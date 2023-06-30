@@ -1,14 +1,16 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Content;
 
+use Kirby\Cms\Blueprint;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Form\Form;
 
 /**
  * The Content class handles all fields
  * for content from pages, the site and users
  *
- * @package   Kirby Cms
+ * @package   Kirby Content
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier

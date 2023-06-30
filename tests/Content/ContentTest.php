@@ -1,9 +1,13 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Content;
+
+use Kirby\Cms\App;
+use Kirby\Cms\Page;
+use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Cms\Content
+ * @coversDefaultClass Kirby\Content\Content
  */
 class ContentTest extends TestCase
 {

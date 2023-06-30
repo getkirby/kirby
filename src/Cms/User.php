@@ -198,10 +198,12 @@ class User extends ModelWithContent
 	 * Filename for the content file
 	 *
 	 * @internal
-	 * @return string
+	 * @deprecated 4.0.0
+	 * @todo Remove in v5
 	 */
 	public function contentFileName(): string
 	{
+		Helpers::deprecated('The internal $model->contentFileName() method has been deprecated. Please let us know via a GitHub issue if you need this method and tell us your use case.', 'model-content-file');
 		return 'user';
 	}
 
@@ -227,7 +229,10 @@ class User extends ModelWithContent
 	 */
 	public function exists(): bool
 	{
-		return is_file($this->contentFile('default')) === true;
+		return $this->storage()->exists(
+			'published',
+			$this->storage()->language('default')
+		);
 	}
 
 	/**
@@ -508,7 +513,8 @@ class User extends ModelWithContent
 	 */
 	public function modified(string $format = 'U', string $handler = null, string $languageCode = null)
 	{
-		$modifiedContent = F::modified($this->contentFile($languageCode));
+		$language        = $this->storage()->language($languageCode);
+		$modifiedContent = $this->storage()->modified('published', $language);
 		$modifiedIndex   = F::modified($this->root() . '/index.php');
 		$modifiedTotal   = max([$modifiedContent, $modifiedIndex]);
 		$handler       ??= $this->kirby()->option('date.handler', 'date');

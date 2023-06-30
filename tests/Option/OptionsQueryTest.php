@@ -298,7 +298,7 @@ class OptionsQueryTest extends TestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid query result data: Kirby\Cms\Field');
+		$this->expectExceptionMessage('Invalid query result data: Kirby\Content\Field');
 
 		$options = (new OptionsQuery('site.foo'))->render($app->site());
 	}

@@ -462,7 +462,8 @@ trait PageActions
 				$ignore[] = $file->root();
 
 				// append all content files
-				array_push($ignore, ...$file->contentFiles());
+				array_push($ignore, ...$file->storage()->contentFiles('published'));
+				array_push($ignore, ...$file->storage()->contentFiles('changes'));
 			}
 		}
 

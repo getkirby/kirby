@@ -298,18 +298,24 @@ class File extends ModelWithContent
 	 * Returns the directory in which
 	 * the content file is located
 	 * @internal
+	 * @deprecated 4.0.0
+	 * @todo Remove in v5
 	 */
 	public function contentFileDirectory(): string
 	{
+		Helpers::deprecated('The internal $model->contentFileDirectory() method has been deprecated. Please let us know via a GitHub issue if you need this method and tell us your use case.', 'model-content-file');
 		return dirname($this->root());
 	}
 
 	/**
 	 * Filename for the content file
 	 * @internal
+	 * @deprecated 4.0.0
+	 * @todo Remove in v5
 	 */
 	public function contentFileName(): string
 	{
+		Helpers::deprecated('The internal $model->contentFileName() method has been deprecated. Please let us know via a GitHub issue if you need this method and tell us your use case.', 'model-content-file');
 		return $this->filename();
 	}
 
@@ -452,7 +458,10 @@ class File extends ModelWithContent
 	 */
 	protected function modifiedContent(string $languageCode = null): int
 	{
-		return F::modified($this->contentFile($languageCode));
+		return $this->storage()->modified(
+			'published',
+			$this->storage()->language($languageCode)
+		) ?? 0;
 	}
 
 	/**

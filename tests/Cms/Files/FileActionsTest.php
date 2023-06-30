@@ -100,20 +100,24 @@ class FileActionsTest extends TestCase
 	 */
 	public function testChangeName(File $file)
 	{
+		$language = new Language(['code' => 'default']);
+
 		// create an empty dummy file
 		F::write($file->root(), '');
 		// ...and an empty content file for it
-		F::write($file->contentFile(), '');
+		F::write($file->storage()->contentFile('published', $language), '');
 
 		$this->assertFileExists($file->root());
-		$this->assertFileExists($file->contentFile());
+		$this->assertFileExists($file->storage()->contentFile('published', $language));
 
 		$result = $file->changeName('test');
 
-		$this->assertNotEquals($file->root(), $result->root());
+		$this->assertNotSame($file->root(), $result->root());
 		$this->assertSame('test.csv', $result->filename());
 		$this->assertFileExists($result->root());
-		$this->assertFileExists($result->contentFile());
+		$this->assertFileExists($result->storage()->contentFile('published', $language));
+		$this->assertFileDoesNotExist($file->root());
+		$this->assertFileDoesNotExist($file->storage()->contentFile('published', $language));
 	}
 
 	public function fileProviderMultiLang()
@@ -137,20 +141,20 @@ class FileActionsTest extends TestCase
 		// create an empty dummy file
 		F::write($file->root(), '');
 		// ...and empty content files for it
-		F::write($file->contentFile('en'), '');
-		F::write($file->contentFile('de'), '');
+		F::write($file->storage()->contentFile('published', $app->language('en')), '');
+		F::write($file->storage()->contentFile('published', $app->language('de')), '');
 
 		$this->assertFileExists($file->root());
-		$this->assertFileExists($file->contentFile('en'));
-		$this->assertFileExists($file->contentFile('de'));
+		$this->assertFileExists($file->storage()->contentFile('published', $app->language('en')));
+		$this->assertFileExists($file->storage()->contentFile('published', $app->language('de')));
 
 		$result = $file->changeName('test');
 
 		$this->assertNotEquals($file->root(), $result->root());
 		$this->assertSame('test.csv', $result->filename());
 		$this->assertFileExists($result->root());
-		$this->assertFileExists($result->contentFile('en'));
-		$this->assertFileExists($result->contentFile('de'));
+		$this->assertFileExists($result->storage()->contentFile('published', $app->language('en')));
+		$this->assertFileExists($result->storage()->contentFile('published', $app->language('de')));
 	}
 
 	public function testChangeTemplate()
@@ -372,10 +376,9 @@ class FileActionsTest extends TestCase
 		$this->assertNull($modified->caption()->value());
 		$this->assertSame('Das ist der Text', $modified->text()->value());
 
-
-		$this->assertFileExists($modified->contentFile('en'));
-		$this->assertFileExists($modified->contentFile('de'));
-		$this->assertFileDoesNotExist($modified->contentFile('fr'));
+		$this->assertFileExists($modified->storage()->contentFile('published', $app->language('en')));
+		$this->assertFileExists($modified->storage()->contentFile('published', $app->language('de')));
+		$this->assertFileDoesNotExist($modified->storage()->contentFile('published', $app->language('fr')));
 	}
 
 	public function testChangeTemplateDefault()
@@ -718,20 +721,22 @@ class FileActionsTest extends TestCase
 	 */
 	public function testDelete(File $file)
 	{
+		$language = new Language(['code' => 'default']);
+
 		// create an empty dummy file
 		F::write($file->root(), '');
 		// ...and an empty content file for it
-		F::write($file->contentFile(), '');
+		F::write($file->storage()->contentFile('published', $language), '');
 
 		$this->assertFileExists($file->root());
-		$this->assertFileExists($file->contentFile());
+		$this->assertFileExists($file->storage()->contentFile('published', $language));
 
 		$result = $file->delete();
 
 		$this->assertTrue($result);
 
 		$this->assertFileDoesNotExist($file->root());
-		$this->assertFileDoesNotExist($file->contentFile());
+		$this->assertFileDoesNotExist($file->storage()->contentFile('published', $language));
 	}
 
 	/**
@@ -837,15 +842,17 @@ class FileActionsTest extends TestCase
 	 */
 	public function testSave($file)
 	{
+		$language = new Language(['code' => 'default']);
+
 		// create an empty dummy file
 		F::write($file->root(), '');
 
 		$this->assertFileExists($file->root());
-		$this->assertFileDoesNotExist($file->contentFile());
+		$this->assertFileDoesNotExist($file->storage()->contentFile('published', $language));
 
 		$file = $file->clone(['content' => ['caption' => 'save']])->save();
 
-		$this->assertFileExists($file->contentFile());
+		$this->assertFileExists($file->storage()->contentFile('published', $language));
 	}
 
 	/**

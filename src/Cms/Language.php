@@ -147,46 +147,75 @@ class Language
 		$kirby = App::instance();
 		$site  = $kirby->site();
 
+		$from = $site->storage()->language($from, true);
+		$to   = $site->storage()->language($to, true);
+
 		// convert site
 		foreach ($site->files() as $file) {
 			F::move(
-				$file->contentFile($from, true),
-				$file->contentFile($to, true)
+				$file->storage()->contentFile('changes', $from),
+				$file->storage()->contentFile('changes', $to)
+			);
+			F::move(
+				$file->storage()->contentFile('published', $from),
+				$file->storage()->contentFile('published', $to)
 			);
 		}
 
 		F::move(
-			$site->contentFile($from, true),
-			$site->contentFile($to, true)
+			$site->storage()->contentFile('changes', $from),
+			$site->storage()->contentFile('changes', $to)
+		);
+		F::move(
+			$site->storage()->contentFile('published', $from),
+			$site->storage()->contentFile('published', $to)
 		);
 
 		// convert all pages
 		foreach ($kirby->site()->index(true) as $page) {
 			foreach ($page->files() as $file) {
 				F::move(
-					$file->contentFile($from, true),
-					$file->contentFile($to, true)
+					$file->storage()->contentFile('changes', $from),
+					$file->storage()->contentFile('changes', $to)
+				);
+				F::move(
+					$file->storage()->contentFile('published', $from),
+					$file->storage()->contentFile('published', $to)
 				);
 			}
 
 			F::move(
-				$page->contentFile($from, true),
-				$page->contentFile($to, true)
+				$page->storage()->contentFile('changes', $from),
+				$page->storage()->contentFile('changes', $to)
 			);
+			if ($page->isDraft() === false) {
+				F::move(
+					$page->storage()->contentFile('published', $from),
+					$page->storage()->contentFile('published', $to)
+				);
+			}
 		}
 
 		// convert all users
 		foreach ($kirby->users() as $user) {
 			foreach ($user->files() as $file) {
 				F::move(
-					$file->contentFile($from, true),
-					$file->contentFile($to, true)
+					$file->storage()->contentFile('changes', $from),
+					$file->storage()->contentFile('changes', $to)
+				);
+				F::move(
+					$file->storage()->contentFile('published', $from),
+					$file->storage()->contentFile('published', $to)
 				);
 			}
 
 			F::move(
-				$user->contentFile($from, true),
-				$user->contentFile($to, true)
+				$user->storage()->contentFile('changes', $from),
+				$user->storage()->contentFile('changes', $to)
+			);
+			F::move(
+				$user->storage()->contentFile('published', $from),
+				$user->storage()->contentFile('published', $to)
 			);
 		}
 
@@ -295,22 +324,31 @@ class Language
 		$kirby = App::instance();
 		$site  = $kirby->site();
 
-		F::remove($site->contentFile($code, true));
+		$language = $site->storage()->language($code, true);
+
+		$site->storage()->delete('changes', $language);
+		$site->storage()->delete('published', $language);
 
 		foreach ($kirby->site()->index(true) as $page) {
 			foreach ($page->files() as $file) {
-				F::remove($file->contentFile($code, true));
+				$file->storage()->delete('changes', $language);
+				$file->storage()->delete('published', $language);
 			}
 
-			F::remove($page->contentFile($code, true));
+			$page->storage()->delete('changes', $language);
+			if ($page->isDraft() === false) {
+				$page->storage()->delete('published', $language);
+			}
 		}
 
 		foreach ($kirby->users() as $user) {
 			foreach ($user->files() as $file) {
-				F::remove($file->contentFile($code, true));
+				$file->storage()->delete('changes', $language);
+				$file->storage()->delete('published', $language);
 			}
 
-			F::remove($user->contentFile($code, true));
+			$user->storage()->delete('changes', $language);
+			$user->storage()->delete('published', $language);
 		}
 
 		return true;
@@ -603,19 +641,36 @@ class Language
 		if ($updated->isDefault() === true) {
 			$kirby->defaultLanguage()?->clone(['default' => false])->save();
 
-			$code = $this->code();
 			$site = $kirby->site();
 
-			touch($site->contentFile($code));
+			if ($site->storage()->exists('changes', $this) === true) {
+				$site->storage()->touch('changes', $this);
+			}
+			if ($site->storage()->exists('published', $this) === true) {
+				$site->storage()->touch('published', $this);
+			}
 
 			foreach ($kirby->site()->index(true) as $page) {
 				$files = $page->files();
 
 				foreach ($files as $file) {
-					touch($file->contentFile($code));
+					if ($file->storage()->exists('changes', $this) === true) {
+						$file->storage()->touch('changes', $this);
+					}
+					if ($file->storage()->exists('published', $this) === true) {
+						$file->storage()->touch('published', $this);
+					}
 				}
 
-				touch($page->contentFile($code));
+				if ($page->storage()->exists('changes', $this) === true) {
+					$page->storage()->touch('changes', $this);
+				}
+				if (
+					$page->isDraft() === false &&
+					$page->storage()->exists('published', $this) === true
+				) {
+					$page->storage()->touch('published', $this);
+				}
 			}
 		} elseif ($this->isDefault() === true) {
 			throw new PermissionException('Please select another language to be the primary language');

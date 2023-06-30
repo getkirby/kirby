@@ -420,9 +420,9 @@ class PageActionsTest extends TestCase
 		$this->assertSame('article', $modified->intendedTemplate()->name());
 		$this->assertSame(2, $calls);
 
-		$this->assertFileExists($modified->contentFile('en'));
-		$this->assertFileExists($modified->contentFile('de'));
-		$this->assertFileDoesNotExist($modified->contentFile('fr'));
+		$this->assertFileExists($modified->storage()->contentFile('published', $app->language('en')));
+		$this->assertFileExists($modified->storage()->contentFile('published', $app->language('de')));
+		$this->assertFileDoesNotExist($modified->storage()->contentFile('published', $app->language('fr')));
 		$this->assertNull($modified->caption()->value());
 		$this->assertSame('Text', $modified->text()->value());
 		$this->assertNull($modified->content('de')->get('caption')->value());
@@ -887,15 +887,15 @@ class PageActionsTest extends TestCase
 			'parent' => $page,
 			'code'   => 'en',
 		]);
-		$this->assertFileExists($page->contentFile('en'));
+		$this->assertFileExists($page->storage()->contentFile('changes', $app->language('en')));
 
 		$drafts = $app->site()->drafts();
 		$childrenAndDrafts = $app->site()->childrenAndDrafts();
 
 		$copy = $page->duplicate('test-copy');
 
-		$this->assertFileExists($copy->contentFile('en'));
-		$this->assertFileDoesNotExist($copy->contentFile('de'));
+		$this->assertFileExists($copy->storage()->contentFile('changes', $app->language('en')));
+		$this->assertFileDoesNotExist($copy->storage()->contentFile('changes', $app->language('de')));
 
 		$this->assertSame($page, $drafts->find('test'));
 		$this->assertSame($page, $childrenAndDrafts->find('test'));
@@ -927,8 +927,8 @@ class PageActionsTest extends TestCase
 			'slug'  => 'test-de'
 		], 'de');
 
-		$this->assertFileExists($page->contentFile('en'));
-		$this->assertFileExists($page->contentFile('de'));
+		$this->assertFileExists($page->storage()->contentFile('changes', $app->language('en')));
+		$this->assertFileExists($page->storage()->contentFile('changes', $app->language('de')));
 		$this->assertSame('test', $page->slug());
 		$this->assertSame('test-de', $page->slug('de'));
 
@@ -1042,8 +1042,8 @@ class PageActionsTest extends TestCase
 
 		$copy = $page->duplicate('test-copy', ['children' => true]);
 
-		$this->assertFileExists($copy->contentFile('en'));
-		$this->assertFileDoesNotExist($copy->contentFile('de'));
+		$this->assertFileExists($copy->storage()->contentFile('changes', $app->language('en')));
+		$this->assertFileDoesNotExist($copy->storage()->contentFile('changes', $app->language('de')));
 
 
 		$this->assertNotSame($page->uuid()->id(), $copy->uuid()->id());

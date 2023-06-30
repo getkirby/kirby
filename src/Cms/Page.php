@@ -7,12 +7,12 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
-use Kirby\Filesystem\F;
 use Kirby\Http\Response;
 use Kirby\Http\Uri;
 use Kirby\Panel\Page as Panel;
 use Kirby\Template\Template;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Str;
 
 /**
  * The `$page` object is the heart and
@@ -299,11 +299,12 @@ class Page extends ModelWithContent
 	 * which is found by the inventory method
 	 *
 	 * @internal
-	 * @param string|null $languageCode
-	 * @return string
+	 * @deprecated 4.0.0
+	 * @todo Remove in v5
 	 */
 	public function contentFileName(string|null $languageCode = null): string
 	{
+		Helpers::deprecated('The internal $model->contentFileName() method has been deprecated. Please let us know via a GitHub issue if you need this method and tell us your use case.', 'model-content-file');
 		return $this->intendedTemplate()->name();
 	}
 
@@ -885,11 +886,18 @@ class Page extends ModelWithContent
 	 */
 	public function modified(string $format = null, string $handler = null, string $languageCode = null)
 	{
-		return F::modified(
-			$this->contentFile($languageCode),
-			$format,
-			$handler ?? $this->kirby()->option('date.handler', 'date')
+		$identifier = $this->isDraft() === true ? 'changes' : 'published';
+
+		$modified = $this->storage()->modified(
+			$identifier,
+			$this->storage()->language($languageCode)
 		);
+
+		if ($modified === null) {
+			return null;
+		}
+
+		return Str::date($modified, $format, $handler ?? $this->kirby()->option('date.handler', 'date'));
 	}
 
 	/**
