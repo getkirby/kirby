@@ -867,17 +867,18 @@ abstract class ModelWithContent implements Identifiable
 			VersionIdentifier::changes() :
 			VersionIdentifier::published();
 
-		// we can only update if the version already exists
-		if ($this->storage()->exists($identifier, $language) === true) {
+		try {
+			// we can only update if the version already exists
 			$this->storage()->update($identifier, $language, $data);
-			return true;
+		} catch (NotFoundException $e) {
+			// otherwise create a new version
+			$template = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
+				VersionTemplate::changes() :
+				VersionTemplate::published();
+
+			$this->storage()->create($template, $language, $data);
 		}
 
-		$template = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
-			VersionTemplate::changes() :
-			VersionTemplate::published();
-
-		$this->storage()->create($template, $language, $data);
 		return true;
 	}
 }
