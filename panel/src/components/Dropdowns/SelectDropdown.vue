@@ -4,6 +4,7 @@
 		<k-dropdown-content
 			ref="dropdown"
 			class="k-select-dropdown-content"
+			:align="align"
 			:navigate="false"
 		>
 			<k-selector
@@ -20,6 +21,7 @@
 <script>
 export default {
 	props: {
+		align: String,
 		options: Array
 	},
 	emits: ["create", "select"],

@@ -67,7 +67,7 @@ export default {
 	border-radius: var(--tag-height);
 	cursor: pointer;
 	user-select: none;
-	outline-offset: -1px;
+	outline-offset: -2px;
 }
 .k-tag:focus {
 	outline: var(--outline);

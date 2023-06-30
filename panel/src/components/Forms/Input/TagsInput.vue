@@ -35,10 +35,9 @@
 			>
 				<k-button
 					ref="toggle"
-					icon="plus"
+					icon="add"
 					class="k-tags-input-toggle"
 					size="xs"
-					variant="filled"
 					@click.native="$refs.selector.open()"
 					@keydown.native="search"
 					@keydown.native.delete="navigate('last')"
@@ -392,7 +391,9 @@ export default {
 <style>
 .k-tags-input {
 	display: flex;
+	gap: 0.25rem;
 	flex-wrap: wrap;
+	flex-grow: 1;
 }
 .k-tags-input .k-sortable-ghost {
 	outline: var(--outline);
@@ -400,12 +401,17 @@ export default {
 .k-tags-input[data-layout="list"] .k-tag {
 	width: 100%;
 }
+.k-tags-input .k-select-dropdown {
+	align-self: start;
+	flex-shrink: 0;
+}
 .k-tags-input-toggle.k-button {
 	--button-rounded: var(--button-height);
-	opacity: 0;
+	--button-color-icon: var(--color-gray-500);
+	outline-offset: -2px;
 }
-.k-tags-input:focus-within .k-tags-input-toggle.k-button {
-	opacity: 1;
+.k-tags-input .k-tags-input-toggle:is(:focus, :hover) {
+	--button-color-icon: var(--color-text);
 }
 
 /* Field Theme */
