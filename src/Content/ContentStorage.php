@@ -273,4 +273,16 @@ class ContentStorage
 			}
 		}
 	}
+
+	public function defaultVersion(): string
+	{
+		if (
+			$this->model instanceof Page === true &&
+			$this->model->isDraft() === true
+		) {
+			return 'changes';
+		}
+
+		return 'published';
+	}
 }
