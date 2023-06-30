@@ -4,7 +4,6 @@ namespace Kirby\Content;
 
 use Kirby\Cms\App;
 use Kirby\Cms\File;
-use Kirby\Cms\Language;
 use Kirby\Cms\Page;
 use Kirby\Cms\User;
 use Kirby\Data\Data;
@@ -20,23 +19,9 @@ use PHPUnit\Framework\TestCase;
  */
 class PlainTextContentStorageTest extends TestCase
 {
-	public static $languageDefault;
-	public static $languageEn;
 	protected $tmp = __DIR__ . '/tmp';
 	protected $model;
 	protected $storage;
-
-	public static function setUpBeforeClass(): void
-	{
-		static::$languageDefault = new Language(['code' => 'default']);
-		static::$languageEn      = new Language(['code' => 'en']);
-	}
-
-	public static function tearDownAfterClass(): void
-	{
-		static::$languageDefault = null;
-		static::$languageEn      = null;
-	}
 
 	public function setUp(): void
 	{
@@ -67,7 +52,7 @@ class PlainTextContentStorageTest extends TestCase
 			'text'  => 'Bar'
 		];
 
-		$this->storage->create('changes', static::$languageEn, $fields);
+		$this->storage->create('changes', 'en', $fields);
 		$this->assertSame($fields, Data::read($this->tmp . '/_changes/article.en.txt'));
 	}
 
@@ -81,7 +66,7 @@ class PlainTextContentStorageTest extends TestCase
 			'text'  => 'Bar'
 		];
 
-		$this->storage->create('changes', static::$languageDefault, $fields);
+		$this->storage->create('changes', 'default', $fields);
 		$this->assertSame($fields, Data::read($this->tmp . '/_changes/article.txt'));
 	}
 
@@ -95,7 +80,7 @@ class PlainTextContentStorageTest extends TestCase
 			'text'  => 'Bar'
 		];
 
-		$this->storage->create('published', static::$languageEn, $fields);
+		$this->storage->create('published', 'en', $fields);
 		$this->assertSame($fields, Data::read($this->tmp . '/article.en.txt'));
 	}
 
@@ -109,7 +94,7 @@ class PlainTextContentStorageTest extends TestCase
 			'text'  => 'Bar'
 		];
 
-		$this->storage->create('published', static::$languageDefault, $fields);
+		$this->storage->create('published', 'default', $fields);
 		$this->assertSame($fields, Data::read($this->tmp . '/article.txt'));
 	}
 
@@ -121,7 +106,7 @@ class PlainTextContentStorageTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid version identifier "invalid"');
 
-		$this->storage->create('invalid', static::$languageDefault, []);
+		$this->storage->create('invalid', 'default', []);
 	}
 
 	/**
@@ -130,7 +115,7 @@ class PlainTextContentStorageTest extends TestCase
 	public function testDeleteNonExisting()
 	{
 		// test idempotency
-		$this->storage->delete('published', static::$languageDefault);
+		$this->storage->delete('published', 'default');
 		$this->assertDirectoryDoesNotExist($this->tmp);
 	}
 
@@ -143,7 +128,7 @@ class PlainTextContentStorageTest extends TestCase
 		touch($this->tmp . '/article.en.txt');
 		touch($this->tmp . '/_changes/article.en.txt');
 
-		$this->storage->delete('changes', static::$languageEn);
+		$this->storage->delete('changes', 'en');
 		$this->assertFileDoesNotExist($this->tmp . '/_changes/article.en.txt');
 		$this->assertDirectoryDoesNotExist($this->tmp . '/_changes');
 		$this->assertDirectoryExists($this->tmp);
@@ -158,7 +143,7 @@ class PlainTextContentStorageTest extends TestCase
 		touch($this->tmp . '/article.txt');
 		touch($this->tmp . '/_changes/article.txt');
 
-		$this->storage->delete('changes', static::$languageDefault);
+		$this->storage->delete('changes', 'default');
 		$this->assertFileDoesNotExist($this->tmp . '/_changes/article.txt');
 		$this->assertDirectoryDoesNotExist($this->tmp . '/_changes');
 	}
@@ -172,7 +157,7 @@ class PlainTextContentStorageTest extends TestCase
 		touch($this->tmp . '/article.en.txt');
 		touch($this->tmp . '/_changes/article.en.txt');
 
-		$this->storage->delete('published', static::$languageEn);
+		$this->storage->delete('published', 'en');
 		$this->assertFileDoesNotExist($this->tmp . '/article.en.txt');
 		$this->assertDirectoryExists($this->tmp);
 	}
@@ -186,7 +171,7 @@ class PlainTextContentStorageTest extends TestCase
 		touch($this->tmp . '/article.txt');
 		touch($this->tmp . '/_changes/article.txt');
 
-		$this->storage->delete('published', static::$languageDefault);
+		$this->storage->delete('published', 'default');
 		$this->assertFileDoesNotExist($this->tmp . '/article.txt');
 		$this->assertDirectoryExists($this->tmp);
 	}
@@ -199,7 +184,7 @@ class PlainTextContentStorageTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid version identifier "invalid"');
 
-		$this->storage->delete('invalid', static::$languageDefault);
+		$this->storage->delete('invalid', 'default');
 	}
 
 	/**
@@ -208,10 +193,6 @@ class PlainTextContentStorageTest extends TestCase
 	 */
 	public function testExistsNoneExisting(string $id, string|null $language)
 	{
-		if ($language !== null) {
-			$language = static::$$language;
-		}
-
 		$this->assertFalse($this->storage->exists($id, $language));
 	}
 
@@ -221,10 +202,6 @@ class PlainTextContentStorageTest extends TestCase
 	 */
 	public function testExistsSomeExistingMultiLang(string $id, string|null $language, array $expected)
 	{
-		if ($language !== null) {
-			$language = static::$$language;
-		}
-
 		Dir::make($this->tmp . '/_changes');
 		touch($this->tmp . '/article.txt');
 		touch($this->tmp . '/_changes/article.en.txt');
@@ -250,10 +227,6 @@ class PlainTextContentStorageTest extends TestCase
 	 */
 	public function testExistsSomeExistingSingleLang(string $id, string|null $language, array $expected)
 	{
-		if ($language !== null) {
-			$language = static::$$language;
-		}
-
 		Dir::make($this->tmp . '/_changes');
 		touch($this->tmp . '/article.txt');
 		touch($this->tmp . '/_changes/article.en.txt');
@@ -265,11 +238,11 @@ class PlainTextContentStorageTest extends TestCase
 	{
 		return [
 			['changes', null, [true, false]],
-			['changes', 'languageDefault', [false, false]],
-			['changes', 'languageEn', [true, true]],
+			['changes', 'default', [false, false]],
+			['changes', 'en', [true, true]],
 			['published', null, [false, true]],
-			['published', 'languageDefault', [true, true]],
-			['published', 'languageEn', [false, false]]
+			['published', 'default', [true, true]],
+			['published', 'en', [false, false]]
 		];
 	}
 
@@ -281,7 +254,7 @@ class PlainTextContentStorageTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid version identifier "invalid"');
 
-		$this->storage->exists('invalid', static::$languageDefault);
+		$this->storage->exists('invalid', 'default');
 	}
 
 	/**
@@ -290,8 +263,6 @@ class PlainTextContentStorageTest extends TestCase
 	 */
 	public function testModifiedNoneExisting(string $id, string $language)
 	{
-		$language = static::$$language;
-
 		$this->assertNull($this->storage->modified($id, $language));
 	}
 
@@ -301,8 +272,6 @@ class PlainTextContentStorageTest extends TestCase
 	 */
 	public function testModifiedSomeExisting(string $id, string $language, int|null $expected)
 	{
-		$language = static::$$language;
-
 		Dir::make($this->tmp . '/_changes');
 		touch($this->tmp . '/article.txt', 1234567890);
 		touch($this->tmp . '/_changes/article.en.txt', 1234567890);
@@ -313,10 +282,10 @@ class PlainTextContentStorageTest extends TestCase
 	public function modifiedProvider(): array
 	{
 		return [
-			['changes', 'languageDefault', null],
-			['changes', 'languageEn', 1234567890],
-			['published', 'languageDefault', 1234567890],
-			['published', 'languageEn', null]
+			['changes', 'default', null],
+			['changes', 'en', 1234567890],
+			['published', 'default', 1234567890],
+			['published', 'en', null]
 		];
 	}
 
@@ -328,7 +297,7 @@ class PlainTextContentStorageTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid version identifier "invalid"');
 
-		$this->storage->modified('invalid', static::$languageDefault);
+		$this->storage->modified('invalid', 'default');
 	}
 
 	/**
@@ -345,7 +314,7 @@ class PlainTextContentStorageTest extends TestCase
 		Dir::make($this->tmp . '/_changes');
 		Data::write($this->tmp . '/_changes/article.en.txt', $fields);
 
-		$this->assertSame($fields, $this->storage->read('changes', static::$languageEn));
+		$this->assertSame($fields, $this->storage->read('changes', 'en'));
 	}
 
 	/**
@@ -362,7 +331,7 @@ class PlainTextContentStorageTest extends TestCase
 		Dir::make($this->tmp . '/_changes');
 		Data::write($this->tmp . '/_changes/article.txt', $fields);
 
-		$this->assertSame($fields, $this->storage->read('changes', static::$languageDefault));
+		$this->assertSame($fields, $this->storage->read('changes', 'default'));
 	}
 
 	/**
@@ -378,7 +347,7 @@ class PlainTextContentStorageTest extends TestCase
 
 		Data::write($this->tmp . '/article.en.txt', $fields);
 
-		$this->assertSame($fields, $this->storage->read('published', static::$languageEn));
+		$this->assertSame($fields, $this->storage->read('published', 'en'));
 	}
 
 	/**
@@ -394,7 +363,7 @@ class PlainTextContentStorageTest extends TestCase
 
 		Data::write($this->tmp . '/article.txt', $fields);
 
-		$this->assertSame($fields, $this->storage->read('published', static::$languageDefault));
+		$this->assertSame($fields, $this->storage->read('published', 'default'));
 	}
 
 	/**
@@ -406,7 +375,7 @@ class PlainTextContentStorageTest extends TestCase
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Version "published (en)" does not already exist');
 
-		$this->storage->read('published', static::$languageEn);
+		$this->storage->read('published', 'en');
 	}
 
 	/**
@@ -417,7 +386,7 @@ class PlainTextContentStorageTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid version identifier "invalid"');
 
-		$this->storage->read('invalid', static::$languageDefault);
+		$this->storage->read('invalid', 'default');
 	}
 
 	/**
@@ -432,7 +401,7 @@ class PlainTextContentStorageTest extends TestCase
 
 		$minTime = time();
 
-		$this->storage->touch('changes', static::$languageEn);
+		$this->storage->touch('changes', 'en');
 
 		clearstatcache();
 		$this->assertGreaterThanOrEqual($minTime, filemtime($this->tmp . '/_changes/article.en.txt'));
@@ -450,7 +419,7 @@ class PlainTextContentStorageTest extends TestCase
 
 		$minTime = time();
 
-		$this->storage->touch('changes', static::$languageDefault);
+		$this->storage->touch('changes', 'default');
 
 		clearstatcache();
 		$this->assertGreaterThanOrEqual($minTime, filemtime($this->tmp . '/_changes/article.txt'));
@@ -467,7 +436,7 @@ class PlainTextContentStorageTest extends TestCase
 
 		$minTime = time();
 
-		$this->storage->touch('published', static::$languageEn);
+		$this->storage->touch('published', 'en');
 
 		clearstatcache();
 		$this->assertGreaterThanOrEqual($minTime, filemtime($this->tmp . '/article.en.txt'));
@@ -484,7 +453,7 @@ class PlainTextContentStorageTest extends TestCase
 
 		$minTime = time();
 
-		$this->storage->touch('published', static::$languageDefault);
+		$this->storage->touch('published', 'default');
 
 		clearstatcache();
 		$this->assertGreaterThanOrEqual($minTime, filemtime($this->tmp . '/article.txt'));
@@ -499,7 +468,7 @@ class PlainTextContentStorageTest extends TestCase
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Version "published (en)" does not already exist');
 
-		$this->storage->touch('published', static::$languageEn);
+		$this->storage->touch('published', 'en');
 	}
 
 	/**
@@ -510,7 +479,7 @@ class PlainTextContentStorageTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid version identifier "invalid"');
 
-		$this->storage->touch('invalid', static::$languageDefault);
+		$this->storage->touch('invalid', 'default');
 	}
 
 	/**
@@ -527,7 +496,7 @@ class PlainTextContentStorageTest extends TestCase
 		Dir::make($this->tmp . '/_changes');
 		Data::write($this->tmp . '/_changes/article.en.txt', $fields);
 
-		$this->storage->update('changes', static::$languageEn, $fields);
+		$this->storage->update('changes', 'en', $fields);
 		$this->assertSame($fields, Data::read($this->tmp . '/_changes/article.en.txt'));
 	}
 
@@ -545,7 +514,7 @@ class PlainTextContentStorageTest extends TestCase
 		Dir::make($this->tmp . '/_changes');
 		Data::write($this->tmp . '/_changes/article.txt', $fields);
 
-		$this->storage->update('changes', static::$languageDefault, $fields);
+		$this->storage->update('changes', 'default', $fields);
 		$this->assertSame($fields, Data::read($this->tmp . '/_changes/article.txt'));
 	}
 
@@ -562,7 +531,7 @@ class PlainTextContentStorageTest extends TestCase
 
 		Data::write($this->tmp . '/article.en.txt', $fields);
 
-		$this->storage->update('published', static::$languageEn, $fields);
+		$this->storage->update('published', 'en', $fields);
 		$this->assertSame($fields, Data::read($this->tmp . '/article.en.txt'));
 	}
 
@@ -579,7 +548,7 @@ class PlainTextContentStorageTest extends TestCase
 
 		Data::write($this->tmp . '/article.txt', $fields);
 
-		$this->storage->update('published', static::$languageDefault, $fields);
+		$this->storage->update('published', 'default', $fields);
 		$this->assertSame($fields, Data::read($this->tmp . '/article.txt'));
 	}
 
@@ -597,7 +566,7 @@ class PlainTextContentStorageTest extends TestCase
 			'text'  => 'Bar'
 		];
 
-		$this->storage->update('published', static::$languageEn, $fields);
+		$this->storage->update('published', 'en', $fields);
 	}
 
 	/**
@@ -608,7 +577,7 @@ class PlainTextContentStorageTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid version identifier "invalid"');
 
-		$this->storage->update('invalid', static::$languageDefault, []);
+		$this->storage->update('invalid', 'default', []);
 	}
 
 	/**
@@ -641,7 +610,6 @@ class PlainTextContentStorageTest extends TestCase
 				'id'    => 'abcdefgh'
 			])
 		};
-		$language = static::$$language;
 
 		$storage = new PlainTextContentStorage($model);
 		$this->assertSame($this->tmp . '/' . $expected, $storage->contentFile($id, $language));
@@ -650,22 +618,22 @@ class PlainTextContentStorageTest extends TestCase
 	public function contentFileProvider(): array
 	{
 		return [
-			['file', 'changes', 'languageDefault', 'content/_changes/image.jpg.txt'],
-			['file', 'changes', 'languageEn', 'content/_changes/image.jpg.en.txt'],
-			['file', 'published', 'languageDefault', 'content/image.jpg.txt'],
-			['file', 'published', 'languageEn', 'content/image.jpg.en.txt'],
-			['page', 'changes', 'languageDefault', 'content/a-page/_changes/article.txt'],
-			['page', 'changes', 'languageEn', 'content/a-page/_changes/article.en.txt'],
-			['page', 'published', 'languageDefault', 'content/a-page/article.txt'],
-			['page', 'published', 'languageEn', 'content/a-page/article.en.txt'],
-			['site', 'changes', 'languageDefault', 'content/_changes/site.txt'],
-			['site', 'changes', 'languageEn', 'content/_changes/site.en.txt'],
-			['site', 'published', 'languageDefault', 'content/site.txt'],
-			['site', 'published', 'languageEn', 'content/site.en.txt'],
-			['user', 'changes', 'languageDefault', 'site/accounts/abcdefgh/_changes/user.txt'],
-			['user', 'changes', 'languageEn', 'site/accounts/abcdefgh/_changes/user.en.txt'],
-			['user', 'published', 'languageDefault', 'site/accounts/abcdefgh/user.txt'],
-			['user', 'published', 'languageEn', 'site/accounts/abcdefgh/user.en.txt'],
+			['file', 'changes', 'default', 'content/_changes/image.jpg.txt'],
+			['file', 'changes', 'en', 'content/_changes/image.jpg.en.txt'],
+			['file', 'published', 'default', 'content/image.jpg.txt'],
+			['file', 'published', 'en', 'content/image.jpg.en.txt'],
+			['page', 'changes', 'default', 'content/a-page/_changes/article.txt'],
+			['page', 'changes', 'en', 'content/a-page/_changes/article.en.txt'],
+			['page', 'published', 'default', 'content/a-page/article.txt'],
+			['page', 'published', 'en', 'content/a-page/article.en.txt'],
+			['site', 'changes', 'default', 'content/_changes/site.txt'],
+			['site', 'changes', 'en', 'content/_changes/site.en.txt'],
+			['site', 'published', 'default', 'content/site.txt'],
+			['site', 'published', 'en', 'content/site.en.txt'],
+			['user', 'changes', 'default', 'site/accounts/abcdefgh/_changes/user.txt'],
+			['user', 'changes', 'en', 'site/accounts/abcdefgh/_changes/user.en.txt'],
+			['user', 'published', 'default', 'site/accounts/abcdefgh/user.txt'],
+			['user', 'published', 'en', 'site/accounts/abcdefgh/user.en.txt'],
 		];
 	}
 
@@ -687,7 +655,6 @@ class PlainTextContentStorageTest extends TestCase
 			'slug' => 'a-page',
 			'template' => 'article'
 		]);
-		$language = static::$$language;
 
 		$storage = new PlainTextContentStorage($model);
 		$this->assertSame($this->tmp . '/' . $expected, $storage->contentFile('changes', $language));
@@ -712,7 +679,6 @@ class PlainTextContentStorageTest extends TestCase
 			'slug' => 'a-page',
 			'template' => 'article'
 		]);
-		$language = static::$$language;
 
 		$storage = new PlainTextContentStorage($model);
 
@@ -724,8 +690,8 @@ class PlainTextContentStorageTest extends TestCase
 	public function contentFileDraftProvider(): array
 	{
 		return [
-			['languageDefault', 'content/_drafts/a-page/article.txt'],
-			['languageEn', 'content/_drafts/a-page/article.en.txt'],
+			['default', 'content/_drafts/a-page/article.txt'],
+			['en', 'content/_drafts/a-page/article.en.txt'],
 		];
 	}
 
@@ -737,7 +703,7 @@ class PlainTextContentStorageTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid version identifier "invalid"');
 
-		$this->storage->contentFile('invalid', static::$languageDefault);
+		$this->storage->contentFile('invalid', 'default');
 	}
 
 	/**
@@ -821,7 +787,7 @@ class PlainTextContentStorageTest extends TestCase
 	 * @covers ::language
 	 * @dataProvider languageProvider
 	 */
-	public function testLanguageMultiLang(string|null $languageCode, bool $force, array $expectedCodes, bool $expectedOriginal)
+	public function testLanguageMultiLang(string|null $languageCode, bool $force, array $expectedCodes)
 	{
 		$app = new App([
 			'languages' => [
@@ -836,12 +802,7 @@ class PlainTextContentStorageTest extends TestCase
 		]);
 
 		$language = $this->storage->language($languageCode, $force);
-		$this->assertSame($expectedCodes[0], $language->code());
-		if ($expectedOriginal === true) {
-			$this->assertSame($app->language($expectedCodes[0]), $language);
-		} else {
-			$this->assertNotSame($app->language($expectedCodes[0]), $language);
-		}
+		$this->assertSame($expectedCodes[0], $language);
 	}
 
 	/**
@@ -874,7 +835,7 @@ class PlainTextContentStorageTest extends TestCase
 	public function testLanguageSingleLang(string|null $languageCode, bool $force, array $expectedCodes)
 	{
 		$language = $this->storage->language($languageCode, $force);
-		$this->assertSame($expectedCodes[1], $language->code());
+		$this->assertSame($expectedCodes[1], $language);
 	}
 
 	/**
@@ -883,19 +844,19 @@ class PlainTextContentStorageTest extends TestCase
 	public function testLanguageSingleLangInvalid()
 	{
 		$language = $this->storage->language('fr', false);
-		$this->assertSame('default', $language->code());
+		$this->assertSame('default', $language);
 	}
 
 	public function languageProvider(): array
 	{
 		return [
-			[null, false, ['en', 'default'], true],
-			[null, true, ['en', 'default'], true],
-			['en', false, ['en', 'default'], true],
-			['en', true, ['en', 'en'], true],
-			['de', false, ['de', 'default'], true],
-			['de', true, ['de', 'de'], true],
-			['fr', true, ['fr', 'fr'], false],
+			[null, false, ['en', 'default']],
+			[null, true, ['en', 'default']],
+			['en', false, ['en', 'default']],
+			['en', true, ['en', 'en']],
+			['de', false, ['de', 'default']],
+			['de', true, ['de', 'de']],
+			['fr', true, ['fr', 'fr']],
 		];
 	}
 }

@@ -2,7 +2,6 @@
 
 namespace Kirby\Content;
 
-use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 
 /**
@@ -26,60 +25,60 @@ interface ContentStorage
 	/**
 	 * Creates a new version
 	 *
-	 * @param \Kirby\Cms\Language $lang Language with code `'default'` in a single-lang installation
+	 * @param string $lang Code `'default'` in a single-lang installation
 	 * @param array<string, string> $fields Content fields
 	 */
-	public function create(string $versionType, Language $lang, array $fields): void;
+	public function create(string $versionType, string $lang, array $fields): void;
 
 	/**
 	 * Deletes an existing version in an idempotent way if it was already deleted
 	 *
-	 * @param \Kirby\Cms\Language $lang Language with code `'default'` in a single-lang installation
+	 * @param string $lang Code `'default'` in a single-lang installation
 	 */
-	public function delete(string $version, Language $lang): void;
+	public function delete(string $version, string $lang): void;
 
 	/**
 	 * Checks if a version exists
 	 *
-	 * @param \Kirby\Cms\Language|null $lang Language with code `'default'` in a single-lang installation;
-	 *                                       checks for "any language" if not provided
+	 * @param string|null $lang Code `'default'` in a single-lang installation;
+	 *                          checks for "any language" if not provided
 	 */
-	public function exists(string $version, Language|null $lang): bool;
+	public function exists(string $version, string|null $lang): bool;
 
 	/**
 	 * Returns the modification timestamp of a version
 	 * if it exists
 	 *
-	 * @param \Kirby\Cms\Language $lang Language with code `'default'` in a single-lang installation
+	 * @param string $lang Code `'default'` in a single-lang installation
 	 */
-	public function modified(string $version, Language $lang): int|null;
+	public function modified(string $version, string $lang): int|null;
 
 	/**
 	 * Returns the stored content fields
 	 *
-	 * @param \Kirby\Cms\Language $lang Language with code `'default'` in a single-lang installation
+	 * @param string $lang Code `'default'` in a single-lang installation
 	 * @return array<string, string>
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function read(string $version, Language $lang): array;
+	public function read(string $version, string $lang): array;
 
 	/**
 	 * Updates the modification timestamp of an existing version
 	 *
-	 * @param \Kirby\Cms\Language $lang Language with code `'default'` in a single-lang installation
+	 * @param string $lang Code `'default'` in a single-lang installation
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function touch(string $version, Language $lang): void;
+	public function touch(string $version, string $lang): void;
 
 	/**
 	 * Updates the content fields of an existing version
 	 *
-	 * @param \Kirby\Cms\Language $lang Language with code `'default'` in a single-lang installation
+	 * @param string $lang Code `'default'` in a single-lang installation
 	 * @param array<string, string> $fields Content fields
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function update(string $version, Language $lang, array $fields): void;
+	public function update(string $version, string $lang, array $fields): void;
 }

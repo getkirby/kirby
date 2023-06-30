@@ -2,7 +2,6 @@
 
 namespace Kirby\Content;
 
-use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
 use Kirby\Exception\Exception;
@@ -33,10 +32,10 @@ class PlainTextContentStorage implements ContentStorage
 	/**
 	 * Creates a new version
 	 *
-	 * @param \Kirby\Cms\Language $lang Language with code `'default'` in a single-lang installation
+	 * @param string $lang Code `'default'` in a single-lang installation
 	 * @param array<string, string> $fields Content fields
 	 */
-	public function create(string $versionType, Language $lang, array $fields): void
+	public function create(string $versionType, string $lang, array $fields): void
 	{
 		$success = Data::write($this->contentFile($versionType, $lang), $fields);
 
@@ -50,9 +49,9 @@ class PlainTextContentStorage implements ContentStorage
 	/**
 	 * Deletes an existing version in an idempotent way if it was already deleted
 	 *
-	 * @param \Kirby\Cms\Language $lang Language with code `'default'` in a single-lang installation
+	 * @param string $lang Code `'default'` in a single-lang installation
 	 */
-	public function delete(string $version, Language $lang): void
+	public function delete(string $version, string $lang): void
 	{
 		$contentFile = $this->contentFile($version, $lang);
 		$success = F::unlink($contentFile);
@@ -82,10 +81,10 @@ class PlainTextContentStorage implements ContentStorage
 	/**
 	 * Checks if a version exists
 	 *
-	 * @param \Kirby\Cms\Language|null $lang Language with code `'default'` in a single-lang installation;
-	 *                                       checks for "any language" if not provided
+	 * @param string|null $lang Code `'default'` in a single-lang installation;
+	 *                          checks for "any language" if not provided
 	 */
-	public function exists(string $version, Language|null $lang): bool
+	public function exists(string $version, string|null $lang): bool
 	{
 		if ($lang === null) {
 			foreach ($this->contentFiles($version) as $file) {
@@ -104,9 +103,9 @@ class PlainTextContentStorage implements ContentStorage
 	 * Returns the modification timestamp of a version
 	 * if it exists
 	 *
-	 * @param \Kirby\Cms\Language $lang Language with code `'default'` in a single-lang installation
+	 * @param string $lang Code `'default'` in a single-lang installation
 	 */
-	public function modified(string $version, Language $lang): int|null
+	public function modified(string $version, string $lang): int|null
 	{
 		$modified = F::modified($this->contentFile($version, $lang));
 
@@ -120,12 +119,12 @@ class PlainTextContentStorage implements ContentStorage
 	/**
 	 * Returns the stored content fields
 	 *
-	 * @param \Kirby\Cms\Language $lang Language with code `'default'` in a single-lang installation
+	 * @param string $lang Code `'default'` in a single-lang installation
 	 * @return array<string, string>
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function read(string $version, Language $lang): array
+	public function read(string $version, string $lang): array
 	{
 		$this->ensureExistingVersion($version, $lang);
 		return Data::read($this->contentFile($version, $lang));
@@ -134,11 +133,11 @@ class PlainTextContentStorage implements ContentStorage
 	/**
 	 * Updates the modification timestamp of an existing version
 	 *
-	 * @param \Kirby\Cms\Language $lang Language with code `'default'` in a single-lang installation
+	 * @param string $lang Code `'default'` in a single-lang installation
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function touch(string $version, Language $lang): void
+	public function touch(string $version, string $lang): void
 	{
 		$this->ensureExistingVersion($version, $lang);
 		$success = touch($this->contentFile($version, $lang));
@@ -153,12 +152,12 @@ class PlainTextContentStorage implements ContentStorage
 	/**
 	 * Updates the content fields of an existing version
 	 *
-	 * @param \Kirby\Cms\Language $lang Language with code `'default'` in a single-lang installation
+	 * @param string $lang Code `'default'` in a single-lang installation
 	 * @param array<string, string> $fields Content fields
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function update(string $version, Language $lang, array $fields): void
+	public function update(string $version, string $lang, array $fields): void
 	{
 		$this->ensureExistingVersion($version, $lang);
 		$success = Data::write($this->contentFile($version, $lang), $fields);
@@ -174,11 +173,11 @@ class PlainTextContentStorage implements ContentStorage
 	 * Returns the absolute path to the content file
 	 * @internal To be made `protected` when the CMS core no longer relies on it
 	 *
-	 * @param \Kirby\Cms\Language $lang Language with code `'default'` in a single-lang installation
+	 * @param string $lang Code `'default'` in a single-lang installation
 	 *
 	 * @throws \Kirby\Exception\LogicException If the model type doesn't have a known content filename
 	 */
-	public function contentFile(string $version, Language $lang): string
+	public function contentFile(string $version, string $lang): string
 	{
 		if (in_array($version, ['published', 'changes']) !== true) {
 			throw new InvalidArgumentException('Invalid version identifier "' . $version . '"');
@@ -214,8 +213,8 @@ class PlainTextContentStorage implements ContentStorage
 			$directory .= '/_changes';
 		}
 
-		if ($lang->code() !== 'default') {
-			return $directory . '/' . $filename . '.' . $lang->code() . '.' . $extension;
+		if ($lang !== 'default') {
+			return $directory . '/' . $filename . '.' . $lang . '.' . $extension;
 		}
 
 		return $directory . '/' . $filename . '.' . $extension;
@@ -234,20 +233,19 @@ class PlainTextContentStorage implements ContentStorage
 		}
 
 		return [
-			$this->contentFile($version, new Language(['code' => 'default']))
+			$this->contentFile($version, 'default')
 		];
 	}
 
 	/**
-	 * Shared helper method as adapter between core methods that currently
-	 * still take the language code and this content storage class that
-	 * takes a language object even in single-lang
+	 * Converts a "user-facing" language code to a "raw" language code to be
+	 * used for storage
 	 * @internal
-	 * @todo not needed anymore when the core is always-multi-lang
 	 *
 	 * @param bool $force If set to `true`, the language code is not validated
+	 * @return string Language code
 	 */
-	public function language(string|null $languageCode = null, bool $force = false): Language
+	public function language(string|null $languageCode = null, bool $force = false): string
 	{
 		if ($this->model->kirby()->multilang() === true) {
 			// look up the actual language object if possible
@@ -260,26 +258,26 @@ class PlainTextContentStorage implements ContentStorage
 
 			// fall back to a base language object with just the code
 			// (force mode where the actual language doesn't exist anymore)
-			return $language ?? new Language(['code' => $languageCode]);
+			return $language?->code() ?? $languageCode;
 		}
 
 		// in force mode, use the provided language code even in single-lang for
 		// compatibility with the previous behavior in `$model->contentFile()`
 		if ($force === true) {
-			return new Language(['code' => $languageCode ?? 'default']);
+			return $languageCode ?? 'default';
 		}
 
 		// otherwise there can only be a single-lang with hardcoded "default" code
-		return new Language(['code' => 'default']);
+		return 'default';
 	}
 
 	/**
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	protected function ensureExistingVersion(string $version, Language $lang): void
+	protected function ensureExistingVersion(string $version, string $lang): void
 	{
 		if ($this->exists($version, $lang) !== true) {
-			throw new NotFoundException('Version "' . $version . ' (' . $lang->code() . ')" does not already exist');
+			throw new NotFoundException('Version "' . $version . ' (' . $lang . ')" does not already exist');
 		}
 	}
 }
