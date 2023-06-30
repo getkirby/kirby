@@ -305,7 +305,7 @@ class Page extends ModelWithContent
 	 */
 	public function contentFileName(string|null $languageCode = null): string
 	{
-		Helpers::deprecated('The internal $model->contentFileName() method has been deprecated', 'model-content-file');
+		Helpers::deprecated('The internal $model->contentFileName() method has been deprecated. Please let us know via a GitHub issue if you need this method and tell us your use case.', 'model-content-file');
 		return $this->intendedTemplate()->name();
 	}
 

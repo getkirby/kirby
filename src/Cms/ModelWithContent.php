@@ -184,7 +184,7 @@ abstract class ModelWithContent implements Identifiable
 	 */
 	public function contentFile(string $languageCode = null, bool $force = false): string
 	{
-		Helpers::deprecated('The internal $model->contentFile() method has been deprecated', 'model-content-file');
+		Helpers::deprecated('The internal $model->contentFile() method has been deprecated. You can use $model->storage()->contentFile() instead, however please note that this method is also internal and may be removed in the future.', 'model-content-file');
 
 		$identifier = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
 			VersionIdentifier::changes() :
@@ -205,7 +205,7 @@ abstract class ModelWithContent implements Identifiable
 	 */
 	public function contentFiles(): array
 	{
-		Helpers::deprecated('The internal $model->contentFiles() method has been deprecated', 'model-content-file');
+		Helpers::deprecated('The internal $model->contentFiles() method has been deprecated. You can use $model->storage()->contentFiles() instead, however please note that this method is also internal and may be removed in the future.', 'model-content-file');
 
 		$identifier = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
 			VersionIdentifier::changes() :
@@ -239,7 +239,7 @@ abstract class ModelWithContent implements Identifiable
 	 */
 	public function contentFileDirectory(): string|null
 	{
-		Helpers::deprecated('The internal $model->contentFileDirectory() method has been deprecated', 'model-content-file');
+		Helpers::deprecated('The internal $model->contentFileDirectory() method has been deprecated. Please let us know via a GitHub issue if you need this method and tell us your use case.', 'model-content-file');
 		return $this->root();
 	}
 
@@ -252,7 +252,7 @@ abstract class ModelWithContent implements Identifiable
 	 */
 	public function contentFileExtension(): string
 	{
-		Helpers::deprecated('The internal $model->contentFileName() method has been deprecated', 'model-content-file');
+		Helpers::deprecated('The internal $model->contentFileName() method has been deprecated. Please let us know via a GitHub issue if you need this method and tell us your use case.', 'model-content-file');
 		return $this->kirby()->contentExtension();
 	}
 
