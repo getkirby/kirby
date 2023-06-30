@@ -230,14 +230,12 @@ trait FileActions
 				throw new LogicException('The file could not be created');
 			}
 
-			// always create files in the default language
-			$languageCode =
-				$file->kirby()->multilang() ?
-				$file->kirby()->defaultLanguage()->code() :
-				null;
-
 			// store the content if necessary
-			$file->save($file->content()->toArray(), $languageCode);
+			// (always create files in the default language)
+			$file->save(
+				$file->content()->toArray(),
+				$file->kirby()->defaultLanguage()?->code()
+			);
 
 			// add the file to the list of siblings
 			$file->siblings()->append($file->id(), $file);
