@@ -57,16 +57,19 @@ trait FileActions
 			// rename the main file
 			F::move($oldFile->root(), $newFile->root());
 
-			if ($newFile->kirby()->multilang() === true) {
-				foreach ($newFile->translations() as $translation) {
-					$translationCode = $translation->code();
+			$translations =
+				$newFile->kirby()->multilang() ?
+				$newFile->translations()->values(
+					fn ($translation) => $translation->code()
+				) :
+				['default'];
 
-					// rename the content file
-					F::move($oldFile->contentFile($translationCode), $newFile->contentFile($translationCode));
-				}
-			} else {
+			foreach ($translations as $translation) {
 				// rename the content file
-				F::move($oldFile->contentFile(), $newFile->contentFile());
+				F::move(
+					$oldFile->contentFile($translation),
+					$newFile->contentFile($translation)
+				);
 			}
 
 			// update collections
@@ -163,16 +166,14 @@ trait FileActions
 	{
 		F::copy($this->root(), $page->root() . '/' . $this->filename());
 
-		if ($this->kirby()->multilang() === true) {
-			foreach ($this->kirby()->languages() as $language) {
-				F::copy(
-					$contentFile = $this->contentFile($language->code()),
-					$page->root() . '/' . basename($contentFile)
-				);
-			}
-		} else {
+		$languages =
+			$this->kirby()->multilang() ?
+			$this->kirby()->languages()->values(fn ($lang) => $lang->code()) :
+			['default'];
+
+		foreach ($languages as $language) {
 			F::copy(
-				$contentFile = $this->contentFile(),
+				$contentFile = $this->contentFile($language),
 				$page->root() . '/' . basename($contentFile)
 			);
 		}
@@ -242,11 +243,10 @@ trait FileActions
 			}
 
 			// always create files in the default language
-			if ($file->kirby()->multilang() === true) {
-				$languageCode = $file->kirby()->defaultLanguage()->code();
-			} else {
-				$languageCode = null;
-			}
+			$languageCode =
+				$file->kirby()->multilang() ?
+				$file->kirby()->defaultLanguage()->code() :
+				null;
 
 			// store the content if necessary
 			$file->save($file->content()->toArray(), $languageCode);
@@ -272,12 +272,13 @@ trait FileActions
 			// remove all public versions, lock and clear UUID cache
 			$file->unpublish();
 
-			if ($file->kirby()->multilang() === true) {
-				foreach ($file->translations() as $translation) {
-					F::remove($file->contentFile($translation->code()));
-				}
-			} else {
-				F::remove($file->contentFile());
+			$translations =
+				$file->kirby()->multilang() ?
+				$file->translations()->values(fn ($lang) => $lang->code()) :
+				['default'];
+
+			foreach ($translations as $translation) {
+				F::remove($file->contentFile($translation));
 			}
 
 			F::remove($file->root());
