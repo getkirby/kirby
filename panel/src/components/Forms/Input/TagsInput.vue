@@ -406,9 +406,12 @@ export default {
 	flex-shrink: 0;
 }
 .k-tags-input-toggle.k-button {
-	--button-rounded: var(--button-height);
-	--button-color-icon: var(--color-gray-500);
-	outline-offset: -2px;
+	--button-rounded: var(--rounded-sm);
+	--button-color-icon: var(--color-gray-600);
+	opacity: 0;
+}
+.k-tags-input:focus-within .k-tags-input-toggle {
+	opacity: 1;
 }
 .k-tags-input .k-tags-input-toggle:is(:focus, :hover) {
 	--button-color-icon: var(--color-text);

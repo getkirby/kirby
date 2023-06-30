@@ -51,7 +51,7 @@ export default {
 	--tag-color-disabled-back: var(--color-gray-600);
 	--tag-color-disabled-text: var(--tag-color-text);
 	--tag-height: var(--height-xs);
-	--tag-rounded: var(--tag-height);
+	--tag-rounded: var(--rounded-sm);
 }
 
 .k-tag {
@@ -64,16 +64,15 @@ export default {
 	line-height: 1;
 	color: var(--tag-color-text);
 	background-color: var(--tag-color-back);
-	border-radius: var(--tag-height);
+	border-radius: var(--tag-rounded);
 	cursor: pointer;
 	user-select: none;
-	outline-offset: -2px;
 }
 .k-tag:focus {
 	outline: var(--outline);
 }
 .k-tag-text {
-	padding-inline: 0.75rem;
+	padding-inline: 0.5rem;
 	line-height: var(--leading-tight);
 }
 .k-tag-toggle {
