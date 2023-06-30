@@ -139,24 +139,6 @@ class Language
 	}
 
 	/**
-	 * Internal converter to create or remove
-	 * translation files.
-	 */
-	protected static function converter(string $from, string $to): void
-	{
-		foreach (App::instance()->models() as $model) {
-			F::move(
-				$model->storage()->contentFile('changes', $from, true),
-				$model->storage()->contentFile('changes', $to, true)
-			);
-			F::move(
-				$model->storage()->contentFile('published', $from, true),
-				$model->storage()->contentFile('published', $to, true)
-			);
-		}
-	}
-
-	/**
 	 * Creates a new language object
 	 *
 	 * @internal
@@ -189,7 +171,9 @@ class Language
 		$language->save();
 
 		if ($languages->count() === 0) {
-			static::converter('', $language->code());
+			foreach ($kirby->models() as $model) {
+				$model->storage()->convertLanguage('', $language->code());
+			}
 		}
 
 		// update the main languages collection in the app instance
@@ -232,10 +216,12 @@ class Language
 			throw new Exception('The language could not be deleted');
 		}
 
-		if ($this->isLast() === true) {
-			$this->converter($code, '');
-		} else {
-			$this->deleteContentFiles($code);
+		foreach ($kirby->models() as $model) {
+			if ($this->isLast() === true) {
+				$model->storage()->convertLanguage($code, '');
+			} else {
+				$model->storage()->deleteLanguage($code);
+			}
 		}
 
 		// get the original language collection and remove the current language
@@ -247,18 +233,6 @@ class Language
 		]);
 
 		return true;
-	}
-
-	/**
-	 * When the language is deleted, all content files with
-	 * the language code must be removed as well.
-	 */
-	protected function deleteContentFiles(mixed $code): void
-	{
-		foreach (App::instance()->models() as $model) {
-			$model->storage()->delete('changes', $code, true);
-			$model->storage()->delete('published', $code, true);
-		}
 	}
 
 	/**
@@ -548,36 +522,8 @@ class Language
 		if ($updated->isDefault() === true) {
 			$kirby->defaultLanguage()?->clone(['default' => false])->save();
 
-			$site = $kirby->site();
-
-			if ($site->storage()->exists('changes', $this) === true) {
-				$site->storage()->touch('changes', $this);
-			}
-			if ($site->storage()->exists('published', $this) === true) {
-				$site->storage()->touch('published', $this);
-			}
-
-			foreach ($kirby->site()->index(true) as $page) {
-				$files = $page->files();
-
-				foreach ($files as $file) {
-					if ($file->storage()->exists('changes', $this) === true) {
-						$file->storage()->touch('changes', $this);
-					}
-					if ($file->storage()->exists('published', $this) === true) {
-						$file->storage()->touch('published', $this);
-					}
-				}
-
-				if ($page->storage()->exists('changes', $this) === true) {
-					$page->storage()->touch('changes', $this);
-				}
-				if (
-					$page->isDraft() === false &&
-					$page->storage()->exists('published', $this) === true
-				) {
-					$page->storage()->touch('published', $this);
-				}
+			foreach ($kirby->models() as $model) {
+				$model->storage()->touchLanguage($this);
 			}
 		} elseif ($this->isDefault() === true) {
 			throw new PermissionException('Please select another language to be the primary language');

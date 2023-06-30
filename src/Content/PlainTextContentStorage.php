@@ -232,4 +232,12 @@ class PlainTextContentStorage implements ContentStorageHandler
 			$this->contentFile($version, 'default')
 		];
 	}
+
+	public function move(array $from, array $to): void {
+		F::move(
+			$this->contentFile($from['version'], $from['lang']),
+			$this->contentFile($to['version'], $to['lang'])
+		);
+	}
+
 }

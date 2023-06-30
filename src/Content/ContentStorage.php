@@ -222,7 +222,10 @@ class ContentStorage
 		$to   = $this->language($to, true);
 
 		foreach ($this->versions() as $version) {
-			$this->handler->convert($version, $from, $to);
+			$this->handler->move(
+				['version' => $version, 'lang' => $from],
+				['version' => $version, 'lang' => $to],
+			);
 		}
 	}
 

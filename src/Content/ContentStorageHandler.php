@@ -53,6 +53,8 @@ interface ContentStorageHandler
 	 */
 	public function modified(string $version, string $lang): int|null;
 
+	public function move(array $from, array $to): void;
+
 	/**
 	 * Returns the stored content fields
 	 *
