@@ -41,14 +41,6 @@ export const props = {
 export default {
 	mixins: [props],
 	inheritAttrs: true,
-	mounted() {
-		this.toggle();
-	},
-	updated() {
-		setTimeout(() => {
-			this.focus();
-		});
-	},
 	watch: {
 		visible(newValue, oldValue) {
 			if (newValue === oldValue) {
@@ -57,6 +49,9 @@ export default {
 
 			this.toggle();
 		}
+	},
+	mounted() {
+		this.toggle();
 	},
 	methods: {
 		/**

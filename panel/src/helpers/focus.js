@@ -14,6 +14,12 @@ export default function focus(element, field) {
 		return false;
 	}
 
+	// prevent setting focus if an item inside element (e.g. the dialog)
+	// already holds the focus currently
+	if (!field && element.contains(document.activeElement)) {
+		return false;
+	}
+
 	const selectors = [
 		"[autofocus]",
 		"[data-autofocus]",
