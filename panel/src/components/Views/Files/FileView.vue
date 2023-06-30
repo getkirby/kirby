@@ -51,7 +51,7 @@
 			</template>
 		</k-header>
 
-		<k-file-preview v-bind="preview" :file="model" :focusable="isFocusable" />
+		<k-file-preview v-bind="preview" :file="model" :is-locked="isLocked" />
 
 		<k-model-tabs :tab="tab.name" :tabs="tabs" />
 

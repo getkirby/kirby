@@ -267,6 +267,40 @@ class File extends Model
 	}
 
 	/**
+	 * Whether focus can be added in Panel view
+	 */
+	public function isFocusable(): bool
+	{
+		// blueprint option
+		$option     = $this->model->blueprint()->focus();
+		// fallback to whether the file is viewable
+		// (images should be focusable by default, others not)
+		$option   ??= $this->model->isViewable();
+
+		if ($option === false) {
+			return false;
+		}
+
+		// ensure that user can update content file
+		if ($this->options()['update'] === false) {
+			return false;
+		}
+
+		$kirby = $this->model->kirby();
+
+		// ensure focus is only added when editing primary/only language
+		if (
+			$kirby->multilang() === false ||
+			$kirby->languages()->count() === 0 ||
+			$kirby->language()->isDefault() === true
+		) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Returns an array of all actions
 	 * that can be performed in the Panel
 	 *
@@ -332,13 +366,6 @@ class File extends Model
 	{
 		$file       = $this->model;
 		$dimensions = $file->dimensions();
-		$siblings   = $file->templateSiblings()->sortBy(
-			'sort',
-			'asc',
-			'filename',
-			'asc'
-		);
-
 
 		return array_merge(
 			parent::props(),
@@ -360,12 +387,13 @@ class File extends Model
 					'url'        => $file->url(),
 				],
 				'preview' => [
-					'image'   => $this->image([
+					'focusable' => $this->isFocusable(),
+					'image'     => $this->image([
 						'back'  => 'transparent',
 						'ratio' => '1/1'
 					], 'cards'),
-					'url'     => $url = $file->previewUrl(),
-					'details' => [
+					'url'       => $url = $file->previewUrl(),
+					'details'   => [
 						[
 							'title' => I18n::translate('template'),
 							'text'  => $file->template() ?? '—'

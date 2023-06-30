@@ -11,21 +11,11 @@
 		:data-translate="fieldset.translate"
 		class="k-block-container"
 		tabindex="0"
-		@keydown.meta.j.prevent.stop="$emit('merge')"
 		@keydown.ctrl.j.prevent.stop="$emit('merge')"
-		@keydown.meta.up.exact.prevent.stop="$emit('focusPrev')"
-		@keydown.ctrl.up.exact.prevent.stop="$emit('focusPrev')"
-		@keydown.meta.down.exact.prevent.stop="$emit('focusNext')"
-		@keydown.ctrl.down.exact.prevent.stop="$emit('focusNext')"
-		@keydown.meta.alt.down.prevent.stop="$emit('selectDown')"
 		@keydown.ctrl.alt.down.prevent.stop="$emit('selectDown')"
-		@keydown.meta.alt.up.prevent.stop="$emit('selectUp')"
 		@keydown.ctrl.alt.up.prevent.stop="$emit('selectUp')"
-		@keydown.meta.shift.down.prevent.stop="$emit('sortDown')"
 		@keydown.ctrl.shift.down.prevent.stop="$emit('sortDown')"
-		@keydown.meta.shift.up.prevent.stop="$emit('sortUp')"
 		@keydown.ctrl.shift.up.prevent.stop="$emit('sortUp')"
-		@keydown.meta.backspace.prevent.stop="remove"
 		@keydown.ctrl.backspace.prevent.stop="remove"
 		@focus.stop="$emit('focus')"
 		@focusin.stop="onFocusIn"
@@ -92,8 +82,6 @@ export default {
 		"copy",
 		"duplicate",
 		"focus",
-		"focusPrev",
-		"focusNext",
 		"hide",
 		"merge",
 		"open",

@@ -5,7 +5,7 @@
 			<!-- Image with focus picker -->
 			<template v-if="image.src">
 				<k-coords
-					:aria-disabled="!focusable"
+					:aria-disabled="!canFocus"
 					:x="focus?.x"
 					:y="focus?.y"
 					@input="setFocus($event.detail)"
@@ -57,7 +57,7 @@
 					<dt>{{ $t("file.focus.title") }}</dt>
 					<dd>
 						<k-file-focus-button
-							v-if="focusable"
+							v-if="canFocus"
 							ref="focus"
 							:file="file"
 							:focus="focus"
@@ -81,6 +81,7 @@ export default {
 		file: Object,
 		focusable: Boolean,
 		image: Object,
+		isLocked: Boolean,
 		url: String
 	},
 	computed: {
@@ -94,6 +95,9 @@ export default {
 			const [x, y] = focus.replaceAll("%", "").split(" ");
 			return { x: parseFloat(x), y: parseFloat(y) };
 		},
+		canFocus() {
+			return this.focusable && this.image.src && this.isLocked === false;
+		},
 		options() {
 			const options = [
 				{
@@ -104,7 +108,7 @@ export default {
 				}
 			];
 
-			if (this.focusable && this.image.src) {
+			if (this.canFocus) {
 				if (this.focus) {
 					options.push({
 						icon: "cancel",

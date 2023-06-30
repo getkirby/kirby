@@ -408,6 +408,85 @@ class FileTest extends TestCase
 	}
 
 	/**
+	 * @covers ::isFocusable
+	 */
+	public function testIsFocusable()
+	{
+		$this->app->clone([
+			'blueprints' => [
+				'files/foo' => [
+					'focus' => false
+				]
+			]
+		]);
+
+
+		$page = new ModelPage(['slug' => 'test']);
+
+		// no update permission
+		$file = new ModelFile([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+		]);
+
+		$this->assertFalse((new File($file))->isFocusable());
+
+		// default for images (viewable)
+		$file = new ModelFile([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+		]);
+		$file->kirby()->impersonate('kirby');
+
+		$this->assertTrue((new File($file))->isFocusable());
+
+		// default for others (not viewable)
+		$file = new ModelFile([
+			'filename' => 'test.mp4',
+			'parent'   => $page,
+		]);
+		$file->kirby()->impersonate('kirby');
+
+		$this->assertFalse((new File($file))->isFocusable());
+
+		// blueprint option: false
+		$file = new ModelFile([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+			'template' => 'foo',
+		]);
+		$file->kirby()->impersonate('kirby');
+
+		$this->assertFalse((new File($file))->isFocusable());
+
+		// editing secondary language
+		$app = $this->app->clone([
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		$app->setCurrentLanguage('de');
+
+
+		$file = new ModelFile([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+		]);
+		$file->kirby()->impersonate('kirby');
+
+		$this->assertFalse((new File($file))->isFocusable());
+	}
+
+	/**
 	 * @covers ::options
 	 */
 	public function testOptions()

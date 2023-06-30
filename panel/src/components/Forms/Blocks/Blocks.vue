@@ -30,8 +30,6 @@
 					@copy="copy()"
 					@duplicate="duplicate(block, index)"
 					@focus="onFocus(block)"
-					@focusPrev="focusPrev(index)"
-					@focusNext="focusNext(index)"
 					@hide="hide(block)"
 					@merge="merge()"
 					@open="isEditing = true"
@@ -364,14 +362,6 @@ export default {
 			this.selected = [block?.id ?? this.blocks[0]];
 			ref?.focus();
 			ref?.$el.scrollIntoView({ block: "nearest" });
-		},
-		focusNext(index) {
-			const block = this.blocks[Math.min(index + 1, this.blocks.length - 1)];
-			this.focus(block);
-		},
-		focusPrev(index) {
-			const block = this.blocks[Math.max(0, index - 1)];
-			this.focus(block);
 		},
 		focusOrOpen(block) {
 			if (this.fieldsets[block.type].wysiwyg) {
