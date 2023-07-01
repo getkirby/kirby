@@ -152,19 +152,13 @@ class User extends ModelWithContent
 
 	/**
 	 * Returns the UserBlueprint object
-	 *
-	 * @return \Kirby\Cms\Blueprint
 	 */
-	public function blueprint()
+	public function blueprint(): UserBlueprint
 	{
-		if ($this->blueprint instanceof Blueprint) {
-			return $this->blueprint;
-		}
-
 		try {
-			return $this->blueprint = UserBlueprint::factory('users/' . $this->role(), 'users/default', $this);
+			return $this->blueprint ??= UserBlueprint::factory('users/' . $this->role(), 'users/default', $this);
 		} catch (Exception) {
-			return $this->blueprint = new UserBlueprint([
+			return $this->blueprint ??= new UserBlueprint([
 				'model' => $this,
 				'name'  => 'default',
 				'title' => 'Default',
@@ -561,10 +555,8 @@ class User extends ModelWithContent
 
 	/**
 	 * Returns the panel info object
-	 *
-	 * @return \Kirby\Panel\User
 	 */
-	public function panel()
+	public function panel(): Panel
 	{
 		return new Panel($this);
 	}
@@ -630,8 +622,6 @@ class User extends ModelWithContent
 
 	/**
 	 * The absolute path to the user directory
-	 *
-	 * @return string
 	 */
 	public function root(): string
 	{
@@ -641,10 +631,8 @@ class User extends ModelWithContent
 	/**
 	 * Returns the UserRules class to
 	 * validate any important action.
-	 *
-	 * @return \Kirby\Cms\UserRules
 	 */
-	protected function rules()
+	protected function rules(): UserRules
 	{
 		return new UserRules();
 	}
@@ -684,10 +672,8 @@ class User extends ModelWithContent
 
 	/**
 	 * Returns the parent Users collection
-	 *
-	 * @return \Kirby\Cms\Users
 	 */
-	protected function siblingsCollection()
+	protected function siblingsCollection(): Users
 	{
 		return $this->kirby()->users();
 	}
@@ -695,8 +681,6 @@ class User extends ModelWithContent
 	/**
 	 * Converts the most important user properties
 	 * to an array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
@@ -713,14 +697,15 @@ class User extends ModelWithContent
 	/**
 	 * String template builder
 	 *
-	 * @param string|null $template
-	 * @param array|null $data
 	 * @param string|null $fallback Fallback for tokens in the template that cannot be replaced
 	 *                              (`null` to keep the original token)
-	 * @return string
 	 */
-	public function toString(string $template = null, array $data = [], string|null $fallback = '', string $handler = 'template'): string
-	{
+	public function toString(
+		string $template = null,
+		array $data = [],
+		string|null $fallback = '',
+		string $handler = 'template'
+	): string {
 		$template ??= $this->email();
 		return parent::toString($template, $data, $fallback, $handler);
 	}
@@ -729,8 +714,6 @@ class User extends ModelWithContent
 	 * Returns the username
 	 * which is the given name or the email
 	 * as a fallback
-	 *
-	 * @return string|null
 	 */
 	public function username(): string|null
 	{

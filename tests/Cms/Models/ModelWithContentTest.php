@@ -2,19 +2,24 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Panel\Page as PanelPage;
 use Kirby\Uuid\PageUuid;
 use Kirby\Uuid\SiteUuid;
 
 class ExtendedModelWithContent extends ModelWithContent
 {
-	public function blueprint()
+	public function blueprint(): Blueprint
 	{
-		return 'test';
+		return new Blueprint([]);
 	}
 
-	protected function commit(string $action, array $arguments, \Closure $callback)
-	{
+	protected function commit(
+		string $action,
+		array $arguments,
+		Closure $callback
+	): mixed {
 		// nothing to commit in the test
 	}
 
@@ -23,14 +28,14 @@ class ExtendedModelWithContent extends ModelWithContent
 		return 'test.txt';
 	}
 
-	public function panel()
+	public function panel(): PanelPage
 	{
-		return new PageForPanel($this);
+		return new PanelPage($this);
 	}
 
-	public function permissions()
+	public function permissions(): ModelPermissions
 	{
-		return null;
+		return new ModelPermissions($this);
 	}
 
 	public function root(): string|null
@@ -56,7 +61,7 @@ class BlueprintsModelWithContent extends ExtendedModelWithContent
 		$this->testModel = $model;
 	}
 
-	public function blueprint()
+	public function blueprint(): Blueprint
 	{
 		return new Blueprint([
 			'model'  => $this->testModel,
