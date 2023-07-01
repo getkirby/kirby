@@ -34,8 +34,6 @@ class Section extends Component
 	/**
 	 * Section constructor.
 	 *
-	 * @param string $type
-	 * @param array $attrs
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public function __construct(string $type, array $attrs = [])
@@ -83,9 +81,6 @@ class Section extends Component
 		return $array;
 	}
 
-	/**
-	 * @return array
-	 */
 	public function toResponse(): array
 	{
 		return array_merge([

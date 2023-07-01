@@ -358,7 +358,6 @@ trait FileActions
 
 	/**
 	 * Stores the content on disk
-	 *
 	 * @internal
 	 */
 	public function save(
