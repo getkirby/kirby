@@ -38,7 +38,7 @@ class Files extends Collection
 	 * @return $this
 	 * @throws \Kirby\Exception\InvalidArgumentException When no `File` or `Files` object or an ID of an existing file is passed
 	 */
-	public function add($object)
+	public function add($object): static
 	{
 		// add a files collection
 		if ($object instanceof self) {
@@ -72,7 +72,7 @@ class Files extends Collection
 	 * @param int $offset Sorting offset
 	 * @return $this
 	 */
-	public function changeSort(array $files, int $offset = 0)
+	public function changeSort(array $files, int $offset = 0): static
 	{
 		foreach ($files as $filename) {
 			if ($file = $this->get($filename)) {
@@ -108,11 +108,8 @@ class Files extends Collection
 	/**
 	 * Finds a file by its filename
 	 * @internal Use `$files->find()` instead
-	 *
-	 * @param string $key
-	 * @return \Kirby\Cms\File|null
 	 */
-	public function findByKey(string $key)
+	public function findByKey(string $key): File|null
 	{
 		if ($file = $this->findByUuid($key, 'file')) {
 			return $file;
@@ -130,7 +127,6 @@ class Files extends Collection
 	 * @param string|null|false $locale Locale for number formatting,
 	 *                                  `null` for the current locale,
 	 *                                  `false` to disable number formatting
-	 * @return string
 	 */
 	public function niceSize($locale = null): string
 	{
@@ -141,8 +137,6 @@ class Files extends Collection
 	 * Returns the raw size for all
 	 * files in the collection
 	 * @since 3.6.0
-	 *
-	 * @return int
 	 */
 	public function size(): int
 	{

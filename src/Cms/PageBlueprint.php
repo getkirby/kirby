@@ -16,8 +16,6 @@ class PageBlueprint extends Blueprint
 	/**
 	 * Creates a new page blueprint object
 	 * with the given props
-	 *
-	 * @param array $props
 	 */
 	public function __construct(array $props)
 	{
@@ -61,8 +59,6 @@ class PageBlueprint extends Blueprint
 
 	/**
 	 * Returns the page numbering mode
-	 *
-	 * @return string
 	 */
 	public function num(): string
 	{
@@ -73,7 +69,6 @@ class PageBlueprint extends Blueprint
 	 * Normalizes the ordering number
 	 *
 	 * @param mixed $num
-	 * @return string
 	 */
 	protected function normalizeNum($num): string
 	{
@@ -89,7 +84,6 @@ class PageBlueprint extends Blueprint
 	 * Normalizes the available status options for the page
 	 *
 	 * @param mixed $status
-	 * @return array
 	 */
 	protected function normalizeStatus($status): array
 	{
@@ -166,8 +160,6 @@ class PageBlueprint extends Blueprint
 	/**
 	 * Returns the options object
 	 * that handles page options and permissions
-	 *
-	 * @return array
 	 */
 	public function options(): array
 	{
@@ -195,8 +187,6 @@ class PageBlueprint extends Blueprint
 
 	/**
 	 * Returns the status array
-	 *
-	 * @return array
 	 */
 	public function status(): array
 	{
