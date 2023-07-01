@@ -208,7 +208,6 @@ class Responder
 	/**
 	 * Setter and getter for the status code
 	 *
-	 * @param int|null $code
 	 * @return int|$this
 	 */
 	public function code(int $code = null)
@@ -223,8 +222,6 @@ class Responder
 
 	/**
 	 * Construct response from an array
-	 *
-	 * @param array $response
 	 */
 	public function fromArray(array $response): void
 	{
@@ -241,7 +238,6 @@ class Responder
 	/**
 	 * Setter and getter for a single header
 	 *
-	 * @param string $key
 	 * @param string|false|null $value
 	 * @param bool $lazy If `true`, an existing header value is not overridden
 	 * @return string|$this
@@ -268,7 +264,6 @@ class Responder
 	/**
 	 * Setter and getter for all headers
 	 *
-	 * @param array|null $headers
 	 * @return array|$this
 	 */
 	public function headers(array $headers = null)
@@ -308,7 +303,6 @@ class Responder
 	/**
 	 * Shortcut to configure a json response
 	 *
-	 * @param array|null $json
 	 * @return string|$this
 	 */
 	public function json(array $json = null)
@@ -323,12 +317,12 @@ class Responder
 	/**
 	 * Shortcut to create a redirect response
 	 *
-	 * @param string|null $location
-	 * @param int|null $code
 	 * @return $this
 	 */
-	public function redirect(string|null $location = null, int|null $code = null)
-	{
+	public function redirect(
+		string|null $location = null,
+		int|null $code = null
+	) {
 		$location = Url::to($location ?? '/');
 		$location = Url::unIdn($location);
 
@@ -339,11 +333,8 @@ class Responder
 
 	/**
 	 * Creates and returns the response object from the config
-	 *
-	 * @param string|null $body
-	 * @return \Kirby\Cms\Response
 	 */
-	public function send(string $body = null)
+	public function send(string $body = null): Response
 	{
 		if ($body !== null) {
 			$this->body($body);
@@ -355,8 +346,6 @@ class Responder
 	/**
 	 * Converts the response configuration
 	 * to an array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
@@ -374,7 +363,6 @@ class Responder
 	/**
 	 * Setter and getter for the content type
 	 *
-	 * @param string|null $type
 	 * @return string|$this
 	 */
 	public function type(string $type = null)
@@ -398,10 +386,6 @@ class Responder
 	 * is actually used/relied on by the response
 	 * @since 3.7.0
 	 * @internal
-	 *
-	 * @param bool $usesAuth
-	 * @param array $usesCookies
-	 * @return bool
 	 */
 	public static function isPrivate(bool $usesAuth, array $usesCookies): bool
 	{

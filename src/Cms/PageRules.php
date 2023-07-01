@@ -23,9 +23,6 @@ class PageRules
 	/**
 	 * Validates if the sorting number of the page can be changed
 	 *
-	 * @param \Kirby\Cms\Page $page
-	 * @param int|null $num
-	 * @return bool
 	 * @throws \Kirby\Exception\InvalidArgumentException If the given number is invalid
 	 */
 	public static function changeNum(Page $page, int $num = null): bool
@@ -40,9 +37,6 @@ class PageRules
 	/**
 	 * Validates if the slug for the page can be changed
 	 *
-	 * @param \Kirby\Cms\Page $page
-	 * @param string $slug
-	 * @return bool
 	 * @throws \Kirby\Exception\DuplicateException If a page with this slug already exists
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the slug
 	 */
@@ -87,14 +81,13 @@ class PageRules
 	/**
 	 * Validates if the status for the page can be changed
 	 *
-	 * @param \Kirby\Cms\Page $page
-	 * @param string $status
-	 * @param int|null $position
-	 * @return bool
 	 * @throws \Kirby\Exception\InvalidArgumentException If the given status is invalid
 	 */
-	public static function changeStatus(Page $page, string $status, int $position = null): bool
-	{
+	public static function changeStatus(
+		Page $page,
+		string $status,
+		int $position = null
+	): bool {
 		if (isset($page->blueprint()->status()[$status]) === false) {
 			throw new InvalidArgumentException(['key' => 'page.status.invalid']);
 		}
@@ -110,11 +103,9 @@ class PageRules
 	/**
 	 * Validates if a page can be converted to a draft
 	 *
-	 * @param \Kirby\Cms\Page $page
-	 * @return bool
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the status or the page cannot be converted to a draft
 	 */
-	public static function changeStatusToDraft(Page $page)
+	public static function changeStatusToDraft(Page $page): bool
 	{
 		if ($page->permissions()->changeStatus() !== true) {
 			throw new PermissionException([
@@ -140,13 +131,10 @@ class PageRules
 	/**
 	 * Validates if the status of a page can be changed to listed
 	 *
-	 * @param \Kirby\Cms\Page $page
-	 * @param int $position
-	 * @return bool
 	 * @throws \Kirby\Exception\InvalidArgumentException If the given position is invalid
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the status or the status for the page cannot be changed by any user
 	 */
-	public static function changeStatusToListed(Page $page, int $position)
+	public static function changeStatusToListed(Page $page, int $position): bool
 	{
 		// no need to check for status changing permissions,
 		// instead we need to check for sorting permissions
@@ -175,8 +163,6 @@ class PageRules
 	/**
 	 * Validates if the status of a page can be changed to unlisted
 	 *
-	 * @param \Kirby\Cms\Page $page
-	 * @return bool
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the status
 	 */
 	public static function changeStatusToUnlisted(Page $page)
@@ -189,9 +175,6 @@ class PageRules
 	/**
 	 * Validates if the template of the page can be changed
 	 *
-	 * @param \Kirby\Cms\Page $page
-	 * @param string $template
-	 * @return bool
 	 * @throws \Kirby\Exception\LogicException If the template of the page cannot be changed at all
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the template
 	 */
@@ -224,9 +207,6 @@ class PageRules
 	/**
 	 * Validates if the title of the page can be changed
 	 *
-	 * @param \Kirby\Cms\Page $page
-	 * @param string $title
-	 * @return bool
 	 * @throws \Kirby\Exception\InvalidArgumentException If the new title is empty
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the title
 	 */
@@ -253,8 +233,6 @@ class PageRules
 	/**
 	 * Validates if the page can be created
 	 *
-	 * @param \Kirby\Cms\Page $page
-	 * @return bool
 	 * @throws \Kirby\Exception\DuplicateException If the same page or a draft already exists
 	 * @throws \Kirby\Exception\InvalidArgumentException If the slug is invalid
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to create this page
@@ -306,9 +284,6 @@ class PageRules
 	/**
 	 * Validates if the page can be deleted
 	 *
-	 * @param \Kirby\Cms\Page $page
-	 * @param bool $force
-	 * @return bool
 	 * @throws \Kirby\Exception\LogicException If the page has children and should not be force-deleted
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to delete the page
 	 */
@@ -333,14 +308,13 @@ class PageRules
 	/**
 	 * Validates if the page can be duplicated
 	 *
-	 * @param \Kirby\Cms\Page $page
-	 * @param string $slug
-	 * @param array $options
-	 * @return bool
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to duplicate the page
 	 */
-	public static function duplicate(Page $page, string $slug, array $options = []): bool
-	{
+	public static function duplicate(
+		Page $page,
+		string $slug,
+		array $options = []
+	): bool {
 		if ($page->permissions()->duplicate() !== true) {
 			throw new PermissionException([
 				'key' => 'page.duplicate.permission',
@@ -426,9 +400,6 @@ class PageRules
 	/**
 	 * Check if the page can be published
 	 * (status change from draft to listed or unlisted)
-	 *
-	 * @param Page $page
-	 * @return bool
 	 */
 	public static function publish(Page $page): bool
 	{
@@ -454,9 +425,6 @@ class PageRules
 	/**
 	 * Validates if the page can be updated
 	 *
-	 * @param \Kirby\Cms\Page $page
-	 * @param array $content
-	 * @return bool
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to update the page
 	 */
 	public static function update(Page $page, array $content = []): bool
@@ -477,8 +445,6 @@ class PageRules
 	 * Ensures that the slug is not empty and doesn't exceed the maximum length
 	 * to make sure that the directory name will be accepted by the filesystem
 	 *
-	 * @param string $slug New slug to check
-	 * @return void
 	 * @throws \Kirby\Exception\InvalidArgumentException If the slug is empty or too long
 	 */
 	protected static function validateSlugLength(string $slug): void

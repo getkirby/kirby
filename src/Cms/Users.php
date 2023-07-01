@@ -43,7 +43,7 @@ class Users extends Collection
 	 * @return $this
 	 * @throws \Kirby\Exception\InvalidArgumentException When no `User` or `Users` object or an ID of an existing user is passed
 	 */
-	public function add($object)
+	public function add($object): static
 	{
 		// add a users collection
 		if ($object instanceof self) {
@@ -70,13 +70,10 @@ class Users extends Collection
 	}
 
 	/**
-	 * Takes an array of user props and creates a nice and clean user collection from it
-	 *
-	 * @param array $users
-	 * @param array $inject
-	 * @return static
+	 * Takes an array of user props and creates a nice
+	 * and clean user collection from it
 	 */
-	public static function factory(array $users, array $inject = [])
+	public static function factory(array $users, array $inject = []): static
 	{
 		$collection = new static();
 
@@ -91,10 +88,8 @@ class Users extends Collection
 
 	/**
 	 * Returns all files of all users
-	 *
-	 * @return \Kirby\Cms\Files
 	 */
-	public function files()
+	public function files(): Files
 	{
 		$files = new Files([], $this->parent);
 
@@ -110,11 +105,8 @@ class Users extends Collection
 	/**
 	 * Finds a user in the collection by ID or email address
 	 * @internal Use `$users->find()` instead
-	 *
-	 * @param string $key
-	 * @return \Kirby\Cms\User|null
 	 */
-	public function findByKey(string $key)
+	public function findByKey(string $key): User|null
 	{
 		if ($user = $this->findByUuid($key, 'user')) {
 			return $user;
@@ -129,12 +121,8 @@ class Users extends Collection
 
 	/**
 	 * Loads a user from disk by passing the absolute path (root)
-	 *
-	 * @param string $root
-	 * @param array $inject
-	 * @return static
 	 */
-	public static function load(string $root, array $inject = [])
+	public static function load(string $root, array $inject = []): static
 	{
 		$users = new static();
 
@@ -163,11 +151,8 @@ class Users extends Collection
 
 	/**
 	 * Shortcut for `$users->filter('role', 'admin')`
-	 *
-	 * @param string $role
-	 * @return static
 	 */
-	public function role(string $role)
+	public function role(string $role): static
 	{
 		return $this->filter('role', $role);
 	}

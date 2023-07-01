@@ -24,8 +24,8 @@ trait HasMethods
 	/**
 	 * Calls a registered method class with the
 	 * passed arguments
-	 *
 	 * @internal
+	 *
 	 * @throws \Kirby\Exception\BadMethodCallException
 	 */
 	public function callMethod(string $method, array $args = []): mixed
@@ -41,7 +41,6 @@ trait HasMethods
 
 	/**
 	 * Checks if the object has a registered method
-	 *
 	 * @internal
 	 */
 	public function hasMethod(string $method): bool
