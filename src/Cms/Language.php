@@ -154,7 +154,6 @@ class Language
 
 	/**
 	 * Creates a new language object
-	 *
 	 * @internal
 	 */
 	public static function create(array $props): static
@@ -206,8 +205,8 @@ class Language
 	/**
 	 * Delete the current language and
 	 * all its translation files
-	 *
 	 * @internal
+	 *
 	 * @throws \Kirby\Exception\Exception
 	 */
 	public function delete(): bool
@@ -399,7 +398,6 @@ class Language
 
 	/**
 	 * Get slug rules for language
-	 *
 	 * @internal
 	 */
 	public function rules(): array
@@ -411,8 +409,8 @@ class Language
 
 	/**
 	 * Saves the language settings in the languages folder
-	 *
 	 * @internal
+	 *
 	 * @return $this
 	 */
 	public function save(): static
@@ -503,7 +501,6 @@ class Language
 
 	/**
 	 * Update language properties and save them
-	 *
 	 * @internal
 	 */
 	public function update(array $props = null): static
