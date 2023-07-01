@@ -41,11 +41,6 @@ class Auth
 	protected User|null $impersonate = null;
 
 	/**
-	 * Kirby instance
-	 */
-	protected App $kirby;
-
-	/**
 	 * Cache of the auth status object
 	 */
 	protected Status|null $status = null;
@@ -65,9 +60,10 @@ class Auth
 	/**
 	 * @codeCoverageIgnore
 	 */
-	public function __construct(App $kirby)
+	public function __construct(
+		protected App $kirby
+	)
 	{
-		$this->kirby = $kirby;
 	}
 
 	/**
@@ -133,7 +129,10 @@ class Auth
 					$session->set('kirby.challenge.type', $challenge);
 
 					if ($code !== null) {
-						$session->set('kirby.challenge.code', password_hash($code, PASSWORD_DEFAULT));
+						$session->set(
+							'kirby.challenge.code',
+							password_hash($code, PASSWORD_DEFAULT)
+						);
 					}
 
 					break;
@@ -223,8 +222,8 @@ class Auth
 			}
 		}
 
-		$request = $this->kirby->request();
-		$auth    = $auth ?? $request->auth();
+		$request   = $this->kirby->request();
+		$auth    ??= $request->auth();
 
 		if (!$auth || $auth->type() !== 'basic') {
 			throw new InvalidArgumentException('Invalid authorization header');
@@ -405,8 +404,7 @@ class Auth
 	{
 		// stop impersonating
 		$this->impersonate = null;
-
-		$this->user = $user;
+		$this->user        = $user;
 
 		// clear the status cache
 		$this->status = null;
@@ -585,8 +583,6 @@ class Auth
 
 	/**
 	 * Logout the current user
-	 *
-	 * @return void
 	 */
 	public function logout(): void
 	{
@@ -827,9 +823,12 @@ class Auth
 				throw new PermissionException(['key' => 'access.code']);
 			}
 
-			throw new LogicException('Invalid authentication challenge: ' . $challenge);
+			throw new LogicException(
+				'Invalid authentication challenge: ' . $challenge
+			);
+
 		} catch (Throwable $e) {
-			$details = $e instanceof \Kirby\Exception\Exception ? $e->getDetails() : [];
+			$details = $e instanceof Exception ? $e->getDetails() : [];
 
 			if (
 				empty($email) === false &&
