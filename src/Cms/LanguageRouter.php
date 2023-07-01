@@ -92,7 +92,7 @@ class LanguageRouter
 	 * that injects the Language instance and
 	 * if needed also the Page as arguments.
 	 */
-	public function call(string $path = null): mixed
+	public function call(string|null $path = null): mixed
 	{
 		$language       = $this->language;
 		$kirby          = $language->kirby();

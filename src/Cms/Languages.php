@@ -40,7 +40,7 @@ class Languages extends Collection
 			throw new DuplicateException('You cannot have multiple default languages. Please check your language config files.');
 		}
 
-		parent::__construct($objects, $parent);
+		parent::__construct($objects, null);
 	}
 
 	/**

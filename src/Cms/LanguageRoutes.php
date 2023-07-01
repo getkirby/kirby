@@ -88,7 +88,7 @@ class LanguageRoutes
 						) {
 							return $kirby
 								->response()
-								->redirect($lang);
+								->redirect($page->url($lang));
 						}
 
 						return $kirby
