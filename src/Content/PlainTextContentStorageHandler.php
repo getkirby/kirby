@@ -22,7 +22,7 @@ use Kirby\Filesystem\F;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class PlainTextContentStorage implements ContentStorageHandler
+class PlainTextContentStorageHandler implements ContentStorageHandler
 {
 	public function __construct(protected ModelWithContent $model)
 	{
@@ -233,11 +233,21 @@ class PlainTextContentStorage implements ContentStorageHandler
 		];
 	}
 
-	public function move(array $from, array $to): void
-	{
+	/**
+	 * Moves content from one version-language combination to another
+	 *
+	 * @param string $fromLang Code `'default'` in a single-lang installation
+	 * @param string $toLang Code `'default'` in a single-lang installation
+	 */
+	public function move(
+		string $fromVersion,
+		string $fromLang,
+		string $toVersion,
+		string $toLang
+	): void {
 		F::move(
-			$this->contentFile($from['version'], $from['lang']),
-			$this->contentFile($to['version'], $to['lang'])
+			$this->contentFile($fromVersion, $fromLang),
+			$this->contentFile($toVersion, $toLang)
 		);
 	}
 

@@ -59,11 +59,9 @@ trait FileActions
 
 			// move the content storage versions
 			foreach ($oldFile->storage()->all() as $version => $lang) {
-				if ($oldFile->storage()->exists($version, $lang) === true) {
-					$content = $oldFile->storage()->read($version, $lang);
-					$oldFile->storage()->delete($version, $lang);
-					$newFile->storage()->create($version, $lang, $content);
-				}
+				$content = $oldFile->storage()->read($version, $lang);
+				$oldFile->storage()->delete($version, $lang);
+				$newFile->storage()->create($version, $lang, $content);
 			}
 
 			// update collections
@@ -162,13 +160,12 @@ trait FileActions
 		$copy = $page->clone()->file($this->filename());
 
 		foreach ($this->storage()->all() as $version => $lang) {
-			if ($this->storage()->exists($version, $lang) === true) {
-				$content = $this->storage()->read($version, $lang);
-				$copy->storage()->create($version, $lang, $content);
-			}
+			$content = $this->storage()->read($version, $lang);
+			$copy->storage()->create($version, $lang, $content);
 		}
 
 		// ensure the content is re-read after copying it
+		// @todo find a more elegant way
 		$copy = $page->clone()->file($this->filename());
 
 		// overwrite with new UUID (remove old, add new)

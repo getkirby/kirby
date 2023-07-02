@@ -172,7 +172,10 @@ class Language
 
 		if ($languages->count() === 0) {
 			foreach ($kirby->models() as $model) {
-				$model->storage()->convertLanguage('', $language->code());
+				$model->storage()->convertLanguage(
+					'default',
+					$language->code()
+				);
 			}
 		}
 
@@ -218,7 +221,7 @@ class Language
 
 		foreach ($kirby->models() as $model) {
 			if ($this->isLast() === true) {
-				$model->storage()->convertLanguage($code, '');
+				$model->storage()->convertLanguage($code, 'default');
 			} else {
 				$model->storage()->deleteLanguage($code);
 			}

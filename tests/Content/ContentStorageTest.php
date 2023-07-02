@@ -8,9 +8,10 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 
 /**
- * @coversDefaultClass Kirby\Content\ContentStorageTest
+ * @coversDefaultClass Kirby\Content\ContentStorage
  * @covers ::__construct
  */
 class ContentStorageTest extends TestCase
@@ -127,7 +128,7 @@ class ContentStorageTest extends TestCase
 			]
 		]);
 
-		$language = $this->storage->language($languageCode, $force);
+		$language = $this->language($this->storage, $languageCode, $force);
 		$this->assertSame($expectedCodes[0], $language);
 	}
 
@@ -151,7 +152,7 @@ class ContentStorageTest extends TestCase
 			]
 		]);
 
-		$this->storage->language('fr', false);
+		$this->language($this->storage, 'fr', false);
 	}
 
 	/**
@@ -160,7 +161,7 @@ class ContentStorageTest extends TestCase
 	 */
 	public function testLanguageSingleLang(string|null $languageCode, bool $force, array $expectedCodes)
 	{
-		$language = $this->storage->language($languageCode, $force);
+		$language = $this->language($this->storage, $languageCode, $force);
 		$this->assertSame($expectedCodes[1], $language);
 	}
 
@@ -169,7 +170,7 @@ class ContentStorageTest extends TestCase
 	 */
 	public function testLanguageSingleLangInvalid()
 	{
-		$language = $this->storage->language('fr', false);
+		$language = $this->language($this->storage, 'fr', false);
 		$this->assertSame('default', $language);
 	}
 
@@ -184,5 +185,12 @@ class ContentStorageTest extends TestCase
 			['de', true, ['de', 'de']],
 			['fr', true, ['fr', 'fr']],
 		];
+	}
+
+	protected function language(ContentStorage $obj, ...$args)
+	{
+		$method = new ReflectionMethod(ContentStorage::class, 'language');
+		$method->setAccessible(true);
+		return $method->invoke($obj, ...$args);
 	}
 }

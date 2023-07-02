@@ -46,14 +46,24 @@ interface ContentStorageHandler
 	public function exists(string $version, string|null $lang): bool;
 
 	/**
-	 * Returns the modification timestamp of a version
-	 * if it exists
+	 * Returns the modification timestamp of a version if it exists
 	 *
 	 * @param string $lang Code `'default'` in a single-lang installation
 	 */
 	public function modified(string $version, string $lang): int|null;
 
-	public function move(array $from, array $to): void;
+	/**
+	 * Moves content from one version-language combination to another
+	 *
+	 * @param string $fromLang Code `'default'` in a single-lang installation
+	 * @param string $toLang Code `'default'` in a single-lang installation
+	 */
+	public function move(
+		string $fromVersion,
+		string $fromLang,
+		string $toVersion,
+		string $toLang
+	): void;
 
 	/**
 	 * Returns the stored content fields

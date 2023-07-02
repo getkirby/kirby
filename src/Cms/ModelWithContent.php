@@ -4,8 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Content\ContentStorage;
-use Kirby\Content\PlainTextContentStorage;
-use Kirby\Data\Data;
+use Kirby\Content\PlainTextContentStorageHandler;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form;
@@ -653,7 +652,7 @@ abstract class ModelWithContent implements Identifiable
 	{
 		return $this->storage ??= new ContentStorage(
 			model:   $this,
-			handler: PlainTextContentStorage::class
+			handler: PlainTextContentStorageHandler::class
 		);
 	}
 

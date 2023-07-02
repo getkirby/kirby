@@ -13,10 +13,10 @@ use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Content\PlainTextContentStorage
+ * @coversDefaultClass Kirby\Content\PlainTextContentStorageHandler
  * @covers ::__construct
  */
-class PlainTextContentStorageTest extends TestCase
+class PlainTextContentStorageHandlerTest extends TestCase
 {
 	protected $tmp = __DIR__ . '/tmp';
 	protected $model;
@@ -33,7 +33,7 @@ class PlainTextContentStorageTest extends TestCase
 			'template' => 'article'
 		]);
 
-		$this->storage = new PlainTextContentStorage($this->model);
+		$this->storage = new PlainTextContentStorageHandler($this->model);
 	}
 
 	public function tearDown(): void
@@ -558,7 +558,7 @@ class PlainTextContentStorageTest extends TestCase
 			])
 		};
 
-		$storage = new PlainTextContentStorage($model);
+		$storage = new PlainTextContentStorageHandler($model);
 		$this->assertSame($this->tmp . '/' . $expected, $storage->contentFile($id, $language));
 	}
 
@@ -603,7 +603,7 @@ class PlainTextContentStorageTest extends TestCase
 			'template' => 'article'
 		]);
 
-		$storage = new PlainTextContentStorage($model);
+		$storage = new PlainTextContentStorageHandler($model);
 		$this->assertSame($this->tmp . '/' . $expected, $storage->contentFile('changes', $language));
 	}
 
@@ -627,7 +627,7 @@ class PlainTextContentStorageTest extends TestCase
 			'template' => 'article'
 		]);
 
-		$storage = new PlainTextContentStorage($model);
+		$storage = new PlainTextContentStorageHandler($model);
 
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Drafts cannot have a published content file');
