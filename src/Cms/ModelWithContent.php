@@ -3,7 +3,9 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Content\Content;
 use Kirby\Content\ContentStorage;
+use Kirby\Content\ContentTranslation;
 use Kirby\Content\PlainTextContentStorageHandler;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
@@ -121,7 +123,7 @@ abstract class ModelWithContent implements Identifiable
 	/**
 	 * Returns the content
 	 *
-	 * @return \Kirby\Cms\Content
+	 * @return \Kirby\Content\Content
 	 * @throws \Kirby\Exception\InvalidArgumentException If the language for the given code does not exist
 	 */
 	public function content(string $languageCode = null)
@@ -170,6 +172,7 @@ abstract class ModelWithContent implements Identifiable
 	 * @internal
 	 * @deprecated 4.0.0
 	 * @todo Remove in v5
+	 * @codeCoverageIgnore
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the language for the given code does not exist
 	 */
@@ -192,6 +195,7 @@ abstract class ModelWithContent implements Identifiable
 	 * (use `$model->storage()->contentFiles()` for other versions)
 	 * @deprecated 4.0.0
 	 * @todo Remove in v5
+	 * @codeCoverageIgnore
 	 */
 	public function contentFiles(): array
 	{
@@ -221,6 +225,7 @@ abstract class ModelWithContent implements Identifiable
 	 * @internal
 	 * @deprecated 4.0.0
 	 * @todo Remove in v5
+	 * @codeCoverageIgnore
 	 */
 	public function contentFileDirectory(): string|null
 	{
@@ -233,6 +238,7 @@ abstract class ModelWithContent implements Identifiable
 	 * @internal
 	 * @deprecated 4.0.0
 	 * @todo Remove in v5
+	 * @codeCoverageIgnore
 	 */
 	public function contentFileExtension(): string
 	{
@@ -245,6 +251,7 @@ abstract class ModelWithContent implements Identifiable
 	 * @internal
 	 * @deprecated 4.0.0
 	 * @todo Remove in v5
+	 * @codeCoverageIgnore
 	 */
 	abstract public function contentFileName(): string;
 
@@ -728,7 +735,7 @@ abstract class ModelWithContent implements Identifiable
 	 * Returns a single translation by language code
 	 * If no code is specified the current translation is returned
 	 *
-	 * @return \Kirby\Cms\ContentTranslation|null
+	 * @return \Kirby\Content\ContentTranslation|null
 	 */
 	public function translation(string $languageCode = null)
 	{

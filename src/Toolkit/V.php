@@ -4,7 +4,7 @@ namespace Kirby\Toolkit;
 
 use Countable;
 use Exception;
-use Kirby\Cms\Field;
+use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Http\Idn;
 use Kirby\Uuid\Uuid;

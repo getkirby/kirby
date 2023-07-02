@@ -250,5 +250,4 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 			$this->contentFile($toVersion, $toLang)
 		);
 	}
-
 }

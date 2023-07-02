@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Exception;
+use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
@@ -194,6 +195,7 @@ class User extends ModelWithContent
 	 * @internal
 	 * @deprecated 4.0.0
 	 * @todo Remove in v5
+	 * @codeCoverageIgnore
 	 */
 	public function contentFileName(): string
 	{
@@ -531,7 +533,7 @@ class User extends ModelWithContent
 	 * Returns the user's name or,
 	 * if empty, the email address
 	 *
-	 * @return \Kirby\Cms\Field
+	 * @return \Kirby\Content\Field
 	 */
 	public function nameOrEmail()
 	{

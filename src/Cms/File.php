@@ -300,6 +300,7 @@ class File extends ModelWithContent
 	 * @internal
 	 * @deprecated 4.0.0
 	 * @todo Remove in v5
+	 * @codeCoverageIgnore
 	 */
 	public function contentFileDirectory(): string
 	{
@@ -312,6 +313,7 @@ class File extends ModelWithContent
 	 * @internal
 	 * @deprecated 4.0.0
 	 * @todo Remove in v5
+	 * @codeCoverageIgnore
 	 */
 	public function contentFileName(): string
 	{
