@@ -456,10 +456,7 @@ class File extends ModelWithContent
 	 */
 	protected function modifiedContent(string $languageCode = null): int
 	{
-		return $this->storage()->modified(
-			'published',
-			$this->storage()->language($languageCode)
-		) ?? 0;
+		return $this->storage()->modified('published', $languageCode) ?? 0;
 	}
 
 	/**

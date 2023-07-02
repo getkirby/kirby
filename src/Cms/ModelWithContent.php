@@ -4,8 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Content\ContentStorage;
-use Kirby\Content\PlainTextContentStorage;
-use Kirby\Data\Data;
+use Kirby\Content\PlainTextContentStorageHandler;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form;
@@ -180,13 +179,10 @@ abstract class ModelWithContent implements Identifiable
 	): string {
 		Helpers::deprecated('The internal $model->contentFile() method has been deprecated. You can use $model->storage()->contentFile() instead, however please note that this method is also internal and may be removed in the future.', 'model-content-file');
 
-		$identifier = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
-			'changes' :
-			'published';
-
 		return $this->storage()->contentFile(
-			$identifier,
-			$this->storage()->language($languageCode, $force)
+			$this->storage()->defaultVersion(),
+			$languageCode,
+			$force
 		);
 	}
 
@@ -201,11 +197,9 @@ abstract class ModelWithContent implements Identifiable
 	{
 		Helpers::deprecated('The internal $model->contentFiles() method has been deprecated. You can use $model->storage()->contentFiles() instead, however please note that this method is also internal and may be removed in the future.', 'model-content-file');
 
-		$identifier = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
-			'changes' :
-			'published';
-
-		return $this->storage()->contentFiles($identifier);
+		return $this->storage()->contentFiles(
+			$this->storage()->defaultVersion()
+		);
 	}
 
 	/**
@@ -264,9 +258,7 @@ abstract class ModelWithContent implements Identifiable
 		$new = $this->clone(['template' => $blueprint]);
 
 		// temporary compatibility change (TODO: also convert changes)
-		$identifier = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
-			'changes' :
-			'published';
+		$identifier = $this->storage()->defaultVersion();
 
 		// for multilang, we go through all translations and
 		// covnert the content for each of them, remove the content file
@@ -281,7 +273,7 @@ abstract class ModelWithContent implements Identifiable
 					// delete the old text file
 					$this->storage()->delete(
 						$identifier,
-						$this->storage()->language($code)
+						$code
 					);
 
 					// save to re-create the translation content file
@@ -306,7 +298,7 @@ abstract class ModelWithContent implements Identifiable
 		$content = $this->content()->convertTo($blueprint);
 
 		// delete the old text file
-		$this->storage()->delete($identifier, new Language(['code' => 'default']));
+		$this->storage()->delete($identifier, 'default');
 
 		return $new->save($content);
 	}
@@ -500,16 +492,12 @@ abstract class ModelWithContent implements Identifiable
 	 */
 	public function readContent(string $languageCode = null): array
 	{
-		$identifier = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
-			'changes' :
-			'published';
-
 		try {
 			return $this->storage()->read(
-				$identifier,
-				$this->storage()->language($languageCode)
+				$this->storage()->defaultVersion(),
+				$languageCode
 			);
-		} catch (NotFoundException $e) {
+		} catch (NotFoundException) {
 			// only if the content file really does not exist, it's ok
 			// to return empty content. Otherwise this could lead to
 			// content loss in case of file reading issues
@@ -662,7 +650,10 @@ abstract class ModelWithContent implements Identifiable
 	 */
 	public function storage(): ContentStorage
 	{
-		return $this->storage ??= new PlainTextContentStorage($this);
+		return $this->storage ??= new ContentStorage(
+			model:   $this,
+			handler: PlainTextContentStorageHandler::class
+		);
 	}
 
 	/**
@@ -818,19 +809,15 @@ abstract class ModelWithContent implements Identifiable
 	 */
 	public function writeContent(array $data, string $languageCode = null): bool
 	{
-		$data     = $this->contentFileData($data, $languageCode);
-		$language = $this->storage()->language($languageCode);
-
-		$id = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
-			'changes' :
-			'published';
+		$data = $this->contentFileData($data, $languageCode);
+		$id   = $this->storage()->defaultVersion();
 
 		try {
 			// we can only update if the version already exists
-			$this->storage()->update($id, $language, $data);
-		} catch (NotFoundException $e) {
+			$this->storage()->update($id, $languageCode, $data);
+		} catch (NotFoundException) {
 			// otherwise create a new version
-			$this->storage()->create($id, $language, $data);
+			$this->storage()->create($id, $languageCode, $data);
 		}
 
 		return true;

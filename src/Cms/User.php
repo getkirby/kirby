@@ -225,7 +225,7 @@ class User extends ModelWithContent
 	{
 		return $this->storage()->exists(
 			'published',
-			$this->storage()->language('default')
+			'default'
 		);
 	}
 
@@ -507,8 +507,7 @@ class User extends ModelWithContent
 	 */
 	public function modified(string $format = 'U', string $handler = null, string $languageCode = null)
 	{
-		$language        = $this->storage()->language($languageCode);
-		$modifiedContent = $this->storage()->modified('published', $language);
+		$modifiedContent = $this->storage()->modified('published', $languageCode);
 		$modifiedIndex   = F::modified($this->root() . '/index.php');
 		$modifiedTotal   = max([$modifiedContent, $modifiedIndex]);
 		$handler       ??= $this->kirby()->option('date.handler', 'date');
