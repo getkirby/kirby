@@ -57,32 +57,11 @@ trait FileActions
 			// rename the main file
 			F::move($oldFile->root(), $newFile->root());
 
-			if ($newFile->kirby()->multilang() === true) {
-				foreach ($newFile->translations() as $translation) {
-					$translationCode = $translation->code();
-
-					// rename the content files
-					$language = $this->storage()->language($translationCode);
-					F::move(
-						$oldFile->storage()->contentFile('published', $language),
-						$newFile->storage()->contentFile('published', $language)
-					);
-					F::move(
-						$oldFile->storage()->contentFile('changes', $language),
-						$newFile->storage()->contentFile('changes', $language)
-					);
-				}
-			} else {
-				// rename the content files
-				$language = new Language(['code' => 'default']);
-				F::move(
-					$oldFile->storage()->contentFile('published', $language),
-					$newFile->storage()->contentFile('published', $language)
-				);
-				F::move(
-					$oldFile->storage()->contentFile('changes', $language),
-					$newFile->storage()->contentFile('changes', $language)
-				);
+			// move the content storage versions
+			foreach ($oldFile->storage()->all() as $version => $lang) {
+				$content = $oldFile->storage()->read($version, $lang);
+				$oldFile->storage()->delete($version, $lang);
+				$newFile->storage()->create($version, $lang, $content);
 			}
 
 			// update collections
@@ -178,30 +157,15 @@ trait FileActions
 	public function copy(Page $page): static
 	{
 		F::copy($this->root(), $page->root() . '/' . $this->filename());
+		$copy = $page->clone()->file($this->filename());
 
-		if ($this->kirby()->multilang() === true) {
-			foreach ($this->kirby()->languages() as $language) {
-				F::copy(
-					$contentFile = $this->storage()->contentFile('published', $language),
-					$page->root() . '/' . basename($contentFile)
-				);
-				F::copy(
-					$contentFile = $this->storage()->contentFile('changes', $language),
-					$page->root() . '/' . basename($contentFile)
-				);
-			}
-		} else {
-			$language = new Language(['code' => 'default']);
-			F::copy(
-				$contentFile = $this->storage()->contentFile('published', $language),
-				$page->root() . '/' . basename($contentFile)
-			);
-			F::copy(
-				$contentFile = $this->storage()->contentFile('changes', $language),
-				$page->root() . '/' . basename($contentFile)
-			);
+		foreach ($this->storage()->all() as $version => $lang) {
+			$content = $this->storage()->read($version, $lang);
+			$copy->storage()->create($version, $lang, $content);
 		}
 
+		// ensure the content is re-read after copying it
+		// @todo find a more elegant way
 		$copy = $page->clone()->file($this->filename());
 
 		// overwrite with new UUID (remove old, add new)
@@ -266,15 +230,12 @@ trait FileActions
 				throw new LogicException('The file could not be created');
 			}
 
-			// always create files in the default language
-			if ($file->kirby()->multilang() === true) {
-				$languageCode = $file->kirby()->defaultLanguage()->code();
-			} else {
-				$languageCode = null;
-			}
-
 			// store the content if necessary
-			$file->save($file->content()->toArray(), $languageCode);
+			// (always create files in the default language)
+			$file->save(
+				$file->content()->toArray(),
+				$file->kirby()->defaultLanguage()?->code()
+			);
 
 			// add the file to the list of siblings
 			$file->siblings()->append($file->id(), $file);
@@ -297,16 +258,8 @@ trait FileActions
 			// remove all public versions, lock and clear UUID cache
 			$file->unpublish();
 
-			if ($file->kirby()->multilang() === true) {
-				foreach ($file->translations() as $translation) {
-					$language = $this->storage()->language($translation->code());
-					F::remove($file->storage()->contentFile('published', $language));
-					F::remove($file->storage()->contentFile('changes', $language));
-				}
-			} else {
-				$language = new Language(['code' => 'default']);
-				F::remove($file->storage()->contentFile('published', $language));
-				F::remove($file->storage()->contentFile('changes', $language));
+			foreach ($file->storage()->all() as $version => $lang) {
+				$file->storage()->delete($version, $lang);
 			}
 
 			F::remove($file->root());

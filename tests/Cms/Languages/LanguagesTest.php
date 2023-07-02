@@ -44,6 +44,43 @@ class LanguagesTest extends TestCase
 		Dir::remove($this->tmp);
 	}
 
+	/**
+	 * @covers ::codes
+	 */
+	public function testCodes()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => $this->tmp = __DIR__ . '/tmp/LanguagesTest',
+			],
+			'languages' => [
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true,
+					'locale'  => 'en_US',
+					'url'     => '/',
+				],
+				[
+					'code'    => 'de',
+					'name'    => 'Deutsch',
+					'locale'  => 'de_DE',
+					'url'     => '/de',
+				],
+			]
+		]);
+
+		$this->assertSame(['en', 'de'], $app->languages()->codes());
+
+		$app = new App([
+			'roots' => [
+				'index' => $this->tmp = __DIR__ . '/tmp/LanguagesTest',
+			]
+		]);
+
+		$this->assertSame(['default'], $app->languages()->codes());
+	}
+
 	public function testLoad()
 	{
 		$this->assertCount(2, $this->languages);

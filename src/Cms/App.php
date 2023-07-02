@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Generator;
 use Kirby\Data\Data;
 use Kirby\Email\Email as BaseEmail;
 use Kirby\Exception\ErrorPageException;
@@ -957,6 +958,30 @@ class App
 		);
 
 		return ($this->component('markdown'))($this, $text, $options);
+	}
+
+	/**
+	 * Yields all models (site, pages, files and users) of this site
+	 * @since 4.0.0
+	 *
+	 * @return \Generator|\Kirby\Cms\ModelWithContent[]
+	 */
+	public function models(): Generator
+	{
+		$site = $this->site();
+
+		yield from $site->files();
+		yield $site;
+
+		foreach ($site->index(true) as $page) {
+			yield from $page->files();
+			yield $page;
+		}
+
+		foreach ($this->users() as $user) {
+			yield from $user->files();
+			yield $user;
+		}
 	}
 
 	/**

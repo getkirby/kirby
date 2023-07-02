@@ -89,8 +89,11 @@ class ContentTranslation
 			'changes' :
 			'published';
 
-		$language = $this->parent->storage()->language($this->code, true);
-		return $this->contentFile = $this->parent->storage()->contentFile($identifier, $language);
+		return $this->contentFile = $this->parent->storage()->contentFile(
+			$identifier,
+			$this->code,
+			true
+		);
 	}
 
 	/**

@@ -7,7 +7,6 @@ use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
-use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 
@@ -23,7 +22,7 @@ use Kirby\Filesystem\F;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class PlainTextContentStorage implements ContentStorage
+class PlainTextContentStorageHandler implements ContentStorageHandler
 {
 	public function __construct(protected ModelWithContent $model)
 	{
@@ -126,7 +125,6 @@ class PlainTextContentStorage implements ContentStorage
 	 */
 	public function read(string $version, string $lang): array
 	{
-		$this->ensureExistingVersion($version, $lang);
 		return Data::read($this->contentFile($version, $lang));
 	}
 
@@ -139,7 +137,6 @@ class PlainTextContentStorage implements ContentStorage
 	 */
 	public function touch(string $version, string $lang): void
 	{
-		$this->ensureExistingVersion($version, $lang);
 		$success = touch($this->contentFile($version, $lang));
 
 		// @codeCoverageIgnoreStart
@@ -159,7 +156,6 @@ class PlainTextContentStorage implements ContentStorage
 	 */
 	public function update(string $version, string $lang, array $fields): void
 	{
-		$this->ensureExistingVersion($version, $lang);
 		$success = Data::write($this->contentFile($version, $lang), $fields);
 
 		// @codeCoverageIgnoreStart
@@ -238,46 +234,21 @@ class PlainTextContentStorage implements ContentStorage
 	}
 
 	/**
-	 * Converts a "user-facing" language code to a "raw" language code to be
-	 * used for storage
-	 * @internal
+	 * Moves content from one version-language combination to another
 	 *
-	 * @param bool $force If set to `true`, the language code is not validated
-	 * @return string Language code
+	 * @param string $fromLang Code `'default'` in a single-lang installation
+	 * @param string $toLang Code `'default'` in a single-lang installation
 	 */
-	public function language(string|null $languageCode = null, bool $force = false): string
-	{
-		if ($this->model->kirby()->multilang() === true) {
-			// look up the actual language object if possible
-			$language = $this->model->kirby()->language($languageCode);
-
-			// validate the language code
-			if ($force === false && $language === null) {
-				throw new InvalidArgumentException('Invalid language: ' . $languageCode);
-			}
-
-			// fall back to a base language object with just the code
-			// (force mode where the actual language doesn't exist anymore)
-			return $language?->code() ?? $languageCode;
-		}
-
-		// in force mode, use the provided language code even in single-lang for
-		// compatibility with the previous behavior in `$model->contentFile()`
-		if ($force === true) {
-			return $languageCode ?? 'default';
-		}
-
-		// otherwise there can only be a single-lang with hardcoded "default" code
-		return 'default';
+	public function move(
+		string $fromVersion,
+		string $fromLang,
+		string $toVersion,
+		string $toLang
+	): void {
+		F::move(
+			$this->contentFile($fromVersion, $fromLang),
+			$this->contentFile($toVersion, $toLang)
+		);
 	}
 
-	/**
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
-	 */
-	protected function ensureExistingVersion(string $version, string $lang): void
-	{
-		if ($this->exists($version, $lang) !== true) {
-			throw new NotFoundException('Version "' . $version . ' (' . $lang . ')" does not already exist');
-		}
-	}
 }
