@@ -91,6 +91,7 @@ class Field
 
 	/**
 	 * Simplifies the var_dump result
+	 * @codeCoverageIgnore
 	 *
 	 * @see Field::toArray
 	 */

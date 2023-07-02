@@ -193,7 +193,6 @@ class EventTest extends TestCase
 	}
 
 	/**
-	 * @covers ::__debugInfo
 	 * @covers ::__toString
 	 * @covers ::toArray
 	 * @covers ::toString

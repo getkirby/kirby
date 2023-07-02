@@ -68,6 +68,7 @@ class Content
 	/**
 	 * Same as `self::data()` to improve
 	 * `var_dump` output
+	 * @codeCoverageIgnore
 	 *
 	 * @see self::data()
 	 */

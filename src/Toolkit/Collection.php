@@ -67,8 +67,7 @@ class Collection extends Iterator implements Countable
 
 	/**
 	 * Improve var_dump() output
-	 *
-	 * @return array
+	 * @codeCoverageIgnore
 	 */
 	public function __debugInfo(): array
 	{

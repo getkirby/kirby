@@ -113,6 +113,7 @@ class User extends ModelWithContent
 
 	/**
 	 * Improved `var_dump` output
+	 * @codeCoverageIgnore
 	 *
 	 * @return array
 	 */
