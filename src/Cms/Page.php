@@ -1171,7 +1171,7 @@ class Page extends ModelWithContent
 	/**
 	 * Returns the title field or the slug as fallback
 	 *
-	 * @return \Kirby\Cms\Field
+	 * @return \Kirby\Content\Field
 	 */
 	public function title()
 	{

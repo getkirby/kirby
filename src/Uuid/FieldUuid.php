@@ -4,7 +4,7 @@ namespace Kirby\Uuid;
 
 use Generator;
 use Kirby\Cms\Collection;
-use Kirby\Cms\Field;
+use Kirby\Content\Field;
 use Kirby\Toolkit\A;
 
 /**
