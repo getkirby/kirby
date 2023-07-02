@@ -283,6 +283,7 @@ class Page extends ModelWithContent
 	 * @internal
 	 * @deprecated 4.0.0
 	 * @todo Remove in v5
+	 * @codeCoverageIgnore
 	 */
 	public function contentFileName(string|null $languageCode = null): string
 	{
