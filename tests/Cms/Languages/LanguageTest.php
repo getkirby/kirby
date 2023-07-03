@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\TestCase;
@@ -39,6 +40,7 @@ class LanguageTest extends TestCase
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The property "code" is required');
+
 		new Language([]);
 	}
 
@@ -62,7 +64,7 @@ class LanguageTest extends TestCase
 	 */
 	public function testBaseUrl($kirbyUrl, $url, $expected)
 	{
-		$app = new App([
+		new App([
 			'roots' => [
 				'index' => '/dev/null'
 			],
@@ -137,10 +139,7 @@ class LanguageTest extends TestCase
 	 */
 	public function testCodeAndId()
 	{
-		$language = new Language([
-			'code' => 'en'
-		]);
-
+		$language = new Language(['code' => 'en']);
 		$this->assertSame('en', $language->code());
 		$this->assertSame('en', $language->id());
 	}
@@ -150,10 +149,7 @@ class LanguageTest extends TestCase
 	 */
 	public function testDelete()
 	{
-		$language = Language::create([
-			'code' => 'en'
-		]);
-
+		$language = Language::create(['code' => 'en']);
 		$this->assertTrue($language->delete());
 	}
 
@@ -233,7 +229,7 @@ class LanguageTest extends TestCase
 	 */
 	public function testExists()
 	{
-		$app = new App([
+		new App([
 			'roots' => [
 				'index' => __DIR__ . '/tmp'
 			]
@@ -654,7 +650,7 @@ class LanguageTest extends TestCase
 	 */
 	public function testUpdate()
 	{
-		Dir::make($contentDir = $this->tmp . '/content');
+		Dir::make($this->tmp . '/content');
 
 		$language = Language::create([
 			'code' => 'en'
@@ -663,6 +659,55 @@ class LanguageTest extends TestCase
 		$language = $language->update(['name' => 'English']);
 
 		$this->assertSame('English', $language->name());
+	}
+
+	/**
+	 * @covers ::update
+	 */
+	public function testUpdateDefault()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => $this->tmp,
+			]
+		]);
+
+		$this->assertFalse($app->multilang());
+		$this->assertNull($app->defaultLanguage());
+		$this->assertSame(0, $app->languages()->count());
+
+		$app->languages()->create([
+			'code' => 'en',
+			'default' => true
+		]);
+
+		$this->assertTrue($app->multilang());
+		$this->assertSame('en', $app->defaultLanguage()->code());
+		$this->assertSame(1, $app->languages()->count());
+		$this->assertTrue($app->language('en')->isDefault());
+
+		$de = $app->languages()->create([
+			'code' => 'de'
+		]);
+
+		$this->assertTrue($app->multilang());
+		$this->assertSame('en', $app->defaultLanguage()->code());
+		$this->assertSame(2, $app->languages()->count());
+		$this->assertSame($de, $app->language('de'));
+		$this->assertTrue($app->language('en')->isDefault());
+		$this->assertFalse($app->language('de')->isDefault());
+
+		$app->language('de')->update(['default' => true]);
+
+		$this->assertSame('de', $app->defaultLanguage()->code());
+		$this->assertSame(2, $app->languages()->count());
+		$this->assertTrue($app->language('de')->isDefault());
+		$this->assertFalse($app->language('en')->isDefault());
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Please select another language to be the primary language');
+
+		$app->language('de')->update(['default' => false]);
 	}
 
 	/**

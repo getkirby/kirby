@@ -921,6 +921,11 @@ class App
 	 */
 	public function languages(bool $clone = true): Languages
 	{
+		if ($clone === false) {
+			$this->multilang = null;
+			$this->defaultLanguage = null;
+		}
+
 		if ($this->languages !== null) {
 			return $clone === true ? clone $this->languages : $this->languages;
 		}
