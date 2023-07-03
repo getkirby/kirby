@@ -167,24 +167,29 @@ class Component
 	 */
 	protected function applyProps(array $props): void
 	{
-		foreach ($props as $propName => $propFunction) {
-			if ($propFunction instanceof Closure) {
-				if (isset($this->attrs[$propName]) === true) {
+		foreach ($props as $name => $function) {
+			if ($function instanceof Closure) {
+				if (isset($this->attrs[$name]) === true) {
 					try {
-						$this->$propName = $this->props[$propName] = $propFunction->call($this, $this->attrs[$propName]);
+						$this->$name = $this->props[$name] = $function->call(
+							$this,
+							$this->attrs[$name]
+						);
+						continue;
 					} catch (TypeError) {
-						throw new TypeError('Invalid value for "' . $propName . '"');
-					}
-				} else {
-					try {
-						$this->$propName = $this->props[$propName] = $propFunction->call($this);
-					} catch (ArgumentCountError) {
-						throw new ArgumentCountError('Please provide a value for "' . $propName . '"');
+						throw new TypeError('Invalid value for "' . $name . '"');
 					}
 				}
-			} else {
-				$this->$propName = $this->props[$propName] = $propFunction;
+
+				try {
+					$this->$name = $this->props[$name] = $function->call($this);
+					continue;
+				} catch (ArgumentCountError) {
+					throw new ArgumentCountError('Please provide a value for "' . $name . '"');
+				}
 			}
+
+			$this->$name = $this->props[$name] = $function;
 		}
 	}
 
@@ -194,9 +199,9 @@ class Component
 	 */
 	protected function applyComputed(array $computed): void
 	{
-		foreach ($computed as $computedName => $computedFunction) {
-			if ($computedFunction instanceof Closure) {
-				$this->$computedName = $this->computed[$computedName] = $computedFunction->call($this);
+		foreach ($computed as $name => $function) {
+			if ($function instanceof Closure) {
+				$this->$name = $this->computed[$name] = $function->call($this);
 			}
 		}
 	}
@@ -214,7 +219,10 @@ class Component
 				throw new Exception('Component definition ' . $definition . ' does not exist');
 			}
 
-			static::$types[$type] = $definition = F::load($definition, allowOutput: false);
+			static::$types[$type] = $definition = F::load(
+				$definition,
+				allowOutput: false
+			);
 		}
 
 		return $definition;
@@ -250,7 +258,10 @@ class Component
 					if (is_string(static::$mixins[$mixin]) === true) {
 						// resolve a path to a mixin on demand
 
-						static::$mixins[$mixin] = F::load(static::$mixins[$mixin], allowOutput: false);
+						static::$mixins[$mixin] = F::load(
+							static::$mixins[$mixin],
+							allowOutput: false
+						);
 					}
 
 					$options = array_replace_recursive(
@@ -269,8 +280,10 @@ class Component
 	 */
 	public function toArray(): array
 	{
-		if (($this->options['toArray'] ?? null) instanceof Closure) {
-			return $this->options['toArray']->call($this);
+		$closure = $this->options['toArray'] ?? null;
+
+		if ($closure instanceof Closure) {
+			return $closure->call($this);
 		}
 
 		$array = array_merge($this->attrs, $this->props, $this->computed);

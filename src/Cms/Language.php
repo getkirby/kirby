@@ -142,55 +142,14 @@ class Language
 	 * Internal converter to create or remove
 	 * translation files.
 	 */
-	protected static function converter(string $from, string $to): bool
+	protected static function converter(string $from, string $to): void
 	{
-		$kirby = App::instance();
-		$site  = $kirby->site();
-
-		// convert site
-		foreach ($site->files() as $file) {
+		foreach (App::instance()->models() as $model) {
 			F::move(
-				$file->contentFile($from, true),
-				$file->contentFile($to, true)
+				$model->contentFile($from, true),
+				$model->contentFile($to, true)
 			);
 		}
-
-		F::move(
-			$site->contentFile($from, true),
-			$site->contentFile($to, true)
-		);
-
-		// convert all pages
-		foreach ($kirby->site()->index(true) as $page) {
-			foreach ($page->files() as $file) {
-				F::move(
-					$file->contentFile($from, true),
-					$file->contentFile($to, true)
-				);
-			}
-
-			F::move(
-				$page->contentFile($from, true),
-				$page->contentFile($to, true)
-			);
-		}
-
-		// convert all users
-		foreach ($kirby->users() as $user) {
-			foreach ($user->files() as $file) {
-				F::move(
-					$file->contentFile($from, true),
-					$file->contentFile($to, true)
-				);
-			}
-
-			F::move(
-				$user->contentFile($from, true),
-				$user->contentFile($to, true)
-			);
-		}
-
-		return true;
 	}
 
 	/**
@@ -272,7 +231,9 @@ class Language
 		if ($this->isLast() === true) {
 			$this->converter($code, '');
 		} else {
-			$this->deleteContentFiles($code);
+			foreach ($kirby->models() as $model) {
+				F::remove($model->contentFile($code, true));
+			}
 		}
 
 		// get the original language collection and remove the current language
@@ -282,36 +243,6 @@ class Language
 		$kirby->trigger('language.delete:after', [
 			'language' => $this
 		]);
-
-		return true;
-	}
-
-	/**
-	 * When the language is deleted, all content files with
-	 * the language code must be removed as well.
-	 */
-	protected function deleteContentFiles(mixed $code): bool
-	{
-		$kirby = App::instance();
-		$site  = $kirby->site();
-
-		F::remove($site->contentFile($code, true));
-
-		foreach ($kirby->site()->index(true) as $page) {
-			foreach ($page->files() as $file) {
-				F::remove($file->contentFile($code, true));
-			}
-
-			F::remove($page->contentFile($code, true));
-		}
-
-		foreach ($kirby->users() as $user) {
-			foreach ($user->files() as $file) {
-				F::remove($file->contentFile($code, true));
-			}
-
-			F::remove($user->contentFile($code, true));
-		}
 
 		return true;
 	}
