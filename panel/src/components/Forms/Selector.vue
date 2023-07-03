@@ -2,7 +2,7 @@
 	<nav class="k-selector" role="search">
 		<input
 			ref="input"
-			:placeholder="placeholder"
+			:placeholder="inputPlaceholder + ' …'"
 			:value="query"
 			class="k-selector-input"
 			type="search"
@@ -23,11 +23,11 @@
 							:key="key"
 							:current="selected === key"
 							:disabled="result.disabled"
-							icon="tag"
+							:icon="result.icon"
 							class="k-selector-button"
 							@focus.native="select(key)"
 						>
-							{{ result.text }}
+							<span v-html="result.highlighted ?? result.text" />
 						</k-button>
 					</template>
 					<template v-else-if="query?.length && options.length">
@@ -43,7 +43,7 @@
 					class="k-selector-button"
 					@focus.native="select(results.length)"
 				>
-					Add: <span class="k-selector-preview">{{ query }}</span>
+					{{ $t("add") }}: <span class="k-selector-preview">{{ query }}</span>
 				</k-button>
 			</footer>
 		</template>
@@ -84,6 +84,20 @@ export default {
 		}
 	},
 	computed: {
+		inputPlaceholder() {
+			if (this.options.length === 0) {
+				return this.$t("add");
+			}
+
+			return this.placeholder;
+		},
+		/**
+		 * Regular expression for current search term
+		 * @returns {RegExp}
+		 */
+		regex() {
+			return new RegExp(`(${RegExp.escape(this.query)})`, "ig");
+		},
 		showCreateButton() {
 			if (this.add === false) {
 				return false;
@@ -106,6 +120,7 @@ export default {
 		},
 		escape() {
 			this.selected = -1;
+			this.query = "";
 			this.focus();
 			this.$emit("escape");
 		},
@@ -136,9 +151,17 @@ export default {
 				limit: this.limit
 			});
 
+			// highlight queries in the text
+			this.results = this.results.map((result) => {
+				result.highlighted = this.toHighlightedString(result.text);
+				return result;
+			});
+
 			// select the create button if there are no results
 			if (this.showCreateButton === true && this.results.length === 0) {
 				this.selected = this.results.length;
+			} else if (this.results.length) {
+				this.selected = 0;
 			}
 		},
 		select(index) {
@@ -161,6 +184,12 @@ export default {
 				this.down();
 			}
 		},
+		toHighlightedString(string) {
+			// make sure that no HTML exists before in the string
+			// to avoid XSS when displaying via `v-html`
+			string = this.$helper.string.stripHTML(string);
+			return string.replace(this.regex, "<b>$1</b>");
+		},
 		up() {
 			this.pick(this.selected - 1);
 		}
@@ -169,6 +198,10 @@ export default {
 </script>
 
 <style>
+:root {
+	--selector-color-highlight: var(--color-yellow-500);
+}
+
 .k-selector-input {
 	height: var(--height-sm);
 	padding: 0 var(--button-padding);
@@ -191,8 +224,12 @@ export default {
 .k-selector-button[aria-current] {
 	outline: var(--outline);
 }
+.k-selector-button b {
+	color: var(--selector-color-highlight);
+	font-weight: var(--font-normal);
+}
 .k-selector-preview {
+	color: var(--selector-color-highlight);
 	display: inline-flex;
-	font-weight: var(--font-bold);
 }
 </style>

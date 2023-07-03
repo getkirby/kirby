@@ -46,8 +46,11 @@ export default {
 	overflow: visible;
 }
 .k-select-dropdown .k-selector-input {
-	background: var(--color-gray-800);
+	background: var(--color-gray-900);
 	height: var(--height-sm);
+}
+.k-select-dropdown .k-selector-input::placeholder {
+	color: var(--color-gray-400);
 }
 .k-select-dropdown .k-selector-results {
 	margin-top: var(--spacing-2);
@@ -60,10 +63,6 @@ export default {
 }
 .k-select-dropdown .k-selector-empty {
 	color: var(--color-text-dimmed);
-}
-.k-select-dropdown .k-selector-preview {
-	color: var(--color-focus);
-	font-weight: var(--font-normal);
 }
 .k-select-dropdown .k-selector-body + .k-selector-footer {
 	padding-top: var(--spacing-2);

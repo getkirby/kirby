@@ -89,6 +89,7 @@
 
 <script>
 import { disabled, id, required } from "@/mixins/props.js";
+import { props as TagsInput } from "@/components/Forms/Input/TagsInput.vue";
 
 import {
 	required as validateRequired,
@@ -97,41 +98,15 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [disabled, id, required],
-	props: {
-		/**
-		 * Maximum number for selected options
-		 */
-		max: Number,
-		/**
-		 * Minimum number for selected options
-		 */
-		min: Number,
-		/**
-		 * @values "list"
-		 */
-		layout: String,
-		/**
-		 * Available options to select
-		 */
-		options: Array,
-		search: [Object, Boolean],
-		separator: {
-			type: String,
-			default: ","
-		},
-		sort: Boolean,
-		value: {
-			type: Array,
-			required: true,
-			default: () => []
-		}
-	}
+	mixins: [disabled, id, required, TagsInput]
 };
 
 export default {
 	mixins: [props],
 	inheritAttrs: false,
+	props: {
+		search: [Object, Boolean]
+	},
 	data() {
 		return {
 			// array of selected values

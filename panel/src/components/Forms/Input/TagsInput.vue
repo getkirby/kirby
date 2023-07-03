@@ -73,6 +73,8 @@ export const props = {
 		 * to 100% and show them in a list. This is handy in narrow columns
 		 * or when a list is a more appropriate design choice for the input
 		 * in general.
+		 *
+		 * @values "list"
 		 */
 		layout: String,
 		/**
@@ -97,6 +99,7 @@ export const props = {
 		},
 		value: {
 			type: Array,
+			required: true,
 			default: () => []
 		}
 	}
