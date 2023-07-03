@@ -4,7 +4,8 @@
 		:data-type="type"
 		class="k-overlay"
 		@cancel="onCancel"
-		@click="onClick"
+		@mousedown="onClick"
+		@touchdown="onClick"
 		@close="onClose"
 	>
 		<slot />
