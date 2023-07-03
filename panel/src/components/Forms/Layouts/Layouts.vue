@@ -42,8 +42,6 @@
 				{{ empty || $t("field.layout.empty") }}
 			</k-empty>
 		</template>
-
-		<k-block-pasteboard ref="pasteboard" @paste="onPaste" />
 	</div>
 </template>
 
@@ -215,13 +213,10 @@ export default {
 
 			this.save();
 		},
-		async onPaste(e) {
-			const json = this.$helper.clipboard.read(e);
-			const index = this.current ?? this.rows.length;
-
+		async paste(e, index = this.rows.length) {
 			// pass json to the paste endpoint to validate
 			let rows = await this.$api.post(this.endpoints.field + "/layout/paste", {
-				json: json
+				json: this.$helper.clipboard.read(e)
 			});
 
 			if (rows.length) {
@@ -235,8 +230,12 @@ export default {
 			);
 		},
 		pasteboard(index) {
-			this.current = index;
-			this.$refs.pasteboard.open();
+			this.$panel.dialog.open({
+				component: "k-block-pasteboard",
+				on: {
+					paste: (e) => this.paste(e, index)
+				}
+			});
 		},
 		remove(layout) {
 			const index = this.rows.findIndex((element) => element.id === layout.id);
