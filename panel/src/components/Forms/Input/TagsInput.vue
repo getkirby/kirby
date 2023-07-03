@@ -16,7 +16,7 @@
 			@click.native.stop
 			@blur.native="selectTag(null)"
 			@focus.native="selectTag(tag)"
-			@keydown.enter.native="edit(tag)"
+			@keypress.native.enter="edit(tag)"
 			@keydown.native.left="navigate('prev')"
 			@keydown.native.right="navigate('next')"
 			@dblclick.native="edit(tag)"
@@ -28,8 +28,12 @@
 
 		<template #footer>
 			<k-select-dropdown
+				v-if="showSelector"
 				ref="selector"
-				:options="dropdownOptions"
+				:add="accept === 'all'"
+				:options="selectable"
+				:search="search"
+				icon="tag"
 				@create="addString($event)"
 				@select="addTag($event)"
 			>
@@ -39,7 +43,7 @@
 					class="k-tags-input-toggle"
 					size="xs"
 					@click.native="$refs.selector.open()"
-					@keydown.native="search"
+					@keydown.native="toggle"
 					@keydown.native.delete="navigate('last')"
 					@keydown.native.left="navigate('last')"
 				/>
@@ -93,6 +97,7 @@ export const props = {
 			type: Array,
 			default: () => []
 		},
+		search: [Boolean, Object],
 		separator: {
 			type: String,
 			default: ","
@@ -115,23 +120,39 @@ export default {
 		};
 	},
 	computed: {
+		draggable() {
+			return this.tags.length > 1;
+		},
 		dragOptions() {
 			return {
 				delay: 1,
 				disabled: !this.draggable,
-				draggable: ".k-tag"
+				draggable: ".k-tag",
+				handle: ".k-tag-text"
 			};
 		},
-		draggable() {
-			return this.tags.length > 1;
+		isFull() {
+			if (!this.max) {
+				return false;
+			}
+
+			return this.tags.length >= this.max;
 		},
-		dropdownOptions() {
+		selectable() {
 			return this.options.filter((option) => {
 				return this.value.includes(option.value) === false;
 			});
 		},
-		skip() {
-			return this.tags.map((tag) => tag.value);
+		showSelector() {
+			if (this.isFull === true) {
+				return false;
+			}
+
+			if (this.accept !== "all" && this.selectable.length === 0) {
+				return false;
+			}
+
+			return true;
 		}
 	},
 	watch: {
@@ -192,10 +213,7 @@ export default {
 				}
 			}
 
-			if (
-				this.index(tag) === -1 &&
-				(!this.max || this.tags.length < this.max)
-			) {
+			if (this.index(tag) === -1 && this.isFull === false) {
 				this.tags.push(tag);
 				this.onInput();
 			}
@@ -205,31 +223,39 @@ export default {
 				component: "k-form-dialog",
 				props: {
 					fields: {
-						tag: {
+						value: {
+							autofocus: true,
+							icon: "tag",
 							label: "Tag",
-							type: "text",
-							icon: "tag"
+							required: true,
+							type: "text"
 						}
 					},
 					submitButton: this.$t("change"),
 					value: {
-						tag: this.$helper.string.unescapeHTML(tag.text)
+						value: tag.value
 					}
 				},
 				on: {
 					submit: (value) => {
 						const index = this.index(tag);
-						const updated = this.toValue(value);
+						const updated = this.toValue(value.value);
+
+						if (!updated) {
+							this.$panel.notification.error("The tag is not allowed");
+							return;
+						}
 
 						this.$set(this.tags, index, updated);
 						this.onInput();
 						this.$panel.dialog.close();
+						this.navigate(index);
 					}
 				}
 			});
 		},
 		focus() {
-			this.$refs.toggle.focus();
+			this.$refs.toggle?.focus();
 		},
 		get(position) {
 			let nextIndex = null;
@@ -320,14 +346,7 @@ export default {
 				this.selectTag(next.tag);
 			} else {
 				this.selectTag(null);
-				this.$refs.toggle.focus();
-			}
-		},
-		search(event) {
-			const char = String.fromCharCode(event.keyCode);
-
-			if (char.match(/(\w)/g)) {
-				this.$refs.selector.open();
+				this.focus();
 			}
 		},
 		select() {
@@ -335,6 +354,17 @@ export default {
 		},
 		selectTag(tag) {
 			this.selected = tag;
+		},
+		toggle(event) {
+			if (event.metaKey || event.altKey || event.ctrlKey) {
+				return false;
+			}
+
+			const char = String.fromCharCode(event.keyCode);
+
+			if (char.match(/(\w)/g)) {
+				this.$refs.selector.open();
+			}
 		},
 		/**
 		 * @param {String,Object} value
@@ -412,8 +442,9 @@ export default {
 	--button-rounded: var(--rounded-sm);
 	--button-color-icon: var(--color-gray-600);
 	opacity: 0;
+	transition: opacity 0.3s;
 }
-.k-tags-input:focus-within .k-tags-input-toggle {
+.k-tags-input:is(:hover, :focus-within) .k-tags-input-toggle {
 	opacity: 1;
 }
 .k-tags-input .k-tags-input-toggle:is(:focus, :hover) {
@@ -421,10 +452,12 @@ export default {
 }
 
 /* Field Theme */
-.k-input[data-theme="field"][data-type="tags"] .k-tags-input {
+.k-input[data-theme="field"]:is([data-type="multiselect"], [data-type="tags"])
+	.k-tags-input {
 	display: flex;
 	align-items: center;
 	gap: 0.25rem;
 	padding: 0.25rem;
+	min-height: calc(var(--field-input-height) - 0.25rem);
 }
 </style>

@@ -353,27 +353,6 @@ export default {
 	inset-inline-end: 0;
 }
 
-/* Multiselect */
-.k-input[data-theme="field"][data-type="multiselect"] {
-	position: relative;
-}
-.k-input[data-theme="field"][data-type="multiselect"] .k-multiselect-input {
-	padding: 0.25rem 2rem 0 0.25rem;
-	min-height: 2.25rem;
-}
-.k-input[data-theme="field"][data-type="multiselect"] .k-tag {
-	margin-inline-end: 0.25rem;
-	margin-bottom: 0.25rem;
-	height: 1.75rem;
-	font-size: var(--text-sm);
-}
-.k-input[data-theme="field"][data-type="multiselect"] .k-input-icon {
-	position: absolute;
-	inset-block: 0;
-	inset-inline-end: 0;
-	pointer-events: none;
-}
-
 /* Textarea */
 .k-input[data-theme="field"][data-type="textarea"] .k-textarea-input-native {
 	padding: 0.25rem var(--field-input-padding);

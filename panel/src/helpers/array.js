@@ -64,7 +64,7 @@ Array.wrap = function (array) {
  * @returns {Array}
  */
 export const search = (array, query, options = {}) => {
-	if (query.length < 1) {
+	if ((query ?? "").length <= (options.min ?? 0)) {
 		return array;
 	}
 

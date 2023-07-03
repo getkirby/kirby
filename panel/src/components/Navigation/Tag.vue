@@ -1,8 +1,8 @@
 <template>
-	<span
+	<button
 		ref="button"
 		class="k-tag"
-		tabindex="0"
+		type="button"
 		@keydown.delete.prevent="remove"
 	>
 		<span class="k-tag-text"><slot /></span>
@@ -12,7 +12,7 @@
 			icon="cancel-small"
 			@click.native="remove"
 		/>
-	</span>
+	</button>
 </template>
 
 <script>

@@ -1,79 +1,89 @@
 <template>
 	<nav class="k-selector" role="search">
-		<input
-			ref="input"
-			:placeholder="inputPlaceholder + ' …'"
-			:value="query"
-			class="k-selector-input"
-			type="search"
-			@input="query = $event.target.value"
-			@keydown.down.prevent="down"
-			@keydown.escape.prevent="escape()"
-			@keydown.enter.prevent="select(selected)"
-			@keydown.tab="tab"
-			@keydown.up.prevent="up"
-		/>
+		<header class="k-selector-header">
+			<input
+				ref="input"
+				:placeholder="inputPlaceholder + ' …'"
+				:value="query"
+				class="k-selector-input"
+				type="search"
+				@click="pick(-1)"
+				@input="filter($event.target.value)"
+				@keydown.down.prevent="down"
+				@keydown.escape.prevent="escape()"
+				@keydown.enter.prevent="select(selected)"
+				@keydown.tab="tab"
+				@keydown.up.prevent="up"
+			/>
+		</header>
 
-		<template v-if="results.length || showCreateButton">
-			<div class="k-selector-body">
-				<div class="k-selector-results">
-					<template v-if="results.length">
-						<k-button
-							v-for="(result, key) in results"
-							:key="key"
-							:current="selected === key"
-							:disabled="result.disabled"
-							:icon="result.icon"
-							class="k-selector-button"
-							@focus.native="select(key)"
-						>
-							<span v-html="result.highlighted ?? result.text" />
-						</k-button>
-					</template>
-					<template v-else-if="query?.length && options.length">
-						<p class="k-selector-empty">No matches</p>
-					</template>
+		<div class="k-selector-body" v-if="options.length">
+			<template v-if="filtered.length">
+				<div ref="results" class="k-selector-results">
+					<k-button
+						v-for="(option, key) in filtered"
+						:key="key"
+						:current="selected === key"
+						:disabled="option.disabled"
+						:icon="option.icon ?? icon"
+						class="k-selector-button"
+						@focus.native="select(key)"
+					>
+						<span v-html="option.highlighted ?? option.text" />
+					</k-button>
 				</div>
-			</div>
+			</template>
+			<template v-else>
+				<p class="k-selector-empty">{{ empty }}</p>
+			</template>
+		</div>
 
-			<footer v-if="showCreateButton" class="k-selector-footer">
-				<k-button
-					:current="selected === results.length"
-					icon="add"
-					class="k-selector-button"
-					@focus.native="select(results.length)"
-				>
-					{{ $t("add") }}: <span class="k-selector-preview">{{ query }}</span>
-				</k-button>
-			</footer>
-		</template>
+		<footer v-if="showCreateButton" class="k-selector-footer">
+			<k-button
+				:current="selected === filtered.length"
+				icon="add"
+				class="k-selector-button"
+				@focus.native="select(filtered.length)"
+			>
+				{{ $t("add") }}: <span class="k-selector-preview">{{ query }}</span>
+			</k-button>
+		</footer>
 	</nav>
 </template>
 
 <script>
-import Search from "@/mixins/search.js";
-
-export default {
-	mixins: [Search],
+export const props = {
 	props: {
 		add: {
 			default: true,
 			type: Boolean
 		},
-		delay: {
-			default: 0
+		icon: {
+			type: String
 		},
-		options: Array,
+		options: {
+			default() {
+				return [];
+			},
+			type: Array
+		},
 		placeholder: {
 			default() {
 				return this.$t("search");
 			}
-		}
-	},
+		},
+		search: [Object, Boolean]
+	}
+};
+
+export default {
+	mixins: [props],
+	emits: ["create", "escape", "pick", "select"],
 	data() {
 		return {
-			selected: -1,
-			results: this.options
+			filtered: this.options,
+			query: null,
+			selected: -1
 		};
 	},
 	watch: {
@@ -84,9 +94,12 @@ export default {
 		}
 	},
 	computed: {
+		empty() {
+			return this.$t("search.results.none");
+		},
 		inputPlaceholder() {
 			if (this.options.length === 0) {
-				return this.$t("add");
+				return "Create a new option";
 			}
 
 			return this.placeholder;
@@ -96,18 +109,19 @@ export default {
 		 * @returns {RegExp}
 		 */
 		regex() {
-			return new RegExp(`(${RegExp.escape(this.query)})`, "ig");
+			return new RegExp(`(${RegExp.escape(this.query ?? "")})`, "ig");
 		},
 		showCreateButton() {
 			if (this.add === false) {
 				return false;
 			}
 
-			if (!this.query?.length) {
+			// don't show the button if the query is empty
+			if ((this.query ?? "").trim().length === 0) {
 				return false;
 			}
 
-			const matches = this.results.filter((result) => {
+			const matches = this.filtered.filter((result) => {
 				return result.text === this.query || result.value === this.query;
 			});
 
@@ -115,22 +129,51 @@ export default {
 		}
 	},
 	methods: {
+		create(value) {
+			value = value.trim();
+
+			if (value.length === 0) {
+				return;
+			}
+
+			this.$emit("create", value);
+		},
 		down() {
 			this.pick(this.selected + 1);
 		},
 		escape() {
-			this.selected = -1;
-			this.query = "";
+			this.reset();
 			this.focus();
 			this.$emit("escape");
 		},
+		filter(query) {
+			this.query = query;
+
+			this.selected = -1;
+			this.filtered = this.$helper.array.search(this.options, this.query, {
+				field: "text"
+			});
+
+			// highlight queries in the text
+			this.filtered = this.filtered.map((result) => {
+				result.highlighted = this.toHighlightedString(result.text);
+				return result;
+			});
+
+			// select the create button if there are no results
+			if (this.showCreateButton === true && this.filtered.length === 0) {
+				this.selected = this.filtered.length;
+			} else if (this.filtered.length) {
+				this.selected = 0;
+			}
+		},
 		focus() {
-			this.$refs.input.focus();
+			this.$refs.input?.focus();
 		},
 		pick(index) {
 			const max = this.showCreateButton
-				? this.results.length
-				: this.results.length - 1;
+				? this.filtered.length
+				: this.filtered.length - 1;
 			const min = -1;
 
 			if (index > max || index < min) {
@@ -138,42 +181,34 @@ export default {
 			}
 
 			this.selected = index;
+			this.$emit("pick", index);
 			this.focus();
+
+			// scroll the results list to the selected button
+			this.$nextTick(() => {
+				this.$refs.results?.querySelector("[aria-current]")?.scrollIntoView({
+					block: "nearest"
+				});
+			});
 		},
-		async search(query) {
-			if (query !== undefined) {
-				this.query = query;
-			}
-
-			this.selected = -1;
-			this.results = this.$helper.array.search(this.options, this.query, {
-				field: "text",
-				limit: this.limit
-			});
-
-			// highlight queries in the text
-			this.results = this.results.map((result) => {
-				result.highlighted = this.toHighlightedString(result.text);
-				return result;
-			});
-
-			// select the create button if there are no results
-			if (this.showCreateButton === true && this.results.length === 0) {
-				this.selected = this.results.length;
-			} else if (this.results.length) {
-				this.selected = 0;
-			}
+		reset() {
+			this.filter("");
 		},
 		select(index) {
 			this.pick(index);
 
-			const value = this.results[this.selected];
+			const value = this.filtered[this.selected];
 
 			if (value) {
 				this.$emit("select", value);
 			} else if (this.showCreateButton) {
-				this.$emit("create", this.query);
+				this.create(this.query);
+			} else {
+				return;
 			}
+
+			// reset the search query
+			this.query = null;
 		},
 		tab(event) {
 			event.preventDefault();
@@ -210,6 +245,7 @@ export default {
 .k-selector:has([aria-current]) .k-selector-input:focus {
 	outline: 0;
 }
+
 .k-selector-empty {
 	height: var(--height-sm);
 	display: flex;

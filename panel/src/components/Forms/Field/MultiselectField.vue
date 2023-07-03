@@ -5,7 +5,6 @@
 		:counter="counterOptions"
 		class="k-multiselect-field"
 		@blur="blur"
-		@keydown.native.enter.prevent="focus"
 	>
 		<k-input
 			v-bind="$props"
@@ -21,7 +20,7 @@
 <script>
 import { props as Field } from "../Field.vue";
 import { props as Input } from "../Input.vue";
-import { props as MultiselectInput } from "../Input/MultiselectInput.vue";
+import { props as MultiselectInput } from "../Input/TagsInput.vue";
 import counter from "@/mixins/forms/counter.js";
 
 /**
