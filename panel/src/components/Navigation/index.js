@@ -10,6 +10,7 @@ import PageTree from "./PageTree.vue";
 import Pagination from "./Pagination.vue";
 import PrevNext from "./PrevNext.vue";
 import Tag from "./Tag.vue";
+import Tags from "./Tags.vue";
 import Tree from "./Tree.vue";
 
 /** @deprecated @todo deprecated.buttons.components - remove @ 5.0 */
@@ -32,6 +33,7 @@ export default {
 		app.component("k-pagination", Pagination);
 		app.component("k-prev-next", PrevNext);
 		app.component("k-tag", Tag);
+		app.component("k-tags", Tags);
 		app.component("k-tree", Tree);
 
 		/** @deprecated @todo deprecated.buttons.components - remove @ 5.0 */

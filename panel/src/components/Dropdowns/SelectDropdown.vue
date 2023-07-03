@@ -12,9 +12,9 @@
 			<k-selector
 				ref="selector"
 				v-bind="$props"
-				@create="$emit('create', $event)"
+				@create="create"
 				@escape="$refs.dropdown.close()"
-				@select="$emit('select', $event)"
+				@select="select"
 			/>
 		</k-dropdown-content>
 	</k-dropdown>
@@ -33,11 +33,19 @@ export default {
 		close() {
 			this.$refs.dropdown.close();
 		},
+		create(value) {
+			this.$emit("create", value);
+			this.close();
+		},
 		open() {
 			this.$refs.dropdown.open();
 		},
 		reset() {
 			this.$refs.selector.reset();
+		},
+		select(value) {
+			this.$emit("select", value);
+			this.close();
 		},
 		toggle() {
 			this.$refs.dropdown.toggle();
@@ -70,13 +78,12 @@ export default {
 	padding: var(--dropdown-padding);
 }
 .k-select-dropdown .k-selector-body {
-	max-height: calc((var(--height-sm) * 10) + var(--spacing-2));
+	max-height: calc((var(--height-sm) * 10) + calc(var(--dropdown-padding) * 2));
 	overflow-y: auto;
-	padding-block: var(--spacing-1);
-	padding-inline: var(--dropdown-padding);
+	padding: var(--dropdown-padding);
 	overscroll-behavior: contain;
-	scroll-padding-top: var(--spacing-1);
-	scroll-padding-bottom: var(--spacing-1);
+	scroll-padding-top: var(--dropdown-padding);
+	scroll-padding-bottom: var(--dropdown-padding);
 }
 .k-select-dropdown .k-selector-button {
 	gap: 0.75rem;

@@ -28,11 +28,6 @@ import counter from "@/mixins/forms/counter.js";
 export default {
 	mixins: [Field, Input, TagsInput, counter],
 	inheritAttrs: false,
-	data() {
-		return {
-			selected: null
-		};
-	},
 	methods: {
 		focus() {
 			this.$refs.input.focus();

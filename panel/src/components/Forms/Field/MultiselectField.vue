@@ -35,13 +35,7 @@ export default {
 			default: "angle-down"
 		}
 	},
-	mounted() {
-		this.$refs.input.$el.setAttribute("tabindex", 0);
-	},
 	methods: {
-		blur(e) {
-			this.$refs.input.blur(e);
-		},
 		focus() {
 			this.$refs.input.focus();
 		}

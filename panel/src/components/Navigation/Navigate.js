@@ -12,16 +12,6 @@ export default class Navigate extends HTMLElement {
 		}
 	}
 
-	canGotoNext(element) {
-		return (
-			!this.isInput(element) || element.selectionEnd === element.value.length
-		);
-	}
-
-	canGotoPrev(element) {
-		return !this.isInput(element) || element.selectionStart === 0;
-	}
-
 	connectedCallback() {
 		this.addEventListener("keydown", this.keydown);
 		this.keys = this.handlers(this.getAttribute("axis"));
@@ -34,14 +24,13 @@ export default class Navigate extends HTMLElement {
 	elements() {
 		return Array.from(
 			this.querySelectorAll(
-				this.getAttribute("select") || ":where(button, a, input):not(:disabled)"
+				this.getAttribute("select") || ":where(button, a):not(:disabled)"
 			)
 		);
 	}
 
 	focus(index = 0, event) {
-		event?.preventDefault();
-		this.elements()[index]?.focus();
+		this.move(index, event);
 	}
 
 	handlers(axis) {
@@ -66,40 +55,47 @@ export default class Navigate extends HTMLElement {
 		}
 	}
 
-	isInput(element) {
-		return element.matches("input");
-	}
-
 	keydown(event) {
 		if (this.disabled) {
 			return false;
 		}
 
-		this.keys[event.key]?.apply(this, [event.target, event]);
+		this.keys[event.key]?.apply(this, [event]);
 	}
 
-	move(element, step, event) {
+	move(next = 0, event) {
 		const elements = this.elements();
-		const index = elements.indexOf(element);
+		const index = elements.indexOf(document.activeElement);
 
 		if (index === -1) {
 			return false;
 		}
 
+		switch (next) {
+			case "first":
+				next = 0;
+				break;
+			case "next":
+				next = index + 1;
+				break;
+			case "last":
+				next = elements.length - 1;
+				break;
+			case "prev":
+				next = index - 1;
+				break;
+		}
+
 		event?.preventDefault();
 
-		elements[index + step]?.focus();
+		elements[next]?.focus();
 	}
 
-	next(element, event) {
-		if (this.canGotoNext(element)) {
-			this.move(element, 1, event);
-		}
+	next(event) {
+		this.move("next", event);
 	}
 
-	prev(element, event) {
-		if (this.canGotoPrev(element)) {
-			this.move(element, -1, event);
-		}
+	prev(event) {
+		this.move("prev", event);
 	}
 }

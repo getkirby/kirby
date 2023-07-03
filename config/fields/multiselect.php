@@ -8,7 +8,7 @@ return [
 		/**
 		 * Unset inherited props
 		 */
-		'accept' => null,
+		'accept' => 'options',
 		/**
 		 * Custom icon to replace the arrow down.
 		 */
