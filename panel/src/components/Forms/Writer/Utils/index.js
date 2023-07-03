@@ -2,8 +2,10 @@
 import {
 	chainCommands,
 	exitCode,
+	lift,
 	setBlockType,
-	toggleMark
+	toggleMark,
+	wrapIn
 } from "prosemirror-commands";
 
 // prosemirror-inputrules
@@ -22,6 +24,7 @@ import {
 
 // custom
 import getMarkAttrs from "./getMarkAttrs";
+import getNodeAttrs from "./getNodeAttrs";
 import markInputRule from "./markInputRule";
 import markIsActive from "./markIsActive";
 import markPasteRule from "./markPasteRule";
@@ -32,15 +35,17 @@ import removeMark from "./removeMark";
 import pasteRule from "./pasteRule";
 import toggleBlockType from "./toggleBlockType";
 import toggleList from "./toggleList";
+import toggleWrap from "./toggleWrap";
 import updateMark from "./updateMark";
-import getNodeAttrs from "./getNodeAttrs";
 
 export default {
 	// prosemirror
 	chainCommands,
 	exitCode,
+	lift,
 	setBlockType,
 	toggleMark,
+	wrapIn,
 
 	// prosemirror-inputrules
 	wrappingInputRule,
@@ -66,5 +71,6 @@ export default {
 	removeMark,
 	toggleBlockType,
 	toggleList,
+	toggleWrap,
 	updateMark
 };
