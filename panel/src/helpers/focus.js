@@ -16,7 +16,11 @@ export default function focus(element, field) {
 
 	// prevent setting focus if an item inside element (e.g. the dialog)
 	// already holds the focus currently
-	if (!field && element.contains(document.activeElement)) {
+	if (
+		!field &&
+		element.contains(document.activeElement) &&
+		element !== document.activeElement
+	) {
 		return false;
 	}
 
