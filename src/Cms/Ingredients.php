@@ -25,8 +25,6 @@ class Ingredients
 
 	/**
 	 * Creates a new ingredient collection
-	 *
-	 * @param array $ingredients
 	 */
 	public function __construct(array $ingredients)
 	{
@@ -35,20 +33,15 @@ class Ingredients
 
 	/**
 	 * Magic getter for single ingredients
-	 *
-	 * @param string $method
-	 * @param array|null $args
-	 * @return mixed
 	 */
-	public function __call(string $method, array $args = null)
+	public function __call(string $method, array $args = null): mixed
 	{
 		return $this->ingredients[$method] ?? null;
 	}
 
 	/**
 	 * Improved `var_dump` output
-	 *
-	 * @return array
+	 * @codeCoverageIgnore
 	 */
 	public function __debugInfo(): array
 	{
@@ -57,9 +50,6 @@ class Ingredients
 
 	/**
 	 * Get a single ingredient by key
-	 *
-	 * @param string $key
-	 * @return mixed
 	 */
 	public function __get(string $key)
 	{
@@ -69,12 +59,9 @@ class Ingredients
 	/**
 	 * Resolves all ingredient callbacks
 	 * and creates a plain array
-	 *
 	 * @internal
-	 * @param array $ingredients
-	 * @return static
 	 */
-	public static function bake(array $ingredients)
+	public static function bake(array $ingredients): static
 	{
 		foreach ($ingredients as $name => $ingredient) {
 			if ($ingredient instanceof Closure) {
@@ -87,8 +74,6 @@ class Ingredients
 
 	/**
 	 * Returns all ingredients as plain array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{

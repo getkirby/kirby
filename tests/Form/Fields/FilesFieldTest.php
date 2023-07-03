@@ -32,7 +32,7 @@ class FilesFieldTest extends TestCase
 								'filename' => 'c.jpg'
 							]
 						]
-					],
+					]
 				],
 				'drafts' => [
 					[
@@ -273,5 +273,21 @@ class FilesFieldTest extends TestCase
 		$this->assertSame('a.jpg', $api['data'][0]['id']);
 		$this->assertSame('b.jpg', $api['data'][1]['id']);
 		$this->assertSame('c.jpg', $api['data'][2]['id']);
+	}
+
+	public function testParentModel()
+	{
+		$field = $this->field('files', [
+			'model' => $this->model()
+		]);
+
+		$this->assertSame($this->model(), $field->parentModel());
+
+		$field = $this->field('files', [
+			'model'  => $this->model(),
+			'parent' => 'site'
+		]);
+
+		$this->assertSame($this->app->site(), $field->parentModel());
 	}
 }

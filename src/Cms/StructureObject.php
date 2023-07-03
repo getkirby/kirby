@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\InvalidArgumentException;
+use Kirby\Content\Content;
 
 /**
  * The StructureObject represents each item
@@ -20,45 +20,38 @@ use Kirby\Exception\InvalidArgumentException;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class StructureObject
+class StructureObject extends Item
 {
-	use HasSiblings;
+	use HasMethods;
 
-	/**
-	 * The content
-	 */
-	protected Content|array $content;
-	protected string $id;
-	protected ModelWithContent|null $parent;
+	public const ITEMS_CLASS = Structure::class;
 
-	/**
-	 * The parent Structure collection
-	 */
-	protected Structure|null $structure;
+	protected Content $content;
 
 	/**
 	 * Creates a new StructureObject with the given props
-	 *
-	 * @param array $props
 	 */
-	public function __construct(array $props)
+	public function __construct(array $params = [])
 	{
-		if (isset($props['id']) === false) {
-			throw new InvalidArgumentException('The property "id" is required');
-		}
+		parent::__construct($params);
 
-		$this->id        = $props['id'];
-		$this->parent    = $props['parent'] ?? App::instance()->site();
-		$this->structure = $props['structure'] ?? null;
-		$this->content   = $props['content'] ?? [];
+		$this->content = new Content(
+			$params['content'] ?? $params['params'] ?? [],
+			$this->parent
+		);
 	}
 
 	/**
 	 * Modified getter to also return fields
 	 * from the object's content
 	 */
-	public function __call(string $method, array $arguments = []): mixed
+	public function __call(string $method, array $args = []): mixed
 	{
+		// structure object methods
+		if ($this->hasMethod($method) === true) {
+			return $this->callMethod($method, $args);
+		}
+
 		// public property access
 		if (isset($this->$method) === true) {
 			return $this->$method;
@@ -72,67 +65,21 @@ class StructureObject
 	 */
 	public function content(): Content
 	{
-		if ($this->content instanceof Content) {
-			return $this->content;
-		}
-
-		if (is_array($this->content) !== true) {
-			$this->content = [];
-		}
-
-		return $this->content = new Content($this->content, $this->parent());
-	}
-
-	/**
-	 * Returns the required id
-	 */
-	public function id(): string
-	{
-		return $this->id;
-	}
-
-	/**
-	 * Compares the current object with the given structure object
-	 */
-	public function is(mixed $structure): bool
-	{
-		if ($structure instanceof self === false) {
-			return false;
-		}
-
-		return $this === $structure;
-	}
-
-	/**
-	 * Returns the parent object
-	 */
-	public function parent(): ModelWithContent|null
-	{
-		return $this->parent;
-	}
-
-	/**
-	 * Returns the parent Structure collection as siblings
-	 */
-	protected function siblingsCollection(): Structure|null
-	{
-		return $this->structure;
+		return $this->content;
 	}
 
 	/**
 	 * Converts all fields in the object to a
 	 * plain associative array. The id is
-	 * injected into the array afterwards
+	 * injected from the parent into the array
 	 * to make sure it's always present and
-	 * not overloaded in the content.
+	 * not overloaded by the content.
 	 */
 	public function toArray(): array
 	{
-		$array = $this->content()->toArray();
-		$array['id'] = $this->id();
-
-		ksort($array);
-
-		return $array;
+		return array_merge(
+			$this->content()->toArray(),
+			parent::toArray()
+		);
 	}
 }

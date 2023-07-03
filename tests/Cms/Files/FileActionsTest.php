@@ -103,17 +103,19 @@ class FileActionsTest extends TestCase
 		// create an empty dummy file
 		F::write($file->root(), '');
 		// ...and an empty content file for it
-		F::write($file->contentFile(), '');
+		F::write($file->storage()->contentFile('published', 'default'), '');
 
 		$this->assertFileExists($file->root());
-		$this->assertFileExists($file->contentFile());
+		$this->assertFileExists($file->storage()->contentFile('published', 'default'));
 
 		$result = $file->changeName('test');
 
-		$this->assertNotEquals($file->root(), $result->root());
+		$this->assertNotSame($file->root(), $result->root());
 		$this->assertSame('test.csv', $result->filename());
 		$this->assertFileExists($result->root());
-		$this->assertFileExists($result->contentFile());
+		$this->assertFileExists($result->storage()->contentFile('published', 'default'));
+		$this->assertFileDoesNotExist($file->root());
+		$this->assertFileDoesNotExist($file->storage()->contentFile('published', 'default'));
 	}
 
 	public function fileProviderMultiLang()
@@ -137,20 +139,20 @@ class FileActionsTest extends TestCase
 		// create an empty dummy file
 		F::write($file->root(), '');
 		// ...and empty content files for it
-		F::write($file->contentFile('en'), '');
-		F::write($file->contentFile('de'), '');
+		F::write($file->storage()->contentFile('published', 'en'), '');
+		F::write($file->storage()->contentFile('published', 'de'), '');
 
 		$this->assertFileExists($file->root());
-		$this->assertFileExists($file->contentFile('en'));
-		$this->assertFileExists($file->contentFile('de'));
+		$this->assertFileExists($file->storage()->contentFile('published', 'en'));
+		$this->assertFileExists($file->storage()->contentFile('published', 'de'));
 
 		$result = $file->changeName('test');
 
 		$this->assertNotEquals($file->root(), $result->root());
 		$this->assertSame('test.csv', $result->filename());
 		$this->assertFileExists($result->root());
-		$this->assertFileExists($result->contentFile('en'));
-		$this->assertFileExists($result->contentFile('de'));
+		$this->assertFileExists($result->storage()->contentFile('published', 'en'));
+		$this->assertFileExists($result->storage()->contentFile('published', 'de'));
 	}
 
 	public function testChangeTemplate()
@@ -372,10 +374,9 @@ class FileActionsTest extends TestCase
 		$this->assertNull($modified->caption()->value());
 		$this->assertSame('Das ist der Text', $modified->text()->value());
 
-
-		$this->assertFileExists($modified->contentFile('en'));
-		$this->assertFileExists($modified->contentFile('de'));
-		$this->assertFileDoesNotExist($modified->contentFile('fr'));
+		$this->assertFileExists($modified->storage()->contentFile('published', 'en'));
+		$this->assertFileExists($modified->storage()->contentFile('published', 'de'));
+		$this->assertFileDoesNotExist($modified->storage()->contentFile('published', 'fr'));
 	}
 
 	public function testChangeTemplateDefault()
@@ -721,17 +722,17 @@ class FileActionsTest extends TestCase
 		// create an empty dummy file
 		F::write($file->root(), '');
 		// ...and an empty content file for it
-		F::write($file->contentFile(), '');
+		F::write($file->storage()->contentFile('published', 'default'), '');
 
 		$this->assertFileExists($file->root());
-		$this->assertFileExists($file->contentFile());
+		$this->assertFileExists($file->storage()->contentFile('published', 'default'));
 
 		$result = $file->delete();
 
 		$this->assertTrue($result);
 
 		$this->assertFileDoesNotExist($file->root());
-		$this->assertFileDoesNotExist($file->contentFile());
+		$this->assertFileDoesNotExist($file->storage()->contentFile('published', 'default'));
 	}
 
 	/**
@@ -841,11 +842,11 @@ class FileActionsTest extends TestCase
 		F::write($file->root(), '');
 
 		$this->assertFileExists($file->root());
-		$this->assertFileDoesNotExist($file->contentFile());
+		$this->assertFileDoesNotExist($file->storage()->contentFile('published', 'default'));
 
 		$file = $file->clone(['content' => ['caption' => 'save']])->save();
 
-		$this->assertFileExists($file->contentFile());
+		$this->assertFileExists($file->storage()->contentFile('published', 'default'));
 	}
 
 	/**

@@ -97,12 +97,8 @@ class Site extends ModelWithContent
 	/**
 	 * Modified getter to also return fields
 	 * from the content
-	 *
-	 * @param string $method
-	 * @param array $arguments
-	 * @return mixed
 	 */
-	public function __call(string $method, array $arguments = [])
+	public function __call(string $method, array $arguments = []): mixed
 	{
 		// public property access
 		if (isset($this->$method) === true) {
@@ -120,8 +116,7 @@ class Site extends ModelWithContent
 
 	/**
 	 * Improved `var_dump` output
-	 *
-	 * @return array
+	 * @codeCoverageIgnore
 	 */
 	public function __debugInfo(): array
 	{
@@ -135,8 +130,6 @@ class Site extends ModelWithContent
 	/**
 	 * Makes it possible to convert the site model
 	 * to a string. Mostly useful for debugging.
-	 *
-	 * @return string
 	 */
 	public function __toString(): string
 	{
@@ -145,10 +138,7 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the url to the api endpoint
-	 *
 	 * @internal
-	 * @param bool $relative
-	 * @return string
 	 */
 	public function apiUrl(bool $relative = false): string
 	{
@@ -161,10 +151,8 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the blueprint object
-	 *
-	 * @return \Kirby\Cms\SiteBlueprint
 	 */
-	public function blueprint()
+	public function blueprint(): SiteBlueprint
 	{
 		if ($this->blueprint instanceof SiteBlueprint) {
 			return $this->blueprint;
@@ -175,10 +163,8 @@ class Site extends ModelWithContent
 
 	/**
 	 * Builds a breadcrumb collection
-	 *
-	 * @return \Kirby\Cms\Pages
 	 */
-	public function breadcrumb()
+	public function breadcrumb(): Pages
 	{
 		// get all parents and flip the order
 		$crumb = $this->page()->parents()->flip();
@@ -194,27 +180,25 @@ class Site extends ModelWithContent
 
 	/**
 	 * Prepares the content for the write method
-	 *
 	 * @internal
-	 * @param array $data
-	 * @param string|null $languageCode
-	 * @return array
 	 */
-	public function contentFileData(array $data, string|null $languageCode = null): array
-	{
-		return A::prepend($data, [
-			'title' => $data['title'] ?? null,
-		]);
+	public function contentFileData(
+		array $data,
+		string|null $languageCode = null
+	): array {
+		return A::prepend($data, ['title' => $data['title'] ?? null]);
 	}
 
 	/**
 	 * Filename for the content file
-	 *
 	 * @internal
-	 * @return string
+	 * @deprecated 4.0.0
+	 * @todo Remove in v5
+	 * @codeCoverageIgnore
 	 */
 	public function contentFileName(): string
 	{
+		Helpers::deprecated('The internal $model->contentFileName() method has been deprecated. Please let us know via a GitHub issue if you need this method and tell us your use case.', 'model-content-file');
 		return 'site';
 	}
 
@@ -228,7 +212,6 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the global error page id
-	 *
 	 * @internal
 	 */
 	public function errorPageId(): string
@@ -254,7 +237,6 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the global home page id
-	 *
 	 * @internal
 	 */
 	public function homePageId(): string
@@ -265,9 +247,7 @@ class Site extends ModelWithContent
 	/**
 	 * Creates an inventory of all files
 	 * and children in the site directory
-	 *
 	 * @internal
-	 * @return array
 	 */
 	public function inventory(): array
 	{
@@ -289,7 +269,6 @@ class Site extends ModelWithContent
 	 * Compares the current object with the given site object
 	 *
 	 * @param mixed $site
-	 * @return bool
 	 */
 	public function is($site): bool
 	{
@@ -302,9 +281,7 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the root to the media folder for the site
-	 *
 	 * @internal
-	 * @return string
 	 */
 	public function mediaRoot(): string
 	{
@@ -313,9 +290,7 @@ class Site extends ModelWithContent
 
 	/**
 	 * The site's base url for any files
-	 *
 	 * @internal
-	 * @return string
 	 */
 	public function mediaUrl(): string
 	{
@@ -326,12 +301,12 @@ class Site extends ModelWithContent
 	 * Gets the last modification date of all pages
 	 * in the content folder.
 	 *
-	 * @param string|null $format
-	 * @param string|null $handler
 	 * @return int|string
 	 */
-	public function modified(string|null $format = null, string|null $handler = null)
-	{
+	public function modified(
+		string|null $format = null,
+		string|null $handler = null
+	) {
 		return Dir::modified(
 			$this->root(),
 			$format,
@@ -370,39 +345,31 @@ class Site extends ModelWithContent
 
 	/**
 	 * Alias for `Site::children()`
-	 *
-	 * @return \Kirby\Cms\Pages
 	 */
-	public function pages()
+	public function pages(): Pages
 	{
 		return $this->children();
 	}
 
 	/**
 	 * Returns the panel info object
-	 *
-	 * @return \Kirby\Panel\Site
 	 */
-	public function panel()
+	public function panel(): Panel
 	{
 		return new Panel($this);
 	}
 
 	/**
 	 * Returns the permissions object for this site
-	 *
-	 * @return \Kirby\Cms\SitePermissions
 	 */
-	public function permissions()
+	public function permissions(): SitePermissions
 	{
 		return new SitePermissions($this);
 	}
 
 	/**
 	 * Preview Url
-	 *
 	 * @internal
-	 * @return string|null
 	 */
 	public function previewUrl(): string|null
 	{
@@ -423,8 +390,6 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the absolute path to the content directory
-	 *
-	 * @return string
 	 */
 	public function root(): string
 	{
@@ -435,10 +400,8 @@ class Site extends ModelWithContent
 	 * Returns the SiteRules class instance
 	 * which is being used in various methods
 	 * to check for valid actions and input.
-	 *
-	 * @return \Kirby\Cms\SiteRules
 	 */
-	protected function rules()
+	protected function rules(): SiteRules
 	{
 		return new SiteRules();
 	}
@@ -446,7 +409,6 @@ class Site extends ModelWithContent
 	/**
 	 * Search all pages in the site
 	 *
-	 * @param string|null $query
 	 * @param array $params
 	 * @return \Kirby\Cms\Pages
 	 */
@@ -473,8 +435,6 @@ class Site extends ModelWithContent
 	/**
 	 * Converts the most important site
 	 * properties to an array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
@@ -491,9 +451,6 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the Url
-	 *
-	 * @param string|null $language
-	 * @return string
 	 */
 	public function url(string|null $language = null): string
 	{
@@ -506,14 +463,12 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the translated url
-	 *
 	 * @internal
-	 * @param string|null $languageCode
-	 * @param array|null $options
-	 * @return string
 	 */
-	public function urlForLanguage(string|null $languageCode = null, array|null $options = null): string
-	{
+	public function urlForLanguage(
+		string|null $languageCode = null,
+		array|null $options = null
+	): string {
 		if ($language = $this->kirby()->language($languageCode)) {
 			return $language->url();
 		}
@@ -528,7 +483,6 @@ class Site extends ModelWithContent
 	 *
 	 * @internal
 	 * @param string|\Kirby\Cms\Page $page
-	 * @param string|null $languageCode
 	 * @return \Kirby\Cms\Page
 	 */
 	public function visit($page, string|null $languageCode = null)
@@ -558,7 +512,6 @@ class Site extends ModelWithContent
 	 * This is mainly used to auto-update the cache
 	 *
 	 * @param mixed $time
-	 * @return bool
 	 */
 	public function wasModifiedAfter($time): bool
 	{

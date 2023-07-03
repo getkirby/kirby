@@ -1,9 +1,9 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Content;
 
 use Closure;
-use Kirby\Exception\InvalidArgumentException;
+use Kirby\Cms\ModelWithContent;
 
 /**
  * Every field in a Kirby content text file
@@ -19,7 +19,7 @@ use Kirby\Exception\InvalidArgumentException;
  * $page->myField()->lower();
  * ```
  *
- * @package   Kirby Cms
+ * @package   Kirby Content
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
@@ -91,6 +91,7 @@ class Field
 
 	/**
 	 * Simplifies the var_dump result
+	 * @codeCoverageIgnore
 	 *
 	 * @see Field::toArray
 	 */
@@ -200,8 +201,6 @@ class Field
 	 * Returns the field content. If a new value is passed,
 	 * the modified field will be returned. Otherwise it
 	 * will return the field value.
-	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public function value(string|Closure $value = null): mixed
 	{
@@ -209,15 +208,12 @@ class Field
 			return $this->value;
 		}
 
-		$value = match (true) {
-			is_scalar($value)   => (string)$value,
-			is_callable($value) => (string)$value->call($this, $this->value),
-			default
-			=> throw new InvalidArgumentException('Invalid field value type: ' . gettype($value))
-		};
+		if (is_callable($value) === true) {
+			$value = $value->call($this, $this->value);
+		}
 
 		$clone = clone $this;
-		$clone->value = $value;
+		$clone->value = (string)$value;
 
 		return $clone;
 	}

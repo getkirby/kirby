@@ -79,7 +79,10 @@ class System
 
 		switch ($folder) {
 			case 'content':
-				return $url . '/' . basename($this->app->site()->contentFile());
+				return $url . '/' . basename($this->app->site()->storage()->contentFile(
+					'published',
+					'default'
+				));
 			case 'git':
 				return $url . '/config';
 			case 'kirby':
@@ -607,6 +610,7 @@ class System
 
 	/**
 	 * Improved `var_dump` output
+	 * @codeCoverageIgnore
 	 */
 	public function __debugInfo(): array
 	{

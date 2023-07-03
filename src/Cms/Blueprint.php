@@ -36,12 +36,8 @@ class Blueprint
 
 	/**
 	 * Magic getter/caller for any blueprint prop
-	 *
-	 * @param string $key
-	 * @param array|null $arguments
-	 * @return mixed
 	 */
-	public function __call(string $key, array $arguments = null)
+	public function __call(string $key, array $arguments = null): mixed
 	{
 		return $this->props[$key] ?? null;
 	}
@@ -49,7 +45,6 @@ class Blueprint
 	/**
 	 * Creates a new blueprint object with the given props
 	 *
-	 * @param array $props
 	 * @throws \Kirby\Exception\InvalidArgumentException If the blueprint model is missing
 	 */
 	public function __construct(array $props)
@@ -94,7 +89,7 @@ class Blueprint
 	/**
 	 * Improved `var_dump` output
 	 *
-	 * @return array
+	 * @codeCoverageIgnore
 	 */
 	public function __debugInfo(): array
 	{
@@ -104,13 +99,11 @@ class Blueprint
 	/**
 	 * Converts all column definitions, that
 	 * are not wrapped in a tab, into a generic tab
-	 *
-	 * @param string $tabName
-	 * @param array $props
-	 * @return array
 	 */
-	protected function convertColumnsToTabs(string $tabName, array $props): array
-	{
+	protected function convertColumnsToTabs(
+		string $tabName,
+		array $props
+	): array {
 		if (isset($props['columns']) === false) {
 			return $props;
 		}
@@ -131,13 +124,11 @@ class Blueprint
 	 * Converts all field definitions, that are not
 	 * wrapped in a fields section into a generic
 	 * fields section.
-	 *
-	 * @param string $tabName
-	 * @param array $props
-	 * @return array
 	 */
-	protected function convertFieldsToSections(string $tabName, array $props): array
-	{
+	protected function convertFieldsToSections(
+		string $tabName,
+		array $props
+	): array {
 		if (isset($props['fields']) === false) {
 			return $props;
 		}
@@ -158,13 +149,11 @@ class Blueprint
 	/**
 	 * Converts all sections that are not wrapped in
 	 * columns, into a single generic column.
-	 *
-	 * @param string $tabName
-	 * @param array $props
-	 * @return array
 	 */
-	protected function convertSectionsToColumns(string $tabName, array $props): array
-	{
+	protected function convertSectionsToColumns(
+		string $tabName,
+		array $props
+	): array {
 		if (isset($props['sections']) === false) {
 			return $props;
 		}
@@ -188,7 +177,6 @@ class Blueprint
 	 * props is just a string
 	 *
 	 * @param array|string $props
-	 * @return array
 	 */
 	public static function extend($props): array
 	{
@@ -246,9 +234,6 @@ class Blueprint
 
 	/**
 	 * Returns a single field definition by name
-	 *
-	 * @param string $name
-	 * @return array|null
 	 */
 	public function field(string $name): array|null
 	{
@@ -257,8 +242,6 @@ class Blueprint
 
 	/**
 	 * Returns all field definitions
-	 *
-	 * @return array
 	 */
 	public function fields(): array
 	{
@@ -268,8 +251,6 @@ class Blueprint
 	/**
 	 * Find a blueprint by name
 	 *
-	 * @param string $name
-	 * @return array
 	 * @throws \Kirby\Exception\NotFoundException If the blueprint cannot be found
 	 */
 	public static function find(string $name): array
@@ -324,8 +305,6 @@ class Blueprint
 
 	/**
 	 * Checks if this is the default blueprint
-	 *
-	 * @return bool
 	 */
 	public function isDefault(): bool
 	{
@@ -361,8 +340,6 @@ class Blueprint
 
 	/**
 	 * Returns the blueprint name
-	 *
-	 * @return string
 	 */
 	public function name(): string
 	{
@@ -371,10 +348,6 @@ class Blueprint
 
 	/**
 	 * Normalizes all required props in a column setup
-	 *
-	 * @param string $tabName
-	 * @param array $columns
-	 * @return array
 	 */
 	protected function normalizeColumns(string $tabName, array $columns): array
 	{
@@ -407,10 +380,6 @@ class Blueprint
 		return $columns;
 	}
 
-	/**
-	 * @param array $items
-	 * @return string
-	 */
 	public static function helpList(array $items): string
 	{
 		$md = [];
@@ -426,7 +395,6 @@ class Blueprint
 	 * Normalize field props for a single field
 	 *
 	 * @param array|string $props
-	 * @return array
 	 * @throws \Kirby\Exception\InvalidArgumentException If the filed name is missing or the field type is invalid
 	 */
 	public static function fieldProps($props): array
@@ -478,10 +446,6 @@ class Blueprint
 
 	/**
 	 * Creates an error field with the given error message
-	 *
-	 * @param string $name
-	 * @param string $message
-	 * @return array
 	 */
 	public static function fieldError(string $name, string $message): array
 	{
@@ -497,9 +461,6 @@ class Blueprint
 	/**
 	 * Normalizes all fields and adds automatic labels,
 	 * types and widths.
-	 *
-	 * @param array $fields
-	 * @return array
 	 */
 	public static function fieldsProps($fields): array
 	{
@@ -560,12 +521,12 @@ class Blueprint
 	 * constructor of an extended class, if you want to make use of it.
 	 *
 	 * @param array|true|false|null|string $options
-	 * @param array $defaults
-	 * @param array $aliases
-	 * @return array
 	 */
-	protected function normalizeOptions($options, array $defaults, array $aliases = []): array
-	{
+	protected function normalizeOptions(
+		$options,
+		array $defaults,
+		array $aliases = []
+	): array {
 		// return defaults when options are not defined or set to true
 		if ($options === true) {
 			return $defaults;
@@ -593,13 +554,11 @@ class Blueprint
 
 	/**
 	 * Normalizes all required keys in sections
-	 *
-	 * @param string $tabName
-	 * @param array $sections
-	 * @return array
 	 */
-	protected function normalizeSections(string $tabName, array $sections): array
-	{
+	protected function normalizeSections(
+		string $tabName,
+		array $sections
+	): array {
 		foreach ($sections as $sectionName => $sectionProps) {
 			// unset / remove section if its property is false
 			if ($sectionProps === false) {
@@ -675,9 +634,6 @@ class Blueprint
 
 	/**
 	 * Normalizes all required keys in tabs
-	 *
-	 * @param array $tabs
-	 * @return array
 	 */
 	protected function normalizeTabs($tabs): array
 	{
@@ -715,9 +671,6 @@ class Blueprint
 
 	/**
 	 * Injects a blueprint preset
-	 *
-	 * @param array $props
-	 * @return array
 	 */
 	protected function preset(array $props): array
 	{
@@ -741,7 +694,6 @@ class Blueprint
 	/**
 	 * Returns a single section by name
 	 *
-	 * @param string $name
 	 * @return \Kirby\Cms\Section|null
 	 */
 	public function section(string $name)
@@ -762,8 +714,6 @@ class Blueprint
 
 	/**
 	 * Returns all sections
-	 *
-	 * @return array
 	 */
 	public function sections(): array
 	{
@@ -775,9 +725,6 @@ class Blueprint
 
 	/**
 	 * Returns a single tab by name
-	 *
-	 * @param string|null $name
-	 * @return array|null
 	 */
 	public function tab(string|null $name = null): array|null
 	{
@@ -790,8 +737,6 @@ class Blueprint
 
 	/**
 	 * Returns all tabs
-	 *
-	 * @return array
 	 */
 	public function tabs(): array
 	{
@@ -800,8 +745,6 @@ class Blueprint
 
 	/**
 	 * Returns the blueprint title
-	 *
-	 * @return string
 	 */
 	public function title(): string
 	{
@@ -810,8 +753,6 @@ class Blueprint
 
 	/**
 	 * Converts the blueprint object to a plain array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{

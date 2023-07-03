@@ -416,7 +416,6 @@ class FileTest extends TestCase
 
 	/**
 	 * @covers ::model
-	 * @covers ::setModel
 	 */
 	public function testModel()
 	{
@@ -437,7 +436,6 @@ class FileTest extends TestCase
 
 	/**
 	 * @covers ::model
-	 * @covers ::setModel
 	 */
 	public function testParentModel()
 	{
@@ -460,7 +458,7 @@ class FileTest extends TestCase
 	}
 
 	/**
-	 * @covers ::setModel
+	 * @covers ::__construct
 	 */
 	public function testInvalidModel()
 	{

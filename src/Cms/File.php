@@ -298,18 +298,26 @@ class File extends ModelWithContent
 	 * Returns the directory in which
 	 * the content file is located
 	 * @internal
+	 * @deprecated 4.0.0
+	 * @todo Remove in v5
+	 * @codeCoverageIgnore
 	 */
 	public function contentFileDirectory(): string
 	{
+		Helpers::deprecated('The internal $model->contentFileDirectory() method has been deprecated. Please let us know via a GitHub issue if you need this method and tell us your use case.', 'model-content-file');
 		return dirname($this->root());
 	}
 
 	/**
 	 * Filename for the content file
 	 * @internal
+	 * @deprecated 4.0.0
+	 * @todo Remove in v5
+	 * @codeCoverageIgnore
 	 */
 	public function contentFileName(): string
 	{
+		Helpers::deprecated('The internal $model->contentFileName() method has been deprecated. Please let us know via a GitHub issue if you need this method and tell us your use case.', 'model-content-file');
 		return $this->filename();
 	}
 
@@ -335,10 +343,8 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the parent Files collection
-	 *
-	 * @return \Kirby\Cms\Files
 	 */
-	public function files()
+	public function files(): Files
 	{
 		return $this->siblingsCollection();
 	}
@@ -431,11 +437,13 @@ class File extends ModelWithContent
 	 *
 	 * @param string|\IntlDateFormatter|null $format
 	 * @param string|null $handler date, intl or strftime
-	 * @param string|null $languageCode
 	 * @return mixed
 	 */
-	public function modified($format = null, string $handler = null, string $languageCode = null)
-	{
+	public function modified(
+		$format = null,
+		string $handler = null,
+		string $languageCode = null
+	) {
 		$file     = $this->modifiedFile();
 		$content  = $this->modifiedContent($languageCode);
 		$modified = max($file, $content);
@@ -447,12 +455,10 @@ class File extends ModelWithContent
 	/**
 	 * Timestamp of the last modification
 	 * of the content file
-	 *
-	 * @param string|null $languageCode
 	 */
 	protected function modifiedContent(string $languageCode = null): int
 	{
-		return F::modified($this->contentFile($languageCode));
+		return $this->storage()->modified('published', $languageCode) ?? 0;
 	}
 
 	/**
@@ -466,10 +472,8 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the parent Page object
-	 *
-	 * @return \Kirby\Cms\Page|null
 	 */
-	public function page()
+	public function page(): Page|null
 	{
 		if ($this->parent() instanceof Page) {
 			return $this->parent();
@@ -480,10 +484,8 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the panel info object
-	 *
-	 * @return \Kirby\Panel\File
 	 */
-	public function panel()
+	public function panel(): Panel
 	{
 		return new Panel($this);
 	}
@@ -507,13 +509,14 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns a collection of all parent pages
-	 *
-	 * @return \Kirby\Cms\Pages
 	 */
-	public function parents()
+	public function parents(): Pages
 	{
 		if ($this->parent() instanceof Page) {
-			return $this->parent()->parents()->prepend($this->parent()->id(), $this->parent());
+			return $this->parent()->parents()->prepend(
+				$this->parent()->id(),
+				$this->parent()
+			);
 		}
 
 		return new Pages();
@@ -530,10 +533,8 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the permissions object for this file
-	 *
-	 * @return \Kirby\Cms\FilePermissions
 	 */
-	public function permissions()
+	public function permissions(): FilePermissions
 	{
 		return new FilePermissions($this);
 	}
@@ -549,10 +550,8 @@ class File extends ModelWithContent
 	/**
 	 * Returns the FileRules class to
 	 * validate any important action.
-	 *
-	 * @return \Kirby\Cms\FileRules
 	 */
-	protected function rules()
+	protected function rules(): FileRules
 	{
 		return new FileRules();
 	}
@@ -575,20 +574,16 @@ class File extends ModelWithContent
 	/**
 	 * Returns the parent Files collection
 	 * @internal
-	 *
-	 * @return \Kirby\Cms\Files
 	 */
-	protected function siblingsCollection()
+	protected function siblingsCollection(): Files
 	{
 		return $this->parent()->files();
 	}
 
 	/**
 	 * Returns the parent Site object
-	 *
-	 * @return \Kirby\Cms\Site
 	 */
-	public function site()
+	public function site(): Site
 	{
 		if ($this->parent() instanceof Site) {
 			return $this->parent();
@@ -607,11 +602,8 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns siblings with the same template
-	 *
-	 * @param bool $self
-	 * @return \Kirby\Cms\Files
 	 */
-	public function templateSiblings(bool $self = true)
+	public function templateSiblings(bool $self = true): Files
 	{
 		return $this->siblings($self)->filter('template', $this->template());
 	}

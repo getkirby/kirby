@@ -37,6 +37,8 @@ class Collection extends BaseCollection
 	 * The Kirby Collection class only shows the key to
 	 * avoid huge tress with dump, but for the blueprint
 	 * collections this is really not useful
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function __debugInfo(): array
 	{

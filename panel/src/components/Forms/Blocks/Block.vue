@@ -11,24 +11,14 @@
 		:data-translate="fieldset.translate"
 		class="k-block-container"
 		tabindex="0"
-		@keydown.meta.j.prevent="$emit('merge')"
-		@keydown.ctrl.j.prevent="$emit('merge')"
-		@keydown.meta.up.exact.prevent="$emit('focusPrev')"
-		@keydown.ctrl.up.exact.prevent="$emit('focusPrev')"
-		@keydown.meta.down.exact.prevent="$emit('focusNext')"
-		@keydown.ctrl.down.exact.prevent="$emit('focusNext')"
-		@keydown.meta.alt.down.prevent="$emit('selectDown')"
-		@keydown.ctrl.alt.down.prevent="$emit('selectDown')"
-		@keydown.meta.alt.up.prevent="$emit('selectUp')"
-		@keydown.ctrl.alt.up.prevent="$emit('selectUp')"
-		@keydown.meta.shift.down.prevent="$emit('sortDown')"
-		@keydown.ctrl.shift.down.prevent="$emit('sortDown')"
-		@keydown.meta.shift.up.prevent="$emit('sortUp')"
-		@keydown.ctrl.shift.up.prevent="$emit('sortUp')"
-		@keydown.meta.backspace.prevent="remove"
-		@keydown.ctrl.backspace.prevent="remove"
-		@focus="$emit('focus')"
-		@focusin="onFocusIn"
+		@keydown.ctrl.j.prevent.stop="$emit('merge')"
+		@keydown.ctrl.alt.down.prevent.stop="$emit('selectDown')"
+		@keydown.ctrl.alt.up.prevent.stop="$emit('selectUp')"
+		@keydown.ctrl.shift.down.prevent.stop="$emit('sortDown')"
+		@keydown.ctrl.shift.up.prevent.stop="$emit('sortUp')"
+		@keydown.ctrl.backspace.prevent.stop="remove"
+		@focus.stop="$emit('focus')"
+		@focusin.stop="onFocusIn"
 	>
 		<div :class="className" class="k-block">
 			<component
@@ -125,8 +115,6 @@ export default {
 		"copy",
 		"duplicate",
 		"focus",
-		"focusPrev",
-		"focusNext",
 		"hide",
 		"merge",
 		"open",

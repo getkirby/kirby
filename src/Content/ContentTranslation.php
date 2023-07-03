@@ -1,13 +1,15 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Content;
+
+use Kirby\Cms\ModelWithContent;
 
 /**
  * Each page, file or site can have multiple
  * translated versions of their content,
  * represented by this class
  *
- * @package   Kirby Cms
+ * @package   Kirby Content
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
@@ -39,6 +41,7 @@ class ContentTranslation
 
 	/**
 	 * Improve `var_dump` output
+	 * @codeCoverageIgnore
 	 */
 	public function __debugInfo(): array
 	{
@@ -82,7 +85,16 @@ class ContentTranslation
 	 */
 	public function contentFile(): string
 	{
-		return $this->contentFile = $this->parent->contentFile($this->code, true);
+		// temporary compatibility change (TODO: take this from the parent `ModelVersion` object)
+		$identifier = $this->parent::CLASS_ALIAS === 'page' && $this->parent->isDraft() === true ?
+			'changes' :
+			'published';
+
+		return $this->contentFile = $this->parent->storage()->contentFile(
+			$identifier,
+			$this->code,
+			true
+		);
 	}
 
 	/**

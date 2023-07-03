@@ -849,4 +849,89 @@ class PagesSectionTest extends TestCase
 
 		$this->assertCount(1, $section->pages());
 	}
+
+	public function testTemplatesIgnore()
+	{
+		$parent = new Page([
+			'slug' => 'test',
+			'children' => [
+				['slug' => 'a', 'template' => 'foo'],
+				['slug' => 'b', 'template' => 'bar'],
+				['slug' => 'c', 'template' => 'baz']
+			]
+		]);
+
+		// test 1
+		$section = new Section('pages', [
+			'name'            => 'test',
+			'model'           => $parent,
+			'templatesIgnore' => $expected = [
+				'foo',
+				'baz'
+			]
+		]);
+
+		$this->assertSame($expected, $section->templatesIgnore());
+		$this->assertCount(1, $section->pages());
+
+		// test 2
+		$section = new Section('pages', [
+			'name'            => 'test',
+			'model'           => $parent,
+			'templatesIgnore' => $expected = [
+				'bar'
+			]
+		]);
+
+		$this->assertSame($expected, $section->templatesIgnore());
+		$this->assertCount(2, $section->pages());
+
+		// test 3
+		$section = new Section('pages', [
+			'name'            => 'test',
+			'model'           => $parent,
+			'templatesIgnore' => $expected = [
+				'not-exists'
+			]
+		]);
+
+		$this->assertSame($expected, $section->templatesIgnore());
+		$this->assertCount(3, $section->pages());
+	}
+
+	public function testBlueprints()
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => ['title' => 'Default'],
+				'pages/section-a' => ['title' => 'Section A'],
+				'pages/section-b' => ['title' => 'Section B'],
+				'pages/section-c' => ['title' => 'Section C'],
+			],
+		]);
+
+		$app->impersonate('kirby');
+
+		$parent = new Page([
+			'slug'     => 'test',
+			'children' => [
+				['slug' => 'a', 'template' => 'section-a'],
+				['slug' => 'b', 'template' => 'section-b'],
+				['slug' => 'c', 'template' => 'section-c']
+			]
+		]);
+
+		$section = new Section('pages', [
+			'name'            => 'test',
+			'model'           => $parent,
+			'templatesIgnore' => $expected = [
+				'section-a',
+				'section-c'
+			]
+		]);
+
+		$this->assertSame($expected, $section->templatesIgnore());
+		$this->assertCount(1, $section->pages());
+		$this->assertCount(2, $section->blueprints());
+	}
 }

@@ -44,7 +44,7 @@ export const props = {
 		step: Number,
 		value: {
 			type: [Number, String],
-			default: null
+			default: ""
 		}
 	}
 };

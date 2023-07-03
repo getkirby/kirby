@@ -24,22 +24,6 @@ class Translations extends Collection
 	 */
 	public static array $methods = [];
 
-	public function start(string $code): void
-	{
-		F::move(
-			$this->parent->contentFile('', true),
-			$this->parent->contentFile($code, true)
-		);
-	}
-
-	public function stop(string $code): void
-	{
-		F::move(
-			$this->parent->contentFile($code, true),
-			$this->parent->contentFile('', true)
-		);
-	}
-
 	public static function factory(array $translations): static
 	{
 		$collection = new static();

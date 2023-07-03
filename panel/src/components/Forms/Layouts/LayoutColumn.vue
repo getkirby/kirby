@@ -65,9 +65,6 @@ export default {
 	flex-direction: column;
 	height: 100%;
 }
-.k-layout-column .k-blocks .k-block-container:last-of-type {
-	flex-grow: 1;
-}
 .k-layout-column .k-blocks-empty {
 	position: absolute;
 	inset: 0;

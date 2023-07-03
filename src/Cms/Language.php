@@ -74,6 +74,7 @@ class Language
 
 	/**
 	 * Improved `var_dump` output
+	 * @codeCoverageIgnore
 	 */
 	public function __debugInfo(): array
 	{
@@ -139,61 +140,6 @@ class Language
 	}
 
 	/**
-	 * Internal converter to create or remove
-	 * translation files.
-	 */
-	protected static function converter(string $from, string $to): bool
-	{
-		$kirby = App::instance();
-		$site  = $kirby->site();
-
-		// convert site
-		foreach ($site->files() as $file) {
-			F::move(
-				$file->contentFile($from, true),
-				$file->contentFile($to, true)
-			);
-		}
-
-		F::move(
-			$site->contentFile($from, true),
-			$site->contentFile($to, true)
-		);
-
-		// convert all pages
-		foreach ($kirby->site()->index(true) as $page) {
-			foreach ($page->files() as $file) {
-				F::move(
-					$file->contentFile($from, true),
-					$file->contentFile($to, true)
-				);
-			}
-
-			F::move(
-				$page->contentFile($from, true),
-				$page->contentFile($to, true)
-			);
-		}
-
-		// convert all users
-		foreach ($kirby->users() as $user) {
-			foreach ($user->files() as $file) {
-				F::move(
-					$file->contentFile($from, true),
-					$file->contentFile($to, true)
-				);
-			}
-
-			F::move(
-				$user->contentFile($from, true),
-				$user->contentFile($to, true)
-			);
-		}
-
-		return true;
-	}
-
-	/**
 	 * Creates a new language object
 	 *
 	 * @internal
@@ -226,7 +172,12 @@ class Language
 		$language->save();
 
 		if ($languages->count() === 0) {
-			static::converter('', $language->code());
+			foreach ($kirby->models() as $model) {
+				$model->storage()->convertLanguage(
+					'default',
+					$language->code()
+				);
+			}
 		}
 
 		// update the main languages collection in the app instance
@@ -269,10 +220,12 @@ class Language
 			throw new Exception('The language could not be deleted');
 		}
 
-		if ($this->isLast() === true) {
-			$this->converter($code, '');
-		} else {
-			$this->deleteContentFiles($code);
+		foreach ($kirby->models() as $model) {
+			if ($this->isLast() === true) {
+				$model->storage()->convertLanguage($code, 'default');
+			} else {
+				$model->storage()->deleteLanguage($code);
+			}
 		}
 
 		// get the original language collection and remove the current language
@@ -282,36 +235,6 @@ class Language
 		$kirby->trigger('language.delete:after', [
 			'language' => $this
 		]);
-
-		return true;
-	}
-
-	/**
-	 * When the language is deleted, all content files with
-	 * the language code must be removed as well.
-	 */
-	protected function deleteContentFiles(mixed $code): bool
-	{
-		$kirby = App::instance();
-		$site  = $kirby->site();
-
-		F::remove($site->contentFile($code, true));
-
-		foreach ($kirby->site()->index(true) as $page) {
-			foreach ($page->files() as $file) {
-				F::remove($file->contentFile($code, true));
-			}
-
-			F::remove($page->contentFile($code, true));
-		}
-
-		foreach ($kirby->users() as $user) {
-			foreach ($user->files() as $file) {
-				F::remove($file->contentFile($code, true));
-			}
-
-			F::remove($user->contentFile($code, true));
-		}
 
 		return true;
 	}
@@ -603,19 +526,8 @@ class Language
 		if ($updated->isDefault() === true) {
 			$kirby->defaultLanguage()?->clone(['default' => false])->save();
 
-			$code = $this->code();
-			$site = $kirby->site();
-
-			touch($site->contentFile($code));
-
-			foreach ($kirby->site()->index(true) as $page) {
-				$files = $page->files();
-
-				foreach ($files as $file) {
-					touch($file->contentFile($code));
-				}
-
-				touch($page->contentFile($code));
+			foreach ($kirby->models() as $model) {
+				$model->storage()->touchLanguage($this);
 			}
 		} elseif ($this->isDefault() === true) {
 			throw new PermissionException('Please select another language to be the primary language');

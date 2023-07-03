@@ -57,16 +57,11 @@ trait FileActions
 			// rename the main file
 			F::move($oldFile->root(), $newFile->root());
 
-			if ($newFile->kirby()->multilang() === true) {
-				foreach ($newFile->translations() as $translation) {
-					$translationCode = $translation->code();
-
-					// rename the content file
-					F::move($oldFile->contentFile($translationCode), $newFile->contentFile($translationCode));
-				}
-			} else {
-				// rename the content file
-				F::move($oldFile->contentFile(), $newFile->contentFile());
+			// move the content storage versions
+			foreach ($oldFile->storage()->all() as $version => $lang) {
+				$content = $oldFile->storage()->read($version, $lang);
+				$oldFile->storage()->delete($version, $lang);
+				$newFile->storage()->create($version, $lang, $content);
 			}
 
 			// update collections
@@ -162,21 +157,15 @@ trait FileActions
 	public function copy(Page $page): static
 	{
 		F::copy($this->root(), $page->root() . '/' . $this->filename());
+		$copy = $page->clone()->file($this->filename());
 
-		if ($this->kirby()->multilang() === true) {
-			foreach ($this->kirby()->languages() as $language) {
-				F::copy(
-					$contentFile = $this->contentFile($language->code()),
-					$page->root() . '/' . basename($contentFile)
-				);
-			}
-		} else {
-			F::copy(
-				$contentFile = $this->contentFile(),
-				$page->root() . '/' . basename($contentFile)
-			);
+		foreach ($this->storage()->all() as $version => $lang) {
+			$content = $this->storage()->read($version, $lang);
+			$copy->storage()->create($version, $lang, $content);
 		}
 
+		// ensure the content is re-read after copying it
+		// @todo find a more elegant way
 		$copy = $page->clone()->file($this->filename());
 
 		// overwrite with new UUID (remove old, add new)
@@ -241,15 +230,12 @@ trait FileActions
 				throw new LogicException('The file could not be created');
 			}
 
-			// always create files in the default language
-			if ($file->kirby()->multilang() === true) {
-				$languageCode = $file->kirby()->defaultLanguage()->code();
-			} else {
-				$languageCode = null;
-			}
-
 			// store the content if necessary
-			$file->save($file->content()->toArray(), $languageCode);
+			// (always create files in the default language)
+			$file->save(
+				$file->content()->toArray(),
+				$file->kirby()->defaultLanguage()?->code()
+			);
 
 			// add the file to the list of siblings
 			$file->siblings()->append($file->id(), $file);
@@ -272,12 +258,8 @@ trait FileActions
 			// remove all public versions, lock and clear UUID cache
 			$file->unpublish();
 
-			if ($file->kirby()->multilang() === true) {
-				foreach ($file->translations() as $translation) {
-					F::remove($file->contentFile($translation->code()));
-				}
-			} else {
-				F::remove($file->contentFile());
+			foreach ($file->storage()->all() as $version => $lang) {
+				$file->storage()->delete($version, $lang);
 			}
 
 			F::remove($file->root());
@@ -358,7 +340,6 @@ trait FileActions
 
 	/**
 	 * Stores the content on disk
-	 *
 	 * @internal
 	 */
 	public function save(
