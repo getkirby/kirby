@@ -526,10 +526,7 @@ export default {
 
 			// not when nothing is selected and the paste event
 			// doesn't target something in the block component
-			if (
-				this.selectedOrBatched.length === 0 &&
-				this.$el.contains(e.target) === false
-			) {
+			if (this.selected.length === 0 && this.$el.contains(e.target) === false) {
 				return false;
 			}
 
