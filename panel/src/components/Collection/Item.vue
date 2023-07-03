@@ -18,7 +18,7 @@
 		</slot>
 
 		<!-- Sort handle -->
-		<k-sort-handle v-if="sortable" class="k-item-sort-handle" />
+		<k-sort-handle v-if="sortable" class="k-item-sort-handle" tabindex="-1" />
 
 		<!-- Content -->
 		<div class="k-item-content">
