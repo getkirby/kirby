@@ -57,7 +57,7 @@ class Language
 
 		static::$kirby      = $props['kirby'] ?? null;
 		$this->code         = trim($props['code']);
-		$this->default      = $props['default'] ?? false;
+		$this->default      = ($props['default'] ?? false) === true;
 		$this->direction    = ($props['direction'] ?? null) === 'rtl' ? 'rtl' : 'ltr';
 		$this->name         = trim($props['name'] ?? $this->code);
 		$this->slugs        = $props['slugs'] ?? [];
