@@ -62,8 +62,7 @@ class Auth
 	 */
 	public function __construct(
 		protected App $kirby
-	)
-	{
+	) {
 	}
 
 	/**
@@ -826,7 +825,6 @@ class Auth
 			throw new LogicException(
 				'Invalid authentication challenge: ' . $challenge
 			);
-
 		} catch (Throwable $e) {
 			$details = $e instanceof Exception ? $e->getDetails() : [];
 
