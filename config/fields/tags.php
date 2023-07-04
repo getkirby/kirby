@@ -52,6 +52,13 @@ return [
 		'separator' => function (string $separator = ',') {
 			return $separator;
 		},
+		/**
+		 * If `true`, selected entries will be sorted
+		 * according to their position in the dropdown
+		 */
+		'sort' => function (bool $sort = false) {
+			return $sort;
+		},
 	],
 	'computed' => [
 		'default' => function (): array {
