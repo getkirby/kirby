@@ -65,10 +65,10 @@ export default class Navigate extends HTMLElement {
 
 	move(next = 0, event) {
 		const elements = this.elements();
-		const index = elements.indexOf(document.activeElement);
+		let index = elements.indexOf(document.activeElement);
 
 		if (index === -1) {
-			return false;
+			index = 0;
 		}
 
 		switch (next) {
