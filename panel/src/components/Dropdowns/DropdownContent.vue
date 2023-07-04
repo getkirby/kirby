@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import Vue from "vue";
+
 let OpenDropdown = null;
 
 /**
@@ -44,6 +46,10 @@ export default {
 		align: {
 			type: String,
 			default: "left"
+		},
+		disabled: {
+			type: Boolean,
+			default: false
 		},
 		navigate: {
 			default: true,
@@ -147,6 +153,10 @@ export default {
 		 * @public
 		 */
 		open(opener) {
+			if (this.disabled === true) {
+				return false;
+			}
+
 			if (OpenDropdown && OpenDropdown !== this) {
 				// close the current dropdown
 				OpenDropdown.close();
@@ -168,6 +178,11 @@ export default {
 		position(opener) {
 			// reset the dropup state before position calculation
 			this.dropup = false;
+
+			// drill down to the element of a component
+			if (opener instanceof Vue) {
+				opener = opener.$el;
+			}
 
 			// get the dimensions of the opening button
 			const openerRect = opener.getBoundingClientRect();
