@@ -116,7 +116,7 @@ export default {
 			// replace all unique IDs for columns and blocks
 			copy = this.updateIds(copy);
 
-			this.rows.splice(index + 1, 0, copy);
+			this.rows.splice(index + 1, 0, ...copy);
 			this.save();
 		},
 		async onAdd(columns) {
