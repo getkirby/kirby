@@ -74,7 +74,7 @@ export default {
 	}
 }
 
-@media screen and (min-width: 65em) {
+@container (min-width: 65em) {
 	.k-grid[data-gutter="large"] {
 		grid-column-gap: 3rem;
 	}
@@ -82,7 +82,7 @@ export default {
 		grid-column-gap: 4.5rem;
 	}
 }
-@media screen and (min-width: 90em) {
+@container (min-width: 90em) {
 	.k-grid[data-gutter="large"] {
 		grid-column-gap: 4.5rem;
 	}
@@ -90,7 +90,7 @@ export default {
 		grid-column-gap: 6rem;
 	}
 }
-@media screen and (min-width: 120em) {
+@container (min-width: 120em) {
 	.k-grid[data-gutter="large"] {
 		grid-column-gap: 6rem;
 	}
