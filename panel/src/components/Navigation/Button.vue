@@ -215,6 +215,7 @@ export default {
 	color: var(--button-color-text);
 	font-variant-numeric: tabular-nums;
 	overflow-x: clip;
+	text-align: var(--button-align);
 }
 
 .k-button-icon {
