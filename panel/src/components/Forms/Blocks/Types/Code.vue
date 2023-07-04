@@ -63,16 +63,12 @@ export default {
 }
 .k-block-type-code-editor-language .k-icon {
 	position: absolute;
-	top: 0;
+	top: 0.175rem;
 	inset-inline-start: 0;
-	height: 1.5rem;
-	display: flex;
-	width: 2rem;
-	z-index: 0;
 }
 .k-block-type-code-editor-language .k-select-input {
 	position: relative;
-	padding: 0.325rem 0.75rem 0.5rem 2rem;
+	padding: 0.325rem 0.75rem 0.5rem 1.25rem;
 	z-index: 1;
 	font-size: var(--text-xs);
 }
