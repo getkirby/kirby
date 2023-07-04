@@ -124,11 +124,12 @@ export default {
 	margin-bottom: var(--spacing-12);
 }
 
-.k-tab-button {
+.k-tab-button.k-button {
 	--button-height: var(--height-lg);
 	--button-padding: 0;
 	--button-rounded: 0;
 	border-bottom: 2px solid transparent;
+	overflow-x: visible;
 }
 
 .k-tab-button[aria-current] {
