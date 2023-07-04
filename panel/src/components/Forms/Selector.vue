@@ -1,23 +1,28 @@
 <template>
 	<nav class="k-selector" role="search">
 		<header class="k-selector-header">
-			<input
-				ref="input"
-				:placeholder="inputPlaceholder + ' …'"
-				:value="query"
-				class="k-selector-input"
-				type="search"
-				@click="pick(-1)"
-				@input="filter($event.target.value)"
-				@keydown.down.prevent="down"
-				@keydown.escape.prevent="escape()"
-				@keydown.enter.prevent="select(selected)"
-				@keydown.tab="tab"
-				@keydown.up.prevent="up"
-			/>
+			<label v-if="label" :for="_uid" class="k-selector-label">
+				{{ label }}
+			</label>
+			<div class="k-selector-input">
+				<input
+					ref="input"
+					:id="_uid"
+					:value="query"
+					:placeholder="inputPlaceholder + ' …'"
+					type="search"
+					@click="pick(-1)"
+					@input="filter($event.target.value)"
+					@keydown.down.prevent="down"
+					@keydown.escape.prevent="escape()"
+					@keydown.enter.prevent="select(selected)"
+					@keydown.tab="tab"
+					@keydown.up.prevent="up"
+				/>
+			</div>
 		</header>
 
-		<div class="k-selector-body" v-if="options.length">
+		<div class="k-selector-body" v-if="options.length || query.length">
 			<template v-if="filtered.length">
 				<div ref="results" class="k-selector-results">
 					<k-button
@@ -29,7 +34,8 @@
 						class="k-selector-button"
 						@focus.native="select(key)"
 					>
-						<span v-html="option.highlighted ?? option.text" />
+						<!-- eslint-disable-next-line vue/no-v-html -->
+						<span v-html="highlight(option.text)" />
 					</k-button>
 				</div>
 			</template>
@@ -42,10 +48,11 @@
 			<k-button
 				:current="selected === filtered.length"
 				icon="add"
-				class="k-selector-button"
+				class="k-selector-button k-selector-add-button"
 				@focus.native="select(filtered.length)"
 			>
-				{{ $t("add") }}: <span class="k-selector-preview">{{ query }}</span>
+				<strong>Create new option:</strong>
+				<span class="k-selector-preview">{{ query }}</span>
 			</k-button>
 		</footer>
 	</nav>
@@ -61,15 +68,20 @@ export const props = {
 		icon: {
 			type: String
 		},
+		ignore: {
+			default: () => [],
+			type: Array
+		},
+		label: {
+			type: String
+		},
 		options: {
-			default() {
-				return [];
-			},
+			default: () => [],
 			type: Array
 		},
 		placeholder: {
 			default() {
-				return this.$t("search");
+				return "Filter options";
 			}
 		},
 		search: [Object, Boolean]
@@ -82,7 +94,7 @@ export default {
 	data() {
 		return {
 			filtered: this.options,
-			query: null,
+			query: "",
 			selected: -1
 		};
 	},
@@ -95,29 +107,32 @@ export default {
 	},
 	computed: {
 		empty() {
-			return this.$t("search.results.none");
+			return this.$t("options.none");
 		},
 		inputPlaceholder() {
-			if (this.options.length === 0) {
-				return "Create a new option";
-			}
-
-			return this.placeholder;
+			return this.options.length === 0 ? "Enter" : "Filter";
 		},
 		/**
 		 * Regular expression for current search term
 		 * @returns {RegExp}
 		 */
 		regex() {
-			return new RegExp(`(${RegExp.escape(this.query ?? "")})`, "ig");
+			return new RegExp(`(${RegExp.escape(this.query)})`, "ig");
 		},
 		showCreateButton() {
 			if (this.add === false) {
 				return false;
 			}
 
+			const query = this.query.trim();
+
 			// don't show the button if the query is empty
-			if ((this.query ?? "").trim().length === 0) {
+			if (query.length === 0) {
+				return false;
+			}
+
+			// don't show the button if the query is in the ignore list
+			if (this.ignore.includes(query) === true) {
 				return false;
 			}
 
@@ -147,17 +162,11 @@ export default {
 			this.$emit("escape");
 		},
 		filter(query) {
-			this.query = query;
+			this.query = query ?? "";
 
 			this.selected = -1;
 			this.filtered = this.$helper.array.search(this.options, this.query, {
 				field: "text"
-			});
-
-			// highlight queries in the text
-			this.filtered = this.filtered.map((result) => {
-				result.highlighted = this.toHighlightedString(result.text);
-				return result;
 			});
 
 			// select the create button if there are no results
@@ -208,7 +217,7 @@ export default {
 			}
 
 			// reset the search query
-			this.query = null;
+			this.query = "";
 		},
 		tab(event) {
 			event.preventDefault();
@@ -219,10 +228,15 @@ export default {
 				this.down();
 			}
 		},
-		toHighlightedString(string) {
+		highlight(string) {
 			// make sure that no HTML exists before in the string
 			// to avoid XSS when displaying via `v-html`
 			string = this.$helper.string.stripHTML(string);
+
+			if (this.query.length === 0) {
+				return string;
+			}
+
 			return string.replace(this.regex, "<b>$1</b>");
 		},
 		up() {
@@ -237,25 +251,28 @@ export default {
 	--selector-color-highlight: var(--color-yellow-500);
 }
 
-.k-selector-input {
-	height: var(--height-sm);
-	padding: 0 var(--button-padding);
-	border-radius: var(--rounded-sm);
+.k-selector {
+	--button-align: start;
+	--button-height: var(--height-sm);
+	--button-rounded: var(--rounded-sm);
+	--button-width: 100%;
 }
-.k-selector:has([aria-current]) .k-selector-input:focus {
+
+.k-selector-input input {
+	height: var(--button-height);
+	padding: 0 var(--button-padding);
+	border-radius: var(--button-rounded);
+}
+.k-selector:has([aria-current]) .k-selector-input input:focus {
 	outline: 0;
 }
 
 .k-selector-empty {
-	height: var(--height-sm);
+	height: var(--button-height);
 	display: flex;
 	align-items: center;
 	padding-inline: var(--button-padding);
 	color: var(--color-text-dimmed);
-}
-.k-selector-button {
-	--button-height: var(--height-sm);
-	--button-align: start;
 }
 .k-selector-button[aria-current] {
 	outline: var(--outline);
@@ -264,8 +281,21 @@ export default {
 	color: var(--selector-color-highlight);
 	font-weight: var(--font-normal);
 }
+
+.k-selector-add-button {
+	--button-height: auto;
+	padding-block: var(--button-padding);
+}
+.k-selector-add-button .k-button-icon {
+	align-self: start;
+}
+.k-selector-add-button .k-button-text strong {
+	display: block;
+	font-weight: var(--font-semi);
+	margin-bottom: 0.25rem;
+}
+
 .k-selector-preview {
 	color: var(--selector-color-highlight);
-	display: inline-flex;
 }
 </style>

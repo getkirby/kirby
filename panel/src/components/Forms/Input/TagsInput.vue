@@ -1,9 +1,16 @@
 <template>
-	<k-tags ref="tags" v-bind="$props" @input="$emit('input', $event)" />
+	<div class="k-tags-input">
+		<k-tags
+			ref="tags"
+			v-bind="$props"
+			@input="$emit('input', $event)"
+			@click.native.stop
+		/>
+	</div>
 </template>
 
 <script>
-import { id, name, required } from "@/mixins/props.js";
+import { name, required } from "@/mixins/props.js";
 import { props as Tags } from "@/components/Navigation/Tags.vue";
 
 import {
@@ -13,7 +20,7 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [id, name, required, Tags],
+	mixins: [name, required, Tags],
 	props: {
 		icon: {
 			type: [String, Boolean],
@@ -25,12 +32,18 @@ export const props = {
 export default {
 	mixins: [props],
 	inheritAttrs: false,
+	emits: ["input"],
 	watch: {
 		value: {
 			handler() {
 				this.$emit("invalid", this.$v.$invalid, this.$v);
 			},
 			immediate: true
+		}
+	},
+	methods: {
+		focus() {
+			this.$refs.tags.open();
 		}
 	},
 	validations() {
@@ -46,8 +59,7 @@ export default {
 </script>
 
 <style>
-/* Field Theme */
-.k-input[data-theme="field"][data-type="tags"] .k-tags {
-	padding: 0.25rem;
+.k-tags-input {
+	padding: var(--tags-gap);
 }
 </style>

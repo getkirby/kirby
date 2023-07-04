@@ -6,6 +6,7 @@
 			class="k-select-dropdown-content"
 			:align="align"
 			:autofocus="false"
+			:disabled="disabled"
 			:navigate="false"
 			@close="reset"
 		>
@@ -26,7 +27,8 @@ import { props as Selector } from "@/components/Forms/Selector.vue";
 export default {
 	mixins: [Selector],
 	props: {
-		align: String
+		align: String,
+		disabled: Boolean
 	},
 	emits: ["create", "select"],
 	methods: {
@@ -37,8 +39,8 @@ export default {
 			this.$emit("create", value);
 			this.close();
 		},
-		open() {
-			this.$refs.dropdown.open();
+		open(opener) {
+			this.$refs.dropdown.open(opener);
 		},
 		reset() {
 			this.$refs.selector.reset();
@@ -47,8 +49,8 @@ export default {
 			this.$emit("select", value);
 			this.close();
 		},
-		toggle() {
-			this.$refs.dropdown.toggle();
+		toggle(opener) {
+			this.$refs.dropdown.toggle(opener);
 		}
 	}
 };
@@ -56,29 +58,41 @@ export default {
 
 <style>
 .k-select-dropdown-content {
-	--button-width: 100%;
+	--color-text-dimmed: var(--color-gray-400);
 	width: 15rem;
-	overflow: visible;
 	padding: 0;
 }
 
+.k-select-dropdown .k-selector-label {
+	padding-inline: var(--spacing-3);
+	height: var(--height-lg);
+	display: flex;
+	font-weight: var(--font-semi);
+	align-items: center;
+	border-bottom: 1px solid var(--dropdown-color-hr);
+}
+
 .k-select-dropdown .k-selector-input {
-	background: var(--dropdown-color-hr);
+	padding: var(--dropdown-padding);
+}
+.k-select-dropdown .k-selector-input input {
+	background: var(--color-gray-800);
 	height: var(--height-sm);
 	line-height: var(--height-sm);
 }
-.k-select-dropdown .k-selector-input::placeholder {
-	color: var(--color-gray-400);
+.k-select-dropdown .k-selector-input input::placeholder {
+	color: var(--color-text-dimmed);
 }
 .k-select-dropdown .k-selector-header {
 	border-bottom: 1px solid var(--dropdown-color-hr);
 }
-.k-select-dropdown .k-selector-header,
 .k-select-dropdown .k-selector-footer {
 	padding: var(--dropdown-padding);
 }
 .k-select-dropdown .k-selector-body {
-	max-height: calc((var(--height-sm) * 10) + calc(var(--dropdown-padding) * 2));
+	max-height: calc(
+		(var(--button-height) * 10) + calc(var(--dropdown-padding) * 2)
+	);
 	overflow-y: auto;
 	padding: var(--dropdown-padding);
 	overscroll-behavior: contain;
@@ -87,16 +101,12 @@ export default {
 }
 .k-select-dropdown .k-selector-button {
 	gap: 0.75rem;
-	--button-rounded: var(--rounded-sm);
 }
 .k-select-dropdown .k-selector-button:hover {
 	--button-color-back: var(--dropdown-color-hr);
 }
-.k-select-dropdown .k-selector-empty {
-	color: var(--color-text-dimmed);
-}
 
-.k-select-dropdown .k-selector-footer {
+.k-select-dropdown .k-selector-body + .k-selector-footer {
 	border-top: 1px solid var(--dropdown-color-hr);
 }
 </style>

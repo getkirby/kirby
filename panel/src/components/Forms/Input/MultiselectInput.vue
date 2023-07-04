@@ -1,6 +1,11 @@
 <template>
 	<div class="k-multiselect-input">
-		<k-tags v-bind="$props" @input="$emit('input', $event)" />
+		<k-tags
+			ref="tags"
+			v-bind="$props"
+			@input="$emit('input', $event)"
+			@click.native.stop
+		/>
 	</div>
 </template>
 
@@ -14,8 +19,7 @@ export default {
 </script>
 
 <style>
-/* Field Theme */
 .k-multiselect-input {
-	padding: 0.25rem;
+	padding: var(--tags-gap);
 }
 </style>

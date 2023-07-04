@@ -4,9 +4,10 @@
 		:input="_uid"
 		:counter="counterOptions"
 		class="k-multiselect-field"
-		@blur="blur"
 	>
+		<k-empty v-if="hasNoOptions" :icon="icon" :text="$t('options.none')" />
 		<k-input
+			v-else
 			v-bind="$props"
 			:id="_uid"
 			ref="input"
@@ -18,27 +19,13 @@
 </template>
 
 <script>
-import { props as Field } from "../Field.vue";
-import { props as Input } from "../Input.vue";
-import { props as MultiselectInput } from "../Input/TagsInput.vue";
-import counter from "@/mixins/forms/counter.js";
+import TagsField from "./TagsField.vue";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-multiselect-input>` for additional information.
+ * Have a look at `<k-tags-field>`.
  */
 export default {
-	mixins: [Field, Input, MultiselectInput, counter],
-	inheritAttrs: false,
-	props: {
-		icon: {
-			type: String,
-			default: "angle-down"
-		}
-	},
-	methods: {
-		focus() {
-			this.$refs.input.focus();
-		}
-	}
+	extends: TagsField,
+	inheritAttrs: false
 };
 </script>

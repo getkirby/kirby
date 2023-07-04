@@ -1,7 +1,6 @@
 <template>
-	<k-navigate ref="navigation" axis="x">
+	<k-navigate ref="navigation" :axis="layout === 'list' ? 'y' : 'x'">
 		<k-draggable
-			v-direction
 			:list="tags"
 			:options="dragOptions"
 			:data-layout="layout"
@@ -14,8 +13,8 @@
 				:removable="!disabled"
 				name="tag"
 				@click.native.stop
-				@keypress.native.enter="edit(index, tag)"
-				@dblclick.native="edit(index, tag)"
+				@keypress.native.enter="edit(index, tag, $event)"
+				@dblclick.native="edit(index, tag, $event)"
 				@remove="remove(index, tag)"
 			>
 				<!-- eslint-disable-next-line vue/no-v-html -->
@@ -26,13 +25,17 @@
 					v-if="showSelector"
 					ref="selector"
 					:add="accept === 'all'"
+					:disabled="disabled"
+					:ignore="value"
 					:options="selectable"
+					label="Add option"
 					@create="add($event)"
 					@select="add($event)"
 				>
 					<k-button
 						ref="toggle"
 						:autofocus="autofocus"
+						:disabled="disabled"
 						:id="id"
 						icon="add"
 						class="k-tags-toggle"
@@ -42,6 +45,17 @@
 						@keydown.native.delete="navigate(tags.length - 1)"
 					/>
 				</k-select-dropdown>
+
+				<k-select-dropdown
+					ref="editor"
+					:add="accept === 'all'"
+					:disabled="disabled"
+					:ignore="value"
+					:options="selectable"
+					label="Replace with"
+					@create="replace($event)"
+					@select="replace($event)"
+				/>
 			</template>
 		</k-draggable>
 	</k-navigate>
@@ -52,6 +66,7 @@ import { autofocus, disabled, id } from "@/mixins/props.js";
 
 export const props = {
 	mixins: [autofocus, disabled, id],
+	inheritAttrs: false,
 	props: {
 		accept: {
 			type: String,
@@ -86,6 +101,10 @@ export const props = {
 			type: Array,
 			default: () => []
 		},
+		sort: {
+			default: false,
+			type: Boolean
+		},
 		value: {
 			default: () => [],
 			type: Array
@@ -97,13 +116,20 @@ export default {
 	mixins: [props],
 	data() {
 		return {
+			editing: null,
 			tags: []
 		};
 	},
 	watch: {
 		value: {
 			handler() {
-				this.tags = this.value.map(this.tag).filter((tag) => tag);
+				if (this.sort === true) {
+					// sort all tags by the available options
+					this.tags = this.sortByOptions(this.value);
+				} else {
+					// convert all values to tag objects and filter invalid tags
+					this.tags = this.value.map(this.tag).filter((tag) => tag);
+				}
 			},
 			immediate: true
 		}
@@ -119,6 +145,7 @@ export default {
 		},
 		isDraggable() {
 			if (
+				this.sort === true ||
 				this.draggable === false ||
 				this.tags.length === 0 ||
 				this.disabled === true
@@ -141,10 +168,6 @@ export default {
 			});
 		},
 		showSelector() {
-			if (this.disabled === true) {
-				return false;
-			}
-
 			if (this.isFull === true) {
 				return false;
 			}
@@ -171,43 +194,21 @@ export default {
 				return false;
 			}
 
+			// check for duplicates
+			if (this.isDuplicate(tag) === true) {
+				return false;
+			}
+
 			this.tags.push(tag);
 			this.save();
 		},
-		edit(index, tag) {
-			this.$panel.dialog.open({
-				component: "k-form-dialog",
-				props: {
-					fields: {
-						value: {
-							autofocus: true,
-							icon: "tag",
-							label: "Tag",
-							required: true,
-							type: "text"
-						}
-					},
-					submitButton: this.$t("change"),
-					value: {
-						value: tag.value
-					}
-				},
-				on: {
-					submit: (tag) => {
-						const updated = this.tag(tag);
+		edit(index, tag, event) {
+			this.editing = {
+				index,
+				tag
+			};
 
-						if (this.isAllowed(updated) === false) {
-							this.$panel.notification.error("The tag is not allowed");
-							return;
-						}
-
-						this.$set(this.tags, index, updated);
-						this.save();
-						this.$panel.dialog.close();
-						this.navigate(index);
-					}
-				}
-			});
+			return this.$refs.editor.open(event.target.closest(".k-tag"));
 		},
 		focus(index = "last") {
 			this.$refs.navigation.move(index);
@@ -220,17 +221,15 @@ export default {
 				return false;
 			}
 
-			// avoid duplicates
-			if (this.value.includes(tag.value)) {
-				return false;
-			}
-
 			// if only options are allwed as value
 			if (this.accept === "options" && !this.option(tag)) {
 				return false;
 			}
 
 			return true;
+		},
+		isDuplicate(tag) {
+			return this.value.includes(tag.value) === true;
 		},
 		navigate(position) {
 			this.focus(position);
@@ -246,6 +245,33 @@ export default {
 
 			this.save();
 		},
+		replace(value) {
+			const { tag, index } = this.editing;
+			const updated = this.tag(value);
+
+			if (this.isAllowed(updated) === false) {
+				return this.$panel.notification.error("The option is not valid");
+			}
+
+			if (this.isDuplicate(updated) === true) {
+				return this.$panel.notification.error(
+					"The option has already been added"
+				);
+			}
+
+			this.$set(this.tags, index, updated);
+			this.save();
+			this.navigate(index);
+			this.editing = null;
+		},
+		open() {
+			if (this.$refs.selector) {
+				this.$refs.toggle.focus();
+				this.$refs.selector.open(this.$refs.toggle);
+			} else {
+				this.focus();
+			}
+		},
 		option(tag) {
 			return this.options.find((option) => option.value === tag.value);
 		},
@@ -257,6 +283,34 @@ export default {
 				"input",
 				this.tags.map((tag) => tag.value)
 			);
+		},
+		sortByOptions(values) {
+			// make sure values are not reactive
+			// otherwise this could have nasty side-effects
+			values = this.$helper.object.clone(values);
+
+			// container for sorted tags
+			const tags = [];
+
+			// add all sorted options first
+			for (const option of this.options) {
+				const index = values.indexOf(option.value);
+
+				// if the option exists in the value array …
+				if (index !== -1) {
+					tags.push(option);
+
+					// remove the sorted option from the temporary values array
+					values.splice(index, 1);
+				}
+			}
+
+			// add all remaining custom options
+			for (const option of values) {
+				tags.push(this.tag(option));
+			}
+
+			return tags;
 		},
 		/**
 		 * @param {String,Object} tag
@@ -306,23 +360,22 @@ export default {
 </script>
 
 <style>
+:root {
+	--tags-gap: 0.375rem;
+}
+
 .k-tags {
-	display: flex;
-	gap: 0.25rem;
+	display: inline-flex;
+	gap: var(--tags-gap);
 	align-items: center;
 	flex-wrap: wrap;
-	flex-grow: 1;
-	min-height: var(--tag-height);
 }
 .k-tags .k-sortable-ghost {
 	outline: var(--outline);
 }
+.k-tags[data-layout="list"],
 .k-tags[data-layout="list"] .k-tag {
 	width: 100%;
-}
-.k-tags .k-select-dropdown {
-	align-self: start;
-	flex-shrink: 0;
 }
 .k-tags-toggle.k-button {
 	--button-rounded: var(--rounded-sm);
