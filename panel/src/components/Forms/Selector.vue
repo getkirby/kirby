@@ -98,13 +98,6 @@ export default {
 			selected: -1
 		};
 	},
-	watch: {
-		selected() {
-			if (this.selected === -1) {
-				this.focus();
-			}
-		}
-	},
 	computed: {
 		empty() {
 			return this.$t("options.none");
@@ -141,6 +134,13 @@ export default {
 			});
 
 			return matches.length === 0;
+		}
+	},
+	watch: {
+		selected() {
+			if (this.selected === -1) {
+				this.focus();
+			}
 		}
 	},
 	methods: {

@@ -120,20 +120,6 @@ export default {
 			tags: []
 		};
 	},
-	watch: {
-		value: {
-			handler() {
-				if (this.sort === true) {
-					// sort all tags by the available options
-					this.tags = this.sortByOptions(this.value);
-				} else {
-					// convert all values to tag objects and filter invalid tags
-					this.tags = this.value.map(this.tag).filter((tag) => tag);
-				}
-			},
-			immediate: true
-		}
-	},
 	computed: {
 		dragOptions() {
 			return {
@@ -177,6 +163,20 @@ export default {
 			}
 
 			return true;
+		}
+	},
+	watch: {
+		value: {
+			handler() {
+				if (this.sort === true) {
+					// sort all tags by the available options
+					this.tags = this.sortByOptions(this.value);
+				} else {
+					// convert all values to tag objects and filter invalid tags
+					this.tags = this.value.map(this.tag).filter((tag) => tag);
+				}
+			},
+			immediate: true
 		}
 	},
 	methods: {
