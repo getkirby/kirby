@@ -24,12 +24,13 @@ class Languages extends Collection
 	/**
 	 * Creates a new collection with the given language objects
 	 *
-	 * @param array $objects `Kirby\Cms\Language` objects
 	 * @param null $parent
 	 * @throws \Kirby\Exception\DuplicateException
 	 */
-	public function __construct($objects = [], $parent = null)
-	{
+	public function __construct(
+		array $objects = [],
+		$parent = null
+	) {
 		$defaults = array_filter(
 			$objects,
 			fn ($language) => $language->isDefault() === true
@@ -39,7 +40,7 @@ class Languages extends Collection
 			throw new DuplicateException('You cannot have multiple default languages. Please check your language config files.');
 		}
 
-		parent::__construct($objects, $parent);
+		parent::__construct($objects, null);
 	}
 
 	/**
@@ -52,33 +53,26 @@ class Languages extends Collection
 
 	/**
 	 * Creates a new language with the given props
-	 *
 	 * @internal
-	 * @param array $props
-	 * @return \Kirby\Cms\Language
 	 */
-	public function create(array $props)
+	public function create(array $props): Language
 	{
 		return Language::create($props);
 	}
 
 	/**
 	 * Returns the default language
-	 *
-	 * @return \Kirby\Cms\Language|null
 	 */
-	public function default()
+	public function default(): Language|null
 	{
 		return $this->findBy('isDefault', true) ?? $this->first();
 	}
 
 	/**
 	 * Convert all defined languages to a collection
-	 *
 	 * @internal
-	 * @return static
 	 */
-	public static function load()
+	public static function load(): static
 	{
 		$languages = [];
 		$files     = glob(App::instance()->root('languages') . '/*.php');
