@@ -1,7 +1,12 @@
 <template>
-	<section class="k-section">
+	<section class="k-section" :data-invalid="invalid">
 		<header v-if="headline || buttons" class="k-bar k-section-header">
-			<k-label :link="link" :required="required" type="section">
+			<k-label
+				:invalid="invalid"
+				:link="link"
+				:required="required"
+				type="section"
+			>
 				{{ headline }}
 			</k-label>
 			<k-button-group
@@ -20,6 +25,7 @@ export default {
 	props: {
 		buttons: Array,
 		headline: String,
+		invalid: Boolean,
 		link: String,
 		required: Boolean
 	}

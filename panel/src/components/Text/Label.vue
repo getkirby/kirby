@@ -3,13 +3,15 @@
 		:is="element"
 		:for="input"
 		:class="'k-' + type + '-label'"
+		:data-invalid="invalid"
 		class="k-label"
 	>
 		<k-link v-if="link" :to="link">
 			<slot />
 		</k-link>
 		<slot v-else />
-		<abbr v-if="required" :title="$t(type + '.required')">✶</abbr>
+		<abbr v-if="invalid" :title="$t(type + '.invalid')">&times;</abbr>
+		<abbr v-else-if="required" :title="$t(type + '.required')">✶</abbr>
 	</component>
 </template>
 
@@ -18,6 +20,9 @@ export default {
 	props: {
 		input: {
 			type: [String, Number]
+		},
+		invalid: {
+			type: Boolean
 		},
 		link: {
 			type: String
@@ -60,18 +65,12 @@ export default {
 }
 
 /** Required and invalid sign **/
-.k-label abbr,
-.k-label::after {
+.k-label abbr {
 	color: var(--color-gray-500);
 	margin-inline-start: 0.375rem;
 }
 
-/** Field Labels **/
-.k-field:has([data-invalid="true"]) .k-field-label::after {
-	content: "×";
+.k-label[data-invalid] abbr {
 	color: var(--color-red-700);
-}
-.k-field:has([data-invalid="true"]) .k-field-label abbr {
-	display: none;
 }
 </style>
