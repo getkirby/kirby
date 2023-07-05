@@ -22,7 +22,7 @@
 			</div>
 		</header>
 
-		<div v-if="options.length || query.length" class="k-selector-body">
+		<div v-if="filtered.length || options.length" class="k-selector-body">
 			<template v-if="filtered.length">
 				<div ref="results" class="k-selector-results">
 					<k-button
@@ -39,7 +39,7 @@
 					</k-button>
 				</div>
 			</template>
-			<template v-else>
+			<template v-else-if="options.length">
 				<p class="k-selector-empty">{{ empty }}</p>
 			</template>
 		</div>
@@ -51,7 +51,7 @@
 				class="k-selector-button k-selector-add-button"
 				@focus.native="select(filtered.length)"
 			>
-				<strong>Create new option:</strong>
+				<strong>{{ value ? "Replace with" : "Create" }}:</strong>
 				<span class="k-selector-preview">{{ query }}</span>
 			</k-button>
 		</footer>

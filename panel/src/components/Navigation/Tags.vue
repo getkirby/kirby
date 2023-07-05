@@ -28,7 +28,7 @@
 					:disabled="disabled"
 					:ignore="value"
 					:options="selectable"
-					label="Add option"
+					label="Add"
 					@create="add($event)"
 					@select="add($event)"
 				>
