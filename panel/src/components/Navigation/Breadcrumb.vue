@@ -103,7 +103,7 @@ export default {
 	width: 15rem;
 }
 
-@media screen and (min-width: 40em) {
+@container (min-width: 40em) {
 	.k-breadcrumb ol {
 		display: flex;
 	}
