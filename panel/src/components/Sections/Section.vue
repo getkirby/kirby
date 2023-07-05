@@ -1,12 +1,7 @@
 <template>
 	<section class="k-section" :data-invalid="invalid">
 		<header v-if="headline || buttons" class="k-bar k-section-header">
-			<k-label
-				:invalid="invalid"
-				:link="link"
-				:required="required"
-				type="section"
-			>
+			<k-label :link="link" :required="required" type="section">
 				{{ headline }}
 			</k-label>
 			<k-button-group
