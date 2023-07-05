@@ -52,6 +52,7 @@
 					:disabled="disabled"
 					:ignore="value"
 					:options="selectable"
+					:value="editing?.tag.text"
 					label="Replace with"
 					@create="replace($event)"
 					@select="replace($event)"

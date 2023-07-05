@@ -22,7 +22,7 @@
 			</div>
 		</header>
 
-		<div class="k-selector-body" v-if="options.length || query.length">
+		<div v-if="options.length || query.length" class="k-selector-body">
 			<template v-if="filtered.length">
 				<div ref="results" class="k-selector-results">
 					<k-button
@@ -84,7 +84,10 @@ export const props = {
 				return "Filter options";
 			}
 		},
-		search: [Object, Boolean]
+		search: [Object, Boolean],
+		value: {
+			type: String
+		}
 	}
 };
 
@@ -94,7 +97,7 @@ export default {
 	data() {
 		return {
 			filtered: this.options,
-			query: "",
+			query: this.value ?? "",
 			selected: -1
 		};
 	},
@@ -142,6 +145,9 @@ export default {
 				this.focus();
 			}
 		}
+	},
+	mounted() {
+		this.$refs.input.select();
 	},
 	methods: {
 		create(value) {
