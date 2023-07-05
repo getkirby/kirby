@@ -3,7 +3,7 @@
 		<header v-if="headline || buttons" class="k-bar k-section-header">
 			<k-headline :link="link" tag="h2" class="k-label">
 				{{ headline }}
-				<abbr v-if="required" :title="$t('section.required')">*</abbr>
+				<abbr v-if="required" :title="$t('section.required')">✶</abbr>
 			</k-headline>
 			<k-button-group
 				v-if="buttons"
@@ -38,17 +38,19 @@ export default {
 .k-label {
 	position: relative;
 	display: flex;
-	font-weight: var(--font-semi);
 	align-items: center;
 	height: var(--height-xs);
-	overflow: hidden;
+	overflow: clip;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	font-weight: var(--font-semi);
 }
 .k-label abbr {
+	margin-top: 2px;
 	text-decoration: none;
-	color: var(--color-gray-500);
-	padding-inline-start: 0.25rem;
+	font-size: var(--text-xs);
+	color: var(--color-gray-600);
+	margin-inline-start: 0.5rem;
 }
 [aria-disabled] .k-label {
 	opacity: var(--opacity-disabled);

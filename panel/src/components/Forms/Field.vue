@@ -11,7 +11,7 @@
 				<slot name="label">
 					<label :for="input" class="k-label k-field-label">
 						{{ label || " " }}
-						<abbr v-if="required" :title="$t('field.required')">*</abbr>
+						<abbr v-if="required" :title="$t('field.required')">✶</abbr>
 					</label>
 				</slot>
 				<slot name="options" />
@@ -58,6 +58,7 @@ export default {
 
 <style>
 .k-field-header {
+	position: relative;
 	margin-bottom: var(--spacing-2);
 }
 .k-field[data-disabled="true"] {
@@ -77,5 +78,19 @@ export default {
 }
 .k-field > :has(+ footer) {
 	margin-bottom: var(--spacing-1);
+}
+.k-field:has([data-invalid="true"]) .k-field-label {
+}
+
+.k-field:has([data-invalid="true"]) .k-field-label::after {
+	margin-top: 2px;
+	font-size: 12px;
+	font-weight: var(--font-bold);
+	content: "×";
+	color: var(--color-red-700);
+	margin-inline-start: 0.5rem;
+}
+.k-field:has([data-invalid="true"]) .k-field-label abbr {
+	display: none;
 }
 </style>

@@ -73,7 +73,7 @@ export default {
  * layout: collapsed
  */
 .k-button-group:where([data-layout="collapsed"]) {
-	gap: 1px;
+	gap: 0;
 }
 
 /** @todo adapt when new dropdowns are here */
@@ -101,5 +101,6 @@ export default {
 	+ .k-button[data-variant="filled"] {
 	border-start-start-radius: 0;
 	border-end-start-radius: 0;
+	border-left: 1px solid var(--theme-color-500, var(--color-gray-400));
 }
 </style>
