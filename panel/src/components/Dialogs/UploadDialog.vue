@@ -22,15 +22,19 @@
 						class="k-upload-item"
 					>
 						<a :href="file.url" class="k-upload-item-preview" target="_blank">
-							<k-image
+							<k-image-frame
 								v-if="file.type.match('(jpg|jpeg|gif|png|webp|avif)')"
 								:cover="true"
 								:src="file.url"
 								back="pattern"
 							/>
-							<k-aspect-ratio v-else ratio="1/1">
-								<k-icon back="pattern" type="file" />
-							</k-aspect-ratio>
+							<k-icon-frame
+								v-else
+								back="black"
+								color="white"
+								ratio="1/1"
+								icon="file"
+							/>
 						</a>
 						<k-input
 							v-model="file.name"

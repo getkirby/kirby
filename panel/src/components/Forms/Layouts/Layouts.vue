@@ -125,15 +125,13 @@ export default {
 			});
 		},
 		duplicate(index, layout) {
-			let copy = {
-				...this.$helper.clone(layout),
-				id: this.$helper.uuid()
-			};
+			const copy = this.$helper.clone(layout);
 
-			// replace all unique IDs for columns and blocks
-			copy = this.updateIds(copy);
+			// replace all unique IDs for layouts, columns and blocks
+			// the method processes a single object and returns it as an array
+			const copies = this.updateIds(copy);
 
-			this.rows.splice(index + 1, 0, copy);
+			this.rows.splice(index + 1, 0, ...copies);
 			this.save();
 		},
 		async onAdd(columns) {
@@ -293,6 +291,12 @@ export default {
 			this.rows[args.index].columns[args.columnIndex].blocks = args.blocks;
 			this.save();
 		},
+		/**
+		 * Replace all unique IDs for layouts, columns and blocks
+		 *
+		 * @param {array|object} copy
+		 * @returns {array}
+		 */
 		updateIds(copy) {
 			if (Array.isArray(copy) === false) {
 				copy = [copy];
@@ -300,6 +304,7 @@ export default {
 
 			return copy.map((layout) => {
 				layout.id = this.$helper.uuid();
+
 				layout.columns = layout.columns.map((column) => {
 					column.id = this.$helper.uuid();
 

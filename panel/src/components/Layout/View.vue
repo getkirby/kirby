@@ -28,7 +28,7 @@ export default {
 	padding-inline: 1.5rem;
 }
 
-@media screen and (min-width: 30rem) {
+@container (min-width: 30rem) {
 	.k-view {
 		padding-inline: 3rem;
 	}

@@ -256,7 +256,7 @@ export default {
 	margin-bottom: -1px;
 	margin-inline-end: -1px;
 }
-@media screen and (min-width: 65em) {
+@container (min-width: 65em) {
 	.k-input[data-theme="field"][data-type="checkboxes"] .k-checkboxes-input {
 		grid-template-columns: repeat(var(--columns), 1fr);
 	}
@@ -297,7 +297,7 @@ export default {
 	margin-bottom: -1px;
 	margin-inline-end: -1px;
 }
-@media screen and (min-width: 65em) {
+@container (min-width: 65em) {
 	.k-input[data-theme="field"][data-type="radio"] .k-radio-input {
 		grid-template-columns: repeat(var(--columns), 1fr);
 	}

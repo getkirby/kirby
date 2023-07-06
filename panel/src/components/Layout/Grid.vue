@@ -61,7 +61,7 @@ export default {
 }
 
 /** @todo grid.gutter.deprecated - remove @ 5.0 */
-@media screen and (min-width: 30em) {
+@container (min-width: 30em) {
 	.k-grid[data-gutter="small"] {
 		grid-column-gap: 1rem;
 		grid-row-gap: 1rem;
