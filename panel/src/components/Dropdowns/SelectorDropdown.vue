@@ -78,8 +78,6 @@ export default {
 }
 .k-selector-dropdown .k-selector-input {
 	background: var(--color-gray-800);
-	height: var(--height-sm);
-	line-height: var(--height-sm);
 }
 .k-selector-dropdown .k-selector-footer {
 	padding: var(--dropdown-padding);
