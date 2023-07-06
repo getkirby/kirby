@@ -1,15 +1,15 @@
 <template>
 	<nav class="k-selector" role="search">
 		<header class="k-selector-header">
-			<label v-if="label" :for="_uid" class="k-selector-label">
+			<h2 v-if="label" class="k-selector-label">
 				{{ label }}
-			</label>
-			<div class="k-selector-input">
+			</h2>
+			<div v-if="showSearch" class="k-selector-search">
 				<input
 					ref="input"
-					:id="_uid"
 					:value="query"
 					:placeholder="inputPlaceholder + ' …'"
+					class="k-selector-input"
 					type="search"
 					@click="pick(-1)"
 					@input="filter($event.target.value)"
@@ -24,7 +24,7 @@
 
 		<div v-if="filtered.length || options.length" class="k-selector-body">
 			<template v-if="filtered.length">
-				<div ref="results" class="k-selector-results">
+				<k-navigate ref="results" axis="y" class="k-selector-results">
 					<k-button
 						v-for="(option, key) in filtered"
 						:key="key"
@@ -32,12 +32,13 @@
 						:disabled="option.disabled"
 						:icon="option.icon ?? icon"
 						class="k-selector-button"
-						@focus.native="select(key)"
+						@click="select(key)"
+						@focus.native="pick(key)"
 					>
 						<!-- eslint-disable-next-line vue/no-v-html -->
 						<span v-html="highlight(option.text)" />
 					</k-button>
-				</div>
+				</k-navigate>
 			</template>
 			<template v-else-if="options.length">
 				<p class="k-selector-empty">{{ empty }}</p>
@@ -51,7 +52,7 @@
 				class="k-selector-button k-selector-add-button"
 				@focus.native="select(filtered.length)"
 			>
-				<strong>{{ value ? "Replace with" : "Create" }}:</strong>
+				<strong>{{ value ? $t("replace.with") : $t("create") }}:</strong>
 				<span class="k-selector-preview">{{ query }}</span>
 			</k-button>
 		</footer>
@@ -106,7 +107,7 @@ export default {
 			return this.$t("options.none");
 		},
 		inputPlaceholder() {
-			return this.options.length === 0 ? "Enter" : "Filter";
+			return this.options.length === 0 ? this.$t("enter") : this.$t("filter");
 		},
 		/**
 		 * Regular expression for current search term
@@ -137,6 +138,15 @@ export default {
 			});
 
 			return matches.length === 0;
+		},
+		showSearch() {
+			// if new options can be added,
+			// the search input is always needed
+			if (this.add === true) {
+				return true;
+			}
+
+			return this.search !== false;
 		}
 	},
 	watch: {
@@ -147,7 +157,7 @@ export default {
 		}
 	},
 	mounted() {
-		this.$refs.input.select();
+		this.$refs.input?.select();
 	},
 	methods: {
 		create(value) {
@@ -264,12 +274,15 @@ export default {
 	--button-width: 100%;
 }
 
-.k-selector-input input {
+.k-selector-input {
 	height: var(--button-height);
 	padding: 0 var(--button-padding);
 	border-radius: var(--button-rounded);
 }
-.k-selector:has([aria-current]) .k-selector-input input:focus {
+.k-selector-input::placeholder {
+	color: var(--color-text-dimmed);
+}
+.k-selector:has([aria-current]) .k-selector-input:focus {
 	outline: 0;
 }
 

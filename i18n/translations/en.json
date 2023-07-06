@@ -57,6 +57,7 @@
 	"email": "Email",
 	"email.placeholder": "mail@example.com",
 
+	"enter": "Enter",
 	"entries": "Entries",
 	"entry": "Entry",
 
@@ -339,6 +340,8 @@
 	"files": "Files",
 	"files.empty": "No files yet",
 
+	"filter": "Filter",
+
 	"hide": "Hide",
 	"hour": "Hour",
 	"import": "Import",
@@ -510,6 +513,7 @@
 	"remove": "Remove",
 	"rename": "Rename",
 	"replace": "Replace",
+	"replace.with": "Replace with",
 	"retry": "Try again",
 	"revert": "Revert",
 	"revert.confirm": "Do you really want to <strong>delete all unsaved changes</strong>?",
