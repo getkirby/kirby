@@ -183,8 +183,8 @@ export default {
 			this.dropup = false;
 
 			// drill down to the element of a component
-			if (opener instanceof Vue) {
-				opener = opener.$el;
+			if (this.opener instanceof Vue) {
+				this.opener = this.opener.$el;
 			}
 
 			// get the dimensions of the opening button
