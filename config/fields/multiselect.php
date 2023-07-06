@@ -18,14 +18,6 @@ return [
 		'icon' => function (string $icon = 'checklist') {
 			return $icon;
 		},
-		/**
-		 * Enable/disable the search in the dropdown
-		 * Also limit displayed items (display: 20)
-		 * and set minimum number of characters to search (min: 3)
-		 */
-		'search' => function ($search = true) {
-			return $search;
-		},
 	],
 	'methods' => [
 		'toValues' => function ($value) {

@@ -85,7 +85,10 @@ export const props = {
 				return "Filter options";
 			}
 		},
-		search: [Object, Boolean],
+		search: {
+			default: true,
+			type: [Object, Boolean]
+		},
 		value: {
 			type: String
 		}

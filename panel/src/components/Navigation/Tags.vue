@@ -21,14 +21,12 @@
 				<span v-html="tag.text" />
 			</k-tag>
 			<template #footer>
-				<k-select-dropdown
+				<!-- add selector -->
+				<k-selector-dropdown
 					v-if="showSelector"
 					ref="selector"
-					:add="accept === 'all'"
-					:disabled="disabled"
-					:ignore="value"
+					v-bind="selectorOptions"
 					:label="$t('add')"
-					:options="selectable"
 					@create="add($event)"
 					@select="add($event)"
 				>
@@ -44,15 +42,13 @@
 						@keydown.native="toggle"
 						@keydown.native.delete="navigate(tags.length - 1)"
 					/>
-				</k-select-dropdown>
+				</k-selector-dropdown>
 
-				<k-select-dropdown
+				<!-- replace selector -->
+				<k-selector-dropdown
 					ref="editor"
-					:add="accept === 'all'"
-					:disabled="disabled"
-					:ignore="value"
+					v-bind="selectorOptions"
 					:label="$t('replace.with')"
-					:options="selectable"
 					:value="editing?.tag.text"
 					@create="replace($event)"
 					@select="replace($event)"
@@ -101,6 +97,10 @@ export const props = {
 		options: {
 			type: Array,
 			default: () => []
+		},
+		search: {
+			default: true,
+			type: [Object, Boolean]
 		},
 		sort: {
 			default: false,
@@ -153,6 +153,15 @@ export default {
 			return this.options.filter((option) => {
 				return this.value.includes(option.value) === false;
 			});
+		},
+		selectorOptions() {
+			return {
+				add: this.accept === "all",
+				disabled: this.disabled,
+				ignore: this.value,
+				options: this.selectable,
+				search: this.search
+			};
 		},
 		showSelector() {
 			if (this.isFull === true) {
