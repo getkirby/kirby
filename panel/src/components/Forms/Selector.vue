@@ -180,10 +180,21 @@ export default {
 			this.focus();
 			this.$emit("escape");
 		},
-		filter(query) {
+		filter(query = "") {
 			this.query = query ?? "";
 
+			// min length for the search to kick in
+			const min = this.search.min ?? 0;
+
+			// reset the focus on the input
 			this.selected = -1;
+
+			// show all results if the query is too short or empty
+			if (query.length < min) {
+				this.filtered = this.options;
+				return;
+			}
+
 			this.filtered = this.$helper.array.search(this.options, this.query, {
 				field: "text"
 			});

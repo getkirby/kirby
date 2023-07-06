@@ -1,9 +1,9 @@
 <template>
-	<k-dropdown class="k-select-dropdown">
+	<k-dropdown class="k-selector-dropdown">
 		<slot />
 		<k-dropdown-content
 			ref="dropdown"
-			class="k-select-dropdown-content"
+			class="k-selector-dropdown-content"
 			:align="align"
 			:autofocus="false"
 			:disabled="disabled"
@@ -57,37 +57,34 @@ export default {
 </script>
 
 <style>
-.k-select-dropdown-content {
+.k-selector-dropdown-content {
 	--color-text-dimmed: var(--color-gray-400);
 	width: 15rem;
 	padding: 0;
 }
-
-.k-select-dropdown .k-selector-header {
+.k-selector-dropdown .k-selector-header {
 	border-bottom: 1px solid var(--dropdown-color-hr);
 }
-
-.k-select-dropdown .k-selector-label {
+.k-selector-dropdown .k-selector-label {
 	padding-inline: var(--spacing-3);
 	height: var(--height-lg);
 	display: flex;
 	font-weight: var(--font-semi);
 	align-items: center;
 }
-.k-select-dropdown .k-selector-search {
+.k-selector-dropdown .k-selector-search {
 	padding: var(--dropdown-padding);
 	border-top: 1px solid var(--dropdown-color-hr);
 }
-.k-select-dropdown .k-selector-input {
+.k-selector-dropdown .k-selector-input {
 	background: var(--color-gray-800);
 	height: var(--height-sm);
 	line-height: var(--height-sm);
 }
-
-.k-select-dropdown .k-selector-footer {
+.k-selector-dropdown .k-selector-footer {
 	padding: var(--dropdown-padding);
 }
-.k-select-dropdown .k-selector-body {
+.k-selector-dropdown .k-selector-body {
 	max-height: calc(
 		(var(--button-height) * 10) + calc(var(--dropdown-padding) * 2)
 	);
@@ -97,14 +94,14 @@ export default {
 	scroll-padding-top: var(--dropdown-padding);
 	scroll-padding-bottom: var(--dropdown-padding);
 }
-.k-select-dropdown .k-selector-button {
+.k-selector-dropdown .k-selector-button {
 	gap: 0.75rem;
 }
-.k-select-dropdown .k-selector-button:hover {
+.k-selector-dropdown .k-selector-button:hover {
 	--button-color-back: var(--dropdown-color-hr);
 }
 
-.k-select-dropdown .k-selector-body + .k-selector-footer {
+.k-selector-dropdown .k-selector-body + .k-selector-footer {
 	border-top: 1px solid var(--dropdown-color-hr);
 }
 </style>
