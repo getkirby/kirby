@@ -60,15 +60,12 @@
 
 <script>
 import { autofocus, disabled, id } from "@/mixins/props.js";
+import { props as Selector } from "@/components/Forms/Selector.vue";
 
 export const props = {
-	mixins: [autofocus, disabled, id],
+	mixins: [autofocus, disabled, id, Selector],
 	inheritAttrs: false,
 	props: {
-		accept: {
-			type: String,
-			default: "all"
-		},
 		draggable: {
 			default: true,
 			type: Boolean
@@ -90,18 +87,6 @@ export const props = {
 		 * The minimum number of required tags
 		 */
 		min: Number,
-		/**
-		 * Options will be shown in the autocomplete dropdown
-		 * as soon as you start typing.
-		 */
-		options: {
-			type: Array,
-			default: () => []
-		},
-		search: {
-			default: true,
-			type: [Object, Boolean]
-		},
 		sort: {
 			default: false,
 			type: Boolean

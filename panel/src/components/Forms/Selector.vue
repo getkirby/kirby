@@ -62,9 +62,9 @@
 <script>
 export const props = {
 	props: {
-		add: {
-			default: true,
-			type: Boolean
+		accept: {
+			type: String,
+			default: "all"
 		},
 		icon: {
 			type: String
@@ -79,11 +79,6 @@ export const props = {
 		options: {
 			default: () => [],
 			type: Array
-		},
-		placeholder: {
-			default() {
-				return "Filter options";
-			}
 		},
 		search: {
 			default: true,
@@ -109,6 +104,12 @@ export default {
 		empty() {
 			return this.$t("options.none");
 		},
+		hasQuery() {
+			// min length for the search to kick in
+			const min = this.search.min ?? 0;
+
+			return this.query.length >= min;
+		},
 		inputPlaceholder() {
 			return this.options.length === 0 ? this.$t("enter") : this.$t("filter");
 		},
@@ -120,19 +121,17 @@ export default {
 			return new RegExp(`(${RegExp.escape(this.query)})`, "ig");
 		},
 		showCreateButton() {
-			if (this.add === false) {
+			if (this.accept !== "all") {
 				return false;
 			}
 
-			const query = this.query.trim();
-
 			// don't show the button if the query is empty
-			if (query.length === 0) {
+			if (this.query.length === 0) {
 				return false;
 			}
 
 			// don't show the button if the query is in the ignore list
-			if (this.ignore.includes(query) === true) {
+			if (this.ignore.includes(this.query) === true) {
 				return false;
 			}
 
@@ -145,7 +144,7 @@ export default {
 		showSearch() {
 			// if new options can be added,
 			// the search input is always needed
-			if (this.add === true) {
+			if (this.accept === "all") {
 				return true;
 			}
 
@@ -181,16 +180,13 @@ export default {
 			this.$emit("escape");
 		},
 		filter(query = "") {
-			this.query = query ?? "";
-
-			// min length for the search to kick in
-			const min = this.search.min ?? 0;
+			this.query = query;
 
 			// reset the focus on the input
 			this.selected = -1;
 
 			// show all results if the query is too short or empty
-			if (query.length < min) {
+			if (this.hasQuery === false) {
 				this.filtered = this.options;
 				return;
 			}
