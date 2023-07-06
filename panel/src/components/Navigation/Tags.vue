@@ -27,8 +27,8 @@
 					:add="accept === 'all'"
 					:disabled="disabled"
 					:ignore="value"
+					:label="$t('add')"
 					:options="selectable"
-					label="Add"
 					@create="add($event)"
 					@select="add($event)"
 				>
@@ -51,9 +51,9 @@
 					:add="accept === 'all'"
 					:disabled="disabled"
 					:ignore="value"
+					:label="$t('replace')"
 					:options="selectable"
 					:value="editing?.tag.text"
-					label="Replace with"
 					@create="replace($event)"
 					@select="replace($event)"
 				/>
