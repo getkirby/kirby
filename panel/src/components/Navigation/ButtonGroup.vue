@@ -76,31 +76,22 @@ export default {
 	gap: 0;
 }
 
-/** @todo adapt when new dropdowns are here */
 .k-button-group[data-layout="collapsed"]
-	> .k-button[data-variant="filled"]:has(
-		+ .k-button[data-variant="filled"],
-		+ .k-dropdown > .k-button[data-variant="filled"]
-	),
-.k-button-group[data-layout="collapsed"]
-	> .k-dropdown:has(+ .k-button[data-variant="filled"])
-	> .k-button[data-variant="filled"] {
+	> .k-button[data-variant="filled"]:not(:last-child) {
 	border-start-end-radius: 0;
 	border-end-end-radius: 0;
 }
 
 .k-button-group[data-layout="collapsed"]
-	> .k-button[data-variant="filled"]
-	+ .k-button[data-variant="filled"],
-.k-button-group[data-layout="collapsed"]
-	> .k-button[data-variant="filled"]
-	+ .k-dropdown
-	> .k-button[data-variant="filled"],
-.k-button-group[data-layout="collapsed"]
-	> .k-dropdown:has(+ .k-button[data-variant="filled"])
-	+ .k-button[data-variant="filled"] {
+	> .k-button[data-variant="filled"]:not(:first-child) {
 	border-start-start-radius: 0;
 	border-end-start-radius: 0;
 	border-left: 1px solid var(--theme-color-500, var(--color-gray-400));
+}
+
+.k-button-group[data-layout="collapsed"]
+	> .k-button[data-variant="filled"]:focus-visible {
+	z-index: 1;
+	border-radius: var(--button-rounded);
 }
 </style>

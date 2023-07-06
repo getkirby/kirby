@@ -11,7 +11,7 @@
 				:disabled="disabled"
 				:theme="theme"
 			/>
-			<k-dropdown v-if="mode">
+			<template v-if="mode">
 				<k-button
 					icon="dots"
 					size="sm"
@@ -21,7 +21,7 @@
 					@click="$refs.dropdown.toggle()"
 				/>
 				<k-dropdown-content ref="dropdown" :options="dropdown" align="end" />
-			</k-dropdown>
+			</template>
 		</k-button-group>
 	</nav>
 </template>

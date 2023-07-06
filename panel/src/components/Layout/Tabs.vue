@@ -118,29 +118,33 @@ export default {
 
 <style>
 .k-tabs {
+	--button-height: var(--height-md);
+	--button-padding: var(--spacing-2);
 	display: flex;
-	gap: var(--spacing-6);
-	position: relative;
+	gap: var(--spacing-1);
 	margin-bottom: var(--spacing-12);
+	margin-inline-start: calc(var(--button-padding) * -1);
 }
 
 .k-tab-button.k-button {
-	--button-height: var(--height-lg);
-	--button-padding: 0;
-	--button-rounded: 0;
-	border-bottom: 2px solid transparent;
+	margin-block: 2px;
 	overflow-x: visible;
 }
 
-.k-tab-button[aria-current] {
-	border-color: var(--color-black);
+.k-tab-button[aria-current]::after {
+	position: absolute;
+	content: "";
+	height: 2px;
+	inset-inline: var(--button-padding);
+	bottom: -2px;
+	background: currentColor;
 }
 
 .k-tabs-badge {
 	position: absolute;
 	top: 2px;
 	font-variant-numeric: tabular-nums;
-	inset-inline-end: 2px;
+	inset-inline-end: calc(var(--button-padding) + 2px);
 	transform: translateX(100%);
 	line-height: 1.5;
 	padding: 0 0.25rem;

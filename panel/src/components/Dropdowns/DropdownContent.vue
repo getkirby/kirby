@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import Vue from "vue";
+
 let OpenDropdown = null;
 
 /**
@@ -44,6 +46,10 @@ export default {
 		align: {
 			type: String,
 			default: "left"
+		},
+		disabled: {
+			type: Boolean,
+			default: false
 		},
 		navigate: {
 			default: true,
@@ -76,7 +82,8 @@ export default {
 		return {
 			dropup: false,
 			isOpen: false,
-			items: []
+			items: [],
+			opener: null
 		};
 	},
 	methods: {
@@ -120,8 +127,9 @@ export default {
 			this.resetPosition();
 			this.isOpen = OpenDropdown = false;
 			this.$emit("close");
+			window.removeEventListener("resize", this.position);
 		},
-		onOpen(opener) {
+		onOpen() {
 			this.isOpen = true;
 
 			// store a global reference to the dropdown
@@ -129,8 +137,9 @@ export default {
 
 			// wait until the dropdown is rendered
 			this.$nextTick(() => {
-				if (this.$el && opener) {
-					this.position(opener);
+				if (this.$el && this.opener) {
+					window.addEventListener("resize", this.position);
+					this.position();
 					this.$emit("open");
 				}
 			});
@@ -147,13 +156,17 @@ export default {
 		 * @public
 		 */
 		open(opener) {
+			if (this.disabled === true) {
+				return false;
+			}
+
 			if (OpenDropdown && OpenDropdown !== this) {
 				// close the current dropdown
 				OpenDropdown.close();
 			}
 
 			// find the opening element
-			opener =
+			this.opener =
 				opener ??
 				window.event?.target.closest("button") ??
 				window.event?.target;
@@ -162,15 +175,20 @@ export default {
 			// soon as they are loaded
 			this.fetchOptions((items) => {
 				this.items = items;
-				this.onOpen(opener);
+				this.onOpen();
 			});
 		},
-		position(opener) {
+		position() {
 			// reset the dropup state before position calculation
 			this.dropup = false;
 
+			// drill down to the element of a component
+			if (this.opener instanceof Vue) {
+				this.opener = this.opener.$el;
+			}
+
 			// get the dimensions of the opening button
-			const openerRect = opener.getBoundingClientRect();
+			const openerRect = this.opener.getBoundingClientRect();
 
 			// set the top position and take scroll position into consideration
 			this.$el.style.top =
@@ -182,7 +200,9 @@ export default {
 			this.$el.style.left = openerRect.left + window.scrollX + offsetX + "px";
 
 			// open the modal after the correct positioning has been applied
-			this.$el.showModal();
+			if (this.$el.open !== true) {
+				this.$el.showModal();
+			}
 
 			// as we just set style.top, wait one tick before measuring dropdownRect
 			this.$nextTick(() => {

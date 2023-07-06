@@ -215,6 +215,7 @@ export default {
 	color: var(--button-color-text);
 	font-variant-numeric: tabular-nums;
 	overflow-x: clip;
+	text-align: var(--button-align);
 }
 
 .k-button-icon {
@@ -236,17 +237,17 @@ export default {
 /** Dimmed Buttons **/
 .k-button:where([data-variant="dimmed"]) {
 	--button-color-icon: var(--color-text);
-	--button-color-text: var(--color-text-dimmed);
+	--button-color-dimmed-on: var(--color-text-dimmed);
+	--button-color-dimmed-off: var(--color-text);
+	--button-color-text: var(--button-color-dimmed-on);
 }
-.k-button:where([data-variant="dimmed"]):hover {
-	filter: brightness(50%);
-}
-.k-button:where([data-variant="dimmed"]):where([aria-current]) {
-	--button-color-text: var(--color-text);
+.k-button:where([data-variant="dimmed"]):is(:hover, [aria-current]) {
+	--button-color-text: var(--button-color-dimmed-off);
 }
 .k-button:where([data-theme][data-variant="dimmed"]) {
 	--button-color-icon: var(--theme-color-icon);
-	--button-color-text: var(--theme-color-text-dimmed);
+	--button-color-dimmed-on: var(--theme-color-text-dimmed);
+	--button-color-dimmed-off: var(--theme-color-text);
 }
 
 /** Filled Buttons **/

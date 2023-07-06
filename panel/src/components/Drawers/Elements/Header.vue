@@ -47,6 +47,7 @@ export default {
 
 <style>
 .k-drawer-header {
+	--button-height: calc(var(--drawer-header-height) - var(--spacing-1));
 	flex-shrink: 0;
 	height: var(--drawer-header-height);
 	padding-inline-start: var(--drawer-header-padding);
@@ -68,7 +69,6 @@ export default {
 	padding-inline-end: 0.75rem;
 }
 .k-drawer-option {
-	--button-height: calc(var(--drawer-header-height) - var(--spacing-1));
 	--button-width: var(--button-height);
 }
 .k-drawer-option[aria-disabled] {

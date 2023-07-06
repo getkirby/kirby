@@ -47,6 +47,7 @@ export default {
 	display: flex;
 	align-items: center;
 	font-size: var(--text-xs);
+	overflow-x: visible;
 }
 .k-drawer-tab.k-button[aria-current]::after {
 	position: absolute;

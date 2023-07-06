@@ -176,26 +176,24 @@ export default {
 <style>
 .k-writer:has(.k-writer-toolbar:not([data-inline="true"])) {
 	grid-template-areas: "topbar" "content";
-	grid-template-rows: 38px 1fr;
+	grid-template-rows: var(--toolbar-size) 1fr;
+	gap: 0;
 }
 
 .k-writer-toolbar:has(~ :focus-within) .k-button[aria-current] {
-	color: var(--color-blue-400);
+	color: var(--color-focus);
 }
 
 .k-writer-toolbar[data-inline="true"] {
-	--toolbar-size: var(--height-md);
 	--toolbar-text: var(--color-white);
 	--toolbar-back: var(--color-black);
-	--toolbar-hover: rgba(255, 255, 255, 0.15);
-	--toolbar-border: var(--color-gray-700);
+	--toolbar-hover: rgba(255, 255, 255, 0.2);
+	--toolbar-border: var(--color-gray-800);
 
 	position: absolute;
 	transform: translateX(-50%) translateY(-0.75rem);
 	z-index: calc(var(--z-dropdown) + 1);
-
-	box-shadow: var(--shadow);
-	border: 0;
+	box-shadow: var(--shadow-toolbar);
 	border-radius: var(--rounded);
 }
 </style>

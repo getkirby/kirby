@@ -22,13 +22,8 @@
 
 		<!-- Content -->
 		<div class="k-item-content">
-			<h3 class="k-item-title">
-				<k-link
-					v-if="link !== false"
-					:target="target"
-					:to="link"
-					:title="$helper.string.unescapeHTML(text)"
-				>
+			<h3 class="k-item-title" :title="$helper.string.unescapeHTML(text)">
+				<k-link v-if="link !== false" :target="target" :to="link">
 					<!-- eslint-disable-next-line vue/no-v-html -->
 					<span v-html="text ?? '–'" />
 				</k-link>
