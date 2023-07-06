@@ -159,7 +159,11 @@ export default {
 .k-layout:focus {
 	outline: 0;
 }
-
+/** override structure field style for sections **/
+section.k-layout {
+	z-index: auto;
+	border: unset;
+}
 /** Toolbar **/
 .k-layout-toolbar {
 	position: absolute;
