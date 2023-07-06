@@ -189,11 +189,6 @@ export default {
 				return false;
 			}
 
-			// check for duplicates
-			if (this.isDuplicate(tag) === true) {
-				return false;
-			}
-
 			this.tags.push(tag);
 			this.save();
 		},
@@ -216,8 +211,12 @@ export default {
 				return false;
 			}
 
-			// if only options are allwed as value
+			// if only options are allowed as value
 			if (this.accept === "options" && !this.option(tag)) {
+				return false;
+			}
+
+			if (this.isDuplicate(tag) === true) {
 				return false;
 			}
 
@@ -245,13 +244,7 @@ export default {
 			const updated = this.tag(value);
 
 			if (this.isAllowed(updated) === false) {
-				return this.$panel.notification.error("The option is not valid");
-			}
-
-			if (this.isDuplicate(updated) === true) {
-				return this.$panel.notification.error(
-					"The option has already been added"
-				);
+				return false;
 			}
 
 			this.$set(this.tags, index, updated);
