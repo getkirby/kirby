@@ -37,7 +37,7 @@
 					icon="angle-down"
 					@click="$refs.options.toggle()"
 				/>
-				<k-dropdown-content ref="options" align="right">
+				<k-dropdown-content ref="options" align-x="end">
 					<k-dropdown-item icon="angle-up" @click="$emit('prepend')">
 						{{ $t("insert.before") }}
 					</k-dropdown-item>
@@ -55,7 +55,11 @@
 					<k-dropdown-item icon="copy" @click="$emit('duplicate')">
 						{{ $t("duplicate") }}
 					</k-dropdown-item>
-					<k-dropdown-item :disabled="layouts.length === 1" icon="dashboard" @click="$emit('change')">
+					<k-dropdown-item
+						:disabled="layouts.length === 1"
+						icon="dashboard"
+						@click="$emit('change')"
+					>
 						{{ $t("field.layout.change") }}
 					</k-dropdown-item>
 					<hr />

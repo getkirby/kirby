@@ -31,7 +31,7 @@
 		/>
 		<k-dropdown-content
 			ref="options"
-			:align="align"
+			:align-x="align"
 			:options="options"
 			class="k-options-dropdown-content"
 			@action="onAction"

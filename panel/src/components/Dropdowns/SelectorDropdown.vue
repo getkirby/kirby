@@ -4,7 +4,7 @@
 		<k-dropdown-content
 			ref="dropdown"
 			class="k-selector-dropdown-content"
-			:align="align"
+			:align-x="align"
 			:autofocus="false"
 			:disabled="disabled"
 			:navigate="false"

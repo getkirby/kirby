@@ -1,9 +1,9 @@
 <template>
 	<dialog
-		ref="dropdown"
 		v-if="isOpen"
-		:data-align="align"
-		:data-dropup="dropup"
+		ref="dropdown"
+		:data-align-x="align.x"
+		:data-align-y="align.y"
 		:data-theme="theme"
 		class="k-dropdown-content"
 		@close="onClose"
@@ -40,12 +40,20 @@ let OpenDropdown = null;
 export default {
 	props: {
 		/**
-		 * Alignment of the dropdown items
-		 * @values left, right
+		 * Default horizontal alignment of the dropdown
+		 * @values start, end
 		 */
-		align: {
+		alignX: {
 			type: String,
-			default: "left"
+			default: "start"
+		},
+		/**
+		 * Default vertical alignment of the dropdown
+		 * @values top, bottom
+		 */
+		alignY: {
+			type: String,
+			default: "bottom"
 		},
 		disabled: {
 			type: Boolean,
@@ -80,7 +88,10 @@ export default {
 	],
 	data() {
 		return {
-			dropup: false,
+			align: {
+				x: this.alignX,
+				y: this.alignY
+			},
 			isOpen: false,
 			items: [],
 			opener: null
@@ -118,7 +129,7 @@ export default {
 			this.$refs.navigate.focus(n);
 		},
 		onClick(event) {
-			// close the dialog if the backdrop is being clicked
+			// close the dialog element if the backdrop is being clicked
 			if (event.target === this.$el) {
 				this.close();
 			}
@@ -179,8 +190,18 @@ export default {
 			});
 		},
 		position() {
-			// reset the dropup state before position calculation
-			this.dropup = false;
+			// reset to the alignment defaults
+			// before running position calculation
+			this.align = {
+				x: this.alignX,
+				y: this.alignY
+			};
+
+			if (this.align.x === "right") {
+				this.align.x = "end";
+			} else if (this.align.x === "left") {
+				this.align.x = "start";
+			}
 
 			// drill down to the element of a component
 			if (this.opener instanceof Vue) {
@@ -188,18 +209,14 @@ export default {
 			}
 
 			// get the dimensions of the opening button
-			const openerRect = this.opener.getBoundingClientRect();
+			const opener = this.opener.getBoundingClientRect();
 
-			// set the top position and take scroll position into consideration
-			this.$el.style.top =
-				openerRect.top + window.scrollY + openerRect.height + "px";
+			// set the default position
+			// and take scroll position into consideration
+			this.$el.style.left = opener.left + window.scrollX + opener.width + "px";
+			this.$el.style.top = opener.top + window.scrollY + opener.height + "px";
 
-			// set the left position based on the alignment
-			const offsetX =
-				this.align === "end" || this.align === "right" ? openerRect.width : 0;
-			this.$el.style.left = openerRect.left + window.scrollX + offsetX + "px";
-
-			// open the modal after the correct positioning has been applied
+			// open the modal after the default positioning has been applied
 			if (this.$el.open !== true) {
 				this.$el.showModal();
 			}
@@ -207,20 +224,43 @@ export default {
 			// as we just set style.top, wait one tick before measuring dropdownRect
 			this.$nextTick(() => {
 				// get the dimensions of the open dropdown
-				const dropdownRect = this.$el.getBoundingClientRect();
-				const safeSpaceHeight = 10;
+				const rect = this.$el.getBoundingClientRect();
+				const safeSpace = 10;
 
-				// activates the dropup if the dropdown content overflows
-				// to the bottom of the screen but only if there is
-				// enough space top of screen
-				if (
-					dropdownRect.top + dropdownRect.height >
-						window.innerHeight - safeSpaceHeight &&
-					dropdownRect.height + safeSpaceHeight * 2 < dropdownRect.top
+				// Horizontal: check if dropdown is outside of viewport
+				// and adapt alignment if necessary
+				if (this.align.x === "end") {
+					if (rect.left - rect.width < safeSpace) {
+						this.align.x === "start";
+					}
+				} else if (
+					rect.left + rect.width > window.innerWidth - safeSpace &&
+					rect.width + safeSpace < rect.left
 				) {
+					this.align.x = "end";
+				}
+
+				if (this.align.x === "start") {
+					this.$el.style.left =
+						parseInt(this.$el.style.left) - opener.width + "px";
+				}
+
+				// Vertical: check if dropdown is outside of viewport
+				// and adapt alignment if necessary
+				if (this.align.y === "top") {
+					if (rect.height + safeSpace > rect.top) {
+						this.align.y === "bottom";
+					}
+				} else if (
+					rect.top + rect.height > window.innerHeight - safeSpace &&
+					rect.height + safeSpace < rect.top
+				) {
+					this.align.y = "top";
+				}
+
+				if (this.align.y === "top") {
 					this.$el.style.top =
-						parseInt(this.$el.style.top) - openerRect.height + "px";
-					this.dropup = true;
+						parseInt(this.$el.style.top) - opener.height + "px";
 				}
 			});
 		},
@@ -268,12 +308,13 @@ export default {
 	background: none;
 }
 
-.k-dropdown-content[data-align="right"],
-.k-dropdown-content[data-align="end"] {
+.k-dropdown-content[data-align-x="end"] {
 	--dropdown-x: -100%;
 }
-
-.k-dropdown-content[data-dropup="true"] {
+.k-dropdown-content[data-align-x="center"] {
+	--dropdown-x: -50%;
+}
+.k-dropdown-content[data-align-y="top"] {
 	--dropdown-y: -100%;
 }
 
