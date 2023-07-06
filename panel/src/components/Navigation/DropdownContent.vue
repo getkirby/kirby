@@ -76,7 +76,8 @@ export default {
 		return {
 			dropup: false,
 			isOpen: false,
-			items: []
+			items: [],
+			opener: null
 		};
 	},
 	methods: {
@@ -120,8 +121,9 @@ export default {
 			this.resetPosition();
 			this.isOpen = OpenDropdown = false;
 			this.$emit("close");
+			window.removeEventListener("resize", this.position);
 		},
-		onOpen(opener) {
+		onOpen() {
 			this.isOpen = true;
 
 			// store a global reference to the dropdown
@@ -129,8 +131,9 @@ export default {
 
 			// wait until the dropdown is rendered
 			this.$nextTick(() => {
-				if (this.$el && opener) {
-					this.position(opener);
+				if (this.$el && this.opener) {
+					window.addEventListener("resize", this.position);
+					this.position();
 					this.$emit("open");
 				}
 			});
@@ -153,7 +156,7 @@ export default {
 			}
 
 			// find the opening element
-			opener =
+			this.opener =
 				opener ??
 				window.event?.target.closest("button") ??
 				window.event?.target;
@@ -162,15 +165,15 @@ export default {
 			// soon as they are loaded
 			this.fetchOptions((items) => {
 				this.items = items;
-				this.onOpen(opener);
+				this.onOpen();
 			});
 		},
-		position(opener) {
+		position() {
 			// reset the dropup state before position calculation
 			this.dropup = false;
 
 			// get the dimensions of the opening button
-			const openerRect = opener.getBoundingClientRect();
+			const openerRect = this.opener.getBoundingClientRect();
 
 			// set the top position and take scroll position into consideration
 			this.$el.style.top =
