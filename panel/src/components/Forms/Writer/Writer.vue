@@ -350,6 +350,7 @@ export default {
 	position: relative;
 	width: 100%;
 	display: grid;
+	line-height: 1.5;
 	grid-template-areas: "content";
 	gap: var(--spacing-1);
 }
