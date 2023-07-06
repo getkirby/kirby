@@ -5,7 +5,9 @@
 		:counter="counterOptions"
 		class="k-tags-field"
 	>
+		<k-empty v-if="hasNoOptions" :icon="icon" :text="$t('options.none')" />
 		<k-input
+			v-else
 			v-bind="$props"
 			:id="_uid"
 			ref="input"
@@ -28,6 +30,11 @@ import counter from "@/mixins/forms/counter.js";
 export default {
 	mixins: [Field, Input, TagsInput, counter],
 	inheritAttrs: false,
+	computed: {
+		hasNoOptions() {
+			return this.options.length === 0 && this.accept === "options";
+		}
+	},
 	methods: {
 		focus() {
 			this.$refs.input.focus();

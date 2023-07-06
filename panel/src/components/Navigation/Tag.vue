@@ -1,8 +1,8 @@
 <template>
-	<span
+	<button
 		ref="button"
 		class="k-tag"
-		tabindex="0"
+		type="button"
 		@keydown.delete.prevent="remove"
 	>
 		<span class="k-tag-text"><slot /></span>
@@ -12,7 +12,7 @@
 			icon="cancel-small"
 			@click.native="remove"
 		/>
-	</span>
+	</button>
 </template>
 
 <script>
@@ -45,14 +45,13 @@ export default {
 
 <style>
 :root {
-	--tag-color-back: var(--color-gray-900);
-	--tag-color-text: var(--color-light);
-	--tag-color-toggle: rgba(255, 255, 255, 0.7);
-	--tag-color-toggle-border: rgba(255, 255, 255, 0.15);
+	--tag-color-back: var(--color-black);
+	--tag-color-text: var(--color-white);
+	--tag-color-toggle: currentColor;
 	--tag-color-disabled-back: var(--color-gray-600);
 	--tag-color-disabled-text: var(--tag-color-text);
-	--tag-rounded: var(--rounded);
-	--tag-height: var(--height-sm);
+	--tag-height: var(--height-xs);
+	--tag-rounded: var(--rounded-sm);
 }
 
 .k-tag {
@@ -73,18 +72,19 @@ export default {
 	outline: var(--outline);
 }
 .k-tag-text {
-	padding-inline: 0.75rem;
+	padding-inline: 0.5rem;
 	line-height: var(--leading-tight);
 }
 .k-tag-toggle {
 	width: var(--tag-height);
 	height: var(--tag-height);
-	padding-inline-end: 1px;
-	border-inline-start: 1px solid var(--tag-color-toggle-border);
-	color: var(--tag-color-toggle);
+	filter: brightness(70%);
+}
+.k-tag-toggle:hover {
+	filter: brightness(100%);
 }
 .k-tag:has(.k-tag-toggle) .k-tag-text {
-	padding-inline-end: 0.5rem;
+	padding-inline-end: 0;
 }
 
 [data-disabled="true"] .k-tag {

@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import Vue from "vue";
+
 let OpenDropdown = null;
 
 /**
@@ -44,6 +46,10 @@ export default {
 		align: {
 			type: String,
 			default: "left"
+		},
+		disabled: {
+			type: Boolean,
+			default: false
 		},
 		navigate: {
 			default: true,
@@ -150,6 +156,10 @@ export default {
 		 * @public
 		 */
 		open(opener) {
+			if (this.disabled === true) {
+				return false;
+			}
+
 			if (OpenDropdown && OpenDropdown !== this) {
 				// close the current dropdown
 				OpenDropdown.close();
@@ -172,6 +182,11 @@ export default {
 			// reset the dropup state before position calculation
 			this.dropup = false;
 
+			// drill down to the element of a component
+			if (this.opener instanceof Vue) {
+				this.opener = this.opener.$el;
+			}
+
 			// get the dimensions of the opening button
 			const openerRect = this.opener.getBoundingClientRect();
 
@@ -185,7 +200,9 @@ export default {
 			this.$el.style.left = openerRect.left + window.scrollX + offsetX + "px";
 
 			// open the modal after the correct positioning has been applied
-			this.$el.showModal();
+			if (this.$el.open !== true) {
+				this.$el.showModal();
+			}
 
 			// as we just set style.top, wait one tick before measuring dropdownRect
 			this.$nextTick(() => {

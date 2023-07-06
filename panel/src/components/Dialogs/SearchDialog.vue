@@ -199,12 +199,13 @@ export default {
 	height: var(--input-height);
 	border-left: 1px solid var(--color-border);
 	line-height: var(--input-height);
+	border-radius: var(--rounded);
 }
 .k-search-dialog-input input:focus {
 	outline: 0;
 }
 
-.k-search-dialog-close {
+.k-search-dialog-input .k-search-dialog-close {
 	flex-shrink: 0;
 }
 
