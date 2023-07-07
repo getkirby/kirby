@@ -1,6 +1,6 @@
 <template>
 	<k-field v-bind="$props" class="k-structure-field" @click.native.stop>
-		<template v-if="hasFields" #options>
+		<template v-if="hasFields && !disabled" #options>
 			<k-dropdown>
 				<k-button
 					icon="dots"
