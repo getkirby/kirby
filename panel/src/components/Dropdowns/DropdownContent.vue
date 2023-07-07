@@ -2,8 +2,8 @@
 	<dialog
 		v-if="isOpen"
 		ref="dropdown"
-		:data-align-x="align.x"
-		:data-align-y="align.y"
+		:data-align-x="axis.x"
+		:data-align-y="axis.y"
 		:data-theme="theme"
 		class="k-dropdown-content"
 		@close="onClose"
@@ -39,6 +39,13 @@ let OpenDropdown = null;
  */
 export default {
 	props: {
+		/**
+		 * @deprecated Use `alignX` instead
+		 * @todo Remove in v5, then rename `axis` data to `align`
+		 */
+		align: {
+			type: String
+		},
 		/**
 		 * Default horizontal alignment of the dropdown
 		 * @values start, end
@@ -88,7 +95,7 @@ export default {
 	],
 	data() {
 		return {
-			align: {
+			axis: {
 				x: this.alignX,
 				y: this.alignY
 			},
@@ -96,6 +103,13 @@ export default {
 			items: [],
 			opener: null
 		};
+	},
+	created() {
+		if (this.align) {
+			window.panel.deprecated(
+				"<k-dropdown-content>: `align` prop will be removed in a future version. Use the `alignX` prop instead."
+			);
+		}
 	},
 	methods: {
 		/**
@@ -192,15 +206,15 @@ export default {
 		position() {
 			// reset to the alignment defaults
 			// before running position calculation
-			this.align = {
-				x: this.alignX,
+			this.axis = {
+				x: this.alignX ?? this.align,
 				y: this.alignY
 			};
 
-			if (this.align.x === "right") {
-				this.align.x = "end";
-			} else if (this.align.x === "left") {
-				this.align.x = "start";
+			if (this.axis.x === "right") {
+				this.axis.x = "end";
+			} else if (this.axis.x === "left") {
+				this.axis.x = "start";
 			}
 
 			// drill down to the element of a component
@@ -229,36 +243,36 @@ export default {
 
 				// Horizontal: check if dropdown is outside of viewport
 				// and adapt alignment if necessary
-				if (this.align.x === "end") {
+				if (this.axis.x === "end") {
 					if (rect.left - rect.width < safeSpace) {
-						this.align.x === "start";
+						this.axis.x === "start";
 					}
 				} else if (
 					rect.left + rect.width > window.innerWidth - safeSpace &&
 					rect.width + safeSpace < rect.left
 				) {
-					this.align.x = "end";
+					this.axis.x = "end";
 				}
 
-				if (this.align.x === "start") {
+				if (this.axis.x === "start") {
 					this.$el.style.left =
 						parseInt(this.$el.style.left) - opener.width + "px";
 				}
 
 				// Vertical: check if dropdown is outside of viewport
 				// and adapt alignment if necessary
-				if (this.align.y === "top") {
+				if (this.axis.y === "top") {
 					if (rect.height + safeSpace > rect.top) {
-						this.align.y === "bottom";
+						this.axis.y === "bottom";
 					}
 				} else if (
 					rect.top + rect.height > window.innerHeight - safeSpace &&
 					rect.height + safeSpace < rect.top
 				) {
-					this.align.y = "top";
+					this.axis.y = "top";
 				}
 
-				if (this.align.y === "top") {
+				if (this.axis.y === "top") {
 					this.$el.style.top =
 						parseInt(this.$el.style.top) - opener.height + "px";
 				}
