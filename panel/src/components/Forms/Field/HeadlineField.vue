@@ -1,6 +1,6 @@
 <template>
 	<div class="k-headline-field">
-		<k-headline size="large">
+		<k-headline :data-numbered="numbered" size="large">
 			{{ label }}
 		</k-headline>
 		<footer v-if="help" class="k-field-footer">
@@ -17,11 +17,16 @@ import { help, label } from "@/mixins/props.js";
  */
 export default {
 	mixins: [help, label],
-	inheritAttrs: false
+	props: {
+		numbered: Boolean
+	}
 };
 </script>
 
 <style>
+body {
+	counter-reset: headline-counter;
+}
 .k-headline-field {
 	position: relative;
 	padding-top: 1.5rem;
@@ -34,6 +39,12 @@ if the headline is the very first form element */
 
 .k-headline-field h2.k-headline {
 	font-weight: var(--font-normal);
-	align-items: baseline;
+}
+.k-headline-field .k-headline[data-numbered]::before {
+	counter-increment: headline-counter;
+	content: counter(headline-counter, decimal-leading-zero);
+	color: var(--color-text-dimmed);
+	font-weight: 400;
+	padding-inline-end: 0.25rem;
 }
 </style>
