@@ -147,6 +147,7 @@ export default {
 				this.$reload({
 					globals: ["$system", "$translation"]
 				});
+				this.$panel.notification.success(this.$t("welcome"));
 			} catch (error) {
 				this.$emit("error", error);
 			} finally {
