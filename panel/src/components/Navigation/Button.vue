@@ -279,6 +279,9 @@ export default {
 		aspect-ratio: 1/1;
 		--button-text-display: none;
 	}
+	.k-button:is([data-responsive]:has(.k-button-icon)) .k-button-arrow {
+		display: none;
+	}
 }
 
 /** Inactive buttons **/
