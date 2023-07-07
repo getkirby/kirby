@@ -1,17 +1,19 @@
 <template>
-	<ul :style="'--columns:' + columns" class="k-checkboxes-input">
-		<template v-if="options.length">
-			<li v-for="(option, index) in options" :key="index">
-				<k-checkbox-input
-					:id="id + '-' + index"
-					:label="option.text"
-					:value="selected.indexOf(option.value) !== -1"
-					@input="onInput(option.value, $event)"
-				/>
-			</li>
-		</template>
-		<k-empty icon="info" v-else theme="info">{{ $t("options.none") }}</k-empty>
+	<ul
+		v-if="options.length"
+		:style="'--columns:' + columns"
+		class="k-checkboxes-input"
+	>
+		<li v-for="(option, index) in options" :key="index">
+			<k-checkbox-input
+				:id="id + '-' + index"
+				:label="option.text"
+				:value="selected.indexOf(option.value) !== -1"
+				@input="onInput(option.value, $event)"
+			/>
+		</li>
 	</ul>
+	<k-empty icon="info" v-else theme="info">{{ $t("options.none") }}</k-empty>
 </template>
 
 <script>

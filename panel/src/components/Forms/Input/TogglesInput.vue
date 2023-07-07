@@ -1,5 +1,6 @@
 <template>
 	<ul
+		v-if="options.length"
 		:data-invalid="$v.$invalid"
 		:data-labels="labels"
 		:style="'--options:' + (columns || options.length)"
@@ -29,6 +30,7 @@
 			</label>
 		</li>
 	</ul>
+	<k-empty icon="info" v-else theme="info">{{ $t("options.none") }}</k-empty>
 </template>
 
 <script>
@@ -67,7 +69,7 @@ export default {
 			(
 				this.$el.querySelector("input[checked]") ||
 				this.$el.querySelector("input")
-			).focus();
+			)?.focus();
 		},
 		onClick(value) {
 			if (value === this.value && this.reset && !this.required) {
@@ -100,6 +102,9 @@ export default {
 }
 .k-input[data-type="toggles"].grow {
 	display: flex;
+}
+.k-input[data-type="toggles"][data-theme="field"]:has(.k-empty) {
+	outline: 0;
 }
 
 .k-toggles-input {
