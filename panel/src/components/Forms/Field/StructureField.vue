@@ -95,7 +95,7 @@ export default {
 		/**
 		 * Fields for the form
 		 */
-		fields: Object,
+		fields: [Array, Object],
 		/**
 		 * How many rows to show per page
 		 */
