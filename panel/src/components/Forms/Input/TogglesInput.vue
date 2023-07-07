@@ -8,8 +8,9 @@
 	>
 		<li v-for="(option, index) in options" :key="index">
 			<input
-				:id="id + '-' + index"
 				:aria-label="option.text"
+				:disabled="disabled"
+				:id="id + '-' + index"
 				:value="option.value"
 				:name="id"
 				:checked="value === option.value"
@@ -105,6 +106,7 @@ export default {
 }
 .k-input[data-type="toggles"][data-theme="field"]:has(.k-empty) {
 	outline: 0;
+	display: flex;
 }
 
 .k-toggles-input {
@@ -132,7 +134,10 @@ export default {
 	padding: 0 var(--spacing-3);
 	height: 100%;
 }
-
+.k-toggles-input li:has(input[disabled]) label {
+	color: var(--color-text-dimmed);
+	background: var(--color-light);
+}
 .k-toggles-input .k-icon + .k-toggles-text {
 	margin-inline-start: var(--spacing-2);
 }
