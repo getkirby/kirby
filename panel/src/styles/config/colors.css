@@ -229,6 +229,7 @@
 
 	--color-gray-100: hsl(var(--color-gray-hs), var(--color-gray-l-100));
 	--color-gray-200: hsl(var(--color-gray-hs), var(--color-gray-l-200));
+	--color-gray-250: #e8e8e8;
 	--color-gray-300: hsl(var(--color-gray-hs), var(--color-gray-l-300));
 	--color-gray-400: hsl(var(--color-gray-hs), var(--color-gray-l-400));
 	--color-gray-500: hsl(var(--color-gray-hs), var(--color-gray-l-500));

@@ -5,13 +5,17 @@
 </template>
 
 <style>
+body:has(.k-panel-outside) {
+	background: var(--color-gray-250);
+}
+
 .k-panel.k-panel-outside {
 	display: grid;
 	grid-template-rows: 1fr;
 	place-items: center;
-	height: 100vh;
-	height: 100dvh;
-	background: var(--color-gray-200);
+	min-height: 100vh;
+	min-height: 100dvh;
 	padding: var(--spacing-6);
+	background: var(--color-gray-250);
 }
 </style>

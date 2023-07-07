@@ -2,17 +2,19 @@
 	<k-panel-outside :class="viewClass">
 		<!-- <div> as a wrapper so that <k-view>
 			     has a single child for Flexbox layout -->
-		<div>
+		<div class="k-dialog k-login-dialog">
 			<h1 class="sr-only">
 				{{ $t("login") }}
 			</h1>
 
-			<k-login-alert v-if="issue" @click="issue = null">
+			<k-login-alert v-if="issue" @click.native="issue = null">
 				{{ issue }}
 			</k-login-alert>
 
-			<k-login-code v-if="form === 'code'" v-bind="$props" @error="onError" />
-			<k-login-plugin v-else :methods="methods" @error="onError" />
+			<k-dialog-body>
+				<k-login-code v-if="form === 'code'" v-bind="$props" @error="onError" />
+				<k-login-plugin v-else :methods="methods" @error="onError" />
+			</k-dialog-body>
 		</div>
 	</k-panel-outside>
 </template>
@@ -73,18 +75,27 @@ export default {
 </script>
 
 <style>
+.k-login-dialog {
+	container-type: inline-size;
+}
+
 .k-login-fields {
 	position: relative;
 }
 
 .k-login-toggler {
 	position: absolute;
-	top: 0;
-	inset-inline-end: 0;
+	top: -2px;
+	inset-inline-end: calc(var(--spacing-2) * -1);
 	z-index: 1;
-
+	color: var(--link-color);
+	padding-inline: var(--spacing-2);
 	text-decoration: underline;
-	font-size: 0.875rem;
+	text-decoration-color: var(--link-color);
+	text-underline-offset: 1px;
+	height: var(--height-xs);
+	line-height: 1;
+	border-radius: var(--rounded);
 }
 
 .k-login-form label abbr {
@@ -92,36 +103,11 @@ export default {
 }
 
 .k-login-buttons {
+	--button-padding: var(--spacing-3);
 	display: flex;
+	gap: 1.5rem;
 	align-items: center;
-	justify-content: flex-end;
-	padding: 1.5rem 0;
-}
-
-.k-login-back-button,
-.k-login-checkbox {
-	display: flex;
-	align-items: center;
-	flex-grow: 1;
-}
-
-.k-login-back-button {
-	margin-inline-start: -1rem;
-}
-
-.k-login-checkbox {
-	padding: 0.5rem 0;
-	font-size: var(--text-sm);
-	cursor: pointer;
-}
-
-.k-login-checkbox .k-checkbox-text {
-	opacity: 0.75;
-	transition: opacity 0.3s;
-}
-
-.k-login-checkbox:hover span,
-.k-login-checkbox:focus span {
-	opacity: 1;
+	justify-content: space-between;
+	margin-top: var(--spacing-10);
 }
 </style>

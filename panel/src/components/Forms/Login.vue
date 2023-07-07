@@ -30,6 +30,7 @@
 			<k-button
 				class="k-login-button"
 				icon="check"
+				size="lg"
 				theme="positive"
 				type="submit"
 				variant="filled"
@@ -146,6 +147,7 @@ export default {
 				this.$reload({
 					globals: ["$system", "$translation"]
 				});
+				this.$panel.notification.success(this.$t("welcome"));
 			} catch (error) {
 				this.$emit("error", error);
 			} finally {

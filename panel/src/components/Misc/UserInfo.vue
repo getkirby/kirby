@@ -6,7 +6,7 @@
 			:src="user.avatar.url"
 			ratio="1/1"
 		/>
-		<k-icon v-else type="user" />
+		<k-icon-frame v-else color="white" back="black" icon="user" />
 		{{ user.name || user.email || user }}
 	</div>
 </template>
@@ -26,18 +26,14 @@ export default {
 .k-user-info {
 	display: flex;
 	align-items: center;
-	line-height: 1;
 	font-size: var(--text-sm);
+	height: var(--height-lg);
+	gap: 0.75rem;
+	padding-inline: var(--spacing-2);
 }
-.k-user-info .k-image {
+.k-user-info .k-image-frame,
+.k-user-info .k-icon-frame {
 	width: 1.5rem;
-	margin-inline-end: 0.75rem;
-}
-.k-user-info .k-icon {
-	width: 1.5rem;
-	height: 1.5rem;
-	margin-inline-end: 0.75rem;
-	background: var(--color-black);
-	color: var(--color-white);
+	border-radius: var(--rounded-sm);
 }
 </style>

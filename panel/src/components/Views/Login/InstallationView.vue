@@ -1,101 +1,108 @@
 <template>
 	<k-panel-outside class="k-installation-view">
-		<!-- installation complete -->
-		<k-text v-if="isComplete">
-			<k-headline>{{ $t("installation.completed") }}</k-headline>
-			<k-link to="/login">
-				{{ $t("login") }}
-			</k-link>
-		</k-text>
+		<div class="k-dialog k-installation-dialog">
+			<k-dialog-body>
+				<!-- installation complete -->
+				<k-text v-if="isComplete">
+					<k-headline>{{ $t("installation.completed") }}</k-headline>
+					<k-link to="/login">
+						{{ $t("login") }}
+					</k-link>
+				</k-text>
 
-		<!-- ready to be installed -->
-		<form v-else-if="isReady" @submit.prevent="install">
-			<h1 class="sr-only">
-				{{ $t("installation") }}
-			</h1>
-			<k-fieldset
-				:fields="fields"
-				:novalidate="true"
-				:value="user"
-				@input="user = $event"
-			/>
-			<k-button
-				:text="$t('install')"
-				icon="check"
-				theme="positive"
-				type="submit"
-				variant="filled"
-			/>
-		</form>
+				<!-- ready to be installed -->
+				<form v-else-if="isReady" @submit.prevent="install">
+					<h1 class="sr-only">
+						{{ $t("installation") }}
+					</h1>
+					<k-fieldset
+						:fields="fields"
+						:novalidate="true"
+						:value="user"
+						@input="user = $event"
+					/>
+					<k-button
+						:text="$t('install')"
+						icon="check"
+						size="lg"
+						theme="positive"
+						type="submit"
+						variant="filled"
+					/>
+				</form>
 
-		<!-- not meeting requirements -->
-		<div v-else>
-			<k-headline>
-				{{ $t("installation.issues.headline") }}
-			</k-headline>
+				<!-- not meeting requirements -->
+				<div v-else>
+					<k-headline>
+						{{ $t("installation.issues.headline") }}
+					</k-headline>
 
-			<ul class="k-installation-issues">
-				<li v-if="isInstallable === false">
-					<k-icon type="alert" />
-					<!-- eslint-disable-next-line vue/no-v-html -->
-					<span v-html="$t('installation.disabled')" />
-				</li>
+					<ul class="k-installation-issues">
+						<li v-if="isInstallable === false">
+							<k-icon type="alert" />
+							<!-- eslint-disable-next-line vue/no-v-html -->
+							<span v-html="$t('installation.disabled')" />
+						</li>
 
-				<li v-if="requirements.php === false">
-					<k-icon type="alert" />
-					<!-- eslint-disable-next-line vue/no-v-html -->
-					<span v-html="$t('installation.issues.php')" />
-				</li>
+						<li v-if="requirements.php === false">
+							<k-icon type="alert" />
+							<!-- eslint-disable-next-line vue/no-v-html -->
+							<span v-html="$t('installation.issues.php')" />
+						</li>
 
-				<li v-if="requirements.server === false">
-					<k-icon type="alert" />
-					<!-- eslint-disable-next-line vue/no-v-html -->
-					<span v-html="$t('installation.issues.server')" />
-				</li>
+						<li v-if="requirements.server === false">
+							<k-icon type="alert" />
+							<!-- eslint-disable-next-line vue/no-v-html -->
+							<span v-html="$t('installation.issues.server')" />
+						</li>
 
-				<li v-if="requirements.mbstring === false">
-					<k-icon type="alert" />
-					<!-- eslint-disable-next-line vue/no-v-html -->
-					<span v-html="$t('installation.issues.mbstring')" />
-				</li>
+						<li v-if="requirements.mbstring === false">
+							<k-icon type="alert" />
+							<!-- eslint-disable-next-line vue/no-v-html -->
+							<span v-html="$t('installation.issues.mbstring')" />
+						</li>
 
-				<li v-if="requirements.curl === false">
-					<k-icon type="alert" />
-					<!-- eslint-disable-next-line vue/no-v-html -->
-					<span v-html="$t('installation.issues.curl')" />
-				</li>
+						<li v-if="requirements.curl === false">
+							<k-icon type="alert" />
+							<!-- eslint-disable-next-line vue/no-v-html -->
+							<span v-html="$t('installation.issues.curl')" />
+						</li>
 
-				<li v-if="requirements.accounts === false">
-					<k-icon type="alert" />
-					<!-- eslint-disable-next-line vue/no-v-html -->
-					<span v-html="$t('installation.issues.accounts')" />
-				</li>
+						<li v-if="requirements.accounts === false">
+							<k-icon type="alert" />
+							<!-- eslint-disable-next-line vue/no-v-html -->
+							<span v-html="$t('installation.issues.accounts')" />
+						</li>
 
-				<li v-if="requirements.content === false">
-					<k-icon type="alert" />
-					<!-- eslint-disable-next-line vue/no-v-html -->
-					<span v-html="$t('installation.issues.content')" />
-				</li>
+						<li v-if="requirements.content === false">
+							<k-icon type="alert" />
+							<!-- eslint-disable-next-line vue/no-v-html -->
+							<span v-html="$t('installation.issues.content')" />
+						</li>
 
-				<li v-if="requirements.media === false">
-					<k-icon type="alert" />
-					<!-- eslint-disable-next-line vue/no-v-html -->
-					<span v-html="$t('installation.issues.media')" />
-				</li>
+						<li v-if="requirements.media === false">
+							<k-icon type="alert" />
+							<!-- eslint-disable-next-line vue/no-v-html -->
+							<span v-html="$t('installation.issues.media')" />
+						</li>
 
-				<li v-if="requirements.sessions === false">
-					<k-icon type="alert" />
-					<!-- eslint-disable-next-line vue/no-v-html -->
-					<span v-html="$t('installation.issues.sessions')" />
-				</li>
-			</ul>
+						<li v-if="requirements.sessions === false">
+							<k-icon type="alert" />
+							<!-- eslint-disable-next-line vue/no-v-html -->
+							<span v-html="$t('installation.issues.sessions')" />
+						</li>
+					</ul>
 
-			<k-button
-				:text="$t('retry')"
-				icon="refresh"
-				variant="filled"
-				@click="$reload"
-			/>
+					<k-button
+						:text="$t('retry')"
+						icon="refresh"
+						size="lg"
+						theme="positive"
+						variant="filled"
+						@click="$reload"
+					/>
+				</div>
+			</k-dialog-body>
 		</div>
 	</k-panel-outside>
 </template>
@@ -171,8 +178,15 @@ export default {
 </script>
 
 <style>
+.k-installation-dialog {
+	container-type: inline-size;
+}
 .k-installation-view .k-button {
-	margin-top: 1.5rem;
+	margin-top: var(--spacing-3);
+	width: 100%;
+}
+.k-installation-view form .k-button {
+	margin-top: var(--spacing-10);
 }
 .k-installation-view .k-headline {
 	margin-bottom: 0.75rem;
@@ -183,25 +197,25 @@ export default {
 }
 .k-installation-issues li {
 	position: relative;
-	padding: 1.5rem;
+	padding: var(--spacing-6);
 	background: var(--color-white);
 	padding-inline-start: 3.5rem;
+	box-shadow: var(--shadow);
+	border-radius: var(--rounded);
 }
-
 .k-installation-issues .k-icon {
 	position: absolute;
 	top: calc(1.5rem + 2px);
 	inset-inline-start: 1.5rem;
 }
-
-.k-installation-issues .k-icon svg * {
-	fill: var(--color-red-700);
+.k-installation-issues .k-icon {
+	color: var(--color-red-600);
 }
 .k-installation-issues li:not(:last-child) {
 	margin-bottom: 2px;
 }
 .k-installation-issues li code {
 	font: inherit;
-	color: var(--color-red-700);
+	color: var(--color-red-600);
 }
 </style>
