@@ -147,7 +147,7 @@ export default {
 	align-items: stretch;
 	background: var(--color-gray-900);
 	border-radius: var(--rounded-lg);
-	margin-bottom: var(--spacing-6);
+	margin-bottom: var(--spacing-12);
 	overflow: hidden;
 }
 
