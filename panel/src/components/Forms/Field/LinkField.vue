@@ -391,9 +391,9 @@ export default {
 	display: flex;
 	overflow: hidden;
 	justify-content: space-between;
-	height: var(--height-sm);
 	margin-inline-end: var(--spacing-1);
 
+	--tag-height: var(--height-sm);
 	--tag-color-back: var(--color-gray-200);
 	--tag-color-text: var(--color-black);
 	--tag-color-toggle: var(--tag-color-text);
