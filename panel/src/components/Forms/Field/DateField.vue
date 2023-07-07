@@ -32,7 +32,7 @@
 							class="k-input-icon-button"
 							@click="$refs.calendar.toggle()"
 						/>
-						<k-dropdown-content ref="calendar" align="right">
+						<k-dropdown-content ref="calendar" align-x="end">
 							<k-calendar
 								:value="value"
 								:min="min"
@@ -67,7 +67,7 @@
 							class="k-input-icon-button"
 							@click="$refs.times.toggle()"
 						/>
-						<k-dropdown-content ref="times" align="right">
+						<k-dropdown-content ref="times" align-x="end">
 							<k-times
 								:display="time.display"
 								:value="value"

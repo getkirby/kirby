@@ -28,7 +28,7 @@
 		<k-dropdown-content
 			v-if="invisibleTabs.length"
 			ref="more"
-			align="right"
+			align-x="end"
 			class="k-tabs-dropdown"
 		>
 			<k-dropdown-item

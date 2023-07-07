@@ -20,7 +20,7 @@
 					:theme="theme"
 					@click="$refs.dropdown.toggle()"
 				/>
-				<k-dropdown-content ref="dropdown" :options="dropdown" align="end" />
+				<k-dropdown-content ref="dropdown" :options="dropdown" align-x="end" />
 			</template>
 		</k-button-group>
 	</nav>

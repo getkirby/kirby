@@ -8,7 +8,7 @@
 					variant="filled"
 					@click="$refs.options.toggle()"
 				/>
-				<k-dropdown-content ref="options" align="right">
+				<k-dropdown-content ref="options" align-x="end">
 					<k-dropdown-item :disabled="!more" icon="add" @click="add()">
 						{{ $t("add") }}
 					</k-dropdown-item>

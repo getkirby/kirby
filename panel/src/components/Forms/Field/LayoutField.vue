@@ -15,7 +15,7 @@
 					size="xs"
 					@click="$refs.options.toggle()"
 				/>
-				<k-dropdown-content ref="options" align="right">
+				<k-dropdown-content ref="options" align-x="end">
 					<k-dropdown-item
 						:disabled="isEmpty"
 						icon="template"

@@ -9,7 +9,7 @@
 			variant="filled"
 			@click="$refs.languages.toggle()"
 		/>
-		<k-dropdown-content v-if="languages" :options="options" ref="languages" />
+		<k-dropdown-content v-if="languages" ref="languages" :options="options" />
 	</k-dropdown>
 </template>
 

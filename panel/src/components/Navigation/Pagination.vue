@@ -13,7 +13,7 @@
 			<k-button v-bind="detailsBtn" />
 			<k-dropdown-content
 				ref="dropdown"
-				align="right"
+				align-x="end"
 				class="k-pagination-selector"
 			>
 				<form method="dialog" @submit="goTo($refs.page.value)">
