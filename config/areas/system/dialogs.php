@@ -45,15 +45,17 @@ return [
 	'registration' => [
 		'load' => function () {
 			$system = App::instance()->system();
+			$local  = $system->isLocal();
 
 			return [
 				'component' => 'k-form-dialog',
 				'props' => [
 					'fields' => [
 						'domain' => [
+							'label' => I18n::translate('license.register'),
 							'type'  => 'info',
-							'theme' => $system->isLocal() ? 'notice' : 'info',
-							'text'  => I18n::template('license.register.' . ($system->isLocal() ? 'local' : 'domain'), ['host' => $system->indexUrl()])
+							'theme' => $local ? 'warning' : 'info',
+							'text'  => I18n::template('license.register.' . ($local ? 'local' : 'domain'), ['host' => $system->indexUrl()])
 						],
 						'license' => [
 							'label'       => I18n::translate('license.register.label'),
@@ -65,7 +67,10 @@ return [
 						],
 						'email' => Field::email(['required' => true])
 					],
-					'submitButton' => I18n::translate('license.register'),
+					'submitButton' => [
+						'icon'  => 'key',
+						'text'  => I18n::translate('license.register'),
+					],
 					'value' => [
 						'license' => null,
 						'email'   => null
