@@ -352,7 +352,7 @@ class View
 
 		$menu[] = '-';
 		$menu[] = [
-			'icon'     => 'edit',
+			'icon'     => 'edit-sheet',
 			'id'       => 'changes',
 			'dialog'   => 'changes',
 			'text'     => I18n::translate('changes'),
