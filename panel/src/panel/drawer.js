@@ -118,13 +118,14 @@ export default (panel) => {
 		},
 
 		tab(tab) {
-			tab = tab ?? Object.keys(this.props.tabs)[0];
+			const tabs = this.props.tabs ?? {};
+			tab = tab ?? Object.keys(tabs ?? {})[0];
 
 			if (!tab) {
 				return false;
 			}
 
-			set(this.props, "fields", this.props.tabs[tab].fields);
+			set(this.props, "fields", tabs[tab].fields);
 			set(this.props, "tab", tab);
 
 			this.emit("tab", tab);
