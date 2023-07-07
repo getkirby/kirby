@@ -55,7 +55,7 @@
 				@keydown.native.up.prevent="$emit('sortUp')"
 				@keydown.native.down.prevent="$emit('sortDown')"
 			/>
-			<k-dropdown-content ref="options" align="right">
+			<k-dropdown-content ref="options" align-x="end">
 				<k-dropdown-item
 					:disabled="isFull"
 					icon="angle-up"

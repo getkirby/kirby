@@ -40,7 +40,7 @@
 						<k-dropdown-content
 							ref="settings"
 							:options="$dropdown(id)"
-							align="right"
+							align-x="end"
 						/>
 					</k-dropdown>
 
