@@ -1,5 +1,6 @@
 <template>
 	<k-button-group
+		v-if="!isFullyDisabled"
 		:buttons="buttons"
 		layout="collapsed"
 		size="xs"
@@ -42,6 +43,9 @@ export default {
 				{ ...this.button(this.prev), icon: "angle-left" },
 				{ ...this.button(this.next), icon: "angle-right" }
 			];
+		},
+		isFullyDisabled() {
+			return this.buttons.filter((button) => !button.disabled).length === 0;
 		}
 	},
 	methods: {
