@@ -180,7 +180,7 @@ export default {
 .k-search-dialog {
 	--dialog-padding: 0;
 	--dialog-rounded: var(--rounded);
-	margin: 2.5rem auto;
+	margin: 2.65rem auto;
 	align-self: start;
 }
 
