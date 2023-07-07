@@ -100,8 +100,8 @@ export default {
 				this.$emit("option", action, item, itemIndex);
 			}
 		},
-		toggle() {
-			this.$refs.options.toggle();
+		toggle(opener = this.$el) {
+			this.$refs.options.toggle(opener);
 		}
 	}
 };

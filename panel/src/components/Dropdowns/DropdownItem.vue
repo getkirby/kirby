@@ -57,9 +57,6 @@ export default {
 .k-dropdown-item.k-button[aria-current] {
 	--button-color-text: var(--color-blue-500);
 }
-.k-dropdown-item.k-button[aria-disabled] {
-	opacity: var(--opacity-disabled);
-}
 .k-dropdown-item.k-button:not([aria-disabled]):hover {
 	--button-color-back: var(--dropdown-color-hr);
 }

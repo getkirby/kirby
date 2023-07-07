@@ -74,7 +74,4 @@ export default {
 	direction: ltr;
 	flex-shrink: 0;
 }
-.k-prev-next [aria-disabled] {
-	opacity: var(--opacity-disabled);
-}
 </style>
