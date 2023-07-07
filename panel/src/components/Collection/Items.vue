@@ -78,11 +78,12 @@ export default {
 			type: [String, Object]
 		},
 		/**
-		 * Card sizes.
+		 * Card sizes
+		 * @values tiny, small, medium, large, huge
 		 */
 		size: {
 			type: String,
-			default: "default"
+			default: "medium"
 		}
 	},
 	computed: {
@@ -167,54 +168,43 @@ export default {
 	);
 }
 
-/* @todo do we want to support both size value sets? */
-.k-items[data-size="xs"],
 .k-items[data-size="tiny"] {
 	--items-size: 6rem;
 }
-.k-items[data-size="sm"],
 .k-items[data-size="small"] {
 	--items-size: 10rem;
 }
-.k-items[data-size="md"],
 .k-items[data-size="medium"] {
 	--items-size: 12rem;
 }
-.k-items[data-size="lg"],
 .k-items[data-size="large"] {
 	--items-size: 15rem;
 }
-.k-items[data-size="xl"],
 .k-items[data-size="huge"] {
 	--items-size: 1fr;
 }
 
 @container (max-width: 6rem) {
-	.k-items[data-layout="cards"][data-size="xs"],
 	.k-items[data-layout="cards"][data-size="tiny"] {
 		grid-template-columns: 1fr;
 	}
 }
 @container (max-width: 9rem) {
-	.k-items[data-layout="cards"][data-size="sm"],
 	.k-items[data-layout="cards"][data-size="small"] {
 		grid-template-columns: 1fr;
 	}
 }
 @container (max-width: 12rem) {
-	.k-items[data-layout="cards"][data-size="md"],
 	.k-items[data-layout="cards"][data-size="medium"] {
 		grid-template-columns: 1fr;
 	}
 }
 @container (max-width: 15rem) {
-	.k-items[data-layout="cards"][data-size="lg"],
 	.k-items[data-layout="cards"][data-size="large"] {
 		grid-template-columns: 1fr;
 	}
 }
 @container (max-width: 18rem) {
-	.k-items[data-layout="cards"][data-size="xl"],
 	.k-items[data-layout="cards"][data-size="huge"] {
 		grid-template-columns: 1fr;
 	}

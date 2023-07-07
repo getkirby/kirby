@@ -7,11 +7,3 @@
 
 	--rounded: var(--rounded-md);
 }
-
-/**
-@todo
-Release notes - Breaking Changes:
-
---rounded-md is now --rounded-lg
---rounded-lg is now --rounded-xl
-**/
