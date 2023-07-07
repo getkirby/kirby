@@ -51,7 +51,6 @@ export default {
 .k-counter {
 	font-size: var(--text-xs);
 	color: var(--color-gray-900);
-	font-weight: var(--font-bold);
 }
 .k-counter[data-invalid="true"] {
 	box-shadow: none;
