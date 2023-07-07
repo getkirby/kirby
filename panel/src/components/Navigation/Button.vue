@@ -238,7 +238,7 @@ export default {
 	--button-color-icon: var(--color-text);
 	--button-color-text: var(--color-text-dimmed);
 }
-.k-button:where([data-variant="dimmed"]):hover {
+.k-button:where([data-variant="dimmed"]):not([aria-disabled]):hover {
 	filter: brightness(50%);
 }
 .k-button:where([data-variant="dimmed"]):where([aria-current]) {
@@ -253,7 +253,7 @@ export default {
 .k-button:where([data-variant="filled"]) {
 	--button-color-back: var(--color-gray-300);
 }
-.k-button:where([data-variant="filled"]):hover {
+.k-button:where([data-variant="filled"]):not([aria-disabled]):hover {
 	filter: brightness(97%);
 }
 .k-button:where([data-theme][data-variant="filled"]) {
@@ -307,7 +307,7 @@ export default {
 .k-button:where([aria-disabled]) {
 	cursor: not-allowed;
 }
-.k-button:where([data-variant="filled"][aria-disabled]) {
+.k-button:where([aria-disabled]) * {
 	opacity: var(--opacity-disabled);
 }
 </style>
