@@ -6,7 +6,7 @@
 
 <style>
 body:has(.k-panel-outside) {
-	background: var(--color-gray-300);
+	background: var(--color-gray-250);
 }
 
 .k-panel.k-panel-outside {
@@ -16,6 +16,6 @@ body:has(.k-panel-outside) {
 	min-height: 100vh;
 	min-height: 100dvh;
 	padding: var(--spacing-6);
-	background: var(--color-gray-300);
+	background: var(--color-gray-250);
 }
 </style>
