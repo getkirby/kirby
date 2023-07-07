@@ -65,6 +65,7 @@ export default {
 	margin: 1.5rem;
 	display: flex;
 	flex-direction: column;
+	overflow: clip;
 }
 
 @media screen and (min-width: 20rem) {

@@ -72,9 +72,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.k-form-indicator .k-notification p {
-	font-weight: var(--font-bold);
-}
-</style>
