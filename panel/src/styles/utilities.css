@@ -7,11 +7,6 @@
 	--outline: 2px solid var(--color-focus, currentColor);
 }
 
-/* Invalid */
-[data-invalid="true"] {
-	--outline: 2px solid var(--color-red-500);
-}
-
 .scroll-x,
 .scroll-x-auto,
 .scroll-y,

@@ -250,11 +250,19 @@ export default {
 .k-input[data-theme="field"][data-type="checkboxes"] .k-input-element {
 	overflow: hidden;
 }
+.k-input[data-theme="field"][data-type="checkboxes"]:has(.k-empty) {
+	outline: 0;
+}
 .k-input[data-theme="field"][data-type="checkboxes"] .k-checkboxes-input {
 	display: grid;
 	grid-template-columns: 1fr;
 	margin-bottom: -1px;
 	margin-inline-end: -1px;
+}
+.k-input[data-theme="field"][data-type="checkboxes"]
+	.k-checkboxes-input:has(.k-empty) {
+	margin-bottom: 0;
+	margin-inline-end: 0;
 }
 @container (min-width: 65em) {
 	.k-input[data-theme="field"][data-type="checkboxes"] .k-checkboxes-input {
@@ -277,6 +285,9 @@ export default {
 }
 
 /* Radio */
+.k-input[data-theme="field"][data-type="radio"]:has(.k-empty) {
+	outline: 0;
+}
 .k-input[data-theme="field"][data-type="radio"] .k-input-before {
 	border-inline-end: 1px solid var(--color-background);
 }
@@ -330,7 +341,11 @@ export default {
 	line-height: var(--field-input-line-height);
 	padding-top: calc(var(--field-input-line-height) / 10);
 }
-.k-input[data-theme="field"][data-type="radio"] .k-radio-input .k-icon {
+.k-input[data-theme="field"][data-type="radio"] .k-radio-input:has(.k-empty) {
+	margin-bottom: 0;
+	margin-inline-end: 0;
+}
+.k-input[data-theme="field"][data-type="radio"] .k-radio-input li .k-icon {
 	width: var(--field-input-height);
 	height: var(--field-input-height);
 	display: flex;

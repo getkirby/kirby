@@ -23,8 +23,7 @@
 				<k-icon v-if="option.icon" :type="option.icon" />
 			</li>
 		</template>
-
-		<k-box v-else theme="info">{{ $t("options.none") }}</k-box>
+		<k-empty v-else icon="info" theme="info">{{ $t("options.none") }}</k-empty>
 	</ul>
 </template>
 

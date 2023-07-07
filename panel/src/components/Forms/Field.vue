@@ -9,10 +9,9 @@
 		<slot name="header">
 			<header class="k-bar k-field-header">
 				<slot name="label">
-					<label :for="input" class="k-label k-field-label">
-						{{ label || " " }}
-						<abbr v-if="required" :title="$t('field.required')">*</abbr>
-					</label>
+					<k-label :input="input" :required="required" type="field">
+						{{ label }}
+					</k-label>
 				</slot>
 				<slot name="options" />
 				<slot name="counter">
@@ -58,6 +57,7 @@ export default {
 
 <style>
 .k-field-header {
+	position: relative;
 	margin-bottom: var(--spacing-2);
 }
 .k-field[data-disabled="true"] {

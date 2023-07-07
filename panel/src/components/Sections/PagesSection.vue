@@ -40,6 +40,9 @@ export default {
 
 				return page;
 			});
+		},
+		type() {
+			return "pages";
 		}
 	},
 	created() {

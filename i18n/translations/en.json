@@ -259,6 +259,7 @@
 	"expand": "Expand",
 	"expand.all": "Expand All",
 
+	"field.invalid": "The field is invalid",
 	"field.required": "The field is required",
 	"field.blocks.changeType": "Change type",
 	"field.blocks.code.name": "Code",
@@ -533,6 +534,7 @@
 	"search.all": "Show all",
 	"search.results.none": "No results",
 
+	"section.invalid": "The section is invalid",
 	"section.required": "The section is required",
 
 	"security": "Security",

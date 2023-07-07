@@ -73,7 +73,7 @@ export default {
  * layout: collapsed
  */
 .k-button-group:where([data-layout="collapsed"]) {
-	gap: 1px;
+	gap: 0;
 }
 
 .k-button-group[data-layout="collapsed"]
@@ -86,6 +86,7 @@ export default {
 	> .k-button[data-variant="filled"]:not(:first-child) {
 	border-start-start-radius: 0;
 	border-end-start-radius: 0;
+	border-left: 1px solid var(--theme-color-500, var(--color-gray-400));
 }
 
 .k-button-group[data-layout="collapsed"]

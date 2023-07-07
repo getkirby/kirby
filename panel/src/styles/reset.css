@@ -14,6 +14,10 @@
 	display: none !important;
 }
 
+:where(abbr) {
+	text-decoration: none;
+}
+
 :where(input, button, textarea, select) {
 	border: 0;
 	font: inherit;
@@ -39,12 +43,16 @@
 	appearance: none;
 }
 
-:where(textarea,
-select,
-input:not([type=checkbox],
-[type=radio],
-[type=reset],
-[type=submit])) {
+:where(
+		textarea,
+		select,
+		input:not(
+				[type="checkbox"],
+				[type="radio"],
+				[type="reset"],
+				[type="submit"]
+			)
+	) {
 	width: 100%;
 }
 
@@ -56,7 +64,7 @@ input:not([type=checkbox],
 	display: none;
 }
 
-:where(input[type=search]) {
+:where(input[type="search"]) {
 	appearance: none;
 }
 
@@ -64,7 +72,7 @@ input:not([type=checkbox],
 	display: none;
 }
 
-:where(button, label, select, summary, [role=button], [role=option]) {
+:where(button, label, select, summary, [role="button"], [role="option"]) {
 	cursor: pointer;
 }
 
@@ -73,9 +81,7 @@ input:not([type=checkbox],
 	align-items: center;
 }
 
-:where(
-	input:-webkit-autofill
-) {
+:where(input:-webkit-autofill) {
 	-webkit-text-fill-color: var(--input-color-text) !important;
 	-webkit-background-clip: text;
 }
