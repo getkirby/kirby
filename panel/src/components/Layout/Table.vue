@@ -398,7 +398,7 @@ export default {
 	font-family: var(--font-mono);
 	font-size: var(--text-xs);
 	font-weight: 400;
-	color: var(--color-gray-600);
+	color: var(--color-text-dimmed);
 	background: var(--color-gray-100);
 	width: 100%;
 }
@@ -490,13 +490,13 @@ td.k-table-index-column {
 }
 .k-table-index {
 	font-size: var(--text-xs);
-	color: var(--color-gray-500);
+	color: var(--color-text-dimmed);
 	line-height: 1.1em;
 }
 
 /** Empty */
 .k-table-empty {
-	color: var(--color-gray-600);
+	color: var(--color-text-dimmed);
 	font-size: var(--text-sm);
 }
 
