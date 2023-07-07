@@ -25,7 +25,7 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 		$this->assertCount(1, $segments->nth(2)->arguments);
 		$this->assertSame(1, $segments->nth(2)->position);
 
-		$segments = Segments::factory('user0.profiles1.twitter');
+		$segments = Segments::factory('user0.profiles1.mastodon');
 		$this->assertCount(5, $segments);
 		$this->assertSame(2, $segments->nth(4)->position);
 	}
@@ -101,11 +101,11 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testResolveNestedArrayWithNumericMethods()
 	{
-		$segments = Segments::factory('user0.profiles1.twitter');
+		$segments = Segments::factory('user0.profiles1.mastodon');
 		$data  = [
 			'user0' => [
 				'profiles1' => [
-					'twitter' => '@homer'
+					'mastodon' => '@homer'
 				]
 			]
 		];
@@ -118,11 +118,11 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testResolveNestedArray2Levels()
 	{
-		$segments = Segments::factory('user.profiles.twitter');
+		$segments = Segments::factory('user.profiles.mastodon');
 		$data  = [
 			'user' => [
 				'profiles' => [
-					'twitter' => '@homer'
+					'mastodon' => '@homer'
 				]
 			]
 		];
@@ -266,7 +266,7 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function tesResolvetWithObject2Level()
 	{
-		$segments = Segments::factory('user.profiles.twitter');
+		$segments = Segments::factory('user.profiles.mastodon');
 		$data     = ['user' => new TestUser()];
 		$this->assertSame('@homer', $segments->resolve($data));
 	}
