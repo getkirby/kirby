@@ -91,6 +91,7 @@ export default {
 }
 .k-checkbox-input-label {
 	display: block;
+	line-height: 1.125;
 	padding-inline-start: 1.75rem;
 }
 .k-checkbox-input-icon {

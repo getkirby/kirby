@@ -21,6 +21,7 @@
 			<k-button
 				class="k-login-button k-login-back-button"
 				icon="angle-left"
+				size="lg"
 				variant="filled"
 				@click="back"
 			>
@@ -30,6 +31,7 @@
 			<k-button
 				class="k-login-button"
 				icon="check"
+				size="lg"
 				type="submit"
 				theme="positive"
 				variant="filled"
@@ -93,11 +95,9 @@ export default {
 
 <style>
 .k-login-code-form .k-user-info {
-	height: 38px;
-	margin-bottom: 2.25rem;
-	padding: 0.5rem;
+	margin-bottom: var(--spacing-6);
 	background: var(--color-white);
-	border-radius: var(--rounded-xs);
+	border-radius: var(--rounded);
 	box-shadow: var(--shadow);
 }
 </style>

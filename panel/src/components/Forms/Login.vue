@@ -30,6 +30,7 @@
 			<k-button
 				class="k-login-button"
 				icon="check"
+				size="lg"
 				theme="positive"
 				type="submit"
 				variant="filled"
