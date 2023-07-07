@@ -1,6 +1,7 @@
 import Collection from "@/components/Collection/index.js";
 import Dialogs from "@/components/Dialogs/index.js";
 import Drawers from "@/components/Drawers/index.js";
+import Dropdowns from "@/components/Dropdowns/index.js";
 import Forms from "@/components/Forms/index.js";
 import Layout from "@/components/Layout/index.js";
 import Misc from "@/components/Misc/index.js";
@@ -18,6 +19,7 @@ export default {
 		app.use(Collection);
 		app.use(Dialogs);
 		app.use(Drawers);
+		app.use(Dropdowns);
 		app.use(Forms);
 		app.use(Layout);
 		app.use(Misc);

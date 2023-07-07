@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\PermissionException;
+use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
@@ -57,7 +57,7 @@ class Language
 
 		static::$kirby      = $props['kirby'] ?? null;
 		$this->code         = trim($props['code']);
-		$this->default      = $props['default'] ?? false;
+		$this->default      = ($props['default'] ?? false) === true;
 		$this->direction    = ($props['direction'] ?? null) === 'rtl' ? 'rtl' : 'ltr';
 		$this->name         = trim($props['name'] ?? $this->code);
 		$this->slugs        = $props['slugs'] ?? [];
@@ -154,7 +154,6 @@ class Language
 
 	/**
 	 * Creates a new language object
-	 *
 	 * @internal
 	 */
 	public static function create(array $props): static
@@ -206,8 +205,8 @@ class Language
 	/**
 	 * Delete the current language and
 	 * all its translation files
-	 *
 	 * @internal
+	 *
 	 * @throws \Kirby\Exception\Exception
 	 */
 	public function delete(): bool
@@ -399,7 +398,6 @@ class Language
 
 	/**
 	 * Get slug rules for language
-	 *
 	 * @internal
 	 */
 	public function rules(): array
@@ -411,8 +409,8 @@ class Language
 
 	/**
 	 * Saves the language settings in the languages folder
-	 *
 	 * @internal
+	 *
 	 * @return $this
 	 */
 	public function save(): static
@@ -503,7 +501,6 @@ class Language
 
 	/**
 	 * Update language properties and save them
-	 *
 	 * @internal
 	 */
 	public function update(array $props = null): static
@@ -530,32 +527,29 @@ class Language
 			'input' => $props
 		]);
 
-		// convert the current default to a non-default language
-		if ($updated->isDefault() === true) {
-			$kirby->defaultLanguage()?->clone(['default' => false])->save();
+		// make sure to handle changes to default language
 
-			$code = $this->code();
-			$site = $kirby->site();
+		// if language just got promoted to be the new default language…
+		if ($this->isDefault() === false && $updated->isDefault() === true) {
+			// convert the current default to a non-default language
+			$previous = $kirby->defaultLanguage()?->clone(['default' => false])->save();
+			$kirby->languages(false)->set($previous->code(), $previous);
+		}
 
-			touch($site->contentFile($code));
-
-			foreach ($kirby->site()->index(true) as $page) {
-				$files = $page->files();
-
-				foreach ($files as $file) {
-					touch($file->contentFile($code));
-				}
-
-				touch($page->contentFile($code));
-			}
-		} elseif ($this->isDefault() === true) {
-			throw new PermissionException('Please select another language to be the primary language');
+		// if language was the default language and got demoted…
+		if (
+			$this->isDefault() === true &&
+			$updated->isDefault() === false &&
+			$kirby->defaultLanguage()->code() === $this->code()
+		) {
+			// ensure another language has already been set as default
+			throw new LogicException('Please select another language to be the primary language');
 		}
 
 		$language = $updated->save();
 
-		// make sure the language is also updated in the Kirby language collection
-		App::instance()->languages(false)->set($language->code(), $language);
+		// make sure the language is also updated in the languages collection
+		$kirby->languages(false)->set($language->code(), $language);
 
 		// trigger after hook
 		$kirby->trigger('language.update:after', [

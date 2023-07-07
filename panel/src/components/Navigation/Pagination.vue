@@ -9,18 +9,16 @@
 		<k-button v-bind="prevBtn" />
 
 		<!-- details -->
-		<k-dropdown v-if="details" class="k-pagination-details">
+		<template v-if="details">
 			<k-button v-bind="detailsBtn" />
-
 			<k-dropdown-content
 				ref="dropdown"
-				align="right"
+				align-x="end"
 				class="k-pagination-selector"
-				@open="$nextTick(() => $refs.page.focus())"
 			>
-				<label for="k-pagination-page">
-					<span>{{ pageLabel ?? $t("pagination.page") }}:</span>
-					<select id="k-pagination-page" ref="page">
+				<form method="dialog" @submit="goTo($refs.page.value)">
+					<label :for="_uid">{{ pageLabel ?? $t("pagination.page") }}:</label>
+					<select ref="page" :id="_uid" :autofocus="true">
 						<option
 							v-for="p in pages"
 							:key="p"
@@ -30,10 +28,10 @@
 							{{ p }}
 						</option>
 					</select>
-				</label>
-				<k-button icon="check" @click="goTo($refs.page.value)" />
+					<k-button type="submit" icon="check" />
+				</form>
 			</k-dropdown-content>
-		</k-dropdown>
+		</template>
 
 		<!-- next -->
 		<k-button v-bind="nextBtn" />
@@ -235,47 +233,31 @@ export default {
 </script>
 
 <style>
-.k-pagination {
-	display: flex;
-	align-items: center;
-	user-select: none;
-	direction: ltr;
-}
-
 .k-pagination-details {
 	--button-padding: var(--spacing-3);
-	font-size: var(--text-sm);
-	white-space: nowrap;
+	font-size: var(--text-xs);
 }
-.k-pagination-details:has(:not(+ .k-dropdown-content)) {
-	cursor: default;
-	pointer-events: none;
-}
-
-[dir="ltr"] .k-pagination-selector {
-	direction: ltr;
-}
-[dir="rtl"] .k-pagination-selector {
-	direction: rtl;
-}
-
 .k-pagination-selector {
+	--button-height: var(--height);
+	--dropdown-padding: 0;
+	overflow: visible;
+}
+.k-pagination-selector form {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 0;
-	font-size: var(--text-xs);
 }
 .k-pagination-selector label {
-	display: flex;
-	border-inline-end: 1px solid rgba(255, 255, 255, 0.35);
-	align-items: center;
-	padding: var(--spacing-3);
+	padding-inline-start: var(--spacing-3);
+	padding-inline-end: var(--spacing-2);
 }
 .k-pagination-selector select {
+	--height: calc(var(--button-height) - 0.5rem);
 	width: auto;
-}
-.k-pagination-selector label span {
-	margin-inline-end: var(--spacing-2);
+	min-width: var(--height);
+	height: var(--height);
+	text-align: center;
+	background: var(--color-gray-800);
+	border-radius: var(--rounded-sm);
 }
 </style>

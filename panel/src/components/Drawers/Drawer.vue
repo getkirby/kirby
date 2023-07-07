@@ -27,7 +27,7 @@
 								<k-dropdown-content
 									:ref="'dropdown-' + index"
 									:options="option.dropdown"
-									align="right"
+									align-x="end"
 									theme="light"
 								/>
 							</k-dropdown>

@@ -32,7 +32,7 @@
 						:name="section.name"
 						:parent="parent"
 						:timestamp="$panel.view.timestamp"
-						:class="'k-section k-section-name-' + section.name"
+						:class="'k-section-name-' + section.name"
 						@submit="$emit('submit', $event)"
 					/>
 					<template v-else>

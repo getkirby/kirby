@@ -1,6 +1,6 @@
 <template>
 	<k-field v-bind="$props" class="k-structure-field" @click.native.stop>
-		<template #options>
+		<template v-if="hasFields && !disabled" #options>
 			<k-dropdown>
 				<k-button
 					icon="dots"
@@ -8,7 +8,7 @@
 					variant="filled"
 					@click="$refs.options.toggle()"
 				/>
-				<k-dropdown-content ref="options" align="right">
+				<k-dropdown-content ref="options" align-x="end">
 					<k-dropdown-item :disabled="!more" icon="add" @click="add()">
 						{{ $t("add") }}
 					</k-dropdown-item>
@@ -23,44 +23,49 @@
 			</k-dropdown>
 		</template>
 
-		<!-- Empty State -->
-		<k-empty
-			v-if="items.length === 0"
-			:data-invalid="isInvalid"
-			icon="list-bullet"
-			@click="add()"
-		>
-			{{ empty || $t("field.structure.empty") }}
-		</k-empty>
-
-		<!-- Table -->
-		<template v-else>
-			<k-table
-				:columns="columns"
-				:disabled="disabled"
-				:fields="fields"
-				:empty="$t('field.structure.empty')"
-				:index="index"
-				:options="options"
-				:pagination="limit ? pagination : false"
-				:rows="paginatedItems"
-				:sortable="isSortable"
+		<template v-if="hasFields">
+			<!-- Empty State -->
+			<k-empty
+				v-if="items.length === 0"
 				:data-invalid="isInvalid"
-				@cell="jump($event.rowIndex, $event.columnIndex)"
-				@input="save"
-				@option="option"
-				@paginate="paginate"
-			/>
+				icon="list-bullet"
+				@click="add()"
+			>
+				{{ empty || $t("field.structure.empty") }}
+			</k-empty>
 
-			<footer v-if="more" class="k-bar" data-align="center">
-				<k-button
-					:title="$t('add')"
-					icon="add"
-					size="xs"
-					variant="filled"
-					@click="add()"
+			<!-- Table -->
+			<template v-else>
+				<k-table
+					:columns="columns"
+					:disabled="disabled"
+					:fields="fields"
+					:empty="$t('field.structure.empty')"
+					:index="index"
+					:options="options"
+					:pagination="limit ? pagination : false"
+					:rows="paginatedItems"
+					:sortable="isSortable"
+					:data-invalid="isInvalid"
+					@cell="jump($event.rowIndex, $event.columnIndex)"
+					@input="save"
+					@option="option"
+					@paginate="paginate"
 				/>
-			</footer>
+
+				<footer v-if="more" class="k-bar" data-align="center">
+					<k-button
+						:title="$t('add')"
+						icon="add"
+						size="xs"
+						variant="filled"
+						@click="add()"
+					/>
+				</footer>
+			</template>
+		</template>
+		<template v-else>
+			<k-empty icon="list-bullet">{{ $t("fields.empty") }}</k-empty>
 		</template>
 	</k-field>
 </template>
@@ -90,7 +95,7 @@ export default {
 		/**
 		 * Fields for the form
 		 */
-		fields: Object,
+		fields: [Array, Object],
 		/**
 		 * How many rows to show per page
 		 */
@@ -177,6 +182,9 @@ export default {
 			}
 
 			return true;
+		},
+		hasFields() {
+			return this.$helper.object.length(this.fields) > 0;
 		},
 		/**
 		 * Returns if field is invalid

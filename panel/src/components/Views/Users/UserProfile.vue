@@ -6,19 +6,22 @@
 			:buttons="[
 				{
 					icon: 'email',
-					text: `${$t('email')}: ${model.email}`,
+					text: `${model.email}`,
+					title: `${$t('email')}: ${model.email}`,
 					disabled: !permissions.changeEmail || isLocked,
 					click: () => $dialog(model.link + '/changeEmail')
 				},
 				{
 					icon: 'bolt',
-					text: `${$t('role')}: ${model.role}`,
+					text: `${model.role}`,
+					title: `${$t('role')}: ${model.role}`,
 					disabled: !permissions.changeRole || isLocked,
 					click: () => $dialog(model.link + '/changeRole')
 				},
 				{
 					icon: 'globe',
-					text: `${$t('language')}: ${model.language}`,
+					text: `${model.language}`,
+					title: `${$t('language')}: ${model.language}`,
 					disabled: !permissions.changeLanguage || isLocked,
 					click: () => $dialog(model.link + '/changeLanguage')
 				}

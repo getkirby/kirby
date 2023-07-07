@@ -1,5 +1,6 @@
 <template>
 	<ul
+		v-if="options.length"
 		:data-invalid="$v.$invalid"
 		:data-labels="labels"
 		:style="'--options:' + (columns || options.length)"
@@ -7,8 +8,9 @@
 	>
 		<li v-for="(option, index) in options" :key="index">
 			<input
-				:id="id + '-' + index"
 				:aria-label="option.text"
+				:disabled="disabled"
+				:id="id + '-' + index"
 				:value="option.value"
 				:name="id"
 				:checked="value === option.value"
@@ -29,6 +31,7 @@
 			</label>
 		</li>
 	</ul>
+	<k-empty icon="info" v-else theme="info">{{ $t("options.none") }}</k-empty>
 </template>
 
 <script>
@@ -67,7 +70,7 @@ export default {
 			(
 				this.$el.querySelector("input[checked]") ||
 				this.$el.querySelector("input")
-			).focus();
+			)?.focus();
 		},
 		onClick(value) {
 			if (value === this.value && this.reset && !this.required) {
@@ -101,6 +104,10 @@ export default {
 .k-input[data-type="toggles"].grow {
 	display: flex;
 }
+.k-input[data-type="toggles"][data-theme="field"]:has(.k-empty) {
+	outline: 0;
+	display: flex;
+}
 
 .k-toggles-input {
 	display: grid;
@@ -127,7 +134,10 @@ export default {
 	padding: 0 var(--spacing-3);
 	height: 100%;
 }
-
+.k-toggles-input li:has(input[disabled]) label {
+	color: var(--color-text-dimmed);
+	background: var(--color-light);
+}
 .k-toggles-input .k-icon + .k-toggles-text {
 	margin-inline-start: var(--spacing-2);
 }

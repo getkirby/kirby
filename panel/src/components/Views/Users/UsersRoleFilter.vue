@@ -26,7 +26,7 @@
 					text: roleFilter.title
 				}))
 			]"
-			align="right"
+			align-x="end"
 		/>
 	</k-dropdown>
 </template>

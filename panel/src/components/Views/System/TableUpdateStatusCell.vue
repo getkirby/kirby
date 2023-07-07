@@ -18,7 +18,7 @@
 				variant="filled"
 				@click.stop="$refs.dropdown.toggle()"
 			/>
-			<k-dropdown-content ref="dropdown" align="right">
+			<k-dropdown-content ref="dropdown" align-x="end">
 				<dl class="k-plugin-info">
 					<dt>{{ $t("plugin") }}</dt>
 					<dd>{{ value.pluginName }}</dd>
@@ -74,13 +74,13 @@ export default {
 	color: var(--theme-color-600);
 }
 
-@media screen and (max-width: 30em) {
+@container (max-width: 30em) {
 	.k-plugin-info dd:not(:last-of-type) {
 		margin-bottom: var(--spacing-2);
 	}
 }
 
-@media screen and (min-width: 30em) {
+@container (min-width: 30em) {
 	.k-plugin-info {
 		width: 20rem;
 		grid-template-columns: 1fr auto;

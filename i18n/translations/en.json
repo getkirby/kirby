@@ -57,6 +57,7 @@
 	"email": "Email",
 	"email.placeholder": "mail@example.com",
 
+	"enter": "Enter",
 	"entries": "Entries",
 	"entry": "Entry",
 
@@ -258,6 +259,7 @@
 	"expand": "Expand",
 	"expand.all": "Expand All",
 
+	"field.invalid": "The field is invalid",
 	"field.required": "The field is required",
 	"field.blocks.changeType": "Change type",
 	"field.blocks.code.name": "Code",
@@ -324,6 +326,8 @@
 
 	"field.users.empty": "No users selected yet",
 
+	"fields.empty": "No fields yet",
+
 	"file": "File",
 	"file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/files/{blueprint}.yml</strong>",
 	"file.changeTemplate": "Change template",
@@ -336,6 +340,8 @@
 
 	"files": "Files",
 	"files.empty": "No files yet",
+
+	"filter": "Filter",
 
 	"hide": "Hide",
 	"hour": "Hour",
@@ -453,6 +459,7 @@
 	"on": "on",
 	"open": "Open",
 	"open.newWindow": "Open in new window",
+	"option": "Option",
 	"options": "Options",
 	"options.none": "No options",
 
@@ -507,6 +514,7 @@
 	"remove": "Remove",
 	"rename": "Rename",
 	"replace": "Replace",
+	"replace.with": "Replace with",
 	"retry": "Try again",
 	"revert": "Revert",
 	"revert.confirm": "Do you really want to <strong>delete all unsaved changes</strong>?",
@@ -526,6 +534,7 @@
 	"search.all": "Show all",
 	"search.results.none": "No results",
 
+	"section.invalid": "The section is invalid",
 	"section.required": "The section is required",
 
 	"security": "Security",

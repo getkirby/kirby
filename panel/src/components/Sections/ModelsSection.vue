@@ -1,12 +1,13 @@
 <template>
 	<k-section
 		v-if="isLoading === false"
-		:headline="options.headline || ' '"
-		:link="options.link"
 		:buttons="buttons"
-		:data-processing="isProcessing"
-		:required="Boolean(options.min)"
 		:class="`k-models-section k-${type}-section`"
+		:data-processing="isProcessing"
+		:headline="options.headline || ' '"
+		:invalid="isInvalid"
+		:link="options.link"
+		:required="Boolean(options.min)"
 	>
 		<!-- Error -->
 		<k-box v-if="error" theme="negative">
@@ -33,7 +34,6 @@
 				<!-- Models collection -->
 				<k-collection
 					v-bind="collection"
-					:data-invalid="isInvalid"
 					v-on="canAdd ? { empty: onAdd } : {}"
 					@action="onAction"
 					@change="onChange"

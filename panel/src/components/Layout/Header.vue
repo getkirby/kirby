@@ -1,11 +1,15 @@
 <template>
 	<header class="k-header">
-		<h1>
-			<button v-if="editable" @click="$emit('edit')">
-				<slot />
-				<k-icon type="edit" />
+		<h1 class="k-header-title">
+			<button
+				v-if="editable"
+				class="k-header-title-button"
+				@click="$emit('edit')"
+			>
+				<span class="k-header-title-text"><slot /></span>
+				<span class="k-header-title-icon"><k-icon type="edit" /></span>
 			</button>
-			<slot v-else />
+			<span v-else class="k-header-title-text"><slot /></span>
 		</h1>
 
 		<div
@@ -56,7 +60,7 @@ export default {
 	position: relative;
 	display: flex;
 	flex-wrap: wrap;
-	align-items: center;
+	align-items: baseline;
 	justify-content: space-between;
 	border-bottom: 1px solid var(--color-border);
 	background: var(--header-color-back);
@@ -66,34 +70,45 @@ export default {
 		-2px 0 0 0 var(--header-color-back);
 }
 
-.k-header h1 {
+.k-header-title {
 	font-size: var(--text-h1);
 	font-weight: var(--font-h1);
 	line-height: var(--leading-h1);
 	margin-bottom: var(--header-padding-block);
+	min-width: 0;
 }
 
-.k-header h1 > button {
+.k-header-title-button {
 	display: inline-flex;
 	text-align: start;
 	gap: var(--spacing-2);
 	align-items: baseline;
+	max-width: 100%;
+	outline: 0;
 }
 
-.k-header h1,
-.k-header h1 > button {
+.k-header-title-text {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
 
-.k-header h1 > button svg {
+.k-header-title-icon {
 	--icon-color: var(--color-gray-500);
-	opacity: 0;
+	border-radius: var(--rounded);
 	transition: opacity 0.2s;
+	display: grid;
+	flex-shrink: 0;
+	place-items: center;
+	height: var(--height-sm);
+	width: var(--height-sm);
+	opacity: 0;
 }
 
-.k-header h1:hover > button svg {
+.k-header-title-button:is(:hover, :focus) .k-header-title-icon {
 	opacity: 1;
+}
+.k-header-title-button:is(:focus) .k-header-title-icon {
+	outline: var(--outline);
 }
 
 .k-header-buttons {

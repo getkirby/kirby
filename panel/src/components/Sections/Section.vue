@@ -1,10 +1,14 @@
 <template>
-	<section class="k-section">
+	<section class="k-section" :data-invalid="invalid">
 		<header v-if="headline || buttons" class="k-bar k-section-header">
-			<k-headline :link="link" tag="h2" class="k-label">
+			<k-label
+				:invalid="invalid"
+				:link="link"
+				:required="required"
+				type="section"
+			>
 				{{ headline }}
-				<abbr v-if="required" :title="$t('section.required')">*</abbr>
-			</k-headline>
+			</k-label>
 			<k-button-group
 				v-if="buttons"
 				:buttons="buttons"
@@ -12,7 +16,6 @@
 				variant="filled"
 			/>
 		</header>
-
 		<slot />
 	</section>
 </template>
@@ -22,6 +25,7 @@ export default {
 	props: {
 		buttons: Array,
 		headline: String,
+		invalid: Boolean,
 		link: String,
 		required: Boolean
 	}
@@ -34,24 +38,5 @@ export default {
 }
 .k-section-header {
 	margin-bottom: var(--spacing-2);
-}
-.k-label {
-	position: relative;
-	display: flex;
-	font-weight: var(--font-semi);
-	align-items: center;
-	height: var(--height-xs);
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-.k-label abbr {
-	text-decoration: none;
-	color: var(--color-gray-500);
-	padding-inline-start: 0.25rem;
-}
-[aria-disabled] .k-label {
-	opacity: var(--opacity-disabled);
-	cursor: not-allowed;
 }
 </style>

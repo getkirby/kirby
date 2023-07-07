@@ -55,7 +55,7 @@
 				@keydown.native.up.prevent="$emit('sortUp')"
 				@keydown.native.down.prevent="$emit('sortDown')"
 			/>
-			<k-dropdown-content ref="options" align="right">
+			<k-dropdown-content ref="options" align-x="end">
 				<k-dropdown-item
 					:disabled="isFull"
 					icon="angle-up"
@@ -141,7 +141,7 @@ export default {
 	align-items: center;
 	background: var(--color-white);
 	z-index: var(--z-dropdown);
-	box-shadow: rgba(0, 0, 0, 0.1) -2px 0 5px, var(--shadow), var(--shadow-xl);
+	box-shadow: var(--shadow-toolbar);
 	color: var(--color-black);
 	border-radius: var(--rounded);
 }

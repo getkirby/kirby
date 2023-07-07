@@ -1,6 +1,6 @@
 <template>
 	<div class="k-field k-info-field">
-		<k-headline>{{ label }}</k-headline>
+		<k-headline v-if="label">{{ label }}</k-headline>
 		<k-box :theme="theme">
 			<k-text :html="text" />
 		</k-box>

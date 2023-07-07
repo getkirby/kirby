@@ -1,9 +1,9 @@
 <template>
 	<dialog
-		ref="dropdown"
 		v-if="isOpen"
-		:data-align="align"
-		:data-dropup="dropup"
+		ref="dropdown"
+		:data-align-x="axis.x"
+		:data-align-y="axis.y"
 		:data-theme="theme"
 		class="k-dropdown-content"
 		@close="onClose"
@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import Vue from "vue";
+
 let OpenDropdown = null;
 
 /**
@@ -38,12 +40,31 @@ let OpenDropdown = null;
 export default {
 	props: {
 		/**
-		 * Alignment of the dropdown items
-		 * @values left, right
+		 * @deprecated Use `alignX` instead
+		 * @todo Remove in v5, then rename `axis` data to `align`
 		 */
 		align: {
+			type: String
+		},
+		/**
+		 * Default horizontal alignment of the dropdown
+		 * @values start, end
+		 */
+		alignX: {
 			type: String,
-			default: "left"
+			default: "start"
+		},
+		/**
+		 * Default vertical alignment of the dropdown
+		 * @values top, bottom
+		 */
+		alignY: {
+			type: String,
+			default: "bottom"
+		},
+		disabled: {
+			type: Boolean,
+			default: false
 		},
 		navigate: {
 			default: true,
@@ -74,10 +95,21 @@ export default {
 	],
 	data() {
 		return {
-			dropup: false,
+			axis: {
+				x: this.alignX,
+				y: this.alignY
+			},
 			isOpen: false,
-			items: []
+			items: [],
+			opener: null
 		};
+	},
+	created() {
+		if (this.align) {
+			window.panel.deprecated(
+				"<k-dropdown-content>: `align` prop will be removed in a future version. Use the `alignX` prop instead."
+			);
+		}
 	},
 	methods: {
 		/**
@@ -111,7 +143,7 @@ export default {
 			this.$refs.navigate.focus(n);
 		},
 		onClick(event) {
-			// close the dialog if the backdrop is being clicked
+			// close the dialog element if the backdrop is being clicked
 			if (event.target === this.$el) {
 				this.close();
 			}
@@ -120,8 +152,9 @@ export default {
 			this.resetPosition();
 			this.isOpen = OpenDropdown = false;
 			this.$emit("close");
+			window.removeEventListener("resize", this.position);
 		},
-		onOpen(opener) {
+		onOpen() {
 			this.isOpen = true;
 
 			// store a global reference to the dropdown
@@ -129,8 +162,9 @@ export default {
 
 			// wait until the dropdown is rendered
 			this.$nextTick(() => {
-				if (this.$el && opener) {
-					this.position(opener);
+				if (this.$el && this.opener) {
+					window.addEventListener("resize", this.position);
+					this.position();
 					this.$emit("open");
 				}
 			});
@@ -147,13 +181,17 @@ export default {
 		 * @public
 		 */
 		open(opener) {
+			if (this.disabled === true) {
+				return false;
+			}
+
 			if (OpenDropdown && OpenDropdown !== this) {
 				// close the current dropdown
 				OpenDropdown.close();
 			}
 
 			// find the opening element
-			opener =
+			this.opener =
 				opener ??
 				window.event?.target.closest("button") ??
 				window.event?.target;
@@ -162,45 +200,81 @@ export default {
 			// soon as they are loaded
 			this.fetchOptions((items) => {
 				this.items = items;
-				this.onOpen(opener);
+				this.onOpen();
 			});
 		},
-		position(opener) {
-			// reset the dropup state before position calculation
-			this.dropup = false;
+		position() {
+			// reset to the alignment defaults
+			// before running position calculation
+			this.axis = {
+				x: this.alignX ?? this.align,
+				y: this.alignY
+			};
+
+			if (this.axis.x === "right") {
+				this.axis.x = "end";
+			} else if (this.axis.x === "left") {
+				this.axis.x = "start";
+			}
+
+			// drill down to the element of a component
+			if (this.opener instanceof Vue) {
+				this.opener = this.opener.$el;
+			}
 
 			// get the dimensions of the opening button
-			const openerRect = opener.getBoundingClientRect();
+			const opener = this.opener.getBoundingClientRect();
 
-			// set the top position and take scroll position into consideration
-			this.$el.style.top =
-				openerRect.top + window.scrollY + openerRect.height + "px";
+			// set the default position
+			// and take scroll position into consideration
+			this.$el.style.left = opener.left + window.scrollX + opener.width + "px";
+			this.$el.style.top = opener.top + window.scrollY + opener.height + "px";
 
-			// set the left position based on the alignment
-			const offsetX =
-				this.align === "end" || this.align === "right" ? openerRect.width : 0;
-			this.$el.style.left = openerRect.left + window.scrollX + offsetX + "px";
-
-			// open the modal after the correct positioning has been applied
-			this.$el.showModal();
+			// open the modal after the default positioning has been applied
+			if (this.$el.open !== true) {
+				this.$el.showModal();
+			}
 
 			// as we just set style.top, wait one tick before measuring dropdownRect
 			this.$nextTick(() => {
 				// get the dimensions of the open dropdown
-				const dropdownRect = this.$el.getBoundingClientRect();
-				const safeSpaceHeight = 10;
+				const rect = this.$el.getBoundingClientRect();
+				const safeSpace = 10;
 
-				// activates the dropup if the dropdown content overflows
-				// to the bottom of the screen but only if there is
-				// enough space top of screen
-				if (
-					dropdownRect.top + dropdownRect.height >
-						window.innerHeight - safeSpaceHeight &&
-					dropdownRect.height + safeSpaceHeight * 2 < dropdownRect.top
+				// Horizontal: check if dropdown is outside of viewport
+				// and adapt alignment if necessary
+				if (this.axis.x === "end") {
+					if (rect.left - rect.width < safeSpace) {
+						this.axis.x === "start";
+					}
+				} else if (
+					rect.left + rect.width > window.innerWidth - safeSpace &&
+					rect.width + safeSpace < rect.left
 				) {
+					this.axis.x = "end";
+				}
+
+				if (this.axis.x === "start") {
+					this.$el.style.left =
+						parseInt(this.$el.style.left) - opener.width + "px";
+				}
+
+				// Vertical: check if dropdown is outside of viewport
+				// and adapt alignment if necessary
+				if (this.axis.y === "top") {
+					if (rect.height + safeSpace > rect.top) {
+						this.axis.y === "bottom";
+					}
+				} else if (
+					rect.top + rect.height > window.innerHeight - safeSpace &&
+					rect.height + safeSpace < rect.top
+				) {
+					this.axis.y = "top";
+				}
+
+				if (this.axis.y === "top") {
 					this.$el.style.top =
-						parseInt(this.$el.style.top) - openerRect.height + "px";
-					this.dropup = true;
+						parseInt(this.$el.style.top) - opener.height + "px";
 				}
 			});
 		},
@@ -248,12 +322,13 @@ export default {
 	background: none;
 }
 
-.k-dropdown-content[data-align="right"],
-.k-dropdown-content[data-align="end"] {
+.k-dropdown-content[data-align-x="end"] {
 	--dropdown-x: -100%;
 }
-
-.k-dropdown-content[data-dropup="true"] {
+.k-dropdown-content[data-align-x="center"] {
+	--dropdown-x: -50%;
+}
+.k-dropdown-content[data-align-y="top"] {
 	--dropdown-y: -100%;
 }
 

@@ -277,8 +277,8 @@ export default {
 
 <style>
 :root {
-	--toolbar-size: 38px;
-	--toolbar-text: #aaa;
+	--toolbar-size: var(--height);
+	--toolbar-text: var(--color-gray-400);
 	--toolbar-back: var(--color-white);
 	--toolbar-hover: rgba(239, 239, 239, 0.5);
 	--toolbar-border: var(--color-background);
@@ -289,6 +289,7 @@ export default {
 	max-width: 100%;
 	height: var(--toolbar-size);
 	margin-bottom: var(--spacing-1);
+	align-items: center;
 
 	color: var(--toolbar-text);
 	background: var(--toolbar-back);
@@ -298,16 +299,17 @@ export default {
 }
 
 .k-toolbar-divider {
+	height: var(--toolbar-size);
 	width: 1px;
 	border-left: 1px solid var(--toolbar-border);
 }
 
-.k-toolbar-button {
+.k-toolbar-button.k-button {
 	--button-width: var(--toolbar-size);
 	--button-height: var(--toolbar-size);
 }
 .k-toolbar-button:hover {
-	--button-color-hover: var(--toolbar-hover);
+	--button-color-back: var(--toolbar-hover);
 }
 
 .k-toolbar:not([data-inline="true"]):has(~ :focus-within) {

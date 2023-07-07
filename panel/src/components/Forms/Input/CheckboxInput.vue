@@ -16,12 +16,7 @@
 				viewBox="0 0 12 10"
 				xmlns="http://www.w3.org/2000/svg"
 			>
-				<path
-					d="M1 5l3.3 3L11 1"
-					stroke-width="2"
-					fill="none"
-					fill-rule="evenodd"
-				/>
+				<path d="M1 5l3.3 3L11 1" stroke-width="2" />
 			</svg>
 		</span>
 		<!-- eslint-disable-next-line vue/no-v-html -->
@@ -114,6 +109,7 @@ export default {
 }
 .k-checkbox-input-icon path {
 	stroke: var(--color-white);
+	fill: none;
 }
 .k-checkbox-input-native:checked + .k-checkbox-input-icon {
 	border-color: var(--color-gray-900);

@@ -10,7 +10,7 @@
 					icon="add"
 					size="sm"
 					variant="filled"
-					@click="$dialog('users/create')"
+					@click="create"
 				/>
 				<k-users-role-filter
 					v-if="roles.length > 1"
@@ -50,6 +50,13 @@ export default {
 		}
 	},
 	methods: {
+		create() {
+			this.$dialog("users/create", {
+				query: {
+					role: this.role?.id
+				}
+			});
+		},
 		paginate(pagination) {
 			this.$reload({
 				query: {
