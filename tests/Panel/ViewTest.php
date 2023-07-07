@@ -570,10 +570,10 @@ class ViewTest extends TestCase
 			'text' => 'Log out'
 		];
 
-		$this->assertCount(3, $menu);
+		$this->assertCount(4, $menu);
 		$this->assertSame('-', $menu[0]);
-		$this->assertSame($account, $menu[1]);
-		$this->assertSame($logout, $menu[2]);
+		$this->assertSame($account, $menu[2]);
+		$this->assertSame($logout, $menu[3]);
 	}
 
 	/**
@@ -607,7 +607,7 @@ class ViewTest extends TestCase
 			'text'     => 'Site'
 		];
 
-		$this->assertCount(4, $menu);
+		$this->assertCount(5, $menu);
 		$this->assertSame($expected, $menu[0]);
 	}
 
@@ -633,7 +633,7 @@ class ViewTest extends TestCase
 			'site'
 		);
 
-		$this->assertCount(3, $menu);
+		$this->assertCount(4, $menu);
 		$this->assertSame('-', $menu[0]);
 	}
 
@@ -648,14 +648,12 @@ class ViewTest extends TestCase
 					'icon'  => 'home',
 					'label' => 'Site',
 					'link'  => 'site',
-					'menu'  => function () {
-						return true;
-					},
+					'menu'  => fn () => true
 				]
 			],
 		);
 
-		$this->assertCount(4, $menu);
+		$this->assertCount(5, $menu);
 		$this->assertSame('Site', $menu[0]['text']);
 	}
 
@@ -677,7 +675,7 @@ class ViewTest extends TestCase
 			],
 		);
 
-		$this->assertCount(4, $menu);
+		$this->assertCount(5, $menu);
 		$this->assertTrue($menu[0]['disabled']);
 	}
 
@@ -699,7 +697,7 @@ class ViewTest extends TestCase
 			],
 		);
 
-		$this->assertCount(3, $menu);
+		$this->assertCount(4, $menu);
 	}
 
 	/**
@@ -713,7 +711,7 @@ class ViewTest extends TestCase
 			]
 		]);
 
-		$this->assertFalse($menu[1]['disabled']);
+		$this->assertFalse($menu[2]['disabled']);
 	}
 
 	/**
@@ -723,7 +721,7 @@ class ViewTest extends TestCase
 	{
 		$menu = View::menu([], [], 'account');
 
-		$this->assertTrue($menu[1]['current']);
+		$this->assertTrue($menu[2]['current']);
 	}
 
 	/**

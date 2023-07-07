@@ -70,6 +70,11 @@ class Home
 				continue;
 			}
 
+			// skip buttons that don't open a link
+			// (but e.g. a dialog)
+			if (isset($menuItem['link']) === false) {
+				continue;
+			}
 
 			return Panel::url($menuItem['link']);
 		}
