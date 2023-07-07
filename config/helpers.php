@@ -647,8 +647,11 @@ if (Helpers::hasOverride('video') === false) { // @codeCoverageIgnore
 	 * videos. The embed Urls are automatically detected from
 	 * the given Url.
 	 */
-	function video(string $url, array $options = [], array $attr = []): string|null
-	{
+	function video(
+		string $url,
+		array $options = [],
+		array $attr = []
+	): string|null {
 		return Html::video($url, $options, $attr);
 	}
 }
@@ -657,8 +660,11 @@ if (Helpers::hasOverride('vimeo') === false) { // @codeCoverageIgnore
 	/**
 	 * Embeds a Vimeo video by URL in an iframe
 	 */
-	function vimeo(string $url, array $options = [], array $attr = []): string|null
-	{
+	function vimeo(
+		string $url,
+		array $options = [],
+		array $attr = []
+	): string|null {
 		return Html::vimeo($url, $options, $attr);
 	}
 }
@@ -679,8 +685,11 @@ if (Helpers::hasOverride('youtube') === false) { // @codeCoverageIgnore
 	/**
 	 * Embeds a Youtube video by URL in an iframe
 	 */
-	function youtube(string $url, array $options = [], array $attr = []): string|null
-	{
+	function youtube(
+		string $url,
+		array $options = [],
+		array $attr = []
+	): string|null {
 		return Html::youtube($url, $options, $attr);
 	}
 }
