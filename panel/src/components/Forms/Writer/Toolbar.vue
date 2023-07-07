@@ -12,7 +12,7 @@
 				@click="$refs.nodes.toggle()"
 			/>
 			<k-dropdown-content ref="nodes">
-				<template v-for="(node, nodeType) in nodeButtons">
+				<template v-for="(node, nodeType, nodeIndex) in nodeButtons">
 					<k-dropdown-item
 						:key="nodeType"
 						:current="activeNodeButton?.id === node.id"
@@ -22,7 +22,7 @@
 					>
 						{{ node.label }}
 					</k-dropdown-item>
-					<hr v-if="node.separator === true" :key="nodeType + '-divider'" />
+					<hr v-if="node.separator === true && nodeIndex !== Object.keys(nodeButtons).length - 1" :key="nodeType + '-divider'" />
 				</template>
 			</k-dropdown-content>
 		</k-dropdown>
