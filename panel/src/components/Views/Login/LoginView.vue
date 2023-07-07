@@ -86,9 +86,13 @@ export default {
 .k-login-toggler {
 	position: absolute;
 	top: -2px;
-	inset-inline-end: 0;
+	inset-inline-end: calc(var(--spacing-2) * -1);
 	z-index: 1;
+	color: var(--link-color);
+	padding-inline: var(--spacing-2);
 	text-decoration: underline;
+	text-decoration-color: var(--link-color);
+	text-underline-offset: 1px;
 	height: var(--height-xs);
 	line-height: 1;
 	border-radius: var(--rounded);
