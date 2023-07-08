@@ -40,8 +40,8 @@ let OpenDropdown = null;
 export default {
 	props: {
 		/**
-		 * @deprecated Use `alignX` instead
-		 * @todo Remove in v5, then rename `axis` data to `align`
+		 * @deprecated 4.0.0 Use `alignX` instead
+		 * @todo rename `axis` data to `align` when removed
 		 */
 		align: {
 			type: String

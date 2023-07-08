@@ -12,9 +12,9 @@ export default {
 		app.component("k-panel-outside", Outside);
 		app.component("k-topbar", Topbar);
 
-		// @deprecated Use `k-panel-inside` instead
+		// @deprecated 4.0.0 Use `k-panel-inside` instead
 		app.component("k-inside", Inside);
-		// @deprecated Use `k-panel-outside` instead
+		// @deprecated 4.0.0 Use `k-panel-outside` instead
 		app.component("k-outside", Outside);
 	}
 };

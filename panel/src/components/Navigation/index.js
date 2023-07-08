@@ -13,7 +13,7 @@ import Tag from "./Tag.vue";
 import Tags from "./Tags.vue";
 import Tree from "./Tree.vue";
 
-/** @deprecated @todo deprecated.buttons.components - remove @ 5.0 */
+/** @deprecated 4.0.0 */
 import ButtonDisabled from "./ButtonDisabled.vue";
 import ButtonLink from "./ButtonLink.vue";
 import ButtonNative from "./ButtonNative.vue";
@@ -36,7 +36,7 @@ export default {
 		app.component("k-tags", Tags);
 		app.component("k-tree", Tree);
 
-		/** @deprecated @todo deprecated.buttons.components - remove @ 5.0 */
+		/** @deprecated */
 		app.component("k-button-disabled", ButtonDisabled);
 		app.component("k-button-link", ButtonLink);
 		app.component("k-button-native", ButtonNative);

@@ -16,7 +16,7 @@ export default {
 		window.panel.search = window.panel.search.bind(window.panel);
 
 		/**
-		 * @deprecated Dollar Sign Shortcuts
+		 * @deprecated 4.0.0 Dollar Sign Shortcuts for panel data
 		 *
 		 * @example
 		 * // Old:
@@ -44,7 +44,6 @@ export default {
 			"search",
 			"searches",
 			"system",
-			"t",
 			"translation",
 			"url",
 			"urls",

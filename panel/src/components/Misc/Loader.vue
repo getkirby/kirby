@@ -6,15 +6,20 @@
 
 <script>
 /**
- * @deprecated Use `<k-icon type="loader" />` instead
- * @todo remove @ 5.0
+ * @deprecated 4.0.0 Use `<k-icon type="loader" />` instead
  *
  * Animated loading spinner
  * @public
  *
  * @example <k-loader />
  */
-export default {};
+export default {
+	created() {
+		window.panel.deprecated(
+			'<k-loader> will be removed in a future version. Use <k-icon type="loader" /> instead.'
+		);
+	}
+};
 </script>
 
 <style>

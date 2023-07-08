@@ -344,18 +344,36 @@ export default (panel) => {
 		},
 
 		/**
-		 * @deprecated use this.on instead
+		 * @deprecated 4.0.0 use this.on instead
 		 */
-		$on: emitter.on,
+		$on(...args) {
+			window.panel.deprecated(
+				"`events.$on` will be removed in a future version. Use `events.on` instead."
+			);
+
+			emitter.on(...args);
+		},
 
 		/**
-		 * @deprecated use this.emit instead
+		 * @deprecated 4.0.0 use this.emit instead
 		 */
-		$emit: emitter.emit,
+		$emit(...args) {
+			window.panel.deprecated(
+				"`events.$emit` will be removed in a future version. Use `events.emit` instead."
+			);
+
+			emitter.emit(...args);
+		},
 
 		/**
-		 * @deprecated use this.off instead
+		 * @deprecated 4.0.0 use this.off instead
 		 */
-		$off: emitter.off
+		$off(...args) {
+			window.panel.deprecated(
+				"`events.$off` will be removed in a future version. Use `events.off` instead."
+			);
+
+			emitter.off(...args);
+		}
 	};
 };

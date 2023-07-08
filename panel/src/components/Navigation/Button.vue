@@ -6,8 +6,7 @@
 			<template v-if="text">
 				{{ text }}
 			</template>
-			<!-- @deprecated 4.0 Use `text` prop instead -->
-			<!-- @todo button.slot.deprecated - remove @ 5.0 -->
+			<!-- @deprecated 4.0.0 Use `text` prop instead -->
 			<template v-else>
 				<slot />
 			</template>
@@ -102,8 +101,7 @@ export default {
 		 */
 		title: String,
 		/**
-		 * @deprecated 4.0 Use the `title` prop instead
-		 * @todo button.prop.tooltip.deprecated - remove @ 5.0
+		 * @deprecated 4.0.0 Use the `title` prop instead
 		 */
 		tooltip: String,
 		/**
@@ -167,6 +165,18 @@ export default {
 			}
 
 			return "button";
+		}
+	},
+	created() {
+		if (this.$slots.default) {
+			window.panel.deprecated(
+				"<k-button>: the default slot will be removed in a future version. Use the `text` prop instead."
+			);
+		}
+		if (this.tooltip) {
+			window.panel.deprecated(
+				"<k-button>: the `tooltip` prop will be removed in a future version. Use the `title` prop instead."
+			);
 		}
 	},
 	methods: {

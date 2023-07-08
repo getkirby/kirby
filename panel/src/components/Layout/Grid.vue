@@ -13,8 +13,7 @@
 export default {
 	props: {
 		/**
-		 * @deprecated 4.0 Use `style="gap: "` or `variant` prop instead
-		 * @todo grid.gutter.deprecated - remove @ 5.0
+		 * @deprecated 4.0.0 Use `style="gap: "` or `variant` prop instead
 		 * @values small, medium, large, huge
 		 */
 		gutter: String,
@@ -24,10 +23,7 @@ export default {
 		 */
 		variant: String
 	},
-	/**
-	 *  @todo grid.gutter.deprecated - remove @ 5.0
-	 */
-	mounted() {
+	created() {
 		if (this.gutter) {
 			window.panel.deprecated(
 				'<k-grid>: the `gutter` prop will be removed in a future version. Use `style="gap: "` or `variant` prop instead.'

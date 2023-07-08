@@ -37,8 +37,7 @@ export default {
 		/**
 		 * Visual appearance of the text
 		 * @values help
-		 * @deprecated Use `k-help` class instead
-		 * @todo Remove in 5.0
+		 * @deprecated 4.0.0 Use `k-help` class instead
 		 */
 		theme: String
 	},
@@ -50,6 +49,13 @@ export default {
 				"data-size": this.size,
 				"data-theme": this.theme
 			};
+		}
+	},
+	created() {
+		if (this.theme) {
+			window.panel.deprecated(
+				'<k-text>: the `theme` prop will be removed in a future version. For help text, add `.k-help "` CSS class instead.'
+			);
 		}
 	}
 };
