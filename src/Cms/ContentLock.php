@@ -199,7 +199,7 @@ class ContentLock
 	 * Returns the state for the
 	 * form buttons in the frontend
 	 */
-	public function state(): ?string
+	public function state(): string|null
 	{
 		return match (true) {
 			$this->isUnlocked() => 'unlock',

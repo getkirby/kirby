@@ -26,7 +26,6 @@ return [
 	/**
 	 * Used by the `css()` helper
 	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param string $url Relative or absolute URL
 	 * @param string|array $options An array of attributes for the link tag or a media attribute string
 	 */
@@ -34,35 +33,39 @@ return [
 
 	/**
 	 * Add your own email provider
-	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
-	 * @param array $props
-	 * @param bool $debug
 	 */
-	'email' => function (App $kirby, array $props = [], bool $debug = false) {
+	'email' => function (
+		App $kirby,
+		array $props = [],
+		bool $debug = false
+	) {
 		return new Emailer($props, $debug);
 	},
 
 	/**
 	 * Modify URLs for file objects
 	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param \Kirby\Cms\File $file The original file object
-	 * @return string
 	 */
-	'file::url' => function (App $kirby, File $file): string {
+	'file::url' => function (
+		App $kirby,
+		File $file
+	): string {
 		return $file->mediaUrl();
 	},
 
 	/**
 	 * Adapt file characteristics
 	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param \Kirby\Cms\File|\Kirby\Filesystem\Asset $file The file object
 	 * @param array $options All thumb options (width, height, crop, blur, grayscale)
 	 * @return \Kirby\Cms\File|\Kirby\Cms\FileVersion|\Kirby\Filesystem\Asset
 	 */
-	'file::version' => function (App $kirby, $file, array $options = []) {
+	'file::version' => function (
+		App $kirby,
+		$file,
+		array $options = []
+	) {
 		// if file is not resizable, return
 		if ($file->isResizable() === false) {
 			return $file;
@@ -101,7 +104,6 @@ return [
 	/**
 	 * Used by the `js()` helper
 	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param string $url Relative or absolute URL
 	 * @param string|array $options An array of attributes for the link tag or a media attribute string
 	 */
@@ -110,10 +112,8 @@ return [
 	/**
 	 * Add your own Markdown parser
 	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param string $text Text to parse
 	 * @param array $options Markdown options
-	 * @return string
 	 */
 	'markdown' => function (
 		App $kirby,
@@ -264,12 +264,14 @@ return [
 	/**
 	 * Add your own SmartyPants parser
 	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param string $text Text to parse
 	 * @param array $options SmartyPants options
-	 * @return string
 	 */
-	'smartypants' => function (App $kirby, string $text = null, array $options = []): string {
+	'smartypants' => function (
+		App $kirby,
+		string $text = null,
+		array $options = []
+	): string {
 		static $smartypants;
 		static $config;
 
@@ -286,43 +288,55 @@ return [
 	/**
 	 * Add your own snippet loader
 	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param string|array $name Snippet name
 	 * @param array $data Data array for the snippet
 	 */
-	'snippet' => function (App $kirby, string|array|null $name, array $data = [], bool $slots = false): Snippet|string {
+	'snippet' => function (
+		App $kirby,
+		string|array|null $name,
+		array $data = [],
+		bool $slots = false
+	): Snippet|string {
 		return Snippet::factory($name, $data, $slots);
 	},
 
 	/**
 	 * Add your own template engine
 	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param string $name Template name
 	 * @param string $type Extension type
 	 * @param string $defaultType Default extension type
 	 * @return \Kirby\Template\Template
 	 */
-	'template' => function (App $kirby, string $name, string $type = 'html', string $defaultType = 'html') {
+	'template' => function (
+		App $kirby,
+		string $name,
+		string $type = 'html',
+		string $defaultType = 'html'
+	) {
 		return new Template($name, $type, $defaultType);
 	},
 
 	/**
 	 * Add your own thumb generator
 	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param string $src Root of the original file
 	 * @param string $dst Template string for the root to the desired destination
 	 * @param array $options All thumb options that should be applied: `width`, `height`, `crop`, `blur`, `grayscale`
 	 * @return string
 	 */
-	'thumb' => function (App $kirby, string $src, string $dst, array $options): string {
+	'thumb' => function (
+		App $kirby,
+		string $src,
+		string $dst,
+		array $options
+	): string {
 		$darkroom = Darkroom::factory(
 			$kirby->option('thumbs.driver', 'gd'),
 			$kirby->option('thumbs', [])
 		);
-		$options  = $darkroom->preprocess($src, $options);
-		$root     = (new Filename($src, $dst, $options))->toString();
+		$options = $darkroom->preprocess($src, $options);
+		$root    = (new Filename($src, $dst, $options))->toString();
 
 		F::copy($src, $root, true);
 		$darkroom->process($root, $options);
@@ -333,12 +347,14 @@ return [
 	/**
 	 * Modify all URLs
 	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param string|null $path URL path
 	 * @param array|string|null $options Array of options for the Uri class
-	 * @return string
 	 */
-	'url' => function (App $kirby, string $path = null, $options = null): string {
+	'url' => function (
+		App $kirby,
+		string $path = null,
+		$options = null
+	): string {
 		$language = null;
 
 		// get language from simple string option

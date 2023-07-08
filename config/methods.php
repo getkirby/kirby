@@ -112,7 +112,7 @@ return function (App $app) {
 			Field $field,
 			string|IntlDateFormatter|null $format = null,
 			string $fallback = null
-		) use ($app): string|int {
+		) use ($app): string|int|null {
 			if (empty($field->value) === true && $fallback === null) {
 				return null;
 			}
