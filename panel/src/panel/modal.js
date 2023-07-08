@@ -109,18 +109,18 @@ export default (panel, key, defaults) => {
 		 * before a modal is opened. It also sets the
 		 * isOpen state.
 		 *
-		 * @param {Object} feature
+		 * @param {Object} modal
 		 * @returns {Promise} Returns the new state
 		 */
-		async open(feature, options) {
+		async open(modal, options) {
 			// close previous notifications from other
 			// contexts, if the modal wasn't open so far
 			if (this.isOpen === false) {
 				panel.notification.close();
 			}
 
-			// open the feature via url or with a state object
-			await parent.open.call(this, feature, options);
+			// open the modal feature via url or with a state object
+			await parent.open.call(this, modal, options);
 
 			// mark the modal as open
 			this.isOpen = true;

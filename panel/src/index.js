@@ -5,7 +5,7 @@ import Components from "./components/index.js";
 import ErrorHandling from "./config/errorhandling";
 import Helpers from "./helpers/index.js";
 import I18n from "./config/i18n.js";
-import Legacy from "./legacy/index.js";
+import Legacy from "./panel/legacy.js";
 import Libraries from "./libraries/index.js";
 import Panel from "./panel/panel.js";
 import store from "./store/store.js";
@@ -47,6 +47,11 @@ window.panel = Vue.prototype.$panel = Panel.create(window.panel.plugins);
 /**
  * Some shortcuts to the Panel's features
  */
+Vue.prototype.$dialog = window.panel.dialog.open.bind(window.panel.dialog);
+Vue.prototype.$drawer = window.panel.drawer.open.bind(window.panel.drawer);
+Vue.prototype.$dropdown = window.panel.dropdown.openAsync.bind(
+	window.panel.dropdown
+);
 Vue.prototype.$go = window.panel.view.open.bind(window.panel.view);
 Vue.prototype.$reload = window.panel.reload.bind(window.panel);
 

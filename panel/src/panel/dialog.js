@@ -40,28 +40,67 @@ export default (panel) => {
 			parent.close.call(this);
 		},
 
-		async open(feature, options = {}) {
+		/**
+		 * Opens dialog via JS object or loads it from the server
+		 *
+		 * @example
+		 * panel.dialog.open('some/dialog');
+		 *
+		 * @example
+		 * panel.dialog.open('some/dialog', () => {
+		 *  // on submit
+		 * });
+		 *
+		 * @example
+		 * panel.dialog.open('some/dialog', {
+		 *   query: {
+		 *     template: 'some-template'
+		 *   },
+		 *   submit: () => {},
+		 *   cancel: () => {}
+		 * });
+		 *
+		 * @example
+		 * panel.dialog.open({
+		 *   component: 'k-remove-dialog',
+		 *   props: {
+		 *      text: 'Do you really want to delete this?'
+		 *   },
+		 *   submit: () => {},
+		 *   cancel: () => {}
+		 * });
+		 *
+		 * @param {String|Object} dialog
+		 * @param {Object|Function} options
+		 * @returns {Object}
+		 */
+		async open(dialog, options = {}) {
 			// check for legacy Vue components
-			if (feature instanceof window.Vue) {
-				return this.openComponent(feature);
+			if (dialog instanceof window.Vue) {
+				return this.openComponent(dialog);
 			}
 
-			return parent.open.call(this, feature, options);
+			// prefix URLs
+			if (typeof dialog === "string") {
+				dialog = `/dialogs/${dialog}`;
+			}
+
+			return parent.open.call(this, dialog, options);
 		},
 
 		/**
 		 * Takes a legacy dialog component and
 		 * opens it manually.
 		 *
-		 * @param {any} component
+		 * @param {any} dialog Vue component
 		 */
-		async openComponent(component) {
+		async openComponent(dialog) {
 			panel.deprecated(
 				"Dialog components should no longer be used in your templates"
 			);
 
 			const state = await parent.open.call(this, {
-				component: component.$options._componentTag,
+				component: dialog.$options._componentTag,
 				// don't render this in the modal
 				// component. The Vue component already
 				// takes over rendering.
@@ -69,22 +108,22 @@ export default (panel) => {
 				// Use a combination of attributes and props
 				// to get everything that was passed to the component
 				props: {
-					...component.$attrs,
-					...component.$props
+					...dialog.$attrs,
+					...dialog.$props
 				},
 				// add a reference to the Vue component
 				// This will make it possible to determine
 				// its open state in the dialog or drawer components
-				ref: component
+				ref: dialog
 			});
 
 			const listeners = this.listeners();
 
 			for (const listener in listeners) {
-				component.$on(listener, listeners[listener]);
+				dialog.$on(listener, listeners[listener]);
 			}
 
-			component.visible = true;
+			dialog.visible = true;
 
 			return state;
 		}

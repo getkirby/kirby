@@ -133,6 +133,15 @@ export default {
 	},
 
 	/**
+	 * Shortcut to trigger a deprecation warning
+	 *
+	 * @param {String} message
+	 */
+	deprecated(message) {
+		this.notification.deprecated(message);
+	},
+
+	/**
 	 * Returns the reading direction based
 	 * on the current interface translation
 	 * This is used to set the dir attribute
