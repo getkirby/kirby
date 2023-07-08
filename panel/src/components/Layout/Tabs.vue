@@ -144,8 +144,8 @@ export default {
 	position: absolute;
 	top: 2px;
 	font-variant-numeric: tabular-nums;
-	inset-inline-end: calc(var(--button-padding) + 2px);
-	transform: translateX(100%);
+	inset-inline-end: var(--button-padding);
+	transform: translateX(75%);
 	line-height: 1.5;
 	padding: 0 0.25rem;
 	border-radius: 1rem;
@@ -155,5 +155,6 @@ export default {
 	background: var(--theme-color-back);
 	border: 1px solid var(--theme-color-500);
 	color: var(--theme-color-text);
+	z-index: 1;
 }
 </style>
