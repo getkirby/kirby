@@ -354,35 +354,34 @@ abstract class Model
 	}
 
 	/**
-	 * Returns link url and tooltip
-	 * for model (e.g. used for prev/next
-	 * navigation)
+	 * Returns link url and title
+	 * for model (e.g. used for prev/next navigation)
 	 * @internal
 	 */
-	public function toLink(string $tooltip = 'title'): array
+	public function toLink(string $title = 'title'): array
 	{
 		return [
 			'link'    => $this->url(true),
-			'title'   => $title = (string)$this->model->{$tooltip}(),
-			// @todo button.prop.tooltip.deprecated - adapt @ 5.0
-			'tooltip' => $title
+			'title'   => $title = (string)$this->model->{$title}()
 		];
 	}
 
 	/**
-	 * Returns link url and tooltip
+	 * Returns link url and title
 	 * for optional sibling model and
 	 * preserves tab selection
 	 *
 	 * @internal
 	 */
-	protected function toPrevNextLink(ModelWithContent|null $model = null, string $tooltip = 'title'): array|null
-	{
+	protected function toPrevNextLink(
+		ModelWithContent|null $model = null,
+		string $title = 'title'
+	): array|null {
 		if ($model === null) {
 			return null;
 		}
 
-		$data = $model->panel()->toLink($tooltip);
+		$data = $model->panel()->toLink($title);
 
 		if ($tab = $model->kirby()->request()->get('tab')) {
 			$uri = new Uri($data['link'], [
