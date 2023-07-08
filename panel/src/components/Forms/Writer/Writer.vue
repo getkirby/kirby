@@ -7,18 +7,13 @@
 		:spellcheck="spellcheck"
 		class="k-writer"
 	>
-		<template v-if="editor">
-			<k-writer-toolbar
-				ref="toolbar"
-				v-bind="toolbar"
-				:editor="editor"
-				:active-marks="editor.activeMarks"
-				:active-nodes="editor.activeNodes"
-				:active-node-attrs="editor.activeNodeAttrs"
-				:is-paragraph-node-hidden="isParagraphNodeHidden"
-				@command="onCommand"
-			/>
-		</template>
+		<k-writer-toolbar
+			v-if="editor"
+			ref="toolbar"
+			v-bind="toolbar"
+			:editor="editor"
+			@command="onCommand"
+		/>
 	</div>
 </template>
 
@@ -111,13 +106,6 @@ export default {
 		},
 		isCursorAtStart() {
 			return this.editor.selectionIsAtStart;
-		},
-		isParagraphNodeHidden() {
-			return (
-				Array.isArray(this.nodes) === true &&
-				this.nodes.length !== 3 &&
-				this.nodes.includes("paragraph") === false
-			);
 		}
 	},
 	watch: {
@@ -190,9 +178,11 @@ export default {
 					// create the final HTML to send to the server
 					this.html = payload.editor.getHTML();
 
-					// when a new list item or heading is created, textContent length returns 0
-					// checking active nodes to prevent this issue
-					// empty input means no nodes or just the paragraph node and its length 0
+					// when a new list item or heading is created,
+					// textContent length returns 0.
+					// checking active nodes to prevent this issue.
+					// Empty input is no nodes or just the paragraph node
+					// and its length 0
 					if (
 						this.isEmpty &&
 						(payload.editor.activeNodes.length === 0 ||
@@ -212,10 +202,7 @@ export default {
 				new Keys(this.keys),
 				new History(),
 				new Insert(),
-				new Toolbar({
-					writer: this,
-					inline: this.toolbar.inline
-				}),
+				new Toolbar(this),
 				...(this.extensions || [])
 			],
 			inline: this.inline
