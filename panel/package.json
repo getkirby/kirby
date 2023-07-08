@@ -48,8 +48,6 @@
 		"eslint-plugin-cypress": "^2.13.3",
 		"eslint-plugin-vue": "^9.15.0",
 		"jsdom": "^22.1.0",
-		"postcss-dir-pseudo-class": "^7.0.2",
-		"postcss-logical": "^6.2.0",
 		"prettier": "^2.8.8",
 		"rollup-plugin-external-globals": "^0.8.0",
 		"terser": "^5.18.1",
