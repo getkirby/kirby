@@ -24,9 +24,9 @@ export default (panel) => {
 		 * @deprecated 4.0.0
 		 */
 		openAsync(dropdown, options = {}) {
-			panel.deprecated(
-				"`pandel.dropdown`: opening via $dropdown won't return an async closure in future versions."
-			);
+			// panel.deprecated(
+			// 	"`pandel.dropdown`: opening via $dropdown won't return an async closure in future versions."
+			// );
 
 			return async (ready) => {
 				await this.open(dropdown, options);
@@ -72,9 +72,9 @@ export default (panel) => {
 			// deprecated dropdown responses only return the options
 			// TODO: remove in v5
 			if (state.options) {
-				panel.deprecated(
-					"`pandel.dropdown`: responses should return the full state object. Only returning the options has been deprecated and will be removed in a future version."
-				);
+				// panel.deprecated(
+				// 	"`pandel.dropdown`: responses should return the full state object. Only returning the options has been deprecated and will be removed in a future version."
+				// );
 
 				state.props = {
 					options: state.options
