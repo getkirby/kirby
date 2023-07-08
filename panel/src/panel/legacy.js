@@ -44,6 +44,7 @@ export default {
 			"search",
 			"searches",
 			"system",
+			"t",
 			"translation",
 			"url",
 			"urls",

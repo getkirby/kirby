@@ -81,10 +81,10 @@ export default {
 		}
 	},
 	created() {
-		this.$events.$on("file.delete", this.removeById);
+		this.$events.on("file.delete", this.removeById);
 	},
 	destroyed() {
-		this.$events.$off("file.delete", this.removeById);
+		this.$events.off("file.delete", this.removeById);
 	},
 	methods: {
 		drop(files) {

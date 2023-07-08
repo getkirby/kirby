@@ -54,11 +54,11 @@ export default {
 		this.media = window.matchMedia("(max-width: 40rem)");
 		this.onCSSMediaChange(this.media);
 		this.media.addEventListener("change", this.onCSSMediaChange);
-		this.$events.$on("keydown.esc", this.onEscape);
+		this.$events.on("keydown.esc", this.onEscape);
 	},
 	destroyed() {
 		this.media.removeEventListener("change", this.onCSSMediaChange);
-		this.$events.$off("keydown.esc", this.onEscape);
+		this.$events.off("keydown.esc", this.onEscape);
 	},
 	methods: {
 		close() {

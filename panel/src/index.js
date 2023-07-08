@@ -54,9 +54,6 @@ Vue.prototype.$dropdown = window.panel.dropdown.openAsync.bind(
 );
 Vue.prototype.$go = window.panel.view.open.bind(window.panel.view);
 Vue.prototype.$reload = window.panel.reload.bind(window.panel);
-Vue.prototype.$t = window.panel.translation.translate.bind(
-	window.panel.translation
-);
 
 /**
  * Create the Vue application

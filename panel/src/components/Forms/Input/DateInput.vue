@@ -134,10 +134,10 @@ export default {
 	},
 	created() {
 		// make sure to commit input value when Cmd+S is hit
-		this.$events.$on("keydown.cmd.s", this.onBlur);
+		this.$events.on("keydown.cmd.s", this.onBlur);
 	},
 	destroyed() {
-		this.$events.$off("keydown.cmd.s", this.onBlur);
+		this.$events.off("keydown.cmd.s", this.onBlur);
 	},
 	methods: {
 		/**

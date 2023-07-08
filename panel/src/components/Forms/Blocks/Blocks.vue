@@ -143,20 +143,20 @@ export default {
 		}
 	},
 	created() {
-		this.$events.$on("blur", this.onBlur);
-		this.$events.$on("copy", this.onCopy);
-		this.$events.$on("focus", this.onOutsideFocus);
-		this.$events.$on("keydown", this.onKey);
-		this.$events.$on("keyup", this.onKey);
-		this.$events.$on("paste", this.onPaste);
+		this.$events.on("blur", this.onBlur);
+		this.$events.on("copy", this.onCopy);
+		this.$events.on("focus", this.onOutsideFocus);
+		this.$events.on("keydown", this.onKey);
+		this.$events.on("keyup", this.onKey);
+		this.$events.on("paste", this.onPaste);
 	},
 	destroyed() {
-		this.$events.$off("blur", this.onBlur);
-		this.$events.$off("copy", this.onCopy);
-		this.$events.$off("focus", this.onOutsideFocus);
-		this.$events.$off("keydown", this.onKey);
-		this.$events.$off("keyup", this.onKey);
-		this.$events.$off("paste", this.onPaste);
+		this.$events.off("blur", this.onBlur);
+		this.$events.off("copy", this.onCopy);
+		this.$events.off("focus", this.onOutsideFocus);
+		this.$events.off("keydown", this.onKey);
+		this.$events.off("keyup", this.onKey);
+		this.$events.off("paste", this.onPaste);
 	},
 	mounted() {
 		// focus first block
