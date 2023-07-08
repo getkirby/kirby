@@ -62,7 +62,7 @@
 				<template v-if="times" #icon>
 					<k-dropdown>
 						<k-button
-							:icon="time.icon || 'clock'"
+							:icon="time.icon ?? 'clock'"
 							:title="$t('time.select')"
 							class="k-input-icon-button"
 							@click="$refs.times.toggle()"
@@ -197,7 +197,7 @@ export default {
 				}
 			}
 
-			this.$emit("input", dt?.toISO() || "");
+			this.$emit("input", dt?.toISO() ?? "");
 		},
 		/**
 		 * Handle input event from calendar dropdown
@@ -256,8 +256,8 @@ export default {
 		toIso(value) {
 			const dt = this.$library.dayjs.iso(value);
 			return {
-				date: dt?.toISO("date") || null,
-				time: dt?.toISO("time") || null
+				date: dt?.toISO("date") ?? null,
+				time: dt?.toISO("time") ?? null
 			};
 		}
 	}

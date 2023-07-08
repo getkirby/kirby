@@ -51,7 +51,7 @@
 						icon="box"
 						@click="choose(blocks.length)"
 					>
-						{{ empty || $t("field.blocks.empty") }}
+						{{ empty ?? $t("field.blocks.empty") }}
 					</k-empty>
 				</template>
 			</k-draggable>
@@ -339,7 +339,7 @@ export default {
 		},
 		fieldset(block) {
 			return (
-				this.fieldsets[block.type] || {
+				this.fieldsets[block.type] ?? {
 					icon: "box",
 					name: block.type,
 					tabs: {

@@ -52,7 +52,7 @@ export default {
 		params(params) {
 			return {
 				...this.$props,
-				...(params || {}),
+				...(params ?? {}),
 				on: {
 					complete: (files, models) => {
 						this.$emit("success", files, models);

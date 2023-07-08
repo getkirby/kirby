@@ -41,7 +41,7 @@ export default {
 	},
 	computed: {
 		ratioPadding() {
-			return this.$helper.ratio(this.ratio || "16/9");
+			return this.$helper.ratio(this.ratio ?? "16/9");
 		}
 	}
 };

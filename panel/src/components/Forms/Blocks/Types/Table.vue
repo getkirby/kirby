@@ -24,19 +24,19 @@ export default {
 		 * @returns {Object}
 		 */
 		columns() {
-			return this.table.columns || this.fields;
+			return this.table.columns ?? this.fields;
 		},
 		/**
 		 * @returns  {Object}
 		 */
 		fields() {
-			return this.table.fields || {};
+			return this.table.fields ?? {};
 		},
 		/**
 		 * @returns {Array}
 		 */
 		rows() {
-			return this.content.rows || [];
+			return this.content.rows ?? [];
 		},
 		/**
 		 * Returns table config from `rows`
@@ -53,7 +53,7 @@ export default {
 				}
 			}
 
-			return table || {};
+			return table ?? {};
 		}
 	}
 };

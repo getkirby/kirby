@@ -44,7 +44,7 @@ export default (api) => ({
 		const roles = await api.get(this.url(id, "roles"));
 		return roles.data.map((role) => ({
 			info:
-				role.description ||
+				role.description ??
 				`(${window.panel.$t("role.description.placeholder")})`,
 			text: role.title,
 			value: role.name

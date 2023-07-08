@@ -45,7 +45,7 @@ export default {
 		emptyProps() {
 			return {
 				icon: "image",
-				text: this.empty || this.$t("field.files.empty")
+				text: this.empty ?? this.$t("field.files.empty")
 			};
 		},
 		options() {

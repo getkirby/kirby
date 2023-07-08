@@ -11,7 +11,7 @@ export default (api) => {
 
 		return api.request(
 			path,
-			Object.assign(options || {}, {
+			Object.assign(options ?? {}, {
 				method: "GET"
 			}),
 			silent

@@ -18,7 +18,7 @@ export default {
 				}
 			});
 
-			return field || fallback;
+			return field ?? fallback;
 		},
 		open() {
 			this.$emit("open");

@@ -22,7 +22,7 @@ export default {
 	},
 	computed: {
 		icon() {
-			return this.fieldset.icon || "box";
+			return this.fieldset.icon ?? "box";
 		},
 		label() {
 			if (!this.fieldset.label || this.fieldset.label.length === 0) {

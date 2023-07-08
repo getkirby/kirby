@@ -20,7 +20,7 @@
 					v-for="fieldset in group.fieldsets"
 					:key="fieldset.name"
 					:disabled="disabledFieldsets.includes(fieldset.type)"
-					:icon="fieldset.icon || 'box'"
+					:icon="fieldset.icon ?? 'box'"
 					:text="fieldset.name"
 					size="lg"
 					@click="$emit('submit', fieldset.type)"
@@ -76,12 +76,6 @@ export default {
 			type: String
 		}
 	},
-	created() {
-		this.$events.on("paste", this.close);
-	},
-	destroyed() {
-		this.$events.off("paste", this.close);
-	},
 	data() {
 		return {
 			selected: null
@@ -92,7 +86,7 @@ export default {
 			let groups = {};
 			let index = 0;
 
-			const fieldsetGroups = this.fieldsetGroups || {
+			const fieldsetGroups = this.fieldsetGroups ?? {
 				blocks: {
 					label: this.$t("field.blocks.fieldsets.label"),
 					sets: Object.keys(this.fieldsets)
@@ -126,7 +120,13 @@ export default {
 		shortcut() {
 			return this.$helper.keyboard.metaKey() + "+v";
 		}
-	}
+	},
+	created() {
+		this.$events.on("paste", this.close);
+	},
+	destroyed() {
+		this.$events.off("paste", this.close);
+	},
 };
 </script>
 

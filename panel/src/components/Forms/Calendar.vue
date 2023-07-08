@@ -273,7 +273,7 @@ export default {
 			 * The input event is fired when a date is selected.
 			 * @property {string} iso data as ISO date string
 			 */
-			this.$emit("input", this.dt?.toISO("date") || null);
+			this.$emit("input", this.dt?.toISO("date") ?? null);
 		},
 		/**
 		 * Shows the following month

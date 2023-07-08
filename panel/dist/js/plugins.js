@@ -44,7 +44,7 @@ window.panel.plugin = function (plugin, extensions) {
 	resolve(extensions, "sections", (name, options) => {
 		window.panel.plugins.components[`k-${name}-section`] = {
 			...options,
-			mixins: ["section", ...(options.mixins || [])]
+			mixins: ["section", ...(options.mixins ?? [])]
 		};
 	});
 
