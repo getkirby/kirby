@@ -40,7 +40,8 @@ return [
 		},
 		'submit' => function (string $path, string $filename) {
 			$file     = Find::file($path, $filename);
-			$renamed  = $file->changeName($file->kirby()->request()->get('name'));
+			$name     = $file->kirby()->request()->get('name');
+			$renamed  = $file->changeName($name);
 			$oldUrl   = $file->panel()->url(true);
 			$newUrl   = $renamed->panel()->url(true);
 			$response = [
