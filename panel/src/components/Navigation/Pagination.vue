@@ -138,7 +138,7 @@ export default {
 				disabled: this.end >= this.total,
 				icon: "angle-right",
 				size: "xs",
-				tooltip: this.nextLabel ?? this.$t("next"),
+				title: this.nextLabel ?? this.$t("next"),
 				variant: "filled",
 				click: () => this.next()
 			};
@@ -154,7 +154,7 @@ export default {
 				disabled: this.start <= 1,
 				icon: "angle-left",
 				size: "xs",
-				tooltip: this.prevLabel ?? this.$t("prev"),
+				title: this.prevLabel ?? this.$t("prev"),
 				variant: "filled",
 				click: () => this.prev()
 			};

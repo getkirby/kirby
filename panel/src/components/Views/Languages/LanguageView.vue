@@ -9,14 +9,14 @@
 			<k-button-group slot="buttons">
 				<k-button
 					:link="url"
-					:tooltip="$t('open')"
+					:title="$t('open')"
 					icon="open"
 					size="sm"
 					target="_blank"
 					variant="filled"
 				/>
 				<k-button
-					:tooltip="$t('settings')"
+					:title="$t('settings')"
 					icon="cog"
 					size="sm"
 					variant="filled"
@@ -24,7 +24,7 @@
 				/>
 				<k-button
 					:disabled="!deletable"
-					:tooltip="$t('delete')"
+					:title="$t('delete')"
 					icon="trash"
 					size="sm"
 					variant="filled"

@@ -2,12 +2,12 @@
 	<!-- Single option = button -->
 	<k-button
 		v-if="hasSingleOption"
-		:icon="options[0].icon || icon"
-		:size="options[0].size || size"
-		:title="options[0].title || options[0].tooltip || options[0].text"
-		:variant="options[0].variant || variant"
+		:icon="options[0].icon ?? icon"
+		:size="options[0].size ?? size"
+		:title="options[0].title ?? options[0].tooltip ?? options[0].text"
+		:variant="options[0].variant ?? variant"
 		class="k-options-dropdown-toggle"
-		@click="onAction(options[0].option || options[0].click, options[0], 0)"
+		@click="onAction(options[0].option ?? options[0].click, options[0], 0)"
 	>
 		<template v-if="text === true">
 			{{ options[0].text }}
