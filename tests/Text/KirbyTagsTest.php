@@ -940,10 +940,6 @@ class KirbyTagsTest extends TestCase
 				'<p><a class="phone" href="tel:+49123456789">+49123456789</a></p>'
 			],
 			[
-				'(twitter: @getkirby)',
-				'<p><a href="https://twitter.com/getkirby" rel="nofollow" target="_blank">@getkirby</a></p>'
-			],
-			[
 				'(video: https://www.youtube.com/watch?v=VhP7ZzZysQg)',
 				'<figure class="video-class"><iframe allow="fullscreen" allowfullscreen src="https://www.youtube.com/embed/VhP7ZzZysQg"></iframe></figure>'
 			]
@@ -968,10 +964,6 @@ class KirbyTagsTest extends TestCase
 					],
 					'tel' => [
 						'class' => 'phone'
-					],
-					'twitter' => [
-						'rel' => 'nofollow',
-						'target' => '_blank',
 					],
 					'video' => [
 						'class' => 'video-class',
