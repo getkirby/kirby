@@ -11,7 +11,7 @@
 				class="k-toolbar-button k-writer-toolbar-nodes"
 				@click="$refs.nodes.toggle()"
 			/>
-			<k-dropdown-content ref="nodes">
+			<k-dropdown-content ref="nodes" theme="light">
 				<template v-for="(node, nodeType, nodeIndex) in nodeButtons">
 					<k-dropdown-item
 						:key="nodeType"
@@ -22,7 +22,13 @@
 					>
 						{{ node.label }}
 					</k-dropdown-item>
-					<hr v-if="node.separator === true && nodeIndex !== Object.keys(nodeButtons).length - 1" :key="nodeType + '-divider'" />
+					<hr
+						v-if="
+							node.separator === true &&
+							nodeIndex !== Object.keys(nodeButtons).length - 1
+						"
+						:key="nodeType + '-divider'"
+					/>
 				</template>
 			</k-dropdown-content>
 		</k-dropdown>
