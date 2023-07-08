@@ -1,20 +1,12 @@
-import dialog from "./dialog.js";
-import dropdown from "./dropdown.js";
-
 /**
  * This is the graveyard for all deprecated
  * aliases. We can remove them step by step
  * in future major releases to clean up.
+ *
+ * @todo remove in v5
  */
 export default {
 	install(app) {
-		/**
-		 * @deprecated Deprecated Panel Methods
-		 */
-		window.panel.deprecated = window.panel.notification.deprecated.bind(
-			window.panel.notification
-		);
-
 		/**
 		 * Method object binding for the polyfills below
 		 */
@@ -24,7 +16,7 @@ export default {
 		window.panel.search = window.panel.search.bind(window.panel);
 
 		/**
-		 * @deprecated Dollar Sign Shortcuts
+		 * @deprecated 4.0.0 Dollar Sign Shortcuts for panel data
 		 *
 		 * @example
 		 * // Old:
@@ -65,11 +57,5 @@ export default {
 			const key = `$${polyfill}`;
 			app.prototype[key] = window.panel[key] = window.panel[polyfill];
 		}
-
-		/**
-		 * Shortcut methods
-		 */
-		app.prototype.$dialog = dialog;
-		app.prototype.$dropdown = dropdown;
 	}
 };

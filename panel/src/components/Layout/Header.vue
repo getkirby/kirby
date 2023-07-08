@@ -17,8 +17,7 @@
 			class="k-header-buttons"
 		>
 			<slot name="buttons" />
-			<!-- @deprecated left/right slot, use buttons slot instead -->
-			<!-- @todo remove right/left slots @ 5.0 -->
+			<!-- @deprecated 4.0.0 left/right slot, use buttons slot instead -->
 			<slot name="left" />
 			<slot name="right" />
 		</div>
@@ -37,9 +36,6 @@ export default {
 		 */
 		editable: Boolean
 	},
-	/**
-	 * @todo remove in v5.0 when removing slots
-	 */
 	mounted() {
 		if (this.$slots.left || this.$slots.right) {
 			window.panel.deprecated(

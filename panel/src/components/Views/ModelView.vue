@@ -53,14 +53,14 @@ export default {
 		}
 	},
 	created() {
-		this.$events.$on("model.reload", this.$reload);
-		this.$events.$on("keydown.left", this.toPrev);
-		this.$events.$on("keydown.right", this.toNext);
+		this.$events.on("model.reload", this.$reload);
+		this.$events.on("keydown.left", this.toPrev);
+		this.$events.on("keydown.right", this.toNext);
 	},
 	destroyed() {
-		this.$events.$off("model.reload", this.$reload);
-		this.$events.$off("keydown.left", this.toPrev);
-		this.$events.$off("keydown.right", this.toNext);
+		this.$events.off("model.reload", this.$reload);
+		this.$events.off("keydown.left", this.toPrev);
+		this.$events.off("keydown.right", this.toNext);
 	},
 	methods: {
 		toPrev(e) {

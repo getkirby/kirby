@@ -1,6 +1,6 @@
 <template>
 	<div :data-align="align" class="k-bar">
-		<!-- @deprecated 4.0 left/centre/right slots. Use with default slot only instead -->
+		<!-- @deprecated 4.0.0 left/centre/right slots. Use with default slot only instead -->
 		<!-- @todo bar.slots.deprecated - remove specific slots @ 5.0 -->
 		<template v-if="$slots.left || $slots.center || $slots.right">
 			<div v-if="$slots.left" class="k-bar-slot" data-position="left">
@@ -39,9 +39,6 @@ export default {
 		 */
 		align: String
 	},
-	/**
-	 * @todo bar.slots.deprecated - remove @ 5.0
-	 */
 	mounted() {
 		if (this.$slots.left || this.$slots.center || this.$slots.right) {
 			window.panel.deprecated(

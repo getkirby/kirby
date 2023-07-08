@@ -80,17 +80,56 @@ export default (panel) => {
 			};
 		},
 
-		async open(feature, options = {}) {
-			await parent.open.call(this, feature, options);
+		/**
+		 * Opens drawer via JS object or loads it from the server
+		 *
+		 * @example
+		 * panel.drawer.open('some/drawer');
+		 *
+		 * @example
+		 * panel.drawer.open('some/drawer', () => {
+		 *  // on submit
+		 * });
+		 *
+		 * @example
+		 * panel.drawer.open('some/drawer', {
+		 *   query: {
+		 *     template: 'some-template'
+		 *   },
+		 *   submit: () => {},
+		 *   cancel: () => {}
+		 * });
+		 *
+		 * @example
+		 * panel.drawer.open({
+		 *   component: 'k-forms-drawer',
+		 *   props: {
+		 *      fields: {}
+		 *   },
+		 *   submit: () => {},
+		 *   cancel: () => {}
+		 * });
+		 *
+		 * @param {String|Object} drawer
+		 * @param {Object|Function} options
+		 * @returns {Object}
+		 */
+		async open(drawer, options = {}) {
+			// prefix URLs
+			if (typeof dialog === "string") {
+				drawer = `/drawers/${drawer}`;
+			}
+
+			await parent.open.call(this, drawer, options);
 
 			// open the provided or first tab
-			this.tab(feature.tab);
+			this.tab(drawer.tab);
 
 			// get the current state and add it to the list of parents
 			const state = this.state();
 
 			// add the drawer to the history
-			if (feature.replace === true) {
+			if (drawer.replace === true) {
 				this.history.replace(-1, state);
 			} else {
 				this.history.add(state);

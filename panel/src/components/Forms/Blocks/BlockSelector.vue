@@ -77,10 +77,10 @@ export default {
 		}
 	},
 	created() {
-		this.$events.$on("paste", this.close);
+		this.$events.on("paste", this.close);
 	},
 	destroyed() {
-		this.$events.$off("paste", this.close);
+		this.$events.off("paste", this.close);
 	},
 	data() {
 		return {

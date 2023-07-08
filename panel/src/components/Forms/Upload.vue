@@ -40,8 +40,13 @@ export default {
 		 * the upload element are used.
 		 * @public
 		 * @param {object} params
+		 * @deprecated 4.0.0
 		 */
 		open(params) {
+			window.panel.deprecated(
+				"<k-upload> will be removed in a future version. Use `$panel.upload.open()` instead."
+			);
+
 			this.$panel.upload.pick(this.params(params));
 		},
 		params(params) {
@@ -66,11 +71,23 @@ export default {
 		 * @public
 		 * @param {array} files
 		 * @param {object} params
+		 * @deprecated 4.0.0
 		 */
 		drop(files, params) {
+			window.panel.deprecated(
+				"<k-upload> will be removed in a future version. Use `$panel.upload.select()` instead."
+			);
+
 			this.$panel.upload.open(files, this.params(params));
 		},
+		/**
+		 * @deprecated 4.0.0
+		 */
 		upload(files, params) {
+			window.panel.deprecated(
+				"<k-upload> will be removed in a future version. Use `$panel.upload.select()` instead."
+			);
+
 			this.$panel.upload.select(files, this.params(params));
 			this.$panel.upload.start();
 		}

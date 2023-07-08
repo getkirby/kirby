@@ -16,7 +16,7 @@ export const props = {
 		},
 		/**
 		 * Whether to disable the submit button
-		 * @deprecated use the submit button settings instead
+		 * @deprecated 4.0.0 use the submit button settings instead
 		 */
 		disabled: {
 			default: false,
@@ -24,7 +24,7 @@ export const props = {
 		},
 		/**
 		 * The icon type for the submit button
-		 * @deprecated use the submit button settings instead
+		 * @deprecated 4.0.0 use the submit button settings instead
 		 */
 		icon: {
 			default: "check",
@@ -40,7 +40,7 @@ export const props = {
 		/**
 		 * The theme of the submit button
 		 * @values positive, negative
-		 * @deprecated use the submit button settings instead
+		 * @deprecated 4.0.0 use the submit button settings instead
 		 */
 		theme: {
 			default: "positive",

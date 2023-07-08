@@ -31,7 +31,7 @@ export default {
 		/**
 		 * Alternate text sizes
 		 * @values small, large, huge
-		 * @deprecated Use `tag` sizes instead
+		 * @deprecated 4.0.0 Use `tag` prop instead to get different sizes
 		 */
 		size: {
 			type: String
@@ -51,7 +51,14 @@ export default {
 			type: String
 		}
 	},
-	emits: ["click"]
+	emits: ["click"],
+	created() {
+		if (this.size) {
+			window.panel.deprecated(
+				"<k-headline>: the `size` prop will be removed in a future version. Use the `tag` prop instead."
+			);
+		}
+	}
 };
 </script>
 

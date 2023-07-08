@@ -3,14 +3,9 @@
 		<k-icon v-if="icon" :type="icon" class="k-button-icon" />
 
 		<span v-if="text || $slots.default" class="k-button-text">
-			<template v-if="text">
+			<slot>
 				{{ text }}
-			</template>
-			<!-- @deprecated 4.0 Use `text` prop instead -->
-			<!-- @todo button.slot.deprecated - remove @ 5.0 -->
-			<template v-else>
-				<slot />
-			</template>
+			</slot>
 		</span>
 		<span v-if="dropdown && (text || $slots.default)" class="k-button-arrow">
 			<k-icon type="angle-down" />
@@ -102,8 +97,7 @@ export default {
 		 */
 		title: String,
 		/**
-		 * @deprecated 4.0 Use the `title` prop instead
-		 * @todo button.prop.tooltip.deprecated - remove @ 5.0
+		 * @deprecated 4.0.0 Use the `title` prop instead
 		 */
 		tooltip: String,
 		/**
@@ -167,6 +161,13 @@ export default {
 			}
 
 			return "button";
+		}
+	},
+	created() {
+		if (this.tooltip) {
+			window.panel.deprecated(
+				"<k-button>: the `tooltip` prop will be removed in a future version. Use the `title` prop instead."
+			);
 		}
 	},
 	methods: {

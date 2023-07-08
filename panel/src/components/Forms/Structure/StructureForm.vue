@@ -65,12 +65,12 @@ export default {
 	},
 	mounted() {
 		this.$store.dispatch("content/disable");
-		this.$events.$on("keydown.cmd.s", this.onSubmit);
-		this.$events.$on("keydown.esc", this.onDiscard);
+		this.$events.on("keydown.cmd.s", this.onSubmit);
+		this.$events.on("keydown.esc", this.onDiscard);
 	},
 	destroyed() {
-		this.$events.$off("keydown.cmd.s", this.onSubmit);
-		this.$events.$off("keydown.esc", this.onDiscard);
+		this.$events.off("keydown.cmd.s", this.onSubmit);
+		this.$events.off("keydown.esc", this.onDiscard);
 		this.$store.dispatch("content/enable");
 	},
 	methods: {

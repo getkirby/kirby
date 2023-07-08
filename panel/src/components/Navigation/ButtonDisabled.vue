@@ -14,8 +14,7 @@
 
 <script>
 /**
- * @deprecated `<k-button-disabled>` has been deprecated and will be removed in Kirby 5. Use `<k-button :disabled="true">` instead.
- * @todo deprecated.buttons.components - remove @ 5.0
+ * @deprecated 4.0.0 `<k-button-disabled>` has been deprecated and will be removed in v5. Use `<k-button :disabled="true">` instead.
  */
 export default {
 	inheritAttrs: false,
@@ -25,6 +24,11 @@ export default {
 		responsive: Boolean,
 		theme: String,
 		tooltip: String
+	},
+	created() {
+		window.panel.deprecated(
+			'<k-button-disabled> will be removed in a future version. Use <k-button :disabled="true"> instead.'
+		);
 	}
 };
 </script>

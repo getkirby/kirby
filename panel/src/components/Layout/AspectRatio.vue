@@ -11,8 +11,7 @@
 
 <script>
 /**
- * @deprecated Use `k-frame` instead
- * @todo remove @ 5.0
+ * @deprecated 4.0.0 Use `k-frame` instead
  *
  * Creates a layout element
  * in the specified ratio
@@ -42,6 +41,11 @@ export default {
 		ratioPadding() {
 			return this.$helper.ratio(this.ratio);
 		}
+	},
+	created() {
+		window.panel.deprecated(
+			"<k-aspect-ratio> will be removed in a future version. Use the <k-frame> instead."
+		);
 	}
 };
 </script>
