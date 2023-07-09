@@ -42,7 +42,7 @@ class Focus
 		if ($ratioThumb > $ratioSource) {
 			$height = $sourceWidth / $ratioThumb;
 		} else {
-			$width  = $sourceHeight * $ratioThumb;
+			$width = $sourceHeight * $ratioThumb;
 		}
 
 		// calculate focus for original image

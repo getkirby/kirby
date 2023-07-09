@@ -13,14 +13,7 @@ namespace Kirby\Image;
  */
 class Camera
 {
-	/**
-	 * Make exif data
-	 */
 	protected string|null $make;
-
-	/**
-	 * Model exif data
-	 */
 	protected string|null $model;
 
 	public function __construct(array $exif)
