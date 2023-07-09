@@ -42,7 +42,8 @@ class Svgz extends Svg
 	 */
 	public static function validate(string $string): void
 	{
-		parent::validate(static::uncompress($string));
+		$string = static::uncompress($string);
+		parent::validate($string);
 	}
 
 	/**

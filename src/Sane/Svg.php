@@ -406,8 +406,9 @@ class Svg extends Xml
 			Str::startsWith($value, '#') === true
 		) {
 			// find the target (used element)
-			$id = str_replace('"', '', mb_substr($value, 1));
-			$target = (new DOMXPath($attr->ownerDocument))->query('//*[@id="' . $id . '"]')->item(0);
+			$id     = str_replace('"', '', mb_substr($value, 1));
+			$path   = new DOMXPath($attr->ownerDocument);
+			$target = $path->query('//*[@id="' . $id . '"]')->item(0);
 
 			// the target must not contain any other <use> elements
 			if (
@@ -487,6 +488,7 @@ class Svg extends Xml
 
 		// basic validation before we continue sanitizing/validating
 		$rootName = $svg->document()->documentElement->nodeName;
+
 		if ($rootName !== 'svg') {
 			throw new InvalidArgumentException('The file is not a SVG (got <' . $rootName . '>)');
 		}

@@ -33,7 +33,8 @@ abstract class Handler
 	 */
 	public static function sanitizeFile(string $file): void
 	{
-		$sanitized = static::sanitize(static::readFile($file));
+		$content   = static::readFile($file);
+		$sanitized = static::sanitize($content);
 		F::write($file, $sanitized);
 	}
 
@@ -54,7 +55,8 @@ abstract class Handler
 	 */
 	public static function validateFile(string $file): void
 	{
-		static::validate(static::readFile($file));
+		$content = static::readFile($file);
+		static::validate($content);
 	}
 
 	/**
