@@ -27,80 +27,44 @@ class Component
 {
 	/**
 	 * Registry for all component mixins
-	 *
-	 * @var array
 	 */
-	public static $mixins = [];
+	public static array $mixins = [];
 
 	/**
 	 * Registry for all component types
-	 *
-	 * @var array
 	 */
-	public static $types = [];
+	public static array $types = [];
 
 	/**
 	 * An array of all passed attributes
-	 *
-	 * @var array
 	 */
-	protected $attrs = [];
+	protected array $attrs = [];
 
 	/**
 	 * An array of all computed properties
-	 *
-	 * @var array
 	 */
-	protected $computed = [];
+	protected array $computed = [];
 
 	/**
 	 * An array of all registered methods
-	 *
-	 * @var array
 	 */
-	protected $methods = [];
+	protected array $methods = [];
 
 	/**
 	 * An array of all component options
 	 * from the component definition
-	 *
-	 * @var array
 	 */
-	protected $options = [];
+	protected array|string $options = [];
 
 	/**
 	 * An array of all resolved props
-	 *
-	 * @var array
 	 */
-	protected $props = [];
+	protected array $props = [];
 
 	/**
 	 * The component type
-	 *
-	 * @var string
 	 */
-	protected $type;
-
-	/**
-	 * Magic caller for defined methods and properties
-	 */
-	public function __call(string $name, array $arguments = [])
-	{
-		if (array_key_exists($name, $this->computed) === true) {
-			return $this->computed[$name];
-		}
-
-		if (array_key_exists($name, $this->props) === true) {
-			return $this->props[$name];
-		}
-
-		if (array_key_exists($name, $this->methods) === true) {
-			return $this->methods[$name]->call($this, ...$arguments);
-		}
-
-		return $this->$name;
-	}
+	protected string $type;
 
 	/**
 	 * Creates a new component for the given type
@@ -131,6 +95,26 @@ class Component
 		$this->methods = $methods;
 		$this->options = $options;
 		$this->type    = $type;
+	}
+
+	/**
+	 * Magic caller for defined methods and properties
+	 */
+	public function __call(string $name, array $arguments = [])
+	{
+		if (array_key_exists($name, $this->computed) === true) {
+			return $this->computed[$name];
+		}
+
+		if (array_key_exists($name, $this->props) === true) {
+			return $this->props[$name];
+		}
+
+		if (array_key_exists($name, $this->methods) === true) {
+			return $this->methods[$name]->call($this, ...$arguments);
+		}
+
+		return $this->$name;
 	}
 
 	/**
@@ -253,23 +237,21 @@ class Component
 		}
 
 		// inject mixins
-		if (isset($options['mixins']) === true) {
-			foreach ($options['mixins'] as $mixin) {
-				if (isset(static::$mixins[$mixin]) === true) {
-					if (is_string(static::$mixins[$mixin]) === true) {
-						// resolve a path to a mixin on demand
+		foreach ($options['mixins'] ?? [] as $mixin) {
+			if (isset(static::$mixins[$mixin]) === true) {
+				if (is_string(static::$mixins[$mixin]) === true) {
+					// resolve a path to a mixin on demand
 
-						static::$mixins[$mixin] = F::load(
-							static::$mixins[$mixin],
-							allowOutput: false
-						);
-					}
-
-					$options = array_replace_recursive(
+					static::$mixins[$mixin] = F::load(
 						static::$mixins[$mixin],
-						$options
+						allowOutput: false
 					);
 				}
+
+				$options = array_replace_recursive(
+					static::$mixins[$mixin],
+					$options
+				);
 			}
 		}
 

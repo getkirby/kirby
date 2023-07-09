@@ -4,9 +4,9 @@ namespace Kirby\Form\Mixin;
 
 trait EmptyState
 {
-	protected $empty;
+	protected string|array|null $empty;
 
-	protected function setEmpty($empty = null)
+	protected function setEmpty(string|array|null $empty = null)
 	{
 		$this->empty = $this->i18n($empty);
 	}

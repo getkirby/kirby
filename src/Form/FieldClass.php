@@ -27,112 +27,27 @@ abstract class FieldClass
 {
 	use HasSiblings;
 
-	/**
-	 * @var string|null
-	 */
-	protected $after;
+	protected string|null $after;
+	protected bool $autofocus;
+	protected string|null $before;
+	protected mixed $default;
+	protected bool $disabled;
+	protected string|null $help;
+	protected string|null $icon;
+	protected string|null $label;
+	protected ModelWithContent $model;
+	protected string|null $name;
+	protected string|null $placeholder;
+	protected bool $required;
+	protected Fields $siblings;
+	protected bool $translate;
+	protected mixed $value = null;
+	protected array|null $when;
+	protected string|null $width;
 
-	/**
-	 * @var bool
-	 */
-	protected $autofocus;
-
-	/**
-	 * @var string|null
-	 */
-	protected $before;
-
-	/**
-	 * @var mixed
-	 */
-	protected $default;
-
-	/**
-	 * @var bool
-	 */
-	protected $disabled;
-
-	/**
-	 * @var string|null
-	 */
-	protected $help;
-
-	/**
-	 * @var string|null
-	 */
-	protected $icon;
-
-	/**
-	 * @var string|null
-	 */
-	protected $label;
-
-	/**
-	 * @var \Kirby\Cms\ModelWithContent
-	 */
-	protected $model;
-
-	/**
-	 * @var string
-	 */
-	protected $name;
-
-	/**
-	 * @var array
-	 */
-	protected $params;
-
-	/**
-	 * @var string|null
-	 */
-	protected $placeholder;
-
-	/**
-	 * @var bool
-	 */
-	protected $required;
-
-	/**
-	 * @var \Kirby\Form\Fields
-	 */
-	protected $siblings;
-
-	/**
-	 * @var bool
-	 */
-	protected $translate;
-
-	/**
-	 * @var mixed
-	 */
-	protected $value;
-
-	/**
-	 * @var array|null
-	 */
-	protected $when;
-
-	/**
-	 * @var string|null
-	 */
-	protected $width;
-
-	/**
-	 * @return mixed
-	 */
-	public function __call(string $param, array $args)
-	{
-		if (isset($this->$param) === true) {
-			return $this->$param;
-		}
-
-		return $this->params[$param] ?? null;
-	}
-
-	public function __construct(array $params = [])
-	{
-		$this->params = $params;
-
+	public function __construct(
+		protected array $params = []
+	) {
 		$this->setAfter($params['after'] ?? null);
 		$this->setAutofocus($params['autofocus'] ?? false);
 		$this->setBefore($params['before'] ?? null);
@@ -153,6 +68,15 @@ abstract class FieldClass
 		if (array_key_exists('value', $params) === true) {
 			$this->fill($params['value']);
 		}
+	}
+
+	public function __call(string $param, array $args): mixed
+	{
+		if (isset($this->$param) === true) {
+			return $this->$param;
+		}
+
+		return $this->params[$param] ?? null;
 	}
 
 	public function after(): string|null
@@ -182,10 +106,8 @@ abstract class FieldClass
 	 * Returns the field data
 	 * in a format to be stored
 	 * in Kirby's content fields
-	 *
-	 * @return mixed
 	 */
-	public function data(bool $default = false)
+	public function data(bool $default = false): mixed
 	{
 		return $this->store($this->value($default));
 	}
@@ -193,10 +115,8 @@ abstract class FieldClass
 	/**
 	 * Returns the default value for the field,
 	 * which will be used when a page/file/user is created
-	 *
-	 * @return mixed
 	 */
-	public function default()
+	public function default(): mixed
 	{
 		if (is_string($this->default) === false) {
 			return $this->default;
@@ -240,10 +160,8 @@ abstract class FieldClass
 
 	/**
 	 * Setter for the value
-	 *
-	 * @param mixed $value
 	 */
-	public function fill($value = null): void
+	public function fill(mixed $value = null): void
 	{
 		$this->value = $value;
 	}
@@ -262,10 +180,7 @@ abstract class FieldClass
 		return null;
 	}
 
-	/**
-	 * @param string|array|null $param
-	 */
-	protected function i18n($param = null): string|null
+	protected function i18n(string|array|null $param = null): string|null
 	{
 		return empty($param) === false ? I18n::translate($param, $param) : null;
 	}
@@ -293,10 +208,7 @@ abstract class FieldClass
 		return $this->isEmptyValue($this->value());
 	}
 
-	/**
-	 * @param mixed $value
-	 */
-	public function isEmptyValue($value = null): bool
+	public function isEmptyValue(mixed $value = null): bool
 	{
 		return in_array($value, [null, '', []], true);
 	}
@@ -334,10 +246,8 @@ abstract class FieldClass
 
 	/**
 	 * Returns the Kirby instance
-	 *
-	 * @return \Kirby\Cms\App
 	 */
-	public function kirby()
+	public function kirby(): App
 	{
 		return $this->model->kirby();
 	}
@@ -354,10 +264,8 @@ abstract class FieldClass
 
 	/**
 	 * Returns the parent model
-	 *
-	 * @return mixed
 	 */
-	public function model()
+	public function model(): mixed
 	{
 		return $this->model;
 	}
@@ -390,20 +298,20 @@ abstract class FieldClass
 		}
 
 		// check the data of the relevant fields if there is a `when` option
-		if (empty($this->when) === false && is_array($this->when) === true) {
-			$formFields = $this->siblings();
+		if (
+			empty($this->when) === false &&
+			is_array($this->when) === true &&
+			$formFields = $this->siblings()
+		) {
+			foreach ($this->when as $field => $value) {
+				$field      = $formFields->get($field);
+				$inputValue = $field?->value() ?? '';
 
-			if ($formFields !== null) {
-				foreach ($this->when as $field => $value) {
-					$field      = $formFields->get($field);
-					$inputValue = $field?->value() ?? '';
-
-					// if the input data doesn't match the requested `when` value,
-					// that means that this field is not required and can be saved
-					// (*all* `when` conditions must be met for this field to be required)
-					if ($inputValue !== $value) {
-						return false;
-					}
+				// if the input data doesn't match the requested `when` value,
+				// that means that this field is not required and can be saved
+				// (*all* `when` conditions must be met for this field to be required)
+				if ($inputValue !== $value) {
+					return false;
 				}
 			}
 		}
@@ -474,17 +382,13 @@ abstract class FieldClass
 	/**
 	 * @deprecated 3.5.0
 	 * @todo remove when the general field class setup has been refactored
-	 * @return bool
 	 */
-	public function save()
+	public function save(): bool
 	{
 		return $this->isSaveable();
 	}
 
-	/**
-	 * @param array|string|null $after
-	 */
-	protected function setAfter($after = null): void
+	protected function setAfter(array|string|null $after = null): void
 	{
 		$this->after = $this->i18n($after);
 	}
@@ -494,18 +398,12 @@ abstract class FieldClass
 		$this->autofocus = $autofocus;
 	}
 
-	/**
-	 * @param array|string|null $before
-	 */
-	protected function setBefore($before = null): void
+	protected function setBefore(array|string|null $before = null): void
 	{
 		$this->before = $this->i18n($before);
 	}
 
-	/**
-	 * @param mixed $default
-	 */
-	protected function setDefault($default = null): void
+	protected function setDefault(mixed $default = null): void
 	{
 		$this->default = $default;
 	}
@@ -515,10 +413,7 @@ abstract class FieldClass
 		$this->disabled = $disabled;
 	}
 
-	/**
-	 * @param array|string|null $help
-	 */
-	protected function setHelp($help = null): void
+	protected function setHelp(array|string|null $help = null): void
 	{
 		$this->help = $this->i18n($help);
 	}
@@ -528,10 +423,7 @@ abstract class FieldClass
 		$this->icon = $icon;
 	}
 
-	/**
-	 * @param array|string|null $label
-	 */
-	protected function setLabel($label = null): void
+	protected function setLabel(array|string|null $label = null): void
 	{
 		$this->label = $this->i18n($label);
 	}
@@ -546,7 +438,7 @@ abstract class FieldClass
 		$this->name = $name;
 	}
 
-	protected function setPlaceholder($placeholder = null): void
+	protected function setPlaceholder(array|string|null $placeholder = null): void
 	{
 		$this->placeholder = $this->i18n($placeholder);
 	}
@@ -568,10 +460,8 @@ abstract class FieldClass
 
 	/**
 	 * Setter for the when condition
-	 *
-	 * @param mixed $when
 	 */
-	protected function setWhen($when = null): void
+	protected function setWhen(mixed $when = null): void
 	{
 		$this->when = $when;
 	}
@@ -586,10 +476,8 @@ abstract class FieldClass
 
 	/**
 	 * Returns all sibling fields
-	 *
-	 * @return \Kirby\Form\Fields
 	 */
-	protected function siblingsCollection()
+	protected function siblingsCollection(): Fields
 	{
 		return $this->siblings;
 	}
@@ -609,11 +497,8 @@ abstract class FieldClass
 	/**
 	 * Converts the given value to a value
 	 * that can be stored in the text file
-	 *
-	 * @param mixed $value
-	 * @return mixed
 	 */
-	public function store($value)
+	public function store(mixed $value): mixed
 	{
 		return $value;
 	}
@@ -695,10 +580,8 @@ abstract class FieldClass
 	/**
 	 * Returns the value of the field if saveable
 	 * otherwise it returns null
-	 *
-	 * @return mixed
 	 */
-	public function value(bool $default = false)
+	public function value(bool $default = false): mixed
 	{
 		if ($this->isSaveable() === false) {
 			return null;
@@ -711,10 +594,7 @@ abstract class FieldClass
 		return $this->value;
 	}
 
-	/**
-	 * @param mixed $value
-	 */
-	protected function valueFromJson($value): array
+	protected function valueFromJson(mixed $value): array
 	{
 		try {
 			return Data::decode($value, 'json');
@@ -723,10 +603,7 @@ abstract class FieldClass
 		}
 	}
 
-	/**
-	 * @param mixed $value
-	 */
-	protected function valueFromYaml($value): array
+	protected function valueFromYaml(mixed $value): array
 	{
 		return Data::decode($value, 'yaml');
 	}
