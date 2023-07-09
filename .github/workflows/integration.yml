@@ -61,12 +61,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # pin@v3
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # pin@v3
         with:
           path: kirby
 
       - name: Checkout Sandbox
-        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # pin@v3
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # pin@v3
         with:
           repository: getkirby/sandbox
           path: sandbox
@@ -83,28 +83,28 @@ jobs:
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@de71cbc3239d9b69ea8558b8609ccd067ab4cf14 # pin@v1
+        uses: shivammathur/cache-extensions@7d0d256df12c7817667b98a7036ddcd7d5b7343b # pin@v1
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           key: e2e-v1
 
       - name: Cache PHP extensions
-        uses: actions/cache@6998d139ddd3e68c71e9e398d8e40b71a2f39812 # pin@v3
+        uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # pin@v3
         with:
           path: ${{ steps.ext-cache.outputs.dir }}
           key: ${{ steps.ext-cache.outputs.key }}
           restore-keys: ${{ steps.ext-cache.outputs.key }}
 
       - name: Setup PHP environment
-        uses: shivammathur/setup-php@d30ad8b1843ace22e6698ab99bbafaa747b6bd0d # pin@v2
+        uses: shivammathur/setup-php@4bd44f22a98a19e0950cbad5f31095157cc9621b # pin@v2
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           coverage: none
 
       - name: Install dependencies
-        uses: cypress-io/github-action@327178c8042fbb3be13870105eece3c8abf348c9 # pin@v5
+        uses: cypress-io/github-action@d69252d52b9a31bad4f418f05ba2bc83687a02eb # pin@v5
         with:
           working-directory: kirby/panel
           runTests: false
@@ -118,7 +118,7 @@ jobs:
         working-directory: kirby/panel
 
       - name: Run tests
-        uses: cypress-io/github-action@327178c8042fbb3be13870105eece3c8abf348c9 # pin@v5
+        uses: cypress-io/github-action@d69252d52b9a31bad4f418f05ba2bc83687a02eb # pin@v5
         with:
           working-directory: kirby/panel
           install: false
