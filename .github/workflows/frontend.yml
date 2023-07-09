@@ -35,10 +35,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # pin@v3
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # pin@v3
 
       - name: Set up Node.js problem matchers and cache npm dependencies
-        uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516 # pin@v3
+        uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # pin@v3
         with:
           cache: "npm"
           cache-dependency-path: panel/package-lock.json
@@ -76,10 +76,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # pin@v3
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # pin@v3
 
       - name: Set up Node.js problem matchers and cache npm dependencies
-        uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516 # pin@v3
+        uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # pin@v3
         with:
           cache: "npm"
           cache-dependency-path: panel/package-lock.json
@@ -101,7 +101,7 @@ jobs:
         if: >
           always() && steps.finishPrepare.outcome == 'success' &&
           github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@ab82daa6ea9b84fe43db7747bb10fa087f34e1ab # pin@v1
+        uses: reviewdog/action-suggester@3f60d0e826f0873905e0eeca522d562a6e67afbd # pin@v1
         with:
           tool_name: ESLint
           fail_on_error: "true"
@@ -118,7 +118,7 @@ jobs:
         if: >
           always() && steps.finishPrepare.outcome == 'success' &&
           github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@ab82daa6ea9b84fe43db7747bb10fa087f34e1ab # pin@v1
+        uses: reviewdog/action-suggester@3f60d0e826f0873905e0eeca522d562a6e67afbd # pin@v1
         with:
           tool_name: Prettier
           fail_on_error: "true"
