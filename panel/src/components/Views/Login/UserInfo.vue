@@ -32,8 +32,7 @@ export default {
 	gap: 0.75rem;
 	padding-inline: var(--spacing-2);
 }
-.k-user-info .k-image-frame,
-.k-user-info .k-icon-frame {
+.k-user-info :where(.k-image-frame, .k-icon-frame) {
 	width: 1.5rem;
 	border-radius: var(--rounded-sm);
 }

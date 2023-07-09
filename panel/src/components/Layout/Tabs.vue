@@ -10,7 +10,7 @@
 			variant="dimmed"
 			class="k-tab-button"
 		>
-			{{ tabButton.label || tabButton.text || tabButton.name }}
+			{{ tabButton.label ?? tabButton.text ?? tabButton.name }}
 
 			<span v-if="tabButton.badge" :data-theme="theme" class="k-tabs-badge">
 				{{ tabButton.badge }}

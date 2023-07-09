@@ -24,10 +24,10 @@ export default {
 		 * You can deactivate the dropzone with this property
 		 */
 		disabled: {
-			type: Boolean,
-			default: false
+			type: Boolean
 		}
 	},
+	emits: ["drop"],
 	data() {
 		return {
 			files: [],

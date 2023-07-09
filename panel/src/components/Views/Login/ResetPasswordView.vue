@@ -1,34 +1,38 @@
 <template>
-	<k-panel-inside>
-		<k-view class="k-password-reset-view" align="center">
-			<k-form
-				:fields="fields"
-				:submit-button="$t('change')"
-				:value="values"
-				@input="values = $event"
-				@submit="submit"
-			>
-				<template #header>
-					<h1 class="sr-only">
-						{{ $t("view.resetPassword") }}
-					</h1>
+	<k-panel-inside class="k-password-reset-view">
+		<k-form
+			:fields="fields"
+			:submit-button="$t('change')"
+			:value="values"
+			@input="values = $event"
+			@submit="submit"
+		>
+			<template #header>
+				<h1 class="sr-only">
+					{{ $t("view.resetPassword") }}
+				</h1>
 
-					<k-login-alert v-if="issue" @click="issue = null">
-						{{ issue }}
-					</k-login-alert>
+				<k-login-alert v-if="issue" @click="issue = null">
+					{{ issue }}
+				</k-login-alert>
 
-					<k-user-info :user="$panel.user" />
-				</template>
+				<k-user-info :user="$panel.user" />
+			</template>
 
-				<template #footer>
-					<div class="k-login-buttons">
-						<k-button class="k-login-button" icon="check" type="submit">
-							{{ $t("change") }} <template v-if="isLoading"> … </template>
-						</k-button>
-					</div>
-				</template>
-			</k-form>
-		</k-view>
+			<template #footer>
+				<div class="k-login-buttons">
+					<k-button
+						icon="check"
+						theme="notice"
+						type="submit"
+						variant="filled"
+						class="k-login-button"
+					>
+						{{ $t("change") }} <template v-if="isLoading"> … </template>
+					</k-button>
+				</div>
+			</template>
+		</k-form>
 	</k-panel-inside>
 </template>
 

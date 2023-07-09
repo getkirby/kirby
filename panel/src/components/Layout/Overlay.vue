@@ -13,6 +13,9 @@
 </template>
 
 <script>
+/**
+ * @internal
+ */
 export const props = {
 	props: {
 		autofocus: {

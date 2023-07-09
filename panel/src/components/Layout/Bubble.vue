@@ -20,7 +20,11 @@
 
 <script>
 /**
+ * Bubble to display content in an inline context, e.g. the
+ * structure preview table
  * @public
+ * @since 3.7.0
+ *
  * @example <k-bubble text="Hello" />
  */
 export default {

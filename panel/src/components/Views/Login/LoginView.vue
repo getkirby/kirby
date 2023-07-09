@@ -1,7 +1,6 @@
 <template>
 	<k-panel-outside :class="viewClass">
-		<!-- <div> as a wrapper so that <k-view>
-			     has a single child for Flexbox layout -->
+		<!-- <div> as single child for grid layout -->
 		<div class="k-dialog k-login-dialog">
 			<h1 class="sr-only">
 				{{ $t("login") }}

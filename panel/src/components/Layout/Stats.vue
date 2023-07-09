@@ -71,8 +71,7 @@ export default {
 	cursor: pointer;
 	background: var(--color-gray-100);
 }
-.k-stat dt,
-.k-stat dd {
+.k-stat :where(dt, dd) {
 	display: block;
 }
 .k-stat-value {
@@ -80,17 +79,16 @@ export default {
 	margin-bottom: var(--spacing-1);
 	order: 1;
 }
-.k-stat-label,
-.k-stat-info {
-	font-size: var(--text-xs);
-}
 .k-stat-label {
+	font-size: var(--text-xs);
 	order: 2;
 }
 .k-stat-info {
-	order: 3;
+	font-size: var(--text-xs);
 	color: var(--theme, var(--color-gray-500));
+	order: 3;
 }
+
 .k-stats[data-size="small"] {
 	--value: var(--text-md);
 }

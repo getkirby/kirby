@@ -26,7 +26,6 @@
 
 <script>
 /**
- * The Header component is a composition of a big fat headline plus two optional slots for buttons — directly below the headline and on the right. The Header is a fundamental part of any main Panel view. While we use the left slot for option buttons, the right slot is mainly used for prev/next navigation between items such as pages or users.
  * @internal
  */
 export default {
@@ -34,7 +33,9 @@ export default {
 		/**
 		 * Whether the headline is editable
 		 */
-		editable: Boolean
+		editable: {
+			type: Boolean
+		}
 	},
 	mounted() {
 		if (this.$slots.left || this.$slots.right) {

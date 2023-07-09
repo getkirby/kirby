@@ -7,10 +7,7 @@
 
 <script>
 /**
-* The View component is a very basic wrapper, that makes sure to keep the right padding around your interface and also limits the max width. You should use it for full screen layouts only.
-* @example <k-view>
-  <!-- your interface goes here -->
-</k-view>
+* @deprecated 4.0.0
 */
 export default {
 	props: {
@@ -19,6 +16,11 @@ export default {
 		 * @values center
 		 */
 		align: String
+	},
+	created() {
+		window.panel.deprecated(
+			"<k-view> will be removed in a future version."
+		);
 	}
 };
 </script>

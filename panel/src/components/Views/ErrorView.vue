@@ -1,19 +1,17 @@
 <template>
-	<component :is="`k-${layout}`">
-		<k-view class="k-error-view">
-			<div class="k-error-view-content">
-				<k-text>
+	<component :is="`k-${layout}`" class="k-error-view">
+		<div class="k-error-view-content">
+			<k-text>
+				<p>
+					<k-icon class="k-error-view-icon" type="alert" />
+				</p>
+				<slot>
 					<p>
-						<k-icon class="k-error-view-icon" type="alert" />
+						{{ error }}
 					</p>
-					<slot>
-						<p>
-							{{ error }}
-						</p>
-					</slot>
-				</k-text>
-			</div>
-		</k-view>
+				</slot>
+			</k-text>
+		</div>
 	</component>
 </template>
 
@@ -28,11 +26,8 @@ export default {
 
 <style>
 .k-error-view {
-	position: absolute;
-	inset: 0;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+	display: grid;
+	place-items: center;
 }
 .k-error-view-content {
 	line-height: 1.5em;
