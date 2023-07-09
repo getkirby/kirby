@@ -30,9 +30,9 @@ return [
 							'theme' => $license ? 'code' : 'negative',
 							'help'  => $license ?
 								// @codeCoverageIgnoreStart
-								'<a href="https://hub.getkirby.com">' . I18n::translate('license.manage') . ' &rarr;</a>' :
+								'<a href="https://hub.getkirby.com" target="_blank">' . I18n::translate('license.manage') . ' &rarr;</a>' :
 								// @codeCoverageIgnoreEnd
-								'<a href="https://getkirby.com/buy">' . I18n::translate('license.buy') . ' &rarr;</a>'
+								'<a href="https://getkirby.com/buy" target="_blank">' . I18n::translate('license.buy') . ' &rarr;</a>'
 						]
 					],
 					'submitButton' => false,
@@ -63,7 +63,7 @@ return [
 							'required'    => true,
 							'counter'     => false,
 							'placeholder' => 'K3-',
-							'help'        => I18n::translate('license.register.help') . ' ' . '<a href="https://getkirby.com/buy">' . I18n::translate('license.buy') . ' &rarr;</a>'
+							'help'        => I18n::translate('license.register.help') . ' ' . '<a href="https://getkirby.com/buy" target="_blank">' . I18n::translate('license.buy') . ' &rarr;</a>'
 						],
 						'email' => Field::email(['required' => true])
 					],
