@@ -1,18 +1,28 @@
 <template>
 	<div :style="'--width:' + width" :data-sticky="sticky" class="k-column">
+		<!-- @slot Column content -->
 		<slot />
 	</div>
 </template>
 
 <script>
 /**
- * The Column component can be used within a Grid component to layout elements in a very convenient way. The Grid is based on 12 columns by default and each column can change its width with the width property:
+ * The Column component can be used within a <k-grid> component
+ * to layout elements in a very convenient way. The Grid is
+ * based on 12 columns by default and each column can change
+ * its width.
+ * @public
+ *
+ * @example <k-grid>
+ *   <k-column width="2/3">…</k-column>
+ *   <k-column width="1/3">…</k-column>
+ * </k-grid>
  */
 export default {
 	props: {
 		/**
-		 * Width of the column in the grid
-		 * @values 1/6, 1/4, 1/3, 1/2, 2/3, 3/4, 5/6, 1/1
+		 * Width of the column in the grid (as a fraction)
+		 * @values e.g. 1/6, 1/4, 1/3, 1/2, 2/3
 		 */
 		width: {
 			type: String,
@@ -33,7 +43,7 @@ export default {
 
 .k-column[data-sticky="true"] {
 	position: sticky;
-	top: 2vh;
+	top: calc(var(--header-sticky-offset) + 2vh);
 	z-index: 2;
 }
 

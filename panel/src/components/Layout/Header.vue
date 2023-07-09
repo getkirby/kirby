@@ -50,6 +50,7 @@ export default {
 :root {
 	--header-color-back: var(--color-light);
 	--header-padding-block: var(--spacing-4);
+	--header-sticky-offset: 4rem;
 }
 
 .k-header {

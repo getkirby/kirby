@@ -314,7 +314,7 @@ export default {
 
 .k-toolbar:not([data-inline="true"]):has(~ :focus-within) {
 	position: sticky;
-	top: 4rem;
+	top: var(--header-sticky-offset);
 	inset-inline: 0;
 	z-index: 1;
 
