@@ -193,8 +193,7 @@ class Field
 	public static function role(array $props = []): array
 	{
 		$kirby   = App::instance();
-		$user    = $kirby->user();
-		$isAdmin = $user && $user->isAdmin();
+		$isAdmin = $kirby->user()?->isAdmin() ?? false;
 		$roles   = [];
 
 		foreach ($kirby->roles() as $role) {
@@ -226,8 +225,10 @@ class Field
 		], $props);
 	}
 
-	public static function template(array|null $blueprints = [], array|null $props = []): array
-	{
+	public static function template(
+		array|null $blueprints = [],
+		array|null $props = []
+	): array {
 		$options = [];
 
 		foreach ($blueprints as $blueprint) {

@@ -68,7 +68,6 @@ class Panel
 		if (!$user) {
 			return [
 				'logout' => static::area('logout', $areas['logout']),
-
 				// login area last because it defines a fallback route
 				'login'  => static::area('login', $areas['login']),
 			];
@@ -183,7 +182,9 @@ class Panel
 		$request = App::instance()->request();
 
 		if ($request->method() === 'GET') {
-			return (bool)($request->get('_json') ?? $request->header('X-Fiber'));
+			return
+				(bool)($request->get('_json') ??
+				$request->header('X-Fiber'));
 		}
 
 		return false;
@@ -290,7 +291,11 @@ class Panel
 			// call the route action to check the result
 			try {
 				// trigger hook
-				$route = $kirby->apply('panel.route:before', compact('route', 'path', 'method'), 'route');
+				$route = $kirby->apply(
+					'panel.route:before',
+					compact('route', 'path', 'method'),
+					'route'
+				);
 
 				// check for access before executing area routes
 				if ($auth !== false) {
@@ -309,7 +314,11 @@ class Panel
 				'type'  => $type
 			]);
 
-			return $kirby->apply('panel.route:after', compact('route', 'path', 'method', 'response'), 'response');
+			return $kirby->apply(
+				'panel.route:after',
+				compact('route', 'path', 'method', 'response'),
+				'response'
+			);
 		});
 	}
 

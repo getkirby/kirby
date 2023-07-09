@@ -3,6 +3,7 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\File as CmsFile;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
 use Kirby\Toolkit\I18n;
 
@@ -19,15 +20,23 @@ use Kirby\Toolkit\I18n;
 class Page extends Model
 {
 	/**
+	 * @var \Kirby\Cms\Page
+	 */
+	protected ModelWithContent $model;
+
+	/**
 	 * Breadcrumb array
 	 */
 	public function breadcrumb(): array
 	{
 		$parents = $this->model->parents()->flip()->merge($this->model);
-		return $parents->values(fn ($parent) => [
-			'label' => $parent->title()->toString(),
-			'link'  => $parent->panel()->url(true),
-		]);
+
+		return $parents->values(
+			fn ($parent) => [
+				'label' => $parent->title()->toString(),
+				'link'  => $parent->panel()->url(true),
+			]
+		);
 	}
 
 	/**
@@ -65,9 +74,9 @@ class Page extends Model
 	 */
 	public function dropdown(array $options = []): array
 	{
-		$page = $this->model;
-
-		$defaults = $page->kirby()->request()->get(['view', 'sort', 'delete']);
+		$page     = $this->model;
+		$request  = $page->kirby()->request();
+		$defaults = $request->get(['view', 'sort', 'delete']);
 		$options  = array_merge($defaults, $options);
 
 		$permissions = $this->options(['preview']);

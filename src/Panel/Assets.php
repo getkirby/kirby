@@ -36,13 +36,14 @@ class Assets
 		$this->kirby   = App::instance();
 		$this->nonce   = $this->kirby->nonce();
 		$this->plugins = new Plugins();
-		$this->vite    = is_file($this->kirby->roots()->panel() . '/.vite-running') === true;
+
+		$vite       = $this->kirby->roots()->panel() . '/.vite-running';
+		$this->vite = is_file($vite) === true;
 
 		// get the assets from the Vite dev server in dev mode;
 		// dev mode = explicitly enabled in the config AND Vite is running
-		$this->dev =
-			$this->kirby->option('panel.dev', false) !== false &&
-			$this->vite === true;
+		$dev       = $this->kirby->option('panel.dev', false);
+		$this->dev = $dev !== false && $this->vite === true;
 
 		// get the base URL
 		$this->url = $this->url();
@@ -259,7 +260,8 @@ class Assets
 		}
 
 		// explicitly configured base URL
-		if (is_string($dev = $this->kirby->option('panel.dev', false)) === true) {
+		$dev = $this->kirby->option('panel.dev');
+		if (is_string($dev) === true) {
 			return $dev;
 		}
 

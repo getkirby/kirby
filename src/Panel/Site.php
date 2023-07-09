@@ -3,6 +3,7 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\File as CmsFile;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
 
 /**
@@ -17,6 +18,11 @@ use Kirby\Filesystem\Asset;
  */
 class Site extends Model
 {
+	/**
+	 * @var \Kirby\Cms\Site
+	 */
+	protected ModelWithContent $model;
+
 	/**
 	 * Returns the setup for a dropdown option
 	 * which is used in the changes dropdown
