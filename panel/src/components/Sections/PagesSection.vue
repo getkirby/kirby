@@ -85,7 +85,7 @@ export default {
 				try {
 					await this.$api.pages.changeStatus(element.id, "listed", position);
 					this.$panel.notification.success();
-					this.$events.$emit("page.sort", element);
+					this.$events.emit("page.sort", element);
 				} catch (error) {
 					this.$panel.error({
 						message: error.message,

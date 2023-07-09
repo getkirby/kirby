@@ -25,6 +25,13 @@
 	</k-box>
 </template>
 
+<script>
+/**
+ * @internal
+ */
+export default {};
+</script>
+
 <style scoped>
 .k-box {
 	--box-height: var(--height);

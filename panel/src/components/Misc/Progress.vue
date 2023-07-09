@@ -54,9 +54,13 @@ export default {
 		/**
 		 * Update the value
 		 * @param {Number} value new value of the progress bar (0-100)
-		 * @public
+		 * @deprecated 4.0.0 Use `value` prop instead
 		 */
 		set(value) {
+			window.panel.deprecated(
+				"<k-dprogress>: `set` method will be removed in a future version. Use the `value` prop instead."
+			);
+
 			validator(value, true);
 			this.state = value;
 		}

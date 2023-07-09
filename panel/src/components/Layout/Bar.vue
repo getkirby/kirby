@@ -14,15 +14,15 @@
 			</div>
 		</template>
 
+		<!-- @slot Contents of the bar -->
 		<slot v-else />
 	</div>
 </template>
 
 <script>
 /**
- * The `k-bar` can be used to create
- * all sorts of toolbars aligning its
- * items accordingly.
+ * The `k-bar` can be used to create  all sorts of toolbars
+ * aligning its items accordingly.
  * @public
  *
  * @example
@@ -34,10 +34,14 @@
 export default {
 	props: {
 		/**
-		 * How to align items horizontally, default is `start`
-		 * @values `start`, `center`, `end`
+		 * How to align items horizontally
+		 * (if not at `start` which is the default)
+		 *
+		 * @values `center`, `end`
 		 */
-		align: String
+		align: {
+			type: String
+		}
 	},
 	mounted() {
 		if (this.$slots.left || this.$slots.center || this.$slots.right) {

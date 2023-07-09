@@ -6,17 +6,31 @@
 </template>
 
 <script>
+import { props as Frame } from "./Frame.vue";
+import { props as Icon } from "@/components/Misc/Icon.vue";
+
+
+/**
+ * Use <k-icon-frame> to display an icon in a fixed ratio with background etc.
+ * @public
+ * @since 4.0.0
+ *
+ * @example <k-icon-frame icon="home" ratio="1/1" back="black" />
+ */
 export default {
+	mixins: [Frame, Icon],
 	inheritAttrs: false,
 	props: {
-		alt: String,
-		fit: String,
-		ratio: String,
-		cover: Boolean,
-		back: String,
-		theme: String,
-		color: String,
-		icon: String
+		/**
+		 * Unset unused props from mixin
+		 */
+		type: null,
+
+		/**
+		 * Name of the chosen icon
+		 * @see https://getkirby.com/docs/reference/panel/icons
+		 */
+		icon: String,
 	},
 	computed: {
 		isEmoji() {

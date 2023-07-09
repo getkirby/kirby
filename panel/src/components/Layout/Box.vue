@@ -20,11 +20,9 @@
 
 <script>
 /**
- * The `<k-box>` component is a multi-purpose
- * box with text. You can use it as a foundation
- * for empty state displays or anything else
- * that needs to be displayed in a box. It comes
- * with several pre-defined styles …
+ * The `<k-box>` component is a multi-purpose box with text.
+ * You can use it as a foundation for empty state displays
+ * or anything else that needs to be displayed in a box.
  * @public
  *
  * @example <k-box text="This is a nice box" theme="positive" />
@@ -35,27 +33,36 @@ export default {
 		 * @values center
 		 */
 		align: String,
+		/**
+		 * Whether the box should function as a button
+		 */
 		button: Boolean,
+		/**
+		 * CSS value for the height of the box
+		 */
 		height: String,
+		/**
+		 * Optional icon object to display in the box.
+		 * Will be passed to <k-icon> (see for available props).
+		 */
 		icon: Object,
 		/**
 		 * Choose one of the pre-defined styles
-		 * @values none, code, button, positive, negative, notice, info, empty
+		 * @values positive, negative, notice, warning, info, passive, text, dark, code, empty
 		 */
 		theme: {
-			type: String,
-			default: "none"
+			type: String
 		},
 		/**
 		 * Text to display inside the box
 		 */
 		text: String,
 		/**
-		 * If set to `true`, the `text` is rendered as HTML code, otherwise as plain text
+		 * If set to `true`, the `text` is rendered as HTML code,
+		 * otherwise as plain text
 		 */
 		html: {
-			type: Boolean,
-			default: false
+			type: Boolean
 		}
 	},
 	computed: {

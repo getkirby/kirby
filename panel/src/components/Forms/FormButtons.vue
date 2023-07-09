@@ -184,7 +184,7 @@ export default {
 			// model used to be locked by another user,
 			// lock has been lifted, so refresh data
 			if (locked === false) {
-				this.$events.$emit("model.reload");
+				this.$events.emit("model.reload");
 			}
 		}
 	},
@@ -258,7 +258,7 @@ export default {
 			e.preventDefault?.();
 
 			await this.$store.dispatch("content/save");
-			this.$events.$emit("model.update");
+			this.$events.emit("model.update");
 			this.$panel.notification.success();
 		},
 		async onUnlock(unlock = true) {

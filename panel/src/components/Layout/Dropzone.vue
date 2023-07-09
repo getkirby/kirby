@@ -52,7 +52,7 @@ export default {
 				return this.reset();
 			}
 
-			this.$events.$emit("dropzone.drop");
+			this.$events.emit("dropzone.drop");
 
 			this.files = $event.dataTransfer.files;
 			/**

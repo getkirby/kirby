@@ -9,7 +9,6 @@ import OfflineWarning from "./OfflineWarning.vue";
 import Progress from "./Progress.vue";
 import Registration from "./Registration.vue";
 import SortHandle from "./SortHandle.vue";
-import UserInfo from "./UserInfo.vue";
 
 export default {
 	install(app) {
@@ -24,6 +23,5 @@ export default {
 		app.component("k-progress", Progress);
 		app.component("k-registration", Registration);
 		app.component("k-sort-handle", SortHandle);
-		app.component("k-user-info", UserInfo);
 	}
 };

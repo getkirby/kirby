@@ -233,7 +233,7 @@ export default {
 		},
 		update() {
 			this.reload();
-			this.$events.$emit("model.update");
+			this.$events.emit("model.update");
 		}
 	}
 };

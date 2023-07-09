@@ -124,7 +124,7 @@ export default {
 			}
 
 			this.onInput();
-			this.$events.$emit("model.update");
+			this.$events.emit("model.update");
 		},
 		prompt() {
 			if (this.disabled) {

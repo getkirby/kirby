@@ -9,6 +9,14 @@
 	</div>
 </template>
 
+<script>
+/**
+ * Displays notification from `panel.notification`
+ * @internal
+ */
+export default {};
+</script>
+
 <style>
 .k-notification {
 	padding: 0.75rem 1.5rem;

@@ -74,7 +74,7 @@
 						@click="$panel.upload.remove(file.id)"
 					/>
 					<div v-else-if="file.progress">
-						<k-loader />
+						<k-icon type="loader" />
 					</div>
 				</div>
 			</li>

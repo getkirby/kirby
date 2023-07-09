@@ -173,7 +173,7 @@ export default {
 		},
 		insertUpload(files) {
 			this.insertFile(files);
-			this.$events.$emit("model.update");
+			this.$events.emit("model.update");
 		},
 		onCommand(command, callback) {
 			if (typeof this[command] !== "function") {

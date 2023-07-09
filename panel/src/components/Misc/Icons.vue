@@ -20,6 +20,7 @@
 
 <script>
 /**
+ * Component to load all icons from plugins
  * @internal
  */
 export default {

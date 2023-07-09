@@ -66,9 +66,11 @@
 								icon="remove"
 								@click="$panel.upload.remove(file.id)"
 							/>
+
 							<div v-else-if="!file.completed">
-								<k-loader />
+								<k-icon type="loader" />
 							</div>
+
 							<k-button
 								v-else
 								icon="check"

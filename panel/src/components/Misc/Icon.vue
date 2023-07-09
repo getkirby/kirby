@@ -12,13 +12,7 @@
 </template>
 
 <script>
-/**
- * Use to display any icon from the Panel's icon set.
- * @public
- *
- * @example <k-icon type="edit" />
- */
-export default {
+export const props = {
 	props: {
 		/**
 		 * For better accessibility of icons,
@@ -28,15 +22,27 @@ export default {
 		alt: String,
 		/**
 		 * Sets a custom color. Either shorthand
-		 * for Panel default colors or directly
-		 * applied CSS value.
+		 * for Panel default colors or actual CSS value.
 		 */
 		color: String,
 		/**
-		 * Select the icon with this attribute
+		 * Name of the chosen icon
+		 * @see https://getkirby.com/docs/reference/panel/icons
 		 */
 		type: String
 	}
+};
+
+/**
+ * Use to display any icon from the Panel's icon set.
+ *
+ * To combine it with an aspect ratio, background etc. use `<k-icon-frame>`
+ * @public
+ *
+ * @example <k-icon type="edit" />
+ */
+export default {
+	mixins: [props],
 };
 </script>
 

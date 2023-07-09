@@ -7,13 +7,14 @@
 			ratio="1/1"
 		/>
 		<k-icon-frame v-else color="white" back="black" icon="user" />
-		{{ user.name || user.email || user }}
+		{{ user.name ?? user.email ?? user }}
 	</div>
 </template>
 
 <script>
 /**
  * @internal
+ * @since 4.0.0
  */
 export default {
 	props: {

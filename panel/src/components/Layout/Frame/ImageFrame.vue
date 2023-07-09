@@ -8,7 +8,7 @@
 		<img
 			v-if="src"
 			:key="src"
-			:alt="alt || ''"
+			:alt="alt ?? ''"
 			:src="src"
 			:srcset="srcset"
 			:sizes="sizes"
@@ -18,17 +18,17 @@
 </template>
 
 <script>
+import { props as Frame } from "./Frame.vue";
+
 /**
- * The `k-image` component simplifies loading
- * and sizing of images and their backgrounds.
- * It can be used as a replacement for regular
- * `<img>` tags, but has a bunch of additional
- * options and built-in lazy-loading.
+ * Use <k-image-frame> to display an image in a fixed ratio with background etc.
  * @public
+ * @since 4.0.0
  *
- * @example <k-image src="myimage.jpg" />
+ * @example <k-image-frame src="https://getkirby.com/image.jpg" ratio="16/9" back="pattern" />
  */
 export default {
+	mixins: [Frame],
 	inheritAttrs: false,
 	props: {
 		/**
@@ -40,30 +40,6 @@ export default {
 		 * readers. Otherwise the filename would be read.
 		 */
 		alt: String,
-		/**
-		 * By default the background of
-		 * images will be transparent
-		 *
-		 * @values black, white, pattern
-		 */
-		back: String,
-		/**
-		 * If images don't fit the defined ratio,
-		 * the component will add additional space
-		 * around images. You can change that behavior
-		 * with the `cover` attribute. If `true`,
-		 * the image will be cropped to fit the ratio.
-		 */
-		cover: Boolean,
-		/**
-		 * The container can be set to a fixed ratio.
-		 * The ratio can be defined freely with the format
-		 * `widthFraction/heightFraction`. The ratio will
-		 * be calculated automatically.
-		 *
-		 * @values e.g. `1/1`, `16/9` or `4/5`
-		 */
-		ratio: String,
 		/**
 		 * For responsive images, pass the `sizes` attribute
 		 */

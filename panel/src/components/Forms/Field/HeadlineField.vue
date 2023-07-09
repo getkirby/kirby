@@ -1,6 +1,6 @@
 <template>
 	<div class="k-headline-field">
-		<k-headline size="large">
+		<k-headline>
 			{{ label }}
 		</k-headline>
 		<footer v-if="help" class="k-field-footer">

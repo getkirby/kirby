@@ -11,15 +11,7 @@
 
 <script>
 /**
- * @deprecated 4.0.0 Use `k-frame` instead
- *
- * Creates a layout element
- * in the specified ratio
- * @public
- *
- * @example <k-aspect-ratio ratio="3/2">
-  <div>Ratio!</div>
-</k-aspect-ratio>
+ * @deprecated 4.0.0 Use `<k-frame>` instead
  */
 export default {
 	props: {

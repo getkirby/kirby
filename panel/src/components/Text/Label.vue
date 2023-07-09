@@ -7,6 +7,7 @@
 		class="k-label"
 	>
 		<k-link v-if="link" :to="link">
+			<!-- @slot Content/text of the label -->
 			<slot />
 		</k-link>
 		<slot v-else />
@@ -17,25 +18,41 @@
 </template>
 
 <script>
+/**
+ * <k-label> is used to label form fields and sections
+ * @public
+ */
 export default {
 	props: {
+		/**
+		 * ID of the input element to which the label belongs
+		 */
 		input: {
 			type: [String, Number]
 		},
+		/**
+		 * Whether the input value is currently invalid
+		 */
 		invalid: {
 			type: Boolean
 		},
+		/**
+		 * Sets a link for the label. Link can be absolute or relative.
+		 */
 		link: {
 			type: String
 		},
+		/**
+		 * Whether a value is required for the input
+		 */
 		required: {
 			default: false,
 			type: Boolean
 		},
-		tag: {
-			default: "label",
-			type: String
-		},
+		/**
+		 * Which type the label belongs to
+		 * @values field, section
+		 */
 		type: {
 			default: "field",
 			type: String

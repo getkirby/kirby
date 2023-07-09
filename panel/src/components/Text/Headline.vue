@@ -30,8 +30,8 @@ export default {
 		link: String,
 		/**
 		 * Alternate text sizes
-		 * @values small, large, huge
 		 * @deprecated 4.0.0 Use `tag` prop instead to get different sizes
+		 * @values small, large, huge
 		 */
 		size: {
 			type: String
@@ -45,6 +45,7 @@ export default {
 		},
 		/**
 		 * Visual look of the headline
+		 * @deprecated 4.0.0
 		 * @values positive, negative
 		 */
 		theme: {
@@ -56,6 +57,11 @@ export default {
 		if (this.size) {
 			window.panel.deprecated(
 				"<k-headline>: the `size` prop will be removed in a future version. Use the `tag` prop instead."
+			);
+		}
+		if (this.theme) {
+			window.panel.deprecated(
+				"<k-headline>: the `theme` prop will be removed in a future version."
 			);
 		}
 	}
@@ -143,13 +149,8 @@ export default {
 	line-height: var(--leading-h6);
 }
 
-/** Legacy */
+/** @deprecated */
 .k-headline[data-theme] {
 	color: var(--theme);
-}
-.k-headline abbr {
-	color: var(--color-gray-500);
-	padding-inline-start: 0.25rem;
-	text-decoration: none;
 }
 </style>

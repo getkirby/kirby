@@ -94,7 +94,7 @@ export default {
 					index: this.pagination.offset
 				});
 				this.$panel.notification.success();
-				this.$events.$emit("file.sort");
+				this.$events.emit("file.sort");
 			} catch (error) {
 				this.$panel.error(error);
 				this.reload();
