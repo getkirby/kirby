@@ -93,7 +93,7 @@ class Params extends Obj
 
 	public function isNotEmpty(): bool
 	{
-		return empty((array)$this) === false;
+		return $this->isEmpty() === false;
 	}
 
 	/**
