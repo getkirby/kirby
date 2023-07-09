@@ -9,8 +9,7 @@
 
 <script>
 /**
- * The <k-text> component is a container for
- * all multi-line text with additional formats.
+ * The <k-text> component is a container for all multi-line text with additional formats.
  * @public
  *
  * @example <k-text>

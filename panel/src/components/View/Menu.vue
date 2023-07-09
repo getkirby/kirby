@@ -7,7 +7,6 @@
 				ref="handle"
 				type="checkbox"
 				name="menu"
-				data-variant="invisible"
 				@input="onHandle"
 			/>
 		</label>
@@ -128,6 +127,13 @@ export default {
 	border-right: 1px solid var(--color-gray-300);
 }
 
+.k-panel-menu-handle input {
+	position: absolute;
+	size: 0;
+	border: 0;
+	opacity: 0;
+}
+
 .k-panel-menu-search {
 	margin-bottom: var(--spacing-12);
 }
@@ -233,13 +239,5 @@ export default {
 	.k-panel-menu:hover .k-panel-menu-handle {
 		display: block;
 	}
-}
-
-/** @todo Temporary fixes */
-input:where([type="checkbox"], [type="radio"])[data-variant="invisible"] {
-	position: absolute;
-	size: 0;
-	border: 0;
-	opacity: 0;
 }
 </style>

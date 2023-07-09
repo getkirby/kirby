@@ -9,9 +9,7 @@
 
 <script>
 /**
- * Icon used as handle to drag elements inside
- * the sortable context of `<k-draggable>` with
- * corresponding hover styles.
+ * Icon used as handle to drag elements inside the sortable context of `<k-draggable>` with corresponding hover styles.
  * @public
  *
  * @example <k-sort-handle />

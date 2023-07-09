@@ -32,12 +32,7 @@ export default {
 	inheritAttrs: false,
 	props: {
 		/**
-		 * Just like in regular `<img>` tags,
-		 * you can and should define a proper `alt`
-		 * attribute whenever possible. The component
-		 * will add an empty alt tag when no alt
-		 * text is specified to be skipped by screen
-		 * readers. Otherwise the filename would be read.
+		 * Just like in regular `<img>` tags, you can and should define a proper `alt` attribute whenever possible. The component will add an empty alt tag when no alt text is specified to be skipped by screen readers. Otherwise the filename would be read.
 		 */
 		alt: String,
 		/**

@@ -20,8 +20,7 @@
 
 <script>
 /**
- * Bubble to display content in an inline context, e.g. the
- * structure preview table
+ * Bubble to display content in an inline context, e.g. the structure preview table
  * @public
  * @since 3.7.0
  *
@@ -31,15 +30,13 @@ export default {
 	inheritAttrs: false,
 	props: {
 		/**
-		 * Sets a custom background color. Either shorthand
-		 * for Panel default colors or actual CSS value.
+		 * Sets a custom background color. Either shorthand for Panel default colors or actual CSS value.
 		 *
 		 * @deprecated 4.0.0 Use `--bubble-back` CSS property instead
 		 */
 		back: String,
 		/**
-		 * Sets a custom color. Either shorthand
-		 * for Panel default colors or actual CSS value.
+		 * Sets a custom color. Either shorthand for Panel default colors or actual CSS value.
 		 *
 		 * @deprecated 4.0.0 Use `--bubble-text` CSS property instead
 		 */
@@ -52,8 +49,7 @@ export default {
 			default: "li"
 		},
 		/**
-		 * Optional image to display in the bubble.
-		 * Used for <k-image-frame>, see for available props
+		 * Optional image to display in the bubble. Used for <k-image-frame>, see for available props
 		 */
 		image: Object,
 		/**

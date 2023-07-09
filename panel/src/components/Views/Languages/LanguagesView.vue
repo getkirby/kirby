@@ -62,24 +62,18 @@ export default {
 					{
 						icon: "edit",
 						text: this.$t("edit"),
-						click() {
-							this.$go(`languages/${language.id}`);
-						}
+						click: () => this.$go(`languages/${language.id}`)
 					},
 					{
 						icon: "cog",
 						text: this.$t("settings"),
-						click() {
-							this.$dialog(`languages/${language.id}/update`);
-						}
+						click: () => this.$dialog(`languages/${language.id}/update`)
 					},
 					{
 						icon: "trash",
 						text: this.$t("delete"),
 						disabled: language.deletable === false,
-						click() {
-							this.$dialog(`languages/${language.id}/delete`);
-						}
+						click: () => this.$dialog(`languages/${language.id}/delete`)
 					}
 				]
 			}));

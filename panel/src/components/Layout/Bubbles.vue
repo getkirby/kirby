@@ -18,9 +18,7 @@ export default {
 	inheritAttrs: false,
 	props: {
 		/**
-		 * Array or string of bubbles,
-		 * see <k-bubble> for available props.
-		 * If string, will be split by comma.
+		 * Array or string of bubbles, see <k-bubble> for available props.  If string, will be split by comma.
 		 */
 		bubbles: [Array, String]
 	},

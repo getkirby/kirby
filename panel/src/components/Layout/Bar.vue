@@ -21,8 +21,7 @@
 
 <script>
 /**
- * The `k-bar` can be used to create  all sorts of toolbars
- * aligning its items accordingly.
+ * The `k-bar` can be used to create  all sorts of toolbars aligning its items accordingly.
  * @public
  *
  * @example
@@ -34,8 +33,7 @@
 export default {
 	props: {
 		/**
-		 * How to align items horizontally
-		 * (if not at `start` which is the default)
+		 * How to align items horizontally (if not at `start` which is the default)
 		 *
 		 * @values `center`, `end`
 		 */

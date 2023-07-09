@@ -20,7 +20,7 @@ export default {
 		const response = await this.load();
 		this.label = response.label;
 		this.text = response.text;
-		this.theme = response.theme || "info";
+		this.theme = response.theme ?? "info";
 	}
 };
 </script>

@@ -29,24 +29,17 @@ export const props = {
 		 */
 		fit: String,
 		/**
-		 * Aspect ratio for the container.
-		 * The ratio can be defined freely with the format
-		 * `widthFraction/heightFraction`.
+		 * Aspect ratio for the container. The ratio can be defined freely with the format `widthFraction/heightFraction`.
 		 *
 		 *  @values e.g. `1/1`, `16/9` or `4/5`
 		 */
 		ratio: String,
 		/**
-		 * If the content doesn't fit the defined ratio,
-		 * the component will add additional space
-		 * around the content. You can change that behavior
-		 * with the `cover` attribute. If `true`,
-		 * the image will be cropped to fit the ratio.
+		 * If the content doesn't fit the defined ratio, the component will add additional space around the content. You can change that behavior with the `cover` attribute. If `true`, the image will be cropped to fit the ratio.
 		 */
 		cover: Boolean,
 		/**
-		 * Background for the frame. Either shorthand
-		 * for Panel default colors or actual CSS value.
+		 * Background for the frame. Either shorthand for Panel default colors or actual CSS value.
 		 */
 		back: String,
 		/**
