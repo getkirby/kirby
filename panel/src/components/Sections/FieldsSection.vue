@@ -17,7 +17,6 @@
 
 <script>
 import SectionMixin from "@/mixins/section.js";
-import debounce from "@/helpers/debounce.js";
 
 export default {
 	mixins: [SectionMixin],
@@ -42,7 +41,6 @@ export default {
 		}
 	},
 	created() {
-		this.input = debounce(this.input, 50);
 		this.fetch();
 	},
 	methods: {
