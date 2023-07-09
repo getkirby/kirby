@@ -571,6 +571,7 @@ abstract class FieldClass
 
 	/**
 	 * Defines all validation rules
+	 * @codeCoverageIgnore
 	 */
 	protected function validations(): array
 	{
