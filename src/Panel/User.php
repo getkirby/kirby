@@ -3,6 +3,7 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\File as CmsFile;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Translation;
 use Kirby\Cms\Url;
 use Kirby\Filesystem\Asset;
@@ -20,6 +21,11 @@ use Kirby\Toolkit\I18n;
  */
 class User extends Model
 {
+	/**
+	 * @var \Kirby\Cms\User
+	 */
+	protected ModelWithContent $model;
+
 	/**
 	 * Breadcrumb array
 	 */

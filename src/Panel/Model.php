@@ -22,11 +22,9 @@ use Kirby\Toolkit\A;
  */
 abstract class Model
 {
-	protected ModelWithContent $model;
-
-	public function __construct(ModelWithContent $model)
-	{
-		$this->model = $model;
+	public function __construct(
+		protected ModelWithContent $model
+	) {
 	}
 
 	/**
@@ -255,10 +253,17 @@ abstract class Model
 	 * Checks for disabled dropdown options according
 	 * to the given permissions
 	 */
-	public function isDisabledDropdownOption(string $action, array $options, array $permissions): bool
-	{
+	public function isDisabledDropdownOption(
+		string $action,
+		array $options,
+		array $permissions
+	): bool {
 		$option = $options[$action] ?? true;
-		return $permissions[$action] === false || $option === false || $option === 'false';
+
+		return
+			$permissions[$action] === false ||
+			$option === false ||
+			$option === 'false';
 	}
 
 	/**
@@ -269,11 +274,7 @@ abstract class Model
 	 */
 	public function lock(): array|false
 	{
-		if ($lock = $this->model->lock()) {
-			return $lock->toArray();
-		}
-
-		return false;
+		return $this->model->lock()?->toArray() ?? false;
 	}
 
 	/**

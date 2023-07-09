@@ -68,7 +68,6 @@ return function (App $app) {
 					'field'  => $field,
 				]);
 				return $blocks->filter('isHidden', false);
-
 			} catch (Throwable) {
 				$message = 'Invalid blocks data for "' . $field->key() . '" field';
 
@@ -249,7 +248,6 @@ return function (App $app) {
 					Data::decode($field->value, 'yaml'),
 					['parent' => $field->parent()]
 				);
-
 			} catch (Exception) {
 				$message = 'Invalid structure data for "' . $field->key() . '" field';
 

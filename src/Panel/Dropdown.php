@@ -54,7 +54,7 @@ class Dropdown extends Json
 					$language = $kirby->language($query->language)
 				) {
 					$option['text'] .= ' (' . $language->code() . ')';
-					$option['link']  .= '?language=' . $language->code();
+					$option['link'] .= '?language=' . $language->code();
 				}
 
 				$options[] = $option;

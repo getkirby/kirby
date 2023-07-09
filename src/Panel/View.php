@@ -40,7 +40,9 @@ class View
 			return static::applyOnly($data, $only);
 		}
 
-		$globals = $request->header('X-Fiber-Globals') ?? $request->get('_globals');
+		$globals =
+			$request->header('X-Fiber-Globals') ??
+			$request->get('_globals');
 
 		if (empty($globals) === false) {
 			return static::applyGlobals($data, $globals);
@@ -56,8 +58,10 @@ class View
 	 * A global request can be activated with the `X-Fiber-Globals` header or the
 	 * `_globals` query parameter.
 	 */
-	public static function applyGlobals(array $data, string|null $globals = null): array
-	{
+	public static function applyGlobals(
+		array $data,
+		string|null $globals = null
+	): array {
 		// split globals string into an array of fields
 		$globalKeys = Str::split($globals, ',');
 
@@ -86,8 +90,10 @@ class View
 	 * Such requests can fetch shared data or globals.
 	 * Globals will be loaded on demand.
 	 */
-	public static function applyOnly(array $data, string|null $only = null): array
-	{
+	public static function applyOnly(
+		array $data,
+		string|null $only = null
+	): array {
 		// split include string into an array of fields
 		$onlyKeys = Str::split($only, ',');
 
@@ -115,9 +121,7 @@ class View
 		}
 
 		// Nest dotted keys in array but ignore $translation
-		return A::nest($result, [
-			'$translation'
-		]);
+		return A::nest($result, ['$translation']);
 	}
 
 	/**
@@ -146,16 +150,18 @@ class View
 		return [
 			'$direction' => function () use ($kirby, $multilang, $language, $user) {
 				if ($multilang === true && $language && $user) {
-					$isDefault = $language->direction() === $kirby->defaultLanguage()->direction();
-					$isFromUser = $language->code() === $user->language();
+					$default = $kirby->defaultLanguage();
 
-					if ($isDefault === false && $isFromUser === false) {
+					if (
+						$language->direction() !== $default->direction() &&
+						$language->code() !== $user->language()
+					) {
 						return $language->direction();
 					}
 				}
 			},
-			'$dialog' => null,
-			'$drawer' => null,
+			'$dialog'   => null,
+			'$drawer'   => null,
 			'$language' => function () use ($kirby, $multilang, $language) {
 				if ($multilang === true && $language) {
 					return [
@@ -180,17 +186,17 @@ class View
 
 				return [];
 			},
-			'$menu' => fn () => static::menu(
+			'$menu'       => fn () => static::menu(
 				$options['areas'] ?? [],
 				$permissions,
 				$options['area']['id'] ?? null
 			),
 			'$permissions' => $permissions,
-			'$license' => (bool)$kirby->system()->license(),
-			'$multilang' => $multilang,
-			'$searches' => static::searches($options['areas'] ?? [], $permissions),
-			'$url' => $kirby->request()->url()->toString(),
-			'$user' => function () use ($user) {
+			'$license'     => (bool)$kirby->system()->license(),
+			'$multilang'   => $multilang,
+			'$searches'    => static::searches($options['areas'] ?? [], $permissions),
+			'$url'         => $kirby->request()->url()->toString(),
+			'$user'        => function () use ($user) {
 				if ($user) {
 					return [
 						'email'       => $user->email(),
@@ -266,13 +272,11 @@ class View
 		$kirby = App::instance();
 
 		return [
-			'$config' => function () use ($kirby) {
-				return [
-					'debug'       => $kirby->option('debug', false),
-					'kirbytext'   => $kirby->option('panel.kirbytext', true),
-					'translation' => $kirby->option('panel.language', 'en'),
-				];
-			},
+			'$config' => fn () => [
+				'debug'       => $kirby->option('debug', false),
+				'kirbytext'   => $kirby->option('panel.kirbytext', true),
+				'translation' => $kirby->option('panel.language', 'en'),
+			],
 			'$system' => function () use ($kirby) {
 				$locales = [];
 
@@ -313,8 +317,11 @@ class View
 	/**
 	 * Creates the menu for the topbar
 	 */
-	public static function menu(array|null $areas = [], array|null $permissions = [], string|null $current = null): array
-	{
+	public static function menu(
+		array|null $areas = [],
+		array|null $permissions = [],
+		string|null $current = null
+	): array {
 		$menu = [];
 
 		// areas
