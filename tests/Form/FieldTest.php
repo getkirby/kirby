@@ -7,6 +7,9 @@ use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Form\Field
+ */
 class FieldTest extends TestCase
 {
 	protected $originalMixins;

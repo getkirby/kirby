@@ -5,7 +5,6 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
-use Kirby\Http\Response;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -338,7 +337,7 @@ class DropdownTest extends TestCase
 	}
 
 	/**
-	 * @covers ::routesForDropdowns
+	 * @covers ::routes
 	 */
 	public function testRoutesForDropdownsWithOptions(): void
 	{
@@ -374,7 +373,7 @@ class DropdownTest extends TestCase
 	}
 
 	/**
-	 * @covers ::routesForDropdowns
+	 * @covers ::routes
 	 */
 	public function testRoutesForDropdownsWithShortcut(): void
 	{
