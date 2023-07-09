@@ -347,14 +347,20 @@ class View
 				continue;
 			}
 
-			$menu[] = [
+			// resolve menu settings for simple disabled string
+			// or default `true`
+			$menuSetting = match ($menuSetting) {
+				'disabled' => ['link' => $areaId, 'disabled' => true],
+				true       => ['link' => $areaId],
+				default    => $menuSetting
+			};
+
+			$menu[] = array_merge([
 				'current'  => $areaId === $current,
-				'disabled' => $menuSetting === 'disabled',
 				'icon'     => $area['icon'],
 				'id'       => $areaId,
-				'link'     => $area['link'],
 				'text'     => $area['label'],
-			];
+			], $menuSetting);
 		}
 
 		$menu[] = '-';

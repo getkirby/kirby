@@ -52,7 +52,7 @@ return [
 				'props' => [
 					'fields' => [
 						'domain' => [
-							'label' => I18n::translate('license.register'),
+							'label' => I18n::translate('license.unregistered'),
 							'type'  => 'info',
 							'theme' => $local ? 'warning' : 'info',
 							'text'  => I18n::template('license.register.' . ($local ? 'local' : 'domain'), ['host' => $system->indexUrl()])
@@ -63,7 +63,7 @@ return [
 							'required'    => true,
 							'counter'     => false,
 							'placeholder' => 'K3-',
-							'help'        => I18n::translate('license.register.help')
+							'help'        => I18n::translate('license.register.help') . ' ' . '<a href="https://getkirby.com/buy">' . I18n::translate('license.buy') . ' &rarr;</a>'
 						],
 						'email' => Field::email(['required' => true])
 					],

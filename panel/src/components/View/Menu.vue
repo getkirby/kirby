@@ -3,12 +3,7 @@
 		<!-- Collapse/expand handle -->
 		<label class="k-panel-menu-handle">
 			<k-icon type="collapse" />
-			<input
-				ref="handle"
-				type="checkbox"
-				name="menu"
-				@input="onHandle"
-			/>
+			<input ref="handle" type="checkbox" name="menu" @input="onHandle" />
 		</label>
 
 		<!-- Search button -->

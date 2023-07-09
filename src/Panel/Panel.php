@@ -41,7 +41,6 @@ class Panel
 		$area['breadcrumbLabel'] ??= $area['label'];
 		$area['title']             = $area['label'];
 		$area['menu']            ??= false;
-		$area['link']            ??= $id;
 		$area['search']          ??= null;
 
 		return $area;

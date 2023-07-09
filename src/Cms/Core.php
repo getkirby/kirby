@@ -51,6 +51,7 @@ class Core
 			'account'      => $this->root . '/areas/account.php',
 			'installation' => $this->root . '/areas/installation.php',
 			'languages'    => $this->root . '/areas/languages.php',
+			'license'      => $this->root . '/areas/license.php',
 			'login'        => $this->root . '/areas/login.php',
 			'logout'       => $this->root . '/areas/logout.php',
 			'search'       => $this->root . '/areas/search.php',

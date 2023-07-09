@@ -7,7 +7,6 @@ import Loader from "./Loader.vue";
 import Notification from "./Notification.vue";
 import OfflineWarning from "./OfflineWarning.vue";
 import Progress from "./Progress.vue";
-import Registration from "./Registration.vue";
 import SortHandle from "./SortHandle.vue";
 
 export default {
@@ -21,7 +20,6 @@ export default {
 		app.component("k-notification", Notification);
 		app.component("k-offline-warning", OfflineWarning);
 		app.component("k-progress", Progress);
-		app.component("k-registration", Registration);
 		app.component("k-sort-handle", SortHandle);
 	}
 };
