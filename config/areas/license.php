@@ -6,7 +6,10 @@ return function ($kirby) {
 	return [
 		'icon'    => 'key',
 		'label'   => I18n::translate('license.register'),
-		'menu'    => ['dialog' => 'registration'],
+		'menu'    => [
+			'link'	 => null,
+			'dialog' => 'registration'
+		],
 		'dialogs' => require __DIR__ . '/license/dialogs.php'
 	];
 };

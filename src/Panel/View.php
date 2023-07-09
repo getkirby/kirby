@@ -348,10 +348,9 @@ class View
 			}
 
 			// resolve menu settings for simple disabled string
-			// or default `true`
 			$menuSetting = match ($menuSetting) {
-				'disabled' => ['link' => $areaId, 'disabled' => true],
-				true       => ['link' => $areaId],
+				'disabled' => ['disabled' => true],
+				true       => [],
 				default    => $menuSetting
 			};
 
@@ -359,6 +358,7 @@ class View
 				'current'  => $areaId === $current,
 				'icon'     => $area['icon'],
 				'id'       => $areaId,
+				'link'     => $area['link'],
 				'text'     => $area['label'],
 			], $menuSetting);
 		}
