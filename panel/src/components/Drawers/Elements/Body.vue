@@ -11,7 +11,11 @@
 	background: var(--color-background);
 }
 /* Sticky elements inside drawer */
-.k-drawer-body .k-toolbar:not([data-inline="true"]):has(~ :focus-within),
+/** TODO: .k-drawer-body .k-toolbar:not([data-inline="true"]):has(~ :focus-within) */
+.k-drawer-body
+	.k-writer-input-wrapper:focus-within
+	.k-toolbar:not([data-inline="true"]),
+.k-drawer-body .k-textarea-input-wrapper:focus-within .k-toolbar,
 .k-drawer-body .k-table th {
 	top: -1.5rem;
 }

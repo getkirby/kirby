@@ -90,9 +90,9 @@
 	cursor: not-allowed;
 }
 
-:where(label:has(> input:disabled), label:has(+ input:disabled)) {
+/* TODO: :where(label:has(> input:disabled), label:has(+ input:disabled)) {
 	cursor: not-allowed;
-}
+} */
 
 :where(a) {
 	color: currentColor;

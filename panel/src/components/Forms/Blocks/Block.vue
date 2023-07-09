@@ -1,7 +1,10 @@
 <template>
 	<div
 		ref="container"
-		:class="'k-block-container-type-' + type"
+		:class="[
+			'k-block-container-fieldset-' + type,
+			containerType ? 'k-block-container-type-' + containerType : ''
+		]"
 		:data-batched="isBatched"
 		:data-disabled="fieldset.disabled"
 		:data-hidden="isHidden"
@@ -111,6 +114,27 @@ export default {
 
 			return className;
 		},
+		containerType() {
+			const preview = this.fieldset.preview;
+
+			if (preview === false) {
+				return false;
+			}
+
+			// custom preview
+			if (preview) {
+				if (this.$helper.isComponent("k-block-type-" + preview)) {
+					return preview;
+				}
+			}
+
+			// default preview
+			if (this.$helper.isComponent("k-block-type-" + this.type)) {
+				return this.type;
+			}
+
+			return false;
+		},
 		customComponent() {
 			if (this.wysiwyg) {
 				return this.wysiwygComponent;
@@ -170,28 +194,8 @@ export default {
 			return this.wysiwygComponent !== false;
 		},
 		wysiwygComponent() {
-			const preview = this.fieldset.preview;
-
-			if (preview === false) {
-				return false;
-			}
-
-			let component;
-
-			// custom preview
-			if (preview) {
-				component = "k-block-type-" + preview;
-
-				if (this.$helper.isComponent(component)) {
-					return component;
-				}
-			}
-
-			// default preview
-			component = "k-block-type-" + this.type;
-
-			if (this.$helper.isComponent(component)) {
-				return component;
+			if (this.containerType) {
+				return "k-block-type-" + this.containerType;
 			}
 
 			return false;

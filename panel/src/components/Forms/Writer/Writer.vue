@@ -4,6 +4,7 @@
 		v-direction
 		:data-empty="isEmpty"
 		:data-placeholder="placeholder"
+		:data-toolbar-inline="Boolean(toolbar.inline)"
 		:spellcheck="spellcheck"
 		class="k-writer"
 	>

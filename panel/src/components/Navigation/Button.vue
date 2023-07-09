@@ -1,5 +1,12 @@
 <template>
-	<component :is="component" v-bind="attrs" class="k-button" @click="onClick">
+	<component
+		:is="component"
+		:data-has-icon="Boolean(icon)"
+		:data-has-text="Boolean(text || $slots.default)"
+		v-bind="attrs"
+		class="k-button"
+		@click="onClick"
+	>
 		<k-icon v-if="icon" :type="icon" class="k-button-icon" />
 
 		<span v-if="text || $slots.default" class="k-button-text">
@@ -268,19 +275,22 @@ export default {
 }
 
 /** Icon Buttons **/
-.k-button:not(:has(.k-button-text)) {
+/** TODO: .k-button:not(:has(.k-button-text)) */
+.k-button:not([data-has-text="true"]) {
 	--button-padding: 0;
 	aspect-ratio: 1/1;
 }
 
 /** Responsive buttons **/
 @container (max-width: 30rem) {
-	.k-button:is([data-responsive]:has(.k-button-icon)) {
+	/** TODO: .k-button:is([data-responsive]:has(.k-button-icon)) */
+	.k-button[data-responsive][data-has-icon="true"] {
 		--button-padding: 0;
 		aspect-ratio: 1/1;
 		--button-text-display: none;
 	}
-	.k-button:is([data-responsive]:has(.k-button-icon)) .k-button-arrow {
+	/** TODO: .k-button:is([data-responsive]:has(.k-button-icon)) .k-button-arrow */
+	.k-button[data-responsive][data-has-icon="true"] .k-button-arrow {
 		display: none;
 	}
 }
