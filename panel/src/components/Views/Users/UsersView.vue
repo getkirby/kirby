@@ -33,7 +33,12 @@
 </template>
 
 <script>
+import RoleFilter from "./UsersRoleFilter.vue";
+
 export default {
+	comments: {
+		"k-users-role-filter": RoleFilter
+	},
 	props: {
 		role: Object,
 		roles: Array,

@@ -29,6 +29,9 @@
 </template>
 
 <script>
+/**
+ * @internal
+ */
 export default {
 	props: {
 		model: Object

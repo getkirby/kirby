@@ -30,6 +30,9 @@
 <script>
 import { clone } from "@/helpers/object.js";
 
+/**
+ * @internal
+ */
 export default {
 	props: {
 		exceptions: Array,

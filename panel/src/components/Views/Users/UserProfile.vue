@@ -31,6 +31,9 @@
 </template>
 
 <script>
+/**
+ * @internal
+ */
 export default {
 	props: {
 		isLocked: Boolean,

@@ -32,6 +32,9 @@
 </template>
 
 <script>
+/**
+ * @internal
+ */
 export default {
 	props: {
 		role: Object,

@@ -41,6 +41,9 @@
 </template>
 
 <script>
+/**
+ * @internal
+ */
 export default {
 	props: {
 		value: [String, Object]
