@@ -182,7 +182,7 @@ export default {
 			...options
 		});
 
-		return response.json;
+		return response?.json ?? {};
 	},
 
 	/**
@@ -235,6 +235,18 @@ export default {
 		return response.json;
 	},
 
+	/**
+ * Sends a Panel request to the backend with
+ * all the right headers and other options.
+ *
+ * It also makes sure to redirect requests,
+ * which cannot be handled via fetch and
+ * throws more useful errors.
+ *
+ * @param {String} url
+ * @param {Object} options
+ * @returns {Object|false} {request, response}
+ */
 	async request(url, options = {}) {
 		return request(url, {
 			referrer: this.view.path,
