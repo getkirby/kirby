@@ -105,9 +105,10 @@ export default {
 
 <style>
 .k-password-reset-view .k-user-info {
-	height: 38px;
-	margin-bottom: 2.25rem;
-	padding: 0.5rem;
+	height: var(--height-xl);
+	margin-top: var(--spacing-12);
+	margin-bottom: var(--spacing-8);
+	padding: var(--spacing-2);
 	background: var(--color-white);
 	border-radius: var(--rounded-xs);
 	box-shadow: var(--shadow);
