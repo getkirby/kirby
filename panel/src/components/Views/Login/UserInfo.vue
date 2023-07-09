@@ -31,6 +31,8 @@ export default {
 	height: var(--height-lg);
 	gap: 0.75rem;
 	padding-inline: var(--spacing-2);
+	background: var(--color-white);
+	box-shadow: var(--shadow);
 }
 .k-user-info :where(.k-image-frame, .k-icon-frame) {
 	width: 1.5rem;

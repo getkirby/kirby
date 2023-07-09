@@ -96,8 +96,5 @@ export default {
 <style>
 .k-login-code-form .k-user-info {
 	margin-bottom: var(--spacing-6);
-	background: var(--color-white);
-	border-radius: var(--rounded);
-	box-shadow: var(--shadow);
 }
 </style>

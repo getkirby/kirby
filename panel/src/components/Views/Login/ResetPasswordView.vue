@@ -1,50 +1,31 @@
 <template>
 	<k-panel-inside class="k-password-reset-view">
-		<k-form
-			:fields="fields"
-			:submit-button="$t('change')"
-			:value="values"
-			@input="values = $event"
-			@submit="submit"
-		>
-			<template #header>
-				<h1 class="sr-only">
-					{{ $t("view.resetPassword") }}
-				</h1>
-
-				<k-login-alert v-if="issue" @click="issue = null">
-					{{ issue }}
-				</k-login-alert>
-
-				<k-user-info :user="$panel.user" />
-			</template>
-
-			<template #footer>
-				<div class="k-login-buttons">
+		<form @submit.prevent="submit">
+			<k-header>
+				{{ $t("view.resetPassword") }}
+				<template #buttons>
 					<k-button
 						icon="check"
 						theme="notice"
 						type="submit"
 						variant="filled"
-						class="k-login-button"
+						size="sm"
 					>
 						{{ $t("change") }} <template v-if="isLoading"> … </template>
 					</k-button>
-				</div>
-			</template>
-		</k-form>
+				</template>
+			</k-header>
+			<k-user-info :user="$panel.user" />
+			<k-fieldset :fields="fields" :value="values" />
+		</form>
 	</k-panel-inside>
 </template>
 
 <script>
-// import the Login View to load the styles
-import "./LoginView.vue";
-
 export default {
 	data() {
 		return {
 			isLoading: false,
-			issue: "",
 			values: {
 				password: null,
 				passwordConfirmation: null
@@ -58,12 +39,14 @@ export default {
 					autofocus: true,
 					label: this.$t("user.changePassword.new"),
 					icon: "key",
-					type: "password"
+					type: "password",
+					width: "1/2"
 				},
 				passwordConfirmation: {
 					label: this.$t("user.changePassword.new.confirm"),
 					icon: "key",
-					type: "password"
+					type: "password",
+					width: "1/2"
 				}
 			};
 		}
@@ -74,13 +57,15 @@ export default {
 	methods: {
 		async submit() {
 			if (!this.values.password || this.values.password.length < 8) {
-				this.issue = this.$t("error.user.password.invalid");
-				return false;
+				return this.$panel.notification.error(
+					this.$t("error.user.password.invalid")
+				);
 			}
 
 			if (this.values.password !== this.values.passwordConfirmation) {
-				this.issue = this.$t("error.user.password.notSame");
-				return false;
+				return this.$panel.notification.error(
+					this.$t("error.user.password.notSame")
+				);
 			}
 
 			this.isLoading = true;
@@ -94,7 +79,7 @@ export default {
 				this.$panel.notification.success();
 				this.$go("/");
 			} catch (error) {
-				this.issue = error.message;
+				this.$panel.notification.error(error);
 			} finally {
 				this.isLoading = false;
 			}
@@ -105,12 +90,6 @@ export default {
 
 <style>
 .k-password-reset-view .k-user-info {
-	height: var(--height-xl);
-	margin-top: var(--spacing-12);
 	margin-bottom: var(--spacing-8);
-	padding: var(--spacing-2);
-	background: var(--color-white);
-	border-radius: var(--rounded-xs);
-	box-shadow: var(--shadow);
 }
 </style>
