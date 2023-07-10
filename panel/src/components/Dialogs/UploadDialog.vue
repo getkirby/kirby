@@ -172,7 +172,7 @@ export default {
 .k-upload-item-error {
 	font-size: var(--text-xs);
 	margin-top: 0.25rem;
-	color: var(--color-red-400);
+	color: var(--color-red-700);
 }
 .k-upload-item-progress {
 	padding-inline: var(--spacing-3);
