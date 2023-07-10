@@ -80,7 +80,7 @@ export const redirect = (url) => {
  *
  * @param {String} url
  * @param {Object} options
- * @returns {Object} {request, response}
+ * @returns {Object|false} {request, response}
  */
 export const request = async (url, options = {}) => {
 	// merge with a few defaults
@@ -103,6 +103,7 @@ export const request = async (url, options = {}) => {
 	// Don't even try to request a
 	// cross-origin url. Redirect instead.
 	if (isSameOrigin(request.url) === false) {
+		// will be false for redirects
 		return redirect(request.url);
 	}
 
