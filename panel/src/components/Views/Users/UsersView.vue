@@ -1,6 +1,6 @@
 <template>
 	<k-panel-inside class="k-users-view">
-		<k-header>
+		<k-header class="k-users-view-header">
 			{{ $t("view.users") }}
 
 			<template #buttons>
@@ -12,23 +12,15 @@
 					variant="filled"
 					@click="create"
 				/>
-				<k-users-role-filter
-					v-if="roles.length > 1"
-					:role="role"
-					:roles="roles"
-				/>
 			</template>
 		</k-header>
-
+		<k-tabs :tab="role?.id ?? 'all'" :tabs="tabs" />
 		<k-collection
-			v-if="users.data.length > 0"
+			:empty="empty"
 			:items="items"
 			:pagination="users.pagination"
 			@paginate="paginate"
 		/>
-		<k-empty v-else-if="users.pagination.total === 0" icon="users">
-			{{ $t("role.empty") }}
-		</k-empty>
 	</k-panel-inside>
 </template>
 
@@ -42,11 +34,36 @@ export default {
 		users: Object
 	},
 	computed: {
+		empty() {
+			return {
+				icon: "users",
+				text: this.$t("role.empty")
+			};
+		},
 		items() {
 			return this.users.data.map((user) => {
 				user.options = this.$dropdown(user.link);
 				return user;
 			});
+		},
+		tabs() {
+			const roles = [
+				{
+					name: "all",
+					label: this.$t("role.all"),
+					link: "/users"
+				}
+			];
+
+			for (const role of this.roles) {
+				roles.push({
+					name: role.id,
+					label: role.title,
+					link: "/users?role=" + role.id
+				});
+			}
+
+			return roles;
 		}
 	},
 	methods: {
@@ -67,3 +84,9 @@ export default {
 	}
 };
 </script>
+
+<style>
+.k-users-view-header {
+	margin-bottom: 0;
+}
+</style>
