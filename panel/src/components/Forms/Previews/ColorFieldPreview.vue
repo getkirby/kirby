@@ -46,7 +46,8 @@ export default {
 .k-color-field-preview {
 	padding: 0.325rem 0.75rem;
 }
-.k-color-field-preview .k-color-preview:has(+ .k-bubble-text) {
+/** TODO: .k-color-field-preview .k-color-preview:has(+ .k-bubble-text) */
+.k-color-field-preview .k-color-preview[data-has-text] {
 	border-start-end-radius: 0;
 	border-end-end-radius: 0;
 }

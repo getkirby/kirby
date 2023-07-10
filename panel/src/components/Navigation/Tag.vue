@@ -1,6 +1,7 @@
 <template>
 	<button
 		ref="button"
+		:data-has-toggle="removable"
 		class="k-tag"
 		type="button"
 		@keydown.delete.prevent="remove"
@@ -83,7 +84,8 @@ export default {
 .k-tag-toggle:hover {
 	filter: brightness(100%);
 }
-.k-tag:has(.k-tag-toggle) .k-tag-text {
+/** TODO: .k-tag:has(.k-tag-toggle) .k-tag-text  */
+.k-tag[data-has-toggle="true"] .k-tag-text {
 	padding-inline-end: 0;
 }
 

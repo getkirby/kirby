@@ -331,7 +331,8 @@ export default {
 	cursor: grabbing;
 	z-index: 1;
 }
-.k-layouts:has(+ footer) {
-	margin-bottom: var(--spacing-3);
+/** TODO: .k-layouts:has(+ footer) { margin-bottom: var(--spacing-3);} */
+.k-layouts > footer {
+	margin-top: var(--spacing-3);
 }
 </style>

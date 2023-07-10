@@ -15,9 +15,7 @@
 </template>
 
 <script>
-export default {
-	inheritAttrs: false
-};
+export default {};
 </script>
 
 <style>

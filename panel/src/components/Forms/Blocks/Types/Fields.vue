@@ -73,7 +73,8 @@ export default {
 </script>
 
 <style>
-.k-block-container:has(.k-block-type-fields) {
+/** TODO: .k-block-container:has(.k-block-type-fields) */
+.k-block-container.k-block-container-type-fields {
 	padding-block: 0;
 }
 
@@ -95,7 +96,9 @@ export default {
 	padding: var(--spacing-6) var(--spacing-6) var(--spacing-8);
 	border-radius: var(--rounded-sm);
 }
-.k-block-container[data-hidden="true"]:has(.k-block-type-fields)
+/** TODO: .k-block-container[data-hidden="true"]:has(.k-block-type-fields)
+	:where(.k-drawer-tabs, .k-block-type-fields-form) */
+.k-block-container-type-fields[data-hidden="true"]
 	:where(.k-drawer-tabs, .k-block-type-fields-form) {
 	display: none;
 }

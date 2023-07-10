@@ -6,6 +6,7 @@
 			color: $helper.color(color),
 			background: $helper.color(back)
 		}"
+		:data-has-text="Boolean(text)"
 		class="k-bubble"
 		@click.native.stop
 	>
@@ -97,7 +98,8 @@ export default {
 	width: var(--bubble-size);
 	height: var(--bubble-size);
 }
-.k-bubble:has(.k-bubble-text) {
+/** TODO: .k-bubble:has(.k-bubble-text) */
+.k-bubble[data-has-text="true"] {
 	display: flex;
 	gap: var(--spacing-2);
 	align-items: center;

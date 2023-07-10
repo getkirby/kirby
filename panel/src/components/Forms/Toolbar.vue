@@ -312,7 +312,9 @@ export default {
 	--button-color-back: var(--toolbar-hover);
 }
 
-.k-toolbar:not([data-inline="true"]):has(~ :focus-within) {
+/** TODO: .k-toolbar:not([data-inline="true"]):has(~ :focus-within) */
+.k-writer-input:focus-within .k-toolbar:not([data-inline="true"]),
+.k-textarea-input:focus-within .k-toolbar:not([data-inline="true"]) {
 	position: sticky;
 	top: var(--header-sticky-offset);
 	inset-inline: 0;

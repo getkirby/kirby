@@ -1,5 +1,8 @@
 <template>
-	<header class="k-header">
+	<header
+		class="k-header"
+		:data-has-buttons="Boolean($slots.buttons || $slots.left || $slots.right)"
+	>
 		<h1 class="k-header-title">
 			<button
 				v-if="editable"
@@ -64,7 +67,8 @@ export default {
 	background: var(--header-color-back);
 	padding-top: var(--header-padding-block);
 	margin-bottom: var(--spacing-12);
-	box-shadow: 2px 0 0 0 var(--header-color-back),
+	box-shadow:
+		2px 0 0 0 var(--header-color-back),
 		-2px 0 0 0 var(--header-color-back);
 }
 
@@ -116,7 +120,8 @@ export default {
 	margin-bottom: var(--header-padding-block);
 }
 
-.k-header:has(.k-header-buttons) {
+/** TODO: .k-header:has(.k-header-buttons) */
+.k-header[data-has-buttons="true"] {
 	position: sticky;
 	top: 0;
 	z-index: var(--z-toolbar);

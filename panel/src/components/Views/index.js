@@ -24,6 +24,7 @@ import UserAvatar from "./Users/UserAvatar.vue";
 import UserProfile from "./Users/UserProfile.vue";
 import UserView from "./Users/UserView.vue";
 import UsersView from "./Users/UsersView.vue";
+import UsersRoleFilter from "./Users/UsersRoleFilter.vue";
 
 import LegacyPluginView from "./LegacyPluginView.vue";
 
@@ -55,6 +56,7 @@ export default {
 		app.component("k-user-profile", UserProfile);
 		app.component("k-user-view", UserView);
 		app.component("k-users-view", UsersView);
+		app.component("k-users-role-filter", UsersRoleFilter);
 
 		app.component("k-plugin-view", LegacyPluginView);
 	}

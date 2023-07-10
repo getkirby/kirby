@@ -15,7 +15,11 @@
 		/>
 
 		<!-- Menus -->
-		<menu v-for="(menu, menuIdex) in menus" :key="menuIdex">
+		<menu
+			v-for="(menu, menuIdex) in menus"
+			:key="menuIdex"
+			:data-is-second-last="menuIdex === menus.length - 2"
+		>
 			<k-button
 				v-for="entry in menu"
 				:key="entry.id"
@@ -135,7 +139,8 @@ export default {
 .k-panel-menu menu + menu {
 	margin-top: var(--spacing-6);
 }
-.k-panel-menu menu:has(+ :last-child) {
+/** TODO: .k-panel-menu menu:has(+ :last-child)  */
+.k-panel-menu menu[data-is-second-last="true"] {
 	flex-grow: 1;
 }
 

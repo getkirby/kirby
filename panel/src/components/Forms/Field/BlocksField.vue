@@ -121,7 +121,8 @@ export default {
 .k-blocks-field {
 	position: relative;
 }
-.k-blocks-field > :has(+ footer) {
-	margin-bottom: var(--spacing-3);
+/** TODO: .k-blocks-field > :has(+ footer) { margin-bottom: var(--spacing-3);} */
+.k-blocks-field > footer {
+	margin-top: var(--spacing-3);
 }
 </style>

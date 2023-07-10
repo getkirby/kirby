@@ -5,9 +5,9 @@
 </template>
 
 <style>
-body:has(.k-panel-outside) {
+/* TODO: body:has(.k-panel-outside) {
 	background: var(--color-gray-250);
-}
+} */
 
 .k-panel.k-panel-outside {
 	display: grid;

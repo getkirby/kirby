@@ -13,7 +13,7 @@
 			/>
 		</li>
 	</ul>
-	<k-empty icon="info" v-else theme="info">{{ $t("options.none") }}</k-empty>
+	<k-empty v-else icon="info" theme="info">{{ $t("options.none") }}</k-empty>
 </template>
 
 <script>

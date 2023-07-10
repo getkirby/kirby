@@ -2,6 +2,7 @@
 	<portal v-if="visible" to="dialog">
 		<form
 			:class="$vnode.data.staticClass"
+			:data-has-footer="cancelButton || submitButton"
 			:data-size="size"
 			class="k-dialog"
 			method="dialog"

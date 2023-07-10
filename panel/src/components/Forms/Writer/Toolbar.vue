@@ -255,13 +255,15 @@ export default {
 </script>
 
 <style>
-.k-writer:has(.k-writer-toolbar:not([data-inline="true"])) {
+/** TODO: .k-writer:has(.k-writer-toolbar:not([data-inline="true"])) */
+.k-writer:not([data-toolbar-inline="true"]) {
 	grid-template-areas: "topbar" "content";
 	grid-template-rows: var(--toolbar-size) 1fr;
 	gap: 0;
 }
 
-.k-writer-toolbar:has(~ :focus-within) .k-button[aria-current] {
+/** TODO: .k-writer-toolbar:has(~ :focus-within) .k-button[aria-current]  */
+.k-writer:focus-within .k-writer-toolbar .k-button[aria-current] {
 	color: var(--color-focus);
 }
 
