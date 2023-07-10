@@ -1,6 +1,6 @@
 <template>
 	<div class="k-headline-field">
-		<k-headline>
+		<k-headline class="h2">
 			{{ label }}
 		</k-headline>
 		<footer v-if="help" class="k-field-footer">
@@ -34,5 +34,9 @@ if the headline is the very first form element */
 
 .k-headline-field h2.k-headline {
 	font-weight: var(--font-normal);
+}
+
+.k-headline-field footer {
+	margin-top: var(--spacing-1);
 }
 </style>
