@@ -14,20 +14,6 @@ export default (panel) => {
 		...parent,
 
 		/**
-		 * Collapses the sidebar menu
-		 * @public
-		 */
-		close() {
-			this.isOpen = false;
-
-			if (media.matches) {
-				document.body.style.overflow = null;
-			} else {
-				localStorage.removeItem("kirby$menu");
-			}
-		},
-
-		/**
 		 * Closes the mobile menu when clicking outside of it
 		 * @internal
 		 * @param {Event} event
@@ -49,6 +35,47 @@ export default (panel) => {
 		},
 
 		/**
+		 * Collapses the sidebar menu
+		 * @public
+		 */
+		close() {
+			this.isOpen = false;
+
+			if (media.matches) {
+				document.body.style.overflow = null;
+			} else {
+				localStorage.removeItem("kirby$menu");
+			}
+		},
+
+		/**
+		 * Closes the mobile menu when escape key is pressed
+		 * @internal
+		 * @param {Event} event
+		 */
+		escape() {
+			if (media.matches === false) {
+				return false;
+			}
+
+			this.close();
+		},
+
+		/**
+		 * Expands the sidebar menu
+		 * @public
+		 */
+		open() {
+			this.isOpen = true;
+
+			if (media.matches) {
+				document.body.style.overflow = "hidden";
+			} else {
+				localStorage.setItem("kirby$menu", true);
+			}
+		},
+
+		/**
 		 * Handles change from mobile to desktop and vice versa
 		 * @internal
 		 */
@@ -63,20 +90,6 @@ export default (panel) => {
 				this.isOpen = true;
 			} else {
 				this.isOpen = false;
-			}
-		},
-
-		/**
-		 * Expands the sidebar menu
-		 * @public
-		 */
-		open() {
-			this.isOpen = true;
-
-			if (media.matches) {
-				document.body.style.overflow = "hidden";
-			} else {
-				localStorage.setItem("kirby$menu", true);
 			}
 		},
 
@@ -103,6 +116,9 @@ export default (panel) => {
 			}
 		}
 	};
+
+	// escape key event
+	panel.events.on("keydown.esc", menu.escape.bind(menu));
 
 	// outside click event
 	panel.events.on("click", menu.blur.bind(menu));

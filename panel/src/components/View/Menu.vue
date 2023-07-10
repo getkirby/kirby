@@ -35,25 +35,9 @@
 
 <script>
 export default {
-	data() {
-		return {
-			media: null
-		};
-	},
 	computed: {
 		menus() {
 			return this.$panel.menu.entries.split("-");
-		}
-	},
-	mounted() {
-		this.$events.on("keydown.esc", this.onEscape);
-	},
-	destroyed() {
-		this.$events.off("keydown.esc", this.onEscape);
-	},
-	methods: {
-		onEscape() {
-			return this.$panel.menu.isMobile ? this.$panel.menu.close() : null;
 		}
 	}
 };
