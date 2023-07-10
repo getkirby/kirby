@@ -1,6 +1,6 @@
 <template>
 	<k-panel-inside
-		:data-has-tabs="tabs.length > 0"
+		:data-has-tabs="tabs.length > 1"
 		:data-id="model.id"
 		:data-locked="isLocked"
 		:data-template="blueprint"
