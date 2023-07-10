@@ -600,7 +600,6 @@ class ViewTest extends TestCase
 
 		$expected = [
 			'current'  => true,
-			'disabled' => false,
 			'icon'     => 'home',
 			'id'       => 'site',
 			'link'     => 'site',

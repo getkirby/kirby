@@ -11,46 +11,6 @@ class SiteDropdownsTest extends AreaTestCase
 		$this->login();
 	}
 
-	public function testChangesDropdown(): void
-	{
-		$this->app([
-			'request' => [
-				'body' => [
-					'ids' => [
-						'site',
-						'pages/test'
-					]
-				]
-			],
-			'site' => [
-				'children' => [
-					['slug' => 'test']
-				],
-				'content' => [
-					'title' => 'Test site'
-				]
-			]
-		]);
-
-		$this->login();
-
-		$options = $this->dropdown('changes')['options'];
-		$expected = [
-			[
-				'icon' => 'home',
-				'text' => 'Test site',
-				'link' => '/panel/site'
-			],
-			[
-				'icon' => 'page',
-				'text' => 'test',
-				'link' => '/panel/pages/test'
-			]
-		];
-
-		$this->assertEquals($expected, $options); // cannot use strict assertion (array order)
-	}
-
 	public function testPageDropdown(): void
 	{
 		$this->app([

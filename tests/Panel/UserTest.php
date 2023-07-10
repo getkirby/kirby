@@ -70,7 +70,7 @@ class UserTest extends TestCase
 		$option = (new User($model))->dropdownOption();
 		$this->assertSame('user', $option['icon']);
 		$this->assertSame('test@getkirby.com', $option['text']);
-		$this->assertSame('/panel/users/test', $option['link']);
+		$this->assertSame('/users/test', $option['link']);
 	}
 
 	/**
