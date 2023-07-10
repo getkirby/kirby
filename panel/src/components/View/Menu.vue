@@ -1,10 +1,11 @@
 <template>
-	<nav class="k-panel-menu">
+	<nav class="k-panel-menu" :data-collapsed="!$panel.menu.isOpen">
 		<!-- Collapse/expand handle -->
-		<label class="k-panel-menu-handle">
-			<k-icon type="collapse" />
-			<input ref="handle" type="checkbox" name="menu" @input="onHandle" />
-		</label>
+		<k-button
+			icon="collapse"
+			class="k-panel-menu-handle"
+			@click="$panel.menu.toggle()"
+		/>
 
 		<!-- Search button -->
 		<k-button
@@ -25,7 +26,7 @@
 				:key="entry.id"
 				v-bind="entry"
 				:click="() => (entry.dialog ? $dialog(entry.dialog) : null)"
-				:current="entry.id === view.id"
+				:current="entry.id === $panel.view.id"
 				:title="entry.title ?? entry.text"
 			/>
 		</menu>
@@ -34,72 +35,9 @@
 
 <script>
 export default {
-	props: {
-		entries: Array,
-		view: Object
-	},
-	data() {
-		return {
-			media: null
-		};
-	},
 	computed: {
 		menus() {
-			return this.entries.split("-");
-		}
-	},
-	mounted() {
-		this.media = window.matchMedia("(max-width: 40rem)");
-		this.onCSSMediaChange(this.media);
-		this.media.addEventListener("change", this.onCSSMediaChange);
-		this.$events.on("keydown.esc", this.onEscape);
-	},
-	destroyed() {
-		this.media.removeEventListener("change", this.onCSSMediaChange);
-		this.$events.off("keydown.esc", this.onEscape);
-	},
-	methods: {
-		close() {
-			if (this.$refs.handle) {
-				this.$refs.handle.checked = false;
-				this.onHandle();
-			}
-		},
-		onClick(event) {
-			if (
-				document.querySelector(".k-panel-menu-proxy").contains(event.target) ===
-					false &&
-				this.$el.contains(event.target) === false
-			) {
-				this.close();
-			}
-		},
-		onCSSMediaChange(media) {
-			// when resizing to mobile, make sure menu starts closed
-			if (media.matches === true) {
-				this.close();
-			} else if (localStorage.getItem("kirby$menu") !== null) {
-				// only restore collapse/expanded state when not mobile
-				this.$refs.handle.checked = true;
-			}
-		},
-		onEscape() {
-			return this.media.matches ? this.close() : null;
-		},
-		onHandle() {
-			if (this.$refs.handle.checked) {
-				if (this.media.matches) {
-					document.addEventListener("click", this.onClick);
-				} else {
-					localStorage.setItem("kirby$menu", true);
-				}
-			} else {
-				if (this.media.matches) {
-					document.removeEventListener("click", this.onClick);
-				} else {
-					localStorage.removeItem("kirby$menu");
-				}
-			}
+			return this.$panel.menu.entries.split("-");
 		}
 	}
 };
@@ -124,13 +62,6 @@ export default {
 	padding: var(--spacing-3);
 	background-color: var(--menu-color-back);
 	border-right: 1px solid var(--color-gray-300);
-}
-
-.k-panel-menu-handle input {
-	position: absolute;
-	size: 0;
-	border: 0;
-	opacity: 0;
 }
 
 .k-panel-menu-search {
@@ -162,18 +93,17 @@ export default {
 		box-shadow: var(--shadow-xl);
 	}
 
-	.k-panel-menu:not(:has([name="menu"]:checked)) {
+	.k-panel-menu[data-collapsed="true"] {
 		display: none;
 	}
 
-	:where(html, body):has([name="menu"]:checked) {
+	/* TODO: currently solved in panel.menu via JS
+	:where(html, body):has(.k-panel-menu[data-collapsed="true"]) {
 		overflow: hidden;
-	}
+	} */
 
 	.k-panel-menu-handle {
-		height: var(--button-height);
-		padding-inline: var(--button-padding);
-		margin-bottom: var(--spacing-1);
+		display: none;
 	}
 
 	.k-panel-menu-search {
@@ -204,13 +134,13 @@ export default {
 }
 
 @media (min-width: 60rem) {
-	.k-panel-menu:has([name="menu"]:checked) {
+	.k-panel-menu:not([data-collapsed="true"]) {
 		--menu-buttons: block;
 
 		width: var(--menu-width);
 	}
 
-	.k-panel-menu:has([name="menu"]:checked) .k-button {
+	.k-panel-menu:not([data-collapsed="true"]) .k-button {
 		padding-inline-start: calc(var(--button-padding) + 0.125rem);
 		justify-content: flex-start;
 	}
