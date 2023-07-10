@@ -1,5 +1,6 @@
 <template>
 	<k-panel-inside
+		:data-has-tabs="tabs.length > 1"
 		:data-locked="isLocked"
 		data-id="/"
 		data-template="site"
@@ -7,6 +8,7 @@
 	>
 		<k-header
 			:editable="permissions.changeTitle && !isLocked"
+			class="k-site-view-header"
 			@edit="$dialog('site/changeTitle')"
 		>
 			{{ model.title }}
@@ -53,3 +55,10 @@ export default {
 	}
 };
 </script>
+
+<style>
+/** TODO: .k-site-view:has(.k-tabs) .k-site-view-header */
+.k-site-view[data-has-tabs="true"] .k-site-view-header {
+	margin-bottom: 0;
+}
+</style>
