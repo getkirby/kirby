@@ -247,17 +247,17 @@ export default {
 	},
 
 	/**
- * Sends a Panel request to the backend with
- * all the right headers and other options.
- *
- * It also makes sure to redirect requests,
- * which cannot be handled via fetch and
- * throws more useful errors.
- *
- * @param {String} url
- * @param {Object} options
- * @returns {Object|false} {request, response}
- */
+	 * Sends a Panel request to the backend with
+	 * all the right headers and other options.
+	 *
+	 * It also makes sure to redirect requests,
+	 * which cannot be handled via fetch and
+	 * throws more useful errors.
+	 *
+	 * @param {String} url
+	 * @param {Object} options
+	 * @returns {Object|false} {request, response}
+	 */
 	async request(url, options = {}) {
 		return request(url, {
 			referrer: this.view.path,
@@ -327,7 +327,7 @@ export default {
 		for (const key of states) {
 			// if there's a new state for the
 			// state object, call its state setter method
-			if (state[key]) {
+			if (isObject(state[key]) || Array.isArray(state[key])) {
 				this[key].set(state[key]);
 			}
 		}

@@ -7,11 +7,10 @@ export const defaults = () => {
 	};
 };
 
-export default () => {
+export default (panel) => {
 	const parent = State("menu", defaults());
 	const media = window.matchMedia("(max-width: 40rem)");
-
-	return {
+	const menu = {
 		...parent,
 
 		/**
@@ -23,7 +22,6 @@ export default () => {
 
 			if (media.matches) {
 				document.body.style.overflow = null;
-				document.removeEventListener("click", this.onBackground);
 			} else {
 				localStorage.removeItem("kirby$menu");
 			}
@@ -34,7 +32,11 @@ export default () => {
 		 * @internal
 		 * @param {Event} event
 		 */
-		onBackground(event) {
+		blur(event) {
+			if (media.matches === false) {
+				return false;
+			}
+
 			const menu = document.querySelector(".k-panel-menu");
 			const toggle = document.querySelector(".k-panel-menu-proxy");
 
@@ -50,7 +52,7 @@ export default () => {
 		 * Handles change from mobile to desktop and vice versa
 		 * @internal
 		 */
-		onResize() {
+		resize() {
 			// when resizing to mobile, make sure menu starts closed
 			if (media.matches) {
 				return this.close();
@@ -73,20 +75,20 @@ export default () => {
 
 			if (media.matches) {
 				document.body.style.overflow = "hidden";
-				document.addEventListener("click", this.onBackground);
 			} else {
 				localStorage.setItem("kirby$menu", true);
 			}
 		},
 
 		/**
-		 * Sets a new state by retrieving etnries
+		 * Sets a new state by retrieving entries
 		 *
 		 * @param {Array} entries
 		 */
 		set(entries) {
-			media.addEventListener("change", this.onResize.bind(this));
-			return parent.set.call(this, { entries });
+			this.entries = entries;
+			this.resize();
+			return this.state();
 		},
 
 		/**
@@ -101,4 +103,12 @@ export default () => {
 			}
 		}
 	};
+
+	// outside click event
+	panel.events.on("click", menu.blur.bind(menu));
+
+	// only register the resize event once
+	media.addEventListener("change", menu.resize.bind(menu));
+
+	return menu;
 };
