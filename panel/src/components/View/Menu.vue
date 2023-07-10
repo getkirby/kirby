@@ -119,9 +119,7 @@ export default {
 	} */
 
 	.k-panel-menu-handle {
-		height: var(--button-height);
-		padding-inline: var(--button-padding);
-		margin-bottom: var(--spacing-1);
+		display: none;
 	}
 
 	.k-panel-menu-search {
