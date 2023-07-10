@@ -1,6 +1,6 @@
 <template>
 	<k-panel class="k-panel-inside" tabindex="0">
-		<k-panel-menu :entries="$panel.menu" :view="$panel.view" />
+		<k-panel-menu />
 
 		<main class="k-panel-main">
 			<div class="k-panel-view">

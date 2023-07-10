@@ -1,7 +1,11 @@
 <template>
 	<div class="k-topbar">
 		<!-- mobile menu opener -->
-		<k-button icon="bars" class="k-panel-menu-proxy" @click="openMenu" />
+		<k-button
+			icon="bars"
+			class="k-panel-menu-proxy"
+			@click="$panel.menu.open()"
+		/>
 
 		<!-- breadcrumb -->
 		<k-breadcrumb
@@ -48,11 +52,6 @@ export default {
 			}
 
 			return null;
-		}
-	},
-	methods: {
-		openMenu() {
-			document.querySelector(".k-panel-menu-handle input").click();
 		}
 	}
 };

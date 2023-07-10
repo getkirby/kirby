@@ -7,6 +7,7 @@ import Events from "./events.js";
 import Notification from "./notification.js";
 import Language from "./language.js";
 import Plugins from "./plugins.js";
+import Menu from "./menu.js";
 import System from "./system.js";
 import Translation from "./translation.js";
 import { buildUrl, isUrl } from "@/helpers/url.js";
@@ -27,7 +28,6 @@ export const globals = {
 	config: {},
 	languages: [],
 	license: false,
-	menu: [],
 	multilang: false,
 	permissions: {},
 	searches: {},
@@ -49,6 +49,7 @@ export const modals = ["dialog", "drawer"];
 export const states = [
 	"dropdown",
 	"language",
+	"menu",
 	"notification",
 	"system",
 	"translation",
@@ -71,6 +72,7 @@ export default {
 
 		// state objects
 		this.language = Language(this);
+		this.menu = Menu(this);
 		this.notification = Notification(this);
 		this.system = System(this);
 		this.translation = Translation(this);
@@ -325,7 +327,7 @@ export default {
 		for (const key of states) {
 			// if there's a new state for the
 			// state object, call its state setter method
-			if (isObject(state[key]) === true) {
+			if (state[key]) {
 				this[key].set(state[key]);
 			}
 		}
