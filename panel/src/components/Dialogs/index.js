@@ -1,6 +1,10 @@
 import Elements from "./Elements/index.js";
 
+/** Dialog foundation */
 import Dialog from "./Dialog.vue";
+
+/** Custom dialogs */
+import ChangesDialog from "./ChangesDialog.vue";
 import EmailDialog from "./EmailDialog.vue";
 import ErrorDialog from "./ErrorDialog.vue";
 import FiberDialog from "./FiberDialog.vue";
@@ -24,6 +28,7 @@ export default {
 		app.use(Elements);
 
 		app.component("k-dialog", Dialog);
+		app.component("k-changes-dialog", ChangesDialog);
 		app.component("k-email-dialog", EmailDialog);
 		app.component("k-error-dialog", ErrorDialog);
 		app.component("k-fiber-dialog", FiberDialog);

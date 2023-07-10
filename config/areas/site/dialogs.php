@@ -7,6 +7,7 @@ use Kirby\Cms\Response;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
+use Kirby\Panel\ChangesDialog;
 use Kirby\Panel\Field;
 use Kirby\Panel\PageCreateDialog;
 use Kirby\Panel\Panel;
@@ -610,9 +611,10 @@ return [
 	'changes' => [
 		'pattern' => 'changes',
 		'load'    => function () {
-			return [
-				'component' => 'k-form-indicator'
-			];
+			return (new ChangesDialog())->load();
 		},
+		'submit' => function () {
+			return (new ChangesDialog())->submit(get('ids'));
+		}
 	],
 ];
