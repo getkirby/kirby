@@ -34,7 +34,7 @@ class Find
 		$parent   = empty($path) ? null : static::parent($path);
 		$file     = App::instance()->file($filename, $parent);
 
-		if ($file?->isReadable() === true) {
+		if ($file?->isAccessible() === true) {
 			return $file;
 		}
 

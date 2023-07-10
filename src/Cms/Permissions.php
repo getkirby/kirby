@@ -29,10 +29,12 @@ class Permissions
 			'users'     => true,
 		],
 		'files' => [
+			'access'     	 => true,
 			'changeName'     => true,
 			'changeTemplate' => true,
 			'create'         => true,
 			'delete'         => true,
+			'list'           => true,
 			'read'           => true,
 			'replace'        => true,
 			'update'         => true

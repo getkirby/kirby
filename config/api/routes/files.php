@@ -128,7 +128,7 @@ return [
 				->index(true)
 				->filter('isListable', true)
 				->files()
-				->filter('isReadable', true);
+				->filter('isListable', true);
 
 			if ($this->requestMethod() === 'GET') {
 				return $files->search($this->requestQuery('q'));
