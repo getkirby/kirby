@@ -322,10 +322,45 @@ class View
 		array|null $permissions = [],
 		string|null $current = null
 	): array {
-		$menu = [];
+		$entries = [];
+		$ids     = App::instance()->option('panel.menu');
+
+		if ($ids === null) {
+			$defaults    = ['site', 'users', 'languages', 'system'];
+			$additionals = array_diff(array_keys($areas), $defaults);
+			$ids         = array_merge($defaults, $additionals);
+		}
+
+		if (in_array('license', $ids) === false) {
+			$ids[] = 'license';
+		}
 
 		// areas
-		foreach ($areas as $areaId => $area) {
+		foreach ($ids as $areaId => $area) {
+			// convert simple id entry
+			if (is_numeric($areaId) === true) {
+				$areaId = $area;
+				$area   = $areas[$areaId] ?? null;
+			}
+
+			if ($areaId === '-') {
+				$entries[] = '-';
+				continue;
+			}
+
+			if ($area === null) {
+				continue;
+			}
+
+			if (is_array($area) === true) {
+				$area = array_merge(
+					$areas[$areaId] ?? [],
+					['menu' => true],
+					$area
+				);
+				$area = Panel::area($areaId, $area);
+			}
+
 			$access = $permissions['access'][$areaId] ?? true;
 
 			// areas without access permissions get skipped entirely
@@ -333,45 +368,51 @@ class View
 				continue;
 			}
 
-			// fetch custom menu settings from the area definition
-			$menuSetting = $area['menu'] ?? false;
+			// check menu setting from the area definition
+			$menu = $area['menu'] ?? false;
 
-			// menu settings can be a callback that can return true, false or disabled
-			if ($menuSetting instanceof Closure) {
-				$menuSetting = $menuSetting($areas, $permissions, $current);
+			// menu setting can be a callback
+			// that returns true, false or 'disabled'
+			if ($menu instanceof Closure) {
+				$menu = $menu($areas, $permissions, $current);
 			}
 
 			// false will remove the area entirely just like with
 			// disabled permissions
-			if ($menuSetting === false) {
+			if ($menu === false) {
 				continue;
 			}
 
-			// resolve menu settings for simple disabled string
-			$menuSetting = match ($menuSetting) {
+			$menu = match ($menu) {
 				'disabled' => ['disabled' => true],
 				true       => [],
-				default    => $menuSetting
+				default    => $menu
 			};
 
-			$menu[] = array_merge([
-				'current'  => $areaId === $current,
-				'icon'     => $area['icon'],
+			$entry = array_merge([
+				'current'  => $area['current'] ?? $areaId === $current,
+				'icon'     => $area['icon'] ?? 'blank',
 				'id'       => $areaId,
 				'link'     => $area['link'],
 				'text'     => $area['label'],
-			], $menuSetting);
+			], $menu);
+
+			if ($entry['current'] instanceof Closure) {
+				$entry['current'] = $entry['current']($current);
+			}
+
+			$entries[] = $entry;
 		}
 
-		$menu[] = '-';
-		$menu[] = [
+		$entries[] = '-';
+		$entries[] = [
 			'icon'     => 'edit-sheet',
 			'id'       => 'changes',
 			'dialog'   => 'changes',
 			'text'     => I18n::translate('changes'),
 		];
 
-		$menu[] = [
+		$entries[] = [
 			'current'  => $current === 'account',
 			'icon'     => 'account',
 			'id'       => 'account',
@@ -381,13 +422,14 @@ class View
 		];
 
 		// logout
-		$menu[] = [
+		$entries[] = [
 			'icon' => 'logout',
 			'id'   => 'logout',
 			'link' => 'logout',
 			'text' => I18n::translate('logout')
 		];
-		return $menu;
+
+		return $entries;
 	}
 
 	/**

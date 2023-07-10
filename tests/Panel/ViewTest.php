@@ -554,6 +554,13 @@ class ViewTest extends TestCase
 	{
 		$menu = View::menu();
 
+		$changes = [
+			'icon'     => 'edit-sheet',
+			'id'       => 'changes',
+			'dialog'   => 'changes',
+			'text'     => 'Changes'
+		];
+
 		$account = [
 			'current'  => false,
 			'icon'     => 'account',
@@ -572,6 +579,7 @@ class ViewTest extends TestCase
 
 		$this->assertCount(4, $menu);
 		$this->assertSame('-', $menu[0]);
+		$this->assertSame($changes, $menu[1]);
 		$this->assertSame($account, $menu[2]);
 		$this->assertSame($logout, $menu[3]);
 	}
@@ -639,6 +647,30 @@ class ViewTest extends TestCase
 	/**
 	 * @covers ::menu
 	 */
+	public function testMenuCurrentCallback()
+	{
+		$unit = $this;
+		$menu = View::menu(
+			[
+				'site' => [
+					'icon'    => 'home',
+					'label'   => 'Site',
+					'link'    => 'site',
+					'current' => function (string|null $current) use ($unit) {
+						$unit->assertNull($current);
+						return true;
+					}
+				]
+			],
+		);
+
+		$this->assertCount(5, $menu);
+		$this->assertSame('Site', $menu[0]['text']);
+	}
+
+	/**
+	 * @covers ::menu
+	 */
 	public function testMenuCallback()
 	{
 		$menu = View::menu(
@@ -667,15 +699,34 @@ class ViewTest extends TestCase
 					'icon'  => 'home',
 					'label' => 'Site',
 					'link'  => 'site',
-					'menu'  => function () {
-						return 'disabled';
-					},
+					'menu'  => fn () => 'disabled',
 				]
 			],
 		);
 
 		$this->assertCount(5, $menu);
 		$this->assertTrue($menu[0]['disabled']);
+	}
+
+	/**
+	 * @covers ::menu
+	 */
+	public function testMenuCallbackAddtionalOptions()
+	{
+		$menu = View::menu(
+			[
+				'site' => [
+					'icon'  => 'home',
+					'label' => 'Site',
+					'menu'  => fn () => [
+						'dialog' => 'test'
+					],
+				]
+			],
+		);
+
+		$this->assertCount(5, $menu);
+		$this->assertSame('test', $menu[0]['dialog']);
 	}
 
 	/**
@@ -689,9 +740,7 @@ class ViewTest extends TestCase
 					'icon'  => 'home',
 					'label' => 'Site',
 					'link'  => 'site',
-					'menu'  => function () {
-						return false;
-					},
+					'menu'  => fn () => false
 				]
 			],
 		);

@@ -44,10 +44,18 @@ export default {
 		 */
 		current: [String, Boolean],
 		/**
+		 * Name/path of a dialog to open on click
+		 */
+		dialog: String,
+		/**
 		 * A disabled button will have no pointer events and
 		 * the opacity is be reduced.
 		 */
 		disabled: Boolean,
+		/**
+		 * Name/path of a drawer to open on click
+		 */
+		drawer: String,
 		/**
 		 * Whether the button opens a dropdown
 		 */
@@ -185,6 +193,14 @@ export default {
 			if (this.disabled) {
 				e.preventDefault();
 				return false;
+			}
+
+			if (this.dialog) {
+				return this.$dialog(this.dialog);
+			}
+
+			if (this.drawer) {
+				return this.$drawer(this.drawer);
 			}
 
 			this.click?.(e);

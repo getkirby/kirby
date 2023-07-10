@@ -58,9 +58,15 @@ class Panel
 		$areas  = $kirby->load()->areas();
 
 		// the system is not ready
-		if ($system->isOk() === false || $system->isInstalled() === false) {
+		if (
+			$system->isOk() === false ||
+			$system->isInstalled() === false
+		) {
 			return [
-				'installation' => static::area('installation', $areas['installation']),
+				'installation' => static::area(
+					'installation',
+					$areas['installation']
+				),
 			];
 		}
 
@@ -82,24 +88,8 @@ class Panel
 			unset($areas['languages']);
 		}
 
-		$menu = $kirby->option('panel.menu', [
-			'site',
-			'languages',
-			'users',
-			'system',
-		]);
-
 		$result = [];
 
-		// add the sorted areas
-		foreach ($menu as $id) {
-			if ($area = ($areas[$id] ?? null)) {
-				$result[$id] = static::area($id, $area);
-				unset($areas[$id]);
-			}
-		}
-
-		// add the remaining areas
 		foreach ($areas as $id => $area) {
 			$result[$id] = static::area($id, $area);
 		}
