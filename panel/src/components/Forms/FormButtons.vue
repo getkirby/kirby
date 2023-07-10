@@ -4,24 +4,27 @@
 		<div v-if="message" class="k-help" v-html="message" />
 
 		<k-button-group layout="collapsed">
+			<template v-if="mode === 'changes'">
+				<k-button
+					icon="undo"
+					size="sm"
+					variant="filled"
+					:disabled="disabled"
+					:responsive="true"
+					:text="$t('revert')"
+					:theme="theme"
+					@click="revert"
+				/>
+			</template>
+
 			<k-button
 				v-bind="button"
 				size="sm"
 				variant="filled"
 				:disabled="disabled"
+				:responsive="true"
 				:theme="theme"
 			/>
-			<template v-if="mode">
-				<k-button
-					icon="dots"
-					size="sm"
-					variant="filled"
-					:disabled="disabled"
-					:theme="theme"
-					@click="$refs.dropdown.toggle()"
-				/>
-				<k-dropdown-content ref="dropdown" :options="dropdown" align-x="end" />
-			</template>
 		</k-button-group>
 	</nav>
 </template>
@@ -76,7 +79,7 @@ export default {
 
 			if (this.mode === "changes") {
 				return {
-					icon: "circle-nested",
+					icon: "check",
 					text: this.$t("save"),
 					disabled: this.isDisabled,
 					click: this.onSave
