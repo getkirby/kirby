@@ -6,7 +6,6 @@ import Calendar from "./Calendar.vue";
 import Counter from "./Counter.vue";
 import Form from "./Form.vue";
 import FormButtons from "./FormButtons.vue";
-import FormIndicator from "./FormIndicator.vue";
 import Field from "./Field.vue";
 import Fieldset from "./Fieldset.vue";
 import Input from "./Input.vue";
@@ -45,7 +44,6 @@ export default {
 		app.component("k-autocomplete", Autocomplete);
 		app.component("k-form", Form);
 		app.component("k-form-buttons", FormButtons);
-		app.component("k-form-indicator", FormIndicator);
 		app.component("k-field", Field);
 		app.component("k-fieldset", Fieldset);
 		app.component("k-input", Input);

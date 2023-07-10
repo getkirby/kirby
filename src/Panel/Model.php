@@ -83,9 +83,10 @@ abstract class Model
 	public function dropdownOption(): array
 	{
 		return [
-			'icon' => 'page',
-			'link' => $this->url(),
-			'text' => $this->model->id(),
+			'icon'  => 'page',
+			'image' => $this->image(['back' => 'black']),
+			'link'  => $this->url(true),
+			'text'  => $this->model->id(),
 		];
 	}
 
