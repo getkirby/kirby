@@ -566,6 +566,7 @@ class ApiTest extends TestCase
 				]
 			]
 		]);
+		$app->impersonate('kirby');
 
 		$page = $app->page('test');
 		$response = $app->api()->fieldApi($page, 'cover');

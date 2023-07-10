@@ -503,10 +503,12 @@ class FileTest extends TestCase
 		$file->kirby()->impersonate('kirby');
 
 		$expected = [
+			'access'      	 => true,
 			'changeName'     => true,
 			'changeTemplate' => false,
 			'create'         => true,
 			'delete'         => true,
+			'list'         	 => true,
 			'read'           => true,
 			'replace'        => true,
 			'update'         => true,
@@ -534,10 +536,12 @@ class FileTest extends TestCase
 
 		// without override
 		$expected = [
+			'access'     	 => false,
 			'changeName'     => false,
 			'changeTemplate' => false,
 			'create'         => false,
 			'delete'         => false,
+			'list'           => false,
 			'read'           => false,
 			'replace'        => false,
 			'update'         => false,
@@ -548,10 +552,12 @@ class FileTest extends TestCase
 
 		// with override
 		$expected = [
+			'access'     	 => false,
 			'changeName'     => false,
 			'changeTemplate' => false,
 			'create'         => false,
 			'delete'         => true,
+			'list'           => false,
 			'read'           => false,
 			'replace'        => false,
 			'update'         => false,
@@ -577,10 +583,12 @@ class FileTest extends TestCase
 		$file->kirby()->impersonate('kirby');
 
 		$expected = [
+			'access'     	 => true,
 			'changeName'     => true,
 			'changeTemplate' => false,
 			'create'         => true,
 			'delete'         => true,
+			'list'           => true,
 			'read'           => true,
 			'replace'        => false,
 			'update'         => true,
@@ -617,10 +625,12 @@ class FileTest extends TestCase
 		$file->kirby()->impersonate('kirby');
 
 		$expected = [
+			'access'     	 => true,
 			'changeName'     => true,
 			'changeTemplate' => false,
 			'create'         => true,
 			'delete'         => true,
+			'list'           => true,
 			'read'           => true,
 			'replace'        => true,
 			'update'         => true,
@@ -659,10 +669,12 @@ class FileTest extends TestCase
 		$file->kirby()->impersonate('kirby');
 
 		$expected = [
+			'access'     	 => true,
 			'changeName'     => true,
 			'changeTemplate' => false,
 			'create'         => true,
 			'delete'         => true,
+			'list'           => true,
 			'read'           => true,
 			'replace'        => false,
 			'update'         => true,

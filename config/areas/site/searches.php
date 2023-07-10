@@ -37,6 +37,7 @@ return [
 				->index(true)
 				->filter('isListable', true)
 				->files()
+				->filter('isListable', true)
 				->search($query)
 				->paginate($limit, $page);
 

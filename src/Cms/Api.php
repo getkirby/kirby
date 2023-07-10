@@ -99,7 +99,7 @@ class Api extends BaseApi
 	 */
 	public function files(string $path): Files
 	{
-		return $this->parent($path)->files()->filter('isReadable', true);
+		return $this->parent($path)->files()->filter('isAccessible', true);
 	}
 
 	/**
