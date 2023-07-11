@@ -75,6 +75,8 @@ export default {
 
 <style>
 .k-login-dialog {
+	--dialog-color-back: var(--color-white);
+	--dialog-shadow: var(--shadow);
 	container-type: inline-size;
 }
 

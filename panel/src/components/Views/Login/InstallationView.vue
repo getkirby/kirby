@@ -179,6 +179,8 @@ export default {
 
 <style>
 .k-installation-dialog {
+	--dialog-color-back: var(--color-white);
+	--dialog-shadow: var(--shadow);
 	container-type: inline-size;
 }
 .k-installation-view .k-button {
@@ -189,6 +191,8 @@ export default {
 	margin-top: var(--spacing-10);
 }
 .k-installation-view .k-headline {
+	font-weight: var(--font-semi);
+	margin-top: -0.5rem;
 	margin-bottom: 0.75rem;
 }
 .k-installation-issues {
@@ -198,9 +202,8 @@ export default {
 .k-installation-issues li {
 	position: relative;
 	padding: var(--spacing-6);
-	background: var(--color-white);
+	background: var(--color-red-300);
 	padding-inline-start: 3.5rem;
-	box-shadow: var(--shadow);
 	border-radius: var(--rounded);
 }
 .k-installation-issues .k-icon {
@@ -209,13 +212,13 @@ export default {
 	inset-inline-start: 1.5rem;
 }
 .k-installation-issues .k-icon {
-	color: var(--color-red-600);
+	color: var(--color-red-700);
 }
 .k-installation-issues li:not(:last-child) {
 	margin-bottom: 2px;
 }
 .k-installation-issues li code {
 	font: inherit;
-	color: var(--color-red-600);
+	color: var(--color-red-700);
 }
 </style>
