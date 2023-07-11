@@ -157,9 +157,18 @@ export default {
 		justify-content: flex-start;
 	}
 
-	.k-panel-menu:hover .k-panel-menu-toggle {
+	.k-panel-menu .k-panel-menu-toggle {
 		display: flex;
+		opacity: 0;
+		transition: opacity 0.2s ease-in-out;
+		transition-delay: 0.2s;
 	}
+	.k-panel-menu:hover .k-panel-menu-toggle {
+		opacity: 1;
+		transition: opacity 0.1s ease-in-out;
+		transition-delay: 0s;
+	}
+
 	/** invisible space on the right of the sidebar that help with hover state */
 	.k-panel-menu::after {
 		content: "";
