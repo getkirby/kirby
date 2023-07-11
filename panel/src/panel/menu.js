@@ -42,7 +42,7 @@ export default (panel) => {
 			this.isOpen = false;
 
 			if (!media.matches) {
-				localStorage.removeItem("kirby$menu");
+				localStorage.setItem("kirby$menu", true);
 			}
 		},
 
@@ -67,7 +67,7 @@ export default (panel) => {
 			this.isOpen = true;
 
 			if (!media.matches) {
-				localStorage.setItem("kirby$menu", true);
+				localStorage.removeItem("kirby$menu");
 			}
 		},
 
@@ -83,9 +83,9 @@ export default (panel) => {
 
 			// only restore collapse/expanded state when not mobile
 			if (localStorage.getItem("kirby$menu") !== null) {
-				this.isOpen = true;
-			} else {
 				this.isOpen = false;
+			} else {
+				this.isOpen = true;
 			}
 		},
 
