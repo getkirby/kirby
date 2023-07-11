@@ -1,9 +1,10 @@
 <template>
 	<nav class="k-panel-menu" :data-collapsed="!$panel.menu.isOpen">
-		<!-- Collapse/expand handle -->
+		<!-- Collapse/expand toggle -->
 		<k-button
-			icon="collapse"
-			class="k-panel-menu-handle"
+			:icon="$panel.menu.isOpen ? 'angle-left' : 'angle-right'"
+			size="xs"
+			class="k-panel-menu-toggle"
 			@click="$panel.menu.toggle()"
 		/>
 
@@ -46,6 +47,8 @@ export default {
 <style>
 :root {
 	--menu-color-back: var(--color-gray-250);
+	--menu-color-border: var(--color-gray-300);
+	--menu-toggle-width: 1.15rem;
 	--menu-width: 12rem;
 }
 
@@ -53,20 +56,35 @@ export default {
 	height: 100vh;
 	height: 100dvh;
 	flex-shrink: 0;
-	overflow-x: hidden;
-	overflow-y: auto;
 	overscroll-behavior: contain;
 	z-index: var(--z-navigation);
 	display: flex;
 	flex-direction: column;
 	padding: var(--spacing-3);
 	background-color: var(--menu-color-back);
-	border-right: 1px solid var(--color-gray-300);
+	border-right: 1px solid var(--menu-color-border);
 }
 
 .k-panel-menu-search {
 	margin-bottom: var(--spacing-12);
 }
+.k-panel-menu-toggle {
+	--button-height: var(--height-sm);
+	--button-color-icon: var(--color-gray-500);
+
+	display: none;
+	position: absolute;
+	z-index: var(--z-dialog);
+	width: var(--menu-toggle-width);
+	inset-block-start: var(--spacing-3);
+	inset-inline-end: calc(-1 * var(--menu-toggle-width));
+	border-block: 1px solid var(--menu-color-border);
+	border-inline-end: 1px solid var(--menu-color-border);
+	background-color: var(--menu-color-back);
+	border-start-start-radius: 0;
+	border-end-start-radius: 0;
+}
+
 .k-panel-menu menu + menu {
 	margin-top: var(--spacing-6);
 }
@@ -97,12 +115,11 @@ export default {
 		display: none;
 	}
 
-	/* TODO: currently solved in panel.menu via JS
 	:where(html, body):has(.k-panel-menu[data-collapsed="true"]) {
 		overflow: hidden;
-	} */
+	}
 
-	.k-panel-menu-handle {
+	.k-panel-menu-collapse {
 		display: none;
 	}
 
@@ -126,8 +143,6 @@ export default {
 		width: calc(2.25rem + 2 * var(--spacing-3));
 	}
 
-	.k-panel-menu-handle,
-	.k-panel-menu-handle .k-icon,
 	.k-panel-menu-proxy {
 		display: none;
 	}
@@ -145,29 +160,16 @@ export default {
 		justify-content: flex-start;
 	}
 
-	.k-panel-menu-handle {
-		position: absolute;
-		inset-block-start: calc(50% - 1.5rem);
-		inset-inline-end: 0;
-		width: 12px;
-		height: 3rem;
-		z-index: var(--z-dialog);
+	.k-panel-menu:hover .k-panel-menu-toggle {
+		display: flex;
 	}
-	.k-panel-menu-handle::before {
+	/** invisible space on the right of the sidebar that help with hover state */
+	.k-panel-menu::after {
 		content: "";
 		position: absolute;
-		top: 0.5rem;
-		inset-inline-end: 4px;
-		width: 4px;
-		height: 2rem;
-		background-color: var(--color-gray-400);
-		border-radius: var(--rounded);
-	}
-	.k-panel-menu-handle * {
-		cursor: pointer;
-	}
-	.k-panel-menu:hover .k-panel-menu-handle {
-		display: block;
+		inset-block: 0;
+		width: var(--menu-toggle-width);
+		inset-inline-end: calc(-1 * var(--menu-toggle-width));
 	}
 }
 </style>

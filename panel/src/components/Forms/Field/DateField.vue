@@ -2,6 +2,7 @@
 	<k-field v-bind="$props" :input="_uid" class="k-date-field">
 		<div
 			ref="body"
+			:data-has-time="Boolean(time)"
 			:data-invalid="!novalidate && isInvalid"
 			class="k-date-field-body"
 			data-theme="field"
@@ -271,7 +272,8 @@ export default {
 }
 
 @container (min-width: 20rem) {
-	.k-date-field-body:has(.k-time-input) {
+	/** TODO: .k-date-field-body:has(.k-time-input) */
+	.k-date-field-body[data-has-time="true"] {
 		grid-template-columns: 1fr minmax(6rem, 9rem);
 	}
 }

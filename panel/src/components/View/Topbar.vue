@@ -4,7 +4,7 @@
 		<k-button
 			icon="bars"
 			class="k-panel-menu-proxy"
-			@click="$panel.menu.open()"
+			@click="$panel.menu.toggle()"
 		/>
 
 		<!-- breadcrumb -->
@@ -72,6 +72,7 @@ export default {
 
 .k-topbar .k-panel-menu-proxy {
 	margin-inline-end: var(--spacing-2);
+	color: var(--color-gray-400);
 }
 .k-topbar-spacer {
 	flex-grow: 1;

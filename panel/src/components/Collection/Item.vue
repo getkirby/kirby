@@ -139,6 +139,12 @@ export default {
 .k-item:has(a:focus) {
 	outline: 2px solid var(--color-focus);
 }
+/** TODO: remove when firefox supports :has() */
+@supports not selector(:has(*)) {
+	.k-item:focus-within {
+		outline: 2px solid var(--color-focus);
+	}
+}
 
 .k-item .k-icon-frame {
 	--back: var(--color-gray-300);

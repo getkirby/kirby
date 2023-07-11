@@ -41,10 +41,8 @@ export default (panel) => {
 		close() {
 			this.isOpen = false;
 
-			if (media.matches) {
-				document.body.style.overflow = null;
-			} else {
-				localStorage.removeItem("kirby$menu");
+			if (media.matches === false) {
+				localStorage.setItem("kirby$menu", true);
 			}
 		},
 
@@ -68,10 +66,8 @@ export default (panel) => {
 		open() {
 			this.isOpen = true;
 
-			if (media.matches) {
-				document.body.style.overflow = "hidden";
-			} else {
-				localStorage.setItem("kirby$menu", true);
+			if (media.matches === false) {
+				localStorage.removeItem("kirby$menu");
 			}
 		},
 
@@ -87,9 +83,9 @@ export default (panel) => {
 
 			// only restore collapse/expanded state when not mobile
 			if (localStorage.getItem("kirby$menu") !== null) {
-				this.isOpen = true;
-			} else {
 				this.isOpen = false;
+			} else {
+				this.isOpen = true;
 			}
 		},
 

@@ -8,7 +8,6 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 import externalGlobals from "rollup-plugin-external-globals";
 
 import postcssAutoprefixer from "autoprefixer";
-import postcssHas from "css-has-pseudo";
 import postcssNano from "cssnano";
 
 let custom;
@@ -104,7 +103,7 @@ export default defineConfig(({ command }) => {
 		},
 		css: {
 			postcss: {
-				plugins: [postcssAutoprefixer(), postcssHas(), postcssNano()]
+				plugins: [postcssAutoprefixer(), postcssNano()]
 			}
 		},
 		resolve: {
