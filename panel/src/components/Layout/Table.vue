@@ -352,7 +352,9 @@ export default {
 }
 .k-table[data-invalid] {
 	border: 0;
-	box-shadow: var(--color-red-900) 0 0 0 1px, var(--color-red-900) 0 0 3px 2px;
+	box-shadow:
+		var(--color-red-900) 0 0 0 1px,
+		var(--color-red-900) 0 0 3px 2px;
 }
 
 /** Cells **/
@@ -532,10 +534,12 @@ td.k-table-index-column {
 	border-end-end-radius: var(--rounded);
 }
 .k-table-pagination.k-pagination .k-button {
+	--button-color-back: transparent;
 	padding: 0 0.75rem;
 	display: flex;
 	align-items: center;
 	line-height: 1;
 	height: var(--table-row-height);
+	border-left: 0 !important;
 }
 </style>
