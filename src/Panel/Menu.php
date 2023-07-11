@@ -40,13 +40,8 @@ class Menu
 		if ($areas === null) {
 			// ensure that some defaults are on top in the right order
 			$defaults    = ['site', 'users', 'languages', 'system'];
-			// add all other areas after that, except license as this will
-			// go into the options section
-			$additionals = array_diff(
-				array_keys($this->areas),
-				$defaults,
-				['license']
-			);
+			// add all other areas after that
+			$additionals = array_diff(array_keys($this->areas), $defaults);
 			$areas       = array_merge($defaults, $additionals);
 		}
 
@@ -221,9 +216,13 @@ class Menu
 			]
 		];
 
-		if ($license = $this->areas['license'] ?? null) {
-			$license = $this->entry($license);
-			array_unshift($options, $license);
+		if (App::instance()->system()->license() === false) {
+			array_unshift($options, [
+				'icon'     => 'key',
+				'id'       => 'registration',
+				'dialog'   => 'registration',
+				'text'     => I18n::translate('license.register'),
+			]);
 		}
 
 		return $options;

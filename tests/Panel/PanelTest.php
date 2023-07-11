@@ -114,14 +114,12 @@ class PanelTest extends TestCase
 		$this->assertArrayHasKey('users', $areas);
 		$this->assertArrayHasKey('account', $areas);
 		$this->assertArrayHasKey('logout', $areas);
-		$this->assertCount(7, $areas);
+		$this->assertCount(6, $areas);
 
 		// authenticated with plugins
 		$app = $this->app->clone([
 			'areas' => [
-				'todos' => function () {
-					return [];
-				}
+				'todos' => fn () => []
 			]
 		]);
 

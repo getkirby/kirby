@@ -65,9 +65,9 @@ class MenuTest extends TestCase
 	{
 		$menu  = new Menu(
 			[
-				'license' => [
-					'label' => 'Register',
-					'link'  => 'key'
+				'foo' => [
+					'label' => 'Bar',
+					'link'  => 'heart'
 				],
 				'site' => [
 					'icon'  => 'home',
@@ -77,7 +77,7 @@ class MenuTest extends TestCase
 			]
 		);
 		$areas = $menu->areas();
-		$this->assertSame(['site'], array_column($areas, 'id'));
+		$this->assertSame(['site', 'foo'], array_column($areas, 'id'));
 	}
 
 	/**
@@ -234,9 +234,10 @@ class MenuTest extends TestCase
 		$this->assertSame('site', $entries[0]['id']);
 		$this->assertTrue($entries[0]['current']);
 		$this->assertSame('-', $entries[1]);
-		$this->assertSame('changes', $entries[2]['id']);
-		$this->assertSame('account', $entries[3]['id']);
-		$this->assertSame('logout', $entries[4]['id']);
+		$this->assertSame('registration', $entries[2]['id']);
+		$this->assertSame('changes', $entries[3]['id']);
+		$this->assertSame('account', $entries[4]['id']);
+		$this->assertSame('logout', $entries[5]['id']);
 	}
 
 	/**
@@ -281,6 +282,13 @@ class MenuTest extends TestCase
 	 */
 	public function testOptions()
 	{
+		$registration = [
+			'icon'     => 'key',
+			'id'       => 'registration',
+			'dialog'   => 'registration',
+			'text'     => 'Register'
+		];
+
 		$changes = [
 			'icon'     => 'edit-sheet',
 			'id'       => 'changes',
@@ -306,21 +314,7 @@ class MenuTest extends TestCase
 
 		$menu    = new Menu();
 		$options = $menu->options();
-		$this->assertSame($changes, $options[0]);
-		$this->assertSame($account, $options[1]);
-		$this->assertSame($logout, $options[2]);
-
-		// with register
-		$menu    = new Menu([
-			'license' => [
-				'id'     => 'license',
-				'label'  => 'Register',
-				'dialog' => 'registration',
-				'menu'   => true
-			]
-		]);
-		$options = $menu->options();
-		$this->assertSame('license', $options[0]['id']);
+		$this->assertSame($registration, $options[0]);
 		$this->assertSame($changes, $options[1]);
 		$this->assertSame($account, $options[2]);
 		$this->assertSame($logout, $options[3]);
