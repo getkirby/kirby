@@ -173,7 +173,7 @@ export default {
 	color: inherit;
 }
 .k-number-input::placeholder {
-	color: var(--color-gray-500);
+	color: var(--input-placeholder);
 }
 .k-number-input:focus {
 	outline: 0;

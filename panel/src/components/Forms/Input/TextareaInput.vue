@@ -316,7 +316,7 @@ export default {
 	min-height: var(--size);
 }
 .k-textarea-input-native::placeholder {
-	color: var(--color-gray-500);
+	color: var(--input-placeholder);
 }
 .k-textarea-input-native:focus {
 	outline: 0;

@@ -246,6 +246,8 @@ export default {
 }
 
 .k-models-section-search.k-input {
+	--input-placeholder: var(--color-gray-600);
+
 	margin-bottom: var(--spacing-3);
 	background: var(--color-gray-300);
 	padding: var(--spacing-2) var(--spacing-3);

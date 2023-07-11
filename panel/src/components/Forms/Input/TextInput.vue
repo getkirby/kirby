@@ -122,6 +122,10 @@ export default {
 </script>
 
 <style>
+:root {
+	--input-placeholder: var(--color-gray-500);
+}
+
 .k-text-input {
 	width: 100%;
 	border: 0;
@@ -131,7 +135,7 @@ export default {
 	font-variant-numeric: tabular-nums;
 }
 .k-text-input::placeholder {
-	color: var(--color-gray-500);
+	color: var(--input-placeholder);
 }
 .k-text-input:focus {
 	outline: 0;
