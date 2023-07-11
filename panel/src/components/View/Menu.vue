@@ -70,7 +70,7 @@ export default {
 }
 .k-panel-menu-toggle {
 	--button-height: var(--height-sm);
-	--button-color-icon: var(--color-gray-400);
+	--button-color-icon: var(--color-gray-500);
 
 	display: none;
 	position: absolute;
