@@ -64,16 +64,13 @@ export default {
 	margin-bottom: var(--spacing-8);
 	display: flex;
 	align-items: center;
+	gap: var(--spacing-1);
 }
 
 .k-topbar-breadcrumb {
 	margin-inline-start: -2px;
 }
 
-.k-topbar .k-panel-menu-proxy {
-	margin-inline-end: var(--spacing-2);
-	color: var(--color-gray-400);
-}
 .k-topbar-spacer {
 	flex-grow: 1;
 }
