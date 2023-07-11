@@ -9,7 +9,7 @@ export const defaults = () => {
 
 export default (panel) => {
 	const parent = State("menu", defaults());
-	const media = window.matchMedia("(max-width: 40rem)");
+	const media = window.matchMedia?.("(max-width: 40rem)");
 	const menu = {
 		...parent,
 
@@ -120,7 +120,7 @@ export default (panel) => {
 	panel.events.on("click", menu.blur.bind(menu));
 
 	// only register the resize event once
-	media.addEventListener("change", menu.resize.bind(menu));
+	media?.addEventListener("change", menu.resize.bind(menu));
 
 	return menu;
 };

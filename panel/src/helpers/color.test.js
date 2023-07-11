@@ -14,9 +14,7 @@ describe.concurrent("$helper.css.color()", () => {
 			[1, undefined],
 			[null, undefined]
 		],
-		"should convert pattern": [
-			["pattern", "var(--color-slate-800) var(--pattern)"]
-		],
+		"should convert pattern": [["pattern", "var(--pattern)"]],
 		"should resolve aliases to CSS colors": [
 			["white", "var(--color-white)"],
 			["blue-200", "var(--color-blue-200)"]

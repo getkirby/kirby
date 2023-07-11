@@ -23,7 +23,7 @@ describe.concurrent("panel", () => {
 		expect(state.language).toStrictEqual(panel.language.state());
 		expect(state.languages).toStrictEqual([]);
 		expect(state.license).toStrictEqual(false);
-		expect(state.menu).toStrictEqual([]);
+		expect(state.menu).toStrictEqual(panel.menu.state());
 		expect(state.multilang).toStrictEqual(false);
 		expect(state.notification).toStrictEqual(panel.notification.state());
 		expect(state.permissions).toStrictEqual({});

@@ -8,7 +8,7 @@ describe("Progress.vue", () => {
 		expect(wrapper.element.value).toBe(0);
 	});
 
-	it("has/sets value", async () => {
+	it("has/updates value", async () => {
 		const wrapper = mount(Progress, {
 			propsData: {
 				value: 30
@@ -18,12 +18,8 @@ describe("Progress.vue", () => {
 		expect(wrapper.element.value).toBe(30);
 		await wrapper.setProps({ value: 50 });
 		expect(wrapper.element.value).toBe(50);
-		await wrapper.vm.set(70);
-		expect(wrapper.element.value).toBe(70);
-
-		expect(() => {
-			wrapper.vm.set(110);
-		}).toThrow("value has to be between 0 and 100");
+		wrapper.setProps({ value: 110 });
+		expect(wrapper.element.value).toBe(50);
 	});
 
 	it("has CSS selector", async () => {

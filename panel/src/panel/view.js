@@ -50,6 +50,7 @@ export default (panel) => {
 		 * Submitting view form values is not
 		 * implemented yet
 		 */
+		/* c8 ignore next 3 */
 		async submit() {
 			throw new Error("Not yet implemented");
 		}
