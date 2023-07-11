@@ -102,7 +102,8 @@ export default {
 				buttons.push({
 					icon: this.addIcon,
 					text: this.$t("add"),
-					click: this.onAdd
+					click: this.onAdd,
+					responsive: true
 				});
 			}
 
