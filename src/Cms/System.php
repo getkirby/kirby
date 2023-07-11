@@ -480,7 +480,7 @@ class System
 		Json::write($file, $json);
 
 		// clear the license cache
-		$this->$license = null;
+		$this->license = null;
 
 		if ($this->license() === false) {
 			throw new InvalidArgumentException([
