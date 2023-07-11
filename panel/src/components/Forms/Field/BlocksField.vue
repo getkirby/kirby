@@ -4,6 +4,7 @@
 			<k-button-group layout="collapsed">
 				<k-button
 					:disabled="isFull"
+					:responsive="true"
 					:text="$t('add')"
 					icon="add"
 					variant="filled"
