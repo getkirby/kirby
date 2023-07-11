@@ -32,6 +32,7 @@ use Throwable;
 class System
 {
 	// cache
+	protected array|bool|null $license = null;
 	protected UpdateStatus|null $updateStatus = null;
 
 	public function __construct(protected App $app)
@@ -247,10 +248,14 @@ class System
 	 */
 	public function license()
 	{
+		if ($this->license !== null) {
+			return $this->license;
+		}
+
 		try {
 			$license = Json::read($this->app->root('license'));
 		} catch (Throwable) {
-			return false;
+			return $this->license = false;
 		}
 
 		// check for all required fields for the validation
@@ -262,7 +267,7 @@ class System
 			$license['domain'],
 			$license['signature']
 		) !== true) {
-			return false;
+			return $this->license = false;
 		}
 
 		// build the license verification data
@@ -282,21 +287,21 @@ class System
 		$data      = json_encode($data);
 		$signature = hex2bin($license['signature']);
 		if (openssl_verify($data, $signature, $pubKey, 'RSA-SHA256') !== 1) {
-			return false;
+			return $this->license = false;
 		}
 
 		// verify the URL
 		if ($this->licenseUrl() !== $this->licenseUrl($license['domain'])) {
-			return false;
+			return $this->license = false;
 		}
 
 		// only return the actual license key if the
 		// current user has appropriate permissions
 		if ($this->app->user()?->isAdmin() === true) {
-			return $license['license'];
+			return $this->license = $license['license'];
 		}
 
-		return true;
+		return $this->license = true;
 	}
 
 	/**
@@ -473,6 +478,9 @@ class System
 
 		// save the license information
 		Json::write($file, $json);
+
+		// clear the license cache
+		$this->license = null;
 
 		if ($this->license() === false) {
 			throw new InvalidArgumentException([
