@@ -91,10 +91,6 @@ class Loader
 		foreach ($extensions as $id => $areaExtensions) {
 			foreach ($areaExtensions as $areaExtension) {
 				$areas[$id] = $this->resolve($areaExtension);
-				// areas that come purely from plugins should
-				// not be listed in the Panel menu by default
-				// (can be added via panel.menu config option)
-				$areas[$id]['menu'] = false;
 			}
 		}
 
