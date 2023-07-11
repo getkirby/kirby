@@ -1,5 +1,9 @@
 <template>
-	<nav class="k-selector" role="search">
+	<nav
+		class="k-selector"
+		role="search"
+		:data-has-current="filtered?.includes(selected)"
+	>
 		<header class="k-selector-header">
 			<h2 v-if="label" class="k-selector-label">
 				{{ label }}
@@ -292,7 +296,8 @@ export default {
 .k-selector-input::placeholder {
 	color: var(--color-text-dimmed);
 }
-.k-selector:has([aria-current]) .k-selector-input:focus {
+/** TODO: .k-selector:has([aria-current]) .k-selector-input:focus  */
+.k-selector[data-has-current="true"] .k-selector-input:focus {
 	outline: 0;
 }
 

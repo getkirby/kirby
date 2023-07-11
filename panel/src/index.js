@@ -70,13 +70,6 @@ Vue.use(I18n);
 Vue.use(ErrorHandling);
 Vue.use(Legacy);
 
-// :has() CSS polyfill
-// TODO: remove when Firefox supports CSS :has
-if (CSS.supports("selector(:has(*))") === false) {
-	import("css-has-pseudo/browser").then(({ default: cssHas }) => {
-		cssHas(document, { preserve: false });
-	});
-}
 // container queries CSS polyfill
 // TODO: remove when global support for container queries is reached
 if (CSS.supports("container") === false) {

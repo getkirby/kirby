@@ -6,7 +6,11 @@
 		:style="'--options:' + (columns || options.length)"
 		class="k-toggles-input"
 	>
-		<li v-for="(option, index) in options" :key="index">
+		<li
+			v-for="(option, index) in options"
+			:key="index"
+			:data-disabled="disabled"
+		>
 			<input
 				:aria-label="option.text"
 				:disabled="disabled"
@@ -104,7 +108,8 @@ export default {
 .k-input[data-type="toggles"].grow {
 	display: flex;
 }
-.k-input[data-type="toggles"][data-theme="field"]:has(.k-empty) {
+/** TODO: .k-input[data-type="toggles"][data-theme="field"]:has(.k-empty) */
+.k-input[data-type="toggles"][data-theme="field"][data-empty="true"] {
 	outline: 0;
 	display: flex;
 }
@@ -134,7 +139,8 @@ export default {
 	padding: 0 var(--spacing-3);
 	height: 100%;
 }
-.k-toggles-input li:has(input[disabled]) label {
+/** TODO: .k-toggles-input li:has(input[disabled]) label */
+.k-toggles-input li[data-disabled="true"] label {
 	color: var(--color-text-dimmed);
 	background: var(--color-light);
 }

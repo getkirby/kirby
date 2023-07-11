@@ -41,9 +41,7 @@ export default (panel) => {
 		close() {
 			this.isOpen = false;
 
-			if (media.matches) {
-				document.body.style.overflow = null;
-			} else {
+			if (!media.matches) {
 				localStorage.removeItem("kirby$menu");
 			}
 		},
@@ -68,9 +66,7 @@ export default (panel) => {
 		open() {
 			this.isOpen = true;
 
-			if (media.matches) {
-				document.body.style.overflow = "hidden";
-			} else {
+			if (!media.matches) {
 				localStorage.setItem("kirby$menu", true);
 			}
 		},

@@ -4,6 +4,7 @@
 			v-bind="$props"
 			:id="_uid"
 			ref="input"
+			:data-empty="!value"
 			theme="field"
 			type="radio"
 			v-on="$listeners"

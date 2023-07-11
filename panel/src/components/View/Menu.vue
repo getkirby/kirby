@@ -97,10 +97,9 @@ export default {
 		display: none;
 	}
 
-	/* TODO: currently solved in panel.menu via JS
 	:where(html, body):has(.k-panel-menu[data-collapsed="true"]) {
 		overflow: hidden;
-	} */
+	}
 
 	.k-panel-menu-handle {
 		display: none;

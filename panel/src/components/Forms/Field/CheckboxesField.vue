@@ -3,6 +3,7 @@
 		<k-input
 			:id="_uid"
 			ref="input"
+			:data-empty="value.length === 0"
 			v-bind="$props"
 			theme="field"
 			type="checkboxes"

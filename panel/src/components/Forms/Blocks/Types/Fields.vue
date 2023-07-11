@@ -1,5 +1,8 @@
 <template>
-	<div @dblclick="!fieldset.wysiwyg ? $emit('open') : null">
+	<div
+		@dblclick="!fieldset.wysiwyg ? $emit('open') : null"
+		:data-collapsed="collapsed"
+	>
 		<header class="k-block-type-fields-header">
 			<k-block-title
 				:content="values"
@@ -78,8 +81,10 @@ export default {
 	padding-block: 0;
 }
 
+/** TODO: .k-block-container:not([data-hidden="true"])
+	.k-block-type-fields:has(.k-block-type-fields-form) */
 .k-block-container:not([data-hidden="true"])
-	.k-block-type-fields:has(.k-block-type-fields-form) {
+	.k-block-type-fields:not([data-collased="true"]) {
 	padding-bottom: var(--spacing-3);
 }
 
