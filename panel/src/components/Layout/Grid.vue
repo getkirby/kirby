@@ -97,9 +97,12 @@ export default {
 }
 
 /** Grid variants **/
-.k-grid[data-variant="columns"] {
+:root {
 	--columns-inline-gap: clamp(0.75rem, 6cqw, 6rem);
 	--columns-block-gap: clamp(var(--spacing-8), 6vh, 6rem);
+}
+
+.k-grid[data-variant="columns"] {
 	column-gap: var(--columns-inline-gap);
 	row-gap: var(--columns-block-gap);
 }
