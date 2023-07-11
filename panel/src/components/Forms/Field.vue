@@ -77,6 +77,6 @@ export default {
 }
 /** TODO: .k-field > :has(+ footer) { margin-bottom: var(--spacing-1);} */
 .k-field > footer {
-	margin-top: var(--spacing-1);
+	margin-top: var(--spacing-2);
 }
 </style>

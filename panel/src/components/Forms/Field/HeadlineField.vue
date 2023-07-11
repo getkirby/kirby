@@ -37,6 +37,6 @@ if the headline is the very first form element */
 }
 
 .k-headline-field footer {
-	margin-top: var(--spacing-1);
+	margin-top: var(--spacing-2);
 }
 </style>

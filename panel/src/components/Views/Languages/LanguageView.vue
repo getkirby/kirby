@@ -117,9 +117,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.k-language-view section + section {
-	margin-top: var(--spacing-6);
-}
-</style>
