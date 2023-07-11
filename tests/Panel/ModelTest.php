@@ -250,7 +250,13 @@ class ModelTest extends TestCase
 		$option = $model->dropdownOption();
 		$expected = [
 			'icon' => 'page',
-			'link' => '/panel/custom',
+			'image' => [
+				'back'  => 'black',
+				'color' => 'gray-500',
+				'cover' => false,
+				'icon'  => 'page'
+			],
+			'link' => '/custom',
 			'text' => null
 		];
 

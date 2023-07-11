@@ -228,7 +228,7 @@ class PageTest extends TestCase
 
 		$this->assertSame('page', $option['icon']);
 		$this->assertSame('Test page', $option['text']);
-		$this->assertSame('/panel/pages/test', $option['link']);
+		$this->assertSame('/pages/test', $option['link']);
 	}
 
 	/**

@@ -24,7 +24,7 @@ class SystemDialogsTest extends AreaTestCase
 		$this->assertSame('License', $field['label']);
 		$this->assertSame('Unregistered', $field['text']);
 		$this->assertSame('negative', $field['theme']);
-		$this->assertSame('<a href="https://getkirby.com/buy">Buy a license &rarr;</a>', $field['help']);
+		$this->assertSame('<a href="https://getkirby.com/buy" target="_blank">Buy a license &rarr;</a>', $field['help']);
 
 		$this->assertSame('medium', $props['size']);
 		$this->assertFalse($props['submitButton']);

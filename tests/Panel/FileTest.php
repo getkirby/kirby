@@ -320,7 +320,7 @@ class FileTest extends TestCase
 
 		$this->assertSame('image', $option['icon']);
 		$this->assertSame('test.jpg', $option['text']);
-		$this->assertSame('/panel/pages/test/files/test.jpg', $option['link']);
+		$this->assertSame('/pages/test/files/test.jpg', $option['link']);
 	}
 
 	/**

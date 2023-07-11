@@ -53,7 +53,7 @@ class SiteTest extends TestCase
 
 		$this->assertSame('home', $option['icon']);
 		$this->assertSame('Test site', $option['text']);
-		$this->assertSame('/panel/site', $option['link']);
+		$this->assertSame('/site', $option['link']);
 	}
 
 	/**
