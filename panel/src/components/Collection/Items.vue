@@ -151,9 +151,16 @@ export default {
 
 /** Cardlets */
 .k-items[data-layout="cardlets"] {
+	--items-size: 10rem;
 	display: grid;
 	gap: 0.75rem;
-	grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(var(--items-size), 1fr));
+}
+
+@container (min-width: 15rem) {
+	.k-items[data-layout="cardlets"] {
+		--items-size: 15rem;
+	}
 }
 
 /** Cards */
