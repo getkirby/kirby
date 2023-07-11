@@ -48,7 +48,7 @@ export default {
 :root {
 	--menu-color-back: var(--color-gray-250);
 	--menu-color-border: var(--color-gray-300);
-	--menu-toggle-width: 1.15rem;
+	--menu-toggle-width: 1rem;
 	--menu-width: 12rem;
 }
 
@@ -69,9 +69,8 @@ export default {
 	margin-bottom: var(--spacing-12);
 }
 .k-panel-menu-toggle {
-	--button-height: var(--height-sm);
-	--button-color-icon: var(--color-gray-500);
-
+	--button-height: var(--height-md);
+	--button-color-icon: var(--color-text);
 	display: none;
 	position: absolute;
 	z-index: var(--z-dialog);
