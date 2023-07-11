@@ -28,7 +28,7 @@
 				:title="$t('settings')"
 				class="k-layout-toolbar-button"
 				icon="settings"
-				@click="$refs.drawer.open()"
+				@click="openSettings"
 			/>
 
 			<k-dropdown>
@@ -48,7 +48,7 @@
 					<k-dropdown-item
 						v-if="settings"
 						icon="settings"
-						@click="$refs.drawer.open()"
+						@click="openSettings"
 					>
 						{{ $t("settings") }}
 					</k-dropdown-item>
@@ -77,17 +77,6 @@
 			</k-dropdown>
 			<k-sort-handle />
 		</nav>
-
-		<k-form-drawer
-			v-if="settings"
-			ref="drawer"
-			:tabs="tabs"
-			:title="$t('settings')"
-			:value="attrs"
-			class="k-layout-drawer"
-			icon="settings"
-			@input="$emit('updateAttrs', $event)"
-		/>
 	</section>
 </template>
 
@@ -126,6 +115,20 @@ export default {
 		}
 	},
 	methods: {
+		openSettings() {
+			this.$panel.drawer.open({
+				component: "k-form-drawer",
+				props: {
+					icon: "settings",
+					tabs: this.tabs,
+					title: this.$t("settings"),
+					value: this.attrs
+				},
+				on: {
+					input: (attrs) => this.$emit("updateAttrs", attrs)
+				}
+			});
+		},
 		remove() {
 			this.$panel.dialog.open({
 				component: "k-remove-dialog",
