@@ -84,7 +84,8 @@ export default {
 /** TODO: .k-block-container:not([data-hidden="true"])
 	.k-block-type-fields:has(.k-block-type-fields-form) */
 .k-block-container:not([data-hidden="true"])
-	.k-block-type-fields:not([data-collased="true"]) {
+	.k-block-type-fields
+	> :not([data-collapsed="true"]) {
 	padding-bottom: var(--spacing-3);
 }
 
@@ -94,6 +95,9 @@ export default {
 	height: var(--drawer-header-height);
 	padding-inline: var(--spacing-1);
 	background: var(--color-white);
+}
+.k-block-type-fields-header .k-block-title {
+	cursor: pointer;
 }
 
 .k-block-type-fields-form {
