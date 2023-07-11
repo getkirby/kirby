@@ -245,9 +245,9 @@ export default {
 }
 
 .k-item[data-layout="list"] .k-sort-button {
-	--button-width: 1.5rem;
+	--button-width: calc(1.5rem + var(--spacing-1));
 	--button-height: var(--item-height);
-	left: calc((var(--button-width) + var(--spacing-1)) * -1);
+	left: calc(-1 * var(--button-width));
 }
 
 /** Cardlet & cards */
