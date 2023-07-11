@@ -38,7 +38,6 @@ export default {
 <style>
 .k-grid {
 	--columns: 12;
-
 	display: grid;
 	align-items: start;
 }
@@ -99,8 +98,10 @@ export default {
 
 /** Grid variants **/
 .k-grid[data-variant="columns"] {
-	column-gap: clamp(0.75rem, 5cqw, 6rem);
-	row-gap: var(--spacing-8);
+	--columns-inline-gap: clamp(0.75rem, 6cqw, 6rem);
+	--columns-block-gap: clamp(var(--spacing-8), 6vh, 6rem);
+	column-gap: var(--columns-inline-gap);
+	row-gap: var(--columns-block-gap);
 }
 .k-grid[data-variant="columns"] > * {
 	container: column / inline-size;

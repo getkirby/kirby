@@ -34,7 +34,7 @@ export default {
 
 <style>
 .k-section + .k-section {
-	margin-top: var(--spacing-8);
+	margin-top: var(--columns-block-gap);
 }
 .k-section-header {
 	margin-bottom: var(--spacing-2);
