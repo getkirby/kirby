@@ -4,7 +4,6 @@ namespace Kirby\Panel;
 
 use Closure;
 use Kirby\Cms\App;
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -41,15 +40,14 @@ class Menu
 		if ($areas === null) {
 			// ensure that some defaults are on top in the right order
 			$defaults    = ['site', 'users', 'languages', 'system'];
-			// add all other areas after that
-			$additionals = array_diff(array_keys($this->areas), $defaults);
+			// add all other areas after that, except license as this will
+			// go into the options section
+			$additionals = array_diff(
+				array_keys($this->areas),
+				$defaults,
+				['license']
+			);
 			$areas       = array_merge($defaults, $additionals);
-		}
-
-		// ensure license area is always included
-		// and cannot be removed via the config option
-		if (in_array('license', $areas) === false) {
-			$areas[] = 'license';
 		}
 
 		$result = [];
@@ -129,7 +127,7 @@ class Menu
 			),
 			'icon'     => $area['icon'] ?? null,
 			'id'       => $area['id'],
-			'link'     => $area['link'],
+			'link'     => $area['link'] ?? null,
 			'dialog'   => $area['dialog'] ?? null,
 			'drawer'   => $area['drawer'] ?? null,
 			'text'     => $area['label'],
@@ -200,7 +198,7 @@ class Menu
 	 */
 	public function options(): array
 	{
-		return [
+		$options = [
 			[
 				'icon'     => 'edit-sheet',
 				'id'       => 'changes',
@@ -222,5 +220,12 @@ class Menu
 				'text' => I18n::translate('logout')
 			]
 		];
+
+		if ($license = $this->areas['license'] ?? null) {
+			$license = $this->entry($license);
+			array_unshift($options, $license);
+		}
+
+		return $options;
 	}
 }
