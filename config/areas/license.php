@@ -12,7 +12,6 @@ return function ($kirby) {
 			}
 
 			return [
-				'link'	 => null,
 				'dialog' => 'registration'
 			];
 		},

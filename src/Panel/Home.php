@@ -50,7 +50,8 @@ class Home
 
 		// needed to create a proper menu
 		$areas = Panel::areas();
-		$menu  = View::menu($areas, $permissions->toArray());
+		$menu  = new Menu($areas, $permissions->toArray());
+		$menu  = $menu->entries();
 
 		// go through the menu and search for the first
 		// available view we can go to

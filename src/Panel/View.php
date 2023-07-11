@@ -2,12 +2,10 @@
 
 namespace Kirby\Panel;
 
-use Closure;
 use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Http\Response;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -186,11 +184,14 @@ class View
 
 				return [];
 			},
-			'$menu'       => fn () => static::menu(
-				$options['areas'] ?? [],
-				$permissions,
-				$options['area']['id'] ?? null
-			),
+			'$menu'       => function () use ($options, $permissions) {
+				$menu = new Menu(
+					$options['areas'] ?? [],
+					$permissions,
+					$options['area']['id'] ?? null
+				);
+				return $menu->entries();
+			},
 			'$permissions' => $permissions,
 			'$license'     => (bool)$kirby->system()->license(),
 			'$multilang'   => $multilang,
@@ -312,124 +313,6 @@ class View
 				'site' => $kirby->url('index')
 			]
 		];
-	}
-
-	/**
-	 * Creates the menu for the topbar
-	 */
-	public static function menu(
-		array|null $areas = [],
-		array|null $permissions = [],
-		string|null $current = null
-	): array {
-		$entries = [];
-		$ids     = App::instance()->option('panel.menu');
-
-		if ($ids === null) {
-			$defaults    = ['site', 'users', 'languages', 'system'];
-			$additionals = array_diff(array_keys($areas), $defaults);
-			$ids         = array_merge($defaults, $additionals);
-		}
-
-		if (in_array('license', $ids) === false) {
-			$ids[] = 'license';
-		}
-
-		// areas
-		foreach ($ids as $areaId => $area) {
-			// convert simple id entry
-			if (is_numeric($areaId) === true) {
-				$areaId = $area;
-				$area   = $areas[$areaId] ?? null;
-			}
-
-			if ($areaId === '-') {
-				$entries[] = '-';
-				continue;
-			}
-
-			if ($area === null) {
-				continue;
-			}
-
-			if (is_array($area) === true) {
-				$area = array_merge(
-					$areas[$areaId] ?? [],
-					['menu' => true],
-					$area
-				);
-				$area = Panel::area($areaId, $area);
-			}
-
-			$access = $permissions['access'][$areaId] ?? true;
-
-			// areas without access permissions get skipped entirely
-			if ($access === false) {
-				continue;
-			}
-
-			// check menu setting from the area definition
-			$menu = $area['menu'] ?? false;
-
-			// menu setting can be a callback
-			// that returns true, false or 'disabled'
-			if ($menu instanceof Closure) {
-				$menu = $menu($areas, $permissions, $current);
-			}
-
-			// false will remove the area entirely just like with
-			// disabled permissions
-			if ($menu === false) {
-				continue;
-			}
-
-			$menu = match ($menu) {
-				'disabled' => ['disabled' => true],
-				true       => [],
-				default    => $menu
-			};
-
-			$entry = array_merge([
-				'current'  => $area['current'] ?? $areaId === $current,
-				'icon'     => $area['icon'] ?? 'blank',
-				'id'       => $areaId,
-				'link'     => $area['link'],
-				'text'     => $area['label'],
-			], $menu);
-
-			if ($entry['current'] instanceof Closure) {
-				$entry['current'] = $entry['current']($current);
-			}
-
-			$entries[] = $entry;
-		}
-
-		$entries[] = '-';
-		$entries[] = [
-			'icon'     => 'edit-sheet',
-			'id'       => 'changes',
-			'dialog'   => 'changes',
-			'text'     => I18n::translate('changes'),
-		];
-
-		$entries[] = [
-			'current'  => $current === 'account',
-			'icon'     => 'account',
-			'id'       => 'account',
-			'link'     => 'account',
-			'disabled' => ($permissions['access']['account'] ?? false) === false,
-			'text'     => I18n::translate('view.account'),
-		];
-
-		// logout
-		$entries[] = [
-			'icon' => 'logout',
-			'id'   => 'logout',
-			'link' => 'logout',
-			'text' => I18n::translate('logout')
-		];
-
-		return $entries;
 	}
 
 	/**
