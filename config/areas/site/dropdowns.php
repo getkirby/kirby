@@ -1,6 +1,5 @@
 <?php
 
-use Kirby\Panel\Dropdown;
 
 $files = require __DIR__ . '/../files/dropdowns.php';
 

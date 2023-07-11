@@ -3,7 +3,6 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
-use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 

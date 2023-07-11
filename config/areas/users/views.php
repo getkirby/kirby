@@ -32,7 +32,7 @@ return [
 						}
 
 						// sort users alphabetically
-					 	$users = $users->sortBy('username', 'asc');
+						$users = $users->sortBy('username', 'asc');
 
 						// paginate
 						$users = $users->paginate([
