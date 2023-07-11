@@ -85,7 +85,7 @@ export default {
 	flex-shrink: 0;
 }
 .k-breadcrumb ol li {
-	min-width: 10ch;
+	min-width: 0;
 	transition: flex-shrink 0.1s;
 }
 .k-breadcrumb .k-icon[data-type="loader"] {
