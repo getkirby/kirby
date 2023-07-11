@@ -70,7 +70,8 @@ class Loader
 		$areas      = [];
 		$extensions = $this->withPlugins === true ? $this->kirby->extensions('areas') : [];
 
-		// load core areas and extend them with elements from plugins if they exist
+		// load core areas and extend them with elements
+		// from plugins if they exist
 		foreach ($this->kirby->core()->areas() as $id => $area) {
 			$area = $this->resolveArea($area);
 
@@ -90,6 +91,10 @@ class Loader
 		foreach ($extensions as $id => $areaExtensions) {
 			foreach ($areaExtensions as $areaExtension) {
 				$areas[$id] = $this->resolve($areaExtension);
+				// areas that come purely from plugins should
+				// not be listed in the Panel menu by default
+				// (can be added via panel.menu config option)
+				$areas[$id]['menu'] = false;
 			}
 		}
 

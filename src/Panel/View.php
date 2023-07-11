@@ -2,12 +2,10 @@
 
 namespace Kirby\Panel;
 
-use Closure;
 use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Http\Response;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -186,11 +184,14 @@ class View
 
 				return [];
 			},
-			'$menu'       => fn () => static::menu(
-				$options['areas'] ?? [],
-				$permissions,
-				$options['area']['id'] ?? null
-			),
+			'$menu'       => function () use ($options, $permissions) {
+				$menu = new Menu(
+					$options['areas'] ?? [],
+					$permissions,
+					$options['area']['id'] ?? null
+				);
+				return $menu->entries();
+			},
 			'$permissions' => $permissions,
 			'$license'     => (bool)$kirby->system()->license(),
 			'$multilang'   => $multilang,
@@ -312,82 +313,6 @@ class View
 				'site' => $kirby->url('index')
 			]
 		];
-	}
-
-	/**
-	 * Creates the menu for the topbar
-	 */
-	public static function menu(
-		array|null $areas = [],
-		array|null $permissions = [],
-		string|null $current = null
-	): array {
-		$menu = [];
-
-		// areas
-		foreach ($areas as $areaId => $area) {
-			$access = $permissions['access'][$areaId] ?? true;
-
-			// areas without access permissions get skipped entirely
-			if ($access === false) {
-				continue;
-			}
-
-			// fetch custom menu settings from the area definition
-			$menuSetting = $area['menu'] ?? false;
-
-			// menu settings can be a callback that can return true, false or disabled
-			if ($menuSetting instanceof Closure) {
-				$menuSetting = $menuSetting($areas, $permissions, $current);
-			}
-
-			// false will remove the area entirely just like with
-			// disabled permissions
-			if ($menuSetting === false) {
-				continue;
-			}
-
-			// resolve menu settings for simple disabled string
-			$menuSetting = match ($menuSetting) {
-				'disabled' => ['disabled' => true],
-				true       => [],
-				default    => $menuSetting
-			};
-
-			$menu[] = array_merge([
-				'current'  => $areaId === $current,
-				'icon'     => $area['icon'],
-				'id'       => $areaId,
-				'link'     => $area['link'],
-				'text'     => $area['label'],
-			], $menuSetting);
-		}
-
-		$menu[] = '-';
-		$menu[] = [
-			'icon'     => 'edit-sheet',
-			'id'       => 'changes',
-			'dialog'   => 'changes',
-			'text'     => I18n::translate('changes'),
-		];
-
-		$menu[] = [
-			'current'  => $current === 'account',
-			'icon'     => 'account',
-			'id'       => 'account',
-			'link'     => 'account',
-			'disabled' => ($permissions['access']['account'] ?? false) === false,
-			'text'     => I18n::translate('view.account'),
-		];
-
-		// logout
-		$menu[] = [
-			'icon' => 'logout',
-			'id'   => 'logout',
-			'link' => 'logout',
-			'text' => I18n::translate('logout')
-		];
-		return $menu;
 	}
 
 	/**

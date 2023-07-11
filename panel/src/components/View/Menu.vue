@@ -26,8 +26,6 @@
 				v-for="entry in menu"
 				:key="entry.id"
 				v-bind="entry"
-				:click="() => (entry.dialog ? $dialog(entry.dialog) : null)"
-				:current="entry.id === $panel.view.id"
 				:title="entry.title ?? entry.text"
 			/>
 		</menu>
