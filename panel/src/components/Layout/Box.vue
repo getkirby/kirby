@@ -106,9 +106,11 @@ export default {
 .k-box[data-theme="white"] {
 	box-shadow: var(--shadow);
 }
-
 .k-box[data-theme="text"] {
 	padding: var(--spacing-6);
+}
+.k-box[data-theme="none"] {
+	padding: 0;
 }
 
 /* Align:center */

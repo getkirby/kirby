@@ -103,3 +103,10 @@
 	--theme-color-text: var(--color-text-dimmed);
 	border: 1px dashed var(--theme-color-border);
 }
+
+[data-theme="none"] {
+	--theme-color-back: transparent;
+	--theme-color-border: transparent;
+	--theme-color-icon: var(--color-text);
+	--theme-color-text: var(--color-text);
+}
