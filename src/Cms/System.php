@@ -479,6 +479,9 @@ class System
 		// save the license information
 		Json::write($file, $json);
 
+		// clear the license cache
+		$this->$license = null;
+
 		if ($this->license() === false) {
 			throw new InvalidArgumentException([
 				'key' => 'license.verification'
