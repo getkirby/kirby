@@ -149,7 +149,6 @@ class MenuTest extends TestCase
 		]);
 		$this->assertSame([
 			'current' => true,
-			'id'      => 'account',
 			'link'    => 'foo',
 			'text'    => 'Foo'
 		], $entry);
@@ -171,7 +170,6 @@ class MenuTest extends TestCase
 
 		$this->assertSame([
 			'current' => true,
-			'id'      => 'account',
 			'dialog'  => 'foo',
 			'text'    => 'Foo'
 		], $entry);
@@ -231,13 +229,13 @@ class MenuTest extends TestCase
 		);
 
 		$entries = $menu->entries();
-		$this->assertSame('site', $entries[0]['id']);
+		$this->assertSame('site', $entries[0]['link']);
 		$this->assertTrue($entries[0]['current']);
 		$this->assertSame('-', $entries[1]);
-		$this->assertSame('registration', $entries[2]['id']);
-		$this->assertSame('changes', $entries[3]['id']);
-		$this->assertSame('account', $entries[4]['id']);
-		$this->assertSame('logout', $entries[5]['id']);
+		$this->assertSame('registration', $entries[2]['dialog']);
+		$this->assertSame('changes', $entries[3]['dialog']);
+		$this->assertSame('account', $entries[4]['link']);
+		$this->assertSame('logout', $entries[5]['link']);
 	}
 
 	/**
@@ -284,14 +282,12 @@ class MenuTest extends TestCase
 	{
 		$registration = [
 			'icon'     => 'key',
-			'id'       => 'registration',
 			'dialog'   => 'registration',
 			'text'     => 'Register'
 		];
 
 		$changes = [
 			'icon'     => 'edit-sheet',
-			'id'       => 'changes',
 			'dialog'   => 'changes',
 			'text'     => 'Changes'
 		];
@@ -299,7 +295,6 @@ class MenuTest extends TestCase
 		$account = [
 			'current'  => false,
 			'icon'     => 'account',
-			'id'       => 'account',
 			'link'     => 'account',
 			'disabled' => false,
 			'text'     => 'Your account'
@@ -307,7 +302,6 @@ class MenuTest extends TestCase
 
 		$logout = [
 			'icon' => 'logout',
-			'id'   => 'logout',
 			'link' => 'logout',
 			'text' => 'Log out'
 		];

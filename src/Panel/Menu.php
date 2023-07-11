@@ -121,7 +121,6 @@ class Menu
 				$area['current'] ?? null
 			),
 			'icon'     => $area['icon'] ?? null,
-			'id'       => $area['id'],
 			'link'     => $area['link'] ?? null,
 			'dialog'   => $area['dialog'] ?? null,
 			'drawer'   => $area['drawer'] ?? null,
@@ -196,21 +195,18 @@ class Menu
 		$options = [
 			[
 				'icon'     => 'edit-sheet',
-				'id'       => 'changes',
 				'dialog'   => 'changes',
 				'text'     => I18n::translate('changes'),
 			],
 			[
 				'current'  => $this->isCurrent('account'),
 				'icon'     => 'account',
-				'id'       => 'account',
 				'link'     => 'account',
 				'disabled' => $this->hasPermission('account') === false,
 				'text'     => I18n::translate('view.account'),
 			],
 			[
 				'icon' => 'logout',
-				'id'   => 'logout',
 				'link' => 'logout',
 				'text' => I18n::translate('logout')
 			]
@@ -219,7 +215,6 @@ class Menu
 		if (App::instance()->system()->license() === false) {
 			array_unshift($options, [
 				'icon'     => 'key',
-				'id'       => 'registration',
 				'dialog'   => 'registration',
 				'text'     => I18n::translate('license.register'),
 			]);
