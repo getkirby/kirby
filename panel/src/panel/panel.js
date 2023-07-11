@@ -278,6 +278,9 @@ export default {
 	async search(type, query, options) {
 		// open the search dialog
 		if (!type && !query) {
+			// close menu on mobile
+			this.menu.escape();
+
 			return this.dialog.open({
 				component: "k-search-dialog"
 			});

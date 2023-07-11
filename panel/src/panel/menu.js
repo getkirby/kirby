@@ -41,7 +41,7 @@ export default (panel) => {
 		close() {
 			this.isOpen = false;
 
-			if (!media.matches) {
+			if (media.matches === false) {
 				localStorage.setItem("kirby$menu", true);
 			}
 		},
@@ -66,7 +66,7 @@ export default (panel) => {
 		open() {
 			this.isOpen = true;
 
-			if (!media.matches) {
+			if (media.matches === false) {
 				localStorage.removeItem("kirby$menu");
 			}
 		},
