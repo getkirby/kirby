@@ -46,16 +46,16 @@ $translationDialogFields = [
 	'key' => [
 		'counter' => false,
 		'icon'    => null,
-		'label'   => 'Key',
-		'type'    => 'slug',
-		'allow'   => 'a-z0-9_-',
-		'width'   => '1/3',
+		'label'   => I18n::translate('language.variable.key'),
+		'type'    => 'text',
+		'width'   => '1/1',
 	],
 	'value' => [
 		'counter' => false,
-		'label'   => 'Value',
-		'type'    => 'text',
-		'width'   => '2/3',
+		'buttons' => false,
+		'label'   => I18n::translate('language.variable.value'),
+		'type'    => 'textarea',
+		'width'   => '1/1',
 	]
 ];
 
@@ -208,7 +208,7 @@ return [
 	'language.translation.delete' => [
 		'pattern' => 'languages/(:any)/translations/(:any)/delete',
 		'load'    => function (string $languageCode, string $translationKey) {
-			$variable = Find::language($languageCode)->variable($translationKey);
+			$variable = Find::language($languageCode)->variable($translationKey, true);
 
 			if ($variable->exists() === false) {
 				throw new NotFoundException('The variable could not be found');
@@ -217,18 +217,18 @@ return [
 			return [
 				'component' => 'k-remove-dialog',
 				'props' => [
-					'text' => 'Do you really want to delete the variable for "' . $translationKey . '"?'
+					'text' => 'Do you really want to delete the variable for "' . Escape::html($variable->key()) . '"?'
 				],
 			];
 		},
 		'submit' => function (string $languageCode, string $translationKey) {
-			return Find::language($languageCode)->variable($translationKey)->delete();
+			return Find::language($languageCode)->variable($translationKey, true)->delete();
 		}
 	],
 	'language.translation.update' => [
 		'pattern' => 'languages/(:any)/translations/(:any)/update',
 		'load'    => function (string $languageCode, string $translationKey) use ($translationDialogFields) {
-			$variable = Find::language($languageCode)->variable($translationKey);
+			$variable = Find::language($languageCode)->variable($translationKey, true);
 
 			if ($variable->exists() === false) {
 				throw new NotFoundException('The variable could not be found');
@@ -251,7 +251,7 @@ return [
 			];
 		},
 		'submit' => function (string $languageCode, string $translationKey) {
-			Find::language($languageCode)->variable($translationKey)->update(
+			Find::language($languageCode)->variable($translationKey, true)->update(
 				App::instance()->request()->get('value')
 			);
 

@@ -373,6 +373,9 @@
 	"language.name": "Name",
 	"language.updated": "The language has been updated",
 
+	"language.variable.key": "Key",
+	"language.variable.value": "Value",
+
 	"languages": "Languages",
 	"languages.default": "Default language",
 	"languages.empty": "There are no languages yet",

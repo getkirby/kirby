@@ -566,8 +566,13 @@ class Language
 	 * Returns a language variable object
 	 * for the key in the translations array
 	 */
-	public function variable(string $key): LanguageVariable
+	public function variable(string $key, bool $decode = false): LanguageVariable
 	{
+		// decode for encoded strings
+		if ($decode === true) {
+			$key = base64_decode(urldecode($key));
+		}
+
 		return new LanguageVariable($this, $key);
 	}
 }
