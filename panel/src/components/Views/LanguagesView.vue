@@ -52,6 +52,10 @@ export default {
 		languages: {
 			type: Array,
 			default: () => []
+		},
+		variables: {
+			type: Boolean,
+			default: true
 		}
 	},
 	computed: {
@@ -64,12 +68,17 @@ export default {
 					icon: "globe"
 				},
 				link: () => {
+					if (this.variables === false) {
+						return null;
+					}
+
 					this.$go(`languages/${language.id}`);
 				},
 				options: [
 					{
 						icon: "edit",
 						text: this.$t("edit"),
+						disabled: this.variables === false,
 						click() {
 							this.$go(`languages/${language.id}`);
 						}
