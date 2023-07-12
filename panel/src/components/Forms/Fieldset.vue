@@ -17,6 +17,7 @@
 						:ref="fieldName"
 						v-bind="field"
 						:disabled="disabled || field.disabled"
+						:error="errors[fieldName] ?? null"
 						:form-data="value"
 						:name="fieldName"
 						:novalidate="novalidate"
@@ -123,8 +124,20 @@ export default {
 		hasField(name) {
 			return this.$refs[name]?.[0];
 		},
-		onInvalid($invalid, $v, field, fieldName) {
-			this.errors[fieldName] = $v;
+		async onBlur(event, field, fieldName) {
+			const response = await this.$api.post(
+				field.endpoints.field + "/validate",
+				{
+					value: this.values[fieldName]
+				}
+			);
+
+			if (Array.isArray(response) === true) {
+				this.$delete(this.errors, fieldName);
+			} else {
+				this.$set(this.errors, fieldName, response.error);
+			}
+
 			this.$emit("invalid", this.errors);
 		},
 		onInput(value, field, name) {

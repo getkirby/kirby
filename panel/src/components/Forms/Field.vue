@@ -10,6 +10,7 @@
 			<header class="k-field-header">
 				<slot name="label">
 					<k-label
+						:error="error"
 						:input="input"
 						:required="required"
 						:title="label"
@@ -48,6 +49,7 @@ export const props = {
 	props: {
 		counter: [Boolean, Object],
 		endpoints: Object,
+		error: String,
 		input: [String, Number],
 		translate: Boolean,
 		type: String

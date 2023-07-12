@@ -3,7 +3,6 @@
 		:is="element"
 		:for="input"
 		:class="'k-' + type + '-label'"
-		:data-invalid="invalid"
 		class="k-label"
 	>
 		<k-link v-if="link" :to="link">
@@ -14,8 +13,10 @@
 			<slot />
 		</span>
 
-		<abbr v-if="required && !invalid" :title="$t(type + '.required')">✶</abbr>
-		<abbr :title="$t(type + '.invalid')" class="k-label-invalid">&times;</abbr>
+		<abbr v-if="required && !error" :title="$t(type + '.required')">✶</abbr>
+		<abbr v-if="error" :title="$t(type + '.invalid')" class="k-label-invalid">{{
+			error
+		}}</abbr>
 	</component>
 </template>
 
@@ -26,16 +27,16 @@
 export default {
 	props: {
 		/**
+		 * Whether the input value is currently invalid
+		 */
+		error: {
+			type: String
+		},
+		/**
 		 * ID of the input element to which the label belongs
 		 */
 		input: {
 			type: [String, Number]
-		},
-		/**
-		 * Whether the input value is currently invalid
-		 */
-		invalid: {
-			type: Boolean
 		},
 		/**
 		 * Sets a link for the label. Link can be absolute or relative.
@@ -105,7 +106,6 @@ export default {
 }
 
 .k-label abbr.k-label-invalid {
-	display: none;
 	color: var(--color-red-700);
 }
 

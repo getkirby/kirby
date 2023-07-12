@@ -69,10 +69,34 @@ class Api extends BaseApi
 		string|null $path = null
 	): mixed {
 		$field = Form::for($model)->field($name);
+		$routes = $field->api();
+
+		$routes[] = [
+			'pattern' => 'validate',
+			'method'  => 'POST',
+			'action'  => function () use ($model, $name) {
+				$value = $this->requestBody()['value'] ?? null;
+				$field = Form::for($model, [
+					'input' => [
+						$name => $value
+					]
+				])->field($name);
+
+				$errors = $field->errors();
+
+				if (empty($errors)) {
+					return [];
+				}
+
+				return [
+					'error' => \Kirby\Toolkit\A::first($errors)
+				];
+			}
+		];
 
 		$fieldApi = $this->clone([
 			'data'   => array_merge($this->data(), ['field' => $field]),
-			'routes' => $field->api(),
+			'routes' => $routes,
 		]);
 
 		return $fieldApi->call(
