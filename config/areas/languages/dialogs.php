@@ -47,15 +47,13 @@ $translationDialogFields = [
 		'counter' => false,
 		'icon'    => null,
 		'label'   => I18n::translate('language.variable.key'),
-		'type'    => 'text',
-		'width'   => '1/1',
+		'type'    => 'text'
 	],
 	'value' => [
 		'counter' => false,
 		'buttons' => false,
 		'label'   => I18n::translate('language.variable.value'),
-		'type'    => 'textarea',
-		'width'   => '1/1',
+		'type'    => 'textarea'
 	]
 ];
 
