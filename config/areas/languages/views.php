@@ -75,7 +75,7 @@ if (App::instance()->option('languages.variables', true) !== false) {
 					'info'         => [
 						[
 							'label' => 'Status',
-							'value' => $language->isDefault() ? 'Default language' : 'Secondary language',
+							'value' => I18n::translate('language.' .( $language->isDefault() ? 'default' : 'secondary')),
 						],
 						[
 							'label' => I18n::translate('language.code'),
