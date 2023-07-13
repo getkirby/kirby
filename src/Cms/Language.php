@@ -570,7 +570,7 @@ class Language
 	{
 		// decode for encoded strings
 		if ($decode === true) {
-			$key = base64_decode(urldecode($key));
+			$key = base64_decode(rawurldecode($key));
 		}
 
 		return new LanguageVariable($this, $key);
