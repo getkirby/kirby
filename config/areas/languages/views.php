@@ -28,9 +28,10 @@ return [
 							'text'  => I18n::translate('edit'),
 						],
 						[
-							'click' => 'delete',
-							'icon'  => 'trash',
-							'text'  => I18n::translate('delete'),
+							'click'    => 'delete',
+							'disabled' => $language->isDefault() === false,
+							'icon'     => 'trash',
+							'text'     => I18n::translate('delete'),
 						]
 					]
 				];
