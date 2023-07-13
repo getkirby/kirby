@@ -446,6 +446,53 @@ class FieldMethodsTest extends TestCase
 		$this->assertNull($field->toUrl());
 	}
 
+	public function testToUuidUrl()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => $this->tmp
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'content' => [
+							'title' => 'Test Title',
+							'uuid'  => 'my-page-uuid'
+						],
+						'files' => [
+							[
+								'filename' => 'test.jpg',
+								'content' => [
+									'uuid'  => 'my-file-uuid',
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$page = $app->page('page://my-page-uuid');
+		$field = $this->field('page://my-page-uuid');
+		$this->assertSame('/test', $field->toUrl());
+		$this->assertSame($page->url(), $field->toUrl());
+
+		$file = $app->file('file://my-file-uuid');
+		$field = $this->field('file://my-file-uuid');
+		$this->assertSame('/media/pages/test/' . $file->mediaHash() . '/test.jpg', $field->toUrl());
+		$this->assertSame($file->url(), $field->toUrl());
+	}
+
+	public function testToInvalidUuidUrl()
+	{
+		$field = $this->field('page://invalid');
+		$this->assertSame('/', $field->toUrl());
+
+		$field = $this->field('file://invalid');
+		$this->assertSame('/', $field->toUrl());
+	}
+
 	public function testToUser()
 	{
 		$app = new App([

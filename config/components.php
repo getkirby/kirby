@@ -404,7 +404,7 @@ return [
 				Uuid::is($path, 'file') === true
 			)
 		) {
-			$path = Uuid::for($path)->model()->url();
+			$path = Uuid::for($path)->model()?->url();
 		}
 
 		$url = Url::makeAbsolute($path, $kirby->url());
