@@ -22,14 +22,14 @@
 
 			<section>
 				<k-bar>
-					<k-headline slot="left" style="margin-bottom: var(--spacing-3)">Language settings</k-headline>
+					<k-headline slot="left" style="margin-bottom: var(--spacing-3)">{{ $t("language.settings") }}</k-headline>
 				</k-bar>
 				<k-stats :reports="info" size="small" />
 			</section>
 
 			<section>
 				<k-bar>
-					<k-headline slot="left">Language variables</k-headline>
+					<k-headline slot="left">{{ $t("language.variables") }}</k-headline>
 					<k-button-group slot="right">
 						<k-button
 							icon="add"
@@ -58,7 +58,7 @@
 					/>
 				</template>
 				<template v-else>
-					<k-empty @click="createTranslation">No translations yet</k-empty>
+					<k-empty @click="createTranslation">{{ $t("language.variables.empty") }}</k-empty>
 				</template>
 			</section>
 		</k-view>

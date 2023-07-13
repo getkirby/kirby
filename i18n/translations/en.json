@@ -363,6 +363,7 @@
 	"language.convert": "Make default",
 	"language.convert.confirm": "<p>Do you really want to convert <strong>{name}</strong> to the default language? This cannot be undone.</p><p>If <strong>{name}</strong> has untranslated content, there will no longer be a valid fallback and parts of your site might be empty.</p>",
 	"language.create": "Add a new language",
+	"language.default": "Default language",
 	"language.delete.confirm": "Do you really want to delete the language <strong>{name}</strong> including all translations? This cannot be undone!",
 	"language.deleted": "The language has been deleted",
 	"language.direction": "Reading direction",
@@ -371,9 +372,15 @@
 	"language.locale": "PHP locale string",
 	"language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
 	"language.name": "Name",
+	"language.secondary": "Secondary language",
+	"language.settings": "Language settings",
 	"language.updated": "The language has been updated",
+	"language.variables": "Language variables",
+	"language.variables.empty": "No translations yet",
 
+	"language.variable.delete.confirm": "Do you really want to delete the variable for {key}?",
 	"language.variable.key": "Key",
+	"language.variable.notFound": "The variable could not be found",
 	"language.variable.value": "Value",
 
 	"languages": "Languages",

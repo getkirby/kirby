@@ -211,13 +211,17 @@ return [
 			$variable = Find::language($languageCode)->variable($translationKey, true);
 
 			if ($variable->exists() === false) {
-				throw new NotFoundException('The variable could not be found');
+				throw new NotFoundException([
+					'key' => 'language.variable.notFound'
+				]);
 			}
 
 			return [
 				'component' => 'k-remove-dialog',
 				'props' => [
-					'text' => 'Do you really want to delete the variable for "' . Escape::html($variable->key()) . '"?'
+					'text' => I18n::template('language.variable.delete.confirm', [
+						'key' => Escape::html($variable->key())
+					])
 				],
 			];
 		},
@@ -231,7 +235,9 @@ return [
 			$variable = Find::language($languageCode)->variable($translationKey, true);
 
 			if ($variable->exists() === false) {
-				throw new NotFoundException('The variable could not be found');
+				throw new NotFoundException([
+					'key' => 'language.variable.notFound'
+				]);
 			}
 
 			$fields = $translationDialogFields;
