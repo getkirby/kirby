@@ -87,7 +87,7 @@ export default {
 		},
 		option(option, row) {
 			this.$panel.dialog.open(
-				`dialogs/languages/${this.id}/translations/${encodeURIComponent(window.btoa(row.key))}/${option}`
+				`dialogs/languages/${this.id}/translations/${window.btoa(encodeURIComponent(row.key))}/${option}`
 			);
 		},
 		remove() {
@@ -103,7 +103,7 @@ export default {
 			});
 		},
 		updateTranslation({ row }) {
-			this.$dialog(`languages/${this.id}/translations/${encodeURIComponent(window.btoa(row.key))}/update`);
+			this.$dialog(`languages/${this.id}/translations/${window.btoa(encodeURIComponent(row.key))}/update`);
 		}
 	}
 };
