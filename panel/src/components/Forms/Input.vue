@@ -225,65 +225,10 @@ export default {
 	padding-inline-start: var(--field-input-padding);
 }
 
-/* Checkboxes & Radio Buttons */
-.k-input[data-theme="field"][data-type="checkboxes"] .k-checkboxes-input li,
-.k-input[data-theme="field"][data-type="checkboxes"] .k-radio-input li,
-.k-input[data-theme="field"][data-type="radio"] .k-checkboxes-input li,
+/* Radio Buttons */
 .k-input[data-theme="field"][data-type="radio"] .k-radio-input li {
 	min-width: 0;
 	overflow-wrap: break-word;
-}
-
-/* Checkboxes */
-.k-input[data-theme="field"][data-type="checkboxes"] .k-input-before {
-	border-inline-end: 1px solid var(--color-background);
-}
-.k-input[data-theme="field"][data-type="checkboxes"]
-	.k-input-element
-	+ .k-input-after,
-.k-input[data-theme="field"][data-type="checkboxes"]
-	.k-input-element
-	+ .k-input-icon {
-	border-inline-start: 1px solid var(--color-background);
-}
-.k-input[data-theme="field"][data-type="checkboxes"] .k-input-element {
-	overflow: hidden;
-}
-/** TODO: .k-input[data-theme="field"][data-type="checkboxes"]:has(.k-empty) */
-.k-input[data-theme="field"][data-type="checkboxes"][data-empty="true"] {
-	outline: 0;
-}
-.k-input[data-theme="field"][data-type="checkboxes"] .k-checkboxes-input {
-	display: grid;
-	grid-template-columns: 1fr;
-	margin-bottom: -1px;
-	margin-inline-end: -1px;
-}
-/** TODO: .k-input[data-theme="field"][data-type="checkboxes"]
-	.k-checkboxes-input:has(.k-empty) */
-.k-input[data-theme="field"][data-type="checkboxes"][data-empty="true"]
-	.k-checkboxes-input {
-	margin-bottom: 0;
-	margin-inline-end: 0;
-}
-@container (min-width: 65em) {
-	.k-input[data-theme="field"][data-type="checkboxes"] .k-checkboxes-input {
-		grid-template-columns: repeat(var(--columns), 1fr);
-	}
-}
-.k-input[data-theme="field"][data-type="checkboxes"] .k-checkboxes-input li {
-	border-inline-end: 1px solid var(--color-background);
-	border-bottom: 1px solid var(--color-background);
-}
-.k-input[data-theme="field"][data-type="checkboxes"] .k-checkboxes-input label {
-	display: block;
-	line-height: var(--field-input-line-height);
-	padding: var(--field-input-padding) var(--field-input-padding);
-}
-.k-input[data-theme="field"][data-type="checkboxes"] .k-checkbox-input-icon {
-	top: calc((var(--field-input-height) - var(--field-input-font-size)) / 2);
-	inset-inline-start: var(--field-input-padding);
-	margin-top: 0px;
 }
 
 /* Radio */

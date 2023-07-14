@@ -1,20 +1,24 @@
 <template>
 	<ul
 		v-if="options.length"
+		:data-theme="theme"
 		:style="'--columns:' + columns"
-		class="k-checkboxes-input"
+		class="k-choices-input"
 	>
 		<li v-for="(option, index) in options" :key="index">
 			<k-choice-input
-				:id="id + '-' + index"
-				:label="option.text"
 				:checked="selected.indexOf(option.value) !== -1"
+				:id="id + '-' + index"
+				:info="option.info"
+				:label="option.text"
 				:theme="theme"
+				:type="type"
+				:value="option.value"
 				@input="onInput(option.value, $event)"
 			/>
 		</li>
 	</ul>
-	<k-empty v-else icon="info" theme="info">{{ $t("options.none") }}</k-empty>
+	<k-empty v-else icon="info">{{ $t("options.none") }}</k-empty>
 </template>
 
 <script>
@@ -32,7 +36,10 @@ export const props = {
 		columns: Number,
 		max: Number,
 		min: Number,
-		options: Array,
+		options: {
+			default: () => [],
+			type: Array
+		},
 		theme: String,
 		/**
 		 * The value for the input should be provided as array. Each value in the array corresponds with the value in the options. If you provide a string, the string will be split by comma.
@@ -115,9 +122,13 @@ export default {
 </script>
 
 <style>
-.k-checkboxes-input {
+.k-choices-input {
+	--columns: 1;
 	display: grid;
-	gap: 0.25rem;
+	gap: var(--spacing-6);
 	grid-template-columns: repeat(var(--columns), 1fr);
+}
+.k-choices-input[data-theme="field"] {
+	gap: var(--spacing-1);
 }
 </style>
