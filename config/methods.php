@@ -270,7 +270,11 @@ return function (App $app) {
 		 * Turns the field value into an absolute Url
 		 */
 		'toUrl' => function (Field $field): string|null {
-			return $field->isNotEmpty() ? Url::to($field->value) : null;
+			try {
+				return $field->isNotEmpty() ? Url::to($field->value) : null;
+			} catch (Throwable) {
+				return null;
+			}
 		},
 
 		/**

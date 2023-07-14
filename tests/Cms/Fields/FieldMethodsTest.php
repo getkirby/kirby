@@ -5,7 +5,6 @@ namespace Kirby\Cms;
 use Kirby\Data\Json;
 use Kirby\Data\Yaml;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 
 class FieldMethodsTest extends TestCase
@@ -485,22 +484,13 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($file->url(), $field->toUrl());
 	}
 
-	public function testToInvalidPageUuidUrl()
+	public function testToInvalidUuidUrl()
 	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The model could not be found for "page://invalid" uuid');
-
 		$field = $this->field('page://invalid');
-		$field->toUrl();
-	}
-
-	public function testToInvalidFileUuidUrl()
-	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The model could not be found for "file://invalid" uuid');
+		$this->assertNull($field->toUrl());
 
 		$field = $this->field('file://invalid');
-		$field->toUrl();
+		$this->assertNull($field->toUrl());
 	}
 
 	public function testToUser()
