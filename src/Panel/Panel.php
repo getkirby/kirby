@@ -10,6 +10,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Response;
 use Kirby\Http\Router;
+use Kirby\Http\Uri;
 use Kirby\Http\Url;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\Tpl;
@@ -364,7 +365,7 @@ class Panel
 				'installation',
 				'login',
 			],
-			'action' => fn () => Panel::go(Home::path()),
+			'action' => fn () => Panel::go(Home::url()),
 			'auth' => false
 		];
 
@@ -545,15 +546,22 @@ class Panel
 	 */
 	public static function url(string|null $url = null, array $options = []): string
 	{
-		$slug = App::instance()->option('panel.slug', 'panel');
-
 		// only touch relative paths
 		if (Url::isAbsolute($url) === false) {
-			$path = trim($url, '/');
+			$kirby = App::instance();
+			$slug  = $kirby->option('panel.slug', 'panel');
+			$path  = trim($url, '/');
 
+			$baseUri  = new Uri($kirby->url());
+			$basePath = trim($baseUri->path()->toString(), '/');
+
+			// removes base path if relative path contains it
+			if (empty($basePath) === false && Str::startsWith($path, $basePath) === true) {
+				$path = Str::after($path, $basePath);
+			}
 			// add the panel slug prefix if it it's not
 			// included in the path yet
-			if (Str::startsWith($path, $slug . '/') === false) {
+			elseif (Str::startsWith($path, $slug . '/') === false) {
 				$path = $slug . '/' . $path;
 			}
 

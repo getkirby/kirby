@@ -53,9 +53,9 @@ if (Helpers::hasOverride('collection') === false) { // @codeCoverageIgnore
 	 * @return \Kirby\Toolkit\Collection|null
 	 * @todo 5.0 Add return type declaration
 	 */
-	function collection(string $name)
+	function collection(string $name, array $options = [])
 	{
-		return App::instance()->collection($name);
+		return App::instance()->collection($name, $options);
 	}
 }
 

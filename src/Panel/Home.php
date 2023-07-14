@@ -156,15 +156,6 @@ class Home
 	}
 
 	/**
-	 * Returns the path after /panel/ for the home url
-	 */
-	public static function path(): string|null
-	{
-		$url = Home::url();
-		return Home::panelPath($url);
-	}
-
-	/**
 	 * Returns the Url that has been stored in the session
 	 * before the last logout. We take this Url if possible
 	 * to redirect the user back to the last point where they
