@@ -229,7 +229,7 @@ class LayoutField extends BlocksField
 		);
 	}
 
-	protected function setSettings(array|string $settings = null): void
+	protected function setSettings(array|string|null $settings = null): void
 	{
 		if (empty($settings) === true) {
 			$this->settings = null;

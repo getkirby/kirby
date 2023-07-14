@@ -265,7 +265,7 @@ abstract class FieldClass
 	/**
 	 * Returns the parent model
 	 */
-	public function model(): mixed
+	public function model(): ModelWithContent
 	{
 		return $this->model;
 	}
@@ -461,7 +461,7 @@ abstract class FieldClass
 	/**
 	 * Setter for the when condition
 	 */
-	protected function setWhen(mixed $when = null): void
+	protected function setWhen(array|null $when = null): void
 	{
 		$this->when = $when;
 	}
