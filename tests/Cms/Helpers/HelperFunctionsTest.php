@@ -67,14 +67,19 @@ class HelperFunctionsTest extends TestCase
 			'collections' => [
 				'test' => function ($pages) {
 					return $pages;
+				},
+				'options' => function (int $b, int $a) {
+					return $a + $b;
 				}
 			]
 		]);
 
 		$collection = collection('test');
-
 		$this->assertCount(1, $collection);
 		$this->assertSame('test', $collection->first()->slug());
+
+		$collection = collection('options', ['a' => 5, 'b' => 3]);
+		$this->assertSame(8, $collection);
 	}
 
 	public function testCsrf()

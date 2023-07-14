@@ -367,14 +367,14 @@ class App
 	 * @return \Kirby\Toolkit\Collection|null
 	 * @todo 5.0 Add return type declaration
 	 */
-	public function collection(string $name)
+	public function collection(string $name, array $options = [])
 	{
-		return $this->collections()->get($name, [
+		return $this->collections()->get($name, array_merge($options, [
 			'kirby' => $this,
-			'site'  => $this->site(),
-			'pages' => $this->site()->children(),
+			'site'  => $site = $this->site(),
+			'pages' => $site->children(),
 			'users' => $this->users()
-		]);
+		]));
 	}
 
 	/**
