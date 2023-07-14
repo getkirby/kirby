@@ -26,7 +26,11 @@
 				/>
 			</k-draggable>
 
-			<footer v-if="!disabled" class="k-bar" data-align="center">
+			<footer
+				v-if="!disabled"
+				class="k-layouts-footer k-bar"
+				data-align="center"
+			>
 				<k-button
 					:title="$t('add')"
 					icon="add"
@@ -331,8 +335,7 @@ export default {
 	cursor: grabbing;
 	z-index: 1;
 }
-/** TODO: .k-layouts:has(+ footer) { margin-bottom: var(--spacing-3);} */
-.k-layouts > footer {
+.k-layouts-footer {
 	margin-top: var(--spacing-3);
 }
 </style>
