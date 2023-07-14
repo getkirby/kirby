@@ -6,7 +6,7 @@ trait EmptyState
 {
 	protected string|null $empty;
 
-	protected function setEmpty(string|array|null $empty = null): string|null
+	protected function setEmpty(string|array|null $empty = null): void
 	{
 		$this->empty = $this->i18n($empty);
 	}
