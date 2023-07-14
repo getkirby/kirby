@@ -350,7 +350,7 @@ return [
 	 *
 	 * @param string|null $path URL path
 	 * @param array|string|null $options Array of options for the Uri class
-	 * @throws \Kirby\Exception\NotFoundException
+	 * @throws \Kirby\Exception\NotFoundException If an invalid UUID was passed
 	 */
 	'url' => function (
 		App $kirby,

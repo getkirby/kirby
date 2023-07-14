@@ -17,6 +17,7 @@ use Kirby\Cms\Users;
 use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 use Kirby\Toolkit\Xml;
@@ -272,7 +273,7 @@ return function (App $app) {
 		'toUrl' => function (Field $field): string|null {
 			try {
 				return $field->isNotEmpty() ? Url::to($field->value) : null;
-			} catch (Throwable) {
+			} catch (NotFoundException) {
 				return null;
 			}
 		},
