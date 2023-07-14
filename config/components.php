@@ -8,6 +8,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\User;
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\Filename;
 use Kirby\Http\Uri;
@@ -349,6 +350,7 @@ return [
 	 *
 	 * @param string|null $path URL path
 	 * @param array|string|null $options Array of options for the Uri class
+	 * @throws \Kirby\Exception\NotFoundException
 	 */
 	'url' => function (
 		App $kirby,
@@ -404,7 +406,13 @@ return [
 				Uuid::is($path, 'file') === true
 			)
 		) {
-			$path = Uuid::for($path)->model()?->url();
+			$model = Uuid::for($path)->model();
+
+			if ($model === null) {
+				throw new NotFoundException('The model could not be found for "' . $path . '" uuid');
+			}
+
+			$path = $model->url();
 		}
 
 		$url = Url::makeAbsolute($path, $kirby->url());
