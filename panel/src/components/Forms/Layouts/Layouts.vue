@@ -40,7 +40,7 @@
 			</k-empty>
 		</template>
 
-		<k-layout-selector ref="selector" :layouts="layouts" @select="onSelect" />
+		<k-layout-selector ref="selector" :layouts="layouts" :size="size" @select="onSelect" />
 		<k-block-pasteboard ref="pasteboard" @paste="onPaste" />
 	</div>
 </template>
@@ -59,6 +59,10 @@ export default {
 		layouts: Array,
 		max: Number,
 		settings: Object,
+		size: {
+			type: String,
+			default: "medium"
+		},
 		value: Array
 	},
 	data() {

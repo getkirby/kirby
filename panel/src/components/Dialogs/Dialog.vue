@@ -95,6 +95,12 @@ export default {
 	}
 }
 
+@media screen and (min-width: 60rem) {
+	.k-dialog[data-size="huge"] {
+		--dialog-width: 60rem;
+	}
+}
+
 /** Pagination **/
 .k-dialog .k-pagination {
 	margin-bottom: -1.5rem;

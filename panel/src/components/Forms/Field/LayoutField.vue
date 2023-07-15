@@ -50,6 +50,13 @@ export default {
 			default: () => [["1/1"]]
 		},
 		settings: Object,
+		/**
+		 * @values small, medium, large, huge
+		 */
+		size: {
+			type: String,
+			default: "medium"
+		},
 		value: {
 			type: Array,
 			default: () => []
