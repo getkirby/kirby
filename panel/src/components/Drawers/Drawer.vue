@@ -3,6 +3,7 @@
 		<form
 			:aria-disabled="disabled"
 			:class="$vnode.data.staticClass"
+			:data-expand="expand"
 			class="k-drawer"
 			method="dialog"
 			@submit.prevent="$emit('submit')"
@@ -80,10 +81,13 @@ export default {
 	display: flex;
 	flex-basis: var(--drawer-width);
 	position: relative;
-	display: flex;
 	flex-direction: column;
 	background: var(--drawer-color-back);
 	box-shadow: var(--drawer-shadow);
 	container-type: inline-size;
+}
+
+.k-drawer[data-expand="true"] {
+	flex-basis: 100rem;
 }
 </style>

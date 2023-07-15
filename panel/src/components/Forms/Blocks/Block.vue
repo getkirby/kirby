@@ -66,6 +66,7 @@ export default {
 		fieldset: Object,
 		id: String,
 		isBatched: Boolean,
+		isExpanded: Boolean,
 		isFull: Boolean,
 		isHidden: Boolean,
 		isLastSelected: Boolean,
@@ -264,6 +265,7 @@ export default {
 					submit: this.submit
 				},
 				props: {
+					expand: this.isExpanded,
 					hidden: this.isHidden,
 					icon: this.fieldset.icon ?? "box",
 					next: this.next,

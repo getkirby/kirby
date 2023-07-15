@@ -14,6 +14,10 @@ export default {
 			default: false,
 			type: Boolean
 		},
+		expand: {
+			default: false,
+			type: Boolean
+		},
 		icon: String,
 		id: String,
 		options: {

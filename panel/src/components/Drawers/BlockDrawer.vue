@@ -1,6 +1,7 @@
 <template>
 	<k-form-drawer
 		ref="drawer"
+		:expand="isExpanded"
 		class="k-block-drawer"
 		v-bind="$props"
 		@cancel="$emit('cancel', $event)"
@@ -10,6 +11,11 @@
 		@tab="$emit('tab', $event)"
 	>
 		<template #options>
+			<k-button
+				class="k-drawer-option k-drawer-option-expand"
+				:icon="isExpanded ? 'collapse' : 'expand'"
+				@click.prevent.stop="isExpanded = !isExpanded"
+			/>
 			<k-button
 				v-if="hidden"
 				class="k-drawer-option"
@@ -39,6 +45,9 @@ import { props as Fields } from "./Elements/Fields.vue";
 
 export const props = {
 	props: {
+		isExpanded: {
+			type: Boolean
+		},
 		hidden: {
 			type: Boolean
 		},
@@ -66,3 +75,11 @@ export default {
 	]
 };
 </script>
+
+<style>
+@media screen and (max-width: 50rem) {
+	.k-button.k-drawer-option-expand {
+		display: none;
+	}
+}
+</style>
