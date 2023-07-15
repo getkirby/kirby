@@ -2,11 +2,16 @@
 	<k-dialog
 		v-bind="$props"
 		class="k-layout-selector"
+		:size="selector?.size ?? 'medium'"
 		@cancel="$emit('cancel')"
 		@submit="$emit('submit', value)"
 	>
 		<h3 class="k-label">{{ label }}</h3>
-		<k-navigate axis="x" class="k-layout-selector-options">
+		<k-navigate
+			:style="'--columns:' + Number(selector?.columns ?? 3)"
+			axis="x"
+			class="k-layout-selector-options"
+		>
 			<button
 				v-for="(columns, layoutIndex) in layouts"
 				:key="layoutIndex"
@@ -51,10 +56,7 @@ export default {
 		layouts: {
 			type: Array
 		},
-		// eslint-disable-next-line vue/require-prop-types
-		size: {
-			default: "medium"
-		},
+		selector: Object,
 		// eslint-disable-next-line vue/require-prop-types
 		submitButton: {
 			default: false
@@ -71,13 +73,16 @@ export default {
 	margin-top: -0.5rem;
 	margin-bottom: var(--spacing-3);
 }
-
 .k-layout-selector-options {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	gap: var(--spacing-6);
 }
-
+@media screen and (min-width: 65em) {
+	.k-layout-selector-options {
+		grid-template-columns: repeat(var(--columns), 1fr);
+	}
+}
 .k-layout-selector-option {
 	--color-border: hsla(var(--color-gray-hs), 0%, 6%);
 	--color-back: var(--color-white);
