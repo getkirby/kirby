@@ -143,7 +143,7 @@ export default {
 			this.$panel.dialog.open({
 				component: "k-toolbar-" + dialog + "-dialog",
 				props: {
-					value: { title: this.selection() }
+					value: this.parseSelection()
 				},
 				on: {
 					cancel: restoreSelection,
@@ -241,6 +241,36 @@ export default {
 		},
 		onSubmit($event) {
 			return this.$emit("submit", $event);
+		},
+		parseSelection() {
+			const selection = this.selection();
+
+			if (selection?.length === 0) {
+				return {
+					href: null,
+					title: null
+				}
+			}
+
+			let regex;
+			if (this.$panel.config.kirbytext) {
+				regex = /^\(link:\s*(?<url>.*?)(?:\s*text:\s*(?<text>.*?))?\)$/is;
+			} else {
+				regex = /^(\[(?<text>.*?)\]\((?<url>.*?)\))|(<(?<link>.*?)>)$/is;
+			}
+
+			const matches = regex.exec(selection);
+			if (matches !== null) {
+				return {
+					href: matches.groups.url ?? matches.groups.link,
+					title: matches.groups.text ?? null
+				}
+			} else {
+				return {
+					href: null,
+					title: selection
+				}
+			}
 		},
 		prepend(prepend) {
 			this.insert(prepend + " " + this.selection());
