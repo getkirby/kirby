@@ -568,7 +568,8 @@ class Language
 	 */
 	public function variable(string $key, bool $decode = false): LanguageVariable
 	{
-		// decode for encoded strings
+		// allows decoding if base64-url encoded url is sent
+		// for compatibility of different environments
 		if ($decode === true) {
 			$key = rawurldecode(base64_decode($key));
 		}

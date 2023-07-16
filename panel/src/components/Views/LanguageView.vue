@@ -86,6 +86,8 @@ export default {
 			);
 		},
 		option(option, row) {
+			// for the compatibility of the encoded url in different environments,
+			// it is also encoded with base64 to ensure stable working
 			this.$panel.dialog.open(
 				`dialogs/languages/${this.id}/translations/${window.btoa(encodeURIComponent(row.key))}/${option}`
 			);
@@ -103,6 +105,8 @@ export default {
 			});
 		},
 		updateTranslation({ row }) {
+			// for the compatibility of the encoded url in different environments,
+			// it is also encoded with base64 to ensure stable working
 			this.$dialog(`languages/${this.id}/translations/${window.btoa(encodeURIComponent(row.key))}/update`);
 		}
 	}
