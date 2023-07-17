@@ -197,6 +197,15 @@ class FieldClassTest extends TestCase
 	}
 
 	/**
+	 * @covers ::drawers
+	 */
+	public function testDrawers()
+	{
+		$field = new TestField();
+		$this->assertSame([], $field->drawers());
+	}
+
+	/**
 	 * @covers ::errors
 	 * @covers ::validate
 	 */
@@ -588,30 +597,6 @@ class FieldClassTest extends TestCase
 	}
 
 	/**
-	 * @covers ::when
-	 */
-	public function testWhen()
-	{
-		$field = new TestField();
-		$this->assertNull($field->when());
-
-		$field = new TestField(['when' => ['a' => 'test']]);
-		$this->assertSame(['a' => 'test'], $field->when());
-	}
-
-	/**
-	 * @covers ::width
-	 */
-	public function testWidth()
-	{
-		$field = new TestField();
-		$this->assertSame('1/1', $field->width());
-
-		$field = new TestField(['width' => '1/2']);
-		$this->assertSame('1/2', $field->width());
-	}
-
-	/**
 	 * @covers ::valueFromJson
 	 */
 	public function testValueFromJson()
@@ -660,5 +645,29 @@ class FieldClassTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid YAML data; please pass a string');
 		new YamlField(['value' => new \stdClass()]);
+	}
+
+	/**
+	 * @covers ::when
+	 */
+	public function testWhen()
+	{
+		$field = new TestField();
+		$this->assertNull($field->when());
+
+		$field = new TestField(['when' => ['a' => 'test']]);
+		$this->assertSame(['a' => 'test'], $field->when());
+	}
+
+	/**
+	 * @covers ::width
+	 */
+	public function testWidth()
+	{
+		$field = new TestField();
+		$this->assertSame('1/1', $field->width());
+
+		$field = new TestField(['width' => '1/2']);
+		$this->assertSame('1/2', $field->width());
 	}
 }
