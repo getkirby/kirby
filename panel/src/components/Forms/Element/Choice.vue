@@ -1,5 +1,7 @@
 <template>
 	<input
+		ref="input"
+		:autofocus="autofocus"
 		:checked="checked"
 		:data-variant="variant"
 		:disabled="disabled"
@@ -15,6 +17,7 @@
 
 <script>
 import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
+import { required as validateRequired } from "vuelidate/lib/validators";
 
 export const props = {
 	mixins: [autofocus, disabled, id, name, required],
@@ -37,7 +40,37 @@ export const props = {
 };
 
 export default {
-	mixins: [props]
+	mixins: [props],
+	watch: {
+		value: {
+			handler() {
+				this.validate();
+			},
+			immediate: true
+		}
+	},
+	methods: {
+		focus() {
+			this.$refs.input.focus();
+		},
+		select() {
+			this.focus();
+		},
+		validate() {
+			/**
+			 * The invalid event is triggered when the input validation fails. This can be used to react on errors immediately.
+			 * @event invalid
+			 */
+			this.$emit("invalid", this.$v.$invalid, this.$v);
+		}
+	},
+	validations() {
+		return {
+			value: {
+				required: this.required ? validateRequired : true
+			}
+		};
+	}
 };
 </script>
 

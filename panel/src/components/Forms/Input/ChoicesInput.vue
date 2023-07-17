@@ -11,6 +11,7 @@
 				:id="id + '-' + index"
 				:info="option.info"
 				:label="option.text"
+				:name="name"
 				:theme="theme"
 				:type="type"
 				:value="option.value"
@@ -22,7 +23,7 @@
 </template>
 
 <script>
-import { autofocus, disabled, id, required } from "@/mixins/props.js";
+import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
 
 import {
 	required as validateRequired,
@@ -31,7 +32,7 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [autofocus, disabled, id, required],
+	mixins: [autofocus, disabled, id, name, required],
 	props: {
 		columns: Number,
 		max: Number,
@@ -41,6 +42,7 @@ export const props = {
 			type: Array
 		},
 		theme: String,
+		type: String,
 		/**
 		 * The value for the input should be provided as array. Each value in the array corresponds with the value in the options. If you provide a string, the string will be split by comma.
 		 */

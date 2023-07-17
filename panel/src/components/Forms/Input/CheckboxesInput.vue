@@ -1,20 +1,10 @@
 <template>
-	<ul
-		v-if="options.length"
-		:style="'--columns:' + columns"
+	<k-choices-input
+		v-bind="$props"
 		class="k-checkboxes-input"
-	>
-		<li v-for="(option, index) in options" :key="index">
-			<k-choice-input
-				:id="id + '-' + index"
-				:label="option.text"
-				:checked="selected.indexOf(option.value) !== -1"
-				:theme="theme"
-				@input="onInput(option.value, $event)"
-			/>
-		</li>
-	</ul>
-	<k-empty v-else icon="info" theme="info">{{ $t("options.none") }}</k-empty>
+		@input="$emit('input', $event)"
+		@invalid="$emit('invalid', $event)"
+	/>
 </template>
 
 <script>

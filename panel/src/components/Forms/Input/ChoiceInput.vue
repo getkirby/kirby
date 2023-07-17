@@ -4,9 +4,14 @@
 		:data-theme="theme"
 		:data-has-info="Boolean(info)"
 	>
-		<k-choice v-bind="$props" @input="$emit('input', $event)" />
-		<span class="k-choice-input-text">
-			<span class="k-choice-input-label" v-html="label" />
+		<k-choice
+			ref="input"
+			v-bind="$props"
+			@input="$emit('input', $event)"
+			@invalid="$emit('invalid', $event)"
+		/>
+		<span class="k-choice-input-label">
+			<span class="k-choice-input-text" v-html="label" />
 			<span v-if="info" class="k-choice-input-info" v-html="info" />
 		</span>
 	</label>
@@ -15,10 +20,10 @@
 <script>
 import { props as Choice } from "@/components/Forms/Element/Choice.vue";
 import { label } from "@/mixins/props.js";
+import { required as validateRequired } from "vuelidate/lib/validators";
 
-export default {
+export const props = {
 	mixins: [Choice, label],
-	emits: ["input"],
 	props: {
 		info: {
 			type: String
@@ -28,46 +33,56 @@ export default {
 		}
 	}
 };
+
+export default {
+	mixins: [props],
+	emits: ["input", "invalid"],
+	methods: {
+		focus() {
+			this.$refs.input.focus();
+		},
+		select() {
+			this.focus();
+		}
+	}
+};
 </script>
 
 <style>
 :root {
+	--choice-input-color-back: var(--color-white);
 	--choice-input-color-info: var(--color-text-dimmed);
 }
 
 .k-choice-input {
 	display: flex;
-	align-items: center;
-	gap: var(--spacing-2);
+	gap: var(--spacing-3);
+	min-width: 0;
 }
-.k-choice-input[data-has-info] {
-	align-items: flex-start;
+.k-choice-input .k-choice {
+	top: 2px;
 }
-.k-choice-input[data-has-info] .k-choice {
-	top: 1px;
-}
-.k-choice-input-text {
+.k-choice-input-label {
 	display: flex;
-	line-height: var(--leading-tight);
+	line-height: 1.25rem;
 	flex-direction: column;
+	min-width: 0;
+}
+.k-choice-input-label > * {
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .k-choice-input-info {
-	color: var(--color-text-dimmed);
-}
-
-.k-choice-input:not([data-has-info]) .k-choice-input-text {
-	overflow: clip;
+	color: var(--choice-input-color-info);
 }
 
 .k-choice-input[data-theme="field"] {
-	background: var(--field-input-background);
-	height: var(--field-input-height);
+	background: var(--choice-input-color-back);
+	min-height: var(--field-input-height);
+	padding-block: var(--spacing-2);
 	padding-inline: var(--spacing-3);
 	border-radius: var(--rounded);
 	box-shadow: var(--shadow);
-}
-.k-choice-input[data-theme="field"][data-has-info] {
-	height: auto;
-	padding-block: var(--spacing-3);
 }
 </style>
