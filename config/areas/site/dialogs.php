@@ -199,7 +199,7 @@ return [
 						'slug' => Field::slug([
 							'required'  => true,
 							'preselect' => $select === 'slug',
-							'path'      => $page->parent() ? '/' . $page->parent()->id() . '/' : '/',
+							'path'      => $page->parent() ? '/' . $page->parent()->uri() . '/' : '/',
 							'disabled'  => $permissions->can('changeSlug') === false,
 							'wizard'    => [
 								'text'  => I18n::translate('page.changeSlug.fromTitle'),
