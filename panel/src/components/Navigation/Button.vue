@@ -240,6 +240,7 @@ export default {
 	font-variant-numeric: tabular-nums;
 	overflow-x: clip;
 	text-align: var(--button-align);
+	flex-shrink: 0;
 }
 
 .k-button-icon {

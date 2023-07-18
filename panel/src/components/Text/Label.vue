@@ -8,9 +8,11 @@
 	>
 		<k-link v-if="link" :to="link">
 			<!-- @slot Content/text of the label -->
-			<slot />
+			<span class="k-label-text"><slot /></span>
 		</k-link>
-		<slot v-else />
+		<span v-else class="k-label-text">
+			<slot />
+		</span>
 
 		<abbr v-if="required && !invalid" :title="$t(type + '.required')">✶</abbr>
 		<abbr :title="$t(type + '.invalid')" class="k-label-invalid">&times;</abbr>
@@ -72,14 +74,27 @@ export default {
 	display: flex;
 	align-items: center;
 	height: var(--height-xs);
-	overflow: clip;
-	text-overflow: ellipsis;
-	white-space: nowrap;
 	font-weight: var(--font-semi);
+	min-width: 0;
 }
 [aria-disabled] .k-label {
 	opacity: var(--opacity-disabled);
 	cursor: not-allowed;
+}
+
+.k-label > a {
+	display: inline-flex;
+	height: var(--height-xs);
+	align-items: center;
+	padding-inline: var(--spacing-2);
+	margin-inline-start: calc(-1 * var(--spacing-2));
+	border-radius: var(--rounded);
+	min-width: 0;
+}
+.k-label-text {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow-x: clip;
 }
 
 /** Required and invalid sign **/
