@@ -154,7 +154,7 @@ class Menu
 
 		$entries[] = '-';
 
-		return [...$entries, ...$this->options()];
+		return array_merge($entries, $this->options());
 	}
 
 	/**

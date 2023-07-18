@@ -295,6 +295,7 @@ class ContentStorage
 			return $languageCode ?? 'default';
 		}
 
+		// in multi-lang, …
 		if ($this->model->kirby()->multilang() === true) {
 			// look up the actual language object if possible
 			$language = $this->model->kirby()->language($languageCode);
@@ -309,7 +310,7 @@ class ContentStorage
 			return $language?->code() ?? $languageCode;
 		}
 
-		// otherwise there can only be a single-lang with hardcoded "default" code
+		// otherwise use hardcoded "default" code for single lang
 		return 'default';
 	}
 }

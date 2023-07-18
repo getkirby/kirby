@@ -611,10 +611,13 @@ return [
 	'changes' => [
 		'pattern' => 'changes',
 		'load'    => function () {
-			return (new ChangesDialog())->load();
+			$dialog = new ChangesDialog();
+			return $dialog->load();
 		},
 		'submit' => function () {
-			return (new ChangesDialog())->submit(get('ids'));
+			$dialog = new ChangesDialog();
+			$ids    = App::instance()->request()->get('ids');
+			return $dialog->submit($ids);
 		}
 	],
 ];
