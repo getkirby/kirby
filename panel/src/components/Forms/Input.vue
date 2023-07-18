@@ -245,16 +245,4 @@ export default {
 	padding: 0.25rem var(--field-input-padding);
 	line-height: 1.5rem;
 }
-
-/* Toggle */
-.k-input[data-theme="field"][data-type="toggle"] .k-input-before {
-	padding-inline-end: calc(var(--field-input-padding) / 2);
-}
-.k-input[data-theme="field"][data-type="toggle"] .k-toggle-input {
-	padding-inline-start: var(--field-input-padding);
-}
-.k-input[data-theme="field"][data-type="toggle"] .k-toggle-input-label {
-	padding: 0 var(--field-input-padding) 0 0.75rem;
-	line-height: var(--field-input-height);
-}
 </style>
