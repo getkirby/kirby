@@ -109,6 +109,7 @@ export default {
 
 .k-page-view-status {
 	--button-color-back: var(--color-gray-300);
+	--button-color-icon: var(--theme-color-600);
 	--button-color-text: initial;
 }
 </style>
