@@ -1,18 +1,12 @@
 <template>
 	<ul
 		v-if="options.length"
-		:data-theme="theme"
 		:style="'--columns:' + columns"
-		class="k-checkboxes-input"
+		class="k-checkboxes-input k-grid"
+		data-variant="choices"
 	>
 		<li v-for="(choice, index) in choices" :key="index">
-			<k-choice-input
-				v-bind="choice"
-				:name="name"
-				:theme="theme"
-				type="checkbox"
-				@input="input(choice.value, $event)"
-			/>
+			<k-choice-input v-bind="choice" @input="input(choice.value, $event)" />
 		</li>
 	</ul>
 	<k-empty v-else icon="info">{{ $t("options.none") }}</k-empty>
@@ -62,8 +56,12 @@ export default {
 				return {
 					autofocus: this.autofocus && index === 0,
 					checked: this.selected.includes(option.value),
-					label: option.text,
+					disabled: this.disabled,
 					info: option.info,
+					label: option.text,
+					name: this.name,
+					theme: this.theme,
+					type: "checkbox",
 					value: option.value
 				};
 			});
@@ -72,7 +70,7 @@ export default {
 	watch: {
 		value: {
 			handler(value) {
-				this.selected = this.toArray(value);
+				this.selected = Array.isArray(value) ? value : [];
 				this.validate();
 			},
 			immediate: true
@@ -96,19 +94,6 @@ export default {
 		select() {
 			this.focus();
 		},
-		toArray(value) {
-			if (Array.isArray(value) === true) {
-				return value;
-			}
-
-			if (typeof value === "string") {
-				return String(value).split(",");
-			}
-
-			if (typeof value === "object") {
-				return Object.values(value);
-			}
-		},
 		validate() {
 			this.$emit("invalid", this.$v.$invalid, this.$v);
 		}
@@ -124,11 +109,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.k-checkboxes-input {
-	display: grid;
-	gap: 2px;
-	grid-template-columns: repeat(var(--columns), 1fr);
-}
-</style>

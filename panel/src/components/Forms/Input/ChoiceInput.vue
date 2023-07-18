@@ -1,8 +1,9 @@
 <template>
 	<label
 		class="k-choice-input"
-		:data-theme="theme"
+		:aria-disabled="disabled"
 		:data-has-info="Boolean(info)"
+		:data-theme="theme"
 	>
 		<k-choice
 			ref="input"
@@ -52,6 +53,7 @@ export default {
 :root {
 	--choice-input-color-back: var(--color-white);
 	--choice-input-color-info: var(--color-text-dimmed);
+	--choice-input-color-text: var(--color-text);
 }
 
 .k-choice-input {
@@ -67,6 +69,7 @@ export default {
 	line-height: 1.25rem;
 	flex-direction: column;
 	min-width: 0;
+	color: var(--choice-input-color-text);
 }
 .k-choice-input-label > * {
 	display: block;
@@ -75,6 +78,14 @@ export default {
 }
 .k-choice-input-info {
 	color: var(--choice-input-color-info);
+}
+
+.k-choice-input[aria-disabled] {
+	cursor: not-allowed;
+	--choice-input-color-back: var(--color-light);
+	--choice-input-color-info: var(--color-gray-400);
+	--choice-input-color-text: var(--color-text-dimmed);
+	--shadow: none;
 }
 
 .k-choice-input[data-theme="field"] {

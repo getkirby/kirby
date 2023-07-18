@@ -1,21 +1,79 @@
+<template>
+	<ul
+		v-if="options.length"
+		:style="'--columns:' + columns"
+		class="k-radio-input k-grid"
+		data-variant="choices"
+	>
+		<li v-for="(choice, index) in choices" :key="index">
+			<k-choice-input v-bind="choice" @input="$emit('input', choice.value)" />
+		</li>
+	</ul>
+	<k-empty v-else icon="info" theme="info">{{ $t("options.none") }}</k-empty>
+</template>
+
 <script>
-import {
-	default as ChoiceInput,
-	props as ChoiceInputProps
-} from "./ChoiceInput.vue";
+import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
+import { required as validateRequired } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [ChoiceInputProps],
-	type: {
-		default: "radio"
+	mixins: [autofocus, disabled, id, name, required],
+	props: {
+		columns: Number,
+		options: {
+			default: () => [],
+			type: Array
+		},
+		theme: String,
+		value: [String, Number, Boolean]
 	}
 };
 
-/**
- *
- * @example <k-input :value="radio" @input="radio = $event" type="radio" />
- */
 export default {
-	mixins: [ChoiceInput, props]
+	mixins: [props],
+	inheritAttrs: false,
+	computed: {
+		choices() {
+			return this.options.map((option, index) => {
+				return {
+					autofocus: this.autofocus && index === 0,
+					checked: this.value === option.value,
+					disabled: this.disabled,
+					info: option.info,
+					label: option.text,
+					name: this.name,
+					theme: this.theme,
+					type: "radio",
+					value: option.value
+				};
+			});
+		}
+	},
+	watch: {
+		value: {
+			handler() {
+				this.validate();
+			},
+			immediate: true
+		}
+	},
+	methods: {
+		focus() {
+			this.$el.querySelector("input")?.focus();
+		},
+		select() {
+			this.focus();
+		},
+		validate() {
+			this.$emit("invalid", this.$v.$invalid, this.$v);
+		}
+	},
+	validations() {
+		return {
+			value: {
+				required: this.required ? validateRequired : true
+			}
+		};
+	}
 };
 </script>
