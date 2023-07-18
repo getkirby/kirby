@@ -140,6 +140,7 @@ export default {
 	gap: clamp(var(--spacing-3), 9vh, var(--spacing-12));
 	padding: var(--menu-padding);
 	overscroll-behavior: contain;
+	overflow-x: hidden;
 	overflow-y: auto;
 	height: 100%;
 }
