@@ -12,7 +12,9 @@
 			@invalid="$emit('invalid', $event)"
 		/>
 		<span class="k-choice-input-label">
+			<!-- eslint-disable-next-line vue/no-v-html -->
 			<span class="k-choice-input-text" v-html="label" />
+			<!-- eslint-disable-next-line vue/no-v-html -->
 			<span v-if="info" class="k-choice-input-info" v-html="info" />
 		</span>
 	</label>

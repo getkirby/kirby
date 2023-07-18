@@ -31,10 +31,10 @@
 					@select="add($event)"
 				>
 					<k-button
+						:id="id"
 						ref="toggle"
 						:autofocus="autofocus"
 						:disabled="disabled"
-						:id="id"
 						icon="add"
 						class="k-tags-toggle"
 						size="xs"

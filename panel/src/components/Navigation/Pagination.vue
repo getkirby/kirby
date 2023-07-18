@@ -18,7 +18,7 @@
 			>
 				<form method="dialog" @submit="goTo($refs.page.value)">
 					<label :for="_uid">{{ pageLabel ?? $t("pagination.page") }}:</label>
-					<select ref="page" :id="_uid" :autofocus="true">
+					<select :id="_uid" ref="page" :autofocus="true">
 						<option
 							v-for="p in pages"
 							:key="p"

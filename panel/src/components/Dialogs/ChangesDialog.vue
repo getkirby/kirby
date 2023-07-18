@@ -18,7 +18,7 @@ export default {
 	mixins: [Dialog],
 	props: {
 		cancelButton: {
-			default: false
+			default: false,
 		},
 		changes: {
 			type: Array

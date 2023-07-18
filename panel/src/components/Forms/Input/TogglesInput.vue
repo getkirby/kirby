@@ -12,9 +12,9 @@
 			:data-disabled="disabled"
 		>
 			<input
+				:id="id + '-' + index"
 				:aria-label="option.text"
 				:disabled="disabled"
-				:id="id + '-' + index"
 				:value="option.value"
 				:name="id"
 				:checked="value === option.value"
@@ -35,7 +35,7 @@
 			</label>
 		</li>
 	</ul>
-	<k-empty icon="info" v-else theme="info">{{ $t("options.none") }}</k-empty>
+	<k-empty v-else icon="info" theme="info">{{ $t("options.none") }}</k-empty>
 </template>
 
 <script>
