@@ -180,7 +180,8 @@ abstract class ModelWithContent implements Identifiable
 		string $languageCode = null,
 		bool $force = false
 	): string {
-		Helpers::deprecated('The internal $model->contentFile() method has been deprecated. You can use $model->storage()->contentFile() instead, however please note that this method is also internal and may be removed in the future.', 'model-content-file');
+		// TODO: add this back. We run into our own deprecation warning in our Language model
+		// Helpers::deprecated('The internal $model->contentFile() method has been deprecated. You can use $model->storage()->contentFile() instead, however please note that this method is also internal and may be removed in the future.', 'model-content-file');
 
 		return $this->storage()->contentFile(
 			$this->storage()->defaultVersion(),
