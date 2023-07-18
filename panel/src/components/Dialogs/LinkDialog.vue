@@ -15,6 +15,7 @@ import { props as Fields } from "./Elements/Fields.vue";
 export default {
 	mixins: [Dialog, Fields],
 	props: {
+		// eslint-disable-next-line vue/require-prop-types
 		fields: {
 			default: () => ({
 				href: {
@@ -35,9 +36,11 @@ export default {
 				}
 			})
 		},
+		// eslint-disable-next-line vue/require-prop-types
 		size: {
 			default: "medium"
 		},
+		// eslint-disable-next-line vue/require-prop-types
 		submitButton: {
 			default: () => window.panel.$t("insert")
 		}

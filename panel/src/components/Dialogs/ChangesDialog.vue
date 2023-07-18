@@ -17,8 +17,9 @@ import Dialog from "@/mixins/dialog.js";
 export default {
 	mixins: [Dialog],
 	props: {
+		// eslint-disable-next-line vue/require-prop-types
 		cancelButton: {
-			default: false,
+			default: false
 		},
 		changes: {
 			type: Array
@@ -26,9 +27,11 @@ export default {
 		loading: {
 			type: Boolean
 		},
+		// eslint-disable-next-line vue/require-prop-types
 		size: {
 			default: "medium"
 		},
+		// eslint-disable-next-line vue/require-prop-types
 		submitButton: {
 			default: false
 		}

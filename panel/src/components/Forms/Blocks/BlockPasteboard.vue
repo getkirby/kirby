@@ -26,12 +26,15 @@ export default {
 	mixins: [Dialog],
 	inheritAttrs: false,
 	props: {
+		// eslint-disable-next-line vue/require-prop-types
 		cancelButton: {
 			default: false
 		},
+		// eslint-disable-next-line vue/require-prop-types
 		size: {
 			default: "large"
 		},
+		// eslint-disable-next-line vue/require-prop-types
 		submitButton: {
 			default: false
 		}

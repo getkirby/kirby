@@ -47,6 +47,7 @@ export default {
 	mixins: [Dialog],
 	inheritAttrs: false,
 	props: {
+		// eslint-disable-next-line vue/require-prop-types
 		cancelButton: {
 			default: false
 		},
@@ -65,9 +66,11 @@ export default {
 		headline: {
 			type: String
 		},
+		// eslint-disable-next-line vue/require-prop-types
 		size: {
 			default: "medium"
 		},
+		// eslint-disable-next-line vue/require-prop-types
 		submitButton: {
 			default: false
 		},
@@ -126,7 +129,7 @@ export default {
 	},
 	destroyed() {
 		this.$events.off("paste", this.close);
-	},
+	}
 };
 </script>
 

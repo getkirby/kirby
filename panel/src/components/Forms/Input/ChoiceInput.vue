@@ -23,7 +23,6 @@
 <script>
 import { props as Choice } from "@/components/Forms/Element/Choice.vue";
 import { label } from "@/mixins/props.js";
-import { required as validateRequired } from "vuelidate/lib/validators";
 
 export const props = {
 	mixins: [Choice, label],

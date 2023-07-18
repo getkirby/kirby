@@ -8,17 +8,17 @@
 			@end="save"
 		>
 			<k-tag
-				v-for="(tag, index) in tags"
-				:key="index"
+				v-for="(item, itemIndex) in tags"
+				:key="itemIndex"
 				:removable="!disabled"
 				name="tag"
 				@click.native.stop
-				@keypress.native.enter="edit(index, tag, $event)"
-				@dblclick.native="edit(index, tag, $event)"
-				@remove="remove(index, tag)"
+				@keypress.native.enter="edit(itemIndex, item, $event)"
+				@dblclick.native="edit(itemIndex, item, $event)"
+				@remove="remove(itemIndex, item)"
 			>
 				<!-- eslint-disable-next-line vue/no-v-html -->
-				<span v-html="tag.text" />
+				<span v-html="item.text" />
 			</k-tag>
 			<template #footer>
 				<!-- add selector -->
@@ -240,7 +240,7 @@ export default {
 			this.save();
 		},
 		replace(value) {
-			const { tag, index } = this.editing;
+			const { index } = this.editing;
 			const updated = this.tag(value);
 
 			if (this.isAllowed(updated) === false) {

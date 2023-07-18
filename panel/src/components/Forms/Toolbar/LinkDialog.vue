@@ -4,6 +4,7 @@ import LinkDialog from "@/components/Dialogs/LinkDialog.vue";
 export default {
 	extends: LinkDialog,
 	props: {
+		// eslint-disable-next-line vue/require-prop-types
 		fields: {
 			default: () => ({
 				href: {
