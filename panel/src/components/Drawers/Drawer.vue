@@ -84,5 +84,6 @@ export default {
 	flex-direction: column;
 	background: var(--drawer-color-back);
 	box-shadow: var(--drawer-shadow);
+	container-type: inline-size;
 }
 </style>
