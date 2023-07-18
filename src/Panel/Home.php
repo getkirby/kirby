@@ -66,14 +66,14 @@ class Home
 				continue;
 			}
 
-			// skip the logout button
-			if ($menuItem['id'] === 'logout') {
-				continue;
-			}
-
 			// skip buttons that don't open a link
 			// (but e.g. a dialog)
 			if (isset($menuItem['link']) === false) {
+				continue;
+			}
+
+			// skip the logout button
+			if ($menuItem['link'] === 'logout') {
 				continue;
 			}
 

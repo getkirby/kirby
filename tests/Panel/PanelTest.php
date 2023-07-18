@@ -128,7 +128,7 @@ class PanelTest extends TestCase
 		$areas = Panel::areas($app);
 
 		$this->assertArrayHasKey('todos', $areas);
-		$this->assertCount(8, $areas);
+		$this->assertCount(7, $areas);
 	}
 
 	/**
