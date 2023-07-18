@@ -1,37 +1,27 @@
 <template>
 	<k-panel class="k-panel-inside" tabindex="0">
 		<k-panel-menu />
-
 		<main class="k-panel-main">
-			<div class="k-panel-view">
-				<k-topbar :breadcrumb="$panel.view.breadcrumb" :view="$panel.view">
-					<slot name="topbar" />
-				</k-topbar>
+			<k-topbar :breadcrumb="$panel.view.breadcrumb" :view="$panel.view">
+				<slot name="topbar" />
+			</k-topbar>
 
-				<slot />
-			</div>
+			<slot />
 		</main>
 	</k-panel>
 </template>
 
-<script>
-export default {};
-</script>
-
 <style>
-.k-panel-inside {
-	display: flex;
+:root {
+	--main-padding-inline: clamp(var(--spacing-6), 5cqw, var(--spacing-24));
 }
 
 .k-panel-main {
-	--main-padding-inline: clamp(var(--spacing-3), 5cqw, var(--spacing-24));
-	flex-grow: 1;
-}
-
-.k-panel-view {
 	min-height: 100vh;
 	min-height: 100dvh;
-	padding: var(--spacing-3) var(--main-padding-inline) var(--spacing-24);
+	padding-block: var(--spacing-3);
+	padding-inline: var(--main-padding-inline);
 	container: main / inline-size;
+	margin-inline-start: var(--main-start);
 }
 </style>

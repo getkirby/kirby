@@ -4,6 +4,7 @@
 		:data-loading="$panel.isLoading"
 		:data-language="$panel.language.code"
 		:data-language-default="$panel.language.isDefault"
+		:data-menu="$panel.menu.isOpen ? 'true' : 'false'"
 		:data-role="$panel.user.role"
 		:data-translation="$panel.translation.code"
 		:data-user="$panel.user.id"
@@ -57,7 +58,6 @@ body {
 	font-size: var(--text-sm);
 }
 .k-panel {
-	container: app / inline-size;
 	background: var(--color-light);
 }
 

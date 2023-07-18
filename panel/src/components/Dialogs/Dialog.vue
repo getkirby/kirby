@@ -49,10 +49,15 @@ export default {
 :root {
 	--dialog-color-back: var(--color-light);
 	--dialog-color-text: currentColor;
-	--dialog-rounded: var(--rounded-xl);
+	--dialog-margin: var(--spacing-6);
 	--dialog-padding: var(--spacing-6);
+	--dialog-rounded: var(--rounded-xl);
 	--dialog-shadow: var(--shadow-xl);
 	--dialog-width: 22rem;
+}
+
+.k-dialog-portal {
+	padding: var(--dialog-margin);
 }
 
 .k-dialog {
@@ -63,7 +68,6 @@ export default {
 	box-shadow: var(--dialog-shadow);
 	border-radius: var(--dialog-rounded);
 	line-height: 1;
-	margin: 1.5rem;
 	display: flex;
 	flex-direction: column;
 	overflow: clip;

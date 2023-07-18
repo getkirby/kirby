@@ -3,6 +3,7 @@ import State from "./state.js";
 export const defaults = () => {
 	return {
 		entries: [],
+		hover: false,
 		isOpen: false
 	};
 };
