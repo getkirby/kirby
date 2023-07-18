@@ -61,6 +61,7 @@ export default {
 	--menu-color-back: var(--color-gray-250);
 	--menu-color-border: var(--color-gray-300);
 	--menu-display: none;
+	--menu-display-backdrop: block;
 	--menu-padding: var(--spacing-3);
 	--menu-shadow: var(--shadow-xl);
 	--menu-toggle-height: var(--menu-button-height);
@@ -183,11 +184,22 @@ export default {
 	--menu-width: var(--menu-width-open);
 }
 
+/* Backdrop for the mobile menu */
+.k-panel[data-menu="true"]::after {
+	content: "";
+	position: fixed;
+	inset: 0;
+	background: var(--color-backdrop);
+	display: var(--menu-display-backdrop);
+	pointer-events: none;
+}
+
 /* Desktop size */
 @media (min-width: 60rem) {
 	/* The menu is always visible on desktop sizes */
 	.k-panel {
 		--menu-display: block;
+		--menu-display-backdrop: none;
 		--menu-shadow: none;
 
 		/* The main view is indented according to the menu width */

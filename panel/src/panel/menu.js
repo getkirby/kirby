@@ -10,7 +10,7 @@ export const defaults = () => {
 
 export default (panel) => {
 	const parent = State("menu", defaults());
-	const media = window.matchMedia?.("(max-width: 40rem)");
+	const media = window.matchMedia?.("(max-width: 60rem)");
 	const menu = {
 		...parent,
 
