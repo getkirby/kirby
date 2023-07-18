@@ -53,10 +53,16 @@
 </template>
 
 <style>
+html {
+	scrollbar-gutter: stable;
+	overflow-x: hidden;
+}
+
 body {
 	background: var(--color-light);
 	font-size: var(--text-sm);
 }
+
 .k-panel {
 	background: var(--color-light);
 }
