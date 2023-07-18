@@ -1,14 +1,25 @@
 <template>
-	<k-choices-input
-		v-bind="$props"
+	<ul
+		v-if="options.length"
+		:data-theme="theme"
+		:style="'--columns:' + columns"
 		class="k-checkboxes-input"
-		@input="$emit('input', $event)"
-		@invalid="$emit('invalid', $event)"
-	/>
+	>
+		<li v-for="(choice, index) in choices" :key="index">
+			<k-choice-input
+				v-bind="choice"
+				:name="name"
+				:theme="theme"
+				type="checkbox"
+				@input="input(choice.value, $event)"
+			/>
+		</li>
+	</ul>
+	<k-empty v-else icon="info">{{ $t("options.none") }}</k-empty>
 </template>
 
 <script>
-import { autofocus, disabled, id, required } from "@/mixins/props.js";
+import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
 
 import {
 	required as validateRequired,
@@ -17,18 +28,21 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [autofocus, disabled, id, required],
+	mixins: [autofocus, disabled, id, name, required],
 	props: {
 		columns: Number,
 		max: Number,
 		min: Number,
-		options: Array,
+		options: {
+			default: () => [],
+			type: Array
+		},
 		theme: String,
 		/**
 		 * The value for the input should be provided as array. Each value in the array corresponds with the value in the options. If you provide a string, the string will be split by comma.
 		 */
 		value: {
-			type: [Array, Object],
+			type: Array,
 			default: () => []
 		}
 	}
@@ -39,29 +53,36 @@ export default {
 	inheritAttrs: false,
 	data() {
 		return {
-			selected: this.toArray(this.value)
+			selected: []
 		};
 	},
-	watch: {
-		value(value) {
-			this.selected = this.toArray(value);
-		},
-		selected() {
-			this.onInvalid();
+	computed: {
+		choices() {
+			return this.options.map((option, index) => {
+				return {
+					autofocus: this.autofocus && index === 0,
+					checked: this.selected.includes(option.value),
+					label: option.text,
+					info: option.info,
+					value: option.value
+				};
+			});
 		}
 	},
-	mounted() {
-		this.onInvalid();
-
-		if (this.$props.autofocus) {
-			this.focus();
+	watch: {
+		value: {
+			handler(value) {
+				this.selected = this.toArray(value);
+				this.validate();
+			},
+			immediate: true
 		}
 	},
 	methods: {
 		focus() {
 			this.$el.querySelector("input")?.focus();
 		},
-		onInput(key, value) {
+		input(key, value) {
 			if (value === true) {
 				this.selected.push(key);
 			} else {
@@ -71,9 +92,6 @@ export default {
 				}
 			}
 			this.$emit("input", this.selected);
-		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
 		},
 		select() {
 			this.focus();
@@ -90,6 +108,9 @@ export default {
 			if (typeof value === "object") {
 				return Object.values(value);
 			}
+		},
+		validate() {
+			this.$emit("invalid", this.$v.$invalid, this.$v);
 		}
 	},
 	validations() {
@@ -107,7 +128,7 @@ export default {
 <style>
 .k-checkboxes-input {
 	display: grid;
-	gap: 0.25rem;
+	gap: 2px;
 	grid-template-columns: repeat(var(--columns), 1fr);
 }
 </style>

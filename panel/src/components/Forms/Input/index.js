@@ -1,7 +1,6 @@
 import CheckboxInput from "./CheckboxInput.vue";
 import CheckboxesInput from "./CheckboxesInput.vue";
 import ChoiceInput from "./ChoiceInput.vue";
-import ChoicesInput from "./ChoicesInput.vue";
 import DateInput from "./DateInput.vue";
 import ColorInput from "./ColorInput.vue";
 import EmailInput from "./EmailInput.vue";
@@ -28,7 +27,6 @@ export default {
 		app.component("k-checkbox-input", CheckboxInput);
 		app.component("k-checkboxes-input", CheckboxesInput);
 		app.component("k-choice-input", ChoiceInput);
-		app.component("k-choices-input", ChoicesInput);
 		app.component("k-color-input", ColorInput);
 		app.component("k-date-input", DateInput);
 		app.component("k-email-input", EmailInput);
