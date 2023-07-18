@@ -90,20 +90,16 @@ export default {
 	},
 	methods: {
 		createTranslation() {
-			this.$panel.dialog.open(
-				`dialogs/languages/${this.id}/translations/create`
-			);
+			this.$dialog(`languages/${this.id}/translations/create`);
 		},
 		option(option, row) {
-			this.$panel.dialog.open(
-				`dialogs/languages/${this.id}/translations/${row.key}/${option}`
-			);
+			this.$dialog(`languages/${this.id}/translations/${row.key}/${option}`);
 		},
 		remove() {
-			this.$panel.dialog.open(`dialogs/languages/${this.id}/delete`);
+			this.$dialog(`languages/${this.id}/delete`);
 		},
 		update(focus) {
-			this.$panel.dialog.open(`dialogs/languages/${this.id}/update`, {
+			this.$dialog(`languages/${this.id}/update`, {
 				on: {
 					ready: () => {
 						this.$panel.dialog.focus(focus);
