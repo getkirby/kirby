@@ -301,13 +301,11 @@ class ContentStorage
 			$language = $this->model->kirby()->language($languageCode);
 
 			// validate the language code
-			if ($force === false && $language === null) {
+			if ($language === null) {
 				throw new InvalidArgumentException('Invalid language: ' . $languageCode);
 			}
 
-			// fall back to a base language object with just the code
-			// (force mode where the actual language doesn't exist anymore)
-			return $language?->code() ?? $languageCode;
+			return $language->code();
 		}
 
 		// otherwise use hardcoded "default" code for single lang
