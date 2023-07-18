@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Content\Field;
 use PHPUnit\Framework\TestCase;
 
 class ItemsTest extends TestCase

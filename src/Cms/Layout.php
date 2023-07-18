@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Content\Content;
+
 /**
  * Represents a single Layout with
  * multiple columns

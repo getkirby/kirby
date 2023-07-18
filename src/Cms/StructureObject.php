@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Content\Content;
+
 /**
  * The StructureObject represents each item
  * in a Structure collection. StructureObjects

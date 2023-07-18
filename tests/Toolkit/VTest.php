@@ -2,7 +2,7 @@
 
 namespace Kirby\Toolkit;
 
-use Kirby\Cms\Field;
+use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 

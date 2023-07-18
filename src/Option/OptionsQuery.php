@@ -3,12 +3,12 @@
 namespace Kirby\Option;
 
 use Kirby\Cms\Block;
-use Kirby\Cms\Field;
 use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\StructureObject;
 use Kirby\Cms\User;
+use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Obj;

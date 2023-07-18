@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Exception;
+use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
@@ -193,10 +194,13 @@ class User extends ModelWithContent
 	 * Filename for the content file
 	 *
 	 * @internal
-	 * @return string
+	 * @deprecated 4.0.0
+	 * @todo Remove in v5
+	 * @codeCoverageIgnore
 	 */
 	public function contentFileName(): string
 	{
+		Helpers::deprecated('The internal $model->contentFileName() method has been deprecated. Please let us know via a GitHub issue if you need this method and tell us your use case.', 'model-content-file');
 		return 'user';
 	}
 
@@ -222,7 +226,10 @@ class User extends ModelWithContent
 	 */
 	public function exists(): bool
 	{
-		return is_file($this->contentFile('default')) === true;
+		return $this->storage()->exists(
+			'published',
+			'default'
+		);
 	}
 
 	/**
@@ -503,7 +510,7 @@ class User extends ModelWithContent
 	 */
 	public function modified(string $format = 'U', string $handler = null, string $languageCode = null)
 	{
-		$modifiedContent = F::modified($this->contentFile($languageCode));
+		$modifiedContent = $this->storage()->modified('published', $languageCode);
 		$modifiedIndex   = F::modified($this->root() . '/index.php');
 		$modifiedTotal   = max([$modifiedContent, $modifiedIndex]);
 		$handler       ??= $this->kirby()->option('date.handler', 'date');
@@ -527,7 +534,7 @@ class User extends ModelWithContent
 	 * Returns the user's name or,
 	 * if empty, the email address
 	 *
-	 * @return \Kirby\Cms\Field
+	 * @return \Kirby\Content\Field
 	 */
 	public function nameOrEmail()
 	{

@@ -2,8 +2,6 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Blocks;
-use Kirby\Cms\Content;
-use Kirby\Cms\Field;
 use Kirby\Cms\File;
 use Kirby\Cms\Files;
 use Kirby\Cms\Html;
@@ -14,6 +12,8 @@ use Kirby\Cms\Structure;
 use Kirby\Cms\Url;
 use Kirby\Cms\User;
 use Kirby\Cms\Users;
+use Kirby\Content\Content;
+use Kirby\Content\Field;
 use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
