@@ -1,11 +1,11 @@
 <template>
 	<input
+		:id="id"
 		ref="input"
 		:autofocus="autofocus"
 		:checked="checked"
 		:data-variant="variant"
 		:disabled="disabled"
-		:id="id"
 		:name="name"
 		:required="required"
 		:type="type"

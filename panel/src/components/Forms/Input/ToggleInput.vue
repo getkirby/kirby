@@ -1,7 +1,7 @@
 <template>
 	<k-choice-input
-		ref="input"
 		:id="id"
+		ref="input"
 		:checked="value"
 		:disabled="disabled"
 		:label="label"

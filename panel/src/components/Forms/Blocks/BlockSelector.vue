@@ -44,8 +44,8 @@ import Dialog from "@/mixins/dialog.js";
  * @internal
  */
 export default {
-	inheritAttrs: false,
 	mixins: [Dialog],
+	inheritAttrs: false,
 	props: {
 		cancelButton: {
 			default: false

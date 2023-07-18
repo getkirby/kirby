@@ -1,8 +1,8 @@
 <template>
 	<div>
 		<component
-			v-for="drawer in $panel.drawer.history.milestones"
 			:is="drawer.component"
+			v-for="drawer in $panel.drawer.history.milestones"
 			:key="drawer.id"
 			:breadcrumb="$panel.drawer.breadcrumb"
 			:disabled="isCurrent(drawer.id) === false"

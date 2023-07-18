@@ -1,7 +1,7 @@
 <template>
 	<div
-		@dblclick="!fieldset.wysiwyg ? $emit('open') : null"
 		:data-collapsed="collapsed"
+		@dblclick="!fieldset.wysiwyg ? $emit('open') : null"
 	>
 		<header class="k-block-type-fields-header">
 			<k-block-title
