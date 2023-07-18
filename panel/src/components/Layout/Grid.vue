@@ -113,4 +113,8 @@ export default {
 .k-grid[data-variant="fields"] {
 	gap: var(--spacing-8);
 }
+
+.k-grid[data-variant="choices"] {
+	gap: 2px;
+}
 </style>

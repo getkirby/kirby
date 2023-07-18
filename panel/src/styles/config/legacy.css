@@ -46,9 +46,10 @@
 	--field-input-height: 2.25rem;
 	--field-input-line-height: 1.25rem;
 	--field-input-font-size: var(--text-md);
+	--field-input-color-border: hsl(var(--color-gray-hs), 85%);
 	--field-input-color-before: var(--color-gray-700);
 	--field-input-color-after: var(--color-gray-700);
-	--field-input-border: 1px solid var(--color-border);
+	--field-input-border: 1px solid var(--field-input-color-border);
 	--field-input-focus-border: 1px solid var(--color-focus);
 	--field-input-focus-outline: 2px solid var(--color-focus);
 	--field-input-invalid-border: 1px solid var(--color-red-900);

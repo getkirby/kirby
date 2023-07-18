@@ -1,17 +1,15 @@
 <template>
-	<label :data-disabled="disabled" class="k-toggle-input">
-		<input
-			:id="id"
-			ref="input"
-			:checked="value"
-			:disabled="disabled"
-			class="k-toggle-input-native"
-			type="checkbox"
-			@change="onInput($event.target.checked)"
-		/>
-		<!-- eslint-disable-next-line vue/no-v-html -->
-		<span class="k-toggle-input-label" v-html="label" />
-	</label>
+	<k-choice-input
+		ref="input"
+		:id="id"
+		:checked="value"
+		:disabled="disabled"
+		:label="label"
+		class="k-toggle-input"
+		type="checkbox"
+		variant="toggle"
+		@input="$emit('input', $event)"
+	/>
 </template>
 
 <script>
@@ -97,61 +95,19 @@ export default {
 </script>
 
 <style>
-.k-toggle-input {
-	--toggle-background: var(--color-white);
-	--toggle-color: var(--color-gray-500);
-	--toggle-active-color: var(--color-gray-900);
-	--toggle-focus-color: var(--color-focus);
-	--toggle-height: 16px;
-
-	display: flex;
-	align-items: center;
-}
-.k-toggle-input-native {
-	position: relative;
-	height: var(--toggle-height);
-	width: calc(var(--toggle-height) * 2);
-	border-radius: var(--toggle-height);
-	border: 2px solid var(--toggle-color);
-	box-shadow: inset 0 0 0 2px var(--toggle-background),
-		inset calc(var(--toggle-height) * -1) 0px 0px 2px var(--toggle-background);
-	background-color: var(--toggle-color);
+/* Toggle */
+.k-input[data-theme="field"][data-type="toggle"] {
 	outline: 0;
-	transition: all ease-in-out 0.1s;
-	appearance: none;
-	cursor: pointer;
-	flex-shrink: 0;
+	box-shadow: var(--shadow);
+	height: var(--field-input-height);
 }
-.k-toggle-input-native:checked {
-	border-color: var(--toggle-active-color);
-	box-shadow: inset 0 0 0 2px var(--toggle-background),
-		inset var(--toggle-height) 0px 0px 2px var(--toggle-background);
-	background-color: var(--toggle-active-color);
+.k-input[data-theme="field"][data-type="toggle"] .k-input-before {
+	padding-inline-end: calc(var(--field-input-padding) / 2);
 }
-
-.k-toggle-input-native[disabled] {
-	border-color: var(--color-border);
-	box-shadow: inset 0 0 0 2px var(--color-background),
-		inset calc(var(--toggle-height) * -1) 0px 0px 2px var(--color-background);
-	background-color: var(--color-border);
+.k-input[data-theme="field"][data-type="toggle"] .k-toggle-input {
+	padding-inline-start: var(--field-input-padding);
 }
-
-.k-toggle-input-native[disabled]:checked {
-	box-shadow: inset 0 0 0 2px var(--color-background),
-		inset var(--toggle-height) 0px 0px 2px var(--color-background);
-}
-
-.k-toggle-input-native:focus:checked {
-	border: 2px solid var(--color-focus);
-	background-color: var(--toggle-focus-color);
-}
-
-.k-toggle-input-native::-ms-check {
-	opacity: 0;
-}
-
-.k-toggle-input-label {
-	cursor: pointer;
-	flex-grow: 1;
+.k-input[data-theme="field"][data-type="toggle"][data-disabled] {
+	box-shadow: none;
 }
 </style>
