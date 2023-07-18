@@ -289,6 +289,12 @@ class ContentStorage
 		string|null $languageCode = null,
 		bool $force = false
 	): string {
+		// in force mode, use the provided language code even in single-lang for
+		// compatibility with the previous behavior in `$model->contentFile()`
+		if ($force === true) {
+			return $languageCode ?? 'default';
+		}
+
 		if ($this->model->kirby()->multilang() === true) {
 			// look up the actual language object if possible
 			$language = $this->model->kirby()->language($languageCode);
@@ -301,12 +307,6 @@ class ContentStorage
 			// fall back to a base language object with just the code
 			// (force mode where the actual language doesn't exist anymore)
 			return $language?->code() ?? $languageCode;
-		}
-
-		// in force mode, use the provided language code even in single-lang for
-		// compatibility with the previous behavior in `$model->contentFile()`
-		if ($force === true) {
-			return $languageCode ?? 'default';
 		}
 
 		// otherwise there can only be a single-lang with hardcoded "default" code
