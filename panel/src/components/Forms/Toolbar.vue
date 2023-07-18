@@ -13,7 +13,7 @@
 				<k-button
 					:key="buttonIndex"
 					:icon="button.icon"
-					:tooltip="button.label"
+					:title="button.label"
 					tabindex="-1"
 					class="k-toolbar-button"
 					@click="$refs[buttonIndex + '-dropdown'][0].toggle()"
@@ -35,7 +35,7 @@
 				v-else
 				:key="buttonIndex + '-button'"
 				:icon="button.icon"
-				:tooltip="button.label"
+				:title="button.label"
 				tabindex="-1"
 				class="k-toolbar-button"
 				@click="command(button.command, button.args)"
@@ -80,35 +80,34 @@ export default {
 		uploads: [Boolean, Object, Array]
 	},
 	data() {
-		let layout = {};
-		let shortcuts = {};
-		let buttons = [];
-		let commands = this.commands();
-
 		if (this.buttons === false) {
-			return layout;
+			return {};
 		}
 
-		if (Array.isArray(this.buttons)) {
-			buttons = this.buttons;
-		}
+		const commands = this.commands();
+		const layout = {};
+		const shortcuts = {};
+		const buttons = Array.isArray(this.buttons)
+			? this.buttons
+			: this.$options.layout;
 
-		if (Array.isArray(this.buttons) !== true) {
-			buttons = this.$options.layout;
-		}
+		for (const index in buttons) {
+			const item = buttons[index];
 
-		buttons.forEach((item, index) => {
 			if (item === "|") {
 				layout["divider-" + index] = { divider: true };
-			} else if (commands[item]) {
-				let button = commands[item];
+				continue;
+			}
+
+			if (commands[item]) {
+				const button = commands[item];
 				layout[item] = button;
 
 				if (button.shortcut) {
 					shortcuts[button.shortcut] = item;
 				}
 			}
-		});
+		}
 
 		// inject custom textarea buttons
 		const customButtons = window.panel.plugins.textareaButtons ?? {};
@@ -120,7 +119,7 @@ export default {
 			layout["divider-custom-buttons"] = { divider: true };
 		}
 
-		Object.keys(customButtons).forEach((name) => {
+		for (const name in customButtons) {
 			const button = customButtons[name];
 
 			// check required props for the button
@@ -137,7 +136,7 @@ export default {
 			if (button.shortcut) {
 				shortcuts[button.shortcut] = name;
 			}
-		});
+		}
 
 		return {
 			layout: layout,
@@ -147,10 +146,10 @@ export default {
 	methods: {
 		command(command, callback) {
 			if (typeof command === "function") {
-				command.apply(this);
-			} else {
-				this.$emit("command", command, callback);
+				return command.apply(this);
 			}
+
+			this.$emit("command", command, callback);
 		},
 		close() {
 			for (const ref in this.$refs) {
@@ -162,7 +161,7 @@ export default {
 			}
 		},
 		fileCommandSetup() {
-			let command = {
+			const command = {
 				label: this.$t("toolbar.button.file"),
 				icon: "attachment"
 			};
@@ -278,8 +277,8 @@ export default {
 
 <style>
 :root {
-	--toolbar-size: 38px;
-	--toolbar-text: #aaa;
+	--toolbar-size: var(--height);
+	--toolbar-text: var(--color-gray-400);
 	--toolbar-back: var(--color-white);
 	--toolbar-hover: rgba(239, 239, 239, 0.5);
 	--toolbar-border: var(--color-background);
@@ -290,6 +289,7 @@ export default {
 	max-width: 100%;
 	height: var(--toolbar-size);
 	margin-bottom: var(--spacing-1);
+	align-items: center;
 
 	color: var(--toolbar-text);
 	background: var(--toolbar-back);
@@ -299,25 +299,24 @@ export default {
 }
 
 .k-toolbar-divider {
+	height: var(--toolbar-size);
 	width: 1px;
 	border-left: 1px solid var(--toolbar-border);
 }
 
 .k-toolbar-button.k-button {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	line-height: 1;
-	width: var(--toolbar-size);
-	height: var(--toolbar-size);
+	--button-width: var(--toolbar-size);
+	--button-height: var(--toolbar-size);
 }
 .k-toolbar-button:hover {
-	background: var(--toolbar-hover);
+	--button-color-back: var(--toolbar-hover);
 }
 
-.k-toolbar:not([data-inline="true"]):has(~ :focus-within) {
+/** TODO: .k-toolbar:not([data-inline="true"]):has(~ :focus-within) */
+.k-writer-input:focus-within .k-toolbar:not([data-inline="true"]),
+.k-textarea-input:focus-within .k-toolbar:not([data-inline="true"]) {
 	position: sticky;
-	top: 0;
+	top: var(--header-sticky-offset);
 	inset-inline: 0;
 	z-index: 1;
 

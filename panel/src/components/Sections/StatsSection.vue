@@ -1,13 +1,12 @@
 <template>
-	<section v-if="isLoading === false" class="k-stats-section">
-		<header class="k-section-header">
-			<k-headline>
-				{{ headline }}
-			</k-headline>
-		</header>
+	<k-section
+		v-if="isLoading === false"
+		:headline="headline"
+		class="k-stats-section"
+	>
 		<k-stats v-if="reports.length > 0" :reports="reports" :size="size" />
-		<k-empty v-else icon="chart"> {{ empty || $t("stats.empty") }}</k-empty>
-	</section>
+		<k-empty v-else icon="chart"> {{ $t("stats.empty") }}</k-empty>
+	</k-section>
 </template>
 
 <script>
@@ -17,8 +16,8 @@ export default {
 	mixins: [SectionMixin],
 	data() {
 		return {
-			isLoading: true,
 			headline: null,
+			isLoading: true,
 			reports: null,
 			size: null
 		};

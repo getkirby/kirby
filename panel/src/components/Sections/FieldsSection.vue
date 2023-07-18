@@ -1,9 +1,10 @@
 <template>
-	<section v-if="!isLoading" class="k-fields-section">
-		<template v-if="issue">
-			<k-headline class="k-fields-issue-headline"> Error </k-headline>
-			<k-box :text="issue.message" :html="false" theme="negative" />
-		</template>
+	<k-section
+		v-if="!isLoading"
+		:headline="issue ? 'Error' : null"
+		class="k-fields-section"
+	>
+		<k-box v-if="issue" :text="issue.message" :html="false" theme="negative" />
 		<k-form
 			:fields="fields"
 			:validate="true"
@@ -12,7 +13,7 @@
 			@input="onInput"
 			@submit="onSubmit"
 		/>
-	</section>
+	</k-section>
 </template>
 
 <script>
@@ -71,16 +72,13 @@ export default {
 		onSubmit(values) {
 			// ensure that all values are actually committed to content store
 			this.$store.dispatch("content/update", [null, values]);
-			this.$events.$emit("keydown.cmd.s", values);
+			this.$events.emit("keydown.cmd.s", values);
 		}
 	}
 };
 </script>
 
 <style>
-.k-fields-issue-headline {
-	margin-bottom: 0.5rem;
-}
 .k-fields-section input[type="submit"] {
 	display: none;
 }

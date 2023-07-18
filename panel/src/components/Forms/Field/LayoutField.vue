@@ -1,14 +1,21 @@
 <template>
 	<k-field v-bind="$props" class="k-layout-field">
 		<template #options>
-			<k-dropdown>
-				<k-button icon="dots" @click="$refs.options.toggle()" />
-
-				<k-dropdown-content ref="options" align="right">
-					<k-dropdown-item icon="add" @click="$refs.layouts.select(0)">
-						{{ $t("add") }}
-					</k-dropdown-item>
-					<hr />
+			<k-button-group layout="collapsed">
+				<k-button
+					:text="$t('add')"
+					icon="add"
+					variant="filled"
+					size="xs"
+					@click="$refs.layouts.select(0)"
+				/>
+				<k-button
+					icon="dots"
+					variant="filled"
+					size="xs"
+					@click="$refs.options.toggle()"
+				/>
+				<k-dropdown-content ref="options" align-x="end">
 					<k-dropdown-item
 						:disabled="isEmpty"
 						icon="template"
@@ -28,7 +35,7 @@
 						{{ $t("delete.all") }}
 					</k-dropdown-item>
 				</k-dropdown-content>
-			</k-dropdown>
+			</k-button-group>
 		</template>
 
 		<k-layouts ref="layouts" v-bind="$props" @input="$emit('input', $event)" />

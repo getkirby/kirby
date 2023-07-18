@@ -103,12 +103,21 @@ export default {
 				return false;
 			}
 
-			this.$refs.selector.open({
-				endpoint: this.endpoints.field,
-				max: this.max,
-				multiple: this.multiple,
-				search: this.search,
-				selected: this.selected.map((model) => model.id)
+			this.$panel.dialog.open({
+				component: this.$options.dialog,
+				props: {
+					endpoint: this.endpoints.field,
+					hasSearch: this.search,
+					max: this.max,
+					multiple: this.multiple,
+					value: this.selected.map((model) => model.id)
+				},
+				on: {
+					submit: (models) => {
+						this.select(models);
+						this.$panel.dialog.close();
+					}
+				}
 			});
 		},
 		remove(index) {
@@ -126,16 +135,13 @@ export default {
 			}
 
 			// remove all items that are no longer selected
-			this.selected = this.selected.filter((selected) => {
-				return items.filter((item) => item.id === selected.id).length > 0;
-			});
+			this.selected = this.selected.filter((selected) =>
+				items.find((item) => item.id === selected.id)
+			);
 
 			// add items that are not yet in the selected list
 			items.forEach((item) => {
-				if (
-					this.selected.filter((selected) => item.id === selected.id).length ===
-					0
-				) {
+				if (!this.selected.find((selected) => item.id === selected.id)) {
 					this.selected.push(item);
 				}
 			});

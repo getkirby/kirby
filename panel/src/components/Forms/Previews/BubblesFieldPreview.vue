@@ -38,11 +38,7 @@ export default {
 					}
 				}
 
-				return {
-					back: "light",
-					color: "black",
-					...bubble
-				};
+				return bubble;
 			});
 		}
 	}
@@ -51,6 +47,9 @@ export default {
 
 <style>
 .k-bubbles-field-preview {
+	--bubble-back: var(--color-light);
+	--bubble-text: var(--color-black);
+
 	padding: 0.325rem 0.75rem;
 }
 </style>

@@ -14,8 +14,8 @@ use Throwable;
 
 class LayoutField extends BlocksField
 {
-	protected $layouts;
-	protected $settings;
+	protected array|null $layouts;
+	protected Fieldset|null $settings;
 
 	public function __construct(array $params)
 	{
@@ -26,7 +26,7 @@ class LayoutField extends BlocksField
 		parent::__construct($params);
 	}
 
-	public function fill($value = null): void
+	public function fill(mixed $value = null): void
 	{
 		$value   = $this->valueFromJson($value);
 		$layouts = Layouts::factory($value, ['parent' => $this->model])->toArray();
@@ -44,7 +44,7 @@ class LayoutField extends BlocksField
 		$this->value = $layouts;
 	}
 
-	public function attrsForm(array $input = [])
+	public function attrsForm(array $input = []): Form
 	{
 		$settings = $this->settings();
 
@@ -71,8 +71,8 @@ class LayoutField extends BlocksField
 			$layout['columns'] ??= [];
 
 			array_walk($layout['columns'], function (&$column) {
-				$column['id']     ??= Str::uuid();
-				$column['blocks']   = $this->blocksToValues($column['blocks'] ?? []);
+				$column['id']   ??= Str::uuid();
+				$column['blocks'] = $this->blocksToValues($column['blocks'] ?? []);
 			});
 		}
 
@@ -136,7 +136,7 @@ class LayoutField extends BlocksField
 		$routes[] = [
 			'pattern' => 'layout',
 			'method'  => 'POST',
-			'action'  => function () use ($field) {
+			'action'  => function () use ($field): array {
 				$request = App::instance()->request();
 
 				$defaults = $field->attrsForm([])->data(true);
@@ -157,7 +157,7 @@ class LayoutField extends BlocksField
 		$routes[] = [
 			'pattern' => 'layout/paste',
 			'method'  => 'POST',
-			'action'  => function () use ($field) {
+			'action'  => function () use ($field): array {
 				$request = App::instance()->request();
 				$value   = Layouts::parse($request->get('json'));
 				$layouts = Layouts::factory($value);
@@ -169,23 +169,33 @@ class LayoutField extends BlocksField
 		$routes[] = [
 			'pattern' => 'fields/(:any)/(:all?)',
 			'method'  => 'ALL',
-			'action'  => function (string $fieldName, string $path = null) use ($field) {
+			'action'  => function (
+				string $fieldName,
+				string $path = null
+			) use ($field): array {
 				$form  = $field->attrsForm();
 				$field = $form->field($fieldName);
 
 				$fieldApi = $this->clone([
 					'routes' => $field->api(),
-					'data'   => array_merge($this->data(), ['field' => $field])
+					'data'   => array_merge(
+						$this->data(),
+						['field' => $field]
+					)
 				]);
 
-				return $fieldApi->call($path, $this->requestMethod(), $this->requestData());
+				return $fieldApi->call(
+					$path,
+					$this->requestMethod(),
+					$this->requestData()
+				);
 			}
 		];
 
 		return $routes;
 	}
 
-	protected function setDefault($default = null): void
+	protected function setDefault(mixed $default = null): void
 	{
 		// set id for layouts, columns and blocks within layout if not exists
 		if (is_array($default) === true) {
@@ -219,7 +229,7 @@ class LayoutField extends BlocksField
 		);
 	}
 
-	protected function setSettings($settings = null): void
+	protected function setSettings(array|string|null $settings = null): void
 	{
 		if (empty($settings) === true) {
 			$this->settings = null;
@@ -235,12 +245,12 @@ class LayoutField extends BlocksField
 		$this->settings = Fieldset::factory($settings);
 	}
 
-	public function settings()
+	public function settings(): Fieldset|null
 	{
 		return $this->settings;
 	}
 
-	public function store($value)
+	public function store(mixed $value): mixed
 	{
 		$value = Layouts::factory($value, ['parent' => $this->model])->toArray();
 
@@ -274,7 +284,9 @@ class LayoutField extends BlocksField
 					$layoutIndex++;
 
 					// validate settings form
-					foreach ($this->attrsForm($layout['attrs'] ?? [])->fields() as $field) {
+					$form = $this->attrsForm($layout['attrs'] ?? []);
+
+					foreach ($form->fields() as $field) {
 						$errors = $field->errors();
 
 						if (empty($errors) === false) {
@@ -307,7 +319,9 @@ class LayoutField extends BlocksField
 							$fields[$blockType] = $blockFields;
 
 							// overwrite the content with the serialized form
-							foreach ($this->form($blockFields, $block['content'])->fields() as $field) {
+							$form = $this->form($blockFields, $block['content']);
+
+							foreach ($form->fields() as $field) {
 								$errors = $field->errors();
 
 								// rough first validation

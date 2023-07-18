@@ -7,7 +7,9 @@
 					<k-button
 						class="k-link-input-toggle"
 						:disabled="disabled"
+						:dropdown="true"
 						:icon="currentType.icon"
+						variant="filled"
 						@click="$refs.types.toggle()"
 					>
 						{{ currentType.label }}
@@ -16,6 +18,7 @@
 						<k-dropdown-item
 							v-for="(type, key) in activeTypes"
 							:key="key"
+							:current="key === linkType"
 							:icon="type.icon"
 							@click="switchType(key)"
 						>
@@ -297,7 +300,7 @@ export default {
 			this.$emit("input", this.currentType.value(value));
 		},
 		onInvalid(invalid) {
-			this.isInvalid = invalid;
+			this.isInvalid = !!invalid;
 		},
 		onOutsideClick(event) {
 			if (this.$el.contains(event.target) === false) {
@@ -378,39 +381,23 @@ export default {
 }
 
 .k-link-input-toggle.k-button {
-	display: flex;
-	align-items: center;
-	padding: 0 1.325rem 0 0.375rem;
-	height: var(--height-sm);
-	border-radius: var(--rounded-sm);
+	--button-height: var(--height-sm);
+	--button-rounded: var(--rounded-sm);
+	--button-color-back: var(--color-gray-200);
 	margin-inline-start: 0.25rem;
-	gap: 0.25rem;
-	background: var(--color-gray-200);
-}
-.k-link-input-toggle.k-button .k-button-text {
-	padding-inline-start: var(--spacing-1);
-}
-
-.k-link-input-toggle .k-button-text::after {
-	position: absolute;
-	top: 50%;
-	right: 0.5rem;
-	margin-top: -2px;
-	content: "";
-	border-top: 4px solid var(--color-black);
-	border-inline-start: 4px solid transparent;
-	border-inline-end: 4px solid transparent;
 }
 
 .k-link-input-model {
 	display: flex;
 	overflow: hidden;
 	justify-content: space-between;
-	height: var(--height-sm);
 	margin-inline-end: var(--spacing-1);
 
+	--tag-height: var(--height-sm);
 	--tag-color-back: var(--color-gray-200);
 	--tag-color-text: var(--color-black);
+	--tag-color-toggle: var(--tag-color-text);
+	--tag-color-toggle-border: var(--color-gray-300);
 	--tag-color-focus-back: var(--tag-color-back);
 	--tag-color-focus-text: var(--tag-color-text);
 	--tag-rounded: var(--rounded-sm);
@@ -428,31 +415,24 @@ export default {
 }
 .k-link-input-model-preview-image {
 	height: calc(var(--height-sm) - 0.5rem);
-	aspect-ratio: 1/1;
-	border-radius: 1px;
+	border-radius: var(--rounded-sm);
 }
 .k-link-input-model-preview .k-tag-text:has(.k-link-input-model-preview-image) {
 	padding-inline-start: 0.25rem;
 }
 .k-link-input-model-placeholder.k-button {
-	display: flex;
+	--button-align: flex-start;
+	--button-color-text: var(--color-gray-600);
+	--button-height: var(--height-sm);
+	--button-padding: var(--spacing-2);
 	flex-grow: 1;
 	overflow: hidden;
 	white-space: nowrap;
 	align-items: center;
-	justify-content: flex-start;
-	height: var(--height-sm);
-	font-size: var(--text-base);
-	padding-inline: var(--spacing-2);
-	color: var(--color-gray-600);
 }
 .k-link-input-model-toggle {
-	display: flex;
-	height: var(--height-sm);
-	width: var(--height-sm);
-	align-items: center;
-	justify-content: center;
-	flex-shrink: 0;
+	--button-height: var(--height-sm);
+	--button-width: var(--height-sm);
 }
 
 .k-link-input-body {

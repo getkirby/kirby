@@ -53,7 +53,7 @@ class SiteTest extends TestCase
 
 		$this->assertSame('home', $option['icon']);
 		$this->assertSame('Test site', $option['text']);
-		$this->assertSame('/panel/site', $option['link']);
+		$this->assertSame('/site', $option['link']);
 	}
 
 	/**
@@ -100,7 +100,6 @@ class SiteTest extends TestCase
 			'color' => 'gray-500',
 			'cover' => false,
 			'icon' => 'page',
-			'ratio' => '3/2',
 			'url' => $mediaUrl . '/test.jpg',
 			'src' => Model::imagePlaceholder(),
 			'srcset' => $mediaUrl . '/test-38x.jpg 38w, ' . $mediaUrl . '/test-76x.jpg 76w'
@@ -112,7 +111,6 @@ class SiteTest extends TestCase
 			'color' => 'gray-500',
 			'cover' => true,
 			'icon' => 'page',
-			'ratio' => '3/2',
 			'url' => $mediaUrl . '/test.jpg',
 			'src' => Model::imagePlaceholder(),
 			'srcset' => $mediaUrl . '/test-38x38-crop.jpg 1x, ' . $mediaUrl . '/test-76x76-crop.jpg 2x'

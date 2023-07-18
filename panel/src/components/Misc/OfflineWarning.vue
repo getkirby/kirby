@@ -15,12 +15,12 @@ export default {
 		};
 	},
 	created() {
-		this.$events.$on("offline", this.isOffline);
-		this.$events.$on("online", this.isOnline);
+		this.$events.on("offline", this.isOffline);
+		this.$events.on("online", this.isOnline);
 	},
 	destroyed() {
-		this.$events.$off("offline", this.isOffline);
-		this.$events.$off("online", this.isOnline);
+		this.$events.off("offline", this.isOffline);
+		this.$events.off("online", this.isOnline);
 	},
 	methods: {
 		isOnline() {

@@ -15,7 +15,6 @@ tests/ export-ignore
 panel/.env.example export-ignore
 panel/.eslintrc.js export-ignore
 panel/.prettierrc.json export-ignore
-panel/cypress.json export-ignore
 panel/package-lock.json export-ignore
 panel/package.json export-ignore
 panel/public export-ignore

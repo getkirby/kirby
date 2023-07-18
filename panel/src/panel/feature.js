@@ -48,25 +48,6 @@ export default (panel, key, defaults) => {
 		...listeners(),
 
 		/**
-		 * Checks if the feature can be submitted
-		 *
-		 * @returns {Boolean}
-		 */
-		hasSubmitter() {
-			// the feature has a custom submit listener
-			if (this.hasEventListener("submit") === true) {
-				return true;
-			}
-
-			// the feature can be submitted to the backend
-			if (typeof this.path === "string") {
-				return true;
-			}
-
-			return false;
-		},
-
-		/**
 		 * Loads a feature from the server
 		 * and opens it afterwards
 		 *

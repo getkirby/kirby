@@ -43,9 +43,4 @@ describe.concurrent("PrevNext.vue", () => {
 		expect(wrapper.vm.button()).toEqual(defaults);
 		expect(wrapper.vm.button(config)).toEqual(config);
 	});
-
-	it("has CSS selector", async () => {
-		const wrapper = mount(PrevNext, setup);
-		expect(wrapper.classes()).toContain("k-prev-next");
-	});
 });

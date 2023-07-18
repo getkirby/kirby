@@ -1,37 +1,47 @@
 <template>
 	<nav
+		v-if="isOpen || !inline"
 		class="k-toolbar k-writer-toolbar"
 		:data-inline="inline"
-		:style="inline ? 'display: none' : null"
+		:style="{
+			bottom: position.y + 'px',
+			left: position.x + 'px'
+		}"
 	>
-		<k-dropdown v-if="hasVisibleNodeButtons" @mousedown.native.prevent>
+		<!-- Nodes -->
+		<k-dropdown v-if="hasNodes" @mousedown.native.prevent>
 			<k-button
-				:current="!!activeNodeButton"
-				:icon="activeNodeButton.icon || 'title'"
+				:current="Boolean(activeNode)"
+				:icon="activeNode.icon ?? 'title'"
 				class="k-toolbar-button k-writer-toolbar-nodes"
 				@click="$refs.nodes.toggle()"
 			/>
-			<k-dropdown-content ref="nodes">
-				<template v-for="(node, nodeType) in nodeButtons">
+			<k-dropdown-content ref="nodes" theme="light">
+				<template v-for="(node, nodeType, nodeIndex) in nodeButtons">
 					<k-dropdown-item
 						:key="nodeType"
-						:current="activeNodeButton?.id === node.id"
-						:disabled="activeNodeButton?.when?.includes(node.name) === false"
+						:current="activeNode?.id === node.id"
+						:disabled="activeNode?.when?.includes(node.name) === false"
 						:icon="node.icon"
-						@click="command(node.command || nodeType)"
+						@click="command(node.command ?? nodeType)"
 					>
 						{{ node.label }}
 					</k-dropdown-item>
-					<hr v-if="node.separator === true" :key="nodeType + '-divider'" />
+					<hr
+						v-if="
+							node.separator === true &&
+							nodeIndex !== Object.keys(nodeButtons).length - 1
+						"
+						:key="nodeType + '-divider'"
+					/>
 				</template>
 			</k-dropdown-content>
 		</k-dropdown>
 
-		<div
-			v-if="hasVisibleNodeButtons && hasVisibleMarkButtons"
-			class="k-toolbar-divider"
-		/>
+		<!-- Divider -->
+		<div v-if="hasNodes && hasMarks" class="k-toolbar-divider" />
 
+		<!-- Marks -->
 		<template v-for="(mark, markType) in markButtons">
 			<div v-if="mark === '|'" :key="markType" class="k-toolbar-divider" />
 			<k-button
@@ -39,9 +49,9 @@
 				:key="markType"
 				:current="activeMarks.includes(markType)"
 				:icon="mark.icon"
-				:tooltip="mark.label"
+				:title="mark.label"
 				class="k-toolbar-button"
-				@mousedown.native.prevent="command(mark.command || markType, $event)"
+				@mousedown.native.prevent="command(mark.command ?? markType, $event)"
 			/>
 		</template>
 	</nav>
@@ -50,42 +60,48 @@
 <script>
 export default {
 	props: {
-		activeMarks: Array,
-		activeNodes: Array,
-		activeNodeAttrs: {
-			type: [Array, Object],
-			default: () => []
-		},
 		editor: {
-			type: Object,
-			required: true
+			required: true,
+			type: Object
 		},
 		inline: {
-			type: Boolean,
-			default: true
+			default: true,
+			type: Boolean
 		},
-		isParagraphNodeHidden: Boolean,
 		marks: {
-			type: [Array, Boolean],
-			default: true
+			default: true,
+			type: [Array, Boolean]
 		},
 		nodes: {
-			type: [Array, Boolean],
-			default: true
+			default: true,
+			type: [Array, Boolean]
 		}
 	},
+	data() {
+		return {
+			isOpen: false,
+			position: {
+				x: 0,
+				y: 0
+			}
+		};
+	},
 	computed: {
-		activeNodeButton() {
-			return (
-				Object.values(this.nodeButtons).find((button) =>
-					this.isButtonActive(button)
-				) || false
-			);
+		activeMarks() {
+			return this.editor.activeMarks;
 		},
-		hasVisibleMarkButtons() {
+		activeNodes() {
+			return this.editor.activeNodes;
+		},
+		activeNode() {
+			const nodes = Object.values(this.nodeButtons);
+			const active = nodes.find((button) => this.isNodeActive(button));
+			return active ?? false;
+		},
+		hasMarks() {
 			return this.$helper.object.length(this.markButtons) > 0;
 		},
-		hasVisibleNodeButtons() {
+		hasNodes() {
 			return this.$helper.object.length(this.nodeButtons) > 1;
 		},
 		markButtons() {
@@ -119,7 +135,12 @@ export default {
 			const available = this.editor.buttons("node");
 
 			// remove the paragraph when certain nodes are requested to be loaded
-			if (this.isParagraphNodeHidden === true && available.paragraph) {
+			if (
+				Array.isArray(this.nodes) === true &&
+				this.nodes.length !== 3 &&
+				this.nodes.includes("paragraph") === false &&
+				available.paragraph
+			) {
 				delete available.paragraph;
 			}
 
@@ -139,61 +160,123 @@ export default {
 		}
 	},
 	methods: {
+		/**
+		 * Closes the inline toolbar
+		 * @public
+		 * @param {FocusEvent} event
+		 */
+		close(event) {
+			if (!event || this.$el.contains(event.relatedTarget) === false) {
+				this.isOpen = false;
+			}
+		},
 		command(command, ...args) {
 			this.$emit("command", command, ...args);
 		},
-		isButtonActive(button) {
+		/**
+		 * Checks if the given node is active
+		 * @param {Object} node
+		 * @returns {Boolean}
+		 */
+		isNodeActive(node) {
+			if (this.activeNodes.includes(node.name) === false) {
+				return false;
+			}
+
 			// since the list element also contains a paragraph,
 			// it is confused whether the list element is an active node
 			// this solves the issue
-			if (button.name === "paragraph") {
-				return (
-					this.activeNodes.length === 1 &&
-					this.activeNodes.includes(button.name)
-				);
+			if (node.name === "paragraph") {
+				return this.activeNodes.length === 1;
 			}
 
-			let isActiveNodeAttr = true;
-
-			if (button.attrs) {
-				const activeNodeAttrs = Object.values(this.activeNodeAttrs).find(
-					(node) => JSON.stringify(node) === JSON.stringify(button.attrs)
+			if (node.attrs) {
+				const attrs = Object.values(this.editor.activeNodeAttrs);
+				const active = attrs.find(
+					(node) => JSON.stringify(node) === JSON.stringify(node.attrs)
 				);
 
-				isActiveNodeAttr = Boolean(activeNodeAttrs || false);
+				if (active) {
+					return true;
+				}
 			}
 
-			return (
-				isActiveNodeAttr === true && this.activeNodes.includes(button.name)
-			);
+			return false;
+		},
+		/**
+		 * Opens the toolbar
+		 * @public
+		 */
+		open() {
+			this.isOpen = true;
+
+			if (this.inline) {
+				this.$nextTick(this.setPosition);
+			}
+		},
+		/**
+		 * Calculates the position of the inline toolbar
+		 * based on the current selection in the editor
+		 */
+		setPosition() {
+			const { from, to } = this.editor.selection;
+
+			const start = this.editor.view.coordsAtPos(from);
+			const end = this.editor.view.coordsAtPos(to, true);
+
+			// The box in which the tooltip is positioned, to use as base
+			const editor = this.editor.element.getBoundingClientRect();
+
+			// Find a center-ish x position from the selection endpoints (when
+			// crossing lines, end may be more to the left)
+			let left = (start.left + end.left) / 2 - editor.left;
+			let bottom = Math.round(editor.bottom - start.top) - 10;
+
+			// Align to writer editor
+			const toolbar = this.$el.clientWidth;
+
+			// adjust left overflow
+			if (left - toolbar / 2 < 0) {
+				left = left + (toolbar / 2 - left) - 10;
+			}
+
+			// adjust right overflow
+			if (left + toolbar / 2 > editor.width) {
+				left = left - (left + toolbar / 2 - editor.width) + 10;
+			}
+
+			this.position = {
+				y: bottom,
+				x: left
+			};
 		}
 	}
 };
 </script>
 
 <style>
-.k-writer:has(.k-writer-toolbar:not([data-inline="true"])) {
+/** TODO: .k-writer:has(.k-writer-toolbar:not([data-inline="true"])) */
+.k-writer:not([data-toolbar-inline="true"]) {
 	grid-template-areas: "topbar" "content";
-	grid-template-rows: 38px 1fr;
+	grid-template-rows: var(--toolbar-size) 1fr;
+	gap: 0;
 }
 
-.k-writer-toolbar:has(~ :focus-within) .k-button[aria-current] {
-	color: var(--color-blue-400);
+/** TODO: .k-writer-toolbar:has(~ :focus-within) .k-button[aria-current]  */
+.k-writer:focus-within .k-writer-toolbar .k-button[aria-current] {
+	color: var(--color-focus);
 }
 
 .k-writer-toolbar[data-inline="true"] {
-	--toolbar-size: var(--height-md);
 	--toolbar-text: var(--color-white);
 	--toolbar-back: var(--color-black);
-	--toolbar-hover: rgba(255, 255, 255, 0.15);
-	--toolbar-border: var(--color-gray-700);
+	--toolbar-hover: rgba(255, 255, 255, 0.2);
+	--toolbar-border: var(--color-gray-800);
 
 	position: absolute;
 	transform: translateX(-50%) translateY(-0.75rem);
 	z-index: calc(var(--z-dropdown) + 1);
-
-	box-shadow: var(--shadow);
-	border: 0;
+	box-shadow: var(--shadow-toolbar);
 	border-radius: var(--rounded);
 }
 </style>

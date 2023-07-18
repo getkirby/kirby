@@ -29,8 +29,10 @@ class AutoSession
 	 *                       - `cookieName`: Name to use for the session cookie; defaults to `kirby_session`
 	 *                       - `gcInterval`: How often should the garbage collector be run?; integer or `false` for never; defaults to `100`
 	 */
-	public function __construct(SessionStore|string $store, array $options = [])
-	{
+	public function __construct(
+		SessionStore|string $store,
+		array $options = []
+	) {
 		// merge options with defaults
 		$this->options = array_merge([
 			'durationNormal' => 7200,

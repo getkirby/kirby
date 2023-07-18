@@ -1,14 +1,9 @@
 <?php
 
-use Kirby\Panel\Dropdown;
 
 $files = require __DIR__ . '/../files/dropdowns.php';
 
 return [
-	'changes' => [
-		'pattern' => 'changes',
-		'options' => fn () => Dropdown::changes()
-	],
 	'page' => [
 		'pattern' => 'pages/(:any)',
 		'options' => function (string $path) {

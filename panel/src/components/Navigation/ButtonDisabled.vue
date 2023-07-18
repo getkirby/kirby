@@ -13,6 +13,9 @@
 </template>
 
 <script>
+/**
+ * @deprecated 4.0.0 `<k-button-disabled>` has been deprecated and will be removed in v5. Use `<k-button :disabled="true">` instead.
+ */
 export default {
 	inheritAttrs: false,
 	props: {
@@ -21,6 +24,11 @@ export default {
 		responsive: Boolean,
 		theme: String,
 		tooltip: String
+	},
+	created() {
+		window.panel.deprecated(
+			'<k-button-disabled> will be removed in a future version. Use <k-button :disabled="true"> instead.'
+		);
 	}
 };
 </script>

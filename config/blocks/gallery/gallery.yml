@@ -8,7 +8,7 @@ fields:
     query: model.images
     multiple: true
     layout: cards
-    size: tiny
+    size: small
     empty: field.blocks.gallery.images.empty
     uploads:
       template: blocks/image

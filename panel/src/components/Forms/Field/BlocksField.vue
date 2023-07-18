@@ -1,17 +1,23 @@
 <template>
 	<k-field v-bind="$props" class="k-blocks-field">
 		<template #options>
-			<k-dropdown v-if="hasFieldsets">
-				<k-button icon="dots" @click="$refs.options.toggle()" />
-				<k-dropdown-content ref="options" align="right">
-					<k-dropdown-item
-						:disabled="isFull"
-						icon="add"
-						@click="$refs.blocks.choose(value.length)"
-					>
-						{{ $t("add") }}
-					</k-dropdown-item>
-					<hr />
+			<k-button-group layout="collapsed">
+				<k-button
+					:disabled="isFull"
+					:responsive="true"
+					:text="$t('add')"
+					icon="add"
+					variant="filled"
+					size="xs"
+					@click="$refs.blocks.choose(value.length)"
+				/>
+				<k-button
+					icon="dots"
+					variant="filled"
+					size="xs"
+					@click="$refs.options.toggle()"
+				/>
+				<k-dropdown-content ref="options" align-x="end">
 					<k-dropdown-item
 						:disabled="isEmpty"
 						icon="template"
@@ -35,7 +41,7 @@
 						{{ $t("delete.all") }}
 					</k-dropdown-item>
 				</k-dropdown-content>
-			</k-dropdown>
+			</k-button-group>
 		</template>
 
 		<k-blocks
@@ -54,13 +60,15 @@
 			v-on="$listeners"
 		/>
 
-		<k-button
-			v-if="!isEmpty && !isFull"
-			class="k-field-add-item-button"
-			icon="add"
-			:tooltip="$t('add')"
-			@click="$refs.blocks.choose(value.length)"
-		/>
+		<footer v-if="!isEmpty && !isFull" class="k-bar" data-align="center">
+			<k-button
+				icon="add"
+				size="xs"
+				variant="filled"
+				:title="$t('add')"
+				@click="$refs.blocks.choose(value.length)"
+			/>
+		</footer>
 	</k-field>
 </template>
 
@@ -91,9 +99,6 @@ export default {
 		};
 	},
 	computed: {
-		hasFieldsets() {
-			return this.$helper.object.length(this.fieldsets) > 0;
-		},
 		isEmpty() {
 			return this.value.length === 0;
 		},
@@ -116,5 +121,9 @@ export default {
 <style>
 .k-blocks-field {
 	position: relative;
+}
+/** TODO: .k-blocks-field > :has(+ footer) { margin-bottom: var(--spacing-3);} */
+.k-blocks-field > footer {
+	margin-top: var(--spacing-3);
 }
 </style>

@@ -1,49 +1,41 @@
 <template>
-	<nav v-if="isVisible" :data-align="align" class="k-pagination">
+	<k-button-group
+		v-if="isVisible"
+		:data-align="align"
+		layout="collapsed"
+		class="k-pagination"
+	>
 		<!-- prev -->
 		<k-button v-bind="prevBtn" />
 
 		<!-- details -->
-		<k-dropdown v-if="details">
-			<k-button
-				:disabled="!hasPages"
-				class="k-pagination-details"
-				@click="$refs.dropdown?.toggle()"
-			>
-				<template v-if="total > 1">
-					{{ detailsText }}
-				</template>
-				{{ total }}
-			</k-button>
-
+		<template v-if="details">
+			<k-button v-bind="detailsBtn" />
 			<k-dropdown-content
-				v-if="dropdown"
 				ref="dropdown"
+				align-x="end"
 				class="k-pagination-selector"
-				@open="$nextTick(() => $refs.page.focus())"
 			>
-				<div class="k-pagination-settings">
-					<label for="k-pagination-page">
-						<span>{{ pageLabel ?? $t("pagination.page") }}:</span>
-						<select id="k-pagination-page" ref="page">
-							<option
-								v-for="p in pages"
-								:key="p"
-								:selected="page === p"
-								:value="p"
-							>
-								{{ p }}
-							</option>
-						</select>
-					</label>
-					<k-button icon="check" @click="goTo($refs.page.value)" />
-				</div>
+				<form method="dialog" @submit="goTo($refs.page.value)">
+					<label :for="_uid">{{ pageLabel ?? $t("pagination.page") }}:</label>
+					<select :id="_uid" ref="page" :autofocus="true">
+						<option
+							v-for="p in pages"
+							:key="p"
+							:selected="page === p"
+							:value="p"
+						>
+							{{ p }}
+						</option>
+					</select>
+					<k-button type="submit" icon="check" />
+				</form>
 			</k-dropdown-content>
-		</k-dropdown>
+		</template>
 
 		<!-- next -->
 		<k-button v-bind="nextBtn" />
-	</nav>
+	</k-button-group>
 </template>
 
 <script>
@@ -118,6 +110,19 @@ export default {
 		};
 	},
 	computed: {
+		detailsBtn() {
+			return {
+				class: "k-pagination-details",
+				disabled: this.total <= this.limit,
+				size: "xs",
+				text: `${this.total > 1 ? this.detailsText : null} ${this.total}`,
+				variant: "filled",
+				click: () => this.$refs.dropdown?.toggle()
+			};
+		},
+		end() {
+			return Math.min(this.start - 1 + this.limit, this.total);
+		},
 		detailsText() {
 			if (this.limit === 1) {
 				return this.start + " / ";
@@ -125,21 +130,17 @@ export default {
 
 			return this.start + "-" + this.end + " / ";
 		},
-		end() {
-			return Math.min(this.start - 1 + this.limit, this.total);
-		},
-		hasPages() {
-			return this.total > this.limit;
-		},
 		isVisible() {
 			return this.pages > 1;
 		},
 		nextBtn() {
 			return {
 				disabled: this.end >= this.total,
-				tooltip: this.nextLabel ?? this.$t("next"),
 				icon: "angle-right",
-				click: this.next
+				size: "xs",
+				title: this.nextLabel ?? this.$t("next"),
+				variant: "filled",
+				click: () => this.next()
 			};
 		},
 		offset() {
@@ -151,9 +152,11 @@ export default {
 		prevBtn() {
 			return {
 				disabled: this.start <= 1,
-				tooltip: this.prevLabel ?? this.$t("prev"),
 				icon: "angle-left",
-				click: this.prev
+				size: "xs",
+				title: this.prevLabel ?? this.$t("prev"),
+				variant: "filled",
+				click: () => this.prev()
 			};
 		},
 		start() {
@@ -230,51 +233,31 @@ export default {
 </script>
 
 <style>
-.k-pagination {
-	display: flex;
-	align-items: center;
-	user-select: none;
-	direction: ltr;
-}
-
 .k-pagination-details {
-	white-space: nowrap;
+	--button-padding: var(--spacing-3);
+	font-size: var(--text-xs);
 }
-.k-pagination-details:not(:has(+ .k-dropdown-content)) {
-	cursor: default;
+.k-pagination-selector {
+	--button-height: var(--height);
+	--dropdown-padding: 0;
+	overflow: visible;
 }
-
-.k-pagination[data-align] {
-	text-align: var(--align);
-}
-
-.k-dropdown-content.k-pagination-selector {
-	position: absolute;
-	top: 100%;
-	inset-inline-start: 50%;
-	transform: translateX(-50%);
-	background: var(--color-black);
-}
-[dir="ltr"] .k-dropdown-content.k-pagination-selector {
-	direction: ltr;
-}
-[dir="rtl"] .k-dropdown-content.k-pagination-selector {
-	direction: rtl;
-}
-
-.k-pagination-settings {
+.k-pagination-selector form {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 }
-.k-pagination-settings label {
-	display: flex;
-	border-inline-end: 1px solid rgba(255, 255, 255, 0.35);
-	align-items: center;
-	padding: 0.625rem 1rem;
-	font-size: var(--text-xs);
+.k-pagination-selector label {
+	padding-inline-start: var(--spacing-3);
+	padding-inline-end: var(--spacing-2);
 }
-.k-pagination-settings label span {
-	margin-inline-end: 0.5rem;
+.k-pagination-selector select {
+	--height: calc(var(--button-height) - 0.5rem);
+	width: auto;
+	min-width: var(--height);
+	height: var(--height);
+	text-align: center;
+	background: var(--color-gray-800);
+	border-radius: var(--rounded-sm);
 }
 </style>

@@ -24,10 +24,10 @@ export default {
 		 * You can deactivate the dropzone with this property
 		 */
 		disabled: {
-			type: Boolean,
-			default: false
+			type: Boolean
 		}
 	},
+	emits: ["drop"],
 	data() {
 		return {
 			files: [],
@@ -52,7 +52,7 @@ export default {
 				return this.reset();
 			}
 
-			this.$events.$emit("dropzone.drop");
+			this.$events.emit("dropzone.drop");
 
 			this.files = $event.dataTransfer.files;
 			/**
@@ -96,6 +96,6 @@ export default {
 .k-dropzone[data-over="true"]::after {
 	display: block;
 	outline: 1px solid var(--color-focus);
-	box-shadow: var(--color-focus-outline) 0 0 0 3px;
+	box-shadow: var(--color-focus) 0 0 0 3px;
 }
 </style>

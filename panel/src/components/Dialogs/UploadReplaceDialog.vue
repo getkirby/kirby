@@ -3,7 +3,8 @@
 		ref="dialog"
 		class="k-upload-dialog k-upload-replace-dialog"
 		v-bind="$props"
-		@submit="submit"
+		@cancel="$emit('cancel')"
+		@submit="$emit('submit')"
 	>
 		<ul class="k-upload-items">
 			<li class="k-upload-original">
@@ -73,7 +74,7 @@
 						@click="$panel.upload.remove(file.id)"
 					/>
 					<div v-else-if="file.progress">
-						<k-loader />
+						<k-icon type="loader" />
 					</div>
 				</div>
 			</li>

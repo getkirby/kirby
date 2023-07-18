@@ -24,7 +24,8 @@ export default {
 		value: {
 			type: String
 		}
-	}
+	},
+	emits: ["search"]
 };
 </script>
 

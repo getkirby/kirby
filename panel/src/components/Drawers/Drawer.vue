@@ -1,13 +1,20 @@
 <template>
-	<k-overlay ref="drawer" :visible="visible" type="drawer" @cancel="cancel">
+	<portal v-if="visible" to="drawer">
 		<form
+			:aria-disabled="disabled"
 			:class="$vnode.data.staticClass"
 			class="k-drawer"
 			method="dialog"
-			@submit.prevent="submit"
+			@submit.prevent="$emit('submit')"
 		>
 			<k-drawer-notification />
-			<k-drawer-header>
+			<k-drawer-header
+				:breadcrumb="breadcrumb"
+				:tab="tab"
+				:tabs="tabs"
+				@crumb="$emit('crumb', $event)"
+				@tab="$emit('tab', $event)"
+			>
 				<slot name="options">
 					<template v-for="(option, index) in options">
 						<template v-if="option.dropdown">
@@ -20,7 +27,7 @@
 								<k-dropdown-content
 									:ref="'dropdown-' + index"
 									:options="option.dropdown"
-									align="right"
+									align-x="end"
 									theme="light"
 								/>
 							</k-dropdown>
@@ -39,14 +46,15 @@
 				<slot />
 			</k-drawer-body>
 		</form>
-	</k-overlay>
+	</portal>
 </template>
 
 <script>
 import Drawer from "@/mixins/drawer.js";
 
 export default {
-	mixins: [Drawer]
+	mixins: [Drawer],
+	emits: ["cancel", "crumb", "submit", "tab"]
 };
 </script>
 
@@ -54,16 +62,9 @@ export default {
 :root {
 	--drawer-color-back: var(--color-light);
 	--drawer-header-height: 2.5rem;
-	--drawer-header-padding: 1.5rem;
+	--drawer-header-padding: 1rem;
 	--drawer-shadow: var(--shadow-xl);
 	--drawer-width: 50rem;
-}
-
-.k-drawer-overlay {
-	--overlay-color-back: rgba(0, 0, 0, 0.2);
-	display: flex;
-	align-items: stretch;
-	justify-content: flex-end;
 }
 
 /**
@@ -83,5 +84,6 @@ export default {
 	flex-direction: column;
 	background: var(--drawer-color-back);
 	box-shadow: var(--drawer-shadow);
+	container-type: inline-size;
 }
 </style>

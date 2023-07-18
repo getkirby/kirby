@@ -70,7 +70,7 @@ class UserTest extends TestCase
 		$option = (new User($model))->dropdownOption();
 		$this->assertSame('user', $option['icon']);
 		$this->assertSame('test@getkirby.com', $option['text']);
-		$this->assertSame('/panel/users/test', $option['link']);
+		$this->assertSame('/users/test', $option['link']);
 	}
 
 	/**
@@ -372,14 +372,14 @@ class UserTest extends TestCase
 
 		$props = (new User($app->user('a@getkirby.com')))->props();
 		$this->assertNull($props['prev']());
-		$this->assertSame('b@getkirby.com', $props['next']()['tooltip']);
+		$this->assertSame('b@getkirby.com', $props['next']()['title']);
 
 		$props = (new User($app->user('b@getkirby.com')))->props();
-		$this->assertSame('a@getkirby.com', $props['prev']()['tooltip']);
-		$this->assertSame('c@getkirby.com', $props['next']()['tooltip']);
+		$this->assertSame('a@getkirby.com', $props['prev']()['title']);
+		$this->assertSame('c@getkirby.com', $props['next']()['title']);
 
 		$props = (new User($app->user('c@getkirby.com')))->props();
-		$this->assertSame('b@getkirby.com', $props['prev']()['tooltip']);
+		$this->assertSame('b@getkirby.com', $props['prev']()['title']);
 		$this->assertNull($props['next']());
 	}
 
@@ -426,14 +426,14 @@ class UserTest extends TestCase
 
 		$prevNext = (new User($app->user('a@getkirby.com')))->prevNext();
 		$this->assertNull($prevNext['prev']());
-		$this->assertSame('b@getkirby.com', $prevNext['next']()['tooltip']);
+		$this->assertSame('b@getkirby.com', $prevNext['next']()['title']);
 
 		$prevNext = (new User($app->user('b@getkirby.com')))->prevNext();
-		$this->assertSame('a@getkirby.com', $prevNext['prev']()['tooltip']);
-		$this->assertSame('c@getkirby.com', $prevNext['next']()['tooltip']);
+		$this->assertSame('a@getkirby.com', $prevNext['prev']()['title']);
+		$this->assertSame('c@getkirby.com', $prevNext['next']()['title']);
 
 		$prevNext = (new User($app->user('c@getkirby.com')))->prevNext();
-		$this->assertSame('b@getkirby.com', $prevNext['prev']()['tooltip']);
+		$this->assertSame('b@getkirby.com', $prevNext['prev']()['title']);
 		$this->assertNull($prevNext['next']());
 	}
 

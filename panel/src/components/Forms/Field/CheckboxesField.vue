@@ -1,11 +1,10 @@
 <template>
 	<k-field v-bind="$props" :counter="counterOptions" class="k-checkboxes-field">
-		<k-input
+		<k-checkboxes-input
 			:id="_uid"
 			ref="input"
 			v-bind="$props"
 			theme="field"
-			type="checkboxes"
 			v-on="$listeners"
 		/>
 	</k-field>

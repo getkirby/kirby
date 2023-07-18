@@ -70,7 +70,8 @@ class Loader
 		$areas      = [];
 		$extensions = $this->withPlugins === true ? $this->kirby->extensions('areas') : [];
 
-		// load core areas and extend them with elements from plugins if they exist
+		// load core areas and extend them with elements
+		// from plugins if they exist
 		foreach ($this->kirby->core()->areas() as $id => $area) {
 			$area = $this->resolveArea($area);
 

@@ -1,0 +1,9 @@
+:root {
+	--rounded-xs: 1px;
+	--rounded-sm: 0.125rem;
+	--rounded-md: 0.25rem;
+	--rounded-lg: 0.375rem;
+	--rounded-xl: 0.5rem;
+
+	--rounded: var(--rounded-md);
+}

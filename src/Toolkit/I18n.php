@@ -18,10 +18,8 @@ class I18n
 {
 	/**
 	 * Custom loader function
-	 *
-	 * @var Closure
 	 */
-	public static $load = null;
+	public static Closure|null $load = null;
 
 	/**
 	 * Current locale

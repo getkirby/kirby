@@ -16,7 +16,7 @@ class MultiselectFieldTest extends TestCase
 		$this->assertNull($field->min());
 		$this->assertNull($field->max());
 		$this->assertSame(',', $field->separator());
-		$this->assertNull($field->icon());
+		$this->assertSame('checklist', $field->icon());
 		$this->assertNull($field->counter());
 		$this->assertTrue($field->search());
 		$this->assertFalse($field->sort());

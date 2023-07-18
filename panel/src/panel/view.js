@@ -38,9 +38,11 @@ export default (panel) => {
 			// get the current url
 			const url = this.url().toString();
 
-			// change the browser location if the path changed
+			// change the browser location and reset the scroll
+			// position if the path changed
 			if (window.location.toString() !== url) {
 				window.history.pushState(null, null, url);
+				window.scrollTo(0, 0);
 			}
 		},
 
@@ -48,6 +50,7 @@ export default (panel) => {
 		 * Submitting view form values is not
 		 * implemented yet
 		 */
+		/* c8 ignore next 3 */
 		async submit() {
 			throw new Error("Not yet implemented");
 		}

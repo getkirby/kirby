@@ -54,6 +54,7 @@
 								<button
 									v-for="color in convertedOptions"
 									:key="color.value"
+									:aria-current="color.value === currentOption?.value"
 									:style="'color: ' + color.value"
 									:title="color.text ?? color.value"
 									type="button"
@@ -170,14 +171,13 @@ export default {
 }
 
 .k-color-field-picker {
-	display: flex;
-	flex-direction: column;
-	gap: var(--spacing-3);
 	padding: var(--spacing-2);
 }
-
 .k-color-field .k-color {
 	width: 12rem;
+}
+.k-color-field .k-color > *:first-child {
+	border-radius: var(--rounded-sm);
 }
 
 .k-color-field-options {
@@ -190,11 +190,14 @@ export default {
 	--color-preview-size: 100%;
 	--color-preview-darkness: 100%;
 	grid-template-columns: repeat(6, 1fr);
+	margin-top: var(--spacing-3);
 }
 
 .k-color-field .k-color-preview[aria-current] {
-	border: 2px solid var(--color-focus);
 	outline: var(--field-input-focus-outline);
+}
+.k-color-field[data-disabled="true"] .k-color-field-options {
+	opacity: var(--opacity-disabled);
 }
 
 .k-color-field .k-input-after {

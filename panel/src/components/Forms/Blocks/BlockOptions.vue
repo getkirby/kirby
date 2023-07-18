@@ -2,20 +2,20 @@
 	<k-dropdown class="k-block-options">
 		<template v-if="isBatched">
 			<k-button
-				:tooltip="$t('copy')"
+				:title="$t('copy')"
 				class="k-block-options-button"
 				icon="template"
 				@click="$emit('copy')"
 			/>
 			<k-button
 				v-if="isMergable"
-				:tooltip="$t('merge')"
+				:title="$t('merge')"
 				class="k-block-options-button"
 				icon="merge"
 				@click="$emit('merge')"
 			/>
 			<k-button
-				:tooltip="$t('remove')"
+				:title="$t('remove')"
 				class="k-block-options-button"
 				icon="trash"
 				@click="$emit('removeSelected')"
@@ -24,38 +24,38 @@
 		<template v-else>
 			<k-button
 				v-if="isEditable"
-				:tooltip="$t('edit')"
+				:title="$t('edit')"
 				icon="edit"
 				class="k-block-options-button"
 				@click="$emit('open')"
 			/>
 			<k-button
 				:disabled="isFull"
-				:tooltip="$t('insert.after')"
+				:title="$t('insert.after')"
 				class="k-block-options-button"
 				icon="add"
 				@click="$emit('chooseToAppend')"
 			/>
 			<k-button
-				:tooltip="$t('delete')"
+				:title="$t('delete')"
 				class="k-block-options-button"
 				icon="trash"
 				@click="$emit('remove')"
 			/>
 			<k-button
-				:tooltip="$t('more')"
+				:title="$t('more')"
 				class="k-block-options-button"
 				icon="dots"
 				@click="$refs.options.toggle()"
 			/>
 			<k-button
-				:tooltip="$t('sort')"
+				:title="$t('sort.drag')"
 				class="k-block-options-button k-sort-handle"
 				icon="sort"
 				@keydown.native.up.prevent="$emit('sortUp')"
 				@keydown.native.down.prevent="$emit('sortDown')"
 			/>
-			<k-dropdown-content ref="options" align="right">
+			<k-dropdown-content ref="options" align-x="end">
 				<k-dropdown-item
 					:disabled="isFull"
 					icon="angle-up"
@@ -141,7 +141,7 @@ export default {
 	align-items: center;
 	background: var(--color-white);
 	z-index: var(--z-dropdown);
-	box-shadow: rgba(0, 0, 0, 0.1) -2px 0 5px, var(--shadow), var(--shadow-xl);
+	box-shadow: var(--shadow-toolbar);
 	color: var(--color-black);
 	border-radius: var(--rounded);
 }

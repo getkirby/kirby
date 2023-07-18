@@ -1,7 +1,7 @@
 <template>
 	<div
 		:id="id"
-		:data-width="width"
+		:style="'--width: ' + width"
 		tabindex="0"
 		class="k-column k-layout-column"
 		@dblclick="$refs.blocks.choose(blocks.length)"
@@ -31,7 +31,10 @@ export default {
 		fieldsets: Object,
 		id: String,
 		isSelected: Boolean,
-		width: String
+		width: {
+			type: String,
+			default: "1/1"
+		}
 	}
 };
 </script>
@@ -65,7 +68,11 @@ export default {
 	flex-direction: column;
 	height: 100%;
 }
-.k-layout-column .k-blocks-empty {
+.k-layout-column .k-blocks .k-block-container:last-of-type {
+	flex-grow: 1;
+}
+.k-layout-column .k-blocks-empty.k-box {
+	--box-color-back: transparent;
 	position: absolute;
 	inset: 0;
 	justify-content: center;
@@ -75,9 +82,5 @@ export default {
 }
 .k-layout-column .k-blocks-empty:hover {
 	opacity: 1;
-}
-.k-layout-column .k-blocks-empty.k-empty .k-icon {
-	width: 1rem;
-	border-inline-end: 0;
 }
 </style>

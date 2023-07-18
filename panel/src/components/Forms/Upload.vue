@@ -5,6 +5,8 @@
  * serves to open the file selector from the OS. Once files are
  * selected the dialog will open and show the progress and
  * potential upload errors.
+ *
+ * @deprecated 4.0.0 Use the $panel.upload module instead
  */
 export default {
 	props: {
@@ -38,14 +40,19 @@ export default {
 		 * the upload element are used.
 		 * @public
 		 * @param {object} params
+		 * @deprecated 4.0.0
 		 */
 		open(params) {
+			window.panel.deprecated(
+				"<k-upload> will be removed in a future version. Use `$panel.upload.open()` instead."
+			);
+
 			this.$panel.upload.pick(this.params(params));
 		},
 		params(params) {
 			return {
 				...this.$props,
-				...(params || {}),
+				...(params ?? {}),
 				on: {
 					complete: (files, models) => {
 						this.$emit("success", files, models);
@@ -64,17 +71,29 @@ export default {
 		 * @public
 		 * @param {array} files
 		 * @param {object} params
+		 * @deprecated 4.0.0
 		 */
 		drop(files, params) {
+			window.panel.deprecated(
+				"<k-upload> will be removed in a future version. Use `$panel.upload.select()` instead."
+			);
+
 			this.$panel.upload.open(files, this.params(params));
 		},
-		render() {
-			return;
-		},
+		/**
+		 * @deprecated 4.0.0
+		 */
 		upload(files, params) {
+			window.panel.deprecated(
+				"<k-upload> will be removed in a future version. Use `$panel.upload.select()` instead."
+			);
+
 			this.$panel.upload.select(files, this.params(params));
 			this.$panel.upload.start();
 		}
+	},
+	render() {
+		return "";
 	}
 };
 </script>

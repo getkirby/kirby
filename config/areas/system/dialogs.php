@@ -30,9 +30,9 @@ return [
 							'theme' => $license ? 'code' : 'negative',
 							'help'  => $license ?
 								// @codeCoverageIgnoreStart
-								'<a href="https://hub.getkirby.com">' . I18n::translate('license.manage') . ' &rarr;</a>' :
+								'<a href="https://hub.getkirby.com" target="_blank">' . I18n::translate('license.manage') . ' &rarr;</a>' :
 								// @codeCoverageIgnoreEnd
-								'<a href="https://getkirby.com/buy">' . I18n::translate('license.buy') . ' &rarr;</a>'
+								'<a href="https://getkirby.com/buy" target="_blank">' . I18n::translate('license.buy') . ' &rarr;</a>'
 						]
 					],
 					'submitButton' => false,
@@ -45,15 +45,17 @@ return [
 	'registration' => [
 		'load' => function () {
 			$system = App::instance()->system();
+			$local  = $system->isLocal();
 
 			return [
 				'component' => 'k-form-dialog',
 				'props' => [
 					'fields' => [
 						'domain' => [
+							'label' => I18n::translate('license.unregistered'),
 							'type'  => 'info',
-							'theme' => $system->isLocal() ? 'notice' : 'info',
-							'text'  => I18n::template('license.register.' . ($system->isLocal() ? 'local' : 'domain'), ['host' => $system->indexUrl()])
+							'theme' => $local ? 'warning' : 'info',
+							'text'  => I18n::template('license.register.' . ($local ? 'local' : 'domain'), ['host' => $system->indexUrl()])
 						],
 						'license' => [
 							'label'       => I18n::translate('license.register.label'),
@@ -61,11 +63,14 @@ return [
 							'required'    => true,
 							'counter'     => false,
 							'placeholder' => 'K3-',
-							'help'        => I18n::translate('license.register.help')
+							'help'        => I18n::translate('license.register.help') . ' ' . '<a href="https://getkirby.com/buy" target="_blank">' . I18n::translate('license.buy') . ' &rarr;</a>'
 						],
 						'email' => Field::email(['required' => true])
 					],
-					'submitButton' => I18n::translate('license.register'),
+					'submitButton' => [
+						'icon'  => 'key',
+						'text'  => I18n::translate('license.register'),
+					],
 					'value' => [
 						'license' => null,
 						'email'   => null

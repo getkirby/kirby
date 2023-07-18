@@ -55,6 +55,10 @@ export default () => {
 			return typeof this.on[event] === "function";
 		},
 
+		listeners() {
+			return this.on;
+		},
+
 		on: {}
 	};
 };

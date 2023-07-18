@@ -19,6 +19,12 @@ return [
 		'pattern' => 'users/create',
 		'load' => function () {
 			$kirby = App::instance();
+
+			// get default value for role
+			if ($role = $kirby->request()->get('role')) {
+				$role = $kirby->roles()->find($role)?->id();
+			}
+
 			return [
 				'component' => 'k-form-dialog',
 				'props' => [
@@ -42,7 +48,7 @@ return [
 						'email'       => '',
 						'password'    => '',
 						'translation' => $kirby->panelLanguage(),
-						'role'        => $kirby->user()->role()->name()
+						'role'        => $role ?? $kirby->user()->role()->name()
 					]
 				]
 			];

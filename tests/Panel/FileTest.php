@@ -320,7 +320,7 @@ class FileTest extends TestCase
 
 		$this->assertSame('image', $option['icon']);
 		$this->assertSame('test.jpg', $option['text']);
-		$this->assertSame('/panel/pages/test/files/test.jpg', $option['link']);
+		$this->assertSame('/pages/test/files/test.jpg', $option['link']);
 	}
 
 	/**
@@ -343,7 +343,6 @@ class FileTest extends TestCase
 		$image = (new File($file))->image();
 		$this->assertSame('image', $image['icon']);
 		$this->assertSame('orange-400', $image['color']);
-		$this->assertSame('3/2', $image['ratio']);
 		$this->assertSame('pattern', $image['back']);
 		$this->assertArrayHasKey('url', $image);
 	}
@@ -373,7 +372,6 @@ class FileTest extends TestCase
 			'color' => 'orange-400',
 			'cover' => false,
 			'icon' => 'image',
-			'ratio' => '3/2',
 			'url' => '/media/site/' . $hash . '/test.jpg',
 			'src' => Model::imagePlaceholder(),
 			'srcset' => '/media/site/' . $hash . '/test-38x.jpg 38w, /media/site/' . $hash . '/test-76x.jpg 76w'
@@ -385,7 +383,6 @@ class FileTest extends TestCase
 			'color' => 'orange-400',
 			'cover' => true,
 			'icon' => 'image',
-			'ratio' => '3/2',
 			'url' => '/media/site/' . $hash . '/test.jpg',
 			'src' => Model::imagePlaceholder(),
 			'srcset' => '/media/site/' . $hash . '/test-38x38-crop.jpg 1x, /media/site/' . $hash . '/test-76x76-crop.jpg 2x'
@@ -506,10 +503,12 @@ class FileTest extends TestCase
 		$file->kirby()->impersonate('kirby');
 
 		$expected = [
+			'access'      	 => true,
 			'changeName'     => true,
 			'changeTemplate' => false,
 			'create'         => true,
 			'delete'         => true,
+			'list'         	 => true,
 			'read'           => true,
 			'replace'        => true,
 			'update'         => true,
@@ -537,10 +536,12 @@ class FileTest extends TestCase
 
 		// without override
 		$expected = [
+			'access'     	 => false,
 			'changeName'     => false,
 			'changeTemplate' => false,
 			'create'         => false,
 			'delete'         => false,
+			'list'           => false,
 			'read'           => false,
 			'replace'        => false,
 			'update'         => false,
@@ -551,10 +552,12 @@ class FileTest extends TestCase
 
 		// with override
 		$expected = [
+			'access'     	 => false,
 			'changeName'     => false,
 			'changeTemplate' => false,
 			'create'         => false,
 			'delete'         => true,
+			'list'           => false,
 			'read'           => false,
 			'replace'        => false,
 			'update'         => false,
@@ -580,10 +583,12 @@ class FileTest extends TestCase
 		$file->kirby()->impersonate('kirby');
 
 		$expected = [
+			'access'     	 => true,
 			'changeName'     => true,
 			'changeTemplate' => false,
 			'create'         => true,
 			'delete'         => true,
+			'list'           => true,
 			'read'           => true,
 			'replace'        => false,
 			'update'         => true,
@@ -620,10 +625,12 @@ class FileTest extends TestCase
 		$file->kirby()->impersonate('kirby');
 
 		$expected = [
+			'access'     	 => true,
 			'changeName'     => true,
 			'changeTemplate' => false,
 			'create'         => true,
 			'delete'         => true,
+			'list'           => true,
 			'read'           => true,
 			'replace'        => true,
 			'update'         => true,
@@ -662,10 +669,12 @@ class FileTest extends TestCase
 		$file->kirby()->impersonate('kirby');
 
 		$expected = [
+			'access'     	 => true,
 			'changeName'     => true,
 			'changeTemplate' => false,
 			'create'         => true,
 			'delete'         => true,
+			'list'           => true,
 			'read'           => true,
 			'replace'        => false,
 			'update'         => true,
@@ -709,7 +718,6 @@ class FileTest extends TestCase
 		$this->assertSame('test.jpg', $data['filename']);
 		$this->assertSame('(image: test.jpg)', $data['dragText']);
 		$this->assertSame('test/test.jpg', $data['id']);
-		$this->assertSame('3/2', $data['image']['ratio']);
 		$this->assertSame('image', $data['image']['icon']);
 		$this->assertSame('/pages/test/files/test.jpg', $data['link']);
 		$this->assertSame('test.jpg', $data['text']);

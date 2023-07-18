@@ -1,72 +1,31 @@
 <template>
-	<nav :data-theme="theme" class="k-form-buttons">
-		<k-view v-if="mode === 'unlock'">
-			<p class="k-form-lock-info">
-				{{ $t("lock.isUnlocked") }}
-			</p>
-			<span class="k-form-lock-buttons">
+	<nav v-if="hasChanges" class="k-form-buttons">
+		<!-- eslint-disable-next-line vue/no-v-html -->
+		<div v-if="message" class="k-help" v-html="message" />
+
+		<k-button-group layout="collapsed">
+			<template v-if="mode === 'changes'">
 				<k-button
-					:text="$t('download')"
-					icon="download"
-					class="k-form-button"
-					@click="onDownload"
+					icon="undo"
+					size="sm"
+					variant="filled"
+					:disabled="disabled"
+					:responsive="true"
+					:text="$t('revert')"
+					:theme="theme"
+					@click="revert"
 				/>
-				<k-button
-					:text="$t('confirm')"
-					icon="check"
-					class="k-form-button"
-					@click="onResolve"
-				/>
-			</span>
-		</k-view>
+			</template>
 
-		<k-view v-else-if="mode === 'lock'">
-			<p class="k-form-lock-info">
-				<k-icon type="lock" />
-				<!-- eslint-disable-next-line vue/no-v-html -->
-				<span v-html="$t('lock.isLocked', { email: $esc(lock.data.email) })" />
-			</p>
-
-			<k-icon
-				v-if="!lock.data.unlockable"
-				type="loader"
-				class="k-form-lock-loader"
-			/>
 			<k-button
-				v-else
-				:text="$t('lock.unlock')"
-				icon="unlock"
-				class="k-form-button"
-				@click="onUnlock()"
+				v-bind="button"
+				size="sm"
+				variant="filled"
+				:disabled="disabled"
+				:responsive="true"
+				:theme="theme"
 			/>
-		</k-view>
-
-		<k-view v-else-if="mode === 'changes'">
-			<k-button
-				:disabled="isDisabled"
-				:text="$t('revert')"
-				icon="undo"
-				class="k-form-button"
-				@click="onRevert"
-			/>
-			<k-button
-				:disabled="isDisabled"
-				:text="$t('save')"
-				icon="check"
-				class="k-form-button"
-				@click="onSave"
-			/>
-		</k-view>
-
-		<k-dialog
-			ref="revert"
-			:submit-button="$t('revert')"
-			icon="undo"
-			theme="negative"
-			@submit="revert"
-		>
-			<k-text :html="$t('revert.confirm')" />
-		</k-dialog>
+		</k-button-group>
 	</nav>
 </template>
 
@@ -87,6 +46,80 @@ export default {
 		api() {
 			// always use silent requests (without loading spinner)
 			return [this.$panel.view.path + "/lock", null, null, true];
+		},
+		message() {
+			if (this.mode === "unlock") {
+				return this.$t("lock.isUnlocked");
+			}
+
+			if (this.mode === "lock") {
+				return this.$t("lock.isLocked", {
+					email: this.$esc(this.lock.data.email)
+				});
+			}
+
+			return false;
+		},
+		button() {
+			if (this.mode === "unlock") {
+				return {
+					icon: "check",
+					text: this.$t("confirm"),
+					click: this.onResolve
+				};
+			}
+
+			if (this.mode === "lock") {
+				return {
+					icon: "unlock",
+					text: this.$t("lock.unlock"),
+					click: this.onUnlock
+				};
+			}
+
+			if (this.mode === "changes") {
+				return {
+					icon: "check",
+					text: this.$t("save"),
+					disabled: this.isDisabled,
+					click: this.onSave
+				};
+			}
+
+			return {
+				icon: "check",
+				text: "No changes",
+				click: this.onSave
+			};
+		},
+		dropdown() {
+			if (this.mode === "changes") {
+				return [
+					{
+						icon: "undo",
+						text: this.$t("revert"),
+						disabled: this.isDisabled,
+						click: this.revert
+					}
+				];
+			}
+
+			return [];
+		},
+		disabled() {
+			if (this.mode === "unlock") {
+				return false;
+			}
+
+			if (this.mode === "lock") {
+				return !this.lock.data.unlockable;
+			}
+
+			if (this.mode === "changes") {
+				return this.isDisabled;
+			}
+
+			return false;
 		},
 		hasChanges() {
 			return this.$store.getters["content/hasChanges"]();
@@ -124,8 +157,11 @@ export default {
 			if (this.mode === "unlock") {
 				return "info";
 			}
+			if (this.mode === "changes") {
+				return "notice";
+			}
 
-			return "notice";
+			return null;
 		}
 	},
 	watch: {
@@ -151,7 +187,7 @@ export default {
 			// model used to be locked by another user,
 			// lock has been lifted, so refresh data
 			if (locked === false) {
-				this.$events.$emit("model.reload");
+				this.$events.emit("model.reload");
 			}
 		}
 	},
@@ -160,13 +196,13 @@ export default {
 		if (this.supportsLocking) {
 			this.isRefreshing = setInterval(this.check, 10000);
 		}
-		this.$events.$on("view.save", this.onSave);
+		this.$events.on("view.save", this.onSave);
 	},
 	destroyed() {
 		// make sure to clear all intervals
 		clearInterval(this.isRefreshing);
 		clearInterval(this.isLocking);
-		this.$events.$off("view.save", this.onSave);
+		this.$events.off("view.save", this.onSave);
 	},
 	methods: {
 		async check() {
@@ -221,14 +257,11 @@ export default {
 			await this.onUnlock(false);
 			this.$store.dispatch("content/revert");
 		},
-		onRevert() {
-			this.$refs.revert.open();
-		},
 		async onSave(e) {
 			e.preventDefault?.();
 
 			await this.$store.dispatch("content/save");
-			this.$events.$emit("model.update");
+			this.$events.emit("model.update");
 			this.$panel.notification.success();
 		},
 		async onUnlock(unlock = true) {
@@ -245,57 +278,40 @@ export default {
 			this.$reload({ silent: true });
 		},
 		revert() {
-			this.$store.dispatch("content/revert");
-			this.$refs.revert.close();
+			this.$panel.dialog.open({
+				component: "k-remove-dialog",
+				props: {
+					submitButton: {
+						icon: "undo",
+						text: this.$t("revert")
+					},
+					text: this.$t("revert.confirm")
+				},
+				on: {
+					submit: () => {
+						this.$store.dispatch("content/revert");
+						this.$panel.dialog.close();
+					}
+				}
+			});
 		}
 	}
 };
 </script>
 
 <style>
-.k-form-buttons[data-theme] {
-	background: var(--theme-light);
-}
-.k-form-buttons .k-view {
+.k-form-buttons {
 	display: flex;
-	justify-content: space-between;
 	align-items: center;
+	gap: 1rem;
 }
-.k-form-button.k-button {
-	font-weight: 500;
-	white-space: nowrap;
-	line-height: 1;
-	height: 2.5rem;
-	display: flex;
-	padding: 0 1rem;
-	align-items: center;
-}
-.k-form-button:first-child {
-	margin-inline-start: -1rem;
-}
-.k-form-button:last-child {
-	margin-inline-end: -1rem;
+.k-form-buttons .k-help {
+	max-width: 22rem;
 }
 
-.k-form-lock-info {
-	display: flex;
-	font-size: var(--text-sm);
-	align-items: center;
-	line-height: 1.5em;
-	padding: 0.625rem 0;
-	margin-inline-end: 3rem;
-}
-.k-form-lock-info > .k-icon {
-	margin-inline-end: 0.5rem;
-}
-.k-form-lock-buttons {
-	display: flex;
-	flex-shrink: 0;
-}
-.k-form-lock-loader {
-	animation: Spin 4s linear infinite;
-}
-.k-form-lock-loader .k-icon-loader {
-	display: flex;
+@container (max-width: 60rem) {
+	.k-form-buttons .k-help {
+		display: none;
+	}
 }
 </style>

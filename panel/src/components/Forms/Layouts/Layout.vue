@@ -25,10 +25,10 @@
 		<nav v-if="!disabled" class="k-layout-toolbar">
 			<k-button
 				v-if="settings"
-				:tooltip="$t('settings')"
+				:title="$t('settings')"
 				class="k-layout-toolbar-button"
 				icon="settings"
-				@click="$refs.drawer.open()"
+				@click="openSettings"
 			/>
 
 			<k-dropdown>
@@ -37,7 +37,7 @@
 					icon="angle-down"
 					@click="$refs.options.toggle()"
 				/>
-				<k-dropdown-content ref="options" align="right">
+				<k-dropdown-content ref="options" align-x="end">
 					<k-dropdown-item icon="angle-up" @click="$emit('prepend')">
 						{{ $t("insert.before") }}
 					</k-dropdown-item>
@@ -48,14 +48,18 @@
 					<k-dropdown-item
 						v-if="settings"
 						icon="settings"
-						@click="$refs.drawer.open()"
+						@click="openSettings"
 					>
 						{{ $t("settings") }}
 					</k-dropdown-item>
 					<k-dropdown-item icon="copy" @click="$emit('duplicate')">
 						{{ $t("duplicate") }}
 					</k-dropdown-item>
-					<k-dropdown-item :disabled="layouts.length === 1" icon="dashboard" @click="$emit('change')">
+					<k-dropdown-item
+						:disabled="layouts.length === 1"
+						icon="dashboard"
+						@click="$emit('change')"
+					>
 						{{ $t("field.layout.change") }}
 					</k-dropdown-item>
 					<hr />
@@ -73,17 +77,6 @@
 			</k-dropdown>
 			<k-sort-handle />
 		</nav>
-
-		<k-form-drawer
-			v-if="settings"
-			ref="drawer"
-			:tabs="tabs"
-			:title="$t('settings')"
-			:value="attrs"
-			class="k-layout-drawer"
-			icon="settings"
-			@input="$emit('updateAttrs', $event)"
-		/>
 	</section>
 </template>
 
@@ -122,6 +115,20 @@ export default {
 		}
 	},
 	methods: {
+		openSettings() {
+			this.$panel.drawer.open({
+				component: "k-form-drawer",
+				props: {
+					icon: "settings",
+					tabs: this.tabs,
+					title: this.$t("settings"),
+					value: this.attrs
+				},
+				on: {
+					input: (attrs) => this.$emit("updateAttrs", attrs)
+				}
+			});
+		},
 		remove() {
 			this.$panel.dialog.open({
 				component: "k-remove-dialog",
@@ -168,6 +175,9 @@ export default {
 	width: var(--layout-toolbar-width);
 	display: flex;
 	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+	padding-bottom: var(--spacing-2);
 	font-size: var(--text-sm);
 	background: var(--color-gray-100);
 	border-inline-start: 1px solid var(--color-light);
@@ -179,10 +189,6 @@ export default {
 .k-layout-toolbar-button {
 	width: var(--layout-toolbar-width);
 	height: var(--layout-toolbar-width);
-}
-.k-layout-toolbar .k-sort-handle {
-	margin-top: auto;
-	color: currentColor;
 }
 
 /** Columns **/

@@ -361,14 +361,14 @@ class App
 	 * @return \Kirby\Toolkit\Collection|null
 	 * @todo 5.0 Add return type declaration
 	 */
-	public function collection(string $name)
+	public function collection(string $name, array $options = [])
 	{
-		return $this->collections()->get($name, [
+		return $this->collections()->get($name, array_merge($options, [
 			'kirby' => $this,
-			'site'  => $this->site(),
-			'pages' => $this->site()->children(),
+			'site'  => $site = $this->site(),
+			'pages' => $site->children(),
 			'users' => $this->users()
-		]);
+		]));
 	}
 
 	/**
@@ -923,6 +923,11 @@ class App
 	 */
 	public function languages(bool $clone = true): Languages
 	{
+		if ($clone === false) {
+			$this->multilang = null;
+			$this->defaultLanguage = null;
+		}
+
 		if ($this->languages !== null) {
 			return $clone === true ? clone $this->languages : $this->languages;
 		}

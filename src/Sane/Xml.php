@@ -32,8 +32,10 @@ class Xml extends DomHandler
 
 		// if we are validating an XML file, block all SVG and HTML namespaces
 		if (static::class === self::class) {
-			$simpleXmlElement = simplexml_import_dom($element);
-			foreach ($simpleXmlElement->getDocNamespaces(false, false) as $namespace => $value) {
+			$xml        = simplexml_import_dom($element);
+			$namespaces = $xml->getDocNamespaces(false, false);
+
+			foreach ($namespaces as $namespace => $value) {
 				if (
 					Str::contains($value, 'html', true) === true ||
 					Str::contains($value, 'svg', true) === true

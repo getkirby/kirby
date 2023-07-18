@@ -250,7 +250,13 @@ class ModelTest extends TestCase
 		$option = $model->dropdownOption();
 		$expected = [
 			'icon' => 'page',
-			'link' => '/panel/custom',
+			'image' => [
+				'back'  => 'black',
+				'color' => 'gray-500',
+				'cover' => false,
+				'icon'  => 'page'
+			],
+			'link' => '/custom',
 			'text' => null
 		];
 
@@ -276,10 +282,8 @@ class ModelTest extends TestCase
 		$this->assertArrayHasKey('back', $image);
 		$this->assertArrayHasKey('cover', $image);
 		$this->assertArrayHasKey('icon', $image);
-		$this->assertArrayHasKey('ratio', $image);
 		$this->assertFalse($image['cover']);
 		$this->assertSame('page', $image['icon']);
-		$this->assertSame('3/2', $image['ratio']);
 
 		// deactivate
 		$this->assertNull($panel->image(false));
@@ -309,17 +313,6 @@ class ModelTest extends TestCase
 		$this->assertStringContainsString('test-352x.jpg 352w', $image['srcset']);
 		$this->assertStringContainsString('test-864x.jpg 864w', $image['srcset']);
 		$this->assertStringContainsString('test-1408x.jpg 1408w', $image['srcset']);
-
-		// cards with cover option should still return the full srcset
-		// cropping is done in css
-		$image = $panel->image([
-			'query'  => 'site.image',
-			'cover'  => true
-		], 'cards');
-
-		$this->assertStringContainsString('test-352x235-crop.jpg 352w', $image['srcset']);
-		$this->assertStringContainsString('test-864x576-crop.jpg 864w', $image['srcset']);
-		$this->assertStringContainsString('test-1408x939-crop.jpg 1408w', $image['srcset']);
 
 		// cardlets
 		$image = $panel->image('site.image', 'cardlets');
@@ -492,11 +485,11 @@ class ModelTest extends TestCase
 
 		$toLink = $panel->toLink();
 		$this->assertSame('/custom', $toLink['link']);
-		$this->assertSame($title, $toLink['tooltip']);
+		$this->assertSame($title, $toLink['title']);
 
 		$toLink = $panel->toLink('author');
 		$this->assertSame('/custom', $toLink['link']);
-		$this->assertSame($author, $toLink['tooltip']);
+		$this->assertSame($author, $toLink['title']);
 	}
 
 	/**

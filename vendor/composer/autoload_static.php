@@ -348,6 +348,7 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         'Kirby\\Option\\OptionsProvider' => __DIR__ . '/../..' . '/src/Option/OptionsProvider.php',
         'Kirby\\Option\\OptionsQuery' => __DIR__ . '/../..' . '/src/Option/OptionsQuery.php',
         'Kirby\\Panel\\Assets' => __DIR__ . '/../..' . '/src/Panel/Assets.php',
+        'Kirby\\Panel\\ChangesDialog' => __DIR__ . '/../..' . '/src/Panel/ChangesDialog.php',
         'Kirby\\Panel\\Dialog' => __DIR__ . '/../..' . '/src/Panel/Dialog.php',
         'Kirby\\Panel\\Document' => __DIR__ . '/../..' . '/src/Panel/Document.php',
         'Kirby\\Panel\\Drawer' => __DIR__ . '/../..' . '/src/Panel/Drawer.php',

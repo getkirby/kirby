@@ -6,6 +6,8 @@
 					v-if="more && !disabled"
 					:icon="btnIcon"
 					:text="btnLabel"
+					variant="filled"
+					size="xs"
 					class="k-field-options-button"
 					@click="open"
 				/>
@@ -21,22 +23,21 @@
 			<template #options="{ index }">
 				<k-button
 					v-if="!disabled"
-					:tooltip="$t('remove')"
+					:title="$t('remove')"
 					icon="remove"
 					@click="remove(index)"
 				/>
 			</template>
 		</k-collection>
-
-		<k-users-dialog ref="selector" @submit="select" />
 	</k-field>
 </template>
 
 <script>
-import picker from "@/mixins/forms/picker.js";
+import Picker from "@/mixins/forms/picker.js";
 
 export default {
-	mixins: [picker],
+	mixins: [Picker],
+	dialog: "k-users-dialog",
 	computed: {
 		emptyProps() {
 			return {

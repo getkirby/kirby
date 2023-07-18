@@ -5,7 +5,7 @@ import Components from "./components/index.js";
 import ErrorHandling from "./config/errorhandling";
 import Helpers from "./helpers/index.js";
 import I18n from "./config/i18n.js";
-import Legacy from "./legacy/index.js";
+import Legacy from "./panel/legacy.js";
 import Libraries from "./libraries/index.js";
 import Panel from "./panel/panel.js";
 import store from "./store/store.js";
@@ -18,9 +18,8 @@ Vue.config.devtools = true;
  * Global styles need to be loaded before
  * components
  */
-import "./styles/variables.css";
+import "./styles/config.css";
 import "./styles/reset.css";
-import "./styles/animations.css";
 
 /**
  * Load all relevant Vue plugins
@@ -30,6 +29,12 @@ Vue.use(Helpers);
 Vue.use(Libraries);
 Vue.use(Vuelidate);
 Vue.use(Components);
+
+/**
+ * Load CSS utilities after components
+ * to increase specificity
+ */
+import "./styles/utilities.css";
 
 /**
  * Create the Panel instance
@@ -42,6 +47,11 @@ window.panel = Vue.prototype.$panel = Panel.create(window.panel.plugins);
 /**
  * Some shortcuts to the Panel's features
  */
+Vue.prototype.$dialog = window.panel.dialog.open.bind(window.panel.dialog);
+Vue.prototype.$drawer = window.panel.drawer.open.bind(window.panel.drawer);
+Vue.prototype.$dropdown = window.panel.dropdown.openAsync.bind(
+	window.panel.dropdown
+);
 Vue.prototype.$go = window.panel.view.open.bind(window.panel.view);
 Vue.prototype.$reload = window.panel.reload.bind(window.panel);
 
@@ -60,19 +70,6 @@ Vue.use(I18n);
 Vue.use(ErrorHandling);
 Vue.use(Legacy);
 
-/**
- * Load CSS utilities after components
- * to increase specificity
- */
-import "./styles/utilities.css";
-
-// :has() CSS polyfill
-// TODO: remove when Firefox supports CSS :has
-if (CSS.supports("selector(:has(*))") === false) {
-	import("css-has-pseudo/browser").then(({ default: cssHas }) => {
-		cssHas(document);
-	});
-}
 // container queries CSS polyfill
 // TODO: remove when global support for container queries is reached
 if (CSS.supports("container") === false) {

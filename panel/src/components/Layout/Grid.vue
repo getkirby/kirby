@@ -1,19 +1,36 @@
 <template>
-	<div :data-gutter="gutter" class="k-grid">
+	<div :data-gutter="gutter" :data-variant="variant" class="k-grid">
 		<slot />
 	</div>
 </template>
 
 <script>
 /**
- * The Grid component is a CSS Grid wrapper. It goes very well together with the `<k-column>` component, which allows to set column widths in a very comfortable way. Any other element within the Grid component can be used as well though.
+ * The <k-grid> component is a CSS grid wrapper. It goes very well together with the <k-column> component, which allows to set column widths in a very comfortable way. Any other element within the Grid component can be used as well though.
+ *
+ * Customised the grid via the `--columns` CSS property on `<k-grid>` and the `--width` and/or `--span` properties on its children.
+ *
+ * @public
  */
 export default {
 	props: {
 		/**
+		 * @deprecated 4.0.0 Use `style="gap: "` or `variant` prop instead
 		 * @values small, medium, large, huge
 		 */
-		gutter: String
+		gutter: String,
+		/**
+		 * Variants for common grid-spacing use cases
+		 * @values `columns`, `fields`
+		 */
+		variant: String
+	},
+	created() {
+		if (this.gutter) {
+			window.panel.deprecated(
+				'<k-grid>: the `gutter` prop will be removed in a future version. Use `style="gap: "` or `variant` prop instead.'
+			);
+		}
 	}
 };
 </script>
@@ -22,17 +39,30 @@ export default {
 .k-grid {
 	--columns: 12;
 	display: grid;
-	grid-column-gap: 0;
-	grid-row-gap: 0;
-	grid-template-columns: 1fr;
+	align-items: start;
 }
 
-@media screen and (min-width: 30em) {
+.k-grid > * {
+	--width: calc(1 / var(--columns));
+	--span: calc(var(--columns) * var(--width));
+}
+
+@container (min-width: 50rem) {
+	.k-grid {
+		grid-template-columns: repeat(var(--columns), 1fr);
+	}
+
+	.k-grid > * {
+		grid-column: span var(--span);
+	}
+}
+
+/** @todo grid.gutter.deprecated - remove @ 5.0 */
+@container (min-width: 30em) {
 	.k-grid[data-gutter="small"] {
 		grid-column-gap: 1rem;
 		grid-row-gap: 1rem;
 	}
-
 	.k-grid[data-gutter="medium"],
 	.k-grid[data-gutter="large"],
 	.k-grid[data-gutter="huge"] {
@@ -41,10 +71,7 @@ export default {
 	}
 }
 
-@media screen and (min-width: 65em) {
-	.k-grid {
-		grid-template-columns: repeat(var(--columns), 1fr);
-	}
+@container (min-width: 65em) {
 	.k-grid[data-gutter="large"] {
 		grid-column-gap: 3rem;
 	}
@@ -52,8 +79,7 @@ export default {
 		grid-column-gap: 4.5rem;
 	}
 }
-
-@media screen and (min-width: 90em) {
+@container (min-width: 90em) {
 	.k-grid[data-gutter="large"] {
 		grid-column-gap: 4.5rem;
 	}
@@ -61,13 +87,34 @@ export default {
 		grid-column-gap: 6rem;
 	}
 }
-
-@media screen and (min-width: 120em) {
+@container (min-width: 120em) {
 	.k-grid[data-gutter="large"] {
 		grid-column-gap: 6rem;
 	}
 	.k-grid[data-gutter="huge"] {
 		grid-column-gap: 7.5rem;
 	}
+}
+
+/** Grid variants **/
+:root {
+	--columns-inline-gap: clamp(0.75rem, 6cqw, 6rem);
+	--columns-block-gap: clamp(var(--spacing-8), 6vh, 6rem);
+}
+
+.k-grid[data-variant="columns"] {
+	column-gap: var(--columns-inline-gap);
+	row-gap: var(--columns-block-gap);
+}
+.k-grid[data-variant="columns"] > * {
+	container: column / inline-size;
+}
+
+.k-grid[data-variant="fields"] {
+	gap: var(--spacing-8);
+}
+
+.k-grid[data-variant="choices"] {
+	gap: 2px;
 }
 </style>

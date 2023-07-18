@@ -49,6 +49,7 @@ export const props = {
 
 export default {
 	mixins: [props],
+	emits: ["input", "submit"],
 	computed: {
 		hasFields() {
 			return this.$helper.object.length(this.fields) > 0;

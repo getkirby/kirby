@@ -14,6 +14,16 @@ export default function focus(element, field) {
 		return false;
 	}
 
+	// prevent setting focus if an item inside element (e.g. the dialog)
+	// already holds the focus currently
+	if (
+		!field &&
+		element.contains(document.activeElement) &&
+		element !== document.activeElement
+	) {
+		return false;
+	}
+
 	const selectors = [
 		"[autofocus]",
 		"[data-autofocus]",
@@ -79,7 +89,13 @@ export function isFocusable(element) {
 		return false;
 	}
 
+	// check if the element itself is disabled
 	if (element.matches("[disabled], [aria-disabled], input[type=hidden]")) {
+		return false;
+	}
+
+	// check if the element is a child of a disabled element
+	if (element.closest("[aria-disabled]") || element.closest("[disabled]")) {
 		return false;
 	}
 

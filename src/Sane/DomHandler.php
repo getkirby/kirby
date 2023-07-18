@@ -74,10 +74,11 @@ class DomHandler extends Handler
 	 */
 	public static function validate(string $string): void
 	{
-		$dom = static::parse($string);
+		$dom    = static::parse($string);
 		$errors = $dom->sanitize(static::options());
+
+		// there may be multiple errors, we can only throw one of them at a time
 		if (count($errors) > 0) {
-			// there may be multiple errors, we can only throw one of them at a time
 			throw $errors[0];
 		}
 	}

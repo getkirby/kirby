@@ -12,11 +12,11 @@
 				<k-dropdown>
 					<k-button
 						:icon="icon || 'clock'"
-						:tooltip="$t('time.select')"
+						:title="$t('time.select')"
 						class="k-input-icon-button"
 						@click="$refs.times.toggle()"
 					/>
-					<k-dropdown-content ref="times" align="right">
+					<k-dropdown-content ref="times" align-x="end">
 						<k-times :display="display" :value="value" @input="select" />
 					</k-dropdown-content>
 				</k-dropdown>

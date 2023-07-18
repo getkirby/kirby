@@ -9,6 +9,14 @@
 	</div>
 </template>
 
+<script>
+/**
+ * Displays notification from `panel.notification`
+ * @internal
+ */
+export default {};
+</script>
+
 <style>
 .k-notification {
 	padding: 0.75rem 1.5rem;
@@ -22,7 +30,7 @@
 }
 
 .k-notification[data-theme] {
-	background: var(--theme-light);
+	background: var(--theme-color-back);
 	color: var(--color-black);
 }
 

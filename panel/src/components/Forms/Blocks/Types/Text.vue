@@ -84,7 +84,6 @@ export default {
 
 <style>
 .k-block-type-text-input {
-	font-size: var(--text-base);
 	line-height: 1.5em;
 	height: 100%;
 }

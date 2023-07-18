@@ -27,7 +27,14 @@
 					@input="user.remember = $event"
 				/>
 			</span>
-			<k-button class="k-login-button" icon="check" type="submit">
+			<k-button
+				class="k-login-button"
+				icon="check"
+				size="lg"
+				theme="positive"
+				type="submit"
+				variant="filled"
+			>
 				{{ $t("login" + (isResetForm ? ".reset" : "")) }}
 				<template v-if="isLoading"> … </template>
 			</k-button>
@@ -140,6 +147,7 @@ export default {
 				this.$reload({
 					globals: ["$system", "$translation"]
 				});
+				this.$panel.notification.success(this.$t("welcome"));
 			} catch (error) {
 				this.$emit("error", error);
 			} finally {

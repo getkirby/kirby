@@ -16,26 +16,25 @@
 				<template #options="{ index }">
 					<k-button
 						v-if="!disabled"
-						:tooltip="$t('remove')"
+						:title="$t('remove')"
 						icon="remove"
 						@click="remove(index)"
 					/>
 				</template>
 			</k-collection>
 		</k-dropzone>
-
-		<k-files-dialog ref="selector" @submit="select" />
 	</k-field>
 </template>
 
 <script>
-import picker from "@/mixins/forms/picker.js";
+import Picker from "@/mixins/forms/picker.js";
 
 /**
  * @example <k-files-field :value="files" @input="files = $event" name="files" label="Files" />
  */
 export default {
-	mixins: [picker],
+	mixins: [Picker],
+	dialog: "k-files-dialog",
 	props: {
 		uploads: [Boolean, Object, Array]
 	},
@@ -46,14 +45,16 @@ export default {
 		emptyProps() {
 			return {
 				icon: "image",
-				text: this.empty || this.$t("field.files.empty")
+				text: this.empty ?? this.$t("field.files.empty")
 			};
 		},
 		options() {
 			if (this.uploads) {
 				return {
 					icon: this.btnIcon,
+					size: "xs",
 					text: this.btnLabel,
+					variant: "filled",
 					options: [
 						{ icon: "check", text: this.$t("select"), click: "open" },
 						{ icon: "upload", text: this.$t("upload"), click: "upload" }
@@ -80,10 +81,10 @@ export default {
 		}
 	},
 	created() {
-		this.$events.$on("file.delete", this.removeById);
+		this.$events.on("file.delete", this.removeById);
 	},
 	destroyed() {
-		this.$events.$off("file.delete", this.removeById);
+		this.$events.off("file.delete", this.removeById);
 	},
 	methods: {
 		drop(files) {
@@ -123,7 +124,7 @@ export default {
 			}
 
 			this.onInput();
-			this.$events.$emit("model.update");
+			this.$events.emit("model.update");
 		},
 		prompt() {
 			if (this.disabled) {

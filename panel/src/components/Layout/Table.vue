@@ -352,8 +352,9 @@ export default {
 }
 .k-table[data-invalid] {
 	border: 0;
-	box-shadow: var(--color-negative-outline) 0 0 0 1px,
-		var(--color-negative-outline) 0 0 3px 2px;
+	box-shadow:
+		var(--color-red-900) 0 0 0 1px,
+		var(--color-red-900) 0 0 3px 2px;
 }
 
 /** Cells **/
@@ -399,7 +400,7 @@ export default {
 	font-family: var(--font-mono);
 	font-size: var(--text-xs);
 	font-weight: 400;
-	color: var(--color-gray-600);
+	color: var(--color-text-dimmed);
 	background: var(--color-gray-100);
 	width: 100%;
 }
@@ -456,19 +457,16 @@ export default {
 }
 
 /** Index & Sort handle */
-.k-table-index,
-.k-table .k-sort-handle {
+td.k-table-index-column {
 	display: grid;
 	place-items: center;
-	width: 100%;
-	height: var(--table-row-height);
 }
 .k-table .k-sort-handle,
 .k-table tr:hover .k-table-index-column[data-sortable="true"] .k-table-index {
 	display: none;
 }
 .k-table tr:hover .k-sort-handle {
-	display: grid !important;
+	display: flex;
 }
 
 .k-table-row-ghost {
@@ -487,22 +485,20 @@ export default {
 }
 
 /** Index column **/
-th.k-table-index-column,
-td.k-table-index-column,
-th.k-table-options-column,
-td.k-table-options-column {
+:is(th, td).k-table-index-column,
+:is(th, td).k-table-options-column {
 	width: var(--table-row-height);
-	text-align: center !important;
+	text-align: center;
 }
 .k-table-index {
 	font-size: var(--text-xs);
-	color: var(--color-gray-500);
+	color: var(--color-text-dimmed);
 	line-height: 1.1em;
 }
 
 /** Empty */
 .k-table-empty {
-	color: var(--color-gray-600);
+	color: var(--color-text-dimmed);
 	font-size: var(--text-sm);
 }
 
@@ -520,7 +516,7 @@ td.k-table-options-column {
 }
 
 /** Mobile */
-@media screen and (max-width: 65em) {
+@container (max-width: 50rem) {
 	.k-table tbody td:not([data-mobile]),
 	.k-table thead th:not([data-mobile]) {
 		display: none;
@@ -538,10 +534,12 @@ td.k-table-options-column {
 	border-end-end-radius: var(--rounded);
 }
 .k-table-pagination.k-pagination .k-button {
+	--button-color-back: transparent;
 	padding: 0 0.75rem;
 	display: flex;
 	align-items: center;
 	line-height: 1;
 	height: var(--table-row-height);
+	border-left: 0 !important;
 }
 </style>

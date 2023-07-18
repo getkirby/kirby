@@ -235,6 +235,7 @@ return array(
     'Kirby\\Option\\OptionsProvider' => $baseDir . '/src/Option/OptionsProvider.php',
     'Kirby\\Option\\OptionsQuery' => $baseDir . '/src/Option/OptionsQuery.php',
     'Kirby\\Panel\\Assets' => $baseDir . '/src/Panel/Assets.php',
+    'Kirby\\Panel\\ChangesDialog' => $baseDir . '/src/Panel/ChangesDialog.php',
     'Kirby\\Panel\\Dialog' => $baseDir . '/src/Panel/Dialog.php',
     'Kirby\\Panel\\Document' => $baseDir . '/src/Panel/Document.php',
     'Kirby\\Panel\\Drawer' => $baseDir . '/src/Panel/Drawer.php',

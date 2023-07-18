@@ -109,14 +109,15 @@ export default {
 		min-height: 10rem;
 	}
 	.k-file-browser-back-button {
-		display: flex;
 		width: 100%;
 		height: var(--height-sm);
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
 		padding-inline: 0.25rem;
+		margin-bottom: 0.5rem;
 		background: var(--color-gray-200);
 		border-radius: var(--rounded);
-		align-items: center;
-		margin-bottom: 0.5rem;
 	}
 	.k-file-browser-tree {
 		border-right: 0;
