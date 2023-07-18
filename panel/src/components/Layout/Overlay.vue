@@ -142,6 +142,7 @@ export default {
 
 .k-overlay[open] {
 	position: fixed;
+	overscroll-behavior: contain;
 	inset: 0;
 	width: 100%;
 	height: 100vh;
@@ -175,7 +176,7 @@ export default {
 }
 
 /* Scroll lock */
-:where(body):has(.k-overlay[open]) {
-	overflow: clip;
+html:has(.k-overlay[open]) {
+	overflow: hidden;
 }
 </style>
