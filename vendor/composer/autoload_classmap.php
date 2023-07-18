@@ -244,6 +244,7 @@ return array(
     'Kirby\\Panel\\File' => $baseDir . '/src/Panel/File.php',
     'Kirby\\Panel\\Home' => $baseDir . '/src/Panel/Home.php',
     'Kirby\\Panel\\Json' => $baseDir . '/src/Panel/Json.php',
+    'Kirby\\Panel\\Menu' => $baseDir . '/src/Panel/Menu.php',
     'Kirby\\Panel\\Model' => $baseDir . '/src/Panel/Model.php',
     'Kirby\\Panel\\Page' => $baseDir . '/src/Panel/Page.php',
     'Kirby\\Panel\\PageCreateDialog' => $baseDir . '/src/Panel/PageCreateDialog.php',
