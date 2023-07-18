@@ -23,7 +23,7 @@
 					@click="update()"
 				/>
 				<k-button
-					:disabled="!deletable"
+					v-if="deletable"
 					:title="$t('delete')"
 					icon="trash"
 					size="sm"
