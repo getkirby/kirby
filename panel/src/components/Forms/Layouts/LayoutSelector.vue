@@ -3,11 +3,11 @@
 		ref="dialog"
 		:cancel-button="false"
 		:submit-button="false"
-		:size="size"
+		:size="selector?.size ?? 'medium'"
 		class="k-layout-selector"
 	>
 		<k-headline>{{ $t("field.layout.select") }}</k-headline>
-		<ul>
+		<ul :style="'--columns:' + Number(selector?.columns ?? 3)">
 			<li
 				v-for="(columns, layoutIndex) in layouts"
 				:key="layoutIndex"
@@ -34,10 +34,7 @@ export default {
 	inheritAttrs: false,
 	props: {
 		layouts: Array,
-		size: {
-			type: String,
-			default: "medium"
-		}
+		selector: Object
 	},
 	data() {
 		return {
@@ -77,14 +74,9 @@ export default {
 	grid-template-columns: repeat(3, 1fr);
 	grid-gap: 1.5rem;
 }
-@media screen and (min-width: 40em) {
-	.k-layout-selector[data-size="large"] ul {
-		grid-template-columns: repeat(4, 1fr);
-	}
-}
-@media screen and (min-width: 60em) {
-	.k-layout-selector[data-size="huge"] ul {
-		grid-template-columns: repeat(5, 1fr);
+@media screen and (min-width: 65em) {
+	.k-layout-selector ul {
+		grid-template-columns: repeat(var(--columns), 1fr);
 	}
 }
 .k-layout-selector-option {

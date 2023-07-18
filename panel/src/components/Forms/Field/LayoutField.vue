@@ -49,14 +49,8 @@ export default {
 			type: Array,
 			default: () => [["1/1"]]
 		},
+		selector: Object,
 		settings: Object,
-		/**
-		 * @values small, medium, large, huge
-		 */
-		size: {
-			type: String,
-			default: "medium"
-		},
 		value: {
 			type: Array,
 			default: () => []

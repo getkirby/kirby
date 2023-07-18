@@ -16,14 +16,14 @@ class LayoutField extends BlocksField
 {
 	protected $layouts;
 	protected $settings;
-	protected $size;
+	protected $selector;
 
 	public function __construct(array $params)
 	{
 		$this->setModel($params['model'] ?? App::instance()->site());
 		$this->setLayouts($params['layouts'] ?? ['1/1']);
+		$this->setSelector($params['selector'] ?? null);
 		$this->setSettings($params['settings'] ?? null);
-		$this->setSize($params['size'] ?? 'medium');
 
 		parent::__construct($params);
 	}
@@ -126,8 +126,8 @@ class LayoutField extends BlocksField
 
 		return array_merge(parent::props(), [
 			'layouts'  => $this->layouts(),
+			'selector' => $this->selector(),
 			'settings' => $settings?->toArray(),
-			'size'     => $this->size(),
 		]);
 	}
 
@@ -239,11 +239,11 @@ class LayoutField extends BlocksField
 	}
 
 	/**
-	 * Size for layout selector: `small`, `medium`, `large` or `huge`
+	 * Layout selector's styles such as size (`small`, `medium`, `large` or `huge`) and columns
 	 */
-	protected function setSize(string $size = 'medium'): void
+	protected function setSelector(array|null $selector = null): void
 	{
-		$this->size = $size;
+		$this->selector = $selector;
 	}
 
 	public function settings()
@@ -251,9 +251,9 @@ class LayoutField extends BlocksField
 		return $this->settings;
 	}
 
-	public function size(): string
+	public function selector(): array|null
 	{
-		return $this->size;
+		return $this->selector;
 	}
 
 	public function store($value)

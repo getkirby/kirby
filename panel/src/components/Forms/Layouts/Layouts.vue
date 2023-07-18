@@ -40,7 +40,7 @@
 			</k-empty>
 		</template>
 
-		<k-layout-selector ref="selector" :layouts="layouts" :size="size" @select="onSelect" />
+		<k-layout-selector ref="selector" :layouts="layouts" :selector="selector" @select="onSelect" />
 		<k-block-pasteboard ref="pasteboard" @paste="onPaste" />
 	</div>
 </template>
@@ -58,11 +58,8 @@ export default {
 		fieldsets: Object,
 		layouts: Array,
 		max: Number,
+		selector: Object,
 		settings: Object,
-		size: {
-			type: String,
-			default: "medium"
-		},
 		value: Array
 	},
 	data() {
