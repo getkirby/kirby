@@ -7,8 +7,9 @@
 		class="k-button"
 		@click="onClick"
 	>
-		<k-icon v-if="icon" :type="icon" class="k-button-icon" />
-
+		<span v-if="icon" class="k-button-icon">
+			<k-icon :type="icon" />
+		</span>
 		<span v-if="text || $slots.default" class="k-button-text">
 			<slot>
 				{{ text }}
@@ -244,6 +245,7 @@ export default {
 }
 
 .k-button-icon {
+	flex-shrink: 0;
 	--icon-color: var(--button-color-icon);
 }
 

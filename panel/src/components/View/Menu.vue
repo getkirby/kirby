@@ -1,5 +1,34 @@
 <template>
-	<nav class="k-panel-menu" :data-collapsed="!$panel.menu.isOpen">
+	<nav
+		class="k-panel-menu"
+		:data-hover="$panel.menu.hover"
+		@mouseenter="$panel.menu.hover = true"
+		@mouseleave="$panel.menu.hover = false"
+	>
+		<div class="k-panel-menu-body">
+			<!-- Search button -->
+			<k-button
+				:text="$t('search')"
+				icon="search"
+				class="k-panel-menu-search k-panel-menu-button"
+				@click="$panel.search()"
+			/>
+			<!-- Menus -->
+			<menu
+				v-for="(menu, menuIdex) in menus"
+				:key="menuIdex"
+				class="k-panel-menu-buttons"
+			>
+				<k-button
+					v-for="entry in menu"
+					:key="entry.id"
+					v-bind="entry"
+					:title="entry.title ?? entry.text"
+					class="k-panel-menu-button"
+				/>
+			</menu>
+		</div>
+
 		<!-- Collapse/expand toggle -->
 		<k-button
 			:icon="$panel.menu.isOpen ? 'angle-left' : 'angle-right'"
@@ -7,33 +36,16 @@
 			class="k-panel-menu-toggle"
 			@click="$panel.menu.toggle()"
 		/>
-
-		<!-- Search button -->
-		<k-button
-			:text="$t('search')"
-			icon="search"
-			class="k-panel-menu-search"
-			@click="$panel.search()"
-		/>
-
-		<!-- Menus -->
-		<menu
-			v-for="(menu, menuIdex) in menus"
-			:key="menuIdex"
-			:data-is-second-last="menuIdex === menus.length - 2"
-		>
-			<k-button
-				v-for="entry in menu"
-				:key="entry.id"
-				v-bind="entry"
-				:title="entry.title ?? entry.text"
-			/>
-		</menu>
 	</nav>
 </template>
 
 <script>
 export default {
+	data() {
+		return {
+			over: false
+		};
+	},
 	computed: {
 		menus() {
 			return this.$panel.menu.entries.split("-");
@@ -44,138 +56,165 @@ export default {
 
 <style>
 :root {
+	--menu-button-height: var(--height);
+	--menu-button-width: 100%;
 	--menu-color-back: var(--color-gray-250);
 	--menu-color-border: var(--color-gray-300);
+	--menu-display: none;
+	--menu-display-backdrop: block;
+	--menu-padding: var(--spacing-3);
+	--menu-shadow: var(--shadow-xl);
+	--menu-toggle-height: var(--menu-button-height);
 	--menu-toggle-width: 1rem;
-	--menu-width: 12rem;
+	--menu-width-closed: calc(
+		var(--menu-button-height) + 2 * var(--menu-padding)
+	);
+	--menu-width-open: 12rem;
+	--menu-width: var(--menu-width-open);
 }
 
+/* Main menu element controls positioning */
 .k-panel-menu {
-	height: 100vh;
-	height: 100dvh;
-	flex-shrink: 0;
-	overscroll-behavior: contain;
+	position: fixed;
+	inset-inline-start: 0;
+	inset-block: 0;
 	z-index: var(--z-navigation);
-	display: flex;
-	flex-direction: column;
-	padding: var(--spacing-3);
+	display: var(--menu-display);
 	background-color: var(--menu-color-back);
 	border-right: 1px solid var(--menu-color-border);
+	width: var(--menu-width);
+	box-shadow: var(--menu-shadow);
 }
 
-.k-panel-menu-search {
-	margin-bottom: var(--spacing-12);
-}
+/* The toggle button builds a full-height strip on the side of the menu */
 .k-panel-menu-toggle {
-	--button-height: var(--height-md);
-	--button-color-icon: var(--color-text);
-	display: none;
+	--button-align: flex-start;
+	--button-height: 100%;
+	--button-width: var(--menu-toggle-width);
 	position: absolute;
-	z-index: var(--z-dialog);
+	inset-block: 0;
+	inset-inline-start: 100%;
+	align-items: flex-start;
+	border-radius: 0;
+	overflow: visible;
+	opacity: 0;
+	transition: opacity 0.2s;
+}
+
+/* The toggle is visible on hover or focus */
+.k-panel-menu-toggle:focus-visible,
+/* The hover state is controlled via JS to avoid flickering */
+.k-panel-menu[data-hover] .k-panel-menu-toggle {
+	opacity: 1;
+}
+
+/* The toggle strip has no focus style. The icon takes over here */
+.k-panel-menu-toggle:focus {
+	outline: 0;
+}
+
+/* The toggle icon has all the visible styles */
+.k-panel-menu-toggle .k-button-icon {
+	display: grid;
+	place-items: center;
+	height: var(--menu-toggle-height);
 	width: var(--menu-toggle-width);
-	inset-block-start: var(--spacing-3);
-	inset-inline-end: calc(-1 * var(--menu-toggle-width));
+	margin-top: var(--menu-padding);
 	border-block: 1px solid var(--menu-color-border);
 	border-inline-end: 1px solid var(--menu-color-border);
-	background-color: var(--menu-color-back);
-	border-start-start-radius: 0;
-	border-end-start-radius: 0;
+	background: var(--menu-color-back);
+	border-start-end-radius: var(--button-rounded);
+	border-end-end-radius: var(--button-rounded);
 }
 
-.k-panel-menu menu + menu {
-	margin-top: var(--spacing-6);
+/* Create the outline on the icon on focus */
+.k-panel-menu-toggle:focus-visible .k-button-icon {
+	outline: var(--outline);
+	/* With a radius on all ends, the outline looks nicer */
+	border-radius: var(--button-rounded);
 }
-/** TODO: .k-panel-menu menu:has(+ :last-child)  */
-.k-panel-menu menu[data-is-second-last="true"] {
+
+/* Overscroll container for menu items. Overscrolling is needed if the screen height is too low */
+.k-panel-menu-body {
+	/* A clamp keeps the gap large when there's enough vertical space */
+	gap: clamp(var(--spacing-3), 9vh, var(--spacing-12));
+	padding: var(--menu-padding);
+	overscroll-behavior: contain;
+	overflow-y: auto;
+	height: 100%;
+}
+
+/** The vertical flex rules are useful for the body and button groups **/
+.k-panel-menu-body,
+.k-panel-menu-buttons {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
 	flex-grow: 1;
 }
 
-.k-panel-menu .k-button {
-	--button-width: 100%;
-	--button-text-display: var(--menu-buttons);
+/* Move the last menu to the end */
+.k-panel-menu-buttons:last-child {
+	justify-content: flex-end;
 }
-.k-panel-menu .k-button[aria-current] {
+
+/* Menu buttons incl. search */
+.k-panel-menu-button {
+	--button-align: flex-start;
+	--button-height: var(--menu-button-height);
+	--button-width: var(--menu-button-width);
+	/* Make sure that buttons don't shrink in height */
+	flex-shrink: 0;
+}
+
+.k-panel-menu-button[aria-current] {
 	--button-color-back: var(--color-white);
 	box-shadow: var(--shadow);
 }
 
-@media (max-width: 40rem) {
-	.k-panel-menu {
-		position: absolute;
-		inset-block: 0;
-		inset-inline-start: 0;
-		width: var(--menu-width);
-		box-shadow: var(--shadow-xl);
-	}
-
-	.k-panel-menu[data-collapsed="true"] {
-		display: none;
-	}
-
-	:where(html, body):has(.k-panel-menu[data-collapsed="true"]) {
-		overflow: hidden;
-	}
-
-	.k-panel-menu-collapse {
-		display: none;
-	}
-
-	.k-panel-menu-search {
-		margin-bottom: var(--spacing-6);
-	}
-	.k-panel-menu menu + menu {
-		margin-top: var(--spacing-3);
-	}
-	.k-panel-menu .k-button {
-		justify-content: flex-start;
-	}
+/* Outline should not vanish behind other buttons */
+.k-panel-menu-button:focus {
+	z-index: 1;
 }
 
-@media (min-width: 40rem) {
-	.k-panel-menu {
-		--menu-buttons: none;
+/* The open menu state works for all screen sizes */
+.k-panel[data-menu="true"] {
+	--menu-button-width: 100%;
+	--menu-display: block;
+	--menu-width: var(--menu-width-open);
+}
 
-		position: sticky;
-		top: 0;
-		width: calc(2.25rem + 2 * var(--spacing-3));
+/* Backdrop for the mobile menu */
+.k-panel[data-menu="true"]::after {
+	content: "";
+	position: fixed;
+	inset: 0;
+	background: var(--color-backdrop);
+	display: var(--menu-display-backdrop);
+	pointer-events: none;
+}
+
+/* Desktop size */
+@media (min-width: 60rem) {
+	/* The menu is always visible on desktop sizes */
+	.k-panel {
+		--menu-display: block;
+		--menu-display-backdrop: none;
+		--menu-shadow: none;
+
+		/* The main view is indented according to the menu width */
+		--main-start: var(--menu-width);
 	}
 
+	/* Closed state on desktop with square buttons */
+	.k-panel[data-menu="false"] {
+		--menu-button-width: var(--menu-button-height);
+		--menu-width: var(--menu-width-closed);
+	}
+
+	/* No proxy button in the breadcrumb. The toggle is enough. */
 	.k-panel-menu-proxy {
 		display: none;
-	}
-}
-
-@media (min-width: 60rem) {
-	.k-panel-menu:not([data-collapsed="true"]) {
-		--menu-buttons: block;
-
-		width: var(--menu-width);
-	}
-
-	.k-panel-menu:not([data-collapsed="true"]) .k-button {
-		padding-inline-start: calc(var(--button-padding) + 0.125rem);
-		justify-content: flex-start;
-	}
-
-	.k-panel-menu .k-panel-menu-toggle {
-		display: flex;
-		opacity: 0;
-		transition: opacity 0.2s ease-in-out;
-		transition-delay: 0.2s;
-	}
-	.k-panel-menu:hover .k-panel-menu-toggle {
-		opacity: 1;
-		transition: opacity 0.1s ease-in-out;
-		transition-delay: 0s;
-	}
-
-	/** invisible space on the right of the sidebar that help with hover state */
-	.k-panel-menu::after {
-		content: "";
-		position: absolute;
-		inset-block: 0;
-		width: var(--menu-toggle-width);
-		inset-inline-end: calc(-1 * var(--menu-toggle-width));
 	}
 }
 </style>

@@ -72,7 +72,7 @@ export default {
 				forceFallback: true,
 				ghostClass: "k-sortable-ghost",
 				handle: handle,
-				scroll: document.querySelector(".k-panel-view"),
+				scroll: document.querySelector(".k-panel-main"),
 				...this.options
 			};
 		}
