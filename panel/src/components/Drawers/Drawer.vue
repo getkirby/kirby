@@ -3,7 +3,7 @@
 		<form
 			:aria-disabled="disabled"
 			:class="$vnode.data.staticClass"
-			:data-expand="expand"
+			:data-expand="isExpanded"
 			class="k-drawer"
 			method="dialog"
 			@submit.prevent="$emit('submit')"
@@ -16,6 +16,13 @@
 				@crumb="$emit('crumb', $event)"
 				@tab="$emit('tab', $event)"
 			>
+				<k-button
+					v-if="expandable"
+					class="k-drawer-option k-drawer-option-expand"
+					:icon="isExpanded ? 'collapse' : 'expand'"
+					@click.prevent.stop="isExpanded = !isExpanded"
+				/>
+
 				<slot name="options">
 					<template v-for="(option, index) in options">
 						<template v-if="option.dropdown">
@@ -89,5 +96,11 @@ export default {
 
 .k-drawer[data-expand="true"] {
 	flex-basis: 100rem;
+}
+
+@media screen and (max-width: 50rem) {
+	.k-drawer-options .k-button.k-drawer-option-expand {
+		display: none;
+	}
 }
 </style>

@@ -14,7 +14,7 @@ export default {
 			default: false,
 			type: Boolean
 		},
-		expand: {
+		expandable: {
 			default: false,
 			type: Boolean
 		},
@@ -28,5 +28,10 @@ export default {
 			default: false,
 			type: Boolean
 		}
-	}
+	},
+	data() {
+		return {
+			isExpanded: false
+		}
+	},
 };

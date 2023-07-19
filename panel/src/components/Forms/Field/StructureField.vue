@@ -370,6 +370,7 @@ export default {
 			this.$panel.drawer.open({
 				component: "k-structure-drawer",
 				props: {
+					expandable: true,
 					icon: this.icon ?? "list-bullet",
 					next: this.items[index + 1],
 					prev: this.items[index - 1],
