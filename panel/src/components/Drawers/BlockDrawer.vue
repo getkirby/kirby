@@ -2,7 +2,6 @@
 	<k-form-drawer
 		ref="drawer"
 		class="k-block-drawer"
-		:expandable="true"
 		v-bind="$props"
 		@cancel="$emit('cancel', $event)"
 		@crumb="$emit('crumb', $event)"
@@ -40,6 +39,9 @@ import { props as Fields } from "./Elements/Fields.vue";
 
 export const props = {
 	props: {
+		expandable: {
+			default: true
+		},
 		hidden: {
 			type: Boolean
 		},

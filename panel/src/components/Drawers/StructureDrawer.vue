@@ -1,7 +1,6 @@
 <template>
 	<k-form-drawer
 		ref="drawer"
-		:expandable="true"
 		class="k-structure-drawer"
 		v-bind="$props"
 		@cancel="$emit('cancel', $event)"
@@ -34,6 +33,9 @@ import { props as Fields } from "./Elements/Fields.vue";
 
 export const props = {
 	props: {
+		expandable: {
+			default: true
+		},
 		next: {
 			type: Object
 		},
