@@ -17,14 +17,12 @@ describe("Text.vue", () => {
 		const wrapper = mount(Text, {
 			propsData: {
 				align: "right",
-				size: "small",
-				theme: "help"
+				size: "small"
 			}
 		});
 
 		expect(wrapper.attributes("data-align")).toBe("right");
 		expect(wrapper.attributes("data-size")).toBe("small");
-		expect(wrapper.attributes("data-theme")).toBe("help");
 	});
 
 	it("has CSS selector", async () => {
@@ -36,8 +34,7 @@ describe("Text.vue", () => {
 		const wrapper = mount(Text, {
 			propsData: {
 				align: "right",
-				size: "large",
-				theme: "help"
+				size: "large"
 			},
 			slots: {
 				default: "This is some text"

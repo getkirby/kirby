@@ -26,22 +26,26 @@
 				/>
 			</k-draggable>
 
-			<k-button
+			<footer
 				v-if="!disabled"
-				class="k-field-add-item-button"
-				icon="add"
-				:tooltip="$t('add')"
-				@click="select(rows.length)"
-			/>
+				class="k-layouts-footer k-bar"
+				data-align="center"
+			>
+				<k-button
+					:title="$t('add')"
+					icon="add"
+					size="xs"
+					variant="filled"
+					@click="select(rows.length)"
+				/>
+			</footer>
 		</template>
+
 		<template v-else>
 			<k-empty icon="dashboard" class="k-layout-empty" @click="select(0)">
 				{{ empty || $t("field.layout.empty") }}
 			</k-empty>
 		</template>
-
-		<k-layout-selector ref="selector" :layouts="layouts" @select="onSelect" />
-		<k-block-pasteboard ref="pasteboard" @paste="onPaste" />
 	</div>
 </template>
 
@@ -104,19 +108,34 @@ export default {
 				(layout) => layout.toString() === columns.toString()
 			);
 
-			// data required to change the layout both in the dialog and afterwards
-			this.$refs.selector.open({ rowIndex, layoutIndex, layout });
+			this.$panel.dialog.open({
+				component: "k-layout-selector",
+				props: {
+					label: this.$t("field.layout.change"),
+					layouts: this.layouts,
+					value: this.layouts[layoutIndex]
+				},
+				on: {
+					submit: (value) => {
+						this.onChange(value, layoutIndex, {
+							rowIndex,
+							layoutIndex,
+							layout
+						});
+
+						this.$panel.dialog.close();
+					}
+				}
+			});
 		},
 		duplicate(index, layout) {
-			let copy = {
-				...this.$helper.clone(layout),
-				id: this.$helper.uuid()
-			};
+			const copy = this.$helper.clone(layout);
 
-			// replace all unique IDs for columns and blocks
-			copy = this.updateIds(copy);
+			// replace all unique IDs for layouts, columns and blocks
+			// the method processes a single object and returns it as an array
+			const copies = this.updateIds(copy);
 
-			this.rows.splice(index + 1, 0, copy);
+			this.rows.splice(index + 1, 0, ...copies);
 			this.save();
 		},
 		async onAdd(columns) {
@@ -125,11 +144,6 @@ export default {
 			});
 
 			this.rows.splice(this.nextIndex, 0, layout);
-
-			if (this.layouts.length > 1) {
-				this.$refs.selector.close();
-			}
-
 			this.save();
 		},
 		/**
@@ -146,9 +160,8 @@ export default {
 		 * @returns {Promise<void>}
 		 */
 		async onChange(columns, layoutIndex, payload) {
-			// don't do anything if the same layout got selected
-			if (layoutIndex === payload.layoutIndex) {
-				return this.$refs.selector.close();
+			if (layoutIndex === this.layouts[payload.layoutIndex]) {
+				return;
 			}
 
 			const oldLayout = payload.layout;
@@ -201,15 +214,11 @@ export default {
 			this.rows.splice(payload.rowIndex, 1, ...rows);
 
 			this.save();
-			this.$refs.selector.close();
 		},
-		async onPaste(e) {
-			const json = this.$helper.clipboard.read(e);
-			const index = this.current ?? this.rows.length;
-
+		async paste(e, index = this.rows.length) {
 			// pass json to the paste endpoint to validate
 			let rows = await this.$api.post(this.endpoints.field + "/layout/paste", {
-				json: json
+				json: this.$helper.clipboard.read(e)
 			});
 
 			if (rows.length) {
@@ -222,14 +231,13 @@ export default {
 				this.$t("paste.success", { count: rows.length })
 			);
 		},
-		async onSelect(columns, layoutIndex, payload) {
-			return payload
-				? this.onChange(columns, layoutIndex, payload)
-				: this.onAdd(columns);
-		},
 		pasteboard(index) {
-			this.current = index;
-			this.$refs.pasteboard.open();
+			this.$panel.dialog.open({
+				component: "k-block-pasteboard",
+				on: {
+					paste: (e) => this.paste(e, index)
+				}
+			});
 		},
 		remove(layout) {
 			const index = this.rows.findIndex((element) => element.id === layout.id);
@@ -265,7 +273,19 @@ export default {
 				return this.onAdd(this.layouts[0]);
 			}
 
-			this.$refs.selector.open();
+			this.$panel.dialog.open({
+				component: "k-layout-selector",
+				props: {
+					layouts: this.layouts,
+					value: null
+				},
+				on: {
+					submit: (value) => {
+						this.onAdd(value);
+						this.$panel.dialog.close();
+					}
+				}
+			});
 		},
 		updateAttrs(layoutIndex, attrs) {
 			this.rows[layoutIndex].attrs = attrs;
@@ -275,6 +295,12 @@ export default {
 			this.rows[args.index].columns[args.columnIndex].blocks = args.blocks;
 			this.save();
 		},
+		/**
+		 * Replace all unique IDs for layouts, columns and blocks
+		 *
+		 * @param {array|object} copy
+		 * @returns {array}
+		 */
 		updateIds(copy) {
 			if (Array.isArray(copy) === false) {
 				copy = [copy];
@@ -282,6 +308,7 @@ export default {
 
 			return copy.map((layout) => {
 				layout.id = this.$helper.uuid();
+
 				layout.columns = layout.columns.map((column) => {
 					column.id = this.$helper.uuid();
 
@@ -307,5 +334,8 @@ export default {
 	outline: 2px solid var(--color-focus);
 	cursor: grabbing;
 	z-index: 1;
+}
+.k-layouts-footer {
+	margin-top: var(--spacing-3);
 }
 </style>

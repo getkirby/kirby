@@ -4,31 +4,17 @@
 		v-direction
 		:data-empty="isEmpty"
 		:data-placeholder="placeholder"
+		:data-toolbar-inline="Boolean(toolbar.inline)"
 		:spellcheck="spellcheck"
 		class="k-writer"
 	>
-		<template v-if="editor">
-			<k-writer-toolbar
-				ref="toolbar"
-				v-bind="toolbar"
-				:editor="editor"
-				:active-marks="editor.activeMarks"
-				:active-nodes="editor.activeNodes"
-				:active-node-attrs="editor.activeNodeAttrs"
-				:is-paragraph-node-hidden="isParagraphNodeHidden"
-				@command="onCommand"
-			/>
-			<k-writer-link-dialog
-				ref="linkDialog"
-				@close="editor.focus()"
-				@submit="editor.command('toggleLink', $event)"
-			/>
-			<k-writer-email-dialog
-				ref="emailDialog"
-				@close="editor.focus()"
-				@submit="editor.command('toggleEmail', $event)"
-			/>
-		</template>
+		<k-writer-toolbar
+			v-if="editor"
+			ref="toolbar"
+			v-bind="toolbar"
+			:editor="editor"
+			@command="onCommand"
+		/>
 	</div>
 </template>
 
@@ -121,13 +107,6 @@ export default {
 		},
 		isCursorAtStart() {
 			return this.editor.selectionIsAtStart;
-		},
-		isParagraphNodeHidden() {
-			return (
-				Array.isArray(this.nodes) === true &&
-				this.nodes.length !== 3 &&
-				this.nodes.includes("paragraph") === false
-			);
 		}
 	},
 	watch: {
@@ -150,10 +129,34 @@ export default {
 			},
 			events: {
 				link: (editor) => {
-					this.$refs.linkDialog.open(editor.getMarkAttrs("link"));
+					this.$panel.dialog.open({
+						component: "k-link-dialog",
+						props: {
+							value: editor.getMarkAttrs("link")
+						},
+						on: {
+							cancel: () => editor.focus(),
+							submit: (values) => {
+								this.$panel.dialog.close();
+								editor.command("toggleLink", values);
+							}
+						}
+					});
 				},
-				email: () => {
-					this.$refs.emailDialog.open(this.editor.getMarkAttrs("email"));
+				email: (editor) => {
+					this.$panel.dialog.open({
+						component: "k-email-dialog",
+						props: {
+							value: this.editor.getMarkAttrs("email")
+						},
+						on: {
+							cancel: () => editor.focus(),
+							submit: (values) => {
+								this.$panel.dialog.close();
+								editor.command("toggleEmail", values);
+							}
+						}
+					});
 				},
 				paste: this.paste,
 				update: (payload) => {
@@ -176,9 +179,11 @@ export default {
 					// create the final HTML to send to the server
 					this.html = payload.editor.getHTML();
 
-					// when a new list item or heading is created, textContent length returns 0
-					// checking active nodes to prevent this issue
-					// empty input means no nodes or just the paragraph node and its length 0
+					// when a new list item or heading is created,
+					// textContent length returns 0.
+					// checking active nodes to prevent this issue.
+					// Empty input is no nodes or just the paragraph node
+					// and its length 0
 					if (
 						this.isEmpty &&
 						(payload.editor.activeNodes.length === 0 ||
@@ -198,10 +203,7 @@ export default {
 				new Keys(this.keys),
 				new History(),
 				new Insert(),
-				new Toolbar({
-					writer: this,
-					inline: this.toolbar.inline
-				}),
+				new Toolbar(this),
 				...(this.extensions || [])
 			],
 			inline: this.inline
@@ -336,6 +338,7 @@ export default {
 	position: relative;
 	width: 100%;
 	display: grid;
+	line-height: 1.5;
 	grid-template-areas: "content";
 	gap: var(--spacing-1);
 }
@@ -454,5 +457,6 @@ export default {
 	pointer-events: none;
 	white-space: pre-wrap;
 	word-wrap: break-word;
+	line-height: 1.5;
 }
 </style>

@@ -10,6 +10,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Response;
 use Kirby\Http\Router;
+use Kirby\Http\Uri;
 use Kirby\Http\Url;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\Tpl;
@@ -58,9 +59,15 @@ class Panel
 		$areas  = $kirby->load()->areas();
 
 		// the system is not ready
-		if ($system->isOk() === false || $system->isInstalled() === false) {
+		if (
+			$system->isOk() === false ||
+			$system->isInstalled() === false
+		) {
 			return [
-				'installation' => static::area('installation', $areas['installation']),
+				'installation' => static::area(
+					'installation',
+					$areas['installation']
+				),
 			];
 		}
 
@@ -68,7 +75,6 @@ class Panel
 		if (!$user) {
 			return [
 				'logout' => static::area('logout', $areas['logout']),
-
 				// login area last because it defines a fallback route
 				'login'  => static::area('login', $areas['login']),
 			];
@@ -83,24 +89,8 @@ class Panel
 			unset($areas['languages']);
 		}
 
-		$menu = $kirby->option('panel.menu', [
-			'site',
-			'languages',
-			'users',
-			'system',
-		]);
-
 		$result = [];
 
-		// add the sorted areas
-		foreach ($menu as $id) {
-			if ($area = ($areas[$id] ?? null)) {
-				$result[$id] = static::area($id, $area);
-				unset($areas[$id]);
-			}
-		}
-
-		// add the remaining areas
 		foreach ($areas as $id => $area) {
 			$result[$id] = static::area($id, $area);
 		}
@@ -183,7 +173,9 @@ class Panel
 		$request = App::instance()->request();
 
 		if ($request->method() === 'GET') {
-			return (bool)($request->get('_json') ?? $request->header('X-Fiber'));
+			return
+				(bool)($request->get('_json') ??
+				$request->header('X-Fiber'));
 		}
 
 		return false;
@@ -290,7 +282,11 @@ class Panel
 			// call the route action to check the result
 			try {
 				// trigger hook
-				$route = $kirby->apply('panel.route:before', compact('route', 'path', 'method'), 'route');
+				$route = $kirby->apply(
+					'panel.route:before',
+					compact('route', 'path', 'method'),
+					'route'
+				);
 
 				// check for access before executing area routes
 				if ($auth !== false) {
@@ -309,7 +305,11 @@ class Panel
 				'type'  => $type
 			]);
 
-			return $kirby->apply('panel.route:after', compact('route', 'path', 'method', 'response'), 'response');
+			return $kirby->apply(
+				'panel.route:after',
+				compact('route', 'path', 'method', 'response'),
+				'response'
+			);
 		});
 	}
 
@@ -355,7 +355,7 @@ class Panel
 				'installation',
 				'login',
 			],
-			'action' => fn () => Panel::go(Home::path()),
+			'action' => fn () => Panel::go(Home::url()),
 			'auth' => false
 		];
 
@@ -536,15 +536,22 @@ class Panel
 	 */
 	public static function url(string|null $url = null, array $options = []): string
 	{
-		$slug = App::instance()->option('panel.slug', 'panel');
-
 		// only touch relative paths
 		if (Url::isAbsolute($url) === false) {
-			$path = trim($url, '/');
+			$kirby = App::instance();
+			$slug  = $kirby->option('panel.slug', 'panel');
+			$path  = trim($url, '/');
 
+			$baseUri  = new Uri($kirby->url());
+			$basePath = trim($baseUri->path()->toString(), '/');
+
+			// removes base path if relative path contains it
+			if (empty($basePath) === false && Str::startsWith($path, $basePath) === true) {
+				$path = Str::after($path, $basePath);
+			}
 			// add the panel slug prefix if it it's not
 			// included in the path yet
-			if (Str::startsWith($path, $slug . '/') === false) {
+			elseif (Str::startsWith($path, $slug . '/') === false) {
 				$path = $slug . '/' . $path;
 			}
 

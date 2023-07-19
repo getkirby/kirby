@@ -13,13 +13,10 @@ describe.concurrent("panel/modal.js", () => {
 		const state = {
 			component: null,
 			isLoading: false,
-			isOpen: false,
-			legacy: false,
 			on: {},
 			path: null,
 			props: {},
 			query: {},
-			ref: null,
 			referrer: null,
 			timestamp: null
 		};

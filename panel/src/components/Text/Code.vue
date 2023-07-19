@@ -1,6 +1,14 @@
 <template>
+	<!-- @slot Code content -->
 	<pre class="k-code"><code><slot /></code></pre>
 </template>
+
+<script>
+/**
+ * @public
+ */
+export default {}
+</script>
 
 <style>
 :root {

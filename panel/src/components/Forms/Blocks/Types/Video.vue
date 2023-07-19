@@ -8,13 +8,13 @@
 		@open="open"
 		@update="update"
 	>
-		<k-aspect-ratio ratio="16/9">
+		<k-frame ratio="16/9">
 			<iframe
 				v-if="video"
 				:src="video"
 				referrerpolicy="strict-origin-when-cross-origin"
 			/>
-		</k-aspect-ratio>
+		</k-frame>
 	</k-block-figure>
 </template>
 

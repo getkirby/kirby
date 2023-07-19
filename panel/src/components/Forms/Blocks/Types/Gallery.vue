@@ -3,22 +3,22 @@
 		<ul @dblclick="open">
 			<template v-if="content.images.length === 0">
 				<li
-					v-for="index in 5"
+					v-for="index in 3"
 					:key="index"
 					class="k-block-type-gallery-placeholder"
 				>
-					<k-aspect-ratio :ratio="ratio" />
+					<k-image-frame :ratio="ratio" />
 				</li>
 			</template>
 			<template v-else>
 				<li v-for="image in content.images" :key="image.id">
-					<k-aspect-ratio :ratio="ratio" :cover="crop">
-						<img
-							:src="image.url"
-							:srcset="image.image.srcset"
-							:alt="image.alt"
-						/>
-					</k-aspect-ratio>
+					<k-image-frame
+						:ratio="ratio"
+						:cover="crop"
+						:src="image.url"
+						:srcset="image.image.srcset"
+						:alt="image.alt"
+					/>
 				</li>
 			</template>
 		</ul>

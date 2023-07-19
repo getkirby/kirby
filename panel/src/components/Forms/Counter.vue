@@ -51,12 +51,11 @@ export default {
 .k-counter {
 	font-size: var(--text-xs);
 	color: var(--color-gray-900);
-	font-weight: var(--font-bold);
 }
 .k-counter[data-invalid="true"] {
 	box-shadow: none;
 	border: 0;
-	color: var(--color-negative);
+	color: var(--color-red-700);
 }
 .k-counter-rules {
 	color: var(--color-gray-600);

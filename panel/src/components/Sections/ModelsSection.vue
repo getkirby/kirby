@@ -1,18 +1,14 @@
 <template>
-	<section
+	<k-section
 		v-if="isLoading === false"
-		:data-processing="isProcessing"
+		:buttons="buttons"
 		:class="`k-models-section k-${type}-section`"
+		:data-processing="isProcessing"
+		:headline="options.headline || ' '"
+		:invalid="isInvalid"
+		:link="options.link"
+		:required="Boolean(options.min)"
 	>
-		<header class="k-section-header">
-			<k-headline :link="options.link">
-				{{ options.headline || " " }}
-				<abbr v-if="options.min" :title="$t('section.required')">*</abbr>
-			</k-headline>
-
-			<k-button-group :buttons="buttons" />
-		</header>
-
 		<!-- Error -->
 		<k-box v-if="error" theme="negative">
 			<k-text size="small">
@@ -38,7 +34,6 @@
 				<!-- Models collection -->
 				<k-collection
 					v-bind="collection"
-					:data-invalid="isInvalid"
 					v-on="canAdd ? { empty: onAdd } : {}"
 					@action="onAction"
 					@change="onChange"
@@ -47,7 +42,7 @@
 				/>
 			</k-dropzone>
 		</template>
-	</section>
+	</k-section>
 </template>
 
 <script>
@@ -107,7 +102,8 @@ export default {
 				buttons.push({
 					icon: this.addIcon,
 					text: this.$t("add"),
-					click: this.onAdd
+					click: this.onAdd,
+					responsive: true
 				});
 			}
 
@@ -238,7 +234,7 @@ export default {
 		},
 		update() {
 			this.reload();
-			this.$events.$emit("model.update");
+			this.$events.emit("model.update");
 		}
 	}
 };
@@ -250,6 +246,8 @@ export default {
 }
 
 .k-models-section-search.k-input {
+	--input-placeholder: var(--color-gray-600);
+
 	margin-bottom: var(--spacing-3);
 	background: var(--color-gray-300);
 	padding: var(--spacing-2) var(--spacing-3);

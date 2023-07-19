@@ -41,7 +41,7 @@ export default {
 	},
 	computed: {
 		ratioPadding() {
-			return this.$helper.ratio(this.ratio || "16/9");
+			return this.$helper.ratio(this.ratio ?? "16/9");
 		}
 	}
 };
@@ -58,18 +58,19 @@ export default {
 }
 .k-block-figure figcaption {
 	padding-top: 0.5rem;
-	color: var(--color-gray-600);
+	color: var(--color-text-dimmed);
 	font-size: var(--text-sm);
 	text-align: center;
 }
-.k-block-figure-empty.k-button {
-	display: flex;
-	width: 100%;
-	height: 6rem;
+.k-block-figure-empty {
+	--button-width: 100%;
+	--button-height: 6rem;
+	--button-color-text: var(--color-text-dimmed);
+	--button-color-back: var(--color-gray-200);
+}
+
+.k-block-figure-empty,
+.k-block-figure-container > * {
 	border-radius: var(--rounded-sm);
-	align-items: center;
-	justify-content: center;
-	color: var(--color-gray-600);
-	background: var(--color-background);
 }
 </style>

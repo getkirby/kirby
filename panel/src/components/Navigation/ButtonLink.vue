@@ -19,6 +19,9 @@
 </template>
 
 <script>
+/**
+ * @deprecated 4.0.0 `<k-button-link>` has been deprecated and will be removed in v5. Use `<k-button link="https//getkirby.com">` instead.
+ */
 export default {
 	inheritAttrs: false,
 	props: {
@@ -34,6 +37,11 @@ export default {
 		tabindex: String,
 		theme: String,
 		tooltip: String
+	},
+	created() {
+		window.panel.deprecated(
+			'<k-button-link> will be removed in a future version. Use <k-button link="https//getkirby.com"> instead.'
+		);
 	},
 	methods: {
 		focus() {

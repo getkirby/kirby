@@ -47,8 +47,8 @@ class Template
 		string $type = 'html',
 		string $defaultType = 'html'
 	) {
-		$this->name = strtolower($name);
-		$this->type = $type;
+		$this->name        = strtolower($name);
+		$this->type        = $type;
 		$this->defaultType = $defaultType;
 	}
 
@@ -103,7 +103,10 @@ class Template
 		if ($this->hasDefaultType() === true) {
 			// Try the default template in the default template directory
 			try {
-				return F::realpath($root . '/' . $name . '.' . $extension, $root);
+				return F::realpath(
+					$root . '/' . $name . '.' . $extension,
+					$root
+				);
 			} catch (Exception) {
 				// ignore errors, continue searching
 			}

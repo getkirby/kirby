@@ -74,29 +74,6 @@ describe.concurrent("panel/feature.js", () => {
 		expect(emitted).toStrictEqual(true);
 	});
 
-	it("should detect submitter", async () => {
-		const feature = Feature(Panel(), "test", defaults());
-		const listeners = {
-			submit: () => {}
-		};
-
-		expect(feature.hasSubmitter()).toStrictEqual(false);
-
-		feature.addEventListeners(listeners);
-
-		expect(feature.hasSubmitter()).toStrictEqual(true);
-	});
-
-	it("should detect submitter with path", async () => {
-		const feature = Feature(Panel(), "test", defaults());
-
-		expect(feature.hasSubmitter()).toStrictEqual(false);
-
-		feature.path = "/some/path";
-
-		expect(feature.hasSubmitter()).toStrictEqual(true);
-	});
-
 	it("should set state", async () => {
 		const feature = Feature(Panel(), "test", defaults());
 

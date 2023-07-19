@@ -6,6 +6,7 @@
 		:size="size"
 		:visible="visible"
 		class="k-error-dialog"
+		@cancel="$emit('cancel')"
 	>
 		<k-text>{{ message }}</k-text>
 		<dl v-if="detailsList.length" class="k-error-details">
@@ -43,6 +44,7 @@ export default {
 			type: String
 		}
 	},
+	emits: ["cancel"],
 	computed: {
 		detailsList() {
 			return Array.fromObject(this.details);
@@ -62,7 +64,7 @@ export default {
 	margin-top: 0.75rem;
 }
 .k-error-details dt {
-	color: var(--color-negative-light);
+	color: var(--color-red-500);
 	margin-bottom: 0.25rem;
 }
 .k-error-details dd {

@@ -178,7 +178,7 @@ class ContentStorageTest extends TestCase
 	{
 		return [
 			[null, false, ['en', 'default']],
-			[null, true, ['en', 'default']],
+			[null, true, ['default', 'default']],
 			['en', false, ['en', 'default']],
 			['en', true, ['en', 'en']],
 			['de', false, ['de', 'default']],

@@ -7,6 +7,7 @@ use Kirby\Cms\Response;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
+use Kirby\Panel\ChangesDialog;
 use Kirby\Panel\Field;
 use Kirby\Panel\PageCreateDialog;
 use Kirby\Panel\Panel;
@@ -210,7 +211,7 @@ return [
 						'slug' => Field::slug([
 							'required'  => true,
 							'preselect' => $select === 'slug',
-							'path'      => $page->parent() ? '/' . $page->parent()->id() . '/' : '/',
+							'path'      => $page->parent() ? '/' . $page->parent()->uri() . '/' : '/',
 							'disabled'  => $permissions->can('changeSlug') === false,
 							'wizard'    => [
 								'text'  => I18n::translate('page.changeSlug.fromTitle'),
@@ -606,4 +607,17 @@ return [
 		'submit'  => $fields['file']['submit'],
 	],
 
+	// content changes
+	'changes' => [
+		'pattern' => 'changes',
+		'load'    => function () {
+			$dialog = new ChangesDialog();
+			return $dialog->load();
+		},
+		'submit' => function () {
+			$dialog = new ChangesDialog();
+			$ids    = App::instance()->request()->get('ids');
+			return $dialog->submit($ids);
+		}
+	],
 ];

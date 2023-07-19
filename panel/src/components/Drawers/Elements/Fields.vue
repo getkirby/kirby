@@ -6,7 +6,6 @@
 		:value="value"
 		class="k-drawer-fields"
 		@input="$emit('input', $event)"
-		@invalid="$emit('invalid', $event)"
 		@submit="$emit('submit', $event)"
 	/>
 	<k-box v-else theme="info">{{ empty }}</k-box>
@@ -30,6 +29,7 @@ export const props = {
 
 export default {
 	mixins: [props],
+	emits: ["input", "submit"],
 	computed: {
 		hasFields() {
 			return this.$helper.object.length(this.fields) > 0;

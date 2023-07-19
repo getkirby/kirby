@@ -106,7 +106,7 @@ export default {
 	--text-size: var(--text-lg);
 }
 .k-block-type-heading-input[data-level="h5"] {
-	--text-size: var(--text-base);
+	--text-size: var(--text-md);
 	line-height: 1.5em;
 }
 .k-block-type-heading-input[data-level="h6"] {

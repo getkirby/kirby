@@ -2,7 +2,7 @@
 
 use Kirby\Cms\Html;
 use Kirby\Cms\Url;
-use Kirby\Image\Image;
+use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuid;
@@ -17,8 +17,12 @@ return [
 	 */
 	'date' => [
 		'attr' => [],
-		'html' => function ($tag) {
-			return strtolower($tag->date) === 'year' ? date('Y') : date($tag->date);
+		'html' => function (KirbyTag $tag): string {
+			if (strtolower($tag->date) === 'year') {
+				return date('Y');
+			}
+
+			return date($tag->date);
 		}
 	],
 
@@ -33,7 +37,7 @@ return [
 			'text',
 			'title'
 		],
-		'html' => function ($tag) {
+		'html' => function (KirbyTag $tag): string {
 			return Html::email($tag->value, $tag->text, [
 				'class'  => $tag->class,
 				'rel'    => $tag->rel,
@@ -55,7 +59,7 @@ return [
 			'text',
 			'title'
 		],
-		'html' => function ($tag) {
+		'html' => function (KirbyTag $tag): string {
 			if (!$file = $tag->file($tag->value)) {
 				return $tag->text;
 			}
@@ -83,7 +87,7 @@ return [
 		'attr' => [
 			'file'
 		],
-		'html' => function ($tag) {
+		'html' => function (KirbyTag $tag): string {
 			return Html::gist($tag->value, $tag->file);
 		}
 	],
@@ -106,7 +110,7 @@ return [
 			'title',
 			'width'
 		],
-		'html' => function ($tag) {
+		'html' => function (KirbyTag $tag): string {
 			if ($tag->file = $tag->file($tag->value)) {
 				$tag->src       = $tag->file->url();
 				$tag->alt     ??= $tag->file->alt()->or(' ')->value();
@@ -163,7 +167,7 @@ return [
 				$tag->caption = [$caption];
 			}
 
-			return Html::figure([ $link($image) ], $tag->caption, [
+			return Html::figure([$link($image)], $tag->caption, [
 				'class' => $tag->class
 			]);
 		}
@@ -182,7 +186,7 @@ return [
 			'title',
 			'text',
 		],
-		'html' => function ($tag) {
+		'html' => function (KirbyTag $tag): string {
 			if (empty($tag->lang) === false) {
 				$tag->value = Url::to($tag->value, $tag->lang);
 			}
@@ -216,7 +220,7 @@ return [
 			'text',
 			'title'
 		],
-		'html' => function ($tag) {
+		'html' => function (KirbyTag $tag): string {
 			return Html::tel($tag->value, $tag->text, [
 				'class' => $tag->class,
 				'rel'   => $tag->rel,
@@ -236,7 +240,7 @@ return [
 			'text',
 			'title'
 		],
-		'html' => function ($tag) {
+		'html' => function (KirbyTag $tag): string {
 			// get and sanitize the username
 			$username = str_replace('@', '', $tag->value);
 
@@ -274,7 +278,7 @@ return [
 			'style',
 			'width',
 		],
-		'html' => function ($tag) {
+		'html' => function (KirbyTag $tag): string {
 			// checks and gets if poster is local file
 			if (
 				empty($tag->poster) === false &&

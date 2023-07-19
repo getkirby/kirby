@@ -1,18 +1,19 @@
 <template>
-	<span
+	<button
 		ref="button"
+		:data-has-toggle="removable"
 		class="k-tag"
-		tabindex="0"
+		type="button"
 		@keydown.delete.prevent="remove"
 	>
 		<span class="k-tag-text"><slot /></span>
-		<k-icon
+		<k-icon-frame
 			v-if="removable"
 			class="k-tag-toggle"
-			type="cancel-small"
+			icon="cancel-small"
 			@click.native="remove"
 		/>
-	</span>
+	</button>
 </template>
 
 <script>
@@ -45,46 +46,49 @@ export default {
 
 <style>
 :root {
-	--tag-color-back: var(--color-gray-900);
-	--tag-color-text: var(--color-light);
-	--tag-color-focus-back: var(--color-focus);
-	--tag-color-focus-text: var(--color-white);
+	--tag-color-back: var(--color-black);
+	--tag-color-text: var(--color-white);
+	--tag-color-toggle: currentColor;
 	--tag-color-disabled-back: var(--color-gray-600);
 	--tag-color-disabled-text: var(--tag-color-text);
-	--tag-rounded: var(--rounded);
-	--tag-height: var(--height-sm);
+	--tag-height: var(--height-xs);
+	--tag-rounded: var(--rounded-sm);
 }
 
 .k-tag {
 	position: relative;
 	height: var(--tag-height);
-	font-size: var(--text-sm);
-	line-height: 1;
-	cursor: pointer;
-	background-color: var(--tag-color-back);
-	color: var(--tag-color-text);
-	border-radius: var(--tag-rounded);
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	font-size: var(--text-sm);
+	line-height: 1;
+	color: var(--tag-color-text);
+	background-color: var(--tag-color-back);
+	border-radius: var(--tag-rounded);
+	cursor: pointer;
 	user-select: none;
 }
 .k-tag:focus {
-	outline: 0;
-	background-color: var(--tag-color-focus-back);
-	color: var(--tag-color-focus-text);
+	outline: var(--outline);
 }
 .k-tag-text {
-	padding-inline: 0.75rem;
+	padding-inline: 0.5rem;
 	line-height: var(--leading-tight);
 }
 .k-tag-toggle {
 	width: var(--tag-height);
 	height: var(--tag-height);
+	filter: brightness(70%);
 }
-.k-tag:has(.k-tag-toggle) .k-tag-text {
-	padding-inline-end: 0.125rem;
+.k-tag-toggle:hover {
+	filter: brightness(100%);
 }
+/** TODO: .k-tag:has(.k-tag-toggle) .k-tag-text  */
+.k-tag[data-has-toggle="true"] .k-tag-text {
+	padding-inline-end: 0;
+}
+
 [data-disabled="true"] .k-tag {
 	background-color: var(--tag-color-disabled-back);
 	color: var(--tag-color-disabled-text);

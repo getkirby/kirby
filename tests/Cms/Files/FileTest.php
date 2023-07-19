@@ -370,7 +370,7 @@ class FileTest extends TestCase
 	{
 		$app = new App([
 			'blueprints' => [
-				'files/test' => [
+				'files/foo' => [
 					'options' => ['read' => false]
 				]
 			],
@@ -397,10 +397,166 @@ class FileTest extends TestCase
 		$file = $this->file([
 			'kirby'    => $app,
 			'filename' => 'test.jpg',
-			'template' => 'test'
+			'template' => 'foo'
 		]);
 		$this->assertFalse($file->isReadable());
 		$this->assertFalse($file->isReadable()); // test caching
+	}
+
+	public function testIsAccessible()
+	{
+		$app = new App([
+			'blueprints' => [
+				'files/bar' => [
+					'options' => ['access' => false]
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'id'    => 'admin',
+					'role'  => 'admin'
+				]
+			],
+			'user' => 'admin'
+		]);
+
+		$file = $this->file([
+			'kirby'    => $app,
+			'filename' => 'test.jpg'
+		]);
+		$this->assertTrue($file->isReadable());
+		$this->assertTrue($file->isAccessible());
+		$this->assertTrue($file->isListable());
+
+		$file = $this->file([
+			'kirby'    => $app,
+			'filename' => 'test.jpg',
+			'template' => 'bar'
+		]);
+		$this->assertTrue($file->isReadable());
+		$this->assertFalse($file->isAccessible());
+		$this->assertFalse($file->isListable());
+	}
+
+	public function testIsAccessibleRead()
+	{
+		$app = new App([
+			'blueprints' => [
+				'files/bar-read' => [
+					'options' => ['read' => false, 'access' => true]
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'id'    => 'admin',
+					'role'  => 'admin'
+				]
+			],
+			'user' => 'admin'
+		]);
+
+		$file = $this->file([
+			'kirby'    => $app,
+			'filename' => 'test.jpg'
+		]);
+		$this->assertTrue($file->isReadable());
+		$this->assertTrue($file->isAccessible());
+		$this->assertTrue($file->isListable());
+
+		$file = $this->file([
+			'kirby'    => $app,
+			'filename' => 'test.jpg',
+			'template' => 'bar-read'
+		]);
+		$this->assertFalse($file->isReadable());
+		$this->assertFalse($file->isAccessible());
+		$this->assertFalse($file->isListable());
+	}
+
+	public function testIsListable()
+	{
+		$app = new App([
+			'blueprints' => [
+				'files/baz' => [
+					'options' => ['list' => false]
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'id'    => 'admin',
+					'role'  => 'admin'
+				]
+			],
+			'user' => 'admin'
+		]);
+
+		$file = $this->file([
+			'kirby'    => $app,
+			'filename' => 'test.jpg'
+		]);
+		$this->assertTrue($file->isReadable());
+		$this->assertTrue($file->isAccessible());
+		$this->assertTrue($file->isListable());
+
+		$file = $this->file([
+			'kirby'    => $app,
+			'filename' => 'test.jpg',
+			'template' => 'baz'
+		]);
+		$this->assertTrue($file->isReadable());
+		$this->assertTrue($file->isAccessible());
+		$this->assertFalse($file->isListable());
+	}
+
+	public function testIsListableRead()
+	{
+		$app = new App([
+			'blueprints' => [
+				'files/baz-read' => [
+					'options' => ['read' => false, 'list' => true]
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'id'    => 'admin',
+					'role'  => 'admin'
+				]
+			],
+			'user' => 'admin'
+		]);
+
+		$file = $this->file([
+			'kirby'    => $app,
+			'filename' => 'test.jpg'
+		]);
+		$this->assertTrue($file->isReadable());
+		$this->assertTrue($file->isAccessible());
+		$this->assertTrue($file->isListable());
+
+		$file = $this->file([
+			'kirby'    => $app,
+			'filename' => 'test.jpg',
+			'template' => 'baz-read'
+		]);
+		$this->assertFalse($file->isReadable());
+		$this->assertFalse($file->isAccessible());
+		$this->assertFalse($file->isListable());
 	}
 
 	public function testMediaHash()

@@ -5,7 +5,9 @@ namespace Kirby\Form\Field;
 use Kirby\Cms\App;
 use Kirby\Cms\Block;
 use Kirby\Cms\Blocks as BlocksCollection;
+use Kirby\Cms\Fieldset;
 use Kirby\Cms\Fieldsets;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\FieldClass;
@@ -22,15 +24,17 @@ class BlocksField extends FieldClass
 	use Max;
 	use Min;
 
-	protected $blocks;
-	protected $fieldsets;
-	protected $group;
-	protected $pretty;
-	protected $value = [];
+	protected Fieldsets $fieldsets;
+	protected string|null $group;
+	protected bool $pretty;
+	protected mixed $value = [];
 
 	public function __construct(array $params = [])
 	{
-		$this->setFieldsets($params['fieldsets'] ?? null, $params['model'] ?? App::instance()->site());
+		$this->setFieldsets(
+			$params['fieldsets'] ?? null,
+			$params['model'] ?? App::instance()->site()
+		);
 
 		parent::__construct($params);
 
@@ -41,8 +45,10 @@ class BlocksField extends FieldClass
 		$this->setPretty($params['pretty'] ?? false);
 	}
 
-	public function blocksToValues($blocks, $to = 'values'): array
-	{
+	public function blocksToValues(
+		array $blocks,
+		string $to = 'values'
+	): array {
 		$result = [];
 		$fields = [];
 
@@ -54,56 +60,56 @@ class BlocksField extends FieldClass
 				$fields[$type] ??= $this->fields($block['type']);
 
 				// overwrite the block content with form values
-				$block['content'] = $this->form($fields[$type], $block['content'])->$to();
+				$block['content'] = $this->form(
+					$fields[$type],
+					$block['content']
+				)->$to();
 
 				// create id if not exists
 				$block['id'] ??= Str::uuid();
-
+			} finally {
 				$result[] = $block;
-			} catch (Throwable) {
-				$result[] = $block;
-
-				// skip invalid blocks
-				continue;
 			}
 		}
 
 		return $result;
 	}
 
-	public function fields(string $type)
+	public function fields(string $type): array
 	{
 		return $this->fieldset($type)->fields();
 	}
 
-	public function fieldset(string $type)
+	public function fieldset(string $type): Fieldset
 	{
 		if ($fieldset = $this->fieldsets->find($type)) {
 			return $fieldset;
 		}
 
-		throw new NotFoundException('The fieldset ' . $type . ' could not be found');
+		throw new NotFoundException(
+			'The fieldset ' . $type . ' could not be found'
+		);
 	}
 
-	public function fieldsets()
+	public function fieldsets(): Fieldsets
 	{
 		return $this->fieldsets;
 	}
 
 	public function fieldsetGroups(): array|null
 	{
-		$fieldsetGroups = $this->fieldsets()->groups();
-		return empty($fieldsetGroups) === true ? null : $fieldsetGroups;
+		$groups = $this->fieldsets()->groups();
+		return empty($groups) === true ? null : $groups;
 	}
 
-	public function fill($value = null): void
+	public function fill(mixed $value = null): void
 	{
 		$value  = BlocksCollection::parse($value);
-		$blocks = BlocksCollection::factory($value);
-		$this->value = $this->blocksToValues($blocks->toArray());
+		$blocks = BlocksCollection::factory($value)->toArray();
+		$this->value = $this->blocksToValues($blocks);
 	}
 
-	public function form(array $fields, array $input = [])
+	public function form(array $fields, array $input = []): Form
 	{
 		return new Form([
 			'fields' => $fields,
@@ -176,12 +182,12 @@ class BlocksField extends FieldClass
 		return [
 			[
 				'pattern' => 'uuid',
-				'action'  => fn () => ['uuid' => Str::uuid()]
+				'action'  => fn (): array => ['uuid' => Str::uuid()]
 			],
 			[
 				'pattern' => 'paste',
 				'method'  => 'POST',
-				'action'  => function () use ($field) {
+				'action'  => function () use ($field): array {
 					$request = App::instance()->request();
 					$value   = BlocksCollection::parse($request->get('html'));
 					$blocks  = BlocksCollection::factory($value);
@@ -192,7 +198,9 @@ class BlocksField extends FieldClass
 			[
 				'pattern' => 'fieldsets/(:any)',
 				'method'  => 'GET',
-				'action'  => function ($fieldsetType) use ($field) {
+				'action'  => function (
+					string $fieldsetType
+				) use ($field): array {
 					$fields   = $field->fields($fieldsetType);
 					$defaults = $field->form($fields, [])->data(true);
 					$content  = $field->form($fields, $defaults)->values();
@@ -206,22 +214,33 @@ class BlocksField extends FieldClass
 			[
 				'pattern' => 'fieldsets/(:any)/fields/(:any)/(:all?)',
 				'method'  => 'ALL',
-				'action'  => function (string $fieldsetType, string $fieldName, string $path = null) use ($field) {
+				'action'  => function (
+					string $fieldsetType,
+					string $fieldName,
+					string $path = null
+				) use ($field) {
 					$fields = $field->fields($fieldsetType);
 					$field  = $field->form($fields)->field($fieldName);
 
 					$fieldApi = $this->clone([
 						'routes' => $field->api(),
-						'data'   => array_merge($this->data(), ['field' => $field])
+						'data'   => array_merge(
+							$this->data(),
+							['field' => $field]
+						)
 					]);
 
-					return $fieldApi->call($path, $this->requestMethod(), $this->requestData());
+					return $fieldApi->call(
+						$path,
+						$this->requestMethod(),
+						$this->requestData()
+					);
 				}
 			],
 		];
 	}
 
-	public function store($value)
+	public function store(mixed $value): mixed
 	{
 		$blocks = $this->blocksToValues((array)$value, 'content');
 
@@ -234,7 +253,7 @@ class BlocksField extends FieldClass
 		return $this->valueToJson($blocks, $this->pretty());
 	}
 
-	protected function setDefault($default = null): void
+	protected function setDefault(mixed $default = null): void
 	{
 		// set id for blocks if not exists
 		if (is_array($default) === true) {
@@ -246,15 +265,18 @@ class BlocksField extends FieldClass
 		parent::setDefault($default);
 	}
 
-	protected function setFieldsets($fieldsets, $model): void
-	{
+	protected function setFieldsets(
+		string|array|null $fieldsets,
+		ModelWithContent $model
+	): void {
 		if (is_string($fieldsets) === true) {
 			$fieldsets = [];
 		}
 
-		$this->fieldsets = Fieldsets::factory($fieldsets, [
-			'parent' => $model
-		]);
+		$this->fieldsets = Fieldsets::factory(
+			$fieldsets,
+			['parent' => $model]
+		);
 	}
 
 	protected function setGroup(string $group = null): void
@@ -294,21 +316,22 @@ class BlocksField extends FieldClass
 
 				foreach ($value as $block) {
 					$index++;
-					$blockType = $block['type'];
+					$type = $block['type'];
 
 					try {
-						$fieldset    = $this->fieldset($blockType);
-						$blockFields = $fields[$blockType] ?? $fieldset->fields() ?? [];
+						$fieldset    = $this->fieldset($type);
+						$blockFields = $fields[$type] ?? $fieldset->fields() ?? [];
 					} catch (Throwable) {
 						// skip invalid blocks
 						continue;
 					}
 
 					// store the fields for the next round
-					$fields[$blockType] = $blockFields;
+					$fields[$type] = $blockFields;
 
 					// overwrite the content with the serialized form
-					foreach ($this->form($blockFields, $block['content'])->fields() as $field) {
+					$form = $this->form($blockFields, $block['content']);
+					foreach ($form->fields() as $field) {
 						$errors = $field->errors();
 
 						// rough first validation

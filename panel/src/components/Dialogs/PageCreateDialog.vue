@@ -3,8 +3,8 @@
 		ref="dialog"
 		v-bind="$props"
 		class="k-page-create-dialog"
-		@cancel="cancel"
-		@submit="submit"
+		@cancel="$emit('cancel')"
+		@submit="$emit('submit', value)"
 	>
 		<k-select-field
 			v-if="templates.length > 1"
@@ -16,13 +16,12 @@
 			class="k-page-template-switch"
 			@input="pick($event)"
 		/>
-
 		<k-dialog-fields
 			:fields="fields"
 			:novalidate="novalidate"
 			:value="value"
-			@input="input"
-			@submit="submit"
+			@input="$emit('input', $event)"
+			@submit="$emit('submit', $event)"
 		/>
 	</k-form-dialog>
 </template>
@@ -47,11 +46,6 @@ export default {
 		template: {
 			type: String
 		}
-	},
-	data() {
-		return {
-			model: this.value
-		};
 	},
 	computed: {
 		templates() {
@@ -83,25 +77,5 @@ export default {
 	margin-bottom: var(--spacing-6);
 	padding-bottom: var(--spacing-6);
 	border-bottom: 1px dashed var(--color-gray-300);
-}
-.k-page-template-switch nav {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 2px;
-}
-.k-page-template-switch .k-headline {
-	margin-bottom: 0.75rem;
-	line-height: 1.25;
-}
-.k-page-template-switch button {
-	text-align: start;
-	padding: 0.625rem 0.75rem;
-	font-size: var(--text-sm);
-	background: var(--color-white);
-	border-radius: var(--rounded-sm);
-	box-shadow: var(--shadow);
-}
-.k-page-template-switch button[aria-current] {
-	background: var(--color-light);
 }
 </style>

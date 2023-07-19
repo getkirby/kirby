@@ -7,10 +7,20 @@
 </template>
 
 <script>
+/**
+ * Display a list of <k-bubble>
+ * @public
+ * @since 3.7.0
+ *
+ * @example <k-bubbles :bubbles="['Hello', 'World']" />
+ */
 export default {
 	inheritAttrs: false,
 	props: {
-		bubbles: Array
+		/**
+		 * Array or string of bubbles, see <k-bubble> for available props.  If string, will be split by comma.
+		 */
+		bubbles: [Array, String]
 	},
 	computed: {
 		items() {
@@ -20,13 +30,9 @@ export default {
 				bubbles = bubbles.split(",");
 			}
 
-			return bubbles.map((bubble) => {
-				if (typeof bubble === "string") {
-					return { text: bubble };
-				}
-
-				return bubble;
-			});
+			return bubbles.map((bubble) =>
+				 bubble === "string" ? { text: bubble } : bubble
+			);
 		}
 	}
 };

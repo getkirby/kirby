@@ -33,7 +33,7 @@ class Query extends Obj
 
 	public function isNotEmpty(): bool
 	{
-		return empty((array)$this) === false;
+		return $this->isEmpty() === false;
 	}
 
 	public function toString(bool $questionMark = false): string

@@ -11,7 +11,7 @@ import {
 	hsv2rgb,
 	hsl2hsv,
 	hsv2hsl
-} from "./colors-math.js";
+} from "./colors-func.js";
 
 import { isHex, isRgb, isHsl, isHsv, RE_RGB, RE_HSL } from "./colors-checks.js";
 

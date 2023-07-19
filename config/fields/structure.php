@@ -49,7 +49,7 @@ return [
 		/**
 		 * Fields setup for the structure form. Works just like fields in regular forms.
 		 */
-		'fields' => function (array $fields) {
+		'fields' => function (array $fields = []) {
 			return $fields;
 		},
 		/**
@@ -99,7 +99,7 @@ return [
 		},
 		'fields' => function () {
 			if (empty($this->fields) === true) {
-				throw new Exception('Please provide some fields for the structure');
+				return [];
 			}
 
 			return $this->form()->fields()->toArray();

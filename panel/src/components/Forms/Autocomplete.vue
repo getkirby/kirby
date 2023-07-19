@@ -92,29 +92,15 @@ export default {
 		 * @param {string} query search term
 		 */
 		search(query) {
-			if (query.length < 1) {
-				return;
-			}
+			// skip all options in the skip array
+			const options = this.options.filter((option) => {
+				return this.skip.indexOf(option.value) !== -1;
+			});
 
-			// Filter options by query to retrieve items (no more than this.limit)
-			const regex = new RegExp(RegExp.escape(query), "ig");
-
-			this.matches = this.options
-				.filter((option) => {
-					// skip all options without valid text
-					if (!option.text) {
-						return false;
-					}
-
-					// skip all options in the skip array
-					if (this.skip.indexOf(option.value) !== -1) {
-						return false;
-					}
-
-					// match the search with the text
-					return option.text.match(regex) !== null;
-				})
-				.slice(0, this.limit);
+			this.matches = this.$helper.array.search(options, query, {
+				field: "text",
+				limit: this.limit
+			});
 
 			/**
 			 * Search has been performed

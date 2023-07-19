@@ -22,11 +22,9 @@ use Kirby\Toolkit\A;
  */
 abstract class Model
 {
-	protected ModelWithContent $model;
-
-	public function __construct(ModelWithContent $model)
-	{
-		$this->model = $model;
+	public function __construct(
+		protected ModelWithContent $model
+	) {
 	}
 
 	/**
@@ -85,9 +83,10 @@ abstract class Model
 	public function dropdownOption(): array
 	{
 		return [
-			'icon' => 'page',
-			'link' => $this->url(),
-			'text' => $this->model->id(),
+			'icon'  => 'page',
+			'image' => $this->image(['back' => 'black']),
+			'link'  => $this->url(true),
+			'text'  => $this->model->id(),
 		];
 	}
 
@@ -154,8 +153,7 @@ abstract class Model
 			'back'  => 'pattern',
 			'color' => 'gray-500',
 			'cover' => false,
-			'icon'  => 'page',
-			'ratio' => '3/2',
+			'icon'  => 'page'
 		];
 	}
 
@@ -214,7 +212,7 @@ abstract class Model
 		// for card layouts with `cover: true` provide
 		// crops based on the card ratio
 		if ($layout === 'cards') {
-			$ratio = explode('/', $settings['ratio']);
+			$ratio = explode('/', $settings['ratio'] ?? '1/1');
 			$ratio = $ratio[0] / $ratio[1];
 
 			return $image->srcset([
@@ -256,10 +254,17 @@ abstract class Model
 	 * Checks for disabled dropdown options according
 	 * to the given permissions
 	 */
-	public function isDisabledDropdownOption(string $action, array $options, array $permissions): bool
-	{
+	public function isDisabledDropdownOption(
+		string $action,
+		array $options,
+		array $permissions
+	): bool {
 		$option = $options[$action] ?? true;
-		return $permissions[$action] === false || $option === false || $option === 'false';
+
+		return
+			$permissions[$action] === false ||
+			$option === false ||
+			$option === 'false';
 	}
 
 	/**
@@ -270,11 +275,7 @@ abstract class Model
 	 */
 	public function lock(): array|false
 	{
-		if ($lock = $this->model->lock()) {
-			return $lock->toArray();
-		}
-
-		return false;
+		return $this->model->lock()?->toArray() ?? false;
 	}
 
 	/**
@@ -355,33 +356,34 @@ abstract class Model
 	}
 
 	/**
-	 * Returns link url and tooltip
-	 * for model (e.g. used for prev/next
-	 * navigation)
+	 * Returns link url and title
+	 * for model (e.g. used for prev/next navigation)
 	 * @internal
 	 */
-	public function toLink(string $tooltip = 'title'): array
+	public function toLink(string $title = 'title'): array
 	{
 		return [
 			'link'    => $this->url(true),
-			'tooltip' => (string)$this->model->{$tooltip}()
+			'title'   => $title = (string)$this->model->{$title}()
 		];
 	}
 
 	/**
-	 * Returns link url and tooltip
+	 * Returns link url and title
 	 * for optional sibling model and
 	 * preserves tab selection
 	 *
 	 * @internal
 	 */
-	protected function toPrevNextLink(ModelWithContent|null $model = null, string $tooltip = 'title'): array|null
-	{
+	protected function toPrevNextLink(
+		ModelWithContent|null $model = null,
+		string $title = 'title'
+	): array|null {
 		if ($model === null) {
 			return null;
 		}
 
-		$data = $model->panel()->toLink($tooltip);
+		$data = $model->panel()->toLink($title);
 
 		if ($tab = $model->kirby()->request()->get('tab')) {
 			$uri = new Uri($data['link'], [

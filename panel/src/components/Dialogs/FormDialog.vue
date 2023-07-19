@@ -1,13 +1,18 @@
 <template>
-	<k-dialog ref="dialog" v-bind="$props" @cancel="cancel" @submit="submit">
+	<k-dialog
+		ref="dialog"
+		v-bind="$props"
+		@cancel="$emit('cancel')"
+		@submit="$emit('submit', value)"
+	>
 		<slot>
 			<k-dialog-text v-if="text" :text="text" />
 			<k-dialog-fields
 				:fields="fields"
 				:novalidate="novalidate"
-				:value="model"
-				@input="input"
-				@submit="submit"
+				:value="value"
+				@input="$emit('input', $event)"
+				@submit="$emit('submit', $event)"
 			/>
 		</slot>
 	</k-dialog>
@@ -20,33 +25,18 @@ import { props as Fields } from "./Elements/Fields.vue";
 export default {
 	mixins: [Dialog, Fields],
 	props: {
+		// eslint-disable-next-line vue/require-prop-types
 		size: {
-			default: "medium",
-			type: String
+			default: "medium"
 		},
+		// eslint-disable-next-line vue/require-prop-types
 		submitButton: {
-			type: [String, Boolean],
 			default: () => window.panel.$t("save")
 		},
 		text: {
 			type: String
 		}
 	},
-	data() {
-		return {
-			model: this.value
-		};
-	},
-	watch: {
-		value(value) {
-			this.model = value;
-		}
-	},
-	methods: {
-		input(value) {
-			this.model = value;
-			this.$panel.dialog.input(value);
-		}
-	}
+	emits: ["cancel", "input", "submit"]
 };
 </script>

@@ -3,6 +3,8 @@
 namespace Kirby\Image;
 
 use Exception;
+use Kirby\Image\Darkroom\GdLib;
+use Kirby\Image\Darkroom\ImageMagick;
 
 /**
  * A wrapper around resizing and cropping
@@ -17,17 +19,13 @@ use Exception;
 class Darkroom
 {
 	public static array $types = [
-		'gd' => 'Kirby\Image\Darkroom\GdLib',
-		'im' => 'Kirby\Image\Darkroom\ImageMagick'
+		'gd' => GdLib::class,
+		'im' => ImageMagick::class
 	];
 
-	protected array $settings = [];
-
-	/**
-	 * Darkroom constructor
-	 */
-	public function __construct(array $settings = [])
-	{
+	public function __construct(
+		protected array $settings = []
+	) {
 		$this->settings = array_merge($this->defaults(), $settings);
 	}
 
@@ -120,8 +118,14 @@ class Darkroom
 		$options['height'] = $thumbDimensions->height();
 
 		// scale ratio compared to the source dimensions
-		$options['scaleWidth']  = Focus::ratio($options['width'], $options['sourceWidth']);
-		$options['scaleHeight'] = Focus::ratio($options['height'], $options['sourceHeight']);
+		$options['scaleWidth'] = Focus::ratio(
+			$options['width'],
+			$options['sourceWidth']
+		);
+		$options['scaleHeight'] = Focus::ratio(
+			$options['height'],
+			$options['sourceHeight']
+		);
 
 		return $options;
 	}

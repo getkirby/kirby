@@ -22,7 +22,7 @@ export default {
 	},
 	computed: {
 		icon() {
-			return this.fieldset.icon || "box";
+			return this.fieldset.icon ?? "box";
 		},
 		label() {
 			if (!this.fieldset.label || this.fieldset.label.length === 0) {
@@ -33,12 +33,17 @@ export default {
 				return false;
 			}
 
-			const label = this.$helper.string.template(
+			let label = this.$helper.string.template(
 				this.fieldset.label,
 				this.content
 			);
 
-			return label === "…" ? false : this.$helper.string.stripHTML(label);
+			if (label === "…") {
+				return false;
+			}
+
+			label = this.$helper.string.stripHTML(label);
+			return this.$helper.string.unescapeHTML(label);
 		},
 		name() {
 			return this.fieldset.name;

@@ -51,21 +51,10 @@
 						icon="box"
 						@click="choose(blocks.length)"
 					>
-						{{ empty || $t("field.blocks.empty") }}
+						{{ empty ?? $t("field.blocks.empty") }}
 					</k-empty>
 				</template>
 			</k-draggable>
-
-			<k-block-selector
-				ref="selector"
-				:fieldsets="fieldsets"
-				:fieldset-groups="fieldsetGroups"
-				@add="add"
-				@convert="convert"
-				@paste="paste($event)"
-			/>
-
-			<k-block-pasteboard ref="pasteboard" @paste="paste($event)" />
 		</template>
 		<template v-else>
 			<k-box theme="info"> No fieldsets yet </k-box>
@@ -98,6 +87,7 @@ export default {
 		return {
 			isEditing: false,
 			isMultiSelectKey: false,
+			isPasteable: false,
 			blocks: this.value,
 			selected: []
 		};
@@ -153,20 +143,20 @@ export default {
 		}
 	},
 	created() {
-		this.$events.$on("blur", this.onBlur);
-		this.$events.$on("copy", this.onCopy);
-		this.$events.$on("focus", this.onOutsideFocus);
-		this.$events.$on("keydown", this.onKey);
-		this.$events.$on("keyup", this.onKey);
-		this.$events.$on("paste", this.onPaste);
+		this.$events.on("blur", this.onBlur);
+		this.$events.on("copy", this.onCopy);
+		this.$events.on("focus", this.onOutsideFocus);
+		this.$events.on("keydown", this.onKey);
+		this.$events.on("keyup", this.onKey);
+		this.$events.on("paste", this.onPaste);
 	},
 	destroyed() {
-		this.$events.$off("blur", this.onBlur);
-		this.$events.$off("copy", this.onCopy);
-		this.$events.$off("focus", this.onOutsideFocus);
-		this.$events.$off("keydown", this.onKey);
-		this.$events.$off("keyup", this.onKey);
-		this.$events.$off("paste", this.onPaste);
+		this.$events.off("blur", this.onBlur);
+		this.$events.off("copy", this.onCopy);
+		this.$events.off("focus", this.onOutsideFocus);
+		this.$events.off("keydown", this.onKey);
+		this.$events.off("keyup", this.onKey);
+		this.$events.off("paste", this.onPaste);
 	},
 	mounted() {
 		// focus first block
@@ -186,17 +176,52 @@ export default {
 		},
 		choose(index) {
 			if (this.$helper.object.length(this.fieldsets) === 1) {
-				const type = Object.values(this.fieldsets)[0].type;
-				this.add(type, index);
-			} else {
-				this.$refs.selector.open(index);
+				return this.add(Object.values(this.fieldsets)[0].type, index);
 			}
+
+			this.$panel.dialog.open({
+				component: "k-block-selector",
+				props: {
+					fieldsetGroups: this.fieldsetGroups,
+					fieldsets: this.fieldsets
+				},
+				on: {
+					open: () => {
+						this.isPasteable = true;
+					},
+					close: () => {
+						this.isPasteable = false;
+					},
+					submit: (type) => {
+						this.add(type, index);
+						this.$panel.dialog.close();
+					},
+					paste: this.paste
+				}
+			});
 		},
 		chooseToConvert(block) {
-			this.$refs.selector.open(block, {
-				disabled: [block.type],
-				headline: this.$t("field.blocks.changeType"),
-				event: "convert"
+			this.$panel.dialog.open({
+				component: "k-block-selector",
+				props: {
+					disabledFieldsets: [block.type],
+					fieldsetGroups: this.fieldsetGroups,
+					fieldsets: this.fieldsets,
+					headline: this.$t("field.blocks.changeType")
+				},
+				on: {
+					open: () => {
+						this.isPasteable = true;
+					},
+					close: () => {
+						this.isPasteable = false;
+					},
+					submit: (type) => {
+						this.convert(type, block);
+						this.$panel.dialog.close();
+					},
+					paste: this.paste
+				}
 			});
 		},
 		click(block) {
@@ -314,7 +339,7 @@ export default {
 		},
 		fieldset(block) {
 			return (
-				this.fieldsets[block.type] || {
+				this.fieldsets[block.type] ?? {
 					icon: "box",
 					name: block.type,
 					tabs: {
@@ -485,7 +510,7 @@ export default {
 		},
 		onPaste(e) {
 			// enable pasting when the block selector is open
-			if (this.$refs.selector?.isOpen() === true) {
+			if (this.isPasteable === true) {
 				return this.paste(e);
 			}
 
@@ -501,10 +526,7 @@ export default {
 
 			// not when nothing is selected and the paste event
 			// doesn't target something in the block component
-			if (
-				this.selectedOrBatched.length === 0 &&
-				this.$el.contains(e.target) === false
-			) {
+			if (this.selected.length === 0 && this.$el.contains(e.target) === false) {
 				return false;
 			}
 
@@ -538,7 +560,12 @@ export default {
 			);
 		},
 		pasteboard() {
-			this.$refs.pasteboard.open();
+			this.$panel.dialog.open({
+				component: "k-block-pasteboard",
+				on: {
+					paste: this.paste
+				}
+			});
 		},
 		prevNext(index) {
 			if (this.blocks[index]) {

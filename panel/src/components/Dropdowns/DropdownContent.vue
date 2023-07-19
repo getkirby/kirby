@@ -1,0 +1,346 @@
+<template>
+	<dialog
+		v-if="isOpen"
+		ref="dropdown"
+		:data-align-x="axis.x"
+		:data-align-y="axis.y"
+		:data-theme="theme"
+		class="k-dropdown-content"
+		@close="onClose"
+		@click="onClick"
+	>
+		<!-- @slot Content of the dropdown -->
+		<k-navigate ref="navigate" :disabled="navigate === false" axis="y">
+			<slot>
+				<template v-for="(option, index) in items">
+					<hr v-if="option === '-'" :key="_uid + '-item-' + index" />
+					<k-dropdown-item
+						v-else
+						:key="_uid + '-item-' + index"
+						v-bind="option"
+						@click="onOptionClick(option)"
+					>
+						{{ option.text }}
+					</k-dropdown-item>
+				</template>
+			</slot>
+		</k-navigate>
+	</dialog>
+</template>
+
+<script>
+import Vue from "vue";
+
+let OpenDropdown = null;
+
+/**
+ * See `<k-dropdown>` for how to use these components together.
+ * @internal
+ */
+export default {
+	props: {
+		/**
+		 * @deprecated 4.0.0 Use `alignX` instead
+		 * @todo rename `axis` data to `align` when removed
+		 */
+		align: {
+			type: String
+		},
+		/**
+		 * Default horizontal alignment of the dropdown
+		 * @values start, end
+		 */
+		alignX: {
+			type: String,
+			default: "start"
+		},
+		/**
+		 * Default vertical alignment of the dropdown
+		 * @values top, bottom
+		 */
+		alignY: {
+			type: String,
+			default: "bottom"
+		},
+		disabled: {
+			type: Boolean,
+			default: false
+		},
+		navigate: {
+			default: true,
+			type: Boolean
+		},
+		options: [Array, Function, String],
+		/**
+		 * Visual theme of the dropdown
+		 * @values dark, light
+		 */
+		theme: {
+			type: String,
+			default: "dark"
+		}
+	},
+	emits: [
+		"action",
+		/**
+		 * When the dropdown content is closed
+		 * @event close
+		 */
+		"close",
+		/**
+		 * When the dropdown content is opened
+		 * @event open
+		 */
+		"open"
+	],
+	data() {
+		return {
+			axis: {
+				x: this.alignX,
+				y: this.alignY
+			},
+			isOpen: false,
+			items: [],
+			opener: null
+		};
+	},
+	created() {
+		if (this.align) {
+			window.panel.deprecated(
+				"<k-dropdown-content>: `align` prop will be removed in a future version. Use the `alignX` prop instead."
+			);
+		}
+	},
+	methods: {
+		/**
+		 * Closes the dropdown
+		 * @public
+		 */
+		close() {
+			this.$refs.dropdown?.close();
+		},
+		async fetchOptions(ready) {
+			if (!this.options) {
+				return ready(this.items);
+			}
+
+			// resolve a dropdown URL
+			if (typeof this.options === "string") {
+				return this.$dropdown(this.options)(ready);
+			}
+
+			// resolve a callback function
+			if (typeof this.options === "function") {
+				return this.options(ready);
+			}
+
+			// resolve options from a simple array
+			if (Array.isArray(this.options)) {
+				return ready(this.options);
+			}
+		},
+		focus(n = 0) {
+			this.$refs.navigate.focus(n);
+		},
+		onClick(event) {
+			// close the dialog element if the backdrop is being clicked
+			if (event.target === this.$el) {
+				this.close();
+			}
+		},
+		onClose() {
+			this.resetPosition();
+			this.isOpen = OpenDropdown = false;
+			this.$emit("close");
+			window.removeEventListener("resize", this.position);
+		},
+		onOpen() {
+			this.isOpen = true;
+
+			// store a global reference to the dropdown
+			OpenDropdown = this;
+
+			// wait until the dropdown is rendered
+			this.$nextTick(() => {
+				if (this.$el && this.opener) {
+					window.addEventListener("resize", this.position);
+					this.position();
+					this.$emit("open");
+				}
+			});
+		},
+		onOptionClick(option) {
+			if (typeof option.click === "function") {
+				option.click.call(this);
+			} else if (option.click) {
+				this.$emit("action", option.click);
+			}
+		},
+		/**
+		 * Opens the dropdown
+		 * @public
+		 */
+		open(opener) {
+			if (this.disabled === true) {
+				return false;
+			}
+
+			if (OpenDropdown && OpenDropdown !== this) {
+				// close the current dropdown
+				OpenDropdown.close();
+			}
+
+			// find the opening element
+			this.opener =
+				opener ??
+				window.event?.target.closest("button") ??
+				window.event?.target;
+
+			// load all options and open the dropdown as
+			// soon as they are loaded
+			this.fetchOptions((items) => {
+				this.items = items;
+				this.onOpen();
+			});
+		},
+		position() {
+			// reset to the alignment defaults
+			// before running position calculation
+			this.axis = {
+				x: this.alignX ?? this.align,
+				y: this.alignY
+			};
+
+			if (this.axis.x === "right") {
+				this.axis.x = "end";
+			} else if (this.axis.x === "left") {
+				this.axis.x = "start";
+			}
+
+			// drill down to the element of a component
+			if (this.opener instanceof Vue) {
+				this.opener = this.opener.$el;
+			}
+
+			// get the dimensions of the opening button
+			const opener = this.opener.getBoundingClientRect();
+
+			// set the default position
+			// and take scroll position into consideration
+			this.$el.style.left = opener.left + window.scrollX + opener.width + "px";
+			this.$el.style.top = opener.top + window.scrollY + opener.height + "px";
+
+			// open the modal after the default positioning has been applied
+			if (this.$el.open !== true) {
+				this.$el.showModal();
+			}
+
+			// as we just set style.top, wait one tick before measuring dropdownRect
+			this.$nextTick(() => {
+				// get the dimensions of the open dropdown
+				const rect = this.$el.getBoundingClientRect();
+				const safeSpace = 10;
+
+				// Horizontal: check if dropdown is outside of viewport
+				// and adapt alignment if necessary
+				if (this.axis.x === "end") {
+					if (rect.left - rect.width < safeSpace) {
+						this.axis.x === "start";
+					}
+				} else if (
+					rect.left + rect.width > window.innerWidth - safeSpace &&
+					rect.width + safeSpace < rect.left
+				) {
+					this.axis.x = "end";
+				}
+
+				if (this.axis.x === "start") {
+					this.$el.style.left =
+						parseInt(this.$el.style.left) - opener.width + "px";
+				}
+
+				// Vertical: check if dropdown is outside of viewport
+				// and adapt alignment if necessary
+				if (this.axis.y === "top") {
+					if (rect.height + safeSpace > rect.top) {
+						this.axis.y === "bottom";
+					}
+				} else if (
+					rect.top + rect.height > window.innerHeight - safeSpace &&
+					rect.height + safeSpace < rect.top
+				) {
+					this.axis.y = "top";
+				}
+
+				if (this.axis.y === "top") {
+					this.$el.style.top =
+						parseInt(this.$el.style.top) - opener.height + "px";
+				}
+			});
+		},
+		resetPosition() {
+			this.$el.style.top = 0;
+			this.$el.style.left = 0;
+		},
+		/**
+		 * Toggles the open state of the dropdown
+		 * @public
+		 */
+		toggle(opener) {
+			this.isOpen ? this.close() : this.open(opener);
+		}
+	}
+};
+</script>
+
+<style>
+:root {
+	--dropdown-color-bg: var(--color-black);
+	--dropdown-color-text: var(--color-white);
+	--dropdown-color-hr: rgba(255, 255, 255, 0.25);
+	--dropdown-padding: var(--spacing-2);
+	--dropdown-rounded: var(--rounded);
+	--dropdown-shadow: var(--shadow-xl);
+}
+
+.k-dropdown-content {
+	--dropdown-x: 0;
+	--dropdown-y: 0;
+	position: absolute;
+	inset-block-start: 0;
+	inset-inline-start: 0;
+	width: max-content;
+	padding: var(--dropdown-padding);
+	background: var(--dropdown-color-bg);
+	border-radius: var(--dropdown-rounded);
+	color: var(--dropdown-color-text);
+	box-shadow: var(--dropdown-shadow);
+	text-align: start;
+	transform: translate(var(--dropdown-x), var(--dropdown-y));
+}
+.k-dropdown-content::backdrop {
+	background: none;
+}
+
+.k-dropdown-content[data-align-x="end"] {
+	--dropdown-x: -100%;
+}
+.k-dropdown-content[data-align-x="center"] {
+	--dropdown-x: -50%;
+}
+.k-dropdown-content[data-align-y="top"] {
+	--dropdown-y: -100%;
+}
+
+.k-dropdown-content hr {
+	margin: 0.5rem 0;
+	height: 1px;
+	background: var(--dropdown-color-hr);
+}
+
+.k-dropdown-content[data-theme="light"] {
+	--dropdown-color-bg: var(--color-white);
+	--dropdown-color-text: var(--color-black);
+	--dropdown-color-hr: rgba(0, 0, 0, 0.1);
+}
+</style>

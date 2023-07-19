@@ -39,8 +39,8 @@ return [
 			$next = function () use ($language) {
 				if ($next = $language->next()) {
 					return [
-						'link'    => '/languages/' . $next->code(),
-						'tooltip' => $next->name(),
+						'link'  => '/languages/' . $next->code(),
+						'title' => $next->name(),
 					];
 				}
 			};
@@ -48,8 +48,8 @@ return [
 			$prev = function () use ($language) {
 				if ($prev = $language->prev()) {
 					return [
-						'link'    => '/languages/' . $prev->code(),
-						'tooltip' => $prev->name(),
+						'link'  => '/languages/' . $prev->code(),
+						'title' => $prev->name(),
 					];
 				}
 			};

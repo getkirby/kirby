@@ -1,4 +1,4 @@
-import "./array.js";
+import array from "./array.js";
 import clipboard from "./clipboard.js";
 import color from "./color.js";
 import debounce from "./debounce.js";
@@ -10,6 +10,7 @@ import isComponent from "./isComponent.js";
 import isUploadEvent from "./isUploadEvent.js";
 import keyboard from "./keyboard.js";
 import object from "./object.js";
+import page from "./page.js";
 import ratio from "./ratio.js";
 import sort from "./sort.js";
 import string from "./string.js";
@@ -21,6 +22,7 @@ import "./regex.js";
 export default {
 	install(app) {
 		app.prototype.$helper = {
+			array,
 			clipboard,
 			clone: object.clone,
 			color,
@@ -33,6 +35,7 @@ export default {
 			file,
 			keyboard,
 			object,
+			page,
 			pad: string.pad,
 			ratio,
 			slug: string.slug,

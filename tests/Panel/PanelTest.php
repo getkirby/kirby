@@ -119,9 +119,7 @@ class PanelTest extends TestCase
 		// authenticated with plugins
 		$app = $this->app->clone([
 			'areas' => [
-				'todos' => function () {
-					return [];
-				}
+				'todos' => fn () => []
 			]
 		]);
 

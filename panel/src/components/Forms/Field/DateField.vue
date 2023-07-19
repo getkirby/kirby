@@ -2,6 +2,7 @@
 	<k-field v-bind="$props" :input="_uid" class="k-date-field">
 		<div
 			ref="body"
+			:data-has-time="Boolean(time)"
 			:data-invalid="!novalidate && isInvalid"
 			class="k-date-field-body"
 			data-theme="field"
@@ -28,11 +29,11 @@
 					<k-dropdown>
 						<k-button
 							:icon="icon"
-							:tooltip="$t('date.select')"
+							:title="$t('date.select')"
 							class="k-input-icon-button"
 							@click="$refs.calendar.toggle()"
 						/>
-						<k-dropdown-content ref="calendar" align="right">
+						<k-dropdown-content ref="calendar" align-x="end">
 							<k-calendar
 								:value="value"
 								:min="min"
@@ -62,12 +63,12 @@
 				<template v-if="times" #icon>
 					<k-dropdown>
 						<k-button
-							:icon="time.icon || 'clock'"
-							:tooltip="$t('time.select')"
+							:icon="time.icon ?? 'clock'"
+							:title="$t('time.select')"
 							class="k-input-icon-button"
 							@click="$refs.times.toggle()"
 						/>
-						<k-dropdown-content ref="times" align="right">
+						<k-dropdown-content ref="times" align-x="end">
 							<k-times
 								:display="time.display"
 								:value="value"
@@ -197,7 +198,7 @@ export default {
 				}
 			}
 
-			this.$emit("input", dt?.toISO() || "");
+			this.$emit("input", dt?.toISO() ?? "");
 		},
 		/**
 		 * Handle input event from calendar dropdown
@@ -256,8 +257,8 @@ export default {
 		toIso(value) {
 			const dt = this.$library.dayjs.iso(value);
 			return {
-				date: dt?.toISO("date") || null,
-				time: dt?.toISO("time") || null
+				date: dt?.toISO("date") ?? null,
+				time: dt?.toISO("time") ?? null
 			};
 		}
 	}
@@ -266,45 +267,14 @@ export default {
 
 <style>
 .k-date-field-body {
-	display: flex;
-	flex-wrap: wrap;
-	line-height: 1;
-	border: var(--field-input-border);
-	background: var(--color-gray-300);
-	gap: 1px;
-	border-radius: var(--rounded);
-}
-.k-date-field-body:focus-within {
-	border: var(--field-input-focus-border);
-	box-shadow: var(--color-focus-outline) 0 0 0 2px;
-}
-.k-date-field[data-disabled] .k-date-field-body {
-	background: none;
-}
-.k-date-field-body > .k-input[data-theme="field"] {
-	border: 0;
-	box-shadow: none;
-	border-radius: var(--rounded);
-}
-.k-date-field-body > .k-input[data-invalid="true"],
-.k-date-field-body > .k-input[data-invalid="true"]:focus-within {
-	border: 0 !important;
-	box-shadow: none !important;
+	display: grid;
+	gap: var(--spacing-2);
 }
 
-/* https://heydonworks.com/article/the-flexbox-holy-albatross/ */
-.k-date-field-body {
-	--multiplier: calc(25rem - 100%);
-}
-.k-date-field-body > * {
-	flex-grow: 1;
-	flex-basis: calc(var(--multiplier) * 999);
-	max-width: 100%;
-}
-.k-date-field-body .k-input[data-type="date"] {
-	min-width: 60%;
-}
-.k-date-field-body .k-input[data-type="time"] {
-	min-width: 30%;
+@container (min-width: 20rem) {
+	/** TODO: .k-date-field-body:has(.k-time-input) */
+	.k-date-field-body[data-has-time="true"] {
+		grid-template-columns: 1fr minmax(6rem, 9rem);
+	}
 }
 </style>

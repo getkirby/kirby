@@ -1,5 +1,10 @@
 <template>
-	<k-text-dialog ref="dialog" v-bind="$props" @cancel="cancel" @submit="submit">
+	<k-text-dialog
+		ref="dialog"
+		v-bind="$props"
+		@cancel="$emit('cancel')"
+		@submit="$emit('submit')"
+	>
 		<slot />
 	</k-text-dialog>
 </template>
@@ -10,17 +15,17 @@ import TextDialog from "./TextDialog.vue";
 export default {
 	mixins: [TextDialog],
 	props: {
+		// eslint-disable-next-line vue/require-prop-types
 		icon: {
-			default: "trash",
-			type: String
+			default: "trash"
 		},
+		// eslint-disable-next-line vue/require-prop-types
 		submitButton: {
-			default: () => window.panel.$t("delete"),
-			type: String
+			default: () => window.panel.$t("delete")
 		},
+		// eslint-disable-next-line vue/require-prop-types
 		theme: {
-			default: "negative",
-			type: String
+			default: "negative"
 		}
 	}
 };

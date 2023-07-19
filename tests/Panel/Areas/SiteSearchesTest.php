@@ -74,8 +74,7 @@ class SiteSearchesTest extends AreaTestCase
 			'back'  => 'pattern',
 			'color' => 'gray-500',
 			'cover' => false,
-			'icon'  => 'page',
-			'ratio' => '3/2'
+			'icon'  => 'page'
 		];
 
 		$this->assertSame($image, $results[0]['image']);

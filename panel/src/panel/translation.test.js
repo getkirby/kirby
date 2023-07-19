@@ -64,5 +64,8 @@ describe.concurrent("panel.translation", () => {
 		expect(translation.translate("template", { name: "Peter" })).toStrictEqual(
 			"Hello Peter"
 		);
+
+		// with invalid input
+		expect(translation.translate(123)).toBeUndefined();
 	});
 });

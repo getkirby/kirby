@@ -32,9 +32,15 @@ class Controller
 			$name = $param->getName();
 
 			if ($param->isVariadic() === true) {
+				// variadic ... argument collects all remaining values
 				$args += $data;
-			} else {
-				$args[$name] = $data[$name] ?? null;
+			} elseif (isset($data[$name]) === true) {
+				// use provided argument value if available
+				$args[$name] = $data[$name];
+			} elseif ($param->isDefaultValueAvailable() === false) {
+				// use null for any other arguments that don't define
+				// a default value for themselves
+				$args[$name] = null;
 			}
 		}
 

@@ -1,115 +1,100 @@
 <template>
-	<k-overlay
-		ref="dialog"
-		:dimmed="true"
-		:visible="visible"
-		type="dialog"
-		@cancel="cancel"
-		@ready="ready"
+	<k-dialog
+		:cancel-button="false"
+		:submit-button="false"
+		class="k-search-dialog"
+		role="search"
+		size="medium"
+		v-bind="$props"
+		@cancel="$emit('cancel')"
+		@submit="submit"
 	>
-		<form
-			class="k-search-dialog k-dialog"
-			data-size="medium"
-			method="dialog"
-			role="search"
-			@submit.prevent="submit"
-		>
-			<div class="k-search-dialog-input">
-				<!-- Type select -->
-				<k-dropdown class="k-search-dialog-types">
-					<k-button
-						:icon="currentType.icon"
-						:text="currentType.label"
-						@click="$refs.types.toggle()"
-					/>
-					<k-dropdown-content ref="types">
-						<k-dropdown-item
-							v-for="(typeItem, typeIndex) in $panel.searches"
-							:key="typeIndex"
-							:icon="typeItem.icon"
-							@click="
-								type = typeIndex;
-								focus();
-							"
-						>
-							{{ typeItem.label }}
-						</k-dropdown-item>
-					</k-dropdown-content>
-				</k-dropdown>
-
-				<!-- Input -->
-				<input
-					ref="input"
-					:aria-label="$t('search')"
-					:autofocus="true"
-					:placeholder="$t('search') + ' …'"
-					:value="q"
-					type="text"
-					@input="search($event.target.value)"
-					@keydown.down.prevent="onDown"
-					@keydown.up.prevent="onUp"
-					@keydown.tab.prevent="onTab"
-					@keydown.enter="onEnter"
-					@keydown.esc="
-						clear();
-						close();
-					"
-				/>
+		<div class="k-search-dialog-input">
+			<!-- Type select -->
+			<k-dropdown class="k-search-dialog-types">
 				<k-button
-					:icon="isLoading ? 'loader' : 'cancel'"
-					:tooltip="$t('close')"
-					class="k-search-dialog-close"
-					@click="close"
+					:dropdown="true"
+					:icon="currentType.icon"
+					:text="currentType.label"
+					variant="dimmed"
+					@click="$refs.types.toggle()"
 				/>
-			</div>
-
-			<div v-if="q?.length > 1" class="k-search-dialog-results">
-				<!-- Results -->
-				<k-collection
-					v-if="items.length"
-					ref="items"
-					:items="items"
-					@mouseout.native="select(-1)"
-				/>
-
-				<!-- No results -->
-				<footer class="k-search-dialog-footer">
-					<p v-if="!items.length">
-						{{ $t("search.results.none") }}
-					</p>
-
-					<k-button
-						v-else-if="items.length < pagination.total"
-						icon="search"
+				<k-dropdown-content ref="types">
+					<k-dropdown-item
+						v-for="(typeItem, typeIndex) in $panel.searches"
+						:key="typeIndex"
+						:icon="typeItem.icon"
 						@click="
-							$go('search', {
-								query: {
-									type: type,
-									query: q
-								}
-							})
+							type = typeIndex;
+							focus();
 						"
 					>
-						All {{ pagination.total }} results
-					</k-button>
-				</footer>
-			</div>
-		</form>
-	</k-overlay>
+						{{ typeItem.label }}
+					</k-dropdown-item>
+				</k-dropdown-content>
+			</k-dropdown>
+
+			<!-- Input -->
+			<input
+				ref="input"
+				:aria-label="$t('search')"
+				:autofocus="true"
+				:placeholder="$t('search') + ' …'"
+				:value="query"
+				type="text"
+				@input="query = $event.target.value"
+				@keydown.down.prevent="onDown"
+				@keydown.up.prevent="onUp"
+				@keydown.enter="onEnter"
+			/>
+			<k-button
+				:icon="isLoading ? 'loader' : 'cancel'"
+				:title="$t('close')"
+				class="k-search-dialog-close"
+				@click="close"
+			/>
+		</div>
+
+		<div v-if="query?.length > 1" class="k-search-dialog-results">
+			<!-- Results -->
+			<k-collection
+				v-if="items.length"
+				ref="items"
+				:items="items"
+				@mouseout.native="select(-1)"
+			/>
+
+			<!-- No results -->
+			<footer class="k-search-dialog-footer">
+				<p v-if="!items.length">
+					{{ $t("search.results.none") }}
+				</p>
+
+				<k-button
+					v-else-if="items.length < pagination.total"
+					icon="search"
+					variant="dimmed"
+					@click="$go('search', { query: { type, query } })"
+				>
+					All {{ pagination.total }} results
+				</k-button>
+			</footer>
+		</div>
+	</k-dialog>
 </template>
 
 <script>
 import Dialog from "@/mixins/dialog.js";
-import debounce from "@/helpers/debounce.js";
+import Search from "@/mixins/search.js";
 
 export default {
-	mixins: [Dialog],
+	mixins: [Dialog, Search],
+	emits: ["cancel"],
 	data() {
 		return {
 			isLoading: false,
 			items: [],
 			pagination: {},
-			q: null,
 			selected: -1,
 			type: this.$panel.view.search
 		};
@@ -124,16 +109,13 @@ export default {
 	},
 	watch: {
 		type() {
-			this.search(this.q);
+			this.search();
 		}
-	},
-	created() {
-		this.search = debounce(this.search, 250);
 	},
 	methods: {
 		clear() {
 			this.items = [];
-			this.q = null;
+			this.query = null;
 		},
 		focus() {
 			this.$refs.input?.focus();
@@ -160,19 +142,18 @@ export default {
 				this.select(this.selected - 1);
 			}
 		},
-		async search(query) {
-			this.q = query;
+		async search() {
 			this.isLoading = true;
 			this.$refs.types?.close();
 			this.select?.(-1);
 
 			try {
 				// Skip API call if query empty
-				if (query === null || query.length < 2) {
+				if (this.query === null || this.query.length < 2) {
 					throw Error("Empty query");
 				}
 
-				const response = await this.$search(this.type, query);
+				const response = await this.$search(this.type, this.query);
 				this.items = response.results;
 				this.pagination = response.pagination;
 			} catch (error) {
@@ -197,68 +178,52 @@ export default {
 
 <style>
 .k-search-dialog {
-	margin: 2.5rem auto;
+	--dialog-padding: 0;
+	--dialog-rounded: var(--rounded);
+	align-self: start;
+	overflow: visible;
 }
+
 .k-search-dialog-input {
+	--input-height: var(--height-lg);
+	--button-height: var(--input-height);
 	display: flex;
+	align-items: center;
 }
 .k-search-dialog-types {
 	flex-shrink: 0;
-	display: flex;
-}
-.k-search-dialog-types > .k-button {
-	padding-inline-start: 1rem;
-	font-size: var(--text-base);
-	line-height: 1;
-	height: 2.5rem;
-}
-.k-search-dialog-types > .k-button .k-icon {
-	height: 2.5rem;
-}
-.k-search-dialog-types > .k-button .k-button-text {
-	opacity: 1;
-	font-weight: 500;
 }
 .k-search-dialog-input input {
-	background: none;
 	flex-grow: 1;
-	font: inherit;
-	padding: 0.75rem;
-	border: 0;
-	height: 2.5rem;
+	padding-inline: 0.75rem;
+	height: var(--input-height);
+	border-left: 1px solid var(--color-border);
+	line-height: var(--input-height);
+	border-radius: var(--rounded);
 }
 .k-search-dialog-input input:focus {
 	outline: 0;
 }
-.k-search-dialog-close {
-	width: 3rem;
-	line-height: 1;
-}
-.k-search-dialog-close .k-icon-loader {
-	animation: Spin 2s linear infinite;
+
+.k-search-dialog-input .k-search-dialog-close {
+	flex-shrink: 0;
 }
 
 .k-search-dialog-results {
-	padding: 0.5rem 1rem 1rem;
-}
-.k-search-dialog-results .k-item:not(:last-child) {
-	margin-bottom: 0.25rem;
+	border-top: 1px solid var(--color-border);
+	padding: 1rem;
 }
 .k-search-dialog-results .k-item[data-selected="true"] {
-	outline: 2px solid var(--color-focus);
-}
-.k-search-dialog-results .k-item-info {
-	font-size: var(--text-xs);
+	outline: var(--outline);
 }
 
 .k-search-dialog-footer {
 	text-align: center;
 }
 .k-search-dialog-footer p {
-	font-size: var(--text-xs);
-	color: var(--color-gray-600);
+	color: var(--color-text-dimmed);
 }
 .k-search-dialog-footer .k-button {
-	margin-top: var(--spacing-3);
+	margin-top: var(--spacing-4);
 }
 </style>

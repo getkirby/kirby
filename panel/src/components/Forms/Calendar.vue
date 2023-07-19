@@ -273,7 +273,7 @@ export default {
 			 * The input event is fired when a date is selected.
 			 * @property {string} iso data as ISO date string
 			 */
-			this.$emit("input", this.dt?.toISO("date") || null);
+			this.$emit("input", this.dt?.toISO("date") ?? null);
 		},
 		/**
 		 * Shows the following month
@@ -345,25 +345,24 @@ export default {
 
 <style>
 .k-calendar-input {
-	--cell-padding: 0.25rem 0.5rem;
-
-	padding: 0.5rem;
-	color: var(--color-light);
-	border-radius: var(--rounded-xs);
+	--button-height: var(--height-sm);
+	--button-width: var(--button-height);
+	--button-padding: 0;
+	padding: var(--spacing-2);
+	width: min-content;
 }
 .k-calendar-table {
 	table-layout: fixed;
-	width: 100%;
 	min-width: 15rem;
-	padding-top: 0.5rem;
 }
-
+.k-calendar-input .k-button {
+	justify-content: center;
+}
 .k-calendar-input > nav {
 	display: flex;
 	direction: ltr;
-}
-.k-calendar-input > nav .k-button {
-	padding: 0.5rem;
+	align-items: center;
+	margin-bottom: var(--spacing-2);
 }
 .k-calendar-selects {
 	flex-grow: 1;
@@ -378,59 +377,42 @@ export default {
 	direction: rtl;
 }
 .k-calendar-selects .k-select-input {
+	display: flex;
+	align-items: center;
+	height: var(--button-height);
 	padding: 0 0.5rem;
-	font-weight: var(--font-normal);
-	font-size: var(--text-sm);
 }
 .k-calendar-selects .k-select-input:focus-within {
-	color: var(--color-focus-light) !important;
+	outline: var(--outline);
 }
 .k-calendar-input th {
-	padding: 0.5rem 0;
+	padding-block: 0.5rem;
 	color: var(--color-gray-500);
 	font-size: var(--text-xs);
-	font-weight: 400;
 	text-align: center;
 }
-.k-calendar-day .k-button {
-	width: 2rem;
-	height: 2rem;
-	margin-inline: auto;
-	color: var(--color-white);
-	line-height: 1.75rem;
-	display: flex;
-	justify-content: center;
-	border-radius: 50%;
-	border: 2px solid transparent;
-}
-.k-calendar-day .k-button .k-button-text {
-	opacity: 1;
-}
-.k-calendar-table .k-button:hover {
-	color: var(--color-white);
-}
-.k-calendar-day:hover .k-button:not([data-disabled="true"]) {
-	border-color: rgba(255, 255, 255, 0.25);
+.k-calendar-day {
+	padding: 2px;
 }
 .k-calendar-day[aria-current="date"] .k-button {
 	text-decoration: underline;
 }
 .k-calendar-day[aria-selected="date"] .k-button {
-	border-color: currentColor;
-	font-weight: 600;
-	color: var(--color-focus-light);
+	--button-color-text: var(--color-text);
+	--button-color-back: var(--color-focus);
+}
+.k-calendar-day[aria-selected="date"] .k-button:focus {
+	--button-color-text: initial;
+	--button-color-back: transparent;
 }
 .k-calendar-today {
+	padding-top: var(--spacing-2);
 	text-align: center;
-	padding-top: 0.5rem;
 }
 .k-calendar-today .k-button {
+	--button-width: auto;
+	--button-padding: var(--spacing-3);
 	font-size: var(--text-xs);
-	padding: 1rem;
 	text-decoration: underline;
-}
-.k-calendar-today .k-button-text {
-	opacity: 1;
-	vertical-align: baseline;
 }
 </style>

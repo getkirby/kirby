@@ -1,55 +1,43 @@
 <template>
-	<k-inside>
-		<k-view class="k-search-view">
-			<k-header>Search</k-header>
+	<k-panel-inside class="k-search-view">
+		<k-header>
+			Search
 
-			<div class="k-search-view-layout">
-				<k-input
-					ref="input"
-					:aria-label="$t('search')"
-					:autofocus="true"
-					:placeholder="$t('search') + ' …'"
-					:value="query"
-					class="k-search-view-input"
-					icon="search"
-					type="text"
-					@input="query = $event"
-				/>
+			<k-input
+				ref="input"
+				slot="buttons"
+				:aria-label="$t('search')"
+				:autofocus="true"
+				:placeholder="$t('search') + ' …'"
+				:value="query"
+				class="k-search-view-input"
+				icon="search"
+				type="text"
+				@input="query = $event"
+			/>
+		</k-header>
+		<k-tabs :tab="type" :tabs="tabs" />
 
-				<aside class="k-search-view-types">
-					<nav>
-						<k-button
-							v-for="(typeItem, typeIndex) in $panel.searches"
-							:key="typeIndex"
-							:current="type === typeIndex"
-							:icon="typeItem.icon"
-							:link="'/search/?type=' + typeIndex + '&query=' + query"
-							class="k-search-view-type"
-						>
-							{{ typeItem.label }}
-						</k-button>
-					</nav>
-				</aside>
-
-				<div class="k-search-view-results">
-					<k-collection
-						v-if="query"
-						:items="items"
-						:empty="{
-							icon: 'search',
-							text: $t('search.results.none')
-						}"
-						:pagination="pagination"
-						@paginate="onPaginate"
-					/>
-				</div>
-			</div>
-		</k-view>
-	</k-inside>
+		<div class="k-search-view-results">
+			<k-collection
+				v-if="query"
+				:items="items"
+				:empty="{
+					icon: 'search',
+					text: $t('search.results.none')
+				}"
+				:pagination="pagination"
+				@paginate="onPaginate"
+			/>
+		</div>
+	</k-panel-inside>
 </template>
 
 <script>
+import Search from "@/mixins/search.js";
+
 export default {
+	mixins: [Search],
 	props: {
 		type: {
 			default: "pages",
@@ -63,20 +51,33 @@ export default {
 			pagination: {}
 		};
 	},
+	computed: {
+		tabs() {
+			const tabs = [];
+
+			for (const typeId in this.$panel.searches) {
+				const type = this.$panel.searches[typeId];
+
+				tabs.push({
+					label: type.label,
+					link: "/search/?type=" + typeId + "&query=" + this.query,
+					name: typeId
+				});
+			}
+
+			return tabs;
+		}
+	},
 	watch: {
 		query: {
-			handler(query) {
-				this.search(query);
+			handler() {
+				this.search();
 			},
 			immediate: true
 		},
 		type() {
-			this.search(this.query);
+			this.search();
 		}
-	},
-	updated() {
-		this.query = this.getQuery();
-		this.focus();
 	},
 	methods: {
 		focus() {
@@ -86,9 +87,9 @@ export default {
 			return new URLSearchParams(window.location.search).get("query");
 		},
 		onPaginate(pagination) {
-			this.search(this.query, pagination.page);
+			this.search(pagination.page);
 		},
-		async search(query, page) {
+		async search(page) {
 			this.$panel.isLoading = true;
 
 			if (!page) {
@@ -105,11 +106,11 @@ export default {
 
 			try {
 				// Skip API call if query empty
-				if (query === null || query.length < 2) {
+				if (this.query === null || this.query.length < 2) {
 					throw Error("Empty query");
 				}
 
-				const response = await this.$search(this.type, query, {
+				const response = await this.$search(this.type, this.query, {
 					page,
 					limit: 15
 				});
@@ -128,55 +129,18 @@ export default {
 
 <style>
 .k-search-view .k-header {
-	margin-bottom: var(--spacing-6);
-}
-.k-search-view-layout {
-	display: grid;
-	row-gap: 1.5rem;
+	margin-bottom: 0;
 }
 
-.k-search-view-types nav {
-	display: flex;
-	flex-direction: column;
-	gap: 2px;
-	background: var(--color-white);
-	box-shadow: var(--shadow);
-	border-radius: var(--rounded);
-	padding: var(--spacing-1);
-}
-.k-search-view-type {
-	display: flex;
-	height: var(--height-sm);
-	align-items: center;
-	padding-inline: var(--spacing-2);
-	border-radius: var(--rounded-sm);
-}
-.k-search-view-type[aria-current] {
-	background: var(--color-blue-200);
-}
 .k-search-view-input {
-	font: inherit;
 	background: var(--color-gray-300);
-	border: none;
-	width: 100%;
+	height: var(--height-sm);
+	width: 40cqw;
+	line-height: var(--height-sm);
 	border-radius: var(--rounded);
-	padding: var(--spacing-3);
+	padding-inline: var(--spacing-2);
 }
-
-@media (min-width: 50rem) {
-	.k-search-view-layout {
-		grid-template-columns: 15rem 1fr;
-		grid-template-rows: var(--height-lg) 1fr;
-		column-gap: 3rem;
-		grid-template-areas:
-			"types input"
-			"types results";
-	}
-	.k-search-view-types {
-		grid-area: types;
-	}
-	.k-search-view-input {
-		grid-area: input;
-	}
+.k-search-view-input:focus-within {
+	outline: var(--outline);
 }
 </style>

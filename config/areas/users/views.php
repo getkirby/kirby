@@ -31,6 +31,10 @@ return [
 							$users = $users->role($role);
 						}
 
+						// sort users alphabetically
+						$users = $users->sortBy('username', 'asc');
+
+						// paginate
 						$users = $users->paginate([
 							'limit' => 20,
 							'page'  => $kirby->request()->get('page')

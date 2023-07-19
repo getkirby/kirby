@@ -8,14 +8,12 @@
 		class="k-page-move-dialog"
 		size="medium"
 		v-bind="$props"
+		@cancel="$emit('cancel')"
+		@submit="$emit('submit', value)"
 	>
 		<k-headline>{{ $t("page.move") }}</k-headline>
 		<div class="k-page-move-parent" tabindex="0" data-autofocus>
-			<k-page-tree
-				:current="$panel.dialog.value.parent"
-				identifier="id"
-				@select="select"
-			/>
+			<k-page-tree :current="value.parent" identifier="id" @select="select" />
 		</div>
 	</k-dialog>
 </template>
@@ -25,9 +23,18 @@ import Dialog from "@/mixins/dialog.js";
 
 export default {
 	mixins: [Dialog],
+	props: {
+		value: {
+			default() {
+				return {};
+			},
+			type: Object
+		}
+	},
+	emits: ["cancel", "input", "submit"],
 	methods: {
 		select(page) {
-			this.$panel.dialog.input({ parent: page.id });
+			this.$emit("input", { parent: page.id });
 		}
 	}
 };

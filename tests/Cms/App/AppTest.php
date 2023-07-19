@@ -204,6 +204,64 @@ class AppTest extends TestCase
 	}
 
 	/**
+	 * @covers ::collection
+	 */
+	public function testCollectionWithOptions()
+	{
+		$test = $this;
+		$app  = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'collections' => [
+				// order of parameters does not matter as their values
+				// are assigned by name
+				'test' => function (int $a, int $c, int $b) {
+					return $a + $b - $c;
+				},
+				'defaults' => function (int $a, int $c, int $b = 20) {
+					return $a + $b - $c;
+				},
+				'nullable' => function ($shallBeNull) use ($test) {
+					$test->assertNull($shallBeNull);
+					return [];
+				},
+				'overwrites' => function (App $kirby) use ($test) {
+					$test->assertInstanceOf(App::class, $kirby);
+					return [];
+				},
+			]
+		]);
+
+		$collection = $app->collection(
+			'test',
+			['a' => 10, 'b' => 20, 'c' => 10]
+		);
+		$this->assertSame(20, $collection);
+
+		// ensure that collection is not cached
+		// when called with different options
+		$collection = $app->collection(
+			'test',
+			['a' => 5, 'b' => 5, 'c' => 2]
+		);
+		$this->assertSame(8, $collection);
+
+		// with defaults
+		$collection = $app->collection(
+			'defaults',
+			['a' => 10, 'c' => 10]
+		);
+		$this->assertSame(20, $collection);
+
+		// null as fallback for arguments
+		$app->collection('nullable');
+
+		// don't overwrite default objects
+		$app->collection('overwrites', ['kirby' => 'foo']);
+	}
+
+	/**
 	 * @covers ::contentToken
 	 */
 	public function testContentToken()

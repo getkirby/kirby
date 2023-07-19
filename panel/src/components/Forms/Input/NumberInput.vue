@@ -41,7 +41,7 @@ export const props = {
 		/**
 		 * The amount to increment with each input step. This can be a decimal.
 		 */
-		step: Number,
+		step: [Number, String],
 		value: {
 			type: [Number, String],
 			default: ""
@@ -173,7 +173,7 @@ export default {
 	color: inherit;
 }
 .k-number-input::placeholder {
-	color: var(--color-gray-500);
+	color: var(--input-placeholder);
 }
 .k-number-input:focus {
 	outline: 0;

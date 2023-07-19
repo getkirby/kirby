@@ -16,7 +16,7 @@ export const props = {
 		},
 		/**
 		 * Whether to disable the submit button
-		 * @deprecated use the submit button settings instead
+		 * @deprecated 4.0.0 use the submit button settings instead
 		 */
 		disabled: {
 			default: false,
@@ -24,7 +24,7 @@ export const props = {
 		},
 		/**
 		 * The icon type for the submit button
-		 * @deprecated use the submit button settings instead
+		 * @deprecated 4.0.0 use the submit button settings instead
 		 */
 		icon: {
 			default: "check",
@@ -40,7 +40,7 @@ export const props = {
 		/**
 		 * The theme of the submit button
 		 * @values positive, negative
-		 * @deprecated use the submit button settings instead
+		 * @deprecated 4.0.0 use the submit button settings instead
 		 */
 		theme: {
 			default: "positive",
@@ -51,6 +51,7 @@ export const props = {
 
 export default {
 	mixins: [props],
+	emits: ["cancel"],
 	computed: {
 		buttons() {
 			return [
@@ -60,15 +61,17 @@ export default {
 					},
 					class: "k-dialog-button-cancel",
 					icon: "cancel",
-					text: this.$t("cancel")
+					text: this.$t("cancel"),
+					variant: "filled"
 				}),
 				this.button(this.submitButton, {
 					class: "k-dialog-button-submit",
-					disabled: this.disabled,
+					disabled: this.disabled || this.$panel.dialog.isLoading,
 					icon: this.icon,
 					text: this.$t("confirm"),
 					theme: this.theme,
-					type: "submit"
+					type: "submit",
+					variant: "filled"
 				})
 			].filter((button) => button !== false);
 		}
@@ -101,20 +104,9 @@ export default {
 
 <style>
 .k-button-group.k-dialog-buttons {
-	display: flex;
-	margin: 0;
-	justify-content: space-between;
-}
-.k-button-group.k-dialog-buttons .k-button {
-	padding: 0.75rem 1rem;
-	line-height: 1.25rem;
-}
-.k-button-group.k-dialog-buttons .k-button.k-dialog-button-cancel {
-	text-align: start;
-	padding-inline-start: 1.5rem;
-}
-.k-button-group.k-dialog-buttons .k-button.k-dialog-button-submit {
-	text-align: end;
-	padding-inline-end: 1.5rem;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: var(--spacing-3);
+	--button-height: var(--height-lg);
 }
 </style>

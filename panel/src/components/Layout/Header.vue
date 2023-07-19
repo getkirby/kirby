@@ -1,32 +1,34 @@
 <template>
 	<header
-		:data-editable="editable"
-		:data-tabs="tabsWithBadges.length > 1"
 		class="k-header"
+		:data-has-buttons="Boolean($slots.buttons || $slots.left || $slots.right)"
 	>
-		<k-headline tag="h1" size="huge" @click="editable ? $emit('edit') : null">
-			<!-- @slot headline -->
-			<slot />
-			<k-icon type="edit" />
-		</k-headline>
-		<k-bar v-if="$slots.left || $slots.right" class="k-header-buttons">
-			<template #left>
-				<!-- @slot buttons on the left -->
-				<slot name="left" />
-			</template>
-			<template #right>
-				<!-- @slot buttons on the right -->
-				<slot name="right" />
-			</template>
-		</k-bar>
+		<h1 class="k-header-title">
+			<button
+				v-if="editable"
+				class="k-header-title-button"
+				@click="$emit('edit')"
+			>
+				<span class="k-header-title-text"><slot /></span>
+				<span class="k-header-title-icon"><k-icon type="edit" /></span>
+			</button>
+			<span v-else class="k-header-title-text"><slot /></span>
+		</h1>
 
-		<k-tabs :tab="tab" :tabs="tabsWithBadges" theme="notice" />
+		<div
+			v-if="$slots.buttons || $slots.left || $slots.right"
+			class="k-header-buttons"
+		>
+			<slot name="buttons" />
+			<!-- @deprecated 4.0.0 left/right slot, use buttons slot instead -->
+			<slot name="left" />
+			<slot name="right" />
+		</div>
 	</header>
 </template>
 
 <script>
 /**
- * The Header component is a composition of a big fat headline plus two optional slots for buttons — directly below the headline and on the right. The Header is a fundamental part of any main Panel view. While we use the left slot for option buttons, the right slot is mainly used for prev/next navigation between items such as pages or users.
  * @internal
  */
 export default {
@@ -34,73 +36,94 @@ export default {
 		/**
 		 * Whether the headline is editable
 		 */
-		editable: Boolean,
-		tab: String,
-		tabs: {
-			type: Array,
-			default: () => []
+		editable: {
+			type: Boolean
 		}
 	},
-	computed: {
-		tabsWithBadges() {
-			const changed = Object.keys(this.$store.getters["content/changes"]());
-
-			return this.tabs.map((tab) => {
-				// collect all fields per tab
-				let fields = [];
-				Object.values(tab.columns).forEach((column) => {
-					Object.values(column.sections).forEach((section) => {
-						if (section.type === "fields") {
-							Object.keys(section.fields).forEach((field) => {
-								fields.push(field);
-							});
-						}
-					});
-				});
-
-				// get count of changed fields in this tab
-				tab.badge = fields.filter((field) =>
-					changed.includes(field.toLowerCase())
-				).length;
-
-				return tab;
-			});
+	mounted() {
+		if (this.$slots.left || this.$slots.right) {
+			window.panel.deprecated(
+				"<k-header>: left/right slots will be removed in a future version. Use `buttons` slot instead."
+			);
 		}
 	}
 };
 </script>
 
 <style>
-.k-header {
-	padding-top: 4vh;
-	margin-bottom: 2rem;
-	border-bottom: 1px solid var(--color-border);
-}
-.k-header[data-tabs="true"] {
-	border-bottom: 0;
+:root {
+	--header-color-back: var(--color-light);
+	--header-padding-block: var(--spacing-4);
+	--header-sticky-offset: 4rem;
 }
 
-.k-header .k-headline {
-	min-height: 1.25em;
-	margin-bottom: 0.5rem;
-	word-wrap: break-word;
+.k-header {
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	justify-content: space-between;
+	border-bottom: 1px solid var(--color-border);
+	background: var(--header-color-back);
+	padding-top: var(--header-padding-block);
+	margin-bottom: var(--spacing-12);
+	box-shadow:
+		2px 0 0 0 var(--header-color-back),
+		-2px 0 0 0 var(--header-color-back);
 }
-.k-header[data-editable="true"] .k-headline {
-	cursor: pointer;
+
+.k-header-title {
+	font-size: var(--text-h1);
+	font-weight: var(--font-h1);
+	line-height: var(--leading-h1);
+	margin-bottom: var(--header-padding-block);
+	min-width: 0;
 }
-.k-header .k-headline .k-icon {
-	color: var(--color-gray-500);
+
+.k-header-title-button {
+	display: inline-flex;
+	text-align: start;
+	gap: var(--spacing-2);
+	align-items: baseline;
+	max-width: 100%;
+	outline: 0;
+}
+
+.k-header-title-text {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.k-header-title-icon {
+	--icon-color: var(--color-gray-500);
+	border-radius: var(--rounded);
+	transition: opacity 0.2s;
+	display: grid;
+	flex-shrink: 0;
+	place-items: center;
+	height: var(--height-sm);
+	width: var(--height-sm);
 	opacity: 0;
-	transition: opacity 0.3s;
-	display: inline-block;
-	margin-inline-start: 0.5rem;
 }
-.k-header[data-editable="true"] .k-headline:hover .k-icon {
+
+.k-header-title-button:is(:hover, :focus) .k-header-title-icon {
 	opacity: 1;
 }
+.k-header-title-button:is(:focus) .k-header-title-icon {
+	outline: var(--outline);
+}
 
-.k-header .k-header-buttons {
-	margin-top: -0.5rem;
-	height: 3.25rem;
+.k-header-buttons {
+	display: flex;
+	flex-shrink: 0;
+	gap: var(--spacing-2);
+	margin-bottom: var(--header-padding-block);
+}
+
+/** TODO: .k-header:has(.k-header-buttons) */
+.k-header[data-has-buttons="true"] {
+	position: sticky;
+	top: 0;
+	z-index: var(--z-toolbar);
 }
 </style>

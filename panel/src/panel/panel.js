@@ -7,6 +7,7 @@ import Events from "./events.js";
 import Notification from "./notification.js";
 import Language from "./language.js";
 import Plugins from "./plugins.js";
+import Menu from "./menu.js";
 import System from "./system.js";
 import Translation from "./translation.js";
 import { buildUrl, isUrl } from "@/helpers/url.js";
@@ -27,7 +28,6 @@ export const globals = {
 	config: {},
 	languages: [],
 	license: false,
-	menu: [],
 	multilang: false,
 	permissions: {},
 	searches: {},
@@ -49,6 +49,7 @@ export const modals = ["dialog", "drawer"];
 export const states = [
 	"dropdown",
 	"language",
+	"menu",
 	"notification",
 	"system",
 	"translation",
@@ -71,6 +72,7 @@ export default {
 
 		// state objects
 		this.language = Language(this);
+		this.menu = Menu(this);
 		this.notification = Notification(this);
 		this.system = System(this);
 		this.translation = Translation(this);
@@ -133,6 +135,15 @@ export default {
 	},
 
 	/**
+	 * Shortcut to trigger a deprecation warning
+	 *
+	 * @param {String} message
+	 */
+	deprecated(message) {
+		this.notification.deprecated(message);
+	},
+
+	/**
 	 * Returns the reading direction based
 	 * on the current interface translation
 	 * This is used to set the dir attribute
@@ -182,7 +193,7 @@ export default {
 			...options
 		});
 
-		return response.json;
+		return response?.json ?? {};
 	},
 
 	/**
@@ -235,6 +246,18 @@ export default {
 		return response.json;
 	},
 
+	/**
+	 * Sends a Panel request to the backend with
+	 * all the right headers and other options.
+	 *
+	 * It also makes sure to redirect requests,
+	 * which cannot be handled via fetch and
+	 * throws more useful errors.
+	 *
+	 * @param {String} url
+	 * @param {Object} options
+	 * @returns {Object|false} {request, response}
+	 */
 	async request(url, options = {}) {
 		return request(url, {
 			referrer: this.view.path,
@@ -255,6 +278,9 @@ export default {
 	async search(type, query, options) {
 		// open the search dialog
 		if (!type && !query) {
+			// close menu on mobile
+			this.menu.escape();
+
 			return this.dialog.open({
 				component: "k-search-dialog"
 			});
@@ -304,7 +330,7 @@ export default {
 		for (const key of states) {
 			// if there's a new state for the
 			// state object, call its state setter method
-			if (isObject(state[key]) === true) {
+			if (isObject(state[key]) || Array.isArray(state[key])) {
 				this[key].set(state[key]);
 			}
 		}

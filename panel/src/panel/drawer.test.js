@@ -9,17 +9,13 @@ describe.concurrent("panel.drawer", () => {
 
 		const state = {
 			component: null,
+			id: null,
 			isLoading: false,
-			isOpen: false,
-			legacy: false,
 			on: {},
-			parent: null,
 			path: null,
 			props: {},
 			query: {},
-			ref: null,
 			referrer: null,
-			tabId: null,
 			timestamp: null
 		};
 

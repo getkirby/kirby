@@ -6,7 +6,10 @@
 			:aria-expanded="item.open"
 			:aria-current="item.id === current"
 		>
-			<p class="k-tree-branch">
+			<p
+				class="k-tree-branch"
+				:data-has-subtree="item.hasChildren && item.open"
+			>
 				<button
 					:disabled="!item.hasChildren"
 					class="k-tree-toggle"
@@ -21,7 +24,7 @@
 					@click="select(item)"
 					@dblclick="toggle(item)"
 				>
-					<k-icon :type="item.icon ?? 'folder'" />
+					<k-icon-frame :icon="item.icon ?? 'folder'" />
 					<span>{{ item.label }}</span>
 				</button>
 			</p>
@@ -79,7 +82,7 @@ export default {
 :root {
 	--tree-color-back: var(--color-gray-200);
 	--tree-color-hover-back: var(--color-gray-300);
-	--tree-color-selected-back: var(--color-blue-200);
+	--tree-color-selected-back: var(--color-blue-300);
 	--tree-color-selected-text: var(--color-black);
 	--tree-color-text: var(--color-text-dimmed);
 	--tree-level: 0;
@@ -92,7 +95,8 @@ export default {
 	padding-inline-start: calc(var(--tree-level) * var(--tree-indentation));
 	margin-bottom: 1px;
 }
-.k-tree-branch:has(+ .k-tree) {
+/** TODO: .k-tree-branch:has(+ .k-tree)  */
+.k-tree-branch[data-has-subtree="true"] {
 	inset-block-start: calc(var(--tree-level) * 1.5rem);
 	z-index: calc(100 - var(--tree-level));
 	background: var(--tree-color-back);
