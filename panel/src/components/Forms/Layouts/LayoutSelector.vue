@@ -101,11 +101,12 @@ export default {
 	border-radius: var(--rounded);
 	overflow: hidden;
 	box-shadow: var(--shadow);
+	height: 5rem;
 }
 .k-layout-selector-option .k-column {
 	grid-column: span var(--span);
 	background: var(--color-back);
-	height: 5rem;
+	height: 100%;
 }
 .k-layout-selector-option[aria-current] {
 	--color-border: var(--color-focus);
