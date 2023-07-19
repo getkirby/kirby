@@ -2,6 +2,7 @@
 	<k-form-drawer
 		ref="drawer"
 		class="k-block-drawer"
+		:expandable="true"
 		v-bind="$props"
 		@cancel="$emit('cancel', $event)"
 		@crumb="$emit('crumb', $event)"

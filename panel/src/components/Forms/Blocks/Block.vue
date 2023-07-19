@@ -264,7 +264,6 @@ export default {
 					submit: this.submit
 				},
 				props: {
-					expandable: true,
 					hidden: this.isHidden,
 					icon: this.fieldset.icon ?? "box",
 					next: this.next,

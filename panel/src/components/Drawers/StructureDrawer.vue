@@ -1,6 +1,7 @@
 <template>
 	<k-form-drawer
 		ref="drawer"
+		:expandable="true"
 		class="k-structure-drawer"
 		v-bind="$props"
 		@cancel="$emit('cancel', $event)"
