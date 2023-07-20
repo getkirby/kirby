@@ -453,7 +453,7 @@ export default {
 }
 
 .k-writer blockquote {
-	font-size: var(--text-xl);
+	font-size: var(--text-lg);
 	margin-bottom: var(--spacing-1);
 	line-height: 1.25em;
 	padding-inline-start: var(--spacing-4);
