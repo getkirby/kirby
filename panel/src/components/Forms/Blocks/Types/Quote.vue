@@ -45,12 +45,12 @@ export default {
 
 <style>
 .k-block-type-quote-editor {
-	padding-inline-start: 1rem;
+	padding-inline-start: var(--spacing-4);
 	border-inline-start: 2px solid var(--color-black);
 }
 .k-block-type-quote-text {
 	font-size: var(--text-xl);
-	margin-bottom: 0.25rem;
+	margin-bottom: var(--spacing-1);
 	line-height: 1.25em;
 }
 .k-block-type-quote-citation {

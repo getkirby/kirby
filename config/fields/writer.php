@@ -47,7 +47,7 @@ return [
 			return $minlength;
 		},
 		/**
-		 * Sets the allowed nodes. Available nodes: `paragraph`, `heading`, `bulletList`, `orderedList`. Activate/deactivate them all by passing `true`/`false`. Default nodes are `paragraph`, `heading`, `bulletList`, `orderedList`.
+		 * Sets the allowed nodes. Available nodes: `paragraph`, `heading`, `bulletList`, `orderedList`, `quote`. Activate/deactivate them all by passing `true`/`false`. Default nodes are `paragraph`, `heading`, `bulletList`, `orderedList`.
 		 * @param array|bool|null $nodes
 		 */
 		'nodes' => function ($nodes = null) {
