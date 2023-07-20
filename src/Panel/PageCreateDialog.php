@@ -246,7 +246,12 @@ class PageCreateDialog
 		$status = $this->blueprint()->create()['status'] ?? 'draft';
 
 		if ($status !== 'draft') {
-			$page->changeStatus($status);
+			// grant all permissions as the status is set in the blueprint and
+			// should not be treated as if the user would try to change it
+			$page->kirby()->impersonate(
+				'kirby',
+				fn () => $page->changeStatus($status)
+			);
 		}
 
 		$payload = [
