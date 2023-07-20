@@ -30,11 +30,10 @@
 		</div>
 
 		<!-- Collapse/expand toggle -->
-		<k-button
-			:icon="$panel.menu.isOpen ? 'angle-left' : 'angle-right'"
-			size="xs"
-			class="k-panel-menu-toggle"
-			@click="$panel.menu.toggle()"
+		<k-expand-handle
+			:is-expanded="$panel.menu.isOpen"
+			class="k-panel-menu-expand"
+			@update="$panel.menu.toggle()"
 		/>
 	</nav>
 </template>
@@ -86,52 +85,20 @@ export default {
 	box-shadow: var(--menu-shadow);
 }
 
-/* The toggle button builds a full-height strip on the side of the menu */
-.k-panel-menu-toggle {
-	--button-align: flex-start;
-	--button-height: 100%;
-	--button-width: var(--menu-toggle-width);
-	position: absolute;
-	inset-block: 0;
-	inset-inline-start: 100%;
-	align-items: flex-start;
-	border-radius: 0;
-	overflow: visible;
-	opacity: 0;
-	transition: opacity 0.2s;
+/* The toggle button */
+.k-panel-menu-expand {
+	--expand-handle-back: var(--menu-color-back);
 }
-
-/* The toggle is visible on hover or focus */
-.k-panel-menu-toggle:focus-visible,
-/* The hover state is controlled via JS to avoid flickering */
-.k-panel-menu[data-hover] .k-panel-menu-toggle {
-	opacity: 1;
-}
-
-/* The toggle strip has no focus style. The icon takes over here */
-.k-panel-menu-toggle:focus {
-	outline: 0;
-}
-
-/* The toggle icon has all the visible styles */
-.k-panel-menu-toggle .k-button-icon {
-	display: grid;
-	place-items: center;
+.k-panel-menu-expand .k-button-icon {
 	height: var(--menu-toggle-height);
 	width: var(--menu-toggle-width);
 	margin-top: var(--menu-padding);
 	border-block: 1px solid var(--menu-color-border);
 	border-inline-end: 1px solid var(--menu-color-border);
-	background: var(--menu-color-back);
-	border-start-end-radius: var(--button-rounded);
-	border-end-end-radius: var(--button-rounded);
 }
-
-/* Create the outline on the icon on focus */
-.k-panel-menu-toggle:focus-visible .k-button-icon {
-	outline: var(--outline);
-	/* With a radius on all ends, the outline looks nicer */
-	border-radius: var(--button-rounded);
+/* The hover state is controlled via JS to avoid flickering */
+.k-panel-menu[data-hover="true"] .k-panel-menu-expand {
+	opacity: 1;
 }
 
 /* Overscroll container for menu items. Overscrolling is needed if the screen height is too low */

@@ -1,5 +1,6 @@
 import Draggable from "./Draggable.vue";
 import ErrorBoundary from "./ErrorBoundary.vue";
+import ExpandHandle from "./ExpandHandle.vue";
 import Fatal from "./Fatal.vue";
 import Icon from "./Icon.vue";
 import Icons from "./Icons.vue";
@@ -13,6 +14,7 @@ export default {
 	install(app) {
 		app.component("k-draggable", Draggable);
 		app.component("k-error-boundary", ErrorBoundary);
+		app.component("k-expand-handle", ExpandHandle);
 		app.component("k-fatal", Fatal);
 		app.component("k-icon", Icon);
 		app.component("k-icons", Icons);

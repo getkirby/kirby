@@ -6,7 +6,8 @@ import { uuid } from "@/helpers/string.js";
 export const defaults = () => {
 	return {
 		...modalDefaults(),
-		id: null
+		id: null,
+		isExpanded: false
 	};
 };
 

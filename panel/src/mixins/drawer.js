@@ -28,10 +28,5 @@ export default {
 			default: false,
 			type: Boolean
 		}
-	},
-	data() {
-		return {
-			isExpanded: false
-		}
-	},
+	}
 };

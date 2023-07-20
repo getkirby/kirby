@@ -3,7 +3,7 @@
 		<form
 			:aria-disabled="disabled"
 			:class="$vnode.data.staticClass"
-			:data-expanded="isExpanded"
+			:data-expanded="$panel.drawer.isExpanded"
 			class="k-drawer"
 			method="dialog"
 			@submit.prevent="$emit('submit')"
@@ -16,13 +16,12 @@
 				@crumb="$emit('crumb', $event)"
 				@tab="$emit('tab', $event)"
 			>
-				<k-button
+				<k-expand-handle
 					v-if="expandable"
-					class="k-drawer-option k-drawer-option-expand"
-					:icon="isExpanded ? 'collapse' : 'expand'"
-					@click.prevent.stop="isExpanded = !isExpanded"
+					:is-expanded="$panel.drawer.isExpanded"
+					attach="end"
+					@update="$panel.drawer.isExpanded = $event"
 				/>
-
 				<slot name="options">
 					<template v-for="(option, index) in options">
 						<template v-if="option.dropdown">
@@ -94,13 +93,17 @@ export default {
 	container-type: inline-size;
 }
 
-.k-drawer[data-expanded="true"] {
-	flex-basis: 100rem;
-}
-
-@media screen and (max-width: 50rem) {
-	.k-drawer-options .k-button.k-drawer-option-expand {
+@media (max-width: 60rem) {
+	.k-drawer .k-expand-handle {
 		display: none;
+	}
+}
+@media (min-width: 60rem) {
+	.k-drawer[data-expanded="true"] {
+		flex-basis: min(calc(100% - var(--spacing-12)), 100rem);
+	}
+	.k-drawer:hover .k-expand-handle {
+		opacity: 1;
 	}
 }
 </style>
