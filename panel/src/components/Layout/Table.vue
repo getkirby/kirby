@@ -516,7 +516,7 @@ td.k-table-index-column {
 }
 
 /** Mobile */
-@container (max-width: 50rem) {
+@container (max-width: 40rem) {
 	.k-table tbody td:not([data-mobile]),
 	.k-table thead th:not([data-mobile]) {
 		display: none;
