@@ -292,7 +292,7 @@
 	"field.pages.empty": "선택한 페이지가 없습니다.",
 
 	"field.structure.delete.confirm": "이 항목을 삭제할까요?",
-	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
+	"field.structure.delete.confirm.all": "모든 항목을 삭제할까요?",
 	"field.structure.empty": "항목이 없습니다.",
 
 	"field.users.empty": "선택한 사용자가 없습니다.",
