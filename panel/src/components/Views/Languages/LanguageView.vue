@@ -94,7 +94,7 @@ export default {
 		},
 		option(option, row) {
 			// for the compatibility of the encoded url in different environments,
-			// it is also encoded with base64 to ensure stable working
+			// it is also encoded with base64 to reduce special characters
 			this.$dialog(`languages/${this.id}/translations/${window.btoa(encodeURIComponent(row.key))}/${option}`);
 		},
 		remove() {
@@ -111,7 +111,7 @@ export default {
 		},
 		updateTranslation({ row }) {
 			// for the compatibility of the encoded url in different environments,
-			// it is also encoded with base64 to ensure stable working
+			// it is also encoded with base64 to reduce special characters
 			this.$dialog(`languages/${this.id}/translations/${window.btoa(encodeURIComponent(row.key))}/update`);
 		}
 	}
