@@ -83,8 +83,8 @@ trait AppErrors
 					$handler->setEditor($editor);
 				}
 
-				if ($blacklist = $this->option('whoops.blacklist')) {
-					foreach ($blacklist as $superglobal => $vars) {
+				if ($blocklist = $this->option('whoops.blocklist')) {
+					foreach ($blocklist as $superglobal => $vars) {
 						foreach ($vars as $var) {
 							$handler->blacklist($superglobal, $var);
 						}
