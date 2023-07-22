@@ -284,6 +284,12 @@ export default {
 			let options = [];
 			let more = this.duplicate && this.more && this.currentIndex === null;
 
+			options.push({
+				icon: "edit",
+				text: this.$t("edit"),
+				click: "edit"
+			});
+
 			if (more) {
 				options.push({
 					icon: "copy",
@@ -369,15 +375,8 @@ export default {
 				return false;
 			}
 
-			// create entry data from field defaults
-			let data = {};
-
-			for (const fieldName in this.fields) {
-				data[fieldName] = this.$helper.clone(this.fields[fieldName].default);
-			}
-
 			this.currentIndex = "new";
-			this.currentModel = data;
+			this.currentModel = this.$helper.field.form(this.fields);
 
 			this.onFormOpen();
 		},
@@ -462,6 +461,10 @@ export default {
 				case "duplicate":
 					this.add(this.items[rowIndex + this.pagination.offset]);
 					this.onInput();
+					break;
+
+				case "edit":
+					this.open(rowIndex);
 					break;
 			}
 		},

@@ -388,7 +388,7 @@
 	"login.toggleText.password-reset.email": "Forgot your password?",
 	"login.toggleText.password-reset.email-password": "← Back to login",
 
-	"logout": "Logout",
+	"logout": "Log out",
 
 	"menu": "Menu",
 	"meridiem": "AM/PM",

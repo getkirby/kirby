@@ -62,6 +62,7 @@ class DocumentTest extends TestCase
 		$this->assertSame($base . '/favicon.png', $assets['icons']['alternate icon']['url']);
 
 		// js
+		$this->assertSame($base . '/js/vue.js', $assets['js']['vue']['src']);
 		$this->assertSame($base . '/js/vendor.js', $assets['js']['vendor']['src']);
 		$this->assertSame('module', $assets['js']['vendor']['type']);
 
@@ -109,6 +110,7 @@ class DocumentTest extends TestCase
 
 		// js
 		$this->assertSame([
+			'vue' => $base . '/node_modules/vue/dist/vue.js',
 			'pluginloader' => $base . '/js/plugins.js',
 			'plugins' => '/media/plugins/index.js?0',
 			'index' => $base . '/src/index.js',
@@ -146,6 +148,7 @@ class DocumentTest extends TestCase
 
 		// js
 		$this->assertSame([
+			'vue' => $base . '/node_modules/vue/dist/vue.js',
 			'pluginloader' => $base . '/js/plugins.js',
 			'plugins' => '/media/plugins/index.js?0',
 			'index' => $base . '/src/index.js',

@@ -1,7 +1,7 @@
 # Kirby License Agreement
 
-Published: March 15, 2022  
-Source: https://getkirby.com/license/2022-03-15
+Published: March 21, 2023  
+Source: https://getkirby.com/license/2023-03-21
 
 ## About this Agreement
 
@@ -37,7 +37,7 @@ As Kirby is software and software is intangible, We don't sell it as such. Inste
 
 The license is **non-exclusive** (meaning that You are not the only one who We will issue a license) and **generally non-transferable** (meaning that the one who purchases the license is the licensee).
 
-On request, We will **transfer** a license to anyone who is also allowed to buy Kirby licenses by law and this Agreement.
+On request, We will **transfer** a license to anyone who is also allowed to buy Kirby licenses by law and this Agreement. The new licensee will take over all rights and obligations of this Agreement from You at the moment We confirm the license transfer.
 
 We will also **reassign** a license to another Website domain and root directory of Your choice, provided that You confirm that the previous Website is no longer in operation and will not be operated with the same license in the future.
 
@@ -98,13 +98,18 @@ You may only use Kirby in a manner that complies with any and all **applicable l
 
 ### Making Copies
 
-You may make **copies of Kirby** in any machine readable form solely for purposes of **deploying a Website to a server, developing a Website on a personal computer or server or as a backup**, provided that You reproduce Kirby in its original form and with all proprietary notices on the copy.
+You may make **copies of Kirby** in any machine readable form solely for the **following purposes**, provided that You reproduce Kirby in its original form and with all proprietary notices on the copy:
+
+- when deploying a Website to a server,
+- when developing a Website on a personal computer or server,
+- when working on code contributions to Kirby or
+- as a backup.
 
 You may _not_ reproduce Kirby or its Source Code, in whole or in part, for **any other purpose**.
 
 ### Modification of the Source Code
 
-You may **alter, modify or extend the Source Code** for Your own use. You may also **commission a third party** to perform those modifications for You.
+You may **alter, modify or extend the Source Code** for Your own use or with the intention to contribute Your changes back to Kirby. You may also **commission a third party** to perform those modifications for You.
 
 However You may _not_:
 
@@ -177,7 +182,13 @@ KIRBY IS OFFERED ON AN **"AS-IS" BASIS** AND **NO WARRANTY**, EITHER EXPRESSED O
 
 ## Term, Termination and Modification
 
-You may use Kirby under this Agreement until either party terminates this Agreement as described in this paragraph. Either party may **terminate the Agreement** at any time, upon notice to the other party in textual form (via email or letter). Upon termination, all or the specified **licenses granted to You will terminate**, and You will **immediately uninstall and cease all use** of Kirby. If not all licenses are terminated, You may continue to use Kirby for the Websites with active licenses. The sections entitled "No Warranty", "Indemnification" and "Limitation of Liability" will **survive any termination** of this Agreement.
+You may **indefinitely use** all Kirby versions that are covered by Your license under this Agreement until either party **terminates this Agreement** as described in this section.
+
+**You** may terminate the Agreement at any time.
+
+**We** may only terminate the Agreement if You or any individual or company who works with Kirby or uses it on Your behalf has violated or failed to comply with terms of this Agreement. If Your compliance with the Agreement can be restored by fixing the violation or non-compliance, We will first contact You with information on the specific term that was violated or not complied with and will allow reasonable time of at least 14 days before We will decide on a license termination. Should We be in the position to terminate a license according to this paragraph, other or all licenses granted to You may be terminated for the same reason(s) at the same time or at any later date.
+
+Termination takes effect upon notice to the other party in textual form (via email or letter). Upon termination, the specified **licenses granted to You will terminate**, and You will **immediately uninstall and cease all use** of Kirby. If not all licenses are terminated, You may continue to use Kirby for the Websites with active licenses. The sections entitled "No Warranty", "Indemnification" and "Limitation of Liability" will **survive any termination** of this Agreement.
 
 We may **modify Kirby and this Agreement** with notice to You either via email or by publishing content on the Kirby website at https://getkirby.com, including but not limited to changing the functionality or appearance of Kirby. Any such modification will **become binding on You** unless You terminate this Agreement. Changes to this Agreement that constrain Your rights to a great extent will only become effective with Your approval in textual or electronic form.
 

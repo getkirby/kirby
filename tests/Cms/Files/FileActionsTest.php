@@ -507,10 +507,12 @@ class FileActionsTest extends TestCase
 	public function testUpdate($file)
 	{
 		$file = $file->update([
-			'caption' => $caption = 'test'
+			'caption' => $caption = 'test',
+			'template' => $template = 'test'
 		]);
 
 		$this->assertSame($caption, $file->caption()->value());
+		$this->assertSame($template, $file->template());
 	}
 
 	public function testChangeNameHooks()

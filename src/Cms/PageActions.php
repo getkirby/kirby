@@ -521,9 +521,9 @@ trait PageActions
 	public static function create(array $props)
 	{
 		// clean up the slug
-		$props['slug']     = Str::slug($props['slug'] ?? $props['content']['title'] ?? null);
-		$props['template'] = $props['model'] = strtolower($props['template'] ?? 'default');
-		$props['isDraft']  = ($props['draft'] ?? true);
+		$props['slug']      = Str::slug($props['slug'] ?? $props['content']['title'] ?? null);
+		$props['template']  = $props['model'] = strtolower($props['template'] ?? 'default');
+		$props['isDraft'] ??= $props['draft'] ?? true;
 
 		// make sure that a UUID gets generated and
 		// added to content right away
@@ -536,29 +536,43 @@ trait PageActions
 		// create a temporary page object
 		$page = Page::factory($props);
 
+		// always create pages in the default language
+		if ($page->kirby()->multilang() === true) {
+			$languageCode = $page->kirby()->defaultLanguage()->code();
+		} else {
+			$languageCode = null;
+		}
+
 		// create a form for the page
-		$form = Form::for($page, ['values' => $props['content']]);
+		// use always default language to fill form with default values
+		$form = Form::for(
+			$page,
+			[
+				'language' => $languageCode,
+				'values'   => $props['content']
+			]
+		);
 
 		// inject the content
 		$page = $page->clone(['content' => $form->strings(true)]);
 
 		// run the hooks and creation action
-		$page = $page->commit('create', ['page' => $page, 'input' => $props], function ($page, $props) {
-			// always create pages in the default language
-			if ($page->kirby()->multilang() === true) {
-				$languageCode = $page->kirby()->defaultLanguage()->code();
-			} else {
-				$languageCode = null;
+		$page = $page->commit(
+			'create',
+			[
+				'page'  => $page,
+				'input' => $props
+			],
+			function ($page, $props) use ($languageCode) {
+				// write the content file
+				$page = $page->save($page->content()->toArray(), $languageCode);
+
+				// flush the parent cache to get children and drafts right
+				static::updateParentCollections($page, 'append');
+
+				return $page;
 			}
-
-			// write the content file
-			$page = $page->save($page->content()->toArray(), $languageCode);
-
-			// flush the parent cache to get children and drafts right
-			static::updateParentCollections($page, 'append');
-
-			return $page;
-		});
+		);
 
 		// publish the new page if a number is given
 		if (isset($props['num']) === true) {

@@ -104,9 +104,11 @@ export default {
 	created() {
 		this.search = debounce(this.search, 250);
 		this.$events.$on("keydown.cmd.shift.f", this.open);
+		this.$events.$on("keydown.cmd./", this.open);
 	},
 	destroyed() {
 		this.$events.$off("keydown.cmd.shift.f", this.open);
+		this.$events.$off("keydown.cmd./", this.open);
 	},
 	methods: {
 		changeType(type) {
@@ -159,7 +161,8 @@ export default {
 				this.select(this.selected - 1);
 			}
 		},
-		open() {
+		open(e) {
+			e?.preventDefault();
 			this.$refs.overlay.open();
 		},
 		async search(query) {

@@ -154,10 +154,10 @@ class Pages extends Collection
 	 *
 	 * @param array $pages
 	 * @param \Kirby\Cms\Model|null $model
-	 * @param bool $draft
+	 * @param bool|null $draft
 	 * @return static
 	 */
-	public static function factory(array $pages, Model $model = null, bool $draft = false)
+	public static function factory(array $pages, Model $model = null, bool $draft = null)
 	{
 		$model  ??= App::instance()->site();
 		$children = new static([], $model);
@@ -175,7 +175,7 @@ class Pages extends Collection
 			$props['kirby']   = $kirby;
 			$props['parent']  = $parent;
 			$props['site']    = $site;
-			$props['isDraft'] = $draft;
+			$props['isDraft'] = $draft ?? $props['isDraft'] ?? $props['draft'] ?? false;
 
 			$page = Page::factory($props);
 
@@ -270,9 +270,9 @@ class Pages extends Collection
 		$query      = $startAt;
 
 		foreach ($path as $key) {
-			$collection = $item ? $item->children() : $this;
-			$query = ltrim($query . '/' . $key, '/');
-			$item  = $collection->get($query) ?? null;
+			$collection = $item?->children() ?? $this;
+			$query      = ltrim($query . '/' . $key, '/');
+			$item       = $collection->get($query) ?? null;
 
 			if ($item === null && $multiLang === true && !App::instance()->language()->isDefault()) {
 				if (count($path) > 1 || $collection->parent()) {

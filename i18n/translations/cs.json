@@ -1,5 +1,5 @@
 {
-	"account.changeName": "Přejmenovat",
+	"account.changeName": "Přejmenovat uživatele",
 	"account.delete": "Smazat účet",
 	"account.delete.confirm": "Opravdu chcete smazat svůj účet? Budete okamžitě odhlášeni. Účet nemůže být zpětně obnoven.",
 
@@ -72,7 +72,7 @@
 	"error.blocks.min.singular": "Musíte přidat alespoň jeden blok",
 	"error.blocks.validation": "V poli \"{field}\" v bloku {index} je při použití \"{fieldset}\" typu chyba",
 
-	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+	"error.cache.type.invalid": "Neplatný typ cache \"{type}\"",
 
 	"error.email.preset.notFound": "Nelze nalézt emailové přednastavení \"{name}\"",
 
@@ -388,7 +388,7 @@
 	"login.toggleText.password-reset.email": "Zapomenuté heslo?",
 	"login.toggleText.password-reset.email-password": "← Zpět na přihlášení",
 
-	"logout": "Odhl\u00e1sit se",
+	"logout": "Odhlásit se",
 
 	"menu": "Menu",
 	"meridiem": "AM/PM",

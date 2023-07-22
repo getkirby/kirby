@@ -106,7 +106,7 @@ class BlocksFieldTest extends TestCase
 			[
 				'type'    => 'heading',
 				'content' => [
-					'text' => 'A nice heading'
+					'text' => 'A nice block/heäding'
 				]
 			],
 		];
@@ -116,7 +116,7 @@ class BlocksFieldTest extends TestCase
 				'type'    => 'heading',
 				'content' => [
 					'level' => '',
-					'text'  => 'A nice heading'
+					'text'  => 'A nice block/heäding'
 				]
 			],
 		];
@@ -261,7 +261,7 @@ class BlocksFieldTest extends TestCase
 			[
 				'type'    => 'heading',
 				'content' => [
-					'text' => 'A nice heading'
+					'text' => 'A nice block/heäding'
 				]
 			],
 		];
@@ -271,7 +271,7 @@ class BlocksFieldTest extends TestCase
 				'type'    => 'heading',
 				'content' => [
 					'level' => '',
-					'text'  => 'A nice heading'
+					'text'  => 'A nice block/heäding'
 				]
 			],
 		];
@@ -280,7 +280,10 @@ class BlocksFieldTest extends TestCase
 			'value' => $value
 		]);
 
-		$this->assertSame(json_encode($expected), $field->store($value));
+		$this->assertSame(
+			json_encode($expected, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
+			$field->store($value)
+		);
 
 		// empty tests
 		$this->assertSame('', $field->store(null));
@@ -498,5 +501,24 @@ class BlocksFieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $field->errors());
+	}
+
+	public function testDefault()
+	{
+		$field = $this->field('blocks', [
+			'default' => [
+				[
+					'type' => 'heading',
+					'text' => 'Some title'
+				]
+			]
+		]);
+
+		$default = $field->default();
+
+		$this->assertCount(1, $default);
+		$this->assertSame('heading', $default[0]['type']);
+		$this->assertSame('Some title', $default[0]['text']);
+		$this->assertArrayHasKey('id', $default[0]);
 	}
 }

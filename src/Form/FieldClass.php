@@ -427,7 +427,7 @@ abstract class FieldClass
 			if ($formFields !== null) {
 				foreach ($this->when as $field => $value) {
 					$field      = $formFields->get($field);
-					$inputValue = $field !== null ? $field->value() : '';
+					$inputValue = $field?->value() ?? '';
 
 					// if the input data doesn't match the requested `when` value,
 					// that means that this field is not required and can be saved
@@ -838,11 +838,13 @@ abstract class FieldClass
 	 */
 	protected function valueToJson(array $value = null, bool $pretty = false): string
 	{
+		$constants = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+
 		if ($pretty === true) {
-			return json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+			$constants |= JSON_PRETTY_PRINT;
 		}
 
-		return json_encode($value);
+		return json_encode($value, $constants);
 	}
 
 	/**

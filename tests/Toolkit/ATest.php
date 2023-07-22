@@ -78,6 +78,18 @@ class ATest extends TestCase
 	}
 
 	/**
+	 * @covers ::count
+	 */
+	public function testCount()
+	{
+		$array = $this->_array();
+
+		$this->assertSame(3, A::count($array));
+		$this->assertSame(2, A::count(['cat', 'dog']));
+		$this->assertSame(0, A::count([]));
+	}
+
+	/**
 	 * @covers ::get
 	 */
 	public function testGet()
@@ -165,6 +177,19 @@ class ATest extends TestCase
 
 		$this->assertNull(A::get($data, 'alexander.the.greate'));
 		$this->assertSame('not great yet', A::get($data, 'alexander'));
+	}
+
+	/**
+	 * @covers ::has
+	 */
+	public function testHas()
+	{
+		$array = $this->_array();
+
+		$this->assertTrue(A::has($array, 'miao'));
+		$this->assertFalse(A::has($array, 'cat'));
+		$this->assertFalse(A::has($array, 4));
+		$this->assertFalse(A::has($array, ['miao']));
 	}
 
 	/**
@@ -351,9 +376,9 @@ class ATest extends TestCase
 	public function testPluck()
 	{
 		$array = [
-			[ 'id' => 1, 'username' => 'bastian'],
-			[ 'id' => 2, 'username' => 'sonja'],
-			[ 'id' => 3, 'username' => 'lukas']
+			['id' => 1, 'username' => 'bastian'],
+			['id' => 2, 'username' => 'sonja'],
+			['id' => 3, 'username' => 'lukas']
 		];
 
 		$this->assertSame([
@@ -374,6 +399,56 @@ class ATest extends TestCase
 		$this->assertSame($array['cat'], $shuffled['cat']);
 		$this->assertSame($array['dog'], $shuffled['dog']);
 		$this->assertSame($array['bird'], $shuffled['bird']);
+	}
+
+	/**
+	 * @covers ::reduce
+	 */
+	public function testReduce()
+	{
+		$array = $this->_array();
+
+		$reduced = A::reduce($array, function ($carry, $item) {
+			return $carry . $item;
+		}, '');
+		$this->assertSame('miaowufftweet', $reduced);
+
+		$reduced = A::reduce([1, 2, 3], function ($carry, $item) {
+			return $carry + $item;
+		}, 42);
+		$this->assertSame(48, $reduced);
+
+		$reduced = A::reduce([], function ($carry, $item) {
+			return $carry + $item;
+		});
+		$this->assertSame(null, $reduced);
+	}
+
+	/**
+	 * @covers ::slice
+	 */
+	public function testSlice()
+	{
+		$array = $this->_array();
+
+		$this->assertSame(['cat' => 'miao'], A::slice($array, 0, 1));
+		$this->assertSame(['dog' => 'wuff', 'bird' => 'tweet'], A::slice($array, 1));
+		$this->assertSame(['bird' => 'tweet'], A::slice($array, -1));
+		$this->assertSame(['dog' => 'wuff'], A::slice($array, -2, 1));
+		$this->assertSame($array, A::slice($array, 0));
+	}
+
+	/**
+	 * @covers ::sum
+	 */
+	public function testSum()
+	{
+		$array = $this->_array();
+
+		$this->assertSame(0, A::sum([]));
+		$this->assertSame(6, A::sum([1, 2, 3]));
+		$this->assertSame(6, A::sum([1, -1, 6]));
+		$this->assertSame(6.0, A::sum([1.2, 2.4, 2.4]));
 	}
 
 	/**
@@ -447,6 +522,22 @@ class ATest extends TestCase
 			'elephant',
 			'elephant'
 		], A::fill($array, 5, 'elephant'));
+
+		// Callable
+		$this->assertSame([
+			'miao',
+			'wuff',
+			'tweet',
+			'elephant',
+			'elephant',
+			'elephant'
+		], A::fill($array, 6, fn () => 'elephant'));
+
+		// Callable with Closure
+		$this->assertSame([1, 2, 3], A::fill([], 3, fn (int $i) => $i + 1));
+
+		// callable with callable
+		$this->assertSame([false, true, false], A::fill([], 3, [V::class, 'accepted']));
 	}
 
 	/**
@@ -696,9 +787,9 @@ class ATest extends TestCase
 	public function testSort()
 	{
 		$array = [
-			[ 'id' => 1, 'username' => 'bastian'],
-			[ 'id' => 2, 'username' => 'sonja'],
-			[ 'id' => 3, 'username' => 'lukas']
+			['id' => 1, 'username' => 'bastian'],
+			['id' => 2, 'username' => 'sonja'],
+			['id' => 3, 'username' => 'lukas']
 		];
 
 		// ASC
@@ -820,6 +911,62 @@ class ATest extends TestCase
 	}
 
 	/**
+	 * @covers ::keyBy
+	 */
+	public function testKeyBy()
+	{
+		$array = [
+			[ 'id' => 1, 'username' => 'bastian'],
+			[ 'id' => 2, 'username' => 'sonja'],
+			[ 'id' => 3, 'username' => 'lukas']
+		];
+
+		$array_by_id = [
+			1 => [ 'id' => 1, 'username' => 'bastian'],
+			2 => [ 'id' => 2, 'username' => 'sonja'],
+			3 => [ 'id' => 3, 'username' => 'lukas']
+		];
+
+		$array_by_name = [
+			'bastian' => [ 'id' => 1, 'username' => 'bastian'],
+			'sonja' => [ 'id' => 2, 'username' => 'sonja'],
+			'lukas' => [ 'id' => 3, 'username' => 'lukas']
+		];
+
+		$array_by_cb = [
+			'bastian-1' => [ 'id' => 1, 'username' => 'bastian'],
+			'sonja-2' => [ 'id' => 2, 'username' => 'sonja'],
+			'lukas-3' => [ 'id' => 3, 'username' => 'lukas']
+		];
+
+		$this->assertSame($array_by_id, A::keyBy($array, 'id'));
+		$this->assertSame($array_by_name, A::keyBy($array, 'username'));
+		$this->assertSame($array_by_cb, A::keyBy($array, function ($item) {
+			return $item['username'] . '-' . $item['id'];
+		}));
+
+		// test with associative array
+		$this->assertSame($array_by_id, A::keyBy($array_by_cb, 'id'));
+	}
+
+	/**
+	 * @covers ::keyBy
+	 */
+	public function testKeyByWithNonexistentKeys()
+	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('The "key by" argument must be a valid key or a callable');
+
+		$array = [
+			[ 'id' => 1, 'username' => 'bastian'],
+			[ 'id' => 2, 'username' => 'sonja'],
+			[ 'id' => 3, 'username' => 'lukas']
+		];
+
+		A::keyBy($array, 'nonexistent');
+	}
+
+	/**
 	 * @covers ::update
 	 */
 	public function testUpdate()
@@ -899,7 +1046,7 @@ class ATest extends TestCase
 		$this->assertSame(['dog' => 'wuff', 'bird' => 'tweet'], A::without($associativeArray, ['this', 'cat', 'doesnt', 'exist']));
 
 		$this->assertSame([0 => 'cat', 4 => 'dog', 5 => 'bird'], A::without($indexedArray, range(1, 3)));
-		$this->assertSame([1 => 'dog', 2 => 'bird', 3 => 'cat', 4=> 'dog', 5 => 'bird'], A::without($indexedArray, 0));
+		$this->assertSame([1 => 'dog', 2 => 'bird', 3 => 'cat', 4 => 'dog', 5 => 'bird'], A::without($indexedArray, 0));
 		$this->assertSame(['cat', 'dog', 'bird', 'cat', 'dog', 'bird'], A::without($indexedArray, -1));
 	}
 }

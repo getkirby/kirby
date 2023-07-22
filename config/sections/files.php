@@ -57,6 +57,11 @@ return [
 			// search
 			if ($this->search === true && empty($this->searchterm()) === false) {
 				$files = $files->search($this->searchterm());
+
+				// disable flip and sortBy while searching
+				// to show most relevant results
+				$this->flip = false;
+				$this->sortBy = null;
 			}
 
 			// sort
@@ -157,10 +162,9 @@ return [
 			}
 
 			// count all uploaded files
-			$total = count($this->data);
-			$max   = $this->max ? $this->max - $total : null;
+			$max = $this->max ? $this->max - $this->total : null;
 
-			if ($this->max && $total === $this->max - 1) {
+			if ($this->max && $this->total === $this->max - 1) {
 				$multiple = false;
 			} else {
 				$multiple = true;
@@ -174,7 +178,10 @@ return [
 				'max'        => $max,
 				'api'        => $this->parent->apiUrl(true) . '/files',
 				'attributes' => array_filter([
-					'sort'     => $this->sortable === true ? $total + 1 : null,
+					// TODO: an edge issue that needs to be solved:
+					//		 if multiple users load the same section at the same time
+					// 		 and upload a file, uploaded files have the same sort number
+					'sort'     => $this->sortable === true ? $this->total + 1 : null,
 					'template' => $template
 				])
 			];
