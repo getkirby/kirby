@@ -73,7 +73,7 @@ trait AppErrors
 		$handler = null;
 
 		if ($this->option('debug') === true) {
-			if ($this->option('whoops', true) === true) {
+			if ($this->option('whoops', true) !== false) {
 				$handler = new PrettyPageHandler();
 				$handler->setPageTitle('Kirby CMS Debugger');
 				$handler->setResourcesPath(dirname(__DIR__, 2) . '/assets');
