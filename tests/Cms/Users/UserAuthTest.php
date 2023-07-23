@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\F;
+
 class UserAuthTest extends TestCase
 {
 	protected $app;
@@ -19,6 +21,7 @@ class UserAuthTest extends TestCase
 			'users' => [
 				[
 					'email' => 'test@getkirby.com',
+					'id'    => 'testuser',
 					'role'  => 'admin'
 				]
 			]
@@ -95,5 +98,31 @@ class UserAuthTest extends TestCase
 
 		// each hook needs to be called exactly twice
 		$this->assertSame((1 + 2 + 4 + 8) * 2, $calls);
+	}
+
+	public function testSessionData()
+	{
+		$user    = $this->app->user('test@getkirby.com');
+		$session = $this->app->session();
+
+		$this->assertSame([], $session->data()->get());
+		$user->loginPasswordless();
+		$this->assertSame(['kirby.userId' => 'testuser'], $session->data()->get());
+		$user->logout();
+		$this->assertSame([], $session->data()->get());
+	}
+
+	public function testSessionDataWithPassword()
+	{
+		F::write($this->tmp . '/accounts/testuser/.htpasswd', 'a very secure hash');
+
+		$user    = $this->app->user('test@getkirby.com');
+		$session = $this->app->session();
+
+		$this->assertSame([], $session->data()->get());
+		$user->loginPasswordless();
+		$this->assertSame(['kirby.userId' => 'testuser', 'kirby.loginTimestamp' => 1337000000], $session->data()->get());
+		$user->logout();
+		$this->assertSame([], $session->data()->get());
 	}
 }
