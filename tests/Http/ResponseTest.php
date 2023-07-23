@@ -188,13 +188,41 @@ class ResponseTest extends TestCase
 
 	public function testFile()
 	{
-		$file = __DIR__ . '/fixtures/download.txt';
+		$file = __DIR__ . '/fixtures/download.json';
+
+		$response = Response::file($file);
+
+		$this->assertSame('application/json', $response->type());
+		$this->assertSame(200, $response->code());
+		$this->assertSame('{"foo": "bar"}', $response->body());
+
+		$response = Response::file($file, [
+			'code'    => '201',
+			'headers' => [
+				'Pragma' => 'no-cache'
+			]
+		]);
+
+		$this->assertSame('application/json', $response->type());
+		$this->assertSame(201, $response->code());
+		$this->assertSame('{"foo": "bar"}', $response->body());
+		$this->assertSame([
+			'Pragma' => 'no-cache'
+		], $response->headers());
+	}
+
+	public function testFileInvalid()
+	{
+		$file = __DIR__ . '/fixtures/download.xyz';
 
 		$response = Response::file($file);
 
 		$this->assertSame('text/plain', $response->type());
 		$this->assertSame(200, $response->code());
 		$this->assertSame('test', $response->body());
+		$this->assertSame([
+			'X-Content-Type-Options' => 'nosniff',
+		], $response->headers());
 
 		$response = Response::file($file, [
 			'code'    => '201',
@@ -207,7 +235,8 @@ class ResponseTest extends TestCase
 		$this->assertSame(201, $response->code());
 		$this->assertSame('test', $response->body());
 		$this->assertSame([
-			'Pragma' => 'no-cache'
+			'Pragma' => 'no-cache',
+			'X-Content-Type-Options' => 'nosniff',
 		], $response->headers());
 	}
 
