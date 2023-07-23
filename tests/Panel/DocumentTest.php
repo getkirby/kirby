@@ -355,6 +355,7 @@ class DocumentTest extends TestCase
 		$this->assertSame(200, $response->code());
 		$this->assertSame('text/html', $response->type());
 		$this->assertSame('UTF-8', $response->charset());
+		$this->assertSame("frame-ancestors 'none'", $response->header('Content-Security-Policy'));
 		$this->assertNotNull($response->body());
 	}
 }
