@@ -438,6 +438,9 @@ class User extends ModelWithContent
 
 		$session->regenerateToken(); // privilege change
 		$session->data()->set('kirby.userId', $this->id());
+		if ($this->passwordTimestamp() !== null) {
+			$session->data()->set('kirby.loginTimestamp', time());
+		}
 		$this->kirby()->auth()->setUser($this);
 
 		$kirby->trigger('user.login:after', ['user' => $this, 'session' => $session]);
@@ -458,6 +461,7 @@ class User extends ModelWithContent
 
 		// remove the user from the session for future requests
 		$session->data()->remove('kirby.userId');
+		$session->data()->remove('kirby.loginTimestamp');
 
 		// clear the cached user object from the app state of the current request
 		$this->kirby()->auth()->flush();
@@ -602,6 +606,26 @@ class User extends ModelWithContent
 		}
 
 		return $this->password = $this->readPassword();
+	}
+
+	/**
+	 * Returns the timestamp when the password
+	 * was last changed
+	 */
+	public function passwordTimestamp(): int|null
+	{
+		$file = $this->passwordFile();
+
+		// ensure we have the latest information
+		// to prevent cache attacks
+		clearstatcache();
+
+		// user does not have a password
+		if (is_file($file) === false) {
+			return null;
+		}
+
+		return filemtime($file);
 	}
 
 	/**
@@ -877,5 +901,13 @@ class User extends ModelWithContent
 		}
 
 		return true;
+	}
+
+	/**
+	 * Returns the path to the password file
+	 */
+	protected function passwordFile(): string
+	{
+		return $this->root() . '/.htpasswd';
 	}
 }
