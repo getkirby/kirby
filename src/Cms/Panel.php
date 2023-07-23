@@ -134,6 +134,8 @@ class Panel
             ]
         ]);
 
-        return new Response($view->render());
+        return new Response($view->render(), 'text/html', 200, [
+            'Content-Security-Policy' => "frame-ancestors 'none'"
+        ]);
     }
 }
