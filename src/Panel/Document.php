@@ -278,6 +278,8 @@ class Document
 			'panelUrl' => $uri->path()->toString(true) . '/',
 		]);
 
-		return new Response($body, 'text/html', $code);
+		return new Response($body, 'text/html', $code, [
+			'Content-Security-Policy' => "frame-ancestors 'none'"
+		]);
 	}
 }
