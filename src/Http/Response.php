@@ -176,6 +176,18 @@ class Response
 			'type' => F::extensionToMime(F::extension($file))
 		], $props);
 
+		// if we couldn't serve a correct MIME type, force
+		// the browser to display the file as plain text to
+		// harden against attacks from malicious file uploads
+		if ($props['type'] === null) {
+			if (isset($props['headers']) !== true) {
+				$props['headers'] = [];
+			}
+
+			$props['type'] = 'text/plain';
+			$props['headers']['X-Content-Type-Options'] = 'nosniff';
+		}
+
 		return new static($props);
 	}
 
