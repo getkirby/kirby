@@ -279,18 +279,39 @@ class Auth
 
 		$id = $session->data()->get('kirby.userId');
 
+		// if no user is logged in, return immediately
 		if (is_string($id) !== true) {
 			return null;
 		}
 
-		if ($user = $this->kirby->users()->find($id)) {
-			// in case the session needs to be updated, do it now
-			// for better performance
-			$session->commit();
-			return $user;
+		// a user is logged in, ensure it exists
+		$user = $this->kirby->users()->find($id);
+		if ($user === null) {
+			return null;
 		}
 
-		return null;
+		if ($passwordTimestamp = $user->passwordTimestamp()) {
+			$loginTimestamp = $session->data()->get('kirby.loginTimestamp');
+			if (is_int($loginTimestamp) !== true) {
+				// session that was created before Kirby
+				// 3.5.8.3, 3.6.6.3, 3.7.5.2, 3.8.4.1 or 3.9.6
+				// or when the user didn't have a password set
+				$user->logout();
+				return null;
+			}
+
+			// invalidate the session if the password
+			// changed since the login
+			if ($loginTimestamp < $passwordTimestamp) {
+				$user->logout();
+				return null;
+			}
+		}
+
+		// in case the session needs to be updated, do it now
+		// for better performance
+		$session->commit();
+		return $user;
 	}
 
 	/**

@@ -42,6 +42,7 @@ class UserActionsTest extends TestCase
 
 	public function tearDown(): void
 	{
+		$this->app->session()->destroy();
 		Dir::remove($this->tmp);
 	}
 
@@ -390,15 +391,53 @@ class UserActionsTest extends TestCase
 				'user.changePassword:after' => function (User $newUser, User $oldUser) use ($phpunit, &$calls) {
 					$phpunit->assertTrue($newUser->validatePassword('topsecret2018'));
 					$phpunit->assertEmpty($oldUser->password());
-					$calls++;
-				}
+					$calls += 2;
+				},
+				'user.login:before' => function () use (&$calls) {
+					$calls += 4;
+				},
+				'user.login:after' => function () use (&$calls) {
+					$calls += 8;
+				},
 			]
 		]);
 
 		$user = $app->user('editor@domain.com');
 		$user->changePassword('topsecret2018');
 
-		$this->assertSame(2, $calls);
+		$this->assertSame(3, $calls);
+	}
+
+	public function testChangePasswordHooksCurrentUser()
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'user.changePassword:before' => function (User $user, $password) use ($phpunit, &$calls) {
+					$phpunit->assertEmpty($user->password());
+					$phpunit->assertSame('topsecret2018', $password);
+					$calls++;
+				},
+				'user.changePassword:after' => function (User $newUser, User $oldUser) use ($phpunit, &$calls) {
+					$phpunit->assertTrue($newUser->validatePassword('topsecret2018'));
+					$phpunit->assertEmpty($oldUser->password());
+					$calls += 2;
+				},
+				'user.login:before' => function () use (&$calls) {
+					$calls += 4;
+				},
+				'user.login:after' => function () use (&$calls) {
+					$calls += 8;
+				},
+			]
+		]);
+
+		$user = $this->app->user('admin@domain.com');
+		$user->changePassword('topsecret2018');
+
+		$this->assertSame(15, $calls);
 	}
 
 	public function testChangeRoleHooks()

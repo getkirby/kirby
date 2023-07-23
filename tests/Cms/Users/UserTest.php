@@ -193,6 +193,32 @@ class UserTest extends TestCase
 		Dir::remove($index);
 	}
 
+	public function testPasswordTimestamp()
+	{
+		$app = new App([
+			'roots' => [
+				'index'    => $this->tmp,
+				'accounts' => $this->tmp
+			]
+		]);
+
+		// create a user file
+		F::write($this->tmp . '/test/index.php', '<?php return [];');
+
+		$user = $app->user('test');
+		$this->assertNull($user->passwordTimestamp());
+
+		// create a password file
+		F::write($this->tmp . '/test/.htpasswd', 'a very secure hash');
+		touch($this->tmp . '/test/.htpasswd', 1337000000);
+
+		$this->assertSame(1337000000, $user->passwordTimestamp());
+
+		// timestamp is not cached
+		touch($this->tmp . '/test/.htpasswd', 1338000000);
+		$this->assertSame(1338000000, $user->passwordTimestamp());
+	}
+
 	public function passwordProvider()
 	{
 		return [
