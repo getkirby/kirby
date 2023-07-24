@@ -924,21 +924,6 @@ class HelperFunctionsTest extends TestCase
 		$this->assertSame('1234567 Autos', tc('car', 1234567, 'de', false));
 	}
 
-	public function testTwitter()
-	{
-		// simple
-		$result   = twitter('getkirby');
-		$expected = '<a href="https://twitter.com/getkirby">@getkirby</a>';
-
-		$this->assertSame($expected, $result);
-
-		// with attributes
-		$result   = twitter('getkirby', 'Follow us', 'Kirby on Twitter', 'twitter');
-		$expected = '<a class="twitter" href="https://twitter.com/getkirby" title="Kirby on Twitter">Follow us</a>';
-
-		$this->assertSame($expected, $result);
-	}
-
 	public function testUrl()
 	{
 		$this->kirby->clone([

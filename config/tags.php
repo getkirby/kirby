@@ -230,37 +230,6 @@ return [
 	],
 
 	/**
-	 * Twitter
-	 */
-	'twitter' => [
-		'attr' => [
-			'class',
-			'rel',
-			'target',
-			'text',
-			'title'
-		],
-		'html' => function (KirbyTag $tag): string {
-			// get and sanitize the username
-			$username = str_replace('@', '', $tag->value);
-
-			// build the profile url
-			$url = 'https://twitter.com/' . $username;
-
-			// sanitize the link text
-			$text = $tag->text ?? '@' . $username;
-
-			// build the final link
-			return Html::a($url, $text, [
-				'class'  => $tag->class,
-				'rel'    => $tag->rel,
-				'target' => $tag->target,
-				'title'  => $tag->title,
-			]);
-		}
-	],
-
-	/**
 	 * Video
 	 */
 	'video' => [

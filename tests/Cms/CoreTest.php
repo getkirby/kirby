@@ -361,7 +361,6 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('image', $tags);
 		$this->assertArrayHasKey('link', $tags);
 		$this->assertArrayHasKey('tel', $tags);
-		$this->assertArrayHasKey('twitter', $tags);
 		$this->assertArrayHasKey('video', $tags);
 	}
 
