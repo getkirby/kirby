@@ -33,7 +33,7 @@
 			</k-button-group>
 		</k-header>
 
-		<k-section headline="Language settings">
+		<k-section :headline="$t('language.settings')">
 			<k-stats :reports="info" size="small" />
 		</k-section>
 
@@ -45,18 +45,18 @@
 					text: $t('add')
 				}
 			]"
-			headline="Language variables"
+			:headline="$t('language.variables')"
 		>
 			<template v-if="translations.length">
 				<k-table
 					:columns="{
 						key: {
-							label: 'Key',
+							label: $t('language.variable.key'),
 							mobile: true,
 							width: '1/4'
 						},
 						value: {
-							label: 'Value',
+							label: $t('language.variable.value'),
 							mobile: true
 						}
 					}"
@@ -67,7 +67,7 @@
 			</template>
 			<template v-else>
 				<k-empty icon="globe" @click="createTranslation">
-					No translations yet
+					{{ $t("language.variables.empty") }}
 				</k-empty>
 			</template>
 		</k-section>
@@ -93,7 +93,9 @@ export default {
 			this.$dialog(`languages/${this.id}/translations/create`);
 		},
 		option(option, row) {
-			this.$dialog(`languages/${this.id}/translations/${row.key}/${option}`);
+			// for the compatibility of the encoded url in different environments,
+			// it is also encoded with base64 to reduce special characters
+			this.$dialog(`languages/${this.id}/translations/${window.btoa(encodeURIComponent(row.key))}/${option}`);
 		},
 		remove() {
 			this.$dialog(`languages/${this.id}/delete`);
@@ -108,7 +110,9 @@ export default {
 			});
 		},
 		updateTranslation({ row }) {
-			this.$dialog(`languages/${this.id}/translations/${row.key}/update`);
+			// for the compatibility of the encoded url in different environments,
+			// it is also encoded with base64 to reduce special characters
+			this.$dialog(`languages/${this.id}/translations/${window.btoa(encodeURIComponent(row.key))}/update`);
 		}
 	}
 };

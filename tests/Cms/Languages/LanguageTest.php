@@ -754,4 +754,35 @@ class LanguageTest extends TestCase
 
 		$this->assertSame(2, $calls);
 	}
+
+	/**
+	 * @covers ::variable
+	 */
+	public function testVariable()
+	{
+		$language = new Language([
+			'code' => 'en',
+		]);
+
+		$variable = $language->variable('test');
+		$this->assertInstanceOf(LanguageVariable::class, $variable);
+		$this->assertSame('test', $variable->key());
+	}
+
+	/**
+	 * @covers ::variable
+	 */
+	public function testVariableDecode()
+	{
+		$language = new Language([
+			'code' => 'en',
+		]);
+
+		$key = 'key with space';
+		$encode = base64_encode(rawurlencode($key));
+		$variable = $language->variable($encode, true);
+
+		$this->assertInstanceOf(LanguageVariable::class, $variable);
+		$this->assertSame($key, $variable->key());
+	}
 }
