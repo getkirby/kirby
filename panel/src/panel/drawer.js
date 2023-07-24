@@ -116,7 +116,7 @@ export default (panel) => {
 		 */
 		async open(drawer, options = {}) {
 			// prefix URLs
-			if (typeof dialog === "string") {
+			if (typeof drawer === "string") {
 				drawer = `/drawers/${drawer}`;
 			}
 
