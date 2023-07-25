@@ -90,8 +90,6 @@ The Panel doesn't have extensive test coverage yet. That's an area we are still 
 
 We use [vitest](https://vitest.dev) for unit tests for JavaScript and Vue components - `.test.js` files next to the actual JavaScript/Vue file.
 
-For integration tests, we use [cypress](https://www.cypress.io) - `.e2e.js` files.
-
 ## And last…
 
 Let us know [in the forum](https://forum.getkirby.com) if you have questions.
