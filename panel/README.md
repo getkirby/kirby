@@ -43,11 +43,3 @@ To upate the dist files
 ```
 npm run build
 ```
-
-### Test
-
-To start end to end tests via Cypress
-
-```
-npm run test
-```
