@@ -16,6 +16,3 @@ jobs:
   release_frontend:
     name: "Release: CI - Frontend"
     uses: ./.github/workflows/frontend.yml
-  release_integration:
-    name: "Release: CI - Integration"
-    uses: ./.github/workflows/integration.yml

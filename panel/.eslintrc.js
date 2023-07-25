@@ -1,10 +1,5 @@
 module.exports = {
-	extends: [
-		"eslint:recommended",
-		"plugin:cypress/recommended",
-		"plugin:vue/recommended",
-		"prettier"
-	],
+	extends: ["eslint:recommended", "plugin:vue/recommended", "prettier"],
 	rules: {
 		"vue/attributes-order": "error",
 		"vue/component-definition-name-casing": "off",
