@@ -15,12 +15,14 @@ use Throwable;
 class LayoutField extends BlocksField
 {
 	protected array|null $layouts;
+	protected array|null $selector;
 	protected Fieldset|null $settings;
 
 	public function __construct(array $params)
 	{
 		$this->setModel($params['model'] ?? App::instance()->site());
 		$this->setLayouts($params['layouts'] ?? ['1/1']);
+		$this->setSelector($params['selector'] ?? null);
 		$this->setSettings($params['settings'] ?? null);
 
 		parent::__construct($params);
@@ -123,8 +125,9 @@ class LayoutField extends BlocksField
 		$settings = $this->settings();
 
 		return array_merge(parent::props(), [
-			'settings' => $settings?->toArray(),
-			'layouts'  => $this->layouts()
+			'layouts'  => $this->layouts(),
+			'selector' => $this->selector(),
+			'settings' => $settings?->toArray()
 		]);
 	}
 
@@ -195,6 +198,11 @@ class LayoutField extends BlocksField
 		return $routes;
 	}
 
+	public function selector(): array|null
+	{
+		return $this->selector;
+	}
+
 	protected function setDefault(mixed $default = null): void
 	{
 		// set id for layouts, columns and blocks within layout if not exists
@@ -227,6 +235,14 @@ class LayoutField extends BlocksField
 			fn ($layout) => Str::split($layout),
 			$layouts
 		);
+	}
+
+	/**
+	 * Layout selector's styles such as size (`small`, `medium`, `large` or `huge`) and columns
+	 */
+	protected function setSelector(array|null $selector = null): void
+	{
+		$this->selector = $selector;
 	}
 
 	protected function setSettings(array|string|null $settings = null): void
