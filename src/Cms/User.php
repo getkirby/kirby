@@ -648,7 +648,6 @@ class User extends ModelWithContent
 
         // if there's an authenticated user …
         if ($user = $kirby->user()) {
-
             // admin users can select pretty much any role
             if ($user->isAdmin() === true) {
                 // except if the user is the last admin
@@ -869,8 +868,15 @@ class User extends ModelWithContent
             throw new NotFoundException(['key' => 'user.password.undefined']);
         }
 
+        // `UserRules` enforces a minimum length of 8 characters,
+        // so everything below that is a typo
         if (Str::length($password) < 8) {
             throw new InvalidArgumentException(['key' => 'user.password.invalid']);
+        }
+
+        // too long passwords can cause DoS attacks
+        if (Str::length($password) > 1000) {
+            throw new InvalidArgumentException(['key' => 'user.password.excessive']);
         }
 
         if (password_verify($password, $this->password()) !== true) {
