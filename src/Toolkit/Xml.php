@@ -258,7 +258,21 @@ class Xml
      */
     public static function parse(string $xml): ?array
     {
-        $xml = @simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOENT);
+        $loaderSetting = null;
+        if (\PHP_VERSION_ID < 80000) {
+            // prevent loading external entities to protect against XXE attacks;
+            // only needed for PHP versions before 8.0 (the function was deprecated
+            // as the disabled state is the new default in PHP 8.0+)
+            $loaderSetting = libxml_disable_entity_loader(true);
+        }
+
+        $xml = @simplexml_load_string($xml);
+
+        if (\PHP_VERSION_ID < 80000) {
+            // ensure that we don't alter global state by
+            // resetting the original value
+            libxml_disable_entity_loader($loaderSetting);
+        }
 
         if (is_object($xml) !== true) {
             return null;
