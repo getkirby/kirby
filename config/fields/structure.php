@@ -1,7 +1,9 @@
 <?php
 
 use Kirby\Data\Data;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -183,17 +185,6 @@ return [
 			]);
 		},
 	],
-	'api' => function () {
-		return [
-			[
-				'pattern' => 'validate',
-				'method'  => 'ALL',
-				'action'  => function () {
-					return array_values($this->field()->form($this->requestBody())->errors());
-				}
-			]
-		];
-	},
 	'save' => function ($value) {
 		$data = [];
 
@@ -205,6 +196,31 @@ return [
 	},
 	'validations' => [
 		'min',
-		'max'
+		'max',
+		'structure' => function ($value) {
+			if (empty($value) === true) {
+				return true;
+			}
+
+			$values = A::wrap($value);
+
+			foreach ($values as $index => $value) {
+				$form = $this->form($value);
+
+				foreach ($form->fields() as $field) {
+					$errors = $field->errors();
+
+					if (empty($errors) === false) {
+						throw new InvalidArgumentException([
+							'key'  => 'structure.validation',
+							'data' => [
+								'field' => $field->label(),
+								'index' => $index + 1
+							]
+						]);
+					}
+				}
+			}
+		}
 	]
 ];
