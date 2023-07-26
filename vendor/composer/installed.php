@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'getkirby/cms',
-        'pretty_version' => '3.6.6.2',
-        'version' => '3.6.6.2',
+        'pretty_version' => '3.6.6.3',
+        'version' => '3.6.6.3',
         'reference' => NULL,
         'type' => 'kirby-cms',
         'install_path' => __DIR__ . '/../../',
@@ -29,8 +29,8 @@
             'dev_requirement' => false,
         ),
         'getkirby/cms' => array(
-            'pretty_version' => '3.6.6.2',
-            'version' => '3.6.6.2',
+            'pretty_version' => '3.6.6.3',
+            'version' => '3.6.6.3',
             'reference' => NULL,
             'type' => 'kirby-cms',
             'install_path' => __DIR__ . '/../../',
@@ -107,9 +107,9 @@
             'dev_requirement' => false,
         ),
         'symfony/polyfill-intl-normalizer' => array(
-            'pretty_version' => 'v1.25.0',
-            'version' => '1.25.0.0',
-            'reference' => '8590a5f561694770bdcd3f9b5c69dde6945028e8',
+            'pretty_version' => 'v1.27.0',
+            'version' => '1.27.0.0',
+            'reference' => '19bd1e4fcd5b91116f14d8533c57831ed00571b6',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/polyfill-intl-normalizer',
             'aliases' => array(),
