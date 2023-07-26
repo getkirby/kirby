@@ -100,6 +100,13 @@ trait UserActions
 
             $user->writePassword($password);
 
+            // keep the user logged in to the current browser
+            // if they changed their own password
+            // (regenerate the session token, update the login timestamp)
+            if ($user->isLoggedIn() === true) {
+                $user->loginPasswordless();
+            }
+
             return $user;
         });
     }
@@ -295,7 +302,7 @@ trait UserActions
      */
     protected function readPassword()
     {
-        return F::read($this->root() . '/.htpasswd');
+        return F::read($this->passwordFile());
     }
 
     /**
@@ -349,6 +356,6 @@ trait UserActions
      */
     protected function writePassword(string $password = null): bool
     {
-        return F::write($this->root() . '/.htpasswd', $password);
+        return F::write($this->passwordFile(), $password);
     }
 }

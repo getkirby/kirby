@@ -2,13 +2,26 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Data\Data;
+use Kirby\Toolkit\Dir;
+
 class UserActionsTest extends TestCase
 {
     protected $app;
-    protected $fixtures;
+    protected $tmp = __DIR__ . '/tmp';
 
     public function setUp(): void
     {
+        Dir::remove($this->tmp);
+        Data::write($this->tmp . '/accounts/admin/index.php', [
+            'email' => 'admin@domain.com',
+            'role' => 'admin'
+        ]);
+        Data::write($this->tmp . '/accounts/editor/index.php', [
+            'email' => 'editor@domain.com',
+            'role' => 'editor'
+        ]);
+
         $this->app = new App([
             'roles' => [
                 [
@@ -20,27 +33,17 @@ class UserActionsTest extends TestCase
             ],
             'roots' => [
                 'index'    => '/dev/null',
-                'accounts' => $this->fixtures = __DIR__ . '/fixtures/UserActionsTest',
+                'accounts' => $this->tmp . '/accounts',
+                'sessions' => $this->tmp . '/sessions'
             ],
-            'user'  => 'admin@domain.com',
-            'users' => [
-                [
-                    'email' => 'admin@domain.com',
-                    'role'  => 'admin'
-                ],
-                [
-                    'email' => 'editor@domain.com',
-                    'role'  => 'editor'
-                ]
-            ],
+            'user'  => 'admin@domain.com'
         ]);
-
-        Dir::remove($this->fixtures);
     }
 
     public function tearDown(): void
     {
-        Dir::remove($this->fixtures);
+        $this->app->session()->destroy();
+        Dir::remove($this->tmp);
     }
 
     public function testChangeEmail()
@@ -374,15 +377,53 @@ class UserActionsTest extends TestCase
                 'user.changePassword:after' => function (User $newUser, User $oldUser) use ($phpunit, &$calls) {
                     $phpunit->assertTrue($newUser->validatePassword('topsecret2018'));
                     $phpunit->assertEmpty($oldUser->password());
-                    $calls++;
-                }
+                    $calls += 2;
+                },
+                'user.login:before' => function () use (&$calls) {
+                    $calls += 4;
+                },
+                'user.login:after' => function () use (&$calls) {
+                    $calls += 8;
+                },
             ]
         ]);
 
         $user = $app->user('editor@domain.com');
         $user->changePassword('topsecret2018');
 
-        $this->assertSame(2, $calls);
+        $this->assertSame(3, $calls);
+    }
+
+    public function testChangePasswordHooksCurrentUser()
+    {
+        $calls = 0;
+        $phpunit = $this;
+
+        $this->app = $this->app->clone([
+            'hooks' => [
+                'user.changePassword:before' => function (User $user, $password) use ($phpunit, &$calls) {
+                    $phpunit->assertEmpty($user->password());
+                    $phpunit->assertSame('topsecret2018', $password);
+                    $calls++;
+                },
+                'user.changePassword:after' => function (User $newUser, User $oldUser) use ($phpunit, &$calls) {
+                    $phpunit->assertTrue($newUser->validatePassword('topsecret2018'));
+                    $phpunit->assertEmpty($oldUser->password());
+                    $calls += 2;
+                },
+                'user.login:before' => function () use (&$calls) {
+                    $calls += 4;
+                },
+                'user.login:after' => function () use (&$calls) {
+                    $calls += 8;
+                },
+            ]
+        ]);
+
+        $user = $this->app->user('admin@domain.com');
+        $user->changePassword('topsecret2018');
+
+        $this->assertSame(15, $calls);
     }
 
     public function testChangeRoleHooks()
