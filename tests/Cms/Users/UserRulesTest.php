@@ -57,6 +57,7 @@ class UserRulesTest extends TestCase
 			['Email', 'domain.com', 'Please enter a valid email address'],
 			['Language', 'english', 'Please enter a valid language'],
 			['Password', '1234', 'Please enter a valid password. Passwords must be at least 8 characters long.'],
+			['Password', str_repeat('1234', 300), 'Please enter a valid password. Passwords must not be longer than 1000 characters.'],
 			['Role', 'rockstar', 'Please enter a valid role']
 		];
 	}

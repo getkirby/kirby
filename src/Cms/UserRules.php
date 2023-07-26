@@ -341,9 +341,20 @@ class UserRules
 		#[SensitiveParameter]
 		string $password
 	): bool {
+		// too short passwords are ineffective
 		if (Str::length($password ?? null) < 8) {
 			throw new InvalidArgumentException([
 				'key' => 'user.password.invalid',
+			]);
+		}
+
+		// too long passwords can cause DoS attacks
+		// and are therefore blocked in the auth system
+		// (blocked here as well to avoid passwords
+		// that cannot be used to log in)
+		if (Str::length($password ?? null) > 1000) {
+			throw new InvalidArgumentException([
+				'key' => 'user.password.excessive',
 			]);
 		}
 

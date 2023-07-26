@@ -183,6 +183,7 @@
 	"error.user.email.invalid": "Bonvolu entajpi validan retpoŝtadreson",
 	"error.user.language.invalid": "Bonvolu entajpi validan lingvon",
 	"error.user.notFound": "La uzanto \"{name}\" ne troveblas",
+	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
 	"error.user.password.invalid": "Bonvolu entajpi validan pasvorton. Pasvortoj devas esti almenaŭ 8 literojn longaj.",
 	"error.user.password.notSame": "La pasvortoj ne estas kongruantaj",
 	"error.user.password.undefined": "La uzanto ne havas pasvorton",

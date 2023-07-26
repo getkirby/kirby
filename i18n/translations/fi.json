@@ -183,6 +183,7 @@
 	"error.user.email.invalid": "Anna kelpaava sähköpostiosoite",
 	"error.user.language.invalid": "Anna kelpaava kieli",
 	"error.user.notFound": "K\u00e4ytt\u00e4j\u00e4\u00e4 ei l\u00f6ytynyt",
+	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
 	"error.user.password.invalid": "Anna kelpaava salasana. Salasanan täytyy olla ainakin 8 merkkiä pitkä.",
 	"error.user.password.notSame": "Salasanat eivät täsmää",
 	"error.user.password.undefined": "Käyttäjällä ei ole salasanaa",

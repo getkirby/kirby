@@ -183,6 +183,7 @@
 	"error.user.email.invalid": "Veuillez saisir un courriel valide",
 	"error.user.language.invalid": "Veuillez saisir une langue valide",
 	"error.user.notFound": "L’utilisateur « {name} » n’a pu être trouvé",
+	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
 	"error.user.password.invalid": "Veuillez saisir un mot de passe valide. Les mots de passe doivent comporter au moins 8 caractères.",
 	"error.user.password.notSame": "Les mots de passe ne sont pas identiques",
 	"error.user.password.undefined": "Cet utilisateur n’a pas de mot de passe",

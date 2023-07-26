@@ -183,6 +183,7 @@
 	"error.user.email.invalid": "Ange en giltig e-postadress",
 	"error.user.language.invalid": "Ange ett giltigt språk",
 	"error.user.notFound": "Användaren \"{name}\" kan ej hittas",
+	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
 	"error.user.password.invalid": "Ange ett giltigt lösenord. Lösenordet måste vara minst 8 tecken långt.",
 	"error.user.password.notSame": "Lösenorden matchar inte",
 	"error.user.password.undefined": "Användaren har inget lösenord",
