@@ -195,6 +195,7 @@ class UserTest extends TestCase
 			[null, false],
 			['', false],
 			['short', false],
+			[str_repeat('long', 300), false],
 			['invalid-password', false],
 			['correct-horse-battery-staple', true],
 		];
@@ -230,6 +231,21 @@ class UserTest extends TestCase
 		try {
 			$user->validatePassword('short');
 		} catch (\Kirby\Exception\InvalidArgumentException $e) {
+			$this->assertSame(
+				'Please enter a valid password. Passwords must be at least 8 characters long.',
+				$e->getMessage()
+			);
+			$this->assertSame(400, $e->getHttpCode());
+			$caught++;
+		}
+
+		try {
+			$user->validatePassword(str_repeat('long', 300));
+		} catch (\Kirby\Exception\InvalidArgumentException $e) {
+			$this->assertSame(
+				'Please enter a valid password. Passwords must not be longer than 1000 characters.',
+				$e->getMessage()
+			);
 			$this->assertSame(400, $e->getHttpCode());
 			$caught++;
 		}
@@ -237,11 +253,12 @@ class UserTest extends TestCase
 		try {
 			$user->validatePassword('longbutinvalid');
 		} catch (\Kirby\Exception\InvalidArgumentException $e) {
+			$this->assertSame('Wrong password', $e->getMessage());
 			$this->assertSame(401, $e->getHttpCode());
 			$caught++;
 		}
 
-		$this->assertSame(2, $caught);
+		$this->assertSame(3, $caught);
 	}
 
 	public function testValidateUndefinedPassword()
