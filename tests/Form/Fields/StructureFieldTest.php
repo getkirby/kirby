@@ -409,4 +409,24 @@ class StructureFieldTest extends TestCase
 
 		$this->assertTrue($field->isValid());
 	}
+
+	public function testValidationsInvalid()
+	{
+		$field = $this->field('structure', [
+			'fields' => [
+				'title' => [
+					'type' => 'text',
+					'required' => true
+				]
+			],
+			'value' => [
+				['title' => ''],
+			]
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertSame([
+			'structure' => 'There\'s an error on the "Title" field in row 1'
+		], $field->errors());
+	}
 }

@@ -5,6 +5,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
 
 return [
 	'mixins' => ['min'],
@@ -214,7 +215,7 @@ return [
 						throw new InvalidArgumentException([
 							'key'  => 'structure.validation',
 							'data' => [
-								'field' => $field->label(),
+								'field' => $field->label() ?? Str::ucfirst($field->name()),
 								'index' => $index + 1
 							]
 						]);
