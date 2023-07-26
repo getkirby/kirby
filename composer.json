@@ -8,7 +8,7 @@
     "core"
   ],
   "homepage": "https://getkirby.com",
-  "version": "3.5.8.2",
+  "version": "3.5.8.3",
   "license": "proprietary",
   "authors": [
     {
@@ -32,7 +32,10 @@
   },
   "config": {
     "optimize-autoloader": true,
-    "platform-check": false
+    "platform-check": false,
+    "allow-plugins": {
+      "getkirby/composer-installer": true
+    }
   },
   "autoload": {
     "psr-4": {
