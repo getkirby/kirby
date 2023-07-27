@@ -184,6 +184,8 @@
 	"error.site.changeTitle.permission": "You are not allowed to change the title of the site",
 	"error.site.update.permission": "You are not allowed to update the site",
 
+	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",
+
 	"error.template.default.notFound": "The default template does not exist",
 
 	"error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
