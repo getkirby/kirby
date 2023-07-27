@@ -73,7 +73,7 @@ trait AppErrors
 		$handler = null;
 
 		if ($this->option('debug') === true) {
-			if ($this->option('whoops', true) === true) {
+			if ($this->option('whoops', true) !== false) {
 				$handler = new PrettyPageHandler();
 				$handler->setPageTitle('Kirby CMS Debugger');
 				$handler->setResourcesPath(dirname(__DIR__, 2) . '/assets');
@@ -81,6 +81,14 @@ trait AppErrors
 
 				if ($editor = $this->option('editor')) {
 					$handler->setEditor($editor);
+				}
+
+				if ($blocklist = $this->option('whoops.blocklist')) {
+					foreach ($blocklist as $superglobal => $vars) {
+						foreach ($vars as $var) {
+							$handler->blacklist($superglobal, $var);
+						}
+					}
 				}
 			}
 		} else {
