@@ -12,6 +12,7 @@
 			v-bind="$props"
 			:id="_uid"
 			ref="input"
+			:type="inputType"
 			theme="field"
 			v-on="$listeners"
 		/>
@@ -32,6 +33,15 @@ import counter from "@/mixins/forms/counter.js";
 export default {
 	mixins: [Field, Input, TextInput, counter],
 	inheritAttrs: false,
+	computed: {
+		inputType() {
+			if (this.$helper.isComponent(`k-${this.type}-input`)) {
+				return this.type;
+			}
+
+			return "text";
+		}
+	},
 	methods: {
 		focus() {
 			this.$refs.input.focus();
