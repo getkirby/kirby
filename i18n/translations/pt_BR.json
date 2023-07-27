@@ -183,6 +183,7 @@
 	"error.user.email.invalid": "Digite um endereço de email válido",
 	"error.user.language.invalid": "Digite um idioma válido",
 	"error.user.notFound": "Usuário \"{name}\" não encontrado",
+	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
 	"error.user.password.invalid": "Digite uma senha válida. Sua senha deve ter pelo menos 8 caracteres.",
 	"error.user.password.notSame": "As senhas não combinam",
 	"error.user.password.undefined": "O usuário não possui uma senha",

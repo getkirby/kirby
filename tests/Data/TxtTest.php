@@ -198,6 +198,34 @@ class TxtTest extends TestCase
 	/**
 	 * @covers ::decode
 	 */
+	public function testDecodeBom1()
+	{
+		$string = "\xEF\xBB\xBFTitle: title field with BOM \xEF\xBB\xBF\n----\nText: text field";
+		$array  = [
+			'title' => "title field with BOM \xEF\xBB\xBF",
+			'text'  => 'text field'
+		];
+
+		$this->assertSame($array, Txt::decode($string));
+	}
+
+	/**
+	 * @covers ::decode
+	 */
+	public function testDecodeBom2()
+	{
+		$string = "\xEF\xBB\xBFTitle: title field with BOM\n--\xEF\xBB\xBF--\nand more text\n----\nText: text field";
+		$array  = [
+			'title' => "title field with BOM\n--\xEF\xBB\xBF--\nand more text",
+			'text'  => 'text field'
+		];
+
+		$this->assertSame($array, Txt::decode($string));
+	}
+
+	/**
+	 * @covers ::decode
+	 */
 	public function testDecodeInvalid1()
 	{
 		// pass invalid object

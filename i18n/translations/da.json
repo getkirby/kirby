@@ -183,6 +183,7 @@
 	"error.user.email.invalid": "Indtast venligst en gyldig email adresse",
 	"error.user.language.invalid": "Indtast venligst et gyldigt sprog",
 	"error.user.notFound": "Brugeren kunne ikke findes",
+	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
 	"error.user.password.invalid": "Indtast venligst en gyldig adgangskode. Adgangskoder skal minimum være 8 tegn lange.",
 	"error.user.password.notSame": "Bekr\u00e6ft venligst adgangskoden",
 	"error.user.password.undefined": "Brugeren har ikke en adgangskode",

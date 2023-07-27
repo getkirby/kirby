@@ -183,6 +183,7 @@
 	"error.user.email.invalid": "Si us plau, introdueix una adreça de correu electrònic vàlida",
 	"error.user.language.invalid": "Introduïu un idioma vàlid",
 	"error.user.notFound": "L'usuari \"{name}\" no s'ha trobat",
+	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
 	"error.user.password.invalid": "Introduïu una contrasenya vàlida. Les contrasenyes han de tenir com a mínim 8 caràcters.",
 	"error.user.password.notSame": "Les contrasenyes no coincideixen",
 	"error.user.password.undefined": "L'usuari no té una contrasenya",

@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\Session\AutoSession;
 use Throwable;
 
@@ -15,13 +16,13 @@ class AuthTest extends TestCase
 {
 	protected $app;
 	protected $auth;
-	protected $fixtures;
+	protected $tmp;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/AuthTest'
+				'index' => $this->tmp = __DIR__ . '/tmp'
 			],
 			'options' => [
 				'api' => [
@@ -41,11 +42,13 @@ class AuthTest extends TestCase
 				[
 					'email'    => 'homer@simpsons.com',
 					'id'       => 'homer',
-					'password' => password_hash('springfield123', PASSWORD_DEFAULT)
+					'password' => $hash = password_hash('springfield123', PASSWORD_DEFAULT)
 				]
 			]
 		]);
-		Dir::make($this->fixtures . '/site/accounts');
+		Dir::make($this->tmp . '/site/accounts/homer');
+		F::write($this->tmp . '/site/accounts/homer/.htpasswd', $hash);
+		touch($this->tmp . '/site/accounts/homer/.htpasswd', 1337000000);
 
 		$this->auth = $this->app->auth();
 	}
@@ -53,7 +56,7 @@ class AuthTest extends TestCase
 	public function tearDown(): void
 	{
 		$this->app->session()->destroy();
-		Dir::remove($this->fixtures);
+		Dir::remove($this->tmp);
 		App::destroy();
 	}
 
@@ -254,7 +257,7 @@ class AuthTest extends TestCase
 	 * @covers ::status
 	 * @covers ::user
 	 */
-	public function testUserSession1()
+	public function testUserSession()
 	{
 		$session = $this->app->session();
 		$session->set('kirby.userId', 'marge');
@@ -286,10 +289,11 @@ class AuthTest extends TestCase
 	 * @covers ::status
 	 * @covers ::user
 	 */
-	public function testUserSession2()
+	public function testUserSessionManualSession()
 	{
 		$session = (new AutoSession($this->app->root('sessions')))->createManually();
 		$session->set('kirby.userId', 'homer');
+		$session->set('kirby.loginTimestamp', 1337000000);
 
 		$user = $this->auth->user($session);
 		$this->assertSame('homer@simpsons.com', $user->email());
@@ -298,6 +302,47 @@ class AuthTest extends TestCase
 			'email'     => 'homer@simpsons.com',
 			'status'    => 'active'
 		], $this->auth->status()->toArray());
+	}
+
+	/**
+	 * @covers ::status
+	 * @covers ::user
+	 */
+	public function testUserSessionOldTimestamp()
+	{
+		$session = $this->app->session();
+		$session->set('kirby.userId', 'homer');
+		$session->set('kirby.loginTimestamp', 1000000000);
+
+		$this->assertNull($this->auth->user());
+		$this->assertSame([
+			'challenge' => null,
+			'email'     => null,
+			'status'    => 'inactive'
+		], $this->auth->status()->toArray());
+
+		// user should be logged out completely
+		$this->assertSame([], $session->data()->get());
+	}
+
+	/**
+	 * @covers ::status
+	 * @covers ::user
+	 */
+	public function testUserSessionNoTimestamp()
+	{
+		$session = $this->app->session();
+		$session->set('kirby.userId', 'homer');
+
+		$this->assertNull($this->auth->user());
+		$this->assertSame([
+			'challenge' => null,
+			'email'     => null,
+			'status'    => 'inactive'
+		], $this->auth->status()->toArray());
+
+		// user should be logged out completely
+		$this->assertSame([], $session->data()->get());
 	}
 
 	/**

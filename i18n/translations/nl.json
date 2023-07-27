@@ -183,6 +183,7 @@
 	"error.user.email.invalid": "Gelieve een geldig emailadres in te voeren",
 	"error.user.language.invalid": "Gelieve een geldige taal in te voeren",
 	"error.user.notFound": "De gebruiker \"{name}\" kan niet worden gevonden",
+	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
 	"error.user.password.invalid": "Gelieve een geldig wachtwoord in te voeren. Wachtwoorden moeten minstens 8 karakters lang zijn.",
 	"error.user.password.notSame": "De wachtwoorden komen niet overeen",
 	"error.user.password.undefined": "De gebruiker heeft geen wachtwoord",

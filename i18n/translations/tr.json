@@ -183,6 +183,7 @@
 	"error.user.email.invalid": "Lütfen geçerli bir e-posta adresi girin",
 	"error.user.language.invalid": "Lütfen geçerli bir dil girin",
 	"error.user.notFound": "\"{name}\" kullanıcısı bulunamadı",
+	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
 	"error.user.password.invalid": "Lütfen geçerli bir şifre giriniz. Şifreler en az 8 karakter uzunluğunda olmalıdır.",
 	"error.user.password.notSame": "L\u00fctfen \u015fifreyi do\u011frulay\u0131n",
 	"error.user.password.undefined": "Bu kullanıcının şifresi yok",

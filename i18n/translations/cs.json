@@ -183,6 +183,7 @@
 	"error.user.email.invalid": "Zadejte prosím platnou emailovou adresu",
 	"error.user.language.invalid": "Zadejte prosím platný jazyk",
 	"error.user.notFound": "U\u017eivatele se nepoda\u0159ilo nal\u00e9zt",
+	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
 	"error.user.password.invalid": "Zadejte prosím platné heslo. Heslo musí být dlouhé alespoň 8 znaků.",
 	"error.user.password.notSame": "Pros\u00edm potvr\u010fte heslo",
 	"error.user.password.undefined": "Uživatel nemá nastavené heslo.",

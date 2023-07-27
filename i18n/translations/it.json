@@ -183,6 +183,7 @@
 	"error.user.email.invalid": "Inserisci un indirizzo email valido",
 	"error.user.language.invalid": "Inserisci una lingua valida",
 	"error.user.notFound": "L'utente non \u00e8 stato trovato",
+	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
 	"error.user.password.invalid": "Per favore inserisci una password valida. Le password devono essere lunghe almeno 8 caratteri",
 	"error.user.password.notSame": "Le password non corrispondono",
 	"error.user.password.undefined": "L'utente non ha una password",

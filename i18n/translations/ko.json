@@ -183,6 +183,7 @@
 	"error.user.email.invalid": "올바른 이메일 주소를 입력하세요.",
 	"error.user.language.invalid": "올바른 언어를 입력하세요.",
 	"error.user.notFound": "사용자({name})가 없습니다.",
+	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
 	"error.user.password.invalid": "암호를 8자 이상으로 설정하세요.",
 	"error.user.password.notSame": "\uc554\ud638\ub97c \ud655\uc778\ud558\uc138\uc694.",
 	"error.user.password.undefined": "암호가 설정되지 않았습니다.",

@@ -183,6 +183,7 @@
 	"error.user.email.invalid": "Παρακαλώ εισάγετε μια έγκυρη διεύθυνση ηλεκτρονικού ταχυδρομείου",
 	"error.user.language.invalid": "Παρακαλώ εισαγάγετε μια έγκυρη γλώσσα",
 	"error.user.notFound": "Δεν είναι δυνατή η εύρεση του χρήστη \"{name}\"",
+	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
 	"error.user.password.invalid": "Παρακαλώ εισάγετε έναν έγκυρο κωδικό πρόσβασης. Οι κωδικοί πρόσβασης πρέπει να έχουν μήκος τουλάχιστον 8 χαρακτήρων.",
 	"error.user.password.notSame": "\u03a0\u03b1\u03c1\u03b1\u03ba\u03b1\u03bb\u03bf\u03cd\u03bc\u03b5 \u03b5\u03c0\u03b9\u03b2\u03b5\u03b2\u03b1\u03b9\u03ce\u03c3\u03c4\u03b5 \u03c4\u03bf\u03bd \u039a\u03c9\u03b4\u03b9\u03ba\u03cc \u03a0\u03c1\u03cc\u03c3\u03b2\u03b1\u03c3\u03b7\u03c2",
 	"error.user.password.undefined": "Ο χρήστης δεν έχει κωδικό πρόσβασης",

@@ -140,6 +140,43 @@ class XmlTest extends TestCase
 	}
 
 	/**
+	 * @covers ::parse
+	 */
+	public function testParseEntities()
+	{
+		$xml   = '<!DOCTYPE d [<!ENTITY e "bar">]><x>this is a file: foo &e; (with entities)</x>';
+		$array = Xml::parse($xml);
+
+		$this->assertSame([
+			'@name' => 'x',
+			'@value' => 'this is a file: foo bar (with entities)'
+		], $array);
+	}
+
+	/**
+	 * @covers ::parse
+	 */
+	public function testParseRecursiveEntities()
+	{
+		$xml = file_get_contents(__DIR__ . '/fixtures/xml/billion-laughs.xml');
+		$this->assertNull(Xml::parse($xml));
+	}
+
+	/**
+	 * @covers ::parse
+	 */
+	public function testParseXXE()
+	{
+		$xml   = '<!DOCTYPE d [<!ENTITY e SYSTEM "' . __FILE__ . '">]><x>this is a file: &e; with an XXE vulnerability</x>';
+		$array = Xml::parse($xml);
+
+		$this->assertSame([
+			'@name' => 'x',
+			'@value' => 'this is a file:  with an XXE vulnerability'
+		], $array);
+	}
+
+	/**
 	 * @covers ::encode
 	 * @covers ::decode
 	 */

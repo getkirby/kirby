@@ -183,6 +183,7 @@
 	"error.user.email.invalid": "Prosím, zadajte platnú e-mailovú adresu",
 	"error.user.language.invalid": "Prosím, zadajte platný jazyk",
 	"error.user.notFound": "Užívateľa \"{name}\" nie je možné nájsť",
+	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
 	"error.user.password.invalid": "Prosím, zadajte platné heslo. Dĺžka hesla musí byť aspoň 8 znakov.",
 	"error.user.password.notSame": "Heslá nie sú rovnaké",
 	"error.user.password.undefined": "Užívateľ nemá heslo",
