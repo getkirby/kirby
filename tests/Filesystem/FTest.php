@@ -493,7 +493,15 @@ class FTest extends TestCase
 	 */
 	public function testMoveAcrossDevices()
 	{
-		$tmpDir = sys_get_temp_dir();
+		// try to find a suitable path on a different device (filesystem)
+		if (is_dir('/dev/shm') === true) {
+			// use tmpfs mount point on GitHub Actions
+			$tmpDir = '/dev/shm';
+		} else {
+			// no luck, try the system temp dir,
+			// which often also uses tmpfs
+			$tmpDir = sys_get_temp_dir();
+		}
 
 		if (stat($this->tmp)['dev'] === stat($tmpDir)['dev']) {
 			$this->markTestSkipped('Temporary directory "' . $tmpDir . '" is on the same filesystem');

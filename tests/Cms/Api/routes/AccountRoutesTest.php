@@ -48,6 +48,7 @@ class AccountRoutesTest extends TestCase
 
 	public function tearDown(): void
 	{
+		$this->app->session()->destroy();
 		App::destroy();
 		Field::$types = [];
 		Section::$types = [];

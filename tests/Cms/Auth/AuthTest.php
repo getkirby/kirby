@@ -305,8 +305,7 @@ class AuthTest extends TestCase
 	}
 
 	/**
-	 * @covers ::status
-	 * @covers ::user
+	 * @covers ::currentUserFromSession
 	 */
 	public function testUserSessionOldTimestamp()
 	{
@@ -326,8 +325,7 @@ class AuthTest extends TestCase
 	}
 
 	/**
-	 * @covers ::status
-	 * @covers ::user
+	 * @covers ::currentUserFromSession
 	 */
 	public function testUserSessionNoTimestamp()
 	{
