@@ -30,7 +30,9 @@ class UserAuthTest extends TestCase
 
 	public function tearDown(): void
 	{
+		$this->app->session()->destroy();
 		Dir::remove($this->tmp);
+		App::destroy();
 	}
 
 	public function testGlobalUserState()
@@ -50,7 +52,7 @@ class UserAuthTest extends TestCase
 
 		$calls         = 0;
 		$logoutSession = false;
-		$app = $this->app->clone([
+		$this->app = $this->app->clone([
 			'hooks' => [
 				'user.login:before' => function ($user, $session) use ($phpunit, &$calls) {
 					$phpunit->assertSame('test@getkirby.com', $user->email());
@@ -86,7 +88,7 @@ class UserAuthTest extends TestCase
 		]);
 
 		// without prepopulated session
-		$user = $app->user('test@getkirby.com');
+		$user = $this->app->user('test@getkirby.com');
 		$user->loginPasswordless();
 		$user->logout();
 
