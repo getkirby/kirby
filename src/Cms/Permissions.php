@@ -63,6 +63,11 @@ class Permissions
 			'changeTitle' => true,
 			'update'      => true
 		],
+		'search' => [
+			'files' => true,
+			'pages' => true,
+			'users' => true,
+		],
 		'users' => [
 			'changeEmail'    => true,
 			'changeLanguage' => true,
@@ -116,7 +121,14 @@ class Permissions
 				return false;
 			}
 
-			return $this->actions[$category];
+			$permissions = $this->actions[$category];
+
+			// checks if there are any allowed permissions in the category
+			if (is_array($permissions) === true) {
+				return in_array(true, $permissions, true);
+			}
+
+			return $permissions;
 		}
 
 		if ($this->hasAction($category, $action) === false) {

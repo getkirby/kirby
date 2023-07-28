@@ -4,8 +4,11 @@ use Kirby\Cms\App;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 
-return [
-	'users' => [
+$kirby = App::instance();
+$searches = [];
+
+if ($kirby->user()?->role()->permissions()->for('search', 'users') === true) {
+	$searches['users'] = [
 		'label' => I18n::translate('users'),
 		'icon'  => 'users',
 		'query' => function (string $query = null, int $limit, int $page) {
@@ -25,5 +28,7 @@ return [
 				'pagination' => $users->pagination()->toArray()
 			];
 		}
-	]
-];
+	];
+}
+
+return $searches;

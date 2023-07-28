@@ -4,8 +4,11 @@ use Kirby\Cms\App;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 
-return [
-	'pages' => [
+$kirby = App::instance();
+$searches = [];
+
+if ($kirby->user()?->role()->permissions()->for('search', 'pages') === true) {
+	$searches['pages'] = [
 		'label' => I18n::translate('pages'),
 		'icon'  => 'page',
 		'query' => function (string $query = null, int $limit, int $page) {
@@ -27,8 +30,11 @@ return [
 				'pagination' => $pages->pagination()->toArray()
 			];
 		}
-	],
-	'files' => [
+	];
+}
+
+if ($kirby->user()?->role()->permissions()->for('search', 'files') === true) {
+	$searches['files'] = [
 		'label' => I18n::translate('files'),
 		'icon'  => 'image',
 		'query' => function (string $query = null, int $limit, int $page) {
@@ -52,5 +58,7 @@ return [
 				'pagination' => $files->pagination()->toArray()
 			];
 		}
-	]
-];
+	];
+}
+
+return $searches;

@@ -8,6 +8,7 @@
 		<div class="k-panel-menu-body">
 			<!-- Search button -->
 			<k-button
+				v-if="canSearch"
 				:text="$t('search')"
 				icon="search"
 				class="k-panel-menu-search k-panel-menu-button"
@@ -51,6 +52,10 @@ export default {
 	computed: {
 		menus() {
 			return this.$panel.menu.entries.split("-");
+		},
+		canSearch() {
+			const type = this.$panel.view.search;
+			return this.$panel.permissions.search[type] ?? false;
 		}
 	}
 };
