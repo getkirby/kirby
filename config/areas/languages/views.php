@@ -5,12 +5,10 @@ use Kirby\Cms\Find;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 
-$routes = [];
-
-// check language variables editor is disabled
-if (App::instance()->option('languages.variables', true) !== false) {
-	$routes['language'] = [
+return [
+	'language' => [
 		'pattern' => 'languages/(:any)',
+		'when'    => App::instance()->option('languages.variables', true) !== false,
 		'action'  => function (string $code) {
 			$language     = Find::language($code);
 			$link         = '/languages/' . $language->code();
@@ -98,28 +96,25 @@ if (App::instance()->option('languages.variables', true) !== false) {
 				]
 			];
 		}
-	];
-}
+	],
+	'languages' => [
+		'pattern' => 'languages',
+		'action'  => function () {
+			$kirby = App::instance();
 
-$routes['languages'] = [
-	'pattern' => 'languages',
-	'action'  => function () {
-		$kirby = App::instance();
-
-		return [
-			'component' => 'k-languages-view',
-			'props'     => [
-				'languages' => $kirby->languages()->values(fn ($language) => [
-					'deletable' => $language->isDeletable(),
-					'default'   => $language->isDefault(),
-					'id'        => $language->code(),
-					'info'      => Escape::html($language->code()),
-					'text'      => Escape::html($language->name()),
-				]),
-				'variables' => $kirby->option('languages.variables', true)
-			]
-		];
-	}
+			return [
+				'component' => 'k-languages-view',
+				'props'     => [
+					'languages' => $kirby->languages()->values(fn ($language) => [
+						'deletable' => $language->isDeletable(),
+						'default'   => $language->isDefault(),
+						'id'        => $language->code(),
+						'info'      => Escape::html($language->code()),
+						'text'      => Escape::html($language->name()),
+					]),
+					'variables' => $kirby->option('languages.variables', true)
+				]
+			];
+		}
+	]
 ];
-
-return $routes;

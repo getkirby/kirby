@@ -471,7 +471,13 @@ class Panel
 		foreach ($views as $view) {
 			$view['area'] = $areaId;
 			$view['type'] = 'view';
-			$routes[] = $view;
+
+			// loads the view only if it meets the condition
+			if (($view['when'] ?? true) === true) {
+				$routes[] = $view;
+			}
+
+			unset($view['when']);
 		}
 
 		return $routes;
