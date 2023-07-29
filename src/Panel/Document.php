@@ -300,8 +300,19 @@ class Document
 			'panelUrl' => $uri->path()->toString(true) . '/',
 		]);
 
+		$frameAncestorsOption = $kirby->option('panel.frameAncestors');
+		if ($frameAncestorsOption === true) {
+			$frameAncestors = "'self'";
+		} elseif (is_array($frameAncestorsOption)) {
+			$frameAncestors = "'self' " . implode(' ', $frameAncestorsOption);
+		} elseif (is_string($frameAncestorsOption)) {
+			$frameAncestors = $frameAncestorsOption;
+		} else {
+			$frameAncestors = "'none'";
+		}
+
 		return new Response($body, 'text/html', $code, [
-			'Content-Security-Policy' => "frame-ancestors 'none'"
+			'Content-Security-Policy' => 'frame-ancestors ' . $frameAncestors
 		]);
 	}
 }
