@@ -140,9 +140,16 @@ return [
 	'search' => function (
 		App $kirby,
 		Collection $collection,
-		string $query = '',
-		$params = []
+		string $query = null,
+		array|string $params = []
 	): Collection|bool {
+		$query = trim($query ?? '');
+
+		// empty search query
+		if (empty($query) === true) {
+			return $collection->limit(0);
+		}
+
 		if (is_string($params) === true) {
 			$params = ['fields' => Str::split($params, '|')];
 		}
@@ -156,7 +163,6 @@ return [
 
 		$collection  = clone $collection;
 		$options     = array_merge($defaults, $params);
-		$query       = trim($query);
 
 		// empty or too short search query
 		if (Str::length($query) < $options['minlength']) {
