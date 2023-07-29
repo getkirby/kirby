@@ -39,6 +39,12 @@ class SearchTest extends TestCase
 
 		$search = Search::collection($collection, ' ');
 		$this->assertCount(0, $search);
+
+		$search = Search::collection($collection, null);
+		$this->assertCount(0, $search);
+
+		$search = Search::collection($collection);
+		$this->assertCount(0, $search);
 	}
 
 
