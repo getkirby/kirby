@@ -358,4 +358,97 @@ class DocumentTest extends TestCase
 		$this->assertSame("frame-ancestors 'none'", $response->header('Content-Security-Policy'));
 		$this->assertNotNull($response->body());
 	}
+
+	/**
+	 * @covers ::response
+	 */
+	public function testResponseFrameAncestorsSelf(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'panel' => [
+					'frameAncestors' => true
+				]
+			]
+		]);
+
+		// create panel dist files first to avoid redirect
+		Document::link($this->app);
+
+		// get panel response
+		$response = Document::response([
+			'test' => 'Test'
+		]);
+
+		$this->assertInstanceOf(Response::class, $response);
+		$this->assertSame(200, $response->code());
+		$this->assertSame('text/html', $response->type());
+		$this->assertSame('UTF-8', $response->charset());
+		$this->assertSame("frame-ancestors 'self'", $response->header('Content-Security-Policy'));
+		$this->assertNotNull($response->body());
+	}
+
+	/**
+	 * @covers ::response
+	 */
+	public function testResponseFrameAncestorsArray(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'panel' => [
+					'frameAncestors' => ['*.example.com', 'https://example.com']
+				]
+			]
+		]);
+
+		// create panel dist files first to avoid redirect
+		Document::link($this->app);
+
+		// get panel response
+		$response = Document::response([
+			'test' => 'Test'
+		]);
+
+		$this->assertInstanceOf(Response::class, $response);
+		$this->assertSame(200, $response->code());
+		$this->assertSame('text/html', $response->type());
+		$this->assertSame('UTF-8', $response->charset());
+		$this->assertSame(
+			"frame-ancestors 'self' *.example.com https://example.com",
+			$response->header('Content-Security-Policy')
+		);
+		$this->assertNotNull($response->body());
+	}
+
+	/**
+	 * @covers ::response
+	 */
+	public function testResponseFrameAncestorsString(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'panel' => [
+					'frameAncestors' => '*.example.com https://example.com'
+				]
+			]
+		]);
+
+		// create panel dist files first to avoid redirect
+		Document::link($this->app);
+
+		// get panel response
+		$response = Document::response([
+			'test' => 'Test'
+		]);
+
+		$this->assertInstanceOf(Response::class, $response);
+		$this->assertSame(200, $response->code());
+		$this->assertSame('text/html', $response->type());
+		$this->assertSame('UTF-8', $response->charset());
+		$this->assertSame(
+			'frame-ancestors *.example.com https://example.com',
+			$response->header('Content-Security-Policy')
+		);
+		$this->assertNotNull($response->body());
+	}
 }
