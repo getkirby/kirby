@@ -46,7 +46,7 @@ class SiteUuid extends Uuid
 	/**
 	 * Pretends to fill cache - we don't need it in cache
 	 */
-	public function populate(): bool
+	public function populate(bool $force = false): bool
 	{
 		return true;
 	}
