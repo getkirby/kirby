@@ -61,9 +61,7 @@ export default {
 	display: flex;
 	gap: var(--spacing-3);
 	min-width: 0;
-}
-.k-choice-input .k-choice {
-	top: 2px;
+	align-items: center;
 }
 .k-choice-input-label {
 	display: flex;
