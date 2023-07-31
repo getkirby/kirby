@@ -183,7 +183,7 @@
 	"error.user.email.invalid": "Bitte gib eine gültige E-Mailadresse an",
 	"error.user.language.invalid": "Bitte gib eine gültige Sprache an",
 	"error.user.notFound": "Der Account \"{name}\" wurde nicht gefunden",
-	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
+	"error.user.password.excessive": "Bitte gib ein gültiges Passwort ein. Passwörter dürfen nicht länger als 1000 Zeichen sein.",
 	"error.user.password.invalid": "Bitte gib ein gültiges Passwort ein. Passwörter müssen mindestens 8 Zeichen lang sein.",
 	"error.user.password.notSame": "Die Passwörter stimmen nicht überein",
 	"error.user.password.undefined": "Der Account hat kein Passwort",
