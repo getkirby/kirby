@@ -183,6 +183,7 @@
 	"error.user.email.invalid": "Masukkan surel yang valid",
 	"error.user.language.invalid": "Masukkan bahasa yang valid",
 	"error.user.notFound": "Pengguna \"{name}\" tidak dapat ditemukan",
+	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
 	"error.user.password.invalid": "Masukkan sandi yang valid. Sandi setidaknya mengandung 8 karakter.",
 	"error.user.password.notSame": "Sandi tidak cocok",
 	"error.user.password.undefined": "Pengguna tidak memiliki sandi",

@@ -183,6 +183,7 @@
 	"error.user.email.invalid": "Vinsamlegast ákjósanlegt netfang",
 	"error.user.language.invalid": "Vinsamlegast ákjósanlegt tungumál",
 	"error.user.notFound": "Þessi notandi; \"{name}\" fannst ekki",
+	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
 	"error.user.password.invalid": "Veldu ákjósanlegt lykilorð. Minnst 8 stafa langt.",
 	"error.user.password.notSame": "Lykilorðin stemma ekki",
 	"error.user.password.undefined": "Þessi notandi hefur ekki lykilorð",

@@ -183,6 +183,7 @@
 	"error.user.email.invalid": "Vennligst skriv inn en gyldig e-postadresse",
 	"error.user.language.invalid": "Vennligst skriv inn et gyldig språk",
 	"error.user.notFound": "Brukeren kunne ikke bli funnet",
+	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
 	"error.user.password.invalid": "Vennligst skriv inn et gyldig passord. Passordet må minst være 8 tegn langt.",
 	"error.user.password.notSame": "Vennligst bekreft passordet",
 	"error.user.password.undefined": "Brukeren har ikke et passord",

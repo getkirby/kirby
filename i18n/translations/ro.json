@@ -183,6 +183,7 @@
 	"error.user.email.invalid": "Te rog introdu o adresă de e-mail validă",
 	"error.user.language.invalid": "Te rog introdu o limbă validă",
 	"error.user.notFound": "Utilizatorul \"{name}\" nu a fost găsit",
+	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
 	"error.user.password.invalid": "Te rog introdu o parolă validă. Parola trebuie să aibă cel puțin 8 caractere.",
 	"error.user.password.notSame": "Parolele nu se potrivesc",
 	"error.user.password.undefined": "Utilizatorul nu are parolă",
