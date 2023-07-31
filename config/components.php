@@ -154,7 +154,6 @@ return [
 			'words'     => false,
 		];
 
-		$collection = clone $collection;
 		$options    = array_merge($defaults, $params);
 		$query      = trim($query ?? '');
 
