@@ -334,6 +334,7 @@ export default {
 }
 .k-textarea-input-wrapper {
 	position: relative;
+	display: block;
 }
 .k-textarea-input-native {
 	resize: none;
@@ -361,12 +362,11 @@ export default {
 
 
 /* Input Context */
-.k-input[data-theme="field"][data-type="textarea"] {
-	display: block;
+.k-input[data-theme="field"][data-type="textarea"] .k-input-element {
+	min-width: 0;
 }
 .k-input[data-theme="field"][data-type="textarea"] .k-textarea-input-native {
 	padding: 0.25rem var(--field-input-padding);
 	line-height: 1.5rem;
-	background: var(--color-white);
 }
 </style>
