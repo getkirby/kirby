@@ -358,4 +358,12 @@ export default {
 .k-textarea-input-native[data-font="monospace"] {
 	font-family: var(--font-mono);
 }
+
+/* Input Context */
+.k-input[data-theme="field"][data-type="textarea"] .k-textarea-input-native {
+	padding: 0.25rem var(--field-input-padding);
+	line-height: 1.5rem;
+	max-width: 80ch;
+	background: var(--color-white);
+}
 </style>

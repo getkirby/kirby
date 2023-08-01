@@ -240,9 +240,4 @@ export default {
 	inset-inline-end: 0;
 }
 
-/* Textarea */
-.k-input[data-theme="field"][data-type="textarea"] .k-textarea-input-native {
-	padding: 0.25rem var(--field-input-padding);
-	line-height: 1.5rem;
-}
 </style>
