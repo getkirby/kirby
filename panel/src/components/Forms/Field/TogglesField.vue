@@ -4,7 +4,6 @@
 			:id="_uid"
 			ref="input"
 			:class="{ grow }"
-			:data-empty="value === undefined"
 			v-bind="$props"
 			theme="field"
 			type="toggles"

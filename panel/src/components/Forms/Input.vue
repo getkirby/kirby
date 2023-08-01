@@ -240,5 +240,4 @@ export default {
 	inset-block: 0;
 	inset-inline-end: 0;
 }
-
 </style>
