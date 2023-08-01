@@ -28,8 +28,15 @@ export default (panel) => {
 		 * Closes the drawer and goes back to the
 		 * parent one if it has been stored
 		 */
-		async close() {
+		async close(id) {
 			if (this.isOpen === false) {
+				return;
+			}
+
+			// Compare the drawer id to avoid closing
+			// the wrong drawer. This is particularly useful
+			// in nested drawers.
+			if (id !== undefined && id !== this.id) {
 				return;
 			}
 

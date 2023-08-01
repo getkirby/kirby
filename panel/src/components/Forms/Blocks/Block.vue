@@ -203,7 +203,7 @@ export default {
 	},
 	methods: {
 		close() {
-			this.$panel.drawer.close();
+			this.$panel.drawer.close(this.id);
 		},
 		focus() {
 			if (typeof this.$refs.editor?.focus === "function") {
@@ -289,10 +289,6 @@ export default {
 				},
 				on: {
 					submit: () => {
-						if (this.$panel.drawer.id === this.id) {
-							this.$panel.drawer.close();
-						}
-
 						this.$panel.dialog.close();
 						this.$emit("remove", this.id);
 					}

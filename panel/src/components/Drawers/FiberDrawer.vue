@@ -8,7 +8,7 @@
 			:disabled="isCurrent(drawer.id) === false"
 			:visible="true"
 			v-bind="drawer.props"
-			v-on="isCurrent(drawer.id) ? $panel.drawer.listeners() : {}"
+			v-on="isCurrent(drawer.id) ? $panel.drawer.listeners() : drawer.on"
 		/>
 	</div>
 </template>
