@@ -359,7 +359,11 @@ export default {
 	font-family: var(--font-mono);
 }
 
+
 /* Input Context */
+.k-input[data-theme="field"][data-type="textarea"] {
+	display: block;
+}
 .k-input[data-theme="field"][data-type="textarea"] .k-textarea-input-native {
 	padding: 0.25rem var(--field-input-padding);
 	line-height: 1.5rem;
