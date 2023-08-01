@@ -304,9 +304,7 @@ export default {
 	},
 	watch: {
 		value(value) {
-			if (value != this.items) {
-				this.items = this.toItems(value);
-			}
+			this.items = this.toItems(value);
 		}
 	},
 	methods: {
@@ -331,11 +329,10 @@ export default {
 				index = this.items.length - 1;
 			}
 
-			this.save();
 			this.open(index);
 		},
 		close() {
-			this.$panel.drawer.close();
+			this.$panel.drawer.close(this._uid);
 		},
 
 		/**
@@ -369,6 +366,7 @@ export default {
 
 			this.$panel.drawer.open({
 				component: "k-structure-drawer",
+				id: this._uid,
 				props: {
 					icon: this.icon ?? "list-bullet",
 					next: this.items[index + 1],
