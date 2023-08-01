@@ -36,6 +36,7 @@ import { after, before, disabled, invalid } from "@/mixins/props.js";
 
 export const props = {
 	mixins: [after, before, disabled, invalid],
+	inheritAttrs: false,
 	props: {
 		autofocus: Boolean,
 		type: String,
