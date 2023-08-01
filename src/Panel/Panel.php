@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel;
 
+use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\Url as CmsUrl;
 use Kirby\Cms\User;
@@ -472,8 +473,14 @@ class Panel
 			$view['area'] = $areaId;
 			$view['type'] = 'view';
 
-			// loads the view only if it meets the condition
-			if (($view['when'] ?? true) === true) {
+			$when = $view['when'] ?? null;
+
+			// checks if there is a load view condition
+			if ($when instanceof Closure) {
+				if ($when($view, $area) === true) {
+					$routes[] = $view;
+				}
+			} else {
 				$routes[] = $view;
 			}
 

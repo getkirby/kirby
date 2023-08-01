@@ -8,7 +8,9 @@ use Kirby\Toolkit\I18n;
 return [
 	'language' => [
 		'pattern' => 'languages/(:any)',
-		'when'    => App::instance()->option('languages.variables', true) !== false,
+		'when'    => function (): bool {
+			return App::instance()->option('languages.variables', true) !== false;
+		},
 		'action'  => function (string $code) {
 			$language     = Find::language($code);
 			$link         = '/languages/' . $language->code();
