@@ -94,6 +94,7 @@ export default {
 	methods: {
 		add() {
 			this.object = this.$helper.field.form(this.fields);
+			this.save();
 			this.open();
 		},
 		cell(name, value) {

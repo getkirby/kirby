@@ -329,6 +329,7 @@ export default {
 				index = this.items.length - 1;
 			}
 
+			this.save();
 			this.open(index);
 		},
 		close() {
