@@ -90,7 +90,7 @@ export default {
 }
 
 .k-header-title-text {
-	overflow: hidden;
+	overflow-x: hidden;
 	text-overflow: ellipsis;
 }
 
