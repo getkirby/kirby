@@ -7,14 +7,14 @@
 				icon="add"
 				size="xs"
 				variant="filled"
-				@click="onAdd"
+				@click="add"
 			/>
 			<k-button
 				v-else
 				icon="remove"
 				size="xs"
 				variant="filled"
-				@click="onRemove"
+				@click="remove"
 			/>
 		</template>
 
@@ -39,13 +39,13 @@
 								:field="field"
 								:mobile="true"
 								:value="object[field.name]"
-								@input="onCellInput(field.name, $event)"
+								@input="cell(field.name, $event)"
 							/>
 						</tr>
 					</template>
 				</tbody>
 			</table>
-			<k-empty v-else :data-invalid="isInvalid" icon="box" @click="onAdd">
+			<k-empty v-else :data-invalid="isInvalid" icon="box" @click="add">
 				{{ empty || $t("field.object.empty") }}
 			</k-empty>
 		</template>
@@ -64,12 +64,12 @@ export default {
 	mixins: [Field, Input],
 	props: {
 		empty: String,
-		fields: Object,
+		fields: [Object, Array],
 		value: [String, Object]
 	},
 	data() {
 		return {
-			object: this.valueToObject(this.value)
+			object: null
 		};
 	},
 	computed: {
@@ -84,27 +84,25 @@ export default {
 		}
 	},
 	watch: {
-		value(value) {
-			this.object = this.valueToObject(value);
-		}
+		value: {
+			handler(value) {
+				this.object = this.valueToObject(value);
+			},
+			immediate: true
+		},
 	},
 	methods: {
-		onAdd() {
+		add() {
 			this.object = this.$helper.field.form(this.fields);
-			this.$emit("input", this.object);
 			this.open();
 		},
-		onCellInput(name, value) {
+		cell(name, value) {
 			set(this.object, name, value);
-			this.$emit("input", this.object);
+			this.save();
 		},
-		onDrawerInput(value) {
-			this.object = value;
-			this.$emit("input", this.object);
-		},
-		onRemove() {
+		remove() {
 			this.object = null;
-			this.$emit("input", this.object);
+			this.save();
 		},
 		// TODO: field is not yet used to pre-focus correct field
 		// eslint-disable-next-line no-unused-vars
@@ -128,9 +126,21 @@ export default {
 					value: this.object
 				},
 				on: {
-					input: this.onDrawerInput.bind(this)
+					input: (value) => {
+						// loop through all object keys and make
+						// sure to make them reactive if they don't
+						// exist yet
+						for (const field in value) {
+							this.$set(this.object, field, value[field]);
+						}
+
+						this.save();
+					}
 				}
 			});
+		},
+		save() {
+			this.$emit("input", this.object);
 		},
 		valueToObject(value) {
 			return typeof value !== "object" ? null : value;
