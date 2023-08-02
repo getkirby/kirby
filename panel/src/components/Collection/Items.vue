@@ -151,12 +151,10 @@ export default {
 
 /** Cardlets */
 .k-items[data-layout="cardlets"] {
+	--items-size: 1fr;
 	display: grid;
 	gap: 0.75rem;
-	grid-template-columns: repeat(
-		auto-fill,
-		minmax(var(--items-size, 10rem), 1fr)
-	);
+	grid-template-columns: repeat(auto-fill, minmax(var(--items-size), 1fr));
 }
 
 @container (min-width: 15rem) {
