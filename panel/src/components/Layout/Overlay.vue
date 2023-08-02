@@ -176,7 +176,10 @@ export default {
 }
 
 /* Scroll lock */
-html:has(.k-overlay[open]) {
+html[data-overlay] {
 	overflow: hidden;
+}
+html[data-overlay] body {
+	overflow: scroll;
 }
 </style>
