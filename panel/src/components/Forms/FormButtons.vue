@@ -249,7 +249,7 @@ export default {
 			});
 		},
 		async save(e) {
-			e.preventDefault?.();
+			e?.preventDefault?.();
 
 			await this.$store.dispatch("content/save");
 			this.$events.emit("model.update");
