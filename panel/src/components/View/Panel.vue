@@ -54,8 +54,8 @@
 
 <style>
 html {
-	scrollbar-gutter: stable;
 	overflow-x: hidden;
+	overflow-y: scroll;
 }
 
 body {

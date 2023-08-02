@@ -44,9 +44,7 @@ export default (panel) => {
 
 			// no more items in the history
 			if (this.history.isEmpty() === true) {
-				this.reset();
-				this.isOpen = false;
-				this.emit("close");
+				parent.close.call(this);
 				return;
 			}
 
