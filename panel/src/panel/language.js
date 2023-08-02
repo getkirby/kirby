@@ -6,7 +6,7 @@ export const defaults = () => {
 		default: false,
 		direction: "ltr",
 		name: null,
-		rules: []
+		rules: null
 	};
 };
 
