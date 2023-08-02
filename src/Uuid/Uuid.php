@@ -322,7 +322,8 @@ abstract class Uuid
 				// lazily fill cache by writing to cache
 				// whenever looked up from index to speed
 				// up future lookups of the same UUID
-				$this->populate();
+				// also force to update value again if it is already cached
+				$this->populate($this->isCached());
 
 				return $this->model;
 			}
@@ -333,12 +334,10 @@ abstract class Uuid
 
 	/**
 	 * Feeds the UUID into the cache
-	 *
-	 * @return bool
 	 */
-	public function populate(): bool
+	public function populate(bool $force = false): bool
 	{
-		if ($this->isCached() === true) {
+		if ($force === false && $this->isCached() === true) {
 			return true;
 		}
 
