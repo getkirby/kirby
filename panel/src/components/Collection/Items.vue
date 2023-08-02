@@ -151,10 +151,10 @@ export default {
 
 /** Cardlets */
 .k-items[data-layout="cardlets"] {
-	--items-size: 10rem;
+	--items-size: 1fr;
 	display: grid;
 	gap: 0.75rem;
-	grid-template-columns: repeat(auto-fit, minmax(var(--items-size), 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(var(--items-size), 1fr));
 }
 
 @container (min-width: 15rem) {
@@ -165,12 +165,10 @@ export default {
 
 /** Cards */
 .k-items[data-layout="cards"] {
-	--items-layout-mode: auto-fill;
-
 	display: grid;
 	gap: 1.5rem;
 	grid-template-columns: repeat(
-		var(--items-layout-mode),
+		auto-fill,
 		minmax(var(--items-size, 12rem), 1fr)
 	);
 }

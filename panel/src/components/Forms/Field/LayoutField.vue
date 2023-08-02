@@ -56,6 +56,7 @@ export default {
 			type: Array,
 			default: () => [["1/1"]]
 		},
+		selector: Object,
 		settings: Object,
 		value: {
 			type: Array,

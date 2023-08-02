@@ -14,7 +14,7 @@ describe.concurrent("panel.language", () => {
 			default: false,
 			direction: "ltr",
 			name: null,
-			rules: []
+			rules: null,
 		};
 
 		expect(language.key()).toStrictEqual("language");

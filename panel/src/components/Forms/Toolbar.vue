@@ -288,9 +288,9 @@ export default {
 	display: flex;
 	max-width: 100%;
 	height: var(--toolbar-size);
-	margin-bottom: var(--spacing-1);
 	align-items: center;
-
+	overflow-x: auto;
+	overflow-y: hidden;
 	color: var(--toolbar-text);
 	background: var(--toolbar-back);
 	border-start-start-radius: var(--rounded);

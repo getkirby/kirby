@@ -62,6 +62,7 @@ export default {
 		fieldsets: Object,
 		layouts: Array,
 		max: Number,
+		selector: Object,
 		settings: Object,
 		value: Array
 	},
@@ -113,6 +114,7 @@ export default {
 				props: {
 					label: this.$t("field.layout.change"),
 					layouts: this.layouts,
+					selector: this.selector,
 					value: this.layouts[layoutIndex]
 				},
 				on: {
@@ -277,6 +279,7 @@ export default {
 				component: "k-layout-selector",
 				props: {
 					layouts: this.layouts,
+					selector: this.selector,
 					value: null
 				},
 				on: {

@@ -42,7 +42,9 @@ class UserActionsTest extends TestCase
 
 	public function tearDown(): void
 	{
+		$this->app->session()->destroy();
 		Dir::remove($this->tmp);
+		App::destroy();
 	}
 
 	public function testChangeEmail()
@@ -302,7 +304,7 @@ class UserActionsTest extends TestCase
 		$calls = 0;
 		$phpunit = $this;
 
-		$app = $this->app->clone([
+		$this->app = $this->app->clone([
 			'hooks' => [
 				'user.changeEmail:before' => function (User $user, $email) use ($phpunit, &$calls) {
 					$phpunit->assertSame('editor@domain.com', $user->email());
@@ -317,7 +319,7 @@ class UserActionsTest extends TestCase
 			]
 		]);
 
-		$user = $app->user('editor@domain.com');
+		$user = $this->app->user('editor@domain.com');
 		$user->changeEmail('another@domain.com');
 
 		$this->assertSame(2, $calls);
@@ -328,7 +330,7 @@ class UserActionsTest extends TestCase
 		$calls = 0;
 		$phpunit = $this;
 
-		$app = $this->app->clone([
+		$this->app = $this->app->clone([
 			'hooks' => [
 				'user.changeLanguage:before' => function (User $user, $language) use ($phpunit, &$calls) {
 					$phpunit->assertSame('en', $user->language());
@@ -343,7 +345,7 @@ class UserActionsTest extends TestCase
 			]
 		]);
 
-		$user = $app->user('editor@domain.com');
+		$user = $this->app->user('editor@domain.com');
 		$user->changeLanguage('de');
 
 		$this->assertSame(2, $calls);
@@ -354,7 +356,7 @@ class UserActionsTest extends TestCase
 		$calls = 0;
 		$phpunit = $this;
 
-		$app = $this->app->clone([
+		$this->app = $this->app->clone([
 			'hooks' => [
 				'user.changeName:before' => function (User $user, $name) use ($phpunit, &$calls) {
 					$phpunit->assertNull($user->name()->value());
@@ -369,7 +371,7 @@ class UserActionsTest extends TestCase
 			]
 		]);
 
-		$user = $app->user('editor@domain.com');
+		$user = $this->app->user('editor@domain.com');
 		$user->changeName('Edith Thor');
 
 		$this->assertSame(2, $calls);
@@ -380,7 +382,7 @@ class UserActionsTest extends TestCase
 		$calls = 0;
 		$phpunit = $this;
 
-		$app = $this->app->clone([
+		$this->app = $this->app->clone([
 			'hooks' => [
 				'user.changePassword:before' => function (User $user, $password) use ($phpunit, &$calls) {
 					$phpunit->assertEmpty($user->password());
@@ -390,15 +392,53 @@ class UserActionsTest extends TestCase
 				'user.changePassword:after' => function (User $newUser, User $oldUser) use ($phpunit, &$calls) {
 					$phpunit->assertTrue($newUser->validatePassword('topsecret2018'));
 					$phpunit->assertEmpty($oldUser->password());
-					$calls++;
-				}
+					$calls += 2;
+				},
+				'user.login:before' => function () use (&$calls) {
+					$calls += 4;
+				},
+				'user.login:after' => function () use (&$calls) {
+					$calls += 8;
+				},
 			]
 		]);
 
-		$user = $app->user('editor@domain.com');
+		$user = $this->app->user('editor@domain.com');
 		$user->changePassword('topsecret2018');
 
-		$this->assertSame(2, $calls);
+		$this->assertSame(3, $calls);
+	}
+
+	public function testChangePasswordHooksCurrentUser()
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'user.changePassword:before' => function (User $user, $password) use ($phpunit, &$calls) {
+					$phpunit->assertEmpty($user->password());
+					$phpunit->assertSame('topsecret2018', $password);
+					$calls++;
+				},
+				'user.changePassword:after' => function (User $newUser, User $oldUser) use ($phpunit, &$calls) {
+					$phpunit->assertTrue($newUser->validatePassword('topsecret2018'));
+					$phpunit->assertEmpty($oldUser->password());
+					$calls += 2;
+				},
+				'user.login:before' => function () use (&$calls) {
+					$calls += 4;
+				},
+				'user.login:after' => function () use (&$calls) {
+					$calls += 8;
+				},
+			]
+		]);
+
+		$user = $this->app->user('admin@domain.com');
+		$user->changePassword('topsecret2018');
+
+		$this->assertSame(15, $calls);
 	}
 
 	public function testChangeRoleHooks()
@@ -406,7 +446,7 @@ class UserActionsTest extends TestCase
 		$calls = 0;
 		$phpunit = $this;
 
-		$app = $this->app->clone([
+		$this->app = $this->app->clone([
 			'hooks' => [
 				'user.changeRole:before' => function (User $user, $role) use ($phpunit, &$calls) {
 					$phpunit->assertSame('editor', $user->role()->name());
@@ -421,7 +461,7 @@ class UserActionsTest extends TestCase
 			]
 		]);
 
-		$user = $app->user('editor@domain.com');
+		$user = $this->app->user('editor@domain.com');
 		$user->changeRole('admin');
 
 		$this->assertSame(2, $calls);
@@ -437,7 +477,7 @@ class UserActionsTest extends TestCase
 			'model' => 'admin',
 		];
 
-		$this->app->clone([
+		$this->app = $this->app->clone([
 			'hooks' => [
 				'user.create:before' => function (User $user, $input) use ($phpunit, $userInput, &$calls) {
 					$phpunit->assertSame('new@domain.com', $user->email());
@@ -463,7 +503,7 @@ class UserActionsTest extends TestCase
 		$calls = 0;
 		$phpunit = $this;
 
-		$app = $this->app->clone([
+		$this->app = $this->app->clone([
 			'hooks' => [
 				'user.delete:before' => function (User $user) use ($phpunit, &$calls) {
 					$phpunit->assertSame('editor@domain.com', $user->email());
@@ -479,7 +519,7 @@ class UserActionsTest extends TestCase
 			]
 		]);
 
-		$user = $app->user('editor@domain.com');
+		$user = $this->app->user('editor@domain.com');
 		$user->delete();
 
 		$this->assertSame(2, $calls);
@@ -493,7 +533,7 @@ class UserActionsTest extends TestCase
 			'website' => 'https://getkirby.com'
 		];
 
-		$app = $this->app->clone([
+		$this->app = $this->app->clone([
 			'hooks' => [
 				'user.update:before' => function (User $user, $values, $strings) use ($phpunit, $input, &$calls) {
 					$phpunit->assertNull($user->website()->value());
@@ -509,7 +549,7 @@ class UserActionsTest extends TestCase
 			]
 		]);
 
-		$user = $app->user('editor@domain.com');
+		$user = $this->app->user('editor@domain.com');
 		$user->update($input);
 
 		$this->assertSame(2, $calls);

@@ -28,7 +28,7 @@ class Search
 	 */
 	public static function collection(
 		Collection $collection,
-		string $query = null,
+		string|null $query = null,
 		string|array $params = []
 	): Collection {
 		$kirby = App::instance();

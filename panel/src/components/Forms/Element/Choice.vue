@@ -34,7 +34,7 @@ export const props = {
 			type: String
 		},
 		value: {
-			type: [Number, String]
+			type: [Boolean, Number, String]
 		}
 	}
 };

@@ -55,6 +55,11 @@ export default (panel, key, defaults) => {
 			this.isOpen = false;
 			this.emit("close");
 			this.reset();
+
+			if (panel.overlays().length === 0) {
+				// unblock the overflow until we can use :has for this.
+				document.documentElement.removeAttribute("data-overlay");
+			}
 		},
 
 		/**
@@ -118,6 +123,9 @@ export default (panel, key, defaults) => {
 			if (this.isOpen === false) {
 				panel.notification.close();
 			}
+
+			// block the overflow until we can use :has for this.
+			document.documentElement.setAttribute("data-overlay", "true");
 
 			// open the modal feature via url or with a state object
 			await parent.open.call(this, modal, options);

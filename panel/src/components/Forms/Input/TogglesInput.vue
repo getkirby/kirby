@@ -108,8 +108,7 @@ export default {
 .k-input[data-type="toggles"].grow {
 	display: flex;
 }
-/** TODO: .k-input[data-type="toggles"][data-theme="field"]:has(.k-empty) */
-.k-input[data-type="toggles"][data-theme="field"][data-empty="true"] {
+.k-input[data-type="toggles"][data-theme="field"]:has(.k-empty) {
 	outline: 0;
 	display: flex;
 }

@@ -44,9 +44,6 @@ class LanguagesTest extends TestCase
 		Dir::remove($this->tmp);
 	}
 
-	/**
-	 * @covers ::codes
-	 */
 	public function testCodes()
 	{
 		$app = new App([

@@ -105,7 +105,6 @@ class StatusTest extends TestCase
 
 	/**
 	 * @covers ::status
-	 * @covers ::setStatus
 	 */
 	public function testStatus()
 	{

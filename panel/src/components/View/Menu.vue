@@ -13,10 +13,12 @@
 				class="k-panel-menu-search k-panel-menu-button"
 				@click="$panel.search()"
 			/>
+
 			<!-- Menus -->
 			<menu
 				v-for="(menu, menuIdex) in menus"
 				:key="menuIdex"
+				:data-second-last="menuIdex === menus.length - 2"
 				class="k-panel-menu-buttons"
 			>
 				<k-button
@@ -79,65 +81,22 @@ export default {
 	inset-inline-start: 0;
 	inset-block: 0;
 	z-index: var(--z-navigation);
+
 	display: var(--menu-display);
+	width: var(--menu-width);
+
 	background-color: var(--menu-color-back);
 	border-right: 1px solid var(--menu-color-border);
-	width: var(--menu-width);
 	box-shadow: var(--menu-shadow);
 }
 
-/* The toggle button builds a full-height strip on the side of the menu */
-.k-panel-menu-toggle {
-	--button-align: flex-start;
-	--button-height: 100%;
-	--button-width: var(--menu-toggle-width);
-	position: absolute;
-	inset-block: 0;
-	inset-inline-start: 100%;
-	align-items: flex-start;
-	border-radius: 0;
-	overflow: visible;
-	opacity: 0;
-	transition: opacity 0.2s;
-}
-
-/* The toggle is visible on hover or focus */
-.k-panel-menu-toggle:focus-visible,
-/* The hover state is controlled via JS to avoid flickering */
-.k-panel-menu[data-hover] .k-panel-menu-toggle {
-	opacity: 1;
-}
-
-/* The toggle strip has no focus style. The icon takes over here */
-.k-panel-menu-toggle:focus {
-	outline: 0;
-}
-
-/* The toggle icon has all the visible styles */
-.k-panel-menu-toggle .k-button-icon {
-	display: grid;
-	place-items: center;
-	height: var(--menu-toggle-height);
-	width: var(--menu-toggle-width);
-	margin-top: var(--menu-padding);
-	border-block: 1px solid var(--menu-color-border);
-	border-inline-end: 1px solid var(--menu-color-border);
-	background: var(--menu-color-back);
-	border-start-end-radius: var(--button-rounded);
-	border-end-end-radius: var(--button-rounded);
-}
-
-/* Create the outline on the icon on focus */
-.k-panel-menu-toggle:focus-visible .k-button-icon {
-	outline: var(--outline);
-	/* With a radius on all ends, the outline looks nicer */
-	border-radius: var(--button-rounded);
-}
-
-/* Overscroll container for menu items. Overscrolling is needed if the screen height is too low */
+/* Overscroll container for menu items. */
+/* Overscrolling is needed if the screen height is too low */
 .k-panel-menu-body {
+	display: flex;
+	flex-direction: column;
 	/* A clamp keeps the gap large when there's enough vertical space */
-	gap: clamp(var(--spacing-3), 9vh, var(--spacing-12));
+	gap: var(--spacing-4);
 	padding: var(--menu-padding);
 	overscroll-behavior: contain;
 	overflow-x: hidden;
@@ -145,15 +104,20 @@ export default {
 	height: 100%;
 }
 
+.k-panel-menu-search {
+	margin-bottom: var(--spacing-8);
+}
+
 /** The vertical flex rules are useful for the body and button groups **/
-.k-panel-menu-body,
 .k-panel-menu-buttons {
 	display: flex;
 	flex-direction: column;
 	width: 100%;
+}
+/* Keep the remaining space between 2nd last and last button group */
+.k-panel-menu-buttons[data-second-last="true"] {
 	flex-grow: 1;
 }
-
 /* Move the last menu to the end */
 .k-panel-menu-buttons:last-child {
 	justify-content: flex-end;
@@ -167,12 +131,10 @@ export default {
 	/* Make sure that buttons don't shrink in height */
 	flex-shrink: 0;
 }
-
 .k-panel-menu-button[aria-current] {
 	--button-color-back: var(--color-white);
 	box-shadow: var(--shadow);
 }
-
 /* Outline should not vanish behind other buttons */
 .k-panel-menu-button:focus {
 	z-index: 1;
@@ -193,6 +155,40 @@ export default {
 	background: var(--color-backdrop);
 	display: var(--menu-display-backdrop);
 	pointer-events: none;
+}
+
+/* The toggle button builds a full-height strip on the side of the menu */
+.k-panel-menu-toggle {
+	--button-align: flex-start;
+	--button-height: 100%;
+	--button-width: var(--menu-toggle-width);
+	position: absolute;
+	inset-block: 0;
+	inset-inline-start: 100%;
+	align-items: flex-start;
+	border-radius: 0;
+	overflow: visible;
+	opacity: 0;
+	transition: opacity 0.2s;
+}
+
+/* The toggle strip has no focus style. The icon takes over here */
+.k-panel-menu-toggle:focus {
+	outline: 0;
+}
+
+/* The toggle icon has all the visible styles */
+.k-panel-menu-toggle .k-button-icon {
+	display: grid;
+	place-items: center;
+	height: var(--menu-toggle-height);
+	width: var(--menu-toggle-width);
+	margin-top: var(--menu-padding);
+	border-block: 1px solid var(--menu-color-border);
+	border-inline-end: 1px solid var(--menu-color-border);
+	background: var(--menu-color-back);
+	border-start-end-radius: var(--button-rounded);
+	border-end-end-radius: var(--button-rounded);
 }
 
 /* Desktop size */
@@ -216,6 +212,19 @@ export default {
 	/* No proxy button in the breadcrumb. The toggle is enough. */
 	.k-panel-menu-proxy {
 		display: none;
+	}
+
+	/* The toggle is visible on hover or focus */
+	.k-panel-menu-toggle:focus-visible,
+	/* The hover state is controlled via JS to avoid flickering */
+	.k-panel-menu[data-hover] .k-panel-menu-toggle {
+		opacity: 1;
+	}
+	/* Create the outline on the icon on focus */
+	.k-panel-menu-toggle:focus-visible .k-button-icon {
+		outline: var(--outline);
+		/* With a radius on all ends, the outline looks nicer */
+		border-radius: var(--button-rounded);
 	}
 }
 </style>

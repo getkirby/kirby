@@ -74,11 +74,11 @@ export default {
 	--ratio: 1/1;
 
 	position: relative;
-	display: block;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	aspect-ratio: var(--ratio);
 	background: var(--back);
-	display: grid;
-	place-items: center;
 	overflow: hidden;
 }
 

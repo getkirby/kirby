@@ -143,7 +143,7 @@ export default {
 			this.$panel.dialog.open({
 				component: "k-toolbar-" + dialog + "-dialog",
 				props: {
-					value: { title: this.selection() }
+					value: this.parseSelection()
 				},
 				on: {
 					cancel: restoreSelection,
@@ -242,6 +242,36 @@ export default {
 		onSubmit($event) {
 			return this.$emit("submit", $event);
 		},
+		parseSelection() {
+			const selection = this.selection();
+
+			if (selection?.length === 0) {
+				return {
+					href: null,
+					title: null
+				}
+			}
+
+			let regex;
+			if (this.$panel.config.kirbytext) {
+				regex = /^\(link:\s*(?<url>.*?)(?:\s*text:\s*(?<text>.*?))?\)$/is;
+			} else {
+				regex = /^(\[(?<text>.*?)\]\((?<url>.*?)\))|(<(?<link>.*?)>)$/is;
+			}
+
+			const matches = regex.exec(selection);
+			if (matches !== null) {
+				return {
+					href: matches.groups.url ?? matches.groups.link,
+					title: matches.groups.text ?? null
+				}
+			} else {
+				return {
+					href: null,
+					title: selection
+				}
+			}
+		},
 		prepend(prepend) {
 			this.insert(prepend + " " + this.selection());
 		},
@@ -304,6 +334,7 @@ export default {
 }
 .k-textarea-input-wrapper {
 	position: relative;
+	display: block;
 }
 .k-textarea-input-native {
 	resize: none;
@@ -327,5 +358,15 @@ export default {
 }
 .k-textarea-input-native[data-font="monospace"] {
 	font-family: var(--font-mono);
+}
+
+
+/* Input Context */
+.k-input[data-theme="field"][data-type="textarea"] .k-input-element {
+	min-width: 0;
+}
+.k-input[data-theme="field"][data-type="textarea"] .k-textarea-input-native {
+	padding: 0.25rem var(--field-input-padding);
+	line-height: 1.5rem;
 }
 </style>

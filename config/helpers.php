@@ -588,25 +588,6 @@ if (Helpers::hasOverride('tt') === false) { // @codeCoverageIgnore
 	}
 }
 
-if (Helpers::hasOverride('twitter') === false) { // @codeCoverageIgnore
-	/**
-	 * Builds a Twitter link
-	 */
-	function twitter(
-		string $username,
-		string|null $text = null,
-		string|null $title = null,
-		string|null $class = null
-	): string {
-		return App::instance()->kirbytag([
-			'twitter' => $username,
-			'text'    => $text,
-			'title'   => $title,
-			'class'   => $class
-		]);
-	}
-}
-
 if (Helpers::hasOverride('u') === false) { // @codeCoverageIgnore
 	/**
 	 * Shortcut for url()

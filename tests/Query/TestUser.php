@@ -12,7 +12,7 @@ class TestUser
 	public function profiles()
 	{
 		return [
-			'twitter' => '@homer'
+			'mastodon' => '@homer'
 		];
 	}
 

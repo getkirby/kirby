@@ -140,5 +140,6 @@ export default {
 <style>
 .k-collection-footer {
 	margin-top: var(--spacing-2);
+	flex-wrap: wrap;
 }
 </style>

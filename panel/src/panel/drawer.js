@@ -28,8 +28,15 @@ export default (panel) => {
 		 * Closes the drawer and goes back to the
 		 * parent one if it has been stored
 		 */
-		async close() {
+		async close(id) {
 			if (this.isOpen === false) {
+				return;
+			}
+
+			// Compare the drawer id to avoid closing
+			// the wrong drawer. This is particularly useful
+			// in nested drawers.
+			if (id !== undefined && id !== this.id) {
 				return;
 			}
 
@@ -37,9 +44,7 @@ export default (panel) => {
 
 			// no more items in the history
 			if (this.history.isEmpty() === true) {
-				this.reset();
-				this.isOpen = false;
-				this.emit("close");
+				parent.close.call(this);
 				return;
 			}
 
@@ -116,7 +121,7 @@ export default (panel) => {
 		 */
 		async open(drawer, options = {}) {
 			// prefix URLs
-			if (typeof dialog === "string") {
+			if (typeof drawer === "string") {
 				drawer = `/drawers/${drawer}`;
 			}
 

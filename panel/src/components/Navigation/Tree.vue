@@ -151,7 +151,9 @@ li[aria-current] > .k-tree-branch {
 		display: none;
 	}
 }
-
+.k-tree-folder > .k-frame {
+	flex-shrink: 0;
+}
 .k-tree-folder > span {
 	overflow: hidden;
 	text-overflow: ellipsis;

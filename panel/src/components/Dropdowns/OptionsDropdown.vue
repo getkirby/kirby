@@ -23,7 +23,7 @@
 			:dropdown="true"
 			:icon="icon"
 			:size="size"
-			:text="text !== true ? text : null"
+			:text="text !== true && text !== false ? text : null"
 			:title="$t('options')"
 			:variant="variant"
 			class="k-options-dropdown-toggle"

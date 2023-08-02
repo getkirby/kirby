@@ -225,6 +225,20 @@ export default {
 		}
 	},
 
+	overlays() {
+		const overlays = [];
+
+		if (this.drawer.isOpen === true) {
+			overlays.push("drawer");
+		}
+
+		if (this.dialog.isOpen === true) {
+			overlays.push("dialog");
+		}
+
+		return overlays;
+	},
+
 	/**
 	 * Sends a POST request
 	 *

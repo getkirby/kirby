@@ -42,6 +42,7 @@ import Heading from "./Nodes/Heading";
 import HorizontalRule from "./Nodes/HorizontalRule";
 import ListItem from "./Nodes/ListItem";
 import OrderedList from "./Nodes/OrderedList";
+import Quote from "./Nodes/Quote";
 
 // Extensions
 import History from "./Extensions/History.js";
@@ -266,6 +267,7 @@ export default {
 					heading: new Heading({ levels: this.headings }),
 					horizontalRule: new HorizontalRule(),
 					listItem: new ListItem(),
+					quote: new Quote(),
 					...this.createNodesFromPanelPlugins()
 				},
 				this.nodes,
@@ -448,6 +450,14 @@ export default {
 }
 .k-writer-code code {
 	font-family: var(--font-mono);
+}
+
+.k-writer blockquote {
+	font-size: var(--text-lg);
+	margin-bottom: var(--spacing-1);
+	line-height: 1.25em;
+	padding-inline-start: var(--spacing-4);
+	border-inline-start: 2px solid var(--color-black);
 }
 
 .k-writer[data-placeholder][data-empty="true"]::before {

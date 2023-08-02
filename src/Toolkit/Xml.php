@@ -271,7 +271,7 @@ class Xml
 	 */
 	public static function parse(string $xml): array|null
 	{
-		$xml = @simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOENT);
+		$xml = @simplexml_load_string($xml);
 
 		if (is_object($xml) !== true) {
 			return null;

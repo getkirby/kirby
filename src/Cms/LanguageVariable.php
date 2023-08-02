@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Toolkit\Str;
 
 /**
  * A language variable is a custom translation string
@@ -37,8 +36,6 @@ class LanguageVariable
 		string $key,
 		string|null $value = null
 	): static {
-		$key = Str::slug($key, null, 'a-z0-9_-');
-
 		if (is_numeric($key) === true) {
 			throw new InvalidArgumentException('The variable key must not be numeric');
 		}

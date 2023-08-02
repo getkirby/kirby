@@ -57,6 +57,16 @@ class Document
 			'panelUrl' => $uri->path()->toString(true) . '/',
 		]);
 
-		return new Response($body, 'text/html', $code);
+		$frameAncestors = $kirby->option('panel.frameAncestors');
+		$frameAncestors = match (true) {
+			$frameAncestors === true   => "'self'",
+			is_array($frameAncestors)  => "'self' " . implode(' ', $frameAncestors),
+			is_string($frameAncestors) => $frameAncestors,
+			default                    => "'none'"
+		};
+
+		return new Response($body, 'text/html', $code, [
+			'Content-Security-Policy' => 'frame-ancestors ' . $frameAncestors
+		]);
 	}
 }

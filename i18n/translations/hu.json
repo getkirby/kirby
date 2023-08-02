@@ -183,6 +183,7 @@
 	"error.user.email.invalid": "Kérlek adj meg egy valós email-címet",
 	"error.user.language.invalid": "Kérlek add meg a megfelelő nyelvi beállítást",
 	"error.user.notFound": "A felhaszn\u00e1l\u00f3 nem tal\u00e1lhat\u00f3",
+	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
 	"error.user.password.invalid": "Kérlek adj meg egy megfelelő jelszót. A jelszónak legalább 8 karakter hosszúságúnak kell lennie.",
 	"error.user.password.notSame": "K\u00e9rlek er\u0151s\u00edtsd meg a jelsz\u00f3t",
 	"error.user.password.undefined": "A felhasználónak nincs jelszó megadva",
