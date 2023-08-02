@@ -75,8 +75,10 @@ class DocumentTest extends TestCase
 			]
 		]);
 
+		$assets = new Assets();
+
 		// create panel dist files first to avoid redirect
-		Document::link($this->app);
+		$assets->link();
 
 		// get panel response
 		$response = Document::response([
@@ -105,7 +107,8 @@ class DocumentTest extends TestCase
 		]);
 
 		// create panel dist files first to avoid redirect
-		Document::link($this->app);
+		$assets = new Assets();
+		$assets->link();
 
 		// get panel response
 		$response = Document::response([
@@ -137,7 +140,8 @@ class DocumentTest extends TestCase
 		]);
 
 		// create panel dist files first to avoid redirect
-		Document::link($this->app);
+		$assets = new Assets();
+		$assets->link();
 
 		// get panel response
 		$response = Document::response([
