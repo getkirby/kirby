@@ -83,12 +83,14 @@ class InfoSectionTest extends TestCase
 		$section = new Section('info', [
 			'name'  => 'test',
 			'model' => new Page(['slug' => 'test']),
+			'icon'  => 'heart',
 			'label' => 'Test Headline',
 			'text'  => 'Test Text',
 			'theme' => 'notice'
 		]);
 
 		$expected = [
+			'icon'  => 'heart',
 			'label' => 'Test Headline',
 			'text'  => '<p>Test Text</p>',
 			'theme' => 'notice'

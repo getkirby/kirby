@@ -1,7 +1,7 @@
 <template>
 	<div class="k-field k-info-field">
 		<k-headline v-if="label">{{ label }}</k-headline>
-		<k-box :theme="theme">
+		<k-box :icon="{ type: icon }" :theme="theme">
 			<k-text :html="text" />
 		</k-box>
 		<footer v-if="help" class="k-field-footer">
@@ -19,6 +19,10 @@ import { help, label } from "@/mixins/props.js";
 export default {
 	mixins: [help, label],
 	props: {
+		/**
+		 * Sets an icon for the info box.
+		 */
+		icon: String,
 		/**
 		 * Sets the info text. You can use HTML here to format the info.
 		 */
