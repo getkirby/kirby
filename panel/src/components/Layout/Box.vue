@@ -7,7 +7,7 @@
 		:style="height ? '--box-height: ' + height : null"
 		class="k-box"
 	>
-		<k-icon v-if="icon" v-bind="icon" />
+		<k-icon v-if="icon?.type" v-bind="icon" />
 		<!-- @slot Use instead of `text` prop -->
 		<slot>
 			<k-text v-if="html" :html="text" />
@@ -95,7 +95,7 @@ export default {
 .k-box[data-theme] {
 	--box-color-back: var(--theme-color-back);
 	--box-color-text: var(--theme-color-text);
-	--box-color-icon: var(--theme-color-icon);
+	--box-color-icon: var(--theme-color-700);
 	min-height: var(--box-height);
 	line-height: 1.25;
 	padding: 0.375rem var(--box-padding-inline);
