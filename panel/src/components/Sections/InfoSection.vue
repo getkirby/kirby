@@ -1,6 +1,6 @@
 <template>
 	<k-section :headline="label" class="k-info-section">
-		<k-box :html="true" :icon="{ type: icon }" :text="text" :theme="theme" />
+		<k-box :html="true" :icon="icon" :text="text" :theme="theme" />
 	</k-section>
 </template>
 

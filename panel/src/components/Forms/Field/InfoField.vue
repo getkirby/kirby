@@ -1,7 +1,7 @@
 <template>
 	<div class="k-field k-info-field">
 		<k-headline v-if="label">{{ label }}</k-headline>
-		<k-box :icon="{ type: icon }" :theme="theme">
+		<k-box :icon="icon" :theme="theme">
 			<k-text :html="text" />
 		</k-box>
 		<footer v-if="help" class="k-field-footer">

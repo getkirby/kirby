@@ -10,7 +10,7 @@
 		:required="Boolean(options.min)"
 	>
 		<!-- Error -->
-		<k-box v-if="error" theme="negative">
+		<k-box v-if="error" icon="alert" theme="negative">
 			<k-text size="small">
 				<strong> {{ $t("error.section.notLoaded", { name: name }) }}: </strong>
 				{{ error }}
