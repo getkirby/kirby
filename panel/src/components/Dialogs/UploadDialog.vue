@@ -28,6 +28,11 @@
 								:src="file.url"
 								back="pattern"
 							/>
+							<k-image-frame
+								v-else-if="file.type.match('svg')"
+								:src="file.url"
+								back="pattern"
+							/>
 							<k-icon-frame
 								v-else
 								back="black"
@@ -141,12 +146,7 @@ export default {
 	outline: 2px solid var(--color-focus);
 	z-index: 1;
 }
-.k-upload-item-preview .k-aspect-ratio > * {
-	display: grid;
-	place-items: center;
-	color: var(--color-gray-500);
-	border-right: 1px solid var(--color-light);
-}
+
 .k-upload-item-body {
 	grid-area: body;
 	padding: var(--spacing-2) var(--spacing-3) 0;

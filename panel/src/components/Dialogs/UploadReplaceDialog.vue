@@ -14,13 +14,18 @@
 					:src="original.url"
 					back="black"
 				/>
-				<k-aspect-ratio v-else ratio="1/1">
-					<k-icon
-						back="pattern"
-						v-bind="original.image"
-						:type="original.image?.icon ?? 'file'"
-					/>
-				</k-aspect-ratio>
+				<k-image-frame
+					v-else-if="original.url.match('svg')"
+					:src="original.url"
+					back="pattern"
+				/>
+				<k-icon-frame
+					v-else
+					:color="original.image?.color ?? 'white'"
+					:icon="original.image?.icon ?? 'file'"
+					back="black"
+					ratio="1/1"
+				/>
 			</li>
 
 			<li>&larr;</li>
@@ -36,15 +41,20 @@
 						v-if="file.type.match('(jpg|jpeg|gif|png|webp|avif)')"
 						:cover="true"
 						:src="file.url"
+						back="black"
+					/>
+					<k-image-frame
+						v-else-if="file.type.match('svg')"
+						:src="file.url"
 						back="pattern"
 					/>
-					<k-aspect-ratio v-else ratio="1/1">
-						<k-icon
-							back="pattern"
-							v-bind="original.image"
-							:type="original.image?.icon ?? 'file'"
-						/>
-					</k-aspect-ratio>
+					<k-icon-frame
+						v-else
+						:color="original.image?.color ?? 'white'"
+						:icon="original.image?.icon ?? 'file'"
+						back="black"
+						ratio="1/1"
+					/>
 				</a>
 				<k-input
 					:value="$helper.file.name(original.filename)"
