@@ -30,7 +30,7 @@ class Mime
 		'aifc'  => 'audio/x-aiff',
 		'aiff'  => 'audio/x-aiff',
 		'avi'   => 'video/x-msvideo',
-		'avif'   => 'image/avif',
+		'avif'  => 'image/avif',
 		'bmp'   => 'image/bmp',
 		'css'   => 'text/css',
 		'csv'   => ['text/csv', 'text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream'],

@@ -9,13 +9,8 @@
 		<ul class="k-upload-items">
 			<li class="k-upload-original">
 				<k-image
-					v-if="original.url.match('(jpg|jpeg|gif|png|webp|avif)')"
+					v-if="isPreviewable(original.mime)"
 					:cover="true"
-					:src="original.url"
-					back="black"
-				/>
-				<k-image-frame
-					v-else-if="original.url.match('svg')"
 					:src="original.url"
 					back="pattern"
 				/>
@@ -38,13 +33,8 @@
 			>
 				<a :href="file.url" class="k-upload-item-preview" target="_blank">
 					<k-image
-						v-if="file.type.match('(jpg|jpeg|gif|png|webp|avif)')"
+						v-if="isPreviewable(file.type)"
 						:cover="true"
-						:src="file.url"
-						back="black"
-					/>
-					<k-image-frame
-						v-else-if="file.type.match('svg')"
 						:src="file.url"
 						back="pattern"
 					/>

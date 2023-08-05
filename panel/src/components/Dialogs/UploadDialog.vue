@@ -23,13 +23,8 @@
 					>
 						<a :href="file.url" class="k-upload-item-preview" target="_blank">
 							<k-image-frame
-								v-if="file.type.match('(jpg|jpeg|gif|png|webp|avif)')"
+								v-if="isPreviewable(file.type)"
 								:cover="true"
-								:src="file.url"
-								back="pattern"
-							/>
-							<k-image-frame
-								v-else-if="file.type.match('svg')"
 								:src="file.url"
 								back="pattern"
 							/>
@@ -104,6 +99,19 @@ export default {
 					text: window.panel.$t("upload")
 				};
 			}
+		}
+	},
+	methods: {
+		isPreviewable(mime) {
+			return [
+				"image/jpeg",
+				"image/jpg",
+				"image/gif",
+				"image/png",
+				"image/webp",
+				"image/avif",
+				"image/svg+xml"
+			].includes(mime);
 		}
 	}
 };
