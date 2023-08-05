@@ -2,11 +2,13 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Composer\InstalledVersions;
 use Exception;
 use Kirby\Cms\System\UpdateStatus;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
@@ -57,6 +59,24 @@ class Plugin
 	public function __call(string $key, array $arguments = null): mixed
 	{
 		return $this->info()[$key] ?? null;
+	}
+
+	public function assets(): array
+	{
+		if ($assets = $this->extends['assets'] ?? null) {
+			if ($assets instanceof Closure) {
+				$assets = $assets();
+			}
+
+			return $assets;
+		}
+
+		$assets = $this->root() . '/assets';
+
+		return A::map(
+			Dir::index($this->root() . '/assets', true),
+			fn ($filename) => 'assets/' . $filename
+		);
 	}
 
 	/**

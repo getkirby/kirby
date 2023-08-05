@@ -25,7 +25,7 @@ class PluginAssets
 	public static function clean(string $pluginName): void
 	{
 		if ($plugin = App::instance()->plugin($pluginName)) {
-			$root   = $plugin->root() . '/assets';
+			$root   = $plugin->root();
 			$media  = $plugin->mediaRoot();
 			$assets = Dir::index($media, true);
 
@@ -51,16 +51,22 @@ class PluginAssets
 	 */
 	public static function resolve(
 		string $pluginName,
-		string $filename
+		string $path
 	): Response|null {
 		if ($plugin = App::instance()->plugin($pluginName)) {
-			$source = $plugin->root() . '/assets/' . $filename;
+			$assets = $plugin->assets();
+
+			if (in_array($path, $assets) === false) {
+				return null;
+			}
+
+			$source = $plugin->root() . '/' . $path;
 
 			if (F::exists($source, $plugin->root()) === true) {
 				// do some spring cleaning for older files
 				static::clean($pluginName);
 
-				$target = $plugin->mediaRoot() . '/' . $filename;
+				$target = $plugin->mediaRoot() . '/' . $path;
 
 				// create a symlink if possible
 				F::link($source, $target, 'symlink');

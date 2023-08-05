@@ -67,6 +67,41 @@ class PluginTest extends TestCase
 	}
 
 	/**
+	 * @covers ::assets
+	 */
+	public function testAssets()
+	{
+		// assets defined in the plugin config
+		$plugin = new Plugin('getkirby/test-plugin', [
+			'root'   => __DIR__ . '/fixtures/plugin-assets',
+			'assets' => $assets = [
+				'a.css',
+				'b.css'
+			]
+		]);
+
+		$this->assertSame($assets, $plugin->assets());
+
+		// assets defined als closure in the plugin config
+		$plugin = new Plugin('getkirby/test-plugin', [
+			'root'   => __DIR__ . '/fixtures/plugin-assets',
+			'assets' => fn () => [
+				'a.css',
+				'b.css'
+			]
+		]);
+
+		$this->assertSame($assets, $plugin->assets());
+
+		// assets gathered from `assets` folder inside plugin root
+		$plugin = new Plugin('getkirby/test-plugin', [
+			'root' => __DIR__ . '/fixtures/plugin-assets'
+		]);
+
+		$this->assertSame(['assets/test.css'], $plugin->assets());
+	}
+
+	/**
 	 * @covers ::authors
 	 */
 	public function testAuthors()

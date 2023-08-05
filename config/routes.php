@@ -61,17 +61,16 @@ return function (App $kirby) {
 			}
 		],
 		[
-			'pattern' => $media . '/plugins/(:any)/(:any)/(:all)\.(css|map|gif|js|mjs|jpg|png|svg|webp|avif|woff2|woff|json)',
+			'pattern' => $media . '/plugins/(:any)/(:any)/(:all)',
 			'env'     => 'media',
 			'action'  => function (
 				string $provider,
 				string $pluginName,
-				string $filename,
-				string $extension
+				string $path
 			) {
 				return PluginAssets::resolve(
 					$provider . '/' . $pluginName,
-					$filename . '.' . $extension
+					$path
 				);
 			}
 		],
