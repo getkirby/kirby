@@ -15,7 +15,6 @@ return [
 		'tabs'    => fn (PageBlueprint $blueprint) => $blueprint->tabs(),
 		'title'   => fn (PageBlueprint $blueprint) => $blueprint->title(),
 	],
-	'type' => 'Kirby\Cms\PageBlueprint',
-	'views' => [
-	],
+	'type'  => PageBlueprint::class,
+	'views' => [],
 ];

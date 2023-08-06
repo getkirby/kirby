@@ -20,7 +20,7 @@ return [
 		'type'       => fn (FileVersion $file) => $file->type(),
 		'url'        => fn (FileVersion $file) => $file->url(),
 	],
-	'type'  => 'Kirby\Cms\FileVersion',
+	'type'  => FileVersion::class,
 	'views' => [
 		'default' => [
 			'dimensions',

@@ -59,7 +59,7 @@ return [
 		'url'        => fn (File $file) => $file->url(),
 		'uuid'       => fn (File $file) => $file->uuid()?->toString()
 	],
-	'type'  => 'Kirby\Cms\File',
+	'type'  => File::class,
 	'views' => [
 		'default' => [
 			'content',
