@@ -67,38 +67,80 @@ class PluginTest extends TestCase
 	}
 
 	/**
+	 * @covers ::asset
+	 */
+	public function testAsset()
+	{
+		$root = __DIR__ . '/fixtures/plugin-assets';
+		$plugin = new Plugin('getkirby/test-plugin', [
+			'assets' => [
+				'c.css' => $a = $root . '/a.css',
+				'd.css' => $b = $root . '/foo/b.css'
+			]
+		]);
+
+		$this->assertSame($a, $plugin->asset('c.css'));
+		$this->assertSame($b, $plugin->asset('d.css'));
+	}
+
+	/**
 	 * @covers ::assets
 	 */
 	public function testAssets()
 	{
-		// assets defined in the plugin config
+		$root = __DIR__ . '/fixtures/plugin-assets';
+
+		// assets defined in plugin config
 		$plugin = new Plugin('getkirby/test-plugin', [
-			'root'   => __DIR__ . '/fixtures/plugin-assets',
-			'assets' => $assets = [
-				'a.css',
-				'b.css'
+			'root'   => $root,
+			'assets' => [
+				'c.css' => $root . '/a.css',
+				'd.css' => $root . '/foo/b.css'
 			]
 		]);
 
-		$this->assertSame($assets, $plugin->assets());
+		$expected = [
+			'c.css' => $root . '/a.css',
+			'd.css' =>	$root . '/foo/b.css'
+		];
+
+		$this->assertSame($expected, $plugin->assets());
+
+		// assets defined as non-associative array in the plugin config
+		$plugin = new Plugin('getkirby/test-plugin', [
+			'root'   => $root,
+			'assets' => [
+				$root . '/a.css',
+				$root . '/foo/b.css'
+			]
+		]);
+
+		$expected = [
+			'a.css'     => $root . '/a.css',
+			'foo/b.css' =>	$root . '/foo/b.css'
+		];
+
+		$this->assertSame($expected, $plugin->assets());
 
 		// assets defined als closure in the plugin config
 		$plugin = new Plugin('getkirby/test-plugin', [
 			'root'   => __DIR__ . '/fixtures/plugin-assets',
 			'assets' => fn () => [
-				'a.css',
-				'b.css'
+				$root . '/a.css',
+				$root . '/foo/b.css'
 			]
 		]);
 
-		$this->assertSame($assets, $plugin->assets());
+		$this->assertSame($expected, $plugin->assets());
 
 		// assets gathered from `assets` folder inside plugin root
 		$plugin = new Plugin('getkirby/test-plugin', [
 			'root' => __DIR__ . '/fixtures/plugin-assets'
 		]);
 
-		$this->assertSame(['assets/test.css'], $plugin->assets());
+		$this->assertSame([
+			'assets/test.css' => $root . '/assets/test.css',
+		], $plugin->assets());
 	}
 
 	/**

@@ -56,23 +56,19 @@ class PluginAssets
 		if ($plugin = App::instance()->plugin($pluginName)) {
 			$assets = $plugin->assets();
 
-			if (in_array($path, $assets) === false) {
-				return null;
-			}
+			if ($asset = $assets[$path] ?? null) {
+				if (F::exists($asset, $plugin->root()) === true) {
+					// do some spring cleaning for older files
+					static::clean($pluginName);
 
-			$source = $plugin->root() . '/' . $path;
+					$target = $plugin->mediaRoot() . '/' . $path;
 
-			if (F::exists($source, $plugin->root()) === true) {
-				// do some spring cleaning for older files
-				static::clean($pluginName);
+					// create a symlink if possible
+					F::link($asset, $target, 'symlink');
 
-				$target = $plugin->mediaRoot() . '/' . $path;
-
-				// create a symlink if possible
-				F::link($source, $target, 'symlink');
-
-				// return the file response
-				return Response::file($source);
+					// return the file response
+					return Response::file($asset);
+				}
 			}
 		}
 

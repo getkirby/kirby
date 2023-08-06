@@ -27,6 +27,7 @@ use Throwable;
  */
 class Plugin
 {
+	protected array $assets;
 	protected array $extends;
 	protected string $name;
 	protected string $root;
@@ -61,22 +62,40 @@ class Plugin
 		return $this->info()[$key] ?? null;
 	}
 
+	public function asset(string $name): string|null
+	{
+		return $this->assets()[$name] ?? null;
+	}
+
 	public function assets(): array
 	{
+		if (isset($this->assets) === true) {
+			return $this->assets;
+		}
+
 		if ($assets = $this->extends['assets'] ?? null) {
 			if ($assets instanceof Closure) {
 				$assets = $assets();
 			}
-
-			return $assets;
 		}
 
-		$assets = $this->root() . '/assets';
+		if ($assets === null) {
+			$assets = [];
+			$root   = $this->root() . '/assets';
 
-		return A::map(
-			Dir::index($this->root() . '/assets', true),
-			fn ($filename) => 'assets/' . $filename
-		);
+			foreach (Dir::index($root, true) as $asset) {
+				$assets['assets/' . $asset] = $root . '/' . $asset;
+			}
+		}
+
+		if (A::isAssociative($assets) === false) {
+			$assets = A::keyBy(
+				$assets,
+				fn ($asset) => Str::after($asset, $this->root() . '/')
+			);
+		}
+
+		return $this->assets = $assets;
 	}
 
 	/**
