@@ -16,21 +16,20 @@ export function form(fields) {
 }
 
 /**
- * Evaluates the when option and field
- * type to check if a field should be
- * visible. Also works for sections.
+ * Checks if a form field is visible based on its "when" conditions
+ * and the current form values. Also works for sections.
  *
- * @param {object} field
- * @param {array} values
- * @returns {boolean}
+ * @param {Object} field - The form field object
+ * @param {Object} values - The current form values object
+ * @returns {boolean} - Whether the field is visible or not
  */
 export function isVisible(field, values) {
-	if (field.type === "hidden" || field.hidden === true) {
-		return false;
-	}
-
 	if (!field.when) {
 		return true;
+	}
+
+	if (field.type === "hidden" || field.hidden === true) {
+		return false;
 	}
 
 	for (const key in field.when) {
@@ -61,8 +60,8 @@ export function isVisible(field, values) {
 export function subfields(field, fields) {
 	let subfields = {};
 
-	Object.keys(fields).forEach((name) => {
-		let subfield = fields[name];
+	for (const name in fields) {
+		const subfield = fields[name];
 
 		subfield.section = field.name;
 		subfield.endpoints = {
@@ -72,7 +71,7 @@ export function subfields(field, fields) {
 		};
 
 		subfields[name] = subfield;
-	});
+	}
 
 	return subfields;
 }
