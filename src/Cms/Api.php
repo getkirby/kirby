@@ -34,7 +34,7 @@ class Api extends BaseApi
 		string|null $path = null,
 		string $method = 'GET',
 		array $requestData = []
-	) {
+	): mixed {
 		$this->setRequestMethod($method);
 		$this->setRequestData($requestData);
 
@@ -63,8 +63,11 @@ class Api extends BaseApi
 	/**
 	 * @throws \Kirby\Exception\NotFoundException if the field type cannot be found or the field cannot be loaded
 	 */
-	public function fieldApi($model, string $name, string|null $path = null)
-	{
+	public function fieldApi(
+		ModelWithContent $model,
+		string $name,
+		string|null $path = null
+	): mixed {
 		$field = Form::for($model)->field($name);
 
 		$fieldApi = $this->clone([
@@ -86,8 +89,10 @@ class Api extends BaseApi
 	 * @param string|null $path Path to file's parent model
 	 * @throws \Kirby\Exception\NotFoundException if the file cannot be found
 	 */
-	public function file(string|null $path = null, string $filename): File|null
-	{
+	public function file(
+		string|null $path = null,
+		string $filename
+	): File|null {
 		return Find::file($path, $filename);
 	}
 
@@ -127,7 +132,9 @@ class Api extends BaseApi
 	 */
 	public function language(): string|null
 	{
-		return $this->requestQuery('language') ?? $this->requestHeaders('x-language');
+		return
+			$this->requestQuery('language') ??
+			$this->requestHeaders('x-language');
 	}
 
 	/**
@@ -146,8 +153,10 @@ class Api extends BaseApi
 	 * parent. The subpages can be filtered
 	 * by status (draft, listed, unlisted, published, all)
 	 */
-	public function pages(string|null $parentId = null, string|null $status = null): Pages
-	{
+	public function pages(
+		string|null $parentId = null,
+		string|null $status = null
+	): Pages {
 		$parent = $parentId === null ? $this->site() : $this->page($parentId);
 		$pages  = match ($status) {
 			'all'             => $parent->childrenAndDrafts(),

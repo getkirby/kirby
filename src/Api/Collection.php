@@ -4,6 +4,7 @@ namespace Kirby\Api;
 
 use Closure;
 use Exception;
+use Kirby\Toolkit\Collection as BaseCollection;
 use Kirby\Toolkit\Str;
 
 /**
@@ -20,23 +21,22 @@ use Kirby\Toolkit\Str;
  */
 class Collection
 {
-	protected Api $api;
-	protected $data;
-	protected $model;
-	protected $select = null;
-	protected $view;
+	protected string|null $model;
+	protected array|null $select = null;
+	protected string|null $view;
 
 	/**
 	 * Collection constructor
 	 *
 	 * @throws \Exception
 	 */
-	public function __construct(Api $api, $data, array $schema)
-	{
-		$this->api    = $api;
-		$this->data   = $data;
-		$this->model  = $schema['model'] ?? null;
-		$this->view   = $schema['view'] ?? null;
+	public function __construct(
+		protected Api $api,
+		protected BaseCollection|array|null $data,
+		array $schema
+	) {
+		$this->model = $schema['model'] ?? null;
+		$this->view  = $schema['view'] ?? null;
 
 		if ($data === null) {
 			if (($schema['default'] ?? null) instanceof Closure === false) {

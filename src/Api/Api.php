@@ -126,8 +126,6 @@ class Api
 
 	/**
 	 * Returns the authentication callback
-	 *
-	 * @return \Closure|null
 	 */
 	public function authentication(): Closure|null
 	{
@@ -141,8 +139,11 @@ class Api
 	 * @throws \Kirby\Exception\NotFoundException
 	 * @throws \Exception
 	 */
-	public function call(string|null $path = null, string $method = 'GET', array $requestData = [])
-	{
+	public function call(
+		string|null $path = null,
+		string $method = 'GET',
+		array $requestData = []
+	): mixed {
 		$path = rtrim($path ?? '', '/');
 
 		$this->setRequestMethod($method);
@@ -229,8 +230,10 @@ class Api
 	 * @throws \Kirby\Exception\NotFoundException If no collection for `$name` exists
 	 * @throws \Exception
 	 */
-	public function collection(string $name, array|BaseCollection|null $collection = null): Collection
-	{
+	public function collection(
+		string $name,
+		array|BaseCollection|null $collection = null
+	): Collection {
 		if (isset($this->collections[$name]) === false) {
 			throw new NotFoundException(sprintf('The collection "%s" does not exist', $name));
 		}
@@ -252,7 +255,7 @@ class Api
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If no data for `$key` exists
 	 */
-	public function data(string|null $key = null, ...$args)
+	public function data(string|null $key = null, ...$args): mixed
 	{
 		if ($key === null) {
 			return $this->data;
@@ -293,8 +296,10 @@ class Api
 	 * @param array models or collections
 	 * @return string|null key of match
 	 */
-	protected function match(array $array, $object = null): string|null
-	{
+	protected function match(
+		array $array,
+		$object = null
+	): string|null {
 		foreach ($array as $definition => $model) {
 			if ($object instanceof $model['type']) {
 				return $definition;
@@ -309,8 +314,10 @@ class Api
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If no model for `$name` exists
 	 */
-	public function model(string|null $name = null, $object = null): Model
-	{
+	public function model(
+		string|null $name = null,
+		$object = null
+	): Model {
 		// Try to auto-match object with API models
 		$name ??= $this->match($this->models, $object);
 
@@ -333,17 +340,12 @@ class Api
 	 * Getter for request data
 	 * Can either get all the data
 	 * or certain parts of it.
-	 *
-	 * @param string|null $type
-	 * @param string|null $key
-	 * @param mixed $default
-	 * @return mixed
 	 */
 	public function requestData(
 		string|null $type = null,
 		string|null $key = null,
-		$default = null
-	) {
+		mixed $default = null
+	): mixed {
 		if ($type === null) {
 			return $this->requestData;
 		}
@@ -361,24 +363,30 @@ class Api
 	/**
 	 * Returns the request body if available
 	 */
-	public function requestBody(string|null $key = null, $default = null)
-	{
+	public function requestBody(
+		string|null $key = null,
+		mixed $default = null
+	): mixed {
 		return $this->requestData('body', $key, $default);
 	}
 
 	/**
 	 * Returns the files from the request if available
 	 */
-	public function requestFiles(string|null $key = null, $default = null)
-	{
+	public function requestFiles(
+		string|null $key = null,
+		mixed $default = null
+	): mixed {
 		return $this->requestData('files', $key, $default);
 	}
 
 	/**
 	 * Returns all headers from the request if available
 	 */
-	public function requestHeaders(string|null $key = null, $default = null)
-	{
+	public function requestHeaders(
+		string|null $key = null,
+		mixed $default = null
+	): mixed {
 		return $this->requestData('headers', $key, $default);
 	}
 
@@ -393,8 +401,10 @@ class Api
 	/**
 	 * Returns the request query if available
 	 */
-	public function requestQuery(string|null $key = null, $default = null)
-	{
+	public function requestQuery(
+		string|null $key = null,
+		mixed $default = null
+	): mixed {
 		return $this->requestData('query', $key, $default);
 	}
 
@@ -435,8 +445,11 @@ class Api
 	/**
 	 * Renders the API call
 	 */
-	public function render(string $path, string $method = 'GET', array $requestData = [])
-	{
+	public function render(
+		string $path,
+		string $method = 'GET',
+		array $requestData = []
+	): mixed {
 		try {
 			$result = $this->call($path, $method, $requestData);
 		} catch (Throwable $e) {
@@ -561,8 +574,9 @@ class Api
 	 * Setter for the request data
 	 * @return $this
 	 */
-	protected function setRequestData(array|null $requestData = []): static
-	{
+	protected function setRequestData(
+		array|null $requestData = []
+	): static {
 		$defaults = [
 			'query' => [],
 			'body'  => [],
@@ -577,8 +591,9 @@ class Api
 	 * Setter for the request method
 	 * @return $this
 	 */
-	protected function setRequestMethod(string $requestMethod = null): static
-	{
+	protected function setRequestMethod(
+		string $requestMethod = null
+	): static {
 		$this->requestMethod = $requestMethod ?? 'GET';
 		return $this;
 	}
@@ -591,8 +606,11 @@ class Api
 	 *
 	 * @throws \Exception If request has no files or there was an error with the upload
 	 */
-	public function upload(Closure $callback, bool $single = false, bool $debug = false): array
-	{
+	public function upload(
+		Closure $callback,
+		bool $single = false,
+		bool $debug = false
+	): array {
 		$trials  = 0;
 		$uploads = [];
 		$errors  = [];
@@ -632,8 +650,9 @@ class Api
 
 			try {
 				if ($upload['error'] !== 0) {
-					$errorMessage = $errorMessages[$upload['error']] ?? I18n::translate('upload.error.default');
-					throw new Exception($errorMessage);
+					throw new Exception(
+						$errorMessages[$upload['error']] ?? I18n::translate('upload.error.default')
+					);
 				}
 
 				// get the extension of the uploaded file
@@ -660,7 +679,9 @@ class Api
 					$debug === false &&
 					move_uploaded_file($upload['tmp_name'], $source) === false
 				) {
-					throw new Exception(I18n::translate('upload.error.cantMove'));
+					throw new Exception(
+						I18n::translate('upload.error.cantMove')
+					);
 				}
 
 				$data = $callback($source, $filename);
