@@ -20,9 +20,10 @@
 		<k-button
 			v-if="invisibleTabs.length"
 			:current="invisibleTabs.find((tabButton) => tab === tabButton.name)"
-			:text="$t('more')"
+			:title="$t('more')"
 			class="k-tab-button k-tabs-dropdown-button"
 			icon="dots"
+			variant="dimmed"
 			@click.stop="$refs.more.toggle()"
 		/>
 		<k-dropdown-content
