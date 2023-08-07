@@ -245,7 +245,7 @@ export default {
 				// and adapt alignment if necessary
 				if (this.axis.x === "end") {
 					if (rect.left - rect.width < safeSpace) {
-						this.axis.x === "start";
+						this.axis.x = "start";
 					}
 				} else if (
 					rect.left + rect.width > window.innerWidth - safeSpace &&
@@ -263,7 +263,7 @@ export default {
 				// and adapt alignment if necessary
 				if (this.axis.y === "top") {
 					if (rect.height + safeSpace > rect.top) {
-						this.axis.y === "bottom";
+						this.axis.y = "bottom";
 					}
 				} else if (
 					rect.top + rect.height > window.innerHeight - safeSpace &&
