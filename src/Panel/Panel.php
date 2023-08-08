@@ -474,6 +474,7 @@ class Panel
 			$view['type'] = 'view';
 
 			$when = $view['when'] ?? null;
+			unset($view['when']);
 
 			// checks if there is a load view condition
 			if ($when instanceof Closure) {
@@ -483,8 +484,6 @@ class Panel
 			} else {
 				$routes[] = $view;
 			}
-
-			unset($view['when']);
 		}
 
 		return $routes;
