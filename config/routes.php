@@ -60,7 +60,7 @@ return function ($kirby) {
 			}
 		],
 		[
-			'pattern' => $media . '/plugins/(:any)/(:any)/(:all).(css|map|gif|js|mjs|jpg|png|svg|webp|avif|woff2|woff|json)',
+			'pattern' => $media . '/plugins/(:any)/(:any)/(:all)\.(css|map|gif|js|mjs|jpg|png|svg|webp|avif|woff2|woff|json)',
 			'env'     => 'media',
 			'action'  => function (string $provider, string $pluginName, string $filename, string $extension) {
 				return PluginAssets::resolve($provider . '/' . $pluginName, $filename . '.' . $extension);
