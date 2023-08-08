@@ -6,6 +6,9 @@ use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Cms\Panel
+ */
 class PanelTest extends TestCase
 {
     protected $app;
@@ -89,5 +92,92 @@ class PanelTest extends TestCase
 
         // clear session file
         $this->app->session()->destroy();
+    }
+
+    /**
+     * @covers ::render
+     */
+    public function testResponseFrameAncestorsSelf(): void
+    {
+        $this->app = $this->app->clone([
+            'options' => [
+                'panel' => [
+                    'frameAncestors' => true
+                ]
+            ]
+        ]);
+
+        // create panel dist files first to avoid redirect
+        Panel::link($this->app);
+
+        // get panel response
+        $response = Panel::render($this->app);
+
+        $this->assertInstanceOf('\Kirby\Http\Response', $response);
+        $this->assertSame(200, $response->code());
+        $this->assertSame('text/html', $response->type());
+        $this->assertSame('UTF-8', $response->charset());
+        $this->assertSame("frame-ancestors 'self'", $response->header('Content-Security-Policy'));
+        $this->assertNotNull($response->body());
+    }
+
+    /**
+     * @covers ::render
+     */
+    public function testResponseFrameAncestorsArray(): void
+    {
+        $this->app = $this->app->clone([
+            'options' => [
+                'panel' => [
+                    'frameAncestors' => ['*.example.com', 'https://example.com']
+                ]
+            ]
+        ]);
+
+        // create panel dist files first to avoid redirect
+        Panel::link($this->app);
+
+        // get panel response
+        $response = Panel::render($this->app);
+
+        $this->assertInstanceOf('\Kirby\Http\Response', $response);
+        $this->assertSame(200, $response->code());
+        $this->assertSame('text/html', $response->type());
+        $this->assertSame('UTF-8', $response->charset());
+        $this->assertSame(
+            "frame-ancestors 'self' *.example.com https://example.com",
+            $response->header('Content-Security-Policy')
+        );
+        $this->assertNotNull($response->body());
+    }
+
+    /**
+     * @covers ::render
+     */
+    public function testResponseFrameAncestorsString(): void
+    {
+        $this->app = $this->app->clone([
+            'options' => [
+                'panel' => [
+                    'frameAncestors' => '*.example.com https://example.com'
+                ]
+            ]
+        ]);
+
+        // create panel dist files first to avoid redirect
+        Panel::link($this->app);
+
+        // get panel response
+        $response = Panel::render($this->app);
+
+        $this->assertInstanceOf('\Kirby\Http\Response', $response);
+        $this->assertSame(200, $response->code());
+        $this->assertSame('text/html', $response->type());
+        $this->assertSame('UTF-8', $response->charset());
+        $this->assertSame(
+            'frame-ancestors *.example.com https://example.com',
+            $response->header('Content-Security-Policy')
+        );
+        $this->assertNotNull($response->body());
     }
 }

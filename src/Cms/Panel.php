@@ -134,8 +134,19 @@ class Panel
             ]
         ]);
 
+        $frameAncestorsOption = $kirby->option('panel.frameAncestors');
+        if ($frameAncestorsOption === true) {
+            $frameAncestors = "'self'";
+        } elseif (is_array($frameAncestorsOption)) {
+            $frameAncestors = "'self' " . implode(' ', $frameAncestorsOption);
+        } elseif (is_string($frameAncestorsOption)) {
+            $frameAncestors = $frameAncestorsOption;
+        } else {
+            $frameAncestors = "'none'";
+        }
+
         return new Response($view->render(), 'text/html', 200, [
-            'Content-Security-Policy' => "frame-ancestors 'none'"
+            'Content-Security-Policy' => 'frame-ancestors ' . $frameAncestors
         ]);
     }
 }
