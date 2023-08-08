@@ -4,7 +4,7 @@
  */
 export function base() {
 	return new URL(
-		document.querySelector("base")?.href || window.location.origin
+		document.querySelector("base")?.href ?? window.location.origin
 	);
 }
 
