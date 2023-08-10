@@ -21,6 +21,7 @@ class PluginAssetsTest extends TestCase
 
 		F::write($plugin . '/index.php', '<?php Kirby::plugin("test/test", []);');
 		F::write($plugin . '/assets/test.css', 'test');
+		F::write($plugin . '/assets/test.mjs', 'test');
 
 		$this->app = new App([
 			'roots' => [
@@ -53,5 +54,20 @@ class PluginAssetsTest extends TestCase
 		$this->assertTrue(is_link($this->fixtures . '/media/plugins/test/test/test.css'));
 		$this->assertSame(200, $response->code());
 		$this->assertSame('text/css', $response->type());
+	}
+
+	public function testCallPluginAsset()
+	{
+		$response = App::instance()->call('media/plugins/test/test/test.mjs');
+
+		$this->assertSame(200, $response->code());
+		$this->assertSame('text/javascript', $response->type());
+		$this->assertSame('test', $response->body());
+	}
+
+	public function testCallPluginAssetInvalid()
+	{
+		$response = App::instance()->call('media/plugins/test/test/test.invalid');
+		$this->assertNull($response);
 	}
 }
