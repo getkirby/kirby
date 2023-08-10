@@ -16,7 +16,7 @@
 					// give each message an image prop unless it already has one
 					image: {
 						back: 'var(--color-red-200)',
-						icon: issue.icon || 'alert',
+						icon: issue.icon ?? 'alert',
 						color: 'var(--color-red)'
 					},
 					target: '_blank',
@@ -50,7 +50,7 @@ export default {
 		);
 
 		// `Promise.all` as fallback for older browsers
-		const promiseAll = (Promise.allSettled || Promise.all).bind(Promise);
+		const promiseAll = (Promise.allSettled ?? Promise.all).bind(Promise);
 
 		// call the check method on every URL in the `urls` object
 		const promises = Object.entries(this.urls).map(this.check);

@@ -20,8 +20,8 @@ export default {
 				return "";
 			}
 
-			let format = this.column?.display || this.field?.display || "YYYY-MM-DD";
-			let time = this.column?.time?.display || this.field?.time?.display;
+			let format = this.column?.display ?? this.field?.display ?? "YYYY-MM-DD";
+			let time = this.column?.time?.display ?? this.field?.time?.display;
 
 			if (time) {
 				format += " " + time;

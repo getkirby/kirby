@@ -1,6 +1,6 @@
 export default class Emitter {
 	emit(event, ...args) {
-		this._callbacks = this._callbacks || {};
+		this._callbacks = this._callbacks ?? {};
 		const callbacks = this._callbacks[event];
 
 		if (callbacks) {
@@ -39,8 +39,8 @@ export default class Emitter {
 	 * Add an event listener for given event
 	 */
 	on(event, fn) {
-		this._callbacks = this._callbacks || {};
-		this._callbacks[event] = this._callbacks[event] || [];
+		this._callbacks = this._callbacks ?? {};
+		this._callbacks[event] = this._callbacks[event] ?? [];
 		this._callbacks[event].push(fn);
 		return this;
 	}

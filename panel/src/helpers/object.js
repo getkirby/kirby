@@ -51,7 +51,7 @@ export function isObject(input) {
  * @returns int
  */
 export function length(object) {
-	return Object.keys(object || {}).length;
+	return Object.keys(object ?? {}).length;
 }
 
 /**
@@ -66,7 +66,7 @@ export function merge(target, source = {}) {
 	// set property to merge of `target` and `source` properties
 	for (const key of Object.keys(source)) {
 		if (source[key] instanceof Object) {
-			Object.assign(source[key], merge(target[key] || {}, source[key]));
+			Object.assign(source[key], merge(target[key] ?? {}, source[key]));
 		}
 	}
 

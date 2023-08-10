@@ -108,7 +108,7 @@ export default {
 		position() {
 			return this.value || this.value === 0
 				? this.value
-				: this.default || this.baseline;
+				: this.default ?? this.baseline;
 		}
 	},
 	watch: {

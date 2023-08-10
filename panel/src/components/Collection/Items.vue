@@ -24,7 +24,7 @@
 		<template v-for="(item, itemIndex) in items">
 			<slot v-bind="{ item, itemIndex }">
 				<k-item
-					:key="item.id || itemIndex"
+					:key="item.id ?? itemIndex"
 					v-bind="item"
 					:class="{ 'k-draggable-item': sortable && item.sortable }"
 					:image="imageOptions(item)"

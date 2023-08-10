@@ -33,7 +33,7 @@ export default {
 			return h(
 				"k-box",
 				{ attrs: { theme: "negative" } },
-				this.error.message || this.error
+				this.error.message ?? this.error
 			);
 		} else {
 			return this.$slots.default[0];

@@ -149,7 +149,7 @@ export default {
 			// since manipulation command can occur while
 			// typing new value, make sure to first update
 			// datetime object from current input value
-			let dt = this.parse() || this.round(this.$library.dayjs());
+			let dt = this.parse() ?? this.round(this.$library.dayjs());
 
 			// what unit to alter and by how much:
 			// as default use the step unit and size
@@ -375,7 +375,7 @@ export default {
 		 * @returns {Object|null}
 		 */
 		round(dt) {
-			return dt?.round(this.rounding.unit, this.rounding.size) || null;
+			return dt?.round(this.rounding.unit, this.rounding.size);
 		},
 		/**
 		 * Sets the cursor selection in the input element
@@ -444,7 +444,7 @@ export default {
 		 * @return {Object|null}
 		 */
 		toISO(dt) {
-			return dt?.toISO(this.inputType) || null;
+			return dt?.toISO(this.inputType);
 		}
 	},
 	validations() {

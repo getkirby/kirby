@@ -46,7 +46,7 @@
 				</tbody>
 			</table>
 			<k-empty v-else :data-invalid="isInvalid" icon="box" @click="add">
-				{{ empty || $t("field.object.empty") }}
+				{{ empty ?? $t("field.object.empty") }}
 			</k-empty>
 		</template>
 		<template v-else>
@@ -89,7 +89,7 @@ export default {
 				this.object = this.valueToObject(value);
 			},
 			immediate: true
-		},
+		}
 	},
 	methods: {
 		add() {

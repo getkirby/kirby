@@ -1,7 +1,7 @@
 export default (api) => ({
 	async login(user) {
 		const data = {
-			long: user.remember || false,
+			long: user.remember ?? false,
 			email: user.email,
 			password: user.password
 		};

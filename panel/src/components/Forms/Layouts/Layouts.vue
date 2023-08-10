@@ -43,7 +43,7 @@
 
 		<template v-else>
 			<k-empty icon="dashboard" class="k-layout-empty" @click="select(0)">
-				{{ empty || $t("field.layout.empty") }}
+				{{ empty ?? $t("field.layout.empty") }}
 			</k-empty>
 		</template>
 	</div>

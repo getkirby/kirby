@@ -40,8 +40,8 @@ export default (api) => ({
 	async duplicate(id, slug, options) {
 		return api.post("pages/" + this.id(id) + "/duplicate", {
 			slug: slug,
-			children: options.children || false,
-			files: options.files || false
+			children: options.children ?? false,
+			files: options.files ?? false
 		});
 	},
 	async get(id, query) {

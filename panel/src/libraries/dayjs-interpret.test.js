@@ -92,7 +92,7 @@ describe("dayjs.interpret(input, 'date')", () => {
 
 	for (const input in expected) {
 		it(input + " should be " + expected[input], () => {
-			const result = dayjs.interpret(input)?.toISO("date") || null;
+			const result = dayjs.interpret(input)?.toISO("date") ?? null;
 			expect(result).toBe(expected[input]);
 		});
 	}
@@ -116,7 +116,7 @@ describe("dayjs.interpret(input, 'time')", () => {
 
 	for (const input in expected) {
 		it(input + " should be " + expected[input], () => {
-			const result = dayjs.interpret(input, "time")?.toISO("time") || null;
+			const result = dayjs.interpret(input, "time")?.toISO("time") ?? null;
 			expect(result).toBe(expected[input]);
 		});
 	}

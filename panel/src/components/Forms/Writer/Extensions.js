@@ -88,7 +88,7 @@ export default class Extensions {
 			.forEach((extension) => {
 				if (Array.isArray(extension.button)) {
 					extension.button.forEach((button) => {
-						buttons[button.id || button.name] = button;
+						buttons[button.id ?? button.name] = button;
 					});
 				} else {
 					buttons[extension.name] = extension.button;

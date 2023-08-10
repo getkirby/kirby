@@ -31,7 +31,7 @@
 				icon="list-bullet"
 				@click="add()"
 			>
-				{{ empty || $t("field.structure.empty") }}
+				{{ empty ?? $t("field.structure.empty") }}
 			</k-empty>
 
 			<!-- Table -->

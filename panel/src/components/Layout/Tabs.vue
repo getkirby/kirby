@@ -40,7 +40,7 @@
 				:icon="tabButton.icon"
 				:title="tabButton.label"
 			>
-				{{ tabButton.label || tabButton.text || tabButton.name }}
+				{{ tabButton.label ?? tabButton.text ?? tabButton.name }}
 			</k-dropdown-item>
 		</k-dropdown-content>
 	</nav>
@@ -63,7 +63,7 @@ export default {
 	computed: {
 		current() {
 			const tab =
-				this.tabs.find((tab) => tab.name === this.tab) || this.tabs[0] || {};
+				this.tabs.find((tab) => tab.name === this.tab) ?? this.tabs[0] ?? {};
 			return tab.name;
 		}
 	},

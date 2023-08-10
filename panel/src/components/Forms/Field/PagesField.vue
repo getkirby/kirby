@@ -42,7 +42,7 @@ export default {
 		emptyProps() {
 			return {
 				icon: "page",
-				text: this.empty || this.$t("field.pages.empty")
+				text: this.empty ?? this.$t("field.pages.empty")
 			};
 		}
 	}

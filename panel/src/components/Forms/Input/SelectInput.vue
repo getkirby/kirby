@@ -77,7 +77,7 @@ export default {
 	},
 	computed: {
 		emptyOption() {
-			return this.placeholder || "—";
+			return this.placeholder ?? "—";
 		},
 		hasEmptyOption() {
 			if (this.empty === false) {

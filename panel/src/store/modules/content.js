@@ -57,14 +57,14 @@ export default {
 		 * Returns ID (current or provided) with correct language suffix
 		 */
 		id: (state) => (id) => {
-			id = id || state.current;
+			id = id ?? state.current;
 			return id + "?language=" + window.panel.language.code;
 		},
 		/**
 		 * Return the full model object for passed ID
 		 */
 		model: (state, getters) => (id) => {
-			id = id || state.current;
+			id = id ?? state.current;
 
 			if (getters.exists(id) === true) {
 				return state.models[id];
@@ -125,7 +125,7 @@ export default {
 			set(state.models, id, {
 				api: model.api,
 				originals: model.originals,
-				changes: changes || {}
+				changes: changes ?? {}
 			});
 		},
 		CURRENT(state, id) {
@@ -283,11 +283,11 @@ export default {
 			}
 		},
 		revert(context, id) {
-			id = id || context.state.current;
+			id = id ?? context.state.current;
 			context.commit("REVERT", id);
 		},
 		async save(context, id) {
-			id = id || context.state.current;
+			id = id ?? context.state.current;
 
 			// don't allow save if model is not current
 			// or the form is currently disabled
@@ -324,7 +324,7 @@ export default {
 			}
 		},
 		update(context, [field, value, id]) {
-			id = id || context.state.current;
+			id = id ?? context.state.current;
 
 			if (field === null) {
 				for (const field in value) {
