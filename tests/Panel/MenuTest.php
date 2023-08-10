@@ -287,7 +287,7 @@ class MenuTest extends TestCase
 		];
 
 		$changes = [
-			'icon'     => 'edit-sheet',
+			'icon'     => 'edit-line',
 			'dialog'   => 'changes',
 			'text'     => 'Changes'
 		];

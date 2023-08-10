@@ -323,7 +323,6 @@ export default {
 .k-button:where([data-size="xs"]) {
 	--button-height: var(--height-xs);
 	--button-padding: 0.325rem;
-	--icon-size: 14px;
 }
 .k-button:where([data-size="sm"]) {
 	--button-height: var(--height-sm);

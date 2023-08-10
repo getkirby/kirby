@@ -1,7 +1,7 @@
 <template>
 	<nav :aria-label="label" class="k-breadcrumb">
 		<k-dropdown v-if="segments.length > 1" class="k-breadcrumb-dropdown">
-			<k-button icon="road-sign" @click="$refs.dropdown.toggle()" />
+			<k-button icon="home" @click="$refs.dropdown.toggle()" />
 			<k-dropdown-content ref="dropdown" :options="dropdown" />
 		</k-dropdown>
 
