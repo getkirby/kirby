@@ -104,7 +104,7 @@ export function parse(string) {
 			r: Number(values[1]),
 			g: Number(values[3]),
 			b: Number(values[5]),
-			a: Number(values[7] ?? 1)
+			a: Number(values[7] || 1)
 		};
 
 		if (values[2] === "%") {
@@ -130,7 +130,7 @@ export function parse(string) {
 			h: Number(h),
 			s: Number(s) / 100,
 			l: Number(l) / 100,
-			a: Number(a ?? 1)
+			a: Number(a || 1)
 		};
 
 		if (values[5] === "%") {
