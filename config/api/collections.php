@@ -3,6 +3,14 @@
 /**
  * Api Collection Definitions
  */
+
+use Kirby\Cms\Files;
+use Kirby\Cms\Languages;
+use Kirby\Cms\Pages;
+use Kirby\Cms\Roles;
+use Kirby\Cms\Translations;
+use Kirby\Cms\Users;
+
 return [
 
 	/**
@@ -10,7 +18,7 @@ return [
 	 */
 	'children' => [
 		'model' => 'page',
-		'type'  => 'Kirby\Cms\Pages',
+		'type'  => Pages::class,
 		'view'  => 'compact'
 	],
 
@@ -19,7 +27,7 @@ return [
 	 */
 	'files' => [
 		'model' => 'file',
-		'type'  => 'Kirby\Cms\Files'
+		'type'  => Files::class,
 	],
 
 	/**
@@ -27,7 +35,7 @@ return [
 	 */
 	'languages' => [
 		'model' => 'language',
-		'type'  => 'Kirby\Cms\Languages'
+		'type'  => Languages::class,
 	],
 
 	/**
@@ -35,7 +43,7 @@ return [
 	 */
 	'pages' => [
 		'model' => 'page',
-		'type'  => 'Kirby\Cms\Pages',
+		'type'  => Pages::class,
 		'view'  => 'compact'
 	],
 
@@ -44,7 +52,7 @@ return [
 	 */
 	'roles' => [
 		'model' => 'role',
-		'type'  => 'Kirby\Cms\Roles',
+		'type'  => Roles::class,
 		'view'  => 'compact'
 	],
 
@@ -53,7 +61,7 @@ return [
 	 */
 	'translations' => [
 		'model' => 'translation',
-		'type'  => 'Kirby\Cms\Translations',
+		'type'  => Translations::class,
 		'view'  => 'compact'
 	],
 
@@ -63,7 +71,7 @@ return [
 	'users' => [
 		'default' => fn () => $this->users(),
 		'model'   => 'user',
-		'type'    => 'Kirby\Cms\Users',
+		'type'    => Users::class,
 		'view'    => 'compact'
 	]
 
