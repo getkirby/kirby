@@ -45,7 +45,7 @@ export default class Editor extends Emitter {
 	}
 
 	get builtInExtensions() {
-		if (!this.options.useBuiltInExtensions) {
+		if (this.options.useBuiltInExtensions !== true) {
 			return [];
 		}
 
@@ -110,11 +110,11 @@ export default class Editor extends Emitter {
 	}
 
 	createEvents() {
-		const events = this.options.events || {};
+		const events = this.options.events ?? {};
 
-		Object.entries(events).forEach(([eventName, eventCallback]) => {
-			this.on(eventName, eventCallback);
-		});
+		for (const [name, callback] of Object.entries(events)) {
+			this.on(name, callback);
+		}
 
 		return events;
 	}
@@ -145,12 +145,8 @@ export default class Editor extends Emitter {
 					tabindex: 0
 				},
 				handleDOMEvents: {
-					focus: (view, event) => {
-						toggleFocus(view, event, true);
-					},
-					blur: (view, event) => {
-						toggleFocus(view, event, false);
-					}
+					focus: (view, event) => toggleFocus(view, event, true),
+					blur: (view, event) => toggleFocus(view, event, false)
 				}
 			}
 		});
@@ -504,7 +500,7 @@ export default class Editor extends Emitter {
 	}
 
 	get state() {
-		return this.view ? this.view.state : null;
+		return this.view?.state;
 	}
 
 	toggleMark(mark) {
