@@ -1,13 +1,15 @@
 /**
  * Debounces the callback function
  *
- * @param {Function} fn callback functions
- * @param {int} delay miliseconds to debounce fn calls
+ * @param {Function} callback function to debounce
+ * @param {int} delay delay in milliseconds
+ * @returns {Function}
  */
-export default (fn, delay) => {
+export default (callback, delay) => {
 	let timer = null;
-	return function () {
+
+	return (...args) => {
 		clearTimeout(timer);
-		timer = setTimeout(() => fn.apply(this, arguments), delay);
+		timer = setTimeout(() => callback.apply(this, args), delay);
 	};
 };

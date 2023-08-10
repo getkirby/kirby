@@ -30,4 +30,11 @@ describe("$helper.object.merge", () => {
 
 		expect(result).toEqual(expected);
 	});
+
+	it("should return the target object if source is undefined", () => {
+		const target = { a: 1 };
+		const result = merge(target, undefined);
+
+		expect(result).toBe(target);
+	});
 });
