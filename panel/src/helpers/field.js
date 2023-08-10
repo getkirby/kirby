@@ -24,12 +24,12 @@ export function form(fields) {
  * @returns {boolean} - Whether the field is visible or not
  */
 export function isVisible(field, values) {
-	if (!field.when) {
-		return true;
-	}
-
 	if (field.type === "hidden" || field.hidden === true) {
 		return false;
+	}
+
+	if (!field.when) {
+		return true;
 	}
 
 	for (const key in field.when) {
