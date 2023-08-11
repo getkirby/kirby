@@ -9,18 +9,18 @@
 		<ul class="k-upload-items">
 			<li class="k-upload-original">
 				<k-image
-					v-if="original.url.match('(jpg|jpeg|gif|png|webp|avif)')"
+					v-if="isPreviewable(original.mime)"
 					:cover="true"
 					:src="original.url"
-					back="black"
+					back="pattern"
 				/>
-				<k-aspect-ratio v-else ratio="1/1">
-					<k-icon
-						back="pattern"
-						v-bind="original.image"
-						:type="original.image?.icon ?? 'file'"
-					/>
-				</k-aspect-ratio>
+				<k-icon-frame
+					v-else
+					:color="original.image?.color ?? 'white'"
+					:icon="original.image?.icon ?? 'file'"
+					back="black"
+					ratio="1/1"
+				/>
 			</li>
 
 			<li>&larr;</li>
@@ -33,18 +33,18 @@
 			>
 				<a :href="file.url" class="k-upload-item-preview" target="_blank">
 					<k-image
-						v-if="file.type.match('(jpg|jpeg|gif|png|webp|avif)')"
+						v-if="isPreviewable(file.type)"
 						:cover="true"
 						:src="file.url"
 						back="pattern"
 					/>
-					<k-aspect-ratio v-else ratio="1/1">
-						<k-icon
-							back="pattern"
-							v-bind="original.image"
-							:type="original.image?.icon ?? 'file'"
-						/>
-					</k-aspect-ratio>
+					<k-icon-frame
+						v-else
+						:color="original.image?.color ?? 'white'"
+						:icon="original.image?.icon ?? 'file'"
+						back="black"
+						ratio="1/1"
+					/>
 				</a>
 				<k-input
 					:value="$helper.file.name(original.filename)"
