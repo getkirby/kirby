@@ -476,12 +476,12 @@ class Panel
 			$when = $view['when'] ?? null;
 			unset($view['when']);
 
-			// checks if there is a load view condition
-			if ($when instanceof Closure) {
-				if ($when($view, $area) === true) {
-					$routes[] = $view;
-				}
-			} else {
+			// enable the route by default, but if there is a
+			// when condition closure, it must return `true`
+			if (
+				$when instanceof Closure === false ||
+				$when($view, $area) === true
+			) {
 				$routes[] = $view;
 			}
 		}
