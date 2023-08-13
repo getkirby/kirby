@@ -1,55 +1,55 @@
-import { uuid } from "@/helpers/string";
-import State from "./state.js";
-import listeners from "./listeners.js";
-import upload from "@/helpers/upload.js";
-import { extension, name, niceSize } from "@/helpers/file.js";
+import {uuid} from '@/helpers/string';
+import State from './state.js';
+import listeners from './listeners.js';
+import upload from '@/helpers/upload.js';
+import {extension, name, niceSize} from '@/helpers/file.js';
 
 export const defaults = () => {
 	return {
-		accept: "*",
+		accept: '*',
 		attributes: {},
 		files: [],
 		max: null,
 		multiple: true,
 		replacing: null,
-		url: null
+		url: null,
+		running: false,
 	};
 };
 
 export default (panel) => {
-	const parent = State("upload", defaults());
+	const parent = State('upload', defaults());
 
 	return {
 		...parent,
 		...listeners(),
 		input: null,
 		cancel() {
-			this.emit("cancel");
+			this.emit('cancel');
 
 			// emit complete event if any files have been completed,
 			// e.g. when first submit/upload yielded any errors and
 			// now cancel was clicked, but already some files have
 			// been completely uploaded
 			if (this.completed.length > 0) {
-				this.emit("complete", this.completed);
+				this.emit('complete', this.completed);
 				panel.view.reload();
 			}
 
 			this.reset();
 		},
 		get completed() {
-			return this.files
-				.filter((file) => file.completed)
-				.map((file) => file.model);
+			return this.files.filter((file) => file.completed).
+				map((file) => file.model);
 		},
 		done() {
 			panel.dialog.close();
 
 			if (this.completed.length > 0) {
-				this.emit("done", this.completed);
+				this.emit('done', this.completed);
 
 				if (panel.drawer.isOpen === false) {
-					panel.notification.success({ context: "view" });
+					panel.notification.success({context: 'view'});
 					panel.view.reload();
 				}
 			}
@@ -72,7 +72,7 @@ export default (panel) => {
 				size: file.size,
 				src: file,
 				type: file.type,
-				url: url
+				url: url,
 			};
 		},
 		/**
@@ -91,17 +91,17 @@ export default (panel) => {
 			}
 
 			const dialog = {
-				component: "k-upload-dialog",
+				component: 'k-upload-dialog',
 				on: {
 					cancel: () => this.cancel(),
-					submit: () => this.start()
-				}
+					submit: () => this.start(),
+				},
 			};
 
 			// when replacing a file, use decdicated dialog component
 			if (this.replacing) {
-				dialog.component = "k-upload-replace-dialog";
-				dialog.props = { original: this.replacing };
+				dialog.component = 'k-upload-replace-dialog';
+				dialog.props = {original: this.replacing};
 			}
 
 			panel.dialog.open(dialog);
@@ -115,9 +115,9 @@ export default (panel) => {
 			this.set(options);
 
 			// create a new temporary file input
-			this.input = document.createElement("input");
-			this.input.type = "file";
-			this.input.classList.add("sr-only");
+			this.input = document.createElement('input');
+			this.input.type = 'file';
+			this.input.classList.add('sr-only');
 			this.input.value = null;
 			this.input.accept = this.accept;
 			this.input.multiple = this.multiple;
@@ -126,7 +126,7 @@ export default (panel) => {
 			this.input.click();
 
 			// show the dialog on change
-			this.input.addEventListener("change", (event) => {
+			this.input.addEventListener('change', (event) => {
 				if (options.immediate === true) {
 					// if upload should start immediately
 					this.set(options);
@@ -145,15 +145,16 @@ export default (panel) => {
 		replace(file, options) {
 			this.pick({
 				...options,
-				url: panel.urls.api + "/" + file.link,
-				accept: "." + file.extension + "," + file.mime,
+				url: panel.urls.api + '/' + file.link,
+				accept: '.' + file.extension + ',' + file.mime,
 				multiple: false,
-				replacing: file
+				replacing: file,
 			});
 		},
 		reset() {
 			parent.reset.call(this);
 			this.files.splice(0);
+			this.running = false;
 		},
 		select(files, options) {
 			this.set(options);
@@ -163,7 +164,7 @@ export default (panel) => {
 			}
 
 			if (files instanceof FileList === false) {
-				throw new Error("Please provide a FileList");
+				throw new Error('Please provide a FileList');
 			}
 
 			// convert the file list to an array
@@ -184,8 +185,8 @@ export default (panel) => {
 							x.src.name === file.src.name &&
 							x.src.type === file.src.type &&
 							x.src.size === file.src.size &&
-							x.src.lastModified === file.src.lastModified
-					) === index
+							x.src.lastModified === file.src.lastModified,
+					) === index,
 			);
 
 			// apply the max limit to the list of files
@@ -194,7 +195,7 @@ export default (panel) => {
 				this.files = this.files.slice(-1 * this.max);
 			}
 
-			this.emit("select", this.files);
+			this.emit('select', this.files);
 		},
 		set(state) {
 			if (!state) {
@@ -219,9 +220,9 @@ export default (panel) => {
 
 			return this.state();
 		},
-		start() {
+		async start() {
 			if (!this.url) {
-				throw new Error("The upload URL is missing");
+				throw new Error('The upload URL is missing');
 			}
 
 			// nothing to upload
@@ -233,6 +234,8 @@ export default (panel) => {
 			if (this.files.length === this.completed.length) {
 				return this.done();
 			}
+
+			this.running = true;
 
 			// upload each file individually and keep track of the progress
 			for (const file of this.files) {
@@ -248,42 +251,41 @@ export default (panel) => {
 
 				// ensure that all files have a unique name
 				const duplicates = this.files.filter(
-					(f) => f.name === file.name && f.extension === file.extension
+					(f) => f.name === file.name && f.extension === file.extension,
 				);
 
 				if (duplicates.length > 1) {
-					file.error = panel.t("error.file.name.unique");
+					file.error = panel.t('error.file.name.unique');
 					continue;
 				}
 
-				upload(file.src, {
+				// TODO: check file already exists on server!
+
+				await upload(file.src, {
 					attributes: this.attributes,
-					headers: {
-						"x-csrf": panel.system.csrf
-					},
-					filename: file.name + "." + file.extension,
+					headers: {'x-csrf': panel.system.csrf},
+					filename: file.name + '.' + file.extension,
 					url: this.url,
-					error: (xhr, src, response) => {
-						panel.error(response, false);
-
-						// store the error message to show it in
-						// the dialog for example
-						file.error = response.message;
-
-						// reset the progress bar on error
-						file.progress = 0;
-					},
 					progress: (xhr, src, progress) => {
 						file.progress = progress;
 					},
-					success: (xhr, src, response) => {
-						file.completed = true;
-						file.model = response.data;
+				}).then(({xhr, src, response}) => {
+					file.completed = true;
+					file.model = response.data;
 
-						if (this.files.length === this.completed.length) {
-							this.done();
-						}
+					if (this.files.length === this.completed.length) {
+						this.running = false;
+						panel.notification.success({context: 'view'});
 					}
+				}).catch(({xhr, src, response}) => {
+					panel.error(response, false);
+
+					// store the error message to show it in
+					// the dialog for example
+					file.error = response.message;
+
+					// reset the progress bar on error
+					file.progress = 0;
 				});
 
 				// if there is sort data, increment in the loop for next file
@@ -291,6 +293,6 @@ export default (panel) => {
 					this.attributes.sort++;
 				}
 			}
-		}
+		},
 	};
 };

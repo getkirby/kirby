@@ -82,6 +82,19 @@
 				</ul>
 			</template>
 		</k-dropzone>
+
+		<template slot="footer">
+			<k-dialog-footer v-if="cancelButton || submitButton">
+				<k-dialog-buttons
+					:cancel-button="cancelButton"
+					:disabled="disabled"
+					:icon="icon"
+					:submit-button="uploadSubmitButton"
+					:theme="theme"
+					@cancel="$emit('cancel')"
+				/>
+			</k-dialog-footer>
+		</template>
 	</k-dialog>
 </template>
 
@@ -90,15 +103,19 @@ import Dialog from "@/mixins/dialog.js";
 
 export default {
 	mixins: [Dialog],
-	props: {
-		submitButton: {
-			type: [String, Boolean, Object],
-			default: () => {
-				return {
-					icon: "upload",
-					text: window.panel.$t("upload")
-				};
-			}
+	computed: {
+		uploadSubmitButton() {
+			return {
+				icon: this.$panel.upload.running ? "loader" : (this.allFilesUploaded ? "check" : "upload"),
+				disabled: this.$panel.upload.running,
+				text: this.allFilesUploaded ? this.$panel.$t("close") : this.$panel.$t("upload") + " (" + this.filesLeft + ")"
+			};
+		},
+		allFilesUploaded() {
+			return this.$panel.upload.files.length === this.$panel.upload.completed.length
+		},
+		filesLeft() {
+			return this.$panel.upload.completed.length + "/" + this.$panel.upload.files.length;
 		}
 	},
 	methods: {
@@ -112,7 +129,7 @@ export default {
 				"image/avif",
 				"image/svg+xml"
 			].includes(mime);
-		}
+		},
 	}
 };
 </script>
@@ -125,6 +142,9 @@ export default {
 .k-upload-items {
 	display: grid;
 	gap: 0.25rem;
+	max-height: 64dvh;
+	overflow-y: auto;
+	padding: 0.2rem;
 }
 .k-upload-item {
 	accent-color: var(--color-focus);
