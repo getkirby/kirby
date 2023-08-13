@@ -106,16 +106,28 @@ export default {
 	computed: {
 		uploadSubmitButton() {
 			return {
-				icon: this.$panel.upload.running ? "loader" : (this.allFilesUploaded ? "check" : "upload"),
+				icon: this.$panel.upload.running
+					? "loader"
+					: this.allFilesUploaded
+					? "check"
+					: "upload",
 				disabled: this.$panel.upload.running,
-				text: this.allFilesUploaded ? this.$panel.$t("close") : this.$panel.$t("upload") + " (" + this.filesLeft + ")"
+				text: this.allFilesUploaded
+					? this.$panel.$t("close")
+					: this.$panel.$t("upload") + " (" + this.filesLeft + ")"
 			};
 		},
 		allFilesUploaded() {
-			return this.$panel.upload.files.length === this.$panel.upload.completed.length
+			return (
+				this.$panel.upload.files.length === this.$panel.upload.completed.length
+			);
 		},
 		filesLeft() {
-			return this.$panel.upload.completed.length + "/" + this.$panel.upload.files.length;
+			return (
+				this.$panel.upload.completed.length +
+				"/" +
+				this.$panel.upload.files.length
+			);
 		}
 	},
 	methods: {
@@ -129,7 +141,7 @@ export default {
 				"image/avif",
 				"image/svg+xml"
 			].includes(mime);
-		},
+		}
 	}
 };
 </script>
