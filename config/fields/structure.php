@@ -108,55 +108,44 @@ return [
 			return $this->form()->fields()->toArray();
 		},
 		'columns' => function () {
-			$columns = [];
-			$mobile  = 0;
+			$columns   = [];
+			$blueprint = $this->columns;
 
-			if (empty($this->columns) === true) {
-				foreach ($this->fields as $field) {
-					// Skip hidden and unsaveable fields
-					// They should never be included as column
-					if (
-						$field['type'] === 'hidden' ||
-						$field['hidden'] === true ||
-						$field['saveable'] === false
-					) {
-						continue;
-					}
+			// if no custom columns have been defined,
+			// gather all fields as columns
+			if (empty($blueprint) === true) {
+				$fields    = array_column($this->fields, 'name');
+				$blueprint = array_fill_keys($fields, true);
+			}
 
-					$columns[$field['name']] = [
-						'type'  => $field['type'],
-						'label' => $field['label'] ?? $field['name']
-					];
+			foreach ($blueprint as $name => $column) {
+				$field = $this->fields[$name] ?? null;
+
+				// Skip empty, hidden and unsaveable fields
+				// They should never be included as column
+				if (
+					empty($field) === true ||
+					$field['type'] === 'hidden' ||
+					$field['hidden'] === true ||
+					$field['saveable'] === false
+				) {
+					continue;
 				}
-			} else {
-				foreach ($this->columns as $columnName => $columnProps) {
-					if (is_array($columnProps) === false) {
-						$columnProps = [];
-					}
 
-					$field = $this->fields[$columnName] ?? null;
-
-					if (
-						empty($field) === true ||
-						$field['saveable'] === false
-					) {
-						continue;
-					}
-
-					if (($columnProps['mobile'] ?? false) === true) {
-						$mobile++;
-					}
-
-					$columns[$columnName] = array_merge([
-						'type'  => $field['type'],
-						'label' => $field['label'] ?? $field['name']
-					], $columnProps);
+				if (is_array($column) === false) {
+					$column = [];
 				}
+
+				$column['type']  ??= $field['type'];
+				$column['label'] ??= $field['label'] ?? $name;
+				$column['label']   = I18n::translate($column['label'], $column['label']);
+
+				$columns[$name] = $column;
 			}
 
 			// make the first column visible on mobile
 			// if no other mobile columns are defined
-			if ($mobile === 0) {
+			if (in_array(true, array_column($columns, 'mobile')) === false) {
 				$columns[array_key_first($columns)]['mobile'] = true;
 			}
 
