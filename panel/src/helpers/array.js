@@ -2,6 +2,22 @@ import sort from "./sort";
 import "./regex";
 
 /**
+ * @param {Array} cunks
+ * @param {Number} size
+ * @returns {Array}
+ *
+ */
+export function chunks(array, size) {
+	const chunks = [];
+
+	for (let i = 0; i < array.length; i += size) {
+		chunks.push(array.slice(i, i + size));
+	}
+
+	return chunks;
+}
+
+/**
  * Array.fromObject()
  */
 Array.fromObject = function (object) {
@@ -43,7 +59,7 @@ export const search = (array, query, options = {}) => {
 };
 
 /**
- * Array.sortBy()
+ * myArray.sortBy()
  */
 Array.prototype.sortBy = function (sortBy) {
 	const options = sortBy.split(" ");
@@ -63,7 +79,7 @@ Array.prototype.sortBy = function (sortBy) {
 };
 
 /**
- * Array.split()
+ * myArray.split()
  *
  * @param {String} delimiter
  * @returns {Array}
@@ -91,5 +107,6 @@ Array.wrap = function (array) {
 };
 
 export default {
+	chunks,
 	search
 };
