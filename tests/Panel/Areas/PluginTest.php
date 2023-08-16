@@ -6,7 +6,6 @@ use Kirby\Cms\App;
 
 class PluginTest extends AreaTestCase
 {
-
 	public function testView(): void
 	{
 		App::plugin('test/a', [
