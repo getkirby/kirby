@@ -67,7 +67,7 @@ export default {
 				this.button(this.submitButton, {
 					class: "k-dialog-button-submit",
 					disabled: this.disabled || this.$panel.dialog.isLoading,
-					icon: this.icon,
+					icon: this.$panel.dialog.isLoading ? "loader" : this.icon,
 					text: this.$t("confirm"),
 					theme: this.theme,
 					type: "submit",
