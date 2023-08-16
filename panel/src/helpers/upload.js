@@ -13,75 +13,83 @@
  * @param {Function} params.success - callback when upload succeeded
  * @param {Function} params.error - callback when upload failed
  */
-export default (file, params) => {
-	const defaults = {
-		url: "/",
-		field: "file",
-		method: "POST",
-		filename: file.name,
-		headers: {},
-		attributes: {},
-		complete: () => {},
-		error: () => {},
-		success: () => {},
-		progress: () => {}
-	};
+export default async (file, params) => {
+	return new Promise((resolve, reject) => {
+		const defaults = {
+			url: "/",
+			field: "file",
+			method: "POST",
+			filename: file.name,
+			headers: {},
+			attributes: {},
+			complete: () => {},
+			error: () => {},
+			success: () => {},
+			progress: () => {}
+		};
 
-	const xhr = new XMLHttpRequest();
-	const data = new FormData();
-	const options = Object.assign(defaults, params);
+		const options = Object.assign(defaults, params);
+		const xhr = new XMLHttpRequest();
+		const data = new FormData();
 
-	// add file to form data
-	data.append(options.field, file, options.filename);
+		// add file to form data
+		data.append(options.field, file, options.filename);
 
-	// add all other attributes to form data
-	for (const attribute in options.attributes) {
-		data.append(attribute, options.attributes[attribute]);
-	}
-
-	const progress = (event) => {
-		if (event.lengthComputable && options.progress) {
-			const percent = Math.max(
-				0,
-				Math.min(100, Math.ceil((event.loaded / event.total) * 100))
-			);
-			options.progress(xhr, file, percent);
-		}
-	};
-
-	xhr.upload.addEventListener("loadstart", progress);
-	xhr.upload.addEventListener("progress", progress);
-
-	xhr.addEventListener("load", (event) => {
-		let response = null;
-
-		try {
-			response = JSON.parse(event.target.response);
-		} catch (error) {
-			response = { status: "error", message: "The file could not be uploaded" };
+		// add all other attributes to form data
+		for (const attribute in options.attributes) {
+			data.append(attribute, options.attributes[attribute]);
 		}
 
-		if (response.status === "error") {
-			options.error(xhr, file, response);
-		} else {
-			options.success(xhr, file, response);
+		const progress = (event) => {
+			if (event.lengthComputable && options.progress) {
+				const percent = Math.max(
+					0,
+					Math.min(100, Math.ceil((event.loaded / event.total) * 100))
+				);
+				options.progress(xhr, file, percent);
+			}
+		};
+
+		xhr.upload.addEventListener("loadstart", progress);
+		xhr.upload.addEventListener("progress", progress);
+
+		xhr.addEventListener("load", (event) => {
+			let response = null;
+
+			try {
+				response = JSON.parse(event.target.response);
+			} catch (error) {
+				response = {
+					status: "error",
+					message: "The file could not be uploaded"
+				};
+			}
+
+			if (response.status === "error") {
+				options.error(xhr, file, response);
+				reject(response);
+			} else {
+				options.progress(xhr, file, 100);
+				options.success(xhr, file, response);
+				resolve(response);
+			}
+		});
+
+		xhr.addEventListener("error", (event) => {
+			const response = JSON.parse(event.target.response);
+
 			options.progress(xhr, file, 100);
+			options.error(xhr, file, response);
+			reject(response);
+		});
+
+		xhr.open(options.method, options.url, true);
+
+		// add all request headers
+		for (const header in options.headers) {
+			xhr.setRequestHeader(header, options.headers[header]);
 		}
+
+		xhr.send(data);
 	});
-
-	xhr.addEventListener("error", (event) => {
-		const response = JSON.parse(event.target.response);
-
-		options.error(xhr, file, response);
-		options.progress(xhr, file, 100);
-	});
-
-	xhr.open(options.method, options.url, true);
-
-	// add all request headers
-	for (const header in options.headers) {
-		xhr.setRequestHeader(header, options.headers[header]);
-	}
-
-	xhr.send(data);
 };
