@@ -40,16 +40,13 @@ export default (file, params) => {
 	}
 
 	const progress = (event) => {
-		if (!event.lengthComputable || !options.progress) {
-			return;
+		if (event.lengthComputable && options.progress) {
+			const percent = Math.max(
+				0,
+				Math.min(100, Math.ceil((event.loaded / event.total) * 100))
+			);
+			options.progress(xhr, file, percent);
 		}
-
-		let percent = Math.max(
-			0,
-			Math.min(100, (event.loaded / event.total) * 100)
-		);
-
-		options.progress(xhr, file, Math.ceil(percent));
 	};
 
 	xhr.upload.addEventListener("loadstart", progress);
