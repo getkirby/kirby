@@ -260,10 +260,22 @@ export default (panel) => {
 				return this.done();
 			}
 
-			// upload each file individually and keep track of the progress
+			// gather upload queue for all files
+			const queue = [];
+
 			for (const file of this.files) {
-				// don't upload completed files again
+				// skip file if alreay completed
 				if (file.completed === true) {
+					continue;
+				}
+
+				// ensure that all files have a unique name
+				if (
+					this.files.filter(
+						(f) => f.name === file.name && f.extension === file.extension
+					).length > 1
+				) {
+					file.error = panel.t("error.file.name.unique");
 					continue;
 				}
 
@@ -272,50 +284,64 @@ export default (panel) => {
 				file.error = null;
 				file.progress = 0;
 
-				// ensure that all files have a unique name
-				const duplicates = this.files.filter(
-					(f) => f.name === file.name && f.extension === file.extension
-				);
-
-				if (duplicates.length > 1) {
-					file.error = panel.t("error.file.name.unique");
-					continue;
-				}
-
-				upload(file.src, {
-					attributes: this.attributes,
-					headers: {
-						"x-csrf": panel.system.csrf
-					},
-					filename: file.name + "." + file.extension,
-					url: this.url,
-					error: (xhr, src, response) => {
-						panel.error(response, false);
-
-						// store the error message to show it in
-						// the dialog for example
-						file.error = response.message;
-
-						// reset the progress bar on error
-						file.progress = 0;
-					},
-					progress: (xhr, src, progress) => {
-						file.progress = progress;
-					},
-					success: (xhr, src, response) => {
-						file.completed = true;
-						file.model = response.data;
-
-						if (this.files.length === this.completed.length) {
-							this.done();
-						}
-					}
-				});
+				// add file to upload queue
+				queue.push(file);
 
 				// if there is sort data, increment in the loop for next file
 				if (this.attributes?.sort !== undefined) {
 					this.attributes.sort++;
 				}
+			}
+
+			// async uploader function:
+			// uploads the next file in the queue
+			// and triggers itself again after completion
+			const uploader = async () => {
+				if (queue.length === 0) {
+					return;
+				}
+
+				try {
+					const file = queue.shift();
+					await upload(file.src, {
+						attributes: this.attributes,
+						headers: {
+							"x-csrf": panel.system.csrf
+						},
+						filename: file.name + "." + file.extension,
+						url: this.url,
+						error: (xhr, src, response) => {
+							panel.error(response, false);
+
+							// store the error message to show it in
+							// the dialog for example
+							file.error = response.message;
+
+							// reset the progress bar on error
+							file.progress = 0;
+						},
+						progress: (xhr, src, progress) => {
+							file.progress = progress;
+						},
+						success: (xhr, src, response) => {
+							file.completed = true;
+							file.model = response.data;
+
+							if (this.files.length === this.completed.length) {
+								this.done();
+							}
+						}
+					});
+				} finally {
+					uploader();
+				}
+			};
+
+			// initialize the uploader for the first up to 20 files,
+			// uploader function will then trigger itself after completion
+			// until the full queue has been processed
+			for (let i = 0; i < Math.min(queue.length, 20); i++) {
+				uploader();
 			}
 		}
 	};
