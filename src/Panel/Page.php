@@ -146,7 +146,7 @@ class Page extends Model
 
 		$result['move'] = [
 			'dialog'   => $url . '/move',
-			'icon'     => 'road-sign',
+			'icon'     => 'parent',
 			'text'     => I18n::translate('page.move'),
 			'disabled' => $this->isDisabledDropdownOption('move', $options, $permissions)
 		];

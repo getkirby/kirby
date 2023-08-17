@@ -110,8 +110,8 @@
 					<td v-if="hasOptions" data-mobile class="k-table-options-column">
 						<slot name="options" v-bind="{ row, rowIndex, options }">
 							<k-options-dropdown
-								:options="row.options || options"
-								:text="(row.options || options).length > 1"
+								:options="row.options ?? options"
+								:text="(row.options ?? options).length > 1"
 								@option="onOption($event, row, rowIndex)"
 							/>
 						</slot>
@@ -267,7 +267,7 @@ export default {
 		 * @returns {string}
 		 */
 		label(column, columnIndex) {
-			return column.label || this.$helper.string.ucfirst(columnIndex);
+			return column.label ?? this.$helper.string.ucfirst(columnIndex);
 		},
 		/**
 		 * When the table has been sorted,

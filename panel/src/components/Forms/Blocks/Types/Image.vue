@@ -37,7 +37,7 @@ export default {
 			return this.field("caption", { marks: true }).marks;
 		},
 		crop() {
-			return this.content.crop || false;
+			return this.content.crop ?? false;
 		},
 		src() {
 			if (this.content.location === "web") {
@@ -51,7 +51,7 @@ export default {
 			return false;
 		},
 		ratio() {
-			return this.content.ratio || false;
+			return this.content.ratio ?? false;
 		}
 	}
 };

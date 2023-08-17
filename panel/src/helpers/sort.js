@@ -4,9 +4,7 @@
  * JS implementation of
  * https://github.com/bubkoo/natsort
  */
-export default (options) => {
-	options = options || {};
-
+export default (options = {}) => {
 	var GREATER = options.desc ? -1 : 1;
 	var SMALLER = -GREATER;
 

@@ -3,7 +3,7 @@
 		<template v-if="loading === false">
 			<k-headline>{{ $t("lock.unsaved") }}</k-headline>
 			<k-items v-if="changes.length" :items="changes" layout="list" />
-			<k-empty v-else icon="edit-sheet">{{ $t("lock.unsaved.empty") }}</k-empty>
+			<k-empty v-else icon="edit-line">{{ $t("lock.unsaved.empty") }}</k-empty>
 		</template>
 		<template v-else>
 			<k-icon type="loader" />

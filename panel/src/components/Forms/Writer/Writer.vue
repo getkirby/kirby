@@ -239,15 +239,19 @@ export default {
 			);
 		},
 		createMarksFromPanelPlugins() {
-			const customs = window.panel.plugins.writerMarks ?? {};
+			const plugins = window.panel.plugins.writerMarks ?? {};
+			const marks = {};
 
 			// take each extenstion object and turn
 			// it into an instance that extends the Mark class
-			for (const markName in customs) {
-				Object.setPrototypeOf(customs[markName], new Mark());
+			for (const name in plugins) {
+				marks[name] = Object.create(
+					Mark.prototype,
+					Object.getOwnPropertyDescriptors(plugins[name])
+				);
 			}
 
-			return customs;
+			return marks;
 		},
 		createNodes() {
 			const hardBreak = new HardBreak({
@@ -288,15 +292,19 @@ export default {
 			);
 		},
 		createNodesFromPanelPlugins() {
-			const customs = window.panel.plugins.writerNodes ?? {};
+			const plugins = window.panel.plugins.writerNodes ?? {};
+			const nodes = {};
 
 			// take each extenstion object and turn
 			// it into an instance that extends the Node class
-			for (const nodeName in customs) {
-				Object.setPrototypeOf(customs[nodeName], new Node());
+			for (const name in plugins) {
+				nodes[name] = Object.create(
+					Node.prototype,
+					Object.getOwnPropertyDescriptors(plugins[name])
+				);
 			}
 
-			return customs;
+			return nodes;
 		},
 		getHTML() {
 			return this.editor.getHTML();

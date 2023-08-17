@@ -23,7 +23,7 @@ import LoginForm from "@/components/Forms/Login.vue";
 
 export default {
 	components: {
-		"k-login-plugin": window.panel.plugins.login || LoginForm
+		"k-login-plugin": window.panel.plugins.login ?? LoginForm
 	},
 	props: {
 		methods: Array,

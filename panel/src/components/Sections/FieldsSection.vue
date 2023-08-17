@@ -4,7 +4,13 @@
 		:headline="issue ? 'Error' : null"
 		class="k-fields-section"
 	>
-		<k-box v-if="issue" :text="issue.message" :html="false" theme="negative" />
+		<k-box
+			v-if="issue"
+			:text="issue.message"
+			:html="false"
+			icon="alert"
+			theme="negative"
+		/>
 		<k-form
 			:fields="fields"
 			:validate="true"

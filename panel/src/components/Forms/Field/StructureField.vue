@@ -31,7 +31,7 @@
 				icon="list-bullet"
 				@click="add()"
 			>
-				{{ empty || $t("field.structure.empty") }}
+				{{ empty ?? $t("field.structure.empty") }}
 			</k-empty>
 
 			<!-- Table -->
@@ -304,7 +304,9 @@ export default {
 	},
 	watch: {
 		value(value) {
-			this.items = this.toItems(value);
+			if (value !== this.items) {
+				this.items = this.toItems(value);
+			}
 		}
 	},
 	methods: {

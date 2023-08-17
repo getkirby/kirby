@@ -6,12 +6,12 @@
 			ref="input"
 			theme="field"
 			type="time"
-			@input="$emit('input', $event || '')"
+			@input="$emit('input', $event ?? '')"
 		>
 			<template v-if="times" #icon>
 				<k-dropdown>
 					<k-button
-						:icon="icon || 'clock'"
+						:icon="icon ?? 'clock'"
 						:title="$t('time.select')"
 						class="k-input-icon-button"
 						@click="$refs.times.toggle()"

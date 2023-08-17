@@ -11,7 +11,7 @@ export default {
 	computed: {
 		text() {
 			const dt = this.$library.dayjs.iso(this.value, "time");
-			return dt?.format(this.field.display) || "";
+			return dt?.format(this.field.display) ?? "";
 		}
 	}
 };

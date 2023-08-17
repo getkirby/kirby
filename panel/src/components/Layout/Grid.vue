@@ -47,7 +47,7 @@ export default {
 	--span: calc(var(--columns) * var(--width));
 }
 
-@container (min-width: 50rem) {
+@container (min-width: 40rem) {
 	.k-grid {
 		grid-template-columns: repeat(var(--columns), 1fr);
 	}

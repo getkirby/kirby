@@ -23,7 +23,7 @@
 					>
 						<a :href="file.url" class="k-upload-item-preview" target="_blank">
 							<k-image-frame
-								v-if="file.type.match('(jpg|jpeg|gif|png|webp|avif)')"
+								v-if="isPreviewable(file.type)"
 								:cover="true"
 								:src="file.url"
 								back="pattern"
@@ -100,6 +100,19 @@ export default {
 				};
 			}
 		}
+	},
+	methods: {
+		isPreviewable(mime) {
+			return [
+				"image/jpeg",
+				"image/jpg",
+				"image/gif",
+				"image/png",
+				"image/webp",
+				"image/avif",
+				"image/svg+xml"
+			].includes(mime);
+		}
 	}
 };
 </script>
@@ -141,12 +154,7 @@ export default {
 	outline: 2px solid var(--color-focus);
 	z-index: 1;
 }
-.k-upload-item-preview .k-aspect-ratio > * {
-	display: grid;
-	place-items: center;
-	color: var(--color-gray-500);
-	border-right: 1px solid var(--color-light);
-}
+
 .k-upload-item-body {
 	grid-area: body;
 	padding: var(--spacing-2) var(--spacing-3) 0;

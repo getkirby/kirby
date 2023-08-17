@@ -194,7 +194,7 @@ class Menu
 	{
 		$options = [
 			[
-				'icon'     => 'edit-sheet',
+				'icon'     => 'edit-line',
 				'dialog'   => 'changes',
 				'text'     => I18n::translate('changes'),
 			],

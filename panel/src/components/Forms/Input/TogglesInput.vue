@@ -3,7 +3,7 @@
 		v-if="options.length"
 		:data-invalid="$v.$invalid"
 		:data-labels="labels"
-		:style="'--options:' + (columns || options.length)"
+		:style="'--options:' + (columns ?? options.length)"
 		class="k-toggles-input"
 	>
 		<li

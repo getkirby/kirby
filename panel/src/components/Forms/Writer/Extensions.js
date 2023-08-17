@@ -4,10 +4,11 @@ import utils from "./Utils";
 
 export default class Extensions {
 	constructor(extensions = [], editor) {
-		extensions.forEach((extension) => {
+		for (const extension of extensions) {
 			extension.bindEditor(editor);
 			extension.init();
-		});
+		}
+
 		this.extensions = extensions;
 	}
 
@@ -38,15 +39,15 @@ export default class Extensions {
 				 * logic to stop commands for disabled editors
 				 * or focus the view before the command is executed
 				 */
-				const createCommand = (commandName, commandCallback) => {
-					commands[commandName] = (attrs) => {
-						if (typeof commandCallback !== "function" || !view.editable) {
+				const createCommand = (name, callback) => {
+					commands[name] = (attrs) => {
+						if (typeof callback !== "function" || !view.editable) {
 							return false;
 						}
 
 						view.focus();
 
-						const result = commandCallback(attrs);
+						const result = callback(attrs);
 
 						if (typeof result === "function") {
 							return result(view.state, view.dispatch, view);
@@ -56,19 +57,18 @@ export default class Extensions {
 					};
 				};
 
-				/**
-				 * extensions can return an object with multiple
-				 * commands. The object key is the command name.
-				 */
 				if (typeof value === "object") {
-					Object.entries(value).forEach(([commandName, commandCallback]) => {
-						createCommand(commandName, commandCallback);
-					});
-
+					/**
+					 * extensions can return an object with multiple
+					 * commands. The object key is the command name.
+					 */
+					for (const [name, callback] of Object.entries(value)) {
+						createCommand(name, callback);
+					}
+				} else {
 					/**
 					 * the extension name will be used as command name
 					 */
-				} else {
 					createCommand(name, value);
 				}
 
@@ -88,7 +88,7 @@ export default class Extensions {
 			.forEach((extension) => {
 				if (Array.isArray(extension.button)) {
 					extension.button.forEach((button) => {
-						buttons[button.id || button.name] = button;
+						buttons[button.id ?? button.name] = button;
 					});
 				} else {
 					buttons[extension.name] = extension.button;

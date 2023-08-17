@@ -24,7 +24,7 @@ export default class Navigate extends HTMLElement {
 	elements() {
 		return Array.from(
 			this.querySelectorAll(
-				this.getAttribute("select") || ":where(button, a):not(:disabled)"
+				this.getAttribute("select") ?? ":where(button, a):not(:disabled)"
 			)
 		);
 	}

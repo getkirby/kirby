@@ -2,7 +2,7 @@
 	<k-dialog
 		ref="dialog"
 		:submit-button="{
-			icon: 'road-sign',
+			icon: 'parent',
 			text: $t('move')
 		}"
 		class="k-page-move-dialog"

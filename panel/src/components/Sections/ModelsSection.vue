@@ -4,13 +4,13 @@
 		:buttons="buttons"
 		:class="`k-models-section k-${type}-section`"
 		:data-processing="isProcessing"
-		:headline="options.headline || ' '"
+		:headline="options.headline ?? ' '"
 		:invalid="isInvalid"
 		:link="options.link"
 		:required="Boolean(options.min)"
 	>
 		<!-- Error -->
-		<k-box v-if="error" theme="negative">
+		<k-box v-if="error" icon="alert" theme="negative">
 			<k-text size="small">
 				<strong> {{ $t("error.section.notLoaded", { name: name }) }}: </strong>
 				{{ error }}
@@ -141,7 +141,7 @@ export default {
 				...this.emptyProps,
 				text: this.searching
 					? this.$t("search.results.none")
-					: this.options.empty || this.emptyProps.text
+					: this.options.empty ?? this.emptyProps.text
 			};
 		},
 		items() {

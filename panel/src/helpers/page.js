@@ -8,7 +8,7 @@ export function status(status, disabled = false) {
 			window.panel.$t("page.status." + status),
 		disabled: disabled,
 		size: "xs",
-		style: "--icon-size: 12px"
+		style: "--icon-size: 15px"
 	};
 
 	if (disabled) {

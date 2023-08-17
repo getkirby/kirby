@@ -69,7 +69,7 @@ export default {
 			return "k-text-field-preview";
 		},
 		type() {
-			return this.column.type || this.field?.type;
+			return this.column.type ?? this.field?.type;
 		}
 	}
 };

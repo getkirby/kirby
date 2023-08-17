@@ -9,7 +9,7 @@ export default function (string) {
 		return;
 	}
 
-	// make sure case insensitive
+	// make the string case-insensitive
 	string = string.toLowerCase();
 
 	if (string === "pattern") {

@@ -18,7 +18,7 @@ export default {
 			let bubbles = this.value;
 
 			// predefined options
-			const options = this.column?.options || this.field?.options || [];
+			const options = this.column?.options ?? this.field?.options ?? [];
 
 			if (typeof bubbles === "string") {
 				bubbles = bubbles.split(",");

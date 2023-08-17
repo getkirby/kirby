@@ -41,7 +41,7 @@ export default defineConfig(({ command }) => {
 	}
 
 	const proxy = {
-		target: process.env.VUE_APP_DEV_SERVER || "http://sandbox.test",
+		target: process.env.VUE_APP_DEV_SERVER ?? "http://sandbox.test",
 		changeOrigin: true,
 		secure: false
 	};

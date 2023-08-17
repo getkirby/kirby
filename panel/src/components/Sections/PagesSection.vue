@@ -22,7 +22,7 @@ export default {
 				page.sortable = page.permissions.sort && this.options.sortable;
 				page.deletable = this.data.length > this.options.min;
 				page.column = this.column;
-				page.buttons = [status, ...(page.buttons || [])];
+				page.buttons = [status, ...(page.buttons ?? [])];
 				page.options = this.$dropdown(page.link, {
 					query: {
 						view: "list",
@@ -58,7 +58,7 @@ export default {
 			if (this.canAdd) {
 				this.$dialog("pages/create", {
 					query: {
-						parent: this.options.link || this.parent,
+						parent: this.options.link ?? this.parent,
 						view: this.parent,
 						section: this.name
 					}

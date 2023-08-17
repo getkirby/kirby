@@ -61,7 +61,7 @@ return function (App $kirby) {
 			}
 		],
 		[
-			'pattern' => $media . '/plugins/(:any)/(:any)/(:all).(css|map|gif|js|mjs|jpg|png|svg|webp|avif|woff2|woff|json)',
+			'pattern' => $media . '/plugins/(:any)/(:any)/(:all)\.(css|map|gif|js|mjs|jpg|png|svg|webp|avif|woff2|woff|json)',
 			'env'     => 'media',
 			'action'  => function (
 				string $provider,

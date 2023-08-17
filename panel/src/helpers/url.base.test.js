@@ -9,9 +9,9 @@ describe("$helper.url.base", () => {
 
 	it("should return the base href", () => {
 		const base = document.createElement("base");
-		base.href = "https://getkirby.com";
+		base.href = "http://localhost:3000";
 
 		const result = url.base();
-		expect(result).toStrictEqual(new URL("https://getkirby.com"));
+		expect(result).toStrictEqual(new URL("http://localhost:3000"));
 	});
 });

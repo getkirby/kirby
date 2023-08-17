@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel;
 
+use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\Url as CmsUrl;
 use Kirby\Cms\User;
@@ -471,7 +472,18 @@ class Panel
 		foreach ($views as $view) {
 			$view['area'] = $areaId;
 			$view['type'] = 'view';
-			$routes[] = $view;
+
+			$when = $view['when'] ?? null;
+			unset($view['when']);
+
+			// enable the route by default, but if there is a
+			// when condition closure, it must return `true`
+			if (
+				$when instanceof Closure === false ||
+				$when($view, $area) === true
+			) {
+				$routes[] = $view;
+			}
 		}
 
 		return $routes;

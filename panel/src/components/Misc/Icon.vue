@@ -46,7 +46,7 @@ export default {
 
 <style>
 :root {
-	--icon-size: 1rem;
+	--icon-size: 18px;
 	--icon-color: currentColor;
 }
 

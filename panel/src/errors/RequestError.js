@@ -4,7 +4,7 @@
  */
 export default class RequestError extends Error {
 	constructor(message, { request, response, cause }) {
-		super(response.json.message || message, { cause });
+		super(response.json.message ?? message, { cause });
 
 		this.request = request;
 		this.response = response;

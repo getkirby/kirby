@@ -207,7 +207,7 @@ export default (panel) => {
 			this.on = {};
 
 			// register new listeners
-			this.addEventListeners(state.on || {});
+			this.addEventListeners(state.on ?? {});
 
 			if (this.max === 1) {
 				this.multiple = false;

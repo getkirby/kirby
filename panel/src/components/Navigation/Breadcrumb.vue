@@ -1,7 +1,7 @@
 <template>
 	<nav :aria-label="label" class="k-breadcrumb">
 		<k-dropdown v-if="segments.length > 1" class="k-breadcrumb-dropdown">
-			<k-button icon="road-sign" @click="$refs.dropdown.toggle()" />
+			<k-button icon="home" @click="$refs.dropdown.toggle()" />
 			<k-dropdown-content ref="dropdown" :options="dropdown" />
 		</k-dropdown>
 
@@ -10,8 +10,8 @@
 				<k-button
 					:icon="crumb.loading ? 'loader' : crumb.icon"
 					:link="crumb.link"
-					:text="crumb.text || crumb.label"
-					:title="crumb.text || crumb.label"
+					:text="crumb.text ?? crumb.label"
+					:title="crumb.text ?? crumb.label"
 					:current="isLast(index - 1) ? 'page' : false"
 					variant="dimmed"
 					size="sm"

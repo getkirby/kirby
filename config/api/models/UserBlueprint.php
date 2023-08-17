@@ -12,7 +12,6 @@ return [
 		'tabs'    => fn (UserBlueprint $blueprint) => $blueprint->tabs(),
 		'title'   => fn (UserBlueprint $blueprint) => $blueprint->title(),
 	],
-	'type' => 'Kirby\Cms\UserBlueprint',
-	'views' => [
-	],
+	'type'  => UserBlueprint::class,
+	'views' => [],
 ];

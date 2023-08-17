@@ -89,7 +89,7 @@ export default {
 	},
 	methods: {
 		decimals() {
-			const step = Number(this.step || 0);
+			const step = Number(this.step ?? 0);
 
 			if (Math.floor(step) === step) {
 				return 0;
@@ -101,7 +101,7 @@ export default {
 				).toString().length;
 			}
 
-			return step.toString().split(".")[1].length || 0;
+			return step.toString().split(".")[1].length ?? 0;
 		},
 		format(value) {
 			if (isNaN(value) || value === "") {

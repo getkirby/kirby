@@ -1,3 +1,10 @@
+/**
+ * Builds a YouTube embed URL
+ *
+ * @param {string} url - The YouTube video URL
+ * @param {boolean} [doNotTrack=false] - Whether to include the DNT parameter
+ * @returns {string} - The YouTube embed URL
+ */
 export function youtube(url, doNotTrack = false) {
 	if (!url.match("youtu")) {
 		return false;
@@ -84,6 +91,13 @@ export function youtube(url, doNotTrack = false) {
 	return src;
 }
 
+/**
+ * Builds a Vimeo embed URL
+ *
+ * @param {string} url - The Vimeo video URL
+ * @param {boolean} [doNotTrack=false] - Whether to include the DNT parameter
+ * @returns {string} - The Vimeo embed URL
+ */
 export function vimeo(url, doNotTrack = false) {
 	let uri = null;
 
@@ -127,12 +141,19 @@ export function vimeo(url, doNotTrack = false) {
 	return src;
 }
 
+/**
+ * Builds an embed URL for the given video URL
+ *
+ * @param {string} url - The video URL
+ * @param {boolean} [doNotTrack=false] - Whether to include the DNT parameter
+ * @returns {string|false} - The embed URL or false if the video URL is not supported
+ */
 export function video(url, doNotTrack = false) {
-	if (url.includes("youtu")) {
+	if (url.includes("youtu") === true) {
 		return youtube(url, doNotTrack);
 	}
 
-	if (url.includes("vimeo")) {
+	if (url.includes("vimeo") === true) {
 		return vimeo(url, doNotTrack);
 	}
 

@@ -20,9 +20,10 @@
 		<k-button
 			v-if="invisibleTabs.length"
 			:current="invisibleTabs.find((tabButton) => tab === tabButton.name)"
-			:text="$t('more')"
+			:title="$t('more')"
 			class="k-tab-button k-tabs-dropdown-button"
 			icon="dots"
+			variant="dimmed"
 			@click.stop="$refs.more.toggle()"
 		/>
 		<k-dropdown-content
@@ -39,7 +40,7 @@
 				:icon="tabButton.icon"
 				:title="tabButton.label"
 			>
-				{{ tabButton.label || tabButton.text || tabButton.name }}
+				{{ tabButton.label ?? tabButton.text ?? tabButton.name }}
 			</k-dropdown-item>
 		</k-dropdown-content>
 	</nav>
@@ -62,7 +63,7 @@ export default {
 	computed: {
 		current() {
 			const tab =
-				this.tabs.find((tab) => tab.name === this.tab) || this.tabs[0] || {};
+				this.tabs.find((tab) => tab.name === this.tab) ?? this.tabs[0] ?? {};
 			return tab.name;
 		}
 	},

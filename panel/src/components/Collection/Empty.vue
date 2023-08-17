@@ -35,7 +35,7 @@ export default {
 		attrs() {
 			const attrs = {
 				button: this.$listeners["click"] !== undefined,
-				icon: { type: this.icon },
+				icon: this.icon,
 				theme: "empty"
 			};
 
