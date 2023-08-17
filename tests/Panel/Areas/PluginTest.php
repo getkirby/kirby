@@ -69,6 +69,5 @@ class PluginTest extends AreaTestCase
 
 		$view = $this->view('bar');
 		$this->assertSame('k-error-view', $view['component']);
-
 	}
 }
