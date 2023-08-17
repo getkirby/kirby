@@ -16,6 +16,13 @@ export const defaults = () => {
 	};
 };
 
+/**
+ * Basic overview of the chain of methods:
+ *
+ * pick   ‾\                     /‾ done
+ *          -- (open) -- start --
+ * select  _/                     \_ cancel
+ */
 export default (panel) => {
 	const parent = State("upload", defaults());
 
@@ -23,6 +30,9 @@ export default (panel) => {
 		...parent,
 		...listeners(),
 		input: null,
+		/**
+		 * Called when dialog's cancel button was clicked
+		 */
 		cancel() {
 			this.emit("cancel");
 
@@ -37,11 +47,18 @@ export default (panel) => {
 
 			this.reset();
 		},
+		/**
+		 * All files that've been already uploaded
+		 */
 		get completed() {
 			return this.files
 				.filter((file) => file.completed)
 				.map((file) => file.model);
 		},
+		/**
+		 * Gets called when the dialog's submit button was clicked
+		 * and all remaining files have been uploaded
+		 */
 		done() {
 			panel.dialog.close();
 
@@ -55,6 +72,22 @@ export default (panel) => {
 			}
 
 			this.reset();
+		},
+		/**
+		 * Checks if file already exists in files list
+		 * and returns index if so
+		 *
+		 * @param {Object} file
+		 * @returns {Number|false}
+		 */
+		findDuplicate(file) {
+			return this.files.findLastIndex(
+				(x) =>
+					x.src.name === file.src.name &&
+					x.src.type === file.src.type &&
+					x.src.size === file.src.size &&
+					x.src.lastModified === file.src.lastModified
+			);
 		},
 		file(file) {
 			const url = URL.createObjectURL(file);
@@ -178,14 +211,7 @@ export default (panel) => {
 			// remove duplicates by comparing crucial src attributes,
 			// preserving the newer file
 			this.files = this.files.filter(
-				(file, index) =>
-					this.files.findLastIndex(
-						(x) =>
-							x.src.name === file.src.name &&
-							x.src.type === file.src.type &&
-							x.src.size === file.src.size &&
-							x.src.lastModified === file.src.lastModified
-					) === index
+				(file, index) => this.findDuplicate(file) === index
 			);
 
 			// apply the max limit to the list of files
