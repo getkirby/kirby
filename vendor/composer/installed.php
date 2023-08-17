@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'claviska/simpleimage' => array(
-            'pretty_version' => '4.0.5',
-            'version' => '4.0.5.0',
-            'reference' => 'b25690f0fc25b2f0b91731370465a3b4e52ea587',
+            'pretty_version' => '4.0.6',
+            'version' => '4.0.6.0',
+            'reference' => '969de5e61810ef91f6f83c475b192c4841367dfa',
             'type' => 'library',
             'install_path' => __DIR__ . '/../claviska/simpleimage',
             'aliases' => array(),
@@ -29,9 +29,9 @@
             'dev_requirement' => false,
         ),
         'filp/whoops' => array(
-            'pretty_version' => '2.15.2',
-            'version' => '2.15.2.0',
-            'reference' => 'aac9304c5ed61bf7b1b7a6064bf9806ab842ce73',
+            'pretty_version' => '2.15.3',
+            'version' => '2.15.3.0',
+            'reference' => 'c83e88a30524f9360b11f585f71e6b17313b7187',
             'type' => 'library',
             'install_path' => __DIR__ . '/../filp/whoops',
             'aliases' => array(),
