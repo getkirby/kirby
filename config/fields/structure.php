@@ -114,19 +114,23 @@ return [
 			// if no custom columns have been defined,
 			// gather all fields as columns
 			if (empty($blueprint) === true) {
-				$fields    = array_column($this->fields, 'name');
+				// skip hidden fields
+				$fields    = array_filter(
+					$this->fields,
+					fn ($field) =>
+						$field['type'] !== 'hidden' && $field['hidden'] !== true
+				);
+				$fields    = array_column($fields, 'name');
 				$blueprint = array_fill_keys($fields, true);
 			}
 
 			foreach ($blueprint as $name => $column) {
 				$field = $this->fields[$name] ?? null;
 
-				// Skip empty, hidden and unsaveable fields
+				// Skip empty and unsaveable fields
 				// They should never be included as column
 				if (
 					empty($field) === true ||
-					$field['type'] === 'hidden' ||
-					$field['hidden'] === true ||
 					$field['saveable'] === false
 				) {
 					continue;
