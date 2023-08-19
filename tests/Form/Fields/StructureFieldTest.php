@@ -100,9 +100,38 @@ class StructureFieldTest extends TestCase
 
 		$expected = [
 			'b' => [
-				'type' => 'text',
-				'label' => 'b',
 				'mobile' => true,
+				'type'   => 'text',
+				'label'  => 'b',
+			],
+		];
+
+		$this->assertSame($expected, $field->columns());
+	}
+
+	public function testColumnsWithI18nLabel()
+	{
+		$field = $this->field('structure', [
+			'columns' => [
+				'b' => [
+					'label' => [
+						'en' => 'Field B',
+						'de' => 'Feld B'
+					]
+				]
+			],
+			'fields' => [
+				'b' => [
+					'type' => 'text'
+				]
+			],
+		]);
+
+		$expected = [
+			'b' => [
+				'label'  => 'Field B',
+				'type'   => 'text',
+				'mobile' => true
 			],
 		];
 
