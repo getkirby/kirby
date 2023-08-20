@@ -24,10 +24,10 @@ export default class Heading extends Node {
 				utils.toggleBlockType(type, schema.nodes.paragraph, attrs)
 		};
 
-		this.options.levels.forEach((level) => {
+		for (const level of this.options.levels) {
 			commands[`h${level}`] = () =>
 				utils.toggleBlockType(type, schema.nodes.paragraph, { level });
-		});
+		}
 
 		return commands;
 	}

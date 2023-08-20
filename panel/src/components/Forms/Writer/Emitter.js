@@ -1,10 +1,10 @@
 export default class Emitter {
 	emit(event, ...args) {
 		this._callbacks = this._callbacks ?? {};
-		const callbacks = this._callbacks[event];
+		const callbacks = this._callbacks[event] ?? [];
 
-		if (callbacks) {
-			callbacks.forEach((callback) => callback.apply(this, args));
+		for (const callback of callbacks) {
+			callback.apply(this, args);
 		}
 
 		return this;

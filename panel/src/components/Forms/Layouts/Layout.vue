@@ -101,15 +101,15 @@ export default {
 		tabs() {
 			let tabs = this.settings.tabs;
 
-			Object.entries(tabs).forEach(([tabName, tab]) => {
-				Object.entries(tab.fields).forEach(([fieldName]) => {
+			for (const [tabName, tab] of Object.entries(tabs)) {
+				for (const fieldName in tab.fields) {
 					tabs[tabName].fields[fieldName].endpoints = {
 						field: this.endpoints.field + "/fields/" + fieldName,
 						section: this.endpoints.section,
 						model: this.endpoints.model
 					};
-				});
-			});
+				}
+			}
 
 			return tabs;
 		}
