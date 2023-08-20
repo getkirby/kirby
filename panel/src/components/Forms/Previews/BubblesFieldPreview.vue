@@ -38,6 +38,10 @@ export default {
 					}
 				}
 
+				// we can unescape the text here, as Vue will
+				// take care of escaping only the relevant parts
+				bubble.text = this.$helper.string.unescapeHTML(bubble.text);
+
 				return bubble;
 			});
 		}
