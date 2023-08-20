@@ -449,7 +449,7 @@ V::$validators = [
 	 * Checks if the value matches the given regular expression
 	 */
 	'match' => function ($value, string $pattern): bool {
-		return preg_match($pattern, $value) !== 0;
+		return preg_match($pattern, (string)$value) !== 0;
 	},
 
 	/**

@@ -332,6 +332,6 @@ class I18n
 			$count = static::formatNumber($count, $locale);
 		}
 
-		return str_replace('{{ count }}', $count, $message);
+		return str_replace('{{ count }}', (string)$count, $message);
 	}
 }
