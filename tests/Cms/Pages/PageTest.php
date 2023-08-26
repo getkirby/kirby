@@ -197,6 +197,87 @@ class PageTest extends TestCase
 		]);
 	}
 
+	/**
+	 * @covers ::isDraft
+	 */
+	public function testIsDraft()
+	{
+		$page = new Page([
+			'slug'  => 'test',
+			'num'   => 1
+		]);
+
+		$this->assertFalse($page->isDraft());
+
+		$page = new Page([
+			'slug'  => 'test',
+			'num'   => null
+		]);
+
+		$this->assertFalse($page->isDraft());
+
+		$page = new Page([
+			'slug'    => 'test',
+			'isDraft' => true
+		]);
+
+		$this->assertTrue($page->isDraft());
+	}
+
+	/**
+	 * @covers ::isListed
+	 */
+	public function testIsListed()
+	{
+		$page = new Page([
+			'slug'  => 'test',
+			'num'   => 1
+		]);
+
+		$this->assertTrue($page->isListed());
+
+		$page = new Page([
+			'slug'  => 'test',
+			'num'   => null
+		]);
+
+		$this->assertFalse($page->isListed());
+
+		$page = new Page([
+			'slug'    => 'test',
+			'isDraft' => true
+		]);
+
+		$this->assertFalse($page->isListed());
+	}
+
+	/**
+	 * @covers ::isUnlisted
+	 */
+	public function testIsUnlisted()
+	{
+		$page = new Page([
+			'slug'  => 'test',
+			'num'   => 1
+		]);
+
+		$this->assertFalse($page->isUnlisted());
+
+		$page = new Page([
+			'slug'  => 'test',
+			'num'   => null
+		]);
+
+		$this->assertTrue($page->isUnlisted());
+
+		$page = new Page([
+			'slug'    => 'test',
+			'isDraft' => true
+		]);
+
+		$this->assertFalse($page->isUnlisted());
+	}
+
 	public function testNum()
 	{
 		$page = new Page([

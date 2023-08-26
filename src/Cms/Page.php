@@ -733,7 +733,7 @@ class Page extends ModelWithContent
 	 */
 	public function isListed(): bool
 	{
-		return $this->num() !== null;
+		return $this->isPublished() && $this->num() !== null;
 	}
 
 	/**
@@ -797,7 +797,7 @@ class Page extends ModelWithContent
 	 */
 	public function isUnlisted(): bool
 	{
-		return $this->isListed() === false;
+		return $this->isPublished() && $this->num() === null;
 	}
 
 	/**
@@ -811,7 +811,7 @@ class Page extends ModelWithContent
 	public function isVerified(string $token = null)
 	{
 		if (
-			$this->isDraft() === false &&
+			$this->isPublished() === true &&
 			$this->parents()->findBy('status', 'draft') === null
 		) {
 			return true;
