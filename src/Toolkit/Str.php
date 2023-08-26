@@ -493,7 +493,7 @@ class Str
 		$decimal = strrchr($value, '.');
 		$decimal = match ($decimal) {
 			false   => 0,
-			default => strlen(substr($decimal, 1))
+			default => strlen($decimal) - 1
 		};
 
 		return number_format((float)$value, $decimal, '.', '');
