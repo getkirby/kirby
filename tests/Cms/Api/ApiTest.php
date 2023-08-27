@@ -399,9 +399,13 @@ class ApiTest extends TestCase
 						'slug' 	   => 'c'
 					]
 				]
+			],
+			'users' => [
+				['id' => 'bastian', 'role' => 'admin']
 			]
 		]);
-		$app->impersonate('kirby');
+
+		$app->impersonate('bastian');
 
 		$this->assertSame(['a', 'c'], $app->api()->pages()->keys());
 	}
