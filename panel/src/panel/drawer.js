@@ -51,6 +51,12 @@ export default (panel) => {
 			return this.open(this.history.last());
 		},
 
+		async closeAll() {
+			while (this.history.isEmpty() === false) {
+				await this.close();
+			}
+		},
+
 		goTo(id) {
 			const state = this.history.goto(id);
 

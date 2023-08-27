@@ -20,6 +20,31 @@ export default (panel) => {
 		...parent,
 
 		/**
+		 * Opens the feature either by URL or by
+		 * passing a state object
+		 *
+		 * @example
+		 * panel.dialog.view.open({
+		 *   component: "k-page-view",
+		 *	 props: {},
+		 *   on: {
+		 *     submit: () => {}
+		 * 	 }
+		 * });
+		 *
+		 * See load for more examples
+		 *
+		 * @param {String|URL|Object} feature
+		 * @param {Object|Function} options
+		 * @returns {Object} Returns the current state
+		 */
+		async open(feature, options = {}) {
+			panel.dialog.close();
+			panel.drawer.closeAll();
+			return await parent.open.call(this, feature, options);
+		},
+
+		/**
 		 * Setting the active view state
 		 * will also change the document title
 		 * and the browser URL

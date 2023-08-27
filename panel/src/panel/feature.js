@@ -100,7 +100,7 @@ export default (panel, key, defaults) => {
 		 * passing a state object
 		 *
 		 * @example
-		 * panel.dialog.view({
+		 * panel.dialog.view.open({
 		 *   component: "k-page-view",
 		 *	 props: {},
 		 *   on: {
