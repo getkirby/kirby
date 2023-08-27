@@ -39,7 +39,7 @@ export default {
 	},
 	methods: {
 		async deleteAvatar() {
-			await this.$api.users.deleteAvatar(this.model.link);
+			await this.$api.users.deleteAvatar(this.model.id);
 			this.$panel.notification.success();
 			this.$reload();
 		},
