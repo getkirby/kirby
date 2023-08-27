@@ -3,6 +3,7 @@
 namespace Kirby\Template;
 
 use Kirby\Cms\App;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use ReflectionProperty;
 
@@ -422,6 +423,28 @@ class SnippetTest extends TestCase
 			]
 		);
 		$this->assertSame('Scope snippet success', $result);
+	}
+
+	/**
+	 * @covers ::scope
+	 */
+	public function testScopeWithInvalidData()
+	{
+		new App([
+			'roots' => [
+				'snippets' => __DIR__ . '/fixtures'
+			]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Passing the $slot or $slots variables to snippets is not supported.');
+
+		Snippet::factory(
+			name: 'scope',
+			data: [
+				'slot' => 'Hello'
+			]
+		);
 	}
 
 	/**
