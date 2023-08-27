@@ -19,6 +19,7 @@
 					<k-icon :type="item.open ? 'angle-down' : 'angle-right'" />
 				</button>
 				<button
+					:disabled="item.disabled"
 					class="k-tree-folder"
 					type="button"
 					@click="select(item)"
@@ -84,7 +85,7 @@ export default {
 	--tree-color-hover-back: var(--color-gray-300);
 	--tree-color-selected-back: var(--color-blue-300);
 	--tree-color-selected-text: var(--color-black);
-	--tree-color-text: var(--color-text-dimmed);
+	--tree-color-text: var(--color-gray-900);
 	--tree-level: 0;
 	--tree-indentation: 0.6rem;
 }

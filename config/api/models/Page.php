@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\Page;
+use Kirby\Cms\PageRules;
 use Kirby\Form\Form;
 
 /**
@@ -10,6 +11,17 @@ return [
 	'fields' => [
 		'blueprint'   => fn (Page $page) => $page->blueprint(),
 		'blueprints'  => fn (Page $page) => $page->blueprints(),
+		'canBeMovedTo' => function (Page $page) {
+			$target = $this->page($this->requestQuery('target'));
+
+			try {
+				PageRules::move($target, $page);
+				return true;
+
+			} catch (Throwable) {
+				return false;
+			}
+		},
 		'children'    => fn (Page $page) => $page->children(),
 		'content'     => fn (Page $page) => Form::for($page)->values(),
 		'drafts'      => fn (Page $page) => $page->drafts(),

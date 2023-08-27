@@ -7,6 +7,7 @@ import Link from "./Link.vue";
 import ModelTabs from "./ModelTabs.vue";
 import Navigate from "./Navigate.js";
 import PageTree from "./PageTree.vue";
+import PageMoveTree from "./PageMoveTree.vue";
 import Pagination from "./Pagination.vue";
 import PrevNext from "./PrevNext.vue";
 import Tag from "./Tag.vue";
@@ -30,6 +31,7 @@ export default {
 		app.component("k-link", Link);
 		app.component("k-model-tabs", ModelTabs);
 		app.component("k-page-tree", PageTree);
+		app.component("k-page-move-tree", PageMoveTree);
 		app.component("k-pagination", Pagination);
 		app.component("k-prev-next", PrevNext);
 		app.component("k-tag", Tag);

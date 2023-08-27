@@ -13,7 +13,12 @@
 	>
 		<k-headline>{{ $t("page.move") }}</k-headline>
 		<div class="k-page-move-parent" tabindex="0" data-autofocus>
-			<k-page-tree :current="value.parent" identifier="id" @select="select" />
+			<k-page-move-tree
+				:current="value.parent"
+				:target="value.page"
+				identifier="id"
+				@select="select"
+			/>
 		</div>
 	</k-dialog>
 </template>
@@ -25,16 +30,14 @@ export default {
 	mixins: [Dialog],
 	props: {
 		value: {
-			default() {
-				return {};
-			},
+			default: () => ({}),
 			type: Object
 		}
 	},
 	emits: ["cancel", "input", "submit"],
 	methods: {
 		select(page) {
-			this.$emit("input", { parent: page.id });
+			this.$emit("input", { ...this.value, parent: page.id });
 		}
 	}
 };
