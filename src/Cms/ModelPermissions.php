@@ -45,8 +45,16 @@ abstract class ModelPermissions
 
 	public function can(string $action): bool
 	{
+		$user = $this->user->id();
 		$role = $this->user->role()->id();
 
+		// the almighty `kirby` user can do anything
+		if ($user === 'kirby' && $role === 'admin') {
+			return true;
+		}
+
+		// users with the `nobody` role can do nothing
+		// that needs a permission check
 		if ($role === 'nobody') {
 			return false;
 		}
