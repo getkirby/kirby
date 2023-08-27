@@ -10,22 +10,23 @@ use PHPUnit\Framework\TestCase;
  */
 class ViewTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/view';
+	protected string $fixtures = __DIR__ . '/fixtures/view';
 
-	protected function _view(array $data = [])
+	protected function view(array $data = [])
 	{
-		return new View(static::FIXTURES . '/view.php', $data);
+		return new View($this->fixtures . '/view.php', $data);
 	}
 
 	/**
+	 * @covers ::__construct
 	 * @covers ::data
 	 */
 	public function testData()
 	{
-		$view = $this->_view();
+		$view = $this->view();
 		$this->assertSame([], $view->data());
 
-		$view = $this->_view(['test']);
+		$view = $this->view(['test']);
 		$this->assertSame(['test'], $view->data());
 	}
 
@@ -34,20 +35,30 @@ class ViewTest extends TestCase
 	 */
 	public function testExists()
 	{
-		$view = $this->_view();
+		$view = $this->view();
 		$this->assertTrue($view->exists());
 
-		$view = new View(static::FIXTURES . '/foo.php');
+		$view = new View($this->fixtures . '/foo.php');
 		$this->assertFalse($view->exists());
 	}
 
 	/**
+	 * @covers ::__construct
 	 * @covers ::file
 	 */
 	public function testFile()
 	{
-		$view = $this->_view();
-		$this->assertSame(static::FIXTURES . '/view.php', $view->file());
+		$view = $this->view();
+		$this->assertSame($this->fixtures . '/view.php', $view->file());
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRender()
+	{
+		$view = $this->view(['name' => 'Homer']);
+		$this->assertSame('Hello Homer', $view->render());
 	}
 
 	/**
@@ -70,7 +81,7 @@ class ViewTest extends TestCase
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('View exception');
 
-		$view = new View(static::FIXTURES . '/view-with-exception.php');
+		$view = new View($this->fixtures . '/view-with-exception.php');
 		$view->render();
 	}
 
@@ -80,7 +91,7 @@ class ViewTest extends TestCase
 	 */
 	public function testToString()
 	{
-		$view = $this->_view(['name' => 'Tester']);
+		$view = $this->view(['name' => 'Tester']);
 		$this->assertSame('Hello Tester', $view->toString());
 		$this->assertSame('Hello Tester', $view->__toString());
 		$this->assertSame('Hello Tester', (string)$view);
