@@ -331,7 +331,7 @@ class User extends ModelWithContent
 	 */
 	public function isKirby(): bool
 	{
-		return $this->email() === 'kirby@getkirby.com';
+		return $this->isAdmin() && $this->id() === 'kirby';
 	}
 
 	/**
@@ -375,7 +375,7 @@ class User extends ModelWithContent
 	 */
 	public function isNobody(): bool
 	{
-		return $this->email() === 'nobody@getkirby.com';
+		return $this->role()->id() === 'nobody' && $this->id() === 'nobody';
 	}
 
 	/**
@@ -385,7 +385,9 @@ class User extends ModelWithContent
 	 */
 	public function language(): string
 	{
-		return $this->language ??= $this->credentials()['language'] ?? $this->kirby()->panelLanguage();
+		return $this->language ??=
+			$this->credentials()['language'] ??
+			$this->kirby()->panelLanguage();
 	}
 
 	/**

@@ -67,6 +67,107 @@ class UserTest extends TestCase
 		$user = new User(['email' => []]);
 	}
 
+	/**
+	 * @covers ::isAdmin
+	 */
+	public function testIsAdmin()
+	{
+		$user = new User([
+			'email' => 'test@getkirby.com',
+			'role'  => 'admin'
+		]);
+
+		$this->assertTrue($user->isAdmin());
+
+		$user = new User([
+			'email' => 'test@getkirby.com',
+			'role'  => 'editor'
+		]);
+
+		$this->assertFalse($user->isAdmin());
+	}
+
+	/**
+	 * @covers ::isKirby
+	 */
+	public function testIsKirby()
+	{
+		$user = new User([
+			'id'   => 'kirby',
+			'role' => 'admin'
+		]);
+		$this->assertTrue($user->isKirby());
+
+		$user = new User([
+			'role' => 'admin'
+		]);
+		$this->assertFalse($user->isKirby());
+
+		$user = new User([
+			'id'   => 'kirby',
+		]);
+		$this->assertFalse($user->isKirby());
+
+		$user = new User([
+			'emai' => 'kirby@getkirby.com',
+		]);
+		$this->assertFalse($user->isKirby());
+	}
+
+	/**
+	 * @covers ::isLoggedIn
+	 */
+	public function testIsLoggedIn()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'users' => [
+				['email' => 'a@getkirby.com'],
+				['email' => 'b@getkirby.com']
+			],
+		]);
+
+		$a = $app->user('a@getkirby.com');
+		$b = $app->user('b@getkirby.com');
+
+		$this->assertFalse($a->isLoggedIn());
+		$this->assertFalse($b->isLoggedIn());
+
+		$app->impersonate('a@getkirby.com');
+
+		$this->assertTrue($a->isLoggedIn());
+		$this->assertFalse($b->isLoggedIn());
+
+		$app->impersonate('b@getkirby.com');
+
+		$this->assertFalse($a->isLoggedIn());
+		$this->assertTrue($b->isLoggedIn());
+	}
+
+	/**
+	 * @covers ::isNobody
+	 */
+	public function testIsNobody()
+	{
+		$user = new User([
+			'id'   => 'nobody',
+			'role' => 'nobody'
+		]);
+		$this->assertTrue($user->isNobody());
+
+		$user = new User([
+			'role' => 'nobody'
+		]);
+		$this->assertFalse($user->isNobody());
+
+		$user = new User([
+			'id' => 'nobody',
+		]);
+		$this->assertTrue($user->isNobody());
+	}
+
 	public function testName()
 	{
 		$user = new User([
@@ -301,51 +402,6 @@ class UserTest extends TestCase
 		$user->validatePassword('test');
 	}
 
-	public function testIsAdmin()
-	{
-		$user = new User([
-			'email' => 'test@getkirby.com',
-			'role'  => 'admin'
-		]);
-
-		$this->assertTrue($user->isAdmin());
-
-		$user = new User([
-			'email' => 'test@getkirby.com',
-			'role'  => 'editor'
-		]);
-
-		$this->assertFalse($user->isAdmin());
-	}
-
-	public function testIsLoggedIn()
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'users' => [
-				['email' => 'a@getkirby.com'],
-				['email' => 'b@getkirby.com']
-			],
-		]);
-
-		$a = $app->user('a@getkirby.com');
-		$b = $app->user('b@getkirby.com');
-
-		$this->assertFalse($a->isLoggedIn());
-		$this->assertFalse($b->isLoggedIn());
-
-		$app->impersonate('a@getkirby.com');
-
-		$this->assertTrue($a->isLoggedIn());
-		$this->assertFalse($b->isLoggedIn());
-
-		$app->impersonate('b@getkirby.com');
-
-		$this->assertFalse($a->isLoggedIn());
-		$this->assertTrue($b->isLoggedIn());
-	}
 
 	public function testQuery()
 	{
