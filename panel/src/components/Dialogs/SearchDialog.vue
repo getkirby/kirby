@@ -166,7 +166,10 @@ export default {
 		select(index) {
 			this.selected = index;
 			const items = this.$refs.items?.$el.querySelectorAll(".k-item") ?? [];
-			[...items].forEach((item) => delete item.dataset.selected);
+
+			for (const item of items) {
+				delete item.dataset.selected;
+			}
 
 			if (index >= 0) {
 				items[index].dataset.selected = true;

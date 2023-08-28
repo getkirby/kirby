@@ -9,9 +9,9 @@ export default {
 		/**
 		 * Register all created plugins
 		 */
-		this.$panel.plugins.created.forEach((plugin) => {
+		for (const plugin of this.$panel.plugins.created) {
 			plugin(this);
-		});
+		}
 
 		/**
 		 * Hook up the back button

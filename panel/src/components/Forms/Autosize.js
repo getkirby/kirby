@@ -25,7 +25,9 @@ export default class Autosize extends HTMLElement {
 
 		// resize all textareas when the container size changes
 		this.resizer = new ResizeObserver(() => {
-			this.textareas.forEach((textarea) => textarea.autosize());
+			for (const textarea of this.textareas) {
+				textarea.autosize();
+			}
 		});
 
 		this.resizer.observe(this);

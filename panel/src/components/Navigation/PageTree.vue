@@ -58,9 +58,8 @@ export default {
 
 			const pages = {};
 
-			data.forEach((page) => {
+			for (const page of data) {
 				const id = page[this.identifier];
-
 				pages[id] = {
 					id,
 					icon: page.panelImage.icon,
@@ -69,7 +68,7 @@ export default {
 					children: "/pages/" + this.$api.pages.id(page.id),
 					open: false
 				};
-			});
+			}
 
 			return pages;
 		},

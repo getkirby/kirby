@@ -86,7 +86,7 @@ export default {
 	},
 	computed: {
 		groups() {
-			let groups = {};
+			const groups = {};
 			let index = 0;
 
 			const fieldsetGroups = this.fieldsetGroups ?? {
@@ -96,7 +96,7 @@ export default {
 				}
 			};
 
-			Object.keys(fieldsetGroups).forEach((key) => {
+			for (const key in fieldsetGroups) {
 				let group = fieldsetGroups[key];
 
 				group.open = group.open === false ? false : true;
@@ -116,7 +116,7 @@ export default {
 				}
 
 				groups[key] = group;
-			});
+			}
 
 			return groups;
 		},
