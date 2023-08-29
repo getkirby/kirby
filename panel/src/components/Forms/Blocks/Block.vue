@@ -290,6 +290,7 @@ export default {
 				on: {
 					submit: () => {
 						this.$panel.dialog.close();
+						this.close();
 						this.$emit("remove", this.id);
 					}
 				}
