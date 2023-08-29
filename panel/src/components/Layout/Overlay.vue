@@ -164,8 +164,11 @@ export default {
 }
 
 .k-overlay[open][data-type="dialog"] > .k-portal {
-	display: grid;
-	place-items: center;
+	display: inline-flex;
+}
+
+.k-overlay[open][data-type="dialog"] > .k-portal > * {
+	margin: auto;
 }
 
 .k-overlay[open][data-type="drawer"] > .k-portal {
