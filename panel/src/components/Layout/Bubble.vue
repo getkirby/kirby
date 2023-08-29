@@ -12,8 +12,8 @@
 	>
 		<!-- @slot Replace the default image -->
 		<slot name="image">
-			<k-image-frame v-if="image" v-bind="image" />
-			<span v-else />
+			<k-image-frame v-if="image.src" v-bind="image" />
+			<k-icon-frame v-else-if="image" v-bind="image" />
 		</slot>
 		<span v-if="text" class="k-bubble-text">{{ text }}</span>
 	</component>
@@ -94,7 +94,7 @@ export default {
 	border-radius: var(--rounded);
 	overflow: hidden;
 }
-.k-bubble .k-image-frame {
+.k-bubble .k-frame {
 	width: var(--bubble-size);
 	height: var(--bubble-size);
 }
