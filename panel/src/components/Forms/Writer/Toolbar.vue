@@ -150,7 +150,7 @@ export default {
 
 			const buttons = {};
 
-			for (const node of this.nodes.entries()) {
+			for (const node of this.nodes) {
 				if (available[node]) {
 					buttons[node] = available[node];
 				}
