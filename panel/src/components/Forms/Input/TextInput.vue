@@ -123,7 +123,7 @@ export default {
 
 <style>
 :root {
-	--input-placeholder: var(--color-gray-500);
+	--input-placeholder: var(--color-gray-600);
 }
 
 .k-text-input {
