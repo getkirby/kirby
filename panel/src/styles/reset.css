@@ -41,6 +41,8 @@
 
 :where(select) {
 	appearance: none;
+	background: var(--color-white);
+	color: var(--color-black);
 }
 
 :where(
