@@ -48,7 +48,7 @@
 			>
 				<!-- Empty -->
 				<tr v-if="rows.length === 0">
-					<td :colspan="columnsCount" class="k-table-empty">
+					<td :colspan="colspan" class="k-table-empty">
 						{{ empty }}
 					</td>
 				</tr>
