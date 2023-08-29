@@ -1,5 +1,5 @@
 <template>
-	<k-panel class="k-panel-inside" tabindex="0">
+	<k-panel class="k-panel-inside">
 		<k-panel-menu />
 		<main class="k-panel-main">
 			<k-topbar :breadcrumb="$panel.view.breadcrumb" :view="$panel.view">
