@@ -183,8 +183,10 @@ export default {
 .k-search-dialog {
 	--dialog-padding: 0;
 	--dialog-rounded: var(--rounded);
-	align-self: start;
 	overflow: visible;
+}
+.k-overlay[open][data-type="dialog"] > .k-portal > .k-search-dialog {
+	margin-top: 0;
 }
 
 .k-search-dialog-input {
