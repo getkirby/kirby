@@ -2,6 +2,7 @@
 	<nav
 		v-if="isOpen || !inline"
 		class="k-toolbar k-writer-toolbar"
+		:data-disabled="disabled"
 		:data-inline="inline"
 		:style="{
 			bottom: position.y + 'px',
@@ -60,6 +61,9 @@
 <script>
 export default {
 	props: {
+		disabled: {
+			type: Boolean
+		},
 		editor: {
 			required: true,
 			type: Object
@@ -278,5 +282,9 @@ export default {
 	z-index: calc(var(--z-dropdown) + 1);
 	box-shadow: var(--shadow-toolbar);
 	border-radius: var(--rounded);
+}
+
+.k-writer-toolbar[data-disabled] {
+	background: none;
 }
 </style>

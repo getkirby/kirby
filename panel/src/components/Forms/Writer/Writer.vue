@@ -2,6 +2,7 @@
 	<div
 		ref="editor"
 		v-direction
+		:data-disabled="disabled"
 		:data-empty="isEmpty"
 		:data-placeholder="placeholder"
 		:data-toolbar-inline="Boolean(toolbar.inline)"
@@ -13,6 +14,7 @@
 			ref="toolbar"
 			v-bind="toolbar"
 			:editor="editor"
+			:disabled="disabled"
 			@command="onCommand"
 		/>
 	</div>
