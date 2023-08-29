@@ -4,6 +4,7 @@
 			<k-button-group class="k-field-options">
 				<k-button
 					v-if="more && !disabled"
+					:autofocus="autofocus"
 					:icon="btnIcon"
 					:text="btnLabel"
 					size="xs"

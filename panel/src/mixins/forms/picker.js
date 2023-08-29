@@ -4,6 +4,7 @@ export default {
 	mixins: [Field],
 	inheritAttrs: false,
 	props: {
+		autofocus: Boolean,
 		empty: String,
 		info: String,
 		link: Boolean,
