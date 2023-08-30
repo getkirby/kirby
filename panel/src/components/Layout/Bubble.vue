@@ -12,8 +12,9 @@
 	>
 		<!-- @slot Replace the default image -->
 		<slot name="image">
-			<k-image-frame v-if="image.src" v-bind="image" />
+			<k-image-frame v-if="image?.src" v-bind="image" />
 			<k-icon-frame v-else-if="image" v-bind="image" />
+			<span v-else></span>
 		</slot>
 		<span v-if="text" class="k-bubble-text">{{ text }}</span>
 	</component>
