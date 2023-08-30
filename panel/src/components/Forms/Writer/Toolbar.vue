@@ -17,7 +17,7 @@
 				class="k-toolbar-button k-writer-toolbar-nodes"
 				@click="$refs.nodes.toggle()"
 			/>
-			<k-dropdown-content ref="nodes" theme="light">
+			<k-dropdown-content ref="nodes" :theme="inline ? 'light' : 'dark'">
 				<template v-for="(node, nodeType, nodeIndex) in nodeButtons">
 					<k-dropdown-item
 						:key="nodeType"
@@ -260,7 +260,7 @@ export default {
 
 <style>
 /** TODO: .k-writer:has(.k-writer-toolbar:not([data-inline="true"])) */
-.k-writer:not([data-toolbar-inline="true"]) {
+.k-writer:not([data-toolbar-inline="true"]):not([data-disabled="true"]) {
 	grid-template-areas: "topbar" "content";
 	grid-template-rows: var(--toolbar-size) 1fr;
 	gap: 0;
@@ -282,9 +282,5 @@ export default {
 	z-index: calc(var(--z-dropdown) + 1);
 	box-shadow: var(--shadow-toolbar);
 	border-radius: var(--rounded);
-}
-
-.k-writer-toolbar[data-disabled] {
-	background: none;
 }
 </style>
