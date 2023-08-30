@@ -10,7 +10,7 @@
 		class="k-writer"
 	>
 		<k-writer-toolbar
-			v-if="editor"
+			v-if="editor && !disabled"
 			ref="toolbar"
 			v-bind="toolbar"
 			:editor="editor"
