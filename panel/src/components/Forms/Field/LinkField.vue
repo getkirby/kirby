@@ -125,7 +125,9 @@ export default {
 	},
 	computed: {
 		currentType() {
-			return this.activeTypes[this.linkType] ?? Object.values(this.activeTypes)[0];
+			return (
+				this.activeTypes[this.linkType] ?? Object.values(this.activeTypes)[0]
+			);
 		},
 		availableTypes() {
 			return {

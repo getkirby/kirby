@@ -13,6 +13,7 @@ use Kirby\Panel\Page as Panel;
 use Kirby\Template\Template;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
+use Throwable;
 
 /**
  * The `$page` object is the heart and
@@ -689,6 +690,15 @@ class Page extends ModelWithContent
 	public function isListed(): bool
 	{
 		return $this->isPublished() && $this->num() !== null;
+	}
+
+	public function isMovableTo(Page|Site $parent): bool
+	{
+		try {
+			return PageRules::move($this, $parent);
+		} catch (Throwable $e) {
+			return false;
+		}
 	}
 
 	/**

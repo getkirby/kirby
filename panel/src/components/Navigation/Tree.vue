@@ -16,16 +16,17 @@
 					type="button"
 					@click="toggle(item)"
 				>
-					<k-icon :type="item.open ? 'angle-down' : 'angle-right'" />
+					<k-icon :type="arrow(item)" />
 				</button>
 				<button
+					:disabled="item.disabled"
 					class="k-tree-folder"
 					type="button"
 					@click="select(item)"
 					@dblclick="toggle(item)"
 				>
 					<k-icon-frame :icon="item.icon ?? 'folder'" />
-					<span>{{ item.label }}</span>
+					<span class="k-tree-folder-label">{{ item.label }}</span>
 				</button>
 			</p>
 			<template v-if="item.hasChildren && item.open">
@@ -34,8 +35,7 @@
 					v-bind="$props"
 					:items="item.children"
 					:level="level + 1"
-					@select="select"
-					@toggle="toggle"
+					v-on="$listeners"
 				/>
 			</template>
 		</li>
@@ -68,11 +68,32 @@ export default {
 		};
 	},
 	methods: {
+		arrow(item) {
+			if (item.loading === true) {
+				return "loader";
+			}
+
+			return item.open ? "angle-down" : "angle-right";
+		},
+		close(item) {
+			this.$set(item, "open", false);
+			this.$emit("close", item);
+		},
+		open(item) {
+			this.$set(item, "open", true);
+			this.$emit("open", item);
+		},
 		select(item) {
 			this.$emit("select", item);
 		},
 		toggle(item) {
 			this.$emit("toggle", item);
+
+			if (item.open === true) {
+				this.close(item);
+			} else {
+				this.open(item);
+			}
 		}
 	}
 };
@@ -84,7 +105,7 @@ export default {
 	--tree-color-hover-back: var(--color-gray-300);
 	--tree-color-selected-back: var(--color-blue-300);
 	--tree-color-selected-text: var(--color-black);
-	--tree-color-text: var(--color-text-dimmed);
+	--tree-color-text: var(--color-gray-dimmed);
 	--tree-level: 0;
 	--tree-indentation: 0.6rem;
 }
@@ -154,10 +175,14 @@ li[aria-current] > .k-tree-branch {
 .k-tree-folder > .k-frame {
 	flex-shrink: 0;
 }
-.k-tree-folder > span {
+.k-tree-folder-label {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	color: var(--tree-color-text);
+	color: currentColor;
+}
+
+.k-tree-folder[disabled] {
+	opacity: var(--opacity-disabled);
 }
 </style>
