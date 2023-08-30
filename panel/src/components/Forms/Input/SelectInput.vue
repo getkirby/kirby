@@ -129,11 +129,13 @@ export default {
 		},
 		text(value) {
 			let text = null;
-			this.options.forEach((option) => {
+
+			for (const option of this.options) {
 				if (option.value == value) {
 					text = option.text;
 				}
-			});
+			}
+
 			return text;
 		}
 	},

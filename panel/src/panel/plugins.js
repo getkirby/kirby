@@ -1,5 +1,9 @@
 import { isObject } from "@/helpers/object.js";
 import isComponent from "@/helpers/isComponent.js";
+
+// mixins
+import dialog from "@/mixins/dialog.js";
+import drawer from "@/mixins/drawer.js";
 import section from "@/mixins/section.js";
 
 /**
@@ -115,7 +119,9 @@ export const installComponentMixins = (options) => {
 	}
 
 	const mixins = {
-		section: section
+		dialog,
+		drawer,
+		section
 	};
 
 	options.mixins = options.mixins.map((mixin) =>

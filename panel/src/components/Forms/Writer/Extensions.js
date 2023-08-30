@@ -82,18 +82,19 @@ export default class Extensions {
 	buttons(type = "mark") {
 		const buttons = {};
 
-		this.extensions
-			.filter((extension) => extension.type === type)
-			.filter((extension) => extension.button)
-			.forEach((extension) => {
-				if (Array.isArray(extension.button)) {
-					extension.button.forEach((button) => {
-						buttons[button.id ?? button.name] = button;
-					});
-				} else {
-					buttons[extension.name] = extension.button;
+		for (const extension of this.extensions) {
+			if (extension.type !== type || !extension.button) {
+				continue;
+			}
+
+			if (Array.isArray(extension.button)) {
+				for (const button of extension.button) {
+					buttons[button.id ?? button.name] = button;
 				}
-			});
+			} else {
+				buttons[extension.name] = extension.button;
+			}
+		}
 
 		return buttons;
 	}

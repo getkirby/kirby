@@ -4,6 +4,7 @@ export default {
 	mixins: [Field],
 	inheritAttrs: false,
 	props: {
+		autofocus: Boolean,
 		empty: String,
 		info: String,
 		link: Boolean,
@@ -140,11 +141,11 @@ export default {
 			);
 
 			// add items that are not yet in the selected list
-			items.forEach((item) => {
+			for (const item of items) {
 				if (!this.selected.find((selected) => item.id === selected.id)) {
 					this.selected.push(item);
 				}
-			});
+			}
 
 			this.onInput();
 		}

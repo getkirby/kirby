@@ -166,7 +166,10 @@ export default {
 		select(index) {
 			this.selected = index;
 			const items = this.$refs.items?.$el.querySelectorAll(".k-item") ?? [];
-			[...items].forEach((item) => delete item.dataset.selected);
+
+			for (const item of items) {
+				delete item.dataset.selected;
+			}
 
 			if (index >= 0) {
 				items[index].dataset.selected = true;
@@ -180,8 +183,10 @@ export default {
 .k-search-dialog {
 	--dialog-padding: 0;
 	--dialog-rounded: var(--rounded);
-	align-self: start;
 	overflow: visible;
+}
+.k-overlay[open][data-type="dialog"] > .k-portal > .k-search-dialog {
+	margin-top: 0;
 }
 
 .k-search-dialog-input {

@@ -3,6 +3,7 @@
 		<template #options>
 			<k-button-group layout="collapsed">
 				<k-button
+					:autofocus="autofocus"
 					:disabled="isFull"
 					:responsive="true"
 					:text="$t('add')"

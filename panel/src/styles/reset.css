@@ -41,6 +41,8 @@
 
 :where(select) {
 	appearance: none;
+	background: var(--color-white);
+	color: var(--color-black);
 }
 
 :where(
@@ -88,6 +90,10 @@
 
 :where(:disabled) {
 	cursor: not-allowed;
+}
+
+*::placeholder {
+	opacity: 1;
 }
 
 /* TODO: :where(label:has(> input:disabled), label:has(+ input:disabled)) {

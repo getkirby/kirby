@@ -1,7 +1,17 @@
 <template>
 	<k-field v-bind="$props" class="k-structure-field" @click.native.stop>
 		<template v-if="hasFields && !disabled" #options>
-			<k-dropdown>
+			<k-button-group layout="collapsed">
+				<k-button
+					:autofocus="autofocus"
+					:disabled="!more"
+					:responsive="true"
+					:text="$t('add')"
+					icon="add"
+					variant="filled"
+					size="xs"
+					@click="add()"
+				/>
 				<k-button
 					icon="dots"
 					size="xs"
@@ -20,7 +30,7 @@
 						{{ $t("delete.all") }}
 					</k-dropdown-item>
 				</k-dropdown-content>
-			</k-dropdown>
+			</k-button-group>
 		</template>
 
 		<template v-if="hasFields">
@@ -77,6 +87,7 @@ export default {
 	mixins: [Field],
 	inheritAttrs: false,
 	props: {
+		autofocus: Boolean,
 		/**
 		 * What columns to show in the table
 		 */
@@ -134,7 +145,6 @@ export default {
 	},
 	data() {
 		return {
-			autofocus: null,
 			items: this.toItems(this.value),
 			page: 1
 		};
@@ -149,13 +159,6 @@ export default {
 				disabled: !this.isSortable,
 				fallbackClass: "k-sortable-row-fallback"
 			};
-		},
-		/**
-		 * Config for the structure form
-		 * @returns {Object}
-		 */
-		form() {
-			return this.$helper.field.subfields(this, this.fields);
 		},
 		/**
 		 * Index of first row that is displayed
@@ -346,6 +349,22 @@ export default {
 			this.$refs.add?.focus?.();
 		},
 		/**
+		 * Config for the structure form
+		 * @returns {Object}
+		 */
+		form(autofocus) {
+			const fields = this.$helper.field.subfields(this, this.fields);
+
+			// set the autofocus to the matching field in the form
+			if (autofocus) {
+				for (const field in fields) {
+					fields[field].autofocus = field === autofocus;
+				}
+			}
+
+			return fields;
+		},
+		/**
 		 * Opens form for a specific row at index
 		 * with field focussed
 		 * @param {number} index
@@ -376,7 +395,7 @@ export default {
 					prev: this.items[index - 1],
 					tabs: {
 						content: {
-							fields: this.form
+							fields: this.form(field)
 						}
 					},
 					title: this.label,

@@ -173,10 +173,9 @@ export default {
 		}
 	},
 	watch: {
-		searchterm: debounce(function () {
-			this.pagination.page = 0;
-			this.reload();
-		}, 200),
+		searchterm() {
+			this.search();
+		},
 		// Reload the section when
 		// the view has changed in the backend
 		timestamp() {
@@ -184,6 +183,7 @@ export default {
 		}
 	},
 	created() {
+		this.search = debounce(this.search, 200);
 		this.load();
 	},
 	methods: {
@@ -228,9 +228,12 @@ export default {
 			this.searching = !this.searching;
 			this.searchterm = null;
 		},
-
 		async reload() {
 			await this.load(true);
+		},
+		async search() {
+			this.pagination.page = 0;
+			await this.reload();
 		},
 		update() {
 			this.reload();

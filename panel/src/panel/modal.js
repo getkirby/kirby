@@ -59,6 +59,7 @@ export default (panel, key, defaults) => {
 			if (panel.overlays().length === 0) {
 				// unblock the overflow until we can use :has for this.
 				document.documentElement.removeAttribute("data-overlay");
+				document.documentElement.style.removeProperty("--scroll-top");
 			}
 		},
 
@@ -126,6 +127,10 @@ export default (panel, key, defaults) => {
 
 			// block the overflow until we can use :has for this.
 			document.documentElement.setAttribute("data-overlay", "true");
+			document.documentElement.style.setProperty(
+				"--scroll-top",
+				window.scrollY + "px"
+			);
 
 			// open the modal feature via url or with a state object
 			await parent.open.call(this, modal, options);

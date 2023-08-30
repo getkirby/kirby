@@ -52,24 +52,23 @@ export default {
 	methods: {
 		async load(path) {
 			const { data } = await this.$api.get(path + "/children", {
-				select: "hasChildren,id,panelImage,title,uuid",
+				select: "hasChildren,hasDrafts,id,panelImage,title,uuid",
 				status: "all"
 			});
 
 			const pages = {};
 
-			data.forEach((page) => {
+			for (const page of data) {
 				const id = page[this.identifier];
-
 				pages[id] = {
 					id,
 					icon: page.panelImage.icon,
 					label: page.title,
-					hasChildren: page.hasChildren,
+					hasChildren: page.hasChildren || page.hasDrafts,
 					children: "/pages/" + this.$api.pages.id(page.id),
 					open: false
 				};
-			});
+			}
 
 			return pages;
 		},

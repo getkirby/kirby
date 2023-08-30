@@ -21,11 +21,11 @@ export function buildQuery(query = {}, origin = {}) {
 	const params = new URLSearchParams(origin);
 
 	// add all data params unless they are empty/null
-	Object.entries(query).forEach(([key, value]) => {
+	for (const [key, value] of Object.entries(query)) {
 		if (value !== null) {
 			params.set(key, value);
 		}
-	});
+	}
 
 	return params;
 }

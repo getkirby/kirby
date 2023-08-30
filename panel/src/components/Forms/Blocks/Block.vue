@@ -290,6 +290,7 @@ export default {
 				on: {
 					submit: () => {
 						this.$panel.dialog.close();
+						this.close();
 						this.$emit("remove", this.id);
 					}
 				}
@@ -321,7 +322,6 @@ export default {
 }
 
 .k-block-container[data-selected="true"] {
-	transform: translate(0);
 	z-index: 2;
 	outline: var(--outline);
 	border-bottom-color: transparent;

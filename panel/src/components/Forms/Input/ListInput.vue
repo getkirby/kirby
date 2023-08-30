@@ -10,9 +10,12 @@
 </template>
 
 <script>
+import { disabled } from "@/mixins/props.js";
 import ListDoc from "@/components/Forms/Writer/Nodes/ListDoc.js";
 
 export const props = {
+	mixins: [disabled],
+	inheritAttrs: false,
 	props: {
 		autofocus: Boolean,
 		keys: Object,
@@ -24,6 +27,7 @@ export const props = {
 			type: [Array, Boolean],
 			default: true
 		},
+		spellcheck: Boolean,
 		value: String
 	}
 };

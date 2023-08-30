@@ -17,16 +17,18 @@ export default {
 
 			return this.tabs.map((tab) => {
 				// collect all fields per tab
-				let fields = [];
-				Object.values(tab.columns).forEach((column) => {
-					Object.values(column.sections).forEach((section) => {
-						if (section.type === "fields") {
-							Object.keys(section.fields).forEach((field) => {
+				const fields = [];
+
+				for (const column in tab.columns) {
+					for (const section in tab.columns[column].sections) {
+						if (tab.columns[column].sections[section].type === "fields") {
+							for (const field in tab.columns[column].sections[section]
+								.fields) {
 								fields.push(field);
-							});
+							}
 						}
-					});
-				});
+					}
+				}
 
 				// get count of changed fields in this tab
 				tab.badge = fields.filter((field) =>

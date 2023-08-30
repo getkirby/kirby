@@ -189,10 +189,10 @@ export default {
 			let content = "";
 			const changes = this.$store.getters["content/changes"]();
 
-			Object.keys(changes).forEach((key) => {
+			for (const key in changes) {
 				content += key + ": \n\n" + changes[key];
 				content += "\n\n----\n\n";
-			});
+			}
 
 			let link = document.createElement("a");
 			link.setAttribute(

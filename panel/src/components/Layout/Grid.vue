@@ -106,7 +106,7 @@ export default {
 	column-gap: var(--columns-inline-gap);
 	row-gap: var(--columns-block-gap);
 }
-.k-grid[data-variant="columns"] > * {
+.k-grid:where([data-variant="columns"], [data-variant="fields"]) > * {
 	container: column / inline-size;
 }
 

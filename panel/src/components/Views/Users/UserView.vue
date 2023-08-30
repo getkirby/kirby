@@ -72,22 +72,7 @@
 import ModelView from "../ModelView.vue";
 
 export default {
-	extends: ModelView,
-	methods: {
-		async deleteAvatar() {
-			await this.$api.users.deleteAvatar(this.model.id);
-			this.$panel.notification.success();
-			this.$reload();
-		},
-		uploadAvatar() {
-			this.$panel.upload.pick({
-				url: this.$panel.urls.api + "/" + this.id + "/avatar",
-				accept: "image/*",
-				immediate: true,
-				multiple: false
-			});
-		}
-	}
+	extends: ModelView
 };
 </script>
 
