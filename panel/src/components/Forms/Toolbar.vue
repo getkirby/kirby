@@ -61,14 +61,15 @@ const list = function (type) {
 export default {
 	layout: [
 		"headlines",
+		"|",
 		"bold",
 		"italic",
+		"code",
 		"|",
 		"link",
 		"email",
 		"file",
 		"|",
-		"code",
 		"ul",
 		"ol"
 	],
