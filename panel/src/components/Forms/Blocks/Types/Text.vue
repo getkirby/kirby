@@ -84,7 +84,15 @@ export default {
 
 <style>
 .k-block-type-text-input {
-	line-height: 1.5em;
+	line-height: 1.5;
 	height: 100%;
+}
+.k-block-type-text-input.k-writer:not([data-toolbar-inline="true"]) {
+	gap: var(--spacing-2);
+}
+.k-block-type-text-input.k-writer:not([data-toolbar-inline="true"])
+	.k-writer-toolbar {
+	border: 1px solid var(--toolbar-border);
+	border-radius: var(--rounded);
 }
 </style>
