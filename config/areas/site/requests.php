@@ -13,7 +13,7 @@ return [
 			$move    = $move ? Find::parent($move) : null;
 			$pages  = [];
 
-			foreach ($parent->childrenAndDrafts() as $child) {
+			foreach ($parent->childrenAndDrafts()->filterBy('isListable', true) as $child) {
 				$panel = $child->panel();
 
 				$pages[] = [
