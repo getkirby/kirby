@@ -52,12 +52,20 @@ class View
 	}
 
 	/**
+	 * Creates an error message for the missing view exception
+	 */
+	protected function missingViewMessage(): string
+	{
+		return 'The view does not exist: ' . $this->file();
+	}
+
+	/**
 	 * Renders the view
 	 */
 	public function render(): string
 	{
 		if ($this->exists() === false) {
-			throw new Exception('The view does not exist: ' . $this->file());
+			throw new Exception($this->missingViewMessage());
 		}
 
 		ob_start();
