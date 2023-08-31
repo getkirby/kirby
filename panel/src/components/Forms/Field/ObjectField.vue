@@ -101,6 +101,22 @@ export default {
 			set(this.object, name, value);
 			this.save();
 		},
+		/**
+		 * Config for the object form
+		 * @returns {Object}
+		 */
+		form(autofocus) {
+			const fields = this.$helper.field.subfields(this, this.fields);
+
+			// set the autofocus to the matching field in the form
+			if (autofocus) {
+				for (const field in fields) {
+					fields[field].autofocus = field === autofocus;
+				}
+			}
+
+			return fields;
+		},
 		remove() {
 			this.object = null;
 			this.save();
@@ -120,7 +136,7 @@ export default {
 					tab: "object",
 					tabs: {
 						object: {
-							fields: this.$helper.field.subfields(this, this.fields)
+							fields: this.form(field)
 						}
 					},
 					title: this.label,
