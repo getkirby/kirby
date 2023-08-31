@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Content\Field;
 use Kirby\Toolkit\Obj;
 
 /**
