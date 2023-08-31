@@ -72,9 +72,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.k-sections {
-	padding-bottom: 3rem;
-}
-</style>
