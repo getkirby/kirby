@@ -510,6 +510,7 @@ return [
 				'component' => 'k-page-move-dialog',
 				'props' => [
 					'value' => [
+						'move'   => $page->panel()->url(true),
 						'parent' => $page->parent()?->panel()->url(true) ?? '/site'
 					]
 				]

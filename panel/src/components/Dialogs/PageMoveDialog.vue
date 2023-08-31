@@ -13,7 +13,12 @@
 	>
 		<k-headline>{{ $t("page.move") }}</k-headline>
 		<div class="k-page-move-parent" tabindex="0" data-autofocus>
-			<k-page-tree :current="value.parent" identifier="id" @select="select" />
+			<k-page-tree
+				:current="value.parent"
+				:move="value.move"
+				identifier="id"
+				@select="select"
+			/>
 		</div>
 	</k-dialog>
 </template>
@@ -34,7 +39,7 @@ export default {
 	emits: ["cancel", "input", "submit"],
 	methods: {
 		select(page) {
-			this.$emit("input", { parent: page.id });
+			this.$emit("input", { ...this.value, parent: page.id });
 		}
 	}
 };
