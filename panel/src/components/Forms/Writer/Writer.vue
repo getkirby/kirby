@@ -2,6 +2,7 @@
 	<div
 		ref="editor"
 		v-direction
+		:data-disabled="disabled"
 		:data-empty="isEmpty"
 		:data-placeholder="placeholder"
 		:data-toolbar-inline="Boolean(toolbar.inline)"
@@ -9,7 +10,7 @@
 		class="k-writer"
 	>
 		<k-writer-toolbar
-			v-if="editor"
+			v-if="editor && !disabled"
 			ref="toolbar"
 			v-bind="toolbar"
 			:editor="editor"

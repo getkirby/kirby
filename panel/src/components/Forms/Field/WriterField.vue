@@ -38,6 +38,7 @@ export default {
 .k-writer-field .k-writer-input .ProseMirror,
 /* ::before is used for the placeholder */
 .k-writer-field .k-writer-input::before {
-	padding: 0.475rem 0.5rem;
+	padding: 0.475rem var(--field-input-padding);
+	line-height: 1.5;
 }
 </style>

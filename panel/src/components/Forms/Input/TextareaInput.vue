@@ -249,7 +249,7 @@ export default {
 				return {
 					href: null,
 					title: null
-				}
+				};
 			}
 
 			let regex;
@@ -264,12 +264,12 @@ export default {
 				return {
 					href: matches.groups.url ?? matches.groups.link,
 					title: matches.groups.text ?? null
-				}
+				};
 			} else {
 				return {
 					href: null,
 					title: selection
-				}
+				};
 			}
 		},
 		prepend(prepend) {
@@ -360,13 +360,12 @@ export default {
 	font-family: var(--font-mono);
 }
 
-
 /* Input Context */
 .k-input[data-theme="field"][data-type="textarea"] .k-input-element {
 	min-width: 0;
 }
 .k-input[data-theme="field"][data-type="textarea"] .k-textarea-input-native {
-	padding: 0.25rem var(--field-input-padding);
-	line-height: 1.5rem;
+	padding: 0.475rem var(--field-input-padding);
+	line-height: 1.5;
 }
 </style>
