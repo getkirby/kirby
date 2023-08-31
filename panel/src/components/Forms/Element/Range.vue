@@ -1,20 +1,31 @@
 <template>
-	<input v-bind="$props" :data-variant="variant" type="range" />
+	<input
+		ref="range"
+		v-bind="$props"
+		:data-variant="variant"
+		type="range"
+		@input="$emit('input', $event.target.value)"
+	/>
 </template>
 
 <script>
 export default {
 	props: {
-		autofocus: String,
+		autofocus: Boolean,
 		form: String,
-		id: String,
+		id: [Number, String],
 		max: Number,
 		min: Number,
 		name: String,
 		required: Boolean,
-		step: Number,
-		value: Number,
+		step: [Number, String],
+		value: [Number, String],
 		variant: String
+	},
+	methods: {
+		focus() {
+			this.$refs.range.focus();
+		}
 	}
 };
 </script>
@@ -22,54 +33,87 @@ export default {
 <style>
 :root {
 	--range-thumb-color: var(--color-white);
-	--range-thumb-height: 1rem;
+	--range-thumb-size: 1rem;
 	--range-thumb-shadow: rgba(0, 0, 0, 0.1) 0 2px 4px 2px,
 		rgba(0, 0, 0, 0.125) 0 0 0 1px;
-	--range-track-height: var(--range-thumb-height);
+	--range-track-back: var(--color-gray-300);
+	--range-track-height: var(--range-thumb-size);
 }
 input[type="range"] {
 	display: flex;
 	align-items: center;
 	appearance: none;
-	height: var(--range-thumb-size);
-	background: var(--color-gray-300);
 	padding: 0;
-	border-radius: var(--range-track-height);
-	height: var(--range-track-height);
+	height: var(--range-thumb-size);
+	border-radius: var(--range-thumb-size);
+}
+input[type="range"]:focus {
+	outline: var(--outline);
 }
 input[type="range"][disabled] {
 	--range-thumb-color: rgba(255, 255, 255, 0.2);
 }
 input[type="range"]::-webkit-slider-thumb {
 	appearance: none;
-	height: var(--range-thumb-height);
-	aspect-ratio: 1/1;
+	width: var(--range-thumb-size);
+	height: var(--range-thumb-size);
+	border: 0;
+	background: var(--range-thumb-color);
+	box-shadow: var(--range-thumb-shadow);
+	transform: translate3d(0, 0, 0);
+	margin-top: calc(
+		((var(--range-thumb-size) - var(--range-track-height)) / 2) * -1
+	);
+	border-radius: 50%;
+	z-index: 1;
+	cursor: grab;
+}
+input[type="range"]::-moz-range-thumb {
+	appearance: none;
+	width: var(--range-thumb-size);
+	height: var(--range-thumb-size);
+	border: 0;
 	background: var(--range-thumb-color);
 	box-shadow: var(--range-thumb-shadow);
 	border-radius: 50%;
-	transform: translateY(-50%);
-	transform: translate(0, 0);
+	transform: translate3d(0, 0, 0);
 	z-index: 1;
 	cursor: grab;
 }
 input[type="range"]::-webkit-slider-thumb:active {
 	cursor: grabbing;
 }
+input[type="range"]::-moz-range-thumb:active {
+	cursor: grabbing;
+}
 input[type="range"][disabled]::-webkit-slider-thumb {
 	cursor: not-allowed;
 }
+input[type="range"][disabled]::-moz-range-thumb {
+	cursor: not-allowed;
+}
 input[type="range"]::-webkit-slider-runnable-track {
+	background: var(--range-track-back);
+	height: var(--range-track-height);
+	border-radius: var(--range-track-height);
+}
+input[type="range"]::-moz-range-track {
+	background: var(--range-track-back);
+	height: var(--range-track-height);
 	border-radius: var(--range-track-height);
 }
 
 /* Focus state */
 input[type="range"]:focus::-webkit-slider-thumb {
-	outline: var(--field-input-focus-outline);
+	outline: var(--outline);
+}
+input[type="range"]:focus::-moz-range-thumb {
+	outline: var(--outline);
 }
 
 /* Variant: hue */
 input[type="range"][data-variant="hue"] {
-	background: linear-gradient(
+	--range-track-back: linear-gradient(
 			to right,
 			hsl(0, 100%, 50%) 0%,
 			hsl(60, 100%, 50%) 16.67%,
@@ -84,9 +128,8 @@ input[type="range"][data-variant="hue"] {
 
 /* Variant: alpha */
 input[type="range"][data-variant="alpha"] {
-	background: var(--color-white) var(--bg-pattern);
-}
-input[type="range"][data-variant="alpha"]::-webkit-slider-runnable-track {
-	background: linear-gradient(to right, transparent, currentColor) no-repeat;
+	--range-track-back: linear-gradient(to right, transparent, currentColor);
+	color: transparent;
+	background: var(--color-white) var(--pattern-light);
 }
 </style>
