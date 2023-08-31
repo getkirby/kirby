@@ -33,6 +33,24 @@ class OptionTest extends TestCase
 	/**
 	 * @covers ::factory
 	 */
+	public function testFactoryWithJustValue()
+	{
+		// string
+		$option = Option::factory('test');
+		$this->assertSame('test', $option->value);
+
+		// int
+		$option = Option::factory(1);
+		$this->assertSame(1, $option->value);
+
+		// float
+		$option = Option::factory(1.0);
+		$this->assertSame(1.0, $option->value);
+	}
+
+	/**
+	 * @covers ::factory
+	 */
 	public function testFactoryWithValueAndText()
 	{
 		// string

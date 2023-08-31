@@ -11,6 +11,7 @@ class SlotsTest extends TestCase
 	 * @covers ::__construct
 	 * @covers ::__get
 	 * @covers ::__call
+	 * @covers ::count
 	 */
 	public function testSlots()
 	{
