@@ -16,7 +16,11 @@
 			<k-icon-frame v-else-if="image" v-bind="image" />
 			<span v-else></span>
 		</slot>
-		<span v-if="text" class="k-bubble-text">{{ text }}</span>
+		<template v-if="text">
+			<!-- eslint-disable-next-line vue/no-v-html -->
+			<span v-if="html" class="k-bubble-text" v-html="text" />
+			<span v-else class="k-bubble-text">{{ text }}</span>
+		</template>
 	</component>
 </template>
 
@@ -49,6 +53,13 @@ export default {
 		element: {
 			type: String,
 			default: "li"
+		},
+		/**
+		 * If set to `true`, the `text` is rendered as HTML code,
+		 * otherwise as plain text
+		 */
+		html: {
+			type: Boolean
 		},
 		/**
 		 * Optional image to display in the bubble. Used for <k-image-frame>, see for available props

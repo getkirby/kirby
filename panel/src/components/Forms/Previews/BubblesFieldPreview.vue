@@ -1,14 +1,15 @@
 <template>
 	<div class="k-bubbles-field-preview" :class="$options.class">
-		<k-bubbles :bubbles="bubbles" />
+		<k-bubbles :bubbles="bubbles" :html="html" />
 	</div>
 </template>
 
 <script>
 import FieldPreview from "@/mixins/forms/fieldPreview.js";
+import { props as Bubbles } from "@/components/Layout/Bubbles.vue";
 
 export default {
-	mixins: [FieldPreview],
+	mixins: [FieldPreview, Bubbles],
 	inheritAttrs: false,
 	props: {
 		value: [Array, String]
@@ -37,10 +38,6 @@ export default {
 						bubble.text = option.text;
 					}
 				}
-
-				// we can unescape the text here, as Vue will
-				// take care of escaping only the relevant parts
-				bubble.text = this.$helper.string.unescapeHTML(bubble.text);
 
 				return bubble;
 			});

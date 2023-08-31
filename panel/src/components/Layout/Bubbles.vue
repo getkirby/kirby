@@ -1,12 +1,24 @@
 <template>
 	<ul class="k-bubbles">
 		<li v-for="(bubble, id) in items" :key="id">
-			<k-bubble v-bind="bubble" />
+			<k-bubble v-bind="bubble" :html="html" />
 		</li>
 	</ul>
 </template>
 
 <script>
+export const props = {
+	props: {
+		/**
+		 * If set to `true`, the `text` is rendered as HTML code,
+		 * otherwise as plain text
+		 */
+		html: {
+			type: Boolean
+		}
+	}
+};
+
 /**
  * Display a list of <k-bubble>
  * @public
@@ -15,6 +27,7 @@
  * @example <k-bubbles :bubbles="['Hello', 'World']" />
  */
 export default {
+	mixins: [props],
 	inheritAttrs: false,
 	props: {
 		/**
@@ -31,7 +44,7 @@ export default {
 			}
 
 			return bubbles.map((bubble) =>
-				 bubble === "string" ? { text: bubble } : bubble
+				bubble === "string" ? { text: bubble } : bubble
 			);
 		}
 	}
