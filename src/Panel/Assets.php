@@ -151,7 +151,9 @@ class Assets
 	{
 		$dir  = $this->kirby->root('panel') . '/';
 		$dir .= $this->dev ? 'public' : 'dist';
-		return F::read($dir . '/img/icons.svg');
+		$icons = F::read($dir . '/img/icons.svg');
+		$icons = preg_replace('/<!--(.|\s)*?-->/', '', $icons);
+		return $icons;
 	}
 
 	/**
