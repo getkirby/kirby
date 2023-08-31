@@ -86,7 +86,7 @@ class AssetsTest extends TestCase
 		$css     = $assets->css();
 
 		// css
-		$this->assertSame($base . '/css/style.css', $css['index']);
+		$this->assertSame($base . '/css/style.min.css', $css['index']);
 		$this->assertSame('/media/plugins/index.css?0', $css['plugins']);
 	}
 
@@ -337,8 +337,8 @@ class AssetsTest extends TestCase
 		$js     = $assets->js();
 
 		// js
-		$this->assertSame($base . '/js/vue.js', $js['vue']['src']);
-		$this->assertSame($base . '/js/vendor.js', $js['vendor']['src']);
+		$this->assertSame($base . '/js/vue.min.js', $js['vue']['src']);
+		$this->assertSame($base . '/js/vendor.min.js', $js['vendor']['src']);
 		$this->assertSame('module', $js['vendor']['type']);
 
 		$this->assertSame($base . '/js/plugins.js', $js['pluginloader']['src']);
@@ -348,7 +348,7 @@ class AssetsTest extends TestCase
 		$this->assertTrue($js['plugins']['defer']);
 		$this->assertArrayNotHasKey('type', $js['plugins']);
 
-		$this->assertSame($base . '/js/index.js', $js['index']['src']);
+		$this->assertSame($base . '/js/index.min.js', $js['index']['src']);
 		$this->assertSame('module', $js['index']['type']);
 	}
 
