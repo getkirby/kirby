@@ -6,7 +6,7 @@
 
 <style>
 .k-drawer-body {
-	padding: 1.5rem;
+	padding: var(--drawer-body-padding);
 	flex-grow: 1;
 	background: var(--color-background);
 }
