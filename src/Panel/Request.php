@@ -19,7 +19,6 @@ class Request
 	public static function response($data, array $options = []): Response
 	{
 		$data = Json::responseData($data);
-
-		return Panel::json(Json::responseData($data), $data['code'] ?? 200);
+		return Panel::json($data, $data['code'] ?? 200);
 	}
 }
