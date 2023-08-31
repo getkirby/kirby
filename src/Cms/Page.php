@@ -696,7 +696,7 @@ class Page extends ModelWithContent
 	{
 		try {
 			return PageRules::move($this, $parent);
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return false;
 		}
 	}
