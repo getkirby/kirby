@@ -35,7 +35,10 @@
 					v-bind="$props"
 					:items="item.children"
 					:level="level + 1"
-					v-on="$listeners"
+					@close="$emit('close', $event)"
+					@open="$emit('open', $event)"
+					@select="$emit('select', $event)"
+					@toggle="$emit('toggle', $event)"
 				/>
 			</template>
 		</li>
