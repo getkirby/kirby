@@ -19,18 +19,20 @@ return [
 				$panel = $site->panel();
 
 				return [
-					'children'    => $panel->url(true),
-					'disabled'    => $move?->isMovableTo($site) === false,
-					'hasChildren' => true,
-					'icon'        => 'home',
-					'id'          => $site->id(),
-					'open'        => false,
-					'label'       => I18n::translate('view.site'),
-					'uuid'        => $site->uuid()->toString(),
+					[
+						'children'    => $panel->url(true),
+						'disabled'    => $move?->isMovableTo($site) === false,
+						'hasChildren' => true,
+						'icon'        => 'home',
+						'id'          => $site->id(),
+						'open'        => false,
+						'label'       => I18n::translate('view.site'),
+						'uuid'        => $site->uuid()->toString(),
+					]
 				];
 			}
 
-			$parent  = Find::parent($parent);
+			$parent = Find::parent($parent);
 			$pages  = [];
 
 			foreach ($parent->childrenAndDrafts() as $child) {
@@ -49,6 +51,6 @@ return [
 			}
 
 			return $pages;
-		},
-	],
+		}
+	]
 ];

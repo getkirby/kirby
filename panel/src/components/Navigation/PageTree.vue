@@ -35,9 +35,8 @@ export default {
 		if (this.items) {
 			this.state = this.items;
 		} else {
-			const site = await this.load(null);
-			this.state = [site];
-			this.open(this.state[0]);
+			this.state = await this.load(null);
+			await this.open(this.state[0]);
 		}
 	},
 	methods: {
