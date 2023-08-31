@@ -14,7 +14,6 @@
 			ref="toolbar"
 			v-bind="toolbar"
 			:editor="editor"
-			:disabled="disabled"
 			@command="onCommand"
 		/>
 	</div>
