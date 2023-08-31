@@ -127,7 +127,7 @@ class Menu
 			'text'     => $area['label'],
 		], $menu);
 
-		// unset tthe link (which is always added by default to an area)
+		// unset the link (which is always added by default to an area)
 		// if a dialog or drawer should be opened instead
 		if (isset($entry['dialog']) || isset($entry['drawer'])) {
 			unset($entry['link']);
