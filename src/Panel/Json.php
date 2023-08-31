@@ -82,5 +82,4 @@ abstract class Json
 
 		return $data;
 	}
-
 }
