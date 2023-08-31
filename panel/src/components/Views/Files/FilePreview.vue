@@ -171,7 +171,7 @@ export default {
 	max-height: 100cqh;
 }
 .k-file-preview .k-coords-thumb {
-	--range-thumb-height: 1.25rem;
+	--range-thumb-size: 1.25rem;
 	background: hsl(216 60% 60% / 0.75);
 	box-shadow: none;
 }
