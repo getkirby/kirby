@@ -56,15 +56,11 @@
 html {
 	overflow-x: hidden;
 	overflow-y: scroll;
+	background: var(--color-light);
 }
 
 body {
-	background: var(--color-light);
 	font-size: var(--text-sm);
-}
-
-.k-panel {
-	background: var(--color-light);
 }
 
 .k-panel[data-loading="true"] {
