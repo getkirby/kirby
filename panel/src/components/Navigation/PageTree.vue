@@ -31,21 +31,12 @@ export default {
 			state: []
 		};
 	},
-	created() {
+	async created() {
 		if (this.items) {
 			this.state = this.items;
 		} else {
-			this.state = [
-				{
-					icon: "home",
-					id: "site://",
-					label: this.$t("view.site"),
-					hasChildren: true,
-					children: "/site",
-					open: false
-				}
-			];
-
+			const site = await this.load(null);
+			this.state = [site];
 			this.open(this.state[0]);
 		}
 	},
