@@ -209,8 +209,6 @@ export default {
 			}
 
 			e.preventDefault();
-			e.stopPropagation();
-
 			this.remove();
 		},
 		close() {
