@@ -224,16 +224,16 @@ export default {
 		createMarks() {
 			return this.filterExtensions(
 				{
-					bold: new Bold(),
-					italic: new Italic(),
+					clear: new Clear(),
+					code: new Code(),
 					underline: new Underline(),
 					strike: new Strike(),
-					sup: new Sup(),
-					sub: new Sub(),
-					code: new Code(),
 					link: new Link(),
 					email: new Email(),
-					clear: new Clear(),
+					bold: new Bold(),
+					italic: new Italic(),
+					sup: new Sup(),
+					sub: new Sub(),
 					...this.createMarksFromPanelPlugins()
 				},
 				this.marks
@@ -319,8 +319,8 @@ export default {
 
 			let installed = [];
 
-			for (const extension of allowed) {
-				if (available[extension]) {
+			for (const extension in available) {
+				if (allowed.includes(extension)) {
 					installed.push(available[extension]);
 				}
 			}
