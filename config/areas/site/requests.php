@@ -6,8 +6,10 @@ return [
 	'tree' => [
 		'pattern' => 'site/tree',
 		'action'  => function () {
-			$parent = Find::parent(get('parent', 'site'));
-			$move   = get('move') ? Find::parent(get('move')) : null;
+			$request = App::instance()->request();
+			$parent  = Find::parent($request->get('parent', 'site'));
+			$move    = $request->get('move');
+			$move    = $move ? Find::parent($move) : null;
 			$pages  = [];
 
 			foreach ($parent->childrenAndDrafts() as $child) {
