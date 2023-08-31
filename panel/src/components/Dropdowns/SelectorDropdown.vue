@@ -59,7 +59,8 @@ export default {
 <style>
 .k-selector-dropdown-content {
 	--color-text-dimmed: var(--color-gray-400);
-	width: 15rem;
+	min-width: 15rem;
+	max-width: 30rem;
 	padding: 0;
 }
 .k-selector-dropdown .k-selector-header {
