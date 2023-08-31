@@ -17,7 +17,7 @@ return [
 
 				$pages[] = [
 					'children'    => $panel->url(true),
-					'disabled'    => $move !== null && $move->isMovableTo($child) === false,
+					'disabled'    => $move?->isMovableTo($child) === false,
 					'hasChildren' => $child->hasChildren() === true || $child->hasDrafts() === true,
 					'icon'        => $panel->image()['icon'] ?? null,
 					'id'          => $child->id(),
