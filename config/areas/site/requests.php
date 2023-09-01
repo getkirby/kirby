@@ -35,7 +35,7 @@ return [
 			$parent = Find::parent($parent);
 			$pages  = [];
 
-			foreach ($parent->childrenAndDrafts() as $child) {
+			foreach ($parent->childrenAndDrafts()->filterBy('isListable', true) as $child) {
 				$panel = $child->panel();
 
 				$pages[] = [
