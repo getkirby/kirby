@@ -1,5 +1,12 @@
 <template>
-	<k-button-group :buttons="buttons" class="k-dialog-buttons" />
+	<k-button-group class="k-dialog-buttons">
+		<k-button v-if="cancel" v-bind="cancel" />
+		<k-button
+			v-if="submit"
+			v-bind="submit"
+			:icon="$panel.dialog.isLoading ? 'loader' : submit.icon"
+		/>
+	</k-button-group>
 </template>
 
 <script>
@@ -53,25 +60,25 @@ export default {
 	mixins: [props],
 	emits: ["cancel"],
 	computed: {
-		buttons() {
-			return [
-				this.button(this.cancelButton, {
-					click: () => this.$emit("cancel"),
-					class: "k-dialog-button-cancel",
-					icon: "cancel",
-					text: this.$t("cancel"),
-					variant: "filled"
-				}),
-				this.button(this.submitButton, {
-					class: "k-dialog-button-submit",
-					disabled: this.disabled || this.$panel.dialog.isLoading,
-					icon: this.$panel.dialog.isLoading ? "loader" : this.icon,
-					text: this.$t("confirm"),
-					theme: this.theme,
-					type: "submit",
-					variant: "filled"
-				})
-			].filter((button) => button !== false);
+		cancel() {
+			return this.button(this.cancelButton, {
+				click: () => this.$emit("cancel"),
+				class: "k-dialog-button-cancel",
+				icon: "cancel",
+				text: this.$t("cancel"),
+				variant: "filled"
+			});
+		},
+		submit() {
+			return this.button(this.submitButton, {
+				class: "k-dialog-button-submit",
+				disabled: this.disabled || this.$panel.dialog.isLoading,
+				icon: this.icon,
+				text: this.$t("confirm"),
+				theme: this.theme,
+				type: "submit",
+				variant: "filled"
+			});
 		}
 	},
 	methods: {
