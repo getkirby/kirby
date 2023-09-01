@@ -75,8 +75,7 @@ export default {
 .k-field:focus-within > .k-field-header > .k-field-counter {
 	display: block;
 }
-/** TODO: .k-field > :has(+ footer) { margin-bottom: var(--spacing-1);} */
-.k-field > footer {
+.k-field-footer {
 	margin-top: var(--spacing-2);
 }
 </style>
