@@ -77,7 +77,7 @@
 					<k-page-tree
 						:current="getPageUUID(value)"
 						:root="false"
-						@select="onInput($event.id)"
+						@select="selectPage($event)"
 					/>
 				</div>
 			</div>
@@ -89,7 +89,7 @@
 			>
 				<k-file-browser
 					:selected="getFileUUID(value)"
-					@select="onInput($event.id)"
+					@select="selectFile($event)"
 				/>
 			</div>
 		</k-input>
@@ -235,7 +235,7 @@ export default {
 				this.linkValue = parts.link;
 
 				if (value !== old) {
-					this.preview();
+					this.preview(parts);
 				}
 			},
 			immediate: true
@@ -309,11 +309,15 @@ export default {
 				this.expanded = false;
 			}
 		},
-		async preview() {
-			if (this.linkType === "page" && this.linkValue) {
-				this.model = await this.previewForPage(this.linkValue);
-			} else if (this.linkType === "file" && this.linkValue) {
-				this.model = await this.previewForFile(this.linkValue);
+		async preview({ type, link }) {
+			if (type === "page" && link) {
+				this.model = await this.previewForPage(link);
+			} else if (type === "file" && link) {
+				this.model = await this.previewForFile(link);
+			} else if (link) {
+				this.model = {
+					label: link
+				};
 			} else {
 				this.model = null;
 			}
@@ -344,6 +348,24 @@ export default {
 			} catch (e) {
 				return null;
 			}
+		},
+		selectPage(page) {
+			if (page.uuid) {
+				this.onInput(page.uuid);
+				return;
+			}
+
+			this.switchType("url");
+			this.onInput(page.url);
+		},
+		selectFile(file) {
+			if (file.uuid) {
+				this.onInput(file.uuid);
+				return;
+			}
+
+			this.switchType("url");
+			this.onInput(file.url);
 		},
 		switchType(type) {
 			if (type === this.linkType) {

@@ -48,22 +48,22 @@ export default {
 			this.page = page;
 
 			const parent =
-				page.id === "site://"
+				page.id === "/"
 					? "/site/files"
 					: "/pages/" + this.$api.pages.id(page.id) + "/files";
 
 			const { data } = await this.$api.get(parent, {
-				select: "filename,panelImage,uuid,id"
+				select: "filename,id,panelImage,url,uuid"
 			});
 
 			this.files = data.map((file) => {
-				const id = file.uuid ?? "/" + file.id;
-
 				return {
 					label: file.filename,
 					image: file.panelImage,
-					id: id,
-					value: id
+					id: file.id,
+					url: file.url,
+					uuid: file.uuid,
+					value: file.uuid ?? file.url
 				};
 			});
 
