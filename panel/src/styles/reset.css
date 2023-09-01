@@ -43,6 +43,7 @@
 	appearance: none;
 	background: var(--color-white);
 	color: var(--color-black);
+	cursor: pointer;
 }
 
 :where(
@@ -56,10 +57,12 @@
 			)
 	) {
 	width: 100%;
+	font-variant-numeric: tabular-nums;
 }
 
 :where(textarea) {
 	resize: vertical;
+	line-height: 1.5;
 }
 
 :where(input)::-webkit-calendar-picker-indicator {
@@ -93,6 +96,7 @@
 }
 
 *::placeholder {
+	color: var(--input-color-placeholder);
 	opacity: 1;
 }
 
@@ -138,6 +142,11 @@
 
 :where(:focus-visible) {
 	outline: var(--outline, 2px solid var(--color-focus, currentColor));
+}
+
+:where(:invalid) {
+	box-shadow: none;
+	outline: 0;
 }
 
 :where(dialog) {

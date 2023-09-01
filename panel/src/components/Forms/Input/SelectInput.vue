@@ -153,36 +153,25 @@ export default {
 .k-select-input {
 	position: relative;
 	display: block;
-	cursor: pointer;
 	overflow: hidden;
+	padding: var(--input-padding);
+	border-radius: var(--input-rounded);
 }
 .k-select-input-native {
 	position: absolute;
 	inset: 0;
 	opacity: 0;
-	width: 100%;
-	font: inherit;
 	z-index: 1;
-	cursor: pointer;
-	appearance: none;
 }
 .k-select-input-native[disabled] {
 	cursor: default;
 }
-.k-select-input-native {
-	font-weight: var(--font-normal);
-}
 
-/* Field theme */
-.k-input[data-theme="field"] .k-select-input {
-	padding: var(--field-input-padding);
-	line-height: var(--field-input-line-height);
-	border-radius: var(--rounded);
-}
-.k-input[data-theme="field"][data-type="select"] {
+/* Input context */
+.k-input[data-type="select"] {
 	position: relative;
 }
-.k-input[data-theme="field"][data-type="select"] .k-input-icon {
+.k-input[data-type="select"] .k-input-icon {
 	position: absolute;
 	inset-block: 0;
 	inset-inline-end: 0;

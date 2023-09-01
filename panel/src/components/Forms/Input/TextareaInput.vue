@@ -321,16 +321,16 @@ export default {
 
 <style>
 .k-textarea-input[data-size="small"] {
-	--size: 7.5rem;
+	--textarea-size: 7.5rem;
 }
 .k-textarea-input[data-size="medium"] {
-	--size: 15rem;
+	--textarea-size: 15rem;
 }
 .k-textarea-input[data-size="large"] {
-	--size: 30rem;
+	--textarea-size: 30rem;
 }
 .k-textarea-input[data-size="huge"] {
-	--size: 45rem;
+	--textarea-size: 45rem;
 }
 .k-textarea-input-wrapper {
 	position: relative;
@@ -338,22 +338,9 @@ export default {
 }
 .k-textarea-input-native {
 	resize: none;
-	border: 0;
-	width: 100%;
-	background: none;
-	font: inherit;
-	line-height: 1.5em;
-	color: inherit;
-	min-height: var(--size);
-}
-.k-textarea-input-native::placeholder {
-	color: var(--input-placeholder);
+	min-height: var(--textarea-size);
 }
 .k-textarea-input-native:focus {
-	outline: 0;
-}
-.k-textarea-input-native:invalid {
-	box-shadow: none;
 	outline: 0;
 }
 .k-textarea-input-native[data-font="monospace"] {
@@ -361,11 +348,10 @@ export default {
 }
 
 /* Input Context */
-.k-input[data-theme="field"][data-type="textarea"] .k-input-element {
+.k-input[data-type="textarea"] .k-input-element {
 	min-width: 0;
 }
-.k-input[data-theme="field"][data-type="textarea"] .k-textarea-input-native {
-	padding: 0.475rem var(--field-input-padding);
-	line-height: 1.5;
+.k-input[data-type="textarea"] .k-textarea-input-native {
+	padding: var(--input-padding-multiline);
 }
 </style>

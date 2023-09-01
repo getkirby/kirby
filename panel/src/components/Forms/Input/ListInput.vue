@@ -96,7 +96,6 @@ export default {
 
 <style>
 .k-list-input .ProseMirror ol > li::marker {
-	font-size: var(--text-sm);
-	color: var(--color-gray-500);
+	color: var(--color-text-dimmed);
 }
 </style>
