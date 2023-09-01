@@ -159,7 +159,5 @@ export default {
 /** Help */
 .k-help {
 	color: var(--color-text-dimmed);
-	font-size: var(--text-xs);
-	line-height: 1.25;
 }
 </style>
