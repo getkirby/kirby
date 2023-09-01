@@ -53,15 +53,17 @@ export default {
 					: "/pages/" + this.$api.pages.id(page.id) + "/files";
 
 			const { data } = await this.$api.get(parent, {
-				select: "filename,panelImage,uuid"
+				select: "filename,panelImage,uuid,id"
 			});
 
 			this.files = data.map((file) => {
+				const id = file.uuid ?? "/" + file.id;
+
 				return {
 					label: file.filename,
 					image: file.panelImage,
-					id: file.uuid,
-					value: file.uuid
+					id: id,
+					value: id
 				};
 			});
 

@@ -24,10 +24,9 @@ return [
 						'disabled'    => $move?->isMovableTo($site) === false,
 						'hasChildren' => true,
 						'icon'        => 'home',
-						'id'          => $site->id(),
+						'id'          => $site->uuid()?->toString() ?? '/',
 						'open'        => false,
 						'label'       => I18n::translate('view.site'),
-						'uuid'        => $site->uuid()->toString(),
 					]
 				];
 			}
@@ -43,10 +42,9 @@ return [
 					'disabled'    => $move?->isMovableTo($child) === false,
 					'hasChildren' => $child->hasChildren() === true || $child->hasDrafts() === true,
 					'icon'        => $panel->image()['icon'] ?? null,
-					'id'          => $child->id(),
+					'id'          => $child->uuid()?->toString() ?? '/' . $child->id(),
 					'open'        => false,
 					'label'       => $child->title()->value(),
-					'uuid'        => $child->uuid()->toString(),
 				];
 			}
 

@@ -293,7 +293,7 @@ export default {
 			);
 		},
 		onInput(link) {
-			const value = link.trim();
+			const value = link?.trim() ?? "";
 
 			if (!value.length) {
 				return this.$emit("input", "");
