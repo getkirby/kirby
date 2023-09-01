@@ -56,9 +56,7 @@ export default {
 		buttons() {
 			return [
 				this.button(this.cancelButton, {
-					click: () => {
-						this.$emit("cancel");
-					},
+					click: () => this.$emit("cancel"),
 					class: "k-dialog-button-cancel",
 					icon: "cancel",
 					text: this.$t("cancel"),
