@@ -63,14 +63,6 @@ export default {
 	color: var(--color-text-dimmed);
 	line-height: var(--leading-normal);
 }
-.k-block-importer label kbd {
-	background: var(--color-gray-300);
-	font-family: var(--font-mono);
-	letter-spacing: 0.1em;
-	padding: 0.25rem;
-	border-radius: var(--rounded);
-	margin: 0 0.25rem;
-}
 .k-block-importer label small {
 	display: block;
 	font-size: inherit;

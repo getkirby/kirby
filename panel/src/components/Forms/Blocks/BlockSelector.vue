@@ -180,14 +180,6 @@ export default {
 	font-size: var(--text-xs);
 	color: var(--color-text-dimmed);
 }
-.k-clipboard-hint kbd {
-	background: var(--color-gray-300);
-	font-family: var(--font-mono);
-	letter-spacing: 0.1em;
-	padding: 0.25rem;
-	border-radius: var(--rounded);
-	margin: 0 0.25rem;
-}
 .k-clipboard-hint small {
 	display: block;
 	font-size: inherit;
