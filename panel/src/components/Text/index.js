@@ -1,5 +1,6 @@
 import Code from "./Code.vue";
 import Headline from "./Headline.vue";
+import "./Kbd.vue";
 import Label from "./Label.vue";
 import Text from "./Text.vue";
 
