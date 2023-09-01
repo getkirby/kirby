@@ -7,6 +7,7 @@
 			<button
 				v-if="editable"
 				class="k-header-title-button"
+				type="button"
 				@click="$emit('edit')"
 			>
 				<span class="k-header-title-text"><slot /></span>
@@ -95,7 +96,7 @@ export default {
 }
 
 .k-header-title-icon {
-	--icon-color: var(--color-gray-500);
+	--icon-color: var(--color-text-dimmed);
 	border-radius: var(--rounded);
 	transition: opacity 0.2s;
 	display: grid;

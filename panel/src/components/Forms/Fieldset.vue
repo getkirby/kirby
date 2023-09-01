@@ -1,5 +1,5 @@
 <template>
-	<fieldset class="k-fieldset">
+	<div class="k-fieldset">
 		<k-grid variant="fields">
 			<template v-for="(field, fieldName) in fields">
 				<k-column
@@ -43,7 +43,7 @@
 				</k-column>
 			</template>
 		</k-grid>
-	</fieldset>
+	</div>
 </template>
 
 <script>
