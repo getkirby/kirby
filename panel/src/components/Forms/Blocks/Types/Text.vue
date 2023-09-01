@@ -87,12 +87,14 @@ export default {
 	line-height: 1.5;
 	height: 100%;
 }
-.k-block-type-text-input.k-writer:not([data-toolbar-inline="true"]) {
-	gap: var(--spacing-2);
+.k-block-container.k-block-container-type-text {
+	padding: 0;
+}
+.k-block-type-text-input.k-writer[data-toolbar-inline="true"] {
+	padding: var(--spacing-3);
 }
 .k-block-type-text-input.k-writer:not([data-toolbar-inline="true"])
-	.k-writer-toolbar {
-	border: 1px solid var(--toolbar-border);
-	border-radius: var(--rounded);
+	> .ProseMirror {
+	padding: var(--spacing-3);
 }
 </style>
