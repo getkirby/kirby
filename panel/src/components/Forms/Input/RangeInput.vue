@@ -190,4 +190,9 @@ export default {
 [data-disabled="true"] .k-range-input-tooltip::after {
 	border-inline-end: 5px solid var(--color-gray-600);
 }
+
+/* Field theme */
+.k-input[data-theme="field"][data-type="range"] .k-range-input {
+	padding: var(--field-input-padding);
+}
 </style>

@@ -182,4 +182,11 @@ export default {
 	box-shadow: none;
 	outline: 0;
 }
+
+/* Field Theme */
+.k-input[data-theme="field"] .k-number-input {
+	padding: var(--field-input-padding);
+	line-height: var(--field-input-line-height);
+	border-radius: var(--rounded);
+}
 </style>

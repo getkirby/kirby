@@ -198,46 +198,4 @@ export default {
 	justify-content: center;
 	flex-shrink: 0;
 }
-
-.k-input[data-theme="field"] .k-number-input,
-.k-input[data-theme="field"] .k-select-input,
-.k-input[data-theme="field"] .k-text-input {
-	padding: var(--field-input-padding);
-	line-height: var(--field-input-line-height);
-	border-radius: var(--rounded);
-}
-
-.k-input[data-theme="field"] .k-date-input .k-select-input,
-.k-input[data-theme="field"] .k-time-input .k-select-input {
-	padding-inline: 0;
-}
-
-.k-input[data-theme="field"] .k-date-input .k-select-input:first-child,
-.k-input[data-theme="field"] .k-time-input .k-select-input:first-child {
-	padding-inline-start: var(--field-input-padding);
-}
-
-.k-input[data-theme="field"] .k-date-input .k-select-input:focus-within,
-.k-input[data-theme="field"] .k-time-input .k-select-input:focus-within {
-	color: var(--color-focus);
-	font-weight: var(--font-bold);
-}
-.k-input[data-theme="field"].k-time-input .k-time-input-meridiem {
-	padding-inline-start: var(--field-input-padding);
-}
-
-/* Range */
-.k-input[data-theme="field"][data-type="range"] .k-range-input {
-	padding: var(--field-input-padding);
-}
-
-/* Select Boxes */
-.k-input[data-theme="field"][data-type="select"] {
-	position: relative;
-}
-.k-input[data-theme="field"][data-type="select"] .k-input-icon {
-	position: absolute;
-	inset-block: 0;
-	inset-inline-end: 0;
-}
 </style>
