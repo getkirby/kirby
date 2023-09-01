@@ -7,6 +7,7 @@
 			<button
 				v-if="editable"
 				class="k-header-title-button"
+				type="button"
 				@click="$emit('edit')"
 			>
 				<span class="k-header-title-text"><slot /></span>
