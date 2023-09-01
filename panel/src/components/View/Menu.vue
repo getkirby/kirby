@@ -1,6 +1,7 @@
 <template>
 	<nav
 		class="k-panel-menu"
+		:aria-label="$t('menu')"
 		:data-hover="$panel.menu.hover"
 		@mouseenter="$panel.menu.hover = true"
 		@mouseleave="$panel.menu.hover = false"
