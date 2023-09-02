@@ -11,6 +11,9 @@ class UserTestModel extends User
 {
 }
 
+/**
+ * @coversDefaultClass \Kirby\Cms\User
+ */
 class UserTest extends TestCase
 {
 	public function testAvatar()
