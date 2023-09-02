@@ -1,11 +1,12 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Panel;
 
+use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 
-class FilePickerTest extends TestCase
+class FilesPickerTest extends TestCase
 {
 	protected $app;
 
@@ -47,14 +48,14 @@ class FilePickerTest extends TestCase
 
 	public function testDefaults()
 	{
-		$picker = new FilePicker();
+		$picker = new FilesPicker();
 
 		$this->assertCount(3, $picker->items());
 	}
 
 	public function testQuery()
 	{
-		$picker = new FilePicker([
+		$picker = new FilesPicker([
 			'query' => 'site.files.offset(1)'
 		]);
 
@@ -63,7 +64,7 @@ class FilePickerTest extends TestCase
 
 	public function testQuerySite()
 	{
-		$picker = new FilePicker([
+		$picker = new FilesPicker([
 			'query' => 'site'
 		]);
 
@@ -72,7 +73,7 @@ class FilePickerTest extends TestCase
 
 	public function testQueryPage()
 	{
-		$picker = new FilePicker([
+		$picker = new FilesPicker([
 			'query' => 'kirby.page("test")'
 		]);
 
@@ -81,7 +82,7 @@ class FilePickerTest extends TestCase
 
 	public function testQueryUser()
 	{
-		$picker = new FilePicker([
+		$picker = new FilesPicker([
 			'query' => 'kirby.user("test")'
 		]);
 
@@ -90,7 +91,7 @@ class FilePickerTest extends TestCase
 
 	public function testQueryFile()
 	{
-		$picker = new FilePicker([
+		$picker = new FilesPicker([
 			'model' => $this->app->site()->files()->first()
 		]);
 
@@ -99,7 +100,7 @@ class FilePickerTest extends TestCase
 
 	public function testQueryInvalid()
 	{
-		$picker = new FilePicker([
+		$picker = new FilesPicker([
 			'query' => 'site.pages'
 		]);
 

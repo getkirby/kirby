@@ -1,10 +1,11 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Panel;
 
+use Kirby\Cms\App;
 use Kirby\TestCase;
 
-class PagePickerTest extends TestCase
+class PagesPickerTest extends TestCase
 {
 	protected $app;
 
@@ -38,7 +39,7 @@ class PagePickerTest extends TestCase
 
 	public function testDefaults()
 	{
-		$picker = new PagePicker();
+		$picker = new PagesPicker();
 
 		$this->assertSame($this->app->site(), $picker->model());
 		$this->assertCount(1, $picker->items());
@@ -47,7 +48,7 @@ class PagePickerTest extends TestCase
 
 	public function testParent()
 	{
-		$picker = new PagePicker([
+		$picker = new PagesPicker([
 			'parent' => 'grandmother'
 		]);
 
@@ -58,7 +59,7 @@ class PagePickerTest extends TestCase
 
 	public function testParentStart()
 	{
-		$picker = new PagePicker([
+		$picker = new PagesPicker([
 			'parent' => 'grandmother/mother'
 		]);
 
@@ -67,7 +68,7 @@ class PagePickerTest extends TestCase
 
 	public function testQuery()
 	{
-		$picker = new PagePicker([
+		$picker = new PagesPicker([
 			'query' => 'site.find("grandmother/mother").children'
 		]);
 
@@ -78,7 +79,7 @@ class PagePickerTest extends TestCase
 
 	public function testQueryAndParent()
 	{
-		$picker = new PagePicker([
+		$picker = new PagesPicker([
 			'query'  => 'site.find("grandmother").children',
 			'parent' => 'grandmother/mother'
 		]);
@@ -90,7 +91,7 @@ class PagePickerTest extends TestCase
 
 	public function testQueryStart()
 	{
-		$picker = new PagePicker([
+		$picker = new PagesPicker([
 			'query'  => 'site.find("grandmother").children',
 			'parent' => 'grandmother/mother'
 		]);

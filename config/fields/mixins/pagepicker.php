@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Cms\PagePicker;
+use Kirby\Panel\PagesPicker;
 
 return [
 	'methods' => [
@@ -8,7 +8,7 @@ return [
 			// inject the current model
 			$params['model'] = $this->model();
 
-			return (new PagePicker($params))->toArray();
+			return (new PagesPicker($params))->toArray();
 		}
 	]
 ];

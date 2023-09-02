@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Cms\FilePicker;
+use Kirby\Panel\FilesPicker;
 
 return [
 	'methods' => [
@@ -8,7 +8,7 @@ return [
 			// fetch the parent model
 			$params['model'] = $this->model();
 
-			return (new FilePicker($params))->toArray();
+			return (new FilesPicker($params))->toArray();
 		}
 	]
 ];

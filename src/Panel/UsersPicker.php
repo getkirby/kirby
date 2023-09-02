@@ -1,7 +1,9 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Panel;
 
+use Kirby\Cms\User;
+use Kirby\Cms\Users;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -9,13 +11,13 @@ use Kirby\Exception\InvalidArgumentException;
  * fetch the right files for the API calls
  * for the user picker component in the panel.
  *
- * @package   Kirby Cms
+ * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class UserPicker extends Picker
+class UsersPicker extends ModelsPicker
 {
 	/**
 	 * Extends the basic defaults

@@ -1,7 +1,10 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Panel;
 
+use Kirby\Cms\Page;
+use Kirby\Cms\Pages;
+use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -10,13 +13,13 @@ use Kirby\Exception\InvalidArgumentException;
  * model for the API calls for the
  * page picker component in the panel.
  *
- * @package   Kirby Cms
+ * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class PagePicker extends Picker
+class PagesPicker extends ModelsPicker
 {
 	// TODO: null only due to our Properties setters,
 	// remove once our implementation is better
@@ -31,7 +34,7 @@ class PagePicker extends Picker
 	{
 		return array_merge(parent::defaults(), [
 			// Page ID of the selected parent. Used to navigate
-			'parent' => null,
+			'parent'   => null,
 			// enable/disable subpage navigation
 			'subpages' => true,
 		]);

@@ -1,21 +1,25 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Panel;
 
+use Kirby\Cms\Files;
+use Kirby\Cms\Page;
+use Kirby\Cms\Site;
+use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
- * The FilePicker class helps to
+ * The FilesPicker class helps to
  * fetch the right files for the API calls
  * for the file picker component in the panel.
  *
- * @package   Kirby Cms
+ * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class FilePicker extends Picker
+class FilesPicker extends ModelsPicker
 {
 	/**
 	 * Extends the basic defaults

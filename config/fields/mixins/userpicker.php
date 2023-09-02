@@ -1,13 +1,13 @@
 <?php
 
-use Kirby\Cms\UserPicker;
+use Kirby\Panel\UsersPicker;
 
 return [
 	'methods' => [
 		'userpicker' => function (array $params = []) {
 			$params['model'] = $this->model();
 
-			return (new UserPicker($params))->toArray();
+			return (new UsersPicker($params))->toArray();
 		}
 	]
 ];

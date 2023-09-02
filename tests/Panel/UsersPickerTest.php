@@ -1,10 +1,11 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Panel;
 
+use Kirby\Cms\App;
 use Kirby\TestCase;
 
-class UserPickerTest extends TestCase
+class UsersPickerTest extends TestCase
 {
 	protected $app;
 
@@ -26,14 +27,14 @@ class UserPickerTest extends TestCase
 
 	public function testDefaults()
 	{
-		$picker = new UserPicker();
+		$picker = new UsersPicker();
 
 		$this->assertCount(3, $picker->items());
 	}
 
 	public function testQuery()
 	{
-		$picker = new UserPicker([
+		$picker = new UsersPicker([
 			'query' => 'kirby.users.offset(1)'
 		]);
 

@@ -1,18 +1,23 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Panel;
+
+use Kirby\Cms\App;
+use Kirby\Cms\Collection;
+use Kirby\Cms\Pagination;
+use Kirby\Cms\Site;
 
 /**
  * The Picker abstract is the foundation
  * for the UserPicker, PagePicker and FilePicker
  *
- * @package   Kirby Cms
+ * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-abstract class Picker
+abstract class ModelsPicker
 {
 	protected App $kirby;
 	protected array $options;
@@ -36,25 +41,25 @@ abstract class Picker
 		// default params
 		return [
 			// image settings (ratio, cover, etc.)
-			'image' => [],
+			'image'  => [],
 			// query template for the info field
-			'info' => false,
+			'info'   => false,
 			// listing style: list, cards, cardlets
 			'layout' => 'list',
 			// number of users displayed per pagination page
-			'limit' => 20,
+			'limit'  => 20,
 			// optional mapping function for the result array
-			'map' => null,
+			'map'    => null,
 			// the reference model
-			'model' => App::instance()->site(),
+			'model'  => App::instance()->site(),
 			// current page when paginating
-			'page' => 1,
+			'page'   => 1,
 			// a query string to fetch specific items
-			'query' => null,
+			'query'  => null,
 			// search query
 			'search' => null,
 			// query template for the text field
-			'text' =>  null
+			'text'   => null
 		];
 	}
 
@@ -74,23 +79,15 @@ abstract class Picker
 			return [];
 		}
 
-		$result = [];
-
-		foreach ($items as $index => $item) {
-			if (empty($this->options['map']) === false) {
-				$result[] = $this->options['map']($item);
-			} else {
-				$result[] = $item->panel()->pickerData([
-					'image'  => $this->options['image'],
-					'info'   => $this->options['info'],
-					'layout' => $this->options['layout'],
-					'model'  => $this->options['model'],
-					'text'   => $this->options['text'],
-				]);
-			}
-		}
-
-		return $result;
+		return $items->values(
+			$this->options['map'] ?? fn ($item) => $item->panel()->pickerData([
+				'image'  => $this->options['image'],
+				'info'   => $this->options['info'],
+				'layout' => $this->options['layout'],
+				'model'  => $this->options['model'],
+				'text'   => $this->options['text'],
+			])
+		);
 	}
 
 	/**
