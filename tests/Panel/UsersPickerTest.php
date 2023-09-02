@@ -5,6 +5,9 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Panel\UsersPicker
+ */
 class UsersPickerTest extends TestCase
 {
 	protected $app;
@@ -25,6 +28,9 @@ class UsersPickerTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
+	/**
+	 * @covers ::defaults
+	 */
 	public function testDefaults()
 	{
 		$picker = new UsersPicker();
@@ -32,7 +38,10 @@ class UsersPickerTest extends TestCase
 		$this->assertCount(3, $picker->items());
 	}
 
-	public function testQuery()
+	/**
+	 * @covers ::items
+	 */
+	public function testItemsQuery()
 	{
 		$picker = new UsersPicker([
 			'query' => 'kirby.users.offset(1)'

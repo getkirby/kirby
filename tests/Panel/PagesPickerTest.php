@@ -5,6 +5,9 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Panel\PagesPicker
+ */
 class PagesPickerTest extends TestCase
 {
 	protected $app;
@@ -37,6 +40,9 @@ class PagesPickerTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
+	/**
+	 * @covers ::defaults
+	 */
 	public function testDefaults()
 	{
 		$picker = new PagesPicker();
@@ -46,6 +52,10 @@ class PagesPickerTest extends TestCase
 		$this->assertSame('grandmother', $picker->items()->first()->id());
 	}
 
+	/**
+	 * @covers ::parent
+	 * @covers ::model
+	 */
 	public function testParent()
 	{
 		$picker = new PagesPicker([
@@ -57,6 +67,9 @@ class PagesPickerTest extends TestCase
 		$this->assertSame('grandmother', $picker->model()->id());
 	}
 
+	/**
+	 * @covers ::start
+	 */
 	public function testParentStart()
 	{
 		$picker = new PagesPicker([

@@ -39,9 +39,16 @@ class TestCase extends BaseTestCase
 		return $this->app;
 	}
 
-	public function field(string $type, array $attr = [], ?Fields $formFields = null)
-	{
+	public function field(
+		string $type,
+		array $attr = [],
+		Fields|null $formFields = null
+	) {
 		$page = new Page(['slug' => 'test']);
-		return Field::factory($type, array_merge(['model' => $page], $attr), $formFields);
+		return Field::factory(
+			$type,
+			array_merge(['model' => $page], $attr),
+			$formFields
+		);
 	}
 }

@@ -217,14 +217,11 @@ class Core
 	{
 		return [
 			'datetime'   => $this->root . '/fields/mixins/datetime.php',
-			'filepicker' => $this->root . '/fields/mixins/filepicker.php',
 			'layout'     => $this->root . '/fields/mixins/layout.php',
 			'min'        => $this->root . '/fields/mixins/min.php',
 			'options'    => $this->root . '/fields/mixins/options.php',
-			'pagepicker' => $this->root . '/fields/mixins/pagepicker.php',
 			'picker'     => $this->root . '/fields/mixins/picker.php',
 			'upload'     => $this->root . '/fields/mixins/upload.php',
-			'userpicker' => $this->root . '/fields/mixins/userpicker.php',
 		];
 	}
 

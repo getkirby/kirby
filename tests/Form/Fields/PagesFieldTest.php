@@ -36,6 +36,9 @@ class PagesFieldTest extends TestCase
 				]
 			]
 		]);
+
+		// otherwise all pages won't be readable
+		$this->app->impersonate('kirby');
 	}
 
 	public function model()

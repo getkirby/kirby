@@ -1,14 +1,15 @@
 <?php
 
 use Kirby\Cms\App;
+use Kirby\Cms\Page;
 use Kirby\Data\Data;
+use Kirby\Panel\PagesPicker;
 use Kirby\Toolkit\A;
 
 return [
 	'mixins' => [
 		'layout',
 		'min',
-		'pagepicker',
 		'picker',
 	],
 	'props' => [
@@ -53,7 +54,7 @@ return [
 		'default' => null
 	],
 	'methods' => [
-		'pageResponse' => function ($page) {
+		'toPage' => function (Page $page): array {
 			return $page->panel()->pickerData([
 				'image'  => $this->image,
 				'info'   => $this->info,
@@ -61,7 +62,7 @@ return [
 				'text'   => $this->text,
 			]);
 		},
-		'toPages' => function ($value = null) {
+		'toPages' => function ($value = null): array {
 			$pages = [];
 			$kirby = App::instance();
 
@@ -71,25 +72,25 @@ return [
 				}
 
 				if ($id !== null && ($page = $kirby->page($id))) {
-					$pages[] = $this->pageResponse($page);
+					$pages[] = $this->toPage($page);
 				}
 			}
 
 			return $pages;
 		}
 	],
-	'api' => function () {
+	'api' => function (): array {
 		return [
 			[
 				'pattern' => '/',
-				'action' => function () {
-					$field = $this->field();
-
-					return $field->pagepicker([
+				'action' => function (): array {
+					$field  = $this->field();
+					$picker = new PagesPicker([
 						'image'    => $field->image(),
 						'info'     => $field->info(),
 						'layout'   => $field->layout(),
 						'limit'    => $field->limit(),
+						'model'    => $field->model(),
 						'page'     => $this->requestQuery('page'),
 						'parent'   => $this->requestQuery('parent'),
 						'query'    => $field->query(),
@@ -97,11 +98,13 @@ return [
 						'subpages' => $field->subpages(),
 						'text'     => $field->text()
 					]);
+
+					return $picker->toArray();
 				}
 			]
 		];
 	},
-	'save' => function ($value = null) {
+	'save' => function ($value = null): array {
 		return A::pluck($value, $this->store);
 	},
 	'validations' => [

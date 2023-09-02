@@ -1,15 +1,16 @@
 <?php
 
 use Kirby\Cms\App;
+use Kirby\Cms\User;
 use Kirby\Data\Data;
+use Kirby\Panel\UsersPicker;
 use Kirby\Toolkit\A;
 
 return [
 	'mixins' => [
 		'layout',
 		'min',
-		'picker',
-		'userpicker'
+		'picker'
 	],
 	'props' => [
 		/**
@@ -43,7 +44,7 @@ return [
 				$user = $this->kirby()->user()
 			) {
 				return [
-					$this->userResponse($user)
+					$this->toUser($user)
 				];
 			}
 
@@ -51,7 +52,7 @@ return [
 		}
 	],
 	'methods' => [
-		'userResponse' => function ($user) {
+		'toUser' => function (User $user): array {
 			return $user->panel()->pickerData([
 				'info'   => $this->info,
 				'image'  => $this->image,
@@ -69,35 +70,37 @@ return [
 				}
 
 				if ($email !== null && ($user = $kirby->user($email))) {
-					$users[] = $this->userResponse($user);
+					$users[] = $this->toUser($user);
 				}
 			}
 
 			return $users;
 		}
 	],
-	'api' => function () {
+	'api' => function (): array {
 		return [
 			[
 				'pattern' => '/',
-				'action' => function () {
-					$field = $this->field();
-
-					return $field->userpicker([
+				'action' => function (): array {
+					$field  = $this->field();
+					$picker = new UsersPicker([
 						'image'  => $field->image(),
 						'info'   => $field->info(),
 						'layout' => $field->layout(),
 						'limit'  => $field->limit(),
+						'model'  => $field->model(),
 						'page'   => $this->requestQuery('page'),
 						'query'  => $field->query(),
 						'search' => $this->requestQuery('search'),
 						'text'   => $field->text()
 					]);
+
+					return $picker->toArray();
 				}
 			]
 		];
 	},
-	'save' => function ($value = null) {
+	'save' => function ($value = null): array {
 		return A::pluck($value, $this->store);
 	},
 	'validations' => [

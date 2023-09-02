@@ -6,6 +6,9 @@ use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Panel\FilesPicker
+ */
 class FilesPickerTest extends TestCase
 {
 	protected $app;
@@ -46,6 +49,9 @@ class FilesPickerTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
+	/**
+	 * @covers ::defaults
+	 */
 	public function testDefaults()
 	{
 		$picker = new FilesPicker();

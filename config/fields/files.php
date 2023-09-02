@@ -1,12 +1,13 @@
 <?php
 
+use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
+use Kirby\Panel\FilesPicker;
 use Kirby\Toolkit\A;
 
 return [
 	'mixins' => [
-		'filepicker',
 		'layout',
 		'min',
 		'picker',
@@ -61,7 +62,7 @@ return [
 		},
 	],
 	'methods' => [
-		'fileResponse' => function ($file) {
+		'toFile' => function (File $file): array {
 			return $file->panel()->pickerData([
 				'image'  => $this->image,
 				'info'   => $this->info ?? false,
@@ -70,7 +71,7 @@ return [
 				'text'   => $this->text,
 			]);
 		},
-		'toFiles' => function ($value = null) {
+		'toFiles' => function ($value = null): array {
 			$files = [];
 
 			foreach (Data::decode($value, 'yaml') as $id) {
@@ -82,30 +83,32 @@ return [
 					$id !== null &&
 					($file = $this->kirby()->file($id, $this->model()))
 				) {
-					$files[] = $this->fileResponse($file);
+					$files[] = $this->toFile($file);
 				}
 			}
 
 			return $files;
 		}
 	],
-	'api' => function () {
+	'api' => function (): array {
 		return [
 			[
 				'pattern' => '/',
-				'action'  => function () {
-					$field = $this->field();
-
-					return $field->filepicker([
+				'action'  => function (): array {
+					$field  = $this->field();
+					$picker = new FilesPicker([
 						'image'  => $field->image(),
 						'info'   => $field->info(),
 						'layout' => $field->layout(),
 						'limit'  => $field->limit(),
+						'model'  => $field->model(),
 						'page'   => $this->requestQuery('page'),
 						'query'  => $field->query(),
 						'search' => $this->requestQuery('search'),
 						'text'   => $field->text()
 					]);
+
+					return $picker->toArray();
 				}
 			],
 			[

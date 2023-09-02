@@ -8,10 +8,9 @@ use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
- * The PagePicker class helps to
+ * The PagesPicker class helps to
  * fetch the right pages and the parent
- * model for the API calls for the
- * page picker component in the panel.
+ * model for the page picker dialog in the Panel.
  *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -21,8 +20,6 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class PagesPicker extends ModelsPicker
 {
-	// TODO: null only due to our Properties setters,
-	// remove once our implementation is better
 	protected Pages|null $items = null;
 	protected Pages|null $itemsForQuery = null;
 	protected Page|Site|null $parent;
@@ -68,9 +65,12 @@ class PagesPicker extends ModelsPicker
 	 * query, depending on the parent and subpages
 	 * options.
 	 */
-	public function modelForQuery(): Page|Site|null
+	protected function modelForQuery(): Page|Site|null
 	{
-		if ($this->options['subpages'] === true && empty($this->options['parent']) === false) {
+		if (
+			$this->options['subpages'] === true &&
+			empty($this->options['parent']) === false
+		) {
 			return $this->parent();
 		}
 
@@ -82,7 +82,7 @@ class PagesPicker extends ModelsPicker
 	 * parent model that is currently selected
 	 * in the page picker.
 	 */
-	public function modelToArray(Page|Site $model = null): array|null
+	protected function modelToArray(Page|Site $model = null): array|null
 	{
 		if ($model === null) {
 			return null;
@@ -132,7 +132,10 @@ class PagesPicker extends ModelsPicker
 		// when subpage navigation is enabled, a parent
 		// might be passed in addition to the query.
 		// The parent then takes priority.
-		} elseif ($this->options['subpages'] === true && empty($this->options['parent']) === false) {
+		} elseif (
+			$this->options['subpages'] === true &&
+			empty($this->options['parent']) === false
+		) {
 			$items = $this->itemsForParent();
 
 		// search by query
@@ -153,7 +156,7 @@ class PagesPicker extends ModelsPicker
 	/**
 	 * Search for pages by parent
 	 */
-	public function itemsForParent(): Pages
+	protected function itemsForParent(): Pages
 	{
 		return $this->parent()->children();
 	}
@@ -163,7 +166,7 @@ class PagesPicker extends ModelsPicker
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
-	public function itemsForQuery(): Pages
+	protected function itemsForQuery(): Pages
 	{
 		// cache
 		if ($this->itemsForQuery !== null) {
@@ -195,7 +198,9 @@ class PagesPicker extends ModelsPicker
 	 */
 	public function parent(): Page|Site
 	{
-		return $this->parent ??= $this->kirby->page($this->options['parent']) ?? $this->site;
+		return $this->parent ??=
+			$this->kirby->page($this->options['parent']) ??
+			$this->site;
 	}
 
 	/**

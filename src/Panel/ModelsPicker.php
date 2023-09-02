@@ -8,8 +8,8 @@ use Kirby\Cms\Pagination;
 use Kirby\Cms\Site;
 
 /**
- * The Picker abstract is the foundation
- * for the UserPicker, PagePicker and FilePicker
+ * The ModelsPicker abstract is the foundation
+ * for the UsersPicker, PagesPicker and FilesPicker
  *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -36,7 +36,7 @@ abstract class ModelsPicker
 	/**
 	 * Return the array of default values
 	 */
-	protected function defaults(): array
+	public function defaults(): array
 	{
 		// default params
 		return [
@@ -73,7 +73,7 @@ abstract class ModelsPicker
 	 * array that is already optimized for the
 	 * panel picker component.
 	 */
-	public function itemsToArray(Collection $items = null): array
+	protected function itemsToArray(Collection $items = null): array
 	{
 		if ($items === null) {
 			return [];
@@ -85,7 +85,7 @@ abstract class ModelsPicker
 				'info'   => $this->options['info'],
 				'layout' => $this->options['layout'],
 				'model'  => $this->options['model'],
-				'text'   => $this->options['text'],
+				'text'   => $this->options['text']
 			])
 		);
 	}
@@ -94,7 +94,7 @@ abstract class ModelsPicker
 	 * Apply pagination to the collection
 	 * of items according to the options.
 	 */
-	public function paginate(Collection $items): Collection
+	protected function paginate(Collection $items): Collection
 	{
 		return $items->paginate([
 			'limit' => $this->options['limit'],
@@ -103,10 +103,9 @@ abstract class ModelsPicker
 	}
 
 	/**
-	 * Return the most relevant pagination
-	 * info as array
+	 * Return the most relevant pagination info as array
 	 */
-	public function paginationToArray(Pagination $pagination): array
+	protected function paginationToArray(Pagination $pagination): array
 	{
 		return [
 			'limit' => $pagination->limit(),

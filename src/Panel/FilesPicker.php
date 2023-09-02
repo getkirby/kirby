@@ -9,9 +9,8 @@ use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
- * The FilesPicker class helps to
- * fetch the right files for the API calls
- * for the file picker component in the panel.
+ * The FilesPicker class helps to fetch the right files
+ * for for the files picker dialog in the Panel.
  *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -42,13 +41,10 @@ class FilesPicker extends ModelsPicker
 		$model = $this->options['model'];
 
 		// find the right default query
-		$query = match (true) {
-			empty($this->options['query']) === false
-				=> $this->options['query'],
-			$model instanceof File
-				=> 'file.siblings',
-			default
-			=> $model::CLASS_ALIAS . '.files'
+		$query   = $this->options['query'];
+		$query ??= match (true) {
+			$model instanceof File => 'file.siblings',
+			default                => $model::CLASS_ALIAS . '.files'
 		};
 
 		// fetch all files for the picker

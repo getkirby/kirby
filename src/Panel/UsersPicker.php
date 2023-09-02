@@ -7,9 +7,8 @@ use Kirby\Cms\Users;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
- * The UserPicker class helps to
- * fetch the right files for the API calls
- * for the user picker component in the panel.
+ * The UsersPicker class helps to fetch the right users
+ * for the user picker dialog in the Panel.
  *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -40,13 +39,10 @@ class UsersPicker extends ModelsPicker
 		$model = $this->options['model'];
 
 		// find the right default query
-		$query = match (true) {
-			empty($this->options['query']) === false
-				=> $this->options['query'],
-			$model instanceof User
-				=> 'user.siblings',
-			default
-			=> 'kirby.users'
+		$query   = $this->options['query'];
+		$query ??= match (true) {
+			$model instanceof User => 'user.siblings',
+			default                => 'kirby.users'
 		};
 
 		// fetch all users for the picker
