@@ -198,11 +198,12 @@ class PageCreateTest extends TestCase
 		]);
 
 		try {
-			$child = $mother->createChild([
+			 $mother->createChild([
 				'slug'     => 'child',
 				'template' => 'uncreatable-page'
 			]);
-		} catch (TypeError) {}
+		} catch (TypeError) {
+		}
 
 		$this->assertTrue($mother->drafts()->isEmpty());
 	}
