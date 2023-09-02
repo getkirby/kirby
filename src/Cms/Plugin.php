@@ -62,23 +62,48 @@ class Plugin
 		return $this->info()[$key] ?? null;
 	}
 
-	public function asset(string $name): string|null
+	/**
+	 * Returns a specific
+	 *
+	 * @param string $name
+	 * @return string|null
+	 */
+	public function asset(string $path): string|null
 	{
-		return $this->assets()[$name] ?? null;
+		return $this->assets()[$path] ?? null;
 	}
 
+	/**
+	 * Returns an array with all asset files for the plugin
+	 * where the key is the relative path and the value the absolute path
+	 */
 	public function assets(): array
 	{
 		if (isset($this->assets) === true) {
 			return $this->assets;
 		}
 
+		// get assets defined in the plugin extension
 		if ($assets = $this->extends['assets'] ?? null) {
 			if ($assets instanceof Closure) {
 				$assets = $assets();
 			}
+
+			// normalize array: use relative path as
+			// key when no key is defined
+			foreach ($assets as $key => $asset) {
+				unset($assets[$key]);
+
+				if (is_int($key) === true) {
+					$key = Str::after($asset, $this->root() . '/');
+				}
+
+				$assets[$key] = $asset;
+			}
 		}
 
+		// fallback: if no assets are defined in the plugin extension,
+		// use all files in the plugin's `assets` directory
 		if ($assets === null) {
 			$assets = [];
 			$root   = $this->root() . '/assets';
@@ -86,13 +111,6 @@ class Plugin
 			foreach (Dir::index($root, true) as $asset) {
 				$assets['assets/' . $asset] = $root . '/' . $asset;
 			}
-		}
-
-		if (A::isAssociative($assets) === false) {
-			$assets = A::keyBy(
-				$assets,
-				fn ($asset) => Str::after($asset, $this->root() . '/')
-			);
 		}
 
 		return $this->assets = $assets;
