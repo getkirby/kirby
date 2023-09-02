@@ -146,10 +146,8 @@ class Files extends Collection
 	/**
 	 * Returns the collection sorted by
 	 * the sort number and the filename
-	 *
-	 * @return static
 	 */
-	public function sorted()
+	public function sorted(): static
 	{
 		return $this->sort('sort', 'asc', 'filename', 'asc');
 	}
@@ -157,10 +155,9 @@ class Files extends Collection
 	/**
 	 * Filter all files by the given template
 	 *
-	 * @param null|string|array $template
 	 * @return $this|static
 	 */
-	public function template($template)
+	public function template(string|array|null $template): static
 	{
 		if (empty($template) === true) {
 			return $this;

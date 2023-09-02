@@ -24,7 +24,6 @@ class Html extends \Kirby\Toolkit\Html
 	 *
 	 * @param string|array $url Relative or absolute URLs, an array of URLs or `@auto` for automatic template css loading
 	 * @param string|array $options Pass an array of attributes for the link tag or a media attribute string
-	 * @return string|null
 	 */
 	public static function css($url, $options = null): string|null
 	{
@@ -69,23 +68,23 @@ class Html extends \Kirby\Toolkit\Html
 	 * @param string|null $href Relative or absolute Url
 	 * @param string|array|null $text If `null`, the link will be used as link text. If an array is passed, each element will be added unencoded
 	 * @param array $attr Additional attributes for the a tag.
-	 * @return string
 	 */
-	public static function link(string $href = null, $text = null, array $attr = []): string
-	{
+	public static function link(
+		string $href = null,
+		string|array $text = null,
+		array $attr = []
+	): string {
 		return parent::link(Url::to($href), $text, $attr);
 	}
 
 	/**
 	 * Creates a script tag to load a javascript file
 	 * @since 3.7.0
-	 *
-	 * @param string|array $url
-	 * @param string|array $options
-	 * @return string|null
 	 */
-	public static function js($url, $options = null): string|null
-	{
+	public static function js(
+		string|array $url,
+		string|array|bool $options = null
+	): string|null {
 		if (is_array($url) === true) {
 			$scripts = A::map($url, fn ($url) => static::js($url, $options));
 			return implode(PHP_EOL, $scripts);
@@ -114,11 +113,8 @@ class Html extends \Kirby\Toolkit\Html
 	 * Includes an SVG file by absolute or
 	 * relative file path.
 	 * @since 3.7.0
-	 *
-	 * @param string|\Kirby\Cms\File $file
-	 * @return string|false
 	 */
-	public static function svg($file)
+	public static function svg(string|File $file): string|false
 	{
 		// support for Kirby's file objects
 		if (
