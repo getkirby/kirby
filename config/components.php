@@ -230,7 +230,7 @@ return [
 					$scoring['score'] += 16 * $score;
 					$scoring['hits']  += 1;
 
-					// check for exact beginning matches
+				// check for exact beginning matches
 				} elseif (
 					$options['words'] === false &&
 					Str::startsWith($lowerValue, $query) === true
@@ -238,7 +238,7 @@ return [
 					$scoring['score'] += 8 * $score;
 					$scoring['hits']  += 1;
 
-					// check for exact query matches
+				// check for exact query matches
 				} elseif ($matches = preg_match_all('!' . $exact . '!i', $value, $r)) {
 					$scoring['score'] += 2 * $score;
 					$scoring['hits']  += $matches;

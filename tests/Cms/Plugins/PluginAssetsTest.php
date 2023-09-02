@@ -18,11 +18,11 @@ class PluginAssetsTest extends TestCase
 		F::write($a . '/assets/test.css', 'test');
 
 		$b = $this->tmp . '/site/plugins/b';
-		F::write($b . '/index.php', '<?php Kirby::plugin("getkirby/b", ["assets" => ["'. $b .'/foo/bar.css"]]);' );
+		F::write($b . '/index.php', '<?php Kirby::plugin("getkirby/b", ["assets" => ["' . $b . '/foo/bar.css"]]);');
 		F::write($b . '/foo/bar.css', 'test');
 
 		$c = $this->tmp . '/site/plugins/c';
-		F::write($c . '/index.php', '<?php Kirby::plugin("getkirby/c", ["assets" => ["test.css" => "'. $c .'/foo/bar.css"]]);' );
+		F::write($c . '/index.php', '<?php Kirby::plugin("getkirby/c", ["assets" => ["test.css" => "' . $c . '/foo/bar.css"]]);');
 		F::write($c . '/foo/bar.css', 'test');
 
 		$this->app = new App([
@@ -77,7 +77,7 @@ class PluginAssetsTest extends TestCase
 
 		$this->assertTrue(is_link($media));
 		$this->assertSame(200, $response->code());
-		$this->assertSame('text/css', $response->type());;
+		$this->assertSame('text/css', $response->type());
 	}
 
 	public function testResolveAutomaticFromAssetsFolder()
