@@ -4,6 +4,9 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Obj;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Error\Deprecated;
+use PHPUnit\Framework\Error\Warning;
 
 /**
  * @coversDefaultClass Kirby\Cms\Helpers
@@ -39,10 +42,15 @@ class HelpersTest extends TestCase
 	{
 		// the deprecation warnings are always triggered in testing mode,
 		// so we cannot test it with disabled debug mode
-		$this->expectException('Whoops\Exception\ErrorException');
-		$this->expectExceptionMessage('The xyz method is deprecated.');
 
-		Helpers::deprecated('The xyz method is deprecated.');
+		try {
+			Helpers::deprecated('The xyz method is deprecated.');
+		} catch (Deprecated $e) {
+			$this->assertSame('The xyz method is deprecated.', $e->getMessage());
+			return;
+		}
+
+		Assert::fail('Expected deprecation warning was not generated');
 	}
 
 	/**
@@ -50,10 +58,14 @@ class HelpersTest extends TestCase
 	 */
 	public function testDeprecatedKeyUndefined()
 	{
-		$this->expectException('Whoops\Exception\ErrorException');
-		$this->expectExceptionMessage('The xyz method is deprecated.');
+		try {
+			Helpers::deprecated('The xyz method is deprecated.', 'my-key');
+		} catch (Deprecated $e) {
+			$this->assertSame('The xyz method is deprecated.', $e->getMessage());
+			return;
+		}
 
-		Helpers::deprecated('The xyz method is deprecated.', 'my-key');
+		Assert::fail('Expected deprecation warning was not generated');
 	}
 
 	/**
@@ -61,11 +73,15 @@ class HelpersTest extends TestCase
 	 */
 	public function testDeprecatedActivated()
 	{
-		$this->expectException('Whoops\Exception\ErrorException');
-		$this->expectExceptionMessage('The xyz method is deprecated.');
+		try {
+			Helpers::$deprecations = ['my-key' => true];
+			Helpers::deprecated('The xyz method is deprecated.', 'my-key');
+		} catch (Deprecated $e) {
+			$this->assertSame('The xyz method is deprecated.', $e->getMessage());
+			return;
+		}
 
-		Helpers::$deprecations = ['my-key' => true];
-		Helpers::deprecated('The xyz method is deprecated.', 'my-key');
+		Assert::fail('Expected deprecation warning was not generated');
 	}
 
 	/**
@@ -195,19 +211,24 @@ class HelpersTest extends TestCase
 	 */
 	public function testHandleErrorsWarningNotCaught()
 	{
-		$this->expectExceptionMessage('Some warning');
+		try {
+			Helpers::handleErrors(
+				fn () => trigger_error('Some warning', E_USER_WARNING),
+				function (int $errno, string $errstr) {
+					$this->assertSame(E_USER_WARNING, $errno);
+					$this->assertSame('Some warning', $errstr);
 
-		Helpers::handleErrors(
-			fn () => trigger_error('Some warning', E_USER_WARNING),
-			function (int $errno, string $errstr) {
-				$this->assertSame(E_USER_WARNING, $errno);
-				$this->assertSame('Some warning', $errstr);
+					// continue the handler chain
+					return false;
+				},
+				'handled'
+			);
+		} catch (Warning $e) {
+			$this->assertSame('Some warning', $e->getMessage());
+			return;
+		}
 
-				// continue the handler chain
-				return false;
-			},
-			'handled'
-		);
+		Assert::fail('Expected warning was not generated');
 	}
 
 	/**

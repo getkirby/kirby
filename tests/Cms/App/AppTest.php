@@ -727,12 +727,14 @@ class AppTest extends TestCase
 						'error'        => $kirby->site()->content()->error()->value(),
 						'slugs'        => 'de'
 					];
-				}
+				},
+				'whoops' => true
 			]
 		]);
 
 		$this->assertSame([
 			'ready' => $ready,
+			'whoops' => true,
 			'test' => '/dev/null',
 			'another.test' => 'foo',
 			'debug' => true,
