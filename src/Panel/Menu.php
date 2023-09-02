@@ -39,7 +39,7 @@ class Menu
 		// if no config is defined…
 		if ($areas === null) {
 			// ensure that some defaults are on top in the right order
-			$defaults    = ['site', 'users', 'languages', 'system'];
+			$defaults    = ['site', 'languages', 'users', 'system'];
 			// add all other areas after that
 			$additionals = array_diff(array_keys($this->areas), $defaults);
 			$areas       = array_merge($defaults, $additionals);
