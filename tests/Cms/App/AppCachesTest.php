@@ -11,11 +11,12 @@ class AppCachesTest extends TestCase
 {
 	public function app(array $props = [])
 	{
-		return new App(array_merge([
+		return new App([
 			'roots' => [
 				'index' => __DIR__ . '/fixtures/AppCachesTest',
-			]
-		], $props));
+			],
+			...$props
+		]);
 	}
 
 	public function tearDown(): void

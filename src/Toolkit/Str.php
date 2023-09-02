@@ -669,7 +669,7 @@ class Str
 			$pool = [];
 
 			foreach ($type as $t) {
-				$pool = array_merge($pool, static::pool($t));
+				$pool = [...$pool, ...static::pool($t)];
 			}
 		} else {
 			$pool = match (strtolower($type)) {

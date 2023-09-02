@@ -334,7 +334,7 @@ abstract class ModelWithContent implements Identifiable
 		$errors = [];
 
 		foreach ($this->blueprint()->sections() as $section) {
-			$errors = array_merge($errors, $section->errors());
+			$errors = [...$errors, ...$section->errors()];
 		}
 
 		return $errors;

@@ -89,10 +89,11 @@ return [
 			[
 				'pattern' => 'files',
 				'action' => function () {
-					$params = array_merge($this->field()->files(), [
+					$params = [
+						...$this->field()->files(),
 						'page'   => $this->requestQuery('page'),
 						'search' => $this->requestQuery('search')
-					]);
+					];
 
 					return $this->field()->filepicker($params);
 				}

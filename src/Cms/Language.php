@@ -396,7 +396,7 @@ class Language
 	{
 		$code = $this->locale(LC_CTYPE);
 		$data = static::loadRules($code);
-		return array_merge($data, $this->slugs());
+		return [...$data, ...$this->slugs()];
 	}
 
 	/**
@@ -423,7 +423,7 @@ class Language
 			'url'          => $this->url,
 		];
 
-		$data = array_merge($existingData, $props);
+		$data = [...$existingData, ...$props];
 
 		ksort($data);
 

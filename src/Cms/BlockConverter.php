@@ -132,12 +132,10 @@ class BlockConverter
 	public static function editorCustom(array $params): array
 	{
 		return [
-			'content' => array_merge(
-				$params['attrs'] ?? [],
-				[
-					'body' => $params['content'] ?? null
-				]
-			),
+			'content' => [
+				...$params['attrs'] ?? [],
+				'body' => $params['content'] ?? null
+			],
 			'type' => $params['type'] ?? 'unknown'
 		];
 	}

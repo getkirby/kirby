@@ -47,7 +47,7 @@ class Users extends Collection
 	{
 		// add a users collection
 		if ($object instanceof self) {
-			$this->data = array_merge($this->data, $object->data);
+			$this->data = [...$this->data, ...$object->data];
 
 		// add a user by id
 		} elseif (

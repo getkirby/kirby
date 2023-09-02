@@ -494,7 +494,7 @@ class Field extends Component
 			$errors = V::errors($this->value(), $rules);
 
 			if (empty($errors) === false) {
-				$this->errors = array_merge($this->errors, $errors);
+				$this->errors = [...$this->errors, ...$errors];
 			}
 		}
 	}

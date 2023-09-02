@@ -335,7 +335,7 @@ class Query
 	public function bindings(array|null $bindings = null): array|static
 	{
 		if (is_array($bindings) === true) {
-			$this->bindings = array_merge($this->bindings, $bindings);
+			$this->bindings = [...$this->bindings, ...$bindings];
 			return $this;
 		}
 
@@ -852,7 +852,7 @@ class Query
 					call_user_func($args[0], $query);
 
 					// copy over the bindings from the nested query
-					$this->bindings = array_merge($this->bindings, $query->bindings);
+					$this->bindings = [...$this->bindings, ...$query->bindings];
 
 					$result = '(' . $query->where . ')';
 				}

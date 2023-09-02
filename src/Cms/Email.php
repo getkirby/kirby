@@ -43,7 +43,7 @@ class Email
 
 		// build a prop array based on preset and props
 		$preset = $this->preset($preset);
-		$this->props = array_merge($preset, $props);
+		$this->props = [...$preset, ...$props];
 
 		// add transport settings
 		$this->props['transport'] ??= $this->options['transport'] ?? [];

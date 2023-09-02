@@ -99,7 +99,7 @@ class Collection extends BaseCollection
 	public function add($object)
 	{
 		if ($object instanceof self) {
-			$this->data = array_merge($this->data, $object->data);
+			$this->data = [...$this->data, ...$object->data];
 		} elseif (
 			is_object($object) === true &&
 			method_exists($object, 'id') === true

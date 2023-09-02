@@ -291,7 +291,7 @@ class Snippet extends Tpl
 		// initialize a dummy slots object and cache it for better performance
 		$slots ??= static::$dummySlots ??= new Slots([]);
 
-		$data = array_merge(App::instance()->data, $data);
+		$data = [...App::instance()->data, ...$data];
 
 		if (
 			array_key_exists('slot', $data) === true ||
@@ -300,9 +300,10 @@ class Snippet extends Tpl
 			throw new InvalidArgumentException('Passing the $slot or $slots variables to snippets is not supported.');
 		}
 
-		return array_merge($data, [
+		return [
+			...$data,
 			'slot'  => $slots->default,
 			'slots' => $slots,
-		]);
+		];
 	}
 }

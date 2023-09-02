@@ -110,7 +110,8 @@ class Html extends DomHandler
 	 */
 	protected static function options(): array
 	{
-		return array_merge(parent::options(), [
+		return [
+			...parent::options(),
 			'allowedAttrPrefixes' => static::$allowedAttrPrefixes,
 			'allowedAttrs'        => static::$allowedAttrs,
 			'allowedNamespaces'   => [],
@@ -118,6 +119,6 @@ class Html extends DomHandler
 			'allowedTags'         => static::$allowedTags,
 			'disallowedTags'      => static::$disallowedTags,
 			'urlAttrs'            => static::$urlAttrs,
-		]);
+		];
 	}
 }

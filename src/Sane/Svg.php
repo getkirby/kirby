@@ -468,13 +468,14 @@ class Svg extends Xml
 	 */
 	protected static function options(): array
 	{
-		return array_merge(parent::options(), [
+		return [
+			...parent::options(),
 			'allowedAttrPrefixes' => static::$allowedAttrPrefixes,
 			'allowedAttrs'        => static::$allowedAttrs,
 			'allowedNamespaces'   => static::$allowedNamespaces,
 			'allowedTags'         => static::$allowedTags,
 			'disallowedTags'      => static::$disallowedTags,
-		]);
+		];
 	}
 
 	/**

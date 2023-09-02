@@ -212,7 +212,7 @@ class Api
 	 */
 	public function clone(array $props = []): static
 	{
-		return new static(array_merge([
+		return new static([
 			'autentication' => $this->authentication,
 			'data'			=> $this->data,
 			'routes'		=> $this->routes,
@@ -220,8 +220,9 @@ class Api
 			'collections'   => $this->collections,
 			'models'		=> $this->models,
 			'requestData'   => $this->requestData,
-			'requestMethod' => $this->requestMethod
-		], $props));
+			'requestMethod' => $this->requestMethod,
+			...$props
+		]);
 	}
 
 	/**
@@ -577,13 +578,12 @@ class Api
 	protected function setRequestData(
 		array|null $requestData = []
 	): static {
-		$defaults = [
+		$this->requestData = [
 			'query' => [],
 			'body'  => [],
-			'files' => []
+			'files' => [],
+			...$requestData ?? []
 		];
-
-		$this->requestData = array_merge($defaults, (array)$requestData);
 		return $this;
 	}
 

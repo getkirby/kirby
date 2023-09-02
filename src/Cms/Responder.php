@@ -293,7 +293,7 @@ class Responder
 			}
 
 			// lazily inject (never override custom headers)
-			return array_merge($injectedHeaders, $this->headers);
+			return [...$injectedHeaders, ...$this->headers];
 		}
 
 		$this->headers = $headers;

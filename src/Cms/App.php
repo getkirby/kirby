@@ -192,10 +192,19 @@ class App
 		$api = [
 			'debug'          => $this->option('debug', false),
 			'authentication' => $extensions['authentication'] ?? include $root . '/authentication.php',
-			'data'           => $extensions['data']           ?? [],
-			'collections'    => array_merge($extensions['collections'] ?? [], include $root . '/collections.php'),
-			'models'         => array_merge($extensions['models']      ?? [], include $root . '/models.php'),
-			'routes'         => array_merge($routes, $extensions['routes'] ?? []),
+			'data'           => $extensions['data'] ?? [],
+			'collections'    => [
+				...$extensions['collections'] ?? [],
+				...include $root . '/collections.php'
+			],
+			'models'         => [
+				...$extensions['models'] ?? [],
+				...include $root . '/models.php'
+			],
+			'routes'         => [
+				...$routes,
+				...$extensions['routes'] ?? []
+			],
 			'kirby'          => $this,
 		];
 
@@ -286,7 +295,7 @@ class App
 	 */
 	protected function bakeRoots(array $roots = null): static
 	{
-		$roots = array_merge($this->core->roots(), (array)$roots);
+		$roots = [...$this->core->roots(), ...$roots ?? []];
 		$this->roots = Ingredients::bake($roots);
 		return $this;
 	}
@@ -298,7 +307,7 @@ class App
 	 */
 	protected function bakeUrls(array $urls = null): static
 	{
-		$urls = array_merge($this->core->urls(), (array)$urls);
+		$urls = [...$this->core->urls(), ...$urls ?? []];
 		$this->urls = Ingredients::bake($urls);
 		return $this;
 	}
@@ -363,13 +372,14 @@ class App
 	 */
 	public function collection(string $name, array $options = [])
 	{
-		return $this->collections()->get($name, array_merge($options, [
+		return $this->collections()->get($name, [
+			...$options,
 			'kirby' => $this,
 			'site'  => $site = $this->site(),
 			'pages' => new LazyValue(fn () => $site->children()),
 			'users' => new LazyValue(fn () => $this->users())
 
-		]));
+		]);
 	}
 
 	/**
@@ -763,10 +773,10 @@ class App
 			// lazily (only if they are not already set);
 			// the case-insensitive nature of headers will be
 			// handled by PHP's `header()` function
-			$data['headers'] = array_merge(
-				$response->headers(),
-				$data['headers']
-			);
+			$data['headers'] = [
+				...$response->headers(),
+				...$data['headers']
+			];
 
 			return new Response($data);
 		}
@@ -955,10 +965,10 @@ class App
 	public function markdown(string $text = null, array $options = null): string
 	{
 		// merge global options with local options
-		$options = array_merge(
-			$this->options['markdown'] ?? [],
-			(array)$options
-		);
+		$options = [
+			...$this->options['markdown'] ?? [],
+			...$options ?? []
+		];
 
 		return ($this->component('markdown'))($this, $text, $options);
 	}
@@ -1377,7 +1387,11 @@ class App
 
 		$registry = $this->extensions('routes');
 		$system   = $this->core->routes();
-		$routes   = array_merge($system['before'], $registry, $system['after']);
+		$routes   = [
+			...$system['before'],
+			...$registry,
+			...$system['after']
+		];
 
 		return $this->routes = $routes;
 	}
@@ -1525,7 +1539,7 @@ class App
 			$languageSmartypants = $this->language()->smartypants() ?? [];
 
 			if (empty($languageSmartypants) === false) {
-				$options = array_merge($options, $languageSmartypants);
+				$options = [...$options, ...$languageSmartypants];
 			}
 		}
 
@@ -1553,7 +1567,7 @@ class App
 		$snippet = ($this->component('snippet'))(
 			$this,
 			$name,
-			array_merge($this->data, $data),
+			[...$this->data, ...$data],
 			$slots
 		);
 

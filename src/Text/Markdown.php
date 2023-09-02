@@ -45,7 +45,7 @@ class Markdown
 	 */
 	public function __construct(array $options = [])
 	{
-		$this->options = array_merge($this->defaults(), $options);
+		$this->options = [...$this->defaults(), ...$options];
 	}
 
 	/**

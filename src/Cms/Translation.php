@@ -71,7 +71,7 @@ class Translation
 		// get the fallback array
 		$fallback = App::instance()->translation('en')->data();
 
-		return array_merge($fallback, $this->data);
+		return [...$fallback, ...$this->data];
 	}
 
 	/**
@@ -111,7 +111,7 @@ class Translation
 		array $inject = []
 	): static {
 		try {
-			$data = array_merge(Data::read($root), $inject);
+			$data = [...Data::read($root), ...$inject];
 		} catch (Exception) {
 			$data = [];
 		}

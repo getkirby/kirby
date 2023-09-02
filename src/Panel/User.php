@@ -147,11 +147,12 @@ class User extends Model
 	 */
 	protected function imageDefaults(): array
 	{
-		return array_merge(parent::imageDefaults(), [
+		return [
+			...parent::imageDefaults(),
 			'back'  => 'black',
 			'icon'  => 'user',
 			'ratio' => '1/1',
-		]);
+		];
 	}
 
 	/**
@@ -188,10 +189,11 @@ class User extends Model
 	{
 		$params['text'] ??= '{{ user.username }}';
 
-		return array_merge(parent::pickerData($params), [
+		return [
+			...parent::pickerData($params),
 			'email'    => $this->model->email(),
 			'username' => $this->model->username(),
-		]);
+		];
 	}
 
 	/**
@@ -221,25 +223,23 @@ class User extends Model
 		$user    = $this->model;
 		$account = $user->isLoggedIn();
 
-		return array_merge(
-			parent::props(),
-			$account ? [] : $this->prevNext(),
-			[
-				'blueprint' => $this->model->role()->name(),
-				'model' => [
-					'account'  => $account,
-					'avatar'   => $user->avatar()?->url(),
-					'content'  => $this->content(),
-					'email'    => $user->email(),
-					'id'       => $user->id(),
-					'language' => $this->translation()->name(),
-					'link'     => $this->url(true),
-					'name'     => $user->name()->toString(),
-					'role'     => $user->role()->title(),
-					'username' => $user->username(),
-				]
+		return [
+			...parent::props(),
+			...$account ? [] : $this->prevNext(),
+			'blueprint' => $this->model->role()->name(),
+			'model' => [
+				'account'  => $account,
+				'avatar'   => $user->avatar()?->url(),
+				'content'  => $this->content(),
+				'email'    => $user->email(),
+				'id'       => $user->id(),
+				'language' => $this->translation()->name(),
+				'link'     => $this->url(true),
+				'name'     => $user->name()->toString(),
+				'role'     => $user->role()->title(),
+				'username' => $user->username(),
 			]
-		);
+		];
 	}
 
 	/**

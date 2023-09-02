@@ -547,7 +547,7 @@ class Dom
 	 */
 	public function sanitize(array $options): array
 	{
-		$options = array_merge([
+		$options = [
 			'allowedAttrPrefixes' => [],
 			'allowedAttrs'        => true,
 			'allowedDataUris'     => true,
@@ -560,7 +560,8 @@ class Dom
 			'doctypeCallback'     => null,
 			'elementCallback'     => null,
 			'urlAttrs'            => ['href', 'src', 'xlink:href'],
-		], $options);
+			...$options
+		];
 
 		$errors = [];
 
@@ -841,14 +842,20 @@ class Dom
 
 				// custom check (if the attribute is still in the document)
 				if ($attr->ownerElement !== null && $options['attrCallback']) {
-					$errors = array_merge($errors, $options['attrCallback']($attr) ?? []);
+					$errors = [
+						...$errors,
+						...$options['attrCallback']($attr) ?? []
+					];
 				}
 			}
 		}
 
 		// custom check
 		if ($options['elementCallback']) {
-			$errors = array_merge($errors, $options['elementCallback']($element) ?? []);
+			$errors = [
+				...$errors,
+				...$options['elementCallback']($element) ?? []
+			];
 		}
 	}
 

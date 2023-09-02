@@ -53,7 +53,7 @@ class Fieldsets extends Items
 			// extract groups
 			if ($fieldset['type'] === 'group') {
 				$result    = static::createFieldsets($fieldset['fieldsets'] ?? []);
-				$fieldsets = array_merge($fieldsets, $result['fieldsets']);
+				$fieldsets = [...$fieldsets, ...$result['fieldsets']];
 				$label     = $fieldset['label'] ?? Str::ucfirst($type);
 
 				$groups[$type] = [

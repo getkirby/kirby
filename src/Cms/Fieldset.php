@@ -76,7 +76,7 @@ class Fieldset extends Item
 		$fields = $this->form($fields)->fields()->toArray();
 
 		// collect all fields
-		$this->fields = array_merge($this->fields, $fields);
+		$this->fields = [...$this->fields, ...$fields];
 
 		return $fields;
 	}

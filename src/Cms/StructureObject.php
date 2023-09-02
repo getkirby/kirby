@@ -77,9 +77,9 @@ class StructureObject extends Item
 	 */
 	public function toArray(): array
 	{
-		return array_merge(
-			$this->content()->toArray(),
-			parent::toArray()
-		);
+		return [
+			...$this->content()->toArray(),
+			...parent::toArray()
+		];
 	}
 }

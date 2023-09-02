@@ -123,7 +123,7 @@ class Content
 		}
 
 		// preserve existing fields
-		return array_merge($this->data, $data);
+		return [...$this->data, ...$data];
 	}
 
 	/**
@@ -238,7 +238,10 @@ class Content
 		bool $overwrite = false
 	): static {
 		$content = array_change_key_case((array)$content, CASE_LOWER);
-		$this->data = $overwrite === true ? $content : array_merge($this->data, $content);
+		$this->data = match ($overwrite) {
+			true    => $content,
+			default => [...$this->data, ...$content]
+		};
 
 		// clear cache of Field objects
 		$this->fields = [];

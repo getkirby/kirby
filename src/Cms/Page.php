@@ -173,13 +173,14 @@ class Page extends ModelWithContent
 	 */
 	public function __debugInfo(): array
 	{
-		return array_merge($this->toArray(), [
+		return [
+			...$this->toArray(),
 			'content'      => $this->content(),
 			'children'     => $this->children(),
 			'siblings'     => $this->siblings(),
 			'translations' => $this->translations(),
 			'files'        => $this->files(),
-		]);
+		];
 	}
 
 	/**
@@ -307,12 +308,13 @@ class Page extends ModelWithContent
 		string $contentType = 'html'
 	): array {
 		// create the template data
-		$data = array_merge($data, [
+		$data = [
+			...$data,
 			'kirby' => $kirby = $this->kirby(),
 			'site'  => $site  = $this->site(),
 			'pages' => new LazyValue(fn () => $site->children()),
 			'page'  => new LazyValue(fn () => $site->visit($this))
-		]);
+		];
 
 		// call the template controller if there's one.
 		$controllerData = $kirby->controller(
@@ -1196,7 +1198,8 @@ class Page extends ModelWithContent
 	 */
 	public function toArray(): array
 	{
-		return array_merge(parent::toArray(), [
+		return [
+			...parent::toArray(),
 			'children'  => $this->children()->keys(),
 			'files'     => $this->files()->keys(),
 			'id'        => $this->id(),
@@ -1209,7 +1212,7 @@ class Page extends ModelWithContent
 			'uid'       => $this->uid(),
 			'uri'       => $this->uri(),
 			'url'       => $this->url()
-		]);
+		];
 	}
 
 	/**

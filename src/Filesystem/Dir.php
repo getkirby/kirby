@@ -169,7 +169,10 @@ class Dir
 			$result[] = $entry;
 
 			if ($recursive === true && is_dir($root) === true) {
-				$result = array_merge($result, static::index($root, true, $ignore, $entry));
+				$result = [
+					...$result,
+					...static::index($root, true, $ignore, $entry)
+				];
 			}
 		}
 
@@ -506,7 +509,7 @@ class Dir
 
 		// create the ignore pattern
 		$ignore ??= static::$ignore;
-		$ignore   = array_merge($ignore, ['.', '..']);
+		$ignore   = [...$ignore, '.', '..'];
 
 		// scan for all files and dirs
 		$result = array_values((array)array_diff(scandir($dir), $ignore));

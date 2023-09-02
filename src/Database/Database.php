@@ -145,16 +145,15 @@ class Database
 	 */
 	public function connect(array|null $params = null): PDO|null
 	{
-		$defaults = [
+		$options = [
 			'database' => null,
 			'type'     => 'mysql',
 			'prefix'   => null,
 			'user'     => null,
 			'password' => null,
-			'id'       => uniqid()
+			'id'       => uniqid(),
+			...$params
 		];
-
-		$options = array_merge($defaults, $params);
 
 		// store the database information
 		$this->database = $options['database'];
@@ -345,14 +344,13 @@ class Database
 		array $bindings = [],
 		array $params = []
 	) {
-		$defaults = [
+		$options = [
 			'flag'     => null,
 			'method'   => 'fetchAll',
 			'fetch'    => Obj::class,
 			'iterator' => Collection::class,
+			...$params
 		];
-
-		$options = array_merge($defaults, $params);
 
 		if ($this->hit($query, $bindings) === false) {
 			return false;

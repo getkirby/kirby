@@ -154,7 +154,7 @@ class FileBlueprint extends Blueprint
 			$this->defaultTypes = true;
 		}
 
-		$accept = array_merge($defaults, $accept);
+		$accept = [...$defaults, ...$accept];
 
 		// normalize the MIME, extension and type from strings into arrays
 		if (is_string($accept['mime']) === true) {

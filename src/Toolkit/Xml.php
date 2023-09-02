@@ -306,7 +306,7 @@ class Xml
 		// collect attributes with each defined document namespace;
 		// also check for attributes without any namespace
 		$attributeArray = [];
-		foreach (array_merge([0 => null], array_keys($usedNamespaces)) as $namespace) {
+		foreach ([0 => null, ...array_keys($usedNamespaces)] as $namespace) {
 			$prefix = ($namespace) ? $namespace . ':' : '';
 			$attributes = $element->attributes($namespace, true);
 
@@ -326,7 +326,7 @@ class Xml
 		// check for children with each defined document namespace;
 		// also check for children without any namespace
 		$hasChildren = false;
-		foreach (array_merge([0 => null], array_keys($usedNamespaces)) as $namespace) {
+		foreach ([0 => null, ...array_keys($usedNamespaces)] as $namespace) {
 			$prefix = ($namespace) ? $namespace . ':' : '';
 			$children = $element->children($namespace, true);
 

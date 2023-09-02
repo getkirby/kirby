@@ -42,7 +42,7 @@ class Files extends Collection
 	{
 		// add a files collection
 		if ($object instanceof self) {
-			$this->data = array_merge($this->data, $object->data);
+			$this->data = [...$this->data, ...$object->data];
 
 		// add a file by id
 		} elseif (

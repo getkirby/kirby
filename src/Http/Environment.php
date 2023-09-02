@@ -156,13 +156,12 @@ class Environment
 		array $options = null,
 		array $info = null
 	): array {
-		$defaults = [
-			'cli'     => null,
-			'allowed' => null
-		];
-
 		$info  ??= $_SERVER;
-		$options = array_merge($defaults, $options ?? []);
+		$options = [
+			'cli'     => null,
+			'allowed' => null,
+			...$options ?? []
+		];
 
 		$this->info          = static::sanitize($info);
 		$this->cli           = $this->detectCli($options['cli']);

@@ -55,9 +55,10 @@ class Api extends BaseApi
 	 */
 	public function clone(array $props = []): static
 	{
-		return parent::clone(array_merge([
-			'kirby' => $this->kirby
-		], $props));
+		return parent::clone([
+			'kirby' => $this->kirby,
+			...$props
+		]);
 	}
 
 	/**
@@ -71,7 +72,7 @@ class Api extends BaseApi
 		$field = Form::for($model)->field($name);
 
 		$fieldApi = $this->clone([
-			'data'   => array_merge($this->data(), ['field' => $field]),
+			'data'   => [...$this->data(), 'field' => $field],
 			'routes' => $field->api(),
 		]);
 
@@ -192,9 +193,10 @@ class Api extends BaseApi
 	 */
 	public function session(array $options = []): Session
 	{
-		return $this->kirby->session(array_merge([
-			'detect' => true
-		], $options));
+		return $this->kirby->session([
+			'detect' => true,
+			...$options
+		]);
 	}
 
 	/**

@@ -63,11 +63,11 @@ class Remote
 		// update the defaults with App config if set;
 		// request the App instance lazily
 		if ($app = App::instance(null, true)) {
-			$defaults = array_merge($defaults, $app->option('remote', []));
+			$defaults = [...$defaults, ...$app->option('remote', [])];
 		}
 
 		// set all options
-		$this->options = array_merge($defaults, $options);
+		$this->options = [...$defaults, ...$options];
 
 		// add the url
 		$this->options['url'] = $url;
@@ -91,10 +91,10 @@ class Remote
 	): static {
 		return new static(
 			url: $arguments[0],
-			options: array_merge(
-				['method' => strtoupper($method)],
-				$arguments[1] ?? []
-			)
+			options: [
+				'method' => strtoupper($method),
+				...$arguments[1] ?? []
+			]
 		);
 	}
 
@@ -264,7 +264,7 @@ class Remote
 			'data'   => [],
 		];
 
-		$options = array_merge($defaults, $params);
+		$options = [...$defaults, ...$params];
 		$query   = http_build_query($options['data']);
 
 		if (empty($query) === false) {

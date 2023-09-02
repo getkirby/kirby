@@ -17,10 +17,11 @@ class RemoteTest extends TestCase
 		$this->defaults = Remote::$defaults;
 		IniStore::$data['curl.cainfo'] = false;
 
-		Remote::$defaults = array_merge($this->defaults, [
+		Remote::$defaults = [
+			...$this->defaults,
 			'test' => true,
 			'key'  => 'value'
-		]);
+		];
 	}
 
 	public function tearDown(): void

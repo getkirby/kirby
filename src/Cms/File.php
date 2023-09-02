@@ -124,10 +124,11 @@ class File extends ModelWithContent
 	 */
 	public function __debugInfo(): array
 	{
-		return array_merge($this->toArray(), [
+		return [
+			...$this->toArray(),
 			'content'  => $this->content(),
 			'siblings' => $this->siblings(),
-		]);
+		];
 	}
 
 	/**
@@ -196,7 +197,7 @@ class File extends ModelWithContent
 				// structure field
 				if ($field['type'] === 'structure') {
 					$fields    = $fromFields($field['fields']);
-					$templates = array_merge($templates, $fields);
+					$templates = [...$templates, ...$fields];
 					continue;
 				}
 			}
@@ -220,7 +221,7 @@ class File extends ModelWithContent
 			//  …from fields
 			if ($section->type() === 'fields') {
 				$fields    = $fromFields($section->fields());
-				$templates = array_merge($templates, $fields);
+				$templates = [...$templates, ...$fields];
 			}
 		}
 
@@ -353,10 +354,7 @@ class File extends ModelWithContent
 	 */
 	public function html(array $attr = []): string
 	{
-		return $this->asset()->html(array_merge(
-			['alt' => $this->alt()],
-			$attr
-		));
+		return $this->asset()->html(['alt' => $this->alt(), ...$attr]);
 	}
 
 	/**
@@ -660,10 +658,12 @@ class File extends ModelWithContent
 	 */
 	public function toArray(): array
 	{
-		return array_merge(parent::toArray(), $this->asset()->toArray(), [
+		return [
+			...parent::toArray(),
+			...$this->asset()->toArray(),
 			'id'       => $this->id(),
 			'template' => $this->template(),
-		]);
+		];
 	}
 
 	/**

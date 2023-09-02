@@ -392,7 +392,10 @@ trait UserActions
 			$credentials['email'] = Str::lower(trim($credentials['email']));
 		}
 
-		return $this->writeCredentials(array_merge($this->credentials(), $credentials));
+		return $this->writeCredentials([
+			...$this->credentials(),
+			...$credentials
+		]);
 	}
 
 	/**

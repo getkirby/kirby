@@ -64,7 +64,8 @@ class Site extends Model
 	 */
 	public function props(): array
 	{
-		return array_merge(parent::props(), [
+		return [
+			...parent::props(),
 			'blueprint' => 'site',
 			'model' => [
 				'content'    => $this->content(),
@@ -72,7 +73,7 @@ class Site extends Model
 				'previewUrl' => $this->model->previewUrl(),
 				'title'      => $this->model->title()->toString(),
 			]
-		]);
+		];
 	}
 
 	/**

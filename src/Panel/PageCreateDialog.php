@@ -171,10 +171,10 @@ class PageCreateDialog
 	 */
 	public function fields(): array
 	{
-		return array_merge(
-			$this->coreFields(),
-			$this->customFields()
-		);
+		return [
+			...$this->coreFields(),
+			...$this->customFields()
+		];
 	}
 
 	/**

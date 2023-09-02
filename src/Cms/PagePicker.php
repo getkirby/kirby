@@ -29,12 +29,13 @@ class PagePicker extends Picker
 	 */
 	public function defaults(): array
 	{
-		return array_merge(parent::defaults(), [
+		return [
+			...parent::defaults(),
 			// Page ID of the selected parent. Used to navigate
 			'parent' => null,
 			// enable/disable subpage navigation
 			'subpages' => true,
-		]);
+		];
 	}
 
 	/**

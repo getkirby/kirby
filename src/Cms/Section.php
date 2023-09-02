@@ -76,11 +76,12 @@ class Section extends Component
 
 	public function toResponse(): array
 	{
-		return array_merge([
+		return [
 			'status' => 'ok',
 			'code'   => 200,
 			'name'   => $this->name,
-			'type'   => $this->type
-		], $this->toArray());
+			'type'   => $this->type,
+			...$this->toArray()
+		];
 	}
 }

@@ -120,11 +120,12 @@ class Site extends ModelWithContent
 	 */
 	public function __debugInfo(): array
 	{
-		return array_merge($this->toArray(), [
+		return [
+			...$this->toArray(),
 			'content'  => $this->content(),
 			'children' => $this->children(),
 			'files'    => $this->files(),
-		]);
+		];
 	}
 
 	/**
@@ -429,7 +430,8 @@ class Site extends ModelWithContent
 	 */
 	public function toArray(): array
 	{
-		return array_merge(parent::toArray(), [
+		return [
+			...parent::toArray(),
 			'children'   => $this->children()->keys(),
 			'errorPage'  => $this->errorPage()?->id() ?? false,
 			'files'      => $this->files()->keys(),
@@ -437,7 +439,7 @@ class Site extends ModelWithContent
 			'page'       => $this->page()?->id() ?? false,
 			'title'      => $this->title()->value(),
 			'url'        => $this->url(),
-		]);
+		];
 	}
 
 	/**

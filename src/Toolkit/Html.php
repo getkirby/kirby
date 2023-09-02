@@ -203,12 +203,13 @@ class Html extends Xml
 		}
 
 		$email = Str::encode($email);
-		$attr  = array_merge([
+		$attr  = [
 			'href' => [
 				'value'  => 'mailto:' . $email,
 				'escape' => false
-			]
-		], $attr);
+			],
+			...$attr
+		];
 
 		// add rel=noopener to target blank links to improve security
 		$attr['rel'] = static::rel($attr['rel'] ?? null, $attr['target'] ?? null);
@@ -298,7 +299,7 @@ class Html extends Xml
 			$src .= '?file=' . $file;
 		}
 
-		return static::tag('script', '', array_merge($attr, ['src' => $src]));
+		return static::tag('script', '', [...$attr, 'src' => $src]);
 	}
 
 	/**
@@ -309,7 +310,7 @@ class Html extends Xml
 	 */
 	public static function iframe(string $src, array $attr = []): string
 	{
-		return static::tag('iframe', '', array_merge(['src' => $src], $attr));
+		return static::tag('iframe', '', ['src' => $src, ...$attr]);
 	}
 
 	/**
@@ -321,10 +322,11 @@ class Html extends Xml
 	 */
 	public static function img(string $src, array $attr = []): string
 	{
-		$attr = array_merge([
+		$attr = [
 			'src' => $src,
-			'alt' => ' '
-		], $attr);
+			'alt' => ' ',
+			...$attr
+		];
 
 		return static::tag('img', '', $attr);
 	}
@@ -350,7 +352,7 @@ class Html extends Xml
 		string|array|null $text = null,
 		array $attr = []
 	): string {
-		$attr = array_merge(['href' => $href], $attr);
+		$attr = ['href' => $href, ...$attr];
 
 		if (empty($text) === true) {
 			$text = $attr['href'];

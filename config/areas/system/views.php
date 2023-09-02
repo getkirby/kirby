@@ -47,7 +47,10 @@ return [
 				$version      = $updateStatus?->toArray() ?? $plugin->version() ?? '–';
 
 				if ($updateStatus !== null) {
-					$exceptions = array_merge($exceptions, $updateStatus->exceptionMessages());
+					$exceptions = [
+						...$exceptions,
+						...$updateStatus->exceptionMessages()
+					];
 				}
 
 				return [

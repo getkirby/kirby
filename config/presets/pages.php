@@ -54,5 +54,5 @@ return function (array $props) {
 	// cleaning up
 	unset($props['drafts'], $props['unlisted'], $props['listed'], $props['templates']);
 
-	return array_merge($props, ['sections' => $sections]);
+	return [...$props, 'sections' => $sections];
 };

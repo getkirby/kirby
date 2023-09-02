@@ -92,7 +92,7 @@ class Uri
 			$props['username'] = $props['user'] ?? null;
 			$props['password'] = $props['pass'] ?? null;
 
-			$props = array_merge($props, $inject);
+			$props = [...$props, ...$inject];
 		}
 
 		// parse the path and extract params

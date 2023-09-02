@@ -367,10 +367,14 @@ class Blueprint
 				];
 			}
 
-			$columns[$columnKey] = array_merge($columnProps, [
+			$columns[$columnKey] = [
+				...$columnProps,
 				'width'    => $columnProps['width'] ?? '1/1',
-				'sections' => $this->normalizeSections($tabName, $columnProps['sections'] ?? [])
-			]);
+				'sections' => $this->normalizeSections(
+					$tabName,
+					$columnProps['sections'] ?? []
+				)
+			];
 		}
 
 		return $columns;
@@ -432,12 +436,13 @@ class Blueprint
 		}
 
 		// add some useful defaults
-		return array_merge($props, [
+		return [
+			...$props,
 			'label' => $props['label'] ?? ucfirst($name),
 			'name'  => $name,
 			'type'  => $type,
 			'width' => $props['width'] ?? '1/1',
-		]);
+		];
 	}
 
 	/**
@@ -500,7 +505,11 @@ class Blueprint
 					$index  = array_search($fieldName, array_keys($fields));
 					$before = array_slice($fields, 0, $index);
 					$after  = array_slice($fields, $index + 1);
-					$fields = array_merge($before, $fieldProps['fields'] ?? [], $after);
+					$fields = [
+						...$before,
+						...$fieldProps['fields'] ?? [],
+						...$after
+					];
 				} else {
 					unset($fields[$fieldName]);
 				}
@@ -545,7 +554,7 @@ class Blueprint
 			}
 		}
 
-		return array_merge($defaults, $options);
+		return [...$defaults, ...$options];
 	}
 
 	/**
@@ -570,10 +579,11 @@ class Blueprint
 			// inject all section extensions
 			$sectionProps = $this->extend($sectionProps);
 
-			$sections[$sectionName] = $sectionProps = array_merge($sectionProps, [
+			$sections[$sectionName] = $sectionProps = [
+				...$sectionProps,
 				'name' => $sectionName,
 				'type' => $type = $sectionProps['type'] ?? $sectionName
-			]);
+			];
 
 			if (empty($type) === true || is_string($type) === false) {
 				$sections[$sectionName] = [
@@ -623,7 +633,7 @@ class Blueprint
 		}
 
 		// store all normalized sections
-		$this->sections = array_merge($this->sections, $sections);
+		$this->sections = [...$this->sections, ...$sections];
 
 		return $sections;
 	}
@@ -653,13 +663,17 @@ class Blueprint
 			$tabProps = $this->convertFieldsToSections($tabName, $tabProps);
 			$tabProps = $this->convertSectionsToColumns($tabName, $tabProps);
 
-			$tabs[$tabName] = array_merge($tabProps, [
-				'columns' => $this->normalizeColumns($tabName, $tabProps['columns'] ?? []),
+			$tabs[$tabName] = [
+				...$tabProps,
+				'columns' => $this->normalizeColumns(
+					$tabName,
+					$tabProps['columns'] ?? []
+				),
 				'icon'    => $tabProps['icon']  ?? null,
 				'label'   => $this->i18n($tabProps['label'] ?? ucfirst($tabName)),
 				'link'    => $this->model->panel()->url(true) . '/?tab=' . $tabName,
 				'name'    => $tabName,
-			]);
+			];
 		}
 
 		return $this->tabs = $tabs;

@@ -62,7 +62,7 @@ return [
 	],
 	'computed' => [
 		'toolbar' => function () {
-			return array_merge([
+			return [
 				'inline' => true,
 				'marks'  => $this->marks ?? [
 					'bold',
@@ -75,8 +75,9 @@ return [
 					'email',
 					'|',
 					'clear'
-				]
-			], $this->toolbar ?? []);
+				],
+				...$this->toolbar ?? []
+			];
 		},
 		'value' => function () {
 			$value = trim($this->value ?? '');

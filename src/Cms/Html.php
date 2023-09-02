@@ -65,9 +65,10 @@ class Html extends \Kirby\Toolkit\Html
 
 		$url  = ($kirby->component('css'))($kirby, $url, $options);
 		$url  = Url::to($url);
-		$attr = array_merge((array)$options, [
+		$attr = [
+			...(array)$options,
 			'href' => $url
-		]);
+		];
 
 		return '<link ' . static::attr($attr) . '>';
 	}
@@ -122,7 +123,7 @@ class Html extends \Kirby\Toolkit\Html
 
 		$url  = ($kirby->component('js'))($kirby, $url, $options);
 		$url  = Url::to($url);
-		$attr = array_merge((array)$options, ['src' => $url]);
+		$attr = [...(array)$options, 'src' => $url];
 
 		return '<script ' . static::attr($attr) . '></script>';
 	}

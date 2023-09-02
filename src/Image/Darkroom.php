@@ -26,7 +26,7 @@ class Darkroom
 	public function __construct(
 		protected array $settings = []
 	) {
-		$this->settings = array_merge($this->defaults(), $settings);
+		$this->settings = [...$this->defaults(), ...$settings];
 	}
 
 	/**
@@ -69,7 +69,7 @@ class Darkroom
 	 */
 	protected function options(array $options = []): array
 	{
-		$options = array_merge($this->settings, $options);
+		$options = [...$this->settings, ...$options];
 
 		// normalize the crop option
 		if ($options['crop'] === true) {

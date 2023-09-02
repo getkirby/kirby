@@ -76,8 +76,10 @@ class Page extends Model
 	{
 		$page     = $this->model;
 		$request  = $page->kirby()->request();
-		$defaults = $request->get(['view', 'sort', 'delete']);
-		$options  = array_merge($defaults, $options);
+		$options  = [
+			...$request->get(['view', 'sort', 'delete']),
+			...$options
+		];
 
 		$permissions = $this->options(['preview']);
 		$view        = $options['view'] ?? 'view';
@@ -202,7 +204,10 @@ class Page extends Model
 			$defaults['icon'] = $icon;
 		}
 
-		return array_merge(parent::imageDefaults(), $defaults);
+		return [
+			...parent::imageDefaults(),
+			...$defaults
+		];
 	}
 
 	/**
@@ -235,11 +240,12 @@ class Page extends Model
 	{
 		$params['text'] ??= '{{ page.title }}';
 
-		return array_merge(parent::pickerData($params), [
+		return [
+			...parent::pickerData($params),
 			'dragText'    => $this->dragText(),
 			'hasChildren' => $this->model->hasChildren(),
 			'url'         => $this->model->url()
-		]);
+		];
 	}
 
 	/**
@@ -326,27 +332,25 @@ class Page extends Model
 	{
 		$page = $this->model;
 
-		return array_merge(
-			parent::props(),
-			$this->prevNext(),
-			[
-				'blueprint' => $page->intendedTemplate()->name(),
-				'model' => [
-					'content'    => $this->content(),
-					'id'         => $page->id(),
-					'link'       => $this->url(true),
-					'parent'     => $page->parentModel()->panel()->url(true),
-					'previewUrl' => $page->previewUrl(),
-					'status'     => $page->status(),
-					'title'      => $page->title()->toString(),
-				],
-				'status' => function () use ($page) {
-					if ($status = $page->status()) {
-						return $page->blueprint()->status()[$status] ?? null;
-					}
-				},
-			]
-		);
+		return [
+			...parent::props(),
+			...$this->prevNext(),
+			'blueprint' => $page->intendedTemplate()->name(),
+			'model' => [
+				'content'    => $this->content(),
+				'id'         => $page->id(),
+				'link'       => $this->url(true),
+				'parent'     => $page->parentModel()->panel()->url(true),
+				'previewUrl' => $page->previewUrl(),
+				'status'     => $page->status(),
+				'title'      => $page->title()->toString(),
+			],
+			'status' => function () use ($page) {
+				if ($status = $page->status()) {
+					return $page->blueprint()->status()[$status] ?? null;
+				}
+			},
+		];
 	}
 
 	/**

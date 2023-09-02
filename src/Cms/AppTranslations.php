@@ -32,7 +32,7 @@ trait AppTranslations
 				$this->multilang() === true &&
 				$language = $this->languages()->find($locale)
 			) {
-				$data = array_merge($data, $language->translations());
+				$data = [...$data, ...$language->translations()];
 			}
 
 
@@ -163,7 +163,7 @@ trait AppTranslations
 
 		// inject current language translations
 		if ($language = $this->language($locale)) {
-			$inject = array_merge($inject, $language->translations());
+			$inject = [...$inject, ...$language->translations()];
 		}
 
 		// load from disk instead
@@ -189,10 +189,10 @@ trait AppTranslations
 
 				// merges language translations with extensions translations
 				if (empty($languageTranslations) === false) {
-					$translations[$languageCode] = array_merge(
-						$translations[$languageCode] ?? [],
-						$languageTranslations
-					);
+					$translations[$languageCode] = [
+						...$translations[$languageCode] ?? [],
+						...$languageTranslations
+					];
 				}
 			}
 		}
