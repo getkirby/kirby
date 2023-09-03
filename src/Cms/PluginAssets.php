@@ -5,7 +5,6 @@ namespace Kirby\Cms;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Http\Response;
-use Kirby\Toolkit\Str;
 
 /**
  * Plugin assets are automatically copied/linked
