@@ -176,7 +176,7 @@ export default (panel) => {
 					// if upload should start immediately
 					this.set(options);
 					this.select(event.target.files);
-					this.start();
+					this.submit();
 				} else {
 					this.open(event.target.files, options);
 				}
