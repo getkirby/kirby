@@ -50,15 +50,15 @@ Array.prototype.sortBy = function (sortBy) {
 	const field = options[0];
 	const direction = options[1] ?? "asc";
 
+	const sorter = sort({
+		desc: direction === "desc",
+		insensitive: true
+	});
+
 	return this.sort((a, b) => {
-		const valueA = String(a[field]).toLowerCase();
-		const valueB = String(b[field]).toLowerCase();
-
-		if (direction === "desc") {
-			return sort(valueB, valueA);
-		}
-
-		return sort(valueA, valueB);
+		const valueA = String(a[field]);
+		const valueB = String(b[field]);
+		return sorter(valueA, valueB);
 	});
 };
 
