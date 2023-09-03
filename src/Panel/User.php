@@ -82,7 +82,7 @@ class User extends Model
 
 		$result[] = [
 			'dialog'   => $url . '/changeLanguage',
-			'icon'     => 'globe',
+			'icon'     => 'translate',
 			'text'     => I18n::translate('user.changeLanguage'),
 			'disabled' => $this->isDisabledDropdownOption('changeLanguage', $options, $permissions)
 		];
