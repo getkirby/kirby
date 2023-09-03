@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Http\Response;
+use Kirby\Toolkit\Str;
 
 /**
  * Plugin assets are automatically copied/linked
@@ -25,21 +26,18 @@ class PluginAssets
 	public static function clean(string $pluginName): void
 	{
 		if ($plugin = App::instance()->plugin($pluginName)) {
-			$root   = $plugin->root();
 			$media  = $plugin->mediaRoot();
-			$assets = Dir::index($media, true);
+			$assets = $plugin->assets();
+			$files  = Dir::index($media, true);
+			$files  = array_diff($files, array_keys($assets));
 
-			foreach ($assets as $asset) {
-				$original = $root . '/' . $asset;
+			foreach ($files as $file) {
+				$root = $media . '/' . $file;
 
-				if (file_exists($original) === false) {
-					$assetRoot = $media . '/' . $asset;
-
-					if (is_file($assetRoot) === true) {
-						F::remove($assetRoot);
-					} else {
-						Dir::remove($assetRoot);
-					}
+				if (is_file($root) === true) {
+					F::remove($root);
+				} else {
+					Dir::remove($root);
 				}
 			}
 		}
@@ -54,10 +52,8 @@ class PluginAssets
 		string $path
 	): Response|null {
 		if ($plugin = App::instance()->plugin($pluginName)) {
-			$assets = $plugin->assets();
-
 			if (
-				($asset = $assets[$path] ?? null) &&
+				($asset = $plugin->asset($path)) &&
 				F::exists($asset, $plugin->root()) === true
 			) {
 				// do some spring cleaning for older files
