@@ -63,10 +63,7 @@ class Plugin
 	}
 
 	/**
-	 * Returns a specific
-	 *
-	 * @param string $name
-	 * @return string|null
+	 * Returns the absolute path to a specific asset
 	 */
 	public function asset(string $path): string|null
 	{
@@ -92,13 +89,11 @@ class Plugin
 			// normalize array: use relative path as
 			// key when no key is defined
 			foreach ($assets as $key => $asset) {
-				unset($assets[$key]);
-
 				if (is_int($key) === true) {
+					unset($assets[$key]);
 					$key = Str::after($asset, $this->root() . '/');
+					$assets[$key] = $asset;
 				}
-
-				$assets[$key] = $asset;
 			}
 		}
 
@@ -109,7 +104,10 @@ class Plugin
 			$root   = $this->root() . '/assets';
 
 			foreach (Dir::index($root, true) as $asset) {
-				$assets['assets/' . $asset] = $root . '/' . $asset;
+				$path = $root . '/' . $asset;
+				if (is_file($path) === true) {
+					$assets['assets/' . $asset] = $path;
+				}
 			}
 		}
 
