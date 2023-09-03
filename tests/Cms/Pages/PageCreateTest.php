@@ -198,7 +198,7 @@ class PageCreateTest extends TestCase
 		]);
 
 		try {
-			 $mother->createChild([
+			$mother->createChild([
 				'slug'     => 'child',
 				'template' => 'uncreatable-page'
 			]);
