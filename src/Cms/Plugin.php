@@ -2,11 +2,13 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Composer\InstalledVersions;
 use Exception;
 use Kirby\Cms\System\UpdateStatus;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
@@ -25,6 +27,7 @@ use Throwable;
  */
 class Plugin
 {
+	protected array $assets;
 	protected array $extends;
 	protected string $name;
 	protected string $root;
@@ -57,6 +60,58 @@ class Plugin
 	public function __call(string $key, array $arguments = null): mixed
 	{
 		return $this->info()[$key] ?? null;
+	}
+
+	/**
+	 * Returns the absolute path to a specific asset
+	 */
+	public function asset(string $path): string|null
+	{
+		return $this->assets()[$path] ?? null;
+	}
+
+	/**
+	 * Returns an array with all asset files for the plugin
+	 * where the key is the relative path and the value the absolute path
+	 */
+	public function assets(): array
+	{
+		if (isset($this->assets) === true) {
+			return $this->assets;
+		}
+
+		// get assets defined in the plugin extension
+		if ($assets = $this->extends['assets'] ?? null) {
+			if ($assets instanceof Closure) {
+				$assets = $assets();
+			}
+
+			// normalize array: use relative path as
+			// key when no key is defined
+			foreach ($assets as $key => $asset) {
+				if (is_int($key) === true) {
+					unset($assets[$key]);
+					$key = Str::after($asset, $this->root() . '/');
+					$assets[$key] = $asset;
+				}
+			}
+		}
+
+		// fallback: if no assets are defined in the plugin extension,
+		// use all files in the plugin's `assets` directory
+		if ($assets === null) {
+			$assets = [];
+			$root   = $this->root() . '/assets';
+
+			foreach (Dir::index($root, true) as $asset) {
+				$path = $root . '/' . $asset;
+				if (is_file($path) === true) {
+					$assets['assets/' . $asset] = $path;
+				}
+			}
+		}
+
+		return $this->assets = $assets;
 	}
 
 	/**

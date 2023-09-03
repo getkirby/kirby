@@ -9,60 +9,90 @@ use PHPUnit\Framework\TestCase;
 class PluginAssetsTest extends TestCase
 {
 	protected $app;
-	protected $fixtures;
+	protected $tmp = __DIR__ . '/tmp/PluginAssetsTest';
 
 	public function setUp(): void
 	{
-		$this->fixtures = __DIR__ . '/fixtures/PluginAssetsTest';
+		$a = $this->tmp . '/site/plugins/a';
+		F::write($a . '/index.php', '<?php Kirby::plugin("getkirby/a", []);');
+		F::write($a . '/assets/test.css', 'test');
 
-		Dir::remove($this->fixtures);
+		$b = $this->tmp . '/site/plugins/b';
+		F::write($b . '/index.php', '<?php Kirby::plugin("getkirby/b", ["assets" => ["' . $b . '/foo/bar.css"]]);');
+		F::write($b . '/foo/bar.css', 'test');
 
-		$plugin = $this->fixtures . '/site/plugins/test';
-
-		F::write($plugin . '/index.php', '<?php Kirby::plugin("test/test", []);');
-		F::write($plugin . '/assets/test.css', 'test');
-		F::write($plugin . '/assets/test.mjs', 'test');
+		$c = $this->tmp . '/site/plugins/c';
+		F::write($c . '/index.php', '<?php Kirby::plugin("getkirby/c", ["assets" => ["test.css" => "' . $c . '/foo/bar.css"]]);');
+		F::write($c . '/foo/bar.css', 'test');
 
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->fixtures
+				'index' => $this->tmp
 			]
 		]);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->fixtures);
+		Dir::remove($this->tmp);
 	}
 
 	public function testClean()
 	{
-		// create orphan
-		F::write($orphan = $this->fixtures . '/media/plugins/test/test/orphan.css', 'test');
+		// create orphans
+		F::write(
+			$a = $this->tmp . '/media/plugins/getkirby/a/orphan.css',
+			'test'
+		);
+		F::write(
+			$b= $this->tmp . '/media/plugins/getkirby/a/assets/orphan.css',
+			'test'
+		);
 
-		$this->assertFileExists($orphan);
+		$this->assertFileExists($a);
+		$this->assertFileExists($b);
 
-		PluginAssets::clean('test/test');
+		PluginAssets::clean('getkirby/a');
 
-		$this->assertFileDoesNotExist($orphan);
+		$this->assertFileDoesNotExist($a);
+		$this->assertFileDoesNotExist($b);
 	}
 
 	public function testResolve()
 	{
-		$response = PluginAssets::resolve('test/test', 'test.css');
+		$response = PluginAssets::resolve('getkirby/b', 'foo/bar.css');
+		$media    = $this->tmp . '/media/plugins/getkirby/b/foo/bar.css';
 
-		$this->assertTrue(is_link($this->fixtures . '/media/plugins/test/test/test.css'));
+		$this->assertTrue(is_link($media));
+		$this->assertSame(200, $response->code());
+		$this->assertSame('text/css', $response->type());
+
+		$response = PluginAssets::resolve('getkirby/b', 'assets/foo.css');
+		$media    = $this->tmp . '/media/plugins/getkirby/b/assets/foo.css';
+		$this->assertNull($response);
+		$this->assertFalse(is_link($media));
+
+		$response = PluginAssets::resolve('getkirby/c', 'test.css');
+		$media    = $this->tmp . '/media/plugins/getkirby/c/test.css';
+
+		$this->assertTrue(is_link($media));
 		$this->assertSame(200, $response->code());
 		$this->assertSame('text/css', $response->type());
 	}
 
-	public function testCallPluginAsset()
+	public function testResolveAutomaticFromAssetsFolder()
 	{
-		$response = App::instance()->call('media/plugins/test/test/test.mjs');
+		$response = PluginAssets::resolve('getkirby/a', 'assets/test.css');
+		$media    = $this->tmp . '/media/plugins/getkirby/a/assets/test.css';
 
+		$this->assertTrue(is_link($media));
 		$this->assertSame(200, $response->code());
-		$this->assertSame('text/javascript', $response->type());
-		$this->assertSame('test', $response->body());
+		$this->assertSame('text/css', $response->type());
+
+		$response = PluginAssets::resolve('getkirby/a', 'assets/foo.css');
+		$media    = $this->tmp . '/media/plugins/getkirby/a/assets/foo.css';
+		$this->assertNull($response);
+		$this->assertFalse(is_link($media));
 	}
 
 	public function testCallPluginAssetInvalid()
