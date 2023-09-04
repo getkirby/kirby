@@ -56,8 +56,8 @@ Array.prototype.sortBy = function (sortBy) {
 	});
 
 	return this.sort((a, b) => {
-		const valueA = String(a[field]);
-		const valueB = String(b[field]);
+		const valueA = String(a[field] ?? "");
+		const valueB = String(b[field] ?? "");
 		return sorter(valueA, valueB);
 	});
 };
