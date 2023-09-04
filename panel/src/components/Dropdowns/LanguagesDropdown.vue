@@ -4,7 +4,7 @@
 			:dropdown="true"
 			:responsive="true"
 			:text="code"
-			icon="globe"
+			icon="translate"
 			size="sm"
 			variant="filled"
 			@click="$refs.languages.toggle()"
