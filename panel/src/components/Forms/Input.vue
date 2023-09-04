@@ -2,7 +2,6 @@
 	<div
 		:data-disabled="disabled"
 		:data-invalid="!novalidate && isInvalid"
-		:data-theme="theme"
 		:data-type="type"
 		class="k-input"
 	>
@@ -49,7 +48,6 @@ export const props = {
 		autofocus: Boolean,
 		type: String,
 		icon: [String, Boolean],
-		theme: String,
 		novalidate: {
 			type: Boolean,
 			default: false

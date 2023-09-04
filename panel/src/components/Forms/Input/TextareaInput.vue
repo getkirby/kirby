@@ -1,10 +1,5 @@
 <template>
-	<div
-		:data-over="over"
-		:data-size="size"
-		:data-theme="theme"
-		class="k-textarea-input"
-	>
+	<div :data-over="over" :data-size="size" class="k-textarea-input">
 		<div class="k-textarea-input-wrapper">
 			<k-toolbar
 				v-if="buttons && !disabled"
