@@ -390,6 +390,13 @@ class Auth
 
 		// validate the user and log in to the session
 		$user = $this->validatePassword($email, $password);
+
+		// @codeCoverageIgnoreStart
+		if ($user->id() === 'kirby') {
+			throw new PermissionException('The almighty user "kirby" cannot be used for login, only for raising permissions in code via `$kirby->impersonate()`');
+		}
+		// @codeCoverageIgnoreEnd
+
 		$user->loginPasswordless($options);
 
 		// clear the status cache
