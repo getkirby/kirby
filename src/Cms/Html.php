@@ -23,10 +23,12 @@ class Html extends \Kirby\Toolkit\Html
 	 * @since 3.7.0
 	 *
 	 * @param string|array $url Relative or absolute URLs, an array of URLs or `@auto` for automatic template css loading
-	 * @param string|array $options Pass an array of attributes for the link tag or a media attribute string
+	 * @param string|array|null $options Pass an array of attributes for the link tag or a media attribute string
 	 */
-	public static function css($url, $options = null): string|null
-	{
+	public static function css(
+		string|array $url,
+		string|array|null $options = null
+	): string|null {
 		if (is_array($url) === true) {
 			$links = A::map($url, fn ($url) => static::css($url, $options));
 			return implode(PHP_EOL, $links);
