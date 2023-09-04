@@ -121,8 +121,8 @@ class Mime
 	 */
 	public static function fix(
 		string $file,
-		string $mime = null,
-		string $extension = null
+		string|null $mime = null,
+		string|null $extension = null
 	): string|null {
 		// fixing map
 		$map = [

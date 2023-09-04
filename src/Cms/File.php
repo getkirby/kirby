@@ -487,7 +487,7 @@ class File extends ModelWithContent
 	public function modified(
 		string|IntlDateFormatter|null $format = null,
 		string|null $handler = null,
-		string $languageCode = null
+		string|null $languageCode = null
 	): mixed {
 		$file     = $this->modifiedFile();
 		$content  = $this->modifiedContent($languageCode);

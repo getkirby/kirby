@@ -149,7 +149,7 @@ class Media
 	public static function unpublish(
 		string $directory,
 		File $file,
-		string $ignore = null
+		string|null $ignore = null
 	): bool {
 		if (is_dir($directory) === false) {
 			return true;

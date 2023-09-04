@@ -70,7 +70,7 @@ class Html extends \Kirby\Toolkit\Html
 	 * @param array $attr Additional attributes for the a tag.
 	 */
 	public static function link(
-		string $href = null,
+		string|null $href = null,
 		string|array $text = null,
 		array $attr = []
 	): string {
@@ -83,7 +83,7 @@ class Html extends \Kirby\Toolkit\Html
 	 */
 	public static function js(
 		string|array $url,
-		string|array|bool $options = null
+		string|array|bool|null $options = null
 	): string|null {
 		if (is_array($url) === true) {
 			$scripts = A::map($url, fn ($url) => static::js($url, $options));

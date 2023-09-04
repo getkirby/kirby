@@ -226,7 +226,7 @@ Db::$queries['delete'] = function (string $table, $where = null): bool {
  * @param string $table The name of the table which should be queried
  * @param mixed $where An optional WHERE clause
  */
-Db::$queries['count'] = function (string $table, $where = null): int {
+Db::$queries['count'] = function (string $table, mixed $where = null): int {
 	return Db::table($table)->where($where)->count();
 };
 

@@ -444,7 +444,7 @@ class AppErrorsTest extends TestCase
 	 *
 	 * @param string|\Whoops\Handler\CallbackHandler $path
 	 */
-	protected function _getBufferedContent($path): false|string
+	protected function _getBufferedContent(string|\Whoops\Handler\CallbackHandler $path): false|string
 	{
 		ob_start();
 

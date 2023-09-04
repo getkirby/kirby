@@ -125,7 +125,7 @@ abstract class ModelWithContent implements Identifiable
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the language for the given code does not exist
 	 */
-	public function content(string $languageCode = null): Content
+	public function content(string|null $languageCode = null): Content
 	{
 		// single language support
 		if ($this->kirby()->multilang() === false) {

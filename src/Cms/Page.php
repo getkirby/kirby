@@ -820,9 +820,9 @@ class Page extends ModelWithContent
 	 * Returns the last modification date of the page
 	 */
 	public function modified(
-		string $format = null,
-		string $handler = null,
-		string $languageCode = null
+		string|null $format = null,
+		string|null $handler = null,
+		string|null $languageCode = null
 	): int|string {
 		$identifier = $this->isDraft() === true ? 'changes' : 'published';
 
@@ -1067,7 +1067,7 @@ class Page extends ModelWithContent
 	/**
 	 * Search all pages within the current page
 	 */
-	public function search(string $query = null, array $params = []): Pages
+	public function search(string|null $query = null, array $params = []): Pages
 	{
 		return $this->index()->search($query, $params);
 	}

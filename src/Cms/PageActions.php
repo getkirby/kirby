@@ -106,7 +106,7 @@ trait PageActions
 	 * @return $this|static
 	 * @throws \Kirby\Exception\LogicException If a draft is being sorted or the directory cannot be moved
 	 */
-	public function changeNum(int $num = null): static
+	public function changeNum(int|null $num = null): static
 	{
 		if ($this->isDraft() === true) {
 			throw new LogicException('Drafts cannot change their sorting number');
@@ -150,7 +150,7 @@ trait PageActions
 	 */
 	public function changeSlug(
 		string $slug,
-		string $languageCode = null
+		string|null $languageCode = null
 	): static {
 		// always sanitize the slug
 		$slug = Str::slug($slug);
@@ -209,7 +209,7 @@ trait PageActions
 	 */
 	protected function changeSlugForLanguage(
 		string $slug,
-		string $languageCode = null
+		string|null $languageCode = null
 	): static {
 		$language = $this->kirby()->language($languageCode);
 
@@ -247,7 +247,7 @@ trait PageActions
 	 * @param int|null $position Optional sorting number
 	 * @throws \Kirby\Exception\InvalidArgumentException If an invalid status is being passed
 	 */
-	public function changeStatus(string $status, int $position = null): static
+	public function changeStatus(string $status, int|null $position = null): static
 	{
 		return match ($status) {
 			'draft'    => $this->changeStatusToDraft(),
@@ -272,7 +272,7 @@ trait PageActions
 	/**
 	 * @return $this|static
 	 */
-	protected function changeStatusToListed(int $position = null): static
+	protected function changeStatusToListed(int|null $position = null): static
 	{
 		// create a sorting number for the page
 		$num = $this->createNum($position);
@@ -320,7 +320,7 @@ trait PageActions
 	 *
 	 * @return $this|static
 	 */
-	public function changeSort(int $position = null): static
+	public function changeSort(int|null $position = null): static
 	{
 		return $this->changeStatus('listed', $position);
 	}
@@ -353,7 +353,7 @@ trait PageActions
 	 */
 	public function changeTitle(
 		string $title,
-		string $languageCode = null
+		string|null $languageCode = null
 	): static {
 		$arguments = ['page' => $this, 'title' => $title, 'languageCode' => $languageCode];
 		return $this->commit('changeTitle', $arguments, function ($page, $title, $languageCode) {
@@ -659,7 +659,7 @@ trait PageActions
 	 * Duplicates the page with the given
 	 * slug and optionally copies all files
 	 */
-	public function duplicate(string $slug = null, array $options = []): static
+	public function duplicate(string|null $slug = null, array $options = []): static
 	{
 		// create the slug for the duplicate
 		$slug = Str::slug($slug ?? $this->slug() . '-' . Str::slug(I18n::translate('page.duplicate.appendix')));
@@ -875,8 +875,8 @@ trait PageActions
 	 * @internal
 	 */
 	public function save(
-		array $data = null,
-		string $languageCode = null,
+		array|null $data = null,
+		string|null $languageCode = null,
 		bool $overwrite = false
 	): static {
 		$page = parent::save($data, $languageCode, $overwrite);
@@ -933,8 +933,8 @@ trait PageActions
 	 * Updates the page data
 	 */
 	public function update(
-		array $input = null,
-		string $languageCode = null,
+		array|null $input = null,
+		string|null $languageCode = null,
 		bool $validate = false
 	): static {
 		if ($this->isDraft() === true) {

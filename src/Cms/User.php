@@ -164,7 +164,7 @@ class User extends ModelWithContent
 	 */
 	public function contentFileData(
 		array $data,
-		string $languageCode = null
+		string|null $languageCode = null
 	): array {
 		// remove stuff that has nothing to do in the text files
 		unset(
@@ -461,8 +461,8 @@ class User extends ModelWithContent
 	 */
 	public function modified(
 		string $format = 'U',
-		string $handler = null,
-		string $languageCode = null
+		string|null $handler = null,
+		string|null $languageCode = null
 	): int|string {
 		$modifiedContent = $this->storage()->modified('published', $languageCode);
 		$modifiedIndex   = F::modified($this->root() . '/index.php');
