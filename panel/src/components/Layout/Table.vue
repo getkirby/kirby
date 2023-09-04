@@ -54,69 +54,71 @@
 				</tr>
 
 				<!-- Rows -->
-				<tr v-for="(row, rowIndex) in values" v-else :key="rowIndex">
-					<!-- Index & drag handle -->
-					<td
-						v-if="hasIndexColumn"
-						:data-sortable="sortable && row.sortable !== false"
-						data-mobile
-						class="k-table-index-column"
-					>
-						<slot
-							name="index"
-							v-bind="{
-								row,
-								rowIndex
-							}"
+				<template v-else>
+					<tr v-for="(row, rowIndex) in values" :key="rowIndex">
+						<!-- Index & drag handle -->
+						<td
+							v-if="hasIndexColumn"
+							:data-sortable="sortable && row.sortable !== false"
+							data-mobile
+							class="k-table-index-column"
 						>
-							<div class="k-table-index" v-text="index + rowIndex" />
-						</slot>
+							<slot
+								name="index"
+								v-bind="{
+									row,
+									rowIndex
+								}"
+							>
+								<div class="k-table-index" v-text="index + rowIndex" />
+							</slot>
 
-						<k-sort-handle
-							v-if="sortable && row.sortable !== false"
-							class="k-table-sort-handle"
-						/>
-					</td>
-
-					<!-- Cell -->
-					<k-table-cell
-						v-for="(column, columnIndex) in columns"
-						:key="rowIndex + '-' + columnIndex"
-						:column="column"
-						:field="fields[columnIndex]"
-						:row="row"
-						:mobile="column.mobile"
-						:value="row[columnIndex]"
-						:style="'width:' + width(column.width)"
-						class="k-table-column"
-						@click.native="
-							onCell({
-								row,
-								rowIndex,
-								column,
-								columnIndex
-							})
-						"
-						@input="
-							onCellUpdate({
-								columnIndex,
-								rowIndex,
-								value: $event
-							})
-						"
-					/>
-
-					<!-- Options -->
-					<td v-if="hasOptions" data-mobile class="k-table-options-column">
-						<slot name="options" v-bind="{ row, rowIndex, options }">
-							<k-options-dropdown
-								:options="row.options ?? options"
-								:text="(row.options ?? options).length > 1"
-								@option="onOption($event, row, rowIndex)"
+							<k-sort-handle
+								v-if="sortable && row.sortable !== false"
+								class="k-table-sort-handle"
 							/>
-						</slot>
-					</td>
-				</tr>
+						</td>
+
+						<!-- Cell -->
+						<k-table-cell
+							v-for="(column, columnIndex) in columns"
+							:key="rowIndex + '-' + columnIndex"
+							:column="column"
+							:field="fields[columnIndex]"
+							:row="row"
+							:mobile="column.mobile"
+							:value="row[columnIndex]"
+							:style="'width:' + width(column.width)"
+							class="k-table-column"
+							@click.native="
+								onCell({
+									row,
+									rowIndex,
+									column,
+									columnIndex
+								})
+							"
+							@input="
+								onCellUpdate({
+									columnIndex,
+									rowIndex,
+									value: $event
+								})
+							"
+						/>
+
+						<!-- Options -->
+						<td v-if="hasOptions" data-mobile class="k-table-options-column">
+							<slot name="options" v-bind="{ row, rowIndex }">
+								<k-options-dropdown
+									:options="row.options ?? options"
+									:text="(row.options ?? options).length > 1"
+									@option="onOption($event, row, rowIndex)"
+								/>
+							</slot>
+						</td>
+					</tr>
+				</template>
 			</k-draggable>
 		</table>
 
@@ -237,6 +239,7 @@ export default {
 		 */
 		hasOptions() {
 			return (
+				this.$scopedSlots.options ||
 				this.options?.length > 0 ||
 				Object.values(this.values).filter((row) => row.options).length > 0
 			);

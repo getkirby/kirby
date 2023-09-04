@@ -1,18 +1,19 @@
 <template>
 	<div :data-layout="layout" class="k-button-group">
 		<slot v-if="$slots.default" />
-		<k-button
-			v-for="(button, index) in buttons"
-			v-else
-			:key="index"
-			v-bind="{
-				variant,
-				theme,
-				size,
-				responsive,
-				...button
-			}"
-		/>
+		<template v-else>
+			<k-button
+				v-for="(button, index) in buttons"
+				:key="index"
+				v-bind="{
+					variant,
+					theme,
+					size,
+					responsive,
+					...button
+				}"
+			/>
+		</template>
 	</div>
 </template>
 
