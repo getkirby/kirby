@@ -4,7 +4,7 @@
 			v-for="(item, index) in state"
 			:key="index"
 			:aria-expanded="item.open"
-			:aria-current="item.id === current"
+			:aria-current="item.value === current"
 		>
 			<p
 				class="k-tree-branch"

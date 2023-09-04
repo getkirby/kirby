@@ -77,7 +77,7 @@
 					<k-page-tree
 						:current="getPageUUID(value)"
 						:root="false"
-						@select="onInput($event.id)"
+						@select="selectModel($event)"
 					/>
 				</div>
 			</div>
@@ -89,7 +89,7 @@
 			>
 				<k-file-browser
 					:selected="getFileUUID(value)"
-					@select="onInput($event.id)"
+					@select="selectModel($event)"
 				/>
 			</div>
 		</k-input>
@@ -235,7 +235,7 @@ export default {
 				this.linkValue = parts.link;
 
 				if (value !== old) {
-					this.preview();
+					this.preview(parts);
 				}
 			},
 			immediate: true
@@ -288,12 +288,13 @@ export default {
 		},
 		isPageUUID(value) {
 			return (
+				value === "site://" ||
 				value.startsWith("page://") === true ||
 				value.startsWith("/@/page/") === true
 			);
 		},
 		onInput(link) {
-			const value = link.trim();
+			const value = link?.trim() ?? "";
 
 			if (!value.length) {
 				return this.$emit("input", "");
@@ -309,11 +310,15 @@ export default {
 				this.expanded = false;
 			}
 		},
-		async preview() {
-			if (this.linkType === "page" && this.linkValue) {
-				this.model = await this.previewForPage(this.linkValue);
-			} else if (this.linkType === "file" && this.linkValue) {
-				this.model = await this.previewForFile(this.linkValue);
+		async preview({ type, link }) {
+			if (type === "page" && link) {
+				this.model = await this.previewForPage(link);
+			} else if (type === "file" && link) {
+				this.model = await this.previewForFile(link);
+			} else if (link) {
+				this.model = {
+					label: link
+				};
 			} else {
 				this.model = null;
 			}
@@ -333,6 +338,12 @@ export default {
 			}
 		},
 		async previewForPage(id) {
+			if (id === "site://") {
+				return {
+					label: this.$t("view.site")
+				};
+			}
+
 			try {
 				const page = await this.$api.pages.get(id, {
 					select: "title"
@@ -344,6 +355,15 @@ export default {
 			} catch (e) {
 				return null;
 			}
+		},
+		selectModel(model) {
+			if (model.uuid) {
+				this.onInput(model.uuid);
+				return;
+			}
+
+			this.switchType("url");
+			this.onInput(model.url);
 		},
 		switchType(type) {
 			if (type === this.linkType) {
