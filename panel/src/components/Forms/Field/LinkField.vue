@@ -77,7 +77,7 @@
 					<k-page-tree
 						:current="getPageUUID(value)"
 						:root="false"
-						@select="selectPage($event)"
+						@select="selectModel($event)"
 					/>
 				</div>
 			</div>
@@ -89,7 +89,7 @@
 			>
 				<k-file-browser
 					:selected="getFileUUID(value)"
-					@select="selectFile($event)"
+					@select="selectModel($event)"
 				/>
 			</div>
 		</k-input>
@@ -288,6 +288,7 @@ export default {
 		},
 		isPageUUID(value) {
 			return (
+				value === "site://" ||
 				value.startsWith("page://") === true ||
 				value.startsWith("/@/page/") === true
 			);
@@ -337,6 +338,12 @@ export default {
 			}
 		},
 		async previewForPage(id) {
+			if (id === "site://") {
+				return {
+					label: this.$t("view.site")
+				};
+			}
+
 			try {
 				const page = await this.$api.pages.get(id, {
 					select: "title"
@@ -349,23 +356,14 @@ export default {
 				return null;
 			}
 		},
-		selectPage(page) {
-			if (page.uuid) {
-				this.onInput(page.uuid);
+		selectModel(model) {
+			if (model.uuid) {
+				this.onInput(model.uuid);
 				return;
 			}
 
 			this.switchType("url");
-			this.onInput(page.url);
-		},
-		selectFile(file) {
-			if (file.uuid) {
-				this.onInput(file.uuid);
-				return;
-			}
-
-			this.switchType("url");
-			this.onInput(file.url);
+			this.onInput(model.url);
 		},
 		switchType(type) {
 			if (type === this.linkType) {
