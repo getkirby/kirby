@@ -3,7 +3,7 @@
 		<div class="k-file-browser-layout">
 			<aside ref="tree" class="k-file-browser-tree">
 				<k-page-tree
-					:current="page?.id"
+					:current="page?.value"
 					@select="selectPage"
 					@toggleBranch="togglePage"
 				/>

@@ -11,7 +11,6 @@ export default {
 			type: Boolean
 		},
 		current: {
-			default: "/site",
 			type: String
 		},
 		move: {

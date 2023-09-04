@@ -17,6 +17,9 @@ return [
 			if ($parent === null) {
 				$site  = $kirby->site();
 				$panel = $site->panel();
+			 	$uuid  = $site->uuid()?->toString();
+			 	$url   = $site->url();
+				$value = $uuid ?? $url;
 
 				return [
 					[
@@ -27,8 +30,9 @@ return [
 						'id'          => '/',
 						'label'       => I18n::translate('view.site'),
 						'open'        => false,
-						'url'         => $site->url(),
-						'uuid'        => $site->uuid()?->toString(),
+						'url'         => $url,
+						'uuid'        => $uuid,
+						'value'       => $value
 					]
 				];
 			}
@@ -38,6 +42,9 @@ return [
 
 			foreach ($parent->childrenAndDrafts()->filterBy('isListable', true) as $child) {
 				$panel = $child->panel();
+			 	$uuid  = $child->uuid()?->toString();
+			 	$url   = $child->url();
+				$value = $uuid ?? $url;
 
 				$pages[] = [
 					'children'    => $panel->url(true),
@@ -47,8 +54,9 @@ return [
 					'id'          => $child->id(),
 					'open'        => false,
 					'label'       => $child->title()->value(),
-					'url'         => $child->url(),
-					'uuid'        => $child->uuid()?->toString(),
+					'url'         => $url,
+					'uuid'        => $uuid,
+					'value'       => $value
 				];
 			}
 
