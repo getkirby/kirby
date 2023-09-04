@@ -1,6 +1,7 @@
 import { uuid } from "@/helpers/string";
 import State from "./state.js";
 import listeners from "./listeners.js";
+import queue from "@/helpers/queue.js";
 import upload from "@/helpers/upload.js";
 import { extension, name, niceSize } from "@/helpers/file.js";
 
@@ -19,8 +20,8 @@ export const defaults = () => {
 /**
  * Basic overview of the chain of methods:
  *
- * pick   ‾\                     /‾ done
- *          -- (open) -- start --
+ * pick   ‾\                      /‾ done
+ *          -- (open) -- submit --
  * select  _/                     \_ cancel
  */
 export default (panel) => {
@@ -89,6 +90,13 @@ export default (panel) => {
 					x.src.lastModified === file.src.lastModified
 			);
 		},
+		hasUniqueName(file) {
+			return (
+				this.files.filter(
+					(f) => f.name === file.name && f.extension === file.extension
+				).length < 2
+			);
+		},
 		file(file) {
 			const url = URL.createObjectURL(file);
 
@@ -127,7 +135,11 @@ export default (panel) => {
 				component: "k-upload-dialog",
 				on: {
 					cancel: () => this.cancel(),
-					submit: () => this.start()
+					submit: async () => {
+						panel.dialog.isLoading = true;
+						await this.submit();
+						panel.dialog.isLoading = false;
+					}
 				}
 			};
 
@@ -164,7 +176,7 @@ export default (panel) => {
 					// if upload should start immediately
 					this.set(options);
 					this.select(event.target.files);
-					this.start();
+					this.submit();
 				} else {
 					this.open(event.target.files, options);
 				}
@@ -245,23 +257,13 @@ export default (panel) => {
 
 			return this.state();
 		},
-		start() {
+		async submit() {
 			if (!this.url) {
 				throw new Error("The upload URL is missing");
 			}
 
-			// nothing to upload
-			if (this.files.length === 0) {
-				return;
-			}
-
-			// if no uncompleted files are left, be done
-			if (this.files.length === this.completed.length) {
-				return this.done();
-			}
-
-			// gather upload queue for all files
-			const queue = [];
+			// gather upload tasks for all files
+			const files = [];
 
 			for (const file of this.files) {
 				// skip file if alreay completed
@@ -270,11 +272,7 @@ export default (panel) => {
 				}
 
 				// ensure that all files have a unique name
-				if (
-					this.files.filter(
-						(f) => f.name === file.name && f.extension === file.extension
-					).length > 1
-				) {
+				if (this.hasUniqueName(file) === false) {
 					file.error = panel.t("error.file.name.unique");
 					continue;
 				}
@@ -285,7 +283,7 @@ export default (panel) => {
 				file.progress = 0;
 
 				// add file to upload queue
-				queue.push(file);
+				files.push(async () => await this.upload(file));
 
 				// if there is sort data, increment in the loop for next file
 				if (this.attributes?.sort !== undefined) {
@@ -293,55 +291,36 @@ export default (panel) => {
 				}
 			}
 
-			// async uploader function:
-			// uploads the next file in the queue
-			// and triggers itself again after completion
-			const uploader = async () => {
-				if (queue.length === 0) {
-					return;
-				}
+			await queue(files);
 
-				try {
-					const file = queue.shift();
-					await upload(file.src, {
-						attributes: this.attributes,
-						headers: {
-							"x-csrf": panel.system.csrf
-						},
-						filename: file.name + "." + file.extension,
-						url: this.url,
-						error: (xhr, src, response) => {
-							panel.error(response, false);
+			// if no uncompleted files are left, be done
+			if (this.files.length === this.completed.length) {
+				return this.done();
+			}
+		},
+		async upload(file) {
+			try {
+				const response = await upload(file.src, {
+					attributes: this.attributes,
+					headers: { "x-csrf": panel.system.csrf },
+					filename: file.name + "." + file.extension,
+					url: this.url,
+					progress: (xhr, src, progress) => {
+						file.progress = progress;
+					}
+				});
 
-							// store the error message to show it in
-							// the dialog for example
-							file.error = response.message;
+				file.completed = true;
+				file.model = response.data;
+			} catch (error) {
+				panel.error(error, false);
 
-							// reset the progress bar on error
-							file.progress = 0;
-						},
-						progress: (xhr, src, progress) => {
-							file.progress = progress;
-						},
-						success: (xhr, src, response) => {
-							file.completed = true;
-							file.model = response.data;
+				// store the error message to show it in
+				// the dialog for example
+				file.error = error.message;
 
-							if (this.files.length === this.completed.length) {
-								this.done();
-							}
-						}
-					});
-				} finally {
-					uploader();
-				}
-			};
-
-			// initialize the uploader for the first up to 20 files,
-			// uploader function will then trigger itself after completion
-			// until the full queue has been processed
-			for (let i = 0; i < Math.min(queue.length, 20); i++) {
-				uploader();
+				// reset the progress bar on error
+				file.progress = 0;
 			}
 		}
 	};
