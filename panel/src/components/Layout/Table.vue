@@ -474,13 +474,10 @@ td.k-table-index-column {
 
 .k-table-row-ghost {
 	background: var(--color-white);
-	box-shadow: var(--shadow-outline);
-	outline: 2px solid var(--color-black);
+	outline: var(--outline);
 	border-radius: var(--rounded);
 	margin-bottom: 2px;
 	cursor: grabbing;
-	cursor: -moz-grabbing;
-	cursor: -webkit-grabbing;
 }
 
 .k-table-row-fallback {
