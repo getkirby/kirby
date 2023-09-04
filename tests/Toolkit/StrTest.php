@@ -1282,6 +1282,25 @@ EOT;
 	}
 
 	/**
+	 * @covers ::template
+	 */
+	public function testTemplateStartEnd()
+	{
+		$this->assertSame(
+			'From a to b',
+			Str::template('From {{ b }} to {{ a }}', ['a' => 'b', 'b' => 'a'])
+		);
+		$this->assertSame(
+			'From a to b',
+			Str::template('From { b } to { a }', ['a' => 'b', 'b' => 'a'])
+		);
+		$this->assertSame(
+			'From a to b',
+			Str::template('From dbf to daf', ['a' => 'b', 'b' => 'a'], ['start' => 'd', 'end' => 'f'])
+		);
+	}
+
+	/**
 	 * @covers ::toBytes
 	 */
 	public function testToBytes()

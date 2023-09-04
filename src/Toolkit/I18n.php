@@ -120,11 +120,7 @@ class I18n
 
 		$template = static::translate($key, $fallback, $locale);
 
-		return Str::template($template, $replace, [
-			'fallback' => '-',
-			'start'    => '{',
-			'end'      => '}'
-		]);
+		return Str::template($template, $replace, ['fallback' => '-']);
 	}
 
 	/**
@@ -332,6 +328,6 @@ class I18n
 			$count = static::formatNumber($count, $locale);
 		}
 
-		return str_replace('{{ count }}', (string)$count, $message);
+		return Str::template($message, compact('count'));
 	}
 }
