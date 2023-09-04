@@ -57,7 +57,7 @@
 					:rows="paginatedItems"
 					:sortable="isSortable"
 					:data-invalid="isInvalid"
-					@cell="jump($event.rowIndex, $event.columnIndex)"
+					@cell="open($event.row, $event.columnIndex)"
 					@input="save"
 					@option="option"
 					@paginate="paginate"
@@ -145,7 +145,7 @@ export default {
 	},
 	data() {
 		return {
-			items: this.toItems(this.value),
+			items: [],
 			page: 1
 		};
 	},
@@ -306,10 +306,13 @@ export default {
 		}
 	},
 	watch: {
-		value(value) {
-			if (value !== this.items) {
-				this.items = this.toItems(value);
-			}
+		value: {
+			handler(value) {
+				if (value !== this.items) {
+					this.items = this.toItems(value);
+				}
+			},
+			immediate: true
 		}
 	},
 	methods: {
@@ -324,19 +327,21 @@ export default {
 
 			value = value ?? this.$helper.field.form(this.fields);
 
-			let index = 0;
+			// add a unique id, if it's not already defined
+			value._id = value._id ?? this.$helper.uuid();
 
 			if (this.prepend === true) {
 				this.items.unshift(value);
-				index = 0;
 			} else {
 				this.items.push(value);
-				index = this.items.length - 1;
 			}
 
 			this.save();
-			this.open(index);
+
+			// opening the drawer only works once the input event has been emitted
+			this.open(value);
 		},
+
 		close() {
 			this.$panel.drawer.close(this._uid);
 		},
@@ -364,25 +369,32 @@ export default {
 
 			return fields;
 		},
-		/**
-		 * Opens form for a specific row at index
-		 * with field focussed
-		 * @param {number} index
-		 * @param {string} field
-		 */
-		jump(index, field) {
-			this.open(index + this.pagination.offset, field);
+
+		findIndex(item) {
+			return this.items.findIndex((row) => row._id === item._id);
+		},
+
+		navigate(item, step) {
+			const index = this.findIndex(item);
+
+			if (this.disabled === true || index === -1) {
+				return;
+			}
+
+			this.open(this.items[index + step], null, true);
 		},
 
 		/**
 		 * Edit the structure field entry at `index` position
 		 * in the structure form with field `field` focused
 		 * @public
-		 * @param {number} index
+		 * @param {object} item
 		 * @param {string} field
 		 */
-		open(index, field, replace = false) {
-			if (this.disabled === true || !this.items[index]) {
+		open(item, field, replace = false) {
+			const index = this.findIndex(item);
+
+			if (this.disabled === true || index === -1) {
 				return false;
 			}
 
@@ -399,22 +411,28 @@ export default {
 						}
 					},
 					title: this.label,
-					value: this.items[index]
+					value: item
 				},
 				replace: replace,
 				on: {
 					input: (value) => {
+						const index = this.findIndex(item);
+
+						// update the prev/next navigation
+						this.$panel.drawer.props.next = this.items[index + 1];
+						this.$panel.drawer.props.prev = this.items[index - 1];
+
 						this.$set(this.items, index, value);
 						this.save();
 					},
 					next: () => {
-						this.open(index + 1, null, true);
+						this.navigate(item, 1);
 					},
 					prev: () => {
-						this.open(index - 1, null, true);
+						this.navigate(item, -1);
 					},
 					remove: () => {
-						this.remove(index);
+						this.remove(item);
 					}
 				}
 			});
@@ -429,15 +447,18 @@ export default {
 		option(option, row, rowIndex) {
 			switch (option) {
 				case "remove":
-					this.remove(rowIndex + this.pagination.offset);
+					this.remove(row);
 					break;
 
 				case "duplicate":
-					this.add(this.items[rowIndex + this.pagination.offset]);
+					this.add({
+						...row,
+						_id: this.$helper.uuid()
+					});
 					break;
 
 				case "edit":
-					this.open(rowIndex);
+					this.open(row);
 					break;
 			}
 		},
@@ -449,11 +470,14 @@ export default {
 		paginate({ page }) {
 			this.page = page;
 		},
+
 		/**
 		 * Remove current entry
 		 */
-		remove(index) {
-			if (this.disabled || index === null) {
+		remove(item) {
+			const index = this.findIndex(item);
+
+			if (this.disabled || index === -1) {
 				return;
 			}
 
@@ -474,8 +498,6 @@ export default {
 						if (this.paginatedItems.length === 0 && this.page > 1) {
 							this.page--;
 						}
-
-						this.items = this.sort(this.items);
 					}
 				}
 			});
@@ -528,6 +550,13 @@ export default {
 			if (Array.isArray(value) === false) {
 				return [];
 			}
+
+			value = value.map((row) => {
+				return {
+					_id: row._id ?? this.$helper.uuid(),
+					...row
+				};
+			});
 
 			return this.sort(value);
 		}
