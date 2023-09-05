@@ -25,6 +25,7 @@
 					:autofocus="true"
 					:placeholder="$t('search') + ' …'"
 					:value="searchterm"
+					icon="search"
 					type="text"
 					class="k-models-section-search"
 					@input="searchterm = $event"
@@ -249,13 +250,8 @@ export default {
 }
 
 .k-models-section-search.k-input {
-	--input-placeholder: var(--color-gray-600);
-
+	--input-color-back: var(--color-gray-300);
+	--input-color-border: transparent;
 	margin-bottom: var(--spacing-3);
-	background: var(--color-gray-300);
-	padding: var(--spacing-2) var(--spacing-3);
-	height: var(--field-input-height);
-	border-radius: var(--rounded);
-	font-size: var(--text-sm);
 }
 </style>
