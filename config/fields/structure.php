@@ -183,7 +183,12 @@ return [
 		$data = [];
 
 		foreach ($value as $row) {
-			$data[] = $this->form($row)->content();
+			$row = $this->form($row)->content();
+
+			// remove frontend helper id
+			unset($row['_id']);
+
+			$data[] = $row;
 		}
 
 		return $data;
