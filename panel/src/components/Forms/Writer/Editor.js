@@ -217,6 +217,9 @@ export default class Editor extends Emitter {
 	createView() {
 		return new EditorView(this.element, {
 			dispatchTransaction: this.dispatchTransaction.bind(this),
+			attributes: {
+				class: "k-text"
+			},
 			editable: () => this.options.editable,
 			handlePaste: (view, event) => {
 				if (typeof this.events["paste"] === "function") {
