@@ -6,6 +6,7 @@
 		:spellcheck="false"
 		:value="content.text"
 		class="k-block-type-markdown-input"
+		font="monospace"
 		type="textarea"
 		@input="update({ text: $event })"
 	/>
@@ -32,12 +33,9 @@ export default {
 
 <style>
 .k-block-type-markdown-input {
-	position: relative;
-	font-size: var(--text-sm);
-	line-height: 1.5em;
-	background: var(--color-background);
-	border-radius: var(--rounded);
-	padding: 0.5rem 0.5rem 0;
-	font-family: var(--font-mono);
+	--input-color-back: var(--color-light);
+	--input-color-border: none;
+	--input-outline-focus: none;
+	--input-padding-multiline: var(--spacing-3);
 }
 </style>

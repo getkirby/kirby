@@ -133,6 +133,7 @@ export default {
 	--input-color-icon: currentColor;
 	--input-color-placeholder: var(--color-gray-600);
 	--input-color-text: currentColor;
+	--input-font-family: var(--font-sans);
 	--input-font-size: var(--text-sm);
 	--input-height: 2.25rem;
 	--input-leading: 1;
@@ -162,6 +163,7 @@ export default {
 	color: var(--input-color-text);
 	min-height: var(--input-height);
 	box-shadow: var(--input-shadow);
+	font-family: var(--input-font-family);
 	font-size: var(--input-font-size);
 }
 .k-input:focus-within {
