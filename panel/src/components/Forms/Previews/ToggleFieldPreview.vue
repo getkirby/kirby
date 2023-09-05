@@ -26,7 +26,9 @@ export default {
 </script>
 
 <style>
-.k-toggle-field-preview {
-	padding: 0 0.25rem 0 0.75rem;
+.k-toggle-field-preview .k-input {
+	--input-outline-focus: 0;
+	--input-padding: var(--spacing-3);
+	--input-shadow: none;
 }
 </style>

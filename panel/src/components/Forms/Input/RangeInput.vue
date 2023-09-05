@@ -1,5 +1,5 @@
 <template>
-	<label class="k-range-input">
+	<label :data-disabled="disabled" class="k-range-input">
 		<k-range
 			ref="input"
 			v-bind="{
@@ -147,8 +147,10 @@ export default {
 .k-range-input {
 	--range-track-height: 1px;
 	--range-track-back: var(--color-gray-300);
+	--range-tooltip-back: var(--color-black);
 	display: flex;
 	align-items: center;
+	padding: var(--field-input-padding);
 }
 .k-range-input input[type="range"]:focus {
 	outline: 0;
@@ -164,7 +166,7 @@ export default {
 	line-height: 1;
 	text-align: center;
 	border-radius: var(--rounded-sm);
-	background: var(--color-black);
+	background: var(--range-tooltip-back);
 	margin-inline-start: 1rem;
 	padding: 0 0.25rem;
 	white-space: nowrap;
@@ -177,17 +179,14 @@ export default {
 	height: 0;
 	transform: translateY(-50%);
 	border-block: 3px solid transparent;
-	border-inline-end: 3px solid var(--color-black);
+	border-inline-end: 3px solid var(--range-tooltip-back);
 	content: "";
 }
 .k-range-input-tooltip > * {
-	padding: 4px;
+	padding: var(--spacing-1);
 }
 
-[data-disabled="true"] .k-range-input-tooltip {
-	background: var(--color-gray-600);
-}
-[data-disabled="true"] .k-range-input-tooltip::after {
-	border-inline-end: 5px solid var(--color-gray-600);
+.k-range-input[data-disabled="true"] {
+	--range-tooltip-back: var(--color-gray-600);
 }
 </style>

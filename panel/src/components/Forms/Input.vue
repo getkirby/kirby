@@ -2,11 +2,14 @@
 	<div
 		:data-disabled="disabled"
 		:data-invalid="!novalidate && isInvalid"
-		:data-theme="theme"
 		:data-type="type"
 		class="k-input"
 	>
-		<span v-if="$slots.before || before" class="k-input-before" @click="focus">
+		<span
+			v-if="$slots.before || before"
+			class="k-input-description k-input-before"
+			@click="focus"
+		>
 			<slot name="before">{{ before }}</slot>
 		</span>
 		<span class="k-input-element" @click.stop="focus">
@@ -20,7 +23,11 @@
 				/>
 			</slot>
 		</span>
-		<span v-if="$slots.after || after" class="k-input-after" @click="focus">
+		<span
+			v-if="$slots.after || after"
+			class="k-input-description k-input-after"
+			@click="focus"
+		>
 			<slot name="after">{{ after }}</slot>
 		</span>
 		<span v-if="$slots.icon || icon" class="k-input-icon" @click="focus">
@@ -41,7 +48,6 @@ export const props = {
 		autofocus: Boolean,
 		type: String,
 		icon: [String, Boolean],
-		theme: String,
 		novalidate: {
 			type: Boolean,
 			default: false
@@ -120,124 +126,94 @@ export default {
 </script>
 
 <style>
+:root {
+	--input-color-back: var(--color-white);
+	--input-color-border: var(--color-border);
+	--input-color-description: var(--color-text-dimmed);
+	--input-color-icon: currentColor;
+	--input-color-placeholder: var(--color-gray-600);
+	--input-color-text: currentColor;
+	--input-font-size: var(--text-sm);
+	--input-height: 2.25rem;
+	--input-leading: 1;
+	--input-outline-focus: var(--outline);
+	--input-padding: var(--spacing-2);
+	--input-padding-multiline: 0.475rem var(--input-padding);
+	--input-rounded: var(--rounded);
+	--input-shadow: none;
+}
+
+@media screen and (max-width: 30rem) {
+	:root {
+		--input-font-size: var(--text-md);
+		--input-padding-multiline: 0.375rem var(--input-padding);
+	}
+}
+
 /* Base Design */
 .k-input {
 	display: flex;
 	align-items: center;
-	line-height: 1;
+	line-height: var(--input-leading);
 	border: 0;
-	outline: 0;
-	background: none;
+	background: var(--input-color-back);
+	border-radius: var(--input-rounded);
+	outline: 1px solid var(--input-color-border);
+	color: var(--input-color-text);
+	min-height: var(--input-height);
+	box-shadow: var(--input-shadow);
+	font-size: var(--input-font-size);
 }
+.k-input:focus-within {
+	outline: var(--input-outline-focus);
+}
+
+/* Element container */
 .k-input-element {
 	flex-grow: 1;
 }
+
+/* Icon */
 .k-input-icon {
+	color: var(--input-color-icon);
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	line-height: 0;
+	width: var(--input-height);
+}
+.k-input-icon-button {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
 }
 
-/* Disabled state */
-.k-input[data-disabled="true"] {
-	pointer-events: none;
+/* Before and After Text */
+.k-input-description {
+	color: var(--input-color-description);
+	padding-inline: var(--input-padding);
+}
+.k-input-before {
+	padding-inline-end: 0;
+}
+.k-input-after {
+	padding-inline-start: 0;
 }
 
-[data-disabled="true"] .k-input-icon {
-	color: var(--color-gray-600);
-}
-
-.k-input[data-theme="field"] {
-	line-height: 1;
-	outline: var(--field-input-border);
-	background: var(--field-input-background);
-	border-radius: var(--rounded);
-}
-.k-input[data-theme="field"]:focus-within {
-	outline: var(--outline);
-}
-
-.k-input[data-theme="field"][data-disabled="true"] {
-	background: var(--color-background);
-}
-
-.k-input[data-theme="field"] .k-input-icon {
-	width: var(--field-input-height);
-}
-.k-input[data-theme="field"] .k-input-icon,
-.k-input[data-theme="field"] .k-input-before,
-.k-input[data-theme="field"] .k-input-after {
+/* Icon and description alignment */
+.k-input :where(.k-input-description, .k-input-icon) {
 	align-self: stretch;
 	display: flex;
 	align-items: center;
 	flex-shrink: 0;
 }
-.k-input[data-theme="field"] .k-input-before,
-.k-input[data-theme="field"] .k-input-after {
-	padding: 0 var(--field-input-padding);
-}
-.k-input[data-theme="field"] .k-input-before {
-	color: var(--field-input-color-before);
-	padding-inline-end: 0;
-}
-.k-input[data-theme="field"] .k-input-after {
-	color: var(--field-input-color-after);
-	padding-inline-start: 0;
-}
 
-.k-input[data-theme="field"] .k-input-icon > .k-dropdown {
-	width: 100%;
-	height: 100%;
-}
-.k-input[data-theme="field"] .k-input-icon-button {
-	width: 100%;
-	height: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-shrink: 0;
-}
-
-.k-input[data-theme="field"] .k-number-input,
-.k-input[data-theme="field"] .k-select-input,
-.k-input[data-theme="field"] .k-text-input {
-	padding: var(--field-input-padding);
-	line-height: var(--field-input-line-height);
-	border-radius: var(--rounded);
-}
-
-.k-input[data-theme="field"] .k-date-input .k-select-input,
-.k-input[data-theme="field"] .k-time-input .k-select-input {
-	padding-inline: 0;
-}
-
-.k-input[data-theme="field"] .k-date-input .k-select-input:first-child,
-.k-input[data-theme="field"] .k-time-input .k-select-input:first-child {
-	padding-inline-start: var(--field-input-padding);
-}
-
-.k-input[data-theme="field"] .k-date-input .k-select-input:focus-within,
-.k-input[data-theme="field"] .k-time-input .k-select-input:focus-within {
-	color: var(--color-focus);
-	font-weight: var(--font-bold);
-}
-.k-input[data-theme="field"].k-time-input .k-time-input-meridiem {
-	padding-inline-start: var(--field-input-padding);
-}
-
-/* Range */
-.k-input[data-theme="field"][data-type="range"] .k-range-input {
-	padding: var(--field-input-padding);
-}
-
-/* Select Boxes */
-.k-input[data-theme="field"][data-type="select"] {
-	position: relative;
-}
-.k-input[data-theme="field"][data-type="select"] .k-input-icon {
-	position: absolute;
-	inset-block: 0;
-	inset-inline-end: 0;
+/* Disabled state */
+.k-input[data-disabled="true"] {
+	--input-color-back: var(--color-background);
+	--input-color-icon: var(--color-gray-600);
+	pointer-events: none;
 }
 </style>

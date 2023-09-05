@@ -190,7 +190,6 @@ export default {
 }
 
 .k-search-dialog-input {
-	--input-height: var(--height-lg);
 	--button-height: var(--input-height);
 	display: flex;
 	align-items: center;
@@ -205,6 +204,7 @@ export default {
 	border-left: 1px solid var(--color-border);
 	line-height: var(--input-height);
 	border-radius: var(--rounded);
+	font-size: var(--input-font-size);
 }
 .k-search-dialog-input input:focus {
 	outline: 0;

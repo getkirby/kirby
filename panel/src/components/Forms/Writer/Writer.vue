@@ -363,6 +363,7 @@ export default {
 	font-variant-ligatures: none;
 	line-height: inherit;
 	grid-area: content;
+	padding: var(--input-padding-multiline);
 }
 .k-writer .ProseMirror:focus {
 	outline: 0;
@@ -472,10 +473,11 @@ export default {
 .k-writer[data-placeholder][data-empty="true"]::before {
 	grid-area: content;
 	content: attr(data-placeholder);
-	color: var(--color-gray-500);
+	color: var(--input-color-placeholder);
 	pointer-events: none;
 	white-space: pre-wrap;
 	word-wrap: break-word;
 	line-height: 1.5;
+	padding: var(--input-padding-multiline);
 }
 </style>

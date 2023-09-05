@@ -398,7 +398,7 @@ export default {
 	grid-template-columns: max-content minmax(0, 1fr);
 	align-items: center;
 	gap: 0.25rem;
-	height: var(--field-input-height);
+	height: var(--input-height);
 	grid-area: header;
 }
 
