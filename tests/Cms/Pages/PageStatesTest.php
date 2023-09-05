@@ -6,8 +6,6 @@ class PageStatesTest extends TestCase
 {
 	/**
 	 * Deregister any plugins for the page
-	 *
-	 * @return void
 	 */
 	public function setUp(): void
 	{

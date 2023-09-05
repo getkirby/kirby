@@ -399,7 +399,6 @@ class Date extends DateTime
 	 * @param array|string|int|null $input Full array with `size` and/or `unit` keys, `unit`
 	 *                                     string, `size` int or `null` for the default
 	 * @param array|null $default Default values to use if one or both values are not provided
-	 * @return array
 	 */
 	public static function stepConfig(
 		// no type hint to use InvalidArgumentException at the end

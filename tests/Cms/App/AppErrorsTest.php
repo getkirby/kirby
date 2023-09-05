@@ -443,9 +443,8 @@ class AppErrorsTest extends TestCase
 	 * Convert output to returned variable
 	 *
 	 * @param string|\Whoops\Handler\CallbackHandler $path
-	 * @return false|string
 	 */
-	protected function _getBufferedContent($path)
+	protected function _getBufferedContent(string|\Whoops\Handler\CallbackHandler $path): false|string
 	{
 		ob_start();
 

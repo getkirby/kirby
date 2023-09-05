@@ -6,10 +6,11 @@ use Kirby\Exception\DuplicateException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\TestCase;
+use TypeError;
 
 class UncreatablePage extends Page
 {
-	public static function create(array $props)
+	public static function create(array $props): static
 	{
 		return 'the model was used';
 	}
@@ -196,12 +197,14 @@ class PageCreateTest extends TestCase
 			'slug' => 'mother'
 		]);
 
-		$child = $mother->createChild([
-			'slug'     => 'child',
-			'template' => 'uncreatable-page'
-		]);
+		try {
+			$mother->createChild([
+				'slug'     => 'child',
+				'template' => 'uncreatable-page'
+			]);
+		} catch (TypeError) {
+		}
 
-		$this->assertSame('the model was used', $child);
 		$this->assertTrue($mother->drafts()->isEmpty());
 	}
 

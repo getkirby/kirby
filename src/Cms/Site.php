@@ -300,13 +300,11 @@ class Site extends ModelWithContent
 	/**
 	 * Gets the last modification date of all pages
 	 * in the content folder.
-	 *
-	 * @return int|string
 	 */
 	public function modified(
 		string|null $format = null,
 		string|null $handler = null
-	) {
+	): int|string {
 		return Dir::modified(
 			$this->root(),
 			$format,
@@ -408,11 +406,8 @@ class Site extends ModelWithContent
 
 	/**
 	 * Search all pages in the site
-	 *
-	 * @param array $params
-	 * @return \Kirby\Cms\Pages
 	 */
-	public function search(string|null $query = null, $params = [])
+	public function search(string|null $query = null, array $params = []): Pages
 	{
 		return $this->index()->search($query, $params);
 	}
@@ -480,13 +475,12 @@ class Site extends ModelWithContent
 	 * Sets the current page by
 	 * id or page object and
 	 * returns the current page
-	 *
 	 * @internal
-	 * @param string|\Kirby\Cms\Page $page
-	 * @return \Kirby\Cms\Page
 	 */
-	public function visit($page, string|null $languageCode = null)
-	{
+	public function visit(
+		string|Page $page,
+		string|null $languageCode = null
+	): Page {
 		if ($languageCode !== null) {
 			$this->kirby()->setCurrentTranslation($languageCode);
 			$this->kirby()->setCurrentLanguage($languageCode);

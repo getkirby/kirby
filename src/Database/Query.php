@@ -255,8 +255,11 @@ class Query
 	 * @param string $type The join type. Uses an inner join by default
 	 * @return $this
 	 */
-	public function join(string $table, string $on, string $type = 'JOIN'): static
-	{
+	public function join(
+		string $table,
+		string $on,
+		string $type = 'JOIN'
+	): static {
 		$join = [
 			'table' => $table,
 			'on'    => $on,

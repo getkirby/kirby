@@ -32,11 +32,8 @@ function headers_sent(string &$file = null, int &$line = null): bool
 
 /**
  * Mock for the PHP ini_get() function to ensure reliable testing
- *
- * @param string $option
- * @return string|false
  */
-function ini_get(string $option)
+function ini_get(string $option): string|false
 {
 	if (defined('KIRBY_TESTING') !== true || KIRBY_TESTING !== true) {
 		throw new Exception('Mock ini_get() function was loaded outside of the test environment. This should never happen.');
@@ -47,10 +44,6 @@ function ini_get(string $option)
 
 /**
  * Mock for the PHP ini_set() function to ensure reliable testing
- *
- * @param string $option
- * @param string $value
- * @return void
  */
 function ini_set(string $option, string $value): void
 {
@@ -63,9 +56,6 @@ function ini_set(string $option, string $value): void
 
 /**
  * Mock for the PHP ini_restore() function to ensure reliable testing
- *
- * @param string $option
- * @return void
  */
 function ini_restore(string $option): void
 {

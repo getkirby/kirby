@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Content\Field;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
@@ -817,14 +818,12 @@ class Page extends ModelWithContent
 
 	/**
 	 * Returns the last modification date of the page
-	 *
-	 * @return int|string
 	 */
 	public function modified(
-		string $format = null,
-		string $handler = null,
-		string $languageCode = null
-	) {
+		string|null $format = null,
+		string|null $handler = null,
+		string|null $languageCode = null
+	): int|string {
 		$identifier = $this->isDraft() === true ? 'changes' : 'published';
 
 		$modified = $this->storage()->modified(
@@ -1031,11 +1030,9 @@ class Page extends ModelWithContent
 
 	/**
 	 * @internal
-	 * @param mixed $type
-	 * @return \Kirby\Template\Template
 	 * @throws \Kirby\Exception\NotFoundException If the content representation cannot be found
 	 */
-	public function representation($type)
+	public function representation(mixed $type): Template
 	{
 		$kirby          = $this->kirby();
 		$template       = $this->template();
@@ -1069,11 +1066,8 @@ class Page extends ModelWithContent
 
 	/**
 	 * Search all pages within the current page
-	 *
-	 * @param array $params
-	 * @return \Kirby\Cms\Pages
 	 */
-	public function search(string $query = null, $params = [])
+	public function search(string|null $query = null, array $params = []): Pages
 	{
 		return $this->index()->search($query, $params);
 	}
@@ -1161,10 +1155,8 @@ class Page extends ModelWithContent
 
 	/**
 	 * Returns the final template
-	 *
-	 * @return \Kirby\Template\Template
 	 */
-	public function template()
+	public function template(): Template
 	{
 		if ($this->template !== null) {
 			return $this->template;
@@ -1181,10 +1173,8 @@ class Page extends ModelWithContent
 
 	/**
 	 * Returns the title field or the slug as fallback
-	 *
-	 * @return \Kirby\Content\Field
 	 */
-	public function title()
+	public function title(): Field
 	{
 		return $this->content()->get('title')->or($this->slug());
 	}

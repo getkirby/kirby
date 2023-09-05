@@ -249,7 +249,7 @@ class System
 	 *                     permissions for access.settings, otherwise just a
 	 *                     boolean that tells whether a valid license is active
 	 */
-	public function license()
+	public function license(): string|bool
 	{
 		if ($this->license !== null) {
 			return $this->license;
