@@ -253,6 +253,7 @@ export default {
 	text-overflow: ellipsis;
 	overflow-x: clip;
 	display: var(--button-text-display);
+	min-width: 0;
 }
 
 /** Themed Buttons **/
