@@ -99,19 +99,13 @@ export default {
 	flex-shrink: 0;
 }
 .k-button.k-breadcrumb-link {
-	overflow-x: clip;
 	flex-shrink: 1;
 	min-width: 0;
-	text-overflow: ellipsis;
 	justify-content: flex-start;
-}
-.k-button.k-breadcrumb-link .k-button-text {
-	min-width: 0;
 }
 
 .k-breadcrumb-dropdown {
 	display: grid;
-	place-content: center;
 }
 .k-breadcrumb-dropdown .k-dropdown-content {
 	width: 15rem;
