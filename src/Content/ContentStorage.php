@@ -102,7 +102,7 @@ class ContentStorage
 	public function create(
 		string $versionType,
 		string|null $lang = null,
-		array $fields
+		array $fields = []
 	): void {
 		$lang = $this->language($lang);
 		$this->handler->create($versionType, $lang, $fields);

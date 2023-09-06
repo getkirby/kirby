@@ -7,7 +7,7 @@
 /**
  * @public
  */
-export default {}
+export default {};
 </script>
 
 <style>
@@ -17,13 +17,22 @@ export default {}
 	--code-color-text: var(--color-gray-200, white);
 	--code-font-family: var(--font-mono);
 	--code-font-size: 1em;
+	--code-inline-color-back: var(--color-blue-300);
+	--code-inline-color-border: var(--color-blue-400);
+	--code-inline-color-text: var(--color-blue-900);
+	--code-inline-font-size: 0.9em;
 }
+
+code {
+	font-family: var(--code-font-family);
+	font-size: var(--code-font-size);
+	font-weight: var(--font-normal);
+}
+
 .k-code,
 .k-text pre {
 	position: relative;
 	display: block;
-	font-family: var(--code-font-family);
-	font-size: var(--code-font-size);
 	max-width: 100%;
 	padding: 0.75rem;
 	border-radius: var(--rounded, 0.5rem);
@@ -48,5 +57,18 @@ export default {}
 	font-size: calc(0.75 * var(--text-xs));
 	background: var(--code-color-back);
 	border-radius: var(--rounded, 0.5rem);
+}
+
+/** Inline code */
+.k-text > code,
+.k-text *:not(pre) > code {
+	display: inline-flex;
+	padding-inline: var(--spacing-1);
+	font-size: var(--code-inline-font-size);
+	color: var(--code-inline-color-text);
+	background: var(--code-inline-color-back);
+	border-radius: var(--rounded);
+	outline: 1px solid var(--code-inline-color-border);
+	outline-offset: -1px;
 }
 </style>

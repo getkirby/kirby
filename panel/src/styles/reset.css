@@ -182,3 +182,28 @@ body {
 	position: relative;
 	accent-color: var(--color-focus, currentColor);
 }
+
+:where(sup, sub) {
+	position: relative;
+	line-height: 0;
+	vertical-align: baseline;
+	font-size: 75%;
+}
+:where(sup) {
+	top: -0.5em;
+}
+:where(sub) {
+	bottom: -0.25em;
+}
+
+:where(mark) {
+	background: var(--color-yellow-300);
+}
+
+:where(kbd) {
+	display: inline-block;
+	padding-inline: var(--spacing-2);
+	border-radius: var(--rounded);
+	background: var(--color-white);
+	box-shadow: var(--shadow);
+}

@@ -63,7 +63,9 @@ export default {
 <style>
 :root {
 	--text-font-size: 1em;
-	--text-line-height: 1.375;
+	--text-line-height: 1.5;
+	--link-color: var(--color-blue-800);
+	--link-underline-offset: 2px;
 }
 
 .k-text {
@@ -71,31 +73,7 @@ export default {
 	line-height: var(--text-line-height);
 }
 
-.k-text > * + * {
-	margin-block-start: calc(var(--text-line-height) * 1em);
-}
-
-.k-text ol,
-.k-text ul {
-	margin-inline-start: 2em;
-}
-
-.k-text ol {
-	list-style: numeric;
-}
-
-.k-text ul {
-	list-style: disc;
-}
-
-.k-text a {
-	text-decoration: underline;
-}
-
-.k-text > * + h6 {
-	margin-block-start: calc(var(--text-line-height) * 1.5em);
-}
-
+/* Font sizes */
 .k-text[data-size="tiny"] {
 	--text-font-size: var(--text-xs);
 }
@@ -108,46 +86,18 @@ export default {
 .k-text[data-size="large"] {
 	--text-font-size: var(--text-xl);
 }
+
+/* Alignment helper */
 .k-text[data-align] {
 	text-align: var(--align);
 }
 
-/** Code */
-.h1 code,
-.k-text h1 code,
-.h2 code,
-.k-text h2 code,
-.h3 code,
-.k-text h3 code,
-.h4 code,
-.k-text h4 code,
-.h5 code,
-.k-text h5 code,
-.h6 code,
-.k-text h6 code {
-	font-family: var(--font-mono, monospace);
-	font-size: 0.925em;
-	font-weight: var(--font-normal);
+/* Element margins */
+.k-text > * + * {
+	margin-block-start: calc(var(--text-line-height) * 1em);
 }
 
-.k-text iframe {
-	width: 100%;
-	aspect-ratio: 16/9;
-}
-
-/** HR **/
-.hr,
-.k-text hr {
-	background: var(--color-border);
-	height: 1px;
-}
-
-/** Links **/
-:root {
-	--link-color: var(--color-blue-800);
-	--link-underline-offset: 2px;
-}
-
+/* Links */
 .k-text :where(.k-link, a) {
 	color: var(--link-color);
 	text-decoration: underline;
@@ -156,7 +106,56 @@ export default {
 	outline-offset: 2px;
 }
 
-/** Help */
+/* Lists */
+.k-text ol,
+.k-text ul {
+	padding-inline-start: 1.75em;
+}
+
+.k-text ol {
+	list-style: numeric;
+}
+.k-text ol > li {
+	list-style: decimal;
+}
+
+.k-text ul > li {
+	list-style: disc;
+}
+.k-text ul ul > li {
+	list-style: circle;
+}
+.k-text ul ul ul > li {
+	list-style: square;
+}
+
+/* Blockquotes */
+.k-text blockquote {
+	font-size: var(--text-lg);
+	line-height: 1.25;
+	padding-inline-start: var(--spacing-4);
+	border-inline-start: 2px solid var(--color-black);
+}
+
+/* Images */
+.k-text img {
+	border-radius: var(--rounded);
+}
+
+/* Embeds */
+.k-text iframe {
+	width: 100%;
+	aspect-ratio: 16/9;
+	border-radius: var(--rounded);
+}
+
+/* HR */
+.k-text hr {
+	background: var(--color-border);
+	height: 1px;
+}
+
+/* Help */
 .k-help {
 	color: var(--color-text-dimmed);
 }

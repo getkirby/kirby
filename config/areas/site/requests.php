@@ -17,8 +17,8 @@ return [
 			if ($parent === null) {
 				$site  = $kirby->site();
 				$panel = $site->panel();
-			 	$uuid  = $site->uuid()?->toString();
-			 	$url   = $site->url();
+				$uuid  = $site->uuid()?->toString();
+				$url   = $site->url();
 				$value = $uuid ?? $url;
 
 				return [
@@ -42,8 +42,8 @@ return [
 
 			foreach ($parent->childrenAndDrafts()->filterBy('isListable', true) as $child) {
 				$panel = $child->panel();
-			 	$uuid  = $child->uuid()?->toString();
-			 	$url   = $child->url();
+				$uuid  = $child->uuid()?->toString();
+				$url   = $child->url();
 				$value = $uuid ?? $url;
 
 				$pages[] = [

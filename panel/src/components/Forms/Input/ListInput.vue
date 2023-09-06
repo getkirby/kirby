@@ -93,9 +93,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.k-list-input .ProseMirror ol > li::marker {
-	color: var(--color-text-dimmed);
-}
-</style>
