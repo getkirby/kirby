@@ -442,9 +442,8 @@ export default {
 		 * Called when option from row's dropdown was engaged
 		 * @param {string} option option name that was triggered
 		 * @param {Object} row
-		 * @param {number} rowIndex
 		 */
-		option(option, row, rowIndex) {
+		option(option, row) {
 			switch (option) {
 				case "remove":
 					this.remove(row);
