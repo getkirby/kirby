@@ -2,9 +2,9 @@
 	<k-dropdown v-if="languages.length > 1" class="k-languages-dropdown">
 		<k-button
 			:dropdown="true"
-			:responsive="true"
 			:text="code"
 			icon="translate"
+			responsive="text"
 			size="sm"
 			variant="filled"
 			@click="$refs.languages.toggle()"
