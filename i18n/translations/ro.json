@@ -10,12 +10,15 @@
 	"cancel": "Anulează",
 	"change": "Modific\u0103",
 	"close": "\u00cenchide",
+	"changes": "Changes",
 	"confirm": "Ok",
 	"collapse": "Pliază",
 	"collapse.all": "Pliază toate",
 	"copy": "Copiază",
 	"copy.all": "Copiază toate",
+	"copy.success": "{count} copied!",
 	"create": "Creează",
+	"custom": "Custom",
 
 	"date": "Data",
 	"date.select": "Alege o dată",
@@ -34,13 +37,18 @@
 	"delete": "\u0218terge",
 	"delete.all": "Șterge toate",
 
+	"dialog.fields.empty": "This dialog has no fields",
 	"dialog.files.empty": "Nu există fișiere de selectat",
 	"dialog.pages.empty": "Nu există pagini de selectat",
+	"dialog.text.empty": "This dialog does not define any text",
 	"dialog.users.empty": "Nu există utilizatori de selectat",
 
 	"dimensions": "Dimensiuni",
 	"disabled": "Dezactivat",
 	"discard": "Renun\u021b\u0103",
+
+	"drawer.fields.empty": "This drawer has no fields",
+
 	"download": "Descarcă",
 	"duplicate": "Duplică",
 
@@ -49,11 +57,13 @@
 	"email": "E-mail",
 	"email.placeholder": "email@exemplu.com",
 
+	"enter": "Enter",
 	"entries": "Întregistrări",
 	"entry": "Înregistrare",
 
 	"environment": "Mediu",
 
+	"error": "Error",
 	"error.access.code": "Cod invalid",
 	"error.access.login": "Conectare invalidă",
 	"error.access.panel": "Nu ai voie să accesezi panoul",
@@ -81,6 +91,9 @@
 
 	"error.file.changeName.empty": "Numele nu trebuie să fie gol",
 	"error.file.changeName.permission": "Nu ai voie să schimbi numele fișierului \"{filename}\"",
+	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
+	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
+
 	"error.file.duplicate": "Există deja un fișier cu numele \"{filename}\"",
 	"error.file.extension.forbidden": "Extensia de fișier \"{extension}\" nu este permisă",
 	"error.file.extension.invalid": "Extensie de fișier invalidă: {extension}",
@@ -95,6 +108,7 @@
 	"error.file.minheight": "Imaginea trebuie să aibă înălțimea de minim {height} pixeli",
 	"error.file.minsize": "Fișierul este prea mic",
 	"error.file.minwidth": "Imaginea trebuie să aibă lățimea de minim {width} pixeli",
+	"error.file.name.unique": "The filename must be unique",
 	"error.file.name.missing": "Numele fișierului nu poate fi gol",
 	"error.file.notFound": "Fișierul \"{filename}\" nu a fost găsit",
 	"error.file.orientation": "Orientarea imaginii trebuie să fie \"{orientation}\"",
@@ -122,6 +136,7 @@
 	"error.offline": "Panoul este momentan offline",
 
 	"error.page.changeSlug.permission": "Nu ai voie să schimbi apendicele URL pentru \"{slug}\"",
+	"error.page.changeSlug.reserved": "The path of top-level pages must not start with \"{path}\"",
 	"error.page.changeStatus.incomplete": "Pagina are erori și nu poate fi publicată",
 	"error.page.changeStatus.permission": "Statutul acestei pagini nu poate fi schimbat",
 	"error.page.changeStatus.toDraft.invalid": "Pagina \"{slug}\" nu poate fi schimbată în ciornă",
@@ -137,6 +152,12 @@
 	"error.page.draft.duplicate": "Există deja o ciornă cu apendicele URL \"{slug}\"",
 	"error.page.duplicate": "Există deja o pagină cu apendicele URL \"{slug}\"",
 	"error.page.duplicate.permission": "Nu ai voie să duplici \"{slug}\"",
+	"error.page.move.ancestor": "The page cannot be moved into itself",
+	"error.page.move.directory": "The page directory cannot be moved",
+	"error.page.move.duplicate": "A sub page with the URL appendix \"{slug}\" already exists",
+	"error.page.move.notFound": "The moved page could not be found",
+	"error.page.move.permission": "You are not allowed to move \"{slug}\"",
+	"error.page.move.template": "The \"{template}\" template is not accepted as a subpage of \"{parent}\"",
 	"error.page.notFound": "Pagina \"{slug}\" nu a fost găsită",
 	"error.page.num.invalid": "Te rog introdu un număr de sortare valid. Numerele nu pot fi negative.",
 	"error.page.slug.invalid": "Te rog introdu un apendice URL valid",
@@ -162,6 +183,8 @@
 	"error.site.changeTitle.empty": "Titlul nu poate să rămână gol",
 	"error.site.changeTitle.permission": "Nu ai voie să schimbi titlul site-ului",
 	"error.site.update.permission": "Nu ai voie să actualizezi site-ul",
+
+	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",
 
 	"error.template.default.notFound": "Șablonul implicit nu există",
 
@@ -195,6 +218,7 @@
 	"error.validation.accepted": "Te rog confirmă",
 	"error.validation.alpha": "Te rog introdu doar caractere din intervalul a-z",
 	"error.validation.alphanum": "Te rog introdu doar caractere din intervalul a-z sau cifre 0-9",
+	"error.validation.anchor": "Please enter a correct link anchor",
 	"error.validation.between": "Te rog introdu o valoare între \"{min}\" și \"{max}\"",
 	"error.validation.boolean": "Te rog confirmă sau refuză",
 	"error.validation.contains": "Te rog introdu o valoare care conține \"{needle}\"",
@@ -211,6 +235,7 @@
 	"error.validation.integer": "Te rog introdu un număr întreg valid",
 	"error.validation.ip": "Te rog introdu o adresă IP validă",
 	"error.validation.less": "Te rog introdu o valoare mai mică decât {max}",
+	"error.validation.linkType": "The link type is not allowed",
 	"error.validation.match": "Valoarea nu se potrivește cu forma așteptată",
 	"error.validation.max": "Te rog introdu o valoare mai mică sau egală cu {max}",
 	"error.validation.maxlength": "Te rog introdu o valoare mai scurtă. (max. {max} caractere)",
@@ -227,15 +252,18 @@
 	"error.validation.same": "Te rog introdu \"{other}\"",
 	"error.validation.size": "Dimensiunea valorii trebuie să fie \"{size}\"",
 	"error.validation.startswith": "Valoarea trebuie să înceapă cu \"{start}\"",
+	"error.validation.tel": "Please enter an unformatted phone number",
 	"error.validation.time": "Te rog introdu un timp valid",
 	"error.validation.time.after": "Te rog introdu un timp după {time}",
 	"error.validation.time.before": "Te rog introdu un timp înainte de {time}",
 	"error.validation.time.between": "Te rog introdu un timp între {min} și {max}",
+	"error.validation.uuid": "Please enter a valid UUID",
 	"error.validation.url": "Te rog introdu un URL valid",
 
 	"expand": "Extinde",
 	"expand.all": "Extinde toate",
 
+	"field.invalid": "The field is invalid",
 	"field.required": "Acest câmp este necesar",
 	"field.blocks.changeType": "Schimbă tipul",
 	"field.blocks.code.name": "Cod",
@@ -246,7 +274,7 @@
 	"field.blocks.delete.confirm.selected": "Chiar vrei să ștergi blocurile selectate?",
 	"field.blocks.empty": "Niciun bloc deocamdată",
 	"field.blocks.fieldsets.label": "Te rog alege un tip de bloc …",
-	"field.blocks.fieldsets.paste": "Apasă <kbd>{{ shortcut }}</kbd> pentru a insera/aduce blocuri din clipboard-ul tău",
+	"field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to import layouts/blocks from your clipboard <small>Only those allowed in the current field will get inserted.</small>",
 	"field.blocks.gallery.name": "Galerie",
 	"field.blocks.gallery.images.empty": "Nicio imagine deocamdată",
 	"field.blocks.gallery.images.label": "Imagini",
@@ -259,6 +287,8 @@
 	"field.blocks.image.crop": "Decupaj",
 	"field.blocks.image.link": "Legătură",
 	"field.blocks.image.location": "Localizare",
+	"field.blocks.image.location.internal": "This website",
+	"field.blocks.image.location.external": "External source",
 	"field.blocks.image.name": "Imagine",
 	"field.blocks.image.placeholder": "Alege o imagine",
 	"field.blocks.image.ratio": "Raport",
@@ -283,8 +313,10 @@
 
 	"field.files.empty": "Niciun fișier selectat deocamdată",
 
+	"field.layout.change": "Change layout",
 	"field.layout.delete": "Șterge layout-ul",
 	"field.layout.delete.confirm": "Chiar vrei să ștergi acest layout?",
+	"field.layout.delete.confirm.all": "Do you really want to delete all layouts?",
 	"field.layout.empty": "Niciun rând deocamdată",
 	"field.layout.select": "Alege un layout",
 
@@ -298,12 +330,22 @@
 
 	"field.users.empty": "Niciun utilizator ales deocamdată",
 
+	"fields.empty": "No fields yet",
+
+	"file": "Fișier",
 	"file.blueprint": "Acest fișier nu are încă un Blueprint. Poți să-l definești în <strong>/site/blueprints/files/{blueprint}.yml</strong>",
+	"file.changeTemplate": "Schimbă șablonul",
+	"file.changeTemplate.notice": "Changing the file's template will remove content for fields that don't match in type. If the new template defines certain rules, e.g. image dimensions, those will also be applied irreversibly. Use with caution.",
 	"file.delete.confirm": "Chiar vrei să ștergi <br><strong>{filename}</strong>?",
+	"file.focus.placeholder": "Set focal point",
+	"file.focus.reset": "Remove focal point",
+	"file.focus.title": "Focus",
 	"file.sort": "Schimbă poziția",
 
 	"files": "Fișiere",
 	"files.empty": "Niciun fișier deocamdată",
+
+	"filter": "Filter",
 
 	"hide": "Ascunde",
 	"hour": "Ora",
@@ -332,6 +374,7 @@
 	"language.convert": "Stabilește ca implicit",
 	"language.convert.confirm": "<p>Chiar vrei să transformi <strong>{name}</strong> în limba implicită? Această modificare este ireversibilă.</p><p>Dacă <strong>{name}</strong> are conținut netradus, unele părți din site s-ar putea să nu mai aibă conținut de rezervă, și vor apărea goale.</p>",
 	"language.create": "Adaugă o limbă nouă",
+	"language.default": "Limba implicită",
 	"language.delete.confirm": "Chiar vrei să ștergi limba <strong>{name}</strong>, inclusiv toate traducerile? Această operațiune este ireversibilă.",
 	"language.deleted": "Limba a fost ștearsă",
 	"language.direction": "Direcția de citire",
@@ -340,7 +383,16 @@
 	"language.locale": "String-ul PHP locale",
 	"language.locale.warning": "Folosești pentru localizare o formulă manuală. Modificările le poți face în fișierul de limbă în /site/languages",
 	"language.name": "Nume",
+	"language.secondary": "Secondary language",
+	"language.settings": "Language settings",
 	"language.updated": "Limba a fost actualizată",
+	"language.variables": "Language variables",
+	"language.variables.empty": "No translations yet",
+
+	"language.variable.delete.confirm": "Do you really want to delete the variable for {key}?",
+	"language.variable.key": "Key",
+	"language.variable.notFound": "The variable could not be found",
+	"language.variable.value": "Value",
 
 	"languages": "Limbi",
 	"languages.default": "Limba implicită",
@@ -367,11 +419,10 @@
 
 	"lock.unsaved": "Schimbări nesalvate",
 	"lock.unsaved.empty": "Nu mai există nicio schimbare nesalvată",
-	"lock.isLocked": "Schimbări nesalvate de <strong>{email}</strong>",
-	"lock.file.isLocked": "Fișierul este editat momentan de {email} și nu poate fi schimbat.",
-	"lock.page.isLocked": "Pagina este editată momentan de {email} și nu poate fi schimbată.",
+	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Deblochează",
-	"lock.isUnlocked": "Schimbările tale nesalvate au fost suprascrise de un alt utilizator. Poți să-ți descarci schimbările pentru a le încorpora manual.",
+	"lock.unlock.submit": "Unlock and overwrite unsaved changes by <strong>{email}</strong>",
+	"lock.isUnlocked": "Was unlocked by another user",
 
 	"login": "Conectează-te",
 	"login.code.label.login": "Cod de conectare",
@@ -391,6 +442,7 @@
 
 	"logout": "Deconectare",
 
+	"merge": "Merge",
 	"menu": "Meniu",
 	"meridiem": "AM/PM",
 	"mime": "Tipul media",
@@ -411,13 +463,16 @@
 	"months.september": "Septembrie",
 
 	"more": "Mai multe",
+	"move": "Move",
 	"name": "Nume",
 	"next": "Următoarea",
+	"night": "Night",
 	"no": "nu",
 	"off": "oprit",
 	"on": "pornit",
 	"open": "Deschide",
 	"open.newWindow": "Deschide în fereastră nouă",
+	"option": "Option",
 	"options": "Opțiuni",
 	"options.none": "Nicio opțiune",
 
@@ -426,6 +481,7 @@
 	"orientation.portrait": "Portrait",
 	"orientation.square": "Pătrată",
 
+	"page": "Pagină",
 	"page.blueprint": "Această pagină nu are încă un Blueprint. Poți să-l definești în <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
 	"page.changeSlug": "Schimbă URL-ul",
 	"page.changeSlug.fromTitle": "Creează din titlu",
@@ -433,13 +489,15 @@
 	"page.changeStatus.position": "Te rog alege o poziție",
 	"page.changeStatus.select": "Alege un statut nou",
 	"page.changeTemplate": "Schimbă șablonul",
+	"page.changeTemplate.notice": "Changing the page's template will remove content for fields that don't match in type. Use with caution.",
+	"page.create": "Create as {status}",
 	"page.delete.confirm": "Chiar vrei să ștergi <strong>{title}</strong>?",
 	"page.delete.confirm.subpages": "<strong>Această pagină are subpagini</strong>. <br>Subpaginile vor fi de asemenea toate șterse.",
 	"page.delete.confirm.title": "Introdu titlul paginii pentru a confirma",
-	"page.draft.create": "Creează ciornă",
 	"page.duplicate.appendix": "Copiază",
 	"page.duplicate.files": "Copiază fișierele",
 	"page.duplicate.pages": "Copiază paginile",
+	"page.move": "Move page",
 	"page.sort": "Schimbă poziția",
 	"page.status": "Statut",
 	"page.status.draft": "Ciornă",
@@ -460,6 +518,7 @@
 	"password": "Parola",
 	"paste": "Inserează",
 	"paste.after": "Inserează după",
+	"paste.success": "{count} pasted!",
 	"pixel": "Pixel",
 	"plugin": "Plugin",
 	"plugins": "Plugin-uri",
@@ -468,6 +527,7 @@
 	"remove": "Înlătură",
 	"rename": "Redenumește",
 	"replace": "\u00cenlocuie\u0219te",
+	"replace.with": "Replace with",
 	"retry": "Încearcă din nou",
 	"revert": "Renunță",
 	"revert.confirm": "Chiar vrei să ștergi <strong>toate schimbările nesalvate</strong>?",
@@ -487,6 +547,7 @@
 	"search.all": "Arată toate",
 	"search.results.none": "Niciun rezultat",
 
+	"section.invalid": "The section is invalid",
 	"section.required": "Această secțiune este necesară",
 
 	"security": "Securitate",
@@ -498,6 +559,8 @@
 	"size": "Dimensiune",
 	"slug": "Apendicele URL",
 	"sort": "Sortare",
+	"sort.drag": "Drag to sort …",
+	"split": "Split",
 
 	"stats.empty": "Niciun raport",
 	"system.issues.content": "Directorul de conținut pare să fie expus",
@@ -520,10 +583,13 @@
 	"system.updateStatus.update": "Actualizare gratuită { version } disponibilă",
 	"system.updateStatus.upgrade": "Actualizare { version } disponibilă",
 
-	"title": "Titlu",
+	"tel": "Phone",
+	"tel.placeholder": "+49123456789",
 	"template": "Șablon",
+	"title": "Titlu",
 	"today": "Astăzi",
 
+	"toolbar.button.clear": "Clear formatting",
 	"toolbar.button.code": "Cod",
 	"toolbar.button.bold": "Bold",
 	"toolbar.button.email": "Adresă e-mail",
@@ -541,6 +607,8 @@
 	"toolbar.button.link": "Link",
 	"toolbar.button.paragraph": "Paragraf",
 	"toolbar.button.strike": "Tăiat",
+	"toolbar.button.sub": "Subscript",
+	"toolbar.button.sup": "Superscript",
 	"toolbar.button.ol": "Listă ordonată",
 	"toolbar.button.underline": "Subliniat",
 	"toolbar.button.ul": "Listă cu puncte",

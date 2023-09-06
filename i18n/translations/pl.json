@@ -10,12 +10,15 @@
 	"cancel": "Anuluj",
 	"change": "Zmie\u0144",
 	"close": "Zamknij",
+	"changes": "Changes",
 	"confirm": "Ok",
 	"collapse": "Zwiń",
 	"collapse.all": "Zwiń wszystkie",
 	"copy": "Kopiuj",
 	"copy.all": "Skopiuj wszystko",
+	"copy.success": "{count} copied!",
 	"create": "Utwórz",
+	"custom": "Custom",
 
 	"date": "Data",
 	"date.select": "Wybierz datę",
@@ -34,13 +37,18 @@
 	"delete": "Usu\u0144",
 	"delete.all": "Usuń wszystkie",
 
+	"dialog.fields.empty": "This dialog has no fields",
 	"dialog.files.empty": "Brak plików do wyboru",
 	"dialog.pages.empty": "Brak stron do wyboru",
+	"dialog.text.empty": "This dialog does not define any text",
 	"dialog.users.empty": "Brak użytkowników do wyboru",
 
 	"dimensions": "Wymiary",
 	"disabled": "Wyłączone",
 	"discard": "Odrzu\u0107",
+
+	"drawer.fields.empty": "This drawer has no fields",
+
 	"download": "Pobierz",
 	"duplicate": "Zduplikuj",
 
@@ -49,11 +57,13 @@
 	"email": "Email",
 	"email.placeholder": "mail@example.com",
 
+	"enter": "Enter",
 	"entries": "Wpisy",
 	"entry": "Wpis",
 
 	"environment": "Środowisko",
 
+	"error": "Error",
 	"error.access.code": "Nieprawidłowy kod",
 	"error.access.login": "Nieprawidłowy login",
 	"error.access.panel": "Nie masz uprawnień by dostać się do panelu",
@@ -81,6 +91,9 @@
 
 	"error.file.changeName.empty": "Imię nie może być puste",
 	"error.file.changeName.permission": "Nie masz uprawnień, by zmienić nazwę \"{filename}\"",
+	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
+	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
+
 	"error.file.duplicate": "Istnieje już plik o nazwie \"{filename}\"",
 	"error.file.extension.forbidden": "Rozszerzenie \"{extension}\" jest niedozwolone",
 	"error.file.extension.invalid": "Nieprawidłowe rozszerzenie: {extension}",
@@ -95,6 +108,7 @@
 	"error.file.minheight": "Wysokość obrazka musi wynosić co najmniej {height} pikseli",
 	"error.file.minsize": "Plik jest za mały",
 	"error.file.minwidth": "Szerokość obrazka musi wynosić co najmniej {width} pikseli",
+	"error.file.name.unique": "The filename must be unique",
 	"error.file.name.missing": "Nazwa pliku nie może być pusta",
 	"error.file.notFound": "Nie można znaleźć pliku \"{filename}\"",
 	"error.file.orientation": "Orientacja obrazka musi być \"{orientation}\"",
@@ -122,6 +136,7 @@
 	"error.offline": "Panel jest obecnie offline",
 
 	"error.page.changeSlug.permission": "Nie możesz zmienić końcówki adresu URL w \"{slug}\"",
+	"error.page.changeSlug.reserved": "The path of top-level pages must not start with \"{path}\"",
 	"error.page.changeStatus.incomplete": "Strona zawiera błędy i nie można jej opublikować",
 	"error.page.changeStatus.permission": "Status tej strony nie może zostać zmieniony",
 	"error.page.changeStatus.toDraft.invalid": "Strony \"{slug}\" nie można przekonwertować na szkic",
@@ -137,6 +152,12 @@
 	"error.page.draft.duplicate": "Istnieje już szkic z końcówką URL \"{slug}\"",
 	"error.page.duplicate": "Istnieje już strona z końcówką URL \"{slug}\"",
 	"error.page.duplicate.permission": "Nie masz uprawnień, by zduplikować \"{slug}\"",
+	"error.page.move.ancestor": "The page cannot be moved into itself",
+	"error.page.move.directory": "The page directory cannot be moved",
+	"error.page.move.duplicate": "A sub page with the URL appendix \"{slug}\" already exists",
+	"error.page.move.notFound": "The moved page could not be found",
+	"error.page.move.permission": "You are not allowed to move \"{slug}\"",
+	"error.page.move.template": "The \"{template}\" template is not accepted as a subpage of \"{parent}\"",
 	"error.page.notFound": "Nie można znaleźć strony \"{slug}\"",
 	"error.page.num.invalid": "Wprowadź poprawny numer sortujący. Liczby nie mogą być ujemne.",
 	"error.page.slug.invalid": "Wprowadź poprawną końcówkę adresu URL",
@@ -162,6 +183,8 @@
 	"error.site.changeTitle.empty": "Tytuł nie może być pusty",
 	"error.site.changeTitle.permission": "Nie masz uprawnień, by zmienić tytuł strony",
 	"error.site.update.permission": "Nie masz uprawnień, by zaktualizować stronę",
+
+	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",
 
 	"error.template.default.notFound": "Domyślny szablon nie istnieje",
 
@@ -195,6 +218,7 @@
 	"error.validation.accepted": "Proszę potwierdzić",
 	"error.validation.alpha": "Wprowadź tylko znaki między a-z",
 	"error.validation.alphanum": "Wprowadź tylko znaki między a-z lub cyfry 0-9",
+	"error.validation.anchor": "Please enter a correct link anchor",
 	"error.validation.between": "Wprowadź wartość między \"{min}\" i \"{max}\"",
 	"error.validation.boolean": "Potwierdź lub odmów",
 	"error.validation.contains": "Wprowadź wartość, która zawiera \"{needle}\"",
@@ -211,6 +235,7 @@
 	"error.validation.integer": "Wprowadź poprawną liczbę całkowitą",
 	"error.validation.ip": "Wprowadź poprawny adres IP",
 	"error.validation.less": "Wprowadź wartość mniejszą niż {max}",
+	"error.validation.linkType": "The link type is not allowed",
 	"error.validation.match": "Wartość nie jest zgodna z oczekiwanym wzorcem",
 	"error.validation.max": "Wprowadź wartość równą lub mniejszą niż {max}",
 	"error.validation.maxlength": "Wprowadź krótszą wartość. (maks. {max} znaków)",
@@ -227,15 +252,18 @@
 	"error.validation.same": "Wprowadź \"{other}\"",
 	"error.validation.size": "Rozmiar wartości musi wynosić \"{size}\"",
 	"error.validation.startswith": "Wartość musi zaczynać się od \"{start}\"",
+	"error.validation.tel": "Please enter an unformatted phone number",
 	"error.validation.time": "Wprowadź poprawny czas",
 	"error.validation.time.after": "Wprowadź czas późniejszy niż {time}",
 	"error.validation.time.before": "Wprowadź czas wcześniejszy niż {time}",
 	"error.validation.time.between": "Wprowadź czas między {min} a {max}",
+	"error.validation.uuid": "Please enter a valid UUID",
 	"error.validation.url": "Wprowadź poprawny adres URL",
 
 	"expand": "Rozwiń",
 	"expand.all": "Rozwiń wszystkie",
 
+	"field.invalid": "The field is invalid",
 	"field.required": "Pole jest wymagane",
 	"field.blocks.changeType": "Zmień typ",
 	"field.blocks.code.name": "Kod",
@@ -246,7 +274,7 @@
 	"field.blocks.delete.confirm.selected": "Czy na pewno chcesz usunąć wszystkie wybrane bloki?",
 	"field.blocks.empty": "Nie ma jeszcze żadnych bloków",
 	"field.blocks.fieldsets.label": "Wybierz typ bloku …",
-	"field.blocks.fieldsets.paste": "Wciśnij <kbd>{{ shortcut }}</kbd> by wkleić/zaimportować bloki ze schowka",
+	"field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to import layouts/blocks from your clipboard <small>Only those allowed in the current field will get inserted.</small>",
 	"field.blocks.gallery.name": "Galeria",
 	"field.blocks.gallery.images.empty": "Nie ma jeszcze żadnych obrazków",
 	"field.blocks.gallery.images.label": "Obrazki",
@@ -259,6 +287,8 @@
 	"field.blocks.image.crop": "Przytnij",
 	"field.blocks.image.link": "Link",
 	"field.blocks.image.location": "Lokalizacja",
+	"field.blocks.image.location.internal": "This website",
+	"field.blocks.image.location.external": "External source",
 	"field.blocks.image.name": "Obrazek",
 	"field.blocks.image.placeholder": "Wybierz obrazek",
 	"field.blocks.image.ratio": "Proporcje",
@@ -283,8 +313,10 @@
 
 	"field.files.empty": "Nie wybrano jeszcze żadnych plików",
 
+	"field.layout.change": "Change layout",
 	"field.layout.delete": "Usuń układ",
 	"field.layout.delete.confirm": "Czy na pewno chcesz usunąć ten układ?",
+	"field.layout.delete.confirm.all": "Do you really want to delete all layouts?",
 	"field.layout.empty": "Nie ma jeszcze żadnych rzędów",
 	"field.layout.select": "Wybierz układ",
 
@@ -298,12 +330,22 @@
 
 	"field.users.empty": "Nie wybrano jeszcze żadnych użytkowników",
 
+	"fields.empty": "No fields yet",
+
+	"file": "Plik",
 	"file.blueprint": "Ten plik nie ma jeszcze wzorca. Możesz go zdefiniować w <strong>/site/blueprints/files/{blueprint}.yml</strong>",
+	"file.changeTemplate": "Zmień szablon",
+	"file.changeTemplate.notice": "Changing the file's template will remove content for fields that don't match in type. If the new template defines certain rules, e.g. image dimensions, those will also be applied irreversibly. Use with caution.",
 	"file.delete.confirm": "Czy na pewno chcesz usunąć <br><strong>{filename}</strong>?",
+	"file.focus.placeholder": "Set focal point",
+	"file.focus.reset": "Remove focal point",
+	"file.focus.title": "Focus",
 	"file.sort": "Zmień pozycję",
 
 	"files": "Pliki",
 	"files.empty": "Nie ma jeszcze żadnych plików",
+
+	"filter": "Filter",
 
 	"hide": "Ukryj",
 	"hour": "Godzina",
@@ -332,6 +374,7 @@
 	"language.convert": "Ustaw jako domyślny",
 	"language.convert.confirm": "<p>Czy na pewno chcesz zmienić domyślny język na <strong>{name}</strong>? Nie można tego cofnąć.</p><p>Jeżeli brakuje tłumaczenia jakichś treści na <strong>{name}</strong>, nie będzie ich czym zastąpić i części witryny mogą być puste.</p>",
 	"language.create": "Dodaj nowy język",
+	"language.default": "Domyślny język",
 	"language.delete.confirm": "Czy na pewno chcesz usunąć język <strong>{name}</strong> i wszystkie tłumaczenia? Tego nie da się cofnąć!",
 	"language.deleted": "Język został usunięty",
 	"language.direction": "Kierunek czytania",
@@ -340,7 +383,16 @@
 	"language.locale": "PHP locale string",
 	"language.locale.warning": "Używasz niestandardowej konfiguracji ustawień regionalnych. Zmodyfikuj to w pliku języka w /site/langugaes",
 	"language.name": "Nazwa",
+	"language.secondary": "Secondary language",
+	"language.settings": "Language settings",
 	"language.updated": "Język został zaktualizowany",
+	"language.variables": "Language variables",
+	"language.variables.empty": "No translations yet",
+
+	"language.variable.delete.confirm": "Do you really want to delete the variable for {key}?",
+	"language.variable.key": "Key",
+	"language.variable.notFound": "The variable could not be found",
+	"language.variable.value": "Value",
 
 	"languages": "Języki",
 	"languages.default": "Domyślny język",
@@ -367,11 +419,10 @@
 
 	"lock.unsaved": "Niezapisane zmiany",
 	"lock.unsaved.empty": "Nie ma już żadnych niezapisanych zmian",
-	"lock.isLocked": "Niezapisane zmiany autorstwa <strong>{email}</strong>",
-	"lock.file.isLocked": "Plik jest aktualnie edytowany przez {email} i nie może zostać zmieniony.",
-	"lock.page.isLocked": "Strona jest aktualnie edytowana przez {email} i nie może zostać zmieniona.",
+	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Odblokuj",
-	"lock.isUnlocked": "Twoje niezapisane zmiany zostały nadpisane przez innego użytkownika. Możesz pobrać swoje zmiany, by scalić je ręcznie.",
+	"lock.unlock.submit": "Unlock and overwrite unsaved changes by <strong>{email}</strong>",
+	"lock.isUnlocked": "Was unlocked by another user",
 
 	"login": "Zaloguj się",
 	"login.code.label.login": "Kod logowania się",
@@ -391,6 +442,7 @@
 
 	"logout": "Wyloguj się",
 
+	"merge": "Merge",
 	"menu": "Menu",
 	"meridiem": "AM/PM",
 	"mime": "Typ multimediów",
@@ -411,13 +463,16 @@
 	"months.september": "Wrzesie\u0144",
 
 	"more": "Więcej",
+	"move": "Move",
 	"name": "Nazwa",
 	"next": "Następne",
+	"night": "Night",
 	"no": "nie",
 	"off": "wyłączone",
 	"on": "włączone",
 	"open": "Otwórz",
 	"open.newWindow": "Otwórz w nowym oknie",
+	"option": "Option",
 	"options": "Opcje",
 	"options.none": "Brak opcji",
 
@@ -426,6 +481,7 @@
 	"orientation.portrait": "Pionowa",
 	"orientation.square": "Kwadrat",
 
+	"page": "Page",
 	"page.blueprint": "Ta strona nie ma jeszcze wzorca. Możesz go zdefiniować w <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
 	"page.changeSlug": "Zmie\u0144 URL",
 	"page.changeSlug.fromTitle": "Utw\u00f3rz na podstawie tytu\u0142u",
@@ -433,13 +489,15 @@
 	"page.changeStatus.position": "Wybierz pozycję",
 	"page.changeStatus.select": "Wybierz nowy status",
 	"page.changeTemplate": "Zmień szablon",
+	"page.changeTemplate.notice": "Changing the page's template will remove content for fields that don't match in type. Use with caution.",
+	"page.create": "Create as {status}",
 	"page.delete.confirm": "Czy na pewno chcesz usunąć <strong>{title}</strong>?",
 	"page.delete.confirm.subpages": "<strong>Ta strona zawiera podstrony</strong>. <br>Wszystkie podstrony również zostaną usunięte.",
 	"page.delete.confirm.title": "Wprowadź tytuł strony, aby potwierdzić",
-	"page.draft.create": "Utwórz szkic",
 	"page.duplicate.appendix": "Kopiuj",
 	"page.duplicate.files": "Kopiuj pliki",
 	"page.duplicate.pages": "Kopiuj strony",
+	"page.move": "Move page",
 	"page.sort": "Zmień pozycję",
 	"page.status": "Status",
 	"page.status.draft": "Szkic",
@@ -460,6 +518,7 @@
 	"password": "Has\u0142o",
 	"paste": "Wklej",
 	"paste.after": "Wklej po",
+	"paste.success": "{count} pasted!",
 	"pixel": "Piksel",
 	"plugin": "Wtyczka",
 	"plugins": "Wtyczki",
@@ -468,6 +527,7 @@
 	"remove": "Usuń",
 	"rename": "Zmień nazwę",
 	"replace": "Zamie\u0144",
+	"replace.with": "Replace with",
 	"retry": "Pon\u00f3w pr\u00f3b\u0119",
 	"revert": "Odrzu\u0107",
 	"revert.confirm": "Czy na pewno chcesz <strong>usunąć wszystkie niezapisane zmiany</strong>?",
@@ -487,6 +547,7 @@
 	"search.all": "Pokaż wzystkie",
 	"search.results.none": "Brak wyników",
 
+	"section.invalid": "The section is invalid",
 	"section.required": "Sekcja jest wymagana",
 
 	"security": "Bezpieczeństwo",
@@ -498,6 +559,8 @@
 	"size": "Rozmiar",
 	"slug": "Końcówka URL",
 	"sort": "Sortuj",
+	"sort.drag": "Drag to sort …",
+	"split": "Split",
 
 	"stats.empty": "Brak raportów",
 	"system.issues.content": "Zdaje się, że folder „content” jest wystawiony na publiczny dostęp",
@@ -520,10 +583,13 @@
 	"system.updateStatus.update": "Dostępna darmowa aktualizacja { version }",
 	"system.updateStatus.upgrade": "Dostępna aktualizacja { version }",
 
-	"title": "Tytuł",
+	"tel": "Phone",
+	"tel.placeholder": "+49123456789",
 	"template": "Szablon",
+	"title": "Tytuł",
 	"today": "Dzisiaj",
 
+	"toolbar.button.clear": "Clear formatting",
 	"toolbar.button.code": "Kod",
 	"toolbar.button.bold": "Pogrubienie",
 	"toolbar.button.email": "Email",
@@ -541,6 +607,8 @@
 	"toolbar.button.link": "Link",
 	"toolbar.button.paragraph": "Akapit",
 	"toolbar.button.strike": "Przekreślenie",
+	"toolbar.button.sub": "Subscript",
+	"toolbar.button.sup": "Superscript",
 	"toolbar.button.ol": "Lista numerowana",
 	"toolbar.button.underline": "Podkreślenie",
 	"toolbar.button.ul": "Lista wypunktowana",

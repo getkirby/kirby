@@ -10,12 +10,15 @@
 	"cancel": "Batal",
 	"change": "Ubah",
 	"close": "Tutup",
+	"changes": "Changes",
 	"confirm": "Oke",
 	"collapse": "Lipat",
 	"collapse.all": "Lipat Semua",
 	"copy": "Salin",
 	"copy.all": "Salin semua",
+	"copy.success": "{count} copied!",
 	"create": "Buat",
+	"custom": "Custom",
 
 	"date": "Tanggal",
 	"date.select": "Pilih tanggal",
@@ -34,13 +37,18 @@
 	"delete": "Hapus",
 	"delete.all": "Hapus semua",
 
+	"dialog.fields.empty": "This dialog has no fields",
 	"dialog.files.empty": "Tidak ada berkas untuk dipilih",
 	"dialog.pages.empty": "Tidak ada halaman untuk dipilih",
+	"dialog.text.empty": "This dialog does not define any text",
 	"dialog.users.empty": "Tidak ada pengguna untuk dipilih",
 
 	"dimensions": "Dimensi",
 	"disabled": "Dimatikan",
 	"discard": "Buang",
+
+	"drawer.fields.empty": "This drawer has no fields",
+
 	"download": "Unduh",
 	"duplicate": "Duplikasi",
 
@@ -49,11 +57,13 @@
 	"email": "Surel",
 	"email.placeholder": "surel@contoh.com",
 
+	"enter": "Enter",
 	"entries": "Entries",
 	"entry": "Entry",
 
 	"environment": "Environment",
 
+	"error": "Kesalahan",
 	"error.access.code": "Kode tidak valid",
 	"error.access.login": "Upaya masuk tidak valid",
 	"error.access.panel": "Anda tidak diizinkan mengakses panel",
@@ -81,6 +91,9 @@
 
 	"error.file.changeName.empty": "Nama harus diisi",
 	"error.file.changeName.permission": "Anda tidak diizinkan mengubah nama berkas \"{filename}\"",
+	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
+	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
+
 	"error.file.duplicate": "Berkas dengan nama \"{filename}\" sudah ada",
 	"error.file.extension.forbidden": "Ekstensi \"{extension}\" tidak diizinkan",
 	"error.file.extension.invalid": "Ekstensi tidak valid: {extension}",
@@ -95,6 +108,7 @@
 	"error.file.minheight": "Tinggi gambar setidaknya {height} piksel",
 	"error.file.minsize": "Berkas terlalu kecil",
 	"error.file.minwidth": "Lebar gambar setidaknya {width} piksel",
+	"error.file.name.unique": "The filename must be unique",
 	"error.file.name.missing": "Nama berkas harus diisi",
 	"error.file.notFound": "Berkas \"{filename}\" tidak dapat ditemukan",
 	"error.file.orientation": "Orientasi gambar harus \"{orientation}\"",
@@ -122,6 +136,7 @@
 	"error.offline": "The Panel is currently offline",
 
 	"error.page.changeSlug.permission": "Anda tidak diizinkan mengubah akhiran URL untuk \"{slug}\"",
+	"error.page.changeSlug.reserved": "The path of top-level pages must not start with \"{path}\"",
 	"error.page.changeStatus.incomplete": "Halaman memiliki kesalahan dan tidak dapat diterbitkan",
 	"error.page.changeStatus.permission": "Status halaman ini tidak dapat diubah",
 	"error.page.changeStatus.toDraft.invalid": "Halaman \"{slug}\" tidak dapat dikonversi menjadi draf",
@@ -137,6 +152,12 @@
 	"error.page.draft.duplicate": "Draf halaman dengan akhiran URL \"{slug}\" sudah ada",
 	"error.page.duplicate": "Halaman dengan akhiran URL \"{slug}\" sudah ada",
 	"error.page.duplicate.permission": "Anda tidak diizinkan menduplikasi \"{slug}\"",
+	"error.page.move.ancestor": "The page cannot be moved into itself",
+	"error.page.move.directory": "The page directory cannot be moved",
+	"error.page.move.duplicate": "A sub page with the URL appendix \"{slug}\" already exists",
+	"error.page.move.notFound": "The moved page could not be found",
+	"error.page.move.permission": "You are not allowed to move \"{slug}\"",
+	"error.page.move.template": "The \"{template}\" template is not accepted as a subpage of \"{parent}\"",
 	"error.page.notFound": "Halaman \"{slug}\" tidak dapat ditemukan",
 	"error.page.num.invalid": "Masukkan nomor urut yang valid. Nomor tidak boleh negatif.",
 	"error.page.slug.invalid": "Masukkan akhiran URL yang valid",
@@ -162,6 +183,8 @@
 	"error.site.changeTitle.empty": "Judul harus diisi",
 	"error.site.changeTitle.permission": "Anda tidak diizinkan mengubah judul situs",
 	"error.site.update.permission": "Anda tidak diizinkan memperbaharui situs",
+
+	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",
 
 	"error.template.default.notFound": "Templat bawaan tidak ada",
 
@@ -195,6 +218,7 @@
 	"error.validation.accepted": "Mohon konfirmasi",
 	"error.validation.alpha": "Masukkan hanya karakter a-z",
 	"error.validation.alphanum": "Masukkan hanya karakter a-z atau 0-9",
+	"error.validation.anchor": "Please enter a correct link anchor",
 	"error.validation.between": "Masukkan nilai antara \"{min}\" dan \"{max}\"",
 	"error.validation.boolean": "Mohon konfirmasi atau tolak",
 	"error.validation.contains": "Masukkan nilai yang mengandung \"{needle}\"",
@@ -211,6 +235,7 @@
 	"error.validation.integer": "Masukkan bilangan bulat yang valid",
 	"error.validation.ip": "Masukkan IP yang valid",
 	"error.validation.less": "Masukkan nilai kurang dari {max}",
+	"error.validation.linkType": "The link type is not allowed",
 	"error.validation.match": "Nilai tidak cocok dengan pola yang semestinya",
 	"error.validation.max": "Masukkan nilai yang sama dengan atau kurang dari {max}",
 	"error.validation.maxlength": "Masukkan nilai yang lebih pendek. (maksimal {max} karakter)",
@@ -227,15 +252,18 @@
 	"error.validation.same": "Masukkan \"{other}\"",
 	"error.validation.size": "Ukuran dari nilai harus \"{size}\"",
 	"error.validation.startswith": "Nilai harus diawali dengan \"{start}\"",
+	"error.validation.tel": "Please enter an unformatted phone number",
 	"error.validation.time": "Masukkan waktu yang valid",
 	"error.validation.time.after": "Masukkan waktu setelah {time}",
 	"error.validation.time.before": "Masukkan waktu sebelum {time}",
 	"error.validation.time.between": "Masukkan waktu antara {min} dan {max}",
+	"error.validation.uuid": "Please enter a valid UUID",
 	"error.validation.url": "Masukkan URL yang valid",
 
 	"expand": "Luaskan",
 	"expand.all": "Luaskan Semua",
 
+	"field.invalid": "The field is invalid",
 	"field.required": "Bidang ini wajib",
 	"field.blocks.changeType": "Ubah tipe",
 	"field.blocks.code.name": "Kode",
@@ -246,7 +274,7 @@
 	"field.blocks.delete.confirm.selected": "Anda yakin menghapus blok yang dipilih?",
 	"field.blocks.empty": "Belum ada blok",
 	"field.blocks.fieldsets.label": "Pilih tipe blok …",
-	"field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to paste/import blocks from your clipboard",
+	"field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to import layouts/blocks from your clipboard <small>Only those allowed in the current field will get inserted.</small>",
 	"field.blocks.gallery.name": "Galeri",
 	"field.blocks.gallery.images.empty": "Belum ada gambar",
 	"field.blocks.gallery.images.label": "Gambar",
@@ -259,6 +287,8 @@
 	"field.blocks.image.crop": "Pangkas",
 	"field.blocks.image.link": "Tautan",
 	"field.blocks.image.location": "Lokasi",
+	"field.blocks.image.location.internal": "This website",
+	"field.blocks.image.location.external": "External source",
 	"field.blocks.image.name": "Gambar",
 	"field.blocks.image.placeholder": "Pilih gambar",
 	"field.blocks.image.ratio": "Rasio",
@@ -283,8 +313,10 @@
 
 	"field.files.empty": "Belum ada berkas yang dipilih",
 
+	"field.layout.change": "Change layout",
 	"field.layout.delete": "Hapus tata letak",
 	"field.layout.delete.confirm": "Anda yakin menghapus tata letak ini?",
+	"field.layout.delete.confirm.all": "Do you really want to delete all layouts?",
 	"field.layout.empty": "Belum ada baris",
 	"field.layout.select": "Pilih tata letak",
 
@@ -298,12 +330,22 @@
 
 	"field.users.empty": "Belum ada pengguna yang dipilih",
 
+	"fields.empty": "No fields yet",
+
+	"file": "Berkas",
 	"file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/files/{blueprint}.yml</strong>",
+	"file.changeTemplate": "Ubah templat",
+	"file.changeTemplate.notice": "Changing the file's template will remove content for fields that don't match in type. If the new template defines certain rules, e.g. image dimensions, those will also be applied irreversibly. Use with caution.",
 	"file.delete.confirm": "Anda yakin menghapus <br> <strong>{filename}</strong>?",
+	"file.focus.placeholder": "Set focal point",
+	"file.focus.reset": "Remove focal point",
+	"file.focus.title": "Focus",
 	"file.sort": "Ubah posisi",
 
 	"files": "Berkas",
 	"files.empty": "Belum ada berkas",
+
+	"filter": "Filter",
 
 	"hide": "Sembunyikan",
 	"hour": "Jam",
@@ -332,6 +374,7 @@
 	"language.convert": "Atur sebagai bawaan",
 	"language.convert.confirm": "<p>Anda yakin mengubah <strong>{name}</strong> menjadi bahasa bawaan? Ini tidak dapat dibatalkan.</p> <p>Jika <strong>{name}</strong> memiliki konten yang tidak diterjemahkan, tidak akan ada pengganti yang valid dan dapat menyebabkan beberapa bagian dari situs Anda menjadi kosong.</p>",
 	"language.create": "Tambah bahasa baru",
+	"language.default": "Bahasa bawaan",
 	"language.delete.confirm": "Anda yakin menghapus bahasa <strong>{name}</strong> termasuk semua terjemahannya? Ini tidak dapat dibatalkan!",
 	"language.deleted": "Bahasa sudah dihapus",
 	"language.direction": "Arah baca",
@@ -340,7 +383,16 @@
 	"language.locale": "String \"PHP locale\"",
 	"language.locale.warning": "Anda menggunakan pengaturan lokal ubah suaian. Ubah di berkas bahasa di /site/languages",
 	"language.name": "Nama",
+	"language.secondary": "Secondary language",
+	"language.settings": "Language settings",
 	"language.updated": "Bahasa sudah diperbaharui",
+	"language.variables": "Language variables",
+	"language.variables.empty": "No translations yet",
+
+	"language.variable.delete.confirm": "Do you really want to delete the variable for {key}?",
+	"language.variable.key": "Key",
+	"language.variable.notFound": "The variable could not be found",
+	"language.variable.value": "Value",
 
 	"languages": "Bahasa",
 	"languages.default": "Bahasa bawaan",
@@ -367,11 +419,10 @@
 
 	"lock.unsaved": "Perubahan belum tersimpan",
 	"lock.unsaved.empty": "Tidak ada lagi perubahan belum tersimpan",
-	"lock.isLocked": "Perubahan belum tersimpan oleh <strong>{email}</strong>",
-	"lock.file.isLocked": "Berkas sedang disunting oleh {email} dan tidak dapat diubah.",
-	"lock.page.isLocked": "Halaman sedang disunting oleh {email} dan tidak dapat diubah.",
+	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Buka kunci",
-	"lock.isUnlocked": "Perubahan Anda yang belum tersimpan telah terubah oleh pengguna lain. Anda dapat mengunduh perubahan Anda untuk menggabungkannya manual.",
+	"lock.unlock.submit": "Unlock and overwrite unsaved changes by <strong>{email}</strong>",
+	"lock.isUnlocked": "Was unlocked by another user",
 
 	"login": "Masuk",
 	"login.code.label.login": "Kode masuk",
@@ -391,6 +442,7 @@
 
 	"logout": "Keluar",
 
+	"merge": "Merge",
 	"menu": "Menu",
 	"meridiem": "AM/PM",
 	"mime": "Tipe Media",
@@ -411,13 +463,16 @@
 	"months.september": "September",
 
 	"more": "Lebih lanjut",
+	"move": "Move",
 	"name": "Nama",
 	"next": "Selanjutnya",
+	"night": "Night",
 	"no": "tidak",
 	"off": "mati",
 	"on": "hidup",
 	"open": "Buka",
 	"open.newWindow": "Buka di jendela baru",
+	"option": "Option",
 	"options": "Opsi",
 	"options.none": "Tidak ada opsi",
 
@@ -426,6 +481,7 @@
 	"orientation.portrait": "Tegak",
 	"orientation.square": "Persegi",
 
+	"page": "Halaman",
 	"page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
 	"page.changeSlug": "Ubah URL",
 	"page.changeSlug.fromTitle": "Buat dari judul",
@@ -433,13 +489,15 @@
 	"page.changeStatus.position": "Pilih posisi",
 	"page.changeStatus.select": "Pilih status baru",
 	"page.changeTemplate": "Ubah templat",
+	"page.changeTemplate.notice": "Changing the page's template will remove content for fields that don't match in type. Use with caution.",
+	"page.create": "Create as {status}",
 	"page.delete.confirm": "Anda yakin menghapus <strong>{title}</strong>?",
 	"page.delete.confirm.subpages": "<strong>Halaman ini memiliki sub-halaman</strong>. <br>Semua sub-halaman akan ikut dihapus.",
 	"page.delete.confirm.title": "Masukkan judul halaman untuk mengonfirmasi",
-	"page.draft.create": "Buat draf",
 	"page.duplicate.appendix": "Salin",
 	"page.duplicate.files": "Salin berkas",
 	"page.duplicate.pages": "Salin halaman",
+	"page.move": "Move page",
 	"page.sort": "Ubah posisi",
 	"page.status": "Status",
 	"page.status.draft": "Draf",
@@ -460,6 +518,7 @@
 	"password": "Sandi",
 	"paste": "Paste",
 	"paste.after": "Paste after",
+	"paste.success": "{count} pasted!",
 	"pixel": "Piksel",
 	"plugin": "Plugin",
 	"plugins": "Plugins",
@@ -468,6 +527,7 @@
 	"remove": "Hapus",
 	"rename": "Ubah nama",
 	"replace": "Ganti",
+	"replace.with": "Replace with",
 	"retry": "Coba lagi",
 	"revert": "Kembalikan",
 	"revert.confirm": "Anda yakin <strong>menghapus semua perubahan yang belum tersimpan</strong>?",
@@ -487,6 +547,7 @@
 	"search.all": "Tampilkan semua",
 	"search.results.none": "Tidak ada hasil",
 
+	"section.invalid": "The section is invalid",
 	"section.required": "Bagian ini wajib",
 
 	"security": "Security",
@@ -498,6 +559,8 @@
 	"size": "Ukuran",
 	"slug": "Akhiran URL",
 	"sort": "Urutkan",
+	"sort.drag": "Drag to sort …",
+	"split": "Split",
 
 	"stats.empty": "No reports",
 	"system.issues.content": "The content folder seems to be exposed",
@@ -520,10 +583,13 @@
 	"system.updateStatus.update": "Free update { version } available",
 	"system.updateStatus.upgrade": "Upgrade { version } available",
 
-	"title": "Judul",
+	"tel": "Phone",
+	"tel.placeholder": "+49123456789",
 	"template": "Templat",
+	"title": "Judul",
 	"today": "Hari ini",
 
+	"toolbar.button.clear": "Clear formatting",
 	"toolbar.button.code": "Kode",
 	"toolbar.button.bold": "Tebal",
 	"toolbar.button.email": "Surel",
@@ -541,6 +607,8 @@
 	"toolbar.button.link": "Tautan",
 	"toolbar.button.paragraph": "Paragraph",
 	"toolbar.button.strike": "Coret",
+	"toolbar.button.sub": "Subscript",
+	"toolbar.button.sup": "Superscript",
 	"toolbar.button.ol": "Daftar berurut",
 	"toolbar.button.underline": "Garis bawah",
 	"toolbar.button.ul": "Daftar tidak berurut",

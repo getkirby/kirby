@@ -10,12 +10,15 @@
 	"cancel": "Peruuta",
 	"change": "Muuta",
 	"close": "Sulje",
+	"changes": "Changes",
 	"confirm": "Ok",
 	"collapse": "Pienennä",
 	"collapse.all": "Pienennä kaikki",
 	"copy": "Kopioi",
 	"copy.all": "Kopioi kaikki",
+	"copy.success": "{count} copied!",
 	"create": "Luo",
+	"custom": "Custom",
 
 	"date": "Päivämäärä",
 	"date.select": "Valitse päivämäärä",
@@ -34,13 +37,18 @@
 	"delete": "Poista",
 	"delete.all": "Poista kaikki",
 
+	"dialog.fields.empty": "This dialog has no fields",
 	"dialog.files.empty": "Ei valittavissa olevia tiedostoja",
 	"dialog.pages.empty": "Ei valittavissa olevia sivuja",
+	"dialog.text.empty": "This dialog does not define any text",
 	"dialog.users.empty": "Ei valittavissa olevia käyttäjiä",
 
 	"dimensions": "Mitat",
 	"disabled": "Pois käytöstä",
 	"discard": "Hylkää",
+
+	"drawer.fields.empty": "This drawer has no fields",
+
 	"download": "Lataa",
 	"duplicate": "Kahdenna",
 
@@ -49,11 +57,13 @@
 	"email": "S\u00e4hk\u00f6posti",
 	"email.placeholder": "nimi@osoite.fi",
 
+	"enter": "Enter",
 	"entries": "Entries",
 	"entry": "Entry",
 
 	"environment": "Ympäristö",
 
+	"error": "Error",
 	"error.access.code": "Väärä koodi",
 	"error.access.login": "Kirjautumistiedot eivät kelpaa",
 	"error.access.panel": "Sinulla ei ole oikeutta käyttää paneelia",
@@ -81,6 +91,9 @@
 
 	"error.file.changeName.empty": "Nimi ei voi olla tyhjä",
 	"error.file.changeName.permission": "Sinulla ei ole oikeutta muuttaa tiedoston \"{filename}\" nimeä",
+	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
+	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
+
 	"error.file.duplicate": "Tiedosto nimeltä \"{filename}\" on jo olemassa",
 	"error.file.extension.forbidden": "Tiedostopääte \"{extension}\" ei ole sallittu",
 	"error.file.extension.invalid": "Pääte {extension} ei kelpaa",
@@ -95,6 +108,7 @@
 	"error.file.minheight": "Kuvan korkeus täytyy olla vähintään {height} pikseliä",
 	"error.file.minsize": "Tiedosto on liian pieni",
 	"error.file.minwidth": "Kuvan leveys täytyy olla vähintään {width} pikseliä",
+	"error.file.name.unique": "The filename must be unique",
 	"error.file.name.missing": "Tiedostonimi ei voi olla tyhjä",
 	"error.file.notFound": "Tiedostoa \"{filename}\" ei löytynyt",
 	"error.file.orientation": "Kuvan suuntaus täytyy olla \"{orientation}\"",
@@ -122,6 +136,7 @@
 	"error.offline": "Paneeli on offline-tilassa",
 
 	"error.page.changeSlug.permission": "Sinulla ei ole oikeutta muuttaa URL-liitettä sivulle \"{slug}\"",
+	"error.page.changeSlug.reserved": "The path of top-level pages must not start with \"{path}\"",
 	"error.page.changeStatus.incomplete": "Sivulla on virheitä eikä sitä voitu julkaista",
 	"error.page.changeStatus.permission": "Tämän sivun tilaa ei voi muuttaa",
 	"error.page.changeStatus.toDraft.invalid": "Sivua \"{slug}\" ei voi muuttaa luonnokseksi",
@@ -137,6 +152,12 @@
 	"error.page.draft.duplicate": "Sivuluonnos URL-liitteellä \"{slug}\" on jo olemassa",
 	"error.page.duplicate": "Sivu URL-liitteellä \"{slug}\" on jo olemassa",
 	"error.page.duplicate.permission": "Sinulla ei ole oikeutta kahdentaa sivua \"{slug}\"",
+	"error.page.move.ancestor": "The page cannot be moved into itself",
+	"error.page.move.directory": "The page directory cannot be moved",
+	"error.page.move.duplicate": "A sub page with the URL appendix \"{slug}\" already exists",
+	"error.page.move.notFound": "The moved page could not be found",
+	"error.page.move.permission": "You are not allowed to move \"{slug}\"",
+	"error.page.move.template": "The \"{template}\" template is not accepted as a subpage of \"{parent}\"",
 	"error.page.notFound": "Sivua \"{slug}\" ei löytynyt",
 	"error.page.num.invalid": "Anna kelpaava järjestysnumero. Numero ei voi olla negatiivinen.",
 	"error.page.slug.invalid": "Anna kelpaava URL-liite",
@@ -162,6 +183,8 @@
 	"error.site.changeTitle.empty": "Nimi ei voi olla tyhjä",
 	"error.site.changeTitle.permission": "Sinulla ei ole oikeutta päivittää sivuston nimeä",
 	"error.site.update.permission": "Sinulla ei ole oikeutta päivittää sivuston tietoja",
+
+	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",
 
 	"error.template.default.notFound": "Oletussivupohjaa ei ole määritetty",
 
@@ -195,6 +218,7 @@
 	"error.validation.accepted": "Ole hyvä ja vahvista",
 	"error.validation.alpha": "Anna vain merkkejä väliltä a-z",
 	"error.validation.alphanum": "Anna vain merkkejä väliltä a-z tai/ja numeroita väliltä 0-9",
+	"error.validation.anchor": "Please enter a correct link anchor",
 	"error.validation.between": "Anna arvo väliltä \"{min}\" ja \"{max}\"",
 	"error.validation.boolean": "Vahvista tai peruuta",
 	"error.validation.contains": "Anna arvo joka sisältää \"{needle}\"",
@@ -211,6 +235,7 @@
 	"error.validation.integer": "Anna kelpaava kokonaisluku",
 	"error.validation.ip": "Anna kelpaava IP-osoite",
 	"error.validation.less": "Anna arvo joka on pienempi kuin {max}",
+	"error.validation.linkType": "The link type is not allowed",
 	"error.validation.match": "Arvo ei vastaa vaadittua kaavaa",
 	"error.validation.max": "Anna arvo joka on enintään {max}",
 	"error.validation.maxlength": "Anna lyhyempi arvo. (enintään {max} merkkiä)",
@@ -227,15 +252,18 @@
 	"error.validation.same": "Anna \"{other}\"",
 	"error.validation.size": "Arvon koko täytyy olla \"{size}\"",
 	"error.validation.startswith": "Arvon alkuosa täytyy olla \"{start}\"",
+	"error.validation.tel": "Please enter an unformatted phone number",
 	"error.validation.time": "Anna kelpaava aika",
 	"error.validation.time.after": "Anna myöhempi aika kuin {time}",
 	"error.validation.time.before": "Anna aiempi aika kuin {time}",
 	"error.validation.time.between": "Anna aika väliltä {min} ja {max}",
+	"error.validation.uuid": "Please enter a valid UUID",
 	"error.validation.url": "Anna kelpaava URL",
 
 	"expand": "Laajenna",
 	"expand.all": "Laajenna kaikki",
 
+	"field.invalid": "The field is invalid",
 	"field.required": "Kenttä on pakollinen",
 	"field.blocks.changeType": "Vaihda tyyppiä",
 	"field.blocks.code.name": "Koodi",
@@ -246,7 +274,7 @@
 	"field.blocks.delete.confirm.selected": "Haluatko varmasti poistaa valitut lohkot?",
 	"field.blocks.empty": "Ei lohkoja",
 	"field.blocks.fieldsets.label": "Valitse lohkon tyyppi …",
-	"field.blocks.fieldsets.paste": "Paina <kbd>{{ shortcut }}</kbd> liittääksesi tai tuodaksesi lohkoja leikepöydältä",
+	"field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to import layouts/blocks from your clipboard <small>Only those allowed in the current field will get inserted.</small>",
 	"field.blocks.gallery.name": "Galleria",
 	"field.blocks.gallery.images.empty": "Ei kuvia",
 	"field.blocks.gallery.images.label": "Kuvat",
@@ -259,6 +287,8 @@
 	"field.blocks.image.crop": "Rajaa",
 	"field.blocks.image.link": "Linkki",
 	"field.blocks.image.location": "Sijainti",
+	"field.blocks.image.location.internal": "This website",
+	"field.blocks.image.location.external": "External source",
 	"field.blocks.image.name": "Kuva",
 	"field.blocks.image.placeholder": "Valitse kuva",
 	"field.blocks.image.ratio": "Kuvasuhde",
@@ -283,8 +313,10 @@
 
 	"field.files.empty": "Tiedostoja ei ole vielä valittu",
 
+	"field.layout.change": "Change layout",
 	"field.layout.delete": "Poista asettelu",
 	"field.layout.delete.confirm": "Halutako varmasti poistaa tämän asettelun?",
+	"field.layout.delete.confirm.all": "Do you really want to delete all layouts?",
 	"field.layout.empty": "Ei rivejä",
 	"field.layout.select": "Valitse asettelu",
 
@@ -298,12 +330,22 @@
 
 	"field.users.empty": "Käyttäjiä ei ole vielä valittu",
 
+	"fields.empty": "No fields yet",
+
+	"file": "File",
 	"file.blueprint": "Tällä tiedostolla ei ole vielä suunnitelmaa. Voit määrittää suunnitelman tiedostoon <strong>/site/blueprints/files/{blueprint}.yml</strong>",
+	"file.changeTemplate": "Vaihda sivupohja",
+	"file.changeTemplate.notice": "Changing the file's template will remove content for fields that don't match in type. If the new template defines certain rules, e.g. image dimensions, those will also be applied irreversibly. Use with caution.",
 	"file.delete.confirm": "Haluatko varmasti poistaa tiedoston <br><strong>{filename}</strong>?",
+	"file.focus.placeholder": "Set focal point",
+	"file.focus.reset": "Remove focal point",
+	"file.focus.title": "Focus",
 	"file.sort": "Muuta järjestyspaikkaa",
 
 	"files": "Tiedostot",
 	"files.empty": "Tiedostoja ei ole vielä lisätty",
+
+	"filter": "Filter",
 
 	"hide": "Piilota",
 	"hour": "Tunti",
@@ -332,6 +374,7 @@
 	"language.convert": "Muuta oletukseksi",
 	"language.convert.confirm": "<p>Haluatko varmasti muuttaa kielen <strong>{name}</strong> oletuskieleksi? Tätä muutosta ei voi peruuttaa.</p><p>Jos<strong>{name}</strong> sisältää kääntämättömiä kohtia, varakäännöstä ei enää ole näille kohdille ja sivustosi saattaa olla osittain tyhjä.</p>",
 	"language.create": "Lisää uusi kieli",
+	"language.default": "Oletuskieli",
 	"language.delete.confirm": "Haluatko varmasti poistaa kielen <strong>{name}</strong>, mukaanlukien kaikki käännökset? Tätä toimintoa ei voi peruuttaa!",
 	"language.deleted": "Kieli on poistettu",
 	"language.direction": "Lukusuunta",
@@ -340,7 +383,16 @@
 	"language.locale": "PHP-aluemäärityksen tunniste",
 	"language.locale.warning": "Käytät mukautettua aluemääritystä. Muokkaa sitä kielitiedostossa /site/languages",
 	"language.name": "Nimi",
+	"language.secondary": "Secondary language",
+	"language.settings": "Language settings",
 	"language.updated": "Kieli on päivitetty",
+	"language.variables": "Language variables",
+	"language.variables.empty": "No translations yet",
+
+	"language.variable.delete.confirm": "Do you really want to delete the variable for {key}?",
+	"language.variable.key": "Key",
+	"language.variable.notFound": "The variable could not be found",
+	"language.variable.value": "Value",
 
 	"languages": "Kielet",
 	"languages.default": "Oletuskieli",
@@ -367,11 +419,10 @@
 
 	"lock.unsaved": "Tallentamattomia muutoksia",
 	"lock.unsaved.empty": "Ei enempää tallentamattomia muutoksia ",
-	"lock.isLocked": "Käyttäjällä <strong>{email}</strong> on tallentamattomia muutoksia",
-	"lock.file.isLocked": "Tiedostoa ei voi muokata juuri nyt, sillä {email} on muokkaamassa tiedostoa.",
-	"lock.page.isLocked": "Sivua ei voi muokata juuri nyt, sillä {email} on muokkaamassa sivua.",
+	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Vapauta",
-	"lock.isUnlocked": "Toinen käyttäjä ylikirjoitti tallentamattomat muutoksesi. Voit ladata tekemäsi muutokset ja lisätä ne käsin.",
+	"lock.unlock.submit": "Unlock and overwrite unsaved changes by <strong>{email}</strong>",
+	"lock.isUnlocked": "Was unlocked by another user",
 
 	"login": "Kirjaudu",
 	"login.code.label.login": "Kirjautumiskoodi",
@@ -391,6 +442,7 @@
 
 	"logout": "Kirjaudu ulos",
 
+	"merge": "Merge",
 	"menu": "Valikko",
 	"meridiem": "am/pm",
 	"mime": "Median tyyppi",
@@ -411,13 +463,16 @@
 	"months.september": "Syyskuu",
 
 	"more": "Lisää",
+	"move": "Move",
 	"name": "Nimi",
 	"next": "Seuraava",
+	"night": "Night",
 	"no": "ei",
 	"off": "Pois käytöstä",
 	"on": "Käytössä",
 	"open": "Avaa",
 	"open.newWindow": "Avaa uudessa ikkunassa",
+	"option": "Option",
 	"options": "Asetukset",
 	"options.none": "Ei valintoja",
 
@@ -426,6 +481,7 @@
 	"orientation.portrait": "Pystysuuntainen",
 	"orientation.square": "Neliskulmainen",
 
+	"page": "Page",
 	"page.blueprint": "Tällä sivulla ei ole vielä suunnitelmaa. Voit määrittää suunnitelman tiedostoon <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
 	"page.changeSlug": "Vaihda URL-osoite",
 	"page.changeSlug.fromTitle": "Luo nimen perusteella",
@@ -433,13 +489,15 @@
 	"page.changeStatus.position": "Valitse järjestyspaikka",
 	"page.changeStatus.select": "Valitse uusi tila",
 	"page.changeTemplate": "Vaihda sivupohja",
+	"page.changeTemplate.notice": "Changing the page's template will remove content for fields that don't match in type. Use with caution.",
+	"page.create": "Create as {status}",
 	"page.delete.confirm": "Haluatko varmasti poistaa sivun <strong>{title}</strong>?",
 	"page.delete.confirm.subpages": "<strong>Tällä sivulla on alasivuja</strong>.<br>Myös kaikki alasivut poistetaan.",
 	"page.delete.confirm.title": "Anna vahvistuksena sivun nimi",
-	"page.draft.create": "Uusi luonnos",
 	"page.duplicate.appendix": "Kopioi",
 	"page.duplicate.files": "Kopioi tiedostot",
 	"page.duplicate.pages": "Kopioi sivut",
+	"page.move": "Move page",
 	"page.sort": "Muuta järjestyspaikkaa",
 	"page.status": "Tila",
 	"page.status.draft": "Luonnos",
@@ -460,6 +518,7 @@
 	"password": "Salasana",
 	"paste": "Liitä",
 	"paste.after": "Liitä jälkeen",
+	"paste.success": "{count} pasted!",
 	"pixel": "Pikseli",
 	"plugin": "Liitännäinen",
 	"plugins": "Liitännäiset",
@@ -468,6 +527,7 @@
 	"remove": "Poista",
 	"rename": "Nimeä uudelleen",
 	"replace": "Korvaa",
+	"replace.with": "Replace with",
 	"retry": "Yrit\u00e4 uudelleen",
 	"revert": "Palauta",
 	"revert.confirm": "Haluatko varmasti <strong>poistaa kaikki tallentamattomat muutokset</strong>?",
@@ -487,6 +547,7 @@
 	"search.all": "Näytä kaikki",
 	"search.results.none": "Ei tuloksia",
 
+	"section.invalid": "The section is invalid",
 	"section.required": "Osio on pakollinen",
 
 	"security": "Tietoturva",
@@ -498,6 +559,8 @@
 	"size": "Koko",
 	"slug": "URL-tunniste",
 	"sort": "Järjestele",
+	"sort.drag": "Drag to sort …",
+	"split": "Split",
 
 	"stats.empty": "Ei raportteja",
 	"system.issues.content": "Content-kansio näyttäisi olevan julkinen",
@@ -520,10 +583,13 @@
 	"system.updateStatus.update": "Ilmainen päivitys { version } saatavilla",
 	"system.updateStatus.upgrade": "Päivitys { version } saatavilla",
 
-	"title": "Nimi",
+	"tel": "Phone",
+	"tel.placeholder": "+49123456789",
 	"template": "Sivupohja",
+	"title": "Nimi",
 	"today": "Tänään",
 
+	"toolbar.button.clear": "Clear formatting",
 	"toolbar.button.code": "Koodi",
 	"toolbar.button.bold": "Lihavointi",
 	"toolbar.button.email": "S\u00e4hk\u00f6posti",
@@ -541,6 +607,8 @@
 	"toolbar.button.link": "Linkki",
 	"toolbar.button.paragraph": "Kappale",
 	"toolbar.button.strike": "Yliviivaus",
+	"toolbar.button.sub": "Subscript",
+	"toolbar.button.sup": "Superscript",
 	"toolbar.button.ol": "Järjestetty lista",
 	"toolbar.button.underline": "Alaviiva",
 	"toolbar.button.ul": "Järjestämätön lista",

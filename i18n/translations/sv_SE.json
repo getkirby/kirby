@@ -10,12 +10,15 @@
 	"cancel": "Avbryt",
 	"change": "\u00c4ndra",
 	"close": "St\u00e4ng",
+	"changes": "Changes",
 	"confirm": "Spara",
 	"collapse": "Kollapsa",
 	"collapse.all": "Kollapsa alla",
 	"copy": "Kopiera",
 	"copy.all": "Kopiera alla",
+	"copy.success": "{count} copied!",
 	"create": "Skapa",
+	"custom": "Custom",
 
 	"date": "Datum",
 	"date.select": "Välj ett datum",
@@ -34,13 +37,18 @@
 	"delete": "Radera",
 	"delete.all": "Radera allt",
 
+	"dialog.fields.empty": "This dialog has no fields",
 	"dialog.files.empty": "Inga filer att välja",
 	"dialog.pages.empty": "Inga sidor att välja",
+	"dialog.text.empty": "This dialog does not define any text",
 	"dialog.users.empty": "Inga användare att välja",
 
 	"dimensions": "Dimensioner",
 	"disabled": "Inaktiverad",
 	"discard": "Kassera",
+
+	"drawer.fields.empty": "This drawer has no fields",
+
 	"download": "Ladda ner",
 	"duplicate": "Duplicera",
 
@@ -49,11 +57,13 @@
 	"email": "E-postadress",
 	"email.placeholder": "namn@exempel.se",
 
+	"enter": "Enter",
 	"entries": "Poster",
 	"entry": "Post",
 
 	"environment": "Miljö",
 
+	"error": "Error",
 	"error.access.code": "Ogiltig kod",
 	"error.access.login": "Ogiltig inloggning",
 	"error.access.panel": "Du saknar behörighet att nå panelen",
@@ -81,6 +91,9 @@
 
 	"error.file.changeName.empty": "Namnet får inte vara tomt",
 	"error.file.changeName.permission": "Du har inte behörighet att ändra namnet på \"{filename}\"",
+	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
+	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
+
 	"error.file.duplicate": "En fil med namnet \"{filename}\" existerar redan",
 	"error.file.extension.forbidden": "Filändelsen \"{extension}\" är inte tillåten",
 	"error.file.extension.invalid": "Ogiltig filändelse: {extension}",
@@ -95,6 +108,7 @@
 	"error.file.minheight": "Bildens höjd måste vara minst {height} pixlar",
 	"error.file.minsize": "Filen är för liten",
 	"error.file.minwidth": "Bildens bredd måste vara minst {width} pixlar",
+	"error.file.name.unique": "The filename must be unique",
 	"error.file.name.missing": "Filnamnet får inte vara tomt",
 	"error.file.notFound": "Filen  \"{filename}\" kan ej hittas",
 	"error.file.orientation": "Bildens orientering måste vara \"{orientation}\"",
@@ -122,6 +136,7 @@
 	"error.offline": "Panelen är för närvarande offline",
 
 	"error.page.changeSlug.permission": "Du har inte behörighet att ändra URL-appendixen för \"{slug}\"",
+	"error.page.changeSlug.reserved": "The path of top-level pages must not start with \"{path}\"",
 	"error.page.changeStatus.incomplete": "Sidan innehåller fel och kan inte publiceras",
 	"error.page.changeStatus.permission": "Statusen för denna sida kan inte ändras",
 	"error.page.changeStatus.toDraft.invalid": "Statusen för sidan \"{slug}\" kan inte ändras till utkast",
@@ -137,6 +152,12 @@
 	"error.page.draft.duplicate": "Ett utkast med URL-appendixen \"{slug}\" existerar redan",
 	"error.page.duplicate": "En sida med URL-appendixen \"{slug}\" existerar redan",
 	"error.page.duplicate.permission": "Du har inte behörighet att duplicera \"{slug}\"",
+	"error.page.move.ancestor": "The page cannot be moved into itself",
+	"error.page.move.directory": "The page directory cannot be moved",
+	"error.page.move.duplicate": "A sub page with the URL appendix \"{slug}\" already exists",
+	"error.page.move.notFound": "The moved page could not be found",
+	"error.page.move.permission": "You are not allowed to move \"{slug}\"",
+	"error.page.move.template": "The \"{template}\" template is not accepted as a subpage of \"{parent}\"",
 	"error.page.notFound": "Sidan \"{slug}\" kan inte hittas",
 	"error.page.num.invalid": "Ange ett giltigt nummer för sortering. Numret får inte vara negativt.",
 	"error.page.slug.invalid": "Ange en giltig URL-appendix",
@@ -162,6 +183,8 @@
 	"error.site.changeTitle.empty": "Titeln får inte vara tom",
 	"error.site.changeTitle.permission": "Du har inte behörighet att ändra titeln på webbplatsen",
 	"error.site.update.permission": "Du har inte behörighet att uppdatera webbplatsen",
+
+	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",
 
 	"error.template.default.notFound": "Standardmallen finns inte",
 
@@ -195,6 +218,7 @@
 	"error.validation.accepted": "Vänligen bekräfta",
 	"error.validation.alpha": "Ange endast tecken mellan a-z",
 	"error.validation.alphanum": "Ange endast tecken mellan a-z eller siffror 0-9",
+	"error.validation.anchor": "Please enter a correct link anchor",
 	"error.validation.between": "Ange ett värde mellan \"{min}\" och \"{max}\"",
 	"error.validation.boolean": "Bekräfta eller neka",
 	"error.validation.contains": "Ange ett värde som innehåller \"{needle}\"",
@@ -211,6 +235,7 @@
 	"error.validation.integer": "Ange en giltig heltalssiffra",
 	"error.validation.ip": "Ange en giltig IP-adress",
 	"error.validation.less": "Ange ett värde lägre än {max}",
+	"error.validation.linkType": "The link type is not allowed",
 	"error.validation.match": "Värdet matchar inte det förväntade mönstret",
 	"error.validation.max": "Ange ett värde som är lika med eller lägre än {max}",
 	"error.validation.maxlength": "Ange ett kortare värde. (max {max} tecken)",
@@ -227,15 +252,18 @@
 	"error.validation.same": "Ange \"{other}\"",
 	"error.validation.size": "Storleken av värdet måste vara \"{size}\"",
 	"error.validation.startswith": "Värdet måste börja med \"{start}\"",
+	"error.validation.tel": "Please enter an unformatted phone number",
 	"error.validation.time": "Ange en giltig tid",
 	"error.validation.time.after": "Ange en tid efter {time}",
 	"error.validation.time.before": "Ange en tid före {time}",
 	"error.validation.time.between": "Ange en tid mellan {min} och {max}",
+	"error.validation.uuid": "Please enter a valid UUID",
 	"error.validation.url": "Ange en giltig URL",
 
 	"expand": "Expandera",
 	"expand.all": "Expandera alla",
 
+	"field.invalid": "The field is invalid",
 	"field.required": "Fältet krävs",
 	"field.blocks.changeType": "Ändra typ",
 	"field.blocks.code.name": "Kod",
@@ -246,7 +274,7 @@
 	"field.blocks.delete.confirm.selected": "Vill du verkligen radera de valda blocken?",
 	"field.blocks.empty": "Inga block än",
 	"field.blocks.fieldsets.label": "Välj en typ av block …",
-	"field.blocks.fieldsets.paste": "Tryck på <kbd>{{ shortcut }}</kbd> för att klistra in/importera block från ditt urklipp",
+	"field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to import layouts/blocks from your clipboard <small>Only those allowed in the current field will get inserted.</small>",
 	"field.blocks.gallery.name": "Galleri",
 	"field.blocks.gallery.images.empty": "Inga bilder än",
 	"field.blocks.gallery.images.label": "Bilder",
@@ -259,6 +287,8 @@
 	"field.blocks.image.crop": "Beskär",
 	"field.blocks.image.link": "Länk",
 	"field.blocks.image.location": "Plats",
+	"field.blocks.image.location.internal": "This website",
+	"field.blocks.image.location.external": "External source",
 	"field.blocks.image.name": "Bild",
 	"field.blocks.image.placeholder": "Välj en bild",
 	"field.blocks.image.ratio": "Bildförhållande",
@@ -283,8 +313,10 @@
 
 	"field.files.empty": "Inga filer valda än",
 
+	"field.layout.change": "Change layout",
 	"field.layout.delete": "Radera layout",
 	"field.layout.delete.confirm": "Vill du verkligen radera denna layout?",
+	"field.layout.delete.confirm.all": "Do you really want to delete all layouts?",
 	"field.layout.empty": "Inga rader än",
 	"field.layout.select": "Välj en layout",
 
@@ -298,12 +330,22 @@
 
 	"field.users.empty": "Inga användare valda än",
 
+	"fields.empty": "No fields yet",
+
+	"file": "File",
 	"file.blueprint": "Denna fil har ingen blueprint än. Du kan skapa en i <strong>/site/blueprints/files/{blueprint}.yml</strong>",
+	"file.changeTemplate": "Ändra mall",
+	"file.changeTemplate.notice": "Changing the file's template will remove content for fields that don't match in type. If the new template defines certain rules, e.g. image dimensions, those will also be applied irreversibly. Use with caution.",
 	"file.delete.confirm": "Vill du verkligen radera <br><strong>{filename}</strong>?",
+	"file.focus.placeholder": "Set focal point",
+	"file.focus.reset": "Remove focal point",
+	"file.focus.title": "Focus",
 	"file.sort": "Ändra position",
 
 	"files": "Filer",
 	"files.empty": "Inga filer än",
+
+	"filter": "Filter",
 
 	"hide": "Göm",
 	"hour": "Timme",
@@ -332,6 +374,7 @@
 	"language.convert": "Ange som standard",
 	"language.convert.confirm": "<p>Vill du verkligen göra <strong>{name}</strong> till standardspråket? Detta kan inte ångras.</p><p>Om <strong>{name}</strong> har oöversatt innehåll, kommer det inte längre finnas en alternativ översättning och delar av sajten kommer kanske att vara tom.</p>",
 	"language.create": "Lägg till ett nytt språk",
+	"language.default": "Standardspråk",
 	"language.delete.confirm": "Vill du verkligen radera språket <strong>{name}</strong> inklusive alla översättningar? Detta kan inte ångras!",
 	"language.deleted": "Språket har raderats",
 	"language.direction": "Läsriktning",
@@ -340,7 +383,16 @@
 	"language.locale": "PHP locale string",
 	"language.locale.warning": "Du använder en anpassad språkinställning. Ändra den i språkfilen i mappen /site/languages",
 	"language.name": "Namn",
+	"language.secondary": "Secondary language",
+	"language.settings": "Language settings",
 	"language.updated": "Språket har uppdaterats",
+	"language.variables": "Language variables",
+	"language.variables.empty": "No translations yet",
+
+	"language.variable.delete.confirm": "Do you really want to delete the variable for {key}?",
+	"language.variable.key": "Key",
+	"language.variable.notFound": "The variable could not be found",
+	"language.variable.value": "Value",
 
 	"languages": "Språk",
 	"languages.default": "Standardspråk",
@@ -367,11 +419,10 @@
 
 	"lock.unsaved": "Osparade ändringar",
 	"lock.unsaved.empty": "Det finns inga fler osparade ändringar",
-	"lock.isLocked": "Osparade ändringar av <strong>{email}</strong>",
-	"lock.file.isLocked": "Filen redigeras just nu av {email} och kan inte redigeras.",
-	"lock.page.isLocked": "Sidan redigeras just nu av {email} och kan inte redigeras.",
+	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Lås upp",
-	"lock.isUnlocked": "Dina osparade ändringar har skrivits över av en annan användare. Du kan ladda ner dina ändringar för att slå ihop dem manuellt.",
+	"lock.unlock.submit": "Unlock and overwrite unsaved changes by <strong>{email}</strong>",
+	"lock.isUnlocked": "Was unlocked by another user",
 
 	"login": "Logga in",
 	"login.code.label.login": "Inloggningskod",
@@ -391,6 +442,7 @@
 
 	"logout": "Logga ut",
 
+	"merge": "Merge",
 	"menu": "Meny",
 	"meridiem": "a.m./p.m.",
 	"mime": "Mediatyp",
@@ -411,13 +463,16 @@
 	"months.september": "September",
 
 	"more": "Mer",
+	"move": "Move",
 	"name": "Namn",
 	"next": "Nästa",
+	"night": "Night",
 	"no": "nej",
 	"off": "av",
 	"on": "på",
 	"open": "Öppna",
 	"open.newWindow": "Öppna i nytt fönster",
+	"option": "Option",
 	"options": "Alternativ",
 	"options.none": "Inga alternativ",
 
@@ -426,6 +481,7 @@
 	"orientation.portrait": "Stående",
 	"orientation.square": "Kvadrat",
 
+	"page": "Page",
 	"page.blueprint": "Denna sida har ingen blueprint än. Du kan skapa en i <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
 	"page.changeSlug": "Ändra URL",
 	"page.changeSlug.fromTitle": "Skapa utifr\u00e5n titel",
@@ -433,13 +489,15 @@
 	"page.changeStatus.position": "Välj en ny position",
 	"page.changeStatus.select": "Välj en ny status",
 	"page.changeTemplate": "Ändra mall",
+	"page.changeTemplate.notice": "Changing the page's template will remove content for fields that don't match in type. Use with caution.",
+	"page.create": "Create as {status}",
 	"page.delete.confirm": "Vill du verkligen radera <strong>{title}</strong>?",
 	"page.delete.confirm.subpages": "<strong>Denna sida har undersidor.</strong> <br>Alla undersidor kommer också att raderas.",
 	"page.delete.confirm.title": "Fyll i sidans titel för att bekräfta",
-	"page.draft.create": "Skapa utkast",
 	"page.duplicate.appendix": "Kopiera",
 	"page.duplicate.files": "Kopiera filer",
 	"page.duplicate.pages": "Kopiera sidor",
+	"page.move": "Move page",
 	"page.sort": "Ändra position",
 	"page.status": "Status",
 	"page.status.draft": "Utkast",
@@ -460,6 +518,7 @@
 	"password": "L\u00f6senord",
 	"paste": "Klistra in",
 	"paste.after": "Klistra in efter",
+	"paste.success": "{count} pasted!",
 	"pixel": "Pixel",
 	"plugin": "Tillägg",
 	"plugins": "Tillägg",
@@ -468,6 +527,7 @@
 	"remove": "Ta bort",
 	"rename": "Byt namn",
 	"replace": "Ersätt",
+	"replace.with": "Replace with",
 	"retry": "F\u00f6rs\u00f6k igen",
 	"revert": "Återgå",
 	"revert.confirm": "Vill du verkligen <strong>radera alla osparade ändringar</strong>?",
@@ -487,6 +547,7 @@
 	"search.all": "Visa alla",
 	"search.results.none": "Inga träffar",
 
+	"section.invalid": "The section is invalid",
 	"section.required": "Sektionen krävs",
 
 	"security": "Säkerhet",
@@ -498,6 +559,8 @@
 	"size": "Storlek",
 	"slug": "URL-appendix",
 	"sort": "Sortera",
+	"sort.drag": "Drag to sort …",
+	"split": "Split",
 
 	"stats.empty": "Inga rapporter",
 	"system.issues.content": "Mappen content verkar vara exponerad",
@@ -520,10 +583,13 @@
 	"system.updateStatus.update": "Gratis uppdatering { version } tillgänglig",
 	"system.updateStatus.upgrade": "Uppgradering { version } tillgänglig",
 
-	"title": "Titel",
+	"tel": "Phone",
+	"tel.placeholder": "+49123456789",
 	"template": "Mall",
+	"title": "Titel",
 	"today": "Idag",
 
+	"toolbar.button.clear": "Clear formatting",
 	"toolbar.button.code": "Kod",
 	"toolbar.button.bold": "Fet",
 	"toolbar.button.email": "E-post",
@@ -541,6 +607,8 @@
 	"toolbar.button.link": "L\u00e4nk",
 	"toolbar.button.paragraph": "Stycke",
 	"toolbar.button.strike": "Genomstruken",
+	"toolbar.button.sub": "Subscript",
+	"toolbar.button.sup": "Superscript",
 	"toolbar.button.ol": "Sorterad lista",
 	"toolbar.button.underline": "Understruken",
 	"toolbar.button.ul": "Punktlista",
