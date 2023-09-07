@@ -172,7 +172,7 @@ export default (panel) => {
 
 			// show the dialog on change
 			this.input.addEventListener("change", (event) => {
-				if (options.immediate === true) {
+				if (options?.immediate === true) {
 					// if upload should start immediately
 					this.set(options);
 					this.select(event.target.files);
