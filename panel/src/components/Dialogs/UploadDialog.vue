@@ -160,9 +160,11 @@ export default {
 	padding: var(--spacing-2) var(--spacing-3) 0;
 }
 .k-upload-item-input.k-input {
+	--input-color-border: transparent;
+	--input-padding: var(--spacing-2) var(--spacing-3);
+	--input-rounded: 0;
 	grid-area: input;
 	font-size: var(--text-sm);
-	padding: var(--spacing-2) var(--spacing-3);
 	border-bottom: 1px solid var(--color-light);
 }
 .k-upload-item-input.k-input:focus-within {
