@@ -233,6 +233,7 @@ class View
 					$view['dialogs'],
 					$view['drawers'],
 					$view['dropdowns'],
+					$view['requests'],
 					$view['searches'],
 					$view['views']
 				);
