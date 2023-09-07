@@ -1,23 +1,33 @@
 <template>
-	<k-button-group
-		v-if="isVisible"
-		:data-align="align"
-		layout="collapsed"
-		class="k-pagination"
-	>
+	<k-button-group v-if="pages > 1" layout="collapsed" class="k-pagination">
 		<!-- prev -->
-		<k-button v-bind="prevBtn" />
+		<k-button
+			:disabled="start <= 1"
+			:title="$t('prev')"
+			icon="angle-left"
+			size="xs"
+			variant="filled"
+			@click="prev"
+		/>
 
 		<!-- details -->
 		<template v-if="details">
-			<k-button v-bind="detailsBtn" />
+			<k-button
+				:disabled="total <= limit"
+				:text="total > 1 ? `${detailsText} / ${total}` : total"
+				size="xs"
+				variant="filled"
+				class="k-pagination-details"
+				@click="$refs.dropdown.toggle()"
+			/>
+
 			<k-dropdown-content
 				ref="dropdown"
 				align-x="end"
 				class="k-pagination-selector"
 			>
 				<form method="dialog" @submit="goTo($refs.page.value)">
-					<label :for="_uid">{{ pageLabel ?? $t("pagination.page") }}:</label>
+					<label :for="_uid">{{ $t("pagination.page") }}:</label>
 					<select :id="_uid" ref="page" :autofocus="true">
 						<option
 							v-for="p in pages"
@@ -34,14 +44,20 @@
 		</template>
 
 		<!-- next -->
-		<k-button v-bind="nextBtn" />
+		<k-button
+			:disabled="end >= total"
+			:title="$t('next')"
+			icon="angle-right"
+			size="xs"
+			variant="filled"
+			@click="next"
+		/>
 	</k-button-group>
 </template>
 
 <script>
 /**
  * @example <k-pagination
- *   align="center"
  *   :details="true"
  *   :page="5"
  *   :total="125"
@@ -50,22 +66,10 @@
 export default {
 	props: {
 		/**
-		 * The align prop makes it possible to move the pagination component according to the wrapper component.
-		 * @values left, center, right
-		 */
-		align: {
-			type: String,
-			default: "left"
-		},
-		/**
-		 * Show/hide the details display with the page selector in the center of the two navigation buttons.
+		 * Show/hide the details display with the page selector
+		 * in the center of the two navigation buttons.
 		 */
 		details: Boolean,
-		dropdown: Boolean,
-		/**
-		 * Enable/disable keyboard navigation
-		 */
-		keys: Boolean,
 		/**
 		 * Sets the limit of items to be shown per page
 		 */
@@ -81,67 +85,28 @@ export default {
 			default: 1
 		},
 		/**
-		 * Sets the label for the page selector
-		 */
-		pageLabel: String,
-		/**
-		 * Sets the total number of items that are in the paginated list. This has to be set higher to 0 to activate pagination.
+		 * Sets the total number of items that are in the paginated list.
+		 * This has to be set higher to 0 to activate pagination.
 		 */
 		total: {
 			type: Number,
 			default: 0
 		},
-		/**
-		 * Sets the label for the `prev` arrow button
-		 */
-		prevLabel: String,
-		/**
-		 * Sets the label for the `next` arrow button
-		 */
-		nextLabel: String,
 		validate: {
 			type: Function,
 			default: () => Promise.resolve()
 		}
 	},
-	data() {
-		return {
-			current: this.page
-		};
-	},
 	computed: {
-		detailsBtn() {
-			return {
-				class: "k-pagination-details",
-				disabled: this.total <= this.limit,
-				size: "xs",
-				text: `${this.total > 1 ? this.detailsText : null} ${this.total}`,
-				variant: "filled",
-				click: () => this.$refs.dropdown?.toggle()
-			};
-		},
 		end() {
 			return Math.min(this.start - 1 + this.limit, this.total);
 		},
 		detailsText() {
 			if (this.limit === 1) {
-				return this.start + " / ";
+				return this.start;
 			}
 
-			return this.start + "-" + this.end + " / ";
-		},
-		isVisible() {
-			return this.pages > 1;
-		},
-		nextBtn() {
-			return {
-				disabled: this.end >= this.total,
-				icon: "angle-right",
-				size: "xs",
-				title: this.nextLabel ?? this.$t("next"),
-				variant: "filled",
-				click: () => this.next()
-			};
+			return this.start + "-" + this.end;
 		},
 		offset() {
 			return this.start - 1;
@@ -149,29 +114,12 @@ export default {
 		pages() {
 			return Math.ceil(this.total / this.limit);
 		},
-		prevBtn() {
-			return {
-				disabled: this.start <= 1,
-				icon: "angle-left",
-				size: "xs",
-				title: this.prevLabel ?? this.$t("prev"),
-				variant: "filled",
-				click: () => this.prev()
-			};
-		},
 		start() {
-			return (this.current - 1) * this.limit + 1;
-		}
-	},
-	watch: {
-		page(page) {
-			this.current = parseInt(page);
+			return (this.page - 1) * this.limit + 1;
 		}
 	},
 	created() {
-		if (this.keys === true) {
-			window.addEventListener("keydown", this.onKey, false);
-		}
+		window.addEventListener("keydown", this.onKey, false);
 	},
 	destroyed() {
 		window.removeEventListener("keydown", this.onKey, false);
@@ -186,7 +134,7 @@ export default {
 				await this.validate(page);
 				this.$refs.dropdown?.close();
 
-				// Don't assign page directly to `this.current` as
+				// Don't assign page directly to `this.page` as
 				// this leads to a flicker of the navigation.
 				// However, because of this we need to manually
 				// calculate start, end and offset that depend on
@@ -207,18 +155,18 @@ export default {
 			}
 		},
 		/**
-		 * Jump to the previous page
+		 * Go to the previous page
 		 * @public
 		 */
 		prev() {
-			this.goTo(this.current - 1);
+			this.goTo(this.page - 1);
 		},
 		/**
-		 * Jump to the next page
+		 * Go to the next page
 		 * @public
 		 */
 		next() {
-			this.goTo(this.current + 1);
+			this.goTo(this.page + 1);
 		},
 		onKey(e) {
 			switch (e.code) {
