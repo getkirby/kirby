@@ -15,6 +15,22 @@ require_once dirname(__DIR__) . '/mocks.php';
  */
 class AppErrorsTest extends TestCase
 {
+	protected App|null $originalApp;
+
+	public function setUp(): void
+	{
+		parent::setUp();
+
+		// Whoops is normally enabled by default, but disabled in CI
+		// to reduce memory leaks; in this test class we need it!
+		$this->originalApp = $this->app;
+		$this->app = $this->originalApp->clone([
+			'options' => [
+				'whoops' => true
+			]
+		]);
+	}
+
 	public function tearDown(): void
 	{
 		$unsetMethod = new ReflectionMethod(App::class, 'unsetWhoopsHandler');
@@ -22,8 +38,14 @@ class AppErrorsTest extends TestCase
 
 		$app = App::instance();
 		$unsetMethod->invoke($app);
+		$unsetMethod->invoke($this->app);
+		$unsetMethod->invoke($this->originalApp);
 
 		parent::tearDown();
+		$this->originalApp = null;
+
+		// reset to the value set by tests/bootstrap.php
+		App::$enableWhoops = false;
 	}
 
 	/**
@@ -164,6 +186,39 @@ class AppErrorsTest extends TestCase
 		$this->assertCount(2, $handlers);
 		$this->assertInstanceOf('Whoops\Handler\PrettyPageHandler', $handlers[0]);
 		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
+	}
+
+	/**
+	 * @covers ::handleErrors
+	 */
+	public function testHandleErrorsGlobalSetting()
+	{
+		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
+		$whoopsMethod->setAccessible(true);
+
+		$testMethod = new ReflectionMethod(App::class, 'handleErrors');
+		$testMethod->setAccessible(true);
+
+		$whoopsEnabled  = $whoopsMethod->invoke($this->app);
+		$whoopsDisabled = $whoopsMethod->invoke($this->originalApp);
+
+		$testMethod->invoke($this->app);
+		$handlers = $whoopsEnabled->getHandlers();
+		$this->assertCount(2, $handlers);
+
+		$testMethod->invoke($this->originalApp);
+		$handlers = $whoopsDisabled->getHandlers();
+		$this->assertCount(0, $handlers);
+
+		App::$enableWhoops = true;
+
+		$testMethod->invoke($this->app);
+		$handlers = $whoopsEnabled->getHandlers();
+		$this->assertCount(2, $handlers);
+
+		$testMethod->invoke($this->originalApp);
+		$handlers = $whoopsDisabled->getHandlers();
+		$this->assertCount(2, $handlers);
 	}
 
 	/**
@@ -388,9 +443,8 @@ class AppErrorsTest extends TestCase
 	 * Convert output to returned variable
 	 *
 	 * @param string|\Whoops\Handler\CallbackHandler $path
-	 * @return false|string
 	 */
-	protected function _getBufferedContent($path)
+	protected function _getBufferedContent(string|\Whoops\Handler\CallbackHandler $path): false|string
 	{
 		ob_start();
 

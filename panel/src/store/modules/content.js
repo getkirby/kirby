@@ -102,16 +102,16 @@ export default {
 
 	mutations: {
 		CLEAR(state) {
-			Object.keys(state.models).forEach((key) => {
+			for (const key in state.models) {
 				state.models[key].changes = {};
-			});
+			}
 
 			// remove all form changes from localStorage
-			Object.keys(localStorage).forEach((key) => {
+			for (const key in localStorage) {
 				if (key.startsWith("kirby$content$")) {
 					localStorage.removeItem(key);
 				}
-			});
+			}
 		},
 		CREATE(state, [id, model]) {
 			if (!model) {
@@ -192,20 +192,18 @@ export default {
 
 	actions: {
 		init(context) {
-			// load models in store from localStorage
-			Object.keys(localStorage)
-				.filter((key) => key.startsWith("kirby$content$"))
-				.map((key) => key.split("kirby$content$")[1])
-				.forEach((id) => {
+			for (const key in localStorage) {
+				// load models in store from localStorage
+				if (key.startsWith("kirby$content$")) {
+					const id = key.split("kirby$content$")[1];
 					const data = localStorage.getItem("kirby$content$" + id);
 					context.commit("CREATE", [id, JSON.parse(data)]);
-				});
+					continue;
+				}
 
-			// load old format
-			Object.keys(localStorage)
-				.filter((key) => key.startsWith("kirby$form$"))
-				.map((key) => key.split("kirby$form$")[1])
-				.forEach((id) => {
+				// load old format
+				if (key.startsWith("kirby$form$")) {
+					const id = key.split("kirby$form$")[1];
 					const json = localStorage.getItem("kirby$form$" + id);
 					let data = null;
 
@@ -235,7 +233,8 @@ export default {
 
 					// remove the old entry
 					localStorage.removeItem("kirby$form$" + id);
-				});
+				}
+			}
 		},
 		clear(context) {
 			context.commit("CLEAR");
@@ -246,7 +245,9 @@ export default {
 			// remove fields from the content object that
 			// should be ignored in changes or when saving content
 			if (Array.isArray(model.ignore)) {
-				model.ignore.forEach((field) => delete content[field]);
+				for (const field of model.ignore) {
+					delete content[field];
+				}
 			}
 
 			// attach the language to the id

@@ -6,7 +6,11 @@
 		@change="$emit('change', $event)"
 		@sort="$emit('sort', $event)"
 		@option="onOption"
-	/>
+	>
+		<template #options="{ row: item, rowIndex: index }">
+			<slot name="options" v-bind="{ item, index }" />
+		</template>
+	</k-table>
 
 	<!-- Layout: cards, cardlets, list -->
 	<k-draggable

@@ -10,12 +10,15 @@
 	"cancel": "Hætta við",
 	"change": "Breyta",
 	"close": "Loka",
+	"changes": "Changes",
 	"confirm": "OK",
 	"collapse": "Fella",
 	"collapse.all": "Fella allt",
 	"copy": "Afrita",
 	"copy.all": "Afrita allt",
+	"copy.success": "{count} copied!",
 	"create": "Stofna",
+	"custom": "Custom",
 
 	"date": "Dagsetning",
 	"date.select": "Veldu dagsetningu",
@@ -34,13 +37,18 @@
 	"delete": "Eyða",
 	"delete.all": "Eyða hreint öllu",
 
+	"dialog.fields.empty": "This dialog has no fields",
 	"dialog.files.empty": "Engar skrár til að velja úr",
 	"dialog.pages.empty": "Engar síður til að velja úr",
+	"dialog.text.empty": "This dialog does not define any text",
 	"dialog.users.empty": "Engir notendur til að velja úr",
 
 	"dimensions": "Rýmd",
 	"disabled": "Óvirkt",
 	"discard": "Hunsa",
+
+	"drawer.fields.empty": "This drawer has no fields",
+
 	"download": "Hlaða niður",
 	"duplicate": "Klóna",
 
@@ -49,11 +57,13 @@
 	"email": "Netfang",
 	"email.placeholder": "nafn@netfang.is",
 
+	"enter": "Enter",
 	"entries": "Færslur",
 	"entry": "Færsla",
 
 	"environment": "Umhverfi",
 
+	"error": "Villa",
 	"error.access.code": "Ógildur kóði",
 	"error.access.login": "Ógild innskráning",
 	"error.access.panel": "Þú hefur ekkert leyfi til að nota panelinn",
@@ -81,6 +91,9 @@
 
 	"error.file.changeName.empty": "Nafn skal fylla út",
 	"error.file.changeName.permission": "Þú mátt ekkert breyta nafninu á skránni \"{filename}\"",
+	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
+	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
+
 	"error.file.duplicate": "Skrá með nafninu \"{filename}\" er nú þegar til",
 	"error.file.extension.forbidden": "Skrárendingin \"{extension}\" er ekki leyfð",
 	"error.file.extension.invalid": "Óleyfilegt skrársnið hér: {extension}",
@@ -95,6 +108,7 @@
 	"error.file.minheight": "Hæð myndarinnar þarf að vera minnst {height} punktar",
 	"error.file.minsize": "Skráin er of smá",
 	"error.file.minwidth": "Breidd myndarinnar þarf að vera minnst {width} punktar",
+	"error.file.name.unique": "The filename must be unique",
 	"error.file.name.missing": "Skrárnafnið má ekki skilja eftir tómt",
 	"error.file.notFound": "Skráin \"{filename}\" fannst ekki",
 	"error.file.orientation": "Snið myndarinnar þarf að vera \"{orientation}\"",
@@ -121,7 +135,8 @@
 
 	"error.offline": "Stjórnborðið er óvirkt eins og stendur.",
 
-	"error.page.changeSlug.permission": "Þú hefur ekkert leyfi til þess að breyta slóðarforskeytinu fyrir  \"{slug}\"",
+	"error.page.changeSlug.permission": "Þú hefur ekkert leyfi til þess að breyta slóðarviðskeytinu fyrir  \"{slug}\"",
+	"error.page.changeSlug.reserved": "The path of top-level pages must not start with \"{path}\"",
 	"error.page.changeStatus.incomplete": "Það eru villur á síðunni og við getum ekki gefið hana út",
 	"error.page.changeStatus.permission": "Stöðu síðunnar var ekki hægt að breyta",
 	"error.page.changeStatus.toDraft.invalid": "Síðunni \"{slug}\" er ekki hægt að breyta í uppkast",
@@ -137,6 +152,12 @@
 	"error.page.draft.duplicate": "Uppkast með slóðinni \"{slug}\" er þegar til",
 	"error.page.duplicate": "Síða með slóðinni \"{slug}\" er þegar til",
 	"error.page.duplicate.permission": "Þú mátt ekki klóna \"{slug}\"",
+	"error.page.move.ancestor": "The page cannot be moved into itself",
+	"error.page.move.directory": "The page directory cannot be moved",
+	"error.page.move.duplicate": "A sub page with the URL appendix \"{slug}\" already exists",
+	"error.page.move.notFound": "The moved page could not be found",
+	"error.page.move.permission": "You are not allowed to move \"{slug}\"",
+	"error.page.move.template": "The \"{template}\" template is not accepted as a subpage of \"{parent}\"",
 	"error.page.notFound": "Síðan \"{slug}\" fannst ekkert",
 	"error.page.num.invalid": "Veldu ákjósanlega raðtölu. Neikvæðar tölur bannaðar.",
 	"error.page.slug.invalid": "Veldu ákjósanlega vefslóð",
@@ -163,6 +184,8 @@
 	"error.site.changeTitle.permission": "Þú mátt ekkert breyta titil vefsvæðisins",
 	"error.site.update.permission": "Þú mátt ekkert uppfæra vefsvæðið",
 
+	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",
+
 	"error.template.default.notFound": "Ekkert sjálfgefið sniðmát fannst",
 
 	"error.unexpected": "Það átti sér stað óvænt villa. Notaðu lúsarleitarhaminn (e. debug mode) til að skilja þetta betur. \nFyrir nánari upplýsingar: https://getkirby.com/docs/reference/system/options/debug",
@@ -183,7 +206,7 @@
 	"error.user.email.invalid": "Vinsamlegast ákjósanlegt netfang",
 	"error.user.language.invalid": "Vinsamlegast ákjósanlegt tungumál",
 	"error.user.notFound": "Þessi notandi; \"{name}\" fannst ekki",
-	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
+	"error.user.password.excessive": "Vinsamlegast settu inn gilt lykilorð. Lykilorð hér meiga ekki vera lengri en 1000 stafabil.",
 	"error.user.password.invalid": "Veldu ákjósanlegt lykilorð. Minnst 8 stafa langt.",
 	"error.user.password.notSame": "Lykilorðin stemma ekki",
 	"error.user.password.undefined": "Þessi notandi hefur ekki lykilorð",
@@ -195,6 +218,7 @@
 	"error.validation.accepted": "Staðfestu",
 	"error.validation.alpha": "Aðeins stafir úr Enska stafrófinu, a-z",
 	"error.validation.alphanum": "Aðeins stafir úr Enska stafrófinu, a-z eða tölustafir 0-9",
+	"error.validation.anchor": "Please enter a correct link anchor",
 	"error.validation.between": "Gildi milli \"{min}\" og \"{max}\"",
 	"error.validation.boolean": "Staðfestu eða hafnaðu þessu",
 	"error.validation.contains": "Settu inni gildi er inniheldur \"{needle}\"",
@@ -211,6 +235,7 @@
 	"error.validation.integer": "Skráðu heiltölu",
 	"error.validation.ip": "Skráðu ákjósanlega IP tölu",
 	"error.validation.less": "Skráðu gildi lægra en {max}",
+	"error.validation.linkType": "The link type is not allowed",
 	"error.validation.match": "Gildið er ekki eftir væntingum",
 	"error.validation.max": "Skráðu gildi sem er ekki hærra en {max}",
 	"error.validation.maxlength": "Veldu eitthvað styttra. (hámark {max} stafir)",
@@ -227,15 +252,18 @@
 	"error.validation.same": "Skráðu \"{other}\"",
 	"error.validation.size": "Gildið þarf að vera \"{size}\"",
 	"error.validation.startswith": "Þetta þarf að byrja á \"{start}\"",
+	"error.validation.tel": "Please enter an unformatted phone number",
 	"error.validation.time": "Ákjósanlegur tími",
 	"error.validation.time.after": "Veldu tíma eftir {time}",
 	"error.validation.time.before": "Veldu tíma fyrir{time}",
 	"error.validation.time.between": "Veldu tíma milli {min} og {max}",
+	"error.validation.uuid": "Please enter a valid UUID",
 	"error.validation.url": "Ákjósanleg vefslóð",
 
 	"expand": "Þenja út",
 	"expand.all": "Þenja allt út",
 
+	"field.invalid": "The field is invalid",
 	"field.required": "Þetta svið er nauðsynlegt",
 	"field.blocks.changeType": "Breyta um bálkagerð",
 	"field.blocks.code.name": "Kóði",
@@ -246,7 +274,7 @@
 	"field.blocks.delete.confirm.selected": "Viltu virkilega eyða völdum bálkum?",
 	"field.blocks.empty": "Öngvir bálkar enn",
 	"field.blocks.fieldsets.label": "Veldu bálkagerð …",
-	"field.blocks.fieldsets.paste": "Notaðu<kbd> {{ shortcut }}</kbd> flýtilyklaaðgerðina til að setja bálkinn hér.",
+	"field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to import layouts/blocks from your clipboard <small>Only those allowed in the current field will get inserted.</small>",
 	"field.blocks.gallery.name": "Myndasafn",
 	"field.blocks.gallery.images.empty": "Engar myndir enn",
 	"field.blocks.gallery.images.label": "Myndir",
@@ -259,6 +287,8 @@
 	"field.blocks.image.crop": "Kroppa",
 	"field.blocks.image.link": "Tengill",
 	"field.blocks.image.location": "Staðsetning",
+	"field.blocks.image.location.internal": "This website",
+	"field.blocks.image.location.external": "External source",
 	"field.blocks.image.name": "Mynd",
 	"field.blocks.image.placeholder": "Veldu mynd",
 	"field.blocks.image.ratio": "Hlutfall",
@@ -283,8 +313,10 @@
 
 	"field.files.empty": "Engar skrár valdar ennþá",
 
+	"field.layout.change": "Change layout",
 	"field.layout.delete": "Eyða ramma",
 	"field.layout.delete.confirm": "Ætlarðu virkilega að eyða þessum ramma?",
+	"field.layout.delete.confirm.all": "Do you really want to delete all layouts?",
 	"field.layout.empty": "Nei. Engir rammar enn.",
 	"field.layout.select": "Veldu rammategund",
 
@@ -298,12 +330,22 @@
 
 	"field.users.empty": "Engir notendur valdir enn",
 
+	"fields.empty": "No fields yet",
+
+	"file": "Skrár",
 	"file.blueprint": "Þessi skrá hefur ekki skipan (e. blueprint) ennþá. Þú mátt skilgreina skipanina í <strong>/site/blueprints/{template}.yml</strong>",
+	"file.changeTemplate": "Breyta sniðmáti",
+	"file.changeTemplate.notice": "Changing the file's template will remove content for fields that don't match in type. If the new template defines certain rules, e.g. image dimensions, those will also be applied irreversibly. Use with caution.",
 	"file.delete.confirm": "Ætlarðu virkilega að eyða <br><strong>{filename}</strong>?",
+	"file.focus.placeholder": "Set focal point",
+	"file.focus.reset": "Remove focal point",
+	"file.focus.title": "Focus",
 	"file.sort": "Breyta röðun",
 
 	"files": "Skrár",
 	"files.empty": "Engar skrár enn",
+
+	"filter": "Filter",
 
 	"hide": "Fela",
 	"hour": "Klukkustund",
@@ -332,6 +374,7 @@
 	"language.convert": "Gera sjálfgefið",
 	"language.convert.confirm": "<p>Ertu viss um að þú viljir breyta <strong>{name}</strong> í sjálfgefið (lesist aðal) tungumál? Þessu verður ekki viðsnúið.</p><p>Ef <strong>{name}</strong> hefur innihald sem ekki hefur verið þýtt, þá verða engir möguleikar til þrautarvara og hluti vefsins gæti birtst tómur.</p>",
 	"language.create": "Bættu við nýju tungumáli",
+	"language.default": "Aðal tungumál",
 	"language.delete.confirm": "Ertu nú viss um að þú viljir eyða <strong>{name}</strong> og öllum tilheyrandi þýðingum? Þetta verður ekki tekið til baka!",
 	"language.deleted": "Tungumálinu hefur verið eytt",
 	"language.direction": "Lesátt",
@@ -340,7 +383,16 @@
 	"language.locale": "PHP locale strengur",
 	"language.locale.warning": "Þú ert að nota sérsniðna locale uppsetningu. Vinsamlegast breyttu tungumálaskránni á slóðinni /site/languages",
 	"language.name": "Nafn tungumáls",
+	"language.secondary": "Secondary language",
+	"language.settings": "Language settings",
 	"language.updated": "Tungumálið hefur verið uppfært",
+	"language.variables": "Language variables",
+	"language.variables.empty": "No translations yet",
+
+	"language.variable.delete.confirm": "Do you really want to delete the variable for {key}?",
+	"language.variable.key": "Key",
+	"language.variable.notFound": "The variable could not be found",
+	"language.variable.value": "Value",
 
 	"languages": "Tungumál",
 	"languages.default": "Aðal tungumál",
@@ -367,11 +419,10 @@
 
 	"lock.unsaved": "Óvistað breytingar",
 	"lock.unsaved.empty": "Það eru öngvar óvistaðar breytingar",
-	"lock.isLocked": "Óvistaðar breytingar frá <strong>{email}</strong>",
-	"lock.file.isLocked": "{email} er að vinna í skránni og þú breytir henni ekki á meðan.",
-	"lock.page.isLocked": "{email}  er að vinna í síðunni og þú breytir henni ekki á meðan.",
+	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Aflæsa",
-	"lock.isUnlocked": "Þær breytingar sem þú gerðir hafa verið yfirskrifaðar af öðrum notanda.  Þú getur sótt þær breytingar og splæst þeim saman við þínar breytingar. Handvirkt.",
+	"lock.unlock.submit": "Unlock and overwrite unsaved changes by <strong>{email}</strong>",
+	"lock.isUnlocked": "Was unlocked by another user",
 
 	"login": "Innskrá",
 	"login.code.label.login": "Innskráningarkóði",
@@ -391,6 +442,7 @@
 
 	"logout": "Útskrá",
 
+	"merge": "Merge",
 	"menu": "Valmynd",
 	"meridiem": "AM/PM",
 	"mime": "Miðilsgerð",
@@ -411,13 +463,16 @@
 	"months.september": "September",
 
 	"more": "Meira",
+	"move": "Move",
 	"name": "Nafn",
 	"next": "Næst",
+	"night": "Night",
 	"no": "nei",
 	"off": "Af",
 	"on": "Á",
 	"open": "Opna",
 	"open.newWindow": "Opna í nýjum glugga",
+	"option": "Option",
 	"options": "Valmöguleikar",
 	"options.none": "Engir valmöguleikar",
 
@@ -426,6 +481,7 @@
 	"orientation.portrait": "Skammsnið",
 	"orientation.square": "Ferningur",
 
+	"page": "Síða",
 	"page.blueprint": "Þessi síða hefur ekki skipan (e. blueprint) ennþá. Þú mátt skilgreina skipanina í <strong>/site/blueprints/{template}.yml</strong>",
 	"page.changeSlug": "Breyta vefslóð",
 	"page.changeSlug.fromTitle": "Slóð af titli",
@@ -433,13 +489,15 @@
 	"page.changeStatus.position": "Veldu ákjósanlega röðun",
 	"page.changeStatus.select": "Veldu nýja stöðu",
 	"page.changeTemplate": "Breyta sniðmáti",
+	"page.changeTemplate.notice": "Changing the page's template will remove content for fields that don't match in type. Use with caution.",
+	"page.create": "Create as {status}",
 	"page.delete.confirm": "Viltu virkilega farga <strong>{title}</strong>?",
 	"page.delete.confirm.subpages": "<strong>Þessi síða hefur undirsíður</strong>. <br>Þeim mun verða fargað líka.",
 	"page.delete.confirm.title": "Skráðu síðutitilinn til staðfestingar",
-	"page.draft.create": "Stofna uppkast",
 	"page.duplicate.appendix": "Afrita",
 	"page.duplicate.files": "Afrita skrár",
 	"page.duplicate.pages": "Afrita síður",
+	"page.move": "Move page",
 	"page.sort": "Breyta röðun",
 	"page.status": "Staða",
 	"page.status.draft": "Uppkast",
@@ -460,6 +518,7 @@
 	"password": "Lykilorð",
 	"paste": "Líma",
 	"paste.after": "Líma eftir",
+	"paste.success": "{count} pasted!",
 	"pixel": "Punkta",
 	"plugin": "Viðbót",
 	"plugins": "Viðbætur",
@@ -468,6 +527,7 @@
 	"remove": "Fjarlægja",
 	"rename": "Endurnefna",
 	"replace": "Setja í stað",
+	"replace.with": "Replace with",
 	"retry": "Reyndu aftur",
 	"revert": "Taka upp fyrri siði",
 	"revert.confirm": "Viltu virkilega <strong>eyða öllum óvistuðum breytingum</strong>?",
@@ -487,6 +547,7 @@
 	"search.all": "Sýna allt",
 	"search.results.none": "Engar niðurstöður",
 
+	"section.invalid": "The section is invalid",
 	"section.required": "Þetta svæði er nauðsynlegt",
 
 	"security": "Öryggi",
@@ -496,8 +557,10 @@
 	"show": "Sýna",
 	"site.blueprint": "Þessi vefur hefur ekki skipan (e. blueprint) ennþá. Þú mátt skilgreina skipanina í <strong>/site/blueprints/site.yml</strong>",
 	"size": "Stærð",
-	"slug": "Slögg forskeyti",
+	"slug": "Slóðar viðskeyti",
 	"sort": "Raða",
+	"sort.drag": "Drag to sort …",
+	"split": "Split",
 
 	"stats.empty": "Engar skýrslur",
 	"system.issues.content": "Efnismappan virðist vera berskjölduð",
@@ -520,10 +583,13 @@
 	"system.updateStatus.update": "Ókeypis uppfærsla { version } fáanleg",
 	"system.updateStatus.upgrade": "Uppfærsla  fyrir { version } fáanleg",
 
-	"title": "Titill",
+	"tel": "Phone",
+	"tel.placeholder": "+49123456789",
 	"template": "Sniðmát",
+	"title": "Titill",
 	"today": "Núna",
 
+	"toolbar.button.clear": "Clear formatting",
 	"toolbar.button.code": "Kóðasnið",
 	"toolbar.button.bold": "Feitletrun",
 	"toolbar.button.email": "Netfang",
@@ -541,6 +607,8 @@
 	"toolbar.button.link": "Tengill",
 	"toolbar.button.paragraph": "Efnisgrein",
 	"toolbar.button.strike": "Gegnumstrika",
+	"toolbar.button.sub": "Subscript",
+	"toolbar.button.sup": "Superscript",
 	"toolbar.button.ol": "Raðaður listi",
 	"toolbar.button.underline": "Undirstrika",
 	"toolbar.button.ul": "Áherslumerktur listi",

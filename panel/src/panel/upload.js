@@ -1,6 +1,7 @@
 import { uuid } from "@/helpers/string";
 import State from "./state.js";
 import listeners from "./listeners.js";
+import queue from "@/helpers/queue.js";
 import upload from "@/helpers/upload.js";
 import { extension, name, niceSize } from "@/helpers/file.js";
 
@@ -16,6 +17,13 @@ export const defaults = () => {
 	};
 };
 
+/**
+ * Basic overview of the chain of methods:
+ *
+ * pick   ‾\                      /‾ done
+ *          -- (open) -- submit --
+ * select  _/                     \_ cancel
+ */
 export default (panel) => {
 	const parent = State("upload", defaults());
 
@@ -23,6 +31,9 @@ export default (panel) => {
 		...parent,
 		...listeners(),
 		input: null,
+		/**
+		 * Called when dialog's cancel button was clicked
+		 */
 		cancel() {
 			this.emit("cancel");
 
@@ -37,11 +48,18 @@ export default (panel) => {
 
 			this.reset();
 		},
+		/**
+		 * All files that've been already uploaded
+		 */
 		get completed() {
 			return this.files
 				.filter((file) => file.completed)
 				.map((file) => file.model);
 		},
+		/**
+		 * Gets called when the dialog's submit button was clicked
+		 * and all remaining files have been uploaded
+		 */
 		done() {
 			panel.dialog.close();
 
@@ -55,6 +73,29 @@ export default (panel) => {
 			}
 
 			this.reset();
+		},
+		/**
+		 * Checks if file already exists in files list
+		 * and returns index if so
+		 *
+		 * @param {Object} file
+		 * @returns {Number|false}
+		 */
+		findDuplicate(file) {
+			return this.files.findLastIndex(
+				(x) =>
+					x.src.name === file.src.name &&
+					x.src.type === file.src.type &&
+					x.src.size === file.src.size &&
+					x.src.lastModified === file.src.lastModified
+			);
+		},
+		hasUniqueName(file) {
+			return (
+				this.files.filter(
+					(f) => f.name === file.name && f.extension === file.extension
+				).length < 2
+			);
 		},
 		file(file) {
 			const url = URL.createObjectURL(file);
@@ -94,7 +135,11 @@ export default (panel) => {
 				component: "k-upload-dialog",
 				on: {
 					cancel: () => this.cancel(),
-					submit: () => this.start()
+					submit: async () => {
+						panel.dialog.isLoading = true;
+						await this.submit();
+						panel.dialog.isLoading = false;
+					}
 				}
 			};
 
@@ -127,11 +172,11 @@ export default (panel) => {
 
 			// show the dialog on change
 			this.input.addEventListener("change", (event) => {
-				if (options.immediate === true) {
+				if (options?.immediate === true) {
 					// if upload should start immediately
 					this.set(options);
 					this.select(event.target.files);
-					this.start();
+					this.submit();
 				} else {
 					this.open(event.target.files, options);
 				}
@@ -178,14 +223,7 @@ export default (panel) => {
 			// remove duplicates by comparing crucial src attributes,
 			// preserving the newer file
 			this.files = this.files.filter(
-				(file, index) =>
-					this.files.findLastIndex(
-						(x) =>
-							x.src.name === file.src.name &&
-							x.src.type === file.src.type &&
-							x.src.size === file.src.size &&
-							x.src.lastModified === file.src.lastModified
-					) === index
+				(file, index) => this.findDuplicate(file) === index
 			);
 
 			// apply the max limit to the list of files
@@ -219,25 +257,23 @@ export default (panel) => {
 
 			return this.state();
 		},
-		start() {
+		async submit() {
 			if (!this.url) {
 				throw new Error("The upload URL is missing");
 			}
 
-			// nothing to upload
-			if (this.files.length === 0) {
-				return;
-			}
+			// gather upload tasks for all files
+			const files = [];
 
-			// if no uncompleted files are left, be done
-			if (this.files.length === this.completed.length) {
-				return this.done();
-			}
-
-			// upload each file individually and keep track of the progress
 			for (const file of this.files) {
-				// don't upload completed files again
+				// skip file if alreay completed
 				if (file.completed === true) {
+					continue;
+				}
+
+				// ensure that all files have a unique name
+				if (this.hasUniqueName(file) === false) {
+					file.error = panel.t("error.file.name.unique");
 					continue;
 				}
 
@@ -246,50 +282,45 @@ export default (panel) => {
 				file.error = null;
 				file.progress = 0;
 
-				// ensure that all files have a unique name
-				const duplicates = this.files.filter(
-					(f) => f.name === file.name && f.extension === file.extension
-				);
-
-				if (duplicates.length > 1) {
-					file.error = panel.t("error.file.name.unique");
-					continue;
-				}
-
-				upload(file.src, {
-					attributes: this.attributes,
-					headers: {
-						"x-csrf": panel.system.csrf
-					},
-					filename: file.name + "." + file.extension,
-					url: this.url,
-					error: (xhr, src, response) => {
-						panel.error(response, false);
-
-						// store the error message to show it in
-						// the dialog for example
-						file.error = response.message;
-
-						// reset the progress bar on error
-						file.progress = 0;
-					},
-					progress: (xhr, src, progress) => {
-						file.progress = progress;
-					},
-					success: (xhr, src, response) => {
-						file.completed = true;
-						file.model = response.data;
-
-						if (this.files.length === this.completed.length) {
-							this.done();
-						}
-					}
-				});
+				// add file to upload queue
+				files.push(async () => await this.upload(file));
 
 				// if there is sort data, increment in the loop for next file
 				if (this.attributes?.sort !== undefined) {
 					this.attributes.sort++;
 				}
+			}
+
+			await queue(files);
+
+			// if no uncompleted files are left, be done
+			if (this.files.length === this.completed.length) {
+				return this.done();
+			}
+		},
+		async upload(file) {
+			try {
+				const response = await upload(file.src, {
+					attributes: this.attributes,
+					headers: { "x-csrf": panel.system.csrf },
+					filename: file.name + "." + file.extension,
+					url: this.url,
+					progress: (xhr, src, progress) => {
+						file.progress = progress;
+					}
+				});
+
+				file.completed = true;
+				file.model = response.data;
+			} catch (error) {
+				panel.error(error, false);
+
+				// store the error message to show it in
+				// the dialog for example
+				file.error = error.message;
+
+				// reset the progress bar on error
+				file.progress = 0;
 			}
 		}
 	};

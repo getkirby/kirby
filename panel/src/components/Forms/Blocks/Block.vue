@@ -19,7 +19,7 @@
 		@keydown.ctrl.alt.up.prevent.stop="$emit('selectUp')"
 		@keydown.ctrl.shift.down.prevent.stop="$emit('sortDown')"
 		@keydown.ctrl.shift.up.prevent.stop="$emit('sortUp')"
-		@keydown.ctrl.backspace.prevent.stop="remove"
+		@keydown.ctrl.backspace.stop="backspace"
 		@focus.stop="$emit('focus')"
 		@focusin.stop="onFocusIn"
 	>
@@ -202,6 +202,15 @@ export default {
 		}
 	},
 	methods: {
+		backspace(e) {
+			// ignore the shortcut when an input is focused
+			if (e.target.matches("[contenteditable], input, textarea")) {
+				return false;
+			}
+
+			e.preventDefault();
+			this.remove();
+		},
 		close() {
 			this.$panel.drawer.close(this.id);
 		},
@@ -290,6 +299,7 @@ export default {
 				on: {
 					submit: () => {
 						this.$panel.dialog.close();
+						this.close();
 						this.$emit("remove", this.id);
 					}
 				}
@@ -321,7 +331,6 @@ export default {
 }
 
 .k-block-container[data-selected="true"] {
-	transform: translate(0);
 	z-index: 2;
 	outline: var(--outline);
 	border-bottom-color: transparent;

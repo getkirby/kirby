@@ -3,7 +3,7 @@
 		<div class="k-file-browser-layout">
 			<aside ref="tree" class="k-file-browser-tree">
 				<k-page-tree
-					:current="page?.id"
+					:current="page?.value"
 					@select="selectPage"
 					@toggleBranch="togglePage"
 				/>
@@ -48,20 +48,22 @@ export default {
 			this.page = page;
 
 			const parent =
-				page.id === "site://"
+				page.id === "/"
 					? "/site/files"
 					: "/pages/" + this.$api.pages.id(page.id) + "/files";
 
 			const { data } = await this.$api.get(parent, {
-				select: "filename,panelImage,uuid"
+				select: "filename,id,panelImage,url,uuid"
 			});
 
 			this.files = data.map((file) => {
 				return {
 					label: file.filename,
 					image: file.panelImage,
-					id: file.uuid,
-					value: file.uuid
+					id: file.id,
+					url: file.url,
+					uuid: file.uuid,
+					value: file.uuid ?? file.url
 				};
 			});
 

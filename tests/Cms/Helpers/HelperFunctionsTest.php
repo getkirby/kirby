@@ -7,6 +7,8 @@ use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Obj;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Error\Deprecated;
 
 class HelperFunctionsTest extends TestCase
 {
@@ -188,10 +190,15 @@ class HelperFunctionsTest extends TestCase
 	{
 		// the deprecation warnings are always triggered in testing mode,
 		// so we cannot test it with disabled debug mode
-		$this->expectException('Whoops\Exception\ErrorException');
-		$this->expectExceptionMessage('The xyz method is deprecated.');
 
-		deprecated('The xyz method is deprecated.');
+		try {
+			deprecated('The xyz method is deprecated.');
+		} catch (Deprecated $e) {
+			$this->assertSame('The xyz method is deprecated.', $e->getMessage());
+			return;
+		}
+
+		Assert::fail('Expected deprecation warning was not generated');
 	}
 
 	public function testDumpOnCli()

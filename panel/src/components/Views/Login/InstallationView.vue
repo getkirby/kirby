@@ -147,7 +147,7 @@ export default {
 					label: this.$t("language"),
 					type: "select",
 					options: this.translations,
-					icon: "globe",
+					icon: "translate",
 					empty: false,
 					required: true
 				}

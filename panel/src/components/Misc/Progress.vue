@@ -80,6 +80,7 @@ progress {
 	height: var(--progress-height);
 	border-radius: var(--progress-height);
 	overflow: hidden;
+	border: 0;
 }
 
 /** Determinate **/
@@ -92,8 +93,15 @@ progress::-webkit-progress-value {
 	border-radius: var(--progress-height);
 }
 
+progress::-moz-progress-bar {
+	background: var(--progress-color-value);
+}
+
 /**	Indeterminate **/
 progress:not([value])::-webkit-progress-bar {
+	background: var(--progress-color-value);
+}
+progress:not([value])::-moz-progress-bar {
 	background: var(--progress-color-value);
 }
 </style>

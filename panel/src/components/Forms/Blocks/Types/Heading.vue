@@ -117,9 +117,9 @@ export default {
 	font-weight: 700;
 }
 .k-block-type-heading-level {
-	font-size: var(--text-sm);
+	--input-color-border: none;
+	--input-color-text: var(--color-gray-600);
 	font-weight: var(--font-bold);
 	text-transform: uppercase;
-	color: var(--color-gray-500);
 }
 </style>

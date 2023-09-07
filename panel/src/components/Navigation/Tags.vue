@@ -141,7 +141,7 @@ export default {
 		},
 		selectorOptions() {
 			return {
-				add: this.accept === "all",
+				accept: this.accept,
 				disabled: this.disabled,
 				ignore: this.value,
 				options: this.selectable,

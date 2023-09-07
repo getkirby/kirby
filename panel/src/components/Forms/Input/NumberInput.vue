@@ -166,20 +166,10 @@ export default {
 
 <style>
 .k-number-input {
-	width: 100%;
-	border: 0;
-	background: none;
-	font: inherit;
-	color: inherit;
-}
-.k-number-input::placeholder {
-	color: var(--input-placeholder);
+	padding: var(--input-padding);
+	border-radius: var(--input-rounded);
 }
 .k-number-input:focus {
-	outline: 0;
-}
-.k-number-input:invalid {
-	box-shadow: none;
 	outline: 0;
 }
 </style>

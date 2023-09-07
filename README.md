@@ -21,7 +21,7 @@ Kirby is not free software. However, you can try Kirby and the Starterkit on you
 ### Contribute
 
 **Found a bug?**  
-Please post all bug reports in our [issue tracker](https://github.com/getkirby/kirby/issues).
+Please post all bugs as individual reports in our [issue tracker](https://github.com/getkirby/kirby/issues).
 
 **Suggest a feature**  
 If you have ideas for a feature or enhancement for Kirby, please use our [feedback platform](https://feedback.getkirby.com).

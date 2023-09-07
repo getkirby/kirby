@@ -10,12 +10,15 @@
 	"cancel": "\u0130ptal",
 	"change": "De\u011fi\u015ftir",
 	"close": "Kapat",
+	"changes": "Changes",
 	"confirm": "Tamam",
 	"collapse": "Daralt",
 	"collapse.all": "Tümünü daralt",
 	"copy": "Kopyala",
 	"copy.all": "Tümünü kopyala",
+	"copy.success": "{count} copied!",
 	"create": "Oluştur",
+	"custom": "Custom",
 
 	"date": "Tarih",
 	"date.select": "Bir tarih seçiniz",
@@ -34,13 +37,18 @@
 	"delete": "Sil",
 	"delete.all": "Tümünü sil",
 
+	"dialog.fields.empty": "This dialog has no fields",
 	"dialog.files.empty": "Seçilecek dosya yok",
 	"dialog.pages.empty": "Seçilecek sayfa yok",
+	"dialog.text.empty": "This dialog does not define any text",
 	"dialog.users.empty": "Seçilecek kullanıcı yok",
 
 	"dimensions": "Boyutlar",
 	"disabled": "Devredışı",
 	"discard": "Vazge\u00e7",
+
+	"drawer.fields.empty": "This drawer has no fields",
+
 	"download": "İndir",
 	"duplicate": "Kopyala",
 
@@ -49,11 +57,13 @@
 	"email": "E-Posta",
 	"email.placeholder": "eposta@ornek.com",
 
+	"enter": "Enter",
 	"entries": "Girdiler",
 	"entry": "Girdi",
 
 	"environment": "Ortam",
 
+	"error": "Error",
 	"error.access.code": "Geçersiz kod",
 	"error.access.login": "Geçersiz giriş",
 	"error.access.panel": "Panel'e erişim izniniz yok",
@@ -81,6 +91,9 @@
 
 	"error.file.changeName.empty": "İsim boş olmamalıdır",
 	"error.file.changeName.permission": "\"{filename}\" adını değiştiremezsiniz",
+	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
+	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
+
 	"error.file.duplicate": "\"{filename}\" isimli bir dosya zaten var",
 	"error.file.extension.forbidden": "\"{extension}\" dosya uzantısına izin verilmiyor",
 	"error.file.extension.invalid": "Geçersiz uzantı: {extension}",
@@ -95,6 +108,7 @@
 	"error.file.minheight": "Resmin yüksekliği en az {height} piksel olmalıdır",
 	"error.file.minsize": "Dosya çok küçük",
 	"error.file.minwidth": "Resmin genişliği en az {width} piksel olmalıdır",
+	"error.file.name.unique": "The filename must be unique",
 	"error.file.name.missing": "Dosya adı boş bırakılamaz",
 	"error.file.notFound": "\"{filename}\" dosyası bulunamadı",
 	"error.file.orientation": "Resmin oryantasyonu \"{orientation}\" olmalıdır",
@@ -122,6 +136,7 @@
 	"error.offline": "Panel şu anda çevrimdışı",
 
 	"error.page.changeSlug.permission": "\"{slug}\" uzantısına sahip bu sayfanın adresini değiştirilemez",
+	"error.page.changeSlug.reserved": "The path of top-level pages must not start with \"{path}\"",
 	"error.page.changeStatus.incomplete": "Sayfada hatalar var ve yayınlanamadı",
 	"error.page.changeStatus.permission": "Bu sayfanın durumu değiştirilemez",
 	"error.page.changeStatus.toDraft.invalid": "\"{slug}\" sayfası bir taslak haline dönüştürülemiyor",
@@ -137,6 +152,12 @@
 	"error.page.draft.duplicate": "\"{slug}\" adres eki olan bir sayfa taslağı zaten mevcut",
 	"error.page.duplicate": "\"{slug}\" adres eki içeren bir sayfa zaten mevcut",
 	"error.page.duplicate.permission": "\"{slug}\" öğesini çoğaltmanıza izin verilmiyor",
+	"error.page.move.ancestor": "The page cannot be moved into itself",
+	"error.page.move.directory": "The page directory cannot be moved",
+	"error.page.move.duplicate": "A sub page with the URL appendix \"{slug}\" already exists",
+	"error.page.move.notFound": "The moved page could not be found",
+	"error.page.move.permission": "You are not allowed to move \"{slug}\"",
+	"error.page.move.template": "The \"{template}\" template is not accepted as a subpage of \"{parent}\"",
 	"error.page.notFound": "\"{slug}\" uzantısındaki sayfa bulunamadı",
 	"error.page.num.invalid": "Lütfen geçerli bir sıralama numarası girin. Sayılar negatif olmamalıdır.",
 	"error.page.slug.invalid": "Lütfen geçerli bir URL eki girin",
@@ -162,6 +183,8 @@
 	"error.site.changeTitle.empty": "Başlık boş bırakılamaz",
 	"error.site.changeTitle.permission": "Sitenin başlığını değiştiremezsin",
 	"error.site.update.permission": "Siteyi güncellemenize izin verilmiyor",
+
+	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",
 
 	"error.template.default.notFound": "Varsayılan şablon yok",
 
@@ -195,6 +218,7 @@
 	"error.validation.accepted": "Lütfen onaylayın",
 	"error.validation.alpha": "Lütfen sadece a-z arasındaki karakterleri girin",
 	"error.validation.alphanum": "Lütfen sadece a-z veya 0-9 arasındaki rakamları girin",
+	"error.validation.anchor": "Please enter a correct link anchor",
 	"error.validation.between": "Lütfen \"{min}\" ile \"{max}\" arasında bir değer girin",
 	"error.validation.boolean": "Lütfen onaylayın veya reddedin",
 	"error.validation.contains": "Lütfen \"{needle}\" içeren bir değer girin",
@@ -211,6 +235,7 @@
 	"error.validation.integer": "Lütfen geçerli bir tamsayı girin",
 	"error.validation.ip": "Lütfen geçerli bir ip adresi girin",
 	"error.validation.less": "Lütfen {max} 'dan daha düşük bir değer girin",
+	"error.validation.linkType": "The link type is not allowed",
 	"error.validation.match": "Değer beklenen modelle eşleşmiyor",
 	"error.validation.max": "Lütfen {max} 'a eşit veya daha küçük bir değer girin",
 	"error.validation.maxlength": "Lütfen daha kısa bir değer girin. (maks. {max} karakter)",
@@ -227,15 +252,18 @@
 	"error.validation.same": "Lütfen \"{other}\" yazınız",
 	"error.validation.size": "Değerin boyutu \"{size}\" olmalıdır",
 	"error.validation.startswith": "Değer \"{start}\" ile başlamalıdır",
+	"error.validation.tel": "Please enter an unformatted phone number",
 	"error.validation.time": "Lütfen geçerli bir zaman girin",
 	"error.validation.time.after": "Lütfen {time} sonrası bir tarih girin",
 	"error.validation.time.before": "Lütfen {time} öncesi bir tarih girin",
 	"error.validation.time.between": "Lütfen {min} ile {max} arasında bir tarih girin",
+	"error.validation.uuid": "Please enter a valid UUID",
 	"error.validation.url": "Lütfen geçerli bir adres girin",
 
 	"expand": "Genişlet",
 	"expand.all": "Tümünü genişlet",
 
+	"field.invalid": "The field is invalid",
 	"field.required": "Alan gereklidir",
 	"field.blocks.changeType": "Türü değiştir",
 	"field.blocks.code.name": "Kod",
@@ -246,7 +274,7 @@
 	"field.blocks.delete.confirm.selected": "Seçilen blokları gerçekten silmek istiyor musunuz?",
 	"field.blocks.empty": "Henüz blok yok",
 	"field.blocks.fieldsets.label": "Lütfen bir blok türü seçiniz …",
-	"field.blocks.fieldsets.paste": "Panonuzdan blokları yapıştırmak veya içe aktarmak için <kbd>{{ shortcut }}</kbd>'e basın",
+	"field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to import layouts/blocks from your clipboard <small>Only those allowed in the current field will get inserted.</small>",
 	"field.blocks.gallery.name": "Galeri",
 	"field.blocks.gallery.images.empty": "Henüz görsel yok",
 	"field.blocks.gallery.images.label": "Görseller",
@@ -259,6 +287,8 @@
 	"field.blocks.image.crop": "Kırp",
 	"field.blocks.image.link": "Bağlantı",
 	"field.blocks.image.location": "Lokasyon",
+	"field.blocks.image.location.internal": "This website",
+	"field.blocks.image.location.external": "External source",
 	"field.blocks.image.name": "Görsel",
 	"field.blocks.image.placeholder": "Bir görsel seçin",
 	"field.blocks.image.ratio": "Oran",
@@ -283,8 +313,10 @@
 
 	"field.files.empty": "Henüz dosya seçilmedi",
 
+	"field.layout.change": "Change layout",
 	"field.layout.delete": "Düzeni sil",
 	"field.layout.delete.confirm": "Bu düzeni gerçekten silmek istiyor musunuz?",
+	"field.layout.delete.confirm.all": "Do you really want to delete all layouts?",
 	"field.layout.empty": "Henüz satır yok",
 	"field.layout.select": "Bir düzen seçin",
 
@@ -298,12 +330,22 @@
 
 	"field.users.empty": "Henüz kullanıcı seçilmedi",
 
+	"fields.empty": "No fields yet",
+
+	"file": "Dosya",
 	"file.blueprint": "Bu dosyanın henüz bir planı yok. Kurulumu <strong>/site/blueprints/files/{blueprint}.yml</strong> dosyasında tanımlayabilirsiniz.",
+	"file.changeTemplate": "Şablonu değiştir",
+	"file.changeTemplate.notice": "Changing the file's template will remove content for fields that don't match in type. If the new template defines certain rules, e.g. image dimensions, those will also be applied irreversibly. Use with caution.",
 	"file.delete.confirm": "<strong>{filename}</strong> dosyasını silmek istediğinizden emin misiniz?",
+	"file.focus.placeholder": "Set focal point",
+	"file.focus.reset": "Remove focal point",
+	"file.focus.title": "Focus",
 	"file.sort": "Pozisyon değiştir",
 
 	"files": "Dosyalar",
 	"files.empty": "Henüz dosya yok",
+
+	"filter": "Filter",
 
 	"hide": "Gizle",
 	"hour": "Saat",
@@ -332,6 +374,7 @@
 	"language.convert": "Varsayılan yap",
 	"language.convert.confirm": "<p><strong>{name}</strong>'i varsayılan dile dönüştürmek istiyor musunuz? Bu geri alınamaz.</p> <p><strong>{name}</strong> çevrilmemiş içeriğe sahipse, artık geçerli bir geri dönüş olmaz ve sitenizin bazı bölümleri boş olabilir.</p>",
 	"language.create": "Yeni bir dil ekle",
+	"language.default": "Varsayılan dil",
 	"language.delete.confirm": "Tüm çevirileri içeren <strong>{name}</strong> dilini gerçekten silmek istiyor musunuz? Bu geri alınamaz!",
 	"language.deleted": "Dil silindi",
 	"language.direction": "Okuma yönü",
@@ -340,7 +383,16 @@
 	"language.locale": "PHP yerel dizesi",
 	"language.locale.warning": "Özel bir yerel ayar kullanıyorsunuz. Lütfen /site/languages konumundaki dil dosyasından değiştirin.",
 	"language.name": "İsim",
+	"language.secondary": "Secondary language",
+	"language.settings": "Language settings",
 	"language.updated": "Dil güncellendi",
+	"language.variables": "Language variables",
+	"language.variables.empty": "No translations yet",
+
+	"language.variable.delete.confirm": "Do you really want to delete the variable for {key}?",
+	"language.variable.key": "Key",
+	"language.variable.notFound": "The variable could not be found",
+	"language.variable.value": "Value",
 
 	"languages": "Diller",
 	"languages.default": "Varsayılan dil",
@@ -367,11 +419,10 @@
 
 	"lock.unsaved": "Kaydedilmemiş değişiklikler",
 	"lock.unsaved.empty": "Daha fazla kaydedilmemiş değişiklik yok",
-	"lock.isLocked": "<strong>{email}</strong> tarafından kaydedilmemiş değişiklikler",
-	"lock.file.isLocked": "Dosya şu anda {email} tarafından düzenlenmektedir ve değiştirilemez.",
-	"lock.page.isLocked": "Sayfa şu anda {email} tarafından düzenlenmektedir ve değiştirilemez.",
+	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Kilidi Aç",
-	"lock.isUnlocked": "Kaydedilmemiş değişikliklerin üzerine başka bir kullanıcı yazmış. Değişikliklerinizi el ile birleştirmek için değişikliklerinizi indirebilirsiniz.",
+	"lock.unlock.submit": "Unlock and overwrite unsaved changes by <strong>{email}</strong>",
+	"lock.isUnlocked": "Was unlocked by another user",
 
 	"login": "Giriş",
 	"login.code.label.login": "Giriş kodu",
@@ -391,6 +442,7 @@
 
 	"logout": "Oturumu kapat",
 
+	"merge": "Merge",
 	"menu": "Menü",
 	"meridiem": "AM/PM",
 	"mime": "Medya Türü",
@@ -411,13 +463,16 @@
 	"months.september": "Eyl\u00fcl",
 
 	"more": "Daha Fazla",
+	"move": "Move",
 	"name": "İsim",
 	"next": "Sonraki",
+	"night": "Night",
 	"no": "hayır",
 	"off": "kapalı",
 	"on": "açık",
 	"open": "Önizleme",
 	"open.newWindow": "Yeni pencerede aç",
+	"option": "Option",
 	"options": "Seçenekler",
 	"options.none": "Seçenek yok",
 
@@ -426,6 +481,7 @@
 	"orientation.portrait": "Dikey",
 	"orientation.square": "Kare",
 
+	"page": "Page",
 	"page.blueprint": "Bu dosyanın henüz bir planı yok. Kurulumu <strong>/site/blueprints/pages/{blueprint}.yml</strong> dosyasında tanımlayabilirsiniz.",
 	"page.changeSlug": "Web Adresini Değiştir",
 	"page.changeSlug.fromTitle": "Ba\u015fl\u0131ktan olu\u015ftur",
@@ -433,13 +489,15 @@
 	"page.changeStatus.position": "Lütfen bir pozisyon seçin",
 	"page.changeStatus.select": "Yeni bir durum seçin",
 	"page.changeTemplate": "Şablonu değiştir",
+	"page.changeTemplate.notice": "Changing the page's template will remove content for fields that don't match in type. Use with caution.",
+	"page.create": "Create as {status}",
 	"page.delete.confirm": "<strong>{title}</strong> sayfasını silmek istediğinizden emin misiniz?",
 	"page.delete.confirm.subpages": "<strong>Bu sayfada alt sayfalar var</strong>. <br>Tüm alt sayfalar da silinecek.",
 	"page.delete.confirm.title": "Onaylamak için sayfa başlığını girin",
-	"page.draft.create": "Taslak oluştur",
 	"page.duplicate.appendix": "Kopya",
 	"page.duplicate.files": "Dosyaları kopyala",
 	"page.duplicate.pages": "Sayfaları kopyala",
+	"page.move": "Move page",
 	"page.sort": "Pozisyon değiştir",
 	"page.status": "Durum",
 	"page.status.draft": "Taslak",
@@ -460,6 +518,7 @@
 	"password": "\u015eifre",
 	"paste": "Yapıştır",
 	"paste.after": "Sonrasına yapıştır",
+	"paste.success": "{count} pasted!",
 	"pixel": "Piksel",
 	"plugin": "Eklenti",
 	"plugins": "Eklentiler",
@@ -468,6 +527,7 @@
 	"remove": "Kaldır",
 	"rename": "Yeniden Adlandır",
 	"replace": "De\u011fi\u015ftir",
+	"replace.with": "Replace with",
 	"retry": "Tekrar Dene",
 	"revert": "Vazge\u00e7",
 	"revert.confirm": "Gerçekten <strong>kaydedilmemiş tüm değişiklikleri silmek</strong> istiyor musunuz?",
@@ -487,6 +547,7 @@
 	"search.all": "Tümünü göster",
 	"search.results.none": "Sonuç yok",
 
+	"section.invalid": "The section is invalid",
 	"section.required": "Bölüm gereklidir",
 
 	"security": "Güvenlik",
@@ -498,6 +559,8 @@
 	"size": "Boyut",
 	"slug": "Web Adres Uzantısı",
 	"sort": "Sırala",
+	"sort.drag": "Drag to sort …",
+	"split": "Split",
 
 	"stats.empty": "Rapor yok",
 	"system.issues.content": "İçerik klasörü açığa çıkmış görünüyor",
@@ -520,10 +583,13 @@
 	"system.updateStatus.update": "Ücretsiz güncelleme { version } mevcut",
 	"system.updateStatus.upgrade": "{ version } yükseltme mevcut",
 
-	"title": "Başlık",
+	"tel": "Phone",
+	"tel.placeholder": "+49123456789",
 	"template": "\u015eablon",
+	"title": "Başlık",
 	"today": "Bugün",
 
+	"toolbar.button.clear": "Clear formatting",
 	"toolbar.button.code": "Kod",
 	"toolbar.button.bold": "Kalın Yazı",
 	"toolbar.button.email": "E-Posta",
@@ -541,6 +607,8 @@
 	"toolbar.button.link": "Ba\u011flant\u0131",
 	"toolbar.button.paragraph": "Paragraf",
 	"toolbar.button.strike": "Üstü çizili",
+	"toolbar.button.sub": "Subscript",
+	"toolbar.button.sup": "Superscript",
 	"toolbar.button.ol": "Sıralı liste",
 	"toolbar.button.underline": "Altı çizili",
 	"toolbar.button.ul": "Madde listesi",

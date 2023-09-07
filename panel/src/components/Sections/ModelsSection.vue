@@ -25,6 +25,7 @@
 					:autofocus="true"
 					:placeholder="$t('search') + ' …'"
 					:value="searchterm"
+					icon="search"
 					type="text"
 					class="k-models-section-search"
 					@input="searchterm = $event"
@@ -173,10 +174,9 @@ export default {
 		}
 	},
 	watch: {
-		searchterm: debounce(function () {
-			this.pagination.page = 0;
-			this.reload();
-		}, 200),
+		searchterm() {
+			this.search();
+		},
 		// Reload the section when
 		// the view has changed in the backend
 		timestamp() {
@@ -184,6 +184,7 @@ export default {
 		}
 	},
 	created() {
+		this.search = debounce(this.search, 200);
 		this.load();
 	},
 	methods: {
@@ -228,9 +229,12 @@ export default {
 			this.searching = !this.searching;
 			this.searchterm = null;
 		},
-
 		async reload() {
 			await this.load(true);
+		},
+		async search() {
+			this.pagination.page = 0;
+			await this.reload();
 		},
 		update() {
 			this.reload();
@@ -246,13 +250,8 @@ export default {
 }
 
 .k-models-section-search.k-input {
-	--input-placeholder: var(--color-gray-600);
-
+	--input-color-back: var(--color-gray-300);
+	--input-color-border: transparent;
 	margin-bottom: var(--spacing-3);
-	background: var(--color-gray-300);
-	padding: var(--spacing-2) var(--spacing-3);
-	height: var(--field-input-height);
-	border-radius: var(--rounded);
-	font-size: var(--text-sm);
 }
 </style>

@@ -47,7 +47,6 @@ class MockTime
  * waiting times while testing
  *
  * @param int $microSeconds
- * @return void
  */
 function usleep(int $microSeconds): void
 {

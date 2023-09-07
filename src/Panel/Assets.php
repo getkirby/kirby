@@ -55,7 +55,7 @@ class Assets
 	public function css(): array
 	{
 		$css = [
-			'index'   => $this->url . '/css/style.css',
+			'index'   => $this->url . '/css/style.min.css',
 			'plugins' => $this->plugins->url('css'),
 			'custom'  => $this->custom('panel.css'),
 		];
@@ -151,7 +151,9 @@ class Assets
 	{
 		$dir  = $this->kirby->root('panel') . '/';
 		$dir .= $this->dev ? 'public' : 'dist';
-		return F::read($dir . '/img/icons.svg');
+		$icons = F::read($dir . '/img/icons.svg');
+		$icons = preg_replace('/<!--(.|\s)*?-->/', '', $icons);
+		return $icons;
 	}
 
 	/**
@@ -162,11 +164,11 @@ class Assets
 		$js = [
 			'vue' => [
 				'nonce' => $this->nonce,
-				'src'   => $this->url . '/js/vue.js'
+				'src'   => $this->url . '/js/vue.min.js'
 			],
 			'vendor'       => [
 				'nonce' => $this->nonce,
-				'src'   => $this->url . '/js/vendor.js',
+				'src'   => $this->url . '/js/vendor.min.js',
 				'type'  => 'module'
 			],
 			'pluginloader' => [
@@ -186,7 +188,7 @@ class Assets
 			],
 			'index'        => [
 				'nonce' => $this->nonce,
-				'src'   => $this->url . '/js/index.js',
+				'src'   => $this->url . '/js/index.min.js',
 				'type'  => 'module'
 			],
 		];

@@ -27,6 +27,15 @@ use Whoops\Run as Whoops;
 trait AppErrors
 {
 	/**
+	 * Allows to disable Whoops globally in CI;
+	 * can be overridden by explicitly setting
+	 * the `whoops` option to `true` or `false`
+	 *
+	 * @internal
+	 */
+	public static bool $enableWhoops = true;
+
+	/**
 	 * Whoops instance cache
 	 */
 	protected Whoops $whoops;
@@ -45,6 +54,17 @@ trait AppErrors
 	 */
 	protected function handleErrors(): void
 	{
+		// no matter the environment, exit early if
+		// Whoops was disabled globally
+		// (but continue if the option was explicitly
+		// set to `true` in the config)
+		if (
+			static::$enableWhoops === false &&
+			$this->option('whoops') !== true
+		) {
+			return;
+		}
+
 		if ($this->environment()->cli() === true) {
 			$this->handleCliErrors();
 			return;

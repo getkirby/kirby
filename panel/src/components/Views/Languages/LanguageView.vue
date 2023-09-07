@@ -66,7 +66,7 @@
 				/>
 			</template>
 			<template v-else>
-				<k-empty icon="globe" @click="createTranslation">
+				<k-empty icon="translate" @click="createTranslation">
 					{{ $t("language.variables.empty") }}
 				</k-empty>
 			</template>
@@ -95,7 +95,11 @@ export default {
 		option(option, row) {
 			// for the compatibility of the encoded url in different environments,
 			// it is also encoded with base64 to reduce special characters
-			this.$dialog(`languages/${this.id}/translations/${window.btoa(encodeURIComponent(row.key))}/${option}`);
+			this.$dialog(
+				`languages/${this.id}/translations/${window.btoa(
+					encodeURIComponent(row.key)
+				)}/${option}`
+			);
 		},
 		remove() {
 			this.$dialog(`languages/${this.id}/delete`);
@@ -112,7 +116,11 @@ export default {
 		updateTranslation({ row }) {
 			// for the compatibility of the encoded url in different environments,
 			// it is also encoded with base64 to reduce special characters
-			this.$dialog(`languages/${this.id}/translations/${window.btoa(encodeURIComponent(row.key))}/update`);
+			this.$dialog(
+				`languages/${this.id}/translations/${window.btoa(
+					encodeURIComponent(row.key)
+				)}/update`
+			);
 		}
 	}
 };

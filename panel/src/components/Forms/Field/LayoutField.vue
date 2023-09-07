@@ -3,6 +3,7 @@
 		<template #options>
 			<k-button-group layout="collapsed">
 				<k-button
+					:autofocus="autofocus"
 					:text="$t('add')"
 					icon="add"
 					variant="filled"
@@ -49,6 +50,7 @@ export default {
 	mixins: [Field],
 	inheritAttrs: false,
 	props: {
+		autofocus: Boolean,
 		empty: String,
 		fieldsetGroups: Object,
 		fieldsets: Object,

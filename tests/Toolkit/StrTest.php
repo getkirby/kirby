@@ -210,10 +210,20 @@ class StrTest extends TestCase
 		$this->assertSame('29.01.2020', Str::date($time, 'd.m.Y'));
 
 		// `intl` handler
-		$formatter = new IntlDateFormatter('en-US', IntlDateFormatter::LONG, IntlDateFormatter::SHORT);
 		$this->assertSame($time, Str::date($time, null, 'intl'));
 		$this->assertSame('29/1/2020 01:01', Str::date($time, 'd/M/yyyy HH:mm', 'intl'));
-		$this->assertSame('January 29, 2020 at 1:01 AM', Str::date($time, $formatter));
+
+		// passing custom `intl` handler
+		$formatter = new IntlDateFormatter(
+			'en-US',
+			IntlDateFormatter::LONG,
+			IntlDateFormatter::SHORT
+		);
+		// @todo remove str_replace when IntlDateFormatter doesn't result
+		// in different spaces depending on the system its running on
+		$date = Str::date($time, $formatter);
+		$date = str_replace("\xE2\x80\xAF", ' ', $date);
+		$this->assertSame('January 29, 2020 at 1:01 AM', $date);
 
 		// `strftime` handler
 		$this->assertSame($time, Str::date($time, null, 'strftime'));
@@ -1269,6 +1279,25 @@ EOT;
 			'user' => new QueryTestUser()
 		]);
 		$this->assertSame('homer says: {{ user.greeting("hi") }}', $template);
+	}
+
+	/**
+	 * @covers ::template
+	 */
+	public function testTemplateStartEnd()
+	{
+		$this->assertSame(
+			'From a to b',
+			Str::template('From {{ b }} to {{ a }}', ['a' => 'b', 'b' => 'a'])
+		);
+		$this->assertSame(
+			'From a to b',
+			Str::template('From { b } to { a }', ['a' => 'b', 'b' => 'a'])
+		);
+		$this->assertSame(
+			'From a to b',
+			Str::template('From dbf to daf', ['a' => 'b', 'b' => 'a'], ['start' => 'd', 'end' => 'f'])
+		);
 	}
 
 	/**

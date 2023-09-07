@@ -65,7 +65,6 @@ export default defineConfig(({ command }) => {
 				targets: [
 					{
 						src: "node_modules/vue/dist/vue.min.js",
-						rename: "vue.js",
 						dest: "js"
 					}
 				]
@@ -85,15 +84,15 @@ export default defineConfig(({ command }) => {
 			rollupOptions: {
 				input: "./src/index.js",
 				output: {
-					entryFileNames: "js/[name].js",
+					entryFileNames: "js/[name].min.js",
 					chunkFileNames: (chunkInfo) => {
 						// TODO: remove when removing CSS :has polyfill
 						if (chunkInfo.name === "browser") {
-							return "js/css-has-polyfill.js";
+							return "js/css-has-polyfill.min.js";
 						}
-						return "js/[name].js";
+						return "js/[name].min.js";
 					},
-					assetFileNames: "[ext]/[name].[ext]"
+					assetFileNames: "[ext]/[name].min.[ext]"
 				}
 			}
 		},

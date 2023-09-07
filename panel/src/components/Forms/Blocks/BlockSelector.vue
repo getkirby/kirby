@@ -86,7 +86,7 @@ export default {
 	},
 	computed: {
 		groups() {
-			let groups = {};
+			const groups = {};
 			let index = 0;
 
 			const fieldsetGroups = this.fieldsetGroups ?? {
@@ -96,7 +96,7 @@ export default {
 				}
 			};
 
-			Object.keys(fieldsetGroups).forEach((key) => {
+			for (const key in fieldsetGroups) {
 				let group = fieldsetGroups[key];
 
 				group.open = group.open === false ? false : true;
@@ -116,7 +116,7 @@ export default {
 				}
 
 				groups[key] = group;
-			});
+			}
 
 			return groups;
 		},
@@ -179,14 +179,6 @@ export default {
 	line-height: var(--leading-normal);
 	font-size: var(--text-xs);
 	color: var(--color-text-dimmed);
-}
-.k-clipboard-hint kbd {
-	background: var(--color-gray-300);
-	font-family: var(--font-mono);
-	letter-spacing: 0.1em;
-	padding: 0.25rem;
-	border-radius: var(--rounded);
-	margin: 0 0.25rem;
 }
 .k-clipboard-hint small {
 	display: block;

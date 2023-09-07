@@ -164,10 +164,11 @@ export default {
 
 <style>
 .k-color-field .k-input .k-input-before {
-	padding: var(--spacing-1);
+	align-items: center;
+	padding-inline: var(--spacing-1);
 }
 .k-color-field .k-color-field-preview {
-	--color-preview-size: calc(var(--field-input-height) - var(--spacing-2));
+	--color-preview-size: calc(var(--input-height) - var(--spacing-2));
 }
 
 .k-color-field-picker {
@@ -181,7 +182,7 @@ export default {
 }
 
 .k-color-field-options {
-	--color-preview-size: var(--field-input-height);
+	--color-preview-size: var(--input-height);
 	display: grid;
 	grid-template-columns: repeat(auto-fill, var(--color-preview-size));
 	gap: var(--spacing-2);
@@ -194,7 +195,7 @@ export default {
 }
 
 .k-color-field .k-color-preview[aria-current] {
-	outline: var(--field-input-focus-outline);
+	outline: var(--outline);
 }
 .k-color-field[data-disabled="true"] .k-color-field-options {
 	opacity: var(--opacity-disabled);

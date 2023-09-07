@@ -335,6 +335,11 @@ class PageRules
 	 */
 	public static function move(Page $page, Site|Page $parent): bool
 	{
+		// if nothing changes, there's no need for checks
+		if ($parent->is($page->parent()) === true) {
+			return true;
+		}
+
 		if ($page->permissions()->move() !== true) {
 			throw new PermissionException([
 				'key' => 'page.move.permission',

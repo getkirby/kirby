@@ -5,15 +5,19 @@ export default {
 	extends: BubblesFieldPreview,
 	inheritAttrs: false,
 	class: "k-files-field-preview",
+	props: {
+		html: {
+			type: Boolean,
+			default: true
+		}
+	},
 	computed: {
 		bubbles() {
-			return this.value.map((file) => {
-				return {
-					text: file.filename,
-					link: file.link,
-					image: file.image
-				};
-			});
+			return this.value.map((file) => ({
+				text: file.filename,
+				link: file.link,
+				image: file.image
+			}));
 		}
 	}
 };

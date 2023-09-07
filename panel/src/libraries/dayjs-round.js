@@ -37,7 +37,9 @@ export default (option, Dayjs) => {
 		const subsubunits = units.slice(0, index);
 		const subunit = subsubunits.pop();
 
-		subsubunits.forEach((unit) => (dt = dt.startOf(unit)));
+		for (const unit of subsubunits) {
+			dt = dt.startOf(unit);
+		}
 
 		// if a direct precessor subunit exists,
 		// check if rounding leads to a carry over

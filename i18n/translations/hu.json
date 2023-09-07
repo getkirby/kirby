@@ -10,12 +10,15 @@
 	"cancel": "M\u00e9gsem",
 	"change": "M\u00f3dos\u00edt\u00e1s",
 	"close": "Bez\u00e1r",
+	"changes": "Changes",
 	"confirm": "Mentés",
 	"collapse": "Bezárás",
 	"collapse.all": "Összes bezárása",
 	"copy": "Másol",
 	"copy.all": "Összes másolása",
+	"copy.success": "{count} copied!",
 	"create": "Létrehoz",
+	"custom": "Custom",
 
 	"date": "Dátum",
 	"date.select": "Dátum kiválasztása",
@@ -34,13 +37,18 @@
 	"delete": "T\u00f6rl\u00e9s",
 	"delete.all": "Összes törlése",
 
+	"dialog.fields.empty": "This dialog has no fields",
 	"dialog.files.empty": "Nincsenek fájlok kiválasztva",
 	"dialog.pages.empty": "Nincsenek oldalak kiválasztva",
+	"dialog.text.empty": "This dialog does not define any text",
 	"dialog.users.empty": "Nincsenek felhasználók kiválasztva",
 
 	"dimensions": "Méretek",
 	"disabled": "Inaktív",
 	"discard": "Visszavon\u00e1s",
+
+	"drawer.fields.empty": "This drawer has no fields",
+
 	"download": "Letöltés",
 	"duplicate": "Másolat",
 
@@ -49,11 +57,13 @@
 	"email": "Email",
 	"email.placeholder": "mail@pelda.hu",
 
+	"enter": "Enter",
 	"entries": "Entries",
 	"entry": "Entry",
 
 	"environment": "Környezet",
 
+	"error": "Error",
 	"error.access.code": "Érvénytelen kód",
 	"error.access.login": "Érvénytelen bejelentkezés",
 	"error.access.panel": "Nincs jogosultságod megnyitni a panelt",
@@ -81,6 +91,9 @@
 
 	"error.file.changeName.empty": "A név nem lehet üres",
 	"error.file.changeName.permission": "Nincs jogosultságod megváltoztatni a \"{filename}\" fájl nevét",
+	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
+	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
+
 	"error.file.duplicate": "Már létezik \"{filename}\" nevű fájl",
 	"error.file.extension.forbidden": "Tiltott kiterjeszt\u00e9s\u0171 f\u00e1jl",
 	"error.file.extension.invalid": "Érvénytelen kiterjesztés: {extension}",
@@ -95,6 +108,7 @@
 	"error.file.minheight": "A képnek legalább {height} pixel magasnak kell lennie",
 	"error.file.minsize": "A fájl túl kicsi",
 	"error.file.minwidth": "A képnek legalább {width} pixel szélesnek kell lennie",
+	"error.file.name.unique": "The filename must be unique",
 	"error.file.name.missing": "A fálj neve nem lehet üres",
 	"error.file.notFound": "A \"{filename}\" fájl nem található",
 	"error.file.orientation": "A képnek \"{orientation}\" tájolásúnak kell lennie",
@@ -122,6 +136,7 @@
 	"error.offline": "A Panel jelenleg nem elérhető",
 
 	"error.page.changeSlug.permission": "Nem változtathatod meg az URL-előtagot: \"{slug}\"",
+	"error.page.changeSlug.reserved": "The path of top-level pages must not start with \"{path}\"",
 	"error.page.changeStatus.incomplete": "Az oldal hibákat tartalmaz és nem publikálható",
 	"error.page.changeStatus.permission": "Az oldal státusza nem változtatható meg",
 	"error.page.changeStatus.toDraft.invalid": "A(z) \"{slug}\" oldalt nem lehet piszkozattá alakítani",
@@ -137,6 +152,12 @@
 	"error.page.draft.duplicate": "Van már egy másik oldal ezzel az URL-lel: \"{slug}\"",
 	"error.page.duplicate": "Van már egy másik oldal ezzel az URL-lel: \"{slug}\"",
 	"error.page.duplicate.permission": "Nincs engedélyed a(z) \"{slug}\" másolat keszítéséhez",
+	"error.page.move.ancestor": "The page cannot be moved into itself",
+	"error.page.move.directory": "The page directory cannot be moved",
+	"error.page.move.duplicate": "A sub page with the URL appendix \"{slug}\" already exists",
+	"error.page.move.notFound": "The moved page could not be found",
+	"error.page.move.permission": "You are not allowed to move \"{slug}\"",
+	"error.page.move.template": "The \"{template}\" template is not accepted as a subpage of \"{parent}\"",
 	"error.page.notFound": "Az oldal nem tal\u00e1lhat\u00f3",
 	"error.page.num.invalid": "Kérlek megfelelő oldalszámozást adj meg. Negatív szám itt nem használható.",
 	"error.page.slug.invalid": "Kérlek érvényes URL-kiterjesztést adj meg",
@@ -162,6 +183,8 @@
 	"error.site.changeTitle.empty": "A cím nem lehet üres",
 	"error.site.changeTitle.permission": "Nincs jogosultságod megváltoztatni az honlap címét",
 	"error.site.update.permission": "Nincs jogosultságod frissíteni a honlapot",
+
+	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",
 
 	"error.template.default.notFound": "Az alapértelmezett sablon nem létezik",
 
@@ -195,6 +218,7 @@
 	"error.validation.accepted": "Kérlek erősítsd meg",
 	"error.validation.alpha": "Kérlek csak kis betűket használj (a-z)",
 	"error.validation.alphanum": "Kérlek csak kis betűket és számjegyeket használj (a-z, 0-9)",
+	"error.validation.anchor": "Please enter a correct link anchor",
 	"error.validation.between": "Kérlek egy \"{min}\" és \"{max}\" közötti értéket adj meg",
 	"error.validation.boolean": "Kérlek erősítsd meg vagy vesd el",
 	"error.validation.contains": "Kérlek olyan értéket adj meg, amely tartalmazza ezt: \"{needle}\"",
@@ -211,6 +235,7 @@
 	"error.validation.integer": "Kérlek valós számot adj meg",
 	"error.validation.ip": "Kérlek megfelelő IP-címet adj meg",
 	"error.validation.less": "A megadott érték kevesebb legyen, mint {max}",
+	"error.validation.linkType": "The link type is not allowed",
 	"error.validation.match": "A megadott érték nem felel meg az elvárt struktúrának",
 	"error.validation.max": "A megadott érték egyenlő vagy kevesebb legyen, mint {max}",
 	"error.validation.maxlength": "Kérlek rövidebb értéket adj meg (legfeljebb {max} karakter)",
@@ -227,15 +252,18 @@
 	"error.validation.same": "Kérlek írd be: \"{other}\"",
 	"error.validation.size": "Az értéknek az alábbi méretűnek kell lennie: \"{size}\"",
 	"error.validation.startswith": "Az értéknek ezzel kell kezdődnie: \"{start}\"",
+	"error.validation.tel": "Please enter an unformatted phone number",
 	"error.validation.time": "Kérlek megfelelő időt adj meg",
 	"error.validation.time.after": "Kérlek olyan időpontot adj meg, amely későbbi ennél: {time}",
 	"error.validation.time.before": "Kérlek olyan időpontot adj meg, amely korábbi ennél: {time}",
 	"error.validation.time.between": "Kérlek {min} és {max} közötti időpontot adj meg",
+	"error.validation.uuid": "Please enter a valid UUID",
 	"error.validation.url": "Kérlek megfelelő URL-t adj meg",
 
 	"expand": "Kinyitás",
 	"expand.all": "Összes kinyitása",
 
+	"field.invalid": "The field is invalid",
 	"field.required": "Kötelező mező",
 	"field.blocks.changeType": "Típus megváltoztatása",
 	"field.blocks.code.name": "Kód",
@@ -246,7 +274,7 @@
 	"field.blocks.delete.confirm.selected": "Tényleg törölni szeretnéd a kijelölt blokkokat?",
 	"field.blocks.empty": "Még nincsenek blokkok",
 	"field.blocks.fieldsets.label": "Kérlek válassz blokktípust …",
-	"field.blocks.fieldsets.paste": "Blokk beszúrásához a vágólapról használd a <kbd>{{ shortcut }}</kbd> billentyűkombinációt",
+	"field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to import layouts/blocks from your clipboard <small>Only those allowed in the current field will get inserted.</small>",
 	"field.blocks.gallery.name": "Galéria",
 	"field.blocks.gallery.images.empty": "Még nincsenek képek",
 	"field.blocks.gallery.images.label": "Képek",
@@ -259,6 +287,8 @@
 	"field.blocks.image.crop": "Körülvágás",
 	"field.blocks.image.link": "Link",
 	"field.blocks.image.location": "A kép helye",
+	"field.blocks.image.location.internal": "This website",
+	"field.blocks.image.location.external": "External source",
 	"field.blocks.image.name": "Kép",
 	"field.blocks.image.placeholder": "Kép kiválasztása",
 	"field.blocks.image.ratio": "Képarány",
@@ -283,8 +313,10 @@
 
 	"field.files.empty": "Nincs fálj kiválasztva",
 
+	"field.layout.change": "Change layout",
 	"field.layout.delete": "Elrendezés törlése",
 	"field.layout.delete.confirm": "Tényleg törölni szeretnéd ezt az elrendezést?",
+	"field.layout.delete.confirm.all": "Do you really want to delete all layouts?",
 	"field.layout.empty": "Még nincsenek sorok",
 	"field.layout.select": "Válassz elrendezést",
 
@@ -298,12 +330,22 @@
 
 	"field.users.empty": "Nincs felhasználó kiválasztva",
 
+	"fields.empty": "No fields yet",
+
+	"file": "Fájl",
 	"file.blueprint": "Ehhez a fájlhoz még nem tartozik oldalsablon. Itt hozhatod létre: <strong>/site/blueprints/files/{blueprint}.yml</strong>",
+	"file.changeTemplate": "Sablon módosítása",
+	"file.changeTemplate.notice": "Changing the file's template will remove content for fields that don't match in type. If the new template defines certain rules, e.g. image dimensions, those will also be applied irreversibly. Use with caution.",
 	"file.delete.confirm": "Biztos törölni akarod ezt a fájlt: <br><strong>{filename}</strong>?",
+	"file.focus.placeholder": "Set focal point",
+	"file.focus.reset": "Remove focal point",
+	"file.focus.title": "Focus",
 	"file.sort": "Sorrend megváltoztatása",
 
 	"files": "Fájlok",
 	"files.empty": "Még nincsenek fájlok",
+
+	"filter": "Filter",
 
 	"hide": "Elrejtés",
 	"hour": "Óra",
@@ -332,6 +374,7 @@
 	"language.convert": "Alapértelmezettnek jelölés",
 	"language.convert.confirm": "<p>Tényleg az alaőértelmezett nyelvre szeretnéd konvertálni ezt: <strong>{name}</strong>? Ez a művelet nem vonható vissza.</p><p>Ha<strong>{name}</strong> olyat is tartalmaz, amelynek nincs megfelelő fordítása, a honlapod egyes részei az új alapértelmezett nyelv hiányosságai miatt üresek maradhatnak.</p>",
 	"language.create": "Új nyelv hozzáadása",
+	"language.default": "Alapértelmezett nyelv",
 	"language.delete.confirm": "Tényleg törölni szeretnéd a(z) <strong>{name}</strong> nyelvet, annak minden fordításával együtt? Ez a művelet nem vonható vissza!",
 	"language.deleted": "A nyelv törölve lett",
 	"language.direction": "Olvasási irány",
@@ -340,7 +383,16 @@
 	"language.locale": "PHP locale sztring",
 	"language.locale.warning": "Egyedi nyelvi készletet használsz. Kérlek módosítsd a nyelvhez tartozó fájlt az alábbi mappában: /site/languages",
 	"language.name": "Név",
+	"language.secondary": "Secondary language",
+	"language.settings": "Language settings",
 	"language.updated": "A nyelv frissítve lett",
+	"language.variables": "Language variables",
+	"language.variables.empty": "No translations yet",
+
+	"language.variable.delete.confirm": "Do you really want to delete the variable for {key}?",
+	"language.variable.key": "Key",
+	"language.variable.notFound": "The variable could not be found",
+	"language.variable.value": "Value",
 
 	"languages": "Nyelvek",
 	"languages.default": "Alapértelmezett nyelv",
@@ -367,11 +419,10 @@
 
 	"lock.unsaved": "Nem mentett változások",
 	"lock.unsaved.empty": "Nincsenek nem mentett változások",
-	"lock.isLocked": "Nem mentett <strong>{email}</strong> változások",
-	"lock.file.isLocked": "A fájlt jelenleg {email} szerkeszti és nem módosítható.",
-	"lock.page.isLocked": "Az oldalt jelenleg {email} szerkeszti és nem módosítható.",
+	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Kinyit",
-	"lock.isUnlocked": "A nem mentett módosításokat egy másik felhasználó felülírta. A módosításokat manuálisan egyesítheted.",
+	"lock.unlock.submit": "Unlock and overwrite unsaved changes by <strong>{email}</strong>",
+	"lock.isUnlocked": "Was unlocked by another user",
 
 	"login": "Bejelentkezés",
 	"login.code.label.login": "Bejelentkezéshez szükséges kód",
@@ -391,6 +442,7 @@
 
 	"logout": "Kijelentkezés",
 
+	"merge": "Merge",
 	"menu": "Menü",
 	"meridiem": "DE/DU",
 	"mime": "Média-típus",
@@ -411,13 +463,16 @@
 	"months.september": "szeptember",
 
 	"more": "Több",
+	"move": "Move",
 	"name": "Név",
 	"next": "Következő",
+	"night": "Night",
 	"no": "nem",
 	"off": "ki",
 	"on": "be",
 	"open": "Megnyitás",
 	"open.newWindow": "Megnyitás új ablakban",
+	"option": "Option",
 	"options": "Beállítások",
 	"options.none": "Nincsnek beállítások",
 
@@ -426,6 +481,7 @@
 	"orientation.portrait": "Álló",
 	"orientation.square": "Négyzetes",
 
+	"page": "Page",
 	"page.blueprint": "Ehhez az oldalhoz még nem tartozik oldalsablon. Itt hozhatod létre: <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
 	"page.changeSlug": "URL v\u00e1ltoztat\u00e1sa",
 	"page.changeSlug.fromTitle": "L\u00e9trehoz\u00e1s c\u00edmb\u0151l",
@@ -433,13 +489,15 @@
 	"page.changeStatus.position": "Kérlek válaszd ki a pozíciót",
 	"page.changeStatus.select": "Új állapot kiválasztása",
 	"page.changeTemplate": "Sablon módosítása",
+	"page.changeTemplate.notice": "Changing the page's template will remove content for fields that don't match in type. Use with caution.",
+	"page.create": "Create as {status}",
 	"page.delete.confirm": "Biztos vagy benne, hogy törlöd az alábbi oldalt: <strong>{title}</strong>?",
 	"page.delete.confirm.subpages": "<strong>Ehhez az oldalhoz aloldalak tartoznak</strong>. <br>Az oldal törlésekor a hozzá tartozó aloldalak is törlődnek.",
 	"page.delete.confirm.title": "Megerősítéshez add meg az oldal címét",
-	"page.draft.create": "Piszkozat létrehozása",
 	"page.duplicate.appendix": "Másol",
 	"page.duplicate.files": "Fájlok másolása",
 	"page.duplicate.pages": "Oldalak másolása",
+	"page.move": "Move page",
 	"page.sort": "Sorrend megváltoztatása",
 	"page.status": "Állapot",
 	"page.status.draft": "Piszkozat",
@@ -460,6 +518,7 @@
 	"password": "Jelsz\u00f3",
 	"paste": "Beillesztés",
 	"paste.after": "Beillesztés utána",
+	"paste.success": "{count} pasted!",
 	"pixel": "Pixel",
 	"plugin": "Plugin",
 	"plugins": "Pluginek",
@@ -468,6 +527,7 @@
 	"remove": "Eltávolítás",
 	"rename": "Átnevezés",
 	"replace": "Cser\u00e9l",
+	"replace.with": "Replace with",
 	"retry": "Próbáld újra",
 	"revert": "Visszavon\u00e1s",
 	"revert.confirm": "Tényleg <strong>törölni szeretnél minden nem mentett változtatást</strong>?",
@@ -487,6 +547,7 @@
 	"search.all": "Összes mutatása",
 	"search.results.none": "Nincs találat",
 
+	"section.invalid": "The section is invalid",
 	"section.required": "Ez a szakasz kötelező",
 
 	"security": "Security",
@@ -498,6 +559,8 @@
 	"size": "Méret",
 	"slug": "URL n\u00e9v",
 	"sort": "Rendezés",
+	"sort.drag": "Drag to sort …",
+	"split": "Split",
 
 	"stats.empty": "No reports",
 	"system.issues.content": "The content folder seems to be exposed",
@@ -520,10 +583,13 @@
 	"system.updateStatus.update": "Free update { version } available",
 	"system.updateStatus.upgrade": "Upgrade { version } available",
 
-	"title": "Cím",
+	"tel": "Phone",
+	"tel.placeholder": "+49123456789",
 	"template": "Sablon",
+	"title": "Cím",
 	"today": "Ma",
 
+	"toolbar.button.clear": "Clear formatting",
 	"toolbar.button.code": "Kód",
 	"toolbar.button.bold": "F\u00e9lk\u00f6v\u00e9r sz\u00f6veg",
 	"toolbar.button.email": "Email",
@@ -541,6 +607,8 @@
 	"toolbar.button.link": "Link",
 	"toolbar.button.paragraph": "Bekezdés",
 	"toolbar.button.strike": "Áthúzott szöveg",
+	"toolbar.button.sub": "Subscript",
+	"toolbar.button.sup": "Superscript",
 	"toolbar.button.ol": "Rendezett lista",
 	"toolbar.button.underline": "Aláhúzott szöveg",
 	"toolbar.button.ul": "Rendezetlen lista",

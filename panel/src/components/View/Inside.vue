@@ -1,5 +1,5 @@
 <template>
-	<k-panel class="k-panel-inside" tabindex="0">
+	<k-panel class="k-panel-inside">
 		<k-panel-menu />
 		<main class="k-panel-main">
 			<k-topbar :breadcrumb="$panel.view.breadcrumb" :view="$panel.view">
@@ -19,8 +19,7 @@
 .k-panel-main {
 	min-height: 100vh;
 	min-height: 100dvh;
-	padding-block: var(--spacing-3);
-	padding-inline: var(--main-padding-inline);
+	padding: var(--spacing-3) var(--main-padding-inline) var(--spacing-24);
 	container: main / inline-size;
 	margin-inline-start: var(--main-start);
 }

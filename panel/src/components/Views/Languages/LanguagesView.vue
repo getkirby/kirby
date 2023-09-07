@@ -24,14 +24,14 @@
 					v-if="secondaryLanguages.length"
 					:items="secondaryLanguages"
 				/>
-				<k-empty v-else icon="globe" @click="$dialog('languages/create')">
+				<k-empty v-else icon="translate" @click="$dialog('languages/create')">
 					{{ $t("languages.secondary.empty") }}
 				</k-empty>
 			</k-section>
 		</template>
 
 		<template v-else-if="languages.length === 0">
-			<k-empty icon="globe" @click="$dialog('languages/create')">
+			<k-empty icon="translate" @click="$dialog('languages/create')">
 				{{ $t("languages.empty") }}
 			</k-empty>
 		</template>
@@ -57,7 +57,7 @@ export default {
 				image: {
 					back: "black",
 					color: "gray",
-					icon: "globe"
+					icon: "translate"
 				},
 				link: () => {
 					if (this.variables === false) {

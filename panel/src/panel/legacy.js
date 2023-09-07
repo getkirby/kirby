@@ -1,3 +1,6 @@
+/* eslint-disable-next-line no-unused-vars */
+import Vue from "vue";
+
 /**
  * This is the graveyard for all deprecated
  * aliases. We can remove them step by step
@@ -49,13 +52,15 @@ export default {
 			"url",
 			"urls",
 			"user",
-			"view",
-			"vue"
+			"view"
 		];
 
 		for (const polyfill of polyfills) {
 			const key = `$${polyfill}`;
 			app.prototype[key] = window.panel[key] = window.panel[polyfill];
 		}
+
+		// Kirbyup relies on this
+		window.panel.$vue = window.panel.app;
 	}
 };

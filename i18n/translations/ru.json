@@ -10,12 +10,15 @@
 	"cancel": "\u041e\u0442\u043c\u0435\u043d\u0438\u0442\u044c",
 	"change": "\u0418\u0437\u043c\u0435\u043d\u0438\u0442\u044c",
 	"close": "\u0417\u0430\u043a\u0440\u044b\u0442\u044c",
+	"changes": "Changes",
 	"confirm": "Ок",
 	"collapse": "Свернуть",
 	"collapse.all": "Свернуть все",
 	"copy": "Скопировать",
 	"copy.all": "Копировать все",
+	"copy.success": "{count} copied!",
 	"create": "Создать",
+	"custom": "Custom",
 
 	"date": "Дата",
 	"date.select": "Выберите дату",
@@ -34,13 +37,18 @@
 	"delete": "\u0423\u0434\u0430\u043b\u0438\u0442\u044c",
 	"delete.all": "Удалить все",
 
+	"dialog.fields.empty": "This dialog has no fields",
 	"dialog.files.empty": "Нет файлов для выбора",
 	"dialog.pages.empty": "Нет страниц для выбора",
+	"dialog.text.empty": "This dialog does not define any text",
 	"dialog.users.empty": "Нет пользователей для выбора",
 
 	"dimensions": "Размеры",
 	"disabled": "Отключено",
 	"discard": "\u0421\u0431\u0440\u043e\u0441",
+
+	"drawer.fields.empty": "This drawer has no fields",
+
 	"download": "Скачать",
 	"duplicate": "Дублировать",
 
@@ -49,11 +57,13 @@
 	"email": "Email",
 	"email.placeholder": "mail@example.com",
 
+	"enter": "Enter",
 	"entries": "Записи",
 	"entry": "Запись",
 
 	"environment": "Среда",
 
+	"error": "Ошибка",
 	"error.access.code": "Неверный код",
 	"error.access.login": "Неправильный логин",
 	"error.access.panel": "У вас нет права доступа к панели",
@@ -81,6 +91,9 @@
 
 	"error.file.changeName.empty": "Название не может быть пустым",
 	"error.file.changeName.permission": "У вас нет права изменить название \"{filename}\"",
+	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
+	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
+
 	"error.file.duplicate": "Файл с названием \"{filename}\" уже есть",
 	"error.file.extension.forbidden": "Расширение файла \"{extension}\" неразрешено",
 	"error.file.extension.invalid": "Неверное разрешение:  {extension}",
@@ -95,6 +108,7 @@
 	"error.file.minheight": "Высота файла должна быть хотя бы {height} px",
 	"error.file.minsize": "Файл слишком маленький",
 	"error.file.minwidth": "Ширина файла должна быть хотя бы {width} px",
+	"error.file.name.unique": "The filename must be unique",
 	"error.file.name.missing": "Название файла не может быть пустым",
 	"error.file.notFound": "\u0424\u0430\u0439\u043b \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d",
 	"error.file.orientation": "Ориентация изображения должна быть \"{orientation}\"",
@@ -122,6 +136,7 @@
 	"error.offline": "Панель управления не в сети",
 
 	"error.page.changeSlug.permission": "\u0412\u044b \u043d\u0435 \u043c\u043e\u0436\u0435\u0442\u0435 \u0438\u0437\u043c\u0435\u043d\u0438\u0442\u044c URL \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b",
+	"error.page.changeSlug.reserved": "The path of top-level pages must not start with \"{path}\"",
 	"error.page.changeStatus.incomplete": "На странице есть ошибки и поэтому ее нельзя опубликовать",
 	"error.page.changeStatus.permission": "Невозможно изменить статус для этой страницы",
 	"error.page.changeStatus.toDraft.invalid": "Невозможно конвертировать в черновик страницу \"{slug}\"",
@@ -137,6 +152,12 @@
 	"error.page.draft.duplicate": "Черновик страницы с аппендиксом URL \"{slug}\" уже есть",
 	"error.page.duplicate": "Страница с аппендиксом URL \"{slug}\" уже есть",
 	"error.page.duplicate.permission": "У вас нет права дублировать \"{slug}\"",
+	"error.page.move.ancestor": "The page cannot be moved into itself",
+	"error.page.move.directory": "The page directory cannot be moved",
+	"error.page.move.duplicate": "A sub page with the URL appendix \"{slug}\" already exists",
+	"error.page.move.notFound": "The moved page could not be found",
+	"error.page.move.permission": "You are not allowed to move \"{slug}\"",
+	"error.page.move.template": "The \"{template}\" template is not accepted as a subpage of \"{parent}\"",
 	"error.page.notFound": "\u0421\u0442\u0440\u0430\u043d\u0438\u0446\u0430 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u0430",
 	"error.page.num.invalid": "Пожалуйста, впишите правильное число сортировки. Число не может быть отрицательным.",
 	"error.page.slug.invalid": "Пожалуйста, введите правильный URL",
@@ -162,6 +183,8 @@
 	"error.site.changeTitle.empty": "Название не может быть пустым",
 	"error.site.changeTitle.permission": "У вас нет права изменять название сайта",
 	"error.site.update.permission": "У вас нет права обновить сайт",
+
+	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",
 
 	"error.template.default.notFound": "Нет шаблона по умолчанию",
 
@@ -195,6 +218,7 @@
 	"error.validation.accepted": "Пожалуйста, подтвердите",
 	"error.validation.alpha": "Пожалуйста, введите только буквы a-z",
 	"error.validation.alphanum": "Пожалуйста, введите только буквы a-z или числа 0-9",
+	"error.validation.anchor": "Please enter a correct link anchor",
 	"error.validation.between": "Пожалуйста, введите значение от \"{min}\" до \"{max}\"",
 	"error.validation.boolean": "Пожалуйста, подтвердите или отмените",
 	"error.validation.contains": "Пожалуйста, впишите значение, которое содержит \"{needle}\"",
@@ -211,6 +235,7 @@
 	"error.validation.integer": "Пожалуйста, введите правильное целое число",
 	"error.validation.ip": "Пожалуйста, введите правильный IP адрес",
 	"error.validation.less": "Пожалуйста, введите значение меньше чем {max}",
+	"error.validation.linkType": "The link type is not allowed",
 	"error.validation.match": "Значение не соответствует ожидаемому шаблону",
 	"error.validation.max": "Пожалуйста, введите значение равное или больше чем {max}",
 	"error.validation.maxlength": "Пожалуйста, введите значение короче (макс. {max} символов)",
@@ -227,15 +252,18 @@
 	"error.validation.same": "Пожалуйста, введите \"{other}\"",
 	"error.validation.size": "Значение размера должно быть \"{size}\"",
 	"error.validation.startswith": "Значение должно начинаться с \"{start}\"",
+	"error.validation.tel": "Please enter an unformatted phone number",
 	"error.validation.time": "Пожалуйста, введите правильную дату",
 	"error.validation.time.after": "Пожалуйста, укажите время после {time}",
 	"error.validation.time.before": "Пожалуйста, укажите время до {time}",
 	"error.validation.time.between": "Пожалуйста, укажите время между {min} и {max}",
+	"error.validation.uuid": "Please enter a valid UUID",
 	"error.validation.url": "Пожалуйста, введите правильный URL",
 
 	"expand": "Развернуть",
 	"expand.all": "Развернуть все",
 
+	"field.invalid": "The field is invalid",
 	"field.required": "Поле обязательно",
 	"field.blocks.changeType": "Изменить тип",
 	"field.blocks.code.name": "Код",
@@ -246,7 +274,7 @@
 	"field.blocks.delete.confirm.selected": "Вы действительно хотите удалить эти блоки?",
 	"field.blocks.empty": "Блоков нет",
 	"field.blocks.fieldsets.label": "Пожалуйста, выберите тип блока…",
-	"field.blocks.fieldsets.paste": "Нажмите <kbd>{{ shortcut }}</kbd> чтобы вставить/импортировать блоки из буфера памяти",
+	"field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to import layouts/blocks from your clipboard <small>Only those allowed in the current field will get inserted.</small>",
 	"field.blocks.gallery.name": "Галерея",
 	"field.blocks.gallery.images.empty": "Изображений нет",
 	"field.blocks.gallery.images.label": "Изображения",
@@ -259,6 +287,8 @@
 	"field.blocks.image.crop": "Обрезать",
 	"field.blocks.image.link": "Ссылка",
 	"field.blocks.image.location": "Расположение",
+	"field.blocks.image.location.internal": "This website",
+	"field.blocks.image.location.external": "External source",
 	"field.blocks.image.name": "Картинка",
 	"field.blocks.image.placeholder": "Выберите изображение",
 	"field.blocks.image.ratio": "Соотношение",
@@ -283,8 +313,10 @@
 
 	"field.files.empty": "Файлы не выбраны",
 
+	"field.layout.change": "Change layout",
 	"field.layout.delete": "Удалить разметку",
 	"field.layout.delete.confirm": "Вы действительно хотите удалить эту разметку?",
+	"field.layout.delete.confirm.all": "Do you really want to delete all layouts?",
 	"field.layout.empty": "Строк нет",
 	"field.layout.select": "Выберите разметку",
 
@@ -298,12 +330,22 @@
 
 	"field.users.empty": "Пользователей нет",
 
+	"fields.empty": "No fields yet",
+
+	"file": "File",
 	"file.blueprint": "У файла пока нет разметки. Вы можете определить новые секции и поля разметки в <strong>/site/blueprints/files/{blueprint}.yml</strong>",
+	"file.changeTemplate": "Изменить шаблон",
+	"file.changeTemplate.notice": "Changing the file's template will remove content for fields that don't match in type. If the new template defines certain rules, e.g. image dimensions, those will also be applied irreversibly. Use with caution.",
 	"file.delete.confirm": "Вы точно хотите удалить файл <br><strong>{filename}</strong>?",
+	"file.focus.placeholder": "Set focal point",
+	"file.focus.reset": "Remove focal point",
+	"file.focus.title": "Focus",
 	"file.sort": "Изменить позицию",
 
 	"files": "Файлы",
 	"files.empty": "Еще нет файлов",
+
+	"filter": "Filter",
 
 	"hide": "Скрыть",
 	"hour": "Час",
@@ -332,6 +374,7 @@
 	"language.convert": "Установить по умолчанию",
 	"language.convert.confirm": "<p>Вы точно хотите конвертировать <strong>{name}</strong> в главный язык? Это нельзя будет отменить.</p><p>Если <strong>{name}</strong> имеет непереведенный контент, то больше не будет верного каскада и части вашего сайта могут быть пустыми.</p>",
 	"language.create": "Добавить новый язык",
+	"language.default": "Главный язык",
 	"language.delete.confirm": "Вы точно хотите удалить <strong>{name}</strong> язык, включая все переводы? Это нельзя будет вернуть.",
 	"language.deleted": "Язык удален",
 	"language.direction": "Направление чтения",
@@ -340,7 +383,16 @@
 	"language.locale": "PHP locale string",
 	"language.locale.warning": "Вы используете кастомную локаль. Пожалуйста измените ее в файле языка в /site/languages",
 	"language.name": "Название",
+	"language.secondary": "Secondary language",
+	"language.settings": "Language settings",
 	"language.updated": "Язык обновлен",
+	"language.variables": "Language variables",
+	"language.variables.empty": "No translations yet",
+
+	"language.variable.delete.confirm": "Do you really want to delete the variable for {key}?",
+	"language.variable.key": "Key",
+	"language.variable.notFound": "The variable could not be found",
+	"language.variable.value": "Value",
 
 	"languages": "Языки",
 	"languages.default": "Главный язык",
@@ -367,11 +419,10 @@
 
 	"lock.unsaved": "Несохраненные изменения",
 	"lock.unsaved.empty": "Несохраненных изменений больше нет",
-	"lock.isLocked": "Несохраненные изменения пользователя <strong>{email}</strong>",
-	"lock.file.isLocked": "В данный момент этот файл редактирует {email}, поэтому его нельзя изменить.",
-	"lock.page.isLocked": "В данный момент эту страницу редактирует {email}, поэтому его нельзя изменить.",
+	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Разблокировать",
-	"lock.isUnlocked": "Ваши несохраненные изменения были перезаписаны другим пользователем. Вы можете загрузить ваши изменения и объединить их вручную.",
+	"lock.unlock.submit": "Unlock and overwrite unsaved changes by <strong>{email}</strong>",
+	"lock.isUnlocked": "Was unlocked by another user",
 
 	"login": "Войти",
 	"login.code.label.login": "Код для входа",
@@ -391,6 +442,7 @@
 
 	"logout": "Выйти",
 
+	"merge": "Merge",
 	"menu": "Меню",
 	"meridiem": "До полудня / После полудня",
 	"mime": "Тип медиа",
@@ -411,13 +463,16 @@
 	"months.september": "\u0421\u0435\u043d\u0442\u044f\u0431\u0440\u044c",
 
 	"more": "Еще",
+	"move": "Move",
 	"name": "Название",
 	"next": "Дальше",
+	"night": "Night",
 	"no": "нет",
 	"off": "выключено",
 	"on": "включено",
 	"open": "Открыть",
 	"open.newWindow": "Открывать в новом окне",
+	"option": "Option",
 	"options": "Опции",
 	"options.none": "Параметров нет",
 
@@ -426,6 +481,7 @@
 	"orientation.portrait": "Портретная",
 	"orientation.square": "Квадрат",
 
+	"page": "Страница",
 	"page.blueprint": "У страницы пока нет разметки. Вы можете определить новые секции и поля разметки в <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
 	"page.changeSlug": "Изменить ссылку",
 	"page.changeSlug.fromTitle": "Создать из названия",
@@ -433,13 +489,15 @@
 	"page.changeStatus.position": "Пожалуйста, выберите позицию",
 	"page.changeStatus.select": "Выбрать новый статус",
 	"page.changeTemplate": "Изменить шаблон",
+	"page.changeTemplate.notice": "Changing the page's template will remove content for fields that don't match in type. Use with caution.",
+	"page.create": "Create as {status}",
 	"page.delete.confirm": "Вы точно хотите удалить страницу <strong>{title}</strong>?",
 	"page.delete.confirm.subpages": "<strong>У этой страницы есть внутренние страницы</strong>.<br>Все внутренние страницы так же будут удалены.",
 	"page.delete.confirm.title": "Напишите название страницы, чтобы подтвердить",
-	"page.draft.create": "Создать черновик",
 	"page.duplicate.appendix": "(копия)",
 	"page.duplicate.files": "Копировать файлы",
 	"page.duplicate.pages": "Копировать страницы",
+	"page.move": "Move page",
 	"page.sort": "Изменить позицию",
 	"page.status": "Статус",
 	"page.status.draft": "Черновик",
@@ -460,6 +518,7 @@
 	"password": "\u041f\u0430\u0440\u043e\u043b\u044c",
 	"paste": "Вставить",
 	"paste.after": "Вставить после",
+	"paste.success": "{count} pasted!",
 	"pixel": "Пиксель",
 	"plugin": "Расширение",
 	"plugins": "Плагины",
@@ -468,6 +527,7 @@
 	"remove": "Удалить",
 	"rename": "Переименовать",
 	"replace": "\u0417\u0430\u043c\u0435\u043d\u0438\u0442\u044c",
+	"replace.with": "Replace with",
 	"retry": "\u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u044c",
 	"revert": "\u0421\u0431\u0440\u043e\u0441",
 	"revert.confirm": "Вы действительно хотите <strong>удалить все несохраненные изменения</strong>?",
@@ -487,6 +547,7 @@
 	"search.all": "Показать все",
 	"search.results.none": "Нет результатов",
 
+	"section.invalid": "The section is invalid",
 	"section.required": "Секция обязательна",
 
 	"security": "Безопасность",
@@ -498,6 +559,8 @@
 	"size": "Размер",
 	"slug": "Понятная ссылка",
 	"sort": "Сортировать",
+	"sort.drag": "Drag to sort …",
+	"split": "Split",
 
 	"stats.empty": "Статистики нет",
 	"system.issues.content": "Похоже, к папке content есть несанкционированный доступ",
@@ -520,10 +583,13 @@
 	"system.updateStatus.update": "Доступно бесплатное обновление { version }",
 	"system.updateStatus.upgrade": "Доступно обновление { version }",
 
-	"title": "Название",
+	"tel": "Phone",
+	"tel.placeholder": "+49123456789",
 	"template": "\u0428\u0430\u0431\u043b\u043e\u043d",
+	"title": "Название",
 	"today": "Сегодня",
 
+	"toolbar.button.clear": "Clear formatting",
 	"toolbar.button.code": "Код",
 	"toolbar.button.bold": "\u0416\u0438\u0440\u043d\u044b\u0439 \u0448\u0440\u0438\u0444\u0442",
 	"toolbar.button.email": "Email",
@@ -541,6 +607,8 @@
 	"toolbar.button.link": "\u0421\u0441\u044b\u043b\u043a\u0430",
 	"toolbar.button.paragraph": "Параграф",
 	"toolbar.button.strike": "Зачёркнутый",
+	"toolbar.button.sub": "Subscript",
+	"toolbar.button.sup": "Superscript",
 	"toolbar.button.ol": "Нумерованный список",
 	"toolbar.button.underline": "Подчёркнутый",
 	"toolbar.button.ul": "Маркированный список",

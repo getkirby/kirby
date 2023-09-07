@@ -8,9 +8,9 @@
 .k-coords-thumb {
 	position: absolute;
 	aspect-ratio: 1/1;
-	width: var(--range-thumb-height);
+	width: var(--range-thumb-size);
 	background: var(--range-thumb-color);
-	border-radius: var(--range-thumb-height);
+	border-radius: var(--range-thumb-size);
 	box-shadow: var(--range-thumb-shadow);
 	transform: translate(-50%, -50%);
 }

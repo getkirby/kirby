@@ -2,6 +2,7 @@
 	<div
 		ref="editor"
 		v-direction
+		:data-disabled="disabled"
 		:data-empty="isEmpty"
 		:data-placeholder="placeholder"
 		:data-toolbar-inline="Boolean(toolbar.inline)"
@@ -9,7 +10,7 @@
 		class="k-writer"
 	>
 		<k-writer-toolbar
-			v-if="editor"
+			v-if="editor && !disabled"
 			ref="toolbar"
 			v-bind="toolbar"
 			:editor="editor"
@@ -223,16 +224,16 @@ export default {
 		createMarks() {
 			return this.filterExtensions(
 				{
-					bold: new Bold(),
-					italic: new Italic(),
+					clear: new Clear(),
+					code: new Code(),
 					underline: new Underline(),
 					strike: new Strike(),
-					sup: new Sup(),
-					sub: new Sub(),
-					code: new Code(),
 					link: new Link(),
 					email: new Email(),
-					clear: new Clear(),
+					bold: new Bold(),
+					italic: new Italic(),
+					sup: new Sup(),
+					sub: new Sub(),
 					...this.createMarksFromPanelPlugins()
 				},
 				this.marks
@@ -318,8 +319,8 @@ export default {
 
 			let installed = [];
 
-			for (const extension of allowed) {
-				if (available[extension]) {
+			for (const extension in available) {
+				if (allowed.includes(extension)) {
 					installed.push(available[extension]);
 				}
 			}
@@ -348,7 +349,6 @@ export default {
 	position: relative;
 	width: 100%;
 	display: grid;
-	line-height: 1.5;
 	grid-template-areas: "content";
 	gap: var(--spacing-1);
 }
@@ -358,10 +358,9 @@ export default {
 	word-wrap: break-word;
 	word-break: break-word;
 	white-space: pre-wrap;
-	-webkit-font-variant-ligatures: none;
 	font-variant-ligatures: none;
-	line-height: inherit;
 	grid-area: content;
+	padding: var(--input-padding-multiline);
 }
 .k-writer .ProseMirror:focus {
 	outline: 0;
@@ -369,112 +368,19 @@ export default {
 .k-writer .ProseMirror * {
 	caret-color: currentColor;
 }
-.k-writer .ProseMirror a {
-	color: var(--color-focus);
-	text-decoration: underline;
-}
-.k-writer .ProseMirror > *:last-child {
-	margin-bottom: 0;
-}
-.k-writer .ProseMirror :where(p, ul, ol, h1, h2, h3) {
-	margin-bottom: 0.75rem;
-}
-.k-writer .ProseMirror :where(p, ul, ol) {
-	line-height: 1.5;
-}
 
-.k-writer .ProseMirror h1 {
-	font-size: var(--text-3xl);
-	line-height: 1.25em;
-}
-.k-writer .ProseMirror h2 {
-	font-size: var(--text-2xl);
-	line-height: 1.25em;
-}
-.k-writer .ProseMirror h3 {
-	font-size: var(--text-xl);
-	line-height: 1.25em;
-}
-.k-writer .ProseMirror :where(h1, h2, h3) strong {
-	font-weight: 700;
-}
-
-.k-writer .ProseMirror strong {
-	font-weight: 600;
-}
-
-.k-writer .ProseMirror :where(sup, sub) {
-	font-size: var(--text-xs);
-	line-height: 1;
-}
-
-.k-writer .ProseMirror code {
-	position: relative;
-	font-size: 0.925em;
-	display: inline-block;
-	line-height: 1.325;
-	padding: 0.05em 0.325em;
-	background: var(--color-gray-300);
-	border-radius: var(--rounded);
-	font-family: var(--font-mono);
-}
-.k-writer .ProseMirror :where(ul, ol) {
-	padding-inline-start: 1.75rem;
-}
-.k-writer .ProseMirror ul > li {
-	list-style: disc;
-}
-.k-writer .ProseMirror ul ul > li {
-	list-style: circle;
-}
-.k-writer .ProseMirror ul ul ul > li {
-	list-style: square;
-}
-.k-writer .ProseMirror ol > li {
-	list-style: decimal;
-}
-.k-writer .ProseMirror li > :where(p, ol, ul) {
-	margin: 0;
-}
-
-.k-writer .ProseMirror hr {
-	border: 0;
-	border-top: 2px solid var(--color-gray-300);
-	border-radius: var(--rounded);
-	margin-block: var(--spacing-1);
-}
 .k-writer .ProseMirror hr.ProseMirror-selectednode {
-	outline: 2px var(--color-focus) solid;
-}
-
-.k-writer-code pre {
-	tab-size: 2;
-	font-size: var(--text-sm);
-	line-height: 2em;
-	overflow-x: auto;
-	overflow-y: hidden;
-	-webkit-overflow-scrolling: touch;
-	white-space: pre;
-}
-.k-writer-code code {
-	font-family: var(--font-mono);
-}
-
-.k-writer blockquote {
-	font-size: var(--text-lg);
-	margin-bottom: var(--spacing-1);
-	line-height: 1.25em;
-	padding-inline-start: var(--spacing-4);
-	border-inline-start: 2px solid var(--color-black);
+	outline: var(--outline);
 }
 
 .k-writer[data-placeholder][data-empty="true"]::before {
 	grid-area: content;
 	content: attr(data-placeholder);
-	color: var(--color-gray-500);
+	color: var(--input-color-placeholder);
 	pointer-events: none;
 	white-space: pre-wrap;
 	word-wrap: break-word;
-	line-height: 1.5;
+	line-height: var(--text-line-height);
+	padding: var(--input-padding-multiline);
 }
 </style>

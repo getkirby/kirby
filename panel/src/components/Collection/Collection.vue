@@ -20,7 +20,7 @@
 			@option="onOption"
 			@sort="$emit('sort', $event)"
 		>
-			<template #options="{ item, itemIndex: index }">
+			<template #options="{ item, index }">
 				<slot name="options" v-bind="{ item, index }" />
 			</template>
 		</k-items>

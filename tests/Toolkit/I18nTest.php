@@ -412,12 +412,15 @@ class I18nTest extends TestCase
 	{
 		I18n::$translations = [
 			'en' => [
-				'car' => '{{ count }} car(s)'
+				'car'  => '{{ count }} car(s)',
+				'bike' => '{ count } bike(s)'
 			]
 		];
 
 		$this->assertSame('1 car(s)', I18n::translateCount('car', 1));
 		$this->assertSame('2 car(s)', I18n::translateCount('car', 2));
+		$this->assertSame('1 bike(s)', I18n::translateCount('bike', 1));
+		$this->assertSame('2 bike(s)', I18n::translateCount('bike', 2));
 	}
 
 	/**

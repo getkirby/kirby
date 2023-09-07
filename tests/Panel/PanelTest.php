@@ -470,7 +470,7 @@ class PanelTest extends TestCase
 		$this->assertSame('browser', $routes[0]['pattern']);
 		$this->assertSame(['/', 'installation', 'login'], $routes[1]['pattern']);
 		$this->assertSame('(:all)', $routes[2]['pattern']);
-		$this->assertSame('The view could not be found', $routes[2]['action']());
+		$this->assertSame('Could not find Panel view for route: foo', $routes[2]['action']('foo'));
 	}
 
 

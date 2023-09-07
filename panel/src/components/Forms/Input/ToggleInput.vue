@@ -96,18 +96,17 @@ export default {
 
 <style>
 /* Toggle */
-.k-input[data-theme="field"][data-type="toggle"] {
-	outline: 0;
-	box-shadow: var(--shadow);
-	height: var(--field-input-height);
+.k-input[data-type="toggle"] {
+	--input-color-border: transparent;
+	--input-shadow: var(--shadow);
 }
-.k-input[data-theme="field"][data-type="toggle"] .k-input-before {
-	padding-inline-end: calc(var(--field-input-padding) / 2);
+.k-input[data-type="toggle"] .k-input-before {
+	padding-inline-end: calc(var(--input-padding) / 2);
 }
-.k-input[data-theme="field"][data-type="toggle"] .k-toggle-input {
-	padding-inline-start: var(--field-input-padding);
+.k-input[data-type="toggle"] .k-toggle-input {
+	padding-inline-start: var(--input-padding);
 }
-.k-input[data-theme="field"][data-type="toggle"][data-disabled] {
+.k-input[data-type="toggle"][data-disabled] {
 	box-shadow: none;
 }
 </style>

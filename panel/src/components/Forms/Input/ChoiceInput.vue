@@ -89,9 +89,9 @@ export default {
 	--shadow: none;
 }
 
-.k-choice-input[data-theme="field"] {
+.k-field .k-choice-input {
 	background: var(--choice-input-color-back);
-	min-height: var(--field-input-height);
+	min-height: var(--input-height);
 	padding-block: var(--spacing-2);
 	padding-inline: var(--spacing-3);
 	border-radius: var(--rounded);

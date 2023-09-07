@@ -11,18 +11,9 @@ export default {
 			type: Boolean
 		},
 		current: {
-			default: "/site",
 			type: String
 		},
-		/**
-		 * @values `id`, `uuid`
-		 */
-		identifier: {
-			default: "uuid",
-			type: String,
-			validator: (value) => ["id", "uuid"].includes(value)
-		},
-		items: {
+		move: {
 			type: String
 		}
 	},
@@ -33,49 +24,35 @@ export default {
 	},
 	async created() {
 		if (this.items) {
-			this.state = await this.load(this.items);
-		} else if (this.root === false) {
-			this.state = await this.load("/site");
+			this.state = this.items;
 		} else {
-			this.state = [
-				{
-					icon: "home",
-					id: "site://",
-					label: this.$t("view.site"),
-					hasChildren: true,
-					children: "/site",
-					open: true
-				}
-			];
+			this.state = await this.load(null);
+			await this.open(this.state[0]);
 		}
 	},
 	methods: {
 		async load(path) {
-			const { data } = await this.$api.get(path + "/children", {
-				select: "hasChildren,id,panelImage,title,uuid",
-				status: "all"
+			return await this.$panel.get("site/tree", {
+				query: {
+					move: this.move ?? null,
+					parent: path
+				}
 			});
-
-			const pages = {};
-
-			data.forEach((page) => {
-				const id = page[this.identifier];
-
-				pages[id] = {
-					id,
-					icon: page.panelImage.icon,
-					label: page.title,
-					hasChildren: page.hasChildren,
-					children: "/pages/" + this.$api.pages.id(page.id),
-					open: false
-				};
-			});
-
-			return pages;
 		},
-		toggle(page) {
-			page.open = !page.open;
-			this.$emit("toggleBranch", page);
+		async open(item) {
+			if (item.hasChildren === false) {
+				return false;
+			}
+
+			this.$set(item, "loading", true);
+
+			// children have not been loaded yet
+			if (typeof item.children === "string") {
+				item.children = await this.load(item.children);
+			}
+
+			this.$set(item, "open", true);
+			this.$set(item, "loading", false);
 		}
 	}
 };

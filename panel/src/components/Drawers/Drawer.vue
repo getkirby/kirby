@@ -60,6 +60,7 @@ export default {
 
 <style>
 :root {
+	--drawer-body-padding: 1.5rem;
 	--drawer-color-back: var(--color-light);
 	--drawer-header-height: 2.5rem;
 	--drawer-header-padding: 1rem;
@@ -76,6 +77,7 @@ export default {
 }
 
 .k-drawer {
+	--header-sticky-offset: calc(var(--drawer-body-padding) * -1);
 	z-index: var(--z-toolbar);
 	display: flex;
 	flex-basis: var(--drawer-width);

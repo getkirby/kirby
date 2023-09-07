@@ -122,26 +122,11 @@ export default {
 </script>
 
 <style>
-:root {
-	--input-placeholder: var(--color-gray-500);
-}
-
 .k-text-input {
-	width: 100%;
-	border: 0;
-	background: none;
-	font: inherit;
-	color: inherit;
-	font-variant-numeric: tabular-nums;
-}
-.k-text-input::placeholder {
-	color: var(--input-placeholder);
+	padding: var(--input-padding);
+	border-radius: var(--input-rounded);
 }
 .k-text-input:focus {
-	outline: 0;
-}
-.k-text-input:invalid {
-	box-shadow: none;
 	outline: 0;
 }
 </style>

@@ -19,7 +19,7 @@
 					click: () => $dialog(model.link + '/changeRole')
 				},
 				{
-					icon: 'globe',
+					icon: 'translate',
 					text: `${model.language}`,
 					title: `${$t('language')}: ${model.language}`,
 					disabled: !permissions.changeLanguage || isLocked,

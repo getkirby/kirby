@@ -258,6 +258,7 @@ export default {
 	height: var(--height);
 	text-align: center;
 	background: var(--color-gray-800);
+	color: var(--color-white);
 	border-radius: var(--rounded-sm);
 }
 </style>

@@ -12,10 +12,10 @@ class TemplateTest extends TestCase
 	/**
 	 * @covers ::__construct
 	 * @covers ::name
-	 * @covers ::__toString
 	 * @covers ::type
 	 * @covers ::defaultType
 	 * @covers ::extension
+	 * @covers ::__toString
 	 */
 	public function testTemplate()
 	{

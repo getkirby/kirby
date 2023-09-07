@@ -12,10 +12,15 @@
 	>
 		<!-- @slot Replace the default image -->
 		<slot name="image">
-			<k-image-frame v-if="image" v-bind="image" />
-			<span v-else />
+			<k-image-frame v-if="image?.src" v-bind="image" />
+			<k-icon-frame v-else-if="image" v-bind="image" />
+			<span v-else></span>
 		</slot>
-		<span v-if="text" class="k-bubble-text">{{ text }}</span>
+		<template v-if="text">
+			<!-- eslint-disable-next-line vue/no-v-html -->
+			<span v-if="html" class="k-bubble-text" v-html="text" />
+			<span v-else class="k-bubble-text">{{ text }}</span>
+		</template>
 	</component>
 </template>
 
@@ -48,6 +53,13 @@ export default {
 		element: {
 			type: String,
 			default: "li"
+		},
+		/**
+		 * If set to `true`, the `text` is rendered as HTML code,
+		 * otherwise as plain text
+		 */
+		html: {
+			type: Boolean
 		},
 		/**
 		 * Optional image to display in the bubble. Used for <k-image-frame>, see for available props
@@ -94,7 +106,7 @@ export default {
 	border-radius: var(--rounded);
 	overflow: hidden;
 }
-.k-bubble .k-image-frame {
+.k-bubble .k-frame {
 	width: var(--bubble-size);
 	height: var(--bubble-size);
 }

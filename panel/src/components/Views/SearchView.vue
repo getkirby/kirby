@@ -133,14 +133,9 @@ export default {
 }
 
 .k-search-view-input {
-	background: var(--color-gray-300);
-	height: var(--height-sm);
+	--input-color-border: transparent;
+	--input-color-back: var(--color-gray-300);
+	--input-height: var(--height-md);
 	width: 40cqw;
-	line-height: var(--height-sm);
-	border-radius: var(--rounded);
-	padding-inline: var(--spacing-2);
-}
-.k-search-view-input:focus-within {
-	outline: var(--outline);
 }
 </style>

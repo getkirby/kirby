@@ -50,9 +50,6 @@ class Loader
 
 	/**
 	 * Loads the area definition
-	 *
-	 * @param string $name
-	 * @return array|null
 	 */
 	public function area(string $name): array|null
 	{
@@ -62,8 +59,6 @@ class Loader
 	/**
 	 * Loads all areas and makes sure that plugins
 	 * are injected properly
-	 *
-	 * @return array
 	 */
 	public function areas(): array
 	{
@@ -99,9 +94,6 @@ class Loader
 
 	/**
 	 * Loads a core component closure
-	 *
-	 * @param string $name
-	 * @return \Closure|null
 	 */
 	public function component(string $name): Closure|null
 	{
@@ -110,8 +102,6 @@ class Loader
 
 	/**
 	 * Loads all core component closures
-	 *
-	 * @return array
 	 */
 	public function components(): array
 	{
@@ -120,21 +110,14 @@ class Loader
 
 	/**
 	 * Loads a particular extension
-	 *
-	 * @param string $type
-	 * @param string $name
-	 * @return mixed
 	 */
-	public function extension(string $type, string $name)
+	public function extension(string $type, string $name): mixed
 	{
 		return $this->extensions($type)[$name] ?? null;
 	}
 
 	/**
 	 * Loads all defined extensions
-	 *
-	 * @param string $type
-	 * @return array
 	 */
 	public function extensions(string $type): array
 	{
@@ -153,11 +136,8 @@ class Loader
 	 *
 	 * 3.) closures will be called and the Kirby instance will be
 	 * passed as first argument
-	 *
-	 * @param mixed $item
-	 * @return mixed
 	 */
-	public function resolve($item)
+	public function resolve(mixed $item): mixed
 	{
 		if (is_string($item) === true) {
 			$item = match (F::extension($item)) {
@@ -176,9 +156,6 @@ class Loader
 	/**
 	 * Calls `static::resolve()` on all items
 	 * in the given array
-	 *
-	 * @param array $items
-	 * @return array
 	 */
 	public function resolveAll(array $items): array
 	{
@@ -194,11 +171,8 @@ class Loader
 	/**
 	 * Areas need a bit of special treatment
 	 * when they are being loaded
-	 *
-	 * @param string|array|Closure $area
-	 * @return array
 	 */
-	public function resolveArea($area): array
+	public function resolveArea(string|array|Closure $area): array
 	{
 		$area      = $this->resolve($area);
 		$dropdowns = $area['dropdowns'] ?? [];
@@ -218,9 +192,6 @@ class Loader
 
 	/**
 	 * Loads a particular section definition
-	 *
-	 * @param string $name
-	 * @return array|null
 	 */
 	public function section(string $name): array|null
 	{
@@ -229,8 +200,6 @@ class Loader
 
 	/**
 	 * Loads all section defintions
-	 *
-	 * @return array
 	 */
 	public function sections(): array
 	{
@@ -240,8 +209,6 @@ class Loader
 	/**
 	 * Returns the status flag, which shows
 	 * if plugins are loaded as well.
-	 *
-	 * @return bool
 	 */
 	public function withPlugins(): bool
 	{

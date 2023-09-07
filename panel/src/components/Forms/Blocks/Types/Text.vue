@@ -84,7 +84,17 @@ export default {
 
 <style>
 .k-block-type-text-input {
-	line-height: 1.5em;
+	line-height: 1.5;
 	height: 100%;
+}
+.k-block-container.k-block-container-type-text {
+	padding: 0;
+}
+.k-block-type-text-input.k-writer[data-toolbar-inline="true"] {
+	padding: var(--spacing-3);
+}
+.k-block-type-text-input.k-writer:not([data-toolbar-inline="true"])
+	> .ProseMirror {
+	padding: var(--spacing-3);
 }
 </style>

@@ -64,7 +64,7 @@ export function length(object) {
 export function merge(target, source = {}) {
 	// Iterate through `source` properties and if an `Object`
 	// set property to merge of `target` and `source` properties
-	for (const key of Object.keys(source)) {
+	for (const key in source) {
 		if (source[key] instanceof Object) {
 			Object.assign(source[key], merge(target[key] ?? {}, source[key]));
 		}

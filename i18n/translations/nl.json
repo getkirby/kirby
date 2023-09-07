@@ -10,12 +10,15 @@
 	"cancel": "Annuleren",
 	"change": "Wijzigen",
 	"close": "Sluiten",
+	"changes": "Changes",
 	"confirm": "OK",
 	"collapse": "Sluit",
 	"collapse.all": "Sluit alles",
 	"copy": "Kopiëren",
 	"copy.all": "Kopieer alles",
+	"copy.success": "{count} copied!",
 	"create": "Aanmaken",
+	"custom": "Custom",
 
 	"date": "Datum",
 	"date.select": "Selecteer een datum",
@@ -34,13 +37,18 @@
 	"delete": "Verwijderen",
 	"delete.all": "Verwijder alles",
 
+	"dialog.fields.empty": "This dialog has no fields",
 	"dialog.files.empty": "Geen bestanden om te selecteren",
 	"dialog.pages.empty": "Geen pagina's om te selecteren",
+	"dialog.text.empty": "This dialog does not define any text",
 	"dialog.users.empty": "Geen gebruikers om te selecteren",
 
 	"dimensions": "Dimensies",
 	"disabled": "Uitgeschakeld",
 	"discard": "Annuleren",
+
+	"drawer.fields.empty": "This drawer has no fields",
+
 	"download": "Download",
 	"duplicate": "Dupliceren",
 
@@ -49,11 +57,13 @@
 	"email": "E-mailadres",
 	"email.placeholder": "mail@voorbeeld.nl",
 
+	"enter": "Enter",
 	"entries": "Entries",
 	"entry": "Entry",
 
 	"environment": "Omgeving",
 
+	"error": "Foutmelding",
 	"error.access.code": "Ongeldige code",
 	"error.access.login": "Ongeldige login",
 	"error.access.panel": "Je hebt geen toegang tot het Panel",
@@ -81,6 +91,9 @@
 
 	"error.file.changeName.empty": "De naam mag niet leeg zijn",
 	"error.file.changeName.permission": "Je hebt geen rechten om de naam te wijzigen van \"{filename}\"",
+	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
+	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
+
 	"error.file.duplicate": "Er bestaat al een bestand met de naam \"{filename}\"",
 	"error.file.extension.forbidden": "Bestandsextensie \"{extension}\" is niet toegestaan",
 	"error.file.extension.invalid": "Ongeldige extensie: {extension}",
@@ -95,6 +108,7 @@
 	"error.file.minheight": "De hoogte van de afbeelding moet minimaal {height} pixels zijn",
 	"error.file.minsize": "Het bestand is te klein",
 	"error.file.minwidth": "De breedte van de afbeelding moet minimaal {width} pixels zijn",
+	"error.file.name.unique": "The filename must be unique",
 	"error.file.name.missing": "De bestandsnaam mag niet leeg zijn",
 	"error.file.notFound": "Het bestand kan niet worden gevonden",
 	"error.file.orientation": "De oriëntatie van de afbeelding moet \"{orientation}\" zijn",
@@ -122,6 +136,7 @@
 	"error.offline": "Het Panel is momenteel offline",
 
 	"error.page.changeSlug.permission": "Je kunt de URL van deze pagina niet wijzigen",
+	"error.page.changeSlug.reserved": "The path of top-level pages must not start with \"{path}\"",
 	"error.page.changeStatus.incomplete": "Deze pagina bevat fouten en kan niet worden gepubliceerd",
 	"error.page.changeStatus.permission": "De status van deze pagina kan niet worden gewijzigd",
 	"error.page.changeStatus.toDraft.invalid": "De pagina \"{slug}\" kan niet worden aangepast naar 'concept'",
@@ -137,6 +152,12 @@
 	"error.page.draft.duplicate": "Er bestaat al een conceptpagina met de URL-appendix \"{slug}\"",
 	"error.page.duplicate": "Er bestaat al een pagina met de URL-appendix \"{slug}\"",
 	"error.page.duplicate.permission": "Je bent niet gemachtigd om \"{slug}\" te dupliceren",
+	"error.page.move.ancestor": "The page cannot be moved into itself",
+	"error.page.move.directory": "The page directory cannot be moved",
+	"error.page.move.duplicate": "A sub page with the URL appendix \"{slug}\" already exists",
+	"error.page.move.notFound": "The moved page could not be found",
+	"error.page.move.permission": "You are not allowed to move \"{slug}\"",
+	"error.page.move.template": "The \"{template}\" template is not accepted as a subpage of \"{parent}\"",
 	"error.page.notFound": "De pagina \"{slug}\" kan niet worden gevonden",
 	"error.page.num.invalid": "Vul een geldig sorteer-cijfer in. Het cijfer mag niet negatief zijn",
 	"error.page.slug.invalid": "Vul een geldig URL-achtervoegsel in",
@@ -162,6 +183,8 @@
 	"error.site.changeTitle.empty": "De titel mag niet leeg zijn",
 	"error.site.changeTitle.permission": "Je hebt geen rechten om de titel van de site te wijzigen",
 	"error.site.update.permission": "Je hebt geen rechten om de site te updaten",
+
+	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",
 
 	"error.template.default.notFound": "Het standaard template bestaat niet",
 
@@ -195,6 +218,7 @@
 	"error.validation.accepted": "Gelieve te bevestigen",
 	"error.validation.alpha": "Vul alleen a-z karakters in",
 	"error.validation.alphanum": "Vul alleen a-z karakters of cijfers (0-9) in",
+	"error.validation.anchor": "Please enter a correct link anchor",
 	"error.validation.between": "Vul een waarde tussen \"{min}\" en \"{max}\"",
 	"error.validation.boolean": "Ga akkoord of weiger",
 	"error.validation.contains": "Vul een waarde in die \"{needle}\" bevat",
@@ -211,6 +235,7 @@
 	"error.validation.integer": "Vul een geldig geheel getal in",
 	"error.validation.ip": "Vul een geldig IP-adres in",
 	"error.validation.less": "Vul een waarde in lager dan {max}",
+	"error.validation.linkType": "The link type is not allowed",
 	"error.validation.match": "De invoer klopt niet met het verwachte patroon",
 	"error.validation.max": "Vul een waarde in die gelijk is aan of lager dan {max}",
 	"error.validation.maxlength": "Gebruik minder karakters (maximaal {max} karakters)",
@@ -227,15 +252,18 @@
 	"error.validation.same": "Vul \"{other}\" in",
 	"error.validation.size": "De lengte van de invoer moet \"{size}\" zijn",
 	"error.validation.startswith": "De invoer moet beginnen met \"{start}\"",
+	"error.validation.tel": "Please enter an unformatted phone number",
 	"error.validation.time": "Vul een geldige tijd in",
 	"error.validation.time.after": "Voer een tijd in na {time}",
 	"error.validation.time.before": "Voer een tijd in voor  {time}",
 	"error.validation.time.between": "Voer een tijd in tussen {min} en {max}",
+	"error.validation.uuid": "Please enter a valid UUID",
 	"error.validation.url": "Vul een geldige URL in",
 
 	"expand": "Open",
 	"expand.all": "Open alles",
 
+	"field.invalid": "The field is invalid",
 	"field.required": "Dit veld is verplicht",
 	"field.blocks.changeType": "Wijzig type",
 	"field.blocks.code.name": "Code",
@@ -246,7 +274,7 @@
 	"field.blocks.delete.confirm.selected": "Wil je de geselecteerde blokken echt verwijderen?",
 	"field.blocks.empty": "Nog geen blokken",
 	"field.blocks.fieldsets.label": "Selecteer een bloktype ...",
-	"field.blocks.fieldsets.paste": "Druk op <kbd>{{ shortcut }}</kbd> om blokken van je klembord te plakken/importeren",
+	"field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to import layouts/blocks from your clipboard <small>Only those allowed in the current field will get inserted.</small>",
 	"field.blocks.gallery.name": "Galerij",
 	"field.blocks.gallery.images.empty": "Nog geen afbeeldingen",
 	"field.blocks.gallery.images.label": "Afbeeldingen",
@@ -259,6 +287,8 @@
 	"field.blocks.image.crop": "Uitsnede",
 	"field.blocks.image.link": "Link",
 	"field.blocks.image.location": "Locatie",
+	"field.blocks.image.location.internal": "This website",
+	"field.blocks.image.location.external": "External source",
 	"field.blocks.image.name": "Afbeelding",
 	"field.blocks.image.placeholder": "Selecteer een afbeelding",
 	"field.blocks.image.ratio": "Verhouding",
@@ -283,8 +313,10 @@
 
 	"field.files.empty": "Nog geen bestanden geselecteerd",
 
+	"field.layout.change": "Change layout",
 	"field.layout.delete": "Verwijder indeling",
 	"field.layout.delete.confirm": "Weet je zeker dat je deze indeling wilt verwijderen?",
+	"field.layout.delete.confirm.all": "Do you really want to delete all layouts?",
 	"field.layout.empty": "Er zijn nog geen rijen",
 	"field.layout.select": "Selecteer een indeling",
 
@@ -298,12 +330,22 @@
 
 	"field.users.empty": "Nog geen gebruikers geselecteerd",
 
+	"fields.empty": "No fields yet",
+
+	"file": "Bestand",
 	"file.blueprint": "Dit bestand heeft nog geen blauwdruk. U kunt de instellingen definiëren in <strong>/site/blueprints/files/{blueprint}.yml</strong>",
+	"file.changeTemplate": "Verander template",
+	"file.changeTemplate.notice": "Changing the file's template will remove content for fields that don't match in type. If the new template defines certain rules, e.g. image dimensions, those will also be applied irreversibly. Use with caution.",
 	"file.delete.confirm": "Wil je dit bestand <br><strong>{filename}</strong> verwijderen?",
+	"file.focus.placeholder": "Set focal point",
+	"file.focus.reset": "Remove focal point",
+	"file.focus.title": "Focus",
 	"file.sort": "Verander positie",
 
 	"files": "Bestanden",
 	"files.empty": "Nog geen bestanden",
+
+	"filter": "Filter",
 
 	"hide": "Verberg",
 	"hour": "Uur",
@@ -332,6 +374,7 @@
 	"language.convert": "Maak standaard",
 	"language.convert.confirm": "<p>Weet je zeker dat je <strong>{name}</strong> wilt aanpassen naar de standaard taal? Dit kan niet ongedaan worden gemaakt</p><p>Als <strong>{name}</strong> nog niet vertaalde content heeft, is er geen content meer om op terug te vallen en zouden delen van je site leeg kunnen zijn.</p>",
 	"language.create": "Nieuwe taal toevoegen",
+	"language.default": "Standaard taal",
 	"language.delete.confirm": "Weet je zeker dat je de taal <strong>{name}</strong> inclusief alle vertalingen wilt verwijderen? Je kunt dit niet ongedaan maken!",
 	"language.deleted": "De taal is verwijderd",
 	"language.direction": "Leesrichting",
@@ -340,7 +383,16 @@
 	"language.locale": "PHP-locale regel",
 	"language.locale.warning": "Je gebruikt een aangepaste landinstelling. Wijzig het het taalbestand in /site/languages",
 	"language.name": "Naam",
+	"language.secondary": "Secondary language",
+	"language.settings": "Language settings",
 	"language.updated": "De taal is geüpdatet",
+	"language.variables": "Language variables",
+	"language.variables.empty": "No translations yet",
+
+	"language.variable.delete.confirm": "Do you really want to delete the variable for {key}?",
+	"language.variable.key": "Key",
+	"language.variable.notFound": "The variable could not be found",
+	"language.variable.value": "Value",
 
 	"languages": "Talen",
 	"languages.default": "Standaard taal",
@@ -367,11 +419,10 @@
 
 	"lock.unsaved": "Niet opgeslagen wijzigingen",
 	"lock.unsaved.empty": "Er zijn geen niet opgeslagen wijzigingen meer",
-	"lock.isLocked": "Niet opgeslagen wijzigingen door <strong>{email}</strong>",
-	"lock.file.isLocked": "Dit bestand wordt momenteel bewerkt door {email} en kan niet worden gewijzigd.",
-	"lock.page.isLocked": "Deze pagina wordt momenteel bewerkt door {email} en kan niet worden gewijzigd.",
+	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Ontgrendelen",
-	"lock.isUnlocked": "Je niet opgeslagen wijzigingen zijn overschreven door een andere gebruiker. Je kunt je wijzigingen downloaden om ze handmatig samen te voegen.",
+	"lock.unlock.submit": "Unlock and overwrite unsaved changes by <strong>{email}</strong>",
+	"lock.isUnlocked": "Was unlocked by another user",
 
 	"login": "Inloggen",
 	"login.code.label.login": "Log in code",
@@ -391,6 +442,7 @@
 
 	"logout": "Uitloggen",
 
+	"merge": "Merge",
 	"menu": "Menu",
 	"meridiem": "AM/PM",
 	"mime": "Mime-type",
@@ -411,13 +463,16 @@
 	"months.september": "september",
 
 	"more": "Meer",
+	"move": "Move",
 	"name": "Naam",
 	"next": "Volgende",
+	"night": "Night",
 	"no": "nee",
 	"off": "uit",
 	"on": "aan",
 	"open": "Open",
 	"open.newWindow": "Openen in een nieuw scherm",
+	"option": "Option",
 	"options": "Opties",
 	"options.none": "Geen opties beschikbaar",
 
@@ -426,6 +481,7 @@
 	"orientation.portrait": "Staand",
 	"orientation.square": "Vierkant",
 
+	"page": "Pagina",
 	"page.blueprint": "Deze pagina heeft nog geen blauwdruk. Je kan de instellingen definiëren in <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
 	"page.changeSlug": "Verander URL",
 	"page.changeSlug.fromTitle": "Aanmaken op basis van titel",
@@ -433,13 +489,15 @@
 	"page.changeStatus.position": "Selecteer een positie",
 	"page.changeStatus.select": "Selecteer een nieuwe status",
 	"page.changeTemplate": "Verander template",
+	"page.changeTemplate.notice": "Changing the page's template will remove content for fields that don't match in type. Use with caution.",
+	"page.create": "Create as {status}",
 	"page.delete.confirm": "Weet je zeker dat je pagina <strong>{title}</strong> wilt verwijderen?",
 	"page.delete.confirm.subpages": "<strong>Deze pagina heeft subpagina's</strong>. <br>Alle subpagina's zullen ook worden verwijderd.",
 	"page.delete.confirm.title": "Voeg een paginatitel in om te bevestigen",
-	"page.draft.create": "Maak concept",
 	"page.duplicate.appendix": "Kopiëren",
 	"page.duplicate.files": "Kopieer bestanden",
 	"page.duplicate.pages": "Kopieer pagina's",
+	"page.move": "Move page",
 	"page.sort": "Verander positie",
 	"page.status": "Status",
 	"page.status.draft": "Concept",
@@ -460,6 +518,7 @@
 	"password": "Wachtwoord",
 	"paste": "Plak",
 	"paste.after": "Plak achter",
+	"paste.success": "{count} pasted!",
 	"pixel": "Pixel",
 	"plugin": "Plugin",
 	"plugins": "Plugins",
@@ -468,6 +527,7 @@
 	"remove": "Verwijder",
 	"rename": "Hernoem",
 	"replace": "Vervang",
+	"replace.with": "Replace with",
 	"retry": "Probeer opnieuw",
 	"revert": "Annuleren",
 	"revert.confirm": "Weet je zeker dat je <strong>alle niet-opgeslagen veranderingen wilt verwijderen</strong>?",
@@ -487,6 +547,7 @@
 	"search.all": "Toon alles",
 	"search.results.none": "Geen resultaten",
 
+	"section.invalid": "The section is invalid",
 	"section.required": "De sectie is verplicht",
 
 	"security": "Beveiliging",
@@ -498,6 +559,8 @@
 	"size": "Grootte",
 	"slug": "URL-toevoeging",
 	"sort": "Sorteren",
+	"sort.drag": "Drag to sort …",
+	"split": "Split",
 
 	"stats.empty": "No reports",
 	"system.issues.content": "The content folder seems to be exposed",
@@ -520,10 +583,13 @@
 	"system.updateStatus.update": "Gratis update { version } beschikbaar",
 	"system.updateStatus.upgrade": "Upgrade { version } beschikbaar",
 
-	"title": "Titel",
+	"tel": "Phone",
+	"tel.placeholder": "+49123456789",
 	"template": "Template",
+	"title": "Titel",
 	"today": "Vandaag",
 
+	"toolbar.button.clear": "Clear formatting",
 	"toolbar.button.code": "Code",
 	"toolbar.button.bold": "Dikgedrukte tekst",
 	"toolbar.button.email": "E-mailadres",
@@ -541,6 +607,8 @@
 	"toolbar.button.link": "Link",
 	"toolbar.button.paragraph": "Paragraaf",
 	"toolbar.button.strike": "Doorstreept",
+	"toolbar.button.sub": "Subscript",
+	"toolbar.button.sup": "Superscript",
 	"toolbar.button.ol": "Genummerde lijst",
 	"toolbar.button.underline": "Onderlijn",
 	"toolbar.button.ul": "Opsomming",

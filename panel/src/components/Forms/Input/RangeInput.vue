@@ -1,6 +1,6 @@
 <template>
-	<label class="k-range-input">
-		<input
+	<label :data-disabled="disabled" class="k-range-input">
+		<k-range
 			ref="input"
 			v-bind="{
 				autofocus,
@@ -13,10 +13,7 @@
 				step
 			}"
 			:value="position"
-			:style="`--min: ${min}; --max: ${max}; --value: ${position}`"
-			type="range"
-			class="k-range-input-native"
-			v-on="listeners"
+			@input="$emit('input', $event)"
 		/>
 		<span v-if="tooltip" class="k-range-input-tooltip">
 			<span v-if="tooltip.before" class="k-range-input-tooltip-before">{{
@@ -61,7 +58,7 @@ export const props = {
 		 * The amount to increment when dragging the slider. This can be a decimal.
 		 */
 		step: {
-			type: Number,
+			type: [Number, String],
 			default: 1
 		},
 		/**
@@ -86,14 +83,6 @@ export const props = {
 export default {
 	mixins: [props],
 	inheritAttrs: false,
-	data() {
-		return {
-			listeners: {
-				...this.$listeners,
-				input: (event) => this.onInput(event.target.value)
-			}
-		};
-	},
 	computed: {
 		baseline() {
 			// If the minimum is below 0, the baseline should be placed at .
@@ -156,158 +145,16 @@ export default {
 
 <style>
 .k-range-input {
-	--range-thumb-size: 16px;
-	--range-thumb-border: 4px solid var(--color-gray-900);
-	--range-thumb-border-disabled: 4px solid var(--color-gray-600);
-	--range-thumb-background: var(--color-background);
-	--range-thumb-focus-border: 4px solid var(--color-focus);
-	--range-thumb-focus-background: var(--color-background);
-	--range-track-height: 4px;
-	--range-track-background: var(--color-border);
-	--range-track-color: var(--color-gray-900);
-	--range-track-color-disabled: var(--color-gray-600);
-	--range-track-focus-color: var(--color-focus);
-
+	--range-track-height: 1px;
+	--range-track-back: var(--color-gray-300);
+	--range-tooltip-back: var(--color-black);
 	display: flex;
 	align-items: center;
+	padding: var(--field-input-padding);
 }
-
-.k-range-input-native {
-	--min: 0;
-	--max: 100;
-	--value: 0;
-	--range: calc(var(--max) - var(--min));
-	--ratio: calc((var(--value) - var(--min)) / var(--range));
-	--position: calc(
-		0.5 * var(--range-thumb-size) + var(--ratio) *
-			calc(100% - var(--range-thumb-size))
-	);
-
-	appearance: none;
-	width: 100%;
-	height: var(--range-thumb-size);
-	background: transparent;
-	font-size: var(--text-sm);
-	line-height: 1;
+.k-range-input input[type="range"]:focus {
+	outline: 0;
 }
-.k-range-input-native::-webkit-slider-thumb {
-	appearance: none;
-}
-
-.k-range-input-native::-webkit-slider-runnable-track {
-	border: none;
-	border-radius: var(--range-track-height);
-	width: 100%;
-	height: var(--range-track-height);
-	background: var(--range-track-background);
-}
-
-.k-range-input-native::-moz-range-track {
-	border: none;
-	border-radius: var(--range-track-height);
-	width: 100%;
-	height: var(--range-track-height);
-	background: var(--range-track-background);
-}
-
-.k-range-input-native::-ms-track {
-	border: none;
-	border-radius: var(--range-track-height);
-	width: 100%;
-	height: var(--range-track-height);
-	background: var(--range-track-background);
-}
-
-.k-range-input-native::-webkit-slider-runnable-track {
-	background: linear-gradient(
-			var(--range-track-color),
-			var(--range-track-color)
-		)
-		0 / var(--position) 100% no-repeat var(--range-track-background);
-}
-
-.k-range-input-native::-moz-range-progress {
-	height: var(--range-track-height);
-	background: var(--range-track-color);
-}
-.k-range-input-native::-ms-fill-lower {
-	height: var(--range-track-height);
-	background: var(--range-track-color);
-}
-.k-range-input-native::-webkit-slider-thumb {
-	margin-top: calc(0.5 * (var(--range-track-height) - var(--range-thumb-size)));
-}
-
-.k-range-input-native::-webkit-slider-thumb {
-	box-sizing: border-box;
-	width: var(--range-thumb-size);
-	height: var(--range-thumb-size);
-	background: var(--range-thumb-background);
-	border: var(--range-thumb-border);
-	border-radius: 50%;
-	cursor: pointer;
-}
-.k-range-input-native::-moz-range-thumb {
-	box-sizing: border-box;
-	width: var(--range-thumb-size);
-	height: var(--range-thumb-size);
-	background: var(--range-thumb-background);
-	border: var(--range-thumb-border);
-	border-radius: 50%;
-	cursor: pointer;
-}
-.k-range-input-native::-ms-thumb {
-	box-sizing: border-box;
-	width: var(--range-thumb-size);
-	height: var(--range-thumb-size);
-	background: var(--range-thumb-background);
-	border: var(--range-thumb-border);
-	border-radius: 50%;
-	cursor: pointer;
-}
-.k-range-input-native::-ms-thumb {
-	margin-top: 0;
-}
-.k-range-input-native::-ms-tooltip {
-	display: none;
-}
-
-.k-range-input-native:focus {
-	outline: none;
-}
-.k-range-input-native:focus::-webkit-slider-runnable-track {
-	border: none;
-	border-radius: var(--range-track-height);
-	width: 100%;
-	height: var(--range-track-height);
-	background: var(--range-track-background);
-	background: linear-gradient(
-			var(--range-track-focus-color),
-			var(--range-track-focus-color)
-		)
-		0 / var(--position) 100% no-repeat var(--range-track-background);
-}
-.k-range-input-native:focus::-moz-range-progress {
-	height: var(--range-track-height);
-	background: var(--range-track-focus-color);
-}
-.k-range-input-native:focus::-ms-fill-lower {
-	height: var(--range-track-height);
-	background: var(--range-track-focus-color);
-}
-.k-range-input-native:focus::-webkit-slider-thumb {
-	background: var(--range-thumb-focus-background);
-	border: var(--range-thumb-focus-border);
-}
-.k-range-input-native:focus::-moz-range-thumb {
-	background: var(--range-thumb-focus-background);
-	border: var(--range-thumb-focus-border);
-}
-.k-range-input-native:focus::-ms-thumb {
-	background: var(--range-thumb-focus-background);
-	border: var(--range-thumb-focus-border);
-}
-
 .k-range-input-tooltip {
 	position: relative;
 	max-width: 20%;
@@ -315,10 +162,11 @@ export default {
 	align-items: center;
 	color: var(--color-white);
 	font-size: var(--text-xs);
+	font-variant-numeric: tabular-nums;
 	line-height: 1;
 	text-align: center;
-	border-radius: var(--rounded-xs);
-	background: var(--color-gray-900);
+	border-radius: var(--rounded-sm);
+	background: var(--range-tooltip-back);
 	margin-inline-start: 1rem;
 	padding: 0 0.25rem;
 	white-space: nowrap;
@@ -326,47 +174,19 @@ export default {
 .k-range-input-tooltip::after {
 	position: absolute;
 	top: 50%;
-	inset-inline-start: -5px;
+	inset-inline-start: -3px;
 	width: 0;
 	height: 0;
 	transform: translateY(-50%);
-	border-block: 5px solid transparent;
-	border-inline-end: 5px solid var(--color-gray-900);
+	border-block: 3px solid transparent;
+	border-inline-end: 3px solid var(--range-tooltip-back);
 	content: "";
 }
 .k-range-input-tooltip > * {
-	padding: 4px;
+	padding: var(--spacing-1);
 }
 
-[data-disabled="true"] .k-range-input-native::-webkit-slider-runnable-track {
-	background: linear-gradient(
-			var(--range-track-color-disabled),
-			var(--range-track-color-disabled)
-		)
-		0 / var(--position) 100% no-repeat var(--range-track-background);
-}
-[data-disabled="true"] .k-range-input-native::-moz-range-progress {
-	height: var(--range-track-height);
-	background: var(--range-track-color-disabled);
-}
-[data-disabled="true"] .k-range-input-native::-ms-fill-lower {
-	height: var(--range-track-height);
-	background: var(--range-track-color-disabled);
-}
-[data-disabled="true"] .k-range-input-native::-webkit-slider-thumb {
-	border: var(--range-thumb-border-disabled);
-}
-[data-disabled="true"] .k-range-input-native::-moz-range-thumb {
-	border: var(--range-thumb-border-disabled);
-}
-[data-disabled="true"] .k-range-input-native::-ms-thumb {
-	border: var(--range-thumb-border-disabled);
-}
-
-[data-disabled="true"] .k-range-input-tooltip {
-	background: var(--color-gray-600);
-}
-[data-disabled="true"] .k-range-input-tooltip::after {
-	border-inline-end: 5px solid var(--color-gray-600);
+.k-range-input[data-disabled="true"] {
+	--range-tooltip-back: var(--color-gray-600);
 }
 </style>

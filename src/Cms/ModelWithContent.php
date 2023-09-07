@@ -123,10 +123,9 @@ abstract class ModelWithContent implements Identifiable
 	/**
 	 * Returns the content
 	 *
-	 * @return \Kirby\Content\Content
 	 * @throws \Kirby\Exception\InvalidArgumentException If the language for the given code does not exist
 	 */
-	public function content(string $languageCode = null)
+	public function content(string|null $languageCode = null): Content
 	{
 		// single language support
 		if ($this->kirby()->multilang() === false) {
@@ -312,14 +311,12 @@ abstract class ModelWithContent implements Identifiable
 
 	/**
 	 * Decrement a given field value
-	 *
-	 * @return static
 	 */
 	public function decrement(
 		string $field,
 		int $by = 1,
 		int $min = 0
-	) {
+	): static {
 		$value = (int)$this->content()->get($field)->value() - $by;
 
 		if ($value < $min) {
@@ -362,24 +359,20 @@ abstract class ModelWithContent implements Identifiable
 
 	/**
 	 * Each model must return a unique id
-	 *
-	 * @return string|null
 	 */
-	public function id()
+	public function id(): string|null
 	{
 		return null;
 	}
 
 	/**
 	 * Increment a given field value
-	 *
-	 * @return static
 	 */
 	public function increment(
 		string $field,
 		int $by = 1,
 		int $max = null
-	) {
+	): static {
 		$value = (int)$this->content()->get($field)->value() + $by;
 
 		if ($max && $value > $max) {
@@ -419,12 +412,11 @@ abstract class ModelWithContent implements Identifiable
 	 *
 	 * Only if a content directory exists,
 	 * virtual pages will need to overwrite this method
-	 *
-	 * @return \Kirby\Cms\ContentLock|null
 	 */
-	public function lock()
+	public function lock(): ContentLock|null
 	{
 		$dir = $this->root();
+
 		if ($this::CLASS_ALIAS === 'file') {
 			$dir = dirname($dir);
 		}
@@ -436,6 +428,8 @@ abstract class ModelWithContent implements Identifiable
 		) {
 			return new ContentLock($this);
 		}
+
+		return null;
 	}
 
 	/**
@@ -520,14 +514,12 @@ abstract class ModelWithContent implements Identifiable
 	/**
 	 * Stores the content on disk
 	 * @internal
-	 *
-	 * @return static
 	 */
 	public function save(
-		array $data = null,
-		string $languageCode = null,
+		array|null $data = null,
+		string|null $languageCode = null,
 		bool $overwrite = false
-	) {
+	): static {
 		if ($this->kirby()->multilang() === true) {
 			return $this->saveTranslation($data, $languageCode, $overwrite);
 		}
@@ -734,11 +726,10 @@ abstract class ModelWithContent implements Identifiable
 	/**
 	 * Returns a single translation by language code
 	 * If no code is specified the current translation is returned
-	 *
-	 * @return \Kirby\Content\ContentTranslation|null
 	 */
-	public function translation(string $languageCode = null)
-	{
+	public function translation(
+		string $languageCode = null
+	): ContentTranslation|null {
 		if ($language = $this->kirby()->language($languageCode)) {
 			return $this->translations()->find($language->code());
 		}
@@ -772,14 +763,13 @@ abstract class ModelWithContent implements Identifiable
 	/**
 	 * Updates the model data
 	 *
-	 * @return static
 	 * @throws \Kirby\Exception\InvalidArgumentException If the input array contains invalid values
 	 */
 	public function update(
 		array $input = null,
 		string $languageCode = null,
 		bool $validate = false
-	) {
+	): static {
 		$form = Form::for($this, [
 			'ignoreDisabled' => $validate === false,
 			'input'          => $input,

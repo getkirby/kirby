@@ -149,6 +149,10 @@ export default {
 	line-height: var(--leading-h6);
 }
 
+.k-text > * + h6 {
+	margin-block-start: calc(var(--text-line-height) * 1.5em);
+}
+
 /** @deprecated */
 .k-headline[data-theme] {
 	color: var(--theme);

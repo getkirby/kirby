@@ -1,6 +1,7 @@
 <template>
 	<nav
 		class="k-panel-menu"
+		:aria-label="$t('menu')"
 		:data-hover="$panel.menu.hover"
 		@mouseenter="$panel.menu.hover = true"
 		@mouseleave="$panel.menu.hover = false"
@@ -34,6 +35,7 @@
 		<!-- Collapse/expand toggle -->
 		<k-button
 			:icon="$panel.menu.isOpen ? 'angle-left' : 'angle-right'"
+			:title="$panel.menu.isOpen ? $t('collapse') : $t('expand')"
 			size="xs"
 			class="k-panel-menu-toggle"
 			@click="$panel.menu.toggle()"

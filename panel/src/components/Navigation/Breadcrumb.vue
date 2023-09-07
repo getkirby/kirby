@@ -44,15 +44,18 @@ export default {
 			}));
 		},
 		segments() {
-			return [
-				{
+			const segments = [];
+
+			if (this.view) {
+				segments.push({
 					link: this.view.link,
 					label: this.view.breadcrumbLabel,
 					icon: this.view.icon,
 					loading: this.$panel.isLoading
-				},
-				...this.crumbs
-			];
+				});
+			}
+
+			return [...segments, ...this.crumbs];
 		}
 	},
 	methods: {
@@ -78,6 +81,7 @@ export default {
 .k-breadcrumb ol li {
 	display: flex;
 	align-items: center;
+	min-width: 0;
 }
 .k-breadcrumb ol li:not(:last-child)::after {
 	content: var(--breadcrumb-divider);
@@ -94,10 +98,14 @@ export default {
 .k-breadcrumb ol li:is(:hover, :focus-within) {
 	flex-shrink: 0;
 }
+.k-button.k-breadcrumb-link {
+	flex-shrink: 1;
+	min-width: 0;
+	justify-content: flex-start;
+}
 
 .k-breadcrumb-dropdown {
 	display: grid;
-	place-content: center;
 }
 .k-breadcrumb-dropdown .k-dropdown-content {
 	width: 15rem;

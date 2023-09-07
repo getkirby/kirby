@@ -61,3 +61,10 @@ export default {
 	}
 };
 </script>
+
+<style>
+.k-block-type-list-input {
+	--input-color-border: none;
+	--input-outline-focus: none;
+}
+</style>

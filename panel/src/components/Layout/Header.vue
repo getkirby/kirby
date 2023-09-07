@@ -7,6 +7,7 @@
 			<button
 				v-if="editable"
 				class="k-header-title-button"
+				type="button"
 				@click="$emit('edit')"
 			>
 				<span class="k-header-title-text"><slot /></span>
@@ -54,7 +55,7 @@ export default {
 :root {
 	--header-color-back: var(--color-light);
 	--header-padding-block: var(--spacing-4);
-	--header-sticky-offset: 4rem;
+	--header-sticky-offset: calc(var(--scroll-top, 0rem) + 4rem);
 }
 
 .k-header {
@@ -95,7 +96,7 @@ export default {
 }
 
 .k-header-title-icon {
-	--icon-color: var(--color-gray-500);
+	--icon-color: var(--color-text-dimmed);
 	border-radius: var(--rounded);
 	transition: opacity 0.2s;
 	display: grid;
@@ -123,7 +124,7 @@ export default {
 /** TODO: .k-header:has(.k-header-buttons) */
 .k-header[data-has-buttons="true"] {
 	position: sticky;
-	top: 0;
+	top: var(--scroll-top, 0);
 	z-index: var(--z-toolbar);
 }
 </style>

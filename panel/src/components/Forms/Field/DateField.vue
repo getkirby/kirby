@@ -5,7 +5,6 @@
 			:data-has-time="Boolean(time)"
 			:data-invalid="!novalidate && isInvalid"
 			class="k-date-field-body"
-			data-theme="field"
 		>
 			<!-- Date input -->
 			<k-input

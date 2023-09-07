@@ -364,14 +364,26 @@ class UserRulesTest extends TestCase
 		UserRules::delete($user);
 	}
 
-	public function testValidId()
+	public function validIdProvider()
+	{
+		return [
+			['account'],
+			['kirby'],
+			['nobody']
+		];
+	}
+
+	/**
+	 * @dataProvider validIdProvider
+	 */
+	public function testValidId(string $id)
 	{
 		$user = new User(['email' => 'test@getkirby.com']);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('"account" is a reserved word and cannot be used as user id');
+		$this->expectExceptionMessage('"' . $id . '" is a reserved word and cannot be used as user id');
 
-		UserRules::validId($user, 'account');
+		UserRules::validId($user, $id);
 	}
 
 	public function testValidIdWhenDuplicateIsFound()

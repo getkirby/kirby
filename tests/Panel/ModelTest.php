@@ -43,14 +43,15 @@ class CustomContentLockIsUnlocked extends CustomContentLockIslocked
 
 class ModelSiteNoLocking extends ModelSite
 {
-	public function lock()
+	public function lock(): ContentLock|null
 	{
+		return null;
 	}
 }
 
 class ModelSiteTestForceLocked extends ModelSite
 {
-	public function lock()
+	public function lock(): ContentLock|null
 	{
 		return new CustomContentLockIsLocked();
 	}
@@ -58,7 +59,7 @@ class ModelSiteTestForceLocked extends ModelSite
 
 class ModelSiteTestForceUnlocked extends ModelSite
 {
-	public function lock()
+	public function lock(): ContentLock|null
 	{
 		return new CustomContentLockIsUnlocked();
 	}

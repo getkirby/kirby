@@ -41,6 +41,9 @@
 
 :where(select) {
 	appearance: none;
+	background: var(--color-white);
+	color: var(--color-black);
+	cursor: pointer;
 }
 
 :where(
@@ -54,10 +57,12 @@
 			)
 	) {
 	width: 100%;
+	font-variant-numeric: tabular-nums;
 }
 
 :where(textarea) {
 	resize: vertical;
+	line-height: 1.5;
 }
 
 :where(input)::-webkit-calendar-picker-indicator {
@@ -88,6 +93,11 @@
 
 :where(:disabled) {
 	cursor: not-allowed;
+}
+
+*::placeholder {
+	color: var(--input-color-placeholder);
+	opacity: 1;
 }
 
 /* TODO: :where(label:has(> input:disabled), label:has(+ input:disabled)) {
@@ -134,6 +144,11 @@
 	outline: var(--outline, 2px solid var(--color-focus, currentColor));
 }
 
+:where(:invalid) {
+	box-shadow: none;
+	outline: 0;
+}
+
 :where(dialog) {
 	border: 0;
 	max-width: none;
@@ -166,4 +181,29 @@ body {
 	line-height: 1;
 	position: relative;
 	accent-color: var(--color-focus, currentColor);
+}
+
+:where(sup, sub) {
+	position: relative;
+	line-height: 0;
+	vertical-align: baseline;
+	font-size: 75%;
+}
+:where(sup) {
+	top: -0.5em;
+}
+:where(sub) {
+	bottom: -0.25em;
+}
+
+:where(mark) {
+	background: var(--color-yellow-300);
+}
+
+:where(kbd) {
+	display: inline-block;
+	padding-inline: var(--spacing-2);
+	border-radius: var(--rounded);
+	background: var(--color-white);
+	box-shadow: var(--shadow);
 }

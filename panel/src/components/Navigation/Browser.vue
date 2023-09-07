@@ -1,7 +1,12 @@
 <template>
 	<nav class="k-browser">
 		<div class="k-browser-items">
-			<label v-for="item in items" :key="item.value" class="k-browser-item">
+			<label
+				v-for="item in items"
+				:key="item.value"
+				:aria-selected="selected === item.value"
+				class="k-browser-item"
+			>
 				<input
 					:checked="selected === item.value"
 					:name="name"
@@ -98,8 +103,7 @@ export default {
 	opacity: 0;
 	width: 0;
 }
-.k-browser-item:has(input:checked) {
-	color: var(--color-blue-700);
-	background: var(--color-blue-200);
+.k-browser-item[aria-selected] {
+	background: var(--color-blue-300);
 }
 </style>

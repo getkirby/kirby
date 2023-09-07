@@ -62,10 +62,6 @@ class Media
 
 	/**
 	 * Copy the file to the final media folder location
-	 *
-	 * @param \Kirby\Cms\File $file
-	 * @param string $dest
-	 * @return bool
 	 */
 	public static function publish(File $file, string $dest): bool
 	{
@@ -149,14 +145,12 @@ class Media
 	/**
 	 * Deletes all versions of the given file
 	 * within the parent directory
-	 *
-	 * @param string $directory
-	 * @param \Kirby\Cms\File $file
-	 * @param string|null $ignore
-	 * @return bool
 	 */
-	public static function unpublish(string $directory, File $file, string $ignore = null): bool
-	{
+	public static function unpublish(
+		string $directory,
+		File $file,
+		string|null $ignore = null
+	): bool {
 		if (is_dir($directory) === false) {
 			return true;
 		}
