@@ -339,12 +339,12 @@ class Panel
 		foreach ($areas as $areaId => $area) {
 			$routes = array_merge(
 				$routes,
-				static::routesForRequests($areaId, $area),
 				static::routesForViews($areaId, $area),
 				static::routesForSearches($areaId, $area),
 				static::routesForDialogs($areaId, $area),
 				static::routesForDrawers($areaId, $area),
 				static::routesForDropdowns($areaId, $area),
+				static::routesForRequests($areaId, $area),
 			);
 		}
 
