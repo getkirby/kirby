@@ -35,7 +35,7 @@
 				>
 					<k-tag
 						v-if="model"
-						:removable="true"
+						:removable="!disabled"
 						class="k-link-input-model-preview"
 						@remove="clear"
 					>
@@ -440,7 +440,7 @@ export default {
 	border-radius: var(--rounded-sm);
 }
 .k-link-input-model-preview .k-tag-text:has(.k-link-input-model-preview-image) {
-	padding-inline-start: 0.25rem;
+	padding-inline: 0.25rem;
 }
 .k-link-input-model-placeholder.k-button {
 	--button-align: flex-start;
