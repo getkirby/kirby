@@ -85,7 +85,7 @@ export default {
 }
 .k-stat-info {
 	font-size: var(--text-xs);
-	color: var(--theme, var(--color-gray-500));
+	color: var(--theme, var(--color-text-dimmed));
 	order: 3;
 }
 
