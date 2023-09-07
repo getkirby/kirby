@@ -57,5 +57,42 @@ return [
 				'text'  => is_string($key) ? $key : null
 			]);
 		}
+	],
+	'validations' => [
+		'color' => function ($value) {
+			if (empty($value) === true) {
+				return true;
+			}
+
+			if (
+				$this->format === 'hex' &&
+				preg_match('/^#([\da-f]{3,4}){1,2}$/i', $value) !== 1
+			) {
+				throw new InvalidArgumentException([
+					'key'  => 'validation.color',
+					'data' => ['format' => 'hex']
+				]);
+			}
+
+			if (
+				$this->format === 'rgb' &&
+				preg_match('/rgba?\(\s*(\d{1,3})(%?)(?:,|\s)+(\d{1,3})(%?)(?:,|\s)+(\d{1,3})(%?)(?:,|\s|\/)*(\d*(?:\.\d+)?)(%?)\s*\)?/i', $value) !== 1
+			) {
+				throw new InvalidArgumentException([
+					'key'  => 'validation.color',
+					'data' => ['format' => 'rgb']
+				]);
+			}
+
+			if (
+				$this->format === 'hsl' &&
+				preg_match('/hsla?\(\s*(\d{1,3})(?:deg|rad|grad|turn)?(?:,|\s)+(\d{1,3})%(?:,|\s)+(\d{1,3})%(?:,|\s|\/)*(\d*(?:\.\d+)?)(%?)\s*\)?/i', $value) !== 1
+			) {
+				throw new InvalidArgumentException([
+					'key'  => 'validation.color',
+					'data' => ['format' => 'hsl']
+				]);
+			}
+		}
 	]
 ];
