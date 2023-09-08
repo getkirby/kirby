@@ -18,7 +18,7 @@
 	</k-button>
 
 	<!-- Multiple options = dropdown -->
-	<k-dropdown v-else-if="options.length" class="k-options-dropdown">
+	<div v-else-if="options.length" class="k-options-dropdown">
 		<k-button
 			:dropdown="true"
 			:icon="icon"
@@ -36,7 +36,7 @@
 			class="k-options-dropdown-content"
 			@action="onAction"
 		/>
-	</k-dropdown>
+	</div>
 </template>
 
 <script>

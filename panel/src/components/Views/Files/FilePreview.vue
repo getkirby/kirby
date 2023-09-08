@@ -12,15 +12,13 @@
 					<img v-bind="image" @dragstart.prevent />
 				</k-coords-input>
 
-				<k-dropdown>
-					<k-button
-						icon="dots"
-						size="xs"
-						style="color: var(--color-gray-500)"
-						@click="$refs.dropdown.toggle()"
-					/>
-					<k-dropdown-content ref="dropdown" :options="options" theme="light" />
-				</k-dropdown>
+				<k-button
+					icon="dots"
+					size="xs"
+					style="color: var(--color-gray-500)"
+					@click="$refs.dropdown.toggle()"
+				/>
+				<k-dropdown-content ref="dropdown" :options="options" theme="light" />
 			</template>
 
 			<!-- Icon -->

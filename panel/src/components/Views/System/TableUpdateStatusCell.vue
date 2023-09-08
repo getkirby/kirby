@@ -6,7 +6,7 @@
 		>
 			{{ value }}
 		</span>
-		<k-dropdown v-else>
+		<template v-else>
 			<k-button
 				class="k-table-update-status-cell-button"
 				:dropdown="true"
@@ -36,7 +36,7 @@
 					</k-button>
 				</template>
 			</k-dropdown-content>
-		</k-dropdown>
+		</template>
 	</div>
 </template>
 

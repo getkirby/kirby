@@ -9,7 +9,7 @@
 		}"
 	>
 		<!-- Nodes -->
-		<k-dropdown v-if="hasNodes" @mousedown.native.prevent>
+		<div v-if="hasNodes" @mousedown.native.prevent>
 			<k-button
 				:current="Boolean(activeNode)"
 				:icon="activeNode.icon ?? 'title'"
@@ -36,7 +36,7 @@
 					/>
 				</template>
 			</k-dropdown-content>
-		</k-dropdown>
+		</div>
 
 		<!-- Divider -->
 		<div v-if="hasNodes && hasMarks" class="k-toolbar-divider" />

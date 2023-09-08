@@ -32,35 +32,20 @@
 		>
 			<template #before>
 				<template v-if="mode === 'picker'">
-					<k-dropdown>
-						<button
-							:style="!isInvalid ? 'color: ' + value : null"
-							class="k-color-field-preview k-color-preview"
-							type="button"
-							@click="$refs.picker.toggle()"
+					<button
+						:style="!isInvalid ? 'color: ' + value : null"
+						class="k-color-field-preview k-color-preview"
+						type="button"
+						@click="$refs.picker.toggle()"
+					/>
+					<k-dropdown-content ref="picker" class="k-color-field-picker">
+						<k-colorpicker-input
+							ref="color"
+							:alpha="alpha"
+							:value="value"
+							@input="onPicker"
 						/>
-						<k-dropdown-content ref="picker" class="k-color-field-picker">
-							<k-colorpicker-input
-								ref="color"
-								:alpha="alpha"
-								:value="value"
-								@input="onPicker"
-							/>
-
-							<div class="k-color-field-options">
-								<button
-									v-for="color in convertedOptions"
-									:key="color.value"
-									:aria-current="color.value === currentOption?.value"
-									:style="'color: ' + color.value"
-									:title="color.text ?? color.value"
-									type="button"
-									class="k-color-preview"
-									@click="$refs.input.$refs.input.onPaste(color.value)"
-								/>
-							</div>
-						</k-dropdown-content>
-					</k-dropdown>
+					</k-dropdown-content>
 				</template>
 				<div
 					v-else

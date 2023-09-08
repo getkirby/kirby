@@ -1,5 +1,5 @@
 <template>
-	<k-dropdown v-if="languages.length > 1" class="k-languages-dropdown">
+	<div v-if="languages.length > 1" class="k-languages-dropdown">
 		<k-button
 			:dropdown="true"
 			:text="code"
@@ -9,8 +9,8 @@
 			variant="filled"
 			@click="$refs.languages.toggle()"
 		/>
-		<k-dropdown-content v-if="languages" ref="languages" :options="options" />
-	</k-dropdown>
+		<k-dropdown-content ref="languages" :options="options" />
+	</div>
 </template>
 
 <script>

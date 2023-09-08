@@ -1,5 +1,5 @@
 <template>
-	<k-dropdown class="k-block-options">
+	<div class="k-block-options">
 		<template v-if="isBatched">
 			<k-button
 				:title="$t('copy')"
@@ -115,7 +115,7 @@
 				</k-dropdown-item>
 			</k-dropdown-content>
 		</template>
-	</k-dropdown>
+	</div>
 </template>
 
 <script>

@@ -3,29 +3,27 @@
 		<k-input v-bind="$props" :invalid="isInvalid" :icon="false" theme="field">
 			<div class="k-link-input-header">
 				<!-- Type selector -->
-				<k-dropdown>
-					<k-button
-						class="k-link-input-toggle"
-						:disabled="disabled"
-						:dropdown="true"
-						:icon="currentType.icon"
-						variant="filled"
-						@click="$refs.types.toggle()"
+				<k-button
+					class="k-link-input-toggle"
+					:disabled="disabled"
+					:dropdown="true"
+					:icon="currentType.icon"
+					variant="filled"
+					@click="$refs.types.toggle()"
+				>
+					{{ currentType.label }}
+				</k-button>
+				<k-dropdown-content ref="types">
+					<k-dropdown-item
+						v-for="(type, key) in activeTypes"
+						:key="key"
+						:current="key === linkType"
+						:icon="type.icon"
+						@click="switchType(key)"
 					>
-						{{ currentType.label }}
-					</k-button>
-					<k-dropdown-content ref="types">
-						<k-dropdown-item
-							v-for="(type, key) in activeTypes"
-							:key="key"
-							:current="key === linkType"
-							:icon="type.icon"
-							@click="switchType(key)"
-						>
-							{{ type.label }}
-						</k-dropdown-item>
-					</k-dropdown-content>
-				</k-dropdown>
+						{{ type.label }}
+					</k-dropdown-item>
+				</k-dropdown-content>
 
 				<!-- Input -->
 				<div

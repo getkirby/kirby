@@ -38,8 +38,7 @@ import Vue from "vue";
 let OpenDropdown = null;
 
 /**
- * See `<k-dropdown>` for how to use these components together.
- * @internal
+ * Dropdowns are constructed with two elements: `<k-dropdown-content>` holds any content shown when opening the dropdown: any number of `<k-dropdown-item>` elements or any other HTML; typically a `<k-button>` then is used to call the `toggle()` method on `<k-dropdown-content>`.
  */
 export default {
 	props: {

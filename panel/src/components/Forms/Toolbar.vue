@@ -9,16 +9,19 @@
 			/>
 
 			<!-- dropdown -->
-			<k-dropdown v-else-if="button.dropdown" :key="buttonIndex + '-dropdown'">
+			<template v-else-if="button.dropdown">
 				<k-button
-					:key="buttonIndex"
+					:key="buttonIndex + '-dropdown-btn'"
 					:icon="button.icon"
 					:title="button.label"
 					tabindex="-1"
 					class="k-toolbar-button"
 					@click="$refs[buttonIndex + '-dropdown'][0].toggle()"
 				/>
-				<k-dropdown-content :ref="buttonIndex + '-dropdown'">
+				<k-dropdown-content
+					:key="buttonIndex + '-dropdown'"
+					:ref="buttonIndex + '-dropdown'"
+				>
 					<k-dropdown-item
 						v-for="(dropdownItem, dropdownItemIndex) in button.dropdown"
 						:key="dropdownItemIndex"
@@ -28,7 +31,7 @@
 						{{ dropdownItem.label }}
 					</k-dropdown-item>
 				</k-dropdown-content>
-			</k-dropdown>
+			</template>
 
 			<!-- single button -->
 			<k-button
