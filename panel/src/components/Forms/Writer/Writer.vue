@@ -65,7 +65,10 @@ export const props = {
 			})
 		},
 		extensions: Array,
-		headings: [Array, Boolean],
+		headings: {
+			default: () => [1, 2, 3, 4, 5, 6],
+			type: [Array, Boolean]
+		},
 		inline: Boolean,
 		keys: Object,
 		marks: {
@@ -84,7 +87,9 @@ export const props = {
 		spellcheck: Boolean,
 		toolbar: {
 			type: Object,
-			default: () => ({ inline: true })
+			default: () => ({
+				inline: true
+			})
 		},
 		value: {
 			type: String,
