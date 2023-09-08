@@ -1,48 +1,39 @@
 <template>
-	<nav v-if="tabs && tabs.length > 1" class="k-tabs">
+	<nav v-if="tabs.length" class="k-tabs">
 		<k-button
-			v-for="tabButton in visibleTabs"
-			:key="tabButton.name"
-			:link="tabButton.link"
-			:current="current === tabButton.name"
-			:icon="tabButton.icon"
-			:title="tabButton.label"
+			v-for="btn in visible"
+			ref="visible"
+			:key="btn.name"
+			v-bind="button(btn)"
 			variant="dimmed"
 			class="k-tab-button"
 		>
-			{{ tabButton.label ?? tabButton.text ?? tabButton.name }}
+			{{ btn.label ?? btn.text ?? btn.name }}
 
-			<span v-if="tabButton.badge" :data-theme="theme" class="k-tabs-badge">
-				{{ tabButton.badge }}
+			<span v-if="btn.badge" :data-theme="theme" class="k-tabs-badge">
+				{{ btn.badge }}
 			</span>
 		</k-button>
 
-		<k-button
-			v-if="invisibleTabs.length"
-			:current="invisibleTabs.find((tabButton) => tab === tabButton.name)"
-			:title="$t('more')"
-			class="k-tab-button k-tabs-dropdown-button"
-			icon="dots"
-			variant="dimmed"
-			@click.stop="$refs.more.toggle()"
-		/>
-		<k-dropdown-content
-			v-if="invisibleTabs.length"
-			ref="more"
-			align-x="end"
-			class="k-tabs-dropdown"
-		>
-			<k-dropdown-item
-				v-for="tabButton in invisibleTabs"
-				:key="'more-' + tabButton.name"
-				:link="tabButton.link"
-				:current="tab === tabButton.name"
-				:icon="tabButton.icon"
-				:title="tabButton.label"
-			>
-				{{ tabButton.label ?? tabButton.text ?? tabButton.name }}
-			</k-dropdown-item>
-		</k-dropdown-content>
+		<template v-if="invisible.length">
+			<k-button
+				:current="!!invisible.find((button) => tab === button.name)"
+				:title="$t('more')"
+				class="k-tab-button k-tabs-dropdown-button"
+				icon="dots"
+				variant="dimmed"
+				@click.stop="$refs.more.toggle()"
+			/>
+			<k-dropdown-content ref="more" align-x="end" class="k-tabs-dropdown">
+				<k-dropdown-item
+					v-for="btn in invisible"
+					:key="'more-' + btn.name"
+					v-bind="button(btn)"
+				>
+					{{ btn.label ?? btn.text ?? btn.name }}
+				</k-dropdown-item>
+			</k-dropdown-content>
+		</template>
 	</nav>
 </template>
 
@@ -50,67 +41,69 @@
 export default {
 	props: {
 		tab: String,
-		tabs: Array,
+		tabs: {
+			type: Array,
+			default: () => []
+		},
 		theme: String
 	},
 	data() {
 		return {
-			size: null,
-			visibleTabs: this.tabs,
-			invisibleTabs: []
+			observer: null,
+			visible: this.tabs,
+			invisible: [],
+			sizes: []
 		};
 	},
 	computed: {
 		current() {
 			const tab =
-				this.tabs.find((tab) => tab.name === this.tab) ?? this.tabs[0] ?? {};
-			return tab.name;
+				this.tabs.find((tab) => tab.name === this.tab) ?? this.tabs[0];
+			return tab?.name;
 		}
 	},
 	watch: {
 		tabs: {
-			handler(tabs) {
-				this.visibleTabs = tabs;
-				this.invisibleTabs = [];
-				this.resize(true);
-			},
-			immediate: true
+			handler() {
+				this.resize();
+			}
 		}
 	},
-	created() {
-		window.addEventListener("resize", this.resize);
+	async created() {
+		await this.$nextTick();
+		this.sizes = [...this.$refs.visible].map((tab) => tab.$el.offsetWidth);
+		this.observer = new ResizeObserver(this.resize);
+		this.observer.observe(this.$el);
 	},
 	destroyed() {
-		window.removeEventListener("resize", this.resize);
+		this.observer.disconnect();
 	},
 	methods: {
-		resize(force) {
-			if (!this.tabs || this.tabs.length <= 1) {
-				return;
-			}
+		button(tab) {
+			return {
+				link: tab.link,
+				current: tab.name === this.current,
+				icon: tab.icon,
+				title: tab.label
+			};
+		},
+		resize() {
+			// container width
+			const width = this.$el.offsetWidth;
 
-			if (this.tabs.length <= 3) {
-				this.visibleTabs = this.tabs;
-				this.invisibleTabs = [];
-				return;
-			}
+			// initial width of visible tabs
+			// that already account for the dropdown button
+			let tabs = 32;
 
-			if (window.innerWidth >= 700) {
-				if (this.size === "large" && !force) {
-					return;
+			for (let index = 0; index < this.tabs.length; index++) {
+				// tab size plus grid gap
+				tabs += this.sizes[index] + 4;
+
+				if (tabs > width) {
+					this.visible = this.tabs.slice(0, index);
+					this.invisible = this.tabs.slice(index);
+					break;
 				}
-
-				this.visibleTabs = this.tabs;
-				this.invisibleTabs = [];
-				this.size = "large";
-			} else {
-				if (this.size === "small" && !force) {
-					return;
-				}
-
-				this.visibleTabs = this.tabs.slice(0, 2);
-				this.invisibleTabs = this.tabs.slice(2);
-				this.size = "small";
 			}
 		}
 	}
@@ -124,7 +117,7 @@ export default {
 	display: flex;
 	gap: var(--spacing-1);
 	margin-bottom: var(--spacing-12);
-	margin-inline-start: calc(var(--button-padding) * -1);
+	margin-inline: calc(var(--button-padding) * -1);
 }
 
 .k-tab-button.k-button {
@@ -148,7 +141,7 @@ export default {
 	inset-inline-end: var(--button-padding);
 	transform: translateX(75%);
 	line-height: 1.5;
-	padding: 0 0.25rem;
+	padding: 0 var(--spacing-1);
 	border-radius: 1rem;
 	text-align: center;
 	font-size: 10px;
