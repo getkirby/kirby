@@ -1,6 +1,5 @@
 <template>
 	<ul
-		v-if="options.length"
 		:data-invalid="$v.$invalid"
 		:data-labels="labels"
 		:style="'--options:' + (columns ?? options.length)"
@@ -35,7 +34,6 @@
 			</label>
 		</li>
 	</ul>
-	<k-empty v-else icon="info" theme="info">{{ $t("options.none") }}</k-empty>
 </template>
 
 <script>
@@ -47,7 +45,10 @@ export const props = {
 	props: {
 		columns: Number,
 		grow: Boolean,
-		labels: Boolean,
+		labels: {
+			default: true,
+			type: Boolean
+		},
 		options: Array,
 		reset: Boolean,
 		value: [String, Number, Boolean]
@@ -102,17 +103,6 @@ export default {
 </script>
 
 <style>
-.k-input[data-type="toggles"] {
-	display: inline-flex;
-}
-.k-input[data-type="toggles"].grow {
-	display: flex;
-}
-.k-input[data-type="toggles"]:has(.k-empty) {
-	outline: 0;
-	display: flex;
-}
-
 .k-toggles-input {
 	display: grid;
 	grid-template-columns: repeat(var(--options), minmax(0, 1fr));
@@ -121,18 +111,18 @@ export default {
 	line-height: 1;
 	background: var(--color-border);
 	overflow: hidden;
+	box-shadow: var(--shadow);
 }
 
 .k-toggles-input li {
-	height: var(--field-input-height);
-	background: var(--color-white);
+	height: var(--input-height);
+	background: var(--input-color-back);
 }
 .k-toggles-input label {
 	align-items: center;
-	background: var(--color-white);
+	background: var(--input-color-back);
 	cursor: pointer;
 	display: flex;
-	font-size: var(--text-sm);
 	justify-content: center;
 	line-height: 1.25;
 	padding: 0 var(--spacing-3);

@@ -89,6 +89,16 @@ export default {
 	--input-shadow: none;
 }
 
+/* Variant: plain */
+.k-inputbox[data-variant="plain"] {
+	background: none;
+	outline: 0;
+	box-shadow: none;
+}
+.k-inputbox[data-variant="plain"]:focus-within {
+	outline: 0;
+}
+
 /* Variant: choices */
 .k-inputbox[data-variant="choices"] {
 	outline: 0;

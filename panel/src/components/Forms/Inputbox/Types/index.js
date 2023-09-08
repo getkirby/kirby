@@ -15,6 +15,7 @@ import TelInputbox from "./TelInputbox.vue";
 import TextInputbox from "./TextInputbox.vue";
 import TextareaInputbox from "./TextareaInputbox.vue";
 import ToggleInputbox from "./ToggleInputbox.vue";
+import TogglesInputbox from "./TogglesInputbox.vue";
 import TimeInputbox from "./TimeInputbox.vue";
 import UrlInputbox from "./UrlInputbox.vue";
 import WriterInputbox from "./WriterInputbox.vue";
@@ -39,6 +40,7 @@ export default {
 		app.component("k-textarea-inputbox", TextareaInputbox);
 		app.component("k-time-inputbox", TimeInputbox);
 		app.component("k-toggle-inputbox", ToggleInputbox);
+		app.component("k-toggles-inputbox", TogglesInputbox);
 		app.component("k-url-inputbox", UrlInputbox);
 		app.component("k-writer-inputbox", WriterInputbox);
 	}
