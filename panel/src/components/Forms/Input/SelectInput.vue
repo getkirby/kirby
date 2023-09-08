@@ -1,9 +1,5 @@
 <template>
-	<span
-		:data-disabled="disabled"
-		:data-empty="selected === ''"
-		class="k-select-input"
-	>
+	<span :data-disabled="disabled" :data-empty="isEmpty" class="k-select-input">
 		<select
 			:id="id"
 			ref="input"
@@ -53,7 +49,10 @@ export const props = {
 		 * The text, that is shown when no option is selected yet.
 		 */
 		placeholder: String,
-		options: Array,
+		options: {
+			default: () => [],
+			type: Array
+		},
 		value: {
 			type: [String, Number, Boolean],
 			default: ""
@@ -85,6 +84,13 @@ export default {
 			}
 
 			return !(this.required && this.default);
+		},
+		isEmpty() {
+			return (
+				this.selected === null ||
+				this.selected === undefined ||
+				this.selected === ""
+			);
 		},
 		label() {
 			const label = this.text(this.selected);
@@ -157,6 +163,10 @@ export default {
 	padding: var(--input-padding);
 	border-radius: var(--input-rounded);
 }
+.k-select-input[data-empty="true"] {
+	color: var(--input-color-placeholder);
+}
+
 .k-select-input-native {
 	position: absolute;
 	inset: 0;
