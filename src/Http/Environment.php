@@ -772,12 +772,21 @@ class Environment
 
 	/**
 	 * Loads and returns options from environment-specific
-	 * PHP files (by host name and server IP address)
+	 * PHP files (by cli, host name and server IP address)
 	 *
 	 * @param string $root Root directory to load configs from
 	 */
 	public function options(string $root): array
 	{
+		// load the config for the cli
+		if ($this->cli() === true) {
+			return F::load(
+				file: $root . '/config.cli.php',
+				fallback: [],
+				allowOutput: false
+			);
+		}
+
 		$configHost = [];
 		$configAddr = [];
 
