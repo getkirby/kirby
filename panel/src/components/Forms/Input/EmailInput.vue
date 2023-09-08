@@ -21,7 +21,7 @@ export const props = {
 };
 
 /**
- * @example <k-input :value="email" @input="email = $event" type="email" name="email" />
+ * @example <k-email-input :value="email" @input="email = $event" name="email" />
  */
 export default {
 	extends: TextInput,
