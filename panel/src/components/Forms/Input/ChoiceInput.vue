@@ -88,13 +88,4 @@ export default {
 	--choice-input-color-text: var(--color-text-dimmed);
 	--shadow: none;
 }
-
-.k-field .k-choice-input {
-	background: var(--choice-input-color-back);
-	min-height: var(--input-height);
-	padding-block: var(--spacing-2);
-	padding-inline: var(--spacing-3);
-	border-radius: var(--rounded);
-	box-shadow: var(--shadow);
-}
 </style>

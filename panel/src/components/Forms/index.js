@@ -31,6 +31,7 @@ import Blocks from "./Blocks/index.js";
 import Elements from "./Element/index.js";
 import Fields from "./Field/index.js";
 import Inputs from "./Input/index.js";
+import Inputboxes from "./Inputbox/index.js";
 import Layouts from "./Layouts/index.js";
 import Previews from "./Previews/index.js";
 import Writer from "./Writer/index.js";
@@ -64,6 +65,7 @@ export default {
 		app.use(Blocks);
 		app.use(Elements);
 		app.use(Inputs);
+		app.use(Inputboxes);
 		app.use(Fields);
 		app.use(Layouts);
 		app.use(Previews);
