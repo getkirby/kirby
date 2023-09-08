@@ -221,6 +221,7 @@
 	"error.validation.anchor": "Please enter a correct link anchor",
 	"error.validation.between": "Please enter a value between \"{min}\" and \"{max}\"",
 	"error.validation.boolean": "Please confirm or deny",
+	"error.validation.color": "Please enter a valid color in the {format} format",
 	"error.validation.contains": "Please enter a value that contains \"{needle}\"",
 	"error.validation.date": "Please enter a valid date",
 	"error.validation.date.after": "Please enter a date after {date}",
