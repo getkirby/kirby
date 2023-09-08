@@ -1,6 +1,5 @@
 <template>
 	<ul
-		v-if="options.length"
 		:style="'--columns:' + columns"
 		class="k-checkboxes-input k-grid"
 		data-variant="choices"
@@ -9,7 +8,6 @@
 			<k-choice-input v-bind="choice" @input="input(choice.value, $event)" />
 		</li>
 	</ul>
-	<k-empty v-else icon="info">{{ $t("options.none") }}</k-empty>
 </template>
 
 <script>
@@ -24,7 +22,10 @@ import {
 export const props = {
 	mixins: [autofocus, disabled, id, name, required],
 	props: {
-		columns: Number,
+		columns: {
+			default: 1,
+			type: Number
+		},
 		max: Number,
 		min: Number,
 		options: {
@@ -59,7 +60,7 @@ export default {
 					disabled: this.disabled,
 					info: option.info,
 					label: option.text,
-					name: this.name,
+					name: this.name ?? this.id,
 					theme: this.theme,
 					type: "checkbox",
 					value: option.value

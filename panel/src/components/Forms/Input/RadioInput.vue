@@ -1,6 +1,5 @@
 <template>
 	<ul
-		v-if="options.length"
 		:style="'--columns:' + columns"
 		class="k-radio-input k-grid"
 		data-variant="choices"
@@ -9,7 +8,6 @@
 			<k-choice-input v-bind="choice" @input="$emit('input', choice.value)" />
 		</li>
 	</ul>
-	<k-empty v-else icon="info" theme="info">{{ $t("options.none") }}</k-empty>
 </template>
 
 <script>
@@ -41,7 +39,7 @@ export default {
 					disabled: this.disabled,
 					info: option.info,
 					label: option.text,
-					name: this.name,
+					name: this.name ?? this.id,
 					theme: this.theme,
 					type: "radio",
 					value: option.value
