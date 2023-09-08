@@ -69,13 +69,12 @@ export default {
 
 			this.view = "files";
 		},
-		togglePage() {
-			this.$nextTick(() => {
-				this.$refs.tree.scrollIntoView({
-					behaviour: "smooth",
-					block: "nearest",
-					inline: "nearest"
-				});
+		async togglePage() {
+			await this.$nextTick();
+			this.$refs.tree.scrollIntoView({
+				behaviour: "smooth",
+				block: "nearest",
+				inline: "nearest"
 			});
 		}
 	}

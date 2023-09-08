@@ -365,7 +365,7 @@ export default {
 			this.switchType("url");
 			this.onInput(model.url);
 		},
-		switchType(type) {
+		async switchType(type) {
 			if (type === this.linkType) {
 				return;
 			}
@@ -381,9 +381,8 @@ export default {
 			}
 
 			this.$emit("input", "");
-			this.$nextTick(() => {
-				this.focus();
-			});
+			await this.$nextTick();
+			this.focus();
 		},
 		toggle() {
 			this.expanded = !this.expanded;
