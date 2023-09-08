@@ -1,5 +1,11 @@
 <template>
-	<k-button-group v-if="pages > 1" layout="collapsed" class="k-pagination">
+	<k-button-group
+		v-if="pages > 1"
+		layout="collapsed"
+		class="k-pagination"
+		@keydown.left.native="prev"
+		@keydown.right.native="next"
+	>
 		<!-- prev -->
 		<k-button
 			:disabled="start <= 1"
@@ -25,6 +31,8 @@
 				ref="dropdown"
 				align-x="end"
 				class="k-pagination-selector"
+				@keydown.left.native.stop
+				@keydown.right.native.stop
 			>
 				<form method="dialog" @submit="goTo($refs.page.value)">
 					<label :for="_uid">{{ $t("pagination.page") }}:</label>
@@ -118,12 +126,6 @@ export default {
 			return (this.page - 1) * this.limit + 1;
 		}
 	},
-	created() {
-		window.addEventListener("keydown", this.onKey, false);
-	},
-	destroyed() {
-		window.removeEventListener("keydown", this.onKey, false);
-	},
 	methods: {
 		/**
 		 * Jump to the given page
@@ -167,14 +169,6 @@ export default {
 		 */
 		next() {
 			this.goTo(this.page + 1);
-		},
-		onKey(e) {
-			switch (e.code) {
-				case "ArrowLeft":
-					return this.prev();
-				case "ArrowRight":
-					return this.next();
-			}
 		}
 	}
 };
