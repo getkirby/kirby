@@ -2,7 +2,7 @@
 	<k-writer
 		ref="input"
 		v-bind="$props"
-		:extensions="extensions"
+		:extensions="listExtensions"
 		:value="list"
 		class="k-list-input"
 		@input="onInput"
@@ -10,25 +10,17 @@
 </template>
 
 <script>
-import { disabled } from "@/mixins/props.js";
+import { props as WriterInputProps } from "@/components/Forms/Input/WriterInput.vue";
 import ListDoc from "@/components/Forms/Writer/Nodes/ListDoc.js";
 
 export const props = {
-	mixins: [disabled],
+	mixins: [WriterInputProps],
 	inheritAttrs: false,
 	props: {
-		autofocus: Boolean,
-		keys: Object,
 		nodes: {
 			type: Array,
 			default: () => ["bulletList", "orderedList"]
-		},
-		marks: {
-			type: [Array, Boolean],
-			default: true
-		},
-		spellcheck: Boolean,
-		value: String
+		}
 	}
 };
 
@@ -42,7 +34,7 @@ export default {
 		};
 	},
 	computed: {
-		extensions() {
+		listExtensions() {
 			return [
 				new ListDoc({
 					inline: true,
@@ -93,3 +85,9 @@ export default {
 	}
 };
 </script>
+
+<style>
+.k-list-input.k-writer[data-placeholder][data-empty="true"]::before {
+	padding-inline-start: 2.5em;
+}
+</style>
