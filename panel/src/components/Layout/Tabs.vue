@@ -1,5 +1,5 @@
 <template>
-	<nav v-if="tabs.length" class="k-tabs">
+	<nav v-if="tabs.length > 1" class="k-tabs">
 		<k-button
 			v-for="btn in visible"
 			ref="visible"
