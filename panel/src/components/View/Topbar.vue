@@ -17,17 +17,6 @@
 		<div class="k-topbar-spacer" />
 
 		<div class="k-topbar-signals">
-			<!-- Notifications -->
-			<k-button
-				v-if="notification && notification.type !== 'error'"
-				:icon="notification.icon"
-				:text="notification.message"
-				:theme="notification.theme"
-				size="xs"
-				class="k-topbar-notification k-topbar-button"
-				@click="notification.close()"
-			/>
-
 			<slot />
 		</div>
 	</div>
@@ -41,18 +30,6 @@ export default {
 		menu: Array,
 		title: String,
 		view: Object
-	},
-	computed: {
-		notification() {
-			if (
-				this.$panel.notification.context === "view" &&
-				!this.$panel.notification.isFatal
-			) {
-				return this.$panel.notification;
-			}
-
-			return null;
-		}
 	}
 };
 </script>
@@ -78,9 +55,5 @@ export default {
 .k-topbar-signals {
 	display: flex;
 	align-items: center;
-}
-.k-topbar-notification {
-	--button-color-icon: var(--theme-color-700);
-	--button-color-text: var(--theme-color-700);
 }
 </style>
