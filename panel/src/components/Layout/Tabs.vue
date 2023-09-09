@@ -65,18 +65,13 @@ export default {
 	watch: {
 		tabs: {
 			handler() {
-				this.resize();
-			}
+				this.measure();
+			},
+			immediate: true
 		}
 	},
-	async created() {
-		await this.$nextTick();
-		this.sizes = [...this.$refs.visible].map((tab) => tab.$el.offsetWidth);
-		this.observer = new ResizeObserver(this.resize);
-		this.observer.observe(this.$el);
-	},
 	destroyed() {
-		this.observer.disconnect();
+		this.observer?.disconnect();
 	},
 	methods: {
 		button(tab) {
@@ -86,6 +81,19 @@ export default {
 				icon: tab.icon,
 				title: tab.label
 			};
+		},
+		async measure() {
+			// disconnect any previous observer
+			this.observer?.disconnect();
+			await this.$nextTick();
+
+			// only if $el exists (more than one tab),
+			// add new observer and measure tab sizes
+			if (this.$el instanceof Element) {
+				this.observer = new ResizeObserver(this.resize);
+				this.observer.observe(this.$el);
+				this.sizes = [...this.$refs.visible].map((tab) => tab.$el.offsetWidth);
+			}
 		},
 		resize() {
 			// container width
