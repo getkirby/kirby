@@ -135,7 +135,7 @@ export function parse(string) {
 			a: Number(a || 1)
 		};
 
-		if (values[5] === "%") {
+		if (values[6] === "%") {
 			color.a = color.a / 100;
 		}
 

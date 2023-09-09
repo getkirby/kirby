@@ -161,5 +161,5 @@ export function hue2deg(hue, angle) {
 		hue = hue * 360;
 	}
 
-	return hue % 360;
+	return parseInt(hue % 360);
 }
