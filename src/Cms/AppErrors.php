@@ -89,7 +89,7 @@ trait AppErrors
 			if ($this->option('whoops', true) !== false) {
 				$handler = new PrettyPageHandler();
 				$handler->setPageTitle('Kirby CMS Debugger');
-				$handler->setResourcesPath(dirname(__DIR__, 2) . '/assets');
+				$handler->addResourcePath(dirname(__DIR__, 2) . '/assets');
 				$handler->addCustomCss('whoops.css');
 
 				if ($editor = $this->option('editor')) {
