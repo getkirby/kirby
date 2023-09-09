@@ -142,8 +142,9 @@ export default {
 
 /* Thumb */
 .k-file-preview-thumb {
-	display: grid;
-	place-items: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	aspect-ratio: 1/1;
 	padding: var(--spacing-12);
 	background: var(--pattern);
@@ -151,6 +152,7 @@ export default {
 }
 
 .k-file-preview-thumb img {
+	width: auto;
 	max-width: 100cqw;
 	max-height: 100cqh;
 }
