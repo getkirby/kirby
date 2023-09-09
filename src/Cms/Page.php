@@ -823,7 +823,7 @@ class Page extends ModelWithContent
 		string|null $format = null,
 		string|null $handler = null,
 		string|null $languageCode = null
-	): int|string {
+	): int|string|false|null {
 		$identifier = $this->isDraft() === true ? 'changes' : 'published';
 
 		$modified = $this->storage()->modified(
