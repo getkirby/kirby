@@ -488,7 +488,7 @@ class File extends ModelWithContent
 		string|IntlDateFormatter|null $format = null,
 		string|null $handler = null,
 		string|null $languageCode = null
-	): mixed {
+	): string|int|false {
 		$file     = $this->modifiedFile();
 		$content  = $this->modifiedContent($languageCode);
 		$modified = max($file, $content);

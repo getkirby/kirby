@@ -463,7 +463,7 @@ class User extends ModelWithContent
 		string $format = 'U',
 		string|null $handler = null,
 		string|null $languageCode = null
-	): int|string {
+	): int|string|false {
 		$modifiedContent = $this->storage()->modified('published', $languageCode);
 		$modifiedIndex   = F::modified($this->root() . '/index.php');
 		$modifiedTotal   = max([$modifiedContent, $modifiedIndex]);
