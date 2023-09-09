@@ -23,7 +23,7 @@
 				<k-input
 					v-if="searching && options.search"
 					:autofocus="true"
-					:placeholder="$t('search') + ' …'"
+					:placeholder="$t('filter') + ' …'"
 					:value="searchterm"
 					icon="search"
 					type="text"
@@ -93,7 +93,7 @@ export default {
 			if (this.canSearch) {
 				buttons.push({
 					icon: "filter",
-					text: this.$t("search"),
+					text: this.$t("filter"),
 					click: this.onSearchToggle,
 					responsive: true
 				});
