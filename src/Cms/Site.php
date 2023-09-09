@@ -504,10 +504,8 @@ class Site extends ModelWithContent
 	 * Checks if any content of the site has been
 	 * modified after the given unix timestamp
 	 * This is mainly used to auto-update the cache
-	 *
-	 * @param mixed $time
 	 */
-	public function wasModifiedAfter($time): bool
+	public function wasModifiedAfter(int $time): bool
 	{
 		return Dir::wasModifiedAfter($this->root(), $time);
 	}
