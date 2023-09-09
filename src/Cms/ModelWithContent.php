@@ -396,7 +396,7 @@ abstract class ModelWithContent implements Identifiable
 	 */
 	public function isValid(): bool
 	{
-		return Form::for($this)->hasErrors() === false;
+		return Form::for($this)->isValid() === true;
 	}
 
 	/**
