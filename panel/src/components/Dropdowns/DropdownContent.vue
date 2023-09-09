@@ -217,6 +217,11 @@ export default {
 				this.axis.x = "start";
 			}
 
+			// flip x axis for RTL languages
+			if (this.$panel.direction === "rtl") {
+				this.axis.x = this.axis.x === "start" ? "end" : "start";
+			}
+
 			// drill down to the element of a component
 			if (this.opener instanceof Vue) {
 				this.opener = this.opener.$el;
@@ -308,7 +313,8 @@ export default {
 	--dropdown-y: 0;
 	position: absolute;
 	inset-block-start: 0;
-	inset-inline-start: 0;
+	inset-inline-start: initial; /* reset this, so that `left` is authoritative */
+	left: 0;
 	width: max-content;
 	padding: var(--dropdown-padding);
 	background: var(--dropdown-color-bg);
