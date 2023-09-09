@@ -149,3 +149,17 @@ export function hsl2hex(hsl) {
 export function hex2hsl(hex) {
 	return rgb2hsl(hex2rgb(hex));
 }
+
+export function hue2deg(hue, angle) {
+	hue = Number(hue);
+
+	if (angle === "grad") {
+		hue = hue * (180 / 200);
+	} else if (angle === "rad") {
+		hue = hue * (180 / Math.PI);
+	} else if (angle === "turn") {
+		hue = hue * 360;
+	}
+
+	return hue % 360;
+}
