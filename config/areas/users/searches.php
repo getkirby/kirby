@@ -22,12 +22,12 @@ if (
 					->paginate($limit, $page);
 
 				return [
-					'results' => $users->values(fn($user) => [
+					'results' => $users->values(fn ($user) => [
 						'image' => $user->panel()->image(),
-						'text' => Escape::html($user->username()),
-						'link' => $user->panel()->url(true),
-						'info' => Escape::html($user->role()->title()),
-						'uuid' => $user->uuid()->toString(),
+						'text'  => Escape::html($user->username()),
+						'link'  => $user->panel()->url(true),
+						'info'  => Escape::html($user->role()->title()),
+						'uuid'  => $user->uuid()->toString(),
 					]),
 					'pagination' => $users->pagination()->toArray()
 				];

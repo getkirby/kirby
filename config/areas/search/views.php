@@ -6,18 +6,14 @@ return [
 	'search' => [
 		'pattern' => 'search',
 		'when'    => function (): bool {
-			$kirby = App::instance();
+			if ($user = App::instance()->user()) {
+				$permissions = $user->role()->permissions();
 
-			return (
-				$kirby->user()
-					?->role()
-					->permissions()
-					->for('access', 'site') === true ||
-				$kirby->user()
-					?->role()
-					->permissions()
-					->for('access', 'users') === true
-			);
+				return $permissions->for('access', 'site') === true ||
+					$permissions->for('access', 'users') === true;
+			}
+
+			return false;
 		},
 		'action'  => function () {
 			return [
