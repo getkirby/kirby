@@ -76,7 +76,7 @@ return [
 
 			if (
 				$this->format === 'rgb' &&
-				preg_match('/rgba?\(\s*(\d{1,3})(%?)(?:,|\s)+(\d{1,3})(%?)(?:,|\s)+(\d{1,3})(%?)(?:,|\s|\/)*(\d*(?:\.\d+)?)(%?)\s*\)?/i', $value) !== 1
+				preg_match('/^rgba?\(\s*(\d{1,3})(%?)(?:,|\s)+(\d{1,3})(%?)(?:,|\s)+(\d{1,3})(%?)(?:,|\s|\/)*(\d*(?:\.\d+)?)(%?)\s*\)?$/i', $value) !== 1
 			) {
 				throw new InvalidArgumentException([
 					'key'  => 'validation.color',
@@ -86,7 +86,7 @@ return [
 
 			if (
 				$this->format === 'hsl' &&
-				preg_match('/hsla?\(\s*(\d{1,3})(?:deg|rad|grad|turn)?(?:,|\s)+(\d{1,3})%(?:,|\s)+(\d{1,3})%(?:,|\s|\/)*(\d*(?:\.\d+)?)(%?)\s*\)?/i', $value) !== 1
+				preg_match('/^hsla?\(\s*(\d{1,3}\.?\d*)(deg|rad|grad|turn)?(?:,|\s)+(\d{1,3})%(?:,|\s)+(\d{1,3})%(?:,|\s|\/)*(\d*(?:\.\d+)?)(%?)\s*\)?$/i', $value) !== 1
 			) {
 				throw new InvalidArgumentException([
 					'key'  => 'validation.color',
