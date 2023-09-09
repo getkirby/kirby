@@ -5,6 +5,7 @@ namespace Kirby\Panel;
 use Closure;
 use Kirby\Cms\App;
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
 
 /**
  * The Menu class takes care of gathering
@@ -19,6 +20,8 @@ use Kirby\Toolkit\I18n;
  */
 class Menu
 {
+	public static array $links = [];
+
 	public function __construct(
 		protected array $areas = [],
 		protected array $permissions = [],
@@ -184,6 +187,27 @@ class Menu
 		}
 
 		return $this->current === $id;
+	}
+
+	/**
+	 * Helper method to create the menu entry data
+	 * and register a custom link for the Panel menu
+	 */
+	public static function link(
+		string $link,
+		string $label,
+		string|null $icon = null,
+		Closure|bool|null $current = null
+	): array {
+		return static::$links[] = [
+			'label'   => I18n::translate($label, $label),
+			'link'    => $link,
+			'icon'    => $icon,
+			'current' => $current ?? fn () => Str::contains(
+				App::instance()->request()->path()->toString(),
+				$link
+			)
+		];
 	}
 
 	/**
