@@ -5,6 +5,10 @@
 		:data-align-x="axis.x"
 		:data-align-y="axis.y"
 		:data-theme="theme"
+		:style="{
+			top: position.y + 'px',
+			left: position.x + 'px'
+		}"
 		class="k-dropdown-content"
 		@close="onClose"
 		@click="onClick"
@@ -48,7 +52,7 @@ export default {
 		},
 		/**
 		 * Default horizontal alignment of the dropdown
-		 * @values start, end
+		 * @values start, end, center
 		 */
 		alignX: {
 			type: String,
@@ -98,6 +102,10 @@ export default {
 			axis: {
 				x: this.alignX,
 				y: this.alignY
+			},
+			position: {
+				x: 0,
+				y: 0
 			},
 			isOpen: false,
 			items: [],
@@ -152,7 +160,7 @@ export default {
 			this.resetPosition();
 			this.isOpen = OpenDropdown = false;
 			this.$emit("close");
-			window.removeEventListener("resize", this.position);
+			window.removeEventListener("resize", this.setPosition);
 		},
 		onOpen() {
 			this.isOpen = true;
@@ -163,8 +171,8 @@ export default {
 			// wait until the dropdown is rendered
 			this.$nextTick(() => {
 				if (this.$el && this.opener) {
-					window.addEventListener("resize", this.position);
-					this.position();
+					window.addEventListener("resize", this.setPosition);
+					this.setPosition();
 					this.$emit("open");
 				}
 			});
@@ -203,7 +211,7 @@ export default {
 				this.onOpen();
 			});
 		},
-		position() {
+		setPosition() {
 			// reset to the alignment defaults
 			// before running position calculation
 			this.axis = {
@@ -219,7 +227,11 @@ export default {
 
 			// flip x axis for RTL languages
 			if (this.$panel.direction === "rtl") {
-				this.axis.x = this.axis.x === "start" ? "end" : "start";
+				if (this.axis.x === "start") {
+					this.axis.x = "end";
+				} else if (this.axis.x === "end") {
+					this.axis.x = "start";
+				}
 			}
 
 			// drill down to the element of a component
@@ -232,8 +244,8 @@ export default {
 
 			// set the default position
 			// and take scroll position into consideration
-			this.$el.style.left = opener.left + window.scrollX + opener.width + "px";
-			this.$el.style.top = opener.top + window.scrollY + opener.height + "px";
+			this.position.x = opener.left + window.scrollX + opener.width;
+			this.position.y = opener.top + window.scrollY + opener.height;
 
 			// open the modal after the default positioning has been applied
 			if (this.$el.open !== true) {
@@ -260,8 +272,9 @@ export default {
 				}
 
 				if (this.axis.x === "start") {
-					this.$el.style.left =
-						parseInt(this.$el.style.left) - opener.width + "px";
+					this.position.x = this.position.x - opener.width;
+				} else if (this.axis.x === "center") {
+					this.position.x = this.position.x - opener.width / 2;
 				}
 
 				// Vertical: check if dropdown is outside of viewport
@@ -278,14 +291,12 @@ export default {
 				}
 
 				if (this.axis.y === "top") {
-					this.$el.style.top =
-						parseInt(this.$el.style.top) - opener.height + "px";
+					this.position.y = this.position.y - opener.height;
 				}
 			});
 		},
 		resetPosition() {
-			this.$el.style.top = 0;
-			this.$el.style.left = 0;
+			this.position = { x: 0, y: 0 };
 		},
 		/**
 		 * Toggles the open state of the dropdown
