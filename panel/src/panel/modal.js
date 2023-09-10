@@ -2,16 +2,19 @@
 
 import { isObject } from "@/helpers/object.js";
 import Feature, { defaults as featureDefaults } from "./feature.js";
+import History from "./history.js";
 import focus from "@/helpers/focus.js";
 import "@/helpers/array.js";
 import { set } from "vue";
+import { uuid } from "@/helpers/string.js";
 
 /**
  * Additional default values for modals
  */
 export const defaults = () => {
 	return {
-		...featureDefaults()
+		...featureDefaults(),
+		id: null
 	};
 };
 
@@ -47,20 +50,36 @@ export default (panel, key, defaults) => {
 		/**
 		 * Closes the modal
 		 */
-		async close() {
+		async close(id) {
 			if (this.isOpen === false) {
 				return;
 			}
 
-			this.isOpen = false;
-			this.emit("close");
-			this.reset();
-
-			if (panel.overlays().length === 0) {
-				// unblock the overflow until we can use :has for this.
-				document.documentElement.removeAttribute("data-overlay");
-				document.documentElement.style.removeProperty("--scroll-top");
+			// Compare the modal id to avoid closing
+			// the wrong drawer. This is particularly useful
+			// in nested drawers.
+			if (id !== undefined && id !== this.id) {
+				return;
 			}
+
+			this.history.removeLast();
+
+			// no more items in the history
+			if (this.history.isEmpty() === true) {
+				this.isOpen = false;
+				this.emit("close");
+				this.reset();
+
+				if (panel.overlays().length === 0) {
+					// unblock the overflow until we can use :has for this.
+					document.documentElement.removeAttribute("data-overlay");
+					document.documentElement.style.removeProperty("--scroll-top");
+				}
+
+				return;
+			}
+
+			return this.open(this.history.last());
 		},
 
 		/**
@@ -73,6 +92,16 @@ export default (panel, key, defaults) => {
 		focus(input) {
 			focus(`.k-${this.key()}-portal`, input);
 		},
+
+		goTo(id) {
+			const state = this.history.goto(id);
+
+			if (state !== undefined) {
+				this.open(state);
+			}
+		},
+
+		history: History(),
 
 		/**
 		 * Form drawers and dialogs can use this
@@ -137,6 +166,32 @@ export default (panel, key, defaults) => {
 
 			// mark the modal as open
 			this.isOpen = true;
+
+			// get the current state and add it to the list of parents
+			const state = this.state();
+
+			// add the modal to the history
+			if (modal.replace === true) {
+				this.history.replace(-1, state);
+			} else {
+				this.history.add(state);
+			}
+
+			return state;
+		},
+
+		/**
+		 * Sets a new active state for the modal
+		 * This is done whenever the state is an object
+		 * and not undefined or null
+		 *
+		 * @param {Object} state
+		 */
+		set(state) {
+			parent.set.call(this, state);
+
+			// create a unique ID for the modal if it does not have one
+			this.id = this.id ?? uuid();
 
 			return this.state();
 		},

@@ -66,7 +66,7 @@ export default (panel) => {
 			if (this.completed.length > 0) {
 				this.emit("done", this.completed);
 
-				if (panel.drawer.isOpen === false) {
+				if (panel.dialog.isOpen === false && panel.drawer.isOpen === false) {
 					panel.notification.success({ context: "view" });
 					panel.view.reload();
 				}

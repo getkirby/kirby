@@ -31,13 +31,13 @@ export default (panel) => {
 		 * Closes the modal
 		 */
 		async close() {
+			parent.close.call(this);
+
 			// close legacy components
 			// if it is still open
 			if (this.ref) {
 				this.ref.visible = false;
 			}
-
-			parent.close.call(this);
 		},
 
 		/**

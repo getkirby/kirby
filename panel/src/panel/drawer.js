@@ -1,12 +1,9 @@
 import Modal, { defaults as modalDefaults } from "./modal.js";
-import History from "./history.js";
 import { set } from "vue";
-import { uuid } from "@/helpers/string.js";
 
 export const defaults = () => {
 	return {
-		...modalDefaults(),
-		id: null
+		...modalDefaults()
 	};
 };
 
@@ -24,42 +21,6 @@ export default (panel) => {
 		get breadcrumb() {
 			return this.history.milestones;
 		},
-		/**
-		 * Closes the drawer and goes back to the
-		 * parent one if it has been stored
-		 */
-		async close(id) {
-			if (this.isOpen === false) {
-				return;
-			}
-
-			// Compare the drawer id to avoid closing
-			// the wrong drawer. This is particularly useful
-			// in nested drawers.
-			if (id !== undefined && id !== this.id) {
-				return;
-			}
-
-			this.history.removeLast();
-
-			// no more items in the history
-			if (this.history.isEmpty() === true) {
-				parent.close.call(this);
-				return;
-			}
-
-			return this.open(this.history.last());
-		},
-
-		goTo(id) {
-			const state = this.history.goto(id);
-
-			if (state !== undefined) {
-				this.open(state);
-			}
-		},
-
-		history: History(),
 
 		get icon() {
 			return this.props.icon ?? "box";
@@ -125,40 +86,14 @@ export default (panel) => {
 				drawer = `/drawers/${drawer}`;
 			}
 
-			await parent.open.call(this, drawer, options);
+			const state = await parent.open.call(this, drawer, options);
 
 			// open the provided or first tab
 			this.tab(drawer.tab);
 
-			// get the current state and add it to the list of parents
-			const state = this.state();
-
-			// add the drawer to the history
-			if (drawer.replace === true) {
-				this.history.replace(-1, state);
-			} else {
-				this.history.add(state);
-			}
-
 			this.focus();
 
 			return state;
-		},
-
-		/**
-		 * Sets a new active state for the feature
-		 * This is done whenever the state is an object
-		 * and not undefined or null
-		 *
-		 * @param {Object} state
-		 */
-		set(state) {
-			parent.set.call(this, state);
-
-			// create a unique ID for the drawer if it does not have one
-			this.id = this.id ?? uuid();
-
-			return this.state();
 		},
 
 		tab(tab) {

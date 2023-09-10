@@ -8,6 +8,7 @@ describe.concurrent("panel.dialog", () => {
 		const dialog = Dialog(panel);
 		const state = {
 			component: null,
+			id: null,
 			isLoading: false,
 			legacy: false,
 			on: {},
