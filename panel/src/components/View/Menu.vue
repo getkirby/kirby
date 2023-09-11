@@ -56,10 +56,7 @@ export default {
 			return this.$panel.menu.entries.split("-");
 		},
 		canSearch() {
-			return (
-				this.$panel.permissions.access['site'] === true ||
-				this.$panel.permissions.access['users']
-			);
+			return Object.keys(this.$panel.searches).length;
 		}
 	}
 };

@@ -95,7 +95,8 @@ export default {
 			isLoading: false,
 			items: [],
 			pagination: {},
-			selected: -1
+			selected: -1,
+			type: this.getType()
 		};
 	},
 	computed: {
@@ -103,14 +104,6 @@ export default {
 			return (
 				this.$panel.searches[this.type] ??
 				Object.values(this.$panel.searches)[0]
-			);
-		},
-		type() {
-			const type = this.$panel.view.search;
-
-			return (
-				this.$panel.searches[type] ?
-					type : Object.keys(this.$panel.searches)[0]
 			);
 		}
 	},
@@ -181,6 +174,14 @@ export default {
 			if (index >= 0) {
 				items[index].dataset.selected = true;
 			}
+		},
+		getType() {
+			const type = this.$panel.view.search;
+
+			return (
+				this.$panel.searches[type] ?
+					type : Object.keys(this.$panel.searches)[0]
+			);
 		}
 	}
 };
