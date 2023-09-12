@@ -162,20 +162,20 @@ export default {
 			this.$emit("close");
 			window.removeEventListener("resize", this.setPosition);
 		},
-		onOpen() {
+		async onOpen() {
 			this.isOpen = true;
 
 			// store a global reference to the dropdown
 			OpenDropdown = this;
 
 			// wait until the dropdown is rendered
-			this.$nextTick(() => {
-				if (this.$el && this.opener) {
-					window.addEventListener("resize", this.setPosition);
-					this.setPosition();
-					this.$emit("open");
-				}
-			});
+			await this.$nextTick();
+
+			if (this.$el && this.opener) {
+				window.addEventListener("resize", this.position);
+				await this.setPosition();
+				this.$emit("open");
+			}
 		},
 		onOptionClick(option) {
 			if (typeof option.click === "function") {
@@ -211,7 +211,7 @@ export default {
 				this.onOpen();
 			});
 		},
-		setPosition() {
+		async setPosition() {
 			// reset to the alignment defaults
 			// before running position calculation
 			this.axis = {
@@ -253,47 +253,47 @@ export default {
 			}
 
 			// as we just set style.top, wait one tick before measuring dropdownRect
-			this.$nextTick(() => {
-				// get the dimensions of the open dropdown
-				const rect = this.$el.getBoundingClientRect();
-				const safeSpace = 10;
+			await this.$nextTick();
 
-				// Horizontal: check if dropdown is outside of viewport
-				// and adapt alignment if necessary
-				if (this.axis.x === "end") {
-					if (rect.left - rect.width < safeSpace) {
-						this.axis.x = "start";
-					}
-				} else if (
-					rect.left + rect.width > window.innerWidth - safeSpace &&
-					rect.width + safeSpace < rect.left
-				) {
-					this.axis.x = "end";
-				}
+			// get the dimensions of the open dropdown
+			const rect = this.$el.getBoundingClientRect();
+			const safeSpace = 10;
 
-				if (this.axis.x === "start") {
-					this.position.x = this.position.x - opener.width;
-				} else if (this.axis.x === "center") {
-					this.position.x = this.position.x - opener.width / 2;
+			// Horizontal: check if dropdown is outside of viewport
+			// and adapt alignment if necessary
+			if (this.axis.x === "end") {
+				if (rect.left - rect.width < safeSpace) {
+					this.axis.x = "start";
 				}
+			} else if (
+				rect.left + rect.width > window.innerWidth - safeSpace &&
+				rect.width + safeSpace < rect.left
+			) {
+				this.axis.x = "end";
+			}
 
-				// Vertical: check if dropdown is outside of viewport
-				// and adapt alignment if necessary
-				if (this.axis.y === "top") {
-					if (rect.height + safeSpace > rect.top) {
-						this.axis.y = "bottom";
-					}
-				} else if (
-					rect.top + rect.height > window.innerHeight - safeSpace &&
-					rect.height + safeSpace < rect.top
-				) {
-					this.axis.y = "top";
-				}
+			if (this.axis.x === "start") {
+				this.$el.style.left =
+					parseInt(this.$el.style.left) - opener.width + "px";
+			}
 
-				if (this.axis.y === "top") {
-					this.position.y = this.position.y - opener.height;
+			// Vertical: check if dropdown is outside of viewport
+			// and adapt alignment if necessary
+			if (this.axis.y === "top") {
+				if (rect.height + safeSpace > rect.top) {
+					this.axis.y = "bottom";
 				}
-			});
+			} else if (
+				rect.top + rect.height > window.innerHeight - safeSpace &&
+				rect.height + safeSpace < rect.top
+			) {
+				this.axis.y = "top";
+			}
+
+			if (this.axis.y === "top") {
+				this.$el.style.top =
+					parseInt(this.$el.style.top) - opener.height + "px";
+			}
 		},
 		resetPosition() {
 			this.position = { x: 0, y: 0 };

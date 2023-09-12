@@ -172,7 +172,8 @@ export default {
 			this.blocks.splice(index, 0, block);
 			this.save();
 
-			this.$nextTick(() => this.focusOrOpen(block));
+			await this.$nextTick();
+			this.focusOrOpen(block);
 		},
 		choose(index) {
 			if (this.$helper.object.length(this.fieldsets) === 1) {
@@ -389,7 +390,7 @@ export default {
 		isSelected(block) {
 			return this.selected.includes(block.id);
 		},
-		merge() {
+		async merge() {
 			if (this.isMergable) {
 				const blocks = this.selected.map((id) => this.find(id));
 
@@ -402,7 +403,8 @@ export default {
 					this.remove(block);
 				}
 
-				this.$nextTick(() => this.focus(blocks[0]));
+				await this.$nextTick();
+				this.focus(blocks[0]);
 			}
 		},
 		move(event) {
@@ -471,13 +473,14 @@ export default {
 				this.selected = [block.id];
 			}
 		},
-		onKey(event) {
+		async onKey(event) {
 			this.isMultiSelectKey = event.metaKey ?? event.ctrlKey ?? event.altKey;
 
 			// remove batch selecting on escape, only select first one
 			if (event.code === "Escape" && this.selected.length > 1) {
 				const block = this.find(this.selected[0]);
-				this.$nextTick(() => this.focus(block));
+				await this.$nextTick();
+				this.focus(block);
 			}
 		},
 		onOutsideFocus(event) {
@@ -658,7 +661,7 @@ export default {
 			set(block, "isHidden", false);
 			this.save();
 		},
-		sort(block, from, to) {
+		async sort(block, from, to) {
 			if (to < 0) {
 				return;
 			}
@@ -667,7 +670,8 @@ export default {
 			blocks.splice(to, 0, block);
 			this.blocks = blocks;
 			this.save();
-			this.$nextTick(() => this.focus(block));
+			await this.$nextTick();
+			this.focus(block);
 		},
 		async split(block, index, contents) {
 			// prepare old block with reduced content chunk
@@ -688,8 +692,8 @@ export default {
 			// in one go: remove old block and onsert updated and new block
 			this.blocks.splice(index, 1, oldBlock, newBlock);
 			this.save();
-
-			this.$nextTick(() => this.focus(newBlock));
+			await this.$nextTick();
+			this.focus(newBlock);
 		},
 		update(block, content) {
 			const index = this.findIndex(block.id);
