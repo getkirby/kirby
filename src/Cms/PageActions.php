@@ -469,7 +469,7 @@ trait PageActions
 	/**
 	 * Creates and stores a new page
 	 */
-	public static function create(array $props): static
+	public static function create(array $props): Page
 	{
 		// clean up the slug
 		$props['slug']      = Str::slug($props['slug'] ?? $props['content']['title'] ?? null);
@@ -536,7 +536,7 @@ trait PageActions
 	/**
 	 * Creates a child of the current page
 	 */
-	public function createChild(array $props): static
+	public function createChild(array $props): Page
 	{
 		$props = array_merge($props, [
 			'url'    => null,
