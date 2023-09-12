@@ -173,7 +173,7 @@ export default {
 
 			if (this.$el && this.opener) {
 				window.addEventListener("resize", this.position);
-				this.position();
+				await this.setPosition();
 				this.$emit("open");
 			}
 		},
@@ -211,7 +211,7 @@ export default {
 				this.onOpen();
 			});
 		},
-		async position() {
+		async setPosition() {
 			// reset to the alignment defaults
 			// before running position calculation
 			this.axis = {
