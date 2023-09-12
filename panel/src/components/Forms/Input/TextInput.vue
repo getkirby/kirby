@@ -16,6 +16,7 @@
 			value
 		}"
 		v-direction
+		:data-font="font"
 		class="k-text-input"
 		v-on="listeners"
 	/>
@@ -39,6 +40,7 @@ export const props = {
 			type: [Boolean, String],
 			default: "off"
 		},
+		font: String,
 		maxlength: Number,
 		minlength: Number,
 		pattern: String,
@@ -128,5 +130,8 @@ export default {
 }
 .k-text-input:focus {
 	outline: 0;
+}
+.k-text-input[data-font="monospace"] {
+	font-family: var(--font-mono);
 }
 </style>
