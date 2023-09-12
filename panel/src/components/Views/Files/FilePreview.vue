@@ -162,7 +162,7 @@ export default {
 	max-width: 100cqw;
 	max-height: 100cqh;
 }
-.k-file-preview-thumb .k-dropdown {
+.k-file-preview-thumb > .k-button {
 	position: absolute;
 	top: var(--spacing-2);
 	inset-inline-start: var(--spacing-2);
