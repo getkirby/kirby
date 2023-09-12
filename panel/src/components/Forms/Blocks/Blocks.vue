@@ -257,9 +257,10 @@ export default {
 			this.selected = blocks.map((block) => block.id);
 
 			// a sign that it has been copied
-			this.$panel.notification.success(
-				this.$t("copy.success", { count: blocks.length })
-			);
+			this.$panel.notification.success({
+				message: this.$t("copy.success", { count: blocks.length }),
+				icon: "template"
+			});
 		},
 		copyAll() {
 			this.selectAll();
@@ -555,9 +556,10 @@ export default {
 			this.save();
 
 			// a sign that it has been pasted
-			this.$panel.notification.success(
-				this.$t("paste.success", { count: blocks.length })
-			);
+			this.$panel.notification.success({
+				message: this.$t("paste.success", { count: blocks.length }),
+				icon: "download"
+			});
 		},
 		pasteboard() {
 			this.$panel.dialog.open({

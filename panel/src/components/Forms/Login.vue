@@ -147,7 +147,11 @@ export default {
 				this.$reload({
 					globals: ["$system", "$translation"]
 				});
-				this.$panel.notification.success(this.$t("welcome"));
+
+				this.$panel.notification.success({
+					message: this.$t("welcome") + "!",
+					icon: "smile"
+				});
 			} catch (error) {
 				this.$emit("error", error);
 			} finally {

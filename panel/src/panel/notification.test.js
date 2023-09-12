@@ -12,6 +12,7 @@ describe.concurrent("panel.notification", () => {
 		const state = {
 			context: null,
 			details: null,
+			icon: null,
 			isOpen: false,
 			message: null,
 			timeout: null,
@@ -83,6 +84,10 @@ describe.concurrent("panel.notification", () => {
 		notification.error("Test");
 
 		expect(notification.icon).toStrictEqual("alert");
+
+		notification.success({ message: "Test", icon: "smile" });
+
+		expect(notification.icon).toStrictEqual("smile");
 	});
 
 	it("should return the right theme", async () => {

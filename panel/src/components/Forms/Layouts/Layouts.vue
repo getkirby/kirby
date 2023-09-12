@@ -99,9 +99,10 @@ export default {
 			this.$helper.clipboard.write(JSON.stringify(copy), e);
 
 			// a sign that it has been pasted
-			this.$panel.notification.success(
-				this.$t("copy.success", { count: copy.length ?? 1 })
-			);
+			this.$panel.notification.success({
+				message: this.$t("copy.success", { count: copy.length ?? 1 }),
+				icon: "template"
+			});
 		},
 		change(rowIndex, layout) {
 			const columns = layout.columns.map((column) => column.width);
@@ -229,9 +230,10 @@ export default {
 			}
 
 			// a sign that it has been pasted
-			this.$panel.notification.success(
-				this.$t("paste.success", { count: rows.length })
-			);
+			this.$panel.notification.success({
+				message: this.$t("paste.success", { count: rows.length }),
+				icon: "download"
+			});
 		},
 		pasteboard(index) {
 			this.$panel.dialog.open({
