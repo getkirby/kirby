@@ -1088,10 +1088,13 @@ class PagesTest extends TestCase
 						'template' => 'readable-baz'
 					]
 				]
+			],
+			'users' => [
+				['id' => 'bastian', 'role' => 'admin']
 			]
 		]);
 
-		$app->impersonate('kirby');
+		$app->impersonate('bastian');
 
 		$page = $app->page('foo');
 		$this->assertTrue($page->isReadable());
@@ -1138,10 +1141,13 @@ class PagesTest extends TestCase
 						'template' => 'visible-baz'
 					]
 				]
+			],
+			'users' => [
+				['id' => 'bastian', 'role' => 'admin']
 			]
 		]);
 
-		$app->impersonate('kirby');
+		$app->impersonate('bastian');
 
 		$page = $app->page('default');
 		$this->assertTrue($page->isListable());
@@ -1201,10 +1207,13 @@ class PagesTest extends TestCase
 						'template' => 'accessible-baz'
 					]
 				]
+			],
+			'users' => [
+				['id' => 'bastian', 'role' => 'admin']
 			]
 		]);
 
-		$app->impersonate('kirby');
+		$app->impersonate('bastian');
 
 		$page = $app->page('default');
 		$this->assertTrue($page->isAccessible());

@@ -45,18 +45,28 @@ abstract class ModelPermissions
 
 	public function can(string $action): bool
 	{
+		$user = $this->user->id();
 		$role = $this->user->role()->id();
 
+		// users with the `nobody` role can do nothing
+		// that needs a permission check
 		if ($role === 'nobody') {
 			return false;
 		}
 
-		// check for a custom overall can method
+		// check for a custom `can` method
+		// which would take priority over any other
+		// role-based permission rules
 		if (
 			method_exists($this, 'can' . $action) === true &&
 			$this->{'can' . $action}() === false
 		) {
 			return false;
+		}
+
+		// the almighty `kirby` user can do anything
+		if ($user === 'kirby' && $role === 'admin') {
+			return true;
 		}
 
 		// evaluate the blueprint options block

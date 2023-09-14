@@ -16,6 +16,9 @@ class PagePermissionsTest extends TestCase
 		$this->app = new App([
 			'roots' => [
 				'index' => '/dev/null'
+			],
+			'users' => [
+				['id' => 'bastian', 'role' => 'admin']
 			]
 		]);
 	}
@@ -42,7 +45,7 @@ class PagePermissionsTest extends TestCase
 	 */
 	public function testWithAdmin($action)
 	{
-		$this->app->impersonate('kirby');
+		$this->app->impersonate('bastian');
 
 		$page = new Page([
 			'slug' => 'test',
@@ -58,7 +61,7 @@ class PagePermissionsTest extends TestCase
 	 */
 	public function testWithAdminButDisabledOption($action)
 	{
-		$this->app->impersonate('kirby');
+		$this->app->impersonate('bastian');
 
 		$page = new Page([
 			'slug' => 'test',
