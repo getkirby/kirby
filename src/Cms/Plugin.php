@@ -106,7 +106,7 @@ class Plugin
 			foreach (Dir::index($root, true) as $asset) {
 				$path = $root . '/' . $asset;
 				if (is_file($path) === true) {
-					$assets['assets/' . $asset] = $path;
+					$assets[$asset] = $path;
 				}
 			}
 		}
