@@ -9,6 +9,10 @@ export const props = {
 			type: String,
 			default: "url"
 		},
+		placeholder: {
+			type: String,
+			default: () => window.panel.$t("url.placeholder")
+		},
 		type: {
 			type: String,
 			default: "url"

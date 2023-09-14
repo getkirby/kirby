@@ -20,13 +20,7 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [name, required, Tags],
-	props: {
-		icon: {
-			type: [String, Boolean],
-			default: "tag"
-		}
-	}
+	mixins: [name, required, Tags]
 };
 
 export default {

@@ -144,7 +144,7 @@ export default {
 	--input-shadow: none;
 }
 
-@media screen and (max-width: 30rem) {
+@media (pointer: coarse) {
 	:root {
 		--input-font-size: var(--text-md);
 		--input-padding-multiline: 0.375rem var(--input-padding);

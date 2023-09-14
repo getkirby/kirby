@@ -115,6 +115,7 @@ export default {
 }
 
 .k-grid[data-variant="choices"] {
+	align-items: stretch;
 	gap: 2px;
 }
 </style>

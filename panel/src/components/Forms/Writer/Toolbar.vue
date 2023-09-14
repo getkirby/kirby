@@ -69,7 +69,18 @@ export default {
 			type: Boolean
 		},
 		marks: {
-			default: true,
+			default: () => [
+				"bold",
+				"italic",
+				"underline",
+				"strike",
+				"code",
+				"|",
+				"link",
+				"email",
+				"|",
+				"clear"
+			],
 			type: [Array, Boolean]
 		},
 		nodes: {

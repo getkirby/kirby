@@ -104,6 +104,9 @@ export default {
 	watch: {
 		value() {
 			this.onInvalid();
+			this.$nextTick(() => {
+				this.$refs.input.autosize();
+			});
 		}
 	},
 	mounted() {
