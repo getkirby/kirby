@@ -19,6 +19,7 @@ panel/package-lock.json export-ignore
 panel/package.json export-ignore
 panel/public export-ignore
 panel/README.md export-ignore
+panel/scripts export-ignore
 panel/src export-ignore
 panel/vite.config.js export-ignore
 panel/vitest.setup.js export-ignore
