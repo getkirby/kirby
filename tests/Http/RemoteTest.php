@@ -15,6 +15,7 @@ class RemoteTest extends TestCase
 	public function setUp(): void
 	{
 		$this->defaults = Remote::$defaults;
+		IniStore::$data['curl.cainfo'] = false;
 
 		Remote::$defaults = array_merge($this->defaults, [
 			'test' => true,
