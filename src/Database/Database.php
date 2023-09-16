@@ -393,7 +393,7 @@ class Database
 				}
 			} elseif ($options['method'] === 'fetch' && $results !== false) {
 				// fetching a single record
-				$results = $options['fetch']($results);
+				$results = $options['fetch']($results, null);
 			}
 		}
 
