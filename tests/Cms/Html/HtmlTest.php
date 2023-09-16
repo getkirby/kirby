@@ -110,11 +110,12 @@ class HtmlTest extends TestCase
 	public function testCssWithPluginAssets()
 	{
 		$plugin = new Plugin('getkirby/test-plugin', [
-			'root' => $this->fixtures . '/plugin'
+			'root' => $root = $this->fixtures . '/plugin'
 		]);
+		touch($root . '/assets/styles.css', 1337000000);
 		$result = Html::css($plugin);
 
-		$expected  = '<link href="https://getkirby.com/media/plugins/getkirby/test-plugin/styles.css?m=2375797551-' . $plugin->asset('styles.css')->modified() . '" rel="stylesheet">';
+		$expected  = '<link href="https://getkirby.com/media/plugins/getkirby/test-plugin/styles.css?m=2375797551-1337000000" rel="stylesheet">';
 
 		$this->assertSame($expected, $result);
 	}
@@ -174,11 +175,12 @@ class HtmlTest extends TestCase
 	public function testJsWithPluginAssets()
 	{
 		$plugin = new Plugin('getkirby/test-plugin', [
-			'root' => $this->fixtures . '/plugin'
+			'root' => $root = $this->fixtures . '/plugin'
 		]);
+		touch($root . '/assets/scripts.js', 1337000000);
 		$result = Html::js($plugin);
 
-		$expected  = '<script src="https://getkirby.com/media/plugins/getkirby/test-plugin/scripts.js?m=1903622314-' . $plugin->asset('scripts.js')->modified() . '"></script>';
+		$expected  = '<script src="https://getkirby.com/media/plugins/getkirby/test-plugin/scripts.js?m=1903622314-1337000000"></script>';
 
 		$this->assertSame($expected, $result);
 	}

@@ -97,7 +97,7 @@ class PluginAssets extends Collection
 		$collection = new static([], $plugin);
 
 		foreach ($assets as $path => $root) {
-			$collection->$path = new PluginAsset($path, $root, $plugin);
+			$collection->data[$path] = new PluginAsset($path, $root, $plugin);
 		}
 
 		return $collection;

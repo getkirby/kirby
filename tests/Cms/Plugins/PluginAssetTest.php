@@ -17,6 +17,8 @@ class PluginAssetTest extends TestCase
 		$this->plugin = new Plugin('getkirby/test-plugin', [
 			'root' => $this->fixture
 		]);
+
+		touch($this->fixture . '/assets/test.css', 1337000000);
 	}
 
 	/**
@@ -30,7 +32,7 @@ class PluginAssetTest extends TestCase
 			$this->plugin
 		);
 
-		$this->assertEquals('css', $asset->extension());
+		$this->assertSame('css', $asset->extension());
 	}
 
 	/**
@@ -44,7 +46,7 @@ class PluginAssetTest extends TestCase
 			$this->plugin
 		);
 
-		$this->assertEquals('test.css', $asset->filename());
+		$this->assertSame('test.css', $asset->filename());
 	}
 
 	/**
@@ -62,11 +64,25 @@ class PluginAssetTest extends TestCase
 			$this->plugin
 		);
 
-		$this->assertEquals('3526409702-' . $asset->modified(), $asset->mediaHash());
-		$this->assertEquals($this->plugin->mediaRoot() . '/test.css', $asset->mediaRoot());
-		$this->assertEquals($url = '/media/plugins/getkirby/test-plugin/test.css?m=3526409702-' . $asset->modified(), $asset->mediaUrl());
-		$this->assertEquals($url, $asset->url());
-		$this->assertEquals($url, (string)$asset);
+		$this->assertSame('3526409702-1337000000', $asset->mediaHash());
+		$this->assertSame($this->plugin->mediaRoot() . '/test.css', $asset->mediaRoot());
+		$this->assertSame($url = '/media/plugins/getkirby/test-plugin/test.css?m=3526409702-1337000000', $asset->mediaUrl());
+		$this->assertSame($url, $asset->url());
+		$this->assertSame($url, (string)$asset);
+	}
+
+	/**
+	 * @covers ::modified
+	 */
+	public function testModified()
+	{
+		$asset = new PluginAsset(
+			'test.css',
+			$this->fixture . '/assets/test.css',
+			$this->plugin
+		);
+
+		$this->assertSame(1337000000, $asset->modified());
 	}
 
 	/**
@@ -83,8 +99,25 @@ class PluginAssetTest extends TestCase
 			$plugin = $this->plugin
 		);
 
-		$this->assertEquals($path, $asset->path());
-		$this->assertEquals($plugin, $asset->plugin());
-		$this->assertEquals($root, $asset->root());
+		$this->assertSame($path, $asset->path());
+		$this->assertSame($plugin, $asset->plugin());
+		$this->assertSame($root, $asset->root());
+	}
+
+	/**
+	 * @covers ::publish
+	 */
+	public function testPublish()
+	{
+		$asset = new PluginAsset(
+			'test.css',
+			$this->fixture . '/assets/test.css',
+			$this->plugin
+		);
+
+		$this->assertFileDoesNotExist($asset->mediaRoot());
+		$asset->publish();
+		$this->assertFileExists($asset->mediaRoot());
+		unlink($asset->mediaRoot());
 	}
 }

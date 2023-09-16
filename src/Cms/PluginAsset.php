@@ -60,8 +60,6 @@ class PluginAsset
 
 	/**
 	 * Timestamp when asset file was last modified
-	 *
-	 * @codeCoverageIgnore
 	 */
 	public function modified(): int|false
 	{
@@ -81,8 +79,6 @@ class PluginAsset
 	/**
 	 * Publishes the asset file to the plugin's media folder
 	 * by creating a symlink
-	 *
-	 * @codeCoverageIgnore
 	 */
 	public function publish(): void
 	{
