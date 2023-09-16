@@ -53,14 +53,27 @@ class PagesPickerTest extends TestCase
 	}
 
 	/**
-	 * @covers ::parent
 	 * @covers ::model
+	 * @covers ::modelForQuery
+	 */
+	public function testModel()
+	{
+		$picker = new PagesPicker(['subpages' => false]);
+		$this->assertNull($picker->model());
+
+		$picker = new PagesPicker(['parent' => 'grandmother']);
+		$this->assertSame('grandmother', $picker->model()->id());
+
+		$picker = new PagesPicker(['query' => 'site.find("grandmother").children']);
+		$this->assertSame('grandmother', $picker->model()->id());
+	}
+
+	/**
+	 * @covers ::parent
 	 */
 	public function testParent()
 	{
-		$picker = new PagesPicker([
-			'parent' => 'grandmother'
-		]);
+		$picker = new PagesPicker(['parent' => 'grandmother']);
 
 		$this->assertCount(1, $picker->items());
 		$this->assertSame('grandmother/mother', $picker->items()->first()->id());
