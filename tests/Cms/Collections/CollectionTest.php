@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use Kirby\Toolkit\Obj;
 use stdClass;
 
@@ -55,9 +56,7 @@ class CollectionTest extends TestCase
 		$this->assertSame('collection test', (new Collection())->test());
 		$this->assertSame('collection test', $kirby->site()->children()->test());
 
-		Pages::$methods['test'] = function () {
-			return 'pages test';
-		};
+		Pages::$methods['test'] = fn () => 'pages test';
 
 		$this->assertSame('collection test', (new Collection())->test());
 		$this->assertSame('pages test', $kirby->site()->children()->test());
@@ -167,9 +166,9 @@ class CollectionTest extends TestCase
 	public function testGroup()
 	{
 		$collection = new Collection([
-			$a = new MockObject(['id' => 'a', 'group' => 'a']),
-			$b = new MockObject(['id' => 'b', 'group' => 'a']),
-			$c = new MockObject(['id' => 'c', 'group' => 'b']),
+			new MockObject(['id' => 'a', 'group' => 'a']),
+			new MockObject(['id' => 'b', 'group' => 'a']),
+			new MockObject(['id' => 'c', 'group' => 'b']),
 		]);
 
 		$groups = $collection->group('group');
@@ -187,15 +186,36 @@ class CollectionTest extends TestCase
 	public function testGroupWithInvalidKey()
 	{
 		$collection = new Collection([
-			$a = new MockObject(['id' => 'a', 'group' => 'a']),
-			$b = new MockObject(['id' => 'b', 'group' => 'a']),
-			$c = new MockObject(['id' => 'c', 'group' => 'b']),
+			new MockObject(['id' => 'a', 'group' => 'a']),
+			new MockObject(['id' => 'b', 'group' => 'a']),
+			new MockObject(['id' => 'c', 'group' => 'b']),
 		]);
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Can only group by string values or by providing a callback function');
 
 		$collection->group(1);
+	}
+
+	public function testGroupCaseSensitive()
+	{
+		$collection = new Collection([
+			new Page(['slug' => 'a', 'content' => ['group' => 'a']]),
+			new Page(['slug' => 'b', 'content' => ['group' => 'a']]),
+			new Page(['slug' => 'c', 'content' => ['group' => 'A']]),
+		]);
+
+		$groups = $collection->group('group', true);
+		$this->assertCount(1, $groups);
+
+		$groups = $collection->group('group', false);
+		$this->assertCount(2, $groups);
+
+		$groupA = $groups->first();
+		$groupB = $groups->last();
+
+		$this->assertCount(2, $groupA);
+		$this->assertCount(1, $groupB);
 	}
 
 	public function testIndexOfWithObject()
