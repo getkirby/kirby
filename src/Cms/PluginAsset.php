@@ -24,6 +24,11 @@ class PluginAsset
 	) {
 	}
 
+	public function extension(): string
+	{
+		return F::extension($this->path());
+	}
+
 	public function filename(): string
 	{
 		return F::filename($this->path());
@@ -93,5 +98,13 @@ class PluginAsset
 	public function url(): string
 	{
 		return $this->mediaUrl();
+	}
+
+	/**
+	 * @see ::url
+	 */
+	public function __toString(): string
+	{
+		return $this->url();
 	}
 }

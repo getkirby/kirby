@@ -65,15 +65,36 @@ class PluginAssetsTest extends TestCase
 	}
 
 	/**
+	 * @covers ::css
+	 * @covers ::js
+	 */
+	public function testCss()
+	{
+		// assets defined in plugin config
+		$plugin = new Plugin('getkirby/test-plugin', [
+			'root'   => $root = __DIR__ . '/tmp',
+			'assets' => [
+				'test.css' => $root . '/test.css',
+				'test.js'  => $root . '/test.js'
+			]
+		]);
+
+		$assets = PluginAssets::factory($plugin);
+		$this->assertCount(2, $assets);
+		$this->assertCount(1, $assets->css());
+		$this->assertSame('test.css', $assets->css()->first()->path());
+		$this->assertCount(1, $assets->js());
+		$this->assertSame('test.js', $assets->js()->first()->path());
+	}
+
+	/**
 	 * @covers ::factory
 	 */
 	public function testFactory()
 	{
-		$root = __DIR__ . '/fixtures/plugin-assets';
-
 		// assets defined in plugin config
 		$plugin = new Plugin('getkirby/test-plugin', [
-			'root'   => $root,
+			'root'   => $root = __DIR__ . '/fixtures/plugin-assets',
 			'assets' => [
 				'c.css' => $root . '/a.css',
 				'd.css' => $root . '/foo/b.css'

@@ -50,6 +50,14 @@ class PluginAssets extends Collection
 	}
 
 	/**
+	 * Filters assets collection by CSS files
+	 */
+	public function css(): static
+	{
+		return $this->filter(fn ($asset) => $asset->extension() === 'css');
+	}
+
+	/**
 	 * Creates a new collection for the plugin's assets
 	 * by considering the plugin's `asset` extension
 	 * (and `assets` directory as fallback)
@@ -93,6 +101,14 @@ class PluginAssets extends Collection
 		}
 
 		return $collection;
+	}
+
+	/**
+	 * Filters assets collection by JavaScript files
+	 */
+	public function js(): static
+	{
+		return $this->filter(fn ($asset) => $asset->extension() === 'js');
 	}
 
 	public function plugin(): Plugin

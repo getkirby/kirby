@@ -20,6 +20,20 @@ class PluginAssetTest extends TestCase
 	}
 
 	/**
+	 * @covers ::extension
+	 */
+	public function testExtension()
+	{
+		$asset = new PluginAsset(
+			'test.css',
+			$this->fixture . '/assets/test.css',
+			$this->plugin
+		);
+
+		$this->assertEquals('css', $asset->extension());
+	}
+
+	/**
 	 * @covers ::filename
 	 */
 	public function testFilename()
@@ -38,6 +52,7 @@ class PluginAssetTest extends TestCase
 	 * @covers ::mediaRoot
 	 * @covers ::mediaUrl
 	 * @covers ::url
+	 * @covers ::__toString
 	 */
 	public function testMedia()
 	{
@@ -51,6 +66,7 @@ class PluginAssetTest extends TestCase
 		$this->assertEquals($this->plugin->mediaRoot() . '/test.css', $asset->mediaRoot());
 		$this->assertEquals('/media/plugins/getkirby/test-plugin/test.css?m=3526409702-1694877136', $asset->mediaUrl());
 		$this->assertEquals('/media/plugins/getkirby/test-plugin/test.css?m=3526409702-1694877136', $asset->url());
+		$this->assertEquals('/media/plugins/getkirby/test-plugin/test.css?m=3526409702-1694877136', (string)$asset);
 	}
 
 	/**
