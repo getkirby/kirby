@@ -391,7 +391,7 @@ class Database
 				foreach ($results as $key => $result) {
 					$results[$key] = $options['fetch']($result, $key);
 				}
-			} else if ($options['method'] === 'fetch' && $results !== false) {
+			} elseif ($options['method'] === 'fetch' && $results !== false) {
 				// fetching a single record
 				$results = $options['fetch']($results);
 			}
