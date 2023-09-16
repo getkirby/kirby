@@ -5,6 +5,7 @@ namespace Kirby\Toolkit;
 use Closure;
 use Countable;
 use Exception;
+use Kirby\Cms\Helpers;
 
 /**
  * The collection class provides a nicer
@@ -29,6 +30,7 @@ class Collection extends Iterator implements Countable
 	/**
 	 * Whether the collection keys should be
 	 * treated as case-sensitive
+	 * @deprecated 4.0.0
 	 *
 	 * @var bool
 	 */
@@ -61,8 +63,13 @@ class Collection extends Iterator implements Countable
 	 */
 	public function __construct(array $data = [], bool $caseSensitive = false)
 	{
-		$this->caseSensitive = $caseSensitive;
 		$this->set($data);
+
+		/** TODO: remove in v5 */
+		if ($caseSensitive === true) {
+			Helpers::deprecated('The `$caseSensitive` prop in `' . static::class . '` class has been deprecated and will be removed in a future version.', 'collection-caseSensitive-prop');
+			$this->caseSensitive = $caseSensitive;
+		}
 	}
 
 	/**
@@ -82,10 +89,11 @@ class Collection extends Iterator implements Countable
 	 */
 	public function __get($key)
 	{
+		/** @codeCoverageIgnoreStart */
 		if ($this->caseSensitive === true) {
 			return $this->data[$key] ?? null;
 		}
-
+		/** @codeCoverageIgnoreEnd */
 		return $this->data[$key] ?? $this->data[strtolower($key)] ?? null;
 	}
 
@@ -98,10 +106,11 @@ class Collection extends Iterator implements Countable
 	 */
 	public function __set(string $key, $value): void
 	{
+		/** @codeCoverageIgnoreStart */
 		if ($this->caseSensitive !== true) {
 			$key = strtolower($key);
 		}
-
+		/** @codeCoverageIgnoreEnd */
 		$this->data[$key] = $value;
 	}
 
