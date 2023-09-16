@@ -530,7 +530,7 @@ class Collection extends Iterator implements Countable
 
 				// ignore upper/lowercase for group names
 				if ($caseInsensitive === true) {
-					$value = Str::lower($value);
+					return Str::lower($value);
 				}
 
 				return (string)$value;
