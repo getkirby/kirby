@@ -418,7 +418,7 @@ class System
 	{
 		return
 			version_compare(PHP_VERSION, '8.0.0', '>=') === true &&
-			version_compare(PHP_VERSION, '8.3.0', '<')  === true;
+			version_compare(PHP_VERSION, '8.4.0', '<')  === true;
 	}
 
 	/**
