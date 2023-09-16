@@ -79,8 +79,8 @@ class PluginTest extends TestCase
 			]
 		]);
 
-		$this->assertSame($a, $plugin->asset('c.css'));
-		$this->assertSame($b, $plugin->asset('d.css'));
+		$this->assertSame($a, $plugin->asset('c.css')->root());
+		$this->assertSame($b, $plugin->asset('d.css')->root());
 	}
 
 	/**
@@ -99,12 +99,10 @@ class PluginTest extends TestCase
 			]
 		]);
 
-		$expected = [
-			'c.css' => $root . '/a.css',
-			'd.css' =>	$root . '/foo/b.css'
-		];
-
-		$this->assertSame($expected, $plugin->assets());
+		$this->assertInstanceOf(PluginAssets::class, $plugin->assets());
+		$this->assertSame(2, $plugin->assets()->count());
+		$this->assertSame($root . '/a.css', $plugin->asset('c.css')->root());
+		$this->assertSame($root . '/foo/b.css', $plugin->asset('d.css')->root());
 
 		// assets defined as non-associative array in the plugin config
 		$plugin = new Plugin('getkirby/test-plugin', [
@@ -120,7 +118,10 @@ class PluginTest extends TestCase
 			'foo/b.css' =>	$root . '/foo/b.css'
 		];
 
-		$this->assertSame($expected, $plugin->assets());
+		$this->assertInstanceOf(PluginAssets::class, $plugin->assets());
+		$this->assertSame(2, $plugin->assets()->count());
+		$this->assertSame($root . '/a.css', $plugin->asset('a.css')->root());
+		$this->assertSame($root . '/foo/b.css', $plugin->asset('foo/b.css')->root());
 
 		// assets defined als closure in the plugin config
 		$plugin = new Plugin('getkirby/test-plugin', [
@@ -131,16 +132,19 @@ class PluginTest extends TestCase
 			]
 		]);
 
-		$this->assertSame($expected, $plugin->assets());
+		$this->assertInstanceOf(PluginAssets::class, $plugin->assets());
+		$this->assertSame(2, $plugin->assets()->count());
+		$this->assertSame($root . '/a.css', $plugin->asset('a.css')->root());
+		$this->assertSame($root . '/foo/b.css', $plugin->asset('foo/b.css')->root());
 
 		// assets gathered from `assets` folder inside plugin root
 		$plugin = new Plugin('getkirby/test-plugin', [
 			'root' => __DIR__ . '/fixtures/plugin-assets'
 		]);
 
-		$this->assertSame([
-			'test.css' => $root . '/assets/test.css',
-		], $plugin->assets());
+		$this->assertInstanceOf(PluginAssets::class, $plugin->assets());
+		$this->assertSame(1, $plugin->assets()->count());
+		$this->assertSame($root . '/assets/test.css', $plugin->asset('test.css')->root());
 	}
 
 	/**
