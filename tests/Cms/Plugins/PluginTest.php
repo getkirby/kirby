@@ -95,56 +95,11 @@ class PluginTest extends TestCase
 			'root'   => $root,
 			'assets' => [
 				'c.css' => $root . '/a.css',
-				'd.css' => $root . '/foo/b.css'
 			]
 		]);
 
 		$this->assertInstanceOf(PluginAssets::class, $plugin->assets());
-		$this->assertSame(2, $plugin->assets()->count());
 		$this->assertSame($root . '/a.css', $plugin->asset('c.css')->root());
-		$this->assertSame($root . '/foo/b.css', $plugin->asset('d.css')->root());
-
-		// assets defined as non-associative array in the plugin config
-		$plugin = new Plugin('getkirby/test-plugin', [
-			'root'   => $root,
-			'assets' => [
-				$root . '/a.css',
-				$root . '/foo/b.css'
-			]
-		]);
-
-		$expected = [
-			'a.css'     => $root . '/a.css',
-			'foo/b.css' =>	$root . '/foo/b.css'
-		];
-
-		$this->assertInstanceOf(PluginAssets::class, $plugin->assets());
-		$this->assertSame(2, $plugin->assets()->count());
-		$this->assertSame($root . '/a.css', $plugin->asset('a.css')->root());
-		$this->assertSame($root . '/foo/b.css', $plugin->asset('foo/b.css')->root());
-
-		// assets defined als closure in the plugin config
-		$plugin = new Plugin('getkirby/test-plugin', [
-			'root'   => __DIR__ . '/fixtures/plugin-assets',
-			'assets' => fn () => [
-				$root . '/a.css',
-				$root . '/foo/b.css'
-			]
-		]);
-
-		$this->assertInstanceOf(PluginAssets::class, $plugin->assets());
-		$this->assertSame(2, $plugin->assets()->count());
-		$this->assertSame($root . '/a.css', $plugin->asset('a.css')->root());
-		$this->assertSame($root . '/foo/b.css', $plugin->asset('foo/b.css')->root());
-
-		// assets gathered from `assets` folder inside plugin root
-		$plugin = new Plugin('getkirby/test-plugin', [
-			'root' => __DIR__ . '/fixtures/plugin-assets'
-		]);
-
-		$this->assertInstanceOf(PluginAssets::class, $plugin->assets());
-		$this->assertSame(1, $plugin->assets()->count());
-		$this->assertSame($root . '/assets/test.css', $plugin->asset('test.css')->root());
 	}
 
 	/**

@@ -4,6 +4,17 @@ namespace Kirby\Cms;
 
 use Kirby\Filesystem\F;
 
+/**
+ * Representing a plugin asset with methods
+ * to manage the asset file between the plugin
+ * and media folder
+ *
+ * @package   Kirby Cms
+ * @author    Nico Hoffmann <nico@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 class PluginAsset
 {
 	public function __construct(

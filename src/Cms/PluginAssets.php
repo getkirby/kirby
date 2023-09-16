@@ -15,12 +15,45 @@ use Kirby\Toolkit\Str;
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 class PluginAssets extends Collection
 {
+	/**
+	 * Clean old/deprecated assets on every resolve
+	 */
+	public static function clean(string $pluginName): void
+	{
+		if ($plugin = App::instance()->plugin($pluginName)) {
+			$media  = $plugin->mediaRoot();
+			$assets = $plugin->assets();
+
+			// get outdated media files by comparing all
+			// files in the media folder against the current set
+			// of asset paths
+			$files  = Dir::index($media, true);
+			$files  = array_diff($files, $assets->keys());
+
+			foreach ($files as $file) {
+				$root = $media . '/' . $file;
+
+				if (is_file($root) === true) {
+					F::remove($root);
+				} else {
+					Dir::remove($root);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Creates a new collection for the plugin's assets
+	 * by considering the plugin's `asset` extension
+	 * (and `assets` directory as fallback)
+	 */
 	public static function factory(Plugin $plugin): static
 	{
 		// get assets defined in the plugin extension
@@ -65,33 +98,6 @@ class PluginAssets extends Collection
 	public function plugin(): Plugin
 	{
 		return $this->parent;
-	}
-
-	/**
-	 * Clean old/deprecated assets on every resolve
-	 */
-	public static function clean(string $pluginName): void
-	{
-		if ($plugin = App::instance()->plugin($pluginName)) {
-			$media  = $plugin->mediaRoot();
-			$assets = $plugin->assets();
-
-			// get outdated media files by comparing all
-			// files in the media folder against the current set
-			// of asset paths
-			$files  = Dir::index($media, true);
-			$files  = array_diff($files, $assets->keys());
-
-			foreach ($files as $file) {
-				$root = $media . '/' . $file;
-
-				if (is_file($root) === true) {
-					F::remove($root);
-				} else {
-					Dir::remove($root);
-				}
-			}
-		}
 	}
 
 	/**
