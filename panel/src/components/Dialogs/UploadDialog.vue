@@ -52,12 +52,13 @@
 									- {{ file.progress }}%
 								</template>
 							</p>
-							<p class="k-upload-item-error">{{ file.error }}</p>
-						</div>
-						<div class="k-upload-item-progress">
+							<p v-if="file.error" class="k-upload-item-error">
+								{{ file.error }}
+							</p>
 							<k-progress
-								v-if="file.progress > 0 && !file.error"
+								v-else-if="file.progress"
 								:value="file.progress"
+								class="k-upload-item-progress"
 							/>
 						</div>
 						<div class="k-upload-item-toggle">
@@ -131,10 +132,9 @@ export default {
 	display: grid;
 	grid-template-areas:
 		"preview input input"
-		"preview body toggle"
-		"preview progress toggle";
+		"preview body toggle";
 	grid-template-columns: 6rem 1fr auto;
-	grid-template-rows: 1fr 1fr 1fr;
+	grid-template-rows: var(--input-height) 1fr;
 	border-radius: var(--rounded);
 	background: var(--color-white);
 	box-shadow: var(--shadow);
@@ -157,7 +157,10 @@ export default {
 
 .k-upload-item-body {
 	grid-area: body;
-	padding: var(--spacing-2) var(--spacing-3) 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: var(--spacing-2) var(--spacing-3);
 }
 .k-upload-item-input.k-input {
 	--input-color-border: transparent;
@@ -185,10 +188,6 @@ export default {
 	color: var(--color-red-700);
 }
 .k-upload-item-progress {
-	padding-inline: var(--spacing-3);
-	align-self: end;
-	height: 1.375rem;
-	grid-area: progress;
 	--progress-height: 0.25rem;
 	--progress-color-back: var(--color-light);
 }
