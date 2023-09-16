@@ -52,7 +52,7 @@ export default {
 	data() {
 		return {
 			items: [],
-			query: this.getQuery(),
+			query: new URLSearchParams(window.location.search).get("query"),
 			pagination: {}
 		};
 	},
@@ -87,9 +87,6 @@ export default {
 	methods: {
 		focus() {
 			this.$refs.input?.focus();
-		},
-		getQuery() {
-			return new URLSearchParams(window.location.search).get("query");
 		},
 		onPaginate(pagination) {
 			this.search(pagination.page);
