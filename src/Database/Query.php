@@ -189,8 +189,12 @@ class Query
 	 *
 	 * @return $this
 	 */
-	public function fetch(string|Closure $fetch): static
+	public function fetch(string|callable|Closure $fetch): static
 	{
+		if (is_callable($fetch) === true) {
+			$fetch = Closure::fromCallable($fetch);
+		}
+
 		$this->fetch = $fetch;
 		return $this;
 	}
