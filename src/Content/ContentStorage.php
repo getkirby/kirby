@@ -96,13 +96,13 @@ class ContentStorage
 	/**
 	 * Creates a new version
 	 *
-	 * @param string $lang Code `'default'` in a single-lang installation
+	 * @param string|null $lang Code `'default'` in a single-lang installation
 	 * @param array<string, string> $fields Content fields
 	 */
 	public function create(
 		string $versionType,
-		string|null $lang = null,
-		array $fields = []
+		string|null $lang,
+		array $fields
 	): void {
 		$lang = $this->language($lang);
 		$this->handler->create($versionType, $lang, $fields);
@@ -259,7 +259,7 @@ class ContentStorage
 	public function update(
 		string $version,
 		string|null $lang = null,
-		array $fields
+		array $fields = []
 	): void {
 		$lang = $this->language($lang);
 		$this->ensureExistingVersion($version, $lang);
