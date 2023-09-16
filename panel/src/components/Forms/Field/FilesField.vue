@@ -8,6 +8,21 @@ export default {
 		uploads: [Boolean, Object, Array]
 	},
 	computed: {
+		buttons() {
+			const buttons = ModelsField.computed.buttons.call(this);
+
+			if (this.hasDropzone) {
+				buttons.unshift({
+					autofocus: this.autofocus,
+					text: this.$t("upload"),
+					responsive: true,
+					icon: "upload",
+					click: () => this.$panel.upload.pick(this.uploadOptions)
+				});
+			}
+
+			return buttons;
+		},
 		emptyProps() {
 			return {
 				icon: "image",
@@ -24,7 +39,20 @@ export default {
 				multiple: this.multiple,
 				url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload",
 				on: {
-					done: this.onUpload
+					done: (files) => {
+						if (this.multiple === false) {
+							this.selected = [];
+						}
+
+						for (const file of files) {
+							if (this.selected.find((f) => f.id === file.id) === undefined) {
+								this.selected.push(file);
+							}
+						}
+
+						this.onInput();
+						this.$events.emit("model.update");
+					}
 				}
 			};
 		}
@@ -42,23 +70,6 @@ export default {
 			}
 
 			return this.$panel.upload.open(files, this.uploadOptions);
-		},
-		isSelected(file) {
-			return this.selected.find((f) => f.id === file.id);
-		},
-		onUpload(files) {
-			if (this.multiple === false) {
-				this.selected = [];
-			}
-
-			for (const file of files) {
-				if (this.isSelected(file) === false) {
-					this.selected.push(file);
-				}
-			}
-
-			this.onInput();
-			this.$events.emit("model.update");
 		}
 	}
 };

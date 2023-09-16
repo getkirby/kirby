@@ -1,9 +1,14 @@
 <template>
 	<k-field v-bind="$props" :class="`k-models-field k-${$options.type}-field`">
 		<template v-if="more && !disabled" #options>
-			<k-button-group class="k-field-options">
-				<k-button v-bind="addBtn" class="k-field-options-button" />
-			</k-button-group>
+			<k-button-group
+				ref="buttons"
+				:buttons="buttons"
+				layout="collapsed"
+				size="xs"
+				variant="filled"
+				class="k-field-options"
+			/>
 		</template>
 
 		<k-dropzone :disabled="!hasDropzone" @drop="drop">
@@ -65,15 +70,15 @@ export default {
 		};
 	},
 	computed: {
-		addBtn() {
-			return {
-				autofocus: this.autofocus,
-				text: this.$t("select"),
-				icon: "refresh",
-				size: "xs",
-				variant: "filled",
-				click: () => this.open()
-			};
+		buttons() {
+			return [
+				{
+					autofocus: this.autofocus,
+					text: this.$t("select"),
+					icon: "checklist",
+					click: () => this.open()
+				}
+			];
 		},
 		collection() {
 			return {
@@ -143,6 +148,7 @@ export default {
 		select(items) {
 			if (items.length === 0) {
 				this.selected = [];
+				this.onInput();
 				return;
 			}
 
