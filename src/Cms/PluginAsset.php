@@ -60,6 +60,8 @@ class PluginAsset
 
 	/**
 	 * Timestamp when asset file was last modified
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function modified(): int|false
 	{

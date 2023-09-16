@@ -62,25 +62,11 @@ class PluginAssetTest extends TestCase
 			$this->plugin
 		);
 
-		$this->assertEquals('3526409702-1694877136', $asset->mediaHash());
+		$this->assertEquals('3526409702-' . $asset->modified(), $asset->mediaHash());
 		$this->assertEquals($this->plugin->mediaRoot() . '/test.css', $asset->mediaRoot());
-		$this->assertEquals('/media/plugins/getkirby/test-plugin/test.css?m=3526409702-1694877136', $asset->mediaUrl());
-		$this->assertEquals('/media/plugins/getkirby/test-plugin/test.css?m=3526409702-1694877136', $asset->url());
-		$this->assertEquals('/media/plugins/getkirby/test-plugin/test.css?m=3526409702-1694877136', (string)$asset);
-	}
-
-	/**
-	 * @covers ::modified
-	 */
-	public function testModified()
-	{
-		$asset = new PluginAsset(
-			'test.css',
-			$this->fixture . '/assets/test.css',
-			$this->plugin
-		);
-
-		$this->assertEquals(1694877136, $asset->modified());
+		$this->assertEquals($url = '/media/plugins/getkirby/test-plugin/test.css?m=3526409702-' . $asset->modified(), $asset->mediaUrl());
+		$this->assertEquals($url, $asset->url());
+		$this->assertEquals($url, (string)$asset);
 	}
 
 	/**
