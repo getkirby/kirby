@@ -30,6 +30,9 @@ class Collection extends Iterator implements Countable
 	 * Whether the collection keys should be
 	 * treated as case-sensitive
 	 *
+	 * @todo 5.0 Check if case-sensitive can become the
+	 * default mode, see https://github.com/getkirby/kirby/pull/5635
+	 *
 	 * @var bool
 	 */
 	protected $caseSensitive = false;
