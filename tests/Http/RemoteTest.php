@@ -26,6 +26,7 @@ class RemoteTest extends TestCase
 	public function tearDown(): void
 	{
 		Remote::$defaults = $this->defaults;
+		unset(IniStore::$data['curl.cainfo']);
 	}
 
 	public function testOptionsHeaders()
