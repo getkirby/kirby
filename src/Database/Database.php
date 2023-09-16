@@ -386,8 +386,14 @@ class Database
 
 		// apply the fetch closure to all results if given
 		if ($options['fetch'] instanceof Closure) {
-			foreach ($results as $key => $result) {
-				$results[$key] = $options['fetch']($result, $key);
+			if ($options['method'] === 'fetchAll') {
+				// fetching multiple records
+				foreach ($results as $key => $result) {
+					$results[$key] = $options['fetch']($result, $key);
+				}
+			} else if ($options['method'] === 'fetch' && $results !== false) {
+				// fetching a single record
+				$results = $options['fetch']($results);
 			}
 		}
 
