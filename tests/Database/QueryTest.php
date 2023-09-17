@@ -339,14 +339,17 @@ class QueryTest extends TestCase
 		$this->assertSame('John Lennon', (clone $query)->fetch([$this, 'fetchTestCallable'])->first());
 		$this->assertInstanceOf(
 			MockClassWithCallable::class,
-			(clone $query)->fetch([MockClassWithCallable::class, 'from_db'])->first()
+			(clone $query)->fetch([MockClassWithCallable::class, 'fromDb'])->first()
 		);
-		$this->assertEquals(
+		$this->assertSame(
 			'John Lennon',
-			(clone $query)->fetch('\Kirby\Database\MockClassWithCallable::from_db')->first()->name()
+			(clone $query)->fetch('\Kirby\Database\MockClassWithCallable::fromDb')->first()->name()
 		);
 	}
-	// Helper function for testFetch()
+	
+	/**
+	 * Helper function for testFetch()
+	 */
 	public function fetchTestCallable(array $row, $key = null)
 	{
 		return $row['fname'] . ' ' . $row['lname'];
