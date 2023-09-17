@@ -74,13 +74,6 @@ class User extends Model
 		];
 
 		$result[] = [
-			'dialog'   => $url . '/changePassword',
-			'icon'     => 'key',
-			'text'     => I18n::translate('user.changePassword'),
-			'disabled' => $this->isDisabledDropdownOption('changePassword', $options, $permissions)
-		];
-
-		$result[] = [
 			'dialog'   => $url . '/changeLanguage',
 			'icon'     => 'translate',
 			'text'     => I18n::translate('user.changeLanguage'),
@@ -96,7 +89,11 @@ class User extends Model
 			'disabled' => $this->isDisabledDropdownOption('changePassword', $options, $permissions)
 		];
 
-		if ($account) {
+		if (
+			$account &&
+			($this->model->kirby()->system()->loginMethods()['password']['2fa'] ?? null) === true &&
+			in_array('totp', $this->model->kirby()->auth()->enabledChallenges()) === true
+		) {
 			$result[] = [
 				'dialog'   => $url . '/changeTotp',
 				'icon'     => 'qr-code',
