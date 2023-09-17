@@ -26,7 +26,7 @@ class MockClassWithCallable
 		return $this->fname . ' ' . $this->lname;
 	}
 
-	public static function from_db(array $row, $key = null): MockClassWithCallable
+	public static function fromDb(array $row, $key = null): MockClassWithCallable
 	{
 		return new MockClassWithCallable($row['fname'], $row['lname']);
 	}
