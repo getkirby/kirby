@@ -5,7 +5,6 @@ import { defineConfig, splitVendorChunkPlugin } from "vite";
 import vue from "@vitejs/plugin-vue2";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import externalGlobals from "rollup-plugin-external-globals";
-
 import kirbyDev from "./scripts/vite-kirby-dev.js";
 
 let customServer;
@@ -62,13 +61,7 @@ export default defineConfig(({ command }) => {
 				input: "./src/index.js",
 				output: {
 					entryFileNames: "js/[name].min.js",
-					chunkFileNames: (chunkInfo) => {
-						// TODO: remove when removing CSS :has polyfill
-						if (chunkInfo.name === "browser") {
-							return "js/css-has-polyfill.min.js";
-						}
-						return "js/[name].min.js";
-					},
+					chunkFileNames: "js/[name].min.js",
 					assetFileNames: "[ext]/[name].min.[ext]"
 				}
 			}
