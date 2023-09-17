@@ -217,6 +217,8 @@ class Menu
 				'icon'     => 'key',
 				'dialog'   => 'registration',
 				'text'     => I18n::translate('license.register'),
+				'variant'  => 'filled',
+				'theme'    => 'notice',
 			]);
 		}
 
