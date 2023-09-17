@@ -55,6 +55,9 @@ return [
 				$secret = $otp->createSecret();
 				$otp->setSecret($secret);
 
+				$issuer = $kirby->site()->title();
+				$label  = $issuer . ':' . $user->email();
+
 				return [
 					'component' => 'k-form-dialog',
 					'props' => [
@@ -62,7 +65,7 @@ return [
 							'secret' => [
 								'label'    => 'TOTP secret for your Auth app',
 								'type'     => 'text',
-								'help'     => $otp->getUri('hiii', 'getkirby'),
+								'help'     => $otp->getUri($label, $issuer),
 								'disabled' => true
 							]
 						],
