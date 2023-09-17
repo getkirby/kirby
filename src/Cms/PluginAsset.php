@@ -47,7 +47,7 @@ class PluginAsset
 	 */
 	public function mediaRoot(): string
 	{
-		return $this->plugin()->mediaRoot() . '/' . $this->path();
+		return $this->plugin()->mediaRoot() . '/' . $this->mediaHash() . '/' . $this->path();
 	}
 
 	/**
@@ -55,7 +55,7 @@ class PluginAsset
 	 */
 	public function mediaUrl(): string
 	{
-		return $this->plugin()->mediaUrl() . '/' . $this->path() . '?m=' . $this->mediaHash();
+		return $this->plugin()->mediaUrl() . '/' . $this->mediaHash() . '/' . $this->path();
 	}
 
 	/**

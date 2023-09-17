@@ -166,20 +166,51 @@ class PluginAssetsTest extends TestCase
 	 */
 	public function testResolve()
 	{
-		$response = PluginAssets::resolve('getkirby/b', 'foo/bar.css');
-		$media    = $this->tmp . '/media/plugins/getkirby/b/foo/bar.css';
+		touch($this->tmp . '/site/plugins/b/foo/bar.css', 1337000000);
+
+		// right path and hash
+		$media    = $this->tmp . '/media/plugins/getkirby/b/110971429-1337000000/foo/bar.css';
+		$response = PluginAssets::resolve(
+			'getkirby/b',
+			'110971429-1337000000',
+			'foo/bar.css'
+		);
 
 		$this->assertTrue(is_link($media));
 		$this->assertSame(200, $response->code());
 		$this->assertSame('text/css', $response->type());
 
-		$response = PluginAssets::resolve('getkirby/b', 'assets/foo.css');
-		$media    = $this->tmp . '/media/plugins/getkirby/b/assets/foo.css';
+		// wrong path
+		$media    = $this->tmp . '/media/plugins/getkirby/b/110971429-1337000000/assets/foo.css';
+		$response = PluginAssets::resolve(
+			'getkirby/b',
+			'110971429-1337000000',
+			'assets/foo.css'
+		);
+
 		$this->assertNull($response);
 		$this->assertFalse(is_link($media));
 
-		$response = PluginAssets::resolve('getkirby/c', 'test.css');
-		$media    = $this->tmp . '/media/plugins/getkirby/c/test.css';
+		// wrong hash
+		$media    = $this->tmp . '/media/plugins/getkirby/b/110971429-1337000000/foo/bar.css';
+		$response = PluginAssets::resolve(
+			'getkirby/b',
+			'110971429-12345678',
+			'foo/bar.css'
+		);
+
+		$this->assertNull($response);
+		$this->assertFalse(is_link($media));
+
+		// correct: different path and root
+		touch($this->tmp . '/site/plugins/c/foo/bar.css', 1337000000);
+
+		$media    = $this->tmp . '/media/plugins/getkirby/c/3526409702-1337000000/test.css';
+		$response = PluginAssets::resolve(
+			'getkirby/c',
+			'3526409702-1337000000',
+			'test.css'
+		);
 
 		$this->assertTrue(is_link($media));
 		$this->assertSame(200, $response->code());
@@ -188,15 +219,26 @@ class PluginAssetsTest extends TestCase
 
 	public function testResolveAutomaticFromAssetsFolder()
 	{
-		$response = PluginAssets::resolve('getkirby/a', 'test.css');
-		$media    = $this->tmp . '/media/plugins/getkirby/a/test.css';
+		touch($this->tmp . '/site/plugins/a/assets/test.css', 1337000000);
+
+		$media    = $this->tmp . '/media/plugins/getkirby/a/3526409702-1337000000/test.css';
+		$response = PluginAssets::resolve(
+			'getkirby/a',
+			'3526409702-1337000000',
+			'test.css'
+		);
 
 		$this->assertTrue(is_link($media));
 		$this->assertSame(200, $response->code());
 		$this->assertSame('text/css', $response->type());
 
-		$response = PluginAssets::resolve('getkirby/a', 'assets/foo.css');
-		$media    = $this->tmp . '/media/plugins/getkirby/a/assets/foo.css';
+
+		$media    = $this->tmp . '/media/plugins/getkirby/a/3526409702-1337000000/assets/test.css';
+		$response = PluginAssets::resolve(
+			'getkirby/a',
+			'3526409702-1337000000',
+			'assets/test.css'
+		);
 		$this->assertNull($response);
 		$this->assertFalse(is_link($media));
 	}

@@ -65,8 +65,8 @@ class PluginAssetTest extends TestCase
 		);
 
 		$this->assertSame('3526409702-1337000000', $asset->mediaHash());
-		$this->assertSame($this->plugin->mediaRoot() . '/test.css', $asset->mediaRoot());
-		$this->assertSame($url = '/media/plugins/getkirby/test-plugin/test.css?m=3526409702-1337000000', $asset->mediaUrl());
+		$this->assertSame($this->plugin->mediaRoot() . '/3526409702-1337000000/test.css', $asset->mediaRoot());
+		$this->assertSame($url = '/media/plugins/getkirby/test-plugin/3526409702-1337000000/test.css', $asset->mediaUrl());
 		$this->assertSame($url, $asset->url());
 		$this->assertSame($url, (string)$asset);
 	}

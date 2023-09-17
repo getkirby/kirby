@@ -35,9 +35,12 @@ class PluginAssets extends Collection
 			// files in the media folder against the current set
 			// of asset paths
 			$files  = Dir::index($media, true);
-			$files  = array_diff($files, $assets->keys());
+			$active = $assets->values(
+				fn ($asset) => $asset->mediaHash() . '/' . $asset->path()
+			);
+			$stale  = array_diff($files, $active);
 
-			foreach ($files as $file) {
+			foreach ($stale as $file) {
 				$root = $media . '/' . $file;
 
 				if (is_file($root) === true) {
@@ -122,13 +125,17 @@ class PluginAssets extends Collection
 	 */
 	public static function resolve(
 		string $pluginName,
+		string $hash,
 		string $path
 	): Response|null {
 		if ($plugin = App::instance()->plugin($pluginName)) {
 			// do some spring cleaning for older files
 			static::clean($pluginName);
 
-			if ($asset = $plugin->asset($path)) {
+			if (
+				($asset = $plugin->asset($path)) &&
+				$asset->mediaHash() === $hash
+			) {
 				// create a symlink if possible
 				$asset->publish();
 

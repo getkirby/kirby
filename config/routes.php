@@ -61,15 +61,17 @@ return function (App $kirby) {
 			}
 		],
 		[
-			'pattern' => $media . '/plugins/(:any)/(:any)/(:all)',
+			'pattern' => $media . '/plugins/(:any)/(:any)/(:any)/(:all)',
 			'env'     => 'media',
 			'action'  => function (
 				string $provider,
 				string $pluginName,
+				string $hash,
 				string $path
 			) {
 				return PluginAssets::resolve(
 					$provider . '/' . $pluginName,
+					$hash,
 					$path
 				);
 			}
