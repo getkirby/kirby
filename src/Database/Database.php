@@ -3,9 +3,10 @@
 namespace Kirby\Database;
 
 use Closure;
-use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Collection;
+use Kirby\Toolkit\Obj;
 use Kirby\Toolkit\Str;
 use PDO;
 use PDOStatement;
@@ -337,13 +338,16 @@ class Database
 	/**
 	 * Executes a sql query, which is expected to return a set of results
 	 */
-	public function query(string $query, array $bindings = [], array $params = [])
-	{
+	public function query(
+		string $query,
+		array $bindings = [],
+		array $params = []
+	) {
 		$defaults = [
 			'flag'     => null,
 			'method'   => 'fetchAll',
-			'fetch'    => 'Kirby\Toolkit\Obj',
-			'iterator' => 'Kirby\Toolkit\Collection',
+			'fetch'    => Obj::class,
+			'iterator' => Collection::class,
 		];
 
 		$options = array_merge($defaults, $params);
@@ -359,7 +363,7 @@ class Database
 		) {
 			$flags = PDO::FETCH_ASSOC;
 		} else {
-			$flags = PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE;
+			$flags = PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE;
 		}
 
 		// add optional flags
@@ -368,7 +372,10 @@ class Database
 		}
 
 		// set the fetch mode
-		if ($options['fetch'] instanceof Closure || $options['fetch'] === 'array') {
+		if (
+			$options['fetch'] instanceof Closure ||
+			$options['fetch'] === 'array'
+		) {
 			$this->statement->setFetchMode($flags);
 		} else {
 			$this->statement->setFetchMode($flags, $options['fetch']);
@@ -379,8 +386,14 @@ class Database
 
 		// apply the fetch closure to all results if given
 		if ($options['fetch'] instanceof Closure) {
-			foreach ($results as $key => $result) {
-				$results[$key] = $options['fetch']($result, $key);
+			if ($options['method'] === 'fetchAll') {
+				// fetching multiple records
+				foreach ($results as $key => $result) {
+					$results[$key] = $options['fetch']($result, $key);
+				}
+			} elseif ($options['method'] === 'fetch' && $results !== false) {
+				// fetching a single record
+				$results = $options['fetch']($results, null);
 			}
 		}
 

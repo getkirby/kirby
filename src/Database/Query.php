@@ -623,7 +623,7 @@ class Query
 	/**
 	 * Selects only one row from a table
 	 */
-	public function first(): object|array|false
+	public function first(): mixed
 	{
 		return $this->query($this->offset(0)->limit(1)->build('select'), [
 			'fetch'    => $this->fetch,
@@ -635,7 +635,7 @@ class Query
 	/**
 	 * Selects only one row from a table
 	 */
-	public function row(): object|array|false
+	public function row(): mixed
 	{
 		return $this->first();
 	}
@@ -643,7 +643,7 @@ class Query
 	/**
 	 * Selects only one row from a table
 	 */
-	public function one(): object|array|false
+	public function one(): mixed
 	{
 		return $this->first();
 	}
