@@ -23,11 +23,11 @@ class Find
 	 * Returns the file object for the given
 	 * parent path and filename
 	 *
-	 * @param string|null $path Path to file's parent model
+	 * @param string $path Path to file's parent model
 	 * @throws \Kirby\Exception\NotFoundException if the file cannot be found
 	 */
 	public static function file(
-		string $path = null,
+		string $path,
 		string $filename
 	): File|null {
 		$filename = urldecode($filename);

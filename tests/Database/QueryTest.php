@@ -301,6 +301,31 @@ class QueryTest extends TestCase
 			->one();
 	}
 
+	public function testFetch()
+	{
+		$query = $this->database
+			->table('users')
+			->where([
+				'username' => 'john'
+			])
+			->fetch(fn ($row) => $row['fname']);
+
+		$this->assertSame('John', (clone $query)->limit(1)->all()->first());
+		$this->assertSame('John', (clone $query)->first());
+		$this->assertSame('John', (clone $query)->row());
+
+		$falseQuery = $this->database
+			->table('users')
+			->where([
+				'username' => 'john-lennon-and-beatles'
+			])
+			->fetch(fn ($row) => $row['fname']);
+
+		$this->assertNull((clone $falseQuery)->limit(1)->all()->first());
+		$this->assertSame(false, (clone $falseQuery)->first());
+		$this->assertSame(false, (clone $falseQuery)->row());
+	}
+
 	public function testFind()
 	{
 		$user = $this->database
