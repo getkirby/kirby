@@ -6,9 +6,6 @@ import vue from "@vitejs/plugin-vue2";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import externalGlobals from "rollup-plugin-external-globals";
 
-import postcssAutoprefixer from "autoprefixer";
-import postcssNano from "cssnano";
-
 import kirbyDev from "./scripts/vite-kirby-dev.js";
 
 let customServer;
@@ -81,9 +78,7 @@ export default defineConfig(({ command }) => {
 			exclude: ["vitest", "vue"]
 		},
 		css: {
-			postcss: {
-				plugins: [postcssAutoprefixer(), postcssNano()]
-			}
+			transformer: "lightningcss"
 		},
 		resolve: {
 			alias: [
