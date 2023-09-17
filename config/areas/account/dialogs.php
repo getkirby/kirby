@@ -86,7 +86,13 @@ return [
 							],
 							'secret' => [
 								'type'     => 'hidden',
-							]
+							],
+							'confirm' => [
+								'label'   => 'Confirm',
+								'type'    => 'text',
+								'counter' => false,
+								'help'    => 'by entering the 2FA code from your authenticator app'
+							],
 						],
 						'size' => 'small',
 						'submitButton' => [
@@ -117,7 +123,17 @@ return [
 			$user   = $kirby->user();
 
 			if ($secret = $kirby->request()->get('secret')) {
-				$user->totp($secret);
+				if ($confirm = $kirby->request()->get('confirm')) {
+					$otp = new TOTP();
+					$otp->setSecret($secret);
+
+					if ($otp->verify($confirm) === false) {
+						throw new Exception('Invalid 2FA code');
+					}
+
+					$user->totp($secret);
+				}
+
 			} else {
 				$user->totp(false);
 			}
