@@ -346,7 +346,7 @@ class QueryTest extends TestCase
 			(clone $query)->fetch('\Kirby\Database\MockClassWithCallable::fromDb')->first()->name()
 		);
 	}
-	
+
 	/**
 	 * Helper function for testFetch()
 	 */
