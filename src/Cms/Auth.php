@@ -298,7 +298,9 @@ class Auth
 	 */
 	public function enabledChallenges(): array
 	{
-		return A::wrap($this->kirby->option('auth.challenges', ['email']));
+		return A::wrap(
+			$this->kirby->option('auth.challenges', ['totp', 'email'])
+		);
 	}
 
 	/**

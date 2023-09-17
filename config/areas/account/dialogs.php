@@ -1,5 +1,8 @@
 <?php
 
+use chillerlan\Authenticator\Authenticator as TOTP;
+use Kirby\Cms\App;
+
 $dialogs = require __DIR__ . '/../users/dialogs.php';
 
 return [
@@ -37,6 +40,66 @@ return [
 		'pattern' => '(account)/changeRole',
 		'load'    => $dialogs['user.changeRole']['load'],
 		'submit'  => $dialogs['user.changeRole']['submit'],
+	],
+
+	// change TOTP status
+	'user.changeTotp' => [
+		'pattern' => 'account/changeTotp',
+		'load' => function () {
+			$kirby  = App::instance();
+			$user   = $kirby->user();
+			$secret = $user->totp();
+
+			if ($secret === null) {
+				$otp = new TOTP();
+				$secret = $otp->createSecret();
+				$otp->setSecret($secret);
+
+				return [
+					'component' => 'k-form-dialog',
+					'props' => [
+						'fields' => [
+							'secret' => [
+								'label'    => 'TOTP secret for your Auth app',
+								'type'     => 'text',
+								'help'     => $otp->getUri('hiii', 'getkirby'),
+								'disabled' => true
+							]
+						],
+						'submitButton' => [
+							'text' => 'Activate',
+							'icon' => 'check'
+						],
+						'value' => [
+							'secret' => $secret
+						]
+					]
+				];
+			}
+
+			return [
+				'component' => 'k-remove-dialog',
+				'props' => [
+					'text' => 'Are you sure you want to deactivate TOTP?',
+					'submitButton' => [
+						'text' => 'Disable',
+						'icon' => 'protected'
+					],
+				]
+			];
+		},
+		'submit' => function () {
+			$kirby  = App::instance();
+			$user   = $kirby->user();
+
+			if ($secret = $kirby->request()->get('secret')) {
+				$user->totp($secret);
+			} else {
+				$user->totp(false);
+			}
+
+			return true;
+		}
 	],
 
 	// delete

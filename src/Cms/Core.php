@@ -7,6 +7,7 @@ use Kirby\Cache\FileCache;
 use Kirby\Cache\MemCached;
 use Kirby\Cache\MemoryCache;
 use Kirby\Cms\Auth\EmailChallenge;
+use Kirby\Cms\Auth\TotpChallenge;
 use Kirby\Form\Field\BlocksField;
 use Kirby\Form\Field\LayoutField;
 
@@ -74,7 +75,8 @@ class Core
 	public function authChallenges(): array
 	{
 		return [
-			'email' => EmailChallenge::class
+			'email' => EmailChallenge::class,
+			'totp'  => TotpChallenge::class,
 		];
 	}
 

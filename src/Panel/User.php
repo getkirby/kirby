@@ -90,6 +90,23 @@ class User extends Model
 		$result[] = '-';
 
 		$result[] = [
+			'dialog'   => $url . '/changePassword',
+			'icon'     => 'key',
+			'text'     => I18n::translate('user.changePassword'),
+			'disabled' => $this->isDisabledDropdownOption('changePassword', $options, $permissions)
+		];
+
+		if ($account) {
+			$result[] = [
+				'dialog'   => $url . '/changeTotp',
+				'icon'     => 'qr-code',
+				'text'     => 'One-time code'
+			];
+		}
+
+		$result[] = '-';
+
+		$result[] = [
 			'dialog'   => $url . '/delete',
 			'icon'     => 'trash',
 			'text'     => I18n::translate($i18nPrefix . '.delete'),

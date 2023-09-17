@@ -676,6 +676,31 @@ class User extends ModelWithContent
 		]);
 	}
 
+	public function totp(string|false|null $secret = null)
+	{
+		// TODO: secret should be stored encrypted
+
+		$file = $this->root() . '/.totp';
+
+		if ($secret === null) {
+			if (is_file($file) === false) {
+				return null;
+			}
+
+			if ($secret = file_get_contents($file)) {
+				return $secret;
+			}
+
+			return null;
+		}
+
+		if ($secret === false) {
+			unlink($file);
+		} else {
+			file_put_contents($file, $secret);
+		}
+	}
+
 	/**
 	 * String template builder
 	 *
