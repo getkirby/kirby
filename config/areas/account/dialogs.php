@@ -5,6 +5,8 @@ use Kirby\Cms\App;
 
 $dialogs = require __DIR__ . '/../users/dialogs.php';
 
+include_once 'QrCode.php';
+
 return [
 
 	// change email
@@ -57,21 +59,40 @@ return [
 
 				$issuer = $kirby->site()->title();
 				$label  = $issuer . ':' . $user->email();
+				$uri    = $otp->getUri($label, $issuer);
+
+				$qr = new QRCode($uri);
+				$image = $qr->render_image();
+				ob_start();
+				imagepng($image);
+				$data = ob_get_contents();
+       			ob_end_clean();
 
 				return [
 					'component' => 'k-form-dialog',
 					'props' => [
 						'fields' => [
+							'qr' => [
+								'label' => 'Scan this QR code',
+								'type'  => 'info',
+								'text'  => '<img src="data:image/png;base64,' . base64_encode($data) . '" title="' . $uri .'" />',
+								'theme' => 'none',
+							],
+							'secret_display' => [
+								'type'  => 'info',
+								'text'  => $secret,
+								'theme' => 'passive',
+								'help'  => 'or add the 2FA secret manually to your authenticator app',
+							],
 							'secret' => [
-								'label'    => 'TOTP secret for your Auth app',
-								'type'     => 'text',
-								'help'     => $otp->getUri($label, $issuer),
-								'disabled' => true
+								'type'     => 'hidden',
 							]
 						],
+						'size' => 'small',
 						'submitButton' => [
 							'text' => 'Activate',
-							'icon' => 'check'
+							'icon' => 'lock',
+							'theme' => 'notice'
 						],
 						'value' => [
 							'secret' => $secret
