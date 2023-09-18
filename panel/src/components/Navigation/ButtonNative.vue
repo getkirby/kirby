@@ -2,6 +2,7 @@
 	<button
 		:id="id"
 		:aria-current="current"
+		:aria-selected="selected"
 		:autofocus="autofocus"
 		:data-theme="theme"
 		:data-responsive="responsive"
@@ -34,6 +35,7 @@ export default {
 		id: [String, Number],
 		responsive: Boolean,
 		role: String,
+		selected: [String, Boolean],
 		tabindex: String,
 		theme: String,
 		tooltip: String,
