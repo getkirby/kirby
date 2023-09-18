@@ -1,31 +1,23 @@
 <template>
 	<k-field v-bind="$props" :counter="counterOptions" class="k-checkboxes-field">
-		<k-checkboxes-input
+		<k-checkboxes-inputbox
 			:id="_uid"
-			ref="input"
 			v-bind="$props"
-			theme="field"
-			v-on="$listeners"
+			@input="$emit('input', $event)"
 		/>
 	</k-field>
 </template>
 
 <script>
-import { props as Field } from "../Field.vue";
-import { props as Input } from "../Input.vue";
-import { props as CheckboxesInput } from "../Input/CheckboxesInput.vue";
-import counter from "@/mixins/forms/counter.js";
+import { props as FieldProps } from "../Field.vue";
+import { props as InputboxProps } from "../Inputbox/Types/CheckboxesInputbox.vue";
+import Counter from "@/mixins/forms/counter.js";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-checkboxes-input>` for additional information.
+ * Have a look at `<k-field>` and `<k-checkboxes-inputbox>` for additional information.
  */
 export default {
-	mixins: [Field, Input, CheckboxesInput, counter],
-	inheritAttrs: false,
-	methods: {
-		focus() {
-			this.$refs.input.focus();
-		}
-	}
+	mixins: [FieldProps, InputboxProps, Counter],
+	inheritAttrs: false
 };
 </script>

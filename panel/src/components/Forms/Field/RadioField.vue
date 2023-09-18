@@ -1,30 +1,23 @@
 <template>
 	<k-field v-bind="$props" class="k-radio-field">
-		<k-radio-input
+		<k-radio-inputbox
 			:id="_uid"
-			ref="input"
 			v-bind="$props"
-			theme="field"
-			v-on="$listeners"
+			@input="$emit('input', $event)"
 		/>
 	</k-field>
 </template>
 
 <script>
-import { props as Field } from "../Field.vue";
-import { props as Input } from "../Input.vue";
-import { props as RadioInput } from "../Input/RadioInput.vue";
+import { props as FieldProps } from "../Field.vue";
+import { props as InputboxProps } from "../Inputbox/Types/RadioInputbox.vue";
+import Counter from "@/mixins/forms/counter.js";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-radio-input>` for additional information.
+ * Have a look at `<k-field>` and `<k-radio-inputbox>` for additional information.
  */
 export default {
-	mixins: [Field, Input, RadioInput],
-	inheritAttrs: false,
-	methods: {
-		focus() {
-			this.$refs.input.focus();
-		}
-	}
+	mixins: [FieldProps, InputboxProps, Counter],
+	inheritAttrs: false
 };
 </script>

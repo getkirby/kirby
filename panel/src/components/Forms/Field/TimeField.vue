@@ -1,79 +1,27 @@
 <template>
 	<k-field v-bind="$props" :input="_uid" class="k-time-field">
-		<k-input
-			v-bind="$props"
+		<k-time-inputbox
 			:id="_uid"
-			ref="input"
-			theme="field"
-			type="time"
-			@input="$emit('input', $event ?? '')"
-		>
-			<template v-if="times" #icon>
-				<k-dropdown>
-					<k-button
-						:icon="icon ?? 'clock'"
-						:title="$t('time.select')"
-						class="k-input-icon-button"
-						@click="$refs.times.toggle()"
-					/>
-					<k-dropdown-content ref="times" align-x="end">
-						<k-times :display="display" :value="value" @input="select" />
-					</k-dropdown-content>
-				</k-dropdown>
-			</template>
-		</k-input>
+			v-bind="$props"
+			@input="$emit('input', $event)"
+		/>
 	</k-field>
 </template>
 
 <script>
-import { props as Field } from "../Field.vue";
-import { props as Input } from "../Input.vue";
-import { props as TimeInput } from "../Input/TimeInput.vue";
+import { props as FieldProps } from "../Field.vue";
+import { props as InputboxProps } from "../Inputbox/Types/TimeInputbox.vue";
 
 /**
  * Form field to handle a time value.
  *
- * Have a look at `<k-field>`, `<k-input>`
- * and `<k-time-input>` for additional information.
+ * Have a look at `<k-field>` and `<k-time-inputbox>` for additional information.
  *
  * @example <k-time-field :value="time" @input="time = $event" name="time" label="Time" />
  * @public
  */
 export default {
-	mixins: [Field, Input, TimeInput],
-	inheritAttrs: false,
-	props: {
-		/**
-		 * Icon used for the input (and times dropdown)
-		 */
-		icon: {
-			type: String,
-			default: "clock"
-		},
-		/**
-		 * Deactivate the times dropdown or not
-		 */
-		times: {
-			type: Boolean,
-			default: true
-		}
-	},
-	methods: {
-		/**
-		 * Focuses the input element
-		 * @public
-		 */
-		focus() {
-			this.$refs.input.focus();
-		},
-		/**
-		 * Handles the input event from the times dropdown
-		 * @param {string} value
-		 */
-		select(value) {
-			this.$emit("input", value);
-			this.$refs.times?.close();
-		}
-	}
+	mixins: [FieldProps, InputboxProps],
+	inheritAttrs: false
 };
 </script>

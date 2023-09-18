@@ -8,43 +8,25 @@
 		<template #options>
 			<slot name="options" />
 		</template>
-		<k-input
-			v-bind="$props"
+		<k-password-inputbox
 			:id="_uid"
-			ref="input"
-			theme="field"
-			type="password"
-			v-on="$listeners"
+			v-bind="$props"
+			@input="$emit('input', $event)"
 		/>
 	</k-field>
 </template>
 
 <script>
-import { props as Field } from "../Field.vue";
-import { props as Input } from "../Input.vue";
-import { props as PasswordInput } from "../Input/PasswordInput.vue";
-import counter from "@/mixins/forms/counter.js";
+import { props as FieldProps } from "../Field.vue";
+import { props as InputboxProps } from "../Inputbox/Types/PasswordInputbox.vue";
+import Counter from "@/mixins/forms/counter.js";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-password-input>` for additional information.
+ * Have a look at `<k-field>` and `<k-password-input>` for additional information.
+ * @example <k-password-field :value="password" @input="password = $event" name="password" label="Password" />
  */
 export default {
-	mixins: [Field, Input, PasswordInput, counter],
-	inheritAttrs: false,
-	props: {
-		minlength: {
-			type: Number,
-			default: 8
-		},
-		icon: {
-			type: String,
-			default: "key"
-		}
-	},
-	methods: {
-		focus() {
-			this.$refs.input.focus();
-		}
-	}
+	mixins: [FieldProps, InputboxProps, Counter],
+	inheritAttrs: false
 };
 </script>

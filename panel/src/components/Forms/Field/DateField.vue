@@ -6,85 +6,43 @@
 			:data-invalid="!novalidate && isInvalid"
 			class="k-date-field-body"
 		>
-			<!-- Date input -->
-			<k-input
+			<k-date-inputbox
 				:id="_uid"
 				ref="dateInput"
 				v-bind="$props"
 				:autofocus="autofocus"
+				:calendar="calendar"
 				:disabled="disabled"
 				:display="display"
 				:max="max"
 				:min="min"
 				:required="required"
 				:value="value"
-				theme="field"
-				type="date"
 				@invalid="onDateInvalid"
 				@input="onDateInput"
 				@submit="$emit('submit')"
-			>
-				<template v-if="calendar" #icon>
-					<k-dropdown>
-						<k-button
-							:icon="icon"
-							:title="$t('date.select')"
-							class="k-input-icon-button"
-							@click="$refs.calendar.toggle()"
-						/>
-						<k-dropdown-content ref="calendar" align-x="end">
-							<k-calendar
-								:value="value"
-								:min="min"
-								:max="max"
-								@input="onCalendarInput"
-							/>
-						</k-dropdown-content>
-					</k-dropdown>
-				</template>
-			</k-input>
+			/>
 
-			<!-- Time input (optional) -->
-			<k-input
+			<k-time-inputbox
 				v-if="time"
 				ref="timeInput"
 				:disabled="disabled"
 				:display="time.display"
 				:required="required"
 				:step="time.step"
+				:times="times"
 				:value="iso.time"
 				:icon="time.icon"
-				theme="field"
-				type="time"
 				@input="onTimeInput"
 				@submit="$emit('submit')"
-			>
-				<template v-if="times" #icon>
-					<k-dropdown>
-						<k-button
-							:icon="time.icon ?? 'clock'"
-							:title="$t('time.select')"
-							class="k-input-icon-button"
-							@click="$refs.times.toggle()"
-						/>
-						<k-dropdown-content ref="times" align-x="end">
-							<k-times
-								:display="time.display"
-								:value="value"
-								@input="onTimesInput"
-							/>
-						</k-dropdown-content>
-					</k-dropdown>
-				</template>
-			</k-input>
+			/>
 		</div>
 	</k-field>
 </template>
 
 <script>
-import { props as Field } from "../Field.vue";
-import { props as Input } from "../Input.vue";
-import { props as DateInput } from "../Input/DateInput.vue";
+import { props as FieldProps } from "../Field.vue";
+import { props as InputboxProps } from "../Inputbox/Types/DateInputbox.vue";
 
 /**
  * Form field to handle a date/datetime value.
@@ -99,23 +57,9 @@ import { props as DateInput } from "../Input/DateInput.vue";
  * @public
  */
 export default {
-	mixins: [Field, Input, DateInput],
+	mixins: [FieldProps, InputboxProps],
 	inheritAttrs: false,
 	props: {
-		/**
-		 * Deactivate the calendar dropdown or not
-		 */
-		calendar: {
-			type: Boolean,
-			default: true
-		},
-		/**
-		 * Icon used for the date input (and calendar dropdown)
-		 */
-		icon: {
-			type: String,
-			default: "calendar"
-		},
 		/**
 		 * Time options (e.g. `display`, `icon`, `step`).
 		 * Please check docs for `k-time-input` props.

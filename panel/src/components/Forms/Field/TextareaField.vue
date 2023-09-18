@@ -5,35 +5,26 @@
 		:counter="counterOptions"
 		class="k-textarea-field"
 	>
-		<k-input
-			v-bind="$props"
+		<k-textarea-inputbox
 			:id="_uid"
-			ref="input"
-			type="textarea"
-			theme="field"
-			v-on="$listeners"
+			v-bind="$props"
+			@input="$emit('input', $event)"
 		/>
 	</k-field>
 </template>
 
 <script>
-import { props as Field } from "../Field.vue";
-import { props as Input } from "../Input.vue";
-import { props as TextareaInput } from "../Input/TextareaInput.vue";
-import counter from "@/mixins/forms/counter.js";
+import { props as FieldProps } from "../Field.vue";
+import { props as InputboxProps } from "../Inputbox/Types/TextareaInputbox.vue";
+import Counter from "@/mixins/forms/counter.js";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-textarea-input>`
+ * Have a look at `<k-field>` and `<k-textarea-input>`
  * for additional information.
  * @example <k-textarea-field :value="text" @input="text = $event" name="text" label="Text" />
  */
 export default {
-	mixins: [Field, Input, TextareaInput, counter],
-	inheritAttrs: false,
-	methods: {
-		focus() {
-			this.$refs.input.focus();
-		}
-	}
+	mixins: [FieldProps, InputboxProps, Counter],
+	inheritAttrs: false
 };
 </script>

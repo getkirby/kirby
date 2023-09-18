@@ -1,39 +1,23 @@
 <template>
 	<k-field v-bind="$props" :input="_uid" :counter="false" class="k-list-field">
-		<k-input
-			v-bind="$props"
+		<k-list-inputbox
 			:id="_uid"
-			ref="input"
-			type="list"
-			theme="field"
+			v-bind="$props"
 			@input="$emit('input', $event)"
 		/>
 	</k-field>
 </template>
 
 <script>
-import { props as Field } from "../Field.vue";
-import { props as Input } from "../Input.vue";
-import { props as List } from "@/components/Forms/Input/ListInput.vue";
+import { props as FieldProps } from "../Field.vue";
+import { props as InputboxProps } from "../Inputbox/Types/ListInputbox.vue";
 
 /**
- * Have a look at `<k-field>` and `<k-input>` for additional information.
+ * Have a look at `<k-field>` and `<k-list-inputbox>` for additional information.
+ * @example <k-list-field :value="list" @input="list = $event" name="list" label="List" />
  */
 export default {
-	mixins: [Field, Input, List],
-	inheritAttrs: false,
-	methods: {
-		focus() {
-			this.$refs.input.focus();
-		}
-	}
+	mixins: [FieldProps, InputboxProps],
+	inheritAttrs: false
 };
 </script>
-
-<style>
-.k-list-field .k-list-input .ProseMirror,
-/* ::before is used for the placeholder */
-.k-list-field .k-list-input::before {
-	padding: 0.475rem 0.5rem 0.475rem 0.75rem;
-}
-</style>

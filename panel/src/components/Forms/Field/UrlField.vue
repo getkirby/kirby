@@ -1,55 +1,24 @@
 <template>
 	<k-field v-bind="$props" :input="_uid" class="k-url-field">
-		<k-input
-			v-bind="$props"
+		<k-url-inputbox
 			:id="_uid"
-			ref="input"
-			theme="field"
-			type="url"
-			v-on="$listeners"
-		>
-			<template #icon>
-				<k-button
-					v-if="link"
-					:icon="icon"
-					:link="value"
-					:title="$t('open')"
-					class="k-input-icon-button"
-					tabindex="-1"
-					target="_blank"
-				/>
-			</template>
-		</k-input>
+			v-bind="$props"
+			@input="$emit('input', $event)"
+		/>
 	</k-field>
 </template>
 
 <script>
-import { props as Field } from "../Field.vue";
-import { props as Input } from "../Input.vue";
-import { props as UrlInput } from "../Input/UrlInput.vue";
+import { props as FieldProps } from "../Field.vue";
+import { props as InputboxProps } from "../Inputbox/Types/UrlInputbox.vue";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-url-input>`
+ * Have a look at `<k-field>` and `<k-url-inputbox>`
  * for additional information.
  * @example <k-url-field :value="url" @input="url = $event" name="url" label="Url" />
  */
 export default {
-	mixins: [Field, Input, UrlInput],
-	inheritAttrs: false,
-	props: {
-		link: {
-			type: Boolean,
-			default: true
-		},
-		icon: {
-			type: String,
-			default: "url"
-		}
-	},
-	methods: {
-		focus() {
-			this.$refs.input.focus();
-		}
-	}
+	mixins: [FieldProps, InputboxProps],
+	inheritAttrs: false
 };
 </script>

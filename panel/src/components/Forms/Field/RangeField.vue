@@ -1,32 +1,23 @@
 <template>
 	<k-field :input="_uid" v-bind="$props" class="k-range-field">
-		<k-input
-			v-bind="$props"
+		<k-range-inputbox
 			:id="_uid"
-			ref="input"
-			theme="field"
-			type="range"
-			v-on="$listeners"
+			v-bind="$props"
+			@input="$emit('input', $event)"
 		/>
 	</k-field>
 </template>
 
 <script>
-import { props as Field } from "../Field.vue";
-import { props as Input } from "../Input.vue";
-import { props as RangeInput } from "../Input/RangeInput.vue";
+import { props as FieldProps } from "../Field.vue";
+import { props as InputboxProps } from "../Inputbox/Types/RangeInputbox.vue";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-range-input>` for additional information.
+ * Have a look at `<k-field>` and `<k-range-input>` for additional information.
  * @example <k-range-field :value="range" @input="range = $event" name="range" label="Slider" />
  */
 export default {
-	mixins: [Input, Field, RangeInput],
-	inheritAttrs: false,
-	methods: {
-		focus() {
-			this.$refs.input.focus();
-		}
-	}
+	mixins: [FieldProps, InputboxProps],
+	inheritAttrs: false
 };
 </script>

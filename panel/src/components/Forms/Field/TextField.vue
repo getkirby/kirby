@@ -8,56 +8,26 @@
 		<template #options>
 			<slot name="options" />
 		</template>
-		<k-input
-			v-bind="$props"
+		<k-text-inputbox
 			:id="_uid"
-			ref="input"
-			:type="inputType"
-			theme="field"
-			v-on="$listeners"
+			v-bind="$props"
+			@input="$emit('input', $event)"
 		/>
 	</k-field>
 </template>
 
 <script>
-import { props as Field } from "../Field.vue";
-import { props as Input } from "../Input.vue";
-import { props as TextInput } from "../Input/TextInput.vue";
-import counter from "@/mixins/forms/counter.js";
+import { props as FieldProps } from "../Field.vue";
+import { props as InputboxProps } from "../Inputbox/Types/TextInputbox.vue";
+import Counter from "@/mixins/forms/counter.js";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-text-input>`
+ * Have a look at `<k-field>` and `<k-text-inputbox>`
  * for additional information.
  * @example <k-text-field :value="text" @input="text = $event" name="text" label="Boring text" />
  */
 export default {
-	mixins: [Field, Input, TextInput, counter],
-	inheritAttrs: false,
-	computed: {
-		inputType() {
-			if (this.$helper.isComponent(`k-${this.type}-input`)) {
-				return this.type;
-			}
-
-			return "text";
-		}
-	},
-	methods: {
-		focus() {
-			this.$refs.input.focus();
-		},
-		select() {
-			this.$refs.input.select();
-		}
-	}
+	mixins: [FieldProps, InputboxProps, Counter],
+	inheritAttrs: false
 };
 </script>
-
-<style>
-.k-field-counter {
-	display: none;
-}
-.k-text-field:focus-within .k-field-counter {
-	display: block;
-}
-</style>
