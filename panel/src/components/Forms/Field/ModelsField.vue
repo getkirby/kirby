@@ -1,10 +1,44 @@
+<template>
+	<k-field v-bind="$props" :class="`k-models-field k-${$options.type}-field`">
+		<template v-if="!disabled" #options>
+			<k-button-group
+				ref="buttons"
+				:buttons="buttons"
+				layout="collapsed"
+				size="xs"
+				variant="filled"
+				class="k-field-options"
+			/>
+		</template>
+
+		<k-dropzone :disabled="!hasDropzone" @drop="drop">
+			<k-collection
+				v-bind="collection"
+				@empty="open"
+				@sort="onInput"
+				@sortChange="$emit('change', $event)"
+			>
+				<template v-if="!disabled" #options="{ index }">
+					<k-button
+						:title="$t('remove')"
+						icon="remove"
+						@click="remove(index)"
+					/>
+				</template>
+			</k-collection>
+		</k-dropzone>
+	</k-field>
+</template>
+
+<script>
 import { props as Field } from "@/components/Forms/Field.vue";
+import { autofocus } from "@/mixins/props.js";
 
 export default {
-	mixins: [Field],
+	type: "model",
+	mixins: [Field, autofocus],
 	inheritAttrs: false,
 	props: {
-		autofocus: Boolean,
 		empty: String,
 		info: String,
 		link: Boolean,
@@ -36,19 +70,15 @@ export default {
 		};
 	},
 	computed: {
-		btnIcon() {
-			if (!this.multiple && this.selected.length > 0) {
-				return "refresh";
-			}
-
-			return "add";
-		},
-		btnLabel() {
-			if (!this.multiple && this.selected.length > 0) {
-				return this.$t("change");
-			}
-
-			return this.$t("add");
+		buttons() {
+			return [
+				{
+					autofocus: this.autofocus,
+					text: this.$t("select"),
+					icon: "checklist",
+					click: () => this.open()
+				}
+			];
 		},
 		collection() {
 			return {
@@ -60,30 +90,18 @@ export default {
 				sortable: !this.disabled && this.selected.length > 1
 			};
 		},
-		isInvalid() {
-			if (this.required && this.selected.length === 0) {
-				return true;
-			}
-
-			if (this.min && this.selected.length < this.min) {
-				return true;
-			}
-
-			if (this.max && this.selected.length > this.max) {
-				return true;
-			}
-
+		hasDropzone() {
 			return false;
 		},
-		items() {
-			return this.models.map(this.item);
+		isInvalid() {
+			return (
+				(this.required && this.selected.length === 0) ||
+				(this.min && this.selected.length < this.min) ||
+				(this.max && this.selected.length > this.max)
+			);
 		},
 		more() {
-			if (!this.max) {
-				return true;
-			}
-
-			return this.max > this.selected.length;
+			return !this.max || this.max > this.selected.length;
 		}
 	},
 	watch: {
@@ -92,10 +110,8 @@ export default {
 		}
 	},
 	methods: {
+		drop() {},
 		focus() {},
-		item(item) {
-			return item;
-		},
 		onInput() {
 			this.$emit("input", this.selected);
 		},
@@ -105,7 +121,7 @@ export default {
 			}
 
 			this.$panel.dialog.open({
-				component: this.$options.dialog,
+				component: `k-${this.$options.type}-dialog`,
 				props: {
 					endpoint: this.endpoints.field,
 					hasSearch: this.search,
@@ -132,6 +148,7 @@ export default {
 		select(items) {
 			if (items.length === 0) {
 				this.selected = [];
+				this.onInput();
 				return;
 			}
 
@@ -151,3 +168,10 @@ export default {
 		}
 	}
 };
+</script>
+
+<style>
+.k-models-field[data-disabled="true"] .k-item * {
+	pointer-events: all !important;
+}
+</style>
