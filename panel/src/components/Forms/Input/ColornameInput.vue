@@ -13,7 +13,7 @@
 		autocomplete="off"
 		spellcheck="false"
 		type="text"
-		class="k-text-input k-color-input"
+		class="k-colorname-input"
 		@blur="onBlur"
 		@input="onInput($event.target.value)"
 		@paste="onPaste"
@@ -49,6 +49,11 @@ export const props = {
 export default {
 	mixins: [props],
 	inheritAttrs: false,
+	data() {
+		return {
+			color: null
+		};
+	},
 	watch: {
 		value() {
 			this.onInvalid();
@@ -64,6 +69,25 @@ export default {
 	},
 	methods: {
 		convert(value) {
+			if (!value) {
+				return value;
+			}
+
+			// create a new secret tester
+			const test = document.createElement("div");
+
+			// set the text color
+			test.style.color = value;
+
+			// it has to be in the document to work
+			document.body.append(test);
+
+			// check the computed style for a usable rgb value
+			value = window.getComputedStyle(test).color;
+
+			// remove the element
+			test.remove();
+
 			try {
 				return this.$library.colors.toString(value, this.format, this.alpha);
 			} catch (e) {
@@ -112,7 +136,7 @@ export default {
 </script>
 
 <style>
-.k-color-input {
+.k-colorname-input {
 	font-family: var(--font-mono);
 }
 </style>
