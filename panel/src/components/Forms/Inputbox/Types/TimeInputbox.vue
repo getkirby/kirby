@@ -10,7 +10,7 @@
 				@click="$refs.times.toggle()"
 			/>
 			<k-dropdown-content ref="times" align-x="end">
-				<k-times :display="display" :value="value" @input="pick" />
+				<k-timeoption-input :display="display" :value="value" @input="pick" />
 			</k-dropdown-content>
 		</k-inputbox-icon>
 	</k-inputbox>
@@ -48,7 +48,7 @@ export default {
 </script>
 
 <style>
-.k-inputbox[data-type="time"] .k-time-input {
+.k-time-inputbox .k-time-input {
 	padding: var(--input-padding);
 }
 </style>

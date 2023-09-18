@@ -20,7 +20,7 @@ export default {
 </script>
 
 <style>
-.k-inputbox[data-type="text"] .k-text-input {
+.k-text-inputbox .k-text-input {
 	padding: var(--input-padding);
 }
 </style>

@@ -26,7 +26,7 @@ export default {
 </script>
 
 <style>
-.k-inputbox[data-type="slug"] .k-slug-input {
+.k-slug-inputbox .k-slug-input {
 	padding: var(--input-padding);
 }
 </style>

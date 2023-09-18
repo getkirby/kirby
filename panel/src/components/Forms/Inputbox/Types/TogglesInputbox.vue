@@ -22,15 +22,13 @@ export default {
 </script>
 
 <style>
-.k-inputbox[data-type="toggles"]
-	.k-inputbox-element[data-grow="true"]
-	.k-toggles-input {
+.k-toggles-inputbox .k-inputbox-element[data-grow="true"] .k-toggles-input {
 	width: 100%;
 }
-.k-inputbox[data-type="toggles"] .k-inputbox-before {
+.k-toggles-inputbox .k-inputbox-before {
 	padding-inline-end: var(--spacing-6);
 }
-.k-inputbox[data-type="toggles"] .k-inputbox-after {
+.k-toggles-inputbox .k-inputbox-after {
 	padding-inline-start: var(--spacing-6);
 }
 </style>

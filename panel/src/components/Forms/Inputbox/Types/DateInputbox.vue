@@ -10,7 +10,7 @@
 				@click="$refs.calendar.toggle()"
 			/>
 			<k-dropdown-content ref="calendar" align-x="end">
-				<k-calendar :value="value" :min="min" :max="max" @input="pick" />
+				<k-calendar-input :value="value" :min="min" :max="max" @input="pick" />
 			</k-dropdown-content>
 		</k-inputbox-icon>
 	</k-inputbox>
@@ -44,7 +44,7 @@ export default {
 </script>
 
 <style>
-.k-inputbox[data-type="date"] .k-date-input {
+.k-date-inputbox .k-date-input {
 	padding: var(--input-padding);
 }
 </style>

@@ -7,33 +7,24 @@
 				type="button"
 				@click="$refs.picker.toggle()"
 			/>
-			<k-dropdown-content
-				ref="picker"
-				class="k-color-field-picker"
-				@open="$nextTick(setPicker)"
-			>
-				<k-color
+			<k-dropdown-content ref="picker">
+				<k-colorpicker-input
 					ref="color"
 					:alpha="alpha"
-					@input="onPicker($event.target.value)"
+					:format="format"
+					:options="convertedOptions"
+					:value="value"
+					@input="$emit('input', $event)"
 				/>
-
-				<div class="k-color-field-options">
-					<button
-						v-for="color in convertedOptions"
-						:key="color.value"
-						:aria-current="color.value === currentOption?.value"
-						:style="'color: ' + color.value"
-						:title="color.text ?? color.value"
-						type="button"
-						class="k-color-preview"
-						@click="$refs.input.$refs.input.onPaste(color.value)"
-					/>
-				</div>
 			</k-dropdown-content>
 		</k-inputbox-description>
-		<k-color-input v-bind="$props" @input="$emit('input', $event)" />
-		<k-inputbox-icon slot="icon">
+		<k-colorname-input v-bind="$props" @input="$emit('input', $event)" />
+
+		<k-inputbox-description v-if="currentOption?.text" position="after" #after>
+			{{ currentOption.text }}
+		</k-inputbox-description>
+
+		<k-inputbox-icon #icon>
 			<k-button
 				:disabled="disabled"
 				:icon="icon"
@@ -47,7 +38,7 @@
 
 <script>
 import { props as InputboxProps } from "../Inputbox.vue";
-import { props as InputProps } from "@/components/Forms/Input/ColorInput.vue";
+import { props as InputProps } from "@/components/Forms/Input/ColornameInput.vue";
 
 export const props = {
 	mixins: [InputboxProps, InputProps],
@@ -55,6 +46,10 @@ export const props = {
 		icon: {
 			default: "pipette",
 			type: String
+		},
+		options: {
+			default: () => [],
+			type: Array
 		}
 	}
 };
@@ -62,12 +57,34 @@ export const props = {
 export default {
 	mixins: [props],
 	inheritAttrs: false,
-	emits: ["input"]
+	emits: ["input"],
+	computed: {
+		convertedOptions() {
+			return this.options.map((option) => ({
+				...option,
+				value: this.convert(option.value)
+			}));
+		},
+		currentOption() {
+			return this.convertedOptions.find((color) => color.value === this.value);
+		}
+	},
+	methods: {
+		convert(value) {
+			return this.$library.colors.toString(value, this.format, this.alpha);
+		}
+	}
 };
 </script>
 
 <style>
-.k-inputbox[data-type="color"] .k-color-input {
+.k-color-inputbox .k-inputbox-before {
+	padding-inline-start: 0.375rem;
+}
+.k-color-inputbox .k-colorname-input {
 	padding: var(--input-padding);
+}
+.k-color-inputbox .k-colorpicker-input {
+	padding: var(--spacing-1);
 }
 </style>

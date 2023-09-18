@@ -34,7 +34,7 @@ export default {
 </script>
 
 <style>
-.k-inputbox[data-type="password"] .k-password-input {
+.k-password-inputbox .k-password-input {
 	padding: var(--input-padding);
 }
 </style>

@@ -20,7 +20,7 @@ export default {
 </script>
 
 <style>
-.k-inputbox[data-type="range"] .k-range-input {
+.k-range-inputbox .k-range-input {
 	flex-grow: 1;
 }
 </style>

@@ -36,7 +36,7 @@ export default {
 </script>
 
 <style>
-.k-inputbox[data-type="tel"] .k-tel-input {
+.k-tel-inputbox .k-tel-input {
 	padding: var(--input-padding);
 }
 </style>

@@ -28,5 +28,3 @@ export default {
 	emits: ["input"]
 };
 </script>
-
-<style></style>

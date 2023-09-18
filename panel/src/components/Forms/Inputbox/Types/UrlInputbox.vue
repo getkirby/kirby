@@ -36,7 +36,7 @@ export default {
 </script>
 
 <style>
-.k-inputbox[data-type="url"] .k-url-input {
+.k-url-inputbox .k-url-input {
 	padding: var(--input-padding);
 }
 </style>

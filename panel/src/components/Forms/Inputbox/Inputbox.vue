@@ -1,5 +1,6 @@
 <template>
 	<div
+		:class="`k-${type}-inputbox`"
 		:data-disabled="disabled"
 		:data-invalid="invalid"
 		:data-type="type"

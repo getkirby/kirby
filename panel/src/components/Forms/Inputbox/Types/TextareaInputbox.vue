@@ -27,7 +27,7 @@ export default {
 </script>
 
 <style>
-.k-inputbox[data-type="textarea"] .k-textarea-input-native {
+.k-textarea-inputbox .k-textarea-input-native {
 	padding: var(--input-padding-multiline);
 }
 </style>
