@@ -1,9 +1,9 @@
 <template>
 	<k-inputbox v-bind="$props" type="email">
 		<k-email-input v-bind="$props" @input="$emit('input', $event)" />
-		<k-inputbox-icon slot="icon">
+		<k-inputbox-icon v-if="value?.length > 0 && link === true" slot="icon">
 			<k-button
-				:disabled="disabled || !value?.length"
+				:disabled="disabled"
 				:link="`mailto:${value}`"
 				:icon="icon"
 				:title="$t('open')"
@@ -24,6 +24,10 @@ export const props = {
 		icon: {
 			default: "email",
 			type: String
+		},
+		link: {
+			type: Boolean,
+			default: true
 		}
 	}
 };
