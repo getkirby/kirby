@@ -2,7 +2,6 @@
 	<input
 		ref="range"
 		v-bind="$props"
-		:data-variant="variant"
 		type="range"
 		@input="$emit('input', $event.target.value)"
 	/>
@@ -19,8 +18,7 @@ export default {
 		name: String,
 		required: Boolean,
 		step: [Number, String],
-		value: [Number, String],
-		variant: String
+		value: [Number, String]
 	},
 	methods: {
 		focus() {
@@ -109,27 +107,5 @@ input[type="range"]:focus::-webkit-slider-thumb {
 }
 input[type="range"]:focus::-moz-range-thumb {
 	outline: var(--outline);
-}
-
-/* Variant: hue */
-input[type="range"][data-variant="hue"] {
-	--range-track-back: linear-gradient(
-			to right,
-			hsl(0, 100%, 50%) 0%,
-			hsl(60, 100%, 50%) 16.67%,
-			hsl(120, 100%, 50%) 33.33%,
-			hsl(180, 100%, 50%) 50%,
-			hsl(240, 100%, 50%) 66.67%,
-			hsl(320, 100%, 50%) 83.33%,
-			hsl(360, 100%, 50%) 100%
-		)
-		no-repeat;
-}
-
-/* Variant: alpha */
-input[type="range"][data-variant="alpha"] {
-	--range-track-back: linear-gradient(to right, transparent, currentColor);
-	color: transparent;
-	background: var(--color-white) var(--pattern-light);
 }
 </style>
