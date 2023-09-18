@@ -4,6 +4,7 @@ namespace Kirby\Toolkit;
 
 use Base32\Base32;
 use Kirby\Exception\InvalidArgumentException;
+use SensitiveParameter;
 
 /**
  * The TOTP class handles the generation and verification
