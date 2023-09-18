@@ -2,11 +2,12 @@
 	<k-inputbox v-bind="$props" type="color">
 		<k-inputbox-description slot="before" position="before">
 			<button
-				:style="!invalid ? 'color: ' + value : null"
-				class="k-color-preview"
+				class="k-color-inputbox-preview"
 				type="button"
 				@click="$refs.picker.toggle()"
-			/>
+			>
+				<k-color-frame :color="value" />
+			</button>
 			<k-dropdown-content ref="picker">
 				<k-colorpicker-input
 					ref="color"
@@ -79,12 +80,17 @@ export default {
 
 <style>
 .k-color-inputbox .k-inputbox-before {
-	padding-inline-start: 0.375rem;
+	--color-frame-rounded: var(--rounded-sm);
+	padding-inline-start: 0.25rem;
+}
+.k-color-inputbox .k-color-inputbox-preview {
+	--color-frame-size: var(--height-sm);
 }
 .k-color-inputbox .k-colorname-input {
 	padding: var(--input-padding);
 }
 .k-color-inputbox .k-colorpicker-input {
+	--color-frame-darkness: 100%;
 	padding: var(--spacing-1);
 }
 </style>

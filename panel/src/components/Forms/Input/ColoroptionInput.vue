@@ -5,12 +5,7 @@
 		class="k-coloroption-input"
 	>
 		<li v-for="(swatch, index) in swatches" :key="swatch.value">
-			<label
-				:aria-current="swatch.value === value"
-				:style="'color: ' + swatch.value"
-				:title="swatch.title"
-				class="k-color-preview"
-			>
+			<label :title="swatch.title">
 				<input
 					:autofocus="index === 0 && autofocus"
 					:checked="swatch.value === value"
@@ -18,9 +13,11 @@
 					:name="name ?? id"
 					:required="required"
 					:value="swatch.value"
+					class="input-hidden"
 					type="radio"
 					@input="$emit('input', swatch.value)"
 				/>
+				<k-color-frame :color="swatch.value" />
 			</label>
 		</li>
 	</ul>
@@ -85,7 +82,7 @@ export default {
 	grid-template-columns: repeat(auto-fill, var(--color-preview-size));
 	gap: var(--spacing-2);
 }
-.k-coloroption-input .k-color-preview[aria-current] {
+.k-coloroption-input input:checked + .k-color-frame {
 	outline: var(--outline);
 }
 .k-coloroption-input[aria-disabled] {

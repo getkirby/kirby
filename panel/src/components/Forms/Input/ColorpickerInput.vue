@@ -162,29 +162,6 @@ export default {
 }
 
 .k-colorpicker-input .k-coloroption-input {
-	--color-preview-size: 100%;
-	--color-preview-darkness: 100%;
 	grid-template-columns: repeat(6, 1fr);
-}
-
-.k-color-preview {
-	aspect-ratio: 1/1;
-	position: relative;
-	display: inline-block;
-	color: transparent;
-	background: var(--pattern-light);
-	border-radius: var(--color-preview-rounded);
-	overflow: hidden;
-	width: var(--color-preview-size);
-	background-clip: padding-box;
-}
-
-.k-color-preview::after {
-	border-radius: calc(var(--color-frame-rounded) - 1px);
-	box-shadow: 0 0 0 1px inset hsla(0, 0%, var(--color-frame-darkness), 0.175);
-	position: absolute;
-	inset: 0;
-	background-color: currentColor;
-	content: "";
 }
 </style>

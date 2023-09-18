@@ -4,7 +4,9 @@
 		:style="`color: ${color}`"
 		element="figure"
 		class="k-color-frame"
-	/>
+	>
+		<slot />
+	</k-frame>
 </template>
 
 <script>
@@ -39,7 +41,7 @@ export default {
 	background-clip: padding-box;
 }
 .k-color-frame::after {
-	border-radius: calc(var(--color-frame-rounded) - 1px);
+	border-radius: var(--color-frame-rounded);
 	box-shadow: 0 0 0 1px inset hsla(0, 0%, var(--color-frame-darkness), 0.175);
 	position: absolute;
 	inset: 0;
