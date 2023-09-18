@@ -1,7 +1,9 @@
 <script>
 import DateInput from "./DateInput.vue";
+import { props as DateInputProps } from "./DateInput.vue";
 
 export const props = {
+	mixins: [DateInputProps],
 	props: {
 		/**
 		 * Format to parse and display the time
