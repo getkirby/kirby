@@ -1,7 +1,7 @@
 <?php
 
-use chillerlan\Authenticator\Authenticator as TOTP;
 use Kirby\Cms\App;
+use Kirby\Toolkit\Totp;
 
 $dialogs = require __DIR__ . '/../users/dialogs.php';
 
@@ -53,13 +53,11 @@ return [
 			$secret = $user->totp();
 
 			if ($secret === null) {
-				$otp = new TOTP();
-				$secret = $otp->createSecret();
-				$otp->setSecret($secret);
+				$totp = new Totp();
 
 				$issuer = $kirby->site()->title();
 				$label  = $issuer . ':' . $user->email();
-				$uri    = $otp->getUri($label, $issuer);
+				$uri    = $totp->uri($issuer, $label);
 
 				$qr = new QRCode($uri);
 				$image = $qr->render_image();
@@ -80,7 +78,7 @@ return [
 							],
 							'secret_display' => [
 								'type'  => 'info',
-								'text'  => $secret,
+								'text'  => $totp->secret(),
 								'theme' => 'passive',
 								'help'  => 'or add the 2FA secret manually to your authenticator app',
 							],
@@ -101,7 +99,7 @@ return [
 							'theme' => 'notice'
 						],
 						'value' => [
-							'secret' => $secret
+							'secret' => $totp->secret()
 						]
 					]
 				];
@@ -124,10 +122,9 @@ return [
 
 			if ($secret = $kirby->request()->get('secret')) {
 				if ($confirm = $kirby->request()->get('confirm')) {
-					$otp = new TOTP();
-					$otp->setSecret($secret);
+					$totp = new Totp($secret);
 
-					if ($otp->verify($confirm) === false) {
+					if ($totp->verify($confirm) === false) {
 						throw new Exception('Invalid 2FA code');
 					}
 

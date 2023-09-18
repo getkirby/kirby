@@ -3,7 +3,7 @@
 namespace Kirby\Cms\Auth;
 
 use Kirby\Cms\User;
-use chillerlan\Authenticator\Authenticator as TOTP;
+use Kirby\Toolkit\Totp;
 
 class TotpChallenge extends Challenge
 {
@@ -29,8 +29,7 @@ class TotpChallenge extends Challenge
 	 */
 	public static function verify(User $user, string $code): bool
 	{
-		$otp = new TOTP();
-		$otp->setSecret($user->totp());
-		return $otp->verify($code);
+		$totp = new Totp($user->totp());
+		return $totp->verify($code);
 	}
 }
