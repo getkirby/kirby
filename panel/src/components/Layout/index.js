@@ -3,6 +3,7 @@ import Bar from "./Bar.vue";
 import Box from "./Box.vue";
 import Bubble from "./Bubble.vue";
 import Bubbles from "./Bubbles.vue";
+import ColorFrame from "./Frame/ColorFrame.vue";
 import Column from "./Column.vue";
 import Dropzone from "./Dropzone.vue";
 import Frame from "./Frame/Frame.vue";
@@ -24,6 +25,7 @@ export default {
 		app.component("k-box", Box);
 		app.component("k-bubble", Bubble);
 		app.component("k-bubbles", Bubbles);
+		app.component("k-color-frame", ColorFrame);
 		app.component("k-column", Column);
 		app.component("k-dropzone", Dropzone);
 		app.component("k-frame", Frame);

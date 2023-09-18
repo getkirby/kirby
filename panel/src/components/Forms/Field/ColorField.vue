@@ -90,10 +90,10 @@
 <script>
 import { props as Field } from "../Field.vue";
 import { props as Input } from "../Input.vue";
-import { props as ColorInput } from "../Input/ColorInput.vue";
+import { props as ColornameInput } from "../Input/ColornameInput.vue";
 
 export default {
-	mixins: [Field, Input, ColorInput],
+	mixins: [Field, Input, ColornameInput],
 	inheritAttrs: false,
 	props: {
 		icon: {
@@ -179,29 +179,5 @@ export default {
 }
 .k-color-field .k-color > *:first-child {
 	border-radius: var(--rounded-sm);
-}
-
-.k-color-field-options {
-	--color-preview-size: var(--input-height);
-	display: grid;
-	grid-template-columns: repeat(auto-fill, var(--color-preview-size));
-	gap: var(--spacing-2);
-}
-.k-color-field-picker .k-color-field-options {
-	--color-preview-size: 100%;
-	--color-preview-darkness: 100%;
-	grid-template-columns: repeat(6, 1fr);
-	margin-top: var(--spacing-3);
-}
-
-.k-color-field .k-color-preview[aria-current] {
-	outline: var(--outline);
-}
-.k-color-field[data-disabled="true"] .k-color-field-options {
-	opacity: var(--opacity-disabled);
-}
-
-.k-color-field .k-input-after {
-	font-size: var(--text-xs);
 }
 </style>
