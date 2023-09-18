@@ -36,6 +36,7 @@
 		"ext-libxml": "*",
 		"ext-mbstring": "*",
 		"ext-openssl": "*",
+		"christian-riesen/base32": "1.6.0",
 		"claviska/simpleimage": "4.0.6",
 		"composer/semver": "3.4.0",
 		"filp/whoops": "2.15.3",
@@ -45,8 +46,7 @@
 		"phpmailer/phpmailer": "6.8.1",
 		"symfony/polyfill-intl-idn": "1.28.0",
 		"symfony/polyfill-mbstring": "1.28.0",
-		"symfony/yaml": "5.4.23",
-		"chillerlan/php-authenticator": "^4.1"
+		"symfony/yaml": "5.4.23"
 	},
 	"replace": {
 		"symfony/polyfill-php72": "*"

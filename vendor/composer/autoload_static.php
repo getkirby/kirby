@@ -17,11 +17,6 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
     );
 
     public static $prefixLengthsPsr4 = array (
-        'c' => 
-        array (
-            'chillerlan\\Settings\\' => 20,
-            'chillerlan\\Authenticator\\' => 25,
-        ),
         'W' => 
         array (
             'Whoops\\' => 7,
@@ -37,7 +32,6 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         'P' => 
         array (
             'Psr\\Log\\' => 8,
-            'ParagonIE\\ConstantTime\\' => 23,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
         'L' => 
@@ -53,17 +47,13 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         array (
             'Composer\\Semver\\' => 16,
         ),
+        'B' => 
+        array (
+            'Base32\\' => 7,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'chillerlan\\Settings\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/chillerlan/php-settings-container/src',
-        ),
-        'chillerlan\\Authenticator\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/chillerlan/php-authenticator/src',
-        ),
         'Whoops\\' => 
         array (
             0 => __DIR__ . '/..' . '/filp/whoops/src/Whoops',
@@ -92,10 +82,6 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         array (
             0 => __DIR__ . '/..' . '/psr/log/src',
         ),
-        'ParagonIE\\ConstantTime\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
-        ),
         'PHPMailer\\PHPMailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
@@ -117,6 +103,10 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         array (
             0 => __DIR__ . '/..' . '/composer/semver/src',
         ),
+        'Base32\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/christian-riesen/base32/src',
+        ),
     );
 
     public static $prefixesPsr0 = array (
@@ -137,6 +127,8 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
     );
 
     public static $classMap = array (
+        'Base32\\Base32' => __DIR__ . '/..' . '/christian-riesen/base32/src/Base32.php',
+        'Base32\\Base32Hex' => __DIR__ . '/..' . '/christian-riesen/base32/src/Base32Hex.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Composer\\Semver\\Comparator' => __DIR__ . '/..' . '/composer/semver/src/Comparator.php',
         'Composer\\Semver\\CompilingMatcher' => __DIR__ . '/..' . '/composer/semver/src/CompilingMatcher.php',
@@ -471,17 +463,6 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         'PHPMailer\\PHPMailer\\PHPMailer' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/PHPMailer.php',
         'PHPMailer\\PHPMailer\\POP3' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/POP3.php',
         'PHPMailer\\PHPMailer\\SMTP' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/SMTP.php',
-        'ParagonIE\\ConstantTime\\Base32' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/Base32.php',
-        'ParagonIE\\ConstantTime\\Base32Hex' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/Base32Hex.php',
-        'ParagonIE\\ConstantTime\\Base64' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/Base64.php',
-        'ParagonIE\\ConstantTime\\Base64DotSlash' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/Base64DotSlash.php',
-        'ParagonIE\\ConstantTime\\Base64DotSlashOrdered' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/Base64DotSlashOrdered.php',
-        'ParagonIE\\ConstantTime\\Base64UrlSafe' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/Base64UrlSafe.php',
-        'ParagonIE\\ConstantTime\\Binary' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/Binary.php',
-        'ParagonIE\\ConstantTime\\EncoderInterface' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/EncoderInterface.php',
-        'ParagonIE\\ConstantTime\\Encoding' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/Encoding.php',
-        'ParagonIE\\ConstantTime\\Hex' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/Hex.php',
-        'ParagonIE\\ConstantTime\\RFC4648' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/RFC4648.php',
         'Parsedown' => __DIR__ . '/../..' . '/dependencies/parsedown/Parsedown.php',
         'ParsedownExtra' => __DIR__ . '/../..' . '/dependencies/parsedown-extra/ParsedownExtra.php',
         'Psr\\Log\\AbstractLogger' => __DIR__ . '/..' . '/psr/log/src/AbstractLogger.php',
@@ -533,20 +514,6 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         'Whoops\\Util\\Misc' => __DIR__ . '/..' . '/filp/whoops/src/Whoops/Util/Misc.php',
         'Whoops\\Util\\SystemFacade' => __DIR__ . '/..' . '/filp/whoops/src/Whoops/Util/SystemFacade.php',
         'Whoops\\Util\\TemplateHelper' => __DIR__ . '/..' . '/filp/whoops/src/Whoops/Util/TemplateHelper.php',
-        'chillerlan\\Authenticator\\Authenticator' => __DIR__ . '/..' . '/chillerlan/php-authenticator/src/Authenticator.php',
-        'chillerlan\\Authenticator\\AuthenticatorOptions' => __DIR__ . '/..' . '/chillerlan/php-authenticator/src/AuthenticatorOptions.php',
-        'chillerlan\\Authenticator\\AuthenticatorOptionsTrait' => __DIR__ . '/..' . '/chillerlan/php-authenticator/src/AuthenticatorOptionsTrait.php',
-        'chillerlan\\Authenticator\\Authenticators\\AuthenticatorAbstract' => __DIR__ . '/..' . '/chillerlan/php-authenticator/src/Authenticators/AuthenticatorAbstract.php',
-        'chillerlan\\Authenticator\\Authenticators\\AuthenticatorInterface' => __DIR__ . '/..' . '/chillerlan/php-authenticator/src/Authenticators/AuthenticatorInterface.php',
-        'chillerlan\\Authenticator\\Authenticators\\BattleNet' => __DIR__ . '/..' . '/chillerlan/php-authenticator/src/Authenticators/BattleNet.php',
-        'chillerlan\\Authenticator\\Authenticators\\HOTP' => __DIR__ . '/..' . '/chillerlan/php-authenticator/src/Authenticators/HOTP.php',
-        'chillerlan\\Authenticator\\Authenticators\\SteamGuard' => __DIR__ . '/..' . '/chillerlan/php-authenticator/src/Authenticators/SteamGuard.php',
-        'chillerlan\\Authenticator\\Authenticators\\TOTP' => __DIR__ . '/..' . '/chillerlan/php-authenticator/src/Authenticators/TOTP.php',
-        'chillerlan\\Authenticator\\Common\\Base32' => __DIR__ . '/..' . '/chillerlan/php-authenticator/src/Common/Base32.php',
-        'chillerlan\\Authenticator\\Common\\Base64' => __DIR__ . '/..' . '/chillerlan/php-authenticator/src/Common/Base64.php',
-        'chillerlan\\Authenticator\\Common\\Hex' => __DIR__ . '/..' . '/chillerlan/php-authenticator/src/Common/Hex.php',
-        'chillerlan\\Settings\\SettingsContainerAbstract' => __DIR__ . '/..' . '/chillerlan/php-settings-container/src/SettingsContainerAbstract.php',
-        'chillerlan\\Settings\\SettingsContainerInterface' => __DIR__ . '/..' . '/chillerlan/php-settings-container/src/SettingsContainerInterface.php',
         'claviska\\SimpleImage' => __DIR__ . '/..' . '/claviska/simpleimage/src/claviska/SimpleImage.php',
     );
 
