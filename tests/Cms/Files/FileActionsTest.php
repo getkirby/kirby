@@ -667,14 +667,17 @@ class FileActionsTest extends TestCase
 				'create' => [
 					'width'  => 100,
 					'height' => 100,
+					'format' => 'webp'
 				]
 			]
 		]);
 
 		$this->assertFileExists($result->root());
-		$this->assertFileExists($parent->root() . '/test.jpg');
+		$this->assertFileExists($parent->root() . '/test.webp');
 		$this->assertSame(100, $result->width());
 		$this->assertSame(100, $result->height());
+		$this->assertSame('webp', $result->extension());
+		$this->assertSame('test.webp', $result->filename());
 	}
 
 	/**
