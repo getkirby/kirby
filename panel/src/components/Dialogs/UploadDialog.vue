@@ -138,11 +138,11 @@ export default {
 	border-radius: var(--rounded);
 	background: var(--color-white);
 	box-shadow: var(--shadow);
-	height: 6rem;
+	min-height: 6rem;
 }
 .k-upload-item-preview {
 	grid-area: preview;
-	display: block;
+	display: flex;
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
@@ -161,6 +161,7 @@ export default {
 	flex-direction: column;
 	justify-content: space-between;
 	padding: var(--spacing-2) var(--spacing-3);
+	min-width: 0;
 }
 .k-upload-item-input.k-input {
 	--input-color-border: transparent;
