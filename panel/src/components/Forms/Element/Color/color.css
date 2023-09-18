@@ -1,5 +1,5 @@
 :root {
-	--color-preview-rounded: var(--rounded-sm);
+	--color-preview-rounded: var(--rounded);
 	--color-preview-size: 1.5rem;
 	--color-preview-darkness: 0%;
 }
@@ -48,7 +48,7 @@
 }
 
 .k-color-preview::after {
-	border-radius: calc(var(--color-preview-rounded) - 1px);
+	border-radius: var(--color-preview-rounded);
 	box-shadow: 0 0 0 1px inset hsla(0, 0%, var(--color-preview-darkness), 0.175);
 	position: absolute;
 	inset: 0;
