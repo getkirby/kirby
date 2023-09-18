@@ -56,7 +56,7 @@ return [
 				$totp = new Totp();
 
 				$issuer = $kirby->site()->title();
-				$label  = $issuer . ':' . $user->email();
+				$label  = $user->email();
 				$uri    = $totp->uri($issuer, $label);
 
 				$qr = new QRCode($uri);
