@@ -1,7 +1,7 @@
 <template>
 	<k-inputbox v-bind="$props" type="date">
 		<k-date-input v-bind="$props" @input="$emit('input', $event)" />
-		<k-inputbox-icon slot="icon">
+		<k-inputbox-icon v-if="calendar" slot="icon">
 			<k-button
 				:disabled="disabled"
 				:icon="icon"
@@ -23,6 +23,16 @@ import { props as InputProps } from "@/components/Forms/Input/DateInput.vue";
 export const props = {
 	mixins: [InputboxProps, InputProps],
 	props: {
+		/**
+		 * Deactivate the calendar dropdown or not
+		 */
+		calendar: {
+			type: Boolean,
+			default: true
+		},
+		/**
+		 * Icon used for calendar dropdown
+		 */
 		icon: {
 			default: "calendar",
 			type: String
