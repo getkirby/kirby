@@ -519,21 +519,24 @@ class Collection extends Iterator implements Countable
 	 * Groups the elements by a given field or callback function
 	 *
 	 * @param string|Closure $field
-	 * @param bool $i
 	 * @return \Kirby\Toolkit\Collection A new collection with an element for
 	 *                                   each group and a subcollection in
 	 *                                   each group
 	 * @throws \Exception if $field is not a string nor a callback function
 	 */
-	public function group($field, bool $i = true)
+	public function group($field, bool $caseInsensitive = true)
 	{
 		// group by field name
 		if (is_string($field) === true) {
-			return $this->group(function ($item) use ($field, $i) {
+			return $this->group(function ($item) use ($field, $caseInsensitive) {
 				$value = $this->getAttribute($item, $field);
 
 				// ignore upper/lowercase for group names
-				return $i === true ? Str::lower($value) : (string)$value;
+				if ($caseInsensitive === true) {
+					return Str::lower($value);
+				}
+
+				return (string)$value;
 			});
 		}
 
