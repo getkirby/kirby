@@ -4,14 +4,13 @@
 		<div class="k-file-preview-thumb">
 			<!-- Image with focus picker -->
 			<template v-if="image.src">
-				<k-coords
-					:aria-disabled="!canFocus"
-					:x="focus?.x"
-					:y="focus?.y"
-					@input="setFocus($event.detail)"
+				<k-coords-input
+					:disabled="!canFocus"
+					:value="focus"
+					@input="setFocus($event)"
 				>
 					<img v-bind="image" @dragstart.prevent />
-				</k-coords>
+				</k-coords-input>
 
 				<k-dropdown>
 					<k-button
@@ -160,25 +159,26 @@ export default {
 	background: var(--pattern);
 	container-type: size;
 }
-
-.k-file-preview .k-coords {
-	--opacity-disabled: 1;
-
-	cursor: crosshair;
-}
 .k-file-preview-thumb img {
 	max-width: 100cqw;
 	max-height: 100cqh;
 }
-.k-file-preview .k-coords-thumb {
-	--range-thumb-size: 1.25rem;
-	background: hsl(216 60% 60% / 0.75);
-	box-shadow: none;
+.k-file-preview-thumb .k-dropdown {
+	position: absolute;
+	top: var(--spacing-2);
+	inset-inline-start: var(--spacing-2);
 }
-.k-file-preview .k-coords-thumb::after {
+
+.k-file-preview .k-coords-input {
+	--opacity-disabled: 1;
+	--range-thumb-color: hsl(216 60% 60% / 0.75);
+	--range-thumb-size: 1.25rem;
+	--range-thumb-shadow: none;
+	cursor: crosshair;
+}
+.k-file-preview .k-coords-input-thumb::after {
 	--size: 0.4rem;
 	--pos: calc(50% - (var(--size) / 2));
-
 	position: absolute;
 	top: var(--pos);
 	inset-inline-start: var(--pos);
@@ -188,16 +188,11 @@ export default {
 	background: var(--color-white);
 	border-radius: 50%;
 }
-.k-file-preview:not([data-has-focus="true"]) .k-coords-thumb {
+.k-file-preview:not([data-has-focus="true"]) .k-coords-input-thumb {
 	display: none;
 }
 .k-file-preview-icon {
 	--icon-size: 3rem;
-}
-.k-file-preview-thumb .k-dropdown {
-	position: absolute;
-	top: var(--spacing-2);
-	inset-inline-start: var(--spacing-2);
 }
 
 /* Details */
