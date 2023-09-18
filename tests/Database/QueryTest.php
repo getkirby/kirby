@@ -7,6 +7,8 @@ use Kirby\Toolkit\Collection;
 use PDOException;
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/mocks.php';
+
 /**
  * @coversDefaultClass \Kirby\Database\Database
  */
@@ -324,6 +326,33 @@ class QueryTest extends TestCase
 		$this->assertNull((clone $falseQuery)->limit(1)->all()->first());
 		$this->assertSame(false, (clone $falseQuery)->first());
 		$this->assertSame(false, (clone $falseQuery)->row());
+
+		$query = $this->database
+			->table('users')
+			->where(['username' => 'john']);
+
+		$x = function ($row, $key) {
+			return $row['fname'] . ' ' . $row['lname'];
+		};
+
+		$this->assertSame('John Lennon', (clone $query)->fetch($x)->first());
+		$this->assertSame('John Lennon', (clone $query)->fetch([$this, 'fetchTestCallable'])->first());
+		$this->assertInstanceOf(
+			MockClassWithCallable::class,
+			(clone $query)->fetch([MockClassWithCallable::class, 'fromDb'])->first()
+		);
+		$this->assertSame(
+			'John Lennon',
+			(clone $query)->fetch('\Kirby\Database\MockClassWithCallable::fromDb')->first()->name()
+		);
+	}
+
+	/**
+	 * Helper function for testFetch()
+	 */
+	public function fetchTestCallable(array $row, $key = null)
+	{
+		return $row['fname'] . ' ' . $row['lname'];
 	}
 
 	public function testFind()
