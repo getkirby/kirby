@@ -1,7 +1,9 @@
 <?php
 
 use Kirby\Cms\App;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Image\QrCode;
+use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Totp;
 
 $dialogs = require __DIR__ . '/../users/dialogs.php';
@@ -41,95 +43,6 @@ return [
 		'pattern' => '(account)/changeRole',
 		'load'    => $dialogs['user.changeRole']['load'],
 		'submit'  => $dialogs['user.changeRole']['submit'],
-	],
-
-	// change TOTP status
-	'user.changeTotp' => [
-		'pattern' => 'account/changeTotp',
-		'load' => function () {
-			$kirby  = App::instance();
-			$user   = $kirby->user();
-			$secret = $user->totp();
-
-			if ($secret === null) {
-				$totp = new Totp();
-
-				$issuer = $kirby->site()->title();
-				$label  = $user->email();
-				$qr     = new QrCode(data: $totp->uri($issuer, $label));
-
-				return [
-					'component' => 'k-form-dialog',
-					'props' => [
-						'fields' => [
-							'qr' => [
-								'label' => 'Scan this QR code',
-								'type'  => 'info',
-								'text'  => $qr->toSvg(),
-								'theme' => 'none',
-							],
-							'secret_display' => [
-								'type'  => 'info',
-								'text'  => $totp->secret(),
-								'theme' => 'passive',
-								'help'  => 'or add the 2FA secret manually to your authenticator app',
-							],
-							'secret' => [
-								'type'     => 'hidden',
-							],
-							'confirm' => [
-								'label'   => 'Confirm',
-								'type'    => 'text',
-								'counter' => false,
-								'font'    => 'monospace',
-								'help'    => 'by entering the 2FA code from your authenticator app'
-							],
-						],
-						'size' => 'small',
-						'submitButton' => [
-							'text' => 'Activate',
-							'icon' => 'lock',
-							'theme' => 'notice'
-						],
-						'value' => [
-							'secret' => $totp->secret()
-						]
-					]
-				];
-			}
-
-			return [
-				'component' => 'k-remove-dialog',
-				'props' => [
-					'text' => 'Are you sure you want to deactivate TOTP?',
-					'submitButton' => [
-						'text' => 'Disable',
-						'icon' => 'protected'
-					],
-				]
-			];
-		},
-		'submit' => function () {
-			$kirby  = App::instance();
-			$user   = $kirby->user();
-
-			if ($secret = $kirby->request()->get('secret')) {
-				if ($confirm = $kirby->request()->get('confirm')) {
-					$totp = new Totp($secret);
-
-					if ($totp->verify($confirm) === false) {
-						throw new Exception('Invalid 2FA code');
-					}
-
-					$user->totp($secret);
-				}
-
-			} else {
-				$user->totp(false);
-			}
-
-			return true;
-		}
 	],
 
 	// delete
@@ -179,5 +92,115 @@ return [
 		'pattern' => '(account)/files/(:any)/fields/(:any)/(:all?)',
 		'load'    => $dialogs['user.file.fields']['load'],
 		'submit'  => $dialogs['user.file.fields']['submit']
+	],
+
+	// activate TOTP
+	'user.totp.activate' => [
+		'pattern' => 'account/totp/activate',
+		'load' => function () {
+			$kirby  = App::instance();
+			$user   = $kirby->user();
+			$totp   = new Totp();
+			$issuer = $kirby->site()->title();
+			$label  = $user->email();
+			$qr     = new QrCode(data: $totp->uri($issuer, $label));
+
+			return [
+				'component' => 'k-form-dialog',
+				'props' => [
+					'fields' => [
+						'qr' => [
+							'label' => 'One-time code',
+							'type'  => 'info',
+							'text'  => $qr->toSvg(),
+							'theme' => 'passive',
+							'help'  => 'Scan this QR code or add the secret <code>' . $totp->secret() . '</code> manually to your authenticator app',
+						],
+						'secret' => [
+							'type' => 'hidden',
+						],
+						'confirm' => [
+							'label'       => 'Confirm',
+							'type'        => 'text',
+							'counter'     => false,
+							'font'        => 'monospace',
+							'required'    => true,
+							'placeholder' => I18n::translate('login.code.placeholder.totp'),
+							'help'        => 'by entering the 2FA code from your authenticator app'
+						],
+					],
+					'size' => 'small',
+					'submitButton' => [
+						'text' => 'Activate',
+						'icon' => 'lock',
+						'theme' => 'notice'
+					],
+					'value' => [
+						'secret' => $totp->secret()
+					]
+				]
+			];
+		},
+		'submit' => function () {
+			$kirby  = App::instance();
+			$user   = $kirby->user();
+			$secret = $kirby->request()->get('secret');
+
+			if ($confirm = $kirby->request()->get('confirm')) {
+				$totp = new Totp($secret);
+
+				if ($totp->verify($confirm) === false) {
+					throw new Exception('Invalid 2FA code');
+				}
+
+				$user->totp($secret);
+			} else {
+				throw new Exception('Please enter the 2FA code');
+			}
+
+			return [
+				'message' => '2FA via TOTP activated'
+			];
+		}
+	],
+
+	// disable TOTP
+	'user.totp.disable' => [
+		'pattern' => 'account/totp/disable',
+		'load' => fn () => [
+			'component' => 'k-form-dialog',
+			'props' => [
+				'fields' => [
+					'password' => [
+						'type'  => 'password',
+						'label'  => 'Enter your password to disable TOTP',
+						'required' => true,
+						'counter' => false
+					]
+				],
+				'submitButton' => [
+					'text'  => 'Disable TOTP',
+					'icon'  => 'protected',
+					'theme' => 'negative'
+				],
+			]
+		],
+		'submit' => function () {
+			$kirby    = App::instance();
+			$user     = $kirby->user();
+			$password = $kirby->request()->get('password');
+
+			try {
+				$user->validatePassword($password);
+				$user->totp(false);
+
+				return [
+					'message' => 'Removed 2FA via TOTP'
+				];
+
+			} catch (Exception $e) {
+				throw new InvalidArgumentException($e->getMessage());
+			}
+		}
 	],
 ];

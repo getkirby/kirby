@@ -94,11 +94,19 @@ class User extends Model
 			($this->model->kirby()->system()->loginMethods()['password']['2fa'] ?? null) === true &&
 			in_array('totp', $this->model->kirby()->auth()->enabledChallenges()) === true
 		) {
-			$result[] = [
-				'dialog'   => $url . '/changeTotp',
+			if ($this->model->totp() === null) {
+				$result[] = [
+					'dialog'   => $url . '/totp/activate',
+					'icon'     => 'qr-code',
+					'text'     => 'Set one-time code'
+				];
+			} else {
+				$result[] = [
+				'dialog'   => $url . '/totp/disable',
 				'icon'     => 'qr-code',
-				'text'     => 'One-time code'
+				'text'     => 'Disable one-time code'
 			];
+			}
 		}
 
 		$result[] = '-';
