@@ -116,7 +116,8 @@ class Totp
 			'issuer' => $issuer
 		], '', '&', PHP_QUERY_RFC3986);
 
-		return 'otpauth://totp/' . rawurlencode($label) . '?' . $query;
+		return 'otpauth://totp/' . rawurlencode($issuer) .
+			':' .rawurlencode($label) . '?' . $query;
 	}
 
 	/**

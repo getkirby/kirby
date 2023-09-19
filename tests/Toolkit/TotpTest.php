@@ -111,7 +111,7 @@ class TotpTest extends TestCase
 		$totp = new Totp('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
 
 		$this->assertSame(
-			'otpauth://totp/test%40getkirby.com%20with%20spaces' .
+			'otpauth://totp/A%20nice%20Kirby%20site:test%40getkirby.com%20with%20spaces' .
 			'?secret=ABCDEFGHIJKLMNOPQRSTUVWXYZ234567&issuer=A%20nice%20Kirby%20site',
 			$totp->uri('A nice Kirby site', 'test@getkirby.com with spaces')
 		);
