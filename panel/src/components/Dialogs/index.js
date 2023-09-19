@@ -19,6 +19,7 @@ import PagesDialog from "./PagesDialog.vue";
 import RemoveDialog from "./RemoveDialog.vue";
 import SearchDialog from "./SearchDialog.vue";
 import TextDialog from "./TextDialog.vue";
+import TotpDialog from "./TotpDialog.vue";
 import UploadDialog from "./UploadDialog.vue";
 import UploadReplaceDialog from "./UploadReplaceDialog.vue";
 import UsersDialog from "./UsersDialog.vue";
@@ -43,6 +44,7 @@ export default {
 		app.component("k-remove-dialog", RemoveDialog);
 		app.component("k-search-dialog", SearchDialog);
 		app.component("k-text-dialog", TextDialog);
+		app.component("k-totp-dialog", TotpDialog);
 		app.component("k-upload-dialog", UploadDialog);
 		app.component("k-upload-replace-dialog", UploadReplaceDialog);
 		app.component("k-users-dialog", UsersDialog);

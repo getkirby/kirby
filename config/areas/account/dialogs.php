@@ -105,41 +105,12 @@ return [
 			$issuer = $kirby->site()->title();
 			$label  = $user->email();
 			$uri    = $totp->uri($issuer, $label);
-			$qr     = new QrCode(data: $uri);
 
 			return [
-				'component' => 'k-form-dialog',
+				'component' => 'k-totp-dialog',
 				'props' => [
-					'fields' => [
-						'qr' => [
-							'label' => I18n::translate('login.totp.activate.label'),
-							'type'  => 'info',
-							'text'  => $qr->toSvg(),
-							'theme' => 'passive',
-							'help'  => I18n::template('login.totp.activate.qr.help', ['secret' => $totp->secret()])
-						],
-						'secret' => [
-							'type' => 'hidden',
-						],
-						'confirm' => [
-							'label'       => I18n::translate('login.totp.activate.confirm.label'),
-							'type'        => 'text',
-							'counter'     => false,
-							'font'        => 'monospace',
-							'required'    => true,
-							'placeholder' => I18n::translate('login.code.placeholder.totp'),
-							'help'        => I18n::translate('login.totp.activate.confirm.help')
-						],
-					],
-					'size' => 'small',
-					'submitButton' => [
-						'text' => I18n::translate('activate'),
-						'icon' => 'lock',
-						'theme' => 'notice'
-					],
-					'value' => [
-						'secret' => $totp->secret()
-					]
+					'qr'    => (new QrCode($uri))->toSvg(),
+					'value' => ['secret' => $totp->secret()]
 				]
 			];
 		},
