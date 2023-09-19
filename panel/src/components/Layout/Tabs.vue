@@ -110,9 +110,13 @@ export default {
 				if (tabs > width) {
 					this.visible = this.tabs.slice(0, index);
 					this.invisible = this.tabs.slice(index);
-					break;
+					return;
 				}
 			}
+
+			// if all tabs fit, ensure that most recent tabs value is used
+			this.visible = this.tabs;
+			this.invisible = [];
 		}
 	}
 };
