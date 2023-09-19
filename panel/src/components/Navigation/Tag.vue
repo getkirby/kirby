@@ -6,6 +6,10 @@
 		type="button"
 		@keydown.delete.prevent="remove"
 	>
+		<template v-if="image">
+			<k-image-frame class="k-tag-image" v-if="image?.src" v-bind="image" />
+			<k-icon-frame class="k-tag-image" v-else-if="image" v-bind="image" />
+		</template>
 		<span class="k-tag-text"><slot /></span>
 		<k-icon-frame
 			v-if="removable"
@@ -23,6 +27,9 @@
  */
 export default {
 	props: {
+		image: {
+			type: Object
+		},
 		/**
 		 * Enables the remove button
 		 */
@@ -71,6 +78,12 @@ export default {
 }
 .k-tag:focus {
 	outline: var(--outline);
+}
+.k-tag-image {
+	height: calc(var(--tag-height) - var(--spacing-2));
+	margin-inline-start: var(--spacing-1);
+	border-radius: var(--rounded-sm);
+	overflow: hidden;
 }
 .k-tag-text {
 	padding-inline: 0.5rem;
