@@ -113,7 +113,6 @@ class TotpTest extends TestCase
 		$this->assertSame(
 			'otpauth://totp/test%40getkirby.com%20with%20spaces' .
 			'?secret=ABCDEFGHIJKLMNOPQRSTUVWXYZ234567&issuer=A%20nice%20Kirby%20site',
-
 			$totp->uri('A nice Kirby site', 'test@getkirby.com with spaces')
 		);
 	}
@@ -127,9 +126,9 @@ class TotpTest extends TestCase
 		$totp = new Totp(Base32::encode('12345678901234567890'));
 
 		$this->assertFalse($totp->verify('731029')); // offset -2
-		$this->assertTrue( $totp->verify('081804')); // offset -1
-		$this->assertTrue( $totp->verify('050471')); // offset  0
-		$this->assertTrue( $totp->verify('266759')); // offset +1
+		$this->assertTrue($totp->verify('081804'));  // offset -1
+		$this->assertTrue($totp->verify('050471'));  // offset  0
+		$this->assertTrue($totp->verify('266759'));  // offset +1
 		$this->assertFalse($totp->verify('306183')); // offset +2
 
 		$this->assertFalse($totp->verify(''));

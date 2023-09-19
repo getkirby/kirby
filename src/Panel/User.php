@@ -97,7 +97,6 @@ class User extends Model
 						'icon'     => 'qr-code',
 						'text'     => I18n::translate('login.totp.disable.option'),
 					];
-
 				} elseif ($account) {
 					$result[] = [
 						'dialog'   => $url . '/totp/activate',

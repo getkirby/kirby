@@ -147,7 +147,6 @@ trait UserActions
 	public function changeTotp(string|false $secret): static
 	{
 		return $this->commit('changeTotp', ['user' => $this, 'secret' => $secret], function ($user, $secret) {
-
 			$file = $user->root() . '/.totp';
 
 			if ($secret === false) {

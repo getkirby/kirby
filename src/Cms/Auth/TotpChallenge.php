@@ -24,7 +24,7 @@ class TotpChallenge extends Challenge
 	 */
 	public static function isAvailable(User $user, string $mode): bool
 	{
-		 return $user->totp() !== null;
+		return $user->totp() !== null;
 	}
 
 	/**

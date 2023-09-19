@@ -393,7 +393,6 @@ return [
 				return [
 					'message' => I18n::translate('login.totp.disable.success')
 				];
-
 			} catch (Exception $e) {
 				// Catch and re-throw exceptions so that any
 				// Unauthenticated exception for incorrect passwords
