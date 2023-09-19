@@ -525,4 +525,36 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame('Some title', $default[0]['text']);
 		$this->assertArrayHasKey('id', $default[0]);
 	}
+
+	public function testInvalidType()
+	{
+		$field = $this->field('blocks', [
+			'value' => [
+				[
+					'type'    => 'heading',
+					'content' => [
+						'text' => 'a'
+					]
+				],
+				[
+					'type'    => 'not-exists',
+					'content' => [
+						'text' => 'b'
+					]
+				],
+				[
+					'type'    => 'text',
+					'content' => [
+						'text' => 'c'
+					]
+				],
+			]
+		]);
+
+		$this->assertCount(3, $field->value());
+		$this->assertSame('heading', $field->value()[0]['type']);
+		$this->assertSame('not-exists', $field->value()[1]['type']);
+		$this->assertSame(['text' => 'b'], $field->value()[1]['content']);
+		$this->assertSame('text', $field->value()[2]['type']);
+	}
 }

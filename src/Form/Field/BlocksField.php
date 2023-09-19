@@ -67,6 +67,8 @@ class BlocksField extends FieldClass
 
 				// create id if not exists
 				$block['id'] ??= Str::uuid();
+			} catch (Throwable) {
+				// skip invalid blocks
 			} finally {
 				$result[] = $block;
 			}
