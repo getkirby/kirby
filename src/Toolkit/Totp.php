@@ -29,10 +29,14 @@ class Totp
 	 *
 	 * @param string|null $secret Existing secret in Base32 format
 	 *                            or `null` to generate a new one
+	 * @param bool $force Whether to skip the secret length validation;
+	 *                    WARNING: Only ever set this to `true` when
+	 *                    generating codes for third-party services
 	 */
 	public function __construct(
 		#[SensitiveParameter]
-		string|null $secret = null
+		string|null $secret = null,
+		bool $force = false
 	) {
 		// if provided, decode the existing secret into binary
 		if ($secret !== null) {
@@ -44,7 +48,7 @@ class Totp
 		$this->secret ??= random_bytes(20);
 
 		// safety check to avoid accidental insecure secrets
-		if (strlen($this->secret) !== 20) {
+		if ($force === false && strlen($this->secret) !== 20) {
 			throw new InvalidArgumentException('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
 		}
 	}

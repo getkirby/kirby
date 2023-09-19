@@ -61,8 +61,13 @@ class TotpTest extends TestCase
 		$this->assertSame(32, strlen($totp1->secret()));
 		$this->assertNotSame($totp1->secret(), $totp2->secret());
 
+		// predefined secret
 		$totp3 = new Totp($secret = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
 		$this->assertSame($secret, $totp3->secret());
+
+		// force mode (third-party services)
+		$totp4 = new Totp($secret = 'TOOSHORT', true);
+		$this->assertSame($secret, $totp4->secret());
 	}
 
 	/**
