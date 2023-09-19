@@ -57,7 +57,7 @@
 			</k-draggable>
 		</template>
 		<template v-else>
-			<k-box theme="info"> No fieldsets yet </k-box>
+			<k-empty icon="box">No fieldsets yet</k-empty>
 		</template>
 	</div>
 </template>
@@ -88,7 +88,7 @@ export default {
 			isEditing: false,
 			isMultiSelectKey: false,
 			isPasteable: false,
-			blocks: this.value,
+			blocks: this.value ?? [],
 			selected: []
 		};
 	},
