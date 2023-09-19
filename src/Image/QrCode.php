@@ -126,6 +126,11 @@ class QrCode
 		return '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 ' . $width . ' ' . $height . '" stroke="none" style="width: 100%"><rect width="100%" height="100%" style="fill: ' . $this->back . '"/><path d="' . implode(' ', $modules) . '" style="fill: ' . $this->color . '"/></svg>';
 	}
 
+	public function __toString(): string
+	{
+		return $this->toSvg();
+	}
+
 	protected function applyMask(array $matrix, int $size, int $mask): array
 	{
 		for ($i = 0; $i < $size; $i++) {
