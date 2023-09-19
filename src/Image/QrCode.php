@@ -338,7 +338,7 @@ class QrCode
 			1 => $this->encodeAlphanum($data, $group),
 			2 => $this->encodeBinary($data, $group),
 
-			default => throw new LogicException('Invalid QR mode')
+			default => throw new LogicException('Invalid QR mode') // @codeCoverageIgnore
 		};
 
 		$code = array_merge($code, array_fill(0, 4, 0));
@@ -730,6 +730,7 @@ class QrCode
 			7 => !(((($row + $column) % 2) + (($row * $column) % 3)) % 2),
 
 			default => throw new LogicException('Invalid QR mask')
+			// @codeCoverageIgnore
 		};
 	}
 

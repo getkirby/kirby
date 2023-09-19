@@ -16,7 +16,7 @@ class QrCodeTest extends TestCase
 		$expected = F::read(__DIR__ . '/fixtures/qr/num.txt');
 		$this->assertSame($expected, $qr->toDataUri());
 
-		$qr = new QrCode('abcdef12345');
+		$qr = new QrCode('ABCDEF12345');
 		$expected = F::read(__DIR__ . '/fixtures/qr/alphanum.txt');
 		$this->assertSame($expected, $qr->toDataUri());
 
@@ -45,7 +45,7 @@ class QrCodeTest extends TestCase
 		$expected = F::read(__DIR__ . '/fixtures/qr/num.svg');
 		$this->assertSame($expected, $qr->toSvg());
 
-		$qr = new QrCode('abcdef12345');
+		$qr = new QrCode('ABCDEF12345');
 		$expected = F::read(__DIR__ . '/fixtures/qr/alphanum.svg');
 		$this->assertSame($expected, $qr->toSvg());
 
