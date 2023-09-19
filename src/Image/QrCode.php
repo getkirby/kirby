@@ -17,7 +17,9 @@ use Kirby\Filesystem\F;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * Based on:
+ * QR Code® is a registered trademark of DENSO WAVE INCORPORATED.
+ *
+ * The code of this class is based on:
  * https://github.com/psyon/php-qrcode
  *
  * qrcode.php - Generate QR Codes. MIT license.
@@ -45,6 +47,12 @@ use Kirby\Filesystem\F;
  */
 class QrCode
 {
+	/**
+	 * Class constructor
+	 *
+	 * @param string $color Foreground color in hex format
+	 * @param string $back Background color in hex format
+	 */
 	public function __construct(
 		public string $data,
 		public string $color = '#000000',
@@ -53,7 +61,9 @@ class QrCode
 	}
 
 	/**
-	 * Returns the QR Code as a data URI
+	 * Returns the QR code as a PNG data URI
+	 *
+	 * @param int|null $size Image width/height in pixels, defaults to a size per module of 4x4
 	 */
 	public function toDataUri(int $size = null): string
 	{
@@ -70,6 +80,8 @@ class QrCode
 
 	/**
 	 * Returns the QR code as a GdImage object
+	 *
+	 * @param int|null $size Image width/height in pixels, defaults to a size per module of 4x4
 	 */
 	public function toImage(int $size = null): GdImage
 	{
@@ -112,7 +124,9 @@ class QrCode
 	}
 
 	/**
-	 * Returns the QR code as <svg> element
+	 * Returns the QR code as `<svg>` element
+	 *
+	 * @param int|string|null $size Width and height of the `<svg>` element
 	 */
 	public function toSvg(int|string $size = '100%'): string
 	{
@@ -135,6 +149,8 @@ class QrCode
 	/**
 	 * Saves the QR code to a file.
 	 * Supported formats: gif, jpg, jpeg, png, svg, webp
+	 *
+	 * @param string $file Path to the output file with one of the supported file extensions
 	 */
 	public function write(string $file): void
 	{
