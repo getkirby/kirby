@@ -128,7 +128,7 @@ class QrCode
 	 *
 	 * @param int|string|null $size Width and height of the `<svg>` element
 	 */
-	public function toSvg(int|string $size = '100%'): string
+	public function toSvg(int|string|null $size = '100%'): string
 	{
 		$code = $this->encode();
 		[$vbw, $vbh] = $this->measure($code);
@@ -138,7 +138,12 @@ class QrCode
 			fn ($x, $y) => 'M' . $x . ',' . $y . 'h1v1h-1z'
 		);
 
-		return '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 ' . $vbw . ' ' . $vbh . '" stroke="none" style="width: ' . $size . '"><rect width="100%" height="100%" fill="' . $this->back . '"/><path d="' . implode(' ', $modules) . '" fill="' . $this->color . '"/></svg>';
+		$size = $size ? ' style="width: ' . $size . '"' : '';
+
+		return '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 ' . $vbw . ' ' . $vbh . '" stroke="none"' . $size . '>' .
+			'<rect width="100%" height="100%" fill="' . $this->back . '"/>' .
+			'<path d="' . implode(' ', $modules) . '" fill="' . $this->color . '"/>' .
+			'</svg>';
 	}
 
 	public function __toString(): string
