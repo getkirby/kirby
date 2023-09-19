@@ -1,11 +1,10 @@
 <?php
 
 use Kirby\Cms\App;
+use Kirby\Image\QrCode;
 use Kirby\Toolkit\Totp;
 
 $dialogs = require __DIR__ . '/../users/dialogs.php';
-
-include_once 'QrCode.php';
 
 return [
 
@@ -59,7 +58,7 @@ return [
 				$label  = $user->email();
 				$uri    = $totp->uri($issuer, $label);
 
-				$qr = new QRCode($uri);
+				$qr = new QrCode($uri);
 				$image = $qr->render_image();
 				ob_start();
 				imagepng($image);
