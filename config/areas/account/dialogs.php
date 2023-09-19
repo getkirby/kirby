@@ -124,14 +124,14 @@ return [
 
 				if ($totp->verify($confirm) === false) {
 					throw new InvalidArgumentException(
-						I18n::translate('login.totp.activate.confirm.fail')
+						['key' => 'login.totp.confirm.fail']
 					);
 				}
 
 				$user->changeTotp($secret);
 			} else {
 				throw new NotFoundException(
-					I18n::translate('login.totp.activate.confirm.missing')
+					['key' => 'login.totp.confirm.missing']
 				);
 			}
 

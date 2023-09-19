@@ -136,6 +136,9 @@
 	"error.license.email": "Please enter a valid email address",
 	"error.license.verification": "The license could not be verified",
 
+	"error.login.totp.confirm.fail": "Invalid code",
+	"error.login.totp.confirm.missing": "Please enter the current code",
+
 	"error.object.validation": "There’s an error in the \"{label}\" field:\n{message}",
 
 	"error.offline": "The Panel is currently offline",
@@ -457,8 +460,6 @@
 	"login.totp.activate.confirm.text": "Use your authenticator app to retrieve the current code and enter it below to complete the setup.",
 	"login.totp.activate.confirm.label": "Current code",
 	"login.totp.activate.confirm.help": "Make sure that the secret setup key is saved in the authenticator app before you confirm. You won't be able to log into your account without a generated code.",
-	"login.totp.activate.confirm.fail": "Invalid time-based code",
-	"login.totp.activate.confirm.missing": "Please enter the current time-based code",
 	"login.totp.activate.success": "Activated time-based codes",
 	"login.totp.disable.option": "Disable auth app",
 	"login.totp.disable.label": "Enter your password to disable time-based codes",
