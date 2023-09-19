@@ -388,7 +388,7 @@ return [
 				}
 
 				// Remove the TOTP secret from the account
-				$user->totp(false);
+				$user->changeTotp(false);
 
 				return [
 					'message' => I18n::translate('login.totp.disable.success')

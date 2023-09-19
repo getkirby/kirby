@@ -142,6 +142,25 @@ trait UserActions
 	}
 
 	/**
+	 * Changes the user's TOTP secret
+	 */
+	public function changeTotp(string|false $secret): static
+	{
+		return $this->commit('changeTotp', ['user' => $this, 'secret' => $secret], function ($user, $secret) {
+
+			$file = $user->root() . '/.totp';
+
+			if ($secret === false) {
+				F::remove($file);
+			} else {
+				F::write($file, $secret);
+			}
+
+			return $user;
+		});
+	}
+
+	/**
 	 * Commits a user action, by following these steps
 	 *
 	 * 1. checks the action rules

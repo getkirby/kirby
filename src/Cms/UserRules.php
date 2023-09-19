@@ -141,6 +141,28 @@ class UserRules
 	}
 
 	/**
+	 * Validates if the TOTP can be changed
+	 *
+	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the password
+	 */
+	public static function changeTotp(
+		User $user,
+		#[SensitiveParameter]
+		string $secret
+	): bool {
+		$currentUser = $user->kirby()->user();
+
+		if (
+			$currentUser->is($user) === false &&
+			$currentUser->isAdmin() === false
+		) {
+			throw new PermissionException('You cannot change the time-based code for ' . $user->email());
+		}
+
+		return true;
+	}
+
+	/**
 	 * Validates if the user can be created
 	 *
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to create a new user

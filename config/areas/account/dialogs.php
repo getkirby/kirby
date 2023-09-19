@@ -157,7 +157,7 @@ return [
 					);
 				}
 
-				$user->totp($secret);
+				$user->changeTotp($secret);
 			} else {
 				throw new NotFoundException(
 					I18n::translate('login.totp.activate.confirm.missing')
