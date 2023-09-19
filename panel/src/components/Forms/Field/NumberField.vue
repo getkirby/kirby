@@ -14,7 +14,9 @@ import { props as InputboxProps } from "../Inputbox/Types/NumberInputbox.vue";
 
 /**
  * Have a look at `<k-field>` and `<k-number-inputbox>` for additional information.
- * @example <k-number-field :value="number" @input="number = $event" name="number" label="Number" />
+ *
+ * @example <k-number-field :value="value" label="Number" @input="value = $event" />
+ * @public
  */
 export default {
 	mixins: [FieldProps, InputboxProps],

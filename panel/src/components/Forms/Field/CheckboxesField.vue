@@ -15,6 +15,9 @@ import Counter from "@/mixins/forms/counter.js";
 
 /**
  * Have a look at `<k-field>` and `<k-checkboxes-inputbox>` for additional information.
+ *
+ * @example <k-checkboxes-field :options="options" :value="value" label="Options" @input="value = $event" />
+ * @public
  */
 export default {
 	mixins: [FieldProps, InputboxProps, Counter],

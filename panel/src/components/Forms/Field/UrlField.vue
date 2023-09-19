@@ -13,9 +13,9 @@ import { props as FieldProps } from "../Field.vue";
 import { props as InputboxProps } from "../Inputbox/Types/UrlInputbox.vue";
 
 /**
- * Have a look at `<k-field>` and `<k-url-inputbox>`
- * for additional information.
- * @example <k-url-field :value="url" @input="url = $event" name="url" label="Url" />
+ * Have a look at `<k-field>` and `<k-url-inputbox>` for additional information.
+ *
+ * @example <k-url-field :value="value" label="Url" @input="value = $event" />
  */
 export default {
 	mixins: [FieldProps, InputboxProps],

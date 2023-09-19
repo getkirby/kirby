@@ -5,40 +5,27 @@
 		:counter="counterOptions"
 		class="k-tags-field"
 	>
-		<k-empty v-if="hasNoOptions" :icon="icon" :text="$t('options.none')" />
-		<k-input
-			v-else
-			v-bind="$props"
+		<k-tags-inputbox
 			:id="_uid"
-			ref="input"
-			theme="field"
-			type="tags"
-			v-on="$listeners"
+			v-bind="$props"
+			@input="$emit('input', $event)"
 		/>
 	</k-field>
 </template>
 
 <script>
-import { props as Field } from "../Field.vue";
-import { props as Input } from "../Input.vue";
-import { props as TagsInput } from "../Input/TagsInput.vue";
-import counter from "@/mixins/forms/counter.js";
+import { props as FieldProps } from "../Field.vue";
+import { props as InputboxProps } from "../Inputbox/Types/TagsInputbox.vue";
+import Counter from "@/mixins/forms/counter.js";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-tags-input>` for additional information.
+ * Have a look at `<k-field>` and `<k-tags-inputbox>` for additional information.
+ *
+ * @example <k-tags-field :value="value" label="Tags" @input="value = $event" />
+ * @public
  */
 export default {
-	mixins: [Field, Input, TagsInput, counter],
-	inheritAttrs: false,
-	computed: {
-		hasNoOptions() {
-			return this.options.length === 0 && this.accept === "options";
-		}
-	},
-	methods: {
-		focus() {
-			this.$refs.input.focus();
-		}
-	}
+	mixins: [FieldProps, InputboxProps, Counter],
+	inheritAttrs: false
 };
 </script>

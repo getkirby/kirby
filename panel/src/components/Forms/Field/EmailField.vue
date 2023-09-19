@@ -14,7 +14,9 @@ import { props as InputboxProps } from "../Inputbox/Types/EmailInputbox.vue";
 
 /**
  * Have a look at `<k-field>` and `<k-email-inputbox>` for additional information.
- * @example <k-email-field :value="email" @input="email = $event" name="email" label="Email" />
+ *
+ * @example <k-email-field :value="value" label="Email" @input="value = $event" />
+ * @public
  */
 export default {
 	mixins: [FieldProps, InputboxProps],

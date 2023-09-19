@@ -1,33 +1,25 @@
 <template>
 	<k-field v-bind="$props" :input="_uid" class="k-toggle-field">
-		<k-input
-			v-bind="$props"
+		<k-toggle-inputbox
 			:id="_uid"
-			ref="input"
-			theme="field"
-			type="toggle"
-			v-on="$listeners"
+			v-bind="$props"
+			@input="$emit('input', $event)"
 		/>
 	</k-field>
 </template>
 
 <script>
-import { props as Field } from "../Field.vue";
-import { props as Input } from "../Input.vue";
-import { props as ToggleInput } from "../Input/ToggleInput.vue";
+import { props as FieldProps } from "../Field.vue";
+import { props as InputboxProps } from "../Inputbox/Types/ToggleInputbox.vue";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-toggle-input>`
- * for additional information.
- * @example <k-toggle-field :value="toggle" @input="toggle = $event" label="Toggle" name="toggle" />
+ * Have a look at `<k-field>`, `<k-input>` and `<k-toggle-inputbox>` for additional information.
+ *
+ * @example <k-toggle-field :value="value" label="Toggle" @input="value = $event" />
+ * @public
  */
 export default {
-	mixins: [Field, Input, ToggleInput],
-	inheritAttrs: false,
-	methods: {
-		focus() {
-			this.$refs.input.focus();
-		}
-	}
+	mixins: [FieldProps, InputboxProps],
+	inheritAttrs: false
 };
 </script>

@@ -14,7 +14,8 @@ import { props as InputboxProps } from "../Inputbox/Types/ListInputbox.vue";
 
 /**
  * Have a look at `<k-field>` and `<k-list-inputbox>` for additional information.
- * @example <k-list-field :value="list" @input="list = $event" name="list" label="List" />
+ *
+ * @example <k-list-field :value="value" label="List" @input="value = $event" />
  */
 export default {
 	mixins: [FieldProps, InputboxProps],

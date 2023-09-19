@@ -24,7 +24,10 @@ import { props as FieldProps } from "../Field.vue";
 import { props as InputboxProps } from "../Inputbox/Types/SlugInputbox.vue";
 
 /**
- * @example <k-slug-field :value="slug" @input="slug = $event" name="slug" label="Slug" />
+ * Have a look at `<k-field>` and `<k-slug-inputbox>` for additional information.
+ *
+ * @example <k-slug-field :value="value" label="Slug" @input="value = $event" />
+ * @public
  */
 export default {
 	mixins: [FieldProps, InputboxProps],

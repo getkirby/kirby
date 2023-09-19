@@ -17,7 +17,7 @@ import { props as InputboxProps } from "../Inputbox/Types/TimeInputbox.vue";
  *
  * Have a look at `<k-field>` and `<k-time-inputbox>` for additional information.
  *
- * @example <k-time-field :value="time" @input="time = $event" name="time" label="Time" />
+ * @example <k-time-field :value="value" label="Time" @input="value = $event" />
  * @public
  */
 export default {

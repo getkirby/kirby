@@ -13,9 +13,10 @@ import { props as FieldProps } from "../Field.vue";
 import { props as InputboxProps } from "../Inputbox/Types/TelInputbox.vue";
 
 /**
- * Have a look at `<k-field>` and `<k-tel-inputbox>`
- * for additional information.
- * @example <k-tel-field :value="tel" @input="tel = $event" name="tel" label="Phone number" />
+ * Have a look at `<k-field>` and `<k-tel-inputbox>` for additional information.
+ *
+ * @example <k-tel-field :value="value" label="Phone number" @input="value = $event" />
+ * @public
  */
 export default {
 	mixins: [FieldProps, InputboxProps],

@@ -13,8 +13,10 @@ import { props as FieldProps } from "../Field.vue";
 import { props as InputboxProps } from "../Inputbox/Types/RangeInputbox.vue";
 
 /**
- * Have a look at `<k-field>` and `<k-range-input>` for additional information.
- * @example <k-range-field :value="range" @input="range = $event" name="range" label="Slider" />
+ * Have a look at `<k-field>` and `<k-range-inputbox>` for additional information.
+ *
+ * @example <k-range-field :value="value" label="Slider" @input="value = $event" />
+ * @public
  */
 export default {
 	mixins: [FieldProps, InputboxProps],

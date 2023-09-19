@@ -67,7 +67,7 @@ export default {
 	},
 	computed: {
 		isEmpty() {
-			return this.value.length === 0;
+			return this.value?.length === 0;
 		}
 	}
 };

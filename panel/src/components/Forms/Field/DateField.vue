@@ -3,36 +3,26 @@
 		<div
 			ref="body"
 			:data-has-time="Boolean(time)"
-			:data-invalid="!novalidate && isInvalid"
+			:data-invalid="isInvalid"
 			class="k-date-field-body"
 		>
 			<k-date-inputbox
 				:id="_uid"
 				ref="dateInput"
 				v-bind="$props"
-				:autofocus="autofocus"
-				:calendar="calendar"
-				:disabled="disabled"
-				:display="display"
-				:max="max"
-				:min="min"
-				:required="required"
 				:value="value"
 				@invalid="onDateInvalid"
 				@input="onDateInput"
 				@submit="$emit('submit')"
 			/>
-
 			<k-time-inputbox
 				v-if="time"
 				ref="timeInput"
+				v-bind="time"
 				:disabled="disabled"
-				:display="time.display"
 				:required="required"
-				:step="time.step"
 				:times="times"
 				:value="iso.time"
-				:icon="time.icon"
 				@input="onTimeInput"
 				@submit="$emit('submit')"
 			/>
@@ -47,13 +37,10 @@ import { props as InputboxProps } from "../Inputbox/Types/DateInputbox.vue";
 /**
  * Form field to handle a date/datetime value.
  *
- * Bundles `k-date-input` with `k-calendar` and, optionally,
- * `k-time-input` with `k-times`.
+ * Have a look at `<k-field>`, `<k-date-inputbox>` and `<k-time-inputbox>`
+ * for additional information.
  *
- * Have a look at `<k-field>`, `<k-input>`
- * and `<k-datetime-input>` for additional information.
- *
- * @example <k-date-field :value="date" name="date" label="Date" @input="$emit('input', $event)" />
+ * @example <k-date-field :value="value" label="Date" @input="value = $event" />
  * @public
  */
 export default {
@@ -144,14 +131,6 @@ export default {
 			this.$emit("input", dt?.toISO() ?? "");
 		},
 		/**
-		 * Handle input event from calendar dropdown
-		 * @param {string} value
-		 */
-		onCalendarInput(value) {
-			this.$refs.calendar?.close();
-			this.onDateInput(value);
-		},
-		/**
 		 * Handle input event from date input
 		 * @param {string} value
 		 */
@@ -183,14 +162,6 @@ export default {
 
 			this.iso.time = value;
 			this.onInput();
-		},
-		/**
-		 * Handle input event from times dropdown
-		 * @param {string} value
-		 */
-		onTimesInput(value) {
-			this.$refs.times?.close();
-			this.onTimeInput(value + ":00");
 		},
 		/**
 		 * Convert an ISO string into an object

@@ -5,6 +5,7 @@
 <script>
 /**
  * @example <k-line-field />
+ * @public
  */
 export default {};
 </script>

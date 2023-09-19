@@ -15,6 +15,7 @@ import { help, label } from "@/mixins/props.js";
 
 /**
  * @example <k-info-field label="Info" text="This is a nice info text" />
+ * @public
  */
 export default {
 	mixins: [help, label],

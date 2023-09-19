@@ -19,9 +19,10 @@ import { props as InputboxProps } from "../Inputbox/Types/TextareaInputbox.vue";
 import Counter from "@/mixins/forms/counter.js";
 
 /**
- * Have a look at `<k-field>` and `<k-textarea-input>`
- * for additional information.
- * @example <k-textarea-field :value="text" @input="text = $event" name="text" label="Text" />
+ * Have a look at `<k-field>` and `<k-textarea-input>` for additional information.
+ *
+ * @example <k-textarea-field :value="value" label="Text" @input="value = $event" />
+ * @public
  */
 export default {
 	mixins: [FieldProps, InputboxProps, Counter],

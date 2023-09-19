@@ -5,27 +5,27 @@
 		:counter="counterOptions"
 		class="k-multiselect-field"
 	>
-		<k-empty v-if="hasNoOptions" :icon="icon" :text="$t('options.none')" />
-		<k-input
-			v-else
-			v-bind="$props"
+		<k-multiselect-inputbox
 			:id="_uid"
-			ref="input"
-			theme="field"
-			type="multiselect"
-			v-on="$listeners"
+			v-bind="$props"
+			@input="$emit('input', $event)"
 		/>
 	</k-field>
 </template>
 
 <script>
-import TagsField from "./TagsField.vue";
+import { props as FieldProps } from "../Field.vue";
+import { props as InputboxProps } from "../Inputbox/Types/MultiselectInputbox.vue";
+import Counter from "@/mixins/forms/counter.js";
 
 /**
- * Have a look at `<k-tags-field>`.
+ * Have a look at `<k-field>` and `<k-multiselect-inputbox>` for additional information.
+ *
+ * @example <k-multiselect-field :options="options" :value="value" label="Options" @input="value = $event" />
+ * @public
  */
 export default {
-	extends: TagsField,
+	mixins: [FieldProps, InputboxProps, Counter],
 	inheritAttrs: false
 };
 </script>
