@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<template v-if="rows.length">
+		<template v-if="rows?.length">
 			<k-draggable v-bind="draggableOptions" class="k-layouts" @sort="save">
 				<k-layout
 					v-for="(layout, index) in rows"
