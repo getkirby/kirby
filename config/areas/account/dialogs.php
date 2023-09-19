@@ -56,8 +56,7 @@ return [
 
 				$issuer = $kirby->site()->title();
 				$label  = $user->email();
-				$uri    = $totp->uri($issuer, $label);
-				$qr     = new QrCode($uri);
+				$qr     = new QrCode(data: $totp->uri($issuer, $label));
 
 				return [
 					'component' => 'k-form-dialog',
@@ -66,7 +65,7 @@ return [
 							'qr' => [
 								'label' => 'Scan this QR code',
 								'type'  => 'info',
-								'text'  => '<img src="' . $qr->toDataUri() . '" title="' . $uri .'" />',
+								'text'  => $qr->toSvg(),
 								'theme' => 'none',
 							],
 							'secret_display' => [
