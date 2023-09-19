@@ -40,7 +40,7 @@ abstract class Picker
 			// query template for the info field
 			'info' => false,
 			// listing style: list, cards, cardlets
-			'layout' =>'list',
+			'layout' => 'list',
 			// number of users displayed per pagination page
 			'limit' => 20,
 			// optional mapping function for the result array

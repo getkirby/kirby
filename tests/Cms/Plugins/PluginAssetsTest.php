@@ -45,7 +45,7 @@ class PluginAssetsTest extends TestCase
 			'test'
 		);
 		F::write(
-			$b= $this->tmp . '/media/plugins/getkirby/a/assets/orphan.css',
+			$b = $this->tmp . '/media/plugins/getkirby/a/assets/orphan.css',
 			'test'
 		);
 

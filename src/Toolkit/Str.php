@@ -1297,7 +1297,7 @@ class Str
 	public static function toBytes(string $size): int
 	{
 		$size = trim($size);
-		$last = strtolower($size[strlen($size)-1] ?? '');
+		$last = strtolower($size[strlen($size) - 1] ?? '');
 		$size = (int)$size;
 
 		$size *= match ($last) {

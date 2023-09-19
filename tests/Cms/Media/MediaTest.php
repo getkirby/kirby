@@ -213,7 +213,7 @@ class MediaTest extends TestCase
 		$file->asset()->copy($mediaPath = $file->mediaRoot());
 
 		$thumb = Media::thumb($file, $file->mediaHash(), $file->filename());
-		$this->assertInstanceOf('Kirby\Cms\Response', $thumb);
+		$this->assertInstanceOf(Response::class, $thumb);
 		$this->assertNotFalse($thumb->body());
 		$this->assertSame(200, $thumb->code());
 		$this->assertSame('image/jpeg', $thumb->type());
@@ -302,7 +302,7 @@ class MediaTest extends TestCase
 		$file->asset()->copy($mediaPath = $this->fixtures . '/media/assets/site/' . $file->mediaHash() . '/' . $file->filename());
 
 		$thumb = Media::thumb('site', $file->mediaHash(), $file->filename());
-		$this->assertInstanceOf('Kirby\Cms\Response', $thumb);
+		$this->assertInstanceOf(Response::class, $thumb);
 		$this->assertNotFalse($thumb->body());
 		$this->assertSame(200, $thumb->code());
 		$this->assertSame('image/jpeg', $thumb->type());

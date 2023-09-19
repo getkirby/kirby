@@ -345,7 +345,7 @@ class UuidTest extends TestCase
 		$page = $this->app->page('page-b');
 		$uuid = $page->uuid();
 		$this->assertNull($uuid->key());
-		$this->assertSame(22, strlen($key =$uuid->key(true)));
+		$this->assertSame(22, strlen($key = $uuid->key(true)));
 		$this->assertSame($key, $uuid->key());
 	}
 

@@ -2,6 +2,14 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Cache\ApcuCache;
+use Kirby\Cache\FileCache;
+use Kirby\Cache\MemCached;
+use Kirby\Cache\MemoryCache;
+use Kirby\Cms\Auth\EmailChallenge;
+use Kirby\Form\Field\BlocksField;
+use Kirby\Form\Field\LayoutField;
+
 /**
  * The Core class lists all parts of Kirby
  * that need to be loaded or initalized in order
@@ -66,7 +74,7 @@ class Core
 	public function authChallenges(): array
 	{
 		return [
-			'email' => 'Kirby\Cms\Auth\EmailChallenge'
+			'email' => EmailChallenge::class
 		];
 	}
 
@@ -142,10 +150,10 @@ class Core
 	public function cacheTypes(): array
 	{
 		return [
-			'apcu'      => 'Kirby\Cache\ApcuCache',
-			'file'      => 'Kirby\Cache\FileCache',
-			'memcached' => 'Kirby\Cache\MemCached',
-			'memory'    => 'Kirby\Cache\MemoryCache',
+			'apcu'      => ApcuCache::class,
+			'file'      => FileCache::class,
+			'memcached' => MemCached::class,
+			'memory'    => MemoryCache::class,
 		];
 	}
 
@@ -223,7 +231,7 @@ class Core
 	public function fields(): array
 	{
 		return [
-			'blocks'      => 'Kirby\Form\Field\BlocksField',
+			'blocks'      => BlocksField::class,
 			'checkboxes'  => $this->root . '/fields/checkboxes.php',
 			'color'       => $this->root . '/fields/color.php',
 			'date'        => $this->root . '/fields/date.php',
@@ -233,7 +241,7 @@ class Core
 			'headline'    => $this->root . '/fields/headline.php',
 			'hidden'      => $this->root . '/fields/hidden.php',
 			'info'        => $this->root . '/fields/info.php',
-			'layout'      => 'Kirby\Form\Field\LayoutField',
+			'layout'      => LayoutField::class,
 			'line'        => $this->root . '/fields/line.php',
 			'link'        => $this->root . '/fields/link.php',
 			'list'        => $this->root . '/fields/list.php',

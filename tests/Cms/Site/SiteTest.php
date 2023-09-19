@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Panel\Site as Panel;
 
 class SiteTest extends TestCase
 {
@@ -262,7 +263,7 @@ class SiteTest extends TestCase
 	public function testPanel()
 	{
 		$site = new Site();
-		$this->assertInstanceOf('Kirby\Panel\Site', $site->panel());
+		$this->assertInstanceOf(Panel::class, $site->panel());
 	}
 
 	public function testQuery()

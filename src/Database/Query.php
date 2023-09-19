@@ -681,7 +681,7 @@ class Query
 		$collection = $this
 			->offset($pagination->offset())
 			->limit($pagination->limit())
-			->iterator('Kirby\Toolkit\Collection')
+			->iterator(Collection::class)
 			->all();
 
 		$this->iterator($iterator);

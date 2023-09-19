@@ -470,7 +470,7 @@ class UserActionsTest extends TestCase
 	public function testCreateHooks()
 	{
 		$calls = 0;
-		$phpunit= $this;
+		$phpunit = $this;
 		$userInput = [
 			'email' => 'new@domain.com',
 			'role'  => 'admin',

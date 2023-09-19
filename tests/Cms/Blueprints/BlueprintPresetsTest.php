@@ -48,7 +48,7 @@ class BlueprintPresetsTest extends TestCase
 						'files' => [
 							'label' => 'Files',
 							'type'  => 'files',
-							'layout'=> 'list'
+							'layout' => 'list'
 						]
 					]
 				]

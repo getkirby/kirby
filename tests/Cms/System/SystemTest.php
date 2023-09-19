@@ -607,7 +607,7 @@ class SystemTest extends TestCase
 	public function testPlugins()
 	{
 		$system = new System($this->app);
-		$this->assertInstanceOf('Kirby\Cms\Collection', $system->plugins());
+		$this->assertInstanceOf(Collection::class, $system->plugins());
 	}
 
 	/**

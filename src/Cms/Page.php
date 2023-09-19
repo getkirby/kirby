@@ -318,10 +318,10 @@ class Page extends ModelWithContent
 		// merge controller data with original data safely
 		if (empty($controllerData) === false) {
 			$classes = [
-				'kirby' => 'Kirby\Cms\App',
-				'site'  => 'Kirby\Cms\Site',
-				'pages' => 'Kirby\Cms\Pages',
-				'page'  => 'Kirby\Cms\Page'
+				'kirby' => App::class,
+				'site'  => Site::class,
+				'pages' => Pages::class,
+				'page'  => Page::class
 			];
 
 			foreach ($controllerData as $key => $value) {

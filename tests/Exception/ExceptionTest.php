@@ -210,7 +210,7 @@ class ExceptionTest extends TestCase
 	{
 		$exception = new Exception();
 		$expected = [
-			'exception' => 'Kirby\Exception\Exception',
+			'exception' => Exception::class,
 			'message'   => 'An error occurred',
 			'key'       => 'error.general',
 			'file'      => __FILE__,

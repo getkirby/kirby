@@ -180,7 +180,7 @@ class ResponseTest extends TestCase
 	public function testJsonWithPrettyArray()
 	{
 		$data     = ['foo' => 'bar'];
-		$expected = json_encode($data, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
+		$expected = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 		$response = Response::json($data, 200, true);
 
 		$this->assertSame($expected, $response->body());

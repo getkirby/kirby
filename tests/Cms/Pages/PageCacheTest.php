@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Cache\Value;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
@@ -185,7 +186,7 @@ class PageCacheTest extends TestCase
 		$this->assertStringStartsWith('This is a test:', $html1);
 
 		$value = $cache->retrieve('default.html');
-		$this->assertInstanceOf('Kirby\Cache\Value', $value);
+		$this->assertInstanceOf(Value::class, $value);
 		$this->assertSame($html1, $value->value()['html']);
 		$this->assertNull($value->expires());
 
@@ -203,7 +204,7 @@ class PageCacheTest extends TestCase
 		$time = $page->render();
 
 		$value = $cache->retrieve('expiry.html');
-		$this->assertInstanceOf('Kirby\Cache\Value', $value);
+		$this->assertInstanceOf(Value::class, $value);
 		$this->assertSame($time, $value->value()['html']);
 		$this->assertSame((int)$time, $value->expires());
 	}

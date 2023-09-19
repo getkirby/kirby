@@ -4,6 +4,9 @@ namespace Kirby\Http;
 
 use Kirby\Cms\App;
 use Kirby\Http\Request\Auth;
+use Kirby\Http\Request\Auth\BasicAuth;
+use Kirby\Http\Request\Auth\BearerAuth;
+use Kirby\Http\Request\Auth\SessionAuth;
 use Kirby\Http\Request\Body;
 use Kirby\Http\Request\Files;
 use Kirby\Http\Request\Query;
@@ -24,9 +27,9 @@ use Kirby\Toolkit\Str;
 class Request
 {
 	public static array $authTypes = [
-		'basic'   => 'Kirby\Http\Request\Auth\BasicAuth',
-		'bearer'  => 'Kirby\Http\Request\Auth\BearerAuth',
-		'session' => 'Kirby\Http\Request\Auth\SessionAuth',
+		'basic'   => BasicAuth::class,
+		'bearer'  => BearerAuth::class,
+		'session' => SessionAuth::class,
 	];
 
 	/**
