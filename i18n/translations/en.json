@@ -3,6 +3,7 @@
 	"account.delete": "Delete your account",
 	"account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
 
+	"activate": "Activate",
 	"add": "Add",
 	"alpha": "Alpha",
 	"author": "Author",
@@ -47,6 +48,7 @@
 	"dialog.users.empty": "No users to select",
 
 	"dimensions": "Dimensions",
+	"disable": "Disable",
 	"disabled": "Disabled",
 	"discard": "Discard",
 
@@ -447,6 +449,19 @@
 	"login.toggleText.code.email-password": "Login with password",
 	"login.toggleText.password-reset.email": "Forgot your password?",
 	"login.toggleText.password-reset.email-password": "← Back to login",
+	"login.totp.activate.option": "Set up time-based codes",
+	"login.totp.activate.label": "Time-based codes for login",
+	"login.totp.activate.qr.help": "Scan this QR code or add the secret <code>{secret}</code> manually to your authenticator app. Use the app later to get a time-based code as second factor for your login.",
+	"login.totp.activate.confirm.label": "Confirm",
+	"login.totp.activate.confirm.help": "by entering the current time-based code from your authenticator app",
+	"login.totp.activate.confirm.fail": "Invalid time-based code",
+	"login.totp.activate.confirm.missing": "Please enter the current time-based code",
+	"login.totp.activate.success": "Activated time-based codes",
+	"login.totp.disable.option": "Disable time-based codes",
+	"login.totp.disable.label": "Enter your password to disable time-based codes",
+	"login.totp.disable.help": "You can always set it up again later. Two-factor authentication will send you a login code via email instead.",
+	"login.totp.disable.admin": "Disable time-based codes for <strong>{user}</strong>",
+	"login.totp.disable.success": "Disabled time-based codes",
 
 	"logout": "Log out",
 

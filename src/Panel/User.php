@@ -89,23 +89,23 @@ class User extends Model
 			'disabled' => $this->isDisabledDropdownOption('changePassword', $options, $permissions)
 		];
 
-		if (
-			$account &&
-			($this->model->kirby()->system()->loginMethods()['password']['2fa'] ?? null) === true &&
-			in_array('totp', $this->model->kirby()->auth()->enabledChallenges()) === true
-		) {
-			if ($this->model->totp() === null) {
-				$result[] = [
-					'dialog'   => $url . '/totp/activate',
-					'icon'     => 'qr-code',
-					'text'     => 'Set one-time code'
-				];
-			} else {
-				$result[] = [
-				'dialog'   => $url . '/totp/disable',
-				'icon'     => 'qr-code',
-				'text'     => 'Disable one-time code'
-			];
+		if ($this->model->kirby()->system()->is2FAWithTOTP() === true) {
+			if ($account || $this->model->kirby()->user()->isAdmin()) {
+				if ($this->model->totp() !== null) {
+					$result[] = [
+						'dialog'   => $url . '/totp/disable',
+						'icon'     => 'qr-code',
+						'text'     => I18n::translate('login.totp.disable.option'),
+					];
+
+				} elseif ($account) {
+					$result[] = [
+						'dialog'   => $url . '/totp/activate',
+						'icon'     => 'qr-code',
+						'text'     => I18n::translate('login.totp.activate.option'),
+						'disabled' => !$account
+					];
+				}
 			}
 		}
 
