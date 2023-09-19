@@ -66,7 +66,7 @@ class QrCodeTest extends TestCase
 	public function testToSvgColors()
 	{
 		$qr = new QrCode(
-			data: 'https://getkirby.com',
+			data:  'https://getkirby.com',
 			color: '#ff0000',
 			back:  '#00ff00'
 		);
@@ -80,7 +80,7 @@ class QrCodeTest extends TestCase
 	public function testToString()
 	{
 		$qr = new QrCode('https://getkirby.com');
-		$this->assertSame((string)$qr, $qr->toSvg());
+		$this->assertSame($qr->toSvg(), (string)$qr);
 	}
 
 	/**
