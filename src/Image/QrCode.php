@@ -65,7 +65,7 @@ class QrCode
 	 *
 	 * @param int|null $size Image width/height in pixels, defaults to a size per module of 4x4
 	 */
-	public function toDataUri(int $size = null): string
+	public function toDataUri(int|null $size = null): string
 	{
 		$image = $this->toImage($size);
 
@@ -83,16 +83,16 @@ class QrCode
 	 *
 	 * @param int|null $size Image width/height in pixels, defaults to a size per module of 4x4
 	 */
-	public function toImage(int $size = null): GdImage
+	public function toImage(int|null $size = null): GdImage
 	{
-		// Get code and size measurements
+		// get code and size measurements
 		$code   = $this->encode();
 		[$width, $height] = $this->measure($code);
 		$size ??= ceil($width * 4);
 		$ws     = $size / $width;
 		$hs     = $size / $height;
 
-		// Create image baseplate
+		// create image baseplate
 		$image = imagecreatetruecolor($size, $size);
 
 		$allocateColor = function (string $hex) use ($image) {
@@ -107,7 +107,7 @@ class QrCode
 		$color = $allocateColor($this->color);
 		imagefill($image, 0, 0, $back);
 
-		// Paint square for each module
+		// paint square for each module
 		$this->eachModule(
 			$code,
 			fn ($x, $y) => imagefilledrectangle(
@@ -168,7 +168,7 @@ class QrCode
 			'png'   => imagepng($this->toImage(), $file),
 			'svg'   => F::write($file, $this->toSvg()),
 			'webp'  => imagewebp($this->toImage(), $file),
-			default => throw new InvalidArgumentException('Cannot write QR code  as .' . $format)
+			default => throw new InvalidArgumentException('Cannot write QR code as ' . $format)
 		};
 	}
 
@@ -215,7 +215,7 @@ class QrCode
 			$matrix[] = $row;
 		}
 
-		// Finder patterns
+		// finder patterns
 		for ($i = 0; $i < 8; $i++) {
 			for ($j = 0; $j < 8; $j++) {
 				$m = (($i == 7 || $j == 7) ? 2 :
@@ -227,7 +227,7 @@ class QrCode
 			}
 		}
 
-		// Alignment patterns
+		// alignment patterns
 		if ($version >= 2) {
 			$alignment = static::ALIGNMENT_PATTERNS[$version - 2];
 
@@ -245,16 +245,16 @@ class QrCode
 			}
 		}
 
-		// Timing patterns
+		// timing patterns
 		for ($i = $size - 9; $i >= 8; $i--) {
 			$matrix[$i][6] = ($i & 1) ^ 3;
 			$matrix[6][$i] = ($i & 1) ^ 3;
 		}
 
-		// Dark module. Such an ominous name for such an innocuous thing
+		// dark module – such an ominous name for such an innocuous thing
 		$matrix[$size - 8][8] = 3;
 
-		// Format information area
+		// format information area
 		for ($i = 0; $i <= 8; $i++) {
 			if (!$matrix[$i][8]) {
 				$matrix[$i][8] = 1;
@@ -270,7 +270,7 @@ class QrCode
 			}
 		}
 
-		// Version information area
+		// version information area
 		if ($version >= 7) {
 			for ($i = 9; $i < 12; $i++) {
 				for ($j = 0; $j < 6; $j++) {
@@ -280,7 +280,7 @@ class QrCode
 			}
 		}
 
-		// Data
+		// data
 		$col    = $size - 1;
 		$row    = $size - 1;
 		$dir    = -1;
@@ -364,7 +364,7 @@ class QrCode
 
 		$ec = static::EC_PARAMS[($version - 1) * 4 + $ecl];
 
-		// Don't cut off mid-character if exceeding capacity
+		// don't cut off mid-character if exceeding capacity
 		$max_chars = static::CAPACITY[$version - 1][$ecl][$mode];
 
 		if ($mode == 3) {
@@ -373,12 +373,11 @@ class QrCode
 
 		$data = substr($this->data, 0, $max_chars);
 
-		// Convert from character level to bit level
+		// convert from character level to bit level
 		$code = match ($mode) {
 			0 => $this->encodeNumeric($data, $group),
 			1 => $this->encodeAlphanum($data, $group),
 			2 => $this->encodeBinary($data, $group),
-
 			default => throw new LogicException('Invalid QR mode') // @codeCoverageIgnore
 		};
 
@@ -388,7 +387,7 @@ class QrCode
 			$code = array_merge($code, array_fill(0, 8 - $remainder, 0));
 		}
 
-		// Convert from bit level to byte level
+		// convert from bit level to byte level
 		$data = [];
 
 		for ($i = 0, $n = count($code); $i < $n; $i += 8) {
@@ -736,7 +735,7 @@ class QrCode
 		$matrix[8][$size - 2] = $format[13];
 		$matrix[8][$size - 1] = $format[14];
 
-		// Version info
+		// version info
 		if ($version >= 7) {
 			$version = static::VERSION_INFO[$version - 7];
 
@@ -748,7 +747,7 @@ class QrCode
 			}
 		}
 
-		// Patterns and data
+		// patterns and data
 		for ($i = 0; $i < $size; $i++) {
 			for ($j = 0; $j < $size; $j++) {
 				$matrix[$i][$j] &= 1;
@@ -769,9 +768,7 @@ class QrCode
 			5 => !(((($row * $column) % 2) + (($row * $column) % 3))),
 			6 => !(((($row * $column) % 2) + (($row * $column) % 3)) % 2),
 			7 => !(((($row + $column) % 2) + (($row * $column) % 3)) % 2),
-
-			default => throw new LogicException('Invalid QR mask')
-			// @codeCoverageIgnore
+			default => throw new LogicException('Invalid QR mask') // @codeCoverageIgnore
 		};
 	}
 
@@ -793,12 +790,12 @@ class QrCode
 	 */
 	protected function mode(): int
 	{
-		// Numeric
+		// numeric
 		if (preg_match('/^[0-9]*$/', $this->data)) {
 			return 0;
 		}
 
-		// Alphanumeric
+		// alphanumeric
 		if (preg_match('/^[0-9A-Z .\/:$%*+-]*$/', $this->data)) {
 			return 1;
 		}
@@ -808,14 +805,14 @@ class QrCode
 
 	protected function penalty(array &$matrix, int $size): int
 	{
-		$score  = $this->penalty_1($matrix, $size);
-		$score += $this->penalty_2($matrix, $size);
-		$score += $this->penalty_3($matrix, $size);
-		$score += $this->penalty_4($matrix, $size);
+		$score  = $this->penalty1($matrix, $size);
+		$score += $this->penalty2($matrix, $size);
+		$score += $this->penalty3($matrix, $size);
+		$score += $this->penalty4($matrix, $size);
 		return $score;
 	}
 
-	protected function penalty_1(array &$matrix, int $size): int
+	protected function penalty1(array &$matrix, int $size): int
 	{
 		$score = 0;
 
@@ -861,7 +858,7 @@ class QrCode
 		return $score;
 	}
 
-	protected function penalty_2(array &$matrix, int $size): int
+	protected function penalty2(array &$matrix, int $size): int
 	{
 		$score = 0;
 
@@ -885,7 +882,7 @@ class QrCode
 		return $score;
 	}
 
-	protected function penalty_3(array &$matrix, int $size): int
+	protected function penalty3(array &$matrix, int $size): int
 	{
 		$score = 0;
 
@@ -926,7 +923,7 @@ class QrCode
 		return $score;
 	}
 
-	protected function penalty_4(array &$matrix, int $size): int
+	protected function penalty4(array &$matrix, int $size): int
 	{
 		$dark = 0;
 
@@ -981,7 +978,7 @@ class QrCode
 
 	/**
 	 * maximum encodable characters = $qr_capacity [ (version - 1) ]
-	 * [ (0 for L, 1 for M, 2 for Q, 3 for H)                    ]
+	 * [ (0 for L, 1 for M, 2 for Q, 3 for H) ]
 	 * [ (0 for numeric, 1 for alpha, 2 for binary) ]
 	 */
 	protected const CAPACITY = [

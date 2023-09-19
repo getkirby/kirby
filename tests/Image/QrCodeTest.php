@@ -92,22 +92,22 @@ class QrCodeTest extends TestCase
 
 		$qr = new QrCode('https://getkirby.com');
 
-		$qr->write($file = $dir .'/test.gif');
+		$qr->write($file = $dir . '/test.gif');
 		$this->assertFileExists($file);
 
-		$qr->write($file = $dir .'/test.jpg');
+		$qr->write($file = $dir . '/test.jpg');
 		$this->assertFileExists($file);
 
-		$qr->write($file = $dir .'/test.jpeg');
+		$qr->write($file = $dir . '/test.jpeg');
 		$this->assertFileExists($file);
 
-		$qr->write($file = $dir .'/test.png');
+		$qr->write($file = $dir . '/test.png');
 		$this->assertFileExists($file);
 
-		$qr->write($file = $dir .'/test.svg');
+		$qr->write($file = $dir . '/test.svg');
 		$this->assertFileExists($file);
 
-		$qr->write($file = $dir .'/test.webp');
+		$qr->write($file = $dir . '/test.webp');
 		$this->assertFileExists($file);
 
 		Dir::remove($dir);
