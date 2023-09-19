@@ -416,9 +416,11 @@ class QrCode
 			case 2: // 27 - 40
 				$code[] = $length & 0x2000;
 				$code[] = $length & 0x1000;
+				// no break
 			case 1: // 10 - 26
 				$code[] = $length & 0x0800;
 				$code[] = $length & 0x0400;
+				// no break
 			case 0: // 1 - 9
 				$code[] = $length & 0x0200;
 				$code[] = $length & 0x0100;
@@ -430,6 +432,7 @@ class QrCode
 				$code[] = $length & 0x0004;
 				$code[] = $length & 0x0002;
 				$code[] = $length & 0x0001;
+				// no break
 		}
 		for ($i = 0; $i < $length; $i += 3) {
 			$group = substr($data, $i, 3);
@@ -438,15 +441,18 @@ class QrCode
 					$code[] = $group & 0x200;
 					$code[] = $group & 0x100;
 					$code[] = $group & 0x080;
+					// no break
 				case 2:
 					$code[] = $group & 0x040;
 					$code[] = $group & 0x020;
 					$code[] = $group & 0x010;
+					// no break
 				case 1:
 					$code[] = $group & 0x008;
 					$code[] = $group & 0x004;
 					$code[] = $group & 0x002;
 					$code[] = $group & 0x001;
+					// no break
 			}
 		}
 		return $code;
@@ -461,9 +467,11 @@ class QrCode
 			case 2: // 27 - 40
 				$code[] = $length & 0x1000;
 				$code[] = $length & 0x0800;
+				// no break
 			case 1: // 10 - 26
 				$code[] = $length & 0x0400;
 				$code[] = $length & 0x0200;
+				// no break
 			case 0: // 1 - 9
 				$code[] = $length & 0x0100;
 				$code[] = $length & 0x0080;
@@ -474,6 +482,7 @@ class QrCode
 				$code[] = $length & 0x0004;
 				$code[] = $length & 0x0002;
 				$code[] = $length & 0x0001;
+				// no break
 		}
 		for ($i = 0; $i < $length; $i += 2) {
 			$group = substr($data, $i, 2);
@@ -531,6 +540,7 @@ class QrCode
 				$code[] = $length & 0x0004;
 				$code[] = $length & 0x0002;
 				$code[] = $length & 0x0001;
+				// no break
 		}
 
 		for ($i = 0; $i < $length; $i++) {
