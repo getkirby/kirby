@@ -4,7 +4,9 @@ namespace Kirby\Image;
 
 use Closure;
 use GdImage;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Filesystem\F;
 
 /**
  * Creates a QR code
@@ -129,6 +131,25 @@ class QrCode
 	public function __toString(): string
 	{
 		return $this->toSvg();
+	}
+
+	/**
+	 * Saves the QR code to a file.
+	 * Supported formats: gif, jpg, jpeg, png, svg, webp
+	 */
+	public function write(string $file): void
+	{
+		$format = F::extension($file);
+
+		match ($format) {
+			'gif'   => imagegif($this->toImage(), $file),
+			'jpg',
+			'jpeg'  => imagejpeg($this->toImage(), $file),
+			'png'   => imagepng($this->toImage(), $file),
+			'svg'   => F::write($file, $this->toSvg()),
+			'webp'  => imagewebp($this->toImage(), $file),
+			default => throw new InvalidArgumentException('Cannot write QR code  as .' . $format)
+		};
 	}
 
 	protected function applyMask(array $matrix, int $size, int $mask): array

@@ -3,6 +3,7 @@
 namespace Kirby\Image;
 
 use GdImage;
+use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 
 /**
@@ -73,9 +74,42 @@ class QrCodeTest extends TestCase
 		$this->assertStringContainsString('<rect width="100%" height="100%" style="fill: #00ff00"/>', $qr->toSvg());
 	}
 
+	/**
+	 * @covers ::__toString
+	 */
 	public function testToString()
 	{
 		$qr = new QrCode('https://getkirby.com');
 		$this->assertSame((string)$qr, $qr->toSvg());
+	}
+
+	/**
+	 * @covers ::write
+	 */
+	public function testWrite()
+	{
+		Dir::make($dir = __DIR__ . '/tmp');
+
+		$qr = new QrCode('https://getkirby.com');
+
+		$qr->write($file = $dir .'/test.gif');
+		$this->assertFileExists($file);
+
+		$qr->write($file = $dir .'/test.jpg');
+		$this->assertFileExists($file);
+
+		$qr->write($file = $dir .'/test.jpeg');
+		$this->assertFileExists($file);
+
+		$qr->write($file = $dir .'/test.png');
+		$this->assertFileExists($file);
+
+		$qr->write($file = $dir .'/test.svg');
+		$this->assertFileExists($file);
+
+		$qr->write($file = $dir .'/test.webp');
+		$this->assertFileExists($file);
+
+		Dir::remove($dir);
 	}
 }
