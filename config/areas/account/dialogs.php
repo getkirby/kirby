@@ -57,13 +57,7 @@ return [
 				$issuer = $kirby->site()->title();
 				$label  = $user->email();
 				$uri    = $totp->uri($issuer, $label);
-
-				$qr = new QrCode($uri);
-				$image = $qr->render_image();
-				ob_start();
-				imagepng($image);
-				$data = ob_get_contents();
-       			ob_end_clean();
+				$qr     = new QrCode($uri);
 
 				return [
 					'component' => 'k-form-dialog',
@@ -72,7 +66,7 @@ return [
 							'qr' => [
 								'label' => 'Scan this QR code',
 								'type'  => 'info',
-								'text'  => '<img src="data:image/png;base64,' . base64_encode($data) . '" title="' . $uri .'" />',
+								'text'  => '<img src="' . $qr->toDataUri() . '" title="' . $uri .'" />',
 								'theme' => 'none',
 							],
 							'secret_display' => [
@@ -88,6 +82,7 @@ return [
 								'label'   => 'Confirm',
 								'type'    => 'text',
 								'counter' => false,
+								'font'    => 'monospace',
 								'help'    => 'by entering the 2FA code from your authenticator app'
 							],
 						],
