@@ -86,8 +86,9 @@ export default {
 	--input-shadow: var(--shadow);
 	--input-outline-focus: none;
 }
-.k-inputbox[data-variant="box"][data-disabled="true"] {
-	--input-shadow: none;
+.k-inputbox[data-variant="box"][data-disabled="true"],
+.k-inputbox[data-variant="choices"][data-disabled="true"] li {
+	box-shadow: none;
 }
 
 /* Variant: plain */
