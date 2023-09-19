@@ -70,8 +70,8 @@ class QrCodeTest extends TestCase
 			color: '#ff0000',
 			back:  '#00ff00'
 		);
-		$this->assertStringContainsString('style="fill: #ff0000"/></svg>', $qr->toSvg());
-		$this->assertStringContainsString('<rect width="100%" height="100%" style="fill: #00ff00"/>', $qr->toSvg());
+		$this->assertStringContainsString('fill="#ff0000"/></svg>', $qr->toSvg());
+		$this->assertStringContainsString('<rect width="100%" height="100%" fill="#00ff00"/>', $qr->toSvg());
 	}
 
 	/**

@@ -47,7 +47,6 @@ class QrCode
 {
 	public function __construct(
 		public string $data,
-		public int|null $size = null,
 		public string $color = '#000000',
 		public string $back = '#FFFFFF',
 	) {
@@ -56,9 +55,9 @@ class QrCode
 	/**
 	 * Returns the QR Code as a data URI
 	 */
-	public function toDataUri(): string
+	public function toDataUri(int $size = null): string
 	{
-		$image = $this->toImage();
+		$image = $this->toImage($size);
 
 		ob_start();
 		imagepng($image);
@@ -72,14 +71,14 @@ class QrCode
 	/**
 	 * Returns the QR code as a GdImage object
 	 */
-	public function toImage(): GdImage
+	public function toImage(int $size = null): GdImage
 	{
 		// Get code and size measurements
-		$code = $this->encode();
+		$code   = $this->encode();
 		[$width, $height] = $this->measure($code);
-		$size = $this->size ?? ceil($width * 4);
-		$ws   = $size / $width;
-		$hs   = $size / $height;
+		$size ??= ceil($width * 4);
+		$ws     = $size / $width;
+		$hs     = $size / $height;
 
 		// Create image baseplate
 		$image = imagecreatetruecolor($size, $size);
@@ -115,17 +114,17 @@ class QrCode
 	/**
 	 * Returns the QR code as <svg> element
 	 */
-	public function toSvg(): string
+	public function toSvg(int|string $size = '100%'): string
 	{
 		$code = $this->encode();
-		[$width, $height] = $this->measure($code);
+		[$vbw, $vbh] = $this->measure($code);
 
 		$modules = $this->eachModule(
 			$code,
 			fn ($x, $y) => 'M' . $x . ',' . $y . 'h1v1h-1z'
 		);
 
-		return '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 ' . $width . ' ' . $height . '" stroke="none" style="width: 100%"><rect width="100%" height="100%" style="fill: ' . $this->back . '"/><path d="' . implode(' ', $modules) . '" style="fill: ' . $this->color . '"/></svg>';
+		return '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 ' . $vbw . ' ' . $vbh . '" stroke="none" style="width: ' . $size . '"><rect width="100%" height="100%" fill="' . $this->back . '"/><path d="' . implode(' ', $modules) . '" fill="' . $this->color . '"/></svg>';
 	}
 
 	public function __toString(): string
