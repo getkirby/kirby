@@ -3,6 +3,7 @@
 		<k-tags
 			ref="tags"
 			v-bind="$props"
+			:value="value ?? []"
 			@input="$emit('input', $event)"
 			@click.native.stop
 		/>
