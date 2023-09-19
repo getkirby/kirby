@@ -1,6 +1,6 @@
 <template>
 	<k-field v-bind="$props" class="k-blocks-field">
-		<template #options>
+		<template v-if="hasFieldsets" #options>
 			<k-button-group layout="collapsed">
 				<k-button
 					:autofocus="autofocus"
@@ -61,7 +61,11 @@
 			v-on="$listeners"
 		/>
 
-		<footer v-if="!isEmpty && !isFull" class="k-bar" data-align="center">
+		<footer
+			v-if="!isEmpty && !isFull && hasFieldsets"
+			class="k-bar"
+			data-align="center"
+		>
 			<k-button
 				icon="add"
 				size="xs"
@@ -100,8 +104,11 @@ export default {
 		};
 	},
 	computed: {
+		hasFieldsets() {
+			return this.$helper.object.length(this.fieldsets) > 0;
+		},
 		isEmpty() {
-			return this.value.length === 0;
+			return this.value?.length === 0;
 		},
 		isFull() {
 			if (this.max === null) {
