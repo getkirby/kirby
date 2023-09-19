@@ -83,9 +83,6 @@ export default {
 
 .k-choice-input[aria-disabled] {
 	cursor: not-allowed;
-	--choice-input-color-back: var(--color-light);
-	--choice-input-color-info: var(--color-gray-400);
-	--choice-input-color-text: var(--color-text-dimmed);
 	--shadow: none;
 }
 </style>
