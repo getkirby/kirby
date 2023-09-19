@@ -135,10 +135,8 @@ class QrCode
 	{
 		for ($i = 0; $i < $size; $i++) {
 			for ($j = 0; $j < $size; $j++) {
-				if ($matrix[$i][$j] >= 4) {
-					if ($this->mask($mask, $i, $j)) {
-						$matrix[$i][$j] ^= 1;
-					}
+				if ($matrix[$i][$j] >= 4 && $this->mask($mask, $i, $j)) {
+					$matrix[$i][$j] ^= 1;
 				}
 			}
 		}
@@ -148,36 +146,31 @@ class QrCode
 
 	protected function applyBestMask(array $matrix, int $size): array
 	{
-		$best_mask    = 0;
-		$best_matrix  = $this->applyMask($matrix, $size, $best_mask);
-		$best_penalty = $this->penalty($best_matrix, $size);
+		$mask     = 0;
+		$mmatrix  = $this->applyMask($matrix, $size, $mask);
+		$penalty  = $this->penalty($mmatrix, $size);
 
-		for ($test_mask = 1; $test_mask < 8; $test_mask++) {
-			$test_matrix  = $this->applyMask($matrix, $size, $test_mask);
-			$test_penalty = $this->penalty($test_matrix, $size);
+		for ($tmask = 1; $tmask < 8; $tmask++) {
+			$tmatrix  = $this->applyMask($matrix, $size, $tmask);
+			$tpenalty = $this->penalty($tmatrix, $size);
 
-			if ($test_penalty < $best_penalty) {
-				$best_mask    = $test_mask;
-				$best_matrix  = $test_matrix;
-				$best_penalty = $test_penalty;
+			if ($tpenalty < $penalty) {
+				$mask    = $tmask;
+				$mmatrix = $tmatrix;
+				$penalty = $tpenalty;
 			}
 		}
 
-		return [$best_mask, $best_matrix];
+		return [$mask, $mmatrix];
 	}
 
 	protected function createMatrix(int $version, array $data): array
 	{
 		$size   = $version * 4 + 17;
 		$matrix = [];
+		$row    = array_fill(0, $size, 0);
 
 		for ($i = 0; $i < $size; $i++) {
-			$row = [];
-
-			for ($j = 0; $j < $size; $j++) {
-				$row[] = 0;
-			}
-
 			$matrix[] = $row;
 		}
 
@@ -267,6 +260,7 @@ class QrCode
 				$dir = -$dir;
 				$row += $dir;
 				$col -= 2;
+
 				if ($col == 6) {
 					$col--;
 				}
@@ -289,10 +283,10 @@ class QrCode
 		foreach ($code['bits'] as $by => $row) {
 			$y1 = $y + $by;
 
-			foreach ($row as $bx => $color) {
+			foreach ($row as $bx => $module) {
 				$x1 = $x + $bx;
 
-				if ($color === 1) {
+				if ($module === 1) {
 					$rows[] = $action($x1, $y1);
 				}
 			}
@@ -347,11 +341,10 @@ class QrCode
 			default => throw new LogicException('Invalid QR mode')
 		};
 
-		for ($i = 0; $i < 4; $i++) {
-			$code[] = 0;
-		}
-		while (count($code) % 8) {
-			$code[] = 0;
+		$code = array_merge($code, array_fill(0, 4, 0));
+
+		if ($remainder = count($code) % 8) {
+			$code = array_merge($code, array_fill(0, 8 - $remainder, 0));
 		}
 
 		// Convert from bit level to byte level
@@ -432,7 +425,6 @@ class QrCode
 				$code[] = $length & 0x0004;
 				$code[] = $length & 0x0002;
 				$code[] = $length & 0x0001;
-				// no break
 		}
 		for ($i = 0; $i < $length; $i += 3) {
 			$group = substr($data, $i, 3);
@@ -452,7 +444,6 @@ class QrCode
 					$code[] = $group & 0x004;
 					$code[] = $group & 0x002;
 					$code[] = $group & 0x001;
-					// no break
 			}
 		}
 		return $code;
@@ -482,7 +473,6 @@ class QrCode
 				$code[] = $length & 0x0004;
 				$code[] = $length & 0x0002;
 				$code[] = $length & 0x0001;
-				// no break
 		}
 		for ($i = 0; $i < $length; $i += 2) {
 			$group = substr($data, $i, 2);
@@ -540,7 +530,6 @@ class QrCode
 				$code[] = $length & 0x0004;
 				$code[] = $length & 0x0002;
 				$code[] = $length & 0x0001;
-				// no break
 		}
 
 		for ($i = 0; $i < $length; $i++) {
