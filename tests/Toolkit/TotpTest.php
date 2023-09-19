@@ -135,5 +135,12 @@ class TotpTest extends TestCase
 		$this->assertFalse($totp->verify(''));
 		$this->assertFalse($totp->verify('a beer'));
 		$this->assertFalse($totp->verify('lizard'));
+
+		$this->assertTrue($totp->verify('050 471'));
+		$this->assertFalse($totp->verify('306 183'));
+		$this->assertTrue($totp->verify('05 04 71'));
+		$this->assertFalse($totp->verify('30 61 83'));
+		$this->assertTrue($totp->verify('My one-time code is 050471!'));
+		$this->assertFalse($totp->verify('My one-time code is 306183!'));
 	}
 }

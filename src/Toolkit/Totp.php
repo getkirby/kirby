@@ -125,6 +125,10 @@ class Totp
 	 */
 	public function verify(string $totp): bool
 	{
+		// strip out any non-numeric character (e.g. spaces)
+		// from user input to increase UX
+		$totp = preg_replace('/[^0-9]/', '', $totp);
+
 		// also allow the previous and upcoming codes
 		// to account for time sync issues
 		for ($offset = -1; $offset <= 1; $offset++) {
