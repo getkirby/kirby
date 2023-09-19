@@ -95,8 +95,9 @@ class QrCode
 		imagefill($image, 0, 0, $back);
 
 		// Paint square for each module
-		$this->eachModule($code, fn ($x, $y) =>
-			imagefilledrectangle(
+		$this->eachModule(
+			$code,
+			fn ($x, $y) => imagefilledrectangle(
 				$image,
 				floor($x * $ws),
 				floor($y * $hs),
@@ -117,14 +118,13 @@ class QrCode
 		$code = $this->encode();
 		[$width, $height] = $this->measure($code);
 
-		$modules = $this->eachModule($code,
-			fn ($x, $y) => "M" . $x . "," . $y . "h1v1h-1z"
+		$modules = $this->eachModule(
+			$code,
+			fn ($x, $y) => 'M' . $x . ',' . $y . 'h1v1h-1z'
 		);
 
 		return '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 ' . $width . ' ' . $height . '" stroke="none" style="width: 100%"><rect width="100%" height="100%" style="fill: ' . $this->back . '"/><path d="' . implode(' ', $modules) . '" style="fill: ' . $this->color . '"/></svg>';
 	}
-
-	/** INTERNAL FUNCTIONS */
 
 	protected function applyMask(array $matrix, int $size, int $mask): array
 	{
@@ -180,8 +180,8 @@ class QrCode
 		for ($i = 0; $i < 8; $i++) {
 			for ($j = 0; $j < 8; $j++) {
 				$m = (($i == 7 || $j == 7) ? 2 :
-				     (($i == 0 || $j == 0 || $i == 6 || $j == 6) ? 3 :
-				     (($i == 1 || $j == 1 || $i == 5 || $j == 5) ? 2 : 3)));
+					 (($i == 0 || $j == 0 || $i == 6 || $j == 6) ? 3 :
+					 (($i == 1 || $j == 1 || $i == 5 || $j == 5) ? 2 : 3)));
 				$matrix[$i][$j] = $m;
 				$matrix[$size - $i - 1][$j] = $m;
 				$matrix[$i][$size - $j - 1] = $m;
@@ -217,10 +217,18 @@ class QrCode
 
 		// Format information area
 		for ($i = 0; $i <= 8; $i++) {
-			if (!$matrix[$i][8]) $matrix[$i][8] = 1;
-			if (!$matrix[8][$i]) $matrix[8][$i] = 1;
-			if ($i && !$matrix[$size - $i][8]) $matrix[$size - $i][8] = 1;
-			if ($i && !$matrix[8][$size - $i]) $matrix[8][$size - $i] = 1;
+			if (!$matrix[$i][8]) {
+				$matrix[$i][8] = 1;
+			}
+			if (!$matrix[8][$i]) {
+				$matrix[8][$i] = 1;
+			}
+			if ($i && !$matrix[$size - $i][8]) {
+				$matrix[$size - $i][8] = 1;
+			}
+			if ($i && !$matrix[8][$size - $i]) {
+				$matrix[8][$size - $i] = 1;
+			}
 		}
 
 		// Version information area
@@ -254,7 +262,9 @@ class QrCode
 				$dir = -$dir;
 				$row += $dir;
 				$col -= 2;
-				if ($col == 6) $col--;
+				if ($col == 6) {
+					$col--;
+				}
 			}
 		}
 
@@ -344,14 +354,32 @@ class QrCode
 
 		for ($i = 0, $n = count($code); $i < $n; $i += 8) {
 			$byte = 0;
-			if ($code[$i + 0]) $byte |= 0x80;
-			if ($code[$i + 1]) $byte |= 0x40;
-			if ($code[$i + 2]) $byte |= 0x20;
-			if ($code[$i + 3]) $byte |= 0x10;
-			if ($code[$i + 4]) $byte |= 0x08;
-			if ($code[$i + 5]) $byte |= 0x04;
-			if ($code[$i + 6]) $byte |= 0x02;
-			if ($code[$i + 7]) $byte |= 0x01;
+
+			if ($code[$i + 0]) {
+				$byte |= 0x80;
+			}
+			if ($code[$i + 1]) {
+				$byte |= 0x40;
+			}
+			if ($code[$i + 2]) {
+				$byte |= 0x20;
+			}
+			if ($code[$i + 3]) {
+				$byte |= 0x10;
+			}
+			if ($code[$i + 4]) {
+				$byte |= 0x08;
+			}
+			if ($code[$i + 5]) {
+				$byte |= 0x04;
+			}
+			if ($code[$i + 6]) {
+				$byte |= 0x02;
+			}
+			if ($code[$i + 7]) {
+				$byte |= 0x01;
+			}
+
 			$data[] = $byte;
 		}
 
@@ -376,16 +404,17 @@ class QrCode
 
 	protected function encodeNumeric($data, $version_group): array
 	{
-		$code = [0, 0, 0, 1];
+		$code   = [0, 0, 0, 1];
 		$length = strlen($data);
+
 		switch ($version_group) {
-			case 2:  /* 27 - 40 */
+			case 2: // 27 - 40
 				$code[] = $length & 0x2000;
 				$code[] = $length & 0x1000;
-			case 1:  /* 10 - 26 */
+			case 1: // 10 - 26
 				$code[] = $length & 0x0800;
 				$code[] = $length & 0x0400;
-			case 0:  /* 1 - 9 */
+			case 0: // 1 - 9
 				$code[] = $length & 0x0200;
 				$code[] = $length & 0x0100;
 				$code[] = $length & 0x0080;
@@ -424,13 +453,13 @@ class QrCode
 		$code = [0, 0, 1, 0];
 		$length = strlen($data);
 		switch ($version_group) {
-			case 2:  /* 27 - 40 */
+			case 2: // 27 - 40
 				$code[] = $length & 0x1000;
 				$code[] = $length & 0x0800;
-			case 1:  /* 10 - 26 */
+			case 1: // 10 - 26
 				$code[] = $length & 0x0400;
 				$code[] = $length & 0x0200;
-			case 0:  /* 1 - 9 */
+			case 0: // 1 - 9
 				$code[] = $length & 0x0100;
 				$code[] = $length & 0x0080;
 				$code[] = $length & 0x0040;
@@ -477,8 +506,8 @@ class QrCode
 		$length = strlen($data);
 
 		switch ($version_group) {
-			case 2:  /* 27 - 40 */
-			case 1:  /* 10 - 26 */
+			case 2:  // 27 - 40
+			case 1:  // 10 - 26
 				$code[] = $length & 0x8000;
 				$code[] = $length & 0x4000;
 				$code[] = $length & 0x2000;
@@ -487,7 +516,8 @@ class QrCode
 				$code[] = $length & 0x0400;
 				$code[] = $length & 0x0200;
 				$code[] = $length & 0x0100;
-			case 0:  /* 1 - 9 */
+				// no break
+			case 0:  // 1 - 9
 				$code[] = $length & 0x0080;
 				$code[] = $length & 0x0040;
 				$code[] = $length & 0x0020;
@@ -613,7 +643,9 @@ class QrCode
 				}
 			}
 
-			if ($break) break;
+			if ($break) {
+				break;
+			}
 		}
 
 		return $data;
@@ -754,7 +786,9 @@ class QrCode
 				if ($rv == $rowvalue) {
 					$rowcount++;
 				} else {
-					if ($rowcount >= 5) $score += $rowcount - 2;
+					if ($rowcount >= 5) {
+						$score += $rowcount - 2;
+					}
 					$rowvalue = $rv;
 					$rowcount = 1;
 				}
@@ -762,14 +796,20 @@ class QrCode
 				if ($cv == $colvalue) {
 					$colcount++;
 				} else {
-					if ($colcount >= 5) $score += $colcount - 2;
+					if ($colcount >= 5) {
+						$score += $colcount - 2;
+					}
 					$colvalue = $cv;
 					$colcount = 1;
 				}
 			}
 
-			if ($rowcount >= 5) $score += $rowcount - 2;
-			if ($colcount >= 5) $score += $colcount - 2;
+			if ($rowcount >= 5) {
+				$score += $rowcount - 2;
+			}
+			if ($colcount >= 5) {
+				$score += $colcount - 2;
+			}
 		}
 
 		return $score;
@@ -789,7 +829,10 @@ class QrCode
 				$v2 = ($v2 == 5 || $v2 == 3) ? 1 : 0;
 				$v3 = ($v3 == 5 || $v3 == 3) ? 1 : 0;
 				$v4 = ($v4 == 5 || $v4 == 3) ? 1 : 0;
-				if ($v1 == $v2 && $v2 == $v3 && $v3 == $v4) $score += 3;
+
+				if ($v1 == $v2 && $v2 == $v3 && $v3 == $v4) {
+					$score += 3;
+				}
 			}
 		}
 
@@ -811,16 +854,26 @@ class QrCode
 				$colvalue = (($colvalue << 1) & 0x7FF) | $cv;
 			}
 
-			if ($rowvalue == 0x5D0 || $rowvalue == 0x5D) $score += 40;
-			if ($colvalue == 0x5D0 || $colvalue == 0x5D) $score += 40;
+			if ($rowvalue == 0x5D0 || $rowvalue == 0x5D) {
+				$score += 40;
+			}
+			if ($colvalue == 0x5D0 || $colvalue == 0x5D) {
+				$score += 40;
+			}
 
 			for ($j = 11; $j < $size; $j++) {
 				$rv = ($matrix[$i][$j] == 5 || $matrix[$i][$j] == 3) ? 1 : 0;
 				$cv = ($matrix[$j][$i] == 5 || $matrix[$j][$i] == 3) ? 1 : 0;
 				$rowvalue = (($rowvalue << 1) & 0x7FF) | $rv;
 				$colvalue = (($colvalue << 1) & 0x7FF) | $cv;
-				if ($rowvalue == 0x5D0 || $rowvalue == 0x5D) $score += 40;
-				if ($colvalue == 0x5D0 || $colvalue == 0x5D) $score += 40;
+
+				if ($rowvalue == 0x5D0 || $rowvalue == 0x5D) {
+					$score += 40;
+				}
+
+				if ($colvalue == 0x5D0 || $colvalue == 0x5D) {
+					$score += 40;
+				}
 			}
 		}
 
