@@ -32,19 +32,22 @@ class AccountDropdownsTest extends AreaTestCase
 		$this->assertSame('/account/changeRole', $role['dialog']);
 		$this->assertSame('Change role', $role['text']);
 
-		$password = $options[4];
 
-		$this->assertSame('/account/changePassword', $password['dialog']);
-		$this->assertSame('Change password', $password['text']);
-
-		$language = $options[5];
+		$language = $options[4];
 
 		$this->assertSame('/account/changeLanguage', $language['dialog']);
 		$this->assertSame('Change language', $language['text']);
 
-		$this->assertSame('-', $options[6]);
+		$this->assertSame('-', $options[5]);
 
-		$delete = $options[7];
+		$password = $options[6];
+
+		$this->assertSame('/account/changePassword', $password['dialog']);
+		$this->assertSame('Change password', $password['text']);
+
+		$this->assertSame('-', $options[7]);
+
+		$delete = $options[8];
 
 		$this->assertSame('/account/delete', $delete['dialog']);
 		$this->assertSame('Delete your account', $delete['text']);

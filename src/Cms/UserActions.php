@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Data\Data;
+use Kirby\Data\Json;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
@@ -12,6 +13,7 @@ use Kirby\Form\Form;
 use Kirby\Http\Idn;
 use Kirby\Toolkit\Str;
 use SensitiveParameter;
+use SplFileObject;
 use Throwable;
 
 /**
@@ -147,13 +149,18 @@ trait UserActions
 	public function changeTotp(string|false $secret): static
 	{
 		return $this->commit('changeTotp', ['user' => $this, 'secret' => $secret], function ($user, $secret) {
-			$file = $user->root() . '/.totp';
+			$secrets = Json::decode($this->readSecret(1));
 
 			if ($secret === false) {
-				F::remove($file);
+				unset($secrets['totp']);
 			} else {
-				F::write($file, $secret);
+				$secrets['totp'] = $secret;
 			}
+
+			$this->writeSecret(Json::encode($secrets), 1);
+
+			// keep the user logged in
+			$user->loginPasswordless();
 
 			return $user;
 		});
@@ -324,7 +331,23 @@ trait UserActions
 	 */
 	protected function readPassword(): string|false
 	{
-		return F::read($this->passwordFile());
+		return $this->readSecret(0);
+	}
+
+	/**
+	 * Reads a specific line from
+	 * the user secrets file from disk
+	 */
+	protected function readSecret(int $line): string|false
+	{
+		$file = $this->secretsFile();
+
+		if (is_file($file) === false) {
+			return false;
+		}
+
+		$secrets = file($file, FILE_IGNORE_NEW_LINES);
+		return $secrets[$line] ?? false;
 	}
 
 	/**
@@ -377,6 +400,27 @@ trait UserActions
 		#[SensitiveParameter]
 		string $password = null
 	): bool {
-		return F::write($this->passwordFile(), $password);
+		return $this->writeSecret($password, 0);
+	}
+
+	/**
+	 * Writes a specific line to
+	 * the user secrets file on disk
+	 */
+	protected function writeSecret(
+		#[SensitiveParameter]
+		string $secret,
+		int $line
+	): bool {
+		$file = $this->secretsFile();
+
+		if (is_file($file) === true) {
+			$secrets = file($file, FILE_IGNORE_NEW_LINES);
+			$secrets[$line] = $secret;
+		} else {
+			$secrets = [$secret];
+		}
+
+		return F::write($file, implode("\n", $secrets));
 	}
 }

@@ -540,7 +540,7 @@ class User extends ModelWithContent
 	 */
 	public function passwordTimestamp(): int|null
 	{
-		$file = $this->passwordFile();
+		$file = $this->secretsFile();
 
 		// ensure we have the latest information
 		// to prevent cache attacks
@@ -681,17 +681,8 @@ class User extends ModelWithContent
 	 */
 	public function totp(): string|null
 	{
-		$file = $this->root() . '/.totp';
-
-		if (is_file($file) === false) {
-			return null;
-		}
-
-		if ($secret = file_get_contents($file)) {
-			return $secret;
-		}
-
-		return null;
+		$secrets = json_decode($this->readSecret(1), true);
+		return $secrets['totp'] ?? null;
 	}
 
 	/**
@@ -754,9 +745,18 @@ class User extends ModelWithContent
 	}
 
 	/**
-	 * Returns the path to the password file
+	 * @deprecated 4.0.0 Use `->secretsFile()` instead
 	 */
 	protected function passwordFile(): string
+	{
+		return $this->secretsFile();
+	}
+
+	/**
+	 * Returns the path to the file containing
+	 * all user secrets, including the password
+	 */
+	protected function secretsFile(): string
 	{
 		return $this->root() . '/.htpasswd';
 	}
