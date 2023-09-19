@@ -131,7 +131,7 @@ class Totp
 
 		// also allow the previous and upcoming codes
 		// to account for time sync issues
-		for ($offset = -1; $offset <= 1; $offset++) {
+		foreach ([0, -1, 1] as $offset) {
 			if (hash_equals($this->generate($offset), $totp) === true) {
 				return true;
 			}
