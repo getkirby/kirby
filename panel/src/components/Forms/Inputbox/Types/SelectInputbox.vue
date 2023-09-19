@@ -28,3 +28,10 @@ export default {
 	emits: ["input"]
 };
 </script>
+
+<style>
+.k-select-inputbox .k-select-input {
+	flex-grow: 1;
+	padding: var(--input-padding);
+}
+</style>
