@@ -10,6 +10,7 @@ import invalid from "./props/invalid.js";
 import label from "./props/label.js";
 import name from "./props/name.js";
 import pattern from "./props/pattern.js";
+import placeholder from "./props/placeholder.js";
 import required from "./props/required.js";
 import type from "./props/type.js";
 
@@ -26,6 +27,7 @@ export {
 	label,
 	name,
 	pattern,
+	placeholder,
 	required,
 	type
 };
