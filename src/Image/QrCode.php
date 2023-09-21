@@ -163,7 +163,7 @@ class QrCode
 	 * Supported formats: gif, jpg, jpeg, png, svg, webp
 	 *
 	 * @param string $file Path to the output file with one of the supported file extensions
-	 * @param int|string|null $size Optional image width/height in pixels( defaults to a size per module of 4x4) or CSS width of the `<svg>` element
+	 * @param int|string|null $size Optional image width/height in pixels (defaults to a size per module of 4x4) or CSS width of the `<svg>` element
 	 * @param string $color Foreground color in hex format
 	 * @param string $back Background color in hex format
 	 */
