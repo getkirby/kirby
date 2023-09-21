@@ -1,3 +1,6 @@
+@import url("./reset/choice.css");
+@import url("./reset/range.css");
+
 *,
 *::before,
 *::after {
@@ -41,8 +44,6 @@
 
 :where(select) {
 	appearance: none;
-	background: var(--color-white);
-	color: var(--color-black);
 	cursor: pointer;
 }
 
@@ -146,7 +147,6 @@
 
 :where(:invalid) {
 	box-shadow: none;
-	outline: 0;
 }
 
 :where(dialog) {
