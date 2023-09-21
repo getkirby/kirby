@@ -109,7 +109,7 @@ return [
 			return [
 				'component' => 'k-totp-dialog',
 				'props' => [
-					'qr'    => (new QrCode($uri))->toSvg(),
+					'qr'    => (new QrCode($uri))->toSvg(size: '100%'),
 					'value' => ['secret' => $totp->secret()]
 				]
 			];
