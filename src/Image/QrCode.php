@@ -48,27 +48,23 @@ use Kirby\Filesystem\F;
  */
 class QrCode
 {
-	/**
-	 * Class constructor
-	 *
-	 * @param string $color Foreground color in hex format
-	 * @param string $back Background color in hex format
-	 */
-	public function __construct(
-		public string $data,
-		public string $color = '#000000',
-		public string $back = '#FFFFFF',
-	) {
+	public function __construct(public string $data)
+	{
 	}
 
 	/**
 	 * Returns the QR code as a PNG data URI
 	 *
 	 * @param int|null $size Image width/height in pixels, defaults to a size per module of 4x4
+	 * @param string $color Foreground color in hex format
+	 * @param string $back Background color in hex format
 	 */
-	public function toDataUri(int|null $size = null): string
-	{
-		$image = $this->toImage($size);
+	public function toDataUri(
+		int|null $size = null,
+		string $color = '#000000',
+		string $back = '#FFFFFF'
+	): string {
+		$image = $this->toImage($size, $color, $back);
 
 		ob_start();
 		imagepng($image);
@@ -83,9 +79,14 @@ class QrCode
 	 * Returns the QR code as a GdImage object
 	 *
 	 * @param int|null $size Image width/height in pixels, defaults to a size per module of 4x4
+	 * @param string $color Foreground color in hex format
+	 * @param string $back Background color in hex format
 	 */
-	public function toImage(int|null $size = null): GdImage
-	{
+	public function toImage(
+		int|null $size = null,
+		string $color = '#000000',
+		string $back = '#FFFFFF'
+	): GdImage {
 		// get code and size measurements
 		$code   = $this->encode();
 		[$width, $height] = $this->measure($code);
@@ -104,8 +105,8 @@ class QrCode
 			return imagecolorallocate($image, $r, $g, $b);
 		};
 
-		$back  = $allocateColor($this->back);
-		$color = $allocateColor($this->color);
+		$back  = $allocateColor($back);
+		$color = $allocateColor($color);
 		imagefill($image, 0, 0, $back);
 
 		// paint square for each module
@@ -128,9 +129,14 @@ class QrCode
 	 * Returns the QR code as `<svg>` element
 	 *
 	 * @param int|string|null $size Optional CSS width of the `<svg>` element
+	 * @param string $color Foreground color in hex format
+	 * @param string $back Background color in hex format
 	 */
-	public function toSvg(int|string|null $size = null): string
-	{
+	public function toSvg(
+		int|string|null $size = null,
+		string $color = '#000000',
+		string $back = '#FFFFFF'
+	): string {
 		$code = $this->encode();
 		[$vbw, $vbh] = $this->measure($code);
 
@@ -142,8 +148,8 @@ class QrCode
 		$size = $size ? ' style="width: ' . $size . '"' : '';
 
 		return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' . $vbw . ' ' . $vbh . '" stroke="none"' . $size . '>' .
-			'<rect width="100%" height="100%" fill="' . $this->back . '"/>' .
-			'<path d="' . implode(' ', $modules) . '" fill="' . $this->color . '"/>' .
+			'<rect width="100%" height="100%" fill="' . $back . '"/>' .
+			'<path d="' . implode(' ', $modules) . '" fill="' . $color . '"/>' .
 			'</svg>';
 	}
 
