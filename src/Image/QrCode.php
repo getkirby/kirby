@@ -62,7 +62,7 @@ class QrCode
 	public function toDataUri(
 		int|null $size = null,
 		string $color = '#000000',
-		string $back = '#FFFFFF'
+		string $back = '#ffffff'
 	): string {
 		$image = $this->toImage($size, $color, $back);
 
@@ -85,7 +85,7 @@ class QrCode
 	public function toImage(
 		int|null $size = null,
 		string $color = '#000000',
-		string $back = '#FFFFFF'
+		string $back = '#ffffff'
 	): GdImage {
 		// get code and size measurements
 		$code   = $this->encode();
@@ -135,7 +135,7 @@ class QrCode
 	public function toSvg(
 		int|string|null $size = null,
 		string $color = '#000000',
-		string $back = '#FFFFFF'
+		string $back = '#ffffff'
 	): string {
 		$code = $this->encode();
 		[$vbw, $vbh] = $this->measure($code);
@@ -171,7 +171,7 @@ class QrCode
 		string $file,
 		int|string|null $size = null,
 		string $color = '#000000',
-		string $back = '#FFFFFF'
+		string $back = '#ffffff'
 	): void {
 		$format = F::extension($file);
 		$args    = [$size, $color, $back];
@@ -350,9 +350,12 @@ class QrCode
 				$width  = 0;
 				$height = 0;
 
+				$rowLength = count($row);
+				$colLength = count($code['bits']);
+
 				// extend to the right as long as the modules are active
 				// and use this to determine the width of the group
-				for ($x = $bx; $x < count($row); $x++) {
+				for ($x = $bx; $x < $rowLength; $x++) {
 					if ($row[$x] === 0) {
 						break;
 					}
@@ -363,7 +366,7 @@ class QrCode
 				// extend downwards as long as all the modules
 				// at the same width range are active;
 				// use this to determine the height of the group
-				for ($y = $by; $y < count($code['bits']); $y++) {
+				for ($y = $by; $y < $colLength; $y++) {
 					$below = array_slice($code['bits'][$y], $bx, $width);
 
 					// if the sum is less than the width,
