@@ -16,12 +16,12 @@ export default {
 
 <style>
 .k-inputbox-icon {
-	color: var(--input-color-icon);
+	color: var(--inputbox-color-icon);
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	align-self: stretch;
-	width: var(--input-height);
+	width: var(--inputbox-height);
 	flex-shrink: 0;
 }
 .k-inputbox-icon-button {

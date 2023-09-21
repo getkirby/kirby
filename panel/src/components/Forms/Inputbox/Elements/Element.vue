@@ -6,23 +6,21 @@
 
 <style>
 .k-inputbox-element {
-	display: flex;
 	flex-grow: 1;
-}
-.k-inputbox[data-variant="multiline"] .k-inputbox-element {
-	display: block;
 }
 .k-inputbox-element
 	:where(
-		input[type="email"],
-		input[type="number"],
-		input[type="password"],
-		input[type="tel"],
-		input[type="text"],
-		input[type="url"],
+		input:not(
+				[type="button"],
+				[type="checkbox"],
+				[type="file"],
+				[type="image"],
+				[type="radio"],
+				[type="reset"],
+				[type="submit"]
+			),
 		textarea,
-		select,
-		[contenteditable]
+		select
 	):focus {
 	outline: 0;
 }

@@ -25,8 +25,8 @@ export default {
 	display: flex;
 	align-items: center;
 	flex-shrink: 0;
-	color: var(--input-color-description);
-	padding-inline: var(--input-padding);
+	color: var(--inputbox-color-description);
+	padding-inline: var(--inputbox-padding);
 }
 .k-inputbox-before {
 	padding-inline-end: 0;

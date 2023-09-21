@@ -1,7 +1,7 @@
 <template>
 	<div
+		:aria-disabled="disabled"
 		:class="`k-${type}-inputbox`"
-		:data-disabled="disabled"
 		:data-invalid="invalid"
 		:data-type="type"
 		:data-variant="variant"
@@ -50,29 +50,45 @@ export default {
 </script>
 
 <style>
+:root {
+	--inputbox-color-back: var(--color-white);
+	--inputbox-color-border: var(--color-border);
+	--inputbox-color-description: var(--color-text-dimmed);
+	--inputbox-color-icon: currentColor;
+	--inputbox-color-text: currentColor;
+	--inputbox-font-family: var(--font-sans);
+	--inputbox-font-size: var(--text-sm);
+	--inputbox-height: var(--item-height);
+	--inputbox-outline-focus: var(--outline);
+	--inputbox-padding: var(--spacing-2);
+	--inputbox-padding-multiline: 0.475rem var(--inputbox-padding);
+	--inputbox-rounded: var(--rounded);
+	--inputbox-shadow: none;
+}
+
 .k-inputbox {
 	display: flex;
 	align-items: center;
-	line-height: var(--input-leading);
+	line-height: 1;
 	border: 0;
-	background: var(--input-color-back);
-	border-radius: var(--input-rounded);
-	outline: 1px solid var(--input-color-border);
-	color: var(--input-color-text);
-	min-height: var(--input-height);
-	box-shadow: var(--input-shadow);
-	font-family: var(--input-font-family);
-	font-size: var(--input-font-size);
+	background: var(--inputbox-color-back);
+	border-radius: var(--inputbox-rounded);
+	outline: 1px solid var(--inputbox-color-border);
+	color: var(--inputbox-color-text);
+	min-height: var(--inputbox-height);
+	box-shadow: var(--inputbox-shadow);
+	font-family: var(--inputbox-font-family);
+	font-size: var(--inputbox-font-size);
 }
 .k-inputbox:focus-within {
-	outline: var(--input-outline-focus);
+	outline: var(--inputbox-outline-focus);
 }
 
 /* Disabled state */
-.k-inputbox[data-disabled="true"] {
-	--input-color-back: var(--color-background);
-	--input-color-icon: var(--color-gray-600);
-	--input-shadow: none;
+.k-inputbox[aria-disabled="true"] {
+	--inputbox-color-back: var(--color-background);
+	--inputbox-color-icon: var(--color-gray-600);
+	--inputbox-shadow: none;
 }
 
 /* Variant: multiline */
@@ -82,13 +98,9 @@ export default {
 
 /* Variant: box */
 .k-inputbox[data-variant="box"] {
-	--input-color-border: transparent;
-	--input-shadow: var(--shadow);
-	--input-outline-focus: none;
-}
-.k-inputbox[data-variant="box"][data-disabled="true"],
-.k-inputbox[data-variant="choices"][data-disabled="true"] li {
-	box-shadow: none;
+	--inputbox-color-border: transparent;
+	--inputbox-shadow: var(--shadow);
+	--inputbox-outline-focus: none;
 }
 
 /* Variant: plain */
@@ -105,16 +117,16 @@ export default {
 .k-inputbox[data-variant="choices"] {
 	outline: 0;
 	background: none;
-	--input-outline-focus: none;
+	--inputbox-outline-focus: none;
 }
 .k-inputbox[data-variant="choices"] .k-inputbox-element {
 	display: block;
 }
-.k-inputbox[data-variant="choices"] li {
-	padding: var(--input-padding);
-	background: var(--input-color-back);
+.k-inputbox[data-variant="choices"] li label {
+	padding: var(--inputbox-padding);
+	background: var(--inputbox-color-back);
 	box-shadow: var(--shadow);
-	min-height: var(--input-height);
-	border-radius: var(--input-rounded);
+	min-height: var(--inputbox-height);
+	border-radius: var(--inputbox-rounded);
 }
 </style>
