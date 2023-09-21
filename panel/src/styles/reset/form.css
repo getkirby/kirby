@@ -14,6 +14,7 @@
 
 /* Global */
 :where(input, button, textarea, select) {
+	appearance: none;
 	border: 0;
 	font: inherit;
 	line-height: inherit;
@@ -25,7 +26,7 @@
 		button,
 		input[type="submit"],
 		input[type="reset"],
-		label[for],
+		label,
 		select,
 		[role="button"],
 		[role="option"]
@@ -34,14 +35,16 @@
 }
 
 :where(
-		input[type="email"],
-		input[type="number"],
-		input[type="password"],
-		input[type="range"],
-		input[type="search"],
-		input[type="tel"],
-		input[type="text"],
-		input[type="url"],
+		input:not(
+				[type="button"],
+				[type="checkbox"],
+				[type="file"],
+				[type="image"],
+				[type="radio"],
+				[type="range"],
+				[type="reset"],
+				[type="submit"]
+			),
 		textarea,
 		select
 	) {
@@ -59,6 +62,17 @@
 	opacity: 1;
 }
 
+:where(input)::-webkit-autofill {
+	-webkit-text-fill-color: var(--input-color-text) !important;
+	-webkit-background-clip: text;
+}
+:where(input)::-webkit-calendar-picker-indicator {
+	display: none;
+}
+:where(input)::-webkit-search-cancel-button {
+	display: none;
+}
+
 /* Fieldsets */
 :where(fieldset) {
 	border: 0;
@@ -73,16 +87,9 @@
 	clear: both;
 }
 
-/* Input */
-:where(input)::-webkit-autofill {
-	-webkit-text-fill-color: var(--input-color-text) !important;
-	-webkit-background-clip: text;
-}
-:where(input)::-webkit-calendar-picker-indicator {
-	display: none;
-}
-:where(input)::-webkit-search-cancel-button {
-	display: none;
+/* Range */
+:where(input[type="range"]) {
+	width: 100%;
 }
 
 /* Search */

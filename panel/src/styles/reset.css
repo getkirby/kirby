@@ -1,4 +1,5 @@
 @import url("./reset/choice.css");
+@import url("./reset/form.css");
 @import url("./reset/range.css");
 
 *,
@@ -13,97 +14,21 @@
 	font-weight: var(--font-bold, 600);
 }
 
-:where([hidden]) {
-	display: none !important;
+:is([hidden]) {
+	display: none;
+}
+
+:is(:disabled, [disabled]) {
+	cursor: not-allowed;
 }
 
 :where(abbr) {
 	text-decoration: none;
 }
 
-:where(input, button, textarea, select) {
-	border: 0;
-	font: inherit;
-	line-height: inherit;
-	color: inherit;
-	background: none;
-}
-
-:where(fieldset) {
-	border: 0;
-}
-
-:where(legend) {
-	width: 100%;
-	float: left;
-}
-
-:where(legend + *) {
-	clear: both;
-}
-
-:where(select) {
-	appearance: none;
+:where(summary) {
 	cursor: pointer;
 }
-
-:where(
-		textarea,
-		select,
-		input:not(
-				[type="checkbox"],
-				[type="radio"],
-				[type="reset"],
-				[type="submit"]
-			)
-	) {
-	width: 100%;
-	font-variant-numeric: tabular-nums;
-}
-
-:where(textarea) {
-	resize: vertical;
-	line-height: 1.5;
-}
-
-:where(input)::-webkit-calendar-picker-indicator {
-	display: none;
-}
-
-:where(input[type="search"]) {
-	appearance: none;
-}
-
-:where(input)::-webkit-search-cancel-button {
-	display: none;
-}
-
-:where(button, label, select, summary, [role="button"], [role="option"]) {
-	cursor: pointer;
-}
-
-:where(select[multiple]) option {
-	display: flex;
-	align-items: center;
-}
-
-:where(input:-webkit-autofill) {
-	-webkit-text-fill-color: var(--input-color-text) !important;
-	-webkit-background-clip: text;
-}
-
-:where(:disabled) {
-	cursor: not-allowed;
-}
-
-*::placeholder {
-	color: var(--input-color-placeholder);
-	opacity: 1;
-}
-
-/* TODO: :where(label:has(> input:disabled), label:has(+ input:disabled)) {
-	cursor: not-allowed;
-} */
 
 :where(a) {
 	color: currentColor;
@@ -143,10 +68,6 @@
 
 :where(:focus-visible) {
 	outline: var(--outline, 2px solid var(--color-focus, currentColor));
-}
-
-:where(:invalid) {
-	box-shadow: none;
 }
 
 :where(dialog) {

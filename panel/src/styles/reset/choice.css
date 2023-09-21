@@ -57,11 +57,9 @@ input:where([type="checkbox"], [type="radio"]):checked:focus {
 
 /** Disabled state **/
 input:where([type="checkbox"], [type="radio"])[disabled] {
-	--choice-color-checked: var(--choice-color-disabled);
+	--choice-color-back: none;
 	--choice-color-border: var(--color-gray-300);
-	box-shadow: none;
-	cursor: default;
-	background: none;
+	--choice-color-checked: var(--choice-color-disabled);
 	box-shadow: none;
 }
 
