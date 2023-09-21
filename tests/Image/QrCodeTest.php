@@ -3,6 +3,7 @@
 namespace Kirby\Image;
 
 use GdImage;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 
@@ -11,6 +12,16 @@ use Kirby\Filesystem\F;
  */
 class QrCodeTest extends TestCase
 {
+	protected function imageContent(GdImage $image): string
+	{
+		ob_start();
+		imagepng($image);
+		imagedestroy($image);
+		$data = ob_get_contents();
+		ob_end_clean();
+		return $data;
+	}
+
 	public function testToDataUri()
 	{
 		$qr = new QrCode('12345678');
@@ -36,8 +47,31 @@ class QrCodeTest extends TestCase
 
 	public function testToImage()
 	{
-		$qr = new QrCode('https://getkirby.com');
-		$this->assertInstanceOf(GdImage::class, $qr->toImage());
+		$qr       = new QrCode('https://getkirby.com');
+		$image    = $qr->toImage();
+		$data     = $this->imageContent($image);
+		$expected = F::read(__DIR__ . '/fixtures/qr/image.png');
+
+		$this->assertInstanceOf(GdImage::class, $image);
+		$this->assertSame($expected, $data);
+	}
+
+	public function testToImageSize()
+	{
+		$qr       = new QrCode('https://getkirby.com');
+		$image    = $qr->toImage(750);
+		$data     = $this->imageContent($image);
+		$expected = F::read(__DIR__ . '/fixtures/qr/image-size.png');
+		$this->assertSame($expected, $data);
+	}
+
+	public function testToImageColors()
+	{
+		$qr       = new QrCode('https://getkirby.com');
+		$image    = $qr->toImage(null, '#00ff00', '#0000ff');
+		$data     = $this->imageContent($image);
+		$expected = F::read(__DIR__ . '/fixtures/qr/image-colors.png');
+		$this->assertSame($expected, $data);
 	}
 
 	public function testToSvg()
@@ -95,22 +129,46 @@ class QrCodeTest extends TestCase
 
 		$qr->write($file = $dir . '/test.gif');
 		$this->assertFileExists($file);
+		$this->assertSame('image/gif', mime_content_type($file));
+		$this->assertSame(F::read(__DIR__ . '/fixtures/qr/test.gif'), F::read($file));
 
 		$qr->write($file = $dir . '/test.jpg');
 		$this->assertFileExists($file);
+		$this->assertSame('image/jpeg', mime_content_type($file));
+		$this->assertSame(F::read(__DIR__ . '/fixtures/qr/test.jpg'), F::read($file));
 
 		$qr->write($file = $dir . '/test.jpeg');
 		$this->assertFileExists($file);
+		$this->assertSame('image/jpeg', mime_content_type($file));
+		$this->assertSame(F::read(__DIR__ . '/fixtures/qr/test.jpeg'), F::read($file));
 
 		$qr->write($file = $dir . '/test.png');
 		$this->assertFileExists($file);
+		$this->assertSame('image/png', mime_content_type($file));
+		$this->assertSame(F::read(__DIR__ . '/fixtures/qr/test.png'), F::read($file));
 
 		$qr->write($file = $dir . '/test.svg');
 		$this->assertFileExists($file);
+		$this->assertSame('image/svg+xml', mime_content_type($file));
+		$this->assertSame(F::read(__DIR__ . '/fixtures/qr/test.svg'), F::read($file));
 
 		$qr->write($file = $dir . '/test.webp');
 		$this->assertFileExists($file);
+		$this->assertSame('image/webp', mime_content_type($file));
+		$this->assertSame(F::read(__DIR__ . '/fixtures/qr/test.webp'), F::read($file));
 
 		Dir::remove($dir);
+	}
+
+	/**
+	 * @covers ::write
+	 */
+	public function testWriteInvalidFormat()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Cannot write QR code as pdf');
+
+		$qr = new QrCode('https://getkirby.com');
+		$qr->write('test.pdf');
 	}
 }
