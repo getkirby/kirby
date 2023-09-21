@@ -112,12 +112,12 @@ class QrCode
 		// paint square for each module
 		$this->eachModuleGroup(
 			$code,
-			fn ($x, $y, $width) => imagefilledrectangle(
+			fn ($x, $y, $width, $height) => imagefilledrectangle(
 				$image,
 				floor($x * $ws),
 				floor($y * $hs),
 				floor($x * $ws + $ws * $width) - 1,
-				floor($y * $hs + $hs) - 1,
+				floor($y * $hs + $hs * $height) - 1,
 				$color
 			)
 		);
@@ -142,7 +142,7 @@ class QrCode
 
 		$modules = $this->eachModuleGroup(
 			$code,
-			fn ($x, $y, $width) => 'M' . $x . ',' . $y . 'h' . $width . 'v1h-' . $width . 'z'
+			fn ($x, $y, $width, $height) => 'M' . $x . ',' . $y . 'h' . $width . 'v' . $height .'h-' . $width . 'z'
 		);
 
 		$size = $size ? ' style="width: ' . $size . '"' : '';
@@ -319,9 +319,9 @@ class QrCode
 	}
 
 	/**
-	 * Loops over every row and column, finds all groups of active
-	 * modules in the same row and applies the given action to
-	 * each active module group
+	 * Loops over every row and column, finds all modules that can
+	 * be grouped as rectangle (starting at the top left corner)
+	 * and applies the given action to each active module group
 	 */
 	protected function eachModuleGroup(array $code, Closure $action): array
 	{
@@ -329,33 +329,54 @@ class QrCode
 		$xStart = $code['q'][3];
 		$yStart = $code['q'][0];
 
+		// generate empty matrix to track what modules have been covered
+		$covered = array_fill(0, count($code['bits']), array_fill(0, count($code['bits'][0]), 0));
+
 		foreach ($code['bits'] as $by => $row) {
-			$yPos  = $yStart + $by;
-			$xPos  = null;
-			$width = 0;
-
 			foreach ($row as $bx => $module) {
-				if ($module === 1) {
-					// a module is active; set the starting X position
-					// unless the previous module is also active and has
-					// already set it; increment the width in any case
-					$xPos ??= $xStart + $bx;
-					$width++;
-				} elseif ($width > 0) {
-					// the previous module was active, but this
-					// one isn't, so apply the action to the
-					// previous set of active modules (1..n)
-					$result[] = $action($xPos, $yPos, $width);
-
-					// reset the counters
-					$xPos  = null;
-					$width = 0;
+				// skip if module is inactive or already covered
+				if ($module === 0 || $covered[$by][$bx] === 1) {
+					continue;
 				}
-			}
 
-			if ($width > 0) {
-				// remaining active module(s) at the end of the row
-				$result[] = $action($xPos, $yPos, $width);
+				$width  = 0;
+				$height = 0;
+
+				// extend to the right as long as the modules are active
+				// and use this to determine the width of the group
+				for ($x = $bx; $x < count($row); $x++) {
+					if ($row[$x] === 0) {
+						break;
+					}
+					$width++;
+					$covered[$by][$x] = 1;
+				}
+
+				// extend downwards as long as all the modules
+				// at the same width range are active;
+				// use this to determine the height of the group
+				for ($y = $by; $y < count($code['bits']); $y++) {
+					$below = array_slice($code['bits'][$y], $bx, $width);
+
+					// if the sum is less than the width,
+					// there is at least one inactive module
+					if (array_sum($below) < $width) {
+						break;
+					}
+
+					$height++;
+
+					for ($x = $bx; $x < $bx + $width; $x++) {
+						$covered[$y][$x] = 1;
+					}
+				}
+
+				$result[] = $action(
+					$xStart + $bx,
+					$yStart + $by,
+					$width,
+					$height
+				);
 			}
 		}
 
