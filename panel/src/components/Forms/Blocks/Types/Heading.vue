@@ -9,13 +9,12 @@
 			:value="content.text"
 			@input="update({ text: $event })"
 		/>
-		<k-input
+		<k-select-input
 			v-if="levels.length > 1"
 			ref="level"
 			:empty="false"
 			:options="levels"
 			:value="content.level"
-			type="select"
 			class="k-block-type-heading-level"
 			@input="update({ level: $event })"
 		/>
@@ -113,13 +112,14 @@ export default {
 	--text-size: var(--text-sm);
 	line-height: 1.5em;
 }
-.k-block-type-heading-input .k-writer .ProseMirror strong {
-	font-weight: 700;
-}
 .k-block-type-heading-level {
-	--input-color-border: none;
-	--input-color-text: var(--color-gray-600);
-	font-weight: var(--font-bold);
+	font-size: var(--text-sm);
+	color: var(--color-gray-600);
+	font-weight: var(--font-normal);
 	text-transform: uppercase;
+	width: auto;
+	height: var(--height);
+	border-radius: var(--rounded);
+	padding-inline: var(--spacing-2);
 }
 </style>
