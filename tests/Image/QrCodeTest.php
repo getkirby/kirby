@@ -12,14 +12,11 @@ use Kirby\Filesystem\F;
  */
 class QrCodeTest extends TestCase
 {
-	protected function imageContent(GdImage $image): string
+	protected $tmp = __DIR__ . '/tmp';
+
+	public function tearDown(): void
 	{
-		ob_start();
-		imagepng($image);
-		imagedestroy($image);
-		$data = ob_get_contents();
-		ob_end_clean();
-		return $data;
+		Dir::remove($this->tmp);
 	}
 
 	public function testToDataUri()
@@ -123,41 +120,40 @@ class QrCodeTest extends TestCase
 	 */
 	public function testWrite()
 	{
-		Dir::make($dir = __DIR__ . '/tmp');
+		Dir::make($this->tmp);
 
 		$qr = new QrCode('https://getkirby.com');
 
-		$qr->write($file = $dir . '/test.gif');
+		$qr->write($file = $this->tmp . '/test.svg');
 		$this->assertFileExists($file);
-		$this->assertSame('image/gif', mime_content_type($file));
-		$this->assertSame(F::read(__DIR__ . '/fixtures/qr/test.gif'), F::read($file));
+		$this->assertFileEquals(__DIR__ . '/fixtures/qr/test.svg', $file);
 
-		$qr->write($file = $dir . '/test.jpg');
+		$qr->write($file = $this->tmp . '/test.png');
 		$this->assertFileExists($file);
-		$this->assertSame('image/jpeg', mime_content_type($file));
-		$this->assertSame(F::read(__DIR__ . '/fixtures/qr/test.jpg'), F::read($file));
+		$this->assertFileEquals(__DIR__ . '/fixtures/qr/test.png', $file);
 
-		$qr->write($file = $dir . '/test.jpeg');
+		$qr->write($file = $this->tmp . '/test.gif');
 		$this->assertFileExists($file);
-		$this->assertSame('image/jpeg', mime_content_type($file));
-		$this->assertSame(F::read(__DIR__ . '/fixtures/qr/test.jpeg'), F::read($file));
+		$this->assertFileEquals(__DIR__ . '/fixtures/qr/test.gif', $file);
 
-		$qr->write($file = $dir . '/test.png');
+		$qr->write($file = $this->tmp . '/test.webp');
 		$this->assertFileExists($file);
-		$this->assertSame('image/png', mime_content_type($file));
-		$this->assertSame(F::read(__DIR__ . '/fixtures/qr/test.png'), F::read($file));
+		$this->assertFileEquals(__DIR__ . '/fixtures/qr/test.webp', $file);
 
-		$qr->write($file = $dir . '/test.svg');
+		// test JPEG by comparing the output dynamically to avoid issues
+		// with different libraries/library versions in CI
+		$fixture      = __DIR__ . '/fixtures/qr/test.jpg';
+		$expectedJpeg = $this->imageContent(imagecreatefromjpeg($fixture));
+
+		$qr->write($file = $this->tmp . '/test.jpg');
 		$this->assertFileExists($file);
-		$this->assertSame('image/svg+xml', mime_content_type($file));
-		$this->assertSame(F::read(__DIR__ . '/fixtures/qr/test.svg'), F::read($file));
+		$actualJpeg = $this->imageContent(imagecreatefromjpeg($file));
+		$this->assertSame($expectedJpeg, $actualJpeg);
 
-		$qr->write($file = $dir . '/test.webp');
+		$qr->write($file = $this->tmp . '/test.jpeg');
 		$this->assertFileExists($file);
-		$this->assertSame('image/webp', mime_content_type($file));
-		$this->assertSame(F::read(__DIR__ . '/fixtures/qr/test.webp'), F::read($file));
-
-		Dir::remove($dir);
+		$actualJpeg = $this->imageContent(imagecreatefromjpeg($file));
+		$this->assertSame($expectedJpeg, $actualJpeg);
 	}
 
 	/**
@@ -166,9 +162,19 @@ class QrCodeTest extends TestCase
 	public function testWriteInvalidFormat()
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Cannot write QR code as pdf');
+		$this->expectExceptionMessage('Cannot write QR code as docx');
 
 		$qr = new QrCode('https://getkirby.com');
-		$qr->write('test.pdf');
+		$qr->write('test.docx');
+	}
+
+	protected function imageContent(GdImage $image): string
+	{
+		ob_start();
+		imagepng($image);
+		imagedestroy($image);
+		$data = ob_get_contents();
+		ob_end_clean();
+		return $data;
 	}
 }
