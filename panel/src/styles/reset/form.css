@@ -1,0 +1,108 @@
+:root {
+	--input-color-placeholder: var(--color-gray-600);
+	--input-color-text: currentColor;
+	--input-font-size: var(--text-sm);
+	--input-rounded: var(--rounded);
+}
+
+@media (pointer: coarse) {
+	:root {
+		--input-font-size: var(--text-md);
+		--input-padding-multiline: 0.375rem var(--input-padding);
+	}
+}
+
+/* Global */
+:where(input, button, textarea, select) {
+	border: 0;
+	font: inherit;
+	line-height: inherit;
+	color: var(--input-color-text);
+	background: none;
+}
+
+:where(
+		button,
+		input[type="submit"],
+		input[type="reset"],
+		label[for],
+		select,
+		[role="button"],
+		[role="option"]
+	) {
+	cursor: pointer;
+}
+
+:where(
+		input[type="email"],
+		input[type="number"],
+		input[type="password"],
+		input[type="range"],
+		input[type="search"],
+		input[type="tel"],
+		input[type="text"],
+		input[type="url"],
+		textarea,
+		select
+	) {
+	width: 100%;
+	font-size: var(--input-font-size);
+	font-variant-numeric: tabular-nums;
+}
+
+:where(:invalid) {
+	box-shadow: none;
+}
+
+:where(*)::placeholder {
+	color: var(--input-color-placeholder);
+	opacity: 1;
+}
+
+/* Fieldsets */
+:where(fieldset) {
+	border: 0;
+}
+
+:where(legend) {
+	width: 100%;
+	float: left;
+}
+
+:where(legend + *) {
+	clear: both;
+}
+
+/* Input */
+:where(input)::-webkit-autofill {
+	-webkit-text-fill-color: var(--input-color-text) !important;
+	-webkit-background-clip: text;
+}
+:where(input)::-webkit-calendar-picker-indicator {
+	display: none;
+}
+:where(input)::-webkit-search-cancel-button {
+	display: none;
+}
+
+/* Search */
+:where(input[type="search"]) {
+	appearance: none;
+}
+
+/* Select */
+:where(select) {
+	appearance: none;
+	cursor: pointer;
+}
+
+:where(select[multiple]) option {
+	display: flex;
+	align-items: center;
+}
+
+/* Textarea */
+:where(textarea) {
+	resize: vertical;
+	line-height: 1.5;
+}
