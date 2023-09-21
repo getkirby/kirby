@@ -142,7 +142,7 @@ class QrCode
 
 		$modules = $this->eachModuleGroup(
 			$code,
-			fn ($x, $y, $width, $height) => 'M' . $x . ',' . $y . 'h' . $width . 'v' . $height .'h-' . $width . 'z'
+			fn ($x, $y, $width, $height) => 'M' . $x . ',' . $y . 'h' . $width . 'v' . $height . 'h-' . $width . 'z'
 		);
 
 		$size = $size ? ' style="width: ' . $size . '"' : '';
