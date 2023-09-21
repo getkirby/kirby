@@ -12,7 +12,8 @@ use Kirby\Filesystem\F;
  * Creates a QR code
  *
  * @package   Kirby Image
- * @author    Nico Hoffmann <nico@getkirby.com>
+ * @author    Nico Hoffmann <nico@getkirby.com>,
+ *            Lukas Bestle <lukas@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
@@ -108,13 +109,13 @@ class QrCode
 		imagefill($image, 0, 0, $back);
 
 		// paint square for each module
-		$this->eachModule(
+		$this->eachModuleGroup(
 			$code,
-			fn ($x, $y) => imagefilledrectangle(
+			fn ($x, $y, $width) => imagefilledrectangle(
 				$image,
 				floor($x * $ws),
 				floor($y * $hs),
-				floor($x * $ws + $ws) - 1,
+				floor($x * $ws + $ws * $width) - 1,
 				floor($y * $hs + $hs) - 1,
 				$color
 			)
@@ -126,21 +127,21 @@ class QrCode
 	/**
 	 * Returns the QR code as `<svg>` element
 	 *
-	 * @param int|string|null $size Width and height of the `<svg>` element
+	 * @param int|string|null $size Optional CSS width of the `<svg>` element
 	 */
-	public function toSvg(int|string|null $size = '100%'): string
+	public function toSvg(int|string|null $size = null): string
 	{
 		$code = $this->encode();
 		[$vbw, $vbh] = $this->measure($code);
 
-		$modules = $this->eachModule(
+		$modules = $this->eachModuleGroup(
 			$code,
-			fn ($x, $y) => 'M' . $x . ',' . $y . 'h1v1h-1z'
+			fn ($x, $y, $width) => 'M' . $x . ',' . $y . 'h' . $width . 'v1h-' . $width . 'z'
 		);
 
 		$size = $size ? ' style="width: ' . $size . '"' : '';
 
-		return '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 ' . $vbw . ' ' . $vbh . '" stroke="none"' . $size . '>' .
+		return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' . $vbw . ' ' . $vbh . '" stroke="none"' . $size . '>' .
 			'<rect width="100%" height="100%" fill="' . $this->back . '"/>' .
 			'<path d="' . implode(' ', $modules) . '" fill="' . $this->color . '"/>' .
 			'</svg>';
@@ -312,28 +313,47 @@ class QrCode
 	}
 
 	/**
-	 * Loop over every module and every row and apply
-	 * the given action to each module coordinate that is active
+	 * Loops over every row and column, finds all groups of active
+	 * modules in the same row and applies the given action to
+	 * each active module group
 	 */
-	protected function eachModule(array $code, Closure $action): array
+	protected function eachModuleGroup(array $code, Closure $action): array
 	{
-		$rows = [];
-		$x    = $code['q'][3];
-		$y    = $code['q'][0];
+		$result = [];
+		$xStart = $code['q'][3];
+		$yStart = $code['q'][0];
 
 		foreach ($code['bits'] as $by => $row) {
-			$y1 = $y + $by;
+			$yPos  = $yStart + $by;
+			$xPos  = null;
+			$width = 0;
 
 			foreach ($row as $bx => $module) {
-				$x1 = $x + $bx;
-
 				if ($module === 1) {
-					$rows[] = $action($x1, $y1);
+					// a module is active; set the starting X position
+					// unless the previous module is also active and has
+					// already set it; increment the width in any case
+					$xPos ??= $xStart + $bx;
+					$width++;
+				} elseif ($width > 0) {
+					// the previous module was active, but this
+					// one isn't, so apply the action to the
+					// previous set of active modules (1..n)
+					$result[] = $action($xPos, $yPos, $width);
+
+					// reset the counters
+					$xPos  = null;
+					$width = 0;
 				}
+			}
+
+			if ($width > 0) {
+				// remaining active module(s) at the end of the row
+				$result[] = $action($xPos, $yPos, $width);
 			}
 		}
 
-		return $rows;
+		return $result;
 	}
 
 	protected function encode(): array
