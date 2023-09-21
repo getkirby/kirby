@@ -385,6 +385,8 @@ class FieldMethodsTest extends TestCase
 
 		$this->assertInstanceOf(QrCode::class, $qr);
 		$this->assertSame($url, $qr->data);
+
+		$this->assertNull($this->field()->toQrCode());
 	}
 
 	public function testToStructure()

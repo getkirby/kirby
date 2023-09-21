@@ -244,7 +244,7 @@ return function (App $app) {
 		/**
 		 * Turns the field value into an QR code object
 		 */
-		'toQrCode' => function (Field $field): QrCode {
+		'toQrCode' => function (Field $field): QrCode|null {
 			return $field->isNotEmpty() ? new QrCode($field->value) : null;
 		},
 
