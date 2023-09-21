@@ -12,6 +12,7 @@ import name from "./props/name.js";
 import pattern from "./props/pattern.js";
 import placeholder from "./props/placeholder.js";
 import required from "./props/required.js";
+import spellcheck from "./props/spellcheck.js";
 import type from "./props/type.js";
 
 export {
@@ -29,5 +30,6 @@ export {
 	pattern,
 	placeholder,
 	required,
+	spellcheck,
 	type
 };
