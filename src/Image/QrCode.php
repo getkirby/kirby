@@ -163,18 +163,26 @@ class QrCode
 	 * Supported formats: gif, jpg, jpeg, png, svg, webp
 	 *
 	 * @param string $file Path to the output file with one of the supported file extensions
+	 * @param int|string|null $size Optional image width/height in pixels( defaults to a size per module of 4x4) or CSS width of the `<svg>` element
+	 * @param string $color Foreground color in hex format
+	 * @param string $back Background color in hex format
 	 */
-	public function write(string $file): void
-	{
+	public function write(
+		string $file,
+		int|string|null $size = null,
+		string $color = '#000000',
+		string $back = '#FFFFFF'
+	): void {
 		$format = F::extension($file);
+		$args    = [$size, $color, $back];
 
 		match ($format) {
-			'gif'   => imagegif($this->toImage(), $file),
+			'gif'   => imagegif($this->toImage(...$args), $file),
 			'jpg',
-			'jpeg'  => imagejpeg($this->toImage(), $file),
-			'png'   => imagepng($this->toImage(), $file),
-			'svg'   => F::write($file, $this->toSvg()),
-			'webp'  => imagewebp($this->toImage(), $file),
+			'jpeg'  => imagejpeg($this->toImage(...$args), $file),
+			'png'   => imagepng($this->toImage(...$args), $file),
+			'svg'   => F::write($file, $this->toSvg(...$args)),
+			'webp'  => imagewebp($this->toImage(...$args), $file),
 			default => throw new InvalidArgumentException('Cannot write QR code as ' . $format)
 		};
 	}
