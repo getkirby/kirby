@@ -124,7 +124,7 @@ export default {
 :root {
 	--item-button-height: var(--height-md);
 	--item-button-width: var(--height-md);
-	--item-height: auto;
+	--item-height: var(--height-lg);
 	--item-height-cardlet: calc(var(--height-md) * 3);
 }
 
@@ -192,9 +192,6 @@ export default {
 
 /** List */
 .k-item[data-layout="list"] {
-	--item-height: var(
-		--field-input-height
-	); /* TODO: change back to --height-md after input refactoring */
 	--item-button-height: var(--item-height);
 	--item-button-width: auto;
 
@@ -308,6 +305,7 @@ export default {
 
 /** Card */
 .k-item[data-layout="cards"] {
+	--item-height: auto;
 	display: flex;
 	flex-direction: column;
 	/* container-type: inline-size; */
