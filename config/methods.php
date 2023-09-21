@@ -18,6 +18,7 @@ use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Image\QrCode;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 use Kirby\Toolkit\Xml;
@@ -238,6 +239,13 @@ return function (App $app) {
 				false,
 				...$field->toData($separator)
 			);
+		},
+
+		/**
+		 * Turns the field value into an QR code object
+		 */
+		'toQrCode' => function (Field $field): QrCode|null {
+			return $field->isNotEmpty() ? new QrCode($field->value) : null;
 		},
 
 		/**

@@ -4,6 +4,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Helpers;
 use Kirby\Cms\Html;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Response;
@@ -12,6 +13,7 @@ use Kirby\Cms\Url;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\F;
 use Kirby\Http\Router;
+use Kirby\Image\QrCode;
 use Kirby\Template\Slot;
 use Kirby\Template\Snippet;
 use Kirby\Toolkit\Date;
@@ -431,6 +433,20 @@ if (Helpers::hasOverride('params') === false) { // @codeCoverageIgnore
 	function params(): array
 	{
 		return App::instance()->request()->url()->params()->toArray();
+	}
+}
+
+if (Helpers::hasOverride('qr') === false) { // @codeCoverageIgnore
+	/**
+	 * Creates a QR code object
+	 */
+	function qr(string|ModelWithContent $data): QrCode
+	{
+		if ($data instanceof ModelWithContent) {
+			$data = $data->url();
+		}
+
+		return new QrCode($data);
 	}
 }
 
