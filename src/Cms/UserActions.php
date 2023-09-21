@@ -13,7 +13,6 @@ use Kirby\Form\Form;
 use Kirby\Http\Idn;
 use Kirby\Toolkit\Str;
 use SensitiveParameter;
-use SplFileObject;
 use Throwable;
 
 /**
