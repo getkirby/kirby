@@ -21,7 +21,10 @@ export default {
 
 <style>
 .k-toggle-inputbox .k-toggle-input {
-	padding: var(--input-padding);
+	padding: var(--inputbox-padding);
 	flex-grow: 1;
+}
+.k-toggle-inputbox .k-inputbox-before {
+	padding-inline-end: var(--spacing-1);
 }
 </style>

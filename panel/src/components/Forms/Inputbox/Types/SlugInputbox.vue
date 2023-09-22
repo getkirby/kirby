@@ -24,9 +24,3 @@ export default {
 	emits: ["input"]
 };
 </script>
-
-<style>
-.k-slug-inputbox .k-slug-input {
-	padding: var(--input-padding);
-}
-</style>

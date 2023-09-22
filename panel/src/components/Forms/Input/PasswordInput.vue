@@ -1,26 +1,34 @@
+<template>
+	<k-string-input
+		v-bind="$props"
+		class="k-password-input"
+		type="password"
+		@input="$emit('input', $event)"
+	/>
+</template>
+
 <script>
-import TextInput from "./TextInput.vue";
-import { props as TextInputProps } from "./TextInput.vue";
+import StringInput, { props as StringInputProps } from "./StringInput.vue";
 
 export const props = {
-	mixins: [TextInputProps],
+	mixins: [StringInputProps],
 	props: {
 		autocomplete: {
 			type: String,
 			default: "new-password"
 		},
-		type: {
-			type: String,
-			default: "password"
+		minlength: {
+			default: 8,
+			type: Number
 		}
 	}
 };
 
 /**
- * @example <k-input :value="password" @input="password = $event" name="password" type="password" />
+ * @example <k-password-input :value="value" @input="value = $event" />
+ * @public
  */
 export default {
-	extends: TextInput,
-	mixins: [props]
+	mixins: [StringInput, props]
 };
 </script>

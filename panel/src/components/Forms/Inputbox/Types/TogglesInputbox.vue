@@ -1,9 +1,15 @@
 <template>
-	<k-inputbox v-bind="$props" type="toggles" variant="plain">
+	<k-inputbox
+		v-if="options?.length"
+		v-bind="$props"
+		type="toggles"
+		variant="plain"
+	>
 		<k-inputbox-element slot="element" :data-grow="grow">
 			<k-toggles-input v-bind="$props" @input="$emit('input', $event)" />
 		</k-inputbox-element>
 	</k-inputbox>
+	<k-empty v-else :icon="icon" :text="$t('options.none')" />
 </template>
 
 <script>

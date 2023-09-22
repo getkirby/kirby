@@ -35,3 +35,9 @@ export default {
 	}
 };
 </script>
+
+<style>
+.k-tags-inputbox .k-tags-input {
+	padding: var(--tags-input-gap);
+}
+</style>

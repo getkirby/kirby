@@ -1,10 +1,9 @@
 <template>
 	<!-- eslint-disable vue/no-mutating-props -->
 	<div class="k-toggle-field-preview">
-		<k-input
+		<k-toggle-inputbox
 			:text="text"
 			:value="value"
-			type="toggle"
 			@input="$emit('input', $event)"
 		/>
 	</div>
@@ -26,9 +25,9 @@ export default {
 </script>
 
 <style>
-.k-toggle-field-preview .k-input {
-	--input-outline-focus: 0;
-	--input-padding: var(--spacing-3);
-	--input-shadow: none;
+.k-toggle-field-preview {
+	--inputbox-outline-focus: 0;
+	--inputbox-padding: var(--spacing-3);
+	--inputbox-shadow: none;
 }
 </style>

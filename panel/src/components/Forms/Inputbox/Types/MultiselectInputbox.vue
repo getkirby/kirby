@@ -39,3 +39,9 @@ export default {
 	}
 };
 </script>
+
+<style>
+.k-multiselect-inputbox .k-multiselect-input {
+	padding: var(--tags-input-gap);
+}
+</style>

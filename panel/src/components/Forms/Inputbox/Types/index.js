@@ -9,6 +9,7 @@ import NumberInputbox from "./NumberInputbox.vue";
 import PasswordInputbox from "./PasswordInputbox.vue";
 import RadioInputbox from "./RadioInputbox.vue";
 import RangeInputbox from "./RangeInputbox.vue";
+import SearchInputbox from "./SearchInputbox.vue";
 import SelectInputbox from "./SelectInputbox.vue";
 import SlugInputbox from "./SlugInputbox.vue";
 import TagsInputbox from "./TagsInputbox.vue";
@@ -34,6 +35,7 @@ export default {
 		app.component("k-password-inputbox", PasswordInputbox);
 		app.component("k-radio-inputbox", RadioInputbox);
 		app.component("k-range-inputbox", RangeInputbox);
+		app.component("k-search-inputbox", SearchInputbox);
 		app.component("k-select-inputbox", SelectInputbox);
 		app.component("k-slug-inputbox", SlugInputbox);
 		app.component("k-tags-inputbox", TagsInputbox);

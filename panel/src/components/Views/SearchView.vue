@@ -2,17 +2,13 @@
 	<k-panel-inside class="k-search-view">
 		<k-header>
 			Search
-
-			<k-input
+			<k-search-inputbox
 				ref="input"
 				slot="buttons"
 				:aria-label="$t('search')"
 				:autofocus="true"
-				:placeholder="$t('search') + ' …'"
 				:value="query"
 				class="k-search-view-input"
-				icon="search"
-				type="text"
 				@input="query = $event"
 			/>
 		</k-header>
@@ -133,9 +129,7 @@ export default {
 }
 
 .k-search-view-input {
-	--input-color-border: transparent;
-	--input-color-back: var(--color-gray-300);
-	--input-height: var(--height-md);
+	--inputbox-height: var(--height-md);
 	width: 40cqw;
 }
 </style>

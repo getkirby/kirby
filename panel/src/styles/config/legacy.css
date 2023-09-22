@@ -42,9 +42,9 @@
 	--leading-loose: 2;
 
 	/** Field properties **/
-	--field-input-padding: var(--input-padding);
-	--field-input-height: var(--input-height);
-	--field-input-line-height: var(--input-leading);
+	--field-input-padding: var(--inputbox-padding);
+	--field-input-height: var(--inputbox-height);
+	--field-input-line-height: 1;
 	--field-input-font-size: var(--input-font-size);
 
 	/** Shadows **/

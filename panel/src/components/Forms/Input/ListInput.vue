@@ -1,5 +1,5 @@
 <template>
-	<k-writer
+	<k-writer-input
 		ref="input"
 		v-bind="$props"
 		:extensions="listExtensions"
@@ -10,12 +10,11 @@
 </template>
 
 <script>
-import { props as WriterInputProps } from "@/components/Forms/Input/WriterInput.vue";
+import { props as WriterInputProps } from "./WriterInput.vue";
 import ListDoc from "@/components/Forms/Writer/Nodes/ListDoc.js";
 
 export const props = {
 	mixins: [WriterInputProps],
-	inheritAttrs: false,
 	props: {
 		nodes: {
 			type: Array,

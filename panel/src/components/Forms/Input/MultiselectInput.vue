@@ -1,24 +1,15 @@
-<template>
-	<div class="k-multiselect-input">
-		<k-tags
-			ref="tags"
-			v-bind="$props"
-			:value="value ?? []"
-			@input="$emit('input', $event)"
-			@click.native.stop
-		/>
-	</div>
-</template>
-
 <script>
-import TagsInput from "./TagsInput.vue";
-import { props as TagsInputProps } from "./TagsInput.vue";
+import TagsInput, { props as TagsInputProps } from "./TagsInput.vue";
 
 export const props = {
 	mixins: [TagsInputProps],
 	props: {
 		accept: {
-			default: "string",
+			default: "options",
+			type: String
+		},
+		layout: {
+			default: "list",
 			type: String
 		}
 	}
@@ -27,12 +18,6 @@ export const props = {
 export default {
 	extends: TagsInput,
 	mixins: [props],
-	inheritAttrs: false
+	class: "k-multiselect-input"
 };
 </script>
-
-<style>
-.k-multiselect-input {
-	padding: var(--tags-gap);
-}
-</style>

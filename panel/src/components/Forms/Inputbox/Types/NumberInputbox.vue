@@ -21,6 +21,10 @@ export default {
 
 <style>
 .k-number-inputbox .k-number-input {
-	padding: var(--input-padding);
+	padding-inline: var(--inputbox-padding);
+	line-height: 1.25;
+}
+.k-number-inputbox .k-number-input:focus {
+	outline: none;
 }
 </style>

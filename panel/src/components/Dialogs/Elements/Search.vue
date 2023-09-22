@@ -1,11 +1,9 @@
 <template>
-	<k-input
+	<k-search-inputbox
 		:autofocus="autofocus"
 		:placeholder="placeholder"
 		:value="value"
 		class="k-dialog-search"
-		icon="search"
-		type="text"
 		@input="$emit('search', $event)"
 	/>
 </template>
@@ -30,10 +28,7 @@ export default {
 </script>
 
 <style>
-/** Dialog search field **/
 .k-dialog-search {
 	margin-bottom: 0.75rem;
-	--input-color-border: transparent;
-	--input-color-back: var(--color-gray-300);
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-	<div
+	<fieldset
 		:style="{
 			'--h': hsl.h,
 			'--s': hsl.s,
@@ -8,21 +8,55 @@
 		}"
 		class="k-colorpicker-input"
 	>
-		<k-coords-input :value="coords" @input="setCoords($event)" />
-		<k-hue-input :value="color.h" @input="setHue($event)" />
-		<k-alpha-input v-if="alpha" :value="color.a" @input="setAlpha($event)" />
-		<k-coloroption-input
-			v-if="options"
+		<legend class="sr-only">{{ $t("color") }}</legend>
+		<k-coords-input
+			ref="coords"
+			:autofocus="autofocus"
+			:disabled="disabled"
+			:required="required"
+			:value="coords"
+			@input="setCoords($event)"
+		/>
+		<label :aria-label="$t('hue')">
+			<k-hue-input
+				:disabled="disabled"
+				:required="required"
+				:value="color.h"
+				@input="setHue($event)"
+			/>
+		</label>
+		<label v-if="alpha" :aria-label="$t('alpha')">
+			<k-alpha-input
+				:disabled="disabled"
+				:required="required"
+				:value="color.a"
+				@input="setAlpha($event)"
+			/>
+		</label>
+		<k-coloroptions-input
+			:disabled="disabled"
 			:format="format"
 			:options="options"
+			:required="required"
 			:value="value"
 			@input="$emit('input', $event)"
 		/>
-	</div>
+		<input
+			:name="name"
+			:required="required"
+			:value="formatted"
+			class="input-hidden"
+			tabindex="-1"
+			type="text"
+		/>
+	</fieldset>
 </template>
 
 <script>
-export default {
+import Input, { props as InputProps } from "@/mixins/input.js";
+
+export const props = {
+	mixins: [InputProps],
 	props: {
 		alpha: {
 			default: true,
@@ -39,7 +73,11 @@ export default {
 		value: {
 			type: [Object, String]
 		}
-	},
+	}
+};
+
+export default {
+	mixins: [Input, props],
 	data() {
 		return {
 			color: {
@@ -53,10 +91,12 @@ export default {
 	},
 	computed: {
 		coords() {
-			return {
-				x: this.color.s * 100,
-				y: (1 - this.color.v) * 100
-			};
+			return this.value
+				? {
+						x: this.color.s * 100,
+						y: (1 - this.color.v) * 100
+				  }
+				: null;
 		},
 		hsl() {
 			try {
@@ -110,16 +150,24 @@ export default {
 			this.formatted = this.$library.colors.toString(this.color, this.format);
 			return this.$emit("input", this.formatted);
 		},
+		focus() {
+			this.$refs.coords.focus();
+		},
 		setAlpha(alpha) {
 			this.color.a = this.alpha ? this.between(Number(alpha), 0, 1) : 1;
 			this.emit();
 		},
 		setCoords(coords) {
+			if (!coords) {
+				return this.$emit("input", "");
+			}
+
 			const x = Math.round(coords.x);
 			const y = Math.round(coords.y);
 
 			this.color.s = this.between(x / 100, 0, 1);
 			this.color.v = this.between(1 - y / 100, 0, 1);
+
 			this.emit();
 		},
 		setHue(hue) {
@@ -131,12 +179,6 @@ export default {
 </script>
 
 <style>
-:root {
-	--color-preview-rounded: var(--rounded-sm);
-	--color-preview-size: 1.5rem;
-	--color-preview-darkness: 0%;
-}
-
 .k-colorpicker-input {
 	--h: 0;
 	--s: 0%;
@@ -161,7 +203,7 @@ export default {
 	color: hsl(var(--h), var(--s), var(--l));
 }
 
-.k-colorpicker-input .k-coloroption-input {
+.k-colorpicker-input .k-coloroptions-input ul {
 	grid-template-columns: repeat(6, 1fr);
 }
 </style>

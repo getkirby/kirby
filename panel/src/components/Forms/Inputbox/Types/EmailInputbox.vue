@@ -41,6 +41,6 @@ export default {
 
 <style>
 .k-email-inputbox .k-email-input {
-	padding: var(--input-padding);
+	padding: var(--inputbox-padding);
 }
 </style>

@@ -36,14 +36,14 @@
 								icon="file"
 							/>
 						</a>
-						<k-input
+						<k-slug-inputbox
 							v-model="file.name"
 							:disabled="file.completed"
+							:icon="false"
 							:after="'.' + file.extension"
 							:novalidate="true"
 							:required="true"
 							class="k-upload-item-input"
-							type="slug"
 						/>
 						<div class="k-upload-item-body">
 							<p class="k-upload-item-meta">
@@ -134,7 +134,7 @@ export default {
 		"preview input input"
 		"preview body toggle";
 	grid-template-columns: 6rem 1fr auto;
-	grid-template-rows: var(--input-height) 1fr;
+	grid-template-rows: var(--inputbox-height) 1fr;
 	border-radius: var(--rounded);
 	background: var(--color-white);
 	box-shadow: var(--shadow);
@@ -163,21 +163,18 @@ export default {
 	padding: var(--spacing-2) var(--spacing-3);
 	min-width: 0;
 }
-.k-upload-item-input.k-input {
-	--input-color-border: transparent;
-	--input-padding: var(--spacing-2) var(--spacing-3);
-	--input-rounded: 0;
+.k-upload-item-input.k-inputbox {
+	--inputbox-color-border: transparent;
+	--inputbox-color-description: var(--color-text-dimmed);
+	--inputbox-padding: var(--spacing-2) var(--spacing-3);
+	--inputbox-rounded: 0;
 	grid-area: input;
 	font-size: var(--text-sm);
 	border-bottom: 1px solid var(--color-light);
 }
-.k-upload-item-input.k-input:focus-within {
-	outline: 2px solid var(--color-focus);
+.k-upload-item-input:focus-within {
+	--inputbox-rounded: var(--rounded);
 	z-index: 1;
-	border-radius: var(--rounded);
-}
-.k-upload-item-input .k-input-after {
-	color: var(--color-gray-600);
 }
 .k-upload-item-meta {
 	font-size: var(--text-xs);

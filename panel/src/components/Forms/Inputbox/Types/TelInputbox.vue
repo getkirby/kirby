@@ -38,9 +38,3 @@ export default {
 	emits: ["input"]
 };
 </script>
-
-<style>
-.k-tel-inputbox .k-tel-input {
-	padding: var(--input-padding);
-}
-</style>

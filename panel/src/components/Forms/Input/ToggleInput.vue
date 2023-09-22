@@ -1,9 +1,7 @@
 <template>
 	<k-choice-input
-		:id="id"
-		ref="input"
+		v-bind="$props"
 		:checked="value"
-		:disabled="disabled"
 		:label="label"
 		class="k-toggle-input"
 		type="checkbox"
@@ -13,13 +11,11 @@
 </template>
 
 <script>
-import { required as validateRequired } from "vuelidate/lib/validators";
+import Input, { props as InputProps } from "@/mixins/input.js";
 
 export const props = {
+	mixins: [InputProps],
 	props: {
-		autofocus: Boolean,
-		disabled: Boolean,
-		id: [Number, String],
 		/**
 		 * The text to display next to the toggle. This can either be a string
 		 * that doesn't change when the toggle switches. Or an array with the
@@ -29,17 +25,16 @@ export const props = {
 		text: {
 			type: [Array, String]
 		},
-		required: Boolean,
 		value: Boolean
 	}
 };
 
 /**
- * @example <k-input :value="toggle" @input="toggle = $event" name="toggle" type="toggle" />
+ * @example <k-toggle-input :value="value" @input="value = $event" />
+ * @public
  */
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	computed: {
 		label() {
 			// Add fallback for text
@@ -52,61 +47,6 @@ export default {
 
 			return text;
 		}
-	},
-	watch: {
-		value() {
-			this.onInvalid();
-		}
-	},
-	mounted() {
-		this.onInvalid();
-
-		if (this.$props.autofocus) {
-			this.focus();
-		}
-	},
-	methods: {
-		focus() {
-			this.$refs.input.focus();
-		},
-		onEnter(e) {
-			if (e.key === "Enter") {
-				this.$refs.input.click();
-			}
-		},
-		onInput(checked) {
-			this.$emit("input", checked);
-		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
-		},
-		select() {
-			this.$refs.input.focus();
-		}
-	},
-	validations() {
-		return {
-			value: {
-				required: this.required ? validateRequired : true
-			}
-		};
 	}
 };
 </script>
-
-<style>
-/* Toggle */
-.k-input[data-type="toggle"] {
-	--input-color-border: transparent;
-	--input-shadow: var(--shadow);
-}
-.k-input[data-type="toggle"] .k-input-before {
-	padding-inline-end: calc(var(--input-padding) / 2);
-}
-.k-input[data-type="toggle"] .k-toggle-input {
-	padding-inline-start: var(--input-padding);
-}
-.k-input[data-type="toggle"][data-disabled] {
-	box-shadow: none;
-}
-</style>

@@ -1,189 +1,92 @@
 <template>
-	<span :data-disabled="disabled" :data-empty="isEmpty" class="k-select-input">
-		<select
-			:id="id"
-			ref="input"
-			:autofocus="autofocus"
-			:aria-label="ariaLabel"
-			:disabled="disabled"
-			:name="name"
-			:required="required"
-			:value="selected"
-			class="k-select-input-native"
-			v-on="listeners"
+	<select
+		v-bind="{
+			autofocus,
+			disabled,
+			id,
+			multiple,
+			name,
+			required
+		}"
+		:aria-label="ariaLabel"
+		:data-empty="isEmpty"
+		class="k-select-input"
+		@input="$emit('input', $event.target.value)"
+	>
+		<option v-if="empty !== false" value="">
+			{{ placeholder }}
+		</option>
+		<option
+			v-for="option in options"
+			:key="option.value"
+			:disabled="option.disabled"
+			:selected="option.value === value"
+			:value="option.value"
 		>
-			<option v-if="hasEmptyOption" :disabled="required" value="">
-				{{ emptyOption }}
-			</option>
-			<option
-				v-for="option in options"
-				:key="option.value"
-				:disabled="option.disabled"
-				:value="option.value"
-			>
-				{{ option.text }}
-			</option>
-		</select>
-		{{ label }}
-	</span>
+			{{ option.text }}
+		</option>
+	</select>
 </template>
 
 <script>
-import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
-
-import { required as validateRequired } from "vuelidate/lib/validators";
+import { props as InputProps } from "@/mixins/input.js";
+import Input from "@/mixins/input.js";
 
 export const props = {
-	mixins: [autofocus, disabled, id, name, required],
+	mixins: [InputProps],
 	props: {
 		ariaLabel: String,
-		default: String,
 		/**
-		 * The text, that is shown as the first empty option, when the field is not required.
+		 * Show/hide the empty option
 		 */
 		empty: {
-			type: [Boolean, String],
-			default: true
+			default: true,
+			type: Boolean
 		},
-		/**
-		 * The text, that is shown when no option is selected yet.
-		 */
-		placeholder: String,
+		multiple: {
+			default: false,
+			type: Boolean
+		},
 		options: {
 			default: () => [],
 			type: Array
 		},
+		/**
+		 * Placeholder text when no option is selected yet.
+		 */
+		placeholder: {
+			default: "–",
+			type: String
+		},
 		value: {
-			type: [String, Number, Boolean],
-			default: ""
+			default: "",
+			type: [String, Number, Boolean]
 		}
 	}
 };
 
+/**
+ * @example <k-select-input :options="options" :value="value" @input="value = $event" />
+ * @public
+ */
 export default {
-	mixins: [props],
-	inheritAttrs: false,
-	data() {
-		return {
-			selected: this.value,
-			listeners: {
-				...this.$listeners,
-				click: (event) => this.onClick(event),
-				change: (event) => this.onInput(event.target.value),
-				input: () => {}
-			}
-		};
-	},
+	mixins: [Input, props],
 	computed: {
-		emptyOption() {
-			return this.placeholder ?? "—";
-		},
-		hasEmptyOption() {
-			if (this.empty === false) {
+		isEmpty() {
+			if (this.multiple) {
 				return false;
 			}
 
-			return !(this.required && this.default);
-		},
-		isEmpty() {
 			return (
-				this.selected === null ||
-				this.selected === undefined ||
-				this.selected === ""
+				this.value === null || this.value === undefined || this.value === ""
 			);
-		},
-		label() {
-			const label = this.text(this.selected);
-
-			if (this.selected === "" || this.selected === null || label === null) {
-				return this.emptyOption;
-			}
-
-			return label;
 		}
-	},
-	watch: {
-		value(value) {
-			this.selected = value;
-			this.onInvalid();
-		}
-	},
-	mounted() {
-		this.onInvalid();
-
-		if (this.$props.autofocus) {
-			this.focus();
-		}
-	},
-	methods: {
-		focus() {
-			this.$refs.input.focus();
-		},
-		onClick(event) {
-			event.stopPropagation();
-			this.$emit("click", event);
-		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
-		},
-		onInput(value) {
-			this.selected = value;
-			this.$emit("input", this.selected);
-		},
-		select() {
-			this.focus();
-		},
-		text(value) {
-			let text = null;
-
-			for (const option of this.options) {
-				if (option.value == value) {
-					text = option.text;
-				}
-			}
-
-			return text;
-		}
-	},
-	validations() {
-		return {
-			selected: {
-				required: this.required ? validateRequired : true
-			}
-		};
 	}
 };
 </script>
 
 <style>
-.k-select-input {
-	position: relative;
-	display: block;
-	overflow: hidden;
-	padding: var(--input-padding);
-	border-radius: var(--input-rounded);
-}
-.k-select-input[data-empty="true"] {
+.k-select-input[data-empty] {
 	color: var(--input-color-placeholder);
-}
-
-.k-select-input-native {
-	position: absolute;
-	inset: 0;
-	opacity: 0;
-	z-index: 1;
-}
-.k-select-input-native[disabled] {
-	cursor: default;
-}
-
-/* Input context */
-.k-input[data-type="select"] {
-	position: relative;
-}
-.k-input[data-type="select"] .k-input-icon {
-	position: absolute;
-	inset-block: 0;
-	inset-inline-end: 0;
 }
 </style>

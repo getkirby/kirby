@@ -1,6 +1,7 @@
 <template>
 	<div
 		:aria-disabled="disabled"
+		:data-empty="!value"
 		class="k-coords-input"
 		@mousedown="onDrag"
 		@click="onMove"
@@ -8,25 +9,38 @@
 	>
 		<slot />
 		<button
-			ref="button"
 			:id="id"
 			:autofocus="autofocus"
+			:disabled="disabled"
 			:style="{
 				left: `${x}%`,
 				top: `${y}%`
 			}"
 			class="k-coords-input-thumb"
-			type="button"
+			@keydown.enter.prevent="onEnter"
+			@keydown.delete="onDelete"
+		/>
+		<input
+			:name="name"
+			:required="required"
+			:value="value ? [value.x, value.y] : null"
+			class="input-hidden"
+			tabindex="-1"
+			type="text"
 		/>
 	</div>
 </template>
 
 <script>
-import { autofocus, disabled, id } from "@/mixins/props.js";
+import Input, { props as InputProps } from "@/mixins/input.js";
 
 export const props = {
-	mixins: [autofocus, disabled, id],
+	mixins: [InputProps],
 	props: {
+		reset: {
+			default: true,
+			type: Boolean
+		},
 		value: {
 			default: () => {
 				return {
@@ -39,8 +53,12 @@ export const props = {
 	}
 };
 
+/**
+ * @example <k-coords-input :value="value" @input="value = $event" />
+ * @public
+ */
 export default {
-	mixins: [props],
+	mixins: [Input, props],
 	data() {
 		return {
 			x: 0,
@@ -59,11 +77,19 @@ export default {
 		}
 	},
 	methods: {
+		focus() {
+			this.$el.querySelector("button")?.focus();
+		},
 		getCoords(event, bounds) {
 			return {
 				x: Math.min(Math.max(event.clientX - bounds.left, 0), bounds.width),
 				y: Math.min(Math.max(event.clientY - bounds.top, 0), bounds.height)
 			};
+		},
+		onDelete() {
+			if (this.reset && !this.required) {
+				this.$emit("input", null);
+			}
 		},
 		onDrag(e) {
 			// only react on mousedown of main mouse button
@@ -79,6 +105,9 @@ export default {
 
 			window.addEventListener("mousemove", moving);
 			window.addEventListener("mouseup", end);
+		},
+		onEnter() {
+			this.$el.form?.requestSubmit();
 		},
 		onInput(e, value) {
 			e.preventDefault();
@@ -109,15 +138,16 @@ export default {
 				this.onInput(e, keys[e.key]);
 			}
 		},
-		onMove(e) {
+		async onMove(e) {
 			const bounds = this.$el.getBoundingClientRect();
 			const coords = this.getCoords(e, bounds);
 
 			const x = (coords.x / bounds.width) * 100;
 			const y = (coords.y / bounds.height) * 100;
 
-			this.$refs.button.focus();
 			this.onInput(e, { x, y });
+			await this.$nextTick();
+			this.focus();
 		},
 		parse(value) {
 			if (typeof value === "object") {
@@ -155,7 +185,7 @@ export default {
 <style>
 .k-coords-input {
 	position: relative;
-	display: inline-flex;
+	display: block !important;
 }
 .k-coords-input img {
 	width: 100%;
@@ -168,9 +198,10 @@ export default {
 	border-radius: var(--range-thumb-size);
 	box-shadow: var(--range-thumb-shadow);
 	transform: translate(-50%, -50%);
-}
-.k-coords-input-thumb {
 	cursor: move;
+}
+.k-coords-input[data-empty] .k-coords-input-thumb {
+	opacity: 0;
 }
 .k-coords-input-thumb:active {
 	cursor: grabbing;

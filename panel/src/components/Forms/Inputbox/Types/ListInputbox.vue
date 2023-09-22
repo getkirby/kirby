@@ -25,3 +25,9 @@ export default {
 	emits: ["input"]
 };
 </script>
+
+<style>
+.k-list-inputbox {
+	--input-padding: var(--inputbox-padding-multiline);
+}
+</style>

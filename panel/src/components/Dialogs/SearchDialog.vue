@@ -190,7 +190,7 @@ export default {
 }
 
 .k-search-dialog-input {
-	--button-height: var(--input-height);
+	--button-height: var(--inputbox-height);
 	display: flex;
 	align-items: center;
 }
@@ -200,11 +200,11 @@ export default {
 .k-search-dialog-input input {
 	flex-grow: 1;
 	padding-inline: 0.75rem;
-	height: var(--input-height);
+	height: var(--inputbox-height);
 	border-left: 1px solid var(--color-border);
-	line-height: var(--input-height);
+	line-height: var(--inputbox-height);
 	border-radius: var(--rounded);
-	font-size: var(--input-font-size);
+	font-size: var(--inputbox-font-size);
 }
 .k-search-dialog-input input:focus {
 	outline: 0;

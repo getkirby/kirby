@@ -418,10 +418,10 @@ export default {
 	grid-template-columns: max-content minmax(0, 1fr) max-content;
 	align-items: center;
 	gap: 0.25rem;
-	height: var(--input-height);
+	height: var(--inputbox-height);
 }
 .k-link-inputbox-toggle.k-button {
-	--button-color-back: var(--color-gray-250);
+	--button-color-back: var(--color-gray-200);
 	margin-inline-start: var(--spacing-1);
 }
 
@@ -439,7 +439,7 @@ export default {
 .k-link-inputbox-model-placeholder.k-button {
 	--button-align: flex-start;
 	--button-color-text: var(--color-gray-600);
-	--button-height: var(--input-height);
+	--button-height: var(--inputbox-height);
 	--button-padding: var(--spacing-2);
 	flex-grow: 1;
 	overflow: hidden;

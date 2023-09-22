@@ -1,10 +1,10 @@
 import AlphaInput from "./AlphaInput.vue";
+import ArrayInput from "./ArrayInput.js";
 import CalendarInput from "./CalendarInput.vue";
-import CheckboxInput from "./CheckboxInput.vue";
 import CheckboxesInput from "./CheckboxesInput.vue";
 import ChoiceInput from "./ChoiceInput.vue";
 import ColornameInput from "./ColornameInput.vue";
-import ColoroptionInput from "./ColoroptionInput.vue";
+import ColoroptionsInput from "./ColoroptionsInput.vue";
 import ColorpickerInput from "./ColorpickerInput.vue";
 import CoordsInput from "./CoordsInput.vue";
 import DateInput from "./DateInput.vue";
@@ -13,12 +13,13 @@ import HueInput from "./HueInput.vue";
 import ListInput from "./ListInput.vue";
 import MultiselectInput from "./MultiselectInput.vue";
 import NumberInput from "./NumberInput.vue";
-import OptionInput from "./OptionInput.vue";
 import PasswordInput from "./PasswordInput.vue";
 import RadioInput from "./RadioInput.vue";
 import RangeInput from "./RangeInput.vue";
+import SearchInput from "./SearchInput.vue";
 import SelectInput from "./SelectInput.vue";
 import SlugInput from "./SlugInput.vue";
+import StringInput from "./StringInput.vue";
 import TagsInput from "./TagsInput.vue";
 import TelInput from "./TelInput.vue";
 import TextInput from "./TextInput.vue";
@@ -32,13 +33,15 @@ import WriterInput from "./WriterInput.vue";
 
 export default {
 	install(app) {
+		customElements.define("k-array-input", ArrayInput);
+
 		app.component("k-alpha-input", AlphaInput);
 		app.component("k-calendar-input", CalendarInput);
-		app.component("k-checkbox-input", CheckboxInput);
+		app.component("k-checkbox-input", ChoiceInput);
 		app.component("k-checkboxes-input", CheckboxesInput);
 		app.component("k-choice-input", ChoiceInput);
 		app.component("k-colorname-input", ColornameInput);
-		app.component("k-coloroption-input", ColoroptionInput);
+		app.component("k-coloroptions-input", ColoroptionsInput);
 		app.component("k-colorpicker-input", ColorpickerInput);
 		app.component("k-coords-input", CoordsInput);
 		app.component("k-date-input", DateInput);
@@ -47,12 +50,13 @@ export default {
 		app.component("k-list-input", ListInput);
 		app.component("k-multiselect-input", MultiselectInput);
 		app.component("k-number-input", NumberInput);
-		app.component("k-option-input", OptionInput);
 		app.component("k-password-input", PasswordInput);
 		app.component("k-radio-input", RadioInput);
 		app.component("k-range-input", RangeInput);
+		app.component("k-search-input", SearchInput);
 		app.component("k-select-input", SelectInput);
 		app.component("k-slug-input", SlugInput);
+		app.component("k-string-input", StringInput);
 		app.component("k-tags-input", TagsInput);
 		app.component("k-tel-input", TelInput);
 		app.component("k-text-input", TextInput);
@@ -66,6 +70,8 @@ export default {
 
 		/** Keep k-calendar and k-times as legacy alias */
 		app.component("k-calendar", CalendarInput);
+		app.component("k-tags", TagsInput);
 		app.component("k-times", TimeoptionInput);
+		app.component("k-writer", WriterInput);
 	}
 };

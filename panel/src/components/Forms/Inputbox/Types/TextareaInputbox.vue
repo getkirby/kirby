@@ -28,6 +28,6 @@ export default {
 
 <style>
 .k-textarea-inputbox .k-textarea-input-native {
-	padding: var(--input-padding-multiline);
+	padding: var(--inputbox-padding-multiline);
 }
 </style>

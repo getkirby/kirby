@@ -20,13 +20,11 @@
 		<template v-else>
 			<k-dropzone :disabled="!canDrop" @drop="onDrop">
 				<!-- Search filter  -->
-				<k-input
+				<k-search-inputbox
 					v-if="searching && options.search"
 					:autofocus="true"
 					:placeholder="$t('filter') + ' …'"
 					:value="searchterm"
-					icon="search"
-					type="text"
 					class="k-models-section-search"
 					@input="searchterm = $event"
 					@keydown.esc="onSearchToggle"
@@ -248,10 +246,7 @@ export default {
 .k-models-section[data-processing="true"] {
 	pointer-events: none;
 }
-
-.k-models-section-search.k-input {
-	--input-color-back: var(--color-gray-300);
-	--input-color-border: transparent;
+.k-models-section-search {
 	margin-bottom: var(--spacing-3);
 }
 </style>

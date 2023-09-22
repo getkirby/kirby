@@ -17,53 +17,51 @@
 		}"
 		v-direction
 		:data-font="font"
-		:class="`k-${type}-input`"
 		class="k-string-input"
 		@input="$emit('input', $event.target.value)"
 	/>
 </template>
 
 <script>
+import Input, { props as InputProps } from "@/mixins/input.js";
 import {
 	autocomplete,
-	autofocus,
-	disabled,
-	id,
-	name,
+	font,
+	maxlength,
+	minlength,
 	pattern,
 	placeholder,
-	required,
 	spellcheck
 } from "@/mixins/props.js";
 
 export const props = {
 	mixins: [
+		InputProps,
 		autocomplete,
-		autofocus,
-		disabled,
-		id,
-		name,
+		font,
+		maxlength,
+		minlength,
 		pattern,
 		placeholder,
-		required,
 		spellcheck
 	],
 	props: {
-		font: String,
-		maxlength: Number,
-		minlength: Number,
-		type: String,
-		value: String
+		type: {
+			default: "text",
+			type: String
+		},
+		value: {
+			type: String
+		}
 	}
 };
 
 /**
  * @example <k-string-input :value="value" type="text" @input="value = $event" />
+ * @public
  */
 export default {
-	mixins: [props],
-	inheritAttrs: false,
-	emits: ["input"]
+	mixins: [Input, props]
 };
 </script>
 
@@ -71,7 +69,7 @@ export default {
 /* Inputbox context */
 .k-inputbox .k-string-input {
 	line-height: 1.25;
-	padding-inline: var(--input-padding);
+	padding-inline: var(--inputbox-padding);
 }
 .k-inputbox .k-string-input:focus {
 	outline: none;

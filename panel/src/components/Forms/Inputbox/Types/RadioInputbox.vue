@@ -1,7 +1,13 @@
 <template>
-	<k-inputbox v-bind="$props" type="radio" variant="choices">
+	<k-inputbox
+		v-if="options?.length"
+		v-bind="$props"
+		type="radio"
+		variant="choices"
+	>
 		<k-radio-input v-bind="$props" @input="$emit('input', $event)" />
 	</k-inputbox>
+	<k-empty v-else :icon="icon" :text="$t('options.none')" />
 </template>
 
 <script>

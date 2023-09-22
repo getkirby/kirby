@@ -6,7 +6,7 @@
 		variant="plain"
 		type="color"
 	>
-		<k-coloroption-input v-bind="$props" @input="$emit('input', $event)" />
+		<k-coloroptions-input v-bind="$props" @input="$emit('input', $event)" />
 	</k-inputbox>
 	<k-inputbox v-else v-bind="$props" type="color">
 		<k-inputbox-element slot="element">
@@ -124,6 +124,8 @@ export default {
 }
 .k-color-inputbox .k-inputbox-element {
 	--color-frame-rounded: var(--rounded-sm);
+	display: flex;
+	align-items: center;
 	padding-inline-start: 0.25rem;
 }
 .k-color-inputbox .k-color-inputbox-preview {
@@ -133,14 +135,13 @@ export default {
 	align-self: center;
 }
 .k-color-inputbox .k-colorname-input {
-	padding: var(--input-padding);
+	padding-inline: var(--inputbox-padding);
 }
 .k-color-inputbox .k-colorpicker-input {
 	--color-frame-darkness: 100%;
 	padding: var(--spacing-1);
 }
-
-.k-color-inputbox .k-coloroption-input {
+.k-color-inputbox .k-coloroptions-input {
 	flex-grow: 1;
 }
 </style>

@@ -1,32 +1,38 @@
 <template>
-	<input
-		ref="range"
+	<k-range-input
 		v-bind="$props"
-		:min="0"
-		:max="360"
-		:step="1"
 		class="k-hue-input"
-		type="range"
-		@input="$emit('input', Number($event.target.value))"
+		@input="$emit('input', $event)"
 	/>
 </template>
 
 <script>
-import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
+import { props as RangeInputProps } from "./RangeInput.vue";
+import Input from "./RangeInput.vue";
 
 export const props = {
-	mixins: [autofocus, disabled, id, name, required],
+	mixins: [RangeInputProps],
 	props: {
-		value: Number
+		max: {
+			default: 360,
+			type: Number
+		},
+		min: {
+			default: 0,
+			type: Number
+		},
+		step: {
+			default: 1,
+			type: Number
+		}
 	}
 };
 
 /**
- * @example <k-hue-input :value="hue" @input="hue = $event" />
+ * @example <k-hue-input :value="value" @input="value = $event" />
  */
 export default {
-	mixins: [props],
-	inheritAttrs: false
+	mixins: [Input, props]
 };
 </script>
 

@@ -1,29 +1,30 @@
 <template>
-	<div class="k-calendar-input">
+	<fieldset class="k-calendar-input">
+		<legend class="sr-only">{{ $t("date.select") }}</legend>
 		<!-- Month + year selects -->
 		<nav>
-			<k-button icon="angle-left" @click="onPrev" />
+			<k-button :title="$t('prev')" icon="angle-left" @click="onPrev" />
 			<span class="k-calendar-selects">
 				<k-select-input
+					:aria-label="$t('month')"
+					:autofocus="autofocus"
 					:options="months"
-					:disabled="disabled"
 					:empty="false"
 					:required="true"
 					:value="month"
 					@input="month = Number($event)"
 				/>
 				<k-select-input
+					:aria-label="$t('year')"
 					:options="years"
-					:disabled="disabled"
 					:empty="false"
 					:required="true"
 					:value="year"
 					@input="year = Number($event)"
 				/>
 			</span>
-			<k-button icon="angle-right" @click="onNext" />
+			<k-button :title="$t('next')" icon="angle-right" @click="onNext" />
 		</nav>
-
 		<table class="k-calendar-table" :key="year + '-' + month">
 			<!-- Weekdays -->
 			<thead>
@@ -56,27 +57,42 @@
 				<!-- Today button -->
 				<tr>
 					<td class="k-calendar-today" colspan="7">
-						<k-button :text="$t('today')" @click="select(today)" />
+						<k-button
+							:disabled="disabled"
+							:text="$t('today')"
+							@click="select(today)"
+						/>
 					</td>
 				</tr>
 			</tfoot>
 		</table>
-	</div>
+		<input
+			:disabled="disabled"
+			:id="id"
+			:min="min"
+			:max="max"
+			:name="name"
+			:required="required"
+			:value="value"
+			class="sr-only"
+			tabindex="-1"
+			type="date"
+		/>
+	</fieldset>
 </template>
 
 <script>
+import { props as InputProps } from "@/mixins/input.js";
+
 /**
  * The Calendar component is mainly used for our `DateInput` component, but it could be used as stand-alone calendar as well with a little CSS love.
- * @public
  *
- * @example <k-calendar-input value="2012-12-12" @input="onInput" />
+ * @example <k-calendar-input :value="value" @input="value = $event" />
+ * @public
  */
 export default {
+	mixins: [InputProps],
 	props: {
-		/**
-		 * Disables whole calendar
-		 */
-		disabled: Boolean,
 		/**
 		 * The last allowed date
 		 * @example `2020-12-31`
@@ -371,8 +387,10 @@ export default {
 .k-calendar-selects .k-select-input {
 	display: flex;
 	align-items: center;
+	text-align: center;
 	height: var(--button-height);
 	padding: 0 0.5rem;
+	border-radius: var(--input-rounded);
 }
 .k-calendar-selects .k-select-input:focus-within {
 	outline: var(--outline);

@@ -20,6 +20,7 @@ export default class ArrayInput extends HTMLElement {
 	}
 
 	connectedCallback() {
+		this.emit();
 		this.validate();
 	}
 
@@ -39,12 +40,12 @@ export default class ArrayInput extends HTMLElement {
 		}
 
 		this.selected.push(value);
-		this.internals.setFormValue(this.selected);
 		this.validate();
 		this.emit();
 	}
 
 	emit() {
+		this.internals.setFormValue(this.selected);
 		this.dispatchEvent(new CustomEvent("input"));
 	}
 
@@ -53,10 +54,18 @@ export default class ArrayInput extends HTMLElement {
 	}
 
 	input() {
-		const selector =
-			this.getAttribute("input") ?? "input, textarea, select, button";
+		const fallback = "input, textarea, select, button";
+		const selector = this.getAttribute("input") ?? fallback;
 
-		return this.querySelector(selector);
+		return (
+			this.querySelector(selector) ??
+			this.querySelector(fallback) ??
+			this.querySelector(":scope > *")
+		);
+	}
+
+	get isEmpty() {
+		return this.selected.length === 0;
 	}
 
 	has(value) {
@@ -77,10 +86,18 @@ export default class ArrayInput extends HTMLElement {
 		if (Boolean(this.required) === true && this.selected.length === 0) {
 			flags.valueMissing = true;
 			error = window.panel.t("error.validation.items.required");
-		} else if (this.min && this.selected.length < this.min) {
+		} else if (
+			this.isEmpty === false &&
+			this.min &&
+			this.selected.length < this.min
+		) {
 			flags.rangeUnderflow = true;
 			error = window.panel.t("error.validation.items.min", { min: this.min });
-		} else if (this.max && this.selected.length > this.max) {
+		} else if (
+			this.isEmpty === false &&
+			this.max &&
+			this.selected.length > this.max
+		) {
 			flags.rangeOverflow = true;
 			error = window.panel.t("error.validation.items.max", { max: this.max });
 		}
@@ -89,14 +106,12 @@ export default class ArrayInput extends HTMLElement {
 	}
 
 	get value() {
-		return String(this.selected);
+		return JSON.stringify(this.selected ?? []);
 	}
 
 	set value(value) {
-		this.selected =
-			value === "" || value === undefined || value === null
-				? []
-				: value.split(",");
+		this.selected = (typeof value === "string" ? JSON.parse(value) : []) ?? [];
 		this.validate();
+		this.emit();
 	}
 }

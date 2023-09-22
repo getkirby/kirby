@@ -35,6 +35,9 @@ export default {
 
 <style>
 .k-password-inputbox .k-password-input {
-	padding: var(--input-padding);
+	padding: var(--inputbox-padding);
+}
+.k-password-inputbox .k-password-input:focus {
+	outline: 0;
 }
 </style>

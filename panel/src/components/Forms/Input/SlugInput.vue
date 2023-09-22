@@ -1,33 +1,23 @@
 <template>
-	<input
-		ref="input"
-		v-bind="{
-			autofocus,
-			disabled,
-			id,
-			minlength,
-			name,
-			pattern,
-			placeholder,
-			required
-		}"
-		v-direction
-		:value="slug"
-		autocomplete="off"
-		spellcheck="false"
+	<k-string-input
+		v-bind="$props"
+		:value="value"
+		class="k-slug-input"
 		type="text"
-		class="k-text-input"
-		v-on="listeners"
+		@input="emit($event)"
 	/>
 </template>
 
 <script>
-import TextInput from "./TextInput.vue";
-import { props as TextInputProps } from "./TextInput.vue";
+import StringInput, { props as StringInputProps } from "./StringInput.vue";
 
 export const props = {
-	mixins: [TextInputProps],
+	mixins: [StringInputProps],
 	props: {
+		autocomplete: {
+			default: "off",
+			type: String
+		},
 		allow: {
 			type: String,
 			default: ""
@@ -36,6 +26,10 @@ export const props = {
 			type: Object,
 			default: () => ({})
 		},
+		spellcheck: {
+			default: "false",
+			type: String
+		},
 		sync: {
 			type: String
 		}
@@ -43,46 +37,41 @@ export const props = {
 };
 
 /**
- * @example <k-input :value="slug" @input="slug = $event" name="slug" type="slug" />
+ * @example <k-slug-input :value="value" @input="value = $event" />
+ * @public
  */
 export default {
-	extends: TextInput,
-	mixins: [props],
+	mixins: [StringInput, props],
 	data() {
 		return {
-			slug: this.sluggify(this.value),
-			slugs: this.$panel.language.rules ?? this.$panel.system.slugs,
-			syncValue: null
+			slugs: this.$panel.language.rules ?? this.$panel.system.slugs
 		};
 	},
 	watch: {
 		formData: {
-			handler(newValue) {
-				if (this.disabled) {
-					return false;
+			handler(newValue, oldValue = {}) {
+				if (this.disabled || !this.sync || newValue[this.sync] === undefined) {
+					return;
 				}
 
-				if (!this.sync || newValue[this.sync] === undefined) {
-					return false;
+				if (newValue[this.sync] === oldValue[this.sync]) {
+					return;
 				}
 
-				if (newValue[this.sync] == this.syncValue) {
-					return false;
-				}
-
-				this.syncValue = newValue[this.sync];
-				this.onInput(this.sluggify(this.syncValue));
+				this.emit(newValue[this.sync]);
 			},
 			deep: true,
 			immediate: true
 		},
-		value(newValue) {
-			newValue = this.sluggify(newValue);
+		value: {
+			handler(newValue, oldValue) {
+				if (newValue === oldValue) {
+					return;
+				}
 
-			if (newValue !== this.slug) {
-				this.slug = newValue;
-				this.$emit("input", this.slug);
-			}
+				this.emit(newValue);
+			},
+			immediate: true
 		}
 	},
 	methods: {
@@ -93,9 +82,8 @@ export default {
 				this.allow
 			);
 		},
-		onInput(value) {
-			this.slug = this.sluggify(value);
-			this.$emit("input", this.slug);
+		emit(value) {
+			this.$emit("input", this.sluggify(value));
 		}
 	}
 };

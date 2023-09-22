@@ -25,3 +25,9 @@ export default {
 	emits: ["input"]
 };
 </script>
+
+<style>
+.k-writer-inputbox {
+	--input-padding: var(--inputbox-padding-multiline);
+}
+</style>

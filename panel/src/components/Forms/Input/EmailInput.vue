@@ -1,30 +1,34 @@
+<template>
+	<k-string-input
+		v-bind="$props"
+		class="k-email-input"
+		type="email"
+		@input="$emit('input', $event)"
+	/>
+</template>
+
 <script>
-import TextInput from "./TextInput.vue";
-import { props as TextInputProps } from "./TextInput.vue";
+import StringInput, { props as StringInputProps } from "./StringInput.vue";
 
 export const props = {
-	mixins: [TextInputProps],
+	mixins: [StringInputProps],
 	props: {
 		autocomplete: {
-			type: String,
-			default: "email"
+			default: "email",
+			type: String
 		},
 		placeholder: {
-			type: String,
-			default: () => window.panel.$t("email.placeholder")
-		},
-		type: {
-			type: String,
-			default: "email"
+			default: () => window.panel.$t("email.placeholder"),
+			type: String
 		}
 	}
 };
 
 /**
- * @example <k-email-input :value="email" @input="email = $event" name="email" />
+ * @example <k-email-input :value="value" @input="value = $event" />
+ * @public
  */
 export default {
-	extends: TextInput,
-	mixins: [props]
+	mixins: [StringInput, props]
 };
 </script>

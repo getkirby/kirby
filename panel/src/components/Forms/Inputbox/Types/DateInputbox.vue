@@ -55,6 +55,6 @@ export default {
 
 <style>
 .k-date-inputbox .k-date-input {
-	padding: var(--input-padding);
+	padding: var(--inputbox-padding);
 }
 </style>

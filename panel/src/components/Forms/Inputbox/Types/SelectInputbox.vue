@@ -19,7 +19,13 @@ import { props as InputboxProps } from "../Inputbox.vue";
 import { props as InputProps } from "@/components/Forms/Input/SelectInput.vue";
 
 export const props = {
-	mixins: [InputboxProps, InputProps]
+	mixins: [InputboxProps, InputProps],
+	props: {
+		icon: {
+			default: "checklist",
+			type: String
+		}
+	}
 };
 
 export default {
@@ -31,7 +37,15 @@ export default {
 
 <style>
 .k-select-inputbox .k-select-input {
+	line-height: 1.25;
 	flex-grow: 1;
-	padding: var(--input-padding);
+	padding: var(--inputbox-padding);
+}
+.k-select-inputbox .k-select-input[multiple] option {
+	padding: var(--spacing-1);
+	border-radius: var(--rounded-sm);
+}
+.k-select-inputbox .k-select-input[multiple] option + option {
+	margin-top: 2px;
 }
 </style>

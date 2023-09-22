@@ -1,37 +1,31 @@
 <template>
-	<input
-		ref="input"
-		v-bind="{
-			autofocus,
-			disabled,
-			id,
-			name,
-			placeholder,
-			required,
-			value
-		}"
-		autocomplete="off"
-		spellcheck="false"
-		type="text"
+	<k-string-input
+		v-bind="$props"
 		class="k-colorname-input"
-		@blur="onBlur"
-		@input="onInput($event.target.value)"
-		@paste="onPaste"
-		@keydown.meta.s.stop.prevent="onSave"
+		@blur.native="onBlur"
+		@input="$emit('input', $event)"
+		@paste.native="onPaste"
+		@keydown.native.meta.s.stop.prevent="onSave"
+		@keydown.native.enter="onSave"
 	/>
 </template>
 
 <script>
-import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
-
-import { required as validateRequired } from "vuelidate/lib/validators";
+import StringInput, { props as StringInputProps } from "./StringInput.vue";
 
 export const props = {
-	mixins: [autofocus, disabled, id, name, required],
+	mixins: [StringInputProps],
 	props: {
+		/**
+		 * Add the alpha value to the color name
+		 */
 		alpha: {
 			type: Boolean,
 			default: true
+		},
+		autocomplete: {
+			default: "off",
+			type: String
 		},
 		/**
 		 * @values `hex`, `rgb`, `hsl`
@@ -41,30 +35,25 @@ export const props = {
 			default: "hex",
 			validator: (format) => ["hex", "rgb", "hsl"].includes(format)
 		},
-		placeholder: String,
-		value: String
+		spellcheck: {
+			default: "false",
+			type: String
+		}
 	}
 };
 
+/**
+ * @example <k-colorname-input :value="value" @input="value = $event" />
+ * @public
+ */
 export default {
-	mixins: [props],
-	inheritAttrs: false,
-	data() {
-		return {
-			color: null
-		};
+	mixins: [StringInput, props],
+	mounted() {
+		this.validate();
 	},
 	watch: {
 		value() {
-			this.onInvalid();
-		}
-	},
-	mounted() {
-		this.onInvalid();
-		this.onBlur();
-
-		if (this.$props.autofocus) {
-			this.focus();
+			this.validate();
 		}
 	},
 	methods: {
@@ -94,49 +83,38 @@ export default {
 				return value;
 			}
 		},
-		focus() {
-			this.$refs.input.focus();
+		convertAndEmit(value) {
+			this.emit(this.convert(value));
 		},
-		onBlur() {
-			const value = this.convert(this.value);
-			this.onInput(value);
-		},
-		onInput(value) {
+		emit(value) {
 			this.$emit("input", value);
 		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
+		onBlur() {
+			this.convertAndEmit(this.value);
 		},
 		onPaste(input) {
 			if (input instanceof ClipboardEvent) {
 				input = this.$helper.clipboard.read(input, true);
 			}
 
-			const value = this.convert(input);
-			this.onInput(value);
+			this.convertAndEmit(input);
 		},
-		onSave() {
-			this.onBlur();
-			this.$emit("submit");
+		async onSave() {
+			this.convertAndEmit(this.value);
+			await this.$nextTick();
+			this.$el.form?.requestSubmit();
 		},
-		select() {
-			this.$refs.input.select();
-		}
-	},
-	validations() {
-		return {
-			value: {
-				color: (value) =>
-					value ? this.$library.colors.parse(value) !== null : true,
-				required: this.required ? validateRequired : true
+		validate() {
+			let error = "";
+
+			if (this.$library.colors.parse(this.value) === null) {
+				error = this.$t("error.validation.color", {
+					format: this.format
+				});
 			}
-		};
+
+			this.$el.setCustomValidity(error);
+		}
 	}
 };
 </script>
-
-<style>
-.k-colorname-input {
-	font-family: var(--font-mono);
-}
-</style>

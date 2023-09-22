@@ -1,33 +1,36 @@
 <template>
 	<input
-		:id="id"
-		ref="input"
 		v-direction
-		:autofocus="autofocus"
-		:class="`k-text-input k-${type}-input`"
-		:disabled="disabled"
-		:placeholder="display"
-		:required="required"
+		v-bind="$props"
+		:class="`k-${type}-input`"
+		:placeholder="placeholder ?? display"
 		:value="formatted"
-		autocomplete="off"
-		spellcheck="false"
+		class="k-string-input"
 		type="text"
 		@blur="onBlur"
-		@focus="$emit('focus')"
 		@input="onInput($event.target.value)"
 		@keydown.down.stop.prevent="onArrowDown"
 		@keydown.up.stop.prevent="onArrowUp"
-		@keydown.enter.stop.prevent="onEnter"
+		@keydown.enter="onEnter"
 		@keydown.tab="onTab"
 	/>
 </template>
 
 <script>
-import { autofocus, disabled, id, required } from "@/mixins/props.js";
+import { props as InputProps } from "@/mixins/input.js";
+import { placeholder } from "@/mixins/props.js";
+import Input from "@/mixins/input.js";
 
 export const props = {
-	mixins: [autofocus, disabled, id, required],
+	mixins: [InputProps, placeholder],
 	props: {
+		/**
+		 * Disable the autocomplete dropdown by default
+		 */
+		autocomplete: {
+			default: "off",
+			type: String
+		},
 		/**
 		 * Format to parse and display the date
 		 * @values YYYY, YY, MM, M, DD, D
@@ -35,7 +38,7 @@ export const props = {
 		 */
 		display: {
 			type: String,
-			default: "DD.MM.YYYY"
+			default: "YYYY-MM-DD"
 		},
 		/**
 		 * The last allowed date as ISO date string
@@ -47,6 +50,13 @@ export const props = {
 		 * @example `2020-01-01`
 		 */
 		min: String,
+		/**
+		 * Disable spellcheck by default
+		 */
+		spellcheck: {
+			default: "false",
+			type: String
+		},
 		/**
 		 * Rounding to the nearest step.
 		 * Requires an object with a `unit`
@@ -83,16 +93,16 @@ export const props = {
  * (altering value by arrow up/down, selecting of
  * input parts via tab key).
  *
- * @example <k-input :value="date" @input="date = $event" type="date" name="date" />
+ * @example <k-date-input :value="value" @input="value = $event" />
  * @public
  */
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	data() {
 		return {
 			dt: null,
-			formatted: null
+			formatted: null,
+			unformatted: null
 		};
 	},
 	computed: {
@@ -102,6 +112,20 @@ export default {
 		 */
 		inputType() {
 			return "date";
+		},
+		/**
+		 * Parse the max boundary whenever it changes
+		 * @returns {Object|null}
+		 */
+		maxDt() {
+			return this.max ? this.parse(this.max) : null;
+		},
+		/**
+		 * Parse the min boundary whenever it changes
+		 * @returns {Object|null}
+		 */
+		minDt() {
+			return this.min ? this.parse(this.min) : null;
 		},
 		/**
 		 * dayjs pattern class for `display` pattern
@@ -125,6 +149,7 @@ export default {
 		value: {
 			handler(newValue, oldValue) {
 				if (newValue !== oldValue) {
+					this.unformatted = newValue;
 					const dt = this.toDatetime(newValue);
 					this.commit(dt);
 				}
@@ -149,7 +174,8 @@ export default {
 			// since manipulation command can occur while
 			// typing new value, make sure to first update
 			// datetime object from current input value
-			let dt = this.parse() ?? this.round(this.$library.dayjs());
+			let dt =
+				this.parse(this.unformatted) ?? this.round(this.$library.dayjs());
 
 			// what unit to alter and by how much:
 			// as default use the step unit and size
@@ -200,7 +226,7 @@ export default {
 		commit(dt) {
 			this.dt = dt;
 			this.formatted = this.pattern.format(dt);
-			this.$emit("invalid", this.$v.$invalid, this.$v);
+			this.validate(this.dt);
 		},
 		/**
 		 * Convert the dayjs object to an ISO string
@@ -209,13 +235,6 @@ export default {
 		 */
 		emit(dt) {
 			this.$emit("input", this.toISO(dt));
-		},
-		/**
-		 * Focuses the input element
-		 * @public
-		 */
-		focus() {
-			this.$refs.input.focus();
 		},
 		/**
 		 * Decrement the currently
@@ -236,7 +255,7 @@ export default {
 		 * data from parsed value and emit
 		 */
 		onBlur() {
-			const dt = this.parse();
+			const dt = this.parse(this.unformatted);
 			this.commit(dt);
 			this.emit(dt);
 		},
@@ -246,8 +265,6 @@ export default {
 		 */
 		async onEnter() {
 			this.onBlur();
-			await this.$nextTick();
-			this.$emit("submit");
 		},
 		/**
 		 * Takes the current input value and
@@ -258,8 +275,10 @@ export default {
 		 * @param {string} value
 		 */
 		onInput(value) {
+			this.unformatted = value;
+
 			// get the parsed dayjs object
-			const dt = this.parse();
+			const dt = this.parse(value);
 
 			// get the formatted string for dayjs value
 			const formatted = this.pattern.format(dt);
@@ -290,20 +309,26 @@ export default {
 		 */
 		async onTab(event) {
 			// step out of the field if it is empty
-			if (this.$refs.input.value == "") {
+			if (!this.unformatted?.length) {
 				return;
 			}
 
 			// make sure to confirm any current input
 			this.onBlur();
+
+			// if the value is not valid, step out
+			if (!this.dt) {
+				return;
+			}
+
 			await this.$nextTick();
 			const selection = this.selection();
 
 			// if an exact part is selected
 			if (
-				this.$refs.input &&
-				selection.start === this.$refs.input.selectionStart &&
-				selection.end === this.$refs.input.selectionEnd - 1
+				this.$el &&
+				selection.start === this.$el.selectionStart &&
+				selection.end === this.$el.selectionEnd - 1
 			) {
 				// move backward on shift + tab
 				if (event.shiftKey) {
@@ -328,8 +353,8 @@ export default {
 			} else {
 				// nothing or no part fully selected
 				if (
-					this.$refs.input &&
-					this.$refs.input.selectionStart == selection.end + 1 &&
+					this.$el &&
+					this.$el.selectionStart == selection.end + 1 &&
 					selection.index == this.pattern.parts.length - 1
 				) {
 					// cursor at the end of the pattern, jump out
@@ -337,13 +362,10 @@ export default {
 				}
 
 				// more than one part selected, select last affected part
-				else if (
-					this.$refs.input &&
-					this.$refs.input.selectionEnd - 1 > selection.end
-				) {
+				else if (this.$el && this.$el.selectionEnd - 1 > selection.end) {
 					const last = this.pattern.at(
-						this.$refs.input.selectionEnd,
-						this.$refs.input.selectionEnd
+						this.$el.selectionEnd,
+						this.$el.selectionEnd
 					);
 
 					this.select(this.pattern.parts[last.index]);
@@ -363,8 +385,7 @@ export default {
 		 * based on the `display` pattern
 		 * @return {Object|null}
 		 */
-		parse() {
-			let value = this.$refs.input.value;
+		parse(value) {
 			// interpret and round to nearest step
 			value = this.$library.dayjs.interpret(value, this.inputType);
 			return this.round(value);
@@ -389,7 +410,7 @@ export default {
 				part = this.selection();
 			}
 
-			this.$refs.input?.setSelectionRange(part.start, part.end + 1);
+			this.$el?.setSelectionRange(part.start, part.end + 1);
 		},
 		/**
 		 * Selects the first pattern if available
@@ -426,10 +447,7 @@ export default {
 		 * @returns {Object}
 		 */
 		selection() {
-			return this.pattern.at(
-				this.$refs.input.selectionStart,
-				this.$refs.input.selectionEnd
-			);
+			return this.pattern.at(this.$el.selectionStart, this.$el.selectionEnd);
 		},
 		/**
 		 * Converts ISO string to dayjs object
@@ -446,22 +464,38 @@ export default {
 		 */
 		toISO(dt) {
 			return dt?.toISO(this.inputType);
-		}
-	},
-	validations() {
-		return {
-			value: {
-				min:
-					this.dt && this.min
-						? () => this.dt.validate(this.min, "min", this.rounding.unit)
-						: true,
-				max:
-					this.dt && this.max
-						? () => this.dt.validate(this.max, "max", this.rounding.unit)
-						: true,
-				required: this.required ? () => !!this.dt : true
+		},
+		validate(dt) {
+			if (!this.$el) {
+				return;
 			}
-		};
+
+			let error = "";
+
+			if (this.unformatted?.length && !dt) {
+				error = this.$t(`error.validation.${this.inputType}`);
+			} else if (this.validateBoundary(dt, "min") === false) {
+				error = this.validityMessage("after", this.min);
+			} else if (this.validateBoundary(dt, "max") === false) {
+				error = this.validityMessage("before", this.max);
+			}
+
+			this.$el.setCustomValidity(error);
+		},
+		validateBoundary(dt, type) {
+			const boundary = this[type + "Dt"];
+
+			if (!dt || !boundary) {
+				return true;
+			}
+
+			return this.dt.validate(boundary, type, this.rounding.unit);
+		},
+		validityMessage(type, value) {
+			return this.$t(`error.validation.${this.inputType}.${type}`, {
+				[this.inputType]: value
+			});
+		}
 	}
 };
 </script>

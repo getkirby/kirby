@@ -18,9 +18,3 @@ export default {
 	emits: ["input"]
 };
 </script>
-
-<style>
-.k-text-inputbox .k-text-input {
-	padding: var(--input-padding);
-}
-</style>

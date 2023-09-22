@@ -1,27 +1,34 @@
+<template>
+	<k-string-input
+		v-bind="$props"
+		class="k-tel-input"
+		type="tel"
+		@input="$emit('input', $event)"
+	/>
+</template>
+
 <script>
-import TextInput from "./TextInput.vue";
-import { props as TextInputProps } from "./TextInput.vue";
+import StringInput, { props as StringInputProps } from "./StringInput.vue";
 
 export const props = {
-	mixins: [TextInputProps],
+	mixins: [StringInputProps],
 	props: {
 		autocomplete: {
-			default: "tel"
+			default: "tel",
+			type: String
 		},
 		placeholder: {
-			default: () => window.panel.$t("tel.placeholder")
-		},
-		type: {
-			default: "tel"
+			default: () => window.panel.$t("tel.placeholder"),
+			type: String
 		}
 	}
 };
 
 /**
- * @example <k-input :value="tel" @input="tel = $event" name="tel" type="tel" />
+ * @example <k-tel-input :value="value" @input="value = $event" />
+ * @public
  */
 export default {
-	extends: TextInput,
-	mixins: [props]
+	mixins: [StringInput, props]
 };
 </script>

@@ -28,7 +28,6 @@
 					:data-font="font"
 					class="k-textarea-input-native"
 					@click="$refs.toolbar?.close()"
-					@focus="onFocus"
 					@input="onInput"
 					@keydown.meta.enter="onSubmit"
 					@keydown.ctrl.enter="onSubmit"
@@ -44,26 +43,23 @@
 </template>
 
 <script>
-import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
-
+import Input, { props as InputProps } from "@/mixins/input.js";
 import {
-	required as validateRequired,
-	minLength as validateMinLength,
-	maxLength as validateMaxLength
-} from "vuelidate/lib/validators";
+	font,
+	maxlength,
+	minlength,
+	placeholder,
+	spellcheck
+} from "@/mixins/props.js";
 
 export const props = {
-	mixins: [autofocus, disabled, id, name, required],
+	mixins: [InputProps, font, maxlength, minlength, placeholder, spellcheck],
 	props: {
 		buttons: {
 			type: [Boolean, Array],
 			default: true
 		},
 		endpoints: Object,
-		font: String,
-		maxlength: Number,
-		minlength: Number,
-		placeholder: String,
 		preselect: Boolean,
 		/**
 		 * Pre-selects the size before auto-sizing kicks in.
@@ -71,22 +67,16 @@ export const props = {
 		 * @values small, medium, large, huge
 		 */
 		size: String,
-		spellcheck: {
-			type: [Boolean, String],
-			default: "off"
-		},
-		theme: String,
 		uploads: [Boolean, Object, Array],
 		value: String
 	}
 };
 
 /**
- * @example <k-input :value="text" @input="text = $event" name="text" type="textarea" />
+ * @example <k-textarea-input :value="value" @input="value = $event" />
  */
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	data() {
 		return {
 			over: false
@@ -103,21 +93,9 @@ export default {
 	},
 	watch: {
 		value() {
-			this.onInvalid();
 			this.$nextTick(() => {
 				this.$refs.input.autosize();
 			});
-		}
-	},
-	mounted() {
-		this.onInvalid();
-
-		if (this.$props.autofocus) {
-			this.focus();
-		}
-
-		if (this.$props.preselect) {
-			this.select();
 		}
 	},
 	methods: {
@@ -153,7 +131,7 @@ export default {
 			});
 		},
 		focus() {
-			this.$refs.input.focus();
+			this.$el.querySelector("textarea")?.focus();
 		},
 		insert(text) {
 			const input = this.$refs.input;
@@ -199,14 +177,8 @@ export default {
 				this.insert(this.$panel.drag.data);
 			}
 		},
-		onFocus($event) {
-			this.$emit("focus", $event);
-		},
 		onInput($event) {
 			this.$emit("input", $event.target.value);
-		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
 		},
 		onOut() {
 			this.$refs.input.blur();
@@ -238,7 +210,7 @@ export default {
 			}
 		},
 		onSubmit($event) {
-			return this.$emit("submit", $event);
+			$event.target.form?.requestSubmit();
 		},
 		parseSelection() {
 			const selection = this.selection();
@@ -304,15 +276,6 @@ export default {
 		wrap(text) {
 			this.insert(text + this.selection() + text);
 		}
-	},
-	validations() {
-		return {
-			value: {
-				required: this.required ? validateRequired : true,
-				minLength: this.minlength ? validateMinLength(this.minlength) : true,
-				maxLength: this.maxlength ? validateMaxLength(this.maxlength) : true
-			}
-		};
 	}
 };
 </script>
@@ -338,18 +301,7 @@ export default {
 	resize: none;
 	min-height: var(--textarea-size);
 }
-.k-textarea-input-native:focus {
-	outline: 0;
-}
 .k-textarea-input-native[data-font="monospace"] {
 	font-family: var(--font-mono);
-}
-
-/* Input Context */
-.k-input[data-type="textarea"] .k-input-element {
-	min-width: 0;
-}
-.k-input[data-type="textarea"] .k-textarea-input-native {
-	padding: var(--input-padding-multiline);
 }
 </style>

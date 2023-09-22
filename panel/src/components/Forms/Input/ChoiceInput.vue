@@ -1,68 +1,73 @@
 <template>
-	<label
-		class="k-choice-input"
-		:aria-disabled="disabled"
-		:data-has-info="Boolean(info)"
-		:data-theme="theme"
-	>
-		<k-choice
-			ref="input"
-			v-bind="$props"
-			@input="$emit('input', $event)"
-			@invalid="$emit('invalid', $event)"
+	<label class="k-choice-input" :aria-disabled="disabled">
+		<input
+			v-bind="{
+				autofocus,
+				id,
+				checked,
+				disabled,
+				name,
+				required,
+				type,
+				value
+			}"
+			:data-variant="variant"
+			@input="$emit('input', $event.target.checked)"
 		/>
-		<span class="k-choice-input-label">
+		<span v-if="label || info" class="k-choice-input-label">
 			<!-- eslint-disable-next-line vue/no-v-html -->
-			<span class="k-choice-input-text" v-html="label" />
+			<span class="k-choice-input-label-text" v-html="label" />
 			<!-- eslint-disable-next-line vue/no-v-html -->
-			<span v-if="info" class="k-choice-input-info" v-html="info" />
+			<span v-if="info" class="k-choice-input-label-info" v-html="info" />
 		</span>
 	</label>
 </template>
 
 <script>
-import { props as Choice } from "@/components/Forms/Element/Choice.vue";
-import { label } from "@/mixins/props.js";
+import { props as InputProps } from "@/mixins/input.js";
+import Input from "@/mixins/input.js";
 
 export const props = {
-	mixins: [Choice, label],
+	mixins: [InputProps],
 	props: {
+		checked: {
+			type: Boolean
+		},
 		info: {
 			type: String
 		},
-		theme: {
+		label: {
+			type: String
+		},
+		type: {
+			default: "checkbox",
+			type: String
+		},
+		value: {
+			type: [Boolean, Number, String]
+		},
+		variant: {
 			type: String
 		}
 	}
 };
 
+/**
+ * @example <k-choice-input :value="value" @input="value = $event" />
+ * @public
+ */
 export default {
-	mixins: [props],
-	emits: ["input", "invalid"],
-	methods: {
-		focus() {
-			this.$refs.input.focus();
-		},
-		select() {
-			this.focus();
-		}
-	}
+	mixins: [Input, props]
 };
 </script>
 
 <style>
-:root {
-	--choice-input-color-back: var(--color-white);
-	--choice-input-color-info: var(--color-text-dimmed);
-	--choice-input-color-text: var(--color-text);
-}
-
 .k-choice-input {
 	display: flex;
 	gap: var(--spacing-3);
 	min-width: 0;
 }
-.k-choice-input .k-choice {
+.k-choice-input input {
 	top: 2px;
 }
 .k-choice-input-label {
@@ -70,19 +75,17 @@ export default {
 	line-height: 1.25rem;
 	flex-direction: column;
 	min-width: 0;
-	color: var(--choice-input-color-text);
+	color: var(--choice-color-text);
 }
 .k-choice-input-label > * {
 	display: block;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-.k-choice-input-info {
-	color: var(--choice-input-color-info);
+.k-choice-input-label-info {
+	color: var(--choice-color-info);
 }
-
 .k-choice-input[aria-disabled] {
 	cursor: not-allowed;
-	--shadow: none;
 }
 </style>

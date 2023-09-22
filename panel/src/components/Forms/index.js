@@ -26,7 +26,6 @@ import ToolbarLinkDialog from "./Toolbar/LinkDialog.vue";
 
 /* Form parts */
 import Blocks from "./Blocks/index.js";
-import Elements from "./Element/index.js";
 import Fields from "./Field/index.js";
 import Inputs from "./Input/index.js";
 import Inputboxes from "./Inputbox/index.js";
@@ -59,7 +58,6 @@ export default {
 		app.component("k-toolbar-link-dialog", ToolbarLinkDialog);
 
 		app.use(Blocks);
-		app.use(Elements);
 		app.use(Inputs);
 		app.use(Inputboxes);
 		app.use(Fields);

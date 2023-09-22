@@ -1,38 +1,40 @@
 <template>
-	<ul
-		:style="'--columns:' + columns"
-		class="k-checkboxes-input k-grid"
-		data-variant="choices"
-	>
-		<li v-for="(choice, index) in choices" :key="index">
-			<k-choice-input v-bind="choice" @input="input(choice.value, $event)" />
-		</li>
-	</ul>
+	<fieldset :disabled="disabled" class="k-checkboxes-input">
+		<legend class="sr-only">{{ $t("options") }}</legend>
+		<k-array-input
+			ref="input"
+			:min="min"
+			:max="max"
+			:name="name"
+			:required="required"
+			:value="JSON.stringify(value)"
+		>
+			<ul :style="'--columns:' + columns" class="k-grid" data-variant="choices">
+				<li v-for="(choice, index) in choices" :key="index">
+					<k-choice-input
+						v-bind="choice"
+						@input="input(choice.value, $event)"
+					/>
+				</li>
+			</ul>
+		</k-array-input>
+	</fieldset>
 </template>
 
 <script>
-import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
+import Input, { props as InputProps } from "@/mixins/input.js";
+import { options } from "@/mixins/props.js";
 
-import {
-	required as validateRequired,
-	minLength as validateMinLength,
-	maxLength as validateMaxLength
-} from "vuelidate/lib/validators";
-
+/**
+ * @example <k-checkboxes-input :options="options" :value="value" @input="value = $event" />
+ * @public
+ */
 export const props = {
-	mixins: [autofocus, disabled, id, name, required],
+	mixins: [InputProps, options],
 	props: {
-		columns: {
-			default: 1,
-			type: Number
-		},
+		columns: Number,
 		max: Number,
 		min: Number,
-		options: {
-			default: () => [],
-			type: Array
-		},
-		theme: String,
 		/**
 		 * The value for the input should be provided as array. Each value in the array corresponds with the value in the options. If you provide a string, the string will be split by comma.
 		 */
@@ -44,69 +46,38 @@ export const props = {
 };
 
 export default {
-	mixins: [props],
-	inheritAttrs: false,
-	data() {
-		return {
-			selected: []
-		};
-	},
+	mixins: [Input, props],
 	computed: {
 		choices() {
 			return this.options.map((option, index) => {
 				return {
 					autofocus: this.autofocus && index === 0,
-					checked: this.selected.includes(option.value),
+					checked: this.value?.includes(option.value),
 					disabled: this.disabled,
 					info: option.info,
 					label: option.text,
-					name: this.name ?? this.id,
-					theme: this.theme,
 					type: "checkbox",
 					value: option.value
 				};
 			});
 		}
 	},
-	watch: {
-		value: {
-			handler(value) {
-				this.selected = Array.isArray(value) ? value : [];
-				this.validate();
-			},
-			immediate: true
-		}
-	},
 	methods: {
 		focus() {
-			this.$el.querySelector("input")?.focus();
+			(
+				this.$el.querySelector("input:checked") ||
+				this.$el.querySelector("input")
+			)?.focus();
 		},
-		input(key, value) {
-			if (value === true) {
-				this.selected.push(key);
+		input(value, checked) {
+			if (checked === true) {
+				this.$refs.input.add(value);
 			} else {
-				const index = this.selected.indexOf(key);
-				if (index !== -1) {
-					this.selected.splice(index, 1);
-				}
+				this.$refs.input.remove(value);
 			}
-			this.$emit("input", this.selected);
-		},
-		select() {
-			this.focus();
-		},
-		validate() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
+
+			this.$emit("input", this.$refs.input.selected);
 		}
-	},
-	validations() {
-		return {
-			selected: {
-				required: this.required ? validateRequired : true,
-				min: this.min ? validateMinLength(this.min) : true,
-				max: this.max ? validateMaxLength(this.max) : true
-			}
-		};
 	}
 };
 </script>
