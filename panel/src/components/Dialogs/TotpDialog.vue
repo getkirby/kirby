@@ -44,6 +44,7 @@
 				}"
 				:novalidate="true"
 				:value="value"
+				class="k-totp-dialog-fields"
 				@input="$emit('input', $event)"
 				@submit="$emit('submit', $event)"
 			/>
@@ -93,5 +94,11 @@ export default {
 		grid-template-columns: 1fr 1fr;
 		gap: var(--spacing-8);
 	}
+}
+
+.k-totp-dialog-fields .k-field-name-confirm {
+	--input-height: var(--height-xl);
+	--input-rounded: var(--rounded-xl);
+	--input-font-size: var(--text-3xl);
 }
 </style>
