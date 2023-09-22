@@ -157,11 +157,6 @@ class BlocksField extends FieldClass
 			}
 		}
 
-		// don't add blocks that exceed the maximum limit
-		if ($max = $this->max()) {
-			$blocks = array_slice($blocks, 0, $max);
-		}
-
 		return $blocks;
 	}
 

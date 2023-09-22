@@ -543,7 +543,7 @@ export default {
 			const html = this.$helper.clipboard.read(e);
 
 			// pass html or plain text to the paste endpoint to convert it to blocks
-			const blocks = await this.$api.post(this.endpoints.field + "/paste", {
+			let blocks = await this.$api.post(this.endpoints.field + "/paste", {
 				html: html
 			});
 
@@ -553,6 +553,12 @@ export default {
 
 			if (lastIndex === -1) {
 				lastIndex = this.blocks.length;
+			}
+
+			// don't add blocks that exceed the maximum limit
+			if (this.max) {
+				const max = this.max - this.blocks.length;
+				blocks = blocks.slice(0, max);
 			}
 
 			this.blocks.splice(lastIndex + 1, 0, ...blocks);
