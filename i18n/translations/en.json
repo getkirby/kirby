@@ -4,6 +4,7 @@
 	"account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
 
 	"add": "Add",
+	"alpha": "Alpha",
 	"author": "Author",
 	"avatar": "Profile picture",
 	"back": "Back",
@@ -14,6 +15,8 @@
 	"confirm": "Ok",
 	"collapse": "Collapse",
 	"collapse.all": "Collapse All",
+	"color": "Color",
+	"coordinates": "Coordinates",
 	"copy": "Copy",
 	"copy.all": "Copy all",
 	"copy.success": "{count} copied!",
@@ -351,6 +354,7 @@
 
 	"hide": "Hide",
 	"hour": "Hour",
+	"hue": "Hue",
 	"import": "Import",
 	"info": "Info",
 	"insert": "Insert",
