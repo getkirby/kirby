@@ -153,8 +153,12 @@ trait UserActions
 		return $this->commit('changeTotp', ['user' => $this, 'secret' => $secret], function ($user, $secret) {
 			$this->writeSecret('totp', $secret);
 
-			// keep the user logged in
-			$user->loginPasswordless();
+			// keep the user logged in to the current browser
+			// if they changed their own TOTP secret
+			// (regenerate the session token, update the login timestamp)
+			if ($user->isLoggedIn() === true) {
+				$user->loginPasswordless();
+			}
 
 			return $user;
 		});
