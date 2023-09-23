@@ -364,9 +364,7 @@ class App
 	{
 		return $this->collections()->get($name, array_merge($options, [
 			'kirby' => $this,
-			'site'  => $site = $this->site(),
-			'pages' => $site->children(),
-			'users' => $this->users()
+			'site'  => $this->site(),
 		]));
 	}
 
