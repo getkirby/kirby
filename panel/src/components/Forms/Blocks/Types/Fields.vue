@@ -59,7 +59,7 @@ export default {
 			this.$emit("open", this.tab);
 		},
 		state(collapsed) {
-			const id = `kirby.fieldsBlock.${this.endpoints.field}`;
+			const id = `kirby.fieldsBlock.${this.endpoints.field}.${this.id}`;
 
 			if (collapsed !== undefined) {
 				sessionStorage.setItem(id, collapsed);
