@@ -32,7 +32,7 @@ export const props = {
 };
 
 export default {
-	mixins: [props, Writer],
+	mixins: [props],
 	inheritAttrs: false,
 	watch: {
 		value() {
