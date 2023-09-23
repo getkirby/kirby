@@ -329,7 +329,7 @@ trait UserActions
 	 */
 	protected function readPassword(): string|false
 	{
-		return $this->secret('password');
+		return $this->secret('password') ?? false;
 	}
 
 	/**
@@ -337,9 +337,9 @@ trait UserActions
 	 */
 	protected function readSecrets(): array
 	{
-		$file = $this->secretsFile();
-
+		$file    = $this->secretsFile();
 		$secrets = [];
+
 		if (is_file($file) === true) {
 			$lines = explode("\n", file_get_contents($file));
 
@@ -351,7 +351,7 @@ trait UserActions
 		}
 
 		// an empty password hash means that no password was set
-		if ($secrets['password'] ?? null === '') {
+		if (($secrets['password'] ?? null) === '') {
 			unset($secrets['password']);
 		}
 

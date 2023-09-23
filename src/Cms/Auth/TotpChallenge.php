@@ -10,6 +10,7 @@ use Kirby\Toolkit\Totp;
  * that are generated with an authenticator app.
  * Users first have to set up time-based codes
  * (storing the TOTP secret in their user account).
+ * @since 4.0.0
  *
  * @package   Kirby Cms
  * @author    Nico Hoffmann <nico@getkirby.com>
