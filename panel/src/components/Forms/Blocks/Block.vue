@@ -228,6 +228,10 @@ export default {
 			}
 		},
 		isSplitable() {
+			if (this.isFull === true) {
+				return false;
+			}
+
 			if (this.$refs.editor) {
 				return (
 					(this.$refs.editor.isSplitable ?? true) &&
