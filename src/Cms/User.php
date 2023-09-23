@@ -681,8 +681,7 @@ class User extends ModelWithContent
 	 */
 	public function totp(): string|null
 	{
-		$secrets = json_decode($this->readSecret(1), true);
-		return $secrets['totp'] ?? null;
+		return $this->readSecret('totp');
 	}
 
 	/**
