@@ -10,6 +10,7 @@ use Kirby\Filesystem\F;
 
 /**
  * Creates a QR code
+ * @since 4.0.0
  *
  * @package   Kirby Image
  * @author    Nico Hoffmann <nico@getkirby.com>,
