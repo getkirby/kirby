@@ -148,7 +148,7 @@ class UserRules
 	public static function changeTotp(
 		User $user,
 		#[SensitiveParameter]
-		string $secret
+		string|null $secret
 	): bool {
 		$currentUser = $user->kirby()->user();
 

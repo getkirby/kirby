@@ -145,12 +145,14 @@ trait UserActions
 	/**
 	 * Changes the user's TOTP secret
 	 */
-	public function changeTotp(string|false $secret): static
-	{
+	public function changeTotp(
+		#[SensitiveParameter]
+		string|null $secret
+	): static {
 		return $this->commit('changeTotp', ['user' => $this, 'secret' => $secret], function ($user, $secret) {
 			$secrets = Json::decode($this->readSecret(1));
 
-			if ($secret === false) {
+			if ($secret === null) {
 				unset($secrets['totp']);
 			} else {
 				$secrets['totp'] = $secret;
