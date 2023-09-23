@@ -123,7 +123,7 @@ class UserActionsTest extends TestCase
 
 	public function testChangeTotp()
 	{
-		$user = $this->app->user('editor@domain.com');
+		$user = $this->app->user('admin@domain.com');
 		$this->assertNull($user->secret('totp'));
 
 		$user->changeTotp('bar');

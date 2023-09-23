@@ -357,6 +357,69 @@ class SystemTest extends TestCase
 	}
 
 	/**
+	 * @covers ::is2FA
+	 */
+	public function testIs2FA()
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'methods' => ['password']
+				]
+			]
+		]);
+		$system = new System($app);
+		$this->assertFalse($system->is2FA());
+
+		$app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'methods' => ['password' => ['2fa' => true]]
+				]
+			]
+		]);
+		$system = new System($app);
+		$this->assertTrue($system->is2FA());
+	}
+
+	/**
+	 * @covers ::is2FAwithTOTP
+	 */
+	public function testIs2FAWithTOTP()
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'methods' => ['password']
+				]
+			]
+		]);
+		$system = new System($app);
+		$this->assertFalse($system->is2FAWithTOTP());
+
+		$app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'methods' => ['password' => ['2fa' => true]]
+				]
+			]
+		]);
+		$system = new System($app);
+		$this->assertTrue($system->is2FAWithTOTP());
+
+		$app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => ['email'],
+					'methods' => ['password' => ['2fa' => true]]
+				]
+			]
+		]);
+		$system = new System($app);
+		$this->assertFalse($system->is2FAWithTOTP());
+	}
+
+	/**
 	 * @covers ::isInstallable
 	 */
 	public function testIsInstallableOnLocalhost()

@@ -2,6 +2,9 @@
 
 namespace Kirby\Panel\Areas;
 
+use Kirby\Exception\NotFoundException;
+use Kirby\Toolkit\Totp;
+
 class AccountDialogsTest extends AreaTestCase
 {
 	public function setUp(): void
@@ -190,5 +193,34 @@ class AccountDialogsTest extends AreaTestCase
 		$dialog = $this->dialog('account/delete');
 
 		$this->assertSame('/logout', $dialog['redirect']);
+	}
+
+	public function testTotpActivate(): void
+	{
+		$dialog = $this->dialog('account/totp/activate');
+		$props  = $dialog['props'];
+
+		$this->assertSame('k-totp-dialog', $dialog['component']);
+		$this->assertArrayHasKey('secret', $props['value']);
+		$this->assertArrayHasKey('qr', $props);
+	}
+
+	public function testTotpActivateOnSubmit(): void
+	{
+		$this->submit([
+			'secret'  => '72JMATWC6VY2IFWURFERJQEYYKLQRLTX',
+			'confirm' => 'bar'
+		]);
+
+		$dialog = $this->dialog('account/totp/activate');
+		$this->assertSame('Invalid code', $dialog['error']);
+
+		$this->submit([
+			'confirm' => null
+		]);
+
+		$dialog = $this->dialog('account/totp/activate');
+		$this->assertSame('Please enter the current code', $dialog['error']);
+
 	}
 }
