@@ -12,7 +12,7 @@
 		/>
 
 		<div class="k-totp-dialog-grid">
-			<div>
+			<div class="k-totp-qrcode">
 				<k-info-field
 					:label="$t('login.totp.activate.qr.label')"
 					:text="qr"
@@ -94,6 +94,10 @@ export default {
 		grid-template-columns: 1fr 1fr;
 		gap: var(--spacing-8);
 	}
+}
+
+.k-totp-qrcode .k-box[data-theme] {
+	padding: var(--box-padding-inline);
 }
 
 .k-totp-dialog-fields .k-field-name-confirm {
