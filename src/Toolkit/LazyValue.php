@@ -15,8 +15,8 @@ class LazyValue
 {
 	public function __construct(
 		protected Closure $value
-	)
-	{}
+	) {
+	}
 
 	public function resolve(mixed ...$args): mixed
 	{
