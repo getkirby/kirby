@@ -1,7 +1,10 @@
 <template>
 	<div :style="'--width:' + width" :data-sticky="sticky" class="k-column">
-		<!-- @slot Column content -->
-		<slot />
+		<!-- additional <div> needed to ensure sticky columns behave correctly -->
+		<div>
+			<!-- @slot Column content -->
+			<slot />
+		</div>
 	</div>
 </template>
 
@@ -39,6 +42,9 @@ export default {
 }
 
 .k-column[data-sticky="true"] {
+	align-self: stretch;
+}
+.k-column[data-sticky="true"] > div {
 	position: sticky;
 	top: calc(var(--header-sticky-offset) + 2vh);
 	z-index: 2;
