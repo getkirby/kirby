@@ -60,10 +60,10 @@
 
 <script>
 import { autofocus, disabled, id } from "@/mixins/props.js";
-import { props as Selector } from "@/components/Forms/Selector.vue";
+import { props as SelectorProps } from "@/components/Forms/Selector.vue";
 
 export const props = {
-	mixins: [autofocus, disabled, id, Selector],
+	mixins: [autofocus, disabled, id, SelectorProps],
 	inheritAttrs: false,
 	props: {
 		draggable: {

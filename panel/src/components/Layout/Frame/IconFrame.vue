@@ -6,9 +6,8 @@
 </template>
 
 <script>
-import { props as Frame } from "./Frame.vue";
-import { props as Icon } from "@/components/Misc/Icon.vue";
-
+import { props as FrameProps } from "./Frame.vue";
+import { props as IconProps } from "@/components/Misc/Icon.vue";
 
 /**
  * Use <k-icon-frame> to display an icon in a fixed ratio with background etc.
@@ -18,7 +17,7 @@ import { props as Icon } from "@/components/Misc/Icon.vue";
  * @example <k-icon-frame icon="home" ratio="1/1" back="black" />
  */
 export default {
-	mixins: [Frame, Icon],
+	mixins: [FrameProps, IconProps],
 	inheritAttrs: false,
 	props: {
 		/**
@@ -30,7 +29,7 @@ export default {
 		 * Name of the chosen icon
 		 * @see https://getkirby.com/docs/reference/panel/icons
 		 */
-		icon: String,
+		icon: String
 	},
 	computed: {
 		isEmoji() {

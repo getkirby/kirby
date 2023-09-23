@@ -10,10 +10,10 @@
 
 <script>
 import Dialog from "@/mixins/dialog.js";
-import { props as Fields } from "./Elements/Fields.vue";
+import { props as FieldsProps } from "./Elements/Fields.vue";
 
 export default {
-	mixins: [Dialog, Fields],
+	mixins: [Dialog, FieldsProps],
 	props: {
 		// eslint-disable-next-line vue/require-prop-types
 		fields: {

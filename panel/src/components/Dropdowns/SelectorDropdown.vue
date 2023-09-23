@@ -22,10 +22,10 @@
 </template>
 
 <script>
-import { props as Selector } from "@/components/Forms/Selector.vue";
+import { props as SelectorProps } from "@/components/Forms/Selector.vue";
 
 export default {
-	mixins: [Selector],
+	mixins: [SelectorProps],
 	props: {
 		align: String,
 		disabled: Boolean

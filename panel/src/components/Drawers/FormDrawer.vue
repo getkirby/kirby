@@ -20,10 +20,10 @@
 
 <script>
 import Drawer from "@/mixins/drawer.js";
-import { props as Fields } from "./Elements/Fields.vue";
+import { props as FieldsProps } from "./Elements/Fields.vue";
 
 export default {
-	mixins: [Drawer, Fields],
+	mixins: [Drawer, FieldsProps],
 	emits: ["cancel", "crumb", "input", "submit", "tab"]
 };
 </script>

@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { props as Frame } from "./Frame.vue";
+import { props as FrameProps } from "./Frame.vue";
 
 /**
  * Use <k-image-frame> to display an image in a fixed ratio with background etc.
@@ -28,7 +28,7 @@ import { props as Frame } from "./Frame.vue";
  * @example <k-image-frame src="https://getkirby.com/image.jpg" ratio="16/9" back="pattern" />
  */
 export default {
-	mixins: [Frame],
+	mixins: [FrameProps],
 	inheritAttrs: false,
 	props: {
 		/**

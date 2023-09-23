@@ -6,10 +6,10 @@
 
 <script>
 import FieldPreview from "@/mixins/forms/fieldPreview.js";
-import { props as Bubbles } from "@/components/Layout/Bubbles.vue";
+import { props as BubblesProps } from "@/components/Layout/Bubbles.vue";
 
 export default {
-	mixins: [FieldPreview, Bubbles],
+	mixins: [FieldPreview, BubblesProps],
 	inheritAttrs: false,
 	props: {
 		value: [Array, String]

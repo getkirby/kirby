@@ -9,7 +9,7 @@
 
 <script>
 import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
-import { props as Writer } from "@/components/Forms/Writer/Writer.vue";
+import { props as WriterProps } from "@/components/Forms/Writer/Writer.vue";
 
 import {
 	required as validateRequired,
@@ -18,7 +18,7 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [autofocus, disabled, id, name, required, Writer],
+	mixins: [autofocus, disabled, id, name, required, WriterProps],
 	props: {
 		maxlength: Number,
 		minlength: Number

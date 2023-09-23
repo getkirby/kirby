@@ -29,7 +29,7 @@
 
 <script>
 import Drawer from "@/mixins/drawer.js";
-import { props as Fields } from "./Elements/Fields.vue";
+import { props as FieldsProps } from "./Elements/Fields.vue";
 
 export const props = {
 	props: {
@@ -43,7 +43,7 @@ export const props = {
 };
 
 export default {
-	mixins: [Drawer, Fields, props],
+	mixins: [Drawer, FieldsProps, props],
 	emits: ["cancel", "crumb", "input", "next", "prev", "remove", "submit", "tab"]
 };
 </script>
