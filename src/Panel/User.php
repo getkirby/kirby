@@ -91,7 +91,7 @@ class User extends Model
 
 		if ($this->model->kirby()->system()->is2FAWithTOTP() === true) {
 			if ($account || $this->model->kirby()->user()->isAdmin()) {
-				if ($this->model->totp() !== null) {
+				if ($this->model->secret('totp') !== null) {
 					$result[] = [
 						'dialog'   => $url . '/totp/disable',
 						'icon'     => 'qr-code',

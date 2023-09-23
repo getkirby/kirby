@@ -325,15 +325,7 @@ trait UserActions
 	 */
 	protected function readPassword(): string|false
 	{
-		return $this->readSecret('password');
-	}
-
-	/**
-	 * Reads a specific secret from the user secrets file on disk
-	 */
-	protected function readSecret(string $key): mixed
-	{
-		return $this->readSecrets()[$key] ?? null;
+		return $this->secret('password');
 	}
 
 	/**

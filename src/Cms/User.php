@@ -621,6 +621,14 @@ class User extends ModelWithContent
 	}
 
 	/**
+	 * Reads a specific secret from the user secrets file on disk
+	 */
+	public function secret(string $key): mixed
+	{
+		return $this->readSecrets()[$key] ?? null;
+	}
+
+	/**
 	 * Sets the Blueprint object
 	 *
 	 * @return $this
@@ -674,14 +682,6 @@ class User extends ModelWithContent
 			'role'     => $this->role()->name(),
 			'username' => $this->username()
 		]);
-	}
-
-	/**
-	 * Returns the TOTP secret for the user
-	 */
-	public function totp(): string|null
-	{
-		return $this->readSecret('totp');
 	}
 
 	/**

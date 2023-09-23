@@ -29,7 +29,7 @@ class TotpChallenge extends Challenge
 	public static function isAvailable(User $user, string $mode): bool
 	{
 		// user needs to have a TOTP secret set up
-		return $user->totp() !== null;
+		return $user->secret('totp') !== null;
 	}
 
 	/**
@@ -56,7 +56,7 @@ class TotpChallenge extends Challenge
 	public static function verify(User $user, string $code): bool
 	{
 		// verify if code is current, previous or next TOTP code
-		$secret = $user->totp();
+		$secret = $user->secret('totp');
 		$totp   = new Totp($secret);
 		return $totp->verify($code);
 	}
