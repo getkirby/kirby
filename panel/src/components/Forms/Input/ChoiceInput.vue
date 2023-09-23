@@ -21,11 +21,11 @@
 </template>
 
 <script>
-import { props as Choice } from "@/components/Forms/Element/Choice.vue";
+import { props as ChoiceProps } from "@/components/Forms/Element/Choice.vue";
 import { label } from "@/mixins/props.js";
 
 export const props = {
-	mixins: [Choice, label],
+	mixins: [ChoiceProps, label],
 	props: {
 		info: {
 			type: String

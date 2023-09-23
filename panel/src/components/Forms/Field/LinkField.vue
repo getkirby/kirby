@@ -97,23 +97,27 @@
 </template>
 
 <script>
-import { props as Field } from "../Field.vue";
-import { props as Input } from "../Input.vue";
+import { props as FieldProps } from "../Field.vue";
+import { props as InputProps } from "../Input.vue";
+import { options } from "@/mixins/props.js";
+
+export const props = {
+	mixins: [FieldProps, InputProps, options],
+	props: {
+		value: {
+			default: "",
+			type: String
+		}
+	}
+};
 
 /**
  * Have a look at `<k-field>` and `<k-input>`
  * @example <k-link-field :value="link" @input="link = $event" name="link" label="Link" />
  */
 export default {
-	mixins: [Field, Input],
+	mixins: [props],
 	inheritAttrs: false,
-	props: {
-		options: Array,
-		value: {
-			default: "",
-			type: String
-		}
-	},
 	data() {
 		return {
 			model: null,

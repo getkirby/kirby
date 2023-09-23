@@ -51,7 +51,10 @@ import Insert from "./Extensions/Insert.js";
 import Keys from "./Extensions/Keys.js";
 import Toolbar from "./Extensions/Toolbar.js";
 
+import { placeholder, spellcheck } from "@/mixins/props.js";
+
 export const props = {
+	mixins: [spellcheck, placeholder],
 	props: {
 		autofocus: Boolean,
 		breaks: Boolean,
@@ -83,8 +86,6 @@ export const props = {
 			type: Function,
 			default: () => () => false
 		},
-		placeholder: String,
-		spellcheck: Boolean,
 		toolbar: {
 			type: Object,
 			default: () => ({

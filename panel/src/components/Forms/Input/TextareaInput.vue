@@ -44,7 +44,14 @@
 </template>
 
 <script>
-import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
+import Input, { props as InputProps } from "@/mixins/input.js";
+import {
+	font,
+	maxlength,
+	minlength,
+	placeholder,
+	spellcheck
+} from "@/mixins/props.js";
 
 import {
 	required as validateRequired,
@@ -53,17 +60,13 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [autofocus, disabled, id, name, required],
+	mixins: [InputProps, font, maxlength, minlength, placeholder, spellcheck],
 	props: {
 		buttons: {
 			type: [Boolean, Array],
 			default: true
 		},
 		endpoints: Object,
-		font: String,
-		maxlength: Number,
-		minlength: Number,
-		placeholder: String,
 		preselect: Boolean,
 		/**
 		 * Pre-selects the size before auto-sizing kicks in.
@@ -71,10 +74,6 @@ export const props = {
 		 * @values small, medium, large, huge
 		 */
 		size: String,
-		spellcheck: {
-			type: [Boolean, String],
-			default: "off"
-		},
 		theme: String,
 		uploads: [Boolean, Object, Array],
 		value: String
@@ -85,8 +84,7 @@ export const props = {
  * @example <k-input :value="text" @input="text = $event" name="text" type="textarea" />
  */
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	data() {
 		return {
 			over: false

@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import Input from "@/mixins/input.js";
 import { props as WriterInputProps } from "@/components/Forms/Input/WriterInput.vue";
 import ListDoc from "@/components/Forms/Writer/Nodes/ListDoc.js";
 
@@ -25,8 +26,7 @@ export const props = {
 };
 
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	data() {
 		return {
 			list: this.value,
@@ -56,9 +56,6 @@ export default {
 		}
 	},
 	methods: {
-		focus() {
-			this.$refs.input.focus();
-		},
 		onInput(html) {
 			let dom = new DOMParser().parseFromString(html, "text/html");
 			let list = dom.querySelector("ul, ol");

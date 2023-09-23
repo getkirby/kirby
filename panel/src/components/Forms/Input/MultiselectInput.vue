@@ -10,8 +10,7 @@
 </template>
 
 <script>
-import TagsInput from "./TagsInput.vue";
-import { props as TagsInputProps } from "./TagsInput.vue";
+import TagsInput, { props as TagsInputProps } from "./TagsInput.vue";
 
 export const props = {
 	mixins: [TagsInputProps],
@@ -25,8 +24,7 @@ export const props = {
 
 export default {
 	extends: TagsInput,
-	mixins: [props],
-	inheritAttrs: false
+	mixins: [props]
 };
 </script>
 

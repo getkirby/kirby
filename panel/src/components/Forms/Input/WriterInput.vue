@@ -8,7 +8,8 @@
 </template>
 
 <script>
-import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
+import Input, { props as InputProps } from "@/mixins/input.js";
+import { maxlength, minlength } from "@/mixins/props.js";
 import { props as WriterProps } from "@/components/Forms/Writer/Writer.vue";
 
 import {
@@ -18,11 +19,7 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [autofocus, disabled, id, name, required, WriterProps],
-	props: {
-		maxlength: Number,
-		minlength: Number
-	},
+	mixins: [InputProps, WriterProps, maxlength, minlength],
 	computed: {
 		counterValue() {
 			const plain = this.$helper.string.stripHTML(this.value);
@@ -32,8 +29,7 @@ export const props = {
 };
 
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	watch: {
 		value() {
 			this.onInvalid();
@@ -47,9 +43,6 @@ export default {
 		}
 	},
 	methods: {
-		focus() {
-			this.$refs.input.focus();
-		},
 		onInvalid() {
 			this.$emit("invalid", this.$v.$invalid, this.$v);
 		}

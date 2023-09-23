@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
+import Input, { props as InputProps } from "@/mixins/input.js";
 
 import {
 	required as validateRequired,
@@ -37,7 +37,7 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [autofocus, disabled, id, name, required],
+	mixins: [InputProps],
 	props: {
 		default: [Number, String],
 		/**
@@ -81,7 +81,7 @@ export const props = {
  * @example <k-input :value="range" @input="range = $event" name="range" type="range" />
  */
 export default {
-	mixins: [props],
+	mixins: [Input, props],
 	inheritAttrs: false,
 	computed: {
 		baseline() {

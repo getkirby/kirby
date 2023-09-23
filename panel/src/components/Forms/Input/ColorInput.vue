@@ -22,12 +22,12 @@
 </template>
 
 <script>
-import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
-
+import Input, { props as InputProps } from "@/mixins/input.js";
+import { placeholder } from "@/mixins/props.js";
 import { required as validateRequired } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [autofocus, disabled, id, name, required],
+	mixins: [InputProps, placeholder],
 	props: {
 		alpha: {
 			type: Boolean,
@@ -41,14 +41,12 @@ export const props = {
 			default: "hex",
 			validator: (format) => ["hex", "rgb", "hsl"].includes(format)
 		},
-		placeholder: String,
 		value: String
 	}
 };
 
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	watch: {
 		value() {
 			this.onInvalid();
@@ -69,9 +67,6 @@ export default {
 			} catch (e) {
 				return value;
 			}
-		},
-		focus() {
-			this.$refs.input.focus();
 		},
 		onBlur() {
 			const value = this.convert(this.value);
