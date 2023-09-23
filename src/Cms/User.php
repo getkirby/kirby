@@ -622,6 +622,7 @@ class User extends ModelWithContent
 
 	/**
 	 * Reads a specific secret from the user secrets file on disk
+	 * @since 4.0.0
 	 */
 	public function secret(string $key): mixed
 	{
@@ -745,6 +746,7 @@ class User extends ModelWithContent
 
 	/**
 	 * @deprecated 4.0.0 Use `->secretsFile()` instead
+	 * @codeCoverageIgnore
 	 */
 	protected function passwordFile(): string
 	{
@@ -754,6 +756,7 @@ class User extends ModelWithContent
 	/**
 	 * Returns the path to the file containing
 	 * all user secrets, including the password
+	 * @since 4.0.0
 	 */
 	protected function secretsFile(): string
 	{

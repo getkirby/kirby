@@ -142,6 +142,7 @@ class UserRules
 
 	/**
 	 * Validates if the TOTP can be changed
+	 * @since 4.0.0
 	 *
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the password
 	 */

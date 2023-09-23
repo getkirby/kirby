@@ -121,6 +121,18 @@ class UserActionsTest extends TestCase
 		$this->assertSame('editor', $user->role()->name());
 	}
 
+	public function testChangeTotp()
+	{
+		$user = $this->app->user('editor@domain.com');
+		$this->assertNull($user->secret('totp'));
+
+		$user->changeTotp('bar');
+		$this->assertSame('bar', $user->secret('totp'));
+
+		$user->changeTotp(null);
+		$this->assertNull($user->secret('totp'));
+	}
+
 	public function testCreateAdmin()
 	{
 		$user = User::create([

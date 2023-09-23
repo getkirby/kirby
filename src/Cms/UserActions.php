@@ -145,6 +145,7 @@ trait UserActions
 
 	/**
 	 * Changes the user's TOTP secret
+	 * @since 4.0.0
 	 */
 	public function changeTotp(
 		#[SensitiveParameter]
@@ -334,6 +335,7 @@ trait UserActions
 
 	/**
 	 * Reads the secrets from the user secrets file on disk
+	 * @since 4.0.0
 	 */
 	protected function readSecrets(): array
 	{
@@ -414,6 +416,7 @@ trait UserActions
 	/**
 	 * Writes a specific secret to the user secrets file on disk;
 	 * `password` is the first line, the rest is stored as JSON
+	 * @since 4.0.0
 	 */
 	protected function writeSecret(
 		string $key,
@@ -432,7 +435,10 @@ trait UserActions
 		$lines = $secrets['password'] ?? '';
 
 		// everything else is for the second line
-		$secondLine = Json::encode(A::without($secrets, 'password'));
+		$secondLine = Json::encode(
+			A::without($secrets, 'password')
+		);
+
 		if ($secondLine !== '[]') {
 			$lines .= "\n" . $secondLine;
 		}
