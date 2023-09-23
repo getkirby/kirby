@@ -274,6 +274,7 @@
 	"field.blocks.delete.confirm.all": "Do you really want to delete all blocks?",
 	"field.blocks.delete.confirm.selected": "Do you really want to delete the selected blocks?",
 	"field.blocks.empty": "No blocks yet",
+	"field.blocks.fieldsets.empy": "No fieldsets yet",
 	"field.blocks.fieldsets.label": "Please select a block type …",
 	"field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to import layouts/blocks from your clipboard <small>Only those allowed in the current field will get inserted.</small>",
 	"field.blocks.gallery.name": "Gallery",
