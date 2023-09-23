@@ -29,7 +29,7 @@ export const props = {
 			type: [Array, Object]
 		},
 		/**
-		 * Skip client side validation (vuelidate).
+		 * Skip client side validation.
 		 * Validation is skipped by default in
 		 * dialogs. Native input validation still works though.
 		 */
