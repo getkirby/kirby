@@ -20,26 +20,42 @@ use Kirby\Toolkit\Totp;
 class TotpChallenge extends Challenge
 {
 	/**
-	 * Checks whether time-based codes are set up for user
+	 * Checks whether the challenge is available
+	 * for the passed user and purpose
+	 *
+	 * @param \Kirby\Cms\User $user User the code will be generated for
+	 * @param 'login'|'password-reset'|'2fa' $mode Purpose of the code
 	 */
 	public static function isAvailable(User $user, string $mode): bool
 	{
+		// user needs to have a TOTP secret set up
 		return $user->totp() !== null;
 	}
 
 	/**
-	 * Since TOTP codes are generated automatically, return null
+	 * Generates a random one-time auth code and returns that code
+	 * for later verification
+	 *
+	 * @param \Kirby\Cms\User $user User to generate the code for
+	 * @param array $options Details of the challenge request:
+	 *                       - 'mode': Purpose of the code ('login', 'password-reset' or '2fa')
+	 *                       - 'timeout': Number of seconds the code will be valid for
 	 */
-	public static function create(User $user, array $options): string|null
+	public static function create(User $user, array $options): null
 	{
+		// the user's app will generate the code, we only verify it
 		return null;
 	}
 
 	/**
-	 * Verify if code is current, previous or next TOTP code
+	 * Verifies the provided code against the created one
+	 *
+	 * @param \Kirby\Cms\User $user User to check the code for
+	 * @param string $code Code to verify
 	 */
 	public static function verify(User $user, string $code): bool
 	{
+		// verify if code is current, previous or next TOTP code
 		$secret = $user->totp();
 		$totp   = new Totp($secret);
 		return $totp->verify($code);
