@@ -351,7 +351,7 @@ trait UserActions
 		}
 
 		// an empty password hash means that no password was set
-		if ($secrets['password'] === '') {
+		if ($secrets['password'] ?? null === '') {
 			unset($secrets['password']);
 		}
 
