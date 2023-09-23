@@ -49,7 +49,10 @@ class Controller
 
 	public function call($bind = null, $data = [])
 	{
-		$args = $this->arguments($data);
+		$args = A::map(
+			$this->arguments($data),
+			fn ($arg) => $arg instanceof LazyValue ? $arg->resolve() : $arg
+		);
 
 		if ($bind === null) {
 			return ($this->function)(...$args);
