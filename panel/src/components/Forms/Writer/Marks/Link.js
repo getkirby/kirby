@@ -18,6 +18,13 @@ export default class Link extends Mark {
 				this.editor.emit("link", this.editor);
 			},
 			insertLink: (attrs = {}) => {
+				const { selection } = this.editor.state;
+
+				// if no text is selected, we insert the link as text
+				if (selection.empty) {
+					this.editor.insertText(attrs.href, true);
+				}
+
 				if (attrs.href) {
 					return this.update(attrs);
 				}
