@@ -5,9 +5,9 @@ namespace Kirby\Toolkit;
 use Closure;
 
 /**
- * Store a lazy values (safe inside a closure from processing)
+ * Store a lazy value (safe from processing inside a closure)
  * in this class wrapper to also protect it from being unwrapped
- * by normal Closure/is_callable checks
+ * by normal `Closure`/`is_callable()` checks
  *
  * @package   Kirby Toolkit
  * @author    Nico Hoffmann <nico@getkirby.com>
@@ -33,7 +33,7 @@ class LazyValue
 	/**
 	 * Unwrap a single value or an array of values
 	 */
-	public static function unwrap(mixed $data, ...$args): mixed
+	public static function unwrap(mixed $data, mixed ...$args): mixed
 	{
 		if (is_array($data) === true) {
 			return A::map($data, fn ($value) => static::unwrap($value, $args));
