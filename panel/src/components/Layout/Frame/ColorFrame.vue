@@ -1,15 +1,19 @@
 <template>
-	<k-frame
-		:ratio="ratio"
-		:style="`color: ${color}`"
-		element="figure"
-		class="k-color-frame"
-	>
+	<k-frame v-bind="$props" :style="`color: ${color}`" class="k-color-frame">
 		<slot />
 	</k-frame>
 </template>
 
 <script>
+import { props as FrameProps } from "./Frame.vue";
+
+export const props = {
+	mixins: [FrameProps],
+	props: {
+		color: String
+	}
+};
+
 /**
  * Use <k-color-frame> to display a color preview.
  * @public
@@ -18,11 +22,8 @@
  * @example <k-color-frame color="#efefef" ratio="1/1" />
  */
 export default {
-	inheritAttrs: false,
-	props: {
-		color: String,
-		ratio: String
-	}
+	mixins: [props],
+	inheritAttrs: false
 };
 </script>
 

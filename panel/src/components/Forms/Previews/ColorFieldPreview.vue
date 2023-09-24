@@ -56,7 +56,7 @@ export default {
 
 	padding: 0.325rem 0.75rem;
 }
-/** TODO: .k-color-field-preview .k-color-preview:has(+ .k-bubble-text) */
+/** TODO: .k-color-field-preview .k-color-frame:has(+ .k-tag-text) */
 .k-color-field-preview[data-has-text="true"]
 	:where(.k-color-frame, .k-color-frame::after) {
 	border-start-end-radius: 0;
