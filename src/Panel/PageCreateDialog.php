@@ -277,7 +277,7 @@ class PageCreateDialog
 		return $payload;
 	}
 
-	public function validate(array $input, string $status): bool
+	public function validate(array $input, string $status = 'draft'): bool
 	{
 		// basic validation
 		PageRules::validateTitleLength($input['content']['title']);
