@@ -980,7 +980,7 @@ class Str
 	public static function short(
 		string $string = null,
 		int $length = 0,
-		string|false $appendix = '…'
+		string $appendix = '…'
 	): string {
 		if ($string === null) {
 			return '';
@@ -994,12 +994,7 @@ class Str
 			return $string;
 		}
 
-		$string = static::substr($string, 0, $length);
-
-		return match ($appendix) {
-			false   => $string,
-			default => $string . $appendix
-		};
+		return static::substr($string, 0, $length) . $appendix;
 	}
 
 	/**
@@ -1124,7 +1119,7 @@ class Str
 		$string = preg_replace('![^a-z0-9]+$!', '', $string);
 
 		// cut the string after the given maxlength
-		return static::short($string, $maxlength, false);
+		return static::short($string, $maxlength, '');
 	}
 
 	/**
