@@ -12,7 +12,7 @@ class LazyValueTest extends TestCase
 {
 	/**
 	 * @covers ::__construct
-	 * @covers ::__invoke
+	 * @covers ::resolve
 	 */
 	public function testValue()
 	{
