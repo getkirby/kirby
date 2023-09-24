@@ -187,17 +187,13 @@ export default {
 					fieldsets: this.fieldsets
 				},
 				on: {
-					open: () => {
-						this.isPasteable = true;
-					},
-					close: () => {
-						this.isPasteable = false;
-					},
 					submit: (type) => {
 						this.add(type, index);
 						this.$panel.dialog.close();
 					},
-					paste: this.paste
+					paste: (e) => {
+						this.paste(e, index);
+					}
 				}
 			});
 		},
@@ -211,12 +207,6 @@ export default {
 					headline: this.$t("field.blocks.changeType")
 				},
 				on: {
-					open: () => {
-						this.isPasteable = true;
-					},
-					close: () => {
-						this.isPasteable = false;
-					},
 					submit: (type) => {
 						this.convert(type, block);
 						this.$panel.dialog.close();
@@ -513,17 +503,12 @@ export default {
 			}
 		},
 		onPaste(e) {
-			// enable pasting when the block selector is open
-			if (this.isPasteable === true) {
-				return this.paste(e);
-			}
-
 			// never paste blocks when the focus is in an input element
 			if (this.isInputEvent(e) === true) {
 				return false;
 			}
 
-			// not when any other dialogs or drawers are open
+			// not when any dialogs or drawers are open
 			if (this.isEditing === true || this.$panel.dialog.isOpen === true) {
 				return false;
 			}
@@ -539,7 +524,7 @@ export default {
 		open(block) {
 			this.$refs["block-" + block.id]?.[0].open();
 		},
-		async paste(e) {
+		async paste(e, index) {
 			const html = this.$helper.clipboard.read(e);
 
 			// pass html or plain text to the paste endpoint to convert it to blocks
@@ -548,11 +533,15 @@ export default {
 			});
 
 			// get the index
-			let lastItem = this.selected[this.selected.length - 1];
-			let lastIndex = this.findIndex(lastItem);
+			if (index === undefined) {
+				let item = this.selected[this.selected.length - 1];
+				index = this.findIndex(item);
 
-			if (lastIndex === -1) {
-				lastIndex = this.blocks.length;
+				if (index === -1) {
+					index = this.blocks.length;
+				}
+
+				index++;
 			}
 
 			// don't add blocks that exceed the maximum limit
@@ -561,7 +550,7 @@ export default {
 				blocks = blocks.slice(0, max);
 			}
 
-			this.blocks.splice(lastIndex + 1, 0, ...blocks);
+			this.blocks.splice(index, 0, ...blocks);
 			this.save();
 
 			// a sign that it has been pasted
