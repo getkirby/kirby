@@ -907,6 +907,12 @@ class PagesTest extends TestCase
 
 		$result = $pages->search('mountain');
 		$this->assertCount(2, $result);
+
+		$result = $pages->search('mountain', 'title|text');
+		$this->assertCount(2, $result);
+
+		$result = $pages->search('mountain', 'text');
+		$this->assertCount(0, $result);
 	}
 
 	public function testSearchWords()
