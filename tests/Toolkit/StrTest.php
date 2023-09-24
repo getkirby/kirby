@@ -984,6 +984,9 @@ class StrTest extends TestCase
 		// with different ellipsis character
 		$this->assertSame('Super---', Str::short($string, 5, '---'));
 
+		// without ellipsis
+		$this->assertSame('Super', Str::short($string, 5, ''));
+
 		// with null
 		$this->assertSame('', Str::short(null, 5));
 
