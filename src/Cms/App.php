@@ -29,6 +29,7 @@ use Kirby\Text\KirbyTags;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Config;
 use Kirby\Toolkit\Controller;
+use Kirby\Toolkit\LazyValue;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuid;
 use Throwable;
@@ -365,8 +366,9 @@ class App
 		return $this->collections()->get($name, array_merge($options, [
 			'kirby' => $this,
 			'site'  => $site = $this->site(),
-			'pages' => $site->children(),
-			'users' => $this->users()
+			'pages' => new LazyValue(fn () => $site->children()),
+			'users' => new LazyValue(fn () => $this->users())
+
 		]));
 	}
 
