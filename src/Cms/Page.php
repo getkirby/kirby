@@ -344,6 +344,7 @@ class Page extends ModelWithContent
 		}
 
 		// unwrap remaining lazy values in data
+		// (happens if the controller didn't override an original lazy Kirby object)
 		$data = LazyValue::unwrap($data);
 
 		return $data;
