@@ -13,6 +13,7 @@ use Kirby\Http\Uri;
 use Kirby\Panel\Page as Panel;
 use Kirby\Template\Template;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\LazyValue;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -308,14 +309,20 @@ class Page extends ModelWithContent
 		$data = array_merge($data, [
 			'kirby' => $kirby = $this->kirby(),
 			'site'  => $site  = $this->site(),
-			'pages' => $site->children(),
-			'page'  => $site->visit($this)
+			'pages' => new LazyValue(fn () => $site->children()),
+			'page'  => new LazyValue(fn () => $site->visit($this))
 		]);
 
 		// call the template controller if there's one.
-		$controllerData = $kirby->controller($this->template()->name(), $data, $contentType);
+		$controllerData = $kirby->controller(
+			$this->template()->name(),
+			$data,
+			$contentType
+		);
 
 		// merge controller data with original data safely
+		// to provide original data to template even if
+		// it wasn't returned by the controller explicitly
 		if (empty($controllerData) === false) {
 			$classes = [
 				'kirby' => App::class,
@@ -325,17 +332,19 @@ class Page extends ModelWithContent
 			];
 
 			foreach ($controllerData as $key => $value) {
-				if (array_key_exists($key, $classes) === true) {
-					if ($value instanceof $classes[$key]) {
-						$data[$key] = $value;
-					} else {
-						throw new InvalidArgumentException('The returned variable "' . $key . '" from the controller "' . $this->template()->name() . '" is not of the required type "' . $classes[$key] . '"');
-					}
-				} else {
-					$data[$key] = $value;
-				}
+				$data[$key] = match (true) {
+					// original data wasn't overwritten
+					array_key_exists($key, $classes) === false => $value,
+					// original data was overwritten, but matches expected type
+					$value instanceof $classes[$key] => $value,
+					// throw error if data was overwritten with wrong type
+					default => throw new InvalidArgumentException('The returned variable "' . $key . '" from the controller "' . $this->template()->name() . '" is not of the required type "' . $classes[$key] . '"')
+				};
 			}
 		}
+
+		// unwrap remaining lazy values in data
+		$data = LazyValue::unwrap($data);
 
 		return $data;
 	}
