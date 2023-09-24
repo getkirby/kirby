@@ -5,12 +5,12 @@ namespace Kirby\Panel;
 use Kirby\Cms\Find;
 use Kirby\Cms\Page;
 use Kirby\Cms\PageBlueprint;
+use Kirby\Cms\PageRules;
 use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\Str;
 
 /**
  * Manages the Panel dialog to create new pages
@@ -248,12 +248,13 @@ class PageCreateDialog
 	 */
 	public function submit(array $input): array
 	{
-		$input = $this->sanitize($input);
-
-		$this->validate($input);
-
-		$page   = $this->parent->createChild($input);
+		$input  = $this->sanitize($input);
 		$status = $this->blueprint()->create()['status'] ?? 'draft';
+
+		// validate the input before creating the page
+		$this->validate($input, $status);
+
+		$page = $this->parent->createChild($input);
 
 		if ($status !== 'draft') {
 			// grant all permissions as the status is set in the blueprint and
@@ -276,12 +277,23 @@ class PageCreateDialog
 		return $payload;
 	}
 
-	public function validate(array $input): bool
+	public function validate(array $input, string $status): bool
 	{
-		if (Str::length($input['content']['title']) === 0) {
-			throw new InvalidArgumentException([
-				'key' => 'page.changeTitle.empty'
-			]);
+		// basic validation
+		PageRules::validateTitleLength($input['content']['title']);
+		PageRules::validateSlugLength($input['slug']);
+
+		// if the page is supposed to be published directly,
+		// ensure that all field validations are met
+		if ($status !== 'draft') {
+			// create temporary form to validate the input
+			$form = Form::for($this->model(), ['values' => $input]);
+
+			if ($form->isInvalid() === true) {
+				throw new InvalidArgumentException([
+					'key' => 'page.changeStatus.incomplete'
+				]);
+			}
 		}
 
 		return true;
