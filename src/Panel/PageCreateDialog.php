@@ -287,7 +287,7 @@ class PageCreateDialog
 		// ensure that all field validations are met
 		if ($status !== 'draft') {
 			// create temporary form to validate the input
-			$form = Form::for($this->model(), ['values' => $input]);
+			$form = Form::for($this->model(), ['values' => $input['content']]);
 
 			if ($form->isInvalid() === true) {
 				throw new InvalidArgumentException([
