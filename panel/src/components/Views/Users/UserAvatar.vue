@@ -6,8 +6,7 @@
 			class="k-user-view-image"
 			@click="model.avatar ? $refs.avatar.toggle() : uploadAvatar()"
 		>
-			<k-image-frame v-if="model.avatar" :cover="true" :src="model.avatar" />
-			<k-icon-frame v-else icon="user" />
+			<k-image-icon-frame :cover="true" :src="model.avatar" icon="user" />
 		</k-button>
 		<k-dropdown-content
 			v-if="model.avatar"

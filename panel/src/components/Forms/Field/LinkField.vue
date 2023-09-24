@@ -33,16 +33,15 @@
 				>
 					<k-tag
 						v-if="model"
+						:image="
+							model.image
+								? { ...model.image, cover: true, back: 'gray-200' }
+								: null
+						"
 						:removable="!disabled"
 						class="k-link-input-model-preview"
 						@remove="clear"
 					>
-						<k-item-image
-							v-if="model.image"
-							:image="{ ...model.image, cover: true, back: 'gray-200' }"
-							class="k-link-input-model-preview-image"
-						/>
-
 						{{ model.label }}
 					</k-tag>
 					<k-button v-else class="k-link-input-model-placeholder">
@@ -424,24 +423,6 @@ export default {
 	--tag-color-focus-back: var(--tag-color-back);
 	--tag-color-focus-text: var(--tag-color-text);
 	--tag-rounded: var(--rounded-sm);
-}
-.k-link-input-model-preview {
-	overflow: hidden;
-	white-space: nowrap;
-}
-.k-link-input-model-preview .k-tag-text {
-	display: flex;
-	gap: 0.5rem;
-	align-items: center;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-.k-link-input-model-preview-image {
-	height: calc(var(--height-sm) - 0.5rem);
-	border-radius: var(--rounded-sm);
-}
-.k-link-input-model-preview .k-tag-text:has(.k-link-input-model-preview-image) {
-	padding-inline: 0.25rem;
 }
 .k-link-input-model-placeholder.k-button {
 	--button-align: flex-start;

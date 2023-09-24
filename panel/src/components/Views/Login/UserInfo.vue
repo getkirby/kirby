@@ -1,12 +1,13 @@
 <template>
 	<div class="k-user-info">
-		<k-image-frame
-			v-if="user.avatar"
+		<k-image-icon-frame
 			:cover="true"
-			:src="user.avatar.url"
+			:src="user.avatar?.url"
+			back="black"
+			color="white"
+			icon="user"
 			ratio="1/1"
 		/>
-		<k-icon-frame v-else color="white" back="black" icon="user" />
 		{{ user.name ?? user.email ?? user }}
 	</div>
 </template>

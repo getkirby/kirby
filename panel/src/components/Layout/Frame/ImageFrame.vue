@@ -20,16 +20,8 @@
 <script>
 import { props as FrameProps } from "./Frame.vue";
 
-/**
- * Use <k-image-frame> to display an image in a fixed ratio with background etc.
- * @public
- * @since 4.0.0
- *
- * @example <k-image-frame src="https://getkirby.com/image.jpg" ratio="16/9" back="pattern" />
- */
-export default {
+export const props = {
 	mixins: [FrameProps],
-	inheritAttrs: false,
 	props: {
 		/**
 		 * Just like in regular `<img>` tags, you can and should define a proper `alt` attribute whenever possible. The component will add an empty alt tag when no alt text is specified to be skipped by screen readers. Otherwise the filename would be read.
@@ -48,6 +40,18 @@ export default {
 		 */
 		srcset: String
 	}
+};
+
+/**
+ * Use <k-image-frame> to display an image in a fixed ratio with background etc.
+ * @public
+ * @since 4.0.0
+ *
+ * @example <k-image-frame src="https://getkirby.com/image.jpg" ratio="16/9" back="pattern" />
+ */
+export default {
+	mixins: [props],
+	inheritAttrs: false
 };
 </script>
 

@@ -1,6 +1,5 @@
 <template>
-	<k-image-frame v-if="image.src" v-bind="attrs" class="k-item-image" />
-	<k-icon-frame v-else v-bind="attrs" class="k-item-image" />
+	<k-image-icon-frame v-bind="attrs" class="k-item-image" />
 </template>
 
 <script>
