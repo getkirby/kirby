@@ -772,7 +772,7 @@ class Environment
 
 	/**
 	 * Loads and returns options from environment-specific
-	 * PHP files (by cli, host name and server IP address)
+	 * PHP files (by host name and server IP address or CLI)
 	 *
 	 * @param string $root Root directory to load configs from
 	 */
