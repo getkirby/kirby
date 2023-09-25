@@ -62,11 +62,7 @@
 						</div>
 					</k-dropdown-content>
 				</template>
-				<div
-					v-else
-					:style="!isInvalid ? 'color: ' + value : null"
-					class="k-color-frame k-frame"
-				/>
+				<k-color-frame v-else :color="!isInvalid ? value : null" />
 			</template>
 
 			<template v-if="currentOption?.text" #after>
