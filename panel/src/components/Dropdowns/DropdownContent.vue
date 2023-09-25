@@ -164,6 +164,9 @@ export default {
 		async onOpen() {
 			this.isOpen = true;
 
+			// remember the current scroll position
+			const scrollTop = window.scrollY;
+
 			// store a global reference to the dropdown
 			OpenDropdown = this;
 
@@ -173,6 +176,8 @@ export default {
 			if (this.$el && this.opener) {
 				window.addEventListener("resize", this.position);
 				await this.setPosition();
+				// restore the scroll position
+				window.scrollTo(0, scrollTop);
 				this.$emit("open");
 			}
 		},
