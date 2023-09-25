@@ -1,22 +1,13 @@
 <template>
 	<k-field v-bind="$props" :input="_uid" class="k-color-field">
 		<!-- Mode: options -->
-		<div
+		<k-coloroptions-input
 			v-if="mode === 'options'"
-			style="--preview-width: var(--field-input-height)"
+			:options="convertedOptions"
+			:value="value"
 			class="k-color-field-options"
-		>
-			<button
-				v-for="color in convertedOptions"
-				:key="color.value"
-				:aria-current="color.value === currentOption?.value"
-				:style="'color: ' + color.value"
-				:title="color.text ?? color.value"
-				class="k-color-frame k-frame"
-				type="button"
-				@click="onOption(color)"
-			/>
-		</div>
+			@input="$emit('input', $event)"
+		/>
 
 		<!-- Mode: picker/input -->
 		<k-input
@@ -26,7 +17,7 @@
 			ref="input"
 			theme="field"
 			type="color"
-			@input="onInput"
+			@input="$emit('input', $event)"
 			@invalid="isInvalid = $event ?? false"
 			@submit="$emit('submit')"
 		>
@@ -44,22 +35,11 @@
 						<k-colorpicker-input
 							ref="color"
 							:alpha="alpha"
+							:options="convertedOptions"
 							:required="required"
 							:value="value"
 							@input="onPicker"
 						/>
-						<div v-if="convertedOptions.length" class="k-color-field-options">
-							<button
-								v-for="color in convertedOptions"
-								:key="color.value"
-								:aria-current="color.value === currentOption?.value"
-								:style="'color: ' + color.value"
-								:title="color.text ?? color.value"
-								type="button"
-								class="k-color-frame k-frame"
-								@click="$refs.input.$refs.input.onPaste(color.value)"
-							/>
-						</div>
 					</k-dropdown-content>
 				</template>
 				<k-color-frame v-else :color="!isInvalid ? value : null" />
@@ -129,9 +109,6 @@ export default {
 		convert(value) {
 			return this.$library.colors.toString(value, this.format, this.alpha);
 		},
-		onInput(input) {
-			this.$emit("input", input);
-		},
 		onPicker(hsv) {
 			if (!hsv) {
 				return this.$emit("input", "");
@@ -139,15 +116,6 @@ export default {
 
 			const input = this.convert(hsv);
 			this.$emit("input", input);
-		},
-		onOption(option) {
-			const value = this.convert(option.value);
-
-			if (value !== this.value || this.required) {
-				this.$emit("input", value);
-			} else {
-				this.$emit("input", "");
-			}
 		}
 	}
 };
@@ -162,35 +130,17 @@ export default {
 	padding-inline: var(--spacing-1);
 }
 
+/* Mode: options */
+.k-color-field-options {
+	--color-frame-size: var(--input-height);
+}
+
+/* Mode: picker */
 .k-color-field-picker {
 	padding: var(--spacing-3);
 }
 .k-color-field-picker-toggle {
 	--color-frame-rounded: var(--rounded-sm);
 	border-radius: var(--color-frame-rounded);
-}
-
-.k-color-field-options {
-	--color-frame-size: var(--input-height);
-	display: grid;
-	grid-template-columns: repeat(auto-fill, var(--color-frame-size));
-	gap: var(--spacing-2);
-}
-.k-color-field-picker .k-color-field-options {
-	--color-frame-size: 100%;
-	--color-frame-darkness: 100%;
-	grid-template-columns: repeat(6, 1fr);
-	margin-top: var(--spacing-3);
-}
-
-.k-color-field .k-color-frame[aria-current] {
-	outline: var(--outline);
-}
-.k-color-field[data-disabled="true"] .k-color-field-options {
-	opacity: var(--opacity-disabled);
-}
-
-.k-color-field .k-input-after {
-	font-size: var(--text-xs);
 }
 </style>
