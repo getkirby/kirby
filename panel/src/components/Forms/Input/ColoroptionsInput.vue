@@ -9,11 +9,11 @@
 			<li v-for="(choice, index) in choices" :key="index">
 				<label :title="choice.title">
 					<input
-						:autofocus="choice.autofocus"
-						:checked="choice.checked"
-						:disabled="choice.disabled"
-						:name="choice.name"
-						:required="choice.required"
+						:autofocus="autofocus && index === 0"
+						:checked="choice.value === value"
+						:disabled="disabled"
+						:name="name"
+						:required="required"
 						:value="choice.value"
 						class="input-hidden"
 						type="radio"
@@ -52,20 +52,11 @@ export default {
 	mixins: [RadioInput, props],
 	computed: {
 		choices() {
-			return this.options.map((color, index) => {
-				const value = this.colorToString(color.value);
-
-				return {
-					...color,
-					autofocus: this.autofocus && index === 0,
-					checked: value === this.value,
-					disabled: this.disabled,
-					name: this.name,
-					required: this.required,
-					title: color.text ?? color.value,
-					value: value
-				};
-			});
+			return this.options.map((color) => ({
+				...color,
+				title: color.text ?? color.value,
+				value: this.colorToString(color.value)
+			}));
 		}
 	},
 	methods: {
