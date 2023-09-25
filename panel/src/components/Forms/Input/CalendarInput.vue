@@ -25,7 +25,7 @@
 			</span>
 			<k-button :title="$t('next')" icon="angle-right" @click="onNext" />
 		</nav>
-		<table class="k-calendar-table" :key="year + '-' + month">
+		<table :key="year + '-' + month" class="k-calendar-table">
 			<!-- Weekdays -->
 			<thead>
 				<tr>
@@ -67,8 +67,8 @@
 			</tfoot>
 		</table>
 		<input
-			:disabled="disabled"
 			:id="id"
+			:disabled="disabled"
 			:min="min"
 			:max="max"
 			:name="name"
@@ -186,9 +186,6 @@ export default {
 			var options = [];
 
 			this.monthnames.forEach((item, index) => {
-				// get date object for 1st of the month
-				const date = this.toDate(1, index);
-
 				options.push({
 					value: index,
 					text: item
