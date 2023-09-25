@@ -1,28 +1,31 @@
 <template>
-	<div class="k-calendar-input">
+	<fieldset class="k-calendar-input">
+		<legend class="sr-only">{{ $t("date.select") }}</legend>
 		<!-- Month + year selects -->
 		<nav>
-			<k-button icon="angle-left" @click="onPrev" />
+			<k-button :title="$t('prev')" icon="angle-left" @click="onPrev" />
 			<span class="k-calendar-selects">
 				<k-select-input
+					:aria-label="$t('month')"
+					:autofocus="autofocus"
 					:options="months"
-					:disabled="disabled"
+					:empty="false"
 					:required="true"
-					:value="current.month"
-					@input="current.month = Number($event)"
+					:value="month"
+					@input="month = Number($event)"
 				/>
 				<k-select-input
+					:aria-label="$t('year')"
 					:options="years"
-					:disabled="disabled"
+					:empty="false"
 					:required="true"
-					:value="current.year"
-					@input="current.year = Number($event)"
+					:value="year"
+					@input="year = Number($event)"
 				/>
 			</span>
-			<k-button icon="angle-right" @click="onNext" />
+			<k-button :title="$t('next')" icon="angle-right" @click="onNext" />
 		</nav>
-
-		<table class="k-calendar-table">
+		<table :key="year + '-' + month" class="k-calendar-table">
 			<!-- Weekdays -->
 			<thead>
 				<tr>
@@ -45,7 +48,7 @@
 							v-if="day"
 							:disabled="isDisabled(day)"
 							:text="day"
-							@click="select(day)"
+							@click="select(toDate(day))"
 						/>
 					</td>
 				</tr>
@@ -54,27 +57,42 @@
 				<!-- Today button -->
 				<tr>
 					<td class="k-calendar-today" colspan="7">
-						<k-button :text="$t('today')" @click="select('today')" />
+						<k-button
+							:disabled="disabled"
+							:text="$t('today')"
+							@click="select(today)"
+						/>
 					</td>
 				</tr>
 			</tfoot>
 		</table>
-	</div>
+		<input
+			:id="id"
+			:disabled="disabled"
+			:min="min"
+			:max="max"
+			:name="name"
+			:required="required"
+			:value="value"
+			class="sr-only"
+			tabindex="-1"
+			type="date"
+		/>
+	</fieldset>
 </template>
 
 <script>
+import { props as InputProps } from "@/mixins/input.js";
+
 /**
  * The Calendar component is mainly used for our `DateInput` component, but it could be used as stand-alone calendar as well with a little CSS love.
- * @public
  *
- * @example <k-calendar value="2012-12-12" @input="onInput" />
+ * @example <k-calendar-input :value="value" @input="value = $event" />
+ * @public
  */
 export default {
+	mixins: [InputProps],
 	props: {
-		/**
-		 * Disables whole calendar
-		 */
-		disabled: Boolean,
 		/**
 		 * The last allowed date
 		 * @example `2020-12-31`
@@ -89,10 +107,20 @@ export default {
 		 * ISO date/datetime string
 		 * @example `2020-03-05`
 		 */
-		value: String
+		value: {
+			default: "",
+			type: String
+		}
 	},
 	data() {
-		return this.data(this.value);
+		return {
+			maxdate: null,
+			mindate: null,
+			month: null,
+			selected: null,
+			today: this.$library.dayjs(),
+			year: null
+		};
 	},
 	computed: {
 		/**
@@ -158,15 +186,9 @@ export default {
 			var options = [];
 
 			this.monthnames.forEach((item, index) => {
-				// get date object for 1st of the month
-				const date = this.toDate(1, index);
-
 				options.push({
 					value: index,
-					text: item,
-					disabled:
-						date.isBefore(this.current.min, "month") ||
-						date.isAfter(this.current.max, "month")
+					text: item
 				});
 			});
 
@@ -178,41 +200,46 @@ export default {
 		 * @returns {array}
 		 */
 		years() {
-			const min = this.current.min?.get("year") ?? this.current.year - 20;
-			const max = this.current.max?.get("year") ?? this.current.year + 20;
+			const min = this.year - 20;
+			const max = this.year + 20;
 			return this.toOptions(min, max);
 		}
 	},
 	watch: {
-		value(value) {
-			const data = this.data(value);
-			this.dt = data.dt;
-			this.current = data.current;
+		max: {
+			handler(newValue, oldValue) {
+				if (newValue === oldValue) {
+					return;
+				}
+
+				this.maxdate = this.$library.dayjs.interpret(newValue, "date");
+			},
+			immediate: true
+		},
+		min: {
+			handler(newValue, oldValue) {
+				if (newValue === oldValue) {
+					return;
+				}
+
+				this.mindate = this.$library.dayjs.interpret(newValue, "date");
+			},
+			immediate: true
+		},
+		value: {
+			handler(newValue, oldValue) {
+				if (newValue === oldValue) {
+					return;
+				}
+
+				// set the selected date
+				this.selected = this.$library.dayjs.interpret(newValue, "date");
+				this.show(this.selected);
+			},
+			immediate: true
 		}
 	},
 	methods: {
-		/**
-		 * Internal method to set and update the
-		 * data object on initialization and when
-		 * the `value` prop changes
-		 * @param {string} value
-		 */
-		data(value) {
-			const dt = this.$library.dayjs.iso(value);
-			const now = this.$library.dayjs();
-
-			return {
-				// datetime object of selection
-				dt: dt,
-				// current calendar view
-				current: {
-					month: (dt ?? now).month(),
-					year: (dt ?? now).year(),
-					min: this.$library.dayjs.iso(this.min),
-					max: this.$library.dayjs.iso(this.max)
-				}
-			};
-		},
 		/**
 		 * Dates for a specific week in the current view (month + year)
 		 * @param {number} week number of week in the current month
@@ -242,8 +269,8 @@ export default {
 			const date = this.toDate(day);
 			return (
 				this.disabled ||
-				date.isBefore(this.current.min, "day") ||
-				date.isAfter(this.current.max, "day")
+				date.isBefore(this.mindate, "day") ||
+				date.isAfter(this.maxdate, "day")
 			);
 		},
 		/**
@@ -253,7 +280,7 @@ export default {
 		 * @returns {boolean}
 		 */
 		isSelected(day) {
-			return this.toDate(day).isSame(this.dt, "day");
+			return this.toDate(day).isSame(this.selected, "day");
 		},
 		/**
 		 * Whether a specified day in the current view (month + year)
@@ -262,18 +289,7 @@ export default {
 		 * @returns {boolean}
 		 */
 		isToday(day) {
-			const now = this.$library.dayjs();
-			return this.toDate(day).isSame(now, "day");
-		},
-		/**
-		 * Emits the current datetime as ISO string
-		 */
-		onInput() {
-			/**
-			 * The input event is fired when a date is selected.
-			 * @property {string} iso data as ISO date string
-			 */
-			this.$emit("input", this.dt?.toISO("date") ?? null);
+			return this.toDate(day).isSame(this.today, "day");
 		},
 		/**
 		 * Shows the following month
@@ -293,24 +309,13 @@ export default {
 		 * Selects a day and updates datetime object
 		 * based on current view (month + year)
 		 */
-		select(day) {
-			// when selecting today, make sure to merge in current time selects
-			const date =
-				day === "today"
-					? this.$library.dayjs().merge(this.toDate(), "time")
-					: this.toDate(day);
-			this.dt = date;
-			this.show(date);
-			this.onInput();
+		select(date) {
+			this.$emit("input", date?.toISO("date") ?? null);
 		},
-		/**
-		 * Updates the calendar to display the
-		 * month of the provided dayjs object
-		 * @param {Object} dt
-		 */
-		show(dt) {
-			this.current.year = dt.year();
-			this.current.month = dt.month();
+		show(date) {
+			// set the view
+			this.month = (date ?? this.today).month();
+			this.year = (date ?? this.today).year();
 		},
 		/**
 		 * Creates a dayjs object for a specified day and
@@ -318,8 +323,8 @@ export default {
 		 * @param {number} day
 		 * @param {number} month
 		 */
-		toDate(day = 1, month = this.current.month) {
-			return this.$library.dayjs(`${this.current.year}-${month + 1}-${day}`);
+		toDate(day = 1, month = this.month) {
+			return this.$library.dayjs(`${this.year}-${month + 1}-${day}`);
 		},
 		/**
 		 * Generates select options between min and max
@@ -379,8 +384,10 @@ export default {
 .k-calendar-selects .k-select-input {
 	display: flex;
 	align-items: center;
+	text-align: center;
 	height: var(--button-height);
 	padding: 0 0.5rem;
+	border-radius: var(--input-rounded);
 }
 .k-calendar-selects .k-select-input:focus-within {
 	outline: var(--outline);
@@ -397,13 +404,13 @@ export default {
 .k-calendar-day[aria-current="date"] .k-button {
 	text-decoration: underline;
 }
-.k-calendar-day[aria-selected="date"] .k-button {
-	--button-color-text: var(--color-text);
-	--button-color-back: var(--color-focus);
-}
+.k-calendar-day[aria-selected="date"] .k-button,
 .k-calendar-day[aria-selected="date"] .k-button:focus {
-	--button-color-text: initial;
-	--button-color-back: transparent;
+	--button-color-text: var(--color-text);
+	--button-color-back: var(--color-blue-500);
+}
+.k-calendar-day[aria-selected="date"] .k-button:focus-visible {
+	outline-offset: 2px;
 }
 .k-calendar-today {
 	padding-top: var(--spacing-2);

@@ -1,3 +1,4 @@
+import CalendarInput from "./CalendarInput.vue";
 import CheckboxInput from "./CheckboxInput.vue";
 import CheckboxesInput from "./CheckboxesInput.vue";
 import ChoiceInput from "./ChoiceInput.vue";
@@ -26,6 +27,7 @@ import WriterInput from "./WriterInput.vue";
 
 export default {
 	install(app) {
+		app.component("k-calendar-input", CalendarInput);
 		app.component("k-checkbox-input", CheckboxInput);
 		app.component("k-checkboxes-input", CheckboxesInput);
 		app.component("k-choice-input", ChoiceInput);
@@ -51,5 +53,8 @@ export default {
 		app.component("k-toggles-input", TogglesInput);
 		app.component("k-url-input", UrlInput);
 		app.component("k-writer-input", WriterInput);
+
+		/** Keep k-calendar as legacy alias */
+		app.component("k-calendar", CalendarInput);
 	}
 };

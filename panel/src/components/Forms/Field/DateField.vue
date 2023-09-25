@@ -33,7 +33,7 @@
 					/>
 					<k-dropdown-content ref="calendar" align-x="end">
 						<k-calendar
-							:value="value"
+							:value="iso.date"
 							:min="min"
 							:max="max"
 							@input="onCalendarInput"
