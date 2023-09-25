@@ -211,7 +211,7 @@ export default {
 			};
 		},
 		activeTypes() {
-			if (!this.options) {
+			if (!this.options?.length) {
 				return this.availableTypes;
 			}
 
