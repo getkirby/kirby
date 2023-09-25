@@ -4,61 +4,65 @@
 		:data-multi-select-key="isMultiSelectKey"
 		class="k-blocks"
 	>
-		<template v-if="hasFieldsets">
-			<k-draggable v-bind="draggableOptions" class="k-blocks-list" @sort="save">
-				<k-block
-					v-for="(block, index) in blocks"
-					:ref="'block-' + block.id"
-					:key="block.id"
-					v-bind="block"
-					:endpoints="endpoints"
-					:fieldset="fieldset(block)"
-					:is-batched="isSelected(block) && selected.length > 1"
-					:is-last-selected="isLastSelected(block)"
-					:is-full="isFull"
-					:is-hidden="block.isHidden === true"
-					:is-mergable="isMergable"
-					:is-selected="isSelected(block)"
-					:next="prevNext(index + 1)"
-					:prev="prevNext(index - 1)"
-					@append="add($event, index + 1)"
-					@chooseToAppend="choose(index + 1)"
-					@chooseToConvert="chooseToConvert(block)"
-					@chooseToPrepend="choose(index)"
-					@click.native.prevent.stop="onClickBlock(block, $event)"
-					@close="isEditing = false"
-					@copy="copy()"
-					@duplicate="duplicate(block, index)"
-					@focus="onFocus(block)"
-					@hide="hide(block)"
-					@merge="merge()"
-					@open="isEditing = true"
-					@paste="pasteboard()"
-					@prepend="add($event, index)"
-					@remove="remove(block)"
-					@removeSelected="removeSelected"
-					@show="show(block)"
-					@selectDown="selectDown"
-					@selectUp="selectUp"
-					@sortDown="sort(block, index, index + 1)"
-					@sortUp="sort(block, index, index - 1)"
-					@split="split(block, index, $event)"
-					@update="update(block, $event)"
-				/>
-				<template #footer>
-					<k-empty
-						class="k-blocks-empty"
-						icon="box"
-						@click="choose(blocks.length)"
-					>
-						{{ empty ?? $t("field.blocks.empty") }}
-					</k-empty>
-				</template>
-			</k-draggable>
-		</template>
-		<template v-else>
-			<k-box theme="info"> No fieldsets yet </k-box>
-		</template>
+		<k-draggable
+			v-if="hasFieldsets"
+			v-bind="draggableOptions"
+			class="k-blocks-list"
+			@sort="save"
+		>
+			<k-block
+				v-for="(block, index) in blocks"
+				:ref="'block-' + block.id"
+				:key="block.id"
+				v-bind="block"
+				:endpoints="endpoints"
+				:fieldset="fieldset(block)"
+				:is-batched="isSelected(block) && selected.length > 1"
+				:is-last-selected="isLastSelected(block)"
+				:is-full="isFull"
+				:is-hidden="block.isHidden === true"
+				:is-mergable="isMergable"
+				:is-selected="isSelected(block)"
+				:next="prevNext(index + 1)"
+				:prev="prevNext(index - 1)"
+				@append="add($event, index + 1)"
+				@chooseToAppend="choose(index + 1)"
+				@chooseToConvert="chooseToConvert(block)"
+				@chooseToPrepend="choose(index)"
+				@click.native.prevent.stop="onClickBlock(block, $event)"
+				@close="isEditing = false"
+				@copy="copy()"
+				@duplicate="duplicate(block, index)"
+				@focus="onFocus(block)"
+				@hide="hide(block)"
+				@merge="merge()"
+				@open="isEditing = true"
+				@paste="pasteboard()"
+				@prepend="add($event, index)"
+				@remove="remove(block)"
+				@removeSelected="removeSelected"
+				@show="show(block)"
+				@selectDown="selectDown"
+				@selectUp="selectUp"
+				@sortDown="sort(block, index, index + 1)"
+				@sortUp="sort(block, index, index - 1)"
+				@split="split(block, index, $event)"
+				@update="update(block, $event)"
+			/>
+			<template #footer>
+				<k-empty
+					class="k-blocks-empty"
+					icon="box"
+					@click="choose(blocks.length)"
+				>
+					{{ empty ?? $t("field.blocks.empty") }}
+				</k-empty>
+			</template>
+		</k-draggable>
+
+		<k-empty v-else icon="box">
+			{{ $t("field.blocks.fieldsets.empty") }}
+		</k-empty>
 	</div>
 </template>
 
@@ -88,7 +92,7 @@ export default {
 			isEditing: false,
 			isMultiSelectKey: false,
 			isPasteable: false,
-			blocks: this.value,
+			blocks: this.value ?? [],
 			selected: []
 		};
 	},
