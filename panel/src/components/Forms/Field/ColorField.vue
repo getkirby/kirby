@@ -39,15 +39,12 @@
 							type="button"
 							@click="$refs.picker.toggle()"
 						/>
-						<k-dropdown-content
-							ref="picker"
-							class="k-color-field-picker"
-							@open="$nextTick(setPicker)"
-						>
-							<k-color
+						<k-dropdown-content ref="picker" class="k-color-field-picker">
+							<k-colorpicker-input
 								ref="color"
 								:alpha="alpha"
-								@input="onPicker($event.target.value)"
+								:value="value"
+								@input="onPicker"
 							/>
 
 							<div class="k-color-field-options">
@@ -137,7 +134,6 @@ export default {
 			return this.$library.colors.toString(value, this.format, this.alpha);
 		},
 		onInput(input) {
-			this.setPicker(input);
 			this.$emit("input", input);
 		},
 		onPicker(hsv) {
@@ -151,11 +147,6 @@ export default {
 				this.$emit("input", value);
 			} else {
 				this.$emit("input", "");
-			}
-		},
-		setPicker(value = this.value) {
-			if (this.$refs.color) {
-				this.$refs.color.value = this.$library.colors.parseAs(value, "hsv");
 			}
 		}
 	}
@@ -203,5 +194,32 @@ export default {
 
 .k-color-field .k-input-after {
 	font-size: var(--text-xs);
+}
+
+:root {
+	--color-preview-rounded: var(--rounded);
+	--color-preview-size: 1.5rem;
+	--color-preview-darkness: 0%;
+}
+
+.k-color-preview {
+	aspect-ratio: 1/1;
+	position: relative;
+	display: inline-block;
+	color: transparent;
+	background: var(--pattern-light);
+	border-radius: var(--color-preview-rounded);
+	overflow: hidden;
+	width: var(--color-preview-size);
+	background-clip: padding-box;
+}
+
+.k-color-preview::after {
+	border-radius: var(--color-preview-rounded);
+	box-shadow: 0 0 0 1px inset hsla(0, 0%, var(--color-preview-darkness), 0.175);
+	position: absolute;
+	inset: 0;
+	background-color: currentColor;
+	content: "";
 }
 </style>
