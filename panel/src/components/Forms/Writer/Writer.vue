@@ -51,15 +51,18 @@ import Insert from "./Extensions/Insert.js";
 import Keys from "./Extensions/Keys.js";
 import Toolbar from "./Extensions/Toolbar.js";
 
-import { placeholder, spellcheck } from "@/mixins/props.js";
+import {
+	autofocus,
+	disabled,
+	placeholder,
+	spellcheck
+} from "@/mixins/props.js";
 
 export const props = {
-	mixins: [spellcheck, placeholder],
+	mixins: [autofocus, disabled, placeholder, spellcheck],
 	props: {
-		autofocus: Boolean,
 		breaks: Boolean,
 		code: Boolean,
-		disabled: Boolean,
 		emptyDocument: {
 			type: Object,
 			default: () => ({
