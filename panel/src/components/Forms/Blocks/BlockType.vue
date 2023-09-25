@@ -6,7 +6,8 @@ export default {
 	inheritAttrs: false,
 	props: {
 		content: [Object, Array],
-		fieldset: Object
+		fieldset: Object,
+		id: String
 	},
 	methods: {
 		field(name, fallback = null) {
