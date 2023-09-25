@@ -56,6 +56,9 @@ export default {
 		}
 	},
 	methods: {
+		focus() {
+			this.$refs.input.focus();
+		},
 		onInput(html) {
 			let dom = new DOMParser().parseFromString(html, "text/html");
 			let list = dom.querySelector("ul, ol");
