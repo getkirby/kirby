@@ -43,6 +43,9 @@ export default {
 		}
 	},
 	methods: {
+		focus() {
+			this.$refs.input.focus();
+		},
 		onInvalid() {
 			this.$emit("invalid", this.$v.$invalid, this.$v);
 		}
