@@ -23,10 +23,10 @@
 </template>
 
 <script>
-import { autofocus, disabled, id, required } from "@/mixins/props.js";
+import Input, { props as InputProps } from "@/mixins/input.js";
 
 export const props = {
-	mixins: [autofocus, disabled, id, required],
+	mixins: [InputProps],
 	props: {
 		/**
 		 * Format to parse and display the date
@@ -87,8 +87,7 @@ export const props = {
  * @public
  */
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	data() {
 		return {
 			dt: null,
@@ -209,13 +208,6 @@ export default {
 		 */
 		emit(dt) {
 			this.$emit("input", this.toISO(dt));
-		},
-		/**
-		 * Focuses the input element
-		 * @public
-		 */
-		focus() {
-			this.$refs.input.focus();
 		},
 		/**
 		 * Decrement the currently

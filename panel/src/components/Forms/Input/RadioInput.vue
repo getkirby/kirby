@@ -11,25 +11,21 @@
 </template>
 
 <script>
-import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
+import Input, { props as InputProps } from "@/mixins/input.js";
+import { options } from "@/mixins/props.js";
 import { required as validateRequired } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [autofocus, disabled, id, name, required],
+	mixins: [InputProps, options],
 	props: {
 		columns: Number,
-		options: {
-			default: () => [],
-			type: Array
-		},
 		theme: String,
 		value: [String, Number, Boolean]
 	}
 };
 
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	computed: {
 		choices() {
 			return this.options.map((option, index) => {

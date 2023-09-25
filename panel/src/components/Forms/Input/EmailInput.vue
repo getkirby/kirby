@@ -1,6 +1,5 @@
 <script>
-import TextInput from "./TextInput.vue";
-import { props as TextInputProps } from "./TextInput.vue";
+import TextInput, { props as TextInputProps } from "./TextInput.vue";
 
 export const props = {
 	mixins: [TextInputProps],

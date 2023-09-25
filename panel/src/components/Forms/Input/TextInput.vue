@@ -23,7 +23,15 @@
 </template>
 
 <script>
-import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
+import Input, { props as InputProps } from "@/mixins/input.js";
+import {
+	font,
+	maxlength,
+	minlength,
+	pattern,
+	placeholder,
+	spellcheck
+} from "@/mixins/props.js";
 
 import {
 	required as validateRequired,
@@ -34,22 +42,21 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [autofocus, disabled, id, name, required],
+	mixins: [
+		InputProps,
+		font,
+		maxlength,
+		minlength,
+		pattern,
+		placeholder,
+		spellcheck
+	],
 	props: {
 		autocomplete: {
 			type: [Boolean, String],
 			default: "off"
 		},
-		font: String,
-		maxlength: Number,
-		minlength: Number,
-		pattern: String,
-		placeholder: String,
 		preselect: Boolean,
-		spellcheck: {
-			type: [Boolean, String],
-			default: "off"
-		},
 		type: {
 			type: String,
 			default: "text"
@@ -62,8 +69,7 @@ export const props = {
  * @example <k-input :value="text" @input="text = $event" name="text" type="text" />
  */
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	data() {
 		return {
 			listeners: {
@@ -89,9 +95,6 @@ export default {
 		}
 	},
 	methods: {
-		focus() {
-			this.$refs.input.focus();
-		},
 		onInput(value) {
 			this.$emit("input", value);
 		},

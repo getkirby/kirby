@@ -29,12 +29,13 @@
 </template>
 
 <script>
-import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
+import Input, { props as InputProps } from "@/mixins/input.js";
+import { options, placeholder } from "@/mixins/props.js";
 
 import { required as validateRequired } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [autofocus, disabled, id, name, required],
+	mixins: [InputProps, options, placeholder],
 	props: {
 		ariaLabel: String,
 		default: String,
@@ -45,14 +46,6 @@ export const props = {
 			type: [Boolean, String],
 			default: true
 		},
-		/**
-		 * The text, that is shown when no option is selected yet.
-		 */
-		placeholder: String,
-		options: {
-			default: () => [],
-			type: Array
-		},
 		value: {
 			type: [String, Number, Boolean],
 			default: ""
@@ -61,8 +54,7 @@ export const props = {
 };
 
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	data() {
 		return {
 			selected: this.value,

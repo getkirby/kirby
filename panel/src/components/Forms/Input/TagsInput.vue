@@ -10,8 +10,9 @@
 </template>
 
 <script>
+import Input from "@/mixins/input.js";
 import { name, required } from "@/mixins/props.js";
-import { props as Tags } from "@/components/Navigation/Tags.vue";
+import { props as TagsProps } from "@/components/Navigation/Tags.vue";
 
 import {
 	required as validateRequired,
@@ -20,13 +21,11 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [name, required, Tags]
+	mixins: [name, required, TagsProps]
 };
 
 export default {
-	mixins: [props],
-	inheritAttrs: false,
-	emits: ["input"],
+	mixins: [Input, props],
 	watch: {
 		value: {
 			handler() {
