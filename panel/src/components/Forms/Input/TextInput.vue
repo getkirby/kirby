@@ -28,6 +28,7 @@ import {
 	font,
 	maxlength,
 	minlength,
+	pattern,
 	placeholder,
 	spellcheck
 } from "@/mixins/props.js";
@@ -41,13 +42,20 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [InputProps, font, maxlength, minlength, placeholder, spellcheck],
+	mixins: [
+		InputProps,
+		font,
+		maxlength,
+		minlength,
+		pattern,
+		placeholder,
+		spellcheck
+	],
 	props: {
 		autocomplete: {
 			type: [Boolean, String],
 			default: "off"
 		},
-		pattern: String,
 		preselect: Boolean,
 		type: {
 			type: String,
