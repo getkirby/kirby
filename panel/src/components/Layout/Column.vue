@@ -1,10 +1,11 @@
 <template>
 	<div :style="'--width:' + width" :data-sticky="sticky" class="k-column">
 		<!-- additional <div> needed to ensure sticky columns behave correctly -->
-		<div>
+		<div v-if="sticky">
 			<!-- @slot Column content -->
 			<slot />
 		</div>
+		<slot v-else />
 	</div>
 </template>
 
