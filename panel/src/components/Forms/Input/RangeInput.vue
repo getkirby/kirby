@@ -82,7 +82,6 @@ export const props = {
  */
 export default {
 	mixins: [Input, props],
-	inheritAttrs: false,
 	computed: {
 		baseline() {
 			// If the minimum is below 0, the baseline should be placed at .
@@ -113,9 +112,6 @@ export default {
 		}
 	},
 	methods: {
-		focus() {
-			this.$refs.input.focus();
-		},
 		format(value) {
 			const locale = document.lang ? document.lang.replace("_", "-") : "en";
 			const parts = this.step.toString().split(".");
