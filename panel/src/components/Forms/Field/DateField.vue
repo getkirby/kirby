@@ -25,22 +25,20 @@
 				@submit="$emit('submit')"
 			>
 				<template v-if="calendar" #icon>
-					<k-dropdown>
-						<k-button
-							:icon="icon"
-							:title="$t('date.select')"
-							class="k-input-icon-button"
-							@click="$refs.calendar.toggle()"
+					<k-button
+						:icon="icon"
+						:title="$t('date.select')"
+						class="k-input-icon-button"
+						@click="$refs.calendar.toggle()"
+					/>
+					<k-dropdown-content ref="calendar" align-x="end">
+						<k-calendar
+							:value="value"
+							:min="min"
+							:max="max"
+							@input="onCalendarInput"
 						/>
-						<k-dropdown-content ref="calendar" align-x="end">
-							<k-calendar
-								:value="value"
-								:min="min"
-								:max="max"
-								@input="onCalendarInput"
-							/>
-						</k-dropdown-content>
-					</k-dropdown>
+					</k-dropdown-content>
 				</template>
 			</k-input>
 
@@ -60,21 +58,19 @@
 				@submit="$emit('submit')"
 			>
 				<template v-if="times" #icon>
-					<k-dropdown>
-						<k-button
-							:icon="time.icon ?? 'clock'"
-							:title="$t('time.select')"
-							class="k-input-icon-button"
-							@click="$refs.times.toggle()"
+					<k-button
+						:icon="time.icon ?? 'clock'"
+						:title="$t('time.select')"
+						class="k-input-icon-button"
+						@click="$refs.times.toggle()"
+					/>
+					<k-dropdown-content ref="times" align-x="end">
+						<k-times
+							:display="time.display"
+							:value="value"
+							@input="onTimesInput"
 						/>
-						<k-dropdown-content ref="times" align-x="end">
-							<k-times
-								:display="time.display"
-								:value="value"
-								@input="onTimesInput"
-							/>
-						</k-dropdown-content>
-					</k-dropdown>
+					</k-dropdown-content>
 				</template>
 			</k-input>
 		</div>

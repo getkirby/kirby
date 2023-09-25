@@ -1,9 +1,9 @@
 <template>
 	<nav :aria-label="label" class="k-breadcrumb">
-		<k-dropdown v-if="segments.length > 1" class="k-breadcrumb-dropdown">
+		<div v-if="segments.length > 1" class="k-breadcrumb-dropdown">
 			<k-button icon="home" @click="$refs.dropdown.toggle()" />
 			<k-dropdown-content ref="dropdown" :options="dropdown" />
-		</k-dropdown>
+		</div>
 
 		<ol>
 			<li v-for="(crumb, index) in segments" :key="index">

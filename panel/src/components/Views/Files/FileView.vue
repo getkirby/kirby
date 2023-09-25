@@ -28,23 +28,24 @@
 						target="_blank"
 						variant="filled"
 					/>
-					<k-dropdown class="k-file-view-options">
-						<k-button
-							:disabled="isLocked"
-							:dropdown="true"
-							:title="$t('settings')"
-							icon="cog"
-							size="sm"
-							variant="filled"
-							@click="$refs.settings.toggle()"
-						/>
-						<k-dropdown-content
-							ref="settings"
-							:options="$dropdown(id)"
-							align-x="end"
-							@action="action"
-						/>
-					</k-dropdown>
+
+					<k-button
+						:disabled="isLocked"
+						:dropdown="true"
+						:title="$t('settings')"
+						icon="cog"
+						size="sm"
+						variant="filled"
+						class="k-file-view-options"
+						@click="$refs.settings.toggle()"
+					/>
+					<k-dropdown-content
+						ref="settings"
+						:options="$dropdown(id)"
+						align-x="end"
+						@action="action"
+					/>
+
 					<k-languages-dropdown />
 				</k-button-group>
 

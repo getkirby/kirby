@@ -12,15 +12,13 @@
 					<img v-bind="image" @dragstart.prevent />
 				</k-coords-input>
 
-				<k-dropdown>
-					<k-button
-						icon="dots"
-						size="xs"
-						style="color: var(--color-gray-500)"
-						@click="$refs.dropdown.toggle()"
-					/>
-					<k-dropdown-content ref="dropdown" :options="options" theme="light" />
-				</k-dropdown>
+				<k-button
+					icon="dots"
+					size="xs"
+					style="color: var(--color-gray-500)"
+					@click="$refs.dropdown.toggle()"
+				/>
+				<k-dropdown-content ref="dropdown" :options="options" theme="light" />
 			</template>
 
 			<!-- Icon -->
@@ -164,7 +162,7 @@ export default {
 	max-width: 100cqw;
 	max-height: 100cqh;
 }
-.k-file-preview-thumb .k-dropdown {
+.k-file-preview-thumb > .k-button {
 	position: absolute;
 	top: var(--spacing-2);
 	inset-inline-start: var(--spacing-2);

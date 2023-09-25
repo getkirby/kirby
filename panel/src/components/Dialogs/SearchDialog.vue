@@ -11,28 +11,27 @@
 	>
 		<div class="k-search-dialog-input">
 			<!-- Type select -->
-			<k-dropdown class="k-search-dialog-types">
-				<k-button
-					:dropdown="true"
-					:icon="currentType.icon"
-					:text="currentType.label"
-					variant="dimmed"
-					@click="$refs.types.toggle()"
-				/>
-				<k-dropdown-content ref="types">
-					<k-dropdown-item
-						v-for="(typeItem, typeIndex) in $panel.searches"
-						:key="typeIndex"
-						:icon="typeItem.icon"
-						@click="
-							type = typeIndex;
-							focus();
-						"
-					>
-						{{ typeItem.label }}
-					</k-dropdown-item>
-				</k-dropdown-content>
-			</k-dropdown>
+			<k-button
+				:dropdown="true"
+				:icon="currentType.icon"
+				:text="currentType.label"
+				variant="dimmed"
+				class="k-search-dialog-types"
+				@click="$refs.types.toggle()"
+			/>
+			<k-dropdown-content ref="types">
+				<k-dropdown-item
+					v-for="(typeItem, typeIndex) in $panel.searches"
+					:key="typeIndex"
+					:icon="typeItem.icon"
+					@click="
+						type = typeIndex;
+						focus();
+					"
+				>
+					{{ typeItem.label }}
+				</k-dropdown-item>
+			</k-dropdown-content>
 
 			<!-- Input -->
 			<input

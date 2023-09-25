@@ -1,5 +1,5 @@
 <template>
-	<k-dropdown class="k-autocomplete">
+	<div class="k-autocomplete">
 		<!-- @slot Use to insert your input -->
 		<slot />
 		<k-dropdown-content
@@ -23,7 +23,7 @@
 			</k-dropdown-item>
 		</k-dropdown-content>
 		{{ query }}
-	</k-dropdown>
+	</div>
 </template>
 
 <script>

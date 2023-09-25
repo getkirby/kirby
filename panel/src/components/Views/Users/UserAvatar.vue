@@ -1,5 +1,5 @@
 <template>
-	<k-dropdown>
+	<div>
 		<k-button
 			:title="$t('avatar')"
 			variant="filled"
@@ -25,7 +25,7 @@
 				}
 			]"
 		/>
-	</k-dropdown>
+	</div>
 </template>
 
 <script>

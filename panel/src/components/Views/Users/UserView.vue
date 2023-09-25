@@ -27,22 +27,21 @@
 
 			<template #buttons>
 				<k-button-group>
-					<k-dropdown class="k-user-view-options">
-						<k-button
-							:disabled="isLocked"
-							:dropdown="true"
-							:title="$t('settings')"
-							icon="cog"
-							size="sm"
-							variant="filled"
-							@click="$refs.settings.toggle()"
-						/>
-						<k-dropdown-content
-							ref="settings"
-							align-x="end"
-							:options="$dropdown(id)"
-						/>
-					</k-dropdown>
+					<k-button
+						:disabled="isLocked"
+						:dropdown="true"
+						:title="$t('settings')"
+						icon="cog"
+						size="sm"
+						variant="filled"
+						class="k-user-view-options"
+						@click="$refs.settings.toggle()"
+					/>
+					<k-dropdown-content
+						ref="settings"
+						align-x="end"
+						:options="$dropdown(id)"
+					/>
 					<k-languages-dropdown />
 				</k-button-group>
 

@@ -1,5 +1,5 @@
 <template>
-	<k-dropdown class="k-selector-dropdown">
+	<div class="k-selector-dropdown">
 		<slot />
 		<k-dropdown-content
 			ref="dropdown"
@@ -18,7 +18,7 @@
 				@select="select"
 			/>
 		</k-dropdown-content>
-	</k-dropdown>
+	</div>
 </template>
 
 <script>
