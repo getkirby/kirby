@@ -57,7 +57,6 @@ export default {
 					info: option.info,
 					label: option.text,
 					name: this.name ?? this.id,
-					theme: this.theme,
 					type: "checkbox",
 					value: option.value
 				};
