@@ -7,7 +7,8 @@
 		@keydown.delete.prevent="remove"
 	>
 		<slot name="image">
-			<k-image-icon-frame v-if="image" v-bind="image" class="k-tag-image" />
+			<k-image-frame v-if="image?.src" v-bind="image" class="k-tag-image" />
+			<k-icon-frame v-else-if="image" v-bind="image" class="k-tag-image" />
 		</slot>
 
 		<span v-if="$slots.default" class="k-tag-text">

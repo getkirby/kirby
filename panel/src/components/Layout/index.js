@@ -11,7 +11,6 @@ import Grid from "./Grid.vue";
 import Header from "./Header.vue";
 import IconFrame from "./Frame/IconFrame.vue";
 import ImageFrame from "./Frame/ImageFrame.vue";
-import ImageIconFrame from "./Frame/ImageIconFrame.vue";
 import Overlay from "./Overlay.vue";
 import Stats from "./Stats.vue";
 import Table from "./Table.vue";
@@ -34,7 +33,6 @@ export default {
 		app.component("k-header", Header);
 		app.component("k-icon-frame", IconFrame);
 		app.component("k-image-frame", ImageFrame);
-		app.component("k-image-icon-frame", ImageIconFrame);
 		app.component("k-image", ImageFrame);
 		app.component("k-overlay", Overlay);
 		app.component("k-stats", Stats);

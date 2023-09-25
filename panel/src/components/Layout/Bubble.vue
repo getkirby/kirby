@@ -12,7 +12,8 @@
 	>
 		<!-- @slot Replace the default image -->
 		<slot name="image">
-			<k-image-icon-frame v-if="image" v-bind="image" />
+			<k-image-frame v-if="image?.src" v-bind="image" />
+			<k-icon-frame v-else-if="image" v-bind="image" />
 			<span v-else></span>
 		</slot>
 		<template v-if="text">
