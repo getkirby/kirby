@@ -17,7 +17,6 @@
 			:value="coords"
 			@input="setCoords($event)"
 		/>
-
 		<label :aria-label="$t('hue')">
 			<k-hue-input
 				:disabled="disabled"
@@ -26,7 +25,6 @@
 				@input="setHue($event)"
 			/>
 		</label>
-
 		<label v-if="alpha" :aria-label="$t('alpha')">
 			<k-alpha-input
 				:disabled="disabled"
@@ -35,7 +33,14 @@
 				@input="setAlpha($event)"
 			/>
 		</label>
-
+		<k-coloroptions-input
+			:disabled="disabled"
+			:format="format"
+			:options="options"
+			:required="required"
+			:value="value"
+			@input="$emit('input', $event)"
+		/>
 		<input
 			:name="name"
 			:required="required"
@@ -49,9 +54,10 @@
 
 <script>
 import Input, { props as InputProps } from "@/mixins/input.js";
+import { options } from "@/mixins/props.js";
 
 export const props = {
-	mixins: [InputProps],
+	mixins: [InputProps, options],
 	props: {
 		alpha: {
 			default: true,
@@ -61,9 +67,6 @@ export const props = {
 			default: "hex",
 			type: String,
 			validator: (format) => ["hex", "rgb", "hsl"].includes(format)
-		},
-		options: {
-			type: Array
 		},
 		value: {
 			type: [Object, String]
