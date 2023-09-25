@@ -1,3 +1,4 @@
+import AlphaInput from "./AlphaInput.vue";
 import CalendarInput from "./CalendarInput.vue";
 import CheckboxInput from "./CheckboxInput.vue";
 import CheckboxesInput from "./CheckboxesInput.vue";
@@ -7,6 +8,7 @@ import ColorpickerInput from "./ColorpickerInput.vue";
 import CoordsInput from "./CoordsInput.vue";
 import DateInput from "./DateInput.vue";
 import EmailInput from "./EmailInput.vue";
+import HueInput from "./HueInput.vue";
 import ListInput from "./ListInput.vue";
 import MultiselectInput from "./MultiselectInput.vue";
 import NumberInput from "./NumberInput.vue";
@@ -27,6 +29,7 @@ import WriterInput from "./WriterInput.vue";
 
 export default {
 	install(app) {
+		app.component("k-alpha-input", AlphaInput);
 		app.component("k-calendar-input", CalendarInput);
 		app.component("k-checkbox-input", CheckboxInput);
 		app.component("k-checkboxes-input", CheckboxesInput);
@@ -36,6 +39,7 @@ export default {
 		app.component("k-coords-input", CoordsInput);
 		app.component("k-date-input", DateInput);
 		app.component("k-email-input", EmailInput);
+		app.component("k-hue-input", HueInput);
 		app.component("k-list-input", ListInput);
 		app.component("k-multiselect-input", MultiselectInput);
 		app.component("k-number-input", NumberInput);

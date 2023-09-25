@@ -19,26 +19,19 @@
 		/>
 
 		<label :aria-label="$t('hue')">
-			<k-range
+			<k-hue-input
 				:disabled="disabled"
-				:min="0"
-				:max="360"
 				:required="required"
 				:value="color.h"
-				variant="hue"
 				@input="setHue($event)"
 			/>
 		</label>
 
 		<label v-if="alpha" :aria-label="$t('alpha')">
-			<k-range
+			<k-alpha-input
 				:disabled="disabled"
-				:min="0"
-				:max="1"
 				:required="required"
-				:step="0.01"
 				:value="color.a"
-				variant="alpha"
 				@input="setAlpha($event)"
 			/>
 		</label>
@@ -204,9 +197,5 @@ export default {
 }
 .k-colorpicker-input .k-coloroptions-input ul {
 	grid-template-columns: repeat(6, 1fr);
-}
-
-.k-colorpicker-input input[data-variant="alpha"] {
-	color: hsl(var(--h), var(--s), var(--l));
 }
 </style>

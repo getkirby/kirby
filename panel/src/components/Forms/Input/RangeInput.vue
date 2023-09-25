@@ -1,7 +1,7 @@
 <template>
-	<label :data-disabled="disabled" class="k-range-input">
-		<k-range
-			ref="input"
+	<div :data-disabled="disabled" class="k-range-input">
+		<input
+			ref="range"
 			v-bind="{
 				autofocus,
 				disabled,
@@ -13,9 +13,10 @@
 				step
 			}"
 			:value="position"
-			@input="$emit('input', $event)"
+			type="range"
+			@input="$emit('input', $event.target.valueAsNumber)"
 		/>
-		<span v-if="tooltip" class="k-range-input-tooltip">
+		<output v-if="tooltip" :for="id" class="k-range-input-tooltip">
 			<span v-if="tooltip.before" class="k-range-input-tooltip-before">{{
 				tooltip.before
 			}}</span>
@@ -23,8 +24,8 @@
 			<span v-if="tooltip.after" class="k-range-input-tooltip-after">{{
 				tooltip.after
 			}}</span>
-		</span>
-	</label>
+		</output>
+	</div>
 </template>
 
 <script>
@@ -112,6 +113,9 @@ export default {
 		}
 	},
 	methods: {
+		focus() {
+			this.$el.querySelector("input")?.focus();
+		},
 		format(value) {
 			const locale = document.lang ? document.lang.replace("_", "-") : "en";
 			const parts = this.step.toString().split(".");
@@ -146,7 +150,6 @@ export default {
 	--range-tooltip-back: var(--color-black);
 	display: flex;
 	align-items: center;
-	padding: var(--field-input-padding);
 }
 .k-range-input input[type="range"]:focus {
 	outline: 0;
@@ -184,5 +187,10 @@ export default {
 
 .k-range-input[data-disabled="true"] {
 	--range-tooltip-back: var(--color-gray-600);
+}
+
+/* Input context */
+.k-input[data-type="range"] .k-range-input {
+	padding-inline: var(--input-padding);
 }
 </style>
