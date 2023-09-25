@@ -1,86 +1,11 @@
-<template>
-	<input
-		:id="id"
-		ref="input"
-		:autofocus="autofocus"
-		:checked="checked"
-		:data-variant="variant"
-		:disabled="disabled"
-		:name="name"
-		:required="required"
-		:type="type"
-		:value="value"
-		class="k-choice"
-		@change="$emit('input', $event.target.checked)"
-	/>
-</template>
-
-<script>
-import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
-import { required as validateRequired } from "vuelidate/lib/validators";
-
-export const props = {
-	mixins: [autofocus, disabled, id, name, required],
-	inheritAttrs: false,
-	props: {
-		checked: {
-			type: Boolean
-		},
-		type: {
-			default: "checkbox",
-			type: String
-		},
-		variant: {
-			type: String
-		},
-		value: {
-			type: [Boolean, Number, String]
-		}
-	}
-};
-
-export default {
-	mixins: [props],
-	watch: {
-		value: {
-			handler() {
-				this.validate();
-			},
-			immediate: true
-		}
-	},
-	methods: {
-		focus() {
-			this.$refs.input.focus();
-		},
-		select() {
-			this.focus();
-		},
-		validate() {
-			/**
-			 * The invalid event is triggered when the input validation fails. This can be used to react on errors immediately.
-			 * @event invalid
-			 */
-			this.$emit("invalid", this.$v.$invalid, this.$v);
-		}
-	},
-	validations() {
-		return {
-			value: {
-				required: this.required ? validateRequired : true
-			}
-		};
-	}
-};
-</script>
-
-<style>
 :root {
 	--choice-color-back: var(--color-white);
 	--choice-color-border: var(--color-gray-500);
 	--choice-color-checked: var(--color-black);
 	--choice-color-disabled: var(--color-gray-400);
 	--choice-color-icon: var(--color-light);
+	--choice-color-info: var(--color-text-dimmed);
+	--choice-color-text: var(--color-text);
 	--choice-color-toggle: var(--choice-color-border);
 	--choice-height: 1rem;
 	--choice-rounded: var(--rounded-sm);
@@ -132,11 +57,9 @@ input:where([type="checkbox"], [type="radio"]):checked:focus {
 
 /** Disabled state **/
 input:where([type="checkbox"], [type="radio"])[disabled] {
-	--choice-color-checked: var(--choice-color-disabled);
+	--choice-color-back: none;
 	--choice-color-border: var(--color-gray-300);
-	box-shadow: none;
-	cursor: default;
-	background: none;
+	--choice-color-checked: var(--choice-color-disabled);
 	box-shadow: none;
 }
 
@@ -168,4 +91,3 @@ input[type="checkbox"][data-variant="toggle"]:checked::after {
 	background: var(--choice-color-checked);
 	margin-inline-start: auto;
 }
-</style>
