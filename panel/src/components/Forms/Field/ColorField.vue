@@ -3,6 +3,7 @@
 		<!-- Mode: options -->
 		<k-coloroptions-input
 			v-if="mode === 'options'"
+			:name="name"
 			:options="convertedOptions"
 			:value="value"
 			class="k-color-field-options"
