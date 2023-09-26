@@ -150,6 +150,7 @@ export default {
 	--range-tooltip-back: var(--color-black);
 	display: flex;
 	align-items: center;
+	border-radius: var(--range-track-height);
 }
 .k-range-input input[type="range"]:focus {
 	outline: 0;
