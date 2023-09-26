@@ -14,12 +14,14 @@
 <script>
 export default {
 	props: {
-		file: Object,
 		focus: Object
 	},
 	methods: {
 		set() {
-			this.$emit("set", "50% 50%");
+			this.$emit("set", {
+				x: 50,
+				y: 50
+			});
 		},
 		reset() {
 			this.$emit("set", undefined);
