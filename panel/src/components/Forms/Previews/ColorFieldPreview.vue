@@ -1,13 +1,13 @@
 <template>
-	<div class="k-color-field-preview">
-		<k-bubble :text="text">
+	<div :data-has-text="Boolean(text)" class="k-color-field-preview">
+		<k-tag>
 			<template #image>
-				<span
-					:style="'color: ' + value"
-					class="k-item-figure k-color-preview"
-				/>
+				<k-color-frame :color="value" />
 			</template>
-		</k-bubble>
+			<template v-if="text">
+				{{ text }}
+			</template>
+		</k-tag>
 	</div>
 </template>
 
@@ -44,10 +44,21 @@ export default {
 
 <style>
 .k-color-field-preview {
+	--tag-height: var(--height-sm);
+	--tag-color-back: var(--color-gray-200);
+	--tag-color-text: var(--color-black);
+	--tag-color-focus-back: var(--tag-color-back);
+	--tag-color-focus-text: var(--tag-color-text);
+	--tag-rounded: var(--rounded);
+
+	--color-frame-rounded: var(--tag-rounded);
+	--color-frame-size: var(--tag-height);
+
 	padding: 0.325rem 0.75rem;
 }
-/** TODO: .k-color-field-preview .k-color-preview:has(+ .k-bubble-text) */
-.k-color-field-preview .k-color-preview[data-has-text] {
+/** TODO: .k-color-field-preview .k-color-frame:has(+ .k-tag-text) */
+.k-color-field-preview[data-has-text="true"]
+	:where(.k-color-frame, .k-color-frame::after) {
 	border-start-end-radius: 0;
 	border-end-end-radius: 0;
 }

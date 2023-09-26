@@ -10,6 +10,7 @@
 			<k-tag
 				v-for="(item, itemIndex) in tags"
 				:key="itemIndex"
+				:image="item.image"
 				:removable="!disabled"
 				name="tag"
 				@click.native.stop
