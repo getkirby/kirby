@@ -132,7 +132,7 @@ class Assets
 			[
 				'rel'   => 'apple-touch-icon',
 				'type'  => 'image/png',
-				'href'  => Url::to($this->url . '/apple-touch-icon.png')
+				'href'  => $this->url . '/apple-touch-icon.png'
 			],
 			[
 				'rel'   => 'alternate icon',
