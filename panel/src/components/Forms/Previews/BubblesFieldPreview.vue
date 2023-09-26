@@ -10,8 +10,8 @@ import { props as BubblesProps } from "@/components/Layout/Bubbles.vue";
 
 export default {
 	mixins: [FieldPreview, BubblesProps],
-	inheritAttrs: false,
 	props: {
+		default: () => [],
 		value: [Array, String]
 	},
 	computed: {
@@ -19,13 +19,13 @@ export default {
 			let bubbles = this.value;
 
 			// predefined options
-			const options = this.column?.options ?? this.field?.options ?? [];
+			const options = this.column.options ?? this.field.options ?? [];
 
 			if (typeof bubbles === "string") {
 				bubbles = bubbles.split(",");
 			}
 
-			return bubbles.map((bubble) => {
+			return (bubbles ?? []).map((bubble) => {
 				if (typeof bubble === "string") {
 					bubble = {
 						value: bubble,

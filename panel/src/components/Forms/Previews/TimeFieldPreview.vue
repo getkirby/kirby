@@ -1,17 +1,18 @@
 <script>
-import TextFieldPreview from "./TextFieldPreview.vue";
+import DateFieldPreview from "./DateFieldPreview.vue";
 
 export default {
-	extends: TextFieldPreview,
-	inheritAttrs: false,
-	props: {
-		value: String
-	},
+	extends: DateFieldPreview,
 	class: "k-time-field-preview",
 	computed: {
+		format() {
+			return this.display ?? "HH:mm";
+		},
+		parsed() {
+			return this.$library.dayjs.iso(this.value, "time");
+		},
 		text() {
-			const dt = this.$library.dayjs.iso(this.value, "time");
-			return dt?.format(this.field.display) ?? "";
+			return this.parsed?.format(this.format);
 		}
 	}
 };

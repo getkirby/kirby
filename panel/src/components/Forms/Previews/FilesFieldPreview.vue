@@ -3,7 +3,6 @@ import BubblesFieldPreview from "./BubblesFieldPreview.vue";
 
 export default {
 	extends: BubblesFieldPreview,
-	inheritAttrs: false,
 	class: "k-files-field-preview",
 	props: {
 		html: {
@@ -13,7 +12,7 @@ export default {
 	},
 	computed: {
 		bubbles() {
-			return this.value.map((file) => ({
+			return (this.value ?? []).map((file) => ({
 				text: file.filename,
 				link: file.link,
 				image: file.image
