@@ -5,13 +5,12 @@
 			<!-- Image with focus picker -->
 			<template v-if="image.src">
 				<k-coords-input
-					:disabled="!canFocus"
+					:disabled="!focusable"
 					:value="focus"
 					@input="setFocus($event)"
 				>
 					<img v-bind="image" @dragstart.prevent />
 				</k-coords-input>
-
 				<k-button
 					icon="dots"
 					size="xs"
@@ -54,9 +53,8 @@
 					<dt>{{ $t("file.focus.title") }}</dt>
 					<dd>
 						<k-file-focus-button
-							v-if="canFocus"
+							v-if="focusable"
 							ref="focus"
-							:file="file"
 							:focus="focus"
 							@set="setFocus"
 						/>
@@ -74,27 +72,21 @@
 <script>
 export default {
 	props: {
-		details: Array,
-		file: Object,
+		details: {
+			default: () => [],
+			type: Array
+		},
+		focus: {
+			type: Object
+		},
 		focusable: Boolean,
-		image: Object,
-		isLocked: Boolean,
+		image: {
+			default: () => ({}),
+			type: Object
+		},
 		url: String
 	},
 	computed: {
-		focus() {
-			const focus = this.$store.getters["content/values"]()["focus"];
-
-			if (!focus) {
-				return;
-			}
-
-			const [x, y] = focus.replaceAll("%", "").split(" ");
-			return { x: parseFloat(x), y: parseFloat(y) };
-		},
-		canFocus() {
-			return this.focusable && this.image.src && this.isLocked === false;
-		},
 		options() {
 			const options = [
 				{
@@ -105,7 +97,7 @@ export default {
 				}
 			];
 
-			if (this.canFocus) {
+			if (this.focusable) {
 				if (this.focus) {
 					options.push({
 						icon: "cancel",
@@ -122,18 +114,18 @@ export default {
 			}
 
 			return options;
-		},
-		storeId() {
-			return this.$store.getters["content/id"](null, true);
 		}
 	},
 	methods: {
 		setFocus(focus) {
-			if (this.$helper.object.isObject(focus) === true) {
-				focus = `${focus.x.toFixed(1)}% ${focus.y.toFixed(1)}%`;
+			if (!focus) {
+				return this.$emit("focus", null);
 			}
 
-			this.$store.dispatch("content/update", ["focus", focus]);
+			this.$emit("focus", {
+				x: focus.x.toFixed(1),
+				y: focus.y.toFixed(1)
+			});
 		}
 	}
 };
