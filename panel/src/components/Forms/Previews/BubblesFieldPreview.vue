@@ -54,5 +54,6 @@ export default {
 	--bubble-text: var(--color-black);
 
 	padding: 0.325rem 0.75rem;
+	overflow: hidden;
 }
 </style>
