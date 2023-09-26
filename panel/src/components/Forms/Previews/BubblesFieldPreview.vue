@@ -11,8 +11,10 @@ import { props as BubblesProps } from "@/components/Layout/Bubbles.vue";
 export default {
 	mixins: [FieldPreview, BubblesProps],
 	props: {
-		default: () => [],
-		value: [Array, String]
+		value: {
+			default: () => [],
+			type: [Array, String]
+		}
 	},
 	computed: {
 		bubbles() {

@@ -12,7 +12,7 @@ export default {
 	},
 	computed: {
 		bubbles() {
-			return (this.value ?? []).map((file) => ({
+			return this.value.map((file) => ({
 				text: file.filename,
 				link: file.link,
 				image: file.image
