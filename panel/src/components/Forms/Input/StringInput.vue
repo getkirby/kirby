@@ -1,5 +1,6 @@
 <template>
 	<input
+		v-direction
 		v-bind="{
 			autocomplete,
 			autofocus,
@@ -15,7 +16,6 @@
 			type,
 			value
 		}"
-		v-direction
 		:data-font="font"
 		class="k-string-input"
 		@input="$emit('input', $event.target.value)"

@@ -48,13 +48,13 @@ export const props = {
  */
 export default {
 	mixins: [StringInput, props],
-	mounted() {
-		this.validate();
-	},
 	watch: {
 		value() {
 			this.validate();
 		}
+	},
+	mounted() {
+		this.validate();
 	},
 	methods: {
 		convert(value) {
