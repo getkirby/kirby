@@ -11,7 +11,6 @@ import Input from "./Input.vue";
 import Login from "./Login.vue";
 import LoginCode from "./LoginCode.vue";
 import Selector from "./Selector.vue";
-import Times from "./Times.vue";
 import Upload from "./Upload.vue";
 
 /** Form Helpers */
@@ -47,7 +46,6 @@ export default {
 		app.component("k-login", Login);
 		app.component("k-login-code", LoginCode);
 		app.component("k-selector", Selector);
-		app.component("k-times", Times);
 		app.component("k-upload", Upload);
 
 		app.component("k-login-alert", LoginAlert);

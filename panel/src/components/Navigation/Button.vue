@@ -90,6 +90,10 @@ export default {
 		 */
 		role: String,
 		/**
+		 * Sets the `aria-selected` attribute.
+		 */
+		selected: [String, Boolean],
+		/**
 		 * Specific sizes for buttong styling
 		 * @values `xs`, `sm`
 		 */
@@ -137,6 +141,7 @@ export default {
 			const attrs = {
 				"aria-current": this.current,
 				"aria-disabled": this.disabled,
+				"aria-selected": this.selected,
 				"data-responsive": this.responsive,
 				"data-size": this.size,
 				"data-theme": this.theme,

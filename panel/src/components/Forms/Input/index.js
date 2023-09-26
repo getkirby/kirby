@@ -22,6 +22,7 @@ import TelInput from "./TelInput.vue";
 import TextInput from "./TextInput.vue";
 import TextareaInput from "./TextareaInput.vue";
 import TimeInput from "./TimeInput.vue";
+import TimeoptionsInput from "./TimeoptionsInput.vue";
 import ToggleInput from "./ToggleInput.vue";
 import TogglesInput from "./TogglesInput.vue";
 import UrlInput from "./UrlInput.vue";
@@ -53,12 +54,14 @@ export default {
 		app.component("k-text-input", TextInput);
 		app.component("k-textarea-input", TextareaInput);
 		app.component("k-time-input", TimeInput);
+		app.component("k-timeoptions-input", TimeoptionsInput);
 		app.component("k-toggle-input", ToggleInput);
 		app.component("k-toggles-input", TogglesInput);
 		app.component("k-url-input", UrlInput);
 		app.component("k-writer-input", WriterInput);
 
-		/** Keep k-calendar as legacy alias */
+		/** Keep k-calendar and k-times as legacy aliases */
 		app.component("k-calendar", CalendarInput);
+		app.component("k-times", TimeoptionsInput);
 	}
 };
