@@ -1,32 +1,35 @@
 <template>
 	<div class="k-file-preview" :data-has-focus="Boolean(focus)">
 		<!-- Thumb -->
-		<div class="k-file-preview-thumb">
-			<!-- Image with focus picker -->
-			<template v-if="image.src">
-				<k-coords-input
-					:disabled="!focusable"
-					:value="focus"
-					@input="setFocus($event)"
-				>
-					<img v-bind="image" @dragstart.prevent />
-				</k-coords-input>
-				<k-button
-					icon="dots"
-					size="xs"
-					style="color: var(--color-gray-500)"
-					@click="$refs.dropdown.toggle()"
-				/>
-				<k-dropdown-content ref="dropdown" :options="options" theme="light" />
-			</template>
+		<div class="k-file-preview-thumb-column">
+			<div class="k-file-preview-thumb">
+				<!-- Image with focus picker -->
+				<template v-if="image.src">
+					<k-coords-input
+						:disabled="!focusable"
+						:value="focus"
+						@input="setFocus($event)"
+					>
+						<img v-bind="image" @dragstart.prevent />
+					</k-coords-input>
 
-			<!-- Icon -->
-			<k-icon
-				v-else
-				:color="$helper.color(image.color)"
-				:type="image.icon"
-				class="k-item-icon"
-			/>
+					<k-button
+						icon="dots"
+						size="xs"
+						style="color: var(--color-gray-500)"
+						@click="$refs.dropdown.toggle()"
+					/>
+					<k-dropdown-content ref="dropdown" :options="options" theme="light" />
+				</template>
+
+				<!-- Icon -->
+				<k-icon
+					v-else
+					:color="$helper.color(image.color)"
+					:type="image.icon"
+					class="k-item-icon"
+				/>
+			</div>
 		</div>
 
 		<!-- Details -->
@@ -141,16 +144,21 @@ export default {
 }
 
 /* Thumb */
-.k-file-preview-thumb {
-	display: grid;
-	place-items: center;
-	aspect-ratio: 1/1;
-	padding: var(--spacing-12);
+.k-file-preview-thumb-column {
 	background: var(--pattern);
+	aspect-ratio: 1/1;
+}
+.k-file-preview-thumb {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	padding: var(--spacing-12);
 	container-type: size;
 }
 
 .k-file-preview-thumb img {
+	width: auto;
 	max-width: 100cqw;
 	max-height: 100cqh;
 }
@@ -192,7 +200,7 @@ export default {
 }
 .k-file-preview-details dl {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
 	grid-gap: var(--spacing-6) var(--spacing-12);
 	align-self: center;
 	padding: var(--spacing-6);
@@ -233,7 +241,7 @@ export default {
 	.k-file-preview {
 		grid-template-columns: 50% auto;
 	}
-	.k-file-preview-thumb {
+	.k-file-preview-thumb-column {
 		aspect-ratio: auto;
 	}
 }
@@ -242,7 +250,7 @@ export default {
 	.k-file-preview {
 		grid-template-columns: 33.333% auto;
 	}
-	.k-file-preview-thumb {
+	.k-file-preview-thumb-column {
 		aspect-ratio: 1/1;
 	}
 }
