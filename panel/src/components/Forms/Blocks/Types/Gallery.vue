@@ -1,7 +1,7 @@
 <template>
 	<figure>
 		<ul @dblclick="open">
-			<template v-if="content.images.length === 0">
+			<template v-if="!content.images?.length">
 				<li
 					v-for="index in 3"
 					:key="index"

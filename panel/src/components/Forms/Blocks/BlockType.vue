@@ -13,7 +13,7 @@ export default {
 		field(name, fallback = null) {
 			let field = null;
 
-			for (const tab of Object.values(this.fieldset.tabs)) {
+			for (const tab of Object.values(this.fieldset.tabs ?? {})) {
 				if (tab.fields[name]) {
 					field = tab.fields[name];
 				}

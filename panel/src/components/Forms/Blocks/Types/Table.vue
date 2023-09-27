@@ -47,7 +47,7 @@ export default {
 		table() {
 			let table = null;
 
-			for (const tab of Object.values(this.fieldset.tabs)) {
+			for (const tab of Object.values(this.fieldset.tabs ?? {})) {
 				if (tab.fields.rows) {
 					table = tab.fields.rows;
 				}
