@@ -51,8 +51,7 @@ export default {
 		return {
 			observer: null,
 			visible: this.tabs,
-			invisible: [],
-			sizes: []
+			invisible: []
 		};
 	},
 	computed: {
@@ -64,8 +63,17 @@ export default {
 	},
 	watch: {
 		tabs: {
-			handler() {
-				this.measure();
+			async handler() {
+				// disconnect any previous observer
+				this.observer?.disconnect();
+				await this.$nextTick();
+
+				// only if $el exists (more than one tab),
+				// add new observer and measure tab sizes
+				if (this.$el instanceof Element) {
+					this.observer = new ResizeObserver(this.resize);
+					this.observer.observe(this.$el);
+				}
 			},
 			immediate: true
 		}
@@ -82,22 +90,17 @@ export default {
 				title: tab.label
 			};
 		},
-		async measure() {
-			// disconnect any previous observer
-			this.observer?.disconnect();
-			await this.$nextTick();
-
-			// only if $el exists (more than one tab),
-			// add new observer and measure tab sizes
-			if (this.$el instanceof Element) {
-				this.observer = new ResizeObserver(this.resize);
-				this.observer.observe(this.$el);
-				this.sizes = [...this.$refs.visible].map((tab) => tab.$el.offsetWidth);
-			}
-		},
-		resize() {
+		async resize() {
 			// container width
 			const width = this.$el.offsetWidth;
+
+			// reset all tabs
+			this.visible = this.tabs;
+			this.invisible = [];
+
+			// measure tab sizes
+			await this.$nextTick();
+			const sizes = [...this.$refs.visible].map((tab) => tab.$el.offsetWidth);
 
 			// initial width of visible tabs
 			// that already account for the dropdown button
@@ -105,7 +108,7 @@ export default {
 
 			for (let index = 0; index < this.tabs.length; index++) {
 				// tab size plus grid gap
-				tabs += this.sizes[index] + 4;
+				tabs += sizes[index] + 4;
 
 				if (tabs > width) {
 					this.visible = this.tabs.slice(0, index);
@@ -113,10 +116,6 @@ export default {
 					return;
 				}
 			}
-
-			// if all tabs fit, ensure that most recent tabs value is used
-			this.visible = this.tabs;
-			this.invisible = [];
 		}
 	}
 };
