@@ -505,6 +505,9 @@ export default {
 	border: 1px solid var(--table-color-border);
 	box-shadow: none;
 }
+.k-table[aria-disabled="true"] thead th {
+	position: static;
+}
 
 /* Mobile */
 @container (max-width: 40rem) {
