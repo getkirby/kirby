@@ -45,7 +45,7 @@ export default {
 
 <style>
 .k-block-type-quote-editor {
-	padding-inline-start: var(--spacing-4);
+	padding-inline-start: var(--spacing-3);
 	border-inline-start: 2px solid var(--color-black);
 }
 .k-block-type-quote-text {
@@ -55,7 +55,6 @@ export default {
 }
 .k-block-type-quote-citation {
 	font-style: italic;
-	font-size: var(--text-sm);
-	color: var(--color-gray-600);
+	color: var(--color-text-dimmed);
 }
 </style>
