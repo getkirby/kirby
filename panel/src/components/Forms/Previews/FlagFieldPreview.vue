@@ -1,6 +1,6 @@
 <template>
-	<div class="k-flag-field-preview">
-		<k-button v-if="value" v-bind="status" size="md" />
+	<div v-if="value" class="k-flag-field-preview">
+		<k-button v-bind="status" size="md" />
 	</div>
 </template>
 
