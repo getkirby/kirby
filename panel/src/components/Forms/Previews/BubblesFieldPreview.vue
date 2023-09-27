@@ -53,7 +53,10 @@ export default {
 	--bubble-back: var(--color-light);
 	--bubble-text: var(--color-black);
 
-	padding: 0.325rem 0.75rem;
+	padding: 0.375rem var(--table-cell-padding);
 	overflow: hidden;
+}
+.k-bubbles-field-preview .k-bubbles {
+	gap: 0.375rem;
 }
 </style>

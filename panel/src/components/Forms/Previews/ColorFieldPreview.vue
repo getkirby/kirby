@@ -49,7 +49,7 @@ export default {
 .k-color-field-preview {
 	--color-frame-rounded: var(--tag-rounded);
 	--color-frame-size: var(--tag-height);
-	padding: 0.325rem 0.75rem;
+	padding: 0.375rem var(--table-cell-padding);
 	display: flex;
 	align-items: center;
 	gap: var(--spacing-2);

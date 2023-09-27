@@ -1,5 +1,5 @@
 <template>
-	<td :data-align="column.align" :data-mobile="mobile">
+	<td :data-align="column.align" :data-mobile="mobile" class="k-table-cell">
 		<template v-if="$helper.object.isEmpty(value) === false">
 			<!-- Table cell type component -->
 			<component
@@ -74,3 +74,9 @@ export default {
 	}
 };
 </script>
+
+<style>
+.k-table .k-table-cell {
+	padding: 0;
+}
+</style>

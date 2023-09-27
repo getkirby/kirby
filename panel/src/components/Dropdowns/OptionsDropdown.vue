@@ -2,6 +2,7 @@
 	<!-- Single option = button -->
 	<k-button
 		v-if="hasSingleOption"
+		:disabled="disabled"
 		:icon="options[0].icon ?? icon"
 		:size="options[0].size ?? size"
 		:title="options[0].title ?? options[0].tooltip ?? options[0].text"
@@ -20,6 +21,7 @@
 	<!-- Multiple options = dropdown -->
 	<div v-else-if="options.length" class="k-options-dropdown">
 		<k-button
+			:disabled="disabled"
 			:dropdown="true"
 			:icon="icon"
 			:size="size"
@@ -49,6 +51,9 @@ export default {
 		align: {
 			type: String,
 			default: "right"
+		},
+		disabled: {
+			type: Boolean
 		},
 		/**
 		 * Icon for the dropdown button
