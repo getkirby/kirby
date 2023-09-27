@@ -15,7 +15,7 @@ export default {
 	mixins: [FieldPreview],
 	computed: {
 		text() {
-			return this.column?.text !== false ? this.field?.text : null;
+			return this.column.text !== false ? this.field.text : null;
 		}
 	}
 };
