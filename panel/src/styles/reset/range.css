@@ -14,7 +14,7 @@
 	appearance: none;
 	padding: 0;
 	height: var(--range-thumb-size);
-	border-radius: var(--range-thumb-size);
+	border-radius: var(--range-track-size);
 	width: 100%;
 }
 

@@ -11,17 +11,7 @@
 		/>
 
 		<!-- Mode: picker/input -->
-		<k-input
-			v-else
-			v-bind="$props"
-			:id="_uid"
-			ref="input"
-			theme="field"
-			type="color"
-			@input="$emit('input', $event)"
-			@invalid="isInvalid = $event ?? false"
-			@submit="$emit('submit')"
-		>
+		<k-input v-else v-bind="$props" theme="field" type="color">
 			<template #before>
 				<template v-if="mode === 'picker'">
 					<button
@@ -30,7 +20,7 @@
 						type="button"
 						@click="$refs.picker.toggle()"
 					>
-						<k-color-frame :color="!isInvalid ? value : null" />
+						<k-color-frame :color="value" />
 					</button>
 					<k-dropdown-content ref="picker" class="k-color-field-picker">
 						<k-colorpicker-input
@@ -39,11 +29,15 @@
 							:options="convertedOptions"
 							:required="required"
 							:value="value"
-							@input="onPicker"
+							@input="$emit('input', $event)"
 						/>
 					</k-dropdown-content>
 				</template>
-				<k-color-frame v-else :color="!isInvalid ? value : null" />
+				<k-color-frame v-else :color="value" />
+			</template>
+
+			<template #default>
+				<k-colorname-input v-bind="$props" @input="$emit('input', $event)" />
 			</template>
 
 			<template v-if="currentOption?.text" #after>
@@ -109,14 +103,6 @@ export default {
 	methods: {
 		convert(value) {
 			return this.$library.colors.toString(value, this.format, this.alpha);
-		},
-		onPicker(hsv) {
-			if (!hsv) {
-				return this.$emit("input", "");
-			}
-
-			const input = this.convert(hsv);
-			this.$emit("input", input);
 		}
 	}
 };
@@ -126,9 +112,9 @@ export default {
 .k-color-field {
 	--color-frame-size: calc(var(--input-height) - var(--spacing-2));
 }
-.k-color-field .k-input .k-input-before {
+.k-color-field .k-input-before {
 	align-items: center;
-	padding-inline: var(--spacing-1);
+	padding-inline-start: var(--spacing-1);
 }
 
 /* Mode: options */
@@ -143,5 +129,12 @@ export default {
 .k-color-field-picker-toggle {
 	--color-frame-rounded: var(--rounded-sm);
 	border-radius: var(--color-frame-rounded);
+}
+
+.k-color-field .k-colorname-input {
+	padding-inline: var(--input-padding);
+}
+.k-color-field .k-colorname-input:focus {
+	outline: 0;
 }
 </style>
