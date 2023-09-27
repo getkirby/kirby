@@ -61,9 +61,15 @@ export default {
 	inheritAttrs: false,
 	props: {
 		attrs: [Array, Object],
-		content: [Array, Object],
+		content: {
+			default: () => ({}),
+			type: [Array, Object]
+		},
 		endpoints: Object,
-		fieldset: Object,
+		fieldset: {
+			default: () => ({}),
+			type: Object
+		},
 		id: String,
 		isBatched: Boolean,
 		isFull: Boolean,
@@ -170,7 +176,7 @@ export default {
 			};
 		},
 		tabs() {
-			const tabs = this.fieldset.tabs;
+			const tabs = this.fieldset.tabs ?? {};
 
 			for (const [tabName, tab] of Object.entries(tabs)) {
 				for (const [fieldName] of Object.entries(tab.fields)) {
