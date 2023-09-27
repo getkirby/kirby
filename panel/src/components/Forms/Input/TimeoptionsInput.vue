@@ -85,6 +85,9 @@ export default {
 		}
 	},
 	methods: {
+		focus() {
+			this.$el.querySelector("button").focus();
+		},
 		formatTimes(times) {
 			return times.map((time) => {
 				if (time === "-") {
