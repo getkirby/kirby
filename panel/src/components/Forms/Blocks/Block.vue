@@ -60,12 +60,18 @@
 export default {
 	inheritAttrs: false,
 	props: {
-		attrs: [Array, Object],
+		attrs: {
+			default: () => ({}),
+			type: [Array, Object]
+		},
 		content: {
 			default: () => ({}),
 			type: [Array, Object]
 		},
-		endpoints: Object,
+		endpoints: {
+			default: () => ({}),
+			type: [Array, Object]
+		},
 		fieldset: {
 			default: () => ({}),
 			type: Object
