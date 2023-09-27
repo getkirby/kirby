@@ -1,5 +1,5 @@
 <template>
-	<k-item-image class="k-image-field-preview" :image="value" />
+	<k-item-image v-if="value" class="k-image-field-preview" :image="value" />
 </template>
 
 <script>
@@ -7,9 +7,14 @@ import FieldPreview from "@/mixins/forms/fieldPreview.js";
 
 export default {
 	mixins: [FieldPreview],
-	inheritAttrs: false,
 	props: {
 		value: [Object]
 	}
 };
 </script>
+
+<style>
+.k-image-field-preview {
+	height: 100%;
+}
+</style>
