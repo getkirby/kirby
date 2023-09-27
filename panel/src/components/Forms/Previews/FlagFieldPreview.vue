@@ -1,7 +1,10 @@
 <template>
-	<div v-if="value" class="k-flag-field-preview">
-		<k-button v-bind="status" size="md" />
-	</div>
+	<k-button
+		v-if="value"
+		v-bind="status"
+		class="k-flag-field-preview"
+		size="md"
+	/>
 </template>
 
 <script>
@@ -25,9 +28,8 @@ export default {
 
 <style>
 .k-flag-field-preview {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: var(--table-row-height);
+	--button-height: var(--table-row-height);
+	--button-width: 100%;
+	outline-offset: -2px;
 }
 </style>

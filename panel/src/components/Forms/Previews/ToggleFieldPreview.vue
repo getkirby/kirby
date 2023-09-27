@@ -23,6 +23,6 @@ export default {
 
 <style>
 .k-toggle-field-preview {
-	padding-inline: var(--spacing-3);
+	padding-inline: var(--table-cell-padding);
 }
 </style>

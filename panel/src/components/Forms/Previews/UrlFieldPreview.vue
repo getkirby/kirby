@@ -33,7 +33,7 @@ export default {
 
 <style>
 .k-url-field-preview {
-	padding-inline: var(--spacing-2);
+	padding-inline: var(--table-cell-padding);
 }
 .k-url-field-preview[data-link] {
 	color: var(--link-color);
@@ -43,6 +43,7 @@ export default {
 	align-items: center;
 	height: var(--height-xs);
 	padding-inline: var(--spacing-1);
+	margin-inline: calc(var(--spacing-1) * -1);
 	border-radius: var(--rounded);
 	max-width: 100%;
 	min-width: 0;

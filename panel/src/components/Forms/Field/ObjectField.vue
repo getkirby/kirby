@@ -31,7 +31,7 @@
 							:key="field.name"
 							@click="open(field.name)"
 						>
-							<th data-mobile="true">
+							<th data-has-button data-mobile="true">
 								<button type="button">{{ field.label }}</button>
 							</th>
 							<k-table-cell
@@ -169,13 +169,6 @@ export default {
 <style>
 .k-table.k-object-field-table {
 	table-layout: auto;
-}
-.k-table.k-object-field-table tbody td,
-.k-table.k-object-field-table tbody th,
-.k-table.k-object-field-table tbody th button {
-	cursor: pointer;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 .k-table.k-object-field-table tbody td {
 	max-width: 0;
