@@ -6,7 +6,7 @@
 				<!-- Image with focus picker -->
 				<template v-if="image.src">
 					<k-coords-input
-						:disabled="!canFocus"
+						:disabled="!focusable"
 						:value="focus"
 						@input="setFocus($event)"
 					>
