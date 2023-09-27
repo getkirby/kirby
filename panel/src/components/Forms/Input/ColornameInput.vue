@@ -2,6 +2,7 @@
 	<k-string-input
 		v-bind="$props"
 		class="k-colorname-input"
+		type="text"
 		@blur.native="onBlur"
 		@input="$emit('input', $event)"
 		@paste.native="onPaste"
