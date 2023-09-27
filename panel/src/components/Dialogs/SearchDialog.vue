@@ -34,17 +34,15 @@
 			</k-dropdown-content>
 
 			<!-- Input -->
-			<input
+			<k-search-input
 				ref="input"
 				:aria-label="$t('search')"
 				:autofocus="true"
-				:placeholder="$t('search') + ' …'"
 				:value="query"
-				type="text"
-				@input="query = $event.target.value"
-				@keydown.down.prevent="onDown"
-				@keydown.up.prevent="onUp"
-				@keydown.enter="onEnter"
+				@input="query = $event"
+				@keydown.native.down.prevent="onDown"
+				@keydown.native.up.prevent="onUp"
+				@keydown.native.enter="onEnter"
 			/>
 			<k-button
 				:icon="isLoading ? 'loader' : 'cancel'"

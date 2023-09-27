@@ -19,6 +19,7 @@ import RadioInput from "./RadioInput.vue";
 import RangeInput from "./RangeInput.vue";
 import SelectInput from "./SelectInput.vue";
 import SlugInput from "./SlugInput.vue";
+import SearchInput from "./SearchInput.vue";
 import StringInput from "./StringInput.vue";
 import TagsInput from "./TagsInput.vue";
 import TelInput from "./TelInput.vue";
@@ -51,6 +52,7 @@ export default {
 		app.component("k-password-input", PasswordInput);
 		app.component("k-radio-input", RadioInput);
 		app.component("k-range-input", RangeInput);
+		app.component("k-search-input", SearchInput);
 		app.component("k-select-input", SelectInput);
 		app.component("k-slug-input", SlugInput);
 		app.component("k-string-input", StringInput);

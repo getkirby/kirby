@@ -16,6 +16,7 @@
 			type,
 			value
 		}"
+		:aria-label="ariaLabel"
 		:data-font="font"
 		class="k-string-input"
 		@input="$emit('input', $event.target.value)"
@@ -46,6 +47,7 @@ export const props = {
 		spellcheck
 	],
 	props: {
+		ariaLabel: String,
 		type: {
 			default: "text",
 			type: String
