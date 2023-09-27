@@ -185,7 +185,7 @@ export default {
 			const tabs = this.fieldset.tabs ?? {};
 
 			for (const [tabName, tab] of Object.entries(tabs)) {
-				for (const [fieldName] of Object.entries(tab.fields)) {
+				for (const [fieldName] of Object.entries(tab.fields ?? {})) {
 					tabs[tabName].fields[fieldName].section = this.name;
 					tabs[tabName].fields[fieldName].endpoints = {
 						field:
