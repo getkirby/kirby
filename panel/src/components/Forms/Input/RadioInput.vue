@@ -5,7 +5,11 @@
 		data-variant="choices"
 	>
 		<li v-for="(choice, index) in choices" :key="index">
-			<k-choice-input v-bind="choice" @input="$emit('input', choice.value)" />
+			<k-choice-input
+				v-bind="choice"
+				@click.native.stop="toggle(choice.value)"
+				@input="$emit('input', choice.value)"
+			/>
 		</li>
 	</ul>
 </template>
@@ -19,6 +23,10 @@ export const props = {
 	mixins: [InputProps, options],
 	props: {
 		columns: Number,
+		reset: {
+			default: true,
+			type: Boolean
+		},
 		theme: String,
 		value: [String, Number, Boolean]
 	}
@@ -56,6 +64,11 @@ export default {
 		},
 		select() {
 			this.focus();
+		},
+		toggle(value) {
+			if (value === this.value && this.reset && !this.required) {
+				this.$emit("input", "");
+			}
 		},
 		validate() {
 			this.$emit("invalid", this.$v.$invalid, this.$v);
