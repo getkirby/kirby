@@ -1,5 +1,5 @@
 <template>
-	<div class="k-table">
+	<div :aria-disabled="disabled" class="k-table">
 		<table :data-disabled="disabled" :data-indexed="hasIndexColumn">
 			<!-- Header row -->
 			<thead>
@@ -338,107 +338,100 @@ export default {
 </script>
 
 <style>
-/** Table Layout **/
+:root {
+	--table-cell-padding: var(--spacing-3);
+	--table-color-back: var(--color-white);
+	--table-color-border: var(--color-background);
+	--table-color-hover: var(--color-gray-100);
+	--table-color-th-back: var(--color-gray-100);
+	--table-color-th-text: var(--color-text-dimmed);
+	--table-row-height: var(--input-height);
+}
+
+/* Table Layout */
 .k-table {
-	--table-row-height: 38px;
 	position: relative;
-	background: var(--color-white);
-	font-size: var(--text-sm);
+	background: var(--table-color-back);
 	box-shadow: var(--shadow);
 	border-radius: var(--rounded);
 }
+
 .k-table table {
-	width: 100%;
-	border-spacing: 0;
 	table-layout: fixed;
-	font-variant-numeric: tabular-nums;
-}
-.k-table[data-invalid] {
-	border: 0;
-	box-shadow:
-		var(--color-red-900) 0 0 0 1px,
-		var(--color-red-900) 0 0 3px 2px;
 }
 
-/** Cells **/
+/* All Cells */
 .k-table th,
 .k-table td {
+	padding-inline: var(--table-cell-padding);
 	height: var(--table-row-height);
 	overflow: hidden;
 	text-overflow: ellipsis;
 	width: 100%;
-	border-inline-end: 1px solid var(--color-background);
-	line-height: 1.25em;
+	border-inline-end: 1px solid var(--table-color-border);
+	line-height: 1.25;
 }
-
-.k-table thead th:first-child {
-	border-start-start-radius: var(--rounded);
-}
-.k-table thead th:last-child {
-	border-start-end-radius: var(--rounded);
-}
-.k-table th:last-child,
-.k-table td:last-child {
-	height: var(--table-row-height);
+.k-table tr > *:last-child {
 	border-inline-end: 0;
 }
 
 .k-table th,
 .k-table tr:not(:last-child) td {
-	border-block-end: 1px solid var(--color-background);
+	border-block-end: 1px solid var(--table-color-border);
 }
 
-.k-table td:last-child {
-	overflow: visible;
+/* Text aligment */
+.k-table :where(td, th)[data-align] {
+	text-align: var(--align);
 }
 
-.k-table th,
-.k-table td {
-	border-inline-end: 1px solid var(--color-background);
-	text-align: start;
-}
-
+/* TH */
 .k-table th {
-	padding: 0 0.75rem;
+	padding-inline: var(--table-cell-padding);
 	font-family: var(--font-mono);
 	font-size: var(--text-xs);
-	font-weight: 400;
-	color: var(--color-text-dimmed);
-	background: var(--color-gray-100);
-	width: 100%;
+	color: var(--table-color-th-text);
+	background: var(--table-color-th-back);
 }
-
+.k-table th[data-has-button] {
+	padding: 0;
+}
 .k-table th button {
-	font: inherit;
-	display: block;
-	padding: 0 0.75rem;
+	padding-inline: var(--table-cell-padding);
 	height: 100%;
 	width: 100%;
 	border-radius: var(--rounded);
 	text-align: start;
 }
 .k-table th button:focus-visible {
-	outline: 2px solid var(--color-black);
 	outline-offset: -2px;
 }
 
-.k-table tbody tr:hover td {
-	background: rgba(239, 239, 239, 0.25);
+/* Table Header */
+.k-table thead th:first-child {
+	border-start-start-radius: var(--rounded);
+}
+.k-table thead th:last-child {
+	border-start-end-radius: var(--rounded);
 }
 
-/** Sticky header **/
+/* Sticky Header */
 .k-table thead th {
 	position: sticky;
-	top: 0;
+	top: var(--header-sticky-offset);
 	inset-inline: 0;
 	z-index: 1;
 }
 
-/** Header cells in the body **/
+/* Table Body */
+.k-table tbody tr:hover td {
+	background: var(--table-color-hover);
+}
+
+/* Header cells in the body */
 .k-table tbody th {
 	width: auto;
 	white-space: nowrap;
-	padding: 0;
 	overflow: visible;
 	border-radius: 0;
 }
@@ -450,28 +443,7 @@ export default {
 	border-block-end: 0;
 }
 
-/** Text aligment **/
-.k-table-column[data-align] {
-	text-align: var(--align) !important;
-}
-.k-table-column[data-align="right"] > .k-input {
-	flex-direction: column;
-	align-items: flex-end;
-}
-
-/** Index & Sort handle */
-td.k-table-index-column {
-	display: grid;
-	place-items: center;
-}
-.k-table .k-sort-handle,
-.k-table tr:hover .k-table-index-column[data-sortable="true"] .k-table-index {
-	display: none;
-}
-.k-table tr:hover .k-sort-handle {
-	display: flex;
-}
-
+/* Sortable tables */
 .k-table-row-ghost {
 	background: var(--color-white);
 	outline: var(--outline);
@@ -479,67 +451,68 @@ td.k-table-index-column {
 	margin-bottom: 2px;
 	cursor: grabbing;
 }
-
 .k-table-row-fallback {
 	opacity: 0 !important;
 }
 
-/** Index column **/
-:is(th, td).k-table-index-column,
-:is(th, td).k-table-options-column {
+/* Table Index */
+.k-table .k-table-index-column {
 	width: var(--table-row-height);
 	text-align: center;
 }
-.k-table-index {
+.k-table .k-table-index {
 	font-size: var(--text-xs);
 	color: var(--color-text-dimmed);
 	line-height: 1.1em;
 }
 
-/** Empty */
+/* Table Index with sort handle */
+.k-table .k-table-index-column .k-sort-handle {
+	--button-width: 100%;
+	display: none;
+}
+.k-table tr:hover .k-table-index-column[data-sortable="true"] .k-table-index {
+	display: none;
+}
+.k-table tr:hover .k-table-index-column[data-sortable="true"] .k-sort-handle {
+	display: flex;
+}
+
+/* Table Options */
+.k-table .k-table-options-column {
+	padding: 0;
+	width: var(--table-row-height);
+	text-align: center;
+}
+.k-table .k-table-options-column .k-options-dropdown-toggle {
+	--button-width: 100%;
+	--button-height: 100%;
+	outline-offset: -2px;
+}
+
+/* Empty */
 .k-table-empty {
 	color: var(--color-text-dimmed);
 	font-size: var(--text-sm);
 }
 
-/** Disabled */
-[data-disabled="true"] .k-table {
-	background: var(--color-gray-100);
-}
-[data-disabled="true"] .k-table th,
-[data-disabled="true"] .k-table tbody td {
-	border-color: var(--color-gray-200);
-}
-[data-disabled="true"] .k-table td:last-child {
-	overflow: hidden;
-	text-overflow: ellipsis;
+/* Disabled */
+.k-table[aria-disabled="true"] {
+	--table-color-back: transparent;
+	--table-color-border: var(--color-border);
+	--table-color-hover: transparent;
+	--table-color-th-back: transparent;
+	border: 1px solid var(--table-color-border);
+	box-shadow: none;
 }
 
-/** Mobile */
+/* Mobile */
 @container (max-width: 40rem) {
-	.k-table tbody td:not([data-mobile]),
-	.k-table thead th:not([data-mobile]) {
-		display: none;
+	.k-table {
+		overflow-x: scroll;
 	}
-}
-
-.k-table-pagination.k-pagination {
-	border-top: 1px solid var(--color-gray-200);
-	background: var(--color-gray-100);
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	height: var(--table-row-height);
-	border-end-start-radius: var(--rounded);
-	border-end-end-radius: var(--rounded);
-}
-.k-table-pagination.k-pagination .k-button {
-	--button-color-back: transparent;
-	padding: 0 0.75rem;
-	display: flex;
-	align-items: center;
-	line-height: 1;
-	height: var(--table-row-height);
-	border-left: 0 !important;
+	.k-table thead th {
+		position: static;
+	}
 }
 </style>
