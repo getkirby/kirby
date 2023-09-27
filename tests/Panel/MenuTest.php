@@ -283,7 +283,9 @@ class MenuTest extends TestCase
 		$registration = [
 			'icon'     => 'key',
 			'dialog'   => 'registration',
-			'text'     => 'Register'
+			'text'     => 'Register',
+			'variant'  => 'filled',
+			'theme'    => 'notice'
 		];
 
 		$changes = [
