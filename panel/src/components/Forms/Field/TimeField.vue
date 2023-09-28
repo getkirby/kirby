@@ -16,7 +16,11 @@
 					@click="$refs.times.toggle()"
 				/>
 				<k-dropdown-content ref="times" align-x="end">
-					<k-times :display="display" :value="value" @input="select" />
+					<k-timeoptions-input
+						:display="display"
+						:value="value"
+						@input="select"
+					/>
 				</k-dropdown-content>
 			</template>
 		</k-input>

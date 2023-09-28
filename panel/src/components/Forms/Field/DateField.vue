@@ -65,7 +65,7 @@
 						@click="$refs.times.toggle()"
 					/>
 					<k-dropdown-content ref="times" align-x="end">
-						<k-times
+						<k-timeoptions-input
 							:display="time.display"
 							:value="value"
 							@input="onTimesInput"
