@@ -1,28 +1,31 @@
 <template>
 	<ul
-		v-if="options.length"
 		:style="'--columns:' + columns"
 		class="k-radio-input k-grid"
 		data-variant="choices"
 	>
 		<li v-for="(choice, index) in choices" :key="index">
-			<k-choice-input v-bind="choice" @input="$emit('input', choice.value)" />
+			<k-choice-input
+				v-bind="choice"
+				@click.native.stop="toggle(choice.value)"
+				@input="$emit('input', choice.value)"
+			/>
 		</li>
 	</ul>
-	<k-empty v-else icon="info" theme="info">{{ $t("options.none") }}</k-empty>
 </template>
 
 <script>
-import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
+import Input, { props as InputProps } from "@/mixins/input.js";
+import { options } from "@/mixins/props.js";
 import { required as validateRequired } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [autofocus, disabled, id, name, required],
+	mixins: [InputProps, options],
 	props: {
 		columns: Number,
-		options: {
-			default: () => [],
-			type: Array
+		reset: {
+			default: true,
+			type: Boolean
 		},
 		theme: String,
 		value: [String, Number, Boolean]
@@ -30,8 +33,7 @@ export const props = {
 };
 
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	computed: {
 		choices() {
 			return this.options.map((option, index) => {
@@ -41,8 +43,7 @@ export default {
 					disabled: this.disabled,
 					info: option.info,
 					label: option.text,
-					name: this.name,
-					theme: this.theme,
+					name: this.name ?? this.id,
 					type: "radio",
 					value: option.value
 				};
@@ -63,6 +64,11 @@ export default {
 		},
 		select() {
 			this.focus();
+		},
+		toggle(value) {
+			if (value === this.value && this.reset && !this.required) {
+				this.$emit("input", "");
+			}
 		},
 		validate() {
 			this.$emit("invalid", this.$v.$invalid, this.$v);

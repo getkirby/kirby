@@ -1,5 +1,5 @@
 <template>
-	<k-dropdown class="k-selector-dropdown">
+	<div class="k-selector-dropdown">
 		<slot />
 		<k-dropdown-content
 			ref="dropdown"
@@ -18,14 +18,14 @@
 				@select="select"
 			/>
 		</k-dropdown-content>
-	</k-dropdown>
+	</div>
 </template>
 
 <script>
-import { props as Selector } from "@/components/Forms/Selector.vue";
+import { props as SelectorProps } from "@/components/Forms/Selector.vue";
 
 export default {
-	mixins: [Selector],
+	mixins: [SelectorProps],
 	props: {
 		align: String,
 		disabled: Boolean

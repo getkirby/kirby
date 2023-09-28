@@ -551,9 +551,13 @@ class PagesSectionTest extends TestCase
 				'pages/unreadable' => [
 					'options' => ['read' => false]
 				]
+			],
+			'users' => [
+				['id' => 'bastian', 'role' => 'admin']
 			]
 		]);
-		$app->impersonate('kirby');
+
+		$app->impersonate('bastian');
 
 		$page = new Page([
 			'slug' => 'test',

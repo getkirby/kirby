@@ -13,6 +13,7 @@ use Kirby\Http\Uri;
 use Kirby\Panel\Page as Panel;
 use Kirby\Template\Template;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\LazyValue;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -308,34 +309,43 @@ class Page extends ModelWithContent
 		$data = array_merge($data, [
 			'kirby' => $kirby = $this->kirby(),
 			'site'  => $site  = $this->site(),
-			'pages' => $site->children(),
-			'page'  => $site->visit($this)
+			'pages' => new LazyValue(fn () => $site->children()),
+			'page'  => new LazyValue(fn () => $site->visit($this))
 		]);
 
 		// call the template controller if there's one.
-		$controllerData = $kirby->controller($this->template()->name(), $data, $contentType);
+		$controllerData = $kirby->controller(
+			$this->template()->name(),
+			$data,
+			$contentType
+		);
 
 		// merge controller data with original data safely
+		// to provide original data to template even if
+		// it wasn't returned by the controller explicitly
 		if (empty($controllerData) === false) {
 			$classes = [
-				'kirby' => 'Kirby\Cms\App',
-				'site'  => 'Kirby\Cms\Site',
-				'pages' => 'Kirby\Cms\Pages',
-				'page'  => 'Kirby\Cms\Page'
+				'kirby' => App::class,
+				'site'  => Site::class,
+				'pages' => Pages::class,
+				'page'  => Page::class
 			];
 
 			foreach ($controllerData as $key => $value) {
-				if (array_key_exists($key, $classes) === true) {
-					if ($value instanceof $classes[$key]) {
-						$data[$key] = $value;
-					} else {
-						throw new InvalidArgumentException('The returned variable "' . $key . '" from the controller "' . $this->template()->name() . '" is not of the required type "' . $classes[$key] . '"');
-					}
-				} else {
-					$data[$key] = $value;
-				}
+				$data[$key] = match (true) {
+					// original data wasn't overwritten
+					array_key_exists($key, $classes) === false => $value,
+					// original data was overwritten, but matches expected type
+					$value instanceof $classes[$key] => $value,
+					// throw error if data was overwritten with wrong type
+					default => throw new InvalidArgumentException('The returned variable "' . $key . '" from the controller "' . $this->template()->name() . '" is not of the required type "' . $classes[$key] . '"')
+				};
 			}
 		}
+
+		// unwrap remaining lazy values in data
+		// (happens if the controller didn't override an original lazy Kirby object)
+		$data = LazyValue::unwrap($data);
 
 		return $data;
 	}
@@ -823,7 +833,7 @@ class Page extends ModelWithContent
 		string|null $format = null,
 		string|null $handler = null,
 		string|null $languageCode = null
-	): int|string {
+	): int|string|false|null {
 		$identifier = $this->isDraft() === true ? 'changes' : 'published';
 
 		$modified = $this->storage()->modified(
@@ -1067,7 +1077,7 @@ class Page extends ModelWithContent
 	/**
 	 * Search all pages within the current page
 	 */
-	public function search(string|null $query = null, array $params = []): Pages
+	public function search(string|null $query = null, string|array $params = []): Pages
 	{
 		return $this->index()->search($query, $params);
 	}

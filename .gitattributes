@@ -15,14 +15,15 @@ tests/ export-ignore
 panel/.env.example export-ignore
 panel/.eslintrc.js export-ignore
 panel/.prettierrc.json export-ignore
+panel/jsconfig.json export-ignore
 panel/package-lock.json export-ignore
 panel/package.json export-ignore
 panel/public export-ignore
 panel/README.md export-ignore
+panel/scripts export-ignore
 panel/src export-ignore
 panel/vite.config.js export-ignore
 panel/vitest.setup.js export-ignore
-panel/jsconfig.json export-ignore
 
 # other
 .tx export-ignore

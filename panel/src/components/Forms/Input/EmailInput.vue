@@ -1,6 +1,5 @@
 <script>
-import TextInput from "./TextInput.vue";
-import { props as TextInputProps } from "./TextInput.vue";
+import TextInput, { props as TextInputProps } from "./TextInput.vue";
 
 export const props = {
 	mixins: [TextInputProps],
@@ -21,7 +20,7 @@ export const props = {
 };
 
 /**
- * @example <k-input :value="email" @input="email = $event" type="email" name="email" />
+ * @example <k-email-input :value="email" @input="email = $event" name="email" />
  */
 export default {
 	extends: TextInput,

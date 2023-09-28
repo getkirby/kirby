@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
+use Kirby\Panel\File as Panel;
 
 class FileTestModel extends File
 {
@@ -708,7 +709,7 @@ class FileTest extends TestCase
 		]);
 
 		$file = $page->file('test.pdf');
-		$this->assertInstanceOf('Kirby\Panel\File', $file->panel());
+		$this->assertInstanceOf(Panel::class, $file->panel());
 	}
 
 	/**

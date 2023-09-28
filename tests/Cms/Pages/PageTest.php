@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Panel\Page as Panel;
 use ReflectionMethod;
 
 class PageTestModel extends Page
@@ -659,7 +660,7 @@ class PageTest extends TestCase
 			'template' => 'default'
 		]);
 
-		$method = new ReflectionMethod('Kirby\Cms\Page', 'token');
+		$method = new ReflectionMethod(Page::class, 'token');
 		$method->setAccessible(true);
 
 		$expected = hash_hmac('sha1', 'test' . 'default', '/var/www/content/test');
@@ -684,7 +685,7 @@ class PageTest extends TestCase
 			'template' => 'default'
 		]);
 
-		$method = new ReflectionMethod('Kirby\Cms\Page', 'token');
+		$method = new ReflectionMethod(Page::class, 'token');
 		$method->setAccessible(true);
 
 		$expected = hash_hmac('sha1', 'test' . 'default', 'testsalt');
@@ -714,7 +715,7 @@ class PageTest extends TestCase
 			]
 		]);
 
-		$method = new ReflectionMethod('Kirby\Cms\Page', 'token');
+		$method = new ReflectionMethod(Page::class, 'token');
 		$method->setAccessible(true);
 
 		$expected = hash_hmac('sha1', 'test' . 'default', '2012-12-12');
@@ -913,7 +914,7 @@ class PageTest extends TestCase
 			'slug' => 'test'
 		]);
 
-		$this->assertInstanceOf('Kirby\Panel\Page', $page->panel());
+		$this->assertInstanceOf(Panel::class, $page->panel());
 	}
 
 	public function testApiUrl()
@@ -1041,7 +1042,7 @@ class PageTest extends TestCase
 		$this->assertSame($app, $data['kirby']);
 		$this->assertSame($app->site(), $data['site']);
 		$this->assertSame($app->site()->children(), $data['pages']);
-		$this->assertInstanceOf('Kirby\Cms\Page', $data['page']);
+		$this->assertInstanceOf(Page::class, $data['page']);
 		$this->assertSame('New Foo Title', $data['page']->title()->value());
 
 		// invalid test

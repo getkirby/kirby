@@ -38,8 +38,13 @@ export default {
 <style>
 .k-grid {
 	--columns: 12;
+	--grid-inline-gap: 0;
+	--grid-block-gap: 0;
+
 	display: grid;
 	align-items: start;
+	grid-column-gap: var(--grid-inline-gap);
+	grid-row-gap: var(--grid-block-gap);
 }
 
 .k-grid > * {
@@ -47,7 +52,7 @@ export default {
 	--span: calc(var(--columns) * var(--width));
 }
 
-@container (min-width: 40rem) {
+@container (min-width: 30rem) {
 	.k-grid {
 		grid-template-columns: repeat(var(--columns), 1fr);
 	}
@@ -55,44 +60,44 @@ export default {
 	.k-grid > * {
 		grid-column: span var(--span);
 	}
-}
 
-/** @todo grid.gutter.deprecated - remove @ 5.0 */
-@container (min-width: 30em) {
+	/** @todo grid.gutter.deprecated -Green remove @ 5.0 */
 	.k-grid[data-gutter="small"] {
-		grid-column-gap: 1rem;
-		grid-row-gap: 1rem;
+		--grid-inline-gap: 1rem;
+		--grid-block-gap: 1rem;
 	}
-	.k-grid[data-gutter="medium"],
-	.k-grid[data-gutter="large"],
-	.k-grid[data-gutter="huge"] {
-		grid-column-gap: 1.5rem;
-		grid-row-gap: 1.5rem;
+	.k-grid:where(
+			[data-gutter="medium"],
+			[data-gutter="large"],
+			[data-gutter="huge"]
+		) {
+		--grid-inline-gap: 1.5rem;
+		--grid-block-gap: 1.5rem;
 	}
 }
 
 @container (min-width: 65em) {
 	.k-grid[data-gutter="large"] {
-		grid-column-gap: 3rem;
+		--grid-inline-gap: 3rem;
 	}
 	.k-grid[data-gutter="huge"] {
-		grid-column-gap: 4.5rem;
+		--grid-inline-gap: 4.5rem;
 	}
 }
 @container (min-width: 90em) {
 	.k-grid[data-gutter="large"] {
-		grid-column-gap: 4.5rem;
+		--grid-inline-gap: 4.5rem;
 	}
 	.k-grid[data-gutter="huge"] {
-		grid-column-gap: 6rem;
+		--grid-inline-gap: 6rem;
 	}
 }
 @container (min-width: 120em) {
 	.k-grid[data-gutter="large"] {
-		grid-column-gap: 6rem;
+		--grid-inline-gap: 6rem;
 	}
 	.k-grid[data-gutter="huge"] {
-		grid-column-gap: 7.5rem;
+		--grid-inline-gap: 7.5rem;
 	}
 }
 
@@ -103,8 +108,8 @@ export default {
 }
 
 .k-grid[data-variant="columns"] {
-	column-gap: var(--columns-inline-gap);
-	row-gap: var(--columns-block-gap);
+	--grid-inline-gap: var(--columns-inline-gap);
+	--grid-block-gap: var(--columns-block-gap);
 }
 .k-grid:where([data-variant="columns"], [data-variant="fields"]) > * {
 	container: column / inline-size;
@@ -115,6 +120,7 @@ export default {
 }
 
 .k-grid[data-variant="choices"] {
+	align-items: stretch;
 	gap: 2px;
 }
 </style>

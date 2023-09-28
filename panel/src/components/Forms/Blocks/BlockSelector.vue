@@ -125,10 +125,16 @@ export default {
 		}
 	},
 	created() {
-		this.$events.on("paste", this.close);
+		this.$events.on("paste", this.paste);
 	},
 	destroyed() {
-		this.$events.off("paste", this.close);
+		this.$events.off("paste", this.paste);
+	},
+	methods: {
+		paste(e) {
+			this.$emit("paste", e);
+			this.close();
+		}
 	}
 };
 </script>

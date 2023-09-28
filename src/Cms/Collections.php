@@ -61,11 +61,9 @@ class Collections
 		$this->collections[$name] ??= $this->load($name);
 
 		// if not yet cached
-		if (
-			isset($this->cache[$name]) === false ||
-			$this->cache[$name]['data'] !== $data
-		) {
+		if (($this->cache[$name]['data'] ?? null) !== $data) {
 			$controller = new Controller($this->collections[$name]);
+
 			$this->cache[$name] = [
 				'result' => $controller->call(null, $data),
 				'data'   => $data

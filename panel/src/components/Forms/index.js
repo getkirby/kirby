@@ -2,7 +2,6 @@ import Autosize from "./Autosize.js";
 
 /* Form */
 import Autocomplete from "./Autocomplete.vue";
-import Calendar from "./Calendar.vue";
 import Counter from "./Counter.vue";
 import Form from "./Form.vue";
 import FormButtons from "./FormButtons.vue";
@@ -12,7 +11,6 @@ import Input from "./Input.vue";
 import Login from "./Login.vue";
 import LoginCode from "./LoginCode.vue";
 import Selector from "./Selector.vue";
-import Times from "./Times.vue";
 import Upload from "./Upload.vue";
 
 /** Form Helpers */
@@ -28,7 +26,6 @@ import ToolbarLinkDialog from "./Toolbar/LinkDialog.vue";
 
 /* Form parts */
 import Blocks from "./Blocks/index.js";
-import Elements from "./Element/index.js";
 import Fields from "./Field/index.js";
 import Inputs from "./Input/index.js";
 import Layouts from "./Layouts/index.js";
@@ -39,7 +36,6 @@ export default {
 	install(app) {
 		customElements.define("k-autosize", Autosize);
 
-		app.component("k-calendar", Calendar);
 		app.component("k-counter", Counter);
 		app.component("k-autocomplete", Autocomplete);
 		app.component("k-form", Form);
@@ -50,7 +46,6 @@ export default {
 		app.component("k-login", Login);
 		app.component("k-login-code", LoginCode);
 		app.component("k-selector", Selector);
-		app.component("k-times", Times);
 		app.component("k-upload", Upload);
 
 		app.component("k-login-alert", LoginAlert);
@@ -62,7 +57,6 @@ export default {
 		app.component("k-toolbar-link-dialog", ToolbarLinkDialog);
 
 		app.use(Blocks);
-		app.use(Elements);
 		app.use(Inputs);
 		app.use(Fields);
 		app.use(Layouts);

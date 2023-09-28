@@ -8,6 +8,7 @@ export const defaults = () => {
 	return {
 		context: null,
 		details: null,
+		icon: null,
 		isOpen: false,
 		message: null,
 		timeout: null,
@@ -109,18 +110,9 @@ export default (panel = {}) => {
 			// show the error notification bar
 			return this.open({
 				message: error.message,
-				type: "error"
+				type: "error",
+				icon: "alert"
 			});
-		},
-
-		/**
-		 * Getter that converts the notification type
-		 * into the matching icon
-		 *
-		 * @returns {String}
-		 */
-		get icon() {
-			return this.type === "success" ? "check" : "alert";
 		},
 
 		/**
@@ -216,6 +208,7 @@ export default (panel = {}) => {
 			return this.open({
 				timeout: 4000,
 				type: "success",
+				icon: "check",
 				...success
 			});
 		},

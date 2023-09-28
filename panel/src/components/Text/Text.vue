@@ -93,7 +93,31 @@ export default {
 }
 
 /* Element margins */
-.k-text > * + * {
+.k-text
+	> :where(
+		audio,
+		blockquote,
+		details,
+		div,
+		figure,
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6,
+		hr,
+		iframe,
+		img,
+		object,
+		ol,
+		p,
+		picture,
+		pre,
+		table,
+		ul
+	)
+	+ * {
 	margin-block-start: calc(var(--text-line-height) * 1em);
 }
 

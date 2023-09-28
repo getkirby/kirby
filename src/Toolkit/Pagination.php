@@ -293,7 +293,7 @@ class Pagination
 			return range($start, $end);
 		}
 
-		$middle = (int)floor($range/2);
+		$middle = (int)floor($range / 2);
 		$start  = $page - $middle + ($range % 2 === 0);
 		$end    = $start + $range - 1;
 

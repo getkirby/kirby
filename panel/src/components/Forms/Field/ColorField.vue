@@ -1,75 +1,43 @@
 <template>
 	<k-field v-bind="$props" :input="_uid" class="k-color-field">
 		<!-- Mode: options -->
-		<div
+		<k-coloroptions-input
 			v-if="mode === 'options'"
-			style="--preview-width: var(--field-input-height)"
+			:name="name"
+			:options="convertedOptions"
+			:value="value"
 			class="k-color-field-options"
-		>
-			<button
-				v-for="color in convertedOptions"
-				:key="color.value"
-				:aria-current="color.value === currentOption?.value"
-				:style="'color: ' + color.value"
-				:title="color.text ?? color.value"
-				class="k-color-preview"
-				type="button"
-				@click="onOption(color)"
-			/>
-		</div>
+			@input="$emit('input', $event)"
+		/>
 
 		<!-- Mode: picker/input -->
-		<k-input
-			v-else
-			v-bind="$props"
-			:id="_uid"
-			ref="input"
-			theme="field"
-			type="color"
-			@input="onInput"
-			@invalid="isInvalid = $event ?? false"
-			@submit="$emit('submit')"
-		>
+		<k-input v-else v-bind="$props" theme="field" type="color">
 			<template #before>
 				<template v-if="mode === 'picker'">
-					<k-dropdown>
-						<button
-							:style="!isInvalid ? 'color: ' + value : null"
-							class="k-color-field-preview k-color-preview"
-							type="button"
-							@click="$refs.picker.toggle()"
+					<button
+						:disabled="disabled"
+						class="k-color-field-picker-toggle"
+						type="button"
+						@click="$refs.picker.toggle()"
+					>
+						<k-color-frame :color="value" />
+					</button>
+					<k-dropdown-content ref="picker" class="k-color-field-picker">
+						<k-colorpicker-input
+							ref="color"
+							:alpha="alpha"
+							:options="convertedOptions"
+							:required="required"
+							:value="value"
+							@input="$emit('input', $event)"
 						/>
-						<k-dropdown-content
-							ref="picker"
-							class="k-color-field-picker"
-							@open="$nextTick(setPicker)"
-						>
-							<k-color
-								ref="color"
-								:alpha="alpha"
-								@input="onPicker($event.target.value)"
-							/>
-
-							<div class="k-color-field-options">
-								<button
-									v-for="color in convertedOptions"
-									:key="color.value"
-									:aria-current="color.value === currentOption?.value"
-									:style="'color: ' + color.value"
-									:title="color.text ?? color.value"
-									type="button"
-									class="k-color-preview"
-									@click="$refs.input.$refs.input.onPaste(color.value)"
-								/>
-							</div>
-						</k-dropdown-content>
-					</k-dropdown>
+					</k-dropdown-content>
 				</template>
-				<div
-					v-else
-					:style="!isInvalid ? 'color: ' + value : null"
-					class="k-color-field-preview k-color-preview"
-				/>
+				<k-color-frame v-else :color="value" />
+			</template>
+
+			<template #default>
+				<k-colorname-input v-bind="$props" @input="$emit('input', $event)" />
 			</template>
 
 			<template v-if="currentOption?.text" #after>
@@ -135,73 +103,38 @@ export default {
 	methods: {
 		convert(value) {
 			return this.$library.colors.toString(value, this.format, this.alpha);
-		},
-		onInput(input) {
-			this.setPicker(input);
-			this.$emit("input", input);
-		},
-		onPicker(hsv) {
-			const input = this.convert(hsv);
-			this.$emit("input", input);
-		},
-		onOption(option) {
-			const value = this.convert(option.value);
-
-			if (value !== this.value || this.required) {
-				this.$emit("input", value);
-			} else {
-				this.$emit("input", "");
-			}
-		},
-		setPicker(value = this.value) {
-			if (this.$refs.color) {
-				this.$refs.color.value = this.$library.colors.parseAs(value, "hsv");
-			}
 		}
 	}
 };
 </script>
 
 <style>
-.k-color-field .k-input .k-input-before {
+.k-color-field {
+	--color-frame-size: calc(var(--input-height) - var(--spacing-2));
+}
+.k-color-field .k-input-before {
 	align-items: center;
-	padding-inline: var(--spacing-1);
-}
-.k-color-field .k-color-field-preview {
-	--color-preview-size: calc(var(--input-height) - var(--spacing-2));
+	padding-inline-start: var(--spacing-1);
 }
 
-.k-color-field-picker {
-	padding: var(--spacing-2);
-}
-.k-color-field .k-color {
-	width: 12rem;
-}
-.k-color-field .k-color > *:first-child {
-	border-radius: var(--rounded-sm);
-}
-
+/* Mode: options */
 .k-color-field-options {
-	--color-preview-size: var(--input-height);
-	display: grid;
-	grid-template-columns: repeat(auto-fill, var(--color-preview-size));
-	gap: var(--spacing-2);
-}
-.k-color-field-picker .k-color-field-options {
-	--color-preview-size: 100%;
-	--color-preview-darkness: 100%;
-	grid-template-columns: repeat(6, 1fr);
-	margin-top: var(--spacing-3);
+	--color-frame-size: var(--input-height);
 }
 
-.k-color-field .k-color-preview[aria-current] {
-	outline: var(--outline);
+/* Mode: picker */
+.k-color-field-picker {
+	padding: var(--spacing-3);
 }
-.k-color-field[data-disabled="true"] .k-color-field-options {
-	opacity: var(--opacity-disabled);
+.k-color-field-picker-toggle {
+	--color-frame-rounded: var(--rounded-sm);
+	border-radius: var(--color-frame-rounded);
 }
 
-.k-color-field .k-input-after {
-	font-size: var(--text-xs);
+.k-color-field .k-colorname-input {
+	padding-inline: var(--input-padding);
+}
+.k-color-field .k-colorname-input:focus {
+	outline: 0;
 }
 </style>

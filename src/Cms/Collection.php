@@ -147,11 +147,11 @@ class Collection extends BaseCollection
 	 * with an item for each group and a collection for each group.
 	 *
 	 * @param string|Closure $field
-	 * @param bool $i Ignore upper/lowercase for group names
+	 * @param bool $caseInsensitive Ignore upper/lowercase for group names
 	 * @return \Kirby\Cms\Collection
 	 * @throws \Kirby\Exception\Exception
 	 */
-	public function group($field, bool $i = true)
+	public function group($field, bool $caseInsensitive = true)
 	{
 		if (is_string($field) === true) {
 			$groups = new Collection([], $this->parent());
@@ -164,8 +164,10 @@ class Collection extends BaseCollection
 					throw new InvalidArgumentException('Invalid grouping value for key: ' . $key);
 				}
 
+				$value = (string)$value;
+
 				// ignore upper/lowercase for group names
-				if ($i) {
+				if ($caseInsensitive === true) {
 					$value = Str::lower($value);
 				}
 
@@ -181,7 +183,7 @@ class Collection extends BaseCollection
 			return $groups;
 		}
 
-		return parent::group($field, $i);
+		return parent::group($field, $caseInsensitive);
 	}
 
 	/**

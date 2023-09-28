@@ -5,6 +5,10 @@
 		:data-align-x="axis.x"
 		:data-align-y="axis.y"
 		:data-theme="theme"
+		:style="{
+			top: position.y + 'px',
+			left: position.x + 'px'
+		}"
 		class="k-dropdown-content"
 		@close="onClose"
 		@click="onClick"
@@ -34,8 +38,7 @@ import Vue from "vue";
 let OpenDropdown = null;
 
 /**
- * See `<k-dropdown>` for how to use these components together.
- * @internal
+ * Dropdowns are constructed with two elements: `<k-dropdown-content>` holds any content shown when opening the dropdown: any number of `<k-dropdown-item>` elements or any other HTML; typically a `<k-button>` then is used to call the `toggle()` method on `<k-dropdown-content>`.
  */
 export default {
 	props: {
@@ -48,7 +51,7 @@ export default {
 		},
 		/**
 		 * Default horizontal alignment of the dropdown
-		 * @values start, end
+		 * @values start, end, center
 		 */
 		alignX: {
 			type: String,
@@ -98,6 +101,10 @@ export default {
 			axis: {
 				x: this.alignX,
 				y: this.alignY
+			},
+			position: {
+				x: 0,
+				y: 0
 			},
 			isOpen: false,
 			items: [],
@@ -152,22 +159,27 @@ export default {
 			this.resetPosition();
 			this.isOpen = OpenDropdown = false;
 			this.$emit("close");
-			window.removeEventListener("resize", this.position);
+			window.removeEventListener("resize", this.setPosition);
 		},
-		onOpen() {
+		async onOpen() {
 			this.isOpen = true;
+
+			// remember the current scroll position
+			const scrollTop = window.scrollY;
 
 			// store a global reference to the dropdown
 			OpenDropdown = this;
 
 			// wait until the dropdown is rendered
-			this.$nextTick(() => {
-				if (this.$el && this.opener) {
-					window.addEventListener("resize", this.position);
-					this.position();
-					this.$emit("open");
-				}
-			});
+			await this.$nextTick();
+
+			if (this.$el && this.opener) {
+				window.addEventListener("resize", this.setPosition);
+				await this.setPosition();
+				// restore the scroll position
+				window.scrollTo(0, scrollTop);
+				this.$emit("open");
+			}
 		},
 		onOptionClick(option) {
 			if (typeof option.click === "function") {
@@ -203,7 +215,7 @@ export default {
 				this.onOpen();
 			});
 		},
-		position() {
+		async setPosition() {
 			// reset to the alignment defaults
 			// before running position calculation
 			this.axis = {
@@ -217,6 +229,15 @@ export default {
 				this.axis.x = "start";
 			}
 
+			// flip x axis for RTL languages
+			if (this.$panel.direction === "rtl") {
+				if (this.axis.x === "start") {
+					this.axis.x = "end";
+				} else if (this.axis.x === "end") {
+					this.axis.x = "start";
+				}
+			}
+
 			// drill down to the element of a component
 			if (this.opener instanceof Vue) {
 				this.opener = this.opener.$el;
@@ -227,8 +248,8 @@ export default {
 
 			// set the default position
 			// and take scroll position into consideration
-			this.$el.style.left = opener.left + window.scrollX + opener.width + "px";
-			this.$el.style.top = opener.top + window.scrollY + opener.height + "px";
+			this.position.x = opener.left + window.scrollX + opener.width;
+			this.position.y = opener.top + window.scrollY + opener.height;
 
 			// open the modal after the default positioning has been applied
 			if (this.$el.open !== true) {
@@ -236,51 +257,50 @@ export default {
 			}
 
 			// as we just set style.top, wait one tick before measuring dropdownRect
-			this.$nextTick(() => {
-				// get the dimensions of the open dropdown
-				const rect = this.$el.getBoundingClientRect();
-				const safeSpace = 10;
+			await this.$nextTick();
 
-				// Horizontal: check if dropdown is outside of viewport
-				// and adapt alignment if necessary
-				if (this.axis.x === "end") {
-					if (rect.left - rect.width < safeSpace) {
-						this.axis.x = "start";
-					}
-				} else if (
-					rect.left + rect.width > window.innerWidth - safeSpace &&
-					rect.width + safeSpace < rect.left
-				) {
-					this.axis.x = "end";
-				}
+			// get the dimensions of the open dropdown
+			const rect = this.$el.getBoundingClientRect();
+			const safeSpace = 10;
 
-				if (this.axis.x === "start") {
-					this.$el.style.left =
-						parseInt(this.$el.style.left) - opener.width + "px";
+			// Horizontal: check if dropdown is outside of viewport
+			// and adapt alignment if necessary
+			if (this.axis.x === "end") {
+				if (opener.left - rect.width < safeSpace) {
+					this.axis.x = "start";
 				}
+			} else if (
+				opener.left + rect.width > window.innerWidth - safeSpace &&
+				rect.width + safeSpace < rect.left
+			) {
+				this.axis.x = "end";
+			}
 
-				// Vertical: check if dropdown is outside of viewport
-				// and adapt alignment if necessary
-				if (this.axis.y === "top") {
-					if (rect.height + safeSpace > rect.top) {
-						this.axis.y = "bottom";
-					}
-				} else if (
-					rect.top + rect.height > window.innerHeight - safeSpace &&
-					rect.height + safeSpace < rect.top
-				) {
-					this.axis.y = "top";
-				}
+			if (this.axis.x === "start") {
+				this.$el.style.left =
+					parseInt(this.$el.style.left) - opener.width + "px";
+			}
 
-				if (this.axis.y === "top") {
-					this.$el.style.top =
-						parseInt(this.$el.style.top) - opener.height + "px";
+			// Vertical: check if dropdown is outside of viewport
+			// and adapt alignment if necessary
+			if (this.axis.y === "top") {
+				if (rect.height + safeSpace > rect.top) {
+					this.axis.y = "bottom";
 				}
-			});
+			} else if (
+				opener.top + rect.height > window.innerHeight - safeSpace &&
+				rect.height + safeSpace < rect.top
+			) {
+				this.axis.y = "top";
+			}
+
+			if (this.axis.y === "top") {
+				this.$el.style.top =
+					parseInt(this.$el.style.top) - opener.height + "px";
+			}
 		},
 		resetPosition() {
-			this.$el.style.top = 0;
-			this.$el.style.left = 0;
+			this.position = { x: 0, y: 0 };
 		},
 		/**
 		 * Toggles the open state of the dropdown
@@ -308,7 +328,8 @@ export default {
 	--dropdown-y: 0;
 	position: absolute;
 	inset-block-start: 0;
-	inset-inline-start: 0;
+	inset-inline-start: initial; /* reset this, so that `left` is authoritative */
+	left: 0;
 	width: max-content;
 	padding: var(--dropdown-padding);
 	background: var(--dropdown-color-bg);

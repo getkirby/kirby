@@ -1,13 +1,9 @@
 <template>
 	<div class="k-color-field-preview">
-		<k-bubble :text="text">
-			<template #image>
-				<span
-					:style="'color: ' + value"
-					class="k-item-figure k-color-preview"
-				/>
-			</template>
-		</k-bubble>
+		<k-color-frame :color="value" />
+		<template v-if="text">
+			{{ text }}
+		</template>
 	</div>
 </template>
 
@@ -16,20 +12,27 @@ import FieldPreview from "@/mixins/forms/fieldPreview.js";
 
 export default {
 	mixins: [FieldPreview],
-	inheritAttrs: false,
 	props: {
-		field: Object,
 		value: String
 	},
 	computed: {
 		text() {
-			const option = this.field.options.find(
+			if (!this.value) {
+				return;
+			}
+
+			const value = this.$library.colors.toString(
+				this.value,
+				this.field.format,
+				this.field.alpha
+			);
+			const option = this.field.options?.find(
 				(option) =>
 					this.$library.colors.toString(
 						option.value,
 						this.field.format,
 						this.field.alpha
-					) === this.value
+					) === value
 			);
 
 			if (option) {
@@ -44,11 +47,11 @@ export default {
 
 <style>
 .k-color-field-preview {
-	padding: 0.325rem 0.75rem;
-}
-/** TODO: .k-color-field-preview .k-color-preview:has(+ .k-bubble-text) */
-.k-color-field-preview .k-color-preview[data-has-text] {
-	border-start-end-radius: 0;
-	border-end-end-radius: 0;
+	--color-frame-rounded: var(--tag-rounded);
+	--color-frame-size: var(--tag-height);
+	padding: 0.375rem var(--table-cell-padding);
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-2);
 }
 </style>

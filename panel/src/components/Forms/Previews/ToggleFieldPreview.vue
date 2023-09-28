@@ -1,22 +1,18 @@
 <template>
-	<!-- eslint-disable vue/no-mutating-props -->
 	<div class="k-toggle-field-preview">
-		<k-input
+		<k-toggle-input
 			:text="text"
 			:value="value"
-			type="toggle"
 			@input="$emit('input', $event)"
 		/>
 	</div>
 </template>
 
 <script>
+import FieldPreview from "@/mixins/forms/fieldPreview.js";
+
 export default {
-	props: {
-		field: Object,
-		value: Boolean,
-		column: Object
-	},
+	mixins: [FieldPreview],
 	computed: {
 		text() {
 			return this.column.text !== false ? this.field.text : null;
@@ -26,9 +22,7 @@ export default {
 </script>
 
 <style>
-.k-toggle-field-preview .k-input {
-	--input-outline-focus: 0;
-	--input-padding: var(--spacing-3);
-	--input-shadow: none;
+.k-toggle-field-preview {
+	padding-inline: var(--table-cell-padding);
 }
 </style>

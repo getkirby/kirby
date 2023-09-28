@@ -10,11 +10,21 @@
 </template>
 
 <script>
-import TagsInput from "./TagsInput.vue";
+import TagsInput, { props as TagsInputProps } from "./TagsInput.vue";
+
+export const props = {
+	mixins: [TagsInputProps],
+	props: {
+		accept: {
+			default: "string",
+			type: String
+		}
+	}
+};
 
 export default {
 	extends: TagsInput,
-	inheritAttrs: false
+	mixins: [props]
 };
 </script>
 

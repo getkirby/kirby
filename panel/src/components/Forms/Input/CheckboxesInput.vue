@@ -1,6 +1,5 @@
 <template>
 	<ul
-		v-if="options.length"
 		:style="'--columns:' + columns"
 		class="k-checkboxes-input k-grid"
 		data-variant="choices"
@@ -9,11 +8,11 @@
 			<k-choice-input v-bind="choice" @input="input(choice.value, $event)" />
 		</li>
 	</ul>
-	<k-empty v-else icon="info">{{ $t("options.none") }}</k-empty>
 </template>
 
 <script>
-import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
+import Input, { props as InputProps } from "@/mixins/input.js";
+import { options } from "@/mixins/props.js";
 
 import {
 	required as validateRequired,
@@ -22,15 +21,14 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [autofocus, disabled, id, name, required],
+	mixins: [InputProps, options],
 	props: {
-		columns: Number,
+		columns: {
+			default: 1,
+			type: Number
+		},
 		max: Number,
 		min: Number,
-		options: {
-			default: () => [],
-			type: Array
-		},
 		theme: String,
 		/**
 		 * The value for the input should be provided as array. Each value in the array corresponds with the value in the options. If you provide a string, the string will be split by comma.
@@ -43,8 +41,7 @@ export const props = {
 };
 
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	data() {
 		return {
 			selected: []
@@ -59,8 +56,7 @@ export default {
 					disabled: this.disabled,
 					info: option.info,
 					label: option.text,
-					name: this.name,
-					theme: this.theme,
+					name: this.name ?? this.id,
 					type: "checkbox",
 					value: option.value
 				};

@@ -42,7 +42,7 @@
 					@option="onOption($event, item, itemIndex)"
 				>
 					<template #options>
-						<slot name="options" v-bind="{ item, itemIndex }" />
+						<slot name="options" v-bind="{ item, index: itemIndex }" />
 					</template>
 				</k-item>
 			</slot>
@@ -171,51 +171,33 @@ export default {
 .k-items[data-layout="cards"] {
 	display: grid;
 	gap: 1.5rem;
-	grid-template-columns: repeat(
-		auto-fill,
-		minmax(var(--items-size, 12rem), 1fr)
-	);
+	grid-template-columns: 1fr;
 }
 
-.k-items[data-size="tiny"] {
-	--items-size: 6rem;
-}
-.k-items[data-size="small"] {
-	--items-size: 10rem;
-}
-.k-items[data-size="medium"] {
-	--items-size: 12rem;
-}
-.k-items[data-size="large"] {
-	--items-size: 15rem;
-}
-.k-items[data-size="huge"] {
-	--items-size: 1fr;
-}
-
-@container (max-width: 6rem) {
+@container (min-width: 6rem) {
 	.k-items[data-layout="cards"][data-size="tiny"] {
-		grid-template-columns: 1fr;
+		grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr));
 	}
 }
-@container (max-width: 9rem) {
+@container (min-width: 9rem) {
 	.k-items[data-layout="cards"][data-size="small"] {
-		grid-template-columns: 1fr;
+		grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
 	}
 }
-@container (max-width: 12rem) {
+@container (min-width: 12rem) {
+	.k-items[data-layout="cards"][data-size="auto"],
 	.k-items[data-layout="cards"][data-size="medium"] {
-		grid-template-columns: 1fr;
+		grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
 	}
 }
-@container (max-width: 15rem) {
+@container (min-width: 15rem) {
 	.k-items[data-layout="cards"][data-size="large"] {
-		grid-template-columns: 1fr;
+		grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
 	}
 }
-@container (max-width: 18rem) {
+@container (min-width: 18rem) {
 	.k-items[data-layout="cards"][data-size="huge"] {
-		grid-template-columns: 1fr;
+		grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
 	}
 }
 </style>

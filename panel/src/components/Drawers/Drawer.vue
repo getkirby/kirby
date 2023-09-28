@@ -18,19 +18,19 @@
 				<slot name="options">
 					<template v-for="(option, index) in options">
 						<template v-if="option.dropdown">
-							<k-dropdown :key="index">
-								<k-button
-									v-bind="option"
-									class="k-drawer-option"
-									@click="$refs['dropdown-' + index][0].toggle()"
-								/>
-								<k-dropdown-content
-									:ref="'dropdown-' + index"
-									:options="option.dropdown"
-									align-x="end"
-									theme="light"
-								/>
-							</k-dropdown>
+							<k-button
+								:key="'btn-' + index"
+								v-bind="option"
+								class="k-drawer-option"
+								@click="$refs['dropdown-' + index][0].toggle()"
+							/>
+							<k-dropdown-content
+								:ref="'dropdown-' + index"
+								:key="'dropdown-' + index"
+								:options="option.dropdown"
+								align-x="end"
+								theme="light"
+							/>
 						</template>
 
 						<k-button

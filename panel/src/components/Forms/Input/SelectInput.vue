@@ -1,9 +1,5 @@
 <template>
-	<span
-		:data-disabled="disabled"
-		:data-empty="selected === ''"
-		class="k-select-input"
-	>
+	<span :data-disabled="disabled" :data-empty="isEmpty" class="k-select-input">
 		<select
 			:id="id"
 			ref="input"
@@ -33,12 +29,13 @@
 </template>
 
 <script>
-import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
+import Input, { props as InputProps } from "@/mixins/input.js";
+import { options, placeholder } from "@/mixins/props.js";
 
 import { required as validateRequired } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [autofocus, disabled, id, name, required],
+	mixins: [InputProps, options, placeholder],
 	props: {
 		ariaLabel: String,
 		default: String,
@@ -49,11 +46,6 @@ export const props = {
 			type: [Boolean, String],
 			default: true
 		},
-		/**
-		 * The text, that is shown when no option is selected yet.
-		 */
-		placeholder: String,
-		options: Array,
 		value: {
 			type: [String, Number, Boolean],
 			default: ""
@@ -62,8 +54,7 @@ export const props = {
 };
 
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	data() {
 		return {
 			selected: this.value,
@@ -85,6 +76,13 @@ export default {
 			}
 
 			return !(this.required && this.default);
+		},
+		isEmpty() {
+			return (
+				this.selected === null ||
+				this.selected === undefined ||
+				this.selected === ""
+			);
 		},
 		label() {
 			const label = this.text(this.selected);
@@ -157,6 +155,10 @@ export default {
 	padding: var(--input-padding);
 	border-radius: var(--input-rounded);
 }
+.k-select-input[data-empty="true"] {
+	color: var(--input-color-placeholder);
+}
+
 .k-select-input-native {
 	position: absolute;
 	inset: 0;

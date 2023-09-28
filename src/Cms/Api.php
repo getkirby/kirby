@@ -86,11 +86,11 @@ class Api extends BaseApi
 	 * Returns the file object for the given
 	 * parent path and filename
 	 *
-	 * @param string|null $path Path to file's parent model
+	 * @param string $path Path to file's parent model
 	 * @throws \Kirby\Exception\NotFoundException if the file cannot be found
 	 */
 	public function file(
-		string|null $path = null,
+		string $path,
 		string $filename
 	): File|null {
 		return Find::file($path, $filename);

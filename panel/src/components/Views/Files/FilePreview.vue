@@ -1,19 +1,18 @@
 <template>
 	<div class="k-file-preview" :data-has-focus="Boolean(focus)">
 		<!-- Thumb -->
-		<div class="k-file-preview-thumb">
-			<!-- Image with focus picker -->
-			<template v-if="image.src">
-				<k-coords
-					:aria-disabled="!canFocus"
-					:x="focus?.x"
-					:y="focus?.y"
-					@input="setFocus($event.detail)"
-				>
-					<img v-bind="image" @dragstart.prevent />
-				</k-coords>
+		<div class="k-file-preview-thumb-column">
+			<div class="k-file-preview-thumb">
+				<!-- Image with focus picker -->
+				<template v-if="image.src">
+					<k-coords-input
+						:disabled="!focusable"
+						:value="focus"
+						@input="setFocus($event)"
+					>
+						<img v-bind="image" @dragstart.prevent />
+					</k-coords-input>
 
-				<k-dropdown>
 					<k-button
 						icon="dots"
 						size="xs"
@@ -21,16 +20,16 @@
 						@click="$refs.dropdown.toggle()"
 					/>
 					<k-dropdown-content ref="dropdown" :options="options" theme="light" />
-				</k-dropdown>
-			</template>
+				</template>
 
-			<!-- Icon -->
-			<k-icon
-				v-else
-				:color="$helper.color(image.color)"
-				:type="image.icon"
-				class="k-item-icon"
-			/>
+				<!-- Icon -->
+				<k-icon
+					v-else
+					:color="$helper.color(image.color)"
+					:type="image.icon"
+					class="k-item-icon"
+				/>
+			</div>
 		</div>
 
 		<!-- Details -->
@@ -57,9 +56,8 @@
 					<dt>{{ $t("file.focus.title") }}</dt>
 					<dd>
 						<k-file-focus-button
-							v-if="canFocus"
+							v-if="focusable"
 							ref="focus"
-							:file="file"
 							:focus="focus"
 							@set="setFocus"
 						/>
@@ -77,27 +75,21 @@
 <script>
 export default {
 	props: {
-		details: Array,
-		file: Object,
+		details: {
+			default: () => [],
+			type: Array
+		},
+		focus: {
+			type: Object
+		},
 		focusable: Boolean,
-		image: Object,
-		isLocked: Boolean,
+		image: {
+			default: () => ({}),
+			type: Object
+		},
 		url: String
 	},
 	computed: {
-		focus() {
-			const focus = this.$store.getters["content/values"]()["focus"];
-
-			if (!focus) {
-				return;
-			}
-
-			const [x, y] = focus.replaceAll("%", "").split(" ");
-			return { x: parseFloat(x), y: parseFloat(y) };
-		},
-		canFocus() {
-			return this.focusable && this.image.src && this.isLocked === false;
-		},
 		options() {
 			const options = [
 				{
@@ -108,7 +100,7 @@ export default {
 				}
 			];
 
-			if (this.canFocus) {
+			if (this.focusable) {
 				if (this.focus) {
 					options.push({
 						icon: "cancel",
@@ -125,18 +117,18 @@ export default {
 			}
 
 			return options;
-		},
-		storeId() {
-			return this.$store.getters["content/id"](null, true);
 		}
 	},
 	methods: {
 		setFocus(focus) {
-			if (this.$helper.object.isObject(focus) === true) {
-				focus = `${focus.x.toFixed(1)}% ${focus.y.toFixed(1)}%`;
+			if (!focus) {
+				return this.$emit("focus", null);
 			}
 
-			this.$store.dispatch("content/update", ["focus", focus]);
+			this.$emit("focus", {
+				x: focus.x.toFixed(1),
+				y: focus.y.toFixed(1)
+			});
 		}
 	}
 };
@@ -152,30 +144,37 @@ export default {
 }
 
 /* Thumb */
-.k-file-preview-thumb {
-	display: grid;
-	place-items: center;
-	aspect-ratio: 1/1;
-	padding: var(--spacing-12);
+.k-file-preview-thumb-column {
 	background: var(--pattern);
+	aspect-ratio: 1/1;
+}
+.k-file-preview-thumb {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	padding: var(--spacing-12);
 	container-type: size;
 }
 
-.k-file-preview .k-coords {
-	--opacity-disabled: 1;
-
-	cursor: crosshair;
-}
 .k-file-preview-thumb img {
+	width: auto;
 	max-width: 100cqw;
 	max-height: 100cqh;
 }
-.k-file-preview .k-coords-thumb {
-	--range-thumb-size: 1.25rem;
-	background: hsl(216 60% 60% / 0.75);
-	box-shadow: none;
+.k-file-preview-thumb > .k-button {
+	position: absolute;
+	top: var(--spacing-2);
+	inset-inline-start: var(--spacing-2);
 }
-.k-file-preview .k-coords-thumb::after {
+.k-file-preview .k-coords-input {
+	--opacity-disabled: 1;
+	--range-thumb-color: hsl(216 60% 60% / 0.75);
+	--range-thumb-size: 1.25rem;
+	--range-thumb-shadow: none;
+	cursor: crosshair;
+}
+.k-file-preview .k-coords-input-thumb::after {
 	--size: 0.4rem;
 	--pos: calc(50% - (var(--size) / 2));
 
@@ -188,16 +187,11 @@ export default {
 	background: var(--color-white);
 	border-radius: 50%;
 }
-.k-file-preview:not([data-has-focus="true"]) .k-coords-thumb {
+.k-file-preview:not([data-has-focus="true"]) .k-coords-input-thumb {
 	display: none;
 }
 .k-file-preview-icon {
 	--icon-size: 3rem;
-}
-.k-file-preview-thumb .k-dropdown {
-	position: absolute;
-	top: var(--spacing-2);
-	inset-inline-start: var(--spacing-2);
 }
 
 /* Details */
@@ -206,7 +200,7 @@ export default {
 }
 .k-file-preview-details dl {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
 	grid-gap: var(--spacing-6) var(--spacing-12);
 	align-self: center;
 	padding: var(--spacing-6);
@@ -247,7 +241,7 @@ export default {
 	.k-file-preview {
 		grid-template-columns: 50% auto;
 	}
-	.k-file-preview-thumb {
+	.k-file-preview-thumb-column {
 		aspect-ratio: auto;
 	}
 }
@@ -256,7 +250,7 @@ export default {
 	.k-file-preview {
 		grid-template-columns: 33.333% auto;
 	}
-	.k-file-preview-thumb {
+	.k-file-preview-thumb-column {
 		aspect-ratio: 1/1;
 	}
 }

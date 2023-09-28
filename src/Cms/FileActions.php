@@ -21,26 +21,49 @@ use Kirby\Uuid\Uuids;
  */
 trait FileActions
 {
+	protected function changeExtension(
+		File $file,
+		string|null $extension = null
+	): File {
+		if (
+			$extension === null ||
+			$extension === $file->extension()
+		) {
+			return $file;
+		}
+
+		return $file->changeName($file->name(), false, $extension);
+	}
+
 	/**
-	 * Renames the file without touching the extension
+	 * Renames the file (optionally also the extension).
 	 * The store is used to actually execute this.
 	 *
 	 * @throws \Kirby\Exception\LogicException
 	 */
-	public function changeName(string $name, bool $sanitize = true): static
-	{
+	public function changeName(
+		string $name,
+		bool $sanitize = true,
+		string|null $extension = null
+	): static {
 		if ($sanitize === true) {
 			$name = F::safeName($name);
 		}
 
+		// if no extension is passed, make sure to maintain current one
+		$extension ??= $this->extension();
+
 		// don't rename if not necessary
-		if ($name === $this->name()) {
+		if (
+			$name === $this->name() &&
+			$extension === $this->extension()
+		) {
 			return $this;
 		}
 
-		return $this->commit('changeName', ['file' => $this, 'name' => $name], function ($oldFile, $name) {
+		return $this->commit('changeName', ['file' => $this, 'name' => $name, 'extension' => $extension], function ($oldFile, $name, $extension) {
 			$newFile = $oldFile->clone([
-				'filename' => $name . '.' . $oldFile->extension(),
+				'filename' => $name . '.' . $extension,
 			]);
 
 			// remove all public versions, lock and clear UUID cache
@@ -104,13 +127,15 @@ trait FileActions
 
 			// update template, prefer unset over writing `default`
 			if ($template === 'default') {
-				$file = $file->update(['template' => null]);
-			} else {
-				$file = $file->update(['template' => $template]);
+				$template = null;
 			}
 
-			// resize the file if configured by new blueprint
-			$file->manipulate($file->blueprint()->create());
+			$file = $file->update(['template' => $template]);
+
+			// rename and/or resize the file if configured by new blueprint
+			$create = $file->blueprint()->create();
+			$file = $file->changeExtension($file, $create['format'] ?? null);
+			$file->manipulate($create);
 
 			return $file;
 		});
@@ -186,7 +211,7 @@ trait FileActions
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 * @throws \Kirby\Exception\LogicException
 	 */
-	public static function create(array $props, bool $move = false): static
+	public static function create(array $props, bool $move = false): File
 	{
 		if (isset($props['source'], $props['parent']) === false) {
 			throw new InvalidArgumentException('Please provide the "source" and "parent" props for the File');
@@ -216,9 +241,15 @@ trait FileActions
 		// inject the content
 		$file = $file->clone(['content' => $form->strings(true)]);
 
+		// if the format is different from the original,
+		// we need to already rename it so that the correct file rules
+		// are applied
+		$create = $file->blueprint()->create();
+		$file = $file->changeExtension($file, $create['format'] ?? null);
+
 		// run the hook
 		$arguments = compact('file', 'upload');
-		return $file->commit('create', $arguments, function ($file, $upload) use ($move) {
+		return $file->commit('create', $arguments, function ($file, $upload) use ($create, $move) {
 			// remove all public versions, lock and clear UUID cache
 			$file->unpublish();
 
@@ -230,6 +261,9 @@ trait FileActions
 				throw new LogicException('The file could not be created');
 			}
 
+			// resize the file on upload if configured
+			$file = $file->manipulate($create);
+
 			// store the content if necessary
 			// (always create files in the default language)
 			$file->save(
@@ -239,9 +273,6 @@ trait FileActions
 
 			// add the file to the list of siblings
 			$file->siblings()->append($file->id(), $file);
-
-			// resize the file on upload if configured
-			$file->manipulate($file->blueprint()->create());
 
 			// return a fresh clone
 			return $file->clone();
@@ -281,10 +312,10 @@ trait FileActions
 			return $this;
 		}
 
+		// generate image file and overwrite it in place
 		$this->kirby()->thumb($this->root(), $this->root(), $options);
 
-		// returns a cloned version of the file
-		return $this->clone();
+		return $this->clone([]);
 	}
 
 	/**
@@ -331,7 +362,9 @@ trait FileActions
 			}
 
 			// apply the resizing/crop options from the blueprint
-			$file->manipulate($file->blueprint()->create());
+			$create = $file->blueprint()->create();
+			$file   = $file->changeExtension($file, $create['format'] ?? null);
+			$file   = $file->manipulate($create);
 
 			// return a fresh clone
 			return $file->clone();

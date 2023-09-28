@@ -64,11 +64,14 @@ export function subfields(field, fields) {
 		const subfield = fields[name];
 
 		subfield.section = field.name;
-		subfield.endpoints = {
-			field: field.endpoints.field + "+" + name,
-			section: field.endpoints.section,
-			model: field.endpoints.model
-		};
+
+		if (field.endpoints) {
+			subfield.endpoints = {
+				field: field.endpoints.field + "+" + name,
+				section: field.endpoints.section,
+				model: field.endpoints.model
+			};
+		}
 
 		subfields[name] = subfield;
 	}

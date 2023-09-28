@@ -3,9 +3,9 @@ import { isObject } from "@/helpers/object.js";
 export const RE_HEX = /^#([\da-f]{3}){1,2}$/i;
 export const RE_HEXA = /^#([\da-f]{4}){1,2}$/i;
 export const RE_RGB =
-	/rgba?\(\s*(\d{1,3})(%?)(?:,|\s)+(\d{1,3})(%?)(?:,|\s)+(\d{1,3})(%?)(?:,|\s|\/)*(\d*(?:\.\d+)?)(%?)\s*\)?/i;
+	/^rgba?\(\s*(\d{1,3})(%?)(?:,|\s)+(\d{1,3})(%?)(?:,|\s)+(\d{1,3})(%?)(?:,|\s|\/)*(\d*(?:\.\d+)?)(%?)\s*\)?$/i;
 export const RE_HSL =
-	/hsla?\(\s*(\d{1,3})(?:deg|rad|grad|turn)?(?:,|\s)+(\d{1,3})%(?:,|\s)+(\d{1,3})%(?:,|\s|\/)*(\d*(?:\.\d+)?)(%?)\s*\)?/i;
+	/^hsla?\(\s*(\d{1,3}\.?\d*)(deg|rad|grad|turn)?(?:,|\s)+(\d{1,3})%(?:,|\s)+(\d{1,3})%(?:,|\s|\/)*(\d*(?:\.\d+)?)(%?)\s*\)?$/i;
 
 /**
  * Checks if input is a HEX/A string

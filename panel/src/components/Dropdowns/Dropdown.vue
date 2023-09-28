@@ -6,9 +6,15 @@
 
 <script>
 /**
- * Dropdowns are constructed with two elements: `<k-dropdown>` is used as wrapper to position the dropdown relatively to the button (or any other element) that serves as toggle. `<k-dropdown-content>` holds any content shown when opening the dropdown: any number of `<k-dropdown-item>` elements or any other HTML.
+ * @deprecated 4.0.0 Use `<k-dropdown-content>` as standalone.
  */
-export default {};
+export default {
+	created() {
+		window.panel.deprecated(
+			"<k-dropdown> will be removed in a future version. Since Kirby 4.0, you don't need it anymore as wrapper element. Use `<k-dropdown-content>` as standalone instead."
+		);
+	}
+};
 </script>
 
 <style>

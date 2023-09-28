@@ -29,7 +29,7 @@ class Users extends Collection
 	 */
 	public static array $methods = [];
 
-	public function create(array $data)
+	public function create(array $data): User
 	{
 		return User::create($data);
 	}

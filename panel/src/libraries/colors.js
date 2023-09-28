@@ -10,7 +10,8 @@ import {
 	rgb2hsv,
 	hsv2rgb,
 	hsl2hsv,
-	hsv2hsl
+	hsv2hsl,
+	hue2deg
 } from "./colors-func.js";
 
 import { isHex, isRgb, isHsl, isHsv, RE_RGB, RE_HSL } from "./colors-checks.js";
@@ -125,15 +126,16 @@ export function parse(string) {
 
 	// HSL
 	if ((values = string.match(RE_HSL))) {
-		const [h, s, l, a] = values.slice(1);
+		let [h, angle, s, l, a] = values.slice(1);
+
 		const color = {
-			h: Number(h),
+			h: hue2deg(h, angle),
 			s: Number(s) / 100,
 			l: Number(l) / 100,
 			a: Number(a || 1)
 		};
 
-		if (values[5] === "%") {
+		if (values[6] === "%") {
 			color.a = color.a / 100;
 		}
 

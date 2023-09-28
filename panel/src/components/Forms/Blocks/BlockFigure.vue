@@ -29,20 +29,13 @@ export default {
 	inheritAttrs: false,
 	props: {
 		caption: String,
-		captionMarks: [Boolean, Array],
-		cover: {
-			type: Boolean,
-			default: true
+		captionMarks: {
+			default: true,
+			type: [Boolean, Array]
 		},
 		isEmpty: Boolean,
 		emptyIcon: String,
-		emptyText: String,
-		ratio: String
-	},
-	computed: {
-		ratioPadding() {
-			return this.$helper.ratio(this.ratio ?? "16/9");
-		}
+		emptyText: String
 	}
 };
 </script>

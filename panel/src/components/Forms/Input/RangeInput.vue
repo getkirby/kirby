@@ -1,7 +1,7 @@
 <template>
-	<label :data-disabled="disabled" class="k-range-input">
-		<k-range
-			ref="input"
+	<div :data-disabled="disabled" class="k-range-input">
+		<input
+			ref="range"
 			v-bind="{
 				autofocus,
 				disabled,
@@ -13,9 +13,10 @@
 				step
 			}"
 			:value="position"
-			@input="$emit('input', $event)"
+			type="range"
+			@input="$emit('input', $event.target.valueAsNumber)"
 		/>
-		<span v-if="tooltip" class="k-range-input-tooltip">
+		<output v-if="tooltip" :for="id" class="k-range-input-tooltip">
 			<span v-if="tooltip.before" class="k-range-input-tooltip-before">{{
 				tooltip.before
 			}}</span>
@@ -23,12 +24,12 @@
 			<span v-if="tooltip.after" class="k-range-input-tooltip-after">{{
 				tooltip.after
 			}}</span>
-		</span>
-	</label>
+		</output>
+	</div>
 </template>
 
 <script>
-import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
+import Input, { props as InputProps } from "@/mixins/input.js";
 
 import {
 	required as validateRequired,
@@ -37,7 +38,7 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [autofocus, disabled, id, name, required],
+	mixins: [InputProps],
 	props: {
 		default: [Number, String],
 		/**
@@ -81,8 +82,7 @@ export const props = {
  * @example <k-input :value="range" @input="range = $event" name="range" type="range" />
  */
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	computed: {
 		baseline() {
 			// If the minimum is below 0, the baseline should be placed at .
@@ -114,7 +114,7 @@ export default {
 	},
 	methods: {
 		focus() {
-			this.$refs.input.focus();
+			this.$el.querySelector("input")?.focus();
 		},
 		format(value) {
 			const locale = document.lang ? document.lang.replace("_", "-") : "en";
@@ -150,7 +150,7 @@ export default {
 	--range-tooltip-back: var(--color-black);
 	display: flex;
 	align-items: center;
-	padding: var(--field-input-padding);
+	border-radius: var(--range-track-height);
 }
 .k-range-input input[type="range"]:focus {
 	outline: 0;
@@ -188,5 +188,10 @@ export default {
 
 .k-range-input[data-disabled="true"] {
 	--range-tooltip-back: var(--color-gray-600);
+}
+
+/* Input context */
+.k-input[data-type="range"] .k-range-input {
+	padding-inline: var(--input-padding);
 }
 </style>

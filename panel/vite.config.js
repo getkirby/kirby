@@ -1,63 +1,22 @@
 /* eslint-env node */
-import fs from "fs";
 import path from "path";
 
 import { defineConfig, splitVendorChunkPlugin } from "vite";
 import vue from "@vitejs/plugin-vue2";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import externalGlobals from "rollup-plugin-external-globals";
+import kirbyDev from "./scripts/vite-kirby-dev.js";
 
-import postcssAutoprefixer from "autoprefixer";
-import postcssNano from "cssnano";
-
-let custom;
+let customServer;
 try {
-	custom = require("./vite.config.custom.js");
+	customServer = require("./vite.config.custom.js");
 } catch (err) {
-	custom = {};
+	customServer = {};
 }
 
 export default defineConfig(({ command }) => {
-	// Tell Kirby that we are in dev mode
-	if (command === "serve") {
-		// Create the flag file on start
-		const runningPath = __dirname + "/.vite-running";
-		fs.closeSync(fs.openSync(runningPath, "w"));
-
-		// Delete the flag file on any kind of exit
-		for (const eventType of ["exit", "SIGINT", "uncaughtException"]) {
-			process.on(eventType, function (err) {
-				if (fs.existsSync(runningPath) === true) {
-					fs.unlinkSync(runningPath);
-				}
-
-				if (eventType === "uncaughtException") {
-					console.error(err);
-				}
-
-				process.exit();
-			});
-		}
-	}
-
-	const proxy = {
-		target: process.env.VUE_APP_DEV_SERVER ?? "http://sandbox.test",
-		changeOrigin: true,
-		secure: false
-	};
-
-	const plugins = [vue(), splitVendorChunkPlugin()];
-
-	if (!process.env.VITEST) {
-		plugins.push(
-			// Externalize Vue so it's not loaded from node_modules
-			// but accessed via window.Vue
-			{
-				...externalGlobals({ vue: "Vue" }),
-				enforce: "post"
-			}
-		);
-	}
+	// gather plugins depending on environment
+	const plugins = [vue(), splitVendorChunkPlugin(), kirbyDev()];
 
 	if (command === "build") {
 		plugins.push(
@@ -72,6 +31,23 @@ export default defineConfig(({ command }) => {
 		);
 	}
 
+	if (!process.env.VITEST) {
+		plugins.push(
+			// Externalize Vue so it's not loaded from node_modules
+			// but accessed via window.Vue
+			{
+				...externalGlobals({ vue: "Vue" }),
+				enforce: "post"
+			}
+		);
+	}
+
+	const proxy = {
+		target: process.env.VUE_APP_DEV_SERVER ?? "http://sandbox.test",
+		changeOrigin: true,
+		secure: false
+	};
+
 	return {
 		plugins,
 		define: {
@@ -85,13 +61,7 @@ export default defineConfig(({ command }) => {
 				input: "./src/index.js",
 				output: {
 					entryFileNames: "js/[name].min.js",
-					chunkFileNames: (chunkInfo) => {
-						// TODO: remove when removing CSS :has polyfill
-						if (chunkInfo.name === "browser") {
-							return "js/css-has-polyfill.min.js";
-						}
-						return "js/[name].min.js";
-					},
+					chunkFileNames: "js/[name].min.js",
 					assetFileNames: "[ext]/[name].min.[ext]"
 				}
 			}
@@ -101,9 +71,7 @@ export default defineConfig(({ command }) => {
 			exclude: ["vitest", "vue"]
 		},
 		css: {
-			postcss: {
-				plugins: [postcssAutoprefixer(), postcssNano()]
-			}
+			transformer: "lightningcss"
 		},
 		resolve: {
 			alias: [
@@ -121,7 +89,7 @@ export default defineConfig(({ command }) => {
 			},
 			open: proxy.target + "/panel",
 			port: 3000,
-			...custom
+			...customServer
 		},
 		test: {
 			environment: "jsdom",

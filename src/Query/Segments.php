@@ -61,7 +61,7 @@ class Segments extends Collection
 		return preg_split(
 			'/(\??\.)|(\(([^()]+|(?2))*+\))(*SKIP)(*FAIL)/',
 			trim($string),
-			flags: PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY
+			flags: PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
 		);
 	}
 

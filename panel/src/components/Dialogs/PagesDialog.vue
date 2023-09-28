@@ -32,10 +32,10 @@
 
 <script>
 import Dialog from "@/mixins/dialog.js";
-import { props as ModelsDialog } from "./ModelsDialog.vue";
+import { props as ModelsDialogProps } from "./ModelsDialog.vue";
 
 export default {
-	mixins: [Dialog, ModelsDialog],
+	mixins: [Dialog, ModelsDialogProps],
 	props: {
 		empty: {
 			type: Object,

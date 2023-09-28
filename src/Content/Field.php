@@ -208,7 +208,7 @@ class Field
 			return $this->value;
 		}
 
-		if (is_callable($value) === true) {
+		if ($value instanceof Closure) {
 			$value = $value->call($this, $this->value);
 		}
 

@@ -371,7 +371,7 @@ class AppErrorsTest extends TestCase
 
 		$this->assertSame(json_encode([
 			'status' => 'error',
-			'exception' => 'Kirby\Exception\Exception',
+			'exception' => Exception::class,
 			'code' => 'error.general',
 			'message' => 'An error occurred',
 			'details' => [

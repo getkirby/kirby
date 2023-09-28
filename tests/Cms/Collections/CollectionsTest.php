@@ -83,7 +83,7 @@ class CollectionsTest extends TestCase
 
 	public function testHas()
 	{
-		$app= $this->_app();
+		$app = $this->_app();
 		$this->assertTrue($app->collections()->has('test'));
 		$this->assertFalse($app->collections()->has('does-not-exist'));
 		$this->assertTrue($app->collections()->has('test'));

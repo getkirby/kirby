@@ -22,7 +22,8 @@
 </template>
 
 <script>
-import { autofocus, disabled, id, required } from "@/mixins/props.js";
+import Input, { props as InputProps } from "@/mixins/input.js";
+import { placeholder } from "@/mixins/props.js";
 
 import {
 	required as validateRequired,
@@ -31,12 +32,11 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [autofocus, disabled, id, required],
+	mixins: [InputProps, placeholder],
 	props: {
 		max: Number,
 		min: Number,
 		name: [Number, String],
-		placeholder: String,
 		preselect: Boolean,
 		/**
 		 * The amount to increment with each input step. This can be a decimal.
@@ -53,8 +53,7 @@ export const props = {
  * @example <k-input :value="number" @input="number = $event" name="number" type="number" />
  */
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	data() {
 		return {
 			number: this.format(this.value),
@@ -133,9 +132,6 @@ export default {
 			if (value !== this.value) {
 				this.$emit("input", value);
 			}
-		},
-		focus() {
-			this.$refs.input.focus();
 		},
 		onInvalid() {
 			this.$emit("invalid", this.$v.$invalid, this.$v);

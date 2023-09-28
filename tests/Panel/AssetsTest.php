@@ -106,12 +106,14 @@ class AssetsTest extends TestCase
 
 	/**
 	 * @covers ::css
+	 * @covers ::custom
 	 */
 	public function testCssWithCustomFile(): void
 	{
-		// valid
 		F::write($this->tmp . '/panel.css', '');
+		F::write($this->tmp . '/foo.css', '');
 
+		// single
 		$this->app->clone([
 			'options' => [
 				'panel' => [
@@ -121,11 +123,23 @@ class AssetsTest extends TestCase
 		]);
 
 		$assets = new Assets();
+		$assets = $assets->custom('panel.css');
+		$this->assertStringContainsString('/panel.css', $assets['custom-0']);
 
-		$this->assertStringContainsString(
-			'/panel.css',
-			$assets->custom('panel.css')
-		);
+		// multiple
+		$this->app->clone([
+			'options' => [
+				'panel' => [
+					'css' => ['panel.css', 'foo.css', $url = 'https://getkirby.com/bar.css']
+				]
+			]
+		]);
+
+		$assets = new Assets();
+		$assets = $assets->custom('panel.css');
+		$this->assertStringContainsString('/panel.css', $assets['custom-0']);
+		$this->assertStringContainsString('/foo.css', $assets['custom-1']);
+		$this->assertSame($url, $assets['custom-2']);
 	}
 
 	/**
@@ -142,7 +156,7 @@ class AssetsTest extends TestCase
 		]);
 
 		$assets = new Assets();
-		$this->assertNull($assets->custom('panel.css'));
+		$this->assertEmpty($assets->custom('panel.css'));
 	}
 
 	/**
@@ -163,6 +177,7 @@ class AssetsTest extends TestCase
 
 	/**
 	 * @covers ::external
+	 * @covers ::custom
 	 */
 	public function testExternalWithCustomCssJs(): void
 	{
@@ -183,8 +198,8 @@ class AssetsTest extends TestCase
 		$assets   = new Assets();
 		$external = $assets->external();
 
-		$this->assertTrue(Str::contains($external['css']['custom'], 'assets/panel.css'));
-		$this->assertTrue(Str::contains($external['js']['custom']['src'], 'assets/panel.js'));
+		$this->assertTrue(Str::contains($external['css']['custom-0'], 'assets/panel.css'));
+		$this->assertTrue(Str::contains($external['js']['custom-0']['src'], 'assets/panel.js'));
 	}
 
 	/**
@@ -377,9 +392,10 @@ class AssetsTest extends TestCase
 	 */
 	public function testJsWithCustomFile(): void
 	{
-		// valid
 		F::write($this->tmp . '/panel.js', '');
+		F::write($this->tmp . '/foo.js', '');
 
+		// single
 		$this->app->clone([
 			'options' => [
 				'panel' => [
@@ -389,11 +405,24 @@ class AssetsTest extends TestCase
 		]);
 
 		$assets = new Assets();
+		$assets = $assets->custom('panel.js');
+		$this->assertStringContainsString('/panel.js', $assets['custom-0']);
 
-		$this->assertStringContainsString(
-			'/panel.js',
-			$assets->custom('panel.js')
-		);
+
+		// multiple
+		$this->app->clone([
+			'options' => [
+				'panel' => [
+					'js' => ['panel.js', 'foo.js', $url = 'https://getkirby.com/bar.js']
+				]
+			]
+		]);
+
+		$assets = new Assets();
+		$assets = $assets->custom('panel.js');
+		$this->assertStringContainsString('/panel.js', $assets['custom-0']);
+		$this->assertStringContainsString('/foo.js', $assets['custom-1']);
+		$this->assertSame($url, $assets['custom-2']);
 	}
 
 	/**
@@ -410,7 +439,7 @@ class AssetsTest extends TestCase
 		]);
 
 		$assets = new Assets();
-		$this->assertNull($assets->custom('panel.js'));
+		$this->assertEmpty($assets->custom('panel.js'));
 	}
 
 	/**

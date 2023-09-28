@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import Input from "@/mixins/input.js";
 import { required as validateRequired } from "vuelidate/lib/validators";
 
 export const props = {
@@ -38,8 +39,7 @@ export const props = {
  * @example <k-input :value="toggle" @input="toggle = $event" name="toggle" type="toggle" />
  */
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	computed: {
 		label() {
 			// Add fallback for text
@@ -66,9 +66,6 @@ export default {
 		}
 	},
 	methods: {
-		focus() {
-			this.$refs.input.focus();
-		},
 		onEnter(e) {
 			if (e.key === "Enter") {
 				this.$refs.input.click();

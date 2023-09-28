@@ -1,7 +1,7 @@
 <template>
 	<div class="k-block-title">
 		<k-icon :type="icon" class="k-block-icon" />
-		<span class="k-block-name">
+		<span v-if="name" class="k-block-name">
 			{{ name }}
 		</span>
 		<span v-if="label" class="k-block-label">
@@ -17,8 +17,14 @@
 export default {
 	inheritAttrs: false,
 	props: {
-		fieldset: Object,
-		content: Object
+		fieldset: {
+			default: () => ({}),
+			type: Object
+		},
+		content: {
+			default: () => ({}),
+			type: Object
+		}
 	},
 	computed: {
 		icon() {
@@ -58,19 +64,15 @@ export default {
 	align-items: center;
 	min-width: 0;
 	padding-inline-end: 0.75rem;
-	font-size: var(--text-sm);
 	line-height: 1;
+	gap: var(--spacing-2);
 }
 .k-block-icon {
+	--icon-color: var(--color-gray-600);
 	width: 1rem;
-	margin-inline-end: 0.5rem;
-	color: var(--color-gray-500);
-}
-.k-block-name {
-	margin-inline-end: 0.5rem;
 }
 .k-block-label {
-	color: var(--color-gray-600);
+	color: var(--color-text-dimmed);
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;

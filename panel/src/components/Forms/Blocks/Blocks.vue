@@ -4,61 +4,65 @@
 		:data-multi-select-key="isMultiSelectKey"
 		class="k-blocks"
 	>
-		<template v-if="hasFieldsets">
-			<k-draggable v-bind="draggableOptions" class="k-blocks-list" @sort="save">
-				<k-block
-					v-for="(block, index) in blocks"
-					:ref="'block-' + block.id"
-					:key="block.id"
-					v-bind="block"
-					:endpoints="endpoints"
-					:fieldset="fieldset(block)"
-					:is-batched="isSelected(block) && selected.length > 1"
-					:is-last-selected="isLastSelected(block)"
-					:is-full="isFull"
-					:is-hidden="block.isHidden === true"
-					:is-mergable="isMergable"
-					:is-selected="isSelected(block)"
-					:next="prevNext(index + 1)"
-					:prev="prevNext(index - 1)"
-					@append="add($event, index + 1)"
-					@chooseToAppend="choose(index + 1)"
-					@chooseToConvert="chooseToConvert(block)"
-					@chooseToPrepend="choose(index)"
-					@click.native.prevent.stop="onClickBlock(block, $event)"
-					@close="isEditing = false"
-					@copy="copy()"
-					@duplicate="duplicate(block, index)"
-					@focus="onFocus(block)"
-					@hide="hide(block)"
-					@merge="merge()"
-					@open="isEditing = true"
-					@paste="pasteboard()"
-					@prepend="add($event, index)"
-					@remove="remove(block)"
-					@removeSelected="removeSelected"
-					@show="show(block)"
-					@selectDown="selectDown"
-					@selectUp="selectUp"
-					@sortDown="sort(block, index, index + 1)"
-					@sortUp="sort(block, index, index - 1)"
-					@split="split(block, index, $event)"
-					@update="update(block, $event)"
-				/>
-				<template #footer>
-					<k-empty
-						class="k-blocks-empty"
-						icon="box"
-						@click="choose(blocks.length)"
-					>
-						{{ empty ?? $t("field.blocks.empty") }}
-					</k-empty>
-				</template>
-			</k-draggable>
-		</template>
-		<template v-else>
-			<k-box theme="info"> No fieldsets yet </k-box>
-		</template>
+		<k-draggable
+			v-if="hasFieldsets"
+			v-bind="draggableOptions"
+			class="k-blocks-list"
+			@sort="save"
+		>
+			<k-block
+				v-for="(block, index) in blocks"
+				:ref="'block-' + block.id"
+				:key="block.id"
+				v-bind="block"
+				:endpoints="endpoints"
+				:fieldset="fieldset(block)"
+				:is-batched="isSelected(block) && selected.length > 1"
+				:is-last-selected="isLastSelected(block)"
+				:is-full="isFull"
+				:is-hidden="block.isHidden === true"
+				:is-mergable="isMergable"
+				:is-selected="isSelected(block)"
+				:next="prevNext(index + 1)"
+				:prev="prevNext(index - 1)"
+				@append="add($event, index + 1)"
+				@chooseToAppend="choose(index + 1)"
+				@chooseToConvert="chooseToConvert(block)"
+				@chooseToPrepend="choose(index)"
+				@click.native.prevent.stop="onClickBlock(block, $event)"
+				@close="isEditing = false"
+				@copy="copy()"
+				@duplicate="duplicate(block, index)"
+				@focus="onFocus(block)"
+				@hide="hide(block)"
+				@merge="merge()"
+				@open="isEditing = true"
+				@paste="pasteboard()"
+				@prepend="add($event, index)"
+				@remove="remove(block)"
+				@removeSelected="removeSelected"
+				@show="show(block)"
+				@selectDown="selectDown"
+				@selectUp="selectUp"
+				@sortDown="sort(block, index, index + 1)"
+				@sortUp="sort(block, index, index - 1)"
+				@split="split(block, index, $event)"
+				@update="update(block, $event)"
+			/>
+			<template #footer>
+				<k-empty
+					class="k-blocks-empty"
+					icon="box"
+					@click="choose(blocks.length)"
+				>
+					{{ empty ?? $t("field.blocks.empty") }}
+				</k-empty>
+			</template>
+		</k-draggable>
+
+		<k-empty v-else icon="box">
+			{{ $t("field.blocks.fieldsets.empty") }}
+		</k-empty>
 	</div>
 </template>
 
@@ -88,7 +92,7 @@ export default {
 			isEditing: false,
 			isMultiSelectKey: false,
 			isPasteable: false,
-			blocks: this.value,
+			blocks: this.value ?? [],
 			selected: []
 		};
 	},
@@ -172,7 +176,8 @@ export default {
 			this.blocks.splice(index, 0, block);
 			this.save();
 
-			this.$nextTick(() => this.focusOrOpen(block));
+			await this.$nextTick();
+			this.focusOrOpen(block);
 		},
 		choose(index) {
 			if (this.$helper.object.length(this.fieldsets) === 1) {
@@ -186,17 +191,13 @@ export default {
 					fieldsets: this.fieldsets
 				},
 				on: {
-					open: () => {
-						this.isPasteable = true;
-					},
-					close: () => {
-						this.isPasteable = false;
-					},
 					submit: (type) => {
 						this.add(type, index);
 						this.$panel.dialog.close();
 					},
-					paste: this.paste
+					paste: (e) => {
+						this.paste(e, index);
+					}
 				}
 			});
 		},
@@ -210,12 +211,6 @@ export default {
 					headline: this.$t("field.blocks.changeType")
 				},
 				on: {
-					open: () => {
-						this.isPasteable = true;
-					},
-					close: () => {
-						this.isPasteable = false;
-					},
 					submit: (type) => {
 						this.convert(type, block);
 						this.$panel.dialog.close();
@@ -257,9 +252,10 @@ export default {
 			this.selected = blocks.map((block) => block.id);
 
 			// a sign that it has been copied
-			this.$panel.notification.success(
-				this.$t("copy.success", { count: blocks.length })
-			);
+			this.$panel.notification.success({
+				message: this.$t("copy.success", { count: blocks.length }),
+				icon: "template"
+			});
 		},
 		copyAll() {
 			this.selectAll();
@@ -388,7 +384,7 @@ export default {
 		isSelected(block) {
 			return this.selected.includes(block.id);
 		},
-		merge() {
+		async merge() {
 			if (this.isMergable) {
 				const blocks = this.selected.map((id) => this.find(id));
 
@@ -401,7 +397,8 @@ export default {
 					this.remove(block);
 				}
 
-				this.$nextTick(() => this.focus(blocks[0]));
+				await this.$nextTick();
+				this.focus(blocks[0]);
 			}
 		},
 		move(event) {
@@ -470,13 +467,14 @@ export default {
 				this.selected = [block.id];
 			}
 		},
-		onKey(event) {
+		async onKey(event) {
 			this.isMultiSelectKey = event.metaKey ?? event.ctrlKey ?? event.altKey;
 
 			// remove batch selecting on escape, only select first one
 			if (event.code === "Escape" && this.selected.length > 1) {
 				const block = this.find(this.selected[0]);
-				this.$nextTick(() => this.focus(block));
+				await this.$nextTick();
+				this.focus(block);
 			}
 		},
 		onOutsideFocus(event) {
@@ -509,17 +507,12 @@ export default {
 			}
 		},
 		onPaste(e) {
-			// enable pasting when the block selector is open
-			if (this.isPasteable === true) {
-				return this.paste(e);
-			}
-
 			// never paste blocks when the focus is in an input element
 			if (this.isInputEvent(e) === true) {
 				return false;
 			}
 
-			// not when any other dialogs or drawers are open
+			// not when any dialogs or drawers are open
 			if (this.isEditing === true || this.$panel.dialog.isOpen === true) {
 				return false;
 			}
@@ -535,29 +528,40 @@ export default {
 		open(block) {
 			this.$refs["block-" + block.id]?.[0].open();
 		},
-		async paste(e) {
+		async paste(e, index) {
 			const html = this.$helper.clipboard.read(e);
 
 			// pass html or plain text to the paste endpoint to convert it to blocks
-			const blocks = await this.$api.post(this.endpoints.field + "/paste", {
+			let blocks = await this.$api.post(this.endpoints.field + "/paste", {
 				html: html
 			});
 
 			// get the index
-			let lastItem = this.selected[this.selected.length - 1];
-			let lastIndex = this.findIndex(lastItem);
+			if (index === undefined) {
+				let item = this.selected[this.selected.length - 1];
+				index = this.findIndex(item);
 
-			if (lastIndex === -1) {
-				lastIndex = this.blocks.length;
+				if (index === -1) {
+					index = this.blocks.length;
+				}
+
+				index++;
 			}
 
-			this.blocks.splice(lastIndex + 1, 0, ...blocks);
+			// don't add blocks that exceed the maximum limit
+			if (this.max) {
+				const max = this.max - this.blocks.length;
+				blocks = blocks.slice(0, max);
+			}
+
+			this.blocks.splice(index, 0, ...blocks);
 			this.save();
 
 			// a sign that it has been pasted
-			this.$panel.notification.success(
-				this.$t("paste.success", { count: blocks.length })
-			);
+			this.$panel.notification.success({
+				message: this.$t("paste.success", { count: blocks.length }),
+				icon: "download"
+			});
 		},
 		pasteboard() {
 			this.$panel.dialog.open({
@@ -656,7 +660,7 @@ export default {
 			set(block, "isHidden", false);
 			this.save();
 		},
-		sort(block, from, to) {
+		async sort(block, from, to) {
 			if (to < 0) {
 				return;
 			}
@@ -665,7 +669,8 @@ export default {
 			blocks.splice(to, 0, block);
 			this.blocks = blocks;
 			this.save();
-			this.$nextTick(() => this.focus(block));
+			await this.$nextTick();
+			this.focus(block);
 		},
 		async split(block, index, contents) {
 			// prepare old block with reduced content chunk
@@ -686,8 +691,8 @@ export default {
 			// in one go: remove old block and onsert updated and new block
 			this.blocks.splice(index, 1, oldBlock, newBlock);
 			this.save();
-
-			this.$nextTick(() => this.focus(newBlock));
+			await this.$nextTick();
+			this.focus(newBlock);
 		},
 		update(block, content) {
 			const index = this.findIndex(block.id);

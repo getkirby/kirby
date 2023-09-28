@@ -36,10 +36,10 @@ class Sane
 	 * All registered handlers
 	 */
 	public static array $handlers = [
-		'html' => 'Kirby\Sane\Html',
-		'svg'  => 'Kirby\Sane\Svg',
-		'svgz' => 'Kirby\Sane\Svgz',
-		'xml'  => 'Kirby\Sane\Xml',
+		'html' => Html::class,
+		'svg'  => Svg::class,
+		'svgz' => Svgz::class,
+		'xml'  => Xml::class,
 	];
 
 	/**

@@ -28,23 +28,24 @@
 						target="_blank"
 						variant="filled"
 					/>
-					<k-dropdown class="k-file-view-options">
-						<k-button
-							:disabled="isLocked"
-							:dropdown="true"
-							:title="$t('settings')"
-							icon="cog"
-							size="sm"
-							variant="filled"
-							@click="$refs.settings.toggle()"
-						/>
-						<k-dropdown-content
-							ref="settings"
-							:options="$dropdown(id)"
-							align-x="end"
-							@action="action"
-						/>
-					</k-dropdown>
+
+					<k-button
+						:disabled="isLocked"
+						:dropdown="true"
+						:title="$t('settings')"
+						icon="cog"
+						size="sm"
+						variant="filled"
+						class="k-file-view-options"
+						@click="$refs.settings.toggle()"
+					/>
+					<k-dropdown-content
+						ref="settings"
+						:options="$dropdown(id)"
+						align-x="end"
+						@action="action"
+					/>
+
 					<k-languages-dropdown />
 				</k-button-group>
 
@@ -52,7 +53,7 @@
 			</template>
 		</k-header>
 
-		<k-file-preview v-bind="preview" :file="model" :is-locked="isLocked" />
+		<k-file-preview v-bind="preview" :focus="focus" @focus="setFocus" />
 
 		<k-model-tabs :tab="tab.name" :tabs="tabs" />
 
@@ -75,9 +76,21 @@ export default {
 		preview: Object
 	},
 	computed: {
+		focus() {
+			const focus = this.$store.getters["content/values"]()["focus"];
+
+			if (!focus) {
+				return;
+			}
+
+			const [x, y] = focus.replaceAll("%", "").split(" ");
+
+			return { x: parseFloat(x), y: parseFloat(y) };
+		},
 		isFocusable() {
 			return (
 				!this.isLocked &&
+				this.preview.image.src &&
 				this.permissions.update &&
 				(!window.panel.multilang ||
 					window.panel.languages.length === 0 ||
@@ -94,6 +107,13 @@ export default {
 						...this.model
 					});
 			}
+		},
+		setFocus(focus) {
+			if (this.$helper.object.isObject(focus) === true) {
+				focus = `${focus.x}% ${focus.y}%`;
+			}
+
+			this.$store.dispatch("content/update", ["focus", focus]);
 		}
 	}
 };

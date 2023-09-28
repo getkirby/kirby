@@ -6,20 +6,11 @@
 </template>
 
 <script>
-import { props as Frame } from "./Frame.vue";
-import { props as Icon } from "@/components/Misc/Icon.vue";
+import { props as FrameProps } from "./Frame.vue";
+import { props as IconProps } from "@/components/Misc/Icon.vue";
 
-
-/**
- * Use <k-icon-frame> to display an icon in a fixed ratio with background etc.
- * @public
- * @since 4.0.0
- *
- * @example <k-icon-frame icon="home" ratio="1/1" back="black" />
- */
-export default {
-	mixins: [Frame, Icon],
-	inheritAttrs: false,
+export const props = {
+	mixins: [FrameProps, IconProps],
 	props: {
 		/**
 		 * Unset unused props from mixin
@@ -30,8 +21,20 @@ export default {
 		 * Name of the chosen icon
 		 * @see https://getkirby.com/docs/reference/panel/icons
 		 */
-		icon: String,
-	},
+		icon: String
+	}
+};
+
+/**
+ * Use <k-icon-frame> to display an icon in a fixed ratio with background etc.
+ * @public
+ * @since 4.0.0
+ *
+ * @example <k-icon-frame icon="home" ratio="1/1" back="black" />
+ */
+export default {
+	mixins: [props],
+	inheritAttrs: false,
 	computed: {
 		isEmoji() {
 			return this.$helper.string.hasEmoji(this.icon);

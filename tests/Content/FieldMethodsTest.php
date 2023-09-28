@@ -14,6 +14,7 @@ use Kirby\Data\Json;
 use Kirby\Data\Yaml;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
+use Kirby\Image\QrCode;
 use PHPUnit\Framework\TestCase;
 
 class FieldMethodsTest extends TestCase
@@ -375,6 +376,17 @@ class FieldMethodsTest extends TestCase
 		$result = $this->field($content)->toPages();
 		$this->assertInstanceOf(Pages::class, $result);
 		$this->assertSame([], $result->data());
+	}
+
+	public function testToQrCode()
+	{
+		$field = $this->field($url = 'https://getkirby.com');
+		$qr    = $field->toQrCode();
+
+		$this->assertInstanceOf(QrCode::class, $qr);
+		$this->assertSame($url, $qr->data);
+
+		$this->assertNull($this->field()->toQrCode());
 	}
 
 	public function testToStructure()

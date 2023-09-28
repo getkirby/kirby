@@ -209,7 +209,7 @@ export default {
 		focus() {
 			this.$refs.input?.focus();
 		},
-		pick(index) {
+		async pick(index) {
 			const max = this.showCreateButton
 				? this.filtered.length
 				: this.filtered.length - 1;
@@ -223,11 +223,11 @@ export default {
 			this.$emit("pick", index);
 			this.focus();
 
+			await this.$nextTick();
+
 			// scroll the results list to the selected button
-			this.$nextTick(() => {
-				this.$refs.results?.querySelector("[aria-current]")?.scrollIntoView({
-					block: "nearest"
-				});
+			this.$refs.results?.querySelector("[aria-current]")?.scrollIntoView({
+				block: "nearest"
 			});
 		},
 		reset() {

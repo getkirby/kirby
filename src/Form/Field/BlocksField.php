@@ -67,6 +67,8 @@ class BlocksField extends FieldClass
 
 				// create id if not exists
 				$block['id'] ??= Str::uuid();
+			} catch (Throwable) {
+				// skip invalid blocks
 			} finally {
 				$result[] = $block;
 			}
@@ -153,11 +155,6 @@ class BlocksField extends FieldClass
 			} catch (Throwable) {
 				unset($blocks[$index]);
 			}
-		}
-
-		// don't add blocks that exceed the maximum limit
-		if ($max = $this->max()) {
-			$blocks = array_slice($blocks, 0, $max);
 		}
 
 		return $blocks;

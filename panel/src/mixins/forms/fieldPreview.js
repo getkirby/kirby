@@ -2,10 +2,13 @@ export default {
 	inheritAttrs: false,
 	props: {
 		column: {
-			type: Object,
-			default: () => ({})
+			default: () => ({}),
+			type: Object
 		},
-		field: Object,
+		field: {
+			default: () => ({}),
+			type: Object
+		},
 		value: {}
 	}
 };

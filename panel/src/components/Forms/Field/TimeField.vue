@@ -9,17 +9,19 @@
 			@input="$emit('input', $event ?? '')"
 		>
 			<template v-if="times" #icon>
-				<k-dropdown>
-					<k-button
-						:icon="icon ?? 'clock'"
-						:title="$t('time.select')"
-						class="k-input-icon-button"
-						@click="$refs.times.toggle()"
+				<k-button
+					:icon="icon ?? 'clock'"
+					:title="$t('time.select')"
+					class="k-input-icon-button"
+					@click="$refs.times.toggle()"
+				/>
+				<k-dropdown-content ref="times" align-x="end">
+					<k-timeoptions-input
+						:display="display"
+						:value="value"
+						@input="select"
 					/>
-					<k-dropdown-content ref="times" align-x="end">
-						<k-times :display="display" :value="value" @input="select" />
-					</k-dropdown-content>
-				</k-dropdown>
+				</k-dropdown-content>
 			</template>
 		</k-input>
 	</k-field>

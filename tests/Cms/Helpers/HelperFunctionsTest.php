@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Cms\App as Kirby;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
+use Kirby\Image\QrCode;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Obj;
 use PHPUnit\Framework\Assert;
@@ -647,6 +648,30 @@ class HelperFunctionsTest extends TestCase
 		]);
 
 		$this->assertSame(['a' => 'value-a', 'b/b:' => 'value-B/B:'], params());
+	}
+
+	public function testQr()
+	{
+		$url = 'https://getkirby.com';
+		$qr    = qr($url);
+
+		$this->assertInstanceOf(QrCode::class, $qr);
+		$this->assertSame($url, $qr->data);
+
+		$app = $this->kirby->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+					]
+				]
+			]
+		]);
+		$page  = $app->page('test');
+		$qr    = qr($page);
+
+		$this->assertInstanceOf(QrCode::class, $qr);
+		$this->assertSame($page->url(), $qr->data);
 	}
 
 	public function testR()

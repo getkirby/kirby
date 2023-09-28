@@ -8,6 +8,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
+use Kirby\Image\QrCode;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -103,6 +104,14 @@ class QueryDefaultFunctionsTest extends \PHPUnit\Framework\TestCase
 
 		$query = new Query('page("c")');
 		$this->assertNull($query->resolve());
+	}
+
+	public function testqr()
+	{
+		$query = new Query('qr("https://getkirby.com")');
+		$qr = $query->resolve();
+		$this->assertInstanceOf(QrCode::class, $qr);
+		$this->assertSame('https://getkirby.com', $qr->data);
 	}
 
 	public function testSite()

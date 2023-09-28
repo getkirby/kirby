@@ -28,6 +28,13 @@ return [
 		},
 
 		/**
+		 * Sets the font family (sans or monospace)
+		 */
+		'font' => function (string $font = null) {
+			return $font === 'monospace' ? 'monospace' : 'sans-serif';
+		},
+
+		/**
 		 * Maximum number of allowed characters
 		 */
 		'maxlength' => function (int $maxlength = null) {

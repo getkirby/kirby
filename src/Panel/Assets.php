@@ -3,11 +3,13 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Url;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Toolkit\A;
 
 /**
  * The Assets class collects all js, css, icons and other
@@ -54,11 +56,13 @@ class Assets
 	 */
 	public function css(): array
 	{
-		$css = [
-			'index'   => $this->url . '/css/style.min.css',
-			'plugins' => $this->plugins->url('css'),
-			'custom'  => $this->custom('panel.css'),
-		];
+		$css = A::merge(
+			[
+				'index'   => $this->url . '/css/style.min.css',
+				'plugins' => $this->plugins->url('css')
+			],
+			$this->custom('panel.css')
+		);
 
 		// during dev mode we do not need to load
 		// the general stylesheet (as styling will be inlined)
@@ -73,17 +77,28 @@ class Assets
 	 * Check for a custom asset file from the
 	 * config (e.g. panel.css or panel.js)
 	 */
-	public function custom(string $option): string|null
+	public function custom(string $option): array
 	{
-		if ($path = $this->kirby->option($option)) {
-			$asset = new Asset($path);
+		$customs = [];
 
-			if ($asset->exists() === true) {
-				return $asset->url() . '?' . $asset->modified();
+		if ($assets = $this->kirby->option($option)) {
+			$assets  = A::wrap($assets);
+
+			foreach ($assets as $index => $path) {
+				if (Url::isAbsolute($path) === true) {
+					$customs['custom-' . $index] = $path;
+					continue;
+				}
+
+				$asset = new Asset($path);
+
+				if ($asset->exists() === true) {
+					$customs['custom-' . $index] =  $asset->url() . '?' . $asset->modified();
+				}
 			}
 		}
 
-		return null;
+		return $customs;
 	}
 
 	/**
@@ -161,37 +176,42 @@ class Assets
 	 */
 	public function js(): array
 	{
-		$js = [
-			'vue' => [
-				'nonce' => $this->nonce,
-				'src'   => $this->url . '/js/vue.min.js'
+		$js = A::merge(
+			[
+				'vue' => [
+					'nonce' => $this->nonce,
+					'src'   => $this->url . '/js/vue.min.js'
+				],
+				'vendor'       => [
+					'nonce' => $this->nonce,
+					'src'   => $this->url . '/js/vendor.min.js',
+					'type'  => 'module'
+				],
+				'pluginloader' => [
+					'nonce' => $this->nonce,
+					'src'   => $this->url . '/js/plugins.js',
+					'type'  => 'module'
+				],
+				'plugins'      => [
+					'nonce' => $this->nonce,
+					'src'   => $this->plugins->url('js'),
+					'defer' => true
+				]
 			],
-			'vendor'       => [
+			A::map($this->custom('panel.js'), fn ($src) => [
 				'nonce' => $this->nonce,
-				'src'   => $this->url . '/js/vendor.min.js',
+				'src'   => $src,
 				'type'  => 'module'
-			],
-			'pluginloader' => [
-				'nonce' => $this->nonce,
-				'src'   => $this->url . '/js/plugins.js',
-				'type'  => 'module'
-			],
-			'plugins'      => [
-				'nonce' => $this->nonce,
-				'src'   => $this->plugins->url('js'),
-				'defer' => true
-			],
-			'custom'       => [
-				'nonce' => $this->nonce,
-				'src'   => $this->custom('panel.js'),
-				'type'  => 'module'
-			],
-			'index'        => [
-				'nonce' => $this->nonce,
-				'src'   => $this->url . '/js/index.min.js',
-				'type'  => 'module'
-			],
-		];
+			]),
+			[
+				'index' => [
+					'nonce' => $this->nonce,
+					'src'   => $this->url . '/js/index.min.js',
+					'type'  => 'module'
+				],
+			]
+		);
+
 
 		// during dev mode, add vite client and adapt
 		// path to `index.js` - vendor does not need

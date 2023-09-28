@@ -13,10 +13,10 @@
 
 <script>
 import Dialog from "@/mixins/dialog.js";
-import { props as Text } from "./Elements/Text.vue";
+import { props as TextProps } from "./Elements/Text.vue";
 
 export const props = {
-	mixins: [Dialog, Text]
+	mixins: [Dialog, TextProps]
 };
 
 export default {

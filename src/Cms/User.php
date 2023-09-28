@@ -7,6 +7,7 @@ use Exception;
 use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Panel\User as Panel;
@@ -373,20 +374,31 @@ class User extends ModelWithContent
 	public function loginPasswordless(
 		Session|array|null $session = null
 	): void {
-		$kirby = $this->kirby();
+		if ($this->id() === 'kirby') {
+			throw new PermissionException('The almighty user "kirby" cannot be used for login, only for raising permissions in code via `$kirby->impersonate()`');
+		}
 
+		$kirby   = $this->kirby();
 		$session = $this->sessionFromOptions($session);
 
-		$kirby->trigger('user.login:before', ['user' => $this, 'session' => $session]);
+		$kirby->trigger(
+			'user.login:before',
+			['user' => $this, 'session' => $session]
+		);
 
 		$session->regenerateToken(); // privilege change
 		$session->data()->set('kirby.userId', $this->id());
+
 		if ($this->passwordTimestamp() !== null) {
 			$session->data()->set('kirby.loginTimestamp', time());
 		}
-		$this->kirby()->auth()->setUser($this);
 
-		$kirby->trigger('user.login:after', ['user' => $this, 'session' => $session]);
+		$kirby->auth()->setUser($this);
+
+		$kirby->trigger(
+			'user.login:after',
+			['user' => $this, 'session' => $session]
+		);
 	}
 
 	/**
@@ -463,7 +475,7 @@ class User extends ModelWithContent
 		string $format = 'U',
 		string|null $handler = null,
 		string|null $languageCode = null
-	): int|string {
+	): int|string|false {
 		$modifiedContent = $this->storage()->modified('published', $languageCode);
 		$modifiedIndex   = F::modified($this->root() . '/index.php');
 		$modifiedTotal   = max([$modifiedContent, $modifiedIndex]);

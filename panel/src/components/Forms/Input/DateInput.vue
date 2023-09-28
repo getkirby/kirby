@@ -23,10 +23,10 @@
 </template>
 
 <script>
-import { autofocus, disabled, id, required } from "@/mixins/props.js";
+import Input, { props as InputProps } from "@/mixins/input.js";
 
 export const props = {
-	mixins: [autofocus, disabled, id, required],
+	mixins: [InputProps],
 	props: {
 		/**
 		 * Format to parse and display the date
@@ -87,8 +87,7 @@ export const props = {
  * @public
  */
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	data() {
 		return {
 			dt: null,
@@ -145,7 +144,7 @@ export default {
 		 * cursor position in the input element and ensuring steps
 		 * @param {string} operator `add`|`substract`
 		 */
-		alter(operator) {
+		async alter(operator) {
 			// since manipulation command can occur while
 			// typing new value, make sure to first update
 			// datetime object from current input value
@@ -189,7 +188,8 @@ export default {
 			this.commit(dt);
 			this.emit(dt);
 
-			this.$nextTick(() => this.select(selected));
+			await this.$nextTick();
+			this.select(selected);
 		},
 		/**
 		 * Updates the in data stored dayjs object
@@ -208,13 +208,6 @@ export default {
 		 */
 		emit(dt) {
 			this.$emit("input", this.toISO(dt));
-		},
-		/**
-		 * Focuses the input element
-		 * @public
-		 */
-		focus() {
-			this.$refs.input.focus();
 		},
 		/**
 		 * Decrement the currently
@@ -243,9 +236,10 @@ export default {
 		 * When hitting enter, blur the input
 		 * but also emit additional submit event
 		 */
-		onEnter() {
+		async onEnter() {
 			this.onBlur();
-			this.$nextTick(() => this.$emit("submit"));
+			await this.$nextTick();
+			this.$emit("submit");
 		},
 		/**
 		 * Takes the current input value and
@@ -286,7 +280,7 @@ export default {
 		 *
 		 * @param {Event} event
 		 */
-		onTab(event) {
+		async onTab(event) {
 			// step out of the field if it is empty
 			if (this.$refs.input.value == "") {
 				return;
@@ -294,67 +288,66 @@ export default {
 
 			// make sure to confirm any current input
 			this.onBlur();
-			this.$nextTick(() => {
-				const selection = this.selection();
+			await this.$nextTick();
+			const selection = this.selection();
 
-				// if an exact part is selected
-				if (
-					this.$refs.input &&
-					selection.start === this.$refs.input.selectionStart &&
-					selection.end === this.$refs.input.selectionEnd - 1
-				) {
-					// move backward on shift + tab
-					if (event.shiftKey) {
-						// if the first part is selected, jump out
-						if (selection.index === 0) {
-							return;
-						}
-
-						// select previous part
-						this.selectPrev(selection.index);
-
-						// move forward on tab
-					} else {
-						// if the last part is selected, jump out
-						if (selection.index === this.pattern.parts.length - 1) {
-							return;
-						}
-
-						// select next part
-						this.selectNext(selection.index);
-					}
-				} else {
-					// nothing or no part fully selected
-					if (
-						this.$refs.input &&
-						this.$refs.input.selectionStart == selection.end + 1 &&
-						selection.index == this.pattern.parts.length - 1
-					) {
-						// cursor at the end of the pattern, jump out
+			// if an exact part is selected
+			if (
+				this.$refs.input &&
+				selection.start === this.$refs.input.selectionStart &&
+				selection.end === this.$refs.input.selectionEnd - 1
+			) {
+				// move backward on shift + tab
+				if (event.shiftKey) {
+					// if the first part is selected, jump out
+					if (selection.index === 0) {
 						return;
 					}
 
-					// more than one part selected, select last affected part
-					else if (
-						this.$refs.input &&
-						this.$refs.input.selectionEnd - 1 > selection.end
-					) {
-						const last = this.pattern.at(
-							this.$refs.input.selectionEnd,
-							this.$refs.input.selectionEnd
-						);
+					// select previous part
+					this.selectPrev(selection.index);
 
-						this.select(this.pattern.parts[last.index]);
+					// move forward on tab
+				} else {
+					// if the last part is selected, jump out
+					if (selection.index === this.pattern.parts.length - 1) {
+						return;
 					}
 
-					// select part where the cursor is located
-					else {
-						this.select(this.pattern.parts[selection.index]);
-					}
+					// select next part
+					this.selectNext(selection.index);
+				}
+			} else {
+				// nothing or no part fully selected
+				if (
+					this.$refs.input &&
+					this.$refs.input.selectionStart == selection.end + 1 &&
+					selection.index == this.pattern.parts.length - 1
+				) {
+					// cursor at the end of the pattern, jump out
+					return;
 				}
 
-				event.preventDefault();
-			});
+				// more than one part selected, select last affected part
+				else if (
+					this.$refs.input &&
+					this.$refs.input.selectionEnd - 1 > selection.end
+				) {
+					const last = this.pattern.at(
+						this.$refs.input.selectionEnd,
+						this.$refs.input.selectionEnd
+					);
+
+					this.select(this.pattern.parts[last.index]);
+				}
+
+				// select part where the cursor is located
+				else {
+					this.select(this.pattern.parts[selection.index]);
+				}
+			}
+
+			event.preventDefault();
 		},
 		/**
 		 * Takes current input value and

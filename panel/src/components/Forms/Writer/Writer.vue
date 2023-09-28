@@ -51,12 +51,18 @@ import Insert from "./Extensions/Insert.js";
 import Keys from "./Extensions/Keys.js";
 import Toolbar from "./Extensions/Toolbar.js";
 
+import {
+	autofocus,
+	disabled,
+	placeholder,
+	spellcheck
+} from "@/mixins/props.js";
+
 export const props = {
+	mixins: [autofocus, disabled, placeholder, spellcheck],
 	props: {
-		autofocus: Boolean,
 		breaks: Boolean,
 		code: Boolean,
-		disabled: Boolean,
 		emptyDocument: {
 			type: Object,
 			default: () => ({
@@ -65,7 +71,10 @@ export const props = {
 			})
 		},
 		extensions: Array,
-		headings: [Array, Boolean],
+		headings: {
+			default: () => [1, 2, 3, 4, 5, 6],
+			type: [Array, Boolean]
+		},
 		inline: Boolean,
 		keys: Object,
 		marks: {
@@ -80,11 +89,11 @@ export const props = {
 			type: Function,
 			default: () => () => false
 		},
-		placeholder: String,
-		spellcheck: Boolean,
 		toolbar: {
 			type: Object,
-			default: () => ({ inline: true })
+			default: () => ({
+				inline: true
+			})
 		},
 		value: {
 			type: String,

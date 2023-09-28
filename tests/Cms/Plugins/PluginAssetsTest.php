@@ -45,7 +45,7 @@ class PluginAssetsTest extends TestCase
 			'test'
 		);
 		F::write(
-			$b= $this->tmp . '/media/plugins/getkirby/a/assets/orphan.css',
+			$b = $this->tmp . '/media/plugins/getkirby/a/assets/orphan.css',
 			'test'
 		);
 
@@ -82,8 +82,8 @@ class PluginAssetsTest extends TestCase
 
 	public function testResolveAutomaticFromAssetsFolder()
 	{
-		$response = PluginAssets::resolve('getkirby/a', 'assets/test.css');
-		$media    = $this->tmp . '/media/plugins/getkirby/a/assets/test.css';
+		$response = PluginAssets::resolve('getkirby/a', 'test.css');
+		$media    = $this->tmp . '/media/plugins/getkirby/a/test.css';
 
 		$this->assertTrue(is_link($media));
 		$this->assertSame(200, $response->code());

@@ -11,41 +11,38 @@
 	>
 		<div class="k-search-dialog-input">
 			<!-- Type select -->
-			<k-dropdown class="k-search-dialog-types">
-				<k-button
-					:dropdown="true"
-					:icon="currentType.icon"
-					:text="currentType.label"
-					variant="dimmed"
-					@click="$refs.types.toggle()"
-				/>
-				<k-dropdown-content ref="types">
-					<k-dropdown-item
-						v-for="(typeItem, typeIndex) in $panel.searches"
-						:key="typeIndex"
-						:icon="typeItem.icon"
-						@click="
-							type = typeIndex;
-							focus();
-						"
-					>
-						{{ typeItem.label }}
-					</k-dropdown-item>
-				</k-dropdown-content>
-			</k-dropdown>
+			<k-button
+				:dropdown="true"
+				:icon="currentType.icon"
+				:text="currentType.label"
+				variant="dimmed"
+				class="k-search-dialog-types"
+				@click="$refs.types.toggle()"
+			/>
+			<k-dropdown-content ref="types">
+				<k-dropdown-item
+					v-for="(typeItem, typeIndex) in $panel.searches"
+					:key="typeIndex"
+					:icon="typeItem.icon"
+					@click="
+						type = typeIndex;
+						focus();
+					"
+				>
+					{{ typeItem.label }}
+				</k-dropdown-item>
+			</k-dropdown-content>
 
 			<!-- Input -->
-			<input
+			<k-search-input
 				ref="input"
 				:aria-label="$t('search')"
 				:autofocus="true"
-				:placeholder="$t('search') + ' …'"
 				:value="query"
-				type="text"
-				@input="query = $event.target.value"
-				@keydown.down.prevent="onDown"
-				@keydown.up.prevent="onUp"
-				@keydown.enter="onEnter"
+				@input="query = $event"
+				@keydown.native.down.prevent="onDown"
+				@keydown.native.up.prevent="onUp"
+				@keydown.native.enter="onEnter"
 			/>
 			<k-button
 				:icon="isLoading ? 'loader' : 'cancel'"

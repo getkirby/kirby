@@ -2,11 +2,13 @@
 
 namespace Kirby\Filesystem;
 
+use Kirby\Cms\App;
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\Page;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Http\Response;
 use PHPUnit\Framework\TestCase as TestCase;
 
 require_once __DIR__ . '/mocks.php';
@@ -268,7 +270,7 @@ class FileTest extends TestCase
 	public function testHeader()
 	{
 		$file = $this->_file();
-		$this->assertInstanceOf('Kirby\Http\Response', $file->header(false));
+		$this->assertInstanceOf(Response::class, $file->header(false));
 	}
 
 	/**
@@ -353,7 +355,7 @@ class FileTest extends TestCase
 	public function testKirby()
 	{
 		$file = $this->_file();
-		$this->assertInstanceOf('Kirby\Cms\App', $file->kirby());
+		$this->assertInstanceOf(App::class, $file->kirby());
 	}
 
 	/**

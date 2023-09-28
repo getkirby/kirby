@@ -3,29 +3,27 @@
 		<k-input v-bind="$props" :invalid="isInvalid" :icon="false" theme="field">
 			<div class="k-link-input-header">
 				<!-- Type selector -->
-				<k-dropdown>
-					<k-button
-						class="k-link-input-toggle"
-						:disabled="disabled"
-						:dropdown="true"
-						:icon="currentType.icon"
-						variant="filled"
-						@click="$refs.types.toggle()"
+				<k-button
+					class="k-link-input-toggle"
+					:disabled="disabled"
+					:dropdown="true"
+					:icon="currentType.icon"
+					variant="filled"
+					@click="$refs.types.toggle()"
+				>
+					{{ currentType.label }}
+				</k-button>
+				<k-dropdown-content ref="types">
+					<k-dropdown-item
+						v-for="(type, key) in activeTypes"
+						:key="key"
+						:current="key === linkType"
+						:icon="type.icon"
+						@click="switchType(key)"
 					>
-						{{ currentType.label }}
-					</k-button>
-					<k-dropdown-content ref="types">
-						<k-dropdown-item
-							v-for="(type, key) in activeTypes"
-							:key="key"
-							:current="key === linkType"
-							:icon="type.icon"
-							@click="switchType(key)"
-						>
-							{{ type.label }}
-						</k-dropdown-item>
-					</k-dropdown-content>
-				</k-dropdown>
+						{{ type.label }}
+					</k-dropdown-item>
+				</k-dropdown-content>
 
 				<!-- Input -->
 				<div
@@ -35,16 +33,15 @@
 				>
 					<k-tag
 						v-if="model"
+						:image="
+							model.image
+								? { ...model.image, cover: true, back: 'gray-200' }
+								: null
+						"
 						:removable="!disabled"
 						class="k-link-input-model-preview"
 						@remove="clear"
 					>
-						<k-item-image
-							v-if="model.image"
-							:image="{ ...model.image, cover: true, back: 'gray-200' }"
-							class="k-link-input-model-preview-image"
-						/>
-
 						{{ model.label }}
 					</k-tag>
 					<k-button v-else class="k-link-input-model-placeholder">
@@ -97,23 +94,27 @@
 </template>
 
 <script>
-import { props as Field } from "../Field.vue";
-import { props as Input } from "../Input.vue";
+import { props as FieldProps } from "../Field.vue";
+import { props as InputProps } from "../Input.vue";
+import { options } from "@/mixins/props.js";
+
+export const props = {
+	mixins: [FieldProps, InputProps, options],
+	props: {
+		value: {
+			default: "",
+			type: String
+		}
+	}
+};
 
 /**
  * Have a look at `<k-field>` and `<k-input>`
  * @example <k-link-field :value="link" @input="link = $event" name="link" label="Link" />
  */
 export default {
-	mixins: [Field, Input],
+	mixins: [props],
 	inheritAttrs: false,
-	props: {
-		options: Array,
-		value: {
-			default: "",
-			type: String
-		}
-	},
 	data() {
 		return {
 			model: null,
@@ -209,7 +210,7 @@ export default {
 			};
 		},
 		activeTypes() {
-			if (!this.options) {
+			if (!this.options?.length) {
 				return this.availableTypes;
 			}
 
@@ -365,7 +366,7 @@ export default {
 			this.switchType("url");
 			this.onInput(model.url);
 		},
-		switchType(type) {
+		async switchType(type) {
 			if (type === this.linkType) {
 				return;
 			}
@@ -381,9 +382,8 @@ export default {
 			}
 
 			this.$emit("input", "");
-			this.$nextTick(() => {
-				this.focus();
-			});
+			await this.$nextTick();
+			this.focus();
 		},
 		toggle() {
 			this.expanded = !this.expanded;
@@ -423,24 +423,6 @@ export default {
 	--tag-color-focus-back: var(--tag-color-back);
 	--tag-color-focus-text: var(--tag-color-text);
 	--tag-rounded: var(--rounded-sm);
-}
-.k-link-input-model-preview {
-	overflow: hidden;
-	white-space: nowrap;
-}
-.k-link-input-model-preview .k-tag-text {
-	display: flex;
-	gap: 0.5rem;
-	align-items: center;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-.k-link-input-model-preview-image {
-	height: calc(var(--height-sm) - 0.5rem);
-	border-radius: var(--rounded-sm);
-}
-.k-link-input-model-preview .k-tag-text:has(.k-link-input-model-preview-image) {
-	padding-inline: 0.25rem;
 }
 .k-link-input-model-placeholder.k-button {
 	--button-align: flex-start;

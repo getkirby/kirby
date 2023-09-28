@@ -78,8 +78,9 @@ export default {
 		/**
 		 * A responsive button will hide the button text on smaller screens
 		 * automatically and only keep the icon. An icon must be set in this case.
+		 * If set to `text`, the icon will be hidden instead.
 		 */
-		responsive: Boolean,
+		responsive: [Boolean, String],
 		/**
 		 * `rel` attribute for when using with `link`
 		 */
@@ -88,6 +89,10 @@ export default {
 		 * `role` attribute for when using with `link`
 		 */
 		role: String,
+		/**
+		 * Sets the `aria-selected` attribute.
+		 */
+		selected: [String, Boolean],
 		/**
 		 * Specific sizes for buttong styling
 		 * @values `xs`, `sm`
@@ -136,6 +141,7 @@ export default {
 			const attrs = {
 				"aria-current": this.current,
 				"aria-disabled": this.disabled,
+				"aria-selected": this.selected,
 				"data-responsive": this.responsive,
 				"data-size": this.size,
 				"data-theme": this.theme,
@@ -222,6 +228,7 @@ export default {
 	--button-padding: var(--spacing-2);
 	--button-rounded: var(--spacing-1);
 	--button-text-display: block;
+	--button-icon-display: block;
 }
 
 .k-button {
@@ -245,8 +252,9 @@ export default {
 }
 
 .k-button-icon {
-	flex-shrink: 0;
 	--icon-color: var(--button-color-icon);
+	flex-shrink: 0;
+	display: var(--button-icon-display);
 }
 
 .k-button-text {
@@ -304,10 +312,13 @@ export default {
 /** Responsive buttons **/
 @container (max-width: 30rem) {
 	/** TODO: .k-button:is([data-responsive]:has(.k-button-icon)) */
-	.k-button[data-responsive][data-has-icon="true"] {
+	.k-button[data-responsive="true"][data-has-icon="true"] {
 		--button-padding: 0;
 		aspect-ratio: 1/1;
 		--button-text-display: none;
+	}
+	.k-button[data-responsive="text"][data-has-text="true"] {
+		--button-icon-display: none;
 	}
 	/** TODO: .k-button:is([data-responsive]:has(.k-button-icon)) .k-button-arrow */
 	.k-button[data-responsive][data-has-icon="true"] .k-button-arrow {

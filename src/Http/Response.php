@@ -247,7 +247,7 @@ class Response
 		array $headers = []
 	): static {
 		if (is_array($body) === true) {
-			$body = json_encode($body, $pretty === true ? JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES : 0);
+			$body = json_encode($body, $pretty === true ? JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES : 0);
 		}
 
 		return new static([

@@ -28,22 +28,22 @@
 						size="sm"
 						class="k-page-view-preview"
 					/>
-					<k-dropdown class="k-page-view-options">
-						<k-button
-							:disabled="isLocked === true"
-							:dropdown="true"
-							:title="$t('settings')"
-							icon="cog"
-							variant="filled"
-							size="sm"
-							@click="$refs.settings.toggle()"
-						/>
-						<k-dropdown-content
-							ref="settings"
-							:options="$dropdown(id)"
-							align-x="end"
-						/>
-					</k-dropdown>
+
+					<k-button
+						:disabled="isLocked === true"
+						:dropdown="true"
+						:title="$t('settings')"
+						icon="cog"
+						variant="filled"
+						size="sm"
+						class="k-page-view-options"
+						@click="$refs.settings.toggle()"
+					/>
+					<k-dropdown-content
+						ref="settings"
+						:options="$dropdown(id)"
+						align-x="end"
+					/>
 
 					<k-languages-dropdown />
 

@@ -6,6 +6,8 @@ use Kirby\Cms\Response;
 use Kirby\Cms\User;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response as HttpResponse;
+use Kirby\Toolkit\Collection;
+use Kirby\Toolkit\Obj;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -162,13 +164,13 @@ class ApiTest extends TestCase
 							return $object->id();
 						}
 					],
-					'type' => 'Kirby\Toolkit\Obj'
+					'type' => Obj::class
 				]
 			],
 			'collections' => [
 				'test' => [
 					'model' => 'test',
-					'type'  => 'Kirby\Toolkit\Collection',
+					'type'  => Collection::class,
 				]
 			]
 		]);
@@ -234,16 +236,14 @@ class ApiTest extends TestCase
 			'models' => [
 				'test' => [
 					'fields' => [
-						'id' => function ($object) {
-							return $object->id();
-						}
+						'id' => fn ($object) => $object->id()
 					],
-					'type' => 'Kirby\Toolkit\Obj'
+					'type' => Obj::class
 				]
 			]
 		]);
 
-		$instance = new \Kirby\Toolkit\Obj(['id' => 'a']);
+		$instance = new Obj(['id' => 'a']);
 		$model    = $api->model('test', $instance);
 		$data     = $model->toArray();
 		$expected = ['id' => 'a'];
@@ -578,7 +578,7 @@ class ApiTest extends TestCase
 			'status'    => 'error',
 			'message'   => 'Test',
 			'code'      => 404,
-			'exception' => 'Kirby\\Exception\\NotFoundException',
+			'exception' => NotFoundException::class,
 			'key'       => 'error.test',
 			'file'      => '/' . basename(__FILE__),
 			'line'      => __LINE__ - 24,

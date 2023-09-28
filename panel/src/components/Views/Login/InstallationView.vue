@@ -168,7 +168,10 @@ export default {
 					globals: ["$system", "$translation"]
 				});
 
-				this.$panel.notification.success(this.$t("welcome") + "!");
+				this.$panel.notification.success({
+					message: this.$t("welcome") + "!",
+					icon: "smile"
+				});
 			} catch (error) {
 				this.$panel.error(error);
 			}

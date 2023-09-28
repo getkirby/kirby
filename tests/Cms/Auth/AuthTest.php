@@ -43,7 +43,12 @@ class AuthTest extends TestCase
 					'email'    => 'homer@simpsons.com',
 					'id'       => 'homer',
 					'password' => $hash = password_hash('springfield123', PASSWORD_DEFAULT)
-				]
+				],
+				[
+					'email'    => 'kirby@getkirby.com',
+					'id'       => 'kirby',
+					'password' => password_hash('somewhere-in-japan', PASSWORD_DEFAULT)
+				],
 			]
 		]);
 		Dir::make($this->tmp . '/site/accounts/homer');
@@ -145,6 +150,80 @@ class AuthTest extends TestCase
 		$this->expectExceptionMessage('The user "lisa@simpsons.com" cannot be found');
 
 		$this->auth->impersonate('lisa@simpsons.com');
+	}
+
+	/**
+	 * @covers ::login
+	 */
+	public function testLogin()
+	{
+		// set the status cache
+		$this->auth->status();
+
+		$this->assertNull($this->app->user());
+
+		$user = $this->auth->login('marge@simpsons.com', 'springfield123');
+		$this->assertSame($this->app->user('marge@simpsons.com'), $user);
+
+		$this->assertSame($user, $this->app->user());
+		$this->assertSame(1800, $this->app->session()->timeout()); // not a long session
+
+		$this->assertSame('marge@simpsons.com', $this->auth->status()->email());
+	}
+
+	/**
+	 * @covers ::login
+	 */
+	public function testLoginLong()
+	{
+		// set the status cache
+		$this->auth->status();
+
+		$this->assertNull($this->app->user());
+
+		$user = $this->auth->login('marge@simpsons.com', 'springfield123', true);
+		$this->assertSame($this->app->user('marge@simpsons.com'), $user);
+
+		$this->assertSame($user, $this->app->user());
+		$this->assertFalse($this->app->session()->timeout()); // a long session
+
+		$this->assertSame('marge@simpsons.com', $this->auth->status()->email());
+	}
+
+	/**
+	 * @covers ::login
+	 */
+	public function testLoginInvalidUser()
+	{
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('Invalid login');
+
+		$this->auth->login('lisa@simpsons.com', 'springfield123');
+	}
+
+	/**
+	 * @covers ::login
+	 */
+	public function testLoginInvalidPassword()
+	{
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('Invalid login');
+
+		$this->auth->login('marge@simpsons.com', 'springfield456');
+	}
+
+	/**
+	 * @covers ::login
+	 */
+	public function testLoginKirby()
+	{
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage(
+			'The almighty user "kirby" cannot be used for login, ' .
+			'only for raising permissions in code via `$kirby->impersonate()`'
+		);
+
+		$this->auth->login('kirby@getkirby.com', 'somewhere-in-japan');
 	}
 
 	/**

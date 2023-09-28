@@ -8,8 +8,9 @@
 </template>
 
 <script>
-import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
-import { props as Writer } from "@/components/Forms/Writer/Writer.vue";
+import Input, { props as InputProps } from "@/mixins/input.js";
+import { maxlength, minlength } from "@/mixins/props.js";
+import { props as WriterProps } from "@/components/Forms/Writer/Writer.vue";
 
 import {
 	required as validateRequired,
@@ -18,11 +19,7 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [autofocus, disabled, id, name, required, Writer],
-	props: {
-		maxlength: Number,
-		minlength: Number
-	},
+	mixins: [InputProps, WriterProps, maxlength, minlength],
 	computed: {
 		counterValue() {
 			const plain = this.$helper.string.stripHTML(this.value);
@@ -32,8 +29,7 @@ export const props = {
 };
 
 export default {
-	mixins: [props, Writer],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	watch: {
 		value() {
 			this.onInvalid();

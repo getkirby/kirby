@@ -59,7 +59,7 @@ export default {
 			this.$emit("open", this.tab);
 		},
 		state(collapsed) {
-			const id = `kirby.fieldsBlock.${this.endpoints.field}`;
+			const id = `kirby.fieldsBlock.${this.endpoints.field}.${this.id}`;
 
 			if (collapsed !== undefined) {
 				sessionStorage.setItem(id, collapsed);
@@ -92,11 +92,10 @@ export default {
 .k-block-type-fields-header {
 	display: flex;
 	justify-content: space-between;
-	height: var(--drawer-header-height);
-	padding-inline: var(--spacing-1);
 	background: var(--color-white);
 }
 .k-block-type-fields-header .k-block-title {
+	padding-block: var(--spacing-3);
 	cursor: pointer;
 }
 

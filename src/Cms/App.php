@@ -29,6 +29,7 @@ use Kirby\Text\KirbyTags;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Config;
 use Kirby\Toolkit\Controller;
+use Kirby\Toolkit\LazyValue;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuid;
 use Throwable;
@@ -204,7 +205,6 @@ class App
 	/**
 	 * Applies a hook to the given value
 	 *
-	 * @internal
 	 * @param string $name Full event name
 	 * @param array $args Associative array of named event arguments
 	 * @param string $modify Key in $args that is modified by the hooks
@@ -366,8 +366,9 @@ class App
 		return $this->collections()->get($name, array_merge($options, [
 			'kirby' => $this,
 			'site'  => $site = $this->site(),
-			'pages' => $site->children(),
-			'users' => $this->users()
+			'pages' => new LazyValue(fn () => $site->children()),
+			'users' => new LazyValue(fn () => $this->users())
+
 		]));
 	}
 
@@ -1597,7 +1598,6 @@ class App
 	/**
 	 * Trigger a hook by name
 	 *
-	 * @internal
 	 * @param string $name Full event name
 	 * @param array $args Associative array of named event arguments
 	 * @param \Kirby\Cms\Event|null $originalEvent Event object (internal use)

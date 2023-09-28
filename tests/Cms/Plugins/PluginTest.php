@@ -139,7 +139,7 @@ class PluginTest extends TestCase
 		]);
 
 		$this->assertSame([
-			'assets/test.css' => $root . '/assets/test.css',
+			'test.css' => $root . '/assets/test.css',
 		], $plugin->assets());
 	}
 
