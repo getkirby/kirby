@@ -12,6 +12,7 @@
 				value
 			}"
 			:data-variant="variant"
+			:class="{ 'sr-only': variant === 'invisible' }"
 			@input="$emit('input', $event.target.checked)"
 		/>
 		<span v-if="label || info" class="k-choice-input-label">
@@ -89,7 +90,8 @@ export default {
 	cursor: not-allowed;
 }
 
-.k-field .k-choice-input {
+/* Field context */
+:where(.k-checkboxes-field, .k-radio-field) .k-choice-input {
 	background: var(--input-color-back);
 	min-height: var(--input-height);
 	padding-block: var(--spacing-2);

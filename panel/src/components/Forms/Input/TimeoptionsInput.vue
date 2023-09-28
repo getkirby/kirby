@@ -1,28 +1,39 @@
 <template>
-	<div class="k-times">
-		<div class="k-times-slot">
+	<div class="k-timeoptions-input">
+		<div>
 			<h3>
 				<k-icon type="sun" /> <span class="sr-only">{{ $t("day") }}</span>
 			</h3>
 			<ul>
-				<li v-for="time in day" :key="time.select">
+				<li v-for="(time, index) in day" :key="time.select">
 					<hr v-if="time === '-'" />
-					<k-button v-else @click="select(time.select)">{{
-						time.display
-					}}</k-button>
+					<k-button
+						v-else
+						:autofocus="autofocus && index === 0"
+						:disabled="disabled"
+						:selected="time.select === value ? 'time' : false"
+						@click="select(time.select)"
+					>
+						{{ time.display }}
+					</k-button>
 				</li>
 			</ul>
 		</div>
-		<div class="k-times-slot">
+		<div>
 			<h3>
 				<k-icon type="moon" /> <span class="sr-only">{{ $t("night") }}</span>
 			</h3>
 			<ul>
 				<li v-for="time in night" :key="time.select">
 					<hr v-if="time === '-'" />
-					<k-button v-else @click="select(time.select)">{{
-						time.display
-					}}</k-button>
+					<k-button
+						v-else
+						:disabled="disabled"
+						:selected="time.select === value ? 'time' : false"
+						@click="select(time.select)"
+					>
+						{{ time.display }}
+					</k-button>
 				</li>
 			</ul>
 		</div>
@@ -30,13 +41,20 @@
 </template>
 
 <script>
+import Input, { props as InputProps } from "@/mixins/input.js";
+
+export const props = {
+	mixins: [InputProps]
+};
+
 /**
  * The Times component displayes available times to choose from
  * @public
  *
- * @example <k-times value="12:12" @input="onInput" />
+ * @example <k-timeoptions-input value="12:12" @input="onInput" />
  */
 export default {
+	mixins: [Input, props],
 	props: {
 		display: {
 			type: String,
@@ -67,6 +85,9 @@ export default {
 		}
 	},
 	methods: {
+		focus() {
+			this.$el.querySelector("button").focus();
+		},
 		formatTimes(times) {
 			return times.map((time) => {
 				if (time === "-") {
@@ -88,21 +109,24 @@ export default {
 </script>
 
 <style>
-.k-times {
+.k-timeoptions-input {
 	--button-height: var(--height-sm);
-	--button-padding: var(--spacing-3);
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: var(--spacing-3);
 }
-.k-times h3 {
+.k-timeoptions-input h3 {
 	display: flex;
 	align-items: center;
 	padding-inline: var(--button-padding);
 	height: var(--button-height);
 	margin-bottom: var(--spacing-1);
 }
-.k-times .k-times-slot hr {
+.k-timeoptions-input hr {
 	margin: var(--spacing-2) var(--spacing-3);
+}
+.k-timeoptions-input .k-button[aria-selected="time"] {
+	--button-color-text: var(--color-text);
+	--button-color-back: var(--color-blue-500);
 }
 </style>
