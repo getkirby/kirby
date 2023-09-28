@@ -9,7 +9,7 @@
 		}"
 	>
 		<!-- Nodes -->
-		<div v-if="hasNodes" @mousedown.native.prevent>
+		<div v-if="hasNodes" @mousedown.prevent>
 			<k-button
 				:current="Boolean(activeNode)"
 				:icon="activeNode.icon ?? 'title'"
