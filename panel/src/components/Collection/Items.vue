@@ -178,9 +178,6 @@ export default {
 	.k-items[data-layout="cards"][data-size="tiny"] {
 		grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr));
 	}
-	.k-items[data-layout="cards"][data-size="auto"] {
-		grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
-	}
 }
 @container (min-width: 9rem) {
 	.k-items[data-layout="cards"][data-size="small"] {
@@ -188,6 +185,7 @@ export default {
 	}
 }
 @container (min-width: 12rem) {
+	.k-items[data-layout="cards"][data-size="auto"],
 	.k-items[data-layout="cards"][data-size="medium"] {
 		grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
 	}
