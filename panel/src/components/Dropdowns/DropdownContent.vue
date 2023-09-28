@@ -174,7 +174,7 @@ export default {
 			await this.$nextTick();
 
 			if (this.$el && this.opener) {
-				window.addEventListener("resize", this.position);
+				window.addEventListener("resize", this.setPosition);
 				await this.setPosition();
 				// restore the scroll position
 				window.scrollTo(0, scrollTop);
@@ -288,7 +288,7 @@ export default {
 					this.axis.y = "bottom";
 				}
 			} else if (
-				rect.top + rect.height > window.innerHeight - safeSpace &&
+				opener.top + rect.height > window.innerHeight - safeSpace &&
 				rect.height + safeSpace < rect.top
 			) {
 				this.axis.y = "top";
