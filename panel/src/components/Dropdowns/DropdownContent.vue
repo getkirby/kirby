@@ -266,11 +266,11 @@ export default {
 			// Horizontal: check if dropdown is outside of viewport
 			// and adapt alignment if necessary
 			if (this.axis.x === "end") {
-				if (rect.left - rect.width < safeSpace) {
+				if (opener.left - rect.width < safeSpace) {
 					this.axis.x = "start";
 				}
 			} else if (
-				rect.left + rect.width > window.innerWidth - safeSpace &&
+				opener.left + rect.width > window.innerWidth - safeSpace &&
 				rect.width + safeSpace < rect.left
 			) {
 				this.axis.x = "end";
