@@ -80,6 +80,14 @@ class Collection extends BaseCollection
 	}
 
 	/**
+	 * Internal remover for each object in the Collection
+	 */
+	public function __unset($id)
+	{
+		unset($this->data[$id]);
+	}
+
+	/**
 	 * Adds a single object or
 	 * an entire second collection to the
 	 * current collection
