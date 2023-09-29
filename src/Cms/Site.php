@@ -407,7 +407,7 @@ class Site extends ModelWithContent
 	/**
 	 * Search all pages in the site
 	 */
-	public function search(string|null $query = null, array $params = []): Pages
+	public function search(string|null $query = null, string|array $params = []): Pages
 	{
 		return $this->index()->search($query, $params);
 	}
