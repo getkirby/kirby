@@ -626,6 +626,8 @@ class Str
 				'alpha'      => static::pool(['alphaLower', 'alphaUpper']),
 				'num'        => range(0, 9),
 				'alphanum'   => static::pool(['alpha', 'num']),
+				'base32'     => array_merge(static::pool('alphaUpper'), range(2, 7)),
+				'base32hex'  => array_merge(range(0, 9), range('A', 'V')),
 				default      => $pool
 			};
 		}
