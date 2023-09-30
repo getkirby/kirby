@@ -582,28 +582,48 @@ class StrTest extends TestCase
 	{
 		// alpha
 		$string = Str::pool('alpha', false);
-		$this->assertTrue(V::alpha($string));
 		$this->assertSame(52, strlen($string));
+		$this->assertSame(
+			'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+			$string
+		);
 
 		// alphaLower
 		$string = Str::pool('alphaLower', false);
-		$this->assertTrue(V::alpha($string));
 		$this->assertSame(26, strlen($string));
+		$this->assertSame('abcdefghijklmnopqrstuvwxyz', $string);
 
 		// alphaUpper
 		$string = Str::pool('alphaUpper', false);
-		$this->assertTrue(V::alpha($string));
 		$this->assertSame(26, strlen($string));
+		$this->assertSame('ABCDEFGHIJKLMNOPQRSTUVWXYZ', $string);
 
 		// num
 		$string = Str::pool('num', false);
-		$this->assertTrue(V::num($string));
 		$this->assertSame(10, strlen($string));
+		$this->assertSame('0123456789', $string);
 
 		// alphaNum
 		$string = Str::pool('alphaNum', false);
-		$this->assertTrue(V::alphanum($string));
 		$this->assertSame(62, strlen($string));
+		$this->assertSame(
+			'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+			$string
+		);
+
+		// base32
+		$string = Str::pool('base32', false);
+		$this->assertSame(32, strlen($string));
+		$this->assertSame('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', $string);
+
+		// base32hex
+		$string = Str::pool('base32hex', false);
+		$this->assertSame(32, strlen($string));
+		$this->assertSame('0123456789ABCDEFGHIJKLMNOPQRSTUV', $string);
+
+		// default fallback: empty pool
+		$pool = Str::pool('invalid', true);
+		$this->assertSame([], $pool);
 
 		// default fallback: empty pool
 		$pool = Str::pool('invalid', true);
@@ -611,8 +631,8 @@ class StrTest extends TestCase
 
 		// [alphaLower, num]
 		$string = Str::pool(['alphaLower', 'num'], false);
-		$this->assertTrue(V::alphanum($string));
 		$this->assertSame(36, strlen($string));
+		$this->assertSame('abcdefghijklmnopqrstuvwxyz0123456789', $string);
 
 		// string vs. array
 		$this->assertIsString(Str::pool('alpha', false));
