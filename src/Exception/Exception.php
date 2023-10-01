@@ -73,7 +73,7 @@ class Exception extends \Exception
 		// define the Exception key
 		$key = $args['key'] ?? static::$defaultKey;
 
-		if (Str::startsWith($key, self::$prefix) === false) {
+		if (Str::startsWith($key, self::$prefix . '.') === false) {
 			$key = self::$prefix . '.' . $key;
 		}
 
