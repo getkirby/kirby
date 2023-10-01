@@ -41,8 +41,9 @@ class TotpChallenge extends Challenge
 	 * @param array $options Details of the challenge request:
 	 *                       - 'mode': Purpose of the code ('login', 'password-reset' or '2fa')
 	 *                       - 'timeout': Number of seconds the code will be valid for
+	 * @todo set return type to null, once PHP 8.0 is dropped
 	 */
-	public static function create(User $user, array $options): null
+	public static function create(User $user, array $options): string|null
 	{
 		// the user's app will generate the code, we only verify it
 		return null;

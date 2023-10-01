@@ -13,7 +13,7 @@ use Kirby\Filesystem\Dir;
 class EmailChallengeTest extends TestCase
 {
 	protected $app;
-	protected $fixtures;
+	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
@@ -23,7 +23,7 @@ class EmailChallengeTest extends TestCase
 
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->fixtures = dirname(__DIR__) . '/fixtures/AuthTest'
+				'index' => $this->tmp
 			],
 			'site' => [
 				'content' => [
@@ -44,11 +44,13 @@ class EmailChallengeTest extends TestCase
 				]
 			]
 		]);
+
+		Dir::make($this->tmp);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->fixtures);
+		Dir::remove($this->tmp);
 
 		Email::$debug = false;
 		Email::$emails = [];
