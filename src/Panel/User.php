@@ -99,7 +99,7 @@ class User extends Model
 					];
 				} elseif ($account) {
 					$result[] = [
-						'dialog'   => $url . '/totp/activate',
+						'dialog'   => $url . '/totp/enable',
 						'icon'     => 'qr-code',
 						'text'     => I18n::translate('login.totp.enable.option')
 					];

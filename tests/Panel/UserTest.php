@@ -77,7 +77,7 @@ class UserTest extends TestCase
 
 		$user = $this->app->user();
 		$dropdown = $user->panel()->dropdown();
-		$this->assertSame('/account/totp/activate', $dropdown[7]['dialog']);
+		$this->assertSame('/account/totp/enable', $dropdown[7]['dialog']);
 		$this->assertSame('qr-code', $dropdown[7]['icon']);
 
 		$user->changeTotp('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
