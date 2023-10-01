@@ -1,11 +1,6 @@
 <?php
 
-use Kirby\Cms\App;
-use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\NotFoundException;
-use Kirby\Image\QrCode;
-use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\Totp;
+use Kirby\Panel\UserTotpEnableDialog;
 
 $dialogs = require __DIR__ . '/../users/dialogs.php';
 
@@ -95,50 +90,11 @@ return [
 		'submit'  => $dialogs['user.file.fields']['submit']
 	],
 
-	// account activate TOTP
-	'account.totp.activate' => [
-		'pattern' => '(account)/totp/activate',
-		'load' => function () {
-			$kirby  = App::instance();
-			$user   = $kirby->user();
-			$totp   = new Totp();
-			$issuer = $kirby->site()->title();
-			$label  = $user->email();
-			$uri    = $totp->uri($issuer, $label);
-
-			return [
-				'component' => 'k-totp-dialog',
-				'props' => [
-					'qr'    => (new QrCode($uri))->toSvg(size: '100%'),
-					'value' => ['secret' => $totp->secret()]
-				]
-			];
-		},
-		'submit' => function () {
-			$kirby  = App::instance();
-			$user   = $kirby->user();
-			$secret = $kirby->request()->get('secret');
-
-			if ($confirm = $kirby->request()->get('confirm')) {
-				$totp = new Totp($secret);
-
-				if ($totp->verify($confirm) === false) {
-					throw new InvalidArgumentException(
-						['key' => 'login.totp.confirm.fail']
-					);
-				}
-
-				$user->changeTotp($secret);
-			} else {
-				throw new NotFoundException(
-					['key' => 'login.totp.confirm.missing']
-				);
-			}
-
-			return [
-				'message' => I18n::translate('login.totp.activate.success')
-			];
-		}
+	// account enable TOTP
+	'account.totp.enable' => [
+		'pattern' => '(account)/totp/enable',
+		'load'    => fn () => (new UserTotpEnableDialog)->load(),
+		'submit'  => fn () => (new UserTotpEnableDialog)->submit()
 	],
 
 	// account disable TOTP

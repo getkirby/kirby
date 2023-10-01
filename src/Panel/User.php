@@ -101,7 +101,7 @@ class User extends Model
 					$result[] = [
 						'dialog'   => $url . '/totp/activate',
 						'icon'     => 'qr-code',
-						'text'     => I18n::translate('login.totp.activate.option')
+						'text'     => I18n::translate('login.totp.enable.option')
 					];
 				}
 			}

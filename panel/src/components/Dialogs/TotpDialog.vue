@@ -7,16 +7,16 @@
 		@submit="$emit('submit')"
 	>
 		<k-dialog-text
-			:text="$t('login.totp.activate.intro')"
+			:text="$t('login.totp.enable.intro')"
 			class="k-totp-dialog-intro"
 		/>
 
 		<div class="k-totp-dialog-grid">
 			<div class="k-totp-qrcode">
 				<k-info-field
-					:label="$t('login.totp.activate.qr.label')"
+					:label="$t('login.totp.enable.qr.label')"
 					:text="qr"
-					:help="$t('login.totp.activate.qr.help', { secret: value.secret })"
+					:help="$t('login.totp.enable.qr.help', { secret: value.secret })"
 					theme="passive"
 				/>
 			</div>
@@ -24,19 +24,19 @@
 			<k-dialog-fields
 				:fields="{
 					info: {
-						label: $t('login.totp.activate.confirm.headline'),
+						label: $t('login.totp.enable.confirm.headline'),
 						type: 'info',
-						text: $t('login.totp.activate.confirm.text'),
+						text: $t('login.totp.enable.confirm.text'),
 						theme: 'none'
 					},
 					confirm: {
-						label: $t('login.totp.activate.confirm.label'),
+						label: $t('login.totp.enable.confirm.label'),
 						type: 'text',
 						counter: false,
 						font: 'monospace',
 						required: true,
 						placeholder: $t('login.code.placeholder.totp'),
-						help: $t('login.totp.activate.confirm.help')
+						help: $t('login.totp.enable.confirm.help')
 					},
 					secret: {
 						type: 'hidden'

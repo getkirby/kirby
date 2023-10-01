@@ -6,6 +6,7 @@ use Kirby\Cms\UserRules;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Field;
 use Kirby\Panel\Panel;
+use Kirby\Panel\UserTotpDisableDialog;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 
@@ -339,66 +340,7 @@ return [
 	// user disable TOTP
 	'user.totp.disable' => [
 		'pattern' => 'users/(:any)/totp/disable',
-		'load' => function (string $id) {
-			$user        = Find::user($id);
-			$currentUser = App::instance()->user();
-			$dialog      = [
-				'props' => [
-					'submitButton' => [
-						'text'  => I18n::translate('disable'),
-						'icon'  => 'protected',
-						'theme' => 'negative'
-					],
-				]
-			];
-
-			if (
-				$currentUser->isAdmin() === true &&
-				$currentUser->is($user) === false
-			) {
-				$dialog['component'] = 'k-remove-dialog';
-				$dialog['props']['text'] = I18n::template('login.totp.disable.admin', ['user' => $user->name()->or($user->email())]);
-			} else {
-				$dialog['component'] = 'k-form-dialog';
-				$dialog['props']['fields'] = [
-					'password' => [
-						'type'     => 'password',
-						'required' => true,
-						'counter'  => false,
-						'label'    => I18n::translate('login.totp.disable.label'),
-						'help'     => I18n::translate('login.totp.disable.help'),
-					]
-				];
-			}
-
-			return $dialog;
-		},
-		'submit' => function (string $id) {
-			$user     = Find::user($id);
-			$kirby    = App::instance();
-			$password = $kirby->request()->get('password');
-
-			try {
-				// Admins can disable TOTP without password
-				if (
-					$kirby->user()->isAdmin() === false ||
-					$kirby->user()->is($user) === true
-				) {
-					$user->validatePassword($password);
-				}
-
-				// Remove the TOTP secret from the account
-				$user->changeTotp(null);
-
-				return [
-					'message' => I18n::translate('login.totp.disable.success')
-				];
-			} catch (Exception $e) {
-				// Catch and re-throw exceptions so that any
-				// Unauthenticated exception for incorrect passwords
-				// does not trigger a logout
-				throw new InvalidArgumentException($e->getMessage());
-			}
-		}
+		'load'    => fn (string $id) => (new UserTotpDisableDialog)->load($id),
+		'submit'  => fn (string $id) => (new UserTotpDisableDialog)->submit($id)
 	],
 ];
