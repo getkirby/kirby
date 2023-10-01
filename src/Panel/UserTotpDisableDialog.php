@@ -86,7 +86,7 @@ class UserTotpDisableDialog
 		try {
 			if ($this->kirby->user()->is($this->user) === true) {
 				$this->user->validatePassword($password);
-			} else if ($this->kirby->user()->isAdmin() === false) {
+			} elseif ($this->kirby->user()->isAdmin() === false) {
 				throw new PermissionException('You are not allowed to disable TOTP for other users');
 			}
 
@@ -96,7 +96,6 @@ class UserTotpDisableDialog
 			return [
 				'message' => I18n::translate('login.totp.disable.success')
 			];
-
 		} catch (InvalidArgumentException $e) {
 			// Catch and re-throw exception so that any
 			// Unauthenticated exception for incorrect passwords

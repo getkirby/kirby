@@ -93,8 +93,8 @@ return [
 	// account enable TOTP
 	'account.totp.enable' => [
 		'pattern' => '(account)/totp/enable',
-		'load'    => fn () => (new UserTotpEnableDialog)->load(),
-		'submit'  => fn () => (new UserTotpEnableDialog)->submit()
+		'load'    => fn () => (new UserTotpEnableDialog())->load(),
+		'submit'  => fn () => (new UserTotpEnableDialog())->submit()
 	],
 
 	// account disable TOTP

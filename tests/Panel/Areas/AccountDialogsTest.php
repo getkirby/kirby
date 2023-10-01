@@ -2,9 +2,6 @@
 
 namespace Kirby\Panel\Areas;
 
-use Kirby\Exception\NotFoundException;
-use Kirby\Toolkit\Totp;
-
 class AccountDialogsTest extends AreaTestCase
 {
 	public function setUp(): void

@@ -6,7 +6,6 @@ use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
-use Kirby\Image\QrCode;
 use Kirby\Toolkit\Totp;
 use PHPUnit\Framework\TestCase;
 
