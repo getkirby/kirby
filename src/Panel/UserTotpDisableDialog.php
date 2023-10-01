@@ -102,6 +102,7 @@ class UserTotpDisableDialog
 			// does not trigger a logout
 			throw new InvalidArgumentException([
 				'key'      => $e->getKey(),
+				'data'     => $e->getData(),
 				'fallback' => $e->getMessage(),
 				'previous' => $e
 			]);
