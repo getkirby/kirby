@@ -110,3 +110,10 @@
 	--theme-color-icon: var(--color-text);
 	--theme-color-text: var(--color-text);
 }
+
+[data-theme] {
+	/** @deprecated */
+	--theme: var(--theme-color-700);
+	--theme-light: var(--theme-color-500);
+	--theme-bg: var(--theme-color-500);
+}
