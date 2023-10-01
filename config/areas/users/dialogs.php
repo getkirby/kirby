@@ -340,7 +340,7 @@ return [
 	// user disable TOTP
 	'user.totp.disable' => [
 		'pattern' => 'users/(:any)/totp/disable',
-		'load'    => fn (string $id) => (new UserTotpDisableDialog())->load($id),
-		'submit'  => fn (string $id) => (new UserTotpDisableDialog())->submit($id)
+		'load'    => fn (string $id) => (new UserTotpDisableDialog($id))->load(),
+		'submit'  => fn (string $id) => (new UserTotpDisableDialog($id))->submit()
 	],
 ];
