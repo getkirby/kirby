@@ -463,8 +463,8 @@
 	"login.totp.enable.success": "Activated one‑time codes",
 	"login.totp.disable.option": "Disable one‑time codes",
 	"login.totp.disable.label": "Enter your password to disable one‑time codes",
-	"login.totp.disable.help": "You can always set it up again later. To log into your account, a login code will be sent as second factor via email instead.",
-	"login.totp.disable.admin": "Disable one‑time codes for <strong>{user}</strong>",
+	"login.totp.disable.help": "In the future, a different second factor like a login code sent via email will be requested when you log in. You can always set up one‑time codes again later.",
+	"login.totp.disable.admin": "<p>This will disable one‑time codes for <strong>{user}</strong>.</p><p>In the future, a different second factor like a login code sent via email will be requested when they log in. {user} can set up one‑time codes again after their next login.</p>",
 	"login.totp.disable.success": "Disabled one‑time codes",
 
 	"logout": "Log out",
