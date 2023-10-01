@@ -44,7 +44,7 @@ class TotpChallengeTest extends TestCase
 	{
 		$user = $this->app->user('homer@simpsons.com');
 		$this->assertFalse(TotpChallenge::isAvailable($user, 'login'));
-		$this->app->impersonate('kirby', fn () => $user->changeTotp('test'));
+		$this->app->impersonate('kirby', fn () => $user->changeTotp('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'));
 		$this->assertTrue(TotpChallenge::isAvailable($user, 'login'));
 	}
 

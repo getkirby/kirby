@@ -80,7 +80,7 @@ class UserTest extends TestCase
 		$this->assertSame('/account/totp/activate', $dropdown[7]['dialog']);
 		$this->assertSame('qr-code', $dropdown[7]['icon']);
 
-		$user->changeTotp('foo');
+		$user->changeTotp('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
 		$dropdown = $user->panel()->dropdown();
 		$this->assertSame('/account/totp/disable', $dropdown[7]['dialog']);
 	}

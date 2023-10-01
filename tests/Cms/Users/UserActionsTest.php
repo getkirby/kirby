@@ -126,8 +126,8 @@ class UserActionsTest extends TestCase
 		$user = $this->app->user('admin@domain.com');
 		$this->assertNull($user->secret('totp'));
 
-		$user->changeTotp('bar');
-		$this->assertSame('bar', $user->secret('totp'));
+		$user->changeTotp('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
+		$this->assertSame('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', $user->secret('totp'));
 
 		$user->changeTotp(null);
 		$this->assertNull($user->secret('totp'));

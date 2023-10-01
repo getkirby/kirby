@@ -7,6 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\Str;
+use Kirby\Toolkit\Totp;
 use Kirby\Toolkit\V;
 use SensitiveParameter;
 
@@ -158,6 +159,12 @@ class UserRules
 			$currentUser->isAdmin() === false
 		) {
 			throw new PermissionException('You cannot change the time-based code for ' . $user->email());
+		}
+
+		// safety check to avoid accidental insecure secrets;
+		// throws an exception for secrets of the wrong length
+		if ($secret !== null) {
+			new Totp($secret);
 		}
 
 		return true;

@@ -239,12 +239,12 @@ class UserRulesTest extends TestCase
 
 		// as user for themselves
 		$kirby->impersonate('user@domain.com');
-		$this->assertTrue(UserRules::changeTotp($kirby->user('user@domain.com'), 'foo'));
+		$this->assertTrue(UserRules::changeTotp($kirby->user('user@domain.com'), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'));
 		$this->assertTrue(UserRules::changeTotp($kirby->user('user@domain.com'), null));
 
 		// as admin for other users
 		$kirby->impersonate('admin@domain.com');
-		$this->assertTrue(UserRules::changeTotp($kirby->user('user@domain.com'), 'foo'));
+		$this->assertTrue(UserRules::changeTotp($kirby->user('user@domain.com'), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'));
 		$this->assertTrue(UserRules::changeTotp($kirby->user('user@domain.com'), null));
 	}
 
@@ -259,7 +259,21 @@ class UserRulesTest extends TestCase
 			]
 		]);
 		$kirby->impersonate('user1@domain.com');
-		UserRules::changeTotp($kirby->user('user2@domain.com'), 'foo');
+		UserRules::changeTotp($kirby->user('user2@domain.com'), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
+	}
+
+	public function testChangeTotpInvalidSecret()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
+
+		$kirby = $this->app()->clone([
+			'users' => [
+				['email' => 'user@domain.com', 'role' => 'editor']
+			]
+		]);
+		$kirby->impersonate('user@domain.com');
+		UserRules::changeTotp($kirby->user('user@domain.com'), 'foo');
 	}
 
 	public function testCreate()
