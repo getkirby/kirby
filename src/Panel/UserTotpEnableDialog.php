@@ -10,7 +10,7 @@ use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Totp;
 
 /**
- * Manages the Panel dialog to enable TOTP auth for the curent user
+ * Manages the Panel dialog to enable TOTP auth for the current user
  * @since 4.0.0
  *
  * @package   Kirby Panel
