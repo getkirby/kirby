@@ -102,6 +102,7 @@ class UserTotpDisableDialog
 			// Unauthenticated exception for incorrect passwords
 			// does not trigger a logout
 			throw new InvalidArgumentException([
+				'key'      => $e->getKey(),
 				'fallback' => $e->getMessage(),
 				'previous' => $e
 			]);
