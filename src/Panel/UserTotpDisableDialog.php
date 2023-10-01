@@ -64,12 +64,14 @@ class UserTotpDisableDialog
 		return [
 			'component' => 'k-form-dialog',
 			'props' => [
-				'password' => [
-					'type'     => 'password',
-					'required' => true,
-					'counter'  => false,
-					'label'    => I18n::translate('login.totp.disable.label'),
-					'help'     => I18n::translate('login.totp.disable.help'),
+				'fields' => [
+					'password' => [
+						'type'     => 'password',
+						'required' => true,
+						'counter'  => false,
+						'label'    => I18n::translate('login.totp.disable.label'),
+						'help'     => I18n::translate('login.totp.disable.help'),
+					]
 				],
 				'submitButton' => $submitBtn,
 			]
