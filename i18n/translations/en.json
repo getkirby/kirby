@@ -453,7 +453,7 @@
 	"login.toggleText.password-reset.email": "Forgot your password?",
 	"login.toggleText.password-reset.email-password": "← Back to login",
 	"login.totp.enable.option": "Set up one‑time codes",
-	"login.totp.enable.intro": "Authenticator apps can generate one‑time codes that are used as a second factor when signing into your account. <a href=\"\">What's two‑factor authentication?</a>",
+	"login.totp.enable.intro": "Authenticator apps can generate one‑time codes that are used as a second factor when signing into your account.",
 	"login.totp.enable.qr.label": "1. Scan this QR code",
 	"login.totp.enable.qr.help": "Unable to scan? Add the setup key <code>{secret}</code> manually to your authenticator app.",
 	"login.totp.enable.confirm.headline": "2. Confirm with generated code",
