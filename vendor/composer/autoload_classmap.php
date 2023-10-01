@@ -6,6 +6,8 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Base32\\Base32' => $vendorDir . '/christian-riesen/base32/src/Base32.php',
+    'Base32\\Base32Hex' => $vendorDir . '/christian-riesen/base32/src/Base32Hex.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Composer\\Semver\\Comparator' => $vendorDir . '/composer/semver/src/Comparator.php',
     'Composer\\Semver\\CompilingMatcher' => $vendorDir . '/composer/semver/src/CompilingMatcher.php',
@@ -50,6 +52,7 @@ return array(
     'Kirby\\Cms\\Auth\\Challenge' => $baseDir . '/src/Cms/Auth/Challenge.php',
     'Kirby\\Cms\\Auth\\EmailChallenge' => $baseDir . '/src/Cms/Auth/EmailChallenge.php',
     'Kirby\\Cms\\Auth\\Status' => $baseDir . '/src/Cms/Auth/Status.php',
+    'Kirby\\Cms\\Auth\\TotpChallenge' => $baseDir . '/src/Cms/Auth/TotpChallenge.php',
     'Kirby\\Cms\\Block' => $baseDir . '/src/Cms/Block.php',
     'Kirby\\Cms\\BlockConverter' => $baseDir . '/src/Cms/BlockConverter.php',
     'Kirby\\Cms\\Blocks' => $baseDir . '/src/Cms/Blocks.php',
@@ -141,10 +144,6 @@ return array(
     'Kirby\\Cms\\UserRules' => $baseDir . '/src/Cms/UserRules.php',
     'Kirby\\Cms\\Users' => $baseDir . '/src/Cms/Users.php',
     'Kirby\\Cms\\Visitor' => $baseDir . '/src/Cms/Visitor.php',
-    'Kirby\\ComposerInstaller\\CmsInstaller' => $vendorDir . '/getkirby/composer-installer/src/ComposerInstaller/CmsInstaller.php',
-    'Kirby\\ComposerInstaller\\Installer' => $vendorDir . '/getkirby/composer-installer/src/ComposerInstaller/Installer.php',
-    'Kirby\\ComposerInstaller\\Plugin' => $vendorDir . '/getkirby/composer-installer/src/ComposerInstaller/Plugin.php',
-    'Kirby\\ComposerInstaller\\PluginInstaller' => $vendorDir . '/getkirby/composer-installer/src/ComposerInstaller/PluginInstaller.php',
     'Kirby\\Content\\Content' => $baseDir . '/src/Content/Content.php',
     'Kirby\\Content\\ContentStorage' => $baseDir . '/src/Content/ContentStorage.php',
     'Kirby\\Content\\ContentStorageHandler' => $baseDir . '/src/Content/ContentStorageHandler.php',

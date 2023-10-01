@@ -36,6 +36,7 @@
 		"ext-libxml": "*",
 		"ext-mbstring": "*",
 		"ext-openssl": "*",
+		"christian-riesen/base32": "1.6.0",
 		"claviska/simpleimage": "4.0.6",
 		"composer/semver": "3.4.0",
 		"filp/whoops": "2.15.3",

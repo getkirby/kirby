@@ -71,7 +71,7 @@ class Auth
 	 * @since 3.5.0
 	 *
 	 * @param bool $long If `true`, a long session will be created
-	 * @param string $mode Either 'login' or 'password-reset'
+	 * @param 'login'|'password-reset'|'2fa' $mode Purpose of the code
 	 *
 	 * @throws \Kirby\Exception\LogicException If there is no suitable authentication challenge (only in debug mode)
 	 * @throws \Kirby\Exception\NotFoundException If the user does not exist (only in debug mode)
@@ -298,7 +298,9 @@ class Auth
 	 */
 	public function enabledChallenges(): array
 	{
-		return A::wrap($this->kirby->option('auth.challenges', ['email']));
+		return A::wrap(
+			$this->kirby->option('auth.challenges', ['totp', 'email'])
+		);
 	}
 
 	/**

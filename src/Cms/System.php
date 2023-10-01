@@ -205,7 +205,25 @@ class System
 	}
 
 	/**
-	 * Check if the panel is installable.
+	 * Check if the Panel has 2FA activated
+	 */
+	public function is2FA(): bool
+	{
+		return ($this->loginMethods()['password']['2fa'] ?? null) === true;
+	}
+
+	/**
+	 * Check if the Panel has 2FA with TOTP activated
+	 */
+	public function is2FAWithTOTP(): bool
+	{
+		return
+			$this->is2FA() === true &&
+			in_array('totp', $this->app->auth()->enabledChallenges()) === true;
+	}
+
+	/**
+	 * Check if the Panel is installable.
 	 * On a public server the panel.install
 	 * option must be explicitly set to true
 	 * to get the installer up and running.

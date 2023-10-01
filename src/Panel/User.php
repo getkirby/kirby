@@ -74,18 +74,38 @@ class User extends Model
 		];
 
 		$result[] = [
+			'dialog'   => $url . '/changeLanguage',
+			'icon'     => 'translate',
+			'text'     => I18n::translate('user.changeLanguage'),
+			'disabled' => $this->isDisabledDropdownOption('changeLanguage', $options, $permissions)
+		];
+
+		$result[] = '-';
+
+		$result[] = [
 			'dialog'   => $url . '/changePassword',
 			'icon'     => 'key',
 			'text'     => I18n::translate('user.changePassword'),
 			'disabled' => $this->isDisabledDropdownOption('changePassword', $options, $permissions)
 		];
 
-		$result[] = [
-			'dialog'   => $url . '/changeLanguage',
-			'icon'     => 'translate',
-			'text'     => I18n::translate('user.changeLanguage'),
-			'disabled' => $this->isDisabledDropdownOption('changeLanguage', $options, $permissions)
-		];
+		if ($this->model->kirby()->system()->is2FAWithTOTP() === true) {
+			if ($account || $this->model->kirby()->user()->isAdmin()) {
+				if ($this->model->secret('totp') !== null) {
+					$result[] = [
+						'dialog'   => $url . '/totp/disable',
+						'icon'     => 'qr-code',
+						'text'     => I18n::translate('login.totp.disable.option'),
+					];
+				} elseif ($account) {
+					$result[] = [
+						'dialog'   => $url . '/totp/enable',
+						'icon'     => 'qr-code',
+						'text'     => I18n::translate('login.totp.enable.option')
+					];
+				}
+			}
+		}
 
 		$result[] = '-';
 

@@ -7,6 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\Str;
+use Kirby\Toolkit\Totp;
 use Kirby\Toolkit\V;
 use SensitiveParameter;
 
@@ -135,6 +136,35 @@ class UserRules
 				'key'  => 'user.changeRole.permission',
 				'data' => ['name' => $user->username()]
 			]);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Validates if the TOTP can be changed
+	 * @since 4.0.0
+	 *
+	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the password
+	 */
+	public static function changeTotp(
+		User $user,
+		#[SensitiveParameter]
+		string|null $secret
+	): bool {
+		$currentUser = $user->kirby()->user();
+
+		if (
+			$currentUser->is($user) === false &&
+			$currentUser->isAdmin() === false
+		) {
+			throw new PermissionException('You cannot change the time-based code for ' . $user->email());
+		}
+
+		// safety check to avoid accidental insecure secrets;
+		// throws an exception for secrets of the wrong length
+		if ($secret !== null) {
+			new Totp($secret);
 		}
 
 		return true;

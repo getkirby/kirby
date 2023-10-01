@@ -58,12 +58,40 @@ class UserTest extends TestCase
 	}
 
 	/**
+	 * @covers ::dropdown
+	 */
+	public function testDropdownTotp(): void
+	{
+		$this->app = new App([
+			'options' => [
+				'auth' => [
+					'methods' => ['password' => ['2fa' => true]]
+				]
+			],
+			'users' => [
+				['email' => 'test@getkirby.com'],
+				['email' => 'foo@getkirby.com']
+			],
+			'user' => 'test@getkirby.com'
+		]);
+
+		$user = $this->app->user();
+		$dropdown = $user->panel()->dropdown();
+		$this->assertSame('/account/totp/enable', $dropdown[7]['dialog']);
+		$this->assertSame('qr-code', $dropdown[7]['icon']);
+
+		$user->changeTotp('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
+		$dropdown = $user->panel()->dropdown();
+		$this->assertSame('/account/totp/disable', $dropdown[7]['dialog']);
+	}
+
+	/**
 	 * @covers ::dropdownOption
 	 */
 	public function testDropdownOption(): void
 	{
 		$model = new ModelUser([
-			'id' => 'test',
+			'id'    => 'test',
 			'email' => 'test@getkirby.com',
 		]);
 

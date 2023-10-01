@@ -12,6 +12,16 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
+/**
+ * Manages the Panel dialog to create new pages
+ * @since 4.0.0
+ *
+ * @package   Kirby Panel
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 class PageCreateDialog
 {
 	protected PageBlueprint $blueprint;

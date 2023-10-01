@@ -47,6 +47,10 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         array (
             'Composer\\Semver\\' => 16,
         ),
+        'B' => 
+        array (
+            'Base32\\' => 7,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -99,6 +103,10 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         array (
             0 => __DIR__ . '/..' . '/composer/semver/src',
         ),
+        'Base32\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/christian-riesen/base32/src',
+        ),
     );
 
     public static $prefixesPsr0 = array (
@@ -119,6 +127,8 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
     );
 
     public static $classMap = array (
+        'Base32\\Base32' => __DIR__ . '/..' . '/christian-riesen/base32/src/Base32.php',
+        'Base32\\Base32Hex' => __DIR__ . '/..' . '/christian-riesen/base32/src/Base32Hex.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Composer\\Semver\\Comparator' => __DIR__ . '/..' . '/composer/semver/src/Comparator.php',
         'Composer\\Semver\\CompilingMatcher' => __DIR__ . '/..' . '/composer/semver/src/CompilingMatcher.php',
@@ -163,6 +173,7 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         'Kirby\\Cms\\Auth\\Challenge' => __DIR__ . '/../..' . '/src/Cms/Auth/Challenge.php',
         'Kirby\\Cms\\Auth\\EmailChallenge' => __DIR__ . '/../..' . '/src/Cms/Auth/EmailChallenge.php',
         'Kirby\\Cms\\Auth\\Status' => __DIR__ . '/../..' . '/src/Cms/Auth/Status.php',
+        'Kirby\\Cms\\Auth\\TotpChallenge' => __DIR__ . '/../..' . '/src/Cms/Auth/TotpChallenge.php',
         'Kirby\\Cms\\Block' => __DIR__ . '/../..' . '/src/Cms/Block.php',
         'Kirby\\Cms\\BlockConverter' => __DIR__ . '/../..' . '/src/Cms/BlockConverter.php',
         'Kirby\\Cms\\Blocks' => __DIR__ . '/../..' . '/src/Cms/Blocks.php',
@@ -254,10 +265,6 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         'Kirby\\Cms\\UserRules' => __DIR__ . '/../..' . '/src/Cms/UserRules.php',
         'Kirby\\Cms\\Users' => __DIR__ . '/../..' . '/src/Cms/Users.php',
         'Kirby\\Cms\\Visitor' => __DIR__ . '/../..' . '/src/Cms/Visitor.php',
-        'Kirby\\ComposerInstaller\\CmsInstaller' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/CmsInstaller.php',
-        'Kirby\\ComposerInstaller\\Installer' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/Installer.php',
-        'Kirby\\ComposerInstaller\\Plugin' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/Plugin.php',
-        'Kirby\\ComposerInstaller\\PluginInstaller' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/PluginInstaller.php',
         'Kirby\\Content\\Content' => __DIR__ . '/../..' . '/src/Content/Content.php',
         'Kirby\\Content\\ContentStorage' => __DIR__ . '/../..' . '/src/Content/ContentStorage.php',
         'Kirby\\Content\\ContentStorageHandler' => __DIR__ . '/../..' . '/src/Content/ContentStorageHandler.php',

@@ -4,12 +4,14 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Data\Data;
+use Kirby\Data\Json;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Form\Form;
 use Kirby\Http\Idn;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use SensitiveParameter;
 use Throwable;
@@ -136,6 +138,28 @@ trait UserActions
 
 			// update the users collection
 			$user->kirby()->users()->set($user->id(), $user);
+
+			return $user;
+		});
+	}
+
+	/**
+	 * Changes the user's TOTP secret
+	 * @since 4.0.0
+	 */
+	public function changeTotp(
+		#[SensitiveParameter]
+		string|null $secret
+	): static {
+		return $this->commit('changeTotp', ['user' => $this, 'secret' => $secret], function ($user, $secret) {
+			$this->writeSecret('totp', $secret);
+
+			// keep the user logged in to the current browser
+			// if they changed their own TOTP secret
+			// (regenerate the session token, update the login timestamp)
+			if ($user->isLoggedIn() === true) {
+				$user->loginPasswordless();
+			}
 
 			return $user;
 		});
@@ -306,7 +330,34 @@ trait UserActions
 	 */
 	protected function readPassword(): string|false
 	{
-		return F::read($this->passwordFile());
+		return $this->secret('password') ?? false;
+	}
+
+	/**
+	 * Reads the secrets from the user secrets file on disk
+	 * @since 4.0.0
+	 */
+	protected function readSecrets(): array
+	{
+		$file    = $this->secretsFile();
+		$secrets = [];
+
+		if (is_file($file) === true) {
+			$lines = explode("\n", file_get_contents($file));
+
+			if (isset($lines[1]) === true) {
+				$secrets = Json::decode($lines[1]);
+			}
+
+			$secrets['password'] = $lines[0];
+		}
+
+		// an empty password hash means that no password was set
+		if (($secrets['password'] ?? null) === '') {
+			unset($secrets['password']);
+		}
+
+		return $secrets;
 	}
 
 	/**
@@ -359,6 +410,39 @@ trait UserActions
 		#[SensitiveParameter]
 		string $password = null
 	): bool {
-		return F::write($this->passwordFile(), $password);
+		return $this->writeSecret('password', $password);
+	}
+
+	/**
+	 * Writes a specific secret to the user secrets file on disk;
+	 * `password` is the first line, the rest is stored as JSON
+	 * @since 4.0.0
+	 */
+	protected function writeSecret(
+		string $key,
+		#[SensitiveParameter]
+		mixed $secret
+	): bool {
+		$secrets = $this->readSecrets();
+
+		if ($secret === null) {
+			unset($secrets[$key]);
+		} else {
+			$secrets[$key] = $secret;
+		}
+
+		// first line is always the password
+		$lines = $secrets['password'] ?? '';
+
+		// everything else is for the second line
+		$secondLine = Json::encode(
+			A::without($secrets, 'password')
+		);
+
+		if ($secondLine !== '[]') {
+			$lines .= "\n" . $secondLine;
+		}
+
+		return F::write($this->secretsFile(), $lines);
 	}
 }

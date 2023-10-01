@@ -71,7 +71,11 @@ class Exception extends \Exception
 		$this->details  = $args['details']  ?? static::$defaultDetails;
 
 		// define the Exception key
-		$key = self::$prefix . '.' . ($args['key'] ?? static::$defaultKey);
+		$key = $args['key'] ?? static::$defaultKey;
+
+		if (Str::startsWith($key, self::$prefix . '.') === false) {
+			$key = self::$prefix . '.' . $key;
+		}
 
 		if (is_string($args) === true) {
 			$this->isTranslated = false;

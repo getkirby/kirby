@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Panel\UserTotpEnableDialog;
+
 $dialogs = require __DIR__ . '/../users/dialogs.php';
 
 return [
@@ -86,5 +88,19 @@ return [
 		'pattern' => '(account)/files/(:any)/fields/(:any)/(:all?)',
 		'load'    => $dialogs['user.file.fields']['load'],
 		'submit'  => $dialogs['user.file.fields']['submit']
+	],
+
+	// account enable TOTP
+	'account.totp.enable' => [
+		'pattern' => '(account)/totp/enable',
+		'load'    => fn () => (new UserTotpEnableDialog())->load(),
+		'submit'  => fn () => (new UserTotpEnableDialog())->submit()
+	],
+
+	// account disable TOTP
+	'account.totp.disable' => [
+		'pattern' => '(account)/totp/disable',
+		'load'    => $dialogs['user.totp.disable']['load'],
+		'submit'  => $dialogs['user.totp.disable']['submit']
 	],
 ];
