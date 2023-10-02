@@ -337,7 +337,7 @@
 
 	"fields.empty": "No fields yet",
 
-	"file": "File",
+	"file": "Arxiu",
 	"file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/files/{blueprint}.yml</strong>",
 	"file.changeTemplate": "Canviar la plantilla",
 	"file.changeTemplate.notice": "Changing the file's template will remove content for fields that don't match in type. If the new template defines certain rules, e.g. image dimensions, those will also be applied irreversibly. Use with caution.",
