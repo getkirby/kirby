@@ -86,7 +86,8 @@ class AssetsTest extends TestCase
 		$css     = $assets->css();
 
 		// css
-		$this->assertSame($base . '/css/style.min.css', $css['index']);
+		$this->assertSame($base . '/css/index.min.css', $css['index']);
+		$this->assertSame($base . '/css/ui.min.css', $css['ui']);
 		$this->assertSame('/media/plugins/index.css?0', $css['plugins']);
 	}
 

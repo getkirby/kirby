@@ -343,6 +343,9 @@ export default {
 .k-button:where([data-size="lg"]) {
 	--button-height: var(--height-lg);
 }
+.k-button:where([data-size="xl"]) {
+	--button-height: var(--height-lg);
+}
 
 /** Dropdown arrow **/
 .k-button-arrow {

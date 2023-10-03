@@ -58,19 +58,20 @@ class Assets
 	{
 		$css = A::merge(
 			[
-				'index'   => $this->url . '/css/style.min.css',
+				'ui'      => $this->url . '/css/ui.min.css',
+				'index'   => $this->url . '/css/index.min.css',
 				'plugins' => $this->plugins->url('css')
 			],
 			$this->custom('panel.css')
 		);
 
 		// during dev mode we do not need to load
-		// the general stylesheet (as styling will be inlined)
+		// the Panel stylesheets (as styling will be inlined)
 		if ($this->dev === true) {
-			$css['index'] = null;
+			unset($css['ui'], $css['index']);
 		}
 
-		return array_filter($css);
+		return $css;
 	}
 
 	/**

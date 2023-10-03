@@ -56,9 +56,9 @@ export default defineConfig(({ command }) => {
 		},
 		build: {
 			minify: "terser",
-			cssCodeSplit: false,
+			cssCodeSplit: true,
 			rollupOptions: {
-				input: "./src/index.js",
+				input: ["./src/ui.js", "./src/index.js"],
 				output: {
 					entryFileNames: "js/[name].min.js",
 					chunkFileNames: "js/[name].min.js",
