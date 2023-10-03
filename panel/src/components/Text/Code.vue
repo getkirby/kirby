@@ -1,13 +1,22 @@
 <template>
 	<!-- @slot Code content -->
-	<pre class="k-code"><code><slot /></code></pre>
+	<pre
+		class="k-code"
+		:data-language="language"
+	><code :class="language ? `language-${language}` : null"><slot /></code></pre>
 </template>
 
 <script>
 /**
  * @public
  */
-export default {};
+export default {
+	props: {
+		language: {
+			type: String
+		}
+	}
+};
 </script>
 
 <style>
