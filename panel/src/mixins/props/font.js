@@ -1,7 +1,8 @@
 export default {
 	props: {
-		font: {
-			type: String
-		}
+		/**
+		 * Changes the font of the input to monospace or sans
+		 */
+		font: String
 	}
 };

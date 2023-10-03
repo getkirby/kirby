@@ -24,6 +24,9 @@ export const props = {
 	}
 };
 
+/**
+ * @displayName DrawerTabs
+ */
 export default {
 	mixins: [props],
 	emits: ["open"],

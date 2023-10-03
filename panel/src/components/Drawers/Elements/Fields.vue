@@ -27,6 +27,9 @@ export const props = {
 	}
 };
 
+/**
+ * @displayName DrawerFields
+ */
 export default {
 	mixins: [props],
 	emits: ["input", "submit"],

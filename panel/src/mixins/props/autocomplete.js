@@ -1,7 +1,8 @@
 export default {
 	props: {
-		autocomplete: {
-			type: String
-		}
+		/**
+		 * Sets the HTML5 autocomplete mode for the input
+		 */
+		autocomplete: String
 	}
 };

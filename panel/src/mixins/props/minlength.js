@@ -1,7 +1,8 @@
 export default {
 	props: {
-		minlength: {
-			type: Number
-		}
+		/**
+		 * Minimum number of required characters
+		 */
+		minlength: Number
 	}
 };

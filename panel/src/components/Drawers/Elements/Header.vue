@@ -39,6 +39,9 @@ export const props = {
 	}
 };
 
+/**
+ * @displayName DrawerHeader
+ */
 export default {
 	mixins: [props],
 	emits: ["crumb", "tab"]

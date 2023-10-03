@@ -4,6 +4,13 @@
 	</div>
 </template>
 
+<script>
+/**
+ * @displayName DrawerBody
+ */
+export default {};
+</script>
+
 <style>
 .k-drawer-body {
 	padding: var(--drawer-body-padding);

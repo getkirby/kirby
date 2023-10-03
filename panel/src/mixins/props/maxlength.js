@@ -1,7 +1,8 @@
 export default {
 	props: {
-		maxlength: {
-			type: Number
-		}
+		/**
+		 * Maximum number of allowed characters
+		 */
+		maxlength: Number
 	}
 };

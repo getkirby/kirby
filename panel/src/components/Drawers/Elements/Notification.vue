@@ -5,6 +5,13 @@
 	/>
 </template>
 
+<script>
+/**
+ * @displayName DrawerNotification
+ */
+export default {};
+</script>
+
 <style>
 .k-notification.k-drawer-notification {
 	padding: 0.625rem 1.5rem;
