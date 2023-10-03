@@ -70,7 +70,7 @@ class A
 	 * // output: 'true'
 	 *
 	 * $isIntegerKey = fn($value, $key) => is_int($key);
-	 * echo A::every($array, $isStringKey) ? 'true' : 'false';
+	 * echo A::every($array, $isIntegerKey) ? 'true' : 'false';
 	 * // output: 'true'
 	 * </code>
 	 *
