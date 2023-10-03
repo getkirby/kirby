@@ -74,6 +74,7 @@ class A
 	 * // output: 'true'
 	 * </code>
 	 *
+	 * @since 3.9.8
 	 * @param array $array
 	 * @param callable(mixed $value, int|string $key, array $array):bool $test
 	 * @return bool
