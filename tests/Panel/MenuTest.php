@@ -134,6 +134,29 @@ class MenuTest extends TestCase
 	}
 
 	/**
+	 * @covers ::areas
+	 */
+	public function testAreasConfigOptionClosure()
+	{
+		$test = $this;
+
+		$this->app->clone([
+			'options' => [
+				'panel' => [
+					'menu' => function ($kirby) use ($test) {
+						$test->assertInstanceOf(App::class, $kirby);
+						return [];
+					}
+				]
+			]
+		]);
+
+		$menu  = new Menu();
+		$areas = $menu->areas();
+		$this->assertCount(0, $areas);
+	}
+
+	/**
 	 * @covers ::entry
 	 */
 	public function testEntry()
