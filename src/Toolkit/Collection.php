@@ -123,6 +123,10 @@ class Collection extends Iterator implements Countable
 	 */
 	public function __unset($key)
 	{
+		if ($this->caseSensitive !== true) {
+			$key = strtolower($key);
+		}
+
 		unset($this->data[$key]);
 	}
 
