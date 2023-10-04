@@ -18,11 +18,11 @@ export default {
 			this.$panel.dialog.open({
 				component: "k-ui-output-dialog",
 				props: {
-					code: JSON.stringify(entries, null, 2),
-				},
+					code: JSON.stringify(entries, null, 2)
+				}
 			});
-		},
-	},
+		}
+	}
 };
 </script>
 

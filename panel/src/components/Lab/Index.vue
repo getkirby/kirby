@@ -8,8 +8,8 @@
 <script>
 export default {
 	props: {
-		examples: Array,
-	},
+		examples: Array
+	}
 };
 </script>
 

@@ -12,14 +12,19 @@
 				<tbody>
 					<tr>
 						<td class="k-table-cell">
-							<component :is="`k-${type}-field-preview`" :column="column" :field="field" :value="value" @input="$emit('input', $event)" />
+							<component
+								:is="`k-${type}-field-preview`"
+								:column="column"
+								:field="field"
+								:value="value"
+								@input="$emit('input', $event)"
+							/>
 						</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 	</k-ui-example>
-	</k-ui-examples>
 </template>
 
 <script>
@@ -39,8 +44,8 @@ export default {
 		},
 		label: String,
 		type: String,
-		value: {},
-	},
+		value: {}
+	}
 };
 </script>
 

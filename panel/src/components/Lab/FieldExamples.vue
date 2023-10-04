@@ -84,45 +84,45 @@ export default {
 	props: {
 		description: {
 			default: true,
-			type: Boolean,
+			type: Boolean
 		},
 		icon: {
 			default: true,
-			type: Boolean,
+			type: Boolean
 		},
 		placeholder: {
 			default: true,
-			type: Boolean,
+			type: Boolean
 		},
 		type: String,
 		value: {
 			default: null,
-			type: [String, Number, Array],
-		},
+			type: [String, Number, Array]
+		}
 	},
 	data() {
 		return {
-			input: null,
+			input: null
 		};
 	},
 	computed: {
 		label() {
 			return this.$helper.string.ucfirst(this.type);
-		},
+		}
 	},
 	watch: {
 		value: {
 			handler(value) {
 				this.input = value;
 			},
-			immediate: true,
-		},
+			immediate: true
+		}
 	},
 	methods: {
 		emit(input) {
 			this.input = input;
 			this.$emit("input", input);
-		},
-	},
+		}
+	}
 };
 </script>

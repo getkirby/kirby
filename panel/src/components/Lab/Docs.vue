@@ -3,6 +3,7 @@
 		<section v-if="info.description" class="k-ui-docs-section">
 			<k-headline class="h3">Description</k-headline>
 			<k-box theme="text">
+				<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
 				<k-text v-html="md(info.description)" />
 			</k-box>
 		</section>
@@ -10,10 +11,10 @@
 		<section v-if="info.tags.examples?.length" class="k-ui-docs-section">
 			<k-headline class="h3">Examples</k-headline>
 			<k-ui-code
-				v-for="(example, index) in info.tags.examples"
+				v-for="(sample, index) in info.tags.examples"
 				:key="index"
 				language="html"
-				>{{ example.content }}</k-ui-code
+				>{{ sample.content }}</k-ui-code
 			>
 		</section>
 
@@ -51,6 +52,7 @@
 								}}</code>
 							</td>
 							<td>
+								<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
 								<k-text v-html="md(prop.description)" />
 							</td>
 						</tr>
@@ -75,6 +77,7 @@
 								</k-text>
 							</td>
 							<td>
+								<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
 								<k-text v-html="md(slot.description)" />
 							</td>
 						</tr>

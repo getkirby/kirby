@@ -35,13 +35,13 @@
 			</k-ui-example>
 			<k-ui-example label="Focus">
 				<component
-					ref="input"
 					:is="`k-${type}-input`"
+					ref="input"
 					:value="input"
 					style="margin-bottom: 1.5rem"
 					@input="emit"
 				/>
-				<k-button variant="filled" @click="$refs.input.focus()" size="sm">
+				<k-button variant="filled" size="sm" @click="$refs.input.focus()">
 					Focus
 				</k-button>
 			</k-ui-example>
@@ -63,17 +63,17 @@ export default {
 	props: {
 		placeholder: {
 			default: true,
-			type: Boolean,
+			type: Boolean
 		},
 		type: String,
 		value: {
 			default: null,
-			type: [String, Number, Boolean, Object, Array],
-		},
+			type: [String, Number, Boolean, Object, Array]
+		}
 	},
 	data() {
 		return {
-			input: null,
+			input: null
 		};
 	},
 	watch: {
@@ -81,15 +81,15 @@ export default {
 			handler(value) {
 				this.input = value;
 			},
-			immediate: true,
-		},
+			immediate: true
+		}
 	},
 	methods: {
 		emit(input) {
 			this.input = input;
 			this.$emit("input", input);
-		},
-	},
+		}
+	}
 };
 </script>
 

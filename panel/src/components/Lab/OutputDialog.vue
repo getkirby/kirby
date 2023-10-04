@@ -13,7 +13,7 @@
 <script>
 export default {
 	props: {
-		code: String,
-	},
+		code: String
+	}
 };
 </script>

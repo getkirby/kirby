@@ -3,21 +3,21 @@
 		<header class="k-ui-example-header">
 			<h3 class="k-ui-example-label">{{ label }}</h3>
 			<k-button-group
-				layout="collapsed"
 				v-if="code"
+				layout="collapsed"
 				class="k-ui-example-inspector"
 			>
 				<k-button
 					icon="preview"
-					@click="inspect = null"
 					:theme="inspect === null ? 'info' : null"
 					size="xs"
+					@click="inspect = null"
 				/>
 				<k-button
 					icon="code"
-					@click="openCode"
 					:theme="inspect !== null ? 'info' : null"
 					size="xs"
+					@click="openCode"
 				/>
 			</k-button-group>
 		</header>
@@ -39,21 +39,21 @@ export default {
 	props: {
 		code: {
 			type: Boolean,
-			default: true,
+			default: true
 		},
 		label: String,
-		flex: Boolean,
+		flex: Boolean
 	},
 	data() {
 		return {
-			inspect: null,
+			inspect: null
 		};
 	},
 	methods: {
 		openCode() {
 			this.inspect = window.UiExamples[this.label];
-		},
-	},
+		}
+	}
 };
 </script>
 

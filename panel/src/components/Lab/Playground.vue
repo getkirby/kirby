@@ -10,8 +10,9 @@
 		</k-header>
 		<k-tabs :tab="tab" :tabs="tabs" />
 
-		<component v-if="file" :is="component" v-bind="props" />
-		<component v-if="styles" is="style" v-html="styles"></component>
+		<component :is="component" v-if="file" v-bind="props" />
+		<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
+		<component :is="'style'" v-if="styles" v-html="styles" />
 	</k-panel-inside>
 </template>
 
@@ -26,14 +27,14 @@ export default {
 		tab: String,
 		tabs: {
 			type: Array,
-			default: () => [],
+			default: () => []
 		},
 		template: String,
-		title: String,
+		title: String
 	},
 	data() {
 		return {
-			component: null,
+			component: null
 		};
 	},
 	watch: {
@@ -41,8 +42,8 @@ export default {
 			handler() {
 				this.createComponent();
 			},
-			immediate: true,
-		},
+			immediate: true
+		}
 	},
 	methods: {
 		async createComponent() {
@@ -69,11 +70,11 @@ export default {
 				props: {
 					icon: "book",
 					title: this.docs,
-					docs: this.docs,
-				},
+					docs: this.docs
+				}
 			});
-		},
-	},
+		}
+	}
 };
 </script>
 
@@ -81,4 +82,4 @@ export default {
 .k-ui-playground-view[data-has-tabs="true"] .k-header {
 	margin-bottom: 0;
 }
-</style>
+</c>

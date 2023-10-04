@@ -70,21 +70,21 @@ export default {
 	props: {
 		columns: {
 			default: true,
-			type: Boolean,
+			type: Boolean
 		},
 		info: {
 			default: true,
-			type: Boolean,
+			type: Boolean
 		},
 		type: String,
 		value: {
 			default: null,
-			type: [Array, String],
-		},
+			type: [Array, String]
+		}
 	},
 	data() {
 		return {
-			input: null,
+			input: null
 		};
 	},
 	computed: {
@@ -95,30 +95,30 @@ export default {
 			return [
 				{ text: "Option A", value: "a" },
 				{ text: "Option B", value: "b" },
-				{ text: "Option C", value: "c" },
+				{ text: "Option C", value: "c" }
 			];
 		},
 		optionsWithInfo() {
 			return [
 				{ text: "Option A", value: "a", info: "This is some info text" },
 				{ text: "Option B", value: "b", info: "This is some info text" },
-				{ text: "Option C", value: "c", info: "This is some info text" },
+				{ text: "Option C", value: "c", info: "This is some info text" }
 			];
-		},
+		}
 	},
 	watch: {
 		value: {
 			handler(value) {
 				this.input = value;
 			},
-			immediate: true,
-		},
+			immediate: true
+		}
 	},
 	methods: {
 		emit(input) {
 			this.input = input;
 			this.$emit("input", input);
-		},
-	},
+		}
+	}
 };
 </script>

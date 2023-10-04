@@ -68,25 +68,25 @@ export default {
 	props: {
 		description: {
 			default: true,
-			type: Boolean,
+			type: Boolean
 		},
 		icon: {
 			default: true,
-			type: Boolean,
+			type: Boolean
 		},
 		placeholder: {
 			default: true,
-			type: Boolean,
+			type: Boolean
 		},
 		type: String,
 		value: {
 			default: null,
-			type: [String, Number],
-		},
+			type: [String, Number]
+		}
 	},
 	data() {
 		return {
-			input: null,
+			input: null
 		};
 	},
 	watch: {
@@ -94,14 +94,14 @@ export default {
 			handler(value) {
 				this.input = value;
 			},
-			immediate: true,
-		},
+			immediate: true
+		}
 	},
 	methods: {
 		emit(input) {
 			this.input = input;
 			this.$emit("input", input);
-		},
-	},
+		}
+	}
 };
 </script>
