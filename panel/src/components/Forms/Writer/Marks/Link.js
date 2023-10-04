@@ -20,8 +20,12 @@ export default class Link extends Mark {
 			insertLink: (attrs = {}) => {
 				const { selection } = this.editor.state;
 
-				// if no text is selected, we insert the link as text
-				if (selection.empty) {
+				// if no text is selected and link mark is not active
+				// we insert the link as text
+				if (
+					selection.empty &&
+					this.editor.activeMarks.includes('link') === false
+				) {
 					this.editor.insertText(attrs.href, true);
 				}
 
