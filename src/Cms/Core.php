@@ -65,6 +65,7 @@ class Core
 			'search'       => $this->root . '/areas/search.php',
 			'site'         => $this->root . '/areas/site.php',
 			'system'       => $this->root . '/areas/system.php',
+			'ui'           => $this->root . '/areas/ui.php',
 			'users'        => $this->root . '/areas/users.php',
 		];
 	}
