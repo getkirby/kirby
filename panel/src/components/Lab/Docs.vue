@@ -11,8 +11,8 @@
 			<k-headline class="h3">Examples</k-headline>
 			<k-ui-code
 				v-for="(example, index) in info.tags.examples"
-				language="html"
 				:key="index"
+				language="html"
 				>{{ example.content }}</k-ui-code
 			>
 		</section>
@@ -38,6 +38,7 @@
 								<k-text class="k-ui-docs-types">
 									<code
 										v-for="type in prop.type.name.split('|')"
+										:key="type"
 										:data-type="type"
 									>
 										{{ type }}
