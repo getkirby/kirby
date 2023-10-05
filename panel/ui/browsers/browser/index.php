@@ -5,7 +5,7 @@ return [
 	'items' => A::map(range(1, 10), function ($item) {
 		return [
 			'image' => [
-				'src' => picsum(100)
+				'src' => 'https://picsum.photos/100/100/?v=' . Str::random()
 			],
 			'label' => 'some-image-' . $item . '.jpg',
 			'value' => $item,
