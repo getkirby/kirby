@@ -2,7 +2,7 @@
 
 return function () {
 	return [
-		'icon'  => 'users',
+		'icon'  => 'palette',
 		'label' => 'UI',
 		'menu'  => false,
 		'views' => require __DIR__ . '/ui/views.php'
