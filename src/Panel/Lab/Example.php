@@ -203,7 +203,7 @@ class Example
 		}
 
 		// extract code for each example
-		if (preg_match_all('!<k-ui-example .*?label="(.*?)".*?>(.*?)<\/k-ui-example>!s', $parts['template'] ?? '', $matches)) {
+		if (preg_match_all('!<k-ui-example.*?label="(.*?)".*?>(.*?)<\/k-ui-example>!s', $parts['template'] ?? '', $matches)) {
 			foreach ($matches[1] as $key => $name) {
 				$code = $matches[2][$key];
 
