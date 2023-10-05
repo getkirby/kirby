@@ -1,0 +1,200 @@
+<template>
+	<k-ui-examples>
+		<h2 class="h4">State</h2>
+		<k-ui-example label="component">
+			<k-text>
+				<p>
+					<code>window.panel.view.component</code> returns the name of the
+					component that is being rendered to display the view
+				</p>
+				<k-code>{{ $panel.view.component }}</k-code>
+			</k-text>
+		</k-ui-example>
+		<k-ui-example label="breadcrumb">
+			<k-text>
+				<p>
+					<code>window.panel.view.breadcrumb</code> returns an array of
+					breadcrumb items that will be displayed at the top of the view
+				</p>
+				<k-code>{{ $panel.view.breadcrumb }}</k-code>
+			</k-text>
+		</k-ui-example>
+		<k-ui-example label="breadcrumbLabel">
+			<k-text>
+				<p>
+					<code>window.panel.view.breadcrumbLabel</code> returns the label for
+					the first item in the breadcrumb
+				</p>
+				<k-code>{{ $panel.view.breadcrumbLabel }}</k-code>
+			</k-text>
+		</k-ui-example>
+		<k-ui-example label="icon">
+			<k-text>
+				<p>
+					<code>window.panel.view.icon</code> returns the icon for the view.
+					This will also be used by the breadcrumb.
+				</p>
+				<k-code>{{ $panel.view.icon }}</k-code>
+			</k-text>
+		</k-ui-example>
+		<k-ui-example label="id">
+			<k-text>
+				<p><code>window.panel.view.id</code> returns the id of the view</p>
+				<k-code>{{ $panel.view.id }}</k-code>
+			</k-text>
+		</k-ui-example>
+		<k-ui-example label="isLoading">
+			<k-text>
+				<p>
+					<code>window.panel.view.isLoading</code> If true, the view is
+					currently being loaded/reloaded.
+				</p>
+				<k-code>{{ $panel.view.isLoading }}</k-code>
+			</k-text>
+		</k-ui-example>
+		<k-ui-example label="link">
+			<k-text>
+				<p>
+					<code>window.panel.view.link</code> Returns the relative base URL of
+					the view
+				</p>
+				<k-code>{{ $panel.view.link }}</k-code>
+			</k-text>
+		</k-ui-example>
+		<k-ui-example label="path">
+			<k-text>
+				<p>
+					<code>window.panel.view.path</code> Returns the relative URL to the
+					current view
+				</p>
+				<k-code>{{ $panel.view.path }}</k-code>
+			</k-text>
+		</k-ui-example>
+		<k-ui-example label="props">
+			<k-text>
+				<p>
+					<code>window.panel.view.props</code> Returns an object with all props
+					for the current view
+				</p>
+				<k-ui-code language="js">{{ $panel.view.props }}</k-ui-code>
+			</k-text>
+		</k-ui-example>
+		<k-ui-example label="query">
+			<k-text>
+				<p>
+					<code>window.panel.view.query</code> Returns an object with the
+					current URL query
+				</p>
+				<k-ui-code language="js">{{ $panel.view.query }}</k-ui-code>
+			</k-text>
+		</k-ui-example>
+		<k-ui-example label="referrer">
+			<k-text>
+				<p>
+					<code>window.panel.view.referrer</code> Returns the referrer URL if
+					there's one for the request
+				</p>
+				<k-code>{{ $panel.view.referrer }}</k-code>
+			</k-text>
+		</k-ui-example>
+		<k-ui-example label="search">
+			<k-text>
+				<p>
+					<code>window.panel.view.search</code> Returns the selected search type
+					that will be activated in the search dialog.
+				</p>
+				<k-code>{{ $panel.view.search }}</k-code>
+			</k-text>
+		</k-ui-example>
+		<k-ui-example label="timestamp">
+			<k-text>
+				<p>
+					<code>window.panel.view.timestamp</code> The server always returns the
+					latest timestamp in requests
+				</p>
+				<k-code>{{ $panel.view.timestamp }}</k-code>
+			</k-text>
+		</k-ui-example>
+		<k-ui-example label="title">
+			<k-text>
+				<p>
+					<code>window.panel.view.title</code> Returns the title for the current
+					view
+				</p>
+				<k-code>{{ $panel.view.title }}</k-code>
+			</k-text>
+		</k-ui-example>
+
+		<h2 class="h4">Methods</h2>
+
+		<k-ui-example label="load">
+			<k-text>
+				<k-ui-code language="js"
+					>window.panel.view.load(url, options = {});</k-ui-code
+				>
+				<p>
+					Loads the state of the next view without updating the current state
+					yet
+				</p>
+			</k-text>
+		</k-ui-example>
+		<k-ui-example label="open">
+			<k-text>
+				<k-ui-code language="js"
+					>window.panel.view.open(url, options = {});</k-ui-code
+				>
+				<p>Loads and sets the state of the next view and handles routing.</p>
+			</k-text>
+		</k-ui-example>
+		<k-ui-example label="post">
+			<k-text>
+				<k-ui-code language="js"
+					>window.panel.view.post(url, options = {});</k-ui-code
+				>
+				<p>Sends a post request to the view.</p>
+			</k-text>
+		</k-ui-example>
+		<k-ui-example label="refresh">
+			<k-text>
+				<k-ui-code language="js"
+					>window.panel.view.refresh(options = {});</k-ui-code
+				>
+				<p>
+					Reloads and updates the props for the current view. This will only
+					rerender the parts that have changed according to the props. The view
+					component will not necessarily be rerenderd. That's the main
+					difference to <code>window.panbel.view.reload()</code>
+				</p>
+			</k-text>
+		</k-ui-example>
+		<k-ui-example label="reload">
+			<k-text>
+				<k-ui-code language="js"
+					>window.panel.view.reload(options = {});</k-ui-code
+				>
+				<p>
+					Reloads and rerenders the current view. If you want to refresh the
+					props of the view without forcing an entire rerender process, use
+					<code>window.panbel.view.refresh()</code> instead.
+				</p>
+			</k-text>
+		</k-ui-example>
+		<k-ui-example label="url">
+			<k-text>
+				<k-ui-code language="js">window.panel.view.url();</k-ui-code>
+				<p>
+					Returns the URL to the current view, including the path and query.
+				</p>
+			</k-text>
+		</k-ui-example>
+	</k-ui-examples>
+</template>
+
+<style>
+.k-ui-examples h2 {
+	margin-bottom: var(--spacing-6);
+}
+.k-ui-examples * + h2 {
+	margin-top: var(--spacing-12);
+}
+</style>
