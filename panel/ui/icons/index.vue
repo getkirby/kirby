@@ -1,13 +1,13 @@
 <template>
 	<k-ui-examples>
-		<k-ui-example label="On white">
+		<k-ui-example label="On white" :code="false">
 			<ul class="k-ui-icons">
 				<li v-for="icon in icons" :key="icon">
 					<k-icon :type="icon" /> {{ icon }}
 				</li>
 			</ul>
 		</k-ui-example>
-		<k-ui-example label="On black">
+		<k-ui-example label="On black" :code="false">
 			<ul class="k-ui-icons" data-variant="dark">
 				<li v-for="icon in icons" :key="icon">
 					<k-icon :type="icon" /> {{ icon }}
@@ -20,8 +20,8 @@
 <script>
 export default {
 	props: {
-		icons: Array,
-	},
+		icons: Array
+	}
 };
 </script>
 

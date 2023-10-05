@@ -9,27 +9,36 @@
 			>
 				<k-button
 					icon="preview"
-					:theme="inspect === null ? 'info' : null"
+					:theme="mode === 'preview' ? 'info' : null"
 					size="xs"
-					@click="inspect = null"
+					@click="mode = 'preview'"
+				/>
+				<k-button
+					icon="search"
+					:theme="mode === 'inspect' ? 'info' : null"
+					size="xs"
+					@click="mode = 'inspect'"
 				/>
 				<k-button
 					icon="code"
-					:theme="inspect !== null ? 'info' : null"
+					:theme="mode === 'raw' ? 'info' : null"
 					size="xs"
-					@click="openCode"
+					@click="mode = 'raw'"
 				/>
 			</k-button-group>
 		</header>
 
-		<!-- Code -->
-		<div v-if="inspect" class="k-ui-example-code">
-			<k-ui-code language="html">{{ inspect }}</k-ui-code>
-		</div>
-
 		<!-- Preview -->
-		<div v-else class="k-ui-example-canvas">
+		<div v-show="mode === 'preview'" ref="preview" class="k-ui-example-canvas">
 			<slot />
+		</div>
+		<!-- Inspect -->
+		<div v-show="mode === 'inspect'" class="k-ui-example-code">
+			<k-ui-code language="html">{{ component }}</k-ui-code>
+		</div>
+		<!-- Raw -->
+		<div v-if="mode === 'raw'" class="k-ui-example-code">
+			<k-ui-code language="html">{{ $refs.preview?.innerHTML }}</k-ui-code>
 		</div>
 	</div>
 </template>
@@ -46,12 +55,12 @@ export default {
 	},
 	data() {
 		return {
-			inspect: null
+			mode: "preview"
 		};
 	},
-	methods: {
-		openCode() {
-			this.inspect = window.UiExamples[this.label];
+	computed: {
+		component() {
+			return window.UiExamples[this.label];
 		}
 	}
 };
