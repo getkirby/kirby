@@ -20,9 +20,9 @@
 export default {
 	props: {
 		docs: String,
-		examples: Object,
+		examples: [Object, Array],
 		file: String,
-		props: Object,
+		props: [Object, Array],
 		styles: String,
 		tab: String,
 		tabs: {
@@ -65,14 +65,7 @@ export default {
 			window.UiExamples = this.examples;
 		},
 		openDocs() {
-			this.$panel.drawer.open({
-				component: "k-ui-docs-drawer",
-				props: {
-					icon: "book",
-					title: this.docs,
-					docs: this.docs
-				}
-			});
+			this.$panel.drawer.open(`ui/docs/${this.docs}`);
 		}
 	}
 };
@@ -82,4 +75,4 @@ export default {
 .k-ui-playground-view[data-has-tabs="true"] .k-header {
 	margin-bottom: 0;
 }
-</c>
+</style>

@@ -5,14 +5,14 @@
 		v-bind="$attrs"
 		@submit="$emit('cancel')"
 	>
-		<k-ui-docs :component="docs" />
+		<k-ui-docs v-bind="docs" />
 	</k-drawer>
 </template>
 
 <script>
 export default {
 	props: {
-		docs: String
+		docs: Object
 	}
 };
 </script>

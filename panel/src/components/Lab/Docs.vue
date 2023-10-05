@@ -1,24 +1,24 @@
 <template>
 	<div class="k-ui-docs">
-		<section v-if="info.description" class="k-ui-docs-section">
+		<section v-if="description.length" class="k-ui-docs-section">
 			<k-headline class="h3">Description</k-headline>
 			<k-box theme="text">
 				<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
-				<k-text v-html="md(info.description)" />
+				<k-text v-html="description" />
 			</k-box>
 		</section>
 
-		<section v-if="info.tags.examples?.length" class="k-ui-docs-section">
+		<section v-if="examples.length" class="k-ui-docs-section">
 			<k-headline class="h3">Examples</k-headline>
 			<k-ui-code
-				v-for="(sample, index) in info.tags.examples"
+				v-for="(example, index) in examples"
 				:key="index"
 				language="html"
-				>{{ sample.content }}</k-ui-code
+				>{{ example.content }}</k-ui-code
 			>
 		</section>
 
-		<section class="k-ui-docs-section">
+		<section v-if="props.length" class="k-ui-docs-section">
 			<k-headline class="h3">Props</k-headline>
 			<div class="k-table">
 				<table>
@@ -29,7 +29,7 @@
 						<th>Description</th>
 					</thead>
 					<tbody>
-						<tr v-for="prop in info.props" :key="prop.name">
+						<tr v-for="prop in props" :key="prop.name">
 							<td>
 								<k-text>
 									<code>{{ prop.name }}</code>
@@ -53,7 +53,7 @@
 							</td>
 							<td>
 								<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
-								<k-text v-html="md(prop.description)" />
+								<k-text v-html="prop.description" />
 							</td>
 						</tr>
 					</tbody>
@@ -61,7 +61,7 @@
 			</div>
 		</section>
 
-		<section v-if="info.slots?.length" class="k-ui-docs-section">
+		<section v-if="slots.length" class="k-ui-docs-section">
 			<k-headline class="h3">Slots</k-headline>
 			<div class="k-table">
 				<table>
@@ -70,7 +70,7 @@
 						<th>Description</th>
 					</thead>
 					<tbody>
-						<tr v-for="slot in info.slots" :key="slot.name">
+						<tr v-for="slot in slots" :key="slot.name">
 							<td style="width: 12rem">
 								<k-text>
 									<code>{{ slot.name }}</code>
@@ -78,7 +78,7 @@
 							</td>
 							<td>
 								<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
-								<k-text v-html="md(slot.description)" />
+								<k-text v-html="slot.description" />
 							</td>
 						</tr>
 					</tbody>
@@ -89,30 +89,21 @@
 </template>
 
 <script>
-import { marked } from "marked";
-import ui from "/dist/ui.json";
-
 export default {
 	props: {
-		component: {
-			type: String
-		}
-	},
-	computed: {
-		example() {
-			return `<${this.component} />`;
+		component: String,
+		description: String,
+		examples: {
+			default: () => [],
+			type: Array
 		},
-		info() {
-			return ui.find((doc) => {
-				const componentName =
-					"k-" + this.$helper.string.camelToKebab(doc.displayName);
-				return componentName === this.component;
-			});
-		}
-	},
-	methods: {
-		md(text) {
-			return marked.parse(text ?? "");
+		slots: {
+			default: () => [],
+			type: Array
+		},
+		props: {
+			default: () => [],
+			type: Array
 		}
 	}
 };
