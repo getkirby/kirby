@@ -1,7 +1,7 @@
 <template>
 	<k-ui-examples>
 		<h2 class="h4">State</h2>
-		<k-ui-example label="debug">
+		<k-ui-example label="debug" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.system.ascii</code> returns the ascii conversion
@@ -10,7 +10,7 @@
 				<k-ui-code language="js">{{ $panel.system.ascii }}</k-ui-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="csrf">
+		<k-ui-example label="csrf" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.system.csrf</code> returns the current CSRF token
@@ -18,7 +18,7 @@
 				<k-code>{{ $panel.system.csrf }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="isLocal">
+		<k-ui-example label="isLocal" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.system.isLocal</code> If true, the Panel assumes it
@@ -27,7 +27,7 @@
 				<k-code>{{ $panel.system.isLocal }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="locales">
+		<k-ui-example label="locales" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.system.locales</code> returns the system locales
@@ -35,7 +35,7 @@
 				<k-ui-code language="js">{{ $panel.system.locales }}</k-ui-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="slugs">
+		<k-ui-example label="slugs" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.system.slugs</code> returns all basic slug rules
@@ -44,7 +44,7 @@
 				<k-code>{{ $panel.system.slugs }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="title">
+		<k-ui-example label="title" :code="false">
 			<k-text>
 				<p><code>window.panel.system.title</code> returns the site title</p>
 				<k-code>{{ $panel.system.title }}</k-code>

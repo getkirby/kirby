@@ -1,7 +1,7 @@
 <template>
 	<k-ui-examples>
 		<h2 class="h4">State</h2>
-		<k-ui-example label="debug">
+		<k-ui-example label="debug" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.config.debug</code> returns the current debug mode.
@@ -14,7 +14,7 @@
 				/>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="kirbytext">
+		<k-ui-example label="kirbytext" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.config.kirbytext</code> If true, the textarea will

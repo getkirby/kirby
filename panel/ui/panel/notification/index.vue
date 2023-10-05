@@ -1,7 +1,7 @@
 <template>
 	<k-ui-examples>
 		<h2 class="h4">State</h2>
-		<k-ui-example label="context">
+		<k-ui-example label="context" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.notification.context</code> returns context where
@@ -15,7 +15,7 @@
 				/>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="details">
+		<k-ui-example label="details" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.notification.details</code> returns an object with
@@ -35,7 +35,7 @@
 				/>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="icon">
+		<k-ui-example label="icon" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.notification.icon</code> returns the custom icon,
@@ -55,7 +55,7 @@
 				/>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="message">
+		<k-ui-example label="message" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.notification.message</code> returns the
@@ -73,7 +73,7 @@
 				/>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="timeout">
+		<k-ui-example label="timeout" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.notification.timeout</code> returns the timeout
@@ -92,7 +92,7 @@
 				/>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="type">
+		<k-ui-example label="type" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.notification.type</code> returns the notification
@@ -113,7 +113,7 @@
 
 		<h2 class="h4">Methods</h2>
 
-		<k-ui-example label="close">
+		<k-ui-example label="close" :code="false">
 			<k-text>
 				<k-ui-code language="js">window.panel.notification.close();</k-ui-code>
 				<p>Closes the current notification</p>
@@ -129,7 +129,7 @@
 				/>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="deprecated">
+		<k-ui-example label="deprecated" :code="false">
 			<k-text>
 				<k-ui-code language="js"
 					>window.panel.notification.deprecated(notification);</k-ui-code
@@ -142,7 +142,7 @@
 				/>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="deprecated">
+		<k-ui-example label="error" :code="false">
 			<k-text>
 				<k-ui-code language="js"
 					>window.panel.notification.error(notification);</k-ui-code
@@ -155,7 +155,7 @@
 				/>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="fatal">
+		<k-ui-example label="fatal" :code="false">
 			<k-text>
 				<k-ui-code language="js"
 					>window.panel.notification.fatal(notification);</k-ui-code
@@ -168,7 +168,7 @@
 				/>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="open">
+		<k-ui-example label="open" :code="false">
 			<k-text>
 				<k-ui-code language="js"
 					>window.panel.notification.open(notification);</k-ui-code
@@ -183,7 +183,7 @@
 				/>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="success">
+		<k-ui-example label="success" :code="false">
 			<k-text>
 				<k-ui-code language="js"
 					>window.panel.notification.success(notification);</k-ui-code

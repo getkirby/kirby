@@ -1,7 +1,7 @@
 <template>
 	<k-ui-examples>
 		<h2 class="h4">State</h2>
-		<k-ui-example label="api">
+		<k-ui-example label="api" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.urls.api</code> returns the base URL for the REST
@@ -10,7 +10,7 @@
 				<k-code>{{ $panel.urls.api }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="site">
+		<k-ui-example label="site" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.urls.site</code> returns the base URL for the site

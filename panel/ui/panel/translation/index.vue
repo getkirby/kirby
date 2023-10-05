@@ -1,7 +1,7 @@
 <template>
 	<k-ui-examples>
 		<h2 class="h4">State</h2>
-		<k-ui-example label="code">
+		<k-ui-example label="code" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.translation.code</code> returns the current
@@ -10,7 +10,7 @@
 				<k-code>{{ $panel.translation.code }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="date">
+		<k-ui-example label="date" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.translation.data</code> returns the entire object
@@ -19,7 +19,7 @@
 				<k-ui-code language="js">{{ $panel.translation.data }}</k-ui-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="direction">
+		<k-ui-example label="direction" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.translation.direction</code> returns the reading
@@ -28,7 +28,7 @@
 				<k-code>{{ $panel.translation.direction }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="name">
+		<k-ui-example label="name" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.translation.name</code> returns the name of the

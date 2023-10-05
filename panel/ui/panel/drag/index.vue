@@ -1,7 +1,7 @@
 <template>
 	<k-ui-examples>
 		<h2 class="h4">State</h2>
-		<k-ui-example label="data">
+		<k-ui-example label="data" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.drag.data</code> returns data for the currently
@@ -10,7 +10,7 @@
 				<k-code>{{ $panel.drag.data }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="isDragging">
+		<k-ui-example label="isDragging" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.drag.isDragging</code> is true when there's
@@ -19,7 +19,7 @@
 				<k-code>{{ $panel.drag.isDragging }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="type">
+		<k-ui-example label="type" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.drag.type</code> Returns the drag type (e.g. text)
@@ -30,14 +30,14 @@
 
 		<h2 class="h4">Methods</h2>
 
-		<k-ui-example label="start">
+		<k-ui-example label="start" :code="false">
 			<k-text>
 				<k-ui-code language="js"
 					>window.panel.drag.start(type, data);</k-ui-code
 				>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="stop">
+		<k-ui-example label="stop" :code="false">
 			<k-text>
 				<k-ui-code language="js">window.panel.drag.stop();</k-ui-code>
 			</k-text>

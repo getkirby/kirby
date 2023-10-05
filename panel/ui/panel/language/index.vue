@@ -10,7 +10,7 @@
 			The state is going to be pretty empty in single-language mode
 		</k-box>
 
-		<k-ui-example label="code">
+		<k-ui-example label="code" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.language.code</code> returns the code of the
@@ -19,7 +19,7 @@
 				<k-code>{{ $panel.language.code || "&nbsp;" }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="direction">
+		<k-ui-example label="direction" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.language.direction</code> Returns the reading
@@ -28,7 +28,7 @@
 				<k-code>{{ $panel.language.direction || "&nbsp;" }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="isDefault">
+		<k-ui-example label="isDefault" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.language.isDefault</code> True if the current
@@ -37,7 +37,7 @@
 				<k-code>{{ $panel.language.isDefault || "&nbsp;" }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="name">
+		<k-ui-example label="name" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.language.name</code> Returns the name of the
@@ -46,7 +46,7 @@
 				<k-code>{{ $panel.language.name || "&nbsp;" }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="rules">
+		<k-ui-example label="rules" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.language.rules</code> Returns the slug rules for

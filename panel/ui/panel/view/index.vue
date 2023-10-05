@@ -1,7 +1,7 @@
 <template>
 	<k-ui-examples>
 		<h2 class="h4">State</h2>
-		<k-ui-example label="component">
+		<k-ui-example label="component" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.view.component</code> returns the name of the
@@ -10,7 +10,7 @@
 				<k-code>{{ $panel.view.component }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="breadcrumb">
+		<k-ui-example label="breadcrumb" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.view.breadcrumb</code> returns an array of
@@ -19,7 +19,7 @@
 				<k-code>{{ $panel.view.breadcrumb }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="breadcrumbLabel">
+		<k-ui-example label="breadcrumbLabel" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.view.breadcrumbLabel</code> returns the label for
@@ -28,7 +28,7 @@
 				<k-code>{{ $panel.view.breadcrumbLabel }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="icon">
+		<k-ui-example label="icon" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.view.icon</code> returns the icon for the view.
@@ -37,13 +37,13 @@
 				<k-code>{{ $panel.view.icon }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="id">
+		<k-ui-example label="id" :code="false">
 			<k-text>
 				<p><code>window.panel.view.id</code> returns the id of the view</p>
 				<k-code>{{ $panel.view.id }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="isLoading">
+		<k-ui-example label="isLoading" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.view.isLoading</code> If true, the view is
@@ -52,7 +52,7 @@
 				<k-code>{{ $panel.view.isLoading }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="link">
+		<k-ui-example label="link" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.view.link</code> Returns the relative base URL of
@@ -61,7 +61,7 @@
 				<k-code>{{ $panel.view.link }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="path">
+		<k-ui-example label="path" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.view.path</code> Returns the relative URL to the
@@ -70,7 +70,7 @@
 				<k-code>{{ $panel.view.path }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="props">
+		<k-ui-example label="props" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.view.props</code> Returns an object with all props
@@ -79,7 +79,7 @@
 				<k-ui-code language="js">{{ $panel.view.props }}</k-ui-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="query">
+		<k-ui-example label="query" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.view.query</code> Returns an object with the
@@ -88,7 +88,7 @@
 				<k-ui-code language="js">{{ $panel.view.query }}</k-ui-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="referrer">
+		<k-ui-example label="referrer" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.view.referrer</code> Returns the referrer URL if
@@ -97,7 +97,7 @@
 				<k-code>{{ $panel.view.referrer }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="search">
+		<k-ui-example label="search" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.view.search</code> Returns the selected search type
@@ -106,7 +106,7 @@
 				<k-code>{{ $panel.view.search }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="timestamp">
+		<k-ui-example label="timestamp" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.view.timestamp</code> The server always returns the
@@ -115,7 +115,7 @@
 				<k-code>{{ $panel.view.timestamp }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="title">
+		<k-ui-example label="title" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.view.title</code> Returns the title for the current
@@ -127,7 +127,7 @@
 
 		<h2 class="h4">Methods</h2>
 
-		<k-ui-example label="load">
+		<k-ui-example label="load" :code="false">
 			<k-text>
 				<k-ui-code language="js"
 					>window.panel.view.load(url, options = {});</k-ui-code
@@ -138,7 +138,7 @@
 				</p>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="open">
+		<k-ui-example label="open" :code="false">
 			<k-text>
 				<k-ui-code language="js"
 					>window.panel.view.open(url, options = {});</k-ui-code
@@ -146,7 +146,7 @@
 				<p>Loads and sets the state of the next view and handles routing.</p>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="post">
+		<k-ui-example label="post" :code="false">
 			<k-text>
 				<k-ui-code language="js"
 					>window.panel.view.post(url, options = {});</k-ui-code
@@ -154,7 +154,7 @@
 				<p>Sends a post request to the view.</p>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="refresh">
+		<k-ui-example label="refresh" :code="false">
 			<k-text>
 				<k-ui-code language="js"
 					>window.panel.view.refresh(options = {});</k-ui-code
@@ -167,7 +167,7 @@
 				</p>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="reload">
+		<k-ui-example label="reload" :code="false">
 			<k-text>
 				<k-ui-code language="js"
 					>window.panel.view.reload(options = {});</k-ui-code
@@ -179,7 +179,7 @@
 				</p>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="url">
+		<k-ui-example label="url" :code="false">
 			<k-text>
 				<k-ui-code language="js">window.panel.view.url();</k-ui-code>
 				<p>

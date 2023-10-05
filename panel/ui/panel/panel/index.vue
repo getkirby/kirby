@@ -1,7 +1,7 @@
 <template>
 	<k-ui-examples>
 		<h2 class="h4">State</h2>
-		<k-ui-example label="context">
+		<k-ui-example label="context" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.context</code> returns the current editing context
@@ -58,7 +58,7 @@
 				</k-button-group>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="debug">
+		<k-ui-example label="debug" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.debug</code> returns current debug mode. It's a
@@ -71,7 +71,7 @@
 				/>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="direction">
+		<k-ui-example label="direction" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.direction</code> returns the reading direction of
@@ -95,7 +95,7 @@
 				</k-button-group>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="languages">
+		<k-ui-example label="languages" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.languages</code> array with all installed languages
@@ -103,7 +103,7 @@
 				<k-code>{{ $panel.languages }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="multilang">
+		<k-ui-example label="multilang" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.multilang</code> true if multiple languages can be
@@ -112,7 +112,7 @@
 				<k-code>{{ $panel.multilang }}</k-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="searches">
+		<k-ui-example label="searches" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.searches</code> object with all available searches
@@ -120,7 +120,7 @@
 				<k-ui-code language="js">{{ $panel.searches }}</k-ui-code>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="title">
+		<k-ui-example label="title" :code="false">
 			<k-text>
 				<p>
 					<code>window.panel.title</code> returns the current document title
@@ -150,7 +150,7 @@
 
 		<h2 class="h4">Methods</h2>
 
-		<k-ui-example label="error">
+		<k-ui-example label="error" :code="false">
 			<k-text>
 				<k-ui-code language="js"
 					>window.panel.error(error, openNotification = true)</k-ui-code
@@ -168,7 +168,7 @@
 				/>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="get">
+		<k-ui-example label="get" :code="false">
 			<k-text>
 				<k-ui-code language="js"
 					>window.panel.get(url, options = {});</k-ui-code
@@ -181,7 +181,7 @@
 				</k-button-group>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="open">
+		<k-ui-example label="open" :code="false">
 			<k-text>
 				<k-ui-code language="js"
 					>window.panel.open(url, options = {});</k-ui-code
@@ -209,7 +209,7 @@
 				</k-button-group>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="post">
+		<k-ui-example label="post" :code="false">
 			<k-text>
 				<k-ui-code language="js"
 					>window.panel.post(url, options = {});</k-ui-code
@@ -217,7 +217,7 @@
 				<p>Sends a POST request</p>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="redirect">
+		<k-ui-example label="redirect" :code="false">
 			<k-text>
 				<k-ui-code language="js"
 					>window.panel.redirect(url, options = {});</k-ui-code
@@ -225,7 +225,7 @@
 				<p>Full redirect to a different URL</p>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="request">
+		<k-ui-example label="request" :code="false">
 			<k-text>
 				<k-ui-code language="js"
 					>window.panel.request(url, options = {});</k-ui-code
@@ -233,7 +233,7 @@
 				<p>Low-level request handler</p>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="search">
+		<k-ui-example label="search" :code="false">
 			<k-text>
 				<k-ui-code language="js">window.panel.search(type, query);</k-ui-code>
 				<p>Sends a search request</p>
@@ -248,20 +248,20 @@
 				</div>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="set">
+		<k-ui-example label="set" :code="false">
 			<k-text>
 				<k-ui-code language="js">window.panel.set(state);</k-ui-code>
 				<p>Overwrites the Panel state</p>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="state">
+		<k-ui-example label="state" :code="false">
 			<k-text>
 				<k-ui-code language="js">window.panel.state();</k-ui-code>
 				<p>Returns the full Panel state including all modules</p>
 				<k-button text="Test" variant="filled" @click="openState" />
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="url">
+		<k-ui-example label="url" :code="false">
 			<k-text>
 				<k-ui-code language="js"
 					>window.panel.url(url = "", query = {}, origin);</k-ui-code

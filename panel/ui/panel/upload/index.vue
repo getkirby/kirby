@@ -1,7 +1,7 @@
 <template>
 	<k-ui-examples>
 		<h2 class="h4">State</h2>
-		<k-ui-example label="state">
+		<k-ui-example label="state" :code="false">
 			<k-text>
 				<k-code>{{ $panel.upload.state() }}</k-code>
 			</k-text>
@@ -9,13 +9,13 @@
 
 		<h2 class="h4">Methods</h2>
 
-		<k-ui-example label="close">
+		<k-ui-example label="close" :code="false">
 			<k-text>
 				<k-ui-code language="js">window.panel.upload.close();</k-ui-code>
 				<p>Closes the upload and clears the queue</p>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="open">
+		<k-ui-example label="open" :code="false">
 			<k-text>
 				<k-ui-code language="js">window.panel.upload.open(options);</k-ui-code>
 				<p>Opens the upload dialog with the given options</p>
@@ -26,7 +26,7 @@
 				/>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="pick">
+		<k-ui-example label="pick" :code="false">
 			<k-text>
 				<k-ui-code language="js">window.panel.upload.pick(options);</k-ui-code>
 				<p>
@@ -40,37 +40,37 @@
 				/>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="remove">
+		<k-ui-example label="remove" :code="false">
 			<k-text>
 				<k-ui-code language="js">window.panel.upload.remove(fileId);</k-ui-code>
 				<p>Removes a file from the queue</p>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="reset">
+		<k-ui-example label="reset" :code="false">
 			<k-text>
 				<k-ui-code language="js">window.panel.upload.reset();</k-ui-code>
 				<p>Resets the queue</p>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="select">
+		<k-ui-example label="select" :code="false">
 			<k-text>
 				<k-ui-code language="js">window.panel.upload.select(files);</k-ui-code>
 				<p>Selects additional files (needs a FileList)</p>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="set">
+		<k-ui-example label="set" :code="false">
 			<k-text>
 				<k-ui-code language="js">window.panel.upload.set(state);</k-ui-code>
 				<p>Overwrites the current uploader state</p>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="start">
+		<k-ui-example label="start" :code="false">
 			<k-text>
 				<k-ui-code language="js">window.panel.upload.start();</k-ui-code>
 				<p>Starts the upload of all files in the queue</p>
 			</k-text>
 		</k-ui-example>
-		<k-ui-example label="state">
+		<k-ui-example label="state" :code="false">
 			<k-text>
 				<k-ui-code language="js">window.panel.upload.state();</k-ui-code>
 				<p>Returns the current uploader state</p>
