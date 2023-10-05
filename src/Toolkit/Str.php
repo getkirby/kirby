@@ -280,6 +280,16 @@ class Str
 	}
 
 	/**
+	 * Converts a camel-case string to kebab-case
+	 *
+	 * @param string $value The string to convert
+	 */
+	public static function camelToKebab(string $value = null): string
+	{
+		return static::lower(preg_replace('!([a-z0-9])([A-Z])!', '$1-$2', $value));
+	}
+
+	/**
 	 * Checks if a str contains another string
 	 */
 	public static function contains(
