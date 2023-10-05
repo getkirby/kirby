@@ -6,14 +6,18 @@
 		:submit-button="false"
 		@cancel="$emit('cancel')"
 	>
-		<k-code>{{ code }}</k-code>
+		<k-ui-code :language="language">{{ code }}</k-ui-code>
 	</k-dialog>
 </template>
 
 <script>
 export default {
 	props: {
-		code: String
+		code: String,
+		language: {
+			default: "js",
+			type: String
+		}
 	}
 };
 </script>
