@@ -40,6 +40,15 @@ class Helpers
 	];
 
 	/**
+	 * Dump object and exit
+	 */
+	public static function dd(mixed $variable, bool $echo = true): string
+	{
+		static::dump($variable, $echo);
+		exit();
+	}
+
+	/**
 	 * Triggers a deprecation warning if debug mode is active
 	 * and warning has not been surpressed via `Helpers::$deprecations`
 	 *

@@ -96,6 +96,16 @@ if (Helpers::hasOverride('css') === false) { // @codeCoverageIgnore
 	}
 }
 
+if (Helpers::hasOverride('dd') === false) { // @codeCoverageIgnore
+	/**
+	 * Dump objects and exit
+	 */
+	function dd(mixed $variable, bool $echo = true): string
+	{
+		return Helpers::dd($variable, $echo);
+	}
+}
+
 if (Helpers::hasOverride('deprecated') === false) { // @codeCoverageIgnore
 	/**
 	 * Triggers a deprecation warning if debug mode is active
