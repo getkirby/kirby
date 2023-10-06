@@ -2,8 +2,7 @@
 	"name": "kirby",
 	"private": true,
 	"scripts": {
-		"build": "vite build",
-		"build:docs": "node scripts/docs.js",
+		"build": "vite build && node scripts/docs.js",
 		"dev": "vite --host",
 		"lint": "eslint \"src/**/*.{js,vue}\"",
 		"lint:fix": "npm run lint -- --fix",
