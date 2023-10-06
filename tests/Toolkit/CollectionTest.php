@@ -87,6 +87,7 @@ class CollectionTest extends TestCase
 	/**
 	 * @covers ::get
 	 * @covers ::set
+	 * @covers ::remove
 	 */
 	public function testCaseSensitive()
 	{
@@ -96,19 +97,17 @@ class CollectionTest extends TestCase
 			'MiXeD'     => 'test3'
 		]);
 		$normalCollection->set('AnOtHeR', 'test4');
+		$normalCollection->remove('upperCase');
 
 		$this->assertSame([
 			'lowercase' => 'test1',
-			'uppercase' => 'test2',
 			'mixed'     => 'test3',
 			'another'   => 'test4'
 		], $normalCollection->data());
 		$this->assertSame('test1', $normalCollection->get('lowercase'));
-		$this->assertSame('test2', $normalCollection->get('UPPERCASE'));
 		$this->assertSame('test3', $normalCollection->get('MiXeD'));
 		$this->assertSame('test4', $normalCollection->get('AnOtHeR'));
 		$this->assertSame('test1', $normalCollection->get('LowerCase'));
-		$this->assertSame('test2', $normalCollection->get('uppercase'));
 		$this->assertSame('test3', $normalCollection->get('mIxEd'));
 		$this->assertSame('test4', $normalCollection->get('another'));
 
@@ -118,20 +117,19 @@ class CollectionTest extends TestCase
 			'MiXeD'     => 'test3'
 		], true);
 		$sensitiveCollection->set('AnOtHeR', 'test4');
+		$sensitiveCollection->remove('upperCase');
+		$sensitiveCollection->remove('MiXeD');
 
 		$this->assertSame([
 			'lowercase' => 'test1',
 			'UPPERCASE' => 'test2',
-			'MiXeD'     => 'test3',
 			'AnOtHeR'   => 'test4'
 		], $sensitiveCollection->data());
 		$this->assertSame('test1', $sensitiveCollection->get('lowercase'));
 		$this->assertSame('test2', $sensitiveCollection->get('UPPERCASE'));
-		$this->assertSame('test3', $sensitiveCollection->get('MiXeD'));
 		$this->assertSame('test4', $sensitiveCollection->get('AnOtHeR'));
 		$this->assertNull($sensitiveCollection->get('Lowercase'));
 		$this->assertNull($sensitiveCollection->get('uppercase'));
-		$this->assertNull($sensitiveCollection->get('mixed'));
 		$this->assertNull($sensitiveCollection->get('another'));
 	}
 
