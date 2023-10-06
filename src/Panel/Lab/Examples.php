@@ -64,7 +64,7 @@ class Examples
 	public static function index(): array
 	{
 		// all core lab examples from `kirby/panel/lab`
-		$core = A::map(
+		$examples = A::map(
 			Dir::inventory(static::base())['children'],
 			fn ($props) => (new static($props['dirname']))->toArray()
 		);
@@ -72,7 +72,9 @@ class Examples
 		// all custom lab examples from `site/lab`
 		$custom = Examples::factory('site')->toArray();
 
-		return array_merge($core, [$custom]);
+		array_unshift($examples, $custom);
+
+		return $examples;
 	}
 
 	public function name(): string
