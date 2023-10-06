@@ -26,8 +26,12 @@ export default {
 		if (this.items) {
 			this.state = this.items;
 		} else {
-			this.state = await this.load(null);
-			await this.open(this.state[0]);
+			// load top-level items (e.g. only site)
+			const items = await this.load(null);
+			await this.open(items[0]);
+
+			// if root is disabled, show the first level of children
+			this.state = this.root ? items : items[0].children;
 		}
 	},
 	methods: {
