@@ -1,14 +1,13 @@
 <template>
 	<k-lab-examples>
-		<k-lab-example label="heights">
+		<k-lab-example label="heights" :code="false">
 			<k-box
 				v-for="height in heights"
 				:key="height"
-				:label="`height-${height}`"
 				:style="`--box-height: var(--height-${height}); height: var(--box-height); font-size: var(--text-xs); font-family: var(--font-mono)`"
 				theme="white"
 			>
-				height-{{ height }}
+				--height-{{ height }}
 			</k-box>
 		</k-lab-example>
 		<k-lab-example :flex="true" label="comparison">
@@ -24,8 +23,8 @@
 <script>
 export default {
 	props: {
-		heights: Array,
-	},
+		heights: Array
+	}
 };
 </script>
 

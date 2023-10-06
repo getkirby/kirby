@@ -1,14 +1,13 @@
 <template>
 	<k-lab-examples>
-		<k-lab-example label="shadows">
+		<k-lab-example label="shadows" :code="false">
 			<k-box
 				v-for="shadow in shadows"
 				:key="shadow"
-				:label="`shadow-${shadow}`"
 				:style="`box-shadow: var(--shadow-${shadow}); font-size: var(--text-xs); font-family: var(--font-mono)`"
 				theme="white"
 			>
-				shadow-{{ shadow }}
+				--shadow-{{ shadow }}
 			</k-box>
 		</k-lab-example>
 	</k-lab-examples>
@@ -17,8 +16,8 @@
 <script>
 export default {
 	props: {
-		shadows: Array,
-	},
+		shadows: Array
+	}
 };
 </script>
 

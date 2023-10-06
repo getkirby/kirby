@@ -3,7 +3,8 @@
 		<k-lab-example
 			v-for="family in families"
 			:key="family"
-			:label="`font-${family}`"
+			:label="`--font-${family}`"
+			:code="false"
 		>
 			<p
 				v-for="size in sizes"
@@ -20,8 +21,8 @@
 export default {
 	props: {
 		families: Array,
-		sizes: Array,
-	},
+		sizes: Array
+	}
 };
 </script>
 

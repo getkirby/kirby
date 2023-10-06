@@ -1,6 +1,11 @@
 <template>
 	<k-lab-examples>
-		<k-lab-example v-for="size in sizes" :key="size" :label="`text-${size}`">
+		<k-lab-example
+			v-for="size in sizes"
+			:key="size"
+			:label="`--text-${size}`"
+			:code="false"
+		>
 			<p :style="`font-size: var(--text-${size})`">
 				The quick brown fox jumps over the lazy dog
 			</p>
@@ -11,7 +16,7 @@
 <script>
 export default {
 	props: {
-		sizes: Array,
-	},
+		sizes: Array
+	}
 };
 </script>

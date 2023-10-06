@@ -1,6 +1,6 @@
 <template>
 	<k-lab-examples>
-		<k-lab-example label="colors">
+		<k-lab-example label="colors" :code="false">
 			<k-grid
 				v-for="name in names"
 				:key="name"
@@ -14,6 +14,13 @@
 					{{ name }}-{{ step }}
 				</k-box>
 			</k-grid>
+
+			<k-text style="margin-top: var(--spacing-8)">
+				<p>
+					Exposed as custom CSS properties, e.g.
+					<code>var(--color-gray-100)</code>
+				</p>
+			</k-text>
 		</k-lab-example>
 	</k-lab-examples>
 </template>
@@ -22,7 +29,7 @@
 export default {
 	props: {
 		names: Array,
-		steps: Array,
+		steps: Array
 	},
 	computed: {
 		colors() {
@@ -35,10 +42,10 @@ export default {
 				600: 1000,
 				700: 100,
 				800: 200,
-				900: 200,
+				900: 200
 			};
-		},
-	},
+		}
+	}
 };
 </script>
 

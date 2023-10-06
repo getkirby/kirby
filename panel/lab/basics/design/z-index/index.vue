@@ -1,11 +1,10 @@
 <template>
 	<k-lab-examples>
-		<k-lab-example label="z">
+		<k-lab-example label="z" :code="false">
 			<div>
 				<k-box
 					v-for="(index, x) in z"
 					:key="index"
-					:label="`z-${index}`"
 					:style="`
 						z-index: var(--z-${index});
 						font-size: var(--text-xs);
@@ -15,7 +14,7 @@
 					`"
 					theme="white"
 				>
-					z-{{ index }}
+					--z-{{ index }}
 				</k-box>
 			</div>
 		</k-lab-example>
@@ -25,8 +24,8 @@
 <script>
 export default {
 	props: {
-		z: Array,
-	},
+		z: Array
+	}
 };
 </script>
 

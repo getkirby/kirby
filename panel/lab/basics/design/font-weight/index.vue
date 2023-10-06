@@ -3,7 +3,8 @@
 		<k-lab-example
 			v-for="weight in weights"
 			:key="weight"
-			:label="`font-${weight}`"
+			:label="`--font-${weight}`"
+			:code="false"
 		>
 			<p :style="`font-weight: var(--font-${weight})`">
 				The quick brown fox jumps over the lazy dog
@@ -15,7 +16,7 @@
 <script>
 export default {
 	props: {
-		weights: Array,
-	},
+		weights: Array
+	}
 };
 </script>

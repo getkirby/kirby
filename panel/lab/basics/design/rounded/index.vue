@@ -1,14 +1,13 @@
 <template>
 	<k-lab-examples>
-		<k-lab-example label="rounded">
+		<k-lab-example label="rounded" :code="false">
 			<k-box
 				v-for="radius in radii"
 				:key="radius"
-				:label="`rounded-${radius}`"
 				:style="`border-radius: var(--rounded-${radius}); font-size: var(--text-xs); font-family: var(--font-mono)`"
 				theme="white"
 			>
-				rounded-{{ radius }}
+				--rounded-{{ radius }}
 			</k-box>
 		</k-lab-example>
 	</k-lab-examples>
@@ -17,8 +16,8 @@
 <script>
 export default {
 	props: {
-		radii: Array,
-	},
+		radii: Array
+	}
 };
 </script>
 
