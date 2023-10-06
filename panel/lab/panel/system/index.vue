@@ -7,7 +7,7 @@
 					<code>window.panel.system.ascii</code> returns the ascii conversion
 					table.
 				</p>
-				<k-lab-code language="js">{{ $panel.system.ascii }}</k-lab-code>
+				<k-code language="js">{{ $panel.system.ascii }}</k-code>
 			</k-text>
 		</k-lab-example>
 		<k-lab-example label="csrf" :code="false">
@@ -32,7 +32,7 @@
 				<p>
 					<code>window.panel.system.locales</code> returns the system locales
 				</p>
-				<k-lab-code language="js">{{ $panel.system.locales }}</k-lab-code>
+				<k-code language="js">{{ $panel.system.locales }}</k-code>
 			</k-text>
 		</k-lab-example>
 		<k-lab-example label="slugs" :code="false">

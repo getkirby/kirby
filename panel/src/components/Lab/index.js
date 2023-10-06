@@ -1,4 +1,3 @@
-import Code from "./Code.vue";
 import Docs from "./Docs.vue";
 import DocsDrawer from "./DocsDrawer.vue";
 import Example from "./Example.vue";
@@ -17,7 +16,6 @@ import PlaygroundView from "./PlaygroundView.vue";
 
 export default {
 	install(app) {
-		app.component("k-lab-code", Code);
 		app.component("k-lab-docs", Docs);
 		app.component("k-lab-docs-drawer", DocsDrawer);
 		app.component("k-lab-example", Example);

@@ -76,7 +76,7 @@
 					<code>window.panel.view.props</code> Returns an object with all props
 					for the current view
 				</p>
-				<k-lab-code language="js">{{ $panel.view.props }}</k-lab-code>
+				<k-code language="js">{{ $panel.view.props }}</k-code>
 			</k-text>
 		</k-lab-example>
 		<k-lab-example label="query" :code="false">
@@ -85,7 +85,7 @@
 					<code>window.panel.view.query</code> Returns an object with the
 					current URL query
 				</p>
-				<k-lab-code language="js">{{ $panel.view.query }}</k-lab-code>
+				<k-code language="js">{{ $panel.view.query }}</k-code>
 			</k-text>
 		</k-lab-example>
 		<k-lab-example label="referrer" :code="false">
@@ -129,8 +129,8 @@
 
 		<k-lab-example label="load" :code="false">
 			<k-text>
-				<k-lab-code language="js"
-					>window.panel.view.load(url, options = {});</k-lab-code
+				<k-code language="js"
+					>window.panel.view.load(url, options = {});</k-code
 				>
 				<p>
 					Loads the state of the next view without updating the current state
@@ -140,25 +140,23 @@
 		</k-lab-example>
 		<k-lab-example label="open" :code="false">
 			<k-text>
-				<k-lab-code language="js"
-					>window.panel.view.open(url, options = {});</k-lab-code
+				<k-code language="js"
+					>window.panel.view.open(url, options = {});</k-code
 				>
 				<p>Loads and sets the state of the next view and handles routing.</p>
 			</k-text>
 		</k-lab-example>
 		<k-lab-example label="post" :code="false">
 			<k-text>
-				<k-lab-code language="js"
-					>window.panel.view.post(url, options = {});</k-lab-code
+				<k-code language="js"
+					>window.panel.view.post(url, options = {});</k-code
 				>
 				<p>Sends a post request to the view.</p>
 			</k-text>
 		</k-lab-example>
 		<k-lab-example label="refresh" :code="false">
 			<k-text>
-				<k-lab-code language="js"
-					>window.panel.view.refresh(options = {});</k-lab-code
-				>
+				<k-code language="js">window.panel.view.refresh(options = {});</k-code>
 				<p>
 					Reloads and updates the props for the current view. This will only
 					rerender the parts that have changed according to the props. The view
@@ -169,9 +167,7 @@
 		</k-lab-example>
 		<k-lab-example label="reload" :code="false">
 			<k-text>
-				<k-lab-code language="js"
-					>window.panel.view.reload(options = {});</k-lab-code
-				>
+				<k-code language="js">window.panel.view.reload(options = {});</k-code>
 				<p>
 					Reloads and rerenders the current view. If you want to refresh the
 					props of the view without forcing an entire rerender process, use
@@ -181,7 +177,7 @@
 		</k-lab-example>
 		<k-lab-example label="url" :code="false">
 			<k-text>
-				<k-lab-code language="js">window.panel.view.url();</k-lab-code>
+				<k-code language="js">window.panel.view.url();</k-code>
 				<p>
 					Returns the URL to the current view, including the path and query.
 				</p>

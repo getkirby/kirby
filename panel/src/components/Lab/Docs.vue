@@ -10,11 +10,11 @@
 
 		<section v-if="examples.length" class="k-lab-docs-section">
 			<k-headline class="h3">Examples</k-headline>
-			<k-lab-code
+			<k-code
 				v-for="(example, index) in examples"
 				:key="index"
 				language="html"
-				>{{ example.content }}</k-lab-code
+				>{{ example.content }}</k-code
 			>
 		</section>
 

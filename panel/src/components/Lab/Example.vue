@@ -34,11 +34,11 @@
 		</div>
 		<!-- Inspect -->
 		<div v-show="mode === 'inspect'" class="k-lab-example-code">
-			<k-lab-code language="html">{{ component }}</k-lab-code>
+			<k-code language="html">{{ component }}</k-code>
 		</div>
 		<!-- Raw -->
 		<div v-if="mode === 'raw'" class="k-lab-example-code">
-			<k-lab-code language="html">{{ $refs.preview?.innerHTML }}</k-lab-code>
+			<k-code language="html">{{ $refs.preview?.innerHTML }}</k-code>
 		</div>
 	</div>
 </template>

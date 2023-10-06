@@ -32,14 +32,12 @@
 
 		<k-lab-example label="start" :code="false">
 			<k-text>
-				<k-lab-code language="js"
-					>window.panel.drag.start(type, data);</k-lab-code
-				>
+				<k-code language="js">window.panel.drag.start(type, data);</k-code>
 			</k-text>
 		</k-lab-example>
 		<k-lab-example label="stop" :code="false">
 			<k-text>
-				<k-lab-code language="js">window.panel.drag.stop();</k-lab-code>
+				<k-code language="js">window.panel.drag.stop();</k-code>
 			</k-text>
 		</k-lab-example>
 	</k-lab-examples>

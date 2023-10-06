@@ -115,7 +115,7 @@
 
 		<k-lab-example label="close" :code="false">
 			<k-text>
-				<k-lab-code language="js">window.panel.notification.close();</k-lab-code>
+				<k-code language="js">window.panel.notification.close();</k-code>
 				<p>Closes the current notification</p>
 				<k-button
 					icon="alert"
@@ -131,8 +131,8 @@
 		</k-lab-example>
 		<k-lab-example label="deprecated" :code="false">
 			<k-text>
-				<k-lab-code language="js"
-					>window.panel.notification.deprecated(notification);</k-lab-code
+				<k-code language="js"
+					>window.panel.notification.deprecated(notification);</k-code
 				>
 				<p>Used to show a deprecation warning in the console.</p>
 				<k-button
@@ -144,8 +144,8 @@
 		</k-lab-example>
 		<k-lab-example label="error" :code="false">
 			<k-text>
-				<k-lab-code language="js"
-					>window.panel.notification.error(notification);</k-lab-code
+				<k-code language="js"
+					>window.panel.notification.error(notification);</k-code
 				>
 				<p>Displays an error notification.</p>
 				<k-button
@@ -157,8 +157,8 @@
 		</k-lab-example>
 		<k-lab-example label="fatal" :code="false">
 			<k-text>
-				<k-lab-code language="js"
-					>window.panel.notification.fatal(notification);</k-lab-code
+				<k-code language="js"
+					>window.panel.notification.fatal(notification);</k-code
 				>
 				<p>Displays a fatal error in an iframe overlay for better isolation</p>
 				<k-button
@@ -170,8 +170,8 @@
 		</k-lab-example>
 		<k-lab-example label="open" :code="false">
 			<k-text>
-				<k-lab-code language="js"
-					>window.panel.notification.open(notification);</k-lab-code
+				<k-code language="js"
+					>window.panel.notification.open(notification);</k-code
 				>
 				<p>Open a custom notification</p>
 				<k-button
@@ -185,8 +185,8 @@
 		</k-lab-example>
 		<k-lab-example label="success" :code="false">
 			<k-text>
-				<k-lab-code language="js"
-					>window.panel.notification.success(notification);</k-lab-code
+				<k-code language="js"
+					>window.panel.notification.success(notification);</k-code
 				>
 				<p>Displays a success notification</p>
 				<k-button

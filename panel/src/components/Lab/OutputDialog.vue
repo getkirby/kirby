@@ -6,7 +6,7 @@
 		:submit-button="false"
 		@cancel="$emit('cancel')"
 	>
-		<k-lab-code :language="language">{{ code }}</k-lab-code>
+		<k-code :language="language">{{ code }}</k-code>
 	</k-dialog>
 </template>
 

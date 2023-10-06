@@ -117,7 +117,7 @@
 				<p>
 					<code>window.panel.searches</code> object with all available searches
 				</p>
-				<k-lab-code language="js">{{ $panel.searches }}</k-lab-code>
+				<k-code language="js">{{ $panel.searches }}</k-code>
 			</k-text>
 		</k-lab-example>
 		<k-lab-example label="title" :code="false">
@@ -152,8 +152,8 @@
 
 		<k-lab-example label="error" :code="false">
 			<k-text>
-				<k-lab-code language="js"
-					>window.panel.error(error, openNotification = true)</k-lab-code
+				<k-code language="js"
+					>window.panel.error(error, openNotification = true)</k-code
 				>
 				<p>Logs (and optionally displays) error an message</p>
 				<k-button
@@ -170,9 +170,7 @@
 		</k-lab-example>
 		<k-lab-example label="get" :code="false">
 			<k-text>
-				<k-lab-code language="js"
-					>window.panel.get(url, options = {});</k-lab-code
-				>
+				<k-code language="js">window.panel.get(url, options = {});</k-code>
 				<p>Sends a GET request</p>
 				<k-button-group>
 					<k-button text="GET: site" variant="filled" @click="get('site')" />
@@ -183,9 +181,7 @@
 		</k-lab-example>
 		<k-lab-example label="open" :code="false">
 			<k-text>
-				<k-lab-code language="js"
-					>window.panel.open(url, options = {});</k-lab-code
-				>
+				<k-code language="js">window.panel.open(url, options = {});</k-code>
 				<p>
 					Sends a GET request and updates the state. This will actually route to
 					a new view if the response includes one.
@@ -211,31 +207,25 @@
 		</k-lab-example>
 		<k-lab-example label="post" :code="false">
 			<k-text>
-				<k-lab-code language="js"
-					>window.panel.post(url, options = {});</k-lab-code
-				>
+				<k-code language="js">window.panel.post(url, options = {});</k-code>
 				<p>Sends a POST request</p>
 			</k-text>
 		</k-lab-example>
 		<k-lab-example label="redirect" :code="false">
 			<k-text>
-				<k-lab-code language="js"
-					>window.panel.redirect(url, options = {});</k-lab-code
-				>
+				<k-code language="js">window.panel.redirect(url, options = {});</k-code>
 				<p>Full redirect to a different URL</p>
 			</k-text>
 		</k-lab-example>
 		<k-lab-example label="request" :code="false">
 			<k-text>
-				<k-lab-code language="js"
-					>window.panel.request(url, options = {});</k-lab-code
-				>
+				<k-code language="js">window.panel.request(url, options = {});</k-code>
 				<p>Low-level request handler</p>
 			</k-text>
 		</k-lab-example>
 		<k-lab-example label="search" :code="false">
 			<k-text>
-				<k-lab-code language="js">window.panel.search(type, query);</k-lab-code>
+				<k-code language="js">window.panel.search(type, query);</k-code>
 				<p>Sends a search request</p>
 				<div style="display: flex; gap: 0.5rem">
 					<k-input :value="search" type="search" @input="search = $event" />
@@ -250,21 +240,21 @@
 		</k-lab-example>
 		<k-lab-example label="set" :code="false">
 			<k-text>
-				<k-lab-code language="js">window.panel.set(state);</k-lab-code>
+				<k-code language="js">window.panel.set(state);</k-code>
 				<p>Overwrites the Panel state</p>
 			</k-text>
 		</k-lab-example>
 		<k-lab-example label="state" :code="false">
 			<k-text>
-				<k-lab-code language="js">window.panel.state();</k-lab-code>
+				<k-code language="js">window.panel.state();</k-code>
 				<p>Returns the full Panel state including all modules</p>
 				<k-button text="Test" variant="filled" @click="openState" />
 			</k-text>
 		</k-lab-example>
 		<k-lab-example label="url" :code="false">
 			<k-text>
-				<k-lab-code language="js"
-					>window.panel.url(url = "", query = {}, origin);</k-lab-code
+				<k-code language="js"
+					>window.panel.url(url = "", query = {}, origin);</k-code
 				>
 				<p>URL builder for Panel URLs</p>
 				<div style="display: flex; gap: 0.5rem">

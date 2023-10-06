@@ -1,3 +1,23 @@
+<template>
+	<div><slot /></div>
+</template>
+
+<script>
+import Prism from "prismjs";
+
+Prism.manual = true;
+
+export default {
+	mounted() {
+		Prism.highlightAll(this.$el);
+	},
+	updated() {
+		Prism.highlightAll(this.$el);
+	}
+};
+</script>
+
+<style>
 .token.punctuation,
 .token.comment,
 .token.doctype {
@@ -62,3 +82,4 @@
 .token.italic {
 	font-style: italic;
 }
+</style>

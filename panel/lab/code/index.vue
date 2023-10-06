@@ -4,7 +4,17 @@
 			<k-code>Hello world</k-code>
 		</k-lab-example>
 		<k-lab-example label="Language">
-			<k-code language="php">if ($page->slug() === 'blog') echo 'Hello'</k-code>
+			<k-code language="html">{{ php }}</k-code>
 		</k-lab-example>
 	</k-lab-examples>
 </template>
+
+<script>
+export default {
+	computed: {
+		php() {
+			return `<p>Hello world</p>`;
+		}
+	}
+};
+</script>

@@ -16,7 +16,7 @@
 					<code>window.panel.translation.data</code> returns the entire object
 					with all messages and other infor about the translation
 				</p>
-				<k-lab-code language="js">{{ $panel.translation.data }}</k-lab-code>
+				<k-code language="js">{{ $panel.translation.data }}</k-code>
 			</k-text>
 		</k-lab-example>
 		<k-lab-example label="direction" :code="false">
