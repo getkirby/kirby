@@ -13,7 +13,7 @@
 
 			<div>&rarr;</div>
 
-			<k-box theme="code">{{ parsed || "{}" }}</k-box>
+			<k-box theme="code">{{ parsed ?? "{}" }}</k-box>
 			<div>
 				<k-color-frame
 					:color="parsed ? $library.colors.toString(parsed) : value"
