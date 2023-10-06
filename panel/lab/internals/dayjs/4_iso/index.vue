@@ -1,9 +1,12 @@
 <template>
 	<k-lab-examples>
-		<k-text>
-			Parse an ISO datetime, date or time string as a <code>dayjs</code> object.
-			Or convert a <code>dayjs</code> object to an ISO string.
-		</k-text>
+		<k-box theme="text">
+			<k-text>
+				Parse an ISO datetime, date or time string as a
+				<code>dayjs</code> object. Or convert a <code>dayjs</code> object to an
+				ISO string.
+			</k-text>
+		</k-box>
 
 		<k-lab-example label="dayjs.iso()" :code="false">
 			<k-code language="javascript"

@@ -1,10 +1,13 @@
 <template>
 	<k-lab-examples>
-		<k-text>
-			Formats a <code>dayjs</code> object based on a chosen format pattern.
-			Check out
-			<a href="https://day.js.org/docs/en/display/format">available formats</a>.
-		</k-text>
+		<k-box theme="text">
+			<k-text>
+				Formats a <code>dayjs</code> object based on a chosen format pattern.
+				Check out
+				<a href="https://day.js.org/docs/en/display/format">available formats</a
+				>.
+			</k-text>
+		</k-box>
 
 		<k-lab-example label="dayjs.pattern().format()" :code="false">
 			<k-code language="javascript"

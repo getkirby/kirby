@@ -1,9 +1,11 @@
 <template>
 	<k-lab-examples>
-		<k-text>
-			Tries to parse the free-text input as a <code>dayjs</code>
-			date or time object.
-		</k-text>
+		<k-box theme="text">
+			<k-text>
+				Tries to parse the free-text input as a <code>dayjs</code>
+				date or time object.
+			</k-text>
+		</k-box>
 
 		<k-lab-example label="dayjs.interpret(input, 'date')" :code="false">
 			<k-code language="javascript"

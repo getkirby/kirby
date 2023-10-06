@@ -2,11 +2,7 @@
 	<k-lab-examples>
 		<h2 class="h4">State</h2>
 
-		<k-box
-			theme="info"
-			v-if="$panel.languages.length === 0"
-			style="margin-bottom: var(--spacing-6)"
-		>
+		<k-box v-if="$panel.languages.length === 0" theme="warning">
 			The state is going to be pretty empty in single-language mode
 		</k-box>
 
