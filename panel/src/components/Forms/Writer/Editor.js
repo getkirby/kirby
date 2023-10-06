@@ -389,6 +389,19 @@ export default class Editor extends Emitter {
 		this.setContent(this.options.content, true);
 	}
 
+	insertText(text, selected = false) {
+		const { tr } = this.state;
+
+		const transaction = tr.insertText(text);
+		this.view.dispatch(transaction);
+
+		if (selected) {
+			const to = tr.selection.from;
+			const from = to - text.length;
+			this.setSelection(from, to);
+		}
+	}
+
 	isEditable() {
 		return this.options.editable;
 	}
