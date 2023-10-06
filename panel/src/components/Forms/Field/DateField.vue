@@ -26,6 +26,7 @@
 			>
 				<template v-if="calendar" #icon>
 					<k-button
+						:disabled="disabled"
 						:icon="icon"
 						:title="$t('date.select')"
 						class="k-input-icon-button"
@@ -59,6 +60,7 @@
 			>
 				<template v-if="times" #icon>
 					<k-button
+						:disabled="disabled"
 						:icon="time.icon ?? 'clock'"
 						:title="$t('time.select')"
 						class="k-input-icon-button"
