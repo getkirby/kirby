@@ -20,35 +20,6 @@
 </template>
 
 <script>
-import Vue from "vue";
-import Docs from "./Docs.vue";
-import DocsDrawer from "./DocsDrawer.vue";
-import Example from "./Example.vue";
-import Examples from "./Examples.vue";
-import FieldExamples from "./FieldExamples.vue";
-import FieldPreviewExample from "./FieldPreviewExample.vue";
-import Form from "./Form.vue";
-import InputExamples from "./InputExamples.vue";
-import InputboxExamples from "./InputboxExamples.vue";
-import OptionsFieldExamples from "./OptionsFieldExamples.vue";
-import OptionsInputExamples from "./OptionsInputExamples.vue";
-import OptionsInputboxExamples from "./OptionsInputboxExamples.vue";
-import OutputDialog from "./OutputDialog.vue";
-
-Vue.component("k-lab-docs", Docs);
-Vue.component("k-lab-docs-drawer", DocsDrawer);
-Vue.component("k-lab-example", Example);
-Vue.component("k-lab-examples", Examples);
-Vue.component("k-lab-field-examples", FieldExamples);
-Vue.component("k-lab-field-preview-example", FieldPreviewExample);
-Vue.component("k-lab-form", Form);
-Vue.component("k-lab-input-examples", InputExamples);
-Vue.component("k-lab-inputbox-examples", InputboxExamples);
-Vue.component("k-lab-options-field-examples", OptionsFieldExamples);
-Vue.component("k-lab-options-input-examples", OptionsInputExamples);
-Vue.component("k-lab-options-inputbox-examples", OptionsInputboxExamples);
-Vue.component("k-lab-output-dialog", OutputDialog);
-
 export default {
 	props: {
 		docs: String,
