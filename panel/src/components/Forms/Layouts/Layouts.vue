@@ -171,6 +171,7 @@ export default {
 
 			// create empty layout based on selected columns
 			const newLayout = await this.$api.post(this.endpoints.field + "/layout", {
+				attrs: oldLayout.attrs,
 				columns: columns
 			});
 
