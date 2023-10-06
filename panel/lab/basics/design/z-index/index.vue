@@ -1,6 +1,11 @@
 <template>
 	<k-lab-examples>
-		<k-lab-example label="z" :code="false">
+		<k-text>
+			Exposed as custom CSS properties, e.g.
+			<code>z-index: var(--z-toolbar)</code>
+		</k-text>
+
+		<k-lab-example label="z-index" :code="false">
 			<div>
 				<k-box
 					v-for="(index, x) in z"

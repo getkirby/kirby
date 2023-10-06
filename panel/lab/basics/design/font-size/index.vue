@@ -1,5 +1,10 @@
 <template>
 	<k-lab-examples>
+		<k-text>
+			Exposed as custom CSS properties, e.g.
+			<code>font-size: var(--text-sm)</code>
+		</k-text>
+
 		<k-lab-example
 			v-for="size in sizes"
 			:key="size"

@@ -1,5 +1,10 @@
 <template>
 	<k-lab-examples>
+		<k-text>
+			Exposed as custom CSS properties, e.g.
+			<code>box-shadow: var(--shadow-lg)</code>
+		</k-text>
+
 		<k-lab-example label="shadows" :code="false">
 			<k-box
 				v-for="shadow in shadows"

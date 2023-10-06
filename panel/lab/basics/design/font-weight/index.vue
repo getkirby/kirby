@@ -1,5 +1,10 @@
 <template>
 	<k-lab-examples>
+		<k-text>
+			Exposed as custom CSS properties, e.g.
+			<code>font-weight: var(--font-bold)</code>
+		</k-text>
+
 		<k-lab-example
 			v-for="weight in weights"
 			:key="weight"

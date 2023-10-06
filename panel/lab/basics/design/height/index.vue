@@ -1,5 +1,10 @@
 <template>
 	<k-lab-examples>
+		<k-text>
+			Exposed as custom CSS properties, e.g.
+			<code>height: var(--height-lg)</code>
+		</k-text>
+
 		<k-lab-example label="heights" :code="false">
 			<k-box
 				v-for="height in heights"

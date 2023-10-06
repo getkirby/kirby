@@ -1,5 +1,10 @@
 <template>
 	<k-lab-examples>
+		<k-text>
+			Exposed as custom CSS properties, e.g.
+			<code>color: var(--color-gray-100)</code>
+		</k-text>
+
 		<k-lab-example label="colors" :code="false">
 			<k-grid
 				v-for="name in names"
@@ -14,13 +19,6 @@
 					{{ name }}-{{ step }}
 				</k-box>
 			</k-grid>
-
-			<k-text style="margin-top: var(--spacing-8)">
-				<p>
-					Exposed as custom CSS properties, e.g.
-					<code>var(--color-gray-100)</code>
-				</p>
-			</k-text>
 		</k-lab-example>
 	</k-lab-examples>
 </template>

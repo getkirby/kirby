@@ -1,5 +1,10 @@
 <template>
 	<k-lab-examples>
+		<k-text>
+			Exposed as custom CSS properties, e.g.
+			<code>font-family: var(--font-mono)</code>
+		</k-text>
+
 		<k-lab-example
 			v-for="family in families"
 			:key="family"
