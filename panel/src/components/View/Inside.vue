@@ -53,12 +53,13 @@ export default {
 }
 
 .k-panel-notification {
+	--button-height: var(--height-sm);
 	--button-color-icon: var(--theme-color-800);
 	--button-color-text: var(--theme-color-800);
-
+	outline: 1px solid var(--theme-color-500);
 	position: fixed;
-	inset-block-end: var(--spacing-8);
-	inset-inline-end: var(--spacing-8);
+	inset-block-end: var(--spacing-6);
+	inset-inline-end: var(--spacing-6);
 	box-shadow: var(--shadow-lg);
 	z-index: var(--z-notification);
 }
