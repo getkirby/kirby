@@ -34,13 +34,17 @@ return [
 			string $id,
 			string|null $tab = null
 		) {
-			$example = (new Examples($category))->example($id, $tab);
-			$props   = $example->props();
-			$vue     = $example->vue();
+			$examples = new Examples($category);
+			$example  = $examples->example($id, $tab);
+			$props    = $example->props();
+			$vue      = $example->vue();
 
 			return [
 				'component' => 'k-lab-playground-view',
 				'breadcrumb' => [
+					[
+						'label' => $examples->name(),
+					],
 					[
 						'label' => $example->title(),
 						'link'  => $example->url()

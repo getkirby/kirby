@@ -62,6 +62,11 @@ class Examples
 		);
 	}
 
+	public function name(): string
+	{
+		return $this->props['name'] ?? ucfirst($this->id);
+	}
+
 	public function root(): string
 	{
 		return $this->root;
@@ -70,7 +75,7 @@ class Examples
 	public function toArray(): array
 	{
 		return [
-			'name'     => ucfirst($this->id),
+			'name'     => $this->name(),
 			'examples' => $this->examples(),
 		];
 	}
