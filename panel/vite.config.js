@@ -70,7 +70,13 @@ export default defineConfig(({ command }) => {
 				output: {
 					entryFileNames: "js/[name].min.js",
 					chunkFileNames: "js/[name].min.js",
-					assetFileNames: "[ext]/[name].min.[ext]"
+					assetFileNames: "[ext]/[name].min.[ext]",
+					manualChunks(id) {
+						// move all lab components into their own chunk
+						if (id.includes("src/components/Lab")) {
+							return "lab";
+						}
+					}
 				}
 			}
 		},
