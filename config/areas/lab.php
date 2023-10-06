@@ -2,7 +2,7 @@
 
 return function () {
 	return [
-		'icon'    => 'palette',
+		'icon'    => 'lab',
 		'label'   => 'Lab',
 		'menu'    => false,
 		'drawers' => require __DIR__ . '/lab/drawers.php',
