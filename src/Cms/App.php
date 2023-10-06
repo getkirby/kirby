@@ -203,7 +203,6 @@ class App
 	/**
 	 * Applies a hook to the given value
 	 *
-	 * @internal
 	 * @param string $name Full event name
 	 * @param array $args Associative array of named event arguments
 	 * @param string $modify Key in $args that is modified by the hooks
@@ -1675,7 +1674,6 @@ class App
 	/**
 	 * Trigger a hook by name
 	 *
-	 * @internal
 	 * @param string $name Full event name
 	 * @param array $args Associative array of named event arguments
 	 * @param \Kirby\Cms\Event|null $originalEvent Event object (internal use)

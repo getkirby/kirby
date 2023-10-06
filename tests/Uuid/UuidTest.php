@@ -3,7 +3,6 @@
 namespace Kirby\Uuid;
 
 use Generator;
-use Kirby\Cms\Page;
 use Kirby\Exception\LogicException;
 use Kirby\Toolkit\Str;
 
@@ -376,5 +375,34 @@ class UuidTest extends TestCase
 	{
 		$page = $this->app->page($dir = 'page-a/subpage-a');
 		$this->assertSame($dir, $page->uuid()->value());
+	}
+
+	/**
+	 * @covers ::model
+	 * @covers ::populate
+	 */
+	public function testCacheInvalidModelId()
+	{
+		$page = $this->app->page('page-a');
+		$key  = 'page/my/-page';
+		$id   = 'page://my-page';
+		$uuid = Uuid::for($id);
+
+		$this->assertFalse($uuid->isCached());
+		$this->assertSame($key, $uuid->key());
+		$this->assertSame($uuid->toString(), $id);
+		$this->assertTrue($uuid->isCached());
+		$this->assertSame(Uuids::cache()->get($key), 'page-a');
+		$this->assertSame($page, $this->app->page($id));
+
+		// modify cache data manually to something invalid
+		Uuids::cache()->set($key, 'invalid-id');
+
+		$uuid = Uuid::for($id);
+		$this->assertSame(Uuids::cache()->get($key), 'invalid-id');
+		$this->assertNull($uuid->model(true));
+		$this->assertSame(Uuids::cache()->get($key), 'invalid-id');
+		$this->assertSame($page, $uuid->model());
+		$this->assertSame(Uuids::cache()->get($key), 'page-a');
 	}
 }

@@ -15,6 +15,7 @@ class RemoteTest extends TestCase
 	public function setUp(): void
 	{
 		$this->defaults = Remote::$defaults;
+		IniStore::$data['curl.cainfo'] = false;
 
 		Remote::$defaults = array_merge($this->defaults, [
 			'test' => true,
@@ -25,6 +26,7 @@ class RemoteTest extends TestCase
 	public function tearDown(): void
 	{
 		Remote::$defaults = $this->defaults;
+		unset(IniStore::$data['curl.cainfo']);
 	}
 
 	public function testOptionsHeaders()

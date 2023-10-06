@@ -168,9 +168,7 @@ class Collection extends BaseCollection
 				}
 
 				// ignore upper/lowercase for group names
-				if ($i) {
-					$value = Str::lower($value);
-				}
+				$value = $i === true ? Str::lower($value) : (string)$value;
 
 				if (isset($groups->data[$value]) === false) {
 					// create a new entry for the group if it does not exist yet

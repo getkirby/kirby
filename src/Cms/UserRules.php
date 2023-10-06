@@ -301,8 +301,8 @@ class UserRules
 	 */
 	public static function validId(User $user, string $id): bool
 	{
-		if ($id === 'account') {
-			throw new InvalidArgumentException('"account" is a reserved word and cannot be used as user id');
+		if (in_array($id, ['account', 'kirby', 'nobody']) === true) {
+			throw new InvalidArgumentException('"' . $id . '" is a reserved word and cannot be used as user id');
 		}
 
 		if ($user->kirby()->users()->find($id)) {

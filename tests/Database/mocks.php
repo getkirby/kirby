@@ -12,3 +12,22 @@ class MockSql extends Sql
 	{
 	}
 }
+
+class MockClassWithCallable
+{
+	public function __construct(
+		public string $fname,
+		public string $lname
+	) {
+	}
+
+	public function name(): string
+	{
+		return $this->fname . ' ' . $this->lname;
+	}
+
+	public static function fromDb(array $row, $key = null): MockClassWithCallable
+	{
+		return new MockClassWithCallable($row['fname'], $row['lname']);
+	}
+}
