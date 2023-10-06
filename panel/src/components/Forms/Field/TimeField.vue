@@ -10,6 +10,7 @@
 		>
 			<template v-if="times" #icon>
 				<k-button
+					:disabled="disabled"
 					:icon="icon ?? 'clock'"
 					:title="$t('time.select')"
 					class="k-input-icon-button"
