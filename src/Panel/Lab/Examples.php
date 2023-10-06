@@ -8,17 +8,21 @@ use Kirby\Toolkit\A;
 
 class Examples
 {
-	protected array $props = [];
 	protected string $root;
 
 	public function __construct(
 		protected string $id,
+		string|null $root = null,
+		protected array $props = []
 	)
 	{
-		$this->root = static::base() . '/' . $this->id;
+		$this->root = $root ?? static::base() . '/' . $this->id;
 
 		if (file_exists($this->root . '/index.php') === true) {
-			$this->props = require $this->root . '/index.php';
+			$this->props = array_merge(
+				require $this->root . '/index.php',
+				$this->props
+			);
 		}
 	}
 
@@ -46,7 +50,14 @@ class Examples
 
 	public static function factory(string $id) {
 		return match ($id) {
-			'site'  => new PluginExamples(),
+			'site'  => new static(
+				'site',
+				App::instance()->root('site') . '/lab',
+				[
+					'name' => 'Your examples',
+					'icon' => 'live'
+				]
+			),
 			default => new static($id)
 		};
 	}
