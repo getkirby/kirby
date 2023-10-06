@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel\Lab;
 
-use Kirby\Cms\App;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\Dir;
@@ -10,17 +9,16 @@ use Kirby\Http\Response;
 
 class Example
 {
-	protected string $base;
 	protected string $root;
 	protected string|null $tab = null;
 	protected array $tabs;
 
 	public function __construct(
+		protected Examples $parent,
 		protected string $id,
 		string|null $tab = null,
 	) {
-		$this->base = static::base();
-		$this->root = $this->base . '/' . $this->id;
+		$this->root = $this->parent->root() . '/' . $this->id;
 
 		if ($this->exists() === false) {
 			throw new NotFoundException('The example could not be found');
@@ -28,31 +26,6 @@ class Example
 
 		$this->tabs = $this->collectTabs();
 		$this->tab  = $this->collectTab($tab);
-	}
-
-	public static function all(): array
-	{
-		$examples = Dir::inventory(static::base())['children'];
-
-		return array_map(function($props) {
-			$example = new static(
-				id: $props['dirname']
-			);
-
-			return [
-				'image' => [
-					'icon' => 'palette',
-					'back' => 'white',
-				],
-				'text' => $example->title(),
-				'link' => $example->url()
-			];
-		}, $examples);
-	}
-
-	public static function base(): string
-	{
-		return App::instance()->root('panel') . '/lab';
 	}
 
 	public function collectTab(string|null $tab): string|null
@@ -76,7 +49,7 @@ class Example
 			$tabs[$child['dirname']] = [
 				'name'  => $child['dirname'],
 				'label' => $child['slug'],
-				'link'  => '/lab/' . $this->id . '/' . $child['dirname']
+				'link'  => '/lab/' .  $this->parent->id() . '/' . $this->id . '/' . $child['dirname']
 			];
 		}
 
@@ -90,7 +63,7 @@ class Example
 
 	public function file(string $filename): string
 	{
-		return $this->base . '/' . $this->path() . '/' . $filename;
+		return $this->parent->root() . '/' . $this->path() . '/' . $filename;
 	}
 
 	public function id(): string
@@ -116,22 +89,22 @@ class Example
 
 	public function path(): string
 	{
-		if ($this->tab === null) {
-			return $this->id;
-		}
-
-		return $this->id . '/' . $this->tab;
+		return match ($this->tab) {
+			null    => $this->id,
+			default => $this->id . '/' . $this->tab
+		};
 	}
 
 	public function props(): array
 	{
 		if ($this->tab !== null) {
-			$props = $this->load('../index.php') ?? [];
-		} else {
-			$props = [];
+			$props = $this->load('../index.php');
 		}
 
-		return array_replace_recursive($props, $this->load('index.php') ?? []);
+		return array_replace_recursive(
+			$props ?? [],
+			$this->load('index.php') ?? []
+		);
 	}
 
 	public function read(string $filename): string|null
@@ -167,15 +140,12 @@ class Example
 
 	public function template(string $filename): string|null
 	{
-		$file = $this->file($filename);
-
-		if (is_file($file) === false) {
-			return null;
+		if ($file = $this->file($filename)) {
+			$data = $this->props();
+			return (new Template($file))->render($data);
 		}
 
-		$data = $this->props();
-
-		return (new Template($file))->render($data);
+		return null;
 	}
 
 	public function title(): string
@@ -183,9 +153,21 @@ class Example
 		return basename($this->id);
 	}
 
+	public function toArray(): array
+	{
+		return [
+			'image' => [
+				'icon' => $this->parent->icon(),
+				'back' => 'white',
+			],
+			'text' => $this->title(),
+			'link' => $this->url()
+		];
+	}
+
 	public function url(): string
 	{
-		return '/lab/' . $this->path();
+		return '/lab/' . $this->parent->id() . '/' . $this->path();
 	}
 
 	public function vue(): array
@@ -243,4 +225,3 @@ class Example
 	}
 
 }
-

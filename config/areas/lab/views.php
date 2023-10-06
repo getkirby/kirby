@@ -1,45 +1,42 @@
 <?php
 
-use Kirby\Panel\Lab\Example;
+use Kirby\Panel\Lab\Examples;
 
 return [
 	'lab' => [
 		'pattern' => 'lab',
 		'action'  => function () {
-			$examples = Example::all();
-
 			return [
 				'component' => 'k-lab-index-view',
 				'props' => [
-					'examples' => $examples
+					'examples' => Examples::index(),
 				],
 			];
 		}
 	],
 	'lab.vue' => [
 		'pattern' => [
-			'lab/(:any)/index.vue',
-			'lab/(:any)/(:any)/index.vue'
+			'lab/(:any)/(:any)/index.vue',
+			'lab/(:any)/(:any)/(:any)/index.vue'
 		],
-		'action'  => function (string $id, string|null $tab = null) {
-			$example = new Example(
-				id: $id,
-				tab: $tab
-			);
-
-			return $example->serve();
+		'action'  => function (
+			string $category,
+			string $id,
+			string|null $tab = null
+		) {
+			return (new Examples($category))->example($id, $tab)->serve();
 		}
 	],
 	'lab.example' => [
-		'pattern' => 'lab/(:any)/(:any?)',
-		'action'  => function (string $id, string|null $tab = null) {
-			$example = new Example(
-				id: $id,
-				tab: $tab
-			);
-
-			$props = $example->props();
-			$vue   = $example->vue();
+		'pattern' => 'lab/(:any)/(:any)/(:any?)',
+		'action'  => function (
+			string $category,
+			string $id,
+			string|null $tab = null
+		) {
+			$example = (new Examples($category))->example($id, $tab);
+			$props   = $example->props();
+			$vue     = $example->vue();
 
 			return [
 				'component' => 'k-lab-playground-view',
