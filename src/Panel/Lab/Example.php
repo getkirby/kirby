@@ -194,12 +194,14 @@ class Example
 					$code = $match[1];
 				}
 
-				// get minimum indent
-				preg_match_all('/^(\t*)\S/m', $code, $indents);
-				$indents = min(array_map(fn ($i) => strlen($i), $indents[1]));
+				if (preg_match_all('/^(\t*)\S/m', $code, $indents)) {
+					// get minimum indent
+					$indents = array_map(fn ($i) => strlen($i), $indents[1]);
+					$indents = min($indents);
 
-				// strip minimum indent from each line
-				$code = preg_replace('/^\t{' . $indents . '}/m', '', $code);
+					// strip minimum indent from each line
+					$code = preg_replace('/^\t{' . $indents . '}/m', '', $code);
+				}
 
 				$parts['examples'][$name] = trim($code);
 			}

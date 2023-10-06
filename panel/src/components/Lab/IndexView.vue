@@ -7,7 +7,13 @@
 			:key="category.name"
 			:headline="category.name"
 		>
-			<k-collection :items="category.examples" />
+			<k-collection
+				:items="category.examples"
+				:empty="{
+					icon: category.icon,
+					text: 'Add examples to ' + category.path
+				}"
+			/>
 		</k-section>
 	</k-panel-inside>
 </template>

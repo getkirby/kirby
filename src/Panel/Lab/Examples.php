@@ -5,6 +5,7 @@ namespace Kirby\Panel\Lab;
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Str;
 
 class Examples
 {
@@ -83,7 +84,7 @@ class Examples
 		// all custom lab examples from `site/lab`
 		$custom = Examples::factory('site')->toArray();
 
-		array_unshift($examples, $custom);
+		array_push($examples, $custom);
 
 		return $examples;
 	}
@@ -103,6 +104,8 @@ class Examples
 		return [
 			'name'     => $this->name(),
 			'examples' => $this->examples(),
+			'icon'     => $this->icon(),
+			'path'     => Str::after($this->root(), App::instance()->root('index')),
 		];
 	}
 }
