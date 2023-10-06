@@ -1,7 +1,3 @@
-<template>
-	<div><slot /></div>
-</template>
-
 <script>
 import Prism from "prismjs";
 
@@ -10,6 +6,9 @@ Prism.manual = true;
 export default {
 	mounted() {
 		Prism.highlightAll(this.$el);
+	},
+	render() {
+		return this.$scopedSlots.default({});
 	},
 	updated() {
 		Prism.highlightAll(this.$el);
