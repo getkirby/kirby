@@ -37,7 +37,7 @@
 			<k-code language="html">{{ component }}</k-code>
 		</div>
 		<!-- Raw -->
-		<div v-if="mode === 'raw'" class="k-lab-example-code">
+		<div v-show="mode === 'raw'" class="k-lab-example-code">
 			<k-code language="html">{{ $refs.preview?.innerHTML }}</k-code>
 		</div>
 	</div>
