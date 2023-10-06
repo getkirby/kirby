@@ -1,11 +1,11 @@
 <template>
-	<div class="k-ui-example" :data-flex="flex" tabindex="0">
-		<header class="k-ui-example-header">
-			<h3 class="k-ui-example-label">{{ label }}</h3>
+	<div class="k-lab-example" :data-flex="flex" tabindex="0">
+		<header class="k-lab-example-header">
+			<h3 class="k-lab-example-label">{{ label }}</h3>
 			<k-button-group
 				v-if="code"
 				layout="collapsed"
-				class="k-ui-example-inspector"
+				class="k-lab-example-inspector"
 			>
 				<k-button
 					icon="preview"
@@ -29,16 +29,16 @@
 		</header>
 
 		<!-- Preview -->
-		<div v-show="mode === 'preview'" ref="preview" class="k-ui-example-canvas">
+		<div v-show="mode === 'preview'" ref="preview" class="k-lab-example-canvas">
 			<slot />
 		</div>
 		<!-- Inspect -->
-		<div v-show="mode === 'inspect'" class="k-ui-example-code">
-			<k-ui-code language="html">{{ component }}</k-ui-code>
+		<div v-show="mode === 'inspect'" class="k-lab-example-code">
+			<k-lab-code language="html">{{ component }}</k-lab-code>
 		</div>
 		<!-- Raw -->
-		<div v-if="mode === 'raw'" class="k-ui-example-code">
-			<k-ui-code language="html">{{ $refs.preview?.innerHTML }}</k-ui-code>
+		<div v-if="mode === 'raw'" class="k-lab-example-code">
+			<k-lab-code language="html">{{ $refs.preview?.innerHTML }}</k-lab-code>
 		</div>
 	</div>
 </template>
@@ -67,7 +67,7 @@ export default {
 </script>
 
 <style>
-.k-ui-example {
+.k-lab-example {
 	position: relative;
 	container-type: inline-size;
 	max-width: 100%;
@@ -75,11 +75,11 @@ export default {
 	border-radius: var(--rounded);
 	border: 1px solid var(--color-gray-300);
 }
-.k-ui-example + .k-ui-example {
+.k-lab-example + .k-lab-example {
 	margin-top: var(--spacing-12);
 }
 
-.k-ui-example-header {
+.k-lab-example-header {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -88,29 +88,29 @@ export default {
 	padding-inline: var(--spacing-2);
 	border-bottom: 1px solid var(--color-gray-300);
 }
-.k-ui-example-label {
+.k-lab-example-label {
 	font-size: 12px;
 	color: var(--color-text-dimmed);
 }
 
-.k-ui-example-canvas,
-.k-ui-example-code {
+.k-lab-example-canvas,
+.k-lab-example-code {
 	padding: var(--spacing-16);
 }
-.k-ui-example[data-flex] .k-ui-example-canvas {
+.k-lab-example[data-flex] .k-lab-example-canvas {
 	display: flex;
 	align-items: center;
 	gap: var(--spacing-6);
 }
 
-.k-ui-example-inspector {
+.k-lab-example-inspector {
 	--icon-size: 13px;
 	--button-color-icon: var(--color-gray-500);
 }
-.k-ui-example-inspector .k-button:not([data-theme]):hover {
+.k-lab-example-inspector .k-button:not([data-theme]):hover {
 	--button-color-icon: var(--color-gray-600);
 }
-.k-ui-example-inspector .k-button:where([data-theme]) {
+.k-lab-example-inspector .k-button:where([data-theme]) {
 	--button-color-icon: var(--color-gray-800);
 }
 </style>

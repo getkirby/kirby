@@ -1,5 +1,8 @@
 <template>
-	<k-panel-inside :data-has-tabs="tabs.length > 1" class="k-ui-playground-view">
+	<k-panel-inside
+		:data-has-tabs="tabs.length > 1"
+		class="k-lab-playground-view"
+	>
 		<k-header>
 			{{ title }}
 			<k-button-group v-if="docs" slot="buttons">
@@ -65,14 +68,14 @@ export default {
 			window.UiExamples = this.examples;
 		},
 		openDocs() {
-			this.$panel.drawer.open(`ui/docs/${this.docs}`);
+			this.$panel.drawer.open(`lab/docs/${this.docs}`);
 		}
 	}
 };
 </script>
 
 <style>
-.k-ui-playground-view[data-has-tabs="true"] .k-header {
+.k-lab-playground-view[data-has-tabs="true"] .k-header {
 	margin-bottom: 0;
 }
 </style>

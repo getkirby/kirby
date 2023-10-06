@@ -1,6 +1,6 @@
 <template>
-	<k-panel-inside class="k-ui-index-view">
-		<k-header>UI</k-header>
+	<k-panel-inside class="k-lab-index-view">
+		<k-header>Lab</k-header>
 		<k-collection :items="examples" />
 	</k-panel-inside>
 </template>
@@ -14,7 +14,7 @@ export default {
 </script>
 
 <style>
-.k-ui-index-view .k-list-items {
+.k-lab-index-view .k-list-items {
 	grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
 }
 </style>

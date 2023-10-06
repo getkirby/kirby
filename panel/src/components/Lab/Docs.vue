@@ -1,6 +1,6 @@
 <template>
-	<div class="k-ui-docs">
-		<section v-if="description.length" class="k-ui-docs-section">
+	<div class="k-lab-docs">
+		<section v-if="description.length" class="k-lab-docs-section">
 			<k-headline class="h3">Description</k-headline>
 			<k-box theme="text">
 				<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
@@ -8,17 +8,17 @@
 			</k-box>
 		</section>
 
-		<section v-if="examples.length" class="k-ui-docs-section">
+		<section v-if="examples.length" class="k-lab-docs-section">
 			<k-headline class="h3">Examples</k-headline>
-			<k-ui-code
+			<k-lab-code
 				v-for="(example, index) in examples"
 				:key="index"
 				language="html"
-				>{{ example.content }}</k-ui-code
+				>{{ example.content }}</k-lab-code
 			>
 		</section>
 
-		<section v-if="props.length" class="k-ui-docs-section">
+		<section v-if="props.length" class="k-lab-docs-section">
 			<k-headline class="h3">Props</k-headline>
 			<div class="k-table">
 				<table>
@@ -36,7 +36,7 @@
 								</k-text>
 							</td>
 							<td>
-								<k-text class="k-ui-docs-types">
+								<k-text class="k-lab-docs-types">
 									<code
 										v-for="type in prop.type.name.split('|')"
 										:key="type"
@@ -61,7 +61,7 @@
 			</div>
 		</section>
 
-		<section v-if="slots.length" class="k-ui-docs-section">
+		<section v-if="slots.length" class="k-lab-docs-section">
 			<k-headline class="h3">Slots</k-headline>
 			<div class="k-table">
 				<table>
@@ -110,48 +110,48 @@ export default {
 </script>
 
 <style>
-.k-ui-docs-section + .k-ui-docs-section {
+.k-lab-docs-section + .k-lab-docs-section {
 	margin-top: var(--spacing-12);
 }
-.k-ui-docs-section .k-headline {
+.k-lab-docs-section .k-headline {
 	margin-bottom: var(--spacing-3);
 }
-.k-ui-docs-section .k-table td {
+.k-lab-docs-section .k-table td {
 	padding: 0.375rem var(--table-cell-padding);
 	vertical-align: top;
 	line-height: 1.5;
 }
-.k-ui-docs-types {
+.k-lab-docs-types {
 	display: inline-flex;
 	gap: 0.25rem;
 }
 
-.k-ui-docs-types code[data-type="boolean"] {
+.k-lab-docs-types code[data-type="boolean"] {
 	color: var(--color-purple-800);
 	outline-color: var(--color-purple-400);
 	background: var(--color-purple-300);
 }
-.k-ui-docs-types code[data-type="string"] {
+.k-lab-docs-types code[data-type="string"] {
 	color: var(--color-green-800);
 	outline-color: var(--color-green-500);
 	background: var(--color-green-300);
 }
-.k-ui-docs-types code[data-type="number"] {
+.k-lab-docs-types code[data-type="number"] {
 	color: var(--color-orange-800);
 	outline-color: var(--color-orange-500);
 	background: var(--color-orange-300);
 }
-.k-ui-docs-types code[data-type="array"] {
+.k-lab-docs-types code[data-type="array"] {
 	color: var(--color-aqua-800);
 	outline-color: var(--color-aqua-500);
 	background: var(--color-aqua-300);
 }
-.k-ui-docs-types code[data-type="object"] {
+.k-lab-docs-types code[data-type="object"] {
 	color: var(--color-yellow-800);
 	outline-color: var(--color-yellow-500);
 	background: var(--color-yellow-300);
 }
-.k-ui-docs-types code[data-type="func"] {
+.k-lab-docs-types code[data-type="func"] {
 	color: var(--color-pink-800);
 	outline-color: var(--color-pink-400);
 	background: var(--color-pink-300);

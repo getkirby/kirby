@@ -1,5 +1,5 @@
 <template>
-	<k-ui-example :label="label">
+	<k-lab-example :label="label">
 		<div class="k-table">
 			<table>
 				<thead>
@@ -24,7 +24,7 @@
 				</tbody>
 			</table>
 		</div>
-	</k-ui-example>
+	</k-lab-example>
 </template>
 
 <script>
@@ -50,7 +50,7 @@ export default {
 </script>
 
 <style>
-.k-ui-input-examples *:not([type="checkbox"], [type="radio"]):invalid {
+.k-lab-input-examples *:not([type="checkbox"], [type="radio"]):invalid {
 	outline: 2px solid var(--color-red-600) !important;
 }
 </style>

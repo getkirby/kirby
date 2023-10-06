@@ -5,7 +5,7 @@
 		v-bind="$attrs"
 		@submit="$emit('cancel')"
 	>
-		<k-ui-docs v-bind="docs" />
+		<k-lab-docs v-bind="docs" />
 	</k-drawer>
 </template>
 

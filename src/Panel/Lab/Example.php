@@ -52,7 +52,7 @@ class Example
 
 	public static function base(): string
 	{
-		return App::instance()->root('panel') . '/ui';
+		return App::instance()->root('panel') . '/lab';
 	}
 
 	public function collectTab(string|null $tab): string|null
@@ -76,7 +76,7 @@ class Example
 			$tabs[$child['dirname']] = [
 				'name'  => $child['dirname'],
 				'label' => $child['slug'],
-				'link'  => '/ui/' . $this->id . '/' . $child['dirname']
+				'link'  => '/lab/' . $this->id . '/' . $child['dirname']
 			];
 		}
 
@@ -185,7 +185,7 @@ class Example
 
 	public function url(): string
 	{
-		return '/ui/' . $this->path();
+		return '/lab/' . $this->path();
 	}
 
 	public function vue(): array
@@ -203,7 +203,7 @@ class Example
 		}
 
 		// extract code for each example
-		if (preg_match_all('!<k-ui-example.*?label="(.*?)".*?>(.*?)<\/k-ui-example>!s', $parts['template'] ?? '', $matches)) {
+		if (preg_match_all('!<k-lab-example.*?label="(.*?)".*?>(.*?)<\/k-lab-example>!s', $parts['template'] ?? '', $matches)) {
 			foreach ($matches[1] as $key => $name) {
 				$code = $matches[2][$key];
 

@@ -1,7 +1,7 @@
 <template>
-	<k-ui-form>
-		<k-ui-examples class="k-ui-options-input-examples">
-			<k-ui-example label="Default">
+	<k-lab-form>
+		<k-lab-examples class="k-lab-options-input-examples">
+			<k-lab-example label="Default">
 				<component
 					:is="`k-${type}-input`"
 					:name="type"
@@ -9,8 +9,8 @@
 					:value="input"
 					@input="emit"
 				/>
-			</k-ui-example>
-			<k-ui-example label="Autofocus">
+			</k-lab-example>
+			<k-lab-example label="Autofocus">
 				<component
 					:is="`k-${type}-input`"
 					:autofocus="true"
@@ -18,8 +18,8 @@
 					:value="input"
 					@input="emit"
 				/>
-			</k-ui-example>
-			<k-ui-example label="Required">
+			</k-lab-example>
+			<k-lab-example label="Required">
 				<component
 					:is="`k-${type}-input`"
 					:options="options"
@@ -27,16 +27,16 @@
 					:value="input"
 					@input="emit"
 				/>
-			</k-ui-example>
-			<k-ui-example v-if="info" label="Options with info">
+			</k-lab-example>
+			<k-lab-example v-if="info" label="Options with info">
 				<component
 					:is="`k-${type}-input`"
 					:options="optionsWithInfo"
 					:value="input"
 					@input="emit"
 				/>
-			</k-ui-example>
-			<k-ui-example label="Focus">
+			</k-lab-example>
+			<k-lab-example label="Focus">
 				<div style="margin-bottom: 1.5rem">
 					<component
 						:is="`k-${type}-input`"
@@ -50,8 +50,8 @@
 				<k-button variant="filled" size="sm" @click="$refs.input.focus()">
 					Focus
 				</k-button>
-			</k-ui-example>
-			<k-ui-example label="Disabled">
+			</k-lab-example>
+			<k-lab-example label="Disabled">
 				<component
 					:is="`k-${type}-input`"
 					:disabled="true"
@@ -59,10 +59,10 @@
 					:value="input"
 					@input="emit"
 				/>
-			</k-ui-example>
+			</k-lab-example>
 			<slot :options="options" :optionsWithInfo="optionsWithInfo" />
-		</k-ui-examples>
-	</k-ui-form>
+		</k-lab-examples>
+	</k-lab-form>
 </template>
 
 <script>
@@ -118,10 +118,10 @@ export default {
 </script>
 
 <style>
-.k-ui-options-input-examples fieldset:invalid {
+.k-lab-options-input-examples fieldset:invalid {
 	outline: 2px solid var(--color-red-600);
 }
-.k-ui-options-input-examples *:not([type="checkbox"], [type="radio"]):invalid {
+.k-lab-options-input-examples *:not([type="checkbox"], [type="radio"]):invalid {
 	outline: 2px solid var(--color-red-600);
 }
 </style>

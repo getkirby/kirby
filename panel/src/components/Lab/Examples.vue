@@ -1,5 +1,5 @@
 <template>
-	<div class="k-ui-examples">
+	<div class="k-lab-examples">
 		<slot />
 	</div>
 </template>

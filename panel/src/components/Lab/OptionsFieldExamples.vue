@@ -1,7 +1,7 @@
 <template>
-	<k-ui-form>
-		<k-ui-examples>
-			<k-ui-example label="Default">
+	<k-lab-form>
+		<k-lab-examples>
+			<k-lab-example label="Default">
 				<component
 					:is="`k-${type}-field`"
 					:name="type"
@@ -10,8 +10,8 @@
 					:value="input"
 					@input="emit"
 				/>
-			</k-ui-example>
-			<k-ui-example label="Autofocus">
+			</k-lab-example>
+			<k-lab-example label="Autofocus">
 				<component
 					:is="`k-${type}-field`"
 					:autofocus="true"
@@ -20,8 +20,8 @@
 					:value="input"
 					@input="emit"
 				/>
-			</k-ui-example>
-			<k-ui-example v-if="info" label="Options with info">
+			</k-lab-example>
+			<k-lab-example v-if="info" label="Options with info">
 				<component
 					:is="`k-${type}-field`"
 					:label="label"
@@ -29,8 +29,8 @@
 					:value="input"
 					@input="emit"
 				/>
-			</k-ui-example>
-			<k-ui-example label="Required">
+			</k-lab-example>
+			<k-lab-example label="Required">
 				<component
 					:is="`k-${type}-field`"
 					:label="label"
@@ -39,8 +39,8 @@
 					:value="input"
 					@input="emit"
 				/>
-			</k-ui-example>
-			<k-ui-example v-if="columns" label="Columns">
+			</k-lab-example>
+			<k-lab-example v-if="columns" label="Columns">
 				<component
 					:is="`k-${type}-field`"
 					:columns="3"
@@ -49,8 +49,8 @@
 					:value="input"
 					@input="emit"
 				/>
-			</k-ui-example>
-			<k-ui-example label="Disabled">
+			</k-lab-example>
+			<k-lab-example label="Disabled">
 				<component
 					:is="`k-${type}-field`"
 					:label="label"
@@ -59,10 +59,10 @@
 					:value="input"
 					@input="emit"
 				/>
-			</k-ui-example>
+			</k-lab-example>
 			<slot />
-		</k-ui-examples>
-	</k-ui-form>
+		</k-lab-examples>
+	</k-lab-form>
 </template>
 
 <script>
