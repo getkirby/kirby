@@ -44,6 +44,13 @@ class Examples
 		);
 	}
 
+	public static function factory(string $id) {
+		return match ($id) {
+			'site'  => new PluginExamples(),
+			default => new static($id)
+		};
+	}
+
 	public function icon(): string
 	{
 		return $this->props['icon'] ?? 'palette';
@@ -56,10 +63,16 @@ class Examples
 
 	public static function index(): array
 	{
-		return A::map(
+		// all core lab examples from `kirby/panel/lab`
+		$core = A::map(
 			Dir::inventory(static::base())['children'],
 			fn ($props) => (new static($props['dirname']))->toArray()
 		);
+
+		// all custom lab examples from `site/lab`
+		$custom = Examples::factory('site')->toArray();
+
+		return array_merge($core, [$custom]);
 	}
 
 	public function name(): string

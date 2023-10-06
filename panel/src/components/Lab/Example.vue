@@ -8,21 +8,24 @@
 				class="k-lab-example-inspector"
 			>
 				<k-button
-					icon="preview"
 					:theme="mode === 'preview' ? 'info' : null"
+					icon="preview"
 					size="xs"
+					title="Preview"
 					@click="mode = 'preview'"
 				/>
 				<k-button
-					icon="search"
 					:theme="mode === 'inspect' ? 'info' : null"
+					icon="search"
 					size="xs"
+					title="Vue code"
 					@click="mode = 'inspect'"
 				/>
 				<k-button
-					icon="code"
 					:theme="mode === 'raw' ? 'info' : null"
+					icon="code"
 					size="xs"
+					title="Rendered HTML"
 					@click="mode = 'raw'"
 				/>
 			</k-button-group>

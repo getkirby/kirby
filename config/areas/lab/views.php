@@ -24,7 +24,7 @@ return [
 			string $id,
 			string|null $tab = null
 		) {
-			return (new Examples($category))->example($id, $tab)->serve();
+			return Examples::factory($category)->example($id, $tab)->serve();
 		}
 	],
 	'lab.example' => [
@@ -34,7 +34,7 @@ return [
 			string $id,
 			string|null $tab = null
 		) {
-			$examples = new Examples($category);
+			$examples = Examples::factory($category);
 			$example  = $examples->example($id, $tab);
 			$props    = $example->props();
 			$vue      = $example->vue();
