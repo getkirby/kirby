@@ -5,10 +5,26 @@
 	>
 		<k-header>
 			{{ title }}
-			<k-button-group v-if="docs" slot="buttons">
-				<k-button icon="book" size="sm" variant="filled" @click="openDocs">
+			<k-button-group v-if="docs || github" slot="buttons">
+				<k-button
+					v-if="docs"
+					icon="book"
+					size="sm"
+					variant="filled"
+					@click="openDocs"
+				>
 					Docs
 				</k-button>
+				<k-button
+					v-if="github"
+					icon="github"
+					size="sm"
+					variant="filled"
+					:link="
+						'https://github.com/getkirby/kirby/tree/v4/feature/lab/' + github
+					"
+					target="_blank"
+				/>
 			</k-button-group>
 		</k-header>
 		<k-tabs :tab="tab" :tabs="tabs" />
@@ -25,6 +41,7 @@ export default {
 		docs: String,
 		examples: [Object, Array],
 		file: String,
+		github: String,
 		props: [Object, Array],
 		styles: String,
 		tab: String,

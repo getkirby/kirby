@@ -1,6 +1,8 @@
 <?php
 
+use Kirby\Cms\App;
 use Kirby\Panel\Lab\Examples;
+use Kirby\Toolkit\Str;
 
 return [
 	'lab' => [
@@ -53,14 +55,14 @@ return [
 				'props' => [
 					'docs'     => $props['docs'] ?? null,
 					'examples' => $vue['examples'],
-					'title'    => $example->title(),
-					'template' => $vue['template'],
-					'styles'   => $vue['style'],
 					'file'     => $example->module(),
+					'github'   => Str::after($example->root(), App::instance()->root('kirby')) . ($example->tab() ? '/' . $example->tab() : ''),
 					'props'    => $props,
+					'styles'   => $vue['style'],
 					'tab'      => $example->tab(),
 					'tabs'     => array_values($example->tabs()),
 					'template' => $vue['template'],
+					'title'    => $example->title(),
 				],
 			];
 		}
