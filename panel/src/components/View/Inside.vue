@@ -8,8 +8,36 @@
 
 			<slot />
 		</main>
+
+		<!-- Notifications -->
+		<k-button
+			v-if="notification && notification.type !== 'error'"
+			:icon="notification.icon"
+			:text="notification.message"
+			:theme="notification.theme"
+			variant="filled"
+			class="k-panel-notification"
+			@click="notification.close()"
+		/>
 	</k-panel>
 </template>
+
+<script>
+export default {
+	computed: {
+		notification() {
+			if (
+				this.$panel.notification.context === "view" &&
+				!this.$panel.notification.isFatal
+			) {
+				return this.$panel.notification;
+			}
+
+			return null;
+		}
+	}
+};
+</script>
 
 <style>
 :root {
@@ -22,5 +50,17 @@
 	padding: var(--spacing-3) var(--main-padding-inline) var(--spacing-24);
 	container: main / inline-size;
 	margin-inline-start: var(--main-start);
+}
+
+.k-panel-notification {
+	--button-height: var(--height-sm);
+	--button-color-icon: var(--theme-color-800);
+	--button-color-text: var(--theme-color-800);
+	outline: 1px solid var(--theme-color-500);
+	position: fixed;
+	inset-block-end: var(--spacing-6);
+	inset-inline-end: var(--spacing-6);
+	box-shadow: var(--shadow-lg);
+	z-index: var(--z-notification);
 }
 </style>
