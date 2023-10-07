@@ -23,26 +23,30 @@
 			</div>
 		</header>
 
-		<k-navigate
-			v-if="filtered.length && options.length"
-			ref="results"
-			axis="y"
-			class="k-selector-results"
-		>
-			<k-button
-				v-for="(option, key) in filtered"
-				:key="key"
-				:current="selected === key"
-				:disabled="option.disabled"
-				:icon="option.icon ?? icon"
-				class="k-selector-button"
-				@click="select(key)"
-				@focus.native="pick(key)"
+		<div v-if="filtered.length || showEmpty" class="k-selector-body">
+			<k-navigate
+				v-if="filtered.length"
+				ref="results"
+				axis="y"
+				class="k-selector-results"
 			>
-				<!-- eslint-disable-next-line vue/no-v-html -->
-				<span v-html="highlight(option.text)" />
-			</k-button>
-		</k-navigate>
+				<k-button
+					v-for="(option, key) in filtered"
+					:key="key"
+					:current="selected === key"
+					:disabled="option.disabled"
+					:icon="option.icon ?? icon"
+					class="k-selector-button"
+					@click="select(key)"
+					@focus.native="pick(key)"
+				>
+					<!-- eslint-disable-next-line vue/no-v-html -->
+					<span v-html="highlight(option.text)" />
+				</k-button>
+			</k-navigate>
+
+			<p v-else-if="showEmpty" class="k-selector-empty">{{ empty }}</p>
+		</div>
 
 		<footer v-if="showCreateButton" class="k-selector-footer">
 			<k-button
@@ -136,6 +140,13 @@ export default {
 			);
 
 			return matches.length === 0;
+		},
+		showEmpty() {
+			return (
+				this.accept === "options" &&
+				this.filtered.legnth === 0 &&
+				this.options.length
+			);
 		},
 		showSearch() {
 			// if new options can be added,
