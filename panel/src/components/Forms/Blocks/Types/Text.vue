@@ -94,7 +94,10 @@ export default {
 	padding: var(--spacing-3);
 }
 .k-block-type-text-input.k-writer:not([data-toolbar-inline="true"])
-	> .ProseMirror {
-	padding: var(--spacing-3);
+	> .ProseMirror,
+.k-block-type-text-input.k-writer:not(
+		[data-toolbar-inline="true"]
+	)[data-placeholder][data-empty="true"]:before {
+	padding: var(--spacing-3) var(--spacing-6);
 }
 </style>
