@@ -2,10 +2,12 @@
 
 namespace Kirby\Panel\Lab;
 
+use Kirby\Cms\App;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
+use Kirby\Toolkit\Str;
 
 /**
  * One or multiple lab examples with one or multiple tabs
@@ -76,6 +78,17 @@ class Example
 		return $this->parent->root() . '/' . $this->path() . '/' . $filename;
 	}
 
+	public function github(): string
+	{
+		$path = Str::after($this->root(), App::instance()->root('kirby'));
+
+		if ($tab = $this->tab()) {
+			$path .= '/' . $tab;
+		}
+
+		return 'https://github.com/getkirby/kirby/tree/v4/feature/lab/' . $path;
+	}
+
 	public function id(): string
 	{
 		return $this->id;
@@ -117,11 +130,13 @@ class Example
 
 	public function read(string $filename): string|null
 	{
-		if ($file = $this->file($filename)) {
-			return F::read($file);
+		$file = $this->file($filename);
+
+		if (is_file($file) === false) {
+			return null;
 		}
 
-		return null;
+		return F::read($file);
 	}
 
 	public function root(): string
@@ -146,12 +161,14 @@ class Example
 
 	public function template(string $filename): string|null
 	{
-		if ($file = $this->file($filename)) {
-			$data = $this->props();
-			return (new Template($file))->render($data);
+		$file = $this->file($filename);
+
+		if (is_file($file) === false) {
+			return null;
 		}
 
-		return null;
+		$data = $this->props();
+		return (new Template($file))->render($data);
 	}
 
 	public function title(): string
@@ -192,9 +209,10 @@ class Example
 		return $parts;
 	}
 
-	public function vueExamples(string $template = ''): array
+	public function vueExamples(string|null $template): array
 	{
-		$examples = [];
+		$template ??= '';
+		$examples   = [];
 
 		if (preg_match_all('!<k-lab-example[\s|\n].*?label="(.*?)".*?>(.*?)<\/k-lab-example>!s', $template, $matches)) {
 			foreach ($matches[1] as $key => $name) {

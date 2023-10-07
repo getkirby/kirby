@@ -9,6 +9,6 @@ class Snippet extends BaseSnippet
 
 	public static function root(): string
 	{
-		return dirname(__DIR__, 2) . '/snippets';
+		return __DIR__ . '/snippets';
 	}
 }

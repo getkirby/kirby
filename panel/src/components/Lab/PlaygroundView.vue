@@ -20,9 +20,7 @@
 					icon="github"
 					size="sm"
 					variant="filled"
-					:link="
-						'https://github.com/getkirby/kirby/tree/v4/feature/lab/' + github
-					"
+					:link="github"
 					target="_blank"
 				/>
 			</k-button-group>
