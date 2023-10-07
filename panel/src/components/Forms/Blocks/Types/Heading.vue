@@ -2,10 +2,9 @@
 	<div :data-level="content.level" class="k-block-type-heading-input">
 		<k-writer
 			ref="input"
+			v-bind="textField"
 			:inline="true"
 			:keys="keys"
-			:marks="textField.marks"
-			:placeholder="textField.placeholder"
 			:value="content.text"
 			@input="update({ text: $event })"
 		/>
