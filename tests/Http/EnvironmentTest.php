@@ -1089,6 +1089,7 @@ class EnvironmentTest extends TestCase
 	public function testOptionsFromInvalidHost()
 	{
 		$env = new Environment([
+			'cli' => false,
 			'allowed' => [
 				'http://example.de'
 			]
