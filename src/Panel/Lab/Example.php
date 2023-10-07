@@ -4,8 +4,8 @@ namespace Kirby\Panel\Lab;
 
 use Kirby\Cms\App;
 use Kirby\Exception\NotFoundException;
-use Kirby\Filesystem\F;
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\Http\Response;
 use Kirby\Toolkit\Str;
 
@@ -57,11 +57,11 @@ class Example
 	{
 		$tabs = [];
 
-		foreach(Dir::inventory($this->root)['children'] as $child) {
+		foreach (Dir::inventory($this->root)['children'] as $child) {
 			$tabs[$child['dirname']] = [
 				'name'  => $child['dirname'],
 				'label' => $child['slug'],
-				'link'  => '/lab/' .  $this->parent->id() . '/' . $this->id . '/' . $child['dirname']
+				'link'  => '/lab/' . $this->parent->id() . '/' . $this->id . '/' . $child['dirname']
 			];
 		}
 

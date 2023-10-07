@@ -60,7 +60,7 @@
 					@input="emit"
 				/>
 			</k-lab-example>
-			<slot :options="options" :optionsWithInfo="optionsWithInfo" />
+			<slot :options="options" :options-with-info="optionsWithInfo" />
 		</k-lab-examples>
 	</k-lab-form>
 </template>

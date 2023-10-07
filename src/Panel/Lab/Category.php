@@ -26,8 +26,7 @@ class Category
 		protected string $id,
 		string|null $root = null,
 		protected array $props = []
-	)
-	{
+	) {
 		$this->root = $root ?? static::base() . '/' . $this->id;
 
 		if (file_exists($this->root . '/index.php') === true) {
@@ -72,7 +71,8 @@ class Category
 		);
 	}
 
-	public static function factory(string $id) {
+	public static function factory(string $id)
+	{
 		return match ($id) {
 			'site'  => static::site(),
 			default => new static($id)

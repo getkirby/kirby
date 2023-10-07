@@ -8,7 +8,6 @@ return [
 	'lab.docs' => [
 		'pattern' => 'lab/docs/(:any)',
 		'load'    => function (string $component) {
-
 			$kirby = App::instance();
 			$file  = $kirby->root('panel') . '/dist/ui.json';
 			$json  = Data::read($file);
@@ -22,7 +21,7 @@ return [
 			];
 
 			foreach ($json as $entry) {
-				$componentName = 'k-'. Str::camelToKebab($entry['displayName']);
+				$componentName = 'k-' . Str::camelToKebab($entry['displayName']);
 
 				if ($component === $componentName) {
 					$docs = $entry;
