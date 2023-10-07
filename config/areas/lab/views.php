@@ -1,7 +1,7 @@
 <?php
 
 use Kirby\Cms\App;
-use Kirby\Panel\Lab\Examples;
+use Kirby\Panel\Lab\Category;
 use Kirby\Toolkit\Str;
 
 return [
@@ -11,7 +11,7 @@ return [
 			return [
 				'component' => 'k-lab-index-view',
 				'props' => [
-					'examples' => Examples::index(),
+					'categories' => Category::all(),
 				],
 			];
 		}
@@ -26,7 +26,7 @@ return [
 			string $id,
 			string|null $tab = null
 		) {
-			return Examples::factory($category)->example($id, $tab)->serve();
+			return Category::factory($category)->example($id, $tab)->serve();
 		}
 	],
 	'lab.example' => [
@@ -36,8 +36,8 @@ return [
 			string $id,
 			string|null $tab = null
 		) {
-			$examples = Examples::factory($category);
-			$example  = $examples->example($id, $tab);
+			$category = Category::factory($category);
+			$example  = $category->example($id, $tab);
 			$props    = $example->props();
 			$vue      = $example->vue();
 
@@ -45,7 +45,7 @@ return [
 				'component' => 'k-lab-playground-view',
 				'breadcrumb' => [
 					[
-						'label' => $examples->name(),
+						'label' => $category->name(),
 					],
 					[
 						'label' => $example->title(),

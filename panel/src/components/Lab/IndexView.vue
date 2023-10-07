@@ -3,7 +3,7 @@
 		<k-header>Lab</k-header>
 
 		<k-section
-			v-for="category in examples"
+			v-for="category in categories"
 			:key="category.name"
 			:headline="category.name"
 		>
@@ -21,7 +21,7 @@
 <script>
 export default {
 	props: {
-		examples: Array
+		categories: Array
 	}
 };
 </script>

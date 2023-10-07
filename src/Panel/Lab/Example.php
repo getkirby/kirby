@@ -7,6 +7,16 @@ use Kirby\Filesystem\F;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 
+/**
+ * One or multiple lab examples with one or multiple tabs
+ * @since 4.0.0
+ *
+ * @package   Kirby Panel
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 class Example
 {
 	protected string $root;
@@ -14,7 +24,7 @@ class Example
 	protected array $tabs;
 
 	public function __construct(
-		protected Examples $parent,
+		protected Category $parent,
 		protected string $id,
 		string|null $tab = null,
 	) {
@@ -73,13 +83,11 @@ class Example
 
 	public function load(string $filename): array|null
 	{
-		$file = $this->file($filename);
-
-		if (is_file($file) === false) {
-			return null;
+		if ($file = $this->file($filename)) {
+			return F::load($file);
 		}
 
-		return F::load($file);
+		return null;
 	}
 
 	public function module(): string
@@ -109,13 +117,11 @@ class Example
 
 	public function read(string $filename): string|null
 	{
-		$file = $this->file($filename);
-
-		if (is_file($file) === false) {
-			return null;
+		if ($file = $this->file($filename)) {
+			return F::read($file);
 		}
 
-		return F::read($file);
+		return null;
 	}
 
 	public function root(): string
@@ -177,15 +183,20 @@ class Example
 		$file ??= $this->template('index.vue.php');
 		$file ??= '';
 
-		// extract template
-		if (preg_match('!<template>(.*)</template>!s', $file, $match)) {
-			$parts['template'] = preg_replace('!^\n!', '', $match[1]);
-		} else {
-			$parts['template'] = null;
-		}
+		// extract parts
+		$parts['template'] = $this->vueTemplate($file);
+		$parts['examples'] = $this->vueExamples($parts['template']);
+		$parts['script']   = $this->vueScript($file);
+		$parts['style']    = $this->vueStyle($file);
 
-		// extract code for each example
-		if (preg_match_all('!<k-lab-example[\s|\n].*?label="(.*?)".*?>(.*?)<\/k-lab-example>!s', $parts['template'] ?? '', $matches)) {
+		return $parts;
+	}
+
+	public function vueExamples(string $template = ''): array
+	{
+		$examples = [];
+
+		if (preg_match_all('!<k-lab-example[\s|\n].*?label="(.*?)".*?>(.*?)<\/k-lab-example>!s', $template, $matches)) {
 			foreach ($matches[1] as $key => $name) {
 				$code = $matches[2][$key];
 
@@ -203,27 +214,37 @@ class Example
 					$code = preg_replace('/^\t{' . $indents . '}/m', '', $code);
 				}
 
-				$parts['examples'][$name] = trim($code);
+				$examples[$name] = trim($code);
 			}
-		} else {
-			$parts['examples'] = [];
 		}
 
-		// extract script
-		if (preg_match('!<script>(.*)</script>!s', $file, $match)) {
-			$parts['script'] = trim($match[1]);
-		} else {
-			$parts['script'] = 'export default {}';
-		}
-
-		// extract style
-		if (preg_match('!<style>(.*)</style>!s', $file, $match)) {
-			$parts['style'] = trim($match[1]);
-		} else {
-			$parts['style'] = null;
-		}
-
-		return $parts;
+		return $examples;
 	}
 
+	public function vueScript(string $file): string
+	{
+		if (preg_match('!<script>(.*)</script>!s', $file, $match)) {
+			return trim($match[1]);
+		}
+
+		return 'export default {}';
+	}
+
+	public function vueStyle(string $file): string|null
+	{
+		if (preg_match('!<style>(.*)</style>!s', $file, $match)) {
+			return trim($match[1]);
+		}
+
+		return null;
+	}
+
+	public function vueTemplate(string $file): string|null
+	{
+		if (preg_match('!<template>(.*)</template>!s', $file, $match)) {
+			return preg_replace('!^\n!', '', $match[1]);
+		}
+
+		return null;
+	}
 }

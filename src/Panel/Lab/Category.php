@@ -7,7 +7,18 @@ use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
-class Examples
+/**
+ * Category of lab examples located in
+ * `kirby/panel/lab` and `site/lab`.
+ * @since 4.0.0
+ *
+ * @package   Kirby Panel
+ * @author    Nico Hoffmann <nico@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
+class Category
 {
 	protected string $root;
 
@@ -27,6 +38,22 @@ class Examples
 		}
 	}
 
+	public static function all(): array
+	{
+		// all core lab examples from `kirby/panel/lab`
+		$examples = A::map(
+			Dir::inventory(static::base())['children'],
+			fn ($props) => (new static($props['dirname']))->toArray()
+		);
+
+		// all custom lab examples from `site/lab`
+		$custom = static::factory('site')->toArray();
+
+		array_push($examples, $custom);
+
+		return $examples;
+	}
+
 	public static function base(): string
 	{
 		return App::instance()->root('panel') . '/lab';
@@ -34,11 +61,7 @@ class Examples
 
 	public function example(string $id, string|null $tab = null): Example
 	{
-		return new Example(
-			parent: $this,
-			id:     $id,
-			tab:    $tab
-		);
+		return new Example(parent: $this, id: $id, tab: $tab);
 	}
 
 	public function examples(): array
@@ -51,14 +74,7 @@ class Examples
 
 	public static function factory(string $id) {
 		return match ($id) {
-			'site'  => new static(
-				'site',
-				App::instance()->root('site') . '/lab',
-				[
-					'name' => 'Your examples',
-					'icon' => 'live'
-				]
-			),
+			'site'  => static::site(),
 			default => new static($id)
 		};
 	}
@@ -73,22 +89,6 @@ class Examples
 		return $this->id;
 	}
 
-	public static function index(): array
-	{
-		// all core lab examples from `kirby/panel/lab`
-		$examples = A::map(
-			Dir::inventory(static::base())['children'],
-			fn ($props) => (new static($props['dirname']))->toArray()
-		);
-
-		// all custom lab examples from `site/lab`
-		$custom = Examples::factory('site')->toArray();
-
-		array_push($examples, $custom);
-
-		return $examples;
-	}
-
 	public function name(): string
 	{
 		return $this->props['name'] ?? ucfirst($this->id);
@@ -99,13 +99,28 @@ class Examples
 		return $this->root;
 	}
 
+	public static function site(): static
+	{
+		return new static(
+			'site',
+			App::instance()->root('site') . '/lab',
+			[
+				'name' => 'Your examples',
+				'icon' => 'live'
+			]
+		);
+	}
+
 	public function toArray(): array
 	{
 		return [
 			'name'     => $this->name(),
 			'examples' => $this->examples(),
 			'icon'     => $this->icon(),
-			'path'     => Str::after($this->root(), App::instance()->root('index')),
+			'path'     => Str::after(
+				$this->root(),
+				App::instance()->root('index')
+			),
 		];
 	}
 }
