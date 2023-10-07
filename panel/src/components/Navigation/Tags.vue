@@ -27,6 +27,7 @@
 					v-if="showSelector"
 					ref="selector"
 					v-bind="selectorOptions"
+					:options="selectable"
 					@create="add($event)"
 					@select="add($event)"
 				>
@@ -48,6 +49,7 @@
 				<k-selector-dropdown
 					ref="editor"
 					v-bind="selectorOptions"
+					:options="replacable"
 					:value="editing?.tag.text"
 					@create="replace($event)"
 					@select="replace($event)"
@@ -133,17 +135,24 @@ export default {
 
 			return this.tags.length >= this.max;
 		},
-		selectable() {
+		replacable() {
 			return this.options.filter((option) => {
-				return this.value.includes(option.value) === false;
+				return (
+					this.value.includes(option.value) === false ||
+					option.value === this.editing?.tag.value
+				);
 			});
+		},
+		selectable() {
+			return this.options.filter(
+				(option) => this.value.includes(option.value) === false
+			);
 		},
 		selectorOptions() {
 			return {
 				accept: this.accept,
 				disabled: this.disabled,
 				ignore: this.value,
-				options: this.selectable,
 				search: this.search
 			};
 		},
