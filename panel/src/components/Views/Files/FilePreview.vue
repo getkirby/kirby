@@ -149,6 +149,8 @@ export default {
 	aspect-ratio: 1/1;
 }
 .k-file-preview-thumb {
+	--icon-size: 3rem;
+
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -189,9 +191,6 @@ export default {
 }
 .k-file-preview:not([data-has-focus="true"]) .k-coords-input-thumb {
 	display: none;
-}
-.k-file-preview-icon {
-	--icon-size: 3rem;
 }
 
 /* Details */
