@@ -6,7 +6,7 @@
 	--choice-color-icon: var(--color-light);
 	--choice-color-info: var(--color-text-dimmed);
 	--choice-color-text: var(--color-text);
-	--choice-color-toggle: var(--choice-color-border);
+	--choice-color-toggle: var(--choice-color-disabled);
 	--choice-height: 1rem;
 	--choice-rounded: var(--rounded-sm);
 }
@@ -27,11 +27,9 @@ input:where([type="checkbox"], [type="radio"]) {
 }
 
 /** Filler **/
-input:where([type="checkbox"], input[type="radio"])::after {
+input:where([type="checkbox"], [type="radio"])::after {
 	position: absolute;
 	content: "";
-	inset: 2px;
-	border-radius: var(--choice-rounded);
 	display: none;
 	place-items: center;
 	text-align: center;
@@ -65,9 +63,10 @@ input:where([type="checkbox"], [type="radio"])[disabled] {
 
 /** Checkbox & Toggle **/
 input[type="checkbox"]:checked::after {
-	font-size: 8px;
-	font-weight: 700;
 	content: "✓";
+	inset: 0;
+	font-size: 9px;
+	font-weight: 700;
 	color: var(--choice-color-icon);
 	line-height: 1;
 }
@@ -76,6 +75,11 @@ input[type="checkbox"]:checked::after {
 input[type="radio"] {
 	--choice-rounded: 50%;
 }
+input[type="radio"]::after {
+	inset: 3px;
+	border-radius: var(--choice-rounded)
+}
+
 
 /** Toggle **/
 input[type="checkbox"][data-variant="toggle"] {
@@ -85,7 +89,9 @@ input[type="checkbox"][data-variant="toggle"] {
 input[type="checkbox"][data-variant="toggle"]::after {
 	background: var(--choice-color-toggle);
 	display: grid;
+	inset: 1px;
 	width: 50%;
+	border-radius: var(--choice-rounded);
 }
 input[type="checkbox"][data-variant="toggle"]:checked::after {
 	background: var(--choice-color-checked);
