@@ -226,7 +226,7 @@ export default {
 			await this.$nextTick();
 
 			// scroll the results list to the selected button
-			this.$refs.results?.querySelector("[aria-current]")?.scrollIntoView({
+			this.$refs.results?.$el.querySelector("[aria-current]")?.scrollIntoView({
 				block: "nearest"
 			});
 		},
