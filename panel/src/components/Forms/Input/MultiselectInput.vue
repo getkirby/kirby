@@ -3,6 +3,7 @@
 		<k-tags
 			ref="tags"
 			v-bind="$props"
+			:selecting="true"
 			@input="$emit('input', $event)"
 			@click.native.stop
 		/>

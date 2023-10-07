@@ -88,6 +88,14 @@ export const props = {
 		 * The minimum number of required tags
 		 */
 		min: Number,
+		/**
+		 * When the mode is selecting, already selected options won't be
+		 * hidden from the dropdown but disabled with a checkmark instead
+		 */
+		selecting: {
+			default: false,
+			type: Boolean
+		},
 		sort: {
 			default: false,
 			type: Boolean
@@ -138,6 +146,7 @@ export default {
 		replacable() {
 			return this.options.filter((option) => {
 				return (
+					this.selecting ||
 					this.value.includes(option.value) === false ||
 					option.value === this.editing?.tag.value
 				);
@@ -145,7 +154,8 @@ export default {
 		},
 		selectable() {
 			return this.options.filter(
-				(option) => this.value.includes(option.value) === false
+				(option) =>
+					this.selecting || this.value.includes(option.value) === false
 			);
 		},
 		selectorOptions() {
@@ -153,7 +163,8 @@ export default {
 				accept: this.accept,
 				disabled: this.disabled,
 				ignore: this.value,
-				search: this.search
+				search: this.search,
+				selected: this.tags.map((tag) => tag.value)
 			};
 		},
 		showAddSelector() {

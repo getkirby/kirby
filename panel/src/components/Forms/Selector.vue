@@ -2,7 +2,7 @@
 	<nav
 		class="k-selector"
 		role="search"
-		:data-has-current="filtered?.includes(selected)"
+		:data-has-current="filtered?.includes(current)"
 	>
 		<header class="k-selector-header">
 			<div v-if="showSearch" class="k-selector-search">
@@ -16,7 +16,7 @@
 					@input="query = $event.target.value"
 					@keydown.down.prevent="down"
 					@keydown.escape.prevent="escape()"
-					@keydown.enter.prevent="select(selected)"
+					@keydown.enter.prevent="select(current)"
 					@keydown.tab="tab"
 					@keydown.up.prevent="up"
 				/>
@@ -33,9 +33,12 @@
 				<k-button
 					v-for="(option, key) in filtered"
 					:key="key"
-					:current="selected === key"
+					:current="current === key"
+					:selected="selected.includes(option.value)"
 					:disabled="option.disabled"
-					:icon="option.icon ?? icon"
+					:icon="
+						selected.includes(option.value) ? 'check' : option.icon ?? icon
+					"
 					class="k-selector-button"
 					@click="select(key)"
 					@focus.native="pick(key)"
@@ -50,7 +53,7 @@
 
 		<footer v-if="showCreateButton" class="k-selector-footer">
 			<k-button
-				:current="selected === filtered.length"
+				:current="current === filtered.length"
 				icon="add"
 				class="k-selector-button k-selector-add-button"
 				@focus.native="select(filtered.length)"
@@ -84,6 +87,10 @@ export const props = {
 			default: true,
 			type: [Object, Boolean]
 		},
+		selected: {
+			type: Array,
+			default: () => []
+		},
 		value: {
 			type: String
 		}
@@ -99,7 +106,7 @@ export default {
 	data() {
 		return {
 			query: this.value ?? "",
-			selected: -1
+			current: -1
 		};
 	},
 	computed: {
@@ -173,7 +180,7 @@ export default {
 	watch: {
 		query() {
 			// reset the focus on the input
-			this.selected = -1;
+			this.current = -1;
 
 			// show all results if the query is too short or empty
 			if (this.hasQuery === false) {
@@ -182,13 +189,13 @@ export default {
 
 			// select the create button if there are no results
 			if (this.showCreateButton === true && this.filtered.length === 0) {
-				this.selected = this.filtered.length;
+				this.current = this.filtered.length;
 			} else if (this.filtered.length) {
-				this.selected = 0;
+				this.current = 0;
 			}
 		},
-		selected() {
-			if (this.selected === -1) {
+		current() {
+			if (this.current === -1) {
 				this.focus();
 			}
 		}
@@ -207,7 +214,7 @@ export default {
 			this.$emit("create", value);
 		},
 		down() {
-			this.pick(this.selected + 1);
+			this.pick(this.current + 1);
 		},
 		escape() {
 			this.reset();
@@ -227,7 +234,7 @@ export default {
 				return false;
 			}
 
-			this.selected = index;
+			this.current = index;
 			this.$emit("pick", index);
 			this.focus();
 
@@ -244,7 +251,7 @@ export default {
 		select(index) {
 			this.pick(index);
 
-			const value = this.filtered[this.selected];
+			const value = this.filtered[this.current];
 
 			if (value) {
 				this.$emit("select", value);
@@ -278,7 +285,7 @@ export default {
 			return string.replace(this.regex, "<b>$1</b>");
 		},
 		up() {
-			this.pick(this.selected - 1);
+			this.pick(this.current - 1);
 		}
 	}
 };
@@ -315,6 +322,14 @@ export default {
 	align-items: center;
 	padding-inline: var(--button-padding);
 	color: var(--color-text-dimmed);
+}
+.k-selector-button[aria-selected] {
+	--icon-size: 1rem;
+	--button-color-text: var(--color-blue-500);
+	--button-color-icon: var(--color-blue-500);
+
+	justify-content: space-between;
+	flex-direction: row-reverse;
 }
 .k-selector-button[aria-current] {
 	outline: var(--outline);
