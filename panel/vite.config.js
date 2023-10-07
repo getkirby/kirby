@@ -74,12 +74,9 @@ export default defineConfig(({ command }) => {
 			transformer: "lightningcss"
 		},
 		resolve: {
-			alias: [
-				{
-					find: "@",
-					replacement: path.resolve(__dirname, "src")
-				}
-			]
+			alias: {
+				"@": path.resolve(__dirname, "src")
+			}
 		},
 		server: {
 			proxy: {
