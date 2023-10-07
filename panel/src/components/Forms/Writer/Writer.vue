@@ -257,7 +257,7 @@ export default {
 			for (const name in plugins) {
 				marks[name] = Object.create(
 					Mark.prototype,
-					Object.getOwnPropertyDescriptors({name, ...plugins[name]})
+					Object.getOwnPropertyDescriptors({ name, ...plugins[name] })
 				);
 			}
 
@@ -310,7 +310,7 @@ export default {
 			for (const name in plugins) {
 				nodes[name] = Object.create(
 					Node.prototype,
-					Object.getOwnPropertyDescriptors({name, ...plugins[name]})
+					Object.getOwnPropertyDescriptors({ name, ...plugins[name] })
 				);
 			}
 

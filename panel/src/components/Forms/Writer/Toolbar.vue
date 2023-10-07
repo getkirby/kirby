@@ -113,7 +113,10 @@ export default {
 			return this.$helper.object.length(this.markButtons) > 0;
 		},
 		hasNodes() {
-			return this.$helper.object.length(this.nodeButtons) > 1;
+			// show nodes dropdown when there are at least two nodes incl. paragraph
+			// or when there is only one node and it's not the paragraph node
+			const min = Object.keys(this.nodeButtons).includes("paragraph") ? 1 : 0;
+			return this.$helper.object.length(this.nodeButtons) > min;
 		},
 		markButtons() {
 			if (this.marks === false) {
@@ -146,12 +149,7 @@ export default {
 			const available = this.editor.buttons("node");
 
 			// remove the paragraph when certain nodes are requested to be loaded
-			if (
-				Array.isArray(this.nodes) === true &&
-				this.nodes.length !== 3 &&
-				this.nodes.includes("paragraph") === false &&
-				available.paragraph
-			) {
+			if (this.editor.nodes.doc.content !== "block+" && available.paragraph) {
 				delete available.paragraph;
 			}
 
@@ -189,30 +187,34 @@ export default {
 		 * @param {Object} node
 		 * @returns {Boolean}
 		 */
-		isNodeActive(node) {
-			if (this.activeNodes.includes(node.name) === false) {
+		isNodeActive(button) {
+			if (this.activeNodes.includes(button.name) === false) {
 				return false;
 			}
 
-			// since the list element also contains a paragraph,
-			// it is confused whether the list element is an active node
-			// this solves the issue
-			if (node.name === "paragraph") {
-				return this.activeNodes.length === 1;
+			// Since the list element also contains a paragraph,
+			// don't consider paragraph as an active node when
+			// the list item is active
+			if (button.name === "paragraph") {
+				return this.activeNodes.includes("listItem") === false;
 			}
 
-			if (node.attrs) {
-				const attrs = Object.values(this.editor.activeNodeAttrs);
-				const active = attrs.find(
-					(node) => JSON.stringify(node) === JSON.stringify(node.attrs)
+			// Te might have multiple node buttons for the same node
+			// (e.g. headings). To know which one is active, we need
+			// to compare the active attributes with the
+			// attributes of the node button
+			if (button.attrs) {
+				const activeAttrs = Object.values(this.editor.activeNodeAttrs);
+				const node = activeAttrs.find(
+					(attrs) => JSON.stringify(attrs) === JSON.stringify(button.attrs)
 				);
 
-				if (active) {
-					return true;
+				if (node === undefined) {
+					return false;
 				}
 			}
 
-			return false;
+			return true;
 		},
 		/**
 		 * Opens the toolbar
