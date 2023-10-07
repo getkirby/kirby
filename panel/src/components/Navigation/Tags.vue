@@ -10,6 +10,7 @@
 			<k-tag
 				v-for="(item, itemIndex) in tags"
 				:key="itemIndex"
+				:disabled="disabled"
 				:image="item.image"
 				:removable="!disabled"
 				name="tag"
@@ -24,7 +25,7 @@
 			<template #footer>
 				<!-- add selector -->
 				<k-selector-dropdown
-					v-if="showSelector"
+					v-if="showAddSelector"
 					ref="selector"
 					v-bind="selectorOptions"
 					:label="$t('add')"
@@ -35,7 +36,6 @@
 						:id="id"
 						ref="toggle"
 						:autofocus="autofocus"
-						:disabled="disabled"
 						icon="add"
 						class="k-tags-toggle"
 						size="xs"
@@ -149,7 +149,11 @@ export default {
 				search: this.search
 			};
 		},
-		showSelector() {
+		showAddSelector() {
+			if (this.disabled === true) {
+				return false;
+			}
+
 			if (this.isFull === true) {
 				return false;
 			}
