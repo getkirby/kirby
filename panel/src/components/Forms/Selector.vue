@@ -5,9 +5,6 @@
 		:data-has-current="filtered?.includes(selected)"
 	>
 		<header class="k-selector-header">
-			<h2 v-if="label" class="k-selector-label">
-				{{ label }}
-			</h2>
 			<div v-if="showSearch" class="k-selector-search">
 				<input
 					ref="input"
@@ -26,28 +23,26 @@
 			</div>
 		</header>
 
-		<div v-if="filtered.length || options.length" class="k-selector-body">
-			<template v-if="filtered.length">
-				<k-navigate ref="results" axis="y" class="k-selector-results">
-					<k-button
-						v-for="(option, key) in filtered"
-						:key="key"
-						:current="selected === key"
-						:disabled="option.disabled"
-						:icon="option.icon ?? icon"
-						class="k-selector-button"
-						@click="select(key)"
-						@focus.native="pick(key)"
-					>
-						<!-- eslint-disable-next-line vue/no-v-html -->
-						<span v-html="highlight(option.text)" />
-					</k-button>
-				</k-navigate>
-			</template>
-			<template v-else-if="options.length">
-				<p class="k-selector-empty">{{ empty }}</p>
-			</template>
-		</div>
+		<k-navigate
+			v-if="filtered.length && options.length"
+			ref="results"
+			axis="y"
+			class="k-selector-results"
+		>
+			<k-button
+				v-for="(option, key) in filtered"
+				:key="key"
+				:current="selected === key"
+				:disabled="option.disabled"
+				:icon="option.icon ?? icon"
+				class="k-selector-button"
+				@click="select(key)"
+				@focus.native="pick(key)"
+			>
+				<!-- eslint-disable-next-line vue/no-v-html -->
+				<span v-html="highlight(option.text)" />
+			</k-button>
+		</k-navigate>
 
 		<footer v-if="showCreateButton" class="k-selector-footer">
 			<k-button
@@ -76,9 +71,6 @@ export const props = {
 		ignore: {
 			default: () => [],
 			type: Array
-		},
-		label: {
-			type: String
 		},
 		options: {
 			default: () => [],
@@ -139,9 +131,9 @@ export default {
 				return false;
 			}
 
-			const matches = this.filtered.filter((result) => {
-				return result.text === this.query || result.value === this.query;
-			});
+			const matches = this.filtered.filter(
+				(result) => result.text === this.query || result.value === this.query
+			);
 
 			return matches.length === 0;
 		},
