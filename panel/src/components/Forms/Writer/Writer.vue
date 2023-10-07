@@ -252,12 +252,12 @@ export default {
 			const plugins = window.panel.plugins.writerMarks ?? {};
 			const marks = {};
 
-			// take each extenstion object and turn
+			// take each extension object and turn
 			// it into an instance that extends the Mark class
 			for (const name in plugins) {
 				marks[name] = Object.create(
 					Mark.prototype,
-					Object.getOwnPropertyDescriptors(plugins[name])
+					Object.getOwnPropertyDescriptors({name, ...plugins[name]})
 				);
 			}
 
@@ -305,12 +305,12 @@ export default {
 			const plugins = window.panel.plugins.writerNodes ?? {};
 			const nodes = {};
 
-			// take each extenstion object and turn
+			// take each extension object and turn
 			// it into an instance that extends the Node class
 			for (const name in plugins) {
 				nodes[name] = Object.create(
 					Node.prototype,
-					Object.getOwnPropertyDescriptors(plugins[name])
+					Object.getOwnPropertyDescriptors({name, ...plugins[name]})
 				);
 			}
 
