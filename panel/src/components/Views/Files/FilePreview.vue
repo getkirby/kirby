@@ -149,8 +149,6 @@ export default {
 	aspect-ratio: 1/1;
 }
 .k-file-preview-thumb {
-	--icon-size: 3rem;
-
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -163,6 +161,9 @@ export default {
 	width: auto;
 	max-width: 100cqw;
 	max-height: 100cqh;
+}
+.k-file-preview-thumb > .k-icon {
+	--icon-size: 3rem;
 }
 .k-file-preview-thumb > .k-button {
 	position: absolute;
