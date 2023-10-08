@@ -9,7 +9,7 @@ return [
 			return [
 				'component' => 'k-search-view',
 				'props' => [
-					'type' => App::instance()->request()->get('type', 'pages'),
+					'type' => App::instance()->request()->get('type'),
 				]
 			];
 		}
