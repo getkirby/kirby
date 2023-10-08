@@ -32,7 +32,7 @@ class Inline
 		$html = static::parseNode($node, $this->marks) ?? '';
 
 		// only trim HTML if it doesn't consist of only spaces
-		if (strlen($html) !== substr_count($html, ' ')) {
+		if (trim($html) !== '') {
 			$html = trim($html);
 		}
 
