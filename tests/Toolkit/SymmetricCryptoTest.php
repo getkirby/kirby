@@ -6,7 +6,6 @@ use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use PHPUnit\Framework\TestCase;
-use ReflectionProperty;
 
 /**
  * @coversDefaultClass \Kirby\Toolkit\SymmetricCrypto
