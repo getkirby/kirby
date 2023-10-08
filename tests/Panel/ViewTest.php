@@ -659,4 +659,41 @@ class ViewTest extends TestCase
 		$this->assertSame('k-error-view', $json['$view']['component']);
 		$this->assertSame('Invalid Panel response', $json['$view']['props']['error']);
 	}
+
+	/**
+	 * @covers ::searches
+	 */
+	public function testSearches()
+	{
+		$areas  = [
+			'a' => [
+				'searches' => [
+					'foo' => [],
+				]
+			],
+			'b' => [
+				'searches' => [
+					'bar' => [],
+				]
+			],
+			'c' => [
+				'searches' => [
+					'test' => [],
+				]
+			]
+		];
+
+		$permissions = [
+			'access' => [
+				'a' => true,
+				'b' => false
+			]
+		];
+
+		$searches = View::searches($areas, $permissions);
+
+		$this->assertArrayHasKey('foo', $searches);
+		$this->assertArrayNotHasKey('bar', $searches);
+		$this->assertArrayHasKey('test', $searches);
+	}
 }
