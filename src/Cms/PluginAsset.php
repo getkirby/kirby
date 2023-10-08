@@ -85,6 +85,18 @@ class PluginAsset
 		F::link($this->root(), $this->mediaRoot(), 'symlink');
 	}
 
+	/**
+	 * @internal
+	 * @since 4.0.0
+	 * @deprecated 4.0.0
+	 * @codeCoverageIgnore
+	 */
+	public function publishAt(string $path): void
+	{
+		$media = $this->plugin()->mediaRoot() . '/' . $path;
+		F::link($this->root(), $media, 'symlink');
+	}
+
 	public function root(): string
 	{
 		return $this->root;

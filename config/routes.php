@@ -61,7 +61,9 @@ return function (App $kirby) {
 			}
 		],
 		[
-			'pattern' => $media . '/plugins/(:any)/(:any)/(:any)/(:all)',
+			// TODO: change to '/plugins/(:any)/(:any)/(:any)/(:all)' once
+			// the hash is made mandatory
+			'pattern' => $media . '/plugins/(:any)/(:any)/(?:(:any)/)?(:all)',
 			'env'     => 'media',
 			'action'  => function (
 				string $provider,

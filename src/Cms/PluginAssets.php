@@ -38,6 +38,14 @@ class PluginAssets extends Collection
 			$active = $assets->values(
 				fn ($asset) => $asset->mediaHash() . '/' . $asset->path()
 			);
+
+			// TODO: remove when media hash is enforced as mandatory
+			// @codeCoverageIgnoreStart
+			$active = array_merge($active, $assets->values(
+				fn ($asset) => $asset->path()
+			));
+			// @codeCoverageIgnoreEnd
+
 			$stale  = array_diff($files, $active);
 
 			foreach ($stale as $file) {
@@ -132,15 +140,29 @@ class PluginAssets extends Collection
 			// do some spring cleaning for older files
 			static::clean($pluginName);
 
-			if (
-				($asset = $plugin->asset($path)) &&
-				$asset->mediaHash() === $hash
-			) {
-				// create a symlink if possible
-				$asset->publish();
-
-				// return the file response
+			// @codeCoverageIgnoreStart
+			// TODO: deprecated media URL without hash
+			if (empty($hash) === true) {
+				$asset = $plugin->asset($path);
+				$asset->publishAt($path);
 				return Response::file($asset->root());
+			}
+
+			// TODO: deprecated media URL with hash (but path)
+			if ($asset = $plugin->asset($hash . '/' . $path)) {
+				$asset->publishAt($hash . '/' . $path);
+				return Response::file($asset->root());
+			}
+			// @codeCoverageIgnoreEnd
+
+			if ($asset = $plugin->asset($path)) {
+				if ($asset->mediaHash() === $hash) {
+					// create a symlink if possible
+					$asset->publish();
+
+					// return the file response
+					return Response::file($asset->root());
+				}
 			}
 		}
 
