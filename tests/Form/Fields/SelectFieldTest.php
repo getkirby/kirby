@@ -118,7 +118,10 @@ class SelectFieldTest extends TestCase
 			['a', 'a'],
 			['b', 'b'],
 			['c', 'c'],
-			['d', '']
+			['d', ''],
+			['1', '1'],
+			['2', '2'],
+			['3', '']
 		];
 	}
 
@@ -131,11 +134,13 @@ class SelectFieldTest extends TestCase
 			'options' => [
 				'a',
 				'b',
-				'c'
+				'c',
+				1,
+				2
 			],
 			'value' => $input
 		]);
 
-		$this->assertTrue($expected === $field->value());
+		$this->assertSame($expected, $field->value());
 	}
 }
