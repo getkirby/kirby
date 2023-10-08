@@ -578,7 +578,7 @@ class Session
 			$this->tokenKey === null ||
 			SymmetricCrypto::isAvailable() === false
 		) {
-			return null;
+			return null; // @codeCoverageIgnore
 		}
 
 		return new SymmetricCrypto(secretKey: hex2bin($this->tokenKey));
