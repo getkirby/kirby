@@ -176,6 +176,24 @@ class StrTest extends TestCase
 	}
 
 	/**
+	 * @covers ::camelToKebab
+	 */
+	public function testCamelToKebab()
+	{
+		$string = 'foobar';
+		$this->assertSame('foobar', Str::camelToKebab($string));
+
+		$string = 'fooBar';
+		$this->assertSame('foo-bar', Str::camelToKebab($string));
+
+		$string = 'FooBar';
+		$this->assertSame('foo-bar', Str::camelToKebab($string));
+
+		$string = 'FooBar-WithString';
+		$this->assertSame('foo-bar-with-string', Str::camelToKebab($string));
+	}
+
+	/**
 	 * @covers ::contains
 	 */
 	public function testContains()
