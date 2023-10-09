@@ -5,6 +5,7 @@ export const defaults = () => {
 		code: null,
 		default: false,
 		direction: "ltr",
+		label: null,
 		name: null,
 		rules: null
 	};

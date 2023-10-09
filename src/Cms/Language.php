@@ -39,6 +39,7 @@ class Language
 	protected string $code;
 	protected bool $default;
 	protected string $direction;
+	protected string $label;
 	protected array $locale;
 	protected string $name;
 	protected array $slugs;
@@ -59,6 +60,7 @@ class Language
 		$this->code         = trim($props['code']);
 		$this->default      = ($props['default'] ?? false) === true;
 		$this->direction    = ($props['direction'] ?? null) === 'rtl' ? 'rtl' : 'ltr';
+		$this->label        = trim($props['label'] ?? Str::upper($this->code));
 		$this->name         = trim($props['name'] ?? $this->code);
 		$this->slugs        = $props['slugs'] ?? [];
 		$this->smartypants  = $props['smartypants'] ?? [];
@@ -120,6 +122,7 @@ class Language
 			'code'         => $this->code,
 			'default'      => $this->default,
 			'direction'    => $this->direction,
+			'label'        => $this->label,
 			'locale'       => $this->locale,
 			'name'         => $this->name,
 			'slugs'        => $this->slugs,
@@ -299,6 +302,14 @@ class Language
 	public function kirby(): App
 	{
 		return static::$kirby ??= App::instance();
+	}
+
+	/**
+	 * @since 4.0.0
+	 */
+	public function label(): string
+	{
+		return $this->label;
 	}
 
 	/**

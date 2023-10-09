@@ -166,6 +166,7 @@ class View
 						'code'      => $language->code(),
 						'default'   => $language->isDefault(),
 						'direction' => $language->direction(),
+						'label'     => $language->label(),
 						'name'      => $language->name(),
 						'rules'     => $language->rules(),
 					];

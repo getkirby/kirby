@@ -1,9 +1,12 @@
 <template>
-	<div v-if="languages.length > 1" class="k-languages-dropdown">
+	<div
+		v-if="languages.length > 1"
+		:data-current="language.code"
+		class="k-languages-dropdown"
+	>
 		<k-button
 			:dropdown="true"
-			:text="code"
-			icon="translate"
+			:text="language.label"
 			responsive="text"
 			size="sm"
 			variant="filled"
@@ -19,9 +22,6 @@
  */
 export default {
 	computed: {
-		code() {
-			return this.language.code.toUpperCase();
-		},
 		language() {
 			return this.$panel.language;
 		},
