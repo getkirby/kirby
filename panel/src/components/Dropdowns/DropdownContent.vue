@@ -277,8 +277,7 @@ export default {
 			}
 
 			if (this.axis.x === "start") {
-				this.$el.style.left =
-					parseInt(this.$el.style.left) - opener.width + "px";
+				this.position.x = this.position.x - opener.width;
 			}
 
 			// Vertical: check if dropdown is outside of viewport
@@ -295,8 +294,7 @@ export default {
 			}
 
 			if (this.axis.y === "top") {
-				this.$el.style.top =
-					parseInt(this.$el.style.top) - opener.height + "px";
+				this.position.y = this.position.y - opener.height;
 			}
 		},
 		resetPosition() {
