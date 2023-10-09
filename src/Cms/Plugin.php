@@ -271,7 +271,7 @@ class Plugin extends Model
 	public function version(): string|null
 	{
 		$composerName = $this->info()['name'] ?? null;
-		$version      = $this->info()['version'] ?? null;
+		$version      = $this->info()['version'] ?? $this->extends()['version'] ?? null;
 
 		try {
 			// if plugin doesn't have version key in composer.json file
