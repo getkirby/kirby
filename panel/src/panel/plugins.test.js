@@ -1,3 +1,7 @@
+/**
+ * @vitest-environment jsdom
+ */
+
 import { describe, expect, it } from "vitest";
 import Plugins from "./plugins.js";
 import Vue from "vue";

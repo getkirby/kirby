@@ -1,7 +1,3 @@
-/**
- * @vitest-environment node
- */
-
 import { describe, expect, it } from "vitest";
 import { isHex, isRgb, isHsl, isHsv } from "./colors-checks.js";
 

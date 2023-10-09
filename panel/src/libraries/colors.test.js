@@ -1,7 +1,3 @@
-/**
- * @vitest-environment node
- */
-
 import { describe, expect, it } from "vitest";
 import { parse, parseAs, toString } from "./colors.js";
 
