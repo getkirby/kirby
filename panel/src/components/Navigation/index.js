@@ -5,7 +5,7 @@ import ButtonGroup from "./ButtonGroup.vue";
 import FileBrowser from "./FileBrowser.vue";
 import Link from "./Link.vue";
 import ModelTabs from "./ModelTabs.vue";
-import Navigate from "./Navigate.js";
+import Navigate from "./Navigate.vue";
 import PageTree from "./PageTree.vue";
 import Pagination from "./Pagination.vue";
 import PrevNext from "./PrevNext.vue";
@@ -20,8 +20,6 @@ import ButtonNative from "./ButtonNative.vue";
 
 export default {
 	install(app) {
-		customElements.define("k-navigate", Navigate);
-
 		app.component("k-breadcrumb", Breadcrumb);
 		app.component("k-browser", Browser);
 		app.component("k-button", Button);
@@ -29,6 +27,7 @@ export default {
 		app.component("k-file-browser", FileBrowser);
 		app.component("k-link", Link);
 		app.component("k-model-tabs", ModelTabs);
+		app.component("k-navigate", Navigate);
 		app.component("k-page-tree", PageTree);
 		app.component("k-pagination", Pagination);
 		app.component("k-prev-next", PrevNext);
