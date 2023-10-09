@@ -94,6 +94,35 @@ class A
 	}
 
 	/**
+	 * Checks if every element in the array passes the test
+	 *
+	 * <code>
+	 * $array = [1, 30, 39, 29, 10, 13];
+	 *
+	 * $isBelowThreshold = fn($value) => $value < 40;
+	 * echo A::every($array, $isBelowThreshold) ? 'true' : 'false';
+	 * // output: 'true'
+	 *
+	 * $isIntegerKey = fn($value, $key) => is_int($key);
+	 * echo A::every($array, $isIntegerKey) ? 'true' : 'false';
+	 * // output: 'true'
+	 * </code>
+	 *
+	 * @since 3.9.8
+	 * @param callable(mixed $value, int|string $key, array $array):bool $test
+	 */
+	public static function every(array $array, callable $test): bool
+	{
+		foreach ($array as $key => $value) {
+			if (!$test($value, $key, $array)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Fills an array up with additional elements to certain amount.
 	 *
 	 * <code>
@@ -142,6 +171,44 @@ class A
 	public static function filter(array $array, callable $callback): array
 	{
 		return array_filter($array, $callback, ARRAY_FILTER_USE_BOTH);
+	}
+
+	/**
+	 * Finds the first element matching the given callback
+	 *
+	 * <code>
+	 * $array = [1, 30, 39, 29, 10, 13];
+	 *
+	 * $isAboveThreshold = fn($value) => $value > 30;
+	 * echo A::find($array, $isAboveThreshold);
+	 * // output: '39'
+	 *
+	 * $array = [
+	 *   'cat' => 'miao',
+	 *   'cow' => 'moo',
+	 *   'colibri' => 'humm',
+	 *   'dog' => 'wuff',
+	 *   'chicken' => 'cluck',
+	 *   'bird' => 'tweet'
+	 * ];
+	 *
+	 * $keyNotStartingWithC = fn($value, $key) => $key[0] !== 'c';
+	 * echo A::find($array, $keyNotStartingWithC);
+	 * // output: 'wuff'
+	 * </code>
+	 *
+	 * @since 3.9.8
+	 * @param callable(mixed $value, int|string $key, array $array):bool $callback
+	 */
+	public static function find(array $array, callable $callback): mixed
+	{
+		foreach ($array as $key => $value) {
+			if ($callback($value, $key, $array)) {
+				return $value;
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -449,6 +516,66 @@ class A
 	}
 
 	/**
+	 * Plucks a single column from an array
+	 *
+	 * <code>
+	 * $array[] = [
+	 *   'id' => 1,
+	 *   'username' => 'homer',
+	 * ];
+	 *
+	 * $array[] = [
+	 *   'id' => 2,
+	 *   'username' => 'marge',
+	 * ];
+	 *
+	 * $array[] = [
+	 *   'id' => 3,
+	 *   'username' => 'lisa',
+	 * ];
+	 *
+	 * var_dump(A::pluck($array, 'username'));
+	 * // result: ['homer', 'marge', 'lisa'];
+	 * </code>
+	 *
+	 * @param array $array The source array
+	 * @param string $key The key name of the column to extract
+	 * @return array The result array with all values
+	 *               from that column.
+	 */
+	public static function pluck(array $array, string $key): array
+	{
+		$output = [];
+
+		foreach ($array as $a) {
+			if (isset($a[$key]) === true) {
+				$output[] = $a[$key];
+			}
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Prepends the given array
+	 */
+	public static function prepend(array $array, array $prepend): array
+	{
+		return $prepend + $array;
+	}
+
+	/**
+	 * Reduce an array to a single value
+	 */
+	public static function reduce(
+		array $array,
+		callable $callback,
+		$initial = null
+	): mixed {
+		return array_reduce($array, $callback, $initial);
+	}
+
+	/**
 	 * Checks for missing elements in an array
 	 *
 	 * This is very handy to check for missing
@@ -582,55 +709,6 @@ class A
 	}
 
 	/**
-	 * Plucks a single column from an array
-	 *
-	 * <code>
-	 * $array[] = [
-	 *   'id' => 1,
-	 *   'username' => 'homer',
-	 * ];
-	 *
-	 * $array[] = [
-	 *   'id' => 2,
-	 *   'username' => 'marge',
-	 * ];
-	 *
-	 * $array[] = [
-	 *   'id' => 3,
-	 *   'username' => 'lisa',
-	 * ];
-	 *
-	 * var_dump(A::pluck($array, 'username'));
-	 * // result: ['homer', 'marge', 'lisa'];
-	 * </code>
-	 *
-	 * @param array $array The source array
-	 * @param string $key The key name of the column to extract
-	 * @return array The result array with all values
-	 *               from that column.
-	 */
-	public static function pluck(array $array, string $key): array
-	{
-		$output = [];
-
-		foreach ($array as $a) {
-			if (isset($a[$key]) === true) {
-				$output[] = $a[$key];
-			}
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Prepends the given array
-	 */
-	public static function prepend(array $array, array $prepend): array
-	{
-		return $prepend + $array;
-	}
-
-	/**
 	 * Returns a number of random elements from an array,
 	 * either in original or shuffled order
 	 */
@@ -649,17 +727,6 @@ class A
 		}
 
 		return self::get($array, array_rand($array, $count));
-	}
-
-	/**
-	 * Reduce an array to a single value
-	 */
-	public static function reduce(
-		array $array,
-		callable $callback,
-		mixed $initial = null
-	): mixed {
-		return array_reduce($array, $callback, $initial);
 	}
 
 	/**
@@ -709,6 +776,35 @@ class A
 		bool $preserveKeys = false
 	): array {
 		return array_slice($array, $offset, $length, $preserveKeys);
+	}
+
+	/**
+	 * Checks if at least one element in the array passes the test
+	 *
+	 * <code>
+	 * $array = [1, 30, 39, 29, 10, 'foo' => 12, 13];
+	 *
+	 * $isAboveThreshold = fn($value) => $value > 30;
+	 * echo A::some($array, $isAboveThreshold) ? 'true' : 'false';
+	 * // output: 'true'
+	 *
+	 * $isStringKey = fn($value, $key) => is_string($key);
+	 * echo A::some($array, $isStringKey) ? 'true' : 'false';
+	 * // output: 'true'
+	 * </code>
+	 *
+	 * @since 3.9.8
+	 * @param callable(mixed $value, int|string $key, array $array):bool $test
+	 */
+	public static function some(array $array, callable $test): bool
+	{
+		foreach ($array as $key => $value) {
+			if ($test($value, $key, $array)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**

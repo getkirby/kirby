@@ -17,6 +17,7 @@
 			"download": "https://repoofthefuture.com/{{ version }}.zip"
 		}
 	},
+	"php": {},
 	"incidents": [],
 	"messages": []
 }

@@ -28,7 +28,15 @@ class Inline
 	public function __construct(DOMNode $node, array $marks = [])
 	{
 		$this->createMarkRules($marks);
-		$this->html = trim(static::parseNode($node, $this->marks) ?? '');
+
+		$html = static::parseNode($node, $this->marks) ?? '';
+
+		// only trim HTML if it doesn't consist of only spaces
+		if (trim($html) !== '') {
+			$html = trim($html);
+		}
+
+		$this->html = $html;
 	}
 
 	/**

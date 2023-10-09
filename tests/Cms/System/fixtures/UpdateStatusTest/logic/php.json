@@ -19,6 +19,9 @@
 			"upgrade": "https://getkirby.com/releases/88888"
 		}
 	},
-	"php": {},
+	"php": {
+		"<CURRENT>": "2022-01-01"
+	},
+	"incidents": [],
 	"messages": []
 }
