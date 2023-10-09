@@ -3,6 +3,7 @@
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Cms\Page;
+use Kirby\Cms\PageRules;
 use Kirby\Cms\Response;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
@@ -236,17 +237,8 @@ return [
 			$slug  = trim($request->get('slug', ''));
 
 			// basic input validation before we move on
-			if (Str::length($title) === 0) {
-				throw new InvalidArgumentException([
-					'key' => 'page.changeTitle.empty'
-				]);
-			}
-
-			if (Str::length($slug) === 0) {
-				throw new InvalidArgumentException([
-					'key' => 'page.slug.invalid'
-				]);
-			}
+			PageRules::validateTitleLength($title);
+			PageRules::validateSlugLength($slug);
 
 			// nothing changed
 			if ($page->title()->value() === $title && $page->slug() === $slug) {
