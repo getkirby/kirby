@@ -5,9 +5,6 @@
 		:data-has-current="filtered?.includes(selected)"
 	>
 		<header class="k-selector-header">
-			<h2 v-if="label" class="k-selector-label">
-				{{ label }}
-			</h2>
 			<div v-if="showSearch" class="k-selector-search">
 				<input
 					ref="input"
@@ -16,7 +13,7 @@
 					class="k-selector-input"
 					type="search"
 					@click="pick(-1)"
-					@input="filter($event.target.value)"
+					@input="query = $event.target.value"
 					@keydown.down.prevent="down"
 					@keydown.escape.prevent="escape()"
 					@keydown.enter.prevent="select(selected)"
@@ -26,27 +23,29 @@
 			</div>
 		</header>
 
-		<div v-if="filtered.length || options.length" class="k-selector-body">
-			<template v-if="filtered.length">
-				<k-navigate ref="results" axis="y" class="k-selector-results">
-					<k-button
-						v-for="(option, key) in filtered"
-						:key="key"
-						:current="selected === key"
-						:disabled="option.disabled"
-						:icon="option.icon ?? icon"
-						class="k-selector-button"
-						@click="select(key)"
-						@focus.native="pick(key)"
-					>
-						<!-- eslint-disable-next-line vue/no-v-html -->
-						<span v-html="highlight(option.text)" />
-					</k-button>
-				</k-navigate>
-			</template>
-			<template v-else-if="options.length">
-				<p class="k-selector-empty">{{ empty }}</p>
-			</template>
+		<div v-if="filtered.length || showEmpty" class="k-selector-body">
+			<k-navigate
+				v-if="filtered.length"
+				ref="results"
+				axis="y"
+				class="k-selector-results"
+			>
+				<k-button
+					v-for="(option, key) in filtered"
+					:key="key"
+					:current="selected === key"
+					:disabled="option.disabled"
+					:icon="option.icon ?? icon"
+					class="k-selector-button"
+					@click="select(key)"
+					@focus.native="pick(key)"
+				>
+					<!-- eslint-disable-next-line vue/no-v-html -->
+					<span v-html="highlight(option.text)" />
+				</k-button>
+			</k-navigate>
+
+			<p v-else-if="showEmpty" class="k-selector-empty">{{ empty }}</p>
 		</div>
 
 		<footer v-if="showCreateButton" class="k-selector-footer">
@@ -77,9 +76,6 @@ export const props = {
 			default: () => [],
 			type: Array
 		},
-		label: {
-			type: String
-		},
 		options: {
 			default: () => [],
 			type: Array
@@ -99,7 +95,6 @@ export default {
 	emits: ["create", "escape", "pick", "select"],
 	data() {
 		return {
-			filtered: this.options,
 			query: this.value ?? "",
 			selected: -1
 		};
@@ -108,6 +103,16 @@ export default {
 		empty() {
 			return this.$t("options.none");
 		},
+		filtered() {
+			// show all results if the query is too short or empty
+			if (this.hasQuery === false) {
+				return this.options;
+			}
+
+			return this.$helper.array.search(this.options, this.query, {
+				field: "text"
+			});
+		},
 		hasQuery() {
 			// min length for the search to kick in
 			const min = this.search.min ?? 0;
@@ -115,7 +120,7 @@ export default {
 			return this.query.length >= min;
 		},
 		inputPlaceholder() {
-			return this.options.length === 0 ? this.$t("enter") : this.$t("filter");
+			return this.accept === "options" ? this.$t("filter") : this.$t("enter");
 		},
 		/**
 		 * Regular expression for current search term
@@ -139,11 +144,18 @@ export default {
 				return false;
 			}
 
-			const matches = this.filtered.filter((result) => {
-				return result.text === this.query || result.value === this.query;
-			});
+			const matches = this.options.filter(
+				(result) => result.text === this.query || result.value === this.query
+			);
 
 			return matches.length === 0;
+		},
+		showEmpty() {
+			return (
+				this.accept === "options" &&
+				this.filtered.legnth === 0 &&
+				this.options.length
+			);
 		},
 		showSearch() {
 			// if new options can be added,
@@ -156,6 +168,22 @@ export default {
 		}
 	},
 	watch: {
+		query() {
+			// reset the focus on the input
+			this.selected = -1;
+
+			// show all results if the query is too short or empty
+			if (this.hasQuery === false) {
+				return;
+			}
+
+			// select the create button if there are no results
+			if (this.showCreateButton === true && this.filtered.length === 0) {
+				this.selected = this.filtered.length;
+			} else if (this.filtered.length) {
+				this.selected = 0;
+			}
+		},
 		selected() {
 			if (this.selected === -1) {
 				this.focus();
@@ -183,29 +211,6 @@ export default {
 			this.focus();
 			this.$emit("escape");
 		},
-		filter(query = "") {
-			this.query = query;
-
-			// reset the focus on the input
-			this.selected = -1;
-
-			// show all results if the query is too short or empty
-			if (this.hasQuery === false) {
-				this.filtered = this.options;
-				return;
-			}
-
-			this.filtered = this.$helper.array.search(this.options, this.query, {
-				field: "text"
-			});
-
-			// select the create button if there are no results
-			if (this.showCreateButton === true && this.filtered.length === 0) {
-				this.selected = this.filtered.length;
-			} else if (this.filtered.length) {
-				this.selected = 0;
-			}
-		},
 		focus() {
 			this.$refs.input?.focus();
 		},
@@ -231,7 +236,7 @@ export default {
 			});
 		},
 		reset() {
-			this.filter("");
+			this.query = "";
 		},
 		select(index) {
 			this.pick(index);

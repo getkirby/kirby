@@ -221,11 +221,7 @@ class PageRules
 			]);
 		}
 
-		if (Str::length($title) === 0) {
-			throw new InvalidArgumentException([
-				'key' => 'page.changeTitle.empty',
-			]);
-		}
+		static::validateTitleLength($title);
 
 		return true;
 	}
@@ -452,7 +448,7 @@ class PageRules
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the slug is empty or too long
 	 */
-	protected static function validateSlugLength(string $slug): void
+	public static function validateSlugLength(string $slug): void
 	{
 		$slugLength = Str::length($slug);
 
@@ -503,6 +499,20 @@ class PageRules
 					]
 				]);
 			}
+		}
+	}
+
+	/**
+	 * Ensures that the page title is not empty
+	 *
+	 * @throws \Kirby\Exception\InvalidArgumentException If the title is empty
+	 */
+	public static function validateTitleLength(string $title): void
+	{
+		if (Str::length($title) === 0) {
+			throw new InvalidArgumentException([
+				'key' => 'page.changeTitle.empty',
+			]);
 		}
 	}
 }

@@ -10,6 +10,7 @@
 			<k-tag
 				v-for="(item, itemIndex) in tags"
 				:key="itemIndex"
+				:disabled="disabled"
 				:image="item.image"
 				:removable="!disabled"
 				name="tag"
@@ -24,10 +25,10 @@
 			<template #footer>
 				<!-- add selector -->
 				<k-selector-dropdown
-					v-if="showSelector"
+					v-if="showAddSelector"
 					ref="selector"
 					v-bind="selectorOptions"
-					:label="$t('add')"
+					:options="selectable"
 					@create="add($event)"
 					@select="add($event)"
 				>
@@ -35,7 +36,6 @@
 						:id="id"
 						ref="toggle"
 						:autofocus="autofocus"
-						:disabled="disabled"
 						icon="add"
 						class="k-tags-toggle"
 						size="xs"
@@ -49,7 +49,7 @@
 				<k-selector-dropdown
 					ref="editor"
 					v-bind="selectorOptions"
-					:label="$t('replace.with')"
+					:options="replacable"
 					:value="editing?.tag.text"
 					@create="replace($event)"
 					@select="replace($event)"
@@ -135,21 +135,32 @@ export default {
 
 			return this.tags.length >= this.max;
 		},
-		selectable() {
+		replacable() {
 			return this.options.filter((option) => {
-				return this.value.includes(option.value) === false;
+				return (
+					this.value.includes(option.value) === false ||
+					option.value === this.editing?.tag.value
+				);
 			});
+		},
+		selectable() {
+			return this.options.filter(
+				(option) => this.value.includes(option.value) === false
+			);
 		},
 		selectorOptions() {
 			return {
 				accept: this.accept,
 				disabled: this.disabled,
 				ignore: this.value,
-				options: this.selectable,
 				search: this.search
 			};
 		},
-		showSelector() {
+		showAddSelector() {
+			if (this.disabled === true) {
+				return false;
+			}
+
 			if (this.isFull === true) {
 				return false;
 			}

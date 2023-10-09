@@ -1,6 +1,7 @@
 <template>
 	<button
 		ref="button"
+		:aria-disabled="disabled"
 		:data-has-toggle="removable"
 		class="k-tag"
 		type="button"
@@ -31,6 +32,7 @@
  */
 export default {
 	props: {
+		disabled: Boolean,
 		image: {
 			type: Object
 		},
@@ -106,11 +108,12 @@ export default {
 	padding-inline-end: 0;
 }
 
-[data-disabled="true"] .k-tag {
+.k-tag:where([aria-disabled]) {
 	background-color: var(--tag-color-disabled-back);
 	color: var(--tag-color-disabled-text);
+	cursor: not-allowed;
 }
-[data-disabled="true"] .k-tag .k-tag-toggle {
+.k-tag:where([aria-disabled]) .k-tag-toggle {
 	display: none;
 }
 </style>
