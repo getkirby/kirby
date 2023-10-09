@@ -10,6 +10,8 @@ use Kirby\Toolkit\Str;
 /**
  * Category of lab examples located in
  * `kirby/panel/lab` and `site/lab`.
+ *
+ * @internal
  * @since 4.0.0
  *
  * @package   Kirby Panel

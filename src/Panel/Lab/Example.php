@@ -11,6 +11,8 @@ use Kirby\Toolkit\Str;
 
 /**
  * One or multiple lab examples with one or multiple tabs
+ *
+ * @internal
  * @since 4.0.0
  *
  * @package   Kirby Panel
