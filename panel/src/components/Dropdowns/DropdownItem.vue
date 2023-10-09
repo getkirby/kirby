@@ -34,7 +34,6 @@ export default {
 			this.$refs.button.focus();
 		},
 		onClick(event) {
-			this.$parent.close();
 			this.$emit("click", event);
 		},
 		tab() {

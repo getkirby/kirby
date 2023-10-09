@@ -182,6 +182,8 @@ export default {
 			}
 		},
 		onOptionClick(option) {
+			this.close();
+
 			if (typeof option.click === "function") {
 				option.click.call(this);
 			} else if (option.click) {
