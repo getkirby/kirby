@@ -215,6 +215,55 @@ class PagePermissionsTest extends TestCase
 	 * @covers \Kirby\Cms\ModelPermissions::can
 	 * @dataProvider actionProvider
 	 */
+	public function testWithAdminAndNegativeOptionForOtherRole($action)
+	{
+		$this->app->impersonate('bastian');
+
+		$page = new Page([
+			'slug' => 'test',
+			'num'  => 1,
+			'blueprint' => [
+				'name' => 'test',
+				'options' => [
+					$action => [
+						'visitor' => false
+					]
+				]
+			]
+		]);
+
+		$this->assertTrue($page->permissions()->can($action));
+	}
+
+	/**
+	 * @covers \Kirby\Cms\ModelPermissions::can
+	 * @dataProvider actionProvider
+	 */
+	public function testWithAdminAndNegativeOptionForOtherRoleAndNegativeFallback($action)
+	{
+		$this->app->impersonate('bastian');
+
+		$page = new Page([
+			'slug' => 'test',
+			'num'  => 1,
+			'blueprint' => [
+				'name' => 'test',
+				'options' => [
+					$action => [
+						'*'       => false,
+						'visitor' => false
+					]
+				]
+			]
+		]);
+
+		$this->assertFalse($page->permissions()->can($action));
+	}
+
+	/**
+	 * @covers \Kirby\Cms\ModelPermissions::can
+	 * @dataProvider actionProvider
+	 */
 	public function testWithNobody($action)
 	{
 		$page  = new Page(['slug' => 'test']);

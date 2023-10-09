@@ -30,7 +30,7 @@
 			<template #options="{ item: row }">
 				<k-button
 					v-if="isSelected(row)"
-					:icon="multiple && max !== 1 ? 'check' : 'circle-filled'"
+					:icon="multiple && max !== 1 ? 'check' : 'circle-nested'"
 					:title="$t('remove')"
 					theme="info"
 					@click.stop="toggle(row)"

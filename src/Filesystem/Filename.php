@@ -65,7 +65,7 @@ class Filename
 			$attributes['format'] ??
 			pathinfo($filename, PATHINFO_EXTENSION)
 		);
-		$this->name       = $this->sanitizeName(pathinfo($filename, PATHINFO_FILENAME));
+		$this->name       = $this->sanitizeName($filename);
 	}
 
 	/**
@@ -227,24 +227,21 @@ class Filename
 
 	/**
 	 * Sanitizes the file extension.
-	 * The extension will be converted
-	 * to lowercase and `jpeg` will be
-	 * replaced with `jpg`
+	 * It also replaces `jpeg` with `jpg`.
 	 */
 	protected function sanitizeExtension(string $extension): string
 	{
-		$extension = strtolower($extension);
+		$extension = F::safeExtension('test.' . $extension);
 		$extension = str_replace('jpeg', 'jpg', $extension);
 		return $extension;
 	}
 
 	/**
-	 * Sanitizes the name with Kirby's
-	 * Str::slug function
+	 * Sanitizes the file name
 	 */
 	protected function sanitizeName(string $name): string
 	{
-		return Str::slug($name);
+		return F::safeBasename($name);
 	}
 
 	/**

@@ -1,7 +1,7 @@
 <template>
 	<div
 		v-if="$panel.notification.isOpen"
-		:data-theme="$panel.notification.type"
+		:data-theme="$panel.notification.theme"
 		class="k-notification"
 	>
 		<p>{{ $panel.notification.message }}</p>

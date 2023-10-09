@@ -85,7 +85,13 @@ abstract class ModelPermissions
 				is_array($options) === true &&
 				A::isAssociative($options) === true
 			) {
-				return $options[$role] ?? $options['*'] ?? false;
+				if (isset($options[$role]) === true) {
+					return $options[$role];
+				}
+
+				if (isset($options['*']) === true) {
+					return $options['*'];
+				}
 			}
 		}
 

@@ -778,6 +778,38 @@ class FTest extends TestCase
 	}
 
 	/**
+	 * @covers ::safeBasename
+	 */
+	public function testSafeBasename()
+	{
+		// make sure no language rules are still set
+		Str::$language = [];
+
+		// with extension
+		$this->assertSame('uber-genious', F::safeBasename('über genious.txt'));
+
+		// without extension
+		$this->assertSame('uber-genious', F::safeBasename('über genious'));
+
+		// with leading dash
+		$this->assertSame('super', F::safeBasename('-super.jpg'));
+	}
+
+	/**
+	 * @covers ::safeExtension
+	 */
+	public function testSafeExtension()
+	{
+		// make sure no language rules are still set
+		Str::$language = [];
+
+		$this->assertSame('txt', F::safeExtension('über genious.txt'));
+		$this->assertSame('taxt', F::safeExtension('über genious.täxt'));
+		$this->assertSame('', F::safeExtension('über genious'));
+		$this->assertSame('jpg', F::safeExtension('-super.jpg'));
+	}
+
+	/**
 	 * @covers ::size
 	 */
 	public function testSize()
