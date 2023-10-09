@@ -5,6 +5,7 @@ import { defineConfig, splitVendorChunkPlugin } from "vite";
 import vue from "@vitejs/plugin-vue2";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import externalGlobals from "rollup-plugin-external-globals";
+import prismjs from "vite-plugin-prismjs";
 import kirbyDev from "./scripts/vite-kirby-dev.js";
 
 let customServer;
@@ -16,7 +17,14 @@ try {
 
 export default defineConfig(({ command }) => {
 	// gather plugins depending on environment
-	const plugins = [vue(), splitVendorChunkPlugin(), kirbyDev()];
+	const plugins = [
+		vue(),
+		splitVendorChunkPlugin(),
+		kirbyDev(),
+		prismjs({
+			languages: ["javascript", "css", "markup", "php", "yaml"]
+		})
+	];
 
 	if (command === "build") {
 		plugins.push(
@@ -54,6 +62,7 @@ export default defineConfig(({ command }) => {
 			// Fix vuelidate error
 			"process.env.BUILD": JSON.stringify("production")
 		},
+		base: "./",
 		build: {
 			minify: "terser",
 			cssCodeSplit: false,

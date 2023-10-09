@@ -10,6 +10,7 @@
 				<k-button
 					:icon="crumb.loading ? 'loader' : crumb.icon"
 					:link="crumb.link"
+					:disabled="!crumb.link"
 					:text="crumb.text ?? crumb.label"
 					:title="crumb.text ?? crumb.label"
 					:current="isLast(index - 1) ? 'page' : false"

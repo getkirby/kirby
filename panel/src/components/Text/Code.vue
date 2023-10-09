@@ -1,9 +1,11 @@
 <template>
 	<!-- @slot Code content -->
-	<pre
-		class="k-code"
-		:data-language="language"
-	><code :class="language ? `language-${language}` : null"><slot /></code></pre>
+	<k-highlight>
+		<pre
+			class="k-code"
+			:data-language="language"
+		><code :class="language ? `language-${language}` : null"><slot /></code></pre>
+	</k-highlight>
 </template>
 
 <script>
@@ -11,6 +13,9 @@
  * @public
  */
 export default {
+	components: {
+		"k-highlight": () => import("./Highlight.vue")
+	},
 	props: {
 		language: {
 			type: String

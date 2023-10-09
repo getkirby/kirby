@@ -66,3 +66,16 @@ export default {
 	mixins: [Input, props]
 };
 </script>
+
+<style>
+.k-string-input {
+	padding: var(--input-padding);
+	border-radius: var(--input-rounded);
+}
+.k-string-input:focus {
+	outline: 0;
+}
+.k-string-input[data-font="monospace"] {
+	font-family: var(--font-mono);
+}
+</style>

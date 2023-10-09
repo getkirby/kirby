@@ -3,6 +3,9 @@ const glob = require("glob");
 const path = require("path");
 const docgen = require("vue-docgen-api");
 
+console.log("\n");
+console.log("Generating UI documentation...");
+
 glob("src/components/**/*.vue", async (err, files) => {
 	if (err) {
 		return console.log(err);
@@ -21,4 +24,6 @@ glob("src/components/**/*.vue", async (err, files) => {
 		path.resolve(__dirname, "../dist/ui.json"),
 		JSON.stringify(components)
 	);
+
+	console.log("-> " + components.length + " components compiled");
 });

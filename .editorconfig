@@ -17,6 +17,10 @@ trim_trailing_whitespace = true
 indent_size = 4
 insert_final_newline = true
 
+[*.vue.php]
+indent_size = 2
+insert_final_newline = false
+
 [*.yml]
 indent_style = space
 

@@ -59,6 +59,7 @@ class Core
 		return [
 			'account'      => $this->root . '/areas/account.php',
 			'installation' => $this->root . '/areas/installation.php',
+			'lab'          => $this->root . '/areas/lab.php',
 			'languages'    => $this->root . '/areas/languages.php',
 			'login'        => $this->root . '/areas/login.php',
 			'logout'       => $this->root . '/areas/logout.php',
