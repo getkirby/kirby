@@ -62,6 +62,13 @@ class Menu
 			if (is_numeric($id) === true) {
 				$id   = $area;
 				$area = $this->areas[$id] ?? null;
+
+				// if area has been disabled for the menu globally, but
+				// explicitly enabled in the config, enable it (unless
+				// it's a Closure that can icnlude more elaborate logic)
+				if (($area['menu'] ?? null) === false) {
+					$area['menu'] = true;
+				}
 			}
 
 			// did not receive custom entry definition in config,
