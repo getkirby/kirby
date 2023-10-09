@@ -503,6 +503,7 @@
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
+	"system.issues.eol.php": "Your installed PHP release { release } has reached end-of-life and will not receive further security updates",
 	"system.issues.debug": "Debugging must be turned off in production",
 	"system.issues.git": "The .git folder seems to be exposed",
 	"system.issues.https": "We recommend HTTPS for all your sites",
