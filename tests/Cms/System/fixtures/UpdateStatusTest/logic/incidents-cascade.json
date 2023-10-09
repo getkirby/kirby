@@ -23,6 +23,7 @@
 			"upgrade": "https://getkirby.com/releases/88888"
 		}
 	},
+	"php": {},
 	"incidents": [
 		{
 			"affected": "<=77777.2.5 || 88888.0.0 - 88888.3.2",

@@ -65,6 +65,11 @@ class UpdateStatusTest extends TestCase
 					'upgrade' => 'https://getkirby.com/releases/99999'
 				]
 			],
+			'php' => [
+				'8.0' => '2023-11-26',
+				'8.1' => '2024-11-25',
+				'8.2' => '2025-12-08'
+			],
 			'incidents' => [],
 			'messages' => [],
 			'_version' => '88888.8.5'
@@ -84,6 +89,11 @@ class UpdateStatusTest extends TestCase
 					'latest' => '88888.8.6',
 					'status' => 'active-support'
 				]
+			],
+			'php' => [
+				'8.0' => '2023-11-26',
+				'8.1' => '2024-11-25',
+				'8.2' => '2025-12-08'
 			],
 			'urls' => [
 				'*' => [
@@ -122,6 +132,11 @@ class UpdateStatusTest extends TestCase
 					'download' => 'https://repoofthefuture.com/{{ version }}.zip',
 					'upgrade' => 'https://getkirby.com/releases/99999'
 				]
+			],
+			'php' => [
+				'8.0' => '2023-11-26',
+				'8.1' => '2024-11-25',
+				'8.2' => '2025-12-08'
 			],
 			'incidents' => [],
 			'messages' => [],
@@ -235,6 +250,11 @@ class UpdateStatusTest extends TestCase
 					'download' => 'https://repoofthefuture.com/{{ version }}.zip',
 					'upgrade' => 'https://getkirby.com/releases/99999'
 				]
+			],
+			'php' => [
+				'8.0' => '2023-11-26',
+				'8.1' => '2024-11-25',
+				'8.2' => '2025-12-08'
 			],
 			'incidents' => [],
 			'messages' => [],
@@ -1068,6 +1088,33 @@ class UpdateStatusTest extends TestCase
 					'exceptionMessages' => []
 				]
 			],
+			'EOL warning (PHP)' => [
+				'app',
+				'88888.8.8',
+				false,
+				$this->data('php'),
+				[
+					'currentVersion' => '88888.8.8',
+					'icon' => 'check',
+					'label' => 'Up to date',
+					'latestVersion' => '88888.8.8',
+					'messages' => [
+						[
+							'text' => 'Your installed PHP release ' .
+								PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION .
+								' has reached end-of-life and will not receive further security updates',
+							'link' => 'https://getkirby.com/security/php-end-of-life',
+							'icon' => 'bell'
+						]
+					],
+					'status' => 'up-to-date',
+					'targetVersion' => null,
+					'theme' => 'positive',
+					'url' => 'https://getkirby.com/releases/88888.8.8',
+					'vulnerabilities' => [],
+					'exceptionMessages' => []
+				]
+			],
 			'EOL warning with custom link' => [
 				'app',
 				'44444.1.2',
@@ -1230,6 +1277,25 @@ class UpdateStatusTest extends TestCase
 					'exceptionMessages' => [
 						'No matching URL found for Kirby@77777.7.7'
 					]
+				]
+			],
+			'No PHP' => [
+				'app',
+				'77777.7.7',
+				false,
+				$this->data('no-php'),
+				[
+					'currentVersion' => '77777.7.7',
+					'icon' => 'info',
+					'label' => 'Upgrade 88888.8.8 available',
+					'latestVersion' => '88888.8.8',
+					'messages' => [],
+					'status' => 'upgrade',
+					'targetVersion' => '88888.8.8',
+					'theme' => 'info',
+					'url' => 'https://getkirby.com/releases/88888',
+					'vulnerabilities' => [],
+					'exceptionMessages' => []
 				]
 			],
 			'No incidents' => [
@@ -1561,7 +1627,16 @@ class UpdateStatusTest extends TestCase
 		}
 
 		$path = __DIR__ . '/fixtures/UpdateStatusTest/logic/' . $name . '.json';
-		return $this->data[$name] = Json::read($path);
+		$json = Json::read($path);
+
+		// dynamically insert the current PHP version
+		// because we cannot mock it easily
+		if (isset($json['php']['<CURRENT>']) === true) {
+			$json['php'][PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION] = $json['php']['<CURRENT>'];
+			unset($json['php']['<CURRENT>']);
+		}
+
+		return $this->data[$name] = $json;
 	}
 
 	protected function plugin(string|null $version): Plugin

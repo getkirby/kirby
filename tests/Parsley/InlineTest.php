@@ -11,6 +11,22 @@ use PHPUnit\Framework\TestCase;
 class InlineTest extends TestCase
 {
 	/**
+	 * @covers ::__construct
+	 */
+	public function testConstructTrim()
+	{
+		$dom    = new Dom('<span> Test </span>');
+		$dom    = $dom->query('//span')[0];
+		$inline = new Inline($dom);
+		$this->assertSame('Test', $inline->innerHtml());
+
+		$dom    = new Dom('<span> </span>');
+		$dom    = $dom->query('//span')[0];
+		$inline = new Inline($dom);
+		$this->assertSame(' ', $inline->innerHtml());
+	}
+
+	/**
 	 * @covers ::parseAttrs
 	 */
 	public function testParseAttrs()

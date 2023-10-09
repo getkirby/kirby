@@ -36,6 +36,9 @@
 			"upgrade": "https://getkirby.com/releases/88888"
 		}
 	},
+	"php": {
+		"<CURRENT>": "9999-01-01"
+	},
 	"incidents": [
 		{
 			"affected": "<=66666.5.4 || 77777.0.0 - 77777.5.4",
