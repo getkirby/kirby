@@ -7,6 +7,7 @@ use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
 use Exception;
+use IntlDateFormatter;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -117,6 +118,20 @@ class Date extends DateTime
 		$flooredDate = date($formats[$unit], $this->timestamp());
 		$this->set($flooredDate);
 		return $this;
+	}
+
+	/**
+	 * Formats the datetime value with a custom handler
+	 * or with the globally configured one
+	 *
+	 * @param 'date'|'intl'|'strftime'|null $handler Custom date handler or `null`
+	 *                                               for the globally configured one
+	 */
+	public function formatWithHandler(
+		string|IntlDateFormatter|null $format = null,
+		string|null $handler = null
+	): string|int|false {
+		return Str::date($this->timestamp(), $format, $handler);
 	}
 
 	/**

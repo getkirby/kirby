@@ -2,6 +2,8 @@
 
 namespace Kirby\Toolkit;
 
+use IntlDateFormatter;
+use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
@@ -10,6 +12,11 @@ use PHPUnit\Framework\TestCase;
  */
 class DateTest extends TestCase
 {
+	public function tearDown(): void
+	{
+		App::destroy();
+	}
+
 	/**
 	 * @covers ::__construct
 	 */
@@ -79,6 +86,53 @@ class DateTest extends TestCase
 		$this->assertSame(12, $date->hour());
 		$this->assertSame(13, $date->hour(13));
 		$this->assertSame('13:12', $date->format('H:i'));
+	}
+
+	/**
+	 * @covers ::formatWithHandler
+	 */
+	public function testFormatWithHandler()
+	{
+		$date = new Date('2020-01-29 01:01');
+
+		// default handler (fallback to `date`)
+		$this->assertSame($date->timestamp(), $date->formatWithHandler());
+		$this->assertSame('29.01.2020', $date->formatWithHandler('d.m.Y'));
+
+		// default handler (global app object)
+		new App([
+			'options' => [
+				'date' => [
+					'handler' => 'intl'
+				]
+			]
+		]);
+		$this->assertSame($date->timestamp(), $date->formatWithHandler());
+		$this->assertSame('29/1/2020 01:01', $date->formatWithHandler('d/M/yyyy HH:mm'));
+
+		// explicit `date` handler
+		$this->assertSame($date->timestamp(), $date->formatWithHandler(null, 'date'));
+		$this->assertSame('29.01.2020', $date->formatWithHandler('d.m.Y', 'date'));
+
+		// `intl` handler
+		$this->assertSame($date->timestamp(), $date->formatWithHandler(null, 'intl'));
+		$this->assertSame('29/1/2020 01:01', $date->formatWithHandler('d/M/yyyy HH:mm', 'intl'));
+
+		// passing custom `intl` handler
+		$formatter = new IntlDateFormatter(
+			'en-US',
+			IntlDateFormatter::LONG,
+			IntlDateFormatter::SHORT
+		);
+		// @todo remove str_replace when IntlDateFormatter doesn't result
+		// in different spaces depending on the system its running on
+		$result = $date->formatWithHandler($formatter);
+		$result = str_replace("\xE2\x80\xAF", ' ', $result);
+		$this->assertSame('January 29, 2020 at 1:01 AM', $result);
+
+		// `strftime` handler
+		$this->assertSame($date->timestamp(), $date->formatWithHandler(null, 'strftime'));
+		$this->assertSame('29.01.2020', $date->formatWithHandler('%d.%m.%Y', 'strftime'));
 	}
 
 	/**
