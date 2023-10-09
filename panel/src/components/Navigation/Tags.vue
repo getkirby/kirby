@@ -27,7 +27,6 @@
 					v-if="showSelector"
 					ref="selector"
 					v-bind="selectorOptions"
-					:label="$t('add')"
 					@create="add($event)"
 					@select="add($event)"
 				>
@@ -49,7 +48,6 @@
 				<k-selector-dropdown
 					ref="editor"
 					v-bind="selectorOptions"
-					:label="$t('replace.with')"
 					:value="editing?.tag.text"
 					@create="replace($event)"
 					@select="replace($event)"
