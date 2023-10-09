@@ -1,3 +1,7 @@
+/**
+ * @vitest-environment jsdom
+ */
+
 import { describe, expect, it } from "vitest";
 import Dialog from "./dialog.js";
 import Panel from "./panel.js";

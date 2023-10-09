@@ -1,3 +1,7 @@
+/**
+ * @vitest-environment jsdom
+ */
+
 import { describe, expect, it } from "vitest";
 import Dropdown from "./dropdown.js";
 import Panel from "./panel.js";
