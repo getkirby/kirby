@@ -88,7 +88,7 @@ class Example
 			$path .= '/' . $tab;
 		}
 
-		return 'https://github.com/getkirby/kirby/tree/v4/feature/lab/' . $path;
+		return 'https://github.com/getkirby/kirby/tree/v4/develop/' . $path;
 	}
 
 	public function id(): string
