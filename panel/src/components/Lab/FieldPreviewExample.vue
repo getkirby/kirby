@@ -44,6 +44,7 @@ export default {
 		},
 		label: String,
 		type: String,
+		// eslint-disable-next-line vue/require-prop-types
 		value: {}
 	}
 };

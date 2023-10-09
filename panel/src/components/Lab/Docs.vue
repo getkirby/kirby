@@ -14,8 +14,7 @@
 				v-for="(example, index) in examples"
 				:key="index"
 				language="html"
-				>{{ example.content }}</k-code
-			>
+				>{{ example.content }}</k-code>
 		</section>
 
 		<section v-if="props.length" class="k-lab-docs-section">
