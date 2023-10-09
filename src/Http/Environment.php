@@ -772,17 +772,27 @@ class Environment
 
 	/**
 	 * Loads and returns options from environment-specific
-	 * PHP files (by host name and server IP address)
+	 * PHP files (by host name and server IP address or CLI)
 	 *
 	 * @param string $root Root directory to load configs from
 	 */
 	public function options(string $root): array
 	{
+		$configCli  = [];
 		$configHost = [];
 		$configAddr = [];
 
 		$host = $this->host();
 		$addr = $this->ip();
+
+		// load the config for the cli
+		if ($this->cli() === true) {
+			$configCli = F::load(
+				file: $root . '/config.cli.php',
+				fallback: [],
+				allowOutput: false
+			);
+		}
 
 		// load the config for the host
 		if (empty($host) === false) {
@@ -802,7 +812,7 @@ class Environment
 			);
 		}
 
-		return array_replace_recursive($configHost, $configAddr);
+		return array_replace_recursive($configCli, $configHost, $configAddr);
 	}
 
 	/**
