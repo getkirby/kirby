@@ -124,8 +124,7 @@ return function (App $app) {
 				$time = strtotime($fallback);
 			}
 
-			$handler = $app->option('date.handler', 'date');
-			return Str::date($time, $format, $handler);
+			return Str::date($time, $format);
 		},
 
 		/**

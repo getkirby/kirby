@@ -4,6 +4,7 @@ namespace Kirby\Toolkit;
 
 use Exception;
 use IntlDateFormatter;
+use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Query\TestUser as QueryTestUser;
 use PHPUnit\Framework\TestCase;
@@ -17,6 +18,11 @@ class StrTest extends TestCase
 	public static function setUpBeforeClass(): void
 	{
 		Str::$language = [];
+	}
+
+	public function tearDown(): void
+	{
+		App::destroy();
 	}
 
 	/**
@@ -205,9 +211,24 @@ class StrTest extends TestCase
 	{
 		$time = mktime(1, 1, 1, 1, 29, 2020);
 
-		// default `date` handler
+		// default handler (fallback to `date`)
 		$this->assertSame($time, Str::date($time));
 		$this->assertSame('29.01.2020', Str::date($time, 'd.m.Y'));
+
+		// default handler (global app object)
+		new App([
+			'options' => [
+				'date' => [
+					'handler' => 'intl'
+				]
+			]
+		]);
+		$this->assertSame($time, Str::date($time));
+		$this->assertSame('29/1/2020 01:01', Str::date($time, 'd/M/yyyy HH:mm'));
+
+		// explicit `date` handler
+		$this->assertSame($time, Str::date($time, null, 'date'));
+		$this->assertSame('29.01.2020', Str::date($time, 'd.m.Y', 'date'));
 
 		// `intl` handler
 		$this->assertSame($time, Str::date($time, null, 'intl'));

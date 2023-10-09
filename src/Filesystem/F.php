@@ -475,12 +475,13 @@ class F
 	/**
 	 * Get the file's last modification time.
 	 *
-	 * @param string $handler date, intl or strftime
+	 * @param 'date'|'intl'|'strftime'|null $handler Custom date handler or `null`
+	 *                                               for the globally configured one
 	 */
 	public static function modified(
 		string $file,
 		string|IntlDateFormatter|null $format = null,
-		string $handler = 'date'
+		string|null $handler = null
 	): string|int|false {
 		if (file_exists($file) !== true) {
 			return false;

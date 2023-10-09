@@ -845,7 +845,7 @@ class Page extends ModelWithContent
 			return null;
 		}
 
-		return Str::date($modified, $format, $handler ?? $this->kirby()->option('date.handler', 'date'));
+		return Str::date($modified, $format, $handler);
 	}
 
 	/**
