@@ -13,7 +13,7 @@
 					class="k-selector-input"
 					type="search"
 					@click="pick(-1)"
-					@input="filter($event.target.value)"
+					@input="query = $event.target.value"
 					@keydown.down.prevent="down"
 					@keydown.escape.prevent="escape()"
 					@keydown.enter.prevent="select(selected)"
@@ -95,7 +95,6 @@ export default {
 	emits: ["create", "escape", "pick", "select"],
 	data() {
 		return {
-			filtered: this.options,
 			query: this.value ?? "",
 			selected: -1
 		};
@@ -104,6 +103,16 @@ export default {
 		empty() {
 			return this.$t("options.none");
 		},
+		filtered() {
+			// show all results if the query is too short or empty
+			if (this.hasQuery === false) {
+				return this.options;
+			}
+
+			return this.$helper.array.search(this.options, this.query, {
+				field: "text"
+			});
+		},
 		hasQuery() {
 			// min length for the search to kick in
 			const min = this.search.min ?? 0;
@@ -111,7 +120,7 @@ export default {
 			return this.query.length >= min;
 		},
 		inputPlaceholder() {
-			return this.options.length === 0 ? this.$t("enter") : this.$t("filter");
+			return this.accept === "options" ? this.$t("filter") : this.$t("enter");
 		},
 		/**
 		 * Regular expression for current search term
@@ -135,7 +144,7 @@ export default {
 				return false;
 			}
 
-			const matches = this.filtered.filter(
+			const matches = this.options.filter(
 				(result) => result.text === this.query || result.value === this.query
 			);
 
@@ -159,6 +168,22 @@ export default {
 		}
 	},
 	watch: {
+		query() {
+			// reset the focus on the input
+			this.selected = -1;
+
+			// show all results if the query is too short or empty
+			if (this.hasQuery === false) {
+				return;
+			}
+
+			// select the create button if there are no results
+			if (this.showCreateButton === true && this.filtered.length === 0) {
+				this.selected = this.filtered.length;
+			} else if (this.filtered.length) {
+				this.selected = 0;
+			}
+		},
 		selected() {
 			if (this.selected === -1) {
 				this.focus();
@@ -186,29 +211,6 @@ export default {
 			this.focus();
 			this.$emit("escape");
 		},
-		filter(query = "") {
-			this.query = query;
-
-			// reset the focus on the input
-			this.selected = -1;
-
-			// show all results if the query is too short or empty
-			if (this.hasQuery === false) {
-				this.filtered = this.options;
-				return;
-			}
-
-			this.filtered = this.$helper.array.search(this.options, this.query, {
-				field: "text"
-			});
-
-			// select the create button if there are no results
-			if (this.showCreateButton === true && this.filtered.length === 0) {
-				this.selected = this.filtered.length;
-			} else if (this.filtered.length) {
-				this.selected = 0;
-			}
-		},
 		focus() {
 			this.$refs.input?.focus();
 		},
@@ -234,7 +236,7 @@ export default {
 			});
 		},
 		reset() {
-			this.filter("");
+			this.query = "";
 		},
 		select(index) {
 			this.pick(index);
