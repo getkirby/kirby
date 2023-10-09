@@ -42,6 +42,11 @@ input:where([type="checkbox"], [type="radio"]):focus {
 	color: var(--color-focus);
 }
 
+/** Checked state for checkboxes **/
+input:where([type="checkbox"]):checked {
+	border-color: var(--color-color-checked);
+}
+
 /** Checked state **/
 input:where([type="checkbox"], [type="radio"]):checked::after {
 	background: var(--choice-color-checked);
@@ -77,9 +82,8 @@ input[type="radio"] {
 }
 input[type="radio"]::after {
 	inset: 3px;
-	border-radius: var(--choice-rounded)
+	border-radius: var(--choice-rounded);
 }
-
 
 /** Toggle **/
 input[type="checkbox"][data-variant="toggle"] {
@@ -92,6 +96,9 @@ input[type="checkbox"][data-variant="toggle"]::after {
 	inset: 1px;
 	width: 50%;
 	border-radius: var(--choice-rounded);
+}
+input[type="checkbox"][data-variant="toggle"]:checked {
+	border-color: var(--choice-color-border);
 }
 input[type="checkbox"][data-variant="toggle"]:checked::after {
 	background: var(--choice-color-checked);
