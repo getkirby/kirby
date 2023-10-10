@@ -1,11 +1,11 @@
 export default {
 	props: {
 		/**
-		 * If `"off"`, spellchecking will be disabled
+		 * If false, spellchecking will be disabled
 		 */
 		spellcheck: {
-			type: [Boolean, String],
-			default: "on"
+			type: Boolean,
+			default: true
 		}
 	}
 };

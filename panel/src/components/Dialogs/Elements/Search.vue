@@ -2,6 +2,7 @@
 	<k-input
 		:autofocus="autofocus"
 		:placeholder="placeholder"
+		:spellcheck="false"
 		:value="value"
 		class="k-dialog-search"
 		icon="search"
