@@ -895,6 +895,8 @@ class A
 	 * //   'password' => 'super-secret'
 	 * // ];
 	 * </code>
+	 *
+	 * @psalm-suppress NamedArgumentNotAllowed
 	 */
 	public static function extend(array ...$arrays): array
 	{
