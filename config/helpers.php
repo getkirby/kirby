@@ -195,10 +195,8 @@ if (Helpers::hasOverride('go') === false) { // @codeCoverageIgnore
 	/**
 	 * Redirects to the given Urls
 	 * Urls can be relative or absolute.
-	 *
-	 * @todo Change return type to `never` once support for PHP 8.0 is dropped
 	 */
-	function go(string $url = '/', int $code = 302): void
+	function go(string $url = '/', int $code = 302): never
 	{
 		Response::go($url, $code);
 	}
