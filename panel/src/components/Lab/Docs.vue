@@ -14,7 +14,8 @@
 				v-for="(example, index) in examples"
 				:key="index"
 				language="html"
-				>{{ example.content }}</k-code>
+				>{{ example.content }}</k-code
+			>
 		</section>
 
 		<section v-if="props.length" class="k-lab-docs-section">
@@ -50,9 +51,22 @@
 									prop.defaultValue?.value
 								}}</code>
 							</td>
-							<td>
+							<td class="k-lab-docs-description">
 								<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
-								<k-text v-html="prop.description" />
+								<k-text
+									v-if="prop.description?.length"
+									v-html="prop.description"
+								/>
+								<k-text v-if="prop.values?.length">
+									<p>
+										Values:<br />
+										<span style="display: flex; gap: 0.25rem; flex-wrap: wrap">
+											<code v-for="value in prop.values" :key="value">
+												{{ value.replaceAll("`", "") }}
+											</code>
+										</span>
+									</p>
+								</k-text>
 							</td>
 						</tr>
 					</tbody>
@@ -123,6 +137,10 @@ export default {
 .k-lab-docs-types {
 	display: inline-flex;
 	gap: 0.25rem;
+}
+
+.k-lab-docs-description .k-text + .k-text {
+	margin-top: var(--spacing-4);
 }
 
 .k-lab-docs-types code[data-type="boolean"] {
