@@ -319,7 +319,7 @@ class Str
 
 		// automatically determine the handler from global configuration
 		// if an app instance is already running; otherwise fall back to
-	 	// `date` for backwards-compatibility
+		// `date` for backwards-compatibility
 		if ($handler === null) {
 			$handler = App::instance(null, true)?->option('date.handler') ?? 'date';
 		}
