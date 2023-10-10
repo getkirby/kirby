@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Kirby\Cms\App;
 use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
@@ -27,6 +28,11 @@ class HasCount
  */
 class VTest extends TestCase
 {
+	public function tearDown(): void
+	{
+		App::destroy();
+	}
+
 	/**
 	 * @covers ::validators
 	 */
@@ -802,7 +808,7 @@ class VTest extends TestCase
 					]
 				],
 				false,
-				'The "email" validation failed for field "email"',
+				'Please enter a valid email address for field "email"',
 			],
 			// missing required field
 			[
@@ -842,6 +848,9 @@ class VTest extends TestCase
 	 */
 	public function testInput($input, $rules, $result, $message = null)
 	{
+		// load the translation strings
+		new App();
+
 		if ($result === false) {
 			$this->expectException('Exception');
 			$this->expectExceptionMessage($message);
@@ -869,8 +878,11 @@ class VTest extends TestCase
 	 */
 	public function testValueFails()
 	{
+		// load the translation strings
+		new App();
+
 		$this->expectException('Exception');
-		$this->expectExceptionMessage('The "same" validation failed');
+		$this->expectExceptionMessage('Please enter "b"');
 
 		$result = V::value('a', [
 			'same' => 'b'

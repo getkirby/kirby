@@ -100,13 +100,14 @@ class DateTest extends TestCase
 		$this->assertSame('29.01.2020', $date->formatWithHandler('d.m.Y'));
 
 		// default handler (global app object)
-		new App([
+		$app = new App([
 			'options' => [
 				'date' => [
 					'handler' => 'intl'
 				]
 			]
 		]);
+		$app->setCurrentLanguage('en');
 		$this->assertSame($date->timestamp(), $date->formatWithHandler());
 		$this->assertSame('29/1/2020 01:01', $date->formatWithHandler('d/M/yyyy HH:mm'));
 
