@@ -27,7 +27,7 @@
  * @example
  * <k-bar>
  *   <div></div>
- * 	 <div></div>
+ *   <div></div>
  * </k-bar>
  */
 export default {
