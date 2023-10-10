@@ -36,7 +36,15 @@ return [
 					// sanitize props
 					foreach (($docs['props'] ?? []) as $propKey => $prop) {
 						$docs['props'][$propKey]['description'] = $kirby->kirbytext($prop['description'] ?? '', $kirbytextOptions);
+
+						// remove private props
+						if (($prop['tags']['access'][0]['description'] ?? null) === 'private') {
+							unset($docs['props'][$propKey]);
+						}
 					}
+
+					// always return an array
+					$docs['props'] = array_values($docs['props']);
 
 					// sanitize slots
 					foreach (($docs['slots'] ?? []) as $slotKey => $slot) {
