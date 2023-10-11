@@ -13,9 +13,15 @@ import StringInput, { props as StringInputProps } from "./StringInput.vue";
 export const props = {
 	mixins: [StringInputProps],
 	props: {
+		autocomplete: {
+			default: "off"
+		},
 		placeholder: {
 			default: () => window.panel.$t("search") + " …",
 			type: String
+		},
+		spellcheck: {
+			default: false
 		}
 	}
 };

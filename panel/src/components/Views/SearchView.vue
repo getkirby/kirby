@@ -9,6 +9,7 @@
 				:aria-label="$t('search')"
 				:autofocus="true"
 				:placeholder="$t('search') + ' …'"
+				:spellcheck="false"
 				:value="query"
 				class="k-search-view-input"
 				icon="search"
