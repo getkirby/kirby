@@ -1,1 +1,1 @@
-{"exportName":"default","displayName":"FileFocusButton","description":"","tags":{},"props":[{"name":"focus","type":{"name":"object"}}],"events":[{"name":"set","type":{"names":["undefined"]}}],"sourceFile":"src/components/Views/Files/FileFocusButton.vue"}
+{"displayName":"FileFocusButton","description":"","tags":{},"props":[{"name":"focus","type":{"name":"object"}}],"events":[{"name":"set","type":{"names":["undefined"]}}],"sourceFile":"src/components/Views/Files/FileFocusButton.vue"}

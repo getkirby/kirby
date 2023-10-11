@@ -3,6 +3,7 @@
 		ref="drawer"
 		class="k-form-drawer"
 		v-bind="$attrs"
+		:options="options"
 		@submit="$emit('cancel')"
 	>
 		<k-lab-docs v-bind="docs" />
@@ -13,6 +14,21 @@
 export default {
 	props: {
 		docs: Object
+	},
+	computed: {
+		options() {
+			const options = [];
+
+			if (this.docs.github) {
+				options.push({
+					icon: "github",
+					link: this.docs.github,
+					target: "_blank"
+				});
+			}
+
+			return options;
+		}
 	}
 };
 </script>

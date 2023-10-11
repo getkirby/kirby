@@ -63,6 +63,11 @@ class Docs
 		return $this->kirby->root('panel') . '/dist/ui/' . $name . '.json';
 	}
 
+	public function github(): string
+	{
+		return 'https://github.com/getkirby/kirby/tree/main/panel/' . $this->json['sourceFile'];
+	}
+
 	protected function kt(string $text): string
 	{
 		return $this->kirby->kirbytext($text, [
@@ -161,6 +166,7 @@ class Docs
 			'description' => $this->description(),
 			'events'      => $this->events(),
 			'examples'    => $this->examples(),
+			'github'      => $this->github(),
 			'methods'     => $this->methods(),
 			'props'       => $this->props(),
 			'slots'       => $this->slots(),

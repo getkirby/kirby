@@ -31,6 +31,7 @@ export default async function generate(file) {
 		const data = await docgen.parse(file, { alias });
 
 		// clean up data
+		delete data.exportName;
 		delete data.sourceFiles;
 		data.sourceFile = path.relative(root, file);
 

@@ -1,1 +1,1 @@
-{"description":"","displayName":"BlockTypeGallery","tags":{"internal":[{"description":true,"title":"internal"}]},"exportName":"default","events":[{"name":"update"}],"sourceFile":"src/components/Forms/Blocks/Types/Gallery.vue"}
+{"description":"","displayName":"BlockTypeGallery","tags":{"internal":[{"description":true,"title":"internal"}]},"events":[{"name":"update"}],"sourceFile":"src/components/Forms/Blocks/Types/Gallery.vue"}

@@ -1,1 +1,1 @@
-{"description":"","displayName":"BlockTypeText","tags":{"internal":[{"description":true,"title":"internal"}]},"exportName":"default","events":[{"name":"split","type":{"names":["undefined"]}}],"sourceFile":"src/components/Forms/Blocks/Types/Text.vue"}
+{"description":"","displayName":"BlockTypeText","tags":{"internal":[{"description":true,"title":"internal"}]},"events":[{"name":"split","type":{"names":["undefined"]}}],"sourceFile":"src/components/Forms/Blocks/Types/Text.vue"}

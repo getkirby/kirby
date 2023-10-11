@@ -1,1 +1,1 @@
-{"exportName":"default","displayName":"LoginView","description":"","tags":{},"props":[{"name":"methods","type":{"name":"array"}},{"name":"pending","type":{"name":"object"}}],"sourceFile":"src/components/Views/Login/LoginView.vue"}
+{"displayName":"LoginView","description":"","tags":{},"props":[{"name":"methods","type":{"name":"array"}},{"name":"pending","type":{"name":"object"}}],"sourceFile":"src/components/Views/Login/LoginView.vue"}
