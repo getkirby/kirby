@@ -44,6 +44,15 @@ return [
 							}
 
 							$docs['props'][$propKey]['default'] = $default;
+						} else {
+							// if type is boolean primarily and no default
+							// value has been set, add `false` as default
+							// for clarity
+							if ($type = $docs['props'][$propKey]['type']['name'] ?? null) {
+								if (Str::startsWith($type, 'boolean')) {
+									$docs['props'][$propKey]['default'] = 'false';
+								}
+							}
 						}
 
 						// deprecated tag
