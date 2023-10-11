@@ -103,6 +103,56 @@
 				</table>
 			</div>
 		</section>
+
+		<section v-if="events.length" class="k-lab-docs-section">
+			<k-headline class="h3">Events</k-headline>
+			<div class="k-table">
+				<table>
+					<thead>
+						<th style="width: 8rem">Event</th>
+						<th>Description</th>
+					</thead>
+					<tbody>
+						<tr v-for="event in events" :key="event.name">
+							<td style="width: 12rem">
+								<k-text>
+									<code>{{ event.name }}</code>
+								</k-text>
+							</td>
+							<td>
+								<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
+								<k-text v-html="event.description" />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+
+		<section v-if="methods.length" class="k-lab-docs-section">
+			<k-headline class="h3">Methods</k-headline>
+			<div class="k-table">
+				<table>
+					<thead>
+						<th style="width: 8rem">Method</th>
+						<th>Description</th>
+					</thead>
+					<tbody>
+						<tr v-for="method in methods" :key="method.name">
+							<td style="width: 12rem">
+								<k-text>
+									<code>{{ method.name }}</code>
+								</k-text>
+							</td>
+							<td>
+								<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
+								<k-text v-html="method.description" />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
 	</div>
 </template>
 
@@ -111,7 +161,15 @@ export default {
 	props: {
 		component: String,
 		description: String,
+		events: {
+			default: () => [],
+			type: Array
+		},
 		examples: {
+			default: () => [],
+			type: Array
+		},
+		methods: {
 			default: () => [],
 			type: Array
 		},

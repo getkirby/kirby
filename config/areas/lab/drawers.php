@@ -65,6 +65,16 @@ return [
 						$docs['slots'][$slotKey]['description'] = $kirby->kirbytext($slot['description'] ?? '', $kirbytextOptions);
 					}
 
+					// sanitize events
+					foreach (($docs['events'] ?? []) as $eventKey => $event) {
+						$docs['events'][$eventKey]['description'] = $kirby->kirbytext($event['description'] ?? '', $kirbytextOptions);
+					}
+
+					// sanitize methods
+					foreach (($docs['methods'] ?? []) as $methodKey => $method) {
+						$docs['methods'][$methodKey]['description'] = $kirby->kirbytext($method['description'] ?? '', $kirbytextOptions);
+					}
+
 					break;
 				}
 			}
