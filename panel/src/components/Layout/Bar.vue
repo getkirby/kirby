@@ -4,12 +4,15 @@
 		<!-- @todo bar.slots.deprecated - remove specific slots @ 5.0 -->
 		<template v-if="$slots.left || $slots.center || $slots.right">
 			<div v-if="$slots.left" class="k-bar-slot" data-position="left">
+				<!-- @slot Deprecated, use default slot instead -->
 				<slot name="left" />
 			</div>
 			<div v-if="$slots.center" class="k-bar-slot" data-position="center">
+				<!-- @slot Deprecated, use default slot instead -->
 				<slot name="center" />
 			</div>
 			<div v-if="$slots.right" class="k-bar-slot" data-position="right">
+				<!-- @slot Deprecated, use default slot instead -->
 				<slot name="right" />
 			</div>
 		</template>
