@@ -1,0 +1,1 @@
+{"exportName":"default","displayName":"UsersView","description":"","tags":{},"props":[{"name":"role","type":{"name":"object"}},{"name":"roles","type":{"name":"array"}},{"name":"search","type":{"name":"string"}},{"name":"title","type":{"name":"string"}},{"name":"users","type":{"name":"object"}}],"sourceFiles":["src/components/Views/Users/UsersView.vue"]}

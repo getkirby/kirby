@@ -1,0 +1,1 @@
+{"description":"","tags":{"deprecated":[{"description":"4.0.0 Use `<k-icon type=\"loader\" />` instead","title":"deprecated"}],"internal":[{"description":true,"title":"internal"}]},"exportName":"default","displayName":"Loader","sourceFiles":["src/components/Misc/Loader.vue"]}

@@ -1,0 +1,1 @@
+{"displayName":"LoginAlert","description":"","tags":{},"events":[{"name":"click"}],"slots":[{"name":"default"}],"sourceFiles":["src/components/Forms/LoginAlert.vue"]}

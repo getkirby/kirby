@@ -1,0 +1,1 @@
+{"description":"","tags":{"internal":[{"description":true,"title":"internal"}]},"exportName":"default","displayName":"TableUpdateStatusCell","props":[{"name":"value","type":{"name":"string|object"}}],"sourceFiles":["src/components/Views/System/TableUpdateStatusCell.vue"]}

@@ -1,41 +1,31 @@
 <?php
 
-use Kirby\Cms\App;
-use Kirby\Data\Data;
 use Kirby\Panel\Lab\Docs;
 
 return [
 	'lab.docs' => [
 		'pattern' => 'lab/docs/(:any)',
 		'load'    => function (string $component) {
-			$kirby = App::instance();
-			$file  = $kirby->root('panel') . '/dist/ui.json';
-			$json  = Data::read($file);
+			try {
+				$docs = new Docs($component);
 
-			foreach ($json as $entry) {
-				$docs  = new Docs($entry);
-				$name = $docs->name();
-
-				if ($component === $name) {
-					return [
-						'component' => 'k-lab-docs-drawer',
-						'props' => [
-							'icon' => 'book',
-							'title' => $component,
-							'docs'  => $docs->toArray()
-						]
-					];
-				}
+				return [
+					'component' => 'k-lab-docs-drawer',
+					'props' => [
+						'icon' => 'book',
+						'title' => $component,
+						'docs'  => $docs->toArray()
+					]
+				];
+			} catch (Throwable) {
+				return [
+					'component' => 'k-text-drawer',
+					'props' => [
+						'icon' => 'book',
+						'text'  => "Couldn't find docs for <code>$component</code>"
+					]
+				];
 			}
-
-			return [
-				'component' => 'k-text-drawer',
-				'props' => [
-					'icon' => 'book',
-					'title' => $component,
-					'text'  => "Couldn't find the docs for <code>$component</code>"
-				]
-			];
 		},
 	],
 ];

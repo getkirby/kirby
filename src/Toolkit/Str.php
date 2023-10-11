@@ -567,6 +567,18 @@ class Str
 	}
 
 	/**
+	 * Convert a kebab case string to camel case.
+	 */
+	public static function kebabToCamel(string $value = null): string
+	{
+		return preg_replace_callback(
+			'/-(.)/',
+			fn ($matches) => strtoupper($matches[1]),
+			$value ?? ''
+		);
+	}
+
+	/**
 	 * A UTF-8 safe version of strlen()
 	 */
 	public static function length(string $string = null): int

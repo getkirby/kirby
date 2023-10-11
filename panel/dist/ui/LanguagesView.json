@@ -1,0 +1,1 @@
+{"exportName":"default","displayName":"LanguagesView","description":"","tags":{},"props":[{"name":"languages","type":{"name":"array"},"defaultValue":{"func":false,"value":"[]"}},{"name":"variables","type":{"name":"boolean"},"defaultValue":{"func":false,"value":"true"}}],"sourceFiles":["src/components/Views/Languages/LanguagesView.vue"]}

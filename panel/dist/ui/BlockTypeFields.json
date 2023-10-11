@@ -1,0 +1,1 @@
+{"description":"","displayName":"BlockTypeFields","tags":{"internal":[{"description":true,"title":"internal"}]},"exportName":"default","props":[{"name":"endpoints","type":{"name":"object"}},{"name":"tabs","type":{"name":"object"}}],"events":[{"name":"open","type":{"names":["undefined"]}},{"name":"update"}],"sourceFiles":["src/components/Forms/Blocks/Types/Fields.vue"]}
