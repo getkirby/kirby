@@ -1,1 +1,1 @@
-{"exportName":"default","displayName":"DocsDrawer","description":"","tags":{},"props":[{"name":"docs","type":{"name":"object"}}],"events":[{"name":"cancel"}],"sourceFiles":["src/components/Lab/DocsDrawer.vue"]}
+{"exportName":"default","displayName":"DocsDrawer","description":"","tags":{},"props":[{"name":"docs","type":{"name":"object"}}],"events":[{"name":"cancel"}],"sourceFile":"src/components/Lab/DocsDrawer.vue"}

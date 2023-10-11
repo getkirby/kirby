@@ -1,1 +1,1 @@
-{"description":"","tags":{"access":[{"description":"public","title":"access"}]},"exportName":"default","displayName":"Code","props":[{"name":"language","type":{"name":"string"}}],"slots":[{"name":"default"}],"sourceFiles":["src/components/Text/Code.vue"]}
+{"description":"","tags":{"access":[{"description":"public","title":"access"}]},"exportName":"default","displayName":"Code","props":[{"name":"language","type":{"name":"string"}}],"slots":[{"name":"default"}],"sourceFile":"src/components/Text/Code.vue"}

@@ -1,1 +1,1 @@
-{"exportName":"default","displayName":"FileBrowser","description":"","tags":{},"props":[{"name":"selected","type":{"name":"string"}}],"events":[{"name":"select","type":{"names":["undefined"]}}],"sourceFiles":["src/components/Navigation/FileBrowser.vue"]}
+{"exportName":"default","displayName":"FileBrowser","description":"","tags":{},"props":[{"name":"selected","type":{"name":"string"}}],"events":[{"name":"select","type":{"names":["undefined"]}}],"sourceFile":"src/components/Navigation/FileBrowser.vue"}

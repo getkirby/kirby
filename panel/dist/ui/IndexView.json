@@ -1,1 +1,1 @@
-{"exportName":"default","displayName":"IndexView","description":"","tags":{},"props":[{"name":"categories","type":{"name":"array"}}],"sourceFiles":["src/components/Lab/IndexView.vue"]}
+{"exportName":"default","displayName":"IndexView","description":"","tags":{},"props":[{"name":"categories","type":{"name":"array"}}],"sourceFile":"src/components/Lab/IndexView.vue"}

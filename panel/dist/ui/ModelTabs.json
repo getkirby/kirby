@@ -1,1 +1,1 @@
-{"exportName":"default","displayName":"ModelTabs","description":"","tags":{},"props":[{"name":"tab","type":{"name":"string"}},{"name":"tabs","type":{"name":"array"},"defaultValue":{"func":false,"value":"[]"}}],"sourceFiles":["src/components/Navigation/ModelTabs.vue"]}
+{"exportName":"default","displayName":"ModelTabs","description":"","tags":{},"props":[{"name":"tab","type":{"name":"string"}},{"name":"tabs","type":{"name":"array"},"defaultValue":{"func":false,"value":"[]"}}],"sourceFile":"src/components/Navigation/ModelTabs.vue"}

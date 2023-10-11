@@ -1,1 +1,1 @@
-{"description":"Preview for the `table` block","displayName":"BlockTypeTable","tags":{"internal":[{"description":true,"title":"internal"}]},"exportName":"default","sourceFiles":["src/components/Forms/Blocks/Types/Table.vue"]}
+{"description":"Preview for the `table` block","displayName":"BlockTypeTable","tags":{"internal":[{"description":true,"title":"internal"}]},"exportName":"default","sourceFile":"src/components/Forms/Blocks/Types/Table.vue"}

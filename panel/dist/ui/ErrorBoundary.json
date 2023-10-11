@@ -1,1 +1,1 @@
-{"description":"","tags":{"internal":[{"description":true,"title":"internal"}]},"exportName":"default","displayName":"ErrorBoundary","slots":[{"name":"error","bindings":[]},{"name":"default"}],"sourceFiles":["src/components/Misc/ErrorBoundary.vue"]}
+{"description":"","tags":{"internal":[{"description":true,"title":"internal"}]},"exportName":"default","displayName":"ErrorBoundary","slots":[{"name":"error","bindings":[]},{"name":"default"}],"sourceFile":"src/components/Misc/ErrorBoundary.vue"}

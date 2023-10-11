@@ -1,1 +1,1 @@
-{"exportName":"default","displayName":"Stats","description":"","tags":{},"props":[{"name":"reports","type":{"name":"array"}},{"name":"size","type":{"name":"string"},"defaultValue":{"func":false,"value":"\"large\""}}],"sourceFiles":["src/components/Layout/Stats.vue"]}
+{"exportName":"default","displayName":"Stats","description":"","tags":{},"props":[{"name":"reports","type":{"name":"array"}},{"name":"size","type":{"name":"string"},"defaultValue":{"func":false,"value":"\"large\""}}],"sourceFile":"src/components/Layout/Stats.vue"}
