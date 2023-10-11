@@ -37,7 +37,16 @@ return [
 					foreach (($docs['props'] ?? []) as $propKey => $prop) {
 						$docs['props'][$propKey]['description'] = $kirby->kirbytext($prop['description'] ?? '', $kirbytextOptions);
 
-						// normalize deprecated tag
+						// default value
+						if ($default = $prop['defaultValue']['value'] ?? null) {
+							if ($default === '() => ({})') {
+								$default = '{}';
+							}
+
+							$docs['props'][$propKey]['default'] = $default;
+						}
+
+						// deprecated tag
 						if ($deprecated = $prop['tags']['deprecated'][0]['description'] ?? null) {
 							$docs['props'][$propKey]['deprecated'] = $deprecated;
 						}

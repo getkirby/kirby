@@ -46,8 +46,8 @@
 								</k-text>
 							</td>
 							<td>
-								<k-text v-if="prop.defaultValue">
-									<code>{{ prop.defaultValue?.value }}</code>
+								<k-text v-if="prop.default">
+									<code>{{ prop.default }}</code>
 								</k-text>
 							</td>
 							<td class="k-lab-docs-description">
