@@ -52,11 +52,21 @@
  */
 export default {
 	props: {
+		/**
+		 * @private
+     */
 		config: Object,
+		/**
+		 * If `true`, all fields in the fieldset are disabled
+		 */
 		disabled: Boolean,
+		/**
+     * Object with field definitions. Check out the field components
+     * for available props
+     */
 		fields: {
 			type: [Array, Object],
-			default: () => []
+			default: () => {}
 		},
 		/**
 		 * If `true`, form fields won't show their validation status on the fly.
@@ -65,6 +75,9 @@ export default {
 			type: Boolean,
 			default: false
 		},
+		/**
+     * Key/Value object with all values for all fields
+     */
 		value: {
 			type: Object,
 			default: () => ({})
