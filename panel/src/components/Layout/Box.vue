@@ -28,9 +28,12 @@
 export default {
 	props: {
 		/**
-		 * @values center
+		 * @values "start", "center"
 		 */
-		align: String,
+		align: {
+			type: String,
+			default: "start"
+		},
 		/**
 		 * Whether the box should function as a button
 		 */
@@ -45,7 +48,7 @@ export default {
 		icon: String,
 		/**
 		 * Choose one of the pre-defined styles
-		 * @values positive, negative, notice, warning, info, passive, text, dark, code, empty
+		 * @values "positive", "negative", "notice", "warning", "info", "passive", "text", "dark", "code", "empty"
 		 */
 		theme: {
 			type: String
@@ -55,7 +58,7 @@ export default {
 		 */
 		text: String,
 		/**
-		 * If set to `true`, the `text` is rendered as HTML code,  otherwise as plain text
+		 * If set to `true`, the `text` is rendered as HTML code, otherwise as plain text
 		 */
 		html: {
 			type: Boolean
