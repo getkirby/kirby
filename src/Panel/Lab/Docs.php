@@ -83,18 +83,24 @@ class Docs
 			return null;
 		}
 
+		$default    = $prop['defaultValue']['value'] ?? null;
+		$deprecated = $prop['tags']['deprecated'][0]['description'] ?? null;
+
 		return [
 			'name'        => $prop['name'],
-			'type'        => $prop['type']['name'] ?? null,
+			'type'        => $type = $prop['type']['name'] ?? null,
 			'description' => $this->kt($prop['description'] ?? ''),
-			'default'     => $this->propDefault($prop),
-			'deprecated'  => $prop['tags']['deprecated'][0]['description'] ?? null,
+			'default'     => $this->propDefault($default, $type),
+			'deprecated'  => $deprecated,
+			'values'      => $prop['values'] ?? null,
 		];
 	}
 
-	protected function propDefault(array $prop): string|null
-	{
-		if ($default = $prop['defaultValue']['value'] ?? null) {
+	protected function propDefault(
+		string|null $default,
+		string|null $type
+	): string|null {
+		if ($default !== null) {
 			// normalize empty object default
 			if ($default === '() => ({})') {
 				$default = '{}';
@@ -106,7 +112,6 @@ class Docs
 		// if type is boolean primarily and no default
 		// value has been set, add `false` as default
 		// for clarity
-		$type = $prop['type']['name'] ?? null;
 		if (Str::startsWith($type, 'boolean')) {
 			return 'false';
 		}
