@@ -157,7 +157,7 @@ class BlocksField extends FieldClass
 			}
 		}
 
-		return $blocks;
+		return array_values($blocks);
 	}
 
 	public function props(): array
