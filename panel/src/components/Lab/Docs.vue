@@ -37,7 +37,7 @@
 							<td>
 								<k-text class="k-lab-docs-types">
 									<code
-										v-for="type in prop.type.name.split('|')"
+										v-for="type in prop.type?.split('|')"
 										:key="type"
 										:data-type="type"
 									>

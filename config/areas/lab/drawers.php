@@ -2,7 +2,7 @@
 
 use Kirby\Cms\App;
 use Kirby\Data\Data;
-use Kirby\Toolkit\Str;
+use Kirby\Panel\Lab\Docs;
 
 return [
 	'lab.docs' => [
@@ -11,89 +11,29 @@ return [
 			$kirby = App::instance();
 			$file  = $kirby->root('panel') . '/dist/ui.json';
 			$json  = Data::read($file);
-			$docs  = [];
-
-			// global kirbytext options for all conversions
-			$kirbytextOptions = [
-				'markdown' => [
-					'breaks' => false
-				]
-			];
 
 			foreach ($json as $entry) {
-				$componentName = 'k-' . Str::camelToKebab($entry['displayName']);
+				$docs  = new Docs($entry);
+				$name = $docs->name();
 
-				if ($component === $componentName) {
-					$docs = $entry;
-
-					$docs['component']   = $componentName;
-					$docs['description'] = $kirby->kirbytext($docs['description'] ?? '', $kirbytextOptions);
-
-					if (empty($docs['tags']['examples']) === false) {
-						$docs['examples'] = $docs['tags']['examples'];
-					}
-
-					// sanitize props
-					foreach (($docs['props'] ?? []) as $propKey => $prop) {
-						$docs['props'][$propKey]['description'] = $kirby->kirbytext($prop['description'] ?? '', $kirbytextOptions);
-
-						// default value
-						if ($default = $prop['defaultValue']['value'] ?? null) {
-							if ($default === '() => ({})') {
-								$default = '{}';
-							}
-
-							$docs['props'][$propKey]['default'] = $default;
-						} else {
-							// if type is boolean primarily and no default
-							// value has been set, add `false` as default
-							// for clarity
-							if ($type = $docs['props'][$propKey]['type']['name'] ?? null) {
-								if (Str::startsWith($type, 'boolean')) {
-									$docs['props'][$propKey]['default'] = 'false';
-								}
-							}
-						}
-
-						// deprecated tag
-						if ($deprecated = $prop['tags']['deprecated'][0]['description'] ?? null) {
-							$docs['props'][$propKey]['deprecated'] = $deprecated;
-						}
-
-						// remove private props
-						if (($prop['tags']['access'][0]['description'] ?? null) === 'private') {
-							unset($docs['props'][$propKey]);
-						}
-					}
-
-					// always return an array
-					$docs['props'] = array_values($docs['props']);
-
-					// sanitize slots
-					foreach (($docs['slots'] ?? []) as $slotKey => $slot) {
-						$docs['slots'][$slotKey]['description'] = $kirby->kirbytext($slot['description'] ?? '', $kirbytextOptions);
-					}
-
-					// sanitize events
-					foreach (($docs['events'] ?? []) as $eventKey => $event) {
-						$docs['events'][$eventKey]['description'] = $kirby->kirbytext($event['description'] ?? '', $kirbytextOptions);
-					}
-
-					// sanitize methods
-					foreach (($docs['methods'] ?? []) as $methodKey => $method) {
-						$docs['methods'][$methodKey]['description'] = $kirby->kirbytext($method['description'] ?? '', $kirbytextOptions);
-					}
-
-					break;
+				if ($component === $name) {
+					return [
+						'component' => 'k-lab-docs-drawer',
+						'props' => [
+							'icon' => 'book',
+							'title' => $component,
+							'docs'  => $docs->toArray()
+						]
+					];
 				}
 			}
 
 			return [
-				'component' => 'k-lab-docs-drawer',
+				'component' => 'k-text-drawer',
 				'props' => [
 					'icon' => 'book',
 					'title' => $component,
-					'docs'  => $docs
+					'text'  => "Couldn't find the docs for <code>$component</code>"
 				]
 			];
 		},

@@ -36,12 +36,13 @@
 export default {
 	props: {
 		/**
-		 * How to align items horizontally (if not at `start` which is the default)
+		 * How to align items horizontally
 		 *
-		 * @values `center`, `end`
+		 * @values "start", "center", "end"
 		 */
 		align: {
-			type: String
+			type: String,
+			default: "start"
 		}
 	},
 	mounted() {
