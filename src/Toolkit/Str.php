@@ -571,11 +571,11 @@ class Str
 	 */
 	public static function kebabToCamel(string $value = null): string
 	{
-		return preg_replace_callback(
+		return ucfirst(preg_replace_callback(
 			'/-(.)/',
 			fn ($matches) => strtoupper($matches[1]),
 			$value ?? ''
-		);
+		));
 	}
 
 	/**

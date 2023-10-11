@@ -4,6 +4,45 @@ import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import docgen from "vue-docgen-api";
 
+/**
+ * Strips unnecessary data from the
+ * Vue component docs' JSON object
+ *
+ * @param {Object} data
+ * @returns {Object}
+ */
+export function strip(data) {
+	delete data.exportName;
+
+	for (const access in data.tags.access ?? []) {
+		delete data.tags.access[access].title;
+	}
+
+	for (const type of ["props", "slots", "events"]) {
+		for (const key in data[type] ?? {}) {
+			delete data[type][key].mixin;
+			delete data[type][key].defaultValue?.func;
+			delete data[type][key].tags?.func;
+
+			for (const access in data[type][key].tags?.access ?? []) {
+				delete data[type][key].tags?.access[access].title;
+			}
+		}
+	}
+
+	delete data.sourceFiles;
+
+	return data;
+}
+
+/**
+ * Generates JSON files for the Vue component
+ * passed to the function, or all Vue components
+ * if no argument is given.
+ *
+ * @param {String} file
+ * @returns {Array}
+ */
 export default async function generate(file) {
 	const script = path.dirname(fileURLToPath(import.meta.url));
 	const root = path.resolve(script, "../");
@@ -28,11 +67,7 @@ export default async function generate(file) {
 	// Parse each Vue SFC file and write earch result to a separate JSON file
 	for (const file of files) {
 		// parse with Vue docgen API
-		const data = await docgen.parse(file, { alias });
-
-		// clean up data
-		delete data.exportName;
-		delete data.sourceFiles;
+		const data = strip(await docgen.parse(file, { alias }));
 		data.sourceFile = path.relative(root, file);
 
 		// write file
@@ -45,6 +80,7 @@ export default async function generate(file) {
 	return files;
 }
 
+// If this file is run from CLI
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
 	console.log("\n");
 	console.log("Generating UI documentation...");

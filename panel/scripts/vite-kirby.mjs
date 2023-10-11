@@ -35,13 +35,11 @@ export function generateUiDocs(config) {
 	return {
 		name: "kirby-generate-ui-docs",
 		configureServer(server) {
-			async function onChange(file) {
+			server.watcher.on("change", (file) => {
 				if (file.endsWith(".vue") === true) {
-					await generateUi(file);
+					generateUi(file);
 				}
-			}
-
-			server.watcher.on("change", onChange);
+			});
 		}
 	};
 }
