@@ -6,7 +6,7 @@ import vue from "@vitejs/plugin-vue2";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import externalGlobals from "rollup-plugin-external-globals";
 import prismjs from "vite-plugin-prismjs";
-import kirbyDev from "./scripts/vite-kirby-dev.js";
+import { devMode, generateUiDocs } from "./scripts/vite-kirby.mjs";
 
 let customServer;
 try {
@@ -20,7 +20,8 @@ export default defineConfig(({ command }) => {
 	const plugins = [
 		vue(),
 		splitVendorChunkPlugin(),
-		kirbyDev(),
+		devMode(),
+		generateUiDocs(),
 		prismjs({
 			languages: ["javascript", "css", "markup", "php", "yaml"]
 		})
