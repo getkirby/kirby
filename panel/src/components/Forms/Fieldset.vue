@@ -21,7 +21,7 @@
 							:form-data="value"
 							:name="fieldName"
 							:novalidate="novalidate"
-							:value="values[fieldName]"
+							:value="value[fieldName]"
 							@input="onInput($event, field, fieldName)"
 							@focus="$emit('focus', $event, field, fieldName)"
 							@invalid="
@@ -52,11 +52,21 @@
  */
 export default {
 	props: {
+		/**
+		 * @private
+     */
 		config: Object,
+		/**
+		 * If `true`, all fields in the fieldset are disabled
+		 */
 		disabled: Boolean,
+		/**
+     * Object with field definitions. Check out the field components
+     * for available props
+     */
 		fields: {
 			type: [Array, Object],
-			default: () => []
+			default: () => {}
 		},
 		/**
 		 * If `true`, form fields won't show their validation status on the fly.
@@ -65,6 +75,9 @@ export default {
 			type: Boolean,
 			default: false
 		},
+		/**
+     * Key/Value object with all values for all fields
+     */
 		value: {
 			type: Object,
 			default: () => ({})
@@ -73,14 +86,8 @@ export default {
 	emits: ["focus", "input", "invalid", "submit"],
 	data() {
 		return {
-			values: this.value,
 			errors: {}
 		};
-	},
-	watch: {
-		value(value) {
-			this.values = value;
-		}
 	},
 	methods: {
 		/**
@@ -123,8 +130,9 @@ export default {
 			this.$emit("invalid", this.errors);
 		},
 		onInput(value, field, name) {
-			this.values = { ...this.value, [name]: value };
-			this.$emit("input", this.values, field, name);
+			const values = this.value;
+			this.$set(values, name, value);
+			this.$emit("input", values, field, name);
 		},
 		hasErrors() {
 			return this.$helper.object.length(this.errors) > 0;
