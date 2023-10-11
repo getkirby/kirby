@@ -21,7 +21,7 @@
 							:form-data="value"
 							:name="fieldName"
 							:novalidate="novalidate"
-							:value="values[fieldName]"
+							:value="value[fieldName]"
 							@input="onInput($event, field, fieldName)"
 							@focus="$emit('focus', $event, field, fieldName)"
 							@invalid="
@@ -73,14 +73,8 @@ export default {
 	emits: ["focus", "input", "invalid", "submit"],
 	data() {
 		return {
-			values: this.value,
 			errors: {}
 		};
-	},
-	watch: {
-		value(value) {
-			this.values = value;
-		}
 	},
 	methods: {
 		/**
@@ -123,8 +117,9 @@ export default {
 			this.$emit("invalid", this.errors);
 		},
 		onInput(value, field, name) {
-			this.values = { ...this.value, [name]: value };
-			this.$emit("input", this.values, field, name);
+			const values = this.value;
+			this.$set(values, name, value);
+			this.$emit("input", values, field, name);
 		},
 		hasErrors() {
 			return this.$helper.object.length(this.errors) > 0;
