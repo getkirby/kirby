@@ -13,8 +13,8 @@
 		@close="onClose"
 		@click="onClick"
 	>
-		<!-- @slot Content of the dropdown -->
 		<k-navigate ref="navigate" :disabled="navigate === false" axis="y">
+			<!-- @slot Content of the dropdown which overrides passed `options` prop -->
 			<slot>
 				<template v-for="(option, index) in items">
 					<hr v-if="option === '-'" :key="_uid + '-item-' + index" />
@@ -51,7 +51,7 @@ export default {
 		},
 		/**
 		 * Default horizontal alignment of the dropdown
-		 * @values start, end, center
+		 * @values "start", "end", "center"
 		 */
 		alignX: {
 			type: String,
@@ -59,7 +59,7 @@ export default {
 		},
 		/**
 		 * Default vertical alignment of the dropdown
-		 * @values top, bottom
+		 * @values "top", "bottom"
 		 */
 		alignY: {
 			type: String,
@@ -76,7 +76,7 @@ export default {
 		options: [Array, Function, String],
 		/**
 		 * Visual theme of the dropdown
-		 * @values dark, light
+		 * @values "dark", "light"
 		 */
 		theme: {
 			type: String,

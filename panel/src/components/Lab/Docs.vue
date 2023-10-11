@@ -23,7 +23,7 @@
 				<table>
 					<thead>
 						<th style="width: 8rem">Name</th>
-						<th style="width: 12rem">Type</th>
+						<th style="width: 10rem">Type</th>
 						<th style="width: 10rem">Default</th>
 						<th>Description</th>
 					</thead>
@@ -46,17 +46,26 @@
 								</k-text>
 							</td>
 							<td>
-								<code v-if="prop.defaultValue">{{
-									prop.defaultValue?.value
-								}}</code>
+								<k-text v-if="prop.defaultValue">
+									<code>{{ prop.defaultValue?.value }}</code>
+								</k-text>
 							</td>
 							<td class="k-lab-docs-description">
 								<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
 								<k-text v-if="prop.description?.length" v-html="prop.description" />
+
+								<k-box
+									v-if="prop.deprecated?.length"
+									theme="warning"
+									class="k-lab-docs-deprecated"
+								>
+									Deprecated: {{ prop.deprecated }}
+								</k-box>
+
 								<k-text v-if="prop.values?.length">
-									<p>
-										Values:<br />
-										<span style="display: flex; gap: 0.25rem; flex-wrap: wrap">
+									<p class="k-lab-docs-values">
+										<strong>Values</strong><br />
+										<span>
 											<code v-for="value in prop.values" :key="value">
 												{{ value.replaceAll("`", "") }}
 											</code>
@@ -132,11 +141,28 @@ export default {
 }
 .k-lab-docs-types {
 	display: inline-flex;
-	gap: 0.25rem;
+	flex-wrap: wrap;
+	gap: var(--spacing-1);
 }
 
-.k-lab-docs-description .k-text + .k-text {
-	margin-top: var(--spacing-4);
+.k-lab-docs-description :where(.k-text, .k-box) + :where(.k-text, .k-box) {
+	margin-top: var(--spacing-3);
+}
+
+.k-lab-docs-deprecated {
+	--box-height: var(--height-xs);
+	font-size: var(--text-xs);
+}
+
+.k-lab-docs-values {
+	font-size: var(--text-xs);
+	border-left: 2px solid var(--color-blue-300);
+	padding-inline-start: var(--spacing-2);
+}
+.k-lab-docs-values span {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: var(--spacing-1);
 }
 
 .k-lab-docs-types code[data-type="boolean"] {

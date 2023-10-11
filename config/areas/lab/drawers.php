@@ -37,6 +37,11 @@ return [
 					foreach (($docs['props'] ?? []) as $propKey => $prop) {
 						$docs['props'][$propKey]['description'] = $kirby->kirbytext($prop['description'] ?? '', $kirbytextOptions);
 
+						// normalize deprecated tag
+						if ($deprecated = $prop['tags']['deprecated'][0]['description'] ?? null) {
+							$docs['props'][$propKey]['deprecated'] = $deprecated;
+						}
+
 						// remove private props
 						if (($prop['tags']['access'][0]['description'] ?? null) === 'private') {
 							unset($docs['props'][$propKey]);
