@@ -6,6 +6,7 @@ use Closure;
 use DateTime;
 use Exception;
 use IntlDateFormatter;
+use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Query\Query;
 use Throwable;
@@ -309,12 +310,13 @@ class Str
 	 * Convert timestamp to date string
 	 * according to locale settings
 	 *
-	 * @param string $handler date, intl or strftime
+	 * @param 'date'|'intl'|'strftime'|null $handler Custom date handler or `null`
+	 *                                               for the globally configured one
 	 */
 	public static function date(
 		int|null $time = null,
 		string|IntlDateFormatter $format = null,
-		string $handler = 'date'
+		string|null $handler = null
 	): string|int|false {
 		if (is_null($format) === true) {
 			return $time;
@@ -323,6 +325,13 @@ class Str
 		// $format is an IntlDateFormatter instance
 		if ($format instanceof IntlDateFormatter) {
 			return $format->format($time ?? time());
+		}
+
+		// automatically determine the handler from global configuration
+		// if an app instance is already running; otherwise fall back to
+		// `date` for backwards-compatibility
+		if ($handler === null) {
+			$handler = App::instance(null, true)?->option('date.handler') ?? 'date';
 		}
 
 		// `intl` handler

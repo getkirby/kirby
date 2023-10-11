@@ -351,19 +351,14 @@ class File
 	/**
 	 * Returns the file's last modification time
 	 *
-	 * @param string|null $handler date, intl or strftime
+	 * @param 'date'|'intl'|'strftime'|null $handler Custom date handler or `null`
+	 *                                               for the globally configured one
 	 */
 	public function modified(
 		string|IntlDateFormatter|null $format = null,
 		string|null $handler = null
 	): string|int|false {
-		$kirby = $this->kirby();
-
-		return F::modified(
-			$this->root(),
-			$format,
-			$handler ?? $kirby?->option('date.handler', 'date') ?? 'date'
-		);
+		return F::modified($this->root(), $format, $handler);
 	}
 
 	/**

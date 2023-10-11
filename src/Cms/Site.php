@@ -305,11 +305,7 @@ class Site extends ModelWithContent
 		string|null $format = null,
 		string|null $handler = null
 	): int|string {
-		return Dir::modified(
-			$this->root(),
-			$format,
-			$handler ?? $this->kirby()->option('date.handler', 'date')
-		);
+		return Dir::modified($this->root(), $format, $handler);
 	}
 
 	/**

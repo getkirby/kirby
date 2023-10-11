@@ -426,8 +426,10 @@ class Dir
 	 * subfolders have been modified for the last time.
 	 *
 	 * @param string $dir The path of the directory
+	 * @param 'date'|'intl'|'strftime'|null $handler Custom date handler or `null`
+	 *                                               for the globally configured one
 	 */
-	public static function modified(string $dir, string $format = null, string $handler = 'date'): int|string
+	public static function modified(string $dir, string $format = null, string|null $handler = null): int|string
 	{
 		$modified = filemtime($dir);
 		$items    = static::read($dir);

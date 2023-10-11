@@ -492,7 +492,6 @@ class File extends ModelWithContent
 		$file     = $this->modifiedFile();
 		$content  = $this->modifiedContent($languageCode);
 		$modified = max($file, $content);
-		$handler ??= $this->kirby()->option('date.handler', 'date');
 
 		return Str::date($modified, $format, $handler);
 	}

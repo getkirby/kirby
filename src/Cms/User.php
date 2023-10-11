@@ -479,7 +479,6 @@ class User extends ModelWithContent
 		$modifiedContent = $this->storage()->modified('published', $languageCode);
 		$modifiedIndex   = F::modified($this->root() . '/index.php');
 		$modifiedTotal   = max([$modifiedContent, $modifiedIndex]);
-		$handler       ??= $this->kirby()->option('date.handler', 'date');
 
 		return Str::date($modifiedTotal, $format, $handler);
 	}
