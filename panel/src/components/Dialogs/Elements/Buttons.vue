@@ -56,6 +56,9 @@ export const props = {
 	}
 };
 
+/**
+ * @displayName DialogButtons
+ */
 export default {
 	mixins: [props],
 	emits: ["cancel"],

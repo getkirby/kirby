@@ -47,6 +47,9 @@ export const props = {
 	}
 };
 
+/**
+ * @displayName DialogFields
+ */
 export default {
 	mixins: [props],
 	emits: ["input", "submit"],

@@ -12,6 +12,9 @@
 </template>
 
 <script>
+/**
+ * @displayName DialogSearch
+ */
 export default {
 	props: {
 		autofocus: {

@@ -4,6 +4,13 @@
 	</div>
 </template>
 
+<script>
+/**
+ * @displayName DialogBody
+ */
+export default {};
+</script>
+
 <style>
 .k-dialog-body {
 	padding: var(--dialog-padding);

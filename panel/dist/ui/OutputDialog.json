@@ -1,1 +1,0 @@
-{"displayName":"OutputDialog","description":"","tags":{},"props":[{"name":"code","type":{"name":"string"}},{"name":"language","type":{"name":"string"},"defaultValue":{"value":"\"js\""}}],"events":[{"name":"cancel"}],"component":"k-output-dialog","sourceFile":"src/components/Lab/OutputDialog.vue"}

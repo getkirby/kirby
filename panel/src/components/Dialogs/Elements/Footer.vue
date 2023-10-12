@@ -4,6 +4,13 @@
 	</footer>
 </template>
 
+<script>
+/**
+ * @displayName DialogFooter
+ */
+export default {};
+</script>
+
 <style>
 .k-dialog-footer {
 	padding: var(--dialog-padding);
