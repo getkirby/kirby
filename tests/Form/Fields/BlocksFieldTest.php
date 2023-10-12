@@ -244,6 +244,28 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame('text', $response[0]['type']);
 	}
 
+	public function testRoutePasteFieldsets()
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'html' => '<h1>Hello World</h1><p>Test</p><h6>Sincerely</h6>'
+				]
+			]
+		]);
+
+		$field = $this->field('blocks', ['fieldsets' => ['heading']]);
+		$route = $field->routes()[1];
+
+		$response = $route['action']();
+
+		$this->assertCount(2, $response);
+		$this->assertSame(['level' => 'h1', 'text' => 'Hello World'], $response[0]['content']);
+		$this->assertSame('heading', $response[0]['type']);
+		$this->assertSame(['level' => 'h6', 'text' => 'Sincerely'], $response[1]['content']);
+		$this->assertSame('heading', $response[1]['type']);
+	}
+
 	public function testRouteFieldset()
 	{
 		$field = $this->field('blocks');
