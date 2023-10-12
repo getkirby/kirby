@@ -37,7 +37,7 @@ class SiteSearchesTest extends AreaTestCase
 
 		$this->assertCount(1, $results);
 
-		$this->assertSame('orange-400', $results[0]['image']['color']);
+		$this->assertSame('orange-500', $results[0]['image']['color']);
 		$this->assertSame('image', $results[0]['image']['icon']);
 		$this->assertSame('test.jpg', $results[0]['text']);
 		$this->assertSame('/pages/test/files/test.jpg', $results[0]['link']);

@@ -342,7 +342,7 @@ class FileTest extends TestCase
 
 		$image = (new File($file))->image();
 		$this->assertSame('image', $image['icon']);
-		$this->assertSame('orange-400', $image['color']);
+		$this->assertSame('orange-500', $image['color']);
 		$this->assertSame('pattern', $image['back']);
 		$this->assertArrayHasKey('url', $image);
 	}
@@ -369,7 +369,7 @@ class FileTest extends TestCase
 		// cover disabled as default
 		$this->assertSame([
 			'back' => 'pattern',
-			'color' => 'orange-400',
+			'color' => 'orange-500',
 			'cover' => false,
 			'icon' => 'image',
 			'url' => '/media/site/' . $hash . '/test.jpg',
@@ -380,7 +380,7 @@ class FileTest extends TestCase
 		// cover enabled
 		$this->assertSame([
 			'back' => 'pattern',
-			'color' => 'orange-400',
+			'color' => 'orange-500',
 			'cover' => true,
 			'icon' => 'image',
 			'url' => '/media/site/' . $hash . '/test.jpg',
