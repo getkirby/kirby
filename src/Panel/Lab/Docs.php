@@ -97,7 +97,13 @@ class Docs
 	{
 		$prop = $this->json['props'][$key];
 
+		// filter private props
 		if (($prop['tags']['access'][0]['description'] ?? null) === 'private') {
+			return null;
+		}
+
+		// filter unset props
+		if (($type = $prop['type']['name'] ?? null) === "null") {
 			return null;
 		}
 
@@ -106,7 +112,7 @@ class Docs
 
 		return [
 			'name'        => $prop['name'],
-			'type'        => $type = $prop['type']['name'] ?? null,
+			'type'        => $type,
 			'description' => $this->kt($prop['description'] ?? ''),
 			'default'     => $this->propDefault($default, $type),
 			'deprecated'  => $deprecated,
