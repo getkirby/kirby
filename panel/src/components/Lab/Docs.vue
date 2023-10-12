@@ -196,6 +196,7 @@ export default {
 	padding: 0.375rem var(--table-cell-padding);
 	vertical-align: top;
 	line-height: 1.5;
+	word-break: break-word;
 }
 .k-lab-docs-types {
 	display: inline-flex;
