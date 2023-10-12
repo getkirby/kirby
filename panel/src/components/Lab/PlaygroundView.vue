@@ -119,8 +119,7 @@ export default {
 		},
 		reloadDocs() {
 			if (this.$panel.drawer.isOpen) {
-				this.$panel.drawer.close();
-				this.openDocs();
+				this.$panel.drawer.refresh();
 			}
 		}
 	}
