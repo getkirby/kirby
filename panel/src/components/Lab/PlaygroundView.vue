@@ -93,7 +93,7 @@ export default {
 		}
 	},
 	mounted() {
-		import.meta.hot?.on("kirby:docs:reload", this.reloadDocs);
+		import.meta.hot?.on("kirby:docs:" + this.docs, this.reloadDocs);
 	},
 	methods: {
 		async createComponent() {

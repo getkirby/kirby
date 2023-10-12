@@ -36,14 +36,14 @@ function devMode() {
  * Watch all Vue SFCs inside `panel/src`
  * and generate UI docs on change
  */
-function watchComponents() {
+function labWatcher() {
 	return {
-		name: "kirby-watch-components",
+		name: "kirby-lab-watcher",
 		configureServer({ watcher, ws }) {
 			watcher.on("change", async (file) => {
 				if (file.match(/panel\/src\/.*\.vue/) !== null) {
-					const components = await generateDocs(file);
-					ws.send("kirby:docs:reload", { components });
+					const docs = await generateDocs(file);
+					ws.send("kirby:docs:" + docs[0]?.component);
 				}
 			});
 		}
@@ -51,5 +51,5 @@ function watchComponents() {
 }
 
 export default function kirby() {
-	return [devMode(), watchComponents()];
+	return [devMode(), labWatcher()];
 }

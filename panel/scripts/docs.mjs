@@ -2,16 +2,22 @@ import fs from "fs";
 import { glob } from "glob";
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
+import { camelToKebab } from "../src/helpers/string.js";
 import docgen from "vue-docgen-api";
 
 /**
- * Strips unnecessary data from the
- * Vue component docs' JSON object
+ * Normalize doc json and strip unnecessary data
  *
  * @param {Object} data
+ * @param {String} path
  * @returns {Object}
  */
-export function strip(data) {
+export function normalizeDoc(data, path) {
+	// add additional data
+	data.component = "k-" + camelToKebab(data.displayName);
+	data.sourceFile = path;
+
+	// strip unnecessary data
 	delete data.exportName;
 
 	for (const access in data.tags.access ?? []) {
@@ -53,35 +59,26 @@ export default async function generate(file) {
 		fs.mkdirSync(dist);
 	}
 
-	let files = [];
-
-	if (file) {
-		files = [file];
-	}
-
-	// If file argument is given, get all Vue SFC files
-	if (files.length === 0) {
-		files = await glob("src/components/**/*.vue");
-	}
-
-	const components = [];
+	// If file argument is not given, get all Vue SFC files
+	const files = file ? [file] : await glob("src/components/**/*.vue");
+	const docs = [];
 
 	// Parse each Vue SFC file and write earch result to a separate JSON file
 	for (const file of files) {
 		// parse with Vue docgen API
-		const data = strip(await docgen.parse(file, { alias }));
-		data.sourceFile = path.relative(root, file);
+		let doc = await docgen.parse(file, { alias });
+		doc = normalizeDoc(doc, path.relative(root, file));
 
 		// write file
 		fs.writeFileSync(
-			path.resolve(dist, data.displayName + ".json"),
-			JSON.stringify(data)
+			path.resolve(dist, doc.displayName + ".json"),
+			JSON.stringify(doc)
 		);
 
-		components.push(data);
+		docs.push(doc);
 	}
 
-	return components;
+	return docs;
 }
 
 // If this file is run from CLI
