@@ -10,6 +10,9 @@
 </template>
 
 <script>
+/**
+ * @displayName LabForm
+ */
 export default {
 	methods: {
 		submit(form) {

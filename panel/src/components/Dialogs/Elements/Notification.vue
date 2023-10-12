@@ -5,6 +5,13 @@
 	/>
 </template>
 
+<script>
+/**
+ * @displayName DialogNotification
+ */
+export default {};
+</script>
+
 <style>
 .k-dialog .k-notification {
 	padding-block: 0.325rem;

@@ -4,6 +4,9 @@
 </template>
 
 <script>
+/**
+ * @displayName DialogText
+ */
 export const props = {
 	props: {
 		/**

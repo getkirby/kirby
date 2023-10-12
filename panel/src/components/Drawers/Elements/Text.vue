@@ -4,6 +4,9 @@
 </template>
 
 <script>
+/**
+ * @displayName DrawerText
+ */
 export const props = {
 	props: {
 		/**
