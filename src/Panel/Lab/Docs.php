@@ -124,6 +124,11 @@ class Docs
 				$default = '{}';
 			}
 
+			// normalize empty array default
+			if ($default === '() => []') {
+				$default = '[]';
+			}
+
 			return $default;
 		}
 
