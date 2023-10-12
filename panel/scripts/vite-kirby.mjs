@@ -1,45 +1,55 @@
 /* eslint-env node */
 import fs from "fs";
-import generateUi from "./docs.mjs";
+import generateDocs from "./docs.mjs";
 
-export function devMode() {
+/**
+ * Creates flag file to tell Kirby that we are in dev mode
+ */
+function devMode() {
 	return {
 		name: "kirby-dev-mode",
-		config(config, { command }) {
-			// Tell Kirby that we are in dev mode
-			if (command === "serve") {
-				// Create the flag file on start
-				const runningPath = __dirname + "/../.vite-running";
-				fs.closeSync(fs.openSync(runningPath, "w"));
+		apply: "serve",
+		config() {
+			// Create the flag file on start
+			const runningPath = __dirname + "/../.vite-running";
+			fs.closeSync(fs.openSync(runningPath, "w"));
 
-				// Delete the flag file on any kind of exit
-				for (const eventType of ["exit", "SIGINT", "uncaughtException"]) {
-					process.on(eventType, function (err) {
-						if (fs.existsSync(runningPath) === true) {
-							fs.unlinkSync(runningPath);
-						}
+			// Delete the flag file on any kind of exit
+			for (const eventType of ["exit", "SIGINT", "uncaughtException"]) {
+				process.on(eventType, function (err) {
+					if (fs.existsSync(runningPath) === true) {
+						fs.unlinkSync(runningPath);
+					}
 
-						if (eventType === "uncaughtException") {
-							console.error(err);
-						}
+					if (eventType === "uncaughtException") {
+						console.error(err);
+					}
 
-						process.exit();
-					});
-				}
+					process.exit();
+				});
 			}
 		}
 	};
 }
 
-export function generateUiDocs(config) {
+/**
+ * Watch all Vue SFCs inside `panel/src`
+ * and generate UI docs on change
+ */
+function watchComponents() {
 	return {
-		name: "kirby-generate-ui-docs",
-		configureServer(server) {
-			server.watcher.on("change", (file) => {
-				if (file.endsWith(".vue") === true) {
-					generateUi(file);
+		name: "kirby-watch-components",
+		configureServer({ watcher, ws }) {
+			watcher.on("change", async (file) => {
+				if (file.match(/panel\/src\/.*\.vue/) !== null) {
+					const components = await generateDocs(file);
+					ws.send("kirby:docs:reload", { components });
 				}
 			});
 		}
 	};
+}
+
+export default function kirby() {
+	return [devMode(), watchComponents()];
 }

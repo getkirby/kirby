@@ -92,6 +92,9 @@ export default {
 			immediate: true
 		}
 	},
+	mounted() {
+		import.meta.hot?.on("kirby:docs:reload", this.reloadDocs);
+	},
 	methods: {
 		async createComponent() {
 			if (!this.file) {
@@ -113,6 +116,12 @@ export default {
 		},
 		openDocs() {
 			this.$panel.drawer.open(`lab/docs/${this.docs}`);
+		},
+		reloadDocs() {
+			if (this.$panel.drawer.isOpen) {
+				this.$panel.drawer.close();
+				this.openDocs();
+			}
 		}
 	}
 };

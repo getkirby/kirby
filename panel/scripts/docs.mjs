@@ -64,6 +64,8 @@ export default async function generate(file) {
 		files = await glob("src/components/**/*.vue");
 	}
 
+	const components = [];
+
 	// Parse each Vue SFC file and write earch result to a separate JSON file
 	for (const file of files) {
 		// parse with Vue docgen API
@@ -75,9 +77,11 @@ export default async function generate(file) {
 			path.resolve(dist, data.displayName + ".json"),
 			JSON.stringify(data)
 		);
+
+		components.push(data);
 	}
 
-	return files;
+	return components;
 }
 
 // If this file is run from CLI
@@ -86,7 +90,7 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
 	console.log("Generating UI documentation...");
 
 	// Pass absolute file path from -- argument, if given
-	generate(process.argv[2]).then((files) => {
-		console.log("--> " + files.length + " components compiled");
+	generate(process.argv[2]).then((components) => {
+		console.log("--> " + components.length + " components compiled");
 	});
 }
