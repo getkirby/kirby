@@ -199,22 +199,22 @@ class File extends Model
 	protected function imageColor(): string
 	{
 		$types = [
-			'image'    => 'orange-400',
-			'video'    => 'yellow-400',
-			'document' => 'red-400',
-			'audio'    => 'aqua-400',
-			'code'     => 'blue-400',
-			'archive'  => 'gray-500'
+			'archive'  => 'gray-500',
+			'audio'    => 'aqua-500',
+			'code'     => 'pink-500',
+			'document' => 'red-500',
+			'image'    => 'orange-500',
+			'video'    => 'yellow-500',
 		];
 
 		$extensions = [
-			'indd'  => 'purple-400',
-			'xls'   => 'green-400',
-			'xlsx'  => 'green-400',
-			'csv'   => 'green-400',
-			'docx'  => 'blue-400',
-			'doc'   => 'blue-400',
-			'rtf'   => 'blue-400'
+			'csv'   => 'green-500',
+			'doc'   => 'blue-500',
+			'docx'  => 'blue-500',
+			'indd'  => 'purple-500',
+			'rtf'   => 'blue-500',
+			'xls'   => 'green-500',
+			'xlsx'  => 'green-500',
 		];
 
 		return
@@ -240,23 +240,23 @@ class File extends Model
 	protected function imageIcon(): string
 	{
 		$types = [
-			'image'    => 'image',
-			'video'    => 'video',
-			'document' => 'document',
+			'archive'  => 'archive',
 			'audio'    => 'audio',
 			'code'     => 'code',
-			'archive'  => 'archive'
+			'document' => 'document',
+			'image'    => 'image',
+			'video'    => 'video',
 		];
 
 		$extensions = [
+			'csv'   => 'table',
+			'doc'   => 'pen',
+			'docx'  => 'pen',
+			'md'    => 'markdown',
+			'mdown' => 'markdown',
+			'rtf'   => 'pen',
 			'xls'   => 'table',
 			'xlsx'  => 'table',
-			'csv'   => 'table',
-			'docx'  => 'pen',
-			'doc'   => 'pen',
-			'rtf'   => 'pen',
-			'mdown' => 'markdown',
-			'md'    => 'markdown'
 		];
 
 		return
