@@ -25,13 +25,22 @@
 <script>
 export const props = {
 	props: {
+		/**
+		 * An array of breadcrumb items
+		 */
 		breadcrumb: {
 			default: () => [],
 			type: Array
 		},
+		/**
+		 * The name of the currently active tab
+		 */
 		tab: {
 			type: String
 		},
+		/**
+		 * An object with tab definitions.
+		 */
 		tabs: {
 			default: () => ({}),
 			type: Object

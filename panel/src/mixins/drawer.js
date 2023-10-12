@@ -10,16 +10,34 @@ import { props as Header } from "@/components/Drawers/Elements/Header.vue";
 export default {
 	mixins: [Header],
 	props: {
+		/**
+		 * If `true`, the drawer form is disabled
+		 */
 		disabled: {
 			default: false,
 			type: Boolean
 		},
+		/**
+		 * The default icon for the drawer header
+		 */
 		icon: String,
+		/**
+		 * A unique ID for the drawer
+		 */
 		id: String,
+		/**
+		 * Option buttons for the drawer header
+		 */
 		options: {
 			type: Array
 		},
+		/**
+		 * The default title for the drawer header
+		 */
 		title: String,
+		/**
+		 * @private
+		 */
 		visible: {
 			default: false,
 			type: Boolean

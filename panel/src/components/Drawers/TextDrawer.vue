@@ -17,6 +17,11 @@
 import Drawer from "@/mixins/drawer.js";
 import { props as TextProps } from "./Elements/Text.vue";
 
+/**
+ * The text drawer is perfect if you want to display
+ * additional information in a longer form that would not
+ * fit into a text dialog.
+ */
 export default {
 	mixins: [Drawer, TextProps],
 	emits: ["cancel", "crumb", "input", "submit", "tab"]

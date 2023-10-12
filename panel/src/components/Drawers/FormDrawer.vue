@@ -22,6 +22,10 @@
 import Drawer from "@/mixins/drawer.js";
 import { props as FieldsProps } from "./Elements/Fields.vue";
 
+/**
+ * The form drawer can be used to display longer, more complex
+ * forms than a form dialog.
+ */
 export default {
 	mixins: [Drawer, FieldsProps],
 	emits: ["cancel", "crumb", "input", "submit", "tab"]
