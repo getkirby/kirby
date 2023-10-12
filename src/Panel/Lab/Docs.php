@@ -119,8 +119,17 @@ class Docs
 		string|null $type
 	): string|null {
 		if ($default !== null) {
-			// normalize defaults from function
-			return Str::after($default, '() => ');
+			// normalize empty object default
+			if ($default === '() => ({})') {
+				return '{}';
+			}
+
+			// normalize all other defaults from function
+			if (Str::startsWith($default, '() => ')) {
+				return Str::after($default, '() => ');
+			}
+
+			return $default;
 		}
 
 		// if type is boolean primarily and no default
