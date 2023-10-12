@@ -26,7 +26,7 @@
 		</k-header>
 		<k-tabs :tab="tab" :tabs="tabs" />
 
-		<component :is="component" v-if="file" v-bind="props" />
+		<component :is="component" v-if="component" v-bind="props" />
 		<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
 		<component :is="'style'" v-if="styles" v-html="styles" />
 	</k-panel-inside>
@@ -93,6 +93,8 @@ export default {
 		}
 	},
 	mounted() {
+		const path = this.$panel.view.path.replace(/lab\//, "");
+		import.meta.hot?.on("kirby:example:" + path, this.reloadComponent);
 		import.meta.hot?.on("kirby:docs:" + this.docs, this.reloadDocs);
 	},
 	methods: {
@@ -101,21 +103,26 @@ export default {
 				return;
 			}
 
-			const component = await import(
+			const { default: component } = await import(
 				/* @vite-ignore */
-				this.$panel.url(this.file)
+				this.$panel.url(this.file) + "?cache=" + Date.now()
 			);
 
 			// add the template to the component
-			component.default.template = this.template;
+			component.template = this.template;
 
-			this.component = component.default;
+			// unwrap to be recognized as new component
+			this.component = { ...component };
 
 			// update the code strings for each example
 			window.UiExamples = this.examples;
 		},
 		openDocs() {
 			this.$panel.drawer.open(`lab/docs/${this.docs}`);
+		},
+		async reloadComponent() {
+			await this.$panel.view.refresh();
+			this.createComponent();
 		},
 		reloadDocs() {
 			if (this.$panel.drawer.isOpen) {
