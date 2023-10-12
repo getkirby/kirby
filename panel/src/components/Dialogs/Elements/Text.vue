@@ -22,6 +22,9 @@ export const props = {
 	}
 };
 
+/**
+ * @displayName DialogText
+ */
 export default {
 	mixins: [props]
 };

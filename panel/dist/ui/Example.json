@@ -1,1 +1,0 @@
-{"displayName":"Example","description":"","tags":{},"props":[{"name":"code","type":{"name":"boolean"},"defaultValue":{"value":"true"}},{"name":"label","type":{"name":"string"}},{"name":"flex","type":{"name":"boolean"}}],"slots":[{"name":"default"}],"component":"k-example","sourceFile":"src/components/Lab/Example.vue"}

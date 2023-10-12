@@ -22,6 +22,9 @@ export const props = {
 	}
 };
 
+/**
+ * @displayName DrawerText
+ */
 export default {
 	mixins: [props]
 };

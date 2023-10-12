@@ -66,6 +66,11 @@ export default async function generate(file) {
 
 	// Parse each Vue SFC file and write earch result to a separate JSON file
 	for (const file of files) {
+		// skip Lab files
+		if (file.match(/src\/components\/Lab\//) !== null) {
+			continue;
+		}
+
 		// parse with Vue docgen API
 		let doc = await docgen.parse(file, { alias });
 		doc = normalizeDoc(doc, path.relative(root, file));
