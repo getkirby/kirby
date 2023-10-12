@@ -44,7 +44,7 @@ export const props = {
 		back: String,
 		/**
 		 * Theme to use for the frame
-		 * @values positive, negative, notice, warning, info, passive, white, dark
+		 * @values "positive", "negative", "notice", "warning", "info", "passive", "white", "dark"
 		 */
 		theme: String
 	}
