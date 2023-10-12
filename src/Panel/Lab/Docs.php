@@ -149,6 +149,9 @@ class Docs
 			fn ($key) => $this->prop($key)
 		);
 
+		// remove empty props
+		$props = array_filter($props);
+
 		// always return an array
 		return array_values($props);
 	}

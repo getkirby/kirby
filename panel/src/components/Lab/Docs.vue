@@ -22,7 +22,7 @@
 			<div class="k-table">
 				<table>
 					<thead>
-						<th style="width: 8rem">Name</th>
+						<th style="width: 10rem">Name</th>
 						<th style="width: 10rem">Type</th>
 						<th style="width: 10rem">Default</th>
 						<th>Description</th>
@@ -84,7 +84,7 @@
 			<div class="k-table">
 				<table>
 					<thead>
-						<th style="width: 8rem">Slot</th>
+						<th style="width: 10rem">Slot</th>
 						<th>Description</th>
 					</thead>
 					<tbody>
@@ -109,7 +109,7 @@
 			<div class="k-table">
 				<table>
 					<thead>
-						<th style="width: 8rem">Event</th>
+						<th style="width: 10rem">Event</th>
 						<th>Description</th>
 					</thead>
 					<tbody>
