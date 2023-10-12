@@ -2,7 +2,8 @@
 	"name": "kirby",
 	"private": true,
 	"scripts": {
-		"build": "vite build && node scripts/docs.js",
+		"build": "vite build && npm run build:docs",
+		"build:docs": "node scripts/docs.mjs",
 		"dev": "vite --host",
 		"lint": "eslint \"src/**/*.{js,vue}\"",
 		"lint:fix": "npm run lint -- --fix",
@@ -32,6 +33,7 @@
 		"eslint": "^8.51.0",
 		"eslint-config-prettier": "^9.0.0",
 		"eslint-plugin-vue": "^9.17.0",
+		"glob": "^10.3.10",
 		"jsdom": "^22.1.0",
 		"lightningcss": "^1.22.0",
 		"prettier": "^3.0.3",

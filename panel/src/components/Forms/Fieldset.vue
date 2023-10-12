@@ -66,7 +66,7 @@ export default {
      */
 		fields: {
 			type: [Array, Object],
-			default: () => {}
+			default: () => ({})
 		},
 		/**
 		 * If `true`, form fields won't show their validation status on the fly.

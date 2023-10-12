@@ -11,6 +11,7 @@
 			<k-icon :type="icon" />
 		</span>
 		<span v-if="text || $slots.default" class="k-button-text">
+			<!-- @slot The Button text. You can also use the `text` prop. Leave empty for icon buttons. -->
 			<slot>
 				{{ text }}
 			</slot>
@@ -69,6 +70,9 @@ export default {
 		 * Adds an icon to the button.
 		 */
 		icon: String,
+		/**
+		 * A unique id for the HTML element
+		 */
 		id: [String, Number],
 		/**
 		 * If the link attribute is set, the button will be represented
@@ -103,6 +107,9 @@ export default {
 		 * target of the link. This does not apply to regular buttons.
 		 */
 		target: String,
+		/**
+		 * Custom tabindex. Only use if you really know how to adjust the order properly.
+		 */
 		tabindex: String,
 		/**
 		 * The button text

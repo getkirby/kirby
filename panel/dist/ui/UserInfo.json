@@ -1,0 +1,1 @@
+{"description":"","tags":{"internal":[{"description":true,"title":"internal"}],"since":[{"description":"4.0.0","title":"since"}]},"displayName":"UserInfo","props":[{"name":"user","type":{"name":"object|string"}}],"component":"k-user-info","sourceFile":"src/components/Views/Login/UserInfo.vue"}

@@ -22,8 +22,8 @@
 			<div class="k-table">
 				<table>
 					<thead>
-						<th style="width: 8rem">Name</th>
-						<th style="width: 12rem">Type</th>
+						<th style="width: 10rem">Name</th>
+						<th style="width: 10rem">Type</th>
 						<th style="width: 10rem">Default</th>
 						<th>Description</th>
 					</thead>
@@ -37,7 +37,7 @@
 							<td>
 								<k-text class="k-lab-docs-types">
 									<code
-										v-for="type in prop.type.name.split('|')"
+										v-for="type in prop.type?.split('|')"
 										:key="type"
 										:data-type="type"
 									>
@@ -46,13 +46,32 @@
 								</k-text>
 							</td>
 							<td>
-								<code v-if="prop.defaultValue">{{
-									prop.defaultValue?.value
-								}}</code>
+								<k-text v-if="prop.default">
+									<code>{{ prop.default }}</code>
+								</k-text>
 							</td>
-							<td>
+							<td class="k-lab-docs-description">
 								<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
-								<k-text v-html="prop.description" />
+								<k-text v-if="prop.description?.length" v-html="prop.description" />
+
+								<k-box
+									v-if="prop.deprecated?.length"
+									theme="warning"
+									class="k-lab-docs-deprecated"
+								>
+									Deprecated: {{ prop.deprecated }}
+								</k-box>
+
+								<k-text v-if="prop.values?.length">
+									<p class="k-lab-docs-values">
+										<strong>Values</strong><br />
+										<span>
+											<code v-for="value in prop.values" :key="value">
+												{{ value.replaceAll("`", "") }}
+											</code>
+										</span>
+									</p>
+								</k-text>
 							</td>
 						</tr>
 					</tbody>
@@ -65,7 +84,7 @@
 			<div class="k-table">
 				<table>
 					<thead>
-						<th style="width: 8rem">Slot</th>
+						<th style="width: 10rem">Slot</th>
 						<th>Description</th>
 					</thead>
 					<tbody>
@@ -84,6 +103,56 @@
 				</table>
 			</div>
 		</section>
+
+		<section v-if="events.length" class="k-lab-docs-section">
+			<k-headline class="h3">Events</k-headline>
+			<div class="k-table">
+				<table>
+					<thead>
+						<th style="width: 10rem">Event</th>
+						<th>Description</th>
+					</thead>
+					<tbody>
+						<tr v-for="event in events" :key="event.name">
+							<td style="width: 12rem">
+								<k-text>
+									<code>{{ event.name }}</code>
+								</k-text>
+							</td>
+							<td>
+								<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
+								<k-text v-html="event.description" />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+
+		<section v-if="methods.length" class="k-lab-docs-section">
+			<k-headline class="h3">Methods</k-headline>
+			<div class="k-table">
+				<table>
+					<thead>
+						<th style="width: 8rem">Method</th>
+						<th>Description</th>
+					</thead>
+					<tbody>
+						<tr v-for="method in methods" :key="method.name">
+							<td style="width: 12rem">
+								<k-text>
+									<code>{{ method.name }}</code>
+								</k-text>
+							</td>
+							<td>
+								<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
+								<k-text v-html="method.description" />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
 	</div>
 </template>
 
@@ -92,7 +161,15 @@ export default {
 	props: {
 		component: String,
 		description: String,
+		events: {
+			default: () => [],
+			type: Array
+		},
 		examples: {
+			default: () => [],
+			type: Array
+		},
+		methods: {
 			default: () => [],
 			type: Array
 		},
@@ -122,7 +199,28 @@ export default {
 }
 .k-lab-docs-types {
 	display: inline-flex;
-	gap: 0.25rem;
+	flex-wrap: wrap;
+	gap: var(--spacing-1);
+}
+
+.k-lab-docs-description :where(.k-text, .k-box) + :where(.k-text, .k-box) {
+	margin-top: var(--spacing-3);
+}
+
+.k-lab-docs-deprecated {
+	--box-height: var(--height-xs);
+	font-size: var(--text-xs);
+}
+
+.k-lab-docs-values {
+	font-size: var(--text-xs);
+	border-left: 2px solid var(--color-blue-300);
+	padding-inline-start: var(--spacing-2);
+}
+.k-lab-docs-values span {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: var(--spacing-1);
 }
 
 .k-lab-docs-types code[data-type="boolean"] {

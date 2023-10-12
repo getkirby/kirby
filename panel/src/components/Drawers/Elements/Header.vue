@@ -26,14 +26,14 @@
 export const props = {
 	props: {
 		breadcrumb: {
-			default: () => {},
+			default: () => [],
 			type: Array
 		},
 		tab: {
 			type: String
 		},
 		tabs: {
-			default: () => {},
+			default: () => ({}),
 			type: Object
 		}
 	}

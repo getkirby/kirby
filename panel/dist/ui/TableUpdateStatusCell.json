@@ -1,0 +1,1 @@
+{"description":"","tags":{"internal":[{"description":true,"title":"internal"}]},"displayName":"TableUpdateStatusCell","props":[{"name":"value","type":{"name":"string|object"}}],"component":"k-table-update-status-cell","sourceFile":"src/components/Views/System/TableUpdateStatusCell.vue"}

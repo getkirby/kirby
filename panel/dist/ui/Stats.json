@@ -1,0 +1,1 @@
+{"displayName":"Stats","description":"","tags":{},"props":[{"name":"reports","type":{"name":"array"}},{"name":"size","type":{"name":"string"},"defaultValue":{"value":"\"large\""}}],"component":"k-stats","sourceFile":"src/components/Layout/Stats.vue"}

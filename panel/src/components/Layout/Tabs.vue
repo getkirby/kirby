@@ -38,13 +38,32 @@
 </template>
 
 <script>
+/**
+ * @example <k-tabs
+ * 	tab="content"
+ * 	tabs="[
+ * 		{ name: 'content', label: 'Content', link: '/content' },
+ * 		{ name: 'settings', label: 'Settings', link: '/settings' }
+ * 	]"
+ * />
+ */
 export default {
 	props: {
+		/**
+		 * Name of the currently active tab
+		 */
 		tab: String,
+		/**
+		 * List of tabs to display. Each entry must be an object with the following properties: `name`, `label`, `link`, `icon`, `badge`
+		 */
 		tabs: {
 			type: Array,
 			default: () => []
 		},
+		/**
+		 * Theme to style any badge
+		 * @values "positive", "negative", "notice", "warning", "info", "passive"
+		 */
 		theme: String
 	},
 	data() {

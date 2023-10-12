@@ -1,0 +1,1 @@
+{"description":"","tags":{"internal":[{"description":true,"title":"internal"}]},"displayName":"SystemSecurity","props":[{"name":"exceptions","type":{"name":"array"}},{"name":"security","type":{"name":"array"}},{"name":"urls","type":{"name":"object"}}],"component":"k-system-security","sourceFile":"src/components/Views/System/SystemSecurity.vue"}

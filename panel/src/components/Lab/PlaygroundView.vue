@@ -8,13 +8,12 @@
 			<k-button-group v-if="docs || github" slot="buttons">
 				<k-button
 					v-if="docs"
+					:text="docs"
 					icon="book"
 					size="sm"
 					variant="filled"
 					@click="openDocs"
-				>
-					Docs
-				</k-button>
+				/>
 				<k-button
 					v-if="github"
 					icon="github"
@@ -93,6 +92,9 @@ export default {
 			immediate: true
 		}
 	},
+	mounted() {
+		import.meta.hot?.on("kirby:docs:" + this.docs, this.reloadDocs);
+	},
 	methods: {
 		async createComponent() {
 			if (!this.file) {
@@ -114,6 +116,11 @@ export default {
 		},
 		openDocs() {
 			this.$panel.drawer.open(`lab/docs/${this.docs}`);
+		},
+		reloadDocs() {
+			if (this.$panel.drawer.isOpen) {
+				this.$panel.drawer.refresh();
+			}
 		}
 	}
 };

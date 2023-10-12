@@ -1,0 +1,1 @@
+{"description":"","displayName":"BlockTypeText","tags":{"internal":[{"description":true,"title":"internal"}]},"events":[{"name":"split","type":{"names":["undefined"]}}],"component":"k-block-type-text","sourceFile":"src/components/Forms/Blocks/Types/Text.vue"}

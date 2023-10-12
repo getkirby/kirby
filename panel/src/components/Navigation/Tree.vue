@@ -46,6 +46,9 @@
 </template>
 
 <script>
+/**
+ * @displayName Tree
+ */
 export default {
 	name: "k-tree",
 	inheritAttrs: false,

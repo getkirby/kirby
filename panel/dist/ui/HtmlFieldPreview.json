@@ -1,0 +1,1 @@
+{"displayName":"HtmlFieldPreview","description":"","tags":{},"props":[{"name":"column","type":{"name":"object"},"defaultValue":{"value":"{}"}},{"name":"field","type":{"name":"object"},"defaultValue":{"value":"{}"}},{"name":"value","type":{"name":"string"}}],"component":"k-html-field-preview","sourceFile":"src/components/Forms/Previews/HtmlFieldPreview.vue"}

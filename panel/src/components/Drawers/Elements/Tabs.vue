@@ -18,7 +18,7 @@ export const props = {
 			type: String
 		},
 		tabs: {
-			default: () => {},
+			default: () => ({}),
 			type: [Array, Object]
 		}
 	}
