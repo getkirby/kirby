@@ -8,179 +8,40 @@
 			</k-box>
 		</section>
 
-		<section v-if="examples.length" class="k-lab-docs-section">
-			<k-headline class="h3">Examples</k-headline>
-			<k-code
-				v-for="(example, index) in examples"
-				:key="index"
-				language="html"
-				>{{ example.content }}</k-code>
-		</section>
+		<k-lab-docs-examples :examples="examples" />
 
-		<section v-if="props.length" class="k-lab-docs-section">
-			<k-headline class="h3">Props</k-headline>
-			<div class="k-table">
-				<table>
-					<thead>
-						<th style="width: 10rem">Name</th>
-						<th style="width: 10rem">Type</th>
-						<th style="width: 10rem">Default</th>
-						<th>Description</th>
-					</thead>
-					<tbody>
-						<tr v-for="prop in props" :key="prop.name">
-							<td>
-								<k-text>
-									<code>{{ prop.name }}</code>
-								</k-text>
-							</td>
-							<td>
-								<k-text class="k-lab-docs-types">
-									<code
-										v-for="type in prop.type?.split('|')"
-										:key="type"
-										:data-type="type"
-									>
-										{{ type }}
-									</code>
-								</k-text>
-							</td>
-							<td>
-								<k-text v-if="prop.default">
-									<code>{{ prop.default }}</code>
-								</k-text>
-							</td>
-							<td class="k-lab-docs-description">
-								<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
-								<k-text v-if="prop.description?.length" v-html="prop.description" />
-
-								<k-box
-									v-if="prop.deprecated?.length"
-									theme="warning"
-									class="k-lab-docs-deprecated"
-								>
-									Deprecated: {{ prop.deprecated }}
-								</k-box>
-
-								<k-text v-if="prop.values?.length">
-									<p class="k-lab-docs-values">
-										<strong>Values</strong><br />
-										<span>
-											<code v-for="value in prop.values" :key="value">
-												{{ value.replaceAll("`", "") }}
-											</code>
-										</span>
-									</p>
-								</k-text>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</section>
-
-		<section v-if="slots.length" class="k-lab-docs-section">
-			<k-headline class="h3">Slots</k-headline>
-			<div class="k-table">
-				<table>
-					<thead>
-						<th style="width: 10rem">Slot</th>
-						<th>Description</th>
-					</thead>
-					<tbody>
-						<tr v-for="slot in slots" :key="slot.name">
-							<td style="width: 12rem">
-								<k-text>
-									<code>{{ slot.name }}</code>
-								</k-text>
-							</td>
-							<td>
-								<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
-								<k-text v-html="slot.description" />
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</section>
-
-		<section v-if="events.length" class="k-lab-docs-section">
-			<k-headline class="h3">Events</k-headline>
-			<div class="k-table">
-				<table>
-					<thead>
-						<th style="width: 10rem">Event</th>
-						<th>Description</th>
-					</thead>
-					<tbody>
-						<tr v-for="event in events" :key="event.name">
-							<td style="width: 12rem">
-								<k-text>
-									<code>{{ event.name }}</code>
-								</k-text>
-							</td>
-							<td>
-								<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
-								<k-text v-html="event.description" />
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</section>
-
-		<section v-if="methods.length" class="k-lab-docs-section">
-			<k-headline class="h3">Methods</k-headline>
-			<div class="k-table">
-				<table>
-					<thead>
-						<th style="width: 8rem">Method</th>
-						<th>Description</th>
-					</thead>
-					<tbody>
-						<tr v-for="method in methods" :key="method.name">
-							<td style="width: 12rem">
-								<k-text>
-									<code>{{ method.name }}</code>
-								</k-text>
-							</td>
-							<td>
-								<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
-								<k-text v-html="method.description" />
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</section>
+		<k-lab-docs-props :props="props" />
+		<k-lab-docs-slots :slots="slots" />
+		<k-lab-docs-events :events="events" />
+		<k-lab-docs-methods :methods="methods" />
 	</div>
 </template>
 
 <script>
+import DocsExamples, { props as DocsExamplesProps } from "./DocsExamples.vue";
+import DocsProps, { props as DocsPropsProps } from "./DocsProps.vue";
+import DocsSlots, { props as DocsSlotsProps } from "./DocsSlots.vue";
+import DocsEvents, { props as DocsEventsProps } from "./DocsEvents.vue";
+import DocsMethods, { props as DocsMethodsProps } from "./DocsMethods.vue";
+
 export default {
+	components: {
+		"k-lab-docs-examples": DocsExamples,
+		"k-lab-docs-props": DocsProps,
+		"k-lab-docs-slots": DocsSlots,
+		"k-lab-docs-events": DocsEvents,
+		"k-lab-docs-methods": DocsMethods
+	},
+	mixins: [
+		DocsExamplesProps,
+		DocsPropsProps,
+		DocsSlotsProps,
+		DocsEventsProps,
+		DocsMethodsProps
+	],
 	props: {
 		component: String,
-		description: String,
-		events: {
-			default: () => [],
-			type: Array
-		},
-		examples: {
-			default: () => [],
-			type: Array
-		},
-		methods: {
-			default: () => [],
-			type: Array
-		},
-		slots: {
-			default: () => [],
-			type: Array
-		},
-		props: {
-			default: () => [],
-			type: Array
-		}
+		description: String
 	}
 };
 </script>
