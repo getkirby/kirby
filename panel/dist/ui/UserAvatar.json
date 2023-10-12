@@ -1,1 +1,1 @@
-{"description":"","tags":{"internal":[{"description":true,"title":"internal"}],"since":[{"description":"4.0.0","title":"since"}]},"displayName":"UserAvatar","props":[{"name":"model","type":{"name":"object"}}],"sourceFile":"src/components/Views/Users/UserAvatar.vue"}
+{"description":"","tags":{"internal":[{"description":true,"title":"internal"}],"since":[{"description":"4.0.0","title":"since"}]},"displayName":"UserAvatar","props":[{"name":"model","type":{"name":"object"}}],"component":"k-user-avatar","sourceFile":"src/components/Views/Users/UserAvatar.vue"}

@@ -2,7 +2,6 @@ import fs from "fs";
 import { glob } from "glob";
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
-import { camelToKebab } from "../src/helpers/string.js";
 import docgen from "vue-docgen-api";
 
 /**
@@ -14,7 +13,9 @@ import docgen from "vue-docgen-api";
  */
 export function normalizeDoc(data, path) {
 	// add additional data
-	data.component = "k-" + camelToKebab(data.displayName);
+	data.component =
+		"k-" +
+		data.displayName.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
 	data.sourceFile = path;
 
 	// strip unnecessary data

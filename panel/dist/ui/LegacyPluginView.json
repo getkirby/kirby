@@ -1,1 +1,1 @@
-{"displayName":"LegacyPluginView","description":"","tags":{},"props":[{"name":"id","type":{"name":"string"}}],"sourceFile":"src/components/Views/LegacyPluginView.vue"}
+{"displayName":"LegacyPluginView","description":"","tags":{},"props":[{"name":"id","type":{"name":"string"}}],"component":"k-legacy-plugin-view","sourceFile":"src/components/Views/LegacyPluginView.vue"}
