@@ -1,6 +1,9 @@
 <script>
 import Tree from "./Tree.vue";
 
+/**
+ * @displayName PageTree
+ */
 export default {
 	name: "k-page-tree",
 	extends: Tree,

@@ -1,0 +1,1 @@
+{"displayName":"Breadcrumb","description":"","tags":{},"props":[{"name":"crumbs","type":{"name":"array"},"defaultValue":{"value":"[]"}},{"name":"label","type":{"name":"string"},"defaultValue":{"value":"\"Breadcrumb\""}},{"name":"view","type":{"name":"object"}}],"sourceFile":"src/components/Navigation/Breadcrumb.vue"}

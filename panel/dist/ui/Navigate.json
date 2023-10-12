@@ -1,0 +1,1 @@
+{"displayName":"Navigate","description":"","tags":{},"props":[{"name":"axis","type":{"name":"string"}},{"name":"disabled","type":{"name":"boolean"}},{"name":"select","type":{"name":"string"}}],"slots":[{"name":"default"}],"sourceFile":"src/components/Navigation/Navigate.vue"}

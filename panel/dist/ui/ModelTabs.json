@@ -1,0 +1,1 @@
+{"displayName":"ModelTabs","description":"","tags":{},"props":[{"name":"tab","type":{"name":"string"}},{"name":"tabs","type":{"name":"array"},"defaultValue":{"value":"[]"}}],"sourceFile":"src/components/Navigation/ModelTabs.vue"}

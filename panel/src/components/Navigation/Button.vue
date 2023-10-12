@@ -11,6 +11,7 @@
 			<k-icon :type="icon" />
 		</span>
 		<span v-if="text || $slots.default" class="k-button-text">
+			<!-- @slot The Button text. You can also use the `text` prop. Leave empty for icon buttons. -->
 			<slot>
 				{{ text }}
 			</slot>

@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Lab;
 
 use Kirby\Cms\App;
+use Kirby\Data\Data;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
@@ -20,9 +21,14 @@ use Kirby\Toolkit\Str;
  */
 class Docs
 {
+	protected array $json;
+	protected App $kirby;
+
 	public function __construct(
-		protected array $json
+		protected string $name
 	) {
+		$this->kirby = App::instance();
+		$this->json  = Data::read($this->file());
 	}
 
 	public function description(): string
@@ -50,9 +56,21 @@ class Docs
 		return [];
 	}
 
+	public function file(): string
+	{
+		$name = Str::after($this->name, 'k-');
+		$name = Str::kebabToCamel($name);
+		return $this->kirby->root('panel') . '/dist/ui/' . $name . '.json';
+	}
+
+	public function github(): string
+	{
+		return 'https://github.com/getkirby/kirby/tree/main/panel/' . $this->json['sourceFile'];
+	}
+
 	protected function kt(string $text): string
 	{
-		return App::instance()->kirbytext($text, [
+		return $this->kirby->kirbytext($text, [
 			'markdown' => [
 				'breaks' => false
 			]
@@ -72,7 +90,7 @@ class Docs
 
 	public function name(): string
 	{
-		return 'k-' . Str::camelToKebab($this->json['displayName']);
+		return $this->name;
 	}
 
 	public function prop(string|int $key): array|null
@@ -148,6 +166,7 @@ class Docs
 			'description' => $this->description(),
 			'events'      => $this->events(),
 			'examples'    => $this->examples(),
+			'github'      => $this->github(),
 			'methods'     => $this->methods(),
 			'props'       => $this->props(),
 			'slots'       => $this->slots(),

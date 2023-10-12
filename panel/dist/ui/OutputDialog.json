@@ -1,0 +1,1 @@
+{"displayName":"OutputDialog","description":"","tags":{},"props":[{"name":"code","type":{"name":"string"}},{"name":"language","type":{"name":"string"},"defaultValue":{"value":"\"js\""}}],"events":[{"name":"cancel"}],"sourceFile":"src/components/Lab/OutputDialog.vue"}

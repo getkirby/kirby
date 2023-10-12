@@ -1,0 +1,1 @@
+{"description":"","tags":{"internal":[{"description":true,"title":"internal"}]},"displayName":"SystemPlugins","props":[{"name":"plugins","type":{"name":"array"}}],"sourceFile":"src/components/Views/System/SystemPlugins.vue"}

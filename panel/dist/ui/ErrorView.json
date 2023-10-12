@@ -1,0 +1,1 @@
+{"displayName":"ErrorView","description":"","tags":{},"props":[{"name":"error","type":{"name":"string"}},{"name":"layout","type":{"name":"string"}}],"sourceFile":"src/components/Views/ErrorView.vue"}

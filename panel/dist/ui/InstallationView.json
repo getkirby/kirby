@@ -1,0 +1,1 @@
+{"displayName":"InstallationView","description":"","tags":{},"props":[{"name":"isInstallable","type":{"name":"boolean"}},{"name":"isInstalled","type":{"name":"boolean"}},{"name":"isOk","type":{"name":"boolean"}},{"name":"requirements","type":{"name":"object"}},{"name":"translations","type":{"name":"array"}}],"sourceFile":"src/components/Views/Login/InstallationView.vue"}
