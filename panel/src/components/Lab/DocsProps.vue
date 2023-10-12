@@ -34,10 +34,7 @@
 						</td>
 						<td class="k-lab-docs-description">
 							<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
-							<k-text
-								v-if="prop.description?.length"
-								v-html="prop.description"
-							/>
+							<k-text v-if="prop.description?.length" v-html="prop.description" />
 
 							<k-box
 								v-if="prop.deprecated?.length"

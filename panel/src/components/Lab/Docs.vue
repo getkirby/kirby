@@ -1,13 +1,6 @@
 <template>
 	<div class="k-lab-docs">
-		<section v-if="description.length" class="k-lab-docs-section">
-			<k-headline class="h3">Description</k-headline>
-			<k-box theme="text">
-				<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
-				<k-text v-html="description" />
-			</k-box>
-		</section>
-
+		<k-lab-docs-description :description="description" />
 		<k-lab-docs-examples :examples="examples" />
 
 		<k-lab-docs-props :props="props" />
@@ -18,6 +11,7 @@
 </template>
 
 <script>
+import DocsDesc, { props as DocsDescProps } from "./DocsDescription.vue";
 import DocsExamples, { props as DocsExamplesProps } from "./DocsExamples.vue";
 import DocsProps, { props as DocsPropsProps } from "./DocsProps.vue";
 import DocsSlots, { props as DocsSlotsProps } from "./DocsSlots.vue";
@@ -26,6 +20,7 @@ import DocsMethods, { props as DocsMethodsProps } from "./DocsMethods.vue";
 
 export default {
 	components: {
+		"k-lab-docs-description": DocsDesc,
 		"k-lab-docs-examples": DocsExamples,
 		"k-lab-docs-props": DocsProps,
 		"k-lab-docs-slots": DocsSlots,
@@ -33,6 +28,7 @@ export default {
 		"k-lab-docs-methods": DocsMethods
 	},
 	mixins: [
+		DocsDescProps,
 		DocsExamplesProps,
 		DocsPropsProps,
 		DocsSlotsProps,
@@ -40,8 +36,7 @@ export default {
 		DocsMethodsProps
 	],
 	props: {
-		component: String,
-		description: String
+		component: String
 	}
 };
 </script>
