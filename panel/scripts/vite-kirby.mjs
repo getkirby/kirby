@@ -51,8 +51,7 @@ function labWatcher() {
 				// Lab examples: send reload to client
 				const examples = file.match(/panel\/lab\/(.*)\/index(.vue|.php)/);
 				if (examples !== null) {
-					const example = examples[1].replace(/\/[0-9]+_/, "_");
-					ws.send("kirby:example:" + example);
+					ws.send("kirby:example:" + examples[1]);
 				}
 			});
 		}
