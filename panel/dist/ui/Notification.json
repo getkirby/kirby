@@ -1,1 +1,1 @@
-{"displayName":"Notification","description":"","tags":{},"component":"k-notification","sourceFile":"src/components/Dialogs/Elements/Notification.vue"}
+{"description":"Displays notification from `panel.notification`","tags":{"internal":[{"description":true,"title":"internal"}]},"displayName":"Notification","component":"k-notification","sourceFile":"src/components/Misc/Notification.vue"}
