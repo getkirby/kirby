@@ -2,7 +2,6 @@
 	<div class="k-lab-docs">
 		<k-lab-docs-description :description="description" />
 		<k-lab-docs-examples :examples="examples" />
-
 		<k-lab-docs-props :props="props" />
 		<k-lab-docs-slots :slots="slots" />
 		<k-lab-docs-events :events="events" />
@@ -11,29 +10,29 @@
 </template>
 
 <script>
-import DocsDesc, { props as DocsDescProps } from "./DocsDescription.vue";
-import DocsExamples, { props as DocsExamplesProps } from "./DocsExamples.vue";
-import DocsProps, { props as DocsPropsProps } from "./DocsProps.vue";
-import DocsSlots, { props as DocsSlotsProps } from "./DocsSlots.vue";
-import DocsEvents, { props as DocsEventsProps } from "./DocsEvents.vue";
-import DocsMethods, { props as DocsMethodsProps } from "./DocsMethods.vue";
+import Desc, { props as DescProps } from "./Docs/Description.vue";
+import Examples, { props as ExamplesProps } from "./Docs/Examples.vue";
+import Props, { props as PropsProps } from "./Docs/Props.vue";
+import Slots, { props as SlotsProps } from "./Docs/Slots.vue";
+import Events, { props as EventsProps } from "./Docs/Events.vue";
+import Methods, { props as MethodsProps } from "./Docs/Methods.vue";
 
 export default {
 	components: {
-		"k-lab-docs-description": DocsDesc,
-		"k-lab-docs-examples": DocsExamples,
-		"k-lab-docs-props": DocsProps,
-		"k-lab-docs-slots": DocsSlots,
-		"k-lab-docs-events": DocsEvents,
-		"k-lab-docs-methods": DocsMethods
+		"k-lab-docs-description": Desc,
+		"k-lab-docs-examples": Examples,
+		"k-lab-docs-props": Props,
+		"k-lab-docs-slots": Slots,
+		"k-lab-docs-events": Events,
+		"k-lab-docs-methods": Methods
 	},
 	mixins: [
-		DocsDescProps,
-		DocsExamplesProps,
-		DocsPropsProps,
-		DocsSlotsProps,
-		DocsEventsProps,
-		DocsMethodsProps
+		DescProps,
+		ExamplesProps,
+		PropsProps,
+		SlotsProps,
+		EventsProps,
+		MethodsProps
 	],
 	props: {
 		component: String
