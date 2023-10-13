@@ -57,7 +57,6 @@ abstract class Json
 		if ($data instanceof Redirect) {
 			return [
 				'redirect' => $data->location(),
-				'code'     => $data->code()
 			];
 		}
 
