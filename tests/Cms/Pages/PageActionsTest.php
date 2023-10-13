@@ -798,58 +798,6 @@ class PageActionsTest extends TestCase
 		$this->assertNotSame($oldUuid, $newUuid);
 	}
 
-	public function testDuplicateCopy()
-	{
-		$this->app->impersonate('kirby');
-
-		$page = $this->app->site()->createChild([
-			'slug' => 'test',
-			'content' => [
-				'title' => 'Test'
-			]
-		]);
-		$this->app->site()->createChild([
-			'slug' => 'test-copy',
-			'content' => [
-				'title' => 'Test copy'
-			]
-		]);
-
-		$duplicate = $page->duplicate('test-copy', ['title' => 'Test copy']);
-
-		$this->assertSame('test-copy1', $duplicate->slug());
-		$this->assertSame('Test copy 1', $duplicate->title()->value());
-	}
-
-	public function testDuplicateCopyIncrement()
-	{
-		$this->app->impersonate('kirby');
-
-		$page = $this->app->site()->createChild([
-			'slug' => 'test',
-			'content' => [
-				'title' => 'Test'
-			]
-		]);
-		$this->app->site()->createChild([
-			'slug' => 'test-copy',
-			'content' => [
-				'title' => 'Test copy'
-			]
-		]);
-		$this->app->site()->createChild([
-			'slug' => 'test-copy1',
-			'content' => [
-				'title' => 'Test copy 1'
-			]
-		]);
-
-		$duplicate = $page->duplicate('test-copy', ['title' => 'Test copy']);
-
-		$this->assertSame('test-copy2', $duplicate->slug());
-		$this->assertSame('Test copy 2', $duplicate->title()->value());
-	}
-
 	public function testDuplicateMultiLang()
 	{
 		$app = $this->app->clone([

@@ -479,6 +479,26 @@ return [
 				];
 			}
 
+			$slugAppendix  = Str::slug(I18n::translate('page.duplicate.appendix'));
+			$titleAppendix = I18n::translate('page.duplicate.appendix');
+
+			// if the item to be duplicated already exists
+			// add a suffix at the end of slug and title
+			$duplicateSlug = $page->slug() . '-' . $slugAppendix;
+			$siblingKeys   = $page->parentModel()->childrenAndDrafts()->pluck('uid');
+
+			if (in_array($duplicateSlug, $siblingKeys) === true) {
+				$suffixCounter = 2;
+				$newSlug       = $duplicateSlug . $suffixCounter;
+
+				while (in_array($newSlug, $siblingKeys) === true) {
+					$newSlug = $duplicateSlug . ++$suffixCounter;
+				}
+
+				$slugAppendix  .= $suffixCounter;
+				$titleAppendix .= ' ' . $suffixCounter;
+			}
+
 			return [
 				'component' => 'k-form-dialog',
 				'props' => [
@@ -487,8 +507,8 @@ return [
 					'value' => [
 						'children' => false,
 						'files'    => false,
-						'slug'     => $page->slug() . '-' . Str::slug(I18n::translate('page.duplicate.appendix')),
-						'title'    => $page->title() . ' ' . I18n::translate('page.duplicate.appendix')
+						'slug'     => $page->slug() . '-' . $slugAppendix,
+						'title'    => $page->title() . ' ' . $titleAppendix
 					]
 				]
 			];

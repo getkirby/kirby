@@ -726,24 +726,6 @@ trait PageActions
 		// create the slug for the duplicate
 		$slug = Str::slug($slug ?? $this->slug() . '-' . Str::slug(I18n::translate('page.duplicate.appendix')));
 
-		// if the item to be duplicated already exist
-		// add a suffix at the end of slug and title
-		$siblingKeys = $this->parentModel()->childrenAndDrafts()->keys();
-		if (in_array($slug, $siblingKeys) === true) {
-			$suffixCounter = 1;
-			$newSlug       = $slug . $suffixCounter;
-
-			while (in_array($newSlug, $siblingKeys) === true) {
-				$newSlug = $slug . ++$suffixCounter;
-			}
-
-			$slug = $newSlug;
-
-			if (isset($options['title']) === true) {
-				$options['title'] .= ' ' . $suffixCounter;
-			}
-		}
-
 		$arguments = [
 			'originalPage' => $this,
 			'input'        => $slug,
