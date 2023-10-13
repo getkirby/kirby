@@ -7,39 +7,37 @@
 					:key="field.signature"
 					:width="field.width"
 				>
-					<k-error-boundary>
-						<!-- @event input Triggered whenever any field value changes -->
-						<!-- @event focus Triggered whenever any field is focused -->
-						<!-- @event submit Triggered whenever any field triggers submit -->
-						<!-- eslint-disable vue/no-mutating-props -->
-						<component
-							:is="'k-' + field.type + '-field'"
-							v-if="hasFieldType(field.type)"
-							:ref="fieldName"
-							v-bind="field"
-							:disabled="disabled || field.disabled"
-							:form-data="value"
-							:name="fieldName"
-							:novalidate="novalidate"
-							:value="value[fieldName]"
-							@input="onInput($event, field, fieldName)"
-							@focus="$emit('focus', $event, field, fieldName)"
-							@invalid="
-								($invalid, $v) => onInvalid($invalid, $v, field, fieldName)
-							"
-							@submit="$emit('submit', $event, field, fieldName)"
-						/>
-						<k-box v-else theme="negative">
-							<k-text size="small">
-								{{
-									$t("error.field.type.missing", {
-										name: fieldName,
-										type: field.type
-									})
-								}}
-							</k-text>
-						</k-box>
-					</k-error-boundary>
+					<!-- @event input Triggered whenever any field value changes -->
+					<!-- @event focus Triggered whenever any field is focused -->
+					<!-- @event submit Triggered whenever any field triggers submit -->
+					<!-- eslint-disable vue/no-mutating-props -->
+					<component
+						:is="'k-' + field.type + '-field'"
+						v-if="hasFieldType(field.type)"
+						:ref="fieldName"
+						v-bind="field"
+						:disabled="disabled || field.disabled"
+						:form-data="value"
+						:name="fieldName"
+						:novalidate="novalidate"
+						:value="value[fieldName]"
+						@input="onInput($event, field, fieldName)"
+						@focus="$emit('focus', $event, field, fieldName)"
+						@invalid="
+							($invalid, $v) => onInvalid($invalid, $v, field, fieldName)
+						"
+						@submit="$emit('submit', $event, field, fieldName)"
+					/>
+					<k-box v-else theme="negative">
+						<k-text size="small">
+							{{
+								$t("error.field.type.missing", {
+									name: fieldName,
+									type: field.type
+								})
+							}}
+						</k-text>
+					</k-box>
 				</k-column>
 			</template>
 		</k-grid>
@@ -54,16 +52,16 @@ export default {
 	props: {
 		/**
 		 * @private
-     */
+		 */
 		config: Object,
 		/**
 		 * If `true`, all fields in the fieldset are disabled
 		 */
 		disabled: Boolean,
 		/**
-     * Object with field definitions. Check out the field components
-     * for available props
-     */
+		 * Object with field definitions. Check out the field components
+		 * for available props
+		 */
 		fields: {
 			type: [Array, Object],
 			default: () => ({})
@@ -76,8 +74,8 @@ export default {
 			default: false
 		},
 		/**
-     * Key/Value object with all values for all fields
-     */
+		 * Key/Value object with all values for all fields
+		 */
 		value: {
 			type: Object,
 			default: () => ({})
