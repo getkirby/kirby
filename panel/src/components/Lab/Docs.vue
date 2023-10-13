@@ -1,6 +1,7 @@
 <template>
 	<div class="k-lab-docs">
-		<k-lab-docs-description :description="description" />
+		<k-lab-docs-deprecated :deprecated="deprecated" />
+		<k-lab-docs-description :description="description" :since="since" />
 		<k-lab-docs-examples :examples="examples" />
 		<k-lab-docs-props :props="props" />
 		<k-lab-docs-slots :slots="slots" />
@@ -10,6 +11,7 @@
 </template>
 
 <script>
+import Deprecated, { props as DeprecatedProps } from "./Docs/Deprecated.vue";
 import Desc, { props as DescProps } from "./Docs/Description.vue";
 import Examples, { props as ExamplesProps } from "./Docs/Examples.vue";
 import Props, { props as PropsProps } from "./Docs/Props.vue";
@@ -19,6 +21,7 @@ import Methods, { props as MethodsProps } from "./Docs/Methods.vue";
 
 export default {
 	components: {
+		"k-lab-docs-deprecated": Deprecated,
 		"k-lab-docs-description": Desc,
 		"k-lab-docs-examples": Examples,
 		"k-lab-docs-props": Props,
@@ -27,6 +30,7 @@ export default {
 		"k-lab-docs-methods": Methods
 	},
 	mixins: [
+		DeprecatedProps,
 		DescProps,
 		ExamplesProps,
 		PropsProps,
@@ -65,7 +69,7 @@ export default {
 
 .k-lab-docs-deprecated {
 	--box-height: var(--height-xs);
-	font-size: var(--text-xs);
+	--text-font-size: var(--text-xs);
 }
 
 .k-lab-docs-values {

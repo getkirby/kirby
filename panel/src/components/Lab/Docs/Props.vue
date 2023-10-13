@@ -40,10 +40,11 @@
 
 							<k-box
 								v-if="prop.deprecated?.length"
+								icon="alert"
 								theme="warning"
 								class="k-lab-docs-deprecated"
 							>
-								Deprecated: {{ prop.deprecated }}
+								<k-text :html="'<strong>Deprecated:</strong> ' + prop.deprecated" />
 							</k-box>
 
 							<k-text v-if="prop.values?.length">

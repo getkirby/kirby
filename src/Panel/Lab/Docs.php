@@ -54,6 +54,11 @@ class Docs
 		return array_values($docs);
 	}
 
+	public function deprecated(): string|null
+	{
+		return $this->kt($this->json['tags']['deprecated'][0]['description'] ?? '');
+	}
+
 	public function description(): string
 	{
 		return $this->kt($this->json['description'] ?? '');
@@ -136,7 +141,7 @@ class Docs
 		}
 
 		$default    = $prop['defaultValue']['value'] ?? null;
-		$deprecated = $prop['tags']['deprecated'][0]['description'] ?? null;
+		$deprecated = $this->kt($prop['tags']['deprecated'][0]['description'] ?? '');
 
 		return [
 			'name'        => $prop['name'],
@@ -195,6 +200,11 @@ class Docs
 		return array_values($props);
 	}
 
+	public function since(): string|null
+	{
+		return $this->json['tags']['since'][0]['description'] ?? null;
+	}
+
 	public function slots(): array
 	{
 		return A::map(
@@ -210,6 +220,7 @@ class Docs
 	{
 		return [
 			'component'   => $this->name(),
+			'deprecated'  => $this->deprecated(),
 			'description' => $this->description(),
 			'events'      => $this->events(),
 			'examples'    => $this->examples(),
@@ -217,6 +228,7 @@ class Docs
 			'github'      => $this->github(),
 			'methods'     => $this->methods(),
 			'props'       => $this->props(),
+			'since'       => $this->since(),
 			'slots'       => $this->slots(),
 		];
 	}
