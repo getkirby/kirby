@@ -10,7 +10,7 @@
 
 <script>
 /**
- * @public
+ *
  */
 export default {
 	components: {

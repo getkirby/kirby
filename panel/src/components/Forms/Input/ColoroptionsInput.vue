@@ -46,7 +46,6 @@ export const props = {
 
 /**
  * @example <k-coloroptions-input :options="options" :value="value" @input="value = $event" />
- * @public
  */
 export default {
 	mixins: [RadioInput, props],

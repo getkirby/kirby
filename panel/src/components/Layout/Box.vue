@@ -21,7 +21,6 @@
 <script>
 /**
  * The `<k-box>` component is a multi-purpose box with text. You can use it as a foundation for empty state displays or anything else that needs to be displayed in a box.
- * @public
  *
  * @example <k-box text="This is a nice box" theme="positive" />
  */

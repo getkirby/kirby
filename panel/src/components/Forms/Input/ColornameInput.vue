@@ -45,7 +45,6 @@ export const props = {
 
 /**
  * @example <k-colorname-input :value="value" @input="value = $event" />
- * @public
  */
 export default {
 	mixins: [StringInput, props],

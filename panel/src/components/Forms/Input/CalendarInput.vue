@@ -88,7 +88,6 @@ import { props as InputProps } from "@/mixins/input.js";
  * The Calendar component is mainly used for our `DateInput` component, but it could be used as stand-alone calendar as well with a little CSS love.
  *
  * @example <k-calendar-input :value="value" @input="value = $event" />
- * @public
  */
 export default {
 	mixins: [InputProps],

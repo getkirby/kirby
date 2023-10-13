@@ -21,7 +21,6 @@ export const props = {
 
 /**
  * Display a list of <k-bubble>
- * @public
  * @since 3.7.0
  *
  * @example <k-bubbles :bubbles="['Hello', 'World']" />

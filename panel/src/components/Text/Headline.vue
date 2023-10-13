@@ -17,8 +17,7 @@
 <script>
 /**
  * Use to display consistently sized headlines
- * @public
-
+ *
  * @example <k-headline>This is a nice headline</k-headline>
  */
 export default {

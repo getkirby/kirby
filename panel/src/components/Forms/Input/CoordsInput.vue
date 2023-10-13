@@ -55,7 +55,6 @@ export const props = {
 
 /**
  * @example <k-coords-input :value="value" @input="value = $event" />
- * @public
  */
 export default {
 	mixins: [Input, props],

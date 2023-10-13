@@ -27,7 +27,6 @@ export const props = {
 
 /**
  * Use <k-icon-frame> to display an icon in a fixed ratio with background etc.
- * @public
  * @since 4.0.0
  *
  * @example <k-icon-frame icon="home" ratio="1/1" back="black" />

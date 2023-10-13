@@ -60,7 +60,6 @@ export const props = {
 
 /**
  * @example <k-string-input :value="value" type="text" @input="value = $event" />
- * @public
  */
 export default {
 	mixins: [Input, props]

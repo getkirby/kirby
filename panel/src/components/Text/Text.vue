@@ -10,7 +10,6 @@
 <script>
 /**
  * The <k-text> component is a container for all multi-line text with additional formats.
- * @public
  *
  * @example <k-text>
   <b>Lorem</b> <a href="#">ipsum</a> <i>dolor</i> …

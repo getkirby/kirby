@@ -44,7 +44,6 @@ export const props = {
 
 /**
  * Use <k-image-frame> to display an image in a fixed ratio with background etc.
- * @public
  * @since 4.0.0
  *
  * @example <k-image-frame src="https://getkirby.com/image.jpg" ratio="16/9" back="pattern" />
