@@ -2,8 +2,7 @@
 	<section v-if="description.length" class="k-lab-docs-section">
 		<k-headline class="h3">Description</k-headline>
 		<k-box theme="text">
-			<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
-			<k-text v-html="description" />
+			<k-text :html="description" />
 		</k-box>
 	</section>
 </template>

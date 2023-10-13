@@ -15,8 +15,7 @@
 							</k-text>
 						</td>
 						<td>
-							<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
-							<k-text v-html="slot.description" />
+							<k-text :html="slot.description" />
 						</td>
 					</tr>
 				</tbody>

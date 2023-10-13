@@ -1,8 +1,7 @@
 <template>
 	<div class="k-html-field-preview" :class="$options.class">
 		{{ column.before }}
-		<!-- eslint-disable-next-line vue/no-v-html -->
-		<div class="k-text" v-html="html" />
+		<k-text :html="html" />
 		{{ column.after }}
 	</div>
 </template>
