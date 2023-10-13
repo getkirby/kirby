@@ -107,7 +107,17 @@ class Docs
 
 	public function lab(): string|null
 	{
-		return $this->json['tags']['lab'][0]['description'] ?? null;
+		$root = $this->kirby->root('panel') . '/lab';
+
+		foreach (glob($root . "/{,*/,*/*/,*/*/*/}index.php", GLOB_BRACE) as $example) {
+			$props = require $example;
+
+			if (($props['docs'] ?? null) === $this->name) {
+				return Str::before(Str::after($example, $root), 'index.php');
+			}
+		}
+
+		return null;
 	}
 
 	public function methods(): array

@@ -25,7 +25,6 @@
 <script>
 /**
  * The `k-bar` can be used to create  all sorts of toolbars aligning its items accordingly.
- * @lab components/bar
  *
  * @example
  * <k-bar>
