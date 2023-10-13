@@ -1,5 +1,5 @@
 <template>
-	<section v-if="description.length" class="k-lab-docs-section">
+	<section v-if="description.length || since.length" class="k-lab-docs-section">
 		<header class="k-lab-docs-desc-header">
 			<k-headline class="h3">Description</k-headline>
 			<k-text v-if="since.length">

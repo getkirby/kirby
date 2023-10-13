@@ -40,7 +40,7 @@
 
 							<k-box
 								v-if="prop.deprecated?.length"
-								icon="alert"
+								icon="protected"
 								theme="warning"
 								class="k-lab-docs-deprecated"
 							>

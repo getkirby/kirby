@@ -1,6 +1,6 @@
 <template>
 	<section v-if="deprecated.length" class="k-lab-docs-section">
-		<k-box icon="alert" theme="warning">
+		<k-box icon="protected" theme="warning">
 			<k-text :html="'<strong>Deprecated:</strong>' + deprecated" />
 		</k-box>
 	</section>

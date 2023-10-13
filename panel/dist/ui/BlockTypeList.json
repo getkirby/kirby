@@ -1,1 +1,0 @@
-{"description":"","displayName":"BlockTypeList","tags":{"internal":[{"description":true,"title":"internal"}]},"events":[{"name":"split","type":{"names":["undefined"]}}],"component":"k-block-type-list","sourceFile":"src/components/Forms/Blocks/Types/List.vue"}
