@@ -4,6 +4,7 @@ namespace Kirby\Session;
 
 use Exception;
 use Kirby\Toolkit\Str;
+use Kirby\Toolkit\SymmetricCrypto;
 
 class InvalidSessionStore
 {
@@ -185,6 +186,28 @@ class TestSessionStore extends SessionStore
 				]
 			]
 		];
+
+		// add moved test sessions when the PHP `sodium` extension is available
+		if (SymmetricCrypto::isAvailable() === true) {
+			$crypto        = new SymmetricCrypto(secretKey: hex2bin($this->validKey));
+			$newSessionKey = $crypto->encrypt($this->validKey);
+
+			// valid session that has moved to a nearly expired session
+			$this->sessions['9999999999.movedRenewalWithKey'] = [
+				'startTime'       => 0,
+				'expiryTime'      => 9999999999,
+				'newSession'      => '2000000000.renewal',
+				'newSessionKey'   => $newSessionKey
+			];
+
+			// valid session that has moved to a session that could be refreshed
+			$this->sessions['9999999999.movedTimeoutActivityWithKey'] = [
+				'startTime'       => 0,
+				'expiryTime'      => 9999999999,
+				'newSession'      => '9999999999.timeoutActivity2',
+				'newSessionKey'   => $newSessionKey
+			];
+		}
 	}
 
 	public function createId(int $expiryTime): string

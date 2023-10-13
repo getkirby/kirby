@@ -58,6 +58,7 @@
 		"ext-fileinfo": "Improved mime type detection for files",
 		"ext-intl": "Improved i18n number formatting",
 		"ext-memcached": "Support for the Memcached cache driver",
+		"ext-sodium": "Support for the crypto class and more robust session handling",
 		"ext-zip": "Support for ZIP archive file functions",
 		"ext-zlib": "Sanitization and validation for svgz files"
 	},
