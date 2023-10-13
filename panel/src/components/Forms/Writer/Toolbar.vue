@@ -58,6 +58,9 @@
 </template>
 
 <script>
+/**
+ * @displayName WriterToolbar
+ */
 export default {
 	props: {
 		editor: {

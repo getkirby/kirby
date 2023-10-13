@@ -77,6 +77,9 @@ export default {
 		"ol"
 	],
 	props: {
+		/**
+		 * Buttons to show in the toolbar
+		 */
 		buttons: {
 			type: [Boolean, Array],
 			default: true
@@ -143,8 +146,8 @@ export default {
 		}
 
 		return {
-			layout: layout,
-			shortcuts: shortcuts
+			layout,
+			shortcuts
 		};
 	},
 	methods: {
