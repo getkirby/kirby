@@ -55,7 +55,7 @@ export const props = {
 
 /**
  * @example <k-choice-input :value="value" @input="value = $event" />
- * @public
+ * @since 4.0.0
  */
 export default {
 	mixins: [Input, props]

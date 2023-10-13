@@ -45,6 +45,7 @@ export const props = {
 };
 
 /**
+ * @since 4.0.0
  * @example <k-coloroptions-input :options="options" :value="value" @input="value = $event" />
  */
 export default {

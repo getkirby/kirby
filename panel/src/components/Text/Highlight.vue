@@ -3,6 +3,10 @@ import Prism from "prismjs";
 
 Prism.manual = true;
 
+/**
+ * @since 4.0.0
+ * @internal
+ */
 export default {
 	mounted() {
 		Prism.highlightAll(this.$el);

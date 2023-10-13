@@ -14,7 +14,7 @@
 
 <script>
 /**
- * @internal
+ *
  */
 export const props = {
 	props: {

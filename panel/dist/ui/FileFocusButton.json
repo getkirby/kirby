@@ -1,1 +1,1 @@
-{"displayName":"FileFocusButton","description":"","tags":{},"props":[{"name":"focus","type":{"name":"object"}}],"events":[{"name":"set","type":{"names":["undefined"]}}],"component":"k-file-focus-button","sourceFile":"src/components/Views/Files/FileFocusButton.vue"}
+{"description":"","tags":{"since":[{"description":"4.0.0","title":"since"}]},"displayName":"FileFocusButton","props":[{"name":"focus","type":{"name":"object"}}],"events":[{"name":"set","type":{"names":["undefined"]}}],"component":"k-file-focus-button","sourceFile":"src/components/Views/Files/FileFocusButton.vue"}

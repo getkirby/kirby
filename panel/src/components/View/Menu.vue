@@ -44,6 +44,10 @@
 </template>
 
 <script>
+/**
+ * @since 4.0.0
+ * @internal
+ */
 export default {
 	data() {
 		return {

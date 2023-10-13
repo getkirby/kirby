@@ -60,6 +60,10 @@ export const props = {
 	mixins: [Dialog, Fields]
 };
 
+/**
+ * Dialog to set up one-time time-based passwords for a user
+ * @since 4.0.0
+ */
 export default {
 	mixins: [props],
 	props: {

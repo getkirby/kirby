@@ -29,6 +29,7 @@ export const props = {
 
 /**
  * @displayName DrawerFields
+ * @since 4.0.0
  */
 export default {
 	mixins: [props],

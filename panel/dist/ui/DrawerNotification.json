@@ -1,1 +1,1 @@
-{"description":"","displayName":"DrawerNotification","tags":{},"component":"k-drawer-notification","sourceFile":"src/components/Drawers/Elements/Notification.vue"}
+{"description":"Displays notification from `panel.notification` in a drawer","displayName":"DrawerNotification","tags":{"internal":[{"description":true,"title":"internal"}],"since":[{"description":"4.0.0","title":"since"}]},"component":"k-drawer-notification","sourceFile":"src/components/Drawers/Elements/Notification.vue"}

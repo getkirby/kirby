@@ -74,7 +74,7 @@ export default async function generate(file) {
 		// parse with Vue docgen API
 		let doc = await docgen.parse(file, { alias });
 
-		if (doc.tags.access?.[0]?.description !== "private") {
+		if (doc.tags.access?.[0]?.description !== "internal") {
 			doc = normalizeDoc(doc, path.relative(root, file));
 
 			// write file
