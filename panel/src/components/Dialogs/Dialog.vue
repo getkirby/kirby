@@ -71,6 +71,7 @@ export default {
 	display: flex;
 	flex-direction: column;
 	overflow: clip;
+	container-type: inline-size;
 }
 
 @media screen and (min-width: 20rem) {
