@@ -15,13 +15,18 @@
 				}"
 			/>
 		</k-section>
+
+		<k-section headline="Docs">
+			<k-collection :items="docs" />
+		</k-section>
 	</k-panel-inside>
 </template>
 
 <script>
 export default {
 	props: {
-		categories: Array
+		categories: Array,
+		docs: Array
 	}
 };
 </script>

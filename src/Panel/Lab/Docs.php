@@ -4,6 +4,8 @@ namespace Kirby\Panel\Lab;
 
 use Kirby\Cms\App;
 use Kirby\Data\Data;
+use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
@@ -29,6 +31,27 @@ class Docs
 	) {
 		$this->kirby = App::instance();
 		$this->json  = Data::read($this->file());
+	}
+
+	public static function all(): array
+	{
+		$docs = A::map(
+			Dir::inventory(App::instance()->root('panel') . '/dist/ui')['files'],
+			function ($file) {
+				$component = 'k-' . Str::camelToKebab(F::name($file['filename']));
+
+				return [
+					'image' => [
+						'icon' => 'book',
+						'back' => 'white',
+					],
+					'text' => $component,
+					'link' => '/lab/docs/' . $component,
+				];
+			}
+		);
+
+		return array_values($docs);
 	}
 
 	public function description(): string
