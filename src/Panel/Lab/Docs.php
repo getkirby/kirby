@@ -100,6 +100,11 @@ class Docs
 		]);
 	}
 
+	public function lab(): string|null
+	{
+		return $this->json['tags']['lab'][0]['description'] ?? null;
+	}
+
 	public function methods(): array
 	{
 		return A::map(
@@ -208,6 +213,7 @@ class Docs
 			'description' => $this->description(),
 			'events'      => $this->events(),
 			'examples'    => $this->examples(),
+			'lab'         => $this->lab(),
 			'github'      => $this->github(),
 			'methods'     => $this->methods(),
 			'props'       => $this->props(),

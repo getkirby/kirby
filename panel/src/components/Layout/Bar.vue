@@ -26,6 +26,7 @@
 /**
  * The `k-bar` can be used to create  all sorts of toolbars aligning its items accordingly.
  * @public
+ * @lab components/bar
  *
  * @example
  * <k-bar>

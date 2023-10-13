@@ -3,8 +3,17 @@
 		<k-header>
 			{{ component }}
 
-			<k-button-group v-if="docs.github" slot="buttons">
+			<k-button-group v-if="docs.github || docs.lab" slot="buttons">
 				<k-button
+					v-if="docs.lab"
+					icon="code"
+					text="Examples"
+					size="sm"
+					variant="filled"
+					:link="'/lab/' + docs.lab"
+				/>
+				<k-button
+					v-if="docs.github"
 					icon="github"
 					size="sm"
 					variant="filled"
