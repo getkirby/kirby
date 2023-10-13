@@ -67,8 +67,17 @@ export default {
 		 * Additional inline buttons in the item's footer
 		 */
 		buttons: Array,
+		/**
+		 * @private
+		 */
 		data: Object,
+		/**
+		 * Item image settings. See `k-image-frame` for available settings.
+		 */
 		image: [Object, Boolean],
+		/**
+		 * The optional info text that will be show next or below the main text
+		 */
 		info: String,
 		/**
 		 * Display layout
@@ -78,15 +87,33 @@ export default {
 			type: String,
 			default: "list"
 		},
+		/**
+		 * An optional link
+		 */
 		link: {
 			type: [Boolean, String, Function]
 		},
+		/**
+		 * Array of dropdown options
+		 */
 		options: {
 			type: [Array, Function, String]
 		},
+		/**
+		 * If `true`, the sort handle will be shown on hover
+		 */
 		sortable: Boolean,
+		/**
+		 * Sets a target attribute if a link is also set
+		 */
 		target: String,
+		/**
+		 * The main text for the item
+		 */
 		text: String,
+		/**
+		 * The width (e.g. `1/2`) of the parent column is used to set the srcset sizes accordingly
+		 */
 		width: String
 	},
 	computed: {

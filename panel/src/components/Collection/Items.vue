@@ -7,7 +7,10 @@
 		@sort="$emit('sort', $event)"
 		@option="onOption"
 	>
-		<template #options="{ row: item, rowIndex: index }">
+		<template
+			v-if="$scopedSlots.options"
+			#options="{ row: item, rowIndex: index }"
+		>
 			<slot name="options" v-bind="{ item, index }" />
 		</template>
 	</k-table>
@@ -54,26 +57,44 @@
 export default {
 	inheritAttrs: false,
 	props: {
+		/**
+		 * Optional column settings for the table layout
+		 */
 		columns: {
 			type: [Object, Array],
-			default: () => []
+			default: () => ({})
 		},
+		/**
+		 * Array of item definitions. See `k-item` for available options.
+		 */
 		items: {
 			type: Array,
 			default: () => []
 		},
+		/**
+		 * @values list, cards, cardlets, table
+		 */
 		layout: {
 			type: String,
 			default: "list"
 		},
+		/**
+		 * If `false`, all item links will be disabled/removed
+		 */
 		link: {
 			type: Boolean,
 			default: true
 		},
+		/**
+		 * Globale image settings. Will be merged with the image settings of each item. See `k-image-frame` for available options.
+		 */
 		image: {
 			type: [Object, Boolean],
 			default: () => ({})
 		},
+		/**
+		 * If `true`, items are sortable. Each item can disable this individually.
+		 */
 		sortable: Boolean,
 		/**
 		 * Placeholder text and icon for empty state
