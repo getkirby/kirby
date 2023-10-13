@@ -153,9 +153,14 @@ class Docs
 				return '{}';
 			}
 
-			// normalize all other defaults from function
+			// normalize all other defaults from shorthand function
 			if (Str::startsWith($default, '() => ')) {
 				return Str::after($default, '() => ');
+			}
+
+			// normalize all other defaults from longform function
+			if (preg_match('/function\(\) {.*return (.*);.*}/si', $default, $matches) === 1) {
+				return $matches[1];
 			}
 
 			return $default;

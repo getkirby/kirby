@@ -23,6 +23,7 @@ return [
 
 			return [
 				'component' => 'k-lab-docs-view',
+				'title'     => $component,
 				'breadcrumb' => [
 					[
 						'label' => 'Docs',
