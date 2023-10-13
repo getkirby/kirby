@@ -103,7 +103,7 @@ class Docs
 		}
 
 		// filter unset props
-		if (($type = $prop['type']['name'] ?? null) === "null") {
+		if (($type = $prop['type']['name'] ?? null) === 'null') {
 			return null;
 		}
 
