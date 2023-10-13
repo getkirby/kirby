@@ -1,0 +1,77 @@
+<template>
+	<k-lab-examples>
+		<k-lab-example label="Card Item">
+			<k-item layout="cards" text="This is a nice item" />
+		</k-lab-example>
+		<k-lab-example label="Text & Info">
+			<k-item layout="cards" info="With some info" text="This is a nice item" />
+		</k-lab-example>
+		<k-lab-example label="Image, Text & Info">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				info="With some info"
+				layout="cards"
+				text="This is a nice item"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Link">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				info="With some info"
+				layout="cards"
+				link="https://getkirby.com"
+				text="This is a nice item"
+				target="_blank"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Sortable">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				:sortable="true"
+				info="With some info"
+				layout="cards"
+				text="This is a nice item"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Options">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				:options="[
+					{
+						text: 'Edit',
+						icon: 'edit'
+					},
+					{
+						text: 'Duplicate',
+						icon: 'copy'
+					},
+					'-',
+					{
+						text: 'Delete',
+						icon: 'trash'
+					}
+				]"
+				info="With some info"
+				layout="cards"
+				text="This is a nice item"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Buttons">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				:buttons="[
+					{
+						icon: 'edit'
+					},
+					{
+						icon: 'trash'
+					}
+				]"
+				info="With some info"
+				layout="cards"
+				text="This is a nice item"
+				width="1/2"
+			/>
+		</k-lab-example>
+	</k-lab-examples>
+</template>

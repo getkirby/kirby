@@ -175,7 +175,10 @@ export default {
 		/**
 		 * What options to include in dropdown
 		 */
-		options: [Array, Function],
+		options: {
+			default: () => [],
+			type: [Array, Function]
+		},
 		/**
 		 * Optional pagination settings
 		 */
@@ -241,7 +244,7 @@ export default {
 			return (
 				this.$scopedSlots.options ||
 				this.options?.length > 0 ||
-				Object.values(this.values).filter((row) => row.options).length > 0
+				Object.values(this.values).filter((row) => row?.options).length > 0
 			);
 		}
 	},
