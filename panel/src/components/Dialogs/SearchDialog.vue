@@ -4,7 +4,6 @@
 		:submit-button="false"
 		class="k-search-dialog"
 		role="search"
-		size="medium"
 		v-bind="$props"
 		@cancel="$emit('cancel')"
 		@submit="submit"
@@ -86,6 +85,18 @@ import Search from "@/mixins/search.js";
 
 export default {
 	mixins: [Dialog, Search],
+	props: {
+		/**
+		 * Unset unused props
+		 */
+		cancelButton: null,
+		submitButton: null,
+
+		// eslint-disable-next-line vue/require-prop-types
+		size: {
+			default: "medium"
+		}
+	},
 	emits: ["cancel"],
 	data() {
 		return {

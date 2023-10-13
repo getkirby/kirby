@@ -3,9 +3,11 @@
 		<k-panel-menu />
 		<main class="k-panel-main">
 			<k-topbar :breadcrumb="$panel.view.breadcrumb" :view="$panel.view">
+				<!-- @slot Additional content for the Topbar  -->
 				<slot name="topbar" />
 			</k-topbar>
 
+			<!-- @slot Main content for the view  -->
 			<slot />
 		</main>
 
@@ -23,6 +25,10 @@
 </template>
 
 <script>
+/**
+ * Wrapper for views that are available only for signed-in users.
+ * @displayName PanelInside
+ */
 export default {
 	computed: {
 		notification() {

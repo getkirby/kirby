@@ -10,6 +10,10 @@ import { props as Buttons } from "@/components/Dialogs/Elements/Buttons.vue";
 export default {
 	mixins: [Buttons],
 	props: {
+		/**
+		 * Width of the dialog
+		 * @values "small", "default", "medium", "large", "huge"
+		 */
 		size: {
 			default: "default",
 			type: String
@@ -37,7 +41,6 @@ export default {
 		},
 		/**
 		 * Shows the error notification bar in the dialog with the given message
-		 * @public
 		 * @param {String} error
 		 */
 		error(error) {
@@ -69,17 +72,14 @@ export default {
 		open() {
 			this.$panel.dialog.open(this);
 		},
-		/**
-		 * This event is triggered when the submit button is clicked,
-		 * or the form is submitted. It can also be called manually.
-		 * @public
-		 */
 		submit() {
+			/**
+			 * The submit button is clicked or the form is submitted.
+			 */
 			this.$emit("submit", this.value);
 		},
 		/**
 		 * Shows the success notification bar in the dialog with the given message
-		 * @public
 		 * @param {String|Object} message
 		 */
 		success(success) {

@@ -144,11 +144,12 @@ class Docs
 		$deprecated = $this->kt($prop['tags']['deprecated'][0]['description'] ?? '');
 
 		return [
-			'name'        => $prop['name'],
+			'name'        => Str::camelToKebab($prop['name']),
 			'type'        => $type,
 			'description' => $this->kt($prop['description'] ?? ''),
 			'default'     => $this->propDefault($default, $type),
 			'deprecated'  => $deprecated,
+			'required'    => $prop['required'] ?? false,
 			'values'      => $prop['values'] ?? null,
 		];
 	}
@@ -158,18 +159,18 @@ class Docs
 		string|null $type
 	): string|null {
 		if ($default !== null) {
-			// normalize empty object default
-			if ($default === '() => ({})') {
-				return '{}';
+			// normalize longform function
+			if (preg_match('/function\(\) {.*return (.*);.*}/si', $default, $matches) === 1) {
+				return $matches[1];
+			}
+
+			// normalize object shorthand function
+			if (preg_match('/\(\) => \((.*)\)/si', $default, $matches) === 1) {
+				return $matches[1];
 			}
 
 			// normalize all other defaults from shorthand function
-			if (Str::startsWith($default, '() => ')) {
-				return Str::after($default, '() => ');
-			}
-
-			// normalize all other defaults from longform function
-			if (preg_match('/function\(\) {.*return (.*);.*}/si', $default, $matches) === 1) {
+			if (preg_match('/\(\) => (.*)/si', $default, $matches) === 1) {
 				return $matches[1];
 			}
 

@@ -10,6 +10,7 @@
 		class="k-link"
 		@click="onClick"
 	>
+		<!-- @slot Visible linked text -->
 		<slot />
 	</a>
 	<span v-else :title="title" class="k-link" aria-disabled>
@@ -19,7 +20,9 @@
 
 <script>
 /**
- * Our Link component is a wrapper around a native HTML `a` element, but it is also used to swap this with a Vue `router-link` element in our application whenever it makes sense. It comes with a set of additional useful helpers.
+ * Wapper around a native HTML `<a>` element that ensures the
+ * correct routing behavior for Panel as well as external links.
+ *
  * @example <k-link to="https://getkirby.com">Kirby Website</k-link>
  */
 export default {
@@ -114,6 +117,9 @@ export default {
 				this.$go(this.to);
 			}
 
+			/**
+			 * The link has been clicked
+			 */
 			this.$emit("click", e);
 		}
 	}

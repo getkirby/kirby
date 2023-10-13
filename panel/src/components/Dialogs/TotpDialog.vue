@@ -2,7 +2,6 @@
 	<k-dialog
 		ref="dialog"
 		v-bind="$props"
-		size="large"
 		@cancel="$emit('cancel')"
 		@submit="$emit('submit')"
 	>
@@ -67,7 +66,22 @@ export const props = {
 export default {
 	mixins: [props],
 	props: {
-		qr: String,
+		/**
+		 * Unset unused props
+		 */
+		fields: null,
+
+		/**
+		 * SVG element for QR code containing TOTP secret
+		 */
+		qr: {
+			type: String,
+			required: true
+		},
+		// eslint-disable-next-line vue/require-prop-types
+		size: {
+			default: "large"
+		},
 		// eslint-disable-next-line vue/require-prop-types
 		submitButton: {
 			default: () => ({
