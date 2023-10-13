@@ -10,13 +10,34 @@ return [
 			return [
 				'component' => 'k-lab-index-view',
 				'props' => [
+					'tab'        => 'examples',
 					'categories' => Category::all(),
-					'docs'       => Docs::all(),
 				],
 			];
 		}
 	],
 	'lab.docs' => [
+		'pattern' => 'lab/docs',
+		'action'  => function () {
+			return [
+				'component' => 'k-lab-index-view',
+				'title'     => 'Docs',
+				'breadcrumb' => [
+					[
+						'label' => 'Docs',
+						'link'  => 'lab/docs'
+					]
+				],
+				'props' => [
+					'tab'        => 'docs',
+					'categories' => [
+						['examples' => Docs::all()]
+					],
+				],
+			];
+		}
+	],
+	'lab.doc' => [
 		'pattern' => 'lab/docs/(:any)',
 		'action'  => function (string $component) {
 			$docs = new Docs($component);
@@ -27,6 +48,7 @@ return [
 				'breadcrumb' => [
 					[
 						'label' => 'Docs',
+						'link'  => 'lab/docs'
 					],
 					[
 						'label' => $component,
