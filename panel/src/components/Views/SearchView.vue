@@ -40,6 +40,7 @@ import Search from "@/mixins/search.js";
 /**
  * @internal
  * @since 4.0.0
+ * @internal
  */
 export default {
 	mixins: [Search],

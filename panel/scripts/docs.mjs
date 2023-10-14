@@ -67,7 +67,7 @@ export default async function generate(file) {
 	// Parse each Vue SFC file and write earch result to a separate JSON file
 	for (const file of files) {
 		// skip Lab files
-		if (file.match(/src\/components\/Lab\//) !== null) {
+		if (/src\/components\/Lab\//.test(file) === true) {
 			continue;
 		}
 
