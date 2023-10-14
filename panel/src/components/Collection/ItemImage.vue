@@ -4,20 +4,32 @@
 </template>
 
 <script>
-export default {
-	inheritAttrs: false,
+import { layout } from "@/mixins/props.js";
+
+export const props = {
+	mixins: [layout],
 	props: {
+		/**
+		 * See `<k-image-frame>` or `<k-icon-frame>` for all available options
+		 */
 		image: [Object, Boolean],
 		/**
-		 * Display layout
-		 * @values list, cards, cardlets
+		 * Width (e.g. `"1/2"`) of the parent column is used to set the srcset sizes accordingly
+		 * @todo refactor to remove this
 		 */
-		layout: {
+		width: {
 			type: String,
-			default: "list"
-		},
-		width: String
-	},
+			default: "1/1"
+		}
+	}
+};
+
+/**
+ * Displays a preview image or icon for a collection `<k-item>`
+ */
+export default {
+	mixins: [props],
+	inheritAttrs: false,
 	computed: {
 		attrs() {
 			return {

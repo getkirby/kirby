@@ -9,6 +9,7 @@ import icon from "./props/icon.js";
 import id from "./props/id.js";
 import invalid from "./props/invalid.js";
 import label from "./props/label.js";
+import layout from "./props/layout.js";
 import maxlength from "./props/maxlength.js";
 import minlength from "./props/minlength.js";
 import name from "./props/name.js";
@@ -31,6 +32,7 @@ export {
 	id,
 	invalid,
 	label,
+	layout,
 	maxlength,
 	minlength,
 	name,
