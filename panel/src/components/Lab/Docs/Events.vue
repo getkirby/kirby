@@ -13,9 +13,13 @@
 						<td>
 							<k-text>
 								<code>{{ event.name }}</code>
+								<div v-if="event.since?.length" class="k-lab-docs-since">
+									since {{ event.since }}
+								</div>
 							</k-text>
 						</td>
 						<td>
+							<k-lab-docs-deprecated :deprecated="method.deprecated" />
 							<k-text :html="event.description" />
 						</td>
 						<td v-if="hasProperties">

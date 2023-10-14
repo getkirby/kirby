@@ -23,8 +23,10 @@ import Events, { props as EventsProps } from "./Docs/Events.vue";
 import Methods, { props as MethodsProps } from "./Docs/Methods.vue";
 import DocBlock, { props as DocBlockProps } from "./Docs/DocBlock.vue";
 
+import DocDeprecated from "./DocsDeprecated.vue";
 import DocParams from "./DocsParams.vue";
 import DocTypes from "./DocsTypes.vue";
+Vue.component("k-lab-docs-deprecated", DocDeprecated);
 Vue.component("k-lab-docs-params", DocParams);
 Vue.component("k-lab-docs-types", DocTypes);
 
@@ -73,8 +75,15 @@ export default {
 	margin-top: var(--spacing-3);
 }
 
-.k-lab-docs-deprecated {
-	--box-height: var(--height-xs);
-	--text-font-size: var(--text-xs);
+.k-lab-docs-required {
+	margin-inline-start: var(--spacing-1);
+	font-size: 0.7rem;
+	vertical-align: super;
+	color: var(--color-red-600);
+}
+.k-lab-docs-since {
+	margin-top: var(--spacing-1);
+	font-size: var(--text-xs);
+	color: var(--color-gray-600);
 }
 </style>

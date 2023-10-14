@@ -14,7 +14,10 @@
 						<td>
 							<k-text>
 								<code>{{ prop.name }}</code>
-								<abbr v-if="prop.required">✶</abbr>
+								<abbr v-if="prop.required" class="k-lab-docs-required">✶</abbr>
+								<div v-if="prop.since?.length" class="k-lab-docs-since">
+									since {{ prop.since }}
+								</div>
 							</k-text>
 						</td>
 						<td>
@@ -26,16 +29,7 @@
 							</k-text>
 						</td>
 						<td class="k-lab-docs-description">
-							<k-box
-								v-if="prop.deprecated?.length"
-								icon="protected"
-								theme="warning"
-								class="k-lab-docs-deprecated"
-							>
-								<k-text
-									:html="'<strong>Deprecated:</strong> ' + prop.deprecated"
-								/>
-							</k-box>
+							<k-lab-docs-deprecated :deprecated="prop.deprecated" />
 
 							<k-text
 								v-if="prop.description?.length"

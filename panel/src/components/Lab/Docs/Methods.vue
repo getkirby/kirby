@@ -15,9 +15,13 @@
 						<td>
 							<k-text>
 								<code>{{ method.name }}</code>
+								<div v-if="method.since?.length" class="k-lab-docs-since">
+									since {{ method.since }}
+								</div>
 							</k-text>
 						</td>
 						<td>
+							<k-lab-docs-deprecated :deprecated="method.deprecated" />
 							<k-text :html="method.description" />
 						</td>
 						<td>

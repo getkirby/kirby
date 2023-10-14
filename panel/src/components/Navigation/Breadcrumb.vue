@@ -48,6 +48,7 @@ export default {
 		},
 		/**
 		 * First segment of the breadcrumb
+		 * @since 4.0.0
 		 * @todo make required in 5.0.0
 		 */
 		root: Object,

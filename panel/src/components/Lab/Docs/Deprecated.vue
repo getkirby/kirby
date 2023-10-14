@@ -3,9 +3,7 @@
 		v-if="deprecated.length"
 		class="k-lab-docs-section k-lab-docs-deprecated"
 	>
-		<k-box icon="protected" theme="warning">
-			<k-text :html="'<strong>Deprecated:</strong>' + deprecated" />
-		</k-box>
+		<k-lab-docs-deprecated :deprecated="deprecated" />
 	</section>
 </template>
 

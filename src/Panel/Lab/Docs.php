@@ -76,6 +76,8 @@ class Docs
 			fn ($event) => [
 				'name'        => $event['name'],
 				'description' => $this->kt($event['description'] ?? ''),
+				'deprecated'  => $this->kt($event['tags']['deprecated'][0]['description'] ?? ''),
+				'since'       => $event['tags']['since'][0]['description'] ?? null,
 				'properties'  => A::map(
 					$event['properties'] ?? [],
 					fn ($property) => [
@@ -140,6 +142,8 @@ class Docs
 			fn ($method) => [
 				'name'        => $method['name'],
 				'description' => $this->kt($method['description'] ?? ''),
+				'deprecated'  => $this->kt($method['tags']['deprecated'][0]['description'] ?? ''),
+				'since'       => $method['tags']['since'][0]['description'] ?? null,
 				'params'      => A::map(
 					$method['params'] ?? [],
 					fn ($param) => [
@@ -183,6 +187,7 @@ class Docs
 			'deprecated'  => $deprecated,
 			'example'     => $prop['tags']['example'][0]['description'] ?? null,
 			'required'    => $prop['required'] ?? false,
+			'since'       => $prop['tags']['since'][0]['description'] ?? null,
 			'value'       => $prop['tags']['value'][0]['description'] ?? null,
 			'values'      => $prop['values'] ?? null,
 		];
@@ -247,6 +252,8 @@ class Docs
 			fn ($slot) => [
 				'name'        => $slot['name'],
 				'description' => $this->kt($slot['description'] ?? ''),
+				'deprecated'  => $this->kt($slot['tags']['deprecated'][0]['description'] ?? ''),
+				'since'       => $slot['tags']['since'][0]['description'] ?? null,
 				'bindings'    => A::map(
 					$slot['bindings'] ?? [],
 					fn ($binding) => [
