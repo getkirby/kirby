@@ -1,7 +1,6 @@
 /**
  * Returns the base URL from the <base> element
  * @since 4.0.0
- *
  * @returns {URL}
  */
 export function base() {
@@ -12,7 +11,6 @@ export function base() {
 
 /**
  * @since 4.0.0
- *
  * @param {object} query
  * @param {string|URL} origin
  * @returns {string}

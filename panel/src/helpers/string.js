@@ -76,7 +76,6 @@ export function hasEmoji(string) {
 /**
  * Checks if a string is empty
  * @since 4.0.0
- *
  * @param {String|undefined|null} string
  * @returns {Boolean}
  */
