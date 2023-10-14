@@ -1,1 +1,1 @@
-{"description":"","tags":{"access":[{"description":"public"}],"since":[{"description":"4.0.0","title":"since"}]},"displayName":"Code","props":[{"name":"language","type":{"name":"string"}}],"slots":[{"name":"default"}],"component":"k-code","sourceFile":"src/components/Text/Code.vue"}
+{"description":"","tags":{"since":[{"description":"4.0.0","title":"since"}]},"displayName":"Code","props":[{"name":"language","type":{"name":"string"}}],"slots":[{"name":"default"}],"component":"k-code","sourceFile":"src/components/Text/Code.vue"}
