@@ -1,5 +1,4 @@
 <template>
-	<!-- @slot Code content -->
 	<k-highlight>
 		<pre
 			class="k-code"
@@ -18,6 +17,9 @@ export default {
 	},
 	props: {
 		language: {
+			/**
+			 * The language of the code block. Used for syntax highlighting.
+			 */
 			type: String
 		}
 	}
