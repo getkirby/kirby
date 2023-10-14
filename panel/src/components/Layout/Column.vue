@@ -12,7 +12,6 @@
 <script>
 /**
  * The Column component can be used within a <k-grid> component to layout elements in a very convenient way. The Grid is based on 12 columns by default and each column can change its width.
- * @public
  *
  * @example <k-grid>
  *   <k-column width="2/3">…</k-column>

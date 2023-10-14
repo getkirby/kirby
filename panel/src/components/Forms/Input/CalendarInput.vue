@@ -89,7 +89,6 @@ import { props as InputProps } from "@/mixins/input.js";
  * @since 4.0.0
  *
  * @example <k-calendar-input :value="value" @input="value = $event" />
- * @public
  */
 export default {
 	mixins: [InputProps],

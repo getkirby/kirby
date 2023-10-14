@@ -21,8 +21,7 @@
 
 <script>
 /**
- * <k-label> is used to label form fields and sections
- * @public
+ * Used to label form fields and sections
  */
 export default {
 	props: {
