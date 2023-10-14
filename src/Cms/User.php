@@ -36,6 +36,7 @@ class User extends ModelWithContent
 
 	/**
 	 * All registered user methods
+	 * @todo Remove when support for PHP 8.2 is dropped
 	 */
 	public static array $methods = [];
 
