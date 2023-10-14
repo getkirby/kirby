@@ -30,6 +30,7 @@ export const defaults = () => {
  * Feature objects isolate functionality and state
  * of Panel features like drawers, dialogs,
  * notifications and views.
+ * @since 4.0.0
  *
  * @param {Object} panel The panel singleton
  * @param {String} key Sets the $key for the feature. Backend responses use this key for features.

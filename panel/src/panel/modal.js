@@ -19,6 +19,7 @@ export const defaults = () => {
  * A modal is a feature that can be opened and
  * closed and will be placed in the Panel by the matching
  * Modal component
+ * @since 4.0.0
  *
  * @param {any} panel
  * @param {string} key

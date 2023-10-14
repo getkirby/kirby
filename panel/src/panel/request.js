@@ -6,6 +6,7 @@ import RequestError from "@/errors/RequestError.js";
 
 /**
  * Creates a proper request body
+ * @since 4.0.0
  *
  * @param {String|FormData|Object|Array}
  * @returns {String}
@@ -28,6 +29,8 @@ export const body = (body) => {
 
 /**
  * Convert globals to comma separated string
+ * @since 4.0.0
+ *
  * @param {Array|String} globals
  * @returns {String|false}
  */
@@ -45,6 +48,7 @@ export const globals = (globals) => {
 
 /**
  * Builds all required headers for a request
+ * @since 4.0.0
  *
  * @param {Object} headers
  * @param {Object} options All request options
@@ -62,6 +66,7 @@ export const headers = (headers = {}, options = {}) => {
 };
 
 /**
+ * @since 4.0.0
  * @param {string|URL} url
  * @returns false
  */
@@ -77,6 +82,7 @@ export const redirect = (url) => {
  * It also makes sure to redirect requests,
  * which cannot be handled via fetch and
  * throws more useful errors.
+ * @since 4.0.0
  *
  * @param {String} url
  * @param {Object} options
@@ -114,6 +120,7 @@ export const request = async (url, options = {}) => {
 /**
  * Try to parse the response and throw
  * matching errors for issues with the response.
+ * @since 4.0.0
  *
  * @param {Request} request
  * @param {Response} response

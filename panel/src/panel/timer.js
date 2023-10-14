@@ -1,6 +1,7 @@
 /**
  * Simple timer implementation to
  * help with starting and stopping timers
+ * @since 4.0.0
  *
  * @example
  * timer.start(100, () => {});

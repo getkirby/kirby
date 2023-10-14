@@ -112,7 +112,7 @@ export const props = {
 };
 
 /**
- * Have a look at `<k-field>` and `<k-input>`
+ * @since 4.0.0
  * @example <k-link-field :value="link" @input="link = $event" name="link" label="Link" />
  */
 export default {

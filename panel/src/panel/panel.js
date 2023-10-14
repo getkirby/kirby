@@ -60,6 +60,7 @@ export const states = [
  * The global panel object serves as a singleton
  * to access any functionality the panel offers
  * and handles the reactive, global state of the panel.
+ * @since 4.0.0
  */
 export default {
 	create(plugins = {}) {

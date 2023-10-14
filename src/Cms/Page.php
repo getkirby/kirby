@@ -42,6 +42,7 @@ class Page extends ModelWithContent
 
 	/**
 	 * All registered page methods
+	 * @todo Remove when support for PHP 8.2 is dropped
 	 */
 	public static array $methods = [];
 

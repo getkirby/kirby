@@ -10,6 +10,9 @@ export const defaults = () => {
 	};
 };
 
+/**
+ * @since 4.0.0
+ */
 export default () => {
 	return State("user", defaults());
 };

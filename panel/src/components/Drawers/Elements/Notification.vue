@@ -7,10 +7,9 @@
 
 <script>
 /**
- * Displays notification from `panel.notification` in a drawer
  * @displayName DrawerNotification
- * @internal
  * @since 4.0.0
+ * @internal
  */
 export default {};
 </script>

@@ -12,6 +12,7 @@ export const props = {
 	props: {
 		/**
 		 * Empty state message if no text is defined
+		 * @since 4.0.0
 		 */
 		empty: {
 			type: String,
