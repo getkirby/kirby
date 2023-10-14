@@ -1,1 +1,0 @@
-{"description":"","tags":{"internal":[{"description":true,"title":"internal"}]},"displayName":"BlockTitle","props":[{"name":"fieldset","type":{"name":"object"},"defaultValue":{"value":"{}"}},{"name":"content","type":{"name":"object"},"defaultValue":{"value":"{}"}}],"component":"k-block-title","sourceFile":"src/components/Forms/Blocks/BlockTitle.vue"}

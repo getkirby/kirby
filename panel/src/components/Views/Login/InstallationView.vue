@@ -108,6 +108,9 @@
 </template>
 
 <script>
+/**
+ * @internal
+ */
 export default {
 	props: {
 		isInstallable: Boolean,

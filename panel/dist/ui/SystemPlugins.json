@@ -1,1 +1,0 @@
-{"description":"","tags":{"internal":[{"description":true,"title":"internal"}],"since":[{"description":"4.0.0","title":"since"}]},"displayName":"SystemPlugins","props":[{"name":"plugins","type":{"name":"array"}}],"component":"k-system-plugins","sourceFile":"src/components/Views/System/SystemPlugins.vue"}

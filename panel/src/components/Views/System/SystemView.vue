@@ -17,6 +17,9 @@
 import Plugins from "./SystemPlugins.vue";
 import Security from "./SystemSecurity.vue";
 
+/**
+ * @internal
+ */
 export default {
 	components: {
 		Plugins,

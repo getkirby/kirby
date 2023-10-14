@@ -13,8 +13,8 @@
 
 <script>
 /**
- * @internal
  * @since 4.0.0
+ * @internal
  */
 export default {
 	props: {

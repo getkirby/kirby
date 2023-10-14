@@ -1,1 +1,0 @@
-{"displayName":"SystemView","description":"","tags":{},"props":[{"name":"environment","type":{"name":"array"}},{"name":"exceptions","type":{"name":"array"}},{"name":"plugins","type":{"name":"array"}},{"name":"security","type":{"name":"array"}},{"name":"urls","type":{"name":"object"}}],"component":"k-system-view","sourceFile":"src/components/Views/System/SystemView.vue"}

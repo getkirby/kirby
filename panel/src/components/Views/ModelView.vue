@@ -1,4 +1,7 @@
 <script>
+/**
+ * @internal
+ */
 export default {
 	props: {
 		blueprint: String,
