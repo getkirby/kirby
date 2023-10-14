@@ -140,10 +140,13 @@ export default {
 	props: {
 		/**
 		 * Configuration which columns to include.
-		 * Supported keys: after, before, label, type, width
+		 * @value name: { after, before, label, type, width }
 		 * @example { title: { label: "title", type: "text" } }
 		 */
-		columns: Object,
+		columns: {
+			type: Object,
+			default: () => ({})
+		},
 		/**
 		 * Whether table is disabled
 		 */
@@ -157,7 +160,7 @@ export default {
 			default: () => ({})
 		},
 		/**
-		 * Text to be shown when table has no rows
+		 * Text to display when table has no rows
 		 */
 		empty: String,
 		/**
