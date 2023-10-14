@@ -6,7 +6,7 @@
 				ref="toolbar"
 				:buttons="buttons"
 				:disabled="disabled"
-				:uploads="uploads"
+				:can-upload="uploads"
 				@mousedown.native.prevent
 				@command="onCommand"
 			/>
@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import { props as ToolbarProps } from "@/components/Forms/Toolbar.vue";
 import Input, { props as InputProps } from "@/mixins/input.js";
 import {
 	font,
@@ -60,12 +61,16 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [InputProps, font, maxlength, minlength, placeholder, spellcheck],
+	mixins: [
+		ToolbarProps,
+		InputProps,
+		font,
+		maxlength,
+		minlength,
+		placeholder,
+		spellcheck
+	],
 	props: {
-		buttons: {
-			type: [Boolean, Array],
-			default: true
-		},
 		endpoints: Object,
 		preselect: Boolean,
 		/**
@@ -75,7 +80,6 @@ export const props = {
 		 */
 		size: String,
 		theme: String,
-		uploads: [Boolean, Object, Array],
 		value: String
 	}
 };

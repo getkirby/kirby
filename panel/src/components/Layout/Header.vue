@@ -4,13 +4,20 @@
 		:data-has-buttons="Boolean($slots.buttons || $slots.left || $slots.right)"
 	>
 		<h1 class="k-header-title">
+			<!--
+				Edit button has been clicked
+				@event edit
+			-->
 			<button
 				v-if="editable"
 				class="k-header-title-button"
 				type="button"
 				@click="$emit('edit')"
 			>
-				<span class="k-header-title-text"><slot /></span>
+				<span class="k-header-title-text">
+					<!-- @slot Headline text -->
+					<slot />
+				</span>
 				<span class="k-header-title-icon"><k-icon type="edit" /></span>
 			</button>
 			<span v-else class="k-header-title-text"><slot /></span>
@@ -20,9 +27,18 @@
 			v-if="$slots.buttons || $slots.left || $slots.right"
 			class="k-header-buttons"
 		>
+			<!-- @slot Position for optional buttons opposite the headline -->
 			<slot name="buttons" />
-			<!-- @deprecated 4.0.0 left/right slot, use buttons slot instead -->
+
+			<!--
+				@slot
+				@deprecated 4.0.0 left slot, use buttons slot instead
+			-->
 			<slot name="left" />
+			<!--
+				@slot
+				@deprecated 4.0.0 right slot, use buttons slot instead
+			-->
 			<slot name="right" />
 		</div>
 	</header>
@@ -30,7 +46,18 @@
 
 <script>
 /**
+ * Sticky header containing headline (with optional edit button)
+ * and optional buttons
  *
+ * @example <k-header :editable="true">Headline</k-header>
+ * @example <k-header>
+ * 	Headline
+ *
+ * 	<k-button-group slot="buttons">
+ * 		<k-button icon="open" variant="filled" />
+ * 		<k-button icon="cog" variant="filled" />
+ * 	</k-button-group>
+ * </k-header>
  */
 export default {
 	props: {
@@ -41,7 +68,7 @@ export default {
 			type: Boolean
 		}
 	},
-	mounted() {
+	created() {
 		if (this.$slots.left || this.$slots.right) {
 			window.panel.deprecated(
 				"<k-header>: left/right slots will be removed in a future version. Use `buttons` slot instead."

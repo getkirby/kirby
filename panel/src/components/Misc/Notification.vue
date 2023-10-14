@@ -13,6 +13,7 @@
 /**
  * Displays notification from `panel.notification`
  * @internal
+ * @since 4.0.0
  */
 export default {};
 </script>

@@ -8,8 +8,12 @@
 		class="k-box"
 	>
 		<k-icon v-if="icon" :type="icon" />
-		<!-- @slot Use instead of `text` prop -->
-		<slot>
+		<!--
+			@slot Box content, replaces content from `text` prop
+			@binding {string} text
+			@binding {boolean} html
+		-->
+		<slot v-bind="{ html, text }">
 			<k-text v-if="html" :html="text" />
 			<k-text v-else>
 				{{ text }}

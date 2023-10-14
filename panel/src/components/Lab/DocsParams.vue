@@ -4,7 +4,8 @@
 			<k-text>
 				<code>{{ param.name }}</code>
 				<k-lab-docs-types :types="[param.type]" />
-				<span v-if="param.description.length" v-text="param.description" />
+				<!-- eslint-disable-next-line vue/no-v-html -->
+				<span v-if="param.description.length" v-html="param.description" />
 			</k-text>
 		</li>
 	</ul>

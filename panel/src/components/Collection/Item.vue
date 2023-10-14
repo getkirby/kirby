@@ -8,8 +8,12 @@
 		@click="$emit('click', $event)"
 		@dragstart="$emit('drag', $event)"
 	>
-		<!-- Image -->
-		<slot name="image">
+		<!--
+			@slot Replace the preview image/icon frame
+			@binding {object} image see `image` prop
+			@binding {string} layout see `layout` prop
+		-->
+		<slot name="image" v-bind="{ image, layout }">
 			<k-item-image
 				v-if="hasFigure"
 				:image="image"
@@ -46,8 +50,11 @@
 				v-bind="button"
 			/>
 
-			<!-- Options -->
-			<slot name="options">
+			<!--
+				@slot Relace the options dropdown, overrides `options` prop
+				@binding {array} options see `options` prop
+			-->
+			<slot name="options" v-bind="{ options }">
 				<k-options-dropdown
 					v-if="options"
 					:options="options"
@@ -60,33 +67,31 @@
 </template>
 
 <script>
+import { props as ItemImageProps } from "./ItemImage.vue";
+import { layout } from "@/mixins/props.js";
+
+/**
+ * A collection item that can be displayed in various layouts
+ */
 export default {
+	mixins: [ItemImageProps, layout],
 	inheritAttrs: false,
 	props: {
 		/**
 		 * Additional inline buttons in the item's footer
 		 */
-		buttons: Array,
+		buttons: {
+			type: Array,
+			default: () => []
+		},
 		/**
 		 * @private
 		 */
 		data: Object,
 		/**
-		 * Item image settings. See `k-image-frame` for available settings.
-		 */
-		image: [Object, Boolean],
-		/**
 		 * The optional info text that will be show next or below the main text
 		 */
 		info: String,
-		/**
-		 * Display layout
-		 * @values "list", "cards", "cardlets"
-		 */
-		layout: {
-			type: String,
-			default: "list"
-		},
 		/**
 		 * An optional link
 		 */
@@ -110,32 +115,11 @@ export default {
 		/**
 		 * The main text for the item
 		 */
-		text: String,
-		/**
-		 * The width (e.g. `"1/2"`) of the parent column is used to set the srcset sizes accordingly
-		 */
-		width: String
+		text: String
 	},
 	computed: {
 		hasFigure() {
 			return this.image !== false && this.$helper.object.length(this.image) > 0;
-		},
-		sizes() {
-			switch (this.width) {
-				case "1/2":
-				case "2/4":
-					return "(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 44em, 27em";
-				case "1/3":
-					return "(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 29.333em, 27em";
-				case "1/4":
-					return "(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 22em, 27em";
-				case "2/3":
-					return "(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 27em, 27em";
-				case "3/4":
-					return "(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 66em, 27em";
-				default:
-					return "(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 88em, 27em";
-			}
 		}
 	},
 	methods: {

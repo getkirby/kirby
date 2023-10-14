@@ -1,5 +1,7 @@
 /**
  * Returns the base URL from the <base> element
+ * @since 4.0.0
+ *
  * @returns {URL}
  */
 export function base() {
@@ -9,6 +11,8 @@ export function base() {
 }
 
 /**
+ * @since 4.0.0
+ *
  * @param {object} query
  * @param {string|URL} origin
  * @returns {string}
@@ -33,6 +37,7 @@ export function buildQuery(query = {}, origin = {}) {
 /**
  * Builds a full URL object based on the
  * given path or another URL object and query data
+ * @since 4.0.0
  *
  * @param {string|URL} url
  * @param {Object} query
@@ -48,6 +53,7 @@ export function buildUrl(url = "", query = {}, origin) {
 
 /**
  * Checks if the url string is absolute
+ * @since 4.0.0
  *
  * @param {string} url
  * @returns {boolean}
@@ -58,6 +64,7 @@ export function isAbsolute(url) {
 
 /**
  * Checks if the url is on the same origin
+ * @since 4.0.0
  *
  * @param {string} url
  * @returns {boolean}
@@ -68,6 +75,7 @@ export function isSameOrigin(url) {
 
 /**
  * Checks if the given argument is a URL
+ * @since 4.0.0
  *
  * @param {string|URL} url
  * @returns {boolean}
@@ -94,6 +102,7 @@ export function isUrl(url) {
 
 /**
  * Make sure the URL is absolute
+ * @since 4.0.0
  *
  * @param {string} path
  * @param {string|URL} origin
@@ -113,6 +122,7 @@ export function makeAbsolute(path, origin) {
 
 /**
  * Converts any given url to a URL object
+ * @since 4.0.0
  *
  * @param {string|URL} url
  * @param {string|URL} origin

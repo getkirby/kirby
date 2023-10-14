@@ -22,6 +22,9 @@
 </template>
 
 <script>
+/**
+ * @internal
+ */
 export default {
 	data() {
 		return {

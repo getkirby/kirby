@@ -31,25 +31,17 @@
 </template>
 
 <script>
-import { props as Field } from "@/components/Forms/Field.vue";
-import { autofocus } from "@/mixins/props.js";
+import { props as FieldProps } from "@/components/Forms/Field.vue";
+import { autofocus, layout } from "@/mixins/props.js";
 
 export default {
 	type: "model",
-	mixins: [Field, autofocus],
+	mixins: [FieldProps, autofocus, layout],
 	inheritAttrs: false,
 	props: {
 		empty: String,
 		info: String,
 		link: Boolean,
-		/**
-		 * Switches the layout of the items
-		 * @values "list", "cards", "cardlets"
-		 */
-		layout: {
-			type: String,
-			default: "list"
-		},
 		max: Number,
 		/**
 		 * If false, only a single item can be selected

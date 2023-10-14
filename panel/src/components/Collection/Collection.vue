@@ -47,55 +47,30 @@
 </template>
 
 <script>
+import { props as ItemsProps } from "./Items.vue";
+
 /**
  * The `k-collection` component is a wrapper around `k-items`
- * that adds sortabilty and pagination to the items.
+ * that adds pagination, empty state and help text to the items.
  */
 export default {
+	mixins: [ItemsProps],
 	props: {
-		/**
-		 * Optional column settings when using the table layout
-		 */
-		columns: {
-			type: [Object, Array],
-			default: () => ({})
-		},
 		/**
 		 * Empty state, see `k-empty` for all options
 		 */
-		empty: Object,
+		empty: {
+			type: Object,
+			default: () => ({})
+		},
 		/**
 		 * Help text to show below the collection
 		 */
 		help: String,
-		items: {
-			type: [Array, Object],
-			default: () => []
-		},
 		/**
-		 * Layout of the collection
-		 * @values "list", "cardlets", "cards", "table"
+		 * Whether pagination should be shown, and if,
+		 * pagination options (see `k-pagination` for details)
 		 */
-		layout: {
-			type: String,
-			default: "list"
-		},
-		/**
-		 * Enable/disable that each item is a clickable link
-		 */
-		link: {
-			type: Boolean,
-			default: true
-		},
-		/**
-		 * Size for items in cards layout
-		 * @values "tiny", "small", "medium", "large", "huge"
-		 */
-		size: String,
-		/**
-		 * Whether the collection can be sorted
-		 */
-		sortable: Boolean,
 		pagination: {
 			type: [Boolean, Object],
 			default: false

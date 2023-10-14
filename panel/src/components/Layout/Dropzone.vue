@@ -16,12 +16,15 @@
 <script>
 /**
  * The dropzone component helps to simplify creating areas, where files can be dropped and uploaded or displayed. You simply wrap it around any other element to create the zone. The dropzone will also create a focus ring around the area when the user drags files over it.
-
+ *
+ * @example <k-dropzone @drop="onDrop">
+ *  <div />
+ * </k-dropzone>
  */
 export default {
 	props: {
 		/**
-		 * You can deactivate the dropzone with this property
+		 * Enable/disable the dropzone
 		 */
 		disabled: {
 			type: Boolean
@@ -52,15 +55,13 @@ export default {
 				return this.reset();
 			}
 
-			this.$events.emit("dropzone.drop");
-
 			this.files = $event.dataTransfer.files;
 			/**
-			 * The drop event is triggered when files are being dropped into the dropzone.
-			 * @event drop
-			 * @property {array} files The event receives the files list as argument, which can then be used to start an upload for example.
+			 * Files have been dropped into the dropzone
+			 * @property {array} files the files list (can be used e.g. to start an upload)
 			 */
 			this.$emit("drop", this.files);
+			this.$events.emit("dropzone.drop");
 			this.reset();
 		},
 		onEnter($event) {

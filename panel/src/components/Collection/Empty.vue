@@ -1,18 +1,25 @@
 <template>
-	<k-box v-bind="attrs" class="k-empty" @click.native="$emit('click', $event)">
-		<slot>
+	<k-box v-bind="attrs" class="k-empty" @click.native="onClick">
+		<!--
+			@slot Text, replaces `text` prop value
+			@binding {string} text
+		-->
+		<slot v-bind="{ text }">
 			{{ text }}
 		</slot>
 	</k-box>
 </template>
 
 <script>
+import { layout } from "@/mixins/props.js";
+
 /**
  * Whenever you have to deal with an "empty" state, such as an empty list or a search without results, you can use the `k-empty` component to make it a bit nicer.
  *
  * @example <k-empty icon="image">No images yet</k-empty>
  */
 export default {
+	mixins: [layout],
 	props: {
 		/**
 		 * Text to show inside the box
@@ -21,15 +28,7 @@ export default {
 		/**
 		 * Icon to show inside the box
 		 */
-		icon: String,
-		/**
-		 * Layout for the box
-		 * @types list, cardlets, cards
-		 */
-		layout: {
-			type: String,
-			default: "list"
-		}
+		icon: String
 	},
 	computed: {
 		attrs() {
@@ -45,6 +44,15 @@ export default {
 			}
 
 			return attrs;
+		}
+	},
+	methods: {
+		onClick(event) {
+			/**
+			 * When empty box ist clicked
+			 * @property {PointerEvent} event
+			 */
+			this.$emit("click", event);
 		}
 	}
 };

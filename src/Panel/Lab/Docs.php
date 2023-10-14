@@ -83,7 +83,7 @@ class Docs
 					fn ($property) => [
 						'name'        => $property['name'],
 						'type'        => $property['type']['names'][0] ?? '',
-						'description' => $property['description'] ?? '',
+						'description' => $this->kt($property['description'] ?? '', true),
 					]
 				),
 			]
@@ -115,11 +115,12 @@ class Docs
 		return 'https://github.com/getkirby/kirby/tree/main/panel/' . $this->json['sourceFile'];
 	}
 
-	protected function kt(string $text): string
+	protected function kt(string $text, bool $inline = false): string
 	{
 		return $this->kirby->kirbytext($text, [
 			'markdown' => [
-				'breaks' => false
+				'breaks' => false,
+				'inline' => $inline,
 			]
 		]);
 	}
@@ -153,7 +154,7 @@ class Docs
 					fn ($param) => [
 						'name'        => $param['name'],
 						'type'        => $param['type']['name'] ?? '',
-						'description' => $param['description'] ?? '',
+						'description' => $this->kt($param['description'] ?? '', true),
 					]
 				),
 				'returns'     => $method['returns']['type']['name'] ?? null,
@@ -269,7 +270,7 @@ class Docs
 					fn ($binding) => [
 						'name'        => $binding['name'],
 						'type'        => $binding['type']['name'] ?? '',
-						'description' => $binding['description'] ?? '',
+						'description' => $this->kt($binding['description'] ?? '', true),
 					]
 				),
 			]

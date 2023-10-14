@@ -1,48 +1,40 @@
 <template>
 	<nav class="k-toolbar">
-		<template v-for="(button, buttonIndex) in layout">
-			<!-- divider -->
+		<template v-for="(button, index) in layout">
 			<div
 				v-if="button.divider"
-				:key="buttonIndex + '-divider'"
+				:key="index + '-divider'"
 				class="k-toolbar-divider"
 			/>
 
-			<!-- dropdown -->
-			<template v-else-if="button.dropdown">
+			<template v-else>
 				<k-button
-					:key="buttonIndex + '-dropdown-btn'"
+					:key="index + '-dropdown-btn'"
 					:icon="button.icon"
 					:title="button.label"
 					tabindex="-1"
 					class="k-toolbar-button"
-					@click="$refs[buttonIndex + '-dropdown'][0].toggle()"
+					@click="
+						button.dropdown
+							? $refs[index + '-dropdown'][0].toggle()
+							: command(button.command, button.args)
+					"
 				/>
 				<k-dropdown-content
-					:key="buttonIndex + '-dropdown'"
-					:ref="buttonIndex + '-dropdown'"
+					v-if="button.dropdown"
+					:key="index + '-dropdown'"
+					:ref="index + '-dropdown'"
 				>
 					<k-dropdown-item
-						v-for="(dropdownItem, dropdownItemIndex) in button.dropdown"
-						:key="dropdownItemIndex"
-						:icon="dropdownItem.icon"
-						@click="command(dropdownItem.command, dropdownItem.args)"
+						v-for="(item, itemIndex) in button.dropdown"
+						:key="itemIndex"
+						:icon="item.icon"
+						@click="command(item.command, item.args)"
 					>
-						{{ dropdownItem.label }}
+						{{ item.label }}
 					</k-dropdown-item>
 				</k-dropdown-content>
 			</template>
-
-			<!-- single button -->
-			<k-button
-				v-else
-				:key="buttonIndex + '-button'"
-				:icon="button.icon"
-				:title="button.label"
-				tabindex="-1"
-				class="k-toolbar-button"
-				@click="command(button.command, button.args)"
-			/>
 		</template>
 	</nav>
 </template>
@@ -50,18 +42,39 @@
 <script>
 const list = function (type) {
 	this.command("insert", (input, selection) => {
-		let html = [];
+		const html = [];
 
 		selection.split("\n").forEach((line, index) => {
-			let prepend = type === "ol" ? index + 1 + "." : "-";
-			html.push(prepend + " " + line);
+			if (type === "ol") {
+				html.push(index + 1 + ". " + line);
+			} else {
+				html.push("- " + line);
+			}
 		});
 
 		return html.join("\n");
 	});
 };
 
+export const props = {
+	props: {
+		/**
+		 * Buttons to show in the toolbar
+		 */
+		buttons: {
+			type: [Boolean, Array],
+			default: true
+		},
+		/**
+		 * Whether the toolbar's file upload button shows a dropdown with
+		 * select and upload options or emits event directly
+		 */
+		uploads: Boolean
+	}
+};
+
 export default {
+	mixins: [props],
 	layout: [
 		"headlines",
 		"|",
@@ -76,16 +89,6 @@ export default {
 		"ul",
 		"ol"
 	],
-	props: {
-		/**
-		 * Buttons to show in the toolbar
-		 */
-		buttons: {
-			type: [Boolean, Array],
-			default: true
-		},
-		uploads: [Boolean, Object, Array]
-	},
 	data() {
 		if (this.buttons === false) {
 			return {};

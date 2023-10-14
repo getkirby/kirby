@@ -29,6 +29,11 @@
 		@end="$emit('sort', items, $event)"
 	>
 		<template v-for="(item, itemIndex) in items">
+			<!--
+				@slot Replaces each item
+				@binding {object} item
+				@binding {number} index
+			-->
 			<slot v-bind="{ item, itemIndex }">
 				<k-item
 					:key="item.id ?? itemIndex"
@@ -45,6 +50,11 @@
 					@option="onOption($event, item, itemIndex)"
 				>
 					<template #options>
+						<!--
+							@slot Replaces otions for each item from `options` key of item
+							@binding {object} item
+							@binding {number} index
+						-->
 						<slot name="options" v-bind="{ item, index: itemIndex }" />
 					</template>
 				</k-item>
@@ -54,8 +64,13 @@
 </template>
 
 <script>
-export default {
-	inheritAttrs: false,
+import { layout } from "@/mixins/props.js";
+
+/**
+ * Collection items that can be displayed in various layouts
+ */
+export const props = {
+	mixins: [layout],
 	props: {
 		/**
 		 * Optional column settings for the table layout
@@ -72,36 +87,17 @@ export default {
 			default: () => []
 		},
 		/**
-		 * @values "list", "cards", "cardlets", "table"
-		 */
-		layout: {
-			type: String,
-			default: "list"
-		},
-		/**
-		 * If `false`, all item links will be disabled/removed
+		 * Enable/disable that each item is a clickable link
 		 */
 		link: {
 			type: Boolean,
 			default: true
 		},
 		/**
-		 * Globale image settings. Will be merged with the image settings of each item. See `k-image-frame` for available options.
-		 */
-		image: {
-			type: [Object, Boolean],
-			default: () => ({})
-		},
-		/**
-		 * If `true`, items are sortable. Each item can disable this individually.
+		 * Whether items are generally sortable.
+		 * Each item can disable this individually.
 		 */
 		sortable: Boolean,
-		/**
-		 * Placeholder text and icon for empty state
-		 */
-		empty: {
-			type: [String, Object]
-		},
 		/**
 		 * Card sizes
 		 * @values "tiny", "small", "medium", "large", "huge"
@@ -109,6 +105,20 @@ export default {
 		size: {
 			type: String,
 			default: "medium"
+		}
+	}
+};
+
+export default {
+	mixins: [props],
+	inheritAttrs: false,
+	props: {
+		/**
+		 * Globale image/icon settings. Will be merged with the image settings of each item. See `k-item-image` for available options.
+		 */
+		image: {
+			type: [Object, Boolean],
+			default: () => ({})
 		}
 	},
 	computed: {
