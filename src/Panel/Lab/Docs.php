@@ -181,6 +181,7 @@ class Docs
 			'description' => $this->kt($prop['description'] ?? ''),
 			'default'     => $this->propDefault($default, $type),
 			'deprecated'  => $deprecated,
+			'example'     => $prop['tags']['example'][0]['description'] ?? null,
 			'required'    => $prop['required'] ?? false,
 			'value'       => $prop['tags']['value'][0]['description'] ?? null,
 			'values'      => $prop['values'] ?? null,

@@ -81,7 +81,7 @@ export default {
 		info: String,
 		/**
 		 * Display layout
-		 * @values list, cards, cardlets
+		 * @values "list", "cards", "cardlets"
 		 */
 		layout: {
 			type: String,
@@ -112,7 +112,7 @@ export default {
 		 */
 		text: String,
 		/**
-		 * The width (e.g. `1/2`) of the parent column is used to set the srcset sizes accordingly
+		 * The width (e.g. `"1/2"`) of the parent column is used to set the srcset sizes accordingly
 		 */
 		width: String
 	},

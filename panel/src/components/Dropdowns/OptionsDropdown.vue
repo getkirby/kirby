@@ -46,7 +46,7 @@ export default {
 	props: {
 		/**
 		 * Aligment of the dropdown items
-		 * @values left, right
+		 * @values "left", "right"
 		 */
 		align: {
 			type: String,
@@ -76,7 +76,7 @@ export default {
 		},
 		/**
 		 * Visual theme of the dropdown
-		 * @values dark, light
+		 * @values "dark", "light"
 		 */
 		theme: {
 			type: String,

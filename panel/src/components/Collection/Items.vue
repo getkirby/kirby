@@ -72,7 +72,7 @@ export default {
 			default: () => []
 		},
 		/**
-		 * @values list, cards, cardlets, table
+		 * @values "list", "cards", "cardlets", "table"
 		 */
 		layout: {
 			type: String,
@@ -104,7 +104,7 @@ export default {
 		},
 		/**
 		 * Card sizes
-		 * @values tiny, small, medium, large, huge
+		 * @values "tiny", "small", "medium", "large", "huge"
 		 */
 		size: {
 			type: String,

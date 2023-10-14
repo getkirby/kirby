@@ -10,7 +10,7 @@ export default {
 		image: [Object, Boolean],
 		/**
 		 * Display layout
-		 * @values list, cards, cardlets
+		 * @values "list", "cards", "cardlets"
 		 */
 		layout: {
 			type: String,

@@ -77,15 +77,4 @@ export default {
 	--box-height: var(--height-xs);
 	--text-font-size: var(--text-xs);
 }
-
-.k-lab-docs-values {
-	font-size: var(--text-xs);
-	border-left: 2px solid var(--color-blue-300);
-	padding-inline-start: var(--spacing-2);
-}
-.k-lab-docs-values span {
-	display: inline-flex;
-	flex-wrap: wrap;
-	gap: var(--spacing-1);
-}
 </style>

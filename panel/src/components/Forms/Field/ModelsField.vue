@@ -44,7 +44,7 @@ export default {
 		link: Boolean,
 		/**
 		 * Switches the layout of the items
-		 * @values list, cards
+		 * @values "list", "cards", "cardlets"
 		 */
 		layout: {
 			type: String,
