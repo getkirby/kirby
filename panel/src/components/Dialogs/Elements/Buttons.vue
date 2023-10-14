@@ -58,6 +58,7 @@ export const props = {
 
 /**
  * @displayName DialogButtons
+ * @since 4.0.0
  */
 export default {
 	mixins: [props],

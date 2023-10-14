@@ -24,6 +24,9 @@
 <script>
 import { props as SelectorProps } from "@/components/Forms/Selector.vue";
 
+/**
+ * @since 4.0.0
+ */
 export default {
 	mixins: [SelectorProps],
 	props: {

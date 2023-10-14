@@ -18,11 +18,15 @@ export const defaults = () => {
 };
 
 /**
+ * Handle file uploads in the Panel
+ *
  * Basic overview of the chain of methods:
  *
  * pick   ‾\                      /‾ done
  *          -- (open) -- submit --
  * select  _/                     \_ cancel
+ *
+ * @since 4.0.0
  */
 export default (panel) => {
 	const parent = State("upload", defaults());

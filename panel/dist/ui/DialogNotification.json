@@ -1,1 +1,1 @@
-{"description":"","displayName":"DialogNotification","tags":{},"component":"k-dialog-notification","sourceFile":"src/components/Dialogs/Elements/Notification.vue"}
+{"description":"","displayName":"DialogNotification","tags":{"since":[{"description":"4.0.0","title":"since"}]},"component":"k-dialog-notification","sourceFile":"src/components/Dialogs/Elements/Notification.vue"}

@@ -8,6 +8,7 @@ import section from "@/mixins/section.js";
 
 /**
  * Installs a plugin component
+ * @since 4.0.0
  *
  * @param {Vue} app
  * @param {String} name
@@ -47,6 +48,7 @@ export const installComponent = (app, name, options) => {
 
 /**
  * Installs all components in the given object
+ * @since 4.0.0
  *
  * @param {Vue} app
  * @param {Object} components
@@ -72,6 +74,7 @@ export const installComponents = (app, components) => {
 
 /**
  * Extends a component if it defines an extension
+ * @since 4.0.0
  *
  * @param {Vue} app
  * @param {String} name
@@ -107,8 +110,8 @@ export const installComponentExtension = (app, name, options) => {
 };
 
 /**
- * Install available mixins if they
- * are required
+ * Install available mixins if they are required
+ * @since 4.0.0
  *
  * @param {Object} options
  * @returns {Object} The updated options
@@ -133,6 +136,7 @@ export const installComponentMixins = (options) => {
 
 /**
  * Installs plugins
+ * @since 4.0.0
  *
  * @param {Vue} app
  * @param {Object} plugins
@@ -151,9 +155,9 @@ export const installPlugins = (app, plugins) => {
 };
 
 /**
- * The plugin module installs all
- * given plugins and makes them accessible
- * at window.panel.plugins
+ * The plugin module installs all given plugins
+ * and makes them accessible at window.panel.plugins
+ * @since 4.0.0
  */
 export default (app, plugins = {}) => {
 	plugins = {

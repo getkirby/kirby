@@ -60,6 +60,9 @@ export const props = {
 	mixins: [Dialog, Fields]
 };
 
+/**
+ * @since 4.0.0
+ */
 export default {
 	mixins: [props],
 	props: {

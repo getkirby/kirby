@@ -18,6 +18,8 @@ import { isHex, isRgb, isHsl, isHsv, RE_RGB, RE_HSL } from "./colors-checks.js";
 
 /**
  * Converts a color into another color space
+ * @since 4.0.0
+ *
  * @param {string|object} color
  * @param {string} format hex, rgb, hsl or hsv
  * @returns {string|object}
@@ -83,6 +85,7 @@ export function convert(color, format) {
 /**
  * Tries to parse a string as HEX, RGB or HSL
  * color and returns an object with type, string and values
+ * @since 4.0.0
  *
  * @param {string} string
  * @returns {object|null}
@@ -148,6 +151,7 @@ export function parse(string) {
 /**
  * Parses the input string and coverts it
  * (if necessary) to the target color space
+ * @since 4.0.0
  *
  * @param {string} string
  * @param {string} format hex, rgb, hsl or hsv
@@ -165,6 +169,8 @@ export function parseAs(string, format) {
 
 /**
  * Formats color as CSS string
+ * @since 4.0.0
+ *
  * @param {object|string} color
  * @param {string} format hex, rgb, hsl or hsv
  * @returns {string}

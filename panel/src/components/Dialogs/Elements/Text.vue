@@ -6,6 +6,7 @@
 <script>
 /**
  * @displayName DialogText
+ * @since 4.0.0
  */
 export const props = {
 	props: {

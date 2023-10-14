@@ -16,6 +16,9 @@ export const defaults = () => {
 	};
 };
 
+/**
+ * @since 4.0.0
+ */
 export default (panel = {}) => {
 	const parent = State("notification", defaults());
 

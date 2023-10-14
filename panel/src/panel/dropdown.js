@@ -1,5 +1,8 @@
 import Feature, { defaults } from "./feature.js";
 
+/**
+ * @since 4.0.0
+ */
 export default (panel) => {
 	const parent = Feature(panel, "dropdown", defaults());
 

@@ -1,1 +1,1 @@
-{"displayName":"Highlight","description":"","tags":{},"slots":[{"name":"default"}],"component":"k-highlight","sourceFile":"src/components/Text/Highlight.vue"}
+{"description":"","tags":{"since":[{"description":"4.0.0","title":"since"}]},"displayName":"Highlight","slots":[{"name":"default"}],"component":"k-highlight","sourceFile":"src/components/Text/Highlight.vue"}

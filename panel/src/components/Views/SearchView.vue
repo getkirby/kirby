@@ -37,6 +37,9 @@
 <script>
 import Search from "@/mixins/search.js";
 
+/**
+ * @since 4.0.0
+ */
 export default {
 	mixins: [Search],
 	props: {

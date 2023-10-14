@@ -89,6 +89,9 @@
 <script>
 import Dialog from "@/mixins/dialog.js";
 
+/**
+ * @since 4.0.0
+ */
 export default {
 	mixins: [Dialog],
 	props: {

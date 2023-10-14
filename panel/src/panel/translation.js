@@ -11,8 +11,8 @@ export const defaults = () => {
 };
 
 /**
- * Represents the current interface
- * translation
+ * Represents the current interface ranslation
+ * @since 4.0.0
  */
 export default () => {
 	const parent = State("translation", defaults());

@@ -5,6 +5,7 @@ import Vue from "vue";
  * This is the graveyard for all deprecated
  * aliases. We can remove them step by step
  * in future major releases to clean up.
+ * @since 4.0.0
  *
  * @todo remove in v5
  */
