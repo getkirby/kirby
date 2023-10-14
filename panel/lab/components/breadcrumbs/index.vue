@@ -6,6 +6,12 @@
 		<k-lab-example label="Too long">
 			<k-breadcrumb :crumbs="tooLong" />
 		</k-lab-example>
+		<k-lab-example label="Root">
+			<k-breadcrumb
+				:root="{ label: 'Sweet home', icon: 'home' }"
+				:crumbs="crumbs"
+			/>
+		</k-lab-example>
 	</k-lab-examples>
 </template>
 
@@ -15,34 +21,31 @@ export default {
 		crumbs() {
 			return [
 				{
-					icon: "home",
-					label: "Site",
-				},
-				{
 					label: "Blog",
+					link: "/blog"
 				},
 				{
 					label: "Exploring the universe",
-				},
+					link: "/blog/exploring-the-universe"
+				}
 			];
 		},
 		tooLong() {
 			return [
 				{
-					icon: "home",
-					label: "Site",
-				},
-				{
 					label: "Our amazing blog",
+					link: "/blog"
 				},
 				{
 					label: "Exploring the universe from one end to the other",
+					link: "/blog/exploring-the-universe"
 				},
 				{
 					label: "some-super-long-filename-that-might-cause-problems.jpg",
-				},
+					link: "/blog/exploring-the-universe/some-super-long-filename-that-might-cause-problems.jpg"
+				}
 			];
-		},
-	},
+		}
+	}
 };
 </script>

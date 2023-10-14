@@ -13,7 +13,7 @@
 					:disabled="!crumb.link"
 					:text="crumb.text ?? crumb.label"
 					:title="crumb.text ?? crumb.label"
-					:current="isLast(index - 1) ? 'page' : false"
+					:current="index === segments.length - 1 ? 'page' : false"
 					variant="dimmed"
 					size="sm"
 					class="k-breadcrumb-link"
@@ -24,8 +24,20 @@
 </template>
 
 <script>
+/**
+ * Displays a breadcrumb trail
+ *
+ * @example <k-breadcrumb
+ * 	:root="{ label: 'Home', link: '/' }"
+ * 	:crumbs="[{ link: '/a', label: 'A' }, { link: '/b', label: 'B' }]"
+ * />
+ */
 export default {
 	props: {
+		/**
+		 * Segments of the breadcrumb trail
+		 * @value { link, label, icon }
+		 */
 		crumbs: {
 			type: Array,
 			default: () => []
@@ -34,6 +46,16 @@ export default {
 			type: String,
 			default: "Breadcrumb"
 		},
+		/**
+		 * First segment of the breadcrumb
+		 * @since 4.0.0
+		 * @todo make required in 5.0.0
+		 */
+		root: Object,
+		/**
+		 * @todo remove in 5.0.0
+		 * @deprecated 4.0.0 Use `root` instead
+		 */
 		view: Object
 	},
 	computed: {
@@ -47,11 +69,15 @@ export default {
 		segments() {
 			const segments = [];
 
-			if (this.view) {
+			if (this.root || this.view) {
 				segments.push({
-					link: this.view.link,
-					label: this.view.breadcrumbLabel,
-					icon: this.view.icon,
+					link: this.root?.link ?? this.view?.link,
+					label:
+						this.root?.label ??
+						this.root?.breadcrumbLabel ??
+						this.view?.label ??
+						this.view?.breadcrumbLabel,
+					icon: this.root?.icon ?? this.view?.icon,
 					loading: this.$panel.isLoading
 				});
 			}
@@ -59,9 +85,11 @@ export default {
 			return [...segments, ...this.crumbs];
 		}
 	},
-	methods: {
-		isLast(index) {
-			return this.crumbs.length - 1 === index;
+	created() {
+		if (this.view) {
+			window.panel.deprecated(
+				"<k-breadcrumb>: `view` prop will be removed in a future version. Use `root` prop instead."
+			);
 		}
 	}
 };
