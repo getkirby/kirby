@@ -71,7 +71,7 @@ class Docs
 
 	public function events(): array
 	{
-		return A::map(
+		$events = A::map(
 			$this->json['events'] ?? [],
 			fn ($event) => [
 				'name'        => $event['name'],
@@ -88,6 +88,10 @@ class Docs
 				),
 			]
 		);
+
+		usort($events, fn ($a, $b) => $a['name'] <=> $b['name']);
+
+		return $events;
 	}
 
 	public function examples(): array
@@ -137,7 +141,7 @@ class Docs
 
 	public function methods(): array
 	{
-		return A::map(
+		$methods = A::map(
 			$this->json['methods'] ?? [],
 			fn ($method) => [
 				'name'        => $method['name'],
@@ -155,6 +159,10 @@ class Docs
 				'returns'     => $method['returns']['type']['name'] ?? null,
 			]
 		);
+
+		usort($methods, fn ($a, $b) => $a['name'] <=> $b['name']);
+
+		return $methods;
 	}
 
 	public function name(): string
@@ -236,6 +244,8 @@ class Docs
 		// remove empty props
 		$props = array_filter($props);
 
+		usort($props, fn ($a, $b) => $a['name'] <=> $b['name']);
+
 		// always return an array
 		return array_values($props);
 	}
@@ -247,7 +257,7 @@ class Docs
 
 	public function slots(): array
 	{
-		return A::map(
+		$slots = A::map(
 			$this->json['slots'] ?? [],
 			fn ($slot) => [
 				'name'        => $slot['name'],
@@ -264,6 +274,10 @@ class Docs
 				),
 			]
 		);
+
+		usort($slots, fn ($a, $b) => $a['name'] <=> $b['name']);
+
+		return $slots;
 	}
 
 	public function toArray(): array
