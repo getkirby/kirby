@@ -27,6 +27,7 @@
 <script>
 /**
  * @example <k-button icon="check">Save</k-button>
+ * @example <k-button icon="check" size="sm" variant="filled">Save</k-button>
  */
 export default {
 	inheritAttrs: false,
@@ -101,7 +102,8 @@ export default {
 		selected: [String, Boolean],
 		/**
 		 * Specific sizes for buttong styling
-		 * @values `xs`, `sm`
+		 * @since 4.0.0
+		 * @values "xs", "sm"
 		 */
 		size: String,
 		/**
@@ -124,6 +126,7 @@ export default {
 		/**
 		 * The title attribute can be used to add additional text
 		 * to the button, which is shown on mouseover.
+		 * @since 4.0.0
 		 */
 		title: String,
 		/**
@@ -132,7 +135,7 @@ export default {
 		tooltip: String,
 		/**
 		 * The type attribute sets the button type like in HTML.
-		 * @values button, submit, reset
+		 * @values "button", "submit", "reset"
 		 */
 		type: {
 			type: String,
@@ -140,7 +143,8 @@ export default {
 		},
 		/**
 		 * Styling variants for the button
-		 * @values `filled`, `dimmed`
+		 * @since 4.0.0
+		 * @values "filled", "dimmed"
 		 */
 		variant: String
 	},

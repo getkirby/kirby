@@ -51,6 +51,7 @@ export default {
 		},
 		/**
 		 * Default horizontal alignment of the dropdown
+		 * @since 4.0.0
 		 * @values "start", "end", "center"
 		 */
 		alignX: {
@@ -59,16 +60,23 @@ export default {
 		},
 		/**
 		 * Default vertical alignment of the dropdown
+		 * @since 4.0.0
 		 * @values "top", "bottom"
 		 */
 		alignY: {
 			type: String,
 			default: "bottom"
 		},
+		/**
+		 * @since 4.0.0
+		 */
 		disabled: {
 			type: Boolean,
 			default: false
 		},
+		/**
+		 * @since 4.0.0
+		 */
 		navigate: {
 			default: true,
 			type: Boolean
