@@ -55,8 +55,11 @@ export default {
 </script>
 
 <style>
-.k-bar {
+:root {
 	--bar-height: var(--height-xs);
+}
+
+.k-bar {
 	display: flex;
 	align-items: center;
 	gap: var(--spacing-3);
@@ -82,3 +85,11 @@ export default {
 	text-align: end;
 }
 </style>
+
+<docs lang="md">
+Use the CSS property `--bar-height` to change the height of the bar:
+
+```css
+--bar-height: 2rem;
+```
+</docs>

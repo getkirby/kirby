@@ -7,6 +7,7 @@
 		<k-lab-docs-slots :slots="slots" />
 		<k-lab-docs-events :events="events" />
 		<k-lab-docs-methods :methods="methods" />
+		<k-lab-docs-docblock :doc-block="docBlock" />
 	</div>
 </template>
 
@@ -18,6 +19,7 @@ import Props, { props as PropsProps } from "./Docs/Props.vue";
 import Slots, { props as SlotsProps } from "./Docs/Slots.vue";
 import Events, { props as EventsProps } from "./Docs/Events.vue";
 import Methods, { props as MethodsProps } from "./Docs/Methods.vue";
+import DocBlock, { props as DocBlockProps } from "./Docs/DocBlock.vue";
 
 export default {
 	components: {
@@ -27,7 +29,8 @@ export default {
 		"k-lab-docs-props": Props,
 		"k-lab-docs-slots": Slots,
 		"k-lab-docs-events": Events,
-		"k-lab-docs-methods": Methods
+		"k-lab-docs-methods": Methods,
+		"k-lab-docs-docblock": DocBlock
 	},
 	mixins: [
 		DeprecatedProps,
@@ -36,7 +39,8 @@ export default {
 		PropsProps,
 		SlotsProps,
 		EventsProps,
-		MethodsProps
+		MethodsProps,
+		DocBlockProps
 	],
 	props: {
 		component: String

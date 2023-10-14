@@ -43,7 +43,7 @@ function labWatcher() {
 		configureServer({ watcher, ws }) {
 			watcher.on("change", async (file) => {
 				// Vue components: regenerate docs and send reload to client
-				if (file.match(/panel\/src\/.*\.vue/) !== null) {
+				if (/panel\/src\/.*\.vue/.test(file) === true) {
 					const docs = await generateDocs(file);
 
 					if (docs[0]) {
@@ -61,6 +61,19 @@ function labWatcher() {
 	};
 }
 
+function removeDocsBlock() {
+	return {
+		name: "kirby-remove-docs-block",
+		transform(code, id) {
+			if (/vue&type=docs/.test(id) === false) {
+				return;
+			}
+
+			return `export default ''`;
+		}
+	};
+}
+
 export default function kirby() {
-	return [devMode(), labWatcher()];
+	return [devMode(), labWatcher(), removeDocsBlock()];
 }

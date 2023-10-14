@@ -64,6 +64,11 @@ class Docs
 		return $this->kt($this->json['description'] ?? '');
 	}
 
+	public function docBlock(): string
+	{
+		return $this->kt($this->json['docsBlocks'][0] ?? '');
+	}
+
 	public function events(): array
 	{
 		return A::map(
@@ -233,6 +238,7 @@ class Docs
 			'component'   => $this->name(),
 			'deprecated'  => $this->deprecated(),
 			'description' => $this->description(),
+			'docBlock'    => $this->docBlock(),
 			'events'      => $this->events(),
 			'examples'    => $this->examples(),
 			'github'      => $this->github(),
