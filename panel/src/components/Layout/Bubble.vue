@@ -26,7 +26,8 @@
 
 <script>
 /**
- * Bubble to display content in an inline context, e.g. the structure preview table
+ * Bubble to display content in an inline context,
+ * e.g. the structure preview table
  * @since 3.7.0
  *
  * @example <k-bubble text="Hello" />

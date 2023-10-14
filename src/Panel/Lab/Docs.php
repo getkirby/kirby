@@ -14,6 +14,7 @@ use Kirby\Toolkit\Str;
  *
  * @internal
  * @since 4.0.0
+ * @codeCoverageIgnore
  *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
