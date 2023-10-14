@@ -206,6 +206,10 @@ export default {
 		}
 	},
 	methods: {
+		/**
+		 * Focus the button
+		 * @public
+		 */
 		focus() {
 			this.$el.focus?.();
 		},

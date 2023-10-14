@@ -19,7 +19,7 @@
 							</k-text>
 						</td>
 						<td>
-							<k-lab-docs-deprecated :deprecated="method.deprecated" />
+							<k-lab-docs-deprecated :deprecated="event.deprecated" />
 							<k-text :html="event.description" />
 						</td>
 						<td v-if="hasProperties">
