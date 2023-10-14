@@ -3,14 +3,14 @@
 		<k-header>
 			{{ component }}
 
-			<k-button-group v-if="docs.github || docs.lab" slot="buttons">
+			<k-button-group v-if="docs.github || lab" slot="buttons">
 				<k-button
-					v-if="docs.lab"
+					v-if="lab"
 					icon="code"
 					text="Examples"
 					size="sm"
 					variant="filled"
-					:link="'/lab/' + docs.lab"
+					:link="'/lab/' + lab"
 				/>
 				<k-button
 					v-if="docs.github"
@@ -39,7 +39,8 @@ Vue.component("k-lab-docs-drawer", DocsDrawer);
 export default {
 	props: {
 		component: String,
-		docs: Object
+		docs: Object,
+		lab: String
 	},
 	mounted() {
 		import.meta.hot?.on("kirby:docs:" + this.component, this.reloadDocs);

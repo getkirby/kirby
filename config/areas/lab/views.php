@@ -57,7 +57,8 @@ return [
 				],
 				'props' => [
 					'component' => $component,
-					'docs'      => $docs->toArray()
+					'docs'      => $docs->toArray(),
+					'lab'       => $docs->lab()
 				]
 			];
 		}

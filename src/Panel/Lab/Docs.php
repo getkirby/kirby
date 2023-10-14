@@ -235,7 +235,6 @@ class Docs
 			'description' => $this->description(),
 			'events'      => $this->events(),
 			'examples'    => $this->examples(),
-			'lab'         => $this->lab(),
 			'github'      => $this->github(),
 			'methods'     => $this->methods(),
 			'props'       => $this->props(),
