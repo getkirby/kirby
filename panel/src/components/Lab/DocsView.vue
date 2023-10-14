@@ -6,8 +6,8 @@
 			<k-button-group v-if="docs.github || lab" slot="buttons">
 				<k-button
 					v-if="lab"
-					icon="code"
-					text="Examples"
+					icon="lab"
+					text="Lab examples"
 					size="sm"
 					variant="filled"
 					:link="'/lab/' + lab"
