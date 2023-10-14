@@ -11,7 +11,9 @@
 			<k-icon :type="icon" />
 		</span>
 		<span v-if="text || $slots.default" class="k-button-text">
-			<!-- @slot The Button text. You can also use the `text` prop. Leave empty for icon buttons. -->
+			<!--
+				@slot The Button text. You can also use the `text` prop. Leave empty for icon buttons.
+			-->
 			<slot>
 				{{ text }}
 			</slot>
@@ -218,6 +220,11 @@ export default {
 			}
 
 			this.click?.(e);
+
+			/**
+			 * The button has been clicked
+			 * @property {PointerEvent} event the native click event
+			 */
 			this.$emit("click", e);
 		}
 	}

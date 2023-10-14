@@ -6,6 +6,9 @@
 				<thead>
 					<th style="width: 10rem">Slot</th>
 					<th>Description</th>
+					<th v-if="slots.filter((slot) => slot.bindings.length).length">
+						Bindings
+					</th>
 				</thead>
 				<tbody>
 					<tr v-for="slot in slots" :key="slot.name">
@@ -16,6 +19,9 @@
 						</td>
 						<td>
 							<k-text :html="slot.description" />
+						</td>
+						<td v-if="slot.bindings.length">
+							<k-lab-docs-params :params="slot.bindings" />
 						</td>
 					</tr>
 				</tbody>

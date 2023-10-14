@@ -58,7 +58,7 @@ export default {
 		/**
 		 * Updates the dialog values
 		 * @public
-		 * @param {Object} value
+		 * @param {Object} value new values
 		 */
 		input(value) {
 			this.$emit("input", value);

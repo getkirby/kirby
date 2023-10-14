@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import Vue from "vue";
+
 import Deprecated, { props as DeprecatedProps } from "./Docs/Deprecated.vue";
 import Desc, { props as DescProps } from "./Docs/Description.vue";
 import Examples, { props as ExamplesProps } from "./Docs/Examples.vue";
@@ -20,6 +22,11 @@ import Slots, { props as SlotsProps } from "./Docs/Slots.vue";
 import Events, { props as EventsProps } from "./Docs/Events.vue";
 import Methods, { props as MethodsProps } from "./Docs/Methods.vue";
 import DocBlock, { props as DocBlockProps } from "./Docs/DocBlock.vue";
+
+import DocParams from "./DocsParams.vue";
+import DocTypes from "./DocsTypes.vue";
+Vue.component("k-lab-docs-params", DocParams);
+Vue.component("k-lab-docs-types", DocTypes);
 
 export default {
 	components: {
@@ -61,11 +68,6 @@ export default {
 	line-height: 1.5;
 	word-break: break-word;
 }
-.k-lab-docs-types {
-	display: inline-flex;
-	flex-wrap: wrap;
-	gap: var(--spacing-1);
-}
 
 .k-lab-docs-description :where(.k-text, .k-box) + :where(.k-text, .k-box) {
 	margin-top: var(--spacing-3);
@@ -85,36 +87,5 @@ export default {
 	display: inline-flex;
 	flex-wrap: wrap;
 	gap: var(--spacing-1);
-}
-
-.k-lab-docs-types code[data-type="boolean"] {
-	color: var(--color-purple-800);
-	outline-color: var(--color-purple-400);
-	background: var(--color-purple-300);
-}
-.k-lab-docs-types code[data-type="string"] {
-	color: var(--color-green-800);
-	outline-color: var(--color-green-500);
-	background: var(--color-green-300);
-}
-.k-lab-docs-types code[data-type="number"] {
-	color: var(--color-orange-800);
-	outline-color: var(--color-orange-500);
-	background: var(--color-orange-300);
-}
-.k-lab-docs-types code[data-type="array"] {
-	color: var(--color-aqua-800);
-	outline-color: var(--color-aqua-500);
-	background: var(--color-aqua-300);
-}
-.k-lab-docs-types code[data-type="object"] {
-	color: var(--color-yellow-800);
-	outline-color: var(--color-yellow-500);
-	background: var(--color-yellow-300);
-}
-.k-lab-docs-types code[data-type="func"] {
-	color: var(--color-pink-800);
-	outline-color: var(--color-pink-400);
-	background: var(--color-pink-300);
 }
 </style>

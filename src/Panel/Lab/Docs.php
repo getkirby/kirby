@@ -76,6 +76,14 @@ class Docs
 			fn ($event) => [
 				'name'        => $event['name'],
 				'description' => $this->kt($event['description'] ?? ''),
+				'properties'  => A::map(
+					$event['properties'] ?? [],
+					fn ($property) => [
+						'name'        => $property['name'],
+						'type'        => $property['type']['names'][0] ?? '',
+						'description' => $property['description'] ?? '',
+					]
+				),
 			]
 		);
 	}
@@ -132,6 +140,15 @@ class Docs
 			fn ($method) => [
 				'name'        => $method['name'],
 				'description' => $this->kt($method['description'] ?? ''),
+				'params'      => A::map(
+					$method['params'] ?? [],
+					fn ($param) => [
+						'name'        => $param['name'],
+						'type'        => $param['type']['name'] ?? '',
+						'description' => $param['description'] ?? '',
+					]
+				),
+				'returns'     => $method['returns']['type']['name'] ?? null,
 			]
 		);
 	}
@@ -228,6 +245,14 @@ class Docs
 			fn ($slot) => [
 				'name'        => $slot['name'],
 				'description' => $this->kt($slot['description'] ?? ''),
+				'bindings'    => A::map(
+					$slot['bindings'] ?? [],
+					fn ($binding) => [
+						'name'        => $binding['name'],
+						'type'        => $binding['type']['name'] ?? '',
+						'description' => $binding['description'] ?? '',
+					]
+				),
 			]
 		);
 	}

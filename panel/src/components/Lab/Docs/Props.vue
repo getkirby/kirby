@@ -18,15 +18,7 @@
 							</k-text>
 						</td>
 						<td>
-							<k-text class="k-lab-docs-types">
-								<code
-									v-for="type in prop.type?.split('|')"
-									:key="type"
-									:data-type="type"
-								>
-									{{ type }}
-								</code>
-							</k-text>
+							<k-lab-docs-types :types="prop.type?.split('|')" />
 						</td>
 						<td>
 							<k-text v-if="prop.default">

@@ -6,16 +6,22 @@
 				<thead>
 					<th style="width: 10rem">Event</th>
 					<th>Description</th>
+					<th v-if="events.filter((event) => event.properties.length).length">
+						Properties
+					</th>
 				</thead>
 				<tbody>
 					<tr v-for="event in events" :key="event.name">
-						<td style="width: 12rem">
+						<td>
 							<k-text>
 								<code>{{ event.name }}</code>
 							</k-text>
 						</td>
 						<td>
 							<k-text :html="event.description" />
+						</td>
+						<td v-if="event.properties.length">
+							<k-lab-docs-params :params="event.properties" />
 						</td>
 					</tr>
 				</tbody>
