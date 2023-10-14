@@ -40,6 +40,17 @@
 								:html="prop.description"
 							/>
 
+							<k-text v-if="prop.value?.length">
+								<p>
+									<strong>Value</strong><br />
+									<span>
+										<code>
+											{{ prop.value }}
+										</code>
+									</span>
+								</p>
+							</k-text>
+
 							<k-text v-if="prop.values?.length">
 								<p class="k-lab-docs-values">
 									<strong>Values</strong><br />

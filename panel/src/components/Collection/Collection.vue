@@ -18,9 +18,14 @@
 			@change="$emit('change', $event)"
 			@item="$emit('item', $event)"
 			@option="onOption"
-			@sort="$emit('sort', $event)"
+			@sort="onSort"
 		>
 			<template #options="{ item, index }">
+				<!--
+					@slot Replaces otions for each item from `options` key of item
+					@binding {object} item
+					@binding {number} index
+				-->
 				<slot name="options" v-bind="{ item, index }" />
 			</template>
 		</k-items>
@@ -28,7 +33,7 @@
 		<footer v-if="help || hasPagination" class="k-bar k-collection-footer">
 			<k-text class="k-help k-collection-help" :html="help" />
 			<!--
-				Emitted when the pagination changes
+				Pagination has changed
 				@event paginate
 				@property {object} pagination
 			-->
@@ -48,10 +53,16 @@
  */
 export default {
 	props: {
+		/**
+		 * Optional column settings when using the table layout
+		 */
 		columns: {
 			type: [Object, Array],
 			default: () => ({})
 		},
+		/**
+		 * Empty state, see `k-empty` for all options
+		 */
 		empty: Object,
 		/**
 		 * Help text to show below the collection
@@ -63,14 +74,14 @@ export default {
 		},
 		/**
 		 * Layout of the collection
-		 * @values list, cards
+		 * @values "list", "cardlets", "cards", "table"
 		 */
 		layout: {
 			type: String,
 			default: "list"
 		},
 		/**
-		 * Enable/disable item links
+		 * Enable/disable that each item is a clickable link
 		 */
 		link: {
 			type: Boolean,
@@ -78,7 +89,7 @@ export default {
 		},
 		/**
 		 * Size for items in cards layout
-		 * @values tiny, small, medium, large, huge
+		 * @values "tiny", "small", "medium", "large", "huge"
 		 */
 		size: String,
 		/**
@@ -125,13 +136,25 @@ export default {
 		}
 	},
 	methods: {
-		onEmpty(e) {
-			e.stopPropagation();
-			this.$emit("empty");
+		onEmpty(event) {
+			event.stopPropagation();
+
+			/**
+			 * Empty collection has been clicked
+			 * @property {PointerEvent} event
+			 */
+			this.$emit("empty", event);
 		},
 		onOption(...args) {
 			this.$emit("action", ...args);
 			this.$emit("option", ...args);
+		},
+		onSort(items) {
+			/**
+			 * Items have been sorted
+			 * @property {array} items
+			 */
+			this.$emit("sort", items);
 		}
 	}
 };

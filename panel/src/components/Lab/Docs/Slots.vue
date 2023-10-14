@@ -6,9 +6,7 @@
 				<thead>
 					<th style="width: 10rem">Slot</th>
 					<th>Description</th>
-					<th v-if="slots.filter((slot) => slot.bindings.length).length">
-						Bindings
-					</th>
+					<th v-if="hasBindings">Bindings</th>
 				</thead>
 				<tbody>
 					<tr v-for="slot in slots" :key="slot.name">
@@ -20,7 +18,7 @@
 						<td>
 							<k-text :html="slot.description" />
 						</td>
-						<td v-if="slot.bindings.length">
+						<td v-if="hasBindings">
 							<k-lab-docs-params :params="slot.bindings" />
 						</td>
 					</tr>
@@ -36,6 +34,11 @@ export const props = {
 		slots: {
 			default: () => [],
 			type: Array
+		}
+	},
+	computed: {
+		hasBindings() {
+			return this.slots.filter((slot) => slot.bindings.length).length;
 		}
 	}
 };

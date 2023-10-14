@@ -10,7 +10,7 @@
 		<!-- breadcrumb -->
 		<k-breadcrumb
 			:crumbs="breadcrumb"
-			:view="view"
+			:root="view"
 			class="k-topbar-breadcrumb"
 		/>
 

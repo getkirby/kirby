@@ -24,8 +24,20 @@
 </template>
 
 <script>
+/**
+ * Displays a breadcrumb trail
+ *
+ * @example <k-breadcrumb
+ * 	:root="{ label: 'Home', link: '/' }"
+ * 	:crumbs="[{ link: '/a', label: 'A' }, { link: '/b', label: 'B' }]"
+ * />
+ */
 export default {
 	props: {
+		/**
+		 * Segments of the breadcrumb trail
+		 * @value { link: string, label: string, icon: string }
+		 */
 		crumbs: {
 			type: Array,
 			default: () => []
@@ -34,6 +46,15 @@ export default {
 			type: String,
 			default: "Breadcrumb"
 		},
+		/**
+		 * First segment of the breadcrumb
+		 * @todo make required in 5.0.0
+		 */
+		root: Object,
+		/**
+		 * @todo remove in 5.0.0
+		 * @deprecated 4.0.0 Use `root` instead
+		 */
 		view: Object
 	},
 	computed: {
@@ -47,16 +68,27 @@ export default {
 		segments() {
 			const segments = [];
 
-			if (this.view) {
+			if (this.root || this.view) {
 				segments.push({
-					link: this.view.link,
-					label: this.view.breadcrumbLabel,
-					icon: this.view.icon,
+					link: this.root.link ?? this.view.link,
+					label:
+						this.root.label ??
+						this.root.breadcrumbLabel ??
+						this.view.label ??
+						this.view.breadcrumbLabel,
+					icon: this.root.icon ?? this.view.icon,
 					loading: this.$panel.isLoading
 				});
 			}
 
 			return [...segments, ...this.crumbs];
+		}
+	},
+	created() {
+		if (this.view) {
+			window.panel.deprecated(
+				"<k-breadcrumb>: `view` prop will be removed in a future version. Use `root` prop instead."
+			);
 		}
 	},
 	methods: {

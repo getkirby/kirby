@@ -182,6 +182,7 @@ class Docs
 			'default'     => $this->propDefault($default, $type),
 			'deprecated'  => $deprecated,
 			'required'    => $prop['required'] ?? false,
+			'value'       => $prop['tags']['value'][0]['description'] ?? null,
 			'values'      => $prop['values'] ?? null,
 		];
 	}
