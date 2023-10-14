@@ -25,7 +25,7 @@ export function normalizeDoc(data, path) {
 		delete data.tags.access[access].title;
 	}
 
-	for (const type of ["props", "slots", "events"]) {
+	for (const type of ["props", "slots", "events", "methods"]) {
 		for (const key in data[type] ?? {}) {
 			delete data[type][key].mixin;
 			delete data[type][key].defaultValue?.func;
@@ -67,7 +67,7 @@ export default async function generate(file) {
 	// Parse each Vue SFC file and write earch result to a separate JSON file
 	for (const file of files) {
 		// skip Lab files
-		if (file.match(/src\/components\/Lab\//) !== null) {
+		if (/src\/components\/Lab\//.test(file) === true) {
 			continue;
 		}
 
