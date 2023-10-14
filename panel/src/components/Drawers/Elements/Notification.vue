@@ -9,6 +9,7 @@
 /**
  * @displayName DrawerNotification
  * @since 4.0.0
+ * @internal
  */
 export default {};
 </script>

@@ -52,6 +52,13 @@
 	</div>
 </template>
 
+<script>
+/**
+ * @internal
+ */
+export default {};
+</script>
+
 <style>
 html {
 	overflow-x: hidden;

@@ -1,1 +1,0 @@
-{"displayName":"Topbar","description":"","tags":{},"props":[{"name":"breadcrumb","type":{"name":"array"}},{"name":"license","type":{"name":"boolean"}},{"name":"menu","type":{"name":"array"}},{"name":"title","type":{"name":"string"}},{"name":"view","type":{"name":"object"}}],"slots":[{"name":"default"}],"component":"k-topbar","sourceFile":"src/components/View/Topbar.vue"}

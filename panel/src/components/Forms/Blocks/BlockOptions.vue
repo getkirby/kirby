@@ -120,7 +120,6 @@
 
 <script>
 /**
- * @internal
  */
 export default {
 	props: {

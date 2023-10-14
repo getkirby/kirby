@@ -23,6 +23,9 @@
 </template>
 
 <script>
+/**
+ * @displayName PanelInside
+ */
 export default {
 	computed: {
 		notification() {

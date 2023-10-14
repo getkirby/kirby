@@ -22,9 +22,6 @@
 </template>
 
 <script>
-/**
- * @internal
- */
 export default {
 	inheritAttrs: false,
 	props: {

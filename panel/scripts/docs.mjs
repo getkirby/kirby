@@ -72,18 +72,22 @@ export default async function generate(file) {
 		}
 
 		// parse with Vue docgen API
-		let doc = await docgen.parse(file, { alias });
+		try {
+			let doc = await docgen.parse(file, { alias });
 
-		if (doc.tags.internal?.[0]?.description !== true) {
-			doc = normalizeDoc(doc, path.relative(root, file));
+			if (doc.tags.internal?.[0]?.description !== true) {
+				doc = normalizeDoc(doc, path.relative(root, file));
 
-			// write file
-			fs.writeFileSync(
-				path.resolve(dist, doc.displayName + ".json"),
-				JSON.stringify(doc)
-			);
+				// write file
+				fs.writeFileSync(
+					path.resolve(dist, doc.displayName + ".json"),
+					JSON.stringify(doc)
+				);
 
-			docs.push(doc);
+				docs.push(doc);
+			}
+		} catch (error) {
+			console.error(error);
 		}
 	}
 
