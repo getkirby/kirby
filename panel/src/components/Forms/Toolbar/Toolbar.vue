@@ -1,7 +1,7 @@
 <template>
 	<nav class="k-toolbar" :data-theme="theme">
 		<template v-for="(button, index) in buttons">
-			<div v-if="button === '|'" :key="index" class="k-toolbar-divider" />
+			<hr v-if="button === '|'" :key="index" />
 
 			<k-button
 				v-else
@@ -26,7 +26,7 @@
 				:theme="theme === 'dark' ? 'light' : 'dark'"
 			>
 				<template v-for="(item, itemIndex) in button.dropdown">
-					<hr v-if="item === '-'" :key="itemIndex" class="k-toolbar-divider" />
+					<hr v-if="item === '-'" :key="itemIndex" />
 
 					<k-dropdown-item
 						v-else
@@ -112,7 +112,7 @@ export default {
 	--toolbar-border: var(--color-gray-800);
 }
 
-.k-toolbar > .k-toolbar-divider {
+.k-toolbar > hr {
 	height: var(--toolbar-size);
 	width: 1px;
 	border-left: 1px solid var(--toolbar-border);

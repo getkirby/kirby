@@ -25,7 +25,7 @@
 			/>
 		</k-lab-example>
 
-		<k-lab-example label="dark">
+		<k-lab-example label="theme: dark">
 			<k-toolbar
 				:buttons="[
 					{
@@ -51,9 +51,40 @@
 				theme="dark"
 			/>
 		</k-lab-example>
+
+		<k-lab-example label="actions">
+			<k-toolbar
+				:buttons="[
+					{
+						icon: 'heart',
+						click: () => alert('I love you')
+					},
+					'|',
+					{
+						icon: 'smile',
+						dropdown: [
+							{
+								label: 'Truth',
+								click: () => alert('Wanna be friends?')
+							},
+							{
+								label: 'Dare',
+								click: () => alert('Let\'s go shopping!')
+							}
+						]
+					}
+				]"
+			/>
+		</k-lab-example>
 	</k-lab-examples>
 </template>
 
 <script>
-export default {};
+export default {
+	methods: {
+		alert(message) {
+			alert(message);
+		}
+	}
+};
 </script>
