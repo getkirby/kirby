@@ -33,22 +33,20 @@ function devMode() {
 }
 
 /**
- * Watch all Vue SFCs inside `panel/src`
- * and generate UI docs on change
+ * Generate tmp UI docs file on change
+ * and send reload events to client for docs
+ * and lab example changes.
  */
-function labWatcher() {
+function labDev() {
 	return {
-		name: "kirby-lab-watcher",
+		name: "kirby-lab-dev",
 		apply: "serve",
 		configureServer({ watcher, ws }) {
 			watcher.on("change", async (file) => {
 				// Vue components: regenerate docs and send reload to client
 				if (/panel\/src\/.*\.vue/.test(file) === true) {
-					const docs = await generateDocs(file);
-
-					if (docs[0]) {
-						ws.send("kirby:docs:" + docs[0]?.component);
-					}
+					const doc = await generateDocs(file);
+					ws.send("kirby:docs:" + doc?.component);
 				}
 
 				// Lab examples: send reload to client
@@ -57,6 +55,20 @@ function labWatcher() {
 					ws.send("kirby:example:" + examples[1]);
 				}
 			});
+		}
+	};
+}
+
+/**
+ * Generate all UI docs on build
+ */
+function labBuild() {
+	return {
+		name: "kirby-lab-build",
+		apply: "build",
+		async writeBundle() {
+			const docs = await generateDocs();
+			console.log(`\x1b[32m✓\x1b[0m ${docs.length} UI docs generated.`);
 		}
 	};
 }
@@ -75,5 +87,5 @@ function removeDocsBlock() {
 }
 
 export default function kirby() {
-	return [devMode(), labWatcher(), removeDocsBlock()];
+	return [devMode(), removeDocsBlock(), labDev(), labBuild()];
 }
