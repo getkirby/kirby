@@ -4,14 +4,38 @@
 
 <script>
 /**
+ * Floating options menu for a block that
+ * appears when the block is focused/selected.
+ *
+ * @example <k-block-options :is-editable="true" />
  */
 export default {
 	props: {
+		/**
+		 * Block is slected together with other blocks
+		 */
 		isBatched: Boolean,
+		/**
+		 * Block can be edited
+		 */
 		isEditable: Boolean,
+		/**
+		 * No more blocks can be added
+		 */
 		isFull: Boolean,
+		/**
+		 * Block is hidden
+		 */
 		isHidden: Boolean,
+		/**
+		 * Block can be merged with other blocks
+		 * @since 4.0.0
+		 */
 		isMergable: Boolean,
+		/**
+		 * Block can be split into multiple blocks
+		 * @since 4.0.0
+		 */
 		isSplitable: Boolean
 	},
 	computed: {

@@ -8,8 +8,12 @@
 		class="k-box"
 	>
 		<k-icon v-if="icon" :type="icon" />
-		<!-- @slot Use instead of `text` prop -->
-		<slot>
+		<!--
+			@slot Box content, replaces content from `text` prop
+			@binding {string} text
+			@binding {boolean} html
+		-->
+		<slot v-bind="{ html, text }">
 			<k-text v-if="html" :html="text" />
 			<k-text v-else>
 				{{ text }}
@@ -75,15 +79,20 @@ export default {
 </script>
 
 <style>
-.k-box {
-	--box-color-back: none;
-	--box-color-text: currentColor;
-	--box-padding-inline: var(--spacing-2);
+:root {
 	--box-height: var(
 		--field-input-height
 	); /* TODO: change back to --height-md after input refactoring */
-	--text-font-size: var(--text-sm);
+	--box-padding-inline: var(--spacing-2);
+	--box-font-size: var(--text-sm);
+	--box-color-back: none;
+	--box-color-text: currentColor;
+}
+
+.k-box {
 	--icon-color: var(--box-color-icon);
+	--text-font-size: var(--box-font-size);
+
 	display: flex;
 	width: 100%;
 	align-items: center;

@@ -35,7 +35,7 @@ export default {
 		buttons: Array,
 		/**
 		 * Styling/layout variations
-		 * @values `collapsed`, `dropdown`
+		 * @values "collapsed", "dropdown"
 		 */
 		layout: String,
 		/**

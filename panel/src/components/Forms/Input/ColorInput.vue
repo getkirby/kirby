@@ -34,7 +34,7 @@ export const props = {
 			default: true
 		},
 		/**
-		 * @values `hex`, `rgb`, `hsl`
+		 * @values "hex", "rgb", "hsl"
 		 */
 		format: {
 			type: String,

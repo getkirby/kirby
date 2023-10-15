@@ -1,1 +1,1 @@
-{"description":"","displayName":"PanelOutside","tags":{},"slots":[{"name":"default"}],"component":"k-panel-outside","sourceFile":"src/components/View/Outside.vue"}
+{"description":"Wrapper for views for signed-out users.","displayName":"PanelOutside","tags":{},"slots":[{"name":"default","description":"Main content for the view"}],"component":"k-panel-outside","sourceFile":"src/components/View/Outside.vue"}

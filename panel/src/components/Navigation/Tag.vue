@@ -7,12 +7,14 @@
 		type="button"
 		@keydown.delete.prevent="remove"
 	>
+		<!-- @slot Replaces the image/icon frame created via the `image` prop -->
 		<slot name="image">
 			<k-image-frame v-if="image?.src" v-bind="image" class="k-tag-image" />
 			<k-icon-frame v-else-if="image" v-bind="image" class="k-tag-image" />
 		</slot>
 
 		<span v-if="$slots.default" class="k-tag-text">
+			<!-- @slot Tag text -->
 			<slot />
 		</span>
 
@@ -27,12 +29,19 @@
 
 <script>
 /**
- * The Tag Button is mostly used in the `<k-tags-input>` component
+ * A simple tag button with optional image/icon and remove button
+ *
  * @example <k-tag>Design</k-tag>
  */
 export default {
 	props: {
+		/**
+		 * Dims the tag and hides the remove button
+		 */
 		disabled: Boolean,
+		/**
+		 * See `k-image-frame` or `k-icon-frame` for available options
+		 */
 		image: {
 			type: Object
 		},
@@ -45,7 +54,8 @@ export default {
 		remove() {
 			if (this.removable) {
 				/**
-				 * This event is emitted when the remove button is being clicked or the tag is focussed and the delete key is entered.
+				 * Remove button is being clicked
+				 * or the tag is focussed and the delete key is entered.
 				 */
 				this.$emit("remove");
 			}

@@ -15,7 +15,7 @@ import { isObject } from "@/helpers/object.js";
 export const props = {
 	props: {
 		/**
-		 * Cancel Button Settings
+		 * Options for the cancel button
 		 */
 		cancelButton: {
 			default: true,
@@ -23,7 +23,7 @@ export const props = {
 		},
 		/**
 		 * Whether to disable the submit button
-		 * @deprecated 4.0.0 use the submit button settings instead
+		 * @deprecated 4.0.0 use the `submit-button` prop instead
 		 */
 		disabled: {
 			default: false,
@@ -31,14 +31,14 @@ export const props = {
 		},
 		/**
 		 * The icon type for the submit button
-		 * @deprecated 4.0.0 use the submit button settings instead
+		 * @deprecated 4.0.0 use the `submit-button` prop instead
 		 */
 		icon: {
 			default: "check",
 			type: String
 		},
 		/**
-		 * Submit button settings
+		 * Options for the submit button
 		 */
 		submitButton: {
 			type: [Boolean, String, Object],
@@ -46,8 +46,8 @@ export const props = {
 		},
 		/**
 		 * The theme of the submit button
-		 * @values positive, negative
-		 * @deprecated 4.0.0 use the submit button settings instead
+		 * @values "positive", "negative"
+		 * @deprecated 4.0.0 use the `submit-button` prop instead
 		 */
 		theme: {
 			default: "positive",

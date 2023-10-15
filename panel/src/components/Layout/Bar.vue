@@ -1,23 +1,34 @@
 <template>
 	<div :data-align="align" class="k-bar">
-		<!-- @deprecated 4.0.0 left/centre/right slots. Use with default slot only instead -->
 		<!-- @todo bar.slots.deprecated - remove specific slots @ 5.0 -->
 		<template v-if="$slots.left || $slots.center || $slots.right">
 			<div v-if="$slots.left" class="k-bar-slot" data-position="left">
-				<!-- @slot Deprecated, use default slot instead -->
+				<!--
+					@slot
+					@deprecated Use `default` slot instead
+				-->
 				<slot name="left" />
 			</div>
 			<div v-if="$slots.center" class="k-bar-slot" data-position="center">
-				<!-- @slot Deprecated, use default slot instead -->
+				<!--
+					@slot
+					@deprecated Use `default` slot instead
+				-->
 				<slot name="center" />
 			</div>
 			<div v-if="$slots.right" class="k-bar-slot" data-position="right">
-				<!-- @slot Deprecated, use default slot instead -->
+				<!--
+					@slot
+					@deprecated Use `default` slot instead
+				-->
 				<slot name="right" />
 			</div>
 		</template>
 
-		<!-- @slot Contents of the bar -->
+		<!--
+			@slot Contents of the bar
+			@since 4.0.0
+		-->
 		<slot v-else />
 	</div>
 </template>
@@ -55,8 +66,11 @@ export default {
 </script>
 
 <style>
-.k-bar {
+:root {
 	--bar-height: var(--height-xs);
+}
+
+.k-bar {
 	display: flex;
 	align-items: center;
 	gap: var(--spacing-3);
@@ -82,3 +96,11 @@ export default {
 	text-align: end;
 }
 </style>
+
+<docs lang="md">
+Use the CSS property `--bar-height` to change the height of the bar:
+
+```css
+--bar-height: 2rem;
+```
+</docs>

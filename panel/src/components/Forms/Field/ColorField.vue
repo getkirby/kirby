@@ -72,7 +72,8 @@ export default {
 			default: "pipette"
 		},
 		/**
-		 * @values `picker`, `input`, `options`
+		 * Display mode
+		 * @values "picker", "input", "options"
 		 */
 		mode: {
 			type: String,
@@ -80,7 +81,7 @@ export default {
 			validator: (mode) => ["picker", "input", "options"].includes(mode)
 		},
 		/**
-		 * Array of color options { value, key }
+		 * Array of color options
 		 */
 		options: {
 			type: Array,

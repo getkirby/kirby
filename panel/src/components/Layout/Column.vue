@@ -22,7 +22,7 @@ export default {
 	props: {
 		/**
 		 * Width of the column in the grid (as a fraction)
-		 * @values e.g. 1/6, 1/4, 1/3, 1/2, 2/3
+		 * @values e.g. "1/6", "1/4", "1/3", "1/2", "2/3"
 		 */
 		width: {
 			type: String,
