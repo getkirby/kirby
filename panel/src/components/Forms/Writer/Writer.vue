@@ -89,6 +89,9 @@ export const props = {
 			type: Function,
 			default: () => () => false
 		},
+		/**
+		 * See `k-writer-toolbar` for available options
+		 */
 		toolbar: {
 			type: Object,
 			default: () => ({
