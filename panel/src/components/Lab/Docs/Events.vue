@@ -6,16 +6,24 @@
 				<thead>
 					<th style="width: 10rem">Event</th>
 					<th>Description</th>
+					<th v-if="hasProperties">Properties</th>
 				</thead>
 				<tbody>
 					<tr v-for="event in events" :key="event.name">
-						<td style="width: 12rem">
+						<td>
 							<k-text>
 								<code>{{ event.name }}</code>
+								<div v-if="event.since?.length" class="k-lab-docs-since">
+									since {{ event.since }}
+								</div>
 							</k-text>
 						</td>
 						<td>
+							<k-lab-docs-deprecated :deprecated="event.deprecated" />
 							<k-text :html="event.description" />
+						</td>
+						<td v-if="hasProperties">
+							<k-lab-docs-params :params="event.properties" />
 						</td>
 					</tr>
 				</tbody>
@@ -30,6 +38,11 @@ export const props = {
 		events: {
 			default: () => [],
 			type: Array
+		}
+	},
+	computed: {
+		hasProperties() {
+			return this.events.filter((event) => event.properties.length).length;
 		}
 	}
 };
