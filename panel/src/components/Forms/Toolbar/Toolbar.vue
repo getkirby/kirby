@@ -64,6 +64,15 @@ export const props = {
 	}
 };
 
+/**
+ * Toolbar to display various buttons with/without dropdowns
+ * and trigger related actions
+ * @since 4.0.0
+ *
+ * @example <k-toolbar :buttons="[
+ * 	{ icon: 'heart', click: () => alert('I love you') }
+ * ]" />
+ */
 export default {
 	mixins: [props],
 	methods: {

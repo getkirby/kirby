@@ -15,7 +15,9 @@
 
 <script>
 /**
+ * Toolbar for `k-writer`
  * @displayName WriterToolbar
+ * @internal
  */
 export default {
 	props: {

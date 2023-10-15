@@ -17,6 +17,11 @@ export const props = {
 	}
 };
 
+/**
+ * Toolbar for `k-textarea-input`
+ * @since 4.0.0
+ * @internal
+ */
 export default {
 	mixins: [props],
 	computed: {
