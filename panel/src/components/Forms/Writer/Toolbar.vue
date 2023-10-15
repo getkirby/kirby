@@ -4,6 +4,7 @@
 		ref="toolbar"
 		:buttons="buttons"
 		:data-inline="inline"
+		:theme="inline ? 'dark' : 'light'"
 		:style="{
 			bottom: position.y + 'px',
 			left: position.x + 'px'
@@ -325,11 +326,6 @@ export default {
 }
 
 .k-writer-toolbar[data-inline="true"] {
-	--toolbar-text: var(--color-white);
-	--toolbar-back: var(--color-black);
-	--toolbar-hover: rgba(255, 255, 255, 0.2);
-	--toolbar-border: var(--color-gray-800);
-
 	position: absolute;
 	transform: translateX(-50%) translateY(-0.75rem);
 	z-index: calc(var(--z-dropdown) + 1);
