@@ -4,15 +4,15 @@
 			<hr v-if="button === '|'" :key="index" />
 
 			<k-button
-				v-else
+				v-else-if="button.when ?? true"
 				:key="index"
 				:current="button.current"
 				:disabled="button.disabled"
 				:icon="button.icon"
 				:title="button.label"
-				tabindex="-1"
-				class="k-toolbar-button"
-				@mousedown.native.prevent="
+				:class="['k-toolbar-button', button.class]"
+				@keydown.native="button.key?.($event)"
+				@click="
 					button.dropdown?.length
 						? $refs[index + '-dropdown'][0].toggle()
 						: button.click?.($event)
@@ -20,7 +20,7 @@
 			/>
 
 			<k-dropdown-content
-				v-if="button.dropdown?.length"
+				v-if="(button.when ?? true) && button.dropdown?.length"
 				:key="index + '-dropdown'"
 				:ref="index + '-dropdown'"
 				:theme="theme === 'dark' ? 'light' : 'dark'"
@@ -29,12 +29,12 @@
 					<hr v-if="item === '-'" :key="itemIndex" />
 
 					<k-dropdown-item
-						v-else
+						v-else-if="item.when ?? true"
 						:key="itemIndex"
 						:current="item.current"
 						:disabled="item.disabled"
 						:icon="item.icon"
-						@mousedown.native.prevent="item.click?.($event)"
+						@click="item.click?.($event)"
 					>
 						{{ item.label }}
 					</k-dropdown-item>
@@ -130,12 +130,22 @@ export default {
 .k-toolbar-button.k-button {
 	--button-width: var(--toolbar-size);
 	--button-height: var(--toolbar-size);
+	--button-rounded: 0;
+	outline-offset: -2px;
 }
 .k-toolbar-button:hover {
 	--button-color-back: var(--toolbar-hover);
 }
 .k-toolbar .k-button[aria-current] {
 	--button-color-text: var(--toolbar-current);
+}
+.k-toolbar > .k-button:first-child {
+	border-start-start-radius: var(--rounded);
+	border-end-start-radius: var(--rounded);
+}
+.k-toolbar > .k-button:last-child {
+	border-start-end-radius: var(--rounded);
+	border-end-end-radius: var(--rounded);
 }
 
 :where(.k-textarea-input, .k-writer-input):not(:focus-within) {

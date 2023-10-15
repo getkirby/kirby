@@ -338,4 +338,10 @@ export default {
 	border-end-end-radius: 0;
 	border-bottom: 1px solid var(--toolbar-border);
 }
+.k-writer-toolbar:not([data-inline="true"]) > .k-button:first-child {
+	border-end-start-radius: 0;
+}
+.k-writer-toolbar:not([data-inline="true"]) > .k-button:last-child {
+	border-end-end-radius: 0;
+}
 </style>

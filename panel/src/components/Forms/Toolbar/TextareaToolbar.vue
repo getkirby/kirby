@@ -26,7 +26,7 @@ export default {
 	mixins: [props],
 	computed: {
 		commands() {
-			const commands = {
+			return {
 				headlines: {
 					label: this.$t("toolbar.button.headings"),
 					icon: "title",
@@ -74,7 +74,22 @@ export default {
 				},
 				file: {
 					label: this.$t("toolbar.button.file"),
-					icon: "attachment"
+					icon: "attachment",
+					click: () => this.$emit("command", "dialog", "file"),
+					dropdown: this.uploads
+						? [
+								{
+									label: this.$t("toolbar.button.file.select"),
+									icon: "check",
+									click: () => this.$emit("command", "dialog", "file")
+								},
+								{
+									label: this.$t("toolbar.button.file.upload"),
+									icon: "upload",
+									click: () => this.$emit("command", "upload")
+								}
+						  ]
+						: undefined
 				},
 				code: {
 					label: this.$t("toolbar.button.code"),
@@ -104,25 +119,6 @@ export default {
 						)
 				}
 			};
-
-			if (this.uploads === false) {
-				commands.file.click = () => this.$emit("command", "dialog", "file");
-			} else {
-				commands.file.dropdown = [
-					{
-						label: this.$t("toolbar.button.file.select"),
-						icon: "check",
-						click: () => this.$emit("command", "dialog", "file")
-					},
-					{
-						label: this.$t("toolbar.button.file.upload"),
-						icon: "upload",
-						click: () => this.$emit("command", "upload")
-					}
-				];
-			}
-
-			return commands;
 		},
 		default() {
 			return [
@@ -196,5 +192,11 @@ export default {
 	border-end-start-radius: 0;
 	border-end-end-radius: 0;
 	border-bottom: 1px solid var(--toolbar-border);
+}
+.k-toolbar.k-textarea-toolbar > .k-button:first-child {
+	border-end-start-radius: 0;
+}
+.k-toolbar.k-textarea-toolbar > .k-button:last-child {
+	border-end-end-radius: 0;
 }
 </style>
