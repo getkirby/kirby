@@ -31,5 +31,6 @@ export default {
 <style>
 .k-writer {
 	background-color: white;
+	border-radius: var(--rounded);
 }
 </style>

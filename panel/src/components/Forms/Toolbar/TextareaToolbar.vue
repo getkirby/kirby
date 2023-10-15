@@ -101,7 +101,7 @@ export default {
 			};
 
 			if (this.uploads === false) {
-				commands.file.click = () => this.$emit("command", "file");
+				commands.file.click = () => this.$emit("command", "dialog", "file");
 			} else {
 				commands.file.dropdown = [
 					{

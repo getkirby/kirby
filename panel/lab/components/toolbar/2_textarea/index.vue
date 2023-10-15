@@ -12,7 +12,7 @@
 			<k-textarea-toolbar @command="onCommand" />
 		</k-lab-example>
 		<k-lab-example label="uploads">
-			<k-textarea-toolbar :uploads="true" />
+			<k-textarea-toolbar :uploads="true" @command="onCommand" />
 		</k-lab-example>
 	</k-lab-examples>
 </template>
