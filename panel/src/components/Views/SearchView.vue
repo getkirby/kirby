@@ -17,11 +17,10 @@
 				@input="query = $event"
 			/>
 		</k-header>
-		<k-tabs :tab="type" :tabs="tabs" />
+		<k-tabs :tab="currentType.id" :tabs="tabs" />
 
 		<div class="k-search-view-results">
 			<k-collection
-				v-if="query"
 				:items="items"
 				:empty="{
 					icon: 'search',
@@ -52,11 +51,17 @@ export default {
 	data() {
 		return {
 			items: [],
-			query: this.getQuery(),
+			query: new URLSearchParams(window.location.search).get("query"),
 			pagination: {}
 		};
 	},
 	computed: {
+		currentType() {
+			return (
+				this.$panel.searches[this.type] ??
+				Object.values(this.$panel.searches)[0]
+			);
+		},
 		tabs() {
 			const tabs = [];
 
@@ -88,9 +93,6 @@ export default {
 		focus() {
 			this.$refs.input?.focus();
 		},
-		getQuery() {
-			return new URLSearchParams(window.location.search).get("query");
-		},
 		onPaginate(pagination) {
 			this.search(pagination.page);
 		},
@@ -102,7 +104,7 @@ export default {
 			}
 
 			const url = this.$panel.url(window.location, {
-				type: this.type,
+				type: this.currentType.id,
 				query: this.query,
 				page: page > 1 ? page : null
 			});
@@ -115,7 +117,7 @@ export default {
 					throw Error("Empty query");
 				}
 
-				const response = await this.$search(this.type, this.query, {
+				const response = await this.$search(this.currentType.id, this.query, {
 					page,
 					limit: 15
 				});
@@ -135,6 +137,11 @@ export default {
 <style>
 .k-search-view .k-header {
 	margin-bottom: 0;
+}
+
+/* if not tabs are displayed, add space */
+.k-header + .k-search-view-results {
+	margin-top: var(--spacing-12);
 }
 
 .k-search-view-input {
