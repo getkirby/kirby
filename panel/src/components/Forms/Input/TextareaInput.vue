@@ -1,7 +1,7 @@
 <template>
 	<div :data-over="over" :data-size="size" class="k-textarea-input">
 		<div class="k-textarea-input-wrapper">
-			<k-toolbar
+			<k-textarea-toolbar
 				v-if="buttons && !disabled"
 				ref="toolbar"
 				:buttons="buttons"
@@ -45,6 +45,8 @@
 
 <script>
 import Input, { props as InputProps } from "@/mixins/input.js";
+import { props as ToolbarProps } from "@/components/Forms/Toolbar/TextareaToolbar.vue";
+
 import {
 	font,
 	maxlength,
@@ -60,12 +62,16 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [InputProps, font, maxlength, minlength, placeholder, spellcheck],
+	mixins: [
+		ToolbarProps,
+		InputProps,
+		font,
+		maxlength,
+		minlength,
+		placeholder,
+		spellcheck
+	],
 	props: {
-		buttons: {
-			type: [Boolean, Array],
-			default: true
-		},
 		endpoints: Object,
 		preselect: Boolean,
 		/**
@@ -75,7 +81,6 @@ export const props = {
 		 */
 		size: String,
 		theme: String,
-		uploads: [Boolean, Object, Array],
 		value: String
 	}
 };
@@ -156,6 +161,10 @@ export default {
 		insert(text) {
 			const input = this.$refs.input;
 
+			if (typeof text === "function") {
+				text = text(this.$refs.input, this.selection());
+			}
+
 			setTimeout(() => {
 				input.focus();
 				input.setRangeText(text, input.selectionStart, input.selectionEnd);
@@ -171,16 +180,13 @@ export default {
 			this.insertFile(files);
 			this.$events.emit("model.update");
 		},
-		onCommand(command, callback) {
+		onCommand(command, ...args) {
 			if (typeof this[command] !== "function") {
 				return console.warn(command + " is not a valid command");
 			}
 
-			if (typeof callback === "function") {
-				callback = callback(this.$refs.input, this.selection());
-			}
-
-			this[command](callback);
+			this[command](...args);
+			this.$refs.toolbar?.close();
 		},
 		onDrop($event) {
 			// dropping files
@@ -268,27 +274,11 @@ export default {
 				};
 			}
 		},
-		prepend(prepend) {
-			this.insert(prepend + " " + this.selection());
+		prepend(text) {
+			this.insert(text + " " + this.selection());
 		},
 		select() {
 			this.$refs.select();
-		},
-		selectFile() {
-			this.$panel.dialog.open({
-				component: "k-files-dialog",
-				props: {
-					endpoint: this.endpoints.field + "/files",
-					multiple: false
-				},
-				on: {
-					cancel: this.cancel,
-					submit: (file) => {
-						this.insertFile(file);
-						this.$panel.dialog.close();
-					}
-				}
-			});
 		},
 		selection() {
 			return this.$refs.input.value.substring(
@@ -296,7 +286,7 @@ export default {
 				this.$refs.input.selectionEnd
 			);
 		},
-		uploadFile() {
+		upload() {
 			this.$panel.upload.pick(this.uploadOptions);
 		},
 		wrap(text) {

@@ -1,121 +1,5 @@
 <template>
-	<div class="k-block-options">
-		<template v-if="isBatched">
-			<k-button
-				:title="$t('copy')"
-				class="k-block-options-button"
-				icon="template"
-				@click="$emit('copy')"
-			/>
-			<k-button
-				v-if="isMergable"
-				:title="$t('merge')"
-				class="k-block-options-button"
-				icon="merge"
-				@click="$emit('merge')"
-			/>
-			<k-button
-				:title="$t('remove')"
-				class="k-block-options-button"
-				icon="trash"
-				@click="$emit('removeSelected')"
-			/>
-		</template>
-		<template v-else>
-			<k-button
-				v-if="isEditable"
-				:title="$t('edit')"
-				icon="edit"
-				class="k-block-options-button"
-				@click="$emit('open')"
-			/>
-			<k-button
-				:disabled="isFull"
-				:title="$t('insert.after')"
-				class="k-block-options-button"
-				icon="add"
-				@click="$emit('chooseToAppend')"
-			/>
-			<k-button
-				:title="$t('delete')"
-				class="k-block-options-button"
-				icon="trash"
-				@click="$emit('remove')"
-			/>
-			<k-button
-				:title="$t('more')"
-				class="k-block-options-button"
-				icon="dots"
-				@click="$refs.options.toggle()"
-			/>
-			<k-button
-				:title="$t('sort.drag')"
-				class="k-block-options-button k-sort-handle"
-				icon="sort"
-				@keydown.native.up.prevent="$emit('sortUp')"
-				@keydown.native.down.prevent="$emit('sortDown')"
-			/>
-			<k-dropdown-content ref="options" align-x="end">
-				<k-dropdown-item
-					:disabled="isFull"
-					icon="angle-up"
-					@click="$emit('chooseToPrepend')"
-				>
-					{{ $t("insert.before") }}
-				</k-dropdown-item>
-				<k-dropdown-item
-					:disabled="isFull"
-					icon="angle-down"
-					@click="$emit('chooseToAppend')"
-				>
-					{{ $t("insert.after") }}
-				</k-dropdown-item>
-				<hr />
-				<k-dropdown-item v-if="isEditable" icon="edit" @click="$emit('open')">
-					{{ $t("edit") }}
-				</k-dropdown-item>
-				<k-dropdown-item icon="refresh" @click="$emit('chooseToConvert')">
-					{{ $t("field.blocks.changeType") }}
-				</k-dropdown-item>
-				<k-dropdown-item
-					v-if="isSplitable"
-					icon="split"
-					@click="$emit('split')"
-				>
-					{{ $t("split") }}
-				</k-dropdown-item>
-				<hr />
-				<k-dropdown-item icon="template" @click="$emit('copy')">
-					{{ $t("copy") }}
-				</k-dropdown-item>
-				<k-dropdown-item
-					:disabled="isFull"
-					icon="download"
-					@click="$emit('paste')"
-				>
-					{{ $t("paste.after") }}
-				</k-dropdown-item>
-				<hr />
-				<k-dropdown-item
-					:icon="isHidden ? 'preview' : 'hidden'"
-					@click="$emit(isHidden ? 'show' : 'hide')"
-				>
-					{{ isHidden === true ? $t("show") : $t("hide") }}
-				</k-dropdown-item>
-				<k-dropdown-item
-					:disabled="isFull"
-					icon="copy"
-					@click="$emit('duplicate')"
-				>
-					{{ $t("duplicate") }}
-				</k-dropdown-item>
-				<hr />
-				<k-dropdown-item icon="trash" @click="$emit('remove')">
-					{{ $t("delete") }}
-				</k-dropdown-item>
-			</k-dropdown-content>
-		</template>
-	</div>
+	<k-toolbar :buttons="buttons" class="k-block-options" />
 </template>
 
 <script>
@@ -130,9 +14,136 @@ export default {
 		isMergable: Boolean,
 		isSplitable: Boolean
 	},
+	computed: {
+		buttons() {
+			if (this.isBatched) {
+				return [
+					{
+						icon: "template",
+						title: this.$t("copy"),
+						click: () => this.$emit("copy")
+					},
+					{
+						when: this.isMergable,
+						icon: "merge",
+						title: this.$t("merge"),
+						click: () => this.$emit("merge")
+					},
+					{
+						icon: "trash",
+						title: this.$t("remove"),
+						click: () => this.$emit("removeSelected")
+					}
+				];
+			}
+
+			return [
+				{
+					when: this.isEditable,
+					icon: "edit",
+					title: this.$t("edit"),
+					click: () => this.$emit("open")
+				},
+				{
+					icon: "add",
+					title: this.$t("insert.after"),
+					disabled: this.isFull,
+					click: () => this.$emit("chooseToAppend")
+				},
+				{
+					icon: "trash",
+					title: this.$t("delete"),
+					click: () => this.$emit("remove")
+				},
+				{
+					icon: "sort",
+					title: this.$t("sort.drag"),
+					class: "k-sort-handle",
+					key: (e) => this.sort(e)
+				},
+				{
+					icon: "dots",
+					title: this.$t("more"),
+					dropdown: [
+						{
+							icon: "angle-up",
+							label: this.$t("insert.before"),
+							disabled: this.isFull,
+							click: () => this.$emit("chooseToPrepend")
+						},
+						{
+							icon: "angle-down",
+							label: this.$t("insert.after"),
+							disabled: this.isFull,
+							click: () => this.$emit("chooseToAppend")
+						},
+						"-",
+						{
+							when: this.isEditable,
+							icon: "edit",
+							label: this.$t("edit"),
+							click: () => this.$emit("open")
+						},
+						{
+							icon: "refresh",
+							label: this.$t("field.blocks.changeType"),
+							click: () => this.$emit("chooseToConvert")
+						},
+						{
+							when: this.isSplitable,
+							icon: "split",
+							label: this.$t("split"),
+							click: () => this.$emit("split")
+						},
+						"-",
+						{
+							icon: "template",
+							label: this.$t("copy"),
+							click: () => this.$emit("copy")
+						},
+						{
+							icon: "download",
+							label: this.$t("paste.after"),
+							disabled: this.isFull,
+							click: () => this.$emit("paste")
+						},
+						"-",
+						{
+							icon: this.isHidden ? "preview" : "hidden",
+							label: this.isHidden ? this.$t("show") : this.$t("hide"),
+							click: () => this.$emit(this.isHidden ? "show" : "hide")
+						},
+						{
+							icon: "copy",
+							label: this.$t("duplicate"),
+							click: () => this.$emit("duplicate")
+						},
+						"-",
+						{
+							icon: "trash",
+							label: this.$t("delete"),
+							click: () => this.$emit("remove")
+						}
+					]
+				}
+			];
+		}
+	},
 	methods: {
 		open() {
 			this.$refs.options.open();
+		},
+		sort(event) {
+			event.preventDefault();
+
+			switch (event.key) {
+				case "ArrowUp":
+					this.$emit("sortUp");
+					break;
+				case "ArrowDown":
+					this.$emit("sortDown");
+					break;
+			}
 		}
 	}
 };
@@ -140,41 +151,12 @@ export default {
 
 <style>
 .k-block-options {
-	display: flex;
-	align-items: center;
-	background: var(--color-white);
-	z-index: var(--z-dropdown);
-	box-shadow: var(--shadow-toolbar);
-	color: var(--color-black);
-	border-radius: var(--rounded);
-}
-.k-block-options-button {
-	--block-options-button-size: 30px;
+	--toolbar-size: 30px;
 
-	width: var(--block-options-button-size);
-	height: var(--block-options-button-size);
-	line-height: 1;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
+	box-shadow: var(--shadow-toolbar);
+}
+.k-block-options > .k-button:not(:last-of-type) {
 	border-inline-end: 1px solid var(--color-background);
-}
-.k-block-options-button:first-child {
-	border-start-start-radius: var(--rounded);
-	border-end-start-radius: var(--rounded);
-}
-.k-block-options-button:last-child {
-	border-start-end-radius: var(--rounded);
-	border-end-end-radius: var(--rounded);
-}
-.k-block-options-button:last-of-type {
-	border-inline-end: 0;
-}
-.k-block-options-button[aria-current] {
-	color: var(--color-focus);
-}
-.k-block-options-button:hover {
-	background: var(--color-gray-100);
 }
 .k-block-options .k-dropdown-content {
 	margin-top: 0.5rem;
