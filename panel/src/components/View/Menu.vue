@@ -9,7 +9,7 @@
 		<div class="k-panel-menu-body">
 			<!-- Search button -->
 			<k-button
-				:disabled="!hasSearch"
+				v-if="hasSearch"
 				:text="$t('search')"
 				icon="search"
 				class="k-panel-menu-search k-panel-menu-button"
