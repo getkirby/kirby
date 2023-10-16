@@ -6,16 +6,9 @@
 			class="k-panel-menu-proxy"
 			@click="$panel.menu.toggle()"
 		/>
-
 		<!-- breadcrumb -->
-		<k-breadcrumb
-			:crumbs="breadcrumb"
-			:view="view"
-			class="k-topbar-breadcrumb"
-		/>
-
+		<k-breadcrumb :crumbs="crumbs" class="k-topbar-breadcrumb" />
 		<div class="k-topbar-spacer" />
-
 		<div class="k-topbar-signals">
 			<slot />
 		</div>
@@ -29,10 +22,20 @@
 export default {
 	props: {
 		breadcrumb: Array,
-		license: Boolean,
-		menu: Array,
-		title: String,
 		view: Object
+	},
+	computed: {
+		crumbs() {
+			return [
+				{
+					link: this.view.link,
+					label: this.view.label ?? this.view.breadcrumbLabel,
+					icon: this.view.icon,
+					loading: this.$panel.isLoading
+				},
+				...this.breadcrumb
+			];
+		}
 	}
 };
 </script>
