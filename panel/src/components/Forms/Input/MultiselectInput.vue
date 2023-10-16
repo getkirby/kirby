@@ -4,6 +4,7 @@
 			ref="tags"
 			v-bind="$props"
 			:selecting="true"
+			fit-width=".k-input"
 			@input="$emit('input', $event)"
 			@click.native.stop
 		/>

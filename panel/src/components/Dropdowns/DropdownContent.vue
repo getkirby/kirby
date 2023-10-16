@@ -69,6 +69,7 @@ export default {
 			type: Boolean,
 			default: false
 		},
+		fitWidth: String,
 		navigate: {
 			default: true,
 			type: Boolean
@@ -210,6 +211,11 @@ export default {
 				window.event?.target.closest("button") ??
 				window.event?.target;
 
+			// drill down to the element of a component
+			if (this.opener instanceof Vue) {
+				this.opener = this.opener.$el;
+			}
+
 			// load all options and open the dropdown as
 			// soon as they are loaded
 			this.fetchOptions((items) => {
@@ -225,6 +231,24 @@ export default {
 				y: this.alignY
 			};
 
+			// get the dimensions of the opening button
+			const opener = this.opener.getBoundingClientRect();
+
+			if (this.fitWidth) {
+				const context = this.opener
+					.closest(this.fitWidth)
+					?.getBoundingClientRect();
+				console.log(context);
+				this.axis.x = "start";
+				this.position.x = context.x + window.scrollX;
+				this.position.y = context.y + window.scrollY + context.height;
+				this.$el.showModal();
+				await this.$nextTick();
+				this.$el.style.width = context.width + "px";
+				this.$el.style.maxWidth = context.width + "px";
+				return;
+			}
+
 			if (this.axis.x === "right") {
 				this.axis.x = "end";
 			} else if (this.axis.x === "left") {
@@ -239,14 +263,6 @@ export default {
 					this.axis.x = "start";
 				}
 			}
-
-			// drill down to the element of a component
-			if (this.opener instanceof Vue) {
-				this.opener = this.opener.$el;
-			}
-
-			// get the dimensions of the opening button
-			const opener = this.opener.getBoundingClientRect();
 
 			// set the default position
 			// and take scroll position into consideration

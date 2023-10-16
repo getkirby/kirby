@@ -71,6 +71,7 @@ export const props = {
 			default: true,
 			type: Boolean
 		},
+		fitWidth: String,
 		/**
 		 * You can set the layout to `list` to extend the width of each tag
 		 * to 100% and show them in a list. This is handy in narrow columns
@@ -162,6 +163,7 @@ export default {
 			return {
 				accept: this.accept,
 				disabled: this.disabled,
+				fitWidth: this.fitWidth,
 				ignore: this.value,
 				search: this.search,
 				selected: this.tags.map((tag) => tag.value)
@@ -201,6 +203,12 @@ export default {
 		add(tag) {
 			// clean up the input
 			tag = this.tag(tag);
+
+			if (this.selecting && this.isDuplicate(tag) === true) {
+				this.tags = this.tags.filter((t) => t.value !== tag.value);
+				this.save();
+				return;
+			}
 
 			// no new tags if this is full
 			if (this.isFull === true) {

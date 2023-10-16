@@ -7,6 +7,7 @@
 			:align-x="align"
 			:autofocus="false"
 			:disabled="disabled"
+			:fit-width="fitWidth"
 			:navigate="false"
 			@close="reset"
 		>
@@ -31,7 +32,8 @@ export default {
 	mixins: [SelectorProps],
 	props: {
 		align: String,
-		disabled: Boolean
+		disabled: Boolean,
+		fitWidth: String
 	},
 	emits: ["create", "select"],
 	methods: {
