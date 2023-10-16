@@ -12,6 +12,7 @@ import Header from "./Header.vue";
 import IconFrame from "./Frame/IconFrame.vue";
 import ImageFrame from "./Frame/ImageFrame.vue";
 import Overlay from "./Overlay.vue";
+import Stat from "./Stat.vue";
 import Stats from "./Stats.vue";
 import Table from "./Table.vue";
 import TableCell from "./TableCell.vue";
@@ -35,6 +36,7 @@ export default {
 		app.component("k-image-frame", ImageFrame);
 		app.component("k-image", ImageFrame);
 		app.component("k-overlay", Overlay);
+		app.component("k-stat", Stat);
 		app.component("k-stats", Stats);
 		app.component("k-table", Table);
 		app.component("k-table-cell", TableCell);
