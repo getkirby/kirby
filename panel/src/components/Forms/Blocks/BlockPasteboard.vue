@@ -3,6 +3,7 @@
 		ref="dialog"
 		:cancel-button="false"
 		:submit-button="false"
+		:visible="true"
 		size="large"
 		class="k-block-importer"
 		@cancel="$emit('cancel')"
