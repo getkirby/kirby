@@ -34,7 +34,10 @@
 						:current="item.current"
 						:disabled="item.disabled"
 						:icon="item.icon"
-						@click="item.click?.($event)"
+						@click="
+							item.click?.($event);
+							$refs[index + '-dropdown'][0].close();
+						"
 					>
 						{{ item.label }}
 					</k-dropdown-item>
