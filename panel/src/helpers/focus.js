@@ -1,6 +1,7 @@
 /**
- * Helper to set the focus inside an
- * HTML element
+ * Helper to set the focus inside an HTML element
+ * @since 4.0.0
+ *
  * @param {String|HTMLElement} element
  * @param {String} field
  * @returns {HTMLElement|false}

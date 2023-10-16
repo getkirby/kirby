@@ -7,7 +7,6 @@
 <script>
 /**
  * @deprecated 4.0.0 Use `<k-icon type="loader" />` instead
- * @internal
  */
 export default {
 	created() {

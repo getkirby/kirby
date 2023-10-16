@@ -4,6 +4,13 @@
 	</k-panel>
 </template>
 
+<script>
+/**
+ * @displayName PanelOutside
+ */
+export default {};
+</script>
+
 <style>
 .k-panel.k-panel-outside {
 	display: grid;

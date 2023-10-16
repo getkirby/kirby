@@ -54,7 +54,12 @@
 </template>
 
 <script>
-export default {
+import { layout } from "@/mixins/props.js";
+/**
+ * Collection items that can be displayed in various layouts
+ */
+export const props = {
+	mixins: [layout],
 	inheritAttrs: false,
 	props: {
 		/**
@@ -72,43 +77,37 @@ export default {
 			default: () => []
 		},
 		/**
-		 * @values list, cards, cardlets, table
-		 */
-		layout: {
-			type: String,
-			default: "list"
-		},
-		/**
-		 * If `false`, all item links will be disabled/removed
+		 * Enable/disable that each item is a clickable link
 		 */
 		link: {
 			type: Boolean,
 			default: true
 		},
 		/**
-		 * Globale image settings. Will be merged with the image settings of each item. See `k-image-frame` for available options.
-		 */
-		image: {
-			type: [Object, Boolean],
-			default: () => ({})
-		},
-		/**
-		 * If `true`, items are sortable. Each item can disable this individually.
+		 * Whether items are generally sortable.
+		 * Each item can disable this individually.
 		 */
 		sortable: Boolean,
 		/**
-		 * Placeholder text and icon for empty state
-		 */
-		empty: {
-			type: [String, Object]
-		},
-		/**
 		 * Card sizes
-		 * @values tiny, small, medium, large, huge
+		 * @values "tiny", "small", "medium", "large", "huge"
 		 */
 		size: {
 			type: String,
 			default: "medium"
+		}
+	}
+};
+
+export default {
+	mixins: [props],
+	props: {
+		/**
+		 * Globale image/icon settings. Will be merged with the image settings of each item. See `k-item-image` for available options.
+		 */
+		image: {
+			type: [Object, Boolean],
+			default: () => ({})
 		}
 	},
 	computed: {

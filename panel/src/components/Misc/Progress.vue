@@ -23,7 +23,6 @@ const validator = (value, throws = false) => {
 
 /**
  * A simple progress bar that we mostly use it in the upload dialog
- * @public
  *
  * @example <k-progress :value="10" />
  */

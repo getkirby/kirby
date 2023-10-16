@@ -9,6 +9,7 @@ export const RE_HSL =
 
 /**
  * Checks if input is a HEX/A string
+ * @since 4.0.0
  *
  * @param {string|object} color
  * @returns {boolean}
@@ -21,6 +22,7 @@ export function isHex(color) {
 
 /**
  * Checks if input is an RGB object
+ * @since 4.0.0
  *
  * @param {string|object} color
  * @returns {boolean}
@@ -31,6 +33,7 @@ export function isRgb(color) {
 
 /**
  * Checks if input is an HSL object
+ * @since 4.0.0
  *
  * @param {object} color
  * @returns {boolean}
@@ -41,6 +44,7 @@ export function isHsl(color) {
 
 /**
  * Checks if input is an HSV object
+ * @since 4.0.0
  *
  * @param {string|object} color
  * @returns {boolean}

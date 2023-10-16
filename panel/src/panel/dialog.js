@@ -15,6 +15,9 @@ export const defaults = () => {
 	};
 };
 
+/**
+ * @since 4.0.0
+ */
 export default (panel) => {
 	// shortcut to submit dialogs
 	panel.events.on("dialog.save", (e) => {

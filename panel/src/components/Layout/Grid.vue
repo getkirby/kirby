@@ -9,8 +9,6 @@
  * The <k-grid> component is a CSS grid wrapper. It goes very well together with the <k-column> component, which allows to set column widths in a very comfortable way. Any other element within the Grid component can be used as well though.
  *
  * Customised the grid via the `--columns` CSS property on `<k-grid>` and the `--width` and/or `--span` properties on its children.
- *
- * @public
  */
 export default {
 	props: {

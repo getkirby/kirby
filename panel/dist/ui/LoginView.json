@@ -1,1 +1,0 @@
-{"displayName":"LoginView","description":"","tags":{},"props":[{"name":"methods","type":{"name":"array"}},{"name":"pending","type":{"name":"object"}}],"component":"k-login-view","sourceFile":"src/components/Views/Login/LoginView.vue"}

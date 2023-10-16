@@ -366,13 +366,17 @@ class View
 	{
 		$searches = [];
 
-		foreach ($areas as $area) {
-			foreach ($area['searches'] ?? [] as $id => $params) {
-				$searches[$id] = [
-					'icon'  => $params['icon'] ?? 'search',
-					'label' => $params['label'] ?? Str::ucfirst($id),
-					'id'    => $id
-				];
+		foreach ($areas as $areaId => $area) {
+			// by default, all areas are accessible unless
+			// the permissions are explicitly set to false
+			if (($permissions['access'][$areaId] ?? true) !== false) {
+				foreach ($area['searches'] ?? [] as $id => $params) {
+					$searches[$id] = [
+						'icon'  => $params['icon'] ?? 'search',
+						'label' => $params['label'] ?? Str::ucfirst($id),
+						'id'    => $id
+					];
+				}
 			}
 		}
 		return $searches;

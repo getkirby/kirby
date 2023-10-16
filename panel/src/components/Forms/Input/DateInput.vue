@@ -84,7 +84,6 @@ export const props = {
  * input parts via tab key).
  *
  * @example <k-input :value="date" @input="date = $event" type="date" name="date" />
- * @public
  */
 export default {
 	mixins: [Input, props],

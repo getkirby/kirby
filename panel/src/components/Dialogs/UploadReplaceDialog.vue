@@ -85,6 +85,9 @@
 <script>
 import UploadDialog from "./UploadDialog.vue";
 
+/**
+ * @since 4.0.0
+ */
 export default {
 	extends: UploadDialog,
 	props: {

@@ -7,6 +7,7 @@
 <script>
 /**
  * @displayName DrawerBody
+ * @since 4.0.0
  */
 export default {};
 </script>

@@ -33,8 +33,8 @@ export const props = {
 };
 
 /**
+ * @since 4.0.0
  * @example <k-alpha-input :value="value" @input="value = $event" />
- * @public
  */
 export default {
 	mixins: [Input, props]

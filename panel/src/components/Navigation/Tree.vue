@@ -48,6 +48,7 @@
 <script>
 /**
  * @displayName Tree
+ * @since 4.0.0
  */
 export default {
 	name: "k-tree",

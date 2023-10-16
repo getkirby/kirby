@@ -42,6 +42,9 @@ export const props = {
 	}
 };
 
+/**
+ * @since 4.0.0
+ */
 export default {
 	mixins: [Drawer, FieldsProps, props],
 	emits: ["cancel", "crumb", "input", "next", "prev", "remove", "submit", "tab"]

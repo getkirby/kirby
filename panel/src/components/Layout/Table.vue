@@ -134,7 +134,6 @@
 <script>
 /**
  * A simple table component with columns and rows
- * @public
  */
 export default {
 	inheritAttrs: false,

@@ -52,7 +52,6 @@ export const props = {
 
 /**
  * Use <k-frame> to display content in a fixed ratio with background etc.
- * @public
  * @since 4.0.0
  *
  * @example <k-frame :ratio="1/1" :back="black">💛</k-frame>

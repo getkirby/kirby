@@ -25,7 +25,7 @@ export function normalizeDoc(data, path) {
 		delete data.tags.access[access].title;
 	}
 
-	for (const type of ["props", "slots", "events"]) {
+	for (const type of ["props", "slots", "events", "methods"]) {
 		for (const key in data[type] ?? {}) {
 			delete data[type][key].mixin;
 			delete data[type][key].defaultValue?.func;
@@ -67,21 +67,28 @@ export default async function generate(file) {
 	// Parse each Vue SFC file and write earch result to a separate JSON file
 	for (const file of files) {
 		// skip Lab files
-		if (file.match(/src\/components\/Lab\//) !== null) {
+		if (/src\/components\/Lab\//.test(file) === true) {
 			continue;
 		}
 
 		// parse with Vue docgen API
-		let doc = await docgen.parse(file, { alias });
-		doc = normalizeDoc(doc, path.relative(root, file));
+		try {
+			let doc = await docgen.parse(file, { alias });
 
-		// write file
-		fs.writeFileSync(
-			path.resolve(dist, doc.displayName + ".json"),
-			JSON.stringify(doc)
-		);
+			if (doc.tags.internal?.[0]?.description !== true) {
+				doc = normalizeDoc(doc, path.relative(root, file));
 
-		docs.push(doc);
+				// write file
+				fs.writeFileSync(
+					path.resolve(dist, doc.displayName + ".json"),
+					JSON.stringify(doc)
+				);
+
+				docs.push(doc);
+			}
+		} catch (error) {
+			console.error(error);
+		}
 	}
 
 	return docs;

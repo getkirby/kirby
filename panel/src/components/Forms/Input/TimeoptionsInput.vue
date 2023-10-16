@@ -49,8 +49,7 @@ export const props = {
 
 /**
  * The Times component displayes available times to choose from
- * @public
- *
+ * @since 4.0.0
  * @example <k-timeoptions-input value="12:12" @input="onInput" />
  */
 export default {

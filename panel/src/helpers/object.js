@@ -46,6 +46,7 @@ export function isObject(input) {
 
 /**
  * Counts all keys in the object
+ * @since 4.0.0
  *
  * @param {object} object
  * @returns int

@@ -21,6 +21,9 @@
 <script>
 import LoginForm from "@/components/Forms/Login.vue";
 
+/**
+ * @internal
+ */
 export default {
 	components: {
 		"k-login-plugin": window.panel.plugins.login ?? LoginForm

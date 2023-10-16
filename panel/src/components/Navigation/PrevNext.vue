@@ -13,7 +13,6 @@
  * Group of buttons with left- and right-pointing arrows
  * used for navigation between previous and next items
  * @example <k-prev-next :prev="{ link: 'a' }" :next="false" />
- * @public
  */
 export default {
 	props: {

@@ -58,7 +58,6 @@ export const props = {
  * get parsed and emitted as time-only ISO string `HH:mm:ss`
  *
  * @example <k-input :value="time" @input="time = $event" name="time" type="time" />
- * @public
  */
 export default {
 	mixins: [DateInput, props],

@@ -40,7 +40,6 @@ import { props as TimeInput } from "../Input/TimeInput.vue";
  * and `<k-time-input>` for additional information.
  *
  * @example <k-time-field :value="time" @input="time = $event" name="time" label="Time" />
- * @public
  */
 export default {
 	mixins: [Field, Input, TimeInput],

@@ -43,9 +43,12 @@ function labWatcher() {
 		configureServer({ watcher, ws }) {
 			watcher.on("change", async (file) => {
 				// Vue components: regenerate docs and send reload to client
-				if (file.match(/panel\/src\/.*\.vue/) !== null) {
+				if (/panel\/src\/.*\.vue/.test(file) === true) {
 					const docs = await generateDocs(file);
-					ws.send("kirby:docs:" + docs[0]?.component);
+
+					if (docs[0]) {
+						ws.send("kirby:docs:" + docs[0]?.component);
+					}
 				}
 
 				// Lab examples: send reload to client

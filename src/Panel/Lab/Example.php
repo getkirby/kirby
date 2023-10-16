@@ -14,6 +14,7 @@ use Kirby\Toolkit\Str;
  *
  * @internal
  * @since 4.0.0
+ * @codeCoverageIgnore
  *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -88,7 +89,7 @@ class Example
 			$path .= '/' . $tab;
 		}
 
-		return 'https://github.com/getkirby/kirby/tree/v4/develop/' . $path;
+		return 'https://github.com/getkirby/kirby/tree/main' . $path;
 	}
 
 	public function id(): string

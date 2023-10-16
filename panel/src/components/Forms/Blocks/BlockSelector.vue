@@ -40,9 +40,6 @@
 <script>
 import Dialog from "@/mixins/dialog.js";
 
-/**
- * @internal
- */
 export default {
 	mixins: [Dialog],
 	inheritAttrs: false,

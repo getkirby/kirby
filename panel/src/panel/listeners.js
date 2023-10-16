@@ -1,5 +1,8 @@
 import { isObject } from "@/helpers/object";
 
+/**
+ * @since 4.0.0
+ */
 export default () => {
 	return {
 		/**
