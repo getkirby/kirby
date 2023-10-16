@@ -9,6 +9,7 @@
 		<div class="k-panel-menu-body">
 			<!-- Search button -->
 			<k-button
+				v-if="hasSearch"
 				:text="$t('search')"
 				icon="search"
 				class="k-panel-menu-search k-panel-menu-button"
@@ -55,6 +56,9 @@ export default {
 		};
 	},
 	computed: {
+		hasSearch() {
+			return this.$helper.object.length(this.$panel.searches) > 0;
+		},
 		menus() {
 			return this.$panel.menu.entries.split("-");
 		}
@@ -231,6 +235,10 @@ export default {
 		outline: var(--outline);
 		/* With a radius on all ends, the outline looks nicer */
 		border-radius: var(--button-rounded);
+	}
+
+	.k-panel-menu-search[aria-disabled="true"] {
+		opacity: 0;
 	}
 }
 </style>

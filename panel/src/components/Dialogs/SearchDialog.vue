@@ -104,7 +104,9 @@ export default {
 			items: [],
 			pagination: {},
 			selected: -1,
-			type: this.$panel.view.search
+			type: this.$panel.searches[this.$panel.view.search]
+				? this.$panel.view.search
+				: Object.keys(this.$panel.searches)[0]
 		};
 	},
 	computed: {

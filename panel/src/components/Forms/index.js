@@ -19,17 +19,13 @@ import LoginAlert from "./LoginAlert.vue";
 /* Form Structure */
 import StructureForm from "./Structure/StructureForm.vue";
 
-/* Form Toolbar */
-import Toolbar from "./Toolbar.vue";
-import ToolbarEmailDialog from "./Toolbar/EmailDialog.vue";
-import ToolbarLinkDialog from "./Toolbar/LinkDialog.vue";
-
 /* Form parts */
 import Blocks from "./Blocks/index.js";
 import Fields from "./Field/index.js";
 import Inputs from "./Input/index.js";
 import Layouts from "./Layouts/index.js";
 import Previews from "./Previews/index.js";
+import Toolbar from "./Toolbar/index.js";
 import Writer from "./Writer/index.js";
 
 export default {
@@ -52,15 +48,12 @@ export default {
 
 		app.component("k-structure-form", StructureForm);
 
-		app.component("k-toolbar", Toolbar);
-		app.component("k-toolbar-email-dialog", ToolbarEmailDialog);
-		app.component("k-toolbar-link-dialog", ToolbarLinkDialog);
-
 		app.use(Blocks);
 		app.use(Inputs);
 		app.use(Fields);
 		app.use(Layouts);
 		app.use(Previews);
+		app.use(Toolbar);
 		app.use(Writer);
 	}
 };

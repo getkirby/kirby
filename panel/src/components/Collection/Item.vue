@@ -8,12 +8,8 @@
 		@click="$emit('click', $event)"
 		@dragstart="$emit('drag', $event)"
 	>
-		<!--
-			@slot Replace the preview image/icon frame
-			@binding {object} image see `image` prop
-			@binding {string} layout see `layout` prop
-		-->
-		<slot name="image" v-bind="{ image, layout }">
+		<!-- Image -->
+		<slot name="image">
 			<k-item-image
 				v-if="hasFigure"
 				:image="image"
@@ -50,11 +46,8 @@
 				v-bind="button"
 			/>
 
-			<!--
-				@slot Relace the options dropdown, overrides `options` prop
-				@binding {array} options see `options` prop
-			-->
-			<slot name="options" v-bind="{ options }">
+			<!-- Options -->
+			<slot name="options">
 				<k-options-dropdown
 					v-if="options"
 					:options="options"
@@ -69,7 +62,6 @@
 <script>
 import { props as ItemImageProps } from "./ItemImage.vue";
 import { layout } from "@/mixins/props.js";
-
 /**
  * A collection item that can be displayed in various layouts
  */

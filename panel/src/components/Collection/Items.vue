@@ -29,11 +29,6 @@
 		@end="$emit('sort', items, $event)"
 	>
 		<template v-for="(item, itemIndex) in items">
-			<!--
-				@slot Replaces each item
-				@binding {object} item
-				@binding {number} index
-			-->
 			<slot v-bind="{ item, itemIndex }">
 				<k-item
 					:key="item.id ?? itemIndex"
@@ -50,11 +45,6 @@
 					@option="onOption($event, item, itemIndex)"
 				>
 					<template #options>
-						<!--
-							@slot Replaces otions for each item from `options` key of item
-							@binding {object} item
-							@binding {number} index
-						-->
 						<slot name="options" v-bind="{ item, index: itemIndex }" />
 					</template>
 				</k-item>
@@ -65,12 +55,12 @@
 
 <script>
 import { layout } from "@/mixins/props.js";
-
 /**
  * Collection items that can be displayed in various layouts
  */
 export const props = {
 	mixins: [layout],
+	inheritAttrs: false,
 	props: {
 		/**
 		 * Optional column settings for the table layout
@@ -111,7 +101,6 @@ export const props = {
 
 export default {
 	mixins: [props],
-	inheritAttrs: false,
 	props: {
 		/**
 		 * Globale image/icon settings. Will be merged with the image settings of each item. See `k-item-image` for available options.

@@ -84,14 +84,19 @@ export default {
 </script>
 
 <style>
+:root {
+	--stat-value-text-size: var(--text-2xl);
+	--stat-info-text-color: var(--color-text-dimmed);
+}
+
 .k-stat {
 	display: flex;
 	flex-direction: column;
-	background: var(--color-white);
-	box-shadow: var(--shadow);
 	padding: var(--spacing-3) var(--spacing-6);
-	line-height: var(--leading-normal);
+	background: var(--color-white);
 	border-radius: var(--rounded);
+	box-shadow: var(--shadow);
+	line-height: var(--leading-normal);
 }
 .k-stat.k-link:hover {
 	cursor: pointer;
@@ -101,17 +106,20 @@ export default {
 	display: block;
 }
 .k-stat-value {
-	font-size: var(--stat-value-text-size, var(--text-2xl));
-	margin-bottom: var(--spacing-1);
 	order: 1;
+	font-size: var(--stat-value-text-size);
+	margin-bottom: var(--spacing-1);
 }
 .k-stat-label {
-	font-size: var(--text-xs);
 	order: 2;
+	font-size: var(--text-xs);
 }
 .k-stat-info {
-	font-size: var(--text-xs);
-	color: var(--theme-color-700, var(--color-text-dimmed));
 	order: 3;
+	font-size: var(--text-xs);
+	color: var(--stat-info-text-color);
+}
+.k-stat:is([data-theme]) .k-stat-info {
+	--stat-info-text-color: var(--theme-color-700);
 }
 </style>
