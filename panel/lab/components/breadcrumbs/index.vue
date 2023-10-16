@@ -6,10 +6,9 @@
 		<k-lab-example label="Too long">
 			<k-breadcrumb :crumbs="tooLong" />
 		</k-lab-example>
-		<k-lab-example label="Root">
+		<k-lab-example label="Icon">
 			<k-breadcrumb
-				:root="{ label: 'Sweet home', icon: 'home' }"
-				:crumbs="crumbs"
+				:crumbs="[{ label: 'Sweet home', link: '/', icon: 'home' }, ...crumbs]"
 			/>
 		</k-lab-example>
 	</k-lab-examples>

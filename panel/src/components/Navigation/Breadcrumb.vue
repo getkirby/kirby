@@ -28,7 +28,6 @@
  * Displays a breadcrumb trail
  *
  * @example <k-breadcrumb
- * 	:root="{ label: 'Home', link: '/' }"
  * 	:crumbs="[{ link: '/a', label: 'A' }, { link: '/b', label: 'B' }]"
  * />
  */
@@ -47,14 +46,8 @@ export default {
 			default: "Breadcrumb"
 		},
 		/**
-		 * First segment of the breadcrumb
-		 * @since 4.0.0
-		 * @todo make required in 5.0.0
-		 */
-		root: Object,
-		/**
 		 * @todo remove in 5.0.0
-		 * @deprecated 4.0.0 Use `root` instead
+		 * @deprecated 4.0.0 Use `crumbs` instead
 		 */
 		view: Object
 	},
@@ -69,15 +62,11 @@ export default {
 		segments() {
 			const segments = [];
 
-			if (this.root || this.view) {
+			if (this.view) {
 				segments.push({
-					link: this.root?.link ?? this.view?.link,
-					label:
-						this.root?.label ??
-						this.root?.breadcrumbLabel ??
-						this.view?.label ??
-						this.view?.breadcrumbLabel,
-					icon: this.root?.icon ?? this.view?.icon,
+					link: this.view.link,
+					label: this.view.label ?? this.view.breadcrumbLabel,
+					icon: this.view.icon,
 					loading: this.$panel.isLoading
 				});
 			}
@@ -88,7 +77,7 @@ export default {
 	created() {
 		if (this.view) {
 			window.panel.deprecated(
-				"<k-breadcrumb>: `view` prop will be removed in a future version. Use `root` prop instead."
+				"<k-breadcrumb>: `view` prop will be removed in a future version. Use `crumbs` instead."
 			);
 		}
 	}
