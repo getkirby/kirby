@@ -28,15 +28,12 @@
 </template>
 
 <script>
-import Vue from "vue";
-
 import Docs from "./Docs.vue";
-import DocsDrawer from "./DocsDrawer.vue";
-
-Vue.component("k-lab-docs", Docs);
-Vue.component("k-lab-docs-drawer", DocsDrawer);
 
 export default {
+	components: {
+		"k-lab-docs": Docs
+	},
 	props: {
 		component: String,
 		docs: Object,

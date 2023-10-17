@@ -3,6 +3,7 @@
 	"private": true,
 	"scripts": {
 		"build": "vite build && npm run build:docs",
+		"build:panel": "vite build",
 		"build:docs": "node scripts/docs.mjs",
 		"dev": "vite --host",
 		"lint": "eslint \"src/**/*.{js,vue}\"",

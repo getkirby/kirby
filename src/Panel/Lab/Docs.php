@@ -130,7 +130,7 @@ class Docs
 	{
 		$root = $this->kirby->root('panel') . '/lab';
 
-		foreach (glob($root . "/{,*/,*/*/,*/*/*/}index.php", GLOB_BRACE) as $example) {
+		foreach (glob($root . '/{,*/,*/*/,*/*/*/}index.php', GLOB_BRACE) as $example) {
 			$props = require $example;
 
 			if (($props['docs'] ?? null) === $this->name) {
