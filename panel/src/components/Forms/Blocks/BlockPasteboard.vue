@@ -1,7 +1,10 @@
 <template>
 	<k-dialog
 		ref="dialog"
-		v-bind="$props"
+		:cancel-button="false"
+		:submit-button="false"
+		:visible="true"
+		size="large"
 		class="k-block-importer"
 		@cancel="$emit('cancel')"
 		@submit="$emit('submit')"
@@ -17,25 +20,8 @@
 </template>
 
 <script>
-import Dialog from "@/mixins/dialog.js";
-
 export default {
-	mixins: [Dialog],
 	inheritAttrs: false,
-	props: {
-		// eslint-disable-next-line vue/require-prop-types
-		cancelButton: {
-			default: false
-		},
-		// eslint-disable-next-line vue/require-prop-types
-		size: {
-			default: "large"
-		},
-		// eslint-disable-next-line vue/require-prop-types
-		submitButton: {
-			default: false
-		}
-	},
 	computed: {
 		shortcut() {
 			return this.$helper.keyboard.metaKey() + "+v";
