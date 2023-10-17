@@ -61,6 +61,19 @@ function labWatcher() {
 	};
 }
 
+function removeDocsBlock() {
+	return {
+		name: "kirby-remove-docs-block",
+		transform(code, id) {
+			if (/vue&type=docs/.test(id) === false) {
+				return;
+			}
+
+			return `export default ''`;
+		}
+	};
+}
+
 export default function kirby() {
-	return [devMode(), labWatcher()];
+	return [devMode(), labWatcher(), removeDocsBlock()];
 }

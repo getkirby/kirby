@@ -2,6 +2,14 @@
 	<k-panel-inside class="k-lab-index-view">
 		<k-header>Lab</k-header>
 
+		<k-tabs
+			:tab="tab"
+			:tabs="[
+				{ name: 'examples', label: 'Examples', link: '/lab' },
+				{ name: 'docs', label: 'Docs', link: '/lab/docs' }
+			]"
+		/>
+
 		<k-section
 			v-for="category in categories"
 			:key="category.name"
@@ -21,12 +29,16 @@
 <script>
 export default {
 	props: {
-		categories: Array
+		categories: Array,
+		tab: String
 	}
 };
 </script>
 
 <style>
+.k-lab-index-view .k-header {
+	margin-bottom: 0;
+}
 .k-lab-index-view .k-list-items {
 	grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
 }

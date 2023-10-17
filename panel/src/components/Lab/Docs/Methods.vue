@@ -1,21 +1,34 @@
 <template>
 	<section v-if="methods.length" class="k-lab-docs-section">
 		<k-headline class="h3">Methods</k-headline>
+
 		<div class="k-table">
 			<table>
 				<thead>
-					<th style="width: 8rem">Method</th>
+					<th style="width: 10rem">Method</th>
 					<th>Description</th>
+					<th style="width: 16rem">Params</th>
+					<th style="width: 10rem">Returns</th>
 				</thead>
 				<tbody>
 					<tr v-for="method in methods" :key="method.name">
-						<td style="width: 12rem">
+						<td>
 							<k-text>
 								<code>{{ method.name }}</code>
+								<div v-if="method.since?.length" class="k-lab-docs-since">
+									since {{ method.since }}
+								</div>
 							</k-text>
 						</td>
 						<td>
+							<k-lab-docs-deprecated :deprecated="method.deprecated" />
 							<k-text :html="method.description" />
+						</td>
+						<td>
+							<k-lab-docs-params :params="method.params" />
+						</td>
+						<td>
+							<k-lab-docs-types :types="[method.returns]" />
 						</td>
 					</tr>
 				</tbody>

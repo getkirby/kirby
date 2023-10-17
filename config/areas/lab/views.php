@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Panel\Lab\Category;
+use Kirby\Panel\Lab\Docs;
 
 return [
 	'lab' => [
@@ -9,8 +10,56 @@ return [
 			return [
 				'component' => 'k-lab-index-view',
 				'props' => [
+					'tab'        => 'examples',
 					'categories' => Category::all(),
 				],
+			];
+		}
+	],
+	'lab.docs' => [
+		'pattern' => 'lab/docs',
+		'action'  => function () {
+			return [
+				'component' => 'k-lab-index-view',
+				'title'     => 'Docs',
+				'breadcrumb' => [
+					[
+						'label' => 'Docs',
+						'link'  => 'lab/docs'
+					]
+				],
+				'props' => [
+					'tab'        => 'docs',
+					'categories' => [
+						['examples' => Docs::all()]
+					],
+				],
+			];
+		}
+	],
+	'lab.doc' => [
+		'pattern' => 'lab/docs/(:any)',
+		'action'  => function (string $component) {
+			$docs = new Docs($component);
+
+			return [
+				'component' => 'k-lab-docs-view',
+				'title'     => $component,
+				'breadcrumb' => [
+					[
+						'label' => 'Docs',
+						'link'  => 'lab/docs'
+					],
+					[
+						'label' => $component,
+						'link'  => 'lab/docs/' . $component
+					]
+				],
+				'props' => [
+					'component' => $component,
+					'docs'      => $docs->toArray(),
+					'lab'       => $docs->lab()
+				]
 			];
 		}
 	],

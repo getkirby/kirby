@@ -17,10 +17,15 @@ export default {
 	},
 	computed: {
 		options() {
-			const options = [];
+			const options = [
+				{
+					icon: "expand",
+					link: "lab/docs/" + this.docs.component
+				}
+			];
 
 			if (this.docs.github) {
-				options.push({
+				options.unshift({
 					icon: "github",
 					link: this.docs.github,
 					target: "_blank"

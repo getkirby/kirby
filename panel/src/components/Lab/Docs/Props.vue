@@ -14,18 +14,14 @@
 						<td>
 							<k-text>
 								<code>{{ prop.name }}</code>
+								<abbr v-if="prop.required" class="k-lab-docs-required">✶</abbr>
+								<div v-if="prop.since?.length" class="k-lab-docs-since">
+									since {{ prop.since }}
+								</div>
 							</k-text>
 						</td>
 						<td>
-							<k-text class="k-lab-docs-types">
-								<code
-									v-for="type in prop.type?.split('|')"
-									:key="type"
-									:data-type="type"
-								>
-									{{ type }}
-								</code>
-							</k-text>
+							<k-lab-docs-types :types="prop.type?.split('|')" />
 						</td>
 						<td>
 							<k-text v-if="prop.default">
@@ -33,28 +29,43 @@
 							</k-text>
 						</td>
 						<td class="k-lab-docs-description">
+							<k-lab-docs-deprecated :deprecated="prop.deprecated" />
+
 							<k-text
 								v-if="prop.description?.length"
 								:html="prop.description"
 							/>
 
-							<k-box
-								v-if="prop.deprecated?.length"
-								theme="warning"
-								class="k-lab-docs-deprecated"
+							<k-text
+								v-if="
+									prop.value?.length ||
+									prop.values?.length ||
+									prop.example?.length
+								"
+								class="k-lab-docs-prop-values"
 							>
-								Deprecated: {{ prop.deprecated }}
-							</k-box>
+								<dl v-if="prop.value?.length">
+									<dt>Value</dt>
+									<dd>
+										<code>{{ prop.value }}</code>
+									</dd>
+								</dl>
 
-							<k-text v-if="prop.values?.length">
-								<p class="k-lab-docs-values">
-									<strong>Values</strong><br />
-									<span>
+								<dl v-if="prop.values?.length">
+									<dt>Values</dt>
+									<dd>
 										<code v-for="value in prop.values" :key="value">
 											{{ value.replaceAll("`", "") }}
 										</code>
-									</span>
-								</p>
+									</dd>
+								</dl>
+
+								<dl v-if="prop.example?.length">
+									<dt>Example</dt>
+									<dd>
+										<code>{{ prop.example }}</code>
+									</dd>
+								</dl>
 							</k-text>
 						</td>
 					</tr>
@@ -78,3 +89,22 @@ export default {
 	mixins: [props]
 };
 </script>
+
+<style>
+.k-lab-docs-prop-values {
+	font-size: var(--text-xs);
+	border-left: 2px solid var(--color-blue-300);
+	padding-inline-start: var(--spacing-2);
+}
+.k-lab-docs-prop-values dl {
+	font-weight: var(--font-bold);
+}
+.k-lab-docs-prop-values dl + dl {
+	margin-top: var(--spacing-2);
+}
+.k-lab-docs-prop-values dd {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: var(--spacing-1);
+}
+</style>
