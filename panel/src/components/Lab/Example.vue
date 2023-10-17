@@ -21,27 +21,16 @@
 					title="Vue code"
 					@click="mode = 'inspect'"
 				/>
-				<k-button
-					:theme="mode === 'raw' ? 'info' : null"
-					icon="code"
-					size="xs"
-					title="Rendered HTML"
-					@click="mode = 'raw'"
-				/>
 			</k-button-group>
 		</header>
 
 		<!-- Preview -->
-		<div v-show="mode === 'preview'" ref="preview" class="k-lab-example-canvas">
+		<div v-if="mode === 'preview'" class="k-lab-example-canvas">
 			<slot />
 		</div>
 		<!-- Inspect -->
-		<div v-show="mode === 'inspect'" class="k-lab-example-code">
+		<div v-if="mode === 'inspect'" class="k-lab-example-code">
 			<k-code language="html">{{ component }}</k-code>
-		</div>
-		<!-- Raw -->
-		<div v-show="mode === 'raw'" class="k-lab-example-code">
-			<k-code language="html">{{ $refs.preview?.innerHTML }}</k-code>
 		</div>
 	</div>
 </template>
