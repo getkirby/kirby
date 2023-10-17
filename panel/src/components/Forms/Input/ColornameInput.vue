@@ -29,7 +29,7 @@ export const props = {
 			type: String
 		},
 		/**
-		 * @values `hex`, `rgb`, `hsl`
+		 * @values "hex", "rgb", "hsl"
 		 */
 		format: {
 			type: String,

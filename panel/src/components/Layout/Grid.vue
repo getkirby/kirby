@@ -1,5 +1,6 @@
 <template>
 	<div :data-gutter="gutter" :data-variant="variant" class="k-grid">
+		<!-- @slot All items that will be arranged in the grid -->
 		<slot />
 	</div>
 </template>
@@ -14,12 +15,12 @@ export default {
 	props: {
 		/**
 		 * @deprecated 4.0.0 Use `style="gap: "` or `variant` prop instead
-		 * @values small, medium, large, huge
+		 * @values "small", "medium", "large", "huge"
 		 */
 		gutter: String,
 		/**
 		 * Variants for common grid-spacing use cases
-		 * @values `columns`, `fields`
+		 * @values "columns", "fields"
 		 */
 		variant: String
 	},

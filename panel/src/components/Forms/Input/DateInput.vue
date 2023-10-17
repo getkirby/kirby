@@ -31,7 +31,7 @@ export const props = {
 		/**
 		 * Format to parse and display the date
 		 * @values YYYY, YY, MM, M, DD, D
-		 * @example `MM/DD/YY`
+		 * @example "MM/DD/YY"
 		 */
 		display: {
 			type: String,
@@ -39,19 +39,18 @@ export const props = {
 		},
 		/**
 		 * The last allowed date as ISO date string
-		 * @example `2025-12-31`
+		 * @example "2025-12-31"
 		 */
 		max: String,
 		/**
 		 * The first allowed date as ISO date string
-		 * @example `2020-01-01`
+		 * @example "2020-01-01"
 		 */
 		min: String,
 		/**
 		 * Rounding to the nearest step.
-		 * Requires an object with a `unit`
-		 * and a `size` key
-		 * @example { unit: 'minute', size: 30 }
+		 * @value { unit: "second"|"minute"|"hour"|"date"|"month"|"year", size: number }
+		 * @example { unit: "minute", size: 30 }
 		 */
 		step: {
 			type: Object,
@@ -68,7 +67,7 @@ export const props = {
 		},
 		/**
 		 * Value must be provided as ISO date string
-		 * @example `2012-12-12`
+		 * @example "2012-12-12"
 		 */
 		value: String
 	}

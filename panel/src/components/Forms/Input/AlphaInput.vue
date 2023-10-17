@@ -33,6 +33,7 @@ export const props = {
 };
 
 /**
+ * Input to select a color's alpha value.
  * @since 4.0.0
  * @example <k-alpha-input :value="value" @input="value = $event" />
  */
@@ -44,8 +45,9 @@ export default {
 <style>
 .k-alpha-input {
 	--range-track-back: linear-gradient(to right, transparent, currentColor);
+	--range-track-height: var(--range-thumb-size);
+
 	color: black;
 	background: var(--color-white) var(--pattern-light);
-	--range-track-height: var(--range-thumb-size);
 }
 </style>

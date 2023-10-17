@@ -44,7 +44,10 @@ export default {
 		/**
 		 * HTML element for the wrapper
 		 */
-		element: String,
+		element: {
+			type: String,
+			default: "div"
+		},
 		/**
 		 * Whether to show a sort handle or, if yes,
 		 * which CSS selector to use

@@ -11,7 +11,9 @@
 			<k-icon :type="icon" />
 		</span>
 		<span v-if="text || $slots.default" class="k-button-text">
-			<!-- @slot The Button text. You can also use the `text` prop. Leave empty for icon buttons. -->
+			<!--
+				@slot The Button text. You can also use the `text` prop. Leave empty for icon buttons.
+			-->
 			<slot>
 				{{ text }}
 			</slot>
@@ -25,6 +27,7 @@
 <script>
 /**
  * @example <k-button icon="check">Save</k-button>
+ * @example <k-button icon="check" size="sm" variant="filled">Save</k-button>
  */
 export default {
 	inheritAttrs: false,
@@ -99,7 +102,8 @@ export default {
 		selected: [String, Boolean],
 		/**
 		 * Specific sizes for buttong styling
-		 * @values `xs`, `sm`
+		 * @since 4.0.0
+		 * @values "xs", "sm"
 		 */
 		size: String,
 		/**
@@ -122,6 +126,7 @@ export default {
 		/**
 		 * The title attribute can be used to add additional text
 		 * to the button, which is shown on mouseover.
+		 * @since 4.0.0
 		 */
 		title: String,
 		/**
@@ -130,7 +135,7 @@ export default {
 		tooltip: String,
 		/**
 		 * The type attribute sets the button type like in HTML.
-		 * @values button, submit, reset
+		 * @values "button", "submit", "reset"
 		 */
 		type: {
 			type: String,
@@ -138,7 +143,8 @@ export default {
 		},
 		/**
 		 * Styling variants for the button
-		 * @values `filled`, `dimmed`
+		 * @since 4.0.0
+		 * @values "filled", "dimmed"
 		 */
 		variant: String
 	},
@@ -200,6 +206,10 @@ export default {
 		}
 	},
 	methods: {
+		/**
+		 * Focus the button
+		 * @public
+		 */
 		focus() {
 			this.$el.focus?.();
 		},
@@ -218,6 +228,11 @@ export default {
 			}
 
 			this.click?.(e);
+
+			/**
+			 * The button has been clicked
+			 * @property {PointerEvent} event the native click event
+			 */
 			this.$emit("click", e);
 		}
 	}

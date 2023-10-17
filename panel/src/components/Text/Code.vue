@@ -1,5 +1,4 @@
 <template>
-	<!-- @slot Code content -->
 	<k-highlight>
 		<pre
 			class="k-code"
@@ -10,13 +9,18 @@
 
 <script>
 /**
+ * A code block with syntax highlighting
  * @since 4.0.0
+ * @example <k-code language="html"><p>Hello World</p></k-code>
  */
 export default {
 	components: {
 		"k-highlight": () => import("./Highlight.vue")
 	},
 	props: {
+		/**
+		 * The language of the code block. Used for syntax highlighting.
+		 */
 		language: {
 			type: String
 		}
