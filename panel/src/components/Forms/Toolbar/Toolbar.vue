@@ -18,31 +18,13 @@
 						: button.click?.($event)
 				"
 			/>
-
 			<k-dropdown-content
 				v-if="(button.when ?? true) && button.dropdown?.length"
 				:key="index + '-dropdown'"
 				:ref="index + '-dropdown'"
+				:options="button.dropdown"
 				:theme="theme === 'dark' ? 'light' : 'dark'"
-			>
-				<template v-for="(item, itemIndex) in button.dropdown">
-					<hr v-if="item === '-'" :key="itemIndex" />
-
-					<k-dropdown-item
-						v-else-if="item.when ?? true"
-						:key="itemIndex"
-						:current="item.current"
-						:disabled="item.disabled"
-						:icon="item.icon"
-						@click="
-							item.click?.($event);
-							$refs[index + '-dropdown'][0].close();
-						"
-					>
-						{{ item.label }}
-					</k-dropdown-item>
-				</template>
-			</k-dropdown-content>
+			/>
 		</template>
 	</nav>
 </template>

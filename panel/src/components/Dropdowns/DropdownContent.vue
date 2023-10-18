@@ -19,12 +19,12 @@
 				<template v-for="(option, index) in items">
 					<hr v-if="option === '-'" :key="_uid + '-item-' + index" />
 					<k-dropdown-item
-						v-else
+						v-else-if="option.when ?? true"
 						:key="_uid + '-item-' + index"
 						v-bind="option"
 						@click="onOptionClick(option)"
 					>
-						{{ option.text }}
+						{{ option.label ?? option.text }}
 					</k-dropdown-item>
 				</template>
 			</slot>
