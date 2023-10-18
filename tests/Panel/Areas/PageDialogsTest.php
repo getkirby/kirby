@@ -999,6 +999,76 @@ class PageDialogsTest extends AreaTestCase
 		$this->assertSame('test-copy', $props['value']['slug']);
 	}
 
+	public function testDuplicateCopy(): void
+	{
+		$this->app([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'content' => [
+							'title' => 'Test'
+						]
+					],
+					[
+						'slug' => 'test-copy',
+						'content' => [
+							'title' => 'Test Copy'
+						]
+					],
+				]
+			]
+		]);
+
+		$this->login();
+
+		$dialog = $this->dialog('pages/test/duplicate');
+		$props  = $dialog['props'];
+
+		$this->assertFormDialog($dialog);
+
+		$this->assertSame('test-copy2', $props['value']['slug']);
+		$this->assertSame('Test Copy 2', $props['value']['title']);
+	}
+
+	public function testDuplicateCopyIncrement(): void
+	{
+		$this->app([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'content' => [
+							'title' => 'Test'
+						]
+					],
+					[
+						'slug' => 'test-copy',
+						'content' => [
+							'title' => 'Test Copy'
+						]
+					],
+					[
+						'slug' => 'test-copy2',
+						'content' => [
+							'title' => 'Test Copy 2'
+						]
+					],
+				]
+			]
+		]);
+
+		$this->login();
+
+		$dialog = $this->dialog('pages/test/duplicate');
+		$props  = $dialog['props'];
+
+		$this->assertFormDialog($dialog);
+
+		$this->assertSame('test-copy3', $props['value']['slug']);
+		$this->assertSame('Test Copy 3', $props['value']['title']);
+	}
+
 	public function testDuplicateWithChildren(): void
 	{
 		$this->app([
