@@ -18,31 +18,7 @@
 					size="xs"
 					@click="$refs.options.toggle()"
 				/>
-				<k-dropdown-content
-					ref="options"
-					:options="[
-						{
-							click: () => $refs.blocks.copyAll(),
-							disabled: isEmpty,
-							icon: 'template',
-							text: $t('copy.all')
-						},
-						{
-							click: () => $refs.blocks.pasteboard(),
-							disabled: isFull,
-							icon: 'download',
-							text: $t('paste')
-						},
-						'-',
-						{
-							click: () => $refs.blocks.removeAll(),
-							disabled: isEmpty,
-							icon: 'trash',
-							text: $t('delete.all')
-						}
-					]"
-					align-x="end"
-				/>
+				<k-dropdown-content ref="options" :options="options" align-x="end" />
 			</k-button-group>
 		</template>
 
@@ -117,6 +93,29 @@ export default {
 			}
 
 			return this.value.length >= this.max;
+		},
+		options() {
+			return [
+				{
+					click: () => this.$refs.blocks.copyAll(),
+					disabled: this.isEmpty,
+					icon: "template",
+					text: this.$t("copy.all")
+				},
+				{
+					click: () => this.$refs.blocks.pasteboard(),
+					disabled: this.isFull,
+					icon: "download",
+					text: this.$t("paste")
+				},
+				"-",
+				{
+					click: () => this.$refs.blocks.removeAll(),
+					disabled: this.isEmpty,
+					icon: "trash",
+					text: this.$t("delete.all")
+				}
+			];
 		}
 	},
 	methods: {

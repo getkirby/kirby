@@ -16,30 +16,7 @@
 					size="xs"
 					@click="$refs.options.toggle()"
 				/>
-				<k-dropdown-content
-					ref="options"
-					:options="[
-						{
-							click: () => $refs.layouts.copy(),
-							disabled: isEmpty,
-							icon: 'template',
-							text: $t('copy.all')
-						},
-						{
-							click: () => $refs.layouts.pasteboard(),
-							icon: 'download',
-							text: $t('paste')
-						},
-						'-',
-						{
-							click: () => $refs.layouts.removeAll(),
-							disabled: isEmpty,
-							icon: 'trash',
-							text: $t('delete.all')
-						}
-					]"
-					align-x="end"
-				/>
+				<k-dropdown-content ref="options" :options="options" align-x="end" />
 			</k-button-group>
 		</template>
 		<k-layouts ref="layouts" v-bind="$props" @input="$emit('input', $event)" />
@@ -71,6 +48,28 @@ export default {
 	computed: {
 		isEmpty() {
 			return this.value.length === 0;
+		},
+		options() {
+			return [
+				{
+					click: () => this.$refs.layouts.copy(),
+					disabled: this.isEmpty,
+					icon: "template",
+					text: this.$t("copy.all")
+				},
+				{
+					click: () => this.$refs.layouts.pasteboard(),
+					icon: "download",
+					text: this.$t("paste")
+				},
+				"-",
+				{
+					click: () => this.$refs.layouts.removeAll(),
+					disabled: this.isEmpty,
+					icon: "trash",
+					text: this.$t("delete.all")
+				}
+			];
 		}
 	}
 };
