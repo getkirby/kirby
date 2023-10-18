@@ -1,7 +1,7 @@
 <template>
-	<div class="k-navigate">
+	<component :is="element" class="k-navigate">
 		<slot />
-	</div>
+	</component>
 </template>
 
 <script>
@@ -12,6 +12,10 @@ export default {
 	props: {
 		axis: String,
 		disabled: Boolean,
+		element: {
+			type: String,
+			default: "div"
+		},
 		select: {
 			type: String,
 			default: ":where(button, a):not(:disabled)"
