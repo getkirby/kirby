@@ -16,29 +16,32 @@
 					size="xs"
 					@click="$refs.options.toggle()"
 				/>
-				<k-dropdown-content ref="options" align-x="end">
-					<k-dropdown-item
-						:disabled="isEmpty"
-						icon="template"
-						@click="$refs.layouts.copy()"
-					>
-						{{ $t("copy.all") }}
-					</k-dropdown-item>
-					<k-dropdown-item icon="download" @click="$refs.layouts.pasteboard()">
-						{{ $t("paste") }}
-					</k-dropdown-item>
-					<hr />
-					<k-dropdown-item
-						:disabled="isEmpty"
-						icon="trash"
-						@click="$refs.layouts.removeAll()"
-					>
-						{{ $t("delete.all") }}
-					</k-dropdown-item>
-				</k-dropdown-content>
+				<k-dropdown-content
+					ref="options"
+					:options="[
+						{
+							click: () => $refs.layouts.copy(),
+							disabled: isEmpty,
+							icon: 'template',
+							text: $t('copy.all')
+						},
+						{
+							click: () => $refs.layouts.pasteboard(),
+							icon: 'download',
+							text: $t('paste')
+						},
+						'-',
+						{
+							click: () => $refs.layouts.removeAll(),
+							disabled: isEmpty,
+							icon: 'trash',
+							text: $t('delete.all')
+						}
+					]"
+					align-x="end"
+				/>
 			</k-button-group>
 		</template>
-
 		<k-layouts ref="layouts" v-bind="$props" @input="$emit('input', $event)" />
 	</k-field>
 </template>

@@ -18,30 +18,31 @@
 					size="xs"
 					@click="$refs.options.toggle()"
 				/>
-				<k-dropdown-content ref="options" align-x="end">
-					<k-dropdown-item
-						:disabled="isEmpty"
-						icon="template"
-						@click="$refs.blocks.copyAll()"
-					>
-						{{ $t("copy.all") }}
-					</k-dropdown-item>
-					<k-dropdown-item
-						:disabled="isFull"
-						icon="download"
-						@click="$refs.blocks.pasteboard()"
-					>
-						{{ $t("paste") }}
-					</k-dropdown-item>
-					<hr />
-					<k-dropdown-item
-						:disabled="isEmpty"
-						icon="trash"
-						@click="$refs.blocks.removeAll()"
-					>
-						{{ $t("delete.all") }}
-					</k-dropdown-item>
-				</k-dropdown-content>
+				<k-dropdown-content
+					ref="options"
+					:options="[
+						{
+							click: () => $refs.blocks.copyAll(),
+							disabled: isEmpty,
+							icon: 'template',
+							text: $t('copy.all')
+						},
+						{
+							click: () => $refs.blocks.pasteboard(),
+							disabled: isFull,
+							icon: 'download',
+							text: $t('paste')
+						},
+						'-',
+						{
+							click: () => $refs.blocks.removeAll(),
+							disabled: isEmpty,
+							icon: 'trash',
+							text: $t('delete.all')
+						}
+					]"
+					align-x="end"
+				/>
 			</k-button-group>
 		</template>
 
