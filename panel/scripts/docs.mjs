@@ -53,8 +53,15 @@ export function normalizeDoc(data, path) {
 export default async function generate(file) {
 	const script = path.dirname(fileURLToPath(import.meta.url));
 	const root = path.resolve(script, "../");
-	const dist = path.resolve(root, "./dist/ui");
 	const alias = { "@": path.resolve(root, "./src/") };
+
+	let dist;
+
+	if (file) {
+		dist = path.resolve(root, "./tmp");
+	} else {
+		dist = path.resolve(root, "./dist/ui");
+	}
 
 	if (fs.existsSync(dist) === false) {
 		fs.mkdirSync(dist);
@@ -96,11 +103,9 @@ export default async function generate(file) {
 
 // If this file is run from CLI
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
-	console.log("\n");
-	console.log("Generating UI documentation...");
-
+	console.log("Generating UI documentation…");
 	// Pass absolute file path from -- argument, if given
-	generate(process.argv[2]).then((components) => {
-		console.log("--> " + components.length + " components compiled");
+	generate(process.argv[2]).then((docs) => {
+		console.log(`\x1b[32m✓\x1b[0m ${docs.length} UI docs generated.`);
 	});
 }

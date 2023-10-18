@@ -31,7 +31,7 @@ class Docs
 		protected string $name
 	) {
 		$this->kirby = App::instance();
-		$this->json  = Data::read($this->file());
+		$this->json  = $this->read();
 	}
 
 	public static function all(): array
@@ -104,11 +104,16 @@ class Docs
 		return [];
 	}
 
-	public function file(): string
+	public function file(string $context): string
 	{
+		$root = match ($context) {
+			'dev'  => $this->kirby->root('panel') . '/tmp',
+			'dist' => $this->kirby->root('panel') . '/dist/ui',
+		};
+
 		$name = Str::after($this->name, 'k-');
 		$name = Str::kebabToCamel($name);
-		return $this->kirby->root('panel') . '/dist/ui/' . $name . '.json';
+		return $root . '/' . $name . '.json';
 	}
 
 	public function github(): string
@@ -250,6 +255,17 @@ class Docs
 
 		// always return an array
 		return array_values($props);
+	}
+
+	protected function read(): array
+	{
+		$file = $this->file('dev');
+
+		if (file_exists($file) === false) {
+			$file = $this->file('dist');
+		}
+
+		return Data::read($file);
 	}
 
 	public function since(): string|null
