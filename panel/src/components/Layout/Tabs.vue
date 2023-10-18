@@ -4,11 +4,11 @@
 			v-for="btn in visible"
 			ref="visible"
 			:key="btn.name"
-			v-bind="button(btn)"
+			v-bind="(btn = button(btn))"
 			variant="dimmed"
 			class="k-tab-button"
 		>
-			{{ btn.label ?? btn.text ?? btn.name }}
+			{{ btn.text }}
 
 			<span v-if="btn.badge" :data-theme="theme" class="k-tabs-badge">
 				{{ btn.badge }}
@@ -24,15 +24,12 @@
 				variant="dimmed"
 				@click.stop="$refs.more.toggle()"
 			/>
-			<k-dropdown-content ref="more" align-x="end" class="k-tabs-dropdown">
-				<k-dropdown-item
-					v-for="btn in invisible"
-					:key="'more-' + btn.name"
-					v-bind="button(btn)"
-				>
-					{{ btn.label ?? btn.text ?? btn.name }}
-				</k-dropdown-item>
-			</k-dropdown-content>
+			<k-dropdown-content
+				ref="more"
+				:options="dropdown"
+				align-x="end"
+				class="k-tabs-dropdown"
+			/>
 		</template>
 	</nav>
 </template>
@@ -78,6 +75,9 @@ export default {
 			const tab =
 				this.tabs.find((tab) => tab.name === this.tab) ?? this.tabs[0];
 			return tab?.name;
+		},
+		dropdown() {
+			return this.invisible.map(this.button);
 		}
 	},
 	watch: {
@@ -106,7 +106,8 @@ export default {
 				link: tab.link,
 				current: tab.name === this.current,
 				icon: tab.icon,
-				title: tab.label
+				title: tab.label,
+				text: tab.label ?? tab.text ?? tab.name
 			};
 		},
 		async resize() {
