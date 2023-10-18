@@ -19,19 +19,7 @@
 				class="k-search-dialog-types"
 				@click="$refs.types.toggle()"
 			/>
-			<k-dropdown-content ref="types">
-				<k-dropdown-item
-					v-for="(typeItem, typeIndex) in $panel.searches"
-					:key="typeIndex"
-					:icon="typeItem.icon"
-					@click="
-						type = typeIndex;
-						focus();
-					"
-				>
-					{{ typeItem.label }}
-				</k-dropdown-item>
-			</k-dropdown-content>
+			<k-dropdown-content ref="types" :options="types" />
 
 			<!-- Input -->
 			<k-search-input
@@ -100,10 +88,18 @@ export default {
 	},
 	computed: {
 		currentType() {
-			return (
-				this.$panel.searches[this.type] ??
-				Object.values(this.$panel.searches)[0]
-			);
+			return this.$panel.searches[this.type] ?? this.types[0];
+		},
+		types() {
+			return Object.values(this.$panel.searches).map((search) => {
+				return {
+					...search,
+					click: () => {
+						(this.type = search.id), this.focus();
+					},
+					current: this.type === search.id
+				};
+			});
 		}
 	},
 	watch: {
