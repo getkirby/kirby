@@ -2,7 +2,8 @@
 	<button
 		ref="button"
 		:aria-disabled="disabled"
-		:data-has-toggle="removable"
+		:data-has-image="Boolean(image)"
+		:data-has-toggle="isRemovable"
 		class="k-tag"
 		type="button"
 		@keydown.delete.prevent="remove"
@@ -19,7 +20,7 @@
 		</span>
 
 		<k-icon-frame
-			v-if="removable"
+			v-if="isRemovable"
 			class="k-tag-toggle"
 			icon="cancel-small"
 			@click.native="remove"
@@ -49,6 +50,11 @@ export default {
 		 * Enables the remove button
 		 */
 		removable: Boolean
+	},
+	computed: {
+		isRemovable() {
+			return this.removable && !this.disabled;
+		}
 	},
 	methods: {
 		remove() {
@@ -97,13 +103,21 @@ export default {
 }
 .k-tag-image {
 	height: calc(var(--tag-height) - var(--spacing-2));
-	margin-inline-start: var(--spacing-1);
+	margin-inline: var(--spacing-1);
 	border-radius: var(--tag-rounded);
 	overflow: hidden;
 }
 .k-tag-text {
-	padding-inline: 0.5rem;
+	padding-inline: var(--spacing-2);
 	line-height: var(--leading-tight);
+}
+/** TODO: .k-tag:has(.k-frame) .k-tag-text  */
+.k-tag[data-has-image="true"] .k-tag-text {
+	padding-inline-start: var(--spacing-1);
+}
+/** TODO: .k-tag:has(.k-tag-toggle) .k-tag-text  */
+.k-tag[data-has-toggle="true"] .k-tag-text {
+	padding-inline-end: 0;
 }
 .k-tag-toggle {
 	width: var(--tag-height);
@@ -113,17 +127,10 @@ export default {
 .k-tag-toggle:hover {
 	filter: brightness(100%);
 }
-/** TODO: .k-tag:has(.k-tag-toggle) .k-tag-text  */
-.k-tag[data-has-toggle="true"] .k-tag-text {
-	padding-inline-end: 0;
-}
 
 .k-tag:where([aria-disabled]) {
 	background-color: var(--tag-color-disabled-back);
 	color: var(--tag-color-disabled-text);
 	cursor: not-allowed;
-}
-.k-tag:where([aria-disabled]) .k-tag-toggle {
-	display: none;
 }
 </style>
