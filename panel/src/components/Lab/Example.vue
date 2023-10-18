@@ -16,7 +16,7 @@
 				/>
 				<k-button
 					:theme="mode === 'inspect' ? 'info' : null"
-					icon="search"
+					icon="code"
 					size="xs"
 					title="Vue code"
 					@click="mode = 'inspect'"
