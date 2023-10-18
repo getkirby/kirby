@@ -13,17 +13,7 @@
 				>
 					{{ currentType.label }}
 				</k-button>
-				<k-dropdown-content ref="types">
-					<k-dropdown-item
-						v-for="(type, key) in activeTypes"
-						:key="key"
-						:current="key === linkType"
-						:icon="type.icon"
-						@click="switchType(key)"
-					>
-						{{ type.label }}
-					</k-dropdown-item>
-				</k-dropdown-content>
+				<k-dropdown-content ref="types" :options="activeTypesOptions" />
 
 				<!-- Input -->
 				<div
@@ -214,13 +204,27 @@ export default {
 				return this.availableTypes;
 			}
 
-			const available = {};
+			const active = {};
 
 			for (const type of this.options) {
-				available[type] = this.availableTypes[type];
+				active[type] = this.availableTypes[type];
 			}
 
-			return available;
+			return active;
+		},
+		activeTypesOptions() {
+			const options = [];
+
+			for (const type in this.activeTypes) {
+				options.push({
+					click: () => this.switchType(type),
+					current: type === this.linkType,
+					icon: this.activeTypes[type].icon,
+					label: this.activeTypes[type].label
+				});
+			}
+
+			return options;
 		}
 	},
 	watch: {
