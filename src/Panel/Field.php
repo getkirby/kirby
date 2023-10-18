@@ -41,7 +41,7 @@ class Field
 		foreach ($field->dialogs() as $dialogId => $dialog) {
 			$routes = [
 				...$routes,
-				Dialog::routes(
+				...Dialog::routes(
 					id: $dialogId,
 					areaId: 'site',
 					options: $dialog
