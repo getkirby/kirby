@@ -157,11 +157,8 @@ export default {
 		focus(n = 0) {
 			this.$refs.navigate.focus(n);
 		},
-		onClick(event) {
-			// close the dialog element if the backdrop is being clicked
-			if (event.target === this.$el) {
-				this.close();
-			}
+		onClick() {
+			this.close();
 		},
 		onClose() {
 			this.resetPosition();
