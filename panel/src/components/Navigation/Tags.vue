@@ -248,4 +248,7 @@ export default {
 .k-tags.k-draggable .k-tag-text {
 	cursor: grab;
 }
+.k-tags.k-draggable .k-tag-text:active {
+	cursor: grabbing;
+}
 </style>
