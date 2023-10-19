@@ -48,6 +48,7 @@ class LanguagesTest extends AreaTestCase
 				'default' => true,
 				'id' => 'en',
 				'info' => 'en',
+				'label' => 'EN',
 				'text' => 'English'
 			],
 			[
@@ -55,6 +56,7 @@ class LanguagesTest extends AreaTestCase
 				'default' => false,
 				'id' => 'de',
 				'info' => 'de',
+				'label' => 'DE',
 				'text' => 'Deutsch'
 			]
 		];

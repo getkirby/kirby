@@ -354,7 +354,17 @@ class ViewTest extends TestCase
 		];
 
 		$this->assertSame($expected, $data['$languages']);
-		$this->assertSame($expected[0], $data['$language']);
+
+		$expected = [
+			'code'      => 'en',
+			'default'   => true,
+			'direction' => 'ltr',
+			'label'     => 'EN',
+			'name'      => 'English',
+			'rules'     => Language::loadRules('en')
+		];
+
+		$this->assertSame($expected, $data['$language']);
 		$this->assertNull($data['$direction']);
 	}
 

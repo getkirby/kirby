@@ -6,7 +6,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\PageCreateDialog;
 
 /**
- * @coversDefaultClass \Kirby\Panel\Areas\PageCreateDialog
+ * @coversDefaultClass \Kirby\Panel\PageCreateDialog
  */
 class PageCreateDialogTest extends AreaTestCase
 {

@@ -282,6 +282,25 @@ class LanguageTest extends TestCase
 	}
 
 	/**
+	 * @covers ::label
+	 */
+	public function tesLabel()
+	{
+		$language = new Language([
+			'code' => 'en',
+		]);
+
+		$this->assertSame('EN', $language->label());
+
+		$language = new Language([
+			'code'  => 'en',
+			'label' => 'foo'
+		]);
+
+		$this->assertSame('foo', $language->label());
+	}
+
+	/**
 	 * @covers ::locale
 	 */
 	public function testLocale()
