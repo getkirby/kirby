@@ -78,6 +78,10 @@ return [
 							'value' => I18n::translate('language.' . ($language->isDefault() ? 'default' : 'secondary')),
 						],
 						[
+							'label' => I18n::translate('language.label'),
+							'value' => $language->label(),
+						],
+						[
 							'label' => I18n::translate('language.code'),
 							'value' => $language->code(),
 						],
@@ -112,6 +116,7 @@ return [
 						'default'   => $language->isDefault(),
 						'id'        => $language->code(),
 						'info'      => Escape::html($language->code()),
+						'label'     => $language->label(),
 						'text'      => Escape::html($language->name()),
 					]),
 					'variables' => $kirby->option('languages.variables', true)

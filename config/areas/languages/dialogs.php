@@ -24,6 +24,19 @@ $languageDialogFields = [
 		'icon'     => 'translate',
 		'width'    => '1/2'
 	],
+	'locale' => [
+		'counter' => false,
+		'label'   => I18n::translate('language.locale'),
+		'type'    => 'text',
+		'width'   => '1/2'
+	],
+	'label' => [
+		'label'    => I18n::translate('language.label'),
+		'type'     => 'text',
+		'counter'  => false,
+		'icon'     => 'translate',
+		'width'    => '1/2'
+	],
 	'direction' => [
 		'label'    => I18n::translate('language.direction'),
 		'type'     => 'select',
@@ -34,11 +47,6 @@ $languageDialogFields = [
 			['value' => 'rtl', 'text' => I18n::translate('language.direction.rtl')]
 		],
 		'width'    => '1/2'
-	],
-	'locale' => [
-		'counter' => false,
-		'label'   => I18n::translate('language.locale'),
-		'type'    => 'text',
 	],
 ];
 
@@ -70,6 +78,7 @@ return [
 					'submitButton' => I18n::translate('language.create'),
 					'value' => [
 						'code'      => '',
+						'label'     => '',
 						'direction' => 'ltr',
 						'locale'    => '',
 						'name'      => '',
@@ -83,6 +92,7 @@ return [
 			$data = $kirby->request()->get([
 				'code',
 				'direction',
+				'label',
 				'locale',
 				'name'
 			]);
@@ -154,6 +164,7 @@ return [
 					'value'        => [
 						'code'      => $language->code(),
 						'direction' => $language->direction(),
+						'label'     => $language->label(),
 						'locale'    => $locale,
 						'name'      => $language->name(),
 						'rules'     => $language->rules(),
@@ -163,9 +174,14 @@ return [
 		},
 		'submit' => function (string $id) {
 			$kirby = App::instance();
+			$data  = $kirby->request()->get([
+				'direction',
+				'label',
+				'locale',
+				'name'
+			]);
 
-			$data = $kirby->request()->get(['direction', 'locale', 'name']);
-			$language = Find::language($id)->update($data);
+			Find::language($id)->update($data);
 
 			return [
 				'event' => 'language.update'

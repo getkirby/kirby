@@ -57,13 +57,19 @@ export default {
 
 <style>
 .k-stats {
+	--stats-grid-columns: 14rem;
+
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+	grid-template-columns: repeat(
+		auto-fit,
+		minmax(var(--stats-grid-columns), 1fr)
+	);
 	grid-auto-rows: 1fr;
 	grid-gap: var(--spacing-2px);
 }
 
 .k-stats[data-size="small"] {
+	--stats-grid-columns: 10rem;
 	--stat-value-text-size: var(--text-md);
 }
 .k-stats[data-size="medium"] {

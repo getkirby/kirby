@@ -428,6 +428,7 @@ class Language
 			'code'         => $this->code(),
 			'default'      => $this->isDefault(),
 			'direction'    => $this->direction(),
+			'label'        => $this->label(),
 			'locale'       => Locale::export($this->locale()),
 			'name'         => $this->name(),
 			'translations' => $this->translations(),
@@ -570,8 +571,10 @@ class Language
 	 * Returns a language variable object
 	 * for the key in the translations array
 	 */
-	public function variable(string $key, bool $decode = false): LanguageVariable
-	{
+	public function variable(
+		string $key,
+		bool $decode = false
+	): LanguageVariable {
 		// allows decoding if base64-url encoded url is sent
 		// for compatibility of different environments
 		if ($decode === true) {

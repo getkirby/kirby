@@ -60,7 +60,9 @@ export default {
 				image: {
 					back: "black",
 					color: "gray",
-					icon: "translate"
+					icon: this.$helper.string.hasEmoji(language.label)
+						? language.label
+						: "translate"
 				},
 				link: () => {
 					if (this.variables === false) {
