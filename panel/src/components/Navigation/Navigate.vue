@@ -91,9 +91,15 @@ export default {
 					break;
 			}
 
-			event?.preventDefault();
+			if (next < 0) {
+				this.$emit("prev");
+			} else if (next >= elements.length) {
+				this.$emit("next");
+			} else {
+				elements[next]?.focus();
+			}
 
-			elements[next]?.focus();
+			event?.preventDefault();
 		},
 		next(event) {
 			this.move("next", event);
