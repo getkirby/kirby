@@ -59,8 +59,8 @@ function labDev() {
 				// Vue components: regenerate docs in tmp directory
 				// and send reload to client
 				if (/panel\/src\/.*\.vue/.test(file) === true) {
-					const doc = await generateDocs(file);
-					ws.send("kirby:docs:" + doc?.component);
+					const docs = await generateDocs(file);
+					ws.send("kirby:docs:" + docs[0]?.component);
 				}
 
 				// Lab examples: send reload to client
