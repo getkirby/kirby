@@ -12,6 +12,7 @@
 			@create="add"
 			@input="input"
 			@escape="$refs.dropdown.close()"
+			@click.native.stop
 		/>
 	</k-dropdown-content>
 </template>
