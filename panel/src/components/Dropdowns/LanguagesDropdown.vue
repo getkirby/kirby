@@ -7,6 +7,7 @@
 		<k-button
 			:dropdown="true"
 			:text="language.label"
+			icon="translate"
 			responsive="text"
 			size="sm"
 			variant="filled"
