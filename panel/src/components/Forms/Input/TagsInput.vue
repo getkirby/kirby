@@ -8,7 +8,7 @@
 		@click.native.stop
 	>
 		<k-button
-			v-if="max && value.length >= max"
+			v-if="!max || value.length < max"
 			:id="id"
 			ref="toggle"
 			:autofocus="autofocus"
