@@ -116,6 +116,7 @@ export default {
 	font-weight: 700;
 }
 .k-block-type-heading-level {
+	--input-color-back: transparent;
 	--input-color-border: none;
 	--input-color-text: var(--color-gray-600);
 	font-weight: var(--font-bold);
