@@ -20,16 +20,25 @@
 			/>
 		</header>
 
-		<component
-			:is="multiple ? 'k-checkboxes-input' : 'k-radio-input'"
-			v-if="filteredOptions.length"
-			ref="options"
-			:disabled="disabled"
-			:options="choices"
-			:value="value"
-			class="k-picklist-input-options"
-			@input="input"
-		/>
+		<template v-if="filteredOptions.length">
+			<component
+				:is="multiple ? 'k-checkboxes-input' : 'k-radio-input'"
+				ref="options"
+				:disabled="disabled"
+				:options="choices"
+				:value="value"
+				class="k-picklist-input-options"
+				@input="input"
+			/>
+
+			<k-button
+				v-if="display !== true && filteredOptions.length > display"
+				class="k-picklist-input-more"
+				@click="display = true"
+			>
+				{{ $t("options.all", { count: filteredOptions.length }) }}
+			</k-button>
+		</template>
 
 		<p v-if="showEmpty" class="k-picklist-input-empty">
 			{{ $t("options.none") }}
@@ -128,13 +137,19 @@ export default {
 	mixins: [Input, props],
 	data() {
 		return {
-			current: -1,
+			display: this.search.display ?? true,
 			query: ""
 		};
 	},
 	computed: {
 		choices() {
-			return this.filteredOptions.map((option) => ({
+			let options = this.filteredOptions;
+
+			if (this.display !== true) {
+				options = options.slice(0, this.display);
+			}
+
+			return options.map((option) => ({
 				...option,
 				// disable options if max is reached that are not yet selected,
 				// allow interaction with already selected options to allow deselecting
@@ -304,6 +319,12 @@ export default {
 }
 .k-picklist-input-options .k-choice-input b {
 	color: var(--picklist-highlight);
+}
+
+.k-picklist-input-more.k-button {
+	--button-width: 100%;
+	padding: var(--spacing-1) var(--spacing-2);
+	font-size: var(--text-xs);
 }
 
 .k-picklist-input-empty {

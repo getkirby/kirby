@@ -85,6 +85,9 @@ export default {
 .k-picklist-dropdown .k-picklist-input-options .k-choice-input:hover {
 	background-color: var(--dropdown-color-hr);
 }
+.k-picklist-dropdown .k-picklist-input-more.k-button:hover {
+	--button-color-back: var(--dropdown-color-hr);
+}
 
 .k-picklist-dropdown .k-picklist-input-create:hover {
 	--button-color-back: var(--dropdown-color-hr);
