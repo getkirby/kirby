@@ -42,7 +42,7 @@
 				class="k-picklist-input-create"
 				@click="add"
 			>
-				<strong>{{ create.submit ?? $t("create") }}:</strong>
+				<strong>{{ create.submit ?? $t("add") }}:</strong>
 				<span class="k-picklist-input-create-preview">{{ query }}</span>
 			</k-button>
 		</footer>
