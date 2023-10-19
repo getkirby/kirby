@@ -25,27 +25,11 @@
 					@updateColumn="updateColumn({ layout, index, ...$event })"
 				/>
 			</k-draggable>
-
-			<footer
-				v-if="!disabled"
-				class="k-layouts-footer k-bar"
-				data-align="center"
-			>
-				<k-button
-					:title="$t('add')"
-					icon="add"
-					size="xs"
-					variant="filled"
-					@click="select(rows.length)"
-				/>
-			</footer>
 		</template>
 
-		<template v-else>
-			<k-empty icon="dashboard" class="k-layout-empty" @click="select(0)">
-				{{ empty ?? $t("field.layout.empty") }}
-			</k-empty>
-		</template>
+		<k-empty v-else icon="dashboard" class="k-layout-empty" @click="select(0)">
+			{{ empty ?? $t("field.layout.empty") }}
+		</k-empty>
 	</div>
 </template>
 
@@ -340,8 +324,5 @@ export default {
 	outline: 2px solid var(--color-focus);
 	cursor: grabbing;
 	z-index: 1;
-}
-.k-layouts-footer {
-	margin-top: var(--spacing-3);
 }
 </style>

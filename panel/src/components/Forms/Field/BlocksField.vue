@@ -44,10 +44,10 @@
 			data-align="center"
 		>
 			<k-button
+				:title="$t('add')"
 				icon="add"
 				size="xs"
 				variant="filled"
-				:title="$t('add')"
 				@click="$refs.blocks.choose(value.length)"
 			/>
 		</footer>
