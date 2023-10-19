@@ -31,12 +31,14 @@
 </template>
 
 <script>
+import Block from "./Default.vue";
+
 /**
  * @displayName BlockTypeFields
  * @since 4.0.0
- * @internal
  */
 export default {
+	extends: Block,
 	props: {
 		endpoints: Object,
 		tabs: Object

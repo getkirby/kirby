@@ -11,11 +11,13 @@
 </template>
 
 <script>
+import Block from "./Default.vue";
+
 /**
  * @displayName BlockTypeList
- * @internal
  */
 export default {
+	extends: Block,
 	emits: ["open", "split", "update"],
 	computed: {
 		isSplitable() {

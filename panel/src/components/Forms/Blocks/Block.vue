@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { props as BlockProps } from "./BlockType.vue";
+import { props as BlockProps } from "./Types/Default.vue";
 import { props as BlockOptionsProps } from "./BlockOptions.vue";
 
 export default {
