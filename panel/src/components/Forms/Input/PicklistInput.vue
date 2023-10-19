@@ -113,6 +113,9 @@ export const props = {
 	}
 };
 
+/**
+ * @since 4.0.0
+ */
 export default {
 	mixins: [Input, props],
 	data() {
@@ -128,7 +131,6 @@ export default {
 				// disable options if max is reached that are not yet selected,
 				// allow interaction with already selected options to allow deselecting
 				disabled:
-					this.disabled ||
 					option.disabled ||
 					(this.isFull && this.value.includes(option.value) === false),
 				text: this.highlight(option.text)
@@ -145,11 +147,7 @@ export default {
 			});
 		},
 		isFull() {
-			if (!this.max) {
-				return false;
-			}
-
-			return this.value.length >= this.max;
+			return this.max && this.value.length >= this.max;
 		},
 		showCreate() {
 			if (this.create === false) {
@@ -188,15 +186,6 @@ export default {
 		}
 	},
 	watch: {
-		options() {
-			// reset the focus to the search input
-			// if the currently focussed option disappears
-			this.$nextTick(() => {
-				if (this.$el.contains(document.activeElement) === false) {
-					this.$refs.search?.focus();
-				}
-			});
-		},
 		value: {
 			handler() {
 				this.$emit("invalid", this.$v.$invalid, this.$v);
@@ -218,7 +207,11 @@ export default {
 			}
 		},
 		focus() {
-			this.$refs.search?.focus();
+			if (this.$refs.search) {
+				this.$refs.search.focus();
+			} else {
+				this.$refs.options?.focus();
+			}
 		},
 		highlight(string) {
 			// make sure that no HTML exists before in the string

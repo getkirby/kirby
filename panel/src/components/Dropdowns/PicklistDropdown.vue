@@ -19,6 +19,9 @@
 <script>
 import { props as PicklistInputProps } from "@/components/Forms/Input/PicklistInput.vue";
 
+/**
+ * @since 4.0.0
+ */
 export default {
 	mixins: [PicklistInputProps],
 	methods: {
