@@ -1,14 +1,30 @@
 <script>
+import { props as BlockTitleProps } from "./BlockTitle.vue";
+
+export const props = {
+	mixins: [BlockTitleProps],
+	props: {
+		/**
+		 * API endpoints
+		 * @value { field, model, section }
+		 */
+		endpoints: {
+			default: () => ({}),
+			type: [Array, Object]
+		},
+		/**
+		 * A unique ID for the block
+		 */
+		id: String
+	}
+};
+
 /**
  * @internal
  */
 export default {
+	mixins: [props],
 	inheritAttrs: false,
-	props: {
-		content: [Object, Array],
-		fieldset: Object,
-		id: String
-	},
 	emits: ["open", "update"],
 	methods: {
 		field(name, fallback = null) {

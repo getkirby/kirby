@@ -11,18 +11,29 @@
 </template>
 
 <script>
-export default {
-	inheritAttrs: false,
+export const props = {
 	props: {
+		/**
+		 * The block content is an object of values,
+		 * depending on the block type.
+		 */
+		content: {
+			default: () => ({}),
+			type: [Array, Object]
+		},
+		/**
+		 * The fieldset definition with all fields, tabs, etc.
+		 */
 		fieldset: {
 			default: () => ({}),
 			type: Object
-		},
-		content: {
-			default: () => ({}),
-			type: Object
 		}
-	},
+	}
+};
+
+export default {
+	mixins: [props],
+	inheritAttrs: false,
 	computed: {
 		icon() {
 			return this.fieldset.icon ?? "box";
