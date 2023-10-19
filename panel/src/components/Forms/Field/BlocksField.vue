@@ -26,6 +26,7 @@
 			ref="blocks"
 			:autofocus="autofocus"
 			:compact="false"
+			:disabled="disabled"
 			:empty="empty"
 			:endpoints="endpoints"
 			:fieldsets="fieldsets"

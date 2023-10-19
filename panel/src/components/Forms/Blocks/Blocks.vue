@@ -1,5 +1,6 @@
 <template>
 	<div
+		:data-disabled="disabled"
 		:data-empty="blocks.length === 0"
 		:data-multi-select-key="isMultiSelectKey"
 		class="k-blocks"
@@ -75,6 +76,7 @@ export default {
 	inheritAttrs: false,
 	props: {
 		autofocus: Boolean,
+		disabled: Boolean,
 		empty: String,
 		endpoints: Object,
 		fieldsets: Object,
@@ -710,13 +712,15 @@ export default {
 </script>
 
 <style>
-.k-blocks:not([data-empty="true"]) {
-	background: var(--color-white);
-	box-shadow: var(--shadow);
+.k-blocks {
 	border-radius: var(--rounded);
 }
-[data-disabled="true"] .k-blocks {
-	background: var(--color-background);
+.k-blocks:not([data-empty="true"], [data-disabled="true"]) {
+	background: var(--color-white);
+	box-shadow: var(--shadow);
+}
+.k-blocks[data-disabled="true"]:not([data-empty="true"]) {
+	border: 1px solid var(--input-color-border);
 }
 .k-blocks[data-multi-select-key="true"] .k-block-container * {
 	pointer-events: none;
