@@ -421,7 +421,7 @@ trait FileActions
 		bool $validate = false
 	): static {
 		// delete all public media versions when focus field gets changed
-		if ($input !== null && array_key_exists('focus', $input) === true) {
+		if (($input['focus'] ?? null) !== $this->focus()->value()) {
 			$this->unpublish(true);
 		}
 
