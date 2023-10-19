@@ -302,6 +302,7 @@ export default {
 }
 
 .k-picklist-input-options .k-choice-input {
+	height: var(--button-height);
 	padding: var(--spacing-1) var(--spacing-2);
 	flex-direction: row-reverse;
 	justify-content: space-between;

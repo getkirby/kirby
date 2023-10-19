@@ -76,7 +76,10 @@ export default {
 }
 
 .k-picklist-dropdown .k-picklist-input-options {
-	max-height: calc((var(--button-height) * 9.6) + var(--dropdown-padding));
+	/* 2px = grid gap of choices list */
+	max-height: calc(
+		var(--button-height) * 9.5 + 2px * 9 + var(--dropdown-padding)
+	);
 	overflow-y: auto;
 	overscroll-behavior: contain;
 	scroll-padding-top: var(--dropdown-padding);
