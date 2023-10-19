@@ -1,7 +1,7 @@
 <template>
-	<div class="k-navigate">
+	<component :is="element" class="k-navigate">
 		<slot />
-	</div>
+	</component>
 </template>
 
 <script>
@@ -12,16 +12,16 @@ export default {
 	props: {
 		axis: String,
 		disabled: Boolean,
-		select: String
+		element: {
+			type: String,
+			default: "div"
+		},
+		select: {
+			type: String,
+			default: ":where(button, a):not(:disabled)"
+		}
 	},
 	computed: {
-		elements() {
-			return Array.from(
-				this.$el.querySelectorAll(
-					this.select ?? ":where(button, a):not(:disabled)"
-				)
-			);
-		},
 		keys() {
 			switch (this.axis) {
 				case "x":
@@ -62,8 +62,15 @@ export default {
 			this.keys[event.key]?.apply(this, [event]);
 		},
 		move(next = 0, event) {
-			const elements = this.elements;
-			let index = elements.indexOf(document.activeElement);
+			// get all focusable elements
+			const elements = [...this.$el.querySelectorAll(this.select)];
+
+			// find the currently focused element
+			let index = elements.findIndex(
+				(element) =>
+					element === document.activeElement ||
+					element.contains(document.activeElement)
+			);
 
 			if (index === -1) {
 				index = 0;
