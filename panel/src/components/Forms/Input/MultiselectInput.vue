@@ -1,30 +1,63 @@
 <template>
-	<div class="k-multiselect-input">
-		<k-tags
-			ref="tags"
+	<k-tags
+		ref="tags"
+		:draggable="false"
+		:options="options"
+		:sort="true"
+		:value="value"
+		class="k-multiselect-input"
+		@input="$emit('input', $event)"
+		@click.native.stop="$refs.dropdown.toggle()"
+	>
+		<k-picklist-dropdown
+			ref="dropdown"
 			v-bind="$props"
+			:options="options"
 			@input="$emit('input', $event)"
-			@click.native.stop
 		/>
-	</div>
+	</k-tags>
 </template>
 
 <script>
-import TagsInput, { props as TagsInputProps } from "./TagsInput.vue";
+import Input from "@/mixins/input.js";
+import { picklist as PicklistInput } from "@/components/Forms/Input/PicklistInput.vue";
+import { name, required } from "@/mixins/props.js";
+
+import {
+	required as validateRequired,
+	minLength as validateMinLength,
+	maxLength as validateMaxLength
+} from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [TagsInputProps],
+	mixins: [name, required, PicklistInput],
 	props: {
-		accept: {
-			default: "string",
-			type: String
+		value: {
+			default: () => [],
+			type: Array
 		}
+	},
+	watch: {
+		value: {
+			handler() {
+				this.$emit("invalid", this.$v.$invalid, this.$v);
+			},
+			immediate: true
+		}
+	},
+	validations() {
+		return {
+			value: {
+				required: this.required ? validateRequired : true,
+				minLength: this.min ? validateMinLength(this.min) : true,
+				maxLength: this.max ? validateMaxLength(this.max) : true
+			}
+		};
 	}
 };
 
 export default {
-	extends: TagsInput,
-	mixins: [props]
+	mixins: [Input, props]
 };
 </script>
 

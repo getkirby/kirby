@@ -1,52 +1,210 @@
 <template>
-	<div class="k-tags-input">
-		<k-tags
-			ref="tags"
-			v-bind="$props"
-			@input="$emit('input', $event)"
-			@click.native.stop
+	<k-tags
+		ref="tags"
+		v-bind="$props"
+		class="k-tags-input"
+		@edit="edit"
+		@input="$emit('input', $event)"
+		@click.native.stop
+	>
+		<k-button
+			v-if="max && value.length >= max"
+			:id="id"
+			ref="toggle"
+			:autofocus="autofocus"
+			icon="add"
+			class="k-tags-input-toggle k-tags-navigatable"
+			size="xs"
+			@click.native="$refs.create.open()"
+			@keydown.native.delete="$refs.tags.focus('prev')"
+			@keydown.native="toggle"
 		/>
-	</div>
+
+		<k-picklist-dropdown
+			ref="replace"
+			v-bind="picklist"
+			:multiple="false"
+			:options="replacableOptions"
+			:value="editing?.tag.value ?? ''"
+			@create="replace"
+			@input="replace"
+		/>
+
+		<k-picklist-dropdown
+			ref="create"
+			v-bind="picklist"
+			:options="creatableOptions"
+			:value="value"
+			@create="create"
+			@input="pick"
+		/>
+	</k-tags>
 </template>
 
 <script>
-import Input from "@/mixins/input.js";
-import { name, required } from "@/mixins/props.js";
+import Multiselect, { props as MultiselectProps } from "./MultiselectInput.vue";
 import { props as TagsProps } from "@/components/Navigation/Tags.vue";
 
-import {
-	required as validateRequired,
-	minLength as validateMinLength,
-	maxLength as validateMaxLength
-} from "vuelidate/lib/validators";
-
 export const props = {
-	mixins: [name, required, TagsProps]
+	mixins: [TagsProps, MultiselectProps],
+	props: {
+		/**
+		 * Whether to accept only options or also custom tags
+		 * @values "all", "options"
+		 */
+		accept: {
+			type: String,
+			default: "all"
+		}
+	}
 };
 
 export default {
-	mixins: [Input, props],
-	watch: {
-		value: {
-			handler() {
-				this.$emit("invalid", this.$v.$invalid, this.$v);
-			},
-			immediate: true
+	extends: Multiselect,
+	mixins: [props],
+	data() {
+		return {
+			editing: null
+		};
+	},
+	computed: {
+		creatableOptions() {
+			// tags should be unique, so when creating,
+			// only show options that are not already selected
+			return this.options.filter(
+				(option) => this.value.includes(option.value) === false
+			);
+		},
+		picklist() {
+			return {
+				disabled: this.disabled,
+				create: this.showCreate,
+				ignore: this.ignore,
+				min: this.min,
+				max: this.max,
+				search: this.showSearch
+			};
+		},
+		replacableOptions() {
+			// when replacing, we want to hide all options
+			// that are already selected (as in `creatableOptions`),
+			// but the one we are replacing should be visible for context
+			return this.options.filter(
+				(option) =>
+					this.value.includes(option.value) === false ||
+					option.value === this.editing?.tag.value
+			);
+		},
+		showCreate() {
+			// never show create when only accepting options
+			if (this.accept === "options") {
+				return false;
+			}
+
+			// when replacing, show custom submit text
+			if (this.editing) {
+				return { submit: this.$t("replace.with") };
+			}
+
+			return true;
+		},
+		showSearch() {
+			if (this.search === false) {
+				return false;
+			}
+
+			if (this.editing) {
+				return { placeholder: this.$t("replace.with"), ...this.search };
+			}
+
+			if (this.accept === "options") {
+				return { placeholder: this.$t("filter"), ...this.search };
+			}
+
+			return this.search;
 		}
 	},
 	methods: {
-		focus() {
-			this.$refs.tags.open();
-		}
-	},
-	validations() {
-		return {
-			value: {
-				required: this.required ? validateRequired : true,
-				minLength: this.min ? validateMinLength(this.min) : true,
-				maxLength: this.max ? validateMaxLength(this.max) : true
+		create(input) {
+			// convert input to tag object
+			const tag = this.$refs.tags.tag(input);
+
+			// no new tags if this is full,
+			// check if the tag is accepted
+			if (this.isAllowed(tag) === true) {
+				const tags = this.$helper.object.clone(this.value);
+				tags.push(tag.value);
+				this.$emit("input", tags);
 			}
-		};
+
+			this.$refs.create.close();
+		},
+		async edit(index, tag) {
+			this.editing = { index, tag };
+			this.$refs.replace.open();
+		},
+		focus() {
+			this.$refs.create.open();
+		},
+		isAllowed(tag) {
+			if (typeof tag !== "object" || tag.value.trim().length === 0) {
+				return false;
+			}
+
+			// if only options are allowed as value
+			if (this.accept === "options" && !this.$refs.tags.option(tag)) {
+				return false;
+			}
+
+			// don't allow duplicates
+			if (this.value.includes(tag.value) === true) {
+				return false;
+			}
+
+			return true;
+		},
+		pick(tags) {
+			this.$emit("input", tags);
+			this.$refs.create.close();
+		},
+		replace(value) {
+			// get index of tag that is being replaced
+			// and tag object of the new value
+			const { index } = this.editing;
+			const updated = this.$refs.tags.tag(value);
+
+			// close the replace dropdown and reset editing
+			this.$refs.replace.close();
+			this.editing = null;
+
+			// don't replace if the new value is not allowed
+			if (this.isAllowed(updated) === false) {
+				return false;
+			}
+
+			// replace the tag at the given index
+			const tags = this.$helper.object.clone(this.value);
+			tags.splice(index, 1, updated.value);
+			this.$emit("input", tags);
+
+			// focus the tag that was replaced
+			this.$refs.tags.navigate(index);
+		},
+		toggle(event) {
+			if (event.metaKey || event.altKey || event.ctrlKey) {
+				return false;
+			}
+
+			if (event.key === "ArrowDown") {
+				this.$refs.create.open();
+				event.preventDefault();
+				return;
+			}
+
+			if (String.fromCharCode(event.keyCode).match(/(\w)/g)) {
+				this.$refs.create.open();
+			}
+		}
 	}
 };
 </script>
@@ -54,5 +212,22 @@ export default {
 <style>
 .k-tags-input {
 	padding: var(--tags-gap);
+}
+
+.k-tags-input-toggle.k-button {
+	--button-rounded: var(--rounded-sm);
+	--button-color-icon: var(--color-gray-600);
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+.k-tags-input:is(:hover, :focus-within) .k-tags-input-toggle {
+	opacity: 1;
+}
+.k-tags-input .k-tags-input-toggle:is(:focus, :hover) {
+	--button-color-icon: var(--color-text);
+}
+
+.k-tags-input .k-picklist-dropdown {
+	margin-top: var(--spacing-1);
 }
 </style>
