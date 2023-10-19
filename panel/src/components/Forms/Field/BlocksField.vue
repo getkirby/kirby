@@ -18,30 +18,7 @@
 					size="xs"
 					@click="$refs.options.toggle()"
 				/>
-				<k-dropdown-content ref="options" align-x="end">
-					<k-dropdown-item
-						:disabled="isEmpty"
-						icon="template"
-						@click="$refs.blocks.copyAll()"
-					>
-						{{ $t("copy.all") }}
-					</k-dropdown-item>
-					<k-dropdown-item
-						:disabled="isFull"
-						icon="download"
-						@click="$refs.blocks.pasteboard()"
-					>
-						{{ $t("paste") }}
-					</k-dropdown-item>
-					<hr />
-					<k-dropdown-item
-						:disabled="isEmpty"
-						icon="trash"
-						@click="$refs.blocks.removeAll()"
-					>
-						{{ $t("delete.all") }}
-					</k-dropdown-item>
-				</k-dropdown-content>
+				<k-dropdown-content ref="options" :options="options" align-x="end" />
 			</k-button-group>
 		</template>
 
@@ -116,6 +93,29 @@ export default {
 			}
 
 			return this.value.length >= this.max;
+		},
+		options() {
+			return [
+				{
+					click: () => this.$refs.blocks.copyAll(),
+					disabled: this.isEmpty,
+					icon: "template",
+					text: this.$t("copy.all")
+				},
+				{
+					click: () => this.$refs.blocks.pasteboard(),
+					disabled: this.isFull,
+					icon: "download",
+					text: this.$t("paste")
+				},
+				"-",
+				{
+					click: () => this.$refs.blocks.removeAll(),
+					disabled: this.isEmpty,
+					icon: "trash",
+					text: this.$t("delete.all")
+				}
+			];
 		}
 	},
 	methods: {

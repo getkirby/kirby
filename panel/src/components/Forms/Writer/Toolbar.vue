@@ -226,7 +226,6 @@ export default {
 			}
 		},
 		command(command, ...args) {
-			this.$refs.toolbar.close();
 			this.$emit("command", command, ...args);
 		},
 		/**

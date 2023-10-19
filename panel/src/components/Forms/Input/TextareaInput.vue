@@ -186,7 +186,6 @@ export default {
 			}
 
 			this[command](...args);
-			this.$refs.toolbar?.close();
 		},
 		onDrop($event) {
 			// dropping files

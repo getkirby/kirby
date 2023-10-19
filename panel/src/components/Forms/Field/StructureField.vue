@@ -18,18 +18,24 @@
 					variant="filled"
 					@click="$refs.options.toggle()"
 				/>
-				<k-dropdown-content ref="options" align-x="end">
-					<k-dropdown-item :disabled="!more" icon="add" @click="add()">
-						{{ $t("add") }}
-					</k-dropdown-item>
-					<k-dropdown-item
-						:disabled="items.length === 0 || disabled"
-						icon="trash"
-						@click="removeAll"
-					>
-						{{ $t("delete.all") }}
-					</k-dropdown-item>
-				</k-dropdown-content>
+				<k-dropdown-content
+					ref="options"
+					:options="[
+						{
+							click: () => add(),
+							disabled: !more,
+							icon: 'add',
+							text: $t('add')
+						},
+						{
+							click: () => removeAll(),
+							disabled: items.length === 0 || disabled,
+							icon: 'trash',
+							text: $t('delete.all')
+						}
+					]"
+					align-x="end"
+				/>
 			</k-button-group>
 		</template>
 

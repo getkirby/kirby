@@ -19,12 +19,12 @@
 				<template v-for="(option, index) in items">
 					<hr v-if="option === '-'" :key="_uid + '-item-' + index" />
 					<k-dropdown-item
-						v-else
+						v-else-if="option.when ?? true"
 						:key="_uid + '-item-' + index"
 						v-bind="option"
 						@click="onOptionClick(option)"
 					>
-						{{ option.text }}
+						{{ option.label ?? option.text }}
 					</k-dropdown-item>
 				</template>
 			</slot>
@@ -157,11 +157,8 @@ export default {
 		focus(n = 0) {
 			this.$refs.navigate.focus(n);
 		},
-		onClick(event) {
-			// close the dialog element if the backdrop is being clicked
-			if (event.target === this.$el) {
-				this.close();
-			}
+		onClick() {
+			this.close();
 		},
 		onClose() {
 			this.resetPosition();

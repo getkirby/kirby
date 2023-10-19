@@ -36,40 +36,7 @@
 				icon="angle-down"
 				@click="$refs.options.toggle()"
 			/>
-			<k-dropdown-content ref="options" align-x="end">
-				<k-dropdown-item icon="angle-up" @click="$emit('prepend')">
-					{{ $t("insert.before") }}
-				</k-dropdown-item>
-				<k-dropdown-item icon="angle-down" @click="$emit('append')">
-					{{ $t("insert.after") }}
-				</k-dropdown-item>
-				<hr />
-				<k-dropdown-item v-if="settings" icon="settings" @click="openSettings">
-					{{ $t("settings") }}
-				</k-dropdown-item>
-				<k-dropdown-item icon="copy" @click="$emit('duplicate')">
-					{{ $t("duplicate") }}
-				</k-dropdown-item>
-				<k-dropdown-item
-					:disabled="layouts.length === 1"
-					icon="dashboard"
-					@click="$emit('change')"
-				>
-					{{ $t("field.layout.change") }}
-				</k-dropdown-item>
-				<hr />
-				<k-dropdown-item icon="template" @click="$emit('copy')">
-					{{ $t("copy") }}
-				</k-dropdown-item>
-				<k-dropdown-item icon="download" @click="$emit('paste')">
-					{{ $t("paste.after") }}
-				</k-dropdown-item>
-				<hr />
-				<k-dropdown-item icon="trash" @click="remove">
-					{{ $t("field.layout.delete") }}
-				</k-dropdown-item>
-			</k-dropdown-content>
-
+			<k-dropdown-content ref="options" :options="options" align-x="end" />
 			<k-sort-handle />
 		</nav>
 	</section>
@@ -93,6 +60,55 @@ export default {
 		settings: Object
 	},
 	computed: {
+		options() {
+			return [
+				{
+					click: () => this.$emit("prepend"),
+					icon: "angle-up",
+					text: this.$t("insert.before")
+				},
+				{
+					click: () => this.$emit("append"),
+					icon: "angle-down",
+					text: this.$t("insert.after")
+				},
+				"-",
+				{
+					click: () => this.openSettings(),
+					icon: "settings",
+					text: this.$t("settings"),
+					when: this.$helper.object.isEmpty(this.settings) === false
+				},
+				{
+					click: () => this.$emit("duplicate"),
+					icon: "copy",
+					text: this.$t("duplicate")
+				},
+				{
+					click: () => this.$emit("change"),
+					disabled: this.layouts.length === 1,
+					icon: "dashboard",
+					text: this.$t("field.layout.change")
+				},
+				"-",
+				{
+					click: () => this.$emit("copy"),
+					icon: "template",
+					text: this.$t("copy")
+				},
+				{
+					click: () => this.$emit("paste"),
+					icon: "download",
+					text: this.$t("paste.after")
+				},
+				"-",
+				{
+					click: () => this.remove(),
+					icon: "trash",
+					text: this.$t("field.layout.delete")
+				}
+			];
+		},
 		tabs() {
 			let tabs = this.settings.tabs;
 
