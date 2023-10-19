@@ -91,32 +91,26 @@ export default {
 	},
 	computed: {
 		options() {
-			const options = [
+			return [
 				{
 					icon: "open",
 					text: this.$t("open"),
 					link: this.url,
 					target: "_blank"
+				},
+				{
+					icon: "cancel",
+					text: this.$t("file.focus.reset"),
+					click: () => this.$refs.focus.reset(),
+					when: this.focusable && this.focus
+				},
+				{
+					icon: "preview",
+					text: this.$t("file.focus.placeholder"),
+					click: () => this.$refs.focus.set(),
+					when: this.focusable && !this.focus
 				}
 			];
-
-			if (this.focusable) {
-				if (this.focus) {
-					options.push({
-						icon: "cancel",
-						text: this.$t("file.focus.reset"),
-						click: () => this.$refs.focus.reset()
-					});
-				} else {
-					options.push({
-						icon: "preview",
-						text: this.$t("file.focus.placeholder"),
-						click: () => this.$refs.focus.set()
-					});
-				}
-			}
-
-			return options;
 		}
 	},
 	methods: {

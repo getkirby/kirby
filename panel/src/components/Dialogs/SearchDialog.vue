@@ -91,15 +91,14 @@ export default {
 			return this.$panel.searches[this.type] ?? this.types[0];
 		},
 		types() {
-			return Object.values(this.$panel.searches).map((search) => {
-				return {
-					...search,
-					click: () => {
-						(this.type = search.id), this.focus();
-					},
-					current: this.type === search.id
-				};
-			});
+			return Object.values(this.$panel.searches).map((search) => ({
+				...search,
+				current: this.type === search.id,
+				click: () => {
+					this.type = search.id;
+					this.focus();
+				}
+			}));
 		}
 	},
 	watch: {
