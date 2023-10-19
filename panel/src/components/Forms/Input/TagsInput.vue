@@ -43,10 +43,9 @@
 
 <script>
 import Multiselect, { props as MultiselectProps } from "./MultiselectInput.vue";
-import { props as TagsProps } from "@/components/Navigation/Tags.vue";
 
 export const props = {
-	mixins: [TagsProps, MultiselectProps],
+	mixins: [MultiselectProps],
 	props: {
 		/**
 		 * Whether to accept only options or also custom tags

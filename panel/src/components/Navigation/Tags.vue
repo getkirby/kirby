@@ -42,14 +42,6 @@ export const props = {
 	inheritAttrs: false,
 	props: {
 		/**
-		 * Whether the tags can by sorted manually by dragging
-		 * (not available when `sort` is `true`)
-		 */
-		draggable: {
-			default: true,
-			type: Boolean
-		},
-		/**
 		 * You can set the layout to `"list"` to extend the width of each tag
 		 * to 100% and show them in a list. This is handy in narrow columns
 		 * or when a list is a more appropriate design choice for the input
@@ -74,6 +66,16 @@ export const props = {
 
 export default {
 	mixins: [props],
+	props: {
+		/**
+		 * Whether the tags can by sorted manually by dragging
+		 * (not available when `sort` is `true`)
+		 */
+		draggable: {
+			default: true,
+			type: Boolean
+		}
+	},
 	data() {
 		return {
 			tags: []

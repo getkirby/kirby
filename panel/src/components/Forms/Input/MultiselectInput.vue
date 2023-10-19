@@ -1,10 +1,7 @@
 <template>
 	<k-tags
 		ref="tags"
-		:draggable="false"
-		:options="options"
-		:sort="true"
-		:value="value"
+		v-bind="$props"
 		class="k-multiselect-input"
 		@input="$emit('input', $event)"
 		@click.native.stop="$refs.dropdown.toggle()"
@@ -20,7 +17,9 @@
 
 <script>
 import Input from "@/mixins/input.js";
-import { picklist as PicklistInput } from "@/components/Forms/Input/PicklistInput.vue";
+import { picklist as PicklistInputProps } from "@/components/Forms/Input/PicklistInput.vue";
+import { props as TagsProps } from "@/components/Navigation/Tags.vue";
+
 import { name, required } from "@/mixins/props.js";
 
 import {
@@ -30,7 +29,7 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [name, required, PicklistInput],
+	mixins: [name, required, TagsProps, PicklistInputProps],
 	props: {
 		value: {
 			default: () => [],
