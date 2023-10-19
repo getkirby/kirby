@@ -1,6 +1,6 @@
 <template>
 	<k-field v-bind="$props" class="k-blocks-field">
-		<template v-if="hasFieldsets" #options>
+		<template v-if="!disabled && hasFieldsets" #options>
 			<k-button-group layout="collapsed">
 				<k-button
 					:autofocus="autofocus"
@@ -39,7 +39,7 @@
 		/>
 
 		<footer
-			v-if="!isEmpty && !isFull && hasFieldsets"
+			v-if="!disabled && !isEmpty && !isFull && hasFieldsets"
 			class="k-bar"
 			data-align="center"
 		>
