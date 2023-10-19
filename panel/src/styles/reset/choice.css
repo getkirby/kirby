@@ -44,7 +44,7 @@ input:where([type="checkbox"], [type="radio"]):focus {
 
 /** Checked state for checkboxes **/
 input:where([type="checkbox"]):checked {
-	border-color: var(--color-color-checked);
+	border-color: var(--choice-color-checked);
 }
 
 /** Checked state **/
@@ -64,6 +64,7 @@ input:where([type="checkbox"], [type="radio"])[disabled] {
 	--choice-color-border: var(--color-gray-300);
 	--choice-color-checked: var(--choice-color-disabled);
 	box-shadow: none;
+	cursor: not-allowed;
 }
 
 /** Checkbox & Toggle **/
