@@ -244,4 +244,8 @@ export default {
 .k-tags[data-layout="list"] .k-tag {
 	width: 100%;
 }
+
+.k-tags.k-draggable .k-tag-text {
+	cursor: grab;
+}
 </style>
