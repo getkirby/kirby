@@ -58,7 +58,7 @@ export default {
 	},
 	methods: {
 		remove() {
-			if (this.removable) {
+			if (this.isRemovable) {
 				/**
 				 * Remove button is being clicked
 				 * or the tag is focussed and the delete key is entered.
@@ -98,7 +98,7 @@ export default {
 	cursor: pointer;
 	user-select: none;
 }
-.k-tag:focus {
+.k-tag:not([aria-disabled]):focus {
 	outline: var(--outline);
 }
 .k-tag-image {
