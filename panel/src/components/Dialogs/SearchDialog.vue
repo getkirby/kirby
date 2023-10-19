@@ -73,7 +73,7 @@
 					variant="dimmed"
 					@click="$go('search', { query: { type, query } })"
 				>
-					All {{ pagination.total }} results
+					{{ $t("search.all", { count: pagination.total }) }}
 				</k-button>
 			</footer>
 		</div>

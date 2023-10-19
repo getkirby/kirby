@@ -571,7 +571,7 @@
 	"save": "Save",
 	"search": "Search",
 	"search.min": "Enter {min} characters to search",
-	"search.all": "Show all",
+	"search.all": "Show all {count} results",
 	"search.results.none": "No results",
 
 	"section.invalid": "The section is invalid",
