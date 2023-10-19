@@ -28,7 +28,7 @@
 			:options="choices"
 			:value="value"
 			class="k-picklist-input-options"
-			@input="$emit('input', $event)"
+			@input="input"
 		/>
 
 		<p v-if="showEmpty" class="k-picklist-input-empty">
@@ -114,7 +114,15 @@ export const props = {
 };
 
 /**
+ * A filterable list of checkbox/radio options
+ * with an optional create button
  * @since 4.0.0
+ *
+ * @example <k-picklist-input
+ * 		:create="create"
+ * 		:options="options"
+ * 		:value="value"
+ *	/>
  */
 export default {
 	mixins: [Input, props],
@@ -188,6 +196,9 @@ export default {
 	watch: {
 		value: {
 			handler() {
+				/**
+				 * Validation failed
+				 */
 				this.$emit("invalid", this.$v.$invalid, this.$v);
 			},
 			immediate: true
@@ -196,11 +207,18 @@ export default {
 	methods: {
 		add() {
 			if (this.showCreate) {
+				/**
+				 * New option shall be created from input
+				 * @property {string} input
+				 */
 				this.$emit("create", this.query);
 			}
 		},
 		escape() {
 			if (this.query.length === 0) {
+				/**
+				 * Escape key was hit to close the list
+				 */
 				this.$emit("escape");
 			} else {
 				this.query = "";
@@ -224,6 +242,13 @@ export default {
 			}
 
 			return string;
+		},
+		input(values) {
+			/**
+			 * Selected values have changed
+			 * @property {array} values
+			 */
+			this.$emit("input", values);
 		}
 	},
 	validations() {
