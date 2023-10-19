@@ -93,7 +93,6 @@ export default {
 .k-block-type-fields-header {
 	display: flex;
 	justify-content: space-between;
-	background: var(--color-white);
 }
 .k-block-type-fields-header .k-block-title {
 	padding-block: var(--spacing-3);
