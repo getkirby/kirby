@@ -21,7 +21,13 @@
 					class="k-link-input-model"
 					@click="toggle"
 				>
-					<k-link-field-preview :value="value" />
+					<k-link-field-preview :type="linkType" :value="value">
+						<template #placeholder>
+							<k-button class="k-link-input-model-placeholder">
+								{{ currentType.placeholder }}
+							</k-button>
+						</template>
+					</k-link-field-preview>
 					<k-button class="k-link-input-model-toggle" icon="bars" />
 				</div>
 
