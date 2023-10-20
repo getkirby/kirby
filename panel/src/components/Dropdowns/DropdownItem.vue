@@ -53,6 +53,9 @@ export default {
 	display: flex;
 	gap: 0.75rem;
 }
+.k-dropdown-item.k-button:focus {
+	outline: var(--outline);
+}
 .k-dropdown-item.k-button[aria-current] {
 	--button-color-text: var(--color-blue-500);
 }
