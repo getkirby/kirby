@@ -29,6 +29,8 @@
 <script>
 /**
  * The Autocomplete component can be wrapped around any form of input to get an flexible starting point to provide an real-time autocomplete dropdown. We use it for our `TagsInput` component.
+ *
+ * @deprecated 4.0.0
  */
 export default {
 	props: {
@@ -72,6 +74,11 @@ export default {
 			matches: [],
 			selected: { text: null }
 		};
+	},
+	created() {
+		window.panel.deprecated(
+			"<k-autocomplete> will be removed in a future version."
+		);
 	},
 	methods: {
 		close() {
