@@ -36,8 +36,16 @@ class Docs
 
 	public static function all(): array
 	{
+		$dist  = App::instance()->root('panel') . '/dist/ui';
+		$tmp   = App::instance()->root('panel') . '/tmp';
+		$files = Dir::inventory($dist)['files'];
+
+		if (Dir::exists($tmp) === true) {
+			$files = [...Dir::inventory($tmp)['files'], ...$files];
+		}
+
 		$docs = A::map(
-			Dir::inventory(App::instance()->root('panel') . '/dist/ui')['files'],
+			$files,
 			function ($file) {
 				$component = 'k-' . Str::camelToKebab(F::name($file['filename']));
 
@@ -51,6 +59,8 @@ class Docs
 				];
 			}
 		);
+
+		usort($docs, fn ($a, $b) => $a['text'] <=> $b['text']);
 
 		return array_values($docs);
 	}
