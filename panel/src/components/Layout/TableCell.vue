@@ -1,16 +1,15 @@
 <template>
 	<td :data-align="column.align" :data-mobile="mobile" class="k-table-cell">
-		<template v-if="$helper.object.isEmpty(value) === false">
-			<!-- Table cell type component -->
-			<component
-				:is="component"
-				:column="column"
-				:field="field"
-				:row="row"
-				:value="value"
-				@input="$emit('input', $event)"
-			/>
-		</template>
+		<!-- Table cell type component -->
+		<component
+			:is="component"
+			v-if="$helper.object.isEmpty(value) === false"
+			:column="column"
+			:field="field"
+			:row="row"
+			:value="value"
+			@input="$emit('input', $event)"
+		/>
 	</td>
 </template>
 
