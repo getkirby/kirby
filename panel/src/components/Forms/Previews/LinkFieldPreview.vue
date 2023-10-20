@@ -11,11 +11,6 @@
 					:value="[{ filename: model.label, image: model.image }]"
 				/>
 			</template>
-
-			<k-bubbles-field-preview
-				v-else
-				:value="[{ image: { icon: 'loader' } }]"
-			/>
 		</template>
 
 		<k-url-field-preview
@@ -52,7 +47,7 @@ export default {
 				if (value === old) {
 					return;
 				}
-				this.model = null;
+
 				this.model = await this.$helper.link.preview(this.current);
 			},
 			immediate: true
