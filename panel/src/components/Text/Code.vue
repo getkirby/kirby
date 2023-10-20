@@ -1,9 +1,11 @@
 <template>
 	<k-highlight>
-		<pre
-			class="k-code"
-			:data-language="language"
-		><code :class="language ? `language-${language}` : null"><slot /></code></pre>
+		<div>
+			<pre
+				class="k-code"
+				:data-language="language"
+			><code :key="$slots.default[0].text + '-' + language" :class="language ? `language-${language}` : null"><slot /></code></pre>
+		</div>
 	</k-highlight>
 </template>
 
@@ -39,6 +41,7 @@ export default {
 	--code-inline-color-border: var(--color-blue-400);
 	--code-inline-color-text: var(--color-blue-900);
 	--code-inline-font-size: 0.9em;
+	--code-padding: var(--spacing-3);
 }
 
 code {
@@ -52,7 +55,7 @@ code {
 	position: relative;
 	display: block;
 	max-width: 100%;
-	padding: 0.75rem;
+	padding: var(--code-padding);
 	border-radius: var(--rounded, 0.5rem);
 	background: var(--code-color-back);
 	color: var(--code-color-text);
