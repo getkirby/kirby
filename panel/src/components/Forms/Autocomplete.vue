@@ -76,11 +76,9 @@ export default {
 		};
 	},
 	created() {
-		if (this.align) {
-			window.panel.deprecated(
-				"<k-autocomplete> will be removed in a future version."
-			);
-		}
+		window.panel.deprecated(
+			"<k-autocomplete> will be removed in a future version."
+		);
 	},
 	methods: {
 		close() {
