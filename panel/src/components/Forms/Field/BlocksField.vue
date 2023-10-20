@@ -1,6 +1,6 @@
 <template>
 	<k-field v-bind="$props" class="k-blocks-field">
-		<template v-if="hasFieldsets" #options>
+		<template v-if="!disabled && hasFieldsets" #options>
 			<k-button-group layout="collapsed">
 				<k-button
 					:autofocus="autofocus"
@@ -26,6 +26,7 @@
 			ref="blocks"
 			:autofocus="autofocus"
 			:compact="false"
+			:disabled="disabled"
 			:empty="empty"
 			:endpoints="endpoints"
 			:fieldsets="fieldsets"
@@ -39,15 +40,15 @@
 		/>
 
 		<footer
-			v-if="!isEmpty && !isFull && hasFieldsets"
+			v-if="!disabled && !isEmpty && !isFull && hasFieldsets"
 			class="k-bar"
 			data-align="center"
 		>
 			<k-button
+				:title="$t('add')"
 				icon="add"
 				size="xs"
 				variant="filled"
-				:title="$t('add')"
 				@click="$refs.blocks.choose(value.length)"
 			/>
 		</footer>

@@ -1,6 +1,6 @@
 <template>
 	<k-field v-bind="$props" class="k-layout-field">
-		<template #options>
+		<template v-if="!disabled" #options>
 			<k-button-group layout="collapsed">
 				<k-button
 					:autofocus="autofocus"
@@ -19,7 +19,18 @@
 				<k-dropdown-content ref="options" :options="options" align-x="end" />
 			</k-button-group>
 		</template>
+
 		<k-layouts ref="layouts" v-bind="$props" @input="$emit('input', $event)" />
+
+		<footer v-if="!disabled" class="k-bar" data-align="center">
+			<k-button
+				:title="$t('add')"
+				icon="add"
+				size="xs"
+				variant="filled"
+				@click="$refs.layouts.select(value.length)"
+			/>
+		</footer>
 	</k-field>
 </template>
 
@@ -74,3 +85,10 @@ export default {
 	}
 };
 </script>
+
+<style>
+/** TODO: .k-layout-field > :has(+ footer) { margin-bottom: var(--spacing-3);} */
+.k-layout-field > footer {
+	margin-top: var(--spacing-3);
+}
+</style>
