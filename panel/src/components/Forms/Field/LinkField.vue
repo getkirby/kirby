@@ -21,25 +21,10 @@
 					class="k-link-input-model"
 					@click="toggle"
 				>
-					<k-tag
-						v-if="model"
-						:image="
-							model.image
-								? { ...model.image, cover: true, back: 'gray-200' }
-								: null
-						"
-						:removable="!disabled"
-						class="k-link-input-model-preview"
-						@remove="clear"
-					>
-						{{ model.label }}
-					</k-tag>
-					<k-button v-else class="k-link-input-model-placeholder">
-						{{ currentType.placeholder }}
-					</k-button>
-
+					<k-link-field-preview :value="value" />
 					<k-button class="k-link-input-model-toggle" icon="bars" />
 				</div>
+
 				<component
 					:is="'k-' + currentType.input + '-input'"
 					v-else
@@ -107,7 +92,6 @@ export default {
 	inheritAttrs: false,
 	data() {
 		return {
-			model: null,
 			linkType: null,
 			linkValue: null,
 			expanded: false,
@@ -115,11 +99,6 @@ export default {
 		};
 	},
 	computed: {
-		currentType() {
-			return (
-				this.activeTypes[this.linkType] ?? Object.values(this.activeTypes)[0]
-			);
-		},
 		activeTypes() {
 			return this.$helper.link.types(this.options);
 		},
@@ -136,6 +115,11 @@ export default {
 			}
 
 			return options;
+		},
+		currentType() {
+			return (
+				this.activeTypes[this.linkType] ?? Object.values(this.activeTypes)[0]
+			);
 		}
 	},
 	watch: {
@@ -148,10 +132,6 @@ export default {
 				const parts = this.$helper.link.detect(value, this.activeTypes);
 				this.linkType = this.linkType ?? parts.type;
 				this.linkValue = parts.link;
-
-				if (value !== old) {
-					this.model = await this.$helper.link.preview(parts);
-				}
 			},
 			immediate: true
 		}
