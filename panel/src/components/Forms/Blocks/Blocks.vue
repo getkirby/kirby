@@ -93,10 +93,9 @@ export default {
 	},
 	data() {
 		return {
+			blocks: this.value ?? [],
 			isEditing: false,
 			isMultiSelectKey: false,
-			isPasteable: false,
-			blocks: this.value ?? [],
 			selected: []
 		};
 	},
@@ -152,16 +151,16 @@ export default {
 	},
 	created() {
 		this.$events.on("blur", this.onBlur);
+		this.$events.on("click", this.onClickGlobal);
 		this.$events.on("copy", this.onCopy);
-		this.$events.on("focus", this.onOutsideFocus);
 		this.$events.on("keydown", this.onKey);
 		this.$events.on("keyup", this.onKey);
 		this.$events.on("paste", this.onPaste);
 	},
 	destroyed() {
 		this.$events.off("blur", this.onBlur);
+		this.$events.off("click", this.onClickGlobal);
 		this.$events.off("copy", this.onCopy);
-		this.$events.off("focus", this.onOutsideFocus);
 		this.$events.off("keydown", this.onKey);
 		this.$events.off("keyup", this.onKey);
 		this.$events.off("paste", this.onPaste);
@@ -222,9 +221,6 @@ export default {
 					paste: this.paste
 				}
 			});
-		},
-		click(block) {
-			this.$emit("click", block);
 		},
 		copy(e) {
 			// don't copy when there are no blocks yet
@@ -426,14 +422,6 @@ export default {
 
 			return true;
 		},
-		onBlur() {
-			// resets multi selecting on tab change
-			// keep only if there are already multiple selections
-			// triggers `blur` event when tab changed
-			if (this.selected.length === 0) {
-				this.isMultiSelectKey = false;
-			}
-		},
 		onClickBlock(block, event) {
 			// checks the event just before selecting the block
 			// especially since keyup doesn't trigger in with
@@ -449,6 +437,44 @@ export default {
 				} else {
 					this.select(block);
 				}
+			}
+		},
+		onBlur() {
+			// resets multi selecting on tab change
+			// keep only if there are already multiple selections
+			// triggers `blur` event when tab changed
+			if (this.selected.length === 0) {
+				this.isMultiSelectKey = false;
+			}
+		},
+		onClickGlobal(event) {
+			// ignore focus in dialogs or drawers to keep the current selection
+			if (
+				typeof event.target.closest === "function" &&
+				(event.target.closest(".k-dialog") || event.target.closest(".k-drawer"))
+			) {
+				return;
+			}
+
+			const overlay = document.querySelector(".k-overlay:last-of-type");
+
+			if (
+				this.$el.contains(event.target) === false &&
+				overlay?.contains(event.target) === false
+			) {
+				this.deselectAll();
+				return;
+			}
+
+			// since we are still working in the same block when overlay is open
+			// we cannot detect the transition between the layout columns;
+			// following codes detect if the target is in the same column
+			if (
+				overlay &&
+				this.$el.closest(".k-layout-column")?.contains(event.target) === false
+			) {
+				this.deselectAll();
+				return;
 			}
 		},
 		onCopy(event) {
@@ -479,35 +505,6 @@ export default {
 				const block = this.find(this.selected[0]);
 				await this.$nextTick();
 				this.focus(block);
-			}
-		},
-		onOutsideFocus(event) {
-			// ignore focus in dialogs to not alter current selection
-			if (
-				typeof event.target.closest === "function" &&
-				event.target.closest(".k-dialog")
-			) {
-				return;
-			}
-
-			const overlay = document.querySelector(".k-overlay:last-of-type");
-			if (
-				this.$el.contains(event.target) === false &&
-				(!overlay || overlay.contains(event.target) === false)
-			) {
-				this.selected = [];
-				return;
-			}
-
-			// since we are still working in the same block when overlay is open
-			// we cannot detect the transition between the layout columns
-			// following codes detect if the target is in the same column
-			if (overlay) {
-				const layoutColumn = this.$el.closest(".k-layout-column");
-				if (layoutColumn?.contains(event.target) === false) {
-					this.selected = [];
-					return;
-				}
 			}
 		},
 		onPaste(e) {
