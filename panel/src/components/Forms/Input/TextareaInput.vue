@@ -295,11 +295,25 @@ export default {
 				this.$refs.input.selectionEnd
 			);
 		},
+		toggle(before, after) {
+			after = after ?? before;
+			const selection = this.selection();
+
+			if (selection.startsWith(before) && selection.endsWith(after)) {
+				return this.insert(
+					selection
+						.slice(before.length)
+						.slice(0, selection.length - before.length - after.length)
+				);
+			}
+
+			return this.wrap(before, after);
+		},
 		upload() {
 			this.$panel.upload.pick(this.uploadOptions);
 		},
-		wrap(text) {
-			this.insert(text + this.selection() + text);
+		wrap(before, after) {
+			this.insert(before + this.selection() + (after ?? before));
 		}
 	},
 	validations() {
