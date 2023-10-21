@@ -722,7 +722,7 @@ export default {
 .k-blocks[data-disabled="true"]:not([data-empty="true"]) {
 	border: 1px solid var(--input-color-border);
 }
-.k-blocks[data-multi-select-key="true"] .k-block-container * {
+.k-blocks[data-multi-select-key="true"] > .k-block-container * {
 	pointer-events: none;
 }
 .k-blocks .k-sortable-ghost {
