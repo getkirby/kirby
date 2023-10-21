@@ -108,7 +108,7 @@ export default {
 			const url = this.$panel.url(window.location, {
 				type: this.currentType.id,
 				query: this.query,
-				page: page > 1 ? page : null
+				page
 			});
 
 			window.history.pushState("", "", url.toString());
