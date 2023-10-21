@@ -6,9 +6,9 @@
 		@input="value = $event"
 	>
 		<template v-slot="{ options }">
-			<k-lab-example label="Reset: false">
+			<k-lab-example label="Reset: true">
 				<k-toggles-input
-					:reset="false"
+					:reset="true"
 					:options="options"
 					:value="value"
 					name="toggles"
@@ -59,7 +59,7 @@
 export default {
 	data() {
 		return {
-			value: null,
+			value: null
 		};
 	},
 	computed: {
@@ -67,7 +67,7 @@ export default {
 			return [
 				{ text: "Left", value: "left", icon: "text-left" },
 				{ text: "Center", value: "center", icon: "text-center" },
-				{ text: "Right", value: "right", icon: "text-right" },
+				{ text: "Right", value: "right", icon: "text-right" }
 			];
 		},
 		optionsForColumns() {
@@ -80,15 +80,15 @@ export default {
 				"grid-right",
 				"grid-bottom-left",
 				"grid-bottom",
-				"grid-bottom-right",
+				"grid-bottom-right"
 			].map((item) => {
 				return {
 					text: item,
 					icon: item,
-					value: item,
+					value: item
 				};
 			});
-		},
-	},
+		}
+	}
 };
 </script>
