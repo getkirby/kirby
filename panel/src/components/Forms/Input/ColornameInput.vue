@@ -37,8 +37,8 @@ export const props = {
 			validator: (format) => ["hex", "rgb", "hsl"].includes(format)
 		},
 		spellcheck: {
-			default: "false",
-			type: String
+			default: false,
+			type: Boolean
 		}
 	}
 };

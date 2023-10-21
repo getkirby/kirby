@@ -34,59 +34,59 @@ export default {
 						{
 							label: this.$t("toolbar.button.heading.1"),
 							icon: "h1",
-							click: () => this.$emit("command", "prepend", "#")
+							click: () => this.command("prepend", "#")
 						},
 						{
 							label: this.$t("toolbar.button.heading.2"),
 							icon: "h2",
-							click: () => this.$emit("command", "prepend", "##")
+							click: () => this.command("prepend", "##")
 						},
 						{
 							label: this.$t("toolbar.button.heading.3"),
 							icon: "h3",
-							click: () => this.$emit("command", "prepend", "###")
+							click: () => this.command("prepend", "###")
 						}
 					]
 				},
 				bold: {
 					label: this.$t("toolbar.button.bold"),
 					icon: "bold",
-					click: () => this.$emit("command", "wrap", "**"),
+					click: () => this.command("wrap", "**"),
 					shortcut: "b"
 				},
 				italic: {
 					label: this.$t("toolbar.button.italic"),
 					icon: "italic",
-					click: () => this.$emit("command", "wrap", "*"),
+					click: () => this.command("wrap", "*"),
 					shortcut: "i"
 				},
 				link: {
 					label: this.$t("toolbar.button.link"),
 					icon: "url",
-					click: () => this.$emit("command", "dialog", "link"),
+					click: () => this.command("dialog", "link"),
 					shortcut: "k"
 				},
 				email: {
 					label: this.$t("toolbar.button.email"),
 					icon: "email",
-					click: () => this.$emit("command", "dialog", "email"),
+					click: () => this.command("dialog", "email"),
 					shortcut: "e"
 				},
 				file: {
 					label: this.$t("toolbar.button.file"),
 					icon: "attachment",
-					click: () => this.$emit("command", "dialog", "file"),
+					click: () => this.command("dialog", "file"),
 					dropdown: this.uploads
 						? [
 								{
 									label: this.$t("toolbar.button.file.select"),
 									icon: "check",
-									click: () => this.$emit("command", "dialog", "file")
+									click: () => this.command("dialog", "file")
 								},
 								{
 									label: this.$t("toolbar.button.file.upload"),
 									icon: "upload",
-									click: () => this.$emit("command", "upload")
+									click: () => this.command("upload")
 								}
 						  ]
 						: undefined
@@ -94,13 +94,13 @@ export default {
 				code: {
 					label: this.$t("toolbar.button.code"),
 					icon: "code",
-					click: () => this.$emit("command", "wrap", "`")
+					click: () => this.command("wrap", "`")
 				},
 				ul: {
 					label: this.$t("toolbar.button.ul"),
 					icon: "list-bullet",
 					click: () =>
-						this.$emit("command", "insert", (input, selection) =>
+						this.command("insert", (input, selection) =>
 							selection
 								.split("\n")
 								.map((line) => "- " + line)
@@ -111,7 +111,7 @@ export default {
 					label: this.$t("toolbar.button.ol"),
 					icon: "list-numbers",
 					click: () =>
-						this.$emit("command", "insert", (input, selection) =>
+						this.command("insert", (input, selection) =>
 							selection
 								.split("\n")
 								.map((line, index) => index + 1 + ". " + line)
@@ -145,14 +145,18 @@ export default {
 			const buttons = Array.isArray(this.buttons) ? this.buttons : this.default;
 			const available = {
 				...this.commands,
-				...Object(window.panel.plugins.textareaButtons ?? {})
+				...(window.panel.plugins.textareaButtons ?? {})
 			};
 
 			for (const button of buttons) {
 				if (button === "|") {
 					layout.push("|");
 				} else if (available[button]) {
-					layout.push(available[button]);
+					// ensure that click handler is bound to this component
+					// so that plugins can use `this.command` etc.
+					const command = available[button];
+					command.click = command.click?.bind(this);
+					layout.push(command);
 				}
 			}
 
@@ -165,6 +169,19 @@ export default {
 		 */
 		close() {
 			this.$refs.toolbar.close();
+		},
+		/**
+		 * Emits command to textarea input component
+		 *
+		 * Supports the following commands:
+		 * - `dialog` opens a dialog component
+		 * - `insert` inserts the given text at the current selection
+		 * - `prepend` prepends the given text to the current selection
+		 * - `upload` opens the file upload dialog
+		 * - `wrap` wraps the current selection with the given text
+		 */
+		command(name, ...args) {
+			this.$emit("command", name, ...args);
 		},
 		/**
 		 * Looks up if any command responds to key shortcut
