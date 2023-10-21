@@ -24,4 +24,26 @@ class Structure extends Items
 	 * All registered structure methods
 	 */
 	public static array $methods = [];
+
+	/**
+	 * Creates a new structure collection from a
+	 * an array of item props
+	 */
+	public static function factory(
+		array $items = null,
+		array $params = []
+	): static {
+		// Bake-in index as ID for all items
+		// TODO: remove when adding UUID supports to Structures
+		if (is_array($items) === true) {
+			$items = array_map(function ($item, $index) {
+				if (is_array($item) === true) {
+					$item['id'] ??= $index;
+				}
+				return $item;
+			}, $items, array_keys($items));
+		}
+
+		return parent::factory($items, $params);
+	}
 }
