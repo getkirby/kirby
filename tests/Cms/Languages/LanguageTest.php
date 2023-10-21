@@ -284,7 +284,7 @@ class LanguageTest extends TestCase
 	/**
 	 * @covers ::label
 	 */
-	public function tesLabel()
+	public function testLabel()
 	{
 		$language = new Language([
 			'code' => 'en',
