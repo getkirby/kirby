@@ -81,7 +81,9 @@ export default {
 	watch: {
 		query: {
 			handler() {
-				this.search();
+				// reload results when query changes
+				// and reset pagination
+				this.search(1);
 			},
 			immediate: true
 		},
