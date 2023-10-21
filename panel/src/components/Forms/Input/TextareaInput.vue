@@ -175,7 +175,10 @@ export default {
 				document.execCommand("insertText", false, text);
 
 				if (input.value === current) {
-					input.setRangeText(text, input.selectionStart, input.selectionEnd);
+					const start = input.selectionStart;
+					const end = input.selectionEnd;
+					const mode = start === end ? "end" : "select";
+					input.setRangeText(text, start, end, mode);
 				}
 
 				this.$emit("input", input.value);
