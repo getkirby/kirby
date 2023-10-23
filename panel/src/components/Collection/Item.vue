@@ -23,7 +23,7 @@
 
 		<!-- Content -->
 		<div class="k-item-content">
-			<h3 class="k-item-title" :title="$helper.string.unescapeHTML(text)">
+			<h3 class="k-item-title" :title="title">
 				<k-link v-if="link !== false" :target="target" :to="link">
 					<!-- eslint-disable-next-line vue/no-v-html -->
 					<span v-html="text ?? '–'" />
@@ -112,6 +112,11 @@ export default {
 	computed: {
 		hasFigure() {
 			return this.image !== false && this.$helper.object.length(this.image) > 0;
+		},
+		title() {
+			return this.$helper.string
+				.stripHTML(this.$helper.string.unescapeHTML(this.text))
+				.trim();
 		}
 	},
 	methods: {
