@@ -97,10 +97,17 @@ export default {
 	},
 	computed: {
 		uploadOptions() {
+			const restoreSelection = this.restoreSelectionCallback();
+
 			return {
 				url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload",
 				multiple: false,
-				on: { done: this.insertUpload }
+				on: {
+					cancel: restoreSelection,
+					done: (files) => {
+						restoreSelection(() => this.insertUpload(files));
+					}
+				}
 			};
 		}
 	},
@@ -125,21 +132,7 @@ export default {
 	},
 	methods: {
 		dialog(dialog) {
-			// store selection
-			const start = this.$refs.input.selectionStart;
-			const end = this.$refs.input.selectionEnd;
-
-			// restore selection as `insert` method
-			// depends on it
-			const restoreSelection = (callback) => {
-				setTimeout(() => {
-					this.$refs.input.setSelectionRange(start, end);
-
-					if (callback) {
-						callback();
-					}
-				});
-			};
+			const restoreSelection = this.restoreSelectionCallback();
 
 			this.$panel.dialog.open({
 				component: "k-toolbar-" + dialog + "-dialog",
@@ -271,20 +264,38 @@ export default {
 			}
 
 			const matches = regex.exec(selection);
+
 			if (matches !== null) {
 				return {
 					href: matches.groups.url ?? matches.groups.link,
 					title: matches.groups.text ?? null
 				};
-			} else {
-				return {
-					href: null,
-					title: selection
-				};
 			}
+
+			return {
+				href: null,
+				title: selection
+			};
 		},
 		prepend(text) {
 			this.insert(text + " " + this.selection());
+		},
+		restoreSelectionCallback() {
+			// store selection
+			const start = this.$refs.input.selectionStart;
+			const end = this.$refs.input.selectionEnd;
+
+			// restore selection as `insert` method
+			// depends on it
+			return (callback) => {
+				setTimeout(() => {
+					this.$refs.input.setSelectionRange(start, end);
+
+					if (callback) {
+						callback();
+					}
+				});
+			};
 		},
 		select() {
 			this.$refs.select();
