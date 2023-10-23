@@ -40,9 +40,9 @@ export default class Autosize extends HTMLElement {
 	}
 
 	restoreScroll() {
-		if (this.scrollY) {
+		if (this.scrollY !== undefined) {
 			window.scroll(0, this.scrollY);
-			this.scroll = null;
+			this.scroll = undefined;
 		}
 	}
 
