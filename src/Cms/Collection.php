@@ -260,7 +260,7 @@ class Collection extends BaseCollection
 	 * Add pagination and return a sliced set of data.
 	 *
 	 * @param mixed ...$arguments
-	 * @return \Kirby\Cms\Collection
+	 * @return $this|static
 	 */
 	public function paginate(...$arguments)
 	{
@@ -271,6 +271,16 @@ class Collection extends BaseCollection
 			$this->pagination->offset(),
 			$this->pagination->limit()
 		);
+	}
+
+	/**
+	 * Get the pagination object
+	 *
+	 * @return \Kirby\Cms\Pagination|null
+	 */
+	public function pagination()
+	{
+		return $this->pagination;
 	}
 
 	/**
