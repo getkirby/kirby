@@ -160,6 +160,7 @@ export default {
 		},
 		insert(text) {
 			const input = this.$refs.input;
+			const current = input.value;
 
 			if (typeof text === "function") {
 				text = text(this.$refs.input, this.selection());
@@ -167,7 +168,16 @@ export default {
 
 			setTimeout(() => {
 				input.focus();
-				input.setRangeText(text, input.selectionStart, input.selectionEnd);
+
+				// try first via execCommand as this will be considered
+				// as a user action and can be undone by the browser's
+				// native undo function
+				document.execCommand("insertText", false, text);
+
+				if (input.value === current) {
+					input.setRangeText(text, input.selectionStart, input.selectionEnd);
+				}
+
 				this.$emit("input", input.value);
 			});
 		},
