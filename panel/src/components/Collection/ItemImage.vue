@@ -36,7 +36,7 @@ export default {
 				back: this.image.back ?? "gray-500",
 				cover: true,
 				...this.image,
-				ratio: this.layout === "list" ? "1/1" : this.image.ratio,
+				ratio: this.layout === "list" ? "auto" : this.image.ratio,
 				size: this.sizes
 			};
 		},
