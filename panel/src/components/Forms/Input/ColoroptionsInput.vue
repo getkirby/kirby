@@ -33,6 +33,9 @@ import RadioInput, { props as RadioInputProps } from "./RadioInput.vue";
 export const props = {
 	mixins: [RadioInputProps],
 	props: {
+		/**
+		 * @values "hex", "rgb", "hsl"
+		 */
 		format: {
 			type: String,
 			default: "hex",
