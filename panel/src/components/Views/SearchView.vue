@@ -81,7 +81,9 @@ export default {
 	watch: {
 		query: {
 			handler() {
-				this.search();
+				// reload results when query changes
+				// and reset pagination
+				this.search(1);
 			},
 			immediate: true
 		},
@@ -106,7 +108,7 @@ export default {
 			const url = this.$panel.url(window.location, {
 				type: this.currentType.id,
 				query: this.query,
-				page: page > 1 ? page : null
+				page
 			});
 
 			window.history.pushState("", "", url.toString());
