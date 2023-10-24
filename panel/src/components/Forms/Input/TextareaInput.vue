@@ -146,6 +146,8 @@ export default {
 			});
 		},
 		file() {
+			const restoreSelection = this.restoreSelectionCallback();
+
 			this.$panel.dialog.open({
 				component: "k-files-dialog",
 				props: {
@@ -153,9 +155,9 @@ export default {
 					multiple: false
 				},
 				on: {
-					cancel: this.cancel,
+					cancel: restoreSelection,
 					submit: (file) => {
-						this.insertFile(file);
+						restoreSelection(() => this.insertFile(file));
 						this.$panel.dialog.close();
 					}
 				}
