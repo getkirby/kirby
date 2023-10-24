@@ -85,8 +85,11 @@ class StructureTest extends TestCase
 		$this->assertInstanceOf(Field::class, $structure->last()->name());
 		$this->assertInstanceOf(Field::class, $structure->last()->prev()->name());
 		$this->assertSame('A', $structure->first()->name()->value());
+		$this->assertSame('0', $structure->first()->id());
 		$this->assertSame('B', $structure->first()->next()->name()->value());
+		$this->assertSame('1', $structure->first()->next()->id());
 		$this->assertSame('C', $structure->last()->name()->value());
+		$this->assertSame('2', $structure->last()->id());
 		$this->assertSame('B', $structure->last()->prev()->name()->value());
 
 		$this->assertSame(2, $structure->last()->indexOf());
