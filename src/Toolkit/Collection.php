@@ -745,14 +745,17 @@ class Collection extends Iterator implements Countable
 	 * Add pagination
 	 *
 	 * @param array ...$arguments
-	 * @return static a sliced set of data
+	 * @return $this|static a sliced set of data
 	 */
 	public function paginate(...$arguments)
 	{
 		$this->pagination = Pagination::for($this, ...$arguments);
 
 		// slice and clone the collection according to the pagination
-		return $this->slice($this->pagination->offset(), $this->pagination->limit());
+		return $this->slice(
+			$this->pagination->offset(),
+			$this->pagination->limit()
+		);
 	}
 
 	/**
