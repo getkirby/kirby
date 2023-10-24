@@ -498,7 +498,7 @@ export default {
 			}
 		},
 		async onKey(event) {
-			this.isMultiSelectKey = event.metaKey ?? event.ctrlKey ?? event.altKey;
+			this.isMultiSelectKey = event.metaKey || event.ctrlKey || event.altKey;
 
 			// remove batch selecting on escape, only select first one
 			if (event.code === "Escape" && this.selected.length > 1) {
