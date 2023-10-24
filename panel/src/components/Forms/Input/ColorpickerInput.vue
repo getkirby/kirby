@@ -59,10 +59,16 @@ import { options } from "@/mixins/props.js";
 export const props = {
 	mixins: [InputProps, options],
 	props: {
+		/**
+		 * Show the alpha tange input
+		 */
 		alpha: {
 			default: true,
 			type: Boolean
 		},
+		/**
+		 * @values "hex", "rgb", "hsl"
+		 */
 		format: {
 			default: "hex",
 			type: String,

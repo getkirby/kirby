@@ -3,9 +3,8 @@
 		<!-- Mode: options -->
 		<k-coloroptions-input
 			v-if="mode === 'options'"
-			:name="name"
+			v-bind="$props"
 			:options="convertedOptions"
-			:value="value"
 			class="k-color-field-options"
 			@input="$emit('input', $event)"
 		/>
@@ -25,11 +24,10 @@
 					<k-dropdown-content ref="picker" class="k-color-field-picker">
 						<k-colorpicker-input
 							ref="color"
-							:alpha="alpha"
+							v-bind="$props"
 							:options="convertedOptions"
-							:required="required"
-							:value="value"
 							@input="$emit('input', $event)"
+							@click.native.stop
 						/>
 					</k-dropdown-content>
 				</template>
@@ -58,13 +56,13 @@
 <script>
 import { props as Field } from "../Field.vue";
 import { props as Input } from "../Input.vue";
-import { props as ColorInput } from "../Input/ColorInput.vue";
+import { props as ColornameInput } from "../Input/ColornameInput.vue";
 
 /**
  * @since 4.0.0
  */
 export default {
-	mixins: [Field, Input, ColorInput],
+	mixins: [Field, Input, ColornameInput],
 	inheritAttrs: false,
 	props: {
 		icon: {

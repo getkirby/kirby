@@ -3,7 +3,6 @@ import CalendarInput from "./CalendarInput.vue";
 import CheckboxInput from "./CheckboxInput.vue";
 import CheckboxesInput from "./CheckboxesInput.vue";
 import ChoiceInput from "./ChoiceInput.vue";
-import ColorInput from "./ColorInput.vue";
 import ColornameInput from "./ColornameInput.vue";
 import ColoroptionsInput from "./ColoroptionsInput.vue";
 import ColorpickerInput from "./ColorpickerInput.vue";
@@ -39,7 +38,6 @@ export default {
 		app.component("k-checkbox-input", CheckboxInput);
 		app.component("k-checkboxes-input", CheckboxesInput);
 		app.component("k-choice-input", ChoiceInput);
-		app.component("k-color-input", ColorInput);
 		app.component("k-colorname-input", ColornameInput);
 		app.component("k-coloroptions-input", ColoroptionsInput);
 		app.component("k-colorpicker-input", ColorpickerInput);
