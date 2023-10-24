@@ -148,6 +148,22 @@ export default {
 				}
 			});
 		},
+		file() {
+			this.$panel.dialog.open({
+				component: "k-files-dialog",
+				props: {
+					endpoint: this.endpoints.field + "/files",
+					multiple: false
+				},
+				on: {
+					cancel: this.cancel,
+					submit: (file) => {
+						this.insertFile(file);
+						this.$panel.dialog.close();
+					}
+				}
+			});
+		},
 		focus() {
 			this.$refs.input.focus();
 		},

@@ -75,13 +75,13 @@ export default {
 				file: {
 					label: this.$t("toolbar.button.file"),
 					icon: "attachment",
-					click: () => this.command("dialog", "file"),
+					click: () => this.command("file"),
 					dropdown: this.uploads
 						? [
 								{
 									label: this.$t("toolbar.button.file.select"),
 									icon: "check",
-									click: () => this.command("dialog", "file")
+									click: () => this.command("file")
 								},
 								{
 									label: this.$t("toolbar.button.file.upload"),
