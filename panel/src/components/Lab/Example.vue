@@ -47,12 +47,33 @@ export default {
 	},
 	data() {
 		return {
-			mode: "preview"
+			mode: "preview",
+			screen: false
 		};
 	},
 	computed: {
 		component() {
 			return window.UiExamples[this.label];
+		}
+	},
+	methods: {
+		async screenshot() {
+			this.screen = this.$panel.url("/languages");
+		},
+		async takeScreenshot() {
+			const { toPng } = await import("https://cdn.skypack.dev/html-to-image");
+
+			await new Promise((resolve) => setTimeout(resolve, 500));
+
+			const image = await toPng(
+				this.$refs.iframe.contentDocument.querySelector("body")
+			);
+
+			let link = document.createElement("a");
+
+			link.download = "test.png";
+			link.href = image;
+			link.click();
 		}
 	}
 };
@@ -83,6 +104,10 @@ export default {
 .k-lab-example-label {
 	font-size: 12px;
 	color: var(--color-text-dimmed);
+}
+
+.k-lab-example-canvas {
+	background: var(--color-light);
 }
 
 .k-lab-example-canvas,

@@ -68,6 +68,7 @@ html {
 
 body {
 	font-size: var(--text-sm);
+	background: var(--color-light);
 }
 
 .k-panel[data-loading="true"] {
