@@ -51,13 +51,13 @@ export default {
 				bold: {
 					label: this.$t("toolbar.button.bold"),
 					icon: "bold",
-					click: () => this.command("wrap", "**"),
+					click: () => this.command("toggle", "**"),
 					shortcut: "b"
 				},
 				italic: {
 					label: this.$t("toolbar.button.italic"),
 					icon: "italic",
-					click: () => this.command("wrap", "*"),
+					click: () => this.command("toggle", "*"),
 					shortcut: "i"
 				},
 				link: {
@@ -94,7 +94,7 @@ export default {
 				code: {
 					label: this.$t("toolbar.button.code"),
 					icon: "code",
-					click: () => this.command("wrap", "`")
+					click: () => this.command("toggle", "`")
 				},
 				ul: {
 					label: this.$t("toolbar.button.ul"),
@@ -177,6 +177,7 @@ export default {
 		 * - `dialog` opens a dialog component
 		 * - `insert` inserts the given text at the current selection
 		 * - `prepend` prepends the given text to the current selection
+		 * - `toggle` toggles wrapping of current selection (accepts before, after texts)
 		 * - `upload` opens the file upload dialog
 		 * - `wrap` wraps the current selection with the given text
 		 */

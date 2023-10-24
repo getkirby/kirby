@@ -175,7 +175,10 @@ export default {
 				document.execCommand("insertText", false, text);
 
 				if (input.value === current) {
-					input.setRangeText(text, input.selectionStart, input.selectionEnd);
+					const start = input.selectionStart;
+					const end = input.selectionEnd;
+					const mode = start === end ? "end" : "select";
+					input.setRangeText(text, start, end, mode);
 				}
 
 				this.$emit("input", input.value);
@@ -295,11 +298,25 @@ export default {
 				this.$refs.input.selectionEnd
 			);
 		},
+		toggle(before, after) {
+			after = after ?? before;
+			const selection = this.selection();
+
+			if (selection.startsWith(before) && selection.endsWith(after)) {
+				return this.insert(
+					selection
+						.slice(before.length)
+						.slice(0, selection.length - before.length - after.length)
+				);
+			}
+
+			return this.wrap(before, after);
+		},
 		upload() {
 			this.$panel.upload.pick(this.uploadOptions);
 		},
-		wrap(text) {
-			this.insert(text + this.selection() + text);
+		wrap(before, after) {
+			this.insert(before + this.selection() + (after ?? before));
 		}
 	},
 	validations() {
