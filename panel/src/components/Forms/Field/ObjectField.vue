@@ -69,7 +69,7 @@ export default {
 	},
 	data() {
 		return {
-			object: null
+			object: {}
 		};
 	},
 	computed: {
@@ -77,7 +77,11 @@ export default {
 			return this.$helper.object.length(this.fields) > 0;
 		},
 		isEmpty() {
-			return this.object === null;
+			if (!this.object) {
+				return true;
+			}
+
+			return this.$helper.object.length(this.object) === 0;
 		},
 		isInvalid() {
 			return this.required === true && this.isEmpty;
@@ -118,7 +122,7 @@ export default {
 			return fields;
 		},
 		remove() {
-			this.object = null;
+			this.object = {};
 			this.save();
 		},
 		// TODO: field is not yet used to pre-focus correct field
@@ -160,7 +164,7 @@ export default {
 			this.$emit("input", this.object);
 		},
 		valueToObject(value) {
-			return typeof value !== "object" ? null : value;
+			return typeof value !== "object" ? {} : value;
 		}
 	}
 };
