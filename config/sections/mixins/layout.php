@@ -20,7 +20,7 @@ return [
 			return in_array($layout, $layouts) ? $layout : 'list';
 		},
 		/**
-		 * The size option controls the size of cards. By default cards are auto-sized and the cards grid will always fill the full width. With a size you can disable auto-sizing. Available sizes: `tiny`, `small`, `medium`, `large`, `huge`
+		 * The size option controls the size of cards. By default cards are auto-sized and the cards grid will always fill the full width. With a size you can disable auto-sizing. Available sizes: `tiny`, `small`, `medium`, `large`, `huge`, `full`
 		 */
 		'size' => function (string $size = 'auto') {
 			return $size;

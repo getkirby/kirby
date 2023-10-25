@@ -90,7 +90,7 @@ export const props = {
 		sortable: Boolean,
 		/**
 		 * Card sizes
-		 * @values "tiny", "small", "medium", "large", "huge"
+		 * @values "tiny", "small", "medium", "large", "huge", "full"
 		 */
 		size: {
 			type: String,

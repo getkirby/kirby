@@ -12,7 +12,7 @@ return [
 		},
 
 		/**
-		 * Layout size for cards: `tiny`, `small`, `medium`, `large` or `huge`
+		 * Layout size for cards: `tiny`, `small`, `medium`, `large`, `huge`, `full`
 		 */
 		'size' => function (string $size = 'auto') {
 			return $size;
