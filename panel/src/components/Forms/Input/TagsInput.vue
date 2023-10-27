@@ -230,6 +230,6 @@ export default {
 	margin-top: var(--spacing-1);
 }
 .k-tags-input .k-picklist-input-options input {
-	opacity: 0;
+	display: none;
 }
 </style>

@@ -11,7 +11,7 @@
 				ref="search"
 				:autofocus="autofocus"
 				:disabled="disabled"
-				:placeholder="(search.placeholder ?? $t('enter')) + ' …'"
+				:placeholder="(search.placeholder ?? $t('filter')) + ' …'"
 				:value="query"
 				class="k-picklist-input-search"
 				@input="query = $event"
@@ -302,10 +302,8 @@ export default {
 }
 
 .k-picklist-input-options .k-choice-input {
-	height: var(--button-height);
+	min-height: var(--button-height);
 	padding: var(--spacing-1) var(--spacing-2);
-	flex-direction: row-reverse;
-	justify-content: space-between;
 	border-radius: var(--picklist-rounded);
 }
 .k-picklist-input-options .k-choice-input:has(:checked) {
