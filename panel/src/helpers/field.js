@@ -9,7 +9,7 @@ export function form(fields) {
 	const form = {};
 
 	for (const fieldName in fields) {
-		form[fieldName] = clone(fields[fieldName].default);
+		form[fieldName] = clone(fields[fieldName].default ?? null);
 	}
 
 	return form;
