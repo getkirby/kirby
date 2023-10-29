@@ -31,7 +31,7 @@
 					@chooseToAppend="choose(index + 1)"
 					@chooseToConvert="chooseToConvert(block)"
 					@chooseToPrepend="choose(index)"
-					@click.native.stop="onClickBlock(block, $event)"
+					@click.native="onClickBlock(block, $event)"
 					@close="isEditing = false"
 					@copy="copy()"
 					@duplicate="duplicate(block, index)"
@@ -441,6 +441,7 @@ export default {
 
 			if (this.isMultiSelectKey) {
 				event.preventDefault();
+				event.stopPropagation();
 
 				if (this.isSelected(block)) {
 					this.deselect(block);
