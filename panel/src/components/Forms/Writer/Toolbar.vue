@@ -6,7 +6,7 @@
 		:data-inline="inline"
 		:theme="inline ? 'dark' : 'light'"
 		:style="{
-			bottom: position.y + 'px',
+			top: position.y + 'px',
 			left: position.x + 'px'
 		}"
 		class="k-writer-toolbar"
@@ -65,10 +65,7 @@ export default {
 	data() {
 		return {
 			isOpen: false,
-			position: {
-				x: 0,
-				y: 0
-			}
+			position: { x: 0, y: 0 }
 		};
 	},
 	computed: {
@@ -277,36 +274,41 @@ export default {
 		 * based on the current selection in the editor
 		 */
 		setPosition() {
-			const { from, to } = this.editor.selection;
+			// Get sizes for the toolbar itself but also the editor box
+			const toolbar = this.$el.getBoundingClientRect();
+			const editor = this.editor.element.getBoundingClientRect();
+			const menu = document
+				.querySelector(".k-panel-menu")
+				.getBoundingClientRect();
 
+			// Create pseudo rectangle for the selection
+			const { from, to } = this.editor.selection;
 			const start = this.editor.view.coordsAtPos(from);
 			const end = this.editor.view.coordsAtPos(to, true);
+			const selection = new DOMRect(
+				start.left,
+				start.top,
+				end.right - start.left,
+				end.bottom - start.top
+			);
 
-			// The box in which the tooltip is positioned, to use as base
-			const editor = this.editor.element.getBoundingClientRect();
+			// Calculate the position of the toolbar: centered above the selection
+			let x = selection.x - editor.x + selection.width / 2 - toolbar.width / 2;
+			let y = selection.y - editor.y - toolbar.height - 5;
 
-			// Find a center-ish x position from the selection endpoints (when
-			// crossing lines, end may be more to the left)
-			let left = (start.left + end.left) / 2 - editor.left;
-			let bottom = Math.round(editor.bottom - start.top) - 10;
+			// Contain in viewport
+			const left = editor.x + x;
+			const right = left + toolbar.width;
+			const safeSpaceLeft = menu.width + 20;
+			const safeSpaceRight = 20;
 
-			// Align to writer editor
-			const toolbar = this.$el.clientWidth;
-
-			// adjust left overflow
-			if (left - toolbar / 2 < 0) {
-				left = left + (toolbar / 2 - left) - 10;
+			if (left < safeSpaceLeft) {
+				x += safeSpaceLeft - left;
+			} else if (right > window.innerWidth - safeSpaceRight) {
+				x -= right - (window.innerWidth - safeSpaceRight);
 			}
 
-			// adjust right overflow
-			if (left + toolbar / 2 > editor.width) {
-				left = left - (left + toolbar / 2 - editor.width) + 10;
-			}
-
-			this.position = {
-				y: bottom,
-				x: left
-			};
+			this.position = { x, y };
 		}
 	}
 };
@@ -327,8 +329,8 @@ export default {
 
 .k-writer-toolbar[data-inline="true"] {
 	position: absolute;
-	transform: translateX(-50%) translateY(-0.75rem);
 	z-index: calc(var(--z-dropdown) + 1);
+	max-width: none;
 	box-shadow: var(--shadow-toolbar);
 }
 .k-writer-toolbar:not([data-inline="true"]) {
