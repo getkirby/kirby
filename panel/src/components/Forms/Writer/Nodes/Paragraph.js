@@ -11,9 +11,25 @@ export default class Paragraph extends Node {
 		};
 	}
 
-	commands({ utils, type }) {
+	commands({ utils, schema, type }) {
 		return {
-			paragraph: () => utils.setBlockType(type)
+			paragraph: () => {
+				if (this.editor.activeNodes.includes("bulletList")) {
+					return utils.toggleList(
+						schema.nodes.bulletList,
+						schema.nodes.listItem
+					);
+				}
+
+				if (this.editor.activeNodes.includes("orderedList")) {
+					return utils.toggleList(
+						schema.nodes.orderedList,
+						schema.nodes.listItem
+					);
+				}
+
+				return utils.setBlockType(type);
+			}
 		};
 	}
 
