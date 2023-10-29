@@ -155,10 +155,7 @@ export default {
 		 * Whether there are any nodes to show in the toolbar
 		 */
 		hasNodes() {
-			// show nodes dropdown when there are at least three nodes incl. paragraph
-			// or when there are at least two one nodes which are not the paragraph
-			const min = Object.keys(this.nodeButtons).includes("paragraph") ? 2 : 1;
-			return this.$helper.object.length(this.nodeButtons) > min;
+			return this.$helper.object.length(this.nodeButtons) > 1;
 		},
 		/**
 		 * All marks that are available and requested based on the `marks` prop
