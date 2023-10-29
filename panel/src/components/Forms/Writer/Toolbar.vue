@@ -296,16 +296,25 @@ export default {
 			let x = selection.x - editor.x + selection.width / 2 - toolbar.width / 2;
 			let y = selection.y - editor.y - toolbar.height - 5;
 
-			// Contain in viewport
-			const left = editor.x + x;
-			const right = left + toolbar.width;
-			const safeSpaceLeft = menu.width + 20;
-			const safeSpaceRight = 20;
+			// Contain in editor (if possible)
+			if (toolbar.width < editor.width) {
+				if (x < 0) {
+					x = 0;
+				} else if (x + toolbar.width > editor.width) {
+					x = editor.width - toolbar.width;
+				}
+			} else {
+				// Contain in viewport
+				const left = editor.x + x;
+				const right = left + toolbar.width;
+				const safeSpaceLeft = menu.width + 20;
+				const safeSpaceRight = 20;
 
-			if (left < safeSpaceLeft) {
-				x += safeSpaceLeft - left;
-			} else if (right > window.innerWidth - safeSpaceRight) {
-				x -= right - (window.innerWidth - safeSpaceRight);
+				if (left < safeSpaceLeft) {
+					x += safeSpaceLeft - left;
+				} else if (right > window.innerWidth - safeSpaceRight) {
+					x -= right - (window.innerWidth - safeSpaceRight);
+				}
 			}
 
 			this.position = { x, y };
