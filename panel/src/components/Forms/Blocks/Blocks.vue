@@ -721,8 +721,12 @@ export default {
 .k-blocks[data-disabled="true"]:not([data-empty="true"]) {
 	border: 1px solid var(--input-color-border);
 }
+/* When multiselect key is pressed, prevent pointer events on containing blocks, but ensure to reset it for nested blocks */
 .k-blocks-list[data-multi-select-key="true"] > .k-block-container * {
 	pointer-events: none;
+}
+.k-blocks-list[data-multi-select-key="true"] > .k-block-container .k-blocks * {
+	pointer-events: all;
 }
 .k-blocks .k-sortable-ghost {
 	outline: 2px solid var(--color-focus);
