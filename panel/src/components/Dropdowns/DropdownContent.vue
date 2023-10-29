@@ -2,8 +2,6 @@
 	<dialog
 		v-if="isOpen"
 		ref="dropdown"
-		:data-align-x="axis.x"
-		:data-align-y="axis.y"
 		:data-theme="theme"
 		:style="{
 			top: position.y + 'px',
@@ -33,7 +31,7 @@
 </template>
 
 <script>
-import Vue from "vue";
+import { position } from "@/helpers/dropdown.js";
 
 let OpenDropdown = null;
 
@@ -44,7 +42,6 @@ export default {
 	props: {
 		/**
 		 * @deprecated 4.0.0 Use `align-x` instead
-		 * @todo rename `axis` data to `align` when removed
 		 */
 		align: {
 			type: String
@@ -106,14 +103,7 @@ export default {
 	],
 	data() {
 		return {
-			axis: {
-				x: this.alignX,
-				y: this.alignY
-			},
-			position: {
-				x: 0,
-				y: 0
-			},
+			position: { x: 0, y: 0 },
 			isOpen: false,
 			items: [],
 			opener: null
@@ -223,86 +213,26 @@ export default {
 			});
 		},
 		async setPosition() {
-			// reset to the alignment defaults
-			// before running position calculation
-			this.axis = {
-				x: this.alignX ?? this.align,
-				y: this.alignY
+			// remember the current scroll position as it will be 0
+			// after the modal is opened
+			const scroll = {
+				x: window.scrollX,
+				y: window.scrollY
 			};
-
-			if (this.axis.x === "right") {
-				this.axis.x = "end";
-			} else if (this.axis.x === "left") {
-				this.axis.x = "start";
-			}
-
-			// flip x axis for RTL languages
-			if (this.$panel.direction === "rtl") {
-				if (this.axis.x === "start") {
-					this.axis.x = "end";
-				} else if (this.axis.x === "end") {
-					this.axis.x = "start";
-				}
-			}
-
-			// drill down to the element of a component
-			if (this.opener instanceof Vue) {
-				this.opener = this.opener.$el;
-			}
-
-			// get the dimensions of the opening button
-			const opener = this.opener.getBoundingClientRect();
-
-			// set the default position
-			// and take scroll position into consideration
-			this.position.x = opener.left + window.scrollX + opener.width;
-			this.position.y = opener.top + window.scrollY + opener.height;
 
 			// open the modal after the default positioning has been applied
 			if (this.$el.open !== true) {
 				this.$el.showModal();
+				await this.$nextTick();
 			}
 
-			// as we just set style.top, wait one tick before measuring dropdownRect
-			await this.$nextTick();
-
-			// get the dimensions of the open dropdown
-			const rect = this.$el.getBoundingClientRect();
-			const safeSpace = 10;
-
-			// Horizontal: check if dropdown is outside of viewport
-			// and adapt alignment if necessary
-			if (this.axis.x === "end") {
-				if (opener.left - rect.width < safeSpace) {
-					this.axis.x = "start";
-				}
-			} else if (
-				opener.left + rect.width > window.innerWidth - safeSpace &&
-				rect.width + safeSpace < rect.left
-			) {
-				this.axis.x = "end";
-			}
-
-			if (this.axis.x === "start") {
-				this.position.x = this.position.x - opener.width;
-			}
-
-			// Vertical: check if dropdown is outside of viewport
-			// and adapt alignment if necessary
-			if (this.axis.y === "top") {
-				if (rect.height + safeSpace > rect.top) {
-					this.axis.y = "bottom";
-				}
-			} else if (
-				opener.top + rect.height > window.innerHeight - safeSpace &&
-				rect.height + safeSpace < rect.top
-			) {
-				this.axis.y = "top";
-			}
-
-			if (this.axis.y === "top") {
-				this.position.y = this.position.y - opener.height;
-			}
+			this.position = position(
+				this.opener,
+				this.$el,
+				this.alignX ?? this.align,
+				this.alignY,
+				scroll
+			);
 		},
 		resetPosition() {
 			this.position = { x: 0, y: 0 };
@@ -329,8 +259,6 @@ export default {
 }
 
 .k-dropdown-content {
-	--dropdown-x: 0;
-	--dropdown-y: 0;
 	position: absolute;
 	inset-block-start: 0;
 	inset-inline-start: initial; /* reset this, so that `left` is authoritative */
@@ -342,20 +270,9 @@ export default {
 	color: var(--dropdown-color-text);
 	box-shadow: var(--dropdown-shadow);
 	text-align: start;
-	transform: translate(var(--dropdown-x), var(--dropdown-y));
 }
 .k-dropdown-content::backdrop {
 	background: none;
-}
-
-.k-dropdown-content[data-align-x="end"] {
-	--dropdown-x: -100%;
-}
-.k-dropdown-content[data-align-x="center"] {
-	--dropdown-x: -50%;
-}
-.k-dropdown-content[data-align-y="top"] {
-	--dropdown-y: -100%;
 }
 
 .k-dropdown-content hr {

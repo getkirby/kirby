@@ -186,7 +186,4 @@ export default {
 .k-block-options > .k-button:not(:last-of-type) {
 	border-inline-end: 1px solid var(--color-background);
 }
-.k-block-options .k-dropdown-content {
-	margin-top: 0.5rem;
-}
 </style>
