@@ -125,20 +125,22 @@ export default {
 			}
 
 			// Marks
-			for (const markType in this.markButtons) {
-				const mark = this.markButtons[markType];
+			if (this.hasMarks) {
+				for (const markType in this.markButtons) {
+					const mark = this.markButtons[markType];
 
-				if (mark === "|") {
-					buttons.push("|");
-					continue;
+					if (mark === "|") {
+						buttons.push("|");
+						continue;
+					}
+
+					buttons.push({
+						current: this.editor.activeMarks.includes(markType),
+						icon: mark.icon,
+						label: mark.label,
+						click: (e) => this.command(mark.command ?? markType, e)
+					});
 				}
-
-				buttons.push({
-					current: this.editor.activeMarks.includes(markType),
-					icon: mark.icon,
-					label: mark.label,
-					click: (e) => this.command(mark.command ?? markType, e)
-				});
 			}
 
 			return buttons;
@@ -162,11 +164,11 @@ export default {
 		 * All marks that are available and requested based on the `marks` prop
 		 */
 		markButtons() {
-			if (this.marks === false) {
+			const available = this.editor.buttons("mark");
+
+			if (this.marks === false || this.$helper.object.length(available) === 0) {
 				return {};
 			}
-
-			const available = this.editor.buttons("mark");
 
 			if (this.marks === true) {
 				return available;
@@ -188,11 +190,11 @@ export default {
 		 * All nodes that are available and requested based on the `nodes` prop
 		 */
 		nodeButtons() {
-			if (this.nodes === false) {
+			const available = this.editor.buttons("node");
+
+			if (this.nodes === false || this.$helper.object.length(available) === 0) {
 				return {};
 			}
-
-			const available = this.editor.buttons("node");
 
 			// remove the paragraph when certain nodes are requested to be loaded
 			if (this.editor.nodes.doc.content !== "block+" && available.paragraph) {
