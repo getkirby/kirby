@@ -11,6 +11,16 @@ export default (panel) => {
 	const emitter = mitt();
 
 	/**
+	 * Custom handler for online/offline state
+	 */
+	emitter.on("online", () => {
+		panel.isOffline = false;
+	});
+	emitter.on("offline", () => {
+		panel.isOffline = true;
+	});
+
+	/**
 	 * Custom handler for save events
 	 */
 	emitter.on("keydown.cmd.s", (e) => {
