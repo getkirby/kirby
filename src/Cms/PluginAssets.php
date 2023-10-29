@@ -31,21 +31,34 @@ class PluginAssets extends Collection
 			$media  = $plugin->mediaRoot();
 			$assets = $plugin->assets();
 
-			// get outdated media files by comparing all
-			// files in the media folder against the current set
-			// of asset paths
-			$files  = Dir::index($media, true);
+			// get all media files
+			$files = Dir::index($media, true);
+
+			// get all active assets' paths from the plugin
 			$active = $assets->values(
-				fn ($asset) => $asset->mediaHash() . '/' . $asset->path()
+				function ($asset) {
+					$path  = $asset->mediaHash() . '/' . $asset->path();
+					$paths = [];
+					$parts = explode('/', $path);
+
+					// collect all path segments
+					// (e.g. foo/, foo/bar/, foo/bar/baz.css) for the asset
+					for ($i=0; $i < count($parts); $i++) {
+						$paths[] = implode('/', array_slice($parts, 0, $i + 1));
+
+						// TODO: remove when media hash is enforced as mandatory
+						$paths[] = implode('/', array_slice($parts, 1, $i + 1));
+					}
+
+					return $paths;
+				}
 			);
 
-			// TODO: remove when media hash is enforced as mandatory
-			// @codeCoverageIgnoreStart
-			$active = array_merge($active, $assets->values(
-				fn ($asset) => $asset->path()
-			));
-			// @codeCoverageIgnoreEnd
+			// flatten the array and remove duplicates
+			$active = array_unique(array_merge(...$active));
 
+			// get outdated media files by comparing all
+			// files in the media folder against the set of asset paths
 			$stale  = array_diff($files, $active);
 
 			foreach ($stale as $file) {
