@@ -153,9 +153,9 @@ export default {
 		 * Whether there are any nodes to show in the toolbar
 		 */
 		hasNodes() {
-			// show nodes dropdown when there are at least two nodes incl. paragraph
-			// or when there is only one node and it's not the paragraph node
-			const min = Object.keys(this.nodeButtons).includes("paragraph") ? 1 : 0;
+			// show nodes dropdown when there are at least three nodes incl. paragraph
+			// or when there are at least two one nodes which are not the paragraph
+			const min = Object.keys(this.nodeButtons).includes("paragraph") ? 2 : 1;
 			return this.$helper.object.length(this.nodeButtons) > min;
 		},
 		/**
