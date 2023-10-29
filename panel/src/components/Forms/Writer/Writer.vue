@@ -12,8 +12,7 @@
 		<k-writer-toolbar
 			v-if="editor && !disabled"
 			ref="toolbar"
-			v-bind="toolbar"
-			:editor="editor"
+			v-bind="toolbarOptions"
 			@command="onCommand"
 		/>
 	</div>
@@ -121,6 +120,14 @@ export default {
 		},
 		isCursorAtStart() {
 			return this.editor.selectionIsAtStart;
+		},
+		toolbarOptions() {
+			return {
+				// if custom set of marks is enabled, use as toolbar default as well
+				marks: Array.isArray(this.marks) ? this.marks : undefined,
+				...this.toolbar,
+				editor: this.editor
+			};
 		}
 	},
 	watch: {
