@@ -43,11 +43,11 @@ class PluginAssets extends Collection
 
 					// collect all path segments
 					// (e.g. foo/, foo/bar/, foo/bar/baz.css) for the asset
-					for ($i=0; $i < count($parts); $i++) {
-						$paths[] = implode('/', array_slice($parts, 0, $i + 1));
+					for ($i=1, $max = count($parts); $i <= $max; $i++) {
+						$paths[] = implode('/', array_slice($parts, 0, $i));
 
 						// TODO: remove when media hash is enforced as mandatory
-						$paths[] = implode('/', array_slice($parts, 1, $i + 1));
+						$paths[] = implode('/', array_slice($parts, 1, $i));
 					}
 
 					return $paths;
@@ -55,7 +55,7 @@ class PluginAssets extends Collection
 			);
 
 			// flatten the array and remove duplicates
-			$active = array_unique(array_merge(...$active));
+			$active = array_unique(array_merge(...array_values($active)));
 
 			// get outdated media files by comparing all
 			// files in the media folder against the set of asset paths
