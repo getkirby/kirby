@@ -2,13 +2,13 @@
 	<div
 		:data-disabled="disabled"
 		:data-empty="blocks.length === 0"
-		:data-multi-select-key="isMultiSelectKey"
 		class="k-blocks"
 	>
 		<template v-if="hasFieldsets">
 			<k-draggable
 				v-if="blocks.length"
 				v-bind="draggableOptions"
+				:data-multi-select-key="isMultiSelectKey"
 				class="k-blocks-list"
 				@sort="save"
 			>
@@ -31,7 +31,7 @@
 					@chooseToAppend="choose(index + 1)"
 					@chooseToConvert="chooseToConvert(block)"
 					@chooseToPrepend="choose(index)"
-					@click.native.prevent.stop="onClickBlock(block, $event)"
+					@click.native.stop="onClickBlock(block, $event)"
 					@close="isEditing = false"
 					@copy="copy()"
 					@duplicate="duplicate(block, index)"
@@ -422,6 +422,14 @@ export default {
 
 			return true;
 		},
+		onBlur() {
+			// resets multi selecting on tab change
+			// keep only if there are already multiple selections
+			// triggers `blur` event when tab changed
+			if (this.selected.length === 0) {
+				this.isMultiSelectKey = false;
+			}
+		},
 		onClickBlock(block, event) {
 			// checks the event just before selecting the block
 			// especially since keyup doesn't trigger in with
@@ -432,19 +440,13 @@ export default {
 			}
 
 			if (this.isMultiSelectKey) {
+				event.preventDefault();
+
 				if (this.isSelected(block)) {
 					this.deselect(block);
 				} else {
 					this.select(block);
 				}
-			}
-		},
-		onBlur() {
-			// resets multi selecting on tab change
-			// keep only if there are already multiple selections
-			// triggers `blur` event when tab changed
-			if (this.selected.length === 0) {
-				this.isMultiSelectKey = false;
 			}
 		},
 		onClickGlobal(event) {
@@ -719,7 +721,7 @@ export default {
 .k-blocks[data-disabled="true"]:not([data-empty="true"]) {
 	border: 1px solid var(--input-color-border);
 }
-.k-blocks[data-multi-select-key="true"] > .k-block-container * {
+.k-blocks-list[data-multi-select-key="true"] > .k-block-container * {
 	pointer-events: none;
 }
 .k-blocks .k-sortable-ghost {
