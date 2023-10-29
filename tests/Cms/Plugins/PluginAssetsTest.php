@@ -192,15 +192,16 @@ class PluginAssetsTest extends TestCase
 		$this->assertFalse(is_link($media));
 
 		// wrong hash
-		$media    = $this->tmp . '/media/plugins/getkirby/b/110971429-1337000000/foo/bar.css';
-		$response = PluginAssets::resolve(
-			'getkirby/b',
-			'110971429-12345678',
-			'foo/bar.css'
-		);
+		// TODO: remove when media hash is enforced as mandatory
+		// $media    = $this->tmp . '/media/plugins/getkirby/b/110971429-1337000000/foo/bar.css';
+		// $response = PluginAssets::resolve(
+		// 	'getkirby/b',
+		// 	'110971429-12345678',
+		// 	'foo/bar.css'
+		// );
 
-		$this->assertNull($response);
-		$this->assertFalse(is_link($media));
+		// $this->assertNull($response);
+		// $this->assertFalse(is_link($media));
 
 		// correct: different path and root
 		touch($this->tmp . '/site/plugins/c/foo/bar.css', 1337000000);
