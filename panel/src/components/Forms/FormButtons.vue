@@ -182,8 +182,10 @@ export default {
 	},
 	methods: {
 		async check() {
-			const { lock } = await this.$api.get(...this.api);
-			set(this.$panel.view.props, "lock", lock);
+			if (this.$panel.isOffline === false) {
+				const { lock } = await this.$api.get(...this.api);
+				set(this.$panel.view.props, "lock", lock);
+			}
 		},
 		download() {
 			let content = "";
@@ -220,6 +222,10 @@ export default {
 			document.body.removeChild(link);
 		},
 		async locking(lock = true) {
+			if (this.$panel.isOffline === true) {
+				return;
+			}
+
 			// writing lock
 			if (lock === true) {
 				try {

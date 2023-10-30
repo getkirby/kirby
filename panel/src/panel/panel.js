@@ -66,6 +66,7 @@ export default {
 	create(plugins = {}) {
 		// props
 		this.isLoading = false;
+		this.isOffline = false;
 
 		this.drag = Drag(this);
 		this.events = Events(this);
