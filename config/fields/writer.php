@@ -61,23 +61,6 @@ return [
 		}
 	],
 	'computed' => [
-		'toolbar' => function () {
-			return array_merge([
-				'inline' => true,
-				'marks'  => $this->marks ?? [
-					'bold',
-					'italic',
-					'underline',
-					'strike',
-					'code',
-					'|',
-					'link',
-					'email',
-					'|',
-					'clear'
-				]
-			], $this->toolbar ?? []);
-		},
 		'value' => function () {
 			$value = trim($this->value ?? '');
 			return Sane::sanitize($value, 'html');
