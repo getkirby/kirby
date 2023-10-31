@@ -28,6 +28,10 @@ export default class Paragraph extends Node {
 					);
 				}
 
+				if (this.editor.activeNodes.includes("quote")) {
+					return utils.toggleWrap(schema.nodes.quote);
+				}
+
 				return utils.setBlockType(type);
 			}
 		};

@@ -241,7 +241,10 @@ export default {
 			// don't consider paragraph as an active node when
 			// the list item is active
 			if (node.name === "paragraph") {
-				return this.editor.activeNodes.includes("listItem") === false;
+				return (
+					this.editor.activeNodes.includes("listItem") === false &&
+					this.editor.activeNodes.includes("quote") === false
+				);
 			}
 
 			// Te might have multiple node buttons for the same node
