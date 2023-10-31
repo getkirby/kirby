@@ -232,9 +232,14 @@ export default {
 
 		this.isEmpty = this.editor.isEmpty();
 		this.json = this.editor.getJSON();
+
+		this.$panel.events.on("click", this.onBlur);
+		this.$panel.events.on("focus", this.onBlur);
 	},
 	beforeDestroy() {
 		this.editor.destroy();
+		this.$panel.events.off("click", this.onBlur);
+		this.$panel.events.off("focus", this.onBlur);
 	},
 	methods: {
 		command(command, ...args) {
@@ -355,6 +360,11 @@ export default {
 		},
 		getSplitContent() {
 			return this.editor.getHTMLStartToSelectionToEnd();
+		},
+		onBlur(event) {
+			if (this.$el.contains(event.target) === false) {
+				this.$refs.toolbar?.close();
+			}
 		},
 		onCommand(command, ...args) {
 			this.editor.command(command, ...args);

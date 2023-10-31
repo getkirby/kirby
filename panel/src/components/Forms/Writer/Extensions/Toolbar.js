@@ -17,15 +17,6 @@ export default class Toolbar extends Extension {
 	}
 
 	init() {
-		this.editor.on("blur", ({ event }) => {
-			// don't close the toolbar if the blur event happened inside the writer
-			if (this.writer.$el.contains(event.target) === true) {
-				return;
-			}
-
-			this.component?.close(event);
-		});
-
 		this.editor.on("deselect", ({ event }) => this.component?.close(event));
 		this.editor.on("select", ({ hasChanged }) => {
 			/**
