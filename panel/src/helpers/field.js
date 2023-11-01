@@ -1,6 +1,39 @@
 import { clone } from "./object.js";
 
 /**
+ * Loads the default value for a field definition
+ * @param {Object} field
+ * @returns {mixed}
+ */
+export function defaultValue(field) {
+	if (field.default !== undefined) {
+		return clone(field.default);
+	}
+
+	const component =
+		window.panel.app.$options.components[`k-${field.type}-field`];
+	const valueProp = component?.options.props.value;
+	const valuePropDefault = valueProp?.default;
+
+	// if the field has no value prop,
+	// it will be completely skipped
+	if (valueProp === undefined) {
+		return undefined;
+	}
+
+	// resolve default prop functions
+	if (typeof valuePropDefault === "function") {
+		return valuePropDefault();
+	}
+
+	if (valuePropDefault !== undefined) {
+		return valuePropDefault;
+	}
+
+	return null;
+}
+
+/**
  * Creates form values for provided fields
  * @param {Object} fields
  * @returns {Object}
@@ -9,7 +42,11 @@ export function form(fields) {
 	const form = {};
 
 	for (const fieldName in fields) {
-		form[fieldName] = clone(fields[fieldName].default);
+		const defaultVal = defaultValue(fields[fieldName]);
+
+		if (defaultVal !== undefined) {
+			form[fieldName] = defaultVal;
+		}
 	}
 
 	return form;
@@ -80,6 +117,7 @@ export function subfields(field, fields) {
 }
 
 export default {
+	defaultValue,
 	form,
 	isVisible,
 	subfields
