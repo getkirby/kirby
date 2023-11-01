@@ -118,7 +118,11 @@ export default {
 			return fields;
 		},
 		remove() {
-			this.object = null;
+			// we need to use an empty string here
+			// it would be more correct to send null, but
+			// that will ignore the input in the form submission
+			// and simply keep the last values.
+			this.object = "";
 			this.save();
 		},
 		// TODO: field is not yet used to pre-focus correct field
