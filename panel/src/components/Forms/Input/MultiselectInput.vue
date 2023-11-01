@@ -65,8 +65,4 @@ export default {
 	padding: var(--tags-gap);
 	cursor: pointer;
 }
-
-.k-multiselect-input .k-picklist-input-options input:not(:checked) {
-	opacity: 0;
-}
 </style>

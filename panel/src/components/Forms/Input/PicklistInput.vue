@@ -297,8 +297,8 @@ export default {
 }
 
 .k-picklist-input-search {
+	--input-rounded: var(--picklist-rounded);
 	height: var(--button-height);
-	border-radius: var(--picklist-rounded);
 }
 
 .k-picklist-input-options .k-choice-input {

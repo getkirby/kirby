@@ -67,7 +67,6 @@ export default {
 	:where(
 		.k-picklist-input-header,
 		.k-picklist-input-options,
-		.k-picklist-input-empty,
 		.k-picklist-input-footer
 	) {
 	padding: var(--dropdown-padding);
@@ -76,15 +75,30 @@ export default {
 	background: var(--color-gray-800);
 }
 
+.k-picklist-input-empty {
+	height: auto;
+	padding: var(--spacing-3) var(--spacing-4);
+}
+
 .k-picklist-dropdown .k-picklist-input-options {
 	/* 2px = grid gap of choices list */
 	max-height: calc(
 		var(--button-height) * 9.5 + 2px * 9 + var(--dropdown-padding)
 	);
 	overflow-y: auto;
+	outline-offset: -2px;
 	overscroll-behavior: contain;
 	scroll-padding-top: var(--dropdown-padding);
 	scroll-padding-bottom: var(--dropdown-padding);
+}
+
+.k-picklist-dropdown .k-picklist-input-options .k-choice-input {
+	--choice-color-border: var(--dropdown-color-hr);
+	--choice-color-back: var(--dropdown-color-hr);
+	--choice-color-checked: var(--dropdown-color-hr);
+}
+.k-picklist-dropdown .k-picklist-input-options .k-choice-input input {
+	top: 3px;
 }
 .k-picklist-dropdown .k-picklist-input-options .k-choice-input:hover {
 	background-color: var(--dropdown-color-hr);
