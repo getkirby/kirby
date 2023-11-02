@@ -56,7 +56,6 @@
 </template>
 
 <script>
-import { set } from "vue";
 import { props as Field } from "../Field.vue";
 import { props as Input } from "../Input.vue";
 
@@ -69,7 +68,7 @@ export default {
 	},
 	data() {
 		return {
-			object: null
+			object: {}
 		};
 	},
 	computed: {
@@ -77,7 +76,9 @@ export default {
 			return this.$helper.object.length(this.fields) > 0;
 		},
 		isEmpty() {
-			return this.object === null;
+			return (
+				this.object === null || this.$helper.object.length(this.object) === 0
+			);
 		},
 		isInvalid() {
 			return this.required === true && this.isEmpty;
@@ -98,7 +99,7 @@ export default {
 			this.open();
 		},
 		cell(name, value) {
-			set(this.object, name, value);
+			this.$set(this.object, name, value);
 			this.save();
 		},
 		/**
@@ -118,7 +119,7 @@ export default {
 			return fields;
 		},
 		remove() {
-			this.object = null;
+			this.object = {};
 			this.save();
 		},
 		// TODO: field is not yet used to pre-focus correct field
@@ -160,7 +161,7 @@ export default {
 			this.$emit("input", this.object);
 		},
 		valueToObject(value) {
-			return typeof value !== "object" ? null : value;
+			return typeof value !== "object" ? {} : value;
 		}
 	}
 };
