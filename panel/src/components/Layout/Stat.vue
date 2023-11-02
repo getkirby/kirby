@@ -1,6 +1,10 @@
 <template>
 	<component :is="component" :data-theme="theme" :to="target" class="k-stat">
-		<dt v-if="label" class="k-stat-label">{{ label }}</dt>
+		<dt v-if="label" class="k-stat-label">
+			<k-icon v-if="icon" :type="icon" />
+
+			{{ label }}
+		</dt>
 		<dd v-if="value" class="k-stat-value">{{ value }}</dd>
 		<dd v-if="info" class="k-stat-info">{{ info }}</dd>
 	</component>
@@ -18,37 +22,30 @@ export default {
 		/**
 		 * Label text of the stat (2nd line)
 		 */
-		label: {
-			type: String
-		},
+		label: String,
 		/**
 		 * Main text of the stat (1st line)
 		 */
-		value: {
-			type: String
-		},
+		value: String,
+		/**
+		 * Additional icon for the stat
+		 * @since 4.0.0
+		 */
+		icon: String,
 		/**
 		 * Additional text of the stat (3rd line)
 		 */
-		info: {
-			type: String
-		},
+		info: String,
 		/**
 		 * @values "negative", "positive", "warning", "info"
 		 */
-		theme: {
-			type: String
-		},
+		theme: String,
 		/** Absolute or relative URL */
-		link: {
-			type: String
-		},
+		link: String,
 		/**
 		 * Function to be called when clicked
 		 */
-		click: {
-			type: Function
-		},
+		click: Function,
 		/**
 		 * Dialog endpoint or options to be passed to `this.$dialog`
 		 */
@@ -111,7 +108,13 @@ export default {
 	margin-bottom: var(--spacing-1);
 }
 .k-stat-label {
+	--icon-size: var(--text-xs);
+
 	order: 2;
+	display: flex;
+	justify-content: start;
+	align-items: center;
+	gap: var(--spacing-1);
 	font-size: var(--text-xs);
 }
 .k-stat-info {

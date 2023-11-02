@@ -17,25 +17,26 @@ return [
 					'label'  => $license ? I18n::translate('license') : I18n::translate('license.register.label'),
 					'value'  => $license ? 'Kirby 3' : I18n::translate('license.unregistered.label'),
 					'theme'  => $license ? null : 'negative',
+					'icon'   => $license ? 'info' : 'key',
 					'dialog' => $license ? 'license' : 'registration'
 				],
 				[
 					'label' => $updateStatus?->label() ?? I18n::translate('version'),
 					'value' => $kirby->version(),
-					'link'  => (
-						$updateStatus ?
-						$updateStatus->url() :
-						'https://github.com/getkirby/kirby/releases/tag/' . $kirby->version()
-					),
-					'theme' => $updateStatus?->theme()
+					'link'  => $updateStatus?->url() ??
+						'https://github.com/getkirby/kirby/releases/tag/' . $kirby->version(),
+					'theme' => $updateStatus?->theme(),
+					'icon'  => $updateStatus?->icon() ?? 'info'
 				],
 				[
 					'label' => 'PHP',
-					'value' => phpversion()
+					'value' => phpversion(),
+					'icon'  => 'code'
 				],
 				[
 					'label' => I18n::translate('server'),
-					'value' => $system->serverSoftware() ?? '?'
+					'value' => $system->serverSoftware() ?? '?',
+					'icon'  => 'server'
 				]
 			];
 

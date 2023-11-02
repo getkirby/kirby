@@ -49,40 +49,44 @@ class SystemTest extends AreaTestCase
 		$this->assertSame('k-system-view', $view['component']);
 		$this->assertSame([
 			[
-				'label' => 'Please enter your license code',
-				'value' => 'Unregistered',
-				'theme' => 'negative',
+				'label'  => 'Please enter your license code',
+				'value'  => 'Unregistered',
+				'theme'  => 'negative',
+				'icon'   => 'key',
 				'dialog' => 'registration'
 			],
 			[
 				'label' => 'Free update 88888.8.8 available',
 				'value' => $this->app->version(),
-				'link' => 'https://getkirby.com/releases/88888.8.8',
-				'theme' => 'info'
+				'link'  => 'https://getkirby.com/releases/88888.8.8',
+				'theme' => 'info',
+				'icon'  => 'info'
 			],
 			[
 				'label' => 'PHP',
-				'value' => phpversion()
+				'value' => phpversion(),
+				'icon'  => 'code'
 			],
 			[
 				'label' => 'Server',
-				'value' => 'php'
+				'value' => 'php',
+				'icon'  => 'server'
 			],
 		], $props['environment']);
 		$this->assertSame([], $props['exceptions']);
 		$this->assertSame([], $props['plugins']);
 		$this->assertSame([
 			[
-				'text' => 'This is a very important announcement!',
+				'text'  => 'This is a very important announcement!',
 				'kirby' => '*',
-				'php' => '*'
+				'php'   => '*'
 			]
 		], $props['security']);
 		$this->assertSame([
 			'content' => 'https://example.com/content/site.txt',
-			'git' => null,
-			'kirby' => null,
-			'site' => 'https://example.com/site'
+			'git'     => null,
+			'kirby'   => null,
+			'site'    => 'https://example.com/site'
 		], $props['urls']);
 	}
 
@@ -102,9 +106,9 @@ class SystemTest extends AreaTestCase
 		$this->assertSame([], $props['exceptions']);
 		$this->assertSame([
 			[
-				'text' => 'This is a very important announcement!',
+				'text'  => 'This is a very important announcement!',
 				'kirby' => '*',
-				'php' => '*'
+				'php'   => '*'
 			],
 			[
 				'id'   => 'debug',
@@ -129,9 +133,9 @@ class SystemTest extends AreaTestCase
 
 		$this->assertSame([
 			[
-				'text' => 'This is a very important announcement!',
+				'text'  => 'This is a very important announcement!',
 				'kirby' => '*',
-				'php' => '*'
+				'php'   => '*'
 			],
 			[
 				'id'   => 'https',
@@ -358,24 +362,28 @@ class SystemTest extends AreaTestCase
 
 		$this->assertSame([
 			[
-				'label' => 'Please enter your license code',
-				'value' => 'Unregistered',
-				'theme' => 'negative',
+				'label'  => 'Please enter your license code',
+				'value'  => 'Unregistered',
+				'theme'  => 'negative',
+				'icon'   => 'key',
 				'dialog' => 'registration'
 			],
 			[
 				'label' => 'Version',
 				'value' => $this->app->version(),
-				'link' => 'https://github.com/getkirby/kirby/releases/tag/' . $this->app->version(),
-				'theme' => null
+				'link'  => 'https://github.com/getkirby/kirby/releases/tag/' . $this->app->version(),
+				'theme' => null,
+				'icon'  => 'info'
 			],
 			[
 				'label' => 'PHP',
-				'value' => phpversion()
+				'value' => phpversion(),
+				'icon'  => 'code'
 			],
 			[
 				'label' => 'Server',
-				'value' => 'php'
+				'value' => 'php',
+				'icon'  => 'server'
 			],
 		], $props['environment']);
 		$this->assertSame([], $props['security']);
