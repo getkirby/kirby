@@ -11,6 +11,7 @@
 				:icon="button.icon"
 				:title="button.label"
 				:class="['k-toolbar-button', button.class]"
+				tabindex="0"
 				@keydown.native="button.key?.($event)"
 				@click="
 					button.dropdown?.length

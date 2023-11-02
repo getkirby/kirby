@@ -17,7 +17,6 @@ export default class Toolbar extends Extension {
 	}
 
 	init() {
-		this.editor.on("blur", ({ event }) => this.component?.close(event));
 		this.editor.on("deselect", ({ event }) => this.component?.close(event));
 		this.editor.on("select", ({ hasChanged }) => {
 			/**
