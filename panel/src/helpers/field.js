@@ -13,13 +13,14 @@ export function defaultValue(field) {
 	const component =
 		window.panel.app.$options.components[`k-${field.type}-field`];
 	const valueProp = component?.options.props.value;
-	const valuePropDefault = valueProp?.default;
 
 	// if the field has no value prop,
 	// it will be completely skipped
 	if (valueProp === undefined) {
 		return undefined;
 	}
+
+	const valuePropDefault = valueProp?.default;
 
 	// resolve default prop functions
 	if (typeof valuePropDefault === "function") {
