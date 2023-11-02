@@ -115,10 +115,13 @@ export default {
 		async value() {
 			this.onInvalid();
 			await this.$nextTick();
-			this.$refs.input.autosize();
+			this.$library.autosize.update(this.$refs.input);
 		}
 	},
-	mounted() {
+	async mounted() {
+		await this.$nextTick();
+		this.$library.autosize(this.$refs.input);
+
 		this.onInvalid();
 
 		if (this.$props.autofocus) {
