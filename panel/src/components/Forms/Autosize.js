@@ -17,12 +17,10 @@ export default class Autosize extends HTMLElement {
 			textarea.autosize = () => {
 				textarea.style.height = "auto";
 				textarea.style.height = textarea.scrollHeight + "px";
-				this.restoreScroll();
 			};
 
 			// trigger resize on input
 			textarea.addEventListener("input", () => textarea.autosize());
-			textarea.addEventListener("beforeinput", () => this.storeScroll());
 		}
 
 		// resize all textareas when the container size changes
@@ -37,16 +35,5 @@ export default class Autosize extends HTMLElement {
 
 	disconnectedCallback() {
 		this.resizer.unobserve(this);
-	}
-
-	restoreScroll() {
-		if (this.scrollY !== undefined) {
-			window.scroll(0, this.scrollY);
-			this.scroll = undefined;
-		}
-	}
-
-	storeScroll() {
-		this.scrollY = window.scrollY;
 	}
 }

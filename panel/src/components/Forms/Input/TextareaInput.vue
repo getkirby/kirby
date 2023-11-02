@@ -112,8 +112,10 @@ export default {
 		}
 	},
 	watch: {
-		value() {
+		async value() {
 			this.onInvalid();
+			await this.$nextTick();
+			this.$refs.input.autosize();
 		}
 	},
 	mounted() {
