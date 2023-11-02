@@ -6,6 +6,15 @@ return [
 	'lab.docs' => [
 		'pattern' => 'lab/docs/(:any)',
 		'load'    => function (string $component) {
+			if (Docs::installed() === false) {
+				return [
+					'component' => 'k-text-drawer',
+					'props' => [
+						'text' => 'The UI docs are not installed.'
+					]
+				];
+			}
+
 			$docs = new Docs($component);
 
 			return [

@@ -15,7 +15,9 @@ tests/ export-ignore
 panel/.env.example export-ignore
 panel/.eslintrc.js export-ignore
 panel/.prettierrc.json export-ignore
+panel/dist/ui export-ignore
 panel/jsconfig.json export-ignore
+panel/lab export-ignore
 panel/package-lock.json export-ignore
 panel/package.json export-ignore
 panel/public export-ignore

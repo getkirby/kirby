@@ -36,8 +36,8 @@ class Docs
 
 	public static function all(): array
 	{
-		$dist  = App::instance()->root('panel') . '/dist/ui';
-		$tmp   = App::instance()->root('panel') . '/tmp';
+		$dist  = static::root();
+		$tmp   = static::root(true);
 		$files = Dir::inventory($dist)['files'];
 
 		if (Dir::exists($tmp) === true) {
@@ -129,6 +129,11 @@ class Docs
 	public function github(): string
 	{
 		return 'https://github.com/getkirby/kirby/tree/main/panel/' . $this->json['sourceFile'];
+	}
+
+	public static function installed(): bool
+	{
+		return Dir::exists(static::root()) === true;
 	}
 
 	protected function kt(string $text, bool $inline = false): string
@@ -276,6 +281,14 @@ class Docs
 		}
 
 		return Data::read($file);
+	}
+
+	public static function root(bool $tmp = false): string
+	{
+		return App::instance()->root('panel') . '/' . match ($tmp) {
+			true    => 'tmp',
+			default => 'dist/ui',
+		};
 	}
 
 	public function since(): string|null
