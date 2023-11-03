@@ -6,7 +6,6 @@
 	>
 		<template v-if="hasFieldsets">
 			<k-draggable
-				v-if="blocks.length"
 				v-bind="draggableOptions"
 				:data-multi-select-key="isMultiSelectKey"
 				class="k-blocks-list"
@@ -51,18 +50,21 @@
 					@split="split(block, index, $event)"
 					@update="update(block, $event)"
 				/>
-			</k-draggable>
 
-			<k-empty
-				v-else
-				class="k-blocks-empty"
-				icon="box"
-				@click="choose(blocks.length)"
-			>
-				{{ empty ?? $t("field.blocks.empty") }}
-			</k-empty>
+				<!-- No blocks -->
+				<template v-if="blocks.length === 0" #footer>
+					<k-empty
+						class="k-blocks-empty"
+						icon="box"
+						@click="choose(blocks.length)"
+					>
+						{{ empty ?? $t("field.blocks.empty") }}
+					</k-empty>
+				</template>
+			</k-draggable>
 		</template>
 
+		<!-- No fieldsets -->
 		<k-empty v-else icon="box">
 			{{ $t("field.blocks.fieldsets.empty") }}
 		</k-empty>
