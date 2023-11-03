@@ -71,7 +71,6 @@ input:where([type="checkbox"], [type="radio"])[disabled] {
 input[type="checkbox"]:checked::after {
 	content: "✓";
 	inset: 0;
-	font-size: 9px;
 	font-weight: 700;
 	color: var(--choice-color-icon);
 	line-height: 1;
@@ -83,6 +82,7 @@ input[type="radio"] {
 }
 input[type="radio"]::after {
 	inset: 3px;
+	font-size: 9px;
 	border-radius: var(--choice-rounded);
 }
 
@@ -95,13 +95,15 @@ input[type="checkbox"][data-variant="toggle"]::after {
 	background: var(--choice-color-toggle);
 	display: grid;
 	inset: 1px;
-	width: 50%;
+	width: .8rem;
+	font-size: 7px;
 	border-radius: var(--choice-rounded);
+	transition: all .1s ease-in-out;
 }
 input[type="checkbox"][data-variant="toggle"]:checked {
 	border-color: var(--choice-color-border);
 }
 input[type="checkbox"][data-variant="toggle"]:checked::after {
 	background: var(--choice-color-checked);
-	margin-inline-start: auto;
+	margin-inline-start: 50%;
 }
