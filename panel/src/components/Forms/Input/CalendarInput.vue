@@ -1,5 +1,5 @@
 <template>
-	<fieldset class="k-calendar-input">
+	<fieldset class="k-calendar-input" @click.stop>
 		<legend class="sr-only">{{ $t("date.select") }}</legend>
 		<!-- Month + year selects -->
 		<nav>
@@ -60,7 +60,10 @@
 						<k-button
 							:disabled="disabled"
 							:text="$t('today')"
-							@click="select(today)"
+							@click="
+								show(today);
+								select(today);
+							"
 						/>
 					</td>
 				</tr>
