@@ -108,7 +108,7 @@ export default {
 	margin-bottom: var(--spacing-1);
 }
 .k-stat-label {
-	--icon-size: var(--text-xs);
+	--icon-size: var(--text-sm);
 
 	order: 2;
 	display: flex;
