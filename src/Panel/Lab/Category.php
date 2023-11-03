@@ -92,6 +92,11 @@ class Category
 		return $this->id;
 	}
 
+	public static function installed(): bool
+	{
+		return Dir::exists(static::base()) === true;
+	}
+
 	public function name(): string
 	{
 		return $this->props['name'] ?? ucfirst($this->id);

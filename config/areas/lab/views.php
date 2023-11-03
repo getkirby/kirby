@@ -10,8 +10,9 @@ return [
 			return [
 				'component' => 'k-lab-index-view',
 				'props' => [
-					'tab'        => 'examples',
 					'categories' => Category::all(),
+					'info'       => Category::installed() ? null : 'The default Lab examples are not installed.',
+					'tab'        => 'examples',
 				],
 			];
 		}
@@ -19,6 +20,17 @@ return [
 	'lab.docs' => [
 		'pattern' => 'lab/docs',
 		'action'  => function () {
+			$props = match (Docs::installed()) {
+				true => [
+					'categories' => [['examples' => Docs::all()]],
+					'tab'        => 'docs',
+				],
+				false => [
+					'info' => 'The UI docs are not installed.',
+					'tab'  => 'docs',
+				]
+			};
+
 			return [
 				'component' => 'k-lab-index-view',
 				'title'     => 'Docs',
@@ -28,34 +40,43 @@ return [
 						'link'  => 'lab/docs'
 					]
 				],
-				'props' => [
-					'tab'        => 'docs',
-					'categories' => [
-						['examples' => Docs::all()]
-					],
-				],
+				'props' => $props,
 			];
 		}
 	],
 	'lab.doc' => [
 		'pattern' => 'lab/docs/(:any)',
 		'action'  => function (string $component) {
+			$crumbs = [
+				[
+					'label' => 'Docs',
+					'link'  => 'lab/docs'
+				],
+				[
+					'label' => $component,
+					'link'  => 'lab/docs/' . $component
+				]
+			];
+
+			if (Docs::installed() === false) {
+				return [
+					'component'  => 'k-lab-index-view',
+					'title'      => $component,
+					'breadcrumb' => $crumbs,
+					'props'      => [
+						'info' => 'The UI docs are not installed.',
+						'tab'  => 'docs',
+					],
+				];
+			}
+
 			$docs = new Docs($component);
 
 			return [
-				'component' => 'k-lab-docs-view',
-				'title'     => $component,
-				'breadcrumb' => [
-					[
-						'label' => 'Docs',
-						'link'  => 'lab/docs'
-					],
-					[
-						'label' => $component,
-						'link'  => 'lab/docs/' . $component
-					]
-				],
-				'props' => [
+				'component'  => 'k-lab-docs-view',
+				'title'      => $component,
+				'breadcrumb' => $crumbs,
+				'props'      => [
 					'component' => $component,
 					'docs'      => $docs->toArray(),
 					'lab'       => $docs->lab()
