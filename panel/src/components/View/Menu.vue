@@ -217,12 +217,14 @@ export default {
 	--button-color-text: var(--color-pink-800);
 	border: 1px solid var(--color-pink-400);
 }
-.k-panel-menu .k-activation {
-	display: none;
-	position: absolute;
-	bottom: var(--menu-padding);
-	inset-inline-start: 100%;
-	margin-left: var(--menu-padding);
+
+@media (max-width: 60rem) {
+	.k-panel-menu .k-activation-button {
+		margin-bottom: var(--spacing-3);
+	}
+	.k-panel-menu .k-activation-toggle {
+		display: none;
+	}
 }
 
 /* Desktop size */
@@ -266,7 +268,28 @@ export default {
 	}
 
 	.k-panel-menu .k-activation {
-		display: flex;
+		position: absolute;
+		bottom: var(--menu-padding);
+		inset-inline-start: 100%;
+		height: var(--height-md);
+		width: max-content;
+		margin-left: var(--menu-padding);
+	}
+	.k-panel-menu .k-activation::before {
+		position: absolute;
+		content: "";
+		top: 50%;
+		left: -4px;
+		margin-top: -4px;
+		border-top: 4px solid transparent;
+		border-right: 4px solid var(--color-black);
+		border-bottom: 4px solid transparent;
+	}
+	.k-panel-menu .k-activation p :where(button, a) {
+		padding-inline: var(--spacing-1);
+	}
+	.k-panel-menu .k-activation-toggle {
+		border-left: 1px solid var(--dropdown-color-hr);
 	}
 }
 </style>

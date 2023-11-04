@@ -22,22 +22,10 @@
 .k-activation {
 	position: relative;
 	display: flex;
-	height: var(--height-md);
-	width: max-content;
 	color: var(--dropdown-color-text);
 	background: var(--dropdown-color-bg);
 	border-radius: var(--dropdown-rounded);
 	box-shadow: var(--dropdown-shadow);
-}
-.k-activation::before {
-	position: absolute;
-	content: "";
-	top: 50%;
-	left: -4px;
-	margin-top: -4px;
-	border-top: 4px solid transparent;
-	border-right: 4px solid var(--color-black);
-	border-bottom: 4px solid transparent;
 }
 .k-activation p {
 	padding-inline-start: var(--spacing-3);
@@ -55,7 +43,6 @@
 	text-decoration-color: currentColor;
 	text-underline-offset: 2px;
 	border-radius: var(--rounded-sm);
-	padding-inline: var(--spacing-1);
 }
 
 /* Hide Button */
