@@ -129,7 +129,7 @@ return [
 					'key' => 'validation.date.between',
 					'data' => [
 						'min' => $min->format($format),
-						'max' => $min->format($format)
+						'max' => $max->format($format)
 					]
 				]);
 			} elseif ($min && $value->isMin($min) === false) {
