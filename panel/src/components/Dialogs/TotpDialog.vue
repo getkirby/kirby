@@ -117,10 +117,9 @@ export default {
 .k-totp-qrcode .k-box[data-theme] {
 	padding: var(--box-padding-inline);
 }
-
 .k-totp-dialog-fields .k-field-name-confirm {
 	--input-height: var(--height-xl);
-	--input-rounded: var(--rounded-xl);
+	--input-rounded: var(--rounded);
 	--input-font-size: var(--text-3xl);
 }
 </style>
