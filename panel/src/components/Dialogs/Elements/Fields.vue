@@ -65,5 +65,6 @@ export default {
 <style>
 .k-dialog-fields {
 	padding-bottom: 0.5rem;
+	container-type: inline-size;
 }
 </style>
