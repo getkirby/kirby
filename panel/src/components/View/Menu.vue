@@ -33,7 +33,7 @@
 			</menu>
 			<menu v-if="$panel.license === false">
 				<k-button
-					:text="'Activate'"
+					:text="$t('activate')"
 					class="k-activation-button k-panel-menu-button"
 					icon="key"
 					variant="filled"

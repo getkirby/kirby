@@ -1,11 +1,13 @@
 <template>
 	<div v-if="$panel.activation.isOpen" class="k-activation">
 		<p>
-			<strong>Ready to launch your site?</strong>
-			<a href="https://getkirby.com/buy" target="_blank">Buy a license</a>
-			and
+			<strong>{{ $t("license.ready") }}</strong>
+			<a href="https://getkirby.com/buy" target="_blank">{{
+				$t("license.buy")
+			}}</a>
+			&amp;
 			<button type="button" @click="$dialog('registration')">
-				activate it now
+				{{ $t("license.activate") }}
 			</button>
 		</p>
 		<k-button
