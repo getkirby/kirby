@@ -31,15 +31,27 @@
 					class="k-panel-menu-button"
 				/>
 			</menu>
-			<menu class="k-panel-registration">
+			<menu v-if="$panel.license === false" class="k-registration">
 				<k-button
 					icon="key"
 					variant="filled"
-					class="k-panel-menu-button"
+					class="k-registration-button k-panel-menu-button"
 					@click="$dialog('registration')"
 				>
-					{{ $t("license.register") }}
+					Activate
 				</k-button>
+
+				<div class="k-registration-bubble">
+					<p>
+						<strong>Ready to launch your site?</strong>
+						<a href="https://getkirby.com/buy" target="_blank">Buy a license</a>
+						and
+						<button type="button" @click="$dialog('registration')">
+							activate it now
+						</button>
+					</p>
+					<k-button class="k-registration-toggle" icon="cancel-small" />
+				</div>
 			</menu>
 		</div>
 
@@ -252,9 +264,66 @@ export default {
 	}
 }
 
-.k-panel-registration .k-panel-menu-button {
-	--button-color-back: var(--color-yellow-400);
-	border: 1px solid var(--color-yellow-600);
-	box-shadow: var(--shadow);
+/* Registration Button */
+.k-registration-button {
+	--button-color-back: var(--color-pink-300);
+	--button-color-text: var(--color-pink-800);
+	border: 1px solid var(--color-pink-400);
+}
+
+/* Registration Message */
+.k-registration-bubble {
+	position: absolute;
+	display: flex;
+	bottom: var(--menu-padding);
+	height: var(--height-md);
+	width: max-content;
+	left: 100%;
+	margin-left: var(--menu-padding);
+	color: var(--dropdown-color-text);
+	background: var(--dropdown-color-bg);
+	border-radius: var(--dropdown-rounded);
+	box-shadow: var(--dropdown-shadow);
+}
+.k-registration-bubble::before {
+	position: absolute;
+	content: "";
+	top: 50%;
+	left: -4px;
+	margin-top: -4px;
+	border-top: 4px solid transparent;
+	border-right: 4px solid var(--color-black);
+	border-bottom: 4px solid transparent;
+}
+.k-registration-bubble p {
+	padding-inline-start: var(--spacing-3);
+	padding-inline-end: var(--spacing-2);
+	padding-block: 0.425rem;
+	line-height: 1.25;
+}
+.k-registration-bubble p strong {
+	font-weight: var(--font-normal);
+	margin-inline-end: var(--spacing-1);
+}
+.k-registration-bubble p :where(button, a) {
+	color: var(--color-pink-400);
+	text-decoration: underline;
+	text-decoration-color: currentColor;
+	text-underline-offset: 2px;
+	border-radius: var(--rounded-sm);
+	padding-inline: var(--spacing-1);
+}
+
+/* Hide Button */
+.k-registration-toggle {
+	--button-color-text: var(--color-gray-400);
+	--button-rounded: 0;
+	border-left: 1px solid var(--dropdown-color-hr);
+}
+.k-registration-toggle:is(:hover, :focus) {
+	--button-color-text: var(--color-white);
+}
+.k-registration-toggle:focus {
+	--button-rounded: var(--rounded);
 }
 </style>
