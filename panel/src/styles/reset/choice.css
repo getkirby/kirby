@@ -95,10 +95,12 @@ input[type="checkbox"][data-variant="toggle"]::after {
 	background: var(--choice-color-toggle);
 	display: grid;
 	inset: 1px;
-	width: .8rem;
+	width: 0.8rem;
 	font-size: 7px;
 	border-radius: var(--choice-rounded);
-	transition: all .1s ease-in-out;
+	transition:
+		margin-inline-start 0.075s ease-in-out,
+		background 0.1s ease-in-out;
 }
 input[type="checkbox"][data-variant="toggle"]:checked {
 	border-color: var(--choice-color-border);
