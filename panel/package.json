@@ -11,6 +11,7 @@
 		"test:unit": "vitest run"
 	},
 	"dependencies": {
+		"autosize": "^6.0.1",
 		"container-query-polyfill": "^1.0.2",
 		"dayjs": "^1.11.10",
 		"mitt": "^3.0.1",

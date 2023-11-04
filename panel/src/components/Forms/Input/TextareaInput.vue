@@ -10,35 +10,33 @@
 				@mousedown.native.prevent
 				@command="onCommand"
 			/>
-			<k-autosize>
-				<textarea
-					ref="input"
-					v-bind="{
-						autofocus,
-						disabled,
-						id,
-						minlength,
-						name,
-						placeholder,
-						required,
-						spellcheck,
-						value
-					}"
-					v-direction
-					:data-font="font"
-					class="k-textarea-input-native"
-					@click="$refs.toolbar?.close()"
-					@focus="onFocus"
-					@input="onInput"
-					@keydown.meta.enter="onSubmit"
-					@keydown.ctrl.enter="onSubmit"
-					@keydown.meta.exact="onShortcut"
-					@keydown.ctrl.exact="onShortcut"
-					@dragover="onOver"
-					@dragleave="onOut"
-					@drop="onDrop"
-				/>
-			</k-autosize>
+			<textarea
+				ref="input"
+				v-bind="{
+					autofocus,
+					disabled,
+					id,
+					minlength,
+					name,
+					placeholder,
+					required,
+					spellcheck,
+					value
+				}"
+				v-direction
+				:data-font="font"
+				class="k-textarea-input-native"
+				@click="$refs.toolbar?.close()"
+				@focus="onFocus"
+				@input="onInput"
+				@keydown.meta.enter="onSubmit"
+				@keydown.ctrl.enter="onSubmit"
+				@keydown.meta.exact="onShortcut"
+				@keydown.ctrl.exact="onShortcut"
+				@dragover="onOver"
+				@dragleave="onOut"
+				@drop="onDrop"
+			/>
 		</div>
 	</div>
 </template>
@@ -112,11 +110,16 @@ export default {
 		}
 	},
 	watch: {
-		value() {
+		async value() {
 			this.onInvalid();
+			await this.$nextTick();
+			this.$library.autosize.update(this.$refs.input);
 		}
 	},
-	mounted() {
+	async mounted() {
+		await this.$nextTick();
+		this.$library.autosize(this.$refs.input);
+
 		this.onInvalid();
 
 		if (this.$props.autofocus) {

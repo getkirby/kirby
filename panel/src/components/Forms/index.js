@@ -1,5 +1,3 @@
-import Autosize from "./Autosize.js";
-
 /* Form */
 import Autocomplete from "./Autocomplete.vue";
 import Counter from "./Counter.vue";
@@ -30,8 +28,6 @@ import Writer from "./Writer/index.js";
 
 export default {
 	install(app) {
-		customElements.define("k-autosize", Autosize);
-
 		app.component("k-counter", Counter);
 		app.component("k-autocomplete", Autocomplete);
 		app.component("k-form", Form);
