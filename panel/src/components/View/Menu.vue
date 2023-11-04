@@ -18,9 +18,9 @@
 
 			<!-- Menus -->
 			<menu
-				v-for="(menu, menuIdex) in menus"
-				:key="menuIdex"
-				:data-second-last="menuIdex === menus.length - 2"
+				v-for="(menu, menuIndex) in menus"
+				:key="menuIndex"
+				:data-second-last="menuIndex === menus.length - 2"
 				class="k-panel-menu-buttons"
 			>
 				<k-button
@@ -30,6 +30,16 @@
 					:title="entry.title ?? entry.text"
 					class="k-panel-menu-button"
 				/>
+			</menu>
+			<menu class="k-panel-registration">
+				<k-button
+					icon="key"
+					variant="filled"
+					class="k-panel-menu-button"
+					@click="$dialog('registration')"
+				>
+					{{ $t("license.register") }}
+				</k-button>
 			</menu>
 		</div>
 
@@ -240,5 +250,11 @@ export default {
 	.k-panel-menu-search[aria-disabled="true"] {
 		opacity: 0;
 	}
+}
+
+.k-panel-registration .k-panel-menu-button {
+	--button-color-back: var(--color-yellow-400);
+	border: 1px solid var(--color-yellow-600);
+	box-shadow: var(--shadow);
 }
 </style>
