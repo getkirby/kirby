@@ -523,7 +523,7 @@ return [
 				'props' => [
 					'value' => [
 						'move'   => $page->panel()->url(true),
-						'parent' => $page->parent()?->panel()->url(true) ?? '/site'
+						'parent' => $page->parent()?->uuid()?->toString() ?? 'site://'
 					]
 				]
 			];
