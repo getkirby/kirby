@@ -413,11 +413,11 @@
 
 	"license": "License",
 	"license.activate": "Activate it now",
-	"license.activate.label": "Please activate your site",
+	"license.activate.label": "Please activate your license",
 	"license.activate.domain": "Your license will be activated for <strong>{host}</strong>.",
 	"license.activate.local": "You are about to use your Kirby license to activate your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please activate it there instead. If {host} is the domain you want to register with your license, please continue.",
 	"license.buy": "Buy a license",
-	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it to activate your site.",
+	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
 	"license.code.label": "Please enter your license code",
 	"license.manage": "Manage your licenses",
 	"license.ready": "Ready to launch your site?",
