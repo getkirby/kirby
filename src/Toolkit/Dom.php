@@ -169,6 +169,8 @@ class Dom
 		DOMAttr $attr,
 		array $options
 	): bool|string {
+		$options = static::normalizeSanitizeOptions($options);
+
 		$allowedTags = $options['allowedTags'];
 
 		// check if the attribute is in the list of global allowed attributes
@@ -217,6 +219,8 @@ class Dom
 		DOMAttr $attr,
 		array $options
 	): bool|string {
+		$options = static::normalizeSanitizeOptions($options);
+
 		$allowedAttrs = $options['allowedAttrs'];
 
 		if ($allowedAttrs === true) {
@@ -255,6 +259,8 @@ class Dom
 		string $url,
 		array $options
 	): bool|string {
+		$options = static::normalizeSanitizeOptions($options);
+
 		$url = Str::lower($url);
 
 		// allow empty URL values
@@ -423,6 +429,8 @@ class Dom
 		array $options,
 		Closure|null $compare = null
 	): string|false {
+		$options = static::normalizeSanitizeOptions($options);
+
 		$allowedNamespaces = $options['allowedNamespaces'];
 		$localName         = $node->localName;
 		$compare         ??= fn ($expected, $real): bool => $expected === $real;
@@ -547,20 +555,7 @@ class Dom
 	 */
 	public function sanitize(array $options): array
 	{
-		$options = array_merge([
-			'allowedAttrPrefixes' => [],
-			'allowedAttrs'        => true,
-			'allowedDataUris'     => true,
-			'allowedDomains'      => true,
-			'allowedNamespaces'   => true,
-			'allowedPIs'          => true,
-			'allowedTags'         => true,
-			'attrCallback'        => null,
-			'disallowedTags'      => [],
-			'doctypeCallback'     => null,
-			'elementCallback'     => null,
-			'urlAttrs'            => ['href', 'src', 'xlink:href'],
-		], $options);
+		$options = static::normalizeSanitizeOptions($options);
 
 		$errors = [];
 
@@ -699,6 +694,37 @@ class Dom
 		$this->doc->encoding ??= 'UTF-8';
 
 		return trim($this->doc->saveXML());
+	}
+
+	/**
+	 * Ensures that all options are set in the user-provided
+	 * options array (otherwise setting the default option)
+	 */
+	protected static function normalizeSanitizeOptions(array $options): array
+	{
+		// increase performance for already normalized option arrays
+		if (($options['_normalized'] ?? false) === true) {
+			return $options;
+		}
+
+		$options = array_merge([
+			'allowedAttrPrefixes' => [],
+			'allowedAttrs'        => true,
+			'allowedDataUris'     => true,
+			'allowedDomains'      => true,
+			'allowedNamespaces'   => true,
+			'allowedPIs'          => true,
+			'allowedTags'         => true,
+			'attrCallback'        => null,
+			'disallowedTags'      => [],
+			'doctypeCallback'     => null,
+			'elementCallback'     => null,
+			'urlAttrs'            => ['href', 'src', 'xlink:href'],
+		], $options);
+
+		$options['_normalized'] = true;
+
+		return $options;
 	}
 
 	/**
