@@ -223,7 +223,7 @@ class FileRules
 		if (
 			Str::contains($extension, 'php') !== false ||
 			Str::contains($extension, 'phar') !== false ||
-			Str::contains($extension, 'phtml') !== false
+			Str::contains($extension, 'pht') !== false
 		) {
 			throw new InvalidArgumentException([
 				'key'  => 'file.type.forbidden',
