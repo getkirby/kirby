@@ -280,7 +280,7 @@ class Dom
 
 		// allow site-internal URLs that didn't match the
 		// protocol-relative check above
-		if (mb_substr($url, 0, 1) === '/') {
+		if (mb_substr($url, 0, 1) === '/' && $options['allowHostRelativeUrls'] !== true) {
 			// if a CMS instance is active, only allow the URL
 			// if it doesn't point outside of the index URL
 			if ($kirby = App::instance(null, true)) {
@@ -525,6 +525,9 @@ class Dom
 	 *                       or `true` for any
 	 *                       - `allowedDomains`: Allowed hostnames for HTTP(S) URLs in `urlAttrs`
 	 *                       and inside `url()` wrappers or `true` for any
+	 *                       - `allowHostRelativeUrls`: Whether URLs that begin with `/` should be
+	 *                       allowed even if the site index URL is in a subfolder (useful when using
+	 *                       the HTML `<base>` element where the sanitized code will be rendered)
 	 *                       - `allowedNamespaces`: Associative array of all allowed namespace URIs;
 	 *                       the array keys are reference names that can be referred to from the
 	 *                       `allowedAttrPrefixes`, `allowedAttrs`, `allowedTags`, `disallowedTags`
@@ -708,18 +711,19 @@ class Dom
 		}
 
 		$options = array_merge([
-			'allowedAttrPrefixes' => [],
-			'allowedAttrs'        => true,
-			'allowedDataUris'     => true,
-			'allowedDomains'      => true,
-			'allowedNamespaces'   => true,
-			'allowedPIs'          => true,
-			'allowedTags'         => true,
-			'attrCallback'        => null,
-			'disallowedTags'      => [],
-			'doctypeCallback'     => null,
-			'elementCallback'     => null,
-			'urlAttrs'            => ['href', 'src', 'xlink:href'],
+			'allowedAttrPrefixes'   => [],
+			'allowedAttrs'          => true,
+			'allowedDataUris'       => true,
+			'allowedDomains'        => true,
+			'allowHostRelativeUrls' => true,
+			'allowedNamespaces'     => true,
+			'allowedPIs'            => true,
+			'allowedTags'           => true,
+			'attrCallback'          => null,
+			'disallowedTags'        => [],
+			'doctypeCallback'       => null,
+			'elementCallback'       => null,
+			'urlAttrs'              => ['href', 'src', 'xlink:href'],
 		], $options);
 
 		$options['_normalized'] = true;

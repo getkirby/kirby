@@ -465,10 +465,13 @@ class Svg extends Xml
 
 	/**
 	 * Returns the sanitization options for the handler
+	 *
+	 * @param bool $isExternal Whether the string is from an external file
+	 *                         that may be accessed directly
 	 */
-	protected static function options(): array
+	protected static function options(bool $isExternal): array
 	{
-		return array_merge(parent::options(), [
+		return array_merge(parent::options($isExternal), [
 			'allowedAttrPrefixes' => static::$allowedAttrPrefixes,
 			'allowedAttrs'        => static::$allowedAttrs,
 			'allowedNamespaces'   => static::$allowedNamespaces,

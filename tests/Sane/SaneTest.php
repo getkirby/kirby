@@ -90,6 +90,10 @@ class SaneTest extends TestCase
 	public function testSanitize()
 	{
 		$this->assertSame('<svg><path d="123"/></svg>', Sane::sanitize('<svg><path d="123" onclick="alert(1)"></path></svg>', 'svg'));
+
+		$string = '<svg><a xlink:href="/another-folder">Very malicious</a></svg>';
+		$this->assertSame($string, Sane::sanitize($string, 'svg')); // not external by default
+		$this->assertSame('<svg><a>Very malicious</a></svg>', Sane::sanitize($string, 'svg', isExternal: true));
 	}
 
 	/**
@@ -105,6 +109,11 @@ class SaneTest extends TestCase
 
 		$expected = $this->fixture('external-source-1.sanitized.svg');
 		$tmp      = $this->fixture('external-source-1.svg', true);
+		$this->assertNull(Sane::sanitizeFile($tmp));
+		$this->assertFileEquals($expected, $tmp);
+
+		$expected = $this->fixture('xlink-subfolder.sanitized.svg');
+		$tmp      = $this->fixture('xlink-subfolder.svg', true);
 		$this->assertNull(Sane::sanitizeFile($tmp));
 		$this->assertFileEquals($expected, $tmp);
 	}
@@ -211,6 +220,17 @@ class SaneTest extends TestCase
 		$this->expectExceptionMessage('The URL is not allowed in attribute "style"');
 
 		Sane::validateFile($this->fixture('external-source-1.svg'), 'svg');
+	}
+
+	/**
+	 * @covers ::validateFile
+	 */
+	public function testValidateFileErrorExternalFile()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The URL points outside of the site index URL');
+
+		Sane::validateFile($this->fixture('xlink-subfolder.svg'));
 	}
 
 	/**

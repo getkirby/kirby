@@ -2,7 +2,7 @@
   <text x="10" y="25">Hello</text>
   <style>
   text {
-    background-image: url(/image.png), url("https://malicious.com/script.php");
+    background-image: url(/subfolder/image.png), url("https://malicious.com/script.php");
   }
   </style>
 </svg>

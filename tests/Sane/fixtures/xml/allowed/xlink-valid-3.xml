@@ -1,3 +1,3 @@
 <xml>
-  <a xlink:href="/contact">Contact</a>
+  <a xlink:href="/subfolder/contact">Contact</a>
 </xml>

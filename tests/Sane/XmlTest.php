@@ -128,6 +128,19 @@ class XmlTest extends TestCase
 		Xml::validateFile($fixture);
 	}
 
+	public function testDisallowedExternalFile()
+	{
+		$fixture   = $this->fixture('disallowed/xlink-subfolder.xml');
+		$sanitized = $this->fixture('sanitized/xlink-subfolder.xml');
+
+		$this->assertStringEqualsFile($fixture, Xml::sanitize(file_get_contents($fixture)));
+		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture), isExternal: true));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The URL points outside of the site index URL');
+		Xml::validateFile($fixture);
+	}
+
 	public function testDisallowedExternalSource1()
 	{
 		$fixture    = $this->fixture('disallowed/external-source-1.xml');

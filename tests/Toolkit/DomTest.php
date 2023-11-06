@@ -897,28 +897,34 @@ class DomTest extends TestCase
 	{
 		return [
 			// allowed URL with site at the domain root
-			['https://getkirby.com', '/some/path', true],
+			['https://getkirby.com', '/some/path', false, true],
 
 			// allowed URL with site at the domain root
-			['/', '/some/path', true],
+			['/', '/some/path', false, true],
 
 			// allowed URL with site in a subfolder
-			['https://getkirby.com/some', '/some/path', true],
+			['https://getkirby.com/some', '/some/path', false, true],
 
 			// allowed URL with site in a subfolder
-			['/some', '/some/path', true],
+			['/some', '/some/path', false, true],
 
 			// disallowed URL with site in a subfolder
-			['https://getkirby.com/site', '/some/path', 'The URL points outside of the site index URL'],
+			['https://getkirby.com/site', '/some/path', false, 'The URL points outside of the site index URL'],
+
+			// generally disallowed URL with site in a subfolder (but allowed)
+			['https://getkirby.com/site', '/some/path', true, true],
 
 			// disallowed URL with site in a subfolder
-			['/site', '/some/path', 'The URL points outside of the site index URL'],
+			['/site', '/some/path', false, 'The URL points outside of the site index URL'],
+
+			// generally disallowed URL with site in a subfolder (but allowed)
+			['/site', '/some/path', true, true],
 
 			// disallowed URL with directory traversal
-			['https://getkirby.com/site', '/site/../some/path', 'The ../ sequence is not allowed in relative URLs'],
+			['https://getkirby.com/site', '/site/../some/path', false, 'The ../ sequence is not allowed in relative URLs'],
 
 			// disallowed URL with directory traversal
-			['/site', '/site/../some/path', 'The ../ sequence is not allowed in relative URLs'],
+			['/site', '/site/../some/path', false, 'The ../ sequence is not allowed in relative URLs'],
 		];
 	}
 
@@ -926,7 +932,7 @@ class DomTest extends TestCase
 	 * @dataProvider isAllowedUrlCmsProvider
 	 * @covers ::isAllowedUrl
 	 */
-	public function testIsAllowedUrlCms(string $indexUrl, string $url, $expected)
+	public function testIsAllowedUrlCms(string $indexUrl, string $url, bool $allowHostRelativeUrls, string|bool $expected)
 	{
 		new App([
 			'urls' => [
@@ -934,7 +940,7 @@ class DomTest extends TestCase
 			]
 		]);
 
-		$this->assertSame($expected, Dom::isAllowedUrl($url, []));
+		$this->assertSame($expected, Dom::isAllowedUrl($url, compact('allowHostRelativeUrls')));
 	}
 
 	/**
