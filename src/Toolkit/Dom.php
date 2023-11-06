@@ -841,14 +841,14 @@ class Dom
 
 				// custom check (if the attribute is still in the document)
 				if ($attr->ownerElement !== null && $options['attrCallback']) {
-					$errors = array_merge($errors, $options['attrCallback']($attr) ?? []);
+					$errors = array_merge($errors, $options['attrCallback']($attr, $options) ?? []);
 				}
 			}
 		}
 
 		// custom check
 		if ($options['elementCallback']) {
-			$errors = array_merge($errors, $options['elementCallback']($element) ?? []);
+			$errors = array_merge($errors, $options['elementCallback']($element, $options) ?? []);
 		}
 	}
 
@@ -898,7 +898,7 @@ class Dom
 		}
 
 		if ($options['doctypeCallback']) {
-			$options['doctypeCallback']($doctype);
+			$options['doctypeCallback']($doctype, $options);
 		}
 	}
 }

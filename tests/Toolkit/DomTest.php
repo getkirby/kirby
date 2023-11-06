@@ -1647,7 +1647,7 @@ class DomTest extends TestCase
 			[
 				'<xml a="A" b="B"/>',
 				[
-					'attrCallback' => function (DOMAttr $attr): void {
+					'attrCallback' => function (DOMAttr $attr, array $options): void {
 						// no return value
 					}
 				],
@@ -1658,7 +1658,9 @@ class DomTest extends TestCase
 			[
 				'<xml a="A" b="B"/>',
 				[
-					'attrCallback' => function (DOMAttr $attr): array {
+					'attrCallback' => function (DOMAttr $attr, array $options): array {
+						$this->assertInstanceOf(Closure::class, $options['attrCallback']);
+
 						if ($attr->nodeName === 'b') {
 							$attr->ownerElement->removeAttributeNode($attr);
 							return [new InvalidArgumentException('The "b" attribute is not allowed')];
@@ -1724,7 +1726,9 @@ class DomTest extends TestCase
 			[
 				'<!DOCTYPE svg><xml/>',
 				[
-					'doctypeCallback' => function (DOMDocumentType $doctype): void {
+					'doctypeCallback' => function (DOMDocumentType $doctype, array $options): void {
+						$this->assertInstanceOf(Closure::class, $options['doctypeCallback']);
+
 						throw new InvalidArgumentException('The "' . $doctype->name . '" doctype is not allowed');
 					}
 				],
@@ -1737,7 +1741,7 @@ class DomTest extends TestCase
 			[
 				'<xml><a class="a">A</a><b class="b">B</b></xml>',
 				[
-					'elementCallback' => function (DOMElement $element): void {
+					'elementCallback' => function (DOMElement $element, array $options): void {
 						// no return value
 					}
 				],
@@ -1748,7 +1752,9 @@ class DomTest extends TestCase
 			[
 				'<xml><a class="a">A</a><b class="b">B</b></xml>',
 				[
-					'elementCallback' => function (DOMElement $element): array {
+					'elementCallback' => function (DOMElement $element, array $options): array {
+						$this->assertInstanceOf(Closure::class, $options['elementCallback']);
+
 						if ($element->nodeName === 'b') {
 							Dom::remove($element);
 							return [new InvalidArgumentException('The "b" element is not allowed')];

@@ -89,7 +89,7 @@ class DomHandler extends Handler
 	 *
 	 * @return array Array with exception objects for each modification
 	 */
-	public static function sanitizeAttr(DOMAttr $attr): array
+	public static function sanitizeAttr(DOMAttr $attr, array $options): array
 	{
 		// to be extended in child classes
 		return [];
@@ -101,7 +101,7 @@ class DomHandler extends Handler
 	 *
 	 * @return array Array with exception objects for each modification
 	 */
-	public static function sanitizeElement(DOMElement $element): array
+	public static function sanitizeElement(DOMElement $element, array $options): array
 	{
 		// to be extended in child classes
 		return [];
@@ -111,7 +111,7 @@ class DomHandler extends Handler
 	 * Custom callback for additional doctype validation
 	 * @internal
 	 */
-	public static function validateDoctype(DOMDocumentType $doctype): void
+	public static function validateDoctype(DOMDocumentType $doctype, array $options): void
 	{
 		// to be extended in child classes
 	}
