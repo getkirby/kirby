@@ -2,6 +2,7 @@
 
 use Kirby\Cms\App;
 use Kirby\Panel\Field;
+use Kirby\Panel\Panel;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -10,31 +11,28 @@ return [
 		'load' => function () {
 			$license = App::instance()->system()->license();
 
-			// @codeCoverageIgnoreStart
-			// the system is registered but the license
-			// key is only visible for admins
-			if ($license === true) {
-				$license = 'Kirby 3';
+			if ($license === false) {
+				go(Panel::url('dialogs/registration'));
 			}
-			// @codeCoverageIgnoreEnd
 
 			return [
-				'component' => 'k-form-dialog',
+				'component' => 'k-license-dialog',
 				'props' => [
-					'size'   => 'medium',
-					'fields' => [
-						'license' => [
-							'type'  => 'info',
-							'label' => I18n::translate('license'),
-							'text'  => $license ? $license : I18n::translate('license.unregistered.label'),
-							'theme' => $license ? 'code' : 'negative',
-							'help'  => $license ?
-								// @codeCoverageIgnoreStart
-								'<a href="https://hub.getkirby.com" target="_blank">' . I18n::translate('license.manage') . ' &rarr;</a>' :
-								// @codeCoverageIgnoreEnd
-								'<a href="https://getkirby.com/buy" target="_blank">' . I18n::translate('license.buy') . ' &rarr;</a>'
-						]
-					],
+					'size'   => 'large',
+					'license' => $license,
+					// 'fields' => [
+					// 	'license' => [
+					// 		'type'  => 'info',
+					// 		'label' => I18n::translate('license'),
+					// 		'text'  => $license ? $license['license'] : I18n::translate('license.unregistered.label'),
+					// 		'theme' => $license ? 'code' : 'negative',
+					// 		'help'  => $license ?
+					// 			// @codeCoverageIgnoreStart
+					// 			'<a href="https://hub.getkirby.com" target="_blank">' . I18n::translate('license.manage') . ' &rarr;</a>' :
+					// 			// @codeCoverageIgnoreEnd
+					// 			'<a href="https://getkirby.com/buy" target="_blank">' . I18n::translate('license.buy') . ' &rarr;</a>'
+					// 	]
+					// ],
 					'submitButton' => false,
 					'cancelButton' => false,
 				]
@@ -62,7 +60,7 @@ return [
 							'type'        => 'text',
 							'required'    => true,
 							'counter'     => false,
-							'placeholder' => 'K3-',
+							'placeholder' => 'K-',
 							'help'        => I18n::translate('license.code.help') . ' ' . '<a href="https://getkirby.com/buy" target="_blank">' . I18n::translate('license.buy') . ' &rarr;</a>'
 						],
 						'email' => Field::email(['required' => true])
