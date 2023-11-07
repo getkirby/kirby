@@ -15,7 +15,7 @@ return [
 			$environment = [
 				[
 					'label'  => $license ? I18n::translate('license') : I18n::translate('license.activate.label'),
-					'value'  => $license ? 'Kirby 3' : I18n::translate('license.unregistered.label'),
+					'value'  => $license ? $license['type'] : I18n::translate('license.unregistered.label'),
 					'theme'  => $license ? null : 'negative',
 					'icon'   => $license ? 'info' : 'key',
 					'dialog' => $license ? 'license' : 'registration'
