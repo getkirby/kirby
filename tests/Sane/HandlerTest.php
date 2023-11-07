@@ -28,6 +28,11 @@ class HandlerTest extends TestCase
 		$tmp      = $this->fixture('external-source-1.svg', true);
 		$this->assertNull(CustomHandler::sanitizeFile($tmp));
 		$this->assertFileEquals($expected, $tmp);
+
+		$expected = $this->fixture('xlink-subfolder.sanitized.svg');
+		$tmp      = $this->fixture('xlink-subfolder.svg', true);
+		$this->assertNull(CustomHandler::sanitizeFile($tmp));
+		$this->assertFileEquals($expected, $tmp);
 	}
 
 	/**
@@ -63,6 +68,18 @@ class HandlerTest extends TestCase
 		$this->expectExceptionMessage('The URL is not allowed in attribute "style"');
 
 		CustomHandler::validateFile($this->fixture('external-source-1.svg'));
+	}
+
+	/**
+	 * @covers ::validateFile
+	 * @covers ::readFile
+	 */
+	public function testValidateFileErrorExternalFile()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The URL points outside of the site index URL');
+
+		CustomHandler::validateFile($this->fixture('xlink-subfolder.svg'));
 	}
 
 	/**

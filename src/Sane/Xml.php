@@ -26,7 +26,7 @@ class Xml extends DomHandler
 	 *
 	 * @return array Array with exception objects for each modification
 	 */
-	public static function sanitizeElement(DOMElement $element): array
+	public static function sanitizeElement(DOMElement $element, array $options): array
 	{
 		$errors = [];
 
@@ -56,7 +56,7 @@ class Xml extends DomHandler
 	 * Custom callback for additional doctype validation
 	 * @internal
 	 */
-	public static function validateDoctype(DOMDocumentType $doctype): void
+	public static function validateDoctype(DOMDocumentType $doctype, array $options): void
 	{
 		// if we are validating an XML file, block all SVG and HTML doctypes
 		if (

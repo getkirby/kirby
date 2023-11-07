@@ -169,6 +169,8 @@ class Dom
 		DOMAttr $attr,
 		array $options
 	): bool|string {
+		$options = static::normalizeSanitizeOptions($options);
+
 		$allowedTags = $options['allowedTags'];
 
 		// check if the attribute is in the list of global allowed attributes
@@ -217,6 +219,8 @@ class Dom
 		DOMAttr $attr,
 		array $options
 	): bool|string {
+		$options = static::normalizeSanitizeOptions($options);
+
 		$allowedAttrs = $options['allowedAttrs'];
 
 		if ($allowedAttrs === true) {
@@ -255,6 +259,8 @@ class Dom
 		string $url,
 		array $options
 	): bool|string {
+		$options = static::normalizeSanitizeOptions($options);
+
 		$url = Str::lower($url);
 
 		// allow empty URL values
@@ -274,7 +280,7 @@ class Dom
 
 		// allow site-internal URLs that didn't match the
 		// protocol-relative check above
-		if (mb_substr($url, 0, 1) === '/') {
+		if (mb_substr($url, 0, 1) === '/' && $options['allowHostRelativeUrls'] !== true) {
 			// if a CMS instance is active, only allow the URL
 			// if it doesn't point outside of the index URL
 			if ($kirby = App::instance(null, true)) {
@@ -423,6 +429,8 @@ class Dom
 		array $options,
 		Closure|null $compare = null
 	): string|false {
+		$options = static::normalizeSanitizeOptions($options);
+
 		$allowedNamespaces = $options['allowedNamespaces'];
 		$localName         = $node->localName;
 		$compare         ??= fn ($expected, $real): bool => $expected === $real;
@@ -517,6 +525,9 @@ class Dom
 	 *                       or `true` for any
 	 *                       - `allowedDomains`: Allowed hostnames for HTTP(S) URLs in `urlAttrs`
 	 *                       and inside `url()` wrappers or `true` for any
+	 *                       - `allowHostRelativeUrls`: Whether URLs that begin with `/` should be
+	 *                       allowed even if the site index URL is in a subfolder (useful when using
+	 *                       the HTML `<base>` element where the sanitized code will be rendered)
 	 *                       - `allowedNamespaces`: Associative array of all allowed namespace URIs;
 	 *                       the array keys are reference names that can be referred to from the
 	 *                       `allowedAttrPrefixes`, `allowedAttrs`, `allowedTags`, `disallowedTags`
@@ -547,20 +558,7 @@ class Dom
 	 */
 	public function sanitize(array $options): array
 	{
-		$options = array_merge([
-			'allowedAttrPrefixes' => [],
-			'allowedAttrs'        => true,
-			'allowedDataUris'     => true,
-			'allowedDomains'      => true,
-			'allowedNamespaces'   => true,
-			'allowedPIs'          => true,
-			'allowedTags'         => true,
-			'attrCallback'        => null,
-			'disallowedTags'      => [],
-			'doctypeCallback'     => null,
-			'elementCallback'     => null,
-			'urlAttrs'            => ['href', 'src', 'xlink:href'],
-		], $options);
+		$options = static::normalizeSanitizeOptions($options);
 
 		$errors = [];
 
@@ -699,6 +697,38 @@ class Dom
 		$this->doc->encoding ??= 'UTF-8';
 
 		return trim($this->doc->saveXML());
+	}
+
+	/**
+	 * Ensures that all options are set in the user-provided
+	 * options array (otherwise setting the default option)
+	 */
+	protected static function normalizeSanitizeOptions(array $options): array
+	{
+		// increase performance for already normalized option arrays
+		if (($options['_normalized'] ?? false) === true) {
+			return $options;
+		}
+
+		$options = array_merge([
+			'allowedAttrPrefixes'   => [],
+			'allowedAttrs'          => true,
+			'allowedDataUris'       => true,
+			'allowedDomains'        => true,
+			'allowHostRelativeUrls' => true,
+			'allowedNamespaces'     => true,
+			'allowedPIs'            => true,
+			'allowedTags'           => true,
+			'attrCallback'          => null,
+			'disallowedTags'        => [],
+			'doctypeCallback'       => null,
+			'elementCallback'       => null,
+			'urlAttrs'              => ['href', 'src', 'xlink:href'],
+		], $options);
+
+		$options['_normalized'] = true;
+
+		return $options;
 	}
 
 	/**
@@ -841,14 +871,14 @@ class Dom
 
 				// custom check (if the attribute is still in the document)
 				if ($attr->ownerElement !== null && $options['attrCallback']) {
-					$errors = array_merge($errors, $options['attrCallback']($attr) ?? []);
+					$errors = array_merge($errors, $options['attrCallback']($attr, $options) ?? []);
 				}
 			}
 		}
 
 		// custom check
 		if ($options['elementCallback']) {
-			$errors = array_merge($errors, $options['elementCallback']($element) ?? []);
+			$errors = array_merge($errors, $options['elementCallback']($element, $options) ?? []);
 		}
 	}
 
@@ -898,7 +928,7 @@ class Dom
 		}
 
 		if ($options['doctypeCallback']) {
-			$options['doctypeCallback']($doctype);
+			$options['doctypeCallback']($doctype, $options);
 		}
 	}
 }
