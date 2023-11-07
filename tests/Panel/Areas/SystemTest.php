@@ -49,7 +49,7 @@ class SystemTest extends AreaTestCase
 		$this->assertSame('k-system-view', $view['component']);
 		$this->assertSame([
 			[
-				'label'  => 'Please enter your license code',
+				'label'  => 'Please activate your license',
 				'value'  => 'Unregistered',
 				'theme'  => 'negative',
 				'icon'   => 'key',
@@ -362,7 +362,7 @@ class SystemTest extends AreaTestCase
 
 		$this->assertSame([
 			[
-				'label'  => 'Please enter your license code',
+				'label'  => 'Please activate your license',
 				'value'  => 'Unregistered',
 				'theme'  => 'negative',
 				'icon'   => 'key',
