@@ -484,8 +484,11 @@ class System
 			throw new InvalidArgumentException(['key' => 'license.email']);
 		}
 
+		// get the hub address
+		$hub = option('hub', 'https://hub.getkirby.com');
+
 		// @codeCoverageIgnoreStart
-		$response = Remote::get('http://hub.getkirby.test/register', [
+		$response = Remote::get($hub . '/register', [
 			'data' => [
 				'license' => $license,
 				'email'   => Str::lower(trim($email)),
