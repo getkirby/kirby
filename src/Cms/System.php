@@ -267,7 +267,7 @@ class System
 	 *                     permissions for access.settings, otherwise just a
 	 *                     boolean that tells whether a valid license is active
 	 */
-	public function license(): string|bool
+	public function license(): array|bool
 	{
 		if ($this->license !== null) {
 			return $this->license;
@@ -286,20 +286,23 @@ class System
 			$license['date'],
 			$license['email'],
 			$license['domain'],
-			$license['signature']
+			$license['signature'],
+			$license['type'],
+			$license['activation'],
 		) !== true) {
 			return $this->license = false;
 		}
 
 		// build the license verification data
 		$data = [
-			'license' => $license['license'],
-			'order'   => $license['order'],
-			'email'   => hash('sha256', $license['email'] . 'kwAHMLyLPBnHEskzH9pPbJsBxQhKXZnX'),
-			'domain'  => $license['domain'],
-			'date'    => $license['date']
+			'license'    => $license['license'],
+			'order'      => $license['order'],
+			'email'      => hash('sha256', $license['email'] . 'kwAHMLyLPBnHEskzH9pPbJsBxQhKXZnX'),
+			'domain'     => $license['domain'],
+			'date'       => $license['date'],
+			'type'       => $license['type'],
+			'activation' => $license['activation'],
 		];
-
 
 		// get the public key
 		$pubKey = F::read($this->app->root('kirby') . '/kirby.pub');
@@ -319,10 +322,16 @@ class System
 		// only return the actual license key if the
 		// current user has appropriate permissions
 		if ($this->app->user()?->isAdmin() === true) {
-			return $this->license = $license['license'];
+			return $this->license = $license;
 		}
 
-		return $this->license = true;
+		// redact sensitive data
+		$license['email']   = null;
+		$license['order']   = null;
+		$license['license'] = Str::substr($license['license'], 0, 10) . str_repeat('X', 22);
+
+		// only keep non-sensitive license info
+		return $this->license = $license;
 	}
 
 	/**
@@ -467,7 +476,7 @@ class System
 	 */
 	public function register(string $license = null, string $email = null): bool
 	{
-		if (Str::startsWith($license, 'K3-PRO-') === false) {
+		if (Str::startsWith($license, 'K-') === false) {
 			throw new InvalidArgumentException(['key' => 'license.format']);
 		}
 
@@ -476,7 +485,7 @@ class System
 		}
 
 		// @codeCoverageIgnoreStart
-		$response = Remote::get('https://hub.getkirby.com/register', [
+		$response = Remote::get('http://hub.getkirby.test/register', [
 			'data' => [
 				'license' => $license,
 				'email'   => Str::lower(trim($email)),
