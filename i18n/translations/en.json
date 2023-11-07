@@ -412,9 +412,11 @@
 	"languages.secondary.empty": "There are no secondary languages yet",
 
 	"license": "License",
+	"license.activate": "Activate it now",
 	"license.buy": "Buy a license",
 	"license.register": "Register",
 	"license.manage": "Manage your licenses",
+	"license.ready": "Ready to launch your site?",
 	"license.register.help": "You received your license code after the purchase via email. Please copy and paste it to register.",
 	"license.register.label": "Please enter your license code",
 	"license.register.domain": "Your license will be registered to <strong>{host}</strong>.",

@@ -1,3 +1,4 @@
+import Activation from "./activiation.js";
 import Api from "@/api/index.js";
 import Dialog from "./dialog.js";
 import Drag from "./drag.js";
@@ -68,6 +69,7 @@ export default {
 		this.isLoading = false;
 		this.isOffline = false;
 
+		this.activation = Activation(this);
 		this.drag = Drag(this);
 		this.events = Events(this);
 		this.upload = Upload(this);
