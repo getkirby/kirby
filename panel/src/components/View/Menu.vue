@@ -31,7 +31,7 @@
 					class="k-panel-menu-button"
 				/>
 			</menu>
-			<menu v-if="$panel.license === false">
+			<menu v-if="$panel.license !== 'active'">
 				<k-button
 					:text="$t('activate')"
 					class="k-activation-button k-panel-menu-button"
@@ -39,7 +39,7 @@
 					variant="filled"
 					@click="$dialog('registration')"
 				/>
-				<k-activation />
+				<k-activation :upgrade="true" />
 			</menu>
 		</div>
 
