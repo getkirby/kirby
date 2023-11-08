@@ -2,6 +2,7 @@
 	<k-dialog
 		ref="dialog"
 		v-bind="$props"
+		class="k-license-dialog"
 		@cancel="$emit('cancel')"
 		@submit="$emit('submit')"
 	>
@@ -10,40 +11,50 @@
 				{{ $t("license") }}
 			</h2>
 			<k-button
-				icon="edit"
+				v-bind="btn"
 				link="https://hub.getkirby.com"
 				target="_blank"
 				variant="filled"
 				size="xs"
-			>
-				Manage license
-			</k-button>
+			/>
 		</k-bar>
 
 		<div class="k-table">
 			<table style="table-layout: auto">
 				<tbody>
 					<tr>
-						<th>Type</th>
+						<th>{{ $t("license.type") }}</th>
 						<td>{{ license.type }}</td>
 					</tr>
 					<tr>
-						<th>Key</th>
+						<th>{{ $t("license.code") }}</th>
 						<td class="k-text">
-							<code>{{ license.license }}</code>
+							<code>{{ license.code }}</code>
 						</td>
 					</tr>
 					<tr>
-						<th>Purchased</th>
-						<td>{{ license.date }}</td>
+						<th>{{ $t("license.purchased") }}</th>
+						<td>{{ license.purchased }}</td>
 					</tr>
 					<tr>
-						<th>Activated</th>
-						<td>{{ license.activation }}</td>
+						<th>{{ $t("license.activated") }}</th>
+						<td>{{ license.activated }}</td>
 					</tr>
 					<tr>
-						<th>Domain</th>
+						<th>{{ $t("license.domain") }}</th>
 						<td>{{ license.domain }}</td>
+					</tr>
+					<tr>
+						<th>{{ $t("license.status") }}</th>
+						<td>
+							<p :data-theme="license.theme" class="k-license-dialog-status">
+								{{ license.info }}
+								<strong>
+									<k-icon :type="license.icon" />
+									{{ license.renewal }}
+								</strong>
+							</p>
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -62,6 +73,37 @@ export const props = {
 };
 
 export default {
-	mixins: [props]
+	mixins: [props],
+	computed: {
+		btn() {
+			if (this.license.status !== "active") {
+				return {
+					icon: "refresh",
+					theme: this.license.theme,
+					text: this.$t("license.renew")
+				};
+			}
+
+			return {
+				icon: "edit",
+				text: this.$t("license.manage")
+			};
+		}
+	}
 };
 </script>
+
+<style>
+.k-license-dialog-status {
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-2);
+}
+.k-license-dialog-status strong {
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-2);
+	font-weight: var(--font-normal);
+	color: var(--theme-color-700);
+}
+</style>
