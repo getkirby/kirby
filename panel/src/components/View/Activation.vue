@@ -1,6 +1,10 @@
 <template>
 	<div v-if="$panel.activation.isOpen" class="k-activation">
-		<p>
+		<p v-if="upgrade === true">
+			<strong>Ready to renew your license?</strong>
+			<button type="button" @click="$dialog('license')">Renew it now!</button>
+		</p>
+		<p v-else>
 			<strong>{{ $t("license.ready") }}</strong>
 			<a href="https://getkirby.com/buy" target="_blank">{{
 				$t("license.buy")
@@ -17,6 +21,14 @@
 		/>
 	</div>
 </template>
+
+<script>
+export default {
+	props: {
+		upgrade: Boolean
+	}
+};
+</script>
 
 <style>
 .k-activation {

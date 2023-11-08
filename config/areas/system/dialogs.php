@@ -9,7 +9,9 @@ return [
 	// license key
 	'license' => [
 		'load' => function () {
-			$license = App::instance()->system()->license();
+			$kirby      = App::instance();
+			$license    = $kirby->system()->license();
+			$obfuscated = $kirby->user()->isAdmin() === false;
 
 			if ($license === false) {
 				go(Panel::url('dialogs/registration'));
@@ -19,20 +21,18 @@ return [
 				'component' => 'k-license-dialog',
 				'props' => [
 					'size'   => 'large',
-					'license' => $license,
-					// 'fields' => [
-					// 	'license' => [
-					// 		'type'  => 'info',
-					// 		'label' => I18n::translate('license'),
-					// 		'text'  => $license ? $license['license'] : I18n::translate('license.unregistered.label'),
-					// 		'theme' => $license ? 'code' : 'negative',
-					// 		'help'  => $license ?
-					// 			// @codeCoverageIgnoreStart
-					// 			'<a href="https://hub.getkirby.com" target="_blank">' . I18n::translate('license.manage') . ' &rarr;</a>' :
-					// 			// @codeCoverageIgnoreEnd
-					// 			'<a href="https://getkirby.com/buy" target="_blank">' . I18n::translate('license.buy') . ' &rarr;</a>'
-					// 	]
-					// ],
+					'license' => [
+						'activated'  => $license->activated('Y-m-d') ?? $license->purchased('Y-m-d'),
+						'code'       => $license->code($obfuscated),
+						'domain'     => $license->domain(),
+						'icon'       => $license->icon(),
+						'info'       => $license->info(),
+						'purchased'  => $license->purchased('Y-m-d'),
+						'renewal'    => $license->renewal('Y-m-d'),
+						'status'     => $license->status(),
+						'theme'      => $license->theme(),
+						'type'       => $license->type(),
+					],
 					'submitButton' => false,
 					'cancelButton' => false,
 				]
