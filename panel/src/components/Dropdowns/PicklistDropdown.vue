@@ -102,8 +102,8 @@ export default {
 .k-picklist-dropdown .k-picklist-input-options .k-choice-input {
 	--choice-color-border: var(--dropdown-color-hr);
 	--choice-color-back: var(--dropdown-color-hr);
-	--choice-color-checked: var(--dropdown-color-hr);
 	--choice-color-info: var(--color-text-dimmed);
+
 	min-height: var(--button-height);
 	border-radius: var(--picklist-rounded);
 	padding-block: 0.375rem;

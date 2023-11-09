@@ -334,6 +334,12 @@ export default {
 	padding-inline: var(--spacing-2);
 }
 
+.k-picklist-input-options .k-choice-input {
+	--choice-color-checked: var(--color-focus);
+}
+.k-picklist-input-options .k-choice-input:has(:checked) {
+	--choice-color-text: var(--color-focus);
+}
 .k-picklist-input-options .k-choice-input[aria-disabled="true"] {
 	--choice-color-text: var(--color-text-dimmed);
 }
