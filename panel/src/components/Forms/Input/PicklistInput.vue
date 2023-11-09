@@ -19,8 +19,7 @@
 					@keydown.enter.native.prevent="add"
 				/>
 				<k-button
-					v-if="create"
-					:disabled="!showCreate"
+					v-if="showCreate"
 					class="k-picklist-input-create"
 					icon="plus"
 					size="xs"
