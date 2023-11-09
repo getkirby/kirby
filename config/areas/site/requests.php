@@ -19,7 +19,7 @@ return [
 				$panel = $site->panel();
 				$uuid  = $site->uuid()?->toString();
 				$url   = $site->url();
-				$value = $uuid ?? $url;
+				$value = $uuid ?? '/';
 
 				return [
 					[
@@ -44,7 +44,7 @@ return [
 				$panel = $child->panel();
 				$uuid  = $child->uuid()?->toString();
 				$url   = $child->url();
-				$value = $uuid ?? $url;
+				$value = $uuid ?? $child->id();
 
 				$pages[] = [
 					'children'    => $panel->url(true),

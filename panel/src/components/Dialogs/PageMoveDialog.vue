@@ -42,7 +42,7 @@ export default {
 	emits: ["cancel", "input", "submit"],
 	methods: {
 		select(page) {
-			this.$emit("input", { ...this.value, parent: page.id });
+			this.$emit("input", { ...this.value, parent: page.value });
 		}
 	}
 };

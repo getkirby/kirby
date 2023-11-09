@@ -2,9 +2,8 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
-use Kirby\Cms\Page;
 use Kirby\Cms\PageRules;
-use Kirby\Cms\Response;
+use Kirby\Uuid\Uuids;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
@@ -516,14 +515,21 @@ return [
 	'page.move' => [
 		'pattern' => 'pages/(:any)/move',
 		'load'    => function (string $id) {
-			$page = Find::page($id);
+			$page   = Find::page($id);
+			$parent = $page->parentModel();
+
+			if (Uuids::enabled() === false) {
+				$parentId = $parent?->id() ?? '/';
+			} else {
+				$parentId = $parent?->uuid()->toString() ?? 'site://';
+			}
 
 			return [
 				'component' => 'k-page-move-dialog',
 				'props' => [
 					'value' => [
 						'move'   => $page->panel()->url(true),
-						'parent' => $page->parent()?->panel()->url(true) ?? '/site'
+						'parent' => $parentId
 					]
 				]
 			];
