@@ -298,6 +298,7 @@ export default {
 <style>
 :root {
 	--picklist-rounded: var(--rounded-sm);
+	--picklist-highlight: var(--color-yellow-500);
 }
 
 .k-picklist-input {

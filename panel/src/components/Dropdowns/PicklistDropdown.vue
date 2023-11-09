@@ -55,8 +55,8 @@ export default {
 
 <style>
 .k-picklist-dropdown {
-	--picklist-highlight: var(--color-yellow-500);
 	--color-text-dimmed: var(--color-gray-400);
+
 	padding: 0;
 	max-width: 30rem;
 	min-width: 8rem;
