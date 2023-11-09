@@ -2,9 +2,7 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
-use Kirby\Cms\Page;
 use Kirby\Cms\PageRules;
-use Kirby\Cms\Response;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
@@ -14,6 +12,7 @@ use Kirby\Panel\PageCreateDialog;
 use Kirby\Panel\Panel;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\Uuids;
 
 $fields = require __DIR__ . '/../fields/dialogs.php';
 $files = require __DIR__ . '/../files/dialogs.php';
@@ -516,14 +515,21 @@ return [
 	'page.move' => [
 		'pattern' => 'pages/(:any)/move',
 		'load'    => function (string $id) {
-			$page = Find::page($id);
+			$page   = Find::page($id);
+			$parent = $page->parentModel();
+
+			if (Uuids::enabled() === false) {
+				$parentId = $parent?->id() ?? '/';
+			} else {
+				$parentId = $parent?->uuid()->toString() ?? 'site://';
+			}
 
 			return [
 				'component' => 'k-page-move-dialog',
 				'props' => [
 					'value' => [
 						'move'   => $page->panel()->url(true),
-						'parent' => $page->parent()?->panel()->url(true) ?? '/site'
+						'parent' => $parentId
 					]
 				]
 			];
