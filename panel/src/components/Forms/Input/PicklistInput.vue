@@ -46,7 +46,7 @@
 				<k-button
 					v-if="display !== true && filteredOptions.length > display"
 					class="k-picklist-input-more"
-					icon="angle-down"
+					icon="triangle-down"
 					@click="display = true"
 				>
 					{{ $t("options.all", { count: filteredOptions.length }) }}
@@ -351,11 +351,11 @@ export default {
 	--button-width: 100%;
 	--button-align: start;
 	--button-color-text: var(--color-text-dimmed);
-	padding: var(--spacing-1) var(--spacing-2);
+	padding-inline: var(--spacing-2);
 }
 .k-picklist-input-more.k-button .k-button-icon {
 	position: relative;
-	left: -2px;
+	inset-inline-start: -1px;
 }
 
 .k-picklist-input-empty {
