@@ -503,6 +503,7 @@
 	"option": "Option",
 	"options": "Options",
 	"options.none": "No options",
+	"options.all": "Show all {count} options",
 
 	"orientation": "Orientation",
 	"orientation.landscape": "Landscape",

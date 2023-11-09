@@ -4,32 +4,87 @@
 			ref="tags"
 			v-bind="$props"
 			@input="$emit('input', $event)"
-			@click.native.stop
+			@click.native.stop="open"
+		>
+			<k-button
+				v-if="!max || value.length < max"
+				:id="id"
+				ref="toggle"
+				:autofocus="autofocus"
+				:disabled="disabled"
+				class="k-multiselect-input-toggle k-tags-navigatable"
+				size="xs"
+				icon="triangle-down"
+				@keydown.native.delete="$refs.tags.focus('prev')"
+				@focus.native="open"
+			/>
+		</k-tags>
+		<k-picklist-dropdown
+			ref="dropdown"
+			v-bind="$props"
+			:options="options"
+			@input="$emit('input', $event)"
 		/>
 	</div>
 </template>
 
 <script>
-import TagsInput, { props as TagsInputProps } from "./TagsInput.vue";
+import Input from "@/mixins/input.js";
+import { picklist as PicklistInputProps } from "@/components/Forms/Input/PicklistInput.vue";
+import { props as TagsProps } from "@/components/Navigation/Tags.vue";
+
+import { name, required } from "@/mixins/props.js";
+
+import {
+	required as validateRequired,
+	minLength as validateMinLength,
+	maxLength as validateMaxLength
+} from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [TagsInputProps],
+	mixins: [name, required, TagsProps, PicklistInputProps],
 	props: {
-		accept: {
-			default: "string",
-			type: String
+		value: {
+			default: () => [],
+			type: Array
+		}
+	},
+	watch: {
+		value: {
+			handler() {
+				this.$emit("invalid", this.$v.$invalid, this.$v);
+			},
+			immediate: true
+		}
+	},
+	validations() {
+		return {
+			value: {
+				required: this.required ? validateRequired : true,
+				minLength: this.min ? validateMinLength(this.min) : true,
+				maxLength: this.max ? validateMaxLength(this.max) : true
+			}
+		};
+	},
+	methods: {
+		open() {
+			this.$refs.dropdown.open(this.$el);
 		}
 	}
 };
 
 export default {
-	extends: TagsInput,
-	mixins: [props]
+	mixins: [Input, props]
 };
 </script>
 
 <style>
 .k-multiselect-input {
 	padding: var(--tags-gap);
+	cursor: pointer;
+}
+
+.k-multiselect-input-toggle.k-button {
+	opacity: 0;
 }
 </style>
