@@ -1,6 +1,5 @@
 <template>
 	<ul
-		v-if="options.length"
 		:data-invalid="$v.$invalid"
 		:data-labels="labels"
 		:style="'--options:' + (columns ?? options.length)"
@@ -35,7 +34,6 @@
 			</label>
 		</li>
 	</ul>
-	<k-empty v-else icon="info" theme="info">{{ $t("options.none") }}</k-empty>
 </template>
 
 <script>
