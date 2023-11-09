@@ -1,6 +1,12 @@
 <template>
 	<k-field v-bind="$props" class="k-toggles-field">
+		<k-empty
+			v-if="!options?.length"
+			:text="$t('options.none')"
+			icon="checklist"
+		/>
 		<k-input
+			v-else
 			:id="_uid"
 			ref="input"
 			:class="{ grow }"
