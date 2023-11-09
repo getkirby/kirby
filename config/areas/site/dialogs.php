@@ -3,7 +3,6 @@
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Cms\PageRules;
-use Kirby\Uuid\Uuids;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
@@ -13,6 +12,7 @@ use Kirby\Panel\PageCreateDialog;
 use Kirby\Panel\Panel;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\Uuids;
 
 $fields = require __DIR__ . '/../fields/dialogs.php';
 $files = require __DIR__ . '/../files/dialogs.php';
