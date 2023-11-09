@@ -2,59 +2,66 @@
 	<k-navigate
 		element="nav"
 		axis="y"
-		select="input[type=search], label, button"
+		select="input[type=search], label, .k-picklist-input-body button"
 		class="k-picklist-input"
 		@prev="$emit('escape')"
 	>
 		<header v-if="search" class="k-picklist-input-header">
-			<k-search-input
-				ref="search"
-				:autofocus="autofocus"
-				:disabled="disabled"
-				:placeholder="(search.placeholder ?? $t('filter')) + ' …'"
-				:value="query"
-				class="k-picklist-input-search"
-				@input="query = $event"
-				@keydown.escape.native.prevent="escape"
-				@keydown.enter.native.prevent="add"
-			/>
+			<div class="k-picklist-input-search">
+				<k-search-input
+					ref="search"
+					:autofocus="autofocus"
+					:disabled="disabled"
+					:placeholder="placeholder"
+					:value="query"
+					@input="query = $event"
+					@keydown.escape.native.prevent="escape"
+					@keydown.enter.native.prevent="add"
+				/>
+				<k-button
+					v-if="create"
+					:disabled="!showCreate"
+					:tabindex="!showCreate ? -1 : 0"
+					class="k-picklist-input-create"
+					icon="plus"
+					size="xs"
+					@click="add"
+				/>
+			</div>
+		</footer>
+
 		</header>
 
 		<template v-if="filteredOptions.length">
-			<component
-				:is="multiple ? 'k-checkboxes-input' : 'k-radio-input'"
-				ref="options"
-				:disabled="disabled"
-				:options="choices"
-				:value="value"
-				class="k-picklist-input-options"
-				@input="input"
-			/>
-
-			<k-button
-				v-if="display !== true && filteredOptions.length > display"
-				class="k-picklist-input-more"
-				@click="display = true"
-			>
-				{{ $t("options.all", { count: filteredOptions.length }) }}
-			</k-button>
+			<div class="k-picklist-input-body">
+				<component
+					:is="multiple ? 'k-checkboxes-input' : 'k-radio-input'"
+					ref="options"
+					:disabled="disabled"
+					:options="choices"
+					:value="value"
+					class="k-picklist-input-options"
+					@input="input"
+					@keydown.native.enter.prevent="enter"
+				/>
+				<k-button
+					v-if="display !== true && filteredOptions.length > display"
+					class="k-picklist-input-more"
+					icon="angle-down"
+					@click="display = true"
+				>
+					{{ $t("options.all", { count: filteredOptions.length }) }}
+				</k-button>
+			</div>
 		</template>
 
-		<p v-if="showEmpty" class="k-picklist-input-empty">
-			{{ $t("options.none") }}
-		</p>
-
-		<footer v-if="showCreate" class="k-picklist-input-footer">
-			<k-button
-				:current="filteredOptions.length === 0"
-				icon="add"
-				class="k-picklist-input-create"
-				@click="add"
-			>
-				<strong>{{ create.submit ?? $t("add") }}:</strong>
-				<span class="k-picklist-input-create-preview">{{ query }}</span>
-			</k-button>
-		</footer>
+		<template v-else-if="showEmpty">
+			<div class="k-picklist-input-body">
+				<p class="k-picklist-input-empty">
+					{{ $t("options.none") }}
+				</p>
+			</div>
+		</template>
 	</k-navigate>
 </template>
 
@@ -172,6 +179,17 @@ export default {
 		isFull() {
 			return this.max && this.value.length >= this.max;
 		},
+		placeholder() {
+			if (this.search.placeholder) {
+				return this.search.placeholder;
+			}
+
+			if (this.options.length > 0) {
+				return this.$t("filter") + "…";
+			}
+
+			return this.$t("enter") + "…";
+		},
 		showCreate() {
 			if (this.create === false) {
 				return false;
@@ -229,6 +247,9 @@ export default {
 				this.$emit("create", this.query);
 			}
 		},
+		enter(event) {
+			event.target?.click();
+		},
 		escape() {
 			if (this.query.length === 0) {
 				/**
@@ -280,10 +301,7 @@ export default {
 
 <style>
 :root {
-	--picklist-highlight: var(--color-yellow-600);
 	--picklist-rounded: var(--rounded-sm);
-	--picklist-selected: var(--color-focus);
-	--picklist-separator: var(--color-border);
 }
 
 .k-picklist-input {
@@ -291,25 +309,34 @@ export default {
 	--button-rounded: var(--picklist-rounded);
 }
 
-.k-picklist-input-header
-	+ :where(.k-picklist-input-options, .k-picklist-input-empty) {
-	border-top: 1px solid var(--picklist-separator);
-}
-
-.k-picklist-input-search {
+.k-picklist-input-header {
 	--input-rounded: var(--picklist-rounded);
+}
+.k-picklist-input-search {
+	display: flex;
+	align-items: center;
+	border-radius: var(--picklist-rounded);
+}
+.k-picklist-input-search .k-search-input {
 	height: var(--button-height);
+}
+.k-picklist-input-search:focus-within {
+	outline: var(--outline);
+}
+.k-picklist-dropdown .k-picklist-input-create:focus {
+	outline: 0;
 }
 
 .k-picklist-input-options .k-choice-input {
-	min-height: var(--button-height);
 	padding: var(--spacing-1) var(--spacing-2);
-	border-radius: var(--picklist-rounded);
 }
-.k-picklist-input-options .k-choice-input:has(:checked) {
-	--choice-color-text: var(--picklist-selected);
-	--choice-color-checked: var(--picklist-selected);
+.k-picklist-input-options .k-choice-input-label {
+	line-height: 1.475rem;
 }
+.k-picklist-input-options .k-choice-input input {
+	top: 4px;
+}
+
 .k-picklist-input-options .k-choice-input[aria-disabled="true"] {
 	--choice-color-text: var(--color-text-dimmed);
 }
@@ -317,45 +344,26 @@ export default {
 	outline: var(--outline);
 }
 .k-picklist-input-options .k-choice-input b {
+	font-weight: var(--font-normal);
 	color: var(--picklist-highlight);
 }
 
 .k-picklist-input-more.k-button {
 	--button-width: 100%;
+	--button-align: start;
+	--button-color-text: var(--color-text-dimmed);
 	padding: var(--spacing-1) var(--spacing-2);
-	font-size: var(--text-xs);
+}
+.k-picklist-input-more.k-button .k-button-icon {
+	position: relative;
+	left: -2px;
 }
 
 .k-picklist-input-empty {
 	height: var(--button-height);
-	display: flex;
-	align-items: center;
-	padding: var(--spacing-2);
+	line-height: 1.475rem;
+	padding: var(--spacing-1) var(--spacing-2);
 	color: var(--color-text-dimmed);
 }
 
-.k-picklist-input-options + .k-picklist-input-footer {
-	border-top: 1px solid var(--picklist-separator);
-}
-.k-picklist-input-create {
-	--button-width: 100%;
-	--button-align: start;
-	--button-height: auto;
-	padding-block: var(--button-padding);
-	gap: var(--spacing-3);
-}
-.k-picklist-input-create[aria-current="true"] {
-	outline: var(--outline);
-}
-.k-picklist-input-create .k-button-icon {
-	align-self: start;
-}
-.k-picklist-input-create strong {
-	display: block;
-	font-weight: var(--font-semi);
-	margin-bottom: var(--spacing-1);
-}
-.k-picklist-input-create-preview {
-	color: var(--picklist-highlight);
-}
 </style>
