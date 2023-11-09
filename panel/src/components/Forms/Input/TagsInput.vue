@@ -5,7 +5,7 @@
 		class="k-tags-input"
 		@edit="edit"
 		@input="$emit('input', $event)"
-		@click.native.stop="$refs.toggle.$el.click()"
+		@click.native.stop="$refs.toggle?.$el?.click()"
 	>
 		<k-button
 			v-if="!max || value.length < max"
@@ -15,7 +15,7 @@
 			:disabled="disabled"
 			class="k-tags-input-toggle k-tags-navigatable"
 			size="xs"
-			icon="plus"
+			icon="add"
 			@click="$refs.create.open()"
 			@keydown.native.delete="$refs.tags.focus('prev')"
 			@keydown.native="toggle"
@@ -215,10 +215,11 @@ export default {
 }
 
 .k-tags-input-toggle.k-button {
-	--button-color-text: var(--color-text);
-	--button-color-back: var(--color-gray-250);
-	--button-rounded: var(--rounded-sm);
+	--button-color-text: var(--input-color-placeholder);
 	opacity: 0;
+}
+.k-tags-input-toggle.k-button:focus {
+	--button-color-text: var(--input-color-text);
 }
 .k-tags-input:focus-within .k-tags-input-toggle {
 	opacity: 1;
@@ -226,5 +227,12 @@ export default {
 
 .k-tags-input .k-picklist-dropdown {
 	margin-top: var(--spacing-1);
+}
+.k-tags-input .k-picklist-dropdown .k-choice-input {
+	gap: 0;
+}
+.k-tags-input .k-picklist-dropdown .k-choice-input input {
+	opacity: 0;
+	width: 0;
 }
 </style>

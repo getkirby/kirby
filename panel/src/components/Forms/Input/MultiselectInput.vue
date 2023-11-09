@@ -4,7 +4,7 @@
 		v-bind="$props"
 		class="k-multiselect-input"
 		@input="$emit('input', $event)"
-		@click.native.stop="$refs.toggle.$el.click()"
+		@click.native.stop="open"
 	>
 		<k-button
 			v-if="!max || value.length < max"
@@ -15,11 +15,9 @@
 			class="k-multiselect-input-toggle k-tags-navigatable"
 			size="xs"
 			icon="triangle-down"
-			@click="$refs.dropdown.open()"
 			@keydown.native.delete="$refs.tags.focus('prev')"
-			@keydown.native="toggle"
+			@focus.native="open"
 		/>
-
 		<k-picklist-dropdown
 			ref="dropdown"
 			v-bind="$props"
@@ -68,20 +66,8 @@ export const props = {
 		};
 	},
 	methods: {
-		toggle(event) {
-			if (event.metaKey || event.altKey || event.ctrlKey) {
-				return false;
-			}
-
-			if (event.key === "ArrowDown") {
-				this.$refs.create.open();
-				event.preventDefault();
-				return;
-			}
-
-			if (String.fromCharCode(event.keyCode).match(/(\w)/g)) {
-				this.$refs.create.open();
-			}
+		open() {
+			this.$refs.dropdown.open(this.$el);
 		}
 	}
 };
@@ -98,7 +84,6 @@ export default {
 }
 
 .k-multiselect-input-toggle.k-button {
-	--button-color-back: var(--color-gray-250);
-	--button-rounded: var(--rounded-sm);
+	opacity: 0;
 }
 </style>

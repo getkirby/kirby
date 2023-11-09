@@ -21,7 +21,6 @@
 				<k-button
 					v-if="create"
 					:disabled="!showCreate"
-					:tabindex="!showCreate ? -1 : 0"
 					class="k-picklist-input-create"
 					icon="plus"
 					size="xs"
@@ -326,15 +325,15 @@ export default {
 .k-picklist-dropdown .k-picklist-input-create:focus {
 	outline: 0;
 }
+.k-picklist-dropdown .k-picklist-input-create[aria-disabled="true"] {
+	visibility: hidden;
+}
 
+.k-picklist-input-options li + li {
+	margin-top: var(--spacing-1);
+}
 .k-picklist-input-options .k-choice-input {
-	padding: var(--spacing-1) var(--spacing-2);
-}
-.k-picklist-input-options .k-choice-input-label {
-	line-height: 1.475rem;
-}
-.k-picklist-input-options .k-choice-input input {
-	top: 4px;
+	padding-inline: var(--spacing-2);
 }
 
 .k-picklist-input-options .k-choice-input[aria-disabled="true"] {
@@ -361,7 +360,7 @@ export default {
 
 .k-picklist-input-empty {
 	height: var(--button-height);
-	line-height: 1.475rem;
+	line-height: 1.25rem;
 	padding: var(--spacing-1) var(--spacing-2);
 	color: var(--color-text-dimmed);
 }

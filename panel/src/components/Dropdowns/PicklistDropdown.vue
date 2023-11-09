@@ -43,8 +43,8 @@ export default {
 			 */
 			this.$emit("input", values);
 		},
-		open() {
-			this.$refs.dropdown.open();
+		open(opener) {
+			this.$refs.dropdown.open(opener);
 		},
 		toggle() {
 			this.$refs.dropdown.toggle();
@@ -76,11 +76,16 @@ export default {
 }
 .k-picklist-dropdown .k-picklist-input-search {
 	background: var(--dropdown-color-hr);
-	padding-inline-end: var(--spacing-1);
+	padding-inline-end: 0.375rem;
 }
-.k-picklist-dropdown
-	.k-picklist-input-create:not([aria-disabled="true"]):focus {
-	--button-color-back: var(--color-focus);
+.k-picklist-dropdown .k-picklist-input-create {
+	--button-color-back: var(--color-black);
+	--button-rounded: 1rem;
+	--button-height: 1.125rem;
+}
+.k-picklist-dropdown .k-picklist-input-create:focus {
+	--button-color-back: var(--color-white);
+	--button-color-text: var(--color-black);
 }
 
 .k-picklist-dropdown .k-picklist-input-body {
@@ -102,6 +107,10 @@ export default {
 	--choice-color-info: var(--color-text-dimmed);
 	min-height: var(--button-height);
 	border-radius: var(--picklist-rounded);
+	padding-block: 0.375rem;
+}
+.k-picklist-dropdown .k-picklist-input-options li + li {
+	margin-top: 0;
 }
 .k-picklist-dropdown
 	.k-picklist-input-options
@@ -117,11 +126,13 @@ export default {
 	.k-choice-input:not([aria-disabled="true"]):hover {
 	background-color: var(--dropdown-color-hr);
 }
-.k-picklist-dropdown .k-picklist-input-more.k-button:hover {
-	--button-color-back: var(--dropdown-color-hr);
+.k-picklist-dropdown
+	.k-picklist-input-options
+	.k-choice-input:not([aria-disabled="true"]):focus-within {
+	--choice-color-text: var(--color-blue-500);
 }
 
-.k-picklist-dropdown .k-picklist-input-create:hover {
+.k-picklist-dropdown .k-picklist-input-more.k-button:hover {
 	--button-color-back: var(--dropdown-color-hr);
 }
 
