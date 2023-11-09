@@ -76,7 +76,7 @@ export default {
 }
 .k-picklist-dropdown .k-picklist-input-search {
 	background: var(--dropdown-color-hr);
-	padding-inline-end: 0.375rem;
+	padding-inline-end: var(--input-padding);
 }
 .k-picklist-dropdown .k-picklist-input-create {
 	--button-rounded: 1rem;
