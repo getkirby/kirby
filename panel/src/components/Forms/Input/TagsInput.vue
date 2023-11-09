@@ -211,6 +211,7 @@ export default {
 <style>
 .k-tags-input {
 	padding: var(--tags-gap);
+	cursor: pointer;
 }
 
 .k-tags-input-toggle.k-button {
@@ -220,7 +221,7 @@ export default {
 .k-tags-input-toggle.k-button:focus {
 	--button-color-text: var(--input-color-text);
 }
-.k-tags-input:where(:focus-within, :hover) .k-tags-input-toggle {
+.k-tags-input:focus-within .k-tags-input-toggle {
 	opacity: 1;
 }
 
