@@ -27,8 +27,6 @@
 					@click="add"
 				/>
 			</div>
-		</footer>
-
 		</header>
 
 		<template v-if="filteredOptions.length">
@@ -364,5 +362,4 @@ export default {
 	padding: var(--spacing-1) var(--spacing-2);
 	color: var(--color-text-dimmed);
 }
-
 </style>

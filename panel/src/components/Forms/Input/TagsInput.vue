@@ -230,6 +230,9 @@ export default {
 .k-tags-input .k-picklist-dropdown .k-choice-input {
 	gap: 0;
 }
+.k-tags-input .k-picklist-dropdown .k-choice-input:focus-within {
+	outline: var(--outline);
+}
 .k-tags-input .k-picklist-dropdown .k-choice-input input {
 	opacity: 0;
 	width: 0;
