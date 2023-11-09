@@ -43,7 +43,7 @@
 				<k-button
 					v-if="display !== true && filteredOptions.length > display"
 					class="k-picklist-input-more"
-					icon="triangle-down"
+					icon="angle-down"
 					@click="display = true"
 				>
 					{{ $t("options.all", { count: filteredOptions.length }) }}
