@@ -34,7 +34,7 @@
 				@keydown.left.native.stop
 				@keydown.right.native.stop
 			>
-				<form method="dialog" @submit="goTo($refs.page.value)">
+				<form method="dialog" @click.stop @submit="goTo($refs.page.value)">
 					<label :for="_uid">{{ $t("pagination.page") }}:</label>
 					<select :id="_uid" ref="page" :autofocus="true">
 						<option
