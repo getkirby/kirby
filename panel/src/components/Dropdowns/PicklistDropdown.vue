@@ -55,8 +55,8 @@ export default {
 
 <style>
 .k-picklist-dropdown {
-	--picklist-highlight: var(--color-yellow-500);
 	--color-text-dimmed: var(--color-gray-400);
+
 	padding: 0;
 	max-width: 30rem;
 	min-width: 8rem;
@@ -76,15 +76,14 @@ export default {
 }
 .k-picklist-dropdown .k-picklist-input-search {
 	background: var(--dropdown-color-hr);
-	padding-inline-end: 0.375rem;
+	padding-inline-end: var(--input-padding);
 }
 .k-picklist-dropdown .k-picklist-input-create {
-	--button-color-back: var(--color-black);
 	--button-rounded: 1rem;
 	--button-height: 1.125rem;
 }
 .k-picklist-dropdown .k-picklist-input-create:focus {
-	--button-color-back: var(--color-white);
+	--button-color-back: var(--color-blue-500);
 	--button-color-text: var(--color-black);
 }
 
@@ -103,8 +102,8 @@ export default {
 .k-picklist-dropdown .k-picklist-input-options .k-choice-input {
 	--choice-color-border: var(--dropdown-color-hr);
 	--choice-color-back: var(--dropdown-color-hr);
-	--choice-color-checked: var(--dropdown-color-hr);
 	--choice-color-info: var(--color-text-dimmed);
+
 	min-height: var(--button-height);
 	border-radius: var(--picklist-rounded);
 	padding-block: 0.375rem;

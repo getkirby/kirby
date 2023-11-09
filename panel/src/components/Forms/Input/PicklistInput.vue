@@ -19,10 +19,9 @@
 					@keydown.enter.native.prevent="add"
 				/>
 				<k-button
-					v-if="create"
-					:disabled="!showCreate"
+					v-if="showCreate"
 					class="k-picklist-input-create"
-					icon="plus"
+					icon="add"
 					size="xs"
 					@click="add"
 				/>
@@ -44,7 +43,7 @@
 				<k-button
 					v-if="display !== true && filteredOptions.length > display"
 					class="k-picklist-input-more"
-					icon="triangle-down"
+					icon="angle-down"
 					@click="display = true"
 				>
 					{{ $t("options.all", { count: filteredOptions.length }) }}
@@ -299,6 +298,7 @@ export default {
 <style>
 :root {
 	--picklist-rounded: var(--rounded-sm);
+	--picklist-highlight: var(--color-yellow-500);
 }
 
 .k-picklist-input {
@@ -334,6 +334,12 @@ export default {
 	padding-inline: var(--spacing-2);
 }
 
+.k-picklist-input-options .k-choice-input {
+	--choice-color-checked: var(--color-focus);
+}
+.k-picklist-input-options .k-choice-input:has(:checked) {
+	--choice-color-text: var(--color-focus);
+}
 .k-picklist-input-options .k-choice-input[aria-disabled="true"] {
 	--choice-color-text: var(--color-text-dimmed);
 }

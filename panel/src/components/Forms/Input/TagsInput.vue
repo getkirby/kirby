@@ -211,6 +211,7 @@ export default {
 <style>
 .k-tags-input {
 	padding: var(--tags-gap);
+	cursor: pointer;
 }
 
 .k-tags-input-toggle.k-button {
