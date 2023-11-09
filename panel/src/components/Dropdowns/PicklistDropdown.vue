@@ -79,12 +79,11 @@ export default {
 	padding-inline-end: 0.375rem;
 }
 .k-picklist-dropdown .k-picklist-input-create {
-	--button-color-back: var(--color-black);
 	--button-rounded: 1rem;
 	--button-height: 1.125rem;
 }
 .k-picklist-dropdown .k-picklist-input-create:focus {
-	--button-color-back: var(--color-white);
+	--button-color-back: var(--color-blue-500);
 	--button-color-text: var(--color-black);
 }
 

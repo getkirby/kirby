@@ -21,7 +21,7 @@
 				<k-button
 					v-if="showCreate"
 					class="k-picklist-input-create"
-					icon="plus"
+					icon="add"
 					size="xs"
 					@click="add"
 				/>
