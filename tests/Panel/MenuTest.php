@@ -255,10 +255,9 @@ class MenuTest extends TestCase
 		$this->assertSame('site', $entries[0]['link']);
 		$this->assertTrue($entries[0]['current']);
 		$this->assertSame('-', $entries[1]);
-		$this->assertSame('registration', $entries[2]['dialog']);
-		$this->assertSame('changes', $entries[3]['dialog']);
-		$this->assertSame('account', $entries[4]['link']);
-		$this->assertSame('logout', $entries[5]['link']);
+		$this->assertSame('changes', $entries[2]['dialog']);
+		$this->assertSame('account', $entries[3]['link']);
+		$this->assertSame('logout', $entries[4]['link']);
 	}
 
 	/**
@@ -303,14 +302,6 @@ class MenuTest extends TestCase
 	 */
 	public function testOptions()
 	{
-		$registration = [
-			'icon'     => 'key',
-			'dialog'   => 'registration',
-			'text'     => 'Register',
-			'variant'  => 'filled',
-			'theme'    => 'notice'
-		];
-
 		$changes = [
 			'icon'     => 'edit-line',
 			'dialog'   => 'changes',
@@ -333,9 +324,8 @@ class MenuTest extends TestCase
 
 		$menu    = new Menu();
 		$options = $menu->options();
-		$this->assertSame($registration, $options[0]);
-		$this->assertSame($changes, $options[1]);
-		$this->assertSame($account, $options[2]);
-		$this->assertSame($logout, $options[3]);
+		$this->assertSame($changes, $options[0]);
+		$this->assertSame($account, $options[1]);
+		$this->assertSame($logout, $options[2]);
 	}
 }

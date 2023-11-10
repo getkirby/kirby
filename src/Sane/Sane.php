@@ -77,10 +77,13 @@ class Sane
 	/**
 	 * Sanitizes the given string with the specified handler
 	 * @since 3.6.0
+	 *
+	 * @param bool $isExternal Whether the string is from an external file
+	 *                         that may be accessed directly
 	 */
-	public static function sanitize(string $string, string $type): string
+	public static function sanitize(string $string, string $type, bool $isExternal = false): string
 	{
-		return static::handler($type)->sanitize($string);
+		return static::handler($type)->sanitize($string, $isExternal);
 	}
 
 	/**
@@ -131,13 +134,16 @@ class Sane
 	/**
 	 * Validates file contents with the specified handler
 	 *
+	 * @param bool $isExternal Whether the string is from an external file
+	 *                         that may be accessed directly
+	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
 	 * @throws \Kirby\Exception\NotFoundException If the handler was not found
 	 * @throws \Kirby\Exception\Exception On other errors
 	 */
-	public static function validate(string $string, string $type): void
+	public static function validate(string $string, string $type, bool $isExternal = false): void
 	{
-		static::handler($type)->validate($string);
+		static::handler($type)->validate($string, $isExternal);
 	}
 
 	/**

@@ -80,6 +80,24 @@ class DateFieldTest extends TestCase
 		$field->validate();
 		$this->assertFalse($field->isValid());
 		$this->assertTrue($field->isInvalid());
+		$this->assertSame([
+			'minMax' => 'Please enter a date between 01.10.2020 and 02.10.2020',
+		], $field->errors());
+
+		// min & max failed (with time)
+		$field = $this->field('date', [
+			'time'  => true,
+			'min'   => '2020-10-01 10:04',
+			'max'   => '2020-10-02 08:15',
+			'value' => '2020-10-03 12:34'
+		]);
+
+		$field->validate();
+		$this->assertFalse($field->isValid());
+		$this->assertTrue($field->isInvalid());
+		$this->assertSame([
+			'minMax' => 'Please enter a date between 01.10.2020 10:04 and 02.10.2020 08:15',
+		], $field->errors());
 
 		// min failed
 		$field = $this->field('date', [
@@ -90,16 +108,22 @@ class DateFieldTest extends TestCase
 		$field->validate();
 		$this->assertFalse($field->isValid());
 		$this->assertTrue($field->isInvalid());
+		$this->assertSame([
+			'minMax' => 'Please enter a date after 01.10.2020',
+		], $field->errors());
 
 		// max failed
 		$field = $this->field('date', [
-			'value' => '2020-11-10',
-			'max'   => '2020-10-31'
+			'max'   => '2020-10-31',
+			'value' => '2020-11-10'
 		]);
 
 		$field->validate();
 		$this->assertFalse($field->isValid());
 		$this->assertTrue($field->isInvalid());
+		$this->assertSame([
+			'minMax' => 'Please enter a date before 31.10.2020',
+		], $field->errors());
 	}
 
 	public function valueProvider()

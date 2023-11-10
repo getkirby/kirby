@@ -4,7 +4,7 @@ import DropdownItem from "./DropdownItem.vue";
 
 import LanguagesDropdown from "./LanguagesDropdown.vue";
 import OptionsDropdown from "./OptionsDropdown.vue";
-import SelectorDropdown from "./SelectorDropdown.vue";
+import PicklistDropdown from "./PicklistDropdown.vue";
 
 export default {
 	install(app) {
@@ -14,6 +14,6 @@ export default {
 
 		app.component("k-languages-dropdown", LanguagesDropdown);
 		app.component("k-options-dropdown", OptionsDropdown);
-		app.component("k-selector-dropdown", SelectorDropdown);
+		app.component("k-picklist-dropdown", PicklistDropdown);
 	}
 };

@@ -10,6 +10,8 @@
 			]"
 		/>
 
+		<k-box v-if="info" icon="question" theme="info" :text="info" :html="true" />
+
 		<k-section
 			v-for="category in categories"
 			:key="category.name"
@@ -30,14 +32,18 @@
 export default {
 	props: {
 		categories: Array,
+		info: String,
 		tab: String
 	}
 };
 </script>
 
 <style>
-.k-lab-index-view .k-header {
+.k-lab-index-view > .k-header {
 	margin-bottom: 0;
+}
+.k-lab-index-view > .k-box {
+	margin-bottom: var(--spacing-8);
 }
 .k-lab-index-view .k-list-items {
 	grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));

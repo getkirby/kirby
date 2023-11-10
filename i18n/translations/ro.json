@@ -3,6 +3,7 @@
 	"account.delete": "Șterge-ți contul",
 	"account.delete.confirm": "Chiar vrei să îți ștergi contul? Vei fi deconectat imediat. Contul nu poate fi recuperat.",
 
+	"activate": "Activate",
 	"add": "Adaug\u0103",
 	"alpha": "Alfa",
 	"author": "Autor",
@@ -47,6 +48,7 @@
 	"dialog.users.empty": "Nu există utilizatori de selectat",
 
 	"dimensions": "Dimensiuni",
+	"disable": "Disable",
 	"disabled": "Dezactivat",
 	"discard": "Renun\u021b\u0103",
 
@@ -133,6 +135,9 @@
 	"error.license.format": "Te rog introdu o cheie de licență validă",
 	"error.license.email": "Te rog introdu o adresă de e-mail validă",
 	"error.license.verification": "Licența nu a putut fi verificată",
+
+	"error.login.totp.confirm.invalid": "Cod invalid",
+	"error.login.totp.confirm.missing": "Please enter the current code",
 
 	"error.object.validation": "Există o eroare la câmpul \"{label}\":\n{message}",
 
@@ -407,15 +412,16 @@
 	"languages.secondary.empty": "Nu există limbi secundare deocamdată.",
 
 	"license": "Licența",
+	"license.activate": "Activate it now",
+	"license.activate.label": "Please activate your license",
+	"license.activate.domain": "Your license will be activated for <strong>{host}</strong>.",
+	"license.activate.local": "You are about to activate your Kirby license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please activate it there instead. If {host} is the domain you want to use your license for, please continue.",
 	"license.buy": "Cumpără o licență",
-	"license.register": "Înregistrează-te",
+	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
+	"license.code.label": "Te rog introdu codul tău de licență",
 	"license.manage": "Gestionează-ți licențele",
-	"license.register.help": "Ai primit codul de licență pe adresa de e-mail după cumpărare. Te rog copiaz-o și insereaz-o pentru a te înregistra.",
-	"license.register.label": "Te rog introdu codul tău de licență",
-	"license.register.domain": "Licența îți va fi înregistrată pentru <strong>{host}</strong>.",
-	"license.register.local": "Ești pe punctul de a-ți înregistra licența pentru domeniul tău local <strong>{host}</strong>. Dacă acest site va fi instalat pe un domeniu public, te rog înregistrează licența acolo, nu aici. Dacă {host} este domeniul pentru care vrei licența Kirby, te rog continuă.",
-	"license.register.success": "Mulțumim că susții Kirby",
-	"license.unregistered": "Acesta este un demo Kirby neînregistrat",
+	"license.ready": "Ready to launch your site?",
+	"license.success": "Mulțumim că susții Kirby",
 	"license.unregistered.label": "Neînregistrat",
 
 	"link": "Legătură",
@@ -434,7 +440,9 @@
 	"login.code.label.login": "Cod de conectare",
 	"login.code.label.password-reset": "Cod de restabilire parolă",
 	"login.code.placeholder.email": "000 000",
+	"login.code.placeholder.totp": "000000",
 	"login.code.text.email": "Dacă adresa de e-mail este înregistrată, codul cerut a fost trimis pe adresă.",
+	"login.code.text.totp": "Please enter the one‑time code from your authenticator app.",
 	"login.email.login.body": "Salut {user.nameOrEmail},\n\nAi cerut recent un cod de conectare pentru Panoul site-ului {site}.\nCodul de conectare de mai jos va fi valid pentru următoarele {timeout} minute:\n\n{code}\n\nDacă nu tu ai cerut un cod de conectare, te rog ignoră acest e-mail sau ia legătura cu administratorul site-ului dacă ai întrebări.\nDin motive de siguranță, te rog să NU trimiți acest email mai departe.",
 	"login.email.login.subject": "Codul tău de conectare",
 	"login.email.password-reset.body": "Salut {user.nameOrEmail},\n\nAi cerut recent un cod de restabilire a parolei pentru Panoul site-ului {site}.\nCodul de restabilire a parolei de mai jos este valabil pentru următoarele {timeout} minute:\n\n{code}\n\nDacă nu tu ai cerut codul de restabilire a parolei, te rog ignoră acest e-mail sau ia legătura cu administratorul site-ului dacă ai întrebări.\nDin motive de securitate, te rog să NU trimiți acest e-mail mai departe.",
@@ -445,6 +453,20 @@
 	"login.toggleText.code.email-password": "Conectare cu parola",
 	"login.toggleText.password-reset.email": "Ți-ai uitat parola?",
 	"login.toggleText.password-reset.email-password": "← Înapoi la conectare",
+	"login.totp.enable.option": "Set up one‑time codes",
+	"login.totp.enable.intro": "Authenticator apps can generate one‑time codes that are used as a second factor when signing into your account.",
+	"login.totp.enable.qr.label": "1. Scan this QR code",
+	"login.totp.enable.qr.help": "Unable to scan? Add the setup key <code>{secret}</code> manually to your authenticator app.",
+	"login.totp.enable.confirm.headline": "2. Confirm with generated code",
+	"login.totp.enable.confirm.text": "Your app generates a new one‑time code every 30 seconds. Enter the current code to complete the setup:",
+	"login.totp.enable.confirm.label": "Current code",
+	"login.totp.enable.confirm.help": "After this setup, we will ask you for a one‑time code every time you log in.",
+	"login.totp.enable.success": "Activated one‑time codes",
+	"login.totp.disable.option": "Disable one‑time codes",
+	"login.totp.disable.label": "Enter your password to disable one‑time codes",
+	"login.totp.disable.help": "In the future, a different second factor like a login code sent via email will be requested when you log in. You can always set up one‑time codes again later.",
+	"login.totp.disable.admin": "<p>This will disable one‑time codes for <strong>{user}</strong>.</p><p>In the future, a different second factor like a login code sent via email will be requested when they log in. {user} can set up one‑time codes again after their next login.</p>",
+	"login.totp.disable.success": "Disabled one‑time codes",
 
 	"logout": "Deconectare",
 
@@ -481,6 +503,7 @@
 	"option": "Opțiune",
 	"options": "Opțiuni",
 	"options.none": "Nicio opțiune",
+	"options.all": "Show all {count} options",
 
 	"orientation": "Orientare",
 	"orientation.landscape": "Landscape",
@@ -550,7 +573,7 @@
 	"save": "Salveaz\u0103",
 	"search": "Caută",
 	"search.min": "Introdu {min} caractere pentru a căuta",
-	"search.all": "Arată toate",
+	"search.all": "Show all {count} results",
 	"search.results.none": "Niciun rezultat",
 
 	"section.invalid": "Secțiunea este invalidă",
@@ -572,6 +595,7 @@
 	"system.issues.content": "Directorul de conținut pare să fie expus",
 	"system.issues.eol.kirby": "Versiunea instalată de Kirby a ajuns la sfârșitul vieții utile și nu va mai primi actualizări de securitate.",
 	"system.issues.eol.plugin": "Versiunea instalată a plugin-ului { plugin } a ajuns la sfârșitul vieții utile și nu va mai primi actualizări de securitate.",
+	"system.issues.eol.php": "Your installed PHP release { release } has reached end-of-life and will not receive further security updates",
 	"system.issues.debug": "Modul depanare trebuie să fie oprit în producție",
 	"system.issues.git": "Directorul .git pare să fie expus",
 	"system.issues.https": "Recomandăm HTTPS pentru toate site-urile.",

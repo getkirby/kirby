@@ -3,6 +3,7 @@
 	"account.delete": "Fiók törlése",
 	"account.delete.confirm": "Tényleg törölni szeretnéd a fiókodat? Azonnal kijelentkeztetünk és ez a folyamat visszavonhatatlan.",
 
+	"activate": "Activate",
 	"add": "Hozz\u00e1ad",
 	"alpha": "Alpha",
 	"author": "Szerző",
@@ -47,6 +48,7 @@
 	"dialog.users.empty": "Nincsenek felhasználók kiválasztva",
 
 	"dimensions": "Méretek",
+	"disable": "Disable",
 	"disabled": "Inaktív",
 	"discard": "Visszavon\u00e1s",
 
@@ -133,6 +135,9 @@
 	"error.license.format": "Kérlek, add meg az évényes lincensz kulcsot",
 	"error.license.email": "Kérlek adj meg egy valós email-címet",
 	"error.license.verification": "A licensz nem ellenőrizhető",
+
+	"error.login.totp.confirm.invalid": "Érvénytelen kód",
+	"error.login.totp.confirm.missing": "Please enter the current code",
 
 	"error.object.validation": "There’s an error in the \"{label}\" field:\n{message}",
 
@@ -407,15 +412,16 @@
 	"languages.secondary.empty": "Nincsnek még másodlagos nyelvek",
 
 	"license": "Kirby licenc",
+	"license.activate": "Activate it now",
+	"license.activate.label": "Please activate your license",
+	"license.activate.domain": "Your license will be activated for <strong>{host}</strong>.",
+	"license.activate.local": "You are about to activate your Kirby license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please activate it there instead. If {host} is the domain you want to use your license for, please continue.",
 	"license.buy": "Licenc vásárlása",
-	"license.register": "Regisztráció",
+	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
+	"license.code.label": "Kérlek írd be a licenc-kódot",
 	"license.manage": "Manage your licenses",
-	"license.register.help": "A vásárlás után emailben küldjük el a licenc-kódot. Regisztrációhoz másold ide a kapott kódot.",
-	"license.register.label": "Kérlek írd be a licenc-kódot",
-	"license.register.domain": "Your license will be registered to <strong>{host}</strong>.",
-	"license.register.local": "You are about to register your license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please register it there instead. If {host} is the domain you want to license Kirby to, please continue.",
-	"license.register.success": "Köszönjük, hogy támogatod a Kirby-t",
-	"license.unregistered": "Jelenleg a Kirby nem regisztrált próbaverzióját használod",
+	"license.ready": "Ready to launch your site?",
+	"license.success": "Köszönjük, hogy támogatod a Kirby-t",
 	"license.unregistered.label": "Unregistered",
 
 	"link": "Link",
@@ -434,7 +440,9 @@
 	"login.code.label.login": "Bejelentkezéshez szükséges kód",
 	"login.code.label.password-reset": "Jelszóvisszaállításhoz szükséges kód",
 	"login.code.placeholder.email": "000 000",
+	"login.code.placeholder.totp": "000000",
 	"login.code.text.email": "Amennyiben az email-címed létezik a rendszerben, a kódot oda küldjük el.",
+	"login.code.text.totp": "Please enter the one‑time code from your authenticator app.",
 	"login.email.login.body": "Helló {user.nameOrEmail},\n\nNemrégiben bejelentkezési kódot igényeltél a(z) {site} Paneljéhez.\nAz alábbi kód {timeout} percig lesz érvényes:\n\n{code}\n\nHa nem te igényelted a kódot, kérlek hagyd figyelmen kívül ezt az emailt, kérdések esetén pedig vedd fel a kapcsolatot az oldal Adminisztrátorával.\nBiztonsági okokból kérjük NE továbbítsd ezt az emailt.",
 	"login.email.login.subject": "Bejelentkezési kódod",
 	"login.email.password-reset.body": "Helló {user.nameOrEmail},\n\nNemrégiben jelszóvisszaállítási kódot igényeltél a(z) {site} Paneljéhez.\nAz alábbi jelszóvisszaállítási kód {timeout} percig lesz érvényes:\n\n{code}\n\nHa nem te igényelted a jelszóvisszaállítási kódot, kérlek hagyd figyelmen kívül ezt az emailt, kérdések esetén pedig vedd fel a kapcsolatot az oldal Adminisztrátorával.\nBiztonsági okokból kérjük NE továbbítsd ezt az emailt.",
@@ -445,6 +453,20 @@
 	"login.toggleText.code.email-password": "Bejelentkezés jelszóval",
 	"login.toggleText.password-reset.email": "Elfelejtetted a jelszavad?",
 	"login.toggleText.password-reset.email-password": "← Vissza a bejelentkezéshez",
+	"login.totp.enable.option": "Set up one‑time codes",
+	"login.totp.enable.intro": "Authenticator apps can generate one‑time codes that are used as a second factor when signing into your account.",
+	"login.totp.enable.qr.label": "1. Scan this QR code",
+	"login.totp.enable.qr.help": "Unable to scan? Add the setup key <code>{secret}</code> manually to your authenticator app.",
+	"login.totp.enable.confirm.headline": "2. Confirm with generated code",
+	"login.totp.enable.confirm.text": "Your app generates a new one‑time code every 30 seconds. Enter the current code to complete the setup:",
+	"login.totp.enable.confirm.label": "Current code",
+	"login.totp.enable.confirm.help": "After this setup, we will ask you for a one‑time code every time you log in.",
+	"login.totp.enable.success": "Activated one‑time codes",
+	"login.totp.disable.option": "Disable one‑time codes",
+	"login.totp.disable.label": "Enter your password to disable one‑time codes",
+	"login.totp.disable.help": "In the future, a different second factor like a login code sent via email will be requested when you log in. You can always set up one‑time codes again later.",
+	"login.totp.disable.admin": "<p>This will disable one‑time codes for <strong>{user}</strong>.</p><p>In the future, a different second factor like a login code sent via email will be requested when they log in. {user} can set up one‑time codes again after their next login.</p>",
+	"login.totp.disable.success": "Disabled one‑time codes",
 
 	"logout": "Kijelentkezés",
 
@@ -481,6 +503,7 @@
 	"option": "Option",
 	"options": "Beállítások",
 	"options.none": "Nincsnek beállítások",
+	"options.all": "Show all {count} options",
 
 	"orientation": "Tájolás",
 	"orientation.landscape": "Fekvő",
@@ -550,7 +573,7 @@
 	"save": "Ment\u00e9s",
 	"search": "Keresés",
 	"search.min": "A kereséshez írj be minimum {min} karaktert",
-	"search.all": "Összes mutatása",
+	"search.all": "Show all {count} results",
 	"search.results.none": "Nincs találat",
 
 	"section.invalid": "The section is invalid",
@@ -572,6 +595,7 @@
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
+	"system.issues.eol.php": "Your installed PHP release { release } has reached end-of-life and will not receive further security updates",
 	"system.issues.debug": "Debugging must be turned off in production",
 	"system.issues.git": "The .git folder seems to be exposed",
 	"system.issues.https": "We recommend HTTPS for all your sites",

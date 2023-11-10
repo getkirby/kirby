@@ -392,7 +392,7 @@ class Svg extends Xml
 	 *
 	 * @return array Array with exception objects for each modification
 	 */
-	public static function sanitizeAttr(DOMAttr $attr): array
+	public static function sanitizeAttr(DOMAttr $attr, array $options): array
 	{
 		$element = $attr->ownerElement;
 		$name    = $attr->name;
@@ -432,14 +432,14 @@ class Svg extends Xml
 	 *
 	 * @return array Array with exception objects for each modification
 	 */
-	public static function sanitizeElement(DOMElement $element): array
+	public static function sanitizeElement(DOMElement $element, array $options): array
 	{
 		$errors = [];
 
 		// check for URLs inside <style> elements
 		if ($element->tagName === 'style') {
 			foreach (Dom::extractUrls($element->textContent) as $url) {
-				if (Dom::isAllowedUrl($url, static::options()) !== true) {
+				if (Dom::isAllowedUrl($url, $options) !== true) {
 					$errors[] = new InvalidArgumentException(
 						'The URL is not allowed in the "style" element' .
 						' (around line ' . $element->getLineNo() . ')'
@@ -456,7 +456,7 @@ class Svg extends Xml
 	 * Custom callback for additional doctype validation
 	 * @internal
 	 */
-	public static function validateDoctype(DOMDocumentType $doctype): void
+	public static function validateDoctype(DOMDocumentType $doctype, array $options): void
 	{
 		if (mb_strtolower($doctype->name) !== 'svg') {
 			throw new InvalidArgumentException('Invalid doctype');
@@ -465,10 +465,13 @@ class Svg extends Xml
 
 	/**
 	 * Returns the sanitization options for the handler
+	 *
+	 * @param bool $isExternal Whether the string is from an external file
+	 *                         that may be accessed directly
 	 */
-	protected static function options(): array
+	protected static function options(bool $isExternal): array
 	{
-		return array_merge(parent::options(), [
+		return array_merge(parent::options($isExternal), [
 			'allowedAttrPrefixes' => static::$allowedAttrPrefixes,
 			'allowedAttrs'        => static::$allowedAttrs,
 			'allowedNamespaces'   => static::$allowedNamespaces,

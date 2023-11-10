@@ -3,6 +3,7 @@
 	"account.delete": "계정 삭제",
 	"account.delete.confirm": "계정을 삭제할까요? 계정을 삭제한 뒤에는 복구할 수 없습니다.",
 
+	"activate": "Activate",
 	"add": "\ucd94\uac00",
 	"alpha": "Alpha",
 	"author": "저자",
@@ -47,6 +48,7 @@
 	"dialog.users.empty": "선택할 사용자가 없습니다.",
 
 	"dimensions": "크기",
+	"disable": "Disable",
 	"disabled": "비활성화",
 	"discard": "무시",
 
@@ -133,6 +135,9 @@
 	"error.license.format": "올바른 라이선스 키를 입력하세요.",
 	"error.license.email": "올바른 이메일 주소를 입력하세요.",
 	"error.license.verification": "라이선스 키가 올바르지 않습니다.",
+
+	"error.login.totp.confirm.invalid": "코드가 올바르지 않습니다.",
+	"error.login.totp.confirm.missing": "Please enter the current code",
 
 	"error.object.validation": "{label} 필드에 오류가 있습니다.\n{message}",
 
@@ -407,15 +412,16 @@
 	"languages.secondary.empty": "보조 언어가 없습니다.",
 
 	"license": "라이선스",
+	"license.activate": "Activate it now",
+	"license.activate.label": "Please activate your license",
+	"license.activate.domain": "Your license will be activated for <strong>{host}</strong>.",
+	"license.activate.local": "You are about to activate your Kirby license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please activate it there instead. If {host} is the domain you want to use your license for, please continue.",
 	"license.buy": "라이선스 구매",
-	"license.register": "등록",
+	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
+	"license.code.label": "라이선스 코드를 입력하세요.",
 	"license.manage": "라이선스 관리",
-	"license.register.help": "Kirby를 등록하려면 이메일로 전송받은 라이선스 코드와 이메일 주소를 입력하세요.",
-	"license.register.label": "라이선스 코드를 입력하세요.",
-	"license.register.domain": "Your license will be registered to <strong>{host}</strong>.",
-	"license.register.local": "You are about to register your license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please register it there instead. If {host} is the domain you want to license Kirby to, please continue.",
-	"license.register.success": "Kirby와 함께해주셔서 감사합니다.",
-	"license.unregistered": "Kirby가 등록되지 않았습니다.",
+	"license.ready": "Ready to launch your site?",
+	"license.success": "Kirby와 함께해주셔서 감사합니다.",
 	"license.unregistered.label": "Kirby가 등록되지 않았습니다.",
 
 	"link": "\uc77c\ubc18 \ub9c1\ud06c",
@@ -434,7 +440,9 @@
 	"login.code.label.login": "로그인 코드",
 	"login.code.label.password-reset": "암호 초기화 코드",
 	"login.code.placeholder.email": "000 000",
+	"login.code.placeholder.totp": "000000",
 	"login.code.text.email": "입력한 이메일 주소로 코드를 전송했습니다.",
+	"login.code.text.totp": "Please enter the one‑time code from your authenticator app.",
 	"login.email.login.body": "{user.nameOrEmail} 님,\n\n{site} 패널에서 요청한 로그인 코드는 다음과 같습니다. 로그인 코드는 {timeout}분 동안 유효합니다.\n\n{code}\n\n로그인 코드를 요청한 적이 없다면, 이 이메일을 무시하거나 관리자에게 문의하세요. 보안을 위해 이 이메일은 다른 사람과 공유하지 마세요.",
 	"login.email.login.subject": "로그인 코드",
 	"login.email.password-reset.body": "{user.nameOrEmail} 님,\n\n{site} 패널에서 요청한 암호 초기화 코드는 다음과 같습니다. 암호 초기화 코드는 {timeout}분 동안 유효합니다.\n\n{code}\n\n암호 초기화 코드를 요청한 적이 없다면, 이 이메일을 무시하거나 관리자에게 문의하세요. 보안을 위해 이 이메일은 다른 사람과 공유하지 마세요.",
@@ -445,6 +453,20 @@
 	"login.toggleText.code.email-password": "암호로 로그인",
 	"login.toggleText.password-reset.email": "암호 찾기",
 	"login.toggleText.password-reset.email-password": "로그인 화면으로",
+	"login.totp.enable.option": "Set up one‑time codes",
+	"login.totp.enable.intro": "Authenticator apps can generate one‑time codes that are used as a second factor when signing into your account.",
+	"login.totp.enable.qr.label": "1. Scan this QR code",
+	"login.totp.enable.qr.help": "Unable to scan? Add the setup key <code>{secret}</code> manually to your authenticator app.",
+	"login.totp.enable.confirm.headline": "2. Confirm with generated code",
+	"login.totp.enable.confirm.text": "Your app generates a new one‑time code every 30 seconds. Enter the current code to complete the setup:",
+	"login.totp.enable.confirm.label": "Current code",
+	"login.totp.enable.confirm.help": "After this setup, we will ask you for a one‑time code every time you log in.",
+	"login.totp.enable.success": "Activated one‑time codes",
+	"login.totp.disable.option": "Disable one‑time codes",
+	"login.totp.disable.label": "Enter your password to disable one‑time codes",
+	"login.totp.disable.help": "In the future, a different second factor like a login code sent via email will be requested when you log in. You can always set up one‑time codes again later.",
+	"login.totp.disable.admin": "<p>This will disable one‑time codes for <strong>{user}</strong>.</p><p>In the future, a different second factor like a login code sent via email will be requested when they log in. {user} can set up one‑time codes again after their next login.</p>",
+	"login.totp.disable.success": "Disabled one‑time codes",
 
 	"logout": "로그아웃",
 
@@ -481,6 +503,7 @@
 	"option": "옵션",
 	"options": "옵션",
 	"options.none": "옵션이 없습니다.",
+	"options.all": "Show all {count} options",
 
 	"orientation": "비율",
 	"orientation.landscape": "가로로 긴 사각형",
@@ -550,7 +573,7 @@
 	"save": "\uc800\uc7a5",
 	"search": "검색",
 	"search.min": "{min}자 이상 입력하세요.",
-	"search.all": "모두 보기",
+	"search.all": "Show all {count} results",
 	"search.results.none": "해당하는 결과가 없습니다.",
 
 	"section.invalid": "섹션이 올바르지 않습니다.",
@@ -572,6 +595,7 @@
 	"system.issues.content": "<code>/content</code> 폴더의 권한을 확인하세요.",
 	"system.issues.eol.kirby": "설치된 Kirby는 버전이 만료되었습니다. 더 이상 보안 업데이트를 받을 수 없습니다.",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
+	"system.issues.eol.php": "Your installed PHP release { release } has reached end-of-life and will not receive further security updates",
 	"system.issues.debug": "공개 서버상에서는 디버그 모드를 해제하세요.",
 	"system.issues.git": "<code>/.git</code> 폴더의 권한을 확인하세요.",
 	"system.issues.https": "HTTPS를 권장합니다.",

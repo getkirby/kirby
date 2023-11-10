@@ -52,24 +52,24 @@ return [
 				'props' => [
 					'fields' => [
 						'domain' => [
-							'label' => I18n::translate('license.unregistered'),
+							'label' => I18n::translate('license.activate.label'),
 							'type'  => 'info',
 							'theme' => $local ? 'warning' : 'info',
-							'text'  => I18n::template('license.register.' . ($local ? 'local' : 'domain'), ['host' => $system->indexUrl()])
+							'text'  => I18n::template('license.activate.' . ($local ? 'local' : 'domain'), ['host' => $system->indexUrl()])
 						],
 						'license' => [
-							'label'       => I18n::translate('license.register.label'),
+							'label'       => I18n::translate('license.code.label'),
 							'type'        => 'text',
 							'required'    => true,
 							'counter'     => false,
 							'placeholder' => 'K3-',
-							'help'        => I18n::translate('license.register.help') . ' ' . '<a href="https://getkirby.com/buy" target="_blank">' . I18n::translate('license.buy') . ' &rarr;</a>'
+							'help'        => I18n::translate('license.code.help') . ' ' . '<a href="https://getkirby.com/buy" target="_blank">' . I18n::translate('license.buy') . ' &rarr;</a>'
 						],
 						'email' => Field::email(['required' => true])
 					],
 					'submitButton' => [
 						'icon'  => 'key',
-						'text'  => I18n::translate('license.register'),
+						'text'  => I18n::translate('activate'),
 					],
 					'value' => [
 						'license' => null,
@@ -88,7 +88,7 @@ return [
 
 			return [
 				'event'   => 'system.register',
-				'message' => I18n::translate('license.register.success')
+				'message' => I18n::translate('license.success')
 			];
 			// @codeCoverageIgnoreEnd
 		}

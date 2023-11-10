@@ -14,6 +14,7 @@ import ListInput from "./ListInput.vue";
 import MultiselectInput from "./MultiselectInput.vue";
 import NumberInput from "./NumberInput.vue";
 import PasswordInput from "./PasswordInput.vue";
+import PicklistInput from "./PicklistInput.vue";
 import RadioInput from "./RadioInput.vue";
 import RangeInput from "./RangeInput.vue";
 import SelectInput from "./SelectInput.vue";
@@ -49,6 +50,7 @@ export default {
 		app.component("k-multiselect-input", MultiselectInput);
 		app.component("k-number-input", NumberInput);
 		app.component("k-password-input", PasswordInput);
+		app.component("k-picklist-input", PicklistInput);
 		app.component("k-radio-input", RadioInput);
 		app.component("k-range-input", RangeInput);
 		app.component("k-search-input", SearchInput);

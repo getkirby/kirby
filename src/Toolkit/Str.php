@@ -282,6 +282,7 @@ class Str
 
 	/**
 	 * Converts a camel-case string to kebab-case
+	 * @since 4.0.0
 	 *
 	 * @param string $value The string to convert
 	 */

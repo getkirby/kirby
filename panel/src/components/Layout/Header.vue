@@ -66,9 +66,19 @@ export default {
 		 */
 		editable: {
 			type: Boolean
-		}
+		},
+		/**
+		 * @deprecated 4.0.0 Has no effect anymore, use `k-tabs` as standalone component instead
+		 */
+		tabs: Array
 	},
 	created() {
+		if (this.tabs) {
+			window.panel.deprecated(
+				"<k-header>: `tabs` prop isn't supported anymore and has no effect. Use `<k-tabs>` as standalone component instead."
+			);
+		}
+
 		if (this.$slots.left || this.$slots.right) {
 			window.panel.deprecated(
 				"<k-header>: left/right slots will be removed in a future version. Use `buttons` slot instead."

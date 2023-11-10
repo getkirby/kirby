@@ -2,7 +2,7 @@
   <text x="10" y="25">Hello</text>
   <style>
   text {
-    background-image: url(/image.png), url("#image.png");
+    background-image: url(/subfolder/image.png), url("#image.png");
   }
   </style>
 </svg>

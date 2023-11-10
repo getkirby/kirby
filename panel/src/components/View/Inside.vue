@@ -59,14 +59,14 @@ export default {
 }
 
 .k-panel-notification {
-	--button-height: var(--height-sm);
-	--button-color-icon: var(--theme-color-800);
-	--button-color-text: var(--theme-color-800);
-	outline: 1px solid var(--theme-color-500);
+	--button-height: var(--height-md);
+	--button-color-icon: var(--theme-color-900);
+	--button-color-text: var(--theme-color-900);
+	border: 1px solid var(--theme-color-500);
 	position: fixed;
-	inset-block-end: var(--spacing-6);
-	inset-inline-end: var(--spacing-6);
-	box-shadow: var(--shadow-lg);
+	inset-block-end: var(--menu-padding);
+	inset-inline-end: var(--menu-padding);
+	box-shadow: var(--dropdown-shadow);
 	z-index: var(--z-notification);
 }
 </style>

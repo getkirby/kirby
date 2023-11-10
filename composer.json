@@ -3,7 +3,7 @@
 	"description": "The Kirby core",
 	"license": "proprietary",
 	"type": "kirby-cms",
-	"version": "4.0.0-beta.3",
+	"version": "4.0.0-rc.1",
 	"keywords": [
 		"kirby",
 		"cms",
@@ -39,7 +39,7 @@
 		"christian-riesen/base32": "1.6.0",
 		"claviska/simpleimage": "4.0.6",
 		"composer/semver": "3.4.0",
-		"filp/whoops": "2.15.3",
+		"filp/whoops": "2.15.4",
 		"getkirby/composer-installer": "^1.2.1",
 		"laminas/laminas-escaper": "2.13.0",
 		"michelf/php-smartypants": "1.8.1",

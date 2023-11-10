@@ -1,7 +1,8 @@
 export default {
 	props: {
 		/**
-		 * An array of option objects `{ value, text, info }`
+		 * An array of option objects
+		 * @value { value, text, info }
 		 */
 		options: {
 			default: () => [],

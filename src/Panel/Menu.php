@@ -216,16 +216,6 @@ class Menu
 			]
 		];
 
-		if (App::instance()->system()->license() === false) {
-			array_unshift($options, [
-				'icon'     => 'key',
-				'dialog'   => 'registration',
-				'text'     => I18n::translate('license.register'),
-				'variant'  => 'filled',
-				'theme'    => 'notice',
-			]);
-		}
-
 		return $options;
 	}
 }

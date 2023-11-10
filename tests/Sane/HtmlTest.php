@@ -2,6 +2,8 @@
 
 namespace Kirby\Sane;
 
+use Kirby\Exception\InvalidArgumentException;
+
 /**
  * @covers \Kirby\Sane\Html
  * @todo Add more tests from DOMPurify and the other test classes
@@ -26,5 +28,18 @@ class HtmlTest extends TestCase
 	public function allowedProvider()
 	{
 		return $this->fixtureList('allowed', 'html');
+	}
+
+	public function testDisallowedExternalFile()
+	{
+		$fixture   = $this->fixture('disallowed/link-subfolder.html');
+		$sanitized = $this->fixture('sanitized/link-subfolder.html');
+
+		$this->assertStringEqualsFile($fixture, Html::sanitize(file_get_contents($fixture)));
+		$this->assertStringEqualsFile($sanitized, Html::sanitize(file_get_contents($fixture), isExternal: true));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The URL points outside of the site index URL');
+		Html::validateFile($fixture);
 	}
 }
