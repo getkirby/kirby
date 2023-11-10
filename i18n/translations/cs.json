@@ -3,6 +3,7 @@
 	"account.delete": "Smazat účet",
 	"account.delete.confirm": "Opravdu chcete smazat svůj účet? Budete okamžitě odhlášeni. Účet nemůže být zpětně obnoven.",
 
+	"activate": "Activate",
 	"add": "P\u0159idat",
 	"alpha": "Alfa",
 	"author": "Autor",
@@ -47,6 +48,7 @@
 	"dialog.users.empty": "Žádní uživatelé k výběru",
 
 	"dimensions": "Rozměry",
+	"disable": "Disable",
 	"disabled": "Zakázáno",
 	"discard": "Zahodit",
 
@@ -133,6 +135,9 @@
 	"error.license.format": "Zadejte prosím platné licenční číslo",
 	"error.license.email": "Zadejte prosím platnou emailovou adresu",
 	"error.license.verification": "Licenci nelze ověřit",
+
+	"error.login.totp.confirm.invalid": "Neplatný kód",
+	"error.login.totp.confirm.missing": "Please enter the current code",
 
 	"error.object.validation": "V poli \"{label}\" je chyba:\n{message}",
 
@@ -407,15 +412,16 @@
 	"languages.secondary.empty": "Neexistují zatím žádné další jazyky",
 
 	"license": "Kirby licence",
+	"license.activate": "Activate it now",
+	"license.activate.label": "Please activate your license",
+	"license.activate.domain": "Your license will be activated for <strong>{host}</strong>.",
+	"license.activate.local": "You are about to activate your Kirby license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please activate it there instead. If {host} is the domain you want to use your license for, please continue.",
 	"license.buy": "Zakoupit licenci",
-	"license.register": "Registrovat",
+	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
+	"license.code.label": "Zadejte prosím licenční kód",
 	"license.manage": "Spravovat licence",
-	"license.register.help": "Licenční kód jste po zakoupení obdrželi na email. Vložte prosím kód a zaregistrujte Vaší kopii.",
-	"license.register.label": "Zadejte prosím licenční kód",
-	"license.register.domain": "Vaše licence bude zaregistrována na <strong>{host}</strong>.",
-	"license.register.local": "Chystáte se registrovat licenci na Vaší lokální doméně <strong>{host}</strong>. Pokud bude tato stránka nasazena na veřejnou doménu, registrujte prosím licenci až tam. Pokud je {host} opravdu doménou, na které si přejete licenci registrovat, pokračujte prosím dále.",
-	"license.register.success": "Děkujeme Vám za podporu Kirby",
-	"license.unregistered": "Toto je neregistrovaná kopie Kirby",
+	"license.ready": "Ready to launch your site?",
+	"license.success": "Děkujeme Vám za podporu Kirby",
 	"license.unregistered.label": "Neregistrovaný",
 
 	"link": "Odkaz",
@@ -434,7 +440,9 @@
 	"login.code.label.login": "Kód pro přihlášení",
 	"login.code.label.password-reset": "Kód pro resetování hesla",
 	"login.code.placeholder.email": "000 000",
+	"login.code.placeholder.totp": "000000",
 	"login.code.text.email": "Vaše e-mailová adresa byla zaregistrována, kód byl odeslán do Vaší e-mailové schránky.",
+	"login.code.text.totp": "Please enter the one‑time code from your authenticator app.",
 	"login.email.login.body": "Ahoj {user.nameOrEmail},\n\nV nedávné době jsi zažádal(a) o kód pro přihlášení do Kirby Panelu na stránce {site}.\nNásledující kód pro přihlášení je platný {timeout} minut:\n\n{code}\n\nPokud jsi o kód pro přihlášení nežádal(a), tuto zprávu prosím ignoruj a v případě dotazů prosím kontaktuj svého administrátora.\nZ bezpečnostních důvodů prosím tuto zprávu nepřeposílej nikomu dalšímu.",
 	"login.email.login.subject": "Váš kód pro přihlášení",
 	"login.email.password-reset.body": "Ahoj {user.nameOrEmail},\n\nV nedávné době jsi zažádal(a) o kód pro resetování hesla do Kirby Panelu na stránce {site}.\nNásledující kód pro resetování hesla je platný {timeout} minut:\n\n{code}\n\nPokud jsi o kód pro resetování hesla nežádal(a), tuto zprávu prosím ignoruj a v případě dotazů prosím kontaktuj svého administrátora.\nZ bezpečnostních důvodů prosím tuto zprávu nepřeposílej nikomu dalšímu.",
@@ -445,6 +453,20 @@
 	"login.toggleText.code.email-password": "Přihlásit se pomocí hesla",
 	"login.toggleText.password-reset.email": "Zapomenuté heslo?",
 	"login.toggleText.password-reset.email-password": "← Zpět na přihlášení",
+	"login.totp.enable.option": "Set up one‑time codes",
+	"login.totp.enable.intro": "Authenticator apps can generate one‑time codes that are used as a second factor when signing into your account.",
+	"login.totp.enable.qr.label": "1. Scan this QR code",
+	"login.totp.enable.qr.help": "Unable to scan? Add the setup key <code>{secret}</code> manually to your authenticator app.",
+	"login.totp.enable.confirm.headline": "2. Confirm with generated code",
+	"login.totp.enable.confirm.text": "Your app generates a new one‑time code every 30 seconds. Enter the current code to complete the setup:",
+	"login.totp.enable.confirm.label": "Current code",
+	"login.totp.enable.confirm.help": "After this setup, we will ask you for a one‑time code every time you log in.",
+	"login.totp.enable.success": "Activated one‑time codes",
+	"login.totp.disable.option": "Disable one‑time codes",
+	"login.totp.disable.label": "Enter your password to disable one‑time codes",
+	"login.totp.disable.help": "In the future, a different second factor like a login code sent via email will be requested when you log in. You can always set up one‑time codes again later.",
+	"login.totp.disable.admin": "<p>This will disable one‑time codes for <strong>{user}</strong>.</p><p>In the future, a different second factor like a login code sent via email will be requested when they log in. {user} can set up one‑time codes again after their next login.</p>",
+	"login.totp.disable.success": "Disabled one‑time codes",
 
 	"logout": "Odhlásit se",
 
@@ -481,6 +503,7 @@
 	"option": "Možnost",
 	"options": "Možnosti",
 	"options.none": "Žádné možnosti",
+	"options.all": "Show all {count} options",
 
 	"orientation": "Orientace",
 	"orientation.landscape": "Na šířku",
@@ -550,7 +573,7 @@
 	"save": "Ulo\u017eit",
 	"search": "Hledat",
 	"search.min": "Pro vyhledání zadejte alespoň {min} znaky",
-	"search.all": "Zobrazit vše",
+	"search.all": "Show all {count} results",
 	"search.results.none": "Žádné výsledky",
 
 	"section.invalid": "Sekce je neplatná",
@@ -572,6 +595,7 @@
 	"system.issues.content": "Složka content je zřejmě přístupná zvenčí",
 	"system.issues.eol.kirby": "Instalovaná verze Kirby dosáhla konce životnosti a nebude již dále dostávat bezpečnostní aktualizace",
 	"system.issues.eol.plugin": "Instalovaná verze doplňku { plugin } dosáhla konce životnosti a nebude již dále dostávat bezpečnostní aktualizace",
+	"system.issues.eol.php": "Your installed PHP release { release } has reached end-of-life and will not receive further security updates",
 	"system.issues.debug": "Debug mode musí být v produkci vypnutý",
 	"system.issues.git": "Složka .git je zřejmě přístupná zvenčí",
 	"system.issues.https": "Pro všechny stránky doporučujeme používat protokol HTTPS",

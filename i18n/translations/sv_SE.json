@@ -3,6 +3,7 @@
 	"account.delete": "Radera ditt konto",
 	"account.delete.confirm": "Vill du verkligen radera ditt konto? Du kommer att loggas ut omedelbart. Ditt konto kan inte återställas.",
 
+	"activate": "Activate",
 	"add": "L\u00e4gg till",
 	"alpha": "Alpha",
 	"author": "Författare",
@@ -47,6 +48,7 @@
 	"dialog.users.empty": "Inga användare att välja",
 
 	"dimensions": "Dimensioner",
+	"disable": "Disable",
 	"disabled": "Inaktiverad",
 	"discard": "Kassera",
 
@@ -133,6 +135,9 @@
 	"error.license.format": "Ange en giltig licensnyckel",
 	"error.license.email": "Ange en giltig e-postadress",
 	"error.license.verification": "Licensen kunde inte verifieras",
+
+	"error.login.totp.confirm.invalid": "Ogiltig kod",
+	"error.login.totp.confirm.missing": "Please enter the current code",
 
 	"error.object.validation": "Det finns ett fel i fältet \"{label}\":\n{message}",
 
@@ -407,15 +412,16 @@
 	"languages.secondary.empty": "Det finns inga sekundära språk ännu",
 
 	"license": "Licens",
+	"license.activate": "Activate it now",
+	"license.activate.label": "Please activate your license",
+	"license.activate.domain": "Your license will be activated for <strong>{host}</strong>.",
+	"license.activate.local": "You are about to activate your Kirby license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please activate it there instead. If {host} is the domain you want to use your license for, please continue.",
 	"license.buy": "Köp en licens",
-	"license.register": "Registrera",
+	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
+	"license.code.label": "Ange din licenskod",
 	"license.manage": "Hantera dina licenser",
-	"license.register.help": "Du fick din licenskod via e-post efter inköpet. Kopiera och klistra in den för att registrera licensen.",
-	"license.register.label": "Ange din licenskod",
-	"license.register.domain": "Din licens kommer att bli registrerad för <strong>{host}</strong>.",
-	"license.register.local": "Du är på väg att registrera din licens för din lokala domän {host}. Om den här webbplatsen kommer att distribueras till en offentlig domän, registrera den där istället. Om {host} är domänen du vill licensiera Kirby till, fortsätt.",
-	"license.register.success": "Tack för att du stödjer Kirby",
-	"license.unregistered": "Detta är en oregistrerad demo av Kirby",
+	"license.ready": "Ready to launch your site?",
+	"license.success": "Tack för att du stödjer Kirby",
 	"license.unregistered.label": "Oregistrerad",
 
 	"link": "L\u00e4nk",
@@ -434,7 +440,9 @@
 	"login.code.label.login": "Inloggningskod",
 	"login.code.label.password-reset": "Kod för återställning av lösenord",
 	"login.code.placeholder.email": "000 000",
+	"login.code.placeholder.totp": "000000",
 	"login.code.text.email": "Om din e-postadress är registrerad skickades den begärda koden via e-post.",
+	"login.code.text.totp": "Please enter the one‑time code from your authenticator app.",
 	"login.email.login.body": "Hej {user.nameOrEmail}.\n\nDu begärde nyligen en inloggningskod till panelen för {site}.\nFöljande kod är giltig i {timeout} minuter:\n\n{code}\n\nOm du inte har begärt någon inloggningskod, ignorera detta e-postmeddelande eller kontakta din administratör om du har frågor.\nAv säkerhetsskäl, vidarebefordra INTE detta e-postmeddelande.",
 	"login.email.login.subject": "Din inloggningskod",
 	"login.email.password-reset.body": "Hej {user.nameOrEmail}.\n\nDu begärde nyligen en kod för återställning av ditt lösenord till panelen för {site}.\nFöljande kod är giltig i {timeout} minuter:\n\n{code}\n\nOm du inte har begärt en återställning av ditt lösenord, ignorera detta e-postmeddelande eller kontakta din administratör om du har frågor.\nAv säkerhetsskäl, vidarebefordra INTE detta e-postmeddelande.",
@@ -445,6 +453,20 @@
 	"login.toggleText.code.email-password": "Logga in med lösenord",
 	"login.toggleText.password-reset.email": "Glömt ditt lösenord?",
 	"login.toggleText.password-reset.email-password": "← Tillbaka till inloggning",
+	"login.totp.enable.option": "Set up one‑time codes",
+	"login.totp.enable.intro": "Authenticator apps can generate one‑time codes that are used as a second factor when signing into your account.",
+	"login.totp.enable.qr.label": "1. Scan this QR code",
+	"login.totp.enable.qr.help": "Unable to scan? Add the setup key <code>{secret}</code> manually to your authenticator app.",
+	"login.totp.enable.confirm.headline": "2. Confirm with generated code",
+	"login.totp.enable.confirm.text": "Your app generates a new one‑time code every 30 seconds. Enter the current code to complete the setup:",
+	"login.totp.enable.confirm.label": "Current code",
+	"login.totp.enable.confirm.help": "After this setup, we will ask you for a one‑time code every time you log in.",
+	"login.totp.enable.success": "Activated one‑time codes",
+	"login.totp.disable.option": "Disable one‑time codes",
+	"login.totp.disable.label": "Enter your password to disable one‑time codes",
+	"login.totp.disable.help": "In the future, a different second factor like a login code sent via email will be requested when you log in. You can always set up one‑time codes again later.",
+	"login.totp.disable.admin": "<p>This will disable one‑time codes for <strong>{user}</strong>.</p><p>In the future, a different second factor like a login code sent via email will be requested when they log in. {user} can set up one‑time codes again after their next login.</p>",
+	"login.totp.disable.success": "Disabled one‑time codes",
 
 	"logout": "Logga ut",
 
@@ -481,6 +503,7 @@
 	"option": "Alternativ",
 	"options": "Alternativ",
 	"options.none": "Inga alternativ",
+	"options.all": "Show all {count} options",
 
 	"orientation": "Orientering",
 	"orientation.landscape": "Liggande",
@@ -550,7 +573,7 @@
 	"save": "Spara",
 	"search": "Sök",
 	"search.min": "Ange {min} tecken för att söka",
-	"search.all": "Visa alla",
+	"search.all": "Show all {count} results",
 	"search.results.none": "Inga träffar",
 
 	"section.invalid": "Sektionen är ogiltig",
@@ -572,6 +595,7 @@
 	"system.issues.content": "Mappen content verkar vara exponerad",
 	"system.issues.eol.kirby": "Din installerade Kirby-version har nått slutet av sin livscykel och kommer inte att få fler säkerhetsuppdateringar",
 	"system.issues.eol.plugin": "Den installerade versionen av tillägget { plugin } har nått slutet på sin livscykel och kommer inte att få fler säkerhetsuppdateringar.",
+	"system.issues.eol.php": "Your installed PHP release { release } has reached end-of-life and will not receive further security updates",
 	"system.issues.debug": "Felsökningsläget måste vara avstängt i produktion",
 	"system.issues.git": "Mappen .git verkar vara exponerad",
 	"system.issues.https": "Vi rekommenderar HTTPS för alla dina webbplatser",

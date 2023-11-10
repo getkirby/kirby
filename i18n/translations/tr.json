@@ -3,6 +3,7 @@
 	"account.delete": "Hesabınızı silin",
 	"account.delete.confirm": "Hesabınızı gerçekten silmek istiyor musunuz? Oturumunuz hemen sonlandırılacaktır. Hesabınız daha sonra geri alınamaz.",
 
+	"activate": "Activate",
 	"add": "Ekle",
 	"alpha": "Alfa",
 	"author": "Yazar",
@@ -47,6 +48,7 @@
 	"dialog.users.empty": "Seçilecek kullanıcı yok",
 
 	"dimensions": "Boyutlar",
+	"disable": "Disable",
 	"disabled": "Devredışı",
 	"discard": "Vazge\u00e7",
 
@@ -133,6 +135,9 @@
 	"error.license.format": "Lütfen geçerli bir lisans anahtarı girin",
 	"error.license.email": "Lütfen geçerli bir e-posta adresi girin",
 	"error.license.verification": "Lisans doğrulanamadı",
+
+	"error.login.totp.confirm.invalid": "Geçersiz kod",
+	"error.login.totp.confirm.missing": "Please enter the current code",
 
 	"error.object.validation": "\"{label}\" alanında bir hata var:\n{message}",
 
@@ -407,15 +412,16 @@
 	"languages.secondary.empty": "Henüz ikincil bir dil yok",
 
 	"license": "Lisans",
+	"license.activate": "Activate it now",
+	"license.activate.label": "Please activate your license",
+	"license.activate.domain": "Your license will be activated for <strong>{host}</strong>.",
+	"license.activate.local": "You are about to activate your Kirby license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please activate it there instead. If {host} is the domain you want to use your license for, please continue.",
 	"license.buy": "Bir lisans satın al",
-	"license.register": "Kayıt Ol",
+	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
+	"license.code.label": "Lütfen lisans kodunu giriniz",
 	"license.manage": "Lisanslarınızı yönetin",
-	"license.register.help": "Satın alma işleminden sonra e-posta yoluyla lisans kodunuzu aldınız. Lütfen kayıt olmak için kodu kopyalayıp yapıştırın.",
-	"license.register.label": "Lütfen lisans kodunu giriniz",
-	"license.register.domain": "Lisansınız <strong>{host}</strong> için kaydedilecek.",
-	"license.register.local": "Lisansınızı yerel alan adınız <strong>{host}</strong> için kaydetmek üzeresiniz. Bu site genel bir etki alanına dağıtılacaksa, lütfen bunun yerine lisansı orada kaydedin. Kirby'yi lisanslamak istediğiniz alan adı {host} ise lütfen devam edin.",
-	"license.register.success": "Kirby'yi desteklediğiniz için teşekkürler",
-	"license.unregistered": "Bu Kirby'nin kayıtsız bir demosu",
+	"license.ready": "Ready to launch your site?",
+	"license.success": "Kirby'yi desteklediğiniz için teşekkürler",
 	"license.unregistered.label": "Kayıtsız",
 
 	"link": "Ba\u011flant\u0131",
@@ -434,7 +440,9 @@
 	"login.code.label.login": "Giriş kodu",
 	"login.code.label.password-reset": "Şifre sıfırlama kodu",
 	"login.code.placeholder.email": "000 000",
+	"login.code.placeholder.totp": "000000",
 	"login.code.text.email": "E-posta adresiniz kayıtlıysa, istenen kod e-posta yoluyla gönderilmiştir.",
+	"login.code.text.totp": "Please enter the one‑time code from your authenticator app.",
 	"login.email.login.body": "Merhaba {user.nameOrEmail},\n\nKısa süre önce {site} Panel'i için bir giriş kodu istediniz.\nAşağıdaki giriş kodu {timeout} dakika boyunca geçerli olacaktır:\n\n{code}\n\nBir giriş kodu istemediyseniz, lütfen bu e-postayı dikkate almayın veya sorularınız varsa yöneticinize başvurun.\nGüvenliğiniz için lütfen bu e-postayı İLETMEYİN.",
 	"login.email.login.subject": "Giriş kodunuz",
 	"login.email.password-reset.body": "Merhaba {user.nameOrEmail},\n\nKısa süre önce {site} Panel'i için bir şifre sıfırlama kodu istediniz.\nAşağıdaki şifre sıfırlama kodu {timeout} dakika boyunca geçerli olacaktır:\n\n{code}\n\nŞifre sıfırlama kodu istemediyseniz, lütfen bu e-postayı dikkate almayın veya sorularınız varsa yöneticinizle iletişime geçin.\nGüvenliğiniz için lütfen bu e-postayı İLETMEYİN.",
@@ -445,6 +453,20 @@
 	"login.toggleText.code.email-password": "Şifre ile giriş yapın",
 	"login.toggleText.password-reset.email": "Şifrenizi mi unuttunuz?",
 	"login.toggleText.password-reset.email-password": "← Girişe geri dön",
+	"login.totp.enable.option": "Set up one‑time codes",
+	"login.totp.enable.intro": "Authenticator apps can generate one‑time codes that are used as a second factor when signing into your account.",
+	"login.totp.enable.qr.label": "1. Scan this QR code",
+	"login.totp.enable.qr.help": "Unable to scan? Add the setup key <code>{secret}</code> manually to your authenticator app.",
+	"login.totp.enable.confirm.headline": "2. Confirm with generated code",
+	"login.totp.enable.confirm.text": "Your app generates a new one‑time code every 30 seconds. Enter the current code to complete the setup:",
+	"login.totp.enable.confirm.label": "Current code",
+	"login.totp.enable.confirm.help": "After this setup, we will ask you for a one‑time code every time you log in.",
+	"login.totp.enable.success": "Activated one‑time codes",
+	"login.totp.disable.option": "Disable one‑time codes",
+	"login.totp.disable.label": "Enter your password to disable one‑time codes",
+	"login.totp.disable.help": "In the future, a different second factor like a login code sent via email will be requested when you log in. You can always set up one‑time codes again later.",
+	"login.totp.disable.admin": "<p>This will disable one‑time codes for <strong>{user}</strong>.</p><p>In the future, a different second factor like a login code sent via email will be requested when they log in. {user} can set up one‑time codes again after their next login.</p>",
+	"login.totp.disable.success": "Disabled one‑time codes",
 
 	"logout": "Oturumu kapat",
 
@@ -481,6 +503,7 @@
 	"option": "Seçenek",
 	"options": "Seçenekler",
 	"options.none": "Seçenek yok",
+	"options.all": "Show all {count} options",
 
 	"orientation": "Oryantasyon",
 	"orientation.landscape": "Yatay",
@@ -550,7 +573,7 @@
 	"save": "Kaydet",
 	"search": "Arama",
 	"search.min": "Aramak için {min} karakter girin",
-	"search.all": "Tümünü göster",
+	"search.all": "Show all {count} results",
 	"search.results.none": "Sonuç yok",
 
 	"section.invalid": "Bu bölüm geçersizdir",
@@ -572,6 +595,7 @@
 	"system.issues.content": "İçerik klasörü açığa çıkmış görünüyor",
 	"system.issues.eol.kirby": "Yüklü Kirby sürümünüz kullanım ömrünün sonuna ulaştı ve daha fazla güvenlik güncellemesi almayacak",
 	"system.issues.eol.plugin": "{ plugin } eklentisinin yüklü sürümü kullanım ömrünün sonuna ulaştı ve daha fazla güvenlik güncellemesi almayacak",
+	"system.issues.eol.php": "Your installed PHP release { release } has reached end-of-life and will not receive further security updates",
 	"system.issues.debug": "Canlı modda hata ayıklama kapatılmalıdır",
 	"system.issues.git": ".git klasörü açığa çıkmış görünüyor",
 	"system.issues.https": "Tüm siteleriniz için HTTPS'yi öneriyoruz",

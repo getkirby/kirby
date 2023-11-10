@@ -3,6 +3,7 @@
 	"account.delete": "Deinen Account löschen",
 	"account.delete.confirm": "Willst du deinen Account wirklich löschen? Du wirst sofort danach abgemeldet. Dein Account kann nicht wieder hergestellt werden.",
 
+	"activate": "Aktivieren",
 	"add": "Hinzuf\u00fcgen",
 	"alpha": "Alpha",
 	"author": "Autor",
@@ -47,6 +48,7 @@
 	"dialog.users.empty": "Keine verfügbaren Accounts",
 
 	"dimensions": "Maße",
+	"disable": "Deaktivieren",
 	"disabled": "Gesperrt",
 	"discard": "Verwerfen",
 
@@ -133,6 +135,9 @@
 	"error.license.format": "Bitte gib einen gültigen Lizenzschlüssel ein",
 	"error.license.email": "Bitte gib eine gültige E-Mailadresse an",
 	"error.license.verification": "Die Lizenz konnte nicht verifiziert werden",
+
+	"error.login.totp.confirm.invalid": "Ungültiger Code",
+	"error.login.totp.confirm.missing": "Bitte gib den aktuellen Code ein",
 
 	"error.object.validation": "Fehler im \"{label}\" Feld:\n{message}",
 
@@ -407,15 +412,16 @@
 	"languages.secondary.empty": "Noch keine sekundären Sprachen",
 
 	"license": "Lizenz",
+	"license.activate": "Aktiviere Kirby jetzt",
+	"license.activate.label": "Bitte aktiviere deine Lizenz",
+	"license.activate.domain": "Deine Lizenz wird für die Domain <strong>{host}</strong> aktiviert.",
+	"license.activate.local": "Du bist dabei, deine Kirby Lizenz für die lokale Domain <strong>{host}</strong> zu aktivieren. Falls diese Seite später unter einer anderen Domain veröffentlicht wird, solltest du sie erst dort aktivieren. Falls {host} die Domain ist, die du für deine Lizenz nutzen möchtest, fahre bitte fort. ",
 	"license.buy": "Kaufe eine Lizenz",
-	"license.register": "Registrieren",
+	"license.code.help": "Du hast deinen Lizenz Code nach dem Kauf per Email bekommen. Bitte kopiere sie aus der Email und füge sie hier ein. ",
+	"license.code.label": "Bitte gib deinen Lizenzcode ein",
 	"license.manage": "Verwalte deine Lizenzen",
-	"license.register.help": "Den Lizenzcode findest du in der Bestätigungsmail zu deinem Kauf. Bitte kopiere und füge ihn ein, um Kirby zu registrieren.",
-	"license.register.label": "Bitte gib deinen Lizenzcode ein",
-	"license.register.domain": "Deine Lizenz wird unter der Domain <strong>{host}</strong> registriert",
-	"license.register.local": "Du bist dabei, deine Lizenz unter der lokalen Domain <strong>{host}</strong> zu registrieren. Wenn diese Seite  unter einer anderen Domain veröffentlicht werden soll, registriere die Lizenz statt dessen bitte dort. Wenn du {host} als Domain verwenden möchtest, fahre bitte fort. ",
-	"license.register.success": "Vielen Dank für deine Unterstützung",
-	"license.unregistered": "Dies ist eine unregistrierte Kirby-Demo",
+	"license.ready": "Bereit, deine Seite zu veröffentlichen?",
+	"license.success": "Vielen Dank für deine Unterstützung",
 	"license.unregistered.label": "Unregistriert",
 
 	"link": "Link",
@@ -434,7 +440,9 @@
 	"login.code.label.login": "Anmeldecode",
 	"login.code.label.password-reset": "Anmeldecode",
 	"login.code.placeholder.email": "000 000",
+	"login.code.placeholder.totp": "000000",
 	"login.code.text.email": "Wenn deine E-Mail-Adresse registriert ist, wurde der angeforderte Code per E-Mail versendet.",
+	"login.code.text.totp": "Bitte gib den Einmal-Code von deiner Authentifizierungs-App ein. ",
 	"login.email.login.body": "Hallo {user.nameOrEmail},\n\ndu hast gerade einen Anmeldecode für das Kirby Panel von {site} angefordert.\n\nDer folgende Anmeldecode ist für die nächsten {timeout} Minuten gültig:\n\n{code}\n\nWenn du keinen Anmeldecode angefordert hast, ignoriere bitte diese E-Mail oder kontaktiere bei Fragen deinen Administrator.\nBitte leite diese E-Mail aus Sicherheitsgründen NICHT weiter.",
 	"login.email.login.subject": "Dein Anmeldecode",
 	"login.email.password-reset.body": "Hallo {user.nameOrEmail},\n\ndu hast gerade einen Anmeldecode für das Kirby Panel von {site} angefordert.\n\nDer folgende Anmeldecode ist für die nächsten {timeout} Minuten gültig:\n\n{code}\n\nWenn du keinen Anmeldecode angefordert hast, ignoriere bitte diese E-Mail oder kontaktiere bei Fragen deinen Administrator.\nBitte leite diese E-Mail aus Sicherheitsgründen NICHT weiter.",
@@ -445,6 +453,20 @@
 	"login.toggleText.code.email-password": "Anmelden mit Passwort",
 	"login.toggleText.password-reset.email": "Passwort vergessen?",
 	"login.toggleText.password-reset.email-password": "← Zurück zur Anmeldung",
+	"login.totp.enable.option": "Einmal-Codes einrichten",
+	"login.totp.enable.intro": "Authentifizierungs-Apps können Einmal-Codes erstellen, die als zweiter Faktor für die Anmeldung dienen. ",
+	"login.totp.enable.qr.label": "1. Scanne diesen QR Code",
+	"login.totp.enable.qr.help": "Scannen funktioniert nicht? Gib den Setup-Schlüssel <code>{secret}</code> manuell in deiner Authentifizierungs-App ein. ",
+	"login.totp.enable.confirm.headline": "2. Bestätige den erstellten Code.",
+	"login.totp.enable.confirm.text": "Deine App erstellt alle 30 Sekunden einen neuen Einmal-Code. Gib den aktuellen Code ein, um das Setup abzuschliessen. ",
+	"login.totp.enable.confirm.label": "Aktueller Code",
+	"login.totp.enable.confirm.help": "Nach dem Setup werden wir dich bei jeder Anmeldung nach einem Einmal-Code fragen. ",
+	"login.totp.enable.success": "Aktivierte Einmal-Codes",
+	"login.totp.disable.option": "Einmal-Codes deaktivieren",
+	"login.totp.disable.label": "Gib dein Passwort ein, um die Einmal-Codes zu deaktivieren. ",
+	"login.totp.disable.help": "In Zukunft wird bei der Anmeldung ein anderer zweiter Faktor abgefragt. Z.B. ein Login-Code der per Email zugeschickt wird. Du kannst die Einmal-Codes jeder Zeit später wieder neu einrichten. ",
+	"login.totp.disable.admin": "<p>Einmal-Codes für <strong>{user}</strong> werden hiermit deaktiviert.</p> <p>In Zukunft wird für die Anmeldung ein anderer zweiter Faktor abgefragt. Z.B. ein Login-Code, der per Email zugeschickt wird. {user} kann nach der nächsten Anmeldung jeder Zeit wieder Einmal-Codes für den Account aktivieren.</p>",
+	"login.totp.disable.success": "Deaktivierte Einmal-Codes",
 
 	"logout": "Abmelden",
 
@@ -481,6 +503,7 @@
 	"option": "Option",
 	"options": "Optionen",
 	"options.none": "Keine Optionen",
+	"options.all": "Zeige alle {count} Optionen",
 
 	"orientation": "Ausrichtung",
 	"orientation.landscape": "Querformat",
@@ -550,7 +573,7 @@
 	"save": "Speichern",
 	"search": "Suchen",
 	"search.min": "Gib mindestens {min}  Zeichen ein, um zu suchen",
-	"search.all": "Alles zeigen",
+	"search.all": "Zeige alle {count} Ergebnisse",
 	"search.results.none": "Keine Ergebnisse",
 
 	"section.invalid": "Der Bereich ist ungültig",
@@ -572,6 +595,7 @@
 	"system.issues.content": "Der content Ordner scheint öffentlich zugänglich zu sein",
 	"system.issues.eol.kirby": "Deine Kirby Installation ist veraltet und erhält keine weiteren Sicherheitsupdates",
 	"system.issues.eol.plugin": "Deine Version des { plugin } Plugins ist veraltet und erhält keine weiteren Sicherheitsupdates",
+	"system.issues.eol.php": "Deine installierte PHP-Version { release } ist veraltet und erhält keinen Sicherheits-Updates mehr",
 	"system.issues.debug": "Debugging muss im öffentlichen Betrieb ausgeschaltet sein",
 	"system.issues.git": "Der .git Ordner scheint öffentlich zugänglich zu sein",
 	"system.issues.https": "Wir empfehlen HTTPS für alle deine Seiten",

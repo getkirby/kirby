@@ -3,6 +3,7 @@
 	"account.delete": "Eliminar cuenta",
 	"account.delete.confirm": "¿Realmente quieres eliminar tu cuenta? Tu sesión se cerrará inmediatamente. Tu cuenta no podrá ser recuperada. ",
 
+	"activate": "Activate",
 	"add": "Agregar",
 	"alpha": "Alpha",
 	"author": "Autor",
@@ -47,6 +48,7 @@
 	"dialog.users.empty": "No has seleccionado ningún usuario",
 
 	"dimensions": "Dimensiones",
+	"disable": "Disable",
 	"disabled": "Deshabilitado",
 	"discard": "Descartar",
 
@@ -133,6 +135,9 @@
 	"error.license.format": "Por favor introduce una llave de licencia válida",
 	"error.license.email": "Por favor ingresa un correo electrónico valido",
 	"error.license.verification": "La licencia no pude ser verificada",
+
+	"error.login.totp.confirm.invalid": "Código inválido",
+	"error.login.totp.confirm.missing": "Please enter the current code",
 
 	"error.object.validation": "Hay un error en el campo \"{label}\":\n{message}",
 
@@ -407,15 +412,16 @@
 	"languages.secondary.empty": "Todavía no hay idiomas secundarios",
 
 	"license": "Licencia",
+	"license.activate": "Activate it now",
+	"license.activate.label": "Please activate your license",
+	"license.activate.domain": "Your license will be activated for <strong>{host}</strong>.",
+	"license.activate.local": "You are about to activate your Kirby license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please activate it there instead. If {host} is the domain you want to use your license for, please continue.",
 	"license.buy": "Comprar una licencia",
-	"license.register": "Registrar",
+	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
+	"license.code.label": "Por favor, ingresa tu código de licencia",
 	"license.manage": "Gestiona tus licencias",
-	"license.register.help": "Recibió su código de licencia después de la compra por correo electrónico. Por favor copie y pegue para registrarse.",
-	"license.register.label": "Por favor, ingresa tu código de licencia",
-	"license.register.domain": "Tu licencia será registrada para <strong>{host}</strong>.",
-	"license.register.local": "Estás a punto de registrar tu licencia para el dominio local {host}. Si este sitio va a ser desplegado en un dominio público, por favor regístralo allí. Si {host} es el dominio en el que quiere registrar Kirby, por favor continúa.",
-	"license.register.success": "Gracias por apoyar a Kirby",
-	"license.unregistered": "Este es un demo no registrado de Kirby",
+	"license.ready": "Ready to launch your site?",
+	"license.success": "Gracias por apoyar a Kirby",
 	"license.unregistered.label": "No registrado",
 
 	"link": "Enlace",
@@ -434,7 +440,9 @@
 	"login.code.label.login": "Código de inicio de sesión",
 	"login.code.label.password-reset": "Código de restablecimiento de contraseña",
 	"login.code.placeholder.email": "000 000",
+	"login.code.placeholder.totp": "000000",
 	"login.code.text.email": "Si tu dirección de correo electrónico está registrada, el código solicitado fue enviado por correo electrónico.",
+	"login.code.text.totp": "Please enter the one‑time code from your authenticator app.",
 	"login.email.login.body": "Hola {user.nameOrEmail},\n\nHas pedido, recientemente, un código de restablecimiento de contraseña para el Panel del sitio {site}.\nEl siguiente código de restablecimiento de contraseña será válido por {timeout} minutos:\n\n{code}\n\nSi no pediste un código de restablecimiento de contraseña, por favor ignora este correo o contacta a tu administrador si tienes dudas.\nPor seguridad, por favor NO reenvíes este correo.",
 	"login.email.login.subject": "Tu código de inicio de sesión",
 	"login.email.password-reset.body": "Hola {user.nameOrEmail},\n\nHas pedido, recientemente, un código de restablecimiento de contraseña para el Panel del sitio {site}.\nEl siguiente código de restablecimiento de contraseña será válido por {timeout} minutos:\n\n{code}\n\nSi no pediste un código de restablecimiento de contraseña, por favor ignora este correo o contacta a tu administrador si tienes dudas.\nPor seguridad, por favor NO reenvíes este correo.",
@@ -445,6 +453,20 @@
 	"login.toggleText.code.email-password": "Iniciar sesión con contraseña",
 	"login.toggleText.password-reset.email": "¿Olvidaste tu contraseña?",
 	"login.toggleText.password-reset.email-password": "← Volver al inicio de sesión",
+	"login.totp.enable.option": "Set up one‑time codes",
+	"login.totp.enable.intro": "Authenticator apps can generate one‑time codes that are used as a second factor when signing into your account.",
+	"login.totp.enable.qr.label": "1. Scan this QR code",
+	"login.totp.enable.qr.help": "Unable to scan? Add the setup key <code>{secret}</code> manually to your authenticator app.",
+	"login.totp.enable.confirm.headline": "2. Confirm with generated code",
+	"login.totp.enable.confirm.text": "Your app generates a new one‑time code every 30 seconds. Enter the current code to complete the setup:",
+	"login.totp.enable.confirm.label": "Current code",
+	"login.totp.enable.confirm.help": "After this setup, we will ask you for a one‑time code every time you log in.",
+	"login.totp.enable.success": "Activated one‑time codes",
+	"login.totp.disable.option": "Disable one‑time codes",
+	"login.totp.disable.label": "Enter your password to disable one‑time codes",
+	"login.totp.disable.help": "In the future, a different second factor like a login code sent via email will be requested when you log in. You can always set up one‑time codes again later.",
+	"login.totp.disable.admin": "<p>This will disable one‑time codes for <strong>{user}</strong>.</p><p>In the future, a different second factor like a login code sent via email will be requested when they log in. {user} can set up one‑time codes again after their next login.</p>",
+	"login.totp.disable.success": "Disabled one‑time codes",
 
 	"logout": "Cerrar sesión",
 
@@ -481,6 +503,7 @@
 	"option": "Option",
 	"options": "Opciones",
 	"options.none": "Sin opciones",
+	"options.all": "Show all {count} options",
 
 	"orientation": "Orientación",
 	"orientation.landscape": "Paisaje",
@@ -550,7 +573,7 @@
 	"save": "Guardar",
 	"search": "Buscar",
 	"search.min": "Introduce {min} caracteres para buscar",
-	"search.all": "Mostrar todo",
+	"search.all": "Show all {count} results",
 	"search.results.none": "Sin resultados",
 
 	"section.invalid": "The section is invalid",
@@ -572,6 +595,7 @@
 	"system.issues.content": "La carpeta content parece estar expuesta",
 	"system.issues.eol.kirby": "La versión de Kirby que tienes instalada ha llegado al final de su vida útil y no recibirá más actualizaciones de seguridad.",
 	"system.issues.eol.plugin": "Tu versión instalada del plugin { plugin } ha llegado al final de su vida útil y no recibirá más actualizaciones de seguridad.",
+	"system.issues.eol.php": "Your installed PHP release { release } has reached end-of-life and will not receive further security updates",
 	"system.issues.debug": "La depuración debe estar desactivada en producción",
 	"system.issues.git": "La carpeta .git parece estar expuesta",
 	"system.issues.https": "Recomendamos HTTPS para todos tus sitios web",

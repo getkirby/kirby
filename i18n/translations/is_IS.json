@@ -3,6 +3,7 @@
 	"account.delete": "Eyða notandareikning þínum",
 	"account.delete.confirm": "Ertu alveg viss um að þú viljir endanlega eyða reikningnum þínum? Þú munt verða útskráð/ur án tafar. Ómögulegt verður að endurheimta reikninginn þinn.",
 
+	"activate": "Activate",
 	"add": "Bæta við",
 	"alpha": "Gagnsæi",
 	"author": "Höfundur",
@@ -47,6 +48,7 @@
 	"dialog.users.empty": "Engir notendur til að velja úr",
 
 	"dimensions": "Rýmd",
+	"disable": "Disable",
 	"disabled": "Óvirkt",
 	"discard": "Hunsa",
 
@@ -133,6 +135,9 @@
 	"error.license.format": "Gildur leyfiskóði hér",
 	"error.license.email": "Almennilegt netfang hér",
 	"error.license.verification": "Ekki heppnaðist að staðfesta leyfið",
+
+	"error.login.totp.confirm.invalid": "Ógildur kóði",
+	"error.login.totp.confirm.missing": "Please enter the current code",
 
 	"error.object.validation": "Það er villa í \"{label}\" sviðinu:\n{message}",
 
@@ -407,15 +412,16 @@
 	"languages.secondary.empty": "Það eru engin auka tungumál skilgreind enn",
 
 	"license": "Leyfi",
+	"license.activate": "Activate it now",
+	"license.activate.label": "Please activate your license",
+	"license.activate.domain": "Your license will be activated for <strong>{host}</strong>.",
+	"license.activate.local": "You are about to activate your Kirby license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please activate it there instead. If {host} is the domain you want to use your license for, please continue.",
 	"license.buy": "Kaupa leyfi",
-	"license.register": "Skr\u00E1 Kirby",
+	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
+	"license.code.label": "Vinsamlegast settu inn leyfiskóðan",
 	"license.manage": "Sýslaðu með leyfin þín",
-	"license.register.help": "Þú fékkst sendan tölvupóst með leyfiskóðanum þegar þú keyptir leyfi. Vinsamlegast afritaðu hann og settu hann hingað til að skrá þig.",
-	"license.register.label": "Vinsamlegast settu inn leyfiskóðan",
-	"license.register.domain": "Leyfið þitt verður skráð á  <strong>{host}</strong>.",
-	"license.register.local": "Nú ertu að fara skrá leyfið þitt á staðbundna lénið (e. local domain) <strong>{host}</strong>. Ef þetta vefsvæði verður fært út á vefinn, vinsamlegast skráðu það frekar þar þegar það hefur verið gefið þar út. Ef {host] er raunverulega lénið sem þú vilt skrá leyfir þitt á, endilega haltu þínu striki.",
-	"license.register.success": "Þakka þér fyrir að velja Kirby",
-	"license.unregistered": "Þetta er óskráð prufueintak af Kirby",
+	"license.ready": "Ready to launch your site?",
+	"license.success": "Þakka þér fyrir að velja Kirby",
 	"license.unregistered.label": "Óskráð",
 
 	"link": "Tengill",
@@ -434,7 +440,9 @@
 	"login.code.label.login": "Innskráningarkóði",
 	"login.code.label.password-reset": "Kóði fyrir endurstillingu lykilorðs",
 	"login.code.placeholder.email": "000 000",
+	"login.code.placeholder.totp": "000000",
 	"login.code.text.email": "Ef netfangið þitt er skráð þá bíður þín nýr tölvupóstur.",
+	"login.code.text.totp": "Please enter the one‑time code from your authenticator app.",
 	"login.email.login.body": "Já halló {user.nameOrEmail},\n\nNýlega baðstu um innskráningarkóða fyrir bakendan á {site}.\nEftirfarandi kóði er virkur í  {timeout} mínútur:\n\n{code}\n\nEf þú óskaðir ekki eftir þessu þá hunsaðu þennan tölvupóst eða talaðu við vefstjóran ef þú vilt fræðast nánar.\nAf öryggisástæðum vinsamlegast áframsendu þennan tölvupóst ALLS EKKI.",
 	"login.email.login.subject": "Innskráningarkóðinn þinn",
 	"login.email.password-reset.body": "Nei halló {user.nameOrEmail},\n\nNýverið baðstu um að lykilorði þínu væri endurstillt fyrir bakendan á {site}. \nEftirfarandi kóði er virkur í  {timeout} mínútur:\n\n{code}\n\nEf þú óskaðir ekki eftir þessu þá hunsaðu þennan tölvupóst eða talaðu við vefstjóran ef þú vilt fræðast nánar.\nAf öryggisástæðum vinsamlegast áframsendu þennan tölvupóst ALLS EKKI.",
@@ -445,6 +453,20 @@
 	"login.toggleText.code.email-password": "Innskrá með lykilorði",
 	"login.toggleText.password-reset.email": "Mannstu ekki lykilorðið?",
 	"login.toggleText.password-reset.email-password": "← Aftur í innskráningu",
+	"login.totp.enable.option": "Set up one‑time codes",
+	"login.totp.enable.intro": "Authenticator apps can generate one‑time codes that are used as a second factor when signing into your account.",
+	"login.totp.enable.qr.label": "1. Scan this QR code",
+	"login.totp.enable.qr.help": "Unable to scan? Add the setup key <code>{secret}</code> manually to your authenticator app.",
+	"login.totp.enable.confirm.headline": "2. Confirm with generated code",
+	"login.totp.enable.confirm.text": "Your app generates a new one‑time code every 30 seconds. Enter the current code to complete the setup:",
+	"login.totp.enable.confirm.label": "Current code",
+	"login.totp.enable.confirm.help": "After this setup, we will ask you for a one‑time code every time you log in.",
+	"login.totp.enable.success": "Activated one‑time codes",
+	"login.totp.disable.option": "Disable one‑time codes",
+	"login.totp.disable.label": "Enter your password to disable one‑time codes",
+	"login.totp.disable.help": "In the future, a different second factor like a login code sent via email will be requested when you log in. You can always set up one‑time codes again later.",
+	"login.totp.disable.admin": "<p>This will disable one‑time codes for <strong>{user}</strong>.</p><p>In the future, a different second factor like a login code sent via email will be requested when they log in. {user} can set up one‑time codes again after their next login.</p>",
+	"login.totp.disable.success": "Disabled one‑time codes",
 
 	"logout": "Útskrá",
 
@@ -481,6 +503,7 @@
 	"option": "Kostur",
 	"options": "Valmöguleikar",
 	"options.none": "Engir valmöguleikar",
+	"options.all": "Show all {count} options",
 
 	"orientation": "Snúningur",
 	"orientation.landscape": "Langsnið",
@@ -550,7 +573,7 @@
 	"save": "Vista",
 	"search": "Leita",
 	"search.min": "Lágmark {min} stafir til að leita",
-	"search.all": "Sýna allt",
+	"search.all": "Show all {count} results",
 	"search.results.none": "Engar niðurstöður",
 
 	"section.invalid": "Þetta svæði er bara ógillt sem stendur.",
@@ -572,6 +595,7 @@
 	"system.issues.content": "Efnismappan virðist vera berskjölduð",
 	"system.issues.eol.kirby": "Uppsett Kirby eintak þitt hefur runnið sitt skeið á enda og mun ekki verða uppfært framar",
 	"system.issues.eol.plugin": "Uppsett eintak þitt  af viðbótinni  { plugin } hefur runnið sitt skeið á enda og mun ekki verða uppfærð framar",
+	"system.issues.eol.php": "Your installed PHP release { release } has reached end-of-life and will not receive further security updates",
 	"system.issues.debug": "Aflúsun ætti alltaf að vera óvirk í útgefnum vef",
 	"system.issues.git": ".git mappan virðist vera berskjölduð",
 	"system.issues.https": "Við mælum harðlega með því að þú notir HTTPS fyrir öll þín vefsvæði",

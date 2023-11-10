@@ -3,6 +3,7 @@
 	"account.delete": "Panaikinti savo paskyrą",
 	"account.delete.confirm": "Ar tikrai norite panaikinti savo paskyrą? Jūs iš karto atsijungsite. Paskyros bus neįmanoma atstatyti.",
 
+	"activate": "Activate",
 	"add": "Pridėti",
 	"alpha": "Alpha",
 	"author": "Autorius",
@@ -47,6 +48,7 @@
 	"dialog.users.empty": "Nėra vartotojų pasirinkimui",
 
 	"dimensions": "Išmatavimai",
+	"disable": "Disable",
 	"disabled": "Išjungta",
 	"discard": "Atšaukti",
 
@@ -133,6 +135,9 @@
 	"error.license.format": "Prašome įrašyti teisingą licenzijos kodą",
 	"error.license.email": "Prašome įrašyti teisingą el. pašto adresą",
 	"error.license.verification": "Nepavyko patikrinti licenzijos",
+
+	"error.login.totp.confirm.invalid": "Neteisinas kodas",
+	"error.login.totp.confirm.missing": "Please enter the current code",
 
 	"error.object.validation": "There’s an error in the \"{label}\" field:\n{message}",
 
@@ -407,15 +412,16 @@
 	"languages.secondary.empty": "Dar nėra papildomų kalbų",
 
 	"license": "Licenzija",
+	"license.activate": "Activate it now",
+	"license.activate.label": "Please activate your license",
+	"license.activate.domain": "Your license will be activated for <strong>{host}</strong>.",
+	"license.activate.local": "You are about to activate your Kirby license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please activate it there instead. If {host} is the domain you want to use your license for, please continue.",
 	"license.buy": "Pirkti licenziją",
-	"license.register": "Registruoti",
+	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
+	"license.code.label": "Prašome įrašyti jūsų licenzijos kodą",
 	"license.manage": "Valdyti savo licencijas",
-	"license.register.help": "Licenzijos kodą gavote el. paštu po apmokėjimo. Prašome įterpti čia, kad sistema būtų užregistruota.",
-	"license.register.label": "Prašome įrašyti jūsų licenzijos kodą",
-	"license.register.domain": "Your license will be registered to <strong>{host}</strong>.",
-	"license.register.local": "You are about to register your license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please register it there instead. If {host} is the domain you want to license Kirby to, please continue.",
-	"license.register.success": "Ačiū, kad palaikote Kirby",
-	"license.unregistered": "Tai neregistruota Kirby demo versija",
+	"license.ready": "Ready to launch your site?",
+	"license.success": "Ačiū, kad palaikote Kirby",
 	"license.unregistered.label": "Neregistruota",
 
 	"link": "Nuoroda",
@@ -434,7 +440,9 @@
 	"login.code.label.login": "Prisijungimo kodas",
 	"login.code.label.password-reset": "Slaptažodžio atstatymo kodas",
 	"login.code.placeholder.email": "000 000",
+	"login.code.placeholder.totp": "000000",
 	"login.code.text.email": "Jei jūsų el. paštas yra užregistruotas, užklaistas kodas buvo išsiųstas el. paštu.",
+	"login.code.text.totp": "Please enter the one‑time code from your authenticator app.",
 	"login.email.login.body": "Sveiki, {user.nameOrEmail},\n\nNeseniai užklausėte prisijungimo kodo svetainėje {site}.\nŠis kodas galios {timeout} min.:\n\n{code}\n\nJei neprašėte šio kodo, tiesiog ignoruokite, arba susisiekite su administratoriumi.\nDėl saugumo, prašome NEPERSIŲSTI šio laiško.",
 	"login.email.login.subject": "Jūsų prisijungimo kodas",
 	"login.email.password-reset.body": "Sveiki, {user.nameOrEmail},\n\nNeseniai užklausėte naujo slaptažodžio kūrimo kodo svetainėje {site}.\nŠis kodas galios {timeout} min.:\n\n{code}\n\nJei neprašėte šio kodo, tiesiog ignoruokite, arba susisiekite su administratoriumi.\nDėl saugumo, prašome NEPERSIŲSTI šio laiško",
@@ -445,6 +453,20 @@
 	"login.toggleText.code.email-password": "Prisijungti su slaptažodžiu",
 	"login.toggleText.password-reset.email": "Pamiršote slaptažodį?",
 	"login.toggleText.password-reset.email-password": "← Atgal į prisijungimą",
+	"login.totp.enable.option": "Set up one‑time codes",
+	"login.totp.enable.intro": "Authenticator apps can generate one‑time codes that are used as a second factor when signing into your account.",
+	"login.totp.enable.qr.label": "1. Scan this QR code",
+	"login.totp.enable.qr.help": "Unable to scan? Add the setup key <code>{secret}</code> manually to your authenticator app.",
+	"login.totp.enable.confirm.headline": "2. Confirm with generated code",
+	"login.totp.enable.confirm.text": "Your app generates a new one‑time code every 30 seconds. Enter the current code to complete the setup:",
+	"login.totp.enable.confirm.label": "Current code",
+	"login.totp.enable.confirm.help": "After this setup, we will ask you for a one‑time code every time you log in.",
+	"login.totp.enable.success": "Activated one‑time codes",
+	"login.totp.disable.option": "Disable one‑time codes",
+	"login.totp.disable.label": "Enter your password to disable one‑time codes",
+	"login.totp.disable.help": "In the future, a different second factor like a login code sent via email will be requested when you log in. You can always set up one‑time codes again later.",
+	"login.totp.disable.admin": "<p>This will disable one‑time codes for <strong>{user}</strong>.</p><p>In the future, a different second factor like a login code sent via email will be requested when they log in. {user} can set up one‑time codes again after their next login.</p>",
+	"login.totp.disable.success": "Disabled one‑time codes",
 
 	"logout": "Atsijungti",
 
@@ -481,6 +503,7 @@
 	"option": "Option",
 	"options": "Pasirinkimai",
 	"options.none": "Nėra pasirinkimų",
+	"options.all": "Show all {count} options",
 
 	"orientation": "Orientacija",
 	"orientation.landscape": "Horizontali",
@@ -550,7 +573,7 @@
 	"save": "Išsaugoti",
 	"search": "Ieškoti",
 	"search.min": "Minimalus simbolių kiekis paieškai: {min}",
-	"search.all": "Rodyti viską",
+	"search.all": "Show all {count} results",
 	"search.results.none": "Nėra rezultatų",
 
 	"section.invalid": "The section is invalid",
@@ -572,6 +595,7 @@
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
+	"system.issues.eol.php": "Your installed PHP release { release } has reached end-of-life and will not receive further security updates",
 	"system.issues.debug": "Debugging must be turned off in production",
 	"system.issues.git": "The .git folder seems to be exposed",
 	"system.issues.https": "Rekomenduojame HTTPS visoms svetainėms",
