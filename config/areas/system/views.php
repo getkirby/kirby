@@ -14,11 +14,11 @@ return [
 
 			$environment = [
 				[
-					'label'  => $license->label(),
+					'label'  => $license->status()->label(),
 					'value'  => $license->type(),
-					'theme'  => $license->theme(),
-					'icon'   => $license->icon(),
-					'dialog' => $license->dialog()
+					'theme'  => $license->status()->theme(),
+					'icon'   => $license->status()->icon(),
+					'dialog' => $license->status()->dialog()
 				],
 				[
 					'label' => $updateStatus?->label() ?? I18n::translate('version'),
