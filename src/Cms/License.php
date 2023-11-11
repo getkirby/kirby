@@ -19,18 +19,13 @@ use Throwable;
  */
 class License
 {
-	public const ACTIVE   = 'active';
-	public const EXPIRED  = 'expired';
-	public const INVALID  = 'invalid';
-	public const OUTDATED = 'outdated';
-
 	protected const HISTORY = [
 		'3' => '2019-02-05',
 		'4' => '2023-12-01'
 	];
 
 	// cache
-	protected string|null $status = null;
+	protected LicenseStatus|null $status = null;
 
 	public function __construct(
 		protected string|null $activated = null,
@@ -64,17 +59,6 @@ class License
 	}
 
 	/**
-	 * Returns the dialog according to the status
-	 */
-	public function dialog(): string
-	{
-		return match ($this->status()) {
-			'invalid' => 'registration',
-			default   => 'license'
-		};
-	}
-
-	/**
 	 * Returns the activated domain if available
 	 */
 	public function domain(): string|null
@@ -88,24 +72,6 @@ class License
 	public function email(): string|null
 	{
 		return $this->email;
-	}
-
-	/**
-	 * Returns the icon according to the status
-	 */
-	public function icon(): string
-	{
-		return match ($this->status()) {
-			static::INVALID  => 'key',
-			static::EXPIRED  => 'alert',
-			static::OUTDATED => 'clock',
-			static::ACTIVE   => 'check',
-		};
-	}
-
-	public function info(): string
-	{
-		return I18n::translate('license.status.' . $this->status() . '.info');
 	}
 
 	/**
@@ -140,19 +106,19 @@ class License
 			return true;
 		}
 
-		// get the major version number
-		$versionNumber = Str::before(App::instance()->version(), '.');
-		$versionDate   = strtotime(static::HISTORY[$versionNumber] ?? '');
+		// get release date of current major version
+		$major   = Str::before(App::instance()->version(), '.');
+		$release = strtotime(static::HISTORY[$major] ?? '');
 
 		// if there's no matching version in the history
 		// rather throw an exception to avoid further issues
-		if ($versionDate === false) {
+		if ($release === false) {
 			throw new InvalidArgumentException('The version for your license could not be found');
 		}
 
 		// If the renewal date is older than the version launch
 		// date, the license is expired
-		return $this->renewal() < $versionDate;
+		return $this->renewal() < $release;
 	}
 
 	/**
@@ -242,11 +208,6 @@ class License
 			$this->isComplete() === true &&
 			$this->isOnCorrectDomain() === true &&
 			$this->isSigned() === true;
-	}
-
-	public function label(): string
-	{
-		return I18n::translate('license.status.' . $this->status() . '.label');
 	}
 
 	/**
@@ -353,79 +314,26 @@ class License
      * This is used to build the proper UI elements
      * for the license activation
 	 */
-	public function status(): string
+	public function status(): LicenseStatus
 	{
 		return $this->status ??= match (true) {
-			$this->isValid() === false
-				=> static::INVALID,
-			$this->isExpired() === true
-				=> static::EXPIRED,
-			$this->isOutdated() === true
-				=> static::OUTDATED,
-			default
-				=> static::ACTIVE
-		};
-
-		// $status = match (true) {
-		// 	$this->isExpired() => [
-		// 		'icon'    => 'alert',
-		// 		'label'   => I18n::translate('license.status.expired.short'),
-		// 		'message' => I18n::translate('license.status.expired'),
-		// 		'renew'   => true,
-		// 		'theme'   => 'negative'
-		// 	],
-		// 	$this->isOutdated() => [
-		// 		'icon'    => 'clock',
-		// 		'label'   => I18n::translate('license.status.outdated.short'),
-		// 		'message' => I18n::translate('license.status.outdated'),
-		// 		'renew'   => true,
-		// 		'theme'   => 'notice'
-		// 	],
-		// 	default => [
-		// 		'icon'    => 'check',
-		// 		'label'   => I18n::translate('license.status.valid.short'),
-		// 		'message' => I18n::translate('license.status.valid'),
-		// 		'renew'   => false,
-		// 		'theme'   => 'positive',
-		// 	]
-		// };
-
-		// $status['date'] = $this->renewal('Y-m-d');
-
-		// return $status;
-	}
-
-	/**
-	 * Returns the theme according to the status
-	 */
-	public function theme(): string
-	{
-		return match ($this->status()) {
-			static::INVALID  => 'negative',
-			static::EXPIRED  => 'negative',
-			static::OUTDATED => 'notice',
-			static::ACTIVE   => 'positive',
+			$this->isValid()    === false => LicenseStatus::Invalid,
+			$this->isExpired()  === true  => LicenseStatus::Expired,
+			$this->isOutdated() === true  => LicenseStatus::Outdated,
+			default                       => LicenseStatus::Active
 		};
 	}
 
 	/**
 	 * Detects the license type if the license key is available
 	 */
-	public function type(): string|null
+	public function type(): string
 	{
 		return match (true) {
-			$this->code === null
-				=> I18n::translate('license.unregistered.label'),
-
-			Str::startsWith($this->code, 'K3-')
-				=> 'Kirby 3',
-
-			Str::startsWith($this->code, 'K-ENT')
-				=> 'Kirby Enterprise',
-
-			Str::startsWith($this->code, 'K-BAS')
-				=> 'Kirby Basic',
+			Str::startsWith($this->code, 'K3-')   => 'Kirby 3',
+			Str::startsWith($this->code, 'K-ENT') => 'Kirby Enterprise',
+			Str::startsWith($this->code, 'K-BAS') => 'Kirby Basic',
+			default                               => I18n::translate('license.unregistered.label')
 		};
 	}
-
 }
