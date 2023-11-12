@@ -21,6 +21,12 @@
 					title="Vue code"
 					@click="mode = 'inspect'"
 				/>
+				<k-button
+					icon="image"
+					size="xs"
+					title="Take screenshot"
+					@click="screenshot"
+				/>
 			</k-button-group>
 		</header>
 
@@ -58,20 +64,15 @@ export default {
 	},
 	methods: {
 		async screenshot() {
-			this.screen = this.$panel.url("/languages");
-		},
-		async takeScreenshot() {
 			const { toPng } = await import("https://cdn.skypack.dev/html-to-image");
 
-			await new Promise((resolve) => setTimeout(resolve, 500));
-
 			const image = await toPng(
-				this.$refs.iframe.contentDocument.querySelector("body")
+				this.$el.querySelector(".k-lab-example-canvas")
 			);
 
 			let link = document.createElement("a");
 
-			link.download = "test.png";
+			link.download = this.$panel.view.props.title + ".png";
 			link.href = image;
 			link.click();
 		}
