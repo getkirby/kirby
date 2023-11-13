@@ -16,5 +16,21 @@
 				</k-button>
 			</k-button-group>
 		</k-lab-example>
+		<k-lab-example label="Renew">
+			<k-activation ref="activation" :renew="true" />
+			<br />
+			<k-button-group>
+				<k-button
+					v-if="$panel.activation.isOpen"
+					variant="filled"
+					@click="$panel.activation.close()"
+				>
+					Close activation
+				</k-button>
+				<k-button v-else variant="filled" @click="$panel.activation.open()">
+					Open activation
+				</k-button>
+			</k-button-group>
+		</k-lab-example>
 	</k-lab-examples>
 </template>

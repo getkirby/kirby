@@ -39,7 +39,7 @@
 					variant="filled"
 					@click="$dialog('registration')"
 				/>
-				<k-activation :upgrade="true" />
+				<k-activation :renew="$panel.license === 'outdated'" />
 			</menu>
 		</div>
 

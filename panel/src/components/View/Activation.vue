@@ -1,11 +1,11 @@
 <template>
 	<div v-if="$panel.activation.isOpen" class="k-activation">
-		<p v-if="upgrade === true">
-			<strong>Ready to renew your license?</strong>
+		<p v-if="renew === true">
+			<strong>{{ $t("license.ready.renew") }}</strong>
 			<button type="button" @click="$dialog('license')">Renew it now!</button>
 		</p>
 		<p v-else>
-			<strong>{{ $t("license.ready") }}</strong>
+			<strong>{{ $t("license.ready.launch") }}</strong>
 			<a href="https://getkirby.com/buy" target="_blank">{{
 				$t("license.buy")
 			}}</a>
@@ -25,7 +25,7 @@
 <script>
 export default {
 	props: {
-		upgrade: Boolean
+		renew: Boolean
 	}
 };
 </script>
@@ -38,6 +38,7 @@ export default {
 	background: var(--dropdown-color-bg);
 	border-radius: var(--dropdown-rounded);
 	box-shadow: var(--dropdown-shadow);
+	justify-content: space-between;
 }
 .k-activation p {
 	padding-inline-start: var(--spacing-3);
