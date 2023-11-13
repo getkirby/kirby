@@ -38,7 +38,7 @@
 						<th>{{ $t("license.domain") }}</th>
 						<td>{{ license.domain }}</td>
 					</tr>
-					<tr>
+					<tr v-if="license.info">
 						<th>{{ $t("license.status") }}</th>
 						<td>
 							<p :data-theme="license.theme" class="k-license-dialog-status">
@@ -62,7 +62,19 @@ import Dialog from "@/mixins/dialog.js";
 export const props = {
 	mixins: [Dialog],
 	props: {
-		license: Object
+		license: Object,
+		// eslint-disable-next-line vue/require-prop-types
+		cancelButton: {
+			default: false
+		},
+		// eslint-disable-next-line vue/require-prop-types
+		size: {
+			default: "large"
+		},
+		// eslint-disable-next-line vue/require-prop-types
+		submitButton: {
+			default: false
+		}
 	}
 };
 
