@@ -20,7 +20,6 @@ return [
 			return [
 				'component' => 'k-license-dialog',
 				'props' => [
-					'size'   => 'large',
 					'license' => [
 						'activated'  => $license->activated('Y-m-d') ?? $license->purchased('Y-m-d'),
 						'code'       => $license->code($obfuscated),
@@ -32,9 +31,7 @@ return [
 						'status'     => $license->status(),
 						'theme'      => $license->status()->theme(),
 						'type'       => $license->type(),
-					],
-					'submitButton' => false,
-					'cancelButton' => false,
+					]
 				]
 			];
 		}
