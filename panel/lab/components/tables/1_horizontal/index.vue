@@ -125,7 +125,7 @@
 						:handle="true"
 						:options="{
 							fallbackClass: 'k-table-row-fallback',
-							ghostClass: 'k-table-row-ghost',
+							ghostClass: 'k-table-row-ghost'
 						}"
 						element="tbody"
 					>
@@ -172,6 +172,39 @@
 				</table>
 			</div>
 		</k-lab-example>
+		<k-lab-example label="Pagination">
+			<div class="k-table">
+				<table>
+					<thead>
+						<tr>
+							<th class="k-table-index-column">#</th>
+							<th>Name</th>
+							<th>Date</th>
+							<th class="k-table-options-column"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="i in 2" :key="i">
+							<td class="k-table-index-column">
+								<span class="k-table-index">{{ i }}</span>
+							</td>
+							<td>Kirby</td>
+							<td>2023-09-25</td>
+							<td class="k-table-options-column">
+								<k-options-dropdown :disabled="true" :options="options" />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<k-pagination
+					class="k-table-pagination"
+					:details="true"
+					:limit="2"
+					:page="1"
+					:total="10"
+				/>
+			</div>
+		</k-lab-example>
 		<k-lab-example label="Empty">
 			<div class="k-table">
 				<table>
@@ -201,19 +234,19 @@ export default {
 			return [
 				{
 					text: "Edit",
-					icon: "edit",
+					icon: "edit"
 				},
 				{
 					text: "Duplicate",
-					icon: "copy",
+					icon: "copy"
 				},
 				"-",
 				{
 					text: "Delete",
-					icon: "trash",
-				},
+					icon: "trash"
+				}
 			];
-		},
-	},
+		}
+	}
 };
 </script>
