@@ -10,13 +10,7 @@
 			<h2 class="k-headline">
 				{{ $t("license") }}
 			</h2>
-			<k-button
-				v-bind="btn"
-				link="https://hub.getkirby.com"
-				target="_blank"
-				variant="filled"
-				size="xs"
-			/>
+			<k-button v-bind="btn" target="_blank" variant="filled" size="xs" />
 		</k-bar>
 
 		<div class="k-table">
@@ -26,21 +20,21 @@
 						<th>{{ $t("license.type") }}</th>
 						<td>{{ license.type }}</td>
 					</tr>
-					<tr>
+					<tr v-if="license.code">
 						<th>{{ $t("license.code") }}</th>
 						<td class="k-text">
 							<code>{{ license.code }}</code>
 						</td>
 					</tr>
-					<tr>
+					<tr v-if="license.purchased">
 						<th>{{ $t("license.purchased") }}</th>
 						<td>{{ license.purchased }}</td>
 					</tr>
-					<tr>
+					<tr v-if="license.activated">
 						<th>{{ $t("license.activated") }}</th>
 						<td>{{ license.activated }}</td>
 					</tr>
-					<tr>
+					<tr v-if="license.domain">
 						<th>{{ $t("license.domain") }}</th>
 						<td>{{ license.domain }}</td>
 					</tr>
@@ -76,9 +70,19 @@ export default {
 	mixins: [props],
 	computed: {
 		btn() {
+			if (this.license.status === "invalid") {
+				return {
+					icon: "cart",
+					link: "https://getkirby.com/buy",
+					theme: "positive",
+					text: this.$t("license.buy")
+				};
+			}
+
 			if (this.license.status !== "active") {
 				return {
 					icon: "refresh",
+					link: "https://hub.getkirby.com",
 					theme: this.license.theme,
 					text: this.$t("license.renew")
 				};
@@ -86,6 +90,7 @@ export default {
 
 			return {
 				icon: "edit",
+				link: "https://hub.getkirby.com",
 				text: this.$t("license.manage")
 			};
 		}
