@@ -64,4 +64,10 @@ enum LicenseStatus: string
 			static::Active   => 'positive',
 		};
 	}
+
+	public function value(): string
+	{
+		return $this->value;
+	}
+
 }
