@@ -200,7 +200,20 @@ export default {
 			const changes = this.$store.getters["content/changes"]();
 
 			Object.keys(changes).forEach((key) => {
-				content += key + ": \n\n" + changes[key];
+				const change = changes[key];
+				content += key + ": \n\n";
+
+				// provides pretty JSON output for only object and array values
+				// @todo refactor with better method for type-based output
+				if (
+					(typeof change === "object" && Object.keys(change).length) ||
+					(Array.isArray(change) && change.length)
+				) {
+					content += JSON.stringify(change, null, 2);
+				} else {
+					content += change;
+				}
+
 				content += "\n\n----\n\n";
 			});
 

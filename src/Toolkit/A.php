@@ -60,6 +60,77 @@ class A
 	}
 
 	/**
+	 * Checks if every element in the array passes the test
+	 *
+	 * <code>
+	 * $array = [1, 30, 39, 29, 10, 13];
+	 *
+	 * $isBelowThreshold = fn($value) => $value < 40;
+	 * echo A::every($array, $isBelowThreshold) ? 'true' : 'false';
+	 * // output: 'true'
+	 *
+	 * $isIntegerKey = fn($value, $key) => is_int($key);
+	 * echo A::every($array, $isIntegerKey) ? 'true' : 'false';
+	 * // output: 'true'
+	 * </code>
+	 *
+	 * @since 3.9.8
+	 * @param array $array
+	 * @param callable(mixed $value, int|string $key, array $array):bool $test
+	 * @return bool
+	 */
+	public static function every(array $array, callable $test): bool
+	{
+		foreach ($array as $key => $value) {
+			if (!$test($value, $key, $array)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Finds the first element matching the given callback
+	 *
+	 * <code>
+	 * $array = [1, 30, 39, 29, 10, 13];
+	 *
+	 * $isAboveThreshold = fn($value) => $value > 30;
+	 * echo A::find($array, $isAboveThreshold);
+	 * // output: '39'
+	 *
+	 * $array = [
+	 *   'cat' => 'miao',
+	 *   'cow' => 'moo',
+	 *   'colibri' => 'humm',
+	 *   'dog' => 'wuff',
+	 *   'chicken' => 'cluck',
+	 *   'bird' => 'tweet'
+	 * ];
+	 *
+	 * $keyNotStartingWithC = fn($value, $key) => $key[0] !== 'c';
+	 * echo A::find($array, $keyNotStartingWithC);
+	 * // output: 'wuff'
+	 * </code>
+	 *
+	 * @since 3.9.8
+	 * @param array $array
+	 * @param callable(mixed $value, int|string $key, array $array):bool $callback
+	 * @return mixed
+	 */
+	public static function find(array $array, callable $callback): mixed
+	{
+		foreach ($array as $key => $value) {
+			if ($callback($value, $key, $array)) {
+				return $value;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Gets an element of an array by key
 	 *
 	 * <code>
@@ -405,6 +476,37 @@ class A
 		bool $preserveKeys = false
 	): array {
 		return array_slice($array, $offset, $length, $preserveKeys);
+	}
+
+	/**
+	 * Checks if at least one element in the array passes the test
+	 *
+	 * <code>
+	 * $array = [1, 30, 39, 29, 10, 'foo' => 12, 13];
+	 *
+	 * $isAboveThreshold = fn($value) => $value > 30;
+	 * echo A::some($array, $isAboveThreshold) ? 'true' : 'false';
+	 * // output: 'true'
+	 *
+	 * $isStringKey = fn($value, $key) => is_string($key);
+	 * echo A::some($array, $isStringKey) ? 'true' : 'false';
+	 * // output: 'true'
+	 * </code>
+	 *
+	 * @since 3.9.8
+	 * @param array $array
+	 * @param callable(mixed $value, int|string $key, array $array):bool $test
+	 * @return bool
+	 */
+	public static function some(array $array, callable $test): bool
+	{
+		foreach ($array as $key => $value) {
+			if ($test($value, $key, $array)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**

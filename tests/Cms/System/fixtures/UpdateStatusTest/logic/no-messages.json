@@ -19,5 +19,6 @@
 			"upgrade": "https://getkirby.com/releases/88888"
 		}
 	},
+	"php": {},
 	"incidents": []
 }

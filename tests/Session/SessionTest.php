@@ -9,6 +9,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Http\Cookie;
 use Kirby\Toolkit\Obj;
 use Kirby\Toolkit\Str;
+use Kirby\Toolkit\SymmetricCrypto;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
@@ -651,11 +652,20 @@ class SessionTest extends TestCase
 		// validate that the old session now references the new one
 		$oldTokenParts = explode('.', $originalToken);
 		$newTokenParts = explode('.', $session->token());
-		$this->assertSame([
+		$expected = [
 			'startTime'  => 1000000000,
 			'expiryTime' => 1337000000 + 30, // timestamp is from mock
 			'newSession' => $newTokenParts[0] . '.' . $newTokenParts[1]
-		], $this->store->sessions['9999999999.' . $oldTokenParts[1]]);
+		];
+		$actual = $this->store->sessions['9999999999.' . $oldTokenParts[1]];
+		if (SymmetricCrypto::isAvailable() === true) {
+			$crypto = new SymmetricCrypto(secretKey: hex2bin($oldTokenParts[2]));
+			$this->assertSame($newTokenParts[2], $crypto->decrypt($actual['newSessionKey']));
+
+			// the actual value contains random parts, accept it in the check below
+			$expected['newSessionKey'] = $actual['newSessionKey'];
+		}
+		$this->assertSame($expected, $actual);
 	}
 
 	/**
@@ -701,11 +711,20 @@ class SessionTest extends TestCase
 		$this->assertNotSame($this->store->validKey, $newTokenParts[2]);
 
 		// validate that the old session now references the new one
-		$this->assertSame([
+		$expected = [
 			'startTime'  => 0,
 			'expiryTime' => 1337000000 + 30, // timestamp is from mock
 			'newSession' => $newTokenParts[0] . '.' . $newTokenParts[1]
-		], $this->store->sessions['9999999999.valid']);
+		];
+		$actual = $this->store->sessions['9999999999.valid'];
+		if (SymmetricCrypto::isAvailable() === true) {
+			$crypto = new SymmetricCrypto(secretKey: hex2bin($this->store->validKey));
+			$this->assertSame($newTokenParts[2], $crypto->decrypt($actual['newSessionKey']));
+
+			// the actual value contains random parts, accept it in the check below
+			$expected['newSessionKey'] = $actual['newSessionKey'];
+		}
+		$this->assertSame($expected, $actual);
 
 		// validate that a cookie has been set
 		$this->assertSame($newToken, Cookie::get('kirby_session'));
@@ -1119,6 +1138,33 @@ class SessionTest extends TestCase
 	/**
 	 * @covers ::__construct
 	 * @covers ::init
+	 * @covers ::startTime
+	 * @covers ::data
+	 */
+	public function testInitMovedRenewalWithKey()
+	{
+		if (SymmetricCrypto::isAvailable() !== true) {
+			$this->markTestSkipped('PHP sodium extension is not available');
+			return;
+		}
+
+		// moved session: data should be identical to the actual one
+		$token = '9999999999.movedRenewalWithKey.' . $this->store->validKey;
+
+		$session = new Session($this->sessions, $token, []);
+		$this->assertSame(0, $session->startTime());
+		$this->assertSame(2000000000, $session->duration());
+		$this->assertFalse($session->timeout());
+		$this->assertTrue($session->renewable());
+		$this->assertSame('renewal', $session->data()->get('id'));
+
+		// new session should be renewed because the new session has its key
+		$this->assertWriteMode(true, $session);
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::init
 	 * @covers ::token
 	 * @covers ::startTime
 	 * @covers ::data
@@ -1139,6 +1185,33 @@ class SessionTest extends TestCase
 
 		// new session should *not* be refreshed because the new session is read-only
 		$this->assertWriteMode(false, $session);
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::init
+	 * @covers ::startTime
+	 * @covers ::data
+	 */
+	public function testInitTimeoutActivityWithKey()
+	{
+		if (SymmetricCrypto::isAvailable() !== true) {
+			$this->markTestSkipped('PHP sodium extension is not available');
+			return;
+		}
+
+		// moved session: data should be identical to the actual one
+		$token = '9999999999.movedTimeoutActivityWithKey.' . $this->store->validKey;
+
+		$session = new Session($this->sessions, $token, []);
+		$this->assertSame(0, $session->startTime());
+		$this->assertSame(9999999999, $session->duration());
+		$this->assertSame(3600, $session->timeout());
+		$this->assertFalse($session->renewable());
+		$this->assertSame('timeoutActivity2', $session->data()->get('id'));
+
+		// new session should be refreshed because the new session has its key
+		$this->assertWriteMode(true, $session);
 	}
 
 	/**

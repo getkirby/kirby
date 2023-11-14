@@ -90,6 +90,103 @@ class ATest extends TestCase
 	}
 
 	/**
+	 * @covers ::every
+	 */
+	public function testEvery()
+	{
+		// The value should be passed to the callback
+		A::every(['foo', 'bar'], function ($value) {
+			$this->assertTrue(is_string($value), 'The value should be passed to the callback');
+		});
+
+		// The key should be passed to the callback
+		A::every(['foo' => 1, 'bar' => 2], function ($value, $key = null) {
+			$this->assertTrue(is_string($key), 'The key should be passed to the callback');
+		});
+
+		// the array should be passed to the callback
+		$arr = ['foo'];
+		A::every($arr, function ($value, $key = null, $array = null) use ($arr) {
+			$this->assertSame($array, $arr, 'The array should be passed to the callback');
+		});
+
+		// It should return false if any callback returns false
+		$this->assertFalse(A::every(['foo', 'bar'], function ($value) {
+			return $value === 'foo';
+		}), 'It should return false if any callback returns false');
+
+		// It should return early if any callback returns false
+		$counter = 0;
+		A::every(['foo', 'bar', 'baz'], function ($value) use (&$counter) {
+			$counter++;
+			return $value === 'foo';
+		});
+		$this->assertSame(2, $counter, 'It should return early if any callback returns false');
+
+		// falsy values should be treated as false
+		$this->assertFalse(A::every(['foo', 'bar', ''], function ($value) {
+			return $value;
+		}), 'falsy values should be treated as false');
+
+		// truthy values should be treated as true
+		$this->assertTrue(A::every(['foo', 'bar', 'baz'], function ($value) {
+			return $value;
+		}), 'truthy values should be treated as true');
+	}
+
+	/**
+	 * @covers ::find
+	 */
+	public function testFind()
+	{
+		$array = $this->_array();
+
+		// The value should be passed to the callback
+		$this->assertSame('miao', A::find($array, function ($value) {
+			return $value === 'miao';
+		}), 'It should return the first value that matches the callback');
+
+		// The key should be passed to the callback
+		$this->assertSame('miao', A::find($array, function ($value = null, $key = null) {
+			return $key === 'cat';
+		}), 'It should pass the key to the callback');
+
+		// The array should be passed to the callback
+		$arr = ['foo'];
+		A::find($arr, function ($value = null, $key = null, $array = null) use ($arr) {
+			$this->assertSame($array, $arr, 'The array should be passed to the callback');
+		});
+
+		// It should return null if no value matches the callback
+		$this->assertNull(A::find($array, function ($value) {
+			return $value === 'MISSING';
+		}), 'It should return null if no value matches the callback');
+
+		// It should return null if the array is empty
+		$this->assertNull(A::find([], function ($value) {
+			return true;
+		}), 'It should return null if the array is empty');
+
+		// It should return early if a value matches the callback
+		$counter = 0;
+		A::find(['foo', 'bar', 'baz'], function ($value) use (&$counter) {
+			$counter++;
+			return $value === 'bar';
+		});
+		$this->assertSame(2, $counter, 'It should return early if a value matches the callback');
+
+		// falsy values should be treated as false
+		$this->assertSame('foo', A::find(['', 'foo', 'bar'], function ($value) {
+			return $value;
+		}), 'falsy values should be treated as false');
+
+		// truthy values should be treated as true
+		$this->assertSame('foo', A::find(['foo', 'bar', 'baz'], function ($value) {
+			return $value;
+		}), 'truthy values should be treated as true');
+	}
+
+	/**
 	 * @covers ::get
 	 */
 	public function testGet()
@@ -436,6 +533,56 @@ class ATest extends TestCase
 		$this->assertSame(['bird' => 'tweet'], A::slice($array, -1));
 		$this->assertSame(['dog' => 'wuff'], A::slice($array, -2, 1));
 		$this->assertSame($array, A::slice($array, 0));
+	}
+
+	/**
+	 * @covers ::some
+	 */
+	public function testSome()
+	{
+		// The value should be passed to the callback
+		A::some(['foo', 'bar'], function ($value = null) {
+			$this->assertTrue(is_string($value), 'The value should be passed to the callback');
+		});
+
+		// The key should be passed to the callback
+		A::some(['foo' => 1, 'bar' => 2], function ($value = null, $key = null) {
+			$this->assertTrue(is_string($key), 'The key should be passed to the callback');
+		});
+
+		// the array should be passed to the callback
+		$arr = ['foo'];
+		A::some($arr, function ($value = null, $key = null, $array = null) use ($arr) {
+			$this->assertSame($array, $arr, 'The array should be passed to the callback');
+		});
+
+		// It should return false if all callbacks returns false
+		$this->assertFalse(A::some(['foo', 'bar'], function () {
+			return false;
+		}), 'It should return false if all callbacks returns false');
+
+		// It should return true if any callback returns true
+		$this->assertTrue(A::some(['foo', 'bar'], function ($value) {
+			return $value === 'foo';
+		}), 'It should return true if any callback returns true');
+
+		// It should return early if any callback returns true
+		$counter = 0;
+		A::some(['foo', 'bar', 'baz'], function () use (&$counter) {
+			$counter++;
+			return true;
+		});
+		$this->assertSame(1, $counter, 'It should return early if any callback returns true');
+
+		// falsy values should be treated as false
+		$this->assertFalse(A::some(['', 0, null], function ($value) {
+			return $value;
+		}), 'falsy values should be treated as false');
+
+		// truthy values should be treated as true
+		$this->assertTrue(A::some(['foo'], function ($value) {
+			return $value;
+		}), 'truthy values should be treated as true');
 	}
 
 	/**

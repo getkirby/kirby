@@ -186,7 +186,7 @@ return [
 		}
 
 		$query   = Str::lower($query);
-		$preg    = '!(' . implode('|', $words) . ')!i';
+		$preg    = '!(' . implode('|', $words) . ')!iu';
 		$scores  = [];
 
 		$results = $collection->filter(function ($item) use ($query, $exact, $preg, $options, &$scores) {
@@ -236,7 +236,7 @@ return [
 					$scoring['hits']  += 1;
 
 				// check for exact query matches
-				} elseif ($matches = preg_match_all('!' . $exact . '!i', $value, $r)) {
+				} elseif ($matches = preg_match_all('!' . $exact . '!ui', $value, $r)) {
 					$scoring['score'] += 2 * $score;
 					$scoring['hits']  += $matches;
 				}

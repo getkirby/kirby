@@ -3,13 +3,13 @@
 	"account.delete": "Șterge-ți contul",
 	"account.delete.confirm": "Chiar vrei să îți ștergi contul? Vei fi deconectat imediat. Contul nu poate fi recuperat.",
 
-	"add": "Adaug\u0103",
+	"add": "Adaugă",
 	"author": "Autor",
 	"avatar": "Imagine de profil",
 	"back": "Înapoi",
 	"cancel": "Anulează",
-	"change": "Modific\u0103",
-	"close": "\u00cenchide",
+	"change": "Schimbă",
+	"close": "Închide",
 	"confirm": "Ok",
 	"collapse": "Pliază",
 	"collapse.all": "Pliază toate",
@@ -23,7 +23,7 @@
 	"day": "Ziua",
 	"days.fri": "Vin",
 	"days.mon": "Lun",
-	"days.sat": "S\u00e2m",
+	"days.sat": "Sâm",
 	"days.sun": "Dum",
 	"days.thu": "Joi",
 	"days.tue": "Mar",
@@ -31,7 +31,7 @@
 
 	"debugging": "Depanare",
 
-	"delete": "\u0218terge",
+	"delete": "Șterge",
 	"delete.all": "Șterge toate",
 
 	"dialog.files.empty": "Nu există fișiere de selectat",
@@ -40,14 +40,14 @@
 
 	"dimensions": "Dimensiuni",
 	"disabled": "Dezactivat",
-	"discard": "Renun\u021b\u0103",
+	"discard": "Renunță",
 	"download": "Descarcă",
 	"duplicate": "Duplică",
 
-	"edit": "Editeaz\u0103",
+	"edit": "Editează",
 
-	"email": "E-mail",
-	"email.placeholder": "email@exemplu.com",
+	"email": "Adresă e-mail",
+	"email.placeholder": "email@exemplu.ro",
 
 	"entries": "Întregistrări",
 	"entry": "Înregistrare",
@@ -110,8 +110,8 @@
 	"error.language.name": "Te rog introdu un nume valid pentru limbă",
 	"error.language.notFound": "Limba nu a fost găsită",
 
-	"error.layout.validation.block": "Există o eroare la câmpul \"{field}\" în blocul {blockIndex} care utilizează tipul de bloc \"{fieldset}\" în layout-ul {layoutIndex}",
-	"error.layout.validation.settings": "Există o eroare la setările layout-ului {index}",
+	"error.layout.validation.block": "Există o eroare la câmpul \"{field}\" în blocul {blockIndex} care utilizează tipul de bloc \"{fieldset}\" în aranjamentul {layoutIndex}",
+	"error.layout.validation.settings": "Există o eroare la setările aranjamentului {index}",
 
 	"error.license.format": "Te rog introdu o cheie de licență validă",
 	"error.license.email": "Te rog introdu o adresă de e-mail validă",
@@ -123,11 +123,11 @@
 
 	"error.page.changeSlug.permission": "Nu ai voie să schimbi apendicele URL pentru \"{slug}\"",
 	"error.page.changeStatus.incomplete": "Pagina are erori și nu poate fi publicată",
-	"error.page.changeStatus.permission": "Statutul acestei pagini nu poate fi schimbat",
+	"error.page.changeStatus.permission": "Statusul acestei pagini nu poate fi schimbat",
 	"error.page.changeStatus.toDraft.invalid": "Pagina \"{slug}\" nu poate fi schimbată în ciornă",
 	"error.page.changeTemplate.invalid": "Șablonul paginii \"{slug}\" nu poate fi schimbat",
 	"error.page.changeTemplate.permission": "Nu ai voie să schimbi șablonul pentru \"{slug}\"",
-	"error.page.changeTitle.empty": "Titlul nu poate rămâne gol",
+	"error.page.changeTitle.empty": "Titlul nu poate să rămână gol",
 	"error.page.changeTitle.permission": "Nu ai voie să schimbi titlul pentru \"{slug}\"",
 	"error.page.create.permission": "Nu ai voie să creezi \"{slug}\"",
 	"error.page.delete": "Pagina \"{slug}\" nu poate fi ștearsă",
@@ -142,7 +142,7 @@
 	"error.page.slug.invalid": "Te rog introdu un apendice URL valid",
 	"error.page.slug.maxlength": "Lungimea slug-ului nu poate depăși \"{length}\"",
 	"error.page.sort.permission": "Pagina \"{slug}\" nu poate fi sortată",
-	"error.page.status.invalid": "Te rog stabilește un statut valid pentru pagină",
+	"error.page.status.invalid": "Te rog stabilește un status valid pentru pagină",
 	"error.page.undefined": "Pagina nu a fost găsită",
 	"error.page.update.permission": "Nu ai voie să actualizezi \"{slug}\"",
 
@@ -183,7 +183,7 @@
 	"error.user.email.invalid": "Te rog introdu o adresă de e-mail validă",
 	"error.user.language.invalid": "Te rog introdu o limbă validă",
 	"error.user.notFound": "Utilizatorul \"{name}\" nu a fost găsit",
-	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
+	"error.user.password.excessive": "Te rog introdu o parolă validă. Parolele nu pot fi mai lungi de 1000 de caractere.",
 	"error.user.password.invalid": "Te rog introdu o parolă validă. Parola trebuie să aibă cel puțin 8 caractere.",
 	"error.user.password.notSame": "Parolele nu se potrivesc",
 	"error.user.password.undefined": "Utilizatorul nu are parolă",
@@ -283,10 +283,10 @@
 
 	"field.files.empty": "Niciun fișier selectat deocamdată",
 
-	"field.layout.delete": "Șterge layout-ul",
-	"field.layout.delete.confirm": "Chiar vrei să ștergi acest layout?",
+	"field.layout.delete": "Șterge aranjamentul",
+	"field.layout.delete.confirm": "Chiar vrei să ștergi acest aranjament?",
 	"field.layout.empty": "Niciun rând deocamdată",
-	"field.layout.select": "Alege un layout",
+	"field.layout.select": "Alege un aranjament",
 
 	"field.object.empty": "Nicio informație deocamdată",
 
@@ -389,7 +389,7 @@
 	"login.toggleText.password-reset.email": "Ți-ai uitat parola?",
 	"login.toggleText.password-reset.email-password": "← Înapoi la conectare",
 
-	"logout": "Deconectare",
+	"logout": "Deconectează-te",
 
 	"menu": "Meniu",
 	"meridiem": "AM/PM",
@@ -429,9 +429,9 @@
 	"page.blueprint": "Această pagină nu are încă un Blueprint. Poți să-l definești în <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
 	"page.changeSlug": "Schimbă URL-ul",
 	"page.changeSlug.fromTitle": "Creează din titlu",
-	"page.changeStatus": "Schimbă statutul",
+	"page.changeStatus": "Schimbă statusul",
 	"page.changeStatus.position": "Te rog alege o poziție",
-	"page.changeStatus.select": "Alege un statut nou",
+	"page.changeStatus.select": "Alege un status nou",
 	"page.changeTemplate": "Schimbă șablonul",
 	"page.delete.confirm": "Chiar vrei să ștergi <strong>{title}</strong>?",
 	"page.delete.confirm.subpages": "<strong>Această pagină are subpagini</strong>. <br>Subpaginile vor fi de asemenea toate șterse.",
@@ -441,12 +441,12 @@
 	"page.duplicate.files": "Copiază fișierele",
 	"page.duplicate.pages": "Copiază paginile",
 	"page.sort": "Schimbă poziția",
-	"page.status": "Statut",
+	"page.status": "Status",
 	"page.status.draft": "Ciornă",
 	"page.status.draft.description": "Pagina este în modul ciornă și va fi vizibilă doar editorilor conectați sau printr-un link secret",
 	"page.status.listed": "Publică",
 	"page.status.listed.description": "Pagina este publică, accesibilă oricui",
-	"page.status.unlisted": "Nelistată",
+	"page.status.unlisted": "Nelistate",
 	"page.status.unlisted.description": "Pagina este accesibilă doar prin URL",
 
 	"pages": "Pagini",
@@ -467,7 +467,7 @@
 	"preview": "Previzualizează",
 	"remove": "Înlătură",
 	"rename": "Redenumește",
-	"replace": "\u00cenlocuie\u0219te",
+	"replace": "Înlocuiește",
 	"retry": "Încearcă din nou",
 	"revert": "Renunță",
 	"revert.confirm": "Chiar vrei să ștergi <strong>toate schimbările nesalvate</strong>?",
@@ -481,7 +481,7 @@
 	"role.nobody.description": "Acesta este un rol de rezervă fără nicio permisiune.",
 	"role.nobody.title": "Nimeni",
 
-	"save": "Salveaz\u0103",
+	"save": "Salvează",
 	"search": "Caută",
 	"search.min": "Introdu {min} caractere pentru a căuta",
 	"search.all": "Arată toate",
@@ -510,7 +510,7 @@
 	"system.issues.site": "Directorul site pare să fie expus",
 	"system.issues.vulnerability.kirby": "Instalarea ta ar putea fi afectată de următoarea vulnerabilitate ({ severity } severity): { description }",
 	"system.issues.vulnerability.plugin": "Instalarea ta ar putea fi afectată de următoarea vulnerabilitate în plugin-ul { plugin } ({ severity } severity): { description }",
-	"system.updateStatus": "Statut actualizare",
+	"system.updateStatus": "Status actualizare",
 	"system.updateStatus.error": "Nu am putut căuta actualizări",
 	"system.updateStatus.not-vulnerable": "Nicio vulnerabilitate cunoscută",
 	"system.updateStatus.security-update": "Actualizare gratuită de securitate { version } disponibilă",
@@ -538,7 +538,7 @@
 	"toolbar.button.file": "Fișier",
 	"toolbar.button.file.select": "Alege un fișier",
 	"toolbar.button.file.upload": "Încarcă un fișier",
-	"toolbar.button.link": "Link",
+	"toolbar.button.link": "Legătură",
 	"toolbar.button.paragraph": "Paragraf",
 	"toolbar.button.strike": "Tăiat",
 	"toolbar.button.ol": "Listă ordonată",
@@ -547,7 +547,7 @@
 
 	"translation.author": "Echipa Kirby",
 	"translation.direction": "ltr",
-	"translation.name": "Rom\u00e2n\u0103",
+	"translation.name": "Română",
 	"translation.locale": "ro_RO",
 
 	"upload": "Încarcă",
@@ -589,7 +589,7 @@
 	"version.latest": "Ultima versiune",
 	"versionInformation": "Informații despre versiune",
 
-	"view.account": "Contul t\u0103u",
+	"view.account": "Contul tău",
 	"view.installation": "Instalare",
 	"view.languages": "Limbi",
 	"view.resetPassword": "Restabilește parola",

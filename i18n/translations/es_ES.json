@@ -3,13 +3,13 @@
 	"account.delete": "Borrar cuenta",
 	"account.delete.confirm": "¿Realmente quieres eliminar tu cuenta? Tu sesión se cerrará inmediatamente. La cuenta no podrá ser recuperada.",
 
-	"add": "Añadir",
+	"add": "Add",
 	"author": "Autor",
-	"avatar": "Foto de perfil",
-	"back": "Atrás",
-	"cancel": "Cancelar",
+	"avatar": "Profile picture",
+	"back": "Back",
+	"cancel": "Cancel",
 	"change": "Cambiar",
-	"close": "Cerrar",
+	"close": "Close",
 	"confirm": "Confirmar",
 	"collapse": "Colapsar",
 	"collapse.all": "Colapsar todo",
@@ -17,16 +17,16 @@
 	"copy.all": "Copiar todo",
 	"create": "Crear",
 
-	"date": "Fecha",
+	"date": "Date",
 	"date.select": "Selecciona una fecha",
 
 	"day": "Día",
-	"days.fri": "Vi",
-	"days.mon": "Lu",
+	"days.fri": "Vie",
+	"days.mon": "Mon",
 	"days.sat": "Sá",
-	"days.sun": "Do",
-	"days.thu": "Ju",
-	"days.tue": "Ma",
+	"days.sun": "Dom",
+	"days.thu": "Thu",
+	"days.tue": "Tue",
 	"days.wed": "Mi",
 
 	"debugging": "Depuración",
@@ -40,11 +40,11 @@
 
 	"dimensions": "Dimensiones",
 	"disabled": "Desabilitado",
-	"discard": "Descartar",
+	"discard": "Discard",
 	"download": "Descargar",
 	"duplicate": "Duplicar",
 
-	"edit": "Editar",
+	"edit": "Edit",
 
 	"email": "Correo electrónico",
 	"email.placeholder": "correo@ejemplo.com",
@@ -180,7 +180,7 @@
 	"error.user.delete.lastUser": "No se puede eliminar el último usuario ",
 	"error.user.delete.permission": "No tienes permiso para eliminar el usuario \"{name}\"",
 	"error.user.duplicate": "Un usuario con la dirección de correo electrónico \"{email}\" ya existe",
-	"error.user.email.invalid": "Por favor, introduce una dirección de correo electrónico válida",
+	"error.user.email.invalid": "Por favor, introduce un correo electrónico válido",
 	"error.user.language.invalid": "Por favor, introduce un idioma válido",
 	"error.user.notFound": "No se puede encontrar el usuario \"{name}\"",
 	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
@@ -302,7 +302,7 @@
 	"file.delete.confirm": "¿Realmente quieres eliminar <br><strong>{filename}</strong>?",
 	"file.sort": "Cambiar posición",
 
-	"files": "Archivos",
+	"files": "Files",
 	"files.empty": "Aún no hay archivos",
 
 	"hide": "Ocultar",
@@ -361,7 +361,7 @@
 	"license.unregistered.label": "No registrado",
 
 	"link": "Enlace",
-	"link.text": "Texto del enlace",
+	"link.text": "Texto de Enlace",
 
 	"loading": "Cargando",
 
@@ -373,7 +373,7 @@
 	"lock.unlock": "Desbloquear",
 	"lock.isUnlocked": "Tus cambios sin guardar han sido sobrescritos por otro usuario. Puedes descargar los cambios y fusionarlos manualmente.",
 
-	"login": "Iniciar sesión",
+	"login": "Log in",
 	"login.code.label.login": "Código de inicio de sesión",
 	"login.code.label.password-reset": "Código de restablecimiento de contraseña",
 	"login.code.placeholder.email": "000 000",
@@ -389,7 +389,7 @@
 	"login.toggleText.password-reset.email": "¿Olvidaste tu contraseña?",
 	"login.toggleText.password-reset.email-password": "← Volver al inicio de sesión",
 
-	"logout": "Cerrar sesión",
+	"logout": "Log out",
 
 	"menu": "Menu",
 	"meridiem": "AM/PM",
@@ -397,18 +397,18 @@
 	"minutes": "Minutos",
 
 	"month": "Mes",
-	"months.april": "Abril",
-	"months.august": "Agosto",
+	"months.april": "April",
+	"months.august": "August",
 	"months.december": "Diciembre",
 	"months.february": "Febrero",
-	"months.january": "Enero",
-	"months.july": "Julio",
-	"months.june": "Junio",
-	"months.march": "Marzo",
-	"months.may": "Mayo",
+	"months.january": "January",
+	"months.july": "July",
+	"months.june": "June",
+	"months.march": "March",
+	"months.may": "May",
 	"months.november": "Noviembre",
-	"months.october": "Octubre",
-	"months.september": "Septiembre",
+	"months.october": "October",
+	"months.september": "September",
 
 	"more": "Más",
 	"name": "Nombre",
@@ -427,7 +427,7 @@
 	"orientation.square": "Cuadrado",
 
 	"page.blueprint": "Este archivo aún no tiene blueprint. Puedes definir la configuración en <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
-	"page.changeSlug": "Cambiar URL",
+	"page.changeSlug": "Change URL",
 	"page.changeSlug.fromTitle": "Crear en base al título",
 	"page.changeStatus": "Cambiar estado",
 	"page.changeStatus.position": "Por favor, selecciona una posición",
@@ -457,7 +457,7 @@
 
 	"pagination.page": "Página",
 
-	"password": "Contraseña",
+	"password": "Password",
 	"paste": "Pegar",
 	"paste.after": "Pegar después",
 	"pixel": "Pixel",
@@ -481,7 +481,7 @@
 	"role.nobody.description": "Este es un rol alternativo sin permisos",
 	"role.nobody.title": "Nadie",
 
-	"save": "Guardar",
+	"save": "Save",
 	"search": "Buscar",
 	"search.min": "Introduce {min} caracteres para buscar",
 	"search.all": "Mostrar todo",
@@ -521,7 +521,7 @@
 	"system.updateStatus.upgrade": "Actualización {versión} disponible",
 
 	"title": "Título",
-	"template": "Plantilla",
+	"template": "Template",
 	"today": "Hoy",
 
 	"toolbar.button.code": "Código",
@@ -574,7 +574,7 @@
 	"user.changeLanguage": "Cambiar idioma",
 	"user.changeName": "Renombrar a este usuario",
 	"user.changePassword": "Cambiar contraseña",
-	"user.changePassword.new": "Nueva contraseña",
+	"user.changePassword.new": "New password",
 	"user.changePassword.new.confirm": "Confirmar nueva contraseña…",
 	"user.changeRole": "Cambiar rol",
 	"user.changeRole.select": "Seleccionar un nuevo rol",

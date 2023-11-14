@@ -51,9 +51,7 @@ class EnvironmentTest extends TestCase
 	{
 		$env = new Environment([
 			'allowed' => '/'
-		], [
-
-		]);
+		], []);
 
 		$this->assertSame('/', $env->baseUrl());
 		$this->assertNull($env->host());
@@ -63,9 +61,7 @@ class EnvironmentTest extends TestCase
 	{
 		$env = new Environment([
 			'allowed' => '/subfolder'
-		], [
-
-		]);
+		], []);
 
 		$this->assertSame('/subfolder', $env->baseUrl());
 		$this->assertNull($env->host());
@@ -1093,6 +1089,7 @@ class EnvironmentTest extends TestCase
 	public function testOptionsFromInvalidHost()
 	{
 		$env = new Environment([
+			'cli' => false,
 			'allowed' => [
 				'http://example.de'
 			]
@@ -1101,6 +1098,15 @@ class EnvironmentTest extends TestCase
 		]);
 
 		$this->assertSame([], $env->options($this->config));
+	}
+
+	public function testOptionsFromCLI()
+	{
+		$env = new Environment([
+			'cli' => true
+		]);
+
+		$this->assertSame('test cli option', $env->options($this->config)['test']);
 	}
 
 	/**
@@ -1570,7 +1576,7 @@ class EnvironmentTest extends TestCase
 		$expected = [];
 
 		foreach ($this->providerForSanitize() as $row) {
-			$input   [$row[0]] = $row[1];
+			$input[$row[0]] = $row[1];
 			$expected[$row[0]] = $row[2];
 		}
 

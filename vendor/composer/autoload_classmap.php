@@ -299,6 +299,7 @@ return array(
     'Kirby\\Toolkit\\Query' => $baseDir . '/src/Toolkit/Query.php',
     'Kirby\\Toolkit\\Silo' => $baseDir . '/src/Toolkit/Silo.php',
     'Kirby\\Toolkit\\Str' => $baseDir . '/src/Toolkit/Str.php',
+    'Kirby\\Toolkit\\SymmetricCrypto' => $baseDir . '/src/Toolkit/SymmetricCrypto.php',
     'Kirby\\Toolkit\\Tpl' => $baseDir . '/src/Toolkit/Tpl.php',
     'Kirby\\Toolkit\\V' => $baseDir . '/src/Toolkit/V.php',
     'Kirby\\Toolkit\\View' => $baseDir . '/src/Toolkit/View.php',

@@ -180,7 +180,7 @@
 	"error.user.delete.lastUser": "Vienintelio vartotojo negalima pašalinti",
 	"error.user.delete.permission": "Neturite leidimo pašalinti vartotoją \"{name}\"",
 	"error.user.duplicate": "Vartotojas su el. paštu \"{email}\" jau yra",
-	"error.user.email.invalid": "Įrašykite teisingą el. pašto adresą",
+	"error.user.email.invalid": "Prašome įrašyti teisingą el. pašto adresą",
 	"error.user.language.invalid": "Įrašykite teisingą kalbą",
 	"error.user.notFound": "Vartotojas \"{name}\" nerastas",
 	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
@@ -204,7 +204,7 @@
 	"error.validation.date.between": "Įrašykite datą tarp {min} ir {max}",
 	"error.validation.denied": "Prašome neleisti",
 	"error.validation.different": "Reikšmė neturi būti \"{other}\"",
-	"error.validation.email": "Prašome įrašyti korektišką el. paštą",
+	"error.validation.email": "Prašome įrašyti teisingą el. pašto adresą",
 	"error.validation.endswith": "Reikšmė turi baigtis su \"{end}\"",
 	"error.validation.filename": "Prašome įrašyti teisingą failo pavadinimą",
 	"error.validation.in": "Prašome įrašyti vieną iš šių: ({in})",
@@ -314,7 +314,7 @@
 	"insert.before": "Įterpti prieš",
 	"install": "Įdiegti",
 
-	"installation": "Įdiegimas",
+	"installation": "Installation",
 	"installation.completed": "Valdymo pultas įdiegtas",
 	"installation.disabled": "Pagal nutylėjimą valdymo pulto įdiegimas viešuose serveriuose yra negalimas. Prašome įdiegti lokalioje aplinkoje arba įgalinkite jį su <code>panel.install</code> opcija.",
 	"installation.issues.accounts": "Katalogas <code>/site/accounts</code> neegzistuoja arba neturi įrašymo teisių",
@@ -453,7 +453,7 @@
 	"pages.empty": "Dar nėra puslapių",
 	"pages.status.draft": "Juodraščiai",
 	"pages.status.listed": "Paskelbti",
-	"pages.status.unlisted": "Nerodomi",
+	"pages.status.unlisted": "Nerodomas",
 
 	"pagination.page": "Puslapis",
 
@@ -562,7 +562,7 @@
 	"upload.error.noFiles": "Failai nebuvo įkelti",
 	"upload.error.partial": "Failas įkeltas tik iš dalies",
 	"upload.error.tmpDir": "Trūksta laikinojo katalogo",
-	"upload.errors": "Klaida",
+	"upload.errors": "Error",
 	"upload.progress": "Įkėlimas…",
 
 	"url": "Url",
