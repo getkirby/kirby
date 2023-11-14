@@ -382,7 +382,7 @@ class System
 		}
 
 		// get the hub address
-		$hub = option('hub', 'https://hub.getkirby.com');
+		$hub = License::hub();
 
 		// @codeCoverageIgnoreStart
 		$response = Remote::get($hub . '/register', [

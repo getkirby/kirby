@@ -13,10 +13,28 @@ use Kirby\Toolkit\I18n;
  */
 enum LicenseStatus: string
 {
+	/**
+	 * The license is valid and active
+	 */
 	case Active   = 'active';
-	case Expired  = 'expired';
-	case Invalid  = 'invalid';
-	case Outdated = 'outdated';
+
+	/**
+	 * The free feature period of
+     * the license is over.
+	 */
+	case Inactive = 'inactive';
+
+	/**
+	 * The installation has an old
+     * license (v1, v2, v3)
+	 */
+	case Legacy = 'legacy';
+
+	/**
+     * The installation has no license or
+     * the license cannot be validated
+	 */
+	case Missing = 'missing';
 
 	/**
 	 * Returns the dialog according to the status
@@ -24,7 +42,7 @@ enum LicenseStatus: string
 	public function dialog(): string
 	{
 		return match($this) {
-			static::Invalid => 'registration',
+			static::Missing => 'registration',
 			default         => 'license'
 		};
 	}
@@ -35,9 +53,9 @@ enum LicenseStatus: string
 	public function icon(): string
 	{
 		return match ($this) {
-			static::Invalid  => 'key',
-			static::Expired  => 'alert',
-			static::Outdated => 'clock',
+			static::Missing  => 'key',
+			static::Legacy   => 'alert',
+			static::Inactive => 'clock',
 			static::Active   => 'check',
 		};
 	}
@@ -58,9 +76,9 @@ enum LicenseStatus: string
 	public function theme(): string
 	{
 		return match ($this) {
-			static::Invalid,
-			static::Expired  => 'negative',
-			static::Outdated => 'notice',
+			static::Missing,
+			static::Legacy   => 'love',
+			static::Inactive => 'love',
 			static::Active   => 'positive',
 		};
 	}
