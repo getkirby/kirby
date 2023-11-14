@@ -1,13 +1,13 @@
 {
-	"account.changeName": "Change your name",
-	"account.delete": "Delete your account",
+	"account.changeName": "Zmeniť vaše meno",
+	"account.delete": "Zmazať váš účet",
 	"account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
 
 	"add": "Pridať",
-	"author": "Author",
+	"author": "Autor",
 	"avatar": "Profilový obrázok",
-	"back": "Späť",
-	"cancel": "Zrušiť",
+	"back": "Back",
+	"cancel": "Cancel",
 	"change": "Zmeniť",
 	"close": "Zavrieť",
 	"confirm": "Ok",
@@ -22,12 +22,12 @@
 
 	"day": "Deň",
 	"days.fri": "Pia",
-	"days.mon": "Pon",
+	"days.mon": "Mon",
 	"days.sat": "Sob",
 	"days.sun": "Ned",
 	"days.thu": "Štv",
 	"days.tue": "Uto",
-	"days.wed": "Str",
+	"days.wed": "Wed",
 
 	"debugging": "Debugging",
 
@@ -36,15 +36,15 @@
 
 	"dialog.files.empty": "No files to select",
 	"dialog.pages.empty": "No pages to select",
-	"dialog.users.empty": "No users to select",
+	"dialog.users.empty": "Zvolení neboli žiadni uživátelia",
 
 	"dimensions": "Rozmery",
 	"disabled": "Disabled",
-	"discard": "Zahodiť",
+	"discard": "Discard",
 	"download": "Stiahnuť",
 	"duplicate": "Duplikovať",
 
-	"edit": "Upraviť",
+	"edit": "Edit",
 
 	"email": "E-mail",
 	"email.placeholder": "mail@example.com",
@@ -302,7 +302,7 @@
 	"file.delete.confirm": "Ste si istý, že chcete zmazať <br><strong>{filename}</strong>?",
 	"file.sort": "Change position",
 
-	"files": "Súbory",
+	"files": "Files",
 	"files.empty": "Zatiaľ žiadne súbory",
 
 	"hide": "Hide",
@@ -373,7 +373,7 @@
 	"lock.unlock": "Unlock",
 	"lock.isUnlocked": "Your unsaved changes have been overwritten by another user. You can download your changes to merge them manually.",
 
-	"login": "Prihlásenie",
+	"login": "Log in",
 	"login.code.label.login": "Login code",
 	"login.code.label.password-reset": "Password reset code",
 	"login.code.placeholder.email": "000 000",
@@ -389,7 +389,7 @@
 	"login.toggleText.password-reset.email": "Forgot your password?",
 	"login.toggleText.password-reset.email-password": "← Back to login",
 
-	"logout": "Odhlásenie",
+	"logout": "Log out",
 
 	"menu": "Menu",
 	"meridiem": "AM/PM",
@@ -400,18 +400,18 @@
 	"months.april": "Apríl",
 	"months.august": "August",
 	"months.december": "December",
-	"months.february": "Február",
+	"months.february": "February",
 	"months.january": "Január",
-	"months.july": "Júl",
-	"months.june": "Jún",
-	"months.march": "Marec",
-	"months.may": "Máj",
+	"months.july": "July",
+	"months.june": "June",
+	"months.march": "March",
+	"months.may": "May",
 	"months.november": "November",
-	"months.october": "Október",
+	"months.october": "October",
 	"months.september": "September",
 
 	"more": "Viac",
-	"name": "Meno",
+	"name": "Názov",
 	"next": "Ďalej",
 	"no": "no",
 	"off": "off",
@@ -449,7 +449,7 @@
 	"page.status.unlisted": "Skryté",
 	"page.status.unlisted.description": "Stránka je prístupná len prostredníctvom priamej URL",
 
-	"pages": "Stránky",
+	"pages": "Pages",
 	"pages.empty": "Zatiaľ žiadne stránky",
 	"pages.status.draft": "Koncepty",
 	"pages.status.listed": "Zverejnené",
@@ -457,7 +457,7 @@
 
 	"pagination.page": "Stránka",
 
-	"password": "Heslo",
+	"password": "Password",
 	"paste": "Paste",
 	"paste.after": "Paste after",
 	"pixel": "Pixel",
@@ -467,7 +467,7 @@
 	"preview": "Preview",
 	"remove": "Odstrániť",
 	"rename": "Premenovať",
-	"replace": "Nahradiť",
+	"replace": "Replace",
 	"retry": "Skúsiť ešte raz",
 	"revert": "Vrátiť späť",
 	"revert.confirm": "Do you really want to <strong>delete all unsaved changes</strong>?",

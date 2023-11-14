@@ -3,7 +3,7 @@
 	"account.delete": "Poista tilisi",
 	"account.delete.confirm": "Haluatko varmasti poistaa tilisi? Sinut kirjataan ulos välittömästi, eikä tiliäsi voi palauttaa.",
 
-	"add": "Lis\u00e4\u00e4",
+	"add": "Lisää",
 	"author": "Tekijä",
 	"avatar": "Profiilikuva",
 	"back": "Takaisin",
@@ -46,7 +46,7 @@
 
 	"edit": "Muokkaa",
 
-	"email": "S\u00e4hk\u00f6posti",
+	"email": "Sähköposti",
 	"email.placeholder": "nimi@osoite.fi",
 
 	"entries": "Entries",
@@ -100,7 +100,7 @@
 	"error.file.orientation": "Kuvan suuntaus täytyy olla \"{orientation}\"",
 	"error.file.type.forbidden": "Sinulla ei ole oikeutta lähettää tiedostoja joiden tyyppi on {type}",
 	"error.file.type.invalid": "Tiedostotyyppi {type} ei kelpaa",
-	"error.file.undefined": "Tiedostoa ei l\u00f6ytynyt",
+	"error.file.undefined": "Tiedostoa ei löytynyt",
 
 	"error.form.incomplete": "Korjaa kaikki lomakkeen virheet…",
 	"error.form.notSaved": "Lomaketta ei voitu tallentaa",
@@ -114,7 +114,7 @@
 	"error.layout.validation.settings": "Virhe asetelman {index} asetuksissa",
 
 	"error.license.format": "Anna lisenssiavain",
-	"error.license.email": "Anna sähköpostiosoite",
+	"error.license.email": "Anna kelpaava sähköpostiosoite",
 	"error.license.verification": "Lisenssiä ei voitu vahvistaa",
 
 	"error.object.validation": "There’s an error in the \"{label}\" field:\n{message}",
@@ -143,7 +143,7 @@
 	"error.page.slug.maxlength": "URL-liite täytyy olla vähemmän kuin \"{length}\" merkkiä pitkä",
 	"error.page.sort.permission": "Sivua \"{slug}\" ei voi järjestellä",
 	"error.page.status.invalid": "Aseta kelvollinen sivun tila",
-	"error.page.undefined": "Sivua ei l\u00f6ytynyt",
+	"error.page.undefined": "Sivua ei löytynyt",
 	"error.page.update.permission": "Sinulla ei ole oikeutta päivittää sivua \"{slug}\"",
 
 	"error.section.files.max.plural": "Et voi lisätä enemmän kuin {max} tiedostoa osioon \"{section}\"",
@@ -182,7 +182,7 @@
 	"error.user.duplicate": "Käyttäjä, jonka sähköpostiosoite on \"{name}\", on jo olemassa",
 	"error.user.email.invalid": "Anna kelpaava sähköpostiosoite",
 	"error.user.language.invalid": "Anna kelpaava kieli",
-	"error.user.notFound": "K\u00e4ytt\u00e4j\u00e4\u00e4 ei l\u00f6ytynyt",
+	"error.user.notFound": "Käyttäjää ei löytynyt",
 	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
 	"error.user.password.invalid": "Anna kelpaava salasana. Salasanan täytyy olla ainakin 8 merkkiä pitkä.",
 	"error.user.password.notSame": "Salasanat eivät täsmää",
@@ -238,7 +238,7 @@
 
 	"field.required": "Kenttä on pakollinen",
 	"field.blocks.changeType": "Vaihda tyyppiä",
-	"field.blocks.code.name": "Koodi",
+	"field.blocks.code.name": "Tunniste",
 	"field.blocks.code.language": "Kieli",
 	"field.blocks.code.placeholder": "Koodisi …",
 	"field.blocks.delete.confirm": "Haluatko varmasti poistaa tämän lohkon?",
@@ -275,7 +275,7 @@
 	"field.blocks.quote.citation.placeholder": "Lähde …",
 	"field.blocks.text.name": "Teksti",
 	"field.blocks.text.placeholder": "Teksti …",
-	"field.blocks.video.caption": "Videon teksti",
+	"field.blocks.video.caption": "Kuvateksti",
 	"field.blocks.video.name": "Video",
 	"field.blocks.video.placeholder": "Anna videon URL",
 	"field.blocks.video.url.label": "Videon URL",
@@ -309,7 +309,7 @@
 	"hour": "Tunti",
 	"import": "Tuo",
 	"info": "Tietoja",
-	"insert": "Lis\u00e4\u00e4",
+	"insert": "Lisää",
 	"insert.after": "Lisää eteen",
 	"insert.before": "Lisää jälkeen",
 	"install": "Asenna",
@@ -402,8 +402,8 @@
 	"months.december": "Joulukuu",
 	"months.february": "Helmikuu",
 	"months.january": "Tammikuu",
-	"months.july": "Hein\u00e4kuu",
-	"months.june": "Kes\u00e4kuu",
+	"months.july": "Heinäkuu",
+	"months.june": "Kesäkuu",
 	"months.march": "Maaliskuu",
 	"months.may": "Toukokuu",
 	"months.november": "Marraskuu",
@@ -455,7 +455,7 @@
 	"pages.status.listed": "Julkaistut",
 	"pages.status.unlisted": "Listaamaton",
 
-	"pagination.page": "Sivu",
+	"pagination.page": "Page",
 
 	"password": "Salasana",
 	"paste": "Liitä",
@@ -468,11 +468,11 @@
 	"remove": "Poista",
 	"rename": "Nimeä uudelleen",
 	"replace": "Korvaa",
-	"retry": "Yrit\u00e4 uudelleen",
+	"retry": "Yritä uudelleen",
 	"revert": "Palauta",
 	"revert.confirm": "Haluatko varmasti <strong>poistaa kaikki tallentamattomat muutokset</strong>?",
 
-	"role": "K\u00e4ytt\u00e4j\u00e4taso",
+	"role": "Käyttäjätaso",
 	"role.admin.description": "Pääkäyttäjällä on kaikki oikeudet",
 	"role.admin.title": "Pääkäyttäjä",
 	"role.all": "Kaikki",
@@ -524,9 +524,9 @@
 	"template": "Sivupohja",
 	"today": "Tänään",
 
-	"toolbar.button.code": "Koodi",
+	"toolbar.button.code": "Tunniste",
 	"toolbar.button.bold": "Lihavointi",
-	"toolbar.button.email": "S\u00e4hk\u00f6posti",
+	"toolbar.button.email": "Sähköposti",
 	"toolbar.button.headings": "Otsikot",
 	"toolbar.button.heading.1": "Otsikko 1",
 	"toolbar.button.heading.2": "Otsikko 2",
@@ -535,7 +535,7 @@
 	"toolbar.button.heading.5": "Otsikko 5",
 	"toolbar.button.heading.6": "Otsikko 6",
 	"toolbar.button.italic": "Kursivointi",
-	"toolbar.button.file": "Tiedosto",
+	"toolbar.button.file": "File",
 	"toolbar.button.file.select": "Valitse tiedosto",
 	"toolbar.button.file.upload": "Lähetä tiedosto",
 	"toolbar.button.link": "Linkki",
@@ -562,7 +562,7 @@
 	"upload.error.noFiles": "Tiedostoja ei lähetetty",
 	"upload.error.partial": "Tiedoston lähetys onnistui vain osittain",
 	"upload.error.tmpDir": "Väliaikainen hakemisto puuttuu",
-	"upload.errors": "Virhe",
+	"upload.errors": "Error",
 	"upload.progress": "Lähetetään...",
 
 	"url": "Url",
@@ -595,7 +595,7 @@
 	"view.resetPassword": "Aseta salasana",
 	"view.site": "Sivusto",
 	"view.system": "Järjestelmä",
-	"view.users": "K\u00e4ytt\u00e4j\u00e4t",
+	"view.users": "Käyttäjät",
 
 	"welcome": "Tervetuloa",
 	"year": "Vuosi",

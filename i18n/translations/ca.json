@@ -7,7 +7,7 @@
 	"author": "Author",
 	"avatar": "Imatge del perfil",
 	"back": "Tornar",
-	"cancel": "Cancel\u00b7lar",
+	"cancel": "Cancel·lar",
 	"change": "Canviar",
 	"close": "Tancar",
 	"confirm": "Ok",
@@ -143,7 +143,7 @@
 	"error.page.slug.maxlength": "La longitud del nom ha de tenir menys de caràcters \"{length}\"",
 	"error.page.sort.permission": "La pàgina \"{slug}\" no es pot ordenar",
 	"error.page.status.invalid": "Si us plau, estableix un estat de pàgina vàlid",
-	"error.page.undefined": "La p\u00e0gina no s'ha trobat",
+	"error.page.undefined": "La pàgina no s'ha trobat",
 	"error.page.update.permission": "No tens permís per actualitzar \"{slug}\"",
 
 	"error.section.files.max.plural": "No has d'afegir més de {max} fitxers a la secció \"{section}\"",
@@ -176,7 +176,7 @@
 	"error.user.changeRole.toAdmin": "No tens permís per promocionar algú al rol d’administrador",
 	"error.user.create.permission": "No tens permís per crear aquest usuari",
 	"error.user.delete": "L'usuari \"{name}\" no es pot eliminar",
-	"error.user.delete.lastAdmin": "No es pot eliminar l'\u00faltim administrador",
+	"error.user.delete.lastAdmin": "No es pot eliminar l'últim administrador",
 	"error.user.delete.lastUser": "El darrer usuari no es pot eliminar",
 	"error.user.delete.permission": "No pots eliminar l'usuari \"{name}\"",
 	"error.user.duplicate": "Ja existeix un usuari amb l'adreça electrònica \"{email}\"",
@@ -348,7 +348,7 @@
 	"languages.secondary": "Idiomes secundaris",
 	"languages.secondary.empty": "Encara no hi ha idiomes secundaris",
 
-	"license": "Llic\u00e8ncia Kirby",
+	"license": "Llicència Kirby",
 	"license.buy": "Comprar una llicència",
 	"license.register": "Registrar",
 	"license.manage": "Manage your licenses",
@@ -360,7 +360,7 @@
 	"license.unregistered": "Aquesta és una demo no registrada de Kirby",
 	"license.unregistered.label": "Unregistered",
 
-	"link": "Enlla\u00e7",
+	"link": "Enllaç",
 	"link.text": "Enllaç de text",
 
 	"loading": "Carregant",
@@ -404,7 +404,7 @@
 	"months.january": "Gener",
 	"months.july": "Juliol",
 	"months.june": "Juny",
-	"months.march": "Mar\u00e7",
+	"months.march": "Març",
 	"months.may": "Maig",
 	"months.november": "Novembre",
 	"months.october": "Octubre",
@@ -428,7 +428,7 @@
 
 	"page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
 	"page.changeSlug": "Canviar URL",
-	"page.changeSlug.fromTitle": "Crear a partir del t\u00edtol",
+	"page.changeSlug.fromTitle": "Crear a partir del títol",
 	"page.changeStatus": "Canviar l'estat",
 	"page.changeStatus.position": "Si us plau, seleccioneu una posició",
 	"page.changeStatus.select": "Seleccioneu un nou estat",
@@ -455,7 +455,7 @@
 	"pages.status.listed": "Publicat",
 	"pages.status.unlisted": "Sense classificar",
 
-	"pagination.page": "Pàgina",
+	"pagination.page": "Page",
 
 	"password": "Contrasenya",
 	"paste": "Paste",
@@ -467,7 +467,7 @@
 	"preview": "Preview",
 	"remove": "Eliminar",
 	"rename": "Canviar el nom",
-	"replace": "Reempla\u00e7ar",
+	"replace": "Reemplaçar",
 	"retry": "Reintentar",
 	"revert": "Revertir",
 	"revert.confirm": "Segur que voleu eliminar <strong>tots els canvis pendents desar</strong>?",
@@ -496,7 +496,7 @@
 	"show": "Show",
 	"site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
 	"size": "Tamany",
-	"slug": "URL-ap\u00e8ndix",
+	"slug": "URL-apèndix",
 	"sort": "Ordenar",
 
 	"stats.empty": "No reports",
@@ -538,7 +538,7 @@
 	"toolbar.button.file": "Arxiu",
 	"toolbar.button.file.select": "Selecciona un fitxer",
 	"toolbar.button.file.upload": "Carrega un fitxer",
-	"toolbar.button.link": "Enlla\u00e7",
+	"toolbar.button.link": "Enllaç",
 	"toolbar.button.paragraph": "Paragraph",
 	"toolbar.button.strike": "Strike-through",
 	"toolbar.button.ol": "Llista ordenada",
@@ -584,7 +584,7 @@
 
 	"users": "Usuaris",
 
-	"version": "Versi\u00f3 de Kirby",
+	"version": "Versió de Kirby",
 	"version.current": "Current version",
 	"version.latest": "Latest version",
 	"versionInformation": "Version information",

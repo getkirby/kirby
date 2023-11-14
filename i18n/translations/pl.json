@@ -5,10 +5,10 @@
 
 	"add": "Dodaj",
 	"author": "Autor",
-	"avatar": "Zdj\u0119cie profilowe",
+	"avatar": "Zdjęcie profilowe",
 	"back": "Wróć",
 	"cancel": "Anuluj",
-	"change": "Zmie\u0144",
+	"change": "Zmień",
 	"close": "Zamknij",
 	"confirm": "Ok",
 	"collapse": "Zwiń",
@@ -22,16 +22,16 @@
 
 	"day": "Dzień",
 	"days.fri": "Pt",
-	"days.mon": "Pn",
+	"days.mon": "Pon",
 	"days.sat": "Sb",
 	"days.sun": "Nd",
 	"days.thu": "Czw",
 	"days.tue": "Wt",
-	"days.wed": "\u015ar",
+	"days.wed": "Śr",
 
 	"debugging": "Debugowanie",
 
-	"delete": "Usu\u0144",
+	"delete": "Usuń",
 	"delete.all": "Usuń wszystkie",
 
 	"dialog.files.empty": "Brak plików do wyboru",
@@ -40,7 +40,7 @@
 
 	"dimensions": "Wymiary",
 	"disabled": "Wyłączone",
-	"discard": "Odrzu\u0107",
+	"discard": "Odrzuć",
 	"download": "Pobierz",
 	"duplicate": "Zduplikuj",
 
@@ -183,7 +183,7 @@
 	"error.user.email.invalid": "Wprowadź poprawny adres email",
 	"error.user.language.invalid": "Proszę podać poprawny język",
 	"error.user.notFound": "Nie można znaleźć użytkownika \"{name}\"",
-	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
+	"error.user.password.excessive": "Wpisz prawidłowe hasło. Hasła nie mogą być dłuższe niż 1000 znaków.",
 	"error.user.password.invalid": "Wprowadź prawidłowe hasło. Hasła muszą mieć co najmniej 8 znaków.",
 	"error.user.password.notSame": "Hasła nie są takie same",
 	"error.user.password.undefined": "Użytkownik nie ma hasła",
@@ -294,7 +294,7 @@
 
 	"field.structure.delete.confirm": "Czy na pewno chcesz usunąć ten wiersz?",
 	"field.structure.delete.confirm.all": "Czy na pewno chcesz usunąć wszystkie wpisy?",
-	"field.structure.empty": "Nie ma jeszcze \u017cadnych wpis\u00f3w.",
+	"field.structure.empty": "Nie ma jeszcze żadnych wpisów.",
 
 	"field.users.empty": "Nie wybrano jeszcze żadnych użytkowników",
 
@@ -327,7 +327,7 @@
 	"installation.issues.server": "Kirby wymaga <code>Apache</code>, <code>Nginx</code> lub <code>Caddy</code>",
 	"installation.issues.sessions": "Folder <code>/site/sessions</code> nie istnieje lub nie ma uprawnień do zapisu",
 
-	"language": "J\u0119zyk",
+	"language": "Język",
 	"language.code": "Kod",
 	"language.convert": "Ustaw jako domyślny",
 	"language.convert.confirm": "<p>Czy na pewno chcesz zmienić domyślny język na <strong>{name}</strong>? Nie można tego cofnąć.</p><p>Jeżeli brakuje tłumaczenia jakichś treści na <strong>{name}</strong>, nie będzie ich czym zastąpić i części witryny mogą być puste.</p>",
@@ -397,18 +397,18 @@
 	"minutes": "Minuty",
 
 	"month": "Miesiąc",
-	"months.april": "Kwiecie\u0144",
-	"months.august": "Sierpie\u0144",
-	"months.december": "Grudzie\u0144",
+	"months.april": "Kwiecień",
+	"months.august": "Sierpień",
+	"months.december": "Grudzień",
 	"months.february": "Luty",
-	"months.january": "Stycze\u0144",
+	"months.january": "Styczeń",
 	"months.july": "Lipiec",
 	"months.june": "Czerwiec",
 	"months.march": "Marzec",
 	"months.may": "Maj",
 	"months.november": "Listopad",
-	"months.october": "Pa\u017adziernik",
-	"months.september": "Wrzesie\u0144",
+	"months.october": "Październik",
+	"months.september": "Wrzesień",
 
 	"more": "Więcej",
 	"name": "Nazwa",
@@ -427,8 +427,8 @@
 	"orientation.square": "Kwadrat",
 
 	"page.blueprint": "Ta strona nie ma jeszcze wzorca. Możesz go zdefiniować w <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
-	"page.changeSlug": "Zmie\u0144 URL",
-	"page.changeSlug.fromTitle": "Utw\u00f3rz na podstawie tytu\u0142u",
+	"page.changeSlug": "Zmień URL",
+	"page.changeSlug.fromTitle": "Utwórz na podstawie tytułu",
 	"page.changeStatus": "Zmień status",
 	"page.changeStatus.position": "Wybierz pozycję",
 	"page.changeStatus.select": "Wybierz nowy status",
@@ -457,7 +457,7 @@
 
 	"pagination.page": "Strona",
 
-	"password": "Has\u0142o",
+	"password": "Hasło",
 	"paste": "Wklej",
 	"paste.after": "Wklej po",
 	"pixel": "Piksel",
@@ -467,9 +467,9 @@
 	"preview": "Podgląd",
 	"remove": "Usuń",
 	"rename": "Zmień nazwę",
-	"replace": "Zamie\u0144",
-	"retry": "Pon\u00f3w pr\u00f3b\u0119",
-	"revert": "Odrzu\u0107",
+	"replace": "Zastąp",
+	"retry": "Ponów próbę",
+	"revert": "Odrzuć",
 	"revert.confirm": "Czy na pewno chcesz <strong>usunąć wszystkie niezapisane zmiany</strong>?",
 
 	"role": "Rola",
@@ -595,7 +595,7 @@
 	"view.resetPassword": "Zresetuj hasło",
 	"view.site": "Strona",
 	"view.system": "System",
-	"view.users": "U\u017cytkownicy",
+	"view.users": "Użytkownicy",
 
 	"welcome": "Witaj",
 	"year": "Rok",

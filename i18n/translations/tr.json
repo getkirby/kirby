@@ -7,13 +7,13 @@
 	"author": "Yazar",
 	"avatar": "Profil resmi",
 	"back": "Geri",
-	"cancel": "\u0130ptal",
-	"change": "De\u011fi\u015ftir",
+	"cancel": "İptal",
+	"change": "Değiştir",
 	"close": "Kapat",
 	"confirm": "Tamam",
 	"collapse": "Daralt",
 	"collapse.all": "Tümünü daralt",
-	"copy": "Kopyala",
+	"copy": "Kopya",
 	"copy.all": "Tümünü kopyala",
 	"create": "Oluştur",
 
@@ -27,7 +27,7 @@
 	"days.sun": "Paz",
 	"days.thu": "Per",
 	"days.tue": "Sal",
-	"days.wed": "\u00c7ar",
+	"days.wed": "Çar",
 
 	"debugging": "Hata ayıklama",
 
@@ -40,14 +40,14 @@
 
 	"dimensions": "Boyutlar",
 	"disabled": "Devredışı",
-	"discard": "Vazge\u00e7",
+	"discard": "Vazgeç",
 	"download": "İndir",
 	"duplicate": "Kopyala",
 
-	"edit": "D\u00fczenle",
+	"edit": "Düzenle",
 
-	"email": "E-Posta",
-	"email.placeholder": "eposta@ornek.com",
+	"email": "E-posta",
+	"email.placeholder": "mail@example.com",
 
 	"entries": "Girdiler",
 	"entry": "Girdi",
@@ -100,7 +100,7 @@
 	"error.file.orientation": "Resmin oryantasyonu \"{orientation}\" olmalıdır",
 	"error.file.type.forbidden": "{type} dosya yükleme izni yok",
 	"error.file.type.invalid": "Geçersiz dosya türü: {type}",
-	"error.file.undefined": "Dosya bulunamad\u0131",
+	"error.file.undefined": "Dosya bulunamadı",
 
 	"error.form.incomplete": "Lütfen tüm form hatalarını düzeltin...",
 	"error.form.notSaved": "Form kaydedilemedi",
@@ -143,7 +143,7 @@
 	"error.page.slug.maxlength": "Adres uzantısı \"{length}\" karakterden az olmalıdır",
 	"error.page.sort.permission": "\"{slug}\" sayfası sıralanamıyor",
 	"error.page.status.invalid": "Lütfen geçerli bir sayfa durumu ayarlayın",
-	"error.page.undefined": "Sayfa bulunamad\u0131",
+	"error.page.undefined": "Sayfa bulunamadı",
 	"error.page.update.permission": "\"{slug}\" güncellemesine izin verilmiyor",
 
 	"error.section.files.max.plural": "\"{section}\" bölümüne {max} dosyadan daha fazlasını eklememelisiniz",
@@ -176,7 +176,7 @@
 	"error.user.changeRole.toAdmin": "Birini yönetici rolüne tanıtmanıza izin verilmiyor",
 	"error.user.create.permission": "Bu kullanıcıyı oluşturmanıza izin verilmiyor",
 	"error.user.delete": "\"{name}\" kullanıcısı silinemedi",
-	"error.user.delete.lastAdmin": "Son y\u00f6netici kullan\u0131c\u0131y\u0131 silemezsiniz",
+	"error.user.delete.lastAdmin": "Son yönetici kullanıcıyı silemezsiniz",
 	"error.user.delete.lastUser": "Son kullanıcı silinemez",
 	"error.user.delete.permission": "\"{name}\" kullanıcısını silme yetkiniz yok",
 	"error.user.duplicate": "\"{email}\" e-posta adresine sahip bir kullanıcı zaten var",
@@ -185,7 +185,7 @@
 	"error.user.notFound": "\"{name}\" kullanıcısı bulunamadı",
 	"error.user.password.excessive": "Lütfen geçerli bir şifre girin. Şifreler 1000 karakterden uzun olmamalıdır.",
 	"error.user.password.invalid": "Lütfen geçerli bir şifre giriniz. Şifreler en az 8 karakter uzunluğunda olmalıdır.",
-	"error.user.password.notSame": "L\u00fctfen \u015fifreyi do\u011frulay\u0131n",
+	"error.user.password.notSame": "Lütfen şifreyi doğrulayın",
 	"error.user.password.undefined": "Bu kullanıcının şifresi yok",
 	"error.user.password.wrong": "Yanlış şifre",
 	"error.user.role.invalid": "Lütfen geçerli bir rol girin",
@@ -292,9 +292,9 @@
 
 	"field.pages.empty": "Henüz sayfa seçilmedi",
 
-	"field.structure.delete.confirm": "Bu girdiyi silmek istedi\u011finizden emin misiniz?",
+	"field.structure.delete.confirm": "Bu girdiyi silmek istediğinizden emin misiniz?",
 	"field.structure.delete.confirm.all": "Tüm girdileri gerçekten silmek istiyor musunuz?",
-	"field.structure.empty": "Hen\u00fcz bir girdi yok",
+	"field.structure.empty": "Henüz bir girdi yok",
 
 	"field.users.empty": "Henüz kullanıcı seçilmedi",
 
@@ -360,8 +360,8 @@
 	"license.unregistered": "Bu Kirby'nin kayıtsız bir demosu",
 	"license.unregistered.label": "Kayıtsız",
 
-	"link": "Ba\u011flant\u0131",
-	"link.text": "Ba\u011flant\u0131 yaz\u0131s\u0131",
+	"link": "Bağlantı",
+	"link.text": "Bağlantı metni",
 
 	"loading": "Yükleniyor",
 
@@ -398,17 +398,17 @@
 
 	"month": "Ay",
 	"months.april": "Nisan",
-	"months.august": "A\u011fustos",
-	"months.december": "Aral\u0131k",
+	"months.august": "Ağustos",
+	"months.december": "Aralık",
 	"months.february": "Şubat",
 	"months.january": "Ocak",
 	"months.july": "Temmuz",
 	"months.june": "Haziran",
 	"months.march": "Mart",
-	"months.may": "May\u0131s",
-	"months.november": "Kas\u0131m",
+	"months.may": "Mayıs",
+	"months.november": "Kasım",
 	"months.october": "Ekim",
-	"months.september": "Eyl\u00fcl",
+	"months.september": "Eylül",
 
 	"more": "Daha Fazla",
 	"name": "İsim",
@@ -428,7 +428,7 @@
 
 	"page.blueprint": "Bu dosyanın henüz bir planı yok. Kurulumu <strong>/site/blueprints/pages/{blueprint}.yml</strong> dosyasında tanımlayabilirsiniz.",
 	"page.changeSlug": "Web Adresini Değiştir",
-	"page.changeSlug.fromTitle": "Ba\u015fl\u0131ktan olu\u015ftur",
+	"page.changeSlug.fromTitle": "Başlıktan oluştur",
 	"page.changeStatus": "Durumu değiştir",
 	"page.changeStatus.position": "Lütfen bir pozisyon seçin",
 	"page.changeStatus.select": "Yeni bir durum seçin",
@@ -457,7 +457,7 @@
 
 	"pagination.page": "Sayfa",
 
-	"password": "\u015eifre",
+	"password": "Şifre",
 	"paste": "Yapıştır",
 	"paste.after": "Sonrasına yapıştır",
 	"pixel": "Piksel",
@@ -467,9 +467,9 @@
 	"preview": "Önizle",
 	"remove": "Kaldır",
 	"rename": "Yeniden Adlandır",
-	"replace": "De\u011fi\u015ftir",
+	"replace": "Değiştir",
 	"retry": "Tekrar Dene",
-	"revert": "Vazge\u00e7",
+	"revert": "Vazgeç",
 	"revert.confirm": "Gerçekten <strong>kaydedilmemiş tüm değişiklikleri silmek</strong> istiyor musunuz?",
 
 	"role": "Rol",
@@ -521,12 +521,12 @@
 	"system.updateStatus.upgrade": "{ version } yükseltme mevcut",
 
 	"title": "Başlık",
-	"template": "\u015eablon",
+	"template": "Şablon",
 	"today": "Bugün",
 
 	"toolbar.button.code": "Kod",
 	"toolbar.button.bold": "Kalın Yazı",
-	"toolbar.button.email": "E-Posta",
+	"toolbar.button.email": "E-posta",
 	"toolbar.button.headings": "Başlıklar",
 	"toolbar.button.heading.1": "Başlık 1",
 	"toolbar.button.heading.2": "Başlık 2",
@@ -538,7 +538,7 @@
 	"toolbar.button.file": "Dosya",
 	"toolbar.button.file.select": "Bir dosya seçin",
 	"toolbar.button.file.upload": "Bir dosya yükleyin",
-	"toolbar.button.link": "Ba\u011flant\u0131",
+	"toolbar.button.link": "Bağlantı",
 	"toolbar.button.paragraph": "Paragraf",
 	"toolbar.button.strike": "Üstü çizili",
 	"toolbar.button.ol": "Sıralı liste",
@@ -547,7 +547,7 @@
 
 	"translation.author": "Kirby Takımı",
 	"translation.direction": "ltr",
-	"translation.name": "T\u00fcrk\u00e7e",
+	"translation.name": "Türkçe",
 	"translation.locale": "tr_TR",
 
 	"upload": "Yükle",
@@ -589,13 +589,13 @@
 	"version.latest": "En son sürüm",
 	"versionInformation": "Sürüm bilgisi",
 
-	"view.account": "Hesap Bilgilerin",
+	"view.account": "Hesabın",
 	"view.installation": "Kurulum",
 	"view.languages": "Diller",
 	"view.resetPassword": "Şifreyi sıfırla",
 	"view.site": "Site",
 	"view.system": "Sistem",
-	"view.users": "Kullan\u0131c\u0131lar",
+	"view.users": "Kullanıcılar",
 
 	"welcome": "Hoşgeldiniz",
 	"year": "Yıl",

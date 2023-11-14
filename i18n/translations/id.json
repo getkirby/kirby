@@ -255,7 +255,7 @@
 	"field.blocks.heading.text": "Teks",
 	"field.blocks.heading.placeholder": "Penajukan …",
 	"field.blocks.image.alt": "Teks alternatif",
-	"field.blocks.image.caption": "Keterangan",
+	"field.blocks.image.caption": "Deskripsi",
 	"field.blocks.image.crop": "Pangkas",
 	"field.blocks.image.link": "Tautan",
 	"field.blocks.image.location": "Lokasi",

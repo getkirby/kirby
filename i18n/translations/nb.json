@@ -23,8 +23,8 @@
 	"day": "Dag",
 	"days.fri": "Fre",
 	"days.mon": "Man",
-	"days.sat": "L\u00f8r",
-	"days.sun": "S\u00f8n",
+	"days.sat": "Lør",
+	"days.sun": "Søn",
 	"days.thu": "Tor",
 	"days.tue": "Tir",
 	"days.wed": "Ons",
@@ -178,7 +178,7 @@
 	"error.user.delete": "Denne brukeren kunne ikke bli slettet",
 	"error.user.delete.lastAdmin": "Siste administrator kan ikke slettes",
 	"error.user.delete.lastUser": "Den siste brukeren kan ikke slettes",
-	"error.user.delete.permission": "Du er ikke tillat \u00e5 slette denne brukeren",
+	"error.user.delete.permission": "Du er ikke tillat å slette denne brukeren",
 	"error.user.duplicate": "En bruker med e-postadresse \"{email}\" eksisterer allerede",
 	"error.user.email.invalid": "Vennligst skriv inn en gyldig e-postadresse",
 	"error.user.language.invalid": "Vennligst skriv inn et gyldig språk",
@@ -292,9 +292,9 @@
 
 	"field.pages.empty": "Ingen side har blitt valgt",
 
-	"field.structure.delete.confirm": "\u00d8nsker du virkelig \u00e5 slette denne oppf\u00f8ringen?",
+	"field.structure.delete.confirm": "Ønsker du virkelig å slette denne oppføringen?",
 	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
-	"field.structure.empty": "Ingen oppf\u00f8ringer enda",
+	"field.structure.empty": "Ingen oppføringer enda",
 
 	"field.users.empty": "Ingen bruker har blitt valgt",
 
@@ -317,8 +317,8 @@
 	"installation": "Installasjon",
 	"installation.completed": "Panelet har blitt installert",
 	"installation.disabled": "Installasjonsprogrammet for Panelet er deaktivert på offentlige servere som standard. Vennligst kjør installasjonsprogrammet på en lokal maskin eller aktiver den med <code>panel.install</code> innstillingen.",
-	"installation.issues.accounts": "\/site\/accounts er ikke skrivbar",
-	"installation.issues.content": "Mappen content og alt av innhold m\u00e5 v\u00e6re skrivbar.",
+	"installation.issues.accounts": "/site/accounts er ikke skrivbar",
+	"installation.issues.content": "Mappen content og alt av innhold må være skrivbar.",
 	"installation.issues.curl": "Utvidelsen <code>CURL</code> er nødvendig",
 	"installation.issues.headline": "Panelet kan ikke installeres",
 	"installation.issues.mbstring": "Utvidelsen <code>MB String</code> er nødvendig",
@@ -327,7 +327,7 @@
 	"installation.issues.server": "Kirby krever <code>Apache</code>, <code>Nginx</code> eller <code>Caddy</code>",
 	"installation.issues.sessions": "Mappen <code>/site/sessions</code> eksisterer ikke eller er ikke skrivbar",
 
-	"language": "Spr\u00e5k",
+	"language": "Språk",
 	"language.code": "Kode",
 	"language.convert": "Gjør til standard",
 	"language.convert.confirm": "<p>Vil du virkelig konvertere <strong>{name}</strong> til standardspråk? Dette kan ikke angres. </p><p>Dersom <strong>{name}</strong> har innhold som ikke er oversatt, vil nettstedet mangle innhold å falle tilbake på. Dette kan resultere i at deler av nettstedet fremstår som tomt.</p>",
@@ -455,7 +455,7 @@
 	"pages.status.listed": "Publisert",
 	"pages.status.unlisted": "Unotert",
 
-	"pagination.page": "Side",
+	"pagination.page": "Page",
 
 	"password": "Passord",
 	"paste": "Lim inn",
@@ -468,7 +468,7 @@
 	"remove": "Fjern",
 	"rename": "Endre navn",
 	"replace": "Erstatt",
-	"retry": "Pr\u00f8v p\u00e5 nytt",
+	"retry": "Prøv på nytt",
 	"revert": "Forkast",
 	"revert.confirm": "Er du sikker på at vil <strong>slette alle ulagrede endringer</strong>?",
 
@@ -547,7 +547,7 @@
 
 	"translation.author": "Kirby Team",
 	"translation.direction": "ltr",
-	"translation.name": "Norsk Bokm\u00e5l",
+	"translation.name": "Norsk Bokmål",
 	"translation.locale": "nb_NO",
 
 	"upload": "Last opp",
@@ -562,7 +562,7 @@
 	"upload.error.noFiles": "Ingen filer ble lastet opp",
 	"upload.error.partial": "Den opplastede filen ble bare delvis lastet opp",
 	"upload.error.tmpDir": "Mangler en midlertidig mappe",
-	"upload.errors": "Feil",
+	"upload.errors": "Error",
 	"upload.progress": "Laster opp…",
 
 	"url": "Nettadresse",

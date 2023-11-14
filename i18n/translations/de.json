@@ -3,13 +3,13 @@
 	"account.delete": "Deinen Account löschen",
 	"account.delete.confirm": "Willst du deinen Account wirklich löschen? Du wirst sofort danach abgemeldet. Dein Account kann nicht wieder hergestellt werden.",
 
-	"add": "Hinzuf\u00fcgen",
+	"add": "Hinzufügen",
 	"author": "Autor",
 	"avatar": "Profilbild",
 	"back": "Zurück",
 	"cancel": "Abbrechen",
-	"change": "\u00c4ndern",
-	"close": "Schlie\u00dfen",
+	"change": "Ändern",
+	"close": "Schließen",
 	"confirm": "OK",
 	"collapse": "Zusammenklappen",
 	"collapse.all": "Alle zusammenklappen",
@@ -31,7 +31,7 @@
 
 	"debugging": "Debugging",
 
-	"delete": "L\u00f6schen",
+	"delete": "Löschen",
 	"delete.all": "Alle löschen",
 
 	"dialog.files.empty": "Keine verfügbaren Dateien",
@@ -60,7 +60,7 @@
 	"error.access.view": "Du hast keinen Zugriff auf diesen Teil des Panels",
 
 	"error.avatar.create.fail": "Das Profilbild konnte nicht hochgeladen werden",
-	"error.avatar.delete.fail": "Das Profilbild konnte nicht gel\u00f6scht werden",
+	"error.avatar.delete.fail": "Das Profilbild konnte nicht gelöscht werden",
 	"error.avatar.dimensions.invalid": "Bitte lade ein Profilbild hoch, das nicht breiter oder höher als 3000 Pixel ist.",
 	"error.avatar.mime.forbidden": "Das Profilbild muss vom Format JPEG oder PNG sein",
 
@@ -292,9 +292,9 @@
 
 	"field.pages.empty": "Keine Seiten ausgewählt",
 
-	"field.structure.delete.confirm": "Willst du diesen Eintrag wirklich l\u00f6schen?",
+	"field.structure.delete.confirm": "Willst du diesen Eintrag wirklich löschen?",
 	"field.structure.delete.confirm.all": "Möchtest du wirklich alle Einträge löschen?",
-	"field.structure.empty": "Es bestehen keine Eintr\u00e4ge.",
+	"field.structure.empty": "Es bestehen keine Einträge.",
 
 	"field.users.empty": "Keine Accounts ausgewählt",
 
@@ -309,7 +309,7 @@
 	"hour": "Stunde",
 	"import": "Importieren",
 	"info": "Info",
-	"insert": "Einf\u00fcgen",
+	"insert": "Einfügen",
 	"insert.after": "Danach einfügen",
 	"insert.before": "Davor einfügen",
 	"install": "Installieren",
@@ -404,7 +404,7 @@
 	"months.january": "Januar",
 	"months.july": "Juli",
 	"months.june": "Juni",
-	"months.march": "M\u00e4rz",
+	"months.march": "März",
 	"months.may": "Mai",
 	"months.november": "November",
 	"months.october": "Oktober",
@@ -427,7 +427,7 @@
 	"orientation.square": "Quadratisch",
 
 	"page.blueprint": "Du kannst zusätzliche Felder und Bereiche für diese Seite in <strong>/site/blueprints/pages/{blueprint}.yml</strong> anlegen",
-	"page.changeSlug": "URL \u00e4ndern",
+	"page.changeSlug": "URL ändern",
 	"page.changeSlug.fromTitle": "Aus Titel erzeugen",
 	"page.changeStatus": "Status ändern",
 	"page.changeStatus.position": "Bitte wähle eine Position aus",
@@ -437,7 +437,7 @@
 	"page.delete.confirm.subpages": "<strong>Diese Seite hat Unterseiten</strong>. <br>Alle Unterseiten werden ebenfalls gelöscht.",
 	"page.delete.confirm.title": "Gib zur Bestätigung den Seitentitel ein",
 	"page.draft.create": "Entwurf anlegen",
-	"page.duplicate.appendix": "Kopie",
+	"page.duplicate.appendix": "Kopieren",
 	"page.duplicate.files": "Dateien kopieren",
 	"page.duplicate.pages": "Seiten kopieren",
 	"page.sort": "Position ändern",

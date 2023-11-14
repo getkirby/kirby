@@ -8,7 +8,7 @@
 	"avatar": "Profilbillede",
 	"back": "Tilbage",
 	"cancel": "Annuller",
-	"change": "\u00c6ndre",
+	"change": "Ændre",
 	"close": "Luk",
 	"confirm": "Gem",
 	"collapse": "Fold sammen",
@@ -23,8 +23,8 @@
 	"day": "Dag",
 	"days.fri": "Fre",
 	"days.mon": "Man",
-	"days.sat": "L\u00f8r",
-	"days.sun": "S\u00f8n",
+	"days.sat": "Lør",
+	"days.sun": "Søn",
 	"days.thu": "Tor",
 	"days.tue": "Tir",
 	"days.wed": "Ons",
@@ -40,7 +40,7 @@
 
 	"dimensions": "Dimensioner",
 	"disabled": "Deaktiveret",
-	"discard": "Kass\u00e9r",
+	"discard": "Kassér",
 	"download": "Download",
 	"duplicate": "Dupliker",
 
@@ -185,7 +185,7 @@
 	"error.user.notFound": "Brugeren kunne ikke findes",
 	"error.user.password.excessive": "Please enter a valid password. Passwords must not be longer than 1000 characters.",
 	"error.user.password.invalid": "Indtast venligst en gyldig adgangskode. Adgangskoder skal minimum være 8 tegn lange.",
-	"error.user.password.notSame": "Bekr\u00e6ft venligst adgangskoden",
+	"error.user.password.notSame": "Bekræft venligst adgangskoden",
 	"error.user.password.undefined": "Brugeren har ikke en adgangskode",
 	"error.user.password.wrong": "Forkert adgangskode",
 	"error.user.role.invalid": "Indtast venligst en gyldig rolle",
@@ -292,14 +292,14 @@
 
 	"field.pages.empty": "Ingen sider valgt endnu",
 
-	"field.structure.delete.confirm": "\u00d8nsker du virkelig at slette denne indtastning?",
+	"field.structure.delete.confirm": "Ønsker du virkelig at slette denne indtastning?",
 	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
 	"field.structure.empty": "Ingen indtastninger endnu.",
 
 	"field.users.empty": "Ingen brugere er valgt",
 
 	"file.blueprint": "Denne fil har intet blueprint endnu. Du kan definere opsætningen i <strong>/site/blueprints/files/{blueprint}.yml</strong>",
-	"file.delete.confirm": "\u00d8nsker du virkelig at slette denne fil?",
+	"file.delete.confirm": "Ønsker du virkelig at slette denne fil?",
 	"file.sort": "Skift position",
 
 	"files": "Filer",
@@ -309,7 +309,7 @@
 	"hour": "Time",
 	"import": "Importer",
 	"info": "Info",
-	"insert": "Inds\u00e6t",
+	"insert": "Indsæt",
 	"insert.after": "Indsæt efter",
 	"insert.before": "Indsæt før",
 	"install": "Installer",
@@ -317,8 +317,8 @@
 	"installation": "Installation",
 	"installation.completed": "Panelet er blevet installeret",
 	"installation.disabled": "Panel installationen er deaktiveret på offentlige servere som standard. Kør venligst installationen på en lokal maskine eller aktiver det med panel.install <code>panel.install</code> muligheden.",
-	"installation.issues.accounts": "\/site\/accounts er ikke skrivbar",
-	"installation.issues.content": "Content mappen samt alle underliggende filer og mapper skal v\u00e6re skrivbare.",
+	"installation.issues.accounts": "/site/accounts er ikke skrivbar",
+	"installation.issues.content": "Content mappen samt alle underliggende filer og mapper skal være skrivbare.",
 	"installation.issues.curl": "<code>CURL</code> extension er påkrævet",
 	"installation.issues.headline": "Panelet kan ikke installeres",
 	"installation.issues.mbstring": "<code>MB String</code> extension er påkrævet",
@@ -427,13 +427,13 @@
 	"orientation.square": "Kvadrat",
 
 	"page.blueprint": "Denne side har intet blueprint endnu. Du kan definere opsætningen i <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
-	"page.changeSlug": "\u00c6ndre URL",
+	"page.changeSlug": "Ændre URL",
 	"page.changeSlug.fromTitle": "Generer udfra titel",
 	"page.changeStatus": "Skift status",
 	"page.changeStatus.position": "Vælg venligst position",
 	"page.changeStatus.select": "Vælg en ny status",
 	"page.changeTemplate": "Skift skabelon",
-	"page.delete.confirm": "\u00d8nsker du virkelig at slette denne side?",
+	"page.delete.confirm": "Ønsker du virkelig at slette denne side?",
 	"page.delete.confirm.subpages": "<strong>Denne side har undersider</strong>. <br>Alle undersider vil også blive slettet.",
 	"page.delete.confirm.title": "Indtast sidens titel for at bekræfte",
 	"page.draft.create": "Opret kladde",
@@ -455,7 +455,7 @@
 	"pages.status.listed": "Udgivede",
 	"pages.status.unlisted": "Ulistede",
 
-	"pagination.page": "Side",
+	"pagination.page": "Page",
 
 	"password": "Adgangskode",
 	"paste": "Indsæt",
@@ -468,8 +468,8 @@
 	"remove": "Fjern",
 	"rename": "Omdøb",
 	"replace": "Erstat",
-	"retry": "Pr\u00f8v igen",
-	"revert": "Kass\u00e9r",
+	"retry": "Prøv igen",
+	"revert": "Kassér",
 	"revert.confirm": "Ønsker du virkelig at <strong>slette all ændringer der ikke er gemt</strong>?",
 
 	"role": "Rolle",
@@ -535,7 +535,7 @@
 	"toolbar.button.heading.5": "Overskrift 5",
 	"toolbar.button.heading.6": "Overskrift 6",
 	"toolbar.button.italic": "Kursiv tekst",
-	"toolbar.button.file": "Fil",
+	"toolbar.button.file": "File",
 	"toolbar.button.file.select": "Vælg en fil",
 	"toolbar.button.file.upload": "Upload en fil",
 	"toolbar.button.link": "Link",
@@ -580,7 +580,7 @@
 	"user.changeRole.select": "Vælg en ny rolle",
 	"user.create": "Tilføj en ny bruger",
 	"user.delete": "Slet denne bruger",
-	"user.delete.confirm": "\u00d8nsker du virkelig at slette denne bruger?",
+	"user.delete.confirm": "Ønsker du virkelig at slette denne bruger?",
 
 	"users": "Brugere",
 
