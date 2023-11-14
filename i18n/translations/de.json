@@ -461,12 +461,12 @@
 	"login.totp.enable.confirm.text": "Deine App erstellt alle 30 Sekunden einen neuen Einmal-Code. Gib den aktuellen Code ein, um das Setup abzuschliessen. ",
 	"login.totp.enable.confirm.label": "Aktueller Code",
 	"login.totp.enable.confirm.help": "Nach dem Setup werden wir dich bei jeder Anmeldung nach einem Einmal-Code fragen. ",
-	"login.totp.enable.success": "Aktivierte Einmal-Codes",
+	"login.totp.enable.success": "Einmal-Codes aktiviert",
 	"login.totp.disable.option": "Einmal-Codes deaktivieren",
 	"login.totp.disable.label": "Gib dein Passwort ein, um die Einmal-Codes zu deaktivieren. ",
 	"login.totp.disable.help": "In Zukunft wird bei der Anmeldung ein anderer zweiter Faktor abgefragt. Z.B. ein Login-Code der per Email zugeschickt wird. Du kannst die Einmal-Codes jeder Zeit später wieder neu einrichten. ",
 	"login.totp.disable.admin": "<p>Einmal-Codes für <strong>{user}</strong> werden hiermit deaktiviert.</p> <p>In Zukunft wird für die Anmeldung ein anderer zweiter Faktor abgefragt. Z.B. ein Login-Code, der per Email zugeschickt wird. {user} kann nach der nächsten Anmeldung jeder Zeit wieder Einmal-Codes für den Account aktivieren.</p>",
-	"login.totp.disable.success": "Deaktivierte Einmal-Codes",
+	"login.totp.disable.success": "Einmal-Codes deaktiviert",
 
 	"logout": "Abmelden",
 
