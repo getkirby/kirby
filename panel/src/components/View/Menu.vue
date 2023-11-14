@@ -31,15 +31,16 @@
 					class="k-panel-menu-button"
 				/>
 			</menu>
-			<menu v-if="$panel.license !== 'active'">
+
+			<menu v-if="activationButton">
 				<k-button
-					:text="$t('activate')"
+					v-bind="activationButton"
 					class="k-activation-button k-panel-menu-button"
 					icon="key"
+					theme="love"
 					variant="filled"
-					@click="$dialog('registration')"
 				/>
-				<k-activation :renew="$panel.license === 'outdated'" />
+				<k-activation :status="$panel.license" />
 			</menu>
 		</div>
 
@@ -66,6 +67,23 @@ export default {
 		};
 	},
 	computed: {
+		activationButton() {
+			if (this.$panel.license === "missing") {
+				return {
+					click: () => this.$dialog("registration"),
+					text: this.$t("activate")
+				};
+			}
+
+			if (this.$panel.license === "legacy") {
+				return {
+					click: () => this.$dialog("license"),
+					text: this.$t("license.renew")
+				};
+			}
+
+			return false;
+		},
 		hasSearch() {
 			return this.$helper.object.length(this.$panel.searches) > 0;
 		},
@@ -209,13 +227,6 @@ export default {
 	background: var(--menu-color-back);
 	border-start-end-radius: var(--button-rounded);
 	border-end-end-radius: var(--button-rounded);
-}
-
-/* Activation */
-.k-panel-menu .k-activation-button {
-	--button-color-back: var(--color-pink-300);
-	--button-color-text: var(--color-pink-800);
-	border: 1px solid var(--color-pink-400);
 }
 
 @media (max-width: 60rem) {

@@ -57,6 +57,12 @@
 	--theme-color-boost: var(--color-blue-boost);
 }
 
+[data-theme="love"] {
+	--theme-color-h: var(--color-pink-h);
+	--theme-color-s: var(--color-pink-s);
+	--theme-color-boost: var(--color-pink-boost);
+}
+
 [data-theme="positive"] {
 	--theme-color-h: var(--color-green-h);
 	--theme-color-s: var(--color-green-s);

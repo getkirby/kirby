@@ -15,7 +15,7 @@ return [
 			$environment = [
 				[
 					'label'  => $license->status()->label(),
-					'value'  => $license->type(),
+					'value'  => $license->label(),
 					'theme'  => $license->status()->theme(),
 					'icon'   => $license->status()->icon(),
 					'dialog' => $license->status()->dialog()

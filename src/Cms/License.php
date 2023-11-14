@@ -24,6 +24,8 @@ class License
 		'4' => '2023-12-01'
 	];
 
+	protected const SALT = 'kwAHMLyLPBnHEskzH9pPbJsBxQhKXZnX';
+
 	// cache
 	protected LicenseStatus|null $status = null;
 
@@ -44,6 +46,14 @@ class License
 	public function activated(string|IntlDateFormatter|null $format = null): int|string|null
 	{
 		return $this->activated !== null ? Str::date(strtotime($this->activated), $format) : null;
+	}
+
+	/**
+	 * Creates a checkout link
+	 */
+	public function checkout(): string
+	{
+		return static::hub() . '/renew/' . hash('sha256', $this->code() . static::SALT);
 	}
 
 	/**
@@ -75,6 +85,14 @@ class License
 	}
 
 	/**
+	 * Hub address
+	 */
+	public static function hub(): string
+	{
+		return App::instance()->option('hub', 'https://hub.getkirby.com');
+	}
+
+	/**
 	 * Checks for all required components of a valid license
 	 */
 	public function isComplete(): bool
@@ -94,11 +112,23 @@ class License
 	}
 
 	/**
-	 * The license is no longer valid for the currently
-	 * installed version and needs to be renewed
+	 * The license is still valid for the currently
+	 * installed version, but it passed the 3 year period.
 	 */
-	public function isExpired(): bool
+	public function isInactive(): bool
 	{
+		return $this->renewal() < time();
+	}
+
+	/**
+	 * Checks for Kirby 3 licenses
+	 */
+	public function isLegacy(): bool
+	{
+		if ($this->type() === 'Kirby 3') {
+			return true;
+		}
+
 		// without an activation date, the license
 		// renewal cannot be evaluated and the license
 		// has to be marked as expired
@@ -122,11 +152,15 @@ class License
 	}
 
 	/**
-	 * Checks for Kirby 3 licenses
+	 * Runs multiple checks to find out if the license is
+     * installed and verifiable
 	 */
-	public function isLegacy(): bool
+	public function isMissing(): bool
 	{
-		return $this->type() === 'Kirby 3';
+		return
+			$this->isComplete() === false ||
+			$this->isOnCorrectDomain() === false ||
+			$this->isSigned() === false;
 	}
 
 	/**
@@ -147,15 +181,6 @@ class License
 	}
 
 	/**
-	 * The license is still valid for the currently
-	 * installed version, but it passed the 3 year period.
-	 */
-	public function isOutdated(): bool
-	{
-		return $this->renewal() < time();
-	}
-
-	/**
 	 * Compares the signature with all ingredients
 	 */
 	public function isSigned(): bool
@@ -172,7 +197,7 @@ class License
 			'activated' => $this->activated,
 			'code'      => $this->code,
 			'domain'    => $this->domain,
-			'email'     => hash('sha256', $this->email . 'kwAHMLyLPBnHEskzH9pPbJsBxQhKXZnX'),
+			'email'     => hash('sha256', $this->email . static::SALT),
 			'order'     => $this->order,
 			'purchased' => $this->purchased,
 		];
@@ -200,14 +225,15 @@ class License
 	}
 
 	/**
-	 * Runs multiple checks to find out if the license is valid
+	 * Returns a reliable label for the license type
 	 */
-	public function isValid(): bool
+	public function label(): string
 	{
-		return
-			$this->isComplete() === true &&
-			$this->isOnCorrectDomain() === true &&
-			$this->isSigned() === true;
+		if ($this->status() === LicenseStatus::Missing) {
+			return I18n::translate('license.unregistered.label');
+		}
+
+		return $this->type();
 	}
 
 	/**
@@ -317,10 +343,10 @@ class License
 	public function status(): LicenseStatus
 	{
 		return $this->status ??= match (true) {
-			$this->isValid()    === false => LicenseStatus::Invalid,
-			$this->isExpired()  === true  => LicenseStatus::Expired,
-			$this->isOutdated() === true  => LicenseStatus::Outdated,
-			default                       => LicenseStatus::Active
+			$this->isMissing()  === true => LicenseStatus::Missing,
+			$this->isLegacy()   === true => LicenseStatus::Legacy,
+			$this->isInactive() === true => LicenseStatus::Inactive,
+			default                      => LicenseStatus::Active
 		};
 	}
 
@@ -330,10 +356,10 @@ class License
 	public function type(): string
 	{
 		return match (true) {
-			Str::startsWith($this->code, 'K3-')   => 'Kirby 3',
-			Str::startsWith($this->code, 'K-ENT') => 'Kirby Enterprise',
-			Str::startsWith($this->code, 'K-BAS') => 'Kirby Basic',
-			default                               => I18n::translate('license.unregistered.label')
+			Str::startsWith($this->code, 'K3-')    => 'Kirby 3',
+			Str::startsWith($this->code, 'K-ENT')  => 'Kirby Enterprise',
+			Str::startsWith($this->code, 'K-BAS')  => 'Kirby Basic',
+			default                                => I18n::translate('license.unregistered.label')
 		};
 	}
 }

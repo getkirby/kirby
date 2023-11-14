@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\App;
+use Kirby\Http\Response;
 use Kirby\Panel\Field;
 use Kirby\Panel\Panel;
 use Kirby\Toolkit\I18n;
@@ -13,26 +14,28 @@ return [
 			$license    = $kirby->system()->license();
 			$obfuscated = $kirby->user()->isAdmin() === false;
 
-			if ($license === false) {
-				go(Panel::url('dialogs/registration'));
-			}
-
 			return [
 				'component' => 'k-license-dialog',
 				'props' => [
 					'license' => [
-						'activated'  => $license->activated('Y-m-d') ?? $license->purchased('Y-m-d'),
-						'code'       => $license->code($obfuscated),
-						'domain'     => $license->domain(),
-						'icon'       => $license->status()->icon(),
-						'info'       => $license->status()->info(),
-						'purchased'  => $license->purchased('Y-m-d'),
-						'renewal'    => $license->renewal('Y-m-d'),
-						'status'     => $license->status(),
-						'theme'      => $license->status()->theme(),
-						'type'       => $license->type(),
+						'code'  => $license->code($obfuscated),
+						'icon'  => $license->status()->icon(),
+						'info'  => $license->status()->info($license->renewal('Y-m-d')),
+						'theme' => $license->status()->theme(),
+						'type'  => $license->type(),
+					],
+					'cancelButton' => $license->status()->value() === 'active' ? false : true,
+					'submitButton' => $license->status()->value() === 'active' ? false : [
+						'icon'  => 'cart',
+						'text'  => I18n::translate('license.renew'),
+						'theme' => 'love',
 					]
 				]
+			];
+		},
+		'submit' => function () {
+			return [
+				'redirect' => App::instance()->system()->license()->checkout()
 			];
 		}
 	],
@@ -65,6 +68,7 @@ return [
 					'submitButton' => [
 						'icon'  => 'key',
 						'text'  => I18n::translate('activate'),
+						'theme' => 'love',
 					],
 					'value' => [
 						'license' => null,
