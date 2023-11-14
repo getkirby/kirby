@@ -62,7 +62,7 @@ class License
 	public function code(bool $obfuscated = false): string|null
 	{
 		if ($this->code !== null && $obfuscated === true) {
- 			return Str::substr($this->code, 0, 10) . str_repeat('X', 22);
+			return Str::substr($this->code, 0, 10) . str_repeat('X', 22);
 		}
 
 		return $this->code;
@@ -153,7 +153,7 @@ class License
 
 	/**
 	 * Runs multiple checks to find out if the license is
-     * installed and verifiable
+	 * installed and verifiable
 	 */
 	public function isMissing(): bool
 	{
@@ -278,7 +278,7 @@ class License
 		try {
 			$license = Json::read(App::instance()->root('license'));
 		} catch (Throwable) {
-			return new static;
+			return new static();
 		}
 
 		return new static(...static::polyfill($license));
@@ -337,8 +337,8 @@ class License
 
 	/**
 	 * Returns the license status as string
-     * This is used to build the proper UI elements
-     * for the license activation
+	 * This is used to build the proper UI elements
+	 * for the license activation
 	 */
 	public function status(): LicenseStatus
 	{
