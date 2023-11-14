@@ -60,9 +60,11 @@ enum LicenseStatus: string
 		};
 	}
 
-	public function info(): string
+	public function info(string $end): string
 	{
-		return I18n::translate('license.status.' . $this->value . '.info');
+		return I18n::template('license.status.' . $this->value . '.info', [
+			'date' => $end
+		]);
 	}
 
 	public function label(): string
@@ -78,7 +80,7 @@ enum LicenseStatus: string
 		return match ($this) {
 			static::Missing,
 			static::Legacy   => 'love',
-			static::Inactive => 'love',
+			static::Inactive => 'warning',
 			static::Active   => 'positive',
 		};
 	}
