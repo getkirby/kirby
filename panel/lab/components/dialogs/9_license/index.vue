@@ -9,7 +9,10 @@
 						component: 'k-license-dialog',
 						props: {
 							license: {
-								type: 'Kirby Enterprise'
+								type: 'Kirby Enterprise',
+								code: 'K-ENT-123456789',
+								purchased: '2023-12-01',
+								activated: '2023-12-01'
 							}
 						}
 					})
