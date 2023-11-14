@@ -16,8 +16,8 @@
 				</k-button>
 			</k-button-group>
 		</k-lab-example>
-		<k-lab-example label="Renew">
-			<k-activation ref="activation" :renew="true" />
+		<k-lab-example label="status: legacy">
+			<k-activation ref="activation" status="legacy" />
 			<br />
 			<k-button-group>
 				<k-button

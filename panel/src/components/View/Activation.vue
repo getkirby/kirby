@@ -1,18 +1,16 @@
 <template>
 	<div v-if="$panel.activation.isOpen" class="k-activation">
-		<p v-if="renew === true">
-			<strong>{{ $t("license.ready.renew") }}</strong>
-			<button type="button" @click="$dialog('license')">Renew it now!</button>
-		</p>
-		<p v-else>
-			<strong>{{ $t("license.ready.launch") }}</strong>
-			<a href="https://getkirby.com/buy" target="_blank">{{
-				$t("license.buy")
-			}}</a>
-			&amp;
-			<button type="button" @click="$dialog('registration')">
-				{{ $t("license.activate") }}
-			</button>
+		<p>
+			<strong>{{ $t(`license.status.${status}.bubble`) }}</strong>
+			<template v-if="status === 'missing'">
+				<a href="https://getkirby.com/buy" target="_blank">{{
+					$t("license.buy")
+				}}</a>
+				&amp;
+				<button type="button" @click="$dialog('registration')">
+					{{ $t("license.activate") }}
+				</button>
+			</template>
 		</p>
 		<k-button
 			class="k-activation-toggle"
@@ -25,7 +23,10 @@
 <script>
 export default {
 	props: {
-		renew: Boolean
+		status: {
+			default: "missing",
+			type: String
+		}
 	}
 };
 </script>

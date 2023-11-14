@@ -10,24 +10,6 @@
 			<h2 class="k-headline">
 				{{ $t("license") }}
 			</h2>
-
-			<k-button-group>
-				<k-button
-					icon="cart"
-					size="xs"
-					link="https://hub.getkirby.com"
-					text="Buy upgrade"
-					target="_blank"
-					variant="filled"
-				/>
-				<k-button
-					icon="refresh"
-					size="xs"
-					text="Renew"
-					theme="positive"
-					variant="filled"
-				/>
-			</k-button-group>
 		</k-bar>
 
 		<div class="k-table">
@@ -43,27 +25,12 @@
 							<code>{{ license.code }}</code>
 						</td>
 					</tr>
-					<tr v-if="license.purchased">
-						<th>{{ $t("license.purchased") }}</th>
-						<td>{{ license.purchased }}</td>
-					</tr>
-					<tr v-if="license.activated">
-						<th>{{ $t("license.activated") }}</th>
-						<td>{{ license.activated }}</td>
-					</tr>
-					<tr v-if="license.domain">
-						<th>{{ $t("license.domain") }}</th>
-						<td>{{ license.domain }}</td>
-					</tr>
 					<tr v-if="license.info">
 						<th>{{ $t("license.status") }}</th>
-						<td>
-							<p :data-theme="license.theme" class="k-license-dialog-status">
+						<td :data-theme="license.theme">
+							<p class="k-license-dialog-status">
+								<k-icon :type="license.icon" />
 								{{ license.info }}
-								<strong>
-									<k-icon :type="license.icon" />
-									{{ license.renewal }}
-								</strong>
 							</p>
 						</td>
 					</tr>
@@ -83,16 +50,8 @@ export const props = {
 	props: {
 		license: Object,
 		// eslint-disable-next-line vue/require-prop-types
-		cancelButton: {
-			default: false
-		},
-		// eslint-disable-next-line vue/require-prop-types
 		size: {
 			default: "large"
-		},
-		// eslint-disable-next-line vue/require-prop-types
-		submitButton: {
-			default: false
 		}
 	}
 };
@@ -112,11 +71,8 @@ export default {
 	align-items: center;
 	gap: var(--spacing-2);
 }
-.k-license-dialog-status strong {
-	display: flex;
-	align-items: center;
-	gap: var(--spacing-2);
-	font-weight: var(--font-normal);
+
+.k-license-dialog .k-icon {
 	color: var(--theme-color-700);
 }
 </style>

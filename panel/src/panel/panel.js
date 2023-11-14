@@ -28,7 +28,7 @@ import { isEmpty } from "@/helpers/string.js";
 export const globals = {
 	config: {},
 	languages: [],
-	license: false,
+	license: "missing",
 	multilang: false,
 	permissions: {},
 	searches: {},
