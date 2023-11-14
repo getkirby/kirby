@@ -20,19 +20,19 @@ enum LicenseStatus: string
 
 	/**
 	 * The free feature period of
-     * the license is over.
+	 * the license is over.
 	 */
 	case Inactive = 'inactive';
 
 	/**
 	 * The installation has an old
-     * license (v1, v2, v3)
+	 * license (v1, v2, v3)
 	 */
 	case Legacy = 'legacy';
 
 	/**
-     * The installation has no license or
-     * the license cannot be validated
+	 * The installation has no license or
+	 * the license cannot be validated
 	 */
 	case Missing = 'missing';
 

@@ -1,9 +1,7 @@
 <?php
 
 use Kirby\Cms\App;
-use Kirby\Http\Response;
 use Kirby\Panel\Field;
-use Kirby\Panel\Panel;
 use Kirby\Toolkit\I18n;
 
 return [

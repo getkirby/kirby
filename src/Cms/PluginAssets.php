@@ -43,7 +43,7 @@ class PluginAssets extends Collection
 
 					// collect all path segments
 					// (e.g. foo/, foo/bar/, foo/bar/baz.css) for the asset
-					for ($i=1, $max = count($parts); $i <= $max; $i++) {
+					for ($i = 1, $max = count($parts); $i <= $max; $i++) {
 						$paths[] = implode('/', array_slice($parts, 0, $i));
 
 						// TODO: remove when media hash is enforced as mandatory
