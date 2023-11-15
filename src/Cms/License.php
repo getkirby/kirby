@@ -229,11 +229,13 @@ class License
 	 */
 	public function label(): string
 	{
-		if ($this->status() === LicenseStatus::Missing) {
+		$type = $this->type();
+
+		if ($type === null || $this->status() === LicenseStatus::Missing) {
 			return I18n::translate('license.unregistered.label');
 		}
 
-		return $this->type();
+		return $type;
 	}
 
 	/**
@@ -353,13 +355,13 @@ class License
 	/**
 	 * Detects the license type if the license key is available
 	 */
-	public function type(): string
+	public function type(): string|null
 	{
 		return match (true) {
 			Str::startsWith($this->code, 'K3-')    => 'Kirby 3',
 			Str::startsWith($this->code, 'K-ENT')  => 'Kirby Enterprise',
 			Str::startsWith($this->code, 'K-BAS')  => 'Kirby Basic',
-			default                                => I18n::translate('license.unregistered.label')
+			default                                => null
 		};
 	}
 }
