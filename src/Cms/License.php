@@ -9,6 +9,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
 use Kirby\Http\Remote;
+use Kirby\Panel\Panel;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
@@ -309,41 +310,29 @@ class License
 			'domain'  => $this->domain
 		]);
 
-		// decode the response
-		$data = static::polyfill($response);
-
-		$this->activation = $data['activation'];
-		$this->code       = $data['code'];
-		$this->date       = $data['date'];
-		$this->order      = $data['order'];
-		$this->signature  = $data['signature'];
-
-		// clear the caches
-		unset($this->status, $this->type);
-
-
-		// save the new state of the license
-		$this->save();
-
-		return $this;
+		return $this->update($response);
 	}
 
-	public function renew(): array
+	public function renew(): static|string
 	{
 		$response = $this->request('renew', [
-			'license' => $this->code,
+			'domain'  => $this->domain,
 			'email'   => $this->email,
-			'domain'  => $this->domain
+			'license' => $this->code,
 		]);
 
-		// validate the redirect URL
-		if (empty($response['url']) === true || Str::startsWith($response['url'], static::hub()) === false) {
-			throw new Exception('We couldn’t redirect you to the Hub');
+		// the license needs an upgrade
+		if (isset($response['upgrade']) === true) {
+			// validate the redirect URL
+			if (empty($response['upgrade']) === true || Str::startsWith($response['upgrade'], static::hub()) === false) {
+				throw new Exception('We couldn’t redirect you to the Hub');
+			}
+
+			return $response['upgrade'];
 		}
 
-		return [
-			'redirect' => $response['url']
-		];
+		// the license can be renewed with the data from the request
+		return $this->update($response);
 	}
 
 	/**
@@ -485,4 +474,28 @@ class License
 	{
 		return $this->type ??= LicenseType::detect($this->code);
 	}
+
+	/**
+	 * Updates the license file
+	 */
+	public function update(array $data): static
+	{
+		// decode the response
+		$data = static::polyfill($data);
+
+		$this->activation = $data['activation'];
+		$this->code       = $data['code'];
+		$this->date       = $data['date'];
+		$this->order      = $data['order'];
+		$this->signature  = $data['signature'];
+
+		// clear the caches
+		unset($this->status, $this->type);
+
+		// save the new state of the license
+		$this->save();
+
+		return $this;
+	}
+
 }
