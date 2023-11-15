@@ -4,10 +4,12 @@ namespace Kirby\Cms;
 
 use IntlDateFormatter;
 use Kirby\Data\Json;
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
 use Kirby\Http\Remote;
+use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 use Throwable;
@@ -33,12 +35,12 @@ class License
 	protected LicenseType $type;
 
 	public function __construct(
-		protected string|null $activated = null,
+		protected string|null $activation = null,
 		protected string|null $code = null,
 		protected string|null $domain = null,
 		protected string|null $email = null,
 		protected string|null $order = null,
-		protected string|null $purchased = null,
+		protected string|null $date = null,
 		protected string|null $signature = null,
 	) {
 		// sanitize the email address
@@ -48,17 +50,9 @@ class License
 	/**
 	 * Returns the activation date if available
 	 */
-	public function activated(string|IntlDateFormatter|null $format = null): int|string|null
+	public function activation(string|IntlDateFormatter|null $format = null): int|string|null
 	{
-		return $this->activated !== null ? Str::date(strtotime($this->activated), $format) : null;
-	}
-
-	/**
-	 * Creates a checkout link
-	 */
-	public function checkout(): string
-	{
-		return static::hub() . '/renew/' . hash('sha256', $this->code() . static::SALT);
+		return $this->activation !== null ? Str::date(strtotime($this->activation), $format) : null;
 	}
 
 	/**
@@ -79,17 +73,26 @@ class License
 	public function content(): array
 	{
 		return [
-			'activated' => $this->activated,
-			'code'      => $this->code,
-			'email'     => $this->email,
-			'order'     => $this->order,
-			'purchased' => $this->purchased,
-			'signature' => $this->signature,
+			'activation' => $this->activation,
+			'code'       => $this->code,
+			'date'       => $this->date,
+			'domain'     => $this->domain,
+			'email'      => $this->email,
+			'order'      => $this->order,
+			'signature'  => $this->signature,
 		];
 	}
 
 	/**
-	 * Returns the activated domain if available
+	 * Returns the purchase date if available
+	 */
+	public function date(string|IntlDateFormatter|null $format = null): int|string|null
+	{
+		return $this->date !== null ? Str::date(strtotime($this->date), $format) : null;
+	}
+
+	/**
+	 * Returns the activation domain if available
 	 */
 	public function domain(): string|null
 	{
@@ -97,7 +100,7 @@ class License
 	}
 
 	/**
-	 * Returns the activated email if available
+	 * Returns the activation email if available
 	 */
 	public function email(): string|null
 	{
@@ -128,7 +131,7 @@ class License
 		if (
 			$this->domain !== null &&
 			$this->order !== null &&
-			$this->purchased !== null &&
+			$this->date !== null &&
 			$this->signature !== null &&
 			$this->hasValidEmailAddress() === true &&
 			$this->type() !== LicenseType::Invalid
@@ -160,7 +163,7 @@ class License
 		// without an activation date, the license
 		// renewal cannot be evaluated and the license
 		// has to be marked as expired
-		if ($this->activated === null) {
+		if ($this->activation === null) {
 			return true;
 		}
 
@@ -220,29 +223,8 @@ class License
 		// get the public key
 		$pubKey = F::read(App::instance()->root('kirby') . '/kirby.pub');
 
-		// build the license verification data
-		$data = [
-			'activated' => $this->activated,
-			'code'      => $this->code,
-			'domain'    => $this->domain,
-			'email'     => hash('sha256', $this->email . static::SALT),
-			'order'     => $this->order,
-			'purchased' => $this->purchased,
-		];
-
-		// legacy licenses need a different payload for their signature
-		if ($this->isLegacy() === true) {
-			$data = [
-				'license' => $data['code'],
-				'order'   => $data['order'],
-				'email'   => $data['email'],
-				'domain'  => $data['domain'],
-				'date'    => $data['purchased'],
-			];
-		}
-
 		// verify the license signature
-		$data      = json_encode($data);
+		$data      = json_encode($this->signatureData());
 		$signature = hex2bin($this->signature);
 
 		if (openssl_verify($data, $signature, $pubKey, 'RSA-SHA256') !== 1) {
@@ -279,22 +261,14 @@ class License
 	public static function polyfill(array $license): array
 	{
 		return [
-			'activated' => $license['activated'] ?? null,
-			'code'      => $license['code']      ?? $license['license'] ?? null,
-			'domain'    => $license['domain']    ?? null,
-			'email'     => $license['email']     ?? null,
-			'order'     => $license['order']     ?? null,
-			'purchased' => $license['purchased'] ?? $license['date'] ?? null,
-			'signature' => $license['signature'] ?? null,
+			'activation' => $license['activation'] ?? null,
+			'code'       => $license['code']       ?? $license['license'] ?? null,
+			'date'       => $license['date']  	   ?? null,
+			'domain'     => $license['domain']     ?? null,
+			'email'      => $license['email']      ?? null,
+			'order'      => $license['order']      ?? null,
+			'signature'  => $license['signature']  ?? null,
 		];
-	}
-
-	/**
-	 * Returns the purchase date if available
-	 */
-	public function purchased(string|IntlDateFormatter|null $format = null): int|string|null
-	{
-		return $this->purchased !== null ? Str::date(strtotime($this->purchased), $format) : null;
 	}
 
 	/**
@@ -329,30 +303,24 @@ class License
 			throw new InvalidArgumentException(['key' => 'license.domain']);
 		}
 
-		// @codeCoverageIgnoreStart
-		$response = Remote::get(static::hub() . '/register', [
-			'data' => [
-				'license' => $this->code,
-				'email'   => $this->email,
-				'domain'  => $this->domain
-			]
+		$response = $this->request('register', [
+			'license' => $this->code,
+			'email'   => $this->email,
+			'domain'  => $this->domain
 		]);
 
-		if ($response->code() !== 200) {
-			throw new LogicException($response->content());
-		}
-
 		// decode the response
-		$json = Json::decode($response->content());
-		$data = static::polyfill($json);
-		// @codeCoverageIgnoreEnd
+		$data = static::polyfill($response);
 
-		$this->activated = $data['activated'];
-		$this->code      = $data['code'];
-		$this->email     = $data['email'];
-		$this->order     = $data['order'];
-		$this->purchased = $data['purchased'];
-		$this->signature = $data['signature'];
+		$this->activation = $data['activation'];
+		$this->code       = $data['code'];
+		$this->date       = $data['date'];
+		$this->order      = $data['order'];
+		$this->signature  = $data['signature'];
+
+		// clear the caches
+		unset($this->status, $this->type);
+
 
 		// save the new state of the license
 		$this->save();
@@ -360,17 +328,57 @@ class License
 		return $this;
 	}
 
+	public function renew(): array
+	{
+		$response = $this->request('renew', [
+			'license' => $this->code,
+			'email'   => $this->email,
+			'domain'  => $this->domain
+		]);
+
+		// validate the redirect URL
+		if (empty($response['url']) === true || Str::startsWith($response['url'], static::hub()) === false) {
+			throw new Exception('We couldn’t redirect you to the Hub');
+		}
+
+		return [
+			'redirect' => $response['url']
+		];
+	}
+
 	/**
 	 * Returns the renewal date
 	 */
 	public function renewal(string|IntlDateFormatter|null $format = null): int|string|null
 	{
-		if ($this->activated === null) {
+		if ($this->activation === null) {
 			return null;
 		}
 
-		$time = strtotime('+3 years', $this->activated());
+		$time = strtotime('+3 years', $this->activation());
 		return Str::date($time, $format);
+	}
+
+	/**
+	 * Sends a hub request
+	 */
+	public function request(string $path, array $data): array
+	{
+		// @codeCoverageIgnoreStart
+		$response = Remote::get(static::hub() . '/' . $path, [
+			'data' => $data
+		]);
+
+		// handle request errors
+		if ($response->code() !== 200) {
+			$error   = $response->json()['message'] ?? null;
+			$message = I18n::translate($error, 'The request failed');
+
+			throw new LogicException($message, $response->code());
+		}
+
+		return $response->json();
+		// @codeCoverageIgnoreEnd
 	}
 
 	/**
@@ -427,6 +435,32 @@ class License
 	public function signature(): string|null
 	{
 		return $this->signature;
+	}
+
+	/**
+	 * Creates the signature data array to compare
+	 * with the signature in ::isSigned
+	 */
+	public function signatureData(): array
+	{
+		if ($this->type() === LicenseType::Legacy) {
+			return [
+				'license'    => $this->code,
+				'order'      => $this->order,
+				'email'      => hash('sha256', $this->email . static::SALT),
+				'domain'     => $this->domain,
+				'date'       => $this->date,
+			];
+		}
+
+		return [
+			'activation' => $this->activation,
+			'code'       => $this->code,
+			'date'       => $this->date,
+			'domain'     => $this->domain,
+			'email'      => hash('sha256', $this->email . static::SALT),
+			'order'      => $this->order,
+		];
 	}
 
 	/**

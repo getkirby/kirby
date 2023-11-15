@@ -33,9 +33,7 @@ return [
 			];
 		},
 		'submit' => function () {
-			return [
-				'redirect' => App::instance()->system()->license()->checkout()
-			];
+			return App::instance()->system()->license()->renew();
 		}
 	],
 	// license registration
