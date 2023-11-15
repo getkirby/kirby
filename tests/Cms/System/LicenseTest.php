@@ -33,14 +33,14 @@ class LicenseTest extends TestCase
 		];
 	}
 
-	public function testActivated()
+	public function testActivation()
 	{
 		$license = new License(
-			activated: $date = '2023-12-01'
+			activation: $date = '2023-12-01'
 		);
 
-		$this->assertSame(strtotime($date), $license->activated());
-		$this->assertSame($date, $license->activated('Y-m-d'));
+		$this->assertSame(strtotime($date), $license->activation());
+		$this->assertSame($date, $license->activation('Y-m-d'));
 	}
 
 	public function testCode()
@@ -51,6 +51,16 @@ class LicenseTest extends TestCase
 
 		$this->assertSame($code, $license->code());
 		$this->assertSame('K-ENT-1234XXXXXXXXXXXXXXXXXXXXXX', $license->code(true));
+	}
+
+	public function testDate()
+	{
+		$license = new License(
+			date: $date = '2023-12-01'
+		);
+
+		$this->assertSame(strtotime($date), $license->date());
+		$this->assertSame($date, $license->date('Y-m-d'));
 	}
 
 	public function testDomain()
@@ -85,10 +95,10 @@ class LicenseTest extends TestCase
 		// complete
 		$license = new License(
 			code: $this->code(LicenseType::Enterprise),
+			date: '2023-12-01',
 			domain: 'getkirby.com',
 			email: 'mail@getkirby.com',
 			order: '1234',
-			purchased: '2023-12-01',
 			signature: 'secret',
 		);
 
@@ -101,14 +111,14 @@ class LicenseTest extends TestCase
 
 		// active
 		$license = new License(
-			activated: date('Y-m-d')
+			activation: date('Y-m-d')
 		);
 
 		$this->assertFalse($license->isInactive());
 
 		// inactive
 		$license = new License(
-			activated: date('Y-m-d', strtotime('-4 years'))
+			activation: date('Y-m-d', strtotime('-4 years'))
 		);
 
 		$this->assertTrue($license->isInactive());
@@ -151,16 +161,6 @@ class LicenseTest extends TestCase
 		$this->assertSame($order, $license->order());
 	}
 
-	public function testPurchased()
-	{
-		$license = new License(
-			purchased: $date = '2023-12-01'
-		);
-
-		$this->assertSame(strtotime($date), $license->purchased());
-		$this->assertSame($date, $license->purchased('Y-m-d'));
-	}
-
 	public function testRegisterWithInvalidDomain()
 	{
 		$license = new License(
@@ -200,7 +200,7 @@ class LicenseTest extends TestCase
 	public function testRenewal()
 	{
 		$license = new License(
-			activated: '2023-12-01'
+			activation: '2023-12-01'
 		);
 
 		$this->assertSame(strtotime('2026-12-01'), $license->renewal());
@@ -270,4 +270,5 @@ class LicenseTest extends TestCase
 
 		$this->assertSame(LicenseType::Invalid, $license->type());
 	}
+
 }
