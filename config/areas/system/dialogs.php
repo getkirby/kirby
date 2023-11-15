@@ -33,7 +33,22 @@ return [
 			];
 		},
 		'submit' => function () {
-			return App::instance()->system()->license()->renew();
+			// @codeCoverageIgnoreStart
+			$response = App::instance()->system()->license()->renew();
+
+			// If a new license has not yet been bought, a redirect
+			// URL to the upgrade form will be sent
+			if (is_string($response) === true) {
+				return [
+					'redirect' => $response
+				];
+			}
+
+			return [
+				'event'   => 'system.renew',
+				'message' => I18n::translate('license.success')
+			];
+			// @codeCoverageIgnoreEnd
 		}
 	],
 	// license registration
