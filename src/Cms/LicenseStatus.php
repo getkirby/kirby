@@ -41,7 +41,7 @@ enum LicenseStatus: string
 	 */
 	public function dialog(): string
 	{
-		return match($this) {
+		return match ($this) {
 			static::Missing => 'registration',
 			default         => 'license'
 		};
@@ -89,5 +89,4 @@ enum LicenseStatus: string
 	{
 		return $this->value;
 	}
-
 }

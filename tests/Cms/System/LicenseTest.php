@@ -270,5 +270,4 @@ class LicenseTest extends TestCase
 
 		$this->assertSame(LicenseType::Invalid, $license->type());
 	}
-
 }
