@@ -3,15 +3,11 @@
 namespace Kirby\Cms;
 
 use Kirby\Cms\System\UpdateStatus;
-use Kirby\Data\Json;
-use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
-use Kirby\Http\Remote;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
-use Kirby\Toolkit\V;
 use Throwable;
 
 /**
@@ -373,52 +369,13 @@ class System
 	 */
 	public function register(string $license = null, string $email = null): bool
 	{
-		if (Str::startsWith($license, 'K-') === false) {
-			throw new InvalidArgumentException(['key' => 'license.format']);
-		}
+		$license = new License(
+			code: $license,
+			domain: $this->indexUrl(),
+			email: $email,
+		);
 
-		if (V::email($email) === false) {
-			throw new InvalidArgumentException(['key' => 'license.email']);
-		}
-
-		// get the hub address
-		$hub = License::hub();
-
-		// @codeCoverageIgnoreStart
-		$response = Remote::get($hub . '/register', [
-			'data' => [
-				'license' => $license,
-				'email'   => Str::lower(trim($email)),
-				'domain'  => $this->indexUrl()
-			]
-		]);
-
-		if ($response->code() !== 200) {
-			throw new Exception($response->content());
-		}
-
-		// decode the response
-		$json = Json::decode($response->content());
-
-		// replace the email with the plaintext version
-		$json['email'] = $email;
-
-		// where to store the license file
-		$file = $this->app->root('license');
-
-		// save the license information
-		Json::write($file, $json);
-
-		// clear the license cache
-		$this->license = null;
-
-		if ($this->license() === false) {
-			throw new InvalidArgumentException([
-				'key' => 'license.verification'
-			]);
-		}
-		// @codeCoverageIgnoreEnd
-
+		$this->license = $license->register();
 		return true;
 	}
 

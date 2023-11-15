@@ -16,7 +16,7 @@ enum LicenseStatus: string
 	/**
 	 * The license is valid and active
 	 */
-	case Active   = 'active';
+	case Active = 'active';
 
 	/**
 	 * The free feature period of
