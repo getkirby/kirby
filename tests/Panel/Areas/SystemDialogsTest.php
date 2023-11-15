@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel\Areas;
 
+use Kirby\Toolkit\Str;
+
 class SystemDialogsTest extends AreaTestCase
 {
 	public function setUp(): void
@@ -16,19 +18,7 @@ class SystemDialogsTest extends AreaTestCase
 		$dialog = $this->dialog('license');
 		$props  = $dialog['props'];
 
-		$this->assertFormDialog($dialog);
-
-		$field = $props['fields']['license'];
-
-		$this->assertSame('info', $field['type']);
-		$this->assertSame('License', $field['label']);
-		$this->assertSame('Unregistered', $field['text']);
-		$this->assertSame('negative', $field['theme']);
-		$this->assertSame('<a href="https://getkirby.com/buy" target="_blank">Buy a license &rarr;</a>', $field['help']);
-
-		$this->assertSame('medium', $props['size']);
-		$this->assertFalse($props['submitButton']);
-		$this->assertFalse($props['cancelButton']);
+		$this->assertSame('k-license-dialog', $dialog['component']);
 	}
 
 	public function testRegistration(): void
@@ -60,7 +50,7 @@ class SystemDialogsTest extends AreaTestCase
 	public function testRegistrationOnSubmitWithInvalidEmail(): void
 	{
 		$this->submit([
-			'license' => 'K3-PRO-',
+			'license' => 'K3-PRO-' . Str::random(32),
 			'email'   => 'mail@'
 		]);
 

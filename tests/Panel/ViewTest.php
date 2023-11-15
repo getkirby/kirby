@@ -256,7 +256,7 @@ class ViewTest extends TestCase
 		$this->assertInstanceOf('Closure', $data['$language']);
 		$this->assertInstanceOf('Closure', $data['$languages']);
 		$this->assertSame([], $data['$permissions']);
-		$this->assertFalse($data['$license']);
+		$this->assertSame('missing', $data['$license']);
 		$this->assertFalse($data['$multilang']);
 		$this->assertSame('/', $data['$url']);
 		$this->assertInstanceOf('Closure', $data['$user']);
