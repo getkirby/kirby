@@ -132,8 +132,9 @@
 	"error.layout.validation.block": "There's an error on the \"{field}\" field in block {blockIndex} using the \"{fieldset}\" block type in layout {layoutIndex}",
 	"error.layout.validation.settings": "There's an error in layout {index} settings",
 
-	"error.license.format": "Please enter a valid license key",
+	"error.license.domain": "The domain for the license is missing",
 	"error.license.email": "Please enter a valid email address",
+	"error.license.format": "Please enter a valid license key",
 	"error.license.verification": "The license could not be verified",
 
 	"error.login.totp.confirm.invalid": "Invalid code",

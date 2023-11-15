@@ -2,11 +2,36 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\Str;
+use ReflectionClass;
+
 /**
  * @coversDefaultClass Kirby\Cms\License
  */
 class LicenseTest extends TestCase
 {
+	public function code(LicenseType $type = LicenseType::Basic): string
+	{
+		return $type->prefix() . '1234' . Str::random(28);
+	}
+
+	public function providerForLicenseUrls()
+	{
+		return [
+			['example.com', 'example.com'],
+			['www.example.com', 'example.com'],
+			['dev.example.com', 'example.com'],
+			['test.example.com', 'example.com'],
+			['staging.example.com', 'example.com'],
+			['sub.example.com', 'sub.example.com'],
+			['www.example.com/test', 'www.example.com/test'],
+			['dev.example.com/test', 'dev.example.com/test'],
+			['test.example.com/test', 'test.example.com/test'],
+			['staging.example.com/test', 'staging.example.com/test'],
+			['sub.example.com/test', 'sub.example.com/test'],
+		];
+	}
 
 	public function testActivated()
 	{
@@ -21,7 +46,7 @@ class LicenseTest extends TestCase
 	public function testCode()
 	{
 		$license = new License(
-			code: $code = 'K-ENT-12345678910123456789101234'
+			code: $code = $this->code(LicenseType::Enterprise)
 		);
 
 		$this->assertSame($code, $license->code());
@@ -59,7 +84,7 @@ class LicenseTest extends TestCase
 
 		// complete
 		$license = new License(
-			code: 'K-ENT-1234',
+			code: $this->code(LicenseType::Enterprise),
 			domain: 'getkirby.com',
 			email: 'mail@getkirby.com',
 			order: '1234',
@@ -136,6 +161,42 @@ class LicenseTest extends TestCase
 		$this->assertSame($date, $license->purchased('Y-m-d'));
 	}
 
+	public function testRegisterWithInvalidDomain()
+	{
+		$license = new License(
+			code: $this->code(),
+			email: 'mail@getkirby.com'
+		);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The domain for the license is missing');
+
+		$license->register();
+	}
+
+	public function testRegisterWithInvalidEmail()
+	{
+		$license = new License(
+			code: $this->code(),
+			email: 'invalid'
+		);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Please enter a valid email address');
+
+		$license->register();
+	}
+
+	public function testRegisterWithInvalidLicenseKey()
+	{
+		$license = new License();
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Please enter a valid license key');
+
+		$license->register();
+	}
+
 	public function testRenewal()
 	{
 		$license = new License(
@@ -144,6 +205,20 @@ class LicenseTest extends TestCase
 
 		$this->assertSame(strtotime('2026-12-01'), $license->renewal());
 		$this->assertSame('2026-12-01', $license->renewal('Y-m-d'));
+	}
+
+	/**
+	 * @dataProvider providerForLicenseUrls
+	 */
+	public function testSanitizeDomain(string $domain, string $expected)
+	{
+		$reflector = new ReflectionClass(License::class);
+		$sanitize = $reflector->getMethod('sanitizeDomain');
+		$sanitize->setAccessible(true);
+
+		$license = new License();
+
+		$this->assertSame($expected, $sanitize->invoke($license, $domain));
 	}
 
 	public function testSignature()
@@ -165,35 +240,35 @@ class LicenseTest extends TestCase
 	public function testTypeKirby3()
 	{
 		$license = new License(
-			code: 'K3-PRO-1234'
+			code: $this->code(LicenseType::Legacy)
 		);
 
-		$this->assertSame('Kirby 3', $license->type());
+		$this->assertSame(LicenseType::Legacy, $license->type());
 	}
 
 	public function testTypeKirbyBasic()
 	{
 		$license = new License(
-			code: 'K-BAS-1234'
+			code: $this->code()
 		);
 
-		$this->assertSame('Kirby Basic', $license->type());
+		$this->assertSame(LicenseType::Basic, $license->type());
 	}
 
 	public function testTypeKirbyEnterprise()
 	{
 		$license = new License(
-			code: 'K-ENT-1234'
+			code: $this->code(LicenseType::Enterprise)
 		);
 
-		$this->assertSame('Kirby Enterprise', $license->type());
+		$this->assertSame(LicenseType::Enterprise, $license->type());
 	}
 
 	public function testTypeUnregistered()
 	{
 		$license = new License();
 
-		$this->assertNull($license->type());
+		$this->assertSame(LicenseType::Invalid, $license->type());
 	}
 
 }

@@ -5,9 +5,11 @@ namespace Kirby\Cms;
 use IntlDateFormatter;
 use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
-use Kirby\Toolkit\I18n;
+use Kirby\Http\Remote;
 use Kirby\Toolkit\Str;
+use Kirby\Toolkit\V;
 use Throwable;
 
 /**
@@ -21,13 +23,14 @@ class License
 {
 	protected const HISTORY = [
 		'3' => '2019-02-05',
-		'4' => '2023-12-01'
+		'4' => '2023-11-28'
 	];
 
 	protected const SALT = 'kwAHMLyLPBnHEskzH9pPbJsBxQhKXZnX';
 
 	// cache
-	protected LicenseStatus|null $status = null;
+	protected LicenseStatus $status;
+	protected LicenseType $type;
 
 	public function __construct(
 		protected string|null $activated = null,
@@ -38,6 +41,8 @@ class License
 		protected string|null $purchased = null,
 		protected string|null $signature = null,
 	) {
+		// sanitize the email address
+		$this->email = $this->email === null ? null : Str::lower(trim($this->email));
 	}
 
 	/**
@@ -69,6 +74,21 @@ class License
 	}
 
 	/**
+	 * Content for the license file
+	 */
+	public function content(): array
+	{
+		return [
+			'activated' => $this->activated,
+			'code'      => $this->code,
+			'email'     => $this->email,
+			'order'     => $this->order,
+			'purchased' => $this->purchased,
+			'signature' => $this->signature,
+		];
+	}
+
+	/**
 	 * Returns the activated domain if available
 	 */
 	public function domain(): string|null
@@ -85,6 +105,14 @@ class License
 	}
 
 	/**
+	 * Validates the email address of the license
+	 */
+	public function hasValidEmailAddress(): bool
+	{
+		return V::email($this->email) === true;
+	}
+
+	/**
 	 * Hub address
 	 */
 	public static function hub(): string
@@ -98,17 +126,17 @@ class License
 	public function isComplete(): bool
 	{
 		if (
-			$this->code === null ||
-			$this->domain === null ||
-			$this->email === null ||
-			$this->order === null ||
-			$this->purchased === null ||
-			$this->signature === null
+			$this->domain !== null &&
+			$this->order !== null &&
+			$this->purchased !== null &&
+			$this->signature !== null &&
+			$this->hasValidEmailAddress() === true &&
+			$this->type() !== LicenseType::Invalid
 		) {
-			return false;
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
 	/**
@@ -125,7 +153,7 @@ class License
 	 */
 	public function isLegacy(): bool
 	{
-		if ($this->type() === 'Kirby 3') {
+		if ($this->type() === LicenseType::Legacy) {
 			return true;
 		}
 
@@ -229,13 +257,11 @@ class License
 	 */
 	public function label(): string
 	{
-		$type = $this->type();
-
-		if ($type === null || $this->status() === LicenseStatus::Missing) {
-			return I18n::translate('license.unregistered.label');
+		if ($this->status() === LicenseStatus::Missing) {
+			return LicenseType::Invalid->label();
 		}
 
-		return $type;
+		return $this->type()->label();
 	}
 
 	/**
@@ -287,6 +313,54 @@ class License
 	}
 
 	/**
+	 * Sends a request to the hub to register the license
+	 */
+	public function register(): static
+	{
+		if ($this->type() === LicenseType::Invalid) {
+			throw new InvalidArgumentException(['key' => 'license.format']);
+		}
+
+		if ($this->hasValidEmailAddress() === false) {
+			throw new InvalidArgumentException(['key' => 'license.email']);
+		}
+
+		if ($this->domain === null) {
+			throw new InvalidArgumentException(['key' => 'license.domain']);
+		}
+
+		// @codeCoverageIgnoreStart
+		$response = Remote::get(static::hub() . '/register', [
+			'data' => [
+				'license' => $this->code,
+				'email'   => $this->email,
+				'domain'  => $this->domain
+			]
+		]);
+
+		if ($response->code() !== 200) {
+			throw new LogicException($response->content());
+		}
+
+		// decode the response
+		$json = Json::decode($response->content());
+		$data = static::polyfill($json);
+		// @codeCoverageIgnoreEnd
+
+		$this->activated = $data['activated'];
+		$this->code      = $data['code'];
+		$this->email     = $data['email'];
+		$this->order     = $data['order'];
+		$this->purchased = $data['purchased'];
+		$this->signature = $data['signature'];
+
+		// save the new state of the license
+		$this->save();
+
+		return $this;
+	}
+
+	/**
 	 * Returns the renewal date
 	 */
 	public function renewal(string|IntlDateFormatter|null $format = null): int|string|null
@@ -330,6 +404,24 @@ class License
 	}
 
 	/**
+	 * Saves the license in the config folder
+	 */
+	public function save(): bool
+	{
+		if ($this->status() !== LicenseStatus::Active) {
+			throw new InvalidArgumentException([
+				'key' => 'license.verification'
+			]);
+		}
+
+		// where to store the license file
+		$file = App::instance()->root('license');
+
+		// save the license information
+		return Json::write($file, $this->content());
+	}
+
+	/**
 	 * Returns the signature if available
 	 */
 	public function signature(): string|null
@@ -355,13 +447,8 @@ class License
 	/**
 	 * Detects the license type if the license key is available
 	 */
-	public function type(): string|null
+	public function type(): LicenseType
 	{
-		return match (true) {
-			Str::startsWith($this->code, 'K3-')    => 'Kirby 3',
-			Str::startsWith($this->code, 'K-ENT')  => 'Kirby Enterprise',
-			Str::startsWith($this->code, 'K-BAS')  => 'Kirby Basic',
-			default                                => null
-		};
+		return $this->type ??= LicenseType::detect($this->code);
 	}
 }
