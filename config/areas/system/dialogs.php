@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\App;
+use Kirby\Cms\LicenseStatus;
 use Kirby\Panel\Field;
 use Kirby\Toolkit\I18n;
 
@@ -20,10 +21,10 @@ return [
 						'icon'  => $license->status()->icon(),
 						'info'  => $license->status()->info($license->renewal('Y-m-d')),
 						'theme' => $license->status()->theme(),
-						'type'  => $license->type(),
+						'type'  => $license->label(),
 					],
-					'cancelButton' => $license->status()->value() === 'active' ? false : true,
-					'submitButton' => $license->status()->value() === 'active' ? false : [
+					'cancelButton' => $license->status() === LicenseStatus::Active ? false : true,
+					'submitButton' => $license->status() === LicenseStatus::Active ? false : [
 						'icon'  => 'cart',
 						'text'  => I18n::translate('license.renew'),
 						'theme' => 'love',
