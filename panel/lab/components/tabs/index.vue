@@ -16,54 +16,55 @@ export default {
 			return [
 				{
 					name: "content",
-					label: "Content",
+					label: "Content"
 				},
 				{
 					name: "settings",
 					label: "Settings",
+					badge: 3
 				},
 				{
 					name: "c",
-					label: "Just another tab C",
+					label: "Just another tab C"
 				},
 				{
 					name: "d",
-					label: "Just another tab D",
+					label: "Just another tab D"
 				},
 				{
 					name: "e",
-					label: "Just another tab E",
+					label: "Just another tab E"
 				},
 				{
 					name: "f",
-					label: "Just another tab F",
+					label: "Just another tab F"
 				},
 				{
 					name: "g",
-					label: "Just another tab G",
+					label: "Just another tab G"
 				},
 				{
 					name: "h",
-					label: "Just another tab H",
+					label: "Just another tab H"
 				},
 				{
 					name: "i",
-					label: "Just another tab I",
+					label: "Just another tab I"
 				},
 				{
 					name: "j",
-					label: "Just another tab J",
+					label: "Just another tab J"
 				},
 				{
 					name: "k",
-					label: "Just another tab K",
+					label: "Just another tab K"
 				},
 				{
 					name: "l",
-					label: "Just another tab L",
-				},
+					label: "Just another tab L"
+				}
 			];
-		},
-	},
+		}
+	}
 };
 </script>
