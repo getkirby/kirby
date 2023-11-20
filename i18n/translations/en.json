@@ -461,12 +461,12 @@
 	"login.totp.enable.confirm.text": "Your app generates a new one‑time code every 30 seconds. Enter the current code to complete the setup:",
 	"login.totp.enable.confirm.label": "Current code",
 	"login.totp.enable.confirm.help": "After this setup, we will ask you for a one‑time code every time you log in.",
-	"login.totp.enable.success": "Activated one‑time codes",
+	"login.totp.enable.success": "One‑time codes enabled",
 	"login.totp.disable.option": "Disable one‑time codes",
 	"login.totp.disable.label": "Enter your password to disable one‑time codes",
 	"login.totp.disable.help": "In the future, a different second factor like a login code sent via email will be requested when you log in. You can always set up one‑time codes again later.",
 	"login.totp.disable.admin": "<p>This will disable one‑time codes for <strong>{user}</strong>.</p><p>In the future, a different second factor like a login code sent via email will be requested when they log in. {user} can set up one‑time codes again after their next login.</p>",
-	"login.totp.disable.success": "Disabled one‑time codes",
+	"login.totp.disable.success": "One‑time codes disabled",
 
 	"logout": "Log out",
 
