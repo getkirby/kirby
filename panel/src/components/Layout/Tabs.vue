@@ -1,17 +1,17 @@
 <template>
 	<nav v-if="tabs.length > 1" class="k-tabs">
 		<k-button
-			v-for="btn in visible"
+			v-for="tabBtn in visible"
 			ref="visible"
-			:key="btn.name"
-			v-bind="(btn = button(btn))"
+			:key="tabBtn.name"
+			v-bind="(btn = button(tabBtn))"
 			variant="dimmed"
 			class="k-tab-button"
 		>
 			{{ btn.text }}
 
-			<span v-if="btn.badge" :data-theme="theme" class="k-tabs-badge">
-				{{ btn.badge }}
+			<span v-if="tabBtn.badge" :data-theme="theme" class="k-tabs-badge">
+				{{ tabBtn.badge }}
 			</span>
 		</k-button>
 
@@ -40,7 +40,7 @@
  * 	tab="content"
  * 	tabs="[
  * 		{ name: 'content', label: 'Content', link: '/content' },
- * 		{ name: 'settings', label: 'Settings', link: '/settings' }
+ * 		{ name: 'settings', label: 'Settings', link: '/settings', badge: 3 }
  * 	]"
  * />
  */
@@ -61,7 +61,10 @@ export default {
 		 * Theme to style any badge
 		 * @values "positive", "negative", "notice", "warning", "info", "passive"
 		 */
-		theme: String
+		theme: {
+			type: String,
+			default: "passive"
+		}
 	},
 	data() {
 		return {
