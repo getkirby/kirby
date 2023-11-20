@@ -5,7 +5,6 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Http\Uri;
-use Kirby\Toolkit\Str;
 use Throwable;
 
 class ChangesDialog
@@ -14,7 +13,6 @@ class ChangesDialog
 	{
 		$kirby     = App::instance();
 		$multilang = $kirby->multilang();
-		$ids       = Str::split($ids);
 		$changes   = [];
 
 		foreach ($ids as $id) {
