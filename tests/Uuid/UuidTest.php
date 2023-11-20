@@ -3,6 +3,7 @@
 namespace Kirby\Uuid;
 
 use Generator;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Toolkit\Str;
 
@@ -159,6 +160,45 @@ class UuidTest extends TestCase
 		// TODO: activate for  uuid-block-structure-support
 		// $this->assertInstanceOf(BlockUuid::class, Uuid::for('block://my-id'));
 		// $this->assertInstanceOf(StructureUuid::class, Uuid::for('struct://my-id'));
+	}
+
+	/**
+	 * @covers ::for
+	 */
+	public function testForUuidStringInvalid()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid UUID URI: foo://my-id');
+		Uuid::for('foo://my-id');
+	}
+
+	/**
+	 * @covers ::for
+	 */
+	public function testForPermalinkString()
+	{
+		$this->assertInstanceOf(PageUuid::class, Uuid::for('/@/page/my-id'));
+		$this->assertInstanceOf(FileUuid::class, Uuid::for('/@/file/my-id'));
+	}
+
+	/**
+	 * @covers ::for
+	 */
+	public function testForPermalinkStringInvalid()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid UUID URI: foo://my-id');
+		Uuid::for('/@/foo/my-id');
+	}
+
+	/**
+	 * @covers ::for
+	 */
+	public function testForStringInvalid()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid UUID string: foo˜bar');
+		Uuid::for('foo˜bar');
 	}
 
 	/**

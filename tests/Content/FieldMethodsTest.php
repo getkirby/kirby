@@ -389,6 +389,39 @@ class FieldMethodsTest extends TestCase
 		$this->assertNull($this->field()->toQrCode());
 	}
 
+	public function testToResolvedUrls()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => $this->tmp
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'content' => [
+							'uuid' => 'my-page'
+						],
+						'files' => [
+							[
+								'filename' => 'test.jpg',
+								'content' => [
+									'uuid'  => 'my-file',
+								]
+							]
+						]
+					],
+				]
+			]
+		]);
+
+		$field  = $this->field('<p>This is a <a href="/@/page/my-page">test</a><img src="/@/file/my-file"></p>');
+		$result = $field->toResolvedUrls();
+		$hash   = $app->file('a/test.jpg')->mediaHash();
+
+		$this->assertSame('<p>This is a <a href="/a">test</a><img src="/media/pages/a/' . $hash . '/test.jpg"></p>', (string)$result);
+	}
+
 	public function testToStructure()
 	{
 		$data = [
@@ -440,7 +473,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($expected, $field->toUrl());
 	}
 
-	public function testToCustomUrl()
+	public function testToUrlCustom()
 	{
 		$app = new App([
 			'roots' => [

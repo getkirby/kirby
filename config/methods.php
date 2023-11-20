@@ -19,9 +19,12 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Image\QrCode;
+use Kirby\Toolkit\A;
+use Kirby\Toolkit\Dom;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 use Kirby\Toolkit\Xml;
+use Kirby\Uuid\Uuid;
 
 /**
  * Field method setup
@@ -245,6 +248,34 @@ return function (App $app) {
 		 */
 		'toQrCode' => function (Field $field): QrCode|null {
 			return $field->isNotEmpty() ? new QrCode($field->value) : null;
+		},
+
+		/**
+		 * Parses the field value as DOM and replaces
+		 * any permalinks in href/src attributes with
+		 * the regular url
+		 */
+		'toResolvedUrls' => function (Field $field): Field {
+			if ($field->isNotEmpty() === true) {
+				$dom        = new Dom($field->value);
+				$attributes = ['href', 'src'];
+				$elements   = $dom->query('//*[' . implode(' | ', A::map($attributes, fn ($attribute) => '@' . $attribute)) . ']');
+
+				foreach ($elements as $element) {
+					foreach ($attributes as $attribute) {
+						if ($url = $element->getAttribute($attribute)) {
+							if ($uuid = Uuid::for($url)) {
+								$url = $uuid->model()->url();
+								$element->setAttribute($attribute, $url);
+							}
+						}
+					}
+				}
+
+				$field->value = $dom->toString();
+			}
+
+			return $field;
 		},
 
 		/**
