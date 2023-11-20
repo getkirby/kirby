@@ -54,6 +54,7 @@
 
 	"drawer.fields.empty": "This drawer has no fields",
 
+	"domain": "Domain",
 	"download": "Download",
 	"duplicate": "Duplicate",
 
@@ -422,8 +423,6 @@
 	"license.code": "Code",
 	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
 	"license.code.label": "Please enter your license code",
-	"license.domain": "Domain",
-	"license.status": "Status",
 	"license.status.active.info": "Includes new major versions until {date}",
 	"license.status.active.label": "Valid license",
 	"license.status.inactive.info": "Renew license to update to new major versions",
@@ -436,9 +435,7 @@
 	"license.status.missing.label": "Please activate your license",
 	"license.manage": "Manage your licenses",
 	"license.purchased": "Purchased",
-	"license.renew": "Renew",
 	"license.success": "Thank you for supporting Kirby",
-	"license.type": "Type",
 	"license.unregistered.label": "Unregistered",
 	"license.updates": "Includes free updates until",
 
@@ -573,6 +570,7 @@
 	"preview": "Preview",
 	"remove": "Remove",
 	"rename": "Rename",
+	"renew": "Renew",
 	"replace": "Replace",
 	"replace.with": "Replace with",
 	"retry": "Try again",
@@ -610,6 +608,8 @@
 	"split": "Split",
 
 	"stats.empty": "No reports",
+	"status": "Status",
+
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
@@ -665,6 +665,8 @@
 	"translation.direction": "ltr",
 	"translation.name": "English",
 	"translation.locale": "en_US",
+
+	"type": "Type",
 
 	"upload": "Upload",
 	"upload.error.cantMove": "The uploaded file could not be moved",

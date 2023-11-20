@@ -16,7 +16,7 @@
 			<table style="table-layout: auto">
 				<tbody>
 					<tr>
-						<th>{{ $t("license.type") }}</th>
+						<th>{{ $t("type") }}</th>
 						<td>{{ license.type }}</td>
 					</tr>
 					<tr v-if="license.code">
@@ -26,7 +26,7 @@
 						</td>
 					</tr>
 					<tr v-if="license.info">
-						<th>{{ $t("license.status") }}</th>
+						<th>{{ $t("status") }}</th>
 						<td :data-theme="license.theme">
 							<p class="k-license-dialog-status">
 								<k-icon :type="license.icon" />

@@ -26,7 +26,7 @@ return [
 					'cancelButton' => $license->status() === LicenseStatus::Active ? false : true,
 					'submitButton' => $license->status() === LicenseStatus::Active ? false : [
 						'icon'  => 'cart',
-						'text'  => I18n::translate('license.renew'),
+						'text'  => I18n::translate('renew'),
 						'theme' => 'love',
 					]
 				]

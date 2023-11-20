@@ -78,7 +78,7 @@ export default {
 			if (this.$panel.license === "legacy") {
 				return {
 					click: () => this.$dialog("license"),
-					text: this.$t("license.renew")
+					text: this.$t("renew")
 				};
 			}
 
