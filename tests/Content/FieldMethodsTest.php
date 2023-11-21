@@ -389,7 +389,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertNull($this->field()->toQrCode());
 	}
 
-	public function testToResolvedUrls()
+	public function testPermalinksToUrls()
 	{
 		$app = new App([
 			'roots' => [
@@ -416,7 +416,7 @@ class FieldMethodsTest extends TestCase
 		]);
 
 		$field  = $this->field('<p>This is a <a href="/@/page/my-page">test</a><img src="/@/file/my-file"></p>. This should not be <a href="https://getkirby.com">affected</a>.');
-		$result = $field->toResolvedUrls();
+		$result = $field->permalinksToUrls();
 		$hash   = $app->file('a/test.jpg')->mediaHash();
 
 		$this->assertSame('<p>This is a <a href="/a">test</a><img src="/media/pages/a/' . $hash . '/test.jpg"></p>. This should not be <a href="https://getkirby.com">affected</a>.', (string)$result);
