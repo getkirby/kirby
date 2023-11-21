@@ -7,7 +7,7 @@
 		@focusout="$emit('blur', $event)"
 	>
 		<slot name="header">
-			<header class="k-bar k-field-header">
+			<header class="k-field-header">
 				<slot name="label">
 					<k-label :input="input" :required="required" type="field">
 						{{ label }}
@@ -57,6 +57,9 @@ export default {
 
 <style>
 .k-field-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	position: relative;
 	margin-bottom: var(--spacing-2);
 }

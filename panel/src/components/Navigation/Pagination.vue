@@ -175,6 +175,9 @@ export default {
 </script>
 
 <style>
+.k-pagination {
+	flex-shrink: 0;
+}
 .k-pagination-details {
 	--button-padding: var(--spacing-3);
 	font-size: var(--text-xs);

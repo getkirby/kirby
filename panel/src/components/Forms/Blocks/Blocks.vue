@@ -640,7 +640,6 @@ export default {
 		select(block) {
 			if (this.isSelected(block) === false) {
 				this.selected.push(block.id);
-				this.selected.sort((a, b) => this.findIndex(a) - this.findIndex(b));
 			}
 		},
 		selectDown() {

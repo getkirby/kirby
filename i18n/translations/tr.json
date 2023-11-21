@@ -54,6 +54,7 @@
 
 	"drawer.fields.empty": "Bu çekmecede alan yok",
 
+	"domain": "Alan adı",
 	"download": "İndir",
 	"duplicate": "Kopyala",
 
@@ -132,8 +133,9 @@
 	"error.layout.validation.block": "{layoutIndex}. sıradaki düzende \"{fieldset}\" blok türünü kullanan {blockIndex}. bloktaki \"{field}\" alanında bir hata var",
 	"error.layout.validation.settings": "{index}. düzen ayarlarında bir hata var",
 
-	"error.license.format": "Lütfen geçerli bir lisans anahtarı girin",
+	"error.license.domain": "Lisans için alan adı eksik",
 	"error.license.email": "Lütfen geçerli bir e-posta adresi girin",
+	"error.license.format": "Lütfen geçerli bir lisans anahtarı girin",
 	"error.license.verification": "Lisans doğrulanamadı",
 
 	"error.login.totp.confirm.invalid": "Geçersiz kod",
@@ -416,13 +418,26 @@
 	"license.activate.label": "Lütfen lisansınızı etkinleştirin",
 	"license.activate.domain": "Lisansınız <strong>{host}</strong> için etkinleştirilecektir.",
 	"license.activate.local": "Yerel etki alanınız <strong>{host}</strong> için Kirby lisansınızı etkinleştirmek üzeresiniz. Bu site genel bir etki alanına kurulacaksa, lütfen bunun yerine orada etkinleştirin. Eğer lisansınızı kullanmak istediğiniz alan adı {host} ise lütfen devam edin.",
+	"license.activated": "Etkinleştirildi",
 	"license.buy": "Bir lisans satın al",
+	"license.code": "Kod",
 	"license.code.help": "Lisans kodunuzu satın alma işleminden sonra e-posta yoluyla aldınız. Lütfen kopyalayıp buraya yapıştırın.",
 	"license.code.label": "Lütfen lisans kodunu giriniz",
+	"license.status.active.info": "{date} tarihine kadar yeni ana sürümleri içerir",
+	"license.status.active.label": "Geçerli lisans",
+	"license.status.inactive.info": "Yeni ana sürümlere güncellemek için lisansı yenileyin",
+	"license.status.inactive.label": "Yeni ana sürüm yok",
+	"license.status.legacy.bubble": "Lisansınızı yenilemeye hazır mısınız?",
+	"license.status.legacy.info": "Lisansınız bu sürümü kapsamıyor",
+	"license.status.legacy.label": "Lütfen lisansınızı yenileyin",
+	"license.status.missing.bubble": "Sitenizi yayına almaya hazır mısınız?",
+	"license.status.missing.info": "Geçerli lisans yok",
+	"license.status.missing.label": "Lütfen lisansınızı etkinleştirin",
 	"license.manage": "Lisanslarınızı yönetin",
-	"license.ready": "Sitenizi yayına almaya hazır mısınız?",
+	"license.purchased": "Satın alındı",
 	"license.success": "Kirby'yi desteklediğiniz için teşekkürler",
 	"license.unregistered.label": "Kayıtsız",
+	"license.updates": "Şu tarihe kadar ücretsiz güncellemeler içerir",
 
 	"link": "Ba\u011flant\u0131",
 	"link.text": "Ba\u011flant\u0131 yaz\u0131s\u0131",
@@ -461,12 +476,12 @@
 	"login.totp.enable.confirm.text": "Uygulamanız her 30 saniyede bir yeni bir kerelik kod oluşturur. Kurulumu tamamlamak için geçerli kodu girin:",
 	"login.totp.enable.confirm.label": "Geçerli kod",
 	"login.totp.enable.confirm.help": "Bu kurulumdan sonra, her oturum açtığınızda sizden tek seferlik bir kod isteyeceğiz.",
-	"login.totp.enable.success": "Etkinleştirilmiş tek seferlik kodlar",
+	"login.totp.enable.success": "Tek seferlik kodlar etkinleştirildi",
 	"login.totp.disable.option": "Tek seferlik kodları devre dışı bırakma",
 	"login.totp.disable.label": "Tek seferlik kodları devre dışı bırakmak için şifrenizi girin",
 	"login.totp.disable.help": "Gelecekte, oturum açtığınızda e-posta yoluyla gönderilen bir oturum açma kodu gibi farklı bir ikinci faktör istenecektir. Tek seferlik kodları daha sonra her zaman yeniden ayarlayabilirsiniz.",
 	"login.totp.disable.admin": "<p>Bu <strong>{user}</strong> için tek seferlik kodları devre dışı bırakacaktır.</p> </p>Gelecekte, oturum açtıklarında e-posta yoluyla gönderilen bir oturum açma kodu gibi farklı bir ikinci faktör istenecektir. {user} bir sonraki girişinden sonra tek seferlik kodları tekrar ayarlayabilir.</p>",
-	"login.totp.disable.success": "Devre dışı bırakılmış tek seferlik kodlar",
+	"login.totp.disable.success": "Tek seferlik kodlar devre dışı",
 
 	"logout": "Oturumu kapat",
 
@@ -555,6 +570,7 @@
 	"preview": "Önizle",
 	"remove": "Kaldır",
 	"rename": "Yeniden Adlandır",
+	"renew": "Yenileme",
 	"replace": "De\u011fi\u015ftir",
 	"replace.with": "Değiştir",
 	"retry": "Tekrar Dene",
@@ -592,6 +608,8 @@
 	"split": "Ayır",
 
 	"stats.empty": "Rapor yok",
+	"status": "Durum",
+
 	"system.issues.content": "İçerik klasörü açığa çıkmış görünüyor",
 	"system.issues.eol.kirby": "Yüklü Kirby sürümünüz kullanım ömrünün sonuna ulaştı ve daha fazla güvenlik güncellemesi almayacak",
 	"system.issues.eol.plugin": "{ plugin } eklentisinin yüklü sürümü kullanım ömrünün sonuna ulaştı ve daha fazla güvenlik güncellemesi almayacak",
@@ -647,6 +665,8 @@
 	"translation.direction": "ltr",
 	"translation.name": "T\u00fcrk\u00e7e",
 	"translation.locale": "tr_TR",
+
+	"type": "Tür",
 
 	"upload": "Yükle",
 	"upload.error.cantMove": "Yüklenen dosya taşınamadı",

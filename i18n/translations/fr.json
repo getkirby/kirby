@@ -54,6 +54,7 @@
 
 	"drawer.fields.empty": "Ce tiroir ne comporte aucun champ",
 
+	"domain": "Domaine",
 	"download": "Télécharger",
 	"duplicate": "Dupliquer",
 
@@ -132,8 +133,9 @@
 	"error.layout.validation.block": "Il y a une erreur sur le champ « {field} » du bloc {blockIndex} utilisant le type de bloc « {fieldset} » dans le layout {layoutIndex}.",
 	"error.layout.validation.settings": "Il y a une erreur dans les paramètres de la disposition {index}",
 
-	"error.license.format": "Veuillez saisir un numéro de licence correct",
+	"error.license.domain": "Le domaine de la licence est manquant",
 	"error.license.email": "Veuillez saisir un courriel correct",
+	"error.license.format": "Veuillez saisir un numéro de licence correct",
 	"error.license.verification": "La licence n’a pu être vérifiée",
 
 	"error.login.totp.confirm.invalid": "Code incorrect",
@@ -416,13 +418,26 @@
 	"license.activate.label": "Veuillez activer votre licence",
 	"license.activate.domain": "Votre licence sera activée pour <strong>{host}</strong>.",
 	"license.activate.local": "Vous êtes sur le point d‘activer votre licence de Kirby pour votre domaine local <strong>{host}</strong>. Si ce site doit être activé sur un domaine publique, veuillez plutôt l‘activer là-bas. Si {host} est bien le domaine pour lequel vous voulez activer votre licence, veuillez continuer.",
+	"license.activated": "Activée",
 	"license.buy": "Acheter une licence",
+	"license.code": "Code",
 	"license.code.help": "Vous avez reçu votre code de licence par courriel après l‘achat. Veuillez le copier et le coller ici.",
 	"license.code.label": "Veuillez saisir votre numéro de licence",
+	"license.status.active.info": "Inclut les nouvelles versions majeures jusqu'au {date}",
+	"license.status.active.label": "Licence valide",
+	"license.status.inactive.info": "Renouveler la licence pour mettre à jour vers les nouvelles versions majeures",
+	"license.status.inactive.label": "Pas de nouvelles versions majeures",
+	"license.status.legacy.bubble": "Prêt à renouveler votre licence ?",
+	"license.status.legacy.info": "Votre licence ne couvre pas cette version",
+	"license.status.legacy.label": "Veuillez renouveler votre licence",
+	"license.status.missing.bubble": "Prêt à lancer votre site ?",
+	"license.status.missing.info": "Pas de licence valide",
+	"license.status.missing.label": "Veuillez activer votre licence",
 	"license.manage": "Gérer vos licences",
-	"license.ready": "Prêt à lancer votre site ?",
+	"license.purchased": "Achetée",
 	"license.success": "Merci pour votre soutien à Kirby",
 	"license.unregistered.label": "Non enregistré",
+	"license.updates": "Inclut des mises à jour gratuites jusqu’au",
 
 	"link": "Lien",
 	"link.text": "Texte du lien",
@@ -555,6 +570,7 @@
 	"preview": "Prévisualiser",
 	"remove": "Supprimer",
 	"rename": "Renommer",
+	"renew": "Renouveler",
 	"replace": "Remplacer",
 	"replace.with": "Remplacer par",
 	"retry": "Essayer à nouveau",
@@ -592,6 +608,8 @@
 	"split": "Diviser",
 
 	"stats.empty": "Aucun rapport",
+	"status": "Statut",
+
 	"system.issues.content": "Le dossier content semble exposé",
 	"system.issues.eol.kirby": "La version de Kirby installée a atteint la fin de son cycle de vie et ne recevra plus de mises à jour de sécurité",
 	"system.issues.eol.plugin": "La version du plugin { plugin } installée a atteint la fin de son cycle de vie et ne recevra plus de mises à jour de sécurité",
@@ -647,6 +665,8 @@
 	"translation.direction": "ltr",
 	"translation.name": "Français",
 	"translation.locale": "fr_FR",
+
+	"type": "Type",
 
 	"upload": "Transférer",
 	"upload.error.cantMove": "Le fichier transféré n’a pu être déplacé",

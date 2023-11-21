@@ -54,6 +54,7 @@
 
 	"drawer.fields.empty": "Þessi skúffa hefur engin svið",
 
+	"domain": "Lén",
 	"download": "Hlaða niður",
 	"duplicate": "Klóna",
 
@@ -132,8 +133,9 @@
 	"error.layout.validation.block": "Það er villa í {field} sviðinu í bálkinum {blockIndex} sem notar {fieldset} bálkgerðina í rammanum {layoutIndex}",
 	"error.layout.validation.settings": "Hér er villa í sitllingum fyrir ramman {index}",
 
-	"error.license.format": "Gildur leyfiskóði hér",
+	"error.license.domain": "Lénið fyrir skráningarleyfið vantar",
 	"error.license.email": "Almennilegt netfang hér",
+	"error.license.format": "Gildur leyfiskóði hér",
 	"error.license.verification": "Ekki heppnaðist að staðfesta leyfið",
 
 	"error.login.totp.confirm.invalid": "Ógildur kóði",
@@ -416,13 +418,26 @@
 	"license.activate.label": "Vinsamlegast virkjaðu leyfið þitt",
 	"license.activate.domain": "Leyfið þitt verður virkjað fyrir og tengt við <strong>{host}</strong>.",
 	"license.activate.local": "Þú ert að fara virkja leyfið þitt fyrir staðbundinn (e. local) vef:  <strong>{host}</strong>. Ef það er meiningin að færa vefinn síðar út á netið þá vinsamlegast virkjaðu leyfið þar. Ef {host} er lénið sem þú vilt tengja leyfið við þá vinsamlegast haltu áfram.",
+	"license.activated": "Virkjað",
 	"license.buy": "Kaupa leyfi",
+	"license.code": "Kóðasnið",
 	"license.code.help": "Þú fékkst leyfiskóðan sendan í tölvupósti eftir að þú borgaðir fyrir leyfið. Vinsamlegast afritaðu hann hingað.",
 	"license.code.label": "Vinsamlegast settu inn leyfiskóðan",
+	"license.status.active.info": "Felur í sér allar útgáfur þar til {date}",
+	"license.status.active.label": "Gilt skráningarleyfi",
+	"license.status.inactive.info": "Endurnýja skráningarleyfi fyrir uppfærslur á nýjum útgáfum",
+	"license.status.inactive.label": "Engar nýjar útgáfur",
+	"license.status.legacy.bubble": "Klár í  að endurnýja skráningarleyfið?",
+	"license.status.legacy.info": "Skráningarleyfið þitt og sá kóði sem fylgir gildir ekkert fyrir þessa útgáfu",
+	"license.status.legacy.label": "Vinsamlegast endurnýjaðu skráningarleyfið þitt",
+	"license.status.missing.bubble": "Er allt tilbúið til að gefa vefinn út?",
+	"license.status.missing.info": "Ekkert gilt skráningarleyfi",
+	"license.status.missing.label": "Vinsamlegast virkjaðu leyfið þitt",
 	"license.manage": "Sýslaðu með leyfin þín",
-	"license.ready": "Er allt tilbúið til að gefa vefinn út?",
+	"license.purchased": "Verslað",
 	"license.success": "Þakka þér fyrir að velja Kirby",
 	"license.unregistered.label": "Óskráð",
+	"license.updates": "Innifeldur ókeypis uppfærslur þar til",
 
 	"link": "Tengill",
 	"link.text": "Tengilstexti",
@@ -461,12 +476,12 @@
 	"login.totp.enable.confirm.text": "Appið þitt framleiðir nýjan einnota kóða á 30 sekúndna fresti. Setti inn núverandi kóða til að ljúka uppsetningu.",
 	"login.totp.enable.confirm.label": "Núverandi kóði",
 	"login.totp.enable.confirm.help": "Eftir uppsetninguna þá munum við biðja um einnota kóða í hvert skipti sem þú skráir þig inn.",
-	"login.totp.enable.success": "Virkjaðir einnota kóðar.",
+	"login.totp.enable.success": "Einnota skráningarkóði virkjaður",
 	"login.totp.disable.option": "Afvirkjaðir einnota kóðar.",
 	"login.totp.disable.label": "Sláðu inn lykilorðið þitt til að afvirkja einnota kóða.",
 	"login.totp.disable.help": "Framveigis þá mun nýr seinniþáttar kóði verða sendur í tölvupósti til þín þegar þú skráir þig inn. Þú munt alltaf geta sett upp einnota kóðana aftur síðar.",
 	"login.totp.disable.admin": "<p>Þetta mun afvirkja einnota kóða fyrir <strong>{user}</strong>.</p><p>Framvegis mun nýr seinniþáttarkóði verða sendur í tölvupósti þegar notendur skrá sig inn.  {user} getur sett upp einnota kóðana eftir næstu innskráningu.</p>",
-	"login.totp.disable.success": "Afvirkjaði einnota kóða",
+	"login.totp.disable.success": "Einnota skráningarkóði afvirkjaður",
 
 	"logout": "Útskrá",
 
@@ -555,6 +570,7 @@
 	"preview": "Forskoða",
 	"remove": "Fjarlægja",
 	"rename": "Endurnefna",
+	"renew": "Endurnýja",
 	"replace": "Setja í stað",
 	"replace.with": "Endursetja með",
 	"retry": "Reyndu aftur",
@@ -592,6 +608,8 @@
 	"split": "Skipta",
 
 	"stats.empty": "Engar skýrslur",
+	"status": "Staða",
+
 	"system.issues.content": "Efnismappan virðist vera berskjölduð",
 	"system.issues.eol.kirby": "Uppsett Kirby eintak þitt hefur runnið sitt skeið á enda og mun ekki verða uppfært framar",
 	"system.issues.eol.plugin": "Uppsett eintak þitt  af viðbótinni  { plugin } hefur runnið sitt skeið á enda og mun ekki verða uppfærð framar",
@@ -647,6 +665,8 @@
 	"translation.direction": "ltr",
 	"translation.name": "Íslenska",
 	"translation.locale": "is_IS",
+
+	"type": "Gerð",
 
 	"upload": "Hlaða inn",
 	"upload.error.cantMove": "Innhlöðnu skránni var ekki haggað",
