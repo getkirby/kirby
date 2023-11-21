@@ -122,7 +122,7 @@ export default {
 .k-collection-footer {
 	display: flex;
 	justify-content: space-between;
-	align-items: center;
+	align-items: flex-start;
 	flex-wrap: nowrap;
 	gap: var(--spacing-12);
 	margin-top: var(--spacing-2);
