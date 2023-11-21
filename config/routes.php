@@ -131,10 +131,24 @@ return function (App $kirby) {
 		],
 		// permalinks for page/file UUIDs
 		[
-			'pattern' => '@/(page|file)/(:all)',
+			'pattern' => [
+				'@/(page|file)/(:all)',
+				'(:any)/@/(page|file)/(:all)'
+			],
 			'method'  => 'ALL',
 			'env'     => 'site',
-			'action'  => function (string $type, string $id) use ($kirby) {
+			'action'  => function (
+				string $lang,
+				string $type,
+				string $id = null
+			) use ($kirby) {
+				// handle the case where the language is missing
+				if ($id === null) {
+					$id   = $type;
+					$type = $lang;
+					$lang = null;
+				}
+
 				// try to resolve to model, but only from UUID cache;
 				// this ensures that only existing UUIDs can be queried
 				// and attackers can't force Kirby to go through the whole
@@ -142,7 +156,7 @@ return function (App $kirby) {
 				if ($model = Uuid::for($type . '://' . $id)?->model(true)) {
 					return $kirby
 						->response()
-						->redirect($model->url());
+						->redirect($model->url($lang));
 				}
 
 				// render the error page
