@@ -361,7 +361,7 @@ abstract class Uuid
 
 	/**
 	 * Helper for routes to find the model by type and id and create a
-     * proper redirect response for it.
+	 * proper redirect response for it.
 	 */
 	public static function redirect(string $type, string $id, string|null $lang = null): Responder|bool
 	{
