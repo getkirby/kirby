@@ -54,6 +54,7 @@
 
 	"drawer.fields.empty": "Acest sertar nu are niciun câmp",
 
+	"domain": "Domain",
 	"download": "Descarcă",
 	"duplicate": "Duplică",
 
@@ -132,8 +133,9 @@
 	"error.layout.validation.block": "Există o eroare la câmpul \"{field}\" în blocul {blockIndex} care utilizează tipul de bloc \"{fieldset}\" în aranjamentul {layoutIndex}",
 	"error.layout.validation.settings": "Există o eroare la setările aranjamentului {index}",
 
-	"error.license.format": "Te rog introdu o cheie de licență validă",
+	"error.license.domain": "The domain for the license is missing",
 	"error.license.email": "Te rog introdu o adresă de e-mail validă",
+	"error.license.format": "Te rog introdu o cheie de licență validă",
 	"error.license.verification": "Licența nu a putut fi verificată",
 
 	"error.login.totp.confirm.invalid": "Cod invalid",
@@ -416,13 +418,26 @@
 	"license.activate.label": "Please activate your license",
 	"license.activate.domain": "Your license will be activated for <strong>{host}</strong>.",
 	"license.activate.local": "You are about to activate your Kirby license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please activate it there instead. If {host} is the domain you want to use your license for, please continue.",
+	"license.activated": "Activated",
 	"license.buy": "Cumpără o licență",
+	"license.code": "Cod",
 	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
 	"license.code.label": "Te rog introdu codul tău de licență",
+	"license.status.active.info": "Includes new major versions until {date}",
+	"license.status.active.label": "Valid license",
+	"license.status.inactive.info": "Renew license to update to new major versions",
+	"license.status.inactive.label": "No new major versions",
+	"license.status.legacy.bubble": "Ready to renew your license?",
+	"license.status.legacy.info": "Your license does not cover this version",
+	"license.status.legacy.label": "Please renew your license",
+	"license.status.missing.bubble": "Ready to launch your site?",
+	"license.status.missing.info": "No valid license",
+	"license.status.missing.label": "Please activate your license",
 	"license.manage": "Gestionează-ți licențele",
-	"license.ready": "Ready to launch your site?",
+	"license.purchased": "Purchased",
 	"license.success": "Mulțumim că susții Kirby",
 	"license.unregistered.label": "Neînregistrat",
+	"license.updates": "Includes free updates until",
 
 	"link": "Legătură",
 	"link.text": "Textul legăturii",
@@ -461,12 +476,12 @@
 	"login.totp.enable.confirm.text": "Your app generates a new one‑time code every 30 seconds. Enter the current code to complete the setup:",
 	"login.totp.enable.confirm.label": "Current code",
 	"login.totp.enable.confirm.help": "After this setup, we will ask you for a one‑time code every time you log in.",
-	"login.totp.enable.success": "Activated one‑time codes",
+	"login.totp.enable.success": "One‑time codes enabled",
 	"login.totp.disable.option": "Disable one‑time codes",
 	"login.totp.disable.label": "Enter your password to disable one‑time codes",
 	"login.totp.disable.help": "In the future, a different second factor like a login code sent via email will be requested when you log in. You can always set up one‑time codes again later.",
 	"login.totp.disable.admin": "<p>This will disable one‑time codes for <strong>{user}</strong>.</p><p>In the future, a different second factor like a login code sent via email will be requested when they log in. {user} can set up one‑time codes again after their next login.</p>",
-	"login.totp.disable.success": "Disabled one‑time codes",
+	"login.totp.disable.success": "One‑time codes disabled",
 
 	"logout": "Deconectare",
 
@@ -555,6 +570,7 @@
 	"preview": "Previzualizează",
 	"remove": "Înlătură",
 	"rename": "Redenumește",
+	"renew": "Renew",
 	"replace": "\u00cenlocuie\u0219te",
 	"replace.with": "Înlocuiește cu",
 	"retry": "Încearcă din nou",
@@ -592,6 +608,8 @@
 	"split": "Împarte",
 
 	"stats.empty": "Niciun raport",
+	"status": "Status",
+
 	"system.issues.content": "Directorul de conținut pare să fie expus",
 	"system.issues.eol.kirby": "Versiunea instalată de Kirby a ajuns la sfârșitul vieții utile și nu va mai primi actualizări de securitate.",
 	"system.issues.eol.plugin": "Versiunea instalată a plugin-ului { plugin } a ajuns la sfârșitul vieții utile și nu va mai primi actualizări de securitate.",
@@ -647,6 +665,8 @@
 	"translation.direction": "ltr",
 	"translation.name": "Rom\u00e2n\u0103",
 	"translation.locale": "ro_RO",
+
+	"type": "Type",
 
 	"upload": "Încarcă",
 	"upload.error.cantMove": "Fișierul încărcat nu a putut fi mutat",

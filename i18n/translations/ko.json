@@ -54,6 +54,7 @@
 
 	"drawer.fields.empty": "This drawer has no fields",
 
+	"domain": "Domain",
 	"download": "다운로드",
 	"duplicate": "복제",
 
@@ -132,8 +133,9 @@
 	"error.layout.validation.block": "There's an error on the \"{field}\" field in block {blockIndex} using the \"{fieldset}\" block type in layout {layoutIndex}",
 	"error.layout.validation.settings": "레이아웃({index})의 옵션을 확인하세요.",
 
-	"error.license.format": "올바른 라이선스 키를 입력하세요.",
+	"error.license.domain": "The domain for the license is missing",
 	"error.license.email": "올바른 이메일 주소를 입력하세요.",
+	"error.license.format": "올바른 라이선스 키를 입력하세요.",
 	"error.license.verification": "라이선스 키가 올바르지 않습니다.",
 
 	"error.login.totp.confirm.invalid": "코드가 올바르지 않습니다.",
@@ -416,13 +418,26 @@
 	"license.activate.label": "Please activate your license",
 	"license.activate.domain": "Your license will be activated for <strong>{host}</strong>.",
 	"license.activate.local": "You are about to activate your Kirby license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please activate it there instead. If {host} is the domain you want to use your license for, please continue.",
+	"license.activated": "Activated",
 	"license.buy": "라이선스 구매",
+	"license.code": "언어 코드",
 	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
 	"license.code.label": "라이선스 코드를 입력하세요.",
+	"license.status.active.info": "Includes new major versions until {date}",
+	"license.status.active.label": "Valid license",
+	"license.status.inactive.info": "Renew license to update to new major versions",
+	"license.status.inactive.label": "No new major versions",
+	"license.status.legacy.bubble": "Ready to renew your license?",
+	"license.status.legacy.info": "Your license does not cover this version",
+	"license.status.legacy.label": "Please renew your license",
+	"license.status.missing.bubble": "Ready to launch your site?",
+	"license.status.missing.info": "No valid license",
+	"license.status.missing.label": "Please activate your license",
 	"license.manage": "라이선스 관리",
-	"license.ready": "Ready to launch your site?",
+	"license.purchased": "Purchased",
 	"license.success": "Kirby와 함께해주셔서 감사합니다.",
 	"license.unregistered.label": "Kirby가 등록되지 않았습니다.",
+	"license.updates": "Includes free updates until",
 
 	"link": "\uc77c\ubc18 \ub9c1\ud06c",
 	"link.text": "\ubb38\uc790",
@@ -461,12 +476,12 @@
 	"login.totp.enable.confirm.text": "Your app generates a new one‑time code every 30 seconds. Enter the current code to complete the setup:",
 	"login.totp.enable.confirm.label": "Current code",
 	"login.totp.enable.confirm.help": "After this setup, we will ask you for a one‑time code every time you log in.",
-	"login.totp.enable.success": "Activated one‑time codes",
+	"login.totp.enable.success": "One‑time codes enabled",
 	"login.totp.disable.option": "Disable one‑time codes",
 	"login.totp.disable.label": "Enter your password to disable one‑time codes",
 	"login.totp.disable.help": "In the future, a different second factor like a login code sent via email will be requested when you log in. You can always set up one‑time codes again later.",
 	"login.totp.disable.admin": "<p>This will disable one‑time codes for <strong>{user}</strong>.</p><p>In the future, a different second factor like a login code sent via email will be requested when they log in. {user} can set up one‑time codes again after their next login.</p>",
-	"login.totp.disable.success": "Disabled one‑time codes",
+	"login.totp.disable.success": "One‑time codes disabled",
 
 	"logout": "로그아웃",
 
@@ -555,6 +570,7 @@
 	"preview": "미리 보기",
 	"remove": "삭제",
 	"rename": "이름 변경",
+	"renew": "Renew",
 	"replace": "\uad50\uccb4",
 	"replace.with": "다음으로 교체",
 	"retry": "\ub2e4\uc2dc \uc2dc\ub3c4",
@@ -592,6 +608,8 @@
 	"split": "나누기",
 
 	"stats.empty": "관련 기록이 없습니다.",
+	"status": "상태",
+
 	"system.issues.content": "<code>/content</code> 폴더의 권한을 확인하세요.",
 	"system.issues.eol.kirby": "설치된 Kirby는 버전이 만료되었습니다. 더 이상 보안 업데이트를 받을 수 없습니다.",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
@@ -647,6 +665,8 @@
 	"translation.direction": "ltr",
 	"translation.name": "한국어",
 	"translation.locale": "ko_KR",
+
+	"type": "Type",
 
 	"upload": "업로드",
 	"upload.error.cantMove": "파일을 이동할 수 없습니다.",
