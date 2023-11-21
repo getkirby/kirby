@@ -415,11 +415,11 @@ class FieldMethodsTest extends TestCase
 			]
 		]);
 
-		$field  = $this->field('<p>This is a <a href="/@/page/my-page">test</a><img src="/@/file/my-file"></p>');
+		$field  = $this->field('<p>This is a <a href="/@/page/my-page">test</a><img src="/@/file/my-file"></p>. This should not be <a href="https://getkirby.com">affected</a>.');
 		$result = $field->toResolvedUrls();
 		$hash   = $app->file('a/test.jpg')->mediaHash();
 
-		$this->assertSame('<p>This is a <a href="/a">test</a><img src="/media/pages/a/' . $hash . '/test.jpg"></p>', (string)$result);
+		$this->assertSame('<p>This is a <a href="/a">test</a><img src="/media/pages/a/' . $hash . '/test.jpg"></p>. This should not be <a href="https://getkirby.com">affected</a>.', (string)$result);
 	}
 
 	public function testToStructure()

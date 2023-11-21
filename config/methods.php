@@ -264,9 +264,13 @@ return function (App $app) {
 				foreach ($elements as $element) {
 					foreach ($attributes as $attribute) {
 						if ($url = $element->getAttribute($attribute)) {
-							if ($uuid = Uuid::for($url)) {
-								$url = $uuid->model()->url();
-								$element->setAttribute($attribute, $url);
+							try {
+								if ($uuid = Uuid::for($url)) {
+									$url = $uuid->model()->url();
+									$element->setAttribute($attribute, $url);
+								}
+							} catch (InvalidArgumentException) {
+								// ignore anything else than permalinks
 							}
 						}
 					}
