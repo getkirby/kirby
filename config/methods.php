@@ -468,6 +468,10 @@ return function (App $app) {
 		 * Parses the field value as DOM and replaces
 		 * any permalinks in href/src attributes with
 		 * the regular url
+		 *
+         * This method is still experimental! You can use
+         * it to solve potential problems with permalinks
+         * already, but it might change in the future.
 		 */
 		'permalinksToUrls' => function (Field $field): Field {
 			if ($field->isNotEmpty() === true) {
