@@ -1,6 +1,6 @@
 <template>
 	<section class="k-section" :data-invalid="invalid">
-		<header v-if="headline || buttons" class="k-bar k-section-header">
+		<header v-if="headline || buttons" class="k-section-header">
 			<k-label
 				:invalid="invalid"
 				:link="link"
@@ -37,6 +37,9 @@ export default {
 	margin-top: var(--columns-block-gap);
 }
 .k-section-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	margin-bottom: var(--spacing-2);
 }
 </style>

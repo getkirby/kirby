@@ -523,4 +523,19 @@ export default {
 		position: static;
 	}
 }
+
+/* Pagination */
+.k-table-pagination {
+	border-top: 1px solid var(--table-color-border);
+	height: var(--table-row-height);
+	background: var(--table-color-th-back);
+	display: flex;
+	justify-content: center;
+	border-end-start-radius: var(--rounded);
+	border-end-end-radius: var(--rounded);
+}
+.k-table-pagination > .k-button {
+	--button-color-back: transparent;
+	border-left: 0 !important;
+}
 </style>

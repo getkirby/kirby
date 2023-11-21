@@ -162,16 +162,30 @@ abstract class Uuid
 
 		// for UUID string
 		if (is_string($seed) === true) {
-			return match (Str::before($seed, '://')) {
-				'page'   => new PageUuid(uuid: $seed, context: $context),
-				'file'   => new FileUuid(uuid: $seed, context: $context),
-				'site'   => new SiteUuid(uuid: $seed, context: $context),
-				'user'   => new UserUuid(uuid: $seed, context: $context),
-				// TODO: activate for uuid-block-structure-support
-				// 'block'  => new BlockUuid(uuid: $seed, context: $context),
-				// 'struct' => new StructureUuid(uuid: $seed, context: $context),
-				default  => throw new InvalidArgumentException('Invalid UUID URI: ' . $seed)
-			};
+			if ($uri = Str::before($seed, '://')) {
+				return match ($uri) {
+					'page'   => new PageUuid(uuid: $seed, context: $context),
+					'file'   => new FileUuid(uuid: $seed, context: $context),
+					'site'   => new SiteUuid(uuid: $seed, context: $context),
+					'user'   => new UserUuid(uuid: $seed, context: $context),
+					// TODO: activate for uuid-block-structure-support
+					// 'block'  => new BlockUuid(uuid: $seed, context: $context),
+					// 'struct' => new StructureUuid(uuid: $seed, context: $context),
+					default  => throw new InvalidArgumentException('Invalid UUID URI: ' . $seed)
+				};
+			}
+
+			// permalinks
+			if ($url = Str::after($seed, '/@/')) {
+				$parts = explode('/', $url);
+
+				return static::for(
+					$parts[0] . '://' . $parts[1],
+					$context
+				);
+			}
+
+			throw new InvalidArgumentException('Invalid UUID string: ' . $seed);
 		}
 
 		// for model object

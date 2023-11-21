@@ -89,6 +89,7 @@ input[type="radio"]::after {
 /** Toggle **/
 input[type="checkbox"][data-variant="toggle"] {
 	--choice-rounded: var(--choice-height);
+	width: calc(var(--choice-height) * 2);
 	aspect-ratio: 2/1;
 }
 input[type="checkbox"][data-variant="toggle"]::after {

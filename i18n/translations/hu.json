@@ -54,6 +54,7 @@
 
 	"drawer.fields.empty": "This drawer has no fields",
 
+	"domain": "Domain",
 	"download": "Letöltés",
 	"duplicate": "Másolat",
 
@@ -132,8 +133,9 @@
 	"error.layout.validation.block": "There's an error on the \"{field}\" field in block {blockIndex} using the \"{fieldset}\" block type in layout {layoutIndex}",
 	"error.layout.validation.settings": "Hibát találtunk a(z) {index} elrendezés beállításaiban",
 
-	"error.license.format": "Kérlek, add meg az évényes lincensz kulcsot",
+	"error.license.domain": "The domain for the license is missing",
 	"error.license.email": "Kérlek adj meg egy valós email-címet",
+	"error.license.format": "Kérlek, add meg az évényes lincensz kulcsot",
 	"error.license.verification": "A licensz nem ellenőrizhető",
 
 	"error.login.totp.confirm.invalid": "Érvénytelen kód",
@@ -416,13 +418,26 @@
 	"license.activate.label": "Please activate your license",
 	"license.activate.domain": "Your license will be activated for <strong>{host}</strong>.",
 	"license.activate.local": "You are about to activate your Kirby license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please activate it there instead. If {host} is the domain you want to use your license for, please continue.",
+	"license.activated": "Activated",
 	"license.buy": "Licenc vásárlása",
+	"license.code": "Kód",
 	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
 	"license.code.label": "Kérlek írd be a licenc-kódot",
+	"license.status.active.info": "Includes new major versions until {date}",
+	"license.status.active.label": "Valid license",
+	"license.status.inactive.info": "Renew license to update to new major versions",
+	"license.status.inactive.label": "No new major versions",
+	"license.status.legacy.bubble": "Ready to renew your license?",
+	"license.status.legacy.info": "Your license does not cover this version",
+	"license.status.legacy.label": "Please renew your license",
+	"license.status.missing.bubble": "Ready to launch your site?",
+	"license.status.missing.info": "No valid license",
+	"license.status.missing.label": "Please activate your license",
 	"license.manage": "Manage your licenses",
-	"license.ready": "Ready to launch your site?",
+	"license.purchased": "Purchased",
 	"license.success": "Köszönjük, hogy támogatod a Kirby-t",
 	"license.unregistered.label": "Unregistered",
+	"license.updates": "Includes free updates until",
 
 	"link": "Link",
 	"link.text": "Link szövege",
@@ -461,12 +476,12 @@
 	"login.totp.enable.confirm.text": "Your app generates a new one‑time code every 30 seconds. Enter the current code to complete the setup:",
 	"login.totp.enable.confirm.label": "Current code",
 	"login.totp.enable.confirm.help": "After this setup, we will ask you for a one‑time code every time you log in.",
-	"login.totp.enable.success": "Activated one‑time codes",
+	"login.totp.enable.success": "One‑time codes enabled",
 	"login.totp.disable.option": "Disable one‑time codes",
 	"login.totp.disable.label": "Enter your password to disable one‑time codes",
 	"login.totp.disable.help": "In the future, a different second factor like a login code sent via email will be requested when you log in. You can always set up one‑time codes again later.",
 	"login.totp.disable.admin": "<p>This will disable one‑time codes for <strong>{user}</strong>.</p><p>In the future, a different second factor like a login code sent via email will be requested when they log in. {user} can set up one‑time codes again after their next login.</p>",
-	"login.totp.disable.success": "Disabled one‑time codes",
+	"login.totp.disable.success": "One‑time codes disabled",
 
 	"logout": "Kijelentkezés",
 
@@ -555,6 +570,7 @@
 	"preview": "Előnézet",
 	"remove": "Eltávolítás",
 	"rename": "Átnevezés",
+	"renew": "Renew",
 	"replace": "Cser\u00e9l",
 	"replace.with": "Replace with",
 	"retry": "Próbáld újra",
@@ -592,6 +608,8 @@
 	"split": "Split",
 
 	"stats.empty": "No reports",
+	"status": "Állapot",
+
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
@@ -647,6 +665,8 @@
 	"translation.direction": "ltr",
 	"translation.name": "Magyar",
 	"translation.locale": "hu_HU",
+
+	"type": "Type",
 
 	"upload": "Feltöltés",
 	"upload.error.cantMove": "A feltöltött fájlt nem sikerült áthelyezni",

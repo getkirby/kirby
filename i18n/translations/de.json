@@ -54,6 +54,7 @@
 
 	"drawer.fields.empty": "Die Schublade hat keine Felder",
 
+	"domain": "Domain",
 	"download": "Download",
 	"duplicate": "Duplizieren",
 
@@ -132,8 +133,9 @@
 	"error.layout.validation.block": "Fehler im \"{field}\" Feld in Block {blockIndex} mit dem Blocktyp \"{fieldset}\" in Layout {layoutIndex}",
 	"error.layout.validation.settings": "Fehler in den Einstellungen von Layout {index}",
 
-	"error.license.format": "Bitte gib einen gültigen Lizenzschlüssel ein",
+	"error.license.domain": "Die Domain für die Lizenz fehlt",
 	"error.license.email": "Bitte gib eine gültige E-Mailadresse an",
+	"error.license.format": "Bitte gib einen gültigen Lizenzschlüssel ein",
 	"error.license.verification": "Die Lizenz konnte nicht verifiziert werden",
 
 	"error.login.totp.confirm.invalid": "Ungültiger Code",
@@ -416,13 +418,26 @@
 	"license.activate.label": "Bitte aktiviere deine Lizenz",
 	"license.activate.domain": "Deine Lizenz wird für die Domain <strong>{host}</strong> aktiviert.",
 	"license.activate.local": "Du bist dabei, deine Kirby Lizenz für die lokale Domain <strong>{host}</strong> zu aktivieren. Falls diese Seite später unter einer anderen Domain veröffentlicht wird, solltest du sie erst dort aktivieren. Falls {host} die Domain ist, die du für deine Lizenz nutzen möchtest, fahre bitte fort. ",
+	"license.activated": "Aktiviert",
 	"license.buy": "Kaufe eine Lizenz",
+	"license.code": "Code",
 	"license.code.help": "Du hast deinen Lizenz Code nach dem Kauf per Email bekommen. Bitte kopiere sie aus der Email und füge sie hier ein. ",
 	"license.code.label": "Bitte gib deinen Lizenzcode ein",
+	"license.status.active.info": "Beinhaltet neue Major Versionen bis {date}",
+	"license.status.active.label": "Gültige Lizenz",
+	"license.status.inactive.info": "Lizenz erneuern, um auf neue Major Versionen upzudaten",
+	"license.status.inactive.label": "Keine neuen Major Versionen",
+	"license.status.legacy.bubble": "Bereit, die Lizenz zu erneuern? ",
+	"license.status.legacy.info": "Deine Lizenz deckt diese Version nicht ab",
+	"license.status.legacy.label": "Bitte erneuere deine Lizenz",
+	"license.status.missing.bubble": "Bereit, deine Seite zu veröffentlichen?",
+	"license.status.missing.info": "Keine gültige Lizenz",
+	"license.status.missing.label": "Bitte aktiviere deine Lizenz",
 	"license.manage": "Verwalte deine Lizenzen",
-	"license.ready": "Bereit, deine Seite zu veröffentlichen?",
+	"license.purchased": "Gekauft",
 	"license.success": "Vielen Dank für deine Unterstützung",
 	"license.unregistered.label": "Unregistriert",
+	"license.updates": "Beinhaltet Updates bis",
 
 	"link": "Link",
 	"link.text": "Linktext",
@@ -461,12 +476,12 @@
 	"login.totp.enable.confirm.text": "Deine App erstellt alle 30 Sekunden einen neuen Einmal-Code. Gib den aktuellen Code ein, um das Setup abzuschliessen. ",
 	"login.totp.enable.confirm.label": "Aktueller Code",
 	"login.totp.enable.confirm.help": "Nach dem Setup werden wir dich bei jeder Anmeldung nach einem Einmal-Code fragen. ",
-	"login.totp.enable.success": "Aktivierte Einmal-Codes",
+	"login.totp.enable.success": "Einmal-Codes aktiviert",
 	"login.totp.disable.option": "Einmal-Codes deaktivieren",
 	"login.totp.disable.label": "Gib dein Passwort ein, um die Einmal-Codes zu deaktivieren. ",
 	"login.totp.disable.help": "In Zukunft wird bei der Anmeldung ein anderer zweiter Faktor abgefragt. Z.B. ein Login-Code der per Email zugeschickt wird. Du kannst die Einmal-Codes jeder Zeit später wieder neu einrichten. ",
 	"login.totp.disable.admin": "<p>Einmal-Codes für <strong>{user}</strong> werden hiermit deaktiviert.</p> <p>In Zukunft wird für die Anmeldung ein anderer zweiter Faktor abgefragt. Z.B. ein Login-Code, der per Email zugeschickt wird. {user} kann nach der nächsten Anmeldung jeder Zeit wieder Einmal-Codes für den Account aktivieren.</p>",
-	"login.totp.disable.success": "Deaktivierte Einmal-Codes",
+	"login.totp.disable.success": "Einmal-Codes deaktiviert",
 
 	"logout": "Abmelden",
 
@@ -555,6 +570,7 @@
 	"preview": "Vorschau",
 	"remove": "Entfernen",
 	"rename": "Umbenennen",
+	"renew": "Erneuern",
 	"replace": "Ersetzen",
 	"replace.with": "Ersetzen mit",
 	"retry": "Wiederholen",
@@ -592,6 +608,8 @@
 	"split": "Teilen",
 
 	"stats.empty": "Keine Daten",
+	"status": "Status",
+
 	"system.issues.content": "Der content Ordner scheint öffentlich zugänglich zu sein",
 	"system.issues.eol.kirby": "Deine Kirby Installation ist veraltet und erhält keine weiteren Sicherheitsupdates",
 	"system.issues.eol.plugin": "Deine Version des { plugin } Plugins ist veraltet und erhält keine weiteren Sicherheitsupdates",
@@ -647,6 +665,8 @@
 	"translation.direction": "ltr",
 	"translation.name": "Deutsch",
 	"translation.locale": "de_DE",
+
+	"type": "Typ",
 
 	"upload": "Hochladen",
 	"upload.error.cantMove": "Die Datei konnte nicht an ihren Zielort bewegt werden",

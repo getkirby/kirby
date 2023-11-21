@@ -39,11 +39,7 @@
 			v-on="$listeners"
 		/>
 
-		<footer
-			v-if="!disabled && !isEmpty && !isFull && hasFieldsets"
-			class="k-bar"
-			data-align="center"
-		>
+		<footer v-if="!disabled && !isEmpty && !isFull && hasFieldsets">
 			<k-button
 				:title="$t('add')"
 				icon="add"
@@ -133,6 +129,8 @@ export default {
 }
 /** TODO: .k-blocks-field > :has(+ footer) { margin-bottom: var(--spacing-3);} */
 .k-blocks-field > footer {
+	display: flex;
+	justify-content: center;
 	margin-top: var(--spacing-3);
 }
 </style>

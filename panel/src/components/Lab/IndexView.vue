@@ -39,7 +39,7 @@ export default {
 </script>
 
 <style>
-.k-lab-index-view > .k-header {
+.k-lab-index-view .k-header {
 	margin-bottom: 0;
 }
 .k-lab-index-view > .k-box {

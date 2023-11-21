@@ -92,7 +92,7 @@ export default {
 	cursor: not-allowed;
 }
 .k-coloroptions-input input:checked + .k-color-frame {
-	outline: 2px solid currentColor;
+	outline: 1px solid var(--color-gray-600);
 	outline-offset: 2px;
 }
 </style>

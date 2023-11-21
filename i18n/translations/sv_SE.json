@@ -3,7 +3,7 @@
 	"account.delete": "Radera ditt konto",
 	"account.delete.confirm": "Vill du verkligen radera ditt konto? Du kommer att loggas ut omedelbart. Ditt konto kan inte återställas.",
 
-	"activate": "Activate",
+	"activate": "Aktivera",
 	"add": "L\u00e4gg till",
 	"alpha": "Alpha",
 	"author": "Författare",
@@ -48,12 +48,13 @@
 	"dialog.users.empty": "Inga användare att välja",
 
 	"dimensions": "Dimensioner",
-	"disable": "Disable",
+	"disable": "Inaktivera",
 	"disabled": "Inaktiverad",
 	"discard": "Kassera",
 
 	"drawer.fields.empty": "Denna vy har inga fält",
 
+	"domain": "Domain",
 	"download": "Ladda ner",
 	"duplicate": "Duplicera",
 
@@ -132,12 +133,13 @@
 	"error.layout.validation.block": "Det finns ett fel i fältet \"{field}\" i blocket {blockIndex} med blocktypen \"{fieldset}\" i layouten {layoutIndex}",
 	"error.layout.validation.settings": "Det finns ett fel i inställningarna för layout {index}",
 
-	"error.license.format": "Ange en giltig licensnyckel",
+	"error.license.domain": "The domain for the license is missing",
 	"error.license.email": "Ange en giltig e-postadress",
+	"error.license.format": "Ange en giltig licensnyckel",
 	"error.license.verification": "Licensen kunde inte verifieras",
 
 	"error.login.totp.confirm.invalid": "Ogiltig kod",
-	"error.login.totp.confirm.missing": "Please enter the current code",
+	"error.login.totp.confirm.missing": "Vänligen ange den aktuella koden",
 
 	"error.object.validation": "Det finns ett fel i fältet \"{label}\":\n{message}",
 
@@ -412,17 +414,30 @@
 	"languages.secondary.empty": "Det finns inga sekundära språk ännu",
 
 	"license": "Licens",
-	"license.activate": "Activate it now",
-	"license.activate.label": "Please activate your license",
-	"license.activate.domain": "Your license will be activated for <strong>{host}</strong>.",
+	"license.activate": "Aktivera nu",
+	"license.activate.label": "Vänligen aktivera din licens",
+	"license.activate.domain": "Din licens kommer att vara aktiverad för <strong>{host}</strong>.",
 	"license.activate.local": "You are about to activate your Kirby license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please activate it there instead. If {host} is the domain you want to use your license for, please continue.",
+	"license.activated": "Activated",
 	"license.buy": "Köp en licens",
+	"license.code": "Kod",
 	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
 	"license.code.label": "Ange din licenskod",
+	"license.status.active.info": "Includes new major versions until {date}",
+	"license.status.active.label": "Valid license",
+	"license.status.inactive.info": "Renew license to update to new major versions",
+	"license.status.inactive.label": "No new major versions",
+	"license.status.legacy.bubble": "Ready to renew your license?",
+	"license.status.legacy.info": "Your license does not cover this version",
+	"license.status.legacy.label": "Please renew your license",
+	"license.status.missing.bubble": "Ready to launch your site?",
+	"license.status.missing.info": "No valid license",
+	"license.status.missing.label": "Vänligen aktivera din licens",
 	"license.manage": "Hantera dina licenser",
-	"license.ready": "Ready to launch your site?",
+	"license.purchased": "Purchased",
 	"license.success": "Tack för att du stödjer Kirby",
 	"license.unregistered.label": "Oregistrerad",
+	"license.updates": "Includes free updates until",
 
 	"link": "L\u00e4nk",
 	"link.text": "L\u00e4nktext",
@@ -459,14 +474,14 @@
 	"login.totp.enable.qr.help": "Unable to scan? Add the setup key <code>{secret}</code> manually to your authenticator app.",
 	"login.totp.enable.confirm.headline": "2. Confirm with generated code",
 	"login.totp.enable.confirm.text": "Your app generates a new one‑time code every 30 seconds. Enter the current code to complete the setup:",
-	"login.totp.enable.confirm.label": "Current code",
-	"login.totp.enable.confirm.help": "After this setup, we will ask you for a one‑time code every time you log in.",
-	"login.totp.enable.success": "Activated one‑time codes",
-	"login.totp.disable.option": "Disable one‑time codes",
-	"login.totp.disable.label": "Enter your password to disable one‑time codes",
+	"login.totp.enable.confirm.label": "Nuvarande kod",
+	"login.totp.enable.confirm.help": "Efter denna installation kommer vi att be dig om en engångskod varje gång du loggar in.",
+	"login.totp.enable.success": "Engångskoder aktiverade",
+	"login.totp.disable.option": "Inaktivera engångskoder",
+	"login.totp.disable.label": "Ange ditt lösenord för att inaktivera engångskoder",
 	"login.totp.disable.help": "In the future, a different second factor like a login code sent via email will be requested when you log in. You can always set up one‑time codes again later.",
 	"login.totp.disable.admin": "<p>This will disable one‑time codes for <strong>{user}</strong>.</p><p>In the future, a different second factor like a login code sent via email will be requested when they log in. {user} can set up one‑time codes again after their next login.</p>",
-	"login.totp.disable.success": "Disabled one‑time codes",
+	"login.totp.disable.success": "One‑time codes disabled",
 
 	"logout": "Logga ut",
 
@@ -503,7 +518,7 @@
 	"option": "Alternativ",
 	"options": "Alternativ",
 	"options.none": "Inga alternativ",
-	"options.all": "Show all {count} options",
+	"options.all": "Visa alla {count} alternativ",
 
 	"orientation": "Orientering",
 	"orientation.landscape": "Liggande",
@@ -555,6 +570,7 @@
 	"preview": "Förhandsgranska",
 	"remove": "Ta bort",
 	"rename": "Byt namn",
+	"renew": "Renew",
 	"replace": "Ersätt",
 	"replace.with": "Ersätt med",
 	"retry": "F\u00f6rs\u00f6k igen",
@@ -573,7 +589,7 @@
 	"save": "Spara",
 	"search": "Sök",
 	"search.min": "Ange {min} tecken för att söka",
-	"search.all": "Show all {count} results",
+	"search.all": "Visa alla {count} resultat",
 	"search.results.none": "Inga träffar",
 
 	"section.invalid": "Sektionen är ogiltig",
@@ -592,6 +608,8 @@
 	"split": "Dela",
 
 	"stats.empty": "Inga rapporter",
+	"status": "Status",
+
 	"system.issues.content": "Mappen content verkar vara exponerad",
 	"system.issues.eol.kirby": "Din installerade Kirby-version har nått slutet av sin livscykel och kommer inte att få fler säkerhetsuppdateringar",
 	"system.issues.eol.plugin": "Den installerade versionen av tillägget { plugin } har nått slutet på sin livscykel och kommer inte att få fler säkerhetsuppdateringar.",
@@ -647,6 +665,8 @@
 	"translation.direction": "ltr",
 	"translation.name": "Svenska",
 	"translation.locale": "sv_SE",
+
+	"type": "Type",
 
 	"upload": "Ladda upp",
 	"upload.error.cantMove": "Den överförda filen kunde inte flyttas",
