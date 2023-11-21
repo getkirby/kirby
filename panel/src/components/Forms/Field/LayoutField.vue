@@ -22,7 +22,7 @@
 
 		<k-layouts ref="layouts" v-bind="$props" @input="$emit('input', $event)" />
 
-		<footer v-if="!disabled" class="k-bar" data-align="center">
+		<footer v-if="!disabled">
 			<k-button
 				:title="$t('add')"
 				icon="add"
@@ -89,6 +89,8 @@ export default {
 <style>
 /** TODO: .k-layout-field > :has(+ footer) { margin-bottom: var(--spacing-3);} */
 .k-layout-field > footer {
+	display: flex;
+	justify-content: center;
 	margin-top: var(--spacing-3);
 }
 </style>

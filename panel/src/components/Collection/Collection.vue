@@ -25,7 +25,7 @@
 			</template>
 		</k-items>
 
-		<footer v-if="help || hasPagination" class="k-bar k-collection-footer">
+		<footer v-if="help || hasPagination" class="k-collection-footer">
 			<k-text class="k-help k-collection-help" :html="help" />
 			<!--
 				Emitted when the pagination changes
@@ -120,7 +120,11 @@ export default {
 
 <style>
 .k-collection-footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	flex-wrap: nowrap;
+	gap: var(--spacing-12);
 	margin-top: var(--spacing-2);
-	flex-wrap: wrap;
 }
 </style>
