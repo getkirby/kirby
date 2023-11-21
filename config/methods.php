@@ -251,38 +251,6 @@ return function (App $app) {
 		},
 
 		/**
-		 * Parses the field value as DOM and replaces
-		 * any permalinks in href/src attributes with
-		 * the regular url
-		 */
-		'toResolvedUrls' => function (Field $field): Field {
-			if ($field->isNotEmpty() === true) {
-				$dom        = new Dom($field->value);
-				$attributes = ['href', 'src'];
-				$elements   = $dom->query('//*[' . implode(' | ', A::map($attributes, fn ($attribute) => '@' . $attribute)) . ']');
-
-				foreach ($elements as $element) {
-					foreach ($attributes as $attribute) {
-						if ($url = $element->getAttribute($attribute)) {
-							try {
-								if ($uuid = Uuid::for($url)) {
-									$url = $uuid->model()->url();
-									$element->setAttribute($attribute, $url);
-								}
-							} catch (InvalidArgumentException) {
-								// ignore anything else than permalinks
-							}
-						}
-					}
-				}
-
-				$field->value = $dom->toString();
-			}
-
-			return $field;
-		},
-
-		/**
 		 * Converts a yaml field to a Structure object
 		 */
 		'toStructure' => function (Field $field): Structure {
@@ -493,6 +461,38 @@ return function (App $app) {
 		 */
 		'nl2br' => function (Field $field): Field {
 			$field->value = nl2br($field->value ?? '', false);
+			return $field;
+		},
+
+		/**
+		 * Parses the field value as DOM and replaces
+		 * any permalinks in href/src attributes with
+		 * the regular url
+		 */
+		'permalinksToUrls' => function (Field $field): Field {
+			if ($field->isNotEmpty() === true) {
+				$dom        = new Dom($field->value);
+				$attributes = ['href', 'src'];
+				$elements   = $dom->query('//*[' . implode(' | ', A::map($attributes, fn ($attribute) => '@' . $attribute)) . ']');
+
+				foreach ($elements as $element) {
+					foreach ($attributes as $attribute) {
+						if ($element->hasAttribute($attribute) && $url = $element->getAttribute($attribute)) {
+							try {
+								if ($uuid = Uuid::for($url)) {
+									$url = $uuid->model()?->url();
+									$element->setAttribute($attribute, $url);
+								}
+							} catch (InvalidArgumentException) {
+								// ignore anything else than permalinks
+							}
+						}
+					}
+				}
+
+				$field->value = $dom->toString();
+			}
+
 			return $field;
 		},
 
