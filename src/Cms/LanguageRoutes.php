@@ -26,6 +26,16 @@ class LanguageRoutes
 				continue;
 			}
 
+			// permalinks for page/file UUIDs
+			$routes[] = [
+				'pattern' => $language->path() . '/@/(page|file)/(:all)',
+				'method'  => 'ALL',
+				'env'     => 'site',
+				'action'  => function (string $type, string $id) use ($language) {
+					return Uuid::redirect($type, $id, $language->code());
+				}
+			];
+
 			// regular pages
 			$routes[] = [
 				'pattern' => $language->pattern(),
@@ -44,16 +54,6 @@ class LanguageRoutes
 					// can be found for this language
 					/** @var \Kirby\Http\Route $this */
 					$this->next();
-				}
-			];
-
-			// permalinks for page/file UUIDs
-			$routes[] = [
-				'pattern' => '(:any)/@/(page|file)/(:all)',
-				'method'  => 'ALL',
-				'env'     => 'site',
-				'action'  => function (string $lang, string $type, string $id) {
-					return Uuid::redirect($type, $id, $lang);
 				}
 			];
 		}
