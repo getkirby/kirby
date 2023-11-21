@@ -69,7 +69,7 @@
 					@paginate="paginate"
 				/>
 
-				<footer v-if="more" class="k-bar" data-align="center">
+				<footer v-if="more">
 					<k-button
 						:title="$t('add')"
 						icon="add"
@@ -575,6 +575,8 @@ export default {
 }
 /** .k-structure-field .k-table:has(+ footer) */
 .k-structure-field .k-table + footer {
+	display: flex;
+	justify-content: center;
 	margin-top: var(--spacing-3);
 }
 </style>
