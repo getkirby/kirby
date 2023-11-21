@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\F;
+use Kirby\Uuid\Uuid;
 
 class LanguageRoutes
 {
@@ -25,6 +26,7 @@ class LanguageRoutes
 				continue;
 			}
 
+			// regular pages
 			$routes[] = [
 				'pattern' => $language->pattern(),
 				'method'  => 'ALL',
@@ -42,6 +44,16 @@ class LanguageRoutes
 					// can be found for this language
 					/** @var \Kirby\Http\Route $this */
 					$this->next();
+				}
+			];
+
+			// permalinks for page/file UUIDs
+			$routes[] = [
+				'pattern' => '(:any)/@/(page|file)/(:all)',
+				'method'  => 'ALL',
+				'env'     => 'site',
+				'action'  => function (string $lang, string $type, string $id) {
+					return Uuid::redirect($type, $id, $lang);
 				}
 			];
 		}

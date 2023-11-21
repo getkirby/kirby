@@ -8,6 +8,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
+use Kirby\Cms\Responder;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
@@ -356,6 +357,25 @@ abstract class Uuid
 		}
 
 		return Uuids::cache()->set($this->key(true), $this->value());
+	}
+
+	/**
+	 * Helper for routes to find the model by type and id and create a
+     * proper redirect response for it.
+	 */
+	public static function redirect(string $type, string $id, string|null $lang = null): Responder|bool
+	{
+		// try to resolve to model, but only from UUID cache;
+		// this ensures that only existing UUIDs can be queried
+		// and attackers can't force Kirby to go through the whole
+		// site index with a non-existing UUID
+		if ($model = Uuid::for($type . '://' . $id)?->model(true)) {
+			return App::instance()
+				->response()
+				->redirect($model->url($lang));
+		}
+
+		return false;
 	}
 
 	/**
