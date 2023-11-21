@@ -5,7 +5,6 @@ import { defineConfig, splitVendorChunkPlugin } from "vite";
 import vue from "@vitejs/plugin-vue2";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import externalGlobals from "rollup-plugin-external-globals";
-import prismjs from "vite-plugin-prismjs";
 import kirby from "./scripts/vite-kirby.mjs";
 
 let customServer;
@@ -17,14 +16,7 @@ try {
 
 export default defineConfig(({ command }) => {
 	// gather plugins depending on environment
-	const plugins = [
-		vue(),
-		splitVendorChunkPlugin(),
-		kirby(),
-		prismjs({
-			languages: ["javascript", "css", "markup", "php", "yaml"]
-		})
-	];
+	const plugins = [vue(), splitVendorChunkPlugin(), kirby()];
 
 	if (command === "build") {
 		plugins.push(
