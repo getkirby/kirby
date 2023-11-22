@@ -11,7 +11,7 @@
 			:label="`--text-${size}`"
 			:code="false"
 		>
-			<p :style="`font-size: var(--text-${size})`">
+			<p :style="{ 'font-size': `var(--text-${size})` }">
 				The quick brown fox jumps over the lazy dog
 			</p>
 		</k-lab-example>

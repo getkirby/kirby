@@ -4,7 +4,7 @@
 		:data-align="align"
 		:data-theme="theme"
 		:type="type"
-		:style="height ? '--box-height: ' + height : null"
+		:style="height ? { '--box-height': height } : null"
 		class="k-box"
 	>
 		<k-icon v-if="icon" :type="icon" />

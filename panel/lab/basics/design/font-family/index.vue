@@ -14,7 +14,10 @@
 			<p
 				v-for="size in sizes"
 				:key="size"
-				:style="`font-family: var(--font-${family}); font-size: var(--text-${size})`"
+				:style="{
+					'font-family': `var(--font-${family})`,
+					'font-size': `var(--text-${size})`
+				}"
 			>
 				The quick brown fox jumps over the lazy dog
 			</p>

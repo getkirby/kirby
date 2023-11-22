@@ -8,7 +8,7 @@
 	>
 		<h3 class="k-label">{{ label }}</h3>
 		<k-navigate
-			:style="'--columns:' + Number(selector?.columns ?? 3)"
+			:style="{ '--columns': Number(selector?.columns ?? 3) }"
 			axis="x"
 			class="k-layout-selector-options"
 		>
