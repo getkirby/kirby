@@ -62,7 +62,7 @@ return [
 				'component'  => 'k-language-view',
 				'breadcrumb' => [
 					[
-						'label' => $name = Escape::html($language->name()),
+						'label' => $name = $language->name(),
 						'link'  => $link,
 					]
 				],
