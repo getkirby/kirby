@@ -7,6 +7,7 @@ use Kirby\Cms\Find;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
+use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -54,7 +55,7 @@ class UserTotpDisableDialog
 			return [
 				'component' => 'k-remove-dialog',
 				'props' => [
-					'text' => I18n::template('login.totp.disable.admin', ['user' => $name]),
+					'text' => I18n::template('login.totp.disable.admin', ['user' => Escape::html($name)]),
 					'submitButton' => $submitBtn,
 				]
 			];
