@@ -168,7 +168,7 @@ The following cases are exempted from this restriction:
 E.g. the following cases are explicitly **_not_ allowed**:
 
 - Selling, licensing or distributing a new product based on Kirby that modifies or hides Kirby’s identity as a Content Management System (CMS)
-- Forking Kirby and selling the modified version ([see above](#restrictions__modification-of-the-source-code))
+- Forking Kirby and selling the modified version ([see above](#modification-of-the-source-code))
 - Buying licenses in bulk and reselling them in your own shop
 - Bundling or including Kirby’s Source Code in the publication and/or distribution of a Website’s source code or a (free or paid) theme or plugin (please use Git submodules or Composer or provide a link to Our repository or website instead)
 
