@@ -1,21 +1,26 @@
 <template>
 	<section class="k-section" :data-invalid="invalid">
-		<header v-if="headline || buttons" class="k-section-header">
+		<header
+			v-if="label || headline || buttons || $slots.options"
+			class="k-section-header"
+		>
 			<k-label
 				:invalid="invalid"
 				:link="link"
 				:required="required"
 				type="section"
 			>
-				{{ headline }}
+				{{ label ?? headline }}
 			</k-label>
-			<k-button-group
-				v-if="buttons"
-				:buttons="buttons"
-				size="xs"
-				variant="filled"
-				class="k-section-buttons"
-			/>
+			<slot name="options">
+				<k-button-group
+					v-if="buttons"
+					:buttons="buttons"
+					size="xs"
+					variant="filled"
+					class="k-section-buttons"
+				/>
+			</slot>
 		</header>
 		<slot />
 	</section>
@@ -27,6 +32,7 @@ export default {
 		buttons: Array,
 		headline: String,
 		invalid: Boolean,
+		label: String,
 		link: String,
 		required: Boolean
 	}
