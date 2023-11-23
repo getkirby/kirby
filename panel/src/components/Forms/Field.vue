@@ -56,13 +56,6 @@ export default {
 </script>
 
 <style>
-.k-field-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	position: relative;
-	margin-bottom: var(--spacing-2);
-}
 .k-field[data-disabled="true"] {
 	cursor: not-allowed;
 }
@@ -71,6 +64,17 @@ export default {
 }
 .k-field[data-disabled="true"] .k-text[data-theme="help"] * {
 	pointer-events: initial;
+}
+.k-field-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: var(--spacing-6);
+	position: relative;
+	margin-bottom: var(--spacing-2);
+}
+.k-field-options {
+	flex-shrink: 0;
 }
 .k-field-counter {
 	display: none;
