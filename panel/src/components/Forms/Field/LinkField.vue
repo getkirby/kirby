@@ -428,6 +428,12 @@ export default {
 	--tag-color-focus-text: var(--tag-color-text);
 	--tag-rounded: var(--rounded-sm);
 }
+.k-link-input-model-preview,
+.k-link-input-model-preview .k-tag-text {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
 .k-link-input-model-placeholder.k-button {
 	--button-align: flex-start;
 	--button-color-text: var(--color-gray-600);
