@@ -37,8 +37,6 @@
 				</tbody>
 			</table>
 		</div>
-
-		<section class="k-license-dialog-upgrade"></section>
 	</k-dialog>
 </template>
 
