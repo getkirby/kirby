@@ -9,8 +9,6 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
 use Kirby\Http\Remote;
-use Kirby\Panel\Panel;
-use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 use Throwable;
@@ -478,7 +476,7 @@ class License
 	/**
 	 * Sends an upgrade request to the hub in order
 	 * to either redirect to the upgrade form or
-     * sync the new license state
+	 * sync the new license state
 	 */
 	public function upgrade(): array
 	{
@@ -509,5 +507,4 @@ class License
 			'status' => 'complete',
 		];
 	}
-
 }
