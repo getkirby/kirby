@@ -338,8 +338,7 @@ class License
 
 		// handle request errors
 		if ($response->code() !== 200) {
-			$error   = $response->json()['message'] ?? null;
-			$message = I18n::translate($error, 'The request failed');
+			$message = $response->json()['message'] ?? 'The request failed';
 
 			throw new LogicException($message, $response->code());
 		}
