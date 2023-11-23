@@ -84,8 +84,12 @@ return [
 	'kirby\cms\kirbytag'           => 'Kirby\Text\KirbyTag',
 	'kirby\cms\kirbytags'          => 'Kirby\Text\KirbyTags',
 	'kirby\cms\template'           => 'Kirby\Template\Template',
+	'kirby\form\options'           => 'Kirby\Options\Options',
+	'kirby\form\optionsapi'        => 'Kirby\Options\OptionsApi',
+	'kirby\form\optionsquery'      => 'Kirby\Options\OptionsQuery',
 	'kirby\toolkit\dir'            => 'Kirby\Filesystem\Dir',
 	'kirby\toolkit\f'              => 'Kirby\Filesystem\F',
 	'kirby\toolkit\file'           => 'Kirby\Filesystem\File',
 	'kirby\toolkit\mime'           => 'Kirby\Filesystem\Mime',
+	'kirby\toolkit\query'          => 'Kirby\Query\Query',
 ];
