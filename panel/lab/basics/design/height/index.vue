@@ -9,7 +9,12 @@
 			<k-box
 				v-for="height in heights"
 				:key="height"
-				:style="`--box-height: var(--height-${height}); height: var(--box-height); font-size: var(--text-xs); font-family: var(--font-mono)`"
+				:style="{
+					'--box-height': `var(--height-${height})`,
+					height: 'var(--box-height)',
+					'font-size': 'var(--text-xs)',
+					'font-family': 'var(--font-mono)'
+				}"
 				theme="white"
 			>
 				--height-{{ height }}

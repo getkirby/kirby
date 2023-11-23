@@ -14,7 +14,10 @@
 				<k-box
 					v-for="(step, index) in steps"
 					:key="step"
-					:style="`background: var(--color-${name}-${step}); color: var(--color-${name}-${colors[step]})`"
+					:style="{
+						background: `var(--color-${name}-${step})`,
+						color: `var(--color-${name}-${colors[step]})`
+					}"
 				>
 					{{ name }}-{{ step }}
 				</k-box>

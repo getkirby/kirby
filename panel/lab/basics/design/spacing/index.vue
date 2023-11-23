@@ -9,7 +9,11 @@
 			<k-box
 				v-for="spacing in spacings"
 				:key="spacing"
-				:style="`margin-bottom: var(--spacing-${spacing}); font-size: var(--text-xs); font-family: var(--font-mono)`"
+				:style="{
+					'margin-bottom': `var(--spacing-${spacing})`,
+					'font-size': 'var(--text-xs)',
+					'font-family': 'var(--font-mono)'
+				}"
 				theme="white"
 			>
 				--spacing-{{ spacing }}

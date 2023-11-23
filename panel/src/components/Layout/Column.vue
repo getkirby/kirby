@@ -1,5 +1,5 @@
 <template>
-	<div :style="'--width:' + width" :data-sticky="sticky" class="k-column">
+	<div :style="{ '--width': width }" :data-sticky="sticky" class="k-column">
 		<!-- additional <div> needed to ensure sticky columns behave correctly -->
 		<div v-if="sticky">
 			<!-- @slot Column content -->
