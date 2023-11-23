@@ -21,6 +21,7 @@
 		<template v-if="hasFields">
 			<table
 				v-if="!isEmpty"
+				:aria-disabled="disabled"
 				:data-invalid="isInvalid"
 				class="k-table k-object-field-table"
 			>
