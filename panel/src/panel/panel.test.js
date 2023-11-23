@@ -15,7 +15,7 @@ describe.concurrent("panel", () => {
 		expect(panel.debug).toStrictEqual(false);
 		expect(panel.direction).toStrictEqual("ltr");
 		expect(panel.isLoading).toStrictEqual(false);
-		expect(panel.license).toStrictEqual(false);
+		expect(panel.license).toStrictEqual("missing");
 		expect(panel.title).toStrictEqual("");
 	});
 
@@ -26,7 +26,7 @@ describe.concurrent("panel", () => {
 		expect(state.config).toStrictEqual({});
 		expect(state.language).toStrictEqual(panel.language.state());
 		expect(state.languages).toStrictEqual([]);
-		expect(state.license).toStrictEqual(false);
+		expect(state.license).toStrictEqual("missing");
 		expect(state.menu).toStrictEqual(panel.menu.state());
 		expect(state.multilang).toStrictEqual(false);
 		expect(state.notification).toStrictEqual(panel.notification.state());
@@ -41,13 +41,13 @@ describe.concurrent("panel", () => {
 	it("should replace $ in state keys", async () => {
 		const panel = Panel.create(Vue);
 
-		expect(panel.license).toStrictEqual(false);
+		expect(panel.license).toStrictEqual("missing");
 
 		panel.set({
-			$license: true
+			$license: "valid"
 		});
 
-		expect(panel.license).toStrictEqual(true);
+		expect(panel.license).toStrictEqual("valid");
 	});
 
 	it("should return the correct debug mode", async () => {
