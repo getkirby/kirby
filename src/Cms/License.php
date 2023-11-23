@@ -313,28 +313,6 @@ class License
 		return $this->update($response);
 	}
 
-	public function renew(): static|string
-	{
-		$response = $this->request('renew', [
-			'domain'  => $this->domain,
-			'email'   => $this->email,
-			'license' => $this->code,
-		]);
-
-		// the license needs an upgrade
-		if (isset($response['upgrade']) === true) {
-			// validate the redirect URL
-			if (empty($response['upgrade']) === true || Str::startsWith($response['upgrade'], static::hub()) === false) {
-				throw new Exception('We couldn’t redirect you to the Hub');
-			}
-
-			return $response['upgrade'];
-		}
-
-		// the license can be renewed with the data from the request
-		return $this->update($response);
-	}
-
 	/**
 	 * Returns the renewal date
 	 */
@@ -496,6 +474,41 @@ class License
 		$this->save();
 
 		return $this;
+	}
+
+	/**
+	 * Sends an upgrade request to the hub in order
+	 * to either redirect to the upgrade form or
+     * sync the new license state
+	 */
+	public function upgrade(): array
+	{
+		$response = $this->request('upgrade', [
+			'domain'  => $this->domain,
+			'email'   => $this->email,
+			'license' => $this->code,
+		]);
+
+		// the license still needs an upgrade
+		if (empty($response['url']) === false) {
+			// validate the redirect URL
+			if (Str::startsWith($response['url'], static::hub()) === false) {
+				throw new Exception('We couldn’t redirect you to the Hub');
+			}
+
+			return [
+				'status' => 'upgrade',
+				'url'    => $response['url']
+			];
+		}
+
+		// the license has already been upgraded
+		// and can now be replaced
+		$this->update($response);
+
+		return [
+			'status' => 'complete',
+		];
 	}
 
 }

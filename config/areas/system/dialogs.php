@@ -2,6 +2,7 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\LicenseStatus;
+use Kirby\Exception\LogicException;
 use Kirby\Panel\Field;
 use Kirby\Toolkit\I18n;
 
@@ -20,12 +21,13 @@ return [
 						'code'  => $license->code($obfuscated),
 						'icon'  => $license->status()->icon(),
 						'info'  => $license->status()->info($license->renewal('Y-m-d')),
+						'sync'  => $license->status() === LicenseStatus::Active ? false : true,
 						'theme' => $license->status()->theme(),
 						'type'  => $license->label(),
 					],
 					'cancelButton' => $license->status() === LicenseStatus::Active ? false : true,
 					'submitButton' => $license->status() === LicenseStatus::Active ? false : [
-						'icon'  => 'cart',
+						'icon'  => 'refresh',
 						'text'  => I18n::translate('renew'),
 						'theme' => 'love',
 					]
@@ -34,20 +36,24 @@ return [
 		},
 		'submit' => function () {
 			// @codeCoverageIgnoreStart
-			$response = App::instance()->system()->license()->renew();
+			$response = App::instance()->system()->license()->upgrade();
 
-			// If a new license has not yet been bought, a redirect
-			// URL to the upgrade form will be sent
-			if (is_string($response) === true) {
+			// the upgrade is still needed
+			if ($response['status'] === 'upgrade') {
 				return [
-					'redirect' => $response
+					'redirect' => $response['url']
 				];
 			}
 
-			return [
-				'event'   => 'system.renew',
-				'message' => I18n::translate('license.success')
-			];
+			// the upgrade has already been completed
+			if ($response['status'] === 'complete') {
+				return [
+					'event'   => 'system.renew',
+					'message' => I18n::translate('license.success')
+				];
+			}
+
+			throw new LogicException('The upgrade failed');
 			// @codeCoverageIgnoreEnd
 		}
 	],
