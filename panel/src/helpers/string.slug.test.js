@@ -13,7 +13,7 @@ describe.concurrent("$helper.string.slug()", () => {
 	});
 
 	it("should replace slashes with custom separator", () => {
-		const result = slug("a/b/c", [], [], "%");
+		const result = slug("a/b/c", [], undefined, "%");
 		expect(result).toBe("a%b%c");
 	});
 
