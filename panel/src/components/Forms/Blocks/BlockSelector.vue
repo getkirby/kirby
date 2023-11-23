@@ -94,22 +94,22 @@ export default {
 			};
 
 			for (const key in fieldsetGroups) {
-				let group = fieldsetGroups[key];
+				const group = fieldsetGroups[key];
 
-				group.open = group.open === false ? false : true;
+				group.open = group.open !== false;
 				group.fieldsets = group.sets
-					.filter((fieldsetName) => this.fieldsets[fieldsetName])
-					.map((fieldsetName) => {
+					.filter((name) => this.fieldsets[name])
+					.map((name) => {
 						index++;
 
 						return {
-							...this.fieldsets[fieldsetName],
+							...this.fieldsets[name],
 							index
 						};
 					});
 
 				if (group.fieldsets.length === 0) {
-					return;
+					continue;
 				}
 
 				groups[key] = group;
