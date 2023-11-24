@@ -8,6 +8,7 @@
 				:invalid="invalid"
 				:link="link"
 				:required="required"
+				:title="label ?? headline"
 				type="section"
 			>
 				{{ label ?? headline }}

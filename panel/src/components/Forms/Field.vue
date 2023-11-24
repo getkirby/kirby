@@ -9,7 +9,12 @@
 		<slot name="header">
 			<header class="k-field-header">
 				<slot name="label">
-					<k-label :input="input" :required="required" type="field">
+					<k-label
+						:input="input"
+						:required="required"
+						:title="label"
+						type="field"
+					>
 						{{ label }}
 					</k-label>
 				</slot>
