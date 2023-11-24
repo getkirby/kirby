@@ -94,6 +94,7 @@ export default {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow-x: clip;
+	min-width: 0;
 }
 
 /** Required and invalid sign **/

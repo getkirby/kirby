@@ -1,5 +1,5 @@
 <template>
-	<k-frame v-bind="$props" :style="`color: ${color}`" class="k-color-frame">
+	<k-frame v-bind="$props" :style="{ color: color }" class="k-color-frame">
 		<slot />
 	</k-frame>
 </template>

@@ -1022,6 +1022,16 @@ class StrTest extends TestCase
 				'fallback' => null
 			]
 		));
+
+		// prevent arbitrary code execution attacks from query placeholders in the untrusted data
+		$this->assertSame(
+			'{{ dangerous }},{&lt; dangerous &gt;};{{ dangerous }},{< dangerous >}',
+			Str::safeTemplate('{{ malicious1 }},{{ malicious2 }};{< malicious1 >},{< malicious2 >}', [
+				'malicious1' => '{{ dangerous }}',
+				'malicious2' => '{< dangerous >}',
+				'dangerous' => '*deleting all of the content or something*'
+			])
+		);
 	}
 
 	/**
@@ -1341,13 +1351,8 @@ EOT;
 			'user' => new QueryTestUser()
 		]);
 		$this->assertSame('homer says: {{ user.greeting("hi") }}', $template);
-	}
 
-	/**
-	 * @covers ::template
-	 */
-	public function testTemplateStartEnd()
-	{
+		// placeholder syntax
 		$this->assertSame(
 			'From a to b',
 			Str::template('From {{ b }} to {{ a }}', ['a' => 'b', 'b' => 'a'])
@@ -1359,6 +1364,17 @@ EOT;
 		$this->assertSame(
 			'From a to b',
 			Str::template('From dbf to daf', ['a' => 'b', 'b' => 'a'], ['start' => 'd', 'end' => 'f'])
+		);
+
+		// prevent arbitrary code execution attacks from query placeholders in the untrusted data
+		$this->assertSame(
+			'{{ dangerous }},{ dangerous },{< dangerous >}',
+			Str::template('{{ malicious1 }},{ malicious2 },{{ malicious3 }}', [
+				'malicious1' => '{{ dangerous }}',
+				'malicious2' => '{ dangerous }',
+				'malicious3' => '{< dangerous >}',
+				'dangerous' => '*deleting all of the content or something*'
+			])
 		);
 	}
 

@@ -5,6 +5,7 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Http\Uri;
+use Kirby\Toolkit\Escape;
 use Throwable;
 
 class ChangesDialog
@@ -35,6 +36,8 @@ class ChangesDialog
 					$item['text'] .= ' (' . $language->code() . ')';
 					$item['link'] .= '?language=' . $language->code();
 				}
+
+				$item['text'] = Escape::html($item['text']);
 
 				$changes[] = $item;
 			} catch (Throwable) {
