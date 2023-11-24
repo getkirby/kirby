@@ -78,8 +78,8 @@ enum LicenseStatus: string
 	public function theme(): string
 	{
 		return match ($this) {
-			static::Missing,
-			static::Legacy   => 'love',
+			static::Missing  => 'love',
+			static::Legacy   => 'negative',
 			static::Inactive => 'notice',
 			static::Active   => 'positive',
 		};
