@@ -7,7 +7,7 @@ use Kirby\Toolkit\Str;
 use ReflectionClass;
 
 /**
- * @coversDefaultClass Kirby\Cms\License
+ * @coversDefaultClass \Kirby\Cms\License
  */
 class LicenseTest extends TestCase
 {
@@ -33,6 +33,9 @@ class LicenseTest extends TestCase
 		];
 	}
 
+	/**
+	 * @covers ::activation
+	 */
 	public function testActivation()
 	{
 		$license = new License(
@@ -43,6 +46,9 @@ class LicenseTest extends TestCase
 		$this->assertSame($date, $license->activation('Y-m-d'));
 	}
 
+	/**
+	 * @covers ::code
+	 */
 	public function testCode()
 	{
 		$license = new License(
@@ -53,6 +59,30 @@ class LicenseTest extends TestCase
 		$this->assertSame('K-ENT-1234XXXXXXXXXXXXXXXXXXXXXX', $license->code(true));
 	}
 
+	/**
+	 * @covers ::__construct
+	 * @covers ::content
+	 */
+	public function testContent()
+	{
+		$license = new License(
+			code: $code = $this->code(LicenseType::Enterprise)
+		);
+
+		$this->assertSame([
+			'activation' => null,
+			'code'       => $code,
+			'date'       => null,
+			'domain'     => null,
+			'email'      => null,
+			'order'      => null,
+			'signature'  => null,
+		], $license->content());
+	}
+
+	/**
+	 * @covers ::date
+	 */
 	public function testDate()
 	{
 		$license = new License(
@@ -63,6 +93,9 @@ class LicenseTest extends TestCase
 		$this->assertSame($date, $license->date('Y-m-d'));
 	}
 
+	/**
+	 * @covers ::domain
+	 */
 	public function testDomain()
 	{
 		$license = new License(
@@ -72,6 +105,9 @@ class LicenseTest extends TestCase
 		$this->assertSame($domain, $license->domain());
 	}
 
+	/**
+	 * @covers ::email
+	 */
 	public function testEmail()
 	{
 		$license = new License(
@@ -81,11 +117,35 @@ class LicenseTest extends TestCase
 		$this->assertSame($email, $license->email());
 	}
 
+	/**
+	 * @covers ::hasValidEmailAddress
+	 */
+	public function testHasValidEmailAddress()
+	{
+		$license = new License(
+			email: 'mail@getkirby.com'
+		);
+
+		$this->assertTrue($license->hasValidEmailAddress());
+
+		$license = new License(
+			email: 'mail@getkirby'
+		);
+
+		$this->assertFalse($license->hasValidEmailAddress());
+	}
+
+	/**
+	 * @covers ::hub
+	 */
 	public function testHub()
 	{
 		$this->assertSame('https://hub.getkirby.com', License::hub());
 	}
 
+	/**
+	 * @covers ::isComplete
+	 */
 	public function testIsComplete()
 	{
 		// incomplete
@@ -105,6 +165,9 @@ class LicenseTest extends TestCase
 		$this->assertTrue($license->isComplete());
 	}
 
+	/**
+	 * @covers ::isInactive
+	 */
 	public function testIsInactive()
 	{
 		MockTime::$time = strtotime('now');
@@ -126,6 +189,45 @@ class LicenseTest extends TestCase
 		MockTime::reset();
 	}
 
+	/**
+	 * @covers ::isLegacy
+	 */
+	public function testIsLegacy()
+	{
+		// legacy license type
+		$license = new License(
+			code: $this->code(LicenseType::Legacy)
+		);
+
+		$this->assertTrue($license->isLegacy());
+
+		// current license type, but never activated
+		$license = new License(
+			code: $this->code(LicenseType::Basic)
+		);
+
+		$this->assertTrue($license->isLegacy());
+
+		// current license type, but activated longer than 3 years ago
+		$license = new License(
+			code: $this->code(LicenseType::Basic),
+			activation: '2020-01-01'
+		);
+
+		$this->assertTrue($license->isLegacy());
+
+		// current license type, but activated today
+		$license = new License(
+			code: $this->code(LicenseType::Basic),
+			activation: date('Y-m-d')
+		);
+
+		$this->assertFalse($license->isLegacy());
+	}
+
+	/**
+	 * @covers ::isOnCorrectDomain
+	 */
 	public function testIsOnCorrectDomain()
 	{
 		$this->app = new App([
@@ -134,8 +236,14 @@ class LicenseTest extends TestCase
 			]
 		]);
 
-		// invalid domain
+		// no domain
 		$license = new License();
+		$this->assertFalse($license->isOnCorrectDomain());
+
+		// invalid domain
+		$license = new License(
+			domain: 'foo.bar'
+		);
 		$this->assertFalse($license->isOnCorrectDomain());
 
 		// valid domain
@@ -146,12 +254,18 @@ class LicenseTest extends TestCase
 		$this->assertTrue($license->isOnCorrectDomain());
 	}
 
-	public function testLabelWhenUnregistered()
+	/**
+	 * @covers ::label
+	 */
+	public function testLabel()
 	{
 		$license = new License();
 		$this->assertSame('Unregistered', $license->label());
 	}
 
+	/**
+	 * @covers ::order
+	 */
 	public function testOrder()
 	{
 		$license = new License(
@@ -161,6 +275,55 @@ class LicenseTest extends TestCase
 		$this->assertSame($order, $license->order());
 	}
 
+	/**
+	 * @covers ::polyfill
+	 */
+	public function testPolyfill()
+	{
+		$this->assertSame([
+			'activation' => null,
+			'code'       => 'abc',
+			'date'       => null,
+			'domain'     => null,
+			'email'      => null,
+			'order'      => null,
+			'signature'  => null,
+
+		], License::polyfill([
+			'license' => 'abc',
+		]));
+	}
+
+	/**
+	 * @covers ::read
+	 */
+	public function testRead()
+	{
+		// existing license
+		$this->app = new App([
+			'roots' => [
+				'license' => __DIR__ . '/fixtures/LicenseTest/.license'
+			]
+		]);
+
+		$license = License::read();
+		$this->assertSame('K-BAS-DOTKFOOYKBWYGSD4BYP2EXHJJJRLBFOO', $license->code());
+		$this->assertSame('getkirby.com', $license->domain());
+
+		// non-existing license root
+		$this->app = new App([
+			'roots' => [
+				'license' => __DIR__ . '/fixtures/LicenseTest/foo'
+			]
+		]);
+
+		$license = License::read();
+		$this->assertNull($license->code());
+	}
+
+	/**
+	 * @covers ::register
+	 */
 	public function testRegisterWithInvalidDomain()
 	{
 		$license = new License(
@@ -174,6 +337,9 @@ class LicenseTest extends TestCase
 		$license->register();
 	}
 
+	/**
+	 * @covers ::register
+	 */
 	public function testRegisterWithInvalidEmail()
 	{
 		$license = new License(
@@ -187,6 +353,9 @@ class LicenseTest extends TestCase
 		$license->register();
 	}
 
+	/**
+	 * @covers ::register
+	 */
 	public function testRegisterWithInvalidLicenseKey()
 	{
 		$license = new License();
@@ -197,17 +366,39 @@ class LicenseTest extends TestCase
 		$license->register();
 	}
 
+	/**
+	 * @covers ::renewal
+	 */
 	public function testRenewal()
 	{
+		// activated
 		$license = new License(
 			activation: '2023-12-01'
 		);
 
 		$this->assertSame(strtotime('2026-12-01'), $license->renewal());
 		$this->assertSame('2026-12-01', $license->renewal('Y-m-d'));
+
+		// not activated
+		$license = new License();
+		$this->assertNull($license->renewal('Y-m-d'));
 	}
 
 	/**
+	 * @covers ::save
+	 */
+	public function testSaveWhenNotActive()
+	{
+		$license = new License();
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The license could not be verified');
+
+		$license->save();
+	}
+
+	/**
+	 * @covers ::sanitizeDomain
 	 * @dataProvider providerForLicenseUrls
 	 */
 	public function testSanitizeDomain(string $domain, string $expected)
@@ -221,6 +412,9 @@ class LicenseTest extends TestCase
 		$this->assertSame($expected, $sanitize->invoke($license, $domain));
 	}
 
+	/**
+	 * @covers ::signature
+	 */
 	public function testSignature()
 	{
 		$license = new License(
@@ -230,13 +424,18 @@ class LicenseTest extends TestCase
 		$this->assertSame('secret', $license->signature());
 	}
 
+	/**
+	 * @covers ::status
+	 */
 	public function testStatus()
 	{
 		$license = new License();
-
-		$this->assertTrue($license->status() === LicenseStatus::Missing);
+		$this->assertSame(LicenseStatus::Missing, $license->status());
 	}
 
+	/**
+	 * @covers ::type
+	 */
 	public function testTypeKirby3()
 	{
 		$license = new License(
@@ -246,6 +445,9 @@ class LicenseTest extends TestCase
 		$this->assertSame(LicenseType::Legacy, $license->type());
 	}
 
+	/**
+	 * @covers ::type
+	 */
 	public function testTypeKirbyBasic()
 	{
 		$license = new License(
@@ -255,6 +457,9 @@ class LicenseTest extends TestCase
 		$this->assertSame(LicenseType::Basic, $license->type());
 	}
 
+	/**
+	 * @covers ::type
+	 */
 	public function testTypeKirbyEnterprise()
 	{
 		$license = new License(
@@ -264,6 +469,9 @@ class LicenseTest extends TestCase
 		$this->assertSame(LicenseType::Enterprise, $license->type());
 	}
 
+	/**
+	 * @covers ::type
+	 */
 	public function testTypeUnregistered()
 	{
 		$license = new License();

@@ -11,6 +11,8 @@ use Kirby\Toolkit\Str;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @codeCoverageIgnore
  */
 enum LicenseType: string
 {

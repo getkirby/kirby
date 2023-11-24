@@ -151,7 +151,7 @@ class License
 	}
 
 	/**
-	 * Checks for Kirby 3 licenses
+	 * Checks for licenses beyond their 3 year period
 	 */
 	public function isLegacy(): bool
 	{
@@ -172,9 +172,11 @@ class License
 
 		// if there's no matching version in the history
 		// rather throw an exception to avoid further issues
+		// @codeCoverageIgnoreStart
 		if ($release === false) {
 			throw new InvalidArgumentException('The version for your license could not be found');
 		}
+		// @codeCoverageIgnoreEnd
 
 		// If the renewal date is older than the version launch
 		// date, the license is expired

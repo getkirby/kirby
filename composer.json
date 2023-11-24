@@ -107,7 +107,7 @@
 		],
 		"fix": "php-cs-fixer fix",
 		"test": "phpunit --stderr",
-		"test:coverage": "phpunit --stderr --coverage-html=tests/coverage",
+		"test:coverage": "XDEBUG_MODE=coverage phpunit --stderr --coverage-html=tests/coverage",
 		"zip": "composer archive --format=zip --file=dist"
 	}
 }
