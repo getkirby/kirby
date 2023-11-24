@@ -123,6 +123,7 @@ class HtmlTest extends TestCase
 			[['B' => 'b', 'A' => 'a'],   false, 'b="b" a="a"'],
 			[['a' => 'a', 'b' => true],  null,  'a="a" b'],
 			[['a' => 'a', 'b' => ' '],   null,  'a="a" b=""'],
+			[['a' => 'a', 'b' => ''],    null,  'a="a" b=""'],
 			[['a' => 'a', 'b' => false], null,  'a="a"'],
 			[['a' => 'a', 'b' => null],  null,  'a="a"'],
 			[['a' => 'a', 'b' => []],    null,  'a="a"'],

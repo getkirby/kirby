@@ -29,12 +29,6 @@ class Helpers
 	 * ```
 	 */
 	public static $deprecations = [
-		// Passing an empty string as value to `Xml::attr()` has been
-		// deprecated. In a future version, passing an empty string won't
-		// omit the attribute anymore but render it with an empty value.
-		// To omit the attribute, please pass `null`.
-		'xml-attr-empty-string' => false,
-
 		// The internal `$model->contentFile*()` methods have been deprecated
 		'model-content-file' => true,
 	];

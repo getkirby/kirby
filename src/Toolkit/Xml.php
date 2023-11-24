@@ -94,15 +94,7 @@ class Xml
 			return implode(' ', $attributes);
 		}
 
-		// TODO: In 3.10, treat $value === '' to render as name=""
-		if ($value === null || $value === '' || $value === []) {
-			// TODO: Remove in 3.10
-			// @codeCoverageIgnoreStart
-			if ($value === '') {
-				Helpers::deprecated('Passing an empty string as value to `Xml::attr()` has been deprecated. In a future version, passing an empty string won\'t omit the attribute anymore but render it with an empty value. To omit the attribute, please pass `null`.', 'xml-attr-empty-string');
-			}
-			// @codeCoverageIgnoreEnd
-
+		if ($value === null || $value === false || $value === []) {
 			return null;
 		}
 
@@ -114,10 +106,6 @@ class Xml
 
 		if ($value === true) {
 			return $name . '="' . $name . '"';
-		}
-
-		if ($value === false) {
-			return null;
 		}
 
 		if (is_array($value) === true) {
