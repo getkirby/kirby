@@ -21,7 +21,7 @@
 			v-if="!collapsed"
 			ref="form"
 			:autofocus="true"
-			:disabled="!fieldset.wysiwyg"
+			:disabled="disabled || !fieldset.wysiwyg"
 			:fields="fields"
 			:value="values"
 			class="k-block-type-fields-form"

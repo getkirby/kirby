@@ -8,9 +8,10 @@
 
 <script>
 import { props as BlockTitleProps } from "../Elements/BlockTitle.vue";
+import { disabled } from "@/mixins/props.js";
 
 export const props = {
-	mixins: [BlockTitleProps],
+	mixins: [BlockTitleProps, disabled],
 	props: {
 		/**
 		 * API endpoints

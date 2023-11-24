@@ -6,7 +6,7 @@
 			containerType ? 'k-block-container-type-' + containerType : ''
 		]"
 		:data-batched="isBatched"
-		:data-disabled="fieldset.disabled"
+		:data-disabled="disabled || fieldset.disabled"
 		:data-hidden="isHidden"
 		:data-id="id"
 		:data-last-selected="isLastSelected"
