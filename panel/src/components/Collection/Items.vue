@@ -38,6 +38,7 @@
 					:layout="layout"
 					:link="link ? item.link : false"
 					:sortable="sortable && item.sortable"
+					:theme="theme"
 					:width="item.column"
 					@click="$emit('item', item, itemIndex)"
 					@drag="onDragStart($event, item.dragText)"
@@ -95,7 +96,12 @@ export const props = {
 		size: {
 			type: String,
 			default: "medium"
-		}
+		},
+		/**
+		 * Visual theme for items
+		 * @values "disabled"
+		 */
+		theme: String
 	}
 };
 
