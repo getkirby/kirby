@@ -9,7 +9,12 @@
 		<slot name="header">
 			<header class="k-field-header">
 				<slot name="label">
-					<k-label :input="input" :required="required" type="field">
+					<k-label
+						:input="input"
+						:required="required"
+						:title="label"
+						type="field"
+					>
 						{{ label }}
 					</k-label>
 				</slot>
@@ -56,13 +61,6 @@ export default {
 </script>
 
 <style>
-.k-field-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	position: relative;
-	margin-bottom: var(--spacing-2);
-}
 .k-field[data-disabled="true"] {
 	cursor: not-allowed;
 }
@@ -71,6 +69,17 @@ export default {
 }
 .k-field[data-disabled="true"] .k-text[data-theme="help"] * {
 	pointer-events: initial;
+}
+.k-field-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: var(--spacing-6);
+	position: relative;
+	margin-bottom: var(--spacing-2);
+}
+.k-field-options {
+	flex-shrink: 0;
 }
 .k-field-counter {
 	display: none;
