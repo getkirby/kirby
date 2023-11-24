@@ -11,7 +11,7 @@
 			:label="`--font-${weight}`"
 			:code="false"
 		>
-			<p :style="`font-weight: var(--font-${weight})`">
+			<p :style="{ 'font-weight': `var(--font-${weight})` }">
 				The quick brown fox jumps over the lazy dog
 			</p>
 		</k-lab-example>

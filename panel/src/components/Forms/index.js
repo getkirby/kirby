@@ -13,9 +13,6 @@ import Upload from "./Upload.vue";
 /** Form Helpers */
 import LoginAlert from "./LoginAlert.vue";
 
-/* Form Structure */
-import StructureForm from "./Structure/StructureForm.vue";
-
 /* Form parts */
 import Blocks from "./Blocks/index.js";
 import Fields from "./Field/index.js";
@@ -39,8 +36,6 @@ export default {
 		app.component("k-upload", Upload);
 
 		app.component("k-login-alert", LoginAlert);
-
-		app.component("k-structure-form", StructureForm);
 
 		app.use(Blocks);
 		app.use(Inputs);

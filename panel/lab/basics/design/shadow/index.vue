@@ -9,7 +9,11 @@
 			<k-box
 				v-for="shadow in shadows"
 				:key="shadow"
-				:style="`box-shadow: var(--shadow-${shadow}); font-size: var(--text-xs); font-family: var(--font-mono)`"
+				:style="{
+					'box-shadow': `var(--shadow-${shadow})`,
+					'font-size': 'var(--text-xs)',
+					'font-family': 'var(--font-mono)'
+				}"
 				theme="white"
 			>
 				--shadow-{{ shadow }}

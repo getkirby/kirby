@@ -9,7 +9,11 @@
 			<k-box
 				v-for="radius in radii"
 				:key="radius"
-				:style="`border-radius: var(--rounded-${radius}); font-size: var(--text-xs); font-family: var(--font-mono)`"
+				:style="{
+					'border-radius': `var(--rounded-${radius})`,
+					'font-size': 'var(--text-xs)',
+					'font-family': 'var(--font-mono)'
+				}"
 				theme="white"
 			>
 				--rounded-{{ radius }}

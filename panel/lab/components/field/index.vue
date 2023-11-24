@@ -27,6 +27,17 @@
 				<k-input :value="value" id="d" type="text" @input="value = $event" />
 			</k-field>
 		</k-lab-example>
+		<k-lab-example label="Options Slot & excessive label">
+			<k-field
+				input="d"
+				label="This is a very very long label that could push the options aside and break stuff"
+			>
+				<k-button icon="add" size="xs" slot="options" variant="filled">
+					Add
+				</k-button>
+				<k-input :value="value" id="d" type="text" @input="value = $event" />
+			</k-field>
+		</k-lab-example>
 		<k-lab-example label="Help">
 			<k-field input="e" help="This is some help" label="Label">
 				<k-input :value="value" id="e" type="text" @input="value = $event" />
@@ -39,8 +50,8 @@
 export default {
 	data() {
 		return {
-			value: null,
+			value: null
 		};
-	},
+	}
 };
 </script>

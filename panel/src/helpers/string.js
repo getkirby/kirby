@@ -161,16 +161,15 @@ export function rtrim(string = "", replace = "") {
  * Convert string to ASCII slug
  * @param {string} string string to be converted
  * @param {array} rules ruleset to convert non-ASCII characters
- * @param {array} allowed list of allowed non-ASCII characters
- * @param {string} separator character used to replace e.g. spaces
+ * @param {array} allowed list of allowed characters (default: a-z0-9)
+ * @param {string} separator character used to replace non-allowed characters
  * @returns {string}
  */
-export function slug(string, rules = [], allowed = "", separator = "-") {
+export function slug(string, rules = [], allowed = "a-z0-9", separator = "-") {
 	if (!string) {
 		return "";
 	}
 
-	allowed = "a-z0-9" + allowed;
 	string = string.trim().toLowerCase();
 
 	// replace according to language and ascii rules
@@ -189,7 +188,7 @@ export function slug(string, rules = [], allowed = "", separator = "-") {
 	// remove all other non-ASCII characters
 	string = string.replace("/[^\x09\x0A\x0D\x20-\x7E]/", "");
 
-	// replace spaces with simple dashes
+	// replace non-allowed characters (e.g. spaces) with separator
 	string = string.replace(new RegExp("[^" + allowed + "]", "ig"), separator);
 
 	// remove double separators

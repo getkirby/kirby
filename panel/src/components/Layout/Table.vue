@@ -13,7 +13,7 @@
 						:key="columnIndex + '-header'"
 						:data-align="column.align"
 						:data-mobile="column.mobile"
-						:style="'width:' + width(column.width)"
+						:style="{ width: width(column.width) }"
 						class="k-table-column"
 						@click="
 							onHeader({
@@ -88,7 +88,7 @@
 							:row="row"
 							:mobile="column.mobile"
 							:value="row[columnIndex]"
-							:style="'width:' + width(column.width)"
+							:style="{ width: width(column.width) }"
 							class="k-table-column"
 							@click.native="
 								onCell({

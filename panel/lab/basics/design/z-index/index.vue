@@ -10,13 +10,13 @@
 				<k-box
 					v-for="(index, x) in z"
 					:key="index"
-					:style="`
-						z-index: var(--z-${index});
-						font-size: var(--text-xs);
-						font-family: var(--font-mono);
-						inset-block-start: ${x * 24}px;
-						inset-inline-start: ${x * 24}px;
-					`"
+					:style="{
+						'z-index': `var(--z-${index})`,
+						'font-size': 'var(--text-xs)',
+						'font-family': 'var(--font-mono)',
+						'inset-block-start': x * 24 + 'px',
+						'inset-inline-start': x * 24 + 'px'
+					}"
 					theme="white"
 				>
 					--z-{{ index }}

@@ -80,7 +80,8 @@ export default {
 				layout: this.layout,
 				link: this.link,
 				size: this.size,
-				sortable: !this.disabled && this.selected.length > 1
+				sortable: !this.disabled && this.selected.length > 1,
+				theme: this.disabled ? "disabled" : null
 			};
 		},
 		hasDropzone() {

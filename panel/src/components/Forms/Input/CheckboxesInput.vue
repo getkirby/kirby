@@ -1,6 +1,6 @@
 <template>
 	<ul
-		:style="'--columns:' + columns"
+		:style="{ '--columns': columns }"
 		class="k-checkboxes-input k-grid"
 		data-variant="choices"
 	>

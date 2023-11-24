@@ -1,7 +1,7 @@
 # Kirby License Agreement
 
-Published: March 21, 2023  
-Source: https://getkirby.com/license/2023-03-21
+Published: November 28, 2023  
+Source: https://getkirby.com/license/2023-11-28
 
 ## About this Agreement
 
@@ -11,43 +11,78 @@ This End User License Agreement (the **"Agreement"**) is fundamental to the rela
 
 If you do not agree to this Agreement, please do not download, install or use Kirby. Installation or use of Kirby signifies that you have read, understood, and agreed to be bound by this Agreement.
 
+## Summary
+
+This section summarizes the most important conditions of this Agreement to give you a quick overview:
+
+- With your purchase you obtain a license. A license allows you to use Kirby according to this Agreement.
+- Each project (defined by its URL) needs its own license. You need to purchase the right license for your project and/or client. You can find our license variants on <https://getkirby.com/buy>. In some explicitly listed cases, you can use Kirby without having to purchase a license.
+- Each license includes any Kirby version that gets released within three years from the date when you first activated your license. We also provide free security updates for older versions that may protect your project beyond three years.
+- After those three years, you can continue to use Kirby for your project with any of these versions as long as you want.
+- To use any newer version released after this time, you will need to upgrade your license.
+- Upgrading your license extends the timeframe for an additional three years during which you can use new releases. You can perform the upgrade at any time.
+- You have the right to transfer or reassign a license to another person or project if needed.
+- There are some restrictions for use of Kirby that you can find below.
+
+For the full license details, please read the Agreement in full. Only the following sections are legally binding.
+
 ## Definitions
 
 Before we get started with the conditions of the Agreement, let's define the terms that will be used throughout it:
 
-- When we refer to **"You"**, we mean the licensee. Before purchasing Kirby, that's the individual or company that has downloaded and/or installed Kirby for a Development Installation, Private Installation or Extension Demo. When used for a Public Site, the licensee is the individual or company that has purchased the Kirby license. If you work on a client project and have purchased the Kirby license for your client, you (and _not_ the client) are the licensee.
-- When we refer to **"We"**/**"Us"**/**"Our"**, we mean the licensor, the Content Folder GmbH & Co. KG. You can find Our company and contact information on Our [contact page](https://getkirby.com/contact).
+- When we refer to **"You"**, we mean the licensee. Before purchasing Kirby, that's the individual or company that has downloaded and/or installed Kirby for a Development Installation, Private Installation or Extension Demo. When used for a Public Site, the licensee is the individual or company that has purchased the Kirby license. If you work on a client project and have purchased the Kirby license for your client, you (and _not_ the client) are the licensee.
+- When we refer to **"We"**/**"Us"**/**"Our"**, we mean the licensor, the Content Folder GmbH & Co. KG. You can find Our company and contact information on Our [contact page](https://getkirby.com/contact).
+- **"Client"** is the individual or company on whose behalf You create or work on a Website. This only applies if the client is not the licensee.
 - A **"Website"** is a single Kirby project that is defined by its domain name and root directory (e.g. `https://sub.example.com` or `https://example.com/example/`). Each (sub)domain and root directory is a separate Website, even if the projects are related in any way. Exception: If You use the cross-domain multi-language feature with the same `content` folder, these domains count as the same Website.
   You may use Kirby as a headless backend or as a static site generator. In these cases the Website is defined by the domain and root directory of the user- or visitor-facing frontend(s).
 - A **"Development Installation"** is a Website that is installed purely for the purposes of development and client preview. It must only be accessible by a restricted number of users (like on a personal computer, on a server in a network with restricted access or when protecting a staging website with a password that only a restricted number of users know).
 - A **"Private Installation"** is a Website that is installed purely for personal use. It must only be accessible by You and Your family.
 - An **"Extension Demo"** is a Website with the single purpose to showcase a free or commercial Kirby theme or Kirby plugin, as long as that Website only contains demo content. If the showcased extension is a Kirby theme, the demo content must be exactly as shipped with the theme. Demos for Kirby plugins may _not_ contain any additional content that is not needed to showcase the plugin in use.
 - A **"Public Site"** is a Website that is _neither_ a Development Installation, a Private Installation nor an Extension Demo.
-- An **"Update"** is defined as a Kirby release which adds smaller new features, minor functionality enhancements or bug fixes. This class of release is identified by the change of the revision to the right of the first decimal point, e.g. 3.1 to 3.2, 3.X.1 to 3.X.2 or 3.X.X.1 to 3.X.X.2.
-- An **"Upgrade"** is a major Kirby release which incorporates major new features or enhancements that increase the core functionality of Kirby to a larger extent. This class of release is identified by the change of the revision to the left of the first decimal point, e.g. 3.X to 4.0.
+- A **"Minor Release"** is a stable Kirby release which adds smaller new features, minor functionality enhancements or bug fixes. This class of release is identified by the change of the revision to the right of the first decimal point, e.g. 4.1 to 4.2, 4.X.1 to 4.X.2.
+- A **"Major Release"** is a stable Kirby release which incorporates major new features or enhancements that increase or change the core functionality of Kirby to a larger extent. It may also deprecate existing parts of the Source Code or change them in a breaking way. This class of release is identified by the change of the revision to the left of the first decimal point, e.g. 4.X to 5.0.
+- A **"Major Generation"** is defined as all releases that share the revision to the left of the first decimal point, e.g. 4.0.0, 4.0.X, 4.X.0 and 4.X.X.
 - The **"Source Code"** is defined as the contents of all files that are provided with Kirby and that make Kirby work. This includes (but is not limited to) all PHP, JavaScript, JSON, HTML and CSS files as well as all related image and other media files.
+- The **"Activation Date"** determines the included updates. It is defined like this:
+	- For a newly purchased license, it is the date when the license was first activated for use with a Public Site.
+	- When You upgrade an already activated license, it is the date on which the upgrade was performed in Our license hub. If the license is still within the Included Updates Period, the Activation Date of the upgrade license will be set to the end of the Included Updates Period of the existing license.
+	- When You upgrade a license that had _not_ been activated before, the upgrade license adopts the unactivated state of the existing license. The Activation Date is set on first activation for use with a Public Site.
+- The **"Included Updates Period"** is the time span of three (3) years after the Activation Date.
+- Licensees (You), Clients and Websites are **"Qualified"** if they satisfy the purchase requirements from the ["Order Process" section](#order-process) of this Agreement.
 
 Every time you see one of these capitalized terms in the following text, it has the meaning that has been explained above.
 
 ## Usage for a Public Site
 
-Installing Kirby on or using it for a Public Site requires a [paid license](https://getkirby.com/buy).
+Installing Kirby on or using it for a Public Site requires a [paid license](https://getkirby.com/buy). Once a paid license is needed, the license must be immediately activated to the Public Site’s domain name and root directory via our license hub or the activation feature in the Kirby Panel.
 
 As Kirby is software and software is intangible, We don't sell it as such. Instead, this Agreement grants a license for each purchase to install and use a single instance of Kirby on a **specific Website**. Additional Kirby licenses must be purchased in order to install and use Kirby on **additional Websites**.
 
-The license is **non-exclusive** (meaning that You are not the only one who We will issue a license) and **generally non-transferable** (meaning that the one who purchases the license is the licensee).
+The license is **non-exclusive** (meaning that You are not the only one to whom We will issue a license) and **generally non-transferable** (meaning that the one who purchases the license is the licensee).
 
-On request, We will **transfer** a license to anyone who is also allowed to buy Kirby licenses by law and this Agreement. The new licensee will take over all rights and obligations of this Agreement from You at the moment We confirm the license transfer.
+On request, We will **transfer** a license to anyone who would be allowed and Qualified to purchase the license by law and this Agreement. The new licensee will take over all rights and obligations of this Agreement from You at the moment We confirm the license transfer.
 
-We will also **reassign** a license to another Website domain and root directory of Your choice, provided that You confirm that the previous Website is no longer in operation and will not be operated with the same license in the future.
+We will also **reassign** a license to another Qualified Website domain and root directory, if You confirm that the previous Website is no longer in operation and will not be operated with the same license in the future.
+
+If the new licensee, Website or Client in a transfer or reassignment is not Qualified for the existing license, You or the new licensee need to **upgrade the license to the qualifying terms and conditions** before the transfer or reassignment can be performed.
 
 If you need to transfer your Kirby license to another individual or company (for example to your client or a new agency) or reassign it to a different project, please get in touch directly at <support@getkirby.com>.
 
-A license is valid for all Updates of the same major Kirby release. We reserve the right to charge an **upgrade fee for Upgrade releases**. Whether a release is an Update or Upgrade is at Our sole discretion.
+A license is valid for all Major Releases that We publish before the end of the Included Updates Period. It is also valid for all releases in those Major Generations independent of their release date. Whether a release is a Minor Release or Major Release is at Our sole discretion.
+
+The use of releases in Major Generations that We publish after the Included Updates Period requires a **paid license upgrade**. An upgrade license replaces the existing license.
 
 ## Order Process
 
 Our order process is conducted by Our online reseller [Paddle.com](https://paddle.com). Paddle.com is the Merchant of Record for all Our orders. Paddle provides all customer service inquiries and handles returns.
+
+When purchasing a license, You are **responsible to choose the right license** based on You and the Website project. Different license variants can come with certain requirements towards You and/or the Website project. We publish all such requirements on <https://getkirby.com/buy> in a way that makes them clearly visible before the purchase. With Your purchase, You confirm that You and the Website project qualify for the selected license variant.
+
+If the Website is created for a Client, You need to make sure that the **Client qualifies for the selected license**.
+
+If You purchase licenses **in advance**, You need to ensure to only use the license(s) for projects that satisfy the requirements for the selected license variant(s).
+
+We **reserve the right to verify** at any time after the purchase whether You, the Website and (if applicable) the Client are Qualified. Changes to the situation of You, the Website or the Client as well as changes to the published information on Our "Buy" page after the purchase or after the assignment to a Client do _not_ take effect on an existing license unless You upgrade the license or We transfer or reassign the license on Your request.
 
 ## Free Licenses
 
@@ -133,7 +168,7 @@ The following cases are exempted from this restriction:
 E.g. the following cases are explicitly **_not_ allowed**:
 
 - Selling, licensing or distributing a new product based on Kirby that modifies or hides Kirby’s identity as a Content Management System (CMS)
-- Forking Kirby and selling the modified version ([see above](#restrictions__modification-of-the-source-code))
+- Forking Kirby and selling the modified version ([see above](#modification-of-the-source-code))
 - Buying licenses in bulk and reselling them in your own shop
 - Bundling or including Kirby’s Source Code in the publication and/or distribution of a Website’s source code or a (free or paid) theme or plugin (please use Git submodules or Composer or provide a link to Our repository or website instead)
 
@@ -167,6 +202,14 @@ You may also _not_:
 ## Technical Support
 
 Technical support is **provided as described on Our website** at <https://getkirby.com>. **No representations or guarantees** are made regarding the response time in which support questions are answered, however We will do Our best to respond quickly.
+
+For each Major Generation, We aim to provide **security support for three (3) years** after the Major Release. Security support means that We will provide free security updates for the supported releases, which will include fixes for security vulnerabilities according to the following rules:
+	- We published a security advisory on <https://getkirby.com/security> within the respective security support period. We will publish vulnerabilities on this page as soon as they are known to Us and an official fix for any supported release is available.
+	- The latest release of the supported Major Generation is affected by the vulnerability.
+
+With each vulnerability, We aim to publish the security advisory and security updates for all supported Major Generations at the same time.
+
+You can find up-to-date information on our currently supported versions in our [public security policy](https://getkirby.com/security).
 
 We reserve the right to **limit technical support for free licenses**.
 
@@ -204,6 +247,8 @@ YOU EXPRESSLY UNDERSTAND AND AGREE THAT **WE SHALL NOT BE LIABLE** FOR ANY DIREC
 
 Bastian Allgeier **owns all rights**, title and interest to Kirby (including all intellectual property rights) and **reserves all rights to Kirby** that are not expressly granted in this Agreement.
 
+In the event that Kirby will no longer be actively maintained, Bastian Allgeier will provide the Source Code under the terms of a free and open source software (FOSS) license as far as legally and contractually possible.
+
 ## Applicable Law & Place of Jurisdiction
 
 1. For all disputes arising out of or in connection with this Agreement, the courts competent for Neckargemünd, Germany, shall have exclusive jurisdiction. However, We shall have the choice to file lawsuits against You before the courts competent for Your place of business.
@@ -219,4 +264,4 @@ Should any provision of this Agreement be or become invalid, void or unenforceab
 
 Due to Kirby's flexibility, you may have special use cases or requirements that don't fit this Agreement.
 
-If that's the case or if you have any questions, feel free to get in touch: <support@getkirby.com>. We are happy to think outside the box and find custom license solutions for your creative application of Kirby.
+If that's the case or if you have any questions, feel free to [get in touch](mailto:support@getkirby.com). We are happy to think outside the box and find custom license solutions for your creative application of Kirby.

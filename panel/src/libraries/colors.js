@@ -26,6 +26,11 @@ import { isHex, isRgb, isHsl, isHsv, RE_RGB, RE_HSL } from "./colors-checks.js";
  */
 export function convert(color, format) {
 	if (isHex(color) === true) {
+		// ensure leading #
+		if (color[0] !== "#") {
+			color = "#" + color;
+		}
+
 		switch (format) {
 			case "hex":
 				return color;
@@ -98,7 +103,11 @@ export function parse(string) {
 	}
 
 	// HEX
-	if (isHex(string)) {
+	if (isHex(string) === true) {
+		if (string[0] !== "#") {
+			string = "#" + string;
+		}
+
 		return string;
 	}
 

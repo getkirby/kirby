@@ -7,10 +7,11 @@ describe("colors.isHex", () => {
 		["#fffa", true],
 		["#ffffff", true],
 		["#ffffffaa", true],
-		["fff", false],
-		["fffa", false],
-		["ffffff", false],
-		["ffffffaa", false],
+		["fff", true],
+		["fffa", true],
+		["ffffff", true],
+		["ffffffaa", true],
+		["ff", false],
 		["rgba(255, 255, 255)", false]
 	];
 
