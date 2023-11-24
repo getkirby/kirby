@@ -63,25 +63,31 @@ export default {
 				return value;
 			}
 
-			// create a new secret tester
-			const test = document.createElement("div");
-
-			// set the text color
-			test.style.color = value;
-
-			// it has to be in the document to work
-			document.body.append(test);
-
-			// check the computed style for a usable rgb value
-			value = window.getComputedStyle(test).color;
-
-			// remove the element
-			test.remove();
-
 			try {
+				// first try to parse the color via the library
 				return this.$library.colors.toString(value, this.format, this.alpha);
 			} catch (e) {
-				return value;
+				// if that fails,
+				// create a new secret tester
+				const test = document.createElement("div");
+
+				// set the text color
+				test.style.color = value;
+
+				// it has to be in the document to work
+				document.body.append(test);
+
+				// check the computed style for a usable rgb value
+				value = window.getComputedStyle(test).color;
+
+				// remove the element
+				test.remove();
+
+				// as we always get a valid rgb value, we can safely
+				// pass it to the library to get a valid color string
+				// in the target format without additional fallback
+				// (getComputedStyle will return rgb(0,0,0) for invalid colors)
+				return this.$library.colors.toString(value, this.format, this.alpha);
 			}
 		},
 		convertAndEmit(value) {

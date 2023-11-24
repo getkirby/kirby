@@ -7,10 +7,11 @@ describe("colors.parse(hex)", () => {
 		["#fffa", "#fffa"],
 		["#ffffff", "#ffffff"],
 		["#ffffffaa", "#ffffffaa"],
-		["fff", null],
-		["fffa", null],
-		["ffffff", null],
-		["ffffffaa", null]
+		["fff", "#fff"],
+		["fffa", "#fffa"],
+		["ffffff", "#ffffff"],
+		["ffffffaa", "#ffffffaa"],
+		["ff", null]
 	];
 
 	for (const test of tests) {
