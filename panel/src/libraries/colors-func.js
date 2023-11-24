@@ -31,10 +31,11 @@ export function hex2hsv(hex) {
 }
 
 export function hex2rgb(hex) {
-	// without alpha (#ff00ff or #f0f)
-	if (RE_HEX.test(hex) === true) {
+	if (RE_HEX.test(hex) === true || RE_HEXA.test(hex) === true) {
 		// remove leading #
-		hex = hex.slice(1);
+		if (hex[0] === "#") {
+			hex = hex.slice(1);
+		}
 
 		// expand short-notation to full six-digit
 		if (hex.length === 3) {
@@ -43,26 +44,17 @@ export function hex2rgb(hex) {
 
 		const num = parseInt(hex, 16);
 
-		return {
-			r: num >> 16,
-			g: (num >> 8) & 0xff,
-			b: num & 0xff,
-			a: 1
-		};
-	}
-
-	// with alpha (e.g. #ffaa0088)
-	if (RE_HEXA.test(hex) === true) {
-		// remove leading #
-		hex = hex.slice(1);
-
-		// expand short-notation to full eight-digit
-		if (hex.length === 4) {
-			hex = hex.split("").reduce((x, y) => x + y + y, "");
+		// without alpha (#ff00ff or #f0f)
+		if (RE_HEX.test(hex) === true) {
+			return {
+				r: num >> 16,
+				g: (num >> 8) & 0xff,
+				b: num & 0xff,
+				a: 1
+			};
 		}
 
-		const num = parseInt(hex, 16);
-
+		// with alpha (e.g. #ffaa0088)
 		return {
 			r: (num >> 24) & 0xff,
 			g: (num >> 16) & 0xff,
