@@ -52,8 +52,8 @@ class Collections
 	 * Loads a collection by name if registered
 	 *
 	 * @return \Kirby\Toolkit\Collection|null
-	 * @todo 4.0 Add deprecation warning when anything else than a Collection is returned
-	 * @todo 5.0 Add return type declaration
+	 * @todo 5.0 Add deprecation warning when anything else than a Collection is returned
+	 * @todo 6.0 Add PHP return type declaration for `Toolkit\Collection`
 	 */
 	public function get(string $name, array $data = [])
 	{
