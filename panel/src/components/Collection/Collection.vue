@@ -15,6 +15,7 @@
 			:link="link"
 			:size="size"
 			:sortable="sortable"
+			:theme="theme"
 			@change="$emit('change', $event)"
 			@item="$emit('item', $event)"
 			@option="onOption"

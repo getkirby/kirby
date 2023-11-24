@@ -80,7 +80,8 @@ export default {
 				layout: this.layout,
 				link: this.link,
 				size: this.size,
-				sortable: !this.disabled && this.selected.length > 1
+				sortable: !this.disabled && this.selected.length > 1,
+				theme: this.disabled ? "disabled" : null
 			};
 		},
 		hasDropzone() {
@@ -164,12 +165,6 @@ export default {
 </script>
 
 <style>
-.k-models-field[data-disabled="true"] .k-item {
-	background: transparent;
-	box-shadow: none;
-	outline: 1px solid var(--color-border);
-	outline-offset: -1px;
-}
 .k-models-field[data-disabled="true"] .k-item * {
 	pointer-events: all !important;
 }

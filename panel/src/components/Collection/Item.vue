@@ -4,6 +4,7 @@
 		:class="layout ? 'k-' + layout + '-item' : false"
 		:data-has-image="hasFigure"
 		:data-layout="layout"
+		:data-theme="theme"
 		class="k-item"
 		@click="$emit('click', $event)"
 		@dragstart="$emit('drag', $event)"
@@ -107,7 +108,12 @@ export default {
 		/**
 		 * The main text for the item
 		 */
-		text: String
+		text: String,
+		/**
+		 * Visual theme for items
+		 * @values "disabled"
+		 */
+		theme: String
 	},
 	computed: {
 		hasFigure() {
@@ -330,5 +336,13 @@ export default {
 }
 .k-item[data-layout="cards"] .k-item-info {
 	margin-top: 0.125em;
+}
+
+/** Theme: disabled */
+.k-item[data-theme="disabled"] {
+	background: transparent;
+	box-shadow: none;
+	outline: 1px solid var(--color-border);
+	outline-offset: -1px;
 }
 </style>

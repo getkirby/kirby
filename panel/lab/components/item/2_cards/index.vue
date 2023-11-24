@@ -73,5 +73,14 @@
 				width="1/2"
 			/>
 		</k-lab-example>
+		<k-lab-example label="Theme: disabled">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				info="With some info"
+				layout="cards"
+				text="This is a nice item"
+				theme="disabled"
+			/>
+		</k-lab-example>
 	</k-lab-examples>
 </template>
