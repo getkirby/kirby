@@ -21,6 +21,11 @@ enum LicenseStatus: string
 	case Active = 'active';
 
 	/**
+	 * Only used for the demo instance
+	 */
+	case Demo = 'demo';
+
+	/**
 	 * The free feature period of
 	 * the license is over.
 	 */
@@ -50,7 +55,9 @@ enum LicenseStatus: string
 	}
 
 	/**
-	 * Returns the icon according to the status
+	 * Returns the icon according to the status.
+     * The icon is used for the system view and
+     * in the license dialog.
 	 */
 	public function icon(): string
 	{
@@ -59,23 +66,51 @@ enum LicenseStatus: string
 			static::Legacy   => 'alert',
 			static::Inactive => 'clock',
 			static::Active   => 'check',
+			static::Demo     => 'preview',
 		};
 	}
 
+	/**
+	 * The info text is shown in the license dialog
+     * in the status row.
+	 */
 	public function info(string|null $end = null): string
 	{
-		return I18n::template('license.status.' . $this->value . '.info', [
-			'date' => $end
-		]);
+		return match ($this) {
+			static::Demo => 'This is a demo installation',
+			default      => I18n::template('license.status.' . $this->value . '.info', ['date' => $end])
+		};
 	}
 
+	/**
+	 * Label for the system view
+	 */
 	public function label(): string
 	{
-		return I18n::translate('license.status.' . $this->value . '.label');
+		return match ($this) {
+			static::Demo => 'Demo',
+			default      => I18n::translate('license.status.' . $this->value . '.label')
+		};
+	}
+
+	/**
+	 * Checks if the license can be renewed
+	 * The license dialog will show the renew
+     * button in this case and redirect to the hub
+	 */
+	public function renewable(): bool
+	{
+		return match ($this) {
+			static::Demo   => false,
+			static::Active => false,
+			default        => true
+		};
 	}
 
 	/**
 	 * Returns the theme according to the status
+     * The theme is used for the label in the system
+	 * view and the status icon in the license dialog.
 	 */
 	public function theme(): string
 	{
@@ -84,9 +119,13 @@ enum LicenseStatus: string
 			static::Legacy   => 'negative',
 			static::Inactive => 'notice',
 			static::Active   => 'positive',
+			static::Demo     => 'notice',
 		};
 	}
 
+	/**
+	 * Returns the status as string value
+	 */
 	public function value(): string
 	{
 		return $this->value;

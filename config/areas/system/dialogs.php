@@ -13,24 +13,25 @@ return [
 			$kirby      = App::instance();
 			$license    = $kirby->system()->license();
 			$obfuscated = $kirby->user()->isAdmin() === false;
+			$status     = $license->status();
+			$renewable  = $status->renewable();
 
 			return [
 				'component' => 'k-license-dialog',
 				'props' => [
 					'license' => [
 						'code'  => $license->code($obfuscated),
-						'icon'  => $license->status()->icon(),
-						'info'  => $license->status()->info($license->renewal('Y-m-d')),
-						'sync'  => $license->status() === LicenseStatus::Active ? false : true,
-						'theme' => $license->status()->theme(),
+						'icon'  => $status->icon(),
+						'info'  => $status->info($license->renewal('Y-m-d')),
+						'theme' => $status->theme(),
 						'type'  => $license->label(),
 					],
-					'cancelButton' => $license->status() === LicenseStatus::Active ? false : true,
-					'submitButton' => $license->status() === LicenseStatus::Active ? false : [
+					'cancelButton' => $renewable,
+					'submitButton' => $renewable ? [
 						'icon'  => 'refresh',
 						'text'  => I18n::translate('renew'),
 						'theme' => 'love',
-					]
+					] : false,
 				]
 			];
 		},
