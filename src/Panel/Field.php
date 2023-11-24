@@ -9,7 +9,6 @@ use Kirby\Cms\Page;
 use Kirby\Form\Form;
 use Kirby\Http\Router;
 use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\Str;
 
 /**
  * Provides common field prop definitions
@@ -223,7 +222,6 @@ class Field
 		return array_merge([
 			'label' => I18n::translate('slug'),
 			'type'  => 'slug',
-			'allow' => Str::$defaults['slug']['allowed']
 		], $props);
 	}
 
