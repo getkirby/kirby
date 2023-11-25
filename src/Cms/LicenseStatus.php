@@ -26,7 +26,7 @@ enum LicenseStatus: string
 	case Demo = 'demo';
 
 	/**
-	 * The free feature period of
+	 * The included updates period of
 	 * the license is over.
 	 */
 	case Inactive = 'inactive';
