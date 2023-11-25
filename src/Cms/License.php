@@ -230,11 +230,7 @@ class License
 		$data      = json_encode($this->signatureData());
 		$signature = hex2bin($this->signature);
 
-		if (openssl_verify($data, $signature, $pubKey, 'RSA-SHA256') !== 1) {
-			return false;
-		}
-
-		return true;
+		return openssl_verify($data, $signature, $pubKey, 'RSA-SHA256') === 1;
 	}
 
 	/**
