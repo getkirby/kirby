@@ -76,10 +76,7 @@ enum LicenseStatus: string
 	 */
 	public function info(string|null $end = null): string
 	{
-		return match ($this) {
-			static::Demo => 'This is a demo installation',
-			default      => I18n::template('license.status.' . $this->value . '.info', ['date' => $end])
-		};
+		return I18n::template('license.status.' . $this->value . '.info', ['date' => $end]);
 	}
 
 	/**
@@ -87,10 +84,7 @@ enum LicenseStatus: string
 	 */
 	public function label(): string
 	{
-		return match ($this) {
-			static::Demo => 'Demo',
-			default      => I18n::translate('license.status.' . $this->value . '.label')
-		};
+		return I18n::translate('license.status.' . $this->value . '.label');
 	}
 
 	/**

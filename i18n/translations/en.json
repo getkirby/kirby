@@ -425,6 +425,8 @@
 	"license.code.label": "Please enter your license code",
 	"license.status.active.info": "Includes new major versions until {date}",
 	"license.status.active.label": "Valid license",
+	"license.status.demo.info": "This is a demo installation",
+	"license.status.demo.label": "Demo",
 	"license.status.inactive.info": "Renew license to update to new major versions",
 	"license.status.inactive.label": "No new major versions",
 	"license.status.legacy.bubble": "Ready to renew your license?",
