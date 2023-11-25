@@ -135,7 +135,7 @@
 
 	"error.license.domain": "The domain for the license is missing",
 	"error.license.email": "Please enter a valid email address",
-	"error.license.format": "Please enter a valid license key",
+	"error.license.format": "Please enter a valid license code",
 	"error.license.verification": "The license could not be verified",
 
 	"error.login.totp.confirm.invalid": "Invalid code",
