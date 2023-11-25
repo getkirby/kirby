@@ -56,8 +56,8 @@ enum LicenseStatus: string
 
 	/**
 	 * Returns the icon according to the status.
-     * The icon is used for the system view and
-     * in the license dialog.
+	 * The icon is used for the system view and
+	 * in the license dialog.
 	 */
 	public function icon(): string
 	{
@@ -72,7 +72,7 @@ enum LicenseStatus: string
 
 	/**
 	 * The info text is shown in the license dialog
-     * in the status row.
+	 * in the status row.
 	 */
 	public function info(string|null $end = null): string
 	{
@@ -90,7 +90,7 @@ enum LicenseStatus: string
 	/**
 	 * Checks if the license can be renewed
 	 * The license dialog will show the renew
-     * button in this case and redirect to the hub
+	 * button in this case and redirect to the hub
 	 */
 	public function renewable(): bool
 	{
@@ -103,7 +103,7 @@ enum LicenseStatus: string
 
 	/**
 	 * Returns the theme according to the status
-     * The theme is used for the label in the system
+	 * The theme is used for the label in the system
 	 * view and the status icon in the license dialog.
 	 */
 	public function theme(): string

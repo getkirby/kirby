@@ -1,7 +1,6 @@
 <?php
 
 use Kirby\Cms\App;
-use Kirby\Cms\LicenseStatus;
 use Kirby\Exception\LogicException;
 use Kirby\Panel\Field;
 use Kirby\Toolkit\I18n;
