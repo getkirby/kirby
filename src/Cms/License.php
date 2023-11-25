@@ -128,9 +128,11 @@ class License
 	public function isComplete(): bool
 	{
 		if (
-			$this->domain !== null &&
-			$this->order !== null &&
+			$this->code !== null &&
 			$this->date !== null &&
+			$this->domain !== null &&
+			$this->email !== null &&
+			$this->order !== null &&
 			$this->signature !== null &&
 			$this->hasValidEmailAddress() === true &&
 			$this->type() !== LicenseType::Invalid
