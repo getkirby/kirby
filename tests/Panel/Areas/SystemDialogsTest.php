@@ -44,7 +44,7 @@ class SystemDialogsTest extends AreaTestCase
 		$dialog = $this->dialog('registration');
 
 		$this->assertSame(400, $dialog['code']);
-		$this->assertSame('Please enter a valid license key', $dialog['error']);
+		$this->assertSame('Please enter a valid license code', $dialog['error']);
 	}
 
 	public function testRegistrationOnSubmitWithInvalidEmail(): void
