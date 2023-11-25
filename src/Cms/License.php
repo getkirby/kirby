@@ -42,8 +42,8 @@ class License
 		protected string|null $date = null,
 		protected string|null $signature = null,
 	) {
-		// sanitize the email address
-		$this->email = $this->email === null ? null : Str::lower(trim($this->email));
+		// normalize the email address
+		$this->email = $this->email === null ? null : $this->normalizeEmail($this->email);
 	}
 
 	/**
@@ -205,7 +205,7 @@ class License
 		}
 
 		// compare domains
-		if ($this->sanitizeDomain(App::instance()->system()->indexUrl()) !== $this->sanitizeDomain($this->domain)) {
+		if ($this->normalizeDomain(App::instance()->system()->indexUrl()) !== $this->normalizeDomain($this->domain)) {
 			return false;
 		}
 
@@ -245,6 +245,45 @@ class License
 		}
 
 		return $this->type()->label();
+	}
+
+	/**
+	 * Prepares the email address to be make sure it
+	 * does not have trailing spaces and is lowercase.
+	 */
+	protected function normalizeEmail(string $email): string
+	{
+		return Str::lower(trim($email));
+	}
+
+	/**
+	 * Prepares the domain to be comparable
+	 */
+	protected function normalizeDomain(string $domain): string
+	{
+		// remove common "testing" subdomains as well as www.
+		// to ensure that installations of the same site have
+		// the same license URL; only for installations at /,
+		// subdirectory installations are difficult to normalize
+		if (Str::contains($domain, '/') === false) {
+			if (Str::startsWith($domain, 'www.')) {
+				return substr($domain, 4);
+			}
+
+			if (Str::startsWith($domain, 'dev.')) {
+				return substr($domain, 4);
+			}
+
+			if (Str::startsWith($domain, 'test.')) {
+				return substr($domain, 5);
+			}
+
+			if (Str::startsWith($domain, 'staging.')) {
+				return substr($domain, 8);
+			}
+		}
+
+		return $domain;
 	}
 
 	/**
@@ -345,36 +384,6 @@ class License
 
 		return $response->json();
 		// @codeCoverageIgnoreEnd
-	}
-
-	/**
-	 * Prepares the domain to be comparable
-	 */
-	protected function sanitizeDomain(string $domain): string
-	{
-		// remove common "testing" subdomains as well as www.
-		// to ensure that installations of the same site have
-		// the same license URL; only for installations at /,
-		// subdirectory installations are difficult to normalize
-		if (Str::contains($domain, '/') === false) {
-			if (Str::startsWith($domain, 'www.')) {
-				return substr($domain, 4);
-			}
-
-			if (Str::startsWith($domain, 'dev.')) {
-				return substr($domain, 4);
-			}
-
-			if (Str::startsWith($domain, 'test.')) {
-				return substr($domain, 5);
-			}
-
-			if (Str::startsWith($domain, 'staging.')) {
-				return substr($domain, 8);
-			}
-		}
-
-		return $domain;
 	}
 
 	/**

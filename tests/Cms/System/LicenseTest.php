@@ -264,6 +264,21 @@ class LicenseTest extends TestCase
 	}
 
 	/**
+	 * @covers ::normalizeDomain
+	 * @dataProvider providerForLicenseUrls
+	 */
+	public function testNormalizeDomain(string $domain, string $expected)
+	{
+		$reflector = new ReflectionClass(License::class);
+		$normalize = $reflector->getMethod('normalizeDomain');
+		$normalize->setAccessible(true);
+
+		$license = new License();
+
+		$this->assertSame($expected, $normalize->invoke($license, $domain));
+	}
+
+	/**
 	 * @covers ::order
 	 */
 	public function testOrder()
@@ -395,21 +410,6 @@ class LicenseTest extends TestCase
 		$this->expectExceptionMessage('The license could not be verified');
 
 		$license->save();
-	}
-
-	/**
-	 * @covers ::sanitizeDomain
-	 * @dataProvider providerForLicenseUrls
-	 */
-	public function testSanitizeDomain(string $domain, string $expected)
-	{
-		$reflector = new ReflectionClass(License::class);
-		$sanitize = $reflector->getMethod('sanitizeDomain');
-		$sanitize->setAccessible(true);
-
-		$license = new License();
-
-		$this->assertSame($expected, $sanitize->invoke($license, $domain));
 	}
 
 	/**
