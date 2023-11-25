@@ -376,7 +376,7 @@ class LicenseTest extends TestCase
 		$license = new License();
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a valid license key');
+		$this->expectExceptionMessage('Please enter a valid license code');
 
 		$license->register();
 	}
