@@ -323,7 +323,7 @@ class Html extends Xml
 	{
 		$attr = array_merge([
 			'src' => $src,
-			'alt' => ' '
+			'alt' => ''
 		], $attr);
 
 		return static::tag('img', '', $attr);
