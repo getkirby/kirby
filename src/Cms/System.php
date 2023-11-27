@@ -3,16 +3,11 @@
 namespace Kirby\Cms;
 
 use Kirby\Cms\System\UpdateStatus;
-use Kirby\Data\Json;
-use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
-use Kirby\Filesystem\F;
-use Kirby\Http\Remote;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
-use Kirby\Toolkit\V;
 use Throwable;
 
 /**
@@ -32,7 +27,7 @@ use Throwable;
 class System
 {
 	// cache
-	protected array|bool|null $license = null;
+	protected License|null $license = null;
 	protected UpdateStatus|null $updateStatus = null;
 
 	public function __construct(protected App $app)
@@ -262,103 +257,10 @@ class System
 	/**
 	 * Loads the license file and returns
 	 * the license information if available
-	 *
-	 * @return string|bool License key or `false` if the current user has
-	 *                     permissions for access.settings, otherwise just a
-	 *                     boolean that tells whether a valid license is active
 	 */
-	public function license(): string|bool
+	public function license(): License
 	{
-		if ($this->license !== null) {
-			return $this->license;
-		}
-
-		try {
-			$license = Json::read($this->app->root('license'));
-		} catch (Throwable) {
-			return $this->license = false;
-		}
-
-		// check for all required fields for the validation
-		if (isset(
-			$license['license'],
-			$license['order'],
-			$license['date'],
-			$license['email'],
-			$license['domain'],
-			$license['signature']
-		) !== true) {
-			return $this->license = false;
-		}
-
-		// build the license verification data
-		$data = [
-			'license' => $license['license'],
-			'order'   => $license['order'],
-			'email'   => hash('sha256', $license['email'] . 'kwAHMLyLPBnHEskzH9pPbJsBxQhKXZnX'),
-			'domain'  => $license['domain'],
-			'date'    => $license['date']
-		];
-
-
-		// get the public key
-		$pubKey = F::read($this->app->root('kirby') . '/kirby.pub');
-
-		// verify the license signature
-		$data      = json_encode($data);
-		$signature = hex2bin($license['signature']);
-		if (openssl_verify($data, $signature, $pubKey, 'RSA-SHA256') !== 1) {
-			return $this->license = false;
-		}
-
-		// verify the URL
-		if ($this->licenseUrl() !== $this->licenseUrl($license['domain'])) {
-			return $this->license = false;
-		}
-
-		// only return the actual license key if the
-		// current user has appropriate permissions
-		if ($this->app->user()?->isAdmin() === true) {
-			return $this->license = $license['license'];
-		}
-
-		return $this->license = true;
-	}
-
-	/**
-	 * Normalizes the app's index URL for
-	 * licensing purposes
-	 *
-	 * @param string|null $url Input URL, by default the app's index URL
-	 * @return string Normalized URL
-	 */
-	protected function licenseUrl(string $url = null): string
-	{
-		$url ??= $this->indexUrl();
-
-		// remove common "testing" subdomains as well as www.
-		// to ensure that installations of the same site have
-		// the same license URL; only for installations at /,
-		// subdirectory installations are difficult to normalize
-		if (Str::contains($url, '/') === false) {
-			if (Str::startsWith($url, 'www.')) {
-				return substr($url, 4);
-			}
-
-			if (Str::startsWith($url, 'dev.')) {
-				return substr($url, 4);
-			}
-
-			if (Str::startsWith($url, 'test.')) {
-				return substr($url, 5);
-			}
-
-			if (Str::startsWith($url, 'staging.')) {
-				return substr($url, 8);
-			}
-		}
-
-		return $url;
+		return $this->license ??= License::read();
 	}
 
 	/**
@@ -467,49 +369,13 @@ class System
 	 */
 	public function register(string $license = null, string $email = null): bool
 	{
-		if (Str::startsWith($license, 'K3-PRO-') === false) {
-			throw new InvalidArgumentException(['key' => 'license.format']);
-		}
+		$license = new License(
+			code: $license,
+			domain: $this->indexUrl(),
+			email: $email,
+		);
 
-		if (V::email($email) === false) {
-			throw new InvalidArgumentException(['key' => 'license.email']);
-		}
-
-		// @codeCoverageIgnoreStart
-		$response = Remote::get('https://hub.getkirby.com/register', [
-			'data' => [
-				'license' => $license,
-				'email'   => Str::lower(trim($email)),
-				'domain'  => $this->indexUrl()
-			]
-		]);
-
-		if ($response->code() !== 200) {
-			throw new Exception($response->content());
-		}
-
-		// decode the response
-		$json = Json::decode($response->content());
-
-		// replace the email with the plaintext version
-		$json['email'] = $email;
-
-		// where to store the license file
-		$file = $this->app->root('license');
-
-		// save the license information
-		Json::write($file, $json);
-
-		// clear the license cache
-		$this->license = null;
-
-		if ($this->license() === false) {
-			throw new InvalidArgumentException([
-				'key' => 'license.verification'
-			]);
-		}
-		// @codeCoverageIgnoreEnd
-
+		$this->license = $license->register();
 		return true;
 	}
 

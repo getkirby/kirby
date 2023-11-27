@@ -1,14 +1,16 @@
 <template>
 	<div v-if="$panel.activation.isOpen" class="k-activation">
 		<p>
-			<strong>{{ $t("license.ready") }}</strong>
-			<a href="https://getkirby.com/buy" target="_blank">{{
-				$t("license.buy")
-			}}</a>
-			&amp;
-			<button type="button" @click="$dialog('registration')">
-				{{ $t("license.activate") }}
-			</button>
+			<strong>{{ $t(`license.status.${status}.bubble`) }}</strong>
+			<template v-if="status === 'missing'">
+				<a href="https://getkirby.com/buy" target="_blank">{{
+					$t("license.buy")
+				}}</a>
+				&amp;
+				<button type="button" @click="$dialog('registration')">
+					{{ $t("license.activate") }}
+				</button>
+			</template>
 		</p>
 		<k-button
 			class="k-activation-toggle"
@@ -18,6 +20,17 @@
 	</div>
 </template>
 
+<script>
+export default {
+	props: {
+		status: {
+			default: "missing",
+			type: String
+		}
+	}
+};
+</script>
+
 <style>
 .k-activation {
 	position: relative;
@@ -26,6 +39,7 @@
 	background: var(--dropdown-color-bg);
 	border-radius: var(--dropdown-rounded);
 	box-shadow: var(--dropdown-shadow);
+	justify-content: space-between;
 }
 .k-activation p {
 	padding-inline-start: var(--spacing-3);

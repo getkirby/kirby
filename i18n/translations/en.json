@@ -54,6 +54,7 @@
 
 	"drawer.fields.empty": "This drawer has no fields",
 
+	"domain": "Domain",
 	"download": "Download",
 	"duplicate": "Duplicate",
 
@@ -132,8 +133,9 @@
 	"error.layout.validation.block": "There's an error on the \"{field}\" field in block {blockIndex} using the \"{fieldset}\" block type in layout {layoutIndex}",
 	"error.layout.validation.settings": "There's an error in layout {index} settings",
 
-	"error.license.format": "Please enter a valid license key",
+	"error.license.domain": "The domain for the license is missing",
 	"error.license.email": "Please enter a valid email address",
+	"error.license.format": "Please enter a valid license code",
 	"error.license.verification": "The license could not be verified",
 
 	"error.login.totp.confirm.invalid": "Invalid code",
@@ -416,11 +418,25 @@
 	"license.activate.label": "Please activate your license",
 	"license.activate.domain": "Your license will be activated for <strong>{host}</strong>.",
 	"license.activate.local": "You are about to activate your Kirby license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please activate it there instead. If {host} is the domain you want to use your license for, please continue.",
+	"license.activated": "Activated",
 	"license.buy": "Buy a license",
+	"license.code": "Code",
 	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
 	"license.code.label": "Please enter your license code",
+	"license.status.active.info": "Includes new major versions until {date}",
+	"license.status.active.label": "Valid license",
+	"license.status.demo.info": "This is a demo installation",
+	"license.status.demo.label": "Demo",
+	"license.status.inactive.info": "Renew license to update to new major versions",
+	"license.status.inactive.label": "No new major versions",
+	"license.status.legacy.bubble": "Ready to renew your license?",
+	"license.status.legacy.info": "Your license does not cover this version",
+	"license.status.legacy.label": "Please renew your license",
+	"license.status.missing.bubble": "Ready to launch your site?",
+	"license.status.missing.info": "No valid license",
+	"license.status.missing.label": "Please activate your license",
 	"license.manage": "Manage your licenses",
-	"license.ready": "Ready to launch your site?",
+	"license.purchased": "Purchased",
 	"license.success": "Thank you for supporting Kirby",
 	"license.unregistered.label": "Unregistered",
 
@@ -555,6 +571,7 @@
 	"preview": "Preview",
 	"remove": "Remove",
 	"rename": "Rename",
+	"renew": "Renew",
 	"replace": "Replace",
 	"replace.with": "Replace with",
 	"retry": "Try again",
@@ -592,6 +609,8 @@
 	"split": "Split",
 
 	"stats.empty": "No reports",
+	"status": "Status",
+
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
@@ -647,6 +666,8 @@
 	"translation.direction": "ltr",
 	"translation.name": "English",
 	"translation.locale": "en_US",
+
+	"type": "Type",
 
 	"upload": "Upload",
 	"upload.error.cantMove": "The uploaded file could not be moved",

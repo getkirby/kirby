@@ -14,11 +14,11 @@ return [
 
 			$environment = [
 				[
-					'label'  => $license ? I18n::translate('license') : I18n::translate('license.activate.label'),
-					'value'  => $license ? 'Kirby 3' : I18n::translate('license.unregistered.label'),
-					'theme'  => $license ? null : 'negative',
-					'icon'   => $license ? 'info' : 'key',
-					'dialog' => $license ? 'license' : 'registration'
+					'label'  => $license->status()->label(),
+					'value'  => $license->label(),
+					'theme'  => $license->status()->theme(),
+					'icon'   => $license->status()->icon(),
+					'dialog' => $license->status()->dialog()
 				],
 				[
 					'label' => $updateStatus?->label() ?? I18n::translate('version'),

@@ -193,7 +193,7 @@ class View
 				return $menu->entries();
 			},
 			'$permissions' => $permissions,
-			'$license'     => (bool)$kirby->system()->license(),
+			'$license'     => $kirby->system()->license()->status()->value(),
 			'$multilang'   => $multilang,
 			'$searches'    => static::searches($options['areas'] ?? [], $permissions),
 			'$url'         => $kirby->request()->url()->toString(),

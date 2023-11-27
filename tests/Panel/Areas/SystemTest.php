@@ -51,7 +51,7 @@ class SystemTest extends AreaTestCase
 			[
 				'label'  => 'Please activate your license',
 				'value'  => 'Unregistered',
-				'theme'  => 'negative',
+				'theme'  => 'love',
 				'icon'   => 'key',
 				'dialog' => 'registration'
 			],
@@ -364,7 +364,7 @@ class SystemTest extends AreaTestCase
 			[
 				'label'  => 'Please activate your license',
 				'value'  => 'Unregistered',
-				'theme'  => 'negative',
+				'theme'  => 'love',
 				'icon'   => 'key',
 				'dialog' => 'registration'
 			],
