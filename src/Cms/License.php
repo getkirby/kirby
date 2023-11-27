@@ -341,6 +341,7 @@ class License
 			throw new InvalidArgumentException(['key' => 'license.domain']);
 		}
 
+		// @codeCoverageIgnoreStart
 		$response = $this->request('register', [
 			'license' => $this->code,
 			'email'   => $this->email,
@@ -348,6 +349,7 @@ class License
 		]);
 
 		return $this->update($response);
+		// @codeCoverageIgnoreEnd
 	}
 
 	/**
@@ -486,6 +488,8 @@ class License
 	 * Sends an upgrade request to the hub in order
 	 * to either redirect to the upgrade form or
 	 * sync the new license state
+     *
+     * @codeCoverageIgnore
 	 */
 	public function upgrade(): array
 	{
