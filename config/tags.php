@@ -113,7 +113,7 @@ return [
 		'html' => function (KirbyTag $tag): string {
 			if ($tag->file = $tag->file($tag->value)) {
 				$tag->src       = $tag->file->url();
-				$tag->alt     ??= $tag->file->alt()->or(' ')->value();
+				$tag->alt     ??= $tag->file->alt()->or('')->value();
 				$tag->title   ??= $tag->file->title()->value();
 				$tag->caption ??= $tag->file->caption()->value();
 
@@ -153,7 +153,7 @@ return [
 				'height' => $tag->height,
 				'class'  => $tag->imgclass,
 				'title'  => $tag->title,
-				'alt'    => $tag->alt ?? ' '
+				'alt'    => $tag->alt ?? ''
 			]);
 
 			if ($tag->kirby()->option('kirbytext.image.figure', true) === false) {
