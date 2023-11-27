@@ -488,8 +488,8 @@ class License
 	 * Sends an upgrade request to the hub in order
 	 * to either redirect to the upgrade form or
 	 * sync the new license state
-     *
-     * @codeCoverageIgnore
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function upgrade(): array
 	{
