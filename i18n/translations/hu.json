@@ -135,7 +135,7 @@
 
 	"error.license.domain": "The domain for the license is missing",
 	"error.license.email": "Kérlek adj meg egy valós email-címet",
-	"error.license.format": "Kérlek, add meg az évényes lincensz kulcsot",
+	"error.license.format": "Please enter a valid license code",
 	"error.license.verification": "A licensz nem ellenőrizhető",
 
 	"error.login.totp.confirm.invalid": "Érvénytelen kód",
@@ -425,6 +425,8 @@
 	"license.code.label": "Kérlek írd be a licenc-kódot",
 	"license.status.active.info": "Includes new major versions until {date}",
 	"license.status.active.label": "Valid license",
+	"license.status.demo.info": "This is a demo installation",
+	"license.status.demo.label": "Demo",
 	"license.status.inactive.info": "Renew license to update to new major versions",
 	"license.status.inactive.label": "No new major versions",
 	"license.status.legacy.bubble": "Ready to renew your license?",
@@ -437,7 +439,6 @@
 	"license.purchased": "Purchased",
 	"license.success": "Köszönjük, hogy támogatod a Kirby-t",
 	"license.unregistered.label": "Unregistered",
-	"license.updates": "Includes free updates until",
 
 	"link": "Link",
 	"link.text": "Link szövege",

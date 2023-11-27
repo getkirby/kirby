@@ -135,7 +135,7 @@
 
 	"error.license.domain": "Domenen for lisensen mangler",
 	"error.license.email": "Vennligst skriv inn en gyldig e-postadresse",
-	"error.license.format": "Vennligst skriv inn gyldig lisensnøkkel",
+	"error.license.format": "Please enter a valid license code",
 	"error.license.verification": "Lisensen kunne ikke verifiseres",
 
 	"error.login.totp.confirm.invalid": "Ugyldig kode",
@@ -425,6 +425,8 @@
 	"license.code.label": "Vennligst skriv inn din lisenskode",
 	"license.status.active.info": "Inkluderer nye hovedversjoner til {date}",
 	"license.status.active.label": "Gyldig lisens",
+	"license.status.demo.info": "This is a demo installation",
+	"license.status.demo.label": "Demo",
 	"license.status.inactive.info": "Forny lisens for å oppdatere til nye hovedversjoner",
 	"license.status.inactive.label": "Ingen nye hovedversjoner",
 	"license.status.legacy.bubble": "Klar til å fornye lisensen?",
@@ -437,7 +439,6 @@
 	"license.purchased": "Kjøpt",
 	"license.success": "Takk for at du støtter Kirby",
 	"license.unregistered.label": "Ikke registrert",
-	"license.updates": "Inkluderer gratis oppdateringer til",
 
 	"link": "Adresse",
 	"link.text": "Koblingstekst",

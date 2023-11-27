@@ -135,7 +135,7 @@
 
 	"error.license.domain": "Лицензия на этот домен отсутствует",
 	"error.license.email": "Пожалуйста, введите правильный Email",
-	"error.license.format": "Пожалуйста, введите правильный лицензионный код",
+	"error.license.format": "Please enter a valid license code",
 	"error.license.verification": "Лицензия не подтверждена",
 
 	"error.login.totp.confirm.invalid": "Неверный код",
@@ -425,6 +425,8 @@
 	"license.code.label": "Пожалуйста вставьте код лицензии",
 	"license.status.active.info": "Включает обновления до {date}",
 	"license.status.active.label": "Действительная лицензия",
+	"license.status.demo.info": "This is a demo installation",
+	"license.status.demo.label": "Demo",
 	"license.status.inactive.info": "Обновите лицензию для перехода на новые версии",
 	"license.status.inactive.label": "Нет новых обновлений",
 	"license.status.legacy.bubble": "Вы готовы обновить вашу лицензию?",
@@ -437,7 +439,6 @@
 	"license.purchased": "Приобретено",
 	"license.success": "Спасибо за поддержку Kirby",
 	"license.unregistered.label": "Не зарегистрировано",
-	"license.updates": "включая бесплатные обновления до",
 
 	"link": "\u0421\u0441\u044b\u043b\u043a\u0430",
 	"link.text": "\u0422\u0435\u043a\u0441\u0442 \u0441\u0441\u044b\u043b\u043a\u0438",

@@ -135,7 +135,7 @@
 
 	"error.license.domain": "Lénið fyrir skráningarleyfið vantar",
 	"error.license.email": "Almennilegt netfang hér",
-	"error.license.format": "Gildur leyfiskóði hér",
+	"error.license.format": "Please enter a valid license code",
 	"error.license.verification": "Ekki heppnaðist að staðfesta leyfið",
 
 	"error.login.totp.confirm.invalid": "Ógildur kóði",
@@ -425,6 +425,8 @@
 	"license.code.label": "Vinsamlegast settu inn leyfiskóðan",
 	"license.status.active.info": "Felur í sér allar útgáfur þar til {date}",
 	"license.status.active.label": "Gilt skráningarleyfi",
+	"license.status.demo.info": "This is a demo installation",
+	"license.status.demo.label": "Demo",
 	"license.status.inactive.info": "Endurnýja skráningarleyfi fyrir uppfærslur á nýjum útgáfum",
 	"license.status.inactive.label": "Engar nýjar útgáfur",
 	"license.status.legacy.bubble": "Klár í  að endurnýja skráningarleyfið?",
@@ -437,7 +439,6 @@
 	"license.purchased": "Verslað",
 	"license.success": "Þakka þér fyrir að velja Kirby",
 	"license.unregistered.label": "Óskráð",
-	"license.updates": "Innifeldur ókeypis uppfærslur þar til",
 
 	"link": "Tengill",
 	"link.text": "Tengilstexti",

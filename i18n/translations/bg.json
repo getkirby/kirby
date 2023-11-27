@@ -135,7 +135,7 @@
 
 	"error.license.domain": "The domain for the license is missing",
 	"error.license.email": "Моля въведете валиден email адрес",
-	"error.license.format": "Please enter a valid license key",
+	"error.license.format": "Please enter a valid license code",
 	"error.license.verification": "The license could not be verified",
 
 	"error.login.totp.confirm.invalid": "Invalid code",
@@ -425,6 +425,8 @@
 	"license.code.label": "Please enter your license code",
 	"license.status.active.info": "Includes new major versions until {date}",
 	"license.status.active.label": "Valid license",
+	"license.status.demo.info": "This is a demo installation",
+	"license.status.demo.label": "Demo",
 	"license.status.inactive.info": "Renew license to update to new major versions",
 	"license.status.inactive.label": "No new major versions",
 	"license.status.legacy.bubble": "Ready to renew your license?",
@@ -437,7 +439,6 @@
 	"license.purchased": "Purchased",
 	"license.success": "Thank you for supporting Kirby",
 	"license.unregistered.label": "Unregistered",
-	"license.updates": "Includes free updates until",
 
 	"link": "\u0412\u0440\u044a\u0437\u043a\u0430",
 	"link.text": "Текстова връзка",

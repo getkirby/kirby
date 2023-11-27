@@ -135,7 +135,7 @@
 
 	"error.license.domain": "The domain for the license is missing",
 	"error.license.email": "Si us plau, introdueix una adreça de correu electrònic vàlida",
-	"error.license.format": "Introduïu una clau de llicència vàlida",
+	"error.license.format": "Please enter a valid license code",
 	"error.license.verification": "No s’ha pogut verificar la llicència",
 
 	"error.login.totp.confirm.invalid": "Codi invàlid",
@@ -425,6 +425,8 @@
 	"license.code.label": "Si us plau, introdueixi el seu codi de llicència",
 	"license.status.active.info": "Includes new major versions until {date}",
 	"license.status.active.label": "Valid license",
+	"license.status.demo.info": "This is a demo installation",
+	"license.status.demo.label": "Demo",
 	"license.status.inactive.info": "Renew license to update to new major versions",
 	"license.status.inactive.label": "No new major versions",
 	"license.status.legacy.bubble": "Ready to renew your license?",
@@ -437,7 +439,6 @@
 	"license.purchased": "Purchased",
 	"license.success": "Gràcies per donar suport a Kirby",
 	"license.unregistered.label": "Unregistered",
-	"license.updates": "Includes free updates until",
 
 	"link": "Enlla\u00e7",
 	"link.text": "Enllaç de text",

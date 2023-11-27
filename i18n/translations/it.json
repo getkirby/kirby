@@ -135,7 +135,7 @@
 
 	"error.license.domain": "Il dominio per la licenza è assente",
 	"error.license.email": "Inserisci un indirizzo email valido",
-	"error.license.format": "Inserisci un codice di licenza valido",
+	"error.license.format": "Please enter a valid license code",
 	"error.license.verification": "Non è stato possibile verificare la licenza",
 
 	"error.login.totp.confirm.invalid": "Codice non valido",
@@ -194,7 +194,7 @@
 	"error.site.changeTitle.permission": "Non ti è permesso modificare il titolo del sito",
 	"error.site.update.permission": "Non ti è permesso modificare i contenuti globali del sito",
 
-	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",
+	"error.structure.validation": "C'è un errore nel campo \"{field}\" nella riga {index}",
 
 	"error.template.default.notFound": "Il template \"default\" non esiste",
 
@@ -425,6 +425,8 @@
 	"license.code.label": "Inserisci il codice di licenza",
 	"license.status.active.info": "Comprende nuove versioni major entro il {date}",
 	"license.status.active.label": "Licenza valida",
+	"license.status.demo.info": "This is a demo installation",
+	"license.status.demo.label": "Demo",
 	"license.status.inactive.info": "Rinnova la licenza per aggiornare a nuove versioni major",
 	"license.status.inactive.label": "Nessuna nuova versione major",
 	"license.status.legacy.bubble": "Pronto per rinnovare la licenza?",
@@ -437,7 +439,6 @@
 	"license.purchased": "Acquistata",
 	"license.success": "Ti ringraziamo per aver supportato Kirby",
 	"license.unregistered.label": "Non registrato",
-	"license.updates": "Include aggiornamenti fino al ",
 
 	"link": "Link",
 	"link.text": "Testo del link",

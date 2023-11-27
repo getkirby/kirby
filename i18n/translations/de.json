@@ -425,6 +425,8 @@
 	"license.code.label": "Bitte gib deinen Lizenzcode ein",
 	"license.status.active.info": "Beinhaltet neue Major Versionen bis {date}",
 	"license.status.active.label": "Gültige Lizenz",
+	"license.status.demo.info": "Dies ist eine Demo Installation",
+	"license.status.demo.label": "Demo",
 	"license.status.inactive.info": "Lizenz erneuern, um auf neue Major Versionen upzudaten",
 	"license.status.inactive.label": "Keine neuen Major Versionen",
 	"license.status.legacy.bubble": "Bereit, die Lizenz zu erneuern? ",
@@ -437,7 +439,6 @@
 	"license.purchased": "Gekauft",
 	"license.success": "Vielen Dank für deine Unterstützung",
 	"license.unregistered.label": "Unregistriert",
-	"license.updates": "Beinhaltet Updates bis",
 
 	"link": "Link",
 	"link.text": "Linktext",

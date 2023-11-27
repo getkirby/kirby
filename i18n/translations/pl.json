@@ -135,7 +135,7 @@
 
 	"error.license.domain": "Brakuje domeny dla licencji",
 	"error.license.email": "Wprowadź poprawny adres email",
-	"error.license.format": "Wprowadź poprawny klucz licencyjny",
+	"error.license.format": "Please enter a valid license code",
 	"error.license.verification": "Nie udało się zweryfikować licencji",
 
 	"error.login.totp.confirm.invalid": "Nieprawidłowy kod",
@@ -425,6 +425,8 @@
 	"license.code.label": "Wprowadź swój kod licencji",
 	"license.status.active.info": "Zawiera nowe główne wersje do {date}",
 	"license.status.active.label": "Ważna licencja",
+	"license.status.demo.info": "This is a demo installation",
+	"license.status.demo.label": "Demo",
 	"license.status.inactive.info": "Odnów licencję, by zaktualizować do nowych wersji głównych",
 	"license.status.inactive.label": "Brak nowych wersji głównych",
 	"license.status.legacy.bubble": "Gotowy/-a do odnowienia swojej licencji?",
@@ -437,7 +439,6 @@
 	"license.purchased": "Zakupiona",
 	"license.success": "Dziękujemy za wspieranie Kirby",
 	"license.unregistered.label": "Niezarejestrowane",
-	"license.updates": "Zawiera bezpłatne aktualizacje do",
 
 	"link": "Link",
 	"link.text": "Tekst linku",

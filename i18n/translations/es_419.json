@@ -135,7 +135,7 @@
 
 	"error.license.domain": "The domain for the license is missing",
 	"error.license.email": "Por favor ingresa un correo electrónico valido",
-	"error.license.format": "Por favor introduce una llave de licencia válida",
+	"error.license.format": "Please enter a valid license code",
 	"error.license.verification": "La licencia no pude ser verificada",
 
 	"error.login.totp.confirm.invalid": "Código inválido",
@@ -425,6 +425,8 @@
 	"license.code.label": "Por favor, ingresa tu código de licencia",
 	"license.status.active.info": "Includes new major versions until {date}",
 	"license.status.active.label": "Valid license",
+	"license.status.demo.info": "This is a demo installation",
+	"license.status.demo.label": "Demo",
 	"license.status.inactive.info": "Renew license to update to new major versions",
 	"license.status.inactive.label": "No new major versions",
 	"license.status.legacy.bubble": "Ready to renew your license?",
@@ -437,7 +439,6 @@
 	"license.purchased": "Purchased",
 	"license.success": "Gracias por apoyar a Kirby",
 	"license.unregistered.label": "No registrado",
-	"license.updates": "Includes free updates until",
 
 	"link": "Enlace",
 	"link.text": "Texto de Enlace",

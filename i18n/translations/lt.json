@@ -135,7 +135,7 @@
 
 	"error.license.domain": "The domain for the license is missing",
 	"error.license.email": "Prašome įrašyti teisingą el. pašto adresą",
-	"error.license.format": "Prašome įrašyti teisingą licenzijos kodą",
+	"error.license.format": "Please enter a valid license code",
 	"error.license.verification": "Nepavyko patikrinti licenzijos",
 
 	"error.login.totp.confirm.invalid": "Neteisinas kodas",
@@ -425,6 +425,8 @@
 	"license.code.label": "Prašome įrašyti jūsų licenzijos kodą",
 	"license.status.active.info": "Includes new major versions until {date}",
 	"license.status.active.label": "Valid license",
+	"license.status.demo.info": "This is a demo installation",
+	"license.status.demo.label": "Demo",
 	"license.status.inactive.info": "Renew license to update to new major versions",
 	"license.status.inactive.label": "No new major versions",
 	"license.status.legacy.bubble": "Ready to renew your license?",
@@ -437,7 +439,6 @@
 	"license.purchased": "Purchased",
 	"license.success": "Ačiū, kad palaikote Kirby",
 	"license.unregistered.label": "Neregistruota",
-	"license.updates": "Includes free updates until",
 
 	"link": "Nuoroda",
 	"link.text": "Nuorodos tekstas",
