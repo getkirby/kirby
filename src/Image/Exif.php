@@ -16,60 +16,29 @@ use Kirby\Toolkit\V;
 class Exif
 {
 	/**
-	 * The parent image object
-	 */
-	protected Image $image;
-
-	/**
 	 * The raw exif array
 	 */
 	protected array $data = [];
 
-	/**
-	 * The camera object with model and make
-	 */
 	protected Camera|null $camera = null;
-
-	/**
-	 * The location object
-	 */
 	protected Location|null $location = null;
-
-	/**
-	 * The timestamp
-	 */
 	protected string|null $timestamp = null;
-
-	/**
-	 * The exposure value
-	 */
 	protected string|null $exposure = null;
-
-	/**
-	 * The aperture value
-	 */
 	protected string|null $aperture = null;
-
-	/**
-	 * ISO value
-	 */
 	protected string|null $iso = null;
-
-	/**
-	 * Focal length
-	 */
 	protected string|null $focalLength = null;
-
-	/**
-	 * Color or black/white
-	 */
 	protected bool|null $isColor = null;
 
-	public function __construct(Image $image)
-	{
-		$this->image = $image;
-		$this->data  = $this->read();
-		$this->parse();
+	public function __construct(
+		protected Image $image
+	) {
+		$this->data        = $this->read();
+		$this->timestamp   = $this->parseTimestamp();
+		$this->exposure    = $this->data['ExposureTime'] ?? null;
+		$this->iso         = $this->data['ISOSpeedRatings'] ?? null;
+		$this->focalLength = $this->parseFocalLength();
+		$this->aperture    = $this->computed()['ApertureFNumber'] ?? null;
+		$this->isColor     = V::accepted($this->computed()['IsColor'] ?? null);
 	}
 
 	/**
@@ -85,11 +54,7 @@ class Exif
 	 */
 	public function camera(): Camera
 	{
-		if ($this->camera !== null) {
-			return $this->camera;
-		}
-
-		return $this->camera = new Camera($this->data);
+		return $this->camera ??= new Camera($this->data);
 	}
 
 	/**
@@ -97,11 +62,7 @@ class Exif
 	 */
 	public function location(): Location
 	{
-		if ($this->location !== null) {
-			return $this->location;
-		}
-
-		return $this->location = new Location($this->data);
+		return $this->location ??= new Location($this->data);
 	}
 
 	/**
@@ -184,19 +145,6 @@ class Exif
 	}
 
 	/**
-	 * Parses and stores all relevant exif data
-	 */
-	protected function parse(): void
-	{
-		$this->timestamp   = $this->parseTimestamp();
-		$this->exposure    = $this->data['ExposureTime'] ?? null;
-		$this->iso         = $this->data['ISOSpeedRatings'] ?? null;
-		$this->focalLength = $this->parseFocalLength();
-		$this->aperture    = $this->computed()['ApertureFNumber'] ?? null;
-		$this->isColor     = V::accepted($this->computed()['IsColor'] ?? null);
-	}
-
-	/**
 	 * Return the timestamp when the picture has been taken
 	 */
 	protected function parseTimestamp(): string
@@ -240,6 +188,7 @@ class Exif
 
 	/**
 	 * Improved `var_dump` output
+	 * @codeCoverageIgnore
 	 */
 	public function __debugInfo(): array
 	{

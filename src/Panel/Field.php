@@ -4,7 +4,10 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\File;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
+use Kirby\Form\Form;
+use Kirby\Http\Router;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -20,6 +23,58 @@ use Kirby\Toolkit\I18n;
  */
 class Field
 {
+	/**
+	 * Creates the routes for a field dialog
+	 * This is most definitely not a good place for this
+	 * method, but as long as the other classes are
+	 * not fully refactored, it still feels appropriate
+	 */
+	public static function dialog(
+		ModelWithContent $model,
+		string $fieldName,
+		string|null $path = null,
+		string $method = 'GET',
+	) {
+		$field  = Form::for($model)->field($fieldName);
+		$routes = [];
+
+		foreach ($field->dialogs() as $dialogId => $dialog) {
+			$routes = array_merge($routes, Dialog::routes(
+				id: $dialogId,
+				areaId: 'site',
+				options: $dialog
+			));
+		}
+
+		return Router::execute($path, $method, $routes);
+	}
+
+	/**
+	 * Creates the routes for a field drawer
+	 * This is most definitely not a good place for this
+	 * method, but as long as the other classes are
+	 * not fully refactored, it still feels appropriate
+	 */
+	public static function drawer(
+		ModelWithContent $model,
+		string $fieldName,
+		string|null $path = null,
+		string $method = 'GET',
+	) {
+		$field  = Form::for($model)->field($fieldName);
+		$routes = [];
+
+		foreach ($field->drawers() as $drawerId => $drawer) {
+			$routes = array_merge($routes, Drawer::routes(
+				id: $drawerId,
+				areaId: 'site',
+				options: $drawer
+			));
+		}
+
+		return Router::execute($path, $method, $routes);
+	}
+
 	/**
 	 * A standard email field
 	 */
@@ -73,7 +128,7 @@ class Field
 
 	public static function hidden(): array
 	{
-		return ['type' => 'hidden'];
+		return ['hidden' => true];
 	}
 
 	/**
@@ -138,8 +193,7 @@ class Field
 	public static function role(array $props = []): array
 	{
 		$kirby   = App::instance();
-		$user    = $kirby->user();
-		$isAdmin = $user && $user->isAdmin();
+		$isAdmin = $kirby->user()?->isAdmin() ?? false;
 		$roles   = [];
 
 		foreach ($kirby->roles() as $role) {
@@ -171,8 +225,10 @@ class Field
 		], $props);
 	}
 
-	public static function template(array|null $blueprints = [], array|null $props = []): array
-	{
+	public static function template(
+		array|null $blueprints = [],
+		array|null $props = []
+	): array {
 		$options = [];
 
 		foreach ($blueprints as $blueprint) {
@@ -217,7 +273,7 @@ class Field
 		return array_merge([
 			'label'    => I18n::translate('language'),
 			'type'     => 'select',
-			'icon'     => 'globe',
+			'icon'     => 'translate',
 			'options'  => $translations,
 			'empty'    => false
 		], $props);

@@ -11,61 +11,53 @@ Vue.use(Vuex);
 export default new Vuex.Store({
 	// eslint-disable-next-line
 	strict: process.env.NODE_ENV !== "production",
-	state: {
-		dialog: null,
-		drag: null,
-		fatal: false,
-		isLoading: false
-	},
-	mutations: {
-		SET_DIALOG(state, dialog) {
-			state.dialog = dialog;
-		},
-		SET_DRAG(state, drag) {
-			state.drag = drag;
-		},
-		SET_FATAL(state, html) {
-			state.fatal = html;
-		},
-		SET_LOADING(state, loading) {
-			state.isLoading = loading;
-		}
-	},
 	actions: {
+		/**
+		 * @deprecated 4.0.0 Use window.panel.dialog.open()
+		 */
 		dialog(context, dialog) {
-			context.commit("SET_DIALOG", dialog);
+			window.panel.deprecated(
+				"`$store.dialog` will be removed in a future version. Use `$panel.dialog.open()` instead."
+			);
+			window.panel.dialog.open(dialog);
 		},
+		/**
+		 * @deprecated Use window.panel.drag.start(type, data)
+		 */
 		drag(context, drag) {
-			context.commit("SET_DRAG", drag);
+			window.panel.deprecated(
+				"`$store.drag` will be removed in a future version. Use `$panel.drag.start(type, data)` instead."
+			);
+			window.panel.drag.start(...drag);
 		},
+		/**
+		 * @deprecated Use window.panel.notification.fatal()
+		 */
 		fatal(context, options) {
-			// close the fatal window if false
-			// is passed as options
-			if (options === false) {
-				context.commit("SET_FATAL", false);
-				return;
-			}
-
-			console.error("The JSON response could not be parsed");
-
-			// show the full response in the console
-			// if debug mode is enabled
-			if (window.panel.$config.debug) {
-				console.info(options.html);
-			}
-
-			// only show the fatal dialog if the silent
-			// option is not set to true
-			if (!options.silent) {
-				context.commit("SET_FATAL", options.html);
-			}
+			window.panel.deprecated(
+				"`$store.fatal` will be removed in a future version. Use `$panel.notification.fatal()` instead."
+			);
+			window.panel.notification.fatal(options);
 		},
+		/**
+		 * @deprecated 4.0.0 Use window.panel.isLoading
+		 */
 		isLoading(context, loading) {
-			context.commit("SET_LOADING", loading === true);
+			window.panel.deprecated(
+				"`$store.isLoading` will be removed in a future version. Use `$panel.isLoading` instead."
+			);
+			window.panel.isLoading = loading;
 		},
-		navigate(context) {
-			context.dispatch("dialog", null);
-			context.dispatch("drawers/close");
+		/**
+		 * @deprecated 4.0.0
+		 */
+		navigate() {
+			window.panel.deprecated(
+				"`$store.navigate` will be removed in a future version."
+			);
+
+			window.panel.dialog.close();
+			window.panel.drawer.close();
 		}
 	},
 	modules: {

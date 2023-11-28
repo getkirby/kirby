@@ -8,7 +8,9 @@ export default {
 			return "upload";
 		},
 		canAdd() {
-			return this.$permissions.files.create && this.options.upload !== false;
+			return (
+				this.$panel.permissions.files.create && this.options.upload !== false
+			);
 		},
 		canDrop() {
 			return this.canAdd !== false;
@@ -43,20 +45,25 @@ export default {
 		type() {
 			return "files";
 		},
-		uploadProps() {
+		uploadOptions() {
 			return {
 				...this.options.upload,
-				url: this.$urls.api + "/" + this.options.upload.api
+				url: this.$panel.urls.api + "/" + this.options.upload.api,
+				on: {
+					complete: () => {
+						this.$panel.notification.success({ context: "view" });
+					}
+				}
 			};
 		}
 	},
 	created() {
-		this.$events.$on("model.update", this.reload);
-		this.$events.$on("file.sort", this.reload);
+		this.$events.on("model.update", this.reload);
+		this.$events.on("file.sort", this.reload);
 	},
 	destroyed() {
-		this.$events.$off("model.update", this.reload);
-		this.$events.$off("file.sort", this.reload);
+		this.$events.off("model.update", this.reload);
+		this.$events.off("file.sort", this.reload);
 	},
 	methods: {
 		onAction(action, file) {
@@ -66,12 +73,12 @@ export default {
 		},
 		onAdd() {
 			if (this.canAdd) {
-				this.$refs.upload.open(this.uploadProps);
+				this.$panel.upload.pick(this.uploadOptions);
 			}
 		},
 		onDrop(files) {
 			if (this.canAdd) {
-				this.$refs.upload.drop(files, this.uploadProps);
+				this.$panel.upload.open(files, this.uploadOptions);
 			}
 		},
 		async onSort(items) {
@@ -86,26 +93,17 @@ export default {
 					files: items.map((item) => item.id),
 					index: this.pagination.offset
 				});
-				this.$store.dispatch("notification/success", ":)");
-				this.$events.$emit("file.sort");
+				this.$panel.notification.success();
+				this.$events.emit("file.sort");
 			} catch (error) {
+				this.$panel.error(error);
 				this.reload();
-				this.$store.dispatch("notification/error", error.message);
 			} finally {
 				this.isProcessing = false;
 			}
 		},
-		onUpload() {
-			this.$events.$emit("file.create");
-			this.$events.$emit("model.update");
-			this.$store.dispatch("notification/success", ":)");
-		},
 		replace(file) {
-			this.$refs.upload.open({
-				url: this.$urls.api + "/" + file.link,
-				accept: "." + file.extension + "," + file.mime,
-				multiple: false
-			});
+			this.$panel.upload.replace(file, this.uploadOptions);
 		}
 	}
 };

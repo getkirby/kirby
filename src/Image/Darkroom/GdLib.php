@@ -5,6 +5,7 @@ namespace Kirby\Image\Darkroom;
 use claviska\SimpleImage;
 use Kirby\Filesystem\Mime;
 use Kirby\Image\Darkroom;
+use Kirby\Image\Focus;
 
 /**
  * GdLib
@@ -56,10 +57,34 @@ class GdLib extends Darkroom
 	 */
 	protected function resize(SimpleImage $image, array $options): SimpleImage
 	{
+		// just resize, no crop
 		if ($options['crop'] === false) {
 			return $image->resize($options['width'], $options['height']);
 		}
 
+		// crop based on focus point
+		if (Focus::isFocalPoint($options['crop']) === true) {
+			// get crop coords for focal point:
+			// if image needs to be cropped, crop before resizing
+			if ($focus = Focus::coords(
+				$options['crop'],
+				$options['sourceWidth'],
+				$options['sourceHeight'],
+				$options['width'],
+				$options['height']
+			)) {
+				$image->crop(
+					$focus['x1'],
+					$focus['y1'],
+					$focus['x2'],
+					$focus['y2']
+				);
+			}
+
+			return $image->thumbnail($options['width'], $options['height']);
+		}
+
+		// normal crop with crop anchor
 		return $image->thumbnail(
 			$options['width'],
 			$options['height'] ?? $options['width'],

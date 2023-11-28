@@ -1,7 +1,3 @@
-/**
- * @vitest-environment node
- */
-
 import { describe, expect, it } from "vitest";
 import sort from "./sort.js";
 
@@ -25,9 +21,7 @@ describe.concurrent("$helper.sort()", () => {
 
 		const sorter = sort();
 
-		users.sort((a, b) => {
-			return sorter(a.username, b.username);
-		});
+		users.sort((a, b) => sorter(a.username, b.username));
 
 		expect(users).toEqual(expected);
 	});

@@ -8,6 +8,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\User;
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\Filename;
 use Kirby\Http\Uri;
@@ -19,13 +20,13 @@ use Kirby\Text\Markdown;
 use Kirby\Text\SmartyPants;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\Uuid;
 
 return [
 
 	/**
 	 * Used by the `css()` helper
 	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param string $url Relative or absolute URL
 	 * @param string|array $options An array of attributes for the link tag or a media attribute string
 	 */
@@ -33,35 +34,39 @@ return [
 
 	/**
 	 * Add your own email provider
-	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
-	 * @param array $props
-	 * @param bool $debug
 	 */
-	'email' => function (App $kirby, array $props = [], bool $debug = false) {
+	'email' => function (
+		App $kirby,
+		array $props = [],
+		bool $debug = false
+	) {
 		return new Emailer($props, $debug);
 	},
 
 	/**
 	 * Modify URLs for file objects
 	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param \Kirby\Cms\File $file The original file object
-	 * @return string
 	 */
-	'file::url' => function (App $kirby, File $file): string {
+	'file::url' => function (
+		App $kirby,
+		File $file
+	): string {
 		return $file->mediaUrl();
 	},
 
 	/**
 	 * Adapt file characteristics
 	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param \Kirby\Cms\File|\Kirby\Filesystem\Asset $file The file object
 	 * @param array $options All thumb options (width, height, crop, blur, grayscale)
 	 * @return \Kirby\Cms\File|\Kirby\Cms\FileVersion|\Kirby\Filesystem\Asset
 	 */
-	'file::version' => function (App $kirby, $file, array $options = []) {
+	'file::version' => function (
+		App $kirby,
+		$file,
+		array $options = []
+	) {
 		// if file is not resizable, return
 		if ($file->isResizable() === false) {
 			return $file;
@@ -100,7 +105,6 @@ return [
 	/**
 	 * Used by the `js()` helper
 	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param string $url Relative or absolute URL
 	 * @param string|array $options An array of attributes for the link tag or a media attribute string
 	 */
@@ -109,10 +113,8 @@ return [
 	/**
 	 * Add your own Markdown parser
 	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param string $text Text to parse
 	 * @param array $options Markdown options
-	 * @return string
 	 */
 	'markdown' => function (
 		App $kirby,
@@ -140,9 +142,9 @@ return [
 	'search' => function (
 		App $kirby,
 		Collection $collection,
-		string|null $query = '',
-		array|string $params = []
-	): Collection|bool {
+		string|null $query = null,
+		string|array $params = []
+	): Collection {
 		if (is_string($params) === true) {
 			$params = ['fields' => Str::split($params, '|')];
 		}
@@ -154,8 +156,9 @@ return [
 			'words'     => false,
 		];
 
-		$options    = array_merge($defaults, $params);
-		$query      = trim($query ?? '');
+		$collection  = clone $collection;
+		$options     = array_merge($defaults, $params);
+		$query       = trim($query ?? '');
 
 		// empty or too short search query
 		if (Str::length($query) < $options['minlength']) {
@@ -262,12 +265,14 @@ return [
 	/**
 	 * Add your own SmartyPants parser
 	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param string $text Text to parse
 	 * @param array $options SmartyPants options
-	 * @return string
 	 */
-	'smartypants' => function (App $kirby, string $text = null, array $options = []): string {
+	'smartypants' => function (
+		App $kirby,
+		string $text = null,
+		array $options = []
+	): string {
 		static $smartypants;
 		static $config;
 
@@ -284,43 +289,55 @@ return [
 	/**
 	 * Add your own snippet loader
 	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param string|array $name Snippet name
 	 * @param array $data Data array for the snippet
 	 */
-	'snippet' => function (App $kirby, string|array|null $name, array $data = [], bool $slots = false): Snippet|string {
+	'snippet' => function (
+		App $kirby,
+		string|array|null $name,
+		array $data = [],
+		bool $slots = false
+	): Snippet|string {
 		return Snippet::factory($name, $data, $slots);
 	},
 
 	/**
 	 * Add your own template engine
 	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param string $name Template name
 	 * @param string $type Extension type
 	 * @param string $defaultType Default extension type
 	 * @return \Kirby\Template\Template
 	 */
-	'template' => function (App $kirby, string $name, string $type = 'html', string $defaultType = 'html') {
+	'template' => function (
+		App $kirby,
+		string $name,
+		string $type = 'html',
+		string $defaultType = 'html'
+	) {
 		return new Template($name, $type, $defaultType);
 	},
 
 	/**
 	 * Add your own thumb generator
 	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param string $src Root of the original file
 	 * @param string $dst Template string for the root to the desired destination
 	 * @param array $options All thumb options that should be applied: `width`, `height`, `crop`, `blur`, `grayscale`
 	 * @return string
 	 */
-	'thumb' => function (App $kirby, string $src, string $dst, array $options): string {
+	'thumb' => function (
+		App $kirby,
+		string $src,
+		string $dst,
+		array $options
+	): string {
 		$darkroom = Darkroom::factory(
 			$kirby->option('thumbs.driver', 'gd'),
 			$kirby->option('thumbs', [])
 		);
-		$options  = $darkroom->preprocess($src, $options);
-		$root     = (new Filename($src, $dst, $options))->toString();
+		$options = $darkroom->preprocess($src, $options);
+		$root    = (new Filename($src, $dst, $options))->toString();
 
 		F::copy($src, $root, true);
 		$darkroom->process($root, $options);
@@ -331,12 +348,15 @@ return [
 	/**
 	 * Modify all URLs
 	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param string|null $path URL path
 	 * @param array|string|null $options Array of options for the Uri class
-	 * @return string
+	 * @throws \Kirby\Exception\NotFoundException If an invalid UUID was passed
 	 */
-	'url' => function (App $kirby, string $path = null, $options = null): string {
+	'url' => function (
+		App $kirby,
+		string $path = null,
+		$options = null
+	): string {
 		$language = null;
 
 		// get language from simple string option
@@ -376,6 +396,23 @@ return [
 			(substr($path, 0, 2) === './' || substr($path, 0, 3) === '../')
 		) {
 			return $path;
+		}
+
+		// support UUIDs
+		if (
+			$path !== null &&
+			(
+				Uuid::is($path, 'page') === true ||
+				Uuid::is($path, 'file') === true
+			)
+		) {
+			$model = Uuid::for($path)->model();
+
+			if ($model === null) {
+				throw new NotFoundException('The model could not be found for "' . $path . '" uuid');
+			}
+
+			$path = $model->url();
 		}
 
 		$url = Url::makeAbsolute($path, $kirby->url());

@@ -22,87 +22,83 @@ use Kirby\Toolkit\A;
  */
 class Site extends ModelWithContent
 {
-	use SiteActions;
 	use HasChildren;
 	use HasFiles;
 	use HasMethods;
+	use SiteActions;
 
 	public const CLASS_ALIAS = 'site';
 
 	/**
 	 * The SiteBlueprint object
-	 *
-	 * @var \Kirby\Cms\SiteBlueprint
 	 */
-	protected $blueprint;
+	protected SiteBlueprint|null $blueprint = null;
 
 	/**
 	 * The error page object
-	 *
-	 * @var \Kirby\Cms\Page
 	 */
-	protected $errorPage;
+	protected Page|null $errorPage = null;
 
 	/**
 	 * The id of the error page, which is
 	 * fetched in the errorPage method
-	 *
-	 * @var string
 	 */
-	protected $errorPageId = 'error';
+	protected string $errorPageId;
 
 	/**
 	 * The home page object
-	 *
-	 * @var \Kirby\Cms\Page
 	 */
-	protected $homePage;
+	protected Page|null $homePage = null;
 
 	/**
 	 * The id of the home page, which is
 	 * fetched in the errorPage method
-	 *
-	 * @var string
 	 */
-	protected $homePageId = 'home';
+	protected string $homePageId;
 
 	/**
 	 * Cache for the inventory array
-	 *
-	 * @var array
 	 */
-	protected $inventory;
+	protected array|null $inventory = null;
 
 	/**
 	 * The current page object
-	 *
-	 * @var \Kirby\Cms\Page
 	 */
-	protected $page;
+	protected Page|null $page;
 
 	/**
 	 * The absolute path to the site directory
-	 *
-	 * @var string
 	 */
-	protected $root;
+	protected string $root;
 
 	/**
 	 * The page url
-	 *
-	 * @var string
 	 */
-	protected $url;
+	protected string|null $url;
+
+	/**
+	 * Creates a new Site object
+	 */
+	public function __construct(array $props = [])
+	{
+		parent::__construct($props);
+
+		$this->errorPageId = $props['errorPageId'] ?? 'error';
+		$this->homePageId  = $props['homePageId'] ?? 'home';
+		$this->page        = $props['page'] ?? null;
+		$this->url         = $props['url'] ?? null;
+
+		$this->setBlueprint($props['blueprint'] ?? null);
+		$this->setChildren($props['children'] ?? null);
+		$this->setDrafts($props['drafts'] ?? null);
+		$this->setFiles($props['files'] ?? null);
+	}
 
 	/**
 	 * Modified getter to also return fields
 	 * from the content
-	 *
-	 * @param string $method
-	 * @param array $arguments
-	 * @return mixed
 	 */
-	public function __call(string $method, array $arguments = [])
+	public function __call(string $method, array $arguments = []): mixed
 	{
 		// public property access
 		if (isset($this->$method) === true) {
@@ -119,19 +115,8 @@ class Site extends ModelWithContent
 	}
 
 	/**
-	 * Creates a new Site object
-	 *
-	 * @param array $props
-	 */
-	public function __construct(array $props = [])
-	{
-		$this->setProperties($props);
-	}
-
-	/**
 	 * Improved `var_dump` output
-	 *
-	 * @return array
+	 * @codeCoverageIgnore
 	 */
 	public function __debugInfo(): array
 	{
@@ -145,8 +130,6 @@ class Site extends ModelWithContent
 	/**
 	 * Makes it possible to convert the site model
 	 * to a string. Mostly useful for debugging.
-	 *
-	 * @return string
 	 */
 	public function __toString(): string
 	{
@@ -155,10 +138,7 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the url to the api endpoint
-	 *
 	 * @internal
-	 * @param bool $relative
-	 * @return string
 	 */
 	public function apiUrl(bool $relative = false): string
 	{
@@ -171,10 +151,8 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the blueprint object
-	 *
-	 * @return \Kirby\Cms\SiteBlueprint
 	 */
-	public function blueprint()
+	public function blueprint(): SiteBlueprint
 	{
 		if ($this->blueprint instanceof SiteBlueprint) {
 			return $this->blueprint;
@@ -185,10 +163,8 @@ class Site extends ModelWithContent
 
 	/**
 	 * Builds a breadcrumb collection
-	 *
-	 * @return \Kirby\Cms\Pages
 	 */
-	public function breadcrumb()
+	public function breadcrumb(): Pages
 	{
 		// get all parents and flip the order
 		$crumb = $this->page()->parents()->flip();
@@ -204,53 +180,39 @@ class Site extends ModelWithContent
 
 	/**
 	 * Prepares the content for the write method
-	 *
 	 * @internal
-	 * @param array $data
-	 * @param string|null $languageCode
-	 * @return array
 	 */
-	public function contentFileData(array $data, string|null $languageCode = null): array
-	{
-		return A::prepend($data, [
-			'title' => $data['title'] ?? null,
-		]);
+	public function contentFileData(
+		array $data,
+		string|null $languageCode = null
+	): array {
+		return A::prepend($data, ['title' => $data['title'] ?? null]);
 	}
 
 	/**
 	 * Filename for the content file
-	 *
 	 * @internal
-	 * @return string
+	 * @deprecated 4.0.0
+	 * @todo Remove in v5
+	 * @codeCoverageIgnore
 	 */
 	public function contentFileName(): string
 	{
+		Helpers::deprecated('The internal $model->contentFileName() method has been deprecated. Please let us know via a GitHub issue if you need this method and tell us your use case.', 'model-content-file');
 		return 'site';
 	}
 
 	/**
 	 * Returns the error page object
-	 *
-	 * @return \Kirby\Cms\Page|null
 	 */
-	public function errorPage()
+	public function errorPage(): Page|null
 	{
-		if ($this->errorPage instanceof Page) {
-			return $this->errorPage;
-		}
-
-		if ($error = $this->find($this->errorPageId())) {
-			return $this->errorPage = $error;
-		}
-
-		return null;
+		return $this->errorPage ??= $this->find($this->errorPageId());
 	}
 
 	/**
 	 * Returns the global error page id
-	 *
 	 * @internal
-	 * @return string
 	 */
 	public function errorPageId(): string
 	{
@@ -259,8 +221,6 @@ class Site extends ModelWithContent
 
 	/**
 	 * Checks if the site exists on disk
-	 *
-	 * @return bool
 	 */
 	public function exists(): bool
 	{
@@ -269,27 +229,15 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the home page object
-	 *
-	 * @return \Kirby\Cms\Page|null
 	 */
-	public function homePage()
+	public function homePage(): Page|null
 	{
-		if ($this->homePage instanceof Page) {
-			return $this->homePage;
-		}
-
-		if ($home = $this->find($this->homePageId())) {
-			return $this->homePage = $home;
-		}
-
-		return null;
+		return $this->homePage ??= $this->find($this->homePageId());
 	}
 
 	/**
 	 * Returns the global home page id
-	 *
 	 * @internal
-	 * @return string
 	 */
 	public function homePageId(): string
 	{
@@ -299,9 +247,7 @@ class Site extends ModelWithContent
 	/**
 	 * Creates an inventory of all files
 	 * and children in the site directory
-	 *
 	 * @internal
-	 * @return array
 	 */
 	public function inventory(): array
 	{
@@ -323,7 +269,6 @@ class Site extends ModelWithContent
 	 * Compares the current object with the given site object
 	 *
 	 * @param mixed $site
-	 * @return bool
 	 */
 	public function is($site): bool
 	{
@@ -336,9 +281,7 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the root to the media folder for the site
-	 *
 	 * @internal
-	 * @return string
 	 */
 	public function mediaRoot(): string
 	{
@@ -347,9 +290,7 @@ class Site extends ModelWithContent
 
 	/**
 	 * The site's base url for any files
-	 *
 	 * @internal
-	 * @return string
 	 */
 	public function mediaUrl(): string
 	{
@@ -359,18 +300,12 @@ class Site extends ModelWithContent
 	/**
 	 * Gets the last modification date of all pages
 	 * in the content folder.
-	 *
-	 * @param string|null $format
-	 * @param string|null $handler
-	 * @return int|string
 	 */
-	public function modified(string|null $format = null, string|null $handler = null)
-	{
-		return Dir::modified(
-			$this->root(),
-			$format,
-			$handler ?? $this->kirby()->option('date.handler', 'date')
-		);
+	public function modified(
+		string|null $format = null,
+		string|null $handler = null
+	): int|string {
+		return Dir::modified($this->root(), $format, $handler);
 	}
 
 	/**
@@ -384,9 +319,8 @@ class Site extends ModelWithContent
 	 *
 	 * @param string|null $path omit for current page,
 	 *                          otherwise e.g. `notes/across-the-ocean`
-	 * @return \Kirby\Cms\Page|null
 	 */
-	public function page(string|null $path = null)
+	public function page(string|null $path = null): Page|null
 	{
 		if ($path !== null) {
 			return $this->find($path);
@@ -405,39 +339,31 @@ class Site extends ModelWithContent
 
 	/**
 	 * Alias for `Site::children()`
-	 *
-	 * @return \Kirby\Cms\Pages
 	 */
-	public function pages()
+	public function pages(): Pages
 	{
 		return $this->children();
 	}
 
 	/**
 	 * Returns the panel info object
-	 *
-	 * @return \Kirby\Panel\Site
 	 */
-	public function panel()
+	public function panel(): Panel
 	{
 		return new Panel($this);
 	}
 
 	/**
 	 * Returns the permissions object for this site
-	 *
-	 * @return \Kirby\Cms\SitePermissions
 	 */
-	public function permissions()
+	public function permissions(): SitePermissions
 	{
 		return new SitePermissions($this);
 	}
 
 	/**
 	 * Preview Url
-	 *
 	 * @internal
-	 * @return string|null
 	 */
 	public function previewUrl(): string|null
 	{
@@ -458,8 +384,6 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the absolute path to the content directory
-	 *
-	 * @return string
 	 */
 	public function root(): string
 	{
@@ -470,22 +394,16 @@ class Site extends ModelWithContent
 	 * Returns the SiteRules class instance
 	 * which is being used in various methods
 	 * to check for valid actions and input.
-	 *
-	 * @return \Kirby\Cms\SiteRules
 	 */
-	protected function rules()
+	protected function rules(): SiteRules
 	{
 		return new SiteRules();
 	}
 
 	/**
 	 * Search all pages in the site
-	 *
-	 * @param string|null $query
-	 * @param array $params
-	 * @return \Kirby\Cms\Pages
 	 */
-	public function search(string|null $query = null, $params = [])
+	public function search(string|null $query = null, string|array $params = []): Pages
 	{
 		return $this->index()->search($query, $params);
 	}
@@ -493,10 +411,9 @@ class Site extends ModelWithContent
 	/**
 	 * Sets the Blueprint object
 	 *
-	 * @param array|null $blueprint
 	 * @return $this
 	 */
-	protected function setBlueprint(array|null $blueprint = null)
+	protected function setBlueprint(array|null $blueprint = null): static
 	{
 		if ($blueprint !== null) {
 			$blueprint['model'] = $this;
@@ -507,85 +424,24 @@ class Site extends ModelWithContent
 	}
 
 	/**
-	 * Sets the id of the error page, which
-	 * is used in the errorPage method
-	 * to get the default error page if nothing
-	 * else is set.
-	 *
-	 * @param string $id
-	 * @return $this
-	 */
-	protected function setErrorPageId(string $id = 'error')
-	{
-		$this->errorPageId = $id;
-		return $this;
-	}
-
-	/**
-	 * Sets the id of the home page, which
-	 * is used in the homePage method
-	 * to get the default home page if nothing
-	 * else is set.
-	 *
-	 * @param string $id
-	 * @return $this
-	 */
-	protected function setHomePageId(string $id = 'home')
-	{
-		$this->homePageId = $id;
-		return $this;
-	}
-
-	/**
-	 * Sets the current page object
-	 *
-	 * @internal
-	 * @param \Kirby\Cms\Page|null $page
-	 * @return $this
-	 */
-	public function setPage(?Page $page = null)
-	{
-		$this->page = $page;
-		return $this;
-	}
-
-	/**
-	 * Sets the Url
-	 *
-	 * @param string|null $url
-	 * @return $this
-	 */
-	protected function setUrl(string|null $url = null)
-	{
-		$this->url = $url;
-		return $this;
-	}
-
-	/**
 	 * Converts the most important site
 	 * properties to an array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
-		return [
-			'children'  => $this->children()->keys(),
-			'content'   => $this->content()->toArray(),
-			'errorPage' => $this->errorPage() ? $this->errorPage()->id() : false,
-			'files'     => $this->files()->keys(),
-			'homePage'  => $this->homePage() ? $this->homePage()->id() : false,
-			'page'      => $this->page() ? $this->page()->id() : false,
-			'title'     => $this->title()->value(),
-			'url'       => $this->url(),
-		];
+		return array_merge(parent::toArray(), [
+			'children'   => $this->children()->keys(),
+			'errorPage'  => $this->errorPage()?->id() ?? false,
+			'files'      => $this->files()->keys(),
+			'homePage'   => $this->homePage()?->id() ?? false,
+			'page'       => $this->page()?->id() ?? false,
+			'title'      => $this->title()->value(),
+			'url'        => $this->url(),
+		]);
 	}
 
 	/**
 	 * Returns the Url
-	 *
-	 * @param string|null $language
-	 * @return string
 	 */
 	public function url(string|null $language = null): string
 	{
@@ -598,14 +454,12 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the translated url
-	 *
 	 * @internal
-	 * @param string|null $languageCode
-	 * @param array|null $options
-	 * @return string
 	 */
-	public function urlForLanguage(string|null $languageCode = null, array|null $options = null): string
-	{
+	public function urlForLanguage(
+		string|null $languageCode = null,
+		array|null $options = null
+	): string {
 		if ($language = $this->kirby()->language($languageCode)) {
 			return $language->url();
 		}
@@ -617,21 +471,19 @@ class Site extends ModelWithContent
 	 * Sets the current page by
 	 * id or page object and
 	 * returns the current page
-	 *
 	 * @internal
-	 * @param string|\Kirby\Cms\Page $page
-	 * @param string|null $languageCode
-	 * @return \Kirby\Cms\Page
 	 */
-	public function visit($page, string|null $languageCode = null)
-	{
+	public function visit(
+		string|Page $page,
+		string|null $languageCode = null
+	): Page {
 		if ($languageCode !== null) {
 			$this->kirby()->setCurrentTranslation($languageCode);
 			$this->kirby()->setCurrentLanguage($languageCode);
 		}
 
 		// convert ids to a Page object
-		if (is_string($page)) {
+		if (is_string($page) === true) {
 			$page = $this->find($page);
 		}
 
@@ -640,22 +492,16 @@ class Site extends ModelWithContent
 			throw new InvalidArgumentException('Invalid page object');
 		}
 
-		// set the current active page
-		$this->setPage($page);
-
-		// return the page
-		return $page;
+		// set and return the current active page
+		return $this->page = $page;
 	}
 
 	/**
 	 * Checks if any content of the site has been
 	 * modified after the given unix timestamp
 	 * This is mainly used to auto-update the cache
-	 *
-	 * @param mixed $time
-	 * @return bool
 	 */
-	public function wasModifiedAfter($time): bool
+	public function wasModifiedAfter(int $time): bool
 	{
 		return Dir::wasModifiedAfter($this->root(), $time);
 	}

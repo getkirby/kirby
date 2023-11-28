@@ -4,16 +4,27 @@ export default class Email extends Mark {
 	get button() {
 		return {
 			icon: "email",
-			label: "Email"
+			label: window.panel.$t("toolbar.button.email")
 		};
 	}
 
 	commands() {
 		return {
-			email: () => {
-				this.editor.emit("email");
+			email: (event) => {
+				if (event.altKey || event.metaKey) {
+					return this.remove();
+				}
+
+				this.editor.emit("email", this.editor);
 			},
 			insertEmail: (attrs = {}) => {
+				const { selection } = this.editor.state;
+
+				// if no text is selected, we insert the link as text
+				if (selection.empty) {
+					this.editor.insertText(attrs.href, true);
+				}
+
 				if (attrs.href) {
 					return this.update(attrs);
 				}

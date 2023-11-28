@@ -1,24 +1,28 @@
 <template>
 	<dl class="k-stats" :data-size="size">
-		<component
-			:is="component(report)"
-			v-for="(report, id) in reports"
-			:key="id"
-			:data-theme="report.theme"
-			:to="target(report)"
-			class="k-stat"
-		>
-			<dt class="k-stat-label">{{ report.label }}</dt>
-			<dd class="k-stat-value">{{ report.value }}</dd>
-			<dd class="k-stat-info">{{ report.info }}</dd>
-		</component>
+		<k-stat v-for="(report, id) in reports" :key="id" v-bind="report" />
 	</dl>
 </template>
 
 <script>
+/**
+ * Grid of reports which can be used to display multiple stats in a row  (e.g. as dashboard for a shop, analytics, etc.)
+ *
+ * @example <k-stats :reports="[{ value: 50, label: 'days' }, { value: 10, label: 'hours'}]" />
+ */
 export default {
 	props: {
-		reports: Array,
+		/**
+		 * List of stat reports. See `k-stat` for all options of each report.
+		 */
+		reports: {
+			type: Array,
+			default: () => []
+		},
+		/**
+		 * Text size of the stat's value
+		 * @values "small", "medium", "large", "huge"
+		 */
 		size: {
 			type: String,
 			default: "large"
@@ -58,49 +62,17 @@ export default {
 	grid-auto-rows: 1fr;
 	grid-gap: var(--spacing-2px);
 }
-.k-stat {
-	display: flex;
-	flex-direction: column;
-	background: var(--color-white);
-	box-shadow: var(--shadow);
-	padding: var(--spacing-3) var(--spacing-6);
-	line-height: var(--leading-normal);
-	border-radius: var(--rounded);
-}
-.k-stat.k-link:hover {
-	cursor: pointer;
-	background: var(--color-gray-100);
-}
-.k-stat dt,
-.k-stat dd {
-	display: block;
-}
-.k-stat-value {
-	font-size: var(--value);
-	margin-bottom: var(--spacing-1);
-	order: 1;
-}
-.k-stat-label,
-.k-stat-info {
-	font-size: var(--text-xs);
-}
-.k-stat-label {
-	order: 2;
-}
-.k-stat-info {
-	order: 3;
-	color: var(--theme, var(--color-gray-500));
-}
+
 .k-stats[data-size="small"] {
-	--value: var(--text-base);
+	--stat-value-text-size: var(--text-md);
 }
 .k-stats[data-size="medium"] {
-	--value: var(--text-xl);
+	--stat-value-text-size: var(--text-xl);
 }
 .k-stats[data-size="large"] {
-	--value: var(--text-2xl);
+	--stat-value-text-size: var(--text-2xl);
 }
 .k-stats[data-size="huge"] {
-	--value: var(--text-3xl);
+	--stat-value-text-size: var(--text-3xl);
 }
 </style>

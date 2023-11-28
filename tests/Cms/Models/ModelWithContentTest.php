@@ -2,19 +2,24 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Panel\Page as PanelPage;
 use Kirby\Uuid\PageUuid;
 use Kirby\Uuid\SiteUuid;
 
 class ExtendedModelWithContent extends ModelWithContent
 {
-	public function blueprint()
+	public function blueprint(): Blueprint
 	{
-		return 'test';
+		return new Blueprint([]);
 	}
 
-	protected function commit(string $action, array $arguments, \Closure $callback)
-	{
+	protected function commit(
+		string $action,
+		array $arguments,
+		Closure $callback
+	): mixed {
 		// nothing to commit in the test
 	}
 
@@ -23,14 +28,14 @@ class ExtendedModelWithContent extends ModelWithContent
 		return 'test.txt';
 	}
 
-	public function panel()
+	public function panel(): PanelPage
 	{
-		return new PageForPanel($this);
+		return new PanelPage($this);
 	}
 
-	public function permissions()
+	public function permissions(): ModelPermissions
 	{
-		return null;
+		return new ModelPermissions($this);
 	}
 
 	public function root(): string|null
@@ -51,12 +56,12 @@ class BlueprintsModelWithContent extends ExtendedModelWithContent
 {
 	protected $testModel;
 
-	public function __construct(Model $model)
+	public function __construct(ModelWithContent $model)
 	{
 		$this->testModel = $model;
 	}
 
-	public function blueprint()
+	public function blueprint(): Blueprint
 	{
 		return new Blueprint([
 			'model'  => $this->testModel,
@@ -219,7 +224,7 @@ class ModelWithContentTest extends TestCase
 	public function testContentLock()
 	{
 		$model = new ExtendedModelWithContent();
-		$this->assertInstanceOf('Kirby\\Cms\\ContentLock', $model->lock());
+		$this->assertInstanceOf(ContentLock::class, $model->lock());
 	}
 
 	public function testContentLockWithNoDirectory()
@@ -230,9 +235,8 @@ class ModelWithContentTest extends TestCase
 
 	/**
 	 * @dataProvider modelsProvider
-	 * @param \Kirby\Cms\Model $model
 	 */
-	public function testBlueprints($model)
+	public function testBlueprints(ModelWithContent $model)
 	{
 		$model = new BlueprintsModelWithContent($model);
 		$this->assertSame([
@@ -249,7 +253,7 @@ class ModelWithContentTest extends TestCase
 				'title' => 'Home'
 			],
 			[
-				'name' => 'Page',
+				'name' => 'default',
 				'title' => 'Page'
 			]
 		], $model->blueprints());
@@ -260,10 +264,13 @@ class ModelWithContentTest extends TestCase
 				'title' => 'Home'
 			],
 			[
-				'name' => 'Page',
+				'name' => 'default',
 				'title' => 'Page'
 			]
 		], $model->blueprints('menu'));
+
+		// non-existing section
+		$this->assertSame([], $model->blueprints('foo'));
 	}
 
 	public function testToSafeString()

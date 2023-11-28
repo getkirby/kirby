@@ -1,35 +1,32 @@
 <template>
 	<k-dialog
-		ref="dialog"
-		:cancel-button="false"
-		:submit-button="false"
+		v-bind="$props"
 		class="k-block-selector"
-		size="medium"
-		@open="onOpen"
-		@close="onClose"
+		@cancel="$emit('cancel')"
+		@submit="$emit('submit', value)"
 	>
 		<k-headline v-if="headline">
 			{{ headline }}
 		</k-headline>
+
 		<details
 			v-for="(group, groupName) in groups"
 			:key="groupName"
 			:open="group.open"
 		>
 			<summary>{{ group.label }}</summary>
-			<div class="k-block-types">
+			<k-navigate class="k-block-types">
 				<k-button
 					v-for="fieldset in group.fieldsets"
-					:ref="'fieldset-' + fieldset.index"
 					:key="fieldset.name"
-					:disabled="disabled.includes(fieldset.type)"
-					:icon="fieldset.icon || 'box'"
+					:disabled="disabledFieldsets.includes(fieldset.type)"
+					:icon="fieldset.icon ?? 'box'"
 					:text="fieldset.name"
-					@keydown.up="navigate(fieldset.index - 1)"
-					@keydown.down="navigate(fieldset.index + 1)"
-					@click="add(fieldset.type)"
+					size="lg"
+					@click="$emit('submit', fieldset.type)"
+					@focus.native="$emit('input', fieldset.type)"
 				/>
-			</div>
+			</k-navigate>
 		</details>
 		<!-- eslint-disable vue/no-v-html -->
 		<p
@@ -41,121 +38,115 @@
 </template>
 
 <script>
-/**
- * @internal
- */
+import Dialog from "@/mixins/dialog.js";
+
 export default {
+	mixins: [Dialog],
 	inheritAttrs: false,
 	props: {
-		endpoint: String,
-		fieldsets: Object,
-		fieldsetGroups: Object
+		// eslint-disable-next-line vue/require-prop-types
+		cancelButton: {
+			default: false
+		},
+		disabledFieldsets: {
+			default() {
+				return [];
+			},
+			type: Array
+		},
+		fieldsets: {
+			type: Object
+		},
+		fieldsetGroups: {
+			type: Object
+		},
+		headline: {
+			type: String
+		},
+		// eslint-disable-next-line vue/require-prop-types
+		size: {
+			default: "medium"
+		},
+		// eslint-disable-next-line vue/require-prop-types
+		submitButton: {
+			default: false
+		},
+		value: {
+			default: null,
+			type: String
+		}
 	},
 	data() {
 		return {
-			dialogIsOpen: false,
-			disabled: [],
-			headline: null,
-			payload: null,
-			event: "add",
-			groups: this.createGroups()
+			selected: null
 		};
 	},
 	computed: {
-		shortcut() {
-			return this.$helper.keyboard.metaKey() + "+v";
-		}
-	},
-	methods: {
-		add(type) {
-			this.$emit(this.event, type, this.payload);
-			this.$refs.dialog.close();
-		},
-		close() {
-			this.$refs.dialog.close();
-		},
-		createGroups() {
-			let groups = {};
+		groups() {
+			const groups = {};
 			let index = 0;
 
-			const fieldsetGroups = this.fieldsetGroups || {
+			const fieldsetGroups = this.fieldsetGroups ?? {
 				blocks: {
 					label: this.$t("field.blocks.fieldsets.label"),
 					sets: Object.keys(this.fieldsets)
 				}
 			};
 
-			Object.keys(fieldsetGroups).forEach((key) => {
-				let group = fieldsetGroups[key];
+			for (const key in fieldsetGroups) {
+				const group = fieldsetGroups[key];
 
-				group.open = group.open === false ? false : true;
+				group.open = group.open !== false;
 				group.fieldsets = group.sets
-					.filter((fieldsetName) => this.fieldsets[fieldsetName])
-					.map((fieldsetName) => {
+					.filter((name) => this.fieldsets[name])
+					.map((name) => {
 						index++;
 
 						return {
-							...this.fieldsets[fieldsetName],
+							...this.fieldsets[name],
 							index
 						};
 					});
 
 				if (group.fieldsets.length === 0) {
-					return;
+					continue;
 				}
 
 				groups[key] = group;
-			});
+			}
 
 			return groups;
 		},
-		isOpen() {
-			return this.dialogIsOpen;
-		},
-		navigate(index) {
-			this.$refs["fieldset-" + index]?.[0]?.focus();
-		},
-		onClose() {
-			this.dialogIsOpen = false;
-			this.$events.$off("paste", this.close);
-		},
-		onOpen() {
-			this.dialogIsOpen = true;
-			this.$events.$on("paste", this.close);
-		},
-		open(payload, params = {}) {
-			const options = {
-				event: "add",
-				disabled: [],
-				headline: null,
-				...params
-			};
-
-			this.event = options.event;
-			this.disabled = options.disabled;
-			this.headline = options.headline;
-			this.payload = payload;
-			this.$refs.dialog.open();
+		shortcut() {
+			return this.$helper.keyboard.metaKey() + "+v";
+		}
+	},
+	created() {
+		this.$events.on("paste", this.paste);
+	},
+	destroyed() {
+		this.$events.off("paste", this.paste);
+	},
+	methods: {
+		paste(e) {
+			this.$emit("paste", e);
+			this.close();
 		}
 	}
 };
 </script>
 
 <style>
-.k-block-selector.k-dialog {
-	background: var(--color-dark);
-	color: var(--color-white);
-}
 .k-block-selector .k-headline {
 	margin-bottom: 1rem;
 }
-.k-block-selector details:not(:last-of-type) {
-	margin-bottom: 1.5rem;
+.k-block-selector details + details {
+	margin-top: var(--spacing-6);
 }
 .k-block-selector summary {
 	font-size: var(--text-xs);
 	cursor: pointer;
-	color: var(--color-gray-400);
+	color: var(--color-text-dimmed);
 }
 .k-block-selector details:only-of-type summary {
 	pointer-events: none;
@@ -164,7 +155,7 @@ export default {
 	outline: 0;
 }
 .k-block-selector summary:focus-visible {
-	color: var(--color-green-400);
+	color: var(--color-focus);
 }
 .k-block-types {
 	display: grid;
@@ -173,36 +164,28 @@ export default {
 	grid-template-columns: repeat(1, 1fr);
 }
 .k-block-types .k-button {
-	display: flex;
-	align-items: flex-start;
-	border-radius: var(--rounded);
-	background: rgba(0, 0, 0, 0.5);
+	--button-color-icon: var(--color-text);
+	--button-color-back: var(--color-white);
+	--button-padding: var(--spacing-3);
 	width: 100%;
-	text-align: start;
-	padding: 0 0.75rem 0 0;
-	line-height: 1.5em;
+	justify-content: start;
+	gap: 1rem;
+	box-shadow: var(--shadow);
 }
-.k-block-types .k-button:focus {
-	outline: 2px solid var(--color-green-300);
-}
-.k-block-types .k-button .k-button-text {
-	padding: 0.5rem 0 0.5rem 0.5rem;
-}
-.k-block-types .k-button .k-icon {
-	width: 38px;
-	height: 38px;
+.k-block-types .k-button[aria-disabled] {
+	opacity: var(--opacity-disabled);
+	--button-color-back: var(--color-gray-200);
+	box-shadow: none;
 }
 .k-clipboard-hint {
 	padding-top: 1.5rem;
+	line-height: var(--leading-normal);
 	font-size: var(--text-xs);
-	color: var(--color-gray-400);
+	color: var(--color-text-dimmed);
 }
-.k-clipboard-hint kbd {
-	background: rgba(0, 0, 0, 0.5);
-	font-family: var(--font-mono);
-	letter-spacing: 0.1em;
-	padding: 0.25rem;
-	border-radius: var(--rounded);
-	margin: 0 0.25rem;
+.k-clipboard-hint small {
+	display: block;
+	font-size: inherit;
+	color: var(--color-text-dimmed);
 }
 </style>

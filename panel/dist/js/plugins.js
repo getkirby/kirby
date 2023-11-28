@@ -1,75 +1,91 @@
-window.panel = window.panel || {};
+window.panel = window.panel ?? {};
 window.panel.plugins = {
-  components: {},
-  created: [],
-  icons: {},
-  routes: [],
-  use: [],
-  views: {},
-  thirdParty: {}
+	components: {},
+	created: [],
+	icons: {},
+	routes: [],
+	textareaButtons: {},
+	thirdParty: {},
+	use: [],
+	views: {},
+	writerMarks: {},
+	writerNodes: {}
 };
 
-window.panel.plugin = function (plugin, parts) {
-  // Blocks
-  resolve(parts, "blocks", function (name, options) {
-    if (typeof options === "string") {
-      options = { template: options };
-    }
+window.panel.plugin = function (plugin, extensions) {
+	// Blocks
+	resolve(extensions, "blocks", (name, options) => {
+		if (typeof options === "string") {
+			options = { template: options };
+		}
 
-    window.panel.plugins.components[`k-block-type-${name}`] = {
-      extends: "k-block-type",
-      ...options
-    };
-  });
+		window.panel.plugins.components[`k-block-type-${name}`] = {
+			extends: "k-block-type",
+			...options
+		};
+	});
 
-  // Components
-  resolve(parts, "components", function (name, options) {
-    window.panel.plugins.components[name] = options;
-  });
+	// Components
+	resolve(extensions, "components", (name, options) => {
+		window.panel.plugins.components[name] = options;
+	});
 
-  // Fields
-  resolve(parts, "fields", function (name, options) {
-    window.panel.plugins.components[`k-${name}-field`] = options;
-  });
+	// Fields
+	resolve(extensions, "fields", (name, options) => {
+		window.panel.plugins.components[`k-${name}-field`] = options;
+	});
 
-  // Icons
-  resolve(parts, "icons", function (name, options) {
-    window.panel.plugins.icons[name] = options;
-  });
+	// Icons
+	resolve(extensions, "icons", (name, options) => {
+		window.panel.plugins.icons[name] = options;
+	});
 
-  // Sections
-  resolve(parts, "sections", function (name, options) {
-    window.panel.plugins.components[`k-${name}-section`] = {
-      ...options,
-      mixins: ["section", ...(options.mixins || [])]
-    };
-  });
+	// Sections
+	resolve(extensions, "sections", (name, options) => {
+		window.panel.plugins.components[`k-${name}-section`] = {
+			...options,
+			mixins: ["section", ...(options.mixins ?? [])]
+		};
+	});
 
-  // `Vue.use`
-  resolve(parts, "use", function (name, options) {
-    window.panel.plugins.use.push(options);
-  });
+	// `Vue.use`
+	resolve(extensions, "use", (name, options) => {
+		window.panel.plugins.use.push(options);
+	});
 
-  // Vue `created` callback
-  if (parts["created"]) {
-    window.panel.plugins.created.push(parts["created"]);
-  }
+	// Vue `created` callback
+	if (extensions["created"]) {
+		window.panel.plugins.created.push(extensions["created"]);
+	}
 
-  // Login
-  if (parts.login) {
-    window.panel.plugins.login = parts.login;
-  }
+	// Login
+	if (extensions.login) {
+		window.panel.plugins.login = extensions.login;
+	}
 
-  // Third-party plugins
-  resolve(parts, "thirdParty", function (name, options) {
-    window.panel.plugins.thirdParty[name] = options;
-  });
+	// Textarea custom toolbar buttons
+	resolve(extensions, "textareaButtons", (name, options) => {
+		window.panel.plugins.textareaButtons[name] = options;
+	});
+
+	// Third-party plugins
+	resolve(extensions, "thirdParty", (name, options) => {
+		window.panel.plugins.thirdParty[name] = options;
+	});
+
+	// Writer custom marks
+	resolve(extensions, "writerMarks", (name, options) => {
+		window.panel.plugins.writerMarks[name] = options;
+	});
+
+	// Writer custom nodes
+	resolve(extensions, "writerNodes", function (name, options) {
+		window.panel.plugins.writerNodes[name] = options;
+	});
 };
 
-function resolve(object, type, callback) {
-  if (object[type]) {
-    for (const [name, options] of Object.entries(object[type])) {
-      callback(name, options);
-    }
-  }
-}
+const resolve = (extensions, type, callback) => {
+	for (const [name, options] of Object.entries(extensions[type] ?? {})) {
+		callback(name, options);
+	}
+};

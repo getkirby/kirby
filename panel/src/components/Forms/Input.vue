@@ -2,11 +2,14 @@
 	<div
 		:data-disabled="disabled"
 		:data-invalid="!novalidate && isInvalid"
-		:data-theme="theme"
 		:data-type="type"
 		class="k-input"
 	>
-		<span v-if="$slots.before || before" class="k-input-before" @click="focus">
+		<span
+			v-if="$slots.before || before"
+			class="k-input-description k-input-before"
+			@click="focus"
+		>
 			<slot name="before">{{ before }}</slot>
 		</span>
 		<span class="k-input-element" @click.stop="focus">
@@ -20,7 +23,11 @@
 				/>
 			</slot>
 		</span>
-		<span v-if="$slots.after || after" class="k-input-after" @click="focus">
+		<span
+			v-if="$slots.after || after"
+			class="k-input-description k-input-after"
+			@click="focus"
+		>
 			<slot name="after">{{ after }}</slot>
 		</span>
 		<span v-if="$slots.icon || icon" class="k-input-icon" @click="focus">
@@ -36,11 +43,11 @@ import { after, before, disabled, invalid } from "@/mixins/props.js";
 
 export const props = {
 	mixins: [after, before, disabled, invalid],
+	inheritAttrs: false,
 	props: {
 		autofocus: Boolean,
 		type: String,
 		icon: [String, Boolean],
-		theme: String,
 		novalidate: {
 			type: Boolean,
 			default: false
@@ -54,7 +61,6 @@ export const props = {
 
 export default {
 	mixins: [props],
-	inheritAttrs: false,
 	data() {
 		return {
 			isInvalid: this.invalid,
@@ -73,6 +79,11 @@ export default {
 				...this.$props,
 				...this.$attrs
 			};
+		}
+	},
+	watch: {
+		invalid() {
+			this.isInvalid = this.invalid;
 		}
 	},
 	methods: {
@@ -115,308 +126,96 @@ export default {
 </script>
 
 <style>
+:root {
+	--input-color-back: var(--color-white);
+	--input-color-border: var(--color-border);
+	--input-color-description: var(--color-text-dimmed);
+	--input-color-icon: currentColor;
+	--input-color-placeholder: var(--color-gray-600);
+	--input-color-text: currentColor;
+	--input-font-family: var(--font-sans);
+	--input-font-size: var(--text-sm);
+	--input-height: 2.25rem;
+	--input-leading: 1;
+	--input-outline-focus: var(--outline);
+	--input-padding: var(--spacing-2);
+	--input-padding-multiline: 0.475rem var(--input-padding);
+	--input-rounded: var(--rounded);
+	--input-shadow: none;
+}
+
+@media (pointer: coarse) {
+	:root {
+		--input-font-size: var(--text-md);
+		--input-padding-multiline: 0.375rem var(--input-padding);
+	}
+}
+
 /* Base Design */
 .k-input {
 	display: flex;
 	align-items: center;
-	line-height: 1;
+	line-height: var(--input-leading);
 	border: 0;
-	outline: 0;
-	background: none;
+	background: var(--input-color-back);
+	border-radius: var(--input-rounded);
+	outline: 1px solid var(--input-color-border);
+	color: var(--input-color-text);
+	min-height: var(--input-height);
+	box-shadow: var(--input-shadow);
+	font-family: var(--input-font-family);
+	font-size: var(--input-font-size);
 }
+.k-input:focus-within {
+	outline: var(--input-outline-focus);
+}
+
+/* Element container */
 .k-input-element {
 	flex-grow: 1;
 }
+
+/* Icon */
 .k-input-icon {
+	color: var(--input-color-icon);
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	line-height: 0;
+	width: var(--input-height);
+}
+.k-input-icon-button {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
 }
 
-/* Disabled state */
-.k-input[data-disabled="true"] {
-	pointer-events: none;
+/* Before and After Text */
+.k-input-description {
+	color: var(--input-color-description);
+	padding-inline: var(--input-padding);
+}
+.k-input-before {
+	padding-inline-end: 0;
+}
+.k-input-after {
+	padding-inline-start: 0;
 }
 
-[data-disabled="true"] .k-input-icon {
-	color: var(--color-gray-600);
-}
-
-.k-input[data-theme="field"] {
-	line-height: 1;
-	border: var(--field-input-border);
-	background: var(--field-input-background);
-	border-radius: var(--rounded);
-}
-.k-input[data-theme="field"]:focus-within {
-	border: var(--field-input-focus-border);
-	box-shadow: var(--color-focus-outline) 0 0 0 2px;
-}
-
-.k-input[data-theme="field"][data-disabled="true"] {
-	background: var(--color-background);
-}
-
-.k-input[data-theme="field"] .k-input-icon {
-	width: var(--field-input-height);
-}
-.k-input[data-theme="field"] .k-input-icon,
-.k-input[data-theme="field"] .k-input-before,
-.k-input[data-theme="field"] .k-input-after {
+/* Icon and description alignment */
+.k-input :where(.k-input-description, .k-input-icon) {
 	align-self: stretch;
 	display: flex;
 	align-items: center;
 	flex-shrink: 0;
 }
-.k-input[data-theme="field"] .k-input-before,
-.k-input[data-theme="field"] .k-input-after {
-	padding: 0 var(--field-input-padding);
-}
-.k-input[data-theme="field"] .k-input-before {
-	color: var(--field-input-color-before);
-	padding-inline-end: 0;
-}
-.k-input[data-theme="field"] .k-input-after {
-	color: var(--field-input-color-after);
-	padding-inline-start: 0;
-}
 
-.k-input[data-theme="field"] .k-input-icon > .k-dropdown {
-	width: 100%;
-	height: 100%;
-}
-.k-input[data-theme="field"] .k-input-icon-button {
-	width: 100%;
-	height: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-shrink: 0;
-}
-
-.k-input[data-theme="field"] .k-number-input,
-.k-input[data-theme="field"] .k-select-input,
-.k-input[data-theme="field"] .k-text-input {
-	padding: var(--field-input-padding);
-	line-height: var(--field-input-line-height);
-	border-radius: var(--rounded);
-}
-
-.k-input[data-theme="field"] .k-date-input .k-select-input,
-.k-input[data-theme="field"] .k-time-input .k-select-input {
-	padding-inline: 0;
-}
-
-.k-input[data-theme="field"] .k-date-input .k-select-input:first-child,
-.k-input[data-theme="field"] .k-time-input .k-select-input:first-child {
-	padding-inline-start: var(--field-input-padding);
-}
-
-.k-input[data-theme="field"] .k-date-input .k-select-input:focus-within,
-.k-input[data-theme="field"] .k-time-input .k-select-input:focus-within {
-	color: var(--color-focus);
-	font-weight: var(--font-bold);
-}
-.k-input[data-theme="field"].k-time-input .k-time-input-meridiem {
-	padding-inline-start: var(--field-input-padding);
-}
-
-/* Checkboxes & Radio Buttons */
-.k-input[data-theme="field"][data-type="checkboxes"] .k-checkboxes-input li,
-.k-input[data-theme="field"][data-type="checkboxes"] .k-radio-input li,
-.k-input[data-theme="field"][data-type="radio"] .k-checkboxes-input li,
-.k-input[data-theme="field"][data-type="radio"] .k-radio-input li {
-	min-width: 0;
-	overflow-wrap: break-word;
-}
-
-/* Checkboxes */
-.k-input[data-theme="field"][data-type="checkboxes"] .k-input-before {
-	border-inline-end: 1px solid var(--color-background);
-}
-.k-input[data-theme="field"][data-type="checkboxes"]
-	.k-input-element
-	+ .k-input-after,
-.k-input[data-theme="field"][data-type="checkboxes"]
-	.k-input-element
-	+ .k-input-icon {
-	border-inline-start: 1px solid var(--color-background);
-}
-.k-input[data-theme="field"][data-type="checkboxes"] .k-input-element {
-	overflow: hidden;
-}
-.k-input[data-theme="field"][data-type="checkboxes"] .k-checkboxes-input {
-	display: grid;
-	grid-template-columns: 1fr;
-	margin-bottom: -1px;
-	margin-inline-end: -1px;
-}
-@media screen and (min-width: 65em) {
-	.k-input[data-theme="field"][data-type="checkboxes"] .k-checkboxes-input {
-		grid-template-columns: repeat(var(--columns), 1fr);
-	}
-}
-.k-input[data-theme="field"][data-type="checkboxes"] .k-checkboxes-input li {
-	border-inline-end: 1px solid var(--color-background);
-	border-bottom: 1px solid var(--color-background);
-}
-.k-input[data-theme="field"][data-type="checkboxes"] .k-checkboxes-input label {
-	display: block;
-	line-height: var(--field-input-line-height);
-	padding: var(--field-input-padding) var(--field-input-padding);
-}
-.k-input[data-theme="field"][data-type="checkboxes"] .k-checkbox-input-icon {
-	top: calc((var(--field-input-height) - var(--field-input-font-size)) / 2);
-	inset-inline-start: var(--field-input-padding);
-	margin-top: 0px;
-}
-
-/* Radio */
-.k-input[data-theme="field"][data-type="radio"] .k-input-before {
-	border-inline-end: 1px solid var(--color-background);
-}
-.k-input[data-theme="field"][data-type="radio"]
-	.k-input-element
-	+ .k-input-after,
-.k-input[data-theme="field"][data-type="radio"]
-	.k-input-element
-	+ .k-input-icon {
-	border-inline-start: 1px solid var(--color-background);
-}
-.k-input[data-theme="field"][data-type="radio"] .k-input-element {
-	overflow: hidden;
-}
-.k-input[data-theme="field"][data-type="radio"] .k-radio-input {
-	display: grid;
-	grid-template-columns: 1fr;
-	margin-bottom: -1px;
-	margin-inline-end: -1px;
-}
-@media screen and (min-width: 65em) {
-	.k-input[data-theme="field"][data-type="radio"] .k-radio-input {
-		grid-template-columns: repeat(var(--columns), 1fr);
-	}
-}
-.k-input[data-theme="field"][data-type="radio"] .k-radio-input li {
-	border-inline-end: 1px solid var(--color-background);
-	border-bottom: 1px solid var(--color-background);
-}
-.k-input[data-theme="field"][data-type="radio"] .k-radio-input label {
-	display: block;
-	flex-grow: 1;
-	min-height: var(--field-input-height);
-	line-height: var(--field-input-line-height);
-	padding: calc(
-			(var(--field-input-height) - var(--field-input-line-height)) / 2
-		)
-		var(--field-input-padding);
-}
-.k-input[data-theme="field"][data-type="radio"] .k-radio-input label::before {
-	top: calc((var(--field-input-height) - 1rem) / 2);
-	inset-inline-start: var(--field-input-padding);
-	margin-top: -1px;
-}
-.k-input[data-theme="field"][data-type="radio"]
-	.k-radio-input
-	.k-radio-input-info {
-	display: block;
-	font-size: var(--text-sm);
-	color: var(--color-gray-600);
-	line-height: var(--field-input-line-height);
-	padding-top: calc(var(--field-input-line-height) / 10);
-}
-.k-input[data-theme="field"][data-type="radio"] .k-radio-input .k-icon {
-	width: var(--field-input-height);
-	height: var(--field-input-height);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-/* Range */
-.k-input[data-theme="field"][data-type="range"] .k-range-input {
-	padding: var(--field-input-padding);
-}
-
-/* Select Boxes */
-.k-input[data-theme="field"][data-type="select"] {
-	position: relative;
-}
-.k-input[data-theme="field"][data-type="select"] .k-input-icon {
-	position: absolute;
-	inset-block: 0;
-	inset-inline-end: 0;
-}
-
-/* Tags */
-.k-input[data-theme="field"][data-type="tags"] .k-tags-input {
-	padding: 0.25rem 0.25rem 0 0.25rem;
-}
-.k-input[data-theme="field"][data-type="tags"] .k-tag {
-	margin-inline-end: 0.25rem;
-	margin-bottom: 0.25rem;
-	height: auto;
-	min-height: 1.75rem;
-	font-size: var(--text-sm);
-}
-.k-input[data-theme="field"][data-type="tags"] .k-tags-input input {
-	font-size: var(--text-sm);
-	padding: 0 0.25rem;
-	height: 1.75rem;
-	line-height: 1;
-	margin-bottom: 0.25rem;
-}
-.k-input[data-theme="field"][data-type="tags"]
-	.k-tags-input
-	.k-dropdown-content {
-	top: calc(100% + 0.5rem + 2px);
-}
-/* don't apply dropup feature to tags */
-.k-input[data-theme="field"][data-type="tags"]
-	.k-tags-input
-	.k-dropdown-content[data-dropup] {
-	top: calc(100% + 0.5rem + 2px);
-	bottom: initial;
-	margin-bottom: initial;
-}
-
-/* Multiselect */
-.k-input[data-theme="field"][data-type="multiselect"] {
-	position: relative;
-}
-.k-input[data-theme="field"][data-type="multiselect"] .k-multiselect-input {
-	padding: 0.25rem 2rem 0 0.25rem;
-	min-height: 2.25rem;
-}
-.k-input[data-theme="field"][data-type="multiselect"] .k-tag {
-	margin-inline-end: 0.25rem;
-	margin-bottom: 0.25rem;
-	height: 1.75rem;
-	font-size: var(--text-sm);
-}
-.k-input[data-theme="field"][data-type="multiselect"] .k-input-icon {
-	position: absolute;
-	inset-block: 0;
-	inset-inline-end: 0;
+/* Disabled state */
+.k-input[data-disabled="true"] {
+	--input-color-back: var(--color-background);
+	--input-color-icon: var(--color-gray-600);
 	pointer-events: none;
-}
-
-/* Textarea */
-.k-input[data-theme="field"][data-type="textarea"] .k-textarea-input-native {
-	padding: 0.25rem var(--field-input-padding);
-	line-height: 1.5rem;
-}
-
-/* Toggle */
-.k-input[data-theme="field"][data-type="toggle"] .k-input-before {
-	padding-inline-end: calc(var(--field-input-padding) / 2);
-}
-.k-input[data-theme="field"][data-type="toggle"] .k-toggle-input {
-	padding-inline-start: var(--field-input-padding);
-}
-.k-input[data-theme="field"][data-type="toggle"] .k-toggle-input-label {
-	padding: 0 var(--field-input-padding) 0 0.75rem;
-	line-height: var(--field-input-height);
 }
 </style>

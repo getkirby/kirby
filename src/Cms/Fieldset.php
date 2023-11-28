@@ -21,24 +21,21 @@ class Fieldset extends Item
 {
 	public const ITEMS_CLASS = Fieldsets::class;
 
-	protected $disabled;
-	protected $editable;
-	protected $fields = [];
-	protected $icon;
-	protected $label;
-	protected $model;
-	protected $name;
-	protected $preview;
-	protected $tabs;
-	protected $translate;
-	protected $type;
-	protected $unset;
-	protected $wysiwyg;
+	protected bool $disabled;
+	protected bool $editable;
+	protected array $fields = [];
+	protected string|null $icon;
+	protected string|null $label;
+	protected string|null $name;
+	protected string|bool|null $preview;
+	protected array $tabs;
+	protected bool $translate;
+	protected string $type;
+	protected bool $unset;
+	protected bool $wysiwyg;
 
 	/**
 	 * Creates a new Fieldset object
-	 *
-	 * @param array $params
 	 */
 	public function __construct(array $params = [])
 	{
@@ -50,17 +47,17 @@ class Fieldset extends Item
 
 		parent::__construct($params);
 
-		$this->disabled  = $params['disabled'] ?? false;
-		$this->editable  = $params['editable'] ?? true;
-		$this->icon      = $params['icon'] ?? null;
-		$this->model     = $this->parent;
-		$this->name      = $this->createName($params['title'] ?? $params['name'] ?? Str::ucfirst($this->type));
-		$this->label     = $this->createLabel($params['label'] ?? null);
-		$this->preview   = $params['preview'] ?? null;
-		$this->tabs      = $this->createTabs($params);
-		$this->translate = $params['translate'] ?? true;
-		$this->unset     = $params['unset'] ?? false;
-		$this->wysiwyg   = $params['wysiwyg'] ?? false;
+		$this->disabled    = $params['disabled'] ?? false;
+		$this->editable    = $params['editable'] ?? true;
+		$this->icon        = $params['icon'] ?? null;
+		$params['title'] ??= $params['name'] ?? Str::ucfirst($this->type);
+		$this->name        = $this->createName($params['title']);
+		$this->label       = $this->createLabel($params['label'] ?? null);
+		$this->preview     = $params['preview'] ?? null;
+		$this->tabs        = $this->createTabs($params);
+		$this->translate   = $params['translate'] ?? true;
+		$this->unset       = $params['unset'] ?? false;
+		$this->wysiwyg     = $params['wysiwyg'] ?? false;
 
 		if (
 			$this->translate === false &&
@@ -73,10 +70,6 @@ class Fieldset extends Item
 		}
 	}
 
-	/**
-	 * @param array $fields
-	 * @return array
-	 */
 	protected function createFields(array $fields = []): array
 	{
 		$fields = Blueprint::fieldsProps($fields);
@@ -88,28 +81,16 @@ class Fieldset extends Item
 		return $fields;
 	}
 
-	/**
-	 * @param array|string $name
-	 * @return string|null
-	 */
-	protected function createName($name): string|null
+	protected function createName(array|string $name): string|null
 	{
 		return I18n::translate($name, $name);
 	}
 
-	/**
-	 * @param array|string $label
-	 * @return string|null
-	 */
-	protected function createLabel($label = null): string|null
+	protected function createLabel(array|string|null $label = null): string|null
 	{
 		return I18n::translate($label, $label);
 	}
 
-	/**
-	 * @param array $params
-	 * @return array
-	 */
 	protected function createTabs(array $params = []): array
 	{
 		$tabs = $params['tabs'] ?? [];
@@ -133,9 +114,10 @@ class Fieldset extends Item
 
 			$tab = Blueprint::extend($tab);
 
-			$tab['fields'] = $this->createFields($tab['fields'] ?? []);
-			$tab['label']  = $this->createLabel($tab['label'] ?? Str::ucfirst($name));
-			$tab['name']   = $name;
+			$tab['fields']  = $this->createFields($tab['fields'] ?? []);
+			$tab['label'] ??= Str::ucfirst($name);
+			$tab['label']   = $this->createLabel($tab['label']);
+			$tab['name']    = $name;
 
 			$tabs[$name] = $tab;
 		}
@@ -143,17 +125,11 @@ class Fieldset extends Item
 		return $tabs;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function disabled(): bool
 	{
 		return $this->disabled;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function editable(): bool
 	{
 		if ($this->editable === false) {
@@ -167,9 +143,6 @@ class Fieldset extends Item
 		return true;
 	}
 
-	/**
-	 * @return array
-	 */
 	public function fields(): array
 	{
 		return $this->fields;
@@ -177,88 +150,57 @@ class Fieldset extends Item
 
 	/**
 	 * Creates a form for the given fields
-	 *
-	 * @param array $fields
-	 * @param array $input
-	 * @return \Kirby\Form\Form
 	 */
-	public function form(array $fields, array $input = [])
+	public function form(array $fields, array $input = []): Form
 	{
 		return new Form([
 			'fields' => $fields,
-			'model'  => $this->model,
+			'model'  => $this->parent,
 			'strict' => true,
 			'values' => $input,
 		]);
 	}
 
-	/**
-	 * @return string|null
-	 */
 	public function icon(): string|null
 	{
 		return $this->icon;
 	}
 
-	/**
-	 * @return string|null
-	 */
 	public function label(): string|null
 	{
 		return $this->label;
 	}
 
-	/**
-	 * @return \Kirby\Cms\ModelWithContent
-	 */
-	public function model()
+	public function model(): ModelWithContent
 	{
-		return $this->model;
+		return $this->parent;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function name(): string
 	{
 		return $this->name;
 	}
 
-	/**
-	 * @return string|bool
-	 */
-	public function preview()
+	public function preview(): string|bool|null
 	{
 		return $this->preview;
 	}
 
-	/**
-	 * @return array
-	 */
 	public function tabs(): array
 	{
 		return $this->tabs;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function translate(): bool
 	{
 		return $this->translate;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function type(): string
 	{
 		return $this->type;
 	}
 
-	/**
-	 * @return array
-	 */
 	public function toArray(): array
 	{
 		return [
@@ -276,17 +218,11 @@ class Fieldset extends Item
 		];
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function unset(): bool
 	{
 		return $this->unset;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function wysiwyg(): bool
 	{
 		return $this->wysiwyg;

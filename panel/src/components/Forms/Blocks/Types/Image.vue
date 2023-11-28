@@ -9,9 +9,13 @@
 		@update="update"
 	>
 		<template v-if="src">
-			<k-aspect-ratio v-if="ratio" :ratio="ratio" :cover="crop">
-				<img :alt="content.alt" :src="src" />
-			</k-aspect-ratio>
+			<k-image-frame
+				v-if="ratio"
+				:ratio="ratio"
+				:cover="crop"
+				:alt="content.alt"
+				:src="src"
+			/>
 			<img
 				v-else
 				:alt="content.alt"
@@ -33,21 +37,21 @@ export default {
 			return this.field("caption", { marks: true }).marks;
 		},
 		crop() {
-			return this.content.crop || false;
+			return this.content.crop ?? false;
 		},
 		src() {
 			if (this.content.location === "web") {
 				return this.content.src;
 			}
 
-			if (this.content.image[0]?.url) {
+			if (this.content.image?.[0]?.url) {
 				return this.content.image[0].url;
 			}
 
 			return false;
 		},
 		ratio() {
-			return this.content.ratio || false;
+			return this.content.ratio ?? false;
 		}
 	}
 };
@@ -55,12 +59,12 @@ export default {
 
 <style>
 .k-block-type-image .k-block-figure-container {
-	display: block;
 	text-align: center;
 	line-height: 0;
 }
 .k-block-type-image-auto {
 	max-width: 100%;
 	max-height: 30rem;
+	margin-inline: auto;
 }
 </style>

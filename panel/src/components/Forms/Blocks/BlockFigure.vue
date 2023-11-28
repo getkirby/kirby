@@ -22,27 +22,17 @@
 </template>
 
 <script>
-/**
- * @internal
- */
 export default {
 	inheritAttrs: false,
 	props: {
 		caption: String,
-		captionMarks: [Boolean, Array],
-		cover: {
-			type: Boolean,
-			default: true
+		captionMarks: {
+			default: true,
+			type: [Boolean, Array]
 		},
 		isEmpty: Boolean,
 		emptyIcon: String,
-		emptyText: String,
-		ratio: String
-	},
-	computed: {
-		ratioPadding() {
-			return this.$helper.ratio(this.ratio || "16/9");
-		}
+		emptyText: String
 	}
 };
 </script>
@@ -58,18 +48,19 @@ export default {
 }
 .k-block-figure figcaption {
 	padding-top: 0.5rem;
-	color: var(--color-gray-600);
+	color: var(--color-text-dimmed);
 	font-size: var(--text-sm);
 	text-align: center;
 }
-.k-block-figure-empty.k-button {
-	display: flex;
-	width: 100%;
-	height: 6rem;
+.k-block-figure-empty {
+	--button-width: 100%;
+	--button-height: 6rem;
+	--button-color-text: var(--color-text-dimmed);
+	--button-color-back: var(--color-gray-200);
+}
+
+.k-block-figure-empty,
+.k-block-figure-container > * {
 	border-radius: var(--rounded-sm);
-	align-items: center;
-	justify-content: center;
-	color: var(--color-gray-600);
-	background: var(--color-background);
 }
 </style>

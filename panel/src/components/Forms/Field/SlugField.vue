@@ -1,7 +1,7 @@
 <template>
 	<k-field v-bind="$props" :input="_uid" :help="preview" class="k-slug-field">
 		<template v-if="wizard && wizard.text" #options>
-			<k-button :text="wizard.text" icon="wand" @click="onWizard" />
+			<k-button :text="wizard.text" icon="sparkling" @click="onWizard" />
 		</template>
 
 		<k-input

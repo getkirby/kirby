@@ -1,3 +1,3 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <circle style="background: url(/image.png)" fill="#000" r="10"/>
+  <circle style="background: url(/subfolder/image.png)" fill="#000" r="10"/>
 </svg>

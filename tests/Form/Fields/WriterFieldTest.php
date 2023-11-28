@@ -10,8 +10,9 @@ class WriterFieldTest extends TestCase
 
 		$this->assertSame('writer', $field->type());
 		$this->assertSame('writer', $field->name());
+		$this->assertSame([1, 2, 3, 4, 5, 6], $field->headings());
 		$this->assertFalse($field->inline());
-		$this->assertTrue($field->marks());
+		$this->assertNull($field->marks());
 		$this->assertNull($field->nodes());
 		$this->assertTrue($field->save());
 	}
@@ -19,10 +20,10 @@ class WriterFieldTest extends TestCase
 	public function testValueSanitized()
 	{
 		$field = $this->field('writer', [
-			'value' => 'This is a <strong>test</strong><script>alert("Hacked")</script> with <em>formatting</em>'
+			'value' => 'This is a <strong>test</strong><script>alert("Hacked")</script> with <em>formatting</em> and a <a href="/@/page/abcde">UUID link</a>'
 		]);
 
-		$this->assertSame('This is a <strong>test</strong> with <em>formatting</em>', $field->value());
+		$this->assertSame('This is a <strong>test</strong> with <em>formatting</em> and a <a href="/@/page/abcde">UUID link</a>', $field->value());
 	}
 
 	public function testValueTrimmed()

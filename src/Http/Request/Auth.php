@@ -16,19 +16,12 @@ use SensitiveParameter;
 abstract class Auth
 {
 	/**
-	 * Raw authentication data after the first space
-	 * in the `Authorization` header
-	 */
-	protected string $data;
-
-	/**
-	 * Constructor
+	 * @param string $data Raw authentication data after the first space in the `Authorization` header
 	 */
 	public function __construct(
 		#[SensitiveParameter]
-		string $data
+		protected string $data
 	) {
-		$this->data = $data;
 	}
 
 	/**

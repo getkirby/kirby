@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 
 class UserActionsTest extends TestCase
 {
@@ -119,6 +120,24 @@ class UserActionsTest extends TestCase
 
 		$this->assertInstanceOf(Role::class, $user->role());
 		$this->assertSame('editor', $user->role()->name());
+	}
+
+	public function testChangeTotp()
+	{
+		$user = $this->app->user('admin@domain.com');
+		F::write($this->tmp . '/accounts/admin/.htpasswd', 'a very secure hash');
+		$this->assertNull($user->secret('totp'));
+
+		$user->changeTotp('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
+		$this->assertSame(
+			"a very secure hash\n" . '{"totp":"ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"}',
+			F::read($this->tmp . '/accounts/admin/.htpasswd')
+		);
+		$this->assertSame('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', $user->secret('totp'));
+
+		$user->changeTotp(null);
+		$this->assertSame('a very secure hash', F::read($this->tmp . '/accounts/admin/.htpasswd'));
+		$this->assertNull($user->secret('totp'));
 	}
 
 	public function testCreateAdmin()
@@ -470,7 +489,7 @@ class UserActionsTest extends TestCase
 	public function testCreateHooks()
 	{
 		$calls = 0;
-		$phpunit= $this;
+		$phpunit = $this;
 		$userInput = [
 			'email' => 'new@domain.com',
 			'role'  => 'admin',

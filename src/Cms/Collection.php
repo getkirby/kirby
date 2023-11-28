@@ -72,9 +72,7 @@ class Collection extends BaseCollection
 	 * child classes can override it again to add validation
 	 * and custom behavior depending on the object type
 	 *
-	 * @param string $id
 	 * @param object $object
-	 * @return void
 	 */
 	public function __set(string $id, $object): void
 	{
@@ -142,7 +140,6 @@ class Collection extends BaseCollection
 	/**
 	 * Find a single element by an attribute and its value
 	 *
-	 * @param string $attribute
 	 * @param mixed $value
 	 * @return mixed|null
 	 */
@@ -162,11 +159,11 @@ class Collection extends BaseCollection
 	 * with an item for each group and a collection for each group.
 	 *
 	 * @param string|Closure $field
-	 * @param bool $i Ignore upper/lowercase for group names
+	 * @param bool $caseInsensitive Ignore upper/lowercase for group names
 	 * @return \Kirby\Cms\Collection
 	 * @throws \Kirby\Exception\Exception
 	 */
-	public function group($field, bool $i = true)
+	public function group($field, bool $caseInsensitive = true)
 	{
 		if (is_string($field) === true) {
 			$groups = new Collection([], $this->parent());
@@ -179,8 +176,12 @@ class Collection extends BaseCollection
 					throw new InvalidArgumentException('Invalid grouping value for key: ' . $key);
 				}
 
+				$value = (string)$value;
+
 				// ignore upper/lowercase for group names
-				$value = $i === true ? Str::lower($value) : (string)$value;
+				if ($caseInsensitive === true) {
+					$value = Str::lower($value);
+				}
 
 				if (isset($groups->data[$value]) === false) {
 					// create a new entry for the group if it does not exist yet
@@ -194,7 +195,7 @@ class Collection extends BaseCollection
 			return $groups;
 		}
 
-		return parent::group($field, $i);
+		return parent::group($field, $caseInsensitive);
 	}
 
 	/**
@@ -202,7 +203,6 @@ class Collection extends BaseCollection
 	 * is in the collection
 	 *
 	 * @param string|object $key
-	 * @return bool
 	 */
 	public function has($key): bool
 	{
@@ -219,7 +219,6 @@ class Collection extends BaseCollection
 	 * or ids and then search accordingly.
 	 *
 	 * @param string|object $needle
-	 * @return int|false
 	 */
 	public function indexOf($needle): int|false
 	{
@@ -261,20 +260,31 @@ class Collection extends BaseCollection
 	 * Add pagination and return a sliced set of data.
 	 *
 	 * @param mixed ...$arguments
-	 * @return \Kirby\Cms\Collection
+	 * @return $this|static
 	 */
 	public function paginate(...$arguments)
 	{
 		$this->pagination = Pagination::for($this, ...$arguments);
 
 		// slice and clone the collection according to the pagination
-		return $this->slice($this->pagination->offset(), $this->pagination->limit());
+		return $this->slice(
+			$this->pagination->offset(),
+			$this->pagination->limit()
+		);
+	}
+
+	/**
+	 * Get the pagination object
+	 *
+	 * @return \Kirby\Cms\Pagination|null
+	 */
+	public function pagination()
+	{
+		return $this->pagination;
 	}
 
 	/**
 	 * Returns the parent model
-	 *
-	 * @return \Kirby\Cms\Model
 	 */
 	public function parent()
 	{
@@ -311,7 +321,6 @@ class Collection extends BaseCollection
 	 * offset, limit, search and paginate on the collection.
 	 * Any part of the query is optional.
 	 *
-	 * @param array $arguments
 	 * @return static
 	 */
 	public function query(array $arguments = [])
@@ -354,13 +363,11 @@ class Collection extends BaseCollection
 
 	/**
 	 * Searches the collection
-	 *
-	 * @param string|null $query
-	 * @param array $params
-	 * @return self
 	 */
-	public function search(string $query = null, $params = [])
-	{
+	public function search(
+		string $query = null,
+		string|array $params = []
+	): static {
 		return Search::collection($this, $query, $params);
 	}
 
@@ -368,9 +375,6 @@ class Collection extends BaseCollection
 	 * Converts all objects in the collection
 	 * to an array. This can also take a callback
 	 * function to further modify the array result.
-	 *
-	 * @param \Closure|null $map
-	 * @return array
 	 */
 	public function toArray(Closure $map = null): array
 	{

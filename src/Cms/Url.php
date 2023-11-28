@@ -35,8 +35,10 @@ class Url extends BaseUrl
 	 * Creates an absolute Url to a template asset if it exists.
 	 * This is used in the `css()` and `js()` helpers
 	 */
-	public static function toTemplateAsset(string $assetPath, string $extension): string|null
-	{
+	public static function toTemplateAsset(
+		string $assetPath,
+		string $extension
+	): string|null {
 		$kirby = App::instance();
 		$page  = $kirby->site()->page();
 		$path  = $assetPath . '/' . $page->template() . '.' . $extension;
@@ -51,8 +53,10 @@ class Url extends BaseUrl
 	 *
 	 * @param array|string|null $options Either an array of options for the Uri class or a language string
 	 */
-	public static function to(string|null $path = null, array|string|null $options = null): string
-	{
+	public static function to(
+		string|null $path = null,
+		array|string|null $options = null
+	): string {
 		$kirby = App::instance();
 		return ($kirby->component('url'))($kirby, $path, $options);
 	}

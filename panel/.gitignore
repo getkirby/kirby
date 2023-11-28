@@ -23,5 +23,3 @@ coverage
 *.ntvs*
 *.njsproj
 *.sln
-
-dist/ui.json

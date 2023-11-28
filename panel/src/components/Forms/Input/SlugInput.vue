@@ -22,8 +22,7 @@
 </template>
 
 <script>
-import TextInput from "./TextInput.vue";
-import { props as TextInputProps } from "./TextInput.vue";
+import TextInput, { props as TextInputProps } from "./TextInput.vue";
 
 export const props = {
 	mixins: [TextInputProps],
@@ -34,9 +33,7 @@ export const props = {
 		},
 		formData: {
 			type: Object,
-			default() {
-				return {};
-			}
+			default: () => ({})
 		},
 		sync: {
 			type: String
@@ -53,7 +50,7 @@ export default {
 	data() {
 		return {
 			slug: this.sluggify(this.value),
-			slugs: this.$language ? this.$language.rules : this.$system.slugs,
+			slugs: this.$panel.language.rules ?? this.$panel.system.slugs,
 			syncValue: null
 		};
 	},
@@ -91,7 +88,7 @@ export default {
 		sluggify(value) {
 			return this.$helper.slug(
 				value,
-				[this.slugs, this.$system.ascii],
+				[this.slugs, this.$panel.system.ascii],
 				this.allow
 			);
 		},

@@ -1,46 +1,54 @@
 <template>
 	<nav :aria-label="label" class="k-breadcrumb">
-		<k-dropdown class="k-breadcrumb-dropdown">
-			<k-button icon="road-sign" @click="$refs.dropdown.toggle()" />
-			<k-dropdown-content ref="dropdown" :options="dropdown" theme="light" />
-		</k-dropdown>
+		<div v-if="segments.length > 1" class="k-breadcrumb-dropdown">
+			<k-button icon="home" @click="$refs.dropdown.toggle()" />
+			<k-dropdown-content ref="dropdown" :options="dropdown" />
+		</div>
 
 		<ol>
 			<li v-for="(crumb, index) in segments" :key="index">
-				<k-link
-					:title="crumb.text || crumb.label"
-					:to="crumb.link"
-					:aria-current="isLast(index) ? 'page' : false"
+				<k-button
+					:icon="crumb.loading ? 'loader' : crumb.icon"
+					:link="crumb.link"
+					:disabled="!crumb.link"
+					:text="crumb.text ?? crumb.label"
+					:title="crumb.text ?? crumb.label"
+					:current="index === segments.length - 1 ? 'page' : false"
+					variant="dimmed"
+					size="sm"
 					class="k-breadcrumb-link"
-				>
-					<k-loader v-if="crumb.loading" class="k-breadcrumb-icon" />
-					<k-icon
-						v-else-if="crumb.icon"
-						:type="crumb.icon"
-						class="k-breadcrumb-icon"
-					/>
-					<span class="k-breadcrumb-link-text">
-						{{ crumb.text || crumb.label }}
-					</span>
-				</k-link>
+				/>
 			</li>
 		</ol>
 	</nav>
 </template>
 
 <script>
+/**
+ * Displays a breadcrumb trail
+ *
+ * @example <k-breadcrumb
+ * 	:crumbs="[{ link: '/a', label: 'A' }, { link: '/b', label: 'B' }]"
+ * />
+ */
 export default {
 	props: {
+		/**
+		 * Segments of the breadcrumb trail
+		 * @value { link, label, icon }
+		 */
 		crumbs: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		},
 		label: {
 			type: String,
 			default: "Breadcrumb"
 		},
+		/**
+		 * @todo remove in 5.0.0
+		 * @deprecated 4.0.0 Use `crumbs` instead
+		 */
 		view: Object
 	},
 	computed: {
@@ -52,20 +60,25 @@ export default {
 			}));
 		},
 		segments() {
-			return [
-				{
+			const segments = [];
+
+			if (this.view) {
+				segments.push({
 					link: this.view.link,
-					label: this.view.breadcrumbLabel,
+					label: this.view.label ?? this.view.breadcrumbLabel,
 					icon: this.view.icon,
-					loading: this.$store.state.isLoading
-				},
-				...this.crumbs
-			];
+					loading: this.$panel.isLoading
+				});
+			}
+
+			return [...segments, ...this.crumbs];
 		}
 	},
-	methods: {
-		isLast(index) {
-			return this.crumbs.length - 1 === index;
+	created() {
+		if (this.view) {
+			window.panel.deprecated(
+				"<k-breadcrumb>: `view` prop will be removed in a future version. Use `crumbs` instead."
+			);
 		}
 	}
 };
@@ -73,65 +86,55 @@ export default {
 
 <style>
 .k-breadcrumb {
-	padding-inline: 0.5rem;
-}
-.k-breadcrumb-dropdown {
-	height: 2.5rem;
-	width: 2.5rem;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-.k-breadcrumb ol {
-	display: none;
-	align-items: center;
+	--breadcrumb-divider: "/";
+	overflow-x: clip;
+	padding: 2px;
 }
 
-@media screen and (min-width: 30em) {
+.k-breadcrumb ol {
+	display: none;
+	gap: 0.125rem;
+	align-items: center;
+}
+.k-breadcrumb ol li {
+	display: flex;
+	align-items: center;
+	min-width: 0;
+}
+.k-breadcrumb ol li:not(:last-child)::after {
+	content: var(--breadcrumb-divider);
+	opacity: 0.175;
+	flex-shrink: 0;
+}
+.k-breadcrumb ol li {
+	min-width: 0;
+	transition: flex-shrink 0.1s;
+}
+.k-breadcrumb .k-icon[data-type="loader"] {
+	opacity: 0.5;
+}
+.k-breadcrumb ol li:is(:hover, :focus-within) {
+	flex-shrink: 0;
+}
+.k-button.k-breadcrumb-link {
+	flex-shrink: 1;
+	min-width: 0;
+	justify-content: flex-start;
+}
+
+.k-breadcrumb-dropdown {
+	display: grid;
+}
+.k-breadcrumb-dropdown .k-dropdown-content {
+	width: 15rem;
+}
+
+@container (min-width: 40em) {
 	.k-breadcrumb ol {
 		display: flex;
 	}
 	.k-breadcrumb-dropdown {
 		display: none;
 	}
-}
-
-.k-breadcrumb-link {
-	display: flex;
-	align-items: center;
-	font-size: var(--text-sm);
-	min-width: 0;
-	align-self: stretch;
-	padding-block: 0.625rem;
-	line-height: 1.25rem;
-}
-.k-breadcrumb li {
-	display: flex;
-	align-items: center;
-	flex-shrink: 3;
-	min-width: 0;
-}
-.k-breadcrumb li:last-child {
-	flex-shrink: 1;
-}
-.k-breadcrumb li:not(:last-child)::after {
-	content: "/";
-	padding-inline: 0.5rem;
-	opacity: 0.5;
-	flex-shrink: 0;
-}
-.k-breadcrumb li:not(:first-child):not(:last-child) {
-	max-width: 15vw;
-}
-.k-breadcrumb-icon {
-	margin-inline-end: 0.5rem;
-}
-.k-breadcrumb-icon.k-loader {
-	opacity: 0.5;
-}
-.k-breadcrumb-link-text {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 </style>

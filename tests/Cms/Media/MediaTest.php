@@ -205,29 +205,15 @@ class MediaTest extends TestCase
 		Dir::make(dirname($file->mediaRoot()));
 		$this->assertInstanceOf(File::class, $file);
 
-		// invalid with no job file
-		$thumb = Media::thumb($file, $file->mediaHash(), $file->filename());
-		$this->assertFalse($thumb);
-
-		// invalid with empty job file
-		F::write(dirname($file->mediaRoot()) . '/.jobs/' . $file->filename() . '.json', '{}');
-		$thumb = Media::thumb($file, $file->mediaHash(), $file->filename());
-		$this->assertFalse($thumb);
-
 		// create job file
 		$jobString = '{"width":64,"height":64,"quality":null,"crop":"center","filename":"test.jpg"}';
 		F::write(dirname($file->mediaRoot()) . '/.jobs/' . $file->filename() . '.json', $jobString);
-
-		// invalid with file not found
-		$thumb = Media::thumb($file, $file->mediaHash(), $file->filename());
-		$this->assertInstanceOf('Kirby\Cms\Response', $thumb);
-		$this->assertSame('', $thumb->body());
 
 		// copy to media folder
 		$file->asset()->copy($mediaPath = $file->mediaRoot());
 
 		$thumb = Media::thumb($file, $file->mediaHash(), $file->filename());
-		$this->assertInstanceOf('Kirby\Cms\Response', $thumb);
+		$this->assertInstanceOf(Response::class, $thumb);
 		$this->assertNotFalse($thumb->body());
 		$this->assertSame(200, $thumb->code());
 		$this->assertSame('image/jpeg', $thumb->type());
@@ -235,6 +221,65 @@ class MediaTest extends TestCase
 		$thumbInfo = getimagesize($mediaPath);
 		$this->assertSame(64, $thumbInfo[0]);
 		$this->assertSame(64, $thumbInfo[1]);
+	}
+
+	public function testThumbWithoutJobsFile()
+	{
+		Dir::make($this->fixtures . '/content');
+
+		// copy test image to content
+		F::copy($this->fixtures . '/../files/test.jpg', $this->fixtures . '/content/test.jpg');
+
+		// get file object
+		$file = $this->app->file('test.jpg');
+
+		$this->expectException(\Kirby\Exception\NotFoundException::class);
+		$this->expectExceptionMessage('The thumbnail configuration could not be found');
+
+		// invalid with no job file
+		$thumb = Media::thumb($file, $file->mediaHash(), $file->filename());
+		$this->assertFalse($thumb);
+	}
+
+	public function testThumbWithIncompleteJobFile()
+	{
+		Dir::make($this->fixtures . '/content');
+
+		// copy test image to content
+		F::copy($this->fixtures . '/../files/test.jpg', $this->fixtures . '/content/test.jpg');
+
+		// get file object
+		$file = $this->app->file('test.jpg');
+
+		// create an empty job file
+		F::write(dirname($file->mediaRoot()) . '/.jobs/' . $file->filename() . '.json', '{}');
+
+		$this->expectException(\Kirby\Exception\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Incomplete thumbnail configuration');
+
+		$thumb = Media::thumb($file, $file->mediaHash(), $file->filename());
+		$this->assertFalse($thumb);
+	}
+
+	public function testThumbWhenGenerationFails()
+	{
+		Dir::make($this->fixtures . '/content');
+
+		// copy test image to content
+		F::copy($this->fixtures . '/../files/test.jpg', $this->fixtures . '/content/test.jpg');
+
+		// get file object
+		$file = $this->app->file('test.jpg');
+
+		// create a valid job file
+		$jobString = '{"width":64,"height":64,"quality":null,"crop":"center","filename":"test.jpg"}';
+		F::write(dirname($file->mediaRoot()) . '/.jobs/' . $file->filename() . '.json', $jobString);
+
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('File not found');
+
+		// but the file cannot be found in the media folder
+		Media::thumb($file, $file->mediaHash(), $file->filename());
 	}
 
 	public function testThumbStringModel()
@@ -257,7 +302,7 @@ class MediaTest extends TestCase
 		$file->asset()->copy($mediaPath = $this->fixtures . '/media/assets/site/' . $file->mediaHash() . '/' . $file->filename());
 
 		$thumb = Media::thumb('site', $file->mediaHash(), $file->filename());
-		$this->assertInstanceOf('Kirby\Cms\Response', $thumb);
+		$this->assertInstanceOf(Response::class, $thumb);
 		$this->assertNotFalse($thumb->body());
 		$this->assertSame(200, $thumb->code());
 		$this->assertSame('image/jpeg', $thumb->type());

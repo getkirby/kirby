@@ -10,6 +10,14 @@ class TestField extends FieldClass
 {
 }
 
+class HiddenField extends FieldClass
+{
+	public function isHidden(): bool
+	{
+		return true;
+	}
+}
+
 class UnsaveableField extends FieldClass
 {
 	public function isSaveable(): bool
@@ -20,7 +28,7 @@ class UnsaveableField extends FieldClass
 
 class JsonField extends FieldClass
 {
-	public function fill($value = null)
+	public function fill($value = null): void
 	{
 		$this->value = $this->valueFromJson($value);
 	}
@@ -28,7 +36,7 @@ class JsonField extends FieldClass
 
 class YamlField extends FieldClass
 {
-	public function fill($value = null)
+	public function fill($value = null): void
 	{
 		$this->value = $this->valueFromYaml($value);
 	}
@@ -165,6 +173,15 @@ class FieldClassTest extends TestCase
 	}
 
 	/**
+	 * @covers ::dialogs
+	 */
+	public function testDialogs()
+	{
+		$field = new TestField();
+		$this->assertSame([], $field->dialogs());
+	}
+
+	/**
 	 * @covers ::disabled
 	 * @covers ::isDisabled
 	 */
@@ -177,6 +194,15 @@ class FieldClassTest extends TestCase
 		$field = new TestField(['disabled' => true]);
 		$this->assertTrue($field->disabled());
 		$this->assertTrue($field->isDisabled());
+	}
+
+	/**
+	 * @covers ::drawers
+	 */
+	public function testDrawers()
+	{
+		$field = new TestField();
+		$this->assertSame([], $field->drawers());
 	}
 
 	/**
@@ -240,6 +266,18 @@ class FieldClassTest extends TestCase
 		$this->assertFalse($field->isEmptyValue(' '));
 		$this->assertFalse($field->isEmptyValue(0));
 		$this->assertFalse($field->isEmptyValue('0'));
+	}
+
+	/**
+	 * @covers ::isHidden
+	 */
+	public function testIsHidden()
+	{
+		$field = new TestField();
+		$this->assertFalse($field->isHidden());
+
+		$field = new HiddenField();
+		$this->assertTrue($field->isHidden());
 	}
 
 	/**
@@ -446,6 +484,7 @@ class FieldClassTest extends TestCase
 			'default'     => 'Default value',
 			'disabled'    => false,
 			'help'        => 'Help value',
+			'hidden'      => false,
 			'icon'        => 'Icon value',
 			'label'       => 'Label value',
 			'name'        => 'name-value',
@@ -558,30 +597,6 @@ class FieldClassTest extends TestCase
 	}
 
 	/**
-	 * @covers ::when
-	 */
-	public function testWhen()
-	{
-		$field = new TestField();
-		$this->assertNull($field->when());
-
-		$field = new TestField(['when' => ['a' => 'test']]);
-		$this->assertSame(['a' => 'test'], $field->when());
-	}
-
-	/**
-	 * @covers ::width
-	 */
-	public function testWidth()
-	{
-		$field = new TestField();
-		$this->assertSame('1/1', $field->width());
-
-		$field = new TestField(['width' => '1/2']);
-		$this->assertSame('1/2', $field->width());
-	}
-
-	/**
 	 * @covers ::valueFromJson
 	 */
 	public function testValueFromJson()
@@ -630,5 +645,29 @@ class FieldClassTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid YAML data; please pass a string');
 		new YamlField(['value' => new \stdClass()]);
+	}
+
+	/**
+	 * @covers ::when
+	 */
+	public function testWhen()
+	{
+		$field = new TestField();
+		$this->assertNull($field->when());
+
+		$field = new TestField(['when' => ['a' => 'test']]);
+		$this->assertSame(['a' => 'test'], $field->when());
+	}
+
+	/**
+	 * @covers ::width
+	 */
+	public function testWidth()
+	{
+		$field = new TestField();
+		$this->assertSame('1/1', $field->width());
+
+		$field = new TestField(['width' => '1/2']);
+		$this->assertSame('1/2', $field->width());
 	}
 }

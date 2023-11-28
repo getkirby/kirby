@@ -23,15 +23,15 @@
 </template>
 
 <script>
-import { autofocus, disabled, id, required } from "@/mixins/props.js";
+import Input, { props as InputProps } from "@/mixins/input.js";
 
 export const props = {
-	mixins: [autofocus, disabled, id, required],
+	mixins: [InputProps],
 	props: {
 		/**
 		 * Format to parse and display the date
 		 * @values YYYY, YY, MM, M, DD, D
-		 * @example `MM/DD/YY`
+		 * @example "MM/DD/YY"
 		 */
 		display: {
 			type: String,
@@ -39,19 +39,18 @@ export const props = {
 		},
 		/**
 		 * The last allowed date as ISO date string
-		 * @example `2025-12-31`
+		 * @example "2025-12-31"
 		 */
 		max: String,
 		/**
 		 * The first allowed date as ISO date string
-		 * @example `2020-01-01`
+		 * @example "2020-01-01"
 		 */
 		min: String,
 		/**
 		 * Rounding to the nearest step.
-		 * Requires an object with a `unit`
-		 * and a `size` key
-		 * @example { unit: 'minute', size: 30 }
+		 * @value { unit: "second"|"minute"|"hour"|"date"|"month"|"year", size: number }
+		 * @example { unit: "minute", size: 30 }
 		 */
 		step: {
 			type: Object,
@@ -68,7 +67,7 @@ export const props = {
 		},
 		/**
 		 * Value must be provided as ISO date string
-		 * @example `2012-12-12`
+		 * @example "2012-12-12"
 		 */
 		value: String
 	}
@@ -84,11 +83,9 @@ export const props = {
  * input parts via tab key).
  *
  * @example <k-input :value="date" @input="date = $event" type="date" name="date" />
- * @public
  */
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	data() {
 		return {
 			dt: null,
@@ -134,10 +131,10 @@ export default {
 	},
 	created() {
 		// make sure to commit input value when Cmd+S is hit
-		this.$events.$on("keydown.cmd.s", this.onBlur);
+		this.$events.on("keydown.cmd.s", this.onBlur);
 	},
 	destroyed() {
-		this.$events.$off("keydown.cmd.s", this.onBlur);
+		this.$events.off("keydown.cmd.s", this.onBlur);
 	},
 	methods: {
 		/**
@@ -145,11 +142,11 @@ export default {
 		 * cursor position in the input element and ensuring steps
 		 * @param {string} operator `add`|`substract`
 		 */
-		alter(operator) {
+		async alter(operator) {
 			// since manipulation command can occur while
 			// typing new value, make sure to first update
 			// datetime object from current input value
-			let dt = this.parse() || this.round(this.$library.dayjs());
+			let dt = this.parse() ?? this.round(this.$library.dayjs());
 
 			// what unit to alter and by how much:
 			// as default use the step unit and size
@@ -189,7 +186,8 @@ export default {
 			this.commit(dt);
 			this.emit(dt);
 
-			this.$nextTick(() => this.select(selected));
+			await this.$nextTick();
+			this.select(selected);
 		},
 		/**
 		 * Updates the in data stored dayjs object
@@ -208,13 +206,6 @@ export default {
 		 */
 		emit(dt) {
 			this.$emit("input", this.toISO(dt));
-		},
-		/**
-		 * Focuses the input element
-		 * @public
-		 */
-		focus() {
-			this.$refs.input.focus();
 		},
 		/**
 		 * Decrement the currently
@@ -243,9 +234,10 @@ export default {
 		 * When hitting enter, blur the input
 		 * but also emit additional submit event
 		 */
-		onEnter() {
+		async onEnter() {
 			this.onBlur();
-			this.$nextTick(() => this.$emit("submit"));
+			await this.$nextTick();
+			this.$emit("submit");
 		},
 		/**
 		 * Takes the current input value and
@@ -286,7 +278,7 @@ export default {
 		 *
 		 * @param {Event} event
 		 */
-		onTab(event) {
+		async onTab(event) {
 			// step out of the field if it is empty
 			if (this.$refs.input.value == "") {
 				return;
@@ -294,67 +286,66 @@ export default {
 
 			// make sure to confirm any current input
 			this.onBlur();
-			this.$nextTick(() => {
-				const selection = this.selection();
+			await this.$nextTick();
+			const selection = this.selection();
 
-				// if an exact part is selected
-				if (
-					this.$refs.input &&
-					selection.start === this.$refs.input.selectionStart &&
-					selection.end === this.$refs.input.selectionEnd - 1
-				) {
-					// move backward on shift + tab
-					if (event.shiftKey) {
-						// if the first part is selected, jump out
-						if (selection.index === 0) {
-							return;
-						}
-
-						// select previous part
-						this.selectPrev(selection.index);
-
-						// move forward on tab
-					} else {
-						// if the last part is selected, jump out
-						if (selection.index === this.pattern.parts.length - 1) {
-							return;
-						}
-
-						// select next part
-						this.selectNext(selection.index);
-					}
-				} else {
-					// nothing or no part fully selected
-					if (
-						this.$refs.input &&
-						this.$refs.input.selectionStart == selection.end + 1 &&
-						selection.index == this.pattern.parts.length - 1
-					) {
-						// cursor at the end of the pattern, jump out
+			// if an exact part is selected
+			if (
+				this.$refs.input &&
+				selection.start === this.$refs.input.selectionStart &&
+				selection.end === this.$refs.input.selectionEnd - 1
+			) {
+				// move backward on shift + tab
+				if (event.shiftKey) {
+					// if the first part is selected, jump out
+					if (selection.index === 0) {
 						return;
 					}
 
-					// more than one part selected, select last affected part
-					else if (
-						this.$refs.input &&
-						this.$refs.input.selectionEnd - 1 > selection.end
-					) {
-						const last = this.pattern.at(
-							this.$refs.input.selectionEnd,
-							this.$refs.input.selectionEnd
-						);
+					// select previous part
+					this.selectPrev(selection.index);
 
-						this.select(this.pattern.parts[last.index]);
+					// move forward on tab
+				} else {
+					// if the last part is selected, jump out
+					if (selection.index === this.pattern.parts.length - 1) {
+						return;
 					}
 
-					// select part where the cursor is located
-					else {
-						this.select(this.pattern.parts[selection.index]);
-					}
+					// select next part
+					this.selectNext(selection.index);
+				}
+			} else {
+				// nothing or no part fully selected
+				if (
+					this.$refs.input &&
+					this.$refs.input.selectionStart == selection.end + 1 &&
+					selection.index == this.pattern.parts.length - 1
+				) {
+					// cursor at the end of the pattern, jump out
+					return;
 				}
 
-				event.preventDefault();
-			});
+				// more than one part selected, select last affected part
+				else if (
+					this.$refs.input &&
+					this.$refs.input.selectionEnd - 1 > selection.end
+				) {
+					const last = this.pattern.at(
+						this.$refs.input.selectionEnd,
+						this.$refs.input.selectionEnd
+					);
+
+					this.select(this.pattern.parts[last.index]);
+				}
+
+				// select part where the cursor is located
+				else {
+					this.select(this.pattern.parts[selection.index]);
+				}
+			}
+
+			event.preventDefault();
 		},
 		/**
 		 * Takes current input value and
@@ -375,7 +366,7 @@ export default {
 		 * @returns {Object|null}
 		 */
 		round(dt) {
-			return dt?.round(this.rounding.unit, this.rounding.size) || null;
+			return dt?.round(this.rounding.unit, this.rounding.size);
 		},
 		/**
 		 * Sets the cursor selection in the input element
@@ -444,7 +435,7 @@ export default {
 		 * @return {Object|null}
 		 */
 		toISO(dt) {
-			return dt?.toISO(this.inputType) || null;
+			return dt?.toISO(this.inputType);
 		}
 	},
 	validations() {

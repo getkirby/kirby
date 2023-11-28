@@ -40,9 +40,11 @@ class GdLibTest extends TestCase
 			'grayscale' => false,
 			'height' => 500,
 			'quality' => 90,
-			'scaleHeight' => 1,
-			'scaleWidth' => 1,
+			'scaleHeight' => 1.0,
+			'scaleWidth' => 1.0,
 			'width' => 500,
+			'sourceWidth' => 500,
+			'sourceHeight' => 500,
 		], $gd->process($file));
 	}
 

@@ -1,18 +1,25 @@
 <template>
-	<section v-if="!isLoading" class="k-fields-section">
-		<template v-if="issue">
-			<k-headline class="k-fields-issue-headline"> Error </k-headline>
-			<k-box :text="issue.message" :html="false" theme="negative" />
-		</template>
+	<k-section
+		v-if="!isLoading"
+		:headline="issue ? 'Error' : null"
+		class="k-fields-section"
+	>
+		<k-box
+			v-if="issue"
+			:text="issue.message"
+			:html="false"
+			icon="alert"
+			theme="negative"
+		/>
 		<k-form
 			:fields="fields"
 			:validate="true"
 			:value="values"
 			:disabled="lock && lock.state === 'lock'"
-			@input="input"
+			@input="onInput"
 			@submit="onSubmit"
 		/>
-	</section>
+	</k-section>
 </template>
 
 <script>
@@ -42,45 +49,42 @@ export default {
 		}
 	},
 	created() {
-		this.input = debounce(this.input, 50);
+		this.onInput = debounce(this.onInput, 50);
 		this.fetch();
 	},
 	methods: {
-		input(values, field, fieldName) {
-			this.$store.dispatch("content/update", [fieldName, values[fieldName]]);
-		},
 		async fetch() {
 			try {
 				const response = await this.load();
 				this.fields = response.fields;
 
-				Object.keys(this.fields).forEach((name) => {
+				for (const name in this.fields) {
 					this.fields[name].section = this.name;
 					this.fields[name].endpoints = {
 						field: this.parent + "/fields/" + name,
 						section: this.parent + "/sections/" + this.name,
 						model: this.parent
 					};
-				});
+				}
 			} catch (error) {
 				this.issue = error;
 			} finally {
 				this.isLoading = false;
 			}
 		},
+		onInput(values, field, fieldName) {
+			this.$store.dispatch("content/update", [fieldName, values[fieldName]]);
+		},
 		onSubmit(values) {
 			// ensure that all values are actually committed to content store
 			this.$store.dispatch("content/update", [null, values]);
-			this.$events.$emit("keydown.cmd.s", values);
+			this.$events.emit("keydown.cmd.s", values);
 		}
 	}
 };
 </script>
 
 <style>
-.k-fields-issue-headline {
-	margin-bottom: 0.5rem;
-}
 .k-fields-section input[type="submit"] {
 	display: none;
 }

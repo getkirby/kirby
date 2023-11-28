@@ -18,10 +18,13 @@ use Kirby\Session\Session;
  */
 class Api extends BaseApi
 {
-	/**
-	 * @var App
-	 */
-	protected $kirby;
+	protected App $kirby;
+
+	public function __construct(array $props)
+	{
+		$this->kirby = $props['kirby'];
+		parent::__construct($props);
+	}
 
 	/**
 	 * Execute an API call for the given path,
@@ -31,7 +34,7 @@ class Api extends BaseApi
 		string|null $path = null,
 		string $method = 'GET',
 		array $requestData = []
-	) {
+	): mixed {
 		$this->setRequestMethod($method);
 		$this->setRequestData($requestData);
 
@@ -47,20 +50,36 @@ class Api extends BaseApi
 	}
 
 	/**
+	 * Creates a new instance while
+	 * merging initial and new properties
+	 */
+	public function clone(array $props = []): static
+	{
+		return parent::clone(array_merge([
+			'kirby' => $this->kirby
+		], $props));
+	}
+
+	/**
 	 * @throws \Kirby\Exception\NotFoundException if the field type cannot be found or the field cannot be loaded
 	 */
-	public function fieldApi($model, string $name, string|null $path = null)
-	{
+	public function fieldApi(
+		ModelWithContent $model,
+		string $name,
+		string|null $path = null
+	): mixed {
 		$field = Form::for($model)->field($name);
 
-		$fieldApi = new static(
-			array_merge($this->propertyData, [
-				'data'   => array_merge($this->data(), ['field' => $field]),
-				'routes' => $field->api(),
-			]),
-		);
+		$fieldApi = $this->clone([
+			'data'   => array_merge($this->data(), ['field' => $field]),
+			'routes' => $field->api(),
+		]);
 
-		return $fieldApi->call($path, $this->requestMethod(), $this->requestData());
+		return $fieldApi->call(
+			$path,
+			$this->requestMethod(),
+			$this->requestData()
+		);
 	}
 
 	/**
@@ -70,9 +89,22 @@ class Api extends BaseApi
 	 * @param string $path Path to file's parent model
 	 * @throws \Kirby\Exception\NotFoundException if the file cannot be found
 	 */
-	public function file(string $path, string $filename): File|null
-	{
+	public function file(
+		string $path,
+		string $filename
+	): File|null {
 		return Find::file($path, $filename);
+	}
+
+	/**
+	 * Returns the all readable files for the parent
+	 *
+	 * @param string $path Path to file's parent model
+	 * @throws \Kirby\Exception\NotFoundException if the file cannot be found
+	 */
+	public function files(string $path): Files
+	{
+		return $this->parent($path)->files()->filter('isAccessible', true);
 	}
 
 	/**
@@ -82,7 +114,7 @@ class Api extends BaseApi
 	 * @throws \Kirby\Exception\InvalidArgumentException if the model type is invalid
 	 * @throws \Kirby\Exception\NotFoundException if the model cannot be found
 	 */
-	public function parent(string $path): Model|null
+	public function parent(string $path): ModelWithContent|null
 	{
 		return Find::parent($path);
 	}
@@ -100,7 +132,9 @@ class Api extends BaseApi
 	 */
 	public function language(): string|null
 	{
-		return $this->requestQuery('language') ?? $this->requestHeaders('x-language');
+		return
+			$this->requestQuery('language') ??
+			$this->requestHeaders('x-language');
 	}
 
 	/**
@@ -119,11 +153,12 @@ class Api extends BaseApi
 	 * parent. The subpages can be filtered
 	 * by status (draft, listed, unlisted, published, all)
 	 */
-	public function pages(string|null $parentId = null, string|null $status = null): Pages
-	{
+	public function pages(
+		string|null $parentId = null,
+		string|null $status = null
+	): Pages {
 		$parent = $parentId === null ? $this->site() : $this->page($parentId);
-
-		return match ($status) {
+		$pages  = match ($status) {
 			'all'             => $parent->childrenAndDrafts(),
 			'draft', 'drafts' => $parent->drafts(),
 			'listed'          => $parent->children()->listed(),
@@ -131,6 +166,8 @@ class Api extends BaseApi
 			'published'       => $parent->children(),
 			default           => $parent->children()
 		};
+
+		return $pages->filter('isAccessible', true);
 	}
 
 	/**
@@ -158,17 +195,6 @@ class Api extends BaseApi
 		return $this->kirby->session(array_merge([
 			'detect' => true
 		], $options));
-	}
-
-	/**
-	 * Setter for the parent Kirby instance
-	 *
-	 * @return $this
-	 */
-	protected function setKirby(App $kirby): static
-	{
-		$this->kirby = $kirby;
-		return $this;
 	}
 
 	/**

@@ -1,5 +1,0 @@
-name: Text
-icon: text
-fields:
-  text:
-    type: writer

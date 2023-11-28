@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Content\Content;
+use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -25,35 +27,18 @@ class Block extends Item
 	public const ITEMS_CLASS = Blocks::class;
 
 	/**
-	 * @var \Kirby\Cms\Content
-	 */
-	protected $content;
-
-	/**
-	 * @var bool
-	 */
-	protected $isHidden;
-
-	/**
 	 * Registry with all block models
-	 *
-	 * @var array
 	 */
-	public static $models = [];
+	public static array $models = [];
 
-	/**
-	 * @var string
-	 */
-	protected $type;
+	protected Content $content;
+	protected bool $isHidden;
+	protected string $type;
 
 	/**
 	 * Proxy for content fields
-	 *
-	 * @param string $method
-	 * @param array $args
-	 * @return \Kirby\Cms\Field
 	 */
-	public function __call(string $method, array $args = [])
+	public function __call(string $method, array $args = []): mixed
 	{
 		// block methods
 		if ($this->hasMethod($method)) {
@@ -66,7 +51,6 @@ class Block extends Item
 	/**
 	 * Creates a new block object
 	 *
-	 * @param array $params
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public function __construct(array $params)
@@ -90,18 +74,15 @@ class Block extends Item
 			$params['content'] = [];
 		}
 
-		$this->content  = $params['content'];
 		$this->isHidden = $params['isHidden'] ?? false;
 		$this->type     = $params['type'];
 
 		// create the content object
-		$this->content = new Content($this->content, $this->parent);
+		$this->content = new Content($params['content'], $this->parent);
 	}
 
 	/**
 	 * Converts the object to a string
-	 *
-	 * @return string
 	 */
 	public function __toString(): string
 	{
@@ -110,18 +91,14 @@ class Block extends Item
 
 	/**
 	 * Returns the content object
-	 *
-	 * @return \Kirby\Cms\Content
 	 */
-	public function content()
+	public function content(): Content
 	{
 		return $this->content;
 	}
 
 	/**
 	 * Controller for the block snippet
-	 *
-	 * @return array
 	 */
 	public function controller(): array
 	{
@@ -140,28 +117,26 @@ class Block extends Item
 	 * Converts the block to HTML and then
 	 * uses the Str::excerpt method to create
 	 * a non-formatted, shortened excerpt from it
-	 *
-	 * @param mixed ...$args
-	 * @return string
 	 */
-	public function excerpt(...$args)
+	public function excerpt(mixed ...$args): string
 	{
 		return Str::excerpt($this->toHtml(), ...$args);
 	}
 
 	/**
 	 * Constructs a block object with registering blocks models
-	 *
-	 * @param array $params
-	 * @return static
-	 * @throws \Kirby\Exception\InvalidArgumentException
 	 * @internal
+	 *
+	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
-	public static function factory(array $params)
+	public static function factory(array $params): static
 	{
 		$type = $params['type'] ?? null;
 
-		if (empty($type) === false && $class = (static::$models[$type] ?? null)) {
+		if (
+			empty($type) === false &&
+			$class = (static::$models[$type] ?? null)
+		) {
 			$object = new $class($params);
 
 			if ($object instanceof self) {
@@ -170,7 +145,7 @@ class Block extends Item
 		}
 
 		// default model for blocks
-		if ($class = (static::$models['Kirby\Cms\Block'] ?? null)) {
+		if ($class = (static::$models['default'] ?? null)) {
 			$object = new $class($params);
 
 			if ($object instanceof self) {
@@ -183,8 +158,6 @@ class Block extends Item
 
 	/**
 	 * Checks if the block is empty
-	 *
-	 * @return bool
 	 */
 	public function isEmpty(): bool
 	{
@@ -194,8 +167,6 @@ class Block extends Item
 	/**
 	 * Checks if the block is hidden
 	 * from being rendered in the frontend
-	 *
-	 * @return bool
 	 */
 	public function isHidden(): bool
 	{
@@ -204,8 +175,6 @@ class Block extends Item
 
 	/**
 	 * Checks if the block is not empty
-	 *
-	 * @return bool
 	 */
 	public function isNotEmpty(): bool
 	{
@@ -214,18 +183,14 @@ class Block extends Item
 
 	/**
 	 * Returns the sibling collection that filtered by block status
-	 *
-	 * @return \Kirby\Cms\Collection
 	 */
-	protected function siblingsCollection()
+	protected function siblingsCollection(): Blocks
 	{
 		return $this->siblings->filter('isHidden', $this->isHidden());
 	}
 
 	/**
 	 * Returns the block type
-	 *
-	 * @return string
 	 */
 	public function type(): string
 	{
@@ -235,8 +200,6 @@ class Block extends Item
 	/**
 	 * The result is being sent to the editor
 	 * via the API in the panel
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
@@ -253,24 +216,24 @@ class Block extends Item
 	 * and then places that inside a field
 	 * object. This can be used further
 	 * with all available field methods
-	 *
-	 * @return \Kirby\Cms\Field
 	 */
-	public function toField()
+	public function toField(): Field
 	{
 		return new Field($this->parent(), $this->id(), $this->toHtml());
 	}
 
 	/**
 	 * Converts the block to HTML
-	 *
-	 * @return string
 	 */
 	public function toHtml(): string
 	{
 		try {
 			$kirby = $this->parent()->kirby();
-			return (string)$kirby->snippet('blocks/' . $this->type(), $this->controller(), true);
+			return (string)$kirby->snippet(
+				'blocks/' . $this->type(),
+				$this->controller(),
+				true
+			);
 		} catch (Throwable $e) {
 			if ($kirby->option('debug') === true) {
 				return '<p>Block error: "' . $e->getMessage() . '" in block type: "' . $this->type() . '"</p>';

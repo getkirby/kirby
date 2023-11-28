@@ -16,10 +16,6 @@ use Kirby\Exception\Exception;
  */
 class Pagination
 {
-	use Properties {
-		setProperties as protected baseSetProperties;
-	}
-
 	/**
 	 * The current page
 	 */
@@ -47,7 +43,44 @@ class Pagination
 	 */
 	public function __construct(array $props = [])
 	{
-		$this->setProperties($props);
+		$this->setLimit($props['limit'] ?? 20);
+		$this->setPage($props['page'] ?? null);
+		$this->setTotal($props['total'] ?? 0);
+
+		// ensure that page is set to something, otherwise
+		// generate "default page" based on other params
+		$this->page ??= $this->firstPage();
+
+		// allow a page value of 1 even if there are no pages;
+		// otherwise the exception will get thrown for this pretty common case
+		$min = $this->firstPage();
+		$max = $this->pages();
+		if ($this->page === 1 && $max === 0) {
+			$this->page = 0;
+		}
+
+		// validate page based on all params if validation is enabled,
+		// otherwise limit the page number to the bounds
+		if ($this->page < $min || $this->page > $max) {
+			if (static::$validate === true) {
+				throw new ErrorPageException('Pagination page ' . $this->page . ' does not exist, expected ' . $min . '-' . $max);
+			}
+
+			$this->page = max(min($this->page, $max), $min);
+		}
+	}
+
+	/**
+	 * Creates a new instance while
+	 * merging initial and new properties
+	 */
+	public function clone(array $props = []): static
+	{
+		return new static(array_replace_recursive([
+			'page'  => $this->page,
+			'limit' => $this->limit,
+			'total' => $this->total
+		], $props));
 	}
 
 	/**
@@ -260,7 +293,7 @@ class Pagination
 			return range($start, $end);
 		}
 
-		$middle = (int)floor($range/2);
+		$middle = (int)floor($range / 2);
 		$start  = $page - $middle + ($range % 2 === 0);
 		$end    = $start + $range - 1;
 
@@ -292,42 +325,6 @@ class Pagination
 	{
 		$range = $this->range($range);
 		return array_pop($range);
-	}
-
-	/**
-	 * Sets the properties limit, total and page
-	 * and validates that the properties match
-	 *
-	 * @param array $props Array with keys limit, total and/or page
-	 * @return $this
-	 */
-	protected function setProperties(array $props): static
-	{
-		$this->baseSetProperties($props);
-
-		// ensure that page is set to something, otherwise
-		// generate "default page" based on other params
-		$this->page ??= $this->firstPage();
-
-		// allow a page value of 1 even if there are no pages;
-		// otherwise the exception will get thrown for this pretty common case
-		$min = $this->firstPage();
-		$max = $this->pages();
-		if ($this->page === 1 && $max === 0) {
-			$this->page = 0;
-		}
-
-		// validate page based on all params if validation is enabled,
-		// otherwise limit the page number to the bounds
-		if ($this->page < $min || $this->page > $max) {
-			if (static::$validate === true) {
-				throw new ErrorPageException('Pagination page ' . $this->page . ' does not exist, expected ' . $min . '-' . $max);
-			}
-
-			$this->page = max(min($this->page, $max), $min);
-		}
-
-		return $this;
 	}
 
 	/**

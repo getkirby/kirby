@@ -1,93 +1,87 @@
 <template>
 	<k-field v-bind="$props" class="k-structure-field" @click.native.stop>
-		<template #options>
-			<k-dropdown>
+		<template v-if="hasFields && !disabled" #options>
+			<k-button-group layout="collapsed">
 				<k-button
-					:disabled="currentIndex !== null"
+					:autofocus="autofocus"
+					:disabled="!more"
+					:responsive="true"
+					:text="$t('add')"
+					icon="add"
+					variant="filled"
+					size="xs"
+					@click="add()"
+				/>
+				<k-button
 					icon="dots"
+					size="xs"
+					variant="filled"
 					@click="$refs.options.toggle()"
 				/>
-				<k-dropdown-content ref="options" align="right">
-					<k-dropdown-item :disabled="!more" icon="add" @click="onAdd">
-						{{ $t("add") }}
-					</k-dropdown-item>
-					<k-dropdown-item
-						:disabled="items.length === 0 || disabled"
-						icon="trash"
-						@click="confirmToRemoveAll"
-					>
-						{{ $t("delete.all") }}
-					</k-dropdown-item>
-				</k-dropdown-content>
-			</k-dropdown>
+				<k-dropdown-content
+					ref="options"
+					:options="[
+						{
+							click: () => add(),
+							disabled: !more,
+							icon: 'add',
+							text: $t('add')
+						},
+						{
+							click: () => removeAll(),
+							disabled: items.length === 0 || disabled,
+							icon: 'trash',
+							text: $t('delete.all')
+						}
+					]"
+					align-x="end"
+				/>
+			</k-button-group>
 		</template>
 
-		<!-- Form -->
-		<k-structure-form
-			v-if="currentIndex !== null"
-			ref="form"
-			:fields="form"
-			:index="currentIndex"
-			:total="items.length"
-			:value="currentModel"
-			@close="onFormClose"
-			@discard="onFormDiscard"
-			@input="onFormInput"
-			@paginate="onFormPaginate($event.offset)"
-			@submit="onFormSubmit"
-		/>
-
-		<!-- Empty State -->
-		<k-empty
-			v-else-if="items.length === 0"
-			:data-invalid="isInvalid"
-			icon="list-bullet"
-			@click="onAdd"
-		>
-			{{ empty || $t("field.structure.empty") }}
-		</k-empty>
-
-		<!-- Table -->
-		<template v-else>
-			<k-table
-				:columns="columns"
-				:disabled="disabled"
-				:fields="fields"
-				:empty="$t('field.structure.empty')"
-				:index="index"
-				:options="options"
-				:pagination="limit ? pagination : false"
-				:rows="paginatedItems"
-				:sortable="isSortable"
+		<template v-if="hasFields">
+			<!-- Empty State -->
+			<k-empty
+				v-if="items.length === 0"
 				:data-invalid="isInvalid"
-				@cell="jump($event.rowIndex, $event.columnIndex)"
-				@input="onInput"
-				@option="onOption"
-				@paginate="paginate"
-			/>
+				icon="list-bullet"
+				@click="add()"
+			>
+				{{ empty ?? $t("field.structure.empty") }}
+			</k-empty>
 
-			<k-button
-				v-if="more"
-				class="k-field-add-item-button"
-				icon="add"
-				:tooltip="$t('add')"
-				@click="onAdd"
-			/>
+			<!-- Table -->
+			<template v-else>
+				<k-table
+					:columns="columns"
+					:disabled="disabled"
+					:fields="fields"
+					:empty="$t('field.structure.empty')"
+					:index="index"
+					:options="options"
+					:pagination="limit ? pagination : false"
+					:rows="paginatedItems"
+					:sortable="isSortable"
+					:data-invalid="isInvalid"
+					@cell="open($event.row, $event.columnIndex)"
+					@input="save"
+					@option="option"
+					@paginate="paginate"
+				/>
 
-			<k-remove-dialog
-				v-if="!disabled"
-				ref="remove"
-				theme="negative"
-				:submit-button="$t('delete')"
-				:text="$t('field.structure.delete.confirm')"
-				@submit="onRemove"
-			/>
-
-			<k-remove-dialog
-				ref="dialogRemoveAll"
-				:text="$t('field.structure.delete.confirm.all')"
-				@submit="onRemoveAll"
-			/>
+				<footer v-if="more">
+					<k-button
+						:title="$t('add')"
+						icon="add"
+						size="xs"
+						variant="filled"
+						@click="add()"
+					/>
+				</footer>
+			</template>
+		</template>
+		<template v-else>
+			<k-empty icon="list-bullet">{{ $t("fields.empty") }}</k-empty>
 		</template>
 	</k-field>
 </template>
@@ -99,6 +93,7 @@ export default {
 	mixins: [Field],
 	inheritAttrs: false,
 	props: {
+		autofocus: Boolean,
 		/**
 		 * What columns to show in the table
 		 */
@@ -117,7 +112,7 @@ export default {
 		/**
 		 * Fields for the form
 		 */
-		fields: Object,
+		fields: [Array, Object],
 		/**
 		 * How many rows to show per page
 		 */
@@ -151,18 +146,12 @@ export default {
 		sortBy: String,
 		value: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		}
 	},
 	data() {
 		return {
-			autofocus: null,
-			items: this.toItems(this.value),
-			currentIndex: null,
-			currentModel: null,
-			trash: null,
+			items: [],
 			page: 1
 		};
 	},
@@ -176,13 +165,6 @@ export default {
 				disabled: !this.isSortable,
 				fallbackClass: "k-sortable-row-fallback"
 			};
-		},
-		/**
-		 * Config for the structure form
-		 * @returns {Object}
-		 */
-		form() {
-			return this.$helper.field.subfields(this, this.fields);
 		},
 		/**
 		 * Index of first row that is displayed
@@ -209,6 +191,9 @@ export default {
 			}
 
 			return true;
+		},
+		hasFields() {
+			return this.$helper.object.length(this.fields) > 0;
 		},
 		/**
 		 * Returns if field is invalid
@@ -286,7 +271,7 @@ export default {
 			}
 
 			let options = [];
-			let more = this.duplicate && this.more && this.currentIndex === null;
+			let more = this.duplicate && this.more;
 
 			options.push({
 				icon: "edit",
@@ -294,17 +279,18 @@ export default {
 				click: "edit"
 			});
 
-			if (more) {
-				options.push({
-					icon: "copy",
-					text: this.$t("duplicate"),
-					click: "duplicate"
-				});
-			}
+			options.push({
+				disabled: !more,
+				icon: "copy",
+				text: this.$t("duplicate"),
+				click: "duplicate"
+			});
+
+			options.push("-");
 
 			options.push({
-				icon: "remove",
-				text: more ? this.$t("remove") : null,
+				icon: "trash",
+				text: more ? this.$t("delete") : null,
 				click: "remove"
 			});
 
@@ -326,28 +312,46 @@ export default {
 		}
 	},
 	watch: {
-		value(value) {
-			if (value != this.items) {
-				this.items = this.toItems(value);
-			}
+		value: {
+			handler(value) {
+				if (value !== this.items) {
+					this.items = this.toItems(value);
+				}
+			},
+			immediate: true
 		}
 	},
 	methods: {
 		/**
 		 * Adds new entry
 		 * @public
-		 * @param {Object} value object with values for each field
 		 */
-		add(value) {
+		add(value = null) {
+			if (this.more === false) {
+				return false;
+			}
+
+			value = value ?? this.$helper.field.form(this.fields);
+
+			// add a unique id, if it's not already defined
+			value._id = value._id ?? this.$helper.uuid();
+
 			if (this.prepend === true) {
 				this.items.unshift(value);
 			} else {
 				this.items.push(value);
 			}
+
+			this.save();
+
+			// opening the drawer only works once the input event has been emitted
+			this.open(value);
 		},
-		confirmToRemoveAll() {
-			this.$refs.dialogRemoveAll.open();
+
+		close() {
+			this.$panel.drawer.close(this._uid);
 		},
+
 		/**
 		 * Focuses the add button
 		 * @public
@@ -356,173 +360,178 @@ export default {
 			this.$refs.add?.focus?.();
 		},
 		/**
-		 * Opens form for a specific row at index
-		 * with field focussed
-		 * @param {number} index
-		 * @param {string} field
+		 * Config for the structure form
+		 * @returns {Object}
 		 */
-		jump(index, field) {
-			this.open(index + this.pagination.offset, field);
-		},
-		/**
-		 * Called when adding new structure entry
-		 */
-		onAdd() {
-			// ignore if field is disabled
-			if (this.disabled === true) {
-				return false;
-			}
+		form(autofocus) {
+			const fields = this.$helper.field.subfields(this, this.fields);
 
-			// if form is already open, discard it (if possible)
-			if (this.currentIndex !== null) {
-				this.onFormDiscard();
-				return false;
-			}
-
-			this.currentIndex = "new";
-			this.currentModel = this.$helper.field.form(this.fields);
-
-			this.onFormOpen();
-		},
-		/**
-		 * Handles the closing of the structure form
-		 */
-		onFormClose() {
-			this.currentIndex = null;
-			this.currentModel = null;
-		},
-		/**
-		 * Handles when the structure form is discarded (e.g. by escape key)
-		 */
-		onFormDiscard() {
-			// when adding a new item, make sure to only discard empty form
-			if (this.currentIndex === "new") {
-				const values = Object.values(this.currentModel).filter(
-					(value) => this.$helper.object.isEmpty(value) === false
-				);
-
-				if (values.length === 0) {
-					this.onFormClose();
-					return;
+			// set the autofocus to the matching field in the form
+			if (autofocus) {
+				for (const field in fields) {
+					fields[field].autofocus = field === autofocus;
 				}
 			}
 
-			this.onFormSubmit();
+			return fields;
 		},
-		/**
-		 * Handles the creation and opening of the structure form
-		 * @param {string} field form field to focus
-		 */
-		onFormOpen(field = this.autofocus) {
-			this.$nextTick(() => {
-				this.$refs.form?.focus(field);
-			});
-		},
-		/**
-		 * Called when pagination changes in open form
-		 * @param {number} index index of new row to be shown
-		 */
-		async onFormPaginate(index) {
-			try {
-				await this.save();
-				this.open(index);
-			} catch (e) {
-				// don't change the page
-			}
-		},
-		/**
-		 * Handles the structure form submission
-		 */
-		async onFormSubmit() {
-			try {
-				await this.save();
-				this.onFormClose();
-			} catch (e) {
-				// don't close
-			}
-		},
-		/**
-		 * When the field's value changes
-		 * @param {array} values
-		 */
-		onInput(values = this.items) {
-			this.$emit("input", values);
-		},
-		/**
-		 * Called when option from row's dropdown was engaged
-		 * @param {string} option option name that was triggered
-		 * @param {Object} row
-		 * @param {number} rowIndex
-		 */
-		onOption(option, row, rowIndex) {
-			switch (option) {
-				case "remove":
-					this.onFormClose();
-					this.trash = rowIndex + this.pagination.offset;
-					this.$refs.remove.open();
-					break;
 
-				case "duplicate":
-					this.add(this.items[rowIndex + this.pagination.offset]);
-					this.onInput();
-					break;
-
-				case "edit":
-					this.open(rowIndex);
-					break;
-			}
+		findIndex(item) {
+			return this.items.findIndex((row) => row._id === item._id);
 		},
-		/**
-		 * When removal has been confirmed,
-		 * remove entry
-		 */
-		onRemove() {
-			// stop if no entry has been flagged for removal
-			if (this.trash === null) {
-				return false;
+
+		navigate(item, step) {
+			const index = this.findIndex(item);
+
+			if (this.disabled === true || index === -1) {
+				return;
 			}
 
-			this.items.splice(this.trash, 1);
-			this.trash = null;
-			this.$refs.remove.close();
-			this.onInput();
-
-			// if pagination page doesn't exist anymore,
-			// go to previous page
-			if (this.paginatedItems.length === 0 && this.page > 1) {
-				this.page--;
-			}
-
-			this.items = this.sort(this.items);
-		},
-		/**
-		 * When removal has been confirmed,
-		 * remove all entries
-		 */
-		onRemoveAll() {
-			this.items = [];
-			this.onInput();
-			this.$refs.dialogRemoveAll.close();
+			this.open(this.items[index + step], null, true);
 		},
 
 		/**
 		 * Edit the structure field entry at `index` position
 		 * in the structure form with field `field` focused
 		 * @public
-		 * @param {number} index
+		 * @param {object} item
 		 * @param {string} field
 		 */
-		open(index, field) {
-			this.currentIndex = index;
-			this.currentModel = this.$helper.clone(this.items[index]);
-			this.onFormOpen(field);
+		open(item, field, replace = false) {
+			const index = this.findIndex(item);
+
+			if (this.disabled === true || index === -1) {
+				return false;
+			}
+
+			this.$panel.drawer.open({
+				component: "k-structure-drawer",
+				id: this._uid,
+				props: {
+					icon: this.icon ?? "list-bullet",
+					next: this.items[index + 1],
+					prev: this.items[index - 1],
+					tabs: {
+						content: {
+							fields: this.form(field)
+						}
+					},
+					title: this.label,
+					value: item
+				},
+				replace: replace,
+				on: {
+					input: (value) => {
+						const index = this.findIndex(item);
+
+						// update the prev/next navigation
+						this.$panel.drawer.props.next = this.items[index + 1];
+						this.$panel.drawer.props.prev = this.items[index - 1];
+
+						this.$set(this.items, index, value);
+						this.save();
+					},
+					next: () => {
+						this.navigate(item, 1);
+					},
+					prev: () => {
+						this.navigate(item, -1);
+					},
+					remove: () => {
+						this.remove(item);
+					}
+				}
+			});
 		},
+
+		/**
+		 * Called when option from row's dropdown was engaged
+		 * @param {string} option option name that was triggered
+		 * @param {Object} row
+		 */
+		option(option, row) {
+			switch (option) {
+				case "remove":
+					this.remove(row);
+					break;
+
+				case "duplicate":
+					this.add({
+						...row,
+						_id: this.$helper.uuid()
+					});
+					break;
+
+				case "edit":
+					this.open(row);
+					break;
+			}
+		},
+
 		/**
 		 * Update pagination state
 		 * @param {Object} pagination
 		 */
 		paginate({ page }) {
 			this.page = page;
+		},
+
+		/**
+		 * Remove current entry
+		 */
+		remove(item) {
+			const index = this.findIndex(item);
+
+			if (this.disabled || index === -1) {
+				return;
+			}
+
+			this.$panel.dialog.open({
+				component: "k-remove-dialog",
+				props: {
+					text: this.$t("field.structure.delete.confirm")
+				},
+				on: {
+					submit: () => {
+						this.items.splice(index, 1);
+						this.save();
+						this.$panel.dialog.close();
+						this.close();
+
+						// if pagination page doesn't exist anymore,
+						// go to previous page
+						if (this.paginatedItems.length === 0 && this.page > 1) {
+							this.page--;
+						}
+					}
+				}
+			});
+		},
+		/**
+		 * Remove all entries
+		 */
+		removeAll() {
+			this.$panel.dialog.open({
+				component: "k-remove-dialog",
+				props: {
+					text: this.$t("field.structure.delete.confirm.all")
+				},
+				on: {
+					submit: () => {
+						this.page = 1;
+						this.items = [];
+						this.save();
+						this.$panel.dialog.close();
+					}
+				}
+			});
+		},
+		/**
+		 * When the field's value changes
+		 * @param {array} values
+		 */
+		save(values = this.items) {
+			this.$emit("input", values);
 		},
 		/**
 		 * Sort items according to `sortBy` prop
@@ -537,35 +546,6 @@ export default {
 			return items.sortBy(this.sortBy);
 		},
 		/**
-		 * Saves the current entry with the values
-		 * from the structure form and updates field value
-		 */
-		async save() {
-			if (this.currentIndex !== null && this.currentIndex !== undefined) {
-				try {
-					await this.validate(this.currentModel);
-
-					if (this.currentIndex === "new") {
-						this.add(this.currentModel);
-					} else {
-						this.items[this.currentIndex] = this.currentModel;
-					}
-
-					this.items = this.sort(this.items);
-					this.onInput();
-
-					return true;
-				} catch (errors) {
-					this.$store.dispatch("notification/error", {
-						message: this.$t("error.form.incomplete"),
-						details: errors
-					});
-
-					throw errors;
-				}
-			}
-		},
-		/**
 		 * Converts field value to internal
 		 * items state
 		 * @param {Array} value
@@ -576,31 +556,14 @@ export default {
 				return [];
 			}
 
-			return this.sort(value);
-		},
-		/**
-		 * Validayes the structure form
-		 * @param {Object} model
-		 * @returns {bool}
-		 */
-		async validate(model) {
-			const errors = await this.$api.post(
-				this.endpoints.field + "/validate",
-				model
-			);
+			value = value.map((row) => {
+				return {
+					_id: row._id ?? this.$helper.uuid(),
+					...row
+				};
+			});
 
-			if (errors.length > 0) {
-				throw errors;
-			} else {
-				return true;
-			}
-		},
-		/**
-		 * Triggered whenever any form field value changes
-		 */
-		onFormInput(model) {
-			this.currentModel = model;
-			this.$emit("formInput", model);
+			return this.sort(value);
 		}
 	}
 };
@@ -609,5 +572,11 @@ export default {
 <style>
 .k-structure-field:not([data-disabled="true"]) td.k-table-column {
 	cursor: pointer;
+}
+/** .k-structure-field .k-table:has(+ footer) */
+.k-structure-field .k-table + footer {
+	display: flex;
+	justify-content: center;
+	margin-top: var(--spacing-3);
 }
 </style>

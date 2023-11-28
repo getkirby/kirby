@@ -22,11 +22,9 @@ use Kirby\Toolkit\A;
  */
 abstract class Model
 {
-	protected ModelWithContent $model;
-
-	public function __construct(ModelWithContent $model)
-	{
-		$this->model = $model;
+	public function __construct(
+		protected ModelWithContent $model
+	) {
 	}
 
 	/**
@@ -85,9 +83,10 @@ abstract class Model
 	public function dropdownOption(): array
 	{
 		return [
-			'icon' => 'page',
-			'link' => $this->url(),
-			'text' => $this->model->id(),
+			'icon'  => 'page',
+			'image' => $this->image(['back' => 'black']),
+			'link'  => $this->url(true),
+			'text'  => $this->model->id(),
 		];
 	}
 
@@ -107,14 +106,10 @@ abstract class Model
 		// skip image thumbnail if option
 		// is explicitly set to show the icon
 		if ($settings === 'icon') {
-			$settings = [
-				'query' => false
-			];
+			$settings = ['query' => false];
 		} elseif (is_string($settings) === true) {
 			// convert string settings to proper array
-			$settings = [
-				'query' => $settings
-			];
+			$settings = ['query' => $settings];
 		}
 
 		// merge with defaults and blueprint option
@@ -128,35 +123,10 @@ abstract class Model
 			// main url
 			$settings['url'] = $image->url();
 
-			// only create srcsets for resizable files
 			if ($image->isResizable() === true) {
-				$settings['src'] = static::imagePlaceholder();
-
-				$sizes = match ($layout) {
-					'cards'    => [352, 864, 1408],
-					'cardlets' => [96, 192],
-					default    => [38, 76]
-				};
-
-				if (
-					($settings['cover'] ?? false) === false ||
-					$layout === 'cards'
-				) {
-					$settings['srcset'] = $image->srcset($sizes);
-				} else {
-					$settings['srcset'] = $image->srcset([
-						'1x' => [
-							'width'  => $sizes[0],
-							'height' => $sizes[0],
-							'crop'   => 'center'
-						],
-						'2x' => [
-							'width'  => $sizes[1],
-							'height' => $sizes[1],
-							'crop'   => 'center'
-						]
-					]);
-				}
+				// only create srcsets for resizable files
+				$settings['src']    = static::imagePlaceholder();
+				$settings['srcset'] = $this->imageSrcset($image, $layout, $settings);
 			} elseif ($image->isViewable() === true) {
 				$settings['src'] = $image->url();
 			}
@@ -183,8 +153,7 @@ abstract class Model
 			'back'  => 'pattern',
 			'color' => 'gray-500',
 			'cover' => false,
-			'icon'  => 'page',
-			'ratio' => '3/2',
+			'icon'  => 'page'
 		];
 	}
 
@@ -218,13 +187,84 @@ abstract class Model
 	}
 
 	/**
+	 * Provides the correct srcset string based on
+	 * the layout and settings
+	 * @internal
+	 */
+	protected function imageSrcset(
+		CmsFile|Asset $image,
+		string $layout,
+		array $settings
+	): string|null {
+		// depending on layout type, set different sizes
+		// to have multiple options for the srcset attribute
+		$sizes = match ($layout) {
+			'cards'    => [352, 864, 1408],
+			'cardlets' => [96, 192],
+			default    => [38, 76]
+		};
+
+		// no additional modfications needed if `cover: false`
+		if (($settings['cover'] ?? false) === false) {
+			return $image->srcset($sizes);
+		}
+
+		// for card layouts with `cover: true` provide
+		// crops based on the card ratio
+		if ($layout === 'cards') {
+			$ratio = explode('/', $settings['ratio'] ?? '1/1');
+			$ratio = $ratio[0] / $ratio[1];
+
+			return $image->srcset([
+				$sizes[0] . 'w' => [
+					'width'  => $sizes[0],
+					'height' => round($sizes[0] / $ratio),
+					'crop'   => true
+				],
+				$sizes[1] . 'w' => [
+					'width'  => $sizes[1],
+					'height' => round($sizes[1] / $ratio),
+					'crop'   => true
+				],
+				$sizes[2] . 'w' => [
+					'width'  => $sizes[2],
+					'height' => round($sizes[2] / $ratio),
+					'crop'   => true
+				]
+			]);
+		}
+
+		// for list and cardlets with `cover: true`
+		// provide square crops in two resolutions
+		return $image->srcset([
+			'1x' => [
+				'width'  => $sizes[0],
+				'height' => $sizes[0],
+				'crop'   => true
+			],
+			'2x' => [
+				'width'  => $sizes[1],
+				'height' => $sizes[1],
+				'crop'   => true
+			]
+		]);
+	}
+
+	/**
 	 * Checks for disabled dropdown options according
 	 * to the given permissions
 	 */
-	public function isDisabledDropdownOption(string $action, array $options, array $permissions): bool
-	{
+	public function isDisabledDropdownOption(
+		string $action,
+		array $options,
+		array $permissions
+	): bool {
 		$option = $options[$action] ?? true;
-		return $permissions[$action] === false || $option === false || $option === 'false';
+
+		return
+			$permissions[$action] === false ||
+			$option === false ||
+			$option === 'false';
 	}
 
 	/**
@@ -235,11 +275,7 @@ abstract class Model
 	 */
 	public function lock(): array|false
 	{
-		if ($lock = $this->model->lock()) {
-			return $lock->toArray();
-		}
-
-		return false;
+		return $this->model->lock()?->toArray() ?? false;
 	}
 
 	/**
@@ -320,33 +356,34 @@ abstract class Model
 	}
 
 	/**
-	 * Returns link url and tooltip
-	 * for model (e.g. used for prev/next
-	 * navigation)
+	 * Returns link url and title
+	 * for model (e.g. used for prev/next navigation)
 	 * @internal
 	 */
-	public function toLink(string $tooltip = 'title'): array
+	public function toLink(string $title = 'title'): array
 	{
 		return [
 			'link'    => $this->url(true),
-			'tooltip' => (string)$this->model->{$tooltip}()
+			'title'   => $title = (string)$this->model->{$title}()
 		];
 	}
 
 	/**
-	 * Returns link url and tooltip
+	 * Returns link url and title
 	 * for optional sibling model and
 	 * preserves tab selection
 	 *
 	 * @internal
 	 */
-	protected function toPrevNextLink(ModelWithContent|null $model = null, string $tooltip = 'title'): array|null
-	{
+	protected function toPrevNextLink(
+		ModelWithContent|null $model = null,
+		string $title = 'title'
+	): array|null {
 		if ($model === null) {
 			return null;
 		}
 
-		$data = $model->panel()->toLink($tooltip);
+		$data = $model->panel()->toLink($title);
 
 		if ($tab = $model->kirby()->request()->get('tab')) {
 			$uri = new Uri($data['link'], [

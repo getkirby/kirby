@@ -1,456 +1,241 @@
 <template>
-	<k-draggable
-		v-direction
-		:list="tags"
-		:options="dragOptions"
-		:data-layout="layout"
-		class="k-tags-input"
-		@end="onInput"
-	>
-		<k-tag
-			v-for="tag in tags"
-			:ref="tag.value"
-			:key="tag.value"
-			:removable="!disabled"
-			name="tag"
-			@click.native.stop
-			@blur.native="selectTag(null)"
-			@focus.native="selectTag(tag)"
-			@keydown.native.left="navigate('prev')"
-			@keydown.native.right="navigate('next')"
-			@dblclick.native="edit(tag)"
-			@remove="remove(tag)"
+	<div class="k-tags-input">
+		<k-tags
+			ref="tags"
+			v-bind="$props"
+			@edit="edit"
+			@input="$emit('input', $event)"
+			@click.native.stop="$refs.toggle?.$el?.click()"
 		>
-			<!-- eslint-disable-next-line vue/no-v-html -->
-			<span v-html="tag.text" />
-		</k-tag>
-
-		<template #footer>
-			<span class="k-tags-input-element">
-				<k-autocomplete
-					ref="autocomplete"
-					:html="true"
-					:options="options"
-					:skip="skip"
-					@select="addTag"
-					@leave="$refs.input.focus()"
-				>
-					<input
-						:id="id"
-						ref="input"
-						:autofocus="autofocus"
-						:disabled="disabled || (max && tags.length >= max)"
-						:name="name"
-						:value="newTag"
-						autocomplete="off"
-						type="text"
-						@input="onType($event.target.value)"
-						@blur="onBlur"
-						@keydown.meta.s="onSubmit"
-						@keydown.left.exact="onBack"
-						@keydown.enter.exact="onEnter"
-						@keydown.tab.exact="onTab"
-						@keydown.backspace.exact="onBack"
-					/>
-				</k-autocomplete>
-			</span>
-		</template>
-	</k-draggable>
+			<k-button
+				v-if="!max || value.length < max"
+				:id="id"
+				ref="toggle"
+				:autofocus="autofocus"
+				:disabled="disabled"
+				class="k-tags-input-toggle k-tags-navigatable"
+				size="xs"
+				icon="add"
+				@click="$refs.create.open()"
+				@keydown.native.delete="$refs.tags.focus('prev')"
+				@keydown.native="toggle"
+			/>
+		</k-tags>
+		<k-picklist-dropdown
+			ref="replace"
+			v-bind="picklist"
+			:multiple="false"
+			:options="replacableOptions"
+			:value="editing?.tag.value ?? ''"
+			@create="replace"
+			@input="replace"
+		/>
+		<k-picklist-dropdown
+			ref="create"
+			v-bind="picklist"
+			:options="creatableOptions"
+			:value="value"
+			@create="create"
+			@input="pick"
+		/>
+	</div>
 </template>
 
 <script>
-import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
-
-import {
-	required as validateRequired,
-	minLength as validateMinLength,
-	maxLength as validateMaxLength
-} from "vuelidate/lib/validators";
+import Multiselect, { props as MultiselectProps } from "./MultiselectInput.vue";
 
 export const props = {
-	mixins: [autofocus, disabled, id, name, required],
+	mixins: [MultiselectProps],
 	props: {
+		/**
+		 * Whether to accept only options or also custom tags
+		 * @values "all", "options"
+		 */
 		accept: {
 			type: String,
 			default: "all"
-		},
-		icon: {
-			type: [String, Boolean],
-			default: "tag"
-		},
-		/**
-		 * You can set the layout to `list` to extend the width of each tag
-		 * to 100% and show them in a list. This is handy in narrow columns
-		 * or when a list is a more appropriate design choice for the input
-		 * in general.
-		 */
-		layout: String,
-		/**
-		 * The maximum number of accepted tags
-		 */
-		max: Number,
-		/**
-		 * The minimum number of required tags
-		 */
-		min: Number,
-		/**
-		 * Options will be shown in the autocomplete dropdown
-		 * as soon as you start typing.
-		 */
-		options: {
-			type: Array,
-			default() {
-				return [];
-			}
-		},
-		separator: {
-			type: String,
-			default: ","
-		},
-		value: {
-			type: Array,
-			default() {
-				return [];
-			}
 		}
 	}
 };
 
 export default {
+	extends: Multiselect,
 	mixins: [props],
-	inheritAttrs: false,
 	data() {
 		return {
-			tags: this.toValues(this.value),
-			selected: null,
-			newTag: null
+			editing: null
 		};
 	},
 	computed: {
-		dragOptions() {
+		creatableOptions() {
+			// tags should be unique, so when creating,
+			// only show options that are not already selected
+			return this.options.filter(
+				(option) => this.value.includes(option.value) === false
+			);
+		},
+		picklist() {
 			return {
-				delay: 1,
-				disabled: !this.draggable,
-				draggable: ".k-tag"
+				disabled: this.disabled,
+				create: this.showCreate,
+				ignore: this.ignore,
+				min: this.min,
+				max: this.max,
+				search: this.showSearch
 			};
 		},
-		draggable() {
-			return this.tags.length > 1;
+		replacableOptions() {
+			// when replacing, we want to hide all options
+			// that are already selected (as in `creatableOptions`),
+			// but the one we are replacing should be visible for context
+			return this.options.filter(
+				(option) =>
+					this.value.includes(option.value) === false ||
+					option.value === this.editing?.tag.value
+			);
 		},
-		skip() {
-			return this.tags.map((tag) => tag.value);
-		}
-	},
-	watch: {
-		value(value) {
-			this.tags = this.toValues(value);
-			this.onInvalid();
-		}
-	},
-	mounted() {
-		this.onInvalid();
+		showCreate() {
+			// never show create when only accepting options
+			if (this.accept === "options") {
+				return false;
+			}
 
-		if (this.$props.autofocus) {
-			this.focus();
+			// when replacing, show custom submit text
+			if (this.editing) {
+				return { submit: this.$t("replace.with") };
+			}
+
+			return true;
+		},
+		showSearch() {
+			if (this.search === false) {
+				return false;
+			}
+
+			if (this.editing) {
+				return { placeholder: this.$t("replace.with"), ...this.search };
+			}
+
+			if (this.accept === "options") {
+				return { placeholder: this.$t("filter"), ...this.search };
+			}
+
+			return this.search;
 		}
 	},
 	methods: {
-		addString(string, focus = true) {
-			if (!string) {
-				return;
+		create(input) {
+			// convert input to tag object
+			const tag = this.$refs.tags.tag(input);
+
+			// no new tags if this is full,
+			// check if the tag is accepted
+			if (this.isAllowed(tag) === true) {
+				const tags = this.$helper.object.clone(this.value);
+				tags.push(tag.value);
+				this.$emit("input", tags);
 			}
 
-			string = string.trim();
-
-			if (string.length === 0) {
-				return;
-			}
-
-			if (string.includes(this.separator) === true) {
-				for (const tag of string.split(this.separator)) {
-					this.addString(tag);
-				}
-
-				return;
-			}
-
-			const tag = this.toValue(string);
-
-			if (tag) {
-				this.addTag(tag, focus);
-			}
+			this.$refs.create.close();
 		},
-		addTag(tag, focus = true) {
-			this.addTagToIndex(tag);
-			this.$refs.autocomplete.close();
-
-			if (focus) {
-				this.$refs.input.focus();
-			}
-		},
-		addTagToIndex(tag) {
-			if (this.accept === "options") {
-				const option = this.options.find(
-					(option) => option.value === tag.value
-				);
-
-				if (!option) {
-					return;
-				}
-			}
-
-			if (
-				this.index(tag) === -1 &&
-				(!this.max || this.tags.length < this.max)
-			) {
-				this.tags.push(tag);
-				this.onInput();
-			}
-
-			this.newTag = null;
-		},
-		edit(tag) {
-			// since the text for manual tags got escaped, we need
-			// to unescape it when trying to edit it manually again
-			this.newTag = this.$helper.string.unescapeHTML(tag.text);
-			this.$refs.input.select();
-			this.remove(tag);
+		async edit(index, tag) {
+			this.editing = { index, tag };
+			this.$refs.replace.open();
 		},
 		focus() {
-			this.$refs.input?.focus();
+			this.$refs.create.open();
 		},
-		get(position) {
-			let nextIndex = null;
-			let currIndex = null;
-
-			switch (position) {
-				case "prev":
-					if (!this.selected) return;
-
-					currIndex = this.index(this.selected);
-					nextIndex = currIndex - 1;
-
-					if (nextIndex < 0) return;
-					break;
-
-				case "next":
-					if (!this.selected) return;
-
-					currIndex = this.index(this.selected);
-					nextIndex = currIndex + 1;
-
-					if (nextIndex >= this.tags.length) return;
-					break;
-
-				case "first":
-					nextIndex = 0;
-					break;
-
-				case "last":
-					nextIndex = this.tags.length - 1;
-					break;
-
-				default:
-					nextIndex = position;
-					break;
+		isAllowed(tag) {
+			if (typeof tag !== "object" || tag.value.trim().length === 0) {
+				return false;
 			}
 
-			let nextTag = this.tags[nextIndex];
-
-			if (nextTag) {
-				let nextRef = this.$refs[nextTag.value];
-
-				if (nextRef?.[0]) {
-					return {
-						ref: nextRef[0],
-						tag: nextTag,
-						index: nextIndex
-					};
-				}
+			// if only options are allowed as value
+			if (this.accept === "options" && !this.$refs.tags.option(tag)) {
+				return false;
 			}
 
-			return false;
-		},
-		index(tag) {
-			return this.tags.findIndex((item) => item.value === tag.value);
-		},
-		navigate(position) {
-			var result = this.get(position);
-			if (result) {
-				result.ref.focus();
-				this.selectTag(result.tag);
-			} else if (position === "next") {
-				this.$refs.input.focus();
-				this.selectTag(null);
+			// don't allow duplicates
+			if (this.value.includes(tag.value) === true) {
+				return false;
 			}
+
+			return true;
 		},
-		onBack(event) {
-			if (
-				event.target.selectionStart === 0 &&
-				event.target.selectionStart === event.target.selectionEnd &&
-				this.tags.length !== 0
-			) {
-				this.$refs.autocomplete.close();
-				this.navigate("last");
+		pick(tags) {
+			this.$emit("input", tags);
+			this.$refs.create.close();
+		},
+		replace(value) {
+			// get index of tag that is being replaced
+			// and tag object of the new value
+			const { index } = this.editing;
+			const updated = this.$refs.tags.tag(value);
+
+			// close the replace dropdown and reset editing
+			this.$refs.replace.close();
+			this.editing = null;
+
+			// don't replace if the new value is not allowed
+			if (this.isAllowed(updated) === false) {
+				return false;
+			}
+
+			// replace the tag at the given index
+			const tags = this.$helper.object.clone(this.value);
+			tags.splice(index, 1, updated.value);
+			this.$emit("input", tags);
+
+			// focus the tag that was replaced
+			this.$refs.tags.navigate(index);
+		},
+		toggle(event) {
+			if (event.metaKey || event.altKey || event.ctrlKey) {
+				return false;
+			}
+
+			if (event.key === "ArrowDown") {
+				this.$refs.create.open();
 				event.preventDefault();
-			}
-		},
-		onBlur(event) {
-			let related = event.relatedTarget || event.explicitOriginalTarget;
-
-			if (this.$refs.autocomplete.$el?.contains(related)) {
 				return;
 			}
 
-			this.addString(this.$refs.input.value, false);
-		},
-		onEnter(event) {
-			if (!this.newTag || this.newTag.length === 0) {
-				return true;
+			if (String.fromCharCode(event.keyCode).match(/(\w)/g)) {
+				this.$refs.create.open();
 			}
-
-			event.preventDefault();
-			this.addString(this.newTag);
-		},
-		onInput() {
-			// make sure to only emit values
-			const tags = this.tags.map((tag) => tag.value);
-			this.$emit("input", tags);
-		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
-		},
-		onSubmit(event) {
-			// prevent immediate saving just yet
-			event.preventDefault();
-			event.stopImmediatePropagation();
-
-			// blur input (which also commits current input as tags)
-			this.onBlur(event);
-
-			// trigger saving
-			this.$emit("submit", event);
-		},
-		onTab(event) {
-			if (this.newTag?.length > 0) {
-				event.preventDefault();
-				this.addString(this.newTag);
-			}
-		},
-		onType(value) {
-			this.newTag = value;
-			this.$refs.autocomplete.search(value);
-		},
-		remove(tag) {
-			// get neighboring tags
-			const prev = this.get("prev");
-			const next = this.get("next");
-
-			// remove tag and fire input event
-			this.tags.splice(this.index(tag), 1);
-			this.onInput();
-
-			if (prev) {
-				this.selectTag(prev.tag);
-				prev.ref.focus();
-			} else if (next) {
-				this.selectTag(next.tag);
-			} else {
-				this.selectTag(null);
-				this.$refs.input.focus();
-			}
-		},
-		select() {
-			this.focus();
-		},
-		selectTag(tag) {
-			this.selected = tag;
-		},
-		/**
-		 * @param {String,Object} value
-		 * @returns {text: String, value: String}
-		 */
-		toValue(value) {
-			const option = this.options.find((option) => option.value === value);
-
-			// if only options are allwed as value
-			if (this.accept === "options") {
-				return option;
-			}
-
-			// always prefer options as source
-			// as they can be trusted without escaping
-			if (option) {
-				return option;
-			}
-
-			if (typeof value === "string") {
-				value = { value: value };
-			}
-
-			return {
-				value: value.value,
-				// always escape HTML in text for tags that
-				// can't be matched with any defined option
-				// to avoid XSS when displaying via `v-html`
-				text: this.$helper.string.escapeHTML(value.text ?? value.value)
-			};
-		},
-		toValues(values) {
-			// objects to array
-			if (typeof values === "object") {
-				values = Object.values(values);
-			}
-
-			if (Array.isArray(values) === false) {
-				return [];
-			}
-
-			return values.map(this.toValue).filter((item) => item);
 		}
-	},
-	validations() {
-		return {
-			tags: {
-				required: this.required ? validateRequired : true,
-				minLength: this.min ? validateMinLength(this.min) : true,
-				maxLength: this.max ? validateMaxLength(this.max) : true
-			}
-		};
 	}
 };
 </script>
 
 <style>
 .k-tags-input {
-	display: flex;
-	flex-wrap: wrap;
+	padding: var(--tags-gap);
+	cursor: pointer;
 }
-.k-tags-input .k-tag {
-	border-radius: var(--rounded-sm);
+
+.k-tags-input-toggle.k-button {
+	--button-color-text: var(--input-color-placeholder);
+	opacity: 0;
 }
-.k-tags-input .k-sortable-ghost {
-	background: var(--color-focus);
+.k-tags-input-toggle.k-button:focus {
+	--button-color-text: var(--input-color-text);
 }
-.k-tags-input-element {
-	flex-grow: 1;
-	flex-basis: 0;
-	min-width: 0;
+.k-tags-input:focus-within .k-tags-input-toggle {
+	opacity: 1;
 }
-.k-tags-input:focus-within .k-tags-input-element {
-	flex-basis: 4rem;
+
+.k-tags-input .k-picklist-dropdown {
+	margin-top: var(--spacing-1);
 }
-.k-tags-input-element input {
-	font: inherit;
-	border: 0;
-	width: 100%;
-	background: none;
+.k-tags-input .k-picklist-dropdown .k-choice-input {
+	gap: 0;
 }
-.k-tags-input-element input:focus {
-	outline: 0;
+.k-tags-input .k-picklist-dropdown .k-choice-input:focus-within {
+	outline: var(--outline);
 }
-.k-tags-input[data-layout="list"] .k-tag {
-	width: 100%;
-	margin-inline-end: 0 !important;
+.k-tags-input .k-picklist-dropdown .k-choice-input input {
+	opacity: 0;
+	width: 0;
 }
 </style>

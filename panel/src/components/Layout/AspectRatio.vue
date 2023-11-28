@@ -11,34 +11,22 @@
 
 <script>
 /**
- * Creates a layout element
- * in the specified ratio
- * @public
- *
- * @example <k-aspect-ratio ratio="3/2">
-  <div>Ratio!</div>
-</k-aspect-ratio>
+ * @deprecated 4.0.0 Use `<k-frame>` instead
  */
 export default {
 	props: {
-		/**
-		 * If `true`, the content will fill
-		 * the element's entire space/ratio
-		 */
 		cover: Boolean,
-		/**
-		 * The ratio can be defined freely with the format
-		 * `widthFraction/heightFraction`. The ratio will
-		 * be calculated automatically.
-		 *
-		 * @values e.g. `1/1`, `16/9` or `4/5`
-		 */
 		ratio: String
 	},
 	computed: {
 		ratioPadding() {
 			return this.$helper.ratio(this.ratio);
 		}
+	},
+	created() {
+		window.panel.deprecated(
+			"<k-aspect-ratio> will be removed in a future version. Use the <k-frame> instead."
+		);
 	}
 };
 </script>

@@ -5,8 +5,11 @@ namespace Kirby\Cms;
 use Kirby\Cms\App as Kirby;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
+use Kirby\Image\QrCode;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Obj;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Error\Deprecated;
 
 class HelperFunctionsTest extends TestCase
 {
@@ -188,10 +191,15 @@ class HelperFunctionsTest extends TestCase
 	{
 		// the deprecation warnings are always triggered in testing mode,
 		// so we cannot test it with disabled debug mode
-		$this->expectException('Whoops\Exception\ErrorException');
-		$this->expectExceptionMessage('The xyz method is deprecated.');
 
-		deprecated('The xyz method is deprecated.');
+		try {
+			deprecated('The xyz method is deprecated.');
+		} catch (Deprecated $e) {
+			$this->assertSame('The xyz method is deprecated.', $e->getMessage());
+			return;
+		}
+
+		Assert::fail('Expected deprecation warning was not generated');
 	}
 
 	public function testDumpOnCli()
@@ -642,6 +650,30 @@ class HelperFunctionsTest extends TestCase
 		$this->assertSame(['a' => 'value-a', 'b/b:' => 'value-B/B:'], params());
 	}
 
+	public function testQr()
+	{
+		$url = 'https://getkirby.com';
+		$qr    = qr($url);
+
+		$this->assertInstanceOf(QrCode::class, $qr);
+		$this->assertSame($url, $qr->data);
+
+		$app = $this->kirby->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+					]
+				]
+			]
+		]);
+		$page  = $app->page('test');
+		$qr    = qr($page);
+
+		$this->assertInstanceOf(QrCode::class, $qr);
+		$this->assertSame($page->url(), $qr->data);
+	}
+
 	public function testR()
 	{
 		$this->assertSame('a', r(1 === 1, 'a', 'b'));
@@ -922,21 +954,6 @@ class HelperFunctionsTest extends TestCase
 		$this->assertSame('1.234.567 Autos', tc('car', 1234567, 'de'));
 		$this->assertSame('1.234.567 Autos', tc('car', 1234567, 'de', true));
 		$this->assertSame('1234567 Autos', tc('car', 1234567, 'de', false));
-	}
-
-	public function testTwitter()
-	{
-		// simple
-		$result   = twitter('getkirby');
-		$expected = '<a href="https://twitter.com/getkirby">@getkirby</a>';
-
-		$this->assertSame($expected, $result);
-
-		// with attributes
-		$result   = twitter('getkirby', 'Follow us', 'Kirby on Twitter', 'twitter');
-		$expected = '<a class="twitter" href="https://twitter.com/getkirby" title="Kirby on Twitter">Follow us</a>';
-
-		$this->assertSame($expected, $result);
 	}
 
 	public function testUrl()

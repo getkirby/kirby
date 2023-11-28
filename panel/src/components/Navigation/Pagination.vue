@@ -1,75 +1,71 @@
 <template>
-	<nav v-if="show" :data-align="align" class="k-pagination">
+	<k-button-group
+		v-if="pages > 1"
+		layout="collapsed"
+		class="k-pagination"
+		@keydown.left.native="prev"
+		@keydown.right.native="next"
+	>
+		<!-- prev -->
 		<k-button
-			v-if="show"
-			:disabled="!hasPrev"
-			:tooltip="prevLabel"
+			:disabled="start <= 1"
+			:title="$t('prev')"
 			icon="angle-left"
+			size="xs"
+			variant="filled"
 			@click="prev"
 		/>
 
+		<!-- details -->
 		<template v-if="details">
-			<template v-if="dropdown">
-				<k-dropdown>
-					<k-button
-						:disabled="!hasPages"
-						class="k-pagination-details"
-						@click="$refs.dropdown.toggle()"
-					>
-						<template v-if="total > 1">
-							{{ detailsText }}
-						</template>
-						{{ total }}
-					</k-button>
+			<k-button
+				:disabled="total <= limit"
+				:text="total > 1 ? `${detailsText} / ${total}` : total"
+				size="xs"
+				variant="filled"
+				class="k-pagination-details"
+				@click="$refs.dropdown.toggle()"
+			/>
 
-					<k-dropdown-content
-						ref="dropdown"
-						class="k-pagination-selector"
-						@open="$nextTick(() => $refs.page.focus())"
-					>
-						<div class="k-pagination-settings">
-							<label for="k-pagination-page">
-								<span>{{ pageLabel }}:</span>
-								<select id="k-pagination-page" ref="page">
-									<option
-										v-for="p in pages"
-										:key="p"
-										:selected="page === p"
-										:value="p"
-									>
-										{{ p }}
-									</option>
-								</select>
-							</label>
-							<k-button icon="check" @click="goTo($refs.page.value)" />
-						</div>
-					</k-dropdown-content>
-				</k-dropdown>
-			</template>
-			<template v-else>
-				<span class="k-pagination-details">
-					<template v-if="total > 1">
-						{{ detailsText }}
-					</template>
-					{{ total }}
-				</span>
-			</template>
+			<k-dropdown-content
+				ref="dropdown"
+				align-x="end"
+				class="k-pagination-selector"
+				@keydown.left.native.stop
+				@keydown.right.native.stop
+			>
+				<form method="dialog" @click.stop @submit="goTo($refs.page.value)">
+					<label :for="_uid">{{ $t("pagination.page") }}:</label>
+					<select :id="_uid" ref="page" :autofocus="true">
+						<option
+							v-for="p in pages"
+							:key="p"
+							:selected="page === p"
+							:value="p"
+						>
+							{{ p }}
+						</option>
+					</select>
+					<k-button type="submit" icon="check" />
+				</form>
+			</k-dropdown-content>
 		</template>
 
+		<!-- next -->
 		<k-button
-			v-if="show"
-			:disabled="!hasNext"
-			:tooltip="nextLabel"
+			:disabled="end >= total"
+			:title="$t('next')"
 			icon="angle-right"
+			size="xs"
+			variant="filled"
 			@click="next"
 		/>
-	</nav>
+	</k-button-group>
 </template>
 
 <script>
 /**
  * @example <k-pagination
- *   align="center"
  *   :details="true"
  *   :page="5"
  *   :total="125"
@@ -78,31 +74,10 @@
 export default {
 	props: {
 		/**
-		 * The align prop makes it possible to move the pagination component according to the wrapper component.
-		 * @values left, center, right
+		 * Show/hide the details display with the page selector
+		 * in the center of the two navigation buttons.
 		 */
-		align: {
-			type: String,
-			default: "left"
-		},
-		/**
-		 * Show/hide the details display with the page selector in the center of the two navigation buttons.
-		 */
-		details: {
-			type: Boolean,
-			default: false
-		},
-		dropdown: {
-			type: Boolean,
-			default: true
-		},
-		/**
-		 * Enable/disable keyboard navigation
-		 */
-		keys: {
-			type: Boolean,
-			default: false
-		},
+		details: Boolean,
 		/**
 		 * Sets the limit of items to be shown per page
 		 */
@@ -118,102 +93,38 @@ export default {
 			default: 1
 		},
 		/**
-		 * Sets the label for the page selector
-		 */
-		pageLabel: {
-			type: String,
-			default() {
-				return window.panel.$t("pagination.page");
-			}
-		},
-		/**
-		 * Sets the total number of items that are in the paginated list. This has to be set higher to 0 to activate pagination.
+		 * Sets the total number of items that are in the paginated list.
+		 * This has to be set higher to 0 to activate pagination.
 		 */
 		total: {
 			type: Number,
 			default: 0
 		},
-		/**
-		 * Sets the label for the `prev` arrow button
-		 */
-		prevLabel: {
-			type: String,
-			default() {
-				return window.panel.$t("prev");
-			}
-		},
-		/**
-		 * Sets the label for the `next` arrow button
-		 */
-		nextLabel: {
-			type: String,
-			default() {
-				return window.panel.$t("next");
-			}
-		},
 		validate: {
 			type: Function,
-			default() {
-				return Promise.resolve();
-			}
+			default: () => Promise.resolve()
 		}
 	},
-	data() {
-		return {
-			currentPage: this.page
-		};
-	},
 	computed: {
-		show() {
-			return this.pages > 1;
-		},
-		start() {
-			return (this.currentPage - 1) * this.limit + 1;
-		},
 		end() {
-			let value = this.start - 1 + this.limit;
-
-			if (value > this.total) {
-				return this.total;
-			} else {
-				return value;
-			}
+			return Math.min(this.start - 1 + this.limit, this.total);
 		},
 		detailsText() {
 			if (this.limit === 1) {
-				return this.start + " / ";
-			} else {
-				return this.start + "-" + this.end + " / ";
+				return this.start;
 			}
+
+			return this.start + "-" + this.end;
+		},
+		offset() {
+			return this.start - 1;
 		},
 		pages() {
 			return Math.ceil(this.total / this.limit);
 		},
-		hasPrev() {
-			return this.start > 1;
-		},
-		hasNext() {
-			return this.end < this.total;
-		},
-		hasPages() {
-			return this.total > this.limit;
-		},
-		offset() {
-			return this.start - 1;
+		start() {
+			return (this.page - 1) * this.limit + 1;
 		}
-	},
-	watch: {
-		page(page) {
-			this.currentPage = parseInt(page);
-		}
-	},
-	created() {
-		if (this.keys === true) {
-			window.addEventListener("keydown", this.navigate, false);
-		}
-	},
-	destroyed() {
-		window.removeEventListener("keydown", this.navigate, false);
 	},
 	methods: {
 		/**
@@ -223,55 +134,41 @@ export default {
 		async goTo(page) {
 			try {
 				await this.validate(page);
+				this.$refs.dropdown?.close();
 
-				if (page < 1) {
-					page = 1;
-				}
-
-				if (page > this.pages) {
-					page = this.pages;
-				}
-
-				this.currentPage = page;
-
-				if (this.$refs.dropdown) {
-					this.$refs.dropdown.close();
-				}
+				// Don't assign page directly to `this.page` as
+				// this leads to a flicker of the navigation.
+				// However, because of this we need to manually
+				// calculate start, end and offset that depend on
+				// the new page value
+				page = Math.max(1, Math.min(page, this.pages));
+				const start = (page - 1) * this.limit + 1;
 
 				this.$emit("paginate", {
-					page: this.currentPage,
-					start: this.start,
-					end: this.end,
+					page,
+					start,
+					end: Math.min(start - 1 + this.limit, this.total),
 					limit: this.limit,
-					offset: this.offset
+					offset: start - 1,
+					total: this.total
 				});
 			} catch (e) {
 				// pagination stopped
 			}
 		},
 		/**
-		 * Jump to the previous page
+		 * Go to the previous page
 		 * @public
 		 */
 		prev() {
-			this.goTo(this.currentPage - 1);
+			this.goTo(this.page - 1);
 		},
 		/**
-		 * Jump to the next page
+		 * Go to the next page
 		 * @public
 		 */
 		next() {
-			this.goTo(this.currentPage + 1);
-		},
-		navigate(e) {
-			switch (e.code) {
-				case "ArrowLeft":
-					this.prev();
-					break;
-				case "ArrowRight":
-					this.next();
-					break;
-			}
+			this.goTo(this.page + 1);
 		}
 	}
 };
@@ -279,52 +176,34 @@ export default {
 
 <style>
 .k-pagination {
-	user-select: none;
-	direction: ltr;
-}
-.k-pagination .k-button {
-	padding: 1rem;
+	flex-shrink: 0;
 }
 .k-pagination-details {
-	white-space: nowrap;
+	--button-padding: var(--spacing-3);
+	font-size: var(--text-xs);
 }
-.k-pagination > span {
-	font-size: var(--text-sm);
+.k-pagination-selector {
+	--button-height: var(--height);
+	--dropdown-padding: 0;
+	overflow: visible;
 }
-.k-pagination[data-align] {
-	text-align: var(--align);
-}
-
-.k-dropdown-content.k-pagination-selector {
-	position: absolute;
-	top: 100%;
-	inset-inline-start: 50%;
-	transform: translateX(-50%);
-	background: var(--color-black);
-}
-[dir="ltr"] .k-dropdown-content.k-pagination-selector {
-	direction: ltr;
-}
-[dir="rtl"] .k-dropdown-content.k-pagination-selector {
-	direction: rtl;
-}
-
-.k-pagination-settings {
+.k-pagination-selector form {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 }
-.k-pagination-settings .k-button {
-	line-height: 1;
+.k-pagination-selector label {
+	padding-inline-start: var(--spacing-3);
+	padding-inline-end: var(--spacing-2);
 }
-.k-pagination-settings label {
-	display: flex;
-	border-inline-end: 1px solid rgba(255, 255, 255, 0.35);
-	align-items: center;
-	padding: 0.625rem 1rem;
-	font-size: var(--text-xs);
-}
-.k-pagination-settings label span {
-	margin-inline-end: 0.5rem;
+.k-pagination-selector select {
+	--height: calc(var(--button-height) - 0.5rem);
+	width: auto;
+	min-width: var(--height);
+	height: var(--height);
+	text-align: center;
+	background: var(--color-gray-800);
+	color: var(--color-white);
+	border-radius: var(--rounded-sm);
 }
 </style>

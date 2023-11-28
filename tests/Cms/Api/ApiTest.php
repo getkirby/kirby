@@ -2,9 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\AuthException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 use Kirby\Toolkit\I18n;
@@ -373,6 +373,43 @@ class ApiTest extends TestCase
 		$this->api->page('does-not-exist');
 	}
 
+	public function testPages()
+	{
+		$this->assertSame(['a/aa', 'a/ab'], $this->api->pages('a')->keys());
+	}
+
+	public function testPagesNotAccessible()
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/api-protected' => [
+					'options' => ['access' => false]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' 	   => 'a'
+					],
+					[
+						'slug' 	   => 'b',
+						'template' => 'api-protected'
+					],
+					[
+						'slug' 	   => 'c'
+					]
+				]
+			],
+			'users' => [
+				['id' => 'bastian', 'role' => 'admin']
+			]
+		]);
+
+		$app->impersonate('bastian');
+
+		$this->assertSame(['a', 'c'], $app->api()->pages()->keys());
+	}
+
 	public function testUser()
 	{
 		$app = $this->app->clone([
@@ -426,7 +463,7 @@ class ApiTest extends TestCase
 		$kirby = $this->createMock(App::class);
 		$kirby->method('auth')->willReturn($auth);
 
-		$this->expectException(PermissionException::class);
+		$this->expectException(AuthException::class);
 		$this->expectExceptionMessage('Unauthenticated');
 
 		$function = require $this->app->root('kirby') . '/config/api/authentication.php';
@@ -446,7 +483,7 @@ class ApiTest extends TestCase
 		$kirby = $this->createMock(App::class);
 		$kirby->method('auth')->willReturn($auth);
 
-		$this->expectException(PermissionException::class);
+		$this->expectException(AuthException::class);
 		$this->expectExceptionMessage('Unauthenticated');
 
 		$function = require $this->app->root('kirby') . '/config/api/authentication.php';
@@ -469,6 +506,7 @@ class ApiTest extends TestCase
 			'users' => [
 				[
 					'email' => 'current@getkirby.com',
+					'role'  => 'admin'
 				],
 				[
 					'email' => 'test@getkirby.com',
@@ -532,6 +570,7 @@ class ApiTest extends TestCase
 				]
 			]
 		]);
+		$app->impersonate('kirby');
 
 		$page = $app->page('test');
 		$response = $app->api()->fieldApi($page, 'cover');

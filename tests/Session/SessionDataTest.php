@@ -2,7 +2,6 @@
 
 namespace Kirby\Session;
 
-use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use PHPUnit\Framework\TestCase;
 
@@ -43,6 +42,13 @@ class SessionDataTest extends TestCase
 		$this->assertTrue($this->session->preparedForWriting);
 		$this->assertSame('someValue', $this->sessionData->get('someKey'));
 
+		// int as key
+		$this->sessionData->set(123, 42);
+		$this->assertSame(42, $this->sessionData->get(123));
+		$this->sessionData->increment(123, 5);
+		$this->sessionData->decrement(123, 2);
+		$this->assertSame(45, $this->sessionData->get(123));
+
 		// key-value array
 		$this->session->ensuredToken = false;
 		$this->session->preparedForWriting = false;
@@ -54,16 +60,6 @@ class SessionDataTest extends TestCase
 		$this->assertTrue($this->session->preparedForWriting);
 		$this->assertSame('someValue1', $this->sessionData->get('someKey1'));
 		$this->assertSame('someValue2', $this->sessionData->get('someKey2'));
-	}
-
-	/**
-	 * @covers ::set
-	 */
-	public function testSetInvalidKey()
-	{
-		$this->expectException(InvalidArgumentException::class);
-
-		$this->sessionData->set(123, 'someValue');
 	}
 
 	/**
@@ -92,26 +88,6 @@ class SessionDataTest extends TestCase
 
 		$this->sessionData->increment('someInt', 10, 200);
 		$this->assertSame(155, $this->sessionData->get('someInt'));
-	}
-
-	/**
-	 * @covers ::increment
-	 */
-	public function testIncrementInvalidKey()
-	{
-		$this->expectException(InvalidArgumentException::class);
-
-		$this->sessionData->increment(123, 10);
-	}
-
-	/**
-	 * @covers ::increment
-	 */
-	public function testIncrementInvalidMax()
-	{
-		$this->expectException(InvalidArgumentException::class);
-
-		$this->sessionData->increment('someInt', 10, 'some invalid max value');
 	}
 
 	/**
@@ -156,26 +132,6 @@ class SessionDataTest extends TestCase
 	/**
 	 * @covers ::decrement
 	 */
-	public function testDecrementInvalidKey()
-	{
-		$this->expectException(InvalidArgumentException::class);
-
-		$this->sessionData->decrement(123, 10);
-	}
-
-	/**
-	 * @covers ::decrement
-	 */
-	public function testDecrementInvalidMin()
-	{
-		$this->expectException(InvalidArgumentException::class);
-
-		$this->sessionData->decrement('someInt', 10, 'some invalid min value');
-	}
-
-	/**
-	 * @covers ::decrement
-	 */
 	public function testDecrementNonIntValue()
 	{
 		$this->expectException(LogicException::class);
@@ -200,16 +156,6 @@ class SessionDataTest extends TestCase
 			'someString' => 'someValue',
 			'someInt'    => 123
 		], $this->sessionData->get());
-	}
-
-	/**
-	 * @covers ::get
-	 */
-	public function testGetInvalidKey()
-	{
-		$this->expectException(InvalidArgumentException::class);
-
-		$this->sessionData->get(123, 456);
 	}
 
 	/**
@@ -248,16 +194,6 @@ class SessionDataTest extends TestCase
 		$this->assertFalse($this->session->ensuredToken);
 		$this->assertTrue($this->session->preparedForWriting);
 		$this->assertSame([], $this->sessionData->get());
-	}
-
-	/**
-	 * @covers ::remove
-	 */
-	public function testRemoveInvalidKey()
-	{
-		$this->expectException(InvalidArgumentException::class);
-
-		$this->sessionData->remove(123);
 	}
 
 	/**

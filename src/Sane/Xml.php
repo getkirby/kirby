@@ -26,14 +26,16 @@ class Xml extends DomHandler
 	 *
 	 * @return array Array with exception objects for each modification
 	 */
-	public static function sanitizeElement(DOMElement $element): array
+	public static function sanitizeElement(DOMElement $element, array $options): array
 	{
 		$errors = [];
 
 		// if we are validating an XML file, block all SVG and HTML namespaces
 		if (static::class === self::class) {
-			$simpleXmlElement = simplexml_import_dom($element);
-			foreach ($simpleXmlElement->getDocNamespaces(false, false) as $namespace => $value) {
+			$xml        = simplexml_import_dom($element);
+			$namespaces = $xml->getDocNamespaces(false, false);
+
+			foreach ($namespaces as $namespace => $value) {
 				if (
 					Str::contains($value, 'html', true) === true ||
 					Str::contains($value, 'svg', true) === true
@@ -54,7 +56,7 @@ class Xml extends DomHandler
 	 * Custom callback for additional doctype validation
 	 * @internal
 	 */
-	public static function validateDoctype(DOMDocumentType $doctype): void
+	public static function validateDoctype(DOMDocumentType $doctype, array $options): void
 	{
 		// if we are validating an XML file, block all SVG and HTML doctypes
 		if (

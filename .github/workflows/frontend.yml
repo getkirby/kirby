@@ -20,15 +20,28 @@ on:
       - "!panel/scripts/**"
   workflow_call:
 
+  workflow_dispatch:
+
 jobs:
   tests:
     name: "Unit tests"
 
-    # if on pull request, only run if from a fork
-    # (our own repo is covered by the push event)
+    # run job only under the following conditions:
+    # - can be triggered manually from any repository
+    # - if on pull request, only run if from a fork
+    #   (our own repo is covered by the push event)
+    # - if on push, only run CI automatically for the
+    #   main getkirby/kirby repo and for forks
     if: >
-      github.event_name != 'pull_request' ||
-      github.event.pull_request.head.repo.full_name != github.repository
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event_name == 'pull_request' &&
+        github.event.pull_request.head.repo.full_name != github.repository
+      ) ||
+      (
+        github.event_name == 'push' &&
+        (github.repository == 'getkirby/kirby' || github.repository_owner != 'getkirby')
+      )
 
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -50,29 +63,33 @@ jobs:
 
       - name: Run JavaScript unit tests
         if: always() && steps.finishPrepare.outcome == 'success'
-        run: npm run test:unit:coverage
+        run: npm run test:unit
         working-directory: panel
-
-      # TODO: Disabled until Vitest coverage reporting is accurate and
-      #       Kirby's frontend tests are useful enough that we need this metric
-      # - name: Upload coverage results to Codecov
-      #   env:
-      #     token: ${{ secrets.CODECOV_TOKEN }}
-      #   if: env.token != ''
-      #   uses: codecov/codecov-action@858dd794fbb81941b6d60b0dca860878cba60fa9 # pin@v3
-      #   with:
-      #     token: ${{ secrets.CODECOV_TOKEN }} # for better reliability if the GitHub API is down
-      #     fail_ci_if_error: true
-      #     files: ${{ github.workspace }}/panel/coverage/lcov.info
-      #     flags: frontend
 
   coding-style:
     name: "Coding Style"
 
+    # run job only under the following conditions:
+    # - can be triggered manually from any repository
+    # - if on pull request, only run if from a fork
+    #   (our own repo is covered by the push event)
+    # - if on push, only run CI automatically for the
+    #   main getkirby/kirby repo and for forks
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event_name == 'pull_request' &&
+        github.event.pull_request.head.repo.full_name != github.repository
+      ) ||
+      (
+        github.event_name == 'push' &&
+        (github.repository == 'getkirby/kirby' || github.repository_owner != 'getkirby')
+      )
+
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      php: "8.0"
+      php: "8.1"
 
     steps:
       - name: Checkout

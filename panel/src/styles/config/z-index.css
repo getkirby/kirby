@@ -1,0 +1,14 @@
+:root {
+	--z-offline: 1200;
+	--z-fatal: 1100;
+	--z-loader: 1000;
+	--z-notification: 900;
+	--z-dialog: 800;
+	--z-navigation: 700;
+	--z-dropdown: 600;
+	--z-drawer: 500;
+	--z-dropzone: 400;
+	--z-toolbar: 300;
+	--z-content: 200;
+	--z-background: 100;
+}

@@ -1,30 +1,36 @@
 <template>
-	<k-dropdown class="k-autocomplete">
+	<div class="k-autocomplete">
 		<!-- @slot Use to insert your input -->
 		<slot />
-		<k-dropdown-content ref="dropdown" :autofocus="true" v-on="$listeners">
+		<k-dropdown-content
+			ref="dropdown"
+			:autofocus="true"
+			@leave="$emit('leave')"
+		>
 			<k-dropdown-item
 				v-for="(item, index) in matches"
 				:key="index"
 				v-bind="item"
-				@mousedown="onSelect(item)"
-				@keydown.tab.prevent="onSelect(item)"
-				@keydown.enter.prevent="onSelect(item)"
-				@keydown.left.prevent="close"
-				@keydown.backspace.prevent="close"
-				@keydown.delete.prevent="close"
+				@mousedown.native="onSelect(item)"
+				@keydown.native.tab.prevent="onSelect(item)"
+				@keydown.native.enter.prevent="onSelect(item)"
+				@keydown.native.left.prevent="close"
+				@keydown.native.backspace.prevent="close"
+				@keydown.native.delete.prevent="close"
 			>
 				<!-- eslint-disable-next-line vue/no-v-html -->
 				<span v-html="html ? item.text : $esc(item.text)" />
 			</k-dropdown-item>
 		</k-dropdown-content>
 		{{ query }}
-	</k-dropdown>
+	</div>
 </template>
 
 <script>
 /**
  * The Autocomplete component can be wrapped around any form of input to get an flexible starting point to provide an real-time autocomplete dropdown. We use it for our `TagsInput` component.
+ *
+ * @deprecated 4.0.0
  */
 export default {
 	props: {
@@ -47,9 +53,7 @@ export default {
 		 */
 		skip: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		},
 		/**
 		 * Options for the autocomplete dropdown must be passed as an array of
@@ -64,11 +68,17 @@ export default {
 		 */
 		query: String
 	},
+	emits: ["leave", "search", "select"],
 	data() {
 		return {
 			matches: [],
 			selected: { text: null }
 		};
+	},
+	created() {
+		window.panel.deprecated(
+			"<k-autocomplete> will be removed in a future version."
+		);
 	},
 	methods: {
 		close() {
@@ -89,29 +99,15 @@ export default {
 		 * @param {string} query search term
 		 */
 		search(query) {
-			if (query.length < 1) {
-				return;
-			}
+			// skip all options in the skip array
+			const options = this.options.filter((option) => {
+				return this.skip.indexOf(option.value) !== -1;
+			});
 
-			// Filter options by query to retrieve items (no more than this.limit)
-			const regex = new RegExp(RegExp.escape(query), "ig");
-
-			this.matches = this.options
-				.filter((option) => {
-					// skip all options without valid text
-					if (!option.text) {
-						return false;
-					}
-
-					// skip all options in the skip array
-					if (this.skip.indexOf(option.value) !== -1) {
-						return false;
-					}
-
-					// match the search with the text
-					return option.text.match(regex) !== null;
-				})
-				.slice(0, this.limit);
+			this.matches = this.$helper.array.search(options, query, {
+				field: "text",
+				limit: this.limit
+			});
 
 			/**
 			 * Search has been performed

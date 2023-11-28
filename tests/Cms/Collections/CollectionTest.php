@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Content\Field;
 use Kirby\Toolkit\Obj;
 use stdClass;
 

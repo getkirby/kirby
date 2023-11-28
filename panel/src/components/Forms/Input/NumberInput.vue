@@ -22,7 +22,8 @@
 </template>
 
 <script>
-import { autofocus, disabled, id, required } from "@/mixins/props.js";
+import Input, { props as InputProps } from "@/mixins/input.js";
+import { placeholder } from "@/mixins/props.js";
 
 import {
 	required as validateRequired,
@@ -31,17 +32,16 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [autofocus, disabled, id, required],
+	mixins: [InputProps, placeholder],
 	props: {
 		max: Number,
 		min: Number,
 		name: [Number, String],
-		placeholder: String,
 		preselect: Boolean,
 		/**
 		 * The amount to increment with each input step. This can be a decimal.
 		 */
-		step: Number,
+		step: [Number, String],
 		value: {
 			type: [Number, String],
 			default: ""
@@ -53,8 +53,7 @@ export const props = {
  * @example <k-input :value="number" @input="number = $event" name="number" type="number" />
  */
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	data() {
 		return {
 			number: this.format(this.value),
@@ -89,7 +88,7 @@ export default {
 	},
 	methods: {
 		decimals() {
-			const step = Number(this.step || 0);
+			const step = Number(this.step ?? 0);
 
 			if (Math.floor(step) === step) {
 				return 0;
@@ -101,7 +100,7 @@ export default {
 				).toString().length;
 			}
 
-			return step.toString().split(".")[1].length || 0;
+			return step.toString().split(".")[1].length ?? 0;
 		},
 		format(value) {
 			if (isNaN(value) || value === "") {
@@ -134,9 +133,6 @@ export default {
 				this.$emit("input", value);
 			}
 		},
-		focus() {
-			this.$refs.input.focus();
-		},
 		onInvalid() {
 			this.$emit("invalid", this.$v.$invalid, this.$v);
 		},
@@ -166,20 +162,10 @@ export default {
 
 <style>
 .k-number-input {
-	width: 100%;
-	border: 0;
-	background: none;
-	font: inherit;
-	color: inherit;
-}
-.k-number-input::placeholder {
-	color: var(--color-gray-500);
+	padding: var(--input-padding);
+	border-radius: var(--input-rounded);
 }
 .k-number-input:focus {
-	outline: 0;
-}
-.k-number-input:invalid {
-	box-shadow: none;
 	outline: 0;
 }
 </style>

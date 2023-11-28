@@ -5,6 +5,7 @@ import Blocks from "./Blocks.vue";
 // helper components
 import BlockFigure from "./BlockFigure.vue";
 import BlockOptions from "./BlockOptions.vue";
+import BlockPasteboard from "./BlockPasteboard.vue";
 import BlockSelector from "./BlockSelector.vue";
 import BlockTitle from "./BlockTitle.vue";
 import BlockType from "./BlockType.vue";
@@ -16,6 +17,7 @@ export default {
 
 		app.component("k-block-figure", BlockFigure);
 		app.component("k-block-options", BlockOptions);
+		app.component("k-block-pasteboard", BlockPasteboard);
 		app.component("k-block-selector", BlockSelector);
 		app.component("k-block-title", BlockTitle);
 		app.component("k-block-type", BlockType);

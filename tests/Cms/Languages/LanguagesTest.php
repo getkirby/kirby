@@ -11,13 +11,13 @@ class LanguagesTest extends TestCase
 {
 	protected $app;
 	protected $languages;
-	protected $fixtures;
+	protected $tmp;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/LanguagesTest',
+				'index' => $this->tmp = __DIR__ . '/tmp/LanguagesTest',
 			],
 			'languages' => [
 				[
@@ -41,7 +41,41 @@ class LanguagesTest extends TestCase
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->fixtures);
+		Dir::remove($this->tmp);
+	}
+
+	public function testCodes()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => $this->tmp = __DIR__ . '/tmp/LanguagesTest',
+			],
+			'languages' => [
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true,
+					'locale'  => 'en_US',
+					'url'     => '/',
+				],
+				[
+					'code'    => 'de',
+					'name'    => 'Deutsch',
+					'locale'  => 'de_DE',
+					'url'     => '/de',
+				],
+			]
+		]);
+
+		$this->assertSame(['en', 'de'], $app->languages()->codes());
+
+		$app = new App([
+			'roots' => [
+				'index' => $this->tmp = __DIR__ . '/tmp/LanguagesTest',
+			]
+		]);
+
+		$this->assertSame(['default'], $app->languages()->codes());
 	}
 
 	public function testLoad()
@@ -55,7 +89,7 @@ class LanguagesTest extends TestCase
 	{
 		$this->app->clone([
 			'roots' => [
-				'languages' => $root = __DIR__ . '/fixtures/LanguagesTest'
+				'languages' => $root = __DIR__ . '/tmp/LanguagesTest'
 			]
 		]);
 

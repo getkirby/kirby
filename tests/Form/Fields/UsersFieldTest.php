@@ -55,6 +55,18 @@ class UsersFieldTest extends TestCase
 			'model' => new Page(['slug' => 'test'])
 		]);
 
+		$this->assertSame([], $field->default());
+	}
+
+	public function testCurrentDefaultUser()
+	{
+		$this->app->impersonate('raphael@getkirby.com');
+
+		$field = $this->field('users', [
+			'model'   => new Page(['slug' => 'test']),
+			'default' => true
+		]);
+
 		$this->assertSame('raphael@getkirby.com', $field->default()[0]['email']);
 	}
 

@@ -9,6 +9,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Http\Cookie;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use TypeError;
 
 require_once __DIR__ . '/mocks.php';
 
@@ -63,8 +64,7 @@ class SessionsTest extends TestCase
 	 */
 	public function testConstructorInvalidStore()
 	{
-		$this->expectException(InvalidArgumentException::class);
-
+		$this->expectException(TypeError::class);
 		new Sessions(new InvalidSessionStore());
 	}
 
@@ -102,9 +102,9 @@ class SessionsTest extends TestCase
 	 */
 	public function testConstructorInvalidCookieName()
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(TypeError::class);
 
-		new Sessions(__DIR__ . '/fixtures/store', ['cookieName' => 123]);
+		new Sessions(__DIR__ . '/fixtures/store', ['cookieName' => ['foo']]);
 	}
 
 	/**

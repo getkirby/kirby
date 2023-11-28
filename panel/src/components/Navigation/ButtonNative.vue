@@ -10,7 +10,6 @@
 		:title="tooltip"
 		:type="type"
 		class="k-button"
-		v-on="$listeners"
 		@click="click"
 	>
 		<k-icon v-if="icon" :type="icon" :alt="tooltip" class="k-button-icon" />
@@ -19,10 +18,10 @@
 </template>
 
 <script>
-import tab from "@/mixins/tab.js";
-
+/**
+ * @deprecated 4.0.0 `<k-button-native>` has been deprecated and will be removed in v5. Use `<k-button>` instead.
+ */
 export default {
-	mixins: [tab],
 	inheritAttrs: false,
 	props: {
 		autofocus: Boolean,
@@ -42,6 +41,11 @@ export default {
 			type: String,
 			default: "button"
 		}
+	},
+	created() {
+		window.panel.deprecated(
+			"<k-button-native> will be removed in a future version. Use <k-button> instead."
+		);
 	}
 };
 </script>

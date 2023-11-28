@@ -1,14 +1,16 @@
 <template>
 	<div
-		ref="wrapper"
+		:data-disabled="disabled"
 		:data-empty="blocks.length === 0"
-		:data-multi-select-key="isMultiSelectKey"
 		class="k-blocks"
-		@focusin="focussed = true"
-		@focusout="focussed = false"
 	>
 		<template v-if="hasFieldsets">
-			<k-draggable v-bind="draggableOptions" class="k-blocks-list" @sort="save">
+			<k-draggable
+				v-bind="draggableOptions"
+				:data-multi-select-key="isMultiSelectKey"
+				class="k-blocks-list"
+				@sort="save"
+			>
 				<k-block
 					v-for="(block, index) in blocks"
 					:ref="'block-' + block.id"
@@ -16,86 +18,67 @@
 					v-bind="block"
 					:endpoints="endpoints"
 					:fieldset="fieldset(block)"
-					:is-batched="isBatched(block)"
-					:is-last-in-batch="isLastInBatch(block)"
+					:is-batched="isSelected(block) && selected.length > 1"
+					:is-last-selected="isLastSelected(block)"
 					:is-full="isFull"
 					:is-hidden="block.isHidden === true"
+					:is-mergable="isMergable"
 					:is-selected="isSelected(block)"
 					:next="prevNext(index + 1)"
 					:prev="prevNext(index - 1)"
-					@append="append($event, index + 1)"
-					@blur="select(null)"
-					@choose="choose($event)"
+					@append="add($event, index + 1)"
 					@chooseToAppend="choose(index + 1)"
 					@chooseToConvert="chooseToConvert(block)"
 					@chooseToPrepend="choose(index)"
+					@click.native="onClickBlock(block, $event)"
 					@close="isEditing = false"
 					@copy="copy()"
-					@confirmToRemoveSelected="confirmToRemoveSelected"
-					@click.native.stop="select(block, $event)"
 					@duplicate="duplicate(block, index)"
-					@focus="select(block)"
+					@focus="onFocus(block)"
 					@hide="hide(block)"
+					@merge="merge()"
 					@open="isEditing = true"
 					@paste="pasteboard()"
 					@prepend="add($event, index)"
 					@remove="remove(block)"
+					@removeSelected="removeSelected"
+					@show="show(block)"
+					@selectDown="selectDown"
+					@selectUp="selectUp"
 					@sortDown="sort(block, index, index + 1)"
 					@sortUp="sort(block, index, index - 1)"
-					@show="show(block)"
+					@split="split(block, index, $event)"
 					@update="update(block, $event)"
 				/>
-				<template #footer>
+
+				<!-- No blocks -->
+				<template v-if="blocks.length === 0" #footer>
 					<k-empty
 						class="k-blocks-empty"
 						icon="box"
 						@click="choose(blocks.length)"
 					>
-						{{ empty || $t("field.blocks.empty") }}
+						{{ empty ?? $t("field.blocks.empty") }}
 					</k-empty>
 				</template>
 			</k-draggable>
-
-			<k-block-selector
-				ref="selector"
-				:fieldsets="fieldsets"
-				:fieldset-groups="fieldsetGroups"
-				@add="add"
-				@convert="convert"
-				@paste="paste($event)"
-			/>
-
-			<k-remove-dialog
-				ref="removeAll"
-				:text="$t('field.blocks.delete.confirm.all')"
-				@submit="removeAll"
-			/>
-
-			<k-remove-dialog
-				ref="removeSelected"
-				:text="$t('field.blocks.delete.confirm.selected')"
-				@submit="removeSelected"
-			/>
-
-			<k-block-pasteboard ref="pasteboard" @paste="paste($event)" />
 		</template>
-		<template v-else>
-			<k-box theme="info"> No fieldsets yet </k-box>
-		</template>
+
+		<!-- No fieldsets -->
+		<k-empty v-else icon="box">
+			{{ $t("field.blocks.fieldsets.empty") }}
+		</k-empty>
 	</div>
 </template>
 
 <script>
 import { set } from "vue";
-import Pasteboard from "./BlockPasteboard.vue";
 
 export default {
-	components: {
-		"k-block-pasteboard": Pasteboard
-	},
 	inheritAttrs: false,
 	props: {
 		autofocus: Boolean,
+		disabled: Boolean,
 		empty: String,
 		endpoints: Object,
 		fieldsets: Object,
@@ -107,19 +90,15 @@ export default {
 		},
 		value: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		}
 	},
 	data() {
 		return {
+			blocks: this.value ?? [],
 			isEditing: false,
 			isMultiSelectKey: false,
-			batch: [],
-			blocks: this.value,
-			current: null,
-			isFocussed: false
+			selected: []
 		};
 	},
 	computed: {
@@ -140,7 +119,7 @@ export default {
 			};
 		},
 		hasFieldsets() {
-			return Object.keys(this.fieldsets).length;
+			return this.$helper.object.length(this.fieldsets) > 0;
 		},
 		isEmpty() {
 			return this.blocks.length === 0;
@@ -152,19 +131,19 @@ export default {
 
 			return this.blocks.length >= this.max;
 		},
-		selected() {
-			return this.current;
-		},
-		selectedOrBatched() {
-			if (this.batch.length > 0) {
-				return this.batch;
+		isMergable() {
+			if (this.selected.length < 2) {
+				return false;
 			}
 
-			if (this.selected) {
-				return [this.selected];
+			const blocks = this.selected.map((id) => this.find(id));
+			const types = new Set(blocks.map((block) => block.type));
+
+			if (types.size > 1) {
+				return false;
 			}
 
-			return [];
+			return typeof this.ref(blocks[0]).$refs.editor.merge === "function";
 		}
 	},
 	watch: {
@@ -173,58 +152,28 @@ export default {
 		}
 	},
 	created() {
-		this.$events.$on("blur", this.onBlur);
-		this.$events.$on("copy", this.onCopy);
-		this.$events.$on("focus", this.onOutsideFocus);
-		this.$events.$on("keydown", this.onKey);
-		this.$events.$on("keyup", this.onKey);
-		this.$events.$on("paste", this.onPaste);
+		this.$events.on("blur", this.onBlur);
+		this.$events.on("click", this.onClickGlobal);
+		this.$events.on("copy", this.onCopy);
+		this.$events.on("keydown", this.onKey);
+		this.$events.on("keyup", this.onKey);
+		this.$events.on("paste", this.onPaste);
 	},
 	destroyed() {
-		this.$events.$off("blur", this.onBlur);
-		this.$events.$off("copy", this.onCopy);
-		this.$events.$off("focus", this.onOutsideFocus);
-		this.$events.$off("keydown", this.onKey);
-		this.$events.$off("keyup", this.onKey);
-		this.$events.$off("paste", this.onPaste);
+		this.$events.off("blur", this.onBlur);
+		this.$events.off("click", this.onClickGlobal);
+		this.$events.off("copy", this.onCopy);
+		this.$events.off("keydown", this.onKey);
+		this.$events.off("keyup", this.onKey);
+		this.$events.off("paste", this.onPaste);
 	},
 	mounted() {
-		setTimeout(() => {
-			// focus first block
-			if (this.$props.autofocus === true) {
-				this.focus();
-			}
-		}, 100);
+		// focus first block
+		if (this.$props.autofocus === true) {
+			setTimeout(this.focus, 100);
+		}
 	},
 	methods: {
-		append(what, index) {
-			if (typeof what === "string") {
-				this.add(what, index);
-				return;
-			}
-
-			if (Array.isArray(what)) {
-				let blocks = this.$helper.clone(what).map((block) => {
-					block.id = this.$helper.uuid();
-					return block;
-				});
-
-				// filters only supported blocks
-				const availableFieldsets = Object.keys(this.fieldsets);
-				blocks = blocks.filter((block) =>
-					availableFieldsets.includes(block.type)
-				);
-
-				// don't add blocks that exceed the maximum limit
-				if (this.max) {
-					const max = this.max - this.blocks.length;
-					blocks = blocks.slice(0, max);
-				}
-
-				this.blocks.splice(index, 0, ...blocks);
-				this.save();
-			}
-		},
 		async add(type = "text", index) {
 			const block = await this.$api.get(
 				this.endpoints.field + "/fieldsets/" + type
@@ -232,47 +181,48 @@ export default {
 			this.blocks.splice(index, 0, block);
 			this.save();
 
-			this.$nextTick(() => {
-				this.focusOrOpen(block);
-			});
-		},
-		addToBatch(block) {
-			// move the selected block to the batch first
-			if (
-				this.selected !== null &&
-				this.batch.includes(this.selected) === false
-			) {
-				this.batch.push(this.selected);
-				this.current = null;
-			}
-
-			if (this.batch.includes(block.id) === false) {
-				this.batch.push(block.id);
-			}
+			await this.$nextTick();
+			this.focusOrOpen(block);
 		},
 		choose(index) {
-			if (Object.keys(this.fieldsets).length === 1) {
-				const type = Object.values(this.fieldsets)[0].type;
-				this.add(type, index);
-			} else {
-				this.$refs.selector.open(index);
+			if (this.$helper.object.length(this.fieldsets) === 1) {
+				return this.add(Object.values(this.fieldsets)[0].type, index);
 			}
-		},
-		chooseToConvert(block) {
-			this.$refs.selector.open(block, {
-				disabled: [block.type],
-				headline: this.$t("field.blocks.changeType"),
-				event: "convert"
+
+			this.$panel.dialog.open({
+				component: "k-block-selector",
+				props: {
+					fieldsetGroups: this.fieldsetGroups,
+					fieldsets: this.fieldsets
+				},
+				on: {
+					submit: (type) => {
+						this.add(type, index);
+						this.$panel.dialog.close();
+					},
+					paste: (e) => {
+						this.paste(e, index);
+					}
+				}
 			});
 		},
-		click(block) {
-			this.$emit("click", block);
-		},
-		confirmToRemoveAll() {
-			this.$refs.removeAll.open();
-		},
-		confirmToRemoveSelected() {
-			this.$refs.removeSelected.open();
+		chooseToConvert(block) {
+			this.$panel.dialog.open({
+				component: "k-block-selector",
+				props: {
+					disabledFieldsets: [block.type],
+					fieldsetGroups: this.fieldsetGroups,
+					fieldsets: this.fieldsets,
+					headline: this.$t("field.blocks.changeType")
+				},
+				on: {
+					submit: (type) => {
+						this.convert(type, block);
+						this.$panel.dialog.close();
+					},
+					paste: this.paste
+				}
+			});
 		},
 		copy(e) {
 			// don't copy when there are no blocks yet
@@ -281,14 +231,14 @@ export default {
 			}
 
 			// don't copy when nothing is selected
-			if (this.selectedOrBatched.length === 0) {
+			if (this.selected.length === 0) {
 				return false;
 			}
 
 			let blocks = [];
 
 			for (const block of this.blocks) {
-				if (this.selectedOrBatched.includes(block.id)) {
+				if (this.selected.includes(block.id)) {
 					blocks.push(block);
 				}
 			}
@@ -300,13 +250,14 @@ export default {
 
 			this.$helper.clipboard.write(blocks, e);
 
-			if (e instanceof ClipboardEvent === false) {
-				// reselect the previously focussed elements
-				this.batch = this.selectedOrBatched;
-			}
+			// reselect the previously focussed elements
+			this.selected = blocks.map((block) => block.id);
 
 			// a sign that it has been copied
-			this.$store.dispatch("notification/success", `${blocks.length} copied!`);
+			this.$panel.notification.success({
+				message: this.$t("copy.success", { count: blocks.length }),
+				icon: "template"
+			});
 		},
 		copyAll() {
 			this.selectAll();
@@ -366,9 +317,15 @@ export default {
 
 			this.save();
 		},
+		deselect(block) {
+			const index = this.selected.findIndex((id) => id === block.id);
+
+			if (index !== -1) {
+				this.selected.splice(index, 1);
+			}
+		},
 		deselectAll() {
-			this.batch = [];
-			this.current = null;
+			this.selected = [];
 		},
 		async duplicate(block, index) {
 			const copy = {
@@ -380,7 +337,7 @@ export default {
 		},
 		fieldset(block) {
 			return (
-				this.fieldsets[block.type] || {
+				this.fieldsets[block.type] ?? {
 					icon: "box",
 					name: block.type,
 					tabs: {
@@ -399,7 +356,10 @@ export default {
 			return this.blocks.findIndex((element) => element.id === id);
 		},
 		focus(block) {
-			this.$refs["block-" + (block?.id ?? this.blocks[0]?.id)]?.[0]?.focus();
+			const ref = this.ref(block);
+			this.selected = [block?.id ?? this.blocks[0]];
+			ref?.focus();
+			ref?.$el.scrollIntoView({ block: "nearest" });
 		},
 		focusOrOpen(block) {
 			if (this.fieldsets[block.type].wysiwyg) {
@@ -412,25 +372,36 @@ export default {
 			set(block, "isHidden", true);
 			this.save();
 		},
-		isBatched(block) {
-			return this.batch.includes(block.id);
-		},
 		isInputEvent() {
 			const focused = document.querySelector(":focus");
-			return (
-				focused &&
-				focused?.matches("input, textarea, [contenteditable], .k-writer")
-			);
+			return focused?.matches("input, textarea, [contenteditable], .k-writer");
 		},
-		isLastInBatch(block) {
-			const [lastItem] = this.batch.slice(-1);
+		isLastSelected(block) {
+			const [lastItem] = this.selected.slice(-1);
 			return lastItem && block.id === lastItem;
 		},
 		isOnlyInstance() {
 			return document.querySelectorAll(".k-blocks").length === 1;
 		},
 		isSelected(block) {
-			return this.selected && this.selected === block.id;
+			return this.selected.includes(block.id);
+		},
+		async merge() {
+			if (this.isMergable) {
+				const blocks = this.selected.map((id) => this.find(id));
+
+				// top selected block handles merging
+				// (will update its own content with merged content)
+				this.ref(blocks[0]).$refs.editor.merge(blocks);
+
+				// remove all other selected blocks
+				for (const block of blocks.slice(1)) {
+					this.remove(block);
+				}
+
+				await this.$nextTick();
+				this.focus(blocks[0]);
+			}
 		},
 		move(event) {
 			// moving block between fields
@@ -457,145 +428,11 @@ export default {
 			// resets multi selecting on tab change
 			// keep only if there are already multiple selections
 			// triggers `blur` event when tab changed
-			if (this.batch.length === 0) {
+			if (this.selected.length === 0) {
 				this.isMultiSelectKey = false;
 			}
 		},
-		onCopy(event) {
-			if (
-				// only act on copy events for this blocks component
-				this.$el.contains(event.target) === false ||
-				// don't copy when the drawer or any dialogs are open
-				this.isEditing === true ||
-				this.$store.state.dialog ||
-				// don't copy if an input is focused
-				this.isInputEvent(event) === true
-			) {
-				return false;
-			}
-
-			return this.copy(event);
-		},
-		onKey(event) {
-			this.isMultiSelectKey = event.metaKey || event.ctrlKey || event.altKey;
-		},
-		onOutsideFocus(event) {
-			// ignore focus in dialogs to not alter current selection
-			if (
-				typeof event.target.closest === "function" &&
-				event.target.closest(".k-dialog")
-			) {
-				return;
-			}
-
-			const overlay = document.querySelector(".k-overlay:last-of-type");
-			if (
-				this.$el.contains(event.target) === false &&
-				(!overlay || overlay.contains(event.target) === false)
-			) {
-				return this.select(null);
-			}
-
-			// since we are still working in the same block when overlay is open
-			// we cannot detect the transition between the layout columns
-			// following codes detect if the target is in the same column
-			if (overlay) {
-				const layoutColumn = this.$el.closest(".k-layout-column");
-				if (layoutColumn?.contains(event.target) === false) {
-					return this.select(null);
-				}
-			}
-		},
-		onPaste(e) {
-			// enable pasting when the block selector is open
-			if (this.$refs.selector?.isOpen() === true) {
-				return this.paste(e);
-			}
-
-			// never paste blocks when the focus is in an input element
-			if (this.isInputEvent(e) === true) {
-				return false;
-			}
-
-			// not when any other dialogs or drawers are open
-			if (this.isEditing === true || this.$store.state.dialog) {
-				return false;
-			}
-
-			// not when nothing is selected and the paste event
-			// doesn't target something in the block component
-			if (
-				this.selectedOrBatched.length === 0 &&
-				this.$el.contains(e.target) === false
-			) {
-				return false;
-			}
-
-			return this.paste(e);
-		},
-		open(block) {
-			this.$refs["block-" + block.id]?.[0].open();
-		},
-		async paste(e) {
-			const html = this.$helper.clipboard.read(e);
-
-			// pass html or plain text to the paste endpoint to convert it to blocks
-			const blocks = await this.$api.post(this.endpoints.field + "/paste", {
-				html: html
-			});
-
-			// get the index
-			let lastItem = this.selectedOrBatched[this.selectedOrBatched.length - 1];
-			let lastIndex = this.findIndex(lastItem);
-
-			if (lastIndex === -1) {
-				lastIndex = this.blocks.length;
-			}
-
-			this.append(blocks, lastIndex + 1);
-		},
-		pasteboard() {
-			this.$refs.pasteboard.open();
-		},
-		prevNext(index) {
-			if (this.blocks[index]) {
-				return this.$refs["block-" + this.blocks[index].id]?.[0];
-			}
-		},
-		remove(block) {
-			const index = this.findIndex(block.id);
-
-			if (index !== -1) {
-				if (this.selected?.id === block.id) {
-					this.select(null);
-				}
-
-				this.$delete(this.blocks, index);
-				this.save();
-			}
-		},
-		removeAll() {
-			this.batch = [];
-			this.blocks = [];
-			this.save();
-			this.$refs.removeAll.close();
-		},
-		removeSelected() {
-			for (const id of this.batch) {
-				const index = this.findIndex(id);
-				if (index !== -1) {
-					this.$delete(this.blocks, index);
-				}
-			}
-
-			this.deselectAll();
-			this.save();
-			this.$refs.removeSelected.close();
-		},
-		save() {
-			this.$emit("input", this.blocks);
-		},
-		select(block, event = null) {
+		onClickBlock(block, event) {
 			// checks the event just before selecting the block
 			// especially since keyup doesn't trigger in with
 			// `ctrl/alt/cmd + tab` or `ctrl/alt/cmd + click` combinations
@@ -604,23 +441,231 @@ export default {
 				this.onKey(event);
 			}
 
-			if (block && this.isMultiSelectKey) {
-				this.addToBatch(block);
-				this.current = null;
+			if (this.isMultiSelectKey) {
+				event.preventDefault();
+				event.stopPropagation();
+
+				if (this.isSelected(block)) {
+					this.deselect(block);
+				} else {
+					this.select(block);
+				}
+			}
+		},
+		onClickGlobal(event) {
+			// ignore focus in dialogs or drawers to keep the current selection
+			if (
+				typeof event.target.closest === "function" &&
+				(event.target.closest(".k-dialog") || event.target.closest(".k-drawer"))
+			) {
 				return;
 			}
 
-			this.batch = [];
-			this.current = block ? block.id : null;
+			const overlay = document.querySelector(".k-overlay:last-of-type");
+
+			if (
+				this.$el.contains(event.target) === false &&
+				overlay?.contains(event.target) === false
+			) {
+				this.deselectAll();
+				return;
+			}
+
+			// since we are still working in the same block when overlay is open
+			// we cannot detect the transition between the layout columns;
+			// following codes detect if the target is in the same column
+			if (
+				overlay &&
+				this.$el.closest(".k-layout-column")?.contains(event.target) === false
+			) {
+				this.deselectAll();
+				return;
+			}
+		},
+		onCopy(event) {
+			if (
+				// only act on copy events for this blocks component
+				this.$el.contains(event.target) === false ||
+				// don't copy when the drawer or any dialogs are open
+				this.isEditing === true ||
+				this.$panel.dialog.isOpen === true ||
+				// don't copy if an input is focused
+				this.isInputEvent(event) === true
+			) {
+				return false;
+			}
+
+			return this.copy(event);
+		},
+		onFocus(block) {
+			if (this.isMultiSelectKey === false) {
+				this.selected = [block.id];
+			}
+		},
+		async onKey(event) {
+			this.isMultiSelectKey = event.metaKey || event.ctrlKey || event.altKey;
+
+			// remove batch selecting on escape, only select first one
+			if (event.code === "Escape" && this.selected.length > 1) {
+				const block = this.find(this.selected[0]);
+				await this.$nextTick();
+				this.focus(block);
+			}
+		},
+		onPaste(e) {
+			// never paste blocks when the focus is in an input element
+			if (this.isInputEvent(e) === true) {
+				return false;
+			}
+
+			// not when any dialogs or drawers are open
+			if (this.isEditing === true || this.$panel.dialog.isOpen === true) {
+				return false;
+			}
+
+			// not when nothing is selected and the paste event
+			// doesn't target something in the block component
+			if (this.selected.length === 0 && this.$el.contains(e.target) === false) {
+				return false;
+			}
+
+			return this.paste(e);
+		},
+		open(block) {
+			this.$refs["block-" + block.id]?.[0].open();
+		},
+		async paste(e, index) {
+			const html = this.$helper.clipboard.read(e);
+
+			// pass html or plain text to the paste endpoint to convert it to blocks
+			let blocks = await this.$api.post(this.endpoints.field + "/paste", {
+				html: html
+			});
+
+			// get the index
+			if (index === undefined) {
+				let item = this.selected[this.selected.length - 1];
+				index = this.findIndex(item);
+
+				if (index === -1) {
+					index = this.blocks.length;
+				}
+
+				index++;
+			}
+
+			// don't add blocks that exceed the maximum limit
+			if (this.max) {
+				const max = this.max - this.blocks.length;
+				blocks = blocks.slice(0, max);
+			}
+
+			this.blocks.splice(index, 0, ...blocks);
+			this.save();
+
+			// a sign that it has been pasted
+			this.$panel.notification.success({
+				message: this.$t("paste.success", { count: blocks.length }),
+				icon: "download"
+			});
+		},
+		pasteboard() {
+			this.$panel.dialog.open({
+				component: "k-block-pasteboard",
+				on: {
+					paste: this.paste
+				}
+			});
+		},
+		prevNext(index) {
+			if (this.blocks[index]) {
+				return this.$refs["block-" + this.blocks[index].id]?.[0];
+			}
+		},
+		ref(block) {
+			return this.$refs["block-" + (block?.id ?? this.blocks[0]?.id)]?.[0];
+		},
+		remove(block) {
+			const index = this.findIndex(block.id);
+
+			if (index !== -1) {
+				this.deselect(block);
+				this.$delete(this.blocks, index);
+				this.save();
+			}
+		},
+		removeAll() {
+			this.$panel.dialog.open({
+				component: "k-remove-dialog",
+				props: {
+					text: this.$t("field.blocks.delete.confirm.all"),
+					submitButton: this.$t("delete.all")
+				},
+				on: {
+					submit: () => {
+						this.selected = [];
+						this.blocks = [];
+						this.save();
+						this.$panel.dialog.close();
+					}
+				}
+			});
+		},
+		removeSelected() {
+			this.$panel.dialog.open({
+				component: "k-remove-dialog",
+				props: {
+					text: this.$t("field.blocks.delete.confirm.selected")
+				},
+				on: {
+					submit: () => {
+						for (const id of this.selected) {
+							const index = this.findIndex(id);
+							if (index !== -1) {
+								this.$delete(this.blocks, index);
+							}
+						}
+
+						this.deselectAll();
+						this.save();
+
+						this.$panel.dialog.close();
+					}
+				}
+			});
+		},
+		save() {
+			this.$emit("input", this.blocks);
+		},
+		select(block) {
+			if (this.isSelected(block) === false) {
+				this.selected.push(block.id);
+			}
+		},
+		selectDown() {
+			const last = this.selected[this.selected.length - 1];
+			const index = this.findIndex(last) + 1;
+
+			if (index < this.blocks.length) {
+				this.select(this.blocks[index]);
+			}
+		},
+		selectUp() {
+			const first = this.selected[0];
+			const index = this.findIndex(first) - 1;
+
+			if (index >= 0) {
+				this.select(this.blocks[index]);
+			}
 		},
 		selectAll() {
-			this.batch = Object.values(this.blocks).map((block) => block.id);
+			this.selected = Object.values(this.blocks).map((block) => block.id);
 		},
 		show(block) {
 			set(block, "isHidden", false);
 			this.save();
 		},
-		sort(block, from, to) {
+		async sort(block, from, to) {
 			if (to < 0) {
 				return;
 			}
@@ -629,9 +674,30 @@ export default {
 			blocks.splice(to, 0, block);
 			this.blocks = blocks;
 			this.save();
-			this.$nextTick(() => {
-				this.focus(block);
-			});
+			await this.$nextTick();
+			this.focus(block);
+		},
+		async split(block, index, contents) {
+			// prepare old block with reduced content chunk
+			const oldBlock = this.$helper.clone(block);
+			oldBlock.content = { ...oldBlock.content, ...contents[0] };
+
+			// create a new block and merge in default contents as
+			// well as the newly splitted content chunk
+			const newBlock = await this.$api.get(
+				this.endpoints.field + "/fieldsets/" + block.type
+			);
+			newBlock.content = {
+				...newBlock.content,
+				...oldBlock.content,
+				...contents[1]
+			};
+
+			// in one go: remove old block and onsert updated and new block
+			this.blocks.splice(index, 1, oldBlock, newBlock);
+			this.save();
+			await this.$nextTick();
+			this.focus(newBlock);
 		},
 		update(block, content) {
 			const index = this.findIndex(block.id);
@@ -648,20 +714,21 @@ export default {
 
 <style>
 .k-blocks {
-	background: var(--color-white);
-	box-shadow: var(--shadow);
 	border-radius: var(--rounded);
 }
-[data-disabled="true"] .k-blocks {
-	background: var(--color-background);
+.k-blocks:not([data-empty="true"], [data-disabled="true"]) {
+	background: var(--color-white);
+	box-shadow: var(--shadow);
 }
-.k-blocks[data-multi-select-key="true"] .k-block-container > * {
+.k-blocks[data-disabled="true"]:not([data-empty="true"]) {
+	border: 1px solid var(--input-color-border);
+}
+/* When multiselect key is pressed, prevent pointer events on containing blocks, but ensure to reset it for nested blocks */
+.k-blocks-list[data-multi-select-key="true"] > .k-block-container * {
 	pointer-events: none;
 }
-.k-blocks[data-empty="true"] {
-	padding: 0;
-	background: none;
-	box-shadow: none;
+.k-blocks-list[data-multi-select-key="true"] > .k-block-container .k-blocks * {
+	pointer-events: all;
 }
 .k-blocks .k-sortable-ghost {
 	outline: 2px solid var(--color-focus);
@@ -673,8 +740,5 @@ export default {
 .k-blocks-list > .k-blocks-empty {
 	display: flex;
 	align-items: center;
-}
-.k-blocks-list > .k-blocks-empty:not(:only-child) {
-	display: none;
 }
 </style>

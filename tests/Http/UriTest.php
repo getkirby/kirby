@@ -295,21 +295,17 @@ class UriTest extends TestCase
 	public function testToArray()
 	{
 		$url = new Uri($this->example2);
-
-		$this->assertSame([
-			'fragment' => 'top',
-			'host'     => 'getkirby.com',
-			'password' => 'weakpassword',
-			'params'   => [
-				'with' => 'kirby',
-			],
-			'path'     => ['docs', 'getting-started'],
-			'port'     => 3000,
-			'query'    => ['q' => 'awesome'],
-			'scheme'   => 'https',
-			'slash'    => true,
-			'username' => 'testuser',
-		], $url->toArray());
+		$result = $url->toArray();
+		$this->assertSame('top', $result['fragment']);
+		$this->assertSame('getkirby.com', $result['host']);
+		$this->assertSame('weakpassword', $result['password']);
+		$this->assertSame(['with' => 'kirby'], $result['params']);
+		$this->assertSame(['docs', 'getting-started'], $result['path']);
+		$this->assertSame(3000, $result['port']);
+		$this->assertSame(['q' => 'awesome'], $result['query']);
+		$this->assertSame('https', $result['scheme']);
+		$this->assertSame(true, $result['slash']);
+		$this->assertSame('testuser', $result['username']);
 	}
 
 	public function buildProvider()

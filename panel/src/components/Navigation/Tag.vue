@@ -1,37 +1,67 @@
 <template>
-	<span
+	<button
 		ref="button"
+		:aria-disabled="disabled"
+		:data-has-image="Boolean(image)"
+		:data-has-toggle="isRemovable"
 		class="k-tag"
-		tabindex="0"
+		type="button"
 		@keydown.delete.prevent="remove"
 	>
-		<span class="k-tag-text"><slot /></span>
-		<k-icon
-			v-if="removable"
+		<!-- @slot Replaces the image/icon frame created via the `image` prop -->
+		<slot name="image">
+			<k-image-frame v-if="image?.src" v-bind="image" class="k-tag-image" />
+			<k-icon-frame v-else-if="image" v-bind="image" class="k-tag-image" />
+		</slot>
+
+		<span v-if="$slots.default" class="k-tag-text">
+			<!-- @slot Tag text -->
+			<slot />
+		</span>
+
+		<k-icon-frame
+			v-if="isRemovable"
 			class="k-tag-toggle"
-			type="cancel-small"
-			@click.native="remove"
+			icon="cancel-small"
+			@click.native.stop="remove"
 		/>
-	</span>
+	</button>
 </template>
 
 <script>
 /**
- * The Tag Button is mostly used in the `<k-tags-input>` component
+ * A simple tag button with optional image/icon and remove button
+ *
  * @example <k-tag>Design</k-tag>
  */
 export default {
 	props: {
 		/**
+		 * Dims the tag and hides the remove button
+		 */
+		disabled: Boolean,
+		/**
+		 * See `k-image-frame` or `k-icon-frame` for available options
+		 */
+		image: {
+			type: Object
+		},
+		/**
 		 * Enables the remove button
 		 */
 		removable: Boolean
 	},
+	computed: {
+		isRemovable() {
+			return this.removable && !this.disabled;
+		}
+	},
 	methods: {
 		remove() {
-			if (this.removable) {
+			if (this.isRemovable) {
 				/**
-				 * This event is emitted when the remove button is being clicked or the tag is focussed and the delete key is entered.
+				 * Remove button is being clicked
+				 * or the tag is focussed and the delete key is entered.
 				 */
 				this.$emit("remove");
 			}
@@ -44,43 +74,63 @@ export default {
 </script>
 
 <style>
+:root {
+	--tag-color-back: var(--color-black);
+	--tag-color-text: var(--color-white);
+	--tag-color-toggle: currentColor;
+	--tag-color-disabled-back: var(--color-gray-600);
+	--tag-color-disabled-text: var(--tag-color-text);
+	--tag-height: var(--height-xs);
+	--tag-rounded: var(--rounded-sm);
+}
+
 .k-tag {
 	position: relative;
-	font-size: var(--text-sm);
-	line-height: 1;
-	cursor: pointer;
-	background-color: var(--color-gray-900);
-	color: var(--color-light);
-	border-radius: var(--rounded);
+	height: var(--tag-height);
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	font-size: var(--text-sm);
+	line-height: 1;
+	color: var(--tag-color-text);
+	background-color: var(--tag-color-back);
+	border-radius: var(--tag-rounded);
+	cursor: pointer;
 	user-select: none;
 }
-.k-tag:focus {
-	outline: 0;
-	background-color: var(--color-focus);
-	color: #fff;
+.k-tag:not([aria-disabled]):focus {
+	outline: var(--outline);
+}
+.k-tag-image {
+	height: calc(var(--tag-height) - var(--spacing-2));
+	margin-inline: var(--spacing-1);
+	border-radius: var(--tag-rounded);
+	overflow: hidden;
 }
 .k-tag-text {
-	padding: 0.3rem 0.75rem 0.375rem;
+	padding-inline: var(--spacing-2);
 	line-height: var(--leading-tight);
 }
+/** TODO: .k-tag:has(.k-frame) .k-tag-text  */
+.k-tag[data-has-image="true"] .k-tag-text {
+	padding-inline-start: var(--spacing-1);
+}
+/** TODO: .k-tag:has(.k-tag-toggle) .k-tag-text  */
+.k-tag[data-has-toggle="true"] .k-tag-text {
+	padding-inline-end: 0;
+}
 .k-tag-toggle {
-	color: rgba(255, 255, 255, 0.7);
-	width: 1.75rem;
-	padding-inline-end: 1px;
-	height: 100%;
-	border-inline-start: 1px solid rgba(255, 255, 255, 0.15);
+	width: var(--tag-height);
+	height: var(--tag-height);
+	filter: brightness(70%);
 }
 .k-tag-toggle:hover {
-	background: rgba(255, 255, 255, 0.2);
-	color: #fff;
+	filter: brightness(100%);
 }
-[data-disabled="true"] .k-tag {
-	background-color: var(--color-gray-600);
-}
-[data-disabled="true"] .k-tag .k-tag-toggle {
-	display: none;
+
+.k-tag:where([aria-disabled]) {
+	background-color: var(--tag-color-disabled-back);
+	color: var(--tag-color-disabled-text);
+	cursor: not-allowed;
 }
 </style>

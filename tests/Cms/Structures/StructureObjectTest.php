@@ -2,32 +2,20 @@
 
 namespace Kirby\Cms;
 
+use TypeError;
+
 class StructureObjectTest extends TestCase
 {
 	public function testId()
 	{
-		$object = new StructureObject([
-			'id' => 'test'
-		]);
-
+		$object = new StructureObject(['id' => 'test']);
 		$this->assertSame('test', $object->id());
 	}
 
 	public function testInvalidId()
 	{
-		$this->expectException('TypeError');
-
-		$object = new StructureObject([
-			'id' => []
-		]);
-	}
-
-	public function testMissingId()
-	{
-		$this->expectException('Exception');
-		$this->expectExceptionMessage('The property "id" is required');
-
-		$object = new StructureObject(['foo' => 'bar']);
+		$this->expectException(TypeError::class);
+		new StructureObject(['id' => []]);
 	}
 
 	public function testContent()
@@ -106,9 +94,18 @@ class StructureObjectTest extends TestCase
 		$this->assertSame($parent, $object->parent());
 	}
 
+	public function testParentFallback()
+	{
+		$object = new StructureObject([
+			'id'     => 'test',
+		]);
+
+		$this->assertInstanceOf(Site::class, $object->parent());
+	}
+
 	public function testInvalidParent()
 	{
-		$this->expectException('TypeError');
+		$this->expectException(TypeError::class);
 
 		$object = new StructureObject([
 			'id'     => 'test',
@@ -124,9 +121,9 @@ class StructureObjectTest extends TestCase
 		];
 
 		$expected = [
-			'id'    => 'test',
-			'text'  => 'Text',
 			'title' => 'Title',
+			'text'  => 'Text',
+			'id'    => 'test',
 		];
 
 		$object = new StructureObject([

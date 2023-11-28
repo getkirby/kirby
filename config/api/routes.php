@@ -19,7 +19,10 @@ return function ($kirby) {
 	// only add the language routes if the
 	// multi language setup is activated
 	if ($kirby->option('languages', false) !== false) {
-		$routes = array_merge($routes, include __DIR__ . '/routes/languages.php');
+		$routes = array_merge(
+			$routes,
+			include __DIR__ . '/routes/languages.php'
+		);
 	}
 
 	return $routes;

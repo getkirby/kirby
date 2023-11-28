@@ -3,6 +3,7 @@
 use Kirby\Cms\Api;
 use Kirby\Cms\File;
 use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 
 return [
 	'props' => [
@@ -22,18 +23,23 @@ return [
 				$uploads = [];
 			}
 
-			$template = $uploads['template'] ?? null;
+			$uploads['accept'] = '*';
 
-			if ($template) {
+			if ($template = $uploads['template'] ?? null) {
+				// get parent object for upload target
+				$parent = $this->uploadParent($uploads['parent'] ?? null);
+
+				if ($parent === null) {
+					throw new InvalidArgumentException('"' . $uploads['parent'] . '" could not be resolved as a valid parent for the upload');
+				}
+
 				$file = new File([
 					'filename' => 'tmp',
-					'parent'   => $this->model(),
+					'parent'   => $parent,
 					'template' => $template
 				]);
 
 				$uploads['accept'] = $file->blueprint()->acceptMime();
-			} else {
-				$uploads['accept'] = '*';
 			}
 
 			return $uploads;
@@ -45,15 +51,7 @@ return [
 				throw new Exception('Uploads are disabled for this field');
 			}
 
-			if ($parentQuery = ($params['parent'] ?? null)) {
-				$parent = $this->model()->query($parentQuery);
-			} else {
-				$parent = $this->model();
-			}
-
-			if ($parent instanceof File) {
-				$parent = $parent->parent();
-			}
+			$parent = $this->uploadParent($params['parent'] ?? null);
 
 			return $api->upload(function ($source, $filename) use ($parent, $params, $map) {
 				$props = [
@@ -71,6 +69,19 @@ return [
 
 				return $map($file, $parent);
 			});
+		},
+		'uploadParent' => function (string $parentQuery = null) {
+			$parent = $this->model();
+
+			if ($parentQuery) {
+				$parent = $parent->query($parentQuery);
+			}
+
+			if ($parent instanceof File) {
+				$parent = $parent->parent();
+			}
+
+			return $parent;
 		}
 	]
 ];

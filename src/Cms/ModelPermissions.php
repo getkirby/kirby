@@ -15,28 +15,13 @@ use Kirby\Toolkit\A;
  */
 abstract class ModelPermissions
 {
-	protected $category;
-	protected $model;
-	protected $options;
-	protected $permissions;
-	protected $user;
+	protected string $category;
+	protected ModelWithContent $model;
+	protected array $options;
+	protected Permissions $permissions;
+	protected User $user;
 
-	/**
-	 * @param string $method
-	 * @param array $arguments
-	 * @return bool
-	 */
-	public function __call(string $method, array $arguments = []): bool
-	{
-		return $this->can($method);
-	}
-
-	/**
-	 * ModelPermissions constructor
-	 *
-	 * @param \Kirby\Cms\Model $model
-	 */
-	public function __construct(Model $model)
+	public function __construct(ModelWithContent $model)
 	{
 		$this->model       = $model;
 		$this->options     = $model->blueprint()->options();
@@ -44,34 +29,44 @@ abstract class ModelPermissions
 		$this->permissions = $this->user->role()->permissions();
 	}
 
+	public function __call(string $method, array $arguments = []): bool
+	{
+		return $this->can($method);
+	}
+
 	/**
 	 * Improved `var_dump` output
-	 *
-	 * @return array
+	 * @codeCoverageIgnore
 	 */
 	public function __debugInfo(): array
 	{
 		return $this->toArray();
 	}
 
-	/**
-	 * @param string $action
-	 * @return bool
-	 */
 	public function can(string $action): bool
 	{
+		$user = $this->user->id();
 		$role = $this->user->role()->id();
 
+		// users with the `nobody` role can do nothing
+		// that needs a permission check
 		if ($role === 'nobody') {
 			return false;
 		}
 
-		// check for a custom overall can method
+		// check for a custom `can` method
+		// which would take priority over any other
+		// role-based permission rules
 		if (
 			method_exists($this, 'can' . $action) === true &&
 			$this->{'can' . $action}() === false
 		) {
 			return false;
+		}
+
+		// the almighty `kirby` user can do anything
+		if ($user === 'kirby' && $role === 'admin') {
+			return true;
 		}
 
 		// evaluate the blueprint options block
@@ -90,25 +85,24 @@ abstract class ModelPermissions
 				is_array($options) === true &&
 				A::isAssociative($options) === true
 			) {
-				return $options[$role] ?? $options['*'] ?? false;
+				if (isset($options[$role]) === true) {
+					return $options[$role];
+				}
+
+				if (isset($options['*']) === true) {
+					return $options['*'];
+				}
 			}
 		}
 
 		return $this->permissions->for($this->category, $action);
 	}
 
-	/**
-	 * @param string $action
-	 * @return bool
-	 */
 	public function cannot(string $action): bool
 	{
 		return $this->can($action) === false;
 	}
 
-	/**
-	 * @return array
-	 */
 	public function toArray(): array
 	{
 		$array = [];

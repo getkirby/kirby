@@ -21,12 +21,21 @@
 			<k-button
 				class="k-login-button k-login-back-button"
 				icon="angle-left"
+				size="lg"
+				variant="filled"
 				@click="back"
 			>
 				{{ $t("back") }} <template v-if="isLoadingBack"> … </template>
 			</k-button>
 
-			<k-button class="k-login-button" icon="check" type="submit">
+			<k-button
+				class="k-login-button"
+				icon="check"
+				size="lg"
+				type="submit"
+				theme="positive"
+				variant="filled"
+			>
 				{{ $t("login" + (mode === "password-reset" ? ".reset" : "")) }}
 				<template v-if="isLoadingLogin"> … </template>
 			</k-button>
@@ -67,7 +76,11 @@ export default {
 
 			try {
 				await this.$api.auth.verifyCode(this.code);
-				this.$store.dispatch("notification/success", this.$t("welcome"));
+
+				this.$panel.notification.success({
+					message: this.$t("welcome") + "!",
+					icon: "smile"
+				});
 
 				if (this.mode === "password-reset") {
 					this.$go("reset-password");
@@ -86,11 +99,6 @@ export default {
 
 <style>
 .k-login-code-form .k-user-info {
-	height: 38px;
-	margin-bottom: 2.25rem;
-	padding: 0.5rem;
-	background: var(--color-white);
-	border-radius: var(--rounded-xs);
-	box-shadow: var(--shadow);
+	margin-bottom: var(--spacing-6);
 }
 </style>

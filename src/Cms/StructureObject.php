@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Content\Content;
+
 /**
  * The StructureObject represents each item
  * in a Structure collection. StructureObjects
@@ -18,44 +20,38 @@ namespace Kirby\Cms;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class StructureObject extends Model
+class StructureObject extends Item
 {
-	use HasSiblings;
+	use HasMethods;
+
+	public const ITEMS_CLASS = Structure::class;
+
+	protected Content $content;
 
 	/**
-	 * The content
-	 *
-	 * @var Content
+	 * Creates a new StructureObject with the given props
 	 */
-	protected $content;
+	public function __construct(array $params = [])
+	{
+		parent::__construct($params);
 
-	/**
-	 * @var string
-	 */
-	protected $id;
-
-	/**
-	 * @var \Kirby\Cms\Site|\Kirby\Cms\Page|\Kirby\Cms\File|\Kirby\Cms\User|null
-	 */
-	protected $parent;
-
-	/**
-	 * The parent Structure collection
-	 *
-	 * @var Structure
-	 */
-	protected $structure;
+		$this->content = new Content(
+			$params['content'] ?? $params['params'] ?? [],
+			$this->parent
+		);
+	}
 
 	/**
 	 * Modified getter to also return fields
 	 * from the object's content
-	 *
-	 * @param string $method
-	 * @param array $arguments
-	 * @return mixed
 	 */
-	public function __call(string $method, array $arguments = [])
+	public function __call(string $method, array $args = []): mixed
 	{
+		// structure object methods
+		if ($this->hasMethod($method) === true) {
+			return $this->callMethod($method, $args);
+		}
+
 		// public property access
 		if (isset($this->$method) === true) {
 			return $this->$method;
@@ -65,145 +61,25 @@ class StructureObject extends Model
 	}
 
 	/**
-	 * Creates a new StructureObject with the given props
-	 *
-	 * @param array $props
-	 */
-	public function __construct(array $props)
-	{
-		$this->setProperties($props);
-	}
-
-	/**
 	 * Returns the content
-	 *
-	 * @return \Kirby\Cms\Content
 	 */
-	public function content()
+	public function content(): Content
 	{
-		if ($this->content instanceof Content) {
-			return $this->content;
-		}
-
-		if (is_array($this->content) !== true) {
-			$this->content = [];
-		}
-
-		return $this->content = new Content($this->content, $this->parent());
-	}
-
-	/**
-	 * Returns the required id
-	 *
-	 * @return string
-	 */
-	public function id(): string
-	{
-		return $this->id;
-	}
-
-	/**
-	 * Compares the current object with the given structure object
-	 *
-	 * @param mixed $structure
-	 * @return bool
-	 */
-	public function is($structure): bool
-	{
-		if ($structure instanceof self === false) {
-			return false;
-		}
-
-		return $this === $structure;
-	}
-
-	/**
-	 * Returns the parent Model object
-	 *
-	 * @return \Kirby\Cms\Model
-	 */
-	public function parent()
-	{
-		return $this->parent;
-	}
-
-	/**
-	 * Sets the Content object with the given parent
-	 *
-	 * @param array|null $content
-	 * @return $this
-	 */
-	protected function setContent(array $content = null)
-	{
-		$this->content = $content;
-		return $this;
-	}
-
-	/**
-	 * Sets the id of the object.
-	 * The id is required. The structure
-	 * class will use the index, if no id is
-	 * specified.
-	 *
-	 * @param string $id
-	 * @return $this
-	 */
-	protected function setId(string $id)
-	{
-		$this->id = $id;
-		return $this;
-	}
-
-	/**
-	 * Sets the parent Model
-	 *
-	 * @return $this
-	 * @param \Kirby\Cms\Site|\Kirby\Cms\Page|\Kirby\Cms\File|\Kirby\Cms\User|null $parent
-	 */
-	protected function setParent(Model $parent = null)
-	{
-		$this->parent = $parent;
-		return $this;
-	}
-
-	/**
-	 * Sets the parent Structure collection
-	 *
-	 * @param \Kirby\Cms\Structure|null $structure
-	 * @return $this
-	 */
-	protected function setStructure(Structure $structure = null)
-	{
-		$this->structure = $structure;
-		return $this;
-	}
-
-	/**
-	 * Returns the parent Structure collection as siblings
-	 *
-	 * @return \Kirby\Cms\Structure
-	 */
-	protected function siblingsCollection()
-	{
-		return $this->structure;
+		return $this->content;
 	}
 
 	/**
 	 * Converts all fields in the object to a
 	 * plain associative array. The id is
-	 * injected into the array afterwards
+	 * injected from the parent into the array
 	 * to make sure it's always present and
-	 * not overloaded in the content.
-	 *
-	 * @return array
+	 * not overloaded by the content.
 	 */
 	public function toArray(): array
 	{
-		$array = $this->content()->toArray();
-		$array['id'] = $this->id();
-
-		ksort($array);
-
-		return $array;
+		return array_merge(
+			$this->content()->toArray(),
+			parent::toArray()
+		);
 	}
 }

@@ -14,25 +14,12 @@ namespace Kirby\Cms;
  */
 abstract class Picker
 {
-	/**
-	 * @var \Kirby\Cms\App
-	 */
-	protected $kirby;
-
-	/**
-	 * @var array
-	 */
-	protected $options;
-
-	/**
-	 * @var \Kirby\Cms\Site
-	 */
-	protected $site;
+	protected App $kirby;
+	protected array $options;
+	protected Site $site;
 
 	/**
 	 * Creates a new Picker instance
-	 *
-	 * @param array $params
 	 */
 	public function __construct(array $params = [])
 	{
@@ -43,8 +30,6 @@ abstract class Picker
 
 	/**
 	 * Return the array of default values
-	 *
-	 * @return array
 	 */
 	protected function defaults(): array
 	{
@@ -55,7 +40,7 @@ abstract class Picker
 			// query template for the info field
 			'info' => false,
 			// listing style: list, cards, cardlets
-			'layout' =>'list',
+			'layout' => 'list',
 			// number of users displayed per pagination page
 			'limit' => 20,
 			// optional mapping function for the result array
@@ -75,20 +60,15 @@ abstract class Picker
 
 	/**
 	 * Fetches all items for the picker
-	 *
-	 * @return \Kirby\Cms\Collection|null
 	 */
-	abstract public function items();
+	abstract public function items(): Collection|null;
 
 	/**
 	 * Converts all given items to an associative
 	 * array that is already optimized for the
 	 * panel picker component.
-	 *
-	 * @param \Kirby\Cms\Collection|null $items
-	 * @return array
 	 */
-	public function itemsToArray($items = null): array
+	public function itemsToArray(Collection $items = null): array
 	{
 		if ($items === null) {
 			return [];
@@ -116,11 +96,8 @@ abstract class Picker
 	/**
 	 * Apply pagination to the collection
 	 * of items according to the options.
-	 *
-	 * @param \Kirby\Cms\Collection $items
-	 * @return \Kirby\Cms\Collection
 	 */
-	public function paginate(Collection $items)
+	public function paginate(Collection $items): Collection
 	{
 		return $items->paginate([
 			'limit' => $this->options['limit'],
@@ -131,9 +108,6 @@ abstract class Picker
 	/**
 	 * Return the most relevant pagination
 	 * info as array
-	 *
-	 * @param \Kirby\Cms\Pagination $pagination
-	 * @return array
 	 */
 	public function paginationToArray(Pagination $pagination): array
 	{
@@ -147,11 +121,8 @@ abstract class Picker
 	/**
 	 * Search through the collection of items
 	 * if not deactivate in the options
-	 *
-	 * @param \Kirby\Cms\Collection $items
-	 * @return \Kirby\Cms\Collection
 	 */
-	public function search(Collection $items)
+	public function search(Collection $items): Collection
 	{
 		if (empty($this->options['search']) === false) {
 			return $items->search($this->options['search']);
@@ -164,8 +135,6 @@ abstract class Picker
 	 * Returns an associative array
 	 * with all information for the picker.
 	 * This will be passed directly to the API.
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{

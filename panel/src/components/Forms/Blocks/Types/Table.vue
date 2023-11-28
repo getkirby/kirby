@@ -24,19 +24,19 @@ export default {
 		 * @returns {Object}
 		 */
 		columns() {
-			return this.table.columns || this.fields;
+			return this.table.columns ?? this.fields;
 		},
 		/**
 		 * @returns  {Object}
 		 */
 		fields() {
-			return this.table.fields || {};
+			return this.table.fields ?? {};
 		},
 		/**
 		 * @returns {Array}
 		 */
 		rows() {
-			return this.content.rows || [];
+			return this.content.rows ?? [];
 		},
 		/**
 		 * Returns table config from `rows`
@@ -47,13 +47,13 @@ export default {
 		table() {
 			let table = null;
 
-			for (const tab of Object.values(this.fieldset.tabs)) {
+			for (const tab of Object.values(this.fieldset.tabs ?? {})) {
 				if (tab.fields.rows) {
 					table = tab.fields.rows;
 				}
 			}
 
-			return table || {};
+			return table ?? {};
 		}
 	}
 };

@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Asset;
 use PHPUnit\Framework\TestCase;
@@ -28,7 +29,8 @@ class FileModificationsTest extends TestCase
 	{
 		$input = [
 			'width'  => 300,
-			'height' => 200
+			'height' => 200,
+			'focus'  => '20%, 80%'
 		];
 
 		$app = $this->app->clone([
@@ -37,6 +39,14 @@ class FileModificationsTest extends TestCase
 					$this->assertSame($input, $options);
 					return $file;
 				}
+			],
+			'site' => [
+				'files' => [
+					[
+						'filename' => 'test.jpg',
+						'content' => ['focus' => '70%, 30%']
+					]
+				]
 			]
 		]);
 
@@ -138,6 +148,29 @@ class FileModificationsTest extends TestCase
 
 		$file = $app->file('test.jpg');
 		$file->thumb(['width' => 100]);
+	}
+
+	public function testThumbWithFocusFromContent()
+	{
+		$app = $this->app->clone([
+			'components' => [
+				'file::version' => function ($kirby, $file, $options = []) {
+					$this->assertSame('70%, 30%', $options['crop']);
+					return $file;
+				}
+			],
+			'site' => [
+				'files' => [
+					[
+						'filename' => 'test.jpg',
+						'content' => ['focus' => '70%, 30%']
+					]
+				]
+			]
+		]);
+
+		$file = $app->file('test.jpg');
+		$file->thumb(['width' => 100, 'crop' => true]);
 	}
 
 	public function testThumbWithNoOptions()

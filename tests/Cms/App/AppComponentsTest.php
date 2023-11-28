@@ -2,7 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Content\Field;
 use Kirby\Email\Email;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Template\Template;
@@ -385,6 +387,20 @@ class AppComponentsTest extends TestCase
 
 		$this->assertSame('test-path', url('test'));
 		$this->assertSame('/any/page', url('any/page'));
+	}
+
+	public function testUrlInvalidUuid()
+	{
+		$this->kirby->clone([
+			'roots' => [
+				'index' => __DIR__ . '/fixtures/AppComponentsTest',
+			]
+		]);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The model could not be found for "page://invalid" uuid');
+
+		url('page://invalid');
 	}
 
 	public function testEmail()

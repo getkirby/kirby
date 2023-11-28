@@ -22,8 +22,7 @@ abstract class Challenge
 	 * for the passed user and purpose
 	 *
 	 * @param \Kirby\Cms\User $user User the code will be generated for
-	 * @param string $mode Purpose of the code ('login', 'reset' or '2fa')
-	 * @return bool
+	 * @param 'login'|'password-reset'|'2fa' $mode Purpose of the code
 	 */
 	abstract public static function isAvailable(User $user, string $mode): bool;
 
@@ -33,7 +32,7 @@ abstract class Challenge
 	 *
 	 * @param \Kirby\Cms\User $user User to generate the code for
 	 * @param array $options Details of the challenge request:
-	 *                       - 'mode': Purpose of the code ('login', 'reset' or '2fa')
+	 *                       - 'mode': Purpose of the code ('login', 'password-reset' or '2fa')
 	 *                       - 'timeout': Number of seconds the code will be valid for
 	 * @return string|null The generated and sent code or `null` in case
 	 *                     there was no code to generate by this algorithm
@@ -47,7 +46,6 @@ abstract class Challenge
 	 *
 	 * @param \Kirby\Cms\User $user User to check the code for
 	 * @param string $code Code to verify
-	 * @return bool
 	 */
 	public static function verify(
 		User $user,

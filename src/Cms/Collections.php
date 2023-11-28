@@ -52,8 +52,8 @@ class Collections
 	 * Loads a collection by name if registered
 	 *
 	 * @return \Kirby\Toolkit\Collection|null
-	 * @todo 4.0 Add deprecation warning when anything else than a Collection is returned
-	 * @todo 5.0 Add return type declaration
+	 * @todo 5.0 Add deprecation warning when anything else than a Collection is returned
+	 * @todo 6.0 Add PHP return type declaration for `Toolkit\Collection`
 	 */
 	public function get(string $name, array $data = [])
 	{
@@ -61,11 +61,9 @@ class Collections
 		$this->collections[$name] ??= $this->load($name);
 
 		// if not yet cached
-		if (
-			isset($this->cache[$name]) === false ||
-			$this->cache[$name]['data'] !== $data
-		) {
+		if (($this->cache[$name]['data'] ?? null) !== $data) {
 			$controller = new Controller($this->collections[$name]);
+
 			$this->cache[$name] = [
 				'result' => $controller->call(null, $data),
 				'data'   => $data
@@ -82,9 +80,6 @@ class Collections
 
 	/**
 	 * Checks if a collection exists
-	 *
-	 * @param string $name
-	 * @return bool
 	 */
 	public function has(string $name): bool
 	{
@@ -104,11 +99,9 @@ class Collections
 	 * Loads collection from php file in a
 	 * given directory or from plugin extension.
 	 *
-	 * @param string $name
-	 * @return mixed
 	 * @throws \Kirby\Exception\NotFoundException
 	 */
-	public function load(string $name)
+	public function load(string $name): mixed
 	{
 		$kirby = App::instance();
 
@@ -126,10 +119,7 @@ class Collections
 		// fallback to collections from plugins
 		$collections = $kirby->extensions('collections');
 
-		if (isset($collections[$name]) === true) {
-			return $collections[$name];
-		}
-
-		throw new NotFoundException('The collection cannot be found');
+		return $collections[$name] ??
+			throw new NotFoundException('The collection cannot be found');
 	}
 }

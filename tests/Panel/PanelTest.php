@@ -108,19 +108,19 @@ class PanelTest extends TestCase
 		// authenticated
 		$areas = Panel::areas($this->app);
 
+		$this->assertArrayHasKey('search', $areas);
 		$this->assertArrayHasKey('site', $areas);
 		$this->assertArrayHasKey('system', $areas);
 		$this->assertArrayHasKey('users', $areas);
 		$this->assertArrayHasKey('account', $areas);
 		$this->assertArrayHasKey('logout', $areas);
-		$this->assertCount(5, $areas);
+		$this->assertArrayHasKey('lab', $areas);
+		$this->assertCount(7, $areas);
 
 		// authenticated with plugins
 		$app = $this->app->clone([
 			'areas' => [
-				'todos' => function () {
-					return [];
-				}
+				'todos' => fn () => []
 			]
 		]);
 
@@ -129,7 +129,7 @@ class PanelTest extends TestCase
 		$areas = Panel::areas($app);
 
 		$this->assertArrayHasKey('todos', $areas);
-		$this->assertCount(6, $areas);
+		$this->assertCount(8, $areas);
 	}
 
 	/**
@@ -471,8 +471,9 @@ class PanelTest extends TestCase
 		$this->assertSame('browser', $routes[0]['pattern']);
 		$this->assertSame(['/', 'installation', 'login'], $routes[1]['pattern']);
 		$this->assertSame('(:all)', $routes[2]['pattern']);
-		$this->assertSame('The view could not be found', $routes[2]['action']());
+		$this->assertSame('Could not find Panel view for route: foo', $routes[2]['action']('foo'));
 	}
+
 
 	/**
 	 * @covers ::routesForDialogs
@@ -524,8 +525,8 @@ class PanelTest extends TestCase
 
 		$routes = Panel::routesForDialogs('test', $area);
 
-		$this->assertSame('The load handler for your dialog is missing', $routes[0]['action']());
-		$this->assertSame('Your dialog does not define a submit handler', $routes[1]['action']());
+		$this->assertSame('The load handler is missing', $routes[0]['action']());
+		$this->assertSame('The submit handler is missing', $routes[1]['action']());
 	}
 
 	/**

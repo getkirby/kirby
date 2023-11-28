@@ -40,6 +40,11 @@ function time(): int
 class MockTime
 {
 	public static $time = 1337000000;
+
+	public static function reset(): void
+	{
+		static::$time = 1337000000;
+	}
 }
 
 /**
@@ -47,7 +52,6 @@ class MockTime
  * waiting times while testing
  *
  * @param int $microSeconds
- * @return void
  */
 function usleep(int $microSeconds): void
 {

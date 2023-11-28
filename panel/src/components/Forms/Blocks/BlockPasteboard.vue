@@ -3,8 +3,11 @@
 		ref="dialog"
 		:cancel-button="false"
 		:submit-button="false"
+		:visible="true"
 		size="large"
 		class="k-block-importer"
+		@cancel="$emit('cancel')"
+		@submit="$emit('submit')"
 	>
 		<!-- eslint-disable vue/no-v-html -->
 		<label
@@ -12,14 +15,11 @@
 			v-html="$t('field.blocks.fieldsets.paste', { shortcut })"
 		/>
 		<!-- eslint-enable -->
-		<textarea id="pasteboard" @paste.prevent="onPaste" />
+		<textarea id="pasteboard" @paste.prevent="paste" />
 	</k-dialog>
 </template>
 
 <script>
-/**
- * @internal
- */
 export default {
 	inheritAttrs: false,
 	computed: {
@@ -28,41 +28,29 @@ export default {
 		}
 	},
 	methods: {
-		close() {
-			this.$refs.dialog.close();
-		},
-		open() {
-			this.$refs.dialog.open();
-		},
-		onPaste(clipboardEvent) {
-			this.$emit("paste", clipboardEvent);
-			this.close();
+		paste(html) {
+			this.$emit("close");
+			this.$emit("paste", html);
 		}
 	}
 };
 </script>
 
 <style>
-.k-block-importer.k-dialog {
-	background: #313740;
-	color: var(--color-white);
-}
 .k-block-importer .k-dialog-body {
 	padding: 0;
 }
 .k-block-importer label {
 	display: block;
 	padding: var(--spacing-6) var(--spacing-6) 0;
-	color: var(--color-gray-400);
+	color: var(--color-text-dimmed);
+	line-height: var(--leading-normal);
 }
-.k-block-importer label kbd {
-	background: rgba(0, 0, 0, 0.5);
-	font-family: var(--font-mono);
-	letter-spacing: 0.1em;
-	padding: 0.25rem;
-	border-radius: var(--rounded);
-	margin: 0 0.25rem;
+.k-block-importer label small {
+	display: block;
+	font-size: inherit;
 }
+
 .k-block-importer textarea {
 	width: 100%;
 	height: 20rem;

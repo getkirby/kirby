@@ -26,6 +26,7 @@ class Dimensions
 
 	/**
 	 * Improved `var_dump` output
+	 * @codeCoverageIgnore
 	 */
 	public function __debugInfo(): array
 	{
@@ -138,8 +139,10 @@ class Dimensions
 	 *                    upscaled to fit the box if smaller
 	 * @return $this object with recalculated dimensions
 	 */
-	public function fitHeight(int|null $fit = null, bool $force = false): static
-	{
+	public function fitHeight(
+		int|null $fit = null,
+		bool $force = false
+	): static {
 		return $this->fitSize('height', $fit, $force);
 	}
 
@@ -152,8 +155,11 @@ class Dimensions
 	 *                    upscaled to fit the box if smaller
 	 * @return $this object with recalculated dimensions
 	 */
-	protected function fitSize(string $ref, int|null $fit = null, bool $force = false): static
-	{
+	protected function fitSize(
+		string $ref,
+		int|null $fit = null,
+		bool $force = false
+	): static {
 		if ($fit === 0 || $fit === null) {
 			return $this;
 		}
@@ -191,8 +197,10 @@ class Dimensions
 	 *                    upscaled to fit the box if smaller
 	 * @return $this object with recalculated dimensions
 	 */
-	public function fitWidth(int|null $fit = null, bool $force = false): static
-	{
+	public function fitWidth(
+		int|null $fit = null,
+		bool $force = false
+	): static {
 		return $this->fitSize('width', $fit, $force);
 	}
 
@@ -254,8 +262,7 @@ class Dimensions
 		$xml     = simplexml_load_string($content);
 
 		if ($xml !== false) {
-			$attr   = $xml->attributes();
-
+			$attr      = $xml->attributes();
 			$rawWidth  = $attr->width;
 			$width     = (int)$rawWidth;
 			$rawHeight = $attr->height;
@@ -300,11 +307,11 @@ class Dimensions
 			return false;
 		}
 
-		if ($this->portrait()) {
+		if ($this->portrait() === true) {
 			return 'portrait';
 		}
 
-		if ($this->landscape()) {
+		if ($this->landscape() === true) {
 			return 'landscape';
 		}
 
@@ -336,7 +343,7 @@ class Dimensions
 			return $this->width / $this->height;
 		}
 
-		return 0;
+		return 0.0;
 	}
 
 	/**

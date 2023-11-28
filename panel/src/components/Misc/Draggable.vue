@@ -6,10 +6,16 @@
 		:list="list"
 		:move="move"
 		class="k-draggable"
-		v-on="listeners"
+		@change="$emit('change', $event)"
+		@end="onEnd"
+		@sort="$emit('sort', $event)"
+		@start="onStart"
 	>
+		<!-- @slot Items to be sortable via drag and drop -->
 		<slot />
+
 		<template #footer>
+			<!-- @slot Non-sortable footer -->
 			<slot name="footer" />
 		</template>
 	</draggable>
@@ -38,46 +44,29 @@ export default {
 		/**
 		 * HTML element for the wrapper
 		 */
-		element: String,
+		element: {
+			type: String,
+			default: "div"
+		},
 		/**
-		 * Whether to use a sort handle
-		 * or, if yes, which CSS selector
-		 * can be used
+		 * Whether to show a sort handle or, if yes,
+		 * which CSS selector to use
 		 */
 		handle: [String, Boolean],
+		/**
+		 * Array/object of items to sync when sorting
+		 */
 		list: [Array, Object],
 		move: Function,
 		options: Object
 	},
-	data() {
-		return {
-			listeners: {
-				...this.$listeners,
-				start: (event) => {
-					this.$store.dispatch("drag", {});
-
-					if (this.$listeners.start) {
-						this.$listeners.start(event);
-					}
-				},
-				end: (event) => {
-					this.$store.dispatch("drag", null);
-
-					if (this.$listeners.end) {
-						this.$listeners.end(event);
-					}
-				}
-			}
-		};
-	},
+	emits: ["change", "end", "sort", "start"],
 	computed: {
 		dragOptions() {
-			let handle = false;
+			let handle = this.handle;
 
-			if (this.handle === true) {
+			if (handle === true) {
 				handle = ".k-sort-handle";
-			} else {
-				handle = this.handle;
 			}
 
 			return {
@@ -86,9 +75,19 @@ export default {
 				forceFallback: true,
 				ghostClass: "k-sortable-ghost",
 				handle: handle,
-				scroll: document.querySelector(".k-panel-view"),
+				scroll: document.querySelector(".k-panel-main"),
 				...this.options
 			};
+		}
+	},
+	methods: {
+		onStart(event) {
+			this.$panel.drag.start("data", {});
+			this.$emit("start", event);
+		},
+		onEnd(event) {
+			this.$panel.drag.stop();
+			this.$emit("end", event);
 		}
 	}
 };

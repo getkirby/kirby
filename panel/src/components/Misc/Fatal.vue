@@ -1,21 +1,13 @@
 <template>
-	<div class="k-fatal">
+	<k-overlay :visible="true" class="k-fatal">
 		<div class="k-fatal-box">
-			<k-bar>
-				<template #left>
-					<k-headline> The JSON response could not be parsed </k-headline>
-				</template>
-				<template #right>
-					<k-button
-						icon="cancel"
-						text="Close"
-						@click="$store.dispatch('fatal', false)"
-					/>
-				</template>
-			</k-bar>
+			<div data-theme="negative" class="k-notification">
+				<p>The JSON response could not be parsed</p>
+				<k-button icon="cancel" @click.stop="$panel.notification.close()" />
+			</div>
 			<iframe ref="iframe" class="k-fatal-iframe" />
 		</div>
-	</div>
+	</k-overlay>
 </template>
 
 <script>
@@ -40,38 +32,27 @@ export default {
 </script>
 
 <style>
-.k-fatal {
-	position: fixed;
-	inset: 0;
-	background: var(--color-backdrop);
-	display: flex;
-	z-index: var(--z-fatal);
-	align-items: center;
-	justify-content: center;
-	padding: 1.5rem;
+.k-fatal[open] {
+	background: var(--overlay-color-back);
+	padding: var(--spacing-6);
 }
 .k-fatal-box {
+	position: relative;
 	width: 100%;
-	height: 100%;
+	box-shadow: var(--dialog-shadow);
+	border-radius: var(--dialog-rounded);
+	line-height: 1;
+	height: calc(100vh - 3rem);
+	height: calc(100dvh - 3rem);
 	display: flex;
 	flex-direction: column;
-	color: var(--color-black);
-	background: var(--color-red-400);
-	box-shadow: var(--shadow-xl);
-	border-radius: var(--rounded);
-}
-.k-fatal-box .k-headline {
-	line-height: 1;
-	font-size: var(--text-sm);
-	padding: 0.75rem;
-}
-.k-fatal-box .k-button {
-	padding: 0.75rem;
+	overflow: hidden;
 }
 .k-fatal-iframe {
 	border: 0;
 	width: 100%;
 	flex-grow: 1;
 	background: var(--color-white);
+	padding: var(--spacing-3);
 }
 </style>

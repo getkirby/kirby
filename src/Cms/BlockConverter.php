@@ -64,8 +64,8 @@ class BlockConverter
 
 		foreach ($blocks as $index => $block) {
 			if (in_array($block['type'], ['ul', 'ol']) === true) {
-				$prev = $blocks[$index-1] ?? null;
-				$next = $blocks[$index+1] ?? null;
+				$prev = $blocks[$index - 1] ?? null;
+				$next = $blocks[$index + 1] ?? null;
 
 				// new list starts here
 				if (!$prev || $prev['type'] !== $block['type']) {

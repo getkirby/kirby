@@ -3,31 +3,31 @@ import TextFieldPreview from "./TextFieldPreview.vue";
 
 export default {
 	extends: TextFieldPreview,
-	inheritAttrs: false,
 	props: {
 		value: String
 	},
 	class: "k-date-field-preview",
 	computed: {
+		display() {
+			return this.column.display ?? this.field.display;
+		},
+		format() {
+			let format = this.display ?? "YYYY-MM-DD";
+
+			if (this.time?.display) {
+				format += " " + this.time.display;
+			}
+
+			return format;
+		},
+		parsed() {
+			return this.$library.dayjs(this.value);
+		},
 		text() {
-			if (typeof this.value !== "string") {
-				return "";
-			}
-
-			const dt = this.$library.dayjs(this.value);
-
-			if (!dt) {
-				return "";
-			}
-
-			let format = this.column?.display || this.field?.display || "YYYY-MM-DD";
-			let time = this.column?.time?.display || this.field?.time?.display;
-
-			if (time) {
-				format += " " + time;
-			}
-
-			return dt.format(format);
+			return this.parsed?.format(this.format);
+		},
+		time() {
+			return this.column.time ?? this.field.time;
 		}
 	}
 };

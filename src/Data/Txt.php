@@ -65,11 +65,10 @@ class Txt extends Handler
 		$result = $key . ':';
 
 		// multi-line content
-		if (preg_match('!\R!', $value) === 1) {
-			$result .= "\n\n";
-		} else {
-			$result .= ' ';
-		}
+		$result .= match (preg_match('!\R!', $value)) {
+			1       => "\n\n",
+			default => ' ',
+		};
 
 		$result .= $value;
 

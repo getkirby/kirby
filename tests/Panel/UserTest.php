@@ -58,19 +58,47 @@ class UserTest extends TestCase
 	}
 
 	/**
+	 * @covers ::dropdown
+	 */
+	public function testDropdownTotp(): void
+	{
+		$this->app = new App([
+			'options' => [
+				'auth' => [
+					'methods' => ['password' => ['2fa' => true]]
+				]
+			],
+			'users' => [
+				['email' => 'test@getkirby.com'],
+				['email' => 'foo@getkirby.com']
+			],
+			'user' => 'test@getkirby.com'
+		]);
+
+		$user = $this->app->user();
+		$dropdown = $user->panel()->dropdown();
+		$this->assertSame('/account/totp/enable', $dropdown[7]['dialog']);
+		$this->assertSame('qr-code', $dropdown[7]['icon']);
+
+		$user->changeTotp('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
+		$dropdown = $user->panel()->dropdown();
+		$this->assertSame('/account/totp/disable', $dropdown[7]['dialog']);
+	}
+
+	/**
 	 * @covers ::dropdownOption
 	 */
 	public function testDropdownOption(): void
 	{
 		$model = new ModelUser([
-			'id' => 'test',
+			'id'    => 'test',
 			'email' => 'test@getkirby.com',
 		]);
 
 		$option = (new User($model))->dropdownOption();
 		$this->assertSame('user', $option['icon']);
 		$this->assertSame('test@getkirby.com', $option['text']);
-		$this->assertSame('/panel/users/test', $option['link']);
+		$this->assertSame('/users/test', $option['link']);
 	}
 
 	/**
@@ -176,6 +204,7 @@ class UserTest extends TestCase
 	 * @covers ::imageSource
 	 * @covers \Kirby\Panel\Model::image
 	 * @covers \Kirby\Panel\Model::imageSource
+	 * @covers \Kirby\Panel\Model::imageSrcset
 	 */
 	public function testImageCover()
 	{
@@ -371,14 +400,14 @@ class UserTest extends TestCase
 
 		$props = (new User($app->user('a@getkirby.com')))->props();
 		$this->assertNull($props['prev']());
-		$this->assertSame('b@getkirby.com', $props['next']()['tooltip']);
+		$this->assertSame('b@getkirby.com', $props['next']()['title']);
 
 		$props = (new User($app->user('b@getkirby.com')))->props();
-		$this->assertSame('a@getkirby.com', $props['prev']()['tooltip']);
-		$this->assertSame('c@getkirby.com', $props['next']()['tooltip']);
+		$this->assertSame('a@getkirby.com', $props['prev']()['title']);
+		$this->assertSame('c@getkirby.com', $props['next']()['title']);
 
 		$props = (new User($app->user('c@getkirby.com')))->props();
-		$this->assertSame('b@getkirby.com', $props['prev']()['tooltip']);
+		$this->assertSame('b@getkirby.com', $props['prev']()['title']);
 		$this->assertNull($props['next']());
 	}
 
@@ -425,14 +454,14 @@ class UserTest extends TestCase
 
 		$prevNext = (new User($app->user('a@getkirby.com')))->prevNext();
 		$this->assertNull($prevNext['prev']());
-		$this->assertSame('b@getkirby.com', $prevNext['next']()['tooltip']);
+		$this->assertSame('b@getkirby.com', $prevNext['next']()['title']);
 
 		$prevNext = (new User($app->user('b@getkirby.com')))->prevNext();
-		$this->assertSame('a@getkirby.com', $prevNext['prev']()['tooltip']);
-		$this->assertSame('c@getkirby.com', $prevNext['next']()['tooltip']);
+		$this->assertSame('a@getkirby.com', $prevNext['prev']()['title']);
+		$this->assertSame('c@getkirby.com', $prevNext['next']()['title']);
 
 		$prevNext = (new User($app->user('c@getkirby.com')))->prevNext();
-		$this->assertSame('b@getkirby.com', $prevNext['prev']()['tooltip']);
+		$this->assertSame('b@getkirby.com', $prevNext['prev']()['title']);
 		$this->assertNull($prevNext['next']());
 	}
 

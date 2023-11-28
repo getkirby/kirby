@@ -2,7 +2,7 @@
 	<p class="k-url-field-preview" :class="$options.class" :data-link="link">
 		{{ column.before }}
 		<k-link :to="link" @click.native.stop>
-			{{ text }}
+			<span>{{ text }}</span>
 		</k-link>
 		{{ column.after }}
 	</p>
@@ -33,19 +33,27 @@ export default {
 
 <style>
 .k-url-field-preview {
-	padding: 0.325rem 0.75rem;
-	overflow-x: hidden;
-	text-overflow: ellipsis;
+	padding-inline: var(--table-cell-padding);
 }
 .k-url-field-preview[data-link] {
-	color: var(--color-focus);
+	color: var(--link-color);
 }
 .k-url-field-preview a {
-	text-decoration: underline;
-	transition: color 0.3s;
-	white-space: nowrap;
+	display: inline-flex;
+	align-items: center;
+	height: var(--height-xs);
+	padding-inline: var(--spacing-1);
+	margin-inline: calc(var(--spacing-1) * -1);
+	border-radius: var(--rounded);
+	max-width: 100%;
+	min-width: 0;
+}
+.k-url-field-preview a > * {
 	overflow: hidden;
+	white-space: nowrap;
 	text-overflow: ellipsis;
+	text-decoration: underline;
+	text-underline-offset: var(--link-underline-offset);
 }
 .k-url-field-preview a:hover {
 	color: var(--color-black);

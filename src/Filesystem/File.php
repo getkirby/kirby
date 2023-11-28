@@ -10,7 +10,6 @@ use Kirby\Http\Response;
 use Kirby\Sane\Sane;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\Html;
-use Kirby\Toolkit\Properties;
 use Kirby\Toolkit\V;
 
 /**
@@ -27,23 +26,21 @@ use Kirby\Toolkit\V;
  */
 class File
 {
-	use Properties;
-
 	/**
 	 * Parent file model
 	 * The model object must use the `\Kirby\Filesystem\IsFile` trait
 	 */
-	protected object|null $model = null;
+	protected object|null $model;
 
 	/**
 	 * Absolute file path
 	 */
-	protected string|null $root = null;
+	protected string|null $root;
 
 	/**
 	 * Absolute file URL
 	 */
-	protected string|null $url = null;
+	protected string|null $url;
 
 	/**
 	 * Validation rules to be used for `::match()`
@@ -58,14 +55,15 @@ class File
 	 *
 	 * @param array|string|null $props Properties or deprecated `$root` string
 	 * @param string|null $url Deprecated argument, use `$props['url']` instead
+	 *
+	 * @throws \Kirby\Exception\InvalidArgumentException When the model does not use the `Kirby\Filesystem\IsFile` trait
 	 */
 	public function __construct(
-		array|string|null $props = null,
-		string|null $url = null
+		array|string $props = null,
+		string $url = null
 	) {
 		// Legacy support for old constructor of
 		// the `Kirby\Image\Image` class
-		// @todo 4.0.0 remove
 		if (is_array($props) === false) {
 			$props = [
 				'root' => $props,
@@ -73,11 +71,21 @@ class File
 			];
 		}
 
-		$this->setProperties($props);
+		$this->root  = $props['root'] ?? null;
+		$this->url   = $props['url'] ?? null;
+		$this->model = $props['model'] ?? null;
+
+		if (
+			$this->model !== null &&
+			method_exists($this->model, 'hasIsFileTrait') !== true
+		) {
+			throw new InvalidArgumentException('The model object must use the "Kirby\Filesystem\IsFile" trait');
+		}
 	}
 
 	/**
 	 * Improved `var_dump` output
+	 * @codeCoverageIgnore
 	 */
 	public function __debugInfo(): array
 	{
@@ -343,19 +351,14 @@ class File
 	/**
 	 * Returns the file's last modification time
 	 *
-	 * @param string|null $handler date, intl or strftime
+	 * @param 'date'|'intl'|'strftime'|null $handler Custom date handler or `null`
+	 *                                               for the globally configured one
 	 */
 	public function modified(
 		string|IntlDateFormatter|null $format = null,
 		string|null $handler = null
 	): string|int|false {
-		$kirby = $this->kirby();
-
-		return F::modified(
-			$this->root(),
-			$format,
-			$handler ?? $kirby?->option('date.handler', 'date') ?? 'date'
-		);
+		return F::modified($this->root(), $format, $handler);
 	}
 
 	/**
@@ -433,45 +436,6 @@ class File
 	public function root(): string|null
 	{
 		return $this->root ??= $this->model?->root();
-	}
-
-	/**
-	 * Setter for the parent file model, which uses this instance as proxied file asset
-	 *
-	 * @return $this
-	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException When the model does not use the `Kirby\Filesystem\IsFile` trait
-	 */
-	protected function setModel(object|null $model = null): static
-	{
-		if ($model !== null && method_exists($model, 'hasIsFileTrait') !== true) {
-			throw new InvalidArgumentException('The model object must use the "Kirby\Filesystem\IsFile" trait');
-		}
-
-		$this->model = $model;
-		return $this;
-	}
-
-	/**
-	 * Setter for the root
-	 *
-	 * @return $this
-	 */
-	protected function setRoot(string|null $root = null): static
-	{
-		$this->root = $root;
-		return $this;
-	}
-
-	/**
-	 * Setter for the file url
-	 *
-	 * @return $this
-	 */
-	protected function setUrl(string|null $url = null): static
-	{
-		$this->url = $url;
-		return $this;
 	}
 
 	/**

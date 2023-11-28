@@ -40,7 +40,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Uuid
+abstract class Uuid
 {
 	protected const TYPE = 'uuid';
 
@@ -105,7 +105,11 @@ class Uuid
 			}
 		}
 
-		return Uuids::cache()->remove($this->key());
+		if ($key = $this->key()) {
+			return Uuids::cache()->remove($key);
+		}
+
+		return true;
 	}
 
 	/**
@@ -158,16 +162,30 @@ class Uuid
 
 		// for UUID string
 		if (is_string($seed) === true) {
-			return match (Str::before($seed, '://')) {
-				'page'   => new PageUuid(uuid: $seed, context: $context),
-				'file'   => new FileUuid(uuid: $seed, context: $context),
-				'site'   => new SiteUuid(uuid: $seed, context: $context),
-				'user'   => new UserUuid(uuid: $seed, context: $context),
-				// TODO: activate for uuid-block-structure-support
-				// 'block'  => new BlockUuid(uuid: $seed, context: $context),
-				// 'struct' => new StructureUuid(uuid: $seed, context: $context),
-				default  => throw new InvalidArgumentException('Invalid UUID URI: ' . $seed)
-			};
+			if ($uri = Str::before($seed, '://')) {
+				return match ($uri) {
+					'page'   => new PageUuid(uuid: $seed, context: $context),
+					'file'   => new FileUuid(uuid: $seed, context: $context),
+					'site'   => new SiteUuid(uuid: $seed, context: $context),
+					'user'   => new UserUuid(uuid: $seed, context: $context),
+					// TODO: activate for uuid-block-structure-support
+					// 'block'  => new BlockUuid(uuid: $seed, context: $context),
+					// 'struct' => new StructureUuid(uuid: $seed, context: $context),
+					default  => throw new InvalidArgumentException('Invalid UUID URI: ' . $seed)
+				};
+			}
+
+			// permalinks
+			if ($url = Str::after($seed, '/@/')) {
+				$parts = explode('/', $url);
+
+				return static::for(
+					$parts[0] . '://' . $parts[1],
+					$context
+				);
+			}
+
+			throw new InvalidArgumentException('Invalid UUID string: ' . $seed);
 		}
 
 		// for model object
@@ -209,12 +227,10 @@ class Uuid
 	/**
 	 * Returns the UUID's id string (UUID without scheme);
 	 * in child classes, this method must ensure that the
-	 * model has an ID
+	 * model has an ID (or generate a new one if the model
+	 * does not have one yet)
 	 */
-	public function id(): string
-	{
-		return $this->uri->host();
-	}
+	abstract public function id(): string;
 
 	/**
 	 * Generator function that creates an index of
@@ -271,21 +287,32 @@ class Uuid
 	 */
 	public function isCached(): bool
 	{
-		return Uuids::cache()->exists($this->key());
+		if ($key = $this->key()) {
+			return Uuids::cache()->exists($key);
+		}
+
+		return false;
 	}
 
 	/**
 	 * Returns key for cache entry
 	 */
-	public function key(): string
+	public function key(bool $generate = false): string|null
 	{
-		$id = $this->id();
+		// the generation happens in the child class
+		// that overrides the `id()` method
+		$id = $generate === true ? $this->id() : $this->uri->host();
 
-		// for better performance when using a file-based cache,
-		// turn first two characters of the id into a directory
-		$id = Str::substr($id, 0, 2) . '/' . Str::substr($id, 2);
+		if ($id !== null) {
+			// for better performance when using a file-based cache,
+			// turn first two characters of the id into a directory
+			$id =
+				static::TYPE . '/' .
+				Str::substr($id, 0, 2) . '/' .
+				Str::substr($id, 2);
+		}
 
-		return static::TYPE . '/' . $id;
+		return $id;
 	}
 
 	/**
@@ -328,7 +355,7 @@ class Uuid
 			return true;
 		}
 
-		return Uuids::cache()->set($this->key(), $this->value());
+		return Uuids::cache()->set($this->key(true), $this->value());
 	}
 
 	/**
@@ -347,12 +374,9 @@ class Uuid
 	 */
 	public function toString(): string
 	{
-		// make sure id is generated if
-		// it doesn't exist yet
-		$this->id();
-
 		// make sure the id is cached
 		// that it can be found again
+		// (will also ensure ID is generated if non-existent yet)
 		$this->populate();
 
 		return $this->uri->toString();

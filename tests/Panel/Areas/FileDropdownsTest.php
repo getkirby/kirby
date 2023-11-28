@@ -92,17 +92,23 @@ class FileDropdownsTest extends AreaTestCase
 		$options = $this->dropdown('pages/test/files/test.jpg')['options'];
 
 		$open = $options[0];
-
 		$this->assertSame('/test/test.jpg', $open['link']);
 		$this->assertSame('_blank', $open['target']);
 		$this->assertSame('Open', $open['text']);
 
-		$this->assertSame('-', $options[4]);
+		$this->assertSame('-', $options[1]);
 
-		$sort = $options[5];
+		$name = $options[2];
+		$this->assertSame('Rename', $name['text']);
 
+		$sort = $options[3];
 		$this->assertSame('/pages/test/files/test.jpg/changeSort', $sort['dialog']);
 		$this->assertSame('Change position', $sort['text']);
+
+		$template = $options[4];
+		$this->assertSame('Change template', $template['text']);
+
+		$this->assertSame('-', $options[5]);
 	}
 
 	public function testFileDropdownForPageFile(): void
@@ -114,13 +120,13 @@ class FileDropdownsTest extends AreaTestCase
 		$this->assertSame('/pages/test/files/test.jpg/changeName', $options[0]['dialog']);
 		$this->assertSame('Rename', $options[0]['text']);
 
-		$this->assertSame('replace', $options[1]['click']);
-		$this->assertSame('Replace', $options[1]['text']);
+		$this->assertSame('replace', $options[3]['click']);
+		$this->assertSame('Replace', $options[3]['text']);
 
-		$this->assertSame('-', $options[2]);
+		$this->assertSame('-', $options[4]);
 
-		$this->assertSame('/pages/test/files/test.jpg/delete', $options[3]['dialog']);
-		$this->assertSame('Delete', $options[3]['text']);
+		$this->assertSame('/pages/test/files/test.jpg/delete', $options[5]['dialog']);
+		$this->assertSame('Delete', $options[5]['text']);
 	}
 
 	public function testFileDropdownForSiteFile(): void
@@ -132,13 +138,13 @@ class FileDropdownsTest extends AreaTestCase
 		$this->assertSame('/site/files/test.jpg/changeName', $options[0]['dialog']);
 		$this->assertSame('Rename', $options[0]['text']);
 
-		$this->assertSame('replace', $options[1]['click']);
-		$this->assertSame('Replace', $options[1]['text']);
+		$this->assertSame('replace', $options[3]['click']);
+		$this->assertSame('Replace', $options[3]['text']);
 
-		$this->assertSame('-', $options[2]);
+		$this->assertSame('-', $options[4]);
 
-		$this->assertSame('/site/files/test.jpg/delete', $options[3]['dialog']);
-		$this->assertSame('Delete', $options[3]['text']);
+		$this->assertSame('/site/files/test.jpg/delete', $options[5]['dialog']);
+		$this->assertSame('Delete', $options[5]['text']);
 	}
 
 	public function testFileDropdownForUserFile(): void
@@ -150,12 +156,12 @@ class FileDropdownsTest extends AreaTestCase
 		$this->assertSame('/users/test/files/test.jpg/changeName', $options[0]['dialog']);
 		$this->assertSame('Rename', $options[0]['text']);
 
-		$this->assertSame('replace', $options[1]['click']);
-		$this->assertSame('Replace', $options[1]['text']);
+		$this->assertSame('replace', $options[3]['click']);
+		$this->assertSame('Replace', $options[3]['text']);
 
-		$this->assertSame('-', $options[2]);
+		$this->assertSame('-', $options[4]);
 
-		$this->assertSame('/users/test/files/test.jpg/delete', $options[3]['dialog']);
-		$this->assertSame('Delete', $options[3]['text']);
+		$this->assertSame('/users/test/files/test.jpg/delete', $options[5]['dialog']);
+		$this->assertSame('Delete', $options[5]['text']);
 	}
 }

@@ -6,16 +6,17 @@
 			:placeholder="placeholder"
 			:spellcheck="false"
 			:value="content.code"
+			font="monospace"
 			type="textarea"
 			@input="update({ code: $event })"
 		/>
 		<div v-if="languages.length" class="k-block-type-code-editor-language">
-			<k-icon type="code" />
 			<k-input
 				ref="language"
 				:empty="false"
 				:options="languages"
 				:value="content.language"
+				icon="code"
 				type="select"
 				@input="update({ language: $event })"
 			/>
@@ -48,37 +49,27 @@ export default {
 <style>
 .k-block-type-code-editor {
 	position: relative;
-	font-size: var(--text-sm);
-	line-height: 1.5em;
-	background: #000;
-	border-radius: var(--rounded);
-	padding: 0.5rem 0.75rem 3rem;
-	color: #fff;
-	font-family: var(--font-mono);
+	--input-color-border: none;
+	--input-color-back: var(--color-black);
+	--input-color-text: var(--color-white);
+	--input-font-family: var(--font-mono);
+	--input-outline-focus: none;
+	--input-padding: var(--spacing-3);
+	--input-padding-multiline: var(--input-padding);
 }
-.k-block-type-code-editor .k-editor {
+.k-block-type-code-editor .k-input[data-type="textarea"] {
 	white-space: pre-wrap;
-	line-height: 1.75em;
 }
 .k-block-type-code-editor-language {
-	font-size: var(--text-sm);
+	--input-font-size: var(--text-xs);
 	position: absolute;
 	inset-inline-end: 0;
 	bottom: 0;
 }
-.k-block-type-code-editor-language .k-icon {
-	position: absolute;
-	top: 0;
-	inset-inline-start: 0;
-	height: 1.5rem;
-	display: flex;
-	width: 2rem;
-	z-index: 0;
+.k-block-type-code-editor-language .k-input-element {
+	padding-inline-start: 1.5rem;
 }
-.k-block-type-code-editor-language .k-select-input {
-	position: relative;
-	padding: 0.325rem 0.75rem 0.5rem 2rem;
-	z-index: 1;
-	font-size: var(--text-xs);
+.k-block-type-code-editor-language .k-input-icon {
+	inset-inline-start: 0;
 }
 </style>

@@ -2,8 +2,8 @@
 
 namespace Kirby\Uuid;
 
-use Kirby\Cms\Field;
 use Kirby\Cms\Structure;
+use Kirby\Content\Field;
 
 /**
  * UUID for \Kirby\Cms\StructureObject

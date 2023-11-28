@@ -314,7 +314,7 @@ class AuthChallengeTest extends TestCase
 				]
 			]
 		]);
-		$this->assertSame(['email'], $app->auth()->enabledChallenges());
+		$this->assertSame(['totp', 'email'], $app->auth()->enabledChallenges());
 
 		// a single challenge
 		$app = $this->app->clone([

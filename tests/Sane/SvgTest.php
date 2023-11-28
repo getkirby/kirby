@@ -106,6 +106,19 @@ class SvgTest extends TestCase
 		Svg::validateFile($fixture);
 	}
 
+	public function testDisallowedExternalFile()
+	{
+		$fixture   = $this->fixture('disallowed/xlink-subfolder.svg');
+		$sanitized = $this->fixture('sanitized/xlink-subfolder.svg');
+
+		$this->assertStringEqualsFile($fixture, Svg::sanitize(file_get_contents($fixture)));
+		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture), isExternal: true));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The URL points outside of the site index URL');
+		Svg::validateFile($fixture);
+	}
+
 	public function testDisallowedExternalXmlns1()
 	{
 		$fixture   = $this->fixture('disallowed/external-xmlns-1.svg');

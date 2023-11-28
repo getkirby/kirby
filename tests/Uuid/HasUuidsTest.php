@@ -36,6 +36,10 @@ class HasUuidsTest extends TestCase
 		$result = (fn () => $this->findByUuid('page://my-id-b', 'page'))->call($pages);
 		$this->assertTrue($b->is($result));
 
+		// with @ shortcut
+		$result = (fn () => $this->findByUuid('@my-id-b', 'page'))->call($pages);
+		$this->assertTrue($b->is($result));
+
 		// with wrong schema
 		$result = (fn () => $this->findByUuid('page://my-id-b', 'file'))->call($pages);
 		$this->assertNull($result);

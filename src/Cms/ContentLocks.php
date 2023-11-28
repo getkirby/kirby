@@ -22,18 +22,14 @@ class ContentLocks
 	 * Data from the `.lock` files
 	 * that have been read so far
 	 * cached by `.lock` file path
-	 *
-	 * @var array
 	 */
-	protected $data = [];
+	protected array $data = [];
 
 	/**
 	 * PHP file handles for all currently
 	 * open `.lock` files
-	 *
-	 * @var array
 	 */
-	protected $handles = [];
+	protected array $handles = [];
 
 	/**
 	 * Closes the open file handles
@@ -50,11 +46,9 @@ class ContentLocks
 	/**
 	 * Removes the file lock and closes the file handle
 	 *
-	 * @param string $file
-	 * @return void
 	 * @throws \Kirby\Exception\Exception
 	 */
-	protected function closeHandle(string $file)
+	protected function closeHandle(string $file): void
 	{
 		if (isset($this->handles[$file]) === false) {
 			return;
@@ -72,20 +66,15 @@ class ContentLocks
 
 	/**
 	 * Returns the path to a model's lock file
-	 *
-	 * @param \Kirby\Cms\ModelWithContent $model
-	 * @return string
 	 */
 	public static function file(ModelWithContent $model): string
 	{
-		return $model->contentFileDirectory() . '/.lock';
+		$root = $model::CLASS_ALIAS === 'file' ? dirname($model->root()) : $model->root();
+		return $root . '/.lock';
 	}
 
 	/**
 	 * Returns the lock/unlock data for the specified model
-	 *
-	 * @param \Kirby\Cms\ModelWithContent $model
-	 * @return array
 	 */
 	public function get(ModelWithContent $model): array
 	{
@@ -121,7 +110,6 @@ class ContentLocks
 	/**
 	 * Returns the file handle to a `.lock` file
 	 *
-	 * @param string $file
 	 * @param bool $create Whether to create the file if it does not exist
 	 * @return resource|null File handle
 	 * @throws \Kirby\Exception\Exception
@@ -155,9 +143,6 @@ class ContentLocks
 	/**
 	 * Returns model ID used as the key for the data array;
 	 * prepended with a slash because the $site otherwise won't have an ID
-	 *
-	 * @param \Kirby\Cms\ModelWithContent $model
-	 * @return string
 	 */
 	public static function id(ModelWithContent $model): string
 	{
@@ -167,9 +152,6 @@ class ContentLocks
 	/**
 	 * Sets and writes the lock/unlock data for the specified model
 	 *
-	 * @param \Kirby\Cms\ModelWithContent $model
-	 * @param array $data
-	 * @return bool
 	 * @throws \Kirby\Exception\Exception
 	 */
 	public function set(ModelWithContent $model, array $data): bool

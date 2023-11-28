@@ -3,7 +3,6 @@
 namespace Kirby\Template;
 
 use Kirby\Cms\App;
-use Kirby\Cms\Helpers;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Toolkit\A;
@@ -285,40 +284,25 @@ class Snippet extends Tpl
 	 *
 	 * @param \Kirby\Template\Slots|null $slots If null, an empty dummy object is used
 	 */
-	protected static function scope(array $data = [], Slots|null $slots = null): array
-	{
+	protected static function scope(
+		array $data = [],
+		Slots|null $slots = null
+	): array {
 		// initialize a dummy slots object and cache it for better performance
-		if ($slots === null) {
-			$slots = static::$dummySlots ??= new Slots([]);
-		}
+		$slots ??= static::$dummySlots ??= new Slots([]);
 
 		$data = array_merge(App::instance()->data, $data);
 
-		// TODO 3.10: Replace the following code:
-		// if (
-		// 	array_key_exists('slot', $data) === true ||
-		// 	array_key_exists('slots', $data) === true
-		// ) {
-		// 	throw new InvalidArgumentException('Passing the $slot or $slots variables to snippets is not supported.');
-		// }
-		//
-		// return array_merge($data, [
-		// 	'slot'  => $slots->default,
-		// 	'slots' => $slots,
-		// ]);
-
-		// @codeCoverageIgnoreStart
 		if (
 			array_key_exists('slot', $data) === true ||
 			array_key_exists('slots', $data) === true
 		) {
-			Helpers::deprecated('Passing the $slot or $slots variables to snippets is deprecated and will break in a future version.', 'snippet-pass-slots');
+			throw new InvalidArgumentException('Passing the $slot or $slots variables to snippets is not supported.');
 		}
-		// @codeCoverageIgnoreEnd
 
-		return array_merge([
+		return array_merge($data, [
 			'slot'  => $slots->default,
 			'slots' => $slots,
-		], $data);
+		]);
 	}
 }

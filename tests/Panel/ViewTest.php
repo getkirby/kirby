@@ -256,7 +256,7 @@ class ViewTest extends TestCase
 		$this->assertInstanceOf('Closure', $data['$language']);
 		$this->assertInstanceOf('Closure', $data['$languages']);
 		$this->assertSame([], $data['$permissions']);
-		$this->assertFalse($data['$license']);
+		$this->assertSame('missing', $data['$license']);
 		$this->assertFalse($data['$multilang']);
 		$this->assertSame('/', $data['$url']);
 		$this->assertInstanceOf('Closure', $data['$user']);
@@ -484,7 +484,6 @@ class ViewTest extends TestCase
 		// $config
 		$this->assertFalse($config['debug']);
 		$this->assertTrue($config['kirbytext']);
-		$this->assertSame(['limit' => 10, 'type'  => 'pages'], $config['search']);
 		$this->assertSame('en', $config['translation']);
 
 		// $system
@@ -534,7 +533,7 @@ class ViewTest extends TestCase
 	public function testResponseAsHTML(): void
 	{
 		// create panel dist files first to avoid redirect
-		Document::link($this->app);
+		(new Assets())->link();
 
 		// get panel response
 		$response = View::response([
@@ -546,186 +545,6 @@ class ViewTest extends TestCase
 		$this->assertSame('text/html', $response->type());
 		$this->assertSame('UTF-8', $response->charset());
 		$this->assertNotNull($response->body());
-	}
-
-	/**
-	 * @covers ::menu
-	 */
-	public function testMenu()
-	{
-		$menu = View::menu();
-
-		$account = [
-			'current'  => false,
-			'icon'     => 'account',
-			'id'       => 'account',
-			'link'     => 'account',
-			'disabled' => true,
-			'text'     => 'Your account'
-		];
-
-		$logout = [
-			'icon' => 'logout',
-			'id'   => 'logout',
-			'link' => 'logout',
-			'text' => 'Log out'
-		];
-
-		$this->assertCount(4, $menu);
-		$this->assertSame('-', $menu[0]);
-		$this->assertSame($account, $menu[1]);
-		$this->assertSame('-', $menu[2]);
-		$this->assertSame($logout, $menu[3]);
-	}
-
-	/**
-	 * @covers ::menu
-	 */
-	public function testMenuAreas()
-	{
-		$menu = View::menu(
-			[
-				'site' => [
-					'icon'  => 'home',
-					'label' => 'Site',
-					'link'  => 'site',
-					'menu'  => true,
-				]
-			],
-			[
-				'access' => [
-					'site' => true
-				]
-			],
-			'site'
-		);
-
-		$expected = [
-			'current'  => true,
-			'disabled' => false,
-			'icon'     => 'home',
-			'id'       => 'site',
-			'link'     => 'site',
-			'text'     => 'Site'
-		];
-
-		$this->assertCount(5, $menu);
-		$this->assertSame($expected, $menu[0]);
-	}
-
-	/**
-	 * @covers ::menu
-	 */
-	public function testMenuAccess()
-	{
-		$menu = View::menu(
-			[
-				'site' => [
-					'icon'  => 'home',
-					'label' => 'Site',
-					'link'  => 'site',
-					'menu'  => true,
-				]
-			],
-			[
-				'access' => [
-					'site' => false
-				]
-			],
-			'site'
-		);
-
-		$this->assertCount(4, $menu);
-		$this->assertSame('-', $menu[0]);
-	}
-
-	/**
-	 * @covers ::menu
-	 */
-	public function testMenuCallback()
-	{
-		$menu = View::menu(
-			[
-				'site' => [
-					'icon'  => 'home',
-					'label' => 'Site',
-					'link'  => 'site',
-					'menu'  => function () {
-						return true;
-					},
-				]
-			],
-		);
-
-		$this->assertCount(5, $menu);
-		$this->assertSame('Site', $menu[0]['text']);
-	}
-
-	/**
-	 * @covers ::menu
-	 */
-	public function testMenuCallbackDisabled()
-	{
-		$menu = View::menu(
-			[
-				'site' => [
-					'icon'  => 'home',
-					'label' => 'Site',
-					'link'  => 'site',
-					'menu'  => function () {
-						return 'disabled';
-					},
-				]
-			],
-		);
-
-		$this->assertCount(5, $menu);
-		$this->assertTrue($menu[0]['disabled']);
-	}
-
-	/**
-	 * @covers ::menu
-	 */
-	public function testMenuCallbackReturningFalse()
-	{
-		$menu = View::menu(
-			[
-				'site' => [
-					'icon'  => 'home',
-					'label' => 'Site',
-					'link'  => 'site',
-					'menu'  => function () {
-						return false;
-					},
-				]
-			],
-		);
-
-		$this->assertCount(4, $menu);
-	}
-
-	/**
-	 * @covers ::menu
-	 */
-	public function testMenuAccountPermissions()
-	{
-		$menu = View::menu([], [
-			'access' => [
-				'account' => true
-			]
-		]);
-
-		$this->assertFalse($menu[1]['disabled']);
-	}
-
-	/**
-	 * @covers ::menu
-	 */
-	public function testMenuAccountIsCurrent()
-	{
-		$menu = View::menu([], [], 'account');
-
-		$this->assertTrue($menu[1]['current']);
 	}
 
 	/**
@@ -839,5 +658,42 @@ class ViewTest extends TestCase
 		$this->assertSame(500, $response->code());
 		$this->assertSame('k-error-view', $json['$view']['component']);
 		$this->assertSame('Invalid Panel response', $json['$view']['props']['error']);
+	}
+
+	/**
+	 * @covers ::searches
+	 */
+	public function testSearches()
+	{
+		$areas  = [
+			'a' => [
+				'searches' => [
+					'foo' => [],
+				]
+			],
+			'b' => [
+				'searches' => [
+					'bar' => [],
+				]
+			],
+			'c' => [
+				'searches' => [
+					'test' => [],
+				]
+			]
+		];
+
+		$permissions = [
+			'access' => [
+				'a' => true,
+				'b' => false
+			]
+		];
+
+		$searches = View::searches($areas, $permissions);
+
+		$this->assertArrayHasKey('foo', $searches);
+		$this->assertArrayNotHasKey('bar', $searches);
+		$this->assertArrayHasKey('test', $searches);
 	}
 }

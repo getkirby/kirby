@@ -57,7 +57,7 @@ class Iterator implements IteratorAggregate
 	/**
 	 * Returns the current element
 	 */
-	public function current()
+	public function current(): mixed
 	{
 		return current($this->data);
 	}
@@ -66,7 +66,7 @@ class Iterator implements IteratorAggregate
 	 * Moves the cursor to the previous element
 	 * and returns it
 	 */
-	public function prev()
+	public function prev(): mixed
 	{
 		return prev($this->data);
 	}
@@ -75,7 +75,7 @@ class Iterator implements IteratorAggregate
 	 * Moves the cursor to the next element
 	 * and returns it
 	 */
-	public function next()
+	public function next(): mixed
 	{
 		return next($this->data);
 	}
@@ -110,7 +110,7 @@ class Iterator implements IteratorAggregate
 	 * @param mixed $needle the element to search for
 	 * @return int|false the index (int) of the element or false
 	 */
-	public function indexOf($needle): int|false
+	public function indexOf(mixed $needle): int|false
 	{
 		return array_search($needle, array_values($this->data));
 	}
@@ -121,33 +121,30 @@ class Iterator implements IteratorAggregate
 	 * @param mixed $needle the element to search for
 	 * @return int|string|false the name of the key or false
 	 */
-	public function keyOf($needle): int|string|false
+	public function keyOf(mixed $needle): int|string|false
 	{
 		return array_search($needle, $this->data);
 	}
 
 	/**
 	 * Checks by key if an element is included
-	 *
-	 * @param mixed $key
 	 */
-	public function has($key): bool
+	public function has(mixed $key): bool
 	{
 		return isset($this->data[$key]) === true;
 	}
 
 	/**
 	 * Checks if the current key is set
-	 *
-	 * @param mixed $key the key to check
 	 */
-	public function __isset($key): bool
+	public function __isset(mixed $key): bool
 	{
 		return $this->has($key);
 	}
 
 	/**
 	 * Simplified var_dump output
+	 * @codeCoverageIgnore
 	 */
 	public function __debugInfo(): array
 	{

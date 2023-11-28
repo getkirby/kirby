@@ -2,8 +2,7 @@
 	<k-writer
 		ref="input"
 		v-bind="$props"
-		:extensions="extensions"
-		:nodes="['bulletList', 'orderedList']"
+		:extensions="listExtensions"
 		:value="list"
 		class="k-list-input"
 		@input="onInput"
@@ -11,21 +10,23 @@
 </template>
 
 <script>
-import { disabled } from "@/mixins/props.js";
+import Input from "@/mixins/input.js";
+import { props as WriterInputProps } from "@/components/Forms/Input/WriterInput.vue";
 import ListDoc from "@/components/Forms/Writer/Nodes/ListDoc.js";
 
-export default {
-	mixins: [disabled],
+export const props = {
+	mixins: [WriterInputProps],
 	inheritAttrs: false,
 	props: {
-		autofocus: Boolean,
-		marks: {
-			type: [Array, Boolean],
-			default: true
-		},
-		spellcheck: Boolean,
-		value: String
-	},
+		nodes: {
+			type: Array,
+			default: () => ["bulletList", "orderedList"]
+		}
+	}
+};
+
+export default {
+	mixins: [Input, props],
 	data() {
 		return {
 			list: this.value,
@@ -33,10 +34,11 @@ export default {
 		};
 	},
 	computed: {
-		extensions() {
+		listExtensions() {
 			return [
 				new ListDoc({
-					inline: true
+					inline: true,
+					nodes: this.nodes
 				})
 			];
 		}
@@ -85,11 +87,7 @@ export default {
 </script>
 
 <style>
-.k-list-input .ProseMirror {
-	line-height: 1.5em;
-}
-.k-list-input .ProseMirror ol > li::marker {
-	font-size: var(--text-sm);
-	color: var(--color-gray-500);
+.k-list-input.k-writer[data-placeholder][data-empty="true"]::before {
+	padding-inline-start: 2.5em;
 }
 </style>

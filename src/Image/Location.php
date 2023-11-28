@@ -24,13 +24,20 @@ class Location
 	 */
 	public function __construct(array $exif)
 	{
-		if (isset($exif['GPSLatitude']) === true &&
+		if (
+			isset($exif['GPSLatitude']) === true &&
 			isset($exif['GPSLatitudeRef']) === true &&
 			isset($exif['GPSLongitude']) === true &&
 			isset($exif['GPSLongitudeRef']) === true
 		) {
-			$this->lat = $this->gps($exif['GPSLatitude'], $exif['GPSLatitudeRef']);
-			$this->lng = $this->gps($exif['GPSLongitude'], $exif['GPSLongitudeRef']);
+			$this->lat = $this->gps(
+				$exif['GPSLatitude'],
+				$exif['GPSLatitudeRef']
+			);
+			$this->lng = $this->gps(
+				$exif['GPSLongitude'],
+				$exif['GPSLongitudeRef']
+			);
 		}
 	}
 
@@ -95,11 +102,12 @@ class Location
 	 */
 	public function __toString(): string
 	{
-		return trim(trim($this->lat() . ', ' . $this->lng(), ','));
+		return trim($this->lat() . ', ' . $this->lng(), ',');
 	}
 
 	/**
 	 * Improved `var_dump` output
+	 * @codeCoverageIgnore
 	 */
 	public function __debugInfo(): array
 	{

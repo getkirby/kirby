@@ -22,6 +22,8 @@ class PagesSectionTest extends TestCase
 				'index' => $this->tmp
 			]
 		]);
+
+		$this->app->impersonate('kirby');
 	}
 
 	public function tearDown(): void
@@ -77,10 +79,9 @@ class PagesSectionTest extends TestCase
 		$this->assertSame('Pages', $section->headline());
 	}
 
+
 	public function testParent()
 	{
-		$this->app->impersonate('kirby');
-
 		$parent = new Page([
 			'slug' => 'test',
 			'children' => [
@@ -108,8 +109,6 @@ class PagesSectionTest extends TestCase
 
 	public function testParentWithInvalidOption()
 	{
-		$this->app->impersonate('kirby');
-
 		$parent = new Page([
 			'slug' => 'test',
 			'children' => [
@@ -381,8 +380,6 @@ class PagesSectionTest extends TestCase
 
 	public function testImageString()
 	{
-		$this->app->impersonate('kirby');
-
 		$model = new Page([
 			'slug' => 'test',
 			'children' => [
@@ -549,13 +546,18 @@ class PagesSectionTest extends TestCase
 
 	public function testUnreadable()
 	{
-		$this->app->clone([
+		$app = $this->app->clone([
 			'blueprints' => [
 				'pages/unreadable' => [
 					'options' => ['read' => false]
 				]
+			],
+			'users' => [
+				['id' => 'bastian', 'role' => 'admin']
 			]
 		]);
+
+		$app->impersonate('bastian');
 
 		$page = new Page([
 			'slug' => 'test',
@@ -824,5 +826,116 @@ class PagesSectionTest extends TestCase
 
 		$this->assertSame([], $options['columns']);
 		$this->assertNull($options['link']);
+	}
+
+	public function testQuery()
+	{
+		$section = new Section('pages', [
+			'name'  => 'test',
+			'model' => new Page([
+				'slug' => 'test',
+				'children' => [
+					[
+						'slug' => 'a',
+						'num'  => 1,
+					],
+					[
+						'slug' => 'b',
+						'num'  => 2,
+					]
+				]
+			]),
+			'query' => $query = 'page.children.filter("num", ">", 1)'
+		]);
+
+		$this->assertSame($query, $section->query());
+		$this->assertFalse($section->sortable());
+
+		$this->assertCount(1, $section->pages());
+	}
+
+	public function testTemplatesIgnore()
+	{
+		$parent = new Page([
+			'slug' => 'test',
+			'children' => [
+				['slug' => 'a', 'template' => 'foo'],
+				['slug' => 'b', 'template' => 'bar'],
+				['slug' => 'c', 'template' => 'baz']
+			]
+		]);
+
+		// test 1
+		$section = new Section('pages', [
+			'name'            => 'test',
+			'model'           => $parent,
+			'templatesIgnore' => $expected = [
+				'foo',
+				'baz'
+			]
+		]);
+
+		$this->assertSame($expected, $section->templatesIgnore());
+		$this->assertCount(1, $section->pages());
+
+		// test 2
+		$section = new Section('pages', [
+			'name'            => 'test',
+			'model'           => $parent,
+			'templatesIgnore' => $expected = [
+				'bar'
+			]
+		]);
+
+		$this->assertSame($expected, $section->templatesIgnore());
+		$this->assertCount(2, $section->pages());
+
+		// test 3
+		$section = new Section('pages', [
+			'name'            => 'test',
+			'model'           => $parent,
+			'templatesIgnore' => $expected = [
+				'not-exists'
+			]
+		]);
+
+		$this->assertSame($expected, $section->templatesIgnore());
+		$this->assertCount(3, $section->pages());
+	}
+
+	public function testBlueprints()
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => ['title' => 'Default'],
+				'pages/section-a' => ['title' => 'Section A'],
+				'pages/section-b' => ['title' => 'Section B'],
+				'pages/section-c' => ['title' => 'Section C'],
+			],
+		]);
+
+		$app->impersonate('kirby');
+
+		$parent = new Page([
+			'slug'     => 'test',
+			'children' => [
+				['slug' => 'a', 'template' => 'section-a'],
+				['slug' => 'b', 'template' => 'section-b'],
+				['slug' => 'c', 'template' => 'section-c']
+			]
+		]);
+
+		$section = new Section('pages', [
+			'name'            => 'test',
+			'model'           => $parent,
+			'templatesIgnore' => $expected = [
+				'section-a',
+				'section-c'
+			]
+		]);
+
+		$this->assertSame($expected, $section->templatesIgnore());
+		$this->assertCount(1, $section->pages());
+		$this->assertCount(2, $section->blueprints());
 	}
 }

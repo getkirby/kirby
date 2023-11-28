@@ -1,0 +1,1 @@
+{"description":"","tags":{"since":[{"description":"4.0.0","title":"since"}]},"displayName":"FileBrowser","props":[{"name":"selected","type":{"name":"string"}}],"events":[{"name":"select","type":{"names":["undefined"]}}],"component":"k-file-browser","sourceFile":"src/components/Navigation/FileBrowser.vue"}

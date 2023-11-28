@@ -6,12 +6,15 @@
 
 <script>
 /**
- * Animated loading spinner
- * @public
- *
- * @example <k-loader />
+ * @deprecated 4.0.0 Use `<k-icon type="loader" />` instead
  */
-export default {};
+export default {
+	created() {
+		window.panel.deprecated(
+			'<k-loader> will be removed in a future version. Use <k-icon type="loader" /> instead.'
+		);
+	}
+};
 </script>
 
 <style>

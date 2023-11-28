@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Panel\UserTotpEnableDialog;
+
 $dialogs = require __DIR__ . '/../users/dialogs.php';
 
 return [
@@ -46,6 +48,13 @@ return [
 		'submit'  => $dialogs['user.delete']['submit'],
 	],
 
+	// account fields dialogs
+	'account.fields' => [
+		'pattern' => '(account)/files/(:any)/fields/(:any)/(:all?)',
+		'load'    => $dialogs['user.fields']['load'],
+		'submit'  => $dialogs['user.fields']['submit']
+	],
+
 	// change file name
 	'account.file.changeName' => [
 		'pattern' => '(account)/files/(:any)/changeName',
@@ -60,6 +69,13 @@ return [
 		'submit'  => $dialogs['user.file.changeSort']['submit'],
 	],
 
+	// change file template
+	'account.file.changeTemplate' => [
+		'pattern' => '(account)/files/(:any)/changeTemplate',
+		'load'    => $dialogs['user.file.changeTemplate']['load'],
+		'submit'  => $dialogs['user.file.changeTemplate']['submit'],
+	],
+
 	// delete
 	'account.file.delete' => [
 		'pattern' => '(account)/files/(:any)/delete',
@@ -67,4 +83,24 @@ return [
 		'submit'  => $dialogs['user.file.delete']['submit'],
 	],
 
+	// account file fields dialogs
+	'account.file.fields' => [
+		'pattern' => '(account)/files/(:any)/fields/(:any)/(:all?)',
+		'load'    => $dialogs['user.file.fields']['load'],
+		'submit'  => $dialogs['user.file.fields']['submit']
+	],
+
+	// account enable TOTP
+	'account.totp.enable' => [
+		'pattern' => '(account)/totp/enable',
+		'load'    => fn () => (new UserTotpEnableDialog())->load(),
+		'submit'  => fn () => (new UserTotpEnableDialog())->submit()
+	],
+
+	// account disable TOTP
+	'account.totp.disable' => [
+		'pattern' => '(account)/totp/disable',
+		'load'    => $dialogs['user.totp.disable']['load'],
+		'submit'  => $dialogs['user.totp.disable']['submit']
+	],
 ];

@@ -1,5 +1,5 @@
 <template>
-	<div class="k-table">
+	<div :aria-disabled="disabled" class="k-table">
 		<table :data-disabled="disabled" :data-indexed="hasIndexColumn">
 			<!-- Header row -->
 			<thead>
@@ -13,7 +13,7 @@
 						:key="columnIndex + '-header'"
 						:data-align="column.align"
 						:data-mobile="column.mobile"
-						:style="'width:' + width(column.width)"
+						:style="{ width: width(column.width) }"
 						class="k-table-column"
 						@click="
 							onHeader({
@@ -48,75 +48,77 @@
 			>
 				<!-- Empty -->
 				<tr v-if="rows.length === 0">
-					<td :colspan="columnsCount" class="k-table-empty">
+					<td :colspan="colspan" class="k-table-empty">
 						{{ empty }}
 					</td>
 				</tr>
 
 				<!-- Rows -->
-				<tr v-for="(row, rowIndex) in values" v-else :key="rowIndex">
-					<!-- Index & drag handle -->
-					<td
-						v-if="hasIndexColumn"
-						:data-sortable="sortable && row.sortable !== false"
-						data-mobile
-						class="k-table-index-column"
-					>
-						<slot
-							name="index"
-							v-bind="{
-								row,
-								rowIndex
-							}"
+				<template v-else>
+					<tr v-for="(row, rowIndex) in values" :key="rowIndex">
+						<!-- Index & drag handle -->
+						<td
+							v-if="hasIndexColumn"
+							:data-sortable="sortable && row.sortable !== false"
+							data-mobile
+							class="k-table-index-column"
 						>
-							<div class="k-table-index" v-text="index + rowIndex" />
-						</slot>
+							<slot
+								name="index"
+								v-bind="{
+									row,
+									rowIndex
+								}"
+							>
+								<div class="k-table-index" v-text="index + rowIndex" />
+							</slot>
 
-						<k-sort-handle
-							v-if="sortable && row.sortable !== false"
-							class="k-table-sort-handle"
-						/>
-					</td>
-
-					<!-- Cell -->
-					<k-table-cell
-						v-for="(column, columnIndex) in columns"
-						:key="rowIndex + '-' + columnIndex"
-						:column="column"
-						:field="fields[columnIndex]"
-						:row="row"
-						:mobile="column.mobile"
-						:value="row[columnIndex]"
-						:style="'width:' + width(column.width)"
-						class="k-table-column"
-						@click.native="
-							onCell({
-								row,
-								rowIndex,
-								column,
-								columnIndex
-							})
-						"
-						@input="
-							onCellUpdate({
-								columnIndex,
-								rowIndex,
-								value: $event
-							})
-						"
-					/>
-
-					<!-- Options -->
-					<td v-if="hasOptions" data-mobile class="k-table-options-column">
-						<slot name="options" v-bind="{ row, rowIndex, options }">
-							<k-options-dropdown
-								:options="row.options || options"
-								:text="(row.options || options).length > 1"
-								@option="onOption($event, row, rowIndex)"
+							<k-sort-handle
+								v-if="sortable && row.sortable !== false"
+								class="k-table-sort-handle"
 							/>
-						</slot>
-					</td>
-				</tr>
+						</td>
+
+						<!-- Cell -->
+						<k-table-cell
+							v-for="(column, columnIndex) in columns"
+							:key="rowIndex + '-' + columnIndex"
+							:column="column"
+							:field="fields[columnIndex]"
+							:row="row"
+							:mobile="column.mobile"
+							:value="row[columnIndex]"
+							:style="{ width: width(column.width) }"
+							class="k-table-column"
+							@click.native="
+								onCell({
+									row,
+									rowIndex,
+									column,
+									columnIndex
+								})
+							"
+							@input="
+								onCellUpdate({
+									columnIndex,
+									rowIndex,
+									value: $event
+								})
+							"
+						/>
+
+						<!-- Options -->
+						<td v-if="hasOptions" data-mobile class="k-table-options-column">
+							<slot name="options" v-bind="{ row, rowIndex }">
+								<k-options-dropdown
+									:options="row.options ?? options"
+									:text="(row.options ?? options).length > 1"
+									@option="onOption($event, row, rowIndex)"
+								/>
+							</slot>
+						</td>
+					</tr>
+				</template>
 			</k-draggable>
 		</table>
 
@@ -132,17 +134,19 @@
 <script>
 /**
  * A simple table component with columns and rows
- * @public
  */
 export default {
 	inheritAttrs: false,
 	props: {
 		/**
 		 * Configuration which columns to include.
-		 * Supported keys: after, before, label, type, width
+		 * @value name: { after, before, label, type, width }
 		 * @example { title: { label: "title", type: "text" } }
 		 */
-		columns: Object,
+		columns: {
+			type: Object,
+			default: () => ({})
+		},
 		/**
 		 * Whether table is disabled
 		 */
@@ -156,7 +160,7 @@ export default {
 			default: () => ({})
 		},
 		/**
-		 * Text to be shown when table has no rows
+		 * Text to display when table has no rows
 		 */
 		empty: String,
 		/**
@@ -173,7 +177,10 @@ export default {
 		/**
 		 * What options to include in dropdown
 		 */
-		options: [Array, Function],
+		options: {
+			default: () => [],
+			type: [Array, Function]
+		},
 		/**
 		 * Optional pagination settings
 		 */
@@ -211,7 +218,7 @@ export default {
 		 * @returns {number}
 		 */
 		columnsCount() {
-			return Object.keys(this.columns).length;
+			return this.$helper.object.length(this.columns);
 		},
 		/**
 		 * Config options for `k-draggable`
@@ -237,8 +244,9 @@ export default {
 		 */
 		hasOptions() {
 			return (
+				this.$scopedSlots.options ||
 				this.options?.length > 0 ||
-				Object.values(this.values).filter((row) => row.options).length > 0
+				Object.values(this.values).filter((row) => row?.options).length > 0
 			);
 		}
 	},
@@ -267,7 +275,7 @@ export default {
 		 * @returns {string}
 		 */
 		label(column, columnIndex) {
-			return column.label || this.$helper.string.ucfirst(columnIndex);
+			return column.label ?? this.$helper.string.ucfirst(columnIndex);
 		},
 		/**
 		 * When the table has been sorted,
@@ -335,106 +343,100 @@ export default {
 </script>
 
 <style>
-/** Table Layout **/
+:root {
+	--table-cell-padding: var(--spacing-3);
+	--table-color-back: var(--color-white);
+	--table-color-border: var(--color-background);
+	--table-color-hover: var(--color-gray-100);
+	--table-color-th-back: var(--color-gray-100);
+	--table-color-th-text: var(--color-text-dimmed);
+	--table-row-height: var(--input-height);
+}
+
+/* Table Layout */
 .k-table {
-	--table-row-height: 38px;
 	position: relative;
-	background: var(--color-white);
-	font-size: var(--text-sm);
+	background: var(--table-color-back);
 	box-shadow: var(--shadow);
 	border-radius: var(--rounded);
 }
+
 .k-table table {
-	width: 100%;
-	border-spacing: 0;
 	table-layout: fixed;
-	font-variant-numeric: tabular-nums;
-}
-.k-table[data-invalid] {
-	border: 0;
-	box-shadow: var(--color-negative-outline) 0 0 0 1px,
-		var(--color-negative-outline) 0 0 3px 2px;
 }
 
-/** Cells **/
+/* All Cells */
 .k-table th,
 .k-table td {
+	padding-inline: var(--table-cell-padding);
 	height: var(--table-row-height);
 	overflow: hidden;
 	text-overflow: ellipsis;
 	width: 100%;
-	border-inline-end: 1px solid var(--color-background);
-	line-height: 1.25em;
+	border-inline-end: 1px solid var(--table-color-border);
+	line-height: 1.25;
 }
-
-.k-table thead th:first-child {
-	border-start-start-radius: var(--rounded);
-}
-.k-table thead th:last-child {
-	border-start-end-radius: var(--rounded);
-}
-.k-table th:last-child,
-.k-table td:last-child {
-	height: var(--table-row-height);
+.k-table tr > *:last-child {
 	border-inline-end: 0;
 }
 
 .k-table th,
 .k-table tr:not(:last-child) td {
-	border-block-end: 1px solid var(--color-background);
+	border-block-end: 1px solid var(--table-color-border);
 }
 
-.k-table td:last-child {
-	overflow: visible;
+/* Text aligment */
+.k-table :where(td, th)[data-align] {
+	text-align: var(--align);
 }
 
-.k-table th,
-.k-table td {
-	border-inline-end: 1px solid var(--color-background);
-	text-align: start;
-}
-
+/* TH */
 .k-table th {
-	padding: 0 0.75rem;
+	padding-inline: var(--table-cell-padding);
 	font-family: var(--font-mono);
 	font-size: var(--text-xs);
-	font-weight: 400;
-	color: var(--color-gray-600);
-	background: var(--color-gray-100);
-	width: 100%;
+	color: var(--table-color-th-text);
+	background: var(--table-color-th-back);
 }
-
+.k-table th[data-has-button] {
+	padding: 0;
+}
 .k-table th button {
-	font: inherit;
-	display: block;
-	padding: 0 0.75rem;
+	padding-inline: var(--table-cell-padding);
 	height: 100%;
 	width: 100%;
 	border-radius: var(--rounded);
 	text-align: start;
 }
 .k-table th button:focus-visible {
-	outline: 2px solid var(--color-black);
 	outline-offset: -2px;
 }
 
-.k-table tbody tr:hover td {
-	background: rgba(239, 239, 239, 0.25);
+/* Table Header */
+.k-table thead th:first-child {
+	border-start-start-radius: var(--rounded);
+}
+.k-table thead th:last-child {
+	border-start-end-radius: var(--rounded);
 }
 
-/** Sticky header **/
+/* Sticky Header */
 .k-table thead th {
 	position: sticky;
-	top: 0;
+	top: var(--header-sticky-offset);
 	inset-inline: 0;
 	z-index: 1;
 }
 
-/** Header cells in the body **/
+/* Table Body */
+.k-table tbody tr:hover td {
+	background: var(--table-color-hover);
+}
+
+/* Header cells in the body */
 .k-table tbody th {
 	width: auto;
 	white-space: nowrap;
-	padding: 0;
 	overflow: visible;
 	border-radius: 0;
 }
@@ -446,102 +448,94 @@ export default {
 	border-block-end: 0;
 }
 
-/** Text aligment **/
-.k-table-column[data-align] {
-	text-align: var(--align) !important;
-}
-.k-table-column[data-align="right"] > .k-input {
-	flex-direction: column;
-	align-items: flex-end;
-}
-
-/** Index & Sort handle */
-.k-table-index,
-.k-table .k-sort-handle {
-	display: grid;
-	place-items: center;
-	width: 100%;
-	height: var(--table-row-height);
-}
-.k-table .k-sort-handle,
-.k-table tr:hover .k-table-index-column[data-sortable="true"] .k-table-index {
-	display: none;
-}
-.k-table tr:hover .k-sort-handle {
-	display: grid !important;
-}
-
+/* Sortable tables */
 .k-table-row-ghost {
 	background: var(--color-white);
-	box-shadow: var(--shadow-outline);
-	outline: 2px solid var(--color-black);
+	outline: var(--outline);
 	border-radius: var(--rounded);
 	margin-bottom: 2px;
 	cursor: grabbing;
-	cursor: -moz-grabbing;
-	cursor: -webkit-grabbing;
 }
-
 .k-table-row-fallback {
 	opacity: 0 !important;
 }
 
-/** Index column **/
-th.k-table-index-column,
-td.k-table-index-column,
-th.k-table-options-column,
-td.k-table-options-column {
+/* Table Index */
+.k-table .k-table-index-column {
 	width: var(--table-row-height);
-	text-align: center !important;
+	text-align: center;
 }
-.k-table-index {
+.k-table .k-table-index {
 	font-size: var(--text-xs);
-	color: var(--color-gray-500);
+	color: var(--color-text-dimmed);
 	line-height: 1.1em;
 }
 
-/** Empty */
+/* Table Index with sort handle */
+.k-table .k-table-index-column .k-sort-handle {
+	--button-width: 100%;
+	display: none;
+}
+.k-table tr:hover .k-table-index-column[data-sortable="true"] .k-table-index {
+	display: none;
+}
+.k-table tr:hover .k-table-index-column[data-sortable="true"] .k-sort-handle {
+	display: flex;
+}
+
+/* Table Options */
+.k-table .k-table-options-column {
+	padding: 0;
+	width: var(--table-row-height);
+	text-align: center;
+}
+.k-table .k-table-options-column .k-options-dropdown-toggle {
+	--button-width: 100%;
+	--button-height: 100%;
+	outline-offset: -2px;
+}
+
+/* Empty */
 .k-table-empty {
-	color: var(--color-gray-600);
+	color: var(--color-text-dimmed);
 	font-size: var(--text-sm);
 }
 
-/** Disabled */
-[data-disabled="true"] .k-table {
-	background: var(--color-gray-100);
+/* Disabled */
+.k-table[aria-disabled="true"] {
+	--table-color-back: transparent;
+	--table-color-border: var(--color-border);
+	--table-color-hover: transparent;
+	--table-color-th-back: transparent;
+	border: 1px solid var(--table-color-border);
+	box-shadow: none;
 }
-[data-disabled="true"] .k-table th,
-[data-disabled="true"] .k-table tbody td {
-	border-color: var(--color-gray-200);
-}
-[data-disabled="true"] .k-table td:last-child {
-	overflow: hidden;
-	text-overflow: ellipsis;
+.k-table[aria-disabled="true"] thead th {
+	position: static;
 }
 
-/** Mobile */
-@media screen and (max-width: 65em) {
-	.k-table tbody td:not([data-mobile]),
-	.k-table thead th:not([data-mobile]) {
-		display: none;
+/* Mobile */
+@container (max-width: 40rem) {
+	.k-table {
+		overflow-x: scroll;
+	}
+	.k-table thead th {
+		position: static;
 	}
 }
 
-.k-table-pagination.k-pagination {
-	border-top: 1px solid var(--color-gray-200);
-	background: var(--color-gray-100);
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
+/* Pagination */
+.k-table-pagination {
+	border-top: 1px solid var(--table-color-border);
 	height: var(--table-row-height);
+	background: var(--table-color-th-back);
+	display: flex;
+	justify-content: center;
 	border-end-start-radius: var(--rounded);
 	border-end-end-radius: var(--rounded);
 }
-.k-table-pagination.k-pagination .k-button {
-	padding: 0 0.75rem;
-	display: flex;
-	align-items: center;
-	line-height: 1;
-	height: var(--table-row-height);
+.k-table-pagination > .k-button {
+	--button-color-back: transparent;
+	border-left: 0 !important;
 }
 </style>

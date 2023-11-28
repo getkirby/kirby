@@ -1,7 +1,3 @@
-/**
- * @vitest-environment node
- */
-
 import { describe, expect, it } from "vitest";
 import embed from "./embed.js";
 
@@ -162,22 +158,22 @@ describe.concurrent("$helper.embed()", () => {
 	];
 
 	it("should create the right embed URLs", () => {
-		tests.forEach((test) => {
+		for (const test of tests) {
 			const input = test[0];
 			const expected = test[1];
 			const result = embed.video(input);
 
 			expect(result).toBe(expected);
-		});
+		}
 	});
 
 	it("should work with doNotTrack flag for youtube and vimeo videos", () => {
-		tests.forEach((test) => {
+		for (const test of tests) {
 			const input = test[0];
 			const expected = test[2];
 			const result = embed.video(input, true);
 
 			expect(result).toBe(expected);
-		});
+		}
 	});
 });

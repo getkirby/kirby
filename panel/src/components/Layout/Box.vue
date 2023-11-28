@@ -1,35 +1,60 @@
 <template>
-	<div :data-theme="theme" class="k-box" v-on="$listeners">
-		<!-- @slot Use instead of `text` prop -->
-		<slot>
+	<component
+		:is="element"
+		:data-align="align"
+		:data-theme="theme"
+		:type="type"
+		:style="height ? { '--box-height': height } : null"
+		class="k-box"
+	>
+		<k-icon v-if="icon" :type="icon" />
+		<!--
+			@slot Box content, replaces content from `text` prop
+			@binding {string} text
+			@binding {boolean} html
+		-->
+		<slot v-bind="{ html, text }">
 			<k-text v-if="html" :html="text" />
 			<k-text v-else>
 				{{ text }}
 			</k-text>
 		</slot>
-	</div>
+	</component>
 </template>
 
 <script>
 /**
- * The `<k-box>` component is a multi-purpose
- * box with text. You can use it as a foundation
- * for empty state displays or anything else
- * that needs to be displayed in a box. It comes
- * with several pre-defined styles …
- * @public
+ * The `<k-box>` component is a multi-purpose box with text. You can use it as a foundation for empty state displays or anything else that needs to be displayed in a box.
  *
  * @example <k-box text="This is a nice box" theme="positive" />
  */
 export default {
 	props: {
 		/**
+		 * @values "start", "center"
+		 */
+		align: {
+			type: String,
+			default: "start"
+		},
+		/**
+		 * Whether the box should function as a button
+		 */
+		button: Boolean,
+		/**
+		 * CSS value for the height of the box
+		 */
+		height: String,
+		/**
+		 * Optional icon to display in the box
+		 */
+		icon: String,
+		/**
 		 * Choose one of the pre-defined styles
-		 * @values none, code, button, positive, negative, notice, info, empty
+		 * @values "positive", "negative", "notice", "warning", "info", "passive", "text", "dark", "code", "empty"
 		 */
 		theme: {
-			type: String,
-			default: "none"
+			type: String
 		},
 		/**
 		 * Text to display inside the box
@@ -39,71 +64,68 @@ export default {
 		 * If set to `true`, the `text` is rendered as HTML code, otherwise as plain text
 		 */
 		html: {
-			type: Boolean,
-			default: false
+			type: Boolean
+		}
+	},
+	computed: {
+		element() {
+			return this.button ? "button" : "div";
+		},
+		type() {
+			return this.button ? "button" : null;
 		}
 	}
 };
 </script>
 
 <style>
+:root {
+	--box-height: var(
+		--field-input-height
+	); /* TODO: change back to --height-md after input refactoring */
+	--box-padding-inline: var(--spacing-2);
+	--box-font-size: var(--text-sm);
+	--box-color-back: none;
+	--box-color-text: currentColor;
+}
+
 .k-box {
+	--icon-color: var(--box-color-icon);
+	--text-font-size: var(--box-font-size);
+
+	display: flex;
+	width: 100%;
+	align-items: center;
+	gap: var(--spacing-2);
+	color: var(--box-color-text);
+	background: var(--box-color-back);
 	word-wrap: break-word;
-	font-size: var(--text-sm);
 }
-.k-box:not([data-theme="none"]) {
-	background: var(--color-white);
+
+/* Themes */
+.k-box[data-theme] {
+	--box-color-back: var(--theme-color-back);
+	--box-color-text: var(--theme-color-text);
+	--box-color-icon: var(--theme-color-700);
+	min-height: var(--box-height);
+	line-height: 1.25;
+	padding: 0.375rem var(--box-padding-inline);
 	border-radius: var(--rounded);
-	line-height: 1.25rem;
-	padding: 0.5rem 0.75rem;
 }
-.k-box[data-theme="code"] {
-	background: var(--color-gray-900);
-	border: 1px solid var(--color-black);
-	color: var(--color-light);
-	font-family: "Input", "Menlo", monospace;
-	font-size: var(--text-sm);
-	line-height: 1.5;
+
+.k-box[data-theme="text"],
+.k-box[data-theme="white"] {
+	box-shadow: var(--shadow);
 }
-.k-box[data-theme="button"] {
+.k-box[data-theme="text"] {
+	padding: var(--spacing-6);
+}
+.k-box[data-theme="none"] {
 	padding: 0;
 }
-.k-box[data-theme="button"] .k-button {
-	padding: 0 0.75rem;
-	height: 2.25rem;
-	width: 100%;
-	display: flex;
-	align-items: center;
-	line-height: 2rem;
-	text-align: start;
-}
 
-.k-box[data-theme="positive"],
-.k-box[data-theme="negative"],
-.k-box[data-theme="notice"],
-.k-box[data-theme="info"] {
-	border: 0;
-	border-inline-start-color: var(--theme-light);
-	background: var(--theme-bg);
-}
-
-.k-box[data-theme="empty"] {
-	text-align: center;
-	border-inline-start: 0;
-	padding: 3rem 1.5rem;
-	display: flex;
+/* Align:center */
+.k-box[data-align="center"] {
 	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	background: var(--color-background);
-	color: var(--color-gray-600);
-	border: 1px dashed var(--color-border);
-}
-.k-box[data-theme="empty"] .k-icon {
-	margin-bottom: 0.5rem;
-	color: var(--color-gray-500);
-}
-.k-box[data-theme="empty"] p {
-	color: var(--color-gray-600);
 }
 </style>

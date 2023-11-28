@@ -4,6 +4,11 @@ namespace Kirby\Cms;
 
 class FileBlueprintTest extends TestCase
 {
+	public function tearDown(): void
+	{
+		Blueprint::$loaded = [];
+	}
+
 	public function testOptions()
 	{
 		$page = new Page([
@@ -15,12 +20,15 @@ class FileBlueprintTest extends TestCase
 		]);
 
 		$expected = [
-			'changeName' => null,
-			'create'     => null,
-			'delete'     => null,
-			'read'       => null,
-			'replace'    => null,
-			'update'     => null,
+			'access' 	 	 => null,
+			'changeName' 	 => null,
+			'changeTemplate' => null,
+			'create'     	 => null,
+			'delete'     	 => null,
+			'list'     	 	 => null,
+			'read'       	 => null,
+			'replace'    	 => null,
+			'update'     	 => null,
 		];
 
 		$this->assertSame($expected, $blueprint->options());

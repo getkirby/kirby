@@ -43,14 +43,15 @@ class CustomContentLockIsUnlocked extends CustomContentLockIslocked
 
 class ModelSiteNoLocking extends ModelSite
 {
-	public function lock()
+	public function lock(): ContentLock|null
 	{
+		return null;
 	}
 }
 
 class ModelSiteTestForceLocked extends ModelSite
 {
-	public function lock()
+	public function lock(): ContentLock|null
 	{
 		return new CustomContentLockIsLocked();
 	}
@@ -58,7 +59,7 @@ class ModelSiteTestForceLocked extends ModelSite
 
 class ModelSiteTestForceUnlocked extends ModelSite
 {
-	public function lock()
+	public function lock(): ContentLock|null
 	{
 		return new CustomContentLockIsUnlocked();
 	}
@@ -250,7 +251,13 @@ class ModelTest extends TestCase
 		$option = $model->dropdownOption();
 		$expected = [
 			'icon' => 'page',
-			'link' => '/panel/custom',
+			'image' => [
+				'back'  => 'black',
+				'color' => 'gray-500',
+				'cover' => false,
+				'icon'  => 'page'
+			],
+			'link' => '/custom',
 			'text' => null
 		];
 
@@ -261,6 +268,7 @@ class ModelTest extends TestCase
 	 * @covers ::image
 	 * @covers ::imageDefaults
 	 * @covers ::imageSource
+	 * @covers ::imageSrcset
 	 */
 	public function testImage()
 	{
@@ -275,10 +283,8 @@ class ModelTest extends TestCase
 		$this->assertArrayHasKey('back', $image);
 		$this->assertArrayHasKey('cover', $image);
 		$this->assertArrayHasKey('icon', $image);
-		$this->assertArrayHasKey('ratio', $image);
 		$this->assertFalse($image['cover']);
 		$this->assertSame('page', $image['icon']);
-		$this->assertSame('3/2', $image['ratio']);
 
 		// deactivate
 		$this->assertNull($panel->image(false));
@@ -305,17 +311,6 @@ class ModelTest extends TestCase
 
 		// cards
 		$image = $panel->image('site.image', 'cards');
-		$this->assertStringContainsString('test-352x.jpg 352w', $image['srcset']);
-		$this->assertStringContainsString('test-864x.jpg 864w', $image['srcset']);
-		$this->assertStringContainsString('test-1408x.jpg 1408w', $image['srcset']);
-
-		// cards with cover option should still return the full srcset
-		// cropping is done in css
-		$image = $panel->image([
-			'query'  => 'site.image',
-			'cover'  => true
-		], 'cards');
-
 		$this->assertStringContainsString('test-352x.jpg 352w', $image['srcset']);
 		$this->assertStringContainsString('test-864x.jpg 864w', $image['srcset']);
 		$this->assertStringContainsString('test-1408x.jpg 1408w', $image['srcset']);
@@ -491,11 +486,11 @@ class ModelTest extends TestCase
 
 		$toLink = $panel->toLink();
 		$this->assertSame('/custom', $toLink['link']);
-		$this->assertSame($title, $toLink['tooltip']);
+		$this->assertSame($title, $toLink['title']);
 
 		$toLink = $panel->toLink('author');
 		$this->assertSame('/custom', $toLink['link']);
-		$this->assertSame($author, $toLink['tooltip']);
+		$this->assertSame($author, $toLink['title']);
 	}
 
 	/**

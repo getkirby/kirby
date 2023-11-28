@@ -897,28 +897,34 @@ class DomTest extends TestCase
 	{
 		return [
 			// allowed URL with site at the domain root
-			['https://getkirby.com', '/some/path', true],
+			['https://getkirby.com', '/some/path', false, true],
 
 			// allowed URL with site at the domain root
-			['/', '/some/path', true],
+			['/', '/some/path', false, true],
 
 			// allowed URL with site in a subfolder
-			['https://getkirby.com/some', '/some/path', true],
+			['https://getkirby.com/some', '/some/path', false, true],
 
 			// allowed URL with site in a subfolder
-			['/some', '/some/path', true],
+			['/some', '/some/path', false, true],
 
 			// disallowed URL with site in a subfolder
-			['https://getkirby.com/site', '/some/path', 'The URL points outside of the site index URL'],
+			['https://getkirby.com/site', '/some/path', false, 'The URL points outside of the site index URL'],
+
+			// generally disallowed URL with site in a subfolder (but allowed)
+			['https://getkirby.com/site', '/some/path', true, true],
 
 			// disallowed URL with site in a subfolder
-			['/site', '/some/path', 'The URL points outside of the site index URL'],
+			['/site', '/some/path', false, 'The URL points outside of the site index URL'],
+
+			// generally disallowed URL with site in a subfolder (but allowed)
+			['/site', '/some/path', true, true],
 
 			// disallowed URL with directory traversal
-			['https://getkirby.com/site', '/site/../some/path', 'The ../ sequence is not allowed in relative URLs'],
+			['https://getkirby.com/site', '/site/../some/path', false, 'The ../ sequence is not allowed in relative URLs'],
 
 			// disallowed URL with directory traversal
-			['/site', '/site/../some/path', 'The ../ sequence is not allowed in relative URLs'],
+			['/site', '/site/../some/path', false, 'The ../ sequence is not allowed in relative URLs'],
 		];
 	}
 
@@ -926,7 +932,7 @@ class DomTest extends TestCase
 	 * @dataProvider isAllowedUrlCmsProvider
 	 * @covers ::isAllowedUrl
 	 */
-	public function testIsAllowedUrlCms(string $indexUrl, string $url, $expected)
+	public function testIsAllowedUrlCms(string $indexUrl, string $url, bool $allowHostRelativeUrls, string|bool $expected)
 	{
 		new App([
 			'urls' => [
@@ -934,7 +940,7 @@ class DomTest extends TestCase
 			]
 		]);
 
-		$this->assertSame($expected, Dom::isAllowedUrl($url, []));
+		$this->assertSame($expected, Dom::isAllowedUrl($url, compact('allowHostRelativeUrls')));
 	}
 
 	/**
@@ -1647,7 +1653,7 @@ class DomTest extends TestCase
 			[
 				'<xml a="A" b="B"/>',
 				[
-					'attrCallback' => function (DOMAttr $attr): void {
+					'attrCallback' => function (DOMAttr $attr, array $options): void {
 						// no return value
 					}
 				],
@@ -1658,7 +1664,9 @@ class DomTest extends TestCase
 			[
 				'<xml a="A" b="B"/>',
 				[
-					'attrCallback' => function (DOMAttr $attr): array {
+					'attrCallback' => function (DOMAttr $attr, array $options): array {
+						$this->assertInstanceOf(Closure::class, $options['attrCallback']);
+
 						if ($attr->nodeName === 'b') {
 							$attr->ownerElement->removeAttributeNode($attr);
 							return [new InvalidArgumentException('The "b" attribute is not allowed')];
@@ -1724,7 +1732,9 @@ class DomTest extends TestCase
 			[
 				'<!DOCTYPE svg><xml/>',
 				[
-					'doctypeCallback' => function (DOMDocumentType $doctype): void {
+					'doctypeCallback' => function (DOMDocumentType $doctype, array $options): void {
+						$this->assertInstanceOf(Closure::class, $options['doctypeCallback']);
+
 						throw new InvalidArgumentException('The "' . $doctype->name . '" doctype is not allowed');
 					}
 				],
@@ -1737,7 +1747,7 @@ class DomTest extends TestCase
 			[
 				'<xml><a class="a">A</a><b class="b">B</b></xml>',
 				[
-					'elementCallback' => function (DOMElement $element): void {
+					'elementCallback' => function (DOMElement $element, array $options): void {
 						// no return value
 					}
 				],
@@ -1748,7 +1758,9 @@ class DomTest extends TestCase
 			[
 				'<xml><a class="a">A</a><b class="b">B</b></xml>',
 				[
-					'elementCallback' => function (DOMElement $element): array {
+					'elementCallback' => function (DOMElement $element, array $options): array {
+						$this->assertInstanceOf(Closure::class, $options['elementCallback']);
+
 						if ($element->nodeName === 'b') {
 							Dom::remove($element);
 							return [new InvalidArgumentException('The "b" element is not allowed')];

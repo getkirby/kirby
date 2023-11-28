@@ -62,7 +62,7 @@ class Expression
 		return preg_split(
 			'/\s+([\?\:]+)\s+|' . Arguments::OUTSIDE . '/',
 			trim($string),
-			flags: PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY
+			flags: PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
 		);
 	}
 

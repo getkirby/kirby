@@ -50,7 +50,8 @@ class Home
 
 		// needed to create a proper menu
 		$areas = Panel::areas();
-		$menu  = View::menu($areas, $permissions->toArray());
+		$menu  = new Menu($areas, $permissions->toArray());
+		$menu  = $menu->entries();
 
 		// go through the menu and search for the first
 		// available view we can go to
@@ -65,11 +66,16 @@ class Home
 				continue;
 			}
 
-			// skip the logout button
-			if ($menuItem['id'] === 'logout') {
+			// skip buttons that don't open a link
+			// (but e.g. a dialog)
+			if (isset($menuItem['link']) === false) {
 				continue;
 			}
 
+			// skip the logout button
+			if ($menuItem['link'] === 'logout') {
+				continue;
+			}
 
 			return Panel::url($menuItem['link']);
 		}
@@ -100,9 +106,10 @@ class Home
 		// create a dummy router to check if we can access this route at all
 		try {
 			return Router::execute($path, 'GET', $routes, function ($route) use ($user) {
-				$auth   = $route->attributes()['auth'] ?? true;
-				$areaId = $route->attributes()['area'] ?? null;
-				$type   = $route->attributes()['type'] ?? 'view';
+				$attrs  = $route->attributes();
+				$auth   = $attrs['auth'] ?? true;
+				$areaId = $attrs['area'] ?? null;
+				$type   = $attrs['type'] ?? 'view';
 
 				// only allow redirects to views
 				if ($type !== 'view') {
@@ -131,7 +138,8 @@ class Home
 	public static function hasValidDomain(Uri $uri): bool
 	{
 		$rootUrl = App::instance()->site()->url();
-		return $uri->domain() === (new Uri($rootUrl))->domain();
+		$rootUri = new Uri($rootUrl);
+		return $uri->domain() === $rootUri->domain();
 	}
 
 	/**
@@ -139,7 +147,8 @@ class Home
 	 */
 	public static function isPanelUrl(string $url): bool
 	{
-		return Str::startsWith($url, App::instance()->url('panel'));
+		$panel = App::instance()->url('panel');
+		return Str::startsWith($url, $panel);
 	}
 
 	/**
@@ -161,10 +170,12 @@ class Home
 	public static function remembered(): string|null
 	{
 		// check for a stored path after login
-		$remembered = App::instance()->session()->pull('panel.path');
+		if ($remembered = App::instance()->session()->pull('panel.path')) {
+			// convert the result to an absolute URL if available
+			return Panel::url($remembered);
+		}
 
-		// convert the result to an absolute URL if available
-		return $remembered ? Panel::url($remembered) : null;
+		return null;
 	}
 
 	/**

@@ -1,5 +1,5 @@
-import Vue, { set, del } from "vue";
-import { clone } from "@/helpers/object.js";
+import { set, del } from "vue";
+import { clone, length } from "@/helpers/object.js";
 
 const keep = (id, data) => {
 	localStorage.setItem("kirby$content$" + id, JSON.stringify(data));
@@ -36,15 +36,13 @@ export default {
 		/**
 		 * Checks for an ID if a model exists in the store
 		 */
-		exists: (state) => (id) => {
-			return Object.prototype.hasOwnProperty.call(state.models, id);
-		},
+		exists: (state) => (id) => Object.hasOwn(state.models, id),
 		/**
 		 * Checks for an ID if a model has unsaved changes
 		 */
 		hasChanges: (state, getters) => (id) => {
 			const changes = getters.model(id).changes;
-			return Object.keys(changes).length > 0;
+			return length(changes) > 0;
 		},
 		/**
 		 * Checks for an ID if it is the current model
@@ -59,19 +57,14 @@ export default {
 		 * Returns ID (current or provided) with correct language suffix
 		 */
 		id: (state) => (id) => {
-			id = id || state.current;
-
-			if (window.panel.$language) {
-				return id + "?language=" + window.panel.$language.code;
-			}
-
-			return id;
+			id = id ?? state.current;
+			return id + "?language=" + window.panel.language.code;
 		},
 		/**
 		 * Return the full model object for passed ID
 		 */
 		model: (state, getters) => (id) => {
-			id = id || state.current;
+			id = id ?? state.current;
 
 			if (getters.exists(id) === true) {
 				return state.models[id];
@@ -109,16 +102,16 @@ export default {
 
 	mutations: {
 		CLEAR(state) {
-			Object.keys(state.models).forEach((key) => {
+			for (const key in state.models) {
 				state.models[key].changes = {};
-			});
+			}
 
 			// remove all form changes from localStorage
-			Object.keys(localStorage).forEach((key) => {
+			for (const key in localStorage) {
 				if (key.startsWith("kirby$content$")) {
 					localStorage.removeItem(key);
 				}
-			});
+			}
 		},
 		CREATE(state, [id, model]) {
 			if (!model) {
@@ -132,7 +125,7 @@ export default {
 			set(state.models, id, {
 				api: model.api,
 				originals: model.originals,
-				changes: changes || {}
+				changes: changes ?? {}
 			});
 		},
 		CURRENT(state, id) {
@@ -177,7 +170,9 @@ export default {
 
 			// // compare current field value with its original value
 			const current = JSON.stringify(value);
-			const original = JSON.stringify(state.models[id].originals[field]);
+			const original = JSON.stringify(
+				state.models[id].originals[field] ?? null
+			);
 
 			if (original == current) {
 				// if the same, there are no unsaved changes
@@ -197,20 +192,18 @@ export default {
 
 	actions: {
 		init(context) {
-			// load models in store from localStorage
-			Object.keys(localStorage)
-				.filter((key) => key.startsWith("kirby$content$"))
-				.map((key) => key.split("kirby$content$")[1])
-				.forEach((id) => {
+			for (const key in localStorage) {
+				// load models in store from localStorage
+				if (key.startsWith("kirby$content$")) {
+					const id = key.split("kirby$content$")[1];
 					const data = localStorage.getItem("kirby$content$" + id);
 					context.commit("CREATE", [id, JSON.parse(data)]);
-				});
+					continue;
+				}
 
-			// load old format
-			Object.keys(localStorage)
-				.filter((key) => key.startsWith("kirby$form$"))
-				.map((key) => key.split("kirby$form$")[1])
-				.forEach((id) => {
+				// load old format
+				if (key.startsWith("kirby$form$")) {
+					const id = key.split("kirby$form$")[1];
 					const json = localStorage.getItem("kirby$form$" + id);
 					let data = null;
 
@@ -240,7 +233,8 @@ export default {
 
 					// remove the old entry
 					localStorage.removeItem("kirby$form$" + id);
-				});
+				}
+			}
 		},
 		clear(context) {
 			context.commit("CLEAR");
@@ -251,7 +245,9 @@ export default {
 			// remove fields from the content object that
 			// should be ignored in changes or when saving content
 			if (Array.isArray(model.ignore)) {
-				model.ignore.forEach((field) => delete content[field]);
+				for (const field of model.ignore) {
+					delete content[field];
+				}
 			}
 
 			// attach the language to the id
@@ -288,11 +284,11 @@ export default {
 			}
 		},
 		revert(context, id) {
-			id = id || context.state.current;
+			id = id ?? context.state.current;
 			context.commit("REVERT", id);
 		},
 		async save(context, id) {
-			id = id || context.state.current;
+			id = id ?? context.state.current;
 
 			// don't allow save if model is not current
 			// or the form is currently disabled
@@ -311,7 +307,7 @@ export default {
 
 			// Send updated values to API
 			try {
-				await Vue.$api.patch(model.api, data);
+				await window.panel.api.patch(model.api, data);
 
 				// re-create model with updated values as originals
 				context.commit("CREATE", [
@@ -329,7 +325,7 @@ export default {
 			}
 		},
 		update(context, [field, value, id]) {
-			id = id || context.state.current;
+			id = id ?? context.state.current;
 
 			if (field === null) {
 				for (const field in value) {

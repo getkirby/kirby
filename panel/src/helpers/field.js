@@ -1,6 +1,41 @@
 import { clone } from "./object.js";
 
 /**
+ * Loads the default value for a field definition
+ * @param {Object} field
+ * @returns {mixed}
+ */
+export function defaultValue(field) {
+	if (field.default !== undefined) {
+		return clone(field.default);
+	}
+
+	const component =
+		window.panel.app.$options.components[`k-${field.type}-field`];
+
+	const valueProp = component?.options.props?.value;
+
+	// if the field has no value prop,
+	// it will be completely skipped
+	if (valueProp === undefined) {
+		return undefined;
+	}
+
+	const valuePropDefault = valueProp?.default;
+
+	// resolve default prop functions
+	if (typeof valuePropDefault === "function") {
+		return valuePropDefault();
+	}
+
+	if (valuePropDefault !== undefined) {
+		return valuePropDefault;
+	}
+
+	return null;
+}
+
+/**
  * Creates form values for provided fields
  * @param {Object} fields
  * @returns {Object}
@@ -9,23 +44,26 @@ export function form(fields) {
 	const form = {};
 
 	for (const fieldName in fields) {
-		form[fieldName] = clone(fields[fieldName].default);
+		const defaultVal = defaultValue(fields[fieldName]);
+
+		if (defaultVal !== undefined) {
+			form[fieldName] = defaultVal;
+		}
 	}
 
 	return form;
 }
 
 /**
- * Evaluates the when option and field
- * type to check if a field should be
- * visible. Also works for sections.
+ * Checks if a form field is visible based on its "when" conditions
+ * and the current form values. Also works for sections.
  *
- * @param {object} field
- * @param {array} values
- * @returns {boolean}
+ * @param {Object} field - The form field object
+ * @param {Object} values - The current form values object
+ * @returns {boolean} - Whether the field is visible or not
  */
 export function isVisible(field, values) {
-	if (field.type === "hidden") {
+	if (field.type === "hidden" || field.hidden === true) {
 		return false;
 	}
 
@@ -61,23 +99,27 @@ export function isVisible(field, values) {
 export function subfields(field, fields) {
 	let subfields = {};
 
-	Object.keys(fields).forEach((name) => {
-		let subfield = fields[name];
+	for (const name in fields) {
+		const subfield = fields[name];
 
 		subfield.section = field.name;
-		subfield.endpoints = {
-			field: field.endpoints.field + "+" + name,
-			section: field.endpoints.section,
-			model: field.endpoints.model
-		};
+
+		if (field.endpoints) {
+			subfield.endpoints = {
+				field: field.endpoints.field + "+" + name,
+				section: field.endpoints.section,
+				model: field.endpoints.model
+			};
+		}
 
 		subfields[name] = subfield;
-	});
+	}
 
 	return subfields;
 }
 
 export default {
+	defaultValue,
 	form,
 	isVisible,
 	subfields

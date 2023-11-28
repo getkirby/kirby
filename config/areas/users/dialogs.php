@@ -6,9 +6,11 @@ use Kirby\Cms\UserRules;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Field;
 use Kirby\Panel\Panel;
+use Kirby\Panel\UserTotpDisableDialog;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 
+$fields = require __DIR__ . '/../fields/dialogs.php';
 $files = require __DIR__ . '/../files/dialogs.php';
 
 return [
@@ -18,6 +20,12 @@ return [
 		'pattern' => 'users/create',
 		'load' => function () {
 			$kirby = App::instance();
+
+			// get default value for role
+			if ($role = $kirby->request()->get('role')) {
+				$role = $kirby->roles()->find($role)?->id();
+			}
+
 			return [
 				'component' => 'k-form-dialog',
 				'props' => [
@@ -41,7 +49,7 @@ return [
 						'email'       => '',
 						'password'    => '',
 						'translation' => $kirby->panelLanguage(),
-						'role'        => $kirby->user()->role()->name()
+						'role'        => $role ?? $kirby->user()->role()->name()
 					]
 				]
 			];
@@ -287,6 +295,13 @@ return [
 		}
 	],
 
+	// user field dialogs
+	'user.fields' => [
+		'pattern' => '(users/.*?)/fields/(:any)/(:all?)',
+		'load'    => $fields['model']['load'],
+		'submit'  => $fields['model']['submit']
+	],
+
 	// change file name
 	'user.file.changeName' => [
 		'pattern' => '(users/.*?)/files/(:any)/changeName',
@@ -301,11 +316,31 @@ return [
 		'submit'  => $files['changeSort']['submit'],
 	],
 
+	// change file template
+	'user.file.changeTemplate' => [
+		'pattern' => '(users/.*?)/files/(:any)/changeTemplate',
+		'load'    => $files['changeTemplate']['load'],
+		'submit'  => $files['changeTemplate']['submit'],
+	],
+
 	// delete file
 	'user.file.delete' => [
 		'pattern' => '(users/.*?)/files/(:any)/delete',
 		'load'    => $files['delete']['load'],
 		'submit'  => $files['delete']['submit'],
-	]
+	],
 
+	// user file fields dialogs
+	'user.file.fields' => [
+		'pattern' => '(users/.*?)/files/(:any)/fields/(:any)/(:all?)',
+		'load'    => $fields['file']['load'],
+		'submit'  => $fields['file']['submit']
+	],
+
+	// user disable TOTP
+	'user.totp.disable' => [
+		'pattern' => 'users/(:any)/totp/disable',
+		'load'    => fn (string $id) => (new UserTotpDisableDialog($id))->load(),
+		'submit'  => fn (string $id) => (new UserTotpDisableDialog($id))->submit()
+	],
 ];

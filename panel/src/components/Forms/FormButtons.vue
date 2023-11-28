@@ -1,73 +1,20 @@
 <template>
-	<nav :data-theme="theme" class="k-form-buttons">
-		<k-view v-if="mode === 'unlock'">
-			<p class="k-form-lock-info">
-				{{ $t("lock.isUnlocked") }}
-			</p>
-			<span class="k-form-lock-buttons">
-				<k-button
-					:text="$t('download')"
-					icon="download"
-					class="k-form-button"
-					@click="onDownload"
-				/>
-				<k-button
-					:text="$t('confirm')"
-					icon="check"
-					class="k-form-button"
-					@click="onResolve"
-				/>
-			</span>
-		</k-view>
-
-		<k-view v-else-if="mode === 'lock'">
-			<p class="k-form-lock-info">
-				<k-icon type="lock" />
-				<!-- eslint-disable-next-line vue/no-v-html -->
-				<span v-html="$t('lock.isLocked', { email: $esc(lock.data.email) })" />
-			</p>
-
-			<k-icon
-				v-if="!lock.data.unlockable"
-				type="loader"
-				class="k-form-lock-loader"
-			/>
-			<k-button
-				v-else
-				:text="$t('lock.unlock')"
-				icon="unlock"
-				class="k-form-button"
-				@click="onUnlock()"
-			/>
-		</k-view>
-
-		<k-view v-else-if="mode === 'changes'">
-			<k-button
-				:disabled="isDisabled"
-				:text="$t('revert')"
-				icon="undo"
-				class="k-form-button"
-				@click="onRevert"
-			/>
-			<k-button
-				:disabled="isDisabled"
-				:text="$t('save')"
-				icon="check"
-				class="k-form-button"
-				@click="onSave"
-			/>
-		</k-view>
-
-		<k-dialog
-			ref="revert"
-			:submit-button="$t('revert')"
-			icon="undo"
-			theme="negative"
-			@submit="revert"
-		>
-			<k-text :html="$t('revert.confirm')" />
-		</k-dialog>
-	</nav>
+	<k-button-group
+		v-if="buttons.length > 0"
+		layout="collapsed"
+		class="k-form-buttons"
+	>
+		<k-button
+			v-for="button in buttons"
+			:key="button.icon"
+			v-bind="button"
+			size="sm"
+			variant="filled"
+			:disabled="isDisabled"
+			:responsive="true"
+			:theme="theme"
+		/>
+	</k-button-group>
 </template>
 
 <script>
@@ -79,14 +26,76 @@ export default {
 	},
 	data() {
 		return {
-			isRefreshing: null,
+			isLoading: null,
 			isLocking: null
 		};
 	},
 	computed: {
 		api() {
 			// always use silent requests (without loading spinner)
-			return [this.$view.path + "/lock", null, null, true];
+			return [this.$panel.view.path + "/lock", null, null, true];
+		},
+		buttons() {
+			if (this.mode === "unlock") {
+				return [
+					{
+						icon: "check",
+						text: this.$t("lock.isUnlocked"),
+						click: () => this.resolve()
+					},
+					{
+						icon: "download",
+						text: this.$t("download"),
+						click: () => this.download()
+					}
+				];
+			}
+
+			if (this.mode === "lock") {
+				return [
+					{
+						icon: this.lock.data.unlockable ? "unlock" : "loader",
+						text: this.$t("lock.isLocked", {
+							email: this.$esc(this.lock.data.email)
+						}),
+						title: this.$t("lock.unlock"),
+						disabled: !this.lock.data.unlockable,
+						click: () => this.unlock()
+					}
+				];
+			}
+
+			if (this.mode === "changes") {
+				return [
+					{
+						icon: "undo",
+						text: this.$t("revert"),
+						click: () => this.revert()
+					},
+					{
+						icon: "check",
+						text: this.$t("save"),
+						click: () => this.save()
+					}
+				];
+			}
+
+			return [];
+		},
+		disabled() {
+			if (this.mode === "unlock") {
+				return false;
+			}
+
+			if (this.mode === "lock") {
+				return !this.lock.data.unlockable;
+			}
+
+			if (this.mode === "changes") {
+				return this.isDisabled;
+			}
+
+			return false;
 		},
 		hasChanges() {
 			return this.$store.getters["content/hasChanges"]();
@@ -124,8 +133,11 @@ export default {
 			if (this.mode === "unlock") {
 				return "info";
 			}
+			if (this.mode === "changes") {
+				return "notice";
+			}
 
-			return "notice";
+			return null;
 		}
 	},
 	watch: {
@@ -135,12 +147,12 @@ export default {
 					if (this.isLocked === false && this.isUnlocked === false) {
 						if (changes === true) {
 							// unsaved changes, write lock every 30 seconds
-							this.onLock();
-							this.isLocking = setInterval(this.onLock, 30000);
+							this.locking();
+							this.isLocking = setInterval(this.locking, 30000);
 						} else if (before) {
 							// no more unsaved changes, stop writing lock, remove lock
 							clearInterval(this.isLocking);
-							this.onLock(false);
+							this.locking(false);
 						}
 					}
 				}
@@ -151,29 +163,69 @@ export default {
 			// model used to be locked by another user,
 			// lock has been lifted, so refresh data
 			if (locked === false) {
-				this.$events.$emit("model.reload");
+				this.$events.emit("model.reload");
 			}
 		}
 	},
 	created() {
 		// refresh lock data every 10 seconds
 		if (this.supportsLocking) {
-			this.isRefreshing = setInterval(this.check, 10000);
+			this.isLoading = setInterval(this.check, 10000);
 		}
-		this.$events.$on("keydown.cmd.s", this.onSave);
+		this.$events.on("view.save", this.save);
 	},
 	destroyed() {
 		// make sure to clear all intervals
-		clearInterval(this.isRefreshing);
+		clearInterval(this.isLoading);
 		clearInterval(this.isLocking);
-		this.$events.$off("keydown.cmd.s", this.onSave);
+		this.$events.off("view.save", this.save);
 	},
 	methods: {
 		async check() {
-			const { lock } = await this.$api.get(...this.api);
-			set(this.$view.props, "lock", lock);
+			if (this.$panel.isOffline === false) {
+				const { lock } = await this.$api.get(...this.api);
+				set(this.$panel.view.props, "lock", lock);
+			}
 		},
-		async onLock(lock = true) {
+		download() {
+			let content = "";
+			const changes = this.$store.getters["content/changes"]();
+
+			for (const key in changes) {
+				const change = changes[key];
+				content += key + ": \n\n";
+
+				// provides pretty JSON output for only object and array values
+				// @todo refactor with better method for type-based output
+				if (
+					(typeof change === "object" && Object.keys(change).length) ||
+					(Array.isArray(change) && change.length)
+				) {
+					content += JSON.stringify(change, null, 2);
+				} else {
+					content += change;
+				}
+
+				content += "\n\n----\n\n";
+			}
+
+			let link = document.createElement("a");
+			link.setAttribute(
+				"href",
+				"data:text/plain;charset=utf-8," + encodeURIComponent(content)
+			);
+			link.setAttribute("download", this.$panel.view.path + ".txt");
+			link.style.display = "none";
+
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+		},
+		async locking(lock = true) {
+			if (this.$panel.isOffline === true) {
+				return;
+			}
+
 			// writing lock
 			if (lock === true) {
 				try {
@@ -192,152 +244,69 @@ export default {
 				await this.$api.delete(...this.api);
 			}
 		},
-		/**
-		 * Download unsaved changes after model got unlocked
-		 */
-		onDownload() {
-			let content = "";
-			const changes = this.$store.getters["content/changes"]();
-
-			Object.keys(changes).forEach((key) => {
-				const change = changes[key];
-				content += key + ": \n\n";
-
-				// provides pretty JSON output for only object and array values
-				// @todo refactor with better method for type-based output
-				if (
-					(typeof change === "object" && Object.keys(change).length) ||
-					(Array.isArray(change) && change.length)
-				) {
-					content += JSON.stringify(change, null, 2);
-				} else {
-					content += change;
-				}
-
-				content += "\n\n----\n\n";
-			});
-
-			let link = document.createElement("a");
-			link.setAttribute(
-				"href",
-				"data:text/plain;charset=utf-8," + encodeURIComponent(content)
-			);
-			link.setAttribute("download", this.$view.path + ".txt");
-			link.style.display = "none";
-
-			document.body.appendChild(link);
-			link.click();
-			document.body.removeChild(link);
-		},
-		async onResolve() {
+		async resolve() {
 			// remove content unlock and throw away unsaved changes
-			await this.onUnlock(false);
+			await this.unlock(false);
 			this.$store.dispatch("content/revert");
-		},
-		onRevert() {
-			this.$refs.revert.open();
-		},
-		async onSave(e) {
-			if (!e) {
-				return false;
-			}
-
-			if (e.preventDefault) {
-				e.preventDefault();
-			}
-
-			try {
-				await this.$store.dispatch("content/save");
-				this.$events.$emit("model.update");
-				this.$store.dispatch("notification/success", ":)");
-			} catch (response) {
-				if (response.code === 403) {
-					return;
-				}
-
-				if (response.details && Object.keys(response.details).length > 0) {
-					this.$store.dispatch("notification/error", {
-						message: this.$t("error.form.incomplete"),
-						details: response.details
-					});
-				} else {
-					this.$store.dispatch("notification/error", {
-						message: this.$t("error.form.notSaved"),
-						details: [
-							{
-								label: "Exception: " + response.exception,
-								message: response.message
-							}
-						]
-					});
-				}
-			}
-		},
-		async onUnlock(unlock = true) {
-			const api = [this.$view.path + "/unlock", null, null, true];
-
-			if (unlock === true) {
-				// unlocking (writing unlock)
-				await this.$api.patch(...api);
-			} else {
-				// resolving unlock (removing unlock)
-				await this.$api.delete(...api);
-			}
-
-			this.$reload({ silent: true });
 		},
 		revert() {
-			this.$store.dispatch("content/revert");
-			this.$refs.revert.close();
+			this.$panel.dialog.open({
+				component: "k-remove-dialog",
+				props: {
+					submitButton: {
+						icon: "undo",
+						text: this.$t("revert")
+					},
+					text: this.$t("revert.confirm")
+				},
+				on: {
+					submit: () => {
+						this.$store.dispatch("content/revert");
+						this.$panel.dialog.close();
+					}
+				}
+			});
+		},
+		async save(e) {
+			e?.preventDefault?.();
+
+			await this.$store.dispatch("content/save");
+			this.$events.emit("model.update");
+			this.$panel.notification.success();
+		},
+		async unlock(unlock = true) {
+			const api = [this.$panel.view.path + "/unlock", null, null, true];
+
+			if (unlock === true) {
+				this.$panel.dialog.open({
+					component: "k-remove-dialog",
+					props: {
+						submitButton: {
+							icon: "unlock",
+							text: this.$t("lock.unlock")
+						},
+						text: this.$t("lock.unlock.submit", {
+							email: this.$esc(this.lock.data.email)
+						})
+					},
+					on: {
+						submit: async () => {
+							// unlocking (writing unlock)
+							await this.$api.patch(...api);
+
+							this.$panel.dialog.close();
+							this.$reload({ silent: true });
+						}
+					}
+				});
+				return;
+			}
+
+			// resolving unlock (removing unlock)
+			await this.$api.delete(...api);
+
+			this.$reload({ silent: true });
 		}
 	}
 };
 </script>
-
-<style>
-.k-form-buttons[data-theme] {
-	background: var(--theme-light);
-}
-.k-form-buttons .k-view {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-}
-.k-form-button.k-button {
-	font-weight: 500;
-	white-space: nowrap;
-	line-height: 1;
-	height: 2.5rem;
-	display: flex;
-	padding: 0 1rem;
-	align-items: center;
-}
-.k-form-button:first-child {
-	margin-inline-start: -1rem;
-}
-.k-form-button:last-child {
-	margin-inline-end: -1rem;
-}
-
-.k-form-lock-info {
-	display: flex;
-	font-size: var(--text-sm);
-	align-items: center;
-	line-height: 1.5em;
-	padding: 0.625rem 0;
-	margin-inline-end: 3rem;
-}
-.k-form-lock-info > .k-icon {
-	margin-inline-end: 0.5rem;
-}
-.k-form-lock-buttons {
-	display: flex;
-	flex-shrink: 0;
-}
-.k-form-lock-loader {
-	animation: Spin 4s linear infinite;
-}
-.k-form-lock-loader .k-icon-loader {
-	display: flex;
-}
-</style>

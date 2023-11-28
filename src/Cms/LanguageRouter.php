@@ -20,36 +20,21 @@ use Kirby\Toolkit\Str;
  */
 class LanguageRouter
 {
-	/**
-	 * The parent language
-	 *
-	 * @var Language
-	 */
-	protected $language;
-
-	/**
-	 * The router instance
-	 *
-	 * @var Router
-	 */
-	protected $router;
+	protected Router $router;
 
 	/**
 	 * Creates a new language router instance
 	 * for the given language
-	 *
-	 * @param \Kirby\Cms\Language $language
 	 */
-	public function __construct(Language $language)
-	{
-		$this->language = $language;
+	public function __construct(
+		protected Language $language
+	) {
 	}
 
 	/**
 	 * Fetches all scoped routes for the
 	 * current language from the Kirby instance
 	 *
-	 * @return array
 	 * @throws \Kirby\Exception\NotFoundException
 	 */
 	public function routes(): array
@@ -106,26 +91,32 @@ class LanguageRouter
 	 * Wrapper around the Router::call method
 	 * that injects the Language instance and
 	 * if needed also the Page as arguments.
-	 *
-	 * @param string|null $path
-	 * @return mixed
 	 */
-	public function call(string $path = null)
+	public function call(string|null $path = null): mixed
 	{
-		$language = $this->language;
-		$kirby    = $language->kirby();
-		$router   = new Router($this->routes());
+		$language       = $this->language;
+		$kirby          = $language->kirby();
+		$this->router ??= new Router($this->routes());
 
 		try {
-			return $router->call($path, $kirby->request()->method(), function ($route) use ($kirby, $language) {
+			return $this->router->call($path, $kirby->request()->method(), function ($route) use ($kirby, $language) {
 				$kirby->setCurrentTranslation($language);
 				$kirby->setCurrentLanguage($language);
 
 				if ($page = $route->page()) {
-					return $route->action()->call($route, $language, $page, ...$route->arguments());
+					return $route->action()->call(
+						$route,
+						$language,
+						$page,
+						...$route->arguments()
+					);
 				}
 
-				return $route->action()->call($route, $language, ...$route->arguments());
+				return $route->action()->call(
+					$route,
+					$language,
+					...$route->arguments()
+				);
 			});
 		} catch (Exception) {
 			return $kirby->resolve($path, $language->code());

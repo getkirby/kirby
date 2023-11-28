@@ -4,6 +4,8 @@ namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Filesystem\File as BaseFile;
+use Kirby\Panel\File as Panel;
 
 class FileTestModel extends File
 {
@@ -30,14 +32,252 @@ class FileTest extends TestCase
 
 	protected function file(array $props = [])
 	{
-		return new File(array_merge($this->defaults($props['kirby'] ?? null), $props));
+		$defaults = $this->defaults($props['kirby'] ?? null);
+		return new File(array_merge($defaults, $props));
 	}
 
 	public function testAsset()
 	{
 		$file = $this->file();
-		$this->assertInstanceOf('Kirby\Filesystem\File', $file->asset());
-		$this->assertSame('https://getkirby.com/projects/project-a/cover.jpg', $file->asset()->url());
+		$this->assertInstanceOf(BaseFile::class, $file->asset());
+		$this->assertSame(
+			'https://getkirby.com/projects/project-a/cover.jpg',
+			$file->asset()->url()
+		);
+	}
+
+	public function testBlueprints()
+	{
+		$app = new App([
+			'blueprints' => [
+				'pages/test' => [
+					'sections' => [
+						[
+							'type' => 'files',
+							'template' => 'for-section/a'
+						],
+						[
+							'type' => 'files',
+							'template' => 'for-section/b'
+						],
+						[
+							'type' => 'files',
+							'template' => 'not-exist'
+						],
+						[
+							'type' => 'fields',
+							'fields' => [
+								'a' => [
+									'type' => 'info'
+								],
+								'b' => [
+									'type' => 'files'
+								],
+								'c' => [
+									'type'    => 'files',
+									'uploads' => 'for-fields/a'
+								],
+								'd' => [
+									'type'    => 'files',
+									'uploads' => [
+										'template' => 'for-fields/b'
+									]
+								],
+								'e' => [
+									'type'    => 'files',
+									'uploads' => [
+										'parent'   => 'foo',
+										'template' => 'for-fields/c'
+									]
+								],
+								'f' => [
+									'type'    => 'files',
+									'uploads' => 'for-fields/c'
+								],
+								'g' => [
+									'type'    => 'textarea',
+									'uploads' => 'for-fields/d'
+								],
+								'h' => [
+									'type'    => 'structure',
+									'fields'  => [
+										[
+											'type'    => 'files',
+											'uploads' => 'for-fields/e'
+										],
+										[
+											'type'    => 'structure',
+											'fields'  => [
+												[
+													'type'    => 'files',
+													'uploads' => 'for-fields/f'
+												]
+											]
+										]
+									]
+								],
+							]
+						]
+					]
+				],
+				'files/for-section/a' => [
+					'title' => 'Type A'
+				],
+				'files/for-section/b' => [
+					'title' => 'Type B'
+				],
+				'files/for-fields/a' => [
+					'title' => 'Field Type A'
+				],
+				'files/for-fields/b' => [
+					'title' => 'Field Type B'
+				],
+				'files/for-fields/c' => [
+					'title' => 'Field Type C',
+					'accept' => 'image'
+				],
+				'files/for-fields/d' => [
+					'title' => 'Field Type D'
+				],
+				'files/for-fields/e' => [
+					'title' => 'Field Type E'
+				],
+				'files/for-fields/f' => [
+					'title' => 'Field Type F'
+				],
+				'files/current' => [
+					'title' => 'Just the current'
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test',
+						'files'    => [
+							[
+								'filename' => 'test.pdf',
+								'content'  => ['template' => 'current']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$file       = $app->file('test/test.pdf');
+		$blueprints = $file->blueprints();
+		$this->assertCount(9, $blueprints);
+		$this->assertSame('default', $blueprints[0]['name']);
+		$this->assertSame('for-fields/a', $blueprints[1]['name']);
+		$this->assertSame('for-fields/b', $blueprints[2]['name']);
+		$this->assertSame('for-fields/d', $blueprints[3]['name']);
+		$this->assertSame('for-fields/e', $blueprints[4]['name']);
+		$this->assertSame('for-fields/f', $blueprints[5]['name']);
+		$this->assertSame('current', $blueprints[6]['name']);
+		$this->assertSame('for-section/a', $blueprints[7]['name']);
+		$this->assertSame('for-section/b', $blueprints[8]['name']);
+	}
+
+	public function testBlueprintsInSection()
+	{
+		$app = new App([
+			'blueprints' => [
+				'pages/test' => [
+					'sections' => [
+						'section-a' => [
+							'type' => 'files',
+							'template' => 'for-section/a'
+						],
+						'section-b' => [
+							'type' => 'files',
+							'template' => 'for-section/b'
+						],
+						'section-c' => [
+							'type' => 'fields',
+							'fields' => [
+								[
+									'type' => 'files'
+								],
+								[
+									'type'    => 'files',
+									'uploads' => 'for-fields/a'
+								],
+								[
+									'type'    => 'files',
+									'uploads' => [
+										'template' => 'for-fields/b'
+									]
+								],
+								[
+									'type'    => 'files',
+									'uploads' => [
+										'parent'   => 'foo',
+										'template' => 'for-fields/c'
+									]
+								],
+								[
+									'type'    => 'files',
+									'uploads' => 'for-fields/c'
+								]
+							]
+						]
+					]
+				],
+				'files/for-section/a' => [
+					'title' => 'Type A'
+				],
+				'files/for-section/b' => [
+					'title' => 'Type B'
+				],
+				'files/for-fields/a' => [
+					'title' => 'Field Type A'
+				],
+				'files/for-fields/b' => [
+					'title' => 'Field Type B'
+				],
+				'files/for-fields/c' => [
+					'title' => 'Field Type C',
+					'accept' => 'image'
+				],
+				'files/current' => [
+					'title' => 'Just the current'
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test',
+						'files'    => [
+							[
+								'filename' => 'test.pdf',
+								'content'  => ['template' => 'current']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$file       = $app->file('test/test.pdf');
+		$blueprints = $file->blueprints('section-a');
+		$this->assertCount(2, $blueprints);
+		$this->assertSame('current', $blueprints[0]['name']);
+		$this->assertSame('for-section/a', $blueprints[1]['name']);
+
+		$blueprints = $file->blueprints('section-c');
+		$this->assertCount(4, $blueprints);
+		$this->assertSame('default', $blueprints[0]['name']);
+		$this->assertSame('for-fields/a', $blueprints[1]['name']);
+		$this->assertSame('for-fields/b', $blueprints[2]['name']);
+		$this->assertSame('current', $blueprints[3]['name']);
 	}
 
 	public function testContent()
@@ -131,7 +371,7 @@ class FileTest extends TestCase
 	{
 		$app = new App([
 			'blueprints' => [
-				'files/test' => [
+				'files/foo' => [
 					'options' => ['read' => false]
 				]
 			],
@@ -158,10 +398,166 @@ class FileTest extends TestCase
 		$file = $this->file([
 			'kirby'    => $app,
 			'filename' => 'test.jpg',
-			'template' => 'test'
+			'template' => 'foo'
 		]);
 		$this->assertFalse($file->isReadable());
 		$this->assertFalse($file->isReadable()); // test caching
+	}
+
+	public function testIsAccessible()
+	{
+		$app = new App([
+			'blueprints' => [
+				'files/bar' => [
+					'options' => ['access' => false]
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'id'    => 'admin',
+					'role'  => 'admin'
+				]
+			],
+			'user' => 'admin'
+		]);
+
+		$file = $this->file([
+			'kirby'    => $app,
+			'filename' => 'test.jpg'
+		]);
+		$this->assertTrue($file->isReadable());
+		$this->assertTrue($file->isAccessible());
+		$this->assertTrue($file->isListable());
+
+		$file = $this->file([
+			'kirby'    => $app,
+			'filename' => 'test.jpg',
+			'template' => 'bar'
+		]);
+		$this->assertTrue($file->isReadable());
+		$this->assertFalse($file->isAccessible());
+		$this->assertFalse($file->isListable());
+	}
+
+	public function testIsAccessibleRead()
+	{
+		$app = new App([
+			'blueprints' => [
+				'files/bar-read' => [
+					'options' => ['read' => false, 'access' => true]
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'id'    => 'admin',
+					'role'  => 'admin'
+				]
+			],
+			'user' => 'admin'
+		]);
+
+		$file = $this->file([
+			'kirby'    => $app,
+			'filename' => 'test.jpg'
+		]);
+		$this->assertTrue($file->isReadable());
+		$this->assertTrue($file->isAccessible());
+		$this->assertTrue($file->isListable());
+
+		$file = $this->file([
+			'kirby'    => $app,
+			'filename' => 'test.jpg',
+			'template' => 'bar-read'
+		]);
+		$this->assertFalse($file->isReadable());
+		$this->assertFalse($file->isAccessible());
+		$this->assertFalse($file->isListable());
+	}
+
+	public function testIsListable()
+	{
+		$app = new App([
+			'blueprints' => [
+				'files/baz' => [
+					'options' => ['list' => false]
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'id'    => 'admin',
+					'role'  => 'admin'
+				]
+			],
+			'user' => 'admin'
+		]);
+
+		$file = $this->file([
+			'kirby'    => $app,
+			'filename' => 'test.jpg'
+		]);
+		$this->assertTrue($file->isReadable());
+		$this->assertTrue($file->isAccessible());
+		$this->assertTrue($file->isListable());
+
+		$file = $this->file([
+			'kirby'    => $app,
+			'filename' => 'test.jpg',
+			'template' => 'baz'
+		]);
+		$this->assertTrue($file->isReadable());
+		$this->assertTrue($file->isAccessible());
+		$this->assertFalse($file->isListable());
+	}
+
+	public function testIsListableRead()
+	{
+		$app = new App([
+			'blueprints' => [
+				'files/baz-read' => [
+					'options' => ['read' => false, 'list' => true]
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'id'    => 'admin',
+					'role'  => 'admin'
+				]
+			],
+			'user' => 'admin'
+		]);
+
+		$file = $this->file([
+			'kirby'    => $app,
+			'filename' => 'test.jpg'
+		]);
+		$this->assertTrue($file->isReadable());
+		$this->assertTrue($file->isAccessible());
+		$this->assertTrue($file->isListable());
+
+		$file = $this->file([
+			'kirby'    => $app,
+			'filename' => 'test.jpg',
+			'template' => 'baz-read'
+		]);
+		$this->assertFalse($file->isReadable());
+		$this->assertFalse($file->isAccessible());
+		$this->assertFalse($file->isListable());
 	}
 
 	public function testMediaHash()
@@ -313,7 +709,7 @@ class FileTest extends TestCase
 		]);
 
 		$file = $page->file('test.pdf');
-		$this->assertInstanceOf('Kirby\Panel\File', $file->panel());
+		$this->assertInstanceOf(Panel::class, $file->panel());
 	}
 
 	/**

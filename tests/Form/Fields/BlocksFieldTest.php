@@ -104,6 +104,7 @@ class BlocksFieldTest extends TestCase
 	{
 		$value = [
 			[
+				'id'	  => 'uuid',
 				'type'    => 'heading',
 				'content' => [
 					'text' => 'A nice block/heäding'
@@ -113,6 +114,7 @@ class BlocksFieldTest extends TestCase
 
 		$expected = [
 			[
+				'id'	  => 'uuid',
 				'type'    => 'heading',
 				'content' => [
 					'level' => '',
@@ -242,6 +244,28 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame('text', $response[0]['type']);
 	}
 
+	public function testRoutePasteFieldsets()
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'html' => '<h1>Hello World</h1><p>Test</p><h6>Sincerely</h6>'
+				]
+			]
+		]);
+
+		$field = $this->field('blocks', ['fieldsets' => ['heading']]);
+		$route = $field->routes()[1];
+
+		$response = $route['action']();
+
+		$this->assertCount(2, $response);
+		$this->assertSame(['level' => 'h1', 'text' => 'Hello World'], $response[0]['content']);
+		$this->assertSame('heading', $response[0]['type']);
+		$this->assertSame(['level' => 'h6', 'text' => 'Sincerely'], $response[1]['content']);
+		$this->assertSame('heading', $response[1]['type']);
+	}
+
 	public function testRouteFieldset()
 	{
 		$field = $this->field('blocks');
@@ -259,6 +283,7 @@ class BlocksFieldTest extends TestCase
 	{
 		$value = [
 			[
+				'id'	  => 'uuid',
 				'type'    => 'heading',
 				'content' => [
 					'text' => 'A nice block/heäding'
@@ -268,6 +293,7 @@ class BlocksFieldTest extends TestCase
 
 		$expected = [
 			[
+				'id'	  => 'uuid',
 				'type'    => 'heading',
 				'content' => [
 					'level' => '',
@@ -520,5 +546,37 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame('heading', $default[0]['type']);
 		$this->assertSame('Some title', $default[0]['text']);
 		$this->assertArrayHasKey('id', $default[0]);
+	}
+
+	public function testInvalidType()
+	{
+		$field = $this->field('blocks', [
+			'value' => [
+				[
+					'type'    => 'heading',
+					'content' => [
+						'text' => 'a'
+					]
+				],
+				[
+					'type'    => 'not-exists',
+					'content' => [
+						'text' => 'b'
+					]
+				],
+				[
+					'type'    => 'text',
+					'content' => [
+						'text' => 'c'
+					]
+				],
+			]
+		]);
+
+		$this->assertCount(3, $field->value());
+		$this->assertSame('heading', $field->value()[0]['type']);
+		$this->assertSame('not-exists', $field->value()[1]['type']);
+		$this->assertSame(['text' => 'b'], $field->value()[1]['content']);
+		$this->assertSame('text', $field->value()[2]['type']);
 	}
 }

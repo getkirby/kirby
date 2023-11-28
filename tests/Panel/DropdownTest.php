@@ -3,9 +3,7 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
-use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
-use Kirby\Http\Response;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -42,164 +40,6 @@ class DropdownTest extends TestCase
 	}
 
 	/**
-	 * @covers ::changes
-	 */
-	public function testChanges()
-	{
-		$this->app = $this->app->clone([
-			'request' => [
-				'body' => [
-					'ids' => [
-						'site',
-						'pages/test',
-						'pages/test/files/test.jpg',
-						'users/test'
-					]
-				]
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'test',
-						'content' => [
-							'title' => 'Test page'
-						],
-						'files' => [
-							[
-								'filename' => 'test.jpg',
-							]
-						]
-					]
-				],
-				'content' => [
-					'title' => 'Test site'
-				]
-			],
-			'users' => [
-				['email' => 'test@getkirby.com', 'id' => 'test']
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$options = Dropdown::changes();
-		$expected = [
-			[
-				'icon' => 'home',
-				'text' => 'Test site',
-				'link' => '/panel/site'
-			],
-			[
-				'icon' => 'page',
-				'text' => 'Test page',
-				'link' => '/panel/pages/test'
-			],
-			[
-				'icon' => 'image',
-				'text' => 'test.jpg',
-				'link' => '/panel/pages/test/files/test.jpg'
-			],
-			[
-				'icon' => 'user',
-				'text' => 'test@getkirby.com',
-				'link' => '/panel/users/test'
-			]
-		];
-
-		$this->assertEquals($expected, $options); // cannot use strict assertion (array order)
-	}
-
-	/**
-	 * @covers ::changes
-	 */
-	public function testChangesWithInvalidId()
-	{
-		$this->app = $this->app->clone([
-			'request' => [
-				'body' => [
-					'ids' => [
-						'site',
-						'pages/does-not-exist'
-					]
-				]
-			],
-			'site' => [
-				'content' => [
-					'title' => 'Test site'
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$options = Dropdown::changes();
-		$expected = [
-			[
-				'icon' => 'home',
-				'text' => 'Test site',
-				'link' => '/panel/site'
-			]
-		];
-
-		$this->assertSame($expected, $options);
-	}
-
-	/**
-	 * @covers ::changes
-	 */
-	public function testChangesWithLanguages()
-	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'languages' => true,
-			],
-			'request' => [
-				'body' => [
-					'ids' => [
-						'site?language=en',
-					]
-				]
-			],
-			'site' => [
-				'content' => [
-					'title' => 'Test site'
-				]
-			],
-			'languages' => [
-				[
-					'code'    => 'en',
-					'name'    => 'English',
-					'default' => true,
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$options = Dropdown::changes();
-		$expected = [
-			[
-				'icon' => 'home',
-				'text' => 'Test site (en)',
-				'link' => '/panel/site?language=en'
-			],
-		];
-
-		$this->assertSame($expected, $options);
-	}
-
-	/**
-	 * @covers ::changes
-	 */
-	public function testChangesWithoutOptions()
-	{
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('No changes for given models');
-
-		Dropdown::changes();
-	}
-
-	/**
 	 * @covers ::error
 	 */
 	public function testError(): void
@@ -231,6 +71,7 @@ class DropdownTest extends TestCase
 				'options'  => ['Test'],
 				'code'     => 200,
 				'path'     => null,
+				'query'    => [],
 				'referrer' => '/'
 			]
 		];
@@ -251,6 +92,7 @@ class DropdownTest extends TestCase
 				'code'     => 500,
 				'error'    => 'Invalid response',
 				'path'     => null,
+				'query'    => [],
 				'referrer' => '/'
 			]
 		];
@@ -270,6 +112,7 @@ class DropdownTest extends TestCase
 				'code'     => 500,
 				'error'    => 'Test',
 				'path'     => null,
+				'query'    => [],
 				'referrer' => '/'
 			]
 		];
@@ -289,10 +132,117 @@ class DropdownTest extends TestCase
 				'code'     => 404,
 				'error'    => 'Test',
 				'path'     => null,
+				'query'    => [],
 				'referrer' => '/'
 			]
 		];
 
 		$this->assertSame($expected, json_decode($response->body(), true));
+	}
+
+	/**
+	 * @covers ::routes
+	 */
+	public function testRoutes(): void
+	{
+		$dropdown = [
+			'pattern' => 'test',
+			'action'  => $action = function () {
+				return [
+					[
+						'text' => 'Test',
+						'link' => '/test'
+					]
+				];
+			}
+		];
+
+		$routes = Dropdown::routes(
+			id: 'test',
+			areaId: 'test',
+			prefix: 'dropdowns',
+			options: $dropdown
+		);
+
+		$expected = [
+			[
+				'pattern' => 'dropdowns/test',
+				'type'    => 'dropdown',
+				'area'    => 'test',
+				'method'  => 'GET|POST',
+				'action'  => $action,
+			]
+		];
+
+		$this->assertSame($expected, $routes);
+	}
+
+	/**
+	 * @covers ::routes
+	 */
+	public function testRoutesForDropdownsWithOptions(): void
+	{
+		$area = [
+			'dropdowns' => [
+				'test' => [
+					'pattern' => 'test',
+					'options' => $action = function () {
+						return [
+							[
+								'text' => 'Test',
+								'link' => '/test'
+							]
+						];
+					}
+				]
+			]
+		];
+
+		$routes = Panel::routesForDropdowns('test', $area);
+
+		$expected = [
+			[
+				'pattern' => 'dropdowns/test',
+				'type'    => 'dropdown',
+				'area'    => 'test',
+				'method'  => 'GET|POST',
+				'action'  => $action,
+			]
+		];
+
+		$this->assertSame($expected, $routes);
+	}
+
+	/**
+	 * @covers ::routes
+	 */
+	public function testRoutesForDropdownsWithShortcut(): void
+	{
+		$area = [
+			'dropdowns' => [
+				'test' => $action = function () {
+					return [
+						[
+							'text' => 'Test',
+							'link' => '/test'
+						]
+					];
+				}
+			]
+		];
+
+		$routes = Panel::routesForDropdowns('test', $area);
+
+		$expected = [
+			[
+				'pattern' => 'dropdowns/test',
+				'type'    => 'dropdown',
+				'area'    => 'test',
+				'method'  => 'GET|POST',
+				'action'  => $action,
+			]
+		];
+
+		$this->assertSame($expected, $routes);
 	}
 }

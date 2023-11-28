@@ -1,21 +1,19 @@
 <template>
-	<!-- eslint-disable vue/no-mutating-props -->
-	<k-input
-		:text="text"
-		:value="value"
-		class="k-toggle-field-preview"
-		type="toggle"
-		@input="$emit('input', $event)"
-	/>
+	<div class="k-toggle-field-preview">
+		<k-toggle-input
+			:text="text"
+			:value="value"
+			@input="$emit('input', $event)"
+			@click.native.stop
+		/>
+	</div>
 </template>
 
 <script>
+import FieldPreview from "@/mixins/forms/fieldPreview.js";
+
 export default {
-	props: {
-		field: Object,
-		value: Boolean,
-		column: Object
-	},
+	mixins: [FieldPreview],
 	computed: {
 		text() {
 			return this.column.text !== false ? this.field.text : null;
@@ -25,29 +23,7 @@ export default {
 </script>
 
 <style>
-.k-toggle-field-preview label {
-	padding: 0 0.25rem 0 0.75rem;
-	display: flex;
-	height: 38px;
-	cursor: pointer;
-	overflow: hidden;
-	white-space: nowrap;
-}
-.k-toggle-field-preview .k-toggle-input-label {
-	padding-inline-start: 0.5rem;
-}
-
-[data-align="right"] .k-toggle-field-preview .k-toggle-input-label {
-	padding-inline-end: 0.5rem;
-}
-
-.k-toggle-field-preview .k-toggle-input {
-	padding-block: 0;
-	padding-inline: 0.75rem 0.25rem;
-}
-
-[data-align="right"] .k-toggle-field-preview .k-toggle-input {
-	flex-direction: row-reverse;
-	padding-inline: 0.25rem 0.75rem;
+.k-toggle-field-preview {
+	padding-inline: var(--table-cell-padding);
 }
 </style>

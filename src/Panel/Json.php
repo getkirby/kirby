@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Http\Response;
 use Throwable;
@@ -39,35 +40,45 @@ abstract class Json
 	 */
 	public static function response($data, array $options = []): Response
 	{
-		// handle redirects
-		if ($data instanceof Redirect) {
-			$data = [
-				'redirect' => $data->location(),
-				'code'     => $data->code()
-			];
-
-		// handle Kirby exceptions
-		} elseif ($data instanceof Exception) {
-			$data = static::error($data->getMessage(), $data->getHttpCode());
-
-		// handle exceptions
-		} elseif ($data instanceof Throwable) {
-			$data = static::error($data->getMessage(), 500);
-
-		// only expect arrays from here on
-		} elseif (is_array($data) === false) {
-			$data = static::error('Invalid response', 500);
-		}
-
-		if (empty($data) === true) {
-			$data = static::error('The response is empty', 404);
-		}
+		$data = static::responseData($data);
 
 		// always inject the response code
 		$data['code']   ??= 200;
 		$data['path']     = $options['path'] ?? null;
+		$data['query']    = App::instance()->request()->query()->toArray();
 		$data['referrer'] = Panel::referrer();
 
 		return Panel::json([static::$key => $data], $data['code']);
+	}
+
+	public static function responseData(mixed $data): array
+	{
+		// handle redirects
+		if ($data instanceof Redirect) {
+			return [
+				'redirect' => $data->location(),
+			];
+		}
+
+		// handle Kirby exceptions
+		if ($data instanceof Exception) {
+			return static::error($data->getMessage(), $data->getHttpCode());
+		}
+
+		// handle exceptions
+		if ($data instanceof Throwable) {
+			return static::error($data->getMessage(), 500);
+		}
+
+		// only expect arrays from here on
+		if (is_array($data) === false) {
+			return static::error('Invalid response', 500);
+		}
+
+		if (empty($data) === true) {
+			return static::error('The response is empty', 404);
+		}
+
+		return $data;
 	}
 }

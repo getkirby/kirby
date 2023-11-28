@@ -21,10 +21,8 @@ class FileBlueprint extends Blueprint
 	/**
 	 * `true` if the default accepted
 	 * types are being used
-	 *
-	 * @var bool
 	 */
-	protected $defaultTypes = false;
+	protected bool $defaultTypes = false;
 
 	public function __construct(array $props)
 	{
@@ -35,12 +33,15 @@ class FileBlueprint extends Blueprint
 			$this->props['options'] ?? true,
 			// defaults
 			[
-				'changeName' => null,
-				'create'     => null,
-				'delete'     => null,
-				'read'       => null,
-				'replace'    => null,
-				'update'     => null,
+				'access'         => null,
+				'changeName'     => null,
+				'changeTemplate' => null,
+				'create'     	 => null,
+				'delete'     	 => null,
+				'list'     	     => null,
+				'read'       	 => null,
+				'replace'    	 => null,
+				'update'     	 => null,
 			]
 		);
 
@@ -48,9 +49,6 @@ class FileBlueprint extends Blueprint
 		$this->props['accept'] = $this->normalizeAccept($this->props['accept'] ?? []);
 	}
 
-	/**
-	 * @return array
-	 */
 	public function accept(): array
 	{
 		return $this->props['accept'];
@@ -59,8 +57,6 @@ class FileBlueprint extends Blueprint
 	/**
 	 * Returns the list of all accepted MIME types for
 	 * file upload or `*` if all MIME types are allowed
-	 *
-	 * @return string
 	 */
 	public function acceptMime(): string
 	{
@@ -120,11 +116,7 @@ class FileBlueprint extends Blueprint
 		return '*';
 	}
 
-	/**
-	 * @param mixed $accept
-	 * @return array
-	 */
-	protected function normalizeAccept($accept = null): array
+	protected function normalizeAccept(mixed $accept = null): array
 	{
 		$accept = match (true) {
 			is_string($accept) 		=> ['mime' => $accept],

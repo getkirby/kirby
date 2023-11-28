@@ -1,22 +1,18 @@
 <template>
-	<ul :style="'--columns:' + columns" class="k-checkboxes-input">
-		<template v-if="options.length">
-			<li v-for="(option, index) in options" :key="index">
-				<k-checkbox-input
-					:id="id + '-' + index"
-					:label="option.text"
-					:value="selected.indexOf(option.value) !== -1"
-					@input="onInput(option.value, $event)"
-				/>
-			</li>
-		</template>
-
-		<k-box v-else theme="info">{{ $t("options.none") }}</k-box>
+	<ul
+		:style="{ '--columns': columns }"
+		class="k-checkboxes-input k-grid"
+		data-variant="choices"
+	>
+		<li v-for="(choice, index) in choices" :key="index">
+			<k-choice-input v-bind="choice" @input="input(choice.value, $event)" />
+		</li>
 	</ul>
 </template>
 
 <script>
-import { autofocus, disabled, id, required } from "@/mixins/props.js";
+import Input, { props as InputProps } from "@/mixins/input.js";
+import { options } from "@/mixins/props.js";
 
 import {
 	required as validateRequired,
@@ -25,52 +21,62 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [autofocus, disabled, id, required],
+	mixins: [InputProps, options],
 	props: {
-		columns: Number,
+		columns: {
+			default: 1,
+			type: Number
+		},
 		max: Number,
 		min: Number,
-		options: Array,
+		theme: String,
 		/**
 		 * The value for the input should be provided as array. Each value in the array corresponds with the value in the options. If you provide a string, the string will be split by comma.
 		 */
 		value: {
-			type: [Array, Object],
-			default() {
-				return [];
-			}
+			type: Array,
+			default: () => []
 		}
 	}
 };
 
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	data() {
 		return {
-			selected: this.toArray(this.value)
+			selected: []
 		};
 	},
-	watch: {
-		value(value) {
-			this.selected = this.toArray(value);
-		},
-		selected() {
-			this.onInvalid();
+	computed: {
+		choices() {
+			return this.options.map((option, index) => {
+				return {
+					autofocus: this.autofocus && index === 0,
+					checked: this.selected.includes(option.value),
+					disabled: this.disabled || option.disabled,
+					info: option.info,
+					label: option.text,
+					name: this.name ?? this.id,
+					type: "checkbox",
+					value: option.value
+				};
+			});
 		}
 	},
-	mounted() {
-		this.onInvalid();
-
-		if (this.$props.autofocus) {
-			this.focus();
+	watch: {
+		value: {
+			handler(value) {
+				this.selected = Array.isArray(value) ? value : [];
+				this.validate();
+			},
+			immediate: true
 		}
 	},
 	methods: {
 		focus() {
 			this.$el.querySelector("input")?.focus();
 		},
-		onInput(key, value) {
+		input(key, value) {
 			if (value === true) {
 				this.selected.push(key);
 			} else {
@@ -81,24 +87,11 @@ export default {
 			}
 			this.$emit("input", this.selected);
 		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
-		},
 		select() {
 			this.focus();
 		},
-		toArray(value) {
-			if (Array.isArray(value) === true) {
-				return value;
-			}
-
-			if (typeof value === "string") {
-				return String(value).split(",");
-			}
-
-			if (typeof value === "object") {
-				return Object.values(value);
-			}
+		validate() {
+			this.$emit("invalid", this.$v.$invalid, this.$v);
 		}
 	},
 	validations() {

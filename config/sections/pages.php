@@ -2,6 +2,7 @@
 
 use Kirby\Cms\Blueprint;
 use Kirby\Cms\Page;
+use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
@@ -30,6 +31,12 @@ return [
 			return $create;
 		},
 		/**
+		 * Filters pages by a query. Sorting will be disabled
+		 */
+		'query' => function (string|null $query = null) {
+			return $query;
+		},
+		/**
 		 * Filters pages by their status. Available status settings: `draft`, `unlisted`, `listed`, `published`, `all`.
 		 */
 		'status' => function (string $status = '') {
@@ -44,10 +51,22 @@ return [
 			return $status;
 		},
 		/**
+		 * Filters the list by single template.
+		 */
+		'template' => function (string|array $template = null) {
+			return $template;
+		},
+		/**
 		 * Filters the list by templates and sets template options when adding new pages to the section.
 		 */
 		'templates' => function ($templates = null) {
 			return A::wrap($templates ?? $this->template);
+		},
+		/**
+		 * Excludes the selected templates.
+		 */
+		'templatesIgnore' => function ($templates = null) {
+			return A::wrap($templates);
 		}
 	],
 	'computed' => [
@@ -64,13 +83,17 @@ return [
 			return $parent;
 		},
 		'pages' => function () {
-			$pages = match ($this->status) {
-				'draft'     => $this->parent->drafts(),
-				'listed'    => $this->parent->children()->listed(),
-				'published' => $this->parent->children(),
-				'unlisted'  => $this->parent->children()->unlisted(),
-				default     => $this->parent->childrenAndDrafts()
-			};
+			if ($this->query !== null) {
+				$pages = $this->parent->query($this->query, Pages::class) ?? new Pages([]);
+			} else {
+				$pages = match ($this->status) {
+					'draft'     => $this->parent->drafts(),
+					'listed'    => $this->parent->children()->listed(),
+					'published' => $this->parent->children(),
+					'unlisted'  => $this->parent->children()->unlisted(),
+					default     => $this->parent->childrenAndDrafts()
+				};
+			}
 
 			// filters pages that are protected and not in the templates list
 			// internal `filter()` method used instead of foreach loop that previously included `unset()`
@@ -78,13 +101,26 @@ return [
 			// also it has been tested that there is no performance difference
 			// even in 0.1 seconds on 100k virtual pages
 			$pages = $pages->filter(function ($page) {
-				// remove all protected pages
-				if ($page->isReadable() === false) {
+				// remove all protected and hidden pages
+				if ($page->isListable() === false) {
 					return false;
 				}
 
+				$intendedTemplate = $page->intendedTemplate()->name();
+
 				// filter by all set templates
-				if ($this->templates && in_array($page->intendedTemplate()->name(), $this->templates) === false) {
+				if (
+					$this->templates &&
+					in_array($intendedTemplate, $this->templates) === false
+				) {
+					return false;
+				}
+
+				// exclude by all ignored templates
+				if (
+					$this->templatesIgnore &&
+					in_array($intendedTemplate, $this->templatesIgnore) === true
+				) {
 					return false;
 				}
 
@@ -214,6 +250,11 @@ return [
 
 			if (empty($templates) === true) {
 				$templates = $this->kirby()->blueprints();
+			}
+
+			// excludes ignored templates
+			if ($templatesIgnore = $this->templatesIgnore) {
+				$templates = array_diff($templates, $templatesIgnore);
 			}
 
 			// convert every template to a usable option array

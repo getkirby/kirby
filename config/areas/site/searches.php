@@ -8,50 +8,49 @@ return [
 	'pages' => [
 		'label' => I18n::translate('pages'),
 		'icon'  => 'page',
-		'query' => function (string $query = null) {
-			$pages = App::instance()->site()
+		'query' => function (string $query = null, int $limit, int $page) {
+			$kirby = App::instance();
+			$pages = $kirby->site()
 				->index(true)
 				->search($query)
-				->filter('isReadable', true)
-				->limit(10);
+				->filter('isListable', true)
+				->paginate($limit, $page);
 
-			$results = [];
-
-			foreach ($pages as $page) {
-				$results[] = [
+			return [
+				'results' => $pages->values(fn ($page) => [
 					'image' => $page->panel()->image(),
 					'text' => Escape::html($page->title()->value()),
 					'link' => $page->panel()->url(true),
-					'info' => Escape::html($page->id())
-				];
-			}
-
-			return $results;
+					'info' => Escape::html($page->id()),
+					'uuid' => $page->uuid()->toString(),
+				]),
+				'pagination' => $pages->pagination()->toArray()
+			];
 		}
 	],
 	'files' => [
 		'label' => I18n::translate('files'),
 		'icon'  => 'image',
-		'query' => function (string $query = null) {
-			$files = App::instance()->site()
+		'query' => function (string $query = null, int $limit, int $page) {
+			$kirby = App::instance();
+			$files = $kirby->site()
 				->index(true)
-				->filter('isReadable', true)
+				->filter('isListable', true)
 				->files()
+				->filter('isListable', true)
 				->search($query)
-				->limit(10);
+				->paginate($limit, $page);
 
-			$results = [];
-
-			foreach ($files as $file) {
-				$results[] = [
+			return [
+				'results' => $files->values(fn ($file) => [
 					'image' => $file->panel()->image(),
 					'text'  => Escape::html($file->filename()),
 					'link'  => $file->panel()->url(true),
-					'info'  => Escape::html($file->id())
-				];
-			}
-
-			return $results;
+					'info'  => Escape::html($file->id()),
+					'uuid'  => $file->uuid()->toString(),
+				]),
+				'pagination' => $files->pagination()->toArray()
+			];
 		}
 	]
 ];

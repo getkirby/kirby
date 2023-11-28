@@ -14,8 +14,5 @@ namespace Kirby\Toolkit;
  */
 class Config extends Silo
 {
-	/**
-	 * @var array
-	 */
-	public static $data = [];
+	public static array $data = [];
 }

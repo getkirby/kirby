@@ -227,12 +227,12 @@ class TestSessionStore extends SessionStore
 		return isset($this->sessions[$expiryTime . '.' . $id]);
 	}
 
-	public function lock(int $expiryTime, string $id)
+	public function lock(int $expiryTime, string $id): void
 	{
 		$this->isLocked[$expiryTime . '.' . $id] = true;
 	}
 
-	public function unlock(int $expiryTime, string $id)
+	public function unlock(int $expiryTime, string $id): void
 	{
 		unset($this->isLocked[$expiryTime . '.' . $id]);
 	}
@@ -268,7 +268,7 @@ class TestSessionStore extends SessionStore
 		}
 	}
 
-	public function set(int $expiryTime, string $id, string $data)
+	public function set(int $expiryTime, string $id, string $data): void
 	{
 		$name = $expiryTime . '.' . $id;
 
@@ -290,12 +290,12 @@ class TestSessionStore extends SessionStore
 		$this->sessions[$name] = $data;
 	}
 
-	public function destroy(int $expiryTime, string $id)
+	public function destroy(int $expiryTime, string $id): void
 	{
 		unset($this->sessions[$expiryTime . '.' . $id]);
 	}
 
-	public function collectGarbage()
+	public function collectGarbage(): void
 	{
 		$this->collectedGarbage = true;
 	}
@@ -303,20 +303,20 @@ class TestSessionStore extends SessionStore
 
 class MockSession extends Session
 {
-	public $ensuredToken       = false;
-	public $preparedForWriting = false;
+	public bool $ensuredToken       = false;
+	public bool $preparedForWriting = false;
 
 	public function __construct()
 	{
 		// do nothing here
 	}
 
-	public function ensureToken()
+	public function ensureToken(): void
 	{
 		$this->ensuredToken = true;
 	}
 
-	public function prepareForWriting()
+	public function prepareForWriting(): void
 	{
 		$this->preparedForWriting = true;
 	}

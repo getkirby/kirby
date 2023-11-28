@@ -469,6 +469,53 @@ class AppTest extends TestCase
 	}
 
 	/**
+	 * @covers ::models
+	 */
+	public function testModels()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'files' => [
+					['filename' => 'sitefile.jpg']
+				],
+				'children' => [
+					[
+						'slug' => 'test',
+						'files' => [
+							['filename' => 'pagefile.jpg']
+						]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'test@getkirby.com',
+					'files' => [
+						['filename' => 'userfile.jpg'],
+					]
+				]
+			]
+		]);
+
+		$models = $app->models();
+
+		$this->assertSame('sitefile.jpg', $models->current()->filename());
+		$models->next();
+		$this->assertInstanceOf(Site::class, $models->current());
+		$models->next();
+		$this->assertSame('pagefile.jpg', $models->current()->filename());
+		$models->next();
+		$this->assertSame('test', $models->current()->slug());
+		$models->next();
+		$this->assertSame('userfile.jpg', $models->current()->filename());
+		$models->next();
+		$this->assertSame('test@getkirby.com', $models->current()->email());
+	}
+
+	/**
 	 * @covers ::nonce
 	 */
 	public function testNonce()
@@ -680,12 +727,14 @@ class AppTest extends TestCase
 						'error'        => $kirby->site()->content()->error()->value(),
 						'slugs'        => 'de'
 					];
-				}
+				},
+				'whoops' => true
 			]
 		]);
 
 		$this->assertSame([
 			'ready' => $ready,
+			'whoops' => true,
 			'test' => '/dev/null',
 			'another.test' => 'foo',
 			'debug' => true,

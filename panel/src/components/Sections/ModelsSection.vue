@@ -1,20 +1,16 @@
 <template>
-	<section
+	<k-section
 		v-if="isLoading === false"
-		:data-processing="isProcessing"
+		:buttons="buttons"
 		:class="`k-models-section k-${type}-section`"
+		:data-processing="isProcessing"
+		:headline="options.headline ?? ' '"
+		:invalid="isInvalid"
+		:link="options.link"
+		:required="Boolean(options.min)"
 	>
-		<header class="k-section-header">
-			<k-headline :link="options.link">
-				{{ options.headline || " " }}
-				<abbr v-if="options.min" :title="$t('section.required')">*</abbr>
-			</k-headline>
-
-			<k-button-group :buttons="buttons" />
-		</header>
-
 		<!-- Error -->
-		<k-box v-if="error" theme="negative">
+		<k-box v-if="error" icon="alert" theme="negative">
 			<k-text size="small">
 				<strong> {{ $t("error.section.notLoaded", { name: name }) }}: </strong>
 				{{ error }}
@@ -27,8 +23,9 @@
 				<k-input
 					v-if="searching && options.search"
 					:autofocus="true"
-					:placeholder="$t('search') + ' …'"
+					:placeholder="$t('filter') + ' …'"
 					:value="searchterm"
+					icon="search"
 					type="text"
 					class="k-models-section-search"
 					@input="searchterm = $event"
@@ -38,7 +35,6 @@
 				<!-- Models collection -->
 				<k-collection
 					v-bind="collection"
-					:data-invalid="isInvalid"
 					v-on="canAdd ? { empty: onAdd } : {}"
 					@action="onAction"
 					@change="onChange"
@@ -46,10 +42,8 @@
 					@paginate="onPaginate"
 				/>
 			</k-dropzone>
-
-			<k-upload ref="upload" @success="onUpload" @error="reload" />
 		</template>
-	</section>
+	</k-section>
 </template>
 
 <script>
@@ -99,7 +93,7 @@ export default {
 			if (this.canSearch) {
 				buttons.push({
 					icon: "filter",
-					text: this.$t("search"),
+					text: this.$t("filter"),
 					click: this.onSearchToggle,
 					responsive: true
 				});
@@ -109,7 +103,8 @@ export default {
 				buttons.push({
 					icon: this.addIcon,
 					text: this.$t("add"),
-					click: this.onAdd
+					click: this.onAdd,
+					responsive: true
 				});
 			}
 
@@ -147,7 +142,7 @@ export default {
 				...this.emptyProps,
 				text: this.searching
 					? this.$t("search.results.none")
-					: this.options.empty || this.emptyProps.text
+					: this.options.empty ?? this.emptyProps.text
 			};
 		},
 		items() {
@@ -179,10 +174,9 @@ export default {
 		}
 	},
 	watch: {
-		searchterm: debounce(function () {
-			this.pagination.page = 0;
-			this.reload();
-		}, 200),
+		searchterm() {
+			this.search();
+		},
 		// Reload the section when
 		// the view has changed in the backend
 		timestamp() {
@@ -190,24 +184,24 @@ export default {
 		}
 	},
 	created() {
+		this.search = debounce(this.search, 200);
 		this.load();
 	},
 	methods: {
 		async load(reload) {
+			this.isProcessing = true;
+
 			if (!reload) {
 				this.isLoading = true;
 			}
 
-			this.isProcessing = true;
-
-			if (this.pagination.page === null) {
-				this.pagination.page = localStorage.getItem(this.paginationId) || 1;
-			}
+			const page =
+				this.pagination.page ?? localStorage.getItem(this.paginationId) ?? 1;
 
 			try {
 				const response = await this.$api.get(
 					this.parent + "/sections/" + this.name,
-					{ page: this.pagination.page, searchterm: this.searchterm }
+					{ page, searchterm: this.searchterm }
 				);
 
 				this.options = response.options;
@@ -235,14 +229,16 @@ export default {
 			this.searching = !this.searching;
 			this.searchterm = null;
 		},
-		onUpload() {},
-
 		async reload() {
 			await this.load(true);
 		},
+		async search() {
+			this.pagination.page = 0;
+			await this.reload();
+		},
 		update() {
 			this.reload();
-			this.$events.$emit("model.update");
+			this.$events.emit("model.update");
 		}
 	}
 };
@@ -254,11 +250,8 @@ export default {
 }
 
 .k-models-section-search.k-input {
+	--input-color-back: var(--color-gray-300);
+	--input-color-border: transparent;
 	margin-bottom: var(--spacing-3);
-	background: var(--color-gray-300);
-	padding: var(--spacing-2) var(--spacing-3);
-	height: var(--field-input-height);
-	border-radius: var(--rounded);
-	font-size: var(--text-sm);
 }
 </style>

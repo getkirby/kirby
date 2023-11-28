@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
@@ -12,23 +13,23 @@ use Kirby\Filesystem\File as BaseFile;
 class FileRulesTest extends TestCase
 {
 	protected $app;
-	protected $fixtures;
+	protected $tmp;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/FileRulesTest'
+				'index' => $this->tmp = __DIR__ . '/tmp/FileRulesTest'
 			]
 		]);
 
 		$this->app->impersonate('kirby');
-		Dir::make($this->fixtures);
+		Dir::make($this->tmp);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->fixtures);
+		Dir::remove($this->tmp);
 	}
 
 	public function testChangeName()
@@ -110,6 +111,92 @@ class FileRulesTest extends TestCase
 		FileRules::changeName($file, 'b');
 	}
 
+	public function testChangeTemplate()
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/foo' => [
+					'sections' => [
+						[
+							'type' => 'files',
+							'template' => 'b'
+						]
+					]
+				],
+				'files/a' => ['title' => 'a'],
+				'files/b' => ['title' => 'b'],
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'foo',
+						'files' => [
+							[
+								'filename' => 'test.jpg',
+								'content'  => ['template' => 'a']
+							]
+						]
+					]
+				]
+			],
+		]);
+
+		$app->impersonate('kirby');
+
+		$file = $app->page('test')->file('test.jpg');
+		$this->assertTrue(FileRules::changeTemplate($file, 'b'));
+	}
+
+	public function testChangeTemplateWithoutPermissions()
+	{
+		$permissions = $this->createMock(FilePermissions::class);
+		$permissions->method('__call')->with('changeTemplate')->willReturn(false);
+
+		$file = $this->createMock(File::class);
+		$file->method('id')->willReturn('test');
+		$file->method('permissions')->willReturn($permissions);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to change the template for the file "test"');
+
+		FileRules::changeTemplate($file, 'test');
+	}
+
+	public function testChangeTemplateTooFewTemplates()
+	{
+		$permissions = $this->createMock(FilePermissions::class);
+		$permissions->method('__call')->with('changeTemplate')->willReturn(true);
+
+		$file = $this->createMock(File::class);
+		$file->method('blueprints')->willReturn([[]]);
+		$file->method('id')->willReturn('test');
+		$file->method('permissions')->willReturn($permissions);
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('The template for the file "test" cannot be changed');
+
+		FileRules::changeTemplate($file, 'c');
+	}
+
+	public function testChangeTemplateWithInvalidTemplateName()
+	{
+		$permissions = $this->createMock(FilePermissions::class);
+		$permissions->method('__call')->with('changeTemplate')->willReturn(true);
+
+		$file = $this->createMock(File::class);
+		$file->method('blueprints')->willReturn([
+			['name' => 'a'], ['name' => 'b']
+		]);
+		$file->method('id')->willReturn('test');
+		$file->method('permissions')->willReturn($permissions);
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('The template for the file "test" cannot be changed');
+
+		FileRules::changeTemplate($file, 'c');
+	}
+
 	public function testCreateExistingFile()
 	{
 		$file = $this->createMock(File::class);
@@ -132,7 +219,7 @@ class FileRulesTest extends TestCase
 
 		$app = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/FileRulesTest/createSameFile',
+				'index' => $this->tmp = __DIR__ . '/tmp/FileRulesTest/createSameFile',
 			],
 			'site' => [
 				'children' => [
@@ -173,7 +260,7 @@ class FileRulesTest extends TestCase
 
 		$app = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/FileRulesTest/createSameFileWithDifferentTemplate',
+				'index' => $this->tmp = __DIR__ . '/tmp/FileRulesTest/createSameFileWithDifferentTemplate',
 			],
 			'site' => [
 				'children' => [
@@ -214,7 +301,7 @@ class FileRulesTest extends TestCase
 
 		$app = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/FileRulesTest/createDifferentFileWithSameFilename',
+				'index' => $this->tmp = __DIR__ . '/tmp/FileRulesTest/createDifferentFileWithSameFilename',
 			],
 			'site' => [
 				'children' => [

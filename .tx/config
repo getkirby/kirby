@@ -1,7 +1,7 @@
 [main]
 host = https://www.transifex.com
 
-[o:getkirby:p:panel:r:v3]
+[o:getkirby:p:panel:r:v4]
 file_filter  = i18n/translations/<lang>.json
 source_file  = i18n/translations/en.json
 source_lang  = en

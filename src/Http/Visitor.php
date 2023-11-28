@@ -34,10 +34,19 @@ class Visitor
 	 */
 	public function __construct(array $arguments = [])
 	{
-		$this->ip($arguments['ip'] ?? Environment::getGlobally('REMOTE_ADDR', ''));
-		$this->userAgent($arguments['userAgent'] ?? Environment::getGlobally('HTTP_USER_AGENT', ''));
-		$this->acceptedLanguage($arguments['acceptedLanguage'] ?? Environment::getGlobally('HTTP_ACCEPT_LANGUAGE', ''));
-		$this->acceptedMimeType($arguments['acceptedMimeType'] ?? Environment::getGlobally('HTTP_ACCEPT', ''));
+		$ip         = $arguments['ip'] ?? null;
+		$ip       ??= Environment::getGlobally('REMOTE_ADDR', '');
+		$agent      = $arguments['userAgent'] ?? null;
+		$agent    ??= Environment::getGlobally('HTTP_USER_AGENT', '');
+		$language   = $arguments['acceptedLanguage'] ?? null;
+		$language ??= Environment::getGlobally('HTTP_ACCEPT_LANGUAGE', '');
+		$mime       = $arguments['acceptedMimeType'] ?? null;
+		$mime     ??= Environment::getGlobally('HTTP_ACCEPT', '');
+
+		$this->ip($ip);
+		$this->userAgent($agent);
+		$this->acceptedLanguage($language);
+		$this->acceptedMimeType($mime);
 	}
 
 	/**
@@ -47,8 +56,9 @@ class Visitor
 	 *
 	 * @return $this|\Kirby\Toolkit\Obj|null
 	 */
-	public function acceptedLanguage(string|null $acceptedLanguage = null): static|Obj|null
-	{
+	public function acceptedLanguage(
+		string|null $acceptedLanguage = null
+	): static|Obj|null {
 		if ($acceptedLanguage === null) {
 			return $this->acceptedLanguages()->first();
 		}
@@ -108,8 +118,9 @@ class Visitor
 	 *
 	 * @return $this|\Kirby\Toolkit\Obj|null
 	 */
-	public function acceptedMimeType(string|null $acceptedMimeType = null): static|Obj|null
-	{
+	public function acceptedMimeType(
+		string|null $acceptedMimeType = null
+	): static|Obj|null {
 		if ($acceptedMimeType === null) {
 			return $this->acceptedMimeTypes()->first();
 		}
@@ -178,7 +189,8 @@ class Visitor
 	 */
 	public function prefersJson(): bool
 	{
-		return $this->preferredMimeType('application/json', 'text/html') === 'application/json';
+		$preferred = $this->preferredMimeType('application/json', 'text/html');
+		return $preferred === 'application/json';
 	}
 
 	/**
@@ -193,6 +205,7 @@ class Visitor
 		if ($ip === null) {
 			return $this->ip;
 		}
+
 		$this->ip = $ip;
 		return $this;
 	}
@@ -209,6 +222,7 @@ class Visitor
 		if ($userAgent === null) {
 			return $this->userAgent;
 		}
+
 		$this->userAgent = $userAgent;
 		return $this;
 	}

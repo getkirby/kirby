@@ -67,6 +67,42 @@ class PluginTest extends TestCase
 	}
 
 	/**
+	 * @covers ::asset
+	 */
+	public function testAsset()
+	{
+		$root = __DIR__ . '/fixtures/plugin-assets';
+		$plugin = new Plugin('getkirby/test-plugin', [
+			'assets' => [
+				'c.css' => $a = $root . '/a.css',
+				'd.css' => $b = $root . '/foo/b.css'
+			]
+		]);
+
+		$this->assertSame($a, $plugin->asset('c.css')->root());
+		$this->assertSame($b, $plugin->asset('d.css')->root());
+	}
+
+	/**
+	 * @covers ::assets
+	 */
+	public function testAssets()
+	{
+		$root = __DIR__ . '/fixtures/plugin-assets';
+
+		// assets defined in plugin config
+		$plugin = new Plugin('getkirby/test-plugin', [
+			'root'   => $root,
+			'assets' => [
+				'c.css' => $root . '/a.css',
+			]
+		]);
+
+		$this->assertInstanceOf(PluginAssets::class, $plugin->assets());
+		$this->assertSame($root . '/a.css', $plugin->asset('c.css')->root());
+	}
+
+	/**
 	 * @covers ::authors
 	 */
 	public function testAuthors()
@@ -294,7 +330,7 @@ class PluginTest extends TestCase
 
 	/**
 	 * @covers ::name
-	 * @covers ::setName
+	 * @covers ::validateName
 	 */
 	public function testName()
 	{
@@ -305,7 +341,7 @@ class PluginTest extends TestCase
 
 	/**
 	 * @covers ::name
-	 * @covers ::setName
+	 * @covers ::validateName
 	 */
 	public function testNameWithInvalidInput()
 	{

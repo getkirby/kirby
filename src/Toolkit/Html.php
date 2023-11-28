@@ -323,7 +323,7 @@ class Html extends Xml
 	{
 		$attr = array_merge([
 			'src' => $src,
-			'alt' => ' '
+			'alt' => ''
 		], $attr);
 
 		return static::tag('img', '', $attr);
@@ -597,7 +597,7 @@ class Html extends Xml
 				return false;
 			}
 
-			return preg_match('!^[a-zA-Z0-9_-]+$!', $id);
+			return preg_match('!^[a-zA-Z0-9_-]+$!', $id) === 1;
 		};
 
 		switch ($path->toString()) {

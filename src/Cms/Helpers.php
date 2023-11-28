@@ -29,20 +29,14 @@ class Helpers
 	 * ```
 	 */
 	public static $deprecations = [
-		// Passing the $slot or $slots variables to snippets is
-		// deprecated and will break in a future version.
-		'snippet-pass-slots'    => true,
+		// Passing a single space as value to `Xml::attr()` has been
+		// deprecated. In a future version, passing a single space won't
+		// render an empty value anymore but a single space.
+		// To render an empty value, please pass an empty string.
+		'xml-attr-single-space' => true,
 
-		// The `Toolkit\Query` class has been deprecated and will
-		// be removed in a future version. Use `Query\Query` instead:
-		// Kirby\Query\Query::factory($query)->resolve($data).
-		'toolkit-query-class'   => true,
-
-		// Passing an empty string as value to `Xml::attr()` has been
-		// deprecated. In a future version, passing an empty string won't
-		// omit the attribute anymore but render it with an empty value.
-		// To omit the attribute, please pass `null`.
-		'xml-attr-empty-string' => false,
+		// The internal `$model->contentFile*()` methods have been deprecated
+		'model-content-file' => true,
 	];
 
 	/**
@@ -52,8 +46,10 @@ class Helpers
 	 * @param string|null $key If given, the key will be checked against the static array
 	 * @return bool Whether the warning was triggered
 	 */
-	public static function deprecated(string $message, string|null $key = null): bool
-	{
+	public static function deprecated(
+		string $message,
+		string|null $key = null
+	): bool {
 		// only trigger warning in debug mode or when running PHPUnit tests
 		// @codeCoverageIgnoreStart
 		if (
@@ -75,19 +71,16 @@ class Helpers
 	/**
 	 * Simple object and variable dumper
 	 * to help with debugging.
-	 *
-	 * @param mixed $variable
-	 * @param bool $echo
-	 * @return string
 	 */
-	public static function dump($variable, bool $echo = true): string
+	public static function dump(mixed $variable, bool $echo = true): string
 	{
-		$kirby = App::instance();
+		$kirby  = App::instance();
+		$output = print_r($variable, true);
 
 		if ($kirby->environment()->cli() === true) {
-			$output = print_r($variable, true) . PHP_EOL;
+			$output .= PHP_EOL;
 		} else {
-			$output = '<pre>' . print_r($variable, true) . '</pre>';
+			$output = Str::wrap($output, '<pre>', '</pre>');
 		}
 
 		if ($echo === true) {
@@ -110,8 +103,11 @@ class Helpers
 	 * @return mixed Return value of the `$action` closure,
 	 *               possibly overridden by `$fallback`
 	 */
-	public static function handleErrors(Closure $action, Closure $condition, $fallback = null)
-	{
+	public static function handleErrors(
+		Closure $action,
+		Closure $condition,
+		$fallback = null
+	) {
 		$override = null;
 
 		$handler = set_error_handler(function () use (&$override, &$handler, $condition, $fallback) {
@@ -152,7 +148,6 @@ class Helpers
 	 * @internal
 	 *
 	 * @param string $name Name of the helper
-	 * @return bool
 	 */
 	public static function hasOverride(string $name): bool
 	{
@@ -164,11 +159,9 @@ class Helpers
 	 * Determines the size/length of numbers,
 	 * strings, arrays and countable objects
 	 *
-	 * @param mixed $value
-	 * @return int
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
-	public static function size($value): int
+	public static function size(mixed $value): int
 	{
 		if (is_numeric($value)) {
 			return (int)$value;

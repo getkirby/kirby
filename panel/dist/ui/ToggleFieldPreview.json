@@ -1,0 +1,1 @@
+{"displayName":"ToggleFieldPreview","description":"","tags":{},"props":[{"name":"column","type":{"name":"object"},"defaultValue":{"value":"{}"}},{"name":"field","type":{"name":"object"},"defaultValue":{"value":"{}"}},{"name":"value"}],"events":[{"name":"input"}],"component":"k-toggle-field-preview","sourceFile":"src/components/Forms/Previews/ToggleFieldPreview.vue"}

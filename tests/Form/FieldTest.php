@@ -7,6 +7,9 @@ use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Form\Field
+ */
 class FieldTest extends TestCase
 {
 	protected $originalMixins;
@@ -198,6 +201,51 @@ class FieldTest extends TestCase
 		$this->assertSame('blog', $field->default());
 		$this->assertSame('blog', $field->default);
 		$this->assertSame('blog', $field->data(true));
+	}
+
+	/**
+	 * @covers ::dialogs
+	 */
+	public function testDialogs()
+	{
+		// no defined as default
+		Field::$types = [
+			'test' => []
+		];
+
+		$model = new Page(['slug' => 'test']);
+
+		$field = new Field('test', [
+			'model' => $model,
+		]);
+
+		$this->assertSame([], $field->dialogs());
+
+		// test dialogs
+		$routes = [
+			[
+				'pattern' => 'foo',
+				'load'    => function () {
+				},
+				'submit'  => function () {
+				}
+			]
+		];
+
+		// return routes
+		Field::$types = [
+			'test' => [
+				'dialogs' => function () use ($routes) {
+					return $routes;
+				}
+			]
+		];
+
+		$field = new Field('test', [
+			'model' => $model,
+		]);
+
+		$this->assertSame($routes, $field->dialogs());
 	}
 
 	public function testDisabled()

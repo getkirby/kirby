@@ -20,10 +20,8 @@ class Roles extends Collection
 {
 	/**
 	 * All registered roles methods
-	 *
-	 * @var array
 	 */
-	public static $methods = [];
+	public static array $methods = [];
 
 	/**
 	 * Returns a filtered list of all
@@ -33,7 +31,7 @@ class Roles extends Collection
 	 * @return $this|static
 	 * @throws \Exception
 	 */
-	public function canBeChanged()
+	public function canBeChanged(): static
 	{
 		if (App::instance()->user()) {
 			return $this->filter(function ($role) {
@@ -57,7 +55,7 @@ class Roles extends Collection
 	 * @return $this|static
 	 * @throws \Exception
 	 */
-	public function canBeCreated()
+	public function canBeCreated(): static
 	{
 		if (App::instance()->user()) {
 			return $this->filter(function ($role) {
@@ -73,12 +71,7 @@ class Roles extends Collection
 		return $this;
 	}
 
-	/**
-	 * @param array $roles
-	 * @param array $inject
-	 * @return static
-	 */
-	public static function factory(array $roles, array $inject = [])
+	public static function factory(array $roles, array $inject = []): static
 	{
 		$collection = new static();
 
@@ -97,12 +90,7 @@ class Roles extends Collection
 		return $collection->sort('name', 'asc');
 	}
 
-	/**
-	 * @param string|null $root
-	 * @param array $inject
-	 * @return static
-	 */
-	public static function load(string $root = null, array $inject = [])
+	public static function load(string $root = null, array $inject = []): static
 	{
 		$kirby = App::instance();
 		$roles = new static();

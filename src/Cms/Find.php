@@ -24,16 +24,17 @@ class Find
 	 * parent path and filename
 	 *
 	 * @param string $path Path to file's parent model
-	 * @param string $filename Filename
-	 * @return \Kirby\Cms\File|null
 	 * @throws \Kirby\Exception\NotFoundException if the file cannot be found
 	 */
-	public static function file(string $path, string $filename)
-	{
+	public static function file(
+		string $path,
+		string $filename
+	): File|null {
 		$filename = urldecode($filename);
-		$file     = static::parent($path)->file($filename);
+		$parent   = empty($path) ? null : static::parent($path);
+		$file     = App::instance()->file($filename, $parent);
 
-		if ($file?->isReadable() === true) {
+		if ($file?->isAccessible() === true) {
 			return $file;
 		}
 
@@ -49,10 +50,9 @@ class Find
 	 * Returns the language object for the given code
 	 *
 	 * @param string $code Language code
-	 * @return \Kirby\Cms\Language|null
 	 * @throws \Kirby\Exception\NotFoundException if the language cannot be found
 	 */
-	public static function language(string $code)
+	public static function language(string $code): Language|null
 	{
 		if ($language = App::instance()->language($code)) {
 			return $language;
@@ -70,15 +70,16 @@ class Find
 	 * Returns the page object for the given id
 	 *
 	 * @param string $id Page's id
-	 * @return \Kirby\Cms\Page|null
 	 * @throws \Kirby\Exception\NotFoundException if the page cannot be found
 	 */
-	public static function page(string $id)
+	public static function page(string $id): Page|null
 	{
-		$id   = str_replace(['+', ' '], '/', $id);
-		$page = App::instance()->page($id);
+		// decode API ID encoding
+		$id    = str_replace(['+', ' '], '/', $id);
+		$kirby = App::instance();
+		$page  = $kirby->page($id, null, true);
 
-		if ($page?->isReadable() === true) {
+		if ($page?->isAccessible() === true) {
 			return $page;
 		}
 
@@ -94,11 +95,10 @@ class Find
 	 * Returns the model's object for the given path
 	 *
 	 * @param string $path Path to parent model
-	 * @return \Kirby\Cms\Model|null
 	 * @throws \Kirby\Exception\InvalidArgumentException if the model type is invalid
 	 * @throws \Kirby\Exception\NotFoundException if the model cannot be found
 	 */
-	public static function parent(string $path)
+	public static function parent(string $path): ModelWithContent
 	{
 		$path       = trim($path, '/');
 		$modelType  = in_array($path, ['site', 'account']) ? $path : trim(dirname($path), '/');
@@ -140,10 +140,9 @@ class Find
 	 * id is passed
 	 *
 	 * @param string|null $id User's id
-	 * @return \Kirby\Cms\User|null
 	 * @throws \Kirby\Exception\NotFoundException if the user for the given id cannot be found
 	 */
-	public static function user(string $id = null)
+	public static function user(string $id = null): User|null
 	{
 		// account is a reserved word to find the current
 		// user. It's used in various API and area routes.

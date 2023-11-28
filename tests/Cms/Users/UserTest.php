@@ -4,13 +4,18 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use TypeError;
 
 class UserTestModel extends User
 {
 }
 
+/**
+ * @coversDefaultClass \Kirby\Cms\User
+ */
 class UserTest extends TestCase
 {
 	public function testAvatar()
@@ -40,7 +45,7 @@ class UserTest extends TestCase
 
 	public function testInvalidContent()
 	{
-		$this->expectException('TypeError');
+		$this->expectException(TypeError::class);
 
 		$user = new User(['email' => 'user@domain.com', 'content' => 'something']);
 	}
@@ -62,9 +67,8 @@ class UserTest extends TestCase
 
 	public function testInvalidEmail()
 	{
-		$this->expectException('TypeError');
-
-		$user = new User(['email' => []]);
+		$this->expectException(TypeError::class);
+		new User(['email' => []]);
 	}
 
 	/**
@@ -167,6 +171,14 @@ class UserTest extends TestCase
 		]);
 		$this->assertTrue($user->isNobody());
 	}
+
+	public function testLoginPasswordlessKirby()
+	{
+		$user = new User(['id' => 'kirby']);
+		$this->expectException(PermissionException::class);
+		$user->loginPasswordless();
+	}
+
 
 	public function testName()
 	{
@@ -330,6 +342,48 @@ class UserTest extends TestCase
 			['invalid-password', false],
 			['correct-horse-battery-staple', true],
 		];
+	}
+
+	public function testSecret()
+	{
+		$app = new App([
+			'roots' => [
+				'index'    => $this->tmp,
+				'accounts' => $this->tmp
+			]
+		]);
+
+		F::write($this->tmp . '/test/index.php', '<?php return [];');
+		$user = $app->user('test');
+
+		// no secrets file
+		$this->assertNull($user->secret('password'));
+		$this->assertNull($user->secret('totp'));
+		$this->assertNull($user->secret('invalid'));
+
+		// just a password hash
+		F::write($this->tmp . '/test/.htpasswd', 'a very secure hash');
+		$this->assertSame('a very secure hash', $user->secret('password'));
+		$this->assertNull($user->secret('totp'));
+		$this->assertNull($user->secret('invalid'));
+
+		// extra secrets
+		F::write($this->tmp . '/test/.htpasswd', 'a very secure hash' . "\n" . '{"totp":"foo"}');
+		$this->assertSame('a very secure hash', $user->secret('password'));
+		$this->assertSame('foo', $user->secret('totp'));
+		$this->assertNull($user->secret('invalid'));
+
+		// just extra secrets
+		F::write($this->tmp . '/test/.htpasswd', "\n" . '{"totp":"foo"}');
+		$this->assertNull($user->secret('password'));
+		$this->assertSame('foo', $user->secret('totp'));
+		$this->assertNull($user->secret('invalid'));
+
+		// invalid JSON
+		F::write($this->tmp . '/test/.htpasswd', "\n" . 'this is not JSON');
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('JSON string is invalid');
+		$user->secret('totp');
 	}
 
 	/**

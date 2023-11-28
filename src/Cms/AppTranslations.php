@@ -17,12 +17,10 @@ use Kirby\Toolkit\Str;
  */
 trait AppTranslations
 {
-	protected $translations;
+	protected Translations|null $translations = null;
 
 	/**
 	 * Setup internationalization
-	 *
-	 * @return void
 	 */
 	protected function i18n(): void
 	{
@@ -88,8 +86,6 @@ trait AppTranslations
 	 * Returns the language code that will be used
 	 * for the Panel if no user is logged in or if
 	 * no language is configured for the user
-	 *
-	 * @return string
 	 */
 	public function panelLanguage(): string
 	{
@@ -113,11 +109,10 @@ trait AppTranslations
 	 * Otherwise fall back to the default language
 	 *
 	 * @internal
-	 * @param string|null $languageCode
-	 * @return \Kirby\Cms\Language|null
 	 */
-	public function setCurrentLanguage(string $languageCode = null)
-	{
+	public function setCurrentLanguage(
+		string $languageCode = null
+	): Language|null {
 		if ($this->multilang() === false) {
 			Locale::set($this->option('locale', 'en_US.utf-8'));
 			return $this->language = null;
@@ -140,8 +135,6 @@ trait AppTranslations
 	 * Set the current translation
 	 *
 	 * @internal
-	 * @param string|null $translationCode
-	 * @return void
 	 */
 	public function setCurrentTranslation(string $translationCode = null): void
 	{
@@ -152,9 +145,8 @@ trait AppTranslations
 	 * Load a specific translation by locale
 	 *
 	 * @param string|null $locale Locale name or `null` for the current locale
-	 * @return \Kirby\Cms\Translation
 	 */
-	public function translation(string|null $locale = null)
+	public function translation(string|null $locale = null): Translation
 	{
 		$locale = $locale ?? I18n::locale();
 		$locale = basename($locale);
@@ -180,10 +172,8 @@ trait AppTranslations
 
 	/**
 	 * Returns all available translations
-	 *
-	 * @return \Kirby\Cms\Translations
 	 */
-	public function translations()
+	public function translations(): Translations
 	{
 		if ($this->translations instanceof Translations) {
 			return $this->translations;
@@ -207,8 +197,6 @@ trait AppTranslations
 			}
 		}
 
-		$this->translations = Translations::load($this->root('i18n:translations'), $translations);
-
-		return $this->translations;
+		return $this->translations = Translations::load($this->root('i18n:translations'), $translations);
 	}
 }

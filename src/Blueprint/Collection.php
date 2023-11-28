@@ -16,7 +16,7 @@ use TypeError;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * // TODO: include in test coverage 3.10
+ * // TODO: include in test coverage once blueprint refactoring is done
  * @codeCoverageIgnore
  */
 class Collection extends BaseCollection
@@ -37,6 +37,8 @@ class Collection extends BaseCollection
 	 * The Kirby Collection class only shows the key to
 	 * avoid huge tress with dump, but for the blueprint
 	 * collections this is really not useful
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function __debugInfo(): array
 	{

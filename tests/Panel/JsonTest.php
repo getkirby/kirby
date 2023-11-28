@@ -26,13 +26,11 @@ class JsonTest extends TestCase
 	{
 		$redirect = new Redirect('https://getkirby.com');
 		$response = Json::response($redirect);
+		$body     = json_decode($response->body(), true);
 
-		$this->assertSame(302, $response->code());
-
-		$body = json_decode($response->body(), true);
-
+		$this->assertSame(200, $response->code());
+		$this->assertSame(200, $body['$response']['code']);
 		$this->assertSame('https://getkirby.com', $body['$response']['redirect']);
-		$this->assertSame(302, $body['$response']['code']);
 	}
 
 	/**

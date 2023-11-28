@@ -4,7 +4,7 @@ namespace Kirby\Toolkit;
 
 use Countable;
 use Exception;
-use Kirby\Cms\Field;
+use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Http\Idn;
 use Kirby\Uuid\Uuid;
@@ -449,7 +449,7 @@ V::$validators = [
 	 * Checks if the value matches the given regular expression
 	 */
 	'match' => function ($value, string $pattern): bool {
-		return preg_match($pattern, $value) !== 0;
+		return preg_match($pattern, (string)$value) === 1;
 	},
 
 	/**
@@ -594,6 +594,13 @@ V::$validators = [
 	 */
 	'startsWith' => function (string $value, string $start): bool {
 		return Str::startsWith($value, $start);
+	},
+
+	/**
+	 * Checks for a valid unformatted telephone number
+	 */
+	'tel' => function ($value): bool {
+		return V::match($value, '!^[+]{0,1}[0-9]+$!');
 	},
 
 	/**

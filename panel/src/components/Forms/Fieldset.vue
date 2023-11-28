@@ -1,49 +1,47 @@
 <template>
-	<fieldset class="k-fieldset">
-		<k-grid>
+	<div class="k-fieldset">
+		<k-grid variant="fields">
 			<template v-for="(field, fieldName) in fields">
 				<k-column
 					v-if="$helper.field.isVisible(field, value)"
 					:key="field.signature"
 					:width="field.width"
 				>
-					<k-error-boundary>
-						<!-- @event input Triggered whenever any field value changes -->
-						<!-- @event focus Triggered whenever any field is focused -->
-						<!-- @event submit Triggered whenever any field triggers submit -->
-						<!-- eslint-disable vue/no-mutating-props -->
-						<component
-							:is="'k-' + field.type + '-field'"
-							v-if="hasFieldType(field.type)"
-							:ref="fieldName"
-							v-model="value[fieldName]"
-							v-bind="field"
-							:disabled="disabled || field.disabled"
-							:form-data="value"
-							:name="fieldName"
-							:novalidate="novalidate"
-							@input="$emit('input', value, field, fieldName)"
-							@focus="$emit('focus', $event, field, fieldName)"
-							@invalid="
-								($invalid, $v) => onInvalid($invalid, $v, field, fieldName)
-							"
-							@submit="$emit('submit', $event, field, fieldName)"
-						/>
-						<k-box v-else theme="negative">
-							<k-text size="small">
-								{{
-									$t("error.field.type.missing", {
-										name: fieldName,
-										type: field.type
-									})
-								}}
-							</k-text>
-						</k-box>
-					</k-error-boundary>
+					<!-- @event input Triggered whenever any field value changes -->
+					<!-- @event focus Triggered whenever any field is focused -->
+					<!-- @event submit Triggered whenever any field triggers submit -->
+					<!-- eslint-disable vue/no-mutating-props -->
+					<component
+						:is="'k-' + field.type + '-field'"
+						v-if="hasFieldType(field.type)"
+						:ref="fieldName"
+						v-bind="field"
+						:disabled="disabled || field.disabled"
+						:form-data="value"
+						:name="fieldName"
+						:novalidate="novalidate"
+						:value="value[fieldName]"
+						@input="onInput($event, field, fieldName)"
+						@focus="$emit('focus', $event, field, fieldName)"
+						@invalid="
+							($invalid, $v) => onInvalid($invalid, $v, field, fieldName)
+						"
+						@submit="$emit('submit', $event, field, fieldName)"
+					/>
+					<k-box v-else theme="negative">
+						<k-text size="small">
+							{{
+								$t("error.field.type.missing", {
+									name: fieldName,
+									type: field.type
+								})
+							}}
+						</k-text>
+					</k-box>
 				</k-column>
 			</template>
 		</k-grid>
-	</fieldset>
+	</div>
 </template>
 
 <script>
@@ -52,13 +50,21 @@
  */
 export default {
 	props: {
+		/**
+		 * @private
+		 */
 		config: Object,
+		/**
+		 * If `true`, all fields in the fieldset are disabled
+		 */
 		disabled: Boolean,
+		/**
+		 * Object with field definitions. Check out the field components
+		 * for available props
+		 */
 		fields: {
 			type: [Array, Object],
-			default() {
-				return [];
-			}
+			default: () => ({})
 		},
 		/**
 		 * If `true`, form fields won't show their validation status on the fly.
@@ -67,13 +73,15 @@ export default {
 			type: Boolean,
 			default: false
 		},
+		/**
+		 * Key/Value object with all values for all fields
+		 */
 		value: {
 			type: Object,
-			default() {
-				return {};
-			}
+			default: () => ({})
 		}
 	},
+	emits: ["focus", "input", "invalid", "submit"],
 	data() {
 		return {
 			errors: {}
@@ -120,11 +128,12 @@ export default {
 			this.$emit("invalid", this.errors);
 		},
 		onInput(value, field, name) {
-			const values = { ...this.value, [name]: value };
+			const values = this.value;
+			this.$set(values, name, value);
 			this.$emit("input", values, field, name);
 		},
 		hasErrors() {
-			return Object.keys(this.errors).length;
+			return this.$helper.object.length(this.errors) > 0;
 		}
 	}
 };
@@ -133,25 +142,5 @@ export default {
 <style>
 .k-fieldset {
 	border: 0;
-}
-.k-fieldset .k-grid {
-	grid-row-gap: 2.25rem;
-}
-
-@media screen and (min-width: 30em) {
-	.k-fieldset .k-grid {
-		grid-column-gap: 1.5rem;
-	}
-}
-
-/* Switch off the grid in narrow sections */
-.k-sections > .k-column[data-width="1/3"] .k-fieldset .k-grid,
-.k-sections > .k-column[data-width="1/4"] .k-fieldset .k-grid {
-	grid-template-columns: repeat(1, 1fr);
-}
-
-.k-sections > .k-column[data-width="1/3"] .k-fieldset .k-grid .k-column,
-.k-sections > .k-column[data-width="1/4"] .k-fieldset .k-grid .k-column {
-	grid-column-start: initial;
 }
 </style>

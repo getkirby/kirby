@@ -9,11 +9,11 @@ export default function (string) {
 		return;
 	}
 
-	// make sure case insensitive
+	// make the string case-insensitive
 	string = string.toLowerCase();
 
 	if (string === "pattern") {
-		return `var(--color-gray-800) var(--bg-pattern)`;
+		return `var(--pattern)`;
 	}
 
 	// check pre-defined color variables

@@ -4,9 +4,11 @@ namespace Kirby\Form;
 
 use Closure;
 use Kirby\Cms\App;
-use Kirby\Cms\Model;
+use Kirby\Cms\File;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
 use Kirby\Exception\NotFoundException;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -26,29 +28,21 @@ class Form
 {
 	/**
 	 * An array of all found errors
-	 *
-	 * @var array|null
 	 */
-	protected $errors;
+	protected array|null $errors = null;
 
 	/**
 	 * Fields in the form
-	 *
-	 * @var \Kirby\Form\Fields|null
 	 */
-	protected $fields;
+	protected Fields|null $fields;
 
 	/**
 	 * All values of form
-	 *
-	 * @var array
 	 */
-	protected $values = [];
+	protected array $values = [];
 
 	/**
 	 * Form constructor
-	 *
-	 * @param array $props
 	 */
 	public function __construct(array $props)
 	{
@@ -80,15 +74,12 @@ class Form
 			// inject the name
 			$props['name'] = $name = strtolower($name);
 
-			// check if the field is disabled
-			$disabled = $props['disabled'] ?? false;
-
+			// check if the field is disabled and
 			// overwrite the field value if not set
-			if ($disabled === true) {
-				$props['value'] = $values[$name] ?? null;
-			} else {
-				$props['value'] = $input[$name] ?? $values[$name] ?? null;
-			}
+			$props['value'] = match ($props['disabled'] ?? false) {
+				true    => $values[$name] ?? null,
+				default => $input[$name] ?? $values[$name] ?? null
+			};
 
 			try {
 				$field = Field::factory($props['type'], $props, $this->fields);
@@ -117,8 +108,6 @@ class Form
 	/**
 	 * Returns the data required to write to the content file
 	 * Doesn't include default and null values
-	 *
-	 * @return array
 	 */
 	public function content(): array
 	{
@@ -129,8 +118,6 @@ class Form
 	 * Returns data for all fields in the form
 	 *
 	 * @param false $defaults
-	 * @param bool $includeNulls
-	 * @return array
 	 */
 	public function data($defaults = false, bool $includeNulls = true): array
 	{
@@ -153,8 +140,6 @@ class Form
 
 	/**
 	 * An array of all found errors
-	 *
-	 * @return array
 	 */
 	public function errors(): array
 	{
@@ -178,17 +163,16 @@ class Form
 
 	/**
 	 * Shows the error with the field
-	 *
-	 * @param \Throwable $exception
-	 * @param array $props
-	 * @return \Kirby\Form\Field
 	 */
-	public static function exceptionField(Throwable $exception, array $props = [])
-	{
+	public static function exceptionField(
+		Throwable $exception,
+		array $props = []
+	): Field {
 		$message = $exception->getMessage();
 
 		if (App::instance()->option('debug') === true) {
-			$message .= ' in file: ' . $exception->getFile() . ' line: ' . $exception->getLine();
+			$message .= ' in file: ' . $exception->getFile();
+			$message .= ' line: ' . $exception->getLine();
 		}
 
 		$props = array_merge($props, [
@@ -204,11 +188,9 @@ class Form
 	 * Get the field object by name
 	 * and handle nested fields correctly
 	 *
-	 * @param string $name
 	 * @throws \Kirby\Exception\NotFoundException
-	 * @return \Kirby\Form\Field
 	 */
-	public function field(string $name)
+	public function field(string $name): Field|FieldClass
 	{
 		$form       = $this;
 		$fieldNames = Str::split($name, '+');
@@ -223,9 +205,11 @@ class Form
 				if ($count !== $index) {
 					$form = $field->form();
 				}
-			} else {
-				throw new NotFoundException('The field "' . $fieldName . '" could not be found');
+
+				continue;
 			}
+
+			throw new NotFoundException('The field "' . $fieldName . '" could not be found');
 		}
 
 		// it can get this error only if $name is an empty string as $name = ''
@@ -238,21 +222,16 @@ class Form
 
 	/**
 	 * Returns form fields
-	 *
-	 * @return \Kirby\Form\Fields|null
 	 */
-	public function fields()
+	public function fields(): Fields|null
 	{
 		return $this->fields;
 	}
 
-	/**
-	 * @param \Kirby\Cms\Model $model
-	 * @param array $props
-	 * @return static
-	 */
-	public static function for(Model $model, array $props = [])
-	{
+	public static function for(
+		ModelWithContent $model,
+		array $props = []
+	): static {
 		// get the original model data
 		$original = $model->content($props['language'] ?? null)->toArray();
 		$values   = $props['values'] ?? [];
@@ -270,7 +249,10 @@ class Form
 		$props['model']    = $model;
 
 		// search for the blueprint
-		if (method_exists($model, 'blueprint') === true && $blueprint = $model->blueprint()) {
+		if (
+			method_exists($model, 'blueprint') === true &&
+			$blueprint = $model->blueprint()
+		) {
 			$props['fields'] = $blueprint->fields();
 		}
 
@@ -289,18 +271,14 @@ class Form
 
 	/**
 	 * Checks if the form is invalid
-	 *
-	 * @return bool
 	 */
 	public function isInvalid(): bool
 	{
-		return empty($this->errors()) === false;
+		return $this->isValid() === false;
 	}
 
 	/**
 	 * Checks if the form is valid
-	 *
-	 * @return bool
 	 */
 	public function isValid(): bool
 	{
@@ -310,17 +288,15 @@ class Form
 	/**
 	 * Disables fields in secondary languages when
 	 * they are configured to be untranslatable
-	 *
-	 * @param array $fields
-	 * @param string|null $language
-	 * @return array
 	 */
-	protected static function prepareFieldsForLanguage(array $fields, string|null $language = null): array
-	{
+	protected static function prepareFieldsForLanguage(
+		array $fields,
+		string|null $language = null
+	): array {
 		$kirby = App::instance(null, true);
 
 		// only modify the fields if we have a valid Kirby multilang instance
-		if (!$kirby || $kirby->multilang() === false) {
+		if ($kirby?->multilang() === false) {
 			return $fields;
 		}
 
@@ -343,29 +319,20 @@ class Form
 	 * Converts the data of fields to strings
 	 *
 	 * @param false $defaults
-	 * @return array
 	 */
 	public function strings($defaults = false): array
 	{
-		$strings = [];
-
-		foreach ($this->data($defaults) as $key => $value) {
-			if ($value === null) {
-				$strings[$key] = null;
-			} elseif (is_array($value) === true) {
-				$strings[$key] = Data::encode($value, 'yaml');
-			} else {
-				$strings[$key] = $value;
+		return A::map(
+			$this->data($defaults),
+			fn ($value) => match (true) {
+				is_array($value) => Data::encode($value, 'yaml'),
+				default		     => $value
 			}
-		}
-
-		return $strings;
+		);
 	}
 
 	/**
 	 * Converts the form to a plain array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
@@ -380,8 +347,6 @@ class Form
 
 	/**
 	 * Returns form values
-	 *
-	 * @return array
 	 */
 	public function values(): array
 	{

@@ -24,6 +24,9 @@ class TestCase extends BaseTestCase
 		$this->app = new App([
 			'roots' => [
 				'index' => $this->tmp
+			],
+			'urls' => [
+				'index' => 'https://getkirby.com/subfolder'
 			]
 		]);
 	}

@@ -1,47 +1,32 @@
 <template>
 	<k-field v-bind="$props" class="k-blocks-field">
-		<template #options>
-			<k-dropdown v-if="hasFieldsets">
-				<k-button icon="dots" @click="$refs.options.toggle()" />
-				<k-dropdown-content ref="options" align="right">
-					<k-dropdown-item
-						:disabled="isFull"
-						icon="add"
-						@click="$refs.blocks.choose(value.length)"
-					>
-						{{ $t("add") }}
-					</k-dropdown-item>
-					<hr />
-					<k-dropdown-item
-						:disabled="isEmpty"
-						icon="template"
-						@click="$refs.blocks.copyAll()"
-					>
-						{{ $t("copy.all") }}
-					</k-dropdown-item>
-					<k-dropdown-item
-						:disabled="isFull"
-						icon="download"
-						@click="$refs.blocks.pasteboard()"
-					>
-						{{ $t("paste") }}
-					</k-dropdown-item>
-					<hr />
-					<k-dropdown-item
-						:disabled="isEmpty"
-						icon="trash"
-						@click="$refs.blocks.confirmToRemoveAll()"
-					>
-						{{ $t("delete.all") }}
-					</k-dropdown-item>
-				</k-dropdown-content>
-			</k-dropdown>
+		<template v-if="!disabled && hasFieldsets" #options>
+			<k-button-group layout="collapsed">
+				<k-button
+					:autofocus="autofocus"
+					:disabled="isFull"
+					:responsive="true"
+					:text="$t('add')"
+					icon="add"
+					variant="filled"
+					size="xs"
+					@click="$refs.blocks.choose(value.length)"
+				/>
+				<k-button
+					icon="dots"
+					variant="filled"
+					size="xs"
+					@click="$refs.options.toggle()"
+				/>
+				<k-dropdown-content ref="options" :options="options" align-x="end" />
+			</k-button-group>
 		</template>
 
 		<k-blocks
 			ref="blocks"
 			:autofocus="autofocus"
 			:compact="false"
+			:disabled="disabled"
 			:empty="empty"
 			:endpoints="endpoints"
 			:fieldsets="fieldsets"
@@ -54,13 +39,15 @@
 			v-on="$listeners"
 		/>
 
-		<k-button
-			v-if="!isEmpty && !isFull"
-			class="k-field-add-item-button"
-			icon="add"
-			:tooltip="$t('add')"
-			@click="$refs.blocks.choose(value.length)"
-		/>
+		<footer v-if="!disabled && !isEmpty && !isFull && hasFieldsets">
+			<k-button
+				:title="$t('add')"
+				icon="add"
+				size="xs"
+				variant="filled"
+				@click="$refs.blocks.choose(value.length)"
+			/>
+		</footer>
 	</k-field>
 </template>
 
@@ -82,9 +69,7 @@ export default {
 		},
 		value: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		}
 	},
 	data() {
@@ -94,7 +79,7 @@ export default {
 	},
 	computed: {
 		hasFieldsets() {
-			return Object.keys(this.fieldsets).length;
+			return this.$helper.object.length(this.fieldsets) > 0;
 		},
 		isEmpty() {
 			return this.value.length === 0;
@@ -105,6 +90,29 @@ export default {
 			}
 
 			return this.value.length >= this.max;
+		},
+		options() {
+			return [
+				{
+					click: () => this.$refs.blocks.copyAll(),
+					disabled: this.isEmpty,
+					icon: "template",
+					text: this.$t("copy.all")
+				},
+				{
+					click: () => this.$refs.blocks.pasteboard(),
+					disabled: this.isFull,
+					icon: "download",
+					text: this.$t("paste")
+				},
+				"-",
+				{
+					click: () => this.$refs.blocks.removeAll(),
+					disabled: this.isEmpty,
+					icon: "trash",
+					text: this.$t("delete.all")
+				}
+			];
 		}
 	},
 	methods: {
@@ -118,5 +126,11 @@ export default {
 <style>
 .k-blocks-field {
 	position: relative;
+}
+/** TODO: .k-blocks-field > :has(+ footer) { margin-bottom: var(--spacing-3);} */
+.k-blocks-field > footer {
+	display: flex;
+	justify-content: center;
+	margin-top: var(--spacing-3);
 }
 </style>

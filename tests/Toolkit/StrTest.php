@@ -2,10 +2,13 @@
 
 namespace Kirby\Toolkit;
 
+use Exception;
 use IntlDateFormatter;
+use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Query\TestUser as QueryTestUser;
 use PHPUnit\Framework\TestCase;
+use TypeError;
 
 /**
  * @coversDefaultClass \Kirby\Toolkit\Str
@@ -15,6 +18,11 @@ class StrTest extends TestCase
 	public static function setUpBeforeClass(): void
 	{
 		Str::$language = [];
+	}
+
+	public function tearDown(): void
+	{
+		App::destroy();
 	}
 
 	/**
@@ -174,6 +182,24 @@ class StrTest extends TestCase
 	}
 
 	/**
+	 * @covers ::camelToKebab
+	 */
+	public function testCamelToKebab()
+	{
+		$string = 'foobar';
+		$this->assertSame('foobar', Str::camelToKebab($string));
+
+		$string = 'fooBar';
+		$this->assertSame('foo-bar', Str::camelToKebab($string));
+
+		$string = 'FooBar';
+		$this->assertSame('foo-bar', Str::camelToKebab($string));
+
+		$string = 'FooBar-WithString';
+		$this->assertSame('foo-bar-with-string', Str::camelToKebab($string));
+	}
+
+	/**
 	 * @covers ::contains
 	 */
 	public function testContains()
@@ -203,15 +229,40 @@ class StrTest extends TestCase
 	{
 		$time = mktime(1, 1, 1, 1, 29, 2020);
 
-		// default `date` handler
+		// default handler (fallback to `date`)
 		$this->assertSame($time, Str::date($time));
 		$this->assertSame('29.01.2020', Str::date($time, 'd.m.Y'));
 
+		// default handler (global app object)
+		new App([
+			'options' => [
+				'date' => [
+					'handler' => 'intl'
+				]
+			]
+		]);
+		$this->assertSame($time, Str::date($time));
+		$this->assertSame('29/1/2020 01:01', Str::date($time, 'd/M/yyyy HH:mm'));
+
+		// explicit `date` handler
+		$this->assertSame($time, Str::date($time, null, 'date'));
+		$this->assertSame('29.01.2020', Str::date($time, 'd.m.Y', 'date'));
+
 		// `intl` handler
-		$formatter = new IntlDateFormatter('en-US', IntlDateFormatter::LONG, IntlDateFormatter::SHORT);
 		$this->assertSame($time, Str::date($time, null, 'intl'));
 		$this->assertSame('29/1/2020 01:01', Str::date($time, 'd/M/yyyy HH:mm', 'intl'));
-		$this->assertSame('January 29, 2020 at 1:01 AM', Str::date($time, $formatter));
+
+		// passing custom `intl` handler
+		$formatter = new IntlDateFormatter(
+			'en-US',
+			IntlDateFormatter::LONG,
+			IntlDateFormatter::SHORT
+		);
+		// @todo remove str_replace when IntlDateFormatter doesn't result
+		// in different spaces depending on the system its running on
+		$date = Str::date($time, $formatter);
+		$date = str_replace("\xE2\x80\xAF", ' ', $date);
+		$this->assertSame('January 29, 2020 at 1:01 AM', $date);
 
 		// `strftime` handler
 		$this->assertSame($time, Str::date($time, null, 'strftime'));
@@ -613,6 +664,10 @@ class StrTest extends TestCase
 		$pool = Str::pool('invalid', true);
 		$this->assertSame([], $pool);
 
+		// default fallback: empty pool
+		$pool = Str::pool('invalid', true);
+		$this->assertSame([], $pool);
+
 		// [alphaLower, num]
 		$string = Str::pool(['alphaLower', 'num'], false);
 		$this->assertSame(36, strlen($string));
@@ -749,7 +804,7 @@ class StrTest extends TestCase
 	 */
 	public function testReplaceInvalid1()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 
 		Str::replace('some string', 'string', ['array'], 1);
 	}
@@ -759,8 +814,7 @@ class StrTest extends TestCase
 	 */
 	public function testReplaceInvalid2()
 	{
-		$this->expectException('Exception');
-
+		$this->expectException(TypeError::class);
 		Str::replace('some string', 'string', 'other string', 'some invalid string as limit');
 	}
 
@@ -769,7 +823,7 @@ class StrTest extends TestCase
 	 */
 	public function testReplaceInvalid3()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 
 		Str::replace('some string', ['some', 'string'], 'other string', [1, 'string']);
 	}
@@ -968,6 +1022,16 @@ class StrTest extends TestCase
 				'fallback' => null
 			]
 		));
+
+		// prevent arbitrary code execution attacks from query placeholders in the untrusted data
+		$this->assertSame(
+			'{{ dangerous }},{&lt; dangerous &gt;};{{ dangerous }},{< dangerous >}',
+			Str::safeTemplate('{{ malicious1 }},{{ malicious2 }};{< malicious1 >},{< malicious2 >}', [
+				'malicious1' => '{{ dangerous }}',
+				'malicious2' => '{< dangerous >}',
+				'dangerous' => '*deleting all of the content or something*'
+			])
+		);
 	}
 
 	/**
@@ -988,6 +1052,9 @@ class StrTest extends TestCase
 
 		// with different ellipsis character
 		$this->assertSame('Super---', Str::short($string, 5, '---'));
+
+		// without ellipsis
+		$this->assertSame('Super', Str::short($string, 5, ''));
 
 		// with null
 		$this->assertSame('', Str::short(null, 5));
@@ -1284,6 +1351,31 @@ EOT;
 			'user' => new QueryTestUser()
 		]);
 		$this->assertSame('homer says: {{ user.greeting("hi") }}', $template);
+
+		// placeholder syntax
+		$this->assertSame(
+			'From a to b',
+			Str::template('From {{ b }} to {{ a }}', ['a' => 'b', 'b' => 'a'])
+		);
+		$this->assertSame(
+			'From a to b',
+			Str::template('From { b } to { a }', ['a' => 'b', 'b' => 'a'])
+		);
+		$this->assertSame(
+			'From a to b',
+			Str::template('From dbf to daf', ['a' => 'b', 'b' => 'a'], ['start' => 'd', 'end' => 'f'])
+		);
+
+		// prevent arbitrary code execution attacks from query placeholders in the untrusted data
+		$this->assertSame(
+			'{{ dangerous }},{ dangerous },{< dangerous >}',
+			Str::template('{{ malicious1 }},{ malicious2 },{{ malicious3 }}', [
+				'malicious1' => '{{ dangerous }}',
+				'malicious2' => '{ dangerous }',
+				'malicious3' => '{< dangerous >}',
+				'dangerous' => '*deleting all of the content or something*'
+			])
+		);
 	}
 
 	/**

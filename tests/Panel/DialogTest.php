@@ -4,7 +4,6 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
-use Kirby\Http\Response;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -72,6 +71,7 @@ class DialogTest extends TestCase
 				'test'     => 'Test',
 				'code'     => 200,
 				'path'     => null,
+				'query'    => [],
 				'referrer' => '/'
 			]
 		];
@@ -91,6 +91,7 @@ class DialogTest extends TestCase
 			'$dialog' => [
 				'code'     => 200,
 				'path'     => null,
+				'query'    => [],
 				'referrer' => '/'
 			]
 		];
@@ -109,6 +110,7 @@ class DialogTest extends TestCase
 				'code'     => 500,
 				'error'    => 'Invalid response',
 				'path'     => null,
+				'query'    => [],
 				'referrer' => '/'
 			]
 		];
@@ -128,6 +130,7 @@ class DialogTest extends TestCase
 				'code'     => 500,
 				'error'    => 'Test',
 				'path'     => null,
+				'query'    => [],
 				'referrer' => '/'
 			]
 		];
@@ -147,10 +150,70 @@ class DialogTest extends TestCase
 				'code'     => 404,
 				'error'    => 'Test',
 				'path'     => null,
+				'query'    => [],
 				'referrer' => '/'
 			]
 		];
 
 		$this->assertSame($expected, json_decode($response->body(), true));
+	}
+
+	/**
+	 * @covers ::routes
+	 */
+	public function testRoutes(): void
+	{
+		$area = [
+			'load'   => $load   = function () {
+			},
+			'submit' => $submit = function () {
+			},
+		];
+
+		$routes = Dialog::routes(
+			id: 'test',
+			areaId: 'test',
+			prefix: 'dialogs',
+			options: $area
+		);
+
+		$expected = [
+			[
+				'pattern' => 'dialogs/test',
+				'type'    => 'dialog',
+				'area'    => 'test',
+				'action'  => $load,
+			],
+			[
+				'pattern' => 'dialogs/test',
+				'type'    => 'dialog',
+				'area'    => 'test',
+				'method'  => 'POST',
+				'action'  => $submit,
+			]
+		];
+
+		$this->assertSame($expected, $routes);
+	}
+
+	/**
+	 * @covers ::routes
+	 */
+	public function testRoutesWithoutHandlers(): void
+	{
+		$area = [
+			'dialogs' => [
+				'test' => []
+			]
+		];
+
+		$routes = Dialog::routes(
+			id: 'test',
+			areaId: 'test',
+			options: []
+		);
+
+		$this->assertSame('The load handler is missing', $routes[0]['action']());
+		$this->assertSame('The submit handler is missing', $routes[1]['action']());
 	}
 }

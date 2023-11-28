@@ -2,13 +2,15 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
-use Kirby\Panel\Field;
+use Kirby\Cms\LanguageVariable;
+use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 
 $languageDialogFields = [
 	'name' => [
+		'counter'  => false,
 		'label'    => I18n::translate('language.name'),
 		'type'     => 'text',
 		'required' => true,
@@ -19,7 +21,7 @@ $languageDialogFields = [
 		'type'     => 'text',
 		'required' => true,
 		'counter'  => false,
-		'icon'     => 'globe',
+		'icon'     => 'translate',
 		'width'    => '1/2'
 	],
 	'direction' => [
@@ -34,9 +36,25 @@ $languageDialogFields = [
 		'width'    => '1/2'
 	],
 	'locale' => [
-		'label' => I18n::translate('language.locale'),
-		'type'  => 'text',
+		'counter' => false,
+		'label'   => I18n::translate('language.locale'),
+		'type'    => 'text',
 	],
+];
+
+$translationDialogFields = [
+	'key' => [
+		'counter' => false,
+		'icon'    => null,
+		'label'   => I18n::translate('language.variable.key'),
+		'type'    => 'text'
+	],
+	'value' => [
+		'buttons' => false,
+		'counter' => false,
+		'label'   => I18n::translate('language.variable.value'),
+		'type'    => 'textarea'
+	]
 ];
 
 return [
@@ -92,8 +110,10 @@ return [
 		},
 		'submit' => function (string $id) {
 			Find::language($id)->delete();
+
 			return [
-				'event' => 'language.delete',
+				'event'    => 'language.delete',
+				'redirect' => 'languages'
 			];
 		}
 	],
@@ -152,4 +172,95 @@ return [
 			];
 		}
 	],
+
+	'language.translation.create' => [
+		'pattern' => 'languages/(:any)/translations/create',
+		'load'    => function (string $languageCode) use ($translationDialogFields) {
+			// find the language to make sure it exists
+			Find::language($languageCode);
+
+			return [
+				'component' => 'k-form-dialog',
+				'props' => [
+					'fields' => $translationDialogFields,
+					'size'   => 'large',
+				],
+			];
+		},
+		'submit' => function (string $languageCode) {
+			$request  = App::instance()->request();
+			$language = Find::language($languageCode);
+
+			$key   = $request->get('key', '');
+			$value = $request->get('value', '');
+
+			LanguageVariable::create($key, $value);
+
+			if ($language->isDefault() === false) {
+				$language->variable($key)->update($value);
+			}
+
+			return true;
+		}
+	],
+	'language.translation.delete' => [
+		'pattern' => 'languages/(:any)/translations/(:any)/delete',
+		'load'    => function (string $languageCode, string $translationKey) {
+			$variable = Find::language($languageCode)->variable($translationKey, true);
+
+			if ($variable->exists() === false) {
+				throw new NotFoundException([
+					'key' => 'language.variable.notFound'
+				]);
+			}
+
+			return [
+				'component' => 'k-remove-dialog',
+				'props' => [
+					'text' => I18n::template('language.variable.delete.confirm', [
+						'key' => Escape::html($variable->key())
+					])
+				],
+			];
+		},
+		'submit' => function (string $languageCode, string $translationKey) {
+			return Find::language($languageCode)->variable($translationKey, true)->delete();
+		}
+	],
+	'language.translation.update' => [
+		'pattern' => 'languages/(:any)/translations/(:any)/update',
+		'load'    => function (string $languageCode, string $translationKey) use ($translationDialogFields) {
+			$variable = Find::language($languageCode)->variable($translationKey, true);
+
+			if ($variable->exists() === false) {
+				throw new NotFoundException([
+					'key' => 'language.variable.notFound'
+				]);
+			}
+
+			$fields = $translationDialogFields;
+			$fields['key']['disabled'] = true;
+			$fields['value']['autofocus'] = true;
+
+			return [
+				'component' => 'k-form-dialog',
+				'props' => [
+					'fields' => $fields,
+					'size'   => 'large',
+					'value'  => [
+						'key'   => $variable->key(),
+						'value' => $variable->value()
+					]
+				],
+			];
+		},
+		'submit' => function (string $languageCode, string $translationKey) {
+			Find::language($languageCode)->variable($translationKey, true)->update(
+				App::instance()->request()->get('value')
+			);
+
+			return true;
+		}
+	]
+
 ];

@@ -1,116 +1,143 @@
 <template>
-	<div v-if="tabs && tabs.length > 1" :data-theme="theme" class="k-tabs">
-		<nav>
-			<k-button
-				v-for="tabButton in visibleTabs"
-				:key="tabButton.name"
-				:link="tabButton.link"
-				:current="current === tabButton.name"
-				:icon="tabButton.icon"
-				:tooltip="tabButton.label"
-				class="k-tab-button"
-			>
-				{{ tabButton.label || tabButton.text || tabButton.name }}
+	<nav v-if="tabs.length > 1" class="k-tabs">
+		<k-button
+			v-for="tabBtn in visible"
+			ref="visible"
+			:key="tabBtn.name"
+			v-bind="(btn = button(tabBtn))"
+			variant="dimmed"
+			class="k-tab-button"
+		>
+			{{ btn.text }}
 
-				<span v-if="tabButton.badge" class="k-tabs-badge">
-					{{ tabButton.badge }}
-				</span>
-			</k-button>
+			<span v-if="tabBtn.badge" :data-theme="theme" class="k-tabs-badge">
+				{{ tabBtn.badge }}
+			</span>
+		</k-button>
 
+		<template v-if="invisible.length">
 			<k-button
-				v-if="invisibleTabs.length"
-				:text="$t('more')"
+				:current="!!invisible.find((button) => tab === button.name)"
+				:title="$t('more')"
 				class="k-tab-button k-tabs-dropdown-button"
 				icon="dots"
+				variant="dimmed"
 				@click.stop="$refs.more.toggle()"
 			/>
-		</nav>
-
-		<k-dropdown-content
-			v-if="invisibleTabs.length"
-			ref="more"
-			align="right"
-			class="k-tabs-dropdown"
-		>
-			<k-dropdown-item
-				v-for="tabButton in invisibleTabs"
-				:key="'more-' + tabButton.name"
-				:link="tabButton.link"
-				:current="tab === tabButton.name"
-				:icon="tabButton.icon"
-				:tooltip="tabButton.label"
-			>
-				{{ tabButton.label || tabButton.text || tabButton.name }}
-			</k-dropdown-item>
-		</k-dropdown-content>
-	</div>
+			<k-dropdown-content
+				ref="more"
+				:options="dropdown"
+				align-x="end"
+				class="k-tabs-dropdown"
+			/>
+		</template>
+	</nav>
 </template>
 
 <script>
+/**
+ * @example <k-tabs
+ * 	tab="content"
+ * 	tabs="[
+ * 		{ name: 'content', label: 'Content', link: '/content' },
+ * 		{ name: 'settings', label: 'Settings', link: '/settings', badge: 3 }
+ * 	]"
+ * />
+ */
 export default {
 	props: {
+		/**
+		 * Name of the currently active tab
+		 */
 		tab: String,
-		tabs: Array,
-		theme: String
+		/**
+		 * List of tabs to display. Each entry must be an object with the following properties: `name`, `label`, `link`, `icon`, `badge`
+		 */
+		tabs: {
+			type: Array,
+			default: () => []
+		},
+		/**
+		 * Theme to style any badge
+		 * @values "positive", "negative", "notice", "warning", "info", "passive"
+		 */
+		theme: {
+			type: String,
+			default: "passive"
+		}
 	},
 	data() {
 		return {
-			size: null,
-			visibleTabs: this.tabs,
-			invisibleTabs: []
+			observer: null,
+			visible: this.tabs,
+			invisible: []
 		};
 	},
 	computed: {
 		current() {
 			const tab =
-				this.tabs.find((tab) => tab.name === this.tab) || this.tabs[0] || {};
-			return tab.name;
+				this.tabs.find((tab) => tab.name === this.tab) ?? this.tabs[0];
+			return tab?.name;
+		},
+		dropdown() {
+			return this.invisible.map(this.button);
 		}
 	},
 	watch: {
 		tabs: {
-			handler(tabs) {
-				this.visibleTabs = tabs;
-				this.invisibleTabs = [];
-				this.resize(true);
+			async handler() {
+				// disconnect any previous observer
+				this.observer?.disconnect();
+				await this.$nextTick();
+
+				// only if $el exists (more than one tab),
+				// add new observer and measure tab sizes
+				if (this.$el instanceof Element) {
+					this.observer = new ResizeObserver(this.resize);
+					this.observer.observe(this.$el);
+				}
 			},
 			immediate: true
 		}
 	},
-	created() {
-		window.addEventListener("resize", this.resize);
-	},
 	destroyed() {
-		window.removeEventListener("resize", this.resize);
+		this.observer?.disconnect();
 	},
 	methods: {
-		resize(force) {
-			if (!this.tabs || this.tabs.length <= 1) {
-				return;
-			}
+		button(tab) {
+			return {
+				link: tab.link,
+				current: tab.name === this.current,
+				icon: tab.icon,
+				title: tab.label,
+				text: tab.label ?? tab.text ?? tab.name
+			};
+		},
+		async resize() {
+			// container width
+			const width = this.$el.offsetWidth;
 
-			if (this.tabs.length <= 3) {
-				this.visibleTabs = this.tabs;
-				this.invisibleTabs = [];
-				return;
-			}
+			// reset all tabs
+			this.visible = this.tabs;
+			this.invisible = [];
 
-			if (window.innerWidth >= 700) {
-				if (this.size === "large" && !force) {
+			// measure tab sizes
+			await this.$nextTick();
+			const sizes = [...this.$refs.visible].map((tab) => tab.$el.offsetWidth);
+
+			// initial width of visible tabs
+			// that already account for the dropdown button
+			let tabs = 32;
+
+			for (let index = 0; index < this.tabs.length; index++) {
+				// tab size plus grid gap
+				tabs += sizes[index] + 4;
+
+				if (tabs > width) {
+					this.visible = this.tabs.slice(0, index);
+					this.invisible = this.tabs.slice(index);
 					return;
 				}
-
-				this.visibleTabs = this.tabs;
-				this.invisibleTabs = [];
-				this.size = "large";
-			} else {
-				if (this.size === "small" && !force) {
-					return;
-				}
-
-				this.visibleTabs = this.tabs.slice(0, 2);
-				this.invisibleTabs = this.tabs.slice(2);
-				this.size = "small";
 			}
 		}
 	}
@@ -119,108 +146,43 @@ export default {
 
 <style>
 .k-tabs {
-	position: relative;
-	background: #e9e9e9;
-	border: 1px solid var(--color-border);
-	border-radius: var(--rounded);
-}
-.k-tabs nav {
+	--button-height: var(--height-md);
+	--button-padding: var(--spacing-2);
 	display: flex;
-	justify-content: center;
-	margin-inline: -1px;
+	gap: var(--spacing-1);
+	margin-bottom: var(--spacing-12);
+	margin-inline: calc(var(--button-padding) * -1);
 }
+
 .k-tab-button.k-button {
-	position: relative;
-	z-index: 1;
-	display: inline-flex;
-	justify-content: center;
-	align-items: center;
-	padding: 0.625rem 0.75rem;
-	font-size: var(--text-xs);
-	text-transform: uppercase;
-	text-align: center;
-	font-weight: 500;
-	border-inline-start: 1px solid transparent;
-	border-inline-end: 1px solid var(--color-border);
-	flex-grow: 1;
-	flex-shrink: 1;
-	flex-direction: column;
-	max-width: 15rem;
+	margin-block: 2px;
+	overflow-x: visible;
 }
 
-@media screen and (min-width: 30em) {
-	.k-tab-button.k-button {
-		flex-direction: row;
-	}
-	.k-tab-button.k-button .k-icon {
-		margin-inline-end: 0.5rem;
-	}
-}
-.k-tab-button.k-button > .k-button-text {
-	padding-top: 0.375rem;
-	padding-inline-start: 0;
-	font-size: 10px;
-	overflow: hidden;
-	max-width: 10rem;
-	text-overflow: ellipsis;
-	opacity: 1;
-}
-
-@media screen and (min-width: 30em) {
-	.k-tab-button.k-button > .k-button-text {
-		font-size: var(--text-xs);
-		padding-top: 0;
-	}
-}
-.k-tab-button:last-child {
-	border-inline-end: 1px solid transparent;
-}
-.k-tab-button[aria-current] {
-	position: relative;
-	background: var(--color-background);
-	border-inline-end: 1px solid var(--color-border);
-	pointer-events: none;
-}
-.k-tab-button[aria-current]:first-child {
-	border-inline-start: 1px solid var(--color-border);
-}
-
-.k-tab-button[aria-current]::before,
 .k-tab-button[aria-current]::after {
 	position: absolute;
 	content: "";
-}
-
-.k-tab-button[aria-current]::before {
-	inset-inline: -1px;
-	top: -1px;
 	height: 2px;
-	background: var(--color-black);
+	inset-inline: var(--button-padding);
+	bottom: -2px;
+	background: currentColor;
 }
 
-.k-tab-button[aria-current]::after {
-	inset-inline: 0;
-	bottom: -1px;
-	height: 1px;
-	background: var(--color-background);
-}
-.k-tabs-dropdown {
-	top: 100%;
-	inset-inline-end: 0;
-}
 .k-tabs-badge {
 	position: absolute;
-	top: 3px;
+	top: 2px;
 	font-variant-numeric: tabular-nums;
-	inset-inline-end: 2px;
+	inset-inline-end: var(--button-padding);
+	transform: translateX(75%);
 	line-height: 1.5;
-	padding: 0 0.25rem;
-	border-radius: 2px;
+	padding: 0 var(--spacing-1);
+	border-radius: 1rem;
+	text-align: center;
 	font-size: 10px;
 	box-shadow: var(--shadow-md);
-}
-.k-tabs[data-theme="notice"] .k-tabs-badge {
-	background: var(--theme-light);
-	color: var(--color-black);
+	background: var(--theme-color-back);
+	border: 1px solid var(--theme-color-500);
+	color: var(--theme-color-text);
+	z-index: 1;
 }
 </style>

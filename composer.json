@@ -1,9 +1,9 @@
 {
 	"name": "getkirby/cms",
-	"description": "The Kirby 3 core",
+	"description": "The Kirby core",
 	"license": "proprietary",
 	"type": "kirby-cms",
-	"version": "3.9.8",
+	"version": "4.0.0",
 	"keywords": [
 		"kirby",
 		"cms",
@@ -24,7 +24,7 @@
 		"source": "https://github.com/getkirby/kirby"
 	},
 	"require": {
-		"php": ">=8.0.0 <8.3.0",
+		"php": "~8.1.0 || ~8.2.0 || ~8.3.0",
 		"ext-SimpleXML": "*",
 		"ext-ctype": "*",
 		"ext-curl": "*",
@@ -36,16 +36,17 @@
 		"ext-libxml": "*",
 		"ext-mbstring": "*",
 		"ext-openssl": "*",
+		"christian-riesen/base32": "1.6.0",
 		"claviska/simpleimage": "4.0.6",
 		"composer/semver": "3.4.0",
 		"filp/whoops": "2.15.4",
 		"getkirby/composer-installer": "^1.2.1",
-		"laminas/laminas-escaper": "2.12.0",
+		"laminas/laminas-escaper": "2.13.0",
 		"michelf/php-smartypants": "1.8.1",
-		"phpmailer/phpmailer": "6.8.1",
+		"phpmailer/phpmailer": "6.9.1",
 		"symfony/polyfill-intl-idn": "1.28.0",
 		"symfony/polyfill-mbstring": "1.28.0",
-		"symfony/yaml": "5.4.30"
+		"symfony/yaml": "6.3.8"
 	},
 	"replace": {
 		"symfony/polyfill-php72": "*"
@@ -79,7 +80,7 @@
 		},
 		"optimize-autoloader": true,
 		"platform": {
-			"php": "8.0.0"
+			"php": "8.1.0"
 		},
 		"platform-check": false
 	},
@@ -106,7 +107,7 @@
 		],
 		"fix": "php-cs-fixer fix",
 		"test": "phpunit --stderr",
-		"test:coverage": "phpunit --stderr --coverage-html=tests/coverage",
+		"test:coverage": "XDEBUG_MODE=coverage phpunit --stderr --coverage-html=tests/coverage",
 		"zip": "composer archive --format=zip --file=dist"
 	}
 }

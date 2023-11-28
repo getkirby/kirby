@@ -4,6 +4,9 @@ namespace Kirby\Http;
 
 use Kirby\Cms\App;
 use Kirby\Http\Request\Auth;
+use Kirby\Http\Request\Auth\BasicAuth;
+use Kirby\Http\Request\Auth\BearerAuth;
+use Kirby\Http\Request\Auth\SessionAuth;
 use Kirby\Http\Request\Body;
 use Kirby\Http\Request\Files;
 use Kirby\Http\Request\Query;
@@ -24,9 +27,9 @@ use Kirby\Toolkit\Str;
 class Request
 {
 	public static array $authTypes = [
-		'basic'   => 'Kirby\Http\Request\Auth\BasicAuth',
-		'bearer'  => 'Kirby\Http\Request\Auth\BearerAuth',
-		'session' => 'Kirby\Http\Request\Auth\SessionAuth',
+		'basic'   => BasicAuth::class,
+		'bearer'  => BearerAuth::class,
+		'session' => SessionAuth::class,
 	];
 
 	/**
@@ -99,24 +102,37 @@ class Request
 		$this->method  = $this->detectRequestMethod($options['method'] ?? null);
 
 		if (isset($options['body']) === true) {
-			$this->body = $options['body'] instanceof Body ? $options['body'] : new Body($options['body']);
+			$this->body =
+				$options['body'] instanceof Body
+				? $options['body']
+				: new Body($options['body']);
 		}
 
 		if (isset($options['files']) === true) {
-			$this->files = $options['files'] instanceof Files ? $options['files'] : new Files($options['files']);
+			$this->files =
+				$options['files'] instanceof Files
+				? $options['files']
+				: new Files($options['files']);
 		}
 
 		if (isset($options['query']) === true) {
-			$this->query = $options['query'] instanceof Query ? $options['query'] : new Query($options['query']);
+			$this->query =
+				$options['query'] instanceof Query
+				? $options['query']
+				: new Query($options['query']);
 		}
 
 		if (isset($options['url']) === true) {
-			$this->url = $options['url'] instanceof Uri ? $options['url'] : new Uri($options['url']);
+			$this->url =
+				$options['url'] instanceof Uri
+				? $options['url']
+				: new Uri($options['url']);
 		}
 	}
 
 	/**
 	 * Improved `var_dump` output
+	 * @codeCoverageIgnore
 	 */
 	public function __debugInfo(): array
 	{
@@ -195,7 +211,10 @@ class Request
 	 */
 	public function data(): array
 	{
-		return array_replace($this->body()->toArray(), $this->query()->toArray());
+		return array_replace(
+			$this->body()->toArray(),
+			$this->query()->toArray()
+		);
 	}
 
 	/**
@@ -215,7 +234,7 @@ class Request
 		}
 
 		// final chain of options to detect the method
-		$method = $method ?? Environment::getGlobally('REQUEST_METHOD', 'GET');
+		$method ??= Environment::getGlobally('REQUEST_METHOD', 'GET');
 
 		// uppercase the shit out of it
 		$method = strtoupper($method);

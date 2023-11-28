@@ -2,9 +2,9 @@
 
 namespace Kirby\Option;
 
-use Kirby\Cms\Field;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Nest;
+use Kirby\Content\Field;
 use Kirby\Data\Json;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Remote;

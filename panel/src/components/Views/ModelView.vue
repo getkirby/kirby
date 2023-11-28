@@ -1,4 +1,7 @@
 <script>
+/**
+ * @internal
+ */
 export default {
 	props: {
 		blueprint: String,
@@ -6,18 +9,14 @@ export default {
 		prev: Object,
 		permissions: {
 			type: Object,
-			default() {
-				return {};
-			}
+			default: () => ({})
 		},
 		lock: {
 			type: [Boolean, Object]
 		},
 		model: {
 			type: Object,
-			default() {
-				return {};
-			}
+			default: () => ({})
 		},
 		tab: {
 			type: Object,
@@ -29,9 +28,7 @@ export default {
 		},
 		tabs: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		}
 	},
 	computed: {
@@ -46,36 +43,29 @@ export default {
 		}
 	},
 	watch: {
-		"model.id": {
+		"$panel.view.timestamp": {
 			handler() {
-				this.content();
+				this.$store.dispatch("content/create", {
+					id: this.id,
+					api: this.id,
+					content: this.model.content,
+					ignore: this.protectedFields
+				});
 			},
 			immediate: true
 		}
 	},
 	created() {
-		this.$events.$on("model.reload", this.reload);
-		this.$events.$on("keydown.left", this.toPrev);
-		this.$events.$on("keydown.right", this.toNext);
+		this.$events.on("model.reload", this.$reload);
+		this.$events.on("keydown.left", this.toPrev);
+		this.$events.on("keydown.right", this.toNext);
 	},
 	destroyed() {
-		this.$events.$off("model.reload", this.reload);
-		this.$events.$off("keydown.left", this.toPrev);
-		this.$events.$off("keydown.right", this.toNext);
+		this.$events.off("model.reload", this.$reload);
+		this.$events.off("keydown.left", this.toPrev);
+		this.$events.off("keydown.right", this.toNext);
 	},
 	methods: {
-		content() {
-			this.$store.dispatch("content/create", {
-				id: this.id,
-				api: this.id,
-				content: this.model.content,
-				ignore: this.protectedFields
-			});
-		},
-		async reload() {
-			await this.$reload();
-			this.content();
-		},
 		toPrev(e) {
 			if (this.prev && e.target.localName === "body") {
 				this.$go(this.prev.link);

@@ -8,6 +8,7 @@ return [
 	'FileBlueprint' => include __DIR__ . '/models/FileBlueprint.php',
 	'FileVersion'   => include __DIR__ . '/models/FileVersion.php',
 	'Language'      => include __DIR__ . '/models/Language.php',
+	'License'       => include __DIR__ . '/models/License.php',
 	'Page'          => include __DIR__ . '/models/Page.php',
 	'PageBlueprint' => include __DIR__ . '/models/PageBlueprint.php',
 	'Role'          => include __DIR__ . '/models/Role.php',

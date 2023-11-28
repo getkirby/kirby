@@ -10,7 +10,7 @@ export default class Node extends Extension {
 	}
 
 	get schema() {
-		return null;
+		return {};
 	}
 
 	commands() {

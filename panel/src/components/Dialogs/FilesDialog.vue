@@ -1,53 +1,25 @@
 <template>
-	<k-dialog
-		ref="dialog"
-		class="k-files-dialog"
-		size="medium"
+	<k-models-dialog
+		v-bind="$props"
 		@cancel="$emit('cancel')"
-		@submit="submit"
-	>
-		<template v-if="issue">
-			<k-box :text="issue" theme="negative" />
-		</template>
-
-		<template v-else>
-			<k-input
-				v-if="options.search"
-				:autofocus="true"
-				:placeholder="$t('search') + ' …'"
-				:value="search"
-				type="text"
-				class="k-dialog-search"
-				icon="search"
-				@input="search = $event"
-			/>
-			<k-collection v-bind="collection" @item="toggle" @paginate="paginate">
-				<template #options="{ item: file }">
-					<k-button v-bind="toggleBtn(file)" @click="toggle(file)" />
-				</template>
-			</k-collection>
-		</template>
-	</k-dialog>
+		@submit="$emit('submit', $event)"
+	/>
 </template>
 
 <script>
-import picker from "@/mixins/picker/dialog.js";
+import Dialog from "@/mixins/dialog.js";
+import { props as ModelsDialogProps } from "./ModelsDialog.vue";
 
 export default {
-	mixins: [picker],
-	computed: {
-		emptyProps() {
-			return {
+	mixins: [Dialog, ModelsDialogProps],
+	props: {
+		empty: {
+			type: Object,
+			default: () => ({
 				icon: "image",
-				text: this.$t("dialog.files.empty")
-			};
+				text: window.panel.$t("dialog.files.empty")
+			})
 		}
 	}
 };
 </script>
-
-<style>
-.k-files-dialog .k-list-item {
-	cursor: pointer;
-}
-</style>

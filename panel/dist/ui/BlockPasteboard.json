@@ -1,0 +1,1 @@
+{"displayName":"BlockPasteboard","description":"","tags":{},"events":[{"name":"cancel"},{"name":"submit"},{"name":"close"},{"name":"paste","type":{"names":["undefined"]}}],"component":"k-block-pasteboard","sourceFile":"src/components/Forms/Blocks/BlockPasteboard.vue"}

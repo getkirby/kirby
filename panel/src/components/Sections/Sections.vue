@@ -5,7 +5,7 @@
 		:text="empty"
 		theme="info"
 	/>
-	<k-grid v-else class="k-sections" gutter="large">
+	<k-grid v-else class="k-sections" variant="columns">
 		<k-column
 			v-for="(column, columnIndex) in tab.columns"
 			:key="parent + '-column-' + columnIndex"
@@ -31,8 +31,8 @@
 						:lock="lock"
 						:name="section.name"
 						:parent="parent"
-						:timestamp="$view.timestamp"
-						:class="'k-section k-section-name-' + section.name"
+						:timestamp="$panel.view.timestamp"
+						:class="'k-section-name-' + section.name"
 						@submit="$emit('submit', $event)"
 					/>
 					<template v-else>
@@ -41,6 +41,7 @@
 								parent + '-column-' + columnIndex + '-section-' + sectionIndex
 							"
 							:text="$t('error.section.type.invalid', { type: section.type })"
+							icon="alert"
 							theme="negative"
 						/>
 					</template>
@@ -71,36 +72,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.k-sections {
-	padding-bottom: 3rem;
-}
-.k-section {
-	padding-bottom: 3rem;
-}
-.k-section-header {
-	position: relative;
-	display: flex;
-	align-items: baseline;
-	z-index: 1;
-}
-.k-section-header .k-headline {
-	line-height: 1.25rem;
-	min-height: 2rem;
-	flex-grow: 1;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	padding-inline-end: var(--spacing-3);
-}
-.k-section-header .k-button-group {
-	position: absolute;
-	top: calc(-0.5rem - 1px);
-	inset-inline-end: 0;
-}
-.k-section-header .k-button-group > .k-button {
-	padding: 0.75rem;
-	display: inline-flex;
-}
-</style>

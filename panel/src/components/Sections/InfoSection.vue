@@ -1,20 +1,17 @@
 <template>
-	<section class="k-info-section">
-		<k-headline class="k-info-section-label">
-			{{ label }}
-		</k-headline>
-		<k-box :theme="theme">
-			<k-text :html="text" />
-		</k-box>
-	</section>
+	<k-section :headline="label" class="k-info-section">
+		<k-box :html="true" :icon="icon" :text="text" :theme="theme" />
+	</k-section>
 </template>
 
 <script>
 import SectionMixin from "@/mixins/section.js";
 export default {
 	mixins: [SectionMixin],
+	inheritAttrs: false,
 	data() {
 		return {
+			icon: null,
 			label: null,
 			text: null,
 			theme: null
@@ -22,15 +19,10 @@ export default {
 	},
 	async created() {
 		const response = await this.load();
+		this.icon = response.icon;
 		this.label = response.label;
 		this.text = response.text;
-		this.theme = response.theme || "info";
+		this.theme = response.theme ?? "info";
 	}
 };
 </script>
-
-<style>
-.k-info-section-label {
-	margin-bottom: 0.5rem;
-}
-</style>

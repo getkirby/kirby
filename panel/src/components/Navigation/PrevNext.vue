@@ -1,5 +1,11 @@
 <template>
-	<k-button-group :buttons="buttons" class="k-prev-next" />
+	<k-button-group
+		v-if="!isFullyDisabled"
+		:buttons="buttons"
+		layout="collapsed"
+		size="xs"
+		class="k-prev-next"
+	/>
 </template>
 
 <script>
@@ -7,7 +13,6 @@
  * Group of buttons with left- and right-pointing arrows
  * used for navigation between previous and next items
  * @example <k-prev-next :prev="{ link: 'a' }" :next="false" />
- * @public
  */
 export default {
 	props: {
@@ -37,6 +42,9 @@ export default {
 				{ ...this.button(this.prev), icon: "angle-left" },
 				{ ...this.button(this.next), icon: "angle-right" }
 			];
+		},
+		isFullyDisabled() {
+			return this.buttons.filter((button) => !button.disabled).length === 0;
 		}
 	},
 	methods: {
@@ -63,5 +71,6 @@ export default {
 <style>
 .k-prev-next {
 	direction: ltr;
+	flex-shrink: 0;
 }
 </style>

@@ -1,0 +1,63 @@
+<template>
+	<k-dialog
+		ref="dialog"
+		:submit-button="{
+			icon: 'parent',
+			text: $t('move')
+		}"
+		class="k-page-move-dialog"
+		size="medium"
+		v-bind="$props"
+		@cancel="$emit('cancel')"
+		@submit="$emit('submit', value)"
+	>
+		<k-headline>{{ $t("page.move") }}</k-headline>
+		<div class="k-page-move-parent" tabindex="0" data-autofocus>
+			<k-page-tree
+				:current="value.parent"
+				:move="value.move"
+				identifier="id"
+				@select="select"
+			/>
+		</div>
+	</k-dialog>
+</template>
+
+<script>
+import Dialog from "@/mixins/dialog.js";
+
+/**
+ * @since 4.0.0
+ */
+export default {
+	mixins: [Dialog],
+	props: {
+		value: {
+			default() {
+				return {};
+			},
+			type: Object
+		}
+	},
+	emits: ["cancel", "input", "submit"],
+	methods: {
+		select(page) {
+			this.$emit("input", { ...this.value, parent: page.value });
+		}
+	}
+};
+</script>
+
+<style>
+.k-page-move-dialog .k-headline {
+	margin-bottom: var(--spacing-2);
+}
+.k-page-move-parent {
+	--tree-color-back: var(--color-white);
+	--tree-color-hover-back: var(--color-light);
+	padding: var(--spacing-3);
+	background: var(--color-white);
+	border-radius: var(--rounded);
+	box-shadow: var(--shadow);
+}
+</style>

@@ -23,19 +23,36 @@ export function isEmpty(value) {
 		return true;
 	}
 
-	if (
-		typeof value === "object" &&
-		Object.keys(value).length === 0 &&
-		value.constructor === Object
-	) {
+	if (isObject(value) && length(value) === 0) {
 		return true;
 	}
 
-	if (value.length !== undefined && value.length === 0) {
+	if (value.length === 0) {
 		return true;
 	}
 
 	return false;
+}
+
+/**
+ * Checks if input is an object
+ *
+ * @param {any} input
+ * @returns {boolean}
+ */
+export function isObject(input) {
+	return typeof input === "object" && input?.constructor === Object;
+}
+
+/**
+ * Counts all keys in the object
+ * @since 4.0.0
+ *
+ * @param {object} object
+ * @returns int
+ */
+export function length(object) {
+	return Object.keys(object ?? {}).length;
 }
 
 /**
@@ -45,17 +62,29 @@ export function isEmpty(value) {
  * @param {Object} source
  * @returns {Object}
  */
-export function merge(target, source) {
-	// Iterate through `source` properties and if an `Object` set property to merge of `target` and `source` properties
-	for (const key of Object.keys(source)) {
+export function merge(target, source = {}) {
+	// Iterate through `source` properties and if an `Object`
+	// set property to merge of `target` and `source` properties
+	for (const key in source) {
 		if (source[key] instanceof Object) {
-			Object.assign(source[key], merge(target[key] || {}, source[key]));
+			Object.assign(source[key], merge(target[key] ?? {}, source[key]));
 		}
 	}
 
 	// Join `target` and modified `source`
-	Object.assign(target || {}, source);
+	Object.assign(target ?? {}, source);
 	return target;
+}
+
+/**
+ * Check if the objects are identical
+ *
+ * @param {object} a
+ * @param {object} b
+ * @returns {Boolean}
+ */
+export function same(a, b) {
+	return JSON.stringify(a) === JSON.stringify(b);
 }
 
 /**
@@ -74,6 +103,9 @@ export function toLowerKeys(obj) {
 export default {
 	clone,
 	isEmpty,
+	isObject,
+	length,
 	merge,
+	same,
 	toLowerKeys
 };

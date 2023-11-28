@@ -8,24 +8,24 @@
 		:target="target"
 		:title="title"
 		class="k-link"
-		v-on="listeners"
+		@click="onClick"
 	>
+		<!-- @slot Visible linked text -->
 		<slot />
 	</a>
-	<span v-else :title="title" class="k-link" data-disabled>
+	<span v-else :title="title" class="k-link" aria-disabled>
 		<slot />
 	</span>
 </template>
 
 <script>
-import tab from "@/mixins/tab.js";
-
 /**
- * Our Link component is a wrapper around a native HTML `a` element, but it is also used to swap this with a Vue `router-link` element in our application whenever it makes sense. It comes with a set of additional useful helpers.
+ * Wapper around a native HTML `<a>` element that ensures the
+ * correct routing behavior for Panel as well as external links.
+ *
  * @example <k-link to="https://getkirby.com">Kirby Website</k-link>
  */
 export default {
-	mixins: [tab],
 	props: {
 		/**
 		 * Disabled links will have no pointer events and cannot be clicked or focused.
@@ -40,15 +40,7 @@ export default {
 		 */
 		to: [String, Function]
 	},
-	data() {
-		return {
-			relAttr: this.target === "_blank" ? "noreferrer noopener" : this.rel,
-			listeners: {
-				...this.$listeners,
-				click: this.onClick
-			}
-		};
-	},
+	emits: ["click"],
 	computed: {
 		href() {
 			if (typeof this.to === "function") {
@@ -68,6 +60,9 @@ export default {
 			}
 
 			return this.to;
+		},
+		relAttr() {
+			return this.target === "_blank" ? "noreferrer noopener" : this.rel;
 		}
 	},
 	methods: {
@@ -106,30 +101,27 @@ export default {
 
 			return true;
 		},
-		onClick(event) {
+		onClick(e) {
 			if (this.disabled === true) {
-				event.preventDefault();
+				e.preventDefault();
 				return false;
 			}
 
 			if (typeof this.to === "function") {
-				event.preventDefault();
+				e.preventDefault();
 				this.to();
 			}
 
-			if (this.isRoutable(event)) {
-				event.preventDefault();
+			if (this.isRoutable(e)) {
+				e.preventDefault();
 				this.$go(this.to);
 			}
 
-			this.$emit("click", event);
+			/**
+			 * The link has been clicked
+			 */
+			this.$emit("click", e);
 		}
 	}
 };
 </script>
-
-<style>
-.k-link {
-	outline: none;
-}
-</style>

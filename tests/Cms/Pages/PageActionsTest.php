@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Content\ContentTranslation;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\TestCase;
@@ -255,6 +256,9 @@ class PageActionsTest extends TestCase
 				'pages/article' => [
 					'title'  => 'Article',
 					'fields' => [
+						'caption' => [
+							'type' => 'info'
+						],
 						'text' => [
 							'type' => 'textarea'
 						]
@@ -296,10 +300,14 @@ class PageActionsTest extends TestCase
 		$page = $drafts->find('test');
 
 		$this->assertSame('video', $page->intendedTemplate()->name());
+		$this->assertSame('Caption', $page->caption()->value());
+		$this->assertSame('Text', $page->text()->value());
 
 		$modified = $page->changeTemplate('article');
 
 		$this->assertSame('article', $modified->intendedTemplate()->name());
+		$this->assertNull($modified->caption()->value());
+		$this->assertSame('Text', $modified->text()->value());
 		$this->assertSame(2, $calls);
 
 		$this->assertSame($modified, $drafts->find('test'));
@@ -332,6 +340,9 @@ class PageActionsTest extends TestCase
 				'pages/article' => [
 					'title'  => 'Article',
 					'fields' => [
+						'caption' => [
+							'type' => 'radio'
+						],
 						'text' => [
 							'type' => 'textarea'
 						]
@@ -364,28 +375,43 @@ class PageActionsTest extends TestCase
 					'code' => 'fr',
 					'name' => 'Français',
 				]
-			]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'video',
+						'translations' => [
+							[
+								'code' => 'en',
+								'content' => [
+									'title'   => 'Test',
+									'caption' => 'Caption',
+									'text'    => 'Text'
+								]
+							],
+							[
+								'code' => 'de',
+								'content' => [
+									'title'   => 'Prüfen',
+									'caption' => 'Untertitel',
+									'text'    => 'Täxt'
+								]
+							],
+						]
+					]
+				]
+			],
 		]);
 
 		$app->impersonate('kirby');
-
-		$page = $app->site()->createChild([
-			'slug'     => 'test',
-			'template' => 'video',
-			'content'  => [
-				'title'   => 'Test',
-				'caption' => 'Caption',
-				'text'    => 'Text'
-			]
-		]);
-
-		$page = $page->update([
-			'title'   => 'Prüfen',
-			'caption' => 'Untertitel',
-			'text'    => 'Text'
-		], 'de');
+		$page = $app->page('test');
 
 		$this->assertSame('video', $page->intendedTemplate()->name());
+		$this->assertSame('Caption', $page->caption()->value());
+		$this->assertSame('Text', $page->text()->value());
+		$this->assertSame('Untertitel', $page->content('de')->get('caption')->value());
+		$this->assertSame('Täxt', $page->content('de')->get('text')->value());
 
 		$drafts = $app->site()->drafts();
 		$childrenAndDrafts = $app->site()->childrenAndDrafts();
@@ -395,12 +421,13 @@ class PageActionsTest extends TestCase
 		$this->assertSame('article', $modified->intendedTemplate()->name());
 		$this->assertSame(2, $calls);
 
-		$this->assertFileExists($modified->contentFile('en'));
-		$this->assertFileExists($modified->contentFile('de'));
-		$this->assertFileDoesNotExist($modified->contentFile('fr'));
-
-		$this->assertSame($modified, $drafts->find('test'));
-		$this->assertSame($modified, $childrenAndDrafts->find('test'));
+		$this->assertFileExists($modified->storage()->contentFile('published', 'en'));
+		$this->assertFileExists($modified->storage()->contentFile('published', 'de'));
+		$this->assertFileDoesNotExist($modified->storage()->contentFile('published', 'fr'));
+		$this->assertNull($modified->caption()->value());
+		$this->assertSame('Text', $modified->text()->value());
+		$this->assertNull($modified->content('de')->get('caption')->value());
+		$this->assertSame('Täxt', $modified->content('de')->get('text')->value());
 	}
 
 	public function testChangeTitle()
@@ -420,6 +447,43 @@ class PageActionsTest extends TestCase
 
 		$this->assertSame($modified, $drafts->find('test'));
 		$this->assertSame($modified, $childrenAndDrafts->find('test'));
+	}
+
+	public function testMove()
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/parent' => [
+					'sections' => [
+						'subpages' => [
+							'type'     => 'pages',
+							'template' => 'child'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$parentA = $this->app->site()->createChild([
+			'slug'     => 'parent-a',
+			'template' => 'parent'
+		]);
+
+		$parentB = $this->app->site()->createChild([
+			'slug'     => 'parent-b',
+			'template' => 'parent'
+		]);
+
+		$child = $parentA->createChild([
+			'slug'     => 'child',
+			'template' => 'child'
+		]);
+
+		$moved = $child->move($parentB);
+
+		$this->assertTrue($moved->parent()->is($parentB));
 	}
 
 	public function testPurge()
@@ -824,15 +888,15 @@ class PageActionsTest extends TestCase
 			'parent' => $page,
 			'code'   => 'en',
 		]);
-		$this->assertFileExists($page->contentFile('en'));
+		$this->assertFileExists($page->storage()->contentFile('changes', 'en'));
 
 		$drafts = $app->site()->drafts();
 		$childrenAndDrafts = $app->site()->childrenAndDrafts();
 
 		$copy = $page->duplicate('test-copy');
 
-		$this->assertFileExists($copy->contentFile('en'));
-		$this->assertFileDoesNotExist($copy->contentFile('de'));
+		$this->assertFileExists($copy->storage()->contentFile('changes', 'en'));
+		$this->assertFileDoesNotExist($copy->storage()->contentFile('changes', 'de'));
 
 		$this->assertSame($page, $drafts->find('test'));
 		$this->assertSame($page, $childrenAndDrafts->find('test'));
@@ -864,8 +928,8 @@ class PageActionsTest extends TestCase
 			'slug'  => 'test-de'
 		], 'de');
 
-		$this->assertFileExists($page->contentFile('en'));
-		$this->assertFileExists($page->contentFile('de'));
+		$this->assertFileExists($page->storage()->contentFile('changes', 'en'));
+		$this->assertFileExists($page->storage()->contentFile('changes', 'de'));
 		$this->assertSame('test', $page->slug());
 		$this->assertSame('test-de', $page->slug('de'));
 
@@ -979,8 +1043,8 @@ class PageActionsTest extends TestCase
 
 		$copy = $page->duplicate('test-copy', ['children' => true]);
 
-		$this->assertFileExists($copy->contentFile('en'));
-		$this->assertFileDoesNotExist($copy->contentFile('de'));
+		$this->assertFileExists($copy->storage()->contentFile('changes', 'en'));
+		$this->assertFileDoesNotExist($copy->storage()->contentFile('changes', 'de'));
 
 
 		$this->assertNotSame($page->uuid()->id(), $copy->uuid()->id());
@@ -1359,5 +1423,70 @@ class PageActionsTest extends TestCase
 		$this->assertSame('de', $app->language()->code());
 		$this->assertSame($expected, $page->content('en')->toArray());
 		$this->assertSame($expected, $page->content('de')->toArray());
+	}
+
+	public function testUnpublish()
+	{
+		$page = Page::create([
+			'slug' => 'test',
+			'draft' => false
+		]);
+
+		Page::create([
+			'slug' => 'child-a',
+			'draft' => false,
+			'num' => 1,
+			'parent' => $page
+		]);
+
+		Page::create([
+			'slug' => 'child-b',
+			'draft' => false,
+			'num' => 2,
+			'parent' => $page
+		]);
+
+		Page::create([
+			'slug' => 'child-c',
+			'draft' => false,
+			'parent' => $page
+		]);
+
+		Page::create([
+			'slug' => 'child-d',
+			'draft' => true,
+			'parent' => $page
+		]);
+
+		$listed = $page->children()->listed();
+		$unlisted = $page->children()->unlisted();
+		$drafts = $page->drafts();
+
+		$this->assertCount(2, $listed);
+		foreach ($listed as $child) {
+			$this->assertSame('listed', $child->status());
+		}
+
+		$this->assertCount(1, $unlisted);
+		foreach ($unlisted as $child) {
+			$this->assertSame('unlisted', $child->status());
+		}
+
+		$this->assertCount(1, $drafts);
+		foreach ($drafts as $child) {
+			$this->assertSame('draft', $child->status());
+		}
+
+		// unpublish all
+		foreach ($page->children() as $child) {
+			$child->unpublish();
+		}
+
+		// make sure that not cached children
+		$clone = $page->clone();
+
+		$this->assertCount(0, $clone->children()->listed());
+		$this->assertCount(0, $clone->children()->unlisted());
+		$this->assertCount(4, $clone->drafts());
 	}
 }

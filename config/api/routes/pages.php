@@ -4,8 +4,9 @@
 /**
  * Page Routes
  */
-return [
 
+
+return [
 	[
 		'pattern' => 'pages/(:any)',
 		'method'  => 'GET',

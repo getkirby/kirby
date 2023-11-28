@@ -11,7 +11,9 @@ return function ($kirby) {
 		'label'     => $kirby->site()->blueprint()->title() ?? I18n::translate('view.site'),
 		'menu'      => true,
 		'dialogs'   => require __DIR__ . '/site/dialogs.php',
+		'drawers'   => require __DIR__ . '/site/drawers.php',
 		'dropdowns' => require __DIR__ . '/site/dropdowns.php',
+		'requests'  => require __DIR__ . '/site/requests.php',
 		'searches'  => require __DIR__ . '/site/searches.php',
 		'views'     => require __DIR__ . '/site/views.php',
 	];

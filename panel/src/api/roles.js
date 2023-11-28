@@ -1,10 +1,8 @@
-export default (api) => {
-	return {
-		async list(params) {
-			return api.get("roles", params);
-		},
-		async get(name) {
-			return api.get("roles/" + name);
-		}
-	};
-};
+export default (api) => ({
+	async list(params) {
+		return api.get("roles", params);
+	},
+	async get(name) {
+		return api.get("roles/" + name);
+	}
+});

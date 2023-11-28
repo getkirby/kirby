@@ -7,17 +7,19 @@ export default {
 	},
 	computed: {
 		counterOptions() {
-			if (this.value === null || this.disabled || this.counter === false) {
+			const value = this.counterValue ?? this.value;
+
+			if (value === null || this.disabled || this.counter === false) {
 				return false;
 			}
 
 			let count = 0;
 
-			if (this.value) {
-				if (Array.isArray(this.value)) {
-					count = this.value.length;
+			if (value) {
+				if (Array.isArray(value)) {
+					count = value.length;
 				} else {
-					count = String(this.value).length;
+					count = String(value).length;
 				}
 			}
 			return {

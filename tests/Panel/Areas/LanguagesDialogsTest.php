@@ -158,7 +158,7 @@ class LanguagesDialogsTest extends AreaTestCase
 
 		$this->assertSame('Please enter your license code', $props['fields']['license']['label']);
 		$this->assertSame('Email', $props['fields']['email']['label']);
-		$this->assertSame('Register', $props['submitButton']);
+		$this->assertSame('Activate', $props['submitButton']['text']);
 		$this->assertNull($props['value']['license']);
 		$this->assertNull($props['value']['email']);
 	}

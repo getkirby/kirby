@@ -3,6 +3,7 @@
 namespace Kirby\Sane;
 
 use FilesystemIterator;
+use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\TestCase as BaseTestCase;
@@ -13,8 +14,18 @@ class TestCase extends BaseTestCase
 {
 	protected $type;
 
+	public function setUp(): void
+	{
+		new App([
+			'urls' => [
+				'index' => 'https://getkirby.com/subfolder'
+			]
+		]);
+	}
+
 	public function tearDown(): void
 	{
+		App::destroy();
 		Dir::remove(__DIR__ . '/tmp');
 	}
 

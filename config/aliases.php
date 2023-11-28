@@ -3,7 +3,6 @@
 return [
 	// cms classes
 	'collection' => 'Kirby\Cms\Collection',
-	'field'      => 'Kirby\Cms\Field',
 	'file'       => 'Kirby\Cms\File',
 	'files'      => 'Kirby\Cms\Files',
 	'find'       => 'Kirby\Cms\Find',
@@ -23,6 +22,9 @@ return [
 	'user'       => 'Kirby\Cms\User',
 	'users'      => 'Kirby\Cms\Users',
 	'visitor'    => 'Kirby\Cms\Visitor',
+
+	// content classes
+	'field'      => 'Kirby\Content\Field',
 
 	// data handler
 	'data'      => 'Kirby\Data\Data',
@@ -69,17 +71,25 @@ return [
 	'v'          => 'Kirby\Toolkit\V',
 	'xml'        => 'Kirby\Toolkit\Xml',
 
-	// TODO: remove in 4.0.0
-	'kirby\cms\asset'          => 'Kirby\Filesystem\Asset',
-	'kirby\cms\dir'            => 'Kirby\Filesystem\Dir',
-	'kirby\cms\filename'       => 'Kirby\Filesystem\Filename',
-	'kirby\cms\filefoundation' => 'Kirby\Filesystem\IsFile',
-	'kirby\cms\form'           => 'Kirby\Form\Form',
-	'kirby\cms\kirbytag'       => 'Kirby\Text\KirbyTag',
-	'kirby\cms\kirbytags'      => 'Kirby\Text\KirbyTags',
-	'kirby\cms\template'       => 'Kirby\Template\Template',
-	'kirby\toolkit\dir'        => 'Kirby\Filesystem\Dir',
-	'kirby\toolkit\f'          => 'Kirby\Filesystem\F',
-	'kirby\toolkit\file'       => 'Kirby\Filesystem\File',
-	'kirby\toolkit\mime'       => 'Kirby\Filesystem\Mime',
+	// Deprecated aliases:
+	// Any of these might be removed at any point in the future
+	'kirby\cms\asset'              => 'Kirby\Filesystem\Asset',
+	'kirby\cms\content'            => 'Kirby\Content\Content',
+	'kirby\cms\contenttranslation' => 'Kirby\Content\ContentTranslation',
+	'kirby\cms\dir'                => 'Kirby\Filesystem\Dir',
+	'kirby\cms\filename'           => 'Kirby\Filesystem\Filename',
+	'kirby\cms\filefoundation'     => 'Kirby\Filesystem\IsFile',
+	'kirby\cms\field'              => 'Kirby\Content\Field',
+	'kirby\cms\form'               => 'Kirby\Form\Form',
+	'kirby\cms\kirbytag'           => 'Kirby\Text\KirbyTag',
+	'kirby\cms\kirbytags'          => 'Kirby\Text\KirbyTags',
+	'kirby\cms\template'           => 'Kirby\Template\Template',
+	'kirby\form\options'           => 'Kirby\Options\Options',
+	'kirby\form\optionsapi'        => 'Kirby\Options\OptionsApi',
+	'kirby\form\optionsquery'      => 'Kirby\Options\OptionsQuery',
+	'kirby\toolkit\dir'            => 'Kirby\Filesystem\Dir',
+	'kirby\toolkit\f'              => 'Kirby\Filesystem\F',
+	'kirby\toolkit\file'           => 'Kirby\Filesystem\File',
+	'kirby\toolkit\mime'           => 'Kirby\Filesystem\Mime',
+	'kirby\toolkit\query'          => 'Kirby\Query\Query',
 ];

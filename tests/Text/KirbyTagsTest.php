@@ -256,6 +256,107 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame($expected, $kirby->kirbytext('(image: myimage.jpg caption: This is an *awesome* image and this a <a href="">link</a>)'));
 	}
 
+	public function testImageWithSrcset()
+	{
+		$kirby = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'content' => [
+							'text' => '(image: image.jpg srcset: 200, 300)'
+						],
+						'files' => [
+							[
+								'filename' => 'image.jpg',
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$page  = $kirby->page('a');
+		$image = $page->file('image.jpg');
+
+		$expected = '<figure><img alt="" src="' . $image->url() . '" srcset="' . $image->srcset([200, 300]) . '"></figure>';
+
+		$this->assertSame($expected, $page->text()->kt()->value());
+	}
+
+	public function testImageWithSrcsetFromThumbsOption()
+	{
+		$kirby = $this->app->clone([
+			'options' => [
+				'thumbs' => [
+					'srcsets' => [
+						'album' => [
+							'800w'  => ['width' => 800],
+							'1024w' => ['width' => 1024]
+						]
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'content' => [
+							'text' => '(image: image.jpg srcset: album)'
+						],
+						'files' => [
+							[
+								'filename' => 'image.jpg',
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$page  = $kirby->page('a');
+		$image = $page->file('image.jpg');
+
+		$expected = '<figure><img alt="" src="' . $image->url() . '" srcset="' . $image->srcset('album') . '"></figure>';
+
+		$this->assertSame($expected, $page->text()->kt()->value());
+	}
+
+	public function testImageWithSrcsetFromDefaults()
+	{
+		$kirby = $this->app->clone([
+			'options' => [
+				'kirbytext' => [
+					'image' => [
+						'srcset' => [200, 300]
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'content' => [
+							'text' => '(image: image.jpg)'
+						],
+						'files' => [
+							[
+								'filename' => 'image.jpg',
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$page  = $kirby->page('a');
+		$image = $page->file('image.jpg');
+
+		$expected = '<figure><img alt="" src="' . $image->url() . '" srcset="' . $image->srcset([200, 300]) . '"></figure>';
+
+		$this->assertSame($expected, $page->text()->kt()->value());
+	}
+
 	public function testImageWithFileLink()
 	{
 		$kirby = $this->app->clone([
@@ -839,10 +940,6 @@ class KirbyTagsTest extends TestCase
 				'<p><a class="phone" href="tel:+49123456789">+49123456789</a></p>'
 			],
 			[
-				'(twitter: @getkirby)',
-				'<p><a href="https://twitter.com/getkirby" rel="nofollow" target="_blank">@getkirby</a></p>'
-			],
-			[
 				'(video: https://www.youtube.com/watch?v=VhP7ZzZysQg)',
 				'<figure class="video-class"><iframe allow="fullscreen" allowfullscreen src="https://www.youtube.com/embed/VhP7ZzZysQg"></iframe></figure>'
 			]
@@ -867,10 +964,6 @@ class KirbyTagsTest extends TestCase
 					],
 					'tel' => [
 						'class' => 'phone'
-					],
-					'twitter' => [
-						'rel' => 'nofollow',
-						'target' => '_blank',
 					],
 					'video' => [
 						'class' => 'video-class',

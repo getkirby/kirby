@@ -223,9 +223,57 @@ class UserRulesTest extends TestCase
 		$this->expectExceptionCode('error.user.changeRole.lastAdmin');
 
 		$kirby = $this->appWithAdmin();
-		$kirby->impersonate('kirby');
+		$kirby->impersonate('admin@domain.com');
 
 		UserRules::changeRole($kirby->user('admin@domain.com'), 'editor');
+	}
+
+	public function testChangeTotp()
+	{
+		$kirby = $this->app()->clone([
+			'users' => [
+				['email' => 'user@domain.com', 'role' => 'editor'],
+				['email' => 'admin@domain.com', 'role' => 'admin']
+			]
+		]);
+
+		// as user for themselves
+		$kirby->impersonate('user@domain.com');
+		$this->assertTrue(UserRules::changeTotp($kirby->user('user@domain.com'), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'));
+		$this->assertTrue(UserRules::changeTotp($kirby->user('user@domain.com'), null));
+
+		// as admin for other users
+		$kirby->impersonate('admin@domain.com');
+		$this->assertTrue(UserRules::changeTotp($kirby->user('user@domain.com'), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'));
+		$this->assertTrue(UserRules::changeTotp($kirby->user('user@domain.com'), null));
+	}
+
+	public function testChangeTotpAsAnotherUser()
+	{
+		$this->expectException(PermissionException::class);
+
+		$kirby = $this->app()->clone([
+			'users' => [
+				['email' => 'user1@domain.com', 'role' => 'editor'],
+				['email' => 'user2@domain.com', 'role' => 'editor']
+			]
+		]);
+		$kirby->impersonate('user1@domain.com');
+		UserRules::changeTotp($kirby->user('user2@domain.com'), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
+	}
+
+	public function testChangeTotpInvalidSecret()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
+
+		$kirby = $this->app()->clone([
+			'users' => [
+				['email' => 'user@domain.com', 'role' => 'editor']
+			]
+		]);
+		$kirby->impersonate('user@domain.com');
+		UserRules::changeTotp($kirby->user('user@domain.com'), 'foo');
 	}
 
 	public function testCreate()

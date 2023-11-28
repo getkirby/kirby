@@ -7,7 +7,7 @@ use Kirby\Http\Response;
 /**
  * The Dialog response class handles Fiber
  * requests to render the JSON object for
- * Panel dialogs
+ * Panel dialogs and creates the routes
  * @since 3.6.0
  *
  * @package   Kirby Panel
@@ -33,5 +33,40 @@ class Dialog extends Json
 		}
 
 		return parent::response($data, $options);
+	}
+
+	/**
+	 * Builds the routes for a dialog
+	 */
+	public static function routes(
+		string $id,
+		string $areaId,
+		string $prefix = '',
+		array $options = []
+	) {
+		$routes = [];
+
+		// create the full pattern with dialogs prefix
+		$pattern = trim($prefix . '/' . ($options['pattern'] ?? $id), '/');
+		$type    = str_replace('$', '', static::$key);
+
+		// load event
+		$routes[] = [
+			'pattern' => $pattern,
+			'type'    => $type,
+			'area'    => $areaId,
+			'action'  => $options['load'] ?? fn () => 'The load handler is missing'
+		];
+
+		// submit event
+		$routes[] = [
+			'pattern' => $pattern,
+			'type'    => $type,
+			'area'    => $areaId,
+			'method'  => 'POST',
+			'action'  => $options['submit'] ?? fn () => 'The submit handler is missing'
+		];
+
+		return $routes;
 	}
 }

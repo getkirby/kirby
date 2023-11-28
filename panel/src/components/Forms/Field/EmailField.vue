@@ -13,7 +13,7 @@
 					v-if="link"
 					:icon="icon"
 					:link="mailto"
-					:tooltip="$t('open')"
+					:title="$t('open')"
 					class="k-input-icon-button"
 					tabindex="-1"
 					target="_blank"

@@ -2,7 +2,7 @@
 
 namespace Kirby\Panel\Areas;
 
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\F;
 
 class FileDialogsTest extends AreaTestCase
 {
@@ -21,7 +21,10 @@ class FileDialogsTest extends AreaTestCase
 					[
 						'slug' => 'test',
 						'files' => [
-							['filename' => 'test.jpg']
+							[
+								'filename' => 'test.jpg',
+								'content' => ['template' => 'a']
+							]
 						]
 					]
 				]
@@ -221,6 +224,63 @@ class FileDialogsTest extends AreaTestCase
 
 		$dialog = $this->dialog('users/test/files/test.jpg/changeName');
 		$this->assertSame('/users/test/files/new-test.jpg', $dialog['redirect']);
+	}
+
+	public function testChangeTemplateForPageFile(): void
+	{
+		$this->createPageFile();
+
+		$dialog = $this->dialog('pages/test/files/test.jpg/changeTemplate');
+		$props  = $dialog['props'];
+
+		$this->assertFormDialog($dialog);
+
+		$this->assertSame('Template', $props['fields']['template']['label']);
+		$this->assertSame('select', $props['fields']['template']['type']);
+		$this->assertSame('Change', $props['submitButton']);
+		$this->assertSame('a', $props['value']['template']);
+	}
+
+	public function testChangeTemplateForPageFileOnSubmit(): void
+	{
+		$this->createPageFile();
+		$this->submit(['template' => 'a']);
+		$this->login();
+
+		$dialog = $this->dialog('pages/test/files/test.jpg/changeTemplate');
+
+		$this->assertSame('file.changeTemplate', $dialog['event']);
+		$this->assertSame(200, $dialog['code']);
+	}
+
+	public function testChangeTemplateForSiteFile(): void
+	{
+		$this->createSiteFile();
+
+		$dialog = $this->dialog('site/files/test.jpg/changeTemplate');
+		$props  = $dialog['props'];
+
+		$this->assertFormDialog($dialog);
+
+		$this->assertSame('Template', $props['fields']['template']['label']);
+		$this->assertSame('select', $props['fields']['template']['type']);
+		$this->assertSame('Change', $props['submitButton']);
+		$this->assertNull($props['value']['template']);
+	}
+
+	public function testChangeTemplateForUserFile(): void
+	{
+		$this->createUserFile();
+
+		$dialog = $this->dialog('users/test/files/test.jpg/changeTemplate');
+		$props  = $dialog['props'];
+
+		$this->assertFormDialog($dialog);
+
+		$this->assertSame('Template', $props['fields']['template']['label']);
+		$this->assertSame('select', $props['fields']['template']['type']);
+		$this->assertSame('Change', $props['submitButton']);
+		$this->assertNull($props['value']['template']);
 	}
 
 	public function testChangeSortForPageFile(): void

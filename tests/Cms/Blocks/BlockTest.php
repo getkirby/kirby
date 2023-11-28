@@ -67,7 +67,7 @@ class BlockTest extends TestCase
 	{
 		$block = new Block([
 			'type'    => 'heading',
-			'content' => $content ='this is old editor content'
+			'content' => $content = 'this is old editor content'
 		]);
 
 		$this->assertSame($content, $block->content()->toArray()['text']);

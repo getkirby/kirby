@@ -75,7 +75,7 @@ return [
 			$pages = $this
 				->site()
 				->index(true)
-				->filter('isReadable', true);
+				->filter('isListable', true);
 
 			if ($this->requestMethod() === 'GET') {
 				return $pages->search($this->requestQuery('q'));

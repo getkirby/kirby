@@ -11,6 +11,15 @@ use Kirby\Cms\Site;
 class SiteUuidTest extends TestCase
 {
 	/**
+	 * @covers ::id
+	 */
+	public function testId()
+	{
+		$site = $this->app->site();
+		$this->assertSame('', $site->uuid()->id());
+	}
+
+	/**
 	 * @covers ::index
 	 */
 	public function testIndex()

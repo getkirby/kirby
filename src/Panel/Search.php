@@ -22,9 +22,17 @@ class Search extends Json
 
 	public static function response($data, array $options = []): Response
 	{
-		if (is_array($data) === true) {
+		if (
+			is_array($data) === true &&
+			array_key_exists('results', $data) === false
+		) {
 			$data = [
-				'results' => $data
+				'results'    => $data,
+				'pagination' => [
+					'page'      => 1,
+					'limit'     => $total = count($data),
+					'total'     => $total
+				]
 			];
 		}
 

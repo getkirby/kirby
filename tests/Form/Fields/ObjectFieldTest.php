@@ -109,10 +109,8 @@ class ObjectFieldTest extends TestCase
 
 	public function testFieldsMissing()
 	{
-		$this->expectException('Exception');
-		$this->expectExceptionMessage('Please provide some fields for the object');
-
-		$this->field('object', []);
+		$field = $this->field('object', []);
+		$this->assertSame([], $field->fields());
 	}
 
 	public function testTagsField()

@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Filesystem\Dir;
 
 /**
  * @coversDefaultClass \Kirby\Cms\Find
@@ -14,9 +15,16 @@ class FindTest extends TestCase
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $tmp = __DIR__ . 'tmp'
 			]
 		]);
+
+		Dir::make($tmp);
+	}
+
+	public function tearDown(): void
+	{
+		Dir::remove(__DIR__ . 'tmp');
 	}
 
 	/**
@@ -171,8 +179,12 @@ class FindTest extends TestCase
 						'children' => [
 							[
 								'slug' => 'aa'
-							],
+							]
 						],
+					],
+					[
+						'slug' => 'b',
+						'content' => ['uuid' => 'my-uuid']
 					]
 				]
 			]
@@ -182,9 +194,12 @@ class FindTest extends TestCase
 
 		$a  = $app->page('a');
 		$aa = $app->page('a/aa');
+		$b  = $app->page('b');
 
 		$this->assertSame($a, Find::page('a'));
+		$this->assertSame($aa, Find::page('a/aa'));
 		$this->assertSame($aa, Find::page('a+aa'));
+		$this->assertSame($b, Find::page('page://my-uuid'));
 	}
 
 	/**
@@ -260,6 +275,7 @@ class FindTest extends TestCase
 			'users' => [
 				[
 					'email' => 'current@getkirby.com',
+					'role'  => 'admin'
 				],
 				[
 					'email' => 'test@getkirby.com',

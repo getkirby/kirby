@@ -1,47 +1,62 @@
 <template>
 	<k-field v-bind="$props" class="k-object-field">
 		<!-- Remove button -->
-		<template v-if="!disabled" #options>
-			<k-button v-if="isEmpty" icon="add" @click="onAdd" />
-			<k-button v-else icon="remove" @click="onRemove" />
+		<template v-if="!disabled && hasFields" #options>
+			<k-button
+				v-if="isEmpty"
+				icon="add"
+				size="xs"
+				variant="filled"
+				@click="add"
+			/>
+			<k-button
+				v-else
+				icon="remove"
+				size="xs"
+				variant="filled"
+				@click="remove"
+			/>
 		</template>
 
-		<table
-			v-if="!isEmpty"
-			:data-invalid="isInvalid"
-			class="k-table k-object-field-table"
-		>
-			<tbody>
-				<template v-for="field in fields">
-					<tr
-						v-if="field.saveable && $helper.field.isVisible(field, value)"
-						:key="field.name"
-						@click="open(field.name)"
-					>
-						<th data-mobile="true">
-							<button type="button">{{ field.label }}</button>
-						</th>
-						<k-table-cell
-							:column="field"
-							:field="field"
-							:mobile="true"
-							:value="object[field.name]"
-							@input="onCellInput(field.name, $event)"
-						/>
-					</tr>
-				</template>
-			</tbody>
-		</table>
-		<k-empty v-else :data-invalid="isInvalid" icon="box" @click="onAdd">
-			{{ empty || $t("field.object.empty") }}
-		</k-empty>
-
-		<k-form-drawer ref="drawer" v-bind="drawer" @input="onDrawerInput" />
+		<template v-if="hasFields">
+			<table
+				v-if="!isEmpty"
+				:aria-disabled="disabled"
+				:data-invalid="isInvalid"
+				class="k-table k-object-field-table"
+			>
+				<tbody>
+					<template v-for="field in fields">
+						<tr
+							v-if="field.saveable && $helper.field.isVisible(field, value)"
+							:key="field.name"
+							@click="open(field.name)"
+						>
+							<th data-has-button data-mobile="true">
+								<button type="button">{{ field.label }}</button>
+							</th>
+							<k-table-cell
+								:column="field"
+								:field="field"
+								:mobile="true"
+								:value="object[field.name]"
+								@input="cell(field.name, $event)"
+							/>
+						</tr>
+					</template>
+				</tbody>
+			</table>
+			<k-empty v-else :data-invalid="isInvalid" icon="box" @click="add">
+				{{ empty ?? $t("field.object.empty") }}
+			</k-empty>
+		</template>
+		<template v-else>
+			<k-empty icon="box">{{ $t("fields.empty") }}</k-empty>
+		</template>
 	</k-field>
 </template>
 
 <script>
-import { set } from "vue";
 import { props as Field } from "../Field.vue";
 import { props as Input } from "../Input.vue";
 
@@ -49,75 +64,105 @@ export default {
 	mixins: [Field, Input],
 	props: {
 		empty: String,
-		fields: Object,
+		fields: [Object, Array],
 		value: [String, Object]
 	},
 	data() {
 		return {
-			object: this.valueToObject(this.value)
+			object: {}
 		};
 	},
 	computed: {
-		drawer() {
-			return {
-				icon: "box",
-				tab: "object",
-				tabs: {
-					object: {
-						fields: this.$helper.field.subfields(this, this.fields)
-					}
-				},
-				title: this.label,
-				value: this.object
-			};
+		hasFields() {
+			return this.$helper.object.length(this.fields) > 0;
 		},
 		isEmpty() {
-			if (!this.object) {
-				return true;
-			}
-
-			if (this.object && Object.keys(this.object).length === 0) {
-				return true;
-			}
-
-			return false;
+			return (
+				this.object === null || this.$helper.object.length(this.object) === 0
+			);
 		},
 		isInvalid() {
 			return this.required === true && this.isEmpty;
 		}
 	},
 	watch: {
-		value(value) {
-			this.object = this.valueToObject(value);
+		value: {
+			handler(value) {
+				this.object = this.valueToObject(value);
+			},
+			immediate: true
 		}
 	},
 	methods: {
-		onAdd() {
+		add() {
 			this.object = this.$helper.field.form(this.fields);
-			this.$emit("input", this.object);
+			this.save();
 			this.open();
 		},
-		onCellInput(name, value) {
-			set(this.object, name, value);
-			this.$emit("input", this.object);
+		cell(name, value) {
+			this.$set(this.object, name, value);
+			this.save();
 		},
-		onDrawerInput(value) {
-			this.object = value;
-			this.$emit("input", this.object);
+		/**
+		 * Config for the object form
+		 * @returns {Object}
+		 */
+		form(autofocus) {
+			const fields = this.$helper.field.subfields(this, this.fields);
+
+			// set the autofocus to the matching field in the form
+			if (autofocus) {
+				for (const field in fields) {
+					fields[field].autofocus = field === autofocus;
+				}
+			}
+
+			return fields;
 		},
-		onRemove() {
+		remove() {
 			this.object = {};
-			this.$emit("input", this.object);
+			this.save();
 		},
+		// TODO: field is not yet used to pre-focus correct field
+		// eslint-disable-next-line no-unused-vars
 		open(field) {
 			if (this.disabled) {
 				return false;
 			}
 
-			this.$refs.drawer.open(null, field);
+			this.$panel.drawer.open({
+				component: "k-form-drawer",
+				props: {
+					breadcrumb: [],
+					icon: "box",
+					tab: "object",
+					tabs: {
+						object: {
+							fields: this.form(field)
+						}
+					},
+					title: this.label,
+					value: this.object
+				},
+				on: {
+					input: (value) => {
+						// loop through all object keys and make
+						// sure to make them reactive if they don't
+						// exist yet
+						for (const field in value) {
+							this.$set(this.object, field, value[field]);
+						}
+
+						this.save();
+					}
+				}
+			});
+		},
+		save() {
+			this.$emit("input", this.object);
 		},
 		valueToObject(value) {
-			return typeof value !== "object" ? null : value;
+			return typeof value !== "object" ? {} : value;
 		}
 	}
 };
@@ -126,13 +171,6 @@ export default {
 <style>
 .k-table.k-object-field-table {
 	table-layout: auto;
-}
-.k-table.k-object-field-table tbody td,
-.k-table.k-object-field-table tbody th,
-.k-table.k-object-field-table tbody th button {
-	cursor: pointer;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 .k-table.k-object-field-table tbody td {
 	max-width: 0;

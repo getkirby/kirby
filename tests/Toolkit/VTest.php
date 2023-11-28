@@ -2,7 +2,8 @@
 
 namespace Kirby\Toolkit;
 
-use Kirby\Cms\Field;
+use Kirby\Cms\App;
+use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
@@ -22,14 +23,28 @@ class HasCount
 	}
 }
 
+/**
+ * @coversDefaultClass \Kirby\Toolkit\V
+ */
 class VTest extends TestCase
 {
+	public function tearDown(): void
+	{
+		App::destroy();
+	}
+
+	/**
+	 * @covers ::validators
+	 */
 	public function testValidators()
 	{
 		$this->assertFalse(empty(V::$validators));
 		$this->assertFalse(empty(V::validators()));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testCustomValidator()
 	{
 		V::$validators['me'] = function ($name): bool {
@@ -42,6 +57,9 @@ class VTest extends TestCase
 		$this->assertFalse(V::me('you'));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testCallInvalidMethod()
 	{
 		$this->expectException('Exception');
@@ -272,6 +290,9 @@ class VTest extends TestCase
 		$this->assertFalse(V::in('bastian', []));
 	}
 
+	/**
+	 * @covers ::invalid
+	 */
 	public function testInvalid()
 	{
 		$data = [
@@ -312,6 +333,9 @@ class VTest extends TestCase
 		$this->assertSame([], $result);
 	}
 
+	/**
+	 * @covers ::invalid
+	 */
 	public function testInvalidSimple()
 	{
 		$data   = ['homer', null];
@@ -320,6 +344,9 @@ class VTest extends TestCase
 		$this->assertSame(1, $result[1]);
 	}
 
+	/**
+	 * @covers ::invalid
+	 */
 	public function testInvalidRequired()
 	{
 		$rules    = ['email' => ['required']];
@@ -350,6 +377,9 @@ class VTest extends TestCase
 		$this->assertSame([], $result);
 	}
 
+	/**
+	 * @covers ::invalid
+	 */
 	public function testInvalidOptions()
 	{
 		$rules = [
@@ -380,6 +410,9 @@ class VTest extends TestCase
 		$this->assertSame([], $result);
 	}
 
+	/**
+	 * @covers ::invalid
+	 */
 	public function testInvalidWithMultipleMessages()
 	{
 		$data     = ['username' => ''];
@@ -613,6 +646,14 @@ class VTest extends TestCase
 		V::size(new \stdClass(), 5);
 	}
 
+	public function testTel()
+	{
+		$this->assertTrue(V::tel('+123456789'));
+		$this->assertTrue(V::tel('00123456789'));
+		$this->assertFalse(V::tel('++123456789'));
+		$this->assertFalse(V::tel('+1234-56789'));
+	}
+
 	public function testTime()
 	{
 		$this->assertTrue(V::time('12:12:12'));
@@ -767,7 +808,7 @@ class VTest extends TestCase
 					]
 				],
 				false,
-				'The "email" validation failed for field "email"',
+				'Please enter a valid email address for field "email"',
 			],
 			// missing required field
 			[
@@ -800,10 +841,16 @@ class VTest extends TestCase
 	}
 
 	/**
+	 * @covers ::input
+	 * @covers ::message
+	 * @covers ::value
 	 * @dataProvider inputProvider
 	 */
 	public function testInput($input, $rules, $result, $message = null)
 	{
+		// load the translation strings
+		new App();
+
 		if ($result === false) {
 			$this->expectException('Exception');
 			$this->expectExceptionMessage($message);
@@ -812,6 +859,9 @@ class VTest extends TestCase
 		$this->assertTrue(V::input($input, $rules));
 	}
 
+	/**
+	 * @covers ::value
+	 */
 	public function testValue()
 	{
 		$result = V::value('test@getkirby.com', [
@@ -823,10 +873,16 @@ class VTest extends TestCase
 		$this->assertTrue($result);
 	}
 
+	/**
+	 * @covers ::value
+	 */
 	public function testValueFails()
 	{
+		// load the translation strings
+		new App();
+
 		$this->expectException('Exception');
-		$this->expectExceptionMessage('The "same" validation failed');
+		$this->expectExceptionMessage('Please enter "b"');
 
 		$result = V::value('a', [
 			'same' => 'b'

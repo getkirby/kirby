@@ -9,11 +9,6 @@ use Kirby\Exception\InvalidArgumentException;
 /**
  * @coversDefaultClass \Kirby\Cms\Auth\Status
  * @covers ::__construct
- * @covers ::setChallenge
- * @covers ::setChallengeFallback
- * @covers ::setEmail
- * @covers ::setKirby
- * @covers ::setStatus
  */
 class StatusTest extends TestCase
 {
@@ -110,7 +105,6 @@ class StatusTest extends TestCase
 
 	/**
 	 * @covers ::status
-	 * @covers ::setStatus
 	 */
 	public function testStatus()
 	{

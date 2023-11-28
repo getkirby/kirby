@@ -10,10 +10,25 @@ export default class Link extends Mark {
 
 	commands() {
 		return {
-			link: () => {
+			link: (event) => {
+				if (event.altKey || event.metaKey) {
+					return this.remove();
+				}
+
 				this.editor.emit("link", this.editor);
 			},
 			insertLink: (attrs = {}) => {
+				const { selection } = this.editor.state;
+
+				// if no text is selected and link mark is not active
+				// we insert the link as text
+				if (
+					selection.empty &&
+					this.editor.activeMarks.includes('link') === false
+				) {
+					this.editor.insertText(attrs.href, true);
+				}
+
 				if (attrs.href) {
 					return this.update(attrs);
 				}
@@ -99,8 +114,7 @@ export default class Link extends Mark {
 			toDOM: (node) => [
 				"a",
 				{
-					...node.attrs,
-					rel: "noreferrer"
+					...node.attrs
 				},
 				0
 			]

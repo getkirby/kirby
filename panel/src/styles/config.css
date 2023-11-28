@@ -1,0 +1,30 @@
+@import url("./config/colors.css");
+@import url("./config/font-family.css");
+@import url("./config/font-size.css");
+@import url("./config/font-weight.css");
+@import url("./config/height.css");
+@import url("./config/opacity.css");
+@import url("./config/rounded.css");
+@import url("./config/shadow.css");
+@import url("./config/spacing.css");
+@import url("./config/z-index.css");
+@import url("./config/pattern.css");
+
+/** @deprecated */
+:root {
+	--container: 80rem;
+
+	--leading-none: 1;
+	--leading-tight: 1.25;
+	--leading-snug: 1.375;
+	--leading-normal: 1.5;
+	--leading-relaxed: 1.625;
+	--leading-loose: 2;
+
+	--field-input-padding: var(--input-padding);
+	--field-input-height: var(--input-height);
+	--field-input-line-height: var(--input-leading);
+	--field-input-font-size: var(--input-font-size);
+
+	--bg-pattern: var(--pattern);
+}

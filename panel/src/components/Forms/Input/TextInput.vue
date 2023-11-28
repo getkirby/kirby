@@ -16,13 +16,22 @@
 			value
 		}"
 		v-direction
+		:data-font="font"
 		class="k-text-input"
 		v-on="listeners"
 	/>
 </template>
 
 <script>
-import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
+import Input, { props as InputProps } from "@/mixins/input.js";
+import {
+	font,
+	maxlength,
+	minlength,
+	pattern,
+	placeholder,
+	spellcheck
+} from "@/mixins/props.js";
 
 import {
 	required as validateRequired,
@@ -33,21 +42,21 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [autofocus, disabled, id, name, required],
+	mixins: [
+		InputProps,
+		font,
+		maxlength,
+		minlength,
+		pattern,
+		placeholder,
+		spellcheck
+	],
 	props: {
 		autocomplete: {
 			type: [Boolean, String],
 			default: "off"
 		},
-		maxlength: Number,
-		minlength: Number,
-		pattern: String,
-		placeholder: String,
 		preselect: Boolean,
-		spellcheck: {
-			type: [Boolean, String],
-			default: "off"
-		},
 		type: {
 			type: String,
 			default: "text"
@@ -60,8 +69,7 @@ export const props = {
  * @example <k-input :value="text" @input="text = $event" name="text" type="text" />
  */
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	data() {
 		return {
 			listeners: {
@@ -87,9 +95,6 @@ export default {
 		}
 	},
 	methods: {
-		focus() {
-			this.$refs.input.focus();
-		},
 		onInput(value) {
 			this.$emit("input", value);
 		},
@@ -123,21 +128,13 @@ export default {
 
 <style>
 .k-text-input {
-	width: 100%;
-	border: 0;
-	background: none;
-	font: inherit;
-	color: inherit;
-	font-variant-numeric: tabular-nums;
-}
-.k-text-input::placeholder {
-	color: var(--color-gray-500);
+	padding: var(--input-padding);
+	border-radius: var(--input-rounded);
 }
 .k-text-input:focus {
 	outline: 0;
 }
-.k-text-input:invalid {
-	box-shadow: none;
-	outline: 0;
+.k-text-input[data-font="monospace"] {
+	font-family: var(--font-mono);
 }
 </style>

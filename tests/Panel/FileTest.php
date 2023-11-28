@@ -320,7 +320,7 @@ class FileTest extends TestCase
 
 		$this->assertSame('image', $option['icon']);
 		$this->assertSame('test.jpg', $option['text']);
-		$this->assertSame('/panel/pages/test/files/test.jpg', $option['link']);
+		$this->assertSame('/pages/test/files/test.jpg', $option['link']);
 	}
 
 	/**
@@ -342,14 +342,14 @@ class FileTest extends TestCase
 
 		$image = (new File($file))->image();
 		$this->assertSame('image', $image['icon']);
-		$this->assertSame('orange-400', $image['color']);
-		$this->assertSame('3/2', $image['ratio']);
+		$this->assertSame('orange-500', $image['color']);
 		$this->assertSame('pattern', $image['back']);
 		$this->assertArrayHasKey('url', $image);
 	}
 
 	/**
 	 * @covers ::imageSource
+	 * @covers ::imageSrcset
 	 */
 	public function testImageCover()
 	{
@@ -369,10 +369,9 @@ class FileTest extends TestCase
 		// cover disabled as default
 		$this->assertSame([
 			'back' => 'pattern',
-			'color' => 'orange-400',
+			'color' => 'orange-500',
 			'cover' => false,
 			'icon' => 'image',
-			'ratio' => '3/2',
 			'url' => '/media/site/' . $hash . '/test.jpg',
 			'src' => Model::imagePlaceholder(),
 			'srcset' => '/media/site/' . $hash . '/test-38x.jpg 38w, /media/site/' . $hash . '/test-76x.jpg 76w'
@@ -381,10 +380,9 @@ class FileTest extends TestCase
 		// cover enabled
 		$this->assertSame([
 			'back' => 'pattern',
-			'color' => 'orange-400',
+			'color' => 'orange-500',
 			'cover' => true,
 			'icon' => 'image',
-			'ratio' => '3/2',
 			'url' => '/media/site/' . $hash . '/test.jpg',
 			'src' => Model::imagePlaceholder(),
 			'srcset' => '/media/site/' . $hash . '/test-38x38-crop.jpg 1x, /media/site/' . $hash . '/test-76x76-crop.jpg 2x'
@@ -410,6 +408,85 @@ class FileTest extends TestCase
 	}
 
 	/**
+	 * @covers ::isFocusable
+	 */
+	public function testIsFocusable()
+	{
+		$this->app->clone([
+			'blueprints' => [
+				'files/foo' => [
+					'focus' => false
+				]
+			]
+		]);
+
+
+		$page = new ModelPage(['slug' => 'test']);
+
+		// no update permission
+		$file = new ModelFile([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+		]);
+
+		$this->assertFalse((new File($file))->isFocusable());
+
+		// default for images (viewable)
+		$file = new ModelFile([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+		]);
+		$file->kirby()->impersonate('kirby');
+
+		$this->assertTrue((new File($file))->isFocusable());
+
+		// default for others (not viewable)
+		$file = new ModelFile([
+			'filename' => 'test.mp4',
+			'parent'   => $page,
+		]);
+		$file->kirby()->impersonate('kirby');
+
+		$this->assertFalse((new File($file))->isFocusable());
+
+		// blueprint option: false
+		$file = new ModelFile([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+			'template' => 'foo',
+		]);
+		$file->kirby()->impersonate('kirby');
+
+		$this->assertFalse((new File($file))->isFocusable());
+
+		// editing secondary language
+		$app = $this->app->clone([
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		$app->setCurrentLanguage('de');
+
+
+		$file = new ModelFile([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+		]);
+		$file->kirby()->impersonate('kirby');
+
+		$this->assertFalse((new File($file))->isFocusable());
+	}
+
+	/**
 	 * @covers ::options
 	 */
 	public function testOptions()
@@ -426,12 +503,15 @@ class FileTest extends TestCase
 		$file->kirby()->impersonate('kirby');
 
 		$expected = [
-			'changeName' => true,
-			'create'     => true,
-			'delete'     => true,
-			'read'       => true,
-			'replace'    => true,
-			'update'     => true,
+			'access'      	 => true,
+			'changeName'     => true,
+			'changeTemplate' => false,
+			'create'         => true,
+			'delete'         => true,
+			'list'         	 => true,
+			'read'           => true,
+			'replace'        => true,
+			'update'         => true,
 		];
 
 		$panel = new File($file);
@@ -456,12 +536,15 @@ class FileTest extends TestCase
 
 		// without override
 		$expected = [
-			'changeName' => false,
-			'create'     => false,
-			'delete'     => false,
-			'read'       => false,
-			'replace'    => false,
-			'update'     => false,
+			'access'     	 => false,
+			'changeName'     => false,
+			'changeTemplate' => false,
+			'create'         => false,
+			'delete'         => false,
+			'list'           => false,
+			'read'           => false,
+			'replace'        => false,
+			'update'         => false,
 		];
 
 		$panel = new File($file);
@@ -469,12 +552,15 @@ class FileTest extends TestCase
 
 		// with override
 		$expected = [
-			'changeName' => false,
-			'create'     => false,
-			'delete'     => true,
-			'read'       => false,
-			'replace'    => false,
-			'update'     => false,
+			'access'     	 => false,
+			'changeName'     => false,
+			'changeTemplate' => false,
+			'create'         => false,
+			'delete'         => true,
+			'list'           => false,
+			'read'           => false,
+			'replace'        => false,
+			'update'         => false,
 		];
 
 		$panel = new File($file);
@@ -497,12 +583,15 @@ class FileTest extends TestCase
 		$file->kirby()->impersonate('kirby');
 
 		$expected = [
-			'changeName' => true,
-			'create'     => true,
-			'delete'     => true,
-			'read'       => true,
-			'replace'    => false,
-			'update'     => true,
+			'access'     	 => true,
+			'changeName'     => true,
+			'changeTemplate' => false,
+			'create'         => true,
+			'delete'         => true,
+			'list'           => true,
+			'read'           => true,
+			'replace'        => false,
+			'update'         => true,
 		];
 
 		$panel = new File($file);
@@ -536,12 +625,15 @@ class FileTest extends TestCase
 		$file->kirby()->impersonate('kirby');
 
 		$expected = [
-			'changeName' => true,
-			'create'     => true,
-			'delete'     => true,
-			'read'       => true,
-			'replace'    => true,
-			'update'     => true,
+			'access'     	 => true,
+			'changeName'     => true,
+			'changeTemplate' => false,
+			'create'         => true,
+			'delete'         => true,
+			'list'           => true,
+			'read'           => true,
+			'replace'        => true,
+			'update'         => true,
 		];
 
 		$panel = new File($file);
@@ -577,12 +669,15 @@ class FileTest extends TestCase
 		$file->kirby()->impersonate('kirby');
 
 		$expected = [
-			'changeName' => true,
-			'create'     => true,
-			'delete'     => true,
-			'read'       => true,
-			'replace'    => false,
-			'update'     => true,
+			'access'     	 => true,
+			'changeName'     => true,
+			'changeTemplate' => false,
+			'create'         => true,
+			'delete'         => true,
+			'list'           => true,
+			'read'           => true,
+			'replace'        => false,
+			'update'         => true,
 		];
 
 		$panel = new File($file);
@@ -623,7 +718,6 @@ class FileTest extends TestCase
 		$this->assertSame('test.jpg', $data['filename']);
 		$this->assertSame('(image: test.jpg)', $data['dragText']);
 		$this->assertSame('test/test.jpg', $data['id']);
-		$this->assertSame('3/2', $data['image']['ratio']);
 		$this->assertSame('image', $data['image']['icon']);
 		$this->assertSame('/pages/test/files/test.jpg', $data['link']);
 		$this->assertSame('test.jpg', $data['text']);

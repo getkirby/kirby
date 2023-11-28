@@ -1,255 +1,91 @@
 <template>
-	<k-overlay ref="overlay" :dimmed="false" @close="onClose" @open="onOpen">
-		<div
-			:data-id="id"
-			:data-nested="nested"
+	<portal v-if="visible" to="drawer">
+		<form
+			:aria-disabled="disabled"
+			:class="$vnode.data.staticClass"
 			class="k-drawer"
-			@mousedown.stop="mousedown(true)"
-			@mouseup="mouseup"
+			method="dialog"
+			@submit.prevent="$emit('submit')"
 		>
-			<div class="k-drawer-box" @mousedown.stop="mousedown(false)">
-				<header class="k-drawer-header">
-					<h2 v-if="breadcrumb.length === 1" class="k-drawer-title">
-						<k-icon :type="icon" /> {{ title }}
-					</h2>
-					<ul v-else class="k-drawer-breadcrumb">
-						<li v-for="crumb in breadcrumb" :key="crumb.id">
+			<k-drawer-notification />
+			<k-drawer-header
+				:breadcrumb="breadcrumb"
+				:tab="tab"
+				:tabs="tabs"
+				@crumb="$emit('crumb', $event)"
+				@tab="$emit('tab', $event)"
+			>
+				<slot name="options">
+					<template v-for="(option, index) in options">
+						<template v-if="option.dropdown">
 							<k-button
-								:icon="crumb.icon"
-								:text="crumb.title"
-								@click="goTo(crumb.id)"
+								:key="'btn-' + index"
+								v-bind="option"
+								class="k-drawer-option"
+								@click="$refs['dropdown-' + index][0].toggle()"
 							/>
-						</li>
-					</ul>
-					<nav v-if="hasTabs" class="k-drawer-tabs">
+							<k-dropdown-content
+								:ref="'dropdown-' + index"
+								:key="'dropdown-' + index"
+								:options="option.dropdown"
+								align-x="end"
+								theme="light"
+							/>
+						</template>
+
 						<k-button
-							v-for="tabButton in tabs"
-							:key="tabButton.name"
-							:current="tab == tabButton.name"
-							:text="tabButton.label"
-							class="k-drawer-tab"
-							@click.stop="$emit('tab', tabButton.name)"
+							v-else
+							:key="index"
+							v-bind="option"
+							class="k-drawer-option"
 						/>
-					</nav>
-					<nav class="k-drawer-options">
-						<slot name="options" />
-						<k-button class="k-drawer-option" icon="check" @click="close" />
-					</nav>
-				</header>
-				<div class="k-drawer-body scroll-y-auto">
-					<slot />
-				</div>
-			</div>
-		</div>
-	</k-overlay>
+					</template>
+				</slot>
+			</k-drawer-header>
+			<k-drawer-body>
+				<slot />
+			</k-drawer-body>
+		</form>
+	</portal>
 </template>
 
 <script>
+import Drawer from "@/mixins/drawer.js";
+
 export default {
-	inheritAttrs: false,
-	props: {
-		id: String,
-		icon: String,
-		tab: String,
-		tabs: Object,
-		title: String
-	},
-	data() {
-		return {
-			click: false
-		};
-	},
-	computed: {
-		breadcrumb() {
-			return this.$store.state.drawers.open;
-		},
-		hasTabs() {
-			return this.tabs && Object.keys(this.tabs).length > 1;
-		},
-		index() {
-			return this.breadcrumb.findIndex((item) => item.id === this._uid);
-		},
-		nested() {
-			return this.index > 0;
-		}
-	},
-	watch: {
-		index() {
-			if (this.index === -1) {
-				this.close();
-			}
-		}
-	},
-	destroyed() {
-		this.$store.dispatch("drawers/close", this._uid);
-	},
-	methods: {
-		close() {
-			this.$refs.overlay.close();
-		},
-		goTo(id) {
-			if (id === this._uid) {
-				return true;
-			}
-			this.$store.dispatch("drawers/goto", id);
-		},
-		mouseup() {
-			if (this.click === true) {
-				this.close();
-			}
-
-			this.click = false;
-		},
-		mousedown(click = false) {
-			this.click = click;
-
-			if (this.click === true) {
-				this.$store.dispatch("drawers/close");
-			}
-		},
-		onClose() {
-			this.$store.dispatch("drawers/close", this._uid);
-			this.$emit("close");
-		},
-		onOpen() {
-			this.$store.dispatch("drawers/open", {
-				id: this._uid,
-				icon: this.icon,
-				title: this.title
-			});
-			this.$emit("open");
-		},
-		open() {
-			this.$refs.overlay.open();
-		}
-	}
+	mixins: [Drawer],
+	emits: ["cancel", "crumb", "submit", "tab"]
 };
 </script>
 
 <style>
-.k-drawer {
+:root {
+	--drawer-body-padding: 1.5rem;
+	--drawer-color-back: var(--color-light);
 	--drawer-header-height: 2.5rem;
-	--drawer-header-padding: 1.5rem;
+	--drawer-header-padding: 1rem;
+	--drawer-shadow: var(--shadow-xl);
+	--drawer-width: 50rem;
+}
 
-	position: fixed;
-	inset: 0;
+/**
+ * Don't apply the dark background twice
+ * for nested drawers.
+ */
+.k-drawer-overlay + .k-drawer-overlay {
+	--overlay-color-back: none;
+}
+
+.k-drawer {
+	--header-sticky-offset: calc(var(--drawer-body-padding) * -1);
 	z-index: var(--z-toolbar);
 	display: flex;
-	align-items: stretch;
-	justify-content: flex-end;
-	background: rgba(0, 0, 0, 0.2);
-}
-.k-drawer-box {
+	flex-basis: var(--drawer-width);
 	position: relative;
-	flex-basis: 50rem;
 	display: flex;
 	flex-direction: column;
-	background: var(--color-background);
-	box-shadow: var(--shadow-xl);
-}
-.k-drawer-header {
-	flex-shrink: 0;
-	height: var(--drawer-header-height);
-	padding-inline-start: var(--drawer-header-padding);
-	display: flex;
-	align-items: center;
-	line-height: 1;
-	justify-content: space-between;
-	background: var(--color-white);
-	font-size: var(--text-sm);
-}
-.k-drawer-title {
-	padding: 0 0.75rem;
-}
-.k-drawer-title,
-.k-drawer-breadcrumb {
-	display: flex;
-	flex-grow: 1;
-	align-items: center;
-	min-width: 0;
-	margin-inline-start: -0.75rem;
-	font-size: var(--text-sm);
-	font-weight: var(--font-normal);
-}
-.k-drawer-breadcrumb li:not(:last-child) .k-button::after {
-	position: absolute;
-	inset-inline-end: -0.75rem;
-	width: 1.5rem;
-	display: inline-flex;
-	justify-content: center;
-	align-items: center;
-	content: "›";
-	color: var(--color-gray-500);
-	height: var(--drawer-header-height);
-}
-.k-drawer-title .k-icon,
-.k-drawer-breadcrumb .k-icon {
-	width: 1rem;
-	color: var(--color-gray-500);
-	margin-inline-end: 0.5rem;
-}
-.k-drawer-breadcrumb .k-button {
-	display: inline-flex;
-	align-items: center;
-	height: var(--drawer-header-height);
-	padding-inline: 0.75rem;
-}
-.k-drawer-breadcrumb .k-button-text {
-	opacity: 1;
-}
-.k-drawer-breadcrumb .k-button .k-button-icon ~ .k-button-text {
-	padding-inline-start: 0;
-}
-.k-drawer-tabs {
-	display: flex;
-	align-items: center;
-	line-height: 1;
-	margin-inline-end: 0.75rem;
-}
-.k-drawer-tab.k-button {
-	height: var(--drawer-header-height);
-	padding-inline: 0.75rem;
-	display: flex;
-	align-items: center;
-	font-size: var(--text-xs);
-}
-.k-drawer-tab.k-button[aria-current]::after {
-	position: absolute;
-	bottom: -1px;
-	inset-inline: 0.75rem;
-	content: "";
-	background: var(--color-black);
-	height: 2px;
-}
-
-.k-drawer-options {
-	padding-inline-end: 0.75rem;
-}
-.k-drawer-option.k-button {
-	width: var(--drawer-header-height);
-	height: var(--drawer-header-height);
-	color: var(--color-gray-500);
-	line-height: 1;
-}
-.k-drawer-option.k-button:focus,
-.k-drawer-option.k-button:hover {
-	color: var(--color-black);
-}
-
-.k-drawer-body {
-	padding: 1.5rem;
-	flex-grow: 1;
-	background: var(--color-background);
-}
-
-/* Nested drawers */
-.k-drawer[data-nested="true"] {
-	background: none;
-}
-
-/* Sticky elements inside drawer */
-.k-drawer-body .k-textarea-input:focus-within .k-toolbar,
-.k-drawer-body .k-table th {
-	top: -1.5rem;
+	background: var(--drawer-color-back);
+	box-shadow: var(--drawer-shadow);
+	container-type: inline-size;
 }
 </style>

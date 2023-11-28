@@ -1,0 +1,88 @@
+:root {
+	--range-thumb-color: var(--color-white);
+	--range-thumb-focus-outline: var(--outline);
+	--range-thumb-size: 1rem;
+	--range-thumb-shadow: rgba(0, 0, 0, 0.1) 0 2px 4px 2px,
+		rgba(0, 0, 0, 0.125) 0 0 0 1px;
+	--range-track-back: var(--color-gray-250);
+	--range-track-height: var(--range-thumb-size);
+}
+
+:where(input[type="range"]) {
+	display: flex;
+	align-items: center;
+	appearance: none;
+	padding: 0;
+	height: var(--range-thumb-size);
+	border-radius: var(--range-track-size);
+	width: 100%;
+}
+
+/* Thumb */
+:where(input[type="range"])::-webkit-slider-thumb {
+	appearance: none;
+	width: var(--range-thumb-size);
+	height: var(--range-thumb-size);
+	border: 0;
+	background: var(--range-thumb-color);
+	box-shadow: var(--range-thumb-shadow);
+	transform: translate3d(0, 0, 0);
+	margin-top: calc(
+		((var(--range-thumb-size) - var(--range-track-height)) / 2) * -1
+	);
+	border-radius: 50%;
+	z-index: 1;
+	cursor: grab;
+}
+:where(input[type="range"])::-moz-range-thumb {
+	appearance: none;
+	width: var(--range-thumb-size);
+	height: var(--range-thumb-size);
+	border: 0;
+	background: var(--range-thumb-color);
+	box-shadow: var(--range-thumb-shadow);
+	border-radius: 50%;
+	transform: translate3d(0, 0, 0);
+	z-index: 1;
+	cursor: grab;
+}
+:where(input[type="range"])::-webkit-slider-thumb:active {
+	cursor: grabbing;
+}
+:where(input[type="range"])::-moz-range-thumb:active {
+	cursor: grabbing;
+}
+
+/* Track */
+:where(input[type="range"])::-webkit-slider-runnable-track {
+	background: var(--range-track-back);
+	height: var(--range-track-height);
+	border-radius: var(--range-track-height);
+}
+:where(input[type="range"])::-moz-range-track {
+	background: var(--range-track-back);
+	height: var(--range-track-height);
+	border-radius: var(--range-track-height);
+}
+
+/* Disabled */
+:where(input[type="range"][disabled]) {
+	--range-thumb-color: rgba(255, 255, 255, 0.2);
+}
+:where(input[type="range"][disabled])::-webkit-slider-thumb {
+	cursor: not-allowed;
+}
+:where(input[type="range"][disabled])::-moz-range-thumb {
+	cursor: not-allowed;
+}
+
+/* Focus state */
+:where(input[type="range"]):focus {
+	outline: var(--outline);
+}
+:where(input[type="range"]):focus::-webkit-slider-thumb {
+	outline: var(--range-thumb-focus-outline);
+}
+:where(input[type="range"]):focus::-moz-range-thumb {
+	outline: var(--range-thumb-focus-outline);
+}

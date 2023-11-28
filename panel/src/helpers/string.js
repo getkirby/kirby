@@ -1,4 +1,4 @@
-import "./regex.js";
+import "./regex";
 
 const escapingMap = {
 	"&": "&amp;",
@@ -74,6 +74,20 @@ export function hasEmoji(string) {
 }
 
 /**
+ * Checks if a string is empty
+ * @since 4.0.0
+ * @param {String|undefined|null} string
+ * @returns {Boolean}
+ */
+export function isEmpty(string) {
+	if (!string) {
+		return true;
+	}
+
+	return String(string).length === 0;
+}
+
+/**
  * Turns first letter lowercase
  * @param {string} string
  * @returns {string}
@@ -81,6 +95,20 @@ export function hasEmoji(string) {
 export function lcfirst(string) {
 	const str = String(string);
 	return str.charAt(0).toLowerCase() + str.slice(1);
+}
+
+/**
+ * Trims the given character(s) at the beginning of the string.
+ * This method is greedy and removes any occurrence at the beginning,
+ * not just the first.
+ *
+ * @param {string} string
+ * @param {string} replace
+ * @returns {string}
+ */
+export function ltrim(string = "", replace = "") {
+	const expression = new RegExp(`^(${replace})+`, "g");
+	return string.replace(expression, "");
 }
 
 /**
@@ -116,11 +144,25 @@ export function random(length) {
 }
 
 /**
+ * Trims the given characters at the end of the string
+ * This method is greedy and removes any occurrence at the end,
+ * not just the last.
+ *
+ * @param {string} string
+ * @param {string} replace
+ * @returns {string}
+ */
+export function rtrim(string = "", replace = "") {
+	const expression = new RegExp(`(${replace})+$`, "g");
+	return string.replace(expression, "");
+}
+
+/**
  * Convert string to ASCII slug
  * @param {string} string string to be converted
  * @param {array} rules ruleset to convert non-ASCII characters
- * @param {array} allowed list of allowed non-ASCII characters
- * @param {string} separator character used to replace e.g. spaces
+ * @param {string} allowed list of allowed characters (default: a-z0-9)
+ * @param {string} separator character used to replace non-allowed characters
  * @returns {string}
  */
 export function slug(string, rules = [], allowed = "", separator = "-") {
@@ -128,7 +170,10 @@ export function slug(string, rules = [], allowed = "", separator = "-") {
 		return "";
 	}
 
-	allowed = "a-z0-9" + allowed;
+	if (!allowed || allowed.length === 0) {
+		allowed = "a-z0-9";
+	}
+
 	string = string.trim().toLowerCase();
 
 	// replace according to language and ascii rules
@@ -147,7 +192,7 @@ export function slug(string, rules = [], allowed = "", separator = "-") {
 	// remove all other non-ASCII characters
 	string = string.replace("/[^\x09\x0A\x0D\x20-\x7E]/", "");
 
-	// replace spaces with simple dashes
+	// replace non-allowed characters (e.g. spaces) with separator
 	string = string.replace(new RegExp("[^" + allowed + "]", "ig"), separator);
 
 	// remove double separators
@@ -185,12 +230,9 @@ export function stripHTML(string) {
 export function template(string, values = {}) {
 	const resolve = (parts, data = {}) => {
 		const part = escapeHTML(parts.shift());
-		const value = data[part] ?? null;
+		const value = data[part] ?? "…";
 
-		if (value === null) {
-			return Object.prototype.hasOwnProperty.call(data, part) || "…";
-		}
-		if (parts.length === 0) {
+		if (value === "…" || parts.length === 0) {
 			return value;
 		}
 
@@ -265,9 +307,12 @@ export default {
 	camelToKebab,
 	escapeHTML,
 	hasEmoji,
+	isEmpty,
 	lcfirst,
+	ltrim,
 	pad,
 	random,
+	rtrim,
 	slug,
 	stripHTML,
 	template,

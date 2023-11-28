@@ -3,6 +3,8 @@
 namespace Kirby\Database;
 
 use Closure;
+use Kirby\Database\Sql\Mysql;
+use Kirby\Database\Sql\Sqlite;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
@@ -536,7 +538,7 @@ class Database
  * MySQL database connector
  */
 Database::$types['mysql'] = [
-	'sql' => 'Kirby\Database\Sql\Mysql',
+	'sql' => Mysql::class,
 	'dsn' => function (array $params): string {
 		if (isset($params['host']) === false && isset($params['socket']) === false) {
 			throw new InvalidArgumentException('The mysql connection requires either a "host" or a "socket" parameter');
@@ -574,7 +576,7 @@ Database::$types['mysql'] = [
  * SQLite database connector
  */
 Database::$types['sqlite'] = [
-	'sql' => 'Kirby\Database\Sql\Sqlite',
+	'sql' => Sqlite::class,
 	'dsn' => function (array $params): string {
 		if (isset($params['database']) === false) {
 			throw new InvalidArgumentException('The sqlite connection requires a "database" parameter');

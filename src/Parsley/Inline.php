@@ -2,7 +2,7 @@
 
 namespace Kirby\Parsley;
 
-use DOMComment;
+use DOMElement;
 use DOMNode;
 use DOMNodeList;
 use DOMText;
@@ -52,21 +52,22 @@ class Inline
 	}
 
 	/**
-	 * Get all allowed attributes for a DOMNode
+	 * Get all allowed attributes for a DOMElement
 	 * as clean array
 	 */
-	public static function parseAttrs(DOMNode $node, array $marks = []): array
-	{
+	public static function parseAttrs(
+		DOMElement $node,
+		array $marks = []
+	): array {
 		$attrs    = [];
 		$mark     = $marks[$node->tagName];
 		$defaults = $mark['defaults'] ?? [];
 
 		foreach ($mark['attrs'] ?? [] as $attr) {
-			if ($node->hasAttribute($attr)) {
-				$attrs[$attr] = $node->getAttribute($attr);
-			} else {
-				$attrs[$attr] = $defaults[$attr] ?? null;
-			}
+			$attrs[$attr] = match ($node->hasAttribute($attr)) {
+				true    => $node->getAttribute($attr),
+				default => $defaults[$attr] ?? null
+			};
 		}
 
 		return $attrs;
@@ -76,8 +77,10 @@ class Inline
 	 * Parses all children and creates clean HTML
 	 * for each of them.
 	 */
-	public static function parseChildren(DOMNodeList $children, array $marks): string
-	{
+	public static function parseChildren(
+		DOMNodeList $children,
+		array $marks
+	): string {
 		$html = '';
 		foreach ($children as $child) {
 			$html .= static::parseNode($child, $marks);
@@ -89,8 +92,10 @@ class Inline
 	 * Go through all child elements and create
 	 * clean inner HTML for them
 	 */
-	public static function parseInnerHtml(DOMNode $node, array $marks = []): string|null
-	{
+	public static function parseInnerHtml(
+		DOMElement $node,
+		array $marks = []
+	): string|null {
 		$html = static::parseChildren($node->childNodes, $marks);
 
 		// trim the inner HTML for paragraphs
@@ -115,33 +120,35 @@ class Inline
 			return Html::encode($node->textContent);
 		}
 
-		// ignore comments
-		if ($node instanceof DOMComment) {
-			return null;
+		if ($node instanceof DOMElement) {
+			// unknown marks
+			if (array_key_exists($node->tagName, $marks) === false) {
+				return static::parseChildren($node->childNodes, $marks);
+			}
+
+			// collect all allowed attributes
+			$attrs = static::parseAttrs($node, $marks);
+
+			// close self-closing elements
+			if (Html::isVoid($node->tagName) === true) {
+				return '<' . $node->tagName . Html::attr($attrs, null, ' ') . ' />';
+			}
+
+			$innerHtml = static::parseInnerHtml($node, $marks);
+
+			// skip empty paragraphs
+			if ($innerHtml === null && $node->tagName === 'p') {
+				return null;
+			}
+
+			// create the outer html for the element
+			$html  = '<' . $node->tagName . Html::attr($attrs, null, ' ') . '>';
+			$html .= $innerHtml;
+			$html .= '</' . $node->tagName . '>';
+			return $html;
 		}
 
-		// unknown marks
-		if (array_key_exists($node->tagName, $marks) === false) {
-			return static::parseChildren($node->childNodes, $marks);
-		}
-
-		// collect all allowed attributes
-		$attrs = static::parseAttrs($node, $marks);
-
-		// close self-closing elements
-		if (Html::isVoid($node->tagName) === true) {
-			return '<' . $node->tagName . Html::attr($attrs, null, ' ') . ' />';
-		}
-
-		$innerHtml = static::parseInnerHtml($node, $marks);
-
-		// skip empty paragraphs
-		if ($innerHtml === null && $node->tagName === 'p') {
-			return null;
-		}
-
-		// create the outer html for the element
-		return '<' . $node->tagName . Html::attr($attrs, null, ' ') . '>' . $innerHtml . '</' . $node->tagName . '>';
+		return null;
 	}
 
 	/**

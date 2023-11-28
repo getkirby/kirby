@@ -14,7 +14,7 @@ class HtmlTest extends TestCase
 	{
 		$this->kirby = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/HtmlTest'
+				'index' => $this->fixtures = __DIR__ . '/fixtures'
 			],
 			'urls' => [
 				'index' => 'https://getkirby.com'
@@ -105,6 +105,22 @@ class HtmlTest extends TestCase
 	}
 
 	/**
+	 * @covers ::css
+	 */
+	public function testCssWithPluginAssets()
+	{
+		$plugin = new Plugin('getkirby/test-plugin', [
+			'root' => $root = $this->fixtures . '/plugin'
+		]);
+		touch($root . '/assets/styles.css', 1337000000);
+		$result = Html::css($plugin);
+
+		$expected  = '<link href="https://getkirby.com/media/plugins/getkirby/test-plugin/2375797551-1337000000/styles.css" rel="stylesheet">';
+
+		$this->assertSame($expected, $result);
+	}
+
+	/**
 	 * @covers ::js
 	 */
 	public function testJs()
@@ -154,6 +170,22 @@ class HtmlTest extends TestCase
 	}
 
 	/**
+	 * @covers ::js
+	 */
+	public function testJsWithPluginAssets()
+	{
+		$plugin = new Plugin('getkirby/test-plugin', [
+			'root' => $root = $this->fixtures . '/plugin'
+		]);
+		touch($root . '/assets/scripts.js', 1337000000);
+		$result = Html::js($plugin);
+
+		$expected  = '<script src="https://getkirby.com/media/plugins/getkirby/test-plugin/1903622314-1337000000/scripts.js"></script>';
+
+		$this->assertSame($expected, $result);
+	}
+
+	/**
 	 * @covers ::svg
 	 */
 	public function testSvg()
@@ -167,7 +199,7 @@ class HtmlTest extends TestCase
 	 */
 	public function testSvgWithAbsolutePath()
 	{
-		$result = Html::svg(__DIR__ . '/fixtures/HtmlTest/test.svg');
+		$result = Html::svg($this->fixtures . '/test.svg');
 		$this->assertSame('<svg>test</svg>', trim($result));
 	}
 

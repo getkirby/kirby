@@ -18,4 +18,5 @@ return array(
     'Laminas\\Escaper\\' => array($vendorDir . '/laminas/laminas-escaper/src'),
     'Kirby\\' => array($baseDir . '/src', $vendorDir . '/getkirby/composer-installer/src'),
     'Composer\\Semver\\' => array($vendorDir . '/composer/semver/src'),
+    'Base32\\' => array($vendorDir . '/christian-riesen/base32/src'),
 );

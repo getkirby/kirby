@@ -245,6 +245,7 @@ class FilesSectionTest extends TestCase
 				]
 			]
 		]);
+		$app->impersonate('kirby');
 
 		// already reached the max
 		$section = new Section('files', [
@@ -283,6 +284,8 @@ class FilesSectionTest extends TestCase
 
 	public function testSortBy()
 	{
+		$this->app->impersonate('kirby');
+
 		$locale = setlocale(LC_ALL, 0);
 		setlocale(LC_ALL, ['de_DE.ISO8859-1', 'de_DE']);
 
@@ -492,11 +495,12 @@ class FilesSectionTest extends TestCase
 
 	public function testSearchWithQuery1()
 	{
-		$this->app->clone([
+		$app = $this->app->clone([
 			'request' => [
 				'query' => ['searchterm' => 'bike']
 			]
 		]);
+		$app->impersonate('kirby');
 
 		$model = new Page([
 			'slug'  => 'test',
@@ -520,11 +524,12 @@ class FilesSectionTest extends TestCase
 
 	public function testSearchWithQuery2()
 	{
-		$this->app->clone([
+		$app = $this->app->clone([
 			'request' => [
 				'query' => ['searchterm' => 'mount']
 			]
 		]);
+		$app->impersonate('kirby');
 
 		$model = new Page([
 			'slug'  => 'test',
@@ -548,11 +553,12 @@ class FilesSectionTest extends TestCase
 
 	public function testSearchWithQuery3()
 	{
-		$this->app->clone([
+		$app = $this->app->clone([
 			'request' => [
 				'query' => ['searchterm' => 'mountain']
 			]
 		]);
+		$app->impersonate('kirby');
 
 		$model = new Page([
 			'slug'  => 'test',
@@ -576,11 +582,12 @@ class FilesSectionTest extends TestCase
 
 	public function testSearchWithFlip()
 	{
-		$this->app->clone([
+		$app = $this->app->clone([
 			'request' => [
 				'query' => ['searchterm' => 'bike']
 			]
 		]);
+		$app->impersonate('kirby');
 
 		$model = new Page([
 			'slug'  => 'test',
@@ -605,11 +612,12 @@ class FilesSectionTest extends TestCase
 
 	public function testSearchWithSortBy()
 	{
-		$this->app->clone([
+		$app = $this->app->clone([
 			'request' => [
 				'query' => ['searchterm' => 'bike']
 			]
 		]);
+		$app->impersonate('kirby');
 
 		$model = new Page([
 			'slug'  => 'test',

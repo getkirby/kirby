@@ -1,0 +1,1 @@
+{"displayName":"FormButtons","description":"","tags":{},"props":[{"name":"lock","type":{"name":"boolean|object"}}],"component":"k-form-buttons","sourceFile":"src/components/Forms/FormButtons.vue"}

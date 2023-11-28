@@ -475,12 +475,13 @@ class F
 	/**
 	 * Get the file's last modification time.
 	 *
-	 * @param string $handler date, intl or strftime
+	 * @param 'date'|'intl'|'strftime'|null $handler Custom date handler or `null`
+	 *                                               for the globally configured one
 	 */
 	public static function modified(
 		string $file,
 		string|IntlDateFormatter|null $format = null,
-		string $handler = 'date'
+		string|null $handler = null
 	): string|int|false {
 		if (file_exists($file) !== true) {
 			return false;
@@ -727,7 +728,8 @@ class F
 	}
 
 	/**
-	 * Sanitize a filename to strip unwanted special characters
+	 * Sanitize a file's full name (filename and extension)
+	 * to strip unwanted special characters
 	 *
 	 * <code>
 	 *
@@ -740,12 +742,34 @@ class F
 	 */
 	public static function safeName(string $string): string
 	{
-		$name          = static::name($string);
-		$extension     = static::extension($string);
-		$safeName      = Str::slug($name, '-', 'a-z0-9@._-');
-		$safeExtension = empty($extension) === false ? '.' . Str::slug($extension) : '';
+		$basename  = static::safeBasename($string);
+		$extension =  static::safeExtension($string);
 
-		return $safeName . $safeExtension;
+		if (empty($extension) === false) {
+			$extension = '.' . $extension;
+		}
+
+		return $basename . $extension;
+	}
+
+	/**
+	 * Sanitize a file's name (without extension)
+	 * @since 4.0.0
+	 */
+	public static function safeBasename(string $string): string
+	{
+		$name = static::name($string);
+		return Str::slug($name, '-', 'a-z0-9@._-');
+	}
+
+	/**
+	 * Sanitize a file's extension
+	 * @since 4.0.0
+	 */
+	public static function safeExtension(string $string): string
+	{
+		$extension = static::extension($string);
+		return Str::slug($extension);
 	}
 
 	/**

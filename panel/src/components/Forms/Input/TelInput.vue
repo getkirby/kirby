@@ -1,16 +1,16 @@
 <script>
-import TextInput from "./TextInput.vue";
-import { props as TextInputProps } from "./TextInput.vue";
+import TextInput, { props as TextInputProps } from "./TextInput.vue";
 
 export const props = {
 	mixins: [TextInputProps],
 	props: {
 		autocomplete: {
-			type: String,
 			default: "tel"
 		},
+		placeholder: {
+			default: () => window.panel.$t("tel.placeholder")
+		},
 		type: {
-			type: String,
 			default: "tel"
 		}
 	}

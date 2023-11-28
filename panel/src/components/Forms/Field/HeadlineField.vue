@@ -1,10 +1,10 @@
 <template>
 	<div class="k-headline-field">
-		<k-headline :data-numbered="numbered" size="large">
+		<k-headline class="h2">
 			{{ label }}
 		</k-headline>
 		<footer v-if="help" class="k-field-footer">
-			<k-text v-if="help" theme="help" class="k-field-help" :html="help" />
+			<k-text class="k-help k-field-help" :html="help" />
 		</footer>
 	</div>
 </template>
@@ -17,16 +17,11 @@ import { help, label } from "@/mixins/props.js";
  */
 export default {
 	mixins: [help, label],
-	props: {
-		numbered: Boolean
-	}
+	inheritAttrs: false
 };
 </script>
 
 <style>
-body {
-	counter-reset: headline-counter;
-}
 .k-headline-field {
 	position: relative;
 	padding-top: 1.5rem;
@@ -37,11 +32,11 @@ if the headline is the very first form element */
 	padding-top: 0;
 }
 
-.k-headline-field .k-headline[data-numbered]::before {
-	counter-increment: headline-counter;
-	content: counter(headline-counter, decimal-leading-zero);
-	color: var(--color-focus);
-	font-weight: 400;
-	padding-inline-end: 0.25rem;
+.k-headline-field h2.k-headline {
+	font-weight: var(--font-normal);
+}
+
+.k-headline-field footer {
+	margin-top: var(--spacing-2);
 }
 </style>

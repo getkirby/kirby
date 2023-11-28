@@ -5,13 +5,8 @@ import { defineConfig, splitVendorChunkPlugin } from "vite";
 import vue from "@vitejs/plugin-vue2";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import externalGlobals from "rollup-plugin-external-globals";
-
-import postcssAutoprefixer from "autoprefixer";
-import postcssCsso from "postcss-csso";
-import postcssDirPseudoClass from "postcss-dir-pseudo-class";
-import postcssLogical from "postcss-logical";
-
-import kirbyDev from "./scripts/vite-kirby-dev.js";
+import prismjs from "vite-plugin-prismjs";
+import kirby from "./scripts/vite-kirby.mjs";
 
 let customServer;
 try {
@@ -22,7 +17,14 @@ try {
 
 export default defineConfig(({ command }) => {
 	// gather plugins depending on environment
-	const plugins = [vue(), splitVendorChunkPlugin(), kirbyDev()];
+	const plugins = [
+		vue(),
+		splitVendorChunkPlugin(),
+		kirby(),
+		prismjs({
+			languages: ["javascript", "css", "markup", "php", "yaml"]
+		})
+	];
 
 	if (command === "build") {
 		plugins.push(
@@ -30,7 +32,6 @@ export default defineConfig(({ command }) => {
 				targets: [
 					{
 						src: "node_modules/vue/dist/vue.min.js",
-						rename: "vue.js",
 						dest: "js"
 					}
 				]
@@ -61,15 +62,16 @@ export default defineConfig(({ command }) => {
 			// Fix vuelidate error
 			"process.env.BUILD": JSON.stringify("production")
 		},
+		base: "./",
 		build: {
 			minify: "terser",
 			cssCodeSplit: false,
 			rollupOptions: {
 				input: "./src/index.js",
 				output: {
-					entryFileNames: "js/[name].js",
-					chunkFileNames: "js/[name].js",
-					assetFileNames: "[ext]/[name].[ext]"
+					entryFileNames: "js/[name].min.js",
+					chunkFileNames: "js/[name].min.js",
+					assetFileNames: "[ext]/[name].min.[ext]"
 				}
 			}
 		},
@@ -78,22 +80,12 @@ export default defineConfig(({ command }) => {
 			exclude: ["vitest", "vue"]
 		},
 		css: {
-			postcss: {
-				plugins: [
-					postcssLogical(),
-					postcssDirPseudoClass(),
-					postcssCsso(),
-					postcssAutoprefixer()
-				]
-			}
+			transformer: "lightningcss"
 		},
 		resolve: {
-			alias: [
-				{
-					find: "@",
-					replacement: path.resolve(__dirname, "src")
-				}
-			]
+			alias: {
+				"@": path.resolve(__dirname, "src")
+			}
 		},
 		server: {
 			proxy: {
@@ -106,15 +98,8 @@ export default defineConfig(({ command }) => {
 			...customServer
 		},
 		test: {
-			environment: "jsdom",
+			environment: "node",
 			include: ["**/*.test.js"],
-			coverage: {
-				all: true,
-				exclude: ["**/*.e2e.js", "**/*.test.js"],
-				extension: ["js", "vue"],
-				src: "src",
-				reporter: ["text", "lcov"]
-			},
 			setupFiles: ["vitest.setup.js"]
 		}
 	};

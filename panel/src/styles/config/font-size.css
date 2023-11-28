@@ -1,0 +1,21 @@
+:root {
+	--text-xs: 0.75rem;
+	--text-sm: 0.875rem;
+	--text-md: 1rem;
+	--text-lg: 1.125rem;
+	--text-xl: 1.25rem;
+	--text-2xl: 1.5rem;
+	--text-3xl: 1.75rem;
+	--text-4xl: 2.5rem;
+	--text-5xl: 3rem;
+	--text-6xl: 4rem;
+
+	/** @deprecated */
+	--text-base: var(--text-md);
+	--font-size-tiny: var(--text-xs);
+	--font-size-small: var(--text-sm);
+	--font-size-medium: var(--text-base);
+	--font-size-large: var(--text-xl);
+	--font-size-huge: var(--text-2xl);
+	--font-size-monster: var(--text-3xl);
+}

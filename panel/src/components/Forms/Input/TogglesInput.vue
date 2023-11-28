@@ -2,12 +2,18 @@
 	<ul
 		:data-invalid="$v.$invalid"
 		:data-labels="labels"
-		:style="'--options:' + (columns || options.length)"
+		:style="{ '--options': columns ?? options.length }"
 		class="k-toggles-input"
 	>
-		<li v-for="(option, index) in options" :key="index">
+		<li
+			v-for="(option, index) in options"
+			:key="index"
+			:data-disabled="disabled"
+		>
 			<input
 				:id="id + '-' + index"
+				:aria-label="option.text"
+				:disabled="disabled"
 				:value="option.value"
 				:name="id"
 				:checked="value === option.value"
@@ -18,19 +24,25 @@
 			/>
 			<label :for="id + '-' + index" :title="option.text">
 				<k-icon v-if="option.icon" :type="option.icon" />
-				<!-- eslint-disable-next-line vue/no-v-html -->
-				<span v-if="labels" class="k-toggles-text" v-html="option.text" />
+				<!-- eslint-disable vue/no-v-html -->
+				<span
+					v-if="labels || !option.icon"
+					class="k-toggles-text"
+					v-html="option.text"
+				/>
+				<!-- eslint-enable vue/no-v-html -->
 			</label>
 		</li>
 	</ul>
 </template>
 
 <script>
-import { autofocus, disabled, id, required } from "@/mixins/props.js";
+import Input, { props as InputProps } from "@/mixins/input.js";
+
 import { required as validateRequired } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [autofocus, disabled, id, required],
+	mixins: [InputProps],
 	props: {
 		columns: Number,
 		grow: Boolean,
@@ -42,8 +54,7 @@ export const props = {
 };
 
 export default {
-	mixins: [props],
-	inheritAttrs: false,
+	mixins: [Input, props],
 	watch: {
 		value() {
 			this.onInvalid();
@@ -61,7 +72,7 @@ export default {
 			(
 				this.$el.querySelector("input[checked]") ||
 				this.$el.querySelector("input")
-			).focus();
+			)?.focus();
 		},
 		onClick(value) {
 			if (value === this.value && this.reset && !this.required) {
@@ -95,6 +106,10 @@ export default {
 .k-input[data-type="toggles"].grow {
 	display: flex;
 }
+.k-input[data-type="toggles"]:has(.k-empty) {
+	outline: 0;
+	display: flex;
+}
 
 .k-toggles-input {
 	display: grid;
@@ -121,12 +136,16 @@ export default {
 	padding: 0 var(--spacing-3);
 	height: 100%;
 }
-
+/** TODO: .k-toggles-input li:has(input[disabled]) label */
+.k-toggles-input li[data-disabled="true"] label {
+	color: var(--color-text-dimmed);
+	background: var(--color-light);
+}
 .k-toggles-input .k-icon + .k-toggles-text {
 	margin-inline-start: var(--spacing-2);
 }
 .k-toggles-input input:focus:not(:checked) + label {
-	background: var(--color-gray-200);
+	background: var(--color-blue-200);
 }
 
 .k-toggles-input input:checked + label {

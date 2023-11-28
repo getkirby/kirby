@@ -1,0 +1,9 @@
+:root {
+	--height-xs: 1.5rem;
+	--height-sm: 1.75rem;
+	--height-md: 2rem;
+	--height-lg: 2.25rem;
+	--height-xl: 2.5rem;
+
+	--height: var(--height-md);
+}

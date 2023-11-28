@@ -6,20 +6,23 @@
 			ref="input"
 			theme="field"
 			type="time"
-			@input="$emit('input', $event || '')"
+			@input="$emit('input', $event ?? '')"
 		>
 			<template v-if="times" #icon>
-				<k-dropdown>
-					<k-button
-						:icon="icon || 'clock'"
-						:tooltip="$t('time.select')"
-						class="k-input-icon-button"
-						@click="$refs.times.toggle()"
+				<k-button
+					:disabled="disabled"
+					:icon="icon ?? 'clock'"
+					:title="$t('time.select')"
+					class="k-input-icon-button"
+					@click="$refs.times.toggle()"
+				/>
+				<k-dropdown-content ref="times" align-x="end">
+					<k-timeoptions-input
+						:display="display"
+						:value="value"
+						@input="select"
 					/>
-					<k-dropdown-content ref="times" align="right">
-						<k-times :display="display" :value="value" @input="select" />
-					</k-dropdown-content>
-				</k-dropdown>
+				</k-dropdown-content>
 			</template>
 		</k-input>
 	</k-field>
@@ -37,7 +40,6 @@ import { props as TimeInput } from "../Input/TimeInput.vue";
  * and `<k-time-input>` for additional information.
  *
  * @example <k-time-field :value="time" @input="time = $event" name="time" label="Time" />
- * @public
  */
 export default {
 	mixins: [Field, Input, TimeInput],

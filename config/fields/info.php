@@ -12,7 +12,6 @@ return [
 		'before'      => null,
 		'default'     => null,
 		'disabled'    => null,
-		'icon'        => null,
 		'placeholder' => null,
 		'required'    => null,
 		'translate'   => null,

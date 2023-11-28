@@ -14,12 +14,12 @@ use Kirby\Cms\ModelWithContent;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * // TODO: include in test coverage in 3.10
+ * // TODO: include in test coverage once blueprint refactoring is done
  * @codeCoverageIgnore
  */
 class NodeText extends NodeI18n
 {
-	public function render(ModelWithContent $model): ?string
+	public function render(ModelWithContent $model): string|null
 	{
 		if ($text = parent::render($model)) {
 			return $model->toSafeString($text);

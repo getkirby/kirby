@@ -1,5 +1,5 @@
 <template>
-	<div v-if="offline" class="k-offline-warning">
+	<div v-if="$panel.isOffline" class="k-offline-warning">
 		<p><k-icon type="bolt" /> {{ $t("error.offline") }}</p>
 	</div>
 </template>
@@ -8,29 +8,7 @@
 /**
  * @internal
  */
-export default {
-	data() {
-		return {
-			offline: false
-		};
-	},
-	created() {
-		this.$events.$on("offline", this.isOffline);
-		this.$events.$on("online", this.isOnline);
-	},
-	destroyed() {
-		this.$events.$off("offline", this.isOffline);
-		this.$events.$off("online", this.isOnline);
-	},
-	methods: {
-		isOnline() {
-			this.offline = false;
-		},
-		isOffline() {
-			this.offline = true;
-		}
-	}
-};
+export default {};
 </script>
 
 <style>

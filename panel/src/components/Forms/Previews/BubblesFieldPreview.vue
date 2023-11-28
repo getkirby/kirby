@@ -1,30 +1,33 @@
 <template>
 	<div class="k-bubbles-field-preview" :class="$options.class">
-		<k-bubbles :bubbles="bubbles" />
+		<k-bubbles :bubbles="bubbles" :html="html" />
 	</div>
 </template>
 
 <script>
 import FieldPreview from "@/mixins/forms/fieldPreview.js";
+import { props as BubblesProps } from "@/components/Layout/Bubbles.vue";
 
 export default {
-	mixins: [FieldPreview],
-	inheritAttrs: false,
+	mixins: [FieldPreview, BubblesProps],
 	props: {
-		value: [Array, String]
+		value: {
+			default: () => [],
+			type: [Array, String]
+		}
 	},
 	computed: {
 		bubbles() {
 			let bubbles = this.value;
 
 			// predefined options
-			const options = this.column?.options || this.field?.options || [];
+			const options = this.column.options ?? this.field.options ?? [];
 
 			if (typeof bubbles === "string") {
 				bubbles = bubbles.split(",");
 			}
 
-			return bubbles.map((bubble) => {
+			return (bubbles ?? []).map((bubble) => {
 				if (typeof bubble === "string") {
 					bubble = {
 						value: bubble,
@@ -38,11 +41,7 @@ export default {
 					}
 				}
 
-				return {
-					back: "light",
-					color: "black",
-					...bubble
-				};
+				return bubble;
 			});
 		}
 	}
@@ -51,6 +50,13 @@ export default {
 
 <style>
 .k-bubbles-field-preview {
-	padding: 0.325rem 0.75rem;
+	--bubble-back: var(--color-light);
+	--bubble-text: var(--color-black);
+
+	padding: 0.375rem var(--table-cell-padding);
+	overflow: hidden;
+}
+.k-bubbles-field-preview .k-bubbles {
+	gap: 0.375rem;
 }
 </style>

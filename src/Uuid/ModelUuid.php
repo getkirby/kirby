@@ -3,7 +3,6 @@
 namespace Kirby\Uuid;
 
 use Kirby\Cms\App;
-use Kirby\Cms\Collection;
 
 /**
  * Base for UUIDs for models where id string
@@ -22,18 +21,6 @@ abstract class ModelUuid extends Uuid
 	 * @var \Kirby\Cms\ModelWithContent|null
 	 */
 	public Identifiable|null $model;
-
-	public function __construct(
-		string|null $uuid = null,
-		Identifiable|null $model = null,
-		Collection|null $context = null
-	) {
-		parent::__construct($uuid, $model, $context);
-
-		// ensure that ID gets generated right away if
-		// not yet stored any in content file
-		$this->id();
-	}
 
 	/**
 	 * Looks up UUID in local and global index

@@ -1,3 +1,5 @@
+import { length } from "@/helpers/object";
+
 import findParentNode from "./findParentNode";
 import findSelectedNodeOfType from "./findSelectedNodeOfType";
 
@@ -7,7 +9,7 @@ export default (state, type, attrs = {}) => {
 		findSelectedNodeOfType(type)(state.selection) ||
 		findParentNode(predicate)(state.selection);
 
-	if (!Object.keys(attrs).length || !node) {
+	if (length(attrs) === 0 || !node) {
 		return !!node;
 	}
 

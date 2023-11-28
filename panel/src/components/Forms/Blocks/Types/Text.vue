@@ -3,6 +3,7 @@
 		:is="component"
 		ref="input"
 		v-bind="textField"
+		:keys="keys"
 		:value="content.text"
 		class="k-block-type-text-input"
 		@input="update({ text: $event })"
@@ -24,7 +25,25 @@ export default {
 			}
 
 			// fallback to writer
-			return "k-writer";
+			return "k-writer-input";
+		},
+		isSplitable() {
+			return (
+				this.content.text.length > 0 &&
+				this.input().isCursorAtStart === false &&
+				this.input().isCursorAtEnd === false
+			);
+		},
+		keys() {
+			const keys = {
+				"Mod-Enter": this.split
+			};
+
+			if (this.textField.inline === true) {
+				keys.Enter = this.split;
+			}
+
+			return keys;
 		},
 		textField() {
 			return this.field("text", {});
@@ -33,6 +52,31 @@ export default {
 	methods: {
 		focus() {
 			this.$refs.input.focus();
+		},
+		input() {
+			return this.$refs.input.$refs.input;
+		},
+		merge(blocks) {
+			this.update({
+				text: blocks
+					.map((block) => block.content.text)
+					.join(this.textField.inline ? " " : "")
+			});
+		},
+		split() {
+			const contents = this.input().getSplitContent?.();
+
+			if (contents) {
+				if (this.textField.type === "writer") {
+					contents[0] = contents[0].replace(/(<p><\/p>)$/, "");
+					contents[1] = contents[1].replace(/^(<p><\/p>)/, "");
+				}
+
+				this.$emit(
+					"split",
+					contents.map((content) => ({ text: content }))
+				);
+			}
 		}
 	}
 };
@@ -40,13 +84,20 @@ export default {
 
 <style>
 .k-block-type-text-input {
-	font-size: var(--text-base);
-	line-height: 1.5em;
+	line-height: 1.5;
 	height: 100%;
 }
-.k-block-type-text,
-.k-block-container-type-text,
-.k-block-type-text .k-writer .ProseMirror {
-	height: 100%;
+.k-block-container.k-block-container-type-text {
+	padding: 0;
+}
+.k-block-type-text-input.k-writer[data-toolbar-inline="true"] {
+	padding: var(--spacing-3);
+}
+.k-block-type-text-input.k-writer:not([data-toolbar-inline="true"])
+	> .ProseMirror,
+.k-block-type-text-input.k-writer:not(
+		[data-toolbar-inline="true"]
+	)[data-placeholder][data-empty="true"]:before {
+	padding: var(--spacing-3) var(--spacing-6);
 }
 </style>

@@ -15,11 +15,14 @@
 			<!-- eslint-disable vue/no-mutating-props -->
 			<k-fieldset
 				ref="fields"
-				v-model="value"
 				:disabled="disabled"
 				:fields="fields"
 				:novalidate="novalidate"
-				v-on="listeners"
+				:value="value"
+				@focus="onFocus"
+				@input="onInput"
+				@invalid="onInvalid"
+				@submit="onSubmit"
 			/>
 		</slot>
 
@@ -43,9 +46,7 @@ export default {
 		config: Object,
 		fields: {
 			type: [Array, Object],
-			default() {
-				return {};
-			}
+			default: () => []
 		},
 		/**
 		 * If `true`, form fields won't show their validation status on the fly.
@@ -56,18 +57,13 @@ export default {
 		},
 		value: {
 			type: Object,
-			default() {
-				return {};
-			}
+			default: () => ({})
 		}
 	},
+	emits: ["input", "submit"],
 	data() {
 		return {
-			errors: {},
-			listeners: {
-				...this.$listeners,
-				submit: this.onSubmit
-			}
+			errors: {}
 		};
 	},
 	methods: {
@@ -78,6 +74,15 @@ export default {
 		 */
 		focus(name) {
 			this.$refs.fields?.focus?.(name);
+		},
+		onFocus(event, field, fieldName) {
+			this.$emit("focus", event, field, fieldName);
+		},
+		onInput(values, field, fieldName) {
+			this.$emit("input", values, field, fieldName);
+		},
+		onInvalid(errors) {
+			this.$emit("invalid", errors);
 		},
 		onSubmit() {
 			/**

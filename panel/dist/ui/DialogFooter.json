@@ -1,0 +1,1 @@
+{"description":"","displayName":"DialogFooter","tags":{"since":[{"description":"4.0.0","title":"since"}]},"slots":[{"name":"default"}],"component":"k-dialog-footer","sourceFile":"src/components/Dialogs/Elements/Footer.vue"}

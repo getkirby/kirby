@@ -3,6 +3,8 @@
 namespace Kirby\Image;
 
 use Exception;
+use Kirby\Image\Darkroom\GdLib;
+use Kirby\Image\Darkroom\ImageMagick;
 
 /**
  * A wrapper around resizing and cropping
@@ -17,17 +19,13 @@ use Exception;
 class Darkroom
 {
 	public static array $types = [
-		'gd' => 'Kirby\Image\Darkroom\GdLib',
-		'im' => 'Kirby\Image\Darkroom\ImageMagick'
+		'gd' => GdLib::class,
+		'im' => ImageMagick::class
 	];
 
-	protected array $settings = [];
-
-	/**
-	 * Darkroom constructor
-	 */
-	public function __construct(array $settings = [])
-	{
+	public function __construct(
+		protected array $settings = []
+	) {
 		$this->settings = array_merge($this->defaults(), $settings);
 	}
 
@@ -110,18 +108,24 @@ class Darkroom
 		$options = $this->options($options);
 		$image   = new Image($file);
 
-		$dimensions      = $image->dimensions();
-		$thumbDimensions = $dimensions->thumb($options);
+		$options['sourceWidth']  = $image->width();
+		$options['sourceHeight'] = $image->height();
 
-		$sourceWidth  = $image->width();
-		$sourceHeight = $image->height();
+		$dimensions        = $image->dimensions();
+		$thumbDimensions   = $dimensions->thumb($options);
 
 		$options['width']  = $thumbDimensions->width();
 		$options['height'] = $thumbDimensions->height();
 
 		// scale ratio compared to the source dimensions
-		$options['scaleWidth']  = $sourceWidth ? $options['width'] / $sourceWidth : null;
-		$options['scaleHeight'] = $sourceHeight ? $options['height'] / $sourceHeight : null;
+		$options['scaleWidth'] = Focus::ratio(
+			$options['width'],
+			$options['sourceWidth']
+		);
+		$options['scaleHeight'] = Focus::ratio(
+			$options['height'],
+			$options['sourceHeight']
+		);
 
 		return $options;
 	}

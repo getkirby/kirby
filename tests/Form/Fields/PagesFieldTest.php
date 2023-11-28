@@ -212,8 +212,7 @@ class PagesFieldTest extends TestCase
 				'back' => 'pattern',
 				'color' => 'gray-500',
 				'cover' => false,
-				'icon' => 'page',
-				'ratio' => '3/2'
+				'icon' => 'page'
 			],
 			'info' => '',
 			'link' => '/pages/test',

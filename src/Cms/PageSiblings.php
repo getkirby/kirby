@@ -18,8 +18,6 @@ trait PageSiblings
 	 * page in the siblings collection
 	 *
 	 * @param \Kirby\Cms\Collection|null $collection
-	 *
-	 * @return bool
 	 */
 	public function hasNextListed($collection = null): bool
 	{
@@ -31,8 +29,6 @@ trait PageSiblings
 	 * page in the siblings collection
 	 *
 	 * @param \Kirby\Cms\Collection|null $collection
-	 *
-	 * @return bool
 	 */
 	public function hasNextUnlisted($collection = null): bool
 	{
@@ -44,8 +40,6 @@ trait PageSiblings
 	 * page in the siblings collection
 	 *
 	 * @param \Kirby\Cms\Collection|null $collection
-	 *
-	 * @return bool
 	 */
 	public function hasPrevListed($collection = null): bool
 	{
@@ -57,8 +51,6 @@ trait PageSiblings
 	 * page in the siblings collection
 	 *
 	 * @param \Kirby\Cms\Collection|null $collection
-	 *
-	 * @return bool
 	 */
 	public function hasPrevUnlisted($collection = null): bool
 	{
@@ -130,7 +122,6 @@ trait PageSiblings
 	/**
 	 * Returns siblings with the same template
 	 *
-	 * @param bool $self
 	 * @return \Kirby\Cms\Pages
 	 */
 	public function templateSiblings(bool $self = true)

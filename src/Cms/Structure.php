@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\InvalidArgumentException;
-
 /**
  * The Structure class wraps
  * array data into a nicely chainable
@@ -18,56 +16,34 @@ use Kirby\Exception\InvalidArgumentException;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Structure extends Collection
+class Structure extends Items
 {
+	public const ITEM_CLASS = StructureObject::class;
+
 	/**
 	 * All registered structure methods
-	 *
-	 * @var array
 	 */
-	public static $methods = [];
+	public static array $methods = [];
 
 	/**
-	 * Creates a new Collection with the given objects
-	 *
-	 * @param array $objects Kirby\Cms\StructureObject` objects or props arrays
-	 * @param object|null $parent
+	 * Creates a new structure collection from a
+	 * an array of item props
 	 */
-	public function __construct($objects = [], $parent = null)
-	{
-		$this->parent = $parent;
-		$this->set($objects);
-	}
-
-	/**
-	 * The internal setter for collection items.
-	 * This makes sure that nothing unexpected ends
-	 * up in the collection. You can pass arrays or
-	 * StructureObjects
-	 *
-	 * @param string $id
-	 * @param array|StructureObject $props
-	 * @return void
-	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
-	 */
-	public function __set(string $id, $props): void
-	{
-		if ($props instanceof StructureObject) {
-			$object = $props;
-		} else {
-			if (is_array($props) === false) {
-				throw new InvalidArgumentException('Invalid structure data');
-			}
-
-			$object = new StructureObject([
-				'content'    => $props,
-				'id'         => $props['id'] ?? $id,
-				'parent'     => $this->parent,
-				'structure'  => $this
-			]);
+	public static function factory(
+		array $items = null,
+		array $params = []
+	): static {
+		// Bake-in index as ID for all items
+		// TODO: remove when adding UUID supports to Structures
+		if (is_array($items) === true) {
+			$items = array_map(function ($item, $index) {
+				if (is_array($item) === true) {
+					$item['id'] ??= $index;
+				}
+				return $item;
+			}, $items, array_keys($items));
 		}
 
-		parent::__set($object->id(), $object);
+		return parent::factory($items, $params);
 	}
 }

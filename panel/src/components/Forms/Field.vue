@@ -9,10 +9,14 @@
 		<slot name="header">
 			<header class="k-field-header">
 				<slot name="label">
-					<label :for="input" class="k-field-label">
-						{{ labelText }}
-						<abbr v-if="required" :title="$t('field.required')">*</abbr>
-					</label>
+					<k-label
+						:input="input"
+						:required="required"
+						:title="label"
+						type="field"
+					>
+						{{ label }}
+					</k-label>
 				</slot>
 				<slot name="options" />
 				<slot name="counter">
@@ -29,7 +33,7 @@
 		<slot name="footer">
 			<footer v-if="help || $slots.help" class="k-field-footer">
 				<slot name="help">
-					<k-text v-if="help" theme="help" class="k-field-help" :html="help" />
+					<k-text v-if="help" class="k-help k-field-help" :html="help" />
 				</slot>
 			</footer>
 		</slot>
@@ -52,45 +56,11 @@ export const props = {
 
 export default {
 	mixins: [props],
-	inheritAttrs: false,
-	computed: {
-		labelText() {
-			return this.label || " ";
-		}
-	}
+	inheritAttrs: false
 };
 </script>
 
 <style>
-.k-field-label {
-	font-weight: var(--font-bold);
-	display: block;
-	padding: 0 0 0.75rem;
-	flex-grow: 1;
-	line-height: 1.25rem;
-}
-.k-field-label abbr {
-	text-decoration: none;
-	color: var(--color-gray-500);
-	padding-inline-start: 0.25rem;
-}
-.k-field-header {
-	position: relative;
-	display: flex;
-	align-items: baseline;
-}
-.k-field-options {
-	position: absolute;
-	top: calc(-0.5rem - 1px);
-	inset-inline-end: 0;
-}
-.k-field-options.k-button-group .k-dropdown {
-	height: auto;
-}
-.k-field-options.k-button-group .k-field-options-button.k-button {
-	padding: 0.75rem;
-	display: flex;
-}
 .k-field[data-disabled="true"] {
 	cursor: not-allowed;
 }
@@ -100,26 +70,24 @@ export default {
 .k-field[data-disabled="true"] .k-text[data-theme="help"] * {
 	pointer-events: initial;
 }
+.k-field-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: var(--spacing-6);
+	position: relative;
+	margin-bottom: var(--spacing-2);
+}
+.k-field-options {
+	flex-shrink: 0;
+}
 .k-field-counter {
 	display: none;
 }
 .k-field:focus-within > .k-field-header > .k-field-counter {
 	display: block;
 }
-.k-field-help {
-	padding-top: 0.5rem;
-}
-
-/** Add Button **/
-.k-field-add-item-button {
-	display: flex;
-	align-items: center;
-	width: 100%;
-	color: var(--color-gray-500);
-	justify-content: center;
-	padding: 0.75rem 0;
-}
-.k-field-add-item-button:hover {
-	color: var(--color-black);
+.k-field-footer {
+	margin-top: var(--spacing-2);
 }
 </style>

@@ -24,7 +24,7 @@ export default (option, Dayjs) => {
 				time: ["hour", "minute", "second"]
 			};
 
-			if (Object.prototype.hasOwnProperty.call(map, units) === false) {
+			if (Object.hasOwn(map, units) === false) {
 				throw new Error("Invalid merge unit alias");
 			}
 

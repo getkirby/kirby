@@ -15,7 +15,7 @@ namespace Kirby\Toolkit;
  */
 class Silo
 {
-	public static $data = [];
+	public static array $data = [];
 
 	/**
 	 * Setter for new data

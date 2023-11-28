@@ -1,0 +1,1 @@
+{"description":"Wrapper for views that are available only for signed-in users.","displayName":"PanelInside","tags":{},"slots":[{"name":"topbar","description":"Additional content for the Topbar"},{"name":"default","description":"Main content for the view"}],"component":"k-panel-inside","sourceFile":"src/components/View/Inside.vue"}

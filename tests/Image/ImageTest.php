@@ -146,7 +146,7 @@ class ImageTest extends TestCase
 	}
 
 	/**
-	 * @covers ::isresizable
+	 * @covers ::isResizable
 	 */
 	public function testIsResizable()
 	{

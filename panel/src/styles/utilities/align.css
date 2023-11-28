@@ -1,0 +1,10 @@
+/** Legacy **/
+[data-align="left"] {
+	--align: start;
+}
+[data-align="center"] {
+	--align: center;
+}
+[data-align="right"] {
+	--align: end;
+}

@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Panel\Page as Panel;
 use ReflectionMethod;
 
 class PageTestModel extends Page
@@ -96,6 +97,36 @@ class PageTest extends TestCase
 		$this->assertSame(['A'], array_column($page->blueprints(), 'title'));
 	}
 
+	public function testBlueprintsInSection()
+	{
+		new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'blueprints' => [
+				'pages/a' => [
+					'title' => 'A',
+					'sections' => [
+						'my-pages' => [
+							'type'   => 'pages',
+							'create' => 'b'
+						]
+					]
+				],
+				'pages/b' => [
+					'title' => 'B'
+				]
+			],
+			'templates' => [
+				'a' => __FILE__
+			]
+		]);
+
+		// no blueprints
+		$page = new Page(['slug' => 'test', 'template' => 'a']);
+		$this->assertSame(['B'], array_column($page->blueprints('my-pages'), 'title'));
+	}
+
 	public function testDepth()
 	{
 		$site = new Site([
@@ -132,8 +163,8 @@ class PageTest extends TestCase
 
 	public function testEmptyId()
 	{
-		$this->expectException('Exception');
-		$this->expectExceptionMessage('The property "slug" is required');
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The page slug is required');
 
 		$page = new Page(['slug' => null]);
 	}
@@ -294,7 +325,7 @@ class PageTest extends TestCase
 
 		$page = new Page([
 			'slug'  => 'test',
-			'num' => []
+			'num'   => []
 		]);
 	}
 
@@ -371,7 +402,7 @@ class PageTest extends TestCase
 	{
 		$this->expectException('TypeError');
 
-		$page = new Page([
+		new Page([
 			'slug'     => 'test/child',
 			'parent' => 'some parent'
 		]);
@@ -629,7 +660,7 @@ class PageTest extends TestCase
 			'template' => 'default'
 		]);
 
-		$method = new ReflectionMethod('Kirby\Cms\Page', 'token');
+		$method = new ReflectionMethod(Page::class, 'token');
 		$method->setAccessible(true);
 
 		$expected = hash_hmac('sha1', 'test' . 'default', '/var/www/content/test');
@@ -654,7 +685,7 @@ class PageTest extends TestCase
 			'template' => 'default'
 		]);
 
-		$method = new ReflectionMethod('Kirby\Cms\Page', 'token');
+		$method = new ReflectionMethod(Page::class, 'token');
 		$method->setAccessible(true);
 
 		$expected = hash_hmac('sha1', 'test' . 'default', 'testsalt');
@@ -684,7 +715,7 @@ class PageTest extends TestCase
 			]
 		]);
 
-		$method = new ReflectionMethod('Kirby\Cms\Page', 'token');
+		$method = new ReflectionMethod(Page::class, 'token');
 		$method->setAccessible(true);
 
 		$expected = hash_hmac('sha1', 'test' . 'default', '2012-12-12');
@@ -883,7 +914,7 @@ class PageTest extends TestCase
 			'slug' => 'test'
 		]);
 
-		$this->assertInstanceOf('Kirby\Panel\Page', $page->panel());
+		$this->assertInstanceOf(Panel::class, $page->panel());
 	}
 
 	public function testApiUrl()
@@ -1011,7 +1042,7 @@ class PageTest extends TestCase
 		$this->assertSame($app, $data['kirby']);
 		$this->assertSame($app->site(), $data['site']);
 		$this->assertSame($app->site()->children(), $data['pages']);
-		$this->assertInstanceOf('Kirby\Cms\Page', $data['page']);
+		$this->assertInstanceOf(Page::class, $data['page']);
 		$this->assertSame('New Foo Title', $data['page']->title()->value());
 
 		// invalid test
@@ -1044,8 +1075,9 @@ class PageTest extends TestCase
 		]);
 
 		$expected = [
-			'children' => [],
 			'content' => [],
+			'translations' => [],
+			'children' => [],
 			'files' => [],
 			'id' => 'test',
 			'mediaUrl' => '/media/pages/test',
@@ -1054,7 +1086,6 @@ class PageTest extends TestCase
 			'parent' => null,
 			'slug' => 'test',
 			'template' => $page->template(),
-			'translations' => [],
 			'uid' => 'test',
 			'uri' => 'test',
 			'url' => '/test',

@@ -22,9 +22,7 @@ const validator = (value, throws = false) => {
 };
 
 /**
- * A simple progress bar that we
- * mostly use it in the upload dialog.
- * @public
+ * A simple progress bar that we mostly use it in the upload dialog
  *
  * @example <k-progress :value="10" />
  */
@@ -54,9 +52,13 @@ export default {
 		/**
 		 * Update the value
 		 * @param {Number} value new value of the progress bar (0-100)
-		 * @public
+		 * @deprecated 4.0.0 Use `value` prop instead
 		 */
 		set(value) {
+			window.panel.deprecated(
+				"<k-dprogress>: `set` method will be removed in a future version. Use the `value` prop instead."
+			);
+
 			validator(value, true);
 			this.state = value;
 		}
@@ -65,32 +67,40 @@ export default {
 </script>
 
 <style>
-.k-progress {
-	-webkit-appearance: none;
+:root {
+	--progress-height: var(--spacing-2);
+	--progress-color-back: var(--color-gray-300);
+	--progress-color-value: var(--color-focus);
+}
+
+progress {
+	display: block;
 	width: 100%;
-	height: 0.5rem;
-	border-radius: 5rem;
-	background: var(--color-border);
+	height: var(--progress-height);
+	border-radius: var(--progress-height);
 	overflow: hidden;
-	border: none;
+	border: 0;
 }
 
-.k-progress::-webkit-progress-bar {
-	border: none;
-	background: var(--color-border);
-	height: 0.5rem;
-	border-radius: 20px;
+/** Determinate **/
+progress::-webkit-progress-bar {
+	background: var(--progress-color-back);
 }
 
-.k-progress::-webkit-progress-value {
-	border-radius: inherit;
-	background: var(--color-focus);
-	transition: width 0.3s;
+progress::-webkit-progress-value {
+	background: var(--progress-color-value);
+	border-radius: var(--progress-height);
 }
 
-.k-progress::-moz-progress-bar {
-	border-radius: inherit;
-	background: var(--color-focus);
-	transition: width 0.3s;
+progress::-moz-progress-bar {
+	background: var(--progress-color-value);
+}
+
+/**	Indeterminate **/
+progress:not([value])::-webkit-progress-bar {
+	background: var(--progress-color-value);
+}
+progress:not([value])::-moz-progress-bar {
+	background: var(--progress-color-value);
 }
 </style>

@@ -60,4 +60,18 @@ class SvgzTest extends TestCase
 		$this->expectExceptionMessage('The doctype must not define a subset');
 		Svgz::validateFile($fixture);
 	}
+
+	public function testDisallowedExternalFile()
+	{
+		$fixture   = $this->fixture('disallowed/xlink-subfolder.svg');
+		$fixtureZ  = $this->fixture('disallowed/xlink-subfolder.svgz');
+		$sanitized = $this->fixture('sanitized/xlink-subfolder.svg');
+
+		$this->assertStringEqualsFile($fixture, gzdecode(Svgz::sanitize(file_get_contents($fixtureZ))));
+		$this->assertStringEqualsFile($sanitized, gzdecode(Svgz::sanitize(file_get_contents($fixtureZ), isExternal: true)));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The URL points outside of the site index URL');
+		Svgz::validateFile($fixtureZ);
+	}
 }

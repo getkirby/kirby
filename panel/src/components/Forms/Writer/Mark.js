@@ -1,10 +1,6 @@
 import Extension from "./Extension.js";
 
 export default class Mark extends Extension {
-	constructor(options = {}) {
-		super(options);
-	}
-
 	command() {
 		return () => {};
 	}
@@ -14,7 +10,7 @@ export default class Mark extends Extension {
 	}
 
 	get schema() {
-		return null;
+		return {};
 	}
 
 	get type() {

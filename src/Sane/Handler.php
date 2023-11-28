@@ -21,8 +21,11 @@ abstract class Handler
 {
 	/**
 	 * Sanitizes the given string
+	 *
+	 * @param bool $isExternal Whether the string is from an external file
+	 *                         that may be accessed directly
 	 */
-	abstract public static function sanitize(string $string): string;
+	abstract public static function sanitize(string $string, bool $isExternal = false): string;
 
 	/**
 	 * Sanitizes the contents of a file by overwriting
@@ -33,17 +36,21 @@ abstract class Handler
 	 */
 	public static function sanitizeFile(string $file): void
 	{
-		$sanitized = static::sanitize(static::readFile($file));
+		$content   = static::readFile($file);
+		$sanitized = static::sanitize($content, isExternal: true);
 		F::write($file, $sanitized);
 	}
 
 	/**
 	 * Validates file contents
 	 *
+	 * @param bool $isExternal Whether the string is from an external file
+	 *                         that may be accessed directly
+	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
 	 * @throws \Kirby\Exception\Exception On other errors
 	 */
-	abstract public static function validate(string $string): void;
+	abstract public static function validate(string $string, bool $isExternal = false): void;
 
 	/**
 	 * Validates the contents of a file
@@ -54,7 +61,8 @@ abstract class Handler
 	 */
 	public static function validateFile(string $file): void
 	{
-		static::validate(static::readFile($file));
+		$content = static::readFile($file);
+		static::validate($content, isExternal: true);
 	}
 
 	/**

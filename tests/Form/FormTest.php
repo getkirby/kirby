@@ -2,11 +2,15 @@
 
 namespace Kirby\Form;
 
+use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Form\Form
+ */
 class FormTest extends TestCase
 {
 	public function testDataWithoutFields()
@@ -20,6 +24,31 @@ class FormTest extends TestCase
 		]);
 
 		$this->assertSame($values, $form->data());
+	}
+
+	/**
+	 * @covers ::exceptionField
+	 */
+	public function testExceptionFieldDebug()
+	{
+		$exception = new Exception('This is an error');
+
+		$app  = new App();
+		$props = ['name' => 'test', 'model' => $app->site()];
+		$field = Form::exceptionField($exception, $props)->toArray();
+		$this->assertSame('info', $field['type']);
+		$this->assertSame('Error in "test" field.', $field['label']);
+		$this->assertSame('<p>This is an error</p>', $field['text']);
+		$this->assertSame('negative', $field['theme']);
+
+		$app   = $app->clone(['options' => ['debug' => true]]);
+		$props = ['name' => 'test', 'model' => $app->site()];
+		$field = Form::exceptionField($exception, $props)->toArray();
+		$this->assertSame('info', $field['type']);
+		$this->assertSame('Error in "test" field.', $field['label']);
+		$this->assertStringContainsString('<p>This is an error in file:', $field['text']);
+		$this->assertStringContainsString('tests/Form/FormTest.php line: 34</p>', $field['text']);
+		$this->assertSame('negative', $field['theme']);
 	}
 
 	public function testValuesWithoutFields()

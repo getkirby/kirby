@@ -12,7 +12,7 @@ return [
 		'permissions' => fn (Role $role) => $role->permissions()->toArray(),
 		'title'       => fn (Role $role) => $role->title(),
 	],
-	'type'  => 'Kirby\Cms\Role',
+	'type'  => Role::class,
 	'views' => [
 		'compact' => [
 			'description',

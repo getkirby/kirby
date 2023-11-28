@@ -2,23 +2,20 @@
 
 namespace Kirby\Cms;
 
-class ArticlePage extends Page
-{
-	public function test()
-	{
-		return $this->id();
-	}
-}
+use Kirby\Filesystem\Dir;
 
 class PageModelTest extends TestCase
 {
 	public function setUp(): void
 	{
-		parent::setUp();
+		$this->app = new App([
+			'roots' => [
+				'index'  => $this->tmp = __DIR__ . '/tmp',
+				'models' => __DIR__ . '/fixtures/PageModelTest'
+			]
+		]);
 
-		Page::$models = [
-			'article' => ArticlePage::class
-		];
+		Dir::make($this->tmp);
 	}
 
 	public function testPageModelWithTemplate()
@@ -28,8 +25,19 @@ class PageModelTest extends TestCase
 			'model' => 'article',
 		]);
 
-		$this->assertInstanceOf(ArticlePage::class, $page);
+		$this->assertInstanceOf(\ArticlePage::class, $page);
 		$this->assertSame('test', $page->test());
+	}
+
+	public function testDefaultPageModel()
+	{
+		$page = Page::factory([
+			'slug'  => 'test',
+			'model' => 'non-existing',
+		]);
+
+		$this->assertInstanceOf(\DefaultPage::class, $page);
+		$this->assertSame('bar', $page->foo());
 	}
 
 	public function testMissingPageModel()
