@@ -65,10 +65,8 @@ export default {
 	border: 1px solid var(--color-gray-300);
 	border-spacing: 0;
 	border-radius: var(--rounded-sm);
-	overflow: hidden;
 }
-.k-block-type-table-preview td,
-.k-block-type-table-preview th {
+.k-block-type-table-preview :where(th, td) {
 	text-align: start;
 	line-height: 1.5em;
 	font-size: var(--text-sm);
