@@ -5,10 +5,7 @@
 		:buttons="buttons"
 		:data-inline="inline"
 		:theme="inline ? 'dark' : 'light'"
-		:style="{
-			top: position.y + 'px',
-			left: position.x + 'px'
-		}"
+		:style="positions"
 		class="k-writer-toolbar"
 	/>
 </template>
@@ -208,6 +205,19 @@ export default {
 			}
 
 			return buttons;
+		},
+		positions() {
+			// only set position when toolbar is inline,
+			// otherwise the top value is overwriting the top offset
+			// for the sticky non-inline toolbar
+			if (this.inline === false) {
+				return null;
+			}
+
+			return {
+				top: this.position.y + "px",
+				left: this.position.x + "px"
+			};
 		}
 	},
 	methods: {
