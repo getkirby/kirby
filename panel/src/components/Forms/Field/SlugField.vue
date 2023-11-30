@@ -1,7 +1,13 @@
 <template>
 	<k-field v-bind="$props" :input="_uid" :help="preview" class="k-slug-field">
 		<template v-if="wizard && wizard.text" #options>
-			<k-button :text="wizard.text" icon="sparkling" @click="onWizard" />
+			<k-button
+				:text="wizard.text"
+				icon="sparkling"
+				size="xs"
+				variant="filled"
+				@click="onWizard"
+			/>
 		</template>
 
 		<k-input
@@ -68,8 +74,14 @@ export default {
 			this.$refs.input.focus();
 		},
 		onWizard() {
-			if (this.formData[this.wizard?.field]) {
-				this.slug = this.formData[this.wizard.field];
+			let field = this.wizard?.field;
+
+			if (field) {
+				const value = this.formData[field.toLowerCase()];
+
+				if (value) {
+					this.slug = value;
+				}
 			}
 		}
 	}
