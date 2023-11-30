@@ -386,6 +386,38 @@ class ModelTest extends TestCase
 	/**
 	 * @covers ::image
 	 */
+	public function testImageWithBlueprintFalse()
+	{
+		$app  = $this->app->clone([
+			'blueprints' => [
+				'pages/foo' => [
+					'image' => false
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'template' => 'foo'
+					]
+				]
+			]
+		]);
+
+		$panel = $app->page('test')->panel();
+		$image = $panel->image(['icon' => 'heart']);
+		$this->assertSame('heart', $image['icon']);
+
+		$image = $panel->image([]);
+		$this->assertNull($image);
+
+		$image = $panel->image();
+		$this->assertNull($image);
+	}
+
+	/**
+	 * @covers ::image
+	 */
 	public function testImageWithQuery()
 	{
 		$site  = new ModelSiteWithImageMethod();
