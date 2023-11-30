@@ -165,4 +165,7 @@ export default {
 .k-models-dialog .k-list-item {
 	cursor: pointer;
 }
+.k-models-dialog .k-collection-footer {
+	margin-bottom: var(--spacing-6);
+}
 </style>
