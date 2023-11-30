@@ -5,3 +5,9 @@
 		</k-lab-example>
 	</k-lab-examples>
 </template>
+
+<style>
+.k-lab-examples {
+	padding-bottom: 100rem;
+}
+</style>
