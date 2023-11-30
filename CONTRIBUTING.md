@@ -6,15 +6,17 @@
 
 To keep track of different states of our code (current release, bugfixes, features) we use branches:
 
-| Branch      | Used for                                                                 | PRs allowed?                |
-| ----------- | ------------------------------------------------------------------------ | --------------------------- |
-| `main`      | Latest released version                                                  | -                           |
-| `develop`   | Working branch for next release, e.g. `3.7.x`                            | ✅                          |
-| `fix/*`     | Temporary branches for single patch                                      | -                           |
-| `feature/*` | Temporary branches for single feature                                    | -                           |
-| `release/*` | Pre-releases in testing before they are merged into `main` when released | only during release testing |
+| Branch          | Used for                                                                 | PRs allowed?                |
+| --------------- | ------------------------------------------------------------------------ | --------------------------- |
+| `main`          | Latest released version                                                  | ❌                           |
+| `develop-patch` | Working branch for next patch release, e.g. `4.0.x`                      | ✅                          |
+| `develop-minor` | Working branch for next minor release, e.g. `4.x.0`                      | ✅                          |
+| `v5/develop`    | Working branch for next major release, e.g. `5.0.0`                      | ✅                          |
+| `fix/*`         | Temporary branches for single bugfix                                     | -                           |
+| `feature/*`     | Temporary branches for single feature                                    | -                           |
+| `release/*`     | Pre-releases in testing before they are merged into `main` when released | only during release testing |
 
-We will review all pull requests (PRs) to `develop` and merge them if accepted, once an appropriate version is upcoming. Please understand that this might not be the immediate next release and might take some time.
+We will review all pull requests (PRs) to `develop-patch`, `develop-minor` and `v5/develop` and merge them if accepted, once an appropriate version is upcoming. Please understand that this might not be the immediate next release and might take some time.
 
 ## How you can contribute
 
@@ -26,25 +28,25 @@ When you find a bug, the first step to fixing it is to help us understand and re
 
 For bug fixes, please create a new branch following the name scheme: `fix/issue_number-bug-x`, e.g. `fix/234-this-nasty-bug`. Limit bug fix PRs to a single bug. **Do not mix multiple bug fixes in a single PR.** This will make it easier for us to review the fix and merge it.
 
-- Always send bug fix PRs against the `develop` branch––not `main`.
+- Always send bug fix PRs against the `develop-patch` branch––not `main`.
 - Add a helpful description of what the PR does if it is not 100% self-explanatory.
 - Every bug fix should include a [unit test](#tests) to avoid future regressions. Let us know if you need help with that.
 - Make sure your code [style](#style) matches ours and includes [comments/in-code documentation](#documentation).
-- Make sure your branch is up to date with the latest state on the `develop` branch. [Rebase](https://help.github.com/articles/about-pull-request-merges/) changes before you send the PR.
+- Make sure your branch is up to date with the latest state on the `develop-patch` branch. [Rebase](https://help.github.com/articles/about-pull-request-merges/) changes before you send the PR.
 - Please *don't* commit updated dist files in the `panel/dist` folder to avoid merge conflicts. We only build the dist files on release. Your branch should only contain changes to the source files.
 
 ### Features
 
 For features create a new branch following the name scheme: `feature/issue_number-feature-x`, e.g. `feature/123-awesome-function`. Our [feedback platform](https://feedback.getkirby.com) can be a good source of highly requested features. Maybe your feature idea already exists and you can get valuable feedback from other Kirby users. Focus on a single feature per PR. Don't mix features!
 
-- Always send feature PRs against the `develop` branch––not `main`.
+- Always send feature PRs against the `develop-minor` branch––not `main`.
 - Add a helpful description of what the PR does.
 - New features should include [unit tests](#tests). Let us know if you need help with that.
 - Make your code [style](#style) matches ours and includes [comments/in-code documentation](#documentation).
-- Make sure your branch is up to date with the latest state on the `develop` branch. [Rebase](https://help.github.com/articles/about-pull-request-merges/) changes before you send the PR.
+- Make sure your branch is up to date with the latest state on the `develop-minor` branch. [Rebase](https://help.github.com/articles/about-pull-request-merges/) changes before you send the PR.
 - Please *don't* commit updated dist files in the `panel/dist` folder to avoid merge conflicts. We only build the dist files on release. Your branch should only contain changes to the source files.
 
-We try to bundle features in our major releases, e.g. `3.x`. That is why we might only review and, if accepted, merge your PR once an appropriate release is upcoming. Please understand that we cannot merge all feature ideas or that it might take a while. Check out the [roadmap](https://roadmap.getkirby.com) to see upcoming releases.
+We try to bundle features in our major releases, e.g. `5.0`. That is why we might only review and, if accepted, merge your PR once an appropriate release is upcoming. Please understand that we cannot merge all feature ideas or that it might take a while. Check out the [roadmap](https://roadmap.getkirby.com) to see upcoming releases.
 
 ### Translations
 
