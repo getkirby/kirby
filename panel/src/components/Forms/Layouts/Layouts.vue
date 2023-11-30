@@ -28,7 +28,7 @@
 		</template>
 
 		<k-empty
-			v-if="hasFieldsets === false"
+			v-else-if="hasFieldsets === false"
 			icon="dashboard"
 			class="k-layout-empty"
 		>
