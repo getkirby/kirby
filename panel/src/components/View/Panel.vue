@@ -60,6 +60,10 @@ export default {};
 </script>
 
 <style>
+:root {
+	--scroll-top: 0rem;
+}
+
 html {
 	overflow-x: hidden;
 	overflow-y: scroll;

@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<template v-if="rows.length">
+		<template v-if="hasFieldsets && rows.length">
 			<k-draggable v-bind="draggableOptions" class="k-layouts" @sort="save">
 				<k-layout
 					v-for="(layout, index) in rows"
@@ -26,6 +26,14 @@
 				/>
 			</k-draggable>
 		</template>
+
+		<k-empty
+			v-if="hasFieldsets === false"
+			icon="dashboard"
+			class="k-layout-empty"
+		>
+			{{ $t("field.blocks.fieldsets.empty") }}
+		</k-empty>
 
 		<k-empty v-else icon="dashboard" class="k-layout-empty" @click="select(0)">
 			{{ empty ?? $t("field.layout.empty") }}
@@ -65,6 +73,9 @@ export default {
 				handle: true,
 				list: this.rows
 			};
+		},
+		hasFieldsets() {
+			return this.$helper.object.length(this.fieldsets) > 0;
 		}
 	},
 	watch: {

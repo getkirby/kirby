@@ -135,7 +135,7 @@
 
 	"error.license.domain": "Het domein voor de licentie ontbreekt",
 	"error.license.email": "Gelieve een geldig emailadres in te voeren",
-	"error.license.format": "Please enter a valid license code",
+	"error.license.format": "Vul een geldige licentie in",
 	"error.license.verification": "De licentie kon niet worden geverifieerd. ",
 
 	"error.login.totp.confirm.invalid": "Ongeldige code",
@@ -425,7 +425,7 @@
 	"license.code.label": "Vul je licentie in",
 	"license.status.active.info": "Inclusief nieuwe major versies tot {date}",
 	"license.status.active.label": "Geldige licentie",
-	"license.status.demo.info": "This is a demo installation",
+	"license.status.demo.info": "Dit is een demo installatie",
 	"license.status.demo.label": "Demo",
 	"license.status.inactive.info": "Verleng licentie om bij te werken naar nieuwe versies",
 	"license.status.inactive.label": "Geen nieuwe major versies",

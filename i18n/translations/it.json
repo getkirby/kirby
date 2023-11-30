@@ -135,7 +135,7 @@
 
 	"error.license.domain": "Il dominio per la licenza è assente",
 	"error.license.email": "Inserisci un indirizzo email valido",
-	"error.license.format": "Please enter a valid license code",
+	"error.license.format": "Per favore inserisci un codice di licenza valido",
 	"error.license.verification": "Non è stato possibile verificare la licenza",
 
 	"error.login.totp.confirm.invalid": "Codice non valido",
@@ -425,7 +425,7 @@
 	"license.code.label": "Inserisci il codice di licenza",
 	"license.status.active.info": "Comprende nuove versioni major entro il {date}",
 	"license.status.active.label": "Licenza valida",
-	"license.status.demo.info": "This is a demo installation",
+	"license.status.demo.info": "Questa è un'installazione demo",
 	"license.status.demo.label": "Demo",
 	"license.status.inactive.info": "Rinnova la licenza per aggiornare a nuove versioni major",
 	"license.status.inactive.label": "Nessuna nuova versione major",

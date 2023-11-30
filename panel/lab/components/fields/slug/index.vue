@@ -2,7 +2,7 @@
 	<k-lab-field-examples type="slug">
 		<k-lab-example label="Wizard">
 			<k-slug-field
-				:formData="formData"
+				:form-data="formData"
 				:value="value"
 				:wizard="wizard"
 				label="Slug"
@@ -16,21 +16,21 @@
 export default {
 	data() {
 		return {
-			value: null,
+			value: null
 		};
 	},
 	computed: {
 		formData() {
 			return {
-				title: "This is a custom slug",
+				title: "This is a custom slug"
 			};
 		},
 		wizard() {
 			return {
 				text: "Create slug",
-				field: "title",
+				field: "title"
 			};
-		},
-	},
+		}
+	}
 };
 </script>

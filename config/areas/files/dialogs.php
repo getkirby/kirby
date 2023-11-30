@@ -26,7 +26,7 @@ return [
 							'type'      => 'slug',
 							'required'  => true,
 							'icon'      => 'title',
-							'allow'     => '@._-',
+							'allow'     => 'a-z0-9@._-',
 							'after'     => '.' . $file->extension(),
 							'preselect' => true
 						]

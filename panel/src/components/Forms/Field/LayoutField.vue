@@ -1,6 +1,6 @@
 <template>
 	<k-field v-bind="$props" class="k-layout-field">
-		<template v-if="!disabled" #options>
+		<template v-if="!disabled && hasFieldsets" #options>
 			<k-button-group layout="collapsed">
 				<k-button
 					:autofocus="autofocus"
@@ -22,7 +22,7 @@
 
 		<k-layouts ref="layouts" v-bind="$props" @input="$emit('input', $event)" />
 
-		<footer v-if="!disabled">
+		<footer v-if="!disabled && hasFieldsets">
 			<k-button
 				:title="$t('add')"
 				icon="add"
@@ -57,6 +57,9 @@ export default {
 		}
 	},
 	computed: {
+		hasFieldsets() {
+			return this.$helper.object.length(this.fieldsets) > 0;
+		},
 		isEmpty() {
 			return this.value.length === 0;
 		},
