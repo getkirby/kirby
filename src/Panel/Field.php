@@ -222,6 +222,7 @@ class Field
 		return array_merge([
 			'label' => I18n::translate('slug'),
 			'type'  => 'slug',
+			'allow' => Str::$defaults['slug']['allowed']
 		], $props);
 	}
 
