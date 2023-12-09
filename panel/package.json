@@ -35,7 +35,6 @@
 		"eslint-plugin-vue": "^9.19.2",
 		"glob": "^10.3.10",
 		"jsdom": "^23.0.1",
-		"lightningcss": "^1.22.1",
 		"prettier": "^3.1.0",
 		"rollup-plugin-external-globals": "^0.9.1",
 		"terser": "^5.26.0",

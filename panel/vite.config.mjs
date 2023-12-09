@@ -71,9 +71,6 @@ export default defineConfig(({ command }) => {
 			entries: "src/**/*.{js,vue}",
 			exclude: ["vitest", "vue"]
 		},
-		css: {
-			transformer: "lightningcss"
-		},
 		resolve: {
 			alias: {
 				"@": path.resolve(__dirname, "src")
