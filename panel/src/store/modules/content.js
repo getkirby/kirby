@@ -58,13 +58,18 @@ export default {
 		 */
 		id: (state) => (id) => {
 			id = id ?? state.current;
-			return id + "?language=" + window.panel.language.code;
+
+			if (id.includes("?language=") === false) {
+				id += "?language=" + window.panel.language.code;
+			}
+
+			return id;
 		},
 		/**
 		 * Return the full model object for passed ID
 		 */
 		model: (state, getters) => (id) => {
-			id = id ?? state.current;
+			id = getters.id(id);
 
 			if (getters.exists(id) === true) {
 				return state.models[id];
@@ -263,6 +268,7 @@ export default {
 			context.dispatch("current", model.id);
 		},
 		current(context, id) {
+			id = context.getters.id(id);
 			context.commit("CURRENT", id);
 		},
 		disable(context) {
@@ -277,6 +283,7 @@ export default {
 			context.commit("MOVE", [from, to]);
 		},
 		remove(context, id) {
+			id = context.getters.id(id);
 			context.commit("REMOVE", id);
 
 			if (context.getters.isCurrent(id)) {
@@ -284,11 +291,11 @@ export default {
 			}
 		},
 		revert(context, id) {
-			id = id ?? context.state.current;
+			id = context.getters.id(id);
 			context.commit("REVERT", id);
 		},
 		async save(context, id) {
-			id = id ?? context.state.current;
+			id = context.getters.id(id);
 
 			// don't allow save if model is not current
 			// or the form is currently disabled
