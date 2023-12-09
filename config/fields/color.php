@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Field\FieldOptions;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
@@ -52,9 +53,18 @@ return [
 			return Str::lower($this->default);
 		},
 		'options' => function (): array {
-			return A::map(array_keys($this->options), fn ($key) => [
-				'value' => $this->options[$key],
-				'text'  => is_string($key) ? $key : null
+			// resolve options to support manual arrays
+			// alongside api and query options
+			$props   = FieldOptions::polyfill($this->props);
+			$options = FieldOptions::factory($props['options']);
+			$options = $options->render($this->model());
+
+			// flip value and text as the notation of the
+			// color options is `text: value`;
+			// only add text if it is different from value
+			return A::map($options, fn ($option) => [
+				'value' => $option['text'],
+				'text'  => $option['value'] !== $option['text'] ? $option['value'] : null
 			]);
 		}
 	],
