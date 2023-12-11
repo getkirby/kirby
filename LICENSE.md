@@ -66,7 +66,8 @@ We will also **reassign** a license to another Qualified Website domain and root
 
 If the new licensee, Website or Client in a transfer or reassignment is not Qualified for the existing license, You or the new licensee need to **upgrade the license to the qualifying terms and conditions** before the transfer or reassignment can be performed.
 
-If you need to transfer your Kirby license to another individual or company (for example to your client or a new agency) or reassign it to a different project, please get in touch directly at <support@getkirby.com>.
+> [!NOTE]
+> If you need to transfer your Kirby license to another individual or company (for example to your client or a new agency) or reassign it to a different project, please get in touch directly at <support@getkirby.com>.
 
 A license is valid for all Major Releases that We publish before the end of the Included Updates Period. It is also valid for all releases in those Major Generations independent of their release date. Whether a release is a Minor Release or Major Release is at Our sole discretion.
 
@@ -88,7 +89,8 @@ We **reserve the right to verify** at any time after the purchase whether You, t
 
 Kirby can be used **for free in the following cases**.
 
-Please note that the restrictions and all other clauses of this Agreement also apply to free licenses. You may especially _not_ alter or circumvent the licensing features.
+> [!NOTE]
+> Please note that the restrictions and all other clauses of this Agreement also apply to free licenses. You may especially _not_ alter or circumvent the licensing features.
 
 ### Usage for a Development Installation
 
@@ -96,26 +98,28 @@ We believe that it should be possible to test and evaluate software before havin
 
 Therefore, installing and using Kirby on a personal computer (like a desktop PC, notebook or tablet) or server for a Development Installation is **free** for as long as You need.
 
-The usage of Kirby in production (with the intention to handle production data or content) is _never_ considered a Development Installation, even in internal apps or systems.
+> [!NOTE]
+> The usage of Kirby in production (with the intention to handle production data or content) is _never_ considered a Development Installation, even in internal apps or systems.
 
 ### Usage for a Private Installation
 
 You may also install and use Kirby for **free** in Private Installations as long as they are not accessible by anyone except You and Your family.
 
-Our [definition](#definitions) of a Private Installation allows the following use cases:
-
-- Private sites for personal use, for example:
-  - Apps for You personally (like a personal diary)
-  - Apps for You as a freelancer (like a bookkeeping, invoicing or project management app)
-  - Apps for Your family (like a private photo gallery)
-- Experimental local Kirby setups for Your personal use (for example to try out Kirby features)
-
-However, the following use cases are _not_ covered and need a **[paid license](#usage-for-a-public-site)**:
-
-- Intranets for companies, authorities or organizations, no matter if on a local or public server
-- (Internal) apps for teams or entire companies, authorities or organizations
-- Websites that are accessible by the public, even for personal/non-commercial purposes
-- Use of Kirby as a local CMS for a static or headless site without a license for the frontend domain(s)
+> [!NOTE]
+> Our [definition](#definitions) of a Private Installation allows the following use cases:
+>
+> - Private sites for personal use, for example:
+>   - Apps for You personally (like a personal diary)
+>   - Apps for You as a freelancer (like a bookkeeping, invoicing or project management app)
+>   - Apps for Your family (like a private photo gallery)
+> - Experimental local Kirby setups for Your personal use (for example to try out Kirby features)
+> 
+> However, the following use cases are _not_ covered and need a **[paid license](#usage-for-a-public-site)**:
+>
+> - Intranets for companies, authorities or organizations, no matter if on a local or public server
+> - (Internal) apps for teams or entire companies, authorities or organizations
+> - Websites that are accessible by the public, even for personal/non-commercial purposes
+> - Use of Kirby as a local CMS for a static or headless site without a license for the frontend domain(s)
 
 ### Usage for an Extension Demo
 
@@ -123,7 +127,8 @@ Extension Demos are not real Websites. We want to encourage you to build and sho
 
 Therefore, You may **operate Extension Demos without purchasing a license**.
 
-Please note that this does _not_ apply to store fronts or other types of sites used to promote free or commercial themes or plugins. If such a site is built with Kirby as well, it is a Public Site and needs a **[paid license](#usage-for-a-public-site)**.
+> [!NOTE]
+> Please note that this does _not_ apply to store fronts or other types of sites used to promote free or commercial themes or plugins. If such a site is built with Kirby as well, it is a Public Site and needs a **[paid license](#usage-for-a-public-site)**.
 
 ## Restrictions
 
@@ -151,7 +156,8 @@ However You may _not_:
 - **alter or circumvent the licensing features**, including (but not limited to) the license validation and payment prompts or
 - **resell, redistribute or transfer** the modified or derivative version.
 
-Please note that We **can't provide technical support** for modified or derivative versions of the Source Code.
+> [!NOTE]
+> Please note that We **can't provide technical support** for modified or derivative versions of the Source Code.
 
 ### Your Relationship to Third Parties
 
@@ -165,12 +171,13 @@ The following cases are exempted from this restriction:
 - You may make a Kirby installation available to employees or partners of You or Your Website client. You may also disclose and distribute Kirby’s Source Code to Your client together with the source code of the Website You created for them.
 - You may disclose the Source Code to individuals or companies that are involved in the development or operation of Your Website (e.g. agencies, design or development freelancers, hosting providers or administrators).
 
-E.g. the following cases are explicitly **_not_ allowed**:
-
-- Selling, licensing or distributing a new product based on Kirby that modifies or hides Kirby’s identity as a Content Management System (CMS)
-- Forking Kirby and selling the modified version ([see above](#modification-of-the-source-code))
-- Buying licenses in bulk and reselling them in your own shop
-- Bundling or including Kirby’s Source Code in the publication and/or distribution of a Website’s source code or a (free or paid) theme or plugin (please use Git submodules or Composer or provide a link to Our repository or website instead)
+> [!NOTE]
+> E.g. the following cases are explicitly **_not_ allowed**:
+> 
+> - Selling, licensing or distributing a new product based on Kirby that modifies or hides Kirby’s identity as a Content Management System (CMS)
+> - Forking Kirby and selling the modified version ([see above](#modification-of-the-source-code))
+> - Buying licenses in bulk and reselling them in your own shop
+> - Bundling or including Kirby’s Source Code in the publication and/or distribution of a Website’s source code or a (free or paid) theme or plugin (please use Git submodules or Composer or provide a link to Our repository or website instead)
 
 ### Disallowed Uses
 
@@ -209,7 +216,8 @@ For each Major Generation, We aim to provide **security support for three (3) ye
 
 With each vulnerability, We aim to publish the security advisory and security updates for all supported Major Generations at the same time.
 
-You can find up-to-date information on our currently supported versions in our [public security policy](https://getkirby.com/security).
+> [!NOTE]
+> You can find up-to-date information on our currently supported versions in our [public security policy](https://getkirby.com/security).
 
 We reserve the right to **limit technical support for free licenses**.
 
@@ -217,7 +225,8 @@ We reserve the right to **limit technical support for free licenses**.
 
 We offer a **14-day**, money back refund policy if Kirby didn't work out for Your project.
 
-If you need a refund, please get in touch directly at <support@getkirby.com>.
+> [!NOTE]
+> If you need a refund, please get in touch directly at <support@getkirby.com>.
 
 ## No Warranty
 
