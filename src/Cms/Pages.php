@@ -158,7 +158,6 @@ class Pages extends Collection
 		}
 
 		foreach ($pages as $props) {
-			$props['kirby']   = $kirby;
 			$props['parent']  = $parent;
 			$props['site']    = $site;
 			$props['isDraft'] = $draft ?? $props['isDraft'] ?? $props['draft'] ?? false;

@@ -1499,7 +1499,6 @@ class App
 		return $this->site ??= new Site([
 			'errorPageId' => $this->options['error'] ?? 'error',
 			'homePageId'  => $this->options['home']  ?? 'home',
-			'kirby'       => $this,
 			'url'         => $this->url('index'),
 		]);
 	}

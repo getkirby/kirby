@@ -94,7 +94,6 @@ class Files extends Collection
 
 		foreach ($files as $props) {
 			$props['collection'] = $collection;
-			$props['kirby']      = $kirby;
 			$props['parent']     = $parent;
 
 			$file = File::factory($props);
