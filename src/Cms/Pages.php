@@ -147,7 +147,6 @@ class Pages extends Collection
 	): static {
 		$model  ??= App::instance()->site();
 		$children = new static([], $model);
-		$kirby    = $model->kirby();
 
 		if ($model instanceof Page) {
 			$parent = $model;
