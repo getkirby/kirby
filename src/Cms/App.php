@@ -1466,9 +1466,7 @@ class App
 	protected function setRoles(array $roles = null): static
 	{
 		if ($roles !== null) {
-			$this->roles = Roles::factory($roles, [
-				'kirby' => $this
-			]);
+			$this->roles = Roles::factory($roles);
 		}
 
 		return $this;
