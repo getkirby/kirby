@@ -1482,9 +1482,7 @@ class App
 	protected function setSite(Site|array $site = null): static
 	{
 		if (is_array($site) === true) {
-			$site = new Site($site + [
-				'kirby' => $this
-			]);
+			$site = new Site($site);
 		}
 
 		$this->site = $site;
