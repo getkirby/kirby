@@ -73,7 +73,7 @@
 	"error.access.code": "Ongeldige code",
 	"error.access.login": "Ongeldige login",
 	"error.access.panel": "Je hebt geen toegang tot het Panel",
-	"error.access.view": "Je hebt geen toegangsrechten voor deze zone van het Panel",
+	"error.access.view": "Je hebt geen toegangsrechten voor dit gedeelte van het Panel",
 
 	"error.avatar.create.fail": "De avatar kon niet worden geupload",
 	"error.avatar.delete.fail": "De avatar kan niet worden verwijderd",
@@ -417,7 +417,7 @@
 	"license.activate": "Activeer nu",
 	"license.activate.label": "Activeer je licentie",
 	"license.activate.domain": "Je licentie wordt geactiveerd voor <strong>{host}</strong>.",
-	"license.activate.local": "Je staat op het punt om je Kirby licentie voor je lokale domein <strong>{host}</strong> te activeren. Als deze site op een publiek domein geplaatst wordt, activeer deze licentie dan daar. Als het domein {host} wel degene is die voor deze licentie wil gebruiken, ga dan door.",
+	"license.activate.local": "Je staat op het punt om je Kirby licentie voor je lokale domein <strong>{host}</strong> te activeren. Als deze site op een publiek domein geplaatst wordt, activeer deze licentie dan daar. Als het domein {host} wel degene is die je voor deze licentie wil gebruiken, ga dan door.",
 	"license.activated": "Geactiveerd",
 	"license.buy": "Koop een licentie",
 	"license.code": "Code",
@@ -507,10 +507,10 @@
 	"months.september": "september",
 
 	"more": "Meer",
-	"move": "Move",
+	"move": "Verplaatsen",
 	"name": "Naam",
 	"next": "Volgende",
-	"night": "Night",
+	"night": "Nacht",
 	"no": "nee",
 	"off": "uit",
 	"on": "aan",
@@ -593,7 +593,7 @@
 	"search.all": "Laat alle {count} resultaten zien",
 	"search.results.none": "Geen resultaten",
 
-	"section.invalid": "The section is invalid",
+	"section.invalid": "De sectie is ongeldig",
 	"section.required": "De sectie is verplicht",
 
 	"security": "Beveiliging",

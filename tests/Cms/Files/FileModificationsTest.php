@@ -58,7 +58,10 @@ class FileModificationsTest extends TestCase
 	{
 		$app = $this->app->clone();
 		$asset = new Asset('');
-		$result = $asset->thumb([]);
+		$result = $asset->thumb([
+			'crop' => true
+		]);
+
 		$this->assertInstanceOf(Asset::class, $result);
 	}
 
