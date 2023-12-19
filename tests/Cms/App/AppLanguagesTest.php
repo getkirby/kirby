@@ -49,7 +49,7 @@ class AppLanguagesTest extends TestCase
 		$this->assertNull($app->languageCode('fr'));
 	}
 
-	public function detectedLanguageProvider(): array
+	public static function detectedLanguageProvider(): array
 	{
 		return [
 			['en', 'en'],

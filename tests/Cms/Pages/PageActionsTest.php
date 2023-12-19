@@ -35,7 +35,7 @@ class PageActionsTest extends TestCase
 		return $this->app->site();
 	}
 
-	public function slugProvider()
+	public static function slugProvider(): array
 	{
 		return [
 			['test', 'test', true],
@@ -594,7 +594,7 @@ class PageActionsTest extends TestCase
 		$this->assertSame(2, $calls);
 	}
 
-	public function languageProvider()
+	public static function languageProvider(): array
 	{
 		return [
 			[null],

@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 class UrlsTest extends TestCase
 {
-	public function defaultUrlProvider(): array
+	public static function defaultUrlProvider(): array
 	{
 		return [
 			['/',      'index'],
@@ -29,7 +29,7 @@ class UrlsTest extends TestCase
 		$this->assertSame($url, $urls->$method());
 	}
 
-	public function customBaseUrlProvider(): array
+	public static function customBaseUrlProvider(): array
 	{
 		return [
 			['https://getkirby.com',       'index'],
@@ -55,7 +55,7 @@ class UrlsTest extends TestCase
 		$this->assertSame($url, $urls->$method());
 	}
 
-	public function customUrlProvider(): array
+	public static function customUrlProvider(): array
 	{
 		return [
 			['https://getkirby.com',       'index'],

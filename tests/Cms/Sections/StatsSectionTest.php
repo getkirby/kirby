@@ -11,7 +11,7 @@ class MockPageForStatsSection extends Page
 		return $this->reports()[0];
 	}
 
-	public function reports()
+	public function reports(): array
 	{
 		return [
 			[

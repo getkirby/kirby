@@ -123,7 +123,7 @@ class FileUuidTest extends TestCase
 		$this->assertSame($expected, $uuid->value());
 	}
 
-	public function providerForMultilang(): array
+	public static function providerForMultilang(): array
 	{
 		return [
 			['en', 'Foo'],

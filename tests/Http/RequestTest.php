@@ -196,7 +196,7 @@ class RequestTest extends TestCase
 		$this->assertSame($expected, $request->hasAuth());
 	}
 
-	public function hasAuthProvider(): array
+	public static function hasAuthProvider(): array
 	{
 		return [
 			[null, null, false],

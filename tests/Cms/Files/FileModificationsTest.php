@@ -209,7 +209,7 @@ class FileModificationsTest extends TestCase
 		$file->bw();
 	}
 
-	public function cropOptions()
+	public static function cropOptions(): array
 	{
 		$field = new Field(null, 'crop', 'top left');
 

@@ -118,7 +118,7 @@ class DataTest extends TestCase
 		Data::decode(true, $handler);
 	}
 
-	public function handlerProvider()
+	public static function handlerProvider(): array
 	{
 		// the PHP handler doesn't support decoding and therefore cannot be
 		// tested with the test methods in this test class

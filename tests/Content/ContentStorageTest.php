@@ -174,7 +174,7 @@ class ContentStorageTest extends TestCase
 		$this->assertSame('default', $language);
 	}
 
-	public function languageProvider(): array
+	public static function languageProvider(): array
 	{
 		return [
 			[null, false, ['en', 'default']],

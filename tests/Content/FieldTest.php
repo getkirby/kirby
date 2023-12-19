@@ -156,7 +156,7 @@ class FieldTest extends TestCase
 		$this->assertSame('Test', $modified->value);
 	}
 
-	public function emptyDataProvider()
+	public static function emptyDataProvider(): array
 	{
 		return [
 			['test', false],

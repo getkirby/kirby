@@ -9,7 +9,7 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class SvgTest extends TestCase
 {
-	protected $type = 'svg';
+	protected static $type = 'svg';
 
 	/**
 	 * @dataProvider allowedProvider
@@ -25,9 +25,9 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile(is_file($cleaned) ? $cleaned : $fixture, $sanitized);
 	}
 
-	public function allowedProvider()
+	public static function allowedProvider()
 	{
-		return $this->fixtureList('allowed', 'svg');
+		return static::fixtureList('allowed', 'svg');
 	}
 
 	public function testAllowedAriaAttr()
@@ -59,9 +59,9 @@ class SvgTest extends TestCase
 		Svg::validateFile($this->fixture($file));
 	}
 
-	public function invalidProvider()
+	public static function invalidProvider()
 	{
-		return $this->fixtureList('invalid', 'svg');
+		return static::fixtureList('invalid', 'svg');
 	}
 
 	public function testDisallowedJavascriptUrl()

@@ -28,7 +28,7 @@ class PageSiblingsTest extends TestCase
 		return $this->app->site();
 	}
 
-	protected function collection()
+	protected function collection(): array
 	{
 		return [
 			['slug' => 'project-a'],

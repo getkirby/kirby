@@ -12,7 +12,7 @@ use RecursiveIteratorIterator;
 
 class TestCase extends BaseTestCase
 {
-	protected $type;
+	protected static $type;
 
 	public function setUp(): void
 	{
@@ -38,13 +38,13 @@ class TestCase extends BaseTestCase
 	 */
 	protected function fixture(string $name, bool $tmp = false): string
 	{
-		$fixtureRoot = __DIR__ . '/fixtures/' . $this->type . '/' . $name;
+		$fixtureRoot = __DIR__ . '/fixtures/' . static::$type . '/' . $name;
 
 		if ($tmp === false) {
 			return $fixtureRoot;
 		}
 
-		$tmpRoot = __DIR__ . '/tmp/' . $this->type . '/' . $name;
+		$tmpRoot = __DIR__ . '/tmp/' . static::$type . '/' . $name;
 		F::copy($fixtureRoot, $tmpRoot);
 		return $tmpRoot;
 	}
@@ -57,9 +57,11 @@ class TestCase extends BaseTestCase
 	 * @param string $extension File extension to filter by
 	 * @return array
 	 */
-	protected function fixtureList(string $directory, string $extension): array
-	{
-		$root = __DIR__ . '/fixtures/' . $this->type;
+	protected static function fixtureList(
+		string $directory,
+		string $extension
+	): array {
+		$root = __DIR__ . '/fixtures/' . static::$type;
 
 		$directory = new RecursiveDirectoryIterator(
 			$root . '/' . $directory,

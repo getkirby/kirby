@@ -126,7 +126,7 @@ class DateFieldTest extends TestCase
 		], $field->errors());
 	}
 
-	public function valueProvider()
+	public static function valueProvider(): array
 	{
 		return [
 			['12.12.2012', date('Y-m-d H:i:s', strtotime('2012-12-12'))],

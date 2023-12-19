@@ -251,7 +251,7 @@ class PaginationTest extends TestCase
 		$this->assertTrue($pagination->isLastPage());
 	}
 
-	public function rangeProvider()
+	public static function rangeProvider(): array
 	{
 		return [
 			// at the beginning - even

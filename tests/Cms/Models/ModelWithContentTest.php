@@ -97,7 +97,7 @@ class BlueprintsModelWithContent extends ExtendedModelWithContent
 
 class ModelWithContentTest extends TestCase
 {
-	public function modelsProvider(): array
+	public static function modelsProvider(): array
 	{
 		$app = new App([
 			'site' => [

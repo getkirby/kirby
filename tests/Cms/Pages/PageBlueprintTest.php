@@ -121,7 +121,7 @@ class PageBlueprintTest extends TestCase
 		$this->assertEquals($expected, $blueprint->options()); // cannot use strict assertion (array order)
 	}
 
-	public function numProvider()
+	public static function numProvider(): array
 	{
 		return [
 			['default', 'default'],

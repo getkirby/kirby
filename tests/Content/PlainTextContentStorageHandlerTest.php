@@ -234,7 +234,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		$this->assertSame($expected[1], $this->storage->exists($id, $language));
 	}
 
-	public function existsProvider(): array
+	public static function existsProvider(): array
 	{
 		return [
 			['changes', null, [true, false]],
@@ -279,7 +279,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		$this->assertSame($expected, $this->storage->modified($id, $language));
 	}
 
-	public function modifiedProvider(): array
+	public static function modifiedProvider(): array
 	{
 		return [
 			['changes', 'default', null],
@@ -562,7 +562,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		$this->assertSame($this->tmp . '/' . $expected, $storage->contentFile($id, $language));
 	}
 
-	public function contentFileProvider(): array
+	public static function contentFileProvider(): array
 	{
 		return [
 			['file', 'changes', 'default', 'content/_changes/image.jpg.txt'],
@@ -634,7 +634,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		$storage->contentFile('published', $language);
 	}
 
-	public function contentFileDraftProvider(): array
+	public static function contentFileDraftProvider(): array
 	{
 		return [
 			['default', 'content/_drafts/a-page/article.txt'],

@@ -9,7 +9,7 @@ class TestUser
 		return 'homer';
 	}
 
-	public function profiles()
+	public function profiles(): array
 	{
 		return [
 			'mastodon' => '@homer'
@@ -46,7 +46,7 @@ class TestUser
 		return in_array($needle1, $array) && in_array($needle2, $array);
 	}
 
-	public function drink()
+	public function drink(): array
 	{
 		return ['gin', 'tonic', 'cucumber'];
 	}

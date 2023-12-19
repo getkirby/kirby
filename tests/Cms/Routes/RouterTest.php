@@ -298,7 +298,7 @@ class RouterTest extends TestCase
 		$this->assertNull($app->call('panel/something'));
 	}
 
-	public function customRouteProvider()
+	public static function customRouteProvider(): array
 	{
 		return [
 			// home
@@ -439,7 +439,7 @@ class RouterTest extends TestCase
 		$this->assertSame('en', I18n::locale());
 	}
 
-	public function multiDomainProvider()
+	public static function multiDomainProvider(): array
 	{
 		return [
 			['https://getkirby.fr', 'fr'],
@@ -533,7 +533,7 @@ class RouterTest extends TestCase
 		$this->assertSame($language, I18n::locale());
 	}
 
-	public function acceptedLanguageProvider()
+	public static function acceptedLanguageProvider(): array
 	{
 		return [
 			['fr,en;q=0.8', '/fr'],

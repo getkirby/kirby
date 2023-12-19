@@ -376,7 +376,7 @@ class FieldTest extends TestCase
 		$this->assertSame('test', $field->icon);
 	}
 
-	public function emptyValuesProvider()
+	public static function emptyValuesProvider(): array
 	{
 		return [
 			['', true],

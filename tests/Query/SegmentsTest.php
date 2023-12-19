@@ -30,7 +30,7 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 		$this->assertSame(2, $segments->nth(4)->position);
 	}
 
-	public function providerParse(): array
+	public static function providerParse(): array
 	{
 		return [
 			[
@@ -130,7 +130,7 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 		$this->assertSame('@homer', $segments->resolve($data));
 	}
 
-	public function scalarProvider(): array
+	public static function scalarProvider(): array
 	{
 		return [
 			['test', 'string'],

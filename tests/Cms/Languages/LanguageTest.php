@@ -44,7 +44,7 @@ class LanguageTest extends TestCase
 		new Language([]);
 	}
 
-	public function baseUrlProvider()
+	public static function baseUrlProvider(): array
 	{
 		return [
 			['https://getkirby.com', null, 'https://getkirby.com'],
@@ -404,7 +404,7 @@ class LanguageTest extends TestCase
 		$this->assertSame('en', $language->name());
 	}
 
-	public function pathProvider()
+	public static function pathProvider(): array
 	{
 		return [
 			[null, 'en'],
@@ -432,7 +432,7 @@ class LanguageTest extends TestCase
 		$this->assertSame($expected, $language->path());
 	}
 
-	public function patternProvider()
+	public static function patternProvider(): array
 	{
 		return [
 			[null, 'en/(:all?)'],

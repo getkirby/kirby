@@ -175,7 +175,7 @@ class PageRulesTest extends TestCase
 		PageRules::changeSlug($app->page('a'), 'api');
 	}
 
-	public function statusActionProvider()
+	public static function statusActionProvider(): array
 	{
 		return [
 			['draft'],

@@ -23,7 +23,7 @@ class PagePermissionsTest extends TestCase
 		]);
 	}
 
-	public function actionProvider()
+	public static function actionProvider(): array
 	{
 		return [
 			['changeSlug'],

@@ -274,7 +274,7 @@ class DateTest extends TestCase
 		$this->assertSame($expected, $date->format('Y-m-d H:i:s'));
 	}
 
-	public function roundProvider(): array
+	public static function roundProvider(): array
 	{
 		return [
 			'1s: no change'  => ['second', 1, '2020-02-29 16:05:15', '2020-02-29 16:05:15'],
@@ -320,7 +320,7 @@ class DateTest extends TestCase
 		$date->round($unit, $size);
 	}
 
-	public function roundUnsupportedSizeProvider(): array
+	public static function roundUnsupportedSizeProvider(): array
 	{
 		return [
 			['second', 7],

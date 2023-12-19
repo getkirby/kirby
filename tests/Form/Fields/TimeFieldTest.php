@@ -144,7 +144,7 @@ class TimeFieldTest extends TestCase
 		$this->assertTrue($field->isInvalid());
 	}
 
-	public function valueProvider()
+	public static function valueProvider(): array
 	{
 		return [
 			[null, ''],

@@ -68,7 +68,7 @@ class PageCacheTest extends TestCase
 		);
 	}
 
-	public function requestMethodProvider()
+	public static function requestMethodProvider(): array
 	{
 		return [
 			['GET', true],
@@ -225,7 +225,7 @@ class PageCacheTest extends TestCase
 		$this->assertNotSame($html1, $html2);
 	}
 
-	public function dynamicProvider(): array
+	public static function dynamicProvider(): array
 	{
 		return [
 			['dynamic-auth', ['auth']],

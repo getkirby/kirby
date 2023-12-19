@@ -19,7 +19,7 @@ class FieldsSectionTest extends TestCase
 		]);
 	}
 
-	public function modelProvider()
+	public static function modelProvider(): array
 	{
 		return [
 			[

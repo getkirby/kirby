@@ -18,7 +18,7 @@ class XmlTest extends TestCase
 		$this->assertSame($expected, Xml::attr($input, $value));
 	}
 
-	public function attrProvider()
+	public static function attrProvider(): array
 	{
 		return [
 			[[],                         null,  ''],
@@ -241,7 +241,7 @@ class XmlTest extends TestCase
 		$this->assertSame($expected, Xml::value($input));
 	}
 
-	public function valueProvider()
+	public static function valueProvider(): array
 	{
 		return [
 			[true, 'true'],

@@ -238,7 +238,7 @@ class EnvironmentTest extends TestCase
 		$this->assertSame([], $env->detect(null, []));
 	}
 
-	public function providerForForwarded(): array
+	public static function providerForForwarded(): array
 	{
 		return [
 			[
@@ -613,7 +613,7 @@ class EnvironmentTest extends TestCase
 		$this->assertSame('getkirby.com', $env->host());
 	}
 
-	public function providerForHttpsValues()
+	public static function providerForHttpsValues(): array
 	{
 		return [
 			['off', false],
@@ -764,7 +764,7 @@ class EnvironmentTest extends TestCase
 		);
 	}
 
-	public function providerForHttpsProtocols()
+	public static function providerForHttpsProtocols(): array
 	{
 		return [
 			['http', false],
@@ -1006,7 +1006,7 @@ class EnvironmentTest extends TestCase
 		$this->assertFalse($env->isBehindProxy());
 	}
 
-	public function providerForIps()
+	public static function providerForIps(): array
 	{
 		return [
 			['127.0.0.1', '127.0.0.1', '127.0.0.1', true],
@@ -1044,7 +1044,7 @@ class EnvironmentTest extends TestCase
 		$this->assertSame($expected, $env->isLocal());
 	}
 
-	public function providerForServerNames()
+	public static function providerForServerNames(): array
 	{
 		return [
 			['localhost', true],
@@ -1338,7 +1338,7 @@ class EnvironmentTest extends TestCase
 		$this->assertSame(9999, $env->port());
 	}
 
-	public function providerForRequestPaths()
+	public function providerForRequestPaths(): array
 	{
 		return [
 			[
@@ -1411,7 +1411,7 @@ class EnvironmentTest extends TestCase
 		$this->assertSame('http://getkirby.com/subfolder/blog/article-a', $env->requestUrl());
 	}
 
-	public function providerForRequestUris()
+	public static function providerForRequestUris(): array
 	{
 		return [
 			[
@@ -1480,7 +1480,7 @@ class EnvironmentTest extends TestCase
 		$this->assertSame($expected['query'], $env->requestUri($value)->query()->toString());
 	}
 
-	public function providerForSanitize()
+	public static function providerForSanitize(): array
 	{
 		return [
 			// needs no sanitizing
@@ -1583,7 +1583,7 @@ class EnvironmentTest extends TestCase
 		$this->assertSame($expected, Environment::sanitize($input));
 	}
 
-	public function providerForScriptPaths()
+	public static function providerForScriptPaths(): array
 	{
 		return [
 			[

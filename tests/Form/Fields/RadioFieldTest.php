@@ -16,7 +16,7 @@ class RadioFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function valueInputProvider()
+	public static function valueInputProvider(): array
 	{
 		return [
 			['a', 'a'],

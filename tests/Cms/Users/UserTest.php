@@ -332,7 +332,7 @@ class UserTest extends TestCase
 		$this->assertSame(1338000000, $user->passwordTimestamp());
 	}
 
-	public function passwordProvider()
+	public static function passwordProvider(): array
 	{
 		return [
 			[null, false],

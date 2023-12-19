@@ -63,7 +63,7 @@ class TogglesFieldTest extends TestCase
 		$this->assertTrue($field->reset());
 	}
 
-	public function valueInputProvider()
+	public static function valueInputProvider(): array
 	{
 		return [
 			['a', 'a'],

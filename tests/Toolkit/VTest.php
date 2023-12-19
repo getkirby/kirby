@@ -785,7 +785,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::url('http://.www.foo.bar./'));
 	}
 
-	public function inputProvider()
+	public static function inputProvider(): array
 	{
 		return [
 			// everything alright

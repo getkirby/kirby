@@ -33,7 +33,7 @@ class ExpressionTest extends \PHPUnit\Framework\TestCase
 		$this->assertInstanceOf(Segments::class, $expression);
 	}
 
-	public function providerParse(): array
+	public static function providerParse(): array
 	{
 		return [
 			[
@@ -81,7 +81,7 @@ class ExpressionTest extends \PHPUnit\Framework\TestCase
 		$this->assertSame($result, $parts);
 	}
 
-	public function providerResolve(): array
+	public static function providerResolve(): array
 	{
 		return [
 			['true ? "yes" : "no"', 'yes'],

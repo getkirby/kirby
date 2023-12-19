@@ -114,7 +114,7 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, Html::attr($input, $value));
 	}
 
-	public function attrProvider()
+	public static function attrProvider(): array
 	{
 		return [
 			[[],                         null,  null],
@@ -467,7 +467,7 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, Html::value($input));
 	}
 
-	public function valueProvider()
+	public static function valueProvider(): array
 	{
 		return [
 			[true, 'true'],
@@ -569,7 +569,7 @@ class HtmlTest extends TestCase
 		$this->assertNull($html);
 	}
 
-	public function videoProvider()
+	public static function videoProvider(): array
 	{
 		return [
 			// YouTube

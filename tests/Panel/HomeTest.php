@@ -321,7 +321,7 @@ class HomeTest extends TestCase
 		$this->assertSame('/panel/site', Home::url());
 	}
 
-	public function customHomeProvider()
+	public static function customHomeProvider(): array
 	{
 		return [
 			// site url: /
