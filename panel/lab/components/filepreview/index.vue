@@ -1,6 +1,6 @@
 <template>
 	<k-lab-examples>
-		<k-lab-example label="Lanscape">
+		<k-lab-example label="Landscape">
 			<k-file-preview
 				:focus="focus"
 				:focusable="true"

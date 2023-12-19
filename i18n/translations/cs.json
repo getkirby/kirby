@@ -135,7 +135,7 @@
 
 	"error.license.domain": "Licenčnímu klíči chybí doména",
 	"error.license.email": "Zadejte prosím platnou emailovou adresu",
-	"error.license.format": "Please enter a valid license code",
+	"error.license.format": "Zadejte prosím platné licenční číslo",
 	"error.license.verification": "Licenci nelze ověřit",
 
 	"error.login.totp.confirm.invalid": "Neplatný kód",
@@ -347,7 +347,7 @@
 	"file": "Soubor",
 	"file.blueprint": "Tento typ souboru nemá blueprint. Blueprint můžete definovat v  <strong>/site/blueprints/files/{blueprint}.yml</strong>",
 	"file.changeTemplate": "Změnit šablonu",
-	"file.changeTemplate.notice": "Změna šablony souboru změní obsah pro pole, která mají odlišný typ. Pokud má nová šablona nastaveny určitá pravidla (jako rozměry obrázku), tyto pravidla budou také aplikovány. Používejte obezřetně.",
+	"file.changeTemplate.notice": "Změna šablony souboru změní obsah pro pole, která mají odlišný typ. Pokud má nová šablona nastavena určitá pravidla, např. rozměry obrázku, tato pravidla budou také aplikována. Používejte obezřetně.",
 	"file.delete.confirm": "Opravdu chcete smazat tento soubor?",
 	"file.focus.placeholder": "Nastavit ohnisko",
 	"file.focus.reset": "Odstranit ohnisko",
@@ -425,8 +425,8 @@
 	"license.code.label": "Zadejte prosím licenční kód",
 	"license.status.active.info": "Platí pro nové verze až do {date}",
 	"license.status.active.label": "Platná licence",
-	"license.status.demo.info": "This is a demo installation",
-	"license.status.demo.label": "Demo",
+	"license.status.demo.info": "Tato instalace je pouze demoverze",
+	"license.status.demo.label": "Demoverze",
 	"license.status.inactive.info": "Pro update na novou hlavní verzi musíte obnovit licenci",
 	"license.status.inactive.label": "Žádné nové hlavní verze",
 	"license.status.legacy.bubble": "Vše připraveno na obnovení licence?",

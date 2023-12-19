@@ -313,6 +313,7 @@ class FieldTest extends TestCase
 		$expected = [
 			'label' => 'URL appendix',
 			'type'  => 'slug',
+			'allow' => 'a-z0-9'
 		];
 
 		$this->assertSame($expected, $field);
