@@ -198,9 +198,8 @@ class Response
 	 * @since 3.7.0
 	 *
 	 * @codeCoverageIgnore
-	 * @todo Change return type to `never` once support for PHP 8.0 is dropped
 	 */
-	public static function go(string $url = '/', int $code = 302): void
+	public static function go(string $url = '/', int $code = 302): never
 	{
 		die(static::redirect($url, $code));
 	}
