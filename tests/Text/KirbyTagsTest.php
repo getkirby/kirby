@@ -612,8 +612,14 @@ class KirbyTagsTest extends TestCase
 		$result = $app->kirbytags('(link: page://page-uuid)');
 		$this->assertSame('<a href="https://getkirby.com/a">getkirby.com/a</a>', $result);
 
+		$result = $app->kirbytags('(link: page://not-exists)');
+		$this->assertSame('<a href="https://getkirby.com">getkirby.com</a>', $result);
+
 		$result = $app->kirbytags('(link: file://file-uuid text: file)');
 		$this->assertSame('<a href="' . $app->file('a/foo.jpg')->url() . '">file</a>', $result);
+
+		$result = $app->kirbytags('(link: file://not-exists text: file)');
+		$this->assertSame('<a href="https://getkirby.com">file</a>', $result);
 	}
 
 	public function testLinkWithUuidAndLang()

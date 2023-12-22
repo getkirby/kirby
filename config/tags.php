@@ -197,7 +197,7 @@ return [
 				Uuid::is($tag->value, 'page') === true ||
 				Uuid::is($tag->value, 'file') === true
 			) {
-				$tag->value = Uuid::for($tag->value)->model()->url();
+				$tag->value = Uuid::for($tag->value)->model()?->url() ?? '';
 			}
 
 			return Html::a($tag->value, $tag->text, [
