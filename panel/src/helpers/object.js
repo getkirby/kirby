@@ -1,15 +1,17 @@
 /**
  * Clone provided object or array
  *
- * @param {Object|array} array
+ * @param {Object|array} value
  * @returns  {Object|array}
+ *
+ * @deprecated Use `structuredClone` instead
  */
-export function clone(array) {
-	if (array === undefined) {
+export function clone(value) {
+	if (value === undefined) {
 		return undefined;
 	}
 
-	return JSON.parse(JSON.stringify(array));
+	return structuredClone(value);
 }
 
 /**
