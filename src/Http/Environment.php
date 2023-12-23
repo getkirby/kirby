@@ -753,6 +753,10 @@ class Environment
 			return true;
 		}
 
+		if (Str::endsWith($host, '.ddev.site') === true) {
+			return true;
+		}
+
 		// collect all possible visitor ips
 		$ips = [
 			$this->get('REMOTE_ADDR'),
