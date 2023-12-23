@@ -206,7 +206,7 @@ class BlocksTest extends TestCase
 		return $this->assertSame($expected, $this->schema->heading($element));
 	}
 
-	public static function headingLevels(): array
+	public static function headingLevelProvider(): array
 	{
 		return [
 			['h1'], ['h2'], ['h3'], ['h4'], ['h5'], ['h6']
@@ -214,7 +214,7 @@ class BlocksTest extends TestCase
 	}
 
 	/**
-	 * @dataProvider headingLevels
+	 * @dataProvider headingLevelProvider
 	 */
 	public function testHeadingLevel($level)
 	{
