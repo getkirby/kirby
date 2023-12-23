@@ -9,7 +9,7 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class SvgzTest extends TestCase
 {
-	protected $type = 'svgz';
+	protected static $type = 'svgz';
 
 	/**
 	 * @dataProvider allowedProvider
@@ -28,9 +28,9 @@ class SvgzTest extends TestCase
 		$this->assertSame(gzdecode($input), gzdecode($sanitized));
 	}
 
-	public function allowedProvider()
+	public static function allowedProvider()
 	{
-		return $this->fixtureList('allowed', 'svgz');
+		return static::fixtureList('allowed', 'svgz');
 	}
 
 	/**
@@ -44,9 +44,9 @@ class SvgzTest extends TestCase
 		Svgz::validateFile($this->fixture($file));
 	}
 
-	public function invalidProvider()
+	public static function invalidProvider()
 	{
-		return $this->fixtureList('invalid', 'svgz');
+		return static::fixtureList('invalid', 'svgz');
 	}
 
 	public function testDisallowedDoctypeEntityAttack()

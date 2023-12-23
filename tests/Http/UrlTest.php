@@ -180,7 +180,7 @@ class UrlTest extends TestCase
 		$this->assertSame('https://täst.de', $object->toString());
 	}
 
-	public function scriptNameProvider()
+	public static function scriptNameProvider(): array
 	{
 		return [
 			[null, 'index.php', '/'],

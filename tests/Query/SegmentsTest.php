@@ -30,7 +30,7 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 		$this->assertSame(2, $segments->nth(4)->position);
 	}
 
-	public function providerParse(): array
+	public static function parseProvider(): array
 	{
 		return [
 			[
@@ -54,7 +54,7 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 
 	/**
 	 * @covers ::parse
-	 * @dataProvider providerParse
+	 * @dataProvider parseProvider
 	 */
 	public function testParse(string $string, array $result)
 	{
@@ -130,7 +130,7 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 		$this->assertSame('@homer', $segments->resolve($data));
 	}
 
-	public function scalarProvider(): array
+	public static function scalarProvider(): array
 	{
 		return [
 			['test', 'string'],
@@ -351,7 +351,7 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @covers ::resolve
 	 */
-	public function testREsolveWithObjectMethodWithEmptyString()
+	public function testResolveWithObjectMethodWithEmptyString()
 	{
 		// double quotes
 		$segments = Segments::factory('user.says("")');

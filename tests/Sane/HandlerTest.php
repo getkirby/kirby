@@ -11,7 +11,7 @@ require_once __DIR__ . '/mocks.php';
  */
 class HandlerTest extends TestCase
 {
-	protected $type = 'sane';
+	protected static $type = 'sane';
 
 	/**
 	 * @covers ::sanitizeFile

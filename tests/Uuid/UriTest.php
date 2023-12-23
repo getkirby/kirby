@@ -7,7 +7,7 @@ namespace Kirby\Uuid;
  */
 class UriTest extends TestCase
 {
-	public function provider()
+	public static function provider(): array
 	{
 		// Provider entries:
 		// - UUID input / toString output

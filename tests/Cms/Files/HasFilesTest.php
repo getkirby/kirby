@@ -50,7 +50,7 @@ class HasFilesTest extends TestCase
 		Dir::remove($this->tmp);
 	}
 
-	public function fileProvider()
+	public static function fileProvider(): array
 	{
 		return [
 			['test.mp3', 'audio', true],

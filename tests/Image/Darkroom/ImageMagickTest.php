@@ -99,7 +99,7 @@ class ImageMagickTest extends TestCase
 		$this->assertStringNotContainsString('GPS', $meta);
 	}
 
-	public function keepColorProfileStripMetaProvider(): array
+	public static function keepColorProfileStripMetaProvider(): array
 	{
 		return [
 			['cat.jpg', false],

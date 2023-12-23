@@ -49,7 +49,7 @@ class SystemTest extends TestCase
 		Dir::remove($this->tmp);
 	}
 
-	public function providerForIndexUrls()
+	public static function providerForIndexUrls(): array
 	{
 		return [
 			['http://getkirby.com', 'getkirby.com'],
@@ -60,7 +60,7 @@ class SystemTest extends TestCase
 		];
 	}
 
-	public function providerForLoginMethods()
+	public static function providerForLoginMethods(): array
 	{
 		return [
 			[
@@ -114,7 +114,7 @@ class SystemTest extends TestCase
 		];
 	}
 
-	public function providerForRoots()
+	public static function providerForRoots(): array
 	{
 		return [
 			['accounts'],
@@ -124,7 +124,7 @@ class SystemTest extends TestCase
 		];
 	}
 
-	public function providerForServerSoftware()
+	public static function providerForServerSoftware(): array
 	{
 		return [
 			['apache', true],
@@ -138,7 +138,7 @@ class SystemTest extends TestCase
 		];
 	}
 
-	public function providerForServerNames()
+	public static function providerForServerNames(): array
 	{
 		return [
 			['localhost', true],

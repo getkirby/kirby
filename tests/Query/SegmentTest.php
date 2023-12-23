@@ -37,7 +37,7 @@ class MyGetObj
  */
 class SegmentTest extends \PHPUnit\Framework\TestCase
 {
-	public function scalarProvider(): array
+	public static function scalarProvider(): array
 	{
 		return [
 			['test', 'string'],

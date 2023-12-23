@@ -16,7 +16,7 @@ class LicenseTest extends TestCase
 		return $type->prefix() . '1234' . Str::random(28);
 	}
 
-	public function providerForLicenseUrls()
+	public static function providerForLicenseUrls(): array
 	{
 		return [
 			['example.com', 'example.com'],

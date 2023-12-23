@@ -11,7 +11,7 @@ class PermissionsTest extends TestCase
 		Permissions::$extendedActions = [];
 	}
 
-	public function actionsProvider()
+	public static function actionsProvider(): array
 	{
 		return [
 			['files', 'changeName'],

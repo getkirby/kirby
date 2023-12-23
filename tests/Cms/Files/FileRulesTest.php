@@ -472,7 +472,7 @@ class FileRulesTest extends TestCase
 		FileRules::update($file, []);
 	}
 
-	public function extensionProvider()
+	public static function extensionProvider(): array
 	{
 		return [
 			['jpg', true],
@@ -512,7 +512,7 @@ class FileRulesTest extends TestCase
 		$this->assertTrue($result);
 	}
 
-	public function fileProvider()
+	public static function fileProvider(): array
 	{
 		return [
 			// valid examples
@@ -595,7 +595,7 @@ class FileRulesTest extends TestCase
 		$this->assertTrue(FileRules::validFile($file));
 	}
 
-	public function filenameProvider()
+	public static function filenameProvider(): array
 	{
 		return [
 			['test.jpg', true],
@@ -625,7 +625,7 @@ class FileRulesTest extends TestCase
 		$this->assertTrue($result);
 	}
 
-	public function mimeProvider()
+	public static function mimeProvider(): array
 	{
 		return [
 			['image/jpeg', true],

@@ -190,7 +190,7 @@ class SiteTest extends TestCase
 	}
 
 
-	public function previewUrlProvider()
+	public static function previewUrlProvider(): array
 	{
 		return [
 			[null, '/'],

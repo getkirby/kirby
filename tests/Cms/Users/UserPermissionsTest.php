@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class UserPermissionsTest extends TestCase
 {
-	public function actionProvider()
+	public static function actionProvider(): array
 	{
 		return [
 			['create'],

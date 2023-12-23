@@ -513,7 +513,7 @@ class PageSortTest extends TestCase
 		$this->assertSame('unlisted', $page->publish()->status());
 	}
 
-	public function sortProvider()
+	public static function sortProvider(): array
 	{
 		return [
 			['a', 2, 'b,a,c,d'],

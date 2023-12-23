@@ -18,7 +18,7 @@ class NumberFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function valueProvider()
+	public static function valueProvider(): array
 	{
 		return [
 			[null, ''],

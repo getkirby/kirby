@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ATest extends TestCase
 {
-	protected function _array()
+	protected function _array(): array
 	{
 		return [
 			'cat'  => 'miao',

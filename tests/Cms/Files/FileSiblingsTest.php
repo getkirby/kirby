@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 class FileSiblingsTest extends TestCase
 {
-	protected function collection()
+	protected function collection(): array
 	{
 		return [
 			['filename' => 'cover.jpg',     'template' => 'cover'],

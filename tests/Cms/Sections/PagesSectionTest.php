@@ -126,7 +126,7 @@ class PagesSectionTest extends TestCase
 		]);
 	}
 
-	public function statusProvider()
+	public static function statusProvider(): array
 	{
 		return [
 			[null, 'all'],
@@ -154,7 +154,7 @@ class PagesSectionTest extends TestCase
 		$this->assertSame($expected, $section->status());
 	}
 
-	public function addableStatusProvider()
+	public static function addableStatusProvider(): array
 	{
 		return [
 			['all', true],
@@ -353,7 +353,7 @@ class PagesSectionTest extends TestCase
 		$this->assertSame('C', $section->data()[2]['text']);
 	}
 
-	public function sortableStatusProvider()
+	public static function sortableStatusProvider(): array
 	{
 		return [
 			['all', true],

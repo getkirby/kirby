@@ -590,7 +590,7 @@ class PageTest extends TestCase
 		$this->assertSame('/test', $page->previewUrl());
 	}
 
-	public function previewUrlProvider()
+	public static function previewUrlProvider(): array
 	{
 		return [
 			[null, '/test', false],

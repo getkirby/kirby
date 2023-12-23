@@ -173,7 +173,7 @@ class SnippetTest extends TestCase
 		$this->assertSame('Default content', $slots->default()->render());
 	}
 
-	public function renderWithSlotsProvider(): array
+	public static function renderWithSlotsProvider(): array
 	{
 		return [
 			[__DIR__ . '/fixtures/slots.php', 'Header content' . PHP_EOL . 'Body content' . PHP_EOL . 'Footer content'],

@@ -11,7 +11,7 @@ require_once __DIR__ . '/mocks.php';
  */
 class DomHandlerTest extends TestCase
 {
-	protected $type = 'sane';
+	protected static $type = 'sane';
 
 	public function testSanitize()
 	{

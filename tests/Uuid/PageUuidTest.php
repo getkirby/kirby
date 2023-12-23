@@ -112,7 +112,7 @@ class PageUuidTest extends TestCase
 		$this->assertSame($url, $page->uuid()->url());
 	}
 
-	public function providerForMultilang(): array
+	public static function multilangProvider(): array
 	{
 		return [
 			['en', 'Foo'],
@@ -121,7 +121,7 @@ class PageUuidTest extends TestCase
 	}
 
 	/**
-	 * @dataProvider providerForMultilang
+	 * @dataProvider multilangProvider
 	 * @covers ::id
 	 */
 	public function testMultilang(string $language, string $title)

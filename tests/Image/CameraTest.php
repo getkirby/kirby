@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class CameraTest extends TestCase
 {
-	protected function _exif()
+	protected function _exif(): array
 	{
 		return [
 			'Make'  => 'Kirby Kamera Inc.',

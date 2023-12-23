@@ -33,7 +33,7 @@ class KirbyTagsTest extends TestCase
 		Dir::remove($this->tmp);
 	}
 
-	public function dataProvider()
+	public static function dataProvider()
 	{
 		$tests = [];
 
@@ -924,7 +924,7 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
-	public function globalOptionsProvider(): array
+	public static function globalOptionsProvider(): array
 	{
 		return [
 			[

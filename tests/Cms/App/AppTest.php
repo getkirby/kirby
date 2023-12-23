@@ -1181,7 +1181,7 @@ class AppTest extends TestCase
 		$this->assertSame(143, $count);
 	}
 
-	public function urlProvider()
+	public static function urlProvider(): array
 	{
 		return [
 			['http://getkirby.com', 'http://getkirby.com'],

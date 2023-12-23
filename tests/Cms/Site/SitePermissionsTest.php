@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class SitePermissionsTest extends TestCase
 {
-	public function actionProvider()
+	public static function actionProvider(): array
 	{
 		return [
 			['changeTitle'],
