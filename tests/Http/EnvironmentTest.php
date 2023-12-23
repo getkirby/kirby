@@ -1338,47 +1338,6 @@ class EnvironmentTest extends TestCase
 		$this->assertSame(9999, $env->port());
 	}
 
-	public function providerForRequestPaths(): array
-	{
-		return [
-			[
-				'/index.php',
-				'/starterkit/sub/folder',
-				'starterkit/sub/folder'
-			],
-			[
-				'/starterkit/index.php',
-				'/starterkit/sub/folder',
-				'sub/folder'
-			],
-			[
-				'\starterkit\index.php',
-				'/starterkit/sub/folder',
-				'sub/folder'
-			],
-			[
-				'/index.php',
-				null,
-				''
-			],
-			[
-				null,
-				null,
-				''
-			],
-			[
-				'/starterkit/index.php',
-				'/starterkit',
-				''
-			],
-			[
-				'/index.php',
-				'/panel/dropdowns//pages/blog',
-				'panel/dropdowns/pages/blog'
-			],
-		];
-	}
-
 	public function testRequestUrl()
 	{
 		// basic
