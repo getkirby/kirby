@@ -351,7 +351,7 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @covers ::resolve
 	 */
-	public function testREsolveWithObjectMethodWithEmptyString()
+	public function testResolveWithObjectMethodWithEmptyString()
 	{
 		// double quotes
 		$segments = Segments::factory('user.says("")');
