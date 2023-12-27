@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <phpunit
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
-
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
 	bootstrap="tests/bootstrap.php"
-	convertDeprecationsToExceptions="true"
 	colors="true"
-	verbose="true"
 	stderr="true"
+	cacheDirectory=".phpunit.cache"
 >
-
-	<coverage ignoreDeprecatedCodeUnits="true">
+	<source>
 		<include>
 			<directory>./config</directory>
 			<directory>./src</directory>
@@ -23,7 +19,7 @@
 			<file>./config/aliases.php</file>
 			<file>./config/setup.php</file>
 		</exclude>
-	</coverage>
+	</source>
 
 	<testsuites>
 		<testsuite name="Classes">
@@ -34,4 +30,6 @@
 	<php>
 		<ini name="memory_limit" value="2048M" />
 	</php>
+
+	<coverage ignoreDeprecatedCodeUnits="true" />
 </phpunit>

@@ -106,7 +106,7 @@
 			"@test"
 		],
 		"fix": "php-cs-fixer fix",
-		"test": "phpunit --stderr",
+		"test": "phpunit --stderr --display-warnings",
 		"test:coverage": "XDEBUG_MODE=coverage phpunit --stderr --coverage-html=tests/coverage",
 		"zip": "composer archive --format=zip --file=dist"
 	}

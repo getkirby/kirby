@@ -99,7 +99,7 @@ jobs:
           extensions: ${{ env.extensions }}
           ini-values: ${{ env.ini }}
           coverage: pcov
-          tools: phpunit:9.5.26, psalm:5.15.0
+          tools: phpunit:10.5.5, psalm:5.15.0
 
       - name: Setup problem matchers
         run: |
