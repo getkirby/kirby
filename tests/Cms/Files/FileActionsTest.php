@@ -11,12 +11,12 @@ use Kirby\Image\Image;
 class FileActionsTest extends TestCase
 {
 	protected $app;
-	protected $tmp;
+	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
-		Dir::make($this->tmp = __DIR__ . '/tmp');
-		$this->app = $this->app();
+		Dir::make($this->tmp);
+		$this->app = static::app();
 	}
 
 	public function tearDown(): void
@@ -25,11 +25,11 @@ class FileActionsTest extends TestCase
 		Dir::remove($this->tmp);
 	}
 
-	public function app()
+	public static function app(): App
 	{
 		return new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => __DIR__ . '/tmp'
 			],
 			'site' => [
 				'children' => [
@@ -58,9 +58,9 @@ class FileActionsTest extends TestCase
 		]);
 	}
 
-	public function appWithLanguages()
+	public static function appWithLanguages()
 	{
-		return $this->app()->clone([
+		return static::app()->clone([
 			'languages' => [
 				[
 					'code'    => 'en',
@@ -75,9 +75,9 @@ class FileActionsTest extends TestCase
 		]);
 	}
 
-	public function parentProvider()
+	public static function parentProvider()
 	{
-		$app = $this->app();
+		$app = static::app();
 
 		return [
 			[$app->site()],
@@ -85,9 +85,9 @@ class FileActionsTest extends TestCase
 		];
 	}
 
-	public function fileProvider()
+	public static function fileProvider(): array
 	{
-		$app = $this->app();
+		$app = static::app();
 
 		return [
 			[$app->site()->file()],
@@ -118,9 +118,9 @@ class FileActionsTest extends TestCase
 		$this->assertFileDoesNotExist($file->storage()->contentFile('published', 'default'));
 	}
 
-	public function fileProviderMultiLang()
+	public static function fileProviderMultiLang(): array
 	{
-		$app = $this->appWithLanguages();
+		$app = static::appWithLanguages();
 
 		return [
 			[$app->site()->file()],
@@ -133,7 +133,7 @@ class FileActionsTest extends TestCase
 	 */
 	public function testChangeNameMultiLang(File $file)
 	{
-		$app = $this->appWithLanguages();
+		$app = static::appWithLanguages();
 		$app->impersonate('kirby');
 
 		// create an empty dummy file
