@@ -12,7 +12,7 @@
 
 <script>
 /**
- * Toolbar for `k-writer`
+ * Toolbar for `k-writer-input`
  * @displayName WriterToolbar
  * @internal
  */
@@ -338,14 +338,14 @@ export default {
 
 <style>
 /** TODO: .k-writer:has(.k-toolbar:not([data-inline="true"])) */
-.k-writer:not([data-toolbar-inline="true"]):not([data-disabled="true"]) {
+.k-writer-input:not([data-toolbar-inline="true"]):not([data-disabled="true"]) {
 	grid-template-areas: "topbar" "content";
 	grid-template-rows: var(--toolbar-size) 1fr;
 	gap: 0;
 }
 
 /** TODO: .k-writer-toolbar:not(:has(~ :focus-within)) */
-.k-writer:not(:focus-within) {
+.k-writer-input:not(:focus-within) {
 	--toolbar-current: currentColor;
 }
 

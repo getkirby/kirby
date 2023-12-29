@@ -1,6 +1,6 @@
 <template>
 	<div class="k-block-type-quote-editor">
-		<k-writer
+		<k-writer-input
 			ref="text"
 			:inline="textField.inline ?? false"
 			:marks="textField.marks"
@@ -9,7 +9,7 @@
 			class="k-block-type-quote-text"
 			@input="update({ text: $event })"
 		/>
-		<k-writer
+		<k-writer-input
 			ref="citation"
 			:inline="citationField.inline ?? true"
 			:marks="citationField.marks"

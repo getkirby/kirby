@@ -108,7 +108,8 @@ export const props = {
 			})
 		},
 		value: {
-			type: String
+			type: String,
+			default: ""
 		}
 	},
 	computed: {

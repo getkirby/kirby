@@ -374,7 +374,9 @@ export default {
 		},
 		isInputEvent() {
 			const focused = document.querySelector(":focus");
-			return focused?.matches("input, textarea, [contenteditable], .k-writer");
+			return focused?.matches(
+				"input, textarea, [contenteditable], .k-writer-input"
+			);
 		},
 		isLastSelected(block) {
 			const [lastItem] = this.selected.slice(-1);
