@@ -1,5 +1,5 @@
 <template>
-	<k-field v-bind="$props" :input="_uid" class="k-date-field">
+	<k-field v-bind="$props" :input="uid" class="k-date-field">
 		<div
 			ref="body"
 			:data-has-time="Boolean(time)"
@@ -8,7 +8,7 @@
 		>
 			<!-- Date input -->
 			<k-input
-				:id="_uid"
+				:id="uid"
 				ref="dateInput"
 				v-bind="$props"
 				:autofocus="autofocus"

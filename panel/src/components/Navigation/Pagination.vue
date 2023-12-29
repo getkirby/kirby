@@ -35,8 +35,8 @@
 				@keydown.right.native.stop
 			>
 				<form method="dialog" @click.stop @submit="goTo($refs.page.value)">
-					<label :for="_uid">{{ $t("pagination.page") }}:</label>
-					<select :id="_uid" ref="page" :autofocus="true">
+					<label :for="id">{{ $t("pagination.page") }}:</label>
+					<select :id="id" ref="page" :autofocus="true">
 						<option
 							v-for="p in pages"
 							:key="p"
@@ -64,6 +64,8 @@
 </template>
 
 <script>
+import useUid from "@/helpers/useUid.js";
+
 /**
  * @example <k-pagination
  *   :details="true"
@@ -107,15 +109,18 @@ export default {
 	},
 	emits: ["paginate"],
 	computed: {
-		end() {
-			return Math.min(this.start - 1 + this.limit, this.total);
-		},
 		detailsText() {
 			if (this.limit === 1) {
 				return this.start;
 			}
 
 			return this.start + "-" + this.end;
+		},
+		end() {
+			return Math.min(this.start - 1 + this.limit, this.total);
+		},
+		id() {
+			return useUid();
 		},
 		offset() {
 			return this.start - 1;

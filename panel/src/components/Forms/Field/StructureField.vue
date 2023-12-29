@@ -349,7 +349,7 @@ export default {
 		},
 
 		close() {
-			this.$panel.drawer.close(this._uid);
+			this.$panel.drawer.close(this.uid);
 		},
 
 		/**
@@ -406,7 +406,7 @@ export default {
 
 			this.$panel.drawer.open({
 				component: "k-structure-drawer",
-				id: this._uid,
+				id: this.uid,
 				props: {
 					icon: this.icon ?? "list-bullet",
 					next: this.items[index + 1],
