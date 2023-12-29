@@ -4,7 +4,7 @@
 			:text="text"
 			:value="value"
 			@input="$emit('input', $event)"
-			@click.native.stop
+			@click.stop
 		/>
 	</div>
 </template>

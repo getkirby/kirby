@@ -28,9 +28,9 @@
 				:autofocus="true"
 				:value="query"
 				@input="query = $event"
-				@keydown.native.down.prevent="onDown"
-				@keydown.native.up.prevent="onUp"
-				@keydown.native.enter="onEnter"
+				@keydown.down.prevent="onDown"
+				@keydown.up.prevent="onUp"
+				@keydown.enter="onEnter"
 			/>
 			<k-button
 				:icon="isLoading ? 'loader' : 'cancel'"
@@ -46,7 +46,7 @@
 				v-if="items.length"
 				ref="items"
 				:items="items"
-				@mouseout.native="select(-1)"
+				@mouseout="select(-1)"
 			/>
 
 			<!-- No results -->

@@ -1,5 +1,5 @@
 <template>
-	<k-box v-bind="attrs" class="k-empty" @click.native="$emit('click', $event)">
+	<k-box v-bind="attrs" class="k-empty" @click="$emit('click', $event)">
 		<slot>
 			{{ text }}
 		</slot>

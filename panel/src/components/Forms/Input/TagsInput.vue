@@ -5,7 +5,7 @@
 			v-bind="$props"
 			@edit="edit"
 			@input="$emit('input', $event)"
-			@click.native.stop="$refs.toggle?.$el?.click()"
+			@click.stop="$refs.toggle?.$el?.click()"
 		>
 			<k-button
 				v-if="!max || value.length < max"
@@ -17,8 +17,8 @@
 				size="xs"
 				icon="add"
 				@click="$refs.create.open()"
-				@keydown.native.delete="$refs.tags.focus('prev')"
-				@keydown.native="toggle"
+				@keydown.delete="$refs.tags.focus('prev')"
+				@keydown="toggle"
 			/>
 		</k-tags>
 		<k-picklist-dropdown

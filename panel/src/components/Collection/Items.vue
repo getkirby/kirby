@@ -42,7 +42,7 @@
 					:width="item.column"
 					@click="$emit('item', item, itemIndex)"
 					@drag="onDragStart($event, item.dragText)"
-					@mouseover.native="$emit('hover', $event, item, itemIndex)"
+					@mouseover="$emit('hover', $event, item, itemIndex)"
 					@option="onOption($event, item, itemIndex)"
 				>
 					<template #options>

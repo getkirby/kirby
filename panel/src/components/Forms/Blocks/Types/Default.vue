@@ -2,7 +2,7 @@
 	<k-block-title
 		:content="content"
 		:fieldset="fieldset"
-		@dblclick.native="$emit('open')"
+		@dblclick="$emit('open')"
 	/>
 </template>
 

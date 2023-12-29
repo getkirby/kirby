@@ -4,7 +4,7 @@
 		:empty="$t('field.structure.empty')"
 		:rows="rows"
 		class="k-block-type-table-preview"
-		@dblclick.native="open"
+		@dblclick="open"
 	/>
 </template>
 

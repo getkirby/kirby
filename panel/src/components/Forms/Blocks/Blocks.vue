@@ -30,7 +30,7 @@
 					@chooseToAppend="choose(index + 1)"
 					@chooseToConvert="chooseToConvert(block)"
 					@chooseToPrepend="choose(index)"
-					@click.native="onClickBlock(block, $event)"
+					@click="onClickBlock(block, $event)"
 					@close="isEditing = false"
 					@copy="copy()"
 					@duplicate="duplicate(block, index)"

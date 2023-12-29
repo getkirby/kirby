@@ -23,7 +23,7 @@
 			v-if="isRemovable"
 			class="k-tag-toggle"
 			icon="cancel-small"
-			@click.native.stop="remove"
+			@click.stop="remove"
 		/>
 	</button>
 </template>

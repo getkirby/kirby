@@ -18,9 +18,9 @@
 				:image="item.image"
 				:removable="!disabled"
 				name="tag"
-				@click.native.stop
-				@keypress.native.enter="edit(itemIndex, item, $event)"
-				@dblclick.native="edit(itemIndex, item, $event)"
+				@click.stop
+				@keypress.enter="edit(itemIndex, item, $event)"
+				@dblclick="edit(itemIndex, item, $event)"
 				@remove="remove(itemIndex, item)"
 			>
 				<!-- eslint-disable-next-line vue/no-v-html -->

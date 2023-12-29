@@ -8,7 +8,7 @@
 		}"
 		:data-has-text="Boolean(text)"
 		class="k-bubble"
-		@click.native.stop
+		@click.stop
 	>
 		<!-- @slot Replace the default image -->
 		<slot name="image">

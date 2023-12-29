@@ -90,7 +90,7 @@
 							:value="row[columnIndex]"
 							:style="{ width: width(column.width) }"
 							class="k-table-column"
-							@click.native="
+							@click="
 								onCell({
 									row,
 									rowIndex,

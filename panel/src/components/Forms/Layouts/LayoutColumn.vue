@@ -14,7 +14,7 @@
 			:value="blocks"
 			group="layout"
 			@input="$emit('input', $event)"
-			@dblclick.native.stop
+			@dblclick.stop
 		/>
 	</div>
 </template>
