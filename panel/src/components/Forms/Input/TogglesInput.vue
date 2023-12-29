@@ -1,68 +1,61 @@
 <template>
-	<ul
-		:data-invalid="$v.$invalid"
-		:data-labels="labels"
-		:style="{ '--options': columns ?? options.length }"
+	<fieldset
+		v-if="choices.length"
+		:disabled="disabled"
+		:data-grow="grow"
 		class="k-toggles-input"
 	>
-		<li
-			v-for="(option, index) in options"
-			:key="index"
-			:data-disabled="disabled"
-		>
-			<input
-				:id="id + '-' + index"
-				:aria-label="option.text"
-				:disabled="disabled"
-				:value="option.value"
-				:name="id"
-				:checked="value === option.value"
-				class="input-hidden"
-				type="radio"
-				@click="onClick(option.value)"
-				@change="onInput(option.value)"
-			/>
-			<label :for="id + '-' + index" :title="option.text">
-				<k-icon v-if="option.icon" :type="option.icon" />
-				<!-- eslint-disable vue/no-v-html -->
-				<span
-					v-if="labels || !option.icon"
-					class="k-toggles-text"
-					v-html="option.text"
+		<legend class="sr-only">{{ $t("options") }}</legend>
+
+		<ul :style="'--options:' + (columns ?? options.length)">
+			<li v-for="(choice, index) in choices" :key="index">
+				<input
+					:aria-label="choice.label"
+					:autofocus="choice.autofocus"
+					:checked="choice.checked"
+					:disabled="choice.disabled"
+					:id="choice.id"
+					:name="choice.name"
+					:required="choice.required"
+					:value="choice.value"
+					class="input-hidden"
+					type="radio"
+					@click="toggle(choice.value)"
+					@change="$emit('input', choice.value)"
 				/>
-				<!-- eslint-enable vue/no-v-html -->
-			</label>
-		</li>
-	</ul>
+
+				<label :for="choice.id" :title="choice.label">
+					<k-icon v-if="choice.icon" :type="choice.icon" />
+					<!-- eslint-disable vue/no-v-html -->
+					<span
+						v-if="labels || !choice.icon"
+						class="k-toggles-text"
+						v-html="choice.label"
+					/>
+					<!-- eslint-enable vue/no-v-html -->
+				</label>
+			</li>
+		</ul>
+	</fieldset>
 </template>
 
 <script>
-import Input, { props as InputProps } from "@/mixins/input.js";
-
-import { required as validateRequired } from "vuelidate/lib/validators";
+import RadioInput, { props as RadioInputProps } from "./RadioInput.vue";
 
 export const props = {
-	mixins: [InputProps],
+	mixins: [RadioInputProps],
 	props: {
-		columns: Number,
-		grow: Boolean,
-		labels: Boolean,
-		options: Array,
-		reset: Boolean,
-		value: [String, Number, Boolean]
+		grow: {
+			default: false,
+			type: Boolean
+		},
+		labels: Boolean
 	}
 };
 
 export default {
-	mixins: [Input, props],
-	watch: {
-		value() {
-			this.onInvalid();
-		}
-	},
+	mixins: [RadioInput, props],
 	mounted() {
-		this.onInvalid();
-
 		if (this.$props.autofocus) {
 			this.focus();
 		}
@@ -81,75 +74,60 @@ export default {
 		},
 		onInput(value) {
 			this.$emit("input", value);
-		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
-		},
-		select() {
-			this.focus();
 		}
-	},
-	validations() {
-		return {
-			value: {
-				required: this.required ? validateRequired : true
-			}
-		};
 	}
 };
 </script>
 
 <style>
-.k-input[data-type="toggles"] {
+.k-toggles-input {
 	display: inline-flex;
 }
-.k-input[data-type="toggles"].grow {
-	display: flex;
+.k-toggles-input[data-grow="true"] {
+	display: block;
 }
-.k-input[data-type="toggles"]:has(.k-empty) {
-	outline: 0;
-	display: flex;
-}
-
-.k-toggles-input {
+.k-toggles-input ul {
 	display: grid;
 	grid-template-columns: repeat(var(--options), minmax(0, 1fr));
 	gap: 1px;
 	border-radius: var(--rounded);
 	line-height: 1;
-	background: var(--color-border);
 	overflow: hidden;
+}
+.k-toggles-input:not([disabled]) ul {
+	background: var(--color-border);
 }
 
 .k-toggles-input li {
 	height: var(--field-input-height);
-	background: var(--color-white);
 }
 .k-toggles-input label {
 	align-items: center;
 	background: var(--color-white);
 	cursor: pointer;
 	display: flex;
-	font-size: var(--text-sm);
 	justify-content: center;
 	line-height: 1.25;
 	padding: 0 var(--spacing-3);
 	height: 100%;
 }
-/** TODO: .k-toggles-input li:has(input[disabled]) label */
-.k-toggles-input li[data-disabled="true"] label {
-	color: var(--color-text-dimmed);
-	background: var(--color-light);
+.k-toggles-input[disabled] label {
+	background: none;
+	cursor: not-allowed;
 }
 .k-toggles-input .k-icon + .k-toggles-text {
 	margin-inline-start: var(--spacing-2);
 }
-.k-toggles-input input:focus:not(:checked) + label {
-	background: var(--color-blue-200);
+.k-toggles-input input:focus + label {
+	outline: var(--outline);
 }
-
 .k-toggles-input input:checked + label {
 	background: var(--color-black);
 	color: var(--color-white);
+}
+
+.k-input[data-type="toggles"]:has(.k-empty) {
+	outline: 0;
+	display: flex;
 }
 </style>

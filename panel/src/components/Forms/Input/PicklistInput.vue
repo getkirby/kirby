@@ -1,75 +1,79 @@
 <template>
-	<k-navigate
-		element="nav"
-		axis="y"
-		select="input[type=search], label, .k-picklist-input-body button"
-		class="k-picklist-input"
-		@prev="$emit('escape')"
+	<k-array-input
+		v-bind="{
+			min,
+			max,
+			required
+		}"
+		:class="$options.class"
+		:value="JSON.stringify(value ?? [])"
 	>
-		<header v-if="search" class="k-picklist-input-header">
-			<div class="k-picklist-input-search">
-				<k-search-input
-					ref="search"
-					:autofocus="autofocus"
-					:disabled="disabled"
-					:placeholder="placeholder"
-					:value="query"
-					@input="query = $event"
-					@keydown.escape.native.prevent="escape"
-					@keydown.enter.native.prevent="add"
-				/>
-				<k-button
-					v-if="showCreate"
-					class="k-picklist-input-create"
-					icon="add"
-					size="xs"
-					@click="add"
-				/>
-			</div>
-		</header>
+		<k-navigate
+			element="nav"
+			axis="y"
+			select="input[type=search], label, .k-picklist-input-body button"
+			class="k-picklist-input"
+			@prev="$emit('escape')"
+		>
+			<header v-if="search" class="k-picklist-input-header">
+				<div class="k-picklist-input-search">
+					<k-search-input
+						ref="search"
+						:autofocus="autofocus"
+						:disabled="disabled"
+						:placeholder="placeholder"
+						:value="query"
+						@input="query = $event"
+						@keydown.escape.native.prevent="escape"
+						@keydown.enter.native.prevent="add"
+					/>
+					<k-button
+						v-if="showCreate"
+						class="k-picklist-input-create"
+						icon="add"
+						size="xs"
+						@click="add"
+					/>
+				</div>
+			</header>
 
-		<template v-if="filteredOptions.length">
-			<div class="k-picklist-input-body">
-				<component
-					:is="multiple ? 'k-checkboxes-input' : 'k-radio-input'"
-					ref="options"
-					:disabled="disabled"
-					:options="choices"
-					:value="value"
-					class="k-picklist-input-options"
-					@input="input"
-					@keydown.native.enter.prevent="enter"
-				/>
-				<k-button
-					v-if="display !== true && filteredOptions.length > display"
-					class="k-picklist-input-more"
-					icon="angle-down"
-					@click="display = true"
-				>
-					{{ $t("options.all", { count: filteredOptions.length }) }}
-				</k-button>
-			</div>
-		</template>
+			<template v-if="filteredOptions.length">
+				<div class="k-picklist-input-body">
+					<component
+						:is="multiple ? 'k-checkboxes-input' : 'k-radio-input'"
+						ref="options"
+						:disabled="disabled"
+						:options="choices"
+						:value="value"
+						class="k-picklist-input-options"
+						@input="input"
+						@keydown.native.enter.prevent="enter"
+					/>
+					<k-button
+						v-if="display !== true && filteredOptions.length > display"
+						class="k-picklist-input-more"
+						icon="angle-down"
+						@click="display = true"
+					>
+						{{ $t("options.all", { count: filteredOptions.length }) }}
+					</k-button>
+				</div>
+			</template>
 
-		<template v-else-if="showEmpty">
-			<div class="k-picklist-input-body">
-				<p class="k-picklist-input-empty">
-					{{ $t("options.none") }}
-				</p>
-			</div>
-		</template>
-	</k-navigate>
+			<template v-else-if="showEmpty">
+				<div class="k-picklist-input-body">
+					<p class="k-picklist-input-empty">
+						{{ $t("options.none") }}
+					</p>
+				</div>
+			</template>
+		</k-navigate>
+	</k-array-input>
 </template>
 
 <script>
 import Input, { props as InputProps } from "@/mixins/input.js";
 import { autofocus, disabled, options, required } from "@/mixins/props.js";
-
-import {
-	required as validateRequired,
-	minLength as validateMinLength,
-	maxLength as validateMaxLength
-} from "vuelidate/lib/validators";
 
 export const picklist = {
 	mixins: [autofocus, disabled, options, required],
@@ -222,17 +226,6 @@ export default {
 			return this.create === false && this.filteredOptions.length === 0;
 		}
 	},
-	watch: {
-		value: {
-			handler() {
-				/**
-				 * Validation failed
-				 */
-				this.$emit("invalid", this.$v.$invalid, this.$v);
-			},
-			immediate: true
-		}
-	},
 	methods: {
 		add() {
 			if (this.showCreate) {
@@ -282,15 +275,6 @@ export default {
 			 */
 			this.$emit("input", values);
 		}
-	},
-	validations() {
-		return {
-			value: {
-				required: this.required ? validateRequired : true,
-				minLength: this.min ? validateMinLength(this.min) : true,
-				maxLength: this.max ? validateMaxLength(this.max) : true
-			}
-		};
 	}
 };
 </script>

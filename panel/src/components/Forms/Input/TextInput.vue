@@ -1,140 +1,23 @@
 <template>
-	<input
-		ref="input"
-		v-bind="{
-			autocomplete,
-			autofocus,
-			disabled,
-			id,
-			minlength,
-			name,
-			pattern,
-			placeholder,
-			required,
-			spellcheck,
-			type,
-			value
-		}"
-		v-direction
-		:data-font="font"
+	<k-string-input
+		v-bind="$props"
+		type="text"
 		class="k-text-input"
-		v-on="listeners"
+		@input="$emit('input', $event)"
 	/>
 </template>
 
 <script>
-import Input, { props as InputProps } from "@/mixins/input.js";
-import {
-	font,
-	maxlength,
-	minlength,
-	pattern,
-	placeholder,
-	spellcheck
-} from "@/mixins/props.js";
-
-import {
-	required as validateRequired,
-	minLength as validateMinLength,
-	maxLength as validateMaxLength,
-	email as validateEmail,
-	url as validateUrl
-} from "vuelidate/lib/validators";
+import StringInput, { props as StringInputProps } from "./StringInput.vue";
 
 export const props = {
-	mixins: [
-		InputProps,
-		font,
-		maxlength,
-		minlength,
-		pattern,
-		placeholder,
-		spellcheck
-	],
-	props: {
-		autocomplete: {
-			type: [Boolean, String],
-			default: "off"
-		},
-		preselect: Boolean,
-		type: {
-			type: String,
-			default: "text"
-		},
-		value: String
-	}
+	mixins: [StringInputProps]
 };
 
 /**
- * @example <k-input :value="text" @input="text = $event" name="text" type="text" />
+ * @example <k-text-input :value="value" @input="value = $event" />
  */
 export default {
-	mixins: [Input, props],
-	data() {
-		return {
-			listeners: {
-				...this.$listeners,
-				input: (event) => this.onInput(event.target.value)
-			}
-		};
-	},
-	watch: {
-		value() {
-			this.onInvalid();
-		}
-	},
-	mounted() {
-		this.onInvalid();
-
-		if (this.$props.autofocus) {
-			this.focus();
-		}
-
-		if (this.$props.preselect) {
-			this.select();
-		}
-	},
-	methods: {
-		onInput(value) {
-			this.$emit("input", value);
-		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
-		},
-		select() {
-			this.$refs.input.select();
-		}
-	},
-	validations() {
-		const validateMatch = (value) => {
-			return (
-				(!this.required && !value) || !this.$refs.input.validity.patternMismatch
-			);
-		};
-
-		return {
-			value: {
-				required: this.required ? validateRequired : true,
-				minLength: this.minlength ? validateMinLength(this.minlength) : true,
-				maxLength: this.maxlength ? validateMaxLength(this.maxlength) : true,
-				email: this.type === "email" ? validateEmail : true,
-				url: this.type === "url" ? validateUrl : true,
-				pattern: this.pattern ? validateMatch : true
-			}
-		};
-	}
+	mixins: [StringInput, props]
 };
 </script>
-
-<style>
-.k-text-input {
-	padding: var(--input-padding);
-	border-radius: var(--input-rounded);
-}
-.k-text-input:focus {
-	outline: 0;
-}
-.k-text-input[data-font="monospace"] {
-	font-family: var(--font-mono);
-}
-</style>

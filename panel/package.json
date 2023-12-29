@@ -25,7 +25,6 @@
 		"prosemirror-view": "^1.32.7",
 		"vue": "^2.7.16",
 		"vuedraggable": "^2.24.3",
-		"vuelidate": "^0.7.7",
 		"vuex": "^3.6.2"
 	},
 	"devDependencies": {

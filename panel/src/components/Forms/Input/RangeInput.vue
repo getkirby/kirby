@@ -31,12 +31,6 @@
 <script>
 import Input, { props as InputProps } from "@/mixins/input.js";
 
-import {
-	required as validateRequired,
-	minValue as validateMinValue,
-	maxValue as validateMaxValue
-} from "vuelidate/lib/validators";
-
 export const props = {
 	mixins: [InputProps],
 	props: {
@@ -59,8 +53,7 @@ export const props = {
 		 * The amount to increment when dragging the slider. This can be a decimal.
 		 */
 		step: {
-			type: [Number, String],
-			default: 1
+			type: Number
 		},
 		/**
 		 * The slider tooltip can have text before and after the value.
@@ -74,7 +67,7 @@ export const props = {
 				};
 			}
 		},
-		value: [Number, String]
+		value: Number
 	}
 };
 
@@ -89,6 +82,11 @@ export default {
 			// Otherwise place the baseline at the minimum
 			return this.min < 0 ? 0 : this.min;
 		},
+		isEmpty() {
+			return (
+				this.value === "" || this.value === undefined || this.value === null
+			);
+		},
 		label() {
 			return this.required || this.value || this.value === 0
 				? this.format(this.position)
@@ -101,12 +99,12 @@ export default {
 		}
 	},
 	watch: {
-		position() {
-			this.onInvalid();
+		value() {
+			this.validate();
 		}
 	},
 	mounted() {
-		this.onInvalid();
+		this.validate();
 
 		if (this.$props.autofocus) {
 			this.focus();
@@ -124,21 +122,22 @@ export default {
 				minimumFractionDigits: digits
 			}).format(value);
 		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
-		},
 		onInput(value) {
 			this.$emit("input", value);
-		}
-	},
-	validations() {
-		return {
-			position: {
-				required: this.required ? validateRequired : true,
-				min: this.min ? validateMinValue(this.min) : true,
-				max: this.max ? validateMaxValue(this.max) : true
+		},
+		validate() {
+			let error = "";
+
+			if (this.required && this.isEmpty === true) {
+				error = this.$t("error.validation.required");
+			} else if (this.isEmpty === false && this.min && this.value < this.min) {
+				error = this.$t("error.validation.min", { min: this.min });
+			} else if (this.isEmpty === false && this.max && this.value > this.max) {
+				error = this.$t("error.validation.max", { max: this.max });
 			}
-		};
+
+			this.$el.setCustomValidity(error);
+		}
 	}
 };
 </script>

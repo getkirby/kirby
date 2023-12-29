@@ -53,12 +53,6 @@ import {
 	spellcheck
 } from "@/mixins/props.js";
 
-import {
-	required as validateRequired,
-	minLength as validateMinLength,
-	maxLength as validateMaxLength
-} from "vuelidate/lib/validators";
-
 export const props = {
 	mixins: [
 		ToolbarProps,
@@ -78,7 +72,6 @@ export const props = {
 		 * @values small, medium, large, huge
 		 */
 		size: String,
-		theme: String,
 		value: String
 	}
 };
@@ -111,7 +104,6 @@ export default {
 	},
 	watch: {
 		async value() {
-			this.onInvalid();
 			await this.$nextTick();
 			this.$library.autosize.update(this.$refs.input);
 		}
@@ -119,8 +111,6 @@ export default {
 	async mounted() {
 		await this.$nextTick();
 		this.$library.autosize(this.$refs.input);
-
-		this.onInvalid();
 
 		if (this.$props.autofocus) {
 			this.focus();
@@ -167,7 +157,7 @@ export default {
 			});
 		},
 		focus() {
-			this.$refs.input.focus();
+			this.$el.querySelector("textarea")?.focus();
 		},
 		insert(text) {
 			const input = this.$refs.input;
@@ -232,9 +222,6 @@ export default {
 		onInput($event) {
 			this.$emit("input", $event.target.value);
 		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
-		},
 		onOut() {
 			this.$refs.input.blur();
 			this.over = false;
@@ -265,7 +252,7 @@ export default {
 			}
 		},
 		onSubmit($event) {
-			return this.$emit("submit", $event);
+			$event.target.form?.requestSubmit();
 		},
 		parseSelection() {
 			const selection = this.selection();
@@ -347,15 +334,6 @@ export default {
 		wrap(before, after) {
 			this.insert(before + this.selection() + (after ?? before));
 		}
-	},
-	validations() {
-		return {
-			value: {
-				required: this.required ? validateRequired : true,
-				minLength: this.minlength ? validateMinLength(this.minlength) : true,
-				maxLength: this.maxlength ? validateMaxLength(this.maxlength) : true
-			}
-		};
 	}
 };
 </script>

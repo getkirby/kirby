@@ -1,5 +1,17 @@
 <template>
-	<div class="k-tags-input">
+	<k-array-input
+		ref="input"
+		v-bind="{
+			min,
+			max,
+			name,
+			required
+		}"
+		:class="$options.class"
+		:value="JSON.stringify(value ?? [])"
+		input=".k-tags-input-toggle"
+		class="k-tags-input"
+	>
 		<k-tags
 			ref="tags"
 			v-bind="$props"
@@ -38,7 +50,7 @@
 			@create="create"
 			@input="pick"
 		/>
-	</div>
+	</k-array-input>
 </template>
 
 <script>
@@ -210,6 +222,7 @@ export default {
 
 <style>
 .k-tags-input {
+	display: block;
 	padding: var(--tags-gap);
 	cursor: pointer;
 }
