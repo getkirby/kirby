@@ -10,11 +10,11 @@
 		<ul :style="'--options:' + (columns ?? options.length)">
 			<li v-for="(choice, index) in choices" :key="index">
 				<input
+					:id="choice.id"
 					:aria-label="choice.label"
 					:autofocus="choice.autofocus"
 					:checked="choice.checked"
 					:disabled="choice.disabled"
-					:id="choice.id"
 					:name="choice.name"
 					:required="choice.required"
 					:value="choice.value"
