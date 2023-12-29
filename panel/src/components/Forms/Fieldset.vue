@@ -23,9 +23,6 @@
 						:value="value[fieldName]"
 						@input="onInput($event, field, fieldName)"
 						@focus="$emit('focus', $event, field, fieldName)"
-						@invalid="
-							($invalid, $v) => onInvalid($invalid, $v, field, fieldName)
-						"
 						@submit="$emit('submit', $event, field, fieldName)"
 					/>
 					<k-box v-else theme="negative">
@@ -81,12 +78,7 @@ export default {
 			default: () => ({})
 		}
 	},
-	emits: ["focus", "input", "invalid", "submit"],
-	data() {
-		return {
-			errors: {}
-		};
-	},
+	emits: ["focus", "input", "submit"],
 	methods: {
 		/**
 		 * Focus a specific field in the fieldset or the first one if no name is given
@@ -123,17 +115,14 @@ export default {
 		hasField(name) {
 			return this.$refs[name]?.[0];
 		},
-		onInvalid($invalid, $v, field, fieldName) {
-			this.errors[fieldName] = $v;
-			this.$emit("invalid", this.errors);
-		},
 		onInput(value, field, name) {
 			const values = this.value;
 			this.$set(values, name, value);
 			this.$emit("input", values, field, name);
 		},
 		hasErrors() {
-			return this.$helper.object.length(this.errors) > 0;
+			// TODO: refactor using native invalid states (or check if can be removed completely)
+			return false;
 		}
 	}
 };
