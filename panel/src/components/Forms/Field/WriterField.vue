@@ -1,7 +1,7 @@
 <template>
 	<k-field
 		v-bind="$props"
-		:input="_uid"
+		:input="uid"
 		:counter="counterOptions"
 		class="k-writer-field"
 	>

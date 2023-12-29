@@ -72,6 +72,7 @@
 </template>
 
 <script>
+import { useUid } from "@/helpers/useUid.js";
 import { set } from "vue";
 
 export default {
@@ -104,7 +105,7 @@ export default {
 	computed: {
 		draggableOptions() {
 			return {
-				id: this._uid,
+				id: useUid(),
 				handle: ".k-sort-handle",
 				list: this.blocks,
 				move: this.move,

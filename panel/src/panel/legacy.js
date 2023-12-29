@@ -58,7 +58,8 @@ export default {
 
 		for (const polyfill of polyfills) {
 			const key = `$${polyfill}`;
-			app.prototype[key] = window.panel[key] = window.panel[polyfill];
+			app.config.globalProperties[key] = window.panel[key] =
+				window.panel[polyfill];
 		}
 
 		// Kirbyup relies on this

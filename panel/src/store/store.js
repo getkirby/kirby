@@ -1,14 +1,11 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import { createStore } from "vuex";
 
 // store modules
 import content from "./modules/content.js";
 import drawers from "./modules/drawers.js";
 import notification from "./modules/notification.js";
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
+export default createStore({
 	// eslint-disable-next-line
 	strict: process.env.NODE_ENV !== "production",
 	actions: {

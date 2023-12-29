@@ -64,7 +64,14 @@ export const states = [
  * @since 4.0.0
  */
 export default {
-	create(plugins = {}) {
+	create(app, plugins = {}) {
+		// Vue instance
+		this.app = app;
+
+		// register the single source of truth
+		// for all Vue components
+		this.app.config.globalProperties.$panel = this;
+
 		// props
 		this.isLoading = false;
 		this.isOffline = false;
@@ -98,7 +105,7 @@ export default {
 		this.t = this.translation.translate.bind(this.translation);
 
 		// register all plugins
-		this.plugins = Plugins(window.Vue, plugins);
+		this.plugins = Plugins(this.app, plugins);
 
 		// set initial state
 		this.set(window.fiber);

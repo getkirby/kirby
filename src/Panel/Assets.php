@@ -230,7 +230,7 @@ class Assets
 			];
 
 			// load the development version of Vue
-			$js['vue']['src'] = $this->url . '/node_modules/vue/dist/vue.js';
+			$js['vue']['src'] = $this->url . '/node_modules/vue/dist/vue.global.js';
 
 			// remove the vendor script
 			$js['vendor']['src'] = null;

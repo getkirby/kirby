@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import { useUid } from "@/helpers/useUid.js";
 import { after, before, disabled, invalid } from "@/mixins/props.js";
 
 export const props = {
@@ -55,6 +56,11 @@ export const props = {
 		value: {
 			type: [String, Boolean, Number, Object, Array],
 			default: null
+		}
+	},
+	computed: {
+		uid() {
+			return useUid();
 		}
 	}
 };

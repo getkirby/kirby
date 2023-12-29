@@ -1,4 +1,4 @@
-import Vue, { h } from "vue";
+import { createApp, h } from "vue";
 
 import App from "./panel/app.js";
 import Components from "./components/index.js";
@@ -8,11 +8,18 @@ import I18n from "./config/i18n.js";
 import Legacy from "./panel/legacy.js";
 import Libraries from "./libraries/index.js";
 import Panel from "./panel/panel.js";
-import store from "./store/store.js";
-import Vuelidate from "vuelidate";
+import Store from "./store/store.js";
+// import Vuelidate from "vuelidate";
 
-Vue.config.productionTip = false;
-Vue.config.devtools = true;
+/**
+ * Create the Vue application
+ */
+const app = createApp(App);
+
+/**
+ * Create the Panel instance
+ */
+window.panel = Panel.create(app, window.panel.plugins);
 
 /**
  * Global styles need to be loaded before
@@ -25,10 +32,11 @@ import "./styles/reset.css";
  * Load all relevant Vue plugins
  * that do not depend on the Panel instance
  */
-Vue.use(Helpers);
-Vue.use(Libraries);
-Vue.use(Vuelidate);
-Vue.use(Components);
+app.use(Helpers);
+app.use(Libraries);
+app.use(Store);
+// Vue.use(Vuelidate);
+app.use(Components);
 
 /**
  * Load CSS utilities after components
@@ -37,38 +45,28 @@ Vue.use(Components);
 import "./styles/utilities.css";
 
 /**
- * Create the Panel instance
- *
- * This is the single source of truth
- * for all Vue components.
- */
-window.panel = Vue.prototype.$panel = Panel.create(window.panel.plugins);
-
-/**
  * Some shortcuts to the Panel's features
  */
-Vue.prototype.$dialog = window.panel.dialog.open.bind(window.panel.dialog);
-Vue.prototype.$drawer = window.panel.drawer.open.bind(window.panel.drawer);
-Vue.prototype.$dropdown = window.panel.dropdown.openAsync.bind(
+app.config.globalProperties.$dialog = window.panel.dialog.open.bind(
+	window.panel.dialog
+);
+app.config.globalProperties.$drawer = window.panel.drawer.open.bind(
+	window.panel.drawer
+);
+app.config.globalProperties.$dropdown = window.panel.dropdown.openAsync.bind(
 	window.panel.dropdown
 );
-Vue.prototype.$go = window.panel.view.open.bind(window.panel.view);
-Vue.prototype.$reload = window.panel.reload.bind(window.panel);
-
-/**
- * Create the Vue application
- */
-window.panel.app = new Vue({
-	store,
-	render: () => h(App)
-});
+app.config.globalProperties.$go = window.panel.view.open.bind(
+	window.panel.view
+);
+app.config.globalProperties.$reload = window.panel.reload.bind(window.panel);
 
 /**
  * Additional functionalities and app configuration
  */
-Vue.use(I18n);
-Vue.use(ErrorHandling);
-Vue.use(Legacy);
+app.use(I18n);
+app.use(ErrorHandling);
+app.use(Legacy);
 
 // container queries CSS polyfill
 // TODO: remove when global support for container queries is reached
@@ -79,4 +77,4 @@ if (CSS.supports("container", "foo / inline-size") === false) {
 /**
  * Mount the Vue application
  */
-window.panel.app.$mount("#app");
+app.mount("#app");

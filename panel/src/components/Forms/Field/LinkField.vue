@@ -1,5 +1,5 @@
 <template>
-	<k-field v-bind="$props" :input="_uid" class="k-link-field">
+	<k-field v-bind="$props" :input="uid" class="k-link-field">
 		<k-input v-bind="$props" :invalid="isInvalid" :icon="false" theme="field">
 			<div class="k-link-input-header">
 				<!-- Type selector -->
@@ -43,7 +43,7 @@
 				<component
 					:is="'k-' + currentType.input + '-input'"
 					v-else
-					:id="_uid"
+					:id="uid"
 					ref="input"
 					:pattern="currentType.pattern ?? null"
 					:placeholder="currentType.placeholder"

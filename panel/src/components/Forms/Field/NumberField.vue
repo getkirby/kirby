@@ -1,8 +1,8 @@
 <template>
-	<k-field v-bind="$props" :input="_uid" class="k-number-field">
+	<k-field v-bind="$props" :input="uid" class="k-number-field">
 		<k-input
 			v-bind="$props"
-			:id="_uid"
+			:id="uid"
 			ref="input"
 			theme="field"
 			type="number"

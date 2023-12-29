@@ -7,7 +7,7 @@
 		/>
 		<k-checkboxes-input
 			v-else
-			:id="_uid"
+			:id="uid"
 			ref="input"
 			v-bind="$props"
 			theme="field"

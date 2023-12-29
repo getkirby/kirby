@@ -1,7 +1,7 @@
 <template>
 	<nav class="k-toolbar" :data-theme="theme">
 		<template v-for="(button, index) in buttons">
-			<hr v-if="button === '|'" :key="index" />
+			<hr v-if="button === '|'" :key="'separator-' + index" />
 
 			<k-button
 				v-else-if="button.when ?? true"
@@ -12,7 +12,7 @@
 				:title="button.label"
 				:class="['k-toolbar-button', button.class]"
 				tabindex="0"
-				@keydown.native="button.key?.($event)"
+				@keydown="button.key?.($event)"
 				@click="
 					button.dropdown?.length
 						? $refs[index + '-dropdown'][0].toggle()

@@ -1,3 +1,5 @@
+import { h, resolveComponent } from "vue";
+
 /**
  * @since 4.0.0
  */
@@ -38,11 +40,12 @@ export default {
 	destroyed() {
 		this.$panel.events.unsubscribe();
 	},
-	render(h) {
+	render() {
 		if (this.$panel.view.component) {
-			return h(this.$panel.view.component, {
+			const component = resolveComponent(this.$panel.view.component);
+			return h(component, {
 				key: this.$panel.view.component,
-				props: this.$panel.view.props
+				...this.$panel.view.props
 			});
 		}
 	}

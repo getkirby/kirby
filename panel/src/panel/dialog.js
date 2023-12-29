@@ -1,4 +1,5 @@
 import Modal, { defaults as modalDefaults } from "./modal.js";
+import isVueComponent from "@/helpers/isVueComponent.js";
 
 export const defaults = () => {
 	return {
@@ -79,7 +80,7 @@ export default (panel) => {
 		 */
 		async open(dialog, options = {}) {
 			// check for legacy Vue components
-			if (dialog instanceof window.Vue) {
+			if (isVueComponent(dialog) === true) {
 				return this.openComponent(dialog);
 			}
 

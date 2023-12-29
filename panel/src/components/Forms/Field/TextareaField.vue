@@ -1,13 +1,13 @@
 <template>
 	<k-field
 		v-bind="$props"
-		:input="_uid"
+		:input="uid"
 		:counter="counterOptions"
 		class="k-textarea-field"
 	>
 		<k-input
 			v-bind="$props"
-			:id="_uid"
+			:id="uid"
 			ref="input"
 			type="textarea"
 			theme="field"

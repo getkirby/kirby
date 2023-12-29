@@ -7,7 +7,7 @@
 		/>
 		<k-input
 			v-else
-			:id="_uid"
+			:id="uid"
 			ref="input"
 			:class="{ grow }"
 			v-bind="$props"
