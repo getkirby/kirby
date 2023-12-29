@@ -2,7 +2,7 @@
 import path from "path";
 
 import { defineConfig, splitVendorChunkPlugin } from "vite";
-import vue from "@vitejs/plugin-vue2";
+import vue from "@vitejs/plugin-vue";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import externalGlobals from "rollup-plugin-external-globals";
 import kirby from "./scripts/vite-kirby.mjs";
@@ -16,7 +16,19 @@ try {
 
 export default defineConfig(({ command }) => {
 	// gather plugins depending on environment
-	const plugins = [vue(), splitVendorChunkPlugin(), kirby()];
+	const plugins = [
+		vue({
+			template: {
+				compilerOptions: {
+					compatConfig: {
+						MODE: 2
+					}
+				}
+			}
+		}),
+		splitVendorChunkPlugin(),
+		kirby()
+	];
 
 	if (command === "build") {
 		plugins.push(
