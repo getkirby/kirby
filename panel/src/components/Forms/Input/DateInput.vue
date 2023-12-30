@@ -197,7 +197,7 @@ export default {
 		commit(dt) {
 			this.dt = dt;
 			this.formatted = this.pattern.format(dt);
-			this.$emit("invalid", this.$v.$invalid, this.$v);
+			this.validate();
 		},
 		/**
 		 * Convert the dayjs object to an ISO string
@@ -436,22 +436,30 @@ export default {
 		 */
 		toISO(dt) {
 			return dt?.toISO(this.inputType);
-		}
-	},
-	validations() {
-		return {
-			value: {
-				min:
-					this.dt && this.min
-						? () => this.dt.validate(this.min, "min", this.rounding.unit)
-						: true,
-				max:
-					this.dt && this.max
-						? () => this.dt.validate(this.max, "max", this.rounding.unit)
-						: true,
-				required: this.required ? () => !!this.dt : true
+		},
+		validate() {
+			let error = "";
+
+			if (
+				this.min &&
+				this.dt?.validate(this.min, "min", this.rounding.unit) === false
+			) {
+				error = this.$t("error.validation.date.after", {
+					date: this.dt.format(this.display)
+				});
 			}
-		};
+
+			if (
+				this.max &&
+				this.dt?.validate(this.max, "max", this.rounding.unit) === false
+			) {
+				error = this.$t("error.validation.date.before", {
+					date: this.dt.format(this.display)
+				});
+			}
+
+			this.$el?.setCustomValidity(error);
+		}
 	}
 };
 </script>
