@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import Vue from "vue";
+import { isVueComponent } from "@/helpers/isComponent.js";
 
 let OpenDropdown = null;
 
@@ -246,7 +246,7 @@ export default {
 			}
 
 			// drill down to the element of a component
-			if (this.opener instanceof Vue) {
+			if (isVueComponent(this.opener) === true) {
 				this.opener = this.opener.$el;
 			}
 
