@@ -53,7 +53,7 @@ export const props = {
 		 * The amount to increment when dragging the slider. This can be a decimal.
 		 */
 		step: {
-			type: Number
+			type: [Number, String]
 		},
 		/**
 		 * The slider tooltip can have text before and after the value.
@@ -67,7 +67,7 @@ export const props = {
 				};
 			}
 		},
-		value: Number
+		value: [Number, String]
 	}
 };
 
@@ -136,7 +136,7 @@ export default {
 				error = this.$t("error.validation.max", { max: this.max });
 			}
 
-			this.$el.setCustomValidity(error);
+			this.$refs.range.setCustomValidity(error);
 		}
 	}
 };
