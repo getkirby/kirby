@@ -375,7 +375,7 @@ class FileTest extends TestCase
 	}
 
 	/**
-	 * @covers \Kirby\Filesystem\File::match
+	 * @covers ::match
 	 */
 	public function testMatchMimeException()
 	{
@@ -386,7 +386,7 @@ class FileTest extends TestCase
 	}
 
 	/**
-	 * @covers \Kirby\Filesystem\File::match
+	 * @covers ::match
 	 */
 	public function testMatchExtensionException()
 	{
@@ -397,7 +397,7 @@ class FileTest extends TestCase
 	}
 
 	/**
-	 * @covers \Kirby\Filesystem\File::match
+	 * @covers ::match
 	 */
 	public function testMatchTypeException()
 	{
