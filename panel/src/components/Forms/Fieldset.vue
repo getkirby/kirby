@@ -119,10 +119,6 @@ export default {
 			const values = this.value;
 			this.$set(values, name, value);
 			this.$emit("input", values, field, name);
-		},
-		hasErrors() {
-			// TODO: refactor using native invalid states (or check if can be removed completely)
-			return false;
 		}
 	}
 };
