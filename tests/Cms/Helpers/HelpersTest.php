@@ -186,6 +186,8 @@ class HelpersTest extends HelpersTestCase
 	 */
 	public function testHandleErrorsWarningCaughtCallbackValue()
 	{
+		// TODO: This line should not be necessary
+		// https://github.com/getkirby/kirby/pull/6093#issuecomment-1872569768
 		$this->activeErrorHandlers++;
 
 		$this->assertSame('handled', Helpers::handleErrors(
