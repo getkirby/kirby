@@ -10,7 +10,7 @@
 		/>
 
 		<!-- Mode: picker/input -->
-		<k-input v-else v-bind="$props" theme="field" type="color">
+		<k-input v-else v-bind="$props" type="color">
 			<template #before>
 				<template v-if="mode === 'picker'">
 					<button

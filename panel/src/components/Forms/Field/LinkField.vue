@@ -1,6 +1,6 @@
 <template>
 	<k-field v-bind="$props" :input="_uid" class="k-link-field">
-		<k-input v-bind="$props" :invalid="isInvalid" :icon="false" theme="field">
+		<k-input v-bind="$props" :invalid="isInvalid" :icon="false">
 			<div class="k-link-input-header">
 				<!-- Type selector -->
 				<k-button

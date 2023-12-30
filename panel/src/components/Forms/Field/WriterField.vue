@@ -11,7 +11,6 @@
 			:after="after"
 			:before="before"
 			:icon="icon"
-			theme="field"
 			type="writer"
 			@input="$emit('input', $event)"
 		/>
