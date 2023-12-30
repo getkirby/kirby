@@ -73,7 +73,6 @@
 
 <script>
 import { set } from "vue";
-import useUid from "@/helpers/useUid.js";
 
 export default {
 	inheritAttrs: false,
@@ -106,7 +105,7 @@ export default {
 	computed: {
 		draggableOptions() {
 			return {
-				id: useUid(),
+				id: this.id,
 				handle: ".k-sort-handle",
 				list: this.blocks,
 				move: this.move,

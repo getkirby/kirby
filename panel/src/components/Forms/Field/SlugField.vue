@@ -1,5 +1,5 @@
 <template>
-	<k-field v-bind="$props" :input="uid" :help="preview" class="k-slug-field">
+	<k-field v-bind="$props" :input="id" :help="preview" class="k-slug-field">
 		<template v-if="wizard && wizard.text" #options>
 			<k-button
 				:text="wizard.text"
@@ -12,7 +12,6 @@
 
 		<k-input
 			v-bind="$props"
-			:id="uid"
 			ref="input"
 			:value="slug"
 			type="slug"

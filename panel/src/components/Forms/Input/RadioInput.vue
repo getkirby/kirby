@@ -41,6 +41,7 @@ export default {
 					autofocus: this.autofocus && index === 0,
 					checked: this.value === option.value,
 					disabled: this.disabled || option.disabled,
+					id: this.id,
 					info: option.info,
 					label: option.text,
 					name: this.name ?? this.id,
