@@ -74,7 +74,10 @@ export function isVisible(field, values) {
 		const condition = field.when[key];
 
 		// if condition is checking for empty field
-		if (value === undefined && (condition === "" || condition === [])) {
+		if (
+			value === undefined &&
+			(condition === "" || (Array.isArray(condition) && condition.length === 0))
+		) {
 			continue;
 		}
 
