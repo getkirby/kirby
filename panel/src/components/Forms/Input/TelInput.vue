@@ -1,17 +1,24 @@
+<template>
+	<k-string-input
+		v-bind="$props"
+		type="tel"
+		class="k-tel-input"
+		@input="$emit('input', $event)"
+		@invalid="($invalid, $v) => $emit('invalid', $invalid, $v)"
+	/>
+</template>
+
 <script>
-import TextInput, { props as TextInputProps } from "./TextInput.vue";
+import StringInput, { props as StringInputProps } from "./StringInput.vue";
 
 export const props = {
-	mixins: [TextInputProps],
+	mixins: [StringInputProps],
 	props: {
 		autocomplete: {
 			default: "tel"
 		},
 		placeholder: {
 			default: () => window.panel.$t("tel.placeholder")
-		},
-		type: {
-			default: "tel"
 		}
 	}
 };
@@ -20,7 +27,6 @@ export const props = {
  * @example <k-input :value="tel" @input="tel = $event" name="tel" type="tel" />
  */
 export default {
-	extends: TextInput,
-	mixins: [props]
+	mixins: [StringInput]
 };
 </script>

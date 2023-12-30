@@ -17,7 +17,7 @@
 		spellcheck="false"
 		type="text"
 		class="k-text-input"
-		v-on="listeners"
+		@input="$emit('input', $event)"
 	/>
 </template>
 

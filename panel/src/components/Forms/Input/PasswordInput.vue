@@ -1,16 +1,22 @@
+<template>
+	<k-string-input
+		v-bind="$props"
+		type="password"
+		class="k-password-input"
+		@input="$emit('input', $event)"
+		@invalid="($invalid, $v) => $emit('invalid', $invalid, $v)"
+	/>
+</template>
+
 <script>
-import TextInput, { props as TextInputProps } from "./TextInput.vue";
+import StringInput, { props as StringInputProps } from "./StringInput.vue";
 
 export const props = {
-	mixins: [TextInputProps],
+	mixins: [StringInputProps],
 	props: {
 		autocomplete: {
 			type: String,
 			default: "new-password"
-		},
-		type: {
-			type: String,
-			default: "password"
 		}
 	}
 };
@@ -19,7 +25,6 @@ export const props = {
  * @example <k-input :value="password" @input="password = $event" name="password" type="password" />
  */
 export default {
-	extends: TextInput,
-	mixins: [props]
+	mixins: [StringInput]
 };
 </script>

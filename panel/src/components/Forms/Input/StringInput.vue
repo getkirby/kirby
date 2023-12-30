@@ -27,6 +27,7 @@
 import Input, { props as InputProps } from "@/mixins/input.js";
 import {
 	autocomplete,
+	autofocus,
 	font,
 	maxlength,
 	minlength,
@@ -35,10 +36,19 @@ import {
 	spellcheck
 } from "@/mixins/props.js";
 
+import {
+	required as validateRequired,
+	minLength as validateMinLength,
+	maxLength as validateMaxLength,
+	email as validateEmail,
+	url as validateUrl
+} from "vuelidate/lib/validators";
+
 export const props = {
 	mixins: [
 		InputProps,
 		autocomplete,
+		autofocus,
 		font,
 		maxlength,
 		minlength,
@@ -48,6 +58,7 @@ export const props = {
 	],
 	props: {
 		ariaLabel: String,
+		preselect: Boolean,
 		type: {
 			default: "text",
 			type: String
@@ -63,7 +74,49 @@ export const props = {
  * @example <k-string-input :value="value" type="text" @input="value = $event" />
  */
 export default {
-	mixins: [Input, props]
+	mixins: [Input, props],
+	watch: {
+		value() {
+			this.onInvalid();
+		}
+	},
+	mounted() {
+		this.onInvalid();
+
+		if (this.$props.autofocus) {
+			this.focus();
+		}
+
+		if (this.$props.preselect) {
+			this.select();
+		}
+	},
+	methods: {
+		onInvalid() {
+			this.$emit("invalid", this.$v.$invalid, this.$v);
+		},
+		select() {
+			this.$refs.input.select();
+		}
+	},
+	validations() {
+		const validateMatch = (value) => {
+			return (
+				(!this.required && !value) || !this.$refs.input.validity.patternMismatch
+			);
+		};
+
+		return {
+			value: {
+				required: this.required ? validateRequired : true,
+				minLength: this.minlength ? validateMinLength(this.minlength) : true,
+				maxLength: this.maxlength ? validateMaxLength(this.maxlength) : true,
+				email: this.type === "email" ? validateEmail : true,
+				url: this.type === "url" ? validateUrl : true,
+				pattern: this.pattern ? validateMatch : true
+			}
+		};
+	}
 };
 </script>
 
