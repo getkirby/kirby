@@ -40,49 +40,52 @@
 		</template>
 
 		<template v-if="hasFields">
-			<!-- Empty State -->
-			<k-empty
-				v-if="items.length === 0"
-				:data-invalid="isInvalid"
-				icon="list-bullet"
-				@click="add()"
+			<k-array-input
+				v-bind="{
+					min,
+					max,
+					name,
+					required
+				}"
+				:value="JSON.stringify(items)"
 			>
-				{{ empty ?? $t("field.structure.empty") }}
-			</k-empty>
+				<!-- Empty State -->
+				<k-empty v-if="items.length === 0" icon="list-bullet" @click="add()">
+					{{ empty ?? $t("field.structure.empty") }}
+				</k-empty>
 
-			<!-- Table -->
-			<template v-else>
-				<k-table
-					:columns="columns"
-					:disabled="disabled"
-					:fields="fields"
-					:empty="$t('field.structure.empty')"
-					:index="index"
-					:options="options"
-					:pagination="limit ? pagination : false"
-					:rows="paginatedItems"
-					:sortable="isSortable"
-					:data-invalid="isInvalid"
-					@cell="open($event.row, $event.columnIndex)"
-					@input="save"
-					@option="option"
-					@paginate="paginate"
-				/>
-
-				<footer v-if="more">
-					<k-button
-						:title="$t('add')"
-						icon="add"
-						size="xs"
-						variant="filled"
-						@click="add()"
+				<!-- Table -->
+				<template v-else>
+					<k-table
+						:columns="columns"
+						:disabled="disabled"
+						:fields="fields"
+						:empty="$t('field.structure.empty')"
+						:index="index"
+						:options="options"
+						:pagination="limit ? pagination : false"
+						:rows="paginatedItems"
+						:sortable="isSortable"
+						@cell="open($event.row, $event.columnIndex)"
+						@input="save"
+						@option="option"
+						@paginate="paginate"
 					/>
-				</footer>
-			</template>
+
+					<footer v-if="more">
+						<k-button
+							:title="$t('add')"
+							icon="add"
+							size="xs"
+							variant="filled"
+							@click="add()"
+						/>
+					</footer>
+				</template>
+			</k-array-input>
 		</template>
-		<template v-else>
-			<k-empty icon="list-bullet">{{ $t("fields.empty") }}</k-empty>
-		</template>
+
+		<k-empty v-else icon="list-bullet">{{ $t("fields.empty") }}</k-empty>
 	</k-field>
 </template>
 
@@ -194,25 +197,6 @@ export default {
 		},
 		hasFields() {
 			return this.$helper.object.length(this.fields) > 0;
-		},
-		/**
-		 * Returns if field is invalid
-		 * @returns {bool}
-		 */
-		isInvalid() {
-			if (this.disabled === true) {
-				return false;
-			}
-
-			if (this.min && this.items.length < this.min) {
-				return true;
-			}
-
-			if (this.max && this.items.length > this.max) {
-				return true;
-			}
-
-			return false;
 		},
 		/**
 		 * Returns whether the rows can be sorted
