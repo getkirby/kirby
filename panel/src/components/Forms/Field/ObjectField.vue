@@ -19,40 +19,45 @@
 		</template>
 
 		<template v-if="hasFields">
-			<table
-				v-if="!isEmpty"
-				:aria-disabled="disabled"
-				:data-invalid="isInvalid"
-				class="k-table k-object-field-table"
+			<k-array-input
+				v-bind="{
+					name,
+					required
+				}"
+				:value="JSON.stringify(object)"
 			>
-				<tbody>
-					<template v-for="field in fields">
-						<tr
-							v-if="field.saveable && $helper.field.isVisible(field, value)"
-							:key="field.name"
-							@click="open(field.name)"
-						>
-							<th data-has-button data-mobile="true">
-								<button type="button">{{ field.label }}</button>
-							</th>
-							<k-table-cell
-								:column="field"
-								:field="field"
-								:mobile="true"
-								:value="object[field.name]"
-								@input="cell(field.name, $event)"
-							/>
-						</tr>
-					</template>
-				</tbody>
-			</table>
-			<k-empty v-else :data-invalid="isInvalid" icon="box" @click="add">
-				{{ empty ?? $t("field.object.empty") }}
-			</k-empty>
+				<table
+					v-if="!isEmpty"
+					:aria-disabled="disabled"
+					class="k-table k-object-field-table"
+				>
+					<tbody>
+						<template v-for="field in fields">
+							<tr
+								v-if="field.saveable && $helper.field.isVisible(field, value)"
+								:key="field.name"
+								@click="open(field.name)"
+							>
+								<th data-has-button data-mobile="true">
+									<button type="button">{{ field.label }}</button>
+								</th>
+								<k-table-cell
+									:column="field"
+									:field="field"
+									:mobile="true"
+									:value="object[field.name]"
+									@input="cell(field.name, $event)"
+								/>
+							</tr>
+						</template>
+					</tbody>
+				</table>
+				<k-empty v-else icon="box" @click="add">
+					{{ empty ?? $t("field.object.empty") }}
+				</k-empty>
+			</k-array-input>
 		</template>
-		<template v-else>
-			<k-empty icon="box">{{ $t("fields.empty") }}</k-empty>
-		</template>
+		<k-empty v-else icon="box">{{ $t("fields.empty") }}</k-empty>
 	</k-field>
 </template>
 
@@ -80,9 +85,6 @@ export default {
 			return (
 				this.object === null || this.$helper.object.length(this.object) === 0
 			);
-		},
-		isInvalid() {
-			return this.required === true && this.isEmpty;
 		}
 	},
 	watch: {
