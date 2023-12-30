@@ -377,7 +377,18 @@ class FileTest extends TestCase
 	/**
 	 * @covers ::match
 	 */
-	public function testMatchMimeException()
+	public function testMatchMimeMissing()
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('The media type for "doesnotexist.invalid" cannot be detected');
+
+		$this->_file('doesnotexist.invalid')->match(['mime' => ['image/png', 'application/pdf']]);
+	}
+
+	/**
+	 * @covers ::match
+	 */
+	public function testMatchMimeInvalid()
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid mime type: text/plain');
