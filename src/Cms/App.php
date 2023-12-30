@@ -1466,9 +1466,7 @@ class App
 	protected function setRoles(array $roles = null): static
 	{
 		if ($roles !== null) {
-			$this->roles = Roles::factory($roles, [
-				'kirby' => $this
-			]);
+			$this->roles = Roles::factory($roles);
 		}
 
 		return $this;
@@ -1482,9 +1480,7 @@ class App
 	protected function setSite(Site|array $site = null): static
 	{
 		if (is_array($site) === true) {
-			$site = new Site($site + [
-				'kirby' => $this
-			]);
+			$site = new Site($site);
 		}
 
 		$this->site = $site;
@@ -1499,7 +1495,6 @@ class App
 		return $this->site ??= new Site([
 			'errorPageId' => $this->options['error'] ?? 'error',
 			'homePageId'  => $this->options['home']  ?? 'home',
-			'kirby'       => $this,
 			'url'         => $this->url('index'),
 		]);
 	}
