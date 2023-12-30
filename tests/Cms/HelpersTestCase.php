@@ -6,15 +6,15 @@ use Closure;
 
 class HelpersTestCase extends TestCase
 {
-	protected $hasErrorHandler = false;
+	protected int $activeErrorHandlers = 0;
 
 	public function tearDown(): void
 	{
 		parent::tearDown();
 
-		if ($this->hasErrorHandler === true) {
+		while ($this->activeErrorHandlers > 0) {
 			restore_error_handler();
-			$this->hasErrorHandler = false;
+			$this->activeErrorHandlers--;
 		}
 	}
 
@@ -24,7 +24,7 @@ class HelpersTestCase extends TestCase
 		Closure $callback,
 		bool $expectedFailure = true
 	) {
-		$this->hasErrorHandler = true;
+		$this->activeErrorHandlers++;
 
 		$called = false;
 

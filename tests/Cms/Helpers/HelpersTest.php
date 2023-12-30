@@ -130,7 +130,7 @@ class HelpersTest extends HelpersTestCase
 	 */
 	public function testHandleErrorsWarningCaught1()
 	{
-		$this->hasErrorHandler = true;
+		$this->activeErrorHandlers++;
 
 		$called = false;
 		set_error_handler(function (int $errno, string $errstr) use (&$called) {
@@ -156,7 +156,7 @@ class HelpersTest extends HelpersTestCase
 	 */
 	public function testHandleErrorsWarningCaught2()
 	{
-		$this->hasErrorHandler = true;
+		$this->activeErrorHandlers++;
 
 		$called = false;
 		set_error_handler(function (int $errno, string $errstr) use (&$called) {
@@ -186,7 +186,7 @@ class HelpersTest extends HelpersTestCase
 	 */
 	public function testHandleErrorsWarningCaughtCallbackValue()
 	{
-		$this->hasErrorHandler = true;
+		$this->activeErrorHandlers++;
 
 		$this->assertSame('handled', Helpers::handleErrors(
 			fn () => trigger_error('Some warning', E_USER_WARNING),
