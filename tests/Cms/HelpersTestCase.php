@@ -20,7 +20,7 @@ class HelpersTestCase extends TestCase
 
 	public function assertError(
 		int $expectedErrorType,
-		string $exptectedErrorMessage,
+		string $expectedErrorMessage,
 		Closure $callback,
 		bool $expectedFailure = true
 	) {
@@ -29,10 +29,10 @@ class HelpersTestCase extends TestCase
 		$called = false;
 
 		set_error_handler(
-			function (int $errno, string $errstr) use ($expectedErrorType, $exptectedErrorMessage, &$called) {
+			function (int $errno, string $errstr) use ($expectedErrorType, $expectedErrorMessage, &$called) {
 				$called = true;
 				$this->assertSame($expectedErrorType, $errno);
-				$this->assertSame($exptectedErrorMessage, $errstr);
+				$this->assertSame($expectedErrorMessage, $errstr);
 			}
 		);
 
