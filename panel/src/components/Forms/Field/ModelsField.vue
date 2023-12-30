@@ -12,20 +12,30 @@
 		</template>
 
 		<k-dropzone :disabled="!hasDropzone" @drop="drop">
-			<k-collection
-				v-bind="collection"
-				@empty="open"
-				@sort="onInput"
-				@sortChange="$emit('change', $event)"
+			<k-array-input
+				v-bind="{
+					max,
+					min,
+					name,
+					required
+				}"
+				:value="JSON.stringify(selected)"
 			>
-				<template v-if="!disabled" #options="{ index }">
-					<k-button
-						:title="$t('remove')"
-						icon="remove"
-						@click="remove(index)"
-					/>
-				</template>
-			</k-collection>
+				<k-collection
+					v-bind="collection"
+					@empty="open"
+					@sort="onInput"
+					@sortChange="$emit('change', $event)"
+				>
+					<template v-if="!disabled" #options="{ index }">
+						<k-button
+							:title="$t('remove')"
+							icon="remove"
+							@click="remove(index)"
+						/>
+					</template>
+				</k-collection>
+			</k-array-input>
 		</k-dropzone>
 	</k-field>
 </template>
@@ -43,6 +53,7 @@ export default {
 		info: String,
 		link: Boolean,
 		max: Number,
+		min: Number,
 		/**
 		 * If false, only a single item can be selected
 		 */
@@ -86,13 +97,6 @@ export default {
 		},
 		hasDropzone() {
 			return false;
-		},
-		isInvalid() {
-			return (
-				(this.required && this.selected.length === 0) ||
-				(this.min && this.selected.length < this.min) ||
-				(this.max && this.selected.length > this.max)
-			);
 		},
 		more() {
 			return !this.max || this.max > this.selected.length;
