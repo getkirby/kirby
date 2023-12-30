@@ -17,10 +17,10 @@
 			<!-- @slot Content of the dropdown which overrides passed `options` prop -->
 			<slot>
 				<template v-for="(option, index) in items">
-					<hr v-if="option === '-'" :key="id + '-item-' + index" />
+					<hr v-if="option === '-'" :key="'separator-' + index" />
 					<k-dropdown-item
 						v-else-if="option.when ?? true"
-						:key="id + '-item-' + index"
+						:key="'item-' + index"
 						v-bind="option"
 						@click="onOptionClick(option)"
 					>
@@ -116,11 +116,6 @@ export default {
 			items: [],
 			opener: null
 		};
-	},
-	computed: {
-		id() {
-			return useUid();
-		}
 	},
 	created() {
 		if (this.align) {
