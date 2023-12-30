@@ -833,9 +833,9 @@ class App
 			}
 		}
 
-		$data['kirby']  = $data['kirby']  ?? $this;
-		$data['site']   = $data['site']   ?? $data['kirby']->site();
-		$data['parent'] = $data['parent'] ?? $data['site']->page();
+		$data['kirby']  ??= $this;
+		$data['site']   ??= $data['kirby']->site();
+		$data['parent'] ??= $data['site']->page();
 
 		return (new KirbyTag($type, $value, $attr, $data, $this->options))->render();
 	}
