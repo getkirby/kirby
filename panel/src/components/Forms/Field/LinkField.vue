@@ -1,7 +1,14 @@
 <template>
 	<k-field v-bind="$props" :input="_uid" class="k-link-field">
-		<k-input v-bind="$props" :invalid="isInvalid" :icon="false" theme="field">
-			<div class="k-link-input-header">
+		<k-input v-bind="$props" :icon="false" theme="field">
+			<k-array-input
+				v-bind="{
+					name,
+					required
+				}"
+				:value="JSON.stringify(value)"
+				class="k-link-input-header"
+			>
 				<!-- Type selector -->
 				<k-button
 					class="k-link-input-toggle"
@@ -45,13 +52,14 @@
 					v-else
 					:id="_uid"
 					ref="input"
+					:required="required"
+					:disabled="disabled"
 					:pattern="currentType.pattern ?? null"
 					:placeholder="currentType.placeholder"
 					:value="linkValue"
-					@invalid="onInvalid"
 					@input="onInput"
 				/>
-			</div>
+			</k-array-input>
 
 			<!-- Page or file browser -->
 			<div
@@ -110,8 +118,7 @@ export default {
 			model: null,
 			linkType: null,
 			linkValue: null,
-			expanded: false,
-			isInvalid: false
+			expanded: false
 		};
 	},
 	computed: {
@@ -307,9 +314,6 @@ export default {
 
 			this.$emit("input", this.currentType.value(value));
 		},
-		onInvalid(invalid) {
-			this.isInvalid = !!invalid;
-		},
 		onOutsideClick(event) {
 			if (this.$el.contains(event.target) === false) {
 				this.expanded = false;
@@ -375,7 +379,6 @@ export default {
 				return;
 			}
 
-			this.isInvalid = false;
 			this.linkType = type;
 			this.linkValue = "";
 
