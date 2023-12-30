@@ -52,10 +52,10 @@ enum LicenseStatus: string
 	public function activatable(): bool
 	{
 		return match ($this) {
-			static::Active   => true,
-			static::Inactive => true,
-			static::Legacy   => true,
-			default          => false
+			static::Active,
+			static::Inactive,
+			static::Legacy    => true,
+			default           => false
 		};
 	}
 
@@ -111,7 +111,7 @@ enum LicenseStatus: string
 	public function renewable(): bool
 	{
 		return match ($this) {
-			static::Demo   => false,
+			static::Demo,
 			static::Active => false,
 			default        => true
 		};
