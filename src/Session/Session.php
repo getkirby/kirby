@@ -675,16 +675,15 @@ class Session
 		}
 
 		// decode the serialized data
-		try {
-			$data = unserialize($data);
-		} catch (Throwable $e) {
+		$data = unserialize($data);
+
+		if ($data === false) {
 			throw new LogicException([
 				'key'       => 'session.invalid',
 				'data'      => ['token' => $this->token()],
 				'fallback'  => 'Session "' . $this->token() . '" is invalid',
 				'translate' => false,
-				'httpCode'  => 500,
-				'previous'  => $e
+				'httpCode'  => 500
 			]);
 		}
 
