@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Obj;
 
@@ -123,6 +124,20 @@ class HelpersTest extends HelpersTestCase
 			fn () => 'return',
 			fn () => $this->fail('Condition handler should not be called because no warning was triggered')
 		));
+	}
+
+	/**
+	 * @covers ::handleErrors
+	 */
+	public function testHandleErrorsException()
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Exception inside the action');
+
+		Helpers::handleErrors(
+			fn () => throw new Exception('Exception inside the action'),
+			fn () => $this->fail('Condition handler should not be called because no warning was triggered')
+		);
 	}
 
 	/**

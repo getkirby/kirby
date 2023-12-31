@@ -135,9 +135,14 @@ class Helpers
 			return true;
 		});
 
-		$result = $action();
-
-		restore_error_handler();
+		try {
+			$result = $action();
+		} finally {
+			// always restore the error handler, even if the
+			// action or the standard error handler threw an
+			// exception; this avoids modifying global state
+			restore_error_handler();
+		}
 
 		return $override ?? $result;
 	}
