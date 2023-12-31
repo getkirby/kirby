@@ -103,7 +103,7 @@ export default {
 .k-input[data-type="toggle"] .k-toggle-input {
 	padding-inline-start: var(--input-padding);
 }
-.k-input[data-type="toggle"][data-disabled] {
+.k-input[data-type="toggle"][data-disabled="true"] {
 	box-shadow: none;
 }
 </style>

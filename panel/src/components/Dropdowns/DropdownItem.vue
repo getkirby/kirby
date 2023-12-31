@@ -56,10 +56,10 @@ export default {
 .k-dropdown-item.k-button:focus {
 	outline: var(--outline);
 }
-.k-dropdown-item.k-button[aria-current] {
+.k-dropdown-item.k-button[aria-current="true"] {
 	--button-color-text: var(--color-blue-500);
 }
-.k-dropdown-item.k-button:not([aria-disabled]):hover {
+.k-dropdown-item.k-button:not([aria-disabled="true"]):hover {
 	--button-color-back: var(--dropdown-color-hr);
 }
 </style>

@@ -172,7 +172,7 @@ export default {
 	gap: 1rem;
 	box-shadow: var(--shadow);
 }
-.k-block-types .k-button[aria-disabled] {
+.k-block-types .k-button[aria-disabled="true"] {
 	opacity: var(--opacity-disabled);
 	--button-color-back: var(--color-gray-200);
 	box-shadow: none;

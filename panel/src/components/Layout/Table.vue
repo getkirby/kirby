@@ -398,7 +398,7 @@ export default {
 	color: var(--table-color-th-text);
 	background: var(--table-color-th-back);
 }
-.k-table th[data-has-button] {
+.k-table th[data-has-button="true"] {
 	padding: 0;
 }
 .k-table th button {

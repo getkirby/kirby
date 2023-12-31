@@ -98,7 +98,7 @@ export default {
 	cursor: pointer;
 	user-select: none;
 }
-.k-tag:not([aria-disabled]):focus {
+.k-tag:not([aria-disabled="true"]):focus {
 	outline: var(--outline);
 }
 .k-tag-image {
@@ -128,7 +128,7 @@ export default {
 	filter: brightness(100%);
 }
 
-.k-tag:where([aria-disabled]) {
+.k-tag:where([aria-disabled="true"]) {
 	background-color: var(--tag-color-disabled-back);
 	color: var(--tag-color-disabled-text);
 	cursor: not-allowed;

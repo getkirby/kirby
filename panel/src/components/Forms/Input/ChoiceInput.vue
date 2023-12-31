@@ -86,7 +86,7 @@ export default {
 .k-choice-input-label-info {
 	color: var(--choice-color-info);
 }
-.k-choice-input[aria-disabled] {
+.k-choice-input[aria-disabled="true"] {
 	cursor: not-allowed;
 }
 
