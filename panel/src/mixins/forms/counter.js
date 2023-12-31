@@ -23,10 +23,13 @@ export default {
 				}
 			}
 			return {
-				count: count,
-				min: this.min ?? this.minlength,
-				max: this.max ?? this.maxlength
+				count,
+				min: this.$props.min ?? this.$props.minlength,
+				max: this.$props.max ?? this.$props.maxlength
 			};
+		},
+		counterValue() {
+			return null;
 		}
 	}
 };
