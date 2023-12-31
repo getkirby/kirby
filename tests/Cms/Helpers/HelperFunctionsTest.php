@@ -8,10 +8,8 @@ use Kirby\Filesystem\Dir;
 use Kirby\Image\QrCode;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Obj;
-use PHPUnit\Framework\Assert;
-use PHPUnit\Framework\Error\Deprecated;
 
-class HelperFunctionsTest extends TestCase
+class HelperFunctionsTest extends HelpersTestCase
 {
 	protected $fixtures;
 	protected $kirby;
@@ -189,17 +187,11 @@ class HelperFunctionsTest extends TestCase
 
 	public function testDeprecated()
 	{
-		// the deprecation warnings are always triggered in testing mode,
-		// so we cannot test it with disabled debug mode
-
-		try {
-			deprecated('The xyz method is deprecated.');
-		} catch (Deprecated $e) {
-			$this->assertSame('The xyz method is deprecated.', $e->getMessage());
-			return;
-		}
-
-		Assert::fail('Expected deprecation warning was not generated');
+		$this->assertError(
+			E_USER_DEPRECATED,
+			'The xyz method is deprecated.',
+			fn () => deprecated('The xyz method is deprecated.')
+		);
 	}
 
 	public function testDumpOnCli()

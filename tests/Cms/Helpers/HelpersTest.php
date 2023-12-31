@@ -4,17 +4,13 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Obj;
-use PHPUnit\Framework\Assert;
-use PHPUnit\Framework\Error\Deprecated;
-use PHPUnit\Framework\Error\Warning;
 
 /**
  * @coversDefaultClass Kirby\Cms\Helpers
  */
-class HelpersTest extends TestCase
+class HelpersTest extends HelpersTestCase
 {
 	protected $deprecations = [];
-	protected $hasErrorHandler = false;
 
 	public function setUp(): void
 	{
@@ -28,11 +24,6 @@ class HelpersTest extends TestCase
 		parent::tearDown();
 
 		Helpers::$deprecations = $this->deprecations;
-
-		if ($this->hasErrorHandler === true) {
-			restore_error_handler();
-			$this->hasErrorHandler = false;
-		}
 	}
 
 	/**
@@ -40,17 +31,11 @@ class HelpersTest extends TestCase
 	 */
 	public function testDeprecated()
 	{
-		// the deprecation warnings are always triggered in testing mode,
-		// so we cannot test it with disabled debug mode
-
-		try {
-			Helpers::deprecated('The xyz method is deprecated.');
-		} catch (Deprecated $e) {
-			$this->assertSame('The xyz method is deprecated.', $e->getMessage());
-			return;
-		}
-
-		Assert::fail('Expected deprecation warning was not generated');
+		$this->assertError(
+			E_USER_DEPRECATED,
+			'The xyz method is deprecated.',
+			fn () => Helpers::deprecated('The xyz method is deprecated.')
+		);
 	}
 
 	/**
@@ -58,14 +43,11 @@ class HelpersTest extends TestCase
 	 */
 	public function testDeprecatedKeyUndefined()
 	{
-		try {
-			Helpers::deprecated('The xyz method is deprecated.', 'my-key');
-		} catch (Deprecated $e) {
-			$this->assertSame('The xyz method is deprecated.', $e->getMessage());
-			return;
-		}
-
-		Assert::fail('Expected deprecation warning was not generated');
+		$this->assertError(
+			E_USER_DEPRECATED,
+			'The xyz method is deprecated.',
+			fn () => Helpers::deprecated('The xyz method is deprecated.', 'my-key')
+		);
 	}
 
 	/**
@@ -73,15 +55,14 @@ class HelpersTest extends TestCase
 	 */
 	public function testDeprecatedActivated()
 	{
-		try {
-			Helpers::$deprecations = ['my-key' => true];
-			Helpers::deprecated('The xyz method is deprecated.', 'my-key');
-		} catch (Deprecated $e) {
-			$this->assertSame('The xyz method is deprecated.', $e->getMessage());
-			return;
-		}
-
-		Assert::fail('Expected deprecation warning was not generated');
+		$this->assertError(
+			E_USER_DEPRECATED,
+			'The xyz method is deprecated.',
+			function () {
+				Helpers::$deprecations = ['my-key' => true];
+				Helpers::deprecated('The xyz method is deprecated.', 'my-key');
+			}
+		);
 	}
 
 	/**
@@ -89,8 +70,16 @@ class HelpersTest extends TestCase
 	 */
 	public function testDeprecatedKeyDeactivated()
 	{
-		Helpers::$deprecations = ['my-key' => false];
-		$this->assertFalse(Helpers::deprecated('The xyz method is deprecated.', 'my-key'));
+		$result = $this->assertError(
+			E_USER_DEPRECATED,
+			'The xyz method is deprecated.',
+			function () {
+				Helpers::$deprecations = ['my-key' => false];
+				return Helpers::deprecated('The xyz method is deprecated.', 'my-key');
+			},
+			false
+		);
+		$this->assertFalse($result);
 	}
 
 	/**
@@ -141,7 +130,7 @@ class HelpersTest extends TestCase
 	 */
 	public function testHandleErrorsWarningCaught1()
 	{
-		$this->hasErrorHandler = true;
+		$this->activeErrorHandlers++;
 
 		$called = false;
 		set_error_handler(function (int $errno, string $errstr) use (&$called) {
@@ -167,7 +156,7 @@ class HelpersTest extends TestCase
 	 */
 	public function testHandleErrorsWarningCaught2()
 	{
-		$this->hasErrorHandler = true;
+		$this->activeErrorHandlers++;
 
 		$called = false;
 		set_error_handler(function (int $errno, string $errstr) use (&$called) {
@@ -197,7 +186,9 @@ class HelpersTest extends TestCase
 	 */
 	public function testHandleErrorsWarningCaughtCallbackValue()
 	{
-		$this->hasErrorHandler = true;
+		// TODO: This line should not be necessary
+		// https://github.com/getkirby/kirby/pull/6093#issuecomment-1872569768
+		$this->activeErrorHandlers++;
 
 		$this->assertSame('handled', Helpers::handleErrors(
 			fn () => trigger_error('Some warning', E_USER_WARNING),
@@ -211,24 +202,23 @@ class HelpersTest extends TestCase
 	 */
 	public function testHandleErrorsWarningNotCaught()
 	{
-		try {
-			Helpers::handleErrors(
-				fn () => trigger_error('Some warning', E_USER_WARNING),
-				function (int $errno, string $errstr) {
-					$this->assertSame(E_USER_WARNING, $errno);
-					$this->assertSame('Some warning', $errstr);
+		$this->assertError(
+			E_USER_WARNING,
+			'Some warning',
+			function () {
+				Helpers::handleErrors(
+					fn () => trigger_error('Some warning', E_USER_WARNING),
+					function (int $errno, string $errstr) {
+						$this->assertSame(E_USER_WARNING, $errno);
+						$this->assertSame('Some warning', $errstr);
 
-					// continue the handler chain
-					return false;
-				},
-				'handled'
-			);
-		} catch (Warning $e) {
-			$this->assertSame('Some warning', $e->getMessage());
-			return;
-		}
-
-		Assert::fail('Expected warning was not generated');
+						// continue the handler chain
+						return false;
+					},
+					'handled'
+				);
+			}
+		);
 	}
 
 	/**
