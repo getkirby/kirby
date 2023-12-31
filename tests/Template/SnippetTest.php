@@ -47,6 +47,7 @@ class SnippetTest extends TestCase
 
 		$openProp = new ReflectionProperty($snippet, 'open');
 		$openProp->setAccessible(true);
+		ob_end_flush(); // close opened slots
 		$this->assertTrue($openProp->getValue($snippet));
 
 		$snippet = Snippet::factory(null, ['message' => 'hello']);
@@ -57,9 +58,11 @@ class SnippetTest extends TestCase
 
 		$snippet = Snippet::factory('missin', ['message' => 'hello'], slots: true);
 		$this->assertInstanceOf(Snippet::class, $snippet);
+		ob_end_flush(); // close opened slots
 
 		$snippet = Snippet::factory(null, ['message' => 'hello'], slots: true);
 		$this->assertInstanceOf(Snippet::class, $snippet);
+		ob_end_flush(); // close opened slots
 	}
 
 	/**
