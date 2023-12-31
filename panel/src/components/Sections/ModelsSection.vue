@@ -29,7 +29,7 @@
 					type="text"
 					class="k-models-section-search"
 					@input="searchterm = $event"
-					@keydown.native.esc="onSearchToggle"
+					@keydown.esc="onSearchToggle"
 				/>
 
 				<!-- Models collection -->
