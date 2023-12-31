@@ -84,11 +84,11 @@ export default {
 			return item.open ? "angle-down" : "angle-right";
 		},
 		close(item) {
-			this.$set(item, "open", false);
+			item.open = false;
 			this.$emit("close", item);
 		},
 		open(item) {
-			this.$set(item, "open", true);
+			item.open = true;
 			this.$emit("open", item);
 		},
 		select(item) {
