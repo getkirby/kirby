@@ -367,10 +367,10 @@ class A
 			}
 
 			if (is_array($value) === true) {
-				$result .= '[' . static::implode($value, $separator) . ']';
-			} else {
-				$result .= $value;
+				$value = static::implode($value, $separator);
 			}
+
+			$result .= $value;
 		}
 
 		return $result;
