@@ -5,6 +5,7 @@
 		:tag="element"
 		:list="list"
 		:move="move"
+		item-key="id"
 		class="k-draggable"
 		@change="$emit('change', $event)"
 		@end="onEnd"
@@ -12,7 +13,9 @@
 		@start="onStart"
 	>
 		<!-- @slot Items to be sortable via drag and drop -->
-		<slot />
+		<template #item="{ element }">
+			<slot />
+		</template>
 
 		<template #footer>
 			<!-- @slot Non-sortable footer -->
@@ -22,6 +25,9 @@
 </template>
 
 <script>
+// TODO: turn into a dynmic import again
+import Draggable from "vuedraggable/src/vuedraggable";
+
 /**
  * The Draggable component implements the
  * [Vue.Draggable](https://github.com/SortableJS/Vue.Draggable)
@@ -37,7 +43,7 @@
  */
 export default {
 	components: {
-		draggable: () => import("vuedraggable/src/vuedraggable")
+		draggable: Draggable
 	},
 	props: {
 		data: Object,
