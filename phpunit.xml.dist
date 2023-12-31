@@ -5,6 +5,7 @@
 	bootstrap="tests/bootstrap.php"
 	cacheDirectory=".phpunit.cache"
 	colors="true"
+	controlGarbageCollector="true"
 	displayDetailsOnIncompleteTests="true"
 	displayDetailsOnSkippedTests="true"
 	displayDetailsOnTestsThatTriggerDeprecations="true"
