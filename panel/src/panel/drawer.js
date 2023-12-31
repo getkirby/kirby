@@ -1,6 +1,5 @@
 import Modal, { defaults as modalDefaults } from "./modal.js";
 import History from "./history.js";
-import { set } from "vue";
 import { uuid } from "@/helpers/string.js";
 
 export const defaults = () => {
@@ -69,9 +68,7 @@ export default (panel) => {
 		},
 
 		input(value) {
-			// make sure that value is reactive
-			set(this.props, "value", value);
-
+			this.props.value = value;
 			this.emit("input", this.props.value);
 		},
 

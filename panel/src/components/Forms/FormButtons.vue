@@ -18,8 +18,6 @@
 </template>
 
 <script>
-import { set } from "vue";
-
 export default {
 	props: {
 		lock: [Boolean, Object]
@@ -184,7 +182,7 @@ export default {
 		async check() {
 			if (this.$panel.isOffline === false) {
 				const { lock } = await this.$api.get(...this.api);
-				set(this.$panel.view.props, "lock", lock);
+				this.$panel.view.props.lock = lock;
 			}
 		},
 		download() {

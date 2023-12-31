@@ -1,5 +1,3 @@
-import { set } from "vue";
-
 /**
  * @since 4.0.0
  */
@@ -69,7 +67,7 @@ export default () => {
 				index = this.milestones.length - 1;
 			}
 
-			set(this.milestones, index, state);
+			this.milestones[index] = state;
 		}
 	};
 };

@@ -73,7 +73,6 @@
 
 <script>
 import { useUid } from "@/helpers/useUid.js";
-import { set } from "vue";
 
 export default {
 	inheritAttrs: false,
@@ -370,7 +369,7 @@ export default {
 			}
 		},
 		hide(block) {
-			set(block, "isHidden", true);
+			block.isHidden = true;
 			this.save();
 		},
 		isInputEvent() {
@@ -663,7 +662,7 @@ export default {
 			this.selected = Object.values(this.blocks).map((block) => block.id);
 		},
 		show(block) {
-			set(block, "isHidden", false);
+			block.isHidden = false;
 			this.save();
 		},
 		async sort(block, from, to) {
@@ -704,7 +703,7 @@ export default {
 			const index = this.findIndex(block.id);
 			if (index !== -1) {
 				for (const key in content) {
-					set(this.blocks[index].content, key, content[key]);
+					this.blocks[index].content[key] = content[key];
 				}
 			}
 			this.save();
