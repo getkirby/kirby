@@ -1,10 +1,5 @@
 <template>
-	<k-frame
-		v-bind="$props"
-		element="figure"
-		class="k-image-frame k-image"
-		v-on="$listeners"
-	>
+	<k-frame v-bind="$props" element="figure" class="k-image-frame k-image">
 		<img
 			v-if="src"
 			:key="src"
