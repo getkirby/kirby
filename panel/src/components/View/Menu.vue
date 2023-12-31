@@ -169,7 +169,7 @@ export default {
 	/* Make sure that buttons don't shrink in height */
 	flex-shrink: 0;
 }
-.k-panel-menu-button[aria-current] {
+.k-panel-menu-button[aria-current="true"] {
 	--button-color-back: var(--color-white);
 	box-shadow: var(--shadow);
 }

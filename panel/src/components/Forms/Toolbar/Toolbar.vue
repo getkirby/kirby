@@ -122,7 +122,7 @@ export default {
 .k-toolbar-button:hover {
 	--button-color-back: var(--toolbar-hover);
 }
-.k-toolbar .k-button[aria-current] {
+.k-toolbar .k-button[aria-current="true"] {
 	--button-color-text: var(--toolbar-current);
 }
 .k-toolbar > .k-button:first-child {

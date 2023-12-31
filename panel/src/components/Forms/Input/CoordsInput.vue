@@ -208,7 +208,7 @@ export default {
 .k-coords-input:focus-within {
 	outline: var(--outline);
 }
-.k-coords-input[aria-disabled] {
+.k-coords-input[aria-disabled="true"] {
 	pointer-events: none;
 	opacity: var(--opacity-disabled);
 }

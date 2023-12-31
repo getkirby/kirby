@@ -84,7 +84,7 @@ export default {
 .k-drawer-option {
 	--button-width: var(--button-height);
 }
-.k-drawer-option[aria-disabled] {
+.k-drawer-option[aria-disabled="true"] {
 	opacity: var(--opacity-disabled);
 }
 </style>

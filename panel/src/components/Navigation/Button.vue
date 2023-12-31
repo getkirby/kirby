@@ -300,9 +300,9 @@ export default {
 	--button-color-dimmed-off: var(--color-text);
 	--button-color-text: var(--button-color-dimmed-on);
 }
-.k-button:where([data-variant="dimmed"]):not([aria-disabled]):is(
+.k-button:where([data-variant="dimmed"]):not([aria-disabled="true"]):is(
 		:hover,
-		[aria-current]
+		[aria-current="true"]
 	) {
 	--button-color-text: var(--button-color-dimmed-off);
 }
@@ -316,7 +316,7 @@ export default {
 .k-button:where([data-variant="filled"]) {
 	--button-color-back: var(--color-gray-300);
 }
-.k-button:where([data-variant="filled"]):not([aria-disabled]):hover {
+.k-button:where([data-variant="filled"]):not([aria-disabled="true"]):hover {
 	filter: brightness(97%);
 }
 .k-button:where([data-theme][data-variant="filled"]) {

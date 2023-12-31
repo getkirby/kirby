@@ -113,7 +113,7 @@ export default {
 	--color-border: var(--color-gray-500);
 	--color-back: var(--color-gray-100);
 }
-.k-layout-selector-option[aria-current] {
+.k-layout-selector-option[aria-current="true"] {
 	--color-border: var(--color-focus);
 	--color-back: var(--color-blue-300);
 }
