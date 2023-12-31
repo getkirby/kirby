@@ -59,6 +59,7 @@ export default {
 			type: [Array, Boolean]
 		}
 	},
+	emits: ["command"],
 	data() {
 		return {
 			isOpen: false,

@@ -106,6 +106,7 @@ export const props = {
 
 export default {
 	mixins: [props],
+	emits: ["input"],
 	data() {
 		return {
 			editor: null,

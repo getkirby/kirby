@@ -76,6 +76,7 @@ export default {
 			type: String
 		}
 	},
+	emits: ["cancel", "input", "paste", "submit"],
 	data() {
 		return {
 			selected: null

@@ -4,3 +4,9 @@
 		<k-button icon="cancel" @click="$emit('click')" />
 	</div>
 </template>
+
+<script>
+export default {
+	emits: ["click"]
+};
+</script>

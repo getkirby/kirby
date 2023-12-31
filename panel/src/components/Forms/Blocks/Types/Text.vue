@@ -16,6 +16,7 @@
  * @internal
  */
 export default {
+	emits: ["open", "split", "update"],
 	computed: {
 		component() {
 			const component = "k-" + this.textField.type + "-input";

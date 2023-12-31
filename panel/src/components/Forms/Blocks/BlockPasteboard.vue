@@ -22,6 +22,7 @@
 <script>
 export default {
 	inheritAttrs: false,
+	emits: ["close", "paste", "submit"],
 	computed: {
 		shortcut() {
 			return this.$helper.keyboard.metaKey() + "+v";

@@ -42,6 +42,23 @@ export default {
 		 */
 		isSplitable: Boolean
 	},
+	emits: [
+		"chooseToAppend",
+		"chooseToConvert",
+		"chooseToPrepend",
+		"copy",
+		"duplicate",
+		"hide",
+		"merge",
+		"open",
+		"paste",
+		"remove",
+		"removeSelected",
+		"show",
+		"split",
+		"sortDown",
+		"sortUp"
+	],
 	computed: {
 		buttons() {
 			if (this.isBatched) {

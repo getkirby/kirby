@@ -82,6 +82,7 @@ export default {
 			type: [Array, String]
 		}
 	},
+	emits: ["input"],
 	data() {
 		return {
 			input: null

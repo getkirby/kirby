@@ -105,6 +105,7 @@ export default {
 			default: () => Promise.resolve()
 		}
 	},
+	emits: ["paginate"],
 	computed: {
 		end() {
 			return Math.min(this.start - 1 + this.limit, this.total);

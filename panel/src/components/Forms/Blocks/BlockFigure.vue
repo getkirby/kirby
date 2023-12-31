@@ -33,7 +33,8 @@ export default {
 		isEmpty: Boolean,
 		emptyIcon: String,
 		emptyText: String
-	}
+	},
+	emits: ["open", "update"]
 };
 </script>
 
