@@ -18,6 +18,7 @@ export default {
 			default: "js",
 			type: String
 		}
-	}
+	},
+	emits: ["cancel"]
 };
 </script>

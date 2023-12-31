@@ -24,6 +24,7 @@ export const props = {
  */
 export default {
 	mixins: [props],
+	emits: ["command"],
 	computed: {
 		commands() {
 			return {
@@ -88,7 +89,7 @@ export default {
 									icon: "upload",
 									click: () => this.command("upload")
 								}
-						  ]
+							]
 						: undefined
 				},
 				code: {

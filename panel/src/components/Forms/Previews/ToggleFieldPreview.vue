@@ -14,6 +14,7 @@ import FieldPreview from "@/mixins/forms/fieldPreview.js";
 
 export default {
 	mixins: [FieldPreview],
+	emits: ["input"],
 	computed: {
 		text() {
 			return this.column.text !== false ? this.field.text : null;

@@ -88,6 +88,7 @@ export const props = {
  */
 export default {
 	mixins: [Input, props],
+	emits: ["focus", "input", "submit"],
 	data() {
 		return {
 			over: false

@@ -56,6 +56,7 @@ export default {
 			default: () => []
 		}
 	},
+	emits: ["change", "input"],
 	data() {
 		return {
 			selected: this.value

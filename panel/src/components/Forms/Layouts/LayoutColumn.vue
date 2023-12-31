@@ -35,7 +35,8 @@ export default {
 			type: String,
 			default: "1/1"
 		}
-	}
+	},
+	emits: ["input"]
 };
 </script>
 

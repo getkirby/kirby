@@ -51,6 +51,7 @@ export default {
 		 */
 		removable: Boolean
 	},
+	emits: ["remove"],
 	computed: {
 		isRemovable() {
 			return this.removable && !this.disabled;

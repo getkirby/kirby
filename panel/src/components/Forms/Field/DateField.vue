@@ -130,6 +130,7 @@ export default {
 			default: true
 		}
 	},
+	emits: ["input", "submit"],
 	data() {
 		return {
 			isInvalid: false,

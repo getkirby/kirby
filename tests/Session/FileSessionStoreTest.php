@@ -57,7 +57,7 @@ class FileSessionStoreTest extends TestCase
 		}
 
 		Dir::remove($this->root);
-		$this->assertDirectoryNotExists($this->root);
+		$this->assertDirectoryDoesNotExist($this->root);
 	}
 
 	/**

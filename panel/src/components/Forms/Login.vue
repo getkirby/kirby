@@ -47,6 +47,7 @@ export default {
 	props: {
 		methods: Array
 	},
+	emits: ["error"],
 	data() {
 		return {
 			currentForm: null,

@@ -64,7 +64,8 @@ export default {
 		value: {
 			type: Array
 		}
-	}
+	},
+	emits: ["cancel", "input", "submit"]
 };
 </script>
 
