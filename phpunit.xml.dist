@@ -2,6 +2,7 @@
 <phpunit
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+	beStrictAboutOutputDuringTests="true"
 	bootstrap="tests/bootstrap.php"
 	cacheDirectory=".phpunit.cache"
 	colors="true"
@@ -12,6 +13,13 @@
 	displayDetailsOnTestsThatTriggerErrors="true"
 	displayDetailsOnTestsThatTriggerNotices="true"
 	displayDetailsOnTestsThatTriggerWarnings="true"
+	failOnDeprecation="true"
+	failOnEmptyTestSuite="true"
+	failOnIncomplete="true"
+	failOnNotice="true"
+	failOnRisky="true"
+	failOnSkipped="true"
+	failOnWarning="true"
 	stderr="true"
 >
 	<source>
