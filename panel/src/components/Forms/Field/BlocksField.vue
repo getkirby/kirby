@@ -36,7 +36,7 @@
 			:value="value"
 			@close="opened = $event"
 			@open="opened = $event"
-			v-on="$listeners"
+			@input="$emit('input', $event)"
 		/>
 
 		<footer v-if="!disabled && !isEmpty && !isFull && hasFieldsets">

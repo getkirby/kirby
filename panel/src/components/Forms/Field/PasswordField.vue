@@ -14,7 +14,7 @@
 			ref="input"
 			theme="field"
 			type="password"
-			v-on="$listeners"
+			@input="$emit('input', $event)"
 		/>
 	</k-field>
 </template>
