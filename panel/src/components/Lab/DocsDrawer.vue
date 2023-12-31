@@ -15,6 +15,7 @@ export default {
 	props: {
 		docs: Object
 	},
+	emits: ["cancel"],
 	computed: {
 		options() {
 			const options = [

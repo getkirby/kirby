@@ -49,6 +49,7 @@ export default {
 		methods: Array,
 		pending: Object
 	},
+	emits: ["error"],
 	data() {
 		return {
 			code: "",

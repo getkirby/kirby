@@ -115,6 +115,7 @@ export default {
 		 */
 		theme: String
 	},
+	emits: ["action", "click", "drag", "option"],
 	computed: {
 		hasFigure() {
 			return this.image !== false && this.$helper.object.length(this.image) > 0;

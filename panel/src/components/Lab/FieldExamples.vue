@@ -100,6 +100,7 @@ export default {
 			type: [String, Number, Array]
 		}
 	},
+	emits: ["input"],
 	data() {
 		return {
 			input: null

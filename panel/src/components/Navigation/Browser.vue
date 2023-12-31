@@ -46,7 +46,8 @@ export default {
 			default: "radio",
 			type: String
 		}
-	}
+	},
+	emits: ["select"]
 };
 </script>
 

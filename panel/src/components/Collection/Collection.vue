@@ -72,6 +72,7 @@ export default {
 			default: false
 		}
 	},
+	emits: ["action", "change", "empty", "item", "option", "paginate", "sort"],
 	computed: {
 		hasPagination() {
 			if (this.pagination === false) {

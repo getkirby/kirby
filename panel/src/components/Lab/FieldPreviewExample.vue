@@ -46,7 +46,8 @@ export default {
 		type: String,
 		// eslint-disable-next-line vue/require-prop-types
 		value: {}
-	}
+	},
+	emits: ["input"]
 };
 </script>
 

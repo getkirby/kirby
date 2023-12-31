@@ -9,6 +9,7 @@ export default {
 		fieldset: Object,
 		id: String
 	},
+	emits: ["open", "update"],
 	methods: {
 		field(name, fallback = null) {
 			let field = null;

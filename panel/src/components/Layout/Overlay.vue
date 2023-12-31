@@ -45,6 +45,7 @@ export const props = {
 export default {
 	mixins: [props],
 	inheritAttrs: true,
+	emits: ["cancel", "close", "open"],
 	watch: {
 		visible(newValue, oldValue) {
 			if (newValue === oldValue) {

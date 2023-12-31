@@ -90,7 +90,8 @@ export default {
 				theme: "notice"
 			})
 		}
-	}
+	},
+	emits: ["cancel", "input", "submit"]
 };
 </script>
 

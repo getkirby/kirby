@@ -71,6 +71,7 @@ export default {
 			type: [String, Number, Boolean, Object, Array]
 		}
 	},
+	emits: ["input"],
 	data() {
 		return {
 			input: null

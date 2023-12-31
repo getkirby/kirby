@@ -95,6 +95,7 @@ export default {
 		type: String,
 		value: [Array, String, Number]
 	},
+	emits: ["input"],
 	data() {
 		return {
 			input: null

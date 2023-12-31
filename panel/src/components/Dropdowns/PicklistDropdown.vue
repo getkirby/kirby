@@ -25,6 +25,7 @@ import { props as PicklistInputProps } from "@/components/Forms/Input/PicklistIn
  */
 export default {
 	mixins: [PicklistInputProps],
+	emits: ["create", "input"],
 	methods: {
 		close() {
 			this.$refs.dropdown.close();
