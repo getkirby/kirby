@@ -15,7 +15,7 @@
 /.idea
 
 # tests
-.phpunit.result.cache
+.phpunit.cache
 /tests/coverage
 
 # ignore all the vendor cruft
