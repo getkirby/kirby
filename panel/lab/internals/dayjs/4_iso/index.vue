@@ -22,7 +22,6 @@
 				/>
 
 				<k-input
-					v-model="mode"
 					type="select"
 					:options="[
 						{ text: 'datetime', value: 'full' },
@@ -30,6 +29,8 @@
 						{ text: 'time', value: 'time' }
 					]"
 					:empty="false"
+					:value="mode"
+					@input="mode = $event"
 				/>
 
 				<div>&rarr;</div>
@@ -44,45 +45,62 @@
 			<div>
 				<div>
 					<k-input
-						v-model="year"
 						type="number"
 						placeholder="Year"
-						@input="generate"
+						:value="year"
+						@input="
+							year = $event;
+							generate();
+						"
 					/>
 					<k-input
-						v-model="month"
 						type="number"
 						placeholder="Month"
-						@input="generate"
+						:value="month"
+						@input="
+							month = $event;
+							generate();
+						"
 					/>
 					<k-input
-						v-model="day"
 						type="number"
 						placeholder="Day"
-						@input="generate"
+						:value="day"
+						@input="
+							day = $event;
+							generate();
+						"
 					/>
 					<k-input
-						v-model="hour"
 						type="number"
 						placeholder="Hour"
-						@input="generate"
+						:value="hour"
+						@input="
+							hour = $event;
+							generate();
+						"
 					/>
 					<k-input
-						v-model="minute"
 						type="number"
 						placeholder="Minute"
-						@input="generate"
+						:value="minute"
+						@input="
+							minute = $event;
+							generate();
+						"
 					/>
 					<k-input
-						v-model="second"
 						type="number"
 						placeholder="Second"
-						@input="generate"
+						:value="second"
+						@input="
+							second = $event;
+							generate();
+						"
 					/>
 				</div>
 
 				<k-input
-					v-model="mode"
 					type="select"
 					:options="[
 						{ text: 'datetime', value: 'full' },
@@ -90,7 +108,11 @@
 						{ text: 'time', value: 'time' }
 					]"
 					:empty="false"
-					@input="generate"
+					:value="mode"
+					@input="
+						mode = $event;
+						generate();
+					"
 				/>
 
 				<div>&rarr;</div>
@@ -102,6 +124,8 @@
 </template>
 
 <script>
+import generate from "scripts/docs.mjs";
+
 export default {
 	data() {
 		return {
