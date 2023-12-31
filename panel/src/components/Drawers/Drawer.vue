@@ -1,5 +1,5 @@
 <template>
-	<portal v-if="visible" to="drawer">
+	<Teleport v-if="visible" to=".k-drawer-portal">
 		<form
 			:aria-disabled="disabled"
 			:class="$vnode.data.staticClass"
@@ -46,7 +46,7 @@
 				<slot />
 			</k-drawer-body>
 		</form>
-	</portal>
+	</Teleport>
 </template>
 
 <script>

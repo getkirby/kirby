@@ -1,4 +1,4 @@
-import { createApp, h } from "vue";
+import { createApp } from "vue";
 
 import App from "./panel/app.js";
 import Components from "./components/index.js";

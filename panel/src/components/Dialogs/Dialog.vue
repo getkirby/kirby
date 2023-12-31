@@ -1,5 +1,5 @@
 <template>
-	<portal v-if="visible" to="dialog">
+	<Teleport v-if="visible" to=".k-dialog-portal">
 		<form
 			:class="$vnode.data.staticClass"
 			:data-has-footer="cancelButton || submitButton"
@@ -30,7 +30,7 @@
 				</k-dialog-footer>
 			</slot>
 		</form>
-	</portal>
+	</Teleport>
 </template>
 
 <script>

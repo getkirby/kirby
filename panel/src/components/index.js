@@ -12,9 +12,6 @@ import Text from "@/components/Text/index.js";
 import View from "@/components/View/index.js";
 import Views from "@/components/Views/index.js";
 
-// 3rd party libraries
-import PortalVue from "portal-vue";
-
 export default {
 	install(app) {
 		app.use(Collection);
@@ -30,7 +27,5 @@ export default {
 		app.use(Text);
 		app.use(View);
 		app.use(Views);
-
-		app.use(PortalVue);
 	}
 };
