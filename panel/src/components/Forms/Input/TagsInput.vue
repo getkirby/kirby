@@ -131,7 +131,7 @@ export default {
 			// no new tags if this is full,
 			// check if the tag is accepted
 			if (this.isAllowed(tag) === true) {
-				const tags = this.$helper.object.clone(this.value);
+				const tags = structuredClone(this.value);
 				tags.push(tag.value);
 				this.$emit("input", tags);
 			}
@@ -182,7 +182,7 @@ export default {
 			}
 
 			// replace the tag at the given index
-			const tags = this.$helper.object.clone(this.value);
+			const tags = structuredClone(this.value);
 			tags.splice(index, 1, updated.value);
 			this.$emit("input", tags);
 

@@ -6,7 +6,7 @@
 			ref="input"
 			theme="field"
 			type="url"
-			v-on="$listeners"
+			@input="$emit('input', $event)"
 		>
 			<template #icon>
 				<k-button

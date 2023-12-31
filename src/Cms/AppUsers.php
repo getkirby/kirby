@@ -86,9 +86,7 @@ trait AppUsers
 	protected function setUsers(array $users = null): static
 	{
 		if ($users !== null) {
-			$this->users = Users::factory($users, [
-				'kirby' => $this
-			]);
+			$this->users = Users::factory($users);
 		}
 
 		return $this;
@@ -128,7 +126,6 @@ trait AppUsers
 	{
 		return $this->users ??= Users::load(
 			$this->root('accounts'),
-			['kirby' => $this]
 		);
 	}
 }

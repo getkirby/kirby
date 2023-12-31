@@ -147,7 +147,6 @@ class Pages extends Collection
 	): static {
 		$model  ??= App::instance()->site();
 		$children = new static([], $model);
-		$kirby    = $model->kirby();
 
 		if ($model instanceof Page) {
 			$parent = $model;
@@ -158,7 +157,6 @@ class Pages extends Collection
 		}
 
 		foreach ($pages as $props) {
-			$props['kirby']   = $kirby;
 			$props['parent']  = $parent;
 			$props['site']    = $site;
 			$props['isDraft'] = $draft ?? $props['isDraft'] ?? $props['draft'] ?? false;

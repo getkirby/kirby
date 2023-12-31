@@ -11,7 +11,7 @@
 			ref="input"
 			type="textarea"
 			theme="field"
-			v-on="$listeners"
+			@input="$emit('input', $event)"
 		/>
 	</k-field>
 </template>

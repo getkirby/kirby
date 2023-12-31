@@ -86,11 +86,6 @@ export default {
 			default: () => []
 		}
 	},
-	data() {
-		return {
-			isInvalid: false
-		};
-	},
 	computed: {
 		convertedOptions() {
 			return this.options.map((option) => ({

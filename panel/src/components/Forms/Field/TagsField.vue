@@ -13,7 +13,7 @@
 			ref="input"
 			theme="field"
 			type="tags"
-			v-on="$listeners"
+			@input="$emit('input', $event)"
 		/>
 	</k-field>
 </template>

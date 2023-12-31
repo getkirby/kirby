@@ -13,7 +13,7 @@
 			v-bind="$props"
 			theme="field"
 			type="toggles"
-			v-on="$listeners"
+			@input="$emit('input', $event)"
 		/>
 	</k-field>
 </template>
