@@ -119,7 +119,7 @@ jobs:
 
       - name: Run tests
         if: always() && steps.finishPrepare.outcome == 'success'
-        run: phpunit --coverage-clover ${{ github.workspace }}/clover.xml
+        run: phpunit --fail-on-skipped --coverage-clover ${{ github.workspace }}/clover.xml
 
       - name: Statically analyze using Psalm
         if: always() && steps.finishPrepare.outcome == 'success'
