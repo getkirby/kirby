@@ -199,7 +199,7 @@ export default {
 	transform: translate(-50%, -50%);
 	cursor: move;
 }
-.k-coords-input[data-empty] .k-coords-input-thumb {
+.k-coords-input[data-empty="true"] .k-coords-input-thumb {
 	opacity: 0;
 }
 .k-coords-input-thumb:active {
@@ -208,7 +208,7 @@ export default {
 .k-coords-input:focus-within {
 	outline: var(--outline);
 }
-.k-coords-input[aria-disabled] {
+.k-coords-input[aria-disabled="true"] {
 	pointer-events: none;
 	opacity: var(--opacity-disabled);
 }

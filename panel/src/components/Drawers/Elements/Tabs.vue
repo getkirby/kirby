@@ -53,7 +53,7 @@ export default {
 	font-size: var(--text-xs);
 	overflow-x: visible;
 }
-.k-drawer-tab.k-button[aria-current]::after {
+.k-drawer-tab.k-button[aria-current="true"]::after {
 	position: absolute;
 	bottom: -2px;
 	inset-inline: var(--button-padding);

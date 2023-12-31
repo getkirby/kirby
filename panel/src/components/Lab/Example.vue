@@ -89,7 +89,7 @@ export default {
 .k-lab-example-code {
 	padding: var(--spacing-16);
 }
-.k-lab-example[data-flex] .k-lab-example-canvas {
+.k-lab-example[data-flex="true"] .k-lab-example-canvas {
 	display: flex;
 	align-items: center;
 	gap: var(--spacing-6);
