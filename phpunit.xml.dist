@@ -6,6 +6,12 @@
 	colors="true"
 	stderr="true"
 	cacheDirectory=".phpunit.cache"
+	displayDetailsOnIncompleteTests="true"
+	displayDetailsOnSkippedTests="true"
+	displayDetailsOnTestsThatTriggerDeprecations="true"
+	displayDetailsOnTestsThatTriggerErrors="true"
+	displayDetailsOnTestsThatTriggerNotices="true"
+	displayDetailsOnTestsThatTriggerWarnings="true"
 >
 	<source>
 		<include>
