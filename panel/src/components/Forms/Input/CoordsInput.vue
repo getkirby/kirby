@@ -199,7 +199,7 @@ export default {
 	transform: translate(-50%, -50%);
 	cursor: move;
 }
-.k-coords-input[data-empty] .k-coords-input-thumb {
+.k-coords-input[data-empty="true"] .k-coords-input-thumb {
 	opacity: 0;
 }
 .k-coords-input-thumb:active {
