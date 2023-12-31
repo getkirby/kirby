@@ -15,9 +15,10 @@
 		:step="stepNumber"
 		class="k-number-input"
 		type="number"
+		@blur="onBlur"
+		@input="onInput($event.target.value)"
 		@keydown.ctrl.s="clean"
 		@keydown.meta.s="clean"
-		v-on="listeners"
 	/>
 </template>
 
@@ -58,12 +59,7 @@ export default {
 		return {
 			number: this.format(this.value),
 			stepNumber: this.format(this.step),
-			timeout: null,
-			listeners: {
-				...this.$listeners,
-				input: (event) => this.onInput(event.target.value),
-				blur: this.onBlur
-			}
+			timeout: null
 		};
 	},
 	watch: {

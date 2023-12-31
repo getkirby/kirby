@@ -20,6 +20,7 @@
 					v-bind="inputProps"
 					:value="value"
 					v-on="listeners"
+					@input="$emit('input', $event)"
 				/>
 			</slot>
 		</span>
@@ -56,7 +57,8 @@ export const props = {
 			type: [String, Boolean, Number, Object, Array],
 			default: null
 		}
-	}
+	},
+	emits: ["input", "invalid"]
 };
 
 export default {
@@ -65,7 +67,6 @@ export default {
 		return {
 			isInvalid: this.invalid,
 			listeners: {
-				...this.$listeners,
 				invalid: ($invalid, $v) => {
 					this.isInvalid = $invalid;
 					this.$emit("invalid", $invalid, $v);

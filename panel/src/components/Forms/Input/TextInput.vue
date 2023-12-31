@@ -18,7 +18,7 @@
 		v-direction
 		:data-font="font"
 		class="k-text-input"
-		v-on="listeners"
+		@input="onInput($event.target.value)"
 	/>
 </template>
 
@@ -70,14 +70,6 @@ export const props = {
  */
 export default {
 	mixins: [Input, props],
-	data() {
-		return {
-			listeners: {
-				...this.$listeners,
-				input: (event) => this.onInput(event.target.value)
-			}
-		};
-	},
 	watch: {
 		value() {
 			this.onInvalid();

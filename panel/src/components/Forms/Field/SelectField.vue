@@ -6,7 +6,7 @@
 			ref="input"
 			theme="field"
 			type="select"
-			v-on="$listeners"
+			@input="$emit('input', $event)"
 		/>
 	</k-field>
 </template>
