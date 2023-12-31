@@ -290,6 +290,22 @@ class ATest extends TestCase
 	}
 
 	/**
+	 * @covers ::implode
+	 */
+	public function testImplode()
+	{
+		$array = ['a', 'b', 'c'];
+		$this->assertSame('a, b, c', A::implode($array));
+		$this->assertSame('a|b|c', A::implode($array, '|'));
+
+		$array = ['a' => 'A', 'b' => 'B', 'c' => 'C'];
+		$this->assertSame('A, B, C', A::implode($array));
+
+		$array = ['a' => 'A', 'b' => 'B', 'c' => ['C', 'D']];
+		$this->assertSame('A, B, [C, D]', A::implode($array));
+	}
+
+	/**
 	 * @covers ::map
 	 */
 	public function testMap()
