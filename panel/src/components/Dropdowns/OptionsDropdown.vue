@@ -2,6 +2,7 @@
 	<!-- Single option = button -->
 	<k-button
 		v-if="hasSingleOption"
+		v-bind="$attrs"
 		:disabled="disabled"
 		:icon="options[0].icon ?? icon"
 		:size="options[0].size ?? size"
@@ -19,7 +20,7 @@
 	</k-button>
 
 	<!-- Multiple options = dropdown -->
-	<div v-else-if="options.length" class="k-options-dropdown">
+	<div v-else-if="options.length" v-bind="$attrs" class="k-options-dropdown">
 		<k-button
 			:disabled="disabled"
 			:dropdown="true"
@@ -91,6 +92,7 @@ export default {
 		 */
 		variant: String
 	},
+	emits: ["action", "option"],
 	computed: {
 		hasSingleOption() {
 			return Array.isArray(this.options) && this.options.length === 1;

@@ -21,7 +21,7 @@ export default defineConfig(({ command }) => {
 			template: {
 				compilerOptions: {
 					compatConfig: {
-						MODE: 2,
+						MODE: 3,
 						COMPILER_V_BIND_OBJECT_ORDER: false
 					}
 				}

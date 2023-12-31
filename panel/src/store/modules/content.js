@@ -1,3 +1,4 @@
+import { toRaw } from "vue";
 import { length } from "@/helpers/object.js";
 
 const keep = (id, data) => {
@@ -85,7 +86,7 @@ export default {
 		 * Returns original (in content file) values for passed model ID
 		 */
 		originals: (state, getters) => (id) => {
-			return structuredClone(getters.model(id).originals);
+			return structuredClone(toRaw(getters.model(id).originals));
 		},
 		/**
 		 * Returns values (incl. unsaved changes) for passed model ID
@@ -100,7 +101,7 @@ export default {
 		 * Returns unsaved changes for passed model ID
 		 */
 		changes: (state, getters) => (id) => {
-			return structuredClone(getters.model(id).changes);
+			return structuredClone(toRaw(getters.model(id).changes));
 		}
 	},
 
@@ -137,7 +138,7 @@ export default {
 		},
 		MOVE(state, [from, to]) {
 			// move state
-			const model = structuredClone(state.models[from]);
+			const model = structuredClone(toRaw(state.models[from]));
 			delete state.models[from];
 			state.models[to] = model;
 
@@ -170,7 +171,7 @@ export default {
 				value = null;
 			}
 
-			value = structuredClone(value);
+			value = structuredClone(toRaw(value));
 
 			// // compare current field value with its original value
 			const current = JSON.stringify(value);
@@ -244,7 +245,7 @@ export default {
 			context.commit("CLEAR");
 		},
 		create(context, model) {
-			const content = structuredClone(model.content);
+			const content = structuredClone(toRaw(model.content));
 
 			// remove fields from the content object that
 			// should be ignored in changes or when saving content
