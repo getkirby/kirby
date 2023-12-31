@@ -9,7 +9,6 @@ import Legacy from "./panel/legacy.js";
 import Libraries from "./libraries/index.js";
 import Panel from "./panel/panel.js";
 import Store from "./store/store.js";
-// import Vuelidate from "vuelidate";
 
 /**
  * Create the Vue application
@@ -35,7 +34,6 @@ import "./styles/reset.css";
 app.use(Helpers);
 app.use(Libraries);
 app.use(Store);
-// Vue.use(Vuelidate);
 app.use(Components);
 
 /**

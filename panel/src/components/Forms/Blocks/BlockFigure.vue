@@ -11,7 +11,7 @@
 			<slot />
 		</span>
 		<figcaption v-if="caption">
-			<k-writer
+			<k-writer-input
 				:inline="true"
 				:marks="captionMarks"
 				:value="caption"

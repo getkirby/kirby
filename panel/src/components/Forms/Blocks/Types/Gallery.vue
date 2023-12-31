@@ -23,7 +23,7 @@
 			</template>
 		</ul>
 		<figcaption v-if="content.caption">
-			<k-writer
+			<k-writer-input
 				:inline="true"
 				:marks="captionMarks"
 				:value="content.caption"

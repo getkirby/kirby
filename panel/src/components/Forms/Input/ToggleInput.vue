@@ -1,9 +1,7 @@
 <template>
 	<k-choice-input
-		:id="id"
-		ref="input"
+		v-bind="$props"
 		:checked="value"
-		:disabled="disabled"
 		:label="label"
 		class="k-toggle-input"
 		type="checkbox"
@@ -13,14 +11,11 @@
 </template>
 
 <script>
-import Input from "@/mixins/input.js";
-import { required as validateRequired } from "vuelidate/lib/validators";
+import Input, { props as InputProps } from "@/mixins/input.js";
 
 export const props = {
+	mixins: [InputProps],
 	props: {
-		autofocus: Boolean,
-		disabled: Boolean,
-		id: [Number, String],
 		/**
 		 * The text to display next to the toggle. This can either be a string
 		 * that doesn't change when the toggle switches. Or an array with the
@@ -30,7 +25,6 @@ export const props = {
 		text: {
 			type: [Array, String]
 		},
-		required: Boolean,
 		value: Boolean
 	}
 };
@@ -53,14 +47,7 @@ export default {
 			return text;
 		}
 	},
-	watch: {
-		value() {
-			this.onInvalid();
-		}
-	},
 	mounted() {
-		this.onInvalid();
-
 		if (this.$props.autofocus) {
 			this.focus();
 		}
@@ -74,19 +61,9 @@ export default {
 		onInput(checked) {
 			this.$emit("input", checked);
 		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
-		},
 		select() {
 			this.$refs.input.focus();
 		}
-	},
-	validations() {
-		return {
-			value: {
-				required: this.required ? validateRequired : true
-			}
-		};
 	}
 };
 </script>

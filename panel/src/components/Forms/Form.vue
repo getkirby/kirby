@@ -21,7 +21,6 @@
 				:value="value"
 				@focus="onFocus"
 				@input="onInput"
-				@invalid="onInvalid"
 				@submit="onSubmit"
 			/>
 		</slot>
@@ -80,9 +79,6 @@ export default {
 		},
 		onInput(values, field, fieldName) {
 			this.$emit("input", values, field, fieldName);
-		},
-		onInvalid(errors) {
-			this.$emit("invalid", errors);
 		},
 		onSubmit() {
 			/**

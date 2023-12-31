@@ -1,10 +1,5 @@
 <template>
-	<div
-		:data-disabled="disabled"
-		:data-invalid="!novalidate && isInvalid"
-		:data-type="type"
-		class="k-input"
-	>
+	<div :data-disabled="disabled" :data-type="type" class="k-input">
 		<span
 			v-if="$slots.before || before"
 			class="k-input-description k-input-before"
@@ -19,7 +14,6 @@
 					ref="input"
 					v-bind="inputProps"
 					:value="value"
-					v-on="listeners"
 					@input="$emit('input', $event)"
 				/>
 			</slot>
@@ -41,10 +35,10 @@
 
 <script>
 import { useUid } from "@/helpers/useUid.js";
-import { after, before, disabled, invalid } from "@/mixins/props.js";
+import { after, before, disabled } from "@/mixins/props.js";
 
 export const props = {
-	mixins: [after, before, disabled, invalid],
+	mixins: [after, before, disabled],
 	inheritAttrs: false,
 	props: {
 		autofocus: Boolean,
@@ -69,28 +63,12 @@ export const props = {
 
 export default {
 	mixins: [props],
-	data() {
-		return {
-			isInvalid: this.invalid,
-			listeners: {
-				invalid: ($invalid, $v) => {
-					this.isInvalid = $invalid;
-					this.$emit("invalid", $invalid, $v);
-				}
-			}
-		};
-	},
 	computed: {
 		inputProps() {
 			return {
 				...this.$props,
 				...this.$attrs
 			};
-		}
-	},
-	watch: {
-		invalid() {
-			this.isInvalid = this.invalid;
 		}
 	},
 	methods: {

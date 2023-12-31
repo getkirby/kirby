@@ -1,6 +1,6 @@
 <template>
 	<div :data-level="content.level" class="k-block-type-heading-input">
-		<k-writer
+		<k-writer-input
 			ref="input"
 			v-bind="textField"
 			:inline="true"

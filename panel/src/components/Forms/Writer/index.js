@@ -1,9 +1,13 @@
 import Toolbar from "./Toolbar.vue";
-import Writer from "./Writer.vue";
+
+// @deprecated
+import WriterInput from "../Input/WriterInput.vue";
 
 export default {
 	install(app) {
 		app.component("k-writer-toolbar", Toolbar);
-		app.component("k-writer", Writer);
+
+		// @deprecated use k-writer-input instead
+		app.component("k-writer", WriterInput);
 	}
 };

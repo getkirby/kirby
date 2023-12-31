@@ -1,8 +1,17 @@
+<template>
+	<k-string-input
+		v-bind="$props"
+		class="k-url-input"
+		type="url"
+		@input="$emit('input', $event)"
+	/>
+</template>
+
 <script>
-import TextInput, { props as TextInputProps } from "./TextInput.vue";
+import StringInput, { props as StringInputProps } from "./StringInput.vue";
 
 export const props = {
-	mixins: [TextInputProps],
+	mixins: [StringInputProps],
 	props: {
 		autocomplete: {
 			type: String,
@@ -11,19 +20,14 @@ export const props = {
 		placeholder: {
 			type: String,
 			default: () => window.panel.$t("url.placeholder")
-		},
-		type: {
-			type: String,
-			default: "url"
 		}
 	}
 };
 
 /**
- * @example <k-input :value="url" @input="url = $event" name="url" type="url" />
+ * @example <k-url-input :value="value" @input="value = $event" />
  */
 export default {
-	extends: TextInput,
-	mixins: [props]
+	mixins: [StringInput]
 };
 </script>

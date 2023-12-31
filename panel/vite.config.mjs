@@ -63,10 +63,6 @@ export default defineConfig(({ command }) => {
 
 	return {
 		plugins,
-		define: {
-			// Fix vuelidate error
-			"process.env.BUILD": JSON.stringify("production")
-		},
 		base: "./",
 		build: {
 			minify: "terser",
