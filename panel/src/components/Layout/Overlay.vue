@@ -180,10 +180,10 @@ export default {
 }
 
 /* Scroll lock */
-html[data-overlay] {
+html[data-overlay="true"] {
 	overflow: hidden;
 }
-html[data-overlay] body {
+html[data-overlay="true"] body {
 	overflow: scroll;
 }
 </style>
