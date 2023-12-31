@@ -30,7 +30,7 @@ export default {
 	computed: {
 		attrs() {
 			const attrs = {
-				button: this.$listeners["click"] !== undefined,
+				button: this.$attrs.onClick !== undefined,
 				icon: this.icon,
 				theme: "empty"
 			};

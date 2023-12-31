@@ -4,7 +4,7 @@
 			v-if="items.length === 0"
 			v-bind="empty"
 			:layout="layout"
-			v-on="$listeners['empty'] ? { click: onEmpty } : {}"
+			@click="$attrs.onEmpty ? onEmpty : null"
 		/>
 
 		<k-items
