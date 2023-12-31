@@ -357,7 +357,7 @@ class A
 	 */
 	public static function implode(
 		array $array,
-		string $separator = ', '
+		string $separator = ''
 	): string {
 		$result = '';
 
