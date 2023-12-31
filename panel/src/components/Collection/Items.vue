@@ -7,10 +7,7 @@
 		@sort="$emit('sort', $event)"
 		@option="onOption"
 	>
-		<template
-			v-if="$scopedSlots.options"
-			#options="{ row: item, rowIndex: index }"
-		>
+		<template v-if="$slots.options" #options="{ row: item, rowIndex: index }">
 			<slot name="options" v-bind="{ item, index }" />
 		</template>
 	</k-table>

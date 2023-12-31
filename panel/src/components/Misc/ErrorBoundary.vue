@@ -24,8 +24,8 @@ export default {
 				return this.$slots.error[0];
 			}
 
-			if (this.$scopedSlots.error) {
-				return this.$scopedSlots.error({
+			if (this.$slots.error) {
+				return this.$slots.error({
 					error: this.error
 				});
 			}

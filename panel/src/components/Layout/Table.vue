@@ -245,7 +245,7 @@ export default {
 		 */
 		hasOptions() {
 			return (
-				this.$scopedSlots.options ||
+				this.$slots.options ||
 				this.options?.length > 0 ||
 				Object.values(this.values).filter((row) => row?.options).length > 0
 			);
