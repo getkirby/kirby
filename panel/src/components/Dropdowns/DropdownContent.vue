@@ -33,8 +33,6 @@
 </template>
 
 <script>
-import { isVueComponent } from "@/helpers/isComponent.js";
-
 let OpenDropdown = null;
 
 /**
@@ -245,8 +243,8 @@ export default {
 				}
 			}
 
-			// drill down to the element of a component
-			if (isVueComponent(this.opener) === true) {
+			// drill down to the element of a Vue component
+			if (this.opener.$el) {
 				this.opener = this.opener.$el;
 			}
 
