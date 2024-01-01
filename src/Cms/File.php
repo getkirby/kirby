@@ -9,6 +9,7 @@ use Kirby\Filesystem\F;
 use Kirby\Filesystem\IsFile;
 use Kirby\Panel\File as Panel;
 use Kirby\Toolkit\Str;
+use WeakMap;
 
 /**
  * The `$file` object provides a set
@@ -157,14 +158,26 @@ class File extends ModelWithContent
 	 */
 	public function blueprints(string $inSection = null): array
 	{
+		// get cached results for the current file model
+		// (except when collecting for a specific section)
 		if ($inSection === null && $this->blueprints !== null) {
 			return $this->blueprints; // @codeCoverageIgnore
+		}
+
+		$parent = $this->parent();
+
+		// get cached results from other models that share the same parent
+		// and thus the same available blueprints
+		// (except when collecting for a specific section)
+		static $cache = new WeakMap();
+
+		if ($inSection === null && $cache->offsetExists($parent)) {
+			return $cache->offsetGet($parent); // @codeCoverageIgnore
 		}
 
 		// always include the current template as option
 		$template  = $this->template() ?? 'default';
 		$templates = [$template];
-		$parent    = $this->parent();
 
 		// what file templates/blueprints should be considered is
 		// defined bythe parent's blueprint: which templates it allows
@@ -271,6 +284,8 @@ class File extends ModelWithContent
 		if ($inSection !== null) {
 			return $blueprints; // @codeCoverageIgnore
 		}
+
+		$cache->offsetSet($parent, $blueprints);
 
 		return $this->blueprints = $blueprints;
 	}
