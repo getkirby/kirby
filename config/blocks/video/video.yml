@@ -2,10 +2,37 @@ name: field.blocks.video.name
 icon: video
 preview: video
 fields:
+  location:
+    label: field.blocks.image.location
+    type: radio
+    columns: 2
+    default: "web"
+    options:
+      kirby: "{{ t('field.blocks.image.location.internal') }}"
+      web: "{{ t('field.blocks.image.location.external') }}"
   url:
     label: field.blocks.video.url.label
     type: url
     placeholder: field.blocks.video.url.placeholder
+    when:
+      location: web
+  video:
+    type: files
+    query: model.videos
+    multiple: false
+    # you might want to add a template for videos here
+    when:
+      location: kirby
+  poster:
+    type: files
+    query: model.images
+    multiple: false
+    image:
+      back: black
+    uploads:
+      template: blocks/image
+    when:
+      location: kirby
   caption:
     label: field.blocks.video.caption
     type: writer
