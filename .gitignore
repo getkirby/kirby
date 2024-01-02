@@ -17,6 +17,7 @@
 # tests
 .phpunit.cache
 /tests/coverage
+/tests/tmp
 
 # ignore all the vendor cruft
 /vendor/**/.*
