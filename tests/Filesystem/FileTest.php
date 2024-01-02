@@ -44,6 +44,7 @@ class FileTest extends TestCase
 
 		Dir::remove($this->tmp);
 		static::$block = [];
+		App::destroy();
 	}
 
 	protected function _file($file = 'test.js')
@@ -355,6 +356,10 @@ class FileTest extends TestCase
 	public function testKirby()
 	{
 		$file = $this->_file();
+
+		$this->assertNull($file->kirby());
+
+		App::instance();
 		$this->assertInstanceOf(App::class, $file->kirby());
 	}
 
@@ -382,6 +387,9 @@ class FileTest extends TestCase
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid mime type: text/plain');
 
+		// load translations
+		App::instance();
+
 		$this->_file()->match(['mime' => ['image/png', 'application/pdf']]);
 	}
 
@@ -393,6 +401,9 @@ class FileTest extends TestCase
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid extension: js');
 
+		// load translations
+		App::instance();
+
 		$this->_file()->match(['extension' => ['png', 'pdf']]);
 	}
 
@@ -403,6 +414,9 @@ class FileTest extends TestCase
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid file type: code');
+
+		// load translations
+		App::instance();
 
 		$this->_file()->match(['type' => ['document', 'video']]);
 	}

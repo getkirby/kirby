@@ -58,6 +58,11 @@ class DatabaseTest extends TestCase
 		]);
 	}
 
+	public function tearDown(): void
+	{
+		Database::$connections = [];
+	}
+
 	public function testInstance()
 	{
 		$this->assertSame($this->database, Database::instance());
@@ -65,10 +70,16 @@ class DatabaseTest extends TestCase
 
 	public function testInstances()
 	{
-		// this unit test order should be second
-		// testInstance() method is #1 instance
-		// testInstances() method is #2 instance
-		$this->assertCount(2, Database::instances());
+		// create another instance
+		$secondInstance = new Database([
+			'database' => ':memory:',
+			'type'     => 'sqlite'
+		]);
+
+		$this->assertSame([
+			$this->database,
+			$secondInstance
+		], array_values(Database::instances()));
 	}
 
 	/**
