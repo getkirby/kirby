@@ -5,6 +5,7 @@ namespace Kirby\Text;
 use Exception;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\TestCase;
@@ -613,13 +614,75 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame('<a href="https://getkirby.com/a">getkirby.com/a</a>', $result);
 
 		$result = $app->kirbytags('(link: page://not-exists)');
-		$this->assertSame('<a href="https://getkirby.com">getkirby.com</a>', $result);
+		$this->assertSame('<a href="https://getkirby.com/error">getkirby.com/error</a>', $result);
 
 		$result = $app->kirbytags('(link: file://file-uuid text: file)');
 		$this->assertSame('<a href="' . $app->file('a/foo.jpg')->url() . '">file</a>', $result);
 
 		$result = $app->kirbytags('(link: file://not-exists text: file)');
-		$this->assertSame('<a href="https://getkirby.com">file</a>', $result);
+		$this->assertSame('<a href="https://getkirby.com/error">file</a>', $result);
+	}
+
+	public function testLinkWithUuidDebug()
+	{
+		$app = $this->app->clone([
+			'urls' => [
+				'index' => 'https://getkirby.com'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'    => 'a',
+						'content' => ['uuid' => 'page-uuid'],
+						'files'   => [
+							[
+								'filename' => 'foo.jpg',
+								'content' => ['uuid' => 'file-uuid'],
+							]
+						]
+					]
+				]
+			],
+			'options' => [
+				'debug' => true
+			]
+		]);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The linked page is not found');
+
+		$app->kirbytags('(link: page://not-exists)');
+	}
+
+	public function testLinkWithUuidDebugText()
+	{
+		$app = $this->app->clone([
+			'urls' => [
+				'index' => 'https://getkirby.com'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'    => 'a',
+						'content' => ['uuid' => 'page-uuid'],
+						'files'   => [
+							[
+								'filename' => 'foo.jpg',
+								'content' => ['uuid' => 'file-uuid'],
+							]
+						]
+					]
+				]
+			],
+			'options' => [
+				'debug' => true
+			]
+		]);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The linked page is not found for the link text "click here"');
+
+		$app->kirbytags('(link: page://not-exists text: click here)');
 	}
 
 	public function testLinkWithUuidAndLang()
