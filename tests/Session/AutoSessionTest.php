@@ -14,6 +14,8 @@ require_once __DIR__ . '/mocks.php';
  */
 class AutoSessionTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures/store';
+
 	protected $store;
 
 	public function setUp(): void
@@ -46,8 +48,8 @@ class AutoSessionTest extends TestCase
 		$this->assertSame($this->store, $sessionsProperty->getValue($autoSession)->store());
 
 		// path string as store
-		$autoSession = new AutoSession(__DIR__ . '/fixtures/store');
-		$this->assertSame(__DIR__ . '/fixtures/store', $pathProperty->getValue($sessionsProperty->getValue($autoSession)->store()));
+		$autoSession = new AutoSession(static::FIXTURES);
+		$this->assertSame(static::FIXTURES, $pathProperty->getValue($sessionsProperty->getValue($autoSession)->store()));
 
 		// default cookie name
 		$autoSession = new AutoSession($this->store);

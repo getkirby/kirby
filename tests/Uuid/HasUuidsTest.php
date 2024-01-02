@@ -4,6 +4,8 @@ namespace Kirby\Uuid;
 
 class HasUuidsTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Uuid.HasUuids';
+
 	public function testfindByUuid()
 	{
 		$app = $this->app->clone([

@@ -14,17 +14,14 @@ class TestCase extends BaseTestCase
 {
 	protected $app;
 	protected $page = null;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
 		App::destroy();
 
-		Dir::make($this->tmp);
-
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => $this->hasTmp() ? static::TMP : '/dev/null'
 			]
 		]);
 
@@ -39,8 +36,11 @@ class TestCase extends BaseTestCase
 	public function tearDown(): void
 	{
 		App::destroy();
-		Dir::remove($this->tmp);
 		Blueprint::$loaded = [];
+
+		if ($this->hasTmp() === true) {
+			Dir::remove(static::TMP);
+		}
 
 		// mock class
 		ErrorLog::$log = '';
@@ -133,5 +133,14 @@ class TestCase extends BaseTestCase
 
 		$action->call($this, $app);
 		$this->assertSame(count($hooks), $triggered);
+	}
+
+	/**
+	 * Checks if the test class extending this test case class
+	 * has defined a temporary directory
+	 */
+	protected function hasTmp(): bool
+	{
+		return defined(get_class($this) . '::TMP');
 	}
 }

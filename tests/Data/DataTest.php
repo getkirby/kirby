@@ -13,6 +13,8 @@ require_once __DIR__ . '/mocks.php';
  */
 class DataTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Data.Data';
+
 	/**
 	 * @covers ::handler
 	 */
@@ -141,10 +143,7 @@ class DataTest extends TestCase
 			'email' => 'homer@simpson.com'
 		];
 
-		$file = __DIR__ . '/tmp/data.json';
-
-		// clean up first
-		@unlink($file);
+		$file = static::TMP . '/data.json';
 
 		// automatic type detection
 		Data::write($file, $data);
@@ -172,7 +171,7 @@ class DataTest extends TestCase
 		$this->expectException('Exception');
 		$this->expectExceptionMessage('Missing handler for type: "foo"');
 
-		Data::read(__DIR__ . '/tmp/data.foo');
+		Data::read(static::TMP . '/data.foo');
 	}
 
 	/**
@@ -189,6 +188,6 @@ class DataTest extends TestCase
 			'email' => 'homer@simpson.com'
 		];
 
-		Data::write(__DIR__ . '/tmp/data.foo', $data);
+		Data::write(static::TMP . '/data.foo', $data);
 	}
 }

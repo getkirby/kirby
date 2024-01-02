@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\Exception;
-use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Locale;
@@ -11,8 +10,10 @@ use Kirby\Toolkit\Str;
 
 class AppTranslationsTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.AppTranslations';
+
 	protected $app;
-	protected $fixtures;
 	protected $locale = [];
 	protected $localeSuffix;
 
@@ -62,13 +63,11 @@ class AppTranslationsTest extends TestCase
 				]
 			]
 		]);
-
-		$this->fixtures = __DIR__ . '/fixtures/AppTranslationsTest';
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->fixtures);
+		parent::tearDown();
 
 		Locale::set($this->locale);
 		$this->locale = [];
@@ -84,7 +83,7 @@ class AppTranslationsTest extends TestCase
 		$app = new App([
 			'roots' => [
 				'index' => '/dev/null',
-				'translations' => __DIR__ . '/fixtures/translations'
+				'translations' => static::FIXTURES . '/translations'
 			]
 		]);
 
@@ -218,12 +217,12 @@ class AppTranslationsTest extends TestCase
 	public function testTranslationInTemplate()
 	{
 		// create a dummy template
-		F::write($this->fixtures . '/test.php', '<?= t("button") ?>');
+		F::write(static::TMP . '/test.php', '<?= t("button") ?>');
 
 		$app = new App([
 			'roots' => [
 				'index'     => '/dev/null',
-				'templates' => $this->fixtures
+				'templates' => static::TMP
 			],
 			'languages' => [
 				[
@@ -328,12 +327,12 @@ class AppTranslationsTest extends TestCase
 	public function testLanguageTranslationWithSlugs()
 	{
 		// create a dummy template
-		F::write($this->fixtures . '/test.php', '<?= t("button") ?>');
+		F::write(static::TMP . '/test.php', '<?= t("button") ?>');
 
 		$app = new App([
 			'roots' => [
 				'index'     => '/dev/null',
-				'templates' => $this->fixtures
+				'templates' => static::TMP
 			],
 			'languages' => [
 				[

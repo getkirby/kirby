@@ -10,10 +10,22 @@ use Kirby\Form\Field;
 
 class FilePickerMixinTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Form.Fields.FilePickerMixin';
+
 	public function setUp(): void
 	{
-		$kirby = App::instance();
+		$kirby = new App([
+			'roots' => [
+				'index' => static::TMP
+			]
+		]);
+
 		$kirby->impersonate('kirby');
+	}
+
+	public function tearDown(): void
+	{
+		App::destroy();
 	}
 
 	public function testPageFiles()

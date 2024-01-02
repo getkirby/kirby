@@ -7,6 +7,8 @@ namespace Kirby\Uuid;
  */
 class UriTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Uuid.Uri';
+
 	public static function provider(): array
 	{
 		// Provider entries:

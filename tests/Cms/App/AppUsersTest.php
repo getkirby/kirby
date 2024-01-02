@@ -6,26 +6,22 @@ use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
-use Kirby\Filesystem\Dir;
 use Kirby\Http\Request\Auth\BasicAuth;
 
 class AppUsersTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.AppUsers';
+
 	protected $app;
-	protected $fixtures;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/AppUsersTest'
+				'index' => static::TMP
 			]
 		]);
-	}
-
-	public function tearDown(): void
-	{
-		Dir::remove($this->fixtures);
 	}
 
 	public function testImpersonate()
@@ -120,7 +116,7 @@ class AppUsersTest extends TestCase
 	{
 		$app = $this->app->clone([
 			'roots' => [
-				'site' => __DIR__ . '/fixtures'
+				'site' => static::FIXTURES
 			]
 		]);
 

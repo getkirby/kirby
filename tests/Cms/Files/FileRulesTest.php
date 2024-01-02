@@ -12,24 +12,26 @@ use Kirby\Filesystem\File as BaseFile;
 
 class FileRulesTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures/files';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.FileRules';
+
 	protected $app;
-	protected $tmp;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp = __DIR__ . '/tmp/FileRulesTest'
+				'index' => static::TMP
 			]
 		]);
 
 		$this->app->impersonate('kirby');
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	public function testChangeName()
@@ -215,11 +217,11 @@ class FileRulesTest extends TestCase
 
 	public function testCreateSameFile()
 	{
-		$testImage =  __DIR__ . '/fixtures/files/test.jpg';
+		$testImage = static::FIXTURES . '/test.jpg';
 
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp = __DIR__ . '/tmp/FileRulesTest/createSameFile',
+				'index' => static::TMP,
 			],
 			'site' => [
 				'children' => [
@@ -256,11 +258,11 @@ class FileRulesTest extends TestCase
 
 	public function testCreateSameFileWithDifferentTemplate()
 	{
-		$testImage =  __DIR__ . '/fixtures/files/test.jpg';
+		$testImage = static::FIXTURES . '/test.jpg';
 
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp = __DIR__ . '/tmp/FileRulesTest/createSameFileWithDifferentTemplate',
+				'index' => static::TMP,
 			],
 			'site' => [
 				'children' => [
@@ -297,11 +299,11 @@ class FileRulesTest extends TestCase
 
 	public function testCreateDifferentFileWithSameFilename()
 	{
-		$testImage =  __DIR__ . '/fixtures/files/test.jpg';
+		$testImage = static::FIXTURES . '/test.jpg';
 
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp = __DIR__ . '/tmp/FileRulesTest/createDifferentFileWithSameFilename',
+				'index' => static::TMP,
 			],
 			'site' => [
 				'children' => [
@@ -332,7 +334,7 @@ class FileRulesTest extends TestCase
 		$this->expectException(DuplicateException::class);
 		$this->expectExceptionMessage('A file with the name "test.jpg" already exists');
 
-		$upload = new BaseFile(__DIR__ . '/fixtures/files/cat.jpg');
+		$upload = new BaseFile(static::FIXTURES . '/cat.jpg');
 		FileRules::create($newFile, $upload);
 	}
 
@@ -353,7 +355,7 @@ class FileRulesTest extends TestCase
 		$file->method('filename')->willReturn('test.svg');
 		$file->method('permissions')->willReturn($permissions);
 
-		$upload = new BaseFile(__DIR__ . '/fixtures/files/test.svg');
+		$upload = new BaseFile(static::FIXTURES . '/test.svg');
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2)');
@@ -450,7 +452,7 @@ class FileRulesTest extends TestCase
 		$file->method('filename')->willReturn('test.svg');
 		$file->method('permissions')->willReturn($permissions);
 
-		$upload = new BaseFile(__DIR__ . '/fixtures/files/test.svg');
+		$upload = new BaseFile(static::FIXTURES . '/test.svg');
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2)');

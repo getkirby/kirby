@@ -11,16 +11,17 @@ use Kirby\Toolkit\I18n;
 
 class ApiTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.Api';
+
 	protected $api;
 	protected $locale;
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'site' => [
 				'children' => [
@@ -72,12 +73,12 @@ class ApiTest extends TestCase
 		$this->api = $this->app->api();
 
 		$this->locale = setlocale(LC_ALL, 0);
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 		setlocale(LC_ALL, $this->locale);
 	}
 

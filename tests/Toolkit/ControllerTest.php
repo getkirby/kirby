@@ -7,6 +7,8 @@ namespace Kirby\Toolkit;
  */
 class ControllerTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	/**
 	 * @covers ::call
 	 */
@@ -81,7 +83,7 @@ class ControllerTest extends TestCase
 	 */
 	public function testLoad()
 	{
-		$root       = __DIR__ . '/fixtures/controller/controller.php';
+		$root       = static::FIXTURES . '/controller/controller.php';
 		$controller = Controller::load($root);
 		$this->assertSame('loaded', $controller->call());
 	}
@@ -91,7 +93,7 @@ class ControllerTest extends TestCase
 	 */
 	public function testLoadNonExisting()
 	{
-		$root       = __DIR__ . '/fixtures/controller/does-not-exist.php';
+		$root       = static::FIXTURES . '/controller/does-not-exist.php';
 		$controller = Controller::load($root);
 		$this->assertNull($controller);
 	}
@@ -101,7 +103,7 @@ class ControllerTest extends TestCase
 	 */
 	public function testLoadInvalidController()
 	{
-		$root       = __DIR__ . '/fixtures/controller/invalid.php';
+		$root       = static::FIXTURES . '/controller/invalid.php';
 		$controller = Controller::load($root);
 		$this->assertNull($controller);
 	}

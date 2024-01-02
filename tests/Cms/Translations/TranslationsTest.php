@@ -4,6 +4,8 @@ namespace Kirby\Cms;
 
 class TranslationsTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	public function testFactory()
 	{
 		$translations = Translations::factory([
@@ -22,7 +24,7 @@ class TranslationsTest extends TestCase
 
 	public function testLoad()
 	{
-		$translations = Translations::load(__DIR__ . '/fixtures/translations');
+		$translations = Translations::load(static::FIXTURES . '/translations');
 
 		$this->assertCount(2, $translations);
 		$this->assertTrue($translations->has('de'));

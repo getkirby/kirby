@@ -9,16 +9,17 @@ use PHPUnit\Framework\TestCase;
 
 class PageActionsTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.PageActions';
+
 	protected $app;
-	protected $tmp;
 
 	public function setUp(): void
 	{
-		Dir::make($this->tmp = __DIR__ . '/tmp');
+		Dir::make(static::TMP);
 
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 		]);
 
@@ -27,7 +28,8 @@ class PageActionsTest extends TestCase
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
+		App::destroy();
 	}
 
 	public function site()
@@ -139,8 +141,8 @@ class PageActionsTest extends TestCase
 			]);
 
 			$in      = 'drafts';
-			$oldRoot = $this->tmp . '/content/_drafts/test';
-			$newRoot = $this->tmp . '/content/_drafts/' . $expected;
+			$oldRoot = static::TMP . '/content/_drafts/test';
+			$newRoot = static::TMP . '/content/_drafts/' . $expected;
 		} else {
 			$page = Page::create([
 				'slug' => 'test',
@@ -148,8 +150,8 @@ class PageActionsTest extends TestCase
 			]);
 
 			$in      = 'children';
-			$oldRoot = $this->tmp . '/content/1_test';
-			$newRoot = $this->tmp . '/content/1_' . $expected;
+			$oldRoot = static::TMP . '/content/1_test';
+			$newRoot = static::TMP . '/content/1_' . $expected;
 		}
 
 		$this->assertTrue($page->exists());
@@ -200,7 +202,7 @@ class PageActionsTest extends TestCase
 			]);
 
 			$in   = 'drafts';
-			$root = $this->tmp . '/content/_drafts/test';
+			$root = static::TMP . '/content/_drafts/test';
 		} else {
 			$page = Page::create([
 				'slug' => 'test',
@@ -208,7 +210,7 @@ class PageActionsTest extends TestCase
 			]);
 
 			$in   = 'children';
-			$root = $this->tmp . '/content/1_test';
+			$root = static::TMP . '/content/1_test';
 		}
 
 		$page = $page->update(['slug' => 'test-de'], 'de');
@@ -851,7 +853,7 @@ class PageActionsTest extends TestCase
 
 		$copy = $page->duplicate('test-copy');
 
-		$this->assertFileDoesNotExist($this->tmp . $copy->root() . '/.lock');
+		$this->assertFileDoesNotExist(static::TMP . $copy->root() . '/.lock');
 
 		$this->assertSame($page, $drafts->find('test'));
 		$this->assertSame($page, $childrenAndDrafts->find('test'));
@@ -950,7 +952,7 @@ class PageActionsTest extends TestCase
 			]
 		]);
 
-		F::write($this->tmp . '/content/_drafts/test/foo.jpg', '');
+		F::write(static::TMP . '/content/_drafts/test/foo.jpg', '');
 
 		$copy = $page->duplicate('test-copy', ['files' => true]);
 
@@ -985,7 +987,7 @@ class PageActionsTest extends TestCase
 			]
 		]);
 
-		F::write($this->tmp . '/content/_drafts/test/foo.jpg', '');
+		F::write(static::TMP . '/content/_drafts/test/foo.jpg', '');
 
 		$page = $app->call('de/test');
 		$page->duplicate('test-copy', ['files' => true]);
@@ -1064,7 +1066,7 @@ class PageActionsTest extends TestCase
 				['filename' => 'foo.jpg'],
 			]
 		]);
-		F::write($this->tmp . '/content/_drafts/test/_drafts/foo/foo.jpg', '');
+		F::write(static::TMP . '/content/_drafts/test/_drafts/foo/foo.jpg', '');
 
 		$page = $app->page('test');
 		$copy = $page->duplicate('test-copy', [

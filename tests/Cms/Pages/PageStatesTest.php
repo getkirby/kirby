@@ -4,6 +4,8 @@ namespace Kirby\Cms;
 
 class PageStatesTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.PageStates';
+
 	/**
 	 * Deregister any plugins for the page
 	 */
@@ -11,7 +13,7 @@ class PageStatesTest extends TestCase
 	{
 		new App([
 			'roots' => [
-				'index' => __DIR__ . '/fixtures/PageStatesTest'
+				'index' => static::TMP
 			]
 		]);
 	}

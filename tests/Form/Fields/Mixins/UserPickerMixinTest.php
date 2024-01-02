@@ -8,13 +8,15 @@ use Kirby\Form\Field;
 
 class UserPickerMixinTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Form.Fields.UserPickerMixin';
+
 	public function setUp(): void
 	{
 		parent::setUp();
 
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'roles' => [
 				['name' => 'admin'],

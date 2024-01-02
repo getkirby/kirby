@@ -12,6 +12,8 @@ require_once __DIR__ . '/mocks.php';
  */
 class ResponseTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	public function tearDown(): void
 	{
 		HeadersSent::$value = false;
@@ -188,7 +190,7 @@ class ResponseTest extends TestCase
 
 	public function testFile()
 	{
-		$file = __DIR__ . '/fixtures/download.json';
+		$file = static::FIXTURES . '/download.json';
 
 		$response = Response::file($file);
 
@@ -213,7 +215,7 @@ class ResponseTest extends TestCase
 
 	public function testFileInvalid()
 	{
-		$file = __DIR__ . '/fixtures/download.xyz';
+		$file = static::FIXTURES . '/download.xyz';
 
 		$response = Response::file($file);
 

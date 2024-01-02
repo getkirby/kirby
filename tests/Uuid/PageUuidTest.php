@@ -11,6 +11,8 @@ use Kirby\Cms\Page;
  */
 class PageUuidTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Uuid.PageUuid';
+
 	/**
 	 * @covers ::findByCache
 	 */
@@ -128,7 +130,7 @@ class PageUuidTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'options' => [
 				'languages' => true

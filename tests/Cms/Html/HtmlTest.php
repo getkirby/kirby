@@ -2,19 +2,25 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Dir;
+
 /**
  * @coversDefaultClass Kirby\Cms\Html
  */
 class HtmlTest extends TestCase
 {
-	protected $fixtures;
+	public const FIXTURES = __DIR__ . '/fixtures';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.Html';
+
 	protected $kirby;
 
 	public function setUp(): void
 	{
+		Dir::copy(static::FIXTURES, static::TMP);
+
 		$this->kirby = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures'
+				'index' => static::TMP
 			],
 			'urls' => [
 				'index' => 'https://getkirby.com'
@@ -110,7 +116,7 @@ class HtmlTest extends TestCase
 	public function testCssWithPluginAssets()
 	{
 		$plugin = new Plugin('getkirby/test-plugin', [
-			'root' => $root = $this->fixtures . '/plugin'
+			'root' => $root = static::TMP . '/plugin'
 		]);
 		touch($root . '/assets/styles.css', 1337000000);
 		$result = Html::css($plugin);
@@ -175,7 +181,7 @@ class HtmlTest extends TestCase
 	public function testJsWithPluginAssets()
 	{
 		$plugin = new Plugin('getkirby/test-plugin', [
-			'root' => $root = $this->fixtures . '/plugin'
+			'root' => $root = static::TMP . '/plugin'
 		]);
 		touch($root . '/assets/scripts.js', 1337000000);
 		$result = Html::js($plugin);
@@ -199,7 +205,7 @@ class HtmlTest extends TestCase
 	 */
 	public function testSvgWithAbsolutePath()
 	{
-		$result = Html::svg($this->fixtures . '/test.svg');
+		$result = Html::svg(static::TMP . '/test.svg');
 		$this->assertSame('<svg>test</svg>', trim($result));
 	}
 

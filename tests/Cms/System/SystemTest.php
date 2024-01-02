@@ -13,16 +13,18 @@ use Kirby\Filesystem\F;
  */
 class SystemTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures/SystemTest';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.System';
+
 	protected static $updateStatusHost;
 
 	protected $app;
-	protected $tmp;
 	protected $subTmp;
 
 	public static function setUpBeforeClass(): void
 	{
 		static::$updateStatusHost = UpdateStatus::$host;
-		UpdateStatus::$host = 'file://' . __DIR__ . '/fixtures/SystemTest';
+		UpdateStatus::$host = 'file://' . static::FIXTURES;
 	}
 
 	public static function tearDownAfterClass(): void
@@ -34,7 +36,7 @@ class SystemTest extends TestCase
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp = __DIR__ . '/tmp'
+				'index' => static::TMP
 			]
 		]);
 	}
@@ -46,7 +48,7 @@ class SystemTest extends TestCase
 			Dir::remove($this->subTmp);
 		}
 
-		Dir::remove($this->tmp);
+		parent::tearDown();
 	}
 
 	public static function providerForIndexUrls(): array
@@ -157,17 +159,17 @@ class SystemTest extends TestCase
 	{
 		$system = new System($this->app->clone([
 			'roots' => [
-				'content' => $this->tmp . '/content',
-				'index'   => $this->tmp
+				'content' => static::TMP . '/content',
+				'index'   => static::TMP
 			]
 		]));
 
-		Dir::remove($this->tmp . '/content');
+		Dir::remove(static::TMP . '/content');
 
 		$this->assertNull($system->folderUrl('content'));
 		$this->assertNull($system->exposedFileUrl('content'));
 
-		Dir::make($this->tmp . '/content');
+		Dir::make(static::TMP . '/content');
 
 		$this->assertSame('/content', $system->folderUrl('content'));
 		$this->assertSame('/content/site.txt', $system->exposedFileUrl('content'));
@@ -181,16 +183,16 @@ class SystemTest extends TestCase
 	{
 		$system = new System($this->app->clone([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			]
 		]));
 
-		Dir::remove($this->tmp . '/.git');
+		Dir::remove(static::TMP . '/.git');
 
 		$this->assertNull($system->folderUrl('git'));
 		$this->assertNull($system->exposedFileUrl('git'));
 
-		Dir::make($this->tmp . '/.git');
+		Dir::make(static::TMP . '/.git');
 
 		$this->assertSame('/.git', $system->folderUrl('git'));
 		$this->assertSame('/.git/config', $system->exposedFileUrl('git'));
@@ -204,12 +206,12 @@ class SystemTest extends TestCase
 	{
 		$system = new System($this->app->clone([
 			'roots' => [
-				'index' => $this->tmp,
-				'media' => $this->tmp . '/media'
+				'index' => static::TMP,
+				'media' => static::TMP . '/media'
 			]
 		]));
 
-		Dir::make($this->tmp . '/media');
+		Dir::make(static::TMP . '/media');
 
 		$this->assertSame('/media', $system->folderUrl('media'));
 		$this->assertNull($system->exposedFileUrl('media'));
@@ -223,17 +225,17 @@ class SystemTest extends TestCase
 	{
 		$system = new System($this->app->clone([
 			'roots' => [
-				'kirby' => $this->tmp . '/kirby',
-				'index' => $this->tmp
+				'kirby' => static::TMP . '/kirby',
+				'index' => static::TMP
 			]
 		]));
 
-		Dir::remove($this->tmp . '/kirby');
+		Dir::remove(static::TMP . '/kirby');
 
 		$this->assertNull($system->folderUrl('kirby'));
 		$this->assertNull($system->exposedFileUrl('kirby'));
 
-		Dir::make($this->tmp . '/kirby');
+		Dir::make(static::TMP . '/kirby');
 
 		$this->assertSame('/kirby', $system->folderUrl('kirby'));
 		$this->assertSame('/kirby/composer.json', $system->exposedFileUrl('kirby'));
@@ -247,32 +249,32 @@ class SystemTest extends TestCase
 	{
 		$system = new System($this->app->clone([
 			'roots' => [
-				'site'  => $this->tmp . '/site',
-				'index' => $this->tmp
+				'site'  => static::TMP . '/site',
+				'index' => static::TMP
 			]
 		]));
 
-		Dir::remove($this->tmp . '/site');
+		Dir::remove(static::TMP . '/site');
 
 		$this->assertNull($system->folderUrl('site'));
 
 		// with blueprints
-		Dir::remove($this->tmp . '/site');
-		F::write($this->tmp . '/site/blueprints/site.yml', 'test');
+		Dir::remove(static::TMP . '/site');
+		F::write(static::TMP . '/site/blueprints/site.yml', 'test');
 
 		$this->assertSame('/site', $system->folderUrl('site'));
 		$this->assertSame('/site/blueprints/site.yml', $system->exposedFileUrl('site'));
 
 		// with templates
-		Dir::remove($this->tmp . '/site');
-		F::write($this->tmp . '/site/templates/default.php', 'test');
+		Dir::remove(static::TMP . '/site');
+		F::write(static::TMP . '/site/templates/default.php', 'test');
 
 		$this->assertSame('/site', $system->folderUrl('site'));
 		$this->assertSame('/site/templates/default.php', $system->exposedFileUrl('site'));
 
 		// with snippets
-		Dir::remove($this->tmp . '/site');
-		F::write($this->tmp . '/site/snippets/header.php', 'test');
+		Dir::remove(static::TMP . '/site');
+		F::write(static::TMP . '/site/snippets/header.php', 'test');
 
 		$this->assertSame('/site', $system->folderUrl('site'));
 		$this->assertSame('/site/snippets/header.php', $system->exposedFileUrl('site'));
@@ -286,7 +288,7 @@ class SystemTest extends TestCase
 	{
 		$system = new System($this->app->clone([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			]
 		]));
 
@@ -315,11 +317,11 @@ class SystemTest extends TestCase
 	 */
 	public function testInitPermission($root)
 	{
-		$this->subTmp = $this->tmp . '/' . ucfirst($root) . 'Test';
+		$this->subTmp = static::TMP . '/' . ucfirst($root) . 'Test';
 
 		$app = $this->app->clone([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => static::TMP,
 				$root   => $this->subTmp . '/' . $root,
 			]
 		]);

@@ -13,9 +13,11 @@ require_once __DIR__ . '/mocks.php';
  */
 class FileCacheTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cache.FileCache';
+
 	public function tearDown(): void
 	{
-		Dir::remove(__DIR__ . '/tmp');
+		Dir::remove(static::TMP);
 	}
 
 	/**
@@ -25,7 +27,7 @@ class FileCacheTest extends TestCase
 	public function testConstruct()
 	{
 		$cache = new FileCache([
-			'root' => $root = __DIR__ . '/tmp'
+			'root' => $root = static::TMP
 		]);
 
 		$this->assertSame($root, $cache->root());
@@ -39,7 +41,7 @@ class FileCacheTest extends TestCase
 	public function testConstructWithPrefix()
 	{
 		$cache = new FileCache([
-			'root'   => $root = __DIR__ . '/tmp',
+			'root'   => $root = static::TMP,
 			'prefix' => 'test'
 		]);
 
@@ -53,7 +55,7 @@ class FileCacheTest extends TestCase
 	public function testEnabled()
 	{
 		$cache = new FileCache([
-			'root' => __DIR__ . '/tmp'
+			'root' => static::TMP
 		]);
 
 		$this->assertTrue($cache->enabled());
@@ -65,7 +67,7 @@ class FileCacheTest extends TestCase
 	public function testEnabledNotWritable()
 	{
 		$cache = new FileCache([
-			'root' => $root = __DIR__ . '/tmp'
+			'root' => $root = static::TMP
 		]);
 
 		chmod($root, 0444);
@@ -82,56 +84,56 @@ class FileCacheTest extends TestCase
 		$method->setAccessible(true);
 
 		$cache = new FileCache([
-			'root' => $root = __DIR__ . '/tmp'
+			'root' => $root = static::TMP
 		]);
 		$this->assertSame($root . '/test', $method->invoke($cache, 'test'));
 
 		$cache = new FileCache([
-			'root'      => $root = __DIR__ . '/tmp',
+			'root'      => $root = static::TMP,
 			'extension' => 'cache'
 		]);
 		$this->assertSame($root . '/test.cache', $method->invoke($cache, 'test'));
 
 		$cache = new FileCache([
-			'root'   => $root = __DIR__ . '/tmp',
+			'root'   => $root = static::TMP,
 			'prefix' => 'test1'
 		]);
 		$this->assertSame($root . '/test1/test', $method->invoke($cache, 'test'));
 
 		$cache = new FileCache([
-			'root'      => $root = __DIR__ . '/tmp',
+			'root'      => $root = static::TMP,
 			'prefix'    => 'test1',
 			'extension' => 'cache'
 		]);
 		$this->assertSame($root . '/test1/test.cache', $method->invoke($cache, 'test'));
 
 		$cache = new FileCache([
-			'root' => $root = __DIR__ . '/tmp',
+			'root' => $root = static::TMP,
 		]);
 		$this->assertSame($root . '/_empty/test', $method->invoke($cache, '/test'));
 
 		$cache = new FileCache([
-			'root' => $root = __DIR__ . '/tmp',
+			'root' => $root = static::TMP,
 		]);
 		$this->assertSame($root . '/test/_empty', $method->invoke($cache, 'test/'));
 
 		$cache = new FileCache([
-			'root' => $root = __DIR__ . '/tmp',
+			'root' => $root = static::TMP,
 		]);
 		$this->assertSame($root . '/test/_backslash/foo/bar', $method->invoke($cache, 'test\\foo/bar'));
 
 		$cache = new FileCache([
-			'root' => $root = __DIR__ . '/tmp',
+			'root' => $root = static::TMP,
 		]);
 		$this->assertSame($root . '/test/_backslash/_empty/foo/_backslash/bar', $method->invoke($cache, 'test\\/foo\\bar'));
 
 		$cache = new FileCache([
-			'root' => $root = __DIR__ . '/tmp',
+			'root' => $root = static::TMP,
 		]);
 		$this->assertSame($root . '/_empty/test/_empty', $method->invoke($cache, '/test/'));
 
 		$cache = new FileCache([
-			'root' => $root = __DIR__ . '/tmp',
+			'root' => $root = static::TMP,
 		]);
 		$this->assertSame(
 			$root . '/_9d891e731f75deae56884d79e9816736b7488080/_9d891e731f75deae56884d79e9816736b7488080/test',
@@ -139,7 +141,7 @@ class FileCacheTest extends TestCase
 		);
 
 		$cache = new FileCache([
-			'root' => $root = __DIR__ . '/tmp',
+			'root' => $root = static::TMP,
 		]);
 		$this->assertSame(
 			$root . '/_9d891e731f75deae56884d79e9816736b7488080/test-cache_4caff0c1d0c8eb128ed9896b4b0258ef2848816b',
@@ -147,12 +149,12 @@ class FileCacheTest extends TestCase
 		);
 
 		$cache = new FileCache([
-			'root' => $root = __DIR__ . '/tmp',
+			'root' => $root = static::TMP,
 		]);
 		$this->assertSame($root . '/_3a52ce780950d4d969792a2559cd519d7ee8c727/test-page', $method->invoke($cache, './test-page'));
 
 		$cache = new FileCache([
-			'root' => $root = __DIR__ . '/tmp',
+			'root' => $root = static::TMP,
 		]);
 		$this->assertSame(
 			$root . '/_3a52ce780950d4d969792a2559cd519d7ee8c727/test-cache_4caff0c1d0c8eb128ed9896b4b0258ef2848816b',
@@ -160,7 +162,7 @@ class FileCacheTest extends TestCase
 		);
 
 		$cache = new FileCache([
-			'root' => $root = __DIR__ . '/tmp',
+			'root' => $root = static::TMP,
 		]);
 		$this->assertSame(
 			$root . '/_9d891e731f75deae56884d79e9816736b7488080/pages/test/_empty',
@@ -168,7 +170,7 @@ class FileCacheTest extends TestCase
 		);
 
 		$cache = new FileCache([
-			'root' => $root = __DIR__ . '/tmp',
+			'root' => $root = static::TMP,
 		]);
 		$this->assertSame(
 			$root . '/_9d891e731f75deae56884d79e9816736b7488080/pages/test-cache_4caff0c1d0c8eb128ed9896b4b0258ef2848816b',
@@ -176,7 +178,7 @@ class FileCacheTest extends TestCase
 		);
 
 		$cache = new FileCache([
-			'root'      => $root = __DIR__ . '/tmp',
+			'root'      => $root = static::TMP,
 			'extension' => 'cache'
 		]);
 		$this->assertSame(
@@ -185,7 +187,7 @@ class FileCacheTest extends TestCase
 		);
 
 		$cache = new FileCache([
-			'root'   => $root = __DIR__ . '/tmp',
+			'root'   => $root = static::TMP,
 			'prefix' => 'prefix'
 		]);
 		$this->assertSame(
@@ -194,7 +196,7 @@ class FileCacheTest extends TestCase
 		);
 
 		$cache = new FileCache([
-			'root'      => $root = __DIR__ . '/tmp',
+			'root'      => $root = static::TMP,
 			'prefix'    => 'prefix',
 			'extension' => 'cache'
 		]);
@@ -217,7 +219,7 @@ class FileCacheTest extends TestCase
 	public function testOperations()
 	{
 		$cache = new FileCache([
-			'root' => $root = __DIR__ . '/tmp'
+			'root' => $root = static::TMP
 		]);
 
 		$time = time();
@@ -252,7 +254,7 @@ class FileCacheTest extends TestCase
 	public function testOperationsWithExtension()
 	{
 		$cache = new FileCache([
-			'root'      => $root = __DIR__ . '/tmp',
+			'root'      => $root = static::TMP,
 			'extension' => 'cache'
 		]);
 
@@ -286,11 +288,11 @@ class FileCacheTest extends TestCase
 	public function testOperationsWithPrefix()
 	{
 		$cache1 = new FileCache([
-			'root' => $root = __DIR__ . '/tmp',
+			'root' => $root = static::TMP,
 			'prefix' => 'test1'
 		]);
 		$cache2 = new FileCache([
-			'root' => $root = __DIR__ . '/tmp',
+			'root' => $root = static::TMP,
 			'prefix' => 'test2'
 		]);
 
@@ -329,7 +331,7 @@ class FileCacheTest extends TestCase
 	public function testFlush()
 	{
 		$cache = new FileCache([
-			'root' => $root = __DIR__ . '/tmp'
+			'root' => $root = static::TMP
 		]);
 
 		$cache->set('a', 'A basic value');
@@ -354,11 +356,11 @@ class FileCacheTest extends TestCase
 	public function testFlushWithPrefix()
 	{
 		$cache1 = new FileCache([
-			'root' => $root = __DIR__ . '/tmp',
+			'root' => $root = static::TMP,
 			'prefix' => 'test1'
 		]);
 		$cache2 = new FileCache([
-			'root' => $root = __DIR__ . '/tmp',
+			'root' => $root = static::TMP,
 			'prefix' => 'test2'
 		]);
 
@@ -390,7 +392,7 @@ class FileCacheTest extends TestCase
 	public function testRemoveEmptyDirectories()
 	{
 		$cache = new FileCache([
-			'root'      => $root = __DIR__ . '/tmp',
+			'root'      => $root = static::TMP,
 			'extension' => 'cache'
 		]);
 
@@ -414,7 +416,7 @@ class FileCacheTest extends TestCase
 	public function testRemoveEmptyDirectoriesWithNotEmptyDirs()
 	{
 		$cache = new FileCache([
-			'root'      => $root = __DIR__ . '/tmp',
+			'root'      => $root = static::TMP,
 			'extension' => 'cache'
 		]);
 

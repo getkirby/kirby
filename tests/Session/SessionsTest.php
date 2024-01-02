@@ -18,6 +18,8 @@ require_once __DIR__ . '/mocks.php';
  */
 class SessionsTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures/store';
+
 	protected $store;
 	protected $sessions;
 
@@ -45,12 +47,12 @@ class SessionsTest extends TestCase
 		$this->assertSame($this->store, $this->sessions->store());
 
 		// custom store
-		$store    = new FileSessionStore(__DIR__ . '/fixtures/store');
+		$store    = new FileSessionStore(static::FIXTURES);
 		$sessions = new Sessions($store);
 		$this->assertSame($store, $sessions->store());
 
 		// custom path
-		$path     = __DIR__ . '/fixtures/store';
+		$path     = static::FIXTURES;
 		$sessions = new Sessions($path);
 
 		$reflector = new ReflectionClass(FileSessionStore::class);
@@ -74,7 +76,7 @@ class SessionsTest extends TestCase
 	 */
 	public function testConstructorOptions()
 	{
-		$sessions = new Sessions(__DIR__ . '/fixtures/store', [
+		$sessions = new Sessions(static::FIXTURES, [
 			'mode'       => 'header',
 			'cookieName' => 'my_cookie_name'
 		]);
@@ -94,7 +96,7 @@ class SessionsTest extends TestCase
 	{
 		$this->expectException(InvalidArgumentException::class);
 
-		new Sessions(__DIR__ . '/fixtures/store', ['mode' => 'invalid']);
+		new Sessions(static::FIXTURES, ['mode' => 'invalid']);
 	}
 
 	/**
@@ -104,7 +106,7 @@ class SessionsTest extends TestCase
 	{
 		$this->expectException(TypeError::class);
 
-		new Sessions(__DIR__ . '/fixtures/store', ['cookieName' => ['foo']]);
+		new Sessions(static::FIXTURES, ['cookieName' => ['foo']]);
 	}
 
 	/**
@@ -130,7 +132,7 @@ class SessionsTest extends TestCase
 	{
 		$this->expectException(InvalidArgumentException::class);
 
-		new Sessions(__DIR__ . '/fixtures/store', ['gcInterval' => 0]);
+		new Sessions(static::FIXTURES, ['gcInterval' => 0]);
 	}
 
 	/**

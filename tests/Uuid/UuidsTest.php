@@ -12,6 +12,8 @@ use Kirby\Exception\LogicException;
  */
 class UuidsTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Uuid.Uuids';
+
 	/**
 	 * @covers ::cache
 	 */

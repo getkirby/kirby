@@ -6,6 +6,8 @@ use Kirby\Exception\InvalidArgumentException;
 
 class PagesTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.Pages';
+
 	public function pages()
 	{
 		return new Pages([

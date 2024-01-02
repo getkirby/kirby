@@ -14,14 +14,16 @@ require_once __DIR__ . '/mocks.php';
  */
 class UpdateStatusTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures/UpdateStatusTest';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.System.UpdateStatus';
+
 	protected static $host;
 	protected static $data = [];
-	protected $tmp = __DIR__ . '/tmp';
 
 	public static function setUpBeforeClass(): void
 	{
 		static::$host = UpdateStatus::$host;
-		UpdateStatus::$host = 'file://' . __DIR__ . '/fixtures/UpdateStatusTest/getkirby.com';
+		UpdateStatus::$host = 'file://' . static::FIXTURES . '/getkirby.com';
 	}
 
 	public static function tearDownAfterClass(): void
@@ -31,7 +33,7 @@ class UpdateStatusTest extends TestCase
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	/**
@@ -298,12 +300,12 @@ class UpdateStatusTest extends TestCase
 		$this->assertNull($updateStatus->targetVersion());
 		$this->assertSame([
 			'Could not load update data for plugin getkirby/test: Couldn\'t open file ' .
-			__DIR__ . '/fixtures/UpdateStatusTest/getkirby.com/plugins/getkirby/test.json'
+			static::FIXTURES . '/getkirby.com/plugins/getkirby/test.json'
 		], $updateStatus->exceptionMessages());
 
 		$this->assertSame(
 			'Could not load update data for plugin getkirby/test: Couldn\'t open file ' .
-			__DIR__ . '/fixtures/UpdateStatusTest/getkirby.com/plugins/getkirby/test.json',
+			static::FIXTURES . '/getkirby.com/plugins/getkirby/test.json',
 			$app->cache('updates')->get('plugins/getkirby/test')
 		);
 
@@ -312,7 +314,7 @@ class UpdateStatusTest extends TestCase
 		$this->assertNull($updateStatus->targetVersion());
 		$this->assertSame([
 			'Could not load update data for plugin getkirby/test: Couldn\'t open file ' .
-			__DIR__ . '/fixtures/UpdateStatusTest/getkirby.com/plugins/getkirby/test.json'
+			static::FIXTURES . '/getkirby.com/plugins/getkirby/test.json'
 		], $updateStatus->exceptionMessages());
 	}
 
@@ -1173,7 +1175,7 @@ class UpdateStatusTest extends TestCase
 					'vulnerabilities' => null,
 					'exceptionMessages' => [
 						'Could not load update data for plugin getkirby/test: Couldn\'t open file ' .
-						__DIR__ . '/fixtures/UpdateStatusTest/getkirby.com/plugins/getkirby/test.json'
+						static::FIXTURES . '/getkirby.com/plugins/getkirby/test.json'
 					]
 				]
 			],
@@ -1615,7 +1617,7 @@ class UpdateStatusTest extends TestCase
 		MockApp::$version = $version;
 		return new MockApp([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			]
 		]);
 	}
@@ -1626,7 +1628,7 @@ class UpdateStatusTest extends TestCase
 			return static::$data[$name];
 		}
 
-		$path = __DIR__ . '/fixtures/UpdateStatusTest/logic/' . $name . '.json';
+		$path = static::FIXTURES . '/logic/' . $name . '.json';
 		$json = Json::read($path);
 
 		// dynamically insert the current PHP version

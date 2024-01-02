@@ -14,6 +14,8 @@ require_once __DIR__ . '/mocks.php';
  */
 class SaneTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Sane.Sane';
+
 	protected static $type = 'sane';
 
 	/**

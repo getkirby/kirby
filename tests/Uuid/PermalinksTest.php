@@ -4,6 +4,8 @@ namespace Kirby\Uuid;
 
 class PermalinksTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Uuid.Permalinks';
+
 	public function testRoute()
 	{
 		$app = $this->app->clone([

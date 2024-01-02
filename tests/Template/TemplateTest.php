@@ -9,6 +9,8 @@ use Kirby\Cms\App;
  */
 class TemplateTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	/**
 	 * @covers ::__construct
 	 * @covers ::name
@@ -35,7 +37,7 @@ class TemplateTest extends TestCase
 	{
 		new App([
 			'roots' => [
-				'templates' => __DIR__ . '/fixtures'
+				'templates' => static::FIXTURES
 			]
 		]);
 
@@ -65,7 +67,7 @@ class TemplateTest extends TestCase
 
 		new App([
 			'roots' => [
-				'templates' => __DIR__ . '/fixtures'
+				'templates' => static::FIXTURES
 			]
 		]);
 
@@ -73,10 +75,10 @@ class TemplateTest extends TestCase
 		$this->assertNull($template->file());
 
 		$template = new Template('simple');
-		$this->assertSame(__DIR__ . '/fixtures/simple.php', $template->file());
+		$this->assertSame(static::FIXTURES . '/simple.php', $template->file());
 
 		$template = new Template('simple', 'rss');
-		$this->assertSame(__DIR__ . '/fixtures/simple.rss.php', $template->file());
+		$this->assertSame(static::FIXTURES . '/simple.rss.php', $template->file());
 
 		$template = new Template('plugin');
 		$this->assertSame('plugin.php', $template->file());
@@ -105,7 +107,7 @@ class TemplateTest extends TestCase
 	{
 		new App([
 			'roots' => [
-				'templates' => $root = __DIR__ . '/fixtures'
+				'templates' => $root = static::FIXTURES
 			]
 		]);
 
@@ -121,7 +123,7 @@ class TemplateTest extends TestCase
 	{
 		new App([
 			'roots' => [
-				'templates' => $root = __DIR__ . '/fixtures'
+				'templates' => $root = static::FIXTURES
 			]
 		]);
 
@@ -136,8 +138,8 @@ class TemplateTest extends TestCase
 	{
 		new App([
 			'roots' => [
-				'snippets'  => __DIR__ . '/fixtures',
-				'templates' => __DIR__ . '/fixtures'
+				'snippets'  => static::FIXTURES,
+				'templates' => static::FIXTURES
 			]
 		]);
 
@@ -152,8 +154,8 @@ class TemplateTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'snippets'  => __DIR__ . '/fixtures',
-				'templates' => __DIR__ . '/fixtures'
+				'snippets'  => static::FIXTURES,
+				'templates' => static::FIXTURES
 			]
 		]);
 
@@ -172,8 +174,8 @@ class TemplateTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'snippets'  => __DIR__ . '/fixtures',
-				'templates' => __DIR__ . '/fixtures'
+				'snippets'  => static::FIXTURES,
+				'templates' => static::FIXTURES
 			]
 		]);
 
@@ -195,8 +197,8 @@ class TemplateTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'snippets'  => __DIR__ . '/fixtures',
-				'templates' => __DIR__ . '/fixtures'
+				'snippets'  => static::FIXTURES,
+				'templates' => static::FIXTURES
 			]
 		]);
 
