@@ -1,5 +1,0 @@
-Name: Homer Simpson
-
-----
-
-Email: homer@simpson.com
