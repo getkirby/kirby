@@ -101,6 +101,19 @@ class ImageMagick extends Darkroom
 	}
 
 	/**
+	 * Applies sharpening if activated in the options.
+	 */
+	protected function sharpen(string $file, array $options): string|null
+	{
+		if ($options['sharpen'] !== false) {
+			$amount = max(1, min(100, $options['sharpen'])) / 100;
+			return '-sharpen ' . escapeshellarg('0x' . $amount);
+		}
+
+		return null;
+	}
+
+	/**
 	 * Applies the correct settings for interlaced JPEGs if
 	 * activated via options
 	 */
