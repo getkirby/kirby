@@ -387,7 +387,7 @@ class FileTest extends TestCase
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid mime type: text/plain');
 
-		// load translations
+		// load translations to get the correct exception message
 		App::instance();
 
 		$this->_file()->match(['mime' => ['image/png', 'application/pdf']]);
@@ -401,7 +401,7 @@ class FileTest extends TestCase
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid extension: js');
 
-		// load translations
+		// load translations to get the correct exception message
 		App::instance();
 
 		$this->_file()->match(['extension' => ['png', 'pdf']]);
@@ -415,7 +415,7 @@ class FileTest extends TestCase
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid file type: code');
 
-		// load translations
+		// load translations to get the correct exception message
 		App::instance();
 
 		$this->_file()->match(['type' => ['document', 'video']]);
