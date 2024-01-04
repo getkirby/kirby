@@ -38,14 +38,14 @@ final class PhpUnitExtension implements Extension
 	public static function init(): void
 	{
 		// determine a unique path to a temporary directory
-		$tempDir = __DIR__ . '/tmp';
+		$tmpDir = __DIR__ . '/tmp';
 
 		// when running via ParaTest, use a separate directory for each process
 		if (getenv('UNIQUE_TEST_TOKEN') !== false) {
-			$tempDir .= '/' . getenv('UNIQUE_TEST_TOKEN');
+			$tmpDir .= '/' . getenv('UNIQUE_TEST_TOKEN');
 		}
 
-		define('KIRBY_TMP_DIR', $tempDir);
+		define('KIRBY_TMP_DIR', $tmpDir);
 		define('KIRBY_TESTING', true);
 
 		// disable Whoops for all tests that don't need it
