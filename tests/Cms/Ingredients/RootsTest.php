@@ -39,7 +39,9 @@ class RootsTest extends TestCase
 
 	public static function defaultRootProvider(): array
 	{
-		return static::rootProvider(realpath(__DIR__ . '/../../../../'));
+		// automatic fallback used in testing mode
+		// we cannot test the actual root with PHPUnit
+		return static::rootProvider('/dev/null');
 	}
 
 	/**

@@ -310,13 +310,22 @@ class Core
 	 */
 	public function roots(): array
 	{
+		$indexClosure = function (array $roots) {
+			// prevent PHPUnit tests from accessing files outside the repo
+			if (defined('KIRBY_TESTING') === true && KIRBY_TESTING === true) {
+				return '/dev/null';
+			}
+
+			return dirname(__DIR__, 3); // @codeCoverageIgnore
+		};
+
 		return $this->cache['roots'] ??= [
 			'kirby'       => fn (array $roots) => dirname(__DIR__, 2),
 			'i18n'        => fn (array $roots) => $roots['kirby'] . '/i18n',
 			'i18n:translations' => fn (array $roots) => $roots['i18n'] . '/translations',
 			'i18n:rules'  => fn (array $roots) => $roots['i18n'] . '/rules',
 
-			'index'       => fn (array $roots) => dirname(__DIR__, 3),
+			'index'       => $indexClosure,
 			'assets'      => fn (array $roots) => $roots['index'] . '/assets',
 			'content'     => fn (array $roots) => $roots['index'] . '/content',
 			'media'       => fn (array $roots) => $roots['index'] . '/media',

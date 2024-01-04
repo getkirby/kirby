@@ -8,6 +8,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
+use Kirby\Filesystem\Dir;
 use Kirby\Image\QrCode;
 use Kirby\Toolkit\I18n;
 
@@ -16,6 +17,13 @@ use Kirby\Toolkit\I18n;
  */
 class QueryDefaultFunctionsTest extends \PHPUnit\Framework\TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Query.QueryDefaultFunctions';
+
+	public function tearDown(): void
+	{
+		Dir::remove(static::TMP);
+	}
+
 	public function testKirby()
 	{
 		$query = new Query('kirby');
@@ -77,6 +85,9 @@ class QueryDefaultFunctionsTest extends \PHPUnit\Framework\TestCase
 	public function testPage()
 	{
 		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
 			'site' => [
 				'children' => [
 					[
