@@ -27,10 +27,6 @@ final class PhpUnitExtension implements Extension
 		Facade $facade,
 		ParameterCollection $parameters
 	): void {
-		// disable Whoops for all tests that don't need it
-		// to reduce the impact of memory leaks
-		App::$enableWhoops = false;
-
 		// ensure the temp directory is there
 		Dir::make(KIRBY_TMP_DIR);
 
@@ -38,7 +34,7 @@ final class PhpUnitExtension implements Extension
 		$facade->registerSubscriber(new TempCleanupSubscriber());
 	}
 
-	public static function defineConstants(): void
+	public static function init(): void
 	{
 		// determine a unique path to a temporary directory
 		$tempDir = __DIR__ . '/tmp';
@@ -50,6 +46,10 @@ final class PhpUnitExtension implements Extension
 
 		define('KIRBY_TMP_DIR', $tempDir);
 		define('KIRBY_TESTING', true);
+
+		// disable Whoops for all tests that don't need it
+		// to reduce the impact of memory leaks
+		App::$enableWhoops = false;
 	}
 }
 
