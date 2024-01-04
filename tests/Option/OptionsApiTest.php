@@ -16,7 +16,7 @@ class OptionsApiTest extends TestCase
 	 */
 	public function testConstruct()
 	{
-		$options = new OptionsApi($url = 'https://api.getkirby.com');
+		$options = new OptionsApi($url = 'https://api.example.com');
 		$this->assertSame($url, $options->url);
 		$this->assertNull($options->query);
 		$this->assertNull($options->text);
@@ -28,7 +28,7 @@ class OptionsApiTest extends TestCase
 	 */
 	public function testDefaults()
 	{
-		$options = new OptionsApi($url = 'https://api.getkirby.com');
+		$options = new OptionsApi($url = 'https://api.example.com');
 		$this->assertSame($url, $options->url);
 		$this->assertNull($options->text);
 		$this->assertNull($options->value);
@@ -46,7 +46,7 @@ class OptionsApiTest extends TestCase
 	public function testFactory()
 	{
 		$options = OptionsApi::factory([
-			'url'   => $url = 'https://api.getkirby.com',
+			'url'   => $url = 'https://api.example.com',
 			'query' => $query = 'Companies',
 			'text'  => $text = '{{ item.name }}',
 			'value' => $value =  '{{ item.id }}',
@@ -57,7 +57,7 @@ class OptionsApiTest extends TestCase
 		$this->assertSame($text, $options->text);
 		$this->assertSame($value, $options->value);
 
-		$options = OptionsApi::factory($url = 'https://api.getkirby.com');
+		$options = OptionsApi::factory($url = 'https://api.example.com');
 		$this->assertSame($url, $options->url);
 		$this->assertNull($options->query);
 		$this->assertNull($options->text);
@@ -67,12 +67,12 @@ class OptionsApiTest extends TestCase
 	/**
 	 * @covers ::load
 	 */
-	public function testLoadNotFound()
+	public function testLoadNoJson()
 	{
 		$model   = new Page(['slug' => 'test']);
-		$options = new OptionsApi(url: 'https://api.getkirby.com');
+		$options = new OptionsApi(url: 'https://example.com');
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Options could not be loaded from API: https://api.getkirby.com');
+		$this->expectExceptionMessage('Options could not be loaded from API: https://example.com');
 		$options->resolve($model);
 	}
 
@@ -81,10 +81,10 @@ class OptionsApiTest extends TestCase
 	 */
 	public function testPolyfill()
 	{
-		$api = 'https//api.getkirby.com';
+		$api = 'https://api.example.com';
 		$this->assertSame(['url' => $api], OptionsApi::polyfill($api));
 
-		$api = ['url' => 'https//api.getkirby.com'];
+		$api = ['url' => 'https://api.example.com'];
 		$this->assertSame($api, OptionsApi::polyfill($api));
 
 		$api = ['fetch' => 'Companies'];
