@@ -4,6 +4,12 @@ namespace Kirby\Cms;
 
 class RootsTest extends TestCase
 {
+	public function tearDown(): void
+	{
+		// ensure that the index root used for testing is reset
+		Core::$indexRoot = '/dev/null';
+	}
+
 	protected static function rootProvider(string $index): array
 	{
 		$kirby = realpath(__DIR__ . '/../../..');
@@ -39,9 +45,7 @@ class RootsTest extends TestCase
 
 	public static function defaultRootProvider(): array
 	{
-		// automatic fallback used in testing mode
-		// we cannot test the actual root with PHPUnit
-		return static::rootProvider('/dev/null');
+		return static::rootProvider(realpath(__DIR__ . '/../../../../'));
 	}
 
 	/**
@@ -49,6 +53,9 @@ class RootsTest extends TestCase
 	 */
 	public function testDefaultRoot($root, $method)
 	{
+		// fake the default behavior for this test
+		Core::$indexRoot = null;
+
 		$roots = (new App())->roots();
 
 		$this->assertSame($root, $roots->$method());

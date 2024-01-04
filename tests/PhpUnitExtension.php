@@ -3,6 +3,7 @@
 namespace Kirby;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Core;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Event\TestRunner\ExecutionFinished;
 use PHPUnit\Event\TestRunner\ExecutionFinishedSubscriber;
@@ -50,6 +51,9 @@ final class PhpUnitExtension implements Extension
 		// disable Whoops for all tests that don't need it
 		// to reduce the impact of memory leaks
 		App::$enableWhoops = false;
+
+		// prevent PHPUnit tests from accessing files outside the repo
+		Core::$indexRoot = '/dev/null';
 	}
 }
 

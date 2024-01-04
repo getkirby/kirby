@@ -30,6 +30,11 @@ use Kirby\Form\Field\LayoutField;
  */
 class Core
 {
+	/**
+	 * Optional override for the auto-detected index root
+	 */
+	public static string|null $indexRoot = null;
+
 	protected array $cache = [];
 	protected string $root;
 
@@ -310,22 +315,13 @@ class Core
 	 */
 	public function roots(): array
 	{
-		$indexClosure = function (array $roots) {
-			// prevent PHPUnit tests from accessing files outside the repo
-			if (defined('KIRBY_TESTING') === true && KIRBY_TESTING === true) {
-				return '/dev/null';
-			}
-
-			return dirname(__DIR__, 3); // @codeCoverageIgnore
-		};
-
 		return $this->cache['roots'] ??= [
 			'kirby'       => fn (array $roots) => dirname(__DIR__, 2),
 			'i18n'        => fn (array $roots) => $roots['kirby'] . '/i18n',
 			'i18n:translations' => fn (array $roots) => $roots['i18n'] . '/translations',
 			'i18n:rules'  => fn (array $roots) => $roots['i18n'] . '/rules',
 
-			'index'       => $indexClosure,
+			'index'       => fn (array $roots) => static::$indexRoot ?? dirname(__DIR__, 3),
 			'assets'      => fn (array $roots) => $roots['index'] . '/assets',
 			'content'     => fn (array $roots) => $roots['index'] . '/content',
 			'media'       => fn (array $roots) => $roots['index'] . '/media',
