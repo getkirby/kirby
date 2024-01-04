@@ -7,9 +7,16 @@ use PHPUnit\Framework\TestCase;
 
 class CookieTest extends TestCase
 {
+	protected $cookieKey;
+
+	public function setUp(): void
+	{
+		$this->cookieKey = Cookie::$key;
+	}
+
 	public function tearDown(): void
 	{
-		Cookie::$key = 'KirbyHttpCookieKey';
+		Cookie::$key = $this->cookieKey;
 	}
 
 	public function testKey()
