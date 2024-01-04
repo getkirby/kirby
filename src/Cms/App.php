@@ -437,8 +437,6 @@ class App
 	/**
 	 * Calls a page controller by name
 	 * and with the given arguments
-	 *
-	 * @internal
 	 */
 	public function controller(
 		string $name,
