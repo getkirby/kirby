@@ -4,10 +4,17 @@ namespace Kirby\Cms;
 
 class RootsTest extends TestCase
 {
+	protected $indexRoot;
+
+	public function setUp(): void
+	{
+		$this->indexRoot = Core::$indexRoot;
+	}
+
 	public function tearDown(): void
 	{
 		// ensure that the index root used for testing is reset
-		Core::$indexRoot = '/dev/null';
+		Core::$indexRoot = $this->indexRoot;
 	}
 
 	protected static function rootProvider(string $index): array
