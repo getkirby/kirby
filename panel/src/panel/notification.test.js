@@ -7,7 +7,7 @@ import Notification from "./notification.js";
 import Panel from "./panel.js";
 import Vue from "vue";
 
-describe.concurrent("panel.notification", () => {
+describe("panel.notification", () => {
 	window.Vue = Vue;
 
 	it("should have a default state", async () => {
