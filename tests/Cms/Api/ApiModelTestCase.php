@@ -44,13 +44,4 @@ class ApiModelTestCase extends TestCase
 	{
 		$this->assertSame($this->attr($object, $attr), $value);
 	}
-
-	/**
-	 * Checks if the test class extending this test case class
-	 * has defined a temporary directory
-	 */
-	protected function hasTmp(): bool
-	{
-		return defined(get_class($this) . '::TMP');
-	}
 }

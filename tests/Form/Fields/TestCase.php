@@ -7,7 +7,7 @@ use Kirby\Cms\Page;
 use Kirby\Filesystem\Dir;
 use Kirby\Form\Field;
 use Kirby\Form\Fields;
-use PHPUnit\Framework\TestCase as BaseTestCase;
+use Kirby\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
@@ -48,14 +48,5 @@ class TestCase extends BaseTestCase
 	{
 		$page = new Page(['slug' => 'test']);
 		return Field::factory($type, array_merge(['model' => $page], $attr), $formFields);
-	}
-
-	/**
-	 * Checks if the test class extending this test case class
-	 * has defined a temporary directory
-	 */
-	protected function hasTmp(): bool
-	{
-		return defined(get_class($this) . '::TMP');
 	}
 }

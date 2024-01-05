@@ -4,7 +4,7 @@ namespace Kirby\Uuid;
 
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
-use PHPUnit\Framework\TestCase as BaseTestCase;
+use Kirby\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
@@ -123,14 +123,5 @@ class TestCase extends BaseTestCase
 				]
 			],
 		]);
-	}
-
-	/**
-	 * Checks if the test class extending this test case class
-	 * has defined a temporary directory
-	 */
-	protected function hasTmp(): bool
-	{
-		return defined(get_class($this) . '::TMP');
 	}
 }
