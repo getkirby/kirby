@@ -88,10 +88,10 @@ class SiteActionsTest extends TestCase
 	public function testUpdate()
 	{
 		$site = $this->site()->update([
-			'copyright' => 2018
+			'copyright' => '2018'
 		]);
 
-		$this->assertSame(2018, $site->copyright()->value());
+		$this->assertSame('2018', $site->copyright()->value());
 	}
 
 	public function testChangeTitleHooks()

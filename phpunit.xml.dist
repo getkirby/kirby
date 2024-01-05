@@ -46,4 +46,8 @@
 	</php>
 
 	<coverage ignoreDeprecatedCodeUnits="true" />
+
+	<extensions>
+		<bootstrap class="Kirby\PhpUnitExtension"/>
+	</extensions>
 </phpunit>

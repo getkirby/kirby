@@ -118,6 +118,9 @@ class PluginsTest extends TestCase
 	{
 		$time = $this->createPlugins();
 
+		// app must be created again to load the new plugins
+		$app = $this->app->clone();
+
 		$plugins = new Plugins();
 		$this->assertSame($time, $plugins->modified());
 	}

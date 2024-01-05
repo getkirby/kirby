@@ -322,10 +322,15 @@ class Environment
 		}
 
 		// @codeCoverageIgnoreStart
+		$sapi = php_sapi_name();
+		if ($sapi === 'cli') {
+			return true;
+		}
+
 		$term = getenv('TERM');
 
 		if (
-			substr(PHP_SAPI, 0, 3) === 'cgi' &&
+			substr($sapi, 0, 3) === 'cgi' &&
 			$term &&
 			$term !== 'unknown'
 		) {

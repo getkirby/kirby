@@ -11,6 +11,8 @@ use ReflectionClass;
  */
 class LicenseTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.License';
+
 	public function code(LicenseType $type = LicenseType::Basic): string
 	{
 		return $type->prefix() . '1234' . Str::random(28);
@@ -231,6 +233,9 @@ class LicenseTest extends TestCase
 	public function testIsOnCorrectDomain()
 	{
 		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
 			'options' => [
 				'url' => 'https://getkirby.com'
 			]
