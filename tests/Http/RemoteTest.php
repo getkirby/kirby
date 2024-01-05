@@ -4,16 +4,22 @@ namespace Kirby\Http;
 
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/mocks.php';
 
 class RemoteTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Http.Remote';
+
+	protected $cwd;
 	protected $defaults;
 
 	public function setUp(): void
 	{
+		$this->cwd = getcwd();
+
 		$this->defaults = Remote::$defaults;
 		IniStore::$data['curl.cainfo'] = false;
 
@@ -21,12 +27,18 @@ class RemoteTest extends TestCase
 			'test' => true,
 			'key'  => 'value'
 		]);
+
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
+		chdir($this->cwd);
+
 		Remote::$defaults = $this->defaults;
 		unset(IniStore::$data['curl.cainfo']);
+
+		Dir::remove(static::TMP);
 	}
 
 	public function testOptionsHeaders()
@@ -93,8 +105,7 @@ class RemoteTest extends TestCase
 		ini_restore('curl.cainfo');
 
 		// explicit internal CA with an existing file named like the constant
-		$originalCwd = getcwd();
-		chdir(__DIR__ . '/fixtures');
+		chdir(static::TMP);
 		touch(Remote::CA_INTERNAL);
 		$request = Remote::get('https://getkirby.com', [
 			'ca' => Remote::CA_INTERNAL
@@ -102,8 +113,6 @@ class RemoteTest extends TestCase
 		$this->assertTrue($request->curlopt[CURLOPT_SSL_VERIFYPEER]);
 		$this->assertSame(dirname(__DIR__, 2) . '/cacert.pem', $request->curlopt[CURLOPT_CAINFO]);
 		$this->assertArrayNotHasKey(CURLOPT_CAPATH, $request->curlopt);
-		unlink(Remote::CA_INTERNAL);
-		chdir($originalCwd);
 
 		// CA file
 		$request = Remote::get('https://getkirby.com', [
@@ -130,8 +139,7 @@ class RemoteTest extends TestCase
 		$this->assertArrayNotHasKey(CURLOPT_CAPATH, $request->curlopt);
 
 		// system CA with an existing file named like the constant
-		$originalCwd = getcwd();
-		chdir(__DIR__ . '/fixtures');
+		chdir(static::TMP);
 		touch(Remote::CA_SYSTEM);
 		$request = Remote::get('https://getkirby.com', [
 			'ca' => Remote::CA_SYSTEM
@@ -139,8 +147,6 @@ class RemoteTest extends TestCase
 		$this->assertTrue($request->curlopt[CURLOPT_SSL_VERIFYPEER]);
 		$this->assertArrayNotHasKey(CURLOPT_CAINFO, $request->curlopt);
 		$this->assertArrayNotHasKey(CURLOPT_CAPATH, $request->curlopt);
-		unlink(Remote::CA_SYSTEM);
-		chdir($originalCwd);
 
 		// disabled
 		$request = Remote::get('https://getkirby.com', [

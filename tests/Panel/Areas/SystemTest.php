@@ -7,12 +7,14 @@ use Kirby\Cms\System\UpdateStatus;
 
 class SystemTest extends AreaTestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures/SystemTest';
+
 	protected static $host;
 
 	public static function setUpBeforeClass(): void
 	{
 		static::$host = UpdateStatus::$host;
-		UpdateStatus::$host = 'file://' . __DIR__ . '/fixtures/SystemTest';
+		UpdateStatus::$host = 'file://' . static::FIXTURES;
 	}
 
 	public static function tearDownAfterClass(): void
@@ -326,9 +328,9 @@ class SystemTest extends AreaTestCase
 		$this->assertSame($expected, $view['props']['plugins']);
 		$this->assertSame([
 			'Could not load update data for plugin getkirby/private: Couldn\'t open file ' .
-			__DIR__ . '/fixtures/SystemTest/plugins/getkirby/private.json',
+			static::FIXTURES . '/plugins/getkirby/private.json',
 			'Could not load update data for plugin getkirby/unknown: Couldn\'t open file ' .
-			__DIR__ . '/fixtures/SystemTest/plugins/getkirby/unknown.json',
+			static::FIXTURES . '/plugins/getkirby/unknown.json',
 		], $view['props']['exceptions']);
 	}
 

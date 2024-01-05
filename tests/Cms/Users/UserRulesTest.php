@@ -10,11 +10,13 @@ use Kirby\Exception\PermissionException;
 
 class UserRulesTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	public function app()
 	{
 		return new App([
 			'roots' => [
-				'site' => __DIR__ . '/fixtures'
+				'site' => static::FIXTURES
 			]
 		]);
 	}
@@ -118,7 +120,7 @@ class UserRulesTest extends TestCase
 	{
 		$kirby = new App([
 			'roots' => [
-				'site' => __DIR__ . '/fixtures',
+				'site' => static::FIXTURES,
 			],
 			'user' => 'admin@domain.com',
 			'users' => [
@@ -147,7 +149,7 @@ class UserRulesTest extends TestCase
 	{
 		$kirby = new App([
 			'roots' => [
-				'site' => __DIR__ . '/fixtures',
+				'site' => static::FIXTURES,
 			],
 			'user' => 'admin@domain.com',
 			'users' => [
@@ -167,7 +169,7 @@ class UserRulesTest extends TestCase
 
 		$kirby = new App([
 			'roots' => [
-				'site' => __DIR__ . '/fixtures',
+				'site' => static::FIXTURES,
 			],
 			'user' => 'user@domain.com',
 			'users' => [
@@ -184,7 +186,7 @@ class UserRulesTest extends TestCase
 	{
 		$kirby = new App([
 			'roots' => [
-				'site' => __DIR__ . '/fixtures',
+				'site' => static::FIXTURES,
 			],
 			'user' => 'user1@domain.com',
 			'users' => [
@@ -204,7 +206,7 @@ class UserRulesTest extends TestCase
 
 		$kirby = new App([
 			'roots' => [
-				'site' => __DIR__ . '/fixtures',
+				'site' => static::FIXTURES,
 			],
 			'user' => 'user1@domain.com',
 			'users' => [

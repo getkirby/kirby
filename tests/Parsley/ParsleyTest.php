@@ -21,6 +21,8 @@ class TestableParsley extends Parsley
  */
 class ParsleyTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	protected function parser(string $html = 'Test')
 	{
 		return new TestableParsley($html, new Blocks());
@@ -34,7 +36,7 @@ class ParsleyTest extends TestCase
 	 */
 	public function testBlocks()
 	{
-		$examples = glob(__DIR__ . '/fixtures/*.html');
+		$examples = glob(static::FIXTURES . '/*.html');
 
 		foreach ($examples as $example) {
 			$input    = F::read($example);

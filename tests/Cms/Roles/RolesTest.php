@@ -3,10 +3,12 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
-use Kirby\Filesystem\Dir;
 
 class RolesTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.Roles';
+
 	public function testFactory()
 	{
 		$roles = Roles::factory([
@@ -26,7 +28,7 @@ class RolesTest extends TestCase
 
 	public function testLoad()
 	{
-		$roles = Roles::load(__DIR__ . '/fixtures/blueprints/users');
+		$roles = Roles::load(static::FIXTURES . '/blueprints/users');
 
 		$this->assertInstanceOf(Roles::class, $roles);
 
@@ -63,24 +65,24 @@ class RolesTest extends TestCase
 		new App([
 			'roots' => [
 				'index' => '/dev/null',
-				'blueprints' => $fixtures = __DIR__ . '/fixtures/RolesTest/loadFromPluginsCallbackString',
+				'blueprints' => static::TMP,
 			],
 			'blueprints' => [
-				'users/admin' => function () use ($fixtures) {
-					return $fixtures . '/custom/admin.yml';
+				'users/admin' => function () {
+					return static::TMP . '/custom/admin.yml';
 				},
-				'users/editor' => function () use ($fixtures) {
-					return $fixtures . '/custom/editor.yml';
+				'users/editor' => function () {
+					return static::TMP . '/custom/editor.yml';
 				}
 			]
 		]);
 
-		Data::write($fixtures . '/custom/admin.yml', [
+		Data::write(static::TMP . '/custom/admin.yml', [
 			'name' => 'admin',
 			'title' => 'Admin'
 		]);
 
-		Data::write($fixtures . '/custom/editor.yml', [
+		Data::write(static::TMP . '/custom/editor.yml', [
 			'name' => 'editor',
 			'title' => 'Editor'
 		]);
@@ -90,8 +92,6 @@ class RolesTest extends TestCase
 		$this->assertCount(2, $roles);
 		$this->assertSame('admin', $roles->first()->name());
 		$this->assertSame('editor', $roles->last()->name());
-
-		Dir::remove($fixtures);
 	}
 
 	public function testLoadFromPluginsCallbackArray()

@@ -96,23 +96,24 @@ class ModelSiteWithImageMethod extends ModelSite
  */
 class ModelTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Panel.Model';
+
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => static::TMP,
 			]
 		]);
 
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	protected function panel(array $props = [])
@@ -412,7 +413,7 @@ class ModelTest extends TestCase
 		$site = new ModelSiteNoLocking();
 		$this->assertFalse($site->panel()->lock());
 
-		Dir::make($this->tmp . '/content');
+		Dir::make(static::TMP . '/content');
 		$app = $this->app->clone();
 		$app->impersonate('kirby');
 

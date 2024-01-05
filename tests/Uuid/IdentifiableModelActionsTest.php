@@ -4,6 +4,8 @@ namespace Kirby\Uuid;
 
 class IdentifiableModelActionsTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Uuid.IdentifiableModelActions';
+
 	public function testFileChangeName()
 	{
 		$file = $this->app->file('page-a/test.pdf');

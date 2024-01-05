@@ -7,6 +7,8 @@ namespace Kirby\Cms;
  */
 class LoaderTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	public $loader;
 
 	public function setUp(): void
@@ -190,7 +192,7 @@ class LoaderTest extends TestCase
 	 */
 	public function testResolvePHPFile()
 	{
-		$resolved = $this->loader->resolve(__DIR__ . '/fixtures/resolve.php');
+		$resolved = $this->loader->resolve(static::FIXTURES . '/resolve.php');
 
 		$this->assertSame('Test', $resolved['test']);
 	}
@@ -200,7 +202,7 @@ class LoaderTest extends TestCase
 	 */
 	public function testResolveYamlFile()
 	{
-		$resolved = $this->loader->resolve(__DIR__ . '/fixtures/resolve.yml');
+		$resolved = $this->loader->resolve(static::FIXTURES . '/resolve.yml');
 
 		$this->assertSame('Test', $resolved['test']);
 	}
@@ -211,7 +213,7 @@ class LoaderTest extends TestCase
 	public function testResolveAll()
 	{
 		$resolved = $this->loader->resolveAll([
-			'test' => __DIR__ . '/fixtures/resolve.php'
+			'test' => static::FIXTURES . '/resolve.php'
 		]);
 
 		$this->assertSame('Test', $resolved['test']['test']);

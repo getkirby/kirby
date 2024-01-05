@@ -12,18 +12,19 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 class TestCase extends BaseTestCase
 {
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
 		// start with a fresh set of fields
 		Field::$types = [];
 
-		Dir::make($this->tmp);
+		if ($this->hasTmp() === true) {
+			Dir::make(static::TMP);
+		}
 
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => $this->hasTmp() ? static::TMP : '/dev/null'
 			],
 			'urls' => [
 				'index' => 'https://getkirby.com/subfolder'
@@ -33,7 +34,9 @@ class TestCase extends BaseTestCase
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		if ($this->hasTmp() === true) {
+			Dir::remove(static::TMP);
+		}
 	}
 
 	public function app()
@@ -45,5 +48,14 @@ class TestCase extends BaseTestCase
 	{
 		$page = new Page(['slug' => 'test']);
 		return Field::factory($type, array_merge(['model' => $page], $attr), $formFields);
+	}
+
+	/**
+	 * Checks if the test class extending this test case class
+	 * has defined a temporary directory
+	 */
+	protected function hasTmp(): bool
+	{
+		return defined(get_class($this) . '::TMP');
 	}
 }

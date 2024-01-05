@@ -4,11 +4,13 @@ namespace Kirby\Cms;
 
 class RoleTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	public function app()
 	{
 		return new App([
 			'roots' => [
-				'site' => __DIR__ . '/fixtures'
+				'site' => static::FIXTURES
 			]
 		]);
 	}
@@ -29,7 +31,7 @@ class RoleTest extends TestCase
 	public function testFactory()
 	{
 		$app  = $this->app();
-		$role = Role::load(__DIR__ . '/fixtures/blueprints/users/editor.yml');
+		$role = Role::load(static::FIXTURES . '/blueprints/users/editor.yml');
 
 		$this->assertSame('editor', $role->name());
 		$this->assertSame('Editor', $role->title());

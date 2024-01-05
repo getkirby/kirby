@@ -20,6 +20,8 @@ class TestUuid extends Uuid
  */
 class UuidTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Uuid.Uuid';
+
 	/**
 	 * @covers ::__construct
 	 */

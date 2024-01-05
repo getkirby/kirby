@@ -644,7 +644,7 @@ class ApiTest extends TestCase
 				'files' => [
 					[
 						'name'     => 'test.txt',
-						'tmp_name' => __DIR__ . '/fixtures/tmp/abc',
+						'tmp_name' => KIRBY_TMP_DIR . '/api.api/abc',
 						'size'     => 123,
 						'error'    => 0
 					]
@@ -711,13 +711,13 @@ class ApiTest extends TestCase
 				'files' => [
 					[
 						'name'     => 'foo.txt',
-						'tmp_name' => __DIR__ . '/fixtures/tmp/foo',
+						'tmp_name' => KIRBY_TMP_DIR . '/api.api/foo',
 						'size'     => 123,
 						'error'    => 0
 					],
 					[
 						'name'     => 'bar.txt',
-						'tmp_name' => __DIR__ . '/fixtures/tmp/bar',
+						'tmp_name' => KIRBY_TMP_DIR . '/api.api/bar',
 						'size'     => 123,
 						'error'    => 0
 					]

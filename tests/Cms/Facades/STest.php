@@ -6,23 +6,24 @@ use Kirby\Filesystem\Dir;
 
 class STest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.STest';
+
 	protected $app;
-	protected $fixtures;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/STest'
+				'index' => static::TMP
 			]
 		]);
 
-		Dir::make($this->fixtures);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->fixtures);
+		Dir::remove(static::TMP);
 	}
 
 	public function testInstance()

@@ -14,30 +14,32 @@ use PHPUnit\Framework\TestCase;
  */
 class KirbyTagsTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+	public const TMP      = KIRBY_TMP_DIR . '/Text.KirbyTags';
+
 	protected $app;
-	protected $tmp;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp = __DIR__ . '/tmp'
+				'index' => static::TMP
 			]
 		]);
 
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	public static function dataProvider()
 	{
 		$tests = [];
 
-		foreach (Dir::read($root = __DIR__ . '/fixtures/kirbytext') as $dir) {
+		foreach (Dir::read($root = static::FIXTURES . '/kirbytext') as $dir) {
 			$kirbytext = F::read($root . '/' . $dir . '/test.txt');
 			$expected  = F::read($root . '/' . $dir . '/expected.html');
 

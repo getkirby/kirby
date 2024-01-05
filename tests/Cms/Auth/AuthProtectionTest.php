@@ -14,11 +14,13 @@ require_once __DIR__ . '/../mocks.php';
  */
 class AuthProtectionTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.AuthProtection';
+
 	public $failedEmail;
 
 	protected $app;
 	protected $auth;
-	protected $fixtures;
 
 	public function setUp(): void
 	{
@@ -31,7 +33,7 @@ class AuthProtectionTest extends TestCase
 				]
 			],
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/AuthTest'
+				'index' => static::TMP
 			],
 			'users' => [
 				[
@@ -53,14 +55,14 @@ class AuthProtectionTest extends TestCase
 				}
 			]
 		]);
-		Dir::make($this->fixtures . '/site/accounts');
+		Dir::make(static::TMP . '/site/accounts');
 
 		$this->auth = new Auth($this->app);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->fixtures);
+		Dir::remove(static::TMP);
 		$this->failedEmail = null;
 	}
 
@@ -69,7 +71,7 @@ class AuthProtectionTest extends TestCase
 	 */
 	public function testLogfile()
 	{
-		$this->assertSame($this->fixtures . '/site/accounts/.logins', $this->auth->logfile());
+		$this->assertSame(static::TMP . '/site/accounts/.logins', $this->auth->logfile());
 	}
 
 	/**
@@ -77,7 +79,7 @@ class AuthProtectionTest extends TestCase
 	 */
 	public function testLog()
 	{
-		copy(__DIR__ . '/fixtures/logins.cleanup.json', $this->fixtures . '/site/accounts/.logins');
+		copy(static::FIXTURES . '/logins.cleanup.json', static::TMP . '/site/accounts/.logins');
 
 		// should delete expired and old entries and add by-email array
 		$this->assertSame([
@@ -89,23 +91,23 @@ class AuthProtectionTest extends TestCase
 			],
 			'by-email' => []
 		], $this->auth->log());
-		$this->assertFileEquals(__DIR__ . '/fixtures/logins.cleanup-cleaned.json', $this->fixtures . '/site/accounts/.logins');
+		$this->assertFileEquals(static::FIXTURES . '/logins.cleanup-cleaned.json', static::TMP . '/site/accounts/.logins');
 
 		// should handle missing .logins file
-		unlink($this->fixtures . '/site/accounts/.logins');
+		unlink(static::TMP . '/site/accounts/.logins');
 		$this->assertSame([
 			'by-ip'    => [],
 			'by-email' => []
 		], $this->auth->log());
-		$this->assertFileDoesNotExist($this->fixtures . '/site/accounts/.logins');
+		$this->assertFileDoesNotExist(static::TMP . '/site/accounts/.logins');
 
 		// should handle invalid .logins file
-		file_put_contents($this->fixtures . '/site/accounts/.logins', 'some gibberish');
+		file_put_contents(static::TMP . '/site/accounts/.logins', 'some gibberish');
 		$this->assertSame([
 			'by-ip'    => [],
 			'by-email' => []
 		], $this->auth->log());
-		$this->assertFileDoesNotExist($this->fixtures . '/site/accounts/.logins');
+		$this->assertFileDoesNotExist(static::TMP . '/site/accounts/.logins');
 	}
 
 	/**
@@ -123,7 +125,7 @@ class AuthProtectionTest extends TestCase
 	 */
 	public function testIsBlocked()
 	{
-		copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
+		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
 
 		$this->app->visitor()->ip('10.1.123.234');
 		$this->assertFalse($this->auth->isBlocked('marge@simpsons.com'));
@@ -141,7 +143,7 @@ class AuthProtectionTest extends TestCase
 	 */
 	public function testTrack()
 	{
-		copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
+		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
 
 		$this->app->visitor()->ip('10.1.123.234');
 		$this->assertTrue($this->auth->track('homer@simpsons.com'));
@@ -191,7 +193,7 @@ class AuthProtectionTest extends TestCase
 			]
 		];
 		$this->assertSame($data, $this->auth->log());
-		$this->assertSame(json_encode($data), file_get_contents($this->fixtures . '/site/accounts/.logins'));
+		$this->assertSame(json_encode($data), file_get_contents(static::TMP . '/site/accounts/.logins'));
 	}
 
 	/**
@@ -199,7 +201,7 @@ class AuthProtectionTest extends TestCase
 	 */
 	public function testValidatePasswordValid()
 	{
-		copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
+		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
 
 		$this->app->visitor()->ip('10.3.123.234');
 		$user = $this->auth->validatePassword('marge@simpsons.com', 'springfield123');
@@ -215,7 +217,7 @@ class AuthProtectionTest extends TestCase
 	 */
 	public function testValidatePasswordInvalid1()
 	{
-		copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
+		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
 
 		$this->app->visitor()->ip('10.3.123.234');
 
@@ -238,7 +240,7 @@ class AuthProtectionTest extends TestCase
 	 */
 	public function testValidatePasswordInvalid2()
 	{
-		copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
+		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
 
 		$this->app->visitor()->ip('10.3.123.234');
 
@@ -262,7 +264,7 @@ class AuthProtectionTest extends TestCase
 	 */
 	public function testValidatePasswordBlocked()
 	{
-		copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
+		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
 
 		$this->app->visitor()->ip('10.2.123.234');
 
@@ -284,7 +286,7 @@ class AuthProtectionTest extends TestCase
 	 */
 	public function testValidatePasswordDebugInvalid1()
 	{
-		copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
+		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
 		$this->app = $this->app->clone([
 			'options' => [
 				'auth' => [
@@ -315,7 +317,7 @@ class AuthProtectionTest extends TestCase
 	 */
 	public function testValidatePasswordDebugInvalid2()
 	{
-		copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
+		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
 		$this->app = $this->app->clone([
 			'options' => [
 				'auth' => [
@@ -348,7 +350,7 @@ class AuthProtectionTest extends TestCase
 	 */
 	public function testValidatePasswordDebugBlocked()
 	{
-		copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
+		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
 		$this->app = $this->app->clone([
 			'options' => [
 				'auth' => [
@@ -377,7 +379,7 @@ class AuthProtectionTest extends TestCase
 	 */
 	public function testValidatePasswordWithUnicodeEmail()
 	{
-		copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
+		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
 
 		$this->app->visitor()->ip('10.3.123.234');
 		$user = $this->auth->validatePassword('test@exämple.com', 'springfield123');
@@ -391,7 +393,7 @@ class AuthProtectionTest extends TestCase
 	 */
 	public function testValidatePasswordWithPunycodeEmail()
 	{
-		copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
+		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
 
 		$this->app->visitor()->ip('10.3.123.234');
 		$user = $this->auth->validatePassword('test@xn--exmple-cua.com', 'springfield123');

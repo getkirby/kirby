@@ -7,6 +7,8 @@ use Kirby\Form\Field;
 
 class PagePickerMixinTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Form.Fields.PagePickerMixin';
+
 	public function setUp(): void
 	{
 		parent::setUp();

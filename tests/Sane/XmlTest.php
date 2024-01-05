@@ -9,6 +9,8 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class XmlTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Sane.Xml';
+
 	protected static $type = 'xml';
 
 	public function tearDown(): void

@@ -10,23 +10,29 @@ class ApiModelTestCase extends TestCase
 {
 	protected $api;
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
+		if ($this->hasTmp() === true) {
+			Dir::remove(static::TMP);
+		}
+
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => $this->hasTmp() ? static::TMP : '/dev/null',
 			],
 		]);
 
 		$this->api = $this->app->api();
-		Dir::make($this->tmp);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		App::destroy();
+
+		if ($this->hasTmp() === true) {
+			Dir::remove(static::TMP);
+		}
 	}
 
 	public function attr($object, $attr)
@@ -37,5 +43,14 @@ class ApiModelTestCase extends TestCase
 	public function assertAttr($object, $attr, $value)
 	{
 		$this->assertSame($this->attr($object, $attr), $value);
+	}
+
+	/**
+	 * Checks if the test class extending this test case class
+	 * has defined a temporary directory
+	 */
+	protected function hasTmp(): bool
+	{
+		return defined(get_class($this) . '::TMP');
 	}
 }

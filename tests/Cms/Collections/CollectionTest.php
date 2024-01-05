@@ -41,6 +41,8 @@ class MockObject extends Model
 
 class CollectionTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.Collection';
+
 	public function testCollectionMethods()
 	{
 		$kirby = $this->kirby([

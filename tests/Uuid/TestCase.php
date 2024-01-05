@@ -9,18 +9,22 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 class TestCase extends BaseTestCase
 {
 	protected $app;
-	protected $tmp;
 
 	protected function setUp(): void
 	{
-		$this->tmp = __DIR__ . '/tmp';
 		$this->app = $this->app();
-		Dir::make($this->tmp);
+
+		if ($this->hasTmp() === true) {
+			Dir::make(static::TMP);
+		}
 	}
 
 	protected function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		if ($this->hasTmp() === true) {
+			Dir::remove(static::TMP);
+		}
+
 		Uuids::cache()->flush();
 	}
 
@@ -28,7 +32,7 @@ class TestCase extends BaseTestCase
 	{
 		return new App([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => $this->hasTmp() ? static::TMP : '/dev/null',
 			],
 			'options' => [
 				'url' => 'https://getkirby.com'
@@ -119,5 +123,14 @@ class TestCase extends BaseTestCase
 				]
 			],
 		]);
+	}
+
+	/**
+	 * Checks if the test class extending this test case class
+	 * has defined a temporary directory
+	 */
+	protected function hasTmp(): bool
+	{
+		return defined(get_class($this) . '::TMP');
 	}
 }

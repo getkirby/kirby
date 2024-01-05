@@ -7,26 +7,27 @@ use PHPUnit\Framework\TestCase;
 
 class FilesSectionTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.FilesSection';
+
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 		$this->app();
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
+		App::destroy();
 	}
 
 	public function app(array $props = [])
 	{
-		App::destroy();
 		$this->app = new App(array_replace_recursive([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			]
 		], $props));
 

@@ -11,6 +11,8 @@ use Kirby\Field\TestCase;
  */
 class OptionsApiTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	/**
 	 * @covers ::__construct
 	 */
@@ -99,7 +101,7 @@ class OptionsApiTest extends TestCase
 	public function testResolve()
 	{
 		$model   = new Page(['slug' => 'test']);
-		$options = new OptionsApi(__DIR__ . '/fixtures/data.json');
+		$options = new OptionsApi(static::FIXTURES . '/data.json');
 		$result  = $options->render($model);
 
 		$this->assertSame('A', $result[0]['text']);
@@ -114,7 +116,7 @@ class OptionsApiTest extends TestCase
 	public function testResolveSimple()
 	{
 		$model   = new Page(['slug' => 'test']);
-		$options = new OptionsApi(__DIR__ . '/fixtures/data-simple.json');
+		$options = new OptionsApi(static::FIXTURES . '/data-simple.json');
 		$result  = $options->render($model);
 
 		$this->assertSame('A', $result[0]['text']);
@@ -130,7 +132,7 @@ class OptionsApiTest extends TestCase
 	{
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(
-			url: __DIR__ . '/fixtures/data.json',
+			url: static::FIXTURES . '/data.json',
 			text: '{{ item.name }}',
 			value: '{{ item.email }}',
 		);
@@ -149,7 +151,7 @@ class OptionsApiTest extends TestCase
 	{
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(
-			url: __DIR__ . '/fixtures/data-nested.json',
+			url: static::FIXTURES . '/data-nested.json',
 			query: 'Directory.Companies'
 		);
 		$result  = $options->render($model);
@@ -167,7 +169,7 @@ class OptionsApiTest extends TestCase
 	{
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(
-			url: __DIR__ . '/fixtures/data-nested.json',
+			url: static::FIXTURES . '/data-nested.json',
 			query: 'Directory.Companies',
 			text: '{{ item.name }}',
 			value: '{{ item.email }}'
@@ -189,7 +191,7 @@ class OptionsApiTest extends TestCase
 
 		// text escaped by default
 		$options = new OptionsApi(
-			url: __DIR__ . '/fixtures/data.json',
+			url: static::FIXTURES . '/data.json',
 			text: '{{ item.slogan }}',
 			value: '{{ item.slogan }}'
 		);
@@ -201,7 +203,7 @@ class OptionsApiTest extends TestCase
 		$this->assertSame('We are <b>better</b>', $result[1]['value']);
 
 		// with simple array
-		$options = new OptionsApi(__DIR__ . '/fixtures/data-simple-html.json');
+		$options = new OptionsApi(static::FIXTURES . '/data-simple-html.json');
 		$result = $options->render($model);
 
 		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', $result[0]['text']);
@@ -211,7 +213,7 @@ class OptionsApiTest extends TestCase
 
 		// with query
 		$options = new OptionsApi(
-			url: __DIR__ . '/fixtures/data-nested.json',
+			url: static::FIXTURES . '/data-nested.json',
 			query: 'Directory.Companies',
 			text: '{{ item.slogan }}',
 			value: '{{ item.slogan }}'
@@ -225,7 +227,7 @@ class OptionsApiTest extends TestCase
 
 		// text unescaped using {< >}
 		$options = new OptionsApi(
-			url: __DIR__ . '/fixtures/data.json',
+			url: static::FIXTURES . '/data.json',
 			text: '{< item.slogan >}',
 			value: '{{ item.slogan }}'
 		);
@@ -237,7 +239,7 @@ class OptionsApiTest extends TestCase
 
 		// text unescaped using {< >} (simple array)
 		$options = new OptionsApi(
-			url: __DIR__ . '/fixtures/data-simple-html.json',
+			url: static::FIXTURES . '/data-simple-html.json',
 			text: '{< item.value >}',
 			value: '{{ item.value }}'
 		);
@@ -249,7 +251,7 @@ class OptionsApiTest extends TestCase
 
 		// test unescaped with disabled safe mode
 		$options = new OptionsApi(
-			url: __DIR__ . '/fixtures/data.json',
+			url: static::FIXTURES . '/data.json',
 			text: '{{ item.slogan }}',
 			value: '{{ item.slogan }}'
 		);
@@ -267,7 +269,7 @@ class OptionsApiTest extends TestCase
 	{
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(
-			url: __DIR__ . '/fixtures/data.json',
+			url: static::FIXTURES . '/data.json',
 			text: '{{ item.name }}',
 			value: '{{ item.name.slug }}'
 		);
@@ -286,7 +288,7 @@ class OptionsApiTest extends TestCase
 	{
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(
-			url: __DIR__ . '/fixtures/data-nested.json',
+			url: static::FIXTURES . '/data-nested.json',
 			query: 'simple',
 			text: '{{ item }}',
 			value: '{{ item.slug }}'

@@ -17,18 +17,19 @@ use ReflectionMethod;
  */
 class AppTest extends TestCase
 {
-	protected $tmp;
+	public const FIXTURES = __DIR__ . '/fixtures';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.App';
+
 	protected $_SERVER;
 
 	public function setUp(): void
 	{
 		$this->_SERVER = $_SERVER;
-		$this->tmp = __DIR__ . '/tmp';
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 		$_SERVER = $this->_SERVER;
 	}
 
@@ -302,7 +303,7 @@ class AppTest extends TestCase
 		$app = new App([
 			'roots' => [
 				'index' => '/dev/null',
-				'sessions' => $this->tmp,
+				'sessions' => static::TMP,
 			]
 		]);
 
@@ -630,7 +631,7 @@ class AppTest extends TestCase
 		$app = new App([
 			'roots' => [
 				'index'  => '/dev/null',
-				'config' => __DIR__ . '/fixtures/AppTest/options'
+				'config' => static::FIXTURES . '/AppTest/options'
 			],
 			'server' => [
 				'SERVER_NAME' => 'getkirby.com',
@@ -655,7 +656,7 @@ class AppTest extends TestCase
 		$app = new App([
 			'roots' => [
 				'index'  => '/dev/null',
-				'config' => __DIR__ . '/fixtures/AppTest/options-env1'
+				'config' => static::FIXTURES . '/AppTest/options-env1'
 			],
 			'server' => [
 				'SERVER_NAME' => 'getkirby.com',
@@ -681,7 +682,7 @@ class AppTest extends TestCase
 		$app = new App([
 			'roots' => [
 				'index'  => '/dev/null',
-				'config' => __DIR__ . '/fixtures/AppTest/options-env2'
+				'config' => static::FIXTURES . '/AppTest/options-env2'
 			],
 			'server' => [
 				'SERVER_NAME' => 'getkirby.com',
@@ -758,7 +759,8 @@ class AppTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'site' => __DIR__ . '/fixtures'
+				'index' => '/dev/null',
+				'site' => static::FIXTURES
 			]
 		]);
 
@@ -809,7 +811,7 @@ class AppTest extends TestCase
 		$app = new App([
 			'roots' => [
 				'index' => '/dev/null',
-				'sessions' => $this->tmp,
+				'sessions' => static::TMP,
 			]
 		]);
 
@@ -963,7 +965,7 @@ class AppTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'site' => [
 				'children' => [
@@ -991,7 +993,7 @@ class AppTest extends TestCase
 		$app = new App([
 			'roots' => [
 				'index' => '/dev/null',
-				'blueprints' => $this->tmp,
+				'blueprints' => static::TMP,
 			],
 			'blueprints' => [
 				'pages/a' => ['title' => 'A'],
@@ -1000,9 +1002,9 @@ class AppTest extends TestCase
 			]
 		]);
 
-		Data::write($this->tmp . '/pages/b.yml', ['title' => 'B']);
-		Data::write($this->tmp . '/pages/c.yml', ['title' => 'C']);
-		Data::write($this->tmp . '/files/b.yml', ['title' => 'File B']);
+		Data::write(static::TMP . '/pages/b.yml', ['title' => 'B']);
+		Data::write(static::TMP . '/pages/c.yml', ['title' => 'C']);
+		Data::write(static::TMP . '/files/b.yml', ['title' => 'File B']);
 
 		$expected = [
 			'a',
@@ -1220,7 +1222,7 @@ class AppTest extends TestCase
 		$app = new App([
 			'roots' => [
 				'index'  => '/dev/null',
-				'config' => __DIR__ . '/fixtures/AppTest/options'
+				'config' => static::FIXTURES . '/AppTest/options'
 			],
 			'server' => [
 				'SERVER_NAME' => 'trykirby.com',
@@ -1240,7 +1242,7 @@ class AppTest extends TestCase
 		$app = new App([
 			'roots' => [
 				'index'  => '/dev/null',
-				'config' => __DIR__ . '/fixtures/AppTest/options'
+				'config' => static::FIXTURES . '/AppTest/options'
 			],
 			'server' => [
 				'SERVER_NAME' => 'getkirby.com',
@@ -1304,7 +1306,7 @@ class AppTest extends TestCase
 		$app = new App([
 			'roots' => [
 				'index' => '/dev/null',
-				'controllers' => __DIR__ . '/fixtures/controllers'
+				'controllers' => static::FIXTURES . '/controllers'
 			]
 		]);
 
@@ -1350,7 +1352,7 @@ class AppTest extends TestCase
 		$app = new App([
 			'roots' => [
 				'index' => '/dev/null',
-				'controllers' => __DIR__ . '/fixtures/controllers'
+				'controllers' => static::FIXTURES . '/controllers'
 			]
 		]);
 
@@ -1375,7 +1377,7 @@ class AppTest extends TestCase
 		$app = new App([
 			'roots' => [
 				'index' => '/dev/null',
-				'controllers' => __DIR__ . '/fixtures/controllers'
+				'controllers' => static::FIXTURES . '/controllers'
 			]
 		]);
 
@@ -1396,7 +1398,7 @@ class AppTest extends TestCase
 		$app = new App([
 			'roots' => [
 				'index' => '/dev/null',
-				'controllers' => __DIR__ . '/fixtures/controllers'
+				'controllers' => static::FIXTURES . '/controllers'
 			]
 		]);
 
@@ -1455,7 +1457,7 @@ class AppTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'site' => [
 				'children' => [
@@ -1478,8 +1480,8 @@ class AppTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp,
-				'templates' => $this->tmp
+				'index' => static::TMP,
+				'templates' => static::TMP
 			],
 			'site' => [
 				'children' => [
@@ -1490,7 +1492,7 @@ class AppTest extends TestCase
 			]
 		]);
 
-		F::write($this->tmp . '/default.php', 'Hello');
+		F::write(static::TMP . '/default.php', 'Hello');
 
 		$this->assertSame('Hello', $app->render()->body());
 

@@ -12,14 +12,15 @@ use Kirby\Toolkit\Totp;
  */
 class TotpChallengeTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.Auth.TotpChallenge';
+
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'users' => [
 				[
@@ -29,12 +30,12 @@ class TotpChallengeTest extends TestCase
 			]
 		]);
 
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	/**

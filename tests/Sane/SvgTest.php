@@ -9,6 +9,8 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class SvgTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Sane.Svg';
+
 	protected static $type = 'svg';
 
 	/**
