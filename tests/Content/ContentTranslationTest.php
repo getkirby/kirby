@@ -28,7 +28,7 @@ class ContentTranslationTest extends TestCase
 			'code'   => 'de'
 		]);
 
-		$this->assertSame($page, $translation->parent());
+		$this->assertIsPage($page, $translation->parent());
 		$this->assertSame('de', $translation->code());
 		$this->assertSame('de', $translation->id());
 	}

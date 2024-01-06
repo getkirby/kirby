@@ -86,8 +86,8 @@ class PageActionsTest extends TestCase
 		$this->assertNotSame($page, $updatedPage);
 		$this->assertSame(2, $updatedPage->num());
 
-		$this->assertIsPage($children->find('test'), $updatedPage);
-		$this->assertIsPage($childrenAndDrafts->find('test'), $updatedPage);
+		$this->assertIsPage($updatedPage, $children->find('test'));
+		$this->assertIsPage($updatedPage, $childrenAndDrafts->find('test'));
 	}
 
 	public function testChangeNumWhenNumStaysTheSame()
@@ -117,10 +117,10 @@ class PageActionsTest extends TestCase
 		$page = $children->find('test');
 
 		// the result page should stay the same
-		$this->assertSame($page, $page->changeNum(1));
+		$this->assertIsPage($page->changeNum(1), $page);
 
-		$this->assertIsPage($children->find('test'), $page);
-		$this->assertIsPage($childrenAndDrafts->find('test'), $page);
+		$this->assertIsPage($page, $children->find('test'));
+		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
 	}
 
 	/**
@@ -164,8 +164,8 @@ class PageActionsTest extends TestCase
 
 		$this->assertTrue($modified->exists());
 		$this->assertSame($expected, $modified->slug());
-		$this->assertIsPage($site->$in()->get($expected), $modified);
-		$this->assertIsPage($site->childrenAndDrafts()->get($expected), $modified);
+		$this->assertIsPage($modified, $site->$in()->get($expected));
+		$this->assertIsPage($modified, $site->childrenAndDrafts()->get($expected));
 		$this->assertSame($newRoot, $modified->root());
 	}
 
@@ -502,7 +502,7 @@ class PageActionsTest extends TestCase
 		$this->assertNotNull($page->drafts);
 		$this->assertNotNull($page->childrenAndDrafts);
 
-		$this->assertSame($page, $page->purge());
+		$this->assertIsPage($page, $page->purge());
 
 		$this->assertNull($page->children);
 		$this->assertNull($page->drafts);
@@ -692,8 +692,8 @@ class PageActionsTest extends TestCase
 		$this->assertSame('A (de)', $page->content('de')->a()->value());
 		$this->assertSame('B (de)', $page->content('de')->b()->value());
 
-		$this->assertSame($page, $drafts->find('test'));
-		$this->assertSame($page, $childrenAndDrafts->find('test'));
+		$this->assertIsPage($page, $drafts->find('test'));
+		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
 
 		// update a single field in the primary language
 		$page = $page->update([
@@ -703,8 +703,8 @@ class PageActionsTest extends TestCase
 		$this->assertSame('A (en)', $page->content('en')->a()->value());
 		$this->assertSame('B modified (en)', $page->content('en')->b()->value());
 
-		$this->assertSame($page, $drafts->find('test'));
-		$this->assertSame($page, $childrenAndDrafts->find('test'));
+		$this->assertIsPage($page, $drafts->find('test'));
+		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
 
 		// update a single field in the secondary language
 		$page = $page->update([
@@ -714,8 +714,8 @@ class PageActionsTest extends TestCase
 		$this->assertSame('A (de)', $page->content('de')->a()->value());
 		$this->assertSame('B modified (de)', $page->content('de')->b()->value());
 
-		$this->assertSame($page, $drafts->find('test'));
-		$this->assertSame($page, $childrenAndDrafts->find('test'));
+		$this->assertIsPage($page, $drafts->find('test'));
+		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
 	}
 
 	public function testChangeStatusDraftHooks()
@@ -748,7 +748,7 @@ class PageActionsTest extends TestCase
 		$drafts = $app->site()->drafts();
 		$childrenAndDrafts = $app->site()->childrenAndDrafts();
 
-		$this->assertSame($page, $children->find('test'));
+		$this->assertIsPage($page, $children->find('test'));
 
 		$newPage = $page->changeStatus('draft');
 
@@ -787,7 +787,7 @@ class PageActionsTest extends TestCase
 		$drafts = $app->site()->drafts();
 		$childrenAndDrafts = $app->site()->childrenAndDrafts();
 
-		$this->assertSame($pageA, $drafts->find('test-a'));
+		$this->assertIsPage($pageA, $drafts->find('test-a'));
 
 		$newPageA = $pageA->changeStatus('listed');
 		$newPageB = $pageB->changeStatus('listed');
@@ -825,7 +825,7 @@ class PageActionsTest extends TestCase
 		$drafts = $app->site()->drafts();
 		$childrenAndDrafts = $app->site()->childrenAndDrafts();
 
-		$this->assertSame($page, $drafts->find('test'));
+		$this->assertIsPage($page, $drafts->find('test'));
 
 		$newPage = $page->changeStatus('unlisted');
 
@@ -855,8 +855,8 @@ class PageActionsTest extends TestCase
 
 		$this->assertFileDoesNotExist(static::TMP . $copy->root() . '/.lock');
 
-		$this->assertSame($page, $drafts->find('test'));
-		$this->assertSame($page, $childrenAndDrafts->find('test'));
+		$this->assertIsPage($page, $drafts->find('test'));
+		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
 
 		// check UUID got updated
 		$newUuid = $copy->content()->get('uuid')->value();
@@ -900,8 +900,8 @@ class PageActionsTest extends TestCase
 		$this->assertFileExists($copy->storage()->contentFile('changes', 'en'));
 		$this->assertFileDoesNotExist($copy->storage()->contentFile('changes', 'de'));
 
-		$this->assertSame($page, $drafts->find('test'));
-		$this->assertSame($page, $childrenAndDrafts->find('test'));
+		$this->assertIsPage($page, $drafts->find('test'));
+		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
 	}
 
 	public function testDuplicateMultiLangSlug()
@@ -1154,7 +1154,7 @@ class PageActionsTest extends TestCase
 		$app = $this->app->clone([
 			'hooks' => [
 				'page.create:before' => function (Page $page, $input) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf(Page::class, $page);
+					$phpunit->assertIsPage($page);
 					$phpunit->assertSame('test', $input['slug']);
 					$phpunit->assertSame('default', $input['model']);
 					$phpunit->assertSame('default', $input['template']);
@@ -1163,7 +1163,7 @@ class PageActionsTest extends TestCase
 					$calls++;
 				},
 				'page.create:after' => function (Page $page) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf(Page::class, $page);
+					$phpunit->assertIsPage($page);
 					$phpunit->assertSame('test', $page->slug());
 					$calls++;
 				}
@@ -1187,14 +1187,14 @@ class PageActionsTest extends TestCase
 		$app = $this->app->clone([
 			'hooks' => [
 				'page.delete:before' => function (Page $page, $force) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf(Page::class, $page);
+					$phpunit->assertIsPage($page);
 					$phpunit->assertFalse($force);
 					$phpunit->assertFileExists($page->root());
 					$calls++;
 				},
 				'page.delete:after' => function ($status, Page $page) use ($phpunit, &$calls) {
 					$phpunit->assertTrue($status);
-					$phpunit->assertInstanceOf(Page::class, $page);
+					$phpunit->assertIsPage($page);
 					$phpunit->assertFileDoesNotExist($page->root());
 					$calls++;
 				}

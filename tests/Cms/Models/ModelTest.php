@@ -31,7 +31,7 @@ class ModelTest extends TestCase
 		$model = new MyModel();
 		$this->assertInstanceOf(Model::class, $model);
 		$this->assertInstanceOf(App::class, $model->kirby());
-		$this->assertInstanceOf(Site::class, $model->site());
+		$this->assertIsSite($model->site());
 	}
 
 	public function testKirby()

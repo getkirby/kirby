@@ -30,7 +30,7 @@ class PageUuidTest extends TestCase
 
 		// retrieve from cache
 		$this->assertTrue($uuid->isCached());
-		$this->assertIsPage($uuid->model(true), $page);
+		$this->assertIsPage($page, $uuid->model(true));
 	}
 
 	/**
@@ -42,7 +42,7 @@ class PageUuidTest extends TestCase
 		$uuid  = new PageUuid('page://my-page');
 		$this->assertFalse($uuid->isCached());
 		$this->assertNull($uuid->model(true));
-		$this->assertIsPage($uuid->model(), $page);
+		$this->assertIsPage($page, $uuid->model());
 		$this->assertTrue($uuid->isCached());
 
 		// not found

@@ -29,7 +29,7 @@ class UserUuidTest extends TestCase
 	public function testModel()
 	{
 		$user = $this->app->user('my-user');
-		$this->assertIsUser(Uuid::for('user://my-user')->model(), $user);
+		$this->assertIsUser($user, Uuid::for('user://my-user')->model());
 	}
 
 	/**

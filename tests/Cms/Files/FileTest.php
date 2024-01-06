@@ -326,7 +326,7 @@ class FileTest extends TestCase
 			'parent' => $page = new Page(['slug' => 'test'])
 		]);
 
-		$this->assertSame($page, $file->page());
+		$this->assertIsPage($page, $file->page());
 
 		$file = $this->file([
 			'parent' => new User([])

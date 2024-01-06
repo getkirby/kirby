@@ -164,7 +164,7 @@ class AppUsersTest extends TestCase
 		$auth = new BasicAuth(base64_encode('test@getkirby.com:correct-horse-battery-staple'));
 		$user = $app->auth()->currentUserFromBasicAuth($auth);
 
-		$this->assertInstanceOf(User::class, $user);
+		$this->assertIsUser($user);
 		$this->assertSame('test@getkirby.com', $user->email());
 	}
 

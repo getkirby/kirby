@@ -30,7 +30,7 @@ class QueryDefaultFunctionsTest extends \Kirby\TestCase
 		$this->assertInstanceOf(App::class, $query->resolve());
 
 		$query = new Query('kirby.site');
-		$this->assertInstanceOf(Site::class, $query->resolve());
+		$this->assertIsSite($query->resolve());
 	}
 
 	public function testCollection()
@@ -73,10 +73,10 @@ class QueryDefaultFunctionsTest extends \Kirby\TestCase
 		]);
 
 		$query = new Query('file("test.jpg")');
-		$this->assertInstanceOf(File::class, $query->resolve());
+		$this->assertIsFile($query->resolve());
 
 		$query = new Query('file("a/test.jpg")');
-		$this->assertInstanceOf(File::class, $query->resolve());
+		$this->assertIsFile($query->resolve());
 
 		$query = new Query('file("b/test.jpg")');
 		$this->assertNull($query->resolve());
@@ -136,10 +136,10 @@ class QueryDefaultFunctionsTest extends \Kirby\TestCase
 		]);
 
 		$query = new Query('site');
-		$this->assertInstanceOf(Site::class, $query->resolve());
+		$this->assertIsSite($query->resolve());
 
 		$query = new Query('site.children.first');
-		$this->assertInstanceOf(Page::class, $query->resolve());
+		$this->assertIsPage($query->resolve());
 	}
 
 	public function testT()
@@ -170,7 +170,7 @@ class QueryDefaultFunctionsTest extends \Kirby\TestCase
 		]);
 
 		$query = new Query('user("user://user-a")');
-		$this->assertInstanceOf(User::class, $query->resolve());
+		$this->assertIsUser($query->resolve());
 
 		$query = new Query('user("user://user-a").email');
 		$this->assertSame('foo@bar.com', $query->resolve());

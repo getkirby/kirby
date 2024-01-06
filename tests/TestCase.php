@@ -11,48 +11,54 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
-	public function assertIsFile($input, string|File $id = null): void
+	public function assertIsFile(string|File $expected, $actual = null): void
 	{
-		$this->assertInstanceOf(File::class, $input);
+		$this->assertInstanceOf(File::class, $actual ?? $expected);
 
-		if (is_string($id) === true) {
-			$this->assertSame($id, $input->id());
-		}
+		if ($actual !== null) {
+			if (is_string($expected) === true) {
+				$this->assertSame($expected, $actual->id());
+			}
 
-		if ($id instanceof File) {
-			$this->assertSame($input, $id);
+			if ($expected instanceof File) {
+				$this->assertSame($expected, $actual);
+			}
 		}
 	}
 
-	public function assertIsPage($input, string|Page $id = null): void
+	public function assertIsPage(string|Page $expected, $actual = null): void
 	{
-		$this->assertInstanceOf(Page::class, $input);
+		$this->assertInstanceOf(Page::class, $actual ?? $expected);
 
-		if (is_string($id) === true) {
-			$this->assertSame($id, $input->id());
-		}
+		if ($actual !== null) {
+			if (is_string($expected) === true) {
+				$this->assertSame($expected, $actual->id());
+			}
 
-		if ($id instanceof Page) {
-			$this->assertSame($input, $id);
+			if ($expected instanceof Page) {
+				$this->assertSame($expected, $actual);
+			}
 		}
 	}
 
-	public function assertIsUser($input, string|User $id = null): void
+	public function assertIsUser(string|User $expected, $actual = null): void
 	{
-		$this->assertInstanceOf(User::class, $input);
+		$this->assertInstanceOf(User::class, $actual ?? $expected);
 
-		if (is_string($id) === true) {
-			$this->assertSame($id, $input->id());
-		}
+		if ($actual !== null) {
+			if (is_string($expected) === true) {
+				$this->assertSame($expected, $actual->id());
+			}
 
-		if ($id instanceof User) {
-			$this->assertSame($input, $id);
+			if ($expected instanceof User) {
+				$this->assertSame($expected, $actual);
+			}
 		}
 	}
 
-	public function assertIsSite($input): void
+	public function assertIsSite($actual): void
 	{
-		$this->assertInstanceOf(Site::class, $input);
+		$this->assertInstanceOf(Site::class, $actual);
 	}
 
 	/**

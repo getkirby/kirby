@@ -951,7 +951,7 @@ class FieldMethodsTest extends TestCase
 		$blocks = $field->toBlocks();
 
 		$this->assertInstanceOf(Blocks::class, $blocks);
-		$this->assertInstanceOf(Page::class, $blocks->parent());
+		$this->assertIsPage($blocks->parent());
 		$this->assertCount(count($data), $blocks);
 		$this->assertCount(count($data), $blocks->data());
 

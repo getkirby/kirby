@@ -29,7 +29,7 @@ class ItemTest extends TestCase
 
 		$this->assertNotNull($item->id());
 		$this->assertSame($this->app, $item->kirby());
-		$this->assertInstanceOf(Site::class, $item->parent());
+		$this->assertIsSite($item->parent());
 		$this->assertInstanceOf(Items::class, $item->siblings());
 	}
 

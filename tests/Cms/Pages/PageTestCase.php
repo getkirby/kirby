@@ -53,7 +53,7 @@ class PageTestCase extends TestCase
 	public function assertPageHasChild($slug)
 	{
 		$child = $this->page()->find($slug);
-		$this->assertIsPage($child, $this->page()->id() . '/' . $slug);
+		$this->assertIsPage($this->page()->id() . '/' . $slug, $child);
 	}
 
 	public function assertPageHasFiles($count = null)

@@ -139,7 +139,7 @@ class BlockTest extends TestCase
 			'type'   => 'heading'
 		]);
 
-		$this->assertSame($page, $block->content()->parent());
+		$this->assertIsPage($page, $block->content()->parent());
 	}
 
 	public function testToArray()

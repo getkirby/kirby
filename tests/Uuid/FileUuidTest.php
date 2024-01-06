@@ -30,7 +30,7 @@ class FileUuidTest extends TestCase
 
 		// retrieve from cache
 		$this->assertTrue($uuid->isCached());
-		$this->assertIsFile($uuid->model(true), $file);
+		$this->assertIsFile($file, $uuid->model(true));
 	}
 
 	/**
@@ -42,7 +42,7 @@ class FileUuidTest extends TestCase
 		$uuid  = new FileUuid('file://my-file');
 		$this->assertFalse($uuid->isCached());
 		$this->assertNull($uuid->model(true));
-		$this->assertIsFile($uuid->model(), $file);
+		$this->assertIsFile($file, $uuid->model());
 		$this->assertTrue($uuid->isCached());
 
 		// not found

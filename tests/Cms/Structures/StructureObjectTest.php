@@ -100,7 +100,7 @@ class StructureObjectTest extends TestCase
 			'id'     => 'test',
 		]);
 
-		$this->assertInstanceOf(Site::class, $object->parent());
+		$this->assertIsSite($object->parent());
 	}
 
 	public function testInvalidParent()
