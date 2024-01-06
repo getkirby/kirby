@@ -61,7 +61,7 @@ class TestCase extends BaseTestCase
 	 */
 	protected function hasTmp(): bool
 	{
-		return defined(get_class($this) . '::TMP');
+		return defined(static::class . '::TMP');
 	}
 
 	protected function setUpTmp(): void
