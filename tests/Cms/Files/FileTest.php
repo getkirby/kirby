@@ -808,9 +808,7 @@ class FileTest extends TestCase
 				'index' => '/dev/null'
 			],
 			'components' => [
-				'file::url' => function ($kirby, $file, array $options = []) {
-					return 'https://getkirby.com/' . $file->filename();
-				}
+				'file::url' => fn ($kirby, $file, array $options = []) => 'https://getkirby.com/' . $file->filename()
 			],
 			'site' => [
 				'children' => [

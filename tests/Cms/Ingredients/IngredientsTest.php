@@ -12,9 +12,7 @@ class IngredientsTest extends TestCase
 	{
 		$this->ingredients = Ingredients::bake([
 			'a' => 'A',
-			'b' => function () {
-				return 'B';
-			}
+			'b' => fn () => 'B'
 		]);
 	}
 

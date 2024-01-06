@@ -2,6 +2,4 @@
 
 use Kirby\Cms\Collection;
 
-return function () {
-	return new Collection();
-};
+return fn () => new Collection();

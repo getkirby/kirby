@@ -939,9 +939,7 @@ class A
 	 *
 	 * // with callback
 	 * A::update($user, [
-	 *   'username' => function ($username) {
-	 *     return $username . ' j. simpson'
-	 *   }
+	 *   'username' => fn ($username) => $username . ' j. simpson'
 	 * ]);
 	 * </code>
 	 */

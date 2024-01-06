@@ -51,13 +51,15 @@ trait SiteActions
 		string $title,
 		string $languageCode = null
 	): static {
-		$site      = $this;
-		$title     = trim($title);
-		$arguments = compact('site', 'title', 'languageCode');
+		$site  = $this;
+		$title = trim($title);
 
-		return $this->commit('changeTitle', $arguments, function ($site, $title, $languageCode) {
-			return $site->save(['title' => $title], $languageCode);
-		});
+		return $this->commit(
+			'changeTitle',
+			compact('site', 'title', 'languageCode'),
+			fn ($site, $title, $languageCode) =>
+				$site->save(['title' => $title], $languageCode)
+		);
 	}
 
 	/**

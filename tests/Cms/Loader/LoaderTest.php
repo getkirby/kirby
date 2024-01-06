@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Closure;
+
 /**
  * @coversDefaultClass \Kirby\Cms\Loader
  */
@@ -170,7 +172,10 @@ class LoaderTest extends TestCase
 			]
 		]);
 
-		$this->assertInstanceOf('Closure', $resolved['dropdowns']['test']['options']);
+		$this->assertInstanceOf(
+			Closure::class,
+			$resolved['dropdowns']['test']['options']
+		);
 	}
 
 	/**
@@ -178,11 +183,9 @@ class LoaderTest extends TestCase
 	 */
 	public function testResolveClosure()
 	{
-		$resolved = $this->loader->resolve(function () {
-			return [
-				'test' => 'Test'
-			];
-		});
+		$resolved = $this->loader->resolve(fn () => [
+			'test' => 'Test'
+		]);
 
 		$this->assertSame('Test', $resolved['test']);
 	}
