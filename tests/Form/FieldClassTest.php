@@ -408,11 +408,11 @@ class FieldClassTest extends TestCase
 	{
 		$field = new TestField();
 		$site  = site();
-		$this->assertSame($site, $field->model());
+		$this->assertIsSite($site, $field->model());
 
 		$page  = new Page(['slug' => 'test']);
 		$field = new TestField(['model' => $page]);
-		$this->assertSame($page, $field->model());
+		$this->assertIsPage($page, $field->model());
 	}
 
 	/**

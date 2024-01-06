@@ -412,7 +412,7 @@ class PageTest extends TestCase
 			'site' => $site
 		]);
 
-		$this->assertSame($site, $page->site());
+		$this->assertIsSite($site, $page->site());
 	}
 
 	public function testInvalidSite()

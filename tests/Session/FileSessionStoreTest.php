@@ -346,9 +346,8 @@ class FileSessionStoreTest extends TestCase
 	 * Asserts that the given session is currently locked
 	 *
 	 * @param string $name Combined name
-	 * @return void
 	 */
-	protected function assertLocked(string $name)
+	protected function assertLocked(string $name): void
 	{
 		$isLocked = $this->storeIsLocked->getValue($this->store);
 		$this->assertTrue(isset($isLocked[$name]));
@@ -367,9 +366,8 @@ class FileSessionStoreTest extends TestCase
 	 * Asserts that the given session is currently not locked
 	 *
 	 * @param string $name Combined name
-	 * @return void
 	 */
-	protected function assertNotLocked(string $name)
+	protected function assertNotLocked(string $name): void
 	{
 		$isLocked = $this->storeIsLocked->getValue($this->store);
 		$this->assertFalse(isset($isLocked[$name]));
@@ -388,9 +386,8 @@ class FileSessionStoreTest extends TestCase
 	 * Asserts that the given session currently has an open handle
 	 *
 	 * @param string $name Combined name
-	 * @return void
 	 */
-	protected function assertHandleExists(string $name)
+	protected function assertHandleExists(string $name): void
 	{
 		$handles = $this->storeHandles->getValue($this->store);
 		$this->assertTrue(isset($handles[$name]));
@@ -400,9 +397,8 @@ class FileSessionStoreTest extends TestCase
 	 * Asserts that the given session currently has no open handle
 	 *
 	 * @param string $name Combined name
-	 * @return void
 	 */
-	protected function assertHandleNotExists(string $name)
+	protected function assertHandleNotExists(string $name): void
 	{
 		$handles = $this->storeHandles->getValue($this->store);
 		$this->assertFalse(isset($handles[$name]));

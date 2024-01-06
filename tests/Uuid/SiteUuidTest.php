@@ -37,7 +37,7 @@ class SiteUuidTest extends TestCase
 	public function testModel()
 	{
 		$site = $this->app->site();
-		$this->assertSame($site, Uuid::for('site://')->model());
+		$this->assertIsSite($site, Uuid::for('site://')->model());
 	}
 
 	/**

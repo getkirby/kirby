@@ -32,7 +32,7 @@ class ApiModelTestCase extends TestCase
 		return $this->api->resolve($object)->select($attr)->toArray()[$attr];
 	}
 
-	public function assertAttr($object, $attr, $value)
+	public function assertAttr($object, $attr, $value): void
 	{
 		$this->assertSame($this->attr($object, $attr), $value);
 	}

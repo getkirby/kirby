@@ -1373,7 +1373,7 @@ class SessionTest extends TestCase
 	 * @param Session $session
 	 * @return void
 	 */
-	protected function assertWriteMode(bool $expected, Session $session)
+	protected function assertWriteMode(bool $expected, Session $session): void
 	{
 		$reflector = new ReflectionClass(Session::class);
 		$writeModeProperty = $reflector->getProperty('writeMode');

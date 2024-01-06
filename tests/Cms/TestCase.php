@@ -71,8 +71,11 @@ class TestCase extends BaseTestCase
 		return $this->site()->homePage();
 	}
 
-	public function assertHooks(array $hooks, Closure $action, $appProps = [])
-	{
+	public function assertHooks(
+		array $hooks,
+		Closure $action,
+		$appProps = []
+	): void {
 		$phpUnit   = $this;
 		$triggered = 0;
 

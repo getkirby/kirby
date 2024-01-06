@@ -27,7 +27,7 @@ class TestCase extends BaseTestCase
 		], $props));
 	}
 
-	public function assertValidationError(string $message)
+	public function assertValidationError(string $message): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage($message);

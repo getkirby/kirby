@@ -985,7 +985,7 @@ class AppTest extends TestCase
 		$page = $app->page('test');
 		$file = $page->file('test-a.jpg');
 
-		$this->assertSame($file, $app->file('file://my-file'));
+		$this->assertIsFile($file, $app->file('file://my-file'));
 	}
 
 	public function testBlueprints()

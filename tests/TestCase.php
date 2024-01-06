@@ -11,7 +11,11 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
-	public function assertIsFile(string|File $expected, $actual = null): void
+	/**
+	 * Whether $actual is a File object
+	 * and optionally if it matches $expected (by reference or ID)
+	 */
+	public function assertIsFile($expected, $actual = null): void
 	{
 		$this->assertInstanceOf(File::class, $actual ?? $expected);
 
@@ -26,7 +30,11 @@ class TestCase extends BaseTestCase
 		}
 	}
 
-	public function assertIsPage(string|Page $expected, $actual = null): void
+	/**
+	 * Whether $actual is a Page object
+	 * and optionally if it matches $expected (by reference or ID)
+	 */
+	public function assertIsPage($expected, $actual = null): void
 	{
 		$this->assertInstanceOf(Page::class, $actual ?? $expected);
 
@@ -41,7 +49,23 @@ class TestCase extends BaseTestCase
 		}
 	}
 
-	public function assertIsUser(string|User $expected, $actual = null): void
+	/**
+	 * Whether $actual is a Site object
+	 */
+	public function assertIsSite($expected, $actual = null): void
+	{
+		$this->assertInstanceOf(Site::class, $actual ?? $expected);
+
+		if ($actual !== null) {
+			$this->assertSame($expected, $actual);
+		}
+	}
+
+	/**
+	 * Whether $actual is a User object
+	 * and optionally if it matches $expected (by reference or ID)
+	 */
+	public function assertIsUser($expected, $actual = null): void
 	{
 		$this->assertInstanceOf(User::class, $actual ?? $expected);
 
@@ -54,11 +78,6 @@ class TestCase extends BaseTestCase
 				$this->assertSame($expected, $actual);
 			}
 		}
-	}
-
-	public function assertIsSite($actual): void
-	{
-		$this->assertInstanceOf(Site::class, $actual);
 	}
 
 	/**

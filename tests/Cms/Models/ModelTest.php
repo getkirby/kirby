@@ -49,7 +49,7 @@ class ModelTest extends TestCase
 		$model = new MyModel([
 			'site' => $site
 		]);
-		$this->assertSame($site, $model->site());
+		$this->assertIsSite($site, $model->site());
 	}
 
 	public function testToString()
