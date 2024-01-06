@@ -3,7 +3,6 @@
 namespace Kirby\Uuid;
 
 use Kirby\Cms\App;
-use Kirby\Filesystem\Dir;
 use Kirby\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
@@ -13,18 +12,12 @@ class TestCase extends BaseTestCase
 	protected function setUp(): void
 	{
 		$this->app = $this->app();
-
-		if ($this->hasTmp() === true) {
-			Dir::make(static::TMP);
-		}
+		$this->setUpTmp();
 	}
 
 	protected function tearDown(): void
 	{
-		if ($this->hasTmp() === true) {
-			Dir::remove(static::TMP);
-		}
-
+		$this->tearDownTmp();
 		Uuids::cache()->flush();
 	}
 

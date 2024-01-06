@@ -28,7 +28,7 @@ class SiteUuidTest extends TestCase
 	{
 		$index = SiteUuid::index();
 		$this->assertInstanceOf(Generator::class, $index);
-		$this->assertInstanceOf(Site::class, $index->current());
+		$this->assertIsSite($index->current());
 		$this->assertSame(1, iterator_count($index));
 	}
 

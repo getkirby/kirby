@@ -5,16 +5,25 @@ namespace Kirby;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
+use Kirby\Cms\User;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
-	public function assertIsSite($input)
+	public function assertIsFile($input, string|File $id = null): void
 	{
-		$this->assertInstanceOf(Site::class, $input);
+		$this->assertInstanceOf(File::class, $input);
+
+		if (is_string($id) === true) {
+			$this->assertSame($id, $input->id());
+		}
+
+		if ($id instanceof File) {
+			$this->assertSame($input, $id);
+		}
 	}
 
-	public function assertIsPage($input, string|Page $id = null)
+	public function assertIsPage($input, string|Page $id = null): void
 	{
 		$this->assertInstanceOf(Page::class, $input);
 
@@ -27,17 +36,22 @@ class TestCase extends BaseTestCase
 		}
 	}
 
-	public function assertIsFile($input, string|File $id = null)
+	public function assertIsUser($input, string|User $id = null): void
 	{
-		$this->assertInstanceOf(File::class, $input);
+		$this->assertInstanceOf(User::class, $input);
 
 		if (is_string($id) === true) {
 			$this->assertSame($id, $input->id());
 		}
 
-		if ($id instanceof File) {
+		if ($id instanceof User) {
 			$this->assertSame($input, $id);
 		}
+	}
+
+	public function assertIsSite($input): void
+	{
+		$this->assertInstanceOf(Site::class, $input);
 	}
 
 	/**

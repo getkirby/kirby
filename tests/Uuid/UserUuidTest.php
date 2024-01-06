@@ -19,7 +19,7 @@ class UserUuidTest extends TestCase
 	{
 		$index = UserUuid::index();
 		$this->assertInstanceOf(Generator::class, $index);
-		$this->assertInstanceOf(User::class, $index->current());
+		$this->assertIsUser($index->current());
 		$this->assertSame(1, iterator_count($index));
 	}
 
@@ -29,7 +29,7 @@ class UserUuidTest extends TestCase
 	public function testModel()
 	{
 		$user = $this->app->user('my-user');
-		$this->assertSame($user, Uuid::for('user://my-user')->model());
+		$this->assertIsUser(Uuid::for('user://my-user')->model(), $user);
 	}
 
 	/**
