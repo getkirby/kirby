@@ -4,8 +4,8 @@ namespace Kirby\Database\Sql;
 
 use Kirby\Database\Database;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Toolkit\A;
 use Kirby\TestCase;
+use Kirby\Toolkit\A;
 
 /**
  * @coversDefaultClass \Kirby\Database\Sql\Sqlite

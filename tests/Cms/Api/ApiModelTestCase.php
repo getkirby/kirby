@@ -4,7 +4,6 @@ namespace Kirby\Cms\Api;
 
 use Kirby\Cms\App;
 use Kirby\Cms\TestCase as TestCase;
-use Kirby\Filesystem\Dir;
 
 class ApiModelTestCase extends TestCase
 {

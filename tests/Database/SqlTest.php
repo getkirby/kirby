@@ -4,8 +4,8 @@ namespace Kirby\Database;
 
 use Kirby\Database\Sql\Sqlite;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Toolkit\A;
 use Kirby\TestCase;
+use Kirby\Toolkit\A;
 
 require_once __DIR__ . '/mocks.php';
 

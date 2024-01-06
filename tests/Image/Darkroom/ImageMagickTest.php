@@ -3,8 +3,8 @@
 namespace Kirby\Image\Darkroom;
 
 use Kirby\Filesystem\Dir;
-use Kirby\Toolkit\F;
 use Kirby\TestCase;
+use Kirby\Toolkit\F;
 
 /**
  * @coversDefaultClass \Kirby\Image\Darkroom\ImageMagick

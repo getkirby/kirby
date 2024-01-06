@@ -56,7 +56,7 @@ class SitePagesTest extends TestCase
 			]
 		]);
 
-		$this->assertIsPage( 'test', $site->page('test'));
+		$this->assertIsPage('test', $site->page('test'));
 	}
 
 	public function testVisitWithPageObject()

@@ -6,9 +6,9 @@ use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
+use Kirby\TestCase;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
-use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Panel\View

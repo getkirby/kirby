@@ -3,11 +3,7 @@
 namespace Kirby\Query;
 
 use Kirby\Cms\App;
-use Kirby\Cms\File;
-use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
-use Kirby\Cms\Site;
-use Kirby\Cms\User;
 use Kirby\Filesystem\Dir;
 use Kirby\Image\QrCode;
 use Kirby\Toolkit\I18n;

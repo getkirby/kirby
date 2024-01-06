@@ -3,8 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
-use Kirby\Toolkit\Str;
 use Kirby\TestCase;
+use Kirby\Toolkit\Str;
 
 class PageDeleteTest extends TestCase
 {

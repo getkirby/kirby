@@ -7,8 +7,8 @@ use Kirby\Cms\Blueprint;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 use Kirby\Panel\Panel;
-use Kirby\Toolkit\Str;
 use Kirby\TestCase;
+use Kirby\Toolkit\Str;
 
 abstract class AreaTestCase extends TestCase
 {

@@ -3,7 +3,6 @@
 namespace Kirby\Uuid;
 
 use Generator;
-use Kirby\Cms\User;
 
 /**
  * @coversDefaultClass \Kirby\Uuid\UserUuid

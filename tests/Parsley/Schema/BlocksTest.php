@@ -3,8 +3,8 @@
 namespace Kirby\Parsley\Schema;
 
 use Kirby\Parsley\Element;
-use Kirby\Toolkit\Dom;
 use Kirby\TestCase;
+use Kirby\Toolkit\Dom;
 
 /**
  * @coversDefaultClass \Kirby\Parsley\Schema\Blocks

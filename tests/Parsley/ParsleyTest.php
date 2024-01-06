@@ -4,8 +4,8 @@ namespace Kirby\Parsley;
 
 use Kirby\Filesystem\F;
 use Kirby\Parsley\Schema\Blocks;
-use Kirby\Toolkit\Dom;
 use Kirby\TestCase;
+use Kirby\Toolkit\Dom;
 
 class TestableParsley extends Parsley
 {

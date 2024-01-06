@@ -2,9 +2,9 @@
 
 namespace Kirby\Http;
 
+use Kirby\TestCase;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Obj;
-use Kirby\TestCase;
 
 class VisitorTest extends TestCase
 {

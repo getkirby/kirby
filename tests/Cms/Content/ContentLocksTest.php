@@ -4,8 +4,8 @@ namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
-use Kirby\Toolkit\Str;
 use Kirby\TestCase;
+use Kirby\Toolkit\Str;
 
 class ContentLocksTest extends TestCase
 {

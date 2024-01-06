@@ -5,8 +5,8 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Cms\Site as ModelSite;
 use Kirby\Filesystem\Dir;
-use Kirby\Toolkit\Str;
 use Kirby\TestCase;
+use Kirby\Toolkit\Str;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Site

@@ -5,8 +5,8 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
-use Kirby\Toolkit\I18n;
 use Kirby\TestCase;
+use Kirby\Toolkit\I18n;
 
 /**
  * @coversDefaultClass \Kirby\Cms\Blueprint

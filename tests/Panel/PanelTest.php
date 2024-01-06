@@ -7,8 +7,8 @@ use Kirby\Cms\Blueprint;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
-use Kirby\Toolkit\A;
 use Kirby\TestCase;
+use Kirby\Toolkit\A;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Panel

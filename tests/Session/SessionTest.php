@@ -7,10 +7,10 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Cookie;
+use Kirby\TestCase;
 use Kirby\Toolkit\Obj;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\SymmetricCrypto;
-use Kirby\TestCase;
 use ReflectionClass;
 use TypeError;
 

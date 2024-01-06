@@ -3,10 +3,9 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Kirby\Filesystem\Dir;
+use Kirby\TestCase as BaseTestCase;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
-use Kirby\TestCase as BaseTestCase;
 
 require_once __DIR__ . '/mocks.php';
 

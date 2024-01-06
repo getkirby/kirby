@@ -3,8 +3,8 @@
 namespace Kirby\Database;
 
 use Kirby\Exception\InvalidArgumentException;
-use PDOException;
 use Kirby\TestCase;
+use PDOException;
 
 /**
  * @coversDefaultClass \Kirby\Database\Database

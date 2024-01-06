@@ -6,9 +6,9 @@ use Kirby\Cms\Response;
 use Kirby\Cms\User;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response as HttpResponse;
+use Kirby\TestCase;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Obj;
-use Kirby\TestCase;
 use stdClass;
 
 class MockModel

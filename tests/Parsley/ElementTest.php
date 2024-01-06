@@ -2,8 +2,8 @@
 
 namespace Kirby\Parsley;
 
-use Kirby\Toolkit\Dom;
 use Kirby\TestCase;
+use Kirby\Toolkit\Dom;
 
 /**
  * @coversDefaultClass \Kirby\Parsley\Element

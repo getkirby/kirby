@@ -6,8 +6,8 @@ use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
-use Kirby\Toolkit\Totp;
 use Kirby\TestCase;
+use Kirby\Toolkit\Totp;
 
 /**
  * @coversDefaultClass \Kirby\Panel\UserTotpDisableDialog
