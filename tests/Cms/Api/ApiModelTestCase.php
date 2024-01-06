@@ -13,10 +13,6 @@ class ApiModelTestCase extends TestCase
 
 	public function setUp(): void
 	{
-		if ($this->hasTmp() === true) {
-			Dir::remove(static::TMP);
-		}
-
 		$this->app = new App([
 			'roots' => [
 				'index' => $this->hasTmp() ? static::TMP : '/dev/null',
@@ -29,10 +25,7 @@ class ApiModelTestCase extends TestCase
 	public function tearDown(): void
 	{
 		App::destroy();
-
-		if ($this->hasTmp() === true) {
-			Dir::remove(static::TMP);
-		}
+		$this->tearDownTmp();
 	}
 
 	public function attr($object, $attr)

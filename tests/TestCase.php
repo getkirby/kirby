@@ -6,6 +6,7 @@ use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
+use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
@@ -61,5 +62,19 @@ class TestCase extends BaseTestCase
 	protected function hasTmp(): bool
 	{
 		return defined(get_class($this) . '::TMP');
+	}
+
+	protected function setUpTmp(): void
+	{
+		if ($this->hasTmp() === true) {
+			Dir::make(static::TMP);
+		}
+	}
+
+	protected function tearDownTmp(): void
+	{
+		if ($this->hasTmp() === true) {
+			Dir::remove(static::TMP);
+		}
 	}
 }

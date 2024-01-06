@@ -38,9 +38,7 @@ class TestCase extends BaseTestCase
 		App::destroy();
 		Blueprint::$loaded = [];
 
-		if ($this->hasTmp() === true) {
-			Dir::remove(static::TMP);
-		}
+		$this->tearDownTmp();
 
 		// mock class
 		ErrorLog::$log = '';
