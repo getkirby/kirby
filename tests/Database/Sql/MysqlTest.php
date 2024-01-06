@@ -4,7 +4,7 @@ namespace Kirby\Database\Sql;
 
 use Kirby\Database\Database;
 use Kirby\Toolkit\A;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Database\Sql\Mysql

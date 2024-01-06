@@ -9,7 +9,7 @@ use stdClass;
 /**
  * @coversDefaultClass Kirby\Query\Segments
  */
-class SegmentsTest extends \PHPUnit\Framework\TestCase
+class SegmentsTest extends \Kirby\TestCase
 {
 	/**
 	 * @covers ::factory

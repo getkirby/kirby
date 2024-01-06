@@ -5,7 +5,7 @@ namespace Kirby\Database;
 use InvalidArgumentException;
 use Kirby\Toolkit\Collection;
 use PDOException;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 require_once __DIR__ . '/mocks.php';
 

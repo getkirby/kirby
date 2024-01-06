@@ -6,7 +6,7 @@ use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\I18n;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Cms\Blueprint

@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\DuplicateException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 use TypeError;
 
 class UncreatablePage extends Page

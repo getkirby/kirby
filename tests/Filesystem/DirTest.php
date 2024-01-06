@@ -7,7 +7,7 @@ use Kirby\Cms\Page;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
-use PHPUnit\Framework\TestCase as TestCase;
+use Kirby\TestCase as TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Filesystem\Dir

@@ -3,7 +3,7 @@
 namespace Kirby\Parsley;
 
 use Kirby\Toolkit\Dom;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Parsley\Inline

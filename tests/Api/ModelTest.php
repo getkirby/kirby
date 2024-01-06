@@ -2,7 +2,7 @@
 
 namespace Kirby\Api;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class ModelTest extends TestCase
 {

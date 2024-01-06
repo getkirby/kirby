@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Content\ContentTranslation;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class PageActionsTest extends TestCase
 {

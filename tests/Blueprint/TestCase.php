@@ -6,7 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
-use PHPUnit\Framework\TestCase as BaseTestCase;
+use Kirby\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {

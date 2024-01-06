@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Asset;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class FileModificationsTest extends TestCase
 {

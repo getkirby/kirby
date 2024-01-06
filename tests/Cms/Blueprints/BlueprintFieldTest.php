@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class BlueprintFieldTest extends TestCase
 {

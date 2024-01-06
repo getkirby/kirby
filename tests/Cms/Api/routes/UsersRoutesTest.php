@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
 use Kirby\Form\Field;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class UsersRoutesTest extends TestCase
 {

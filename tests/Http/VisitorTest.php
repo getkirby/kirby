@@ -4,7 +4,7 @@ namespace Kirby\Http;
 
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Obj;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class VisitorTest extends TestCase
 {

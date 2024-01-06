@@ -7,7 +7,7 @@ use Kirby\Cms\Blueprint;
 use Kirby\Cms\User as ModelUser;
 use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\Str;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class ModelUserTestForceLocked extends ModelUser
 {

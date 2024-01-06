@@ -15,7 +15,7 @@ use Kirby\Data\Yaml;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Image\QrCode;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class FieldMethodsTest extends TestCase
 {

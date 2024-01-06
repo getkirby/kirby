@@ -5,7 +5,7 @@ namespace Kirby\Exception;
 use Kirby\Cms\App;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\I18n;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class WillFail
 {

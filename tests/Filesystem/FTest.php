@@ -6,7 +6,7 @@ use Kirby\Exception\LogicException;
 use Kirby\Http\HeadersSent;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
-use PHPUnit\Framework\TestCase as TestCase;
+use Kirby\TestCase as TestCase;
 
 require_once dirname(__DIR__) . '/Http/mocks.php';
 

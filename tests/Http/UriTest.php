@@ -4,7 +4,7 @@ namespace Kirby\Http;
 
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class UriTest extends TestCase
 {

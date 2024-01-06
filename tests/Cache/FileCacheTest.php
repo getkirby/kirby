@@ -3,7 +3,7 @@
 namespace Kirby\Cache;
 
 use Kirby\Filesystem\Dir;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 use ReflectionMethod;
 
 require_once __DIR__ . '/mocks.php';

@@ -2,7 +2,7 @@
 
 namespace Kirby\Template;
 
-class TestCase extends \PHPUnit\Framework\TestCase
+class TestCase extends \Kirby\TestCase
 {
 	protected function tearDown(): void
 	{

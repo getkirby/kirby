@@ -15,7 +15,7 @@ use Kirby\Toolkit\I18n;
 /**
  * @coversDefaultClass Kirby\Query\Query
  */
-class QueryDefaultFunctionsTest extends \PHPUnit\Framework\TestCase
+class QueryDefaultFunctionsTest extends \Kirby\TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Query.QueryDefaultFunctions';
 

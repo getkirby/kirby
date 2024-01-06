@@ -7,7 +7,7 @@ use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 use ReflectionClass;
 
 require_once __DIR__ . '/mocks.php';

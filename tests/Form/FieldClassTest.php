@@ -4,7 +4,7 @@ namespace Kirby\Form;
 
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class TestField extends FieldClass
 {

@@ -4,7 +4,7 @@ namespace Kirby\Toolkit;
 
 use Exception;
 use InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Toolkit\A

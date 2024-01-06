@@ -4,7 +4,7 @@ namespace Kirby\Content;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass Kirby\Content\ContentTranslation

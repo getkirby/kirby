@@ -2,7 +2,7 @@
 
 namespace Kirby\Cache;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 require_once __DIR__ . '/mocks.php';
 

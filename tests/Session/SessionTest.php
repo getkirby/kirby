@@ -10,7 +10,7 @@ use Kirby\Http\Cookie;
 use Kirby\Toolkit\Obj;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\SymmetricCrypto;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 use ReflectionClass;
 use TypeError;
 

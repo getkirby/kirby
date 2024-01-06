@@ -2,7 +2,7 @@
 
 namespace Kirby\Cache;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Cache\NullCache

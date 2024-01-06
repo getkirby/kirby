@@ -8,7 +8,7 @@ use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Panel\View

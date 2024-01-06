@@ -2,7 +2,7 @@
 
 namespace Kirby\Email;
 
-class TestCase extends \PHPUnit\Framework\TestCase
+class TestCase extends \Kirby\TestCase
 {
 	protected function _email(array $props, $mailer)
 	{

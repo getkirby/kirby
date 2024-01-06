@@ -4,7 +4,7 @@ namespace Kirby\Http\Request\Auth;
 
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @covers \Kirby\Http\Request\Auth

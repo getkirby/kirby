@@ -4,7 +4,7 @@ namespace Kirby\Parsley\Schema;
 
 use Kirby\Parsley\Element;
 use Kirby\Toolkit\Dom;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Parsley\Schema\Plain

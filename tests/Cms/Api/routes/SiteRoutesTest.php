@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class SiteRoutesTest extends TestCase
 {

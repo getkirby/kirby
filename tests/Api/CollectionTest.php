@@ -4,7 +4,7 @@ namespace Kirby\Api;
 
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class CollectionTest extends TestCase
 {

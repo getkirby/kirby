@@ -5,7 +5,7 @@ namespace Kirby\Parsley;
 use Kirby\Filesystem\F;
 use Kirby\Parsley\Schema\Blocks;
 use Kirby\Toolkit\Dom;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class TestableParsley extends Parsley
 {

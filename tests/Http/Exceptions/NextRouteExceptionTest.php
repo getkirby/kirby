@@ -2,7 +2,7 @@
 
 namespace Kirby\Http\Exceptions;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class NextRouteExceptionTest extends TestCase
 {

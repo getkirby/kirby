@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Exception\DuplicateException;
 use Kirby\Filesystem\Dir;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class LanguagesTest extends TestCase
 {

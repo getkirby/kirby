@@ -8,7 +8,7 @@ use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 use Kirby\Panel\Panel;
 use Kirby\Toolkit\Str;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 abstract class AreaTestCase extends TestCase
 {

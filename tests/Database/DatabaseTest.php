@@ -4,7 +4,7 @@ namespace Kirby\Database;
 
 use Kirby\Exception\InvalidArgumentException;
 use PDOException;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Database\Database

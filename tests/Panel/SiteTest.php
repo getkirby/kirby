@@ -6,7 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\Site as ModelSite;
 use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\Str;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Site
