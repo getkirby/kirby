@@ -22,12 +22,8 @@ class CollectionTest extends TestCase
 			'models' => [
 				'test' => [
 					'fields' => [
-						'key' => function ($model) {
-							return strtolower($model);
-						},
-						'value' => function ($model) {
-							return $model;
-						}
+						'key'   => fn ($model) => strtolower($model),
+						'value' => fn ($model) => $model
 					]
 				]
 			]
@@ -61,9 +57,7 @@ class CollectionTest extends TestCase
 			'models' => [
 				'test' => [
 					'fields' => [
-						'value' => function ($model) {
-							return $model;
-						}
+						'value' => fn ($model) => $model
 					]
 				]
 			]
@@ -91,9 +85,7 @@ class CollectionTest extends TestCase
 				'test' => [
 					'type'   => Page::class,
 					'fields' => [
-						'value' => function ($model) {
-							return $model->slug();
-						}
+						'value' => fn ($model) => $model->slug()
 					]
 				]
 			]

@@ -86,8 +86,8 @@ class PageActionsTest extends TestCase
 		$this->assertNotSame($page, $updatedPage);
 		$this->assertSame(2, $updatedPage->num());
 
-		$this->assertSame($updatedPage, $children->find('test'));
-		$this->assertSame($updatedPage, $childrenAndDrafts->find('test'));
+		$this->assertIsPage($children->find('test'), $updatedPage);
+		$this->assertIsPage($childrenAndDrafts->find('test'), $updatedPage);
 	}
 
 	public function testChangeNumWhenNumStaysTheSame()
@@ -119,8 +119,8 @@ class PageActionsTest extends TestCase
 		// the result page should stay the same
 		$this->assertSame($page, $page->changeNum(1));
 
-		$this->assertSame($page, $children->find('test'));
-		$this->assertSame($page, $childrenAndDrafts->find('test'));
+		$this->assertIsPage($children->find('test'), $page);
+		$this->assertIsPage($childrenAndDrafts->find('test'), $page);
 	}
 
 	/**
@@ -164,8 +164,8 @@ class PageActionsTest extends TestCase
 
 		$this->assertTrue($modified->exists());
 		$this->assertSame($expected, $modified->slug());
-		$this->assertSame($modified, $site->$in()->get($expected));
-		$this->assertSame($modified, $site->childrenAndDrafts()->get($expected));
+		$this->assertIsPage($site->$in()->get($expected), $modified);
+		$this->assertIsPage($site->childrenAndDrafts()->get($expected), $modified);
 		$this->assertSame($newRoot, $modified->root());
 	}
 
