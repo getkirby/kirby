@@ -1,7 +1,7 @@
 <template>
 	<k-field
 		v-bind="$props"
-		:input="id"
+		:input="id + '-0'"
 		:counter="counterOptions"
 		class="k-checkboxes-field"
 	>
@@ -10,12 +10,7 @@
 			:text="$t('options.none')"
 			icon="checklist"
 		/>
-		<k-checkboxes-input
-			v-else
-			ref="input"
-			v-bind="$props"
-			v-on="$listeners"
-		/>
+		<k-checkboxes-input v-else ref="input" v-bind="$props" v-on="$listeners" />
 	</k-field>
 </template>
 
