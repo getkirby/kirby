@@ -2,7 +2,7 @@
 	<span :data-invalid="!valid" class="k-counter">
 		<span>{{ count }}</span>
 
-		<span class="k-counter-rules">
+		<span v-if="min || max" class="k-counter-rules">
 			<template v-if="min && max">{{ min }}–{{ max }}</template>
 			<template v-else-if="min">≥ {{ min }}</template>
 			<template v-else-if="max">≤ {{ max }}</template>
