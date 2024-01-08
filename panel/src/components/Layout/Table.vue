@@ -190,6 +190,7 @@ export default {
 		 */
 		sortable: Boolean
 	},
+	emits: ["cell", "change", "header", "input", "option", "paginate", "sort"],
 	data() {
 		return {
 			values: this.rows

@@ -79,6 +79,7 @@ export const props = {
 
 export default {
 	mixins: [Dialog, Search, props],
+	emits: ["cancel", "fetched", "submit"],
 	data() {
 		return {
 			models: [],

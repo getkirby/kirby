@@ -55,6 +55,7 @@ export const props = {
 
 export default {
 	mixins: [Input, props],
+	emits: ["click", "input"],
 	data() {
 		return {
 			selected: this.value,

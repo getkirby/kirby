@@ -58,6 +58,7 @@ export default {
 		settings: Object,
 		value: Array
 	},
+	emits: ["input"],
 	data() {
 		return {
 			current: null,

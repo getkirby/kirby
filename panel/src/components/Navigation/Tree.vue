@@ -69,6 +69,7 @@ export default {
 			type: Number
 		}
 	},
+	emits: ["close", "open", "select", "toggle"],
 	data() {
 		return {
 			state: this.items

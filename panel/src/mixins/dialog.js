@@ -23,7 +23,7 @@ export default {
 			type: Boolean
 		}
 	},
-	emits: ["cancel", "submit"],
+	emits: ["cancel", "close", "input", "submit", "success"],
 	methods: {
 		/**
 		 * Triggers the `@cancel` event and closes the dialog.

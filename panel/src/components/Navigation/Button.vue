@@ -148,6 +148,7 @@ export default {
 		 */
 		variant: String
 	},
+	emits: ["click"],
 	computed: {
 		attrs() {
 			// Shared
