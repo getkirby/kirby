@@ -70,12 +70,8 @@ class HelperFunctionsTest extends HelpersTestCase
 				]
 			],
 			'collections' => [
-				'test' => function ($pages) {
-					return $pages;
-				},
-				'options' => function (int $b, int $a) {
-					return $a + $b;
-				}
+				'test'    => fn ($pages) => $pages,
+				'options' => fn (int $b, int $a) => $a + $b
 			]
 		]);
 
@@ -683,23 +679,17 @@ class HelperFunctionsTest extends HelpersTestCase
 			[
 				'pattern' => 'a/(:any)',
 				'method'  => 'POST',
-				'action'  => function () {
-					return 'nonono';
-				}
+				'action'  => fn () => 'nonono'
 			],
 			[
 				'pattern' => 'b/(:any)',
 				'method'  => 'ALL',
-				'action'  => function () {
-					return 'nonono';
-				}
+				'action'  => fn () => 'nonono'
 			],
 			[
 				'pattern' => 'a/(:any)',
 				'method'  => 'GET',
-				'action'  => function ($path) {
-					return 'yes: ' . $path;
-				}
+				'action'  => fn ($path) => 'yes: ' . $path
 			]
 		];
 

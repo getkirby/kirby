@@ -1,6 +1,4 @@
 <?php
 
 
-return function () {
-	return 'a';
-};
+return fn () => 'a';

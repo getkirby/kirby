@@ -1,5 +1,3 @@
 <?php
 
-return function () {
-	return 'loaded';
-};
+return fn () => 'loaded';

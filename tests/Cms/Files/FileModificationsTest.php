@@ -122,9 +122,7 @@ class FileModificationsTest extends TestCase
 	{
 		$app = $this->app->clone([
 			'components' => [
-				'file::version' => function ($kirby, $file, $options = []) {
-					return 'image';
-				}
+				'file::version' => fn ($kirby, $file, $options = []) => 'image'
 			]
 		]);
 

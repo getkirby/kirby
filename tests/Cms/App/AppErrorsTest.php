@@ -248,9 +248,7 @@ class AppErrorsTest extends TestCase
 		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 
 		// without fatal closure
-		$optionsMethod->invoke($app, ['fatal' => function () {
-			return 'Fatal Error Test!';
-		}]);
+		$optionsMethod->invoke($app, ['fatal' => fn () => 'Fatal Error Test!']);
 
 		$testMethod->invoke($app);
 		$handlers = $whoops->getHandlers();

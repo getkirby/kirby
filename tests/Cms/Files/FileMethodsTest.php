@@ -12,14 +12,10 @@ class FileMethodsTest extends TestCase
 	{
 		$this->app = new App([
 			'fileMethods' => [
-				'test' => function () {
-					return 'file method';
-				}
+				'test' => fn () => 'file method'
 			],
 			'filesMethods' => [
-				'test' => function () {
-					return 'files method';
-				}
+				'test' => fn () => 'files method'
 			],
 			'site' => [
 				'children' => [
