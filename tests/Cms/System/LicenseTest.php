@@ -408,7 +408,7 @@ class LicenseTest extends TestCase
 	/**
 	 * @covers ::save
 	 */
-	public function testSaveWhenNotActive()
+	public function testSaveWhenNotActivatable()
 	{
 		$license = new License();
 
