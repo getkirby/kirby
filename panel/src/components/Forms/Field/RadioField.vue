@@ -10,7 +10,6 @@
 			:id="_uid"
 			ref="input"
 			v-bind="$props"
-			theme="field"
 			v-on="$listeners"
 		/>
 	</k-field>

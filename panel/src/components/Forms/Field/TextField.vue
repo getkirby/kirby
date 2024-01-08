@@ -13,7 +13,6 @@
 			:id="_uid"
 			ref="input"
 			:type="inputType"
-			theme="field"
 			v-on="$listeners"
 		/>
 	</k-field>

@@ -10,7 +10,6 @@
 			:id="_uid"
 			ref="input"
 			type="textarea"
-			theme="field"
 			v-on="$listeners"
 		/>
 	</k-field>
