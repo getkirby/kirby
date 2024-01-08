@@ -1,8 +1,7 @@
 <template>
-	<k-field v-bind="$props" :input="_uid" class="k-select-field">
+	<k-field v-bind="$props" :input="id" class="k-select-field">
 		<k-input
 			v-bind="$props"
-			:id="_uid"
 			ref="input"
 			type="select"
 			v-on="$listeners"

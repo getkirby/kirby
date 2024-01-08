@@ -1,17 +1,11 @@
 <template>
-	<k-field v-bind="$props" class="k-radio-field">
+	<k-field v-bind="$props" :input="id + '-0'" class="k-radio-field">
 		<k-empty
 			v-if="!options?.length"
 			:text="$t('options.none')"
 			icon="checklist"
 		/>
-		<k-radio-input
-			v-else
-			:id="_uid"
-			ref="input"
-			v-bind="$props"
-			v-on="$listeners"
-		/>
+		<k-radio-input v-else ref="input" v-bind="$props" v-on="$listeners" />
 	</k-field>
 </template>
 
