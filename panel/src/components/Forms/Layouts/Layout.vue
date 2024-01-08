@@ -59,6 +59,17 @@ export default {
 		layouts: Array,
 		settings: Object
 	},
+	emits: [
+		"append",
+		"change",
+		"copy",
+		"duplicate",
+		"prepend",
+		"remove",
+		"select",
+		"updateAttrs",
+		"updateColumn"
+	],
 	computed: {
 		options() {
 			return [

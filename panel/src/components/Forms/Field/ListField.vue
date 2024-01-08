@@ -5,7 +5,6 @@
 			:id="_uid"
 			ref="input"
 			type="list"
-			theme="field"
 			@input="$emit('input', $event)"
 		/>
 	</k-field>

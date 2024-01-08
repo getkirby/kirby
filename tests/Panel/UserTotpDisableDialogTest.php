@@ -14,14 +14,15 @@ use PHPUnit\Framework\TestCase;
  */
 class UserTotpDisableDialogTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Panel.UserTotpDisableDialog';
+
 	protected App $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => static::TMP,
 			],
 			'users' => [
 				[
@@ -37,7 +38,7 @@ class UserTotpDisableDialogTest extends TestCase
 			'user' => 'test@getkirby.com'
 		]);
 
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
@@ -45,7 +46,7 @@ class UserTotpDisableDialogTest extends TestCase
 		// clear session file first
 		$this->app->session()->destroy();
 
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 
 		// clear fake json requests
 		$_GET = [];

@@ -8,6 +8,8 @@ use PHPUnit\Framework\TestCase;
 
 class AuthRoutesTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.AuthRoutes';
+
 	protected $app;
 
 	public function setUp(): void
@@ -17,16 +19,15 @@ class AuthRoutesTest extends TestCase
 				'api.allowImpersonation' => true
 			],
 			'roots' => [
-				'index' => $fixtures = __DIR__ . '/fixtures/AuthRoutesTest'
+				'index' => static::TMP
 			],
 		]);
-
-		Dir::remove($fixtures);
 	}
 
 	public function tearDown(): void
 	{
 		$this->app->session()->destroy();
+		Dir::remove(static::TMP);
 	}
 
 	public function testGet()

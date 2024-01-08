@@ -5,7 +5,6 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
-use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use TypeError;
 
@@ -18,6 +17,8 @@ class UserTestModel extends User
  */
 class UserTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.User';
+
 	public function testAvatar()
 	{
 		$user = new User([
@@ -243,13 +244,13 @@ class UserTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index'    => $index = __DIR__ . '/fixtures/UserPropsTest/modified',
-				'accounts' => $index
+				'index'    => static::TMP,
+				'accounts' => static::TMP
 			]
 		]);
 
 		// create a user file
-		F::write($file = $index . '/test/index.php', '<?php return [];');
+		F::write($file = static::TMP . '/test/index.php', '<?php return [];');
 
 		$modified = filemtime($file);
 		$user     = $app->user('test');
@@ -263,16 +264,14 @@ class UserTest extends TestCase
 		// custom date handler
 		$format = '%d.%m.%Y';
 		$this->assertSame(@strftime($format, $modified), $user->modified($format, 'strftime'));
-
-		Dir::remove($index);
 	}
 
 	public function testModifiedSpecifyingLanguage()
 	{
 		$app = new App([
 			'roots' => [
-				'index'    => $index = __DIR__ . '/fixtures/UserPropsTest/modified',
-				'accounts' => $index
+				'index'    => static::TMP,
+				'accounts' => static::TMP
 			],
 			'languages' => [
 				[
@@ -288,47 +287,45 @@ class UserTest extends TestCase
 		]);
 
 		// create a user file
-		F::write($file = $index . '/test/index.php', '<?php return [];');
+		F::write($file = static::TMP . '/test/index.php', '<?php return [];');
 
 		// create the english page
-		F::write($file = $index . '/test/user.en.txt', 'test');
+		F::write($file = static::TMP . '/test/user.en.txt', 'test');
 		touch($file, $modifiedEnContent = \time() + 2);
 
 		// create the german page
-		F::write($file = $index . '/test/user.de.txt', 'test');
+		F::write($file = static::TMP . '/test/user.de.txt', 'test');
 		touch($file, $modifiedDeContent = \time() + 5);
 
 		$user = $app->user('test');
 
 		$this->assertSame((string)$modifiedEnContent, $user->modified('U', null, 'en'));
 		$this->assertSame((string)$modifiedDeContent, $user->modified('U', null, 'de'));
-
-		Dir::remove($index);
 	}
 
 	public function testPasswordTimestamp()
 	{
 		$app = new App([
 			'roots' => [
-				'index'    => $this->tmp,
-				'accounts' => $this->tmp
+				'index'    => static::TMP,
+				'accounts' => static::TMP
 			]
 		]);
 
 		// create a user file
-		F::write($this->tmp . '/test/index.php', '<?php return [];');
+		F::write(static::TMP . '/test/index.php', '<?php return [];');
 
 		$user = $app->user('test');
 		$this->assertNull($user->passwordTimestamp());
 
 		// create a password file
-		F::write($this->tmp . '/test/.htpasswd', 'a very secure hash');
-		touch($this->tmp . '/test/.htpasswd', 1337000000);
+		F::write(static::TMP . '/test/.htpasswd', 'a very secure hash');
+		touch(static::TMP . '/test/.htpasswd', 1337000000);
 
 		$this->assertSame(1337000000, $user->passwordTimestamp());
 
 		// timestamp is not cached
-		touch($this->tmp . '/test/.htpasswd', 1338000000);
+		touch(static::TMP . '/test/.htpasswd', 1338000000);
 		$this->assertSame(1338000000, $user->passwordTimestamp());
 	}
 
@@ -348,12 +345,12 @@ class UserTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index'    => $this->tmp,
-				'accounts' => $this->tmp
+				'index'    => static::TMP,
+				'accounts' => static::TMP
 			]
 		]);
 
-		F::write($this->tmp . '/test/index.php', '<?php return [];');
+		F::write(static::TMP . '/test/index.php', '<?php return [];');
 		$user = $app->user('test');
 
 		// no secrets file
@@ -362,25 +359,25 @@ class UserTest extends TestCase
 		$this->assertNull($user->secret('invalid'));
 
 		// just a password hash
-		F::write($this->tmp . '/test/.htpasswd', 'a very secure hash');
+		F::write(static::TMP . '/test/.htpasswd', 'a very secure hash');
 		$this->assertSame('a very secure hash', $user->secret('password'));
 		$this->assertNull($user->secret('totp'));
 		$this->assertNull($user->secret('invalid'));
 
 		// extra secrets
-		F::write($this->tmp . '/test/.htpasswd', 'a very secure hash' . "\n" . '{"totp":"foo"}');
+		F::write(static::TMP . '/test/.htpasswd', 'a very secure hash' . "\n" . '{"totp":"foo"}');
 		$this->assertSame('a very secure hash', $user->secret('password'));
 		$this->assertSame('foo', $user->secret('totp'));
 		$this->assertNull($user->secret('invalid'));
 
 		// just extra secrets
-		F::write($this->tmp . '/test/.htpasswd', "\n" . '{"totp":"foo"}');
+		F::write(static::TMP . '/test/.htpasswd', "\n" . '{"totp":"foo"}');
 		$this->assertNull($user->secret('password'));
 		$this->assertSame('foo', $user->secret('totp'));
 		$this->assertNull($user->secret('invalid'));
 
 		// invalid JSON
-		F::write($this->tmp . '/test/.htpasswd', "\n" . 'this is not JSON');
+		F::write(static::TMP . '/test/.htpasswd', "\n" . 'this is not JSON');
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('JSON string is invalid');
 		$user->secret('totp');

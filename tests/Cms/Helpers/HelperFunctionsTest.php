@@ -11,26 +11,30 @@ use Kirby\Toolkit\Obj;
 
 class HelperFunctionsTest extends HelpersTestCase
 {
-	protected $fixtures;
+	public const FIXTURES = __DIR__ . '/fixtures/HelpersTest';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.HelperFunctions';
+
 	protected $kirby;
 
 	public function setUp(): void
 	{
+		Dir::copy(static::FIXTURES, static::TMP);
+
 		$this->kirby = new Kirby([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/HelpersTest'
+				'index' => static::TMP
 			],
 			'urls' => [
 				'index' => 'https://getkirby.com'
 			]
 		]);
 
-		Dir::make($this->fixtures . '/site');
+		Dir::make(static::TMP . '/site');
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->fixtures . '/site');
+		Dir::remove(static::TMP);
 	}
 
 	public function testAttrWithBeforeValue()
@@ -66,12 +70,8 @@ class HelperFunctionsTest extends HelpersTestCase
 				]
 			],
 			'collections' => [
-				'test' => function ($pages) {
-					return $pages;
-				},
-				'options' => function (int $b, int $a) {
-					return $a + $b;
-				}
+				'test'    => fn ($pages) => $pages,
+				'options' => fn (int $b, int $a) => $a + $b
 			]
 		]);
 
@@ -531,12 +531,12 @@ class HelperFunctionsTest extends HelpersTestCase
 	public function testLoad()
 	{
 		load([
-			'helperstest\\a' => __DIR__ . '/fixtures/HelpersTest/load/a/a.php',
+			'helperstest\\a' => static::FIXTURES . '/load/a/a.php',
 		]);
 
 		load([
 			'HelpersTest\\B' => 'B.php',
-		], __DIR__ . '/fixtures/HelpersTest/load/B');
+		], static::FIXTURES . '/load/B');
 
 		$this->assertTrue(class_exists('HelpersTest\\A'));
 		$this->assertTrue(class_exists('HelpersTest\\B'));
@@ -679,23 +679,17 @@ class HelperFunctionsTest extends HelpersTestCase
 			[
 				'pattern' => 'a/(:any)',
 				'method'  => 'POST',
-				'action'  => function () {
-					return 'nonono';
-				}
+				'action'  => fn () => 'nonono'
 			],
 			[
 				'pattern' => 'b/(:any)',
 				'method'  => 'ALL',
-				'action'  => function () {
-					return 'nonono';
-				}
+				'action'  => fn () => 'nonono'
 			],
 			[
 				'pattern' => 'a/(:any)',
 				'method'  => 'GET',
-				'action'  => function ($path) {
-					return 'yes: ' . $path;
-				}
+				'action'  => fn ($path) => 'yes: ' . $path
 			]
 		];
 
@@ -752,8 +746,8 @@ class HelperFunctionsTest extends HelpersTestCase
 	{
 		$this->kirby->clone([
 			'roots' => [
-				'index'     => $index = __DIR__ . '/fixtures/HelpersTest',
-				'snippets'  => $index,
+				'index'     => '/dev/null',
+				'snippets'  => static::FIXTURES,
 			]
 		]);
 
@@ -765,8 +759,8 @@ class HelperFunctionsTest extends HelpersTestCase
 	{
 		$this->kirby->clone([
 			'roots' => [
-				'index'     => $index = __DIR__ . '/fixtures/HelpersTest',
-				'snippets'  => $index,
+				'index'     => '/dev/null',
+				'snippets'  => static::FIXTURES,
 			]
 		]);
 
@@ -778,8 +772,8 @@ class HelperFunctionsTest extends HelpersTestCase
 	{
 		$this->kirby->clone([
 			'roots' => [
-				'index'     => $index = __DIR__ . '/fixtures/HelpersTest',
-				'snippets'  => $index
+				'index'     => '/dev/null',
+				'snippets'  => static::FIXTURES,
 			]
 		]);
 
@@ -791,8 +785,8 @@ class HelperFunctionsTest extends HelpersTestCase
 	{
 		$this->kirby->clone([
 			'roots' => [
-				'index'     => $index = __DIR__ . '/fixtures/HelpersTest',
-				'snippets'  => $index,
+				'index'     => '/dev/null',
+				'snippets'  => static::FIXTURES,
 			]
 		]);
 
@@ -808,8 +802,8 @@ class HelperFunctionsTest extends HelpersTestCase
 	{
 		$this->kirby->clone([
 			'roots' => [
-				'index'     => $index = __DIR__ . '/fixtures/HelpersTest',
-				'snippets'  => $index,
+				'index'     => '/dev/null',
+				'snippets'  => static::FIXTURES,
 			]
 		]);
 
@@ -823,8 +817,8 @@ class HelperFunctionsTest extends HelpersTestCase
 
 		$this->kirby->clone([
 			'roots' => [
-				'index'     => $index = __DIR__ . '/fixtures/HelpersTest',
-				'snippets'  => $index,
+				'index'     => '/dev/null',
+				'snippets'  => static::FIXTURES,
 			]
 		]);
 
@@ -835,7 +829,7 @@ class HelperFunctionsTest extends HelpersTestCase
 	{
 		$this->kirby->clone([
 			'roots' => [
-				'snippets' => __DIR__ . '/fixtures/HelpersTest'
+				'snippets' => static::FIXTURES
 			]
 		]);
 
@@ -858,7 +852,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testSvgWithAbsolutePath()
 	{
-		$result = svg(__DIR__ . '/fixtures/HelpersTest/test.svg');
+		$result = svg(static::FIXTURES . '/test.svg');
 		$this->assertSame('<svg>test</svg>', trim($result));
 	}
 

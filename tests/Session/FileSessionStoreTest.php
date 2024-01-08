@@ -17,15 +17,16 @@ require_once __DIR__ . '/mocks.php';
  */
 class FileSessionStoreTest extends TestCase
 {
-	protected $root = __DIR__ . '/fixtures/store';
+	public const TMP = KIRBY_TMP_DIR . '/Session.FileSessionStore';
+
 	protected $store;
 	protected $storeHandles;
 	protected $storeIsLocked;
 
 	public function setUp(): void
 	{
-		$this->store = new FileSessionStore($this->root);
-		$this->assertDirectoryExists($this->root);
+		$this->store = new FileSessionStore(static::TMP);
+		$this->assertDirectoryExists(static::TMP);
 
 		// make internal data accessible
 		$reflector = new ReflectionClass(FileSessionStore::class);
@@ -35,12 +36,12 @@ class FileSessionStoreTest extends TestCase
 		$this->storeIsLocked->setAccessible(true);
 
 		// demo files
-		F::write($this->root . '/.gitignore', "*\n!.gitignore");
-		F::write($this->root . '/1234567890.abcdefghijabcdefghij.sess', '1234567890');
-		F::write($this->root . '/1357913579.abcdefghijabcdefghij.sess', '1357913579');
-		F::write($this->root . '/7777777777.abcdefghijabcdefghij.sess', '7777777777');
-		F::write($this->root . '/8888888888.abcdefghijabcdefghij.sess', '');
-		F::write($this->root . '/9999999999.abcdefghijabcdefghij.sess', '9999999999');
+		F::write(static::TMP . '/.gitignore', "*\n!.gitignore");
+		F::write(static::TMP . '/1234567890.abcdefghijabcdefghij.sess', '1234567890');
+		F::write(static::TMP . '/1357913579.abcdefghijabcdefghij.sess', '1357913579');
+		F::write(static::TMP . '/7777777777.abcdefghijabcdefghij.sess', '7777777777');
+		F::write(static::TMP . '/8888888888.abcdefghijabcdefghij.sess', '');
+		F::write(static::TMP . '/9999999999.abcdefghijabcdefghij.sess', '9999999999');
 	}
 
 	public function tearDown(): void
@@ -49,15 +50,15 @@ class FileSessionStoreTest extends TestCase
 		unset($this->store);
 
 		// make sure the directory and in files are writable before trying to delete
-		chmod($this->root, 0777);
+		chmod(static::TMP, 0777);
 
-		$files = array_diff(scandir($this->root) ?? [], ['.', '..']);
+		$files = array_diff(scandir(static::TMP) ?? [], ['.', '..']);
 		foreach ($files as $file) {
-			chmod($this->root . '/' . $file, 0777);
+			chmod(static::TMP . '/' . $file, 0777);
 		}
 
-		Dir::remove($this->root);
-		$this->assertDirectoryDoesNotExist($this->root);
+		Dir::remove(static::TMP);
+		$this->assertDirectoryDoesNotExist(static::TMP);
 	}
 
 	/**
@@ -68,10 +69,10 @@ class FileSessionStoreTest extends TestCase
 		$this->expectException(Exception::class);
 		$this->expectExceptionCode('error.session.filestore.dirNotWritable');
 
-		Dir::make($this->root, true);
-		chmod($this->root, 0555);
+		Dir::make(static::TMP, true);
+		chmod(static::TMP, 0555);
 
-		new FileSessionStore($this->root);
+		new FileSessionStore(static::TMP);
 	}
 
 	/**
@@ -85,7 +86,7 @@ class FileSessionStoreTest extends TestCase
 
 		$this->assertStringMatchesFormat('%x', $id);
 		$this->assertSame(20, strlen($id));
-		$this->assertFileExists($this->root . '/1234567890.' . $id . '.sess');
+		$this->assertFileExists(static::TMP . '/1234567890.' . $id . '.sess');
 		$this->assertHandleExists('1234567890.' . $id);
 		$this->assertLocked('1234567890.' . $id);
 	}
@@ -166,7 +167,7 @@ class FileSessionStoreTest extends TestCase
 		// locked file that doesn't exist anymore
 		$this->store->lock(1357913579, 'abcdefghijabcdefghij');
 		$this->assertLocked('1357913579.abcdefghijabcdefghij');
-		unlink($this->root . '/1357913579.abcdefghijabcdefghij.sess');
+		unlink(static::TMP . '/1357913579.abcdefghijabcdefghij.sess');
 		$this->store->unlock(1357913579, 'abcdefghijabcdefghij');
 		$this->assertNotLocked('1357913579.abcdefghijabcdefghij');
 	}
@@ -209,7 +210,7 @@ class FileSessionStoreTest extends TestCase
 		$this->expectExceptionCode('error.session.filestore.notOpened');
 
 		// session files need to have read and write permissions even for reading
-		chmod($this->root . '/1234567890.abcdefghijabcdefghij.sess', 0444);
+		chmod(static::TMP . '/1234567890.abcdefghijabcdefghij.sess', 0444);
 		$this->store->get(1234567890, 'abcdefghijabcdefghij');
 	}
 
@@ -227,7 +228,7 @@ class FileSessionStoreTest extends TestCase
 
 		$this->assertLocked('1234567890.abcdefghijabcdefghij');
 		$this->assertHandleExists('1234567890.abcdefghijabcdefghij');
-		$this->assertSame('some other data', F::read($this->root . '/1234567890.abcdefghijabcdefghij.sess'));
+		$this->assertSame('some other data', F::read(static::TMP . '/1234567890.abcdefghijabcdefghij.sess'));
 		$this->assertSame('some other data', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
 	}
 
@@ -267,13 +268,13 @@ class FileSessionStoreTest extends TestCase
 	 */
 	public function testDestroy()
 	{
-		$this->assertFileExists($this->root . '/1234567890.abcdefghijabcdefghij.sess');
+		$this->assertFileExists(static::TMP . '/1234567890.abcdefghijabcdefghij.sess');
 		$this->assertNotLocked('1234567890.abcdefghijabcdefghij');
 		$this->assertHandleNotExists('1234567890.abcdefghijabcdefghij');
 
 		$this->store->destroy(1234567890, 'abcdefghijabcdefghij');
 
-		$this->assertFileDoesNotExist($this->root . '/1234567890.abcdefghijabcdefghij.sess');
+		$this->assertFileDoesNotExist(static::TMP . '/1234567890.abcdefghijabcdefghij.sess');
 		$this->assertNotLocked('1234567890.abcdefghijabcdefghij');
 		$this->assertHandleNotExists('1234567890.abcdefghijabcdefghij');
 	}
@@ -291,7 +292,7 @@ class FileSessionStoreTest extends TestCase
 		$this->assertHandleExists('1234567890.abcdefghijabcdefghij');
 
 		// simulate that another thread deleted the file
-		unlink($this->root . '/1234567890.abcdefghijabcdefghij.sess');
+		unlink(static::TMP . '/1234567890.abcdefghijabcdefghij.sess');
 
 		// shouldn't throw an Exception
 		$this->store->destroy(1234567890, 'abcdefghijabcdefghij');
@@ -313,7 +314,7 @@ class FileSessionStoreTest extends TestCase
 		$this->assertHandleExists('1234567890.abcdefghijabcdefghij');
 
 		// simulate that another thread deleted the file
-		unlink($this->root . '/1234567890.abcdefghijabcdefghij.sess');
+		unlink(static::TMP . '/1234567890.abcdefghijabcdefghij.sess');
 
 		// now it should throw even if there is already a handle
 		$this->store->set(1234567890, 'abcdefghijabcdefghij', 'something else');
@@ -324,21 +325,21 @@ class FileSessionStoreTest extends TestCase
 	 */
 	public function testCollectGarbage()
 	{
-		$this->assertFileExists($this->root . '/.gitignore');
-		$this->assertFileExists($this->root . '/1234567890.abcdefghijabcdefghij.sess');
-		$this->assertFileExists($this->root . '/1357913579.abcdefghijabcdefghij.sess');
-		$this->assertFileExists($this->root . '/7777777777.abcdefghijabcdefghij.sess');
-		$this->assertFileExists($this->root . '/8888888888.abcdefghijabcdefghij.sess');
-		$this->assertFileExists($this->root . '/9999999999.abcdefghijabcdefghij.sess');
+		$this->assertFileExists(static::TMP . '/.gitignore');
+		$this->assertFileExists(static::TMP . '/1234567890.abcdefghijabcdefghij.sess');
+		$this->assertFileExists(static::TMP . '/1357913579.abcdefghijabcdefghij.sess');
+		$this->assertFileExists(static::TMP . '/7777777777.abcdefghijabcdefghij.sess');
+		$this->assertFileExists(static::TMP . '/8888888888.abcdefghijabcdefghij.sess');
+		$this->assertFileExists(static::TMP . '/9999999999.abcdefghijabcdefghij.sess');
 
 		$this->store->collectGarbage();
 
-		$this->assertFileExists($this->root . '/.gitignore');
-		$this->assertFileDoesNotExist($this->root . '/1234567890.abcdefghijabcdefghij.sess');
-		$this->assertFileExists($this->root . '/1357913579.abcdefghijabcdefghij.sess');
-		$this->assertFileExists($this->root . '/7777777777.abcdefghijabcdefghij.sess');
-		$this->assertFileExists($this->root . '/8888888888.abcdefghijabcdefghij.sess');
-		$this->assertFileExists($this->root . '/9999999999.abcdefghijabcdefghij.sess');
+		$this->assertFileExists(static::TMP . '/.gitignore');
+		$this->assertFileDoesNotExist(static::TMP . '/1234567890.abcdefghijabcdefghij.sess');
+		$this->assertFileExists(static::TMP . '/1357913579.abcdefghijabcdefghij.sess');
+		$this->assertFileExists(static::TMP . '/7777777777.abcdefghijabcdefghij.sess');
+		$this->assertFileExists(static::TMP . '/8888888888.abcdefghijabcdefghij.sess');
+		$this->assertFileExists(static::TMP . '/9999999999.abcdefghijabcdefghij.sess');
 	}
 
 	/**
@@ -353,7 +354,7 @@ class FileSessionStoreTest extends TestCase
 		$this->assertTrue(isset($isLocked[$name]));
 
 		// try locking the file again, which should fail
-		$path = $this->root . '/' . $name . '.sess';
+		$path = static::TMP . '/' . $name . '.sess';
 		if (is_file($path)) {
 			$handle = fopen($path, 'r+');
 			$this->assertFalse(flock($handle, LOCK_EX | LOCK_NB));
@@ -374,7 +375,7 @@ class FileSessionStoreTest extends TestCase
 		$this->assertFalse(isset($isLocked[$name]));
 
 		// try locking the file, which should work if the file is not currently locked
-		$path = $this->root . '/' . $name . '.sess';
+		$path = static::TMP . '/' . $name . '.sess';
 		if (is_file($path)) {
 			$handle = fopen($path, 'r+');
 			$this->assertTrue(flock($handle, LOCK_EX | LOCK_NB));

@@ -6,6 +6,8 @@ use Kirby\Cms\Api\ApiModelTestCase;
 
 class FileApiModelTest extends ApiModelTestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.FileApiModel';
+
 	public function testNextWithTemplate()
 	{
 		$page = new Page([

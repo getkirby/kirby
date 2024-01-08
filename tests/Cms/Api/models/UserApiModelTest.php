@@ -6,6 +6,8 @@ use Kirby\Cms\Api\ApiModelTestCase;
 
 class UserApiModelTest extends ApiModelTestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.UserApiModel';
+
 	protected $user;
 
 	public function setUp(): void

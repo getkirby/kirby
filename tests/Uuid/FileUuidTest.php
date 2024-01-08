@@ -11,6 +11,8 @@ use Kirby\Cms\File;
  */
 class FileUuidTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Uuid.FileUuid';
+
 	/**
 	 * @covers ::findByCache
 	 */
@@ -139,7 +141,7 @@ class FileUuidTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'options' => [
 				'languages' => true

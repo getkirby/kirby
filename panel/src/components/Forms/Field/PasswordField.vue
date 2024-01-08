@@ -12,7 +12,6 @@
 			v-bind="$props"
 			:id="_uid"
 			ref="input"
-			theme="field"
 			type="password"
 			@input="$emit('input', $event)"
 		/>

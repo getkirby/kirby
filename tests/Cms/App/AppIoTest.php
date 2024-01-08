@@ -8,12 +8,14 @@ use PHPUnit\Framework\TestCase;
 
 class AppIoTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	public function app()
 	{
 		return new App([
 			'roots' => [
 				'index'     => '/dev/null',
-				'templates' => __DIR__ . '/fixtures/AppIoTest/templates'
+				'templates' => static::FIXTURES . '/AppIoTest/templates'
 			]
 		]);
 	}

@@ -56,7 +56,8 @@ export const props = {
 
 export default {
 	mixins: [props],
-	inheritAttrs: false
+	inheritAttrs: false,
+	emits: ["blur", "focus"]
 };
 </script>
 

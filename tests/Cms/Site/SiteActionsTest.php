@@ -8,14 +8,15 @@ use PHPUnit\Framework\TestCase;
 
 class SiteActionsTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.SiteActions';
+
 	protected $app;
-	protected $fixtures = __DIR__ . '/fixtures/SiteActionsTest';
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->fixtures
+				'index' => static::TMP
 			],
 			'users' => [
 				[
@@ -37,12 +38,12 @@ class SiteActionsTest extends TestCase
 			]
 		]);
 
-		Dir::make($this->fixtures);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->fixtures);
+		Dir::remove(static::TMP);
 	}
 
 	public function site()
@@ -69,7 +70,7 @@ class SiteActionsTest extends TestCase
 
 	public function testCreateFile()
 	{
-		F::write($source = $this->fixtures . '/source.md', '');
+		F::write($source = static::TMP . '/source.md', '');
 
 		$file = $this->site()->createFile([
 			'filename' => 'test.md',

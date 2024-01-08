@@ -11,7 +11,8 @@ use ReflectionClass;
  */
 class LicenseTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.License';
+	public const FIXTURES = __DIR__ . '/fixtures/LicenseTest';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.License';
 
 	public function code(LicenseType $type = LicenseType::Basic): string
 	{
@@ -322,7 +323,7 @@ class LicenseTest extends TestCase
 		// existing license
 		$this->app = new App([
 			'roots' => [
-				'license' => __DIR__ . '/fixtures/LicenseTest/.license'
+				'license' => static::FIXTURES . '/.license'
 			]
 		]);
 
@@ -333,7 +334,7 @@ class LicenseTest extends TestCase
 		// non-existing license root
 		$this->app = new App([
 			'roots' => [
-				'license' => __DIR__ . '/fixtures/LicenseTest/foo'
+				'license' => static::FIXTURES . '/foo'
 			]
 		]);
 
@@ -407,7 +408,7 @@ class LicenseTest extends TestCase
 	/**
 	 * @covers ::save
 	 */
-	public function testSaveWhenNotActive()
+	public function testSaveWhenNotActivatable()
 	{
 		$license = new License();
 

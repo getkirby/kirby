@@ -10,7 +10,6 @@
 			:id="_uid"
 			ref="input"
 			v-bind="$props"
-			theme="field"
 			@input="$emit('input', $event)"
 		/>
 	</k-field>

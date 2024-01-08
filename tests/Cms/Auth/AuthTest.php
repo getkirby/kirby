@@ -14,15 +14,16 @@ use Throwable;
  */
 class AuthTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.Auth';
+
 	protected $app;
 	protected $auth;
-	protected $tmp;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp = __DIR__ . '/tmp'
+				'index' => static::TMP
 			],
 			'options' => [
 				'api' => [
@@ -51,9 +52,9 @@ class AuthTest extends TestCase
 				],
 			]
 		]);
-		Dir::make($this->tmp . '/site/accounts/homer');
-		F::write($this->tmp . '/site/accounts/homer/.htpasswd', $hash);
-		touch($this->tmp . '/site/accounts/homer/.htpasswd', 1337000000);
+		Dir::make(static::TMP . '/site/accounts/homer');
+		F::write(static::TMP . '/site/accounts/homer/.htpasswd', $hash);
+		touch(static::TMP . '/site/accounts/homer/.htpasswd', 1337000000);
 
 		$this->auth = $this->app->auth();
 	}
@@ -61,7 +62,7 @@ class AuthTest extends TestCase
 	public function tearDown(): void
 	{
 		$this->app->session()->destroy();
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 		App::destroy();
 	}
 

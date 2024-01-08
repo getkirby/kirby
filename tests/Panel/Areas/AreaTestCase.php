@@ -12,8 +12,9 @@ use PHPUnit\Framework\TestCase;
 
 abstract class AreaTestCase extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Panel.Areas.AreaTestCase';
+
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function app(array $params)
 	{
@@ -178,7 +179,7 @@ abstract class AreaTestCase extends TestCase
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => static::TMP,
 			],
 			'request' => [
 				'query' => [
@@ -192,7 +193,7 @@ abstract class AreaTestCase extends TestCase
 			]
 		]);
 
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function submit(array $data)
@@ -213,7 +214,7 @@ abstract class AreaTestCase extends TestCase
 		// clear session file first
 		$this->app->session()->destroy();
 
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 
 		// clear blueprint cache
 		Blueprint::$loaded = [];

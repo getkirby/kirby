@@ -11,20 +11,17 @@ use Kirby\Filesystem\Dir;
  */
 class FindTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.Find';
+
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $tmp = __DIR__ . 'tmp'
+				'index' => static::TMP
 			]
 		]);
 
-		Dir::make($tmp);
-	}
-
-	public function tearDown(): void
-	{
-		Dir::remove(__DIR__ . 'tmp');
+		Dir::make(static::TMP);
 	}
 
 	/**

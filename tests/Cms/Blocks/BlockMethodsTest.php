@@ -15,9 +15,7 @@ class BlockMethodsTest extends TestCase
 				'index' => '/dev/null',
 			],
 			'blockMethods' => [
-				'test' => function () {
-					return 'block method';
-				}
+				'test' => fn () => 'block method'
 			]
 		]);
 	}

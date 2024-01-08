@@ -72,6 +72,7 @@ export default {
 		 */
 		tabs: Array
 	},
+	emits: ["edit"],
 	created() {
 		if (this.tabs) {
 			window.panel.deprecated(

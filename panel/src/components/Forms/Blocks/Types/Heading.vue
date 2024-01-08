@@ -27,6 +27,7 @@
  * @internal
  */
 export default {
+	emits: ["append", "open", "split", "update"],
 	computed: {
 		isSplitable() {
 			return (

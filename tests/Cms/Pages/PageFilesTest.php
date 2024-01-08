@@ -4,14 +4,15 @@ namespace Kirby\Cms;
 
 class PageFilesTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.PageFiles';
+
 	protected $app;
-	protected $fixtures;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/PageFilesTest'
+				'index' => static::TMP
 			]
 		]);
 	}

@@ -21,6 +21,7 @@ export default {
 			default: ":where(button, a):not(:disabled)"
 		}
 	},
+	emits: ["next", "prev"],
 	computed: {
 		keys() {
 			switch (this.axis) {

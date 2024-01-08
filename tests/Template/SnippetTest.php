@@ -12,6 +12,8 @@ use ReflectionProperty;
  */
 class SnippetTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	/**
 	 * @covers ::close
 	 */
@@ -35,7 +37,7 @@ class SnippetTest extends TestCase
 
 		new App([
 			'roots' => [
-				'snippets' => __DIR__ . '/fixtures'
+				'snippets' => static::FIXTURES
 			]
 		]);
 
@@ -78,12 +80,12 @@ class SnippetTest extends TestCase
 
 		new App([
 			'roots' => [
-				'snippets' => __DIR__ . '/fixtures'
+				'snippets' => static::FIXTURES
 			]
 		]);
 
-		$this->assertSame(__DIR__ . '/fixtures/simple.php', Snippet::file('simple'));
-		$this->assertSame(__DIR__ . '/fixtures/simple.php', Snippet::file(['missin', 'simple']));
+		$this->assertSame(static::FIXTURES . '/simple.php', Snippet::file('simple'));
+		$this->assertSame(static::FIXTURES . '/simple.php', Snippet::file(['missin', 'simple']));
 		$this->assertNull(Snippet::file('missin'));
 		$this->assertSame('bar.php', Snippet::file('foo'));
 	}
@@ -96,7 +98,7 @@ class SnippetTest extends TestCase
 	{
 		ob_start();
 
-		Snippet::begin(__DIR__ . '/fixtures/simple.php');
+		Snippet::begin(static::FIXTURES . '/simple.php');
 		Slot::begin();
 		echo 'Nice';
 		Slot::end();
@@ -179,8 +181,8 @@ class SnippetTest extends TestCase
 	public static function renderWithSlotsProvider(): array
 	{
 		return [
-			[__DIR__ . '/fixtures/slots.php', 'Header content' . PHP_EOL . 'Body content' . PHP_EOL . 'Footer content'],
-			[__DIR__ . '/fixtures/missin.php', ''],
+			[static::FIXTURES . '/slots.php', 'Header content' . PHP_EOL . 'Body content' . PHP_EOL . 'Footer content'],
+			[static::FIXTURES . '/missin.php', ''],
 			[null, ''],
 		];
 	}
@@ -226,7 +228,7 @@ class SnippetTest extends TestCase
 		// all output must be captured
 		$this->expectOutputString('');
 
-		$snippet = new Snippet(__DIR__ . '/fixtures/layout.php');
+		$snippet = new Snippet(static::FIXTURES . '/layout.php');
 		$snippet->open();
 		echo 'content';
 
@@ -241,7 +243,7 @@ class SnippetTest extends TestCase
 		// all output must be captured
 		$this->expectOutputString('');
 
-		$snippet = new Snippet(__DIR__ . '/fixtures/layout-with-multiple-slots.php');
+		$snippet = new Snippet(static::FIXTURES . '/layout-with-multiple-slots.php');
 
 		$snippet->slot('header');
 		echo 'Header content';
@@ -259,7 +261,7 @@ class SnippetTest extends TestCase
 	 */
 	public function testRenderWithLazySlots()
 	{
-		$snippet = new Snippet(__DIR__ . '/fixtures/slots.php');
+		$snippet = new Snippet(static::FIXTURES . '/slots.php');
 
 		$html = $snippet->render(slots: [
 			'header'  => 'Header content',
@@ -281,7 +283,7 @@ class SnippetTest extends TestCase
 	public function testRenderWithData()
 	{
 		$snippet = new Snippet(
-			file: __DIR__ . '/fixtures/data.php',
+			file: static::FIXTURES . '/data.php',
 			data: ['message' => 'hello']
 		);
 
@@ -294,7 +296,7 @@ class SnippetTest extends TestCase
 	public function testRenderWithLazyData()
 	{
 		$snippet = new Snippet(
-			file: __DIR__ . '/fixtures/data.php',
+			file: static::FIXTURES . '/data.php',
 		);
 
 		$this->assertSame('hello', $snippet->render(data: ['message' => 'hello']));
@@ -307,7 +309,7 @@ class SnippetTest extends TestCase
 	{
 		new App([
 			'roots' => [
-				'snippets' => $root = __DIR__ . '/fixtures'
+				'snippets' => $root = static::FIXTURES
 			]
 		]);
 
@@ -334,7 +336,7 @@ class SnippetTest extends TestCase
 			echo 'Scope snippet success';
 		};
 
-		$snippet = new Snippet(file: __DIR__ . '/fixtures/scope.php', data: $data = [
+		$snippet = new Snippet(file: static::FIXTURES . '/scope.php', data: $data = [
 			'message' => 'Hello',
 			'closure' => $closure
 		]);
@@ -360,7 +362,7 @@ class SnippetTest extends TestCase
 			echo 'Scope snippet success';
 		};
 
-		$snippet = new Snippet(file: __DIR__ . '/fixtures/scope.php', data: $data = [
+		$snippet = new Snippet(file: static::FIXTURES . '/scope.php', data: $data = [
 			'closure' => $closure
 		]);
 
@@ -381,7 +383,7 @@ class SnippetTest extends TestCase
 	{
 		new App([
 			'roots' => [
-				'snippets' => __DIR__ . '/fixtures'
+				'snippets' => static::FIXTURES
 			]
 		]);
 
@@ -435,7 +437,7 @@ class SnippetTest extends TestCase
 	{
 		new App([
 			'roots' => [
-				'snippets' => __DIR__ . '/fixtures'
+				'snippets' => static::FIXTURES
 			]
 		]);
 

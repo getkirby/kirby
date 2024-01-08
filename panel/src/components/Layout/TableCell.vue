@@ -41,6 +41,7 @@ export default {
 			default: ""
 		}
 	},
+	emits: ["input"],
 	computed: {
 		/**
 		 * Returns the component name (if exists) for

@@ -10,6 +10,8 @@ use Kirby\Cms\Site;
  */
 class SiteUuidTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Uuid.SiteUuid';
+
 	/**
 	 * @covers ::id
 	 */

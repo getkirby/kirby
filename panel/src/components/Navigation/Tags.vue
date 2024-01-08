@@ -76,6 +76,7 @@ export default {
 			type: Boolean
 		}
 	},
+	emits: ["edit", "input"],
 	data() {
 		return {
 			tags: []

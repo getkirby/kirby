@@ -11,7 +11,6 @@
 			ref="input"
 			:class="{ grow }"
 			v-bind="$props"
-			theme="field"
 			type="toggles"
 			@input="$emit('input', $event)"
 		/>

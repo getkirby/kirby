@@ -93,6 +93,7 @@ export default {
 			default: () => []
 		}
 	},
+	emits: ["input"],
 	data() {
 		return {
 			blocks: this.value ?? [],

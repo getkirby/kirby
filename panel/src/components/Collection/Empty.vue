@@ -26,6 +26,7 @@ export default {
 		 */
 		icon: String
 	},
+	emits: ["click"],
 	computed: {
 		attrs() {
 			const attrs = {

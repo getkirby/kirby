@@ -76,13 +76,11 @@ class SymmetricCryptoTest extends TestCase
 	public function testDestruct()
 	{
 		// helper to access protected props by reference
-		$reader = function () {
-			return [
-				'password'            => &$this->password,
-				'secretKey'           => &$this->secretKey,
-				'secretKeysByOptions' => &$this->secretKeysByOptions,
-			];
-		};
+		$reader = fn () => [
+			'password'            => &$this->password,
+			'secretKey'           => &$this->secretKey,
+			'secretKeysByOptions' => &$this->secretKeysByOptions,
+		];
 
 		$crypto = new SymmetricCrypto(secretKey: $secretKey = 'abcdefghijklmnopabcdefghijklmnop');
 		$values = Closure::bind($reader, $crypto, $crypto)();

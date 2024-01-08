@@ -2,12 +2,13 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Panel\Site as Panel;
 
 class SiteTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.Site';
+
 	public function testUrl()
 	{
 		$site = new Site([
@@ -102,13 +103,13 @@ class SiteTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index'   => $index = __DIR__ . '/fixtures/SitePropsTest/modified',
-				'content' => $index
+				'index'   => static::TMP,
+				'content' => static::TMP
 			]
 		]);
 
 		// create the site file
-		F::write($file = $index . '/site.txt', 'test');
+		F::write($file = static::TMP . '/site.txt', 'test');
 
 		$modified = filemtime($file);
 		$site     = $app->site();
@@ -122,16 +123,14 @@ class SiteTest extends TestCase
 		// custom date handler
 		$format = '%d.%m.%Y';
 		$this->assertSame(@strftime($format, $modified), $site->modified($format, 'strftime'));
-
-		Dir::remove($index);
 	}
 
 	public function testModifiedInMultilangInstallation()
 	{
 		$app = new App([
 			'roots' => [
-				'index'   => $index = __DIR__ . '/fixtures/SitePropsTest/modified',
-				'content' => $index
+				'index'   => static::TMP,
+				'content' => static::TMP
 			],
 			'languages' => [
 				[
@@ -147,13 +146,13 @@ class SiteTest extends TestCase
 		]);
 
 		// create the english site
-		F::write($file = $index . '/site.en.txt', 'test');
+		F::write($file = static::TMP . '/site.en.txt', 'test');
 		touch($file, $modified = \time() + 2);
 
 		$this->assertSame($modified, $app->site()->modified());
 
 		// create the german site
-		F::write($file = $index . '/site.de.txt', 'test');
+		F::write($file = static::TMP . '/site.de.txt', 'test');
 		touch($file, $modified = \time() + 5);
 
 		// change the language
@@ -161,8 +160,6 @@ class SiteTest extends TestCase
 		$app->setCurrentTranslation('de');
 
 		$this->assertSame($modified, $app->site()->modified());
-
-		Dir::remove($index);
 	}
 
 	public function testIs()

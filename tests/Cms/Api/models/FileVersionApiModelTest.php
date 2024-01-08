@@ -7,16 +7,17 @@ use Kirby\Filesystem\Dir;
 
 class FileVersionApiModelTest extends ApiModelTestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.FileVersionApiModel';
+
 	protected $file;
 	protected $parent;
-	protected $fixtures;
 
 	public function setUp(): void
 	{
 		parent::setUp();
 
 		$this->parent = new Page([
-			'root' => $this->fixtures = __DIR__ . '/fixtures',
+			'root' => static::TMP,
 			'slug' => 'test'
 		]);
 
@@ -31,14 +32,14 @@ class FileVersionApiModelTest extends ApiModelTestCase
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->fixtures);
+		Dir::remove(static::TMP);
 	}
 
 	public function testExists()
 	{
 		$version = new FileVersion([
 			'original' => $this->file,
-			'root'     => $this->fixtures . '/test-version.jpg',
+			'root'     => static::TMP . '/test-version.jpg',
 		]);
 
 		$this->assertAttr($version, 'exists', false);
@@ -48,7 +49,7 @@ class FileVersionApiModelTest extends ApiModelTestCase
 	{
 		$version = new FileVersion([
 			'original' => $this->file,
-			'root'     => $this->fixtures . '/test-version.jpg',
+			'root'     => static::TMP . '/test-version.jpg',
 		]);
 
 		$this->assertAttr($version, 'type', 'image');
@@ -58,7 +59,7 @@ class FileVersionApiModelTest extends ApiModelTestCase
 	{
 		$version = new FileVersion([
 			'original' => $this->file,
-			'root'     => $this->fixtures . '/test-version.jpg',
+			'root'     => static::TMP . '/test-version.jpg',
 		]);
 
 		$this->assertAttr($version, 'url', null);

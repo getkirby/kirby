@@ -84,6 +84,7 @@ export default {
 			type: [String, Number]
 		}
 	},
+	emits: ["input"],
 	data() {
 		return {
 			input: null

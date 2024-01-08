@@ -10,11 +10,11 @@ use PHPUnit\Framework\TestCase;
  */
 class ViewTest extends TestCase
 {
-	protected string $fixtures = __DIR__ . '/fixtures/view';
+	public const FIXTURES = __DIR__ . '/fixtures/view';
 
 	protected function view(array $data = [])
 	{
-		return new View($this->fixtures . '/view.php', $data);
+		return new View(static::FIXTURES . '/view.php', $data);
 	}
 
 	/**
@@ -38,7 +38,7 @@ class ViewTest extends TestCase
 		$view = $this->view();
 		$this->assertTrue($view->exists());
 
-		$view = new View($this->fixtures . '/foo.php');
+		$view = new View(static::FIXTURES . '/foo.php');
 		$this->assertFalse($view->exists());
 	}
 
@@ -49,7 +49,7 @@ class ViewTest extends TestCase
 	public function testFile()
 	{
 		$view = $this->view();
-		$this->assertSame($this->fixtures . '/view.php', $view->file());
+		$this->assertSame(static::FIXTURES . '/view.php', $view->file());
 	}
 
 	/**
@@ -81,7 +81,7 @@ class ViewTest extends TestCase
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('View exception');
 
-		$view = new View($this->fixtures . '/view-with-exception.php');
+		$view = new View(static::FIXTURES . '/view-with-exception.php');
 		$view->render();
 	}
 

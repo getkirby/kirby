@@ -443,9 +443,10 @@ class Pages extends Collection
 			$templates = [$templates];
 		}
 
-		return $this->filter(function ($page) use ($templates) {
-			return !in_array($page->intendedTemplate()->name(), $templates);
-		});
+		return $this->filter(
+			fn ($page) =>
+				!in_array($page->intendedTemplate()->name(), $templates)
+		);
 	}
 
 	/**
@@ -478,9 +479,10 @@ class Pages extends Collection
 			$templates = [$templates];
 		}
 
-		return $this->filter(function ($page) use ($templates) {
-			return in_array($page->intendedTemplate()->name(), $templates);
-		});
+		return $this->filter(
+			fn ($page) =>
+				in_array($page->intendedTemplate()->name(), $templates)
+		);
 	}
 
 	/**

@@ -11,7 +11,6 @@
 			v-bind="$props"
 			:id="_uid"
 			ref="input"
-			theme="field"
 			type="multiselect"
 			@input="$emit('input', $event)"
 		/>

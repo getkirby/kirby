@@ -18,7 +18,6 @@
 				:min="min"
 				:required="required"
 				:value="value"
-				theme="field"
 				type="date"
 				@invalid="onDateInvalid"
 				@input="onDateInput"
@@ -53,7 +52,6 @@
 				:step="time.step"
 				:value="iso.time"
 				:icon="time.icon"
-				theme="field"
 				type="time"
 				@input="onTimeInput"
 				@submit="$emit('submit')"
@@ -130,6 +128,7 @@ export default {
 			default: true
 		}
 	},
+	emits: ["input", "submit"],
 	data() {
 		return {
 			isInvalid: false,

@@ -82,9 +82,7 @@ class ComponentTest extends TestCase
 		Component::$types = [
 			'test' => [
 				'computed' => [
-					'prop' => function () {
-						return 'computed prop';
-					}
+					'prop' => fn () => 'computed prop'
 				]
 			]
 		];
@@ -100,14 +98,10 @@ class ComponentTest extends TestCase
 		Component::$types = [
 			'test' => [
 				'props' => [
-					'prop' => function ($prop) {
-						return $prop;
-					}
+					'prop' => fn ($prop) => $prop
 				],
 				'computed' => [
-					'prop' => function () {
-						return 'computed: ' . $this->prop;
-					}
+					'prop' => fn () => 'computed: ' . $this->prop
 				]
 			]
 		];
@@ -122,9 +116,7 @@ class ComponentTest extends TestCase
 		Component::$types = [
 			'test' => [
 				'methods' => [
-					'say' => function () {
-						return 'hello world';
-					}
+					'say' => fn () => 'hello world'
 				]
 			]
 		];
@@ -139,14 +131,10 @@ class ComponentTest extends TestCase
 		Component::$types = [
 			'test' => [
 				'props' => [
-					'message' => function ($message) {
-						return $message;
-					}
+					'message' => fn ($message) => $message
 				],
 				'methods' => [
-					'say' => function () {
-						return $this->message;
-					}
+					'say' => fn () => $this->message
 				]
 			]
 		];
@@ -161,19 +149,13 @@ class ComponentTest extends TestCase
 		Component::$types = [
 			'test' => [
 				'props' => [
-					'message' => function ($message) {
-						return $message;
-					}
+					'message' => fn ($message) => $message
 				],
 				'computed' => [
-					'message' => function () {
-						return strtoupper($this->message);
-					},
+					'message' => fn () => strtoupper($this->message)
 				],
 				'methods' => [
-					'say' => function () {
-						return $this->message;
-					}
+					'say' => fn () => $this->message
 				]
 			]
 		];
@@ -188,19 +170,13 @@ class ComponentTest extends TestCase
 		Component::$types = [
 			'test' => [
 				'props' => [
-					'message' => function ($message) {
-						return $message;
-					}
+					'message' => fn ($message) => $message
 				],
 				'computed' => [
-					'message' => function () {
-						return strtoupper($this->message);
-					},
+					'message' => fn () => strtoupper($this->message)
 				],
 				'methods' => [
-					'say' => function () {
-						return $this->message;
-					}
+					'say' => fn () => $this->message
 				]
 			]
 		];
@@ -216,11 +192,9 @@ class ComponentTest extends TestCase
 	{
 		Component::$types = [
 			'test' => [
-				'toArray' => function () {
-					return [
-						'foo' => 'bar'
-					];
-				}
+				'toArray' => fn () => [
+					'foo' => 'bar'
+				]
 			]
 		];
 
@@ -251,9 +225,7 @@ class ComponentTest extends TestCase
 		Component::$mixins = [
 			'test' => [
 				'computed' => [
-					'message' => function () {
-						return strtoupper($this->message);
-					}
+					'message' => fn () => strtoupper($this->message)
 				]
 			]
 		];
@@ -262,9 +234,7 @@ class ComponentTest extends TestCase
 			'test' => [
 				'mixins' => ['test'],
 				'props' => [
-					'message' => function ($message) {
-						return $message;
-					}
+					'message' => fn ($message) => $message
 				]
 			]
 		];

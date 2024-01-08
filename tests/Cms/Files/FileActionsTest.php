@@ -10,26 +10,28 @@ use Kirby\Image\Image;
 
 class FileActionsTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures/files';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.FileActions';
+
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 		$this->app = static::app();
 	}
 
 	public function tearDown(): void
 	{
 		Blueprint::$loaded = [];
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	public static function app(): App
 	{
 		return new App([
 			'roots' => [
-				'index' => __DIR__ . '/tmp'
+				'index' => static::TMP
 			],
 			'site' => [
 				'children' => [
@@ -492,7 +494,7 @@ class FileActionsTest extends TestCase
 	public function testCopyRenewUuid()
 	{
 		// create dumy file
-		F::write($source = $this->tmp . '/original.md', '# Foo');
+		F::write($source = static::TMP . '/original.md', '# Foo');
 
 		$file = File::create([
 			'filename' => 'test.md',
@@ -505,7 +507,7 @@ class FileActionsTest extends TestCase
 
 		$destination = new Page([
 			'slug' => 'newly',
-			'root' => $this->tmp . '/new-page'
+			'root' => static::TMP . '/new-page'
 		]);
 
 		$copy = $file->copy($destination);
@@ -520,7 +522,7 @@ class FileActionsTest extends TestCase
 	 */
 	public function testCreate($parent)
 	{
-		$source = $this->tmp . '/source.md';
+		$source = static::TMP . '/source.md';
 
 		// create the dummy source
 		F::write($source, '# Test');
@@ -545,7 +547,7 @@ class FileActionsTest extends TestCase
 	 */
 	public function testCreateMove($parent)
 	{
-		$source = $this->tmp . '/source.md';
+		$source = static::TMP . '/source.md';
 
 		// create the dummy source
 		F::write($source, '# Test');
@@ -570,7 +572,7 @@ class FileActionsTest extends TestCase
 	 */
 	public function testCreateWithDefaults($parent)
 	{
-		$source = $this->tmp . '/source.md';
+		$source = static::TMP . '/source.md';
 
 		// create the dummy source
 		F::write($source, '# Test');
@@ -603,7 +605,7 @@ class FileActionsTest extends TestCase
 	 */
 	public function testCreateWithDefaultsAndContent($parent)
 	{
-		$source = $this->tmp . '/source.md';
+		$source = static::TMP . '/source.md';
 
 		// create the dummy source
 		F::write($source, '# Test');
@@ -639,7 +641,7 @@ class FileActionsTest extends TestCase
 	 */
 	public function testCreateImage($parent)
 	{
-		$source =  __DIR__ . '/fixtures/files/test.jpg';
+		$source = static::FIXTURES . '/test.jpg';
 
 		$result = File::create([
 			'filename' => 'test.jpg',
@@ -657,7 +659,7 @@ class FileActionsTest extends TestCase
 	 */
 	public function testCreateImageAndManipulate($parent)
 	{
-		$source =  __DIR__ . '/fixtures/files/test.jpg';
+		$source = static::FIXTURES . '/test.jpg';
 		$result = File::create([
 			'filename' => 'test.jpg',
 			'source'   => $source,
@@ -705,7 +707,7 @@ class FileActionsTest extends TestCase
 		]);
 
 		// create the dummy source
-		F::write($source = $this->tmp . '/source.md', '# Test');
+		F::write($source = static::TMP . '/source.md', '# Test');
 
 		$result = File::create([
 			'filename' => 'test.md',
@@ -758,8 +760,8 @@ class FileActionsTest extends TestCase
 	 */
 	public function testReplace($parent)
 	{
-		$original    = $this->tmp . '/original.md';
-		$replacement = $this->tmp . '/replacement.md';
+		$original    = static::TMP . '/original.md';
+		$replacement = static::TMP . '/replacement.md';
 
 		// create the dummy files
 		F::write($original, '# Original');
@@ -788,8 +790,8 @@ class FileActionsTest extends TestCase
 	 */
 	public function testReplaceMove($parent)
 	{
-		$original    = $this->tmp . '/original.md';
-		$replacement = $this->tmp . '/replacement.md';
+		$original    = static::TMP . '/original.md';
+		$replacement = static::TMP . '/replacement.md';
 
 		// create the dummy files
 		F::write($original, '# Original');
@@ -818,8 +820,8 @@ class FileActionsTest extends TestCase
 	 */
 	public function testReplaceImage($parent)
 	{
-		$original =  __DIR__ . '/fixtures/files/test.jpg';
-		$replacement =  __DIR__ . '/fixtures/files/cat.jpg';
+		$original    = static::FIXTURES . '/test.jpg';
+		$replacement = static::FIXTURES . '/cat.jpg';
 
 		$originalFile = File::create([
 			'filename' => 'test.jpg',
@@ -886,7 +888,7 @@ class FileActionsTest extends TestCase
 	 */
 	public function testManipulate($parent)
 	{
-		$original =  __DIR__ . '/fixtures/files/test.jpg';
+		$original = static::FIXTURES . '/test.jpg';
 
 		$originalFile = File::create([
 			'filename' => 'test.jpg',
@@ -1001,7 +1003,7 @@ class FileActionsTest extends TestCase
 		]);
 
 		// create the dummy source
-		F::write($source = $this->tmp . '/source.md', '# Test');
+		F::write($source = static::TMP . '/source.md', '# Test');
 
 		$file = File::create([
 			'filename' => 'test.md',
@@ -1044,7 +1046,7 @@ class FileActionsTest extends TestCase
 		]);
 
 		// create the dummy source
-		F::write($source = $this->tmp . '/replace.csv', 'Replace');
+		F::write($source = static::TMP . '/replace.csv', 'Replace');
 
 		File::create([
 			'filename' => 'replace.csv',

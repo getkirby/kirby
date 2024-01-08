@@ -12,6 +12,8 @@ require_once __DIR__ . '/mocks.php';
  */
 class HandlerTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Data.Handler';
+
 	/**
 	 * @covers ::read
 	 * @covers ::write
@@ -23,10 +25,7 @@ class HandlerTest extends TestCase
 			'email' => 'homer@simpson.com'
 		];
 
-		$file = __DIR__ . '/tmp/data.json';
-
-		// clean up first
-		@unlink($file);
+		$file = static::TMP . '/data.json';
 
 		CustomHandler::write($file, $data);
 		$this->assertFileExists($file);
@@ -41,7 +40,7 @@ class HandlerTest extends TestCase
 	 */
 	public function testReadFileMissing()
 	{
-		$file = __DIR__ . '/tmp/does-not-exist.json';
+		$file = static::TMP . '/does-not-exist.json';
 
 		$this->expectException('Exception');
 		$this->expectExceptionMessage('The file "' . $file . '" does not exist or cannot be read');

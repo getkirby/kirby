@@ -15,7 +15,6 @@
 			:id="_uid"
 			ref="input"
 			:value="slug"
-			theme="field"
 			type="slug"
 			@input="$emit('input', $event)"
 		/>

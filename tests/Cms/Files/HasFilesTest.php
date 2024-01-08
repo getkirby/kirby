@@ -21,17 +21,17 @@ class HasFileTraitUser
 	}
 }
 
-
 class HasFilesTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.HasFiles';
+
 	protected $app;
-	protected $tmp;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp = __DIR__ . '/tmp'
+				'index' => static::TMP
 			],
 			'users' => [
 				[
@@ -42,12 +42,13 @@ class HasFilesTest extends TestCase
 			'user' => 'admin@domain.com'
 		]);
 
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
+		App::destroy();
 	}
 
 	public static function fileProvider(): array
@@ -68,7 +69,7 @@ class HasFilesTest extends TestCase
 
 	public function testCreateFile()
 	{
-		$source = $this->tmp . '/source.md';
+		$source = static::TMP . '/source.md';
 
 		// create the dummy source
 		F::write($source, '# Test');
@@ -91,7 +92,7 @@ class HasFilesTest extends TestCase
 
 	public function testCreateFileMove()
 	{
-		$source = $this->tmp . '/source.md';
+		$source = static::TMP . '/source.md';
 
 		// create the dummy source
 		F::write($source, '# Test');

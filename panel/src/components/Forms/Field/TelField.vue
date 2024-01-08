@@ -4,7 +4,6 @@
 			v-bind="$props"
 			:id="_uid"
 			ref="input"
-			theme="field"
 			type="tel"
 			@input="$emit('input', $event)"
 		/>

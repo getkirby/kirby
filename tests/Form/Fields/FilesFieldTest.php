@@ -9,13 +9,15 @@ use Kirby\Cms\User;
 
 class FilesFieldTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Form.Fields.Languages';
+
 	public function setUp(): void
 	{
 		parent::setUp();
 
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'site' => [
 				'children' => [
@@ -237,7 +239,7 @@ class FilesFieldTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'options' => ['api.allowImpersonation' => true],
 			'site' => [

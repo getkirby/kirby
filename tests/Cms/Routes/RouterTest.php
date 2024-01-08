@@ -3,30 +3,12 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\NotFoundException;
-use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\I18n;
 
 class RouterTest extends TestCase
 {
-	protected $app;
-	protected $fixtures;
-
-	public function setUp(): void
-	{
-		$this->fixtures = __DIR__ . '/fixtures/RouterTest';
-
-		$this->app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
-	}
-
-	public function tearDown(): void
-	{
-		Dir::remove($this->fixtures);
-	}
+	public const TMP = KIRBY_TMP_DIR . '/Cms.Router';
 
 	public function testHomeRoute()
 	{
@@ -111,13 +93,13 @@ class RouterTest extends TestCase
 
 	public function testPageRepresentationRoute()
 	{
-		F::write($template = $this->fixtures . '/test.php', 'html');
-		F::write($template = $this->fixtures . '/test.xml.php', 'xml');
+		F::write($template = static::TMP . '/test.php', 'html');
+		F::write($template = static::TMP . '/test.xml.php', 'xml');
 
 		$app = new App([
 			'roots' => [
 				'index'     => '/dev/null',
-				'templates' => $this->fixtures
+				'templates' => static::TMP
 			],
 			'site' => [
 				'children' => [
@@ -655,13 +637,13 @@ class RouterTest extends TestCase
 
 	public function testMultilangPageRepresentationRoute()
 	{
-		F::write($template = $this->fixtures . '/test.php', 'html');
-		F::write($template = $this->fixtures . '/test.xml.php', 'xml');
+		F::write($template = static::TMP . '/test.php', 'html');
+		F::write($template = static::TMP . '/test.xml.php', 'xml');
 
 		$app = new App([
 			'roots' => [
 				'index'     => '/dev/null',
-				'templates' => $this->fixtures
+				'templates' => static::TMP
 			],
 			'site' => [
 				'children' => [
@@ -713,13 +695,13 @@ class RouterTest extends TestCase
 
 	public function testMultilangPageRepresentationRouteWithoutLanguageCode()
 	{
-		F::write($template = $this->fixtures . '/test.php', 'html');
-		F::write($template = $this->fixtures . '/test.xml.php', 'xml');
+		F::write($template = static::TMP . '/test.php', 'html');
+		F::write($template = static::TMP . '/test.xml.php', 'xml');
 
 		$app = new App([
 			'roots' => [
 				'index'     => '/dev/null',
-				'templates' => $this->fixtures
+				'templates' => static::TMP
 			],
 			'site' => [
 				'children' => [
