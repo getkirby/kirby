@@ -391,7 +391,7 @@ class License
 	 */
 	public function save(): bool
 	{
-		if ($this->status() !== LicenseStatus::Active) {
+		if ($this->status()->activatable() !== true) {
 			throw new InvalidArgumentException([
 				'key' => 'license.verification'
 			]);
