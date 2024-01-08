@@ -11,6 +11,8 @@
 			:value="selected"
 			class="k-select-input-native"
 			v-on="listeners"
+			@change="onInput($event.target.value)"
+			@click="onClick"
 		>
 			<option v-if="hasEmptyOption" :disabled="required" value="">
 				{{ emptyOption }}
@@ -57,13 +59,7 @@ export default {
 	mixins: [Input, props],
 	data() {
 		return {
-			selected: this.value,
-			listeners: {
-				...this.$listeners,
-				click: (event) => this.onClick(event),
-				change: (event) => this.onInput(event.target.value),
-				input: () => {}
-			}
+			selected: this.value
 		};
 	},
 	computed: {
