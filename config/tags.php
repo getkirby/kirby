@@ -205,9 +205,9 @@ return [
 			if ($tag->value === null) {
 				if ($tag->kirby()->option('debug', false) === true) {
 					if (empty($tag->text) === false) {
-						throw new NotFoundException('The linked page is not found for the link text "' . $tag->text . '"');
+						throw new NotFoundException('The linked page cannot be found for the link text "' . $tag->text . '"');
 					} else {
-						throw new NotFoundException('The linked page is not found');
+						throw new NotFoundException('The linked page cannot be found');
 					}
 				} else {
 					$tag->value = $tag->kirby()->site()->errorPageId();

@@ -649,7 +649,7 @@ class KirbyTagsTest extends TestCase
 		]);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The linked page is not found');
+		$this->expectExceptionMessage('The linked page cannot be found');
 
 		$app->kirbytags('(link: page://not-exists)');
 	}
@@ -680,7 +680,7 @@ class KirbyTagsTest extends TestCase
 		]);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The linked page is not found for the link text "click here"');
+		$this->expectExceptionMessage('The linked page cannot be found for the link text "click here"');
 
 		$app->kirbytags('(link: page://not-exists text: click here)');
 	}
