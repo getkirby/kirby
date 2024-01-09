@@ -48,7 +48,6 @@ export default {
 	flex-direction: column;
 	background: var(--color-white);
 	min-height: 6rem;
-	container: column / inline-size;
 }
 .k-layout-column:focus {
 	outline: 0;
