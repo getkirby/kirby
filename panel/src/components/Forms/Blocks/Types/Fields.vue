@@ -103,6 +103,7 @@ export default {
 	background-color: var(--color-gray-200);
 	padding: var(--spacing-6) var(--spacing-6) var(--spacing-8);
 	border-radius: var(--rounded-sm);
+	container: column / inline-size;
 }
 /** TODO: .k-block-container[data-hidden="true"]:has(.k-block-type-fields)
 	:where(.k-drawer-tabs, .k-block-type-fields-form) */
