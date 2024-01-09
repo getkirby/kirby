@@ -49,16 +49,25 @@ trait SiteActions
 	 */
 	public function changeTitle(
 		string $title,
-		string $languageCode = null
+		string|null $languageCode = null
 	): static {
-		$site  = $this;
-		$title = trim($title);
+		// if the `$languageCode` argument is not set and is not the default language
+		// the `$languageCode` argument is sent as the current language
+		if (
+			$languageCode === null &&
+			$language = $this->kirby()->language()
+		) {
+			if ($language->isDefault() === false) {
+				$languageCode = $language->code();
+			}
+		}
+
+		$arguments = ['site' => $this, 'title' => trim($title), 'languageCode' => $languageCode];
 
 		return $this->commit(
 			'changeTitle',
-			compact('site', 'title', 'languageCode'),
-			fn ($site, $title, $languageCode) =>
-				$site->save(['title' => $title], $languageCode)
+			$arguments,
+			fn ($site, $title, $languageCode) => $site->save(['title' => $title], $languageCode)
 		);
 	}
 
