@@ -3,7 +3,7 @@
 namespace Kirby\Http;
 
 use Kirby\Cms\App;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class UrlTest extends TestCase
 {

@@ -6,7 +6,7 @@ use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Exception\Exception;
 use Kirby\Exception\LogicException;
-use PHPUnit\Framework\TestCase as TestCase;
+use Kirby\TestCase as TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Image\Image

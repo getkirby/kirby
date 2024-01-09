@@ -4,7 +4,6 @@ namespace Kirby\Uuid;
 
 use Generator;
 use Kirby\Cms\App;
-use Kirby\Cms\Page;
 
 /**
  * @coversDefaultClass \Kirby\Uuid\PageUuid
@@ -30,7 +29,7 @@ class PageUuidTest extends TestCase
 
 		// retrieve from cache
 		$this->assertTrue($uuid->isCached());
-		$this->assertTrue($page->is($uuid->model(true)));
+		$this->assertIsPage($page, $uuid->model(true));
 	}
 
 	/**
@@ -42,7 +41,7 @@ class PageUuidTest extends TestCase
 		$uuid  = new PageUuid('page://my-page');
 		$this->assertFalse($uuid->isCached());
 		$this->assertNull($uuid->model(true));
-		$this->assertTrue($page->is($uuid->model()));
+		$this->assertIsPage($page, $uuid->model());
 		$this->assertTrue($uuid->isCached());
 
 		// not found
@@ -91,7 +90,7 @@ class PageUuidTest extends TestCase
 	{
 		$index = PageUuid::index();
 		$this->assertInstanceOf(Generator::class, $index);
-		$this->assertInstanceOf(Page::class, $index->current());
+		$this->assertIsPage($index->current());
 		$this->assertSame(3, iterator_count($index));
 	}
 

@@ -3,7 +3,7 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\Page;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 use stdClass;
 use TypeError;
 

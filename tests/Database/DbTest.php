@@ -3,7 +3,7 @@
 namespace Kirby\Database;
 
 use Kirby\Exception\InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 use ReflectionProperty;
 
 /**

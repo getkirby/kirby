@@ -3,7 +3,6 @@
 namespace Kirby\Uuid;
 
 use Generator;
-use Kirby\Cms\Site;
 
 /**
  * @coversDefaultClass \Kirby\Uuid\SiteUuid
@@ -28,7 +27,7 @@ class SiteUuidTest extends TestCase
 	{
 		$index = SiteUuid::index();
 		$this->assertInstanceOf(Generator::class, $index);
-		$this->assertInstanceOf(Site::class, $index->current());
+		$this->assertIsSite($index->current());
 		$this->assertSame(1, iterator_count($index));
 	}
 
@@ -38,7 +37,7 @@ class SiteUuidTest extends TestCase
 	public function testModel()
 	{
 		$site = $this->app->site();
-		$this->assertSame($site, Uuid::for('site://')->model());
+		$this->assertIsSite($site, Uuid::for('site://')->model());
 	}
 
 	/**

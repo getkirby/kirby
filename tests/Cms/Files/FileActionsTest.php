@@ -917,14 +917,14 @@ class FileActionsTest extends TestCase
 		$app = $this->app->clone([
 			'hooks' => [
 				'file.changeName:before' => function (File $file, $name) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf(File::class, $file);
+					$phpunit->assertIsFile($file);
 					$phpunit->assertSame('test', $name);
 					$phpunit->assertSame('site.csv', $file->filename());
 					$calls++;
 				},
 				'file.changeName:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf(File::class, $newFile);
-					$phpunit->assertInstanceOf(File::class, $oldFile);
+					$phpunit->assertIsFile($newFile);
+					$phpunit->assertIsFile($oldFile);
 					$phpunit->assertSame('test.csv', $newFile->filename());
 					$phpunit->assertSame('site.csv', $oldFile->filename());
 					$calls++;
@@ -958,14 +958,14 @@ class FileActionsTest extends TestCase
 			],
 			'hooks' => [
 				'file.changeSort:before' => function (File $file, $position) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf(File::class, $file);
+					$phpunit->assertIsFile($file);
 					$phpunit->assertSame(3, $position);
 					$phpunit->assertNull($file->sort()->value());
 					$calls++;
 				},
 				'file.changeSort:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf(File::class, $newFile);
-					$phpunit->assertInstanceOf(File::class, $oldFile);
+					$phpunit->assertIsFile($newFile);
+					$phpunit->assertIsFile($oldFile);
 					$phpunit->assertSame(3, $newFile->sort()->value());
 					$phpunit->assertNull($oldFile->sort()->value());
 					$calls++;
@@ -1027,7 +1027,7 @@ class FileActionsTest extends TestCase
 		$app = $this->app->clone([
 			'hooks' => [
 				'file.replace:before' => function (File $file, BaseFile $upload) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf(File::class, $file);
+					$phpunit->assertIsFile($file);
 					$phpunit->assertInstanceOf(BaseFile::class, $upload);
 					$phpunit->assertSame('site.csv', $file->filename());
 					$phpunit->assertSame('replace.csv', $upload->filename());
@@ -1035,8 +1035,8 @@ class FileActionsTest extends TestCase
 					$calls++;
 				},
 				'file.replace:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf(File::class, $newFile);
-					$phpunit->assertInstanceOf(File::class, $oldFile);
+					$phpunit->assertIsFile($newFile);
+					$phpunit->assertIsFile($oldFile);
 					$phpunit->assertSame('site.csv', $newFile->filename());
 					$phpunit->assertSame('Replace', F::read($newFile->root()));
 					$phpunit->assertSame('site.csv', $oldFile->filename());
@@ -1070,15 +1070,15 @@ class FileActionsTest extends TestCase
 		$app = $this->app->clone([
 			'hooks' => [
 				'file.update:before' => function (File $file, $values, $strings) use ($phpunit, $input, &$calls) {
-					$phpunit->assertInstanceOf(File::class, $file);
+					$phpunit->assertIsFile($file);
 					$phpunit->assertNull($file->title()->value());
 					$phpunit->assertSame($input, $values);
 					$phpunit->assertSame($input, $strings);
 					$calls++;
 				},
 				'file.update:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf(File::class, $newFile);
-					$phpunit->assertInstanceOf(File::class, $oldFile);
+					$phpunit->assertIsFile($newFile);
+					$phpunit->assertIsFile($oldFile);
 					$phpunit->assertSame('Test', $newFile->title()->value());
 					$phpunit->assertNull($oldFile->title()->value());
 					$calls++;

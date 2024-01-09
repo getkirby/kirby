@@ -3,7 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Exception;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Toolkit\View

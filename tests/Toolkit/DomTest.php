@@ -7,9 +7,9 @@ use DOMAttr;
 use DOMDocument;
 use DOMDocumentType;
 use DOMElement;
+use Kirby\AssertionFailedError;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
-use PHPUnit\Framework\AssertionFailedError;
 
 /**
  * @coversDefaultClass \Kirby\Toolkit\Dom

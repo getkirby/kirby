@@ -270,18 +270,18 @@ class HelperFunctionsTest extends HelpersTestCase
 		]);
 
 		$image = image('test/pagefile.jpg');
-		$this->assertInstanceOf(File::class, $image);
+		$this->assertIsFile($image);
 
 		$image = image('/sitefile.jpg');
-		$this->assertInstanceOf(File::class, $image);
+		$this->assertIsFile($image);
 
 		// get the first image of the current page
 		$app->site()->visit('test');
 		$image = image();
-		$this->assertInstanceOf(File::class, $image);
+		$this->assertIsFile($image);
 
 		$image = image('pagefile.jpg');
-		$this->assertInstanceOf(File::class, $image);
+		$this->assertIsFile($image);
 
 		$image = image('does-not-exist.jpg');
 		$this->assertNull($image);

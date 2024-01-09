@@ -206,7 +206,7 @@ class AuthProtectionTest extends TestCase
 		$this->app->visitor()->ip('10.3.123.234');
 		$user = $this->auth->validatePassword('marge@simpsons.com', 'springfield123');
 
-		$this->assertInstanceOf(User::class, $user);
+		$this->assertIsUser($user);
 		$this->assertSame('marge@simpsons.com', $user->email());
 		$this->assertNull($this->failedEmail);
 	}
@@ -384,7 +384,7 @@ class AuthProtectionTest extends TestCase
 		$this->app->visitor()->ip('10.3.123.234');
 		$user = $this->auth->validatePassword('test@exämple.com', 'springfield123');
 
-		$this->assertInstanceOf(User::class, $user);
+		$this->assertIsUser($user);
 		$this->assertSame('test@exämple.com', $user->email());
 	}
 
@@ -398,7 +398,7 @@ class AuthProtectionTest extends TestCase
 		$this->app->visitor()->ip('10.3.123.234');
 		$user = $this->auth->validatePassword('test@xn--exmple-cua.com', 'springfield123');
 
-		$this->assertInstanceOf(User::class, $user);
+		$this->assertIsUser($user);
 		$this->assertSame('test@exämple.com', $user->email());
 	}
 }

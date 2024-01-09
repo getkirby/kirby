@@ -3,10 +3,9 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Kirby\Filesystem\Dir;
+use Kirby\TestCase as BaseTestCase;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
-use PHPUnit\Framework\TestCase as BaseTestCase;
 
 require_once __DIR__ . '/mocks.php';
 
@@ -38,9 +37,7 @@ class TestCase extends BaseTestCase
 		App::destroy();
 		Blueprint::$loaded = [];
 
-		if ($this->hasTmp() === true) {
-			Dir::remove(static::TMP);
-		}
+		$this->tearDownTmp();
 
 		// mock class
 		ErrorLog::$log = '';
@@ -74,39 +71,11 @@ class TestCase extends BaseTestCase
 		return $this->site()->homePage();
 	}
 
-	public function assertIsSite($input)
-	{
-		$this->assertInstanceOf(Site::class, $input);
-	}
-
-	public function assertIsPage($input, $id = null)
-	{
-		$this->assertInstanceOf(Page::class, $input);
-
-		if (is_string($id)) {
-			$this->assertSame($id, $input->id());
-		}
-
-		if ($id instanceof Page) {
-			$this->assertSame($input, $id);
-		}
-	}
-
-	public function assertIsFile($input, $id = null)
-	{
-		$this->assertInstanceOf(File::class, $input);
-
-		if (is_string($id)) {
-			$this->assertSame($id, $input->id());
-		}
-
-		if ($id instanceof File) {
-			$this->assertSame($input, $id);
-		}
-	}
-
-	public function assertHooks(array $hooks, Closure $action, $appProps = [])
-	{
+	public function assertHooks(
+		array $hooks,
+		Closure $action,
+		$appProps = []
+	): void {
 		$phpUnit   = $this;
 		$triggered = 0;
 
@@ -133,14 +102,5 @@ class TestCase extends BaseTestCase
 
 		$action->call($this, $app);
 		$this->assertSame(count($hooks), $triggered);
-	}
-
-	/**
-	 * Checks if the test class extending this test case class
-	 * has defined a temporary directory
-	 */
-	protected function hasTmp(): bool
-	{
-		return defined(get_class($this) . '::TMP');
 	}
 }

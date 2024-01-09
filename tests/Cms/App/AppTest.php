@@ -452,18 +452,18 @@ class AppTest extends TestCase
 		]);
 
 		$image = $app->image('test/pagefile.jpg');
-		$this->assertInstanceOf(File::class, $image);
+		$this->assertIsFile($image);
 
 		$image = $app->image('/sitefile.jpg');
-		$this->assertInstanceOf(File::class, $image);
+		$this->assertIsFile($image);
 
 		// get the first image of the current page
 		$app->site()->visit('test');
 		$image = $app->image();
-		$this->assertInstanceOf(File::class, $image);
+		$this->assertIsFile($image);
 
 		$image = $app->image('pagefile.jpg');
-		$this->assertInstanceOf(File::class, $image);
+		$this->assertIsFile($image);
 
 		$image = $app->image('does-not-exist.jpg');
 		$this->assertNull($image);
@@ -505,7 +505,7 @@ class AppTest extends TestCase
 
 		$this->assertSame('sitefile.jpg', $models->current()->filename());
 		$models->next();
-		$this->assertInstanceOf(Site::class, $models->current());
+		$this->assertIsSite($models->current());
 		$models->next();
 		$this->assertSame('pagefile.jpg', $models->current()->filename());
 		$models->next();
@@ -802,7 +802,7 @@ class AppTest extends TestCase
 		$response = $app->call('projects');
 		$route    = $app->route();
 
-		$this->assertInstanceOf(Page::class, $response);
+		$this->assertIsPage($response);
 		$this->assertInstanceOf(Route::class, $route);
 	}
 
@@ -985,7 +985,7 @@ class AppTest extends TestCase
 		$page = $app->page('test');
 		$file = $page->file('test-a.jpg');
 
-		$this->assertSame($file, $app->file('file://my-file'));
+		$this->assertIsFile($file, $app->file('file://my-file'));
 	}
 
 	public function testBlueprints()
@@ -1470,7 +1470,7 @@ class AppTest extends TestCase
 		]);
 
 		$page = $app->page('test');
-		$this->assertSame($page, $app->page('page://my-page'));
+		$this->assertIsPage($page, $app->page('page://my-page'));
 	}
 
 	/**

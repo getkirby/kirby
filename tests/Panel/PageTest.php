@@ -6,8 +6,8 @@ use Kirby\Cms\App;
 use Kirby\Cms\Page as ModelPage;
 use Kirby\Cms\Site as ModelSite;
 use Kirby\Filesystem\Dir;
+use Kirby\TestCase;
 use Kirby\Toolkit\Str;
-use PHPUnit\Framework\TestCase;
 
 class ModelPageTestForceLocked extends ModelPage
 {

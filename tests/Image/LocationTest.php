@@ -2,7 +2,7 @@
 
 namespace Kirby\Image;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class LocationTest extends TestCase
 {

@@ -26,7 +26,7 @@ class AppResolveTest extends TestCase
 
 		$result = $app->resolve(null);
 
-		$this->assertInstanceOf(Page::class, $result);
+		$this->assertIsPage($result);
 		$this->assertTrue($result->isHomePage());
 	}
 
@@ -47,7 +47,7 @@ class AppResolveTest extends TestCase
 
 		$result = $app->resolve('test');
 
-		$this->assertInstanceOf(Page::class, $result);
+		$this->assertIsPage($result);
 		$this->assertSame('test', $result->id());
 	}
 
@@ -71,7 +71,7 @@ class AppResolveTest extends TestCase
 
 		$result = $app->resolve('test/subpage');
 
-		$this->assertInstanceOf(Page::class, $result);
+		$this->assertIsPage($result);
 		$this->assertSame('test/subpage', $result->id());
 	}
 
@@ -138,7 +138,7 @@ class AppResolveTest extends TestCase
 		// existing file
 		$result = $app->resolve('test.jpg');
 
-		$this->assertInstanceOf(File::class, $result);
+		$this->assertIsFile($result);
 		$this->assertSame('test.jpg', $result->id());
 	}
 
@@ -167,7 +167,7 @@ class AppResolveTest extends TestCase
 		// existing file
 		$result = $app->resolve('test/test.jpg');
 
-		$this->assertInstanceOf(File::class, $result);
+		$this->assertIsFile($result);
 		$this->assertSame('test/test.jpg', $result->id());
 	}
 
@@ -211,7 +211,7 @@ class AppResolveTest extends TestCase
 		// finding the page
 		$result = $app->resolve('test');
 
-		$this->assertInstanceOf(Page::class, $result);
+		$this->assertIsPage($result);
 		$this->assertSame('test', $result->id());
 		$this->assertSame('de', $app->language()->code());
 
@@ -235,7 +235,7 @@ class AppResolveTest extends TestCase
 		// finding the page
 		$result = $app->resolve('test', 'en');
 
-		$this->assertInstanceOf(Page::class, $result);
+		$this->assertIsPage($result);
 		$this->assertSame('test', $result->id());
 		$this->assertSame('en', $app->language()->code());
 

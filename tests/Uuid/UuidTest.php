@@ -48,7 +48,7 @@ class UuidTest extends TestCase
 		);
 		$this->assertInstanceOf(Uri::class, $uuid->uri);
 		$this->assertSame('page://my-page', $uuid->uri->toString());
-		$this->assertSame($page, $uuid->model);
+		$this->assertIsPage($page, $uuid->model);
 		$this->assertSame($siblings, $uuid->context);
 	}
 
@@ -399,7 +399,7 @@ class UuidTest extends TestCase
 		// for Uuid that was constructed from model
 		$page = $this->app->page('page-a');
 		$uuid = $page->uuid();
-		$this->assertSame($page, $uuid->model());
+		$this->assertIsPage($page, $uuid->model());
 
 		// from cache (enforce via $lazy)
 		$uuid = new PageUuid('page://my-page');
@@ -407,14 +407,14 @@ class UuidTest extends TestCase
 		$this->assertNull($uuid->model(true));
 		$uuid->populate();
 		$this->assertTrue($uuid->isCached());
-		$this->assertSame($page, $uuid->model(true));
+		$this->assertIsPage($page, $uuid->model(true));
 		$uuid->clear(true);
 
 		// from index
 		$uuid = new PageUuid('page://my-page');
 		$this->assertFalse($uuid->isCached());
 		$this->assertNull($uuid->model(true));
-		$this->assertSame($page, $uuid->model());
+		$this->assertIsPage($page, $uuid->model());
 		$this->assertTrue($uuid->isCached());
 	}
 
@@ -502,7 +502,7 @@ class UuidTest extends TestCase
 		$this->assertSame(Uuids::cache()->get($key), 'invalid-id');
 		$this->assertNull($uuid->model(true));
 		$this->assertSame(Uuids::cache()->get($key), 'invalid-id');
-		$this->assertSame($page, $uuid->model());
+		$this->assertIsPage($page, $uuid->model());
 		$this->assertSame(Uuids::cache()->get($key), 'page-a');
 	}
 }

@@ -21,7 +21,7 @@ class RouterTest extends TestCase
 		]);
 
 		$page = $app->call('');
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertSame('home', $page->id());
 	}
 
@@ -87,7 +87,7 @@ class RouterTest extends TestCase
 		]);
 
 		$page = $app->call('projects');
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertSame('projects', $page->id());
 	}
 
@@ -140,7 +140,7 @@ class RouterTest extends TestCase
 		]);
 
 		$file = $app->call('projects/cover.jpg');
-		$this->assertInstanceOf(File::class, $file);
+		$this->assertIsFile($file);
 		$this->assertSame('projects/cover.jpg', $file->id());
 	}
 
@@ -157,7 +157,7 @@ class RouterTest extends TestCase
 		]);
 
 		$file = $app->call('background.jpg');
-		$this->assertInstanceOf(File::class, $file);
+		$this->assertIsFile($file);
 		$this->assertSame('background.jpg', $file->id());
 	}
 
@@ -179,7 +179,7 @@ class RouterTest extends TestCase
 		]);
 
 		$page = $app->call('projects/project-a');
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertSame('projects/project-a', $page->id());
 	}
 
@@ -359,7 +359,7 @@ class RouterTest extends TestCase
 		// fr
 		$page = $app->call('fr');
 
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertSame('home', $page->id());
 		$this->assertSame('fr', $app->language()->code());
 		$this->assertSame('fr', I18n::locale());
@@ -367,7 +367,7 @@ class RouterTest extends TestCase
 		// en
 		$page = $app->call('en');
 
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertSame('home', $page->id());
 		$this->assertSame('en', $app->language()->code());
 		$this->assertSame('en', I18n::locale());
@@ -407,7 +407,7 @@ class RouterTest extends TestCase
 		// fr
 		$page = $app->call('/');
 
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertSame('home', $page->id());
 		$this->assertSame('fr', $app->language()->code());
 		$this->assertSame('fr', I18n::locale());
@@ -415,7 +415,7 @@ class RouterTest extends TestCase
 		// en
 		$page = $app->call('en');
 
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertSame('home', $page->id());
 		$this->assertSame('en', $app->language()->code());
 		$this->assertSame('en', I18n::locale());
@@ -464,7 +464,7 @@ class RouterTest extends TestCase
 		// home
 		$page = $app->call('');
 
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertSame('home', $page->id());
 		$this->assertSame($language, $app->language()->code());
 		$this->assertSame($language, I18n::locale());
@@ -509,7 +509,7 @@ class RouterTest extends TestCase
 		// home
 		$page = $app->call('subfolder');
 
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertSame('home', $page->id());
 		$this->assertSame($language, $app->language()->code());
 		$this->assertSame($language, I18n::locale());
@@ -621,7 +621,7 @@ class RouterTest extends TestCase
 		// en
 		$page = $app->call('en/projects');
 
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertSame('projects', $page->id());
 		$this->assertSame('en', $app->language()->code());
 		$this->assertSame('en', I18n::locale());
@@ -629,7 +629,7 @@ class RouterTest extends TestCase
 		// fr
 		$page = $app->call('fr/projects');
 
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertSame('projects', $page->id());
 		$this->assertSame('fr', $app->language()->code());
 		$this->assertSame('fr', I18n::locale());

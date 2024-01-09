@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class BlockTest extends TestCase
 {
@@ -139,7 +139,7 @@ class BlockTest extends TestCase
 			'type'   => 'heading'
 		]);
 
-		$this->assertSame($page, $block->content()->parent());
+		$this->assertIsPage($page, $block->content()->parent());
 	}
 
 	public function testToArray()

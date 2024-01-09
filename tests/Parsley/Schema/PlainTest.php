@@ -3,8 +3,8 @@
 namespace Kirby\Parsley\Schema;
 
 use Kirby\Parsley\Element;
+use Kirby\TestCase;
 use Kirby\Toolkit\Dom;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Parsley\Schema\Plain

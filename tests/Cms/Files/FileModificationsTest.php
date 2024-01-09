@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Asset;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class FileModificationsTest extends TestCase
 {
@@ -177,7 +177,7 @@ class FileModificationsTest extends TestCase
 	public function testThumbWithNoOptions()
 	{
 		$file = $this->app->file('test.jpg');
-		$this->assertSame($file, $file->thumb([]));
+		$this->assertIsFile($file, $file->thumb([]));
 	}
 
 	public function testBlur()

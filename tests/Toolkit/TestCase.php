@@ -2,7 +2,7 @@
 
 namespace Kirby\Toolkit;
 
-class TestCase extends \PHPUnit\Framework\TestCase
+class TestCase extends \Kirby\TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 }

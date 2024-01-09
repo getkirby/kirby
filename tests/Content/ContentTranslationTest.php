@@ -4,7 +4,7 @@ namespace Kirby\Content;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass Kirby\Content\ContentTranslation
@@ -28,7 +28,7 @@ class ContentTranslationTest extends TestCase
 			'code'   => 'de'
 		]);
 
-		$this->assertSame($page, $translation->parent());
+		$this->assertIsPage($page, $translation->parent());
 		$this->assertSame('de', $translation->code());
 		$this->assertSame('de', $translation->id());
 	}

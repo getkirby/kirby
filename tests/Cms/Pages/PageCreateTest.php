@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\DuplicateException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 use TypeError;
 
 class UncreatablePage extends Page
@@ -54,7 +54,7 @@ class PageCreateTest extends TestCase
 		]);
 
 		$this->assertTrue($page->exists());
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertTrue($page->isDraft());
 		$this->assertTrue($page->parentModel()->drafts()->has($page));
 		$this->assertTrue($site->drafts()->has($page));
@@ -120,7 +120,7 @@ class PageCreateTest extends TestCase
 		]);
 
 		$this->assertTrue($page->exists());
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertFalse($page->isDraft());
 		$this->assertTrue($page->parentModel()->children()->has($page));
 		$this->assertTrue($site->children()->has($page));
@@ -135,7 +135,7 @@ class PageCreateTest extends TestCase
 		]);
 
 		$this->assertTrue($page->exists());
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertFalse($page->isDraft());
 		$this->assertFalse($page->isListed());
 		$this->assertTrue($page->parentModel()->children()->has($page));
@@ -152,7 +152,7 @@ class PageCreateTest extends TestCase
 		]);
 
 		$this->assertTrue($page->exists());
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertFalse($page->isDraft());
 		$this->assertFalse($page->isListed());
 		$this->assertTrue($page->parentModel()->children()->has($page));

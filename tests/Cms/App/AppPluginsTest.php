@@ -324,13 +324,11 @@ class AppPluginsTest extends TestCase
 				'index' => '/dev/null'
 			],
 			'collections' => [
-				'test' => function () use ($pages) {
-					return $pages;
-				}
+				'test' => fn () => $pages
 			],
 		]);
 
-		$this->assertSame($page, $kirby->collection('test')->first());
+		$this->assertIsPage($page, $kirby->collection('test')->first());
 	}
 
 	public function testCollectionFilters()

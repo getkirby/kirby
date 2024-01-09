@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Content\Field;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class NestObjectTest extends TestCase
 {

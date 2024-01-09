@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Panel\Model;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class PagesSectionTest extends TestCase
 {

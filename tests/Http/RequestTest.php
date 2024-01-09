@@ -8,7 +8,7 @@ use Kirby\Http\Request\Auth\BearerAuth;
 use Kirby\Http\Request\Body;
 use Kirby\Http\Request\Files;
 use Kirby\Http\Request\Query;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class RequestTest extends TestCase
 {

@@ -2,7 +2,7 @@
 
 namespace Kirby\Filesystem;
 
-use PHPUnit\Framework\TestCase as TestCase;
+use Kirby\TestCase as TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Filesystem\Filename
