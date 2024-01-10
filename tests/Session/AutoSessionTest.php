@@ -4,7 +4,7 @@ namespace Kirby\Session;
 
 use Kirby\Cms\App;
 use Kirby\Http\Cookie;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 use ReflectionClass;
 
 require_once __DIR__ . '/mocks.php';

@@ -412,7 +412,7 @@ class PageTest extends TestCase
 			'site' => $site
 		]);
 
-		$this->assertSame($site, $page->site());
+		$this->assertIsSite($site, $page->site());
 	}
 
 	public function testInvalidSite()
@@ -1038,7 +1038,7 @@ class PageTest extends TestCase
 		$this->assertSame($app, $data['kirby']);
 		$this->assertSame($app->site(), $data['site']);
 		$this->assertSame($app->site()->children(), $data['pages']);
-		$this->assertInstanceOf(Page::class, $data['page']);
+		$this->assertIsPage($data['page']);
 		$this->assertSame('New Foo Title', $data['page']->title()->value());
 
 		// invalid test

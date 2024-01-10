@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\Exception;
 use Kirby\Http\Response;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class AppIoTest extends TestCase
 {

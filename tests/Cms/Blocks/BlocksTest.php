@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Yaml;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class BlocksTest extends TestCase
 {

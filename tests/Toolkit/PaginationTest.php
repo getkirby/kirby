@@ -4,7 +4,7 @@ namespace Kirby\Toolkit;
 
 use Kirby\Exception\ErrorPageException;
 use Kirby\Exception\Exception;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class PaginationTest extends TestCase
 {

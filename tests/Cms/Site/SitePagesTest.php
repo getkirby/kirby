@@ -14,7 +14,7 @@ class SitePagesTest extends TestCase
 			]
 		]);
 
-		$this->assertIsPage($site->errorPage(), 'error');
+		$this->assertIsPage('error', $site->errorPage());
 	}
 
 	public function testHomePage()
@@ -25,7 +25,7 @@ class SitePagesTest extends TestCase
 			]
 		]);
 
-		$this->assertIsPage($site->homePage(), 'home');
+		$this->assertIsPage('home', $site->homePage());
 	}
 
 	public function testPage()
@@ -34,7 +34,7 @@ class SitePagesTest extends TestCase
 			'page' => $page = new Page(['slug' => 'test'])
 		]);
 
-		$this->assertIsPage($site->page(), $page);
+		$this->assertIsPage($page, $site->page());
 	}
 
 	public function testDefaultPageWithChildren()
@@ -45,7 +45,7 @@ class SitePagesTest extends TestCase
 			]
 		]);
 
-		$this->assertIsPage($site->page(), 'home');
+		$this->assertIsPage('home', $site->page());
 	}
 
 	public function testPageWithPathAndChildren()
@@ -56,7 +56,7 @@ class SitePagesTest extends TestCase
 			]
 		]);
 
-		$this->assertIsPage($site->page('test'), 'test');
+		$this->assertIsPage('test', $site->page('test'));
 	}
 
 	public function testVisitWithPageObject()
@@ -64,8 +64,8 @@ class SitePagesTest extends TestCase
 		$site = new Site();
 		$page = $site->visit(new Page(['slug' => 'test']));
 
-		$this->assertIsPage($site->page(), 'test');
-		$this->assertIsPage($site->page(), $page);
+		$this->assertIsPage('test', $site->page());
+		$this->assertIsPage($page, $site->page());
 	}
 
 	public function testVisitWithId()
@@ -78,8 +78,8 @@ class SitePagesTest extends TestCase
 
 		$page = $site->visit('test');
 
-		$this->assertIsPage($site->page(), 'test');
-		$this->assertIsPage($site->page(), $page);
+		$this->assertIsPage('test', $site->page());
+		$this->assertIsPage($page, $site->page());
 	}
 
 	public function testVisitInvalid()

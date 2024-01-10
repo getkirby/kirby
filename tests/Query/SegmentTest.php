@@ -35,7 +35,7 @@ class MyGetObj
 /**
  * @coversDefaultClass Kirby\Query\Segment
  */
-class SegmentTest extends \PHPUnit\Framework\TestCase
+class SegmentTest extends \Kirby\TestCase
 {
 	public static function scalarProvider(): array
 	{

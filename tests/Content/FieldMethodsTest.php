@@ -15,7 +15,7 @@ use Kirby\Data\Yaml;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Image\QrCode;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class FieldMethodsTest extends TestCase
 {
@@ -951,7 +951,7 @@ class FieldMethodsTest extends TestCase
 		$blocks = $field->toBlocks();
 
 		$this->assertInstanceOf(Blocks::class, $blocks);
-		$this->assertInstanceOf(Page::class, $blocks->parent());
+		$this->assertIsPage($blocks->parent());
 		$this->assertCount(count($data), $blocks);
 		$this->assertCount(count($data), $blocks->data());
 

@@ -5,7 +5,7 @@ namespace Kirby\Cms\System;
 use Kirby\Cms\Plugin;
 use Kirby\Data\Json;
 use Kirby\Filesystem\Dir;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 require_once __DIR__ . '/mocks.php';
 

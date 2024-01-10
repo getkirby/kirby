@@ -46,7 +46,7 @@ class PageModelTest extends TestCase
 			'model' => 'project',
 		]);
 
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertFalse(method_exists($page, 'test'));
 	}
 }

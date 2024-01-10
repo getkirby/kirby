@@ -105,7 +105,7 @@ export default {
 	computed: {
 		draggableOptions() {
 			return {
-				id: this._uid,
+				id: this.id,
 				handle: ".k-sort-handle",
 				list: this.blocks,
 				move: this.move,

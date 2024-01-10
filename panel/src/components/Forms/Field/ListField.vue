@@ -1,8 +1,7 @@
 <template>
-	<k-field v-bind="$props" :input="_uid" :counter="false" class="k-list-field">
+	<k-field v-bind="$props" :input="id" :counter="false" class="k-list-field">
 		<k-input
 			v-bind="$props"
-			:id="_uid"
 			ref="input"
 			type="list"
 			@input="$emit('input', $event)"

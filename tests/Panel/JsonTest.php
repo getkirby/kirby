@@ -3,7 +3,7 @@
 namespace Kirby\Panel;
 
 use Exception;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Json

@@ -6,8 +6,8 @@ use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Image\QrCode;
+use Kirby\TestCase;
 use Kirby\Toolkit\Totp;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Panel\UserTotpEnableDialog

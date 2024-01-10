@@ -7,7 +7,7 @@ use Kirby\Exception\LogicException;
 /**
  * @coversDefaultClass Kirby\Query\Expression
  */
-class ExpressionTest extends \PHPUnit\Framework\TestCase
+class ExpressionTest extends \Kirby\TestCase
 {
 	/**
 	 * @covers ::__construct

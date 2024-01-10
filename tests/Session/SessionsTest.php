@@ -7,7 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Cookie;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 use ReflectionClass;
 use TypeError;
 

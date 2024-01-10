@@ -186,7 +186,7 @@ class MediaTest extends TestCase
 		// get file object
 		$file  = $this->app->file('test.jpg');
 		Dir::make(dirname($file->mediaRoot()));
-		$this->assertInstanceOf(File::class, $file);
+		$this->assertIsFile($file);
 
 		// create job file
 		$jobString = '{"width":64,"height":64,"quality":null,"crop":"center","filename":"test.jpg"}';
@@ -275,7 +275,7 @@ class MediaTest extends TestCase
 		// get file object
 		$file  = $this->app->file('test.jpg');
 		Dir::make(static::TMP . '/media/assets/site/' . $file->mediaHash());
-		$this->assertInstanceOf(File::class, $file);
+		$this->assertIsFile($file);
 
 		// create job file
 		$jobString = '{"width":64,"height":64,"quality":null,"crop":"center","filename":"test.jpg"}';

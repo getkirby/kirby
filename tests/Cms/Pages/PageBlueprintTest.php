@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Cms\PageBlueprint
@@ -29,7 +29,7 @@ class PageBlueprintTest extends TestCase
 			'create'         => null,
 			'delete'         => null,
 			'duplicate'      => null,
-			'list'					 => null,
+			'list'			 => null,
 			'move'           => null,
 			'preview'        => null,
 			'read'           => null,
@@ -47,7 +47,7 @@ class PageBlueprintTest extends TestCase
 		new App([
 			'blueprints' => [
 				'options/default' => [
-					'changeSlug' => true,
+					'changeSlug'     => true,
 					'changeTemplate' => false,
 				]
 			]
