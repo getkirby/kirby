@@ -135,7 +135,7 @@
 
 	"error.license.domain": "Lisans için alan adı eksik",
 	"error.license.email": "Lütfen geçerli bir e-posta adresi girin",
-	"error.license.format": "Please enter a valid license code",
+	"error.license.format": "Lütfen geçerli bir lisans anahtarı girin",
 	"error.license.verification": "Lisans doğrulanamadı",
 
 	"error.login.totp.confirm.invalid": "Geçersiz kod",
@@ -425,7 +425,7 @@
 	"license.code.label": "Lütfen lisans kodunu giriniz",
 	"license.status.active.info": "{date} tarihine kadar yeni ana sürümleri içerir",
 	"license.status.active.label": "Geçerli lisans",
-	"license.status.demo.info": "This is a demo installation",
+	"license.status.demo.info": "Bu bir demo kurulumudur",
 	"license.status.demo.label": "Demo",
 	"license.status.inactive.info": "Yeni ana sürümlere güncellemek için lisansı yenileyin",
 	"license.status.inactive.label": "Yeni ana sürüm yok",

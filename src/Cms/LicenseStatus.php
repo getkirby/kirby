@@ -44,6 +44,22 @@ enum LicenseStatus: string
 	case Missing = 'missing';
 
 	/**
+	 * Checks if the license can be saved when it
+	 * was entered in the activation dialog;
+	 * renewable licenses are accepted as well
+	 * to allow renewal from the Panel
+	 */
+	public function activatable(): bool
+	{
+		return match ($this) {
+			static::Active,
+			static::Inactive,
+			static::Legacy    => true,
+			default           => false
+		};
+	}
+
+	/**
 	 * Returns the dialog according to the status
 	 */
 	public function dialog(): string
@@ -95,7 +111,7 @@ enum LicenseStatus: string
 	public function renewable(): bool
 	{
 		return match ($this) {
-			static::Demo   => false,
+			static::Demo,
 			static::Active => false,
 			default        => true
 		};

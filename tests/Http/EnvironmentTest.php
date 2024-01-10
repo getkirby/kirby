@@ -1050,6 +1050,7 @@ class EnvironmentTest extends TestCase
 			['localhost', true],
 			['mydomain.local', true],
 			['mydomain.test', true],
+			['mydomain.ddev.site', true],
 			['mydomain.com', false],
 			['mydomain.dev', false],
 		];
