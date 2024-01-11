@@ -11,7 +11,7 @@ if (
 	$url   = $video->url();
 	$attrs = array_filter([
 		'controls' => true,
-		'poster'   => $block->poster()->toFile()->url()
+		'poster'   => $block->poster()->toFile()?->url()
 	]);
 } else {
 	$url = $block->url();
