@@ -6,7 +6,7 @@
 			containerType ? 'k-block-container-type-' + containerType : ''
 		]"
 		:data-batched="isBatched"
-		:data-disabled="fieldset.disabled"
+		:data-disabled="disabled || fieldset.disabled"
 		:data-hidden="isHidden"
 		:data-id="id"
 		:data-last-selected="isLastSelected"
@@ -35,12 +35,14 @@
 
 		<k-block-options
 			ref="options"
-			:is-batched="isBatched"
-			:is-editable="isEditable"
-			:is-full="isFull"
-			:is-hidden="isHidden"
-			:is-mergable="isMergable"
-			:is-splitable="isSplitable()"
+			v-bind="{
+				isBatched,
+				isEditable,
+				isFull,
+				isHidden,
+				isMergable,
+				isSplitable: isSplitable()
+			}"
 			v-on="{
 				...listeners,
 				split: () => $refs.editor.split(),
@@ -57,7 +59,11 @@
 </template>
 
 <script>
+import { props as BlockProps } from "./Types/Default.vue";
+import { props as BlockOptionsProps } from "./BlockOptions.vue";
+
 export default {
+	mixins: [BlockProps, BlockOptionsProps],
 	inheritAttrs: false,
 	props: {
 		/**
@@ -68,52 +74,9 @@ export default {
 			type: [Array, Object]
 		},
 		/**
-		 * The block content is an object of values, depending
-		 * on the block type.
-		 */
-		content: {
-			default: () => ({}),
-			type: [Array, Object]
-		},
-		/**
-		 * API endpoints `{ field, model, section }`
-		 */
-		endpoints: {
-			default: () => ({}),
-			type: [Array, Object]
-		},
-		/**
-		 * The fieldset definition with all fields, tabs, etc.
-		 */
-		fieldset: {
-			default: () => ({}),
-			type: Object
-		},
-		/**
-		 * A unique ID for the block
-		 */
-		id: String,
-		/**
-		 * If `true` the block is selected together with other blocks
-		 */
-		isBatched: Boolean,
-		/**
-		 * If `true` the blocks field is full and no more blocks can be added
-		 */
-		isFull: Boolean,
-		/**
-		 * If `true` the block is hidden on the frontend
-		 */
-		isHidden: Boolean,
-		/**
-		 * If `true` the block is the last selected item in a list of batched blocks.
-		 * The last one shows the toolbar.
+		 * If `true` the block is the last selected item in a list of batched blocks.  The last one shows the toolbar.
 		 */
 		isLastSelected: Boolean,
-		/**
-		 * If `true` the block can be merged with another selected block when it is batched.
-		 */
-		isMergable: Boolean,
 		/**
 		 * If `true` the block is marked as selected
 		 */

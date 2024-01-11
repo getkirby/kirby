@@ -15,17 +15,20 @@
 					v-for="(block, index) in blocks"
 					:ref="'block-' + block.id"
 					:key="block.id"
-					v-bind="block"
-					:endpoints="endpoints"
-					:fieldset="fieldset(block)"
-					:is-batched="isSelected(block) && selected.length > 1"
-					:is-last-selected="isLastSelected(block)"
-					:is-full="isFull"
-					:is-hidden="block.isHidden === true"
-					:is-mergable="isMergable"
-					:is-selected="isSelected(block)"
-					:next="prevNext(index + 1)"
-					:prev="prevNext(index - 1)"
+					v-bind="{
+						...block,
+						disabled,
+						endpoints,
+						fieldset: fieldset(block),
+						isBatched: isSelected(block) && selected.length > 1,
+						isFull,
+						isHidden: block.isHidden === true,
+						isLastSelected: isLastSelected(block),
+						isMergable,
+						isSelected: isSelected(block),
+						next: prevNext(index + 1),
+						prev: prevNext(index - 1)
+					}"
 					@append="add($event, index + 1)"
 					@chooseToAppend="choose(index + 1)"
 					@chooseToConvert="chooseToConvert(block)"
@@ -73,12 +76,11 @@
 
 <script>
 import { set } from "vue";
+import { autofocus, disabled } from "@/mixins/props.js";
 
-export default {
-	inheritAttrs: false,
+export const props = {
+	mixins: [autofocus, disabled],
 	props: {
-		autofocus: Boolean,
-		disabled: Boolean,
 		empty: String,
 		endpoints: Object,
 		fieldsets: Object,
@@ -93,7 +95,12 @@ export default {
 			default: () => []
 		}
 	},
-	emits: ["input"],
+	emits: ["input"]
+};
+
+export default {
+	mixins: [props],
+	inheritAttrs: false,
 	data() {
 		return {
 			blocks: this.value ?? [],

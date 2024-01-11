@@ -25,11 +25,13 @@
 </template>
 
 <script>
+import Block from "./Default.vue";
+
 /**
  * @displayName BlockTypeCode
- * @internal
  */
 export default {
+	extends: Block,
 	computed: {
 		placeholder() {
 			return this.field("code", {}).placeholder;
