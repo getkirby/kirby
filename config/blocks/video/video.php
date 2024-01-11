@@ -10,8 +10,12 @@ if (
 ) {
 	$url   = $video->url();
 	$attrs = array_filter([
-		'controls' => true,
-		'poster'   => $block->poster()->toFile()?->url()
+		'autoplay' => $block->autoplay()->toBool(),
+		'controls' => $block->controls()->toBool(),
+		'loop'     => $block->loop()->toBool(),
+		'muted'    => $block->muted()->toBool(),
+		'poster'   => $block->poster()->toFile()?->url(),
+		'preload'  => $block->preload()->value(),
 	]);
 } else {
 	$url = $block->url();

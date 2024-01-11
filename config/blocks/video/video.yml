@@ -37,3 +37,35 @@ fields:
     label: field.blocks.video.caption
     type: writer
     inline: true
+  autoplay:
+    type: toggle
+    width: 1/3
+    when:
+      location: kirby
+  muted:
+    type: toggle
+    width: 1/3
+    default: true
+    when:
+      location: kirby
+  loop:
+    type: toggle
+    width: 1/3
+    when:
+      location: kirby
+  controls:
+    type: toggle
+    width: 1/3
+    default: true
+    when:
+      location: kirby
+  preload:
+    type: select
+    width: 2/3
+    default: auto
+    options:
+      - auto
+      - metadata
+      - none
+    when:
+      location: kirby
