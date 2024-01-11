@@ -13,11 +13,13 @@
 </template>
 
 <script>
+import Block from "./Default.vue";
+
 /**
  * @displayName BlockTypeMarkdown
- * @internal
  */
 export default {
+	extends: Block,
 	computed: {
 		placeholder() {
 			return this.field("text", {}).placeholder;

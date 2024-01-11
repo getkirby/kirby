@@ -27,11 +27,13 @@
 </template>
 
 <script>
+import Block from "./Default.vue";
+
 /**
  * @displayName BlockTypeImage
- * @internal
  */
 export default {
+	extends: Block,
 	computed: {
 		captionMarks() {
 			return this.field("caption", { marks: true }).marks;

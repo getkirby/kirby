@@ -21,7 +21,7 @@
 			v-if="!collapsed"
 			ref="form"
 			:autofocus="true"
-			:disabled="!fieldset.wysiwyg"
+			:disabled="disabled || !fieldset.wysiwyg"
 			:fields="fields"
 			:value="values"
 			class="k-block-type-fields-form"
@@ -31,12 +31,14 @@
 </template>
 
 <script>
+import Block from "./Default.vue";
+
 /**
  * @displayName BlockTypeFields
  * @since 4.0.0
- * @internal
  */
 export default {
+	extends: Block,
 	props: {
 		endpoints: Object,
 		tabs: Object
