@@ -47,8 +47,8 @@
 				<table>
 					<thead>
 						<tr>
-							<th data-has-button><button>Name</button></th>
-							<th data-has-button><button>Date</button></th>
+							<th data-has-button="true"><button>Name</button></th>
+							<th data-has-button="true"><button>Date</button></th>
 						</tr>
 					</thead>
 					<tbody>

@@ -203,7 +203,7 @@ export default {
 .k-upload-item-toggle > * {
 	padding: var(--spacing-3);
 }
-.k-upload-item[data-completed] .k-upload-item-progress {
+.k-upload-item[data-completed="true"] .k-upload-item-progress {
 	--progress-color-value: var(--color-green-400);
 }
 </style>

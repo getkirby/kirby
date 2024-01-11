@@ -169,7 +169,7 @@ export default {
 	/* Make sure that buttons don't shrink in height */
 	flex-shrink: 0;
 }
-.k-panel-menu-button[aria-current] {
+.k-panel-menu-button[aria-current="true"] {
 	--button-color-back: var(--color-white);
 	box-shadow: var(--shadow);
 }
@@ -264,7 +264,7 @@ export default {
 	/* The toggle is visible on hover or focus */
 	.k-panel-menu-toggle:focus-visible,
 	/* The hover state is controlled via JS to avoid flickering */
-	.k-panel-menu[data-hover] .k-panel-menu-toggle {
+	.k-panel-menu[data-hover="true"] .k-panel-menu-toggle {
 		opacity: 1;
 	}
 	/* Create the outline on the icon on focus */
