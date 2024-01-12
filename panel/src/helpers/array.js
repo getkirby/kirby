@@ -62,7 +62,7 @@ Object.defineProperty(Array.prototype, "sortBy", {
 			return sorter(valueA, valueB);
 		});
 	},
-	enumerable: false,
+	enumerable: false, // This makes sure the property is not enumerable
 	writable: true,
 	configurable: true
 });
