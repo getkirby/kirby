@@ -45,22 +45,27 @@ export const search = (array, query, options = {}) => {
 /**
  * Array.sortBy()
  */
-Array.prototype.sortBy = function (sortBy) {
-	const options = sortBy.split(" ");
-	const field = options[0];
-	const direction = options[1] ?? "asc";
+Object.defineProperty(Array.prototype, "sortBy", {
+	value: function (sortBy) {
+		const options = sortBy.split(" ");
+		const field = options[0];
+		const direction = options[1] ?? "asc";
 
-	const sorter = sort({
-		desc: direction === "desc",
-		insensitive: true
-	});
+		const sorter = sort({
+			desc: direction === "desc",
+			insensitive: true
+		});
 
-	return this.sort((a, b) => {
-		const valueA = String(a[field] ?? "");
-		const valueB = String(b[field] ?? "");
-		return sorter(valueA, valueB);
-	});
-};
+		return this.sort((a, b) => {
+			const valueA = String(a[field] ?? "");
+			const valueB = String(b[field] ?? "");
+			return sorter(valueA, valueB);
+		});
+	},
+	enumerable: false,
+	writable: true,
+	configurable: true
+});
 
 /**
  * Array.split()
@@ -69,19 +74,24 @@ Array.prototype.sortBy = function (sortBy) {
  * @returns {Array}
  *
  */
-Array.prototype.split = function (delimiter) {
-	return this.reduce(
-		(entries, entry) => {
-			if (entry === delimiter) {
-				entries.push([]);
-			} else {
-				entries[entries.length - 1].push(entry);
-			}
-			return entries;
-		},
-		[[]]
-	);
-};
+Object.defineProperty(Array.prototype, "split", {
+	value: function (delimiter) {
+		return this.reduce(
+			(entries, entry) => {
+				if (entry === delimiter) {
+					entries.push([]);
+				} else {
+					entries[entries.length - 1].push(entry);
+				}
+				return entries;
+			},
+			[[]]
+		);
+	},
+	enumerable: false, // This makes sure the property is not enumerable
+	writable: true,
+	configurable: true
+});
 
 /**
  * Array.wrap()
