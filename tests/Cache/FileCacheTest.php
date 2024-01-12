@@ -6,8 +6,6 @@ use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use ReflectionMethod;
 
-require_once __DIR__ . '/mocks.php';
-
 /**
  * @coversDefaultClass \Kirby\Cache\FileCache
  */

@@ -8,8 +8,6 @@ use Kirby\TestCase as TestCase;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
-require_once dirname(__DIR__) . '/Http/mocks.php';
-
 /**
  * @coversDefaultClass \Kirby\Filesystem\F
  */

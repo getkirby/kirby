@@ -7,8 +7,6 @@ use Kirby\TestCase as BaseTestCase;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
-require_once __DIR__ . '/mocks.php';
-
 class TestCase extends BaseTestCase
 {
 	protected $app;

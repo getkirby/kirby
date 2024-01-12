@@ -8,8 +8,6 @@ use ReflectionMethod;
 use Whoops\Handler\CallbackHandler;
 use Whoops\Handler\PlainTextHandler;
 
-require_once dirname(__DIR__) . '/mocks.php';
-
 /**
  * @coversDefaultClass \Kirby\Cms\AppErrors
  */

@@ -12,8 +12,6 @@ use Kirby\Image\Image;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\I18n;
 
-require_once __DIR__ . '/../mocks.php';
-
 class DummyAuthChallenge extends Challenge
 {
 	public static function isAvailable(User $user, string $mode): bool
