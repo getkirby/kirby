@@ -543,7 +543,7 @@ export default {
 				return items;
 			}
 
-			return items.sortBy(this.sortBy);
+			return this.$helper.array.sortBy(this.items, this.sortBy);
 		},
 		/**
 		 * Converts field value to internal
