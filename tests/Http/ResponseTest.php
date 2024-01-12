@@ -5,8 +5,6 @@ namespace Kirby\Http;
 use Kirby\Exception\LogicException;
 use Kirby\TestCase;
 
-require_once __DIR__ . '/mocks.php';
-
 /**
  * @coversDefaultClass \Kirby\Http\Response
  */

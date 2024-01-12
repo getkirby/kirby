@@ -11,9 +11,6 @@ use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Throwable;
 
-require_once __DIR__ . '/../mocks.php';
-require_once __DIR__ . '/mocks.php';
-
 /**
  * @coversDefaultClass \Kirby\Cms\Auth
  */

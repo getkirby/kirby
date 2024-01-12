@@ -10,8 +10,6 @@ use Kirby\Filesystem\F;
 use Kirby\TestCase;
 use ReflectionClass;
 
-require_once __DIR__ . '/mocks.php';
-
 /**
  * @coversDefaultClass \Kirby\Session\FileSessionStore
  */

@@ -6,8 +6,6 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
 
-require_once __DIR__ . '/mocks.php';
-
 /**
  * @coversDefaultClass \Kirby\Data\Data
  */

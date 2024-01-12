@@ -14,8 +14,6 @@ use Kirby\Toolkit\SymmetricCrypto;
 use ReflectionClass;
 use TypeError;
 
-require_once __DIR__ . '/mocks.php';
-
 /**
  * @coversDefaultClass \Kirby\Session\Session
  */
