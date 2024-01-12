@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Block;
 
 /**
  * Converts the data from the old builder and editor fields

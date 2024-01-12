@@ -1,7 +1,9 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Block;
 
+use Kirby\Cms\App;
+use Kirby\Cms\Page;
 use Kirby\Data\Yaml;
 use Kirby\TestCase;
 

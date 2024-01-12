@@ -1,8 +1,9 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Block;
 
 use Exception;
+use Kirby\Cms\Items;
 use Kirby\Data\Json;
 use Kirby\Data\Yaml;
 use Kirby\Parsley\Parsley;

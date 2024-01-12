@@ -1,7 +1,9 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Block;
 
+use Kirby\Cms\HasMethods;
+use Kirby\Cms\Item;
 use Kirby\Content\Content;
 use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;

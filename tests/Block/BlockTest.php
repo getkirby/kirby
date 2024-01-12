@@ -1,7 +1,11 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Block;
 
+use Kirby\Cms\App;
+use Kirby\Cms\Page;
+use Kirby\Content\Content;
+use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 

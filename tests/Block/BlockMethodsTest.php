@@ -1,8 +1,9 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Block;
 
-use Kirby\TestCase as TestCase;
+use Kirby\Cms\App;
+use Kirby\TestCase;
 
 class BlockMethodsTest extends TestCase
 {

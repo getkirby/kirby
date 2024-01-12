@@ -1,6 +1,9 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Block;
+
+use Kirby\Cms\App;
+use Kirby\TestCase;
 
 class HeadingBlock extends Block
 {

@@ -74,6 +74,9 @@ return [
 	// Deprecated aliases:
 	// Any of these might be removed at any point in the future
 	'kirby\cms\asset'              => 'Kirby\Filesystem\Asset',
+	'kirby\cms\block'              => 'Kirby\Block\Block',
+	'kirby\cms\blockconverter'     => 'Kirby\Block\BlockConverter',
+	'kirby\cms\blocks'             => 'Kirby\Block\Blocks',
 	'kirby\cms\content'            => 'Kirby\Content\Content',
 	'kirby\cms\contenttranslation' => 'Kirby\Content\ContentTranslation',
 	'kirby\cms\dir'                => 'Kirby\Filesystem\Dir',
