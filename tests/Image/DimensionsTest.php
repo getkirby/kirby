@@ -164,6 +164,24 @@ class DimensionsTest extends TestCase
 	}
 
 	/**
+	 * @covers ::forImage
+	 */
+	public function testForImage()
+	{
+		$dimensions = Dimensions::forImage(__DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.jpg');
+		$this->assertSame(600, $dimensions->width());
+		$this->assertSame(400, $dimensions->height());
+
+		$dimensions = Dimensions::forImage(__DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.webp');
+		$this->assertSame(600, $dimensions->width());
+		$this->assertSame(400, $dimensions->height());
+
+		// $dimensions = Dimensions::forImage(__DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.avif');
+		// $this->assertSame(600, $dimensions->width());
+		// $this->assertSame(400, $dimensions->height());
+	}
+
+	/**
 	 * @covers ::forSvg
 	 */
 	public function testForSvg()
