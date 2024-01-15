@@ -305,7 +305,7 @@ class PageCreateDialog
 
 	public function value(): array
 	{
-		return [
+		$value = [
 			'parent'   => $this->parentId,
 			'section'  => $this->sectionId,
 			'slug'     => $this->slug ?? '',
@@ -313,5 +313,12 @@ class PageCreateDialog
 			'title'    => $this->title ?? '',
 			'view'     => $this->viewId,
 		];
+
+		// add default values for custom fields
+		foreach ($this->customFields() as $name => $field) {
+			$value[$name] = $field['default'] ?? null;
+		}
+
+		return $value;
 	}
 }

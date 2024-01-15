@@ -191,4 +191,46 @@ class PageCreateDialogTest extends AreaTestCase
 
 		$this->assertTrue($valid);
 	}
+
+	/**
+	 * @covers ::value
+	 */
+	public function testValue(): void
+	{
+		$this->app([
+			'blueprints' => [
+				'pages/test' => [
+					'create' => [
+						'fields' => ['foo']
+					],
+					'fields' => [
+						'foo' => [
+							'type'     => 'text',
+							'required' => true,
+							'default'  => 'bar'
+						]
+					]
+				]
+			]
+		]);
+
+		$dialog = new PageCreateDialog(
+			null,
+			null,
+			'test',
+			null
+		);
+
+		$value = $dialog->value();
+
+		$this->assertSame([
+			'parent'   => 'site',
+			'section'  => null,
+			'slug'     => '',
+			'template' => 'test',
+			'title'    => '',
+			'view'     => null,
+			'foo'      => 'bar'
+		], $value);
+	}
 }
