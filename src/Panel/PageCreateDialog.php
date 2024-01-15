@@ -203,14 +203,29 @@ class PageCreateDialog
 
 		$this->template ??= $blueprints[0]['name'];
 
-		$status = $this->blueprint()->create()['status'] ?? 'draft';
-		$status = $this->blueprint()->status()[$status]['label'] ?? I18n::translate('page.status.' . $status);
+		$status   = $this->blueprint()->create()['status'] ?? 'draft';
+		$status   = $this->blueprint()->status()[$status]['label'] ?? null;
+		$status ??= I18n::translate('page.status.' . $status);
+
+		$fields  = $this->fields();
+		$visible = array_filter(
+			$fields,
+			fn ($field) => ($field['hidden'] ?? null) !== true
+		);
+
+		// immediately submit the dialog if there is no editable field
+		if (count($visible) === 0 && count($blueprints) < 2) {
+			$input    = $this->value();
+			$response = $this->submit($input);
+			$response['redirect'] ??= $this->parent->panel()->url(true);
+			Panel::go($response['redirect']);
+		}
 
 		return [
 			'component' => 'k-page-create-dialog',
 			'props' => [
 				'blueprints'   => $blueprints,
-				'fields'       => $this->fields(),
+				'fields'       => $fields,
 				'submitButton' => I18n::template('page.create', [
 					'status' => $status
 				]),
