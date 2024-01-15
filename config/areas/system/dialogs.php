@@ -21,7 +21,7 @@ return [
 					'license' => [
 						'code'  => $license->code($obfuscated),
 						'icon'  => $status->icon(),
-						'info'  => $status->info($license->renewal('Y-m-d')),
+						'info'  => $status->info($license->renewal('Y-m-d', 'date')),
 						'theme' => $status->theme(),
 						'type'  => $license->label(),
 					],

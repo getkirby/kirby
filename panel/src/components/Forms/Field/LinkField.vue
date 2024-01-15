@@ -257,12 +257,10 @@ export default {
 			this.$emit("input", "");
 			this.expanded = false;
 		},
-		detect(value) {
-			value = value ?? "";
-
+		detect(value = "") {
 			if (value.length === 0) {
 				return {
-					type: "url",
+					type: Object.keys(this.activeTypes)[0] ?? "url",
 					link: ""
 				};
 			}

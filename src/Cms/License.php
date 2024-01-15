@@ -49,9 +49,11 @@ class License
 	/**
 	 * Returns the activation date if available
 	 */
-	public function activation(string|IntlDateFormatter|null $format = null): int|string|null
-	{
-		return $this->activation !== null ? Str::date(strtotime($this->activation), $format) : null;
+	public function activation(
+		string|IntlDateFormatter|null $format = null,
+		string|null $handler = null
+	): int|string|null {
+		return $this->activation !== null ? Str::date(strtotime($this->activation), $format, $handler) : null;
 	}
 
 	/**
@@ -85,9 +87,11 @@ class License
 	/**
 	 * Returns the purchase date if available
 	 */
-	public function date(string|IntlDateFormatter|null $format = null): int|string|null
-	{
-		return $this->date !== null ? Str::date(strtotime($this->date), $format) : null;
+	public function date(
+		string|IntlDateFormatter|null $format = null,
+		string|null $handler = null
+	): int|string|null {
+		return $this->date !== null ? Str::date(strtotime($this->date), $format, $handler) : null;
 	}
 
 	/**
@@ -355,14 +359,16 @@ class License
 	/**
 	 * Returns the renewal date
 	 */
-	public function renewal(string|IntlDateFormatter|null $format = null): int|string|null
-	{
+	public function renewal(
+		string|IntlDateFormatter|null $format = null,
+		string|null $handler = null
+	): int|string|null {
 		if ($this->activation === null) {
 			return null;
 		}
 
 		$time = strtotime('+3 years', $this->activation());
-		return Str::date($time, $format);
+		return Str::date($time, $format, $handler);
 	}
 
 	/**
