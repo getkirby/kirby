@@ -3,6 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Http\Url as BaseUrl;
+use Kirby\Toolkit\Str;
+use Kirby\Toolkit\V;
 
 /**
  * The `Url` class extends the
@@ -59,5 +61,116 @@ class Url extends BaseUrl
 	): string {
 		$kirby = App::instance();
 		return ($kirby->component('url'))($kirby, $path, $options);
+	}
+
+	/**
+	 * Smart resolver for internal and external urls
+	 */
+	public static function availableLinkTypes(): array
+	{
+		$kirby = App::instance();
+
+		return [
+			'anchor' => [
+				'detect' => function (string $value): bool {
+					return Str::startsWith($value, '#') === true;
+				},
+				'link' => function (string $value): string {
+					return $value;
+				},
+				'text' => function (string $value): string {
+					return $value;
+				},
+				'validate' => function (string $value): bool {
+					return Str::startsWith($value, '#') === true;
+				},
+			],
+			'email' => [
+				'detect' => function (string $value): bool {
+					return Str::startsWith($value, 'mailto:') === true;
+				},
+				'link' => function (string $value): string {
+					return str_replace('mailto:', '', $value);
+				},
+				'text' => function (string $value): string {
+					return str_replace('mailto:', '', $value);
+				},
+				'validate' => function (string $value): bool {
+					return V::email($value);
+				},
+			],
+			'file' => [
+				'detect' => function (string $value): bool {
+					return Str::startsWith($value, 'file://') === true;
+				},
+				'link' => function (string $value): string {
+					return $value;
+				},
+				'text' => function (string $value) use ($kirby): string {
+					return $kirby->file($value)?->filename();
+				},
+				'validate' => function (string $value): bool {
+					return V::uuid($value, 'file');
+				},
+			],
+			'page' => [
+				'detect' => function (string $value): bool {
+					return Str::startsWith($value, 'page://') === true;
+				},
+				'link' => function (string $value): string {
+					return $value;
+				},
+				'text' => function (string $value) use ($kirby): string {
+					return $kirby->page($value)?->title()->value();
+				},
+				'validate' => function (string $value): bool {
+					return V::uuid($value, 'page');
+				},
+			],
+			'tel' => [
+				'detect' => function (string $value): bool {
+					return Str::startsWith($value, 'tel:') === true;
+				},
+				'link' => function (string $value): string {
+					return str_replace('tel:', '', $value);
+				},
+				'text' => function (string $value): string {
+					return str_replace('tel:', '', $value);
+				},
+				'validate' => function (string $value): bool {
+					return V::tel($value);
+				},
+			],
+			'url' => [
+				'detect' => function (string $value): bool {
+					return Str::startsWith($value, 'http://') === true || Str::startsWith($value, 'https://') === true;
+				},
+				'link' => function (string $value): string {
+					return $value;
+				},
+				'text' => function (string $value): string {
+					return $value;
+				},
+				'validate' => function (string $value): bool {
+					return V::url($value);
+				},
+			],
+
+			// needs to come last
+			'custom' => [
+				'detect' => function (string $value): bool {
+					return true;
+				},
+				'link' => function (string $value): string {
+					return $value;
+				},
+				'text' => function (string $value): string {
+					return $value;
+				},
+				'validate' => function (): bool {
+					return true;
+				},
+			]
+		];
 	}
 }

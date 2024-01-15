@@ -1,9 +1,8 @@
 <?php
 
+use Kirby\Cms\Url;
+use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Http\Url;
-use Kirby\Toolkit\Str;
-use Kirby\Toolkit\V;
 
 return [
 	'props' => [
@@ -25,118 +24,60 @@ return [
 				'anchor',
 				'custom'
 			];
-		},
-		'value' => function (string|null $value = null) {
-			return $value ?? '';
+		}
+	],
+	'computed' => [
+		'value' => function () {
+			$data = Data::decode($this->value, 'yaml');
+
+			// support old string url syntax
+			// @todo remove when string url syntax dropped
+			if (empty($data[0]) === false) {
+				return ['value' => $data[0]];
+			}
+
+			if (empty($data) === true) {
+				return '';
+			}
+
+			return $data;
 		}
 	],
 	'methods' => [
 		'activeTypes' => function () {
-			return array_filter($this->availableTypes(), function (string $type) {
+			return array_filter(Url::availableLinkTypes(), function (string $type) {
 				return in_array($type, $this->props['options']) === true;
 			}, ARRAY_FILTER_USE_KEY);
-		},
-		'availableTypes' => function () {
-			return [
-				'anchor' => [
-					'detect' => function (string $value): bool {
-						return Str::startsWith($value, '#') === true;
-					},
-					'link' => function (string $value): string {
-						return $value;
-					},
-					'validate' => function (string $value): bool {
-						return Str::startsWith($value, '#') === true;
-					},
-				],
-				'email' => [
-					'detect' => function (string $value): bool {
-						return Str::startsWith($value, 'mailto:') === true;
-					},
-					'link' => function (string $value): string {
-						return str_replace('mailto:', '', $value);
-					},
-					'validate' => function (string $value): bool {
-						return V::email($value);
-					},
-				],
-				'file' => [
-					'detect' => function (string $value): bool {
-						return Str::startsWith($value, 'file://') === true;
-					},
-					'link' => function (string $value): string {
-						return $value;
-					},
-					'validate' => function (string $value): bool {
-						return V::uuid($value, 'file');
-					},
-				],
-				'page' => [
-					'detect' => function (string $value): bool {
-						return Str::startsWith($value, 'page://') === true;
-					},
-					'link' => function (string $value): string {
-						return $value;
-					},
-					'validate' => function (string $value): bool {
-						return V::uuid($value, 'page');
-					},
-				],
-				'tel' => [
-					'detect' => function (string $value): bool {
-						return Str::startsWith($value, 'tel:') === true;
-					},
-					'link' => function (string $value): string {
-						return str_replace('tel:', '', $value);
-					},
-					'validate' => function (string $value): bool {
-						return V::tel($value);
-					},
-				],
-				'url' => [
-					'detect' => function (string $value): bool {
-						return Str::startsWith($value, 'http://') === true || Str::startsWith($value, 'https://') === true;
-					},
-					'link' => function (string $value): string {
-						return $value;
-					},
-					'validate' => function (string $value): bool {
-						return V::url($value);
-					},
-				],
-
-				// needs to come last
-				'custom' => [
-					'detect' => function (string $value): bool {
-						return true;
-					},
-					'link' => function (string $value): string {
-						return $value;
-					},
-					'validate' => function (): bool {
-						return true;
-					},
-				]
-			];
-		},
+		}
 	],
+	'save' => function ($value) {
+		if (empty($value) === true) {
+			return '';
+		}
+
+		return Data::encode($value, 'yaml');
+	},
 	'validations' => [
-		'value' => function (string|null $value) {
-			if (empty($value) === true) {
+		'value' => function (array|string|null $link) {
+			if (is_array($link) === false) {
+				$link = ['value' => $link];
+			}
+
+			if (empty($link['value']) === true) {
 				return true;
 			}
 
 			$detected = false;
 
 			foreach ($this->activeTypes() as $type => $options) {
-				if ($options['detect']($value) !== true) {
+				if ($options['detect']($link['value']) !== true) {
 					continue;
 				}
 
-				$link     = $options['link']($value);
-				$detected = true;
+				$previewLink = $options['link']($link['value']);
+				$detected    = true;
 
-				if ($options['validate']($link) === false) {
+				if ($options['validate']($previewLink) === false) {
 					throw new InvalidArgumentException([
 						'key' => 'validation.' . $type
 					]);

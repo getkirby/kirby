@@ -1,5 +1,15 @@
 <template>
 	<k-field v-bind="$props" :input="id" class="k-link-field">
+		<template v-if="!disabled" #options>
+			<k-button
+				:text="$t('settings')"
+				icon="settings"
+				size="xs"
+				variant="filled"
+				@click="settings"
+			/>
+		</template>
+
 		<k-input v-bind="$props" :invalid="isInvalid" :icon="false">
 			<div class="k-link-input-header">
 				<!-- Type selector -->
@@ -17,7 +27,7 @@
 
 				<!-- Input -->
 				<div
-					v-if="linkType === 'page' || linkType === 'file'"
+					v-if="link.type === 'page' || link.type === 'file'"
 					class="k-link-input-model"
 					@click="toggle"
 				>
@@ -55,27 +65,27 @@
 
 			<!-- Page or file browser -->
 			<div
-				v-if="linkType === 'page'"
+				v-if="link.type === 'page'"
 				v-show="expanded"
 				data-type="page"
 				class="k-link-input-body"
 			>
 				<div class="k-page-browser">
 					<k-page-tree
-						:current="getPageUUID(value)"
+						:current="getPageUUID(link.value)"
 						:root="false"
 						@select="selectModel($event)"
 					/>
 				</div>
 			</div>
 			<div
-				v-else-if="linkType === 'file'"
+				v-else-if="link.type === 'file'"
 				v-show="expanded"
 				data-type="file"
 				class="k-link-input-body"
 			>
 				<k-file-browser
-					:selected="getFileUUID(value)"
+					:selected="getFileUUID(link.value)"
 					@select="selectModel($event)"
 				/>
 			</div>
@@ -91,10 +101,7 @@ import { options } from "@/mixins/props.js";
 export const props = {
 	mixins: [FieldProps, InputProps, options],
 	props: {
-		value: {
-			default: "",
-			type: String
-		}
+		value: [String, Object]
 	}
 };
 
@@ -107,17 +114,17 @@ export default {
 	inheritAttrs: false,
 	data() {
 		return {
-			model: null,
-			linkType: null,
-			linkValue: null,
 			expanded: false,
-			isInvalid: false
+			isInvalid: false,
+			link: {},
+			linkValue: null,
+			model: null
 		};
 	},
 	computed: {
 		currentType() {
 			return (
-				this.activeTypes[this.linkType] ?? Object.values(this.activeTypes)[0]
+				this.activeTypes[this.link.type] ?? Object.values(this.activeTypes)[0]
 			);
 		},
 		availableTypes() {
@@ -218,7 +225,7 @@ export default {
 			for (const type in this.activeTypes) {
 				options.push({
 					click: () => this.switchType(type),
-					current: type === this.linkType,
+					current: type === this.link.type,
 					icon: this.activeTypes[type].icon,
 					label: this.activeTypes[type].label
 				});
@@ -229,17 +236,24 @@ export default {
 	},
 	watch: {
 		value: {
-			handler(value, old) {
-				if (value === old) {
+			handler(link, old) {
+				if (typeof link !== "object") {
+					link = {value: link};
+				}
+
+				if (link.value === old) {
 					return;
 				}
 
-				const parts = this.detect(value);
-
-				this.linkType = this.linkType ?? parts.type;
+				const parts = this.detect(link.value);
 				this.linkValue = parts.link;
 
-				if (value !== old) {
+				this.$set(this.link, "text", link.text);
+				this.$set(this.link, "target", link.target);
+				this.$set(this.link, "type", this.link.type ?? parts.type);
+				this.$set(this.link, "value", link.value);
+
+				if (link.value !== old) {
 					this.preview(parts);
 				}
 			},
@@ -297,13 +311,18 @@ export default {
 			);
 		},
 		onInput(link) {
-			const value = link?.trim() ?? "";
+			if (typeof link !== "object") {
+				link = {value: link};
+			}
+
+			const value = link.value?.trim() ?? "";
 
 			if (!value.length) {
 				return this.$emit("input", "");
 			}
 
-			this.$emit("input", this.currentType.value(value));
+			this.$set(this.link, "value", this.currentType.value(value));
+			this.$emit("input", this.link);
 		},
 		onInvalid(invalid) {
 			this.isInvalid = !!invalid;
@@ -312,6 +331,34 @@ export default {
 			if (this.$el.contains(event.target) === false) {
 				this.expanded = false;
 			}
+		},
+		settings() {
+			this.$panel.dialog.open({
+				component: "k-form-dialog",
+				props: {
+					fields: {
+						text: {
+							label: this.$t("link.text"),
+							type: "text",
+							icon: "title"
+						},
+						target: {
+							label: this.$t("open.newWindow"),
+							type: "toggle",
+							text: [this.$t("no"), this.$t("yes")]
+						}
+					},
+					value: this.link
+				},
+				on: {
+					submit: (value) => {
+						this.$set(this.link, "text", value?.text);
+						this.$set(this.link, "target", value?.target);
+						this.onInput(this.link);
+						this.$panel.dialog.close();
+					}
+				}
+			});
 		},
 		async preview({ type, link }) {
 			if (type === "page" && link) {
@@ -369,21 +416,20 @@ export default {
 			this.onInput(model.url);
 		},
 		async switchType(type) {
-			if (type === this.linkType) {
+			if (type === this.link.type) {
 				return;
 			}
 
+			this.$set(this.link, "text", this.link.text);
+			this.$set(this.link, "target", this.link.target);
+			this.$set(this.link, "type", type);
+			this.$set(this.link, "value", "");
+
 			this.isInvalid = false;
-			this.linkType = type;
 			this.linkValue = "";
+			this.expanded = this.link.type === "page" || this.link.type === "file";
 
-			if (this.linkType === "page" || this.linkType === "file") {
-				this.expanded = true;
-			} else {
-				this.expanded = false;
-			}
-
-			this.$emit("input", "");
+			this.$emit("input", this.link);
 			await this.$nextTick();
 			this.focus();
 		},

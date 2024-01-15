@@ -197,6 +197,10 @@ return function (App $app) {
 			string|array|null $attr1 = null,
 			array|null $attr2 = null
 		): string {
+			// @todo remove yaml decoding when dropped accepting string url value for the link field
+			$data  = Data::decode($field->value, 'yaml');
+			$value = $data[0] ?? $data['value'] ?? null;
+
 			if (is_string($attr1) === true) {
 				$href = $attr1;
 				$attr = $attr2;
@@ -209,7 +213,7 @@ return function (App $app) {
 				$attr['aria-current'] = 'page';
 			}
 
-			return Html::a($href, $field->value, $attr ?? []);
+			return Html::a($href, $value, $attr ?? []);
 		},
 
 		/**
@@ -282,10 +286,37 @@ return function (App $app) {
 		 */
 		'toUrl' => function (Field $field): string|null {
 			try {
-				return $field->isNotEmpty() ? Url::to($field->value) : null;
+				// return $field->isNotEmpty() ? Url::to($field->value) : null;
+
+				/**
+				 * @todo remove yaml decoding when dropped
+				 * accepting string url value for the link field
+				 * and uncomment above return line
+				 */
+				$data  = Data::decode($field->value, 'yaml');
+				$value = $data[0] ?? $data['value'] ?? null;
+				return $field->isNotEmpty() ? Url::to($value) : null;
 			} catch (NotFoundException) {
 				return null;
 			}
+		},
+
+		/**
+		 * Parse yaml link data and convert it to a content object
+		 */
+		'toLinkObject' => function (Field $field): Content {
+			$data           = $field->yaml();
+			$data['popup']  = (bool)($data['target'] ?? null) === true;
+			$data['target'] = $data['popup'] === true ? '_blank' : '_self';
+			$data['href']   = Url::to($data['value'] ?? null);
+
+			// set default link text when no custom link text entered
+			if (empty($data['text']) === true) {
+				$linkType     = Url::availableLinkTypes()[$data['type']];
+				$data['text'] = $linkType['text']($data['value']);
+			}
+
+			return new Content($data, $field->parent(), true);
 		},
 
 		/**
