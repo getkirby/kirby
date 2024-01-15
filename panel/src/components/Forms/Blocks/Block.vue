@@ -6,7 +6,7 @@
 			containerType ? 'k-block-container-type-' + containerType : ''
 		]"
 		:data-batched="isBatched"
-		:data-disabled="disabled || fieldset.disabled"
+		:data-disabled="isDisabled"
 		:data-hidden="isHidden"
 		:data-id="id"
 		:data-last-selected="isLastSelected"
@@ -23,7 +23,7 @@
 		@focus.stop="$emit('focus')"
 		@focusin.stop="onFocusIn"
 	>
-		<div :class="className" class="k-block">
+		<div :class="className" :data-disabled="isDisabled" class="k-block">
 			<component
 				:is="customComponent"
 				ref="editor"
@@ -35,6 +35,7 @@
 
 		<k-block-options
 			ref="options"
+			v-if="!isDisabled"
 			v-bind="{
 				isBatched,
 				isEditable,
@@ -126,7 +127,7 @@ export default {
 		className() {
 			let className = ["k-block-type-" + this.type];
 
-			if (this.fieldset.preview !== this.type) {
+			if (this.fieldset.preview && this.fieldset.preview !== this.type) {
 				className.push("k-block-type-" + this.fieldset.preview);
 			}
 
@@ -163,6 +164,9 @@ export default {
 			}
 
 			return "k-block-type-default";
+		},
+		isDisabled() {
+			return this.disabled === true || this.fieldset.disabled === true;
 		},
 		isEditable() {
 			return this.fieldset.editable !== false;
@@ -281,7 +285,7 @@ export default {
 			this.$emit("update", value);
 		},
 		open(tab, replace = false) {
-			if (!this.isEditable || this.isBatched) {
+			if (!this.isEditable || this.isBatched || this.isDisabled) {
 				return;
 			}
 
@@ -386,7 +390,9 @@ export default {
 	vertical-align: middle;
 	display: inline-grid;
 }
-[data-disabled="true"] .k-block-container {
+.k-block-container[data-disabled="true"] {
+	pointer-events: all;
+	cursor: default;
 	background: var(--color-background);
 }
 
