@@ -71,6 +71,14 @@ export const props = {
 			default: () => ({})
 		},
 		/**
+		 * Optional fields configuration that is used for table layout
+		 * @internal
+		 */
+		fields: {
+			type: Object,
+			default: () => ({})
+		},
+		/**
 		 * Array of item definitions. See `k-item` for available options.
 		 */
 		items: {
@@ -128,6 +136,7 @@ export default {
 		table() {
 			return {
 				columns: this.columns,
+				fields: this.fields,
 				rows: this.items,
 				sortable: this.sortable
 			};
