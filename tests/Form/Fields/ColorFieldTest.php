@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Fields;
 
+use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 
 class ColorFieldTest extends TestCase
@@ -54,13 +55,13 @@ class ColorFieldTest extends TestCase
 	{
 		// Only values
 		$field = $this->field('color', [
-			'options' => ['a', 'b', 'c'],
+			'options' => ['#aaa', '#bbb', '#ccc'],
 		]);
 
 		$this->assertSame([
-			['value' => 'a'],
-			['value' => 'b'],
-			['value' => 'c']
+			['value' => '#aaa'],
+			['value' => '#bbb'],
+			['value' => '#ccc']
 		], $field->options());
 
 		// Value => Name
@@ -85,6 +86,68 @@ class ColorFieldTest extends TestCase
 				'Color b' => '#bbb',
 				'Color c' => '#ccc'
 			],
+		]);
+
+		$this->assertSame([
+			['value' => '#aaa', 'text' => 'Color a'],
+			['value' => '#bbb', 'text' => 'Color b'],
+			['value' => '#ccc', 'text' => 'Color c']
+		], $field->options());
+	}
+
+	public function testOptionsFromQuery()
+	{
+		// Only values
+		$this->app = new App([
+			'options' => [
+				'foo' => ['#aaa', '#bbb', '#ccc']
+			]
+		]);
+
+		$field = $this->field('color', [
+			'options' => ['type' => 'query', 'query' => 'kirby.option("foo")'],
+		]);
+
+		$this->assertSame([
+			['value' => '#aaa'],
+			['value' => '#bbb'],
+			['value' => '#ccc']
+		], $field->options());
+
+		// Value => Name
+		$this->app = new App([
+			'options' => [
+				'foo' => [
+					'#aaa' => 'Color a',
+					'#bbb' => 'Color b',
+					'#ccc' => 'Color c'
+				]
+			]
+		]);
+
+		$field = $this->field('color', [
+			'options' => ['type' => 'query', 'query' => 'kirby.option("foo")'],
+		]);
+
+		$this->assertSame([
+			['value' => '#aaa', 'text' => 'Color a'],
+			['value' => '#bbb', 'text' => 'Color b'],
+			['value' => '#ccc', 'text' => 'Color c']
+		], $field->options());
+
+		// Deprecated: name => value
+		$this->app = new App([
+			'options' => [
+				'foo' => [
+					'Color a' => '#aaa',
+					'Color b' => '#bbb',
+					'Color c' => '#ccc'
+				],
+			]
+		]);
+
+		$field = $this->field('color', [
+			'options' => ['type' => 'query', 'query' => 'kirby.option("foo")'],
 		]);
 
 		$this->assertSame([

@@ -68,6 +68,9 @@ return [
 			}
 
 			$options = match (true) {
+				// simple array of values
+				// or value=text (from Options class)
+				is_numeric($options[0]['value']) ||
 				$options[0]['value'] === $options[0]['text']
 					=> A::map($options, fn ($option) => [
 						'value' => $option['text']
