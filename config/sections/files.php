@@ -55,7 +55,7 @@ return [
 		'parent' => function () {
 			return $this->parentModel();
 		},
-		'files' => function () {
+		'models' => function () {
 			if ($this->query !== null) {
 				$files = $this->parent->query($this->query, Files::class) ?? new Files([]);
 			} else {
@@ -99,6 +99,9 @@ return [
 
 			return $files;
 		},
+		'files' => function () {
+			return $this->models;
+		},
 		'data' => function () {
 			$data = [];
 
@@ -106,7 +109,7 @@ return [
 			// a different parent model
 			$dragTextAbsolute = $this->model->is($this->parent) === false;
 
-			foreach ($this->files as $file) {
+			foreach ($this->models as $file) {
 				$panel = $file->panel();
 
 				$item = [
@@ -137,7 +140,7 @@ return [
 			return $data;
 		},
 		'total' => function () {
-			return $this->files->pagination()->total();
+			return $this->models->pagination()->total();
 		},
 		'errors' => function () {
 			$errors = [];
@@ -209,7 +212,7 @@ return [
 			'options' => [
 				'accept'   => $this->accept,
 				'apiUrl'   => $this->parent->apiUrl(true),
-				'columns'  => $this->columns,
+				'columns'  => $this->columnsWithTypes(),
 				'empty'    => $this->empty,
 				'headline' => $this->headline,
 				'help'     => $this->help,
