@@ -75,6 +75,7 @@ return [
 					=> A::map($options, fn ($option) => [
 						'value' => $option['text']
 					]),
+
 				// deprecated: name => value, flipping
 				// TODO: start throwing in warning in v5
 				$this->isColor($options[0]['text'])
@@ -82,11 +83,12 @@ return [
 						'value' => $option['text'],
 						'text'  => $option['value']
 					]),
+
 				default
-					=> A::map($options, fn ($option) => [
-						'value' => $option['value'],
-						'text'  => $option['text']
-					]),
+				=> A::map($options, fn ($option) => [
+					'value' => $option['value'],
+					'text'  => $option['text']
+				]),
 			};
 
 			return $options;
