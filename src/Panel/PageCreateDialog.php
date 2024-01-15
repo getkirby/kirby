@@ -236,8 +236,12 @@ class PageCreateDialog
 			$content[$name] = $input[$name] ?? null;
 		}
 
+		// create temporary form to sanitize the input
+		// and add default values
+		$form = Form::for($this->model(), ['values' => $content]);
+
 		return [
-			'content'  => $content,
+			'content'  => $form->strings(true),
 			'slug'     => $input['slug'],
 			'template' => $this->template,
 		];

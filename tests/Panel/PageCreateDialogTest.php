@@ -36,6 +36,56 @@ class PageCreateDialogTest extends AreaTestCase
 	}
 
 	/**
+	 * @covers ::sanitize
+	 */
+	public function testSanitize(): void
+	{
+		$this->app([
+			'blueprints' => [
+				'pages/test' => [
+					'create' => [
+						'fields' => ['foo', 'bar']
+					],
+					'fields' => [
+						'foo' => [
+							'type'     => 'text',
+							'required' => true
+						],
+						'bar' => [
+							'type'     => 'text',
+							'required' => true,
+							'default'  => 'bar'
+						]
+					]
+				]
+			]
+		]);
+
+		$dialog = new PageCreateDialog(
+			null,
+			null,
+			'test',
+			null
+		);
+
+		$input = $dialog->sanitize([
+			'slug'  => 'foo',
+			'title' => 'Foo',
+			'foo'   => 'bar'
+		]);
+
+		$this->assertSame([
+			'content'  => [
+				'foo'   => 'bar',
+				'bar'   => 'bar',
+				'title' => 'Foo',
+			],
+			'slug'     => 'foo',
+			'template' => 'test',
+		], $input);
+	}
+
+	/**
 	 * @covers ::validate
 	 */
 	public function testValidateInvalidTitle(): void
@@ -119,14 +169,13 @@ class PageCreateDialogTest extends AreaTestCase
 				'pages/test' => [
 					'fields' => [
 						'foo' => [
-							'type' => 'text',
+							'type'     => 'text',
 							'required' => true
 						]
 					]
 				]
 			]
 		]);
-
 
 		$dialog = new PageCreateDialog(
 			null,
