@@ -2,11 +2,12 @@ import sort from "./sort";
 import "./regex";
 
 /**
- * Array.fromObject()
+ * @param {Array|Object} object
+ * @returns {Array}
  */
-Array.fromObject = function (object) {
+export function fromObject(object) {
 	return Array.isArray(object) ? object : Object.values(object ?? {});
-};
+}
 
 /**
  * Search through an array by query
@@ -43,9 +44,11 @@ export const search = (array, query, options = {}) => {
 };
 
 /**
- * Array.sortBy()
+ * @param {Array} array
+ * @param {String} sortBy
+ * @returns {Array}
  */
-Array.prototype.sortBy = function (sortBy) {
+export function sortBy(array, sortBy) {
 	const options = sortBy.split(" ");
 	const field = options[0];
 	const direction = options[1] ?? "asc";
@@ -55,22 +58,21 @@ Array.prototype.sortBy = function (sortBy) {
 		insensitive: true
 	});
 
-	return this.sort((a, b) => {
+	return array.sort((a, b) => {
 		const valueA = String(a[field] ?? "");
 		const valueB = String(b[field] ?? "");
 		return sorter(valueA, valueB);
 	});
-};
+}
 
 /**
- * Array.split()
- *
+ * @param {Array} array
  * @param {String} delimiter
  * @returns {Array}
  *
  */
-Array.prototype.split = function (delimiter) {
-	return this.reduce(
+export function split(array, delimiter) {
+	return array.reduce(
 		(entries, entry) => {
 			if (entry === delimiter) {
 				entries.push([]);
@@ -81,15 +83,54 @@ Array.prototype.split = function (delimiter) {
 		},
 		[[]]
 	);
-};
+}
 
 /**
- * Array.wrap()
+ * @param {any} array
+ * @returns {Array}
  */
-Array.wrap = function (array) {
+export function wrap(array) {
 	return Array.isArray(array) ? array : [array];
-};
+}
+
+/**
+ * @deprecated `Array.fromObject()` will be removed in a future version. Use `this.$helper.array.fromObject()` instead.
+ */
+Array.fromObject = fromObject;
+
+/**
+ * @deprecated `myArray.sortBy()` will be removed in a future version. Use `this.$helper.array.sortBy(myArray, sortBy)` instead.
+ */
+Object.defineProperty(Array.prototype, "sortBy", {
+	value: function (sortBy) {
+		return sortBy(this, sortBy);
+	},
+	enumerable: false,
+	writable: true,
+	configurable: true
+});
+
+/**
+ * @deprecated `myArray.split()` will be removed in a future version. Use `this.$helper.array.split(myArray, delimiter)` instead.
+ */
+Object.defineProperty(Array.prototype, "split", {
+	value: function (delimiter) {
+		return split(this, delimiter);
+	},
+	enumerable: false,
+	writable: true,
+	configurable: true
+});
+
+/**
+ * @deprecated `Array.wrap()` will be removed in a future version. Use `this.$helper.array.wrap()` instead.
+ */
+Array.wrap = wrap;
 
 export default {
-	search
+	fromObject,
+	search,
+	sortBy,
+	split,
+	wrap
 };

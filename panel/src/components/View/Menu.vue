@@ -88,7 +88,7 @@ export default {
 			return this.$helper.object.length(this.$panel.searches) > 0;
 		},
 		menus() {
-			return this.$panel.menu.entries.split("-");
+			return this.$helper.array.split(this.$panel.menu.entries, "-");
 		}
 	}
 };
@@ -166,6 +166,7 @@ export default {
 	--button-align: flex-start;
 	--button-height: var(--menu-button-height);
 	--button-width: var(--menu-button-width);
+	--button-padding: 7px;
 	/* Make sure that buttons don't shrink in height */
 	flex-shrink: 0;
 }

@@ -7,8 +7,6 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 
-require_once __DIR__ . '/mocks.php';
-
 class RemoteTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Http.Remote';

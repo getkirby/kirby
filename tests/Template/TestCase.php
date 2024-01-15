@@ -2,6 +2,8 @@
 
 namespace Kirby\Template;
 
+use Kirby\Cms\App;
+
 class TestCase extends \Kirby\TestCase
 {
 	protected function tearDown(): void
@@ -9,5 +11,7 @@ class TestCase extends \Kirby\TestCase
 		while (Snippet::$current !== null) {
 			Snippet::$current->close();
 		}
+
+		App::destroy();
 	}
 }

@@ -7,8 +7,6 @@ use Kirby\TestCase;
 use Kirby\Toolkit\Collection;
 use PDOException;
 
-require_once __DIR__ . '/mocks.php';
-
 /**
  * @coversDefaultClass \Kirby\Database\Database
  */

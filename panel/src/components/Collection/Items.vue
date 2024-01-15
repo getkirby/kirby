@@ -126,12 +126,9 @@ export default {
 			};
 		},
 		table() {
-			let columns = this.columns;
-			let items = this.items;
-
 			return {
-				columns: columns,
-				rows: items,
+				columns: this.columns,
+				rows: this.items,
 				sortable: this.sortable
 			};
 		}

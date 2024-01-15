@@ -63,6 +63,7 @@ export const props = {
  * @internal
  */
 export default {
+	mixins: [props],
 	emits: ["input"],
 	data() {
 		return {

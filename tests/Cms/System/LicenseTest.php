@@ -47,6 +47,7 @@ class LicenseTest extends TestCase
 
 		$this->assertSame(strtotime($date), $license->activation());
 		$this->assertSame($date, $license->activation('Y-m-d'));
+		$this->assertSame('1/12/2023 00:00', $license->activation('d/M/yyyy HH:mm', 'intl'));
 	}
 
 	/**
@@ -94,6 +95,7 @@ class LicenseTest extends TestCase
 
 		$this->assertSame(strtotime($date), $license->date());
 		$this->assertSame($date, $license->date('Y-m-d'));
+		$this->assertSame('1/12/2023 00:00', $license->date('d/M/yyyy HH:mm', 'intl'));
 	}
 
 	/**
@@ -399,6 +401,7 @@ class LicenseTest extends TestCase
 
 		$this->assertSame(strtotime('2026-12-01'), $license->renewal());
 		$this->assertSame('2026-12-01', $license->renewal('Y-m-d'));
+		$this->assertSame('1/12/2026 00:00', $license->renewal('d/M/yyyy HH:mm', 'intl'));
 
 		// not activated
 		$license = new License();

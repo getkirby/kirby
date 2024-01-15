@@ -7,8 +7,6 @@ use Kirby\Data\Json;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 
-require_once __DIR__ . '/mocks.php';
-
 /**
  * @coversDefaultClass \Kirby\Cms\System\UpdateStatus
  */

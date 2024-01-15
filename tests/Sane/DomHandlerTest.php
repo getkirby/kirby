@@ -4,8 +4,6 @@ namespace Kirby\Sane;
 
 use Kirby\Exception\InvalidArgumentException;
 
-require_once __DIR__ . '/mocks.php';
-
 /**
  * @covers \Kirby\Sane\DomHandler
  */

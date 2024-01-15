@@ -7,8 +7,6 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 use Kirby\Toolkit\A;
 
-require_once __DIR__ . '/mocks.php';
-
 /**
  * @coversDefaultClass \Kirby\Database\Sql
  */
