@@ -2,6 +2,7 @@
 	<k-block-figure
 		:caption="content.caption"
 		:caption-marks="captionMarks"
+		:disabled="disabled"
 		:empty-text="$t('field.blocks.video.placeholder') + ' …'"
 		:is-empty="!video"
 		empty-icon="video"

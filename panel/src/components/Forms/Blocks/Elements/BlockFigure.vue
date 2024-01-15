@@ -2,6 +2,7 @@
 	<figure class="k-block-figure">
 		<k-button
 			v-if="isEmpty"
+			:disabled="disabled"
 			:icon="emptyIcon"
 			:text="emptyText"
 			class="k-block-figure-empty"
@@ -30,6 +31,7 @@ export default {
 			default: true,
 			type: [Boolean, Array]
 		},
+		disabled: Boolean,
 		isEmpty: Boolean,
 		emptyIcon: String,
 		emptyText: String

@@ -13,14 +13,14 @@
 		:data-selected="isSelected"
 		:data-translate="fieldset.translate"
 		class="k-block-container"
-		tabindex="0"
+		:tabindex="isDisabled ? null : 0"
 		@keydown.ctrl.j.prevent.stop="$emit('merge')"
 		@keydown.ctrl.alt.down.prevent.stop="$emit('selectDown')"
 		@keydown.ctrl.alt.up.prevent.stop="$emit('selectUp')"
 		@keydown.ctrl.shift.down.prevent.stop="$emit('sortDown')"
 		@keydown.ctrl.shift.up.prevent.stop="$emit('sortUp')"
 		@keydown.ctrl.backspace.stop="backspace"
-		@focus.stop="$emit('focus')"
+		@focus.stop="onFocus"
 		@focusin.stop="onFocusIn"
 	>
 		<div :class="className" :data-disabled="isDisabled" class="k-block">
@@ -271,11 +271,18 @@ export default {
 			this.$emit("close");
 			this.focus();
 		},
+		onFocus(event) {
+			if (this.disabled) {
+				return;
+			}
+
+			this.$emit("focus", event);
+		},
 		onFocusIn(event) {
 			// skip focus if the event is coming from the options buttons
 			// to preserve the current focus (since options buttons directly
 			// trigger events and don't need any focus themselves)
-			if (this.$refs.options?.$el?.contains(event.target)) {
+			if (this.disabled || this.$refs.options?.$el?.contains(event.target)) {
 				return;
 			}
 
@@ -391,8 +398,6 @@ export default {
 	display: inline-grid;
 }
 .k-block-container[data-disabled="true"] {
-	pointer-events: all;
-	cursor: default;
 	background: var(--color-background);
 }
 

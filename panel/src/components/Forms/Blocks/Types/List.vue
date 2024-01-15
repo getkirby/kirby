@@ -1,6 +1,7 @@
 <template>
 	<k-input
 		ref="input"
+		:disabled="disabled"
 		:keys="keys"
 		:marks="marks"
 		:value="content.text"
@@ -67,6 +68,7 @@ export default {
 
 <style>
 .k-block-type-list-input {
+	--input-color-back: transparent;
 	--input-color-border: none;
 	--input-outline-focus: none;
 }
