@@ -216,13 +216,7 @@ class PageCreateDialog
 		// immediately submit the dialog if there is no editable field
 		if (count($visible) === 0 && count($blueprints) < 2) {
 			$input    = $this->value();
-			$response = $this->submit([
-				...$input,
-
-				// only as dummy to pass validation
-				'title' => 'New page',
-				'slug'  => 'new-page'
-			]);
+			$response = $this->submit($input);
 			$response['redirect'] ??= $this->parent->panel()->url(true);
 			Panel::go($response['redirect']);
 		}
