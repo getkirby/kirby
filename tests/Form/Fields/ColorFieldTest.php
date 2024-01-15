@@ -52,24 +52,45 @@ class ColorFieldTest extends TestCase
 
 	public function testOptions()
 	{
+		// Only values
 		$field = $this->field('color', [
 			'options' => ['a', 'b', 'c'],
 		]);
 
 		$this->assertSame([
-			['value' => 'a', 'text' => null],
-			['value' => 'b', 'text' => null],
-			['value' => 'c', 'text' => null]
+			['value' => 'a'],
+			['value' => 'b'],
+			['value' => 'c']
 		], $field->options());
 
+		// Value => Name
 		$field = $this->field('color', [
-			'options' => ['Color a' => 'a', 'Color b' => 'b', 'Color c' => 'c'],
+			'options' => [
+				'#aaa' => 'Color a',
+				'#bbb' => 'Color b',
+				'#ccc' => 'Color c'
+			],
 		]);
 
 		$this->assertSame([
-			['value' => 'a', 'text' => 'Color a'],
-			['value' => 'b', 'text' => 'Color b'],
-			['value' => 'c', 'text' => 'Color c']
+			['value' => '#aaa', 'text' => 'Color a'],
+			['value' => '#bbb', 'text' => 'Color b'],
+			['value' => '#ccc', 'text' => 'Color c']
+		], $field->options());
+
+		// Deprecated: name => value
+		$field = $this->field('color', [
+			'options' => [
+				'Color a' => '#aaa',
+				'Color b' => '#bbb',
+				'Color c' => '#ccc'
+			],
+		]);
+
+		$this->assertSame([
+			['value' => '#aaa', 'text' => 'Color a'],
+			['value' => '#bbb', 'text' => 'Color b'],
+			['value' => '#ccc', 'text' => 'Color c']
 		], $field->options());
 	}
 }
