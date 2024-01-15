@@ -105,19 +105,34 @@ class PageCreateDialog
 	 */
 	public function coreFields(): array
 	{
-		$title = $this->blueprint()->create()['title']['label'] ?? 'title';
+		$fields = [];
 
-		return [
-			'title' => Field::title([
-				'label'     => I18n::translate($title, $title),
+		// title field
+		$title = $this->blueprint()->create()['title'] ?? null;
+
+		if ($title === null || is_array($title) === true) {
+			$label = $title['label'] ?? 'title';
+			$fields['title'] = Field::title([
+				...$title ?? [],
+				'label'     => I18n::translate($label, $label),
 				'required'  => true,
 				'preselect' => true
-			]),
-			'slug' => Field::slug([
+			]);
+		}
+
+		// slug field
+		$slug = $this->blueprint()->create()['slug'] ?? null;
+
+		if ($slug === null) {
+			$fields['slug'] = Field::slug([
 				'required' => true,
 				'sync'     => 'title',
 				'path'     => $this->parent instanceof Page ? '/' . $this->parent->id() . '/' : '/'
-			]),
+			]);
+		}
+
+		return [
+			...$fields,
 			'parent'   => Field::hidden(),
 			'section'  => Field::hidden(),
 			'template' => Field::hidden(),
@@ -171,10 +186,10 @@ class PageCreateDialog
 	 */
 	public function fields(): array
 	{
-		return array_merge(
-			$this->coreFields(),
-			$this->customFields()
-		);
+		return [
+			...$this->coreFields(),
+			...$this->customFields()
+		];
 	}
 
 	/**
@@ -221,16 +236,35 @@ class PageCreateDialog
 	}
 
 	/**
+	 * Generates values for title and slug
+	 * from template strings from the blueprint
+	 */
+	public function resolveFieldTemplates(array $input): array
+	{
+		$title = $this->blueprint()->create()['title'] ?? null;
+		$slug  = $this->blueprint()->create()['slug'] ?? null;
+
+		if (is_string($title)) {
+			$input['title'] = $this->model()->toSafeString($title);
+		}
+
+		if (is_string($slug)) {
+			$input['slug'] = $this->model()->toSafeString($slug);
+		}
+
+		return $input;
+	}
+
+	/**
 	 * Prepares and cleans up the input data
 	 */
 	public function sanitize(array $input): array
 	{
-		$input['slug']  ??= $this->slug  ?? '';
 		$input['title'] ??= $this->title ?? '';
+		$input['slug']  ??= $this->slug  ?? '';
 
-		$content = [
-			'title' => trim($input['title']),
-		];
+		$input   = $this->resolveFieldTemplates($input);
+		$content = ['title' => trim($input['title'])];
 
 		foreach ($this->customFields() as $name => $field) {
 			$content[$name] = $input[$name] ?? null;
@@ -308,9 +342,9 @@ class PageCreateDialog
 		$value = [
 			'parent'   => $this->parentId,
 			'section'  => $this->sectionId,
-			'slug'     => $this->slug ?? '',
+			'slug'     => '',
 			'template' => $this->template,
-			'title'    => $this->title ?? '',
+			'title'    => '',
 			'view'     => $this->viewId,
 		];
 
