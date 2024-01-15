@@ -88,7 +88,7 @@ export default {
 			return this.$helper.object.length(this.$panel.searches) > 0;
 		},
 		menus() {
-			return this.$panel.menu.entries.split("-");
+			return this.$helper.array.split(this.$panel.menu.entries, "-");
 		}
 	}
 };
