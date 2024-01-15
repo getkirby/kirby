@@ -210,7 +210,7 @@ return [
 						throw new NotFoundException('The linked page cannot be found');
 					}
 				} else {
-					$tag->value = $tag->kirby()->site()->errorPageId();
+					$tag->value = Url::to($tag->kirby()->site()->errorPageId());
 				}
 			}
 
