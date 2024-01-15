@@ -56,17 +56,55 @@ return [
 			// resolve options to support manual arrays
 			// alongside api and query options
 			$props   = FieldOptions::polyfill($this->props);
-			$options = FieldOptions::factory($props['options']);
+			$options = FieldOptions::factory([
+				...$props['options'],
+				'value' => '{{ item.key }}',
+				'text'  => '{{ item.value }}',
+			]);
 			$options = $options->render($this->model());
 
-			// flip value and text as the notation of the
-			// color options is `text: value`;
-			// only add text if it is different from value
-			return A::map($options, fn ($option) => [
-				'value' => $option['text'],
-				'text'  => $option['value'] !== $option['text'] ? $option['value'] : null
-			]);
+			if (empty($options) === true) {
+				return [];
+			}
+
+			$options = match (true) {
+				$options[0]['value'] === $options[0]['text']
+					=> A::map($options, fn ($option) => [
+						'value' => $option['text']
+					]),
+				// deprecated: name => value, flipping
+				// TODO: start throwing in warning in v5
+				$this->isColor($options[0]['text'])
+					=> A::map($options, fn ($option) => [
+						'value' => $option['text'],
+						'text'  => $option['value']
+					]),
+				default
+					=> A::map($options, fn ($option) => [
+						'value' => $option['value'],
+						'text'  => $option['text']
+					]),
+			};
+
+			return $options;
 		}
+	],
+	'methods' => [
+		'isColor' => function (string $value): bool {
+			return
+				$this->isHex($value) ||
+				$this->isRgb($value) ||
+				$this->isHsl($value);
+		},
+		'isHex' => function (string $value): bool {
+			return preg_match('/^#([\da-f]{3,4}){1,2}$/i', $value) === 1;
+		},
+		'isHsl' => function (string $value): bool {
+			return preg_match('/^hsla?\(\s*(\d{1,3}\.?\d*)(deg|rad|grad|turn)?(?:,|\s)+(\d{1,3})%(?:,|\s)+(\d{1,3})%(?:,|\s|\/)*(\d*(?:\.\d+)?)(%?)\s*\)?$/i', $value) === 1;
+		},
+		'isRgb' => function (string $value): bool {
+			return preg_match('/^rgba?\(\s*(\d{1,3})(%?)(?:,|\s)+(\d{1,3})(%?)(?:,|\s)+(\d{1,3})(%?)(?:,|\s|\/)*(\d*(?:\.\d+)?)(%?)\s*\)?$/i', $value) === 1;
+		},
 	],
 	'validations' => [
 		'color' => function ($value) {
@@ -74,30 +112,21 @@ return [
 				return true;
 			}
 
-			if (
-				$this->format === 'hex' &&
-				preg_match('/^#([\da-f]{3,4}){1,2}$/i', $value) !== 1
-			) {
+			if ($this->format === 'hex' && $this->isHex($value) === false) {
 				throw new InvalidArgumentException([
 					'key'  => 'validation.color',
 					'data' => ['format' => 'hex']
 				]);
 			}
 
-			if (
-				$this->format === 'rgb' &&
-				preg_match('/^rgba?\(\s*(\d{1,3})(%?)(?:,|\s)+(\d{1,3})(%?)(?:,|\s)+(\d{1,3})(%?)(?:,|\s|\/)*(\d*(?:\.\d+)?)(%?)\s*\)?$/i', $value) !== 1
-			) {
+			if ($this->format === 'rgb' && $this->isRgb($value) === false) {
 				throw new InvalidArgumentException([
 					'key'  => 'validation.color',
 					'data' => ['format' => 'rgb']
 				]);
 			}
 
-			if (
-				$this->format === 'hsl' &&
-				preg_match('/^hsla?\(\s*(\d{1,3}\.?\d*)(deg|rad|grad|turn)?(?:,|\s)+(\d{1,3})%(?:,|\s)+(\d{1,3})%(?:,|\s|\/)*(\d*(?:\.\d+)?)(%?)\s*\)?$/i', $value) !== 1
-			) {
+			if ($this->format === 'hsl' && $this->isHsl($value) === false) {
 				throw new InvalidArgumentException([
 					'key'  => 'validation.color',
 					'data' => ['format' => 'hsl']
