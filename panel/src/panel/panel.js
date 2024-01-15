@@ -354,13 +354,26 @@ export default {
 		}
 
 		/**
+		 * Toggle the dropdown
+		 */
+		if (isObject(state.dropdown) === true) {
+			this.dropdown.open(state.dropdown);
+		} else if (state.dropdown !== undefined) {
+			this.dropdown.close();
+		}
+
+		/**
 		 * Toggle modals
 		 */
 		for (const modal of modals) {
 			// if there's a new state for the
 			// modal, call its state setter method
 			if (isObject(state[modal]) === true) {
-				this[modal].open(state[modal]);
+				if (state[modal].redirect) {
+					return this.open(state[modal].redirect);
+				} else {
+					this[modal].open(state[modal]);
+				}
 			}
 
 			// modals will be closed if the response is null or false.
@@ -368,15 +381,6 @@ export default {
 			else if (state[modal] !== undefined) {
 				this[modal].close();
 			}
-		}
-
-		/**
-		 * Toggle the dropdown
-		 */
-		if (isObject(state.dropdown) === true) {
-			this.dropdown.open(state.dropdown);
-		} else if (state.dropdown !== undefined) {
-			this.dropdown.close();
 		}
 
 		/**
