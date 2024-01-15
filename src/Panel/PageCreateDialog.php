@@ -316,7 +316,9 @@ class PageCreateDialog
 
 		// add default values for custom fields
 		foreach ($this->customFields() as $name => $field) {
-			$value[$name] = $field['default'] ?? null;
+			if ($default = $field['default'] ?? null) {
+				$value[$name] = $default;
+			}
 		}
 
 		return $value;
