@@ -100,7 +100,11 @@ return [
 
 			// add the type to the columns for the table layout
 			if ($this->layout === 'table') {
-				$blueprint = $this->models->first()->blueprint();
+				$blueprint = $this->models->first()?->blueprint();
+
+				if ($blueprint === null) {
+					return $columns;
+				}
 
 				foreach ($columns as $columnName => $column) {
 					if ($id = $column['id'] ?? null) {
