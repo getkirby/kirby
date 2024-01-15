@@ -4,7 +4,11 @@
 			<!-- Header row -->
 			<thead>
 				<tr>
-					<th v-if="hasIndexColumn" data-mobile class="k-table-index-column">
+					<th
+						v-if="hasIndexColumn"
+						data-mobile="true"
+						class="k-table-index-column"
+					>
 						#
 					</th>
 
@@ -34,7 +38,11 @@
 						</slot>
 					</th>
 
-					<th v-if="hasOptions" data-mobile class="k-table-options-column"></th>
+					<th
+						v-if="hasOptions"
+						data-mobile="true"
+						class="k-table-options-column"
+					></th>
 				</tr>
 			</thead>
 
@@ -60,7 +68,7 @@
 						<td
 							v-if="hasIndexColumn"
 							:data-sortable="sortable && row.sortable !== false"
-							data-mobile
+							data-mobile="true"
 							class="k-table-index-column"
 						>
 							<slot
@@ -108,7 +116,12 @@
 						/>
 
 						<!-- Options -->
-						<td v-if="hasOptions" data-mobile class="k-table-options-column">
+						<td
+							v-if="hasOptions"
+							data-mobile="true"
+							true
+							class="k-table-options-column"
+						>
 							<slot name="options" v-bind="{ row, rowIndex }">
 								<k-options-dropdown
 									:options="row.options ?? options"
@@ -521,6 +534,9 @@ export default {
 	}
 	.k-table thead th {
 		position: static;
+	}
+	.k-table :where(th, td):not([data-mobile="true"]) {
+		display: none;
 	}
 }
 
