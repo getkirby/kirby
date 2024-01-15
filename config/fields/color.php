@@ -57,10 +57,11 @@ return [
 			// alongside api and query options
 			$props   = FieldOptions::polyfill($this->props);
 			$options = FieldOptions::factory([
-				...$props['options'],
-				'value' => '{{ item.key }}',
 				'text'  => '{{ item.value }}',
+				'value' => '{{ item.key }}',
+				...$props['options']
 			]);
+
 			$options = $options->render($this->model());
 
 			if (empty($options) === true) {
