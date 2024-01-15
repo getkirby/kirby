@@ -121,6 +121,70 @@ class SiteActionsTest extends TestCase
 		$this->assertSame(2, $calls);
 	}
 
+	public function testChangeTitleHookBeforeHookDefaultLanguage()
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		$app = $this->app->clone([
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			],
+			'hooks' => [
+				'site.changeTitle:before' => function (Site $site, $title, $languageCode) use ($phpunit, &$calls) {
+					$phpunit->assertNull($site->title()->value());
+					$phpunit->assertSame('New Title', $title);
+					$phpunit->assertNull($languageCode);
+					$calls++;
+				}
+			]
+		]);
+
+		$app->site()->changeTitle('New Title');
+
+		$this->assertSame(1, $calls);
+	}
+
+	public function testChangeTitleHookBeforeHookSecondaryLanguage()
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		$app = $this->app->clone([
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			],
+			'hooks' => [
+				'site.changeTitle:before' => function (Site $site, $title, $languageCode) use ($phpunit, &$calls) {
+					$phpunit->assertNull($site->title()->value());
+					$phpunit->assertSame('New Title', $title);
+					$phpunit->assertSame('de', $languageCode);
+					$calls++;
+				}
+			]
+		]);
+
+		$app->site()->changeTitle('New Title', 'de');
+
+		$this->assertSame(1, $calls);
+	}
+
 	public function testUpdateHooks()
 	{
 		$calls = 0;

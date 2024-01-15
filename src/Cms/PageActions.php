@@ -366,7 +366,19 @@ trait PageActions
 		string $title,
 		string|null $languageCode = null
 	): static {
+		// if the `$languageCode` argument is not set and is not the default language
+		// the `$languageCode` argument is sent as the current language
+		if (
+			$languageCode === null &&
+			$language = $this->kirby()->language()
+		) {
+			if ($language->isDefault() === false) {
+				$languageCode = $language->code();
+			}
+		}
+
 		$arguments = ['page' => $this, 'title' => $title, 'languageCode' => $languageCode];
+
 		return $this->commit('changeTitle', $arguments, function ($page, $title, $languageCode) {
 			$page = $page->save(['title' => $title], $languageCode);
 

@@ -1146,6 +1146,83 @@ class PageActionsTest extends TestCase
 		$this->assertSame(2, $calls);
 	}
 
+	public function testChangeTitleBeforeHookDefaultLanguage()
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		$app = $this->app->clone([
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			],
+			'hooks' => [
+				'page.changeTitle:before' => function (Page $page, $title, $languageCode) use ($phpunit, &$calls) {
+					$phpunit->assertSame('test', $page->title()->value);
+					$phpunit->assertSame('New Title', $title);
+					$phpunit->assertNull($languageCode);
+					$calls++;
+				},
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$page->changeTitle('New Title');
+
+		$this->assertSame(1, $calls);
+	}
+
+	public function testChangeTitleBeforeHookSecondaryLanguage()
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		$app = $this->app->clone([
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			],
+			'hooks' => [
+				'page.changeTitle:before' => function (Page $page, $title, $languageCode) use ($phpunit, &$calls) {
+					$phpunit->assertSame('test', $page->title()->value);
+					$phpunit->assertSame('New Title', $title);
+					$phpunit->assertSame('de', $languageCode);
+					$calls++;
+				},
+			]
+		]);
+
+		$app->impersonate('kirby');
+		$app->setCurrentLanguage('de');
+
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$page->changeTitle('New Title', 'de');
+
+		$this->assertSame(1, $calls);
+	}
+
 	public function testCreateHooks()
 	{
 		$calls = 0;
