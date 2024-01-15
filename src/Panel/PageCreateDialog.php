@@ -236,8 +236,12 @@ class PageCreateDialog
 			$content[$name] = $input[$name] ?? null;
 		}
 
+		// create temporary form to sanitize the input
+		// and add default values
+		$form = Form::for($this->model(), ['values' => $content]);
+
 		return [
-			'content'  => $content,
+			'content'  => $form->strings(true),
 			'slug'     => $input['slug'],
 			'template' => $this->template,
 		];
@@ -301,7 +305,7 @@ class PageCreateDialog
 
 	public function value(): array
 	{
-		return [
+		$value = [
 			'parent'   => $this->parentId,
 			'section'  => $this->sectionId,
 			'slug'     => $this->slug ?? '',
@@ -309,5 +313,14 @@ class PageCreateDialog
 			'title'    => $this->title ?? '',
 			'view'     => $this->viewId,
 		];
+
+		// add default values for custom fields
+		foreach ($this->customFields() as $name => $field) {
+			if ($default = $field['default'] ?? null) {
+				$value[$name] = $default;
+			}
+		}
+
+		return $value;
 	}
 }
