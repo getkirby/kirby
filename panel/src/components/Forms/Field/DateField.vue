@@ -28,7 +28,7 @@
 							:value="iso.date"
 							:min="min"
 							:max="max"
-							@input="onDateInput"
+							@input="onCalendarInput"
 						/>
 					</k-dropdown-content>
 				</template>
@@ -199,6 +199,10 @@ export default {
 
 			this.iso.date = value;
 			this.onInput();
+		},
+		onCalendarInput(value) {
+			this.onDateInput(value);
+			this.$refs.calendar?.close();
 		},
 		/**
 		 * Handle invalid event from date input
