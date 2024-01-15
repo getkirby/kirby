@@ -259,12 +259,21 @@ class PageCreateDialog
 		$title = $this->blueprint()->create()['title'] ?? null;
 		$slug  = $this->blueprint()->create()['slug'] ?? null;
 
+		// create temporary page object
+		// to resolve the template strings
+		$page = new Page([
+			'slug'     => 'temp',
+			'template' => $input['template'],
+			'parent'   => $this->model(),
+			'content'  => $input
+		]);
+
 		if (is_string($title)) {
-			$input['title'] = $this->model()->toSafeString($title);
+			$input['title'] = $page->toSafeString($title);
 		}
 
 		if (is_string($slug)) {
-			$input['slug'] = $this->model()->toSafeString($slug);
+			$input['slug'] = $page->toSafeString($slug);
 		}
 
 		return $input;
