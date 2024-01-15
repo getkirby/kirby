@@ -1,11 +1,26 @@
 <template>
 	<k-lab-examples>
 		<k-lab-example label="Default">
-			<k-block type="quote" />
+			<k-block :content="content" type="quote" @update="update" />
+		</k-lab-example>
+		<k-lab-example label="Disabled">
+			<k-block
+				:content="content"
+				:disabled="true"
+				type="quote"
+				@update="update"
+			/>
 		</k-lab-example>
 		<k-lab-example label="With Fieldset">
-			<k-block :content="content" :fieldset="fieldset" :is-editable="true" :is-last-selected="true" :is-selected="true"
-				type="quote" @update="update" />
+			<k-block
+				:content="content"
+				:fieldset="fieldset"
+				:is-editable="true"
+				:is-last-selected="true"
+				:is-selected="true"
+				type="quote"
+				@update="update"
+			/>
 		</k-lab-example>
 		<k-lab-example label="Output">
 			<k-code>{{ content }}</k-code>
@@ -14,46 +29,46 @@
 </template>
 
 <script>
-	export default {
-		data() {
+export default {
+	data() {
+		return {
+			content: {
+				text: "",
+				citation: ""
+			}
+		};
+	},
+	computed: {
+		fieldset() {
 			return {
-				content: {
-					text: "",
-					citation: "",
-				},
-			};
-		},
-		computed: {
-			fieldset() {
-				return {
-					icon: "quote",
-					name: "Quote",
-					tabs: {
-						main: {
-							fields: {
-								text: {
-									label: "Quote",
-									type: "writer",
-									placeholder: "Quote …",
-								},
-								citation: {
-									label: "Citation",
-									type: "writer",
-									placeholder: "Citation …",
-								},
+				icon: "quote",
+				name: "Quote",
+				tabs: {
+					main: {
+						fields: {
+							text: {
+								label: "Quote",
+								type: "writer",
+								placeholder: "Quote …"
 							},
-						},
-					},
-				};
-			},
-		},
-		methods: {
-			update(content) {
-				this.content = {
-					...this.content,
-					...content,
-				};
-			},
-		},
-	};
+							citation: {
+								label: "Citation",
+								type: "writer",
+								placeholder: "Citation …"
+							}
+						}
+					}
+				}
+			};
+		}
+	},
+	methods: {
+		update(content) {
+			this.content = {
+				...this.content,
+				...content
+			};
+		}
+	}
+};
 </script>

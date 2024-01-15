@@ -6,6 +6,9 @@
 		<k-lab-example label="Tabs">
 			<k-block type="fields" :fieldset="fieldsetWithTabs" />
 		</k-lab-example>
+		<k-lab-example>
+			<k-block :disabled="true" :fieldset="fieldsetWithTabs" type="fields" />
+		</k-lab-example>
 	</k-lab-examples>
 </template>
 
@@ -14,7 +17,7 @@ export default {
 	computed: {
 		fieldset() {
 			return {
-				name: "Test",
+				name: "Test"
 			};
 		},
 		fieldsetWithTabs() {
@@ -23,15 +26,15 @@ export default {
 				tabs: {
 					content: {
 						name: "content",
-						label: "Content",
+						label: "Content"
 					},
 					settings: {
 						name: "settings",
-						label: "Settings",
-					},
-				},
+						label: "Settings"
+					}
+				}
 			};
-		},
-	},
+		}
+	}
 };
 </script>

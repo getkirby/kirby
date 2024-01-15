@@ -3,6 +3,14 @@
 		<k-lab-example label="Default">
 			<k-block :content="content" type="heading" @update="update" />
 		</k-lab-example>
+		<k-lab-example label="Disabled">
+			<k-block
+				:content="content"
+				:disabled="true"
+				type="heading"
+				@update="update"
+			/>
+		</k-lab-example>
 		<k-lab-example label="With Fieldset">
 			<k-block
 				:content="content"
@@ -26,8 +34,8 @@ export default {
 		return {
 			content: {
 				level: "h1",
-				text: "",
-			},
+				text: ""
+			}
 		};
 	},
 	computed: {
@@ -44,27 +52,27 @@ export default {
 								options: [
 									{ text: "h1", value: "h1" },
 									{ text: "h2", value: "h2" },
-									{ text: "h3", value: "h3" },
-								],
+									{ text: "h3", value: "h3" }
+								]
 							},
 							text: {
 								label: "Text",
 								type: "writer",
-								placeholder: "Heading …",
-							},
-						},
-					},
-				},
+								placeholder: "Heading …"
+							}
+						}
+					}
+				}
 			};
-		},
+		}
 	},
 	methods: {
 		update(content) {
 			this.content = {
 				...this.content,
-				...content,
+				...content
 			};
-		},
-	},
+		}
+	}
 };
 </script>
