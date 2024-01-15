@@ -107,9 +107,14 @@ class PageCreateDialog
 	{
 		$fields = [];
 
-		// title field
 		$title = $this->blueprint()->create()['title'] ?? null;
+		$slug  = $this->blueprint()->create()['slug'] ?? null;
 
+		if ($title === false || $slug === false) {
+			throw new InvalidArgumentException('Page create dialog: title and slug must not be false');
+		}
+
+		// title field
 		if ($title === null || is_array($title) === true) {
 			$label = $title['label'] ?? 'title';
 			$fields['title'] = Field::title([
@@ -121,8 +126,6 @@ class PageCreateDialog
 		}
 
 		// slug field
-		$slug = $this->blueprint()->create()['slug'] ?? null;
-
 		if ($slug === null) {
 			$fields['slug'] = Field::slug([
 				'required' => true,
@@ -262,8 +265,8 @@ class PageCreateDialog
 		// create temporary page object
 		// to resolve the template strings
 		$page = new Page([
-			'slug'     => 'temp',
-			'template' => $input['template'],
+			'slug'     => 'tmp',
+			'template' => $this->template,
 			'parent'   => $this->model(),
 			'content'  => $input
 		]);
