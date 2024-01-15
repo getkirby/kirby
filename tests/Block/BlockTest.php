@@ -30,7 +30,7 @@ class BlockTest extends TestCase
 
 	public function testConstruct()
 	{
-		$block = new Block(['type' => 'test']);
+		$block = Block::factory(['type' => 'test']);
 
 		$this->assertInstanceOf(Content::class, $block->content());
 		$this->assertFalse($block->isHidden());
@@ -48,7 +48,7 @@ class BlockTest extends TestCase
 
 	public function testContent()
 	{
-		$block = new Block([
+		$block = Block::factory([
 			'type'    => 'heading',
 			'content' => $content = [
 				'a' => 'Test Field A',
@@ -72,7 +72,7 @@ class BlockTest extends TestCase
 	 */
 	public function testContentWhenNotArrayConvertedAsEditorBlock()
 	{
-		$block = new Block([
+		$block = Block::factory([
 			'type'    => 'heading',
 			'content' => $content = 'this is old editor content'
 		]);
@@ -82,7 +82,7 @@ class BlockTest extends TestCase
 
 	public function testController()
 	{
-		$block = new Block([
+		$block = Block::factory([
 			'type' => 'heading',
 			'content' => [
 				'a' => 'Test Content A',
@@ -108,14 +108,14 @@ class BlockTest extends TestCase
 
 	public function testIsEmpty()
 	{
-		$block = new Block([
+		$block = Block::factory([
 			'type' => 'heading'
 		]);
 
 		$this->assertTrue($block->isEmpty());
 		$this->assertFalse($block->isNotEmpty());
 
-		$block = new Block([
+		$block = Block::factory([
 			'type' => 'heading',
 			'content' => [
 				'text' => 'This is a nice heading'
@@ -128,7 +128,7 @@ class BlockTest extends TestCase
 
 	public function testIsHidden()
 	{
-		$block = new Block([
+		$block = Block::factory([
 			'type' => 'heading',
 			'isHidden' => true
 		]);
@@ -138,7 +138,7 @@ class BlockTest extends TestCase
 
 	public function testParent()
 	{
-		$block = new Block([
+		$block = Block::factory([
 			'parent' => $page = new Page(['slug' => 'test']),
 			'type'   => 'heading'
 		]);
@@ -148,7 +148,7 @@ class BlockTest extends TestCase
 
 	public function testToArray()
 	{
-		$block = new Block([
+		$block = Block::factory([
 			'type' => 'heading',
 			'content' => $content = [
 				'a' => 'Test Content A',
@@ -166,7 +166,7 @@ class BlockTest extends TestCase
 
 	public function testToField()
 	{
-		$block = new Block([
+		$block = Block::factory([
 			'content' => [
 				'text' => 'Test'
 			],
@@ -183,7 +183,7 @@ class BlockTest extends TestCase
 
 	public function testToHtml()
 	{
-		$block = new Block([
+		$block = Block::factory([
 			'content' => [
 				'text' => 'Test'
 			],
@@ -206,7 +206,7 @@ class BlockTest extends TestCase
 			]
 		]);
 
-		$block = new Block([
+		$block = Block::factory([
 			'content' => [
 				'text' => 'Test'
 			],
@@ -228,7 +228,7 @@ class BlockTest extends TestCase
 			]
 		]);
 
-		$block = new Block([
+		$block = Block::factory([
 			'content' => [
 				'text' => 'Test'
 			],
@@ -248,7 +248,7 @@ class BlockTest extends TestCase
 			],
 		]);
 
-		$block = new Block([
+		$block = Block::factory([
 			'content' => [
 				'text' => 'Test'
 			],
@@ -264,7 +264,7 @@ class BlockTest extends TestCase
 
 	public function testExcerpt()
 	{
-		$block = new Block([
+		$block = Block::factory([
 			'content' => [
 				'text' => $expected = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
 			],
@@ -377,7 +377,7 @@ class BlockTest extends TestCase
 		]);
 
 		// no alt
-		$block = new Block([
+		$block = Block::factory([
 			'type'    => 'image',
 			'content' => [
 				'image' => 'foo.jpg'
@@ -389,7 +389,7 @@ class BlockTest extends TestCase
 		$this->assertStringContainsString($expected, $block->toHtml());
 
 		// image alt
-		$block = new Block([
+		$block = Block::factory([
 			'type'    => 'image',
 			'content' => [
 				'image' => 'bar.jpg'
@@ -401,7 +401,7 @@ class BlockTest extends TestCase
 		$this->assertStringContainsString($expected, $block->toHtml());
 
 		// custom alt
-		$block = new Block([
+		$block = Block::factory([
 			'type'    => 'image',
 			'content' => [
 				'alt'   => 'Custom image alt text',

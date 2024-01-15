@@ -2,6 +2,16 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Block\CodeBlock;
+use Kirby\Block\GalleryBlock;
+use Kirby\Block\HeadingBlock;
+use Kirby\Block\ImageBlock;
+use Kirby\Block\LineBlock;
+use Kirby\Block\ListBlock;
+use Kirby\Block\MarkdownBlock;
+use Kirby\Block\QuoteBlock;
+use Kirby\Block\TextBlock;
+use Kirby\Block\VideoBlock;
 use Kirby\Cache\ApcuCache;
 use Kirby\Cache\FileCache;
 use Kirby\Cache\MemCached;
@@ -83,6 +93,22 @@ class Core
 		return [
 			'email' => EmailChallenge::class,
 			'totp'  => TotpChallenge::class,
+		];
+	}
+
+	public function blockModels(): array
+	{
+		return [
+			'code'     => CodeBlock::class,
+			'gallery'  => GalleryBlock::class,
+			'heading'  => HeadingBlock::class,
+			'image'    => ImageBlock::class,
+			'line'     => LineBlock::class,
+			'list'     => ListBlock::class,
+			'markdown' => MarkdownBlock::class,
+			'quote'    => QuoteBlock::class,
+			'text'     => TextBlock::class,
+			'video'    => VideoBlock::class
 		];
 	}
 

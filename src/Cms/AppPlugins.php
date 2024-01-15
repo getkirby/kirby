@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Block\Block;
 use Kirby\Content\Field;
 use Kirby\Exception\DuplicateException;
 use Kirby\Filesystem\Asset;
@@ -669,6 +670,9 @@ trait AppPlugins
 
 		// blueprint presets
 		PageBlueprint::$presets = $this->core->blueprintPresets();
+
+		// block models
+		Block::$models = $this->core->blockModels();
 
 		$this->extendAuthChallenges($this->core->authChallenges());
 		$this->extendCacheTypes($this->core->cacheTypes());

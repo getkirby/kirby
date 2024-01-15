@@ -16,7 +16,7 @@ use Throwable;
  * converted to HTML
  * @since 3.5.0
  *
- * @package   Kirby Cms
+ * @package   Kirby Block
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
