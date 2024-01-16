@@ -34,8 +34,8 @@
 		</div>
 
 		<k-block-options
-			ref="options"
 			v-if="!isDisabled"
+			ref="options"
 			v-bind="{
 				isBatched,
 				isEditable,
