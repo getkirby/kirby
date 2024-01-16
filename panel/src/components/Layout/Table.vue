@@ -119,7 +119,6 @@
 						<td
 							v-if="hasOptions"
 							data-mobile="true"
-							true
 							class="k-table-options-column"
 						>
 							<slot name="options" v-bind="{ row, rowIndex }">
