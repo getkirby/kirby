@@ -6,8 +6,8 @@
 					<div class="k-table">
 						<table>
 							<tr>
-								<td>TD 1</td>
-								<td>TD 2</td>
+								<td data-mobile="true">TD 1</td>
+								<td data-mobile="true">TD 2</td>
 							</tr>
 						</table>
 					</div>
@@ -19,8 +19,8 @@
 						<table style="table-layout: auto">
 							<tbody>
 								<tr v-for="i in 1" :key="i">
-									<th>Label {{ i }}</th>
-									<td>Value {{ i }}</td>
+									<th data-mobile="true">Label {{ i }}</th>
+									<td data-mobile="true">Value {{ i }}</td>
 								</tr>
 							</tbody>
 						</table>
