@@ -4,7 +4,6 @@ namespace Kirby\Image\Darkroom;
 
 use claviska\SimpleImage;
 use Kirby\Filesystem\Mime;
-use Kirby\Image\Crop;
 use Kirby\Image\Darkroom;
 use Kirby\Image\Focus;
 
@@ -45,8 +44,10 @@ class GdLib extends Darkroom
 	 * Activates the autoOrient option in SimpleImage
 	 * unless this is deactivated
 	 */
-	protected function autoOrient(SimpleImage $image, array $options): SimpleImage
-	{
+	protected function autoOrient(
+		SimpleImage $image,
+		array $options
+	): SimpleImage {
 		if ($options['autoOrient'] === false) {
 			return $image;
 		}
@@ -65,7 +66,7 @@ class GdLib extends Darkroom
 		}
 
 		// first crop the image in the right ratio
-		$crop  = Crop::fromDarkroomOptions($options);
+		$crop  = Focus::fromDarkroomOptions($options);
 		$image = $image->crop($crop->x1, $crop->y1, $crop->x2, $crop->y2);
 
 		// then scale it to the right size
@@ -87,8 +88,10 @@ class GdLib extends Darkroom
 	/**
 	 * Applies grayscale conversion if activated in the options.
 	 */
-	protected function grayscale(SimpleImage $image, array $options): SimpleImage
-	{
+	protected function grayscale(
+		SimpleImage $image,
+		array $options
+	): SimpleImage {
 		if ($options['grayscale'] === false) {
 			return $image;
 		}

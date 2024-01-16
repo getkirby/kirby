@@ -10,6 +10,40 @@ use Kirby\TestCase;
 class FocusTest extends TestCase
 {
 	/**
+	 * @covers ::__construct
+	 */
+	public function testFocus()
+	{
+		$crop = new Focus(
+			sourceWidth: 1200,
+			sourceHeight: 700,
+			targetWidth: 400,
+			targetHeight: 250,
+			focus: 'top left'
+		);
+		$this->assertSame(0, $crop->x1);
+		$this->assertSame(0, $crop->y1);
+		$this->assertSame(1120, $crop->x2);
+		$this->assertSame(700, $crop->y2);
+		$this->assertSame(1120, $crop->scaledWidth);
+		$this->assertSame(700, $crop->scaledHeight);
+
+		$crop = new Focus(
+			sourceWidth: 1200,
+			sourceHeight: 700,
+			targetWidth: 400,
+			targetHeight: 250,
+			focus: 'top right'
+		);
+		$this->assertSame(80, $crop->x1);
+		$this->assertSame(0, $crop->y1);
+		$this->assertSame(1200, $crop->x2);
+		$this->assertSame(700, $crop->y2);
+		$this->assertSame(1120, $crop->scaledWidth);
+		$this->assertSame(700, $crop->scaledHeight);
+	}
+
+	/**
 	 * @covers ::coords
 	 */
 	public function testCoords()

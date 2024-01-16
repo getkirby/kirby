@@ -4,7 +4,6 @@ namespace Kirby\Image\Darkroom;
 
 use Exception;
 use Kirby\Filesystem\F;
-use Kirby\Image\Crop;
 use Kirby\Image\Darkroom;
 use Kirby\Image\Focus;
 
@@ -176,7 +175,7 @@ class ImageMagick extends Darkroom
 		}
 
 		// first crop the image in the right ratio,
-		$crop    = Crop::fromDarkroomOptions($options);
+		$crop    = Focus::fromDarkroomOptions($options);
 		$command = '-crop ' . escapeshellarg(sprintf(
 			'%sx%s+%s+%s',
 			$crop->scaledWidth,
