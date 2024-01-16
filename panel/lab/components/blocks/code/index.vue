@@ -1,9 +1,14 @@
 <template>
 	<k-lab-examples>
 		<k-lab-example label="Default">
-			<k-block type="code" />
+			<k-block
+				:content="content"
+				:fieldset="fieldset"
+				type="code"
+				@update="update"
+			/>
 		</k-lab-example>
-		<k-lab-example label="With Fieldset">
+		<k-lab-example label="Selected">
 			<k-block
 				:content="content"
 				:fieldset="fieldset"
@@ -31,41 +36,14 @@
 
 <script>
 export default {
+	props: {
+		defaults: Object,
+		fieldset: Object
+	},
 	data() {
 		return {
-			content: {
-				code: "",
-				language: ""
-			}
+			content: this.defaults
 		};
-	},
-	computed: {
-		fieldset() {
-			return {
-				icon: "code",
-				name: "Code",
-				tabs: {
-					main: {
-						fields: {
-							language: {
-								label: "Level",
-								type: "select",
-								options: [
-									{ text: "PHP", value: "php" },
-									{ text: "HTML", value: "html" },
-									{ text: "CSS", value: "css" }
-								]
-							},
-							text: {
-								label: "Text",
-								type: "writer",
-								placeholder: "Heading …"
-							}
-						}
-					}
-				}
-			};
-		}
 	},
 	methods: {
 		update(content) {

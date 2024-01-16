@@ -1,23 +1,29 @@
 <template>
 	<k-lab-examples>
 		<k-lab-example label="Default">
-			<k-block :content="content" type="text" @update="update" />
-		</k-lab-example>
-		<k-lab-example label="Disabled">
 			<k-block
 				:content="content"
-				:disabled="true"
+				:fieldset="fieldset"
 				type="text"
 				@update="update"
 			/>
 		</k-lab-example>
-		<k-lab-example label="With Fieldset">
+		<k-lab-example label="Selected">
 			<k-block
 				:content="content"
 				:fieldset="fieldset"
 				:is-editable="true"
 				:is-last-selected="true"
 				:is-selected="true"
+				type="text"
+				@update="update"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Disabled">
+			<k-block
+				:content="content"
+				:disabled="true"
+				:fieldset="fieldset"
 				type="text"
 				@update="update"
 			/>
@@ -30,32 +36,14 @@
 
 <script>
 export default {
+	props: {
+		defaults: Object,
+		fieldset: Object
+	},
 	data() {
 		return {
-			content: {
-				level: "",
-				text: ""
-			}
+			content: this.defaults
 		};
-	},
-	computed: {
-		fieldset() {
-			return {
-				icon: "text",
-				name: "Text",
-				tabs: {
-					main: {
-						fields: {
-							text: {
-								label: "Text",
-								type: "writer",
-								placeholder: "Text …"
-							}
-						}
-					}
-				}
-			};
-		}
 	},
 	methods: {
 		update(content) {
