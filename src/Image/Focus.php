@@ -11,6 +11,8 @@ use Kirby\Toolkit\Str;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ *
+ * @deprecated Use `Kirby\Image\Crop` instead
  */
 class Focus
 {

@@ -4,6 +4,7 @@ namespace Kirby\Image\Darkroom;
 
 use Exception;
 use Kirby\Filesystem\F;
+use Kirby\Image\Crop;
 use Kirby\Image\Darkroom;
 use Kirby\Image\Focus;
 
@@ -174,43 +175,22 @@ class ImageMagick extends Darkroom
 			return '-thumbnail ' . escapeshellarg(sprintf('%sx%s!', $options['width'], $options['height']));
 		}
 
-		// crop based on focus point
-		if (Focus::isFocalPoint($options['crop']) === true) {
-			if ($focus = Focus::coords(
-				$options['crop'],
-				$options['sourceWidth'],
-				$options['sourceHeight'],
-				$options['width'],
-				$options['height']
-			)) {
-				return sprintf(
-					'-crop %sx%s+%s+%s -resize %sx%s^',
-					$focus['width'],
-					$focus['height'],
-					$focus['x1'],
-					$focus['y1'],
-					$options['width'],
-					$options['height']
-				);
-			}
-		}
+		// first crop the image in the right ratio,
+		$crop    = Crop::fromDarkroomOptions($options);
+		$command = '-crop ' . escapeshellarg(sprintf(
+			'%sx%s+%s+%s',
+			$crop->scaledWidth,
+			$crop->scaledHeight,
+			$crop->x1,
+			$crop->y1
+		));
 
-		// translate the gravity option into something imagemagick understands
-		$gravity = match ($options['crop'] ?? null) {
-			'top left'     => 'NorthWest',
-			'top'          => 'North',
-			'top right'    => 'NorthEast',
-			'left'         => 'West',
-			'right'        => 'East',
-			'bottom left'  => 'SouthWest',
-			'bottom'       => 'South',
-			'bottom right' => 'SouthEast',
-			default        => 'Center'
-		};
-
-		$command  = '-thumbnail ' . escapeshellarg(sprintf('%sx%s^', $options['width'], $options['height']));
-		$command .= ' -gravity ' . escapeshellarg($gravity);
-		$command .= ' -crop ' . escapeshellarg(sprintf('%sx%s+0+0', $options['width'], $options['height']));
+		// then scale it to the right size
+		$command .= ' -thumbnail ' . escapeshellarg(sprintf(
+			'%sx%s^',
+			$options['width'],
+			$options['height']
+		));
 
 		return $command;
 	}

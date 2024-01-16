@@ -124,14 +124,8 @@ class Darkroom
 		$options['height'] = $thumbDimensions->height();
 
 		// scale ratio compared to the source dimensions
-		$options['scaleWidth'] = Focus::ratio(
-			$options['width'],
-			$options['sourceWidth']
-		);
-		$options['scaleHeight'] = Focus::ratio(
-			$options['height'],
-			$options['sourceHeight']
-		);
+		$options['scaleWidth']  = $options['width'] / $options['sourceWidth'];
+		$options['scaleHeight'] = $options['height'] / $options['sourceHeight'];
 
 		return $options;
 	}
