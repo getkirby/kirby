@@ -1,5 +1,5 @@
 <template>
-	<form class="k-login-form" @submit.prevent="login">
+	<form class="k-login-form k-login-password-form" @submit.prevent="login">
 		<div class="k-login-fields">
 			<k-fieldset
 				ref="fieldset"

@@ -10,6 +10,16 @@
 				{{ issue }}
 			</k-login-alert>
 
+			{{ methods }}
+
+			<menu>
+				<k-button
+					v-for="(method, index) in methods"
+					:key="index"
+					:text="method"
+				/>
+			</menu>
+
 			<k-dialog-body>
 				<k-login-code v-if="form === 'code'" v-bind="$props" @error="onError" />
 				<k-login-plugin v-else :methods="methods" @error="onError" />
@@ -19,7 +29,7 @@
 </template>
 
 <script>
-import LoginForm from "@/components/Login/LoginEmailPasswordForm.vue";
+import LoginForm from "@/components/Login/LoginPasswordForm.vue";
 
 /**
  * @internal

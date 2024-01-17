@@ -1,7 +1,7 @@
 /* Form */
 import LoginCodeForm from "./LoginCodeForm.vue";
 import LoginEmailForm from "./LoginEmailForm.vue";
-import LoginEmailPasswordForm from "./LoginEmailPasswordForm.vue";
+import LoginPasswordForm from "./LoginPasswordForm.vue";
 
 /** Login Elements */
 import LoginAlert from "./Elements/LoginAlert.vue";
@@ -14,7 +14,7 @@ export default {
 
 		app.component("k-login-code-form", LoginCodeForm);
 		app.component("k-login-email-form", LoginEmailForm);
-		app.component("k-login-email-password-form", LoginEmailPasswordForm);
+		app.component("k-login-password-form", LoginPasswordForm);
 
 		/**
 		 * @deprecated Use k-login-code-form instead
@@ -23,6 +23,6 @@ export default {
 		/**
 		 * @deprecated Use k-login-password-form instead
 		 */
-		app.component("k-login", LoginEmailPasswordForm);
+		app.component("k-login", LoginPasswordForm);
 	}
 };
