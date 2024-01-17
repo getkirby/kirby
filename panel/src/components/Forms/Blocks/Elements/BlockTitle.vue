@@ -43,7 +43,7 @@ export default {
 				return false;
 			}
 
-			if (this.fieldset.label === this.fieldset.name) {
+			if (this.fieldset.label === this.name) {
 				return false;
 			}
 
@@ -60,7 +60,7 @@ export default {
 			return this.$helper.string.unescapeHTML(label);
 		},
 		name() {
-			return this.fieldset.name;
+			return this.fieldset.name ?? this.fieldset.label;
 		}
 	}
 };
