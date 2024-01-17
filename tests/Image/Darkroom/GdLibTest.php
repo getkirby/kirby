@@ -39,6 +39,7 @@ class GdLibTest extends TestCase
 			'quality' => 90,
 			'scaleHeight' => 1.0,
 			'scaleWidth' => 1.0,
+			'sharpen' => null,
 			'width' => 500,
 			'sourceWidth' => 500,
 			'sourceHeight' => 500,
