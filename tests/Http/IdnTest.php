@@ -2,7 +2,7 @@
 
 namespace Kirby\Http;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class IdnTest extends TestCase
 {

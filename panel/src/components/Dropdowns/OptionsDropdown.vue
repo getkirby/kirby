@@ -91,6 +91,7 @@ export default {
 		 */
 		variant: String
 	},
+	emits: ["action", "option"],
 	computed: {
 		hasSingleOption() {
 			return Array.isArray(this.options) && this.options.length === 1;

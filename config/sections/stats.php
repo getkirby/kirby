@@ -53,6 +53,7 @@ return [
 				$value = $report['value'] ?? null;
 
 				$reports[] = [
+					'icon'  => $toString($report['icon'] ?? null),
 					'info'  => $toString(I18n::translate($info, $info)),
 					'label' => $toString(I18n::translate($label, $label)),
 					'link'  => $toString(I18n::translate($link, $link)),

@@ -1,5 +1,3 @@
-import { clone } from "./object.js";
-
 /**
  * Loads the default value for a field definition
  * @param {Object} field
@@ -7,7 +5,7 @@ import { clone } from "./object.js";
  */
 export function defaultValue(field) {
 	if (field.default !== undefined) {
-		return clone(field.default);
+		return structuredClone(field.default);
 	}
 
 	const component =
@@ -76,7 +74,10 @@ export function isVisible(field, values) {
 		const condition = field.when[key];
 
 		// if condition is checking for empty field
-		if (value === undefined && (condition === "" || condition === [])) {
+		if (
+			value === undefined &&
+			(condition === "" || (Array.isArray(condition) && condition.length === 0))
+		) {
 			continue;
 		}
 

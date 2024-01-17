@@ -6,6 +6,8 @@ use Kirby\Exception\InvalidArgumentException;
 
 class PHPMailerTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures/files';
+
 	protected function _email($props = [], $mailer = PHPMailer::class)
 	{
 		return parent::_email($props, $mailer);
@@ -24,6 +26,7 @@ class PHPMailerTest extends TestCase
 	public function testProperties()
 	{
 		$phpunit = $this;
+		$fixtures = static::FIXTURES;
 		$beforeSend = false;
 
 		$email = $this->_email([
@@ -45,9 +48,9 @@ class PHPMailerTest extends TestCase
 				'html' => '<strong>We will never reply</strong>',
 			],
 			'attachments' => [
-				__DIR__ . '/fixtures/files/test.jpg'
+				static::FIXTURES . '/test.jpg'
 			],
-			'beforeSend' => function (\PHPMailer\PHPMailer\PHPMailer $mailer) use ($phpunit, &$beforeSend) {
+			'beforeSend' => function (\PHPMailer\PHPMailer\PHPMailer $mailer) use ($phpunit, &$beforeSend, $fixtures) {
 				$phpunit->assertInstanceOf('PHPMailer\PHPMailer\PHPMailer', $mailer);
 				$phpunit->assertSame('mail', $mailer->Mailer);
 				$phpunit->assertSame('no-reply@supercompany.com', $mailer->From);
@@ -68,7 +71,7 @@ class PHPMailerTest extends TestCase
 				], $mailer->getBccAddresses());
 				$phpunit->assertSame([
 					[
-						__DIR__ . '/fixtures/files/test.jpg',
+						$fixtures . '/test.jpg',
 						'test.jpg',
 						'test.jpg',
 						'base64',

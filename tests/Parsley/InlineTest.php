@@ -2,8 +2,8 @@
 
 namespace Kirby\Parsley;
 
+use Kirby\TestCase;
 use Kirby\Toolkit\Dom;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Parsley\Inline

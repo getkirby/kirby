@@ -5,7 +5,6 @@ namespace Kirby\Cms;
 use Kirby\Content\Field;
 use Kirby\Email\Email;
 use Kirby\Exception\NotFoundException;
-use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Template\Template;
 use Kirby\Toolkit\Obj;
@@ -28,6 +27,8 @@ class CustomEmailProvider extends Email
 
 class AppComponentsTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.AppComponents';
+
 	protected $kirby;
 
 	public function setUp(): void
@@ -302,18 +303,18 @@ class AppComponentsTest extends TestCase
 	{
 		$app = $this->kirby->clone([
 			'roots' => [
-				'snippets' => $tmp = __DIR__ . '/tmp/snippets'
+				'snippets' => static::TMP
 			],
 			'snippets' => [
-				'plugin' => $tmp . '/plugin-snippet.php' // explicitly different filename
+				'plugin' => static::TMP . '/plugin-snippet.php' // explicitly different filename
 			]
 		]);
 
-		F::write($tmp . '/variable.php', '<?= $message;');
-		F::write($tmp . '/item.php', '<?= $item->method();');
-		F::write($tmp . '/test.php', 'test');
-		F::write($tmp . '/fallback.php', 'fallback');
-		F::write($tmp . '/plugin-snippet.php', 'plugin');
+		F::write(static::TMP . '/variable.php', '<?= $message;');
+		F::write(static::TMP . '/item.php', '<?= $item->method();');
+		F::write(static::TMP . '/test.php', 'test');
+		F::write(static::TMP . '/fallback.php', 'fallback');
+		F::write(static::TMP . '/plugin-snippet.php', 'plugin');
 
 		// simple string
 		$this->assertSame('test', $app->snippet('test'));
@@ -349,8 +350,6 @@ class AppComponentsTest extends TestCase
 		// with direct output
 		$this->expectOutputString('test');
 		$app->snippet('variable', ['message' => 'test'], false);
-
-		Dir::remove($tmp);
 	}
 
 	public function testTemplate()
@@ -393,7 +392,7 @@ class AppComponentsTest extends TestCase
 	{
 		$this->kirby->clone([
 			'roots' => [
-				'index' => __DIR__ . '/fixtures/AppComponentsTest',
+				'index' => static::TMP,
 			]
 		]);
 

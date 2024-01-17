@@ -41,6 +41,8 @@ class MockObject extends Model
 
 class CollectionTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.Collection';
+
 	public function testCollectionMethods()
 	{
 		$kirby = $this->kirby([
@@ -155,10 +157,10 @@ class CollectionTest extends TestCase
 		]);
 
 		$result = $collection->findBy('uuid', 'page://test');
-		$this->assertSame($page, $result);
+		$this->assertIsPage($page, $result);
 
 		$result = $collection->findBy('uuid', $page->uuid());
-		$this->assertSame($page, $result);
+		$this->assertIsPage($page, $result);
 
 		$result = $collection->findBy('uuid', 'page://foo');
 		$this->assertNull($result);

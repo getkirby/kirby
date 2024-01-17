@@ -19,7 +19,12 @@
 
 				<div>&rarr;</div>
 
-				<k-input v-model="pattern" type="text" style="min-width: 12rem" />
+				<k-input
+					:value="pattern"
+					type="text"
+					style="min-width: 12rem"
+					@input="pattern = $event"
+				/>
 
 				<div>&rarr;</div>
 

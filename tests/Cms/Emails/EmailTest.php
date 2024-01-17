@@ -7,6 +7,8 @@ use PHPMailer\PHPMailer\PHPMailer as Mailer;
 
 class EmailTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures/emails';
+
 	public function testToArray()
 	{
 		$props = [
@@ -67,7 +69,7 @@ class EmailTest extends TestCase
 	{
 		$app = new App([
 			'templates' => [
-				'emails/contact' => __DIR__ . '/fixtures/emails/contact.php'
+				'emails/contact' => static::FIXTURES . '/contact.php'
 			]
 		]);
 		$email = new Email([
@@ -83,7 +85,7 @@ class EmailTest extends TestCase
 	{
 		$app = new App([
 			'templates' => [
-				'emails/media.html' => __DIR__ . '/fixtures/emails/media.html.php'
+				'emails/media.html' => static::FIXTURES . '/media.html.php'
 			]
 		]);
 		$email = new Email(['template' => 'media']);
@@ -96,8 +98,8 @@ class EmailTest extends TestCase
 	{
 		$app = new App([
 			'templates' => [
-				'emails/media.html' => __DIR__ . '/fixtures/emails/media.html.php',
-				'emails/media.text' => __DIR__ . '/fixtures/emails/media.text.php',
+				'emails/media.html' => static::FIXTURES . '/media.html.php',
+				'emails/media.text' => static::FIXTURES . '/media.text.php',
 			]
 		]);
 		$email = new Email(['template' => 'media']);
@@ -223,7 +225,7 @@ class EmailTest extends TestCase
 				'index' => '/dev/null'
 			],
 			'templates' => [
-				'emails/user-info' => __DIR__ . '/fixtures/emails/user-info.php'
+				'emails/user-info' => static::FIXTURES . '/user-info.php'
 			]
 		]);
 

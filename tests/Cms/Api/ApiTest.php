@@ -11,16 +11,17 @@ use Kirby\Toolkit\I18n;
 
 class ApiTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.Api';
+
 	protected $api;
 	protected $locale;
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'site' => [
 				'children' => [
@@ -72,12 +73,12 @@ class ApiTest extends TestCase
 		$this->api = $this->app->api();
 
 		$this->locale = setlocale(LC_ALL, 0);
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 		setlocale(LC_ALL, $this->locale);
 	}
 
@@ -521,13 +522,13 @@ class ApiTest extends TestCase
 
 		$api = $app->api();
 
-		$this->assertInstanceOf(User::class, $api->parent('account'));
-		$this->assertInstanceOf(User::class, $api->parent('users/test@getkirby.com'));
-		$this->assertInstanceOf(Site::class, $api->parent('site'));
-		$this->assertInstanceOf(Page::class, $api->parent('pages/a+aa'));
-		$this->assertInstanceOf(File::class, $api->parent('site/files/sitefile.jpg'));
-		$this->assertInstanceOf(File::class, $api->parent('pages/a/files/a-regular-file.jpg'));
-		$this->assertInstanceOf(File::class, $api->parent('users/test@getkirby.com/files/userfile.jpg'));
+		$this->assertIsUser($api->parent('account'));
+		$this->assertIsUser($api->parent('users/test@getkirby.com'));
+		$this->assertIsSite($api->parent('site'));
+		$this->assertIsPage($api->parent('pages/a+aa'));
+		$this->assertIsFile($api->parent('site/files/sitefile.jpg'));
+		$this->assertIsFile($api->parent('pages/a/files/a-regular-file.jpg'));
+		$this->assertIsFile($api->parent('users/test@getkirby.com/files/userfile.jpg'));
 
 		// model type is not recognized
 		$this->expectException(InvalidArgumentException::class);

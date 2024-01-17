@@ -7,7 +7,7 @@ use Kirby\Exception\LogicException;
 /**
  * @coversDefaultClass Kirby\Query\Expression
  */
-class ExpressionTest extends \PHPUnit\Framework\TestCase
+class ExpressionTest extends \Kirby\TestCase
 {
 	/**
 	 * @covers ::__construct
@@ -33,7 +33,7 @@ class ExpressionTest extends \PHPUnit\Framework\TestCase
 		$this->assertInstanceOf(Segments::class, $expression);
 	}
 
-	public function providerParse(): array
+	public static function parseProvider(): array
 	{
 		return [
 			[
@@ -73,7 +73,7 @@ class ExpressionTest extends \PHPUnit\Framework\TestCase
 
 	/**
 	 * @covers ::parse
-	 * @dataProvider providerParse
+	 * @dataProvider parseProvider
 	 */
 	public function testParse(string $expression, array $result)
 	{
@@ -81,7 +81,7 @@ class ExpressionTest extends \PHPUnit\Framework\TestCase
 		$this->assertSame($result, $parts);
 	}
 
-	public function providerResolve(): array
+	public static function resolveProvider(): array
 	{
 		return [
 			['true ? "yes" : "no"', 'yes'],
@@ -97,7 +97,7 @@ class ExpressionTest extends \PHPUnit\Framework\TestCase
 
 	/**
 	 * @covers ::resolve
-	 * @dataProvider providerResolve
+	 * @dataProvider resolveProvider
 	 */
 	public function testResolve(string $input, mixed $result)
 	{

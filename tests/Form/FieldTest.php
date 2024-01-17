@@ -5,7 +5,7 @@ namespace Kirby\Form;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Form\Field
@@ -376,7 +376,7 @@ class FieldTest extends TestCase
 		$this->assertSame('test', $field->icon);
 	}
 
-	public function emptyValuesProvider()
+	public static function emptyValuesProvider(): array
 	{
 		return [
 			['', true],

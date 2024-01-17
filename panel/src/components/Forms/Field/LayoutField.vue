@@ -35,27 +35,13 @@
 </template>
 
 <script>
-import { props as Field } from "../Field.vue";
+import { props as FieldProps } from "../Field.vue";
+import { props as LayoutsProps } from "@/components/Forms/Layouts/Layouts.vue";
+import { autofocus } from "@/mixins/props.js";
 
 export default {
-	mixins: [Field],
+	mixins: [FieldProps, LayoutsProps, autofocus],
 	inheritAttrs: false,
-	props: {
-		autofocus: Boolean,
-		empty: String,
-		fieldsetGroups: Object,
-		fieldsets: Object,
-		layouts: {
-			type: Array,
-			default: () => [["1/1"]]
-		},
-		selector: Object,
-		settings: Object,
-		value: {
-			type: Array,
-			default: () => []
-		}
-	},
 	computed: {
 		hasFieldsets() {
 			return this.$helper.object.length(this.fieldsets) > 0;

@@ -11,12 +11,14 @@ use Kirby\Field\TestCase;
  */
 class OptionsApiTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	/**
 	 * @covers ::__construct
 	 */
 	public function testConstruct()
 	{
-		$options = new OptionsApi($url = 'https://api.getkirby.com');
+		$options = new OptionsApi($url = 'https://api.example.com');
 		$this->assertSame($url, $options->url);
 		$this->assertNull($options->query);
 		$this->assertNull($options->text);
@@ -28,7 +30,7 @@ class OptionsApiTest extends TestCase
 	 */
 	public function testDefaults()
 	{
-		$options = new OptionsApi($url = 'https://api.getkirby.com');
+		$options = new OptionsApi($url = 'https://api.example.com');
 		$this->assertSame($url, $options->url);
 		$this->assertNull($options->text);
 		$this->assertNull($options->value);
@@ -46,7 +48,7 @@ class OptionsApiTest extends TestCase
 	public function testFactory()
 	{
 		$options = OptionsApi::factory([
-			'url'   => $url = 'https://api.getkirby.com',
+			'url'   => $url = 'https://api.example.com',
 			'query' => $query = 'Companies',
 			'text'  => $text = '{{ item.name }}',
 			'value' => $value =  '{{ item.id }}',
@@ -57,7 +59,7 @@ class OptionsApiTest extends TestCase
 		$this->assertSame($text, $options->text);
 		$this->assertSame($value, $options->value);
 
-		$options = OptionsApi::factory($url = 'https://api.getkirby.com');
+		$options = OptionsApi::factory($url = 'https://api.example.com');
 		$this->assertSame($url, $options->url);
 		$this->assertNull($options->query);
 		$this->assertNull($options->text);
@@ -67,12 +69,12 @@ class OptionsApiTest extends TestCase
 	/**
 	 * @covers ::load
 	 */
-	public function testLoadNotFound()
+	public function testLoadNoJson()
 	{
 		$model   = new Page(['slug' => 'test']);
-		$options = new OptionsApi(url: 'https://api.getkirby.com');
+		$options = new OptionsApi(url: 'https://example.com');
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Options could not be loaded from API: https://api.getkirby.com');
+		$this->expectExceptionMessage('Options could not be loaded from API: https://example.com');
 		$options->resolve($model);
 	}
 
@@ -81,10 +83,10 @@ class OptionsApiTest extends TestCase
 	 */
 	public function testPolyfill()
 	{
-		$api = 'https//api.getkirby.com';
+		$api = 'https://api.example.com';
 		$this->assertSame(['url' => $api], OptionsApi::polyfill($api));
 
-		$api = ['url' => 'https//api.getkirby.com'];
+		$api = ['url' => 'https://api.example.com'];
 		$this->assertSame($api, OptionsApi::polyfill($api));
 
 		$api = ['fetch' => 'Companies'];
@@ -99,7 +101,7 @@ class OptionsApiTest extends TestCase
 	public function testResolve()
 	{
 		$model   = new Page(['slug' => 'test']);
-		$options = new OptionsApi(__DIR__ . '/fixtures/data.json');
+		$options = new OptionsApi(static::FIXTURES . '/data.json');
 		$result  = $options->render($model);
 
 		$this->assertSame('A', $result[0]['text']);
@@ -114,7 +116,7 @@ class OptionsApiTest extends TestCase
 	public function testResolveSimple()
 	{
 		$model   = new Page(['slug' => 'test']);
-		$options = new OptionsApi(__DIR__ . '/fixtures/data-simple.json');
+		$options = new OptionsApi(static::FIXTURES . '/data-simple.json');
 		$result  = $options->render($model);
 
 		$this->assertSame('A', $result[0]['text']);
@@ -130,7 +132,7 @@ class OptionsApiTest extends TestCase
 	{
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(
-			url: __DIR__ . '/fixtures/data.json',
+			url: static::FIXTURES . '/data.json',
 			text: '{{ item.name }}',
 			value: '{{ item.email }}',
 		);
@@ -149,7 +151,7 @@ class OptionsApiTest extends TestCase
 	{
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(
-			url: __DIR__ . '/fixtures/data-nested.json',
+			url: static::FIXTURES . '/data-nested.json',
 			query: 'Directory.Companies'
 		);
 		$result  = $options->render($model);
@@ -167,7 +169,7 @@ class OptionsApiTest extends TestCase
 	{
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(
-			url: __DIR__ . '/fixtures/data-nested.json',
+			url: static::FIXTURES . '/data-nested.json',
 			query: 'Directory.Companies',
 			text: '{{ item.name }}',
 			value: '{{ item.email }}'
@@ -189,7 +191,7 @@ class OptionsApiTest extends TestCase
 
 		// text escaped by default
 		$options = new OptionsApi(
-			url: __DIR__ . '/fixtures/data.json',
+			url: static::FIXTURES . '/data.json',
 			text: '{{ item.slogan }}',
 			value: '{{ item.slogan }}'
 		);
@@ -201,7 +203,7 @@ class OptionsApiTest extends TestCase
 		$this->assertSame('We are <b>better</b>', $result[1]['value']);
 
 		// with simple array
-		$options = new OptionsApi(__DIR__ . '/fixtures/data-simple-html.json');
+		$options = new OptionsApi(static::FIXTURES . '/data-simple-html.json');
 		$result = $options->render($model);
 
 		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', $result[0]['text']);
@@ -211,7 +213,7 @@ class OptionsApiTest extends TestCase
 
 		// with query
 		$options = new OptionsApi(
-			url: __DIR__ . '/fixtures/data-nested.json',
+			url: static::FIXTURES . '/data-nested.json',
 			query: 'Directory.Companies',
 			text: '{{ item.slogan }}',
 			value: '{{ item.slogan }}'
@@ -225,7 +227,7 @@ class OptionsApiTest extends TestCase
 
 		// text unescaped using {< >}
 		$options = new OptionsApi(
-			url: __DIR__ . '/fixtures/data.json',
+			url: static::FIXTURES . '/data.json',
 			text: '{< item.slogan >}',
 			value: '{{ item.slogan }}'
 		);
@@ -237,7 +239,7 @@ class OptionsApiTest extends TestCase
 
 		// text unescaped using {< >} (simple array)
 		$options = new OptionsApi(
-			url: __DIR__ . '/fixtures/data-simple-html.json',
+			url: static::FIXTURES . '/data-simple-html.json',
 			text: '{< item.value >}',
 			value: '{{ item.value }}'
 		);
@@ -249,7 +251,7 @@ class OptionsApiTest extends TestCase
 
 		// test unescaped with disabled safe mode
 		$options = new OptionsApi(
-			url: __DIR__ . '/fixtures/data.json',
+			url: static::FIXTURES . '/data.json',
 			text: '{{ item.slogan }}',
 			value: '{{ item.slogan }}'
 		);
@@ -267,7 +269,7 @@ class OptionsApiTest extends TestCase
 	{
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(
-			url: __DIR__ . '/fixtures/data.json',
+			url: static::FIXTURES . '/data.json',
 			text: '{{ item.name }}',
 			value: '{{ item.name.slug }}'
 		);
@@ -286,7 +288,7 @@ class OptionsApiTest extends TestCase
 	{
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(
-			url: __DIR__ . '/fixtures/data-nested.json',
+			url: static::FIXTURES . '/data-nested.json',
 			query: 'simple',
 			text: '{{ item }}',
 			value: '{{ item.slug }}'

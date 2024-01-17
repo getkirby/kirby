@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use PHPUnit\Framework\TestCase as TestCase;
+use Kirby\TestCase as TestCase;
 
 class BlockMethodsTest extends TestCase
 {
@@ -15,9 +15,7 @@ class BlockMethodsTest extends TestCase
 				'index' => '/dev/null',
 			],
 			'blockMethods' => [
-				'test' => function () {
-					return 'block method';
-				}
+				'test' => fn () => 'block method'
 			]
 		]);
 	}

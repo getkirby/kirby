@@ -2,14 +2,16 @@
 
 namespace Kirby\Toolkit;
 
-use PHPUnit\Framework\TestCase;
+use Exception;
+use InvalidArgumentException;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Toolkit\A
  */
 class ATest extends TestCase
 {
-	protected function _array()
+	protected function _array(): array
 	{
 		return [
 			'cat'  => 'miao',
@@ -49,19 +51,15 @@ class ATest extends TestCase
 	{
 		$array = [
 			'level' => [
-				'foo' => 'bar',
-				'homer' => function () {
-					return 'simpson';
-				}
+				'foo'   => 'bar',
+				'homer' => fn () => 'simpson'
 			],
-			'a' => function ($b) {
-				return $b;
-			}
+			'a' => fn ($b) => $b
 		];
 
 		$expected = [
 			'level' => [
-				'foo' => 'bar',
+				'foo'   => 'bar',
 				'homer' => 'simpson'
 			],
 			'a' => 'b'
@@ -70,9 +68,7 @@ class ATest extends TestCase
 		$this->assertSame($expected, A::apply($array, 'b'));
 		$this->assertSame($expected, A::apply($array, 'b', 'c'));
 
-		$array['a'] = function ($b, $c) {
-			return $b . ' or ' . $c;
-		};
+		$array['a']    = fn ($b, $c) => $b . ' or ' . $c;
 		$expected['a'] = 'b or c';
 		$this->assertSame($expected, A::apply($array, 'b', 'c'));
 	}
@@ -111,9 +107,10 @@ class ATest extends TestCase
 		});
 
 		// It should return false if any callback returns false
-		$this->assertFalse(A::every(['foo', 'bar'], function ($value) {
-			return $value === 'foo';
-		}), 'It should return false if any callback returns false');
+		$this->assertFalse(
+			A::every(['foo', 'bar'], fn ($value) => $value === 'foo'),
+			'It should return false if any callback returns false'
+		);
 
 		// It should return early if any callback returns false
 		$counter = 0;
@@ -124,14 +121,16 @@ class ATest extends TestCase
 		$this->assertSame(2, $counter, 'It should return early if any callback returns false');
 
 		// falsy values should be treated as false
-		$this->assertFalse(A::every(['foo', 'bar', ''], function ($value) {
-			return $value;
-		}), 'falsy values should be treated as false');
+		$this->assertFalse(
+			A::every(['foo', 'bar', ''], fn ($value) => $value),
+			'falsy values should be treated as false'
+		);
 
 		// truthy values should be treated as true
-		$this->assertTrue(A::every(['foo', 'bar', 'baz'], function ($value) {
-			return $value;
-		}), 'truthy values should be treated as true');
+		$this->assertTrue(
+			A::every(['foo', 'bar', 'baz'], fn ($value) => $value),
+			'truthy values should be treated as true'
+		);
 	}
 
 	/**
@@ -142,14 +141,18 @@ class ATest extends TestCase
 		$array = $this->_array();
 
 		// The value should be passed to the callback
-		$this->assertSame('miao', A::find($array, function ($value) {
-			return $value === 'miao';
-		}), 'It should return the first value that matches the callback');
+		$this->assertSame(
+			'miao',
+			A::find($array, fn ($value) => $value === 'miao'),
+			'It should return the first value that matches the callback'
+		);
 
 		// The key should be passed to the callback
-		$this->assertSame('miao', A::find($array, function ($value = null, $key = null) {
-			return $key === 'cat';
-		}), 'It should pass the key to the callback');
+		$this->assertSame(
+			'miao',
+			A::find($array, fn ($value = null, $key = null) => $key === 'cat'),
+			'It should pass the key to the callback'
+		);
 
 		// The array should be passed to the callback
 		$arr = ['foo'];
@@ -158,14 +161,19 @@ class ATest extends TestCase
 		});
 
 		// It should return null if no value matches the callback
-		$this->assertNull(A::find($array, function ($value) {
-			return $value === 'MISSING';
-		}), 'It should return null if no value matches the callback');
+		$this->assertNull(
+			A::find($array, fn ($value) => $value === 'MISSING'),
+			'It should return null if no value matches the callback'
+		);
 
 		// It should return null if the array is empty
-		$this->assertNull(A::find([], function ($value) {
-			return true;
-		}), 'It should return null if the array is empty');
+		$this->assertNull(
+			A::find(
+				[],
+				fn ($value) => true
+			),
+			'It should return null if the array is empty'
+		);
 
 		// It should return early if a value matches the callback
 		$counter = 0;
@@ -176,14 +184,18 @@ class ATest extends TestCase
 		$this->assertSame(2, $counter, 'It should return early if a value matches the callback');
 
 		// falsy values should be treated as false
-		$this->assertSame('foo', A::find(['', 'foo', 'bar'], function ($value) {
-			return $value;
-		}), 'falsy values should be treated as false');
+		$this->assertSame(
+			'foo',
+			A::find(['', 'foo', 'bar'], fn ($value) => $value),
+			'falsy values should be treated as false'
+		);
 
 		// truthy values should be treated as true
-		$this->assertSame('foo', A::find(['foo', 'bar', 'baz'], function ($value) {
-			return $value;
-		}), 'truthy values should be treated as true');
+		$this->assertSame(
+			'foo',
+			A::find(['foo', 'bar', 'baz'], fn ($value) => $value),
+			'truthy values should be treated as true'
+		);
 	}
 
 	/**
@@ -290,6 +302,22 @@ class ATest extends TestCase
 	}
 
 	/**
+	 * @covers ::implode
+	 */
+	public function testImplode()
+	{
+		$array = ['a', 'b', 'c'];
+		$this->assertSame('abc', A::implode($array));
+		$this->assertSame('a|b|c', A::implode($array, '|'));
+
+		$array = ['a' => 'A', 'b' => 'B', 'c' => 'C'];
+		$this->assertSame('ABC', A::implode($array));
+
+		$array = ['a' => 'A', 'b' => 'B', 'c' => ['C', 'D']];
+		$this->assertSame('ABCD', A::implode($array));
+	}
+
+	/**
 	 * @covers ::map
 	 */
 	public function testMap()
@@ -304,9 +332,10 @@ class ATest extends TestCase
 			['name' => 'Mary']
 		];
 
-		$this->assertSame($expected, A::map($array, function ($name) {
-			return ['name' => $name];
-		}));
+		$this->assertSame(
+			$expected,
+			A::map($array, fn ($name) => ['name' => $name])
+		);
 	}
 
 	public function testMapWithFunction()
@@ -505,19 +534,17 @@ class ATest extends TestCase
 	{
 		$array = $this->_array();
 
-		$reduced = A::reduce($array, function ($carry, $item) {
-			return $carry . $item;
-		}, '');
+		$reduced = A::reduce($array, fn ($carry, $item) => $carry . $item, '');
 		$this->assertSame('miaowufftweet', $reduced);
 
-		$reduced = A::reduce([1, 2, 3], function ($carry, $item) {
-			return $carry + $item;
-		}, 42);
+		$reduced = A::reduce(
+			[1, 2, 3],
+			fn ($carry, $item) => $carry + $item,
+			42
+		);
 		$this->assertSame(48, $reduced);
 
-		$reduced = A::reduce([], function ($carry, $item) {
-			return $carry + $item;
-		});
+		$reduced = A::reduce([], fn ($carry, $item) => $carry + $item);
 		$this->assertSame(null, $reduced);
 	}
 
@@ -557,14 +584,16 @@ class ATest extends TestCase
 		});
 
 		// It should return false if all callbacks returns false
-		$this->assertFalse(A::some(['foo', 'bar'], function () {
-			return false;
-		}), 'It should return false if all callbacks returns false');
+		$this->assertFalse(
+			A::some(['foo', 'bar'], fn () => false),
+			'It should return false if all callbacks returns false'
+		);
 
 		// It should return true if any callback returns true
-		$this->assertTrue(A::some(['foo', 'bar'], function ($value) {
-			return $value === 'foo';
-		}), 'It should return true if any callback returns true');
+		$this->assertTrue(
+			A::some(['foo', 'bar'], fn ($value) => $value === 'foo'),
+			'It should return true if any callback returns true'
+		);
 
 		// It should return early if any callback returns true
 		$counter = 0;
@@ -575,14 +604,16 @@ class ATest extends TestCase
 		$this->assertSame(1, $counter, 'It should return early if any callback returns true');
 
 		// falsy values should be treated as false
-		$this->assertFalse(A::some(['', 0, null], function ($value) {
-			return $value;
-		}), 'falsy values should be treated as false');
+		$this->assertFalse(
+			A::some(['', 0, null], fn ($value) => $value),
+			'falsy values should be treated as false'
+		);
 
 		// truthy values should be treated as true
-		$this->assertTrue(A::some(['foo'], function ($value) {
-			return $value;
-		}), 'truthy values should be treated as true');
+		$this->assertTrue(
+			A::some(['foo'], fn ($value) => $value),
+			'truthy values should be treated as true'
+		);
 	}
 
 	/**
@@ -619,8 +650,8 @@ class ATest extends TestCase
 	 */
 	public function testRandom()
 	{
-		$array = $this->_array();
-		$arrayKeys = array_flip(array_keys($array));
+		$array       = $this->_array();
+		$arrayKeys   = array_flip(array_keys($array));
 		$arrayValues = array_flip(array_values($array));
 
 		// Assert existence and correctness of keys
@@ -714,7 +745,7 @@ class ATest extends TestCase
 	 */
 	public function testMoveWithInvalidFrom()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid "from" index');
 
 		A::move(['a', 'b', 'c'], -1, 2);
@@ -725,7 +756,7 @@ class ATest extends TestCase
 	 */
 	public function testMoveWithInvalidTo()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid "to" index');
 
 		A::move(['a', 'b', 'c'], 0, 4);
@@ -1076,21 +1107,22 @@ class ATest extends TestCase
 
 		$array_by_name = [
 			'bastian' => [ 'id' => 1, 'username' => 'bastian'],
-			'sonja' => [ 'id' => 2, 'username' => 'sonja'],
-			'lukas' => [ 'id' => 3, 'username' => 'lukas']
+			'sonja'   => [ 'id' => 2, 'username' => 'sonja'],
+			'lukas'   => [ 'id' => 3, 'username' => 'lukas']
 		];
 
 		$array_by_cb = [
 			'bastian-1' => [ 'id' => 1, 'username' => 'bastian'],
-			'sonja-2' => [ 'id' => 2, 'username' => 'sonja'],
-			'lukas-3' => [ 'id' => 3, 'username' => 'lukas']
+			'sonja-2'   => [ 'id' => 2, 'username' => 'sonja'],
+			'lukas-3'   => [ 'id' => 3, 'username' => 'lukas']
 		];
 
 		$this->assertSame($array_by_id, A::keyBy($array, 'id'));
 		$this->assertSame($array_by_name, A::keyBy($array, 'username'));
-		$this->assertSame($array_by_cb, A::keyBy($array, function ($item) {
-			return $item['username'] . '-' . $item['id'];
-		}));
+		$this->assertSame(
+			$array_by_cb,
+			A::keyBy($array, fn ($item) => $item['username'] . '-' . $item['id'])
+		);
 
 		// test with associative array
 		$this->assertSame($array_by_id, A::keyBy($array_by_cb, 'id'));
@@ -1101,7 +1133,7 @@ class ATest extends TestCase
 	 */
 	public function testKeyByWithNonexistentKeys()
 	{
-		$this->expectException('InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The "key by" argument must be a valid key or a callable');
 
 		$array = [
@@ -1129,9 +1161,10 @@ class ATest extends TestCase
 		$this->assertSame($updated, A::update($array, ['cat' => 'meow']));
 
 		// callback
-		$this->assertSame($updated, A::update($array, ['cat' => function ($value) {
-			return 'meow';
-		}]));
+		$this->assertSame(
+			$updated,
+			A::update($array, ['cat' => fn ($value) => 'meow'])
+		);
 	}
 
 	/**
@@ -1158,24 +1191,25 @@ class ATest extends TestCase
 		$associativeArray = $this->_array();
 		$indexedArray = array_keys($associativeArray);
 
-		$result = A::filter($associativeArray, function ($value, $key) {
-			return in_array($key, ['cat', 'dog']);
-		});
+		$result = A::filter(
+			$associativeArray,
+			fn ($value, $key) => in_array($key, ['cat', 'dog'])
+		);
 		$this->assertSame(['cat'  => 'miao', 'dog'  => 'wuff'], $result);
 
-		$result = A::filter($associativeArray, function ($value, $key) {
-			return in_array($value, ['miao', 'tweet']);
-		});
+		$result = A::filter(
+			$associativeArray,
+			fn ($value) => in_array($value, ['miao', 'tweet'])
+		);
 		$this->assertSame(['cat'  => 'miao', 'bird' => 'tweet'], $result);
 
-		$result = A::filter($associativeArray, function ($value, $key) {
-			return $key === 'cat' || $value === 'tweet';
-		});
+		$result = A::filter(
+			$associativeArray,
+			fn ($value, $key) => $key === 'cat' || $value === 'tweet'
+		);
 		$this->assertSame(['cat'  => 'miao', 'bird' => 'tweet'], $result);
 
-		$result = A::filter($indexedArray, function ($value, $key) {
-			return $key > 0;
-		});
+		$result = A::filter($indexedArray, fn ($value, $key) => $key > 0);
 		$this->assertSame([1 => 'dog', 2 => 'bird'], $result);
 	}
 

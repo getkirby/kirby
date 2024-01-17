@@ -3,10 +3,12 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Yaml;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class BlocksTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	protected $app;
 	protected $page;
 
@@ -187,7 +189,7 @@ class BlocksTest extends TestCase
 		$this->app = new App([
 			'roots' => [
 				'index' => '/dev/null',
-				'snippets' => __DIR__ . '/fixtures/snippets'
+				'snippets' => static::FIXTURES . '/snippets'
 			],
 		]);
 

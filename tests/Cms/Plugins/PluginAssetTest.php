@@ -2,23 +2,29 @@
 
 namespace Kirby\Cms;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\Filesystem\Dir;
 
 /**
  * @coversDefaultClass \Kirby\Cms\PluginAsset
  */
 class PluginAssetTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures/plugin-assets';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.PluginAsset';
+
 	protected Plugin $plugin;
-	protected string $fixture = __DIR__ . '/fixtures/plugin-assets';
 
 	public function setUp(): void
 	{
+		parent::setUp();
+
+		Dir::copy(static::FIXTURES, static::TMP . '/test-plugin');
+
 		$this->plugin = new Plugin('getkirby/test-plugin', [
-			'root' => $this->fixture
+			'root' => static::TMP . '/test-plugin'
 		]);
 
-		touch($this->fixture . '/assets/test.css', 1337000000);
+		touch(static::TMP . '/test-plugin/assets/test.css', 1337000000);
 	}
 
 	/**
@@ -28,7 +34,7 @@ class PluginAssetTest extends TestCase
 	{
 		$asset = new PluginAsset(
 			'test.css',
-			$this->fixture . '/assets/test.css',
+			static::TMP . '/test-plugin/assets/test.css',
 			$this->plugin
 		);
 
@@ -42,7 +48,7 @@ class PluginAssetTest extends TestCase
 	{
 		$asset = new PluginAsset(
 			'test.css',
-			$this->fixture . '/assets/test.css',
+			static::TMP . '/test-plugin/assets/test.css',
 			$this->plugin
 		);
 
@@ -60,7 +66,7 @@ class PluginAssetTest extends TestCase
 	{
 		$asset = new PluginAsset(
 			'test.css',
-			$this->fixture . '/assets/test.css',
+			static::TMP . '/test-plugin/assets/test.css',
 			$this->plugin
 		);
 
@@ -78,7 +84,7 @@ class PluginAssetTest extends TestCase
 	{
 		$asset = new PluginAsset(
 			'test.css',
-			$this->fixture . '/assets/test.css',
+			static::TMP . '/test-plugin/assets/test.css',
 			$this->plugin
 		);
 
@@ -95,7 +101,7 @@ class PluginAssetTest extends TestCase
 	{
 		$asset = new PluginAsset(
 			$path = 'test.css',
-			$root = $this->fixture . '/assets/test.css',
+			$root = static::TMP . '/test-plugin/assets/test.css',
 			$plugin = $this->plugin
 		);
 
@@ -111,13 +117,12 @@ class PluginAssetTest extends TestCase
 	{
 		$asset = new PluginAsset(
 			'test.css',
-			$this->fixture . '/assets/test.css',
+			static::TMP . '/test-plugin/assets/test.css',
 			$this->plugin
 		);
 
 		$this->assertFileDoesNotExist($asset->mediaRoot());
 		$asset->publish();
 		$this->assertFileExists($asset->mediaRoot());
-		unlink($asset->mediaRoot());
 	}
 }

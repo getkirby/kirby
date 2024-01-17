@@ -14,19 +14,19 @@
 				:fieldset="{
 					icon: 'image',
 					name: 'image',
-					label: 'This is an image block',
+					label: 'This is an image block'
 				}"
 			/>
 		</k-lab-example>
 		<k-lab-example label="Label template">
 			<k-block-title
 				:content="{
-					title: 'Test',
+					title: 'Test'
 				}"
 				:fieldset="{
 					icon: 'image',
 					name: 'image',
-					label: 'This is a {{title}}',
+					label: 'This is a {{title}}'
 				}"
 			/>
 		</k-lab-example>
@@ -35,7 +35,15 @@
 				:fieldset="{
 					icon: 'image',
 					name: 'image',
-					label: 'This <b>has</b> some HTML',
+					label: 'This <b>has</b> some HTML'
+				}"
+			/>
+		</k-lab-example>
+		<k-lab-example label="No name, but label (fallback)">
+			<k-block-title
+				:fieldset="{
+					icon: 'image',
+					label: 'image'
 				}"
 			/>
 		</k-lab-example>

@@ -134,16 +134,13 @@ class V
 			$value = $params[$index] ?? null;
 
 			if (is_array($value) === true) {
-				try {
-					foreach ($value as $key => $item) {
-						if (is_array($item) === true) {
-							$value[$key] = implode('|', $item);
-						}
+				foreach ($value as $key => $item) {
+					if (is_array($item) === true) {
+						$value[$key] = A::implode($item, '|');
 					}
-					$value = implode(', ', $value);
-				} catch (Throwable) {
-					$value = '-';
 				}
+
+				$value = implode(', ', $value);
 			}
 
 			$arguments[$parameter->getName()] = $value;

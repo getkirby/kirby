@@ -437,8 +437,6 @@ class App
 	/**
 	 * Calls a page controller by name
 	 * and with the given arguments
-	 *
-	 * @internal
 	 */
 	public function controller(
 		string $name,
@@ -833,9 +831,9 @@ class App
 			}
 		}
 
-		$data['kirby']  = $data['kirby']  ?? $this;
-		$data['site']   = $data['site']   ?? $data['kirby']->site();
-		$data['parent'] = $data['parent'] ?? $data['site']->page();
+		$data['kirby']  ??= $this;
+		$data['site']   ??= $data['kirby']->site();
+		$data['parent'] ??= $data['site']->page();
 
 		return (new KirbyTag($type, $value, $attr, $data, $this->options))->render();
 	}
@@ -1466,9 +1464,7 @@ class App
 	protected function setRoles(array $roles = null): static
 	{
 		if ($roles !== null) {
-			$this->roles = Roles::factory($roles, [
-				'kirby' => $this
-			]);
+			$this->roles = Roles::factory($roles);
 		}
 
 		return $this;
@@ -1482,9 +1478,7 @@ class App
 	protected function setSite(Site|array $site = null): static
 	{
 		if (is_array($site) === true) {
-			$site = new Site($site + [
-				'kirby' => $this
-			]);
+			$site = new Site($site);
 		}
 
 		$this->site = $site;
@@ -1499,7 +1493,6 @@ class App
 		return $this->site ??= new Site([
 			'errorPageId' => $this->options['error'] ?? 'error',
 			'homePageId'  => $this->options['home']  ?? 'home',
-			'kirby'       => $this,
 			'url'         => $this->url('index'),
 		]);
 	}

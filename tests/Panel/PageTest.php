@@ -6,8 +6,8 @@ use Kirby\Cms\App;
 use Kirby\Cms\Page as ModelPage;
 use Kirby\Cms\Site as ModelSite;
 use Kirby\Filesystem\Dir;
+use Kirby\TestCase;
 use Kirby\Toolkit\Str;
-use PHPUnit\Framework\TestCase;
 
 class ModelPageTestForceLocked extends ModelPage
 {
@@ -22,23 +22,24 @@ class ModelPageTestForceLocked extends ModelPage
  */
 class PageTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Panel.Page';
+
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => static::TMP,
 			]
 		]);
 
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	/**
@@ -739,7 +740,7 @@ class PageTest extends TestCase
 	{
 		$app = $this->app->clone([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => static::TMP,
 			],
 			'blueprints' => [
 				'pages/a' => [
@@ -805,7 +806,7 @@ class PageTest extends TestCase
 	{
 		$app = $this->app->clone([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => static::TMP,
 			],
 			'blueprints' => [
 				'pages/c' => [
@@ -884,7 +885,7 @@ class PageTest extends TestCase
 	{
 		$app = $this->app->clone([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => static::TMP,
 			],
 			'blueprints' => [
 				'pages/e' => [
@@ -963,7 +964,7 @@ class PageTest extends TestCase
 	{
 		$app = $this->app->clone([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => static::TMP,
 			],
 			'blueprints' => [
 				'pages/g' => [

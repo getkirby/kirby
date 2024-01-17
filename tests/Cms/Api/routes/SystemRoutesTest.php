@@ -2,22 +2,21 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Filesystem\Dir;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class SystemRoutesTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.SystemRoutes';
+
 	protected $app;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $fixtures = __DIR__ . '/fixtures/SystemRoutesTest'
+				'index' => static::TMP
 			]
 		]);
-
-		Dir::remove($fixtures);
 	}
 
 	public function testGetWithInvalidServerSoftware()

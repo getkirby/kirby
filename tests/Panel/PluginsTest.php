@@ -5,15 +5,16 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Plugins
  */
 class PluginsTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Panel.Plugins';
+
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp';
 	protected $cssA;
 	protected $cssB;
 	protected $cssC;
@@ -28,7 +29,7 @@ class PluginsTest extends TestCase
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			]
 		]);
 	}
@@ -37,29 +38,29 @@ class PluginsTest extends TestCase
 	{
 		$time = \time() + 2;
 
-		F::write($this->tmp . '/site/plugins/a/index.php', '<?php Kirby::plugin("test/a", []);');
-		touch($this->tmp . '/site/plugins/a/index.php', $time);
-		F::write($this->cssA = $this->tmp . '/site/plugins/a/index.css', 'a');
+		F::write(static::TMP . '/site/plugins/a/index.php', '<?php Kirby::plugin("test/a", []);');
+		touch(static::TMP . '/site/plugins/a/index.php', $time);
+		F::write($this->cssA = static::TMP . '/site/plugins/a/index.css', 'a');
 		touch($this->cssA, $time);
-		F::write($this->jsA = $this->tmp . '/site/plugins/a/index.js', 'a');
+		F::write($this->jsA = static::TMP . '/site/plugins/a/index.js', 'a');
 		touch($this->jsA, $time);
-		$this->mjsA = $this->tmp . '/site/plugins/a/index.dev.mjs';
+		$this->mjsA = static::TMP . '/site/plugins/a/index.dev.mjs';
 
-		F::write($this->tmp . '/site/plugins/b/index.php', '<?php Kirby::plugin("test/b", []);');
-		touch($this->tmp . '/site/plugins/b/index.php', $time);
-		F::write($this->cssB = $this->tmp . '/site/plugins/b/index.css', 'b');
+		F::write(static::TMP . '/site/plugins/b/index.php', '<?php Kirby::plugin("test/b", []);');
+		touch(static::TMP . '/site/plugins/b/index.php', $time);
+		F::write($this->cssB = static::TMP . '/site/plugins/b/index.css', 'b');
 		touch($this->cssB, $time);
-		F::write($this->jsB = $this->tmp . '/site/plugins/b/index.js', 'b');
+		F::write($this->jsB = static::TMP . '/site/plugins/b/index.js', 'b');
 		touch($this->jsB, $time);
-		$this->mjsB = $this->tmp . '/site/plugins/b/index.dev.mjs';
+		$this->mjsB = static::TMP . '/site/plugins/b/index.dev.mjs';
 
-		F::write($this->tmp . '/site/plugins/c/index.php', '<?php Kirby::plugin("test/c", []);');
-		touch($this->tmp . '/site/plugins/c/index.php', $time);
-		F::write($this->cssC = $this->tmp . '/site/plugins/c/index.css', 'c');
+		F::write(static::TMP . '/site/plugins/c/index.php', '<?php Kirby::plugin("test/c", []);');
+		touch(static::TMP . '/site/plugins/c/index.php', $time);
+		F::write($this->cssC = static::TMP . '/site/plugins/c/index.css', 'c');
 		touch($this->cssC, $time);
-		F::write($this->jsC = $this->tmp . '/site/plugins/c/index.js', 'c');
+		F::write($this->jsC = static::TMP . '/site/plugins/c/index.js', 'c');
 		touch($this->jsC, $time);
-		$this->mjsC = $this->tmp . '/site/plugins/c/index.dev.mjs';
+		$this->mjsC = static::TMP . '/site/plugins/c/index.dev.mjs';
 
 		if ($addDevMjs === true) {
 			F::write($this->mjsC, 'c');
@@ -71,7 +72,7 @@ class PluginsTest extends TestCase
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	/**
@@ -117,6 +118,9 @@ class PluginsTest extends TestCase
 	public function testModifiedWithFiles()
 	{
 		$time = $this->createPlugins();
+
+		// app must be created again to load the new plugins
+		$app = $this->app->clone();
 
 		$plugins = new Plugins();
 		$this->assertSame($time, $plugins->modified());

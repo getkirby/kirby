@@ -4,7 +4,7 @@ namespace Kirby\Data;
 
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Data\Yaml

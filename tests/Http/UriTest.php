@@ -4,12 +4,12 @@ namespace Kirby\Http;
 
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class UriTest extends TestCase
 {
-	protected $example1 = 'https://getkirby.com';
-	protected $example2 = 'https://testuser:weakpassword@getkirby.com:3000/docs/getting-started/with:kirby/?q=awesome#top';
+	protected static $example1 = 'https://getkirby.com';
+	protected static $example2 = 'https://testuser:weakpassword@getkirby.com:3000/docs/getting-started/with:kirby/?q=awesome#top';
 
 	protected function setUp(): void
 	{
@@ -294,7 +294,7 @@ class UriTest extends TestCase
 
 	public function testToArray()
 	{
-		$url = new Uri($this->example2);
+		$url = new Uri(static::$example2);
 		$result = $url->toArray();
 		$this->assertSame('top', $result['fragment']);
 		$this->assertSame('getkirby.com', $result['host']);
@@ -308,12 +308,12 @@ class UriTest extends TestCase
 		$this->assertSame('testuser', $result['username']);
 	}
 
-	public function buildProvider()
+	public static function buildProvider(): array
 	{
 		return [
 			// basic 1:1 tests
-			[$this->example1, [], $this->example1],
-			[$this->example2, [], $this->example2],
+			[static::$example1, [], static::$example1],
+			[static::$example2, [], static::$example2],
 
 			// relative path + adding params
 			[

@@ -2,20 +2,19 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Filesystem\Dir;
-
 class PageModelTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures/PageModelTest';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.PageModel';
+
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index'  => $this->tmp = __DIR__ . '/tmp',
-				'models' => __DIR__ . '/fixtures/PageModelTest'
+				'index'  => static::TMP,
+				'models' => static::FIXTURES
 			]
 		]);
-
-		Dir::make($this->tmp);
 	}
 
 	public function testPageModelWithTemplate()
@@ -47,7 +46,7 @@ class PageModelTest extends TestCase
 			'model' => 'project',
 		]);
 
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertFalse(method_exists($page, 'test'));
 	}
 }

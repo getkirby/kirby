@@ -1,5 +1,5 @@
 <template>
-	<compontent
+	<component
 		:is="element"
 		:data-theme="theme"
 		:style="{
@@ -10,7 +10,7 @@
 		class="k-frame"
 	>
 		<slot />
-	</compontent>
+	</component>
 </template>
 
 <script>

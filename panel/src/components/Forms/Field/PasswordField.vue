@@ -1,7 +1,7 @@
 <template>
 	<k-field
 		v-bind="$props"
-		:input="_uid"
+		:input="id"
 		:counter="counterOptions"
 		class="k-password-field"
 	>
@@ -10,9 +10,7 @@
 		</template>
 		<k-input
 			v-bind="$props"
-			:id="_uid"
 			ref="input"
-			theme="field"
 			type="password"
 			v-on="$listeners"
 		/>

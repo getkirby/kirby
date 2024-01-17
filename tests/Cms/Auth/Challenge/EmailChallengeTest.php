@@ -12,8 +12,10 @@ use Kirby\Filesystem\Dir;
  */
 class EmailChallengeTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/../fixtures';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.Auth.EmailChallenge';
+
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
@@ -23,7 +25,7 @@ class EmailChallengeTest extends TestCase
 
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'site' => [
 				'content' => [
@@ -45,12 +47,12 @@ class EmailChallengeTest extends TestCase
 			]
 		]);
 
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 
 		Email::$debug = false;
 		Email::$emails = [];
@@ -225,7 +227,7 @@ class EmailChallengeTest extends TestCase
 				'auth.challenge.email.subject' => 'Custom subject'
 			],
 			'templates' => [
-				'emails/auth/login' => dirname(__DIR__) . '/fixtures/auth.email.text.php'
+				'emails/auth/login' => static::FIXTURES . '/auth.email.text.php'
 			]
 		]);
 
@@ -254,8 +256,8 @@ class EmailChallengeTest extends TestCase
 	{
 		$this->app = $this->app->clone([
 			'templates' => [
-				'emails/auth/login'      => dirname(__DIR__) . '/fixtures/auth.email.text.php',
-				'emails/auth/login.html' => dirname(__DIR__) . '/fixtures/auth.email.html.php'
+				'emails/auth/login'      => static::FIXTURES . '/auth.email.text.php',
+				'emails/auth/login.html' => static::FIXTURES . '/auth.email.html.php'
 			]
 		]);
 

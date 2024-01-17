@@ -2,7 +2,7 @@
 
 namespace Kirby\Filesystem;
 
-use PHPUnit\Framework\TestCase as TestCase;
+use Kirby\TestCase as TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Filesystem\Filename
@@ -34,7 +34,7 @@ class FilenameTest extends TestCase
 		$this->assertSame($expected, $name->attributesToArray());
 	}
 
-	public function attributesToStringProvider()
+	public static function attributesToStringProvider(): array
 	{
 		return [
 			[
@@ -90,7 +90,7 @@ class FilenameTest extends TestCase
 		$this->assertSame('', $name->attributesToString());
 	}
 
-	public function blurOptionProvider()
+	public static function blurOptionProvider(): array
 	{
 		return [
 			[false, false],
@@ -114,7 +114,7 @@ class FilenameTest extends TestCase
 		$this->assertSame($expected, $name->blur());
 	}
 
-	public function cropAnchorProvider(): array
+	public static function cropAnchorProvider(): array
 	{
 		return [
 			['center', 'center'],
@@ -255,7 +255,7 @@ class FilenameTest extends TestCase
 		$this->assertSame('jpg', $name->extension());
 	}
 
-	public function grayscaleOptionProvider()
+	public static function grayscaleOptionProvider(): array
 	{
 		return [
 			['grayscale', true, true],
@@ -298,7 +298,7 @@ class FilenameTest extends TestCase
 		$this->assertSame('some-file', $name->name());
 	}
 
-	public function qualityOptionProvider()
+	public static function qualityOptionProvider(): array
 	{
 		return [
 			[false, false],

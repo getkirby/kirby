@@ -3,7 +3,7 @@
 namespace Kirby\Data;
 
 use Kirby\Exception\InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Data\Xml

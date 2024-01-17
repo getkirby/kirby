@@ -3,7 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Closure;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Toolkit\LazyValue

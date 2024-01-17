@@ -98,7 +98,7 @@
 	"error.file.changeName.empty": "Bitte gib einen Namen an",
 	"error.file.changeName.permission": "Du darfst den Dateinamen von \"{filename}\" nicht ändern",
 	"error.file.changeTemplate.invalid": "Die Vorlage für die Datei \"{id}\" kann nicht zu \"{template}\" geändert werden (gültig: \"{blueprints}\")",
-	"error.file.changeTemplate.permission": "Du kannst die Voralge für die Datei \"{id}\" nicht ändern",
+	"error.file.changeTemplate.permission": "Du kannst die Vorlage für die Datei \"{id}\" nicht ändern",
 
 	"error.file.duplicate": "Eine Datei mit dem Dateinamen \"{filename}\" besteht bereits",
 	"error.file.extension.forbidden": "Verbotene Dateiendung \"{extension}\"",

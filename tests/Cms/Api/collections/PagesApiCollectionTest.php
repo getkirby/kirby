@@ -6,6 +6,8 @@ use Kirby\Cms\Api\ApiCollectionTestCase;
 
 class PagesApiCollectionTest extends ApiCollectionTestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.PagesApiCollection';
+
 	public function testCollection()
 	{
 		$collection = $this->api->collection('pages', new Pages([

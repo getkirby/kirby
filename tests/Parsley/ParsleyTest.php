@@ -4,8 +4,8 @@ namespace Kirby\Parsley;
 
 use Kirby\Filesystem\F;
 use Kirby\Parsley\Schema\Blocks;
+use Kirby\TestCase;
 use Kirby\Toolkit\Dom;
-use PHPUnit\Framework\TestCase;
 
 class TestableParsley extends Parsley
 {
@@ -21,6 +21,8 @@ class TestableParsley extends Parsley
  */
 class ParsleyTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	protected function parser(string $html = 'Test')
 	{
 		return new TestableParsley($html, new Blocks());
@@ -34,7 +36,7 @@ class ParsleyTest extends TestCase
 	 */
 	public function testBlocks()
 	{
-		$examples = glob(__DIR__ . '/fixtures/*.html');
+		$examples = glob(static::FIXTURES . '/*.html');
 
 		foreach ($examples as $example) {
 			$input    = F::read($example);
@@ -45,7 +47,7 @@ class ParsleyTest extends TestCase
 		}
 	}
 
-	public function containsBlockProvider()
+	public static function containsBlockProvider(): array
 	{
 		return [
 			['<h1>Test</h1>', '//h1/text()', false],
@@ -80,7 +82,7 @@ class ParsleyTest extends TestCase
 		$this->assertFalse($this->parser()->containsBlock($element));
 	}
 
-	public function isBlockProvider()
+	public static function isBlockProvider(): array
 	{
 		return [
 			['<h1>Test</h1>', '/html/body/h1', true],
@@ -108,7 +110,7 @@ class ParsleyTest extends TestCase
 		$this->assertSame($expected, $this->parser()->isBlock($element));
 	}
 
-	public function isInlineProvider()
+	public static function isInlineProvider(): array
 	{
 		return [
 			['<p>Test</p>', '/html/body/p/text()', true],

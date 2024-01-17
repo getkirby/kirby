@@ -10,6 +10,7 @@ use Kirby\Panel\ChangesDialog;
 use Kirby\Panel\Field;
 use Kirby\Panel\PageCreateDialog;
 use Kirby\Panel\Panel;
+use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuids;

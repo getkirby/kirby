@@ -1,6 +1,6 @@
 <template>
-	<k-field v-bind="$props" :input="_uid" class="k-link-field">
-		<k-input v-bind="$props" :invalid="isInvalid" :icon="false" theme="field">
+	<k-field v-bind="$props" :input="id" class="k-link-field">
+		<k-input v-bind="$props" :invalid="isInvalid" :icon="false">
 			<div class="k-link-input-header">
 				<!-- Type selector -->
 				<k-button
@@ -43,7 +43,7 @@
 				<component
 					:is="'k-' + currentType.input + '-input'"
 					v-else
-					:id="_uid"
+					:id="id"
 					ref="input"
 					:pattern="currentType.pattern ?? null"
 					:placeholder="currentType.placeholder"
@@ -257,12 +257,10 @@ export default {
 			this.$emit("input", "");
 			this.expanded = false;
 		},
-		detect(value) {
-			value = value ?? "";
-
+		detect(value = "") {
 			if (value.length === 0) {
 				return {
-					type: "url",
+					type: Object.keys(this.activeTypes)[0] ?? "url",
 					link: ""
 				};
 			}

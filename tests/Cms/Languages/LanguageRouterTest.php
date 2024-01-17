@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\NotFoundException;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class LanguageRouterTest extends TestCase
 {

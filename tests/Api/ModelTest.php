@@ -2,7 +2,8 @@
 
 namespace Kirby\Api;
 
-use PHPUnit\Framework\TestCase;
+use Exception;
+use Kirby\TestCase;
 
 class ModelTest extends TestCase
 {
@@ -14,7 +15,7 @@ class ModelTest extends TestCase
 	}
 	public function testConstructInvalidModel()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid model type "stdClass" expected: "nonexists"');
 
 		new Model(new Api([]), new \stdClass(), ['type' => 'nonexists']);
@@ -22,7 +23,7 @@ class ModelTest extends TestCase
 
 	public function testConstructMissingModel()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Missing model data');
 
 		new Model(new Api([]), null, []);
@@ -32,7 +33,7 @@ class ModelTest extends TestCase
 	{
 		$model = new Model(new Api([]), [], []);
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid select keys');
 		$model->select(0);
 	}
@@ -43,12 +44,8 @@ class ModelTest extends TestCase
 			'models' => [
 				'test' => [
 					'fields' => [
-						'key' => function ($model) {
-							return strtolower($model);
-						},
-						'value' => function ($model) {
-							return $model;
-						}
+						'key'   => fn ($model) => strtolower($model),
+						'value' => fn ($model) => $model
 					]
 				]
 			]
@@ -115,7 +112,7 @@ class ModelTest extends TestCase
 			'select' => ['key' => 'any']
 		]);
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid sub view: "any"');
 
 		$selection = $model->selection();

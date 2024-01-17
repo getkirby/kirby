@@ -5,17 +5,18 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
+use Kirby\TestCase;
 use Kirby\Toolkit\I18n;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Cms\Blueprint
  */
 class BlueprintTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.Blueprint';
+
 	protected $app;
 	protected $model;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
@@ -27,12 +28,12 @@ class BlueprintTest extends TestCase
 
 		$this->model = new Page(['slug' => 'a']);
 
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	/**
@@ -432,16 +433,16 @@ class BlueprintTest extends TestCase
 		$this->app = $this->app->clone([
 			'roots' => [
 				'index' => '/dev/null',
-				'blueprints' => $this->tmp,
+				'blueprints' => static::TMP,
 			],
 			'blueprints' => [
 				'pages/test' => function () {
-					return $this->tmp . '/custom/test.yml';
+					return static::TMP . '/custom/test.yml';
 				}
 			]
 		]);
 
-		Data::write($this->tmp . '/custom/test.yml', ['title' => 'Test']);
+		Data::write(static::TMP . '/custom/test.yml', ['title' => 'Test']);
 
 		$blueprint = Blueprint::factory('pages/test', null, new Page(['slug' => 'test']));
 

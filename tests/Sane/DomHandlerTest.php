@@ -4,14 +4,14 @@ namespace Kirby\Sane;
 
 use Kirby\Exception\InvalidArgumentException;
 
-require_once __DIR__ . '/mocks.php';
-
 /**
  * @covers \Kirby\Sane\DomHandler
  */
 class DomHandlerTest extends TestCase
 {
-	protected $type = 'sane';
+	public const TMP = KIRBY_TMP_DIR . '/Sane.DomHandler';
+
+	protected static $type = 'sane';
 
 	public function testSanitize()
 	{

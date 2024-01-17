@@ -1,10 +1,8 @@
 <template>
-	<k-field v-bind="$props" :input="_uid" class="k-time-field">
+	<k-field v-bind="$props" :input="id" class="k-time-field">
 		<k-input
 			v-bind="$props"
-			:id="_uid"
 			ref="input"
-			theme="field"
 			type="time"
 			@input="$emit('input', $event ?? '')"
 		>

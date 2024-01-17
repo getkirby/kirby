@@ -6,26 +6,27 @@ use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\TestCase;
 use Kirby\Toolkit\Str;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Assets
  */
 class AssetsTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Panel.Assets';
+
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => static::TMP,
 			]
 		]);
 
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
@@ -33,7 +34,7 @@ class AssetsTest extends TestCase
 		// clear session file first
 		$this->app->session()->destroy();
 
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 
 		// clear fake json requests
 		$_GET = [];
@@ -110,8 +111,8 @@ class AssetsTest extends TestCase
 	 */
 	public function testCssWithCustomFile(): void
 	{
-		F::write($this->tmp . '/panel.css', '');
-		F::write($this->tmp . '/foo.css', '');
+		F::write(static::TMP . '/panel.css', '');
+		F::write(static::TMP . '/foo.css', '');
 
 		// single
 		$this->app->clone([
@@ -192,8 +193,8 @@ class AssetsTest extends TestCase
 		]);
 
 		// create dummy assets
-		F::write($this->tmp . '/assets/panel.css', 'test');
-		F::write($this->tmp . '/assets/panel.js', 'test');
+		F::write(static::TMP . '/assets/panel.css', 'test');
+		F::write(static::TMP . '/assets/panel.js', 'test');
 
 		$assets   = new Assets();
 		$external = $assets->external();
@@ -392,8 +393,8 @@ class AssetsTest extends TestCase
 	 */
 	public function testJsWithCustomFile(): void
 	{
-		F::write($this->tmp . '/panel.js', '');
-		F::write($this->tmp . '/foo.js', '');
+		F::write(static::TMP . '/panel.js', '');
+		F::write(static::TMP . '/foo.js', '');
 
 		// single
 		$this->app->clone([

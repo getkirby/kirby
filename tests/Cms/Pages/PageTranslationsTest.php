@@ -2,11 +2,12 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Filesystem\Dir;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class PageTranslationsTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.PageTranslations';
+
 	public function app($language = null)
 	{
 		$app = new App([
@@ -205,7 +206,7 @@ class PageTranslationsTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $fixtures = __DIR__ . '/fixtures/PageTranslationsTest'
+				'index' => static::TMP
 			],
 			'languages' => [
 				[
@@ -278,7 +279,5 @@ class PageTranslationsTest extends TestCase
 		];
 
 		$this->assertSame($expected, $de->content('de')->data());
-
-		Dir::remove($fixtures);
 	}
 }

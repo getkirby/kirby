@@ -6,17 +6,17 @@ use Kirby\Filesystem\F;
 
 class UserAuthTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.UserAuth';
+
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
-		Dir::remove($this->tmp);
 		$this->app = new App([
 			'roots' => [
 				'index'    => '/dev/null',
-				'accounts' => $this->tmp . '/accounts',
-				'sessions' => $this->tmp . '/sessions'
+				'accounts' => static::TMP . '/accounts',
+				'sessions' => static::TMP . '/sessions'
 			],
 			'users' => [
 				[
@@ -31,7 +31,7 @@ class UserAuthTest extends TestCase
 	public function tearDown(): void
 	{
 		$this->app->session()->destroy();
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 		App::destroy();
 	}
 
@@ -116,7 +116,7 @@ class UserAuthTest extends TestCase
 
 	public function testSessionDataWithPassword()
 	{
-		F::write($this->tmp . '/accounts/testuser/.htpasswd', 'a very secure hash');
+		F::write(static::TMP . '/accounts/testuser/.htpasswd', 'a very secure hash');
 
 		$user    = $this->app->user('test@getkirby.com');
 		$session = $this->app->session();

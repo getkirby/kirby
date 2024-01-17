@@ -295,12 +295,15 @@ export default {
 	 */
 	async search(type, query, options) {
 		// open the search dialog
-		if (!type && !query) {
+		if (!query) {
 			// close menu on mobile
 			this.menu.escape();
 
 			return this.dialog.open({
-				component: "k-search-dialog"
+				component: "k-search-dialog",
+				props: {
+					type: type
+				}
 			});
 		}
 
@@ -360,7 +363,11 @@ export default {
 			// if there's a new state for the
 			// modal, call its state setter method
 			if (isObject(state[modal]) === true) {
-				this[modal].open(state[modal]);
+				if (state[modal].redirect) {
+					return this.open(state[modal].redirect);
+				} else {
+					this[modal].open(state[modal]);
+				}
 			}
 
 			// modals will be closed if the response is null or false.

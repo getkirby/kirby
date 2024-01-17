@@ -12,6 +12,8 @@ use Kirby\Exception\PermissionException;
  */
 class PageRulesTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.PageRules';
+
 	public function appWithAdmin()
 	{
 		return new App([
@@ -175,7 +177,7 @@ class PageRulesTest extends TestCase
 		PageRules::changeSlug($app->page('a'), 'api');
 	}
 
-	public function statusActionProvider()
+	public static function statusActionProvider(): array
 	{
 		return [
 			['draft'],
@@ -864,7 +866,7 @@ class PageRulesTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => static::TMP,
 			],
 			'site' => [
 				'children' => [

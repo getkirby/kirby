@@ -2,17 +2,19 @@
 
 namespace Kirby\Image;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class DarkroomTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	public function file(string $driver = null)
 	{
 		if ($driver !== null) {
-			return __DIR__ . '/fixtures/image/cat-' . $driver . '.jpg';
+			return static::FIXTURES . '/image/cat-' . $driver . '.jpg';
 		}
 
-		return __DIR__ . '/fixtures/image/cat.jpg';
+		return static::FIXTURES . '/image/cat.jpg';
 	}
 
 	public function testFactory()

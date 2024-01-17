@@ -5,7 +5,7 @@ namespace Kirby\Text;
 use Kirby\Cms\App;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Text\KirbyTag
@@ -37,6 +37,7 @@ class KirbyTagTest extends TestCase
 	{
 		KirbyTag::$aliases = [];
 		KirbyTag::$types = [];
+		App::destroy();
 	}
 
 	/**
@@ -224,90 +225,165 @@ class KirbyTagTest extends TestCase
 
 	/**
 	 * @covers ::parse
+	 * @dataProvider parseProvider
 	 */
-	public function testParse()
+	public function testParse(string $string, array $data, array $options, array $expected)
 	{
-		$tag = KirbyTag::parse('(test: test value)', ['some' => 'data'], ['some' => 'options']);
-		$this->assertSame('test', $tag->type);
-		$this->assertSame('test value', $tag->value);
-		$this->assertSame(['some' => 'data'], $tag->data);
-		$this->assertSame(['some' => 'options'], $tag->options);
-		$this->assertSame([], $tag->attrs);
+		$tag = KirbyTag::parse($string, $data, $options);
+		foreach ($expected as $key => $value) {
+			$this->assertSame($value, $tag->$key);
+		}
+	}
 
-		$tag = KirbyTag::parse('test: test value');
-		$this->assertSame('test', $tag->type);
-		$this->assertSame('test value', $tag->value);
-		$this->assertSame([], $tag->attrs);
-
-		$tag = KirbyTag::parse('test:');
-		$this->assertSame('test', $tag->type);
-		$this->assertSame('', $tag->value);
-		$this->assertSame([], $tag->attrs);
-
-		$tag = KirbyTag::parse('test: ');
-		$this->assertSame('test', $tag->type);
-		$this->assertSame('', $tag->value);
-		$this->assertSame([], $tag->attrs);
-
-		$tag = KirbyTag::parse('test: test value a: attrA b: attrB');
-		$this->assertSame('test', $tag->type);
-		$this->assertSame('test value', $tag->value);
-		$this->assertSame([
-			'a' => 'attrA',
-			'b' => 'attrB'
-		], $tag->attrs);
-
-		$tag = KirbyTag::parse('test:test value a:attrA b:attrB');
-		$this->assertSame('test', $tag->type);
-		$this->assertSame('test value', $tag->value);
-		$this->assertSame([
-			'a' => 'attrA',
-			'b' => 'attrB'
-		], $tag->attrs);
-
-		$tag = KirbyTag::parse('test: test value a: attrA b:');
-		$this->assertSame('test', $tag->type);
-		$this->assertSame('test value', $tag->value);
-		$this->assertSame([
-			'a' => 'attrA',
-			'b' => ''
-		], $tag->attrs);
-
-		$tag = KirbyTag::parse('test: test value a: attrA b: ');
-		$this->assertSame('test', $tag->type);
-		$this->assertSame('test value', $tag->value);
-		$this->assertSame([
-			'a' => 'attrA',
-			'b' => ''
-		], $tag->attrs);
-
-		$tag = KirbyTag::parse('test: test value a: attrA b: attrB ');
-		$this->assertSame('test', $tag->type);
-		$this->assertSame('test value', $tag->value);
-		$this->assertSame([
-			'a' => 'attrA',
-			'b' => 'attrB'
-		], $tag->attrs);
-
-		$tag = KirbyTag::parse('test: test value a: attrA c: attrC b: attrB');
-		$this->assertSame('test', $tag->type);
-		$this->assertSame('test value', $tag->value);
-		$this->assertSame([
-			'a' => 'attrA c: attrC',
-			'b' => 'attrB'
-		], $tag->attrs);
-
-		$tag = KirbyTag::parse('test: test value a: attrA b: attrB c: attrC');
-		$this->assertSame('test', $tag->type);
-		$this->assertSame('test value', $tag->value);
-		$this->assertSame([
-			'a' => 'attrA',
-			'b' => 'attrB c: attrC'
-		], $tag->attrs);
-
-		$tag = KirbyTag::parse('file: file://abc a: attrA b: attrB c: attrC');
-		$this->assertSame('file://abc', $tag->value);
-		$this->assertSame(['a' => 'attrA b: attrB c: attrC'], $tag->attrs);
+	public static function parseProvider(): array
+	{
+		return [
+			[
+				'(test: test value)',
+				['some' => 'data'],
+				['some' => 'options'],
+				[
+					'type'    => 'test',
+					'value'   => 'test value',
+					'data'    => ['some' => 'data'],
+					'options' => ['some' => 'options'],
+					'attrs'   => []
+				]
+			],
+			[
+				'test: test value',
+				[],
+				[],
+				[
+					'type'    => 'test',
+					'value'   => 'test value',
+					'attrs'   => []
+				]
+			],
+			[
+				'test:',
+				[],
+				[],
+				[
+					'type'    => 'test',
+					'value'   => '',
+					'attrs'   => []
+				]
+			],
+			[
+				'test: ',
+				[],
+				[],
+				[
+					'type'    => 'test',
+					'value'   => '',
+					'attrs'   => []
+				]
+			],
+			[
+				'test: test value a: attrA b: attrB',
+				[],
+				[],
+				[
+					'type'    => 'test',
+					'value'   => 'test value',
+					'attrs'   => [
+						'a' => 'attrA',
+						'b' => 'attrB'
+					]
+				]
+			],
+			[
+				'test:test value a:attrA b:attrB',
+				[],
+				[],
+				[
+					'type'    => 'test',
+					'value'   => 'test value',
+					'attrs'   => [
+						'a' => 'attrA',
+						'b' => 'attrB'
+					]
+				]
+			],
+			[
+				'test: test value a: attrA b:',
+				[],
+				[],
+				[
+					'type'    => 'test',
+					'value'   => 'test value',
+					'attrs'   => [
+						'a' => 'attrA',
+						'b' => ''
+					]
+				]
+			],
+			[
+				'test: test value a: attrA b: ',
+				[],
+				[],
+				[
+					'type'    => 'test',
+					'value'   => 'test value',
+					'attrs'   => [
+						'a' => 'attrA',
+						'b' => ''
+					]
+				]
+			],
+			[
+				'test: test value a: attrA b: attrB ',
+				[],
+				[],
+				[
+					'type'    => 'test',
+					'value'   => 'test value',
+					'attrs'   => [
+						'a' => 'attrA',
+						'b' => 'attrB'
+					]
+				]
+			],
+			[
+				'test: test value a: attrA c: attrC b: attrB',
+				[],
+				[],
+				[
+					'type'    => 'test',
+					'value'   => 'test value',
+					'attrs'   => [
+						'a' => 'attrA c: attrC',
+						'b' => 'attrB'
+					]
+				]
+			],
+			[
+				'test: test value a: attrA b: attrB c: attrC',
+				[],
+				[],
+				[
+					'type'    => 'test',
+					'value'   => 'test value',
+					'attrs'   => [
+						'a' => 'attrA',
+						'b' => 'attrB c: attrC'
+					]
+				]
+			],
+			[
+				'file: file://abc a: attrA b: attrB c: attrC',
+				[],
+				[],
+				[
+					'type'    => 'file',
+					'value'   => 'file://abc',
+					'attrs'   => [
+						'a' => 'attrA b: attrB c: attrC'
+					]
+				]
+			],
+		];
 	}
 
 	/**

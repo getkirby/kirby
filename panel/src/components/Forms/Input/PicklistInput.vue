@@ -122,7 +122,8 @@ export const props = {
 			type: [Array, String],
 			default: () => []
 		}
-	}
+	},
+	emits: ["create", "escape", "input"]
 };
 
 /**

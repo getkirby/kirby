@@ -2,22 +2,12 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 
 class AppResolveTest extends TestCase
 {
-	protected $fixtures;
-
-	public function setUp(): void
-	{
-		$this->fixtures = __DIR__ . '/fixtures/AppResolveTest';
-	}
-
-	public function tearDown(): void
-	{
-		Dir::remove($this->fixtures);
-	}
+	public const FIXTURES = __DIR__ . '/fixtures';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.AppResolve';
 
 	public function testResolveHomePage()
 	{
@@ -36,7 +26,7 @@ class AppResolveTest extends TestCase
 
 		$result = $app->resolve(null);
 
-		$this->assertInstanceOf(Page::class, $result);
+		$this->assertIsPage($result);
 		$this->assertTrue($result->isHomePage());
 	}
 
@@ -57,7 +47,7 @@ class AppResolveTest extends TestCase
 
 		$result = $app->resolve('test');
 
-		$this->assertInstanceOf(Page::class, $result);
+		$this->assertIsPage($result);
 		$this->assertSame('test', $result->id());
 	}
 
@@ -81,23 +71,23 @@ class AppResolveTest extends TestCase
 
 		$result = $app->resolve('test/subpage');
 
-		$this->assertInstanceOf(Page::class, $result);
+		$this->assertIsPage($result);
 		$this->assertSame('test/subpage', $result->id());
 	}
 
 	public function testResolvePageRepresentation()
 	{
-		F::write($template = $this->fixtures . '/test.php', 'html');
-		F::write($template = $this->fixtures . '/test.xml.php', 'xml');
+		F::write($template = static::TMP . '/test.php', 'html');
+		F::write($template = static::TMP . '/test.xml.php', 'xml');
 		F::write(
-			$template = $this->fixtures . '/test.png.php',
+			$template = static::TMP . '/test.png.php',
 			'<?php $kirby->response()->type("image/jpeg"); ?>png'
 		);
 
 		$app = new App([
 			'roots' => [
 				'index'     => '/dev/null',
-				'templates' => $this->fixtures
+				'templates' => static::TMP
 			],
 			'site' => [
 				'children' => [
@@ -148,7 +138,7 @@ class AppResolveTest extends TestCase
 		// existing file
 		$result = $app->resolve('test.jpg');
 
-		$this->assertInstanceOf(File::class, $result);
+		$this->assertIsFile($result);
 		$this->assertSame('test.jpg', $result->id());
 	}
 
@@ -177,19 +167,19 @@ class AppResolveTest extends TestCase
 		// existing file
 		$result = $app->resolve('test/test.jpg');
 
-		$this->assertInstanceOf(File::class, $result);
+		$this->assertIsFile($result);
 		$this->assertSame('test/test.jpg', $result->id());
 	}
 
 	public function testResolveMultilangPageRepresentation()
 	{
-		F::write($template = $this->fixtures . '/test.php', 'html');
-		F::write($template = $this->fixtures . '/test.xml.php', 'xml');
+		F::write($template = static::TMP . '/test.php', 'html');
+		F::write($template = static::TMP . '/test.xml.php', 'xml');
 
 		$app = new App([
 			'roots' => [
 				'index'     => '/dev/null',
-				'templates' => $this->fixtures
+				'templates' => static::TMP
 			],
 			'site' => [
 				'children' => [
@@ -221,7 +211,7 @@ class AppResolveTest extends TestCase
 		// finding the page
 		$result = $app->resolve('test');
 
-		$this->assertInstanceOf(Page::class, $result);
+		$this->assertIsPage($result);
 		$this->assertSame('test', $result->id());
 		$this->assertSame('de', $app->language()->code());
 
@@ -245,7 +235,7 @@ class AppResolveTest extends TestCase
 		// finding the page
 		$result = $app->resolve('test', 'en');
 
-		$this->assertInstanceOf(Page::class, $result);
+		$this->assertIsPage($result);
 		$this->assertSame('test', $result->id());
 		$this->assertSame('en', $app->language()->code());
 
@@ -267,7 +257,7 @@ class AppResolveTest extends TestCase
 	{
 		$this->app = new App([
 			'templates' => [
-				'blog' => __DIR__ . '/fixtures/templates/test.php',
+				'blog' => static::FIXTURES . '/templates/test.php',
 			],
 			'site' => [
 				'children' => [

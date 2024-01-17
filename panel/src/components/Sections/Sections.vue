@@ -60,6 +60,7 @@ export default {
 		parent: String,
 		tab: Object
 	},
+	emits: ["submit"],
 	computed: {
 		content() {
 			return this.$store.getters["content/values"]();

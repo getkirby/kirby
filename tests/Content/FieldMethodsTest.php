@@ -15,11 +15,12 @@ use Kirby\Data\Yaml;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Image\QrCode;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class FieldMethodsTest extends TestCase
 {
-	protected $tmp;
+	public const FIXTURES = __DIR__ . '/fixtures';
+	public const TMP      = KIRBY_TMP_DIR . '/Filesystem.FieldMethods';
 
 	public function setUp(): void
 	{
@@ -27,18 +28,19 @@ class FieldMethodsTest extends TestCase
 
 		new App([
 			'roots' => [
-				'index'   => $this->tmp = __DIR__ . '/tmp',
-				'content' => __DIR__ . '/fixtures'
+				'index'   => static::TMP,
+				'content' => static::FIXTURES
 			]
 		]);
 
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
 		parent::tearDown();
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
+		App::destroy();
 	}
 
 	public function testFieldMethodCaseInsensitivity()
@@ -125,7 +127,7 @@ class FieldMethodsTest extends TestCase
 	{
 		new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'options' => [
 				'date.handler' => 'strftime'
@@ -157,6 +159,12 @@ class FieldMethodsTest extends TestCase
 
 	public function testToFile()
 	{
+		new App([
+			'roots' => [
+				'index' => static::TMP
+			]
+		]);
+
 		$page = new Page([
 			'content' => [
 				'cover'   => 'cover.jpg',
@@ -173,7 +181,6 @@ class FieldMethodsTest extends TestCase
 
 		$this->assertSame('cover.jpg', $page->cover()->toFile()->filename());
 		$this->assertSame('cover.jpg', $page->coverid()->toFile()->filename());
-		Dir::remove(__DIR__ . '/fixtures/test');
 	}
 
 	public function testToFiles()
@@ -196,7 +203,7 @@ class FieldMethodsTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'site' => [
 				'children' => [
@@ -303,7 +310,7 @@ class FieldMethodsTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'site' => [
 				'children' => [
@@ -331,7 +338,7 @@ class FieldMethodsTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'site' => [
 				'children' => [
@@ -393,7 +400,7 @@ class FieldMethodsTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'site' => [
 				'children' => [
@@ -477,7 +484,7 @@ class FieldMethodsTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'urls' => [
 				'index' => 'https://getkirby.com'
@@ -500,7 +507,7 @@ class FieldMethodsTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'site' => [
 				'children' => [
@@ -547,7 +554,7 @@ class FieldMethodsTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'users' => [
 				['email' => 'a@company.com'],
@@ -572,7 +579,7 @@ class FieldMethodsTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'users' => [
 				['email' => 'a@company.com'],
@@ -798,7 +805,7 @@ class FieldMethodsTest extends TestCase
 	{
 		new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'options' => [
 				'smartypants' => true
@@ -944,7 +951,7 @@ class FieldMethodsTest extends TestCase
 		$blocks = $field->toBlocks();
 
 		$this->assertInstanceOf(Blocks::class, $blocks);
-		$this->assertInstanceOf(Page::class, $blocks->parent());
+		$this->assertIsPage($blocks->parent());
 		$this->assertCount(count($data), $blocks);
 		$this->assertCount(count($data), $blocks->data());
 

@@ -2,7 +2,7 @@
 
 namespace Kirby\Http;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class RouteTest extends TestCase
 {
@@ -84,7 +84,7 @@ class RouteTest extends TestCase
 		$this->assertSame('a(?:/(.*))?', $route->regex('a/(:all?)'));
 	}
 
-	public function patternProvider()
+	public static function patternProvider(): array
 	{
 		return [
 			// simple strings

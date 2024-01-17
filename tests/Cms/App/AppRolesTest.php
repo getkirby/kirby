@@ -4,6 +4,8 @@ namespace Kirby\Cms;
 
 class AppRolesTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	public function testSet()
 	{
 		$app = new App([
@@ -23,7 +25,7 @@ class AppRolesTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'site' => __DIR__ . '/fixtures'
+				'site' => static::FIXTURES
 			]
 		]);
 

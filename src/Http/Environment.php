@@ -322,10 +322,15 @@ class Environment
 		}
 
 		// @codeCoverageIgnoreStart
+		$sapi = php_sapi_name();
+		if ($sapi === 'cli') {
+			return true;
+		}
+
 		$term = getenv('TERM');
 
 		if (
-			substr(PHP_SAPI, 0, 3) === 'cgi' &&
+			substr($sapi, 0, 3) === 'cgi' &&
 			$term &&
 			$term !== 'unknown'
 		) {
@@ -750,6 +755,10 @@ class Environment
 		}
 
 		if (Str::endsWith($host, '.test') === true) {
+			return true;
+		}
+
+		if (Str::endsWith($host, '.ddev.site') === true) {
 			return true;
 		}
 

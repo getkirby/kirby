@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class MockPageForStatsSection extends Page
 {
@@ -11,10 +11,11 @@ class MockPageForStatsSection extends Page
 		return $this->reports()[0];
 	}
 
-	public function reports()
+	public function reports(): array
 	{
 		return [
 			[
+				'icon'  => 'heart',
 				'info'  => 'Info A',
 				'label' => 'A',
 				'link'  => 'https://getkirby.com',
@@ -22,6 +23,7 @@ class MockPageForStatsSection extends Page
 				'value' => 'Value A',
 			],
 			[
+				'icon'  => null,
 				'info'  => null,
 				'label' => 'B',
 				'link'  => null,
@@ -138,7 +140,10 @@ class StatsSectionTest extends TestCase
 	{
 		$section = new Section('stats', [
 			'name'     => 'test',
-			'model'    => Page::factory(['slug' => 'test']),
+			'model'    => Page::factory([
+				'slug'    => 'test',
+				'content' => ['icon' => 'heart']
+			]),
 			'reports'  => [
 				[
 					'label' => 'C',
@@ -147,6 +152,7 @@ class StatsSectionTest extends TestCase
 						'en' => 'Extra information',
 						'de' => 'Zusatzinformation'
 					],
+					'icon'  => '{{ page.icon }}',
 					'link'  => null,
 					'theme' => null,
 				]
@@ -158,5 +164,6 @@ class StatsSectionTest extends TestCase
 		$this->assertSame('C', $report['label']);
 		$this->assertSame('Value C', $report['value']);
 		$this->assertSame('Extra information', $report['info']);
+		$this->assertSame('heart', $report['icon']);
 	}
 }

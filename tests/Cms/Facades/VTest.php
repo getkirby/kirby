@@ -17,7 +17,7 @@ class VTest extends TestCase
 		]);
 	}
 
-	public function messageInput()
+	public static function messageInput(): array
 	{
 		return [
 			['accepted', ['test'], 'Please confirm'],

@@ -32,6 +32,7 @@ export default {
 			type: String
 		}
 	},
+	emits: ["success"],
 	methods: {
 		/**
 		 * Opens the uploader with the object of given parameters.

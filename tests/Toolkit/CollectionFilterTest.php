@@ -91,7 +91,7 @@ class CollectionFilterTest extends TestCase
 		$this->assertSame($expected, $result->data());
 	}
 
-	public function filterDataProvider()
+	public static function filterDataProvider(): array
 	{
 		return [
 

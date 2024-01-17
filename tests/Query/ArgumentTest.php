@@ -7,7 +7,7 @@ use Closure;
 /**
  * @coversDefaultClass Kirby\Query\Argument
  */
-class ArgumentTest extends \PHPUnit\Framework\TestCase
+class ArgumentTest extends \Kirby\TestCase
 {
 	/**
 	 * @covers ::__construct

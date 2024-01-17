@@ -4,7 +4,7 @@ namespace Kirby\Filesystem;
 
 use Kirby\Cms\App;
 use Kirby\Exception\BadMethodCallException;
-use PHPUnit\Framework\TestCase as TestCase;
+use Kirby\TestCase as TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Filesystem\Asset

@@ -20,6 +20,7 @@ export default {
 	props: {
 		focus: Object
 	},
+	emits: ["set"],
 	methods: {
 		set() {
 			this.$emit("set", {

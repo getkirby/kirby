@@ -6,26 +6,22 @@ use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
-use Kirby\Filesystem\Dir;
 use Kirby\Http\Request\Auth\BasicAuth;
 
 class AppUsersTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.AppUsers';
+
 	protected $app;
-	protected $fixtures;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/AppUsersTest'
+				'index' => static::TMP
 			]
 		]);
-	}
-
-	public function tearDown(): void
-	{
-		Dir::remove($this->fixtures);
 	}
 
 	public function testImpersonate()
@@ -44,8 +40,8 @@ class AppUsersTest extends TestCase
 
 		// impersonate as kirby
 		$user = $app->impersonate('kirby');
-		$this->assertSame($user, $app->user());
-		$this->assertSame('kirby', $user->id());
+		$this->assertIsUser($user, $app->user());
+		$this->assertIsUser('kirby', $user);
 		$this->assertSame('kirby@getkirby.com', $user->email());
 		$this->assertSame('admin', $user->role()->name());
 		$this->assertTrue($user->isKirby());
@@ -53,20 +49,20 @@ class AppUsersTest extends TestCase
 
 		// impersonate as existing user
 		$user = $app->impersonate('homer@simpsons.com');
-		$this->assertSame($user, $app->user());
+		$this->assertIsUser($user, $app->user());
 		$this->assertSame('homer@simpsons.com', $user->email());
 		$user = $app->impersonate('testtest');
-		$this->assertSame($user, $app->user());
+		$this->assertIsUser($user, $app->user());
 		$this->assertSame('homer@simpsons.com', $user->email());
 		$this->assertNull($app->user(null, false));
 
 		// impersonate as nobody
 		$user = $app->impersonate('nobody');
-		$this->assertSame('nobody', $user->id());
+		$this->assertIsUser('nobody', $user);
 		$this->assertSame('nobody@getkirby.com', $user->email());
 		$this->assertSame('nobody', $user->role()->name());
 		$this->assertTrue($user->isNobody());
-		$this->assertSame($user, $app->user());
+		$this->assertIsUser($user, $app->user());
 		$this->assertNull($app->user(null, false));
 
 		// unimpersonate
@@ -77,7 +73,7 @@ class AppUsersTest extends TestCase
 
 		// with callback
 		$result = $app->impersonate('homer@simpsons.com', function ($user) use ($app, $self) {
-			$self->assertSame($user, $app->user());
+			$self->assertIsUser($user, $app->user());
 			$self->assertSame('homer@simpsons.com', $user->email());
 			$self->assertNull($app->user(null, false));
 
@@ -92,7 +88,7 @@ class AppUsersTest extends TestCase
 		$caught = false;
 		try {
 			$app->impersonate('homer@simpsons.com', function ($user) use ($app, $self) {
-				$self->assertSame($user, $app->user());
+				$self->assertIsUser($user, $app->user());
 				$self->assertSame('homer@simpsons.com', $user->email());
 				$self->assertNull($app->user(null, false));
 
@@ -120,7 +116,7 @@ class AppUsersTest extends TestCase
 	{
 		$app = $this->app->clone([
 			'roots' => [
-				'site' => __DIR__ . '/fixtures'
+				'site' => static::FIXTURES
 			]
 		]);
 
@@ -168,7 +164,7 @@ class AppUsersTest extends TestCase
 		$auth = new BasicAuth(base64_encode('test@getkirby.com:correct-horse-battery-staple'));
 		$user = $app->auth()->currentUserFromBasicAuth($auth);
 
-		$this->assertInstanceOf(User::class, $user);
+		$this->assertIsUser($user);
 		$this->assertSame('test@getkirby.com', $user->email());
 	}
 

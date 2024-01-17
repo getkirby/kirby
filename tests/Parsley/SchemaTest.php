@@ -2,7 +2,7 @@
 
 namespace Kirby\Parsley;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Parsley\Schema

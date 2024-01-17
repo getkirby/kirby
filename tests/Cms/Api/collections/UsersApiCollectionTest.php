@@ -7,11 +7,13 @@ use Kirby\Filesystem\Dir;
 
 class UsersApiCollectionTest extends ApiCollectionTestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.UsersApiCollection';
+
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'users' => [
 				['email' => 'a@getkirby.com'],
@@ -20,7 +22,7 @@ class UsersApiCollectionTest extends ApiCollectionTestCase
 		]);
 
 		$this->api = $this->app->api();
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function testDefaultCollection()

@@ -5,7 +5,7 @@ namespace Kirby\Query;
 /**
  * @coversDefaultClass Kirby\Query\Arguments
  */
-class ArgumentsTest extends \PHPUnit\Framework\TestCase
+class ArgumentsTest extends \Kirby\TestCase
 {
 	/**
 	 * @covers ::factory

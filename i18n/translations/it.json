@@ -535,7 +535,7 @@
 	"page.changeStatus.select": "Seleziona un nuovo stato",
 	"page.changeTemplate": "Cambia template",
 	"page.changeTemplate.notice": "Changing the page's template will remove content for fields that don't match in type. Use with caution.",
-	"page.create": "Create as {status}",
+	"page.create": "Crea come \"{status}\"",
 	"page.delete.confirm": "Sei sicuro di voler eliminare questa pagina?",
 	"page.delete.confirm.subpages": "<strong>Questa pagina ha sottopagine</strong>. <br>Anche tutte le sottopagine verranno eliminate.",
 	"page.delete.confirm.title": "Inserisci il titolo della pagina per confermare",

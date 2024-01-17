@@ -12,7 +12,7 @@
 						:autofocus="autofocus && index === 0"
 						:checked="choice.value === value"
 						:disabled="disabled"
-						:name="name ?? _uid"
+						:name="name ?? id"
 						:required="required"
 						:value="choice.value"
 						class="input-hidden"

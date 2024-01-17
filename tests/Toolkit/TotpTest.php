@@ -5,8 +5,6 @@ namespace Kirby\Toolkit;
 use Base32\Base32;
 use Kirby\Exception\InvalidArgumentException;
 
-require_once __DIR__ . '/mocks.php';
-
 /**
  * @coversDefaultClass \Kirby\Toolkit\Totp
  */

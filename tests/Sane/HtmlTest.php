@@ -10,7 +10,9 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class HtmlTest extends TestCase
 {
-	protected $type = 'html';
+	public const TMP = KIRBY_TMP_DIR . '/Sane.Html';
+
+	protected static $type = 'html';
 
 	/**
 	 * @dataProvider allowedProvider
@@ -25,9 +27,9 @@ class HtmlTest extends TestCase
 		$this->assertStringEqualsFile($fixture, $sanitized);
 	}
 
-	public function allowedProvider()
+	public static function allowedProvider()
 	{
-		return $this->fixtureList('allowed', 'html');
+		return static::fixtureList('allowed', 'html');
 	}
 
 	public function testDisallowedExternalFile()

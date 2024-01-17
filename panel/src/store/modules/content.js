@@ -1,5 +1,5 @@
 import { set, del } from "vue";
-import { clone, length } from "@/helpers/object.js";
+import { length } from "@/helpers/object.js";
 
 const keep = (id, data) => {
 	localStorage.setItem("kirby$content$" + id, JSON.stringify(data));
@@ -58,13 +58,18 @@ export default {
 		 */
 		id: (state) => (id) => {
 			id = id ?? state.current;
-			return id + "?language=" + window.panel.language.code;
+
+			if (id && id.includes("?language=") === false) {
+				id += "?language=" + window.panel.language.code;
+			}
+
+			return id;
 		},
 		/**
 		 * Return the full model object for passed ID
 		 */
 		model: (state, getters) => (id) => {
-			id = id ?? state.current;
+			id = getters.id(id);
 
 			if (getters.exists(id) === true) {
 				return state.models[id];
@@ -81,7 +86,7 @@ export default {
 		 * Returns original (in content file) values for passed model ID
 		 */
 		originals: (state, getters) => (id) => {
-			return clone(getters.model(id).originals);
+			return structuredClone(getters.model(id).originals);
 		},
 		/**
 		 * Returns values (incl. unsaved changes) for passed model ID
@@ -96,7 +101,7 @@ export default {
 		 * Returns unsaved changes for passed model ID
 		 */
 		changes: (state, getters) => (id) => {
-			return clone(getters.model(id).changes);
+			return structuredClone(getters.model(id).changes);
 		}
 	},
 
@@ -133,7 +138,7 @@ export default {
 		},
 		MOVE(state, [from, to]) {
 			// move state
-			const model = clone(state.models[from]);
+			const model = structuredClone(state.models[from]);
 			del(state.models, from);
 			set(state.models, to, model);
 
@@ -166,7 +171,7 @@ export default {
 				value = null;
 			}
 
-			value = clone(value);
+			value = structuredClone(value);
 
 			// // compare current field value with its original value
 			const current = JSON.stringify(value);
@@ -240,7 +245,7 @@ export default {
 			context.commit("CLEAR");
 		},
 		create(context, model) {
-			const content = clone(model.content);
+			const content = structuredClone(model.content);
 
 			// remove fields from the content object that
 			// should be ignored in changes or when saving content
@@ -263,6 +268,7 @@ export default {
 			context.dispatch("current", model.id);
 		},
 		current(context, id) {
+			id = context.getters.id(id);
 			context.commit("CURRENT", id);
 		},
 		disable(context) {
@@ -277,6 +283,7 @@ export default {
 			context.commit("MOVE", [from, to]);
 		},
 		remove(context, id) {
+			id = context.getters.id(id);
 			context.commit("REMOVE", id);
 
 			if (context.getters.isCurrent(id)) {
@@ -284,11 +291,11 @@ export default {
 			}
 		},
 		revert(context, id) {
-			id = id ?? context.state.current;
+			id = context.getters.id(id);
 			context.commit("REVERT", id);
 		},
 		async save(context, id) {
-			id = id ?? context.state.current;
+			id = context.getters.id(id);
 
 			// don't allow save if model is not current
 			// or the form is currently disabled

@@ -2,7 +2,7 @@
 
 namespace Kirby\Image;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Image\Focus

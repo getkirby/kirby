@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class FieldsSectionTest extends TestCase
 {
@@ -19,7 +19,7 @@ class FieldsSectionTest extends TestCase
 		]);
 	}
 
-	public function modelProvider()
+	public static function modelProvider(): array
 	{
 		return [
 			[

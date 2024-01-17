@@ -5,7 +5,7 @@ namespace Kirby\Toolkit;
 use Kirby\Cms\App;
 use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class CanBeCounted implements \Countable
 {
@@ -785,7 +785,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::url('http://.www.foo.bar./'));
 	}
 
-	public function inputProvider()
+	public static function inputProvider(): array
 	{
 		return [
 			// everything alright

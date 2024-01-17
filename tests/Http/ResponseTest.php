@@ -3,15 +3,15 @@
 namespace Kirby\Http;
 
 use Kirby\Exception\LogicException;
-use PHPUnit\Framework\TestCase;
-
-require_once __DIR__ . '/mocks.php';
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Http\Response
  */
 class ResponseTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	public function tearDown(): void
 	{
 		HeadersSent::$value = false;
@@ -188,7 +188,7 @@ class ResponseTest extends TestCase
 
 	public function testFile()
 	{
-		$file = __DIR__ . '/fixtures/download.json';
+		$file = static::FIXTURES . '/download.json';
 
 		$response = Response::file($file);
 
@@ -213,7 +213,7 @@ class ResponseTest extends TestCase
 
 	public function testFileInvalid()
 	{
-		$file = __DIR__ . '/fixtures/download.xyz';
+		$file = static::FIXTURES . '/download.xyz';
 
 		$response = Response::file($file);
 

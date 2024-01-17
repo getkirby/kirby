@@ -22,11 +22,14 @@
 </template>
 
 <script>
+import Block from "./Default.vue";
+
 /**
  * @displayName BlockTypeHeading
- * @internal
  */
 export default {
+	extends: Block,
+	emits: ["append", "open", "split", "update"],
 	computed: {
 		isSplitable() {
 			return (

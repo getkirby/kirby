@@ -2,7 +2,7 @@
 
 namespace Kirby\Session;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 use ReflectionClass;
 
 /**

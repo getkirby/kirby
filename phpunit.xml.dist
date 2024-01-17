@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <phpunit
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
-
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+	beStrictAboutOutputDuringTests="true"
 	bootstrap="tests/bootstrap.php"
-	convertDeprecationsToExceptions="true"
+	cacheDirectory=".phpunit.cache"
 	colors="true"
-	verbose="true"
+	controlGarbageCollector="true"
+	displayDetailsOnIncompleteTests="true"
+	displayDetailsOnSkippedTests="true"
+	displayDetailsOnTestsThatTriggerDeprecations="true"
+	displayDetailsOnTestsThatTriggerErrors="true"
+	displayDetailsOnTestsThatTriggerNotices="true"
+	displayDetailsOnTestsThatTriggerWarnings="true"
+	failOnDeprecation="true"
+	failOnEmptyTestSuite="true"
+	failOnIncomplete="true"
+	failOnNotice="true"
+	failOnRisky="true"
+	failOnWarning="true"
 	stderr="true"
 >
-
-	<coverage ignoreDeprecatedCodeUnits="true">
+	<source>
 		<include>
 			<directory>./config</directory>
 			<directory>./src</directory>
@@ -23,7 +33,7 @@
 			<file>./config/aliases.php</file>
 			<file>./config/setup.php</file>
 		</exclude>
-	</coverage>
+	</source>
 
 	<testsuites>
 		<testsuite name="Classes">
@@ -34,4 +44,10 @@
 	<php>
 		<ini name="memory_limit" value="2048M" />
 	</php>
+
+	<coverage ignoreDeprecatedCodeUnits="true" />
+
+	<extensions>
+		<bootstrap class="Kirby\PhpUnitExtension"/>
+	</extensions>
 </phpunit>

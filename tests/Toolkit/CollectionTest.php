@@ -36,7 +36,7 @@ class CollectionTest extends TestCase
 		$this->collection = new Collection($this->sampleData);
 	}
 
-	protected function assertIsUntouched()
+	protected function assertIsUntouched(): void
 	{
 		// the original collection must to be untouched
 		$this->assertSame($this->sampleData, $this->collection->toArray());

@@ -22,11 +22,13 @@
 </template>
 
 <script>
+import Block from "./Default.vue";
+
 /**
  * @displayName BlockTypeQuote
- * @internal
  */
 export default {
+	extends: Block,
 	computed: {
 		citationField() {
 			return this.field("citation", {});

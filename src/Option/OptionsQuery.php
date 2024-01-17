@@ -159,7 +159,9 @@ class OptionsQuery extends OptionsProvider
 		}
 
 		if ($result instanceof Collection === false) {
-			throw new InvalidArgumentException('Invalid query result data: ' . get_class($result));
+			$type = is_object($result) === true ? get_class($result) : gettype($result);
+
+			throw new InvalidArgumentException('Invalid query result data: ' . $type);
 		}
 
 		// create options array

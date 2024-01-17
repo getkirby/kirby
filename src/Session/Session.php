@@ -11,7 +11,6 @@ use Kirby\Http\Cookie;
 use Kirby\Http\Url;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\SymmetricCrypto;
-use Throwable;
 
 /**
  * @package   Kirby Session
@@ -661,6 +660,7 @@ class Session
 		// skip if we don't have the key (only the case for moved sessions)
 		$hmac = Str::before($data, "\n");
 		$data = trim(Str::after($data, "\n"));
+
 		if (
 			$this->tokenKey !== null &&
 			hash_equals(hash_hmac('sha256', $data, $this->tokenKey), $hmac) !== true
@@ -675,16 +675,15 @@ class Session
 		}
 
 		// decode the serialized data
-		try {
-			$data = unserialize($data);
-		} catch (Throwable $e) {
+		$data = @unserialize($data);
+
+		if ($data === false) {
 			throw new LogicException([
 				'key'       => 'session.invalid',
 				'data'      => ['token' => $this->token()],
 				'fallback'  => 'Session "' . $this->token() . '" is invalid',
 				'translate' => false,
-				'httpCode'  => 500,
-				'previous'  => $e
+				'httpCode'  => 500
 			]);
 		}
 

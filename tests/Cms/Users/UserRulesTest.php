@@ -10,11 +10,13 @@ use Kirby\Exception\PermissionException;
 
 class UserRulesTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	public function app()
 	{
 		return new App([
 			'roots' => [
-				'site' => __DIR__ . '/fixtures'
+				'site' => static::FIXTURES
 			]
 		]);
 	}
@@ -30,7 +32,7 @@ class UserRulesTest extends TestCase
 		]);
 	}
 
-	public function validDataProvider()
+	public static function validDataProvider(): array
 	{
 		return [
 			['Email', 'editor@domain.com'],
@@ -51,7 +53,7 @@ class UserRulesTest extends TestCase
 		$this->assertTrue(UserRules::{'change' . $key}($user, $value));
 	}
 
-	public function invalidDataProvider()
+	public static function invalidDataProvider(): array
 	{
 		return [
 			['Email', 'domain.com', 'Please enter a valid email address'],
@@ -76,7 +78,7 @@ class UserRulesTest extends TestCase
 		$this->assertTrue(UserRules::{'change' . $key}($user, $value));
 	}
 
-	public function missingPermissionProvider()
+	public static function missingPermissionProvider(): array
 	{
 		return [
 			['Email', 'domain.com', 'You are not allowed to change the email for the user "test"'],
@@ -118,7 +120,7 @@ class UserRulesTest extends TestCase
 	{
 		$kirby = new App([
 			'roots' => [
-				'site' => __DIR__ . '/fixtures',
+				'site' => static::FIXTURES,
 			],
 			'user' => 'admin@domain.com',
 			'users' => [
@@ -147,7 +149,7 @@ class UserRulesTest extends TestCase
 	{
 		$kirby = new App([
 			'roots' => [
-				'site' => __DIR__ . '/fixtures',
+				'site' => static::FIXTURES,
 			],
 			'user' => 'admin@domain.com',
 			'users' => [
@@ -167,7 +169,7 @@ class UserRulesTest extends TestCase
 
 		$kirby = new App([
 			'roots' => [
-				'site' => __DIR__ . '/fixtures',
+				'site' => static::FIXTURES,
 			],
 			'user' => 'user@domain.com',
 			'users' => [
@@ -184,7 +186,7 @@ class UserRulesTest extends TestCase
 	{
 		$kirby = new App([
 			'roots' => [
-				'site' => __DIR__ . '/fixtures',
+				'site' => static::FIXTURES,
 			],
 			'user' => 'user1@domain.com',
 			'users' => [
@@ -204,7 +206,7 @@ class UserRulesTest extends TestCase
 
 		$kirby = new App([
 			'roots' => [
-				'site' => __DIR__ . '/fixtures',
+				'site' => static::FIXTURES,
 			],
 			'user' => 'user1@domain.com',
 			'users' => [
@@ -412,7 +414,7 @@ class UserRulesTest extends TestCase
 		UserRules::delete($user);
 	}
 
-	public function validIdProvider()
+	public static function validIdProvider(): array
 	{
 		return [
 			['account'],

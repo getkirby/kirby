@@ -1,5 +1,5 @@
 <template>
-	<k-field v-bind="$props" :input="_uid" class="k-date-field">
+	<k-field v-bind="$props" :input="id" class="k-date-field">
 		<div
 			ref="body"
 			:data-has-time="Boolean(time)"
@@ -8,17 +8,8 @@
 		>
 			<!-- Date input -->
 			<k-input
-				:id="_uid"
 				ref="dateInput"
 				v-bind="$props"
-				:autofocus="autofocus"
-				:disabled="disabled"
-				:display="display"
-				:max="max"
-				:min="min"
-				:required="required"
-				:value="value"
-				theme="field"
 				type="date"
 				@invalid="onDateInvalid"
 				@input="onDateInput"
@@ -53,7 +44,6 @@
 				:step="time.step"
 				:value="iso.time"
 				:icon="time.icon"
-				theme="field"
 				type="time"
 				@input="onTimeInput"
 				@submit="$emit('submit')"
@@ -130,6 +120,7 @@ export default {
 			default: true
 		}
 	},
+	emits: ["input", "submit"],
 	data() {
 		return {
 			isInvalid: false,

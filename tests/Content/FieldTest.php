@@ -3,7 +3,7 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\Page;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 use stdClass;
 use TypeError;
 
@@ -156,7 +156,7 @@ class FieldTest extends TestCase
 		$this->assertSame('Test', $modified->value);
 	}
 
-	public function emptyDataProvider()
+	public static function emptyDataProvider(): array
 	{
 		return [
 			['test', false],

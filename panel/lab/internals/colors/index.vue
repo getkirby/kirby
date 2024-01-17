@@ -35,7 +35,6 @@
 			<div>&rarr;</div>
 
 			<k-input
-				v-model="parseAsFormat"
 				type="select"
 				:options="[
 					{ text: 'hex', value: 'hex' },
@@ -43,7 +42,11 @@
 					{ text: 'hsl', value: 'hsl' }
 				]"
 				:empty="false"
-				@input="parseAs(valueAs)"
+				:value="parseAsFormat"
+				@input="
+					parseAsFormat = $event;
+					parseAs(valueAs);
+				"
 			/>
 
 			<div>&rarr;</div>

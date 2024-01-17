@@ -9,13 +9,16 @@
 
 		<k-items
 			v-else
-			:columns="columns"
-			:items="items"
-			:layout="layout"
-			:link="link"
-			:size="size"
-			:sortable="sortable"
-			:theme="theme"
+			v-bind="{
+				columns,
+				fields,
+				items,
+				layout,
+				link,
+				size,
+				sortable,
+				theme
+			}"
 			@change="$emit('change', $event)"
 			@item="$emit('item', $event)"
 			@option="onOption"
@@ -72,6 +75,7 @@ export default {
 			default: false
 		}
 	},
+	emits: ["action", "change", "empty", "item", "option", "paginate", "sort"],
 	computed: {
 		hasPagination() {
 			if (this.pagination === false) {

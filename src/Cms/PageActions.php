@@ -282,10 +282,16 @@ trait PageActions
 			return $this;
 		}
 
-		$arguments = ['page' => $this, 'status' => 'listed', 'position' => $num];
-		$page = $this->commit('changeStatus', $arguments, function ($page, $status, $position) {
-			return $page->publish()->changeNum($position);
-		});
+		$page = $this->commit(
+			'changeStatus',
+			[
+				'page'     => $this,
+				'status'   => 'listed',
+				'position' => $num
+			],
+			fn ($page, $status, $position) =>
+				$page->publish()->changeNum($position)
+		);
 
 		if ($this->blueprint()->num() === 'default') {
 			$page->resortSiblingsAfterListing($num);
@@ -303,10 +309,15 @@ trait PageActions
 			return $this;
 		}
 
-		$arguments = ['page' => $this, 'status' => 'unlisted', 'position' => null];
-		$page = $this->commit('changeStatus', $arguments, function ($page) {
-			return $page->publish()->changeNum(null);
-		});
+		$page = $this->commit(
+			'changeStatus',
+			[
+				'page'     => $this,
+				'status'   => 'unlisted',
+				'position' => null
+			],
+			fn ($page) => $page->publish()->changeNum(null)
+		);
 
 		$this->resortSiblingsAfterUnlisting();
 
@@ -355,7 +366,19 @@ trait PageActions
 		string $title,
 		string|null $languageCode = null
 	): static {
+		// if the `$languageCode` argument is not set and is not the default language
+		// the `$languageCode` argument is sent as the current language
+		if (
+			$languageCode === null &&
+			$language = $this->kirby()->language()
+		) {
+			if ($language->isDefault() === false) {
+				$languageCode = $language->code();
+			}
+		}
+
 		$arguments = ['page' => $this, 'title' => $title, 'languageCode' => $languageCode];
+
 		return $this->commit('changeTitle', $arguments, function ($page, $title, $languageCode) {
 			$page = $page->save(['title' => $title], $languageCode);
 

@@ -2,7 +2,7 @@
 
 namespace Kirby\Http\Request;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class QueryTest extends TestCase
 {

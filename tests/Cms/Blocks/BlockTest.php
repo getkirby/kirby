@@ -3,10 +3,13 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class BlockTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.Block';
+
 	protected $app;
 	protected $page;
 
@@ -136,7 +139,7 @@ class BlockTest extends TestCase
 			'type'   => 'heading'
 		]);
 
-		$this->assertSame($page, $block->content()->parent());
+		$this->assertIsPage($page, $block->content()->parent());
 	}
 
 	public function testToArray()
@@ -195,7 +198,7 @@ class BlockTest extends TestCase
 		new App([
 			'roots' => [
 				'index' => '/dev/null',
-				'snippets' => __DIR__ . '/fixtures/snippets'
+				'snippets' => static::FIXTURES . '/snippets'
 			]
 		]);
 
@@ -214,7 +217,7 @@ class BlockTest extends TestCase
 		new App([
 			'roots' => [
 				'index' => '/dev/null',
-				'snippets' => __DIR__ . '/fixtures/snippets'
+				'snippets' => static::FIXTURES . '/snippets'
 			],
 			'options' => [
 				'debug' => true
@@ -237,7 +240,7 @@ class BlockTest extends TestCase
 		$this->app = new App([
 			'roots' => [
 				'index' => '/dev/null',
-				'snippets' => __DIR__ . '/fixtures/snippets'
+				'snippets' => static::FIXTURES . '/snippets'
 			],
 		]);
 
@@ -364,8 +367,8 @@ class BlockTest extends TestCase
 	{
 		$this->app = new App([
 			'roots' => [
-				'index'   => __DIR__ . '/tmp',
-				'content' => __DIR__ . '/fixtures/files'
+				'index'   => static::TMP,
+				'content' => static::FIXTURES . '/files'
 			]
 		]);
 

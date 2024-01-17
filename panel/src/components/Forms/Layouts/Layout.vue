@@ -9,10 +9,12 @@
 			<k-layout-column
 				v-for="(column, columnIndex) in columns"
 				:key="column.id"
-				:endpoints="endpoints"
-				:fieldset-groups="fieldsetGroups"
-				:fieldsets="fieldsets"
-				v-bind="column"
+				v-bind="{
+					...column,
+					endpoints,
+					fieldsetGroups,
+					fieldsets
+				}"
 				@input="
 					$emit('updateColumn', {
 						column,
@@ -43,22 +45,40 @@
 </template>
 
 <script>
+import { props as LayoutColumnProps } from "./LayoutColumn.vue";
+import { disabled } from "@/mixins/props.js";
+
+export const props = {
+	mixins: [LayoutColumnProps, disabled],
+	props: {
+		columns: Array,
+		layouts: {
+			type: Array,
+			default: () => [["1/1"]]
+		},
+		settings: Object
+	}
+};
+
 /**
  * @internal
  */
 export default {
+	mixins: [props],
 	props: {
-		attrs: [Array, Object],
-		columns: Array,
-		disabled: Boolean,
-		endpoints: Object,
-		fieldsetGroups: Object,
-		fieldsets: Object,
-		id: String,
-		isSelected: Boolean,
-		layouts: Array,
-		settings: Object
+		attrs: [Array, Object]
 	},
+	emits: [
+		"append",
+		"change",
+		"copy",
+		"duplicate",
+		"prepend",
+		"remove",
+		"select",
+		"updateAttrs",
+		"updateColumn"
+	],
 	computed: {
 		options() {
 			return [

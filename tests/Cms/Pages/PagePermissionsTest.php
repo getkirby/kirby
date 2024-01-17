@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Cms\PagePermissions
@@ -23,7 +23,7 @@ class PagePermissionsTest extends TestCase
 		]);
 	}
 
-	public function actionProvider()
+	public static function actionProvider(): array
 	{
 		return [
 			['changeSlug'],

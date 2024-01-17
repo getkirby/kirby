@@ -632,10 +632,20 @@ class Api
 			$uploadMaxFileSize = Str::toBytes(ini_get('upload_max_filesize'));
 
 			if ($postMaxSize < $uploadMaxFileSize) {
-				throw new Exception(I18n::translate('upload.error.iniPostSize'));
+				throw new Exception(
+					I18n::translate(
+						'upload.error.iniPostSize',
+						'The uploaded file exceeds the post_max_size directive in php.ini'
+					)
+				);
 			}
 
-			throw new Exception(I18n::translate('upload.error.noFiles'));
+			throw new Exception(
+				I18n::translate(
+					'upload.error.noFiles',
+					'No files were uploaded'
+				)
+			);
 		}
 
 		foreach ($files as $upload) {
@@ -651,7 +661,8 @@ class Api
 			try {
 				if ($upload['error'] !== 0) {
 					throw new Exception(
-						$errorMessages[$upload['error']] ?? I18n::translate('upload.error.default')
+						$errorMessages[$upload['error']] ??
+						I18n::translate('upload.error.default', 'The file could not be uploaded')
 					);
 				}
 

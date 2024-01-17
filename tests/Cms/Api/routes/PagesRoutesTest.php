@@ -3,12 +3,13 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class PagesRoutesTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.PagesRoutes';
+
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
@@ -17,15 +18,15 @@ class PagesRoutesTest extends TestCase
 				'api.allowImpersonation' => true
 			],
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => static::TMP,
 			]
 		]);
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	public function testGet()
