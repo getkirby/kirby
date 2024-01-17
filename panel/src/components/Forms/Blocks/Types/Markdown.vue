@@ -2,6 +2,7 @@
 	<k-input
 		ref="input"
 		:buttons="false"
+		:disabled="disabled"
 		:placeholder="placeholder"
 		:spellcheck="false"
 		:value="content.text"
