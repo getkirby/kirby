@@ -2,6 +2,7 @@
 	<div class="k-block-type-quote-editor">
 		<k-writer
 			ref="text"
+			:disabled="disabled"
 			:inline="textField.inline ?? false"
 			:marks="textField.marks"
 			:placeholder="textField.placeholder"
@@ -11,6 +12,7 @@
 		/>
 		<k-writer
 			ref="citation"
+			:disabled="disabled"
 			:inline="citationField.inline ?? true"
 			:marks="citationField.marks"
 			:placeholder="citationField.placeholder"

@@ -1,11 +1,32 @@
 <template>
 	<k-lab-examples>
 		<k-lab-example label="Default">
-			<k-block type="quote" />
+			<k-block
+				:content="content"
+				:fieldset="fieldset"
+				type="quote"
+				@update="update"
+			/>
 		</k-lab-example>
-		<k-lab-example label="With Fieldset">
-			<k-block :content="content" :fieldset="fieldset" :is-editable="true" :is-last-selected="true" :is-selected="true"
-				type="quote" @update="update" />
+		<k-lab-example label="Selected">
+			<k-block
+				:content="content"
+				:fieldset="fieldset"
+				:is-editable="true"
+				:is-last-selected="true"
+				:is-selected="true"
+				type="quote"
+				@update="update"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Disabled">
+			<k-block
+				:content="content"
+				:disabled="true"
+				:fieldset="fieldset"
+				type="quote"
+				@update="update"
+			/>
 		</k-lab-example>
 		<k-lab-example label="Output">
 			<k-code>{{ content }}</k-code>
@@ -14,46 +35,23 @@
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
-				content: {
-					text: "",
-					citation: "",
-				},
+export default {
+	props: {
+		defaults: Object,
+		fieldset: Object
+	},
+	data() {
+		return {
+			content: this.defaults
+		};
+	},
+	methods: {
+		update(content) {
+			this.content = {
+				...this.content,
+				...content
 			};
-		},
-		computed: {
-			fieldset() {
-				return {
-					icon: "quote",
-					name: "Quote",
-					tabs: {
-						main: {
-							fields: {
-								text: {
-									label: "Quote",
-									type: "writer",
-									placeholder: "Quote …",
-								},
-								citation: {
-									label: "Citation",
-									type: "writer",
-									placeholder: "Citation …",
-								},
-							},
-						},
-					},
-				};
-			},
-		},
-		methods: {
-			update(content) {
-				this.content = {
-					...this.content,
-					...content,
-				};
-			},
-		},
-	};
+		}
+	}
+};
 </script>

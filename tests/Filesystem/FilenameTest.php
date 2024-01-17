@@ -20,7 +20,8 @@ class FilenameTest extends TestCase
 			'crop'      => 'top left',
 			'grayscale' => true,
 			'blur'      => 10,
-			'quality'   => 90
+			'quality'   => 90,
+			'sharpen'   => 25,
 		]);
 
 		$expected = [
@@ -28,7 +29,8 @@ class FilenameTest extends TestCase
 			'crop'       => 'top-left',
 			'blur'       => 10,
 			'bw'         => true,
-			'q'          => 90
+			'q'          => 90,
+			'sharpen'    => 25
 		];
 
 		$this->assertSame($expected, $name->attributesToArray());
@@ -65,6 +67,12 @@ class FilenameTest extends TestCase
 				'-crop',
 				[
 					'crop' => 'center',
+				]
+			],
+			[
+				'-sharpen25',
+				[
+					'sharpen' => 25,
 				]
 			],
 		];
@@ -347,7 +355,8 @@ class FilenameTest extends TestCase
 			'crop'      => false,
 			'blur'      => false,
 			'grayscale' => false,
-			'quality'   => false
+			'quality'   => false,
+			'sharpen'   => false
 		]);
 
 		$this->assertSame('some-file.jpg', $name->toString());

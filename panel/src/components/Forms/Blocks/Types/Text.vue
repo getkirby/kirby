@@ -3,6 +3,7 @@
 		:is="component"
 		ref="input"
 		v-bind="textField"
+		:disabled="disabled"
 		:keys="keys"
 		:value="content.text"
 		class="k-block-type-text-input"

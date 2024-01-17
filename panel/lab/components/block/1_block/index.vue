@@ -30,5 +30,8 @@
 				:is-selected="true"
 			/>
 		</k-lab-example>
+		<k-lab-example label="Disabled">
+			<k-block :disabled="true" :fieldset="{ icon: 'image', label: 'Image' }" />
+		</k-lab-example>
 	</k-lab-examples>
 </template>

@@ -24,6 +24,7 @@
 		</ul>
 		<figcaption v-if="content.caption">
 			<k-writer
+				:disabled="disabled"
 				:inline="true"
 				:marks="captionMarks"
 				:value="content.caption"
@@ -63,7 +64,12 @@ export default {
 	line-height: 0;
 	align-items: center;
 	justify-content: center;
+}
+.k-block-type-gallery:not([data-disabled="true"]) ul {
 	cursor: pointer;
+}
+.k-block-type-gallery[data-disabled="true"] .k-block-type-gallery-placeholder {
+	background: var(--color-gray-250);
 }
 .k-block-type-gallery-placeholder {
 	background: var(--color-background);

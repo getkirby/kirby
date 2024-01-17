@@ -7,6 +7,14 @@
 				empty-text="Select an image …"
 			/>
 		</k-lab-example>
+		<k-lab-example label="Empty & disabled">
+			<k-block-figure
+				:disabled="true"
+				:is-empty="true"
+				empty-icon="image"
+				empty-text="Select an image …"
+			/>
+		</k-lab-example>
 		<k-lab-example label="Image">
 			<k-block-figure>
 				<k-image-frame

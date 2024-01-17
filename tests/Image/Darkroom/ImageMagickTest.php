@@ -5,6 +5,7 @@ namespace Kirby\Image\Darkroom;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use Kirby\Toolkit\F;
+use ReflectionMethod;
 
 /**
  * @coversDefaultClass \Kirby\Image\Darkroom\ImageMagick
@@ -40,12 +41,47 @@ class ImageMagickTest extends TestCase
 			'quality' => 90,
 			'scaleHeight' => 1.0,
 			'scaleWidth' => 1.0,
+			'sharpen' => null,
 			'width' => 500,
 			'bin' => 'convert',
 			'interlace' => false,
 			'sourceWidth' => 500,
 			'sourceHeight' => 500
 		], $im->process($file));
+	}
+
+	/**
+	 * @covers ::sharpen
+	 */
+	public function testSharpen()
+	{
+		$im = new ImageMagick();
+
+		$method = new ReflectionMethod(get_class($im), 'sharpen');
+		$method->setAccessible(true);
+
+		$result = $method->invoke($im, '', [
+			'sharpen' => 50
+		]);
+
+		$this->assertSame("-sharpen '0x0.5'", $result);
+	}
+
+	/**
+	 * @covers ::sharpen
+	 */
+	public function testSharpenWithoutValue()
+	{
+		$im = new ImageMagick();
+
+		$method = new ReflectionMethod(get_class($im), 'sharpen');
+		$method->setAccessible(true);
+
+		$result = $method->invoke($im, '', [
+			'sharpen' => null
+		]);
+
+		$this->assertNull($result);
 	}
 
 	/**

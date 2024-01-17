@@ -2,16 +2,23 @@
 	<figure class="k-block-figure">
 		<k-button
 			v-if="isEmpty"
+			:disabled="disabled"
 			:icon="emptyIcon"
 			:text="emptyText"
 			class="k-block-figure-empty"
 			@click="$emit('open')"
 		/>
-		<span v-else class="k-block-figure-container" @dblclick="$emit('open')">
+		<span
+			v-else
+			:data-disabled="disabled"
+			class="k-block-figure-container"
+			@dblclick="$emit('open')"
+		>
 			<slot />
 		</span>
 		<figcaption v-if="caption">
 			<k-writer
+				:disabled="disabled"
 				:inline="true"
 				:marks="captionMarks"
 				:value="caption"
@@ -30,6 +37,7 @@ export default {
 			default: true,
 			type: [Boolean, Array]
 		},
+		disabled: Boolean,
 		isEmpty: Boolean,
 		emptyIcon: String,
 		emptyText: String
@@ -39,7 +47,7 @@ export default {
 </script>
 
 <style>
-.k-block-figure {
+.k-block-figure-container:not([data-disabled="true"]) {
 	cursor: pointer;
 }
 .k-block-figure iframe {

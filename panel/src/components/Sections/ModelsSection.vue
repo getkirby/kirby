@@ -123,6 +123,7 @@ export default {
 			return {
 				columns: this.options.columns,
 				empty: this.emptyPropsWithSearch,
+				fields: this.options.fields,
 				layout: this.options.layout,
 				help: this.options.help,
 				items: this.items,

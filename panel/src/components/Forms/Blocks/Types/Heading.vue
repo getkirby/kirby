@@ -3,6 +3,7 @@
 		<k-writer
 			ref="input"
 			v-bind="textField"
+			:disabled="disabled"
 			:inline="true"
 			:keys="keys"
 			:value="content.text"
@@ -11,6 +12,7 @@
 		<k-input
 			v-if="levels.length > 1"
 			ref="level"
+			:disabled="disabled"
 			:empty="false"
 			:options="levels"
 			:value="content.level"
@@ -29,6 +31,7 @@ import Block from "./Default.vue";
  */
 export default {
 	extends: Block,
+	inheritAttrs: false,
 	emits: ["append", "open", "split", "update"],
 	computed: {
 		isSplitable() {
