@@ -1,14 +1,14 @@
 <template>
 	<form class="k-login-form k-login-code-form" @submit.prevent="login">
-		<k-user-info :user="pending.email" />
+		<k-user-info :user="email" />
 
 		<k-text-field
 			:autofocus="true"
 			:counter="false"
-			:help="$t('login.code.text.' + pending.challenge)"
+			:help="$t('login.code.text.' + challenge)"
 			:label="$t('login.code.label.' + mode)"
 			:novalidate="true"
-			:placeholder="$t('login.code.placeholder.' + pending.challenge)"
+			:placeholder="$t('login.code.placeholder.' + challenge)"
 			:required="true"
 			:value="code"
 			autocomplete="one-time-code"
@@ -20,25 +20,13 @@
 		<div class="k-login-buttons">
 			<k-button
 				class="k-login-button k-login-back-button"
-				icon="angle-left"
+				:icon="isLoadingBack ? 'loader' : 'angle-left'"
+				:text="$t('back')"
 				size="lg"
 				variant="filled"
 				@click="back"
-			>
-				{{ $t("back") }} <template v-if="isLoadingBack"> … </template>
-			</k-button>
-
-			<k-button
-				class="k-login-button"
-				icon="check"
-				size="lg"
-				type="submit"
-				theme="positive"
-				variant="filled"
-			>
-				{{ $t("login" + (mode === "password-reset" ? ".reset" : "")) }}
-				<template v-if="isLoadingLogin"> … </template>
-			</k-button>
+			/>
+			<k-login-button :loading="isLoadingLogin" :text="buttonText" />
 		</div>
 	</form>
 </template>
@@ -46,8 +34,15 @@
 <script>
 export default {
 	props: {
-		methods: Array,
-		pending: Object
+		challenge: {
+			default: "email",
+			type: String
+		},
+		email: String,
+		mode: {
+			default: "login",
+			type: String
+		}
 	},
 	emits: ["error"],
 	data() {
@@ -58,12 +53,10 @@ export default {
 		};
 	},
 	computed: {
-		mode() {
-			if (this.methods.includes("password-reset") === true) {
-				return "password-reset";
-			}
-
-			return "login";
+		buttonText() {
+			return this.$t(
+				"login" + (this.mode === "password-reset" ? ".reset" : "")
+			);
 		}
 	},
 	methods: {

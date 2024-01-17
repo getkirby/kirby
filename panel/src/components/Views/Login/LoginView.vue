@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import LoginForm from "@/components/Forms/Login.vue";
+import LoginForm from "@/components/Login/LoginEmailPasswordForm.vue";
 
 /**
  * @internal

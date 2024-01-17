@@ -5,6 +5,7 @@ import Dropdowns from "@/components/Dropdowns/index.js";
 import Forms from "@/components/Forms/index.js";
 import Lab from "@/components/Lab/index.js";
 import Layout from "@/components/Layout/index.js";
+import Login from "@/components/Login/index.js";
 import Misc from "@/components/Misc/index.js";
 import Navigation from "@/components/Navigation/index.js";
 import Sections from "@/components/Sections/index.js";
@@ -22,6 +23,7 @@ export default {
 		app.use(Drawers);
 		app.use(Dropdowns);
 		app.use(Forms);
+		app.use(Login);
 		app.use(Lab);
 		app.use(Layout);
 		app.use(Misc);
