@@ -22,15 +22,23 @@
 
 		<k-layouts ref="layouts" v-bind="$props" @input="$emit('input', $event)" />
 
-		<footer v-if="!disabled && hasFieldsets">
-			<k-button
-				:title="$t('add')"
-				icon="add"
-				size="xs"
-				variant="filled"
-				@click="$refs.layouts.select(value.length)"
-			/>
-		</footer>
+		<template #footer>
+			<footer
+				v-if="hasFooter"
+				:data-has-help="Boolean(help)"
+				class="k-field-footer"
+			>
+				<k-text v-if="help" class="k-help k-field-help" :html="help" />
+				<k-button
+					v-if="hasMoreButton"
+					:title="$t('add')"
+					icon="add"
+					size="xs"
+					variant="filled"
+					@click="$refs.layouts.select(value.length)"
+				/>
+			</footer>
+		</template>
 	</k-field>
 </template>
 
@@ -45,6 +53,16 @@ export default {
 	computed: {
 		hasFieldsets() {
 			return this.$helper.object.length(this.fieldsets) > 0;
+		},
+		hasFooter() {
+			if (this.help) {
+				return true;
+			}
+
+			return this.hasMoreButton;
+		},
+		hasMoreButton() {
+			return !this.disabled && !this.isEmpty && this.hasFieldsets;
 		},
 		isEmpty() {
 			return this.value.length === 0;
@@ -76,10 +94,12 @@ export default {
 </script>
 
 <style>
-/** TODO: .k-layout-field > :has(+ footer) { margin-bottom: var(--spacing-3);} */
-.k-layout-field > footer {
+.k-layout-field .k-field-footer {
 	display: flex;
 	justify-content: center;
-	margin-top: var(--spacing-3);
+}
+.k-layout-field .k-field-footer[data-has-help="true"] {
+	display: flex;
+	justify-content: space-between;
 }
 </style>

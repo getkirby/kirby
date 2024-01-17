@@ -30,15 +30,23 @@
 			v-on="$listeners"
 		/>
 
-		<footer v-if="!disabled && !isEmpty && !isFull && hasFieldsets">
-			<k-button
-				:title="$t('add')"
-				icon="add"
-				size="xs"
-				variant="filled"
-				@click="$refs.blocks.choose(value.length)"
-			/>
-		</footer>
+		<template #footer>
+			<footer
+				v-if="hasFooter"
+				:data-has-help="Boolean(help)"
+				class="k-field-footer"
+			>
+				<k-text v-if="help" class="k-help k-field-help" :html="help" />
+				<k-button
+					v-if="hasMoreButton"
+					:title="$t('add')"
+					icon="add"
+					size="xs"
+					variant="filled"
+					@click="$refs.blocks.choose(value.length)"
+				/>
+			</footer>
+		</template>
 	</k-field>
 </template>
 
@@ -57,6 +65,18 @@ export default {
 	computed: {
 		hasFieldsets() {
 			return this.$helper.object.length(this.fieldsets) > 0;
+		},
+		hasFooter() {
+			if (this.help) {
+				return true;
+			}
+
+			return this.hasMoreButton;
+		},
+		hasMoreButton() {
+			return (
+				!this.disabled && !this.isEmpty && !this.isFull && this.hasFieldsets
+			);
 		},
 		isEmpty() {
 			return this.value.length === 0;
@@ -100,10 +120,11 @@ export default {
 .k-blocks-field {
 	position: relative;
 }
-/** TODO: .k-blocks-field > :has(+ footer) { margin-bottom: var(--spacing-3);} */
-.k-blocks-field > footer {
+.k-blocks-field .k-field-footer {
 	display: flex;
 	justify-content: center;
-	margin-top: var(--spacing-3);
+}
+.k-blocks-field .k-field-footer[data-has-help="true"] {
+	justify-content: space-between;
 }
 </style>
