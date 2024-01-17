@@ -65,6 +65,17 @@ class DarkroomTest extends TestCase
 		$this->assertSame(90, $options['quality']);
 	}
 
+	public function testSharpenWithoutValue()
+	{
+		$darkroom = new Darkroom();
+		$options  = $darkroom->preprocess($this->file(), [
+			'sharpen' => true,
+			'width'   => 100
+		]);
+
+		$this->assertSame(50, $options['sharpen']);
+	}
+
 	public function testDefaults()
 	{
 		$darkroom = new Darkroom();

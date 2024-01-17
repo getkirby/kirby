@@ -101,6 +101,19 @@ class ImageMagick extends Darkroom
 	}
 
 	/**
+	 * Applies sharpening if activated in the options.
+	 */
+	protected function sharpen(string $file, array $options): string|null
+	{
+		if (is_int($options['sharpen']) === false) {
+			return null;
+		}
+
+		$amount = max(1, min(100, $options['sharpen'])) / 100;
+		return '-sharpen ' . escapeshellarg('0x' . $amount);
+	}
+
+	/**
 	 * Applies the correct settings for interlaced JPEGs if
 	 * activated via options
 	 */
@@ -133,6 +146,7 @@ class ImageMagick extends Darkroom
 		$command[] = $this->resize($file, $options);
 		$command[] = $this->quality($file, $options);
 		$command[] = $this->blur($file, $options);
+		$command[] = $this->sharpen($file, $options);
 		$command[] = $this->save($file, $options);
 
 		// remove all null values and join the parts
