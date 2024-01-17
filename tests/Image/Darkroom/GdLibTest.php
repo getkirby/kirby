@@ -107,5 +107,4 @@ class GdLibTest extends TestCase
 
 		$this->assertSame(50, $result->sharpen);
 	}
-
 }
