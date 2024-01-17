@@ -68,6 +68,9 @@ export default {
 .k-block-type-gallery:not([data-disabled="true"]) ul {
 	cursor: pointer;
 }
+.k-block-type-gallery[data-disabled="true"] .k-block-type-gallery-placeholder {
+	background: var(--color-gray-250);
+}
 .k-block-type-gallery-placeholder {
 	background: var(--color-background);
 }
