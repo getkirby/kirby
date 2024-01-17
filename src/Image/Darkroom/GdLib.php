@@ -122,11 +122,11 @@ class GdLib extends Darkroom
 	 */
 	protected function sharpen(SimpleImage $image, array $options): SimpleImage
 	{
-		if ($options['sharpen'] === false) {
+		if (is_int($options['sharpen']) === false) {
 			return $image;
 		}
 
-		return $image->sharpen((int)$options['sharpen']);
+		return $image->sharpen($options['sharpen']);
 	}
 
 	/**
