@@ -14,10 +14,16 @@
 			<k-icon-frame v-else-if="image" v-bind="image" class="k-tag-image" />
 		</slot>
 
-		<span v-if="$slots.default" class="k-tag-text">
-			<!-- @slot Tag text -->
-			<slot />
-		</span>
+		<template v-if="text">
+			<span v-if="html" class="k-tag-text" v-html="text" />
+			<span v-else class="k-tag-text">{{ text }}</span>
+		</template>
+		<template v-else-if="$slots.default">
+			<span class="k-tag-text">
+				<!-- @slot Tag text -->
+				<slot />
+			</span>
+		</template>
 
 		<k-icon-frame
 			v-if="isRemovable"
@@ -41,6 +47,13 @@ export default {
 		 */
 		disabled: Boolean,
 		/**
+		 * If set to `true`, the `text` is rendered as HTML code,
+		 * otherwise as plain text
+		 */
+		html: {
+			type: Boolean
+		},
+		/**
 		 * See `k-image-frame` or `k-icon-frame` for available options
 		 */
 		image: {
@@ -49,7 +62,11 @@ export default {
 		/**
 		 * Enables the remove button
 		 */
-		removable: Boolean
+		removable: Boolean,
+		/**
+		 * Text to display in the bubble
+		 */
+		text: String
 	},
 	emits: ["remove"],
 	computed: {
