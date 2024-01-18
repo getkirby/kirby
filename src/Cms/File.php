@@ -164,78 +164,11 @@ class File extends ModelWithContent
 			return $this->blueprints; // @codeCoverageIgnore
 		}
 
-		$parent = $this->parent();
-
-		// get cached results from other models that share the same parent
-		// and thus the same available blueprints
-		// (except when collecting for a specific section)
-		static $cache = new WeakMap();
-
-		if ($inSection === null && $cache->offsetExists($parent)) {
-			return $cache->offsetGet($parent); // @codeCoverageIgnore
-		}
-
 		// always include the current template as option
-		$template  = $this->template() ?? 'default';
-		$templates = [$template];
-
-		// what file templates/blueprints should be considered is
-		// defined bythe parent's blueprint: which templates it allows
-		// in files sections as well as files fields
-		$blueprint = $parent->blueprint();
-
-		$fromFields = function ($fields) use (&$fromFields, $parent) {
-			$templates = [];
-
-			foreach ($fields as $field) {
-				// files or textare field
-				if (
-					$field['type'] === 'files' ||
-					$field['type'] === 'textarea'
-				) {
-					$uploads = $field['uploads'] ?? null;
-
-					// only if the `uploads` parent is the actual parent
-					if ($target = $uploads['parent'] ?? null) {
-						if ($parent->id() !== $target) {
-							continue;
-						}
-					}
-
-					$templates[] = $uploads['template'] ?? 'default';
-					continue;
-				}
-
-				// structure field
-				if ($field['type'] === 'structure') {
-					$fields    = $fromFields($field['fields']);
-					$templates = array_merge($templates, $fields);
-					continue;
-				}
-			}
-
-			return $templates;
-		};
-
-		// collect all allowed templates…
-		foreach ($blueprint->sections() as $section) {
-			// if collecting for a specific section, skip all others
-			if ($inSection !== null && $section->name() !== $inSection) {
-				continue;
-			}
-
-			//  …from files sections
-			if ($section->type() === 'files') {
-				$templates[] = $section->template() ?? 'default';
-				continue;
-			}
-
-			//  …from fields
-			if ($section->type() === 'fields') {
-				$fields    = $fromFields($section->fields());
-				$templates = array_merge($templates, $fields);
-			}
-		}
+		$templates = [
+			$this->template() ?? 'default',
+			...$this->parent()->acceptedFileTemplates($inSection)
+		];
 
 		// make sure every template is only included once
 		$templates = array_unique(array_filter($templates));
@@ -284,8 +217,6 @@ class File extends ModelWithContent
 		if ($inSection !== null) {
 			return $blueprints; // @codeCoverageIgnore
 		}
-
-		$cache->offsetSet($parent, $blueprints);
 
 		return $this->blueprints = $blueprints;
 	}
