@@ -124,10 +124,14 @@ export default {
 	margin-inline: var(--spacing-1);
 	border-radius: var(--rounded-xs);
 	overflow: hidden;
+	flex-shrink: 0;
 }
 .k-tag-text {
 	padding-inline: var(--spacing-2);
 	line-height: var(--leading-tight);
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 /** TODO: .k-tag:has(.k-frame) .k-tag-text  */
 .k-tag[data-has-image="true"] .k-tag-text {
@@ -138,9 +142,11 @@ export default {
 	padding-inline-end: 0;
 }
 .k-tag-toggle {
+	--icon-size: 14px;
 	width: var(--tag-height);
 	height: var(--tag-height);
 	filter: brightness(70%);
+	flex-shrink: 0;
 }
 .k-tag-toggle:hover {
 	filter: brightness(100%);
