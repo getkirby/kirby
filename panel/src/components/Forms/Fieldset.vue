@@ -131,9 +131,6 @@ export default {
 			const values = this.value;
 			this.$set(values, name, value);
 			this.$emit("input", values, field, name);
-		},
-		hasErrors() {
-			return this.$helper.object.length(this.errors) > 0;
 		}
 	}
 };
