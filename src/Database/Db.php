@@ -48,7 +48,7 @@ class Db
 			'database' => Config::get('db.database', ''),
 			'prefix'   => Config::get('db.prefix', ''),
 			'port'     => Config::get('db.port', ''),
-			'charset'  => Config::get('db.charset', 'utf8mb4')
+			'charset'  => Config::get('db.charset')
 		];
 
 		return static::$connection = new Database($params);

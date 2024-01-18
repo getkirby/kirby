@@ -566,7 +566,7 @@ Database::$types['mysql'] = [
 			$parts[] = 'dbname=' . $params['database'];
 		}
 
-		$parts[] = 'charset=' . ($params['charset'] ?? 'utf8');
+		$parts[] = 'charset=' . ($params['charset'] ?? 'utf8mb4');
 
 		return 'mysql:' . implode(';', $parts);
 	}
