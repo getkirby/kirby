@@ -25,6 +25,7 @@
 			label="File"
 			type="link"
 		/>
+		<k-lab-field-preview-example value="#anchor" label="Anchor" type="link" />
 		<k-lab-field-preview-example label="Empty" type="link" />
 	</k-lab-examples>
 </template>
