@@ -10,6 +10,7 @@ import ImageFieldPreview from "./ImageFieldPreview.vue";
 import LinkFieldPreview from "./LinkFieldPreview.vue";
 import ObjectFieldPreview from "./ObjectFieldPreview.vue";
 import PagesFieldPreview from "./PagesFieldPreview.vue";
+import SelectFieldPreview from "./SelectFieldPreview.vue";
 import TextFieldPreview from "./TextFieldPreview.vue";
 import TimeFieldPreview from "./TimeFieldPreview.vue";
 import ToggleFieldPreview from "./ToggleFieldPreview.vue";
@@ -30,6 +31,7 @@ export default {
 		app.component("k-link-field-preview", LinkFieldPreview);
 		app.component("k-object-field-preview", ObjectFieldPreview);
 		app.component("k-pages-field-preview", PagesFieldPreview);
+		app.component("k-select-field-preview", SelectFieldPreview);
 		app.component("k-text-field-preview", TextFieldPreview);
 		app.component("k-toggle-field-preview", ToggleFieldPreview);
 		app.component("k-time-field-preview", TimeFieldPreview);
@@ -43,7 +45,6 @@ export default {
 		app.component("k-checkboxes-field-preview", BubblesFieldPreview);
 		app.component("k-multiselect-field-preview", BubblesFieldPreview);
 		app.component("k-radio-field-preview", BubblesFieldPreview);
-		app.component("k-select-field-preview", BubblesFieldPreview);
 		app.component("k-tags-field-preview", BubblesFieldPreview);
 		app.component("k-toggles-field-preview", BubblesFieldPreview);
 	}

@@ -1,7 +1,7 @@
 <template>
-	<p class="k-text-field-preview" :class="$options.class">
+	<p class="k-text-field-preview" :class="$options.class" @click.stop>
 		{{ column.before }}
-		<slot>{{ text }}</slot>
+		<k-text-input :value="value ?? ''" @input="$emit('input', $event)" />
 		{{ column.after }}
 	</p>
 </template>
@@ -21,10 +21,12 @@ export default {
 </script>
 
 <style>
-.k-text-field-preview {
-	padding: 0.325rem 0.75rem;
-	overflow-x: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+.k-text-field-preview input {
+	padding-inline: var(--table-cell-padding);
+	height: var(--table-row-height);
+}
+.k-text-field-preview input:focus {
+	outline-offset: -2px;
+	outline: var(--outline);
 }
 </style>

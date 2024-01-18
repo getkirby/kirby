@@ -3,6 +3,7 @@ import UrlFieldPreview from "./UrlFieldPreview.vue";
 
 export default {
 	extends: UrlFieldPreview,
-	class: "k-email-field-preview"
+	class: "k-email-field-preview",
+	input: "k-email-input"
 };
 </script>

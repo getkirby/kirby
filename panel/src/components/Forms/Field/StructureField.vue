@@ -326,7 +326,7 @@ export default {
 		 * Adds new entry
 		 * @public
 		 */
-		add(value = null) {
+		async add(value = null) {
 			if (this.more === false) {
 				return false;
 			}
@@ -344,8 +344,12 @@ export default {
 
 			this.save();
 
+			await this.$nextTick();
+
+			this.$el.querySelector("table tr:last-child input:first-of-type").focus();
+
 			// opening the drawer only works once the input event has been emitted
-			this.open(value);
+			// this.open(value);
 		},
 
 		close() {

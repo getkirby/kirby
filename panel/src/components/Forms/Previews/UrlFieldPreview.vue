@@ -1,9 +1,11 @@
 <template>
-	<p class="k-url-field-preview" :class="$options.class" :data-link="link">
+	<p class="k-url-field-preview" :class="$options.class" @click.stop>
 		{{ column.before }}
-		<k-link :to="link" @click.native.stop>
-			<span>{{ text }}</span>
-		</k-link>
+		<component
+			:is="$options.input"
+			:value="value"
+			@input="$emit('input', $event)"
+		/>
 		{{ column.after }}
 	</p>
 </template>
@@ -13,49 +15,35 @@ import FieldPreview from "@/mixins/forms/fieldPreview.js";
 
 export default {
 	mixins: [FieldPreview],
+	input: "k-url-input",
 	props: {
 		value: [String, Object]
-	},
-	computed: {
-		link() {
-			return typeof this.value === "object" ? this.value.href : this.value;
-		},
-		text() {
-			if (typeof this.value === "object") {
-				return this.value.text;
-			}
-
-			return this.link;
-		}
 	}
+	// computed: {
+	// 	link() {
+	// 		return typeof this.value === "object" ? this.value.href : this.value;
+	// 	},
+	// 	text() {
+	// 		if (typeof this.value === "object") {
+	// 			return this.value.text;
+	// 		}
+
+	// 		return this.link;
+	// 	}
+	// }
 };
 </script>
 
 <style>
-.k-url-field-preview {
-	padding-inline: var(--table-cell-padding);
-}
-.k-url-field-preview[data-link] {
-	color: var(--link-color);
-}
-.k-url-field-preview a {
-	display: inline-flex;
-	align-items: center;
-	height: var(--height-xs);
-	padding-inline: var(--spacing-1);
-	margin-inline: calc(var(--spacing-1) * -1);
-	border-radius: var(--rounded);
-	max-width: 100%;
-	min-width: 0;
-}
-.k-url-field-preview a > * {
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
+.k-url-field-preview input {
 	text-decoration: underline;
 	text-underline-offset: var(--link-underline-offset);
+	padding-inline: var(--table-cell-padding);
+	height: var(--table-row-height);
+	color: var(--link-color);
 }
-.k-url-field-preview a:hover {
-	color: var(--color-black);
+.k-url-field-preview input:focus {
+	outline-offset: -2px;
+	outline: var(--outline);
 }
 </style>
