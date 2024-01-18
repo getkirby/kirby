@@ -75,7 +75,7 @@ async function previewForFile(id, fields = ["filename", "panelImage"]) {
 	}
 }
 
-async function previewForPage(id, fields = ["title"]) {
+async function previewForPage(id, fields = ["title", "panelImage"]) {
 	if (id === "site://") {
 		return {
 			label: window.panel.$t("view.site")
@@ -88,7 +88,8 @@ async function previewForPage(id, fields = ["title"]) {
 		});
 
 		return {
-			label: page.title
+			label: page.title,
+			image: page.panelImage
 		};
 	} catch (e) {
 		return null;
