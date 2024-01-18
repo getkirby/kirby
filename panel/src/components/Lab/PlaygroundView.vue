@@ -41,9 +41,7 @@ import Example from "./Example.vue";
 import Examples from "./Examples.vue";
 import FieldExamples from "./FieldExamples.vue";
 import Form from "./Form.vue";
-import InputExamples from "./InputExamples.vue";
 import OptionsFieldExamples from "./OptionsFieldExamples.vue";
-import OptionsInputExamples from "./OptionsInputExamples.vue";
 import OutputDialog from "./OutputDialog.vue";
 import TableCell from "./TableCell.vue";
 
@@ -53,9 +51,7 @@ Vue.component("k-lab-example", Example);
 Vue.component("k-lab-examples", Examples);
 Vue.component("k-lab-field-examples", FieldExamples);
 Vue.component("k-lab-form", Form);
-Vue.component("k-lab-input-examples", InputExamples);
 Vue.component("k-lab-options-field-examples", OptionsFieldExamples);
-Vue.component("k-lab-options-input-examples", OptionsInputExamples);
 Vue.component("k-lab-output-dialog", OutputDialog);
 Vue.component("k-lab-table-cell", TableCell);
 
@@ -132,5 +128,16 @@ export default {
 <style>
 .k-lab-playground-view[data-has-tabs="true"] .k-header {
 	margin-bottom: 0;
+}
+
+.k-lab-example *:invalid {
+	outline: 2px solid var(--color-red-600);
+}
+
+.k-lab-form *:not([type="checkbox"], [type="radio"]):invalid {
+	outline: 2px solid var(--color-red-600) !important;
+}
+.k-lab-input-examples-focus .k-lab-example-canvas > .k-button {
+	margin-top: var(--spacing-6);
 }
 </style>
