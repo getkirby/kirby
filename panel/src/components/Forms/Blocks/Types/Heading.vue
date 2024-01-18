@@ -1,6 +1,6 @@
 <template>
 	<div :data-level="content.level" class="k-block-type-heading-input">
-		<k-writer
+		<k-writer-input
 			ref="input"
 			v-bind="textField"
 			:disabled="disabled"
@@ -118,7 +118,7 @@ export default {
 	--text-size: var(--text-sm);
 	line-height: 1.5em;
 }
-.k-block-type-heading-input .k-writer .ProseMirror strong {
+.k-block-type-heading-input .k-writer-input .ProseMirror strong {
 	font-weight: 700;
 }
 .k-block-type-heading-level {

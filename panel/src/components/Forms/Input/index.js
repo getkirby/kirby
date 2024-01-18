@@ -32,6 +32,9 @@ import TogglesInput from "./TogglesInput.vue";
 import UrlInput from "./UrlInput.vue";
 import WriterInput from "./WriterInput.vue";
 
+/** @deprecated */
+import Writer from "../Writer/Writer.vue";
+
 export default {
 	install(app) {
 		app.component("k-alpha-input", AlphaInput);
@@ -71,5 +74,8 @@ export default {
 		/** Keep k-calendar and k-times as legacy aliases */
 		app.component("k-calendar", CalendarInput);
 		app.component("k-times", TimeoptionsInput);
+
+		/** @deprecated */
+		app.component("k-writer", Writer);
 	}
 };
