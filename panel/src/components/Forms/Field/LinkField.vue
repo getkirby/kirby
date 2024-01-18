@@ -257,6 +257,7 @@ export default {
 	align-items: center;
 }
 .k-link-input-model-toggle {
+	align-self: center;
 	--button-height: var(--height-sm);
 	--button-width: var(--height-sm);
 }
@@ -276,5 +277,13 @@ export default {
 	width: 100%;
 	container-type: inline-size;
 	overflow: auto;
+}
+.k-link-field .k-bubbles-field-preview {
+	--bubble-rounded: var(--rounded-sm);
+	--bubble-size: var(--height-sm);
+	padding-inline: 0;
+}
+.k-link-field .k-bubbles-field-preview .k-bubble {
+	font-size: var(--text-sm);
 }
 </style>
