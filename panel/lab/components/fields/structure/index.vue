@@ -1,13 +1,12 @@
 <template>
 	<k-lab-examples>
-		<k-lab-example label="Todo">
-			<k-box theme="negative">
-				The structure field does not work without the backend yet
-			</k-box>
-		</k-lab-example>
+		<k-box theme="notice" icon="alert">
+			The structure field does not work without the backend yet
+		</k-box>
+
 		<k-lab-example label="Default">
 			<k-structure-field
-				:label="label"
+				label="Structure"
 				:value="value"
 				@input="value = $event"
 			/>
@@ -19,13 +18,8 @@
 export default {
 	data() {
 		return {
-			value: null,
+			value: null
 		};
-	},
-	computed: {
-		label() {
-			return "Structure";
-		},
-	},
+	}
 };
 </script>
