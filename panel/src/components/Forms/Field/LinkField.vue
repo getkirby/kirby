@@ -21,7 +21,12 @@
 					class="k-link-input-model"
 					@click="toggle"
 				>
-					<k-link-field-preview :type="linkType" :value="value">
+					<k-link-field-preview
+						:removable="true"
+						:type="linkType"
+						:value="value"
+						@remove="$emit('input', '')"
+					>
 						<template #placeholder>
 							<k-button class="k-link-input-model-placeholder">
 								{{ currentType.placeholder }}
@@ -227,30 +232,40 @@ export default {
 
 .k-link-input-model {
 	display: flex;
-	overflow: hidden;
 	justify-content: space-between;
 	margin-inline-end: var(--spacing-1);
-}
-.k-link-input-model-preview,
-.k-link-input-model-preview .k-tag-text {
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
 }
 .k-link-input-model-placeholder.k-button {
 	--button-align: flex-start;
 	--button-color-text: var(--color-gray-600);
 	--button-height: var(--height-sm);
 	--button-padding: var(--spacing-2);
+	--button-rounded: var(--rounded-sm);
 	flex-grow: 1;
 	overflow: hidden;
 	white-space: nowrap;
 	align-items: center;
 }
+
+.k-link-field .k-link-field-preview {
+	--tag-height: var(--height-sm);
+	padding-inline: 0;
+}
+.k-link-field .k-link-field-preview .k-tag:focus {
+	outline: 0;
+}
+.k-link-field .k-link-field-preview .k-tag:focus-visible {
+	outline: var(--outline);
+}
+.k-link-field .k-link-field-preview .k-tag-text {
+	font-size: var(--text-sm);
+}
+
 .k-link-input-model-toggle {
 	align-self: center;
 	--button-height: var(--height-sm);
 	--button-width: var(--height-sm);
+	--button-rounded: var(--rounded-sm);
 }
 
 .k-link-input-body {

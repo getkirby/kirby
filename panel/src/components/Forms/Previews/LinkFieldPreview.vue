@@ -2,29 +2,26 @@
 	<div class="k-link-field-preview">
 		<template v-if="currentType === 'page' || currentType === 'file'">
 			<template v-if="model">
-				<k-pages-field-preview
-					v-if="currentType === 'page'"
-					:html="false"
-					:value="[{ text: model.label, value: value, image: model.image }]"
-				/>
-				<k-files-field-preview
-					v-else
-					:html="false"
-					:value="[{ filename: model.label, image: model.image }]"
+				<k-tag
+					:image="{
+						...model.image,
+						cover: true
+					}"
+					:removable="removable"
+					:text="model.label"
+					@remove="$emit('remove', $event)"
 				/>
 			</template>
-
 			<slot v-else name="placeholder" />
 		</template>
-		<k-url-field-preview
-			v-else-if="currentType === 'url'"
-			:value="detected.link"
-		/>
-		<k-email-field-preview
-			v-else-if="currentType === 'email'"
-			:value="detected.link"
-		/>
-		<k-text-field-preview v-else :value="detected.link" />
+		<template v-else-if="isLink">
+			<p class="k-text">
+				<a :href="value" target="_blank">{{ detected.link }}</a>
+			</p>
+		</template>
+		<template v-else>
+			{{ detected.link }}
+		</template>
 	</div>
 </template>
 
@@ -34,7 +31,9 @@ import FieldPreview from "@/mixins/forms/fieldPreview.js";
 export default {
 	mixins: [FieldPreview],
 	inheritAttrs: false,
+	emits: ["remove"],
 	props: {
+		removable: Boolean,
 		type: String
 	},
 	data() {
@@ -48,6 +47,9 @@ export default {
 		},
 		detected() {
 			return this.$helper.link.detect(this.value);
+		},
+		isLink() {
+			return ["url", "email", "tel"].includes(this.currentType);
 		}
 	},
 	watch: {
@@ -67,3 +69,34 @@ export default {
 	}
 };
 </script>
+
+<style>
+.k-link-field-preview {
+	--tag-height: var(--height-xs);
+	--tag-color-back: var(--color-gray-200);
+	--tag-color-text: var(--color-black);
+	--tag-color-toggle: var(--tag-color-text);
+	--tag-color-toggle-border: var(--color-gray-300);
+	--tag-color-focus-back: var(--tag-color-back);
+	--tag-color-focus-text: var(--tag-color-text);
+	--tag-rounded: var(--rounded-sm);
+	padding-inline: var(--table-cell-padding);
+	min-width: 0;
+}
+.k-link-field-preview .k-tag {
+	min-width: 0;
+	max-width: 100%;
+}
+.k-link-field-preview .k-tag-image {
+	border-radius: 0;
+	border-start-start-radius: var(--tag-rounded);
+	border-end-start-radius: var(--tag-rounded);
+	margin-inline-start: 0;
+	height: 100%;
+}
+.k-link-field-preview .k-tag-text {
+	font-size: var(--text-xs);
+	overflow: hidden;
+	min-width: 0;
+}
+</style>
