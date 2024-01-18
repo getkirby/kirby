@@ -369,7 +369,7 @@ export default {
 
 /** Dropdown arrow **/
 .k-button-arrow {
-	--icon-size: 10px;
+	--icon-size: 14px;
 	width: max-content;
 	margin-inline-start: -0.125rem;
 }
