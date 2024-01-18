@@ -230,15 +230,6 @@ export default {
 	overflow: hidden;
 	justify-content: space-between;
 	margin-inline-end: var(--spacing-1);
-
-	--tag-height: var(--height-sm);
-	--tag-color-back: var(--color-gray-200);
-	--tag-color-text: var(--color-black);
-	--tag-color-toggle: var(--tag-color-text);
-	--tag-color-toggle-border: var(--color-gray-300);
-	--tag-color-focus-back: var(--tag-color-back);
-	--tag-color-focus-text: var(--tag-color-text);
-	--tag-rounded: var(--rounded-sm);
 }
 .k-link-input-model-preview,
 .k-link-input-model-preview .k-tag-text {
