@@ -23,9 +23,12 @@
 		<k-lab-example :flex="true" label="comparison">
 			<k-button variant="filled" size="lg">Button</k-button>
 			<k-box height="var(--height-lg)" theme="white">Box</k-box>
-			<k-inputbox>
-				<input type="text" style="padding-inline: var(--input-padding)" />
-			</k-inputbox>
+			<k-input>
+				<input
+					type="text"
+					:style="{ 'padding-inline': 'var(--input-padding)', outline: 'none' }"
+				/>
+			</k-input>
 		</k-lab-example>
 	</k-lab-examples>
 </template>
