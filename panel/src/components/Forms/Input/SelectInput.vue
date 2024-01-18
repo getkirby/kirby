@@ -10,7 +10,6 @@
 			:required="required"
 			:value="selected"
 			class="k-select-input-native"
-			v-on="listeners"
 			@change="onInput($event.target.value)"
 			@click="onClick"
 		>
