@@ -1,0 +1,30 @@
+<template>
+	<k-lab-examples>
+		<k-lab-field-preview-example
+			value="https://getkirby.com"
+			label="URL"
+			type="link"
+		/>
+		<k-lab-field-preview-example
+			value="mailto:mail@getkirby.com"
+			label="Email"
+			type="link"
+		/>
+		<k-lab-field-preview-example
+			value="tel:+4912345678"
+			label="Tel"
+			type="link"
+		/>
+		<k-lab-field-preview-example
+			value="page://q6Ja1wxCXavVF1cL"
+			label="Page"
+			type="link"
+		/>
+		<k-lab-field-preview-example
+			value="file://IIQpSczd4Cabewmx"
+			label="File"
+			type="link"
+		/>
+		<k-lab-field-preview-example label="Empty" type="link" />
+	</k-lab-examples>
+</template>
