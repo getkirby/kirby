@@ -15,6 +15,7 @@
 		</slot>
 
 		<template v-if="text">
+			<!-- eslint-disable-next-line vue/no-v-html -->
 			<span v-if="html" class="k-tag-text" v-html="text" />
 			<span v-else class="k-tag-text">{{ text }}</span>
 		</template>

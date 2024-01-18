@@ -31,11 +31,11 @@ import FieldPreview from "@/mixins/forms/fieldPreview.js";
 export default {
 	mixins: [FieldPreview],
 	inheritAttrs: false,
-	emits: ["remove"],
 	props: {
 		removable: Boolean,
 		type: String
 	},
+	emits: ["remove"],
 	data() {
 		return {
 			model: null
