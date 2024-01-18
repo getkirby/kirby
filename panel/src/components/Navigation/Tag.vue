@@ -105,7 +105,7 @@ export default {
 .k-tag-image {
 	height: calc(var(--tag-height) - var(--spacing-2));
 	margin-inline: var(--spacing-1);
-	border-radius: var(--tag-rounded);
+	border-radius: var(--rounded-xs);
 	overflow: hidden;
 }
 .k-tag-text {
