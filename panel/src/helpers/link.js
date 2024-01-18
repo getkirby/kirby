@@ -4,7 +4,7 @@ export function detect(value, _types) {
 
 	if (value.length === 0) {
 		return {
-			type: "url",
+			type: Object.keys(_types)[0] ?? "url",
 			link: ""
 		};
 	}
