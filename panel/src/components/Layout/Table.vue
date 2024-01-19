@@ -477,6 +477,7 @@ export default {
 .k-table .k-table-index-column {
 	width: var(--table-row-height);
 	text-align: center;
+	padding-inline: 0;
 }
 .k-table .k-table-index {
 	font-size: var(--text-xs);
@@ -486,6 +487,8 @@ export default {
 
 /* Table Index with sort handle */
 .k-table .k-table-index-column .k-sort-handle {
+	display: flex;
+	--button-height: var(--table-row-height);
 	--button-width: 100%;
 	display: none;
 }
@@ -494,6 +497,7 @@ export default {
 }
 .k-table tr:hover .k-table-index-column[data-sortable="true"] .k-sort-handle {
 	display: flex;
+	outline-offset: -2px;
 }
 
 /* Table Options */

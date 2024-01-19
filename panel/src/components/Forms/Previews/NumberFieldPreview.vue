@@ -1,10 +1,12 @@
 <template>
-	<p class="k-select-field-preview" @click.stop>
-		<k-select-input
+	<p class="k-number-field-preview" @click.stop>
+		{{ column.before }}
+		<k-number-input
 			v-bind="field"
 			:value="value"
 			@input="$emit('input', $event)"
 		/>
+		{{ column.after }}
 	</p>
 </template>
 
@@ -18,12 +20,11 @@ export default {
 </script>
 
 <style>
-.k-select-field-preview .k-select-input {
-	padding: 0;
+.k-number-field-preview input {
 	padding-inline: var(--table-cell-padding);
-	line-height: var(--table-row-height);
+	height: var(--table-row-height);
 }
-.k-select-field-preview .k-select-input:focus-within {
+.k-number-field-preview input:focus {
 	outline-offset: -2px;
 	outline: var(--outline);
 }
