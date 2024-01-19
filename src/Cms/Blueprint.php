@@ -696,6 +696,10 @@ class Blueprint
 			return null;
 		}
 
+		if ($this->sections[$name] instanceof Section) {
+			return $this->sections[$name]; //@codeCoverageIgnore
+		}
+
 		// get all props
 		$props = $this->sections[$name];
 
@@ -703,7 +707,7 @@ class Blueprint
 		$props['model'] = $this->model();
 
 		// create a new section object
-		return new Section($props['type'], $props);
+		return $this->sections[$name] = new Section($props['type'], $props);
 	}
 
 	/**
@@ -713,7 +717,10 @@ class Blueprint
 	{
 		return A::map(
 			$this->sections,
-			fn ($section) => $this->section($section['name'])
+			fn ($section) => match (true) {
+				$section instanceof Section => $section,
+				default                     => $this->section($section['name'])
+			}
 		);
 	}
 
