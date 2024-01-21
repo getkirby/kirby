@@ -306,9 +306,9 @@ class Dir
 		bool $multilang = false
 	): array {
 		// extract the slug and num of the directory
-		if (preg_match('/^([0-9]+)' . static::$numSeparator . '(.*)$/', $item, $match)) {
-			$num  = (int)$match[1];
-			$slug = $match[2];
+		if ($separator = strpos($item, static::$numSeparator)) {
+			$num  = (int)substr($item, 0, $separator);
+			$slug = substr($item, $separator + 1);
 		}
 
 		// determine the model
