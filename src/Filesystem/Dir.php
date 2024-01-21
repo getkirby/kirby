@@ -239,6 +239,7 @@ class Dir
 		$items = static::read($dir, $contentIgnore);
 		natsort($items);
 
+		// loop through all directory items and collect all relevant information
 		foreach ($items as $item) {
 			// ignore all items with a leading dot or underscore
 			if (in_array(substr($item, 0, 1), ['.', '_']) === true) {
@@ -265,7 +266,8 @@ class Dir
 				continue;
 			}
 
-			// collect all content files separately
+			// collect all content files separately,
+			// not as inventory entries
 			if ($extension === $contentExtension) {
 				$filename = pathinfo($item, PATHINFO_FILENAME);
 
@@ -310,16 +312,16 @@ class Dir
 		}
 
 		// determine the model
-		// inject models
 		if (empty(Page::$models) === false) {
 			if ($multilang === true) {
-				$contentExtension = App::instance()->defaultLanguage()->code() . '.' . $contentExtension;
+				$code = App::instance()->defaultLanguage()->code();
+				$contentExtension = $code . '.' . $contentExtension;
 			}
 
 			// look if a content file can be found
 			// for any of the available models
 			foreach (Page::$models as $modelName => $modelClass) {
-				if (file_exists($root . '/' . $modelName . '.' . $contentExtension) === true) {
+				if (file_exists($root . '/' . $modelName . '.' . $contentExtension)) {
 					$model = $modelName;
 					break;
 				}
@@ -350,6 +352,7 @@ class Dir
 			}
 
 			// it's most likely the template
+			// (will overwrite and use the last match for historic reasons)
 			$template = $name;
 		}
 
