@@ -34,33 +34,6 @@ class DirBench
 		Page::$models = [];
     }
 
-	public function benchInventoryThreeModels()
-    {
-		Page::$models = [
-			'a' => 'A',
-			'b' => 'B',
-			'c' => 'C'
-		];
-
-		Dir::inventory(__DIR__ . '/fixtures/inventory/models');
-
-		Page::$models = [];
-    }
-
-	public function benchInventoryFourModels()
-    {
-		Page::$models = [
-			'a' => 'A',
-			'b' => 'B',
-			'c' => 'C',
-			'd' => 'D'
-		];
-
-		Dir::inventory(__DIR__ . '/fixtures/inventory/models');
-
-		Page::$models = [];
-    }
-
 	public function benchInventoryFiveModels()
     {
 		Page::$models = [
@@ -76,7 +49,7 @@ class DirBench
 		Page::$models = [];
     }
 
-	public function benchInventorySixModels()
+	public function benchInventory10Models()
     {
 		Page::$models = [
 			'a' => 'A',
@@ -84,6 +57,11 @@ class DirBench
 			'c' => 'C',
 			'd' => 'D',
 			'e' => 'E',
+			'f' => 'F',
+			'g' => 'G',
+			'h' => 'H',
+			'i' => 'I',
+			'j' => 'J'
 		];
 
 		Dir::inventory(__DIR__ . '/fixtures/inventory/models');
@@ -91,7 +69,32 @@ class DirBench
 		Page::$models = [];
     }
 
-	public function benchInventoryManyModels()
+	public function benchInventory15Models()
+    {
+		Page::$models = [
+			'a' => 'A',
+			'b' => 'B',
+			'c' => 'C',
+			'd' => 'D',
+			'e' => 'E',
+			'f' => 'F',
+			'g' => 'G',
+			'h' => 'H',
+			'i' => 'I',
+			'j' => 'J',
+			'k' => 'K',
+			'l' => 'L',
+			'm' => 'M',
+			'n' => 'N',
+			'o' => 'O'
+		];
+
+		Dir::inventory(__DIR__ . '/fixtures/inventory/models');
+
+		Page::$models = [];
+    }
+
+	public function benchInventory26Models()
     {
 		Page::$models = [
 			'a' => 'A',
