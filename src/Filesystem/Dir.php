@@ -249,7 +249,12 @@ class Dir
 
 			// collect all directories as children
 			if (is_dir($root) === true) {
-				$inventory['children'][] = static::inventoryChild($item, $root);
+				$inventory['children'][] = static::inventoryChild(
+					$item,
+					$root,
+					$contentExtension,
+					$multilang
+				);
 				continue;
 			}
 
@@ -262,7 +267,14 @@ class Dir
 
 			// collect all content files separately
 			if ($extension === $contentExtension) {
-				$content[] = pathinfo($item, PATHINFO_FILENAME);
+				$filename = pathinfo($item, PATHINFO_FILENAME);
+
+				// remove the language codes from all content filenames
+				if ($multilang === true) {
+					$filename = pathinfo($filename, PATHINFO_FILENAME);
+				}
+
+				$content[] = $filename;
 				continue;
 			}
 
@@ -274,17 +286,10 @@ class Dir
 			];
 		}
 
-		// remove the language codes from all content filenames
-		if ($multilang === true) {
-			foreach ($content as $key => $filename) {
-				$content[$key] = pathinfo($filename, PATHINFO_FILENAME);
-			}
-
-			$content = array_unique($content);
-		}
+		$content = array_unique($content);
 
 		return [
-			...static::inventoryModels($inventory, $contentExtension, $multilang),
+			...$inventory,
 			'template' => static::inventoryTemplate($content, $inventory['files'])
 		];
 	}
@@ -294,7 +299,9 @@ class Dir
 	 */
 	protected static function inventoryChild(
 		string $item,
-		string $root
+		string $root,
+		string $contentExtension = 'txt',
+		bool $multilang = false
 	): array {
 		// extract the slug and num of the directory
 		if (preg_match('/^([0-9]+)' . static::$numSeparator . '(.*)$/', $item, $match)) {
@@ -302,47 +309,30 @@ class Dir
 			$slug = $match[2];
 		}
 
-		return [
-			'dirname' => $item,
-			'model'   => null,
-			'num'     => $num ?? null,
-			'root'    => $root,
-			'slug'    => $slug ?? $item,
-		];
-	}
-
-	/**
-	 * Go through all inventory children
-	 * and inject a model for each
-	 */
-	protected static function inventoryModels(
-		array $inventory,
-		string $contentExtension,
-		bool $multilang = false
-	): array {
+		// determine the model
 		// inject models
-		if (
-			empty($inventory['children']) === false &&
-			empty(Page::$models) === false
-		) {
+		if (empty(Page::$models) === false) {
 			if ($multilang === true) {
 				$contentExtension = App::instance()->defaultLanguage()->code() . '.' . $contentExtension;
 			}
 
-			// for each child, try to find a model
-			foreach ($inventory['children'] as $key => $child) {
-				// look if a content file can be found
-				// for any of the available models
-				foreach (Page::$models as $modelName => $modelClass) {
-					if (file_exists($child['root'] . '/' . $modelName . '.' . $contentExtension) === true) {
-						$inventory['children'][$key]['model'] = $modelName;
-						break;
-					}
+			// look if a content file can be found
+			// for any of the available models
+			foreach (Page::$models as $modelName => $modelClass) {
+				if (file_exists($root . '/' . $modelName . '.' . $contentExtension) === true) {
+					$model = $modelName;
+					break;
 				}
 			}
 		}
 
-		return $inventory;
+		return [
+			'dirname' => $item,
+			'model'   => $model ?? null,
+			'num'     => $num ?? null,
+			'root'    => $root,
+			'slug'    => $slug ?? $item,
+		];
 	}
 
 	/**
