@@ -435,6 +435,8 @@ class FieldMethodsTest extends TestCase
 		$structure = $field->toStructure();
 
 		$this->assertCount(2, $structure);
+		$this->assertEquals($field, $structure->field()); // Field object gets cloned by the `Field` class
+		$this->assertEquals($field, $structure->first()->field()); // Field object gets cloned by the `Field` class
 		$this->assertSame('a', $structure->first()->title()->value());
 		$this->assertSame('a', $structure->first()->content()->title()->value());
 		$this->assertSame('c', $structure->first()->content()->field()->value());
