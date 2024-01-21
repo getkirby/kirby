@@ -375,6 +375,7 @@ class DirTest extends TestCase
 
 	/**
 	 * @covers ::inventory
+	 * @covers ::inventoryTemplate
 	 */
 	public function testInventoryMissingTemplate()
 	{
@@ -389,6 +390,7 @@ class DirTest extends TestCase
 
 	/**
 	 * @covers ::inventory
+	 * @covers ::inventoryTemplate
 	 */
 	public function testInventoryTemplateWithDotInFilename()
 	{
@@ -404,6 +406,7 @@ class DirTest extends TestCase
 
 	/**
 	 * @covers ::inventory
+	 * @covers ::inventoryTemplate
 	 */
 	public function testInventoryExtension()
 	{
@@ -419,6 +422,7 @@ class DirTest extends TestCase
 
 	/**
 	 * @covers ::inventory
+	 * @covers ::inventoryTemplate
 	 */
 	public function testInventoryIgnore()
 	{
@@ -433,6 +437,7 @@ class DirTest extends TestCase
 
 	/**
 	 * @covers ::inventory
+	 * @covers ::inventoryTemplate
 	 */
 	public function testInventoryMultilang()
 	{

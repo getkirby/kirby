@@ -283,10 +283,10 @@ class Dir
 			$content = array_unique($content);
 		}
 
-		$inventory = static::inventoryContent($inventory, $content);
-		$inventory = static::inventoryModels($inventory, $contentExtension, $multilang);
-
-		return $inventory;
+		return [
+			...static::inventoryModels($inventory, $contentExtension, $multilang),
+			'template' => static::inventoryTemplate($content, $inventory['files'])
+		];
 	}
 
 	/**
@@ -309,32 +309,6 @@ class Dir
 			'root'    => $root,
 			'slug'    => $slug ?? $item,
 		];
-	}
-
-	/**
-	 * Take all content files,  remove those who are meta files
-	 * and detect the main content file
-	 */
-	protected static function inventoryContent(
-		array $inventory,
-		array $content
-	): array {
-		// if no content files are found,apply default template
-		if (empty($content) === true) {
-			return [...$inventory, 'template' => 'default'];
-		}
-
-		foreach ($content as $name) {
-			// is a meta file corresponding to an actual file, i.e. cover.jpg
-			if (isset($inventory['files'][$name]) === true) {
-				continue;
-			}
-
-			// it's most likely the template
-			$inventory['template'] = $name;
-		}
-
-		return $inventory;
 	}
 
 	/**
@@ -371,6 +345,27 @@ class Dir
 		}
 
 		return $inventory;
+	}
+
+	/**
+	 * Determines the main template for the inventory
+	 * from all collected content files, ignory file meta files
+	 */
+	protected static function inventoryTemplate(
+		array $content,
+		array $files,
+	): string {
+		foreach ($content as $name) {
+			// is a meta file corresponding to an actual file, i.e. cover.jpg
+			if (isset($files[$name]) === true) {
+				continue;
+			}
+
+			// it's most likely the template
+			$template = $name;
+		}
+
+		return $template ?? 'default';
 	}
 
 	/**
