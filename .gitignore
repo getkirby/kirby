@@ -15,6 +15,7 @@
 /.idea
 
 # tests
+.phpbench
 .phpunit.cache
 /tests/coverage
 /tests/tmp
