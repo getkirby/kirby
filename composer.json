@@ -90,7 +90,6 @@
 		]
 	},
 	"scripts": {
-		"post-update-cmd": "curl -o cacert.pem https://curl.se/ca/cacert.pem",
 		"analyze": [
 			"@analyze:composer",
 			"@analyze:psalm",
@@ -108,6 +107,7 @@
 			"@test"
 		],
 		"fix": "php-cs-fixer fix",
+		"post-update-cmd": "curl -o cacert.pem https://curl.se/ca/cacert.pem",
 		"test": "phpunit",
 		"test:coverage": "XDEBUG_MODE=coverage phpunit --coverage-html=tests/coverage",
 		"zip": "composer archive --format=zip --file=dist"
