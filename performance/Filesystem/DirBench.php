@@ -34,6 +34,63 @@ class DirBench
 		Page::$models = [];
     }
 
+	public function benchInventoryThreeModels()
+    {
+		Page::$models = [
+			'a' => 'A',
+			'b' => 'B',
+			'c' => 'C'
+		];
+
+		Dir::inventory(__DIR__ . '/fixtures/inventory/models');
+
+		Page::$models = [];
+    }
+
+	public function benchInventoryFourModels()
+    {
+		Page::$models = [
+			'a' => 'A',
+			'b' => 'B',
+			'c' => 'C',
+			'd' => 'D'
+		];
+
+		Dir::inventory(__DIR__ . '/fixtures/inventory/models');
+
+		Page::$models = [];
+    }
+
+	public function benchInventoryFiveModels()
+    {
+		Page::$models = [
+			'a' => 'A',
+			'b' => 'B',
+			'c' => 'C',
+			'd' => 'D',
+			'e' => 'E'
+		];
+
+		Dir::inventory(__DIR__ . '/fixtures/inventory/models');
+
+		Page::$models = [];
+    }
+
+	public function benchInventorySixModels()
+    {
+		Page::$models = [
+			'a' => 'A',
+			'b' => 'B',
+			'c' => 'C',
+			'd' => 'D',
+			'e' => 'E',
+		];
+
+		Dir::inventory(__DIR__ . '/fixtures/inventory/models');
+
+		Page::$models = [];
+    }
+
 	public function benchInventoryManyModels()
     {
 		Page::$models = [
