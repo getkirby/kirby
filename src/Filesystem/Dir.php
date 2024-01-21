@@ -320,12 +320,10 @@ class Dir
 		string $contentExtension,
 		bool $multilang = false
 	): array {
-		$models = array_keys(Page::$models);
-
 		// inject models
 		if (
 			empty($inventory['children']) === false &&
-			empty($models) === false
+			empty(Page::$models) === false
 		) {
 			if ($multilang === true) {
 				$contentExtension = App::instance()->defaultLanguage()->code() . '.' . $contentExtension;
@@ -335,7 +333,7 @@ class Dir
 			foreach ($inventory['children'] as $key => $child) {
 				// look if a content file can be found
 				// for any of the available models
-				foreach ($models as $modelName) {
+				foreach (Page::$models as $modelName => $modelClass) {
 					if (file_exists($child['root'] . '/' . $modelName . '.' . $contentExtension) === true) {
 						$inventory['children'][$key]['model'] = $modelName;
 						break;
