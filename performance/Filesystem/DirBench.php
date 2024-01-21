@@ -11,16 +11,16 @@ class DirBench
 		Dir::inventory(__DIR__ . '/fixtures/inventory/models');
     }
 
-	public function benchInventoryOneModels()
-    {
-		Page::$models = [
-			'a' => 'A'
-		];
+	// public function benchInventoryOneModels()
+    // {
+	// 	Page::$models = [
+	// 		'a' => 'A'
+	// 	];
 
-		Dir::inventory(__DIR__ . '/fixtures/inventory/models');
+	// 	Dir::inventory(__DIR__ . '/fixtures/inventory/models');
 
-		Page::$models = [];
-    }
+	// 	Page::$models = [];
+    // }
 
 	public function benchInventoryTwoModels()
     {
@@ -34,65 +34,65 @@ class DirBench
 		Page::$models = [];
     }
 
-	public function benchInventoryFiveModels()
-    {
-		Page::$models = [
-			'a' => 'A',
-			'b' => 'B',
-			'c' => 'C',
-			'd' => 'D',
-			'e' => 'E'
-		];
+	// public function benchInventoryFiveModels()
+    // {
+	// 	Page::$models = [
+	// 		'a' => 'A',
+	// 		'b' => 'B',
+	// 		'c' => 'C',
+	// 		'd' => 'D',
+	// 		'e' => 'E'
+	// 	];
 
-		Dir::inventory(__DIR__ . '/fixtures/inventory/models');
+	// 	Dir::inventory(__DIR__ . '/fixtures/inventory/models');
 
-		Page::$models = [];
-    }
+	// 	Page::$models = [];
+    // }
 
-	public function benchInventory10Models()
-    {
-		Page::$models = [
-			'a' => 'A',
-			'b' => 'B',
-			'c' => 'C',
-			'd' => 'D',
-			'e' => 'E',
-			'f' => 'F',
-			'g' => 'G',
-			'h' => 'H',
-			'i' => 'I',
-			'j' => 'J'
-		];
+	// public function benchInventory10Models()
+    // {
+	// 	Page::$models = [
+	// 		'a' => 'A',
+	// 		'b' => 'B',
+	// 		'c' => 'C',
+	// 		'd' => 'D',
+	// 		'e' => 'E',
+	// 		'f' => 'F',
+	// 		'g' => 'G',
+	// 		'h' => 'H',
+	// 		'i' => 'I',
+	// 		'j' => 'J'
+	// 	];
 
-		Dir::inventory(__DIR__ . '/fixtures/inventory/models');
+	// 	Dir::inventory(__DIR__ . '/fixtures/inventory/models');
 
-		Page::$models = [];
-    }
+	// 	Page::$models = [];
+    // }
 
-	public function benchInventory15Models()
-    {
-		Page::$models = [
-			'a' => 'A',
-			'b' => 'B',
-			'c' => 'C',
-			'd' => 'D',
-			'e' => 'E',
-			'f' => 'F',
-			'g' => 'G',
-			'h' => 'H',
-			'i' => 'I',
-			'j' => 'J',
-			'k' => 'K',
-			'l' => 'L',
-			'm' => 'M',
-			'n' => 'N',
-			'o' => 'O'
-		];
+	// public function benchInventory15Models()
+    // {
+	// 	Page::$models = [
+	// 		'a' => 'A',
+	// 		'b' => 'B',
+	// 		'c' => 'C',
+	// 		'd' => 'D',
+	// 		'e' => 'E',
+	// 		'f' => 'F',
+	// 		'g' => 'G',
+	// 		'h' => 'H',
+	// 		'i' => 'I',
+	// 		'j' => 'J',
+	// 		'k' => 'K',
+	// 		'l' => 'L',
+	// 		'm' => 'M',
+	// 		'n' => 'N',
+	// 		'o' => 'O'
+	// 	];
 
-		Dir::inventory(__DIR__ . '/fixtures/inventory/models');
+	// 	Dir::inventory(__DIR__ . '/fixtures/inventory/models');
 
-		Page::$models = [];
-    }
+	// 	Page::$models = [];
+    // }
 
 	public function benchInventory26Models()
     {
