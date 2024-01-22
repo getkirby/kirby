@@ -545,6 +545,33 @@ class FileActionsTest extends TestCase
 	/**
 	 * @dataProvider parentProvider
 	 */
+	public function testCreateDuplicate($parent)
+	{
+		$source = static::TMP . '/source.md';
+
+		// create the dummy source
+		F::write($source, '# Test');
+
+		$result = File::create([
+			'filename' => 'test.md',
+			'source'   => $source,
+			'parent'   => $parent
+		]);
+
+		$uuid = $result->content()->get('uuid')->value();
+
+		$duplicate = File::create([
+			'filename' => 'test.md',
+			'source'   => $source,
+			'parent'   => $parent
+		]);
+
+		$this->assertSame($uuid, $duplicate->content()->get('uuid')->value());
+	}
+
+	/**
+	 * @dataProvider parentProvider
+	 */
 	public function testCreateMove($parent)
 	{
 		$source = static::TMP . '/source.md';
