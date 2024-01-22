@@ -1,27 +1,45 @@
 <template>
 	<k-lab-examples>
-		<k-lab-field-preview-example
-			:value="bubbles"
-			label="Default"
-			type="bubbles"
-		/>
-		<k-lab-field-preview-example label="Empty" type="bubbles" />
+		<k-lab-example label="Default">
+			<k-lab-table-cell>
+				<!-- @code -->
+				<k-bubbles-field-preview
+					:value="[
+						{
+							text: 'A'
+						},
+						{
+							text: 'B'
+						}
+					]"
+				/>
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
+
+		<k-lab-example label="Overlow">
+			<k-lab-table-cell>
+				<!-- @code -->
+				<k-bubbles-field-preview
+					:value="[
+						{
+							text: 'Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+						},
+						{
+							text: 'Bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+						}
+					]"
+				/>
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
+
+		<k-lab-example label="Empty">
+			<k-lab-table-cell>
+				<!-- @code -->
+				<k-bubbles-field-preview />
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
 	</k-lab-examples>
 </template>
-
-<script>
-export default {
-	computed: {
-		bubbles() {
-			return [
-				{
-					text: "A",
-				},
-				{
-					text: "B",
-				},
-			];
-		},
-	},
-};
-</script>
