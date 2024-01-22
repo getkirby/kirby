@@ -480,6 +480,27 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
+	public function testFileDoesNotExist()
+	{
+		$kirby = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'content' => [
+							'text' => '(file: a.jpg) (file: b.jpg text: b)'
+						]
+					],
+
+				]
+			]
+		]);
+
+		$page = $kirby->page('a');
+
+		$this->assertSame('<p>a.jpg b</p>', $page->text()->kt()->value());
+	}
+
 	public function testFileWithDisabledDownloadOption()
 	{
 		$kirby = $this->app->clone([

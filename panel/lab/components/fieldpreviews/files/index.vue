@@ -1,27 +1,48 @@
 <template>
 	<k-lab-examples>
-		<k-lab-field-preview-example :value="files" label="Default" type="files" />
-		<k-lab-field-preview-example label="Empty" type="files" />
+		<k-lab-example label="Default">
+			<k-lab-table-cell>
+				<!-- @code -->
+				<k-files-field-preview
+					:value="[
+						{
+							image: { icon: 'code', back: 'black', color: 'white' },
+							filename: 'test-1.js',
+							link: '/'
+						},
+						{
+							image: { icon: 'code', back: 'black', color: 'white' },
+							filename: 'test-2.js',
+							link: '/'
+						}
+					]"
+				/>
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
+
+		<k-lab-example label="Overflow">
+			<k-lab-table-cell>
+				<!-- @code -->
+				<k-files-field-preview
+					:value="
+						Array(20).fill({
+							image: { icon: 'code', back: 'black', color: 'white' },
+							filename: 'test-1.js',
+							link: '/'
+						})
+					"
+				/>
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
+
+		<k-lab-example label="Empty">
+			<k-lab-table-cell>
+				<!-- @code -->
+				<k-files-field-preview />
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
 	</k-lab-examples>
 </template>
-
-<script>
-export default {
-	computed: {
-		files() {
-			return [
-				{
-					image: { icon: "code", back: "black", color: "white" },
-					filename: "test-1.js",
-					link: "/",
-				},
-				{
-					image: { icon: "code", back: "black", color: "white" },
-					filename: "test-2.js",
-					link: "/",
-				},
-			];
-		},
-	},
-};
-</script>

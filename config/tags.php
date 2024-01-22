@@ -62,7 +62,7 @@ return [
 		],
 		'html' => function (KirbyTag $tag): string {
 			if (!$file = $tag->file($tag->value)) {
-				return $tag->text;
+				return $tag->text ?? $tag->value;
 			}
 
 			// use filename if the text is empty and make sure to

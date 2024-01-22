@@ -93,6 +93,7 @@ export default {
 :root {
 	--bubble-size: 1.525rem;
 	--bubble-back: var(--color-light);
+	--bubble-rounded: var(--rounded);
 	--bubble-text: var(--color-black);
 }
 
@@ -103,7 +104,7 @@ export default {
 	line-height: 1.5;
 	background: var(--bubble-back);
 	color: var(--bubble-text);
-	border-radius: var(--rounded);
+	border-radius: var(--bubble-rounded);
 	overflow: hidden;
 }
 .k-bubble .k-frame {

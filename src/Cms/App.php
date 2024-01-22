@@ -655,7 +655,7 @@ class App
 	 * specified by the path
 	 *
 	 * Example:
-	 * <?= App::image('some/page/myimage.jpg') ?>
+	 * <?= $kirby->image('some/page/myimage.jpg') ?>
 	 *
 	 * @todo merge with App::file()
 	 */

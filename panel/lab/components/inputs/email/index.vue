@@ -1,3 +1,56 @@
 <template>
-	<k-lab-input-examples type="email" />
+	<k-lab-form>
+		<k-lab-examples>
+			<k-lab-example label="Default">
+				<k-email-input name="email" :value="value" @input="value = $event" />
+			</k-lab-example>
+
+			<k-lab-example label="Autofocus">
+				<k-email-input
+					:autofocus="true"
+					:value="value"
+					@input="value = $event"
+				/>
+			</k-lab-example>
+
+			<k-lab-example label="Required">
+				<k-email-input
+					:required="true"
+					:value="value"
+					@input="value = $event"
+				/>
+			</k-lab-example>
+
+			<k-lab-example label="Placeholder">
+				<k-email-input
+					placeholder="Placeholder text …"
+					:value="value"
+					@input="value = $event"
+				/>
+			</k-lab-example>
+
+			<k-lab-example label="Focus" class="k-lab-input-examples-focus">
+				<k-email-input ref="input" :value="value" @input="value = $event" />
+				<k-button text="Focus" variant="filled" @click="$refs.input.focus()" />
+			</k-lab-example>
+
+			<k-lab-example label="Disabled">
+				<k-email-input
+					:disabled="true"
+					:value="value"
+					@input="value = $event"
+				/>
+			</k-lab-example>
+		</k-lab-examples>
+	</k-lab-form>
 </template>
+
+<script>
+export default {
+	data() {
+		return {
+			value: null
+		};
+	}
+};
+</script>

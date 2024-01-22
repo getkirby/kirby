@@ -432,8 +432,8 @@ class FieldMethodsTest extends TestCase
 	public function testToStructure()
 	{
 		$data = [
-			['title' => 'a'],
-			['title' => 'b']
+			['title' => 'a', 'field' => 'c'],
+			['title' => 'b', 'field' => 'd']
 		];
 
 		$yaml = Yaml::encode($data);
@@ -442,8 +442,14 @@ class FieldMethodsTest extends TestCase
 		$structure = $field->toStructure();
 
 		$this->assertCount(2, $structure);
+		$this->assertEquals($field, $structure->field()); // Field object gets cloned by the `Field` class
+		$this->assertEquals($field, $structure->first()->field()); // Field object gets cloned by the `Field` class
 		$this->assertSame('a', $structure->first()->title()->value());
+		$this->assertSame('a', $structure->first()->content()->title()->value());
+		$this->assertSame('c', $structure->first()->content()->field()->value());
 		$this->assertSame('b', $structure->last()->title()->value());
+		$this->assertSame('b', $structure->last()->content()->title()->value());
+		$this->assertSame('d', $structure->last()->content()->field()->value());
 	}
 
 	public function testToStructureWithInvalidData()
