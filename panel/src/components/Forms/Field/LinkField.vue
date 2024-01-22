@@ -81,7 +81,7 @@
 
 <script>
 import { props as FieldProps } from "../Field.vue";
-import { props as InputProps } from "../Input.vue";
+import { props as InputProps } from "@/mixins/input.js";
 import { options } from "@/mixins/props.js";
 
 export const props = {
