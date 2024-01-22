@@ -3,7 +3,7 @@ icon: video
 preview: video
 fields:
   location:
-    label: field.blocks.image.location
+    label: field.blocks.video.location
     type: radio
     columns: 2
     default: "web"
@@ -17,6 +17,7 @@ fields:
     when:
       location: web
   video:
+    label: field.blocks.video.name
     type: files
     query: model.videos
     multiple: false
@@ -24,6 +25,7 @@ fields:
     when:
       location: kirby
   poster:
+    label: field.blocks.video.poster
     type: files
     query: model.images
     multiple: false
@@ -38,28 +40,33 @@ fields:
     type: writer
     inline: true
   autoplay:
+    label: field.blocks.video.autoplay
     type: toggle
     width: 1/3
     when:
       location: kirby
   muted:
+    label: field.blocks.video.muted
     type: toggle
     width: 1/3
     default: true
     when:
       location: kirby
   loop:
+    label: field.blocks.video.loop
     type: toggle
     width: 1/3
     when:
       location: kirby
   controls:
+    label: field.blocks.video.controls
     type: toggle
     width: 1/3
     default: true
     when:
       location: kirby
   preload:
+    label: field.blocks.video.preload
     type: select
     width: 2/3
     default: auto
