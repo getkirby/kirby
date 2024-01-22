@@ -56,7 +56,7 @@ export default {
 </script>
 
 <style>
-.k-lab-input-examples .k-timeoptions-input {
+.k-lab-example .k-timeoptions-input {
 	display: flex;
 }
 </style>
