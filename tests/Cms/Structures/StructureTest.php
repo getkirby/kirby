@@ -29,14 +29,16 @@ class StructureTest extends TestCase
 	public function testToArray()
 	{
 		$data = [
-			['name' => 'A'],
-			['name' => 'B']
+			['name' => 'A', 'field' => 'C'],
+			['name' => 'B', 'field' => 'D']
 		];
 		$structure = Structure::factory($data)->toArray();
 
 		$this->assertSame('A', $structure[0]['name']);
+		$this->assertSame('C', $structure[0]['field']);
 		$this->assertArrayHasKey('id', $structure[0]);
 		$this->assertSame('B', $structure[1]['name']);
+		$this->assertSame('D', $structure[1]['field']);
 		$this->assertArrayHasKey('id', $structure[1]);
 	}
 
