@@ -79,7 +79,6 @@ export default {
 	--tag-color-toggle-border: var(--color-gray-300);
 	--tag-color-focus-back: var(--tag-color-back);
 	--tag-color-focus-text: var(--tag-color-text);
-	--tag-rounded: var(--rounded-sm);
 	padding-inline: var(--table-cell-padding);
 	min-width: 0;
 }
@@ -87,16 +86,8 @@ export default {
 	min-width: 0;
 	max-width: 100%;
 }
-.k-link-field-preview .k-tag-image {
-	border-radius: 0;
-	border-start-start-radius: var(--tag-rounded);
-	border-end-start-radius: var(--tag-rounded);
-	margin-inline-start: 0;
-	height: 100%;
-}
 .k-link-field-preview .k-tag-text {
 	font-size: var(--text-xs);
-	overflow: hidden;
 	min-width: 0;
 }
 </style>

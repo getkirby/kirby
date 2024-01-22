@@ -121,11 +121,14 @@ export default {
 	outline: var(--outline);
 }
 .k-tag-image {
-	height: calc(var(--tag-height) - var(--spacing-2));
-	margin-inline: var(--spacing-1);
+	height: 100%;
 	border-radius: var(--rounded-xs);
 	overflow: hidden;
 	flex-shrink: 0;
+	border-radius: 0;
+	border-start-start-radius: var(--tag-rounded);
+	border-end-start-radius: var(--tag-rounded);
+	background-clip: padding-box;
 }
 .k-tag-text {
 	padding-inline: var(--spacing-2);
@@ -133,10 +136,6 @@ export default {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
-}
-/** TODO: .k-tag:has(.k-frame) .k-tag-text  */
-.k-tag[data-has-image="true"] .k-tag-text {
-	padding-inline-start: var(--spacing-1);
 }
 /** TODO: .k-tag:has(.k-tag-toggle) .k-tag-text  */
 .k-tag[data-has-toggle="true"] .k-tag-text {
