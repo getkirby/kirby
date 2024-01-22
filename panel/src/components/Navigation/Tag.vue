@@ -14,10 +14,17 @@
 			<k-icon-frame v-else-if="image" v-bind="image" class="k-tag-image" />
 		</slot>
 
-		<span v-if="$slots.default" class="k-tag-text">
-			<!-- @slot Tag text -->
-			<slot />
-		</span>
+		<template v-if="text">
+			<!-- eslint-disable-next-line vue/no-v-html -->
+			<span v-if="html" class="k-tag-text" v-html="text" />
+			<span v-else class="k-tag-text">{{ text }}</span>
+		</template>
+		<template v-else-if="$slots.default">
+			<span class="k-tag-text">
+				<!-- @slot Tag text -->
+				<slot />
+			</span>
+		</template>
 
 		<k-icon-frame
 			v-if="isRemovable"
@@ -41,6 +48,13 @@ export default {
 		 */
 		disabled: Boolean,
 		/**
+		 * If set to `true`, the `text` is rendered as HTML code,
+		 * otherwise as plain text
+		 */
+		html: {
+			type: Boolean
+		},
+		/**
 		 * See `k-image-frame` or `k-icon-frame` for available options
 		 */
 		image: {
@@ -49,7 +63,11 @@ export default {
 		/**
 		 * Enables the remove button
 		 */
-		removable: Boolean
+		removable: Boolean,
+		/**
+		 * Text to display in the bubble
+		 */
+		text: String
 	},
 	emits: ["remove"],
 	computed: {
@@ -103,27 +121,32 @@ export default {
 	outline: var(--outline);
 }
 .k-tag-image {
-	height: calc(var(--tag-height) - var(--spacing-2));
-	margin-inline: var(--spacing-1);
-	border-radius: var(--tag-rounded);
+	height: 100%;
+	border-radius: var(--rounded-xs);
 	overflow: hidden;
+	flex-shrink: 0;
+	border-radius: 0;
+	border-start-start-radius: var(--tag-rounded);
+	border-end-start-radius: var(--tag-rounded);
+	background-clip: padding-box;
 }
 .k-tag-text {
 	padding-inline: var(--spacing-2);
 	line-height: var(--leading-tight);
-}
-/** TODO: .k-tag:has(.k-frame) .k-tag-text  */
-.k-tag[data-has-image="true"] .k-tag-text {
-	padding-inline-start: var(--spacing-1);
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 /** TODO: .k-tag:has(.k-tag-toggle) .k-tag-text  */
 .k-tag[data-has-toggle="true"] .k-tag-text {
 	padding-inline-end: 0;
 }
 .k-tag-toggle {
+	--icon-size: 14px;
 	width: var(--tag-height);
 	height: var(--tag-height);
 	filter: brightness(70%);
+	flex-shrink: 0;
 }
 .k-tag-toggle:hover {
 	filter: brightness(100%);
