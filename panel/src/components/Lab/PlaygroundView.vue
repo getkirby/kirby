@@ -126,13 +126,6 @@ export default {
 	margin-bottom: 0;
 }
 
-.k-lab-example *:invalid {
-	outline: 2px solid var(--color-red-600);
-}
-
-.k-lab-form *:not([type="checkbox"], [type="radio"]):invalid {
-	outline: 2px solid var(--color-red-600) !important;
-}
 .k-lab-input-examples-focus .k-lab-example-canvas > .k-button {
 	margin-top: var(--spacing-6);
 }
