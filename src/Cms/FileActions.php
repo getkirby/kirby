@@ -229,9 +229,25 @@ trait FileActions
 		// gather content
 		$content = $props['content'] ?? [];
 
-		// make sure that a UUID gets generated and
-		// added to content right away
-		if (Uuids::enabled() === true) {
+		// make sure that a UUID gets generated
+		// and added to content right away
+		if (
+			Uuids::enabled() === true &&
+			empty($content['uuid']) === true
+		) {
+			// sets the current uuid if it is the exact same file
+			if ($file->exists() === true) {
+				$existing = $file->parent()->file($file->filename());
+
+				if (
+					$file->sha1() === $upload->sha1() &&
+					$file->template() === $existing->template()
+				) {
+					// use existing content data if it is the exact same file
+					$content = $existing->content()->toArray();
+				}
+			}
+
 			$content['uuid'] ??= Uuid::generate();
 		}
 
