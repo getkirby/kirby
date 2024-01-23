@@ -289,8 +289,10 @@ export default (panel) => {
 				// add file to upload queue
 				files.push(async () => await this.upload(file));
 
+				const sort = this.attributes?.sort;
+
 				// if there is sort data, increment in the loop for next file
-				if (this.attributes?.sort !== undefined) {
+				if (sort !== undefined && sort !== null) {
 					this.attributes.sort++;
 				}
 			}
