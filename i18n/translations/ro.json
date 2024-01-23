@@ -135,7 +135,7 @@
 
 	"error.license.domain": "Domeniul pentru licență lipsește",
 	"error.license.email": "Te rog introdu o adresă de e-mail validă",
-	"error.license.format": "Please enter a valid license code",
+	"error.license.format": "Te rog introdu un cod de licență valid",
 	"error.license.verification": "Licența nu a putut fi verificată",
 
 	"error.login.totp.confirm.invalid": "Cod invalid",
@@ -425,7 +425,7 @@
 	"license.code.label": "Te rog introdu codul tău de licență",
 	"license.status.active.info": "Include noi versiuni majore până la data de {date}",
 	"license.status.active.label": "Licență validă",
-	"license.status.demo.info": "This is a demo installation",
+	"license.status.demo.info": "Aceasta este o instalare demo",
 	"license.status.demo.label": "Demo",
 	"license.status.inactive.info": "Reînnoiți licența pentru a actualiza la noile versiuni majore",
 	"license.status.inactive.label": "Fără noi versiuni majore",
