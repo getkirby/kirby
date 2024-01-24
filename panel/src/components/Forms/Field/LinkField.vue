@@ -6,10 +6,12 @@
 				<k-button
 					class="k-link-input-toggle"
 					:disabled="disabled"
-					:dropdown="true"
+					:dropdown="!disabled && activeTypesOptions.length > 1"
 					:icon="currentType.icon"
 					variant="filled"
-					@click="$refs.types.toggle()"
+					@click="
+						activeTypesOptions.length > 1 ? $refs.types.toggle() : toggle()
+					"
 				>
 					{{ currentType.label }}
 				</k-button>
