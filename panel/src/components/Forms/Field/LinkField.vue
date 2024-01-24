@@ -144,8 +144,8 @@ export default {
 				}
 
 				const parts = this.$helper.link.detect(value, this.activeTypes);
-				this.linkType = this.linkType ?? parts.type;
-				this.linkValue = parts.link;
+				this.linkType = this.linkType ?? parts?.type;
+				this.linkValue = parts?.link ?? value;
 			},
 			immediate: true
 		}
