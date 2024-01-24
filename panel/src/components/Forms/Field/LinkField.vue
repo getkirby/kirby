@@ -19,15 +19,15 @@
 
 				<!-- Input -->
 				<div
-					v-if="linkType === 'page' || linkType === 'file'"
+					v-if="currentType.id === 'page' || currentType.id === 'file'"
 					class="k-link-input-model"
 					@click="toggle"
 				>
 					<k-link-field-preview
 						:removable="true"
-						:type="linkType"
+						:type="currentType.id"
 						:value="value"
-						@remove="$emit('input', '')"
+						@remove="removeModel"
 					>
 						<template #placeholder>
 							<k-button class="k-link-input-model-placeholder">
@@ -53,7 +53,7 @@
 
 			<!-- Page or file browser -->
 			<div
-				v-if="linkType === 'page'"
+				v-if="currentType.id === 'page'"
 				v-show="expanded"
 				data-type="page"
 				class="k-link-input-body"
@@ -67,7 +67,7 @@
 				</div>
 			</div>
 			<div
-				v-else-if="linkType === 'file'"
+				v-else-if="currentType.id === 'file'"
 				v-show="expanded"
 				data-type="file"
 				class="k-link-input-body"
@@ -122,7 +122,7 @@ export default {
 			for (const type in this.activeTypes) {
 				options.push({
 					click: () => this.switchType(type),
-					current: type === this.linkType,
+					current: type === this.currentType.id,
 					icon: this.activeTypes[type].icon,
 					label: this.activeTypes[type].label
 				});
@@ -139,13 +139,16 @@ export default {
 	watch: {
 		value: {
 			async handler(value, old) {
-				if (value === old) {
+				if (value === old || value === this.linkValue) {
 					return;
 				}
 
 				const parts = this.$helper.link.detect(value, this.activeTypes);
-				this.linkType = this.linkType ?? parts?.type;
-				this.linkValue = parts?.link ?? value;
+
+				if (parts) {
+					this.linkType = parts.type;
+					this.linkValue = parts.link;
+				}
 			},
 			immediate: true
 		}
@@ -158,8 +161,8 @@ export default {
 	},
 	methods: {
 		clear() {
+			this.linkValue = "";
 			this.$emit("input", "");
-			this.expanded = false;
 		},
 		focus() {
 			this.$refs.input?.focus();
@@ -167,8 +170,11 @@ export default {
 		onInput(link) {
 			const value = link?.trim() ?? "";
 
+			this.linkType ??= this.currentType.id;
+			this.linkValue = value;
+
 			if (!value.length) {
-				return this.$emit("input", "");
+				return this.clear();
 			}
 
 			this.$emit("input", this.currentType.value(value));
@@ -181,6 +187,10 @@ export default {
 				this.expanded = false;
 			}
 		},
+		removeModel() {
+			this.clear();
+			this.expanded = false;
+		},
 		selectModel(model) {
 			if (model.uuid) {
 				this.onInput(model.uuid);
@@ -191,21 +201,27 @@ export default {
 			this.onInput(model.url);
 		},
 		async switchType(type) {
-			if (type === this.linkType) {
+			// avoid unnecessary switching
+			if (type === this.currentType.id) {
 				return;
 			}
 
+			// reset validation
 			this.isInvalid = false;
-			this.linkType = type;
-			this.linkValue = "";
 
-			if (this.linkType === "page" || this.linkType === "file") {
+			// set the new type
+			this.linkType = type;
+
+			// remove the value
+			this.clear();
+
+			// show the file or page browser
+			if (this.currentType.id === "page" || this.currentType.id === "file") {
 				this.expanded = true;
 			} else {
 				this.expanded = false;
 			}
 
-			this.$emit("input", "");
 			await this.$nextTick();
 			this.focus();
 		},
