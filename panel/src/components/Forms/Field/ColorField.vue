@@ -39,7 +39,8 @@
 			</template>
 
 			<template v-if="currentOption?.text" #after>
-				{{ currentOption.text }}
+				<!-- eslint-disable-next-line vue/no-v-html -->
+				<span v-html="currentOption.text" />
 			</template>
 
 			<template v-if="mode === 'picker'" #icon>
