@@ -93,7 +93,7 @@ export default {
 :root {
 	--bubble-size: 1.525rem;
 	--bubble-back: var(--color-light);
-	--bubble-rounded: var(--rounded);
+	--bubble-rounded: var(--rounded-sm);
 	--bubble-text: var(--color-black);
 }
 
