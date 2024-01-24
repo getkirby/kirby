@@ -106,16 +106,39 @@ export default {
 	inheritAttrs: false,
 	data() {
 		return {
+			/**
+			 * Stores the currently detected link type. The currentType
+			 * object is computed from this
+			 */
 			linkType: null,
+			/**
+			 * The link value holds the value that is visible in the input
+			 * E.g. for the email type, the actually stored value would be
+			 * prefixed by mailto: but the linkValue would be without prefix
+			 */
 			linkValue: null,
+			/**
+			 * Open/close state for the file or page browser
+			 */
 			expanded: false,
+			/**
+			 * Validation state for the wrapping `k-input` component
+			 */
 			isInvalid: false
 		};
 	},
 	computed: {
+		/**
+		 * Returns all available link types as defined
+		 * by the options prop
+		 */
 		activeTypes() {
 			return this.$helper.link.types(this.options);
 		},
+		/**
+		 * Converts all active types to
+		 * dropdown options
+		 */
 		activeTypesOptions() {
 			const options = [];
 
@@ -130,6 +153,11 @@ export default {
 
 			return options;
 		},
+		/**
+		 * Returns the full type as defined in
+		 * the helpers/link.js types object. Falls back
+		 * to the first available type.
+		 */
 		currentType() {
 			return (
 				this.activeTypes[this.linkType] ?? Object.values(this.activeTypes)[0]
@@ -137,6 +165,11 @@ export default {
 		}
 	},
 	watch: {
+		/**
+		 * When the value changes from the outside. E.g. by reverting
+		 * changes or mounting the field for the first time, the link type
+		 * and link value need to be detected
+		 */
 		value: {
 			async handler(value, old) {
 				if (value === old || value === this.linkValue) {
