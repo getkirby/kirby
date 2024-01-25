@@ -29,7 +29,7 @@
 						:value="value"
 						@remove="removeModel"
 					>
-						<template #placeholder>
+						<template v-if="!disabled" #placeholder>
 							<k-button class="k-link-input-model-placeholder">
 								{{ currentType.placeholder }}
 							</k-button>
@@ -43,8 +43,9 @@
 					v-else
 					:id="id"
 					ref="input"
+					:disabled="disabled"
+					:placeholder="!disabled ? currentType.placeholder : null"
 					:pattern="currentType.pattern ?? null"
-					:placeholder="currentType.placeholder"
 					:value="linkValue"
 					@invalid="onInvalid"
 					@input="onInput"

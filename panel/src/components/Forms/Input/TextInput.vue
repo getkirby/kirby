@@ -9,7 +9,7 @@
 			minlength,
 			name,
 			pattern,
-			placeholder,
+			placeholder: !disabled && hasPlaceholder ? placeholder : null,
 			required,
 			spellcheck,
 			type,
@@ -77,6 +77,14 @@ export default {
 				input: (event) => this.onInput(event.target.value)
 			}
 		};
+	},
+	computed: {
+		/**
+		 * Whether the input has an explicit placeholder set (not the default)
+		 */
+		hasPlaceholder() {
+			return this.$options.propsData.placeholder !== undefined;
+		}
 	},
 	watch: {
 		value() {
