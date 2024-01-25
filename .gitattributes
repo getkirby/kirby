@@ -11,7 +11,7 @@ phpbench.json export-ignore
 phpmd.xml.dist export-ignore
 phpunit.xml.dist export-ignore
 psalm.xml.dist export-ignore
-performance/ export-ignore
+bench/ export-ignore
 tests/ export-ignore
 
 # panel
