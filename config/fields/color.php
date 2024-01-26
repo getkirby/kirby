@@ -3,6 +3,7 @@
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Field\FieldOptions;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\Str;
 
 return [
@@ -82,7 +83,8 @@ return [
 				$this->isColor($options[0]['text'])
 					=> A::map($options, fn ($option) => [
 						'value' => $option['text'],
-						'text'  => $option['value']
+						// ensure that any HTML in the new text is escaped
+						'text'  => Escape::html($option['value'])
 					]),
 
 				default

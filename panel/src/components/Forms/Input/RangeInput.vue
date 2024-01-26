@@ -157,7 +157,6 @@ export default {
 }
 .k-range-input-tooltip {
 	position: relative;
-	max-width: 20%;
 	display: flex;
 	align-items: center;
 	color: var(--color-white);
@@ -167,8 +166,8 @@ export default {
 	text-align: center;
 	border-radius: var(--rounded-sm);
 	background: var(--range-tooltip-back);
-	margin-inline-start: 1rem;
-	padding: 0 0.25rem;
+	margin-inline-start: var(--spacing-3);
+	padding: 0 var(--spacing-1);
 	white-space: nowrap;
 }
 .k-range-input-tooltip::after {

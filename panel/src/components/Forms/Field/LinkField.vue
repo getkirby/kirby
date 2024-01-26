@@ -19,15 +19,15 @@
 
 				<!-- Input -->
 				<div
-					v-if="linkType === 'page' || linkType === 'file'"
+					v-if="currentType.id === 'page' || currentType.id === 'file'"
 					class="k-link-input-model"
 					@click="toggle"
 				>
 					<k-link-field-preview
 						:removable="true"
-						:type="linkType"
+						:type="currentType.id"
 						:value="value"
-						@remove="$emit('input', '')"
+						@remove="removeModel"
 					>
 						<template #placeholder>
 							<k-button class="k-link-input-model-placeholder">
@@ -53,7 +53,7 @@
 
 			<!-- Page or file browser -->
 			<div
-				v-if="linkType === 'page'"
+				v-if="currentType.id === 'page'"
 				v-show="expanded"
 				data-type="page"
 				class="k-link-input-body"
@@ -67,7 +67,7 @@
 				</div>
 			</div>
 			<div
-				v-else-if="linkType === 'file'"
+				v-else-if="currentType.id === 'file'"
 				v-show="expanded"
 				data-type="file"
 				class="k-link-input-body"
@@ -106,23 +106,46 @@ export default {
 	inheritAttrs: false,
 	data() {
 		return {
+			/**
+			 * Stores the currently detected link type. The currentType
+			 * object is computed from this
+			 */
 			linkType: null,
+			/**
+			 * The link value holds the value that is visible in the input
+			 * E.g. for the email type, the actually stored value would be
+			 * prefixed by mailto: but the linkValue would be without prefix
+			 */
 			linkValue: null,
+			/**
+			 * Open/close state for the file or page browser
+			 */
 			expanded: false,
+			/**
+			 * Validation state for the wrapping `k-input` component
+			 */
 			isInvalid: false
 		};
 	},
 	computed: {
+		/**
+		 * Returns all available link types as defined
+		 * by the options prop
+		 */
 		activeTypes() {
 			return this.$helper.link.types(this.options);
 		},
+		/**
+		 * Converts all active types to
+		 * dropdown options
+		 */
 		activeTypesOptions() {
 			const options = [];
 
 			for (const type in this.activeTypes) {
 				options.push({
 					click: () => this.switchType(type),
-					current: type === this.linkType,
+					current: type === this.currentType.id,
 					icon: this.activeTypes[type].icon,
 					label: this.activeTypes[type].label
 				});
@@ -130,6 +153,11 @@ export default {
 
 			return options;
 		},
+		/**
+		 * Returns the full type as defined in
+		 * the helpers/link.js types object. Falls back
+		 * to the first available type.
+		 */
 		currentType() {
 			return (
 				this.activeTypes[this.linkType] ?? Object.values(this.activeTypes)[0]
@@ -137,15 +165,23 @@ export default {
 		}
 	},
 	watch: {
+		/**
+		 * When the value changes from the outside. E.g. by reverting
+		 * changes or mounting the field for the first time, the link type
+		 * and link value need to be detected
+		 */
 		value: {
 			async handler(value, old) {
-				if (value === old) {
+				if (value === old || value === this.linkValue) {
 					return;
 				}
 
 				const parts = this.$helper.link.detect(value, this.activeTypes);
-				this.linkType = this.linkType ?? parts?.type;
-				this.linkValue = parts?.link ?? value;
+
+				if (parts) {
+					this.linkType = parts.type;
+					this.linkValue = parts.link;
+				}
 			},
 			immediate: true
 		}
@@ -158,8 +194,8 @@ export default {
 	},
 	methods: {
 		clear() {
+			this.linkValue = "";
 			this.$emit("input", "");
-			this.expanded = false;
 		},
 		focus() {
 			this.$refs.input?.focus();
@@ -167,8 +203,11 @@ export default {
 		onInput(link) {
 			const value = link?.trim() ?? "";
 
+			this.linkType ??= this.currentType.id;
+			this.linkValue = value;
+
 			if (!value.length) {
-				return this.$emit("input", "");
+				return this.clear();
 			}
 
 			this.$emit("input", this.currentType.value(value));
@@ -181,6 +220,10 @@ export default {
 				this.expanded = false;
 			}
 		},
+		removeModel() {
+			this.clear();
+			this.expanded = false;
+		},
 		selectModel(model) {
 			if (model.uuid) {
 				this.onInput(model.uuid);
@@ -191,21 +234,27 @@ export default {
 			this.onInput(model.url);
 		},
 		async switchType(type) {
-			if (type === this.linkType) {
+			// avoid unnecessary switching
+			if (type === this.currentType.id) {
 				return;
 			}
 
+			// reset validation
 			this.isInvalid = false;
-			this.linkType = type;
-			this.linkValue = "";
 
-			if (this.linkType === "page" || this.linkType === "file") {
+			// set the new type
+			this.linkType = type;
+
+			// remove the value
+			this.clear();
+
+			// show the file or page browser
+			if (this.currentType.id === "page" || this.currentType.id === "file") {
 				this.expanded = true;
 			} else {
 				this.expanded = false;
 			}
 
-			this.$emit("input", "");
 			await this.$nextTick();
 			this.focus();
 		},

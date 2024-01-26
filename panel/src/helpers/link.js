@@ -101,6 +101,7 @@ export function types(keys = []) {
 		url: {
 			detect: (value) => /^(http|https):\/\//.test(value),
 			icon: "url",
+			id: "url",
 			label: window.panel.$t("url"),
 			link: (value) => value,
 			placeholder: window.panel.$t("url.placeholder"),
@@ -110,6 +111,7 @@ export function types(keys = []) {
 		page: {
 			detect: (value) => isPageUUID(value) === true,
 			icon: "page",
+			id: "page",
 			label: window.panel.$t("page"),
 			link: (value) => value,
 			placeholder: window.panel.$t("select") + " …",
@@ -119,6 +121,7 @@ export function types(keys = []) {
 		file: {
 			detect: (value) => isFileUUID(value) === true,
 			icon: "file",
+			id: "file",
 			label: window.panel.$t("file"),
 			link: (value) => value,
 			placeholder: window.panel.$t("select") + " …",
@@ -127,6 +130,7 @@ export function types(keys = []) {
 		email: {
 			detect: (value) => value.startsWith("mailto:"),
 			icon: "email",
+			id: "email",
 			label: window.panel.$t("email"),
 			link: (value) => value.replace(/^mailto:/, ""),
 			placeholder: window.panel.$t("email.placeholder"),
@@ -136,6 +140,7 @@ export function types(keys = []) {
 		tel: {
 			detect: (value) => value.startsWith("tel:"),
 			icon: "phone",
+			id: "tel",
 			label: window.panel.$t("tel"),
 			link: (value) => value.replace(/^tel:/, ""),
 			pattern: "[+]{0,1}[0-9]+",
@@ -146,6 +151,7 @@ export function types(keys = []) {
 		anchor: {
 			detect: (value) => value.startsWith("#"),
 			icon: "anchor",
+			id: "anchor",
 			label: "Anchor",
 			link: (value) => value,
 			pattern: "^#.+",
@@ -156,6 +162,7 @@ export function types(keys = []) {
 		custom: {
 			detect: () => true,
 			icon: "title",
+			id: "custom",
 			label: window.panel.$t("custom"),
 			link: (value) => value,
 			input: "text",
