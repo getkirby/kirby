@@ -17,8 +17,8 @@ return [
 			$language     = Find::language($code);
 			$link         = '/languages/' . $language->code();
 			$strings      = [];
-			$foundation   = $kirby->defaultLanguage()->translations();
-			$translations = $language->translations();
+			$foundation   = $kirby->defaultLanguage()->translations()->toArray();
+			$translations = $language->translations()->toArray();
 
 			// TODO: update following line and adapt for update and
 			// delete options when `languageVariables.*` permissions available
