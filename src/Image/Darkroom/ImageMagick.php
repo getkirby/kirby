@@ -62,8 +62,8 @@ class ImageMagick extends Darkroom
 	{
 		$command = escapeshellarg($options['bin']);
 
-		// limit to single-threading to keep CPU usage sane
-		$command .= ' -limit thread 1';
+		// default is limiting to single-threading to keep CPU usage sane
+		$command .= ' -limit thread ' . escapeshellarg($options['thread']);
 
 		// add JPEG size hint to optimize CPU and memory usage
 		if (F::mime($file) === 'image/jpeg') {
@@ -85,6 +85,7 @@ class ImageMagick extends Darkroom
 		return parent::defaults() + [
 			'bin'       => 'convert',
 			'interlace' => false,
+			'thread'    => 1,
 		];
 	}
 
