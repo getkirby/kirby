@@ -62,7 +62,6 @@ class Language
 		$this->name         = trim($props['name'] ?? $this->code);
 		$this->slugs        = $props['slugs'] ?? [];
 		$this->smartypants  = $props['smartypants'] ?? [];
-		$this->translations = $props['translations'] ?? [];
 		$this->url          = $props['url'] ?? null;
 
 		if ($locale = $props['locale'] ?? null) {
@@ -70,6 +69,8 @@ class Language
 		} else {
 			$this->locale = [LC_ALL => $this->code];
 		}
+
+		$this->setTranslations($props['translations'] ?? []);
 	}
 
 	/**
@@ -409,6 +410,13 @@ class Language
 	{
 		try {
 			$existingData = Data::read($this->root());
+
+			// inject translations from custom root
+			// returns existing translations
+			// if custom root is not defined as fallback
+			$data['translations'] = $this
+				->translationsObject()
+				->load($existingData['translations'] ?? []);
 		} catch (Throwable) {
 			$existingData = [];
 		}
@@ -427,7 +435,27 @@ class Language
 
 		ksort($data);
 
+		// save translations to the custom root and remove translations
+		// to prevent duplication write into the language file
+		if ($this->translationsObject()->root() !== null) {
+			$this->translationsObject()
+				->save($data['translations'] ?? []);
+			$data['translations'] = [];
+		}
+
 		Data::write($this->root(), $data);
+
+		return $this;
+	}
+
+	/**
+	 * Sets the translations data
+	 *
+	 * @return $this
+	 */
+	protected function setTranslations(array $translations = []): static
+	{
+		$this->translations = (new LanguageTranslations($this))->load($translations);
 
 		return $this;
 	}
@@ -475,10 +503,23 @@ class Language
 
 	/**
 	 * Returns the translation strings for this language
+	 * @todo In v5, remove this method and
+	 * 		rename `->translationsObject()` method with the `translations`.
+	 * 		This will be a breaking change.
 	 */
 	public function translations(): array
 	{
 		return $this->translations;
+	}
+
+	/**
+	 * Returns the language translations object for this language
+	 * @todo In v5, rename this method name as `translations`
+	 * @internal
+	 */
+	public function translationsObject(): LanguageTranslations
+	{
+		return new LanguageTranslations($this, $this->translations);
 	}
 
 	/**
