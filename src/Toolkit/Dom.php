@@ -125,7 +125,11 @@ class Dom
 	 */
 	public function body(): DOMElement|null
 	{
-		return $this->body ??= $this->query('/html/body')[0] ?? null;
+		if ($this->body === null && $query = $this->query('/html/body')) {
+			return $this->body = $query[0] ?? null;
+		}
+
+		return $this->body;
 	}
 
 	/**
