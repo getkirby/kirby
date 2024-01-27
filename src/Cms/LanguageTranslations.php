@@ -19,14 +19,12 @@ use Kirby\Filesystem\F;
  */
 class LanguageTranslations
 {
-	protected App   $kirby;
 	protected array $data;
 
 	public function __construct(
 		protected Language $language,
 		self|array $translations = []
 	) {
-		$this->kirby = App::instance();
 		$this->setTranslations($translations);
 	}
 
@@ -62,8 +60,9 @@ class LanguageTranslations
 	 */
 	public function save(array $translations = []): static
 	{
+		$this->setTranslations($translations);
+
 		if ($root = $this->root()) {
-			$this->data = $translations;
 			Data::write($root, $translations);
 		}
 
@@ -77,7 +76,7 @@ class LanguageTranslations
 	{
 		$kirby = App::instance();
 		$root  = $kirby->root('translations');
-		$file  = $root . '/' . $this->language->code() . '.php';
+		$file  = ($root ?? '') . '/' . $this->language->code() . '.php';
 
 		if (
 			$root !== null &&
