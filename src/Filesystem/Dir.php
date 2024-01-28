@@ -290,10 +290,12 @@ class Dir
 
 		$content = array_unique($content);
 
-		return [
-			...$inventory,
-			'template' => static::inventoryTemplate($content, $inventory['files'])
-		];
+		$inventory['template'] = static::inventoryTemplate(
+			$content,
+			$inventory['files']
+		);
+
+		return $inventory;
 	}
 
 	/**
