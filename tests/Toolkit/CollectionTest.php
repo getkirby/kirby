@@ -52,6 +52,16 @@ class CollectionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::__toString
+	 */
+	public function test__toString()
+	{
+		$collection = new Collection(['a' => 'A', 'b' => 'B']);
+		$this->assertSame('a<br />b', $collection->__toString());
+		$this->assertSame('a<br />b', (string)$collection);
+	}
+
+	/**
 	 * @covers ::append
 	 */
 	public function testAppend()
@@ -140,6 +150,30 @@ class CollectionTest extends TestCase
 	{
 		$this->assertSame(3, $this->collection->count());
 		$this->assertSame(3, count($this->collection));
+	}
+
+	/**
+	 * @covers ::data
+	 */
+	public function testData()
+	{
+		$collection = new Collection($data = ['a' => 'A', 'b' => 'B']);
+		$this->assertSame($data, $collection->data());
+
+		$collection->data($data = ['c' => 'C', 'd' => 'D']);
+		$this->assertSame($data, $collection->data());
+	}
+
+	/**
+	 * @covers ::empty
+	 */
+	public function testEmpty()
+	{
+		$collection = new Collection($data = ['a' => 'A', 'b' => 'B']);
+		$this->assertSame($data, $collection->data());
+
+		$collection = $collection->empty();
+		$this->assertSame([], $collection->data());
 	}
 
 	/**
@@ -237,10 +271,26 @@ class CollectionTest extends TestCase
 		$this->assertSame('My first element', $this->collection->get('first'));
 		$this->assertSame('My second element', $this->collection->get('second'));
 		$this->assertSame('My third element', $this->collection->get('third'));
+
+		$this->assertNull($this->collection->get('fourth'));
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::__get
+	 * @covers ::get
+	 */
+	public function testGettersCaseSensitive()
+	{
+		$collection = new Collection($this->sampleData, true);
+
+		$this->assertSame('My first element', $collection->get('first'));
+		$this->assertNull($collection->get('FIRst'));
 	}
 
 	/**
 	 * @covers ::group
+	 * @covers ::groupBy
 	 */
 	public function testGroup()
 	{
@@ -261,15 +311,17 @@ class CollectionTest extends TestCase
 			'group'    => 'client'
 		];
 
-		$groups = $collection->group(function ($item) {
-			return $item['group'];
-		});
-
+		$groups = $collection->group(fn ($item) => $item['group']);
 		$this->assertCount(2, $groups->admin());
 		$this->assertCount(1, $groups->client());
 
 		$firstAdmin = $groups->admin()->first();
 		$this->assertSame('peter', $firstAdmin['username']);
+
+		// alias
+		$groups = $collection->groupBy(fn ($item) => $item['group']);
+		$this->assertCount(2, $groups->admin());
+		$this->assertCount(1, $groups->client());
 	}
 
 	/**
@@ -565,6 +617,16 @@ class CollectionTest extends TestCase
 	public function testLast()
 	{
 		$this->assertSame('My third element', $this->collection->last());
+	}
+
+	/**
+	 * @covers ::map
+	 */
+	public function testMap()
+	{
+		$collection = new Collection(['a' => 1, 'b' => 2]);
+		$collection->map(fn ($item) => $item * 2);
+		$this->assertSame(['a' => 2, 'b' => 4], $collection->data());
 	}
 
 	/**
@@ -871,6 +933,38 @@ class CollectionTest extends TestCase
 		// non-associative
 		$collection = new Collection($input = ['a', 'b', 'c']);
 		$this->assertSame($input, $collection->toArray());
+
+		// with mapping
+		$collection = new Collection(['a' => 1, 'b' => 2]);
+		$this->assertSame(['a' => 2, 'b' => 4], $collection->toArray(fn ($item) => $item * 2));
+	}
+
+	/**
+	 * @covers ::toJson
+	 */
+	public function testToJson()
+	{
+		// associative
+		$collection = new Collection(['a' => 'value A', 'b' => 'value B']);
+		$this->assertSame('{"a":"value A","b":"value B"}', $collection->toJson());
+
+		// non-associative
+		$collection = new Collection(['a', 'b', 'c']);
+		$this->assertSame('["a","b","c"]', $collection->toJson());
+	}
+
+	/**
+	 * @covers ::toString
+	 */
+	public function testToString()
+	{
+		// associative
+		$collection = new Collection(['a' => 'value A', 'b' => 'value B']);
+		$this->assertSame('a<br />b', $collection->toString());
+
+		// non-associative
+		$collection = new Collection(['a', 'b', 'c']);
+		$this->assertSame('0<br />1<br />2', $collection->toString());
 	}
 
 	/**
