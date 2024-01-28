@@ -76,6 +76,17 @@ class MarkdownTest extends TestCase
 	/**
 	 * @covers ::parse
 	 */
+	public function testParseInline()
+	{
+		$markdown = new Markdown();
+		$md       = file_get_contents(static::FIXTURES . '/inline.md');
+		$html     = file_get_contents(static::FIXTURES . '/inline.html');
+		$this->assertSame($html, $markdown->parse($md, true));
+	}
+
+	/**
+	 * @covers ::parse
+	 */
 	public function testParseWithExtra()
 	{
 		$markdown = new Markdown(['extra' => true]);
