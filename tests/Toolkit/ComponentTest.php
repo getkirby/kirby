@@ -5,6 +5,9 @@ namespace Kirby\Toolkit;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 
+/**
+ * @coversDefaultClass \Kirby\Toolkit\Component
+ */
 class ComponentTest extends TestCase
 {
 	public function tearDown(): void
@@ -13,14 +16,17 @@ class ComponentTest extends TestCase
 		Component::$mixins = [];
 	}
 
+	/**
+	 * @covers ::__construct
+	 * @covers ::__call
+	 * @covers ::applyProps
+	 */
 	public function testProp()
 	{
 		Component::$types = [
 			'test' => [
 				'props' => [
-					'prop' => function ($prop) {
-						return $prop;
-					}
+					'prop' => fn ($prop) => $prop
 				]
 			]
 		];
@@ -31,14 +37,15 @@ class ComponentTest extends TestCase
 		$this->assertSame('prop value', $component->prop);
 	}
 
+	/**
+	 * @covers ::applyProps
+	 */
 	public function testPropWithDefaultValue()
 	{
 		Component::$types = [
 			'test' => [
 				'props' => [
-					'prop' => function ($prop = 'default value') {
-						return $prop;
-					}
+					'prop' => fn ($prop = 'default value') => $prop
 				]
 			]
 		];
@@ -49,6 +56,9 @@ class ComponentTest extends TestCase
 		$this->assertSame('default value', $component->prop);
 	}
 
+	/**
+	 * @covers ::applyProps
+	 */
 	public function testPropWithFixedValue()
 	{
 		Component::$types = [
@@ -65,6 +75,9 @@ class ComponentTest extends TestCase
 		$this->assertSame('test', $component->prop);
 	}
 
+	/**
+	 * @covers ::__construct
+	 */
 	public function testAttrs()
 	{
 		Component::$types = [
@@ -77,6 +90,11 @@ class ComponentTest extends TestCase
 		$this->assertSame('bar', $component->foo);
 	}
 
+	/**
+	 * @covers ::__construct
+	 * @covers ::__call
+	 * @covers ::applyComputed
+	 */
 	public function testComputed()
 	{
 		Component::$types = [
@@ -93,6 +111,11 @@ class ComponentTest extends TestCase
 		$this->assertSame('computed prop', $component->prop);
 	}
 
+	/**
+	 * @covers ::__construct
+	 * @covers ::__call
+	 * @covers ::applyComputed
+	 */
 	public function testComputedFromProp()
 	{
 		Component::$types = [
@@ -111,6 +134,10 @@ class ComponentTest extends TestCase
 		$this->assertSame('computed: prop value', $component->prop());
 	}
 
+	/**
+	 * @covers ::__construct
+	 * @covers ::__call
+	 */
 	public function testMethod()
 	{
 		Component::$types = [
@@ -126,6 +153,10 @@ class ComponentTest extends TestCase
 		$this->assertSame('hello world', $component->say());
 	}
 
+	/**
+	 * @covers ::__construct
+	 * @covers ::__call
+	 */
 	public function testPropsInMethods()
 	{
 		Component::$types = [
@@ -144,6 +175,10 @@ class ComponentTest extends TestCase
 		$this->assertSame('hello world', $component->say());
 	}
 
+	/**
+	 * @covers ::__construct
+	 * @covers ::__call
+	 */
 	public function testComputedPropsInMethods()
 	{
 		Component::$types = [
@@ -165,6 +200,10 @@ class ComponentTest extends TestCase
 		$this->assertSame('HELLO WORLD', $component->say());
 	}
 
+	/**
+	 * @covers ::toArray
+	 * @covers ::__debugInfo
+	 */
 	public function testToArray()
 	{
 		Component::$types = [
@@ -188,6 +227,10 @@ class ComponentTest extends TestCase
 		$this->assertSame($expected, $component->__debugInfo());
 	}
 
+	/**
+	 * @covers ::toArray
+	 * @covers ::__debugInfo
+	 */
 	public function testCustomToArray()
 	{
 		Component::$types = [
@@ -203,6 +246,9 @@ class ComponentTest extends TestCase
 		$this->assertSame(['foo' => 'bar'], $component->toArray());
 	}
 
+	/**
+	 * @covers ::__construct
+	 */
 	public function testInvalidType()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -211,6 +257,9 @@ class ComponentTest extends TestCase
 		new Component('test');
 	}
 
+	/**
+	 * @covers ::load
+	 */
 	public function testLoadInvalidFile()
 	{
 		Component::$types = ['foo' => 'bar'];
@@ -220,6 +269,10 @@ class ComponentTest extends TestCase
 		Component::load('foo');
 	}
 
+	/**
+	 * @covers ::__construct
+	 * @covers ::setup
+	 */
 	public function testMixins()
 	{
 		Component::$mixins = [
@@ -243,5 +296,31 @@ class ComponentTest extends TestCase
 
 		$this->assertSame('HELLO WORLD', $component->message());
 		$this->assertSame('HELLO WORLD', $component->message);
+	}
+
+	/**
+	 * @covers ::__get
+	 */
+	public function testGetInvalidProp()
+	{
+		Component::$types = [
+			'test' => []
+		];
+
+		$component = new Component('test');
+		$this->assertNull($component->foo);
+	}
+
+	/**
+	 * @covers ::defaults
+	 */
+	public function testDefaults()
+	{
+		Component::$types = [
+			'test' => []
+		];
+
+		$component = new Component('test');
+		$this->assertSame([], $component->defaults());
 	}
 }
