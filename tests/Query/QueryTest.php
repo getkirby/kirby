@@ -25,7 +25,7 @@ class QueryTest extends TestCase
 	 */
 	public function testIntercept()
 	{
-		$query = new Query("kirby");
+		$query = new Query('kirby');
 		$this->assertSame('foo', $query->intercept('foo'));
 	}
 
