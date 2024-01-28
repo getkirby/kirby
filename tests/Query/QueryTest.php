@@ -3,11 +3,12 @@
 namespace Kirby\Query;
 
 use Closure;
+use Kirby\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Query\Query
+ * @coversDefaultClass \Kirby\Query\Query
  */
-class QueryTest extends \Kirby\TestCase
+class QueryTest extends TestCase
 {
 	/**
 	 * @covers ::__construct
@@ -17,6 +18,15 @@ class QueryTest extends \Kirby\TestCase
 	{
 		$query = Query::factory(' user.me ');
 		$this->assertSame('user.me', $query->query);
+	}
+
+	/**
+	 * @covers ::intercept
+	 */
+	public function testIntercept()
+	{
+		$query = new Query("kirby");
+		$this->assertSame('foo', $query->intercept('foo'));
 	}
 
 	/**

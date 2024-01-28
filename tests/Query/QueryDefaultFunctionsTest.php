@@ -9,7 +9,7 @@ use Kirby\Image\QrCode;
 use Kirby\Toolkit\I18n;
 
 /**
- * @coversDefaultClass Kirby\Query\Query
+ * @coversNothing
  */
 class QueryDefaultFunctionsTest extends \Kirby\TestCase
 {
