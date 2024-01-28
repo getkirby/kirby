@@ -454,9 +454,9 @@ class DirTest extends TestCase
 
 	/**
 	 * @covers ::inventory
-	 * @covers ::inventoryModels
+	 * @covers ::inventoryChild
 	 */
-	public function testInventoryModels()
+	public function testInventoryChildModels()
 	{
 		Page::$models = [
 			'a' => 'A',
@@ -478,9 +478,9 @@ class DirTest extends TestCase
 
 	/**
 	 * @covers ::inventory
-	 * @covers ::inventoryModels
+	 * @covers ::inventoryChild
 	 */
-	public function testInventoryMultilangModels()
+	public function testInventoryChildMultilangModels()
 	{
 		new App([
 			'roots' => [
