@@ -710,7 +710,7 @@ class Dom
 			return $options;
 		}
 
-		$options = array_merge([
+		return [
 			'allowedAttrPrefixes'   => [],
 			'allowedAttrs'          => true,
 			'allowedDataUris'       => true,
@@ -724,11 +724,9 @@ class Dom
 			'doctypeCallback'       => null,
 			'elementCallback'       => null,
 			'urlAttrs'              => ['href', 'src', 'xlink:href'],
-		], $options);
-
-		$options['_normalized'] = true;
-
-		return $options;
+			...$options,
+			'_normalized'           => true
+		];
 	}
 
 	/**
