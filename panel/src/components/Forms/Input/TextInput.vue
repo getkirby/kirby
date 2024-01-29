@@ -9,7 +9,7 @@
 			minlength,
 			name,
 			pattern,
-			placeholder: !disabled && hasPlaceholder ? placeholder : null,
+			placeholder,
 			required,
 			spellcheck,
 			type,
@@ -78,14 +78,6 @@ export default {
 			}
 		};
 	},
-	computed: {
-		/**
-		 * Whether the input has an explicit placeholder set (not the default)
-		 */
-		hasPlaceholder() {
-			return this.$options.propsData.placeholder !== undefined;
-		}
-	},
 	watch: {
 		value() {
 			this.onInvalid();
@@ -144,5 +136,8 @@ export default {
 }
 .k-text-input[data-font="monospace"] {
 	font-family: var(--font-mono);
+}
+.k-text-input:disabled::placeholder {
+	opacity: 0;
 }
 </style>

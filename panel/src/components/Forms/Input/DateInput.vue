@@ -6,7 +6,7 @@
 		:autofocus="autofocus"
 		:class="`k-text-input k-${type}-input`"
 		:disabled="disabled"
-		:placeholder="placeholder"
+		:placeholder="display"
 		:required="required"
 		:value="formatted"
 		autocomplete="off"
@@ -107,13 +107,6 @@ export default {
 		 */
 		pattern() {
 			return this.$library.dayjs.pattern(this.display);
-		},
-		placeholder() {
-			if (this.disabled) {
-				return null;
-			}
-
-			return this.display;
 		},
 		/**
 		 * Merges step donfiguration with defaults
@@ -463,3 +456,9 @@ export default {
 	}
 };
 </script>
+
+<style>
+.k-date-input:disabled::placeholder {
+	opacity: 0;
+}
+</style>
