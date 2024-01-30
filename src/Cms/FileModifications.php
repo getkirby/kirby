@@ -106,6 +106,14 @@ trait FileModifications
 	}
 
 	/**
+	 * Sharpens the image
+	 */
+	public function sharpen(int $amount = 50): FileVersion|File|Asset
+	{
+		return $this->thumb(['sharpen' => $amount]);
+	}
+
+	/**
 	 * Create a srcset definition for the given sizes
 	 * Sizes can be defined as a simple array. They can
 	 * also be set up in the config with the thumbs.srcsets option.
