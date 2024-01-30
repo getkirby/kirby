@@ -45,9 +45,10 @@
 
 <script>
 import { props as LayoutProps } from "./Layout.vue";
+import { id } from "@/mixins/props.js";
 
 export const props = {
-	mixins: [LayoutProps],
+	mixins: [LayoutProps, id],
 	props: {
 		empty: String,
 		max: Number,
