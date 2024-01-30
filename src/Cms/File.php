@@ -167,7 +167,7 @@ class File extends ModelWithContent
 		// always include the current template as option
 		$templates = [
 			$this->template() ?? 'default',
-			...$this->parent()->acceptedFileTemplates($inSection)
+			...$this->parent()->blueprint()->acceptedFileTemplates($inSection)
 		];
 
 		// make sure every template is only included once

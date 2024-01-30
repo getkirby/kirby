@@ -34,6 +34,8 @@ class Blueprint
 	protected $sections = [];
 	protected $tabs = [];
 
+	protected array|null $fileTemplates = null;
+
 	/**
 	 * Magic getter/caller for any blueprint prop
 	 */
@@ -94,6 +96,82 @@ class Blueprint
 	public function __debugInfo(): array
 	{
 		return $this->props ?? [];
+	}
+
+	/**
+	 * Gathers what file templates are allowed in
+	 * this model based on the blueprint
+	 */
+	public function acceptedFileTemplates(string $inSection = null): array
+	{
+		// get cached results for the current file model
+		// (except when collecting for a specific section)
+		if ($inSection === null && $this->fileTemplates !== null) {
+			return $this->fileTemplates; // @codeCoverageIgnore
+		}
+
+		$templates = [];
+
+		// collect all allowed file templates from blueprint…
+		foreach ($this->sections() as $section) {
+			// if collecting for a specific section, skip all others
+			if ($inSection !== null && $section->name() !== $inSection) {
+				continue;
+			}
+
+			$templates = match ($section->type()) {
+				'files'  => [...$templates, $section->template() ?? 'default'],
+				'fields' => [
+					...$templates,
+					...$this->acceptedFileTemplatesFromFields($section->fields())
+				],
+				default  => $templates
+			};
+		}
+
+		// no caching for when collecting for specific section
+		if ($inSection !== null) {
+			return $templates; // @codeCoverageIgnore
+		}
+
+		return $this->fileTemplates = $templates;
+	}
+
+	/**
+	 * Gathers the allowed file templates from model's fields
+	 */
+	protected function acceptedFileTemplatesFromFields(array $fields): array
+	{
+		$templates = [];
+
+		foreach ($fields as $field) {
+			// files or textare field
+			if (
+				$field['type'] === 'files' ||
+				$field['type'] === 'textarea'
+			) {
+				$uploads = $field['uploads'] ?? null;
+
+				// only if the `uploads` parent is this model
+				if ($target = $uploads['parent'] ?? null) {
+					if ($this->model->id() !== $target) {
+						continue;
+					}
+				}
+
+				$templates[] = $uploads['template'] ?? 'default';
+				continue;
+			}
+
+			// structure field
+			if ($field['type'] === 'structure') {
+				$fields    = $this->acceptedFileTemplatesFromFields($field['fields']);
+				$templates = array_merge($templates, $fields);
+				continue;
+			}
+		}
+
+		return $templates;
 	}
 
 	/**
