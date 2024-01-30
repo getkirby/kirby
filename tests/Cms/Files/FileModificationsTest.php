@@ -323,4 +323,35 @@ class FileModificationsTest extends TestCase
 		$file = $app->file('test.jpg');
 		$file->resize(100, 200, 10);
 	}
+
+	public function testSharpen()
+	{
+		$app = $this->app->clone([
+			'components' => [
+				'file::version' => function ($kirby, $file, $options = []) {
+					$this->assertSame(['sharpen' => 50], $options);
+					return $file;
+				}
+			]
+		]);
+
+		$file = $app->file('test.jpg');
+		$file->sharpen();
+	}
+
+	public function testSharpenWithCustomValue()
+	{
+		$app = $this->app->clone([
+			'components' => [
+				'file::version' => function ($kirby, $file, $options = []) {
+					$this->assertSame(['sharpen' => 20], $options);
+					return $file;
+				}
+			]
+		]);
+
+		$file = $app->file('test.jpg');
+		$file->sharpen(20);
+	}
+
 }
