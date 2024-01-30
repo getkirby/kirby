@@ -9,7 +9,6 @@ use Kirby\Filesystem\F;
 use Kirby\Filesystem\IsFile;
 use Kirby\Panel\File as Panel;
 use Kirby\Toolkit\Str;
-use WeakMap;
 
 /**
  * The `$file` object provides a set
