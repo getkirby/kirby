@@ -2,8 +2,10 @@
 
 namespace Kirby\Toolkit;
 
+use ArgumentCountError;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
+use TypeError;
 
 /**
  * @coversDefaultClass \Kirby\Toolkit\Component
@@ -73,6 +75,44 @@ class ComponentTest extends TestCase
 
 		$this->assertSame('test', $component->prop());
 		$this->assertSame('test', $component->prop);
+	}
+
+	/**
+	 * @covers ::applyProps
+	 */
+	public function testPropWithInvalidValue()
+	{
+		Component::$types = [
+			'test' => [
+				'props' => [
+					'prop' => fn (string $prop) => $prop
+				]
+			]
+		];
+
+		$this->expectException(TypeError::class);
+		$this->expectExceptionMessage('Invalid value for "prop"');
+
+		new Component('test', ['prop' => [1, 2, 3]]);
+	}
+
+	/**
+	 * @covers ::applyProps
+	 */
+	public function testPropWithMissingValue()
+	{
+		Component::$types = [
+			'test' => [
+				'props' => [
+					'prop' => fn (string $prop) => $prop
+				]
+			]
+		];
+
+		$this->expectException(ArgumentCountError::class);
+		$this->expectExceptionMessage('Please provide a value for "prop"');
+
+		new Component('test');
 	}
 
 	/**
