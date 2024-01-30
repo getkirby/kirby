@@ -535,6 +535,18 @@ export default {
 	.k-table thead th {
 		position: static;
 	}
+
+	/** Make sure that the option toggle does not create huge row heights **/
+	.k-table .k-options-dropdown-toggle {
+		aspect-ratio: auto !important;
+	}
+
+	/**	Reset any custom column widths **/
+	.k-table
+		:where(th, td):not(.k-table-index-column):not(.k-table-options-column) {
+		width: auto !important;
+	}
+
 	.k-table :where(th, td):not([data-mobile="true"]) {
 		display: none;
 	}
