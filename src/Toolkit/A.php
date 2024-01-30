@@ -588,7 +588,7 @@ class A
 	 */
 	public static function prepend(array $array, array $prepend): array
 	{
-		return $prepend + $array;
+		return static::merge($prepend, $array, A::MERGE_APPEND);
 	}
 
 	/**
