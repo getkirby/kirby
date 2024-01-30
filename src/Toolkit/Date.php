@@ -222,7 +222,7 @@ class Date extends DateTime
 	 */
 	public function microsecond(): int
 	{
-		return $this->format('u');
+		return (int)$this->format('u');
 	}
 
 	/**
@@ -230,7 +230,7 @@ class Date extends DateTime
 	 */
 	public function millisecond(): int
 	{
-		return $this->format('v');
+		return (int)$this->format('v');
 	}
 
 	/**

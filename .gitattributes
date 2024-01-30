@@ -6,9 +6,11 @@
 # tests
 .codecov.yml export-ignore
 .php-cs-fixer.dist.php export-ignore
+phpbench.json export-ignore
 phpmd.xml.dist export-ignore
 phpunit.xml.dist export-ignore
 psalm.xml.dist export-ignore
+bench/ export-ignore
 tests/ export-ignore
 
 # panel
