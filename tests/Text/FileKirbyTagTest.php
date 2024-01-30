@@ -6,9 +6,6 @@ use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 
-/**
- * @coversNothing
- */
 class FileKirbyTagTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Text.FileKirbyTag';

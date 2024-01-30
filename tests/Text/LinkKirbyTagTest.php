@@ -7,9 +7,6 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 
-/**
- * @coversNothing
- */
 class LinkKirbyTagTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Text.LinkKirbyTag';
