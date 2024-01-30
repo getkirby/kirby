@@ -353,5 +353,4 @@ class FileModificationsTest extends TestCase
 		$file = $app->file('test.jpg');
 		$file->sharpen(20);
 	}
-
 }
