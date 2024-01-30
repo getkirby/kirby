@@ -97,7 +97,9 @@ class BlueprintsModelWithContent extends ExtendedModelWithContent
 
 class ModelWithContentTest extends TestCase
 {
-	public function modelsProvider(): array
+	public const TMP = KIRBY_TMP_DIR . '/Cms.ModelWithContent';
+
+	public static function modelsProvider(): array
 	{
 		$app = new App([
 			'site' => [

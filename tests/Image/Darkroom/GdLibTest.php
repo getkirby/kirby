@@ -2,35 +2,46 @@
 
 namespace Kirby\Image\Darkroom;
 
+use claviska\SimpleImage;
 use Kirby\Filesystem\Dir;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
+use ReflectionMethod;
+
+class SimpleImageMock extends SimpleImage
+{
+	public int $sharpen = 50;
+
+	public function sharpen(int $amount = 50): static
+	{
+		$this->sharpen = $amount;
+		return $this;
+	}
+}
+
 
 /**
  * @coversDefaultClass \Kirby\Image\Darkroom\GdLib
  */
 class GdLibTest extends TestCase
 {
-	protected $fixtures;
-	protected $tmp;
+	public const FIXTURES = __DIR__ . '/../fixtures/image';
+	public const TMP      = KIRBY_TMP_DIR . '/Image.Darkroom.GdLib';
 
 	public function setUp(): void
 	{
-		$this->fixtures = dirname(__DIR__) . '/fixtures/image';
-		$this->tmp      = dirname(__DIR__) . '/tmp';
-
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	public function testProcess()
 	{
 		$gd = new GdLib();
 
-		copy($this->fixtures . '/cat.jpg', $file = $this->tmp . '/cat.jpg');
+		copy(static::FIXTURES . '/cat.jpg', $file = static::TMP . '/cat.jpg');
 
 		$this->assertSame([
 			'autoOrient' => true,
@@ -42,6 +53,7 @@ class GdLibTest extends TestCase
 			'quality' => 90,
 			'scaleHeight' => 1.0,
 			'scaleWidth' => 1.0,
+			'sharpen' => null,
 			'width' => 500,
 			'sourceWidth' => 500,
 			'sourceHeight' => 500,
@@ -54,7 +66,45 @@ class GdLibTest extends TestCase
 	public function testProcessWithFormat()
 	{
 		$gd = new GdLib(['format' => 'webp']);
-		copy($this->fixtures . '/cat.jpg', $file = $this->tmp . '/cat.jpg');
+		copy(static::FIXTURES . '/cat.jpg', $file = static::TMP . '/cat.jpg');
 		$this->assertSame('webp', $gd->process($file)['format']);
+	}
+
+	/**
+	 * @covers ::sharpen
+	 */
+	public function testSharpen()
+	{
+		$gd = new GdLib();
+
+		$method = new ReflectionMethod(get_class($gd), 'sharpen');
+		$method->setAccessible(true);
+
+		$simpleImage = new SimpleImageMock();
+
+		$result = $method->invoke($gd, $simpleImage, [
+			'sharpen' => 50
+		]);
+
+		$this->assertSame(50, $result->sharpen);
+	}
+
+	/**
+	 * @covers ::sharpen
+	 */
+	public function testSharpenWithoutValue()
+	{
+		$gd = new GdLib();
+
+		$method = new ReflectionMethod(get_class($gd), 'sharpen');
+		$method->setAccessible(true);
+
+		$simpleImage = new SimpleImageMock();
+
+		$result = $method->invoke($gd, $simpleImage, [
+			'sharpen' => null
+		]);
+
+		$this->assertSame(50, $result->sharpen);
 	}
 }

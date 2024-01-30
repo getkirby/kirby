@@ -48,6 +48,7 @@ import ModelView from "../ModelView.vue";
 
 export default {
 	extends: ModelView,
+	emits: ["submit"],
 	computed: {
 		protectedFields() {
 			return ["title"];

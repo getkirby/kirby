@@ -23,15 +23,16 @@ class MockChallenge extends Challenge
  */
 class ChallengeTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.Auth.Challenge';
+
 	protected $app;
-	protected $fixtures;
 	protected $session;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->fixtures = dirname(__DIR__) . '/fixtures/AuthChallengeTest'
+				'index' => static::TMP
 			],
 			'users' => [
 				[
@@ -46,7 +47,7 @@ class ChallengeTest extends TestCase
 	public function tearDown(): void
 	{
 		$this->session->destroy();
-		Dir::remove($this->fixtures);
+		Dir::remove(static::TMP);
 	}
 
 	/**

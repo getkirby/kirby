@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Uuid\Uuids;
 
@@ -12,6 +11,8 @@ use Kirby\Uuid\Uuids;
  */
 class FilesTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.Files';
+
 	public function testAddFile()
 	{
 		$parent = new Page(['slug' => 'test']);
@@ -153,12 +154,9 @@ class FilesTest extends TestCase
 	 */
 	public function testSize()
 	{
-		$tmp = __DIR__ . '/tmp';
-		Dir::make($tmp);
-
 		$app = new App([
 			'roots' => [
-				'index' => $tmp
+				'index' => static::TMP
 			],
 			'site' => [
 				'children' => [
@@ -167,8 +165,8 @@ class FilesTest extends TestCase
 			]
 		]);
 
-		F::write($a = $tmp . '/content/test/a.txt', 'foo');
-		F::write($b = $tmp . '/content/test/b.txt', 'bar');
+		F::write($a = static::TMP . '/content/test/a.txt', 'foo');
+		F::write($b = static::TMP . '/content/test/b.txt', 'bar');
 
 		$files = Files::factory([
 			['filename' => 'a.txt', 'root' => $a],
@@ -178,8 +176,6 @@ class FilesTest extends TestCase
 
 		$this->assertSame(6, $files->size());
 		$this->assertSame('6 B', $files->niceSize());
-
-		Dir::remove($tmp);
 	}
 
 	/**

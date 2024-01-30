@@ -3,8 +3,8 @@
 namespace Kirby\Parsley\Schema;
 
 use Kirby\Parsley\Element;
+use Kirby\TestCase;
 use Kirby\Toolkit\Dom;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Parsley\Schema\Blocks
@@ -206,7 +206,7 @@ class BlocksTest extends TestCase
 		return $this->assertSame($expected, $this->schema->heading($element));
 	}
 
-	public function headingLevels()
+	public static function headingLevelProvider(): array
 	{
 		return [
 			['h1'], ['h2'], ['h3'], ['h4'], ['h5'], ['h6']
@@ -214,7 +214,7 @@ class BlocksTest extends TestCase
 	}
 
 	/**
-	 * @dataProvider headingLevels
+	 * @dataProvider headingLevelProvider
 	 */
 	public function testHeadingLevel($level)
 	{

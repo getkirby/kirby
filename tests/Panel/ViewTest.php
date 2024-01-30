@@ -6,27 +6,28 @@ use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
+use Kirby\TestCase;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Panel\View
  */
 class ViewTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Panel.View';
+
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => static::TMP,
 			]
 		]);
 
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
@@ -34,7 +35,7 @@ class ViewTest extends TestCase
 		// clear session file first
 		$this->app->session()->destroy();
 
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 
 		// clear fake json requests
 		$_GET = [];

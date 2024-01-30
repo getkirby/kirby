@@ -7,13 +7,15 @@ use Kirby\Cms\Page;
 
 class PagesFieldTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Form.Fields.PagesField';
+
 	public function setUp(): void
 	{
 		parent::setUp();
 
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'site' => [
 				'children' => [
@@ -169,7 +171,7 @@ class PagesFieldTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'options' => ['api.allowImpersonation' => true],
 			'site' => [

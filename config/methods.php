@@ -257,7 +257,7 @@ return function (App $app) {
 			try {
 				return Structure::factory(
 					Data::decode($field->value, 'yaml'),
-					['parent' => $field->parent()]
+					['parent' => $field->parent(), 'field' => $field]
 				);
 			} catch (Exception) {
 				$message = 'Invalid structure data for "' . $field->key() . '" field';

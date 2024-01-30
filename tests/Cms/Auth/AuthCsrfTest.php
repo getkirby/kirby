@@ -9,15 +9,16 @@ use Kirby\Filesystem\Dir;
  */
 class AuthCsrfTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.AuthCsrf';
+
 	protected $app;
 	protected $auth;
-	protected $fixtures;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/AuthTest'
+				'index' => static::TMP
 			],
 		]);
 
@@ -27,7 +28,7 @@ class AuthCsrfTest extends TestCase
 	public function tearDown(): void
 	{
 		$this->app->session()->destroy();
-		Dir::remove($this->fixtures);
+		Dir::remove(static::TMP);
 		$_GET = [];
 	}
 

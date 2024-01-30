@@ -2,7 +2,7 @@
 
 namespace Kirby\Toolkit;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Toolkit\Silo

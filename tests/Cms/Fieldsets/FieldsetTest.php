@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Cms\Fieldset

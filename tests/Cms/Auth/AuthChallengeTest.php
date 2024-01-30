@@ -11,19 +11,17 @@ use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Throwable;
 
-require_once __DIR__ . '/../mocks.php';
-require_once __DIR__ . '/mocks.php';
-
 /**
  * @coversDefaultClass \Kirby\Cms\Auth
  */
 class AuthChallengeTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.AuthChallenge';
+
 	public $failedEmail;
 
 	protected $app;
 	protected $auth;
-	protected $tmp;
 
 	public function setUp(): void
 	{
@@ -48,7 +46,7 @@ class AuthChallengeTest extends TestCase
 				]
 			],
 			'roots' => [
-				'index' => $this->tmp = __DIR__ . '/tmp'
+				'index' => static::TMP
 			],
 			'users' => [
 				[
@@ -66,7 +64,7 @@ class AuthChallengeTest extends TestCase
 				]
 			]
 		]);
-		Dir::make($this->tmp . '/site/accounts');
+		Dir::make(static::TMP . '/site/accounts');
 
 		$this->auth = new Auth($this->app);
 	}
@@ -74,7 +72,7 @@ class AuthChallengeTest extends TestCase
 	public function tearDown(): void
 	{
 		$this->app->session()->destroy();
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 
 		unset(Auth::$challenges['errorneous']);
 		Email::$debug = false;

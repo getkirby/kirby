@@ -60,6 +60,7 @@ class Darkroom
 			'quality'     => 90,
 			'scaleHeight' => null,
 			'scaleWidth'  => null,
+			'sharpen'     => null,
 			'width'       => null,
 		];
 	}
@@ -91,6 +92,11 @@ class Darkroom
 		if (isset($options['bw']) === true) {
 			$options['grayscale'] = $options['bw'];
 			unset($options['bw']);
+		}
+
+		// normalize the sharpen option
+		if ($options['sharpen'] === true) {
+			$options['sharpen'] = 50;
 		}
 
 		$options['quality'] ??= $this->settings['quality'];

@@ -5,7 +5,7 @@ namespace Kirby\Filesystem;
 use Kirby\Cms\App;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Image\Image;
-use PHPUnit\Framework\TestCase as TestCase;
+use Kirby\TestCase as TestCase;
 
 class AFile
 {

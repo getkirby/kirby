@@ -11,12 +11,15 @@ use ReflectionClass;
  */
 class LicenseTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures/LicenseTest';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.License';
+
 	public function code(LicenseType $type = LicenseType::Basic): string
 	{
 		return $type->prefix() . '1234' . Str::random(28);
 	}
 
-	public function providerForLicenseUrls()
+	public static function providerForLicenseUrls(): array
 	{
 		return [
 			['example.com', 'example.com'],
@@ -44,6 +47,7 @@ class LicenseTest extends TestCase
 
 		$this->assertSame(strtotime($date), $license->activation());
 		$this->assertSame($date, $license->activation('Y-m-d'));
+		$this->assertSame('1/12/2023 00:00', $license->activation('d/M/yyyy HH:mm', 'intl'));
 	}
 
 	/**
@@ -91,6 +95,7 @@ class LicenseTest extends TestCase
 
 		$this->assertSame(strtotime($date), $license->date());
 		$this->assertSame($date, $license->date('Y-m-d'));
+		$this->assertSame('1/12/2023 00:00', $license->date('d/M/yyyy HH:mm', 'intl'));
 	}
 
 	/**
@@ -231,6 +236,9 @@ class LicenseTest extends TestCase
 	public function testIsOnCorrectDomain()
 	{
 		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
 			'options' => [
 				'url' => 'https://getkirby.com'
 			]
@@ -317,7 +325,7 @@ class LicenseTest extends TestCase
 		// existing license
 		$this->app = new App([
 			'roots' => [
-				'license' => __DIR__ . '/fixtures/LicenseTest/.license'
+				'license' => static::FIXTURES . '/.license'
 			]
 		]);
 
@@ -328,7 +336,7 @@ class LicenseTest extends TestCase
 		// non-existing license root
 		$this->app = new App([
 			'roots' => [
-				'license' => __DIR__ . '/fixtures/LicenseTest/foo'
+				'license' => static::FIXTURES . '/foo'
 			]
 		]);
 
@@ -393,6 +401,7 @@ class LicenseTest extends TestCase
 
 		$this->assertSame(strtotime('2026-12-01'), $license->renewal());
 		$this->assertSame('2026-12-01', $license->renewal('Y-m-d'));
+		$this->assertSame('1/12/2026 00:00', $license->renewal('d/M/yyyy HH:mm', 'intl'));
 
 		// not activated
 		$license = new License();

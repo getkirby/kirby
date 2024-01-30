@@ -105,19 +105,37 @@ class PageCreateDialog
 	 */
 	public function coreFields(): array
 	{
-		$title = $this->blueprint()->create()['title']['label'] ?? 'title';
+		$fields = [];
 
-		return [
-			'title' => Field::title([
-				'label'     => I18n::translate($title, $title),
+		$title = $this->blueprint()->create()['title'] ?? null;
+		$slug  = $this->blueprint()->create()['slug'] ?? null;
+
+		if ($title === false || $slug === false) {
+			throw new InvalidArgumentException('Page create dialog: title and slug must not be false');
+		}
+
+		// title field
+		if ($title === null || is_array($title) === true) {
+			$label = $title['label'] ?? 'title';
+			$fields['title'] = Field::title([
+				...$title ?? [],
+				'label'     => I18n::translate($label, $label),
 				'required'  => true,
 				'preselect' => true
-			]),
-			'slug' => Field::slug([
+			]);
+		}
+
+		// slug field
+		if ($slug === null) {
+			$fields['slug'] = Field::slug([
 				'required' => true,
 				'sync'     => 'title',
 				'path'     => $this->parent instanceof Page ? '/' . $this->parent->id() . '/' : '/'
-			]),
+			]);
+		}
+
+		return [
+			...$fields,
 			'parent'   => Field::hidden(),
 			'section'  => Field::hidden(),
 			'template' => Field::hidden(),
@@ -171,10 +189,10 @@ class PageCreateDialog
 	 */
 	public function fields(): array
 	{
-		return array_merge(
-			$this->coreFields(),
-			$this->customFields()
-		);
+		return [
+			...$this->coreFields(),
+			...$this->customFields()
+		];
 	}
 
 	/**
@@ -188,14 +206,29 @@ class PageCreateDialog
 
 		$this->template ??= $blueprints[0]['name'];
 
-		$status = $this->blueprint()->create()['status'] ?? 'draft';
-		$status = $this->blueprint()->status()[$status]['label'] ?? I18n::translate('page.status.' . $status);
+		$status   = $this->blueprint()->create()['status'] ?? 'draft';
+		$status   = $this->blueprint()->status()[$status]['label'] ?? null;
+		$status ??= I18n::translate('page.status.' . $status);
+
+		$fields  = $this->fields();
+		$visible = array_filter(
+			$fields,
+			fn ($field) => ($field['hidden'] ?? null) !== true
+		);
+
+		// immediately submit the dialog if there is no editable field
+		if (count($visible) === 0 && count($blueprints) < 2) {
+			$input    = $this->value();
+			$response = $this->submit($input);
+			$response['redirect'] ??= $this->parent->panel()->url(true);
+			Panel::go($response['redirect']);
+		}
 
 		return [
 			'component' => 'k-page-create-dialog',
 			'props' => [
 				'blueprints'   => $blueprints,
-				'fields'       => $this->fields(),
+				'fields'       => $fields,
 				'submitButton' => I18n::template('page.create', [
 					'status' => $status
 				]),
@@ -221,23 +254,55 @@ class PageCreateDialog
 	}
 
 	/**
+	 * Generates values for title and slug
+	 * from template strings from the blueprint
+	 */
+	public function resolveFieldTemplates(array $input): array
+	{
+		$title = $this->blueprint()->create()['title'] ?? null;
+		$slug  = $this->blueprint()->create()['slug'] ?? null;
+
+		// create temporary page object
+		// to resolve the template strings
+		$page = new Page([
+			'slug'     => 'tmp',
+			'template' => $this->template,
+			'parent'   => $this->model(),
+			'content'  => $input
+		]);
+
+		if (is_string($title)) {
+			$input['title'] = $page->toSafeString($title);
+		}
+
+		if (is_string($slug)) {
+			$input['slug'] = $page->toSafeString($slug);
+		}
+
+		return $input;
+	}
+
+	/**
 	 * Prepares and cleans up the input data
 	 */
 	public function sanitize(array $input): array
 	{
-		$input['slug']  ??= $this->slug  ?? '';
 		$input['title'] ??= $this->title ?? '';
+		$input['slug']  ??= $this->slug  ?? '';
 
-		$content = [
-			'title' => trim($input['title']),
-		];
+		$input   = $this->resolveFieldTemplates($input);
+		$content = ['title' => trim($input['title'])];
 
 		foreach ($this->customFields() as $name => $field) {
 			$content[$name] = $input[$name] ?? null;
 		}
 
+		// create temporary form to sanitize the input
+		// and add default values
+		$form = Form::for($this->model(), ['values' => $content]);
+
 		return [
-			'content'  => $content,
+			'content'  => $form->strings(true),
 			'slug'     => $input['slug'],
 			'template' => $this->template,
 		];
@@ -301,13 +366,22 @@ class PageCreateDialog
 
 	public function value(): array
 	{
-		return [
+		$value = [
 			'parent'   => $this->parentId,
 			'section'  => $this->sectionId,
-			'slug'     => $this->slug ?? '',
+			'slug'     => '',
 			'template' => $this->template,
-			'title'    => $this->title ?? '',
+			'title'    => '',
 			'view'     => $this->viewId,
 		];
+
+		// add default values for custom fields
+		foreach ($this->customFields() as $name => $field) {
+			if ($default = $field['default'] ?? null) {
+				$value[$name] = $default;
+			}
+		}
+
+		return $value;
 	}
 }

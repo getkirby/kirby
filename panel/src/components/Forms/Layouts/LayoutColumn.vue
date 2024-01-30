@@ -8,11 +8,13 @@
 	>
 		<k-blocks
 			ref="blocks"
-			:endpoints="endpoints"
-			:fieldset-groups="fieldsetGroups"
-			:fieldsets="fieldsets"
-			:value="blocks"
-			group="layout"
+			v-bind="{
+				endpoints,
+				fieldsets,
+				fieldsetGroups,
+				group: 'layout',
+				value: blocks
+			}"
 			@input="$emit('input', $event)"
 			@dblclick.native.stop
 		/>
@@ -20,22 +22,36 @@
 </template>
 
 <script>
+export const props = {
+	props: {
+		/**
+		 * API endpoints
+		 * @value { field, model, section }
+		 */
+		endpoints: Object,
+		fieldsetGroups: Object,
+		/**
+		 * The fieldset definition with all fields, tabs, etc.
+		 */
+		fieldsets: Object,
+		id: String,
+		isSelected: Boolean
+	}
+};
+
 /**
  * @internal
  */
 export default {
+	mixins: [props],
 	props: {
 		blocks: Array,
-		endpoints: Object,
-		fieldsetGroups: Object,
-		fieldsets: Object,
-		id: String,
-		isSelected: Boolean,
 		width: {
 			type: String,
 			default: "1/1"
 		}
-	}
+	},
+	emits: ["input"]
 };
 </script>
 

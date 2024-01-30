@@ -112,7 +112,7 @@ class SelectFieldTest extends TestCase
 		$this->assertSame($expected, $field->options());
 	}
 
-	public function valueInputProvider()
+	public static function valueInputProvider(): array
 	{
 		return [
 			['a', 'a'],

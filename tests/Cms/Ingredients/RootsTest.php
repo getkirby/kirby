@@ -4,7 +4,20 @@ namespace Kirby\Cms;
 
 class RootsTest extends TestCase
 {
-	protected function rootProvider(string $index): array
+	protected $indexRoot;
+
+	public function setUp(): void
+	{
+		$this->indexRoot = Core::$indexRoot;
+	}
+
+	public function tearDown(): void
+	{
+		// ensure that the index root used for testing is reset
+		Core::$indexRoot = $this->indexRoot;
+	}
+
+	protected static function rootProvider(string $index): array
 	{
 		$kirby = realpath(__DIR__ . '/../../..');
 
@@ -37,9 +50,9 @@ class RootsTest extends TestCase
 		];
 	}
 
-	public function defaultRootProvider(): array
+	public static function defaultRootProvider(): array
 	{
-		return $this->rootProvider(realpath(__DIR__ . '/../../../../'));
+		return static::rootProvider(realpath(__DIR__ . '/../../../../'));
 	}
 
 	/**
@@ -47,14 +60,17 @@ class RootsTest extends TestCase
 	 */
 	public function testDefaultRoot($root, $method)
 	{
+		// fake the default behavior for this test
+		Core::$indexRoot = null;
+
 		$roots = (new App())->roots();
 
 		$this->assertSame($root, $roots->$method());
 	}
 
-	public function customIndexRootProvider(): array
+	public static function customIndexRootProvider(): array
 	{
-		return $this->rootProvider('/var/www/getkirby.com');
+		return static::rootProvider('/var/www/getkirby.com');
 	}
 
 	/**
@@ -73,7 +89,7 @@ class RootsTest extends TestCase
 		$this->assertSame($root, $roots->$method());
 	}
 
-	public function customRootProvider(): array
+	public static function customRootProvider(): array
 	{
 		$base    = '/var/www/getkirby.com';
 		$public  = $base . '/public';

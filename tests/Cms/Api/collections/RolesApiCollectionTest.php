@@ -7,11 +7,13 @@ use Kirby\Filesystem\Dir;
 
 class RolesApiCollectionTest extends ApiCollectionTestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.RolesApiCollection';
+
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'roles' => [
 				[
@@ -24,7 +26,7 @@ class RolesApiCollectionTest extends ApiCollectionTestCase
 		]);
 
 		$this->api = $this->app->api();
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function testCollection()

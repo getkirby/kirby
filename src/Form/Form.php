@@ -296,7 +296,7 @@ class Form
 		$kirby = App::instance(null, true);
 
 		// only modify the fields if we have a valid Kirby multilang instance
-		if ($kirby?->multilang() === false) {
+		if ($kirby?->multilang() !== true) {
 			return $fields;
 		}
 

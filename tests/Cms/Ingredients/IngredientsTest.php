@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class IngredientsTest extends TestCase
 {
@@ -12,9 +12,7 @@ class IngredientsTest extends TestCase
 	{
 		$this->ingredients = Ingredients::bake([
 			'a' => 'A',
-			'b' => function () {
-				return 'B';
-			}
+			'b' => fn () => 'B'
 		]);
 	}
 

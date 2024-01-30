@@ -2,13 +2,15 @@
 
 namespace Kirby\Image;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Image\Dimensions
  */
 class DimensionsTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	/**
 	 * @covers ::__construct
 	 * @covers ::width
@@ -164,19 +166,39 @@ class DimensionsTest extends TestCase
 	}
 
 	/**
+	 * @covers ::forImage
+	 */
+	public function testForImage()
+	{
+		$dimensions = Dimensions::forImage(__DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.jpg');
+		$this->assertSame(600, $dimensions->width());
+		$this->assertSame(400, $dimensions->height());
+
+		$dimensions = Dimensions::forImage(__DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.webp');
+		$this->assertSame(600, $dimensions->width());
+		$this->assertSame(400, $dimensions->height());
+
+		if (version_compare(phpversion(), '8.2.0') >= 0) {
+			$dimensions = Dimensions::forImage(__DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.avif');
+			$this->assertSame(600, $dimensions->width());
+			$this->assertSame(400, $dimensions->height());
+		}
+	}
+
+	/**
 	 * @covers ::forSvg
 	 */
 	public function testForSvg()
 	{
-		$dimensions = Dimensions::forSvg(__DIR__ . '/fixtures/dimensions/circle.svg');
+		$dimensions = Dimensions::forSvg(static::FIXTURES . '/dimensions/circle.svg');
 		$this->assertSame(50, $dimensions->width());
 		$this->assertSame(50, $dimensions->height());
 
-		$dimensions = Dimensions::forSvg(__DIR__ . '/fixtures/dimensions/circle-abs.svg');
+		$dimensions = Dimensions::forSvg(static::FIXTURES . '/dimensions/circle-abs.svg');
 		$this->assertSame(35, $dimensions->width());
 		$this->assertSame(35, $dimensions->height());
 
-		$dimensions = Dimensions::forSvg(__DIR__ . '/fixtures/dimensions/circle-offset.svg');
+		$dimensions = Dimensions::forSvg(static::FIXTURES . '/dimensions/circle-offset.svg');
 		$this->assertSame(40, $dimensions->width());
 		$this->assertSame(25, $dimensions->height());
 	}

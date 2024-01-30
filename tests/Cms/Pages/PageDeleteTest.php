@@ -3,30 +3,31 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
+use Kirby\TestCase;
 use Kirby\Toolkit\Str;
-use PHPUnit\Framework\TestCase;
 
 class PageDeleteTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.PageDelete';
+
 	protected $app;
-	protected $fixtures;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/PageDeleteTest'
+				'index' => static::TMP
 			],
 		]);
 
 		$this->app->impersonate('kirby');
 
-		Dir::make($this->fixtures);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->fixtures);
+		Dir::remove(static::TMP);
 	}
 
 	public function site()

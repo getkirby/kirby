@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Asset;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class FileModificationsTest extends TestCase
 {
@@ -122,9 +122,7 @@ class FileModificationsTest extends TestCase
 	{
 		$app = $this->app->clone([
 			'components' => [
-				'file::version' => function ($kirby, $file, $options = []) {
-					return 'image';
-				}
+				'file::version' => fn ($kirby, $file, $options = []) => 'image'
 			]
 		]);
 
@@ -179,7 +177,7 @@ class FileModificationsTest extends TestCase
 	public function testThumbWithNoOptions()
 	{
 		$file = $this->app->file('test.jpg');
-		$this->assertSame($file, $file->thumb([]));
+		$this->assertIsFile($file, $file->thumb([]));
 	}
 
 	public function testBlur()
@@ -212,7 +210,7 @@ class FileModificationsTest extends TestCase
 		$file->bw();
 	}
 
-	public function cropOptions()
+	public static function cropOptionsProvider(): array
 	{
 		$field = new Field(null, 'crop', 'top left');
 
@@ -275,7 +273,7 @@ class FileModificationsTest extends TestCase
 	}
 
 	/**
-	 * @dataProvider cropOptions
+	 * @dataProvider cropOptionsProvider
 	 */
 	public function testCrop($args, $expected)
 	{

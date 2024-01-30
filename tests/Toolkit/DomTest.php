@@ -7,6 +7,7 @@ use DOMAttr;
 use DOMDocument;
 use DOMDocumentType;
 use DOMElement;
+use Kirby\AssertionFailedError;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 
@@ -15,7 +16,60 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class DomTest extends TestCase
 {
-	public function parseSaveProvider(): array
+	protected static $testClosures = [];
+
+	public static function setUpBeforeClass(): void
+	{
+		// define static test closures for use in data providers because returning a closure
+		// from a data provider breaks serialization when using PHPUnit process isolation
+		static::$testClosures = [
+			'listContainsName_customCompare1' => function ($expected, $real): bool {
+				return strtolower($expected) === strtolower($real);
+			},
+			'listContainsName_customCompare2' => function ($expected, $real): bool {
+				return strtolower($expected) === strtolower($real);
+			},
+			'serialize_attrCallback1' => function (DOMAttr $attr, array $options): void {
+				// no return value
+			},
+			'serialize_attrCallback2' => function (DOMAttr $attr, array $options): array {
+				if (is_a($options['attrCallback'], Closure::class) !== true) {
+					throw new AssertionFailedError('Options provided to callback are not complete or invalid');
+				}
+
+				if ($attr->nodeName === 'b') {
+					$attr->ownerElement->removeAttributeNode($attr);
+					return [new InvalidArgumentException('The "b" attribute is not allowed')];
+				}
+
+				return [];
+			},
+			'sanitize_doctypeCallback' => function (DOMDocumentType $doctype, array $options): void {
+				if (is_a($options['doctypeCallback'], Closure::class) !== true) {
+					throw new AssertionFailedError('Options provided to callback are not complete or invalid');
+				}
+
+				throw new InvalidArgumentException('The "' . $doctype->name . '" doctype is not allowed');
+			},
+			'sanitize_elementCallback1' => function (DOMElement $element, array $options): void {
+				// no return value
+			},
+			'sanitize_elementCallback2' => function (DOMElement $element, array $options): array {
+				if (is_a($options['elementCallback'], Closure::class) !== true) {
+					throw new AssertionFailedError('Options provided to callback are not complete or invalid');
+				}
+
+				if ($element->nodeName === 'b') {
+					Dom::remove($element);
+					return [new InvalidArgumentException('The "b" element is not allowed')];
+				}
+
+				return [];
+			},
+		];
+	}
+
+	public static function parseSaveProvider(): array
 	{
 		return [
 			// full document with doctype
@@ -171,7 +225,7 @@ class DomTest extends TestCase
 		$this->assertSame($expected ?? $code, $dom->toString());
 	}
 
-	public function parseSaveNormalizeProvider(): array
+	public static function parseSaveNormalizeProvider(): array
 	{
 		return [
 			// full document with doctype
@@ -353,7 +407,7 @@ class DomTest extends TestCase
 		$this->assertSame("<html><body><p>This is a test</p></body></html>\n", $dom->document()->saveHtml());
 	}
 
-	public function extractUrlsProvider(): array
+	public static function extractUrlsProvider(): array
 	{
 		return [
 			// empty input
@@ -439,7 +493,7 @@ class DomTest extends TestCase
 		$this->assertSame($expected, Dom::extractUrls($url));
 	}
 
-	public function isAllowedAttrProvider(): array
+	public static function isAllowedAttrProvider(): array
 	{
 		return [
 			// only the global allowlist
@@ -594,7 +648,7 @@ class DomTest extends TestCase
 		$this->assertSame($expected, Dom::isAllowedAttr($attr, $options));
 	}
 
-	public function isAllowedGlobalAttrProvider(): array
+	public static function isAllowedGlobalAttrProvider(): array
 	{
 		return [
 			// all attrs are allowed
@@ -749,7 +803,7 @@ class DomTest extends TestCase
 		$this->assertSame($expected, Dom::isAllowedGlobalAttr($attr, $options));
 	}
 
-	public function isAllowedUrlProvider(): array
+	public static function isAllowedUrlProvider(): array
 	{
 		return [
 			// allowed empty url
@@ -893,7 +947,7 @@ class DomTest extends TestCase
 		$this->assertSame($expected, Dom::isAllowedUrl($url, $options));
 	}
 
-	public function isAllowedUrlCmsProvider()
+	public static function isAllowedUrlCmsProvider(): array
 	{
 		return [
 			// allowed URL with site at the domain root
@@ -959,7 +1013,7 @@ class DomTest extends TestCase
 		$this->assertSame('Test <strong>Test test</strong>!', $dom->innerMarkup($node));
 	}
 
-	public function listContainsNameProvider(): array
+	public static function listContainsNameProvider(): array
 	{
 		return [
 			// basic tests
@@ -1181,9 +1235,7 @@ class DomTest extends TestCase
 				['html', 'bodY'],
 				['BoDy', ''],
 				[],
-				function ($expected, $real): bool {
-					return strtolower($expected) === strtolower($real);
-				},
+				'listContainsName_customCompare1',
 
 				'bodY'
 			],
@@ -1191,9 +1243,7 @@ class DomTest extends TestCase
 				['html', 'bodY'],
 				['BoDy', ''],
 				true,
-				function ($expected, $real): bool {
-					return strtolower($expected) === strtolower($real);
-				},
+				'listContainsName_customCompare2',
 
 				'bodY'
 			],
@@ -1204,8 +1254,12 @@ class DomTest extends TestCase
 	 * @dataProvider listContainsNameProvider
 	 * @covers ::listContainsName
 	 */
-	public function testListContainsName(array $list, array $node, $allowedNamespaces, Closure|null $compare, $expected)
+	public function testListContainsName(array $list, array $node, $allowedNamespaces, string|null $compare, $expected)
 	{
+		if ($compare !== null) {
+			$compare = static::$testClosures[$compare];
+		}
+
 		[$nodeName, $nodeNS] = $node;
 		if ($nodeNS !== null) {
 			$element = new DOMElement($nodeName, null, $nodeNS);
@@ -1245,7 +1299,7 @@ class DomTest extends TestCase
 		$this->assertSame('<span>Test test</span>', $dom->document()->saveHtml($node));
 	}
 
-	public function sanitizeProvider(): array
+	public static function sanitizeProvider(): array
 	{
 		return [
 			// defaults
@@ -1653,9 +1707,7 @@ class DomTest extends TestCase
 			[
 				'<xml a="A" b="B"/>',
 				[
-					'attrCallback' => function (DOMAttr $attr, array $options): void {
-						// no return value
-					}
+					'attrCallback' => 'serialize_attrCallback1' // static test closure defined at the top of the file
 				],
 
 				'<xml a="A" b="B"/>',
@@ -1664,16 +1716,7 @@ class DomTest extends TestCase
 			[
 				'<xml a="A" b="B"/>',
 				[
-					'attrCallback' => function (DOMAttr $attr, array $options): array {
-						$this->assertInstanceOf(Closure::class, $options['attrCallback']);
-
-						if ($attr->nodeName === 'b') {
-							$attr->ownerElement->removeAttributeNode($attr);
-							return [new InvalidArgumentException('The "b" attribute is not allowed')];
-						}
-
-						return [];
-					}
+					'attrCallback' => 'serialize_attrCallback2' // static test closure defined at the top of the file
 				],
 
 				'<xml a="A"/>',
@@ -1732,11 +1775,7 @@ class DomTest extends TestCase
 			[
 				'<!DOCTYPE svg><xml/>',
 				[
-					'doctypeCallback' => function (DOMDocumentType $doctype, array $options): void {
-						$this->assertInstanceOf(Closure::class, $options['doctypeCallback']);
-
-						throw new InvalidArgumentException('The "' . $doctype->name . '" doctype is not allowed');
-					}
+					'doctypeCallback' => 'sanitize_doctypeCallback' // static test closure defined at the top of the file
 				],
 
 				'<xml/>',
@@ -1747,9 +1786,7 @@ class DomTest extends TestCase
 			[
 				'<xml><a class="a">A</a><b class="b">B</b></xml>',
 				[
-					'elementCallback' => function (DOMElement $element, array $options): void {
-						// no return value
-					}
+					'elementCallback' => 'sanitize_elementCallback1' // static test closure defined at the top of the file
 				],
 
 				'<xml><a class="a">A</a><b class="b">B</b></xml>',
@@ -1758,16 +1795,7 @@ class DomTest extends TestCase
 			[
 				'<xml><a class="a">A</a><b class="b">B</b></xml>',
 				[
-					'elementCallback' => function (DOMElement $element, array $options): array {
-						$this->assertInstanceOf(Closure::class, $options['elementCallback']);
-
-						if ($element->nodeName === 'b') {
-							Dom::remove($element);
-							return [new InvalidArgumentException('The "b" element is not allowed')];
-						}
-
-						return [];
-					}
+					'elementCallback' => 'sanitize_elementCallback2' // static test closure defined at the top of the file
 				],
 
 				'<xml><a class="a">A</a></xml>',
@@ -1807,6 +1835,13 @@ class DomTest extends TestCase
 	 */
 	public function testSanitize(string $code, array $options, string $expectedCode, array $expectedErrors)
 	{
+		// hydrate the closures in the options from the static closures
+		foreach (['attrCallback', 'doctypeCallback', 'elementCallback'] as $name) {
+			if (isset($options[$name]) === true) {
+				$options[$name] = static::$testClosures[$options[$name]];
+			}
+		}
+
 		$dom    = new Dom($code, 'XML');
 		$errors = $dom->sanitize($options);
 

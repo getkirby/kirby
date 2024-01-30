@@ -3,35 +3,33 @@
 namespace Kirby\Image\Darkroom;
 
 use Kirby\Filesystem\Dir;
+use Kirby\TestCase;
 use Kirby\Toolkit\F;
-use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 
 /**
  * @coversDefaultClass \Kirby\Image\Darkroom\ImageMagick
  */
 class ImageMagickTest extends TestCase
 {
-	protected $fixtures;
-	protected $tmp;
+	public const FIXTURES = __DIR__ . '/../fixtures/image';
+	public const TMP      = KIRBY_TMP_DIR . '/Image.Darkroom.ImageMagick';
 
 	public function setUp(): void
 	{
-		$this->fixtures = dirname(__DIR__) . '/fixtures/image';
-		$this->tmp      = dirname(__DIR__) . '/tmp';
-
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	public function testProcess()
 	{
 		$im = new ImageMagick();
 
-		copy($this->fixtures . '/cat.jpg', $file = $this->tmp . '/cat.jpg');
+		copy(static::FIXTURES . '/cat.jpg', $file = static::TMP . '/cat.jpg');
 
 		$this->assertSame([
 			'autoOrient' => true,
@@ -43,6 +41,7 @@ class ImageMagickTest extends TestCase
 			'quality' => 90,
 			'scaleHeight' => 1.0,
 			'scaleWidth' => 1.0,
+			'sharpen' => null,
 			'width' => 500,
 			'bin' => 'convert',
 			'interlace' => false,
@@ -52,14 +51,48 @@ class ImageMagickTest extends TestCase
 	}
 
 	/**
+	 * @covers ::sharpen
+	 */
+	public function testSharpen()
+	{
+		$im = new ImageMagick();
+
+		$method = new ReflectionMethod(get_class($im), 'sharpen');
+		$method->setAccessible(true);
+
+		$result = $method->invoke($im, '', [
+			'sharpen' => 50
+		]);
+
+		$this->assertSame("-sharpen '0x0.5'", $result);
+	}
+
+	/**
+	 * @covers ::sharpen
+	 */
+	public function testSharpenWithoutValue()
+	{
+		$im = new ImageMagick();
+
+		$method = new ReflectionMethod(get_class($im), 'sharpen');
+		$method->setAccessible(true);
+
+		$result = $method->invoke($im, '', [
+			'sharpen' => null
+		]);
+
+		$this->assertNull($result);
+	}
+
+	/**
 	 * @covers ::save
 	 */
 	public function testSaveWithFormat()
 	{
 		$im = new ImageMagick(['format' => 'webp']);
 
-		copy($this->fixtures . '/cat.jpg', $file = $this->tmp . '/cat.jpg');
-		$this->assertFalse(F::exists($webp = $this->tmp . '/cat.webp'));
+		copy(static::FIXTURES . '/cat.jpg', $file = static::TMP . '/cat.jpg');
+		$this->assertFalse(F::exists($webp = static::TMP . '/cat.webp'));
 		$im->process($file);
 		$this->assertTrue(F::exists($webp));
 	}
@@ -75,7 +108,7 @@ class ImageMagickTest extends TestCase
 			'width' => 250, // do some arbitrary transformation
 		]);
 
-		copy($this->fixtures . '/' . $basename, $file = $this->tmp . '/' . $basename);
+		copy(static::FIXTURES . '/' . $basename, $file = static::TMP . '/' . $basename);
 
 		// test if profile has been kept
 		// errors have to be redirected to /dev/null, otherwise they would be printed to stdout by ImageMagick
@@ -99,7 +132,7 @@ class ImageMagickTest extends TestCase
 		$this->assertStringNotContainsString('GPS', $meta);
 	}
 
-	public function keepColorProfileStripMetaProvider(): array
+	public static function keepColorProfileStripMetaProvider(): array
 	{
 		return [
 			['cat.jpg', false],

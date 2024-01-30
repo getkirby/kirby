@@ -23,7 +23,7 @@ class TextFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function converterDataProvider()
+	public static function converterDataProvider(): array
 	{
 		return [
 			['slug', 'Super nice', 'super-nice'],

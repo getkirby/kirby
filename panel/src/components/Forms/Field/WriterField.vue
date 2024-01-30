@@ -1,7 +1,7 @@
 <template>
 	<k-field
 		v-bind="$props"
-		:input="_uid"
+		:input="id"
 		:counter="counterOptions"
 		class="k-writer-field"
 	>
@@ -11,7 +11,6 @@
 			:after="after"
 			:before="before"
 			:icon="icon"
-			theme="field"
 			type="writer"
 			@input="$emit('input', $event)"
 		/>

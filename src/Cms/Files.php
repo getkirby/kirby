@@ -90,11 +90,9 @@ class Files extends Collection
 	public static function factory(array $files, Page|Site|User $parent): static
 	{
 		$collection = new static([], $parent);
-		$kirby      = $parent->kirby();
 
 		foreach ($files as $props) {
 			$props['collection'] = $collection;
-			$props['kirby']      = $kirby;
 			$props['parent']     = $parent;
 
 			$file = File::factory($props);

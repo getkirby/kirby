@@ -24,16 +24,7 @@
 
 		<k-blocks
 			ref="blocks"
-			:autofocus="autofocus"
-			:compact="false"
-			:disabled="disabled"
-			:empty="empty"
-			:endpoints="endpoints"
-			:fieldsets="fieldsets"
-			:fieldset-groups="fieldsetGroups"
-			:group="group"
-			:max="max"
-			:value="value"
+			v-bind="$props"
 			@close="opened = $event"
 			@open="opened = $event"
 			v-on="$listeners"
@@ -52,26 +43,12 @@
 </template>
 
 <script>
-import { props as Field } from "../Field.vue";
+import { props as FieldProps } from "../Field.vue";
+import { props as BlocksProps } from "@/components/Forms/Blocks/Blocks.vue";
 
 export default {
-	mixins: [Field],
+	mixins: [FieldProps, BlocksProps],
 	inheritAttrs: false,
-	props: {
-		autofocus: Boolean,
-		empty: String,
-		fieldsets: Object,
-		fieldsetGroups: Object,
-		group: String,
-		max: {
-			type: Number,
-			default: null
-		},
-		value: {
-			type: Array,
-			default: () => []
-		}
-	},
 	data() {
 		return {
 			opened: []
@@ -85,11 +62,7 @@ export default {
 			return this.value.length === 0;
 		},
 		isFull() {
-			if (this.max === null) {
-				return false;
-			}
-
-			return this.value.length >= this.max;
+			return this.max && this.value.length >= this.max;
 		},
 		options() {
 			return [

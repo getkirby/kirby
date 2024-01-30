@@ -28,8 +28,6 @@
 </template>
 
 <script>
-import { clone } from "@/helpers/object.js";
-
 /**
  * @internal
  * @since 4.0.0
@@ -42,7 +40,7 @@ export default {
 	},
 	data() {
 		return {
-			issues: clone(this.security)
+			issues: structuredClone(this.security)
 		};
 	},
 	async created() {

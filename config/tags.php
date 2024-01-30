@@ -2,6 +2,7 @@
 
 use Kirby\Cms\Html;
 use Kirby\Cms\Url;
+use Kirby\Exception\NotFoundException;
 use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
@@ -61,7 +62,7 @@ return [
 		],
 		'html' => function (KirbyTag $tag): string {
 			if (!$file = $tag->file($tag->value)) {
-				return $tag->text;
+				return $tag->text ?? $tag->value;
 			}
 
 			// use filename if the text is empty and make sure to
@@ -197,7 +198,20 @@ return [
 				Uuid::is($tag->value, 'page') === true ||
 				Uuid::is($tag->value, 'file') === true
 			) {
-				$tag->value = Uuid::for($tag->value)->model()->url();
+				$tag->value = Uuid::for($tag->value)->model()?->url();
+			}
+
+			// if url is empty, throw exception or link to the error page
+			if ($tag->value === null) {
+				if ($tag->kirby()->option('debug', false) === true) {
+					if (empty($tag->text) === false) {
+						throw new NotFoundException('The linked page cannot be found for the link text "' . $tag->text . '"');
+					} else {
+						throw new NotFoundException('The linked page cannot be found');
+					}
+				} else {
+					$tag->value = Url::to($tag->kirby()->site()->errorPageId());
+				}
 			}
 
 			return Html::a($tag->value, $tag->text, [

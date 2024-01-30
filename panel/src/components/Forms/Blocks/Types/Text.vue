@@ -3,6 +3,7 @@
 		:is="component"
 		ref="input"
 		v-bind="textField"
+		:disabled="disabled"
 		:keys="keys"
 		:value="content.text"
 		class="k-block-type-text-input"
@@ -11,11 +12,14 @@
 </template>
 
 <script>
+import Block from "./Default.vue";
+
 /**
  * @displayName BlockTypeText
- * @internal
  */
 export default {
+	extends: Block,
+	emits: ["open", "split", "update"],
 	computed: {
 		component() {
 			const component = "k-" + this.textField.type + "-input";

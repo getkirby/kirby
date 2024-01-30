@@ -14,15 +14,16 @@ use Throwable;
  */
 class AuthTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.Auth';
+
 	protected $app;
 	protected $auth;
-	protected $tmp;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp = __DIR__ . '/tmp'
+				'index' => static::TMP
 			],
 			'options' => [
 				'api' => [
@@ -51,9 +52,9 @@ class AuthTest extends TestCase
 				],
 			]
 		]);
-		Dir::make($this->tmp . '/site/accounts/homer');
-		F::write($this->tmp . '/site/accounts/homer/.htpasswd', $hash);
-		touch($this->tmp . '/site/accounts/homer/.htpasswd', 1337000000);
+		Dir::make(static::TMP . '/site/accounts/homer');
+		F::write(static::TMP . '/site/accounts/homer/.htpasswd', $hash);
+		touch(static::TMP . '/site/accounts/homer/.htpasswd', 1337000000);
 
 		$this->auth = $this->app->auth();
 	}
@@ -61,7 +62,7 @@ class AuthTest extends TestCase
 	public function tearDown(): void
 	{
 		$this->app->session()->destroy();
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 		App::destroy();
 	}
 
@@ -81,9 +82,9 @@ class AuthTest extends TestCase
 			'email'     => 'kirby@getkirby.com',
 			'status'    => 'impersonated'
 		], $this->auth->status()->toArray());
-		$this->assertSame($user, $this->auth->user());
-		$this->assertSame($user, $this->auth->currentUserFromImpersonation());
-		$this->assertSame('kirby', $user->id());
+		$this->assertIsUser($user, $this->auth->user());
+		$this->assertIsUser($user, $this->auth->currentUserFromImpersonation());
+		$this->assertIsUser('kirby', $user);
 		$this->assertSame('kirby@getkirby.com', $user->email());
 		$this->assertSame('admin', $user->role()->name());
 		$this->assertNull($this->auth->user(null, false));
@@ -95,8 +96,8 @@ class AuthTest extends TestCase
 			'status'    => 'impersonated'
 		], $this->auth->status()->toArray());
 		$this->assertSame('homer@simpsons.com', $user->email());
-		$this->assertSame($user, $this->auth->user());
-		$this->assertSame($user, $this->auth->currentUserFromImpersonation());
+		$this->assertIsUser($user, $this->auth->user());
+		$this->assertIsUser($user, $this->auth->currentUserFromImpersonation());
 		$this->assertNull($this->auth->user(null, false));
 
 		$this->assertNull($this->auth->impersonate(null));
@@ -165,7 +166,7 @@ class AuthTest extends TestCase
 		$user = $this->auth->login('marge@simpsons.com', 'springfield123');
 		$this->assertSame($this->app->user('marge@simpsons.com'), $user);
 
-		$this->assertSame($user, $this->app->user());
+		$this->assertIsUser($user, $this->app->user());
 		$this->assertSame(1800, $this->app->session()->timeout()); // not a long session
 
 		$this->assertSame('marge@simpsons.com', $this->auth->status()->email());
@@ -184,7 +185,7 @@ class AuthTest extends TestCase
 		$user = $this->auth->login('marge@simpsons.com', 'springfield123', true);
 		$this->assertSame($this->app->user('marge@simpsons.com'), $user);
 
-		$this->assertSame($user, $this->app->user());
+		$this->assertIsUser($user, $this->app->user());
 		$this->assertFalse($this->app->session()->timeout()); // a long session
 
 		$this->assertSame('marge@simpsons.com', $this->auth->status()->email());

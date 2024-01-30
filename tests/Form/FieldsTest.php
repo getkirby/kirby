@@ -3,7 +3,7 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\Page;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class FieldsTest extends TestCase
 {

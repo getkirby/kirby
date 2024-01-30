@@ -5,23 +5,23 @@ namespace Kirby\Cms\System;
 use Kirby\Cms\Plugin;
 use Kirby\Data\Json;
 use Kirby\Filesystem\Dir;
-use PHPUnit\Framework\TestCase;
-
-require_once __DIR__ . '/mocks.php';
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Cms\System\UpdateStatus
  */
 class UpdateStatusTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures/UpdateStatusTest';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.System.UpdateStatus';
+
 	protected static $host;
-	protected $data = [];
-	protected $tmp = __DIR__ . '/tmp';
+	protected static $data = [];
 
 	public static function setUpBeforeClass(): void
 	{
 		static::$host = UpdateStatus::$host;
-		UpdateStatus::$host = 'file://' . __DIR__ . '/fixtures/UpdateStatusTest/getkirby.com';
+		UpdateStatus::$host = 'file://' . static::FIXTURES . '/getkirby.com';
 	}
 
 	public static function tearDownAfterClass(): void
@@ -31,7 +31,7 @@ class UpdateStatusTest extends TestCase
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	/**
@@ -298,12 +298,12 @@ class UpdateStatusTest extends TestCase
 		$this->assertNull($updateStatus->targetVersion());
 		$this->assertSame([
 			'Could not load update data for plugin getkirby/test: Couldn\'t open file ' .
-			__DIR__ . '/fixtures/UpdateStatusTest/getkirby.com/plugins/getkirby/test.json'
+			static::FIXTURES . '/getkirby.com/plugins/getkirby/test.json'
 		], $updateStatus->exceptionMessages());
 
 		$this->assertSame(
 			'Could not load update data for plugin getkirby/test: Couldn\'t open file ' .
-			__DIR__ . '/fixtures/UpdateStatusTest/getkirby.com/plugins/getkirby/test.json',
+			static::FIXTURES . '/getkirby.com/plugins/getkirby/test.json',
 			$app->cache('updates')->get('plugins/getkirby/test')
 		);
 
@@ -312,7 +312,7 @@ class UpdateStatusTest extends TestCase
 		$this->assertNull($updateStatus->targetVersion());
 		$this->assertSame([
 			'Could not load update data for plugin getkirby/test: Couldn\'t open file ' .
-			__DIR__ . '/fixtures/UpdateStatusTest/getkirby.com/plugins/getkirby/test.json'
+			static::FIXTURES . '/getkirby.com/plugins/getkirby/test.json'
 		], $updateStatus->exceptionMessages());
 	}
 
@@ -366,7 +366,7 @@ class UpdateStatusTest extends TestCase
 		}
 	}
 
-	public function logicProvider(): array
+	public static function logicProvider(): array
 	{
 		return [
 			// update check (Kirby)
@@ -374,7 +374,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'88888.8.8',
 				false,
-				$this->data('basic'),
+				static::data('basic'),
 				[
 					'currentVersion' => '88888.8.8',
 					'icon' => 'check',
@@ -393,7 +393,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'88888.8.9-rc.1',
 				false,
-				$this->data('basic'),
+				static::data('basic'),
 				[
 					'currentVersion' => '88888.8.9-rc.1',
 					'icon' => 'question',
@@ -412,7 +412,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.1.2',
 				false,
-				$this->data('basic'),
+				static::data('basic'),
 				[
 					'currentVersion' => '77777.1.2',
 					'icon' => 'alert',
@@ -445,7 +445,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'55555.1.2',
 				false,
-				$this->data('basic'),
+				static::data('basic'),
 				[
 					'currentVersion' => '55555.1.2',
 					'icon' => 'alert',
@@ -478,7 +478,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.7.6',
 				true,
-				$this->data('basic'),
+				static::data('basic'),
 				[
 					'currentVersion' => '77777.7.6',
 					'icon' => 'check',
@@ -497,7 +497,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'66666.6.5',
 				true,
-				$this->data('basic'),
+				static::data('basic'),
 				[
 					'currentVersion' => '66666.6.5',
 					'icon' => 'check',
@@ -516,7 +516,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.7.7',
 				true,
-				$this->data('basic'),
+				static::data('basic'),
 				[
 					'currentVersion' => '77777.7.7',
 					'icon' => 'check',
@@ -535,7 +535,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.7.6',
 				false,
-				$this->data('basic'),
+				static::data('basic'),
 				[
 					'currentVersion' => '77777.7.6',
 					'icon' => 'info',
@@ -554,7 +554,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.7.7',
 				false,
-				$this->data('basic'),
+				static::data('basic'),
 				[
 					'currentVersion' => '77777.7.7',
 					'icon' => 'info',
@@ -575,7 +575,7 @@ class UpdateStatusTest extends TestCase
 				'plugin',
 				'88888.8.8',
 				false,
-				$this->data('basic'),
+				static::data('basic'),
 				[
 					'messages' => [],
 					'status' => 'up-to-date',
@@ -597,7 +597,7 @@ class UpdateStatusTest extends TestCase
 				'plugin',
 				'88888.8.9-rc.1',
 				false,
-				$this->data('basic'),
+				static::data('basic'),
 				[
 					'messages' => [],
 					'status' => 'unreleased',
@@ -619,7 +619,7 @@ class UpdateStatusTest extends TestCase
 				'plugin',
 				'77777.1.2',
 				false,
-				$this->data('basic'),
+				static::data('basic'),
 				[
 					'messages' => [
 						[
@@ -658,7 +658,7 @@ class UpdateStatusTest extends TestCase
 				'plugin',
 				'55555.1.2',
 				false,
-				$this->data('basic'),
+				static::data('basic'),
 				[
 					'messages' => [
 						[
@@ -697,7 +697,7 @@ class UpdateStatusTest extends TestCase
 				'plugin',
 				'77777.7.6',
 				false,
-				$this->data('basic'),
+				static::data('basic'),
 				[
 					'messages' => [],
 					'status' => 'update',
@@ -719,7 +719,7 @@ class UpdateStatusTest extends TestCase
 				'plugin',
 				'77777.7.7',
 				false,
-				$this->data('basic'),
+				static::data('basic'),
 				[
 					'messages' => [],
 					'status' => 'upgrade',
@@ -741,7 +741,7 @@ class UpdateStatusTest extends TestCase
 				'plugin',
 				'v77777.7.7',
 				false,
-				$this->data('basic'),
+				static::data('basic'),
 				[
 					'messages' => [],
 					'status' => 'upgrade',
@@ -763,7 +763,7 @@ class UpdateStatusTest extends TestCase
 				'plugin',
 				'not a version',
 				false,
-				$this->data('basic'),
+				static::data('basic'),
 				[
 					'messages' => null,
 					'status' => 'error',
@@ -785,7 +785,7 @@ class UpdateStatusTest extends TestCase
 				'plugin',
 				null,
 				false,
-				$this->data('basic'),
+				static::data('basic'),
 				[
 					'messages' => null,
 					'status' => 'error',
@@ -809,7 +809,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.1.2',
 				false,
-				$this->data('incidents-severity'),
+				static::data('incidents-severity'),
 				[
 					'currentVersion' => '77777.1.2',
 					'icon' => 'alert',
@@ -890,7 +890,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.0.0-rc.1',
 				false,
-				$this->data('basic'),
+				static::data('basic'),
 				[
 					'currentVersion' => '77777.0.0-rc.1',
 					'icon' => 'alert',
@@ -923,7 +923,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.1.2',
 				false,
-				$this->data('incidents-cascade'),
+				static::data('incidents-cascade'),
 				[
 					'currentVersion' => '77777.1.2',
 					'icon' => 'alert',
@@ -956,7 +956,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.1.2',
 				false,
-				$this->data('incidents-loop'),
+				static::data('incidents-loop'),
 				[
 					'currentVersion' => '77777.1.2',
 					'icon' => 'alert',
@@ -991,7 +991,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.6.0',
 				false,
-				$this->data('basic'),
+				static::data('basic'),
 				[
 					'currentVersion' => '77777.6.0',
 					'icon' => 'info',
@@ -1016,7 +1016,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'44444.1.2',
 				false,
-				$this->data('basic'),
+				static::data('basic'),
 				[
 					'currentVersion' => '44444.1.2',
 					'icon' => 'alert',
@@ -1054,7 +1054,7 @@ class UpdateStatusTest extends TestCase
 				'plugin',
 				'44444.1.2',
 				false,
-				$this->data('basic'),
+				static::data('basic'),
 				[
 					'currentVersion' => '44444.1.2',
 					'icon' => 'alert',
@@ -1092,7 +1092,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'88888.8.8',
 				false,
-				$this->data('php'),
+				static::data('php'),
 				[
 					'currentVersion' => '88888.8.8',
 					'icon' => 'check',
@@ -1119,7 +1119,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'44444.1.2',
 				false,
-				$this->data('eol-link'),
+				static::data('eol-link'),
 				[
 					'currentVersion' => '44444.1.2',
 					'icon' => 'alert',
@@ -1173,7 +1173,7 @@ class UpdateStatusTest extends TestCase
 					'vulnerabilities' => null,
 					'exceptionMessages' => [
 						'Could not load update data for plugin getkirby/test: Couldn\'t open file ' .
-						__DIR__ . '/fixtures/UpdateStatusTest/getkirby.com/plugins/getkirby/test.json'
+						static::FIXTURES . '/getkirby.com/plugins/getkirby/test.json'
 					]
 				]
 			],
@@ -1203,7 +1203,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.7.5',
 				false,
-				$this->data('no-latest'),
+				static::data('no-latest'),
 				[
 					'currentVersion' => '77777.7.5',
 					'icon' => 'info',
@@ -1222,7 +1222,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.7.7',
 				false,
-				$this->data('no-latest'),
+				static::data('no-latest'),
 				[
 					'currentVersion' => '77777.7.7',
 					'icon' => 'info',
@@ -1241,7 +1241,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.7.7',
 				false,
-				$this->data('no-versions'),
+				static::data('no-versions'),
 				[
 					'currentVersion' => '77777.7.7',
 					'icon' => 'question',
@@ -1262,7 +1262,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.7.7',
 				false,
-				$this->data('no-urls'),
+				static::data('no-urls'),
 				[
 					'currentVersion' => '77777.7.7',
 					'icon' => 'info',
@@ -1283,7 +1283,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.7.7',
 				false,
-				$this->data('no-php'),
+				static::data('no-php'),
 				[
 					'currentVersion' => '77777.7.7',
 					'icon' => 'info',
@@ -1302,7 +1302,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.7.7',
 				false,
-				$this->data('no-incidents'),
+				static::data('no-incidents'),
 				[
 					'currentVersion' => '77777.7.7',
 					'icon' => 'info',
@@ -1321,7 +1321,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.7.7',
 				false,
-				$this->data('no-messages'),
+				static::data('no-messages'),
 				[
 					'currentVersion' => '77777.7.7',
 					'icon' => 'info',
@@ -1340,7 +1340,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.7.7',
 				false,
-				$this->data('no-url-entry'),
+				static::data('no-url-entry'),
 				[
 					'currentVersion' => '77777.7.7',
 					'icon' => 'info',
@@ -1361,7 +1361,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.7.7',
 				false,
-				$this->data('url-entry-without-changes'),
+				static::data('url-entry-without-changes'),
 				[
 					'currentVersion' => '77777.7.7',
 					'icon' => 'info',
@@ -1382,7 +1382,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.7.7',
 				false,
-				$this->data('no-version-entry'),
+				static::data('no-version-entry'),
 				[
 					'currentVersion' => '77777.7.7',
 					'icon' => 'question',
@@ -1403,7 +1403,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.4.3',
 				false,
-				$this->data('no-version-entry'),
+				static::data('no-version-entry'),
 				[
 					'currentVersion' => '77777.4.3',
 					'icon' => 'question',
@@ -1438,7 +1438,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.7.5',
 				false,
-				$this->data('version-entry-without-latest'),
+				static::data('version-entry-without-latest'),
 				[
 					'currentVersion' => '77777.7.5',
 					'icon' => 'info',
@@ -1457,7 +1457,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.7.7',
 				false,
-				$this->data('invalid-constraint-message'),
+				static::data('invalid-constraint-message'),
 				[
 					'currentVersion' => '77777.7.7',
 					'icon' => 'info',
@@ -1481,7 +1481,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.3.2',
 				false,
-				$this->data('invalid-constraint-incident'),
+				static::data('invalid-constraint-incident'),
 				[
 					'currentVersion' => '77777.3.2',
 					'icon' => 'info',
@@ -1503,7 +1503,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.7.5',
 				false,
-				$this->data('invalid-constraint-url'),
+				static::data('invalid-constraint-url'),
 				[
 					'currentVersion' => '77777.7.5',
 					'icon' => 'info',
@@ -1525,7 +1525,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.7.5',
 				false,
-				$this->data('invalid-constraint-version'),
+				static::data('invalid-constraint-version'),
 				[
 					'currentVersion' => '77777.7.5',
 					'icon' => 'info',
@@ -1547,7 +1547,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.7.7',
 				false,
-				$this->data('missing-constraint-message'),
+				static::data('missing-constraint-message'),
 				[
 					'currentVersion' => '77777.7.7',
 					'icon' => 'info',
@@ -1569,7 +1569,7 @@ class UpdateStatusTest extends TestCase
 				'app',
 				'77777.3.2',
 				false,
-				$this->data('missing-constraint-incident'),
+				static::data('missing-constraint-incident'),
 				[
 					'currentVersion' => '77777.3.2',
 					'icon' => 'info',
@@ -1594,7 +1594,7 @@ class UpdateStatusTest extends TestCase
 	 */
 	public function testMessagesCache()
 	{
-		$updateStatus = new UpdateStatus($this->app('77777.6.0'), false, $this->data('basic'));
+		$updateStatus = new UpdateStatus($this->app('77777.6.0'), false, static::data('basic'));
 
 		$expected = [
 			[
@@ -1615,18 +1615,18 @@ class UpdateStatusTest extends TestCase
 		MockApp::$version = $version;
 		return new MockApp([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			]
 		]);
 	}
 
-	protected function data(string $name): array
+	protected static function data(string $name): array
 	{
-		if (isset($this->data[$name]) === true) {
-			return $this->data[$name];
+		if (isset(static::$data[$name]) === true) {
+			return static::$data[$name];
 		}
 
-		$path = __DIR__ . '/fixtures/UpdateStatusTest/logic/' . $name . '.json';
+		$path = static::FIXTURES . '/logic/' . $name . '.json';
 		$json = Json::read($path);
 
 		// dynamically insert the current PHP version
@@ -1636,7 +1636,7 @@ class UpdateStatusTest extends TestCase
 			unset($json['php']['<CURRENT>']);
 		}
 
-		return $this->data[$name] = $json;
+		return static::$data[$name] = $json;
 	}
 
 	protected function plugin(string|null $version): Plugin

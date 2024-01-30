@@ -6,9 +6,9 @@ use Kirby\Cms\Response;
 use Kirby\Cms\User;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response as HttpResponse;
+use Kirby\TestCase;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Obj;
-use PHPUnit\Framework\TestCase;
 use stdClass;
 
 class MockModel
@@ -70,31 +70,23 @@ class ApiTest extends TestCase
 				[
 					'pattern' => 'testScalar',
 					'method'  => 'POST',
-					'action'  => function () {
-						return $this->requestQuery('foo');
-					}
+					'action'  => fn () => $this->requestQuery('foo')
 				],
 				[
 					'pattern' => 'testModel',
 					'method'  => 'POST',
-					'action'  => function () {
-						return $this->model('test', 'Awesome test model as string, yay');
-					}
+					'action'  => fn () => $this->model('test', 'Awesome test model as string, yay')
 				],
 				[
 					'pattern' => 'testResponse',
 					'method'  => 'POST',
-					'action'  => function () {
-						return new Response('test', 'text/plain', 201);
-					}
+					'action'  => fn () => new Response('test', 'text/plain', 201)
 				]
 			],
 			'models' => [
 				'test' => [
 					'fields' => [
-						'value' => function ($model) {
-							return $model;
-						}
+						'value' => fn ($model) => $model
 					]
 				]
 			]
@@ -130,9 +122,7 @@ class ApiTest extends TestCase
 				[
 					'pattern' => 'foo',
 					'method'  => 'GET',
-					'action'  => function () {
-						return 'something';
-					}
+					'action'  => fn () => 'something'
 				],
 			],
 			'authentication' => function () use (&$language) {
@@ -160,9 +150,7 @@ class ApiTest extends TestCase
 			'models' => [
 				'test' => [
 					'fields' => [
-						'id' => function ($object) {
-							return $object->id();
-						}
+						'id' => fn ($object) => $object->id()
 					],
 					'type' => Obj::class
 				]
@@ -201,12 +189,8 @@ class ApiTest extends TestCase
 		$api = new Api([
 			'data' => $data = [
 				'a' => 'A',
-				'b' => function () {
-					return 'B';
-				},
-				'c' => function ($value) {
-					return $value;
-				}
+				'b' => fn () => 'B',
+				'c' => fn ($value) => $value
 			]
 		]);
 
@@ -340,9 +324,7 @@ class ApiTest extends TestCase
 				[
 					'pattern' => 'test',
 					'method'  => 'POST',
-					'action'  => function () {
-						return 'test';
-					}
+					'action'  => fn () => 'test'
 				]
 			]
 		]);
@@ -357,9 +339,7 @@ class ApiTest extends TestCase
 				[
 					'pattern' => 'test',
 					'method'  => 'POST',
-					'action'  => function () {
-						return ['a' => 'A'];
-					}
+					'action'  => fn () => ['a' => 'A']
 				]
 			]
 		]);
@@ -377,9 +357,7 @@ class ApiTest extends TestCase
 				[
 					'pattern' => 'test',
 					'method'  => 'POST',
-					'action'  => function () {
-						return true;
-					}
+					'action'  => fn () => true
 				]
 			]
 		]);
@@ -403,9 +381,7 @@ class ApiTest extends TestCase
 				[
 					'pattern' => 'test',
 					'method'  => 'POST',
-					'action'  => function () {
-						return false;
-					}
+					'action'  => fn () => false
 				]
 			]
 		]);
@@ -429,9 +405,7 @@ class ApiTest extends TestCase
 				[
 					'pattern' => 'test',
 					'method'  => 'POST',
-					'action'  => function () {
-						return null;
-					}
+					'action'  => fn () => null
 				]
 			]
 		]);
@@ -626,9 +600,7 @@ class ApiTest extends TestCase
 			'routes' => $routes = [
 				[
 					'pattern' => 'test',
-					'action'  => function () {
-						return 'foo';
-					}
+					'action'  => fn () => 'foo'
 				]
 			]
 		]);
@@ -644,15 +616,13 @@ class ApiTest extends TestCase
 				'files' => [
 					[
 						'name'     => 'test.txt',
-						'tmp_name' => __DIR__ . '/fixtures/tmp/abc',
+						'tmp_name' => KIRBY_TMP_DIR . '/api.api/abc',
 						'size'     => 123,
 						'error'    => 0
 					]
 				]
 			],
-			'authentication' => function () {
-				return new User(['language' => 'en']);
-			}
+			'authentication' => fn () => new User(['language' => 'en'])
 		]);
 
 		$phpunit = $this;
@@ -711,21 +681,19 @@ class ApiTest extends TestCase
 				'files' => [
 					[
 						'name'     => 'foo.txt',
-						'tmp_name' => __DIR__ . '/fixtures/tmp/foo',
+						'tmp_name' => KIRBY_TMP_DIR . '/api.api/foo',
 						'size'     => 123,
 						'error'    => 0
 					],
 					[
 						'name'     => 'bar.txt',
-						'tmp_name' => __DIR__ . '/fixtures/tmp/bar',
+						'tmp_name' => KIRBY_TMP_DIR . '/api.api/bar',
 						'size'     => 123,
 						'error'    => 0
 					]
 				]
 			],
-			'authentication' => function () {
-				return new User(['language' => 'en']);
-			}
+			'authentication' => fn () => new User(['language' => 'en'])
 		]);
 
 		$phpunit = $this;

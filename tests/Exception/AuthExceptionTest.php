@@ -2,7 +2,7 @@
 
 namespace Kirby\Exception;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class AuthExceptionTest extends TestCase
 {

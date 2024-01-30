@@ -390,7 +390,7 @@ class EscapeTest extends TestCase
 		}
 	}
 
-	public function xmlStringProvider()
+	public static function xmlStringProvider(): array
 	{
 		return [
 			['\'', '&apos;'],

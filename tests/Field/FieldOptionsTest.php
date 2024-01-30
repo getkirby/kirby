@@ -12,6 +12,8 @@ use Kirby\Option\OptionsQuery;
  */
 class FieldOptionsTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/../Option/fixtures';
+
 	/**
 	 * @covers ::factory
 	 */
@@ -90,7 +92,7 @@ class FieldOptionsTest extends TestCase
 
 		$options = FieldOptions::factory([
 			'type'  => 'api',
-			'url'   =>  __DIR__ . '/../Option/fixtures/data-nested.json',
+			'url'   =>  static::FIXTURES . '/data-nested.json',
 			'query' => 'Directory.Companies',
 			'text'  => '{{ item.slogan }}'
 		]);
@@ -101,7 +103,7 @@ class FieldOptionsTest extends TestCase
 		$options = FieldOptions::factory(
 			[
 				'type'  => 'api',
-				'url'   =>  __DIR__ . '/../Option/fixtures/data-nested.json',
+				'url'   =>  static::FIXTURES . '/data-nested.json',
 				'query' => 'Directory.Companies',
 				'text'  => '{{ item.slogan }}'
 			],

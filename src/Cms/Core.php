@@ -30,6 +30,11 @@ use Kirby\Form\Field\LayoutField;
  */
 class Core
 {
+	/**
+	 * Optional override for the auto-detected index root
+	 */
+	public static string|null $indexRoot = null;
+
 	protected array $cache = [];
 	protected string $root;
 
@@ -316,7 +321,7 @@ class Core
 			'i18n:translations' => fn (array $roots) => $roots['i18n'] . '/translations',
 			'i18n:rules'  => fn (array $roots) => $roots['i18n'] . '/rules',
 
-			'index'       => fn (array $roots) => dirname(__DIR__, 3),
+			'index'       => fn (array $roots) => static::$indexRoot ?? dirname(__DIR__, 3),
 			'assets'      => fn (array $roots) => $roots['index'] . '/assets',
 			'content'     => fn (array $roots) => $roots['index'] . '/content',
 			'media'       => fn (array $roots) => $roots['index'] . '/media',

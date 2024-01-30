@@ -2,12 +2,16 @@
 
 namespace Kirby\Template;
 
-class TestCase extends \PHPUnit\Framework\TestCase
+use Kirby\Cms\App;
+
+class TestCase extends \Kirby\TestCase
 {
 	protected function tearDown(): void
 	{
 		while (Snippet::$current !== null) {
 			Snippet::$current->close();
 		}
+
+		App::destroy();
 	}
 }

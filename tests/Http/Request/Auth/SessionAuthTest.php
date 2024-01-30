@@ -4,7 +4,7 @@ namespace Kirby\Http\Request\Auth;
 
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @covers \Kirby\Http\Request\Auth
@@ -12,17 +12,17 @@ use PHPUnit\Framework\TestCase;
  */
 class SessionAuthTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Http.Request.Auth.SessionAuth';
+
 	protected $kirby;
-	protected $tmp;
 
 	public function setUp(): void
 	{
-		$this->tmp = dirname(__DIR__, 2) . '/tmp';
-		Dir::make($this->tmp . '/site/sessions');
+		Dir::make(static::TMP . '/site/sessions');
 
 		$this->kirby = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			]
 		]);
 	}
@@ -30,7 +30,7 @@ class SessionAuthTest extends TestCase
 	public function tearDown(): void
 	{
 		$this->kirby->session()->destroy();
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	public function testInstance()

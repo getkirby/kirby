@@ -3,6 +3,9 @@
 		<k-lab-example label="Default">
 			<k-block type="table" />
 		</k-lab-example>
+		<k-lab-example label="Disabled">
+			<k-block :disabled="true" type="table" />
+		</k-lab-example>
 	</k-lab-examples>
 </template>
 

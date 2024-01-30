@@ -4,11 +4,13 @@ namespace Kirby\Cms;
 
 class CollectionsTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures/collections';
+
 	protected function _app()
 	{
 		return new App([
 			'roots' => [
-				'collections' => __DIR__ . '/fixtures/collections'
+				'collections' => static::FIXTURES
 			]
 		]);
 	}

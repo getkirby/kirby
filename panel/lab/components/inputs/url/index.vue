@@ -1,3 +1,44 @@
 <template>
-	<k-lab-input-examples type="url" />
+	<k-lab-form>
+		<k-lab-examples>
+			<k-lab-example label="Default">
+				<k-url-input name="url" :value="value" @input="value = $event" />
+			</k-lab-example>
+
+			<k-lab-example label="Autofocus">
+				<k-url-input :autofocus="true" :value="value" @input="value = $event" />
+			</k-lab-example>
+
+			<k-lab-example label="Required">
+				<k-url-input :required="true" :value="value" @input="value = $event" />
+			</k-lab-example>
+
+			<k-lab-example label="Placeholder">
+				<k-url-input
+					placeholder="Placeholder text …"
+					:value="value"
+					@input="value = $event"
+				/>
+			</k-lab-example>
+
+			<k-lab-example label="Focus" class="k-lab-input-examples-focus">
+				<k-url-input ref="input" :value="value" @input="value = $event" />
+				<k-button text="Focus" variant="filled" @click="$refs.input.focus()" />
+			</k-lab-example>
+
+			<k-lab-example label="Disabled">
+				<k-url-input :disabled="true" :value="value" @input="value = $event" />
+			</k-lab-example>
+		</k-lab-examples>
+	</k-lab-form>
 </template>
+
+<script>
+export default {
+	data() {
+		return {
+			value: null
+		};
+	}
+};
+</script>

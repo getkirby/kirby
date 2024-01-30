@@ -2,11 +2,11 @@
 
 namespace Kirby\Image;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class LocationTest extends TestCase
 {
-	protected function _exif()
+	protected function _exif(): array
 	{
 		return [
 			'GPSLatitudeRef'  => 'N',

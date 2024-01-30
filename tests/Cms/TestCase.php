@@ -3,28 +3,22 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Kirby\Filesystem\Dir;
+use Kirby\TestCase as BaseTestCase;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
-use PHPUnit\Framework\TestCase as BaseTestCase;
-
-require_once __DIR__ . '/mocks.php';
 
 class TestCase extends BaseTestCase
 {
 	protected $app;
 	protected $page = null;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
 		App::destroy();
 
-		Dir::make($this->tmp);
-
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => $this->hasTmp() ? static::TMP : '/dev/null'
 			]
 		]);
 
@@ -39,8 +33,9 @@ class TestCase extends BaseTestCase
 	public function tearDown(): void
 	{
 		App::destroy();
-		Dir::remove($this->tmp);
 		Blueprint::$loaded = [];
+
+		$this->tearDownTmp();
 
 		// mock class
 		ErrorLog::$log = '';
@@ -74,39 +69,11 @@ class TestCase extends BaseTestCase
 		return $this->site()->homePage();
 	}
 
-	public function assertIsSite($input)
-	{
-		$this->assertInstanceOf(Site::class, $input);
-	}
-
-	public function assertIsPage($input, $id = null)
-	{
-		$this->assertInstanceOf(Page::class, $input);
-
-		if (is_string($id)) {
-			$this->assertSame($id, $input->id());
-		}
-
-		if ($id instanceof Page) {
-			$this->assertSame($input, $id);
-		}
-	}
-
-	public function assertIsFile($input, $id = null)
-	{
-		$this->assertInstanceOf(File::class, $input);
-
-		if (is_string($id)) {
-			$this->assertSame($id, $input->id());
-		}
-
-		if ($id instanceof File) {
-			$this->assertSame($input, $id);
-		}
-	}
-
-	public function assertHooks(array $hooks, Closure $action, $appProps = [])
-	{
+	public function assertHooks(
+		array $hooks,
+		Closure $action,
+		$appProps = []
+	): void {
 		$phpUnit   = $this;
 		$triggered = 0;
 

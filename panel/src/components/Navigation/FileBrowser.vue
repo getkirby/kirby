@@ -36,6 +36,7 @@ export default {
 			type: String
 		}
 	},
+	emits: ["select"],
 	data() {
 		return {
 			files: [],

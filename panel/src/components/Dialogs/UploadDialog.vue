@@ -37,13 +37,14 @@
 							/>
 						</a>
 						<k-input
-							v-model="file.name"
 							:disabled="file.completed"
 							:after="'.' + file.extension"
 							:novalidate="true"
 							:required="true"
+							:value="file.name"
 							class="k-upload-item-input"
 							type="slug"
+							@input="file.name = $event"
 						/>
 						<div class="k-upload-item-body">
 							<p class="k-upload-item-meta">

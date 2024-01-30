@@ -33,13 +33,17 @@ class Structure extends Items
 		array $items = null,
 		array $params = []
 	): static {
-		// Bake-in index as ID for all items
-		// TODO: remove when adding UUID supports to Structures
 		if (is_array($items) === true) {
 			$items = array_map(function ($item, $index) {
 				if (is_array($item) === true) {
+					// pass a clean content array without special `Item` keys
+					$item['content'] = $item;
+
+					// bake-in index as ID for all items
+					// TODO: remove when adding UUID supports to Structures
 					$item['id'] ??= $index;
 				}
+
 				return $item;
 			}, $items, array_keys($items));
 		}

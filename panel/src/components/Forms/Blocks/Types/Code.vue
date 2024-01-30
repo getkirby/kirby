@@ -3,6 +3,7 @@
 		<k-input
 			ref="code"
 			:buttons="false"
+			:disabled="disabled"
 			:placeholder="placeholder"
 			:spellcheck="false"
 			:value="content.code"
@@ -13,6 +14,7 @@
 		<div v-if="languages.length" class="k-block-type-code-editor-language">
 			<k-input
 				ref="language"
+				:disabled="disabled"
 				:empty="false"
 				:options="languages"
 				:value="content.language"
@@ -25,11 +27,13 @@
 </template>
 
 <script>
+import Block from "./Default.vue";
+
 /**
  * @displayName BlockTypeCode
- * @internal
  */
 export default {
+	extends: Block,
 	computed: {
 		placeholder() {
 			return this.field("code", {}).placeholder;
@@ -49,6 +53,8 @@ export default {
 <style>
 .k-block-type-code-editor {
 	position: relative;
+}
+.k-block-type-code-editor .k-input {
 	--input-color-border: none;
 	--input-color-back: var(--color-black);
 	--input-color-text: var(--color-white);

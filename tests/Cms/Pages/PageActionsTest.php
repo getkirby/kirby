@@ -5,20 +5,21 @@ namespace Kirby\Cms;
 use Kirby\Content\ContentTranslation;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class PageActionsTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.PageActions';
+
 	protected $app;
-	protected $tmp;
 
 	public function setUp(): void
 	{
-		Dir::make($this->tmp = __DIR__ . '/tmp');
+		Dir::make(static::TMP);
 
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 		]);
 
@@ -27,7 +28,8 @@ class PageActionsTest extends TestCase
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
+		App::destroy();
 	}
 
 	public function site()
@@ -35,7 +37,7 @@ class PageActionsTest extends TestCase
 		return $this->app->site();
 	}
 
-	public function slugProvider()
+	public static function slugProvider(): array
 	{
 		return [
 			['test', 'test', true],
@@ -84,8 +86,8 @@ class PageActionsTest extends TestCase
 		$this->assertNotSame($page, $updatedPage);
 		$this->assertSame(2, $updatedPage->num());
 
-		$this->assertSame($updatedPage, $children->find('test'));
-		$this->assertSame($updatedPage, $childrenAndDrafts->find('test'));
+		$this->assertIsPage($updatedPage, $children->find('test'));
+		$this->assertIsPage($updatedPage, $childrenAndDrafts->find('test'));
 	}
 
 	public function testChangeNumWhenNumStaysTheSame()
@@ -115,10 +117,10 @@ class PageActionsTest extends TestCase
 		$page = $children->find('test');
 
 		// the result page should stay the same
-		$this->assertSame($page, $page->changeNum(1));
+		$this->assertIsPage($page->changeNum(1), $page);
 
-		$this->assertSame($page, $children->find('test'));
-		$this->assertSame($page, $childrenAndDrafts->find('test'));
+		$this->assertIsPage($page, $children->find('test'));
+		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
 	}
 
 	/**
@@ -139,8 +141,8 @@ class PageActionsTest extends TestCase
 			]);
 
 			$in      = 'drafts';
-			$oldRoot = $this->tmp . '/content/_drafts/test';
-			$newRoot = $this->tmp . '/content/_drafts/' . $expected;
+			$oldRoot = static::TMP . '/content/_drafts/test';
+			$newRoot = static::TMP . '/content/_drafts/' . $expected;
 		} else {
 			$page = Page::create([
 				'slug' => 'test',
@@ -148,8 +150,8 @@ class PageActionsTest extends TestCase
 			]);
 
 			$in      = 'children';
-			$oldRoot = $this->tmp . '/content/1_test';
-			$newRoot = $this->tmp . '/content/1_' . $expected;
+			$oldRoot = static::TMP . '/content/1_test';
+			$newRoot = static::TMP . '/content/1_' . $expected;
 		}
 
 		$this->assertTrue($page->exists());
@@ -162,8 +164,8 @@ class PageActionsTest extends TestCase
 
 		$this->assertTrue($modified->exists());
 		$this->assertSame($expected, $modified->slug());
-		$this->assertSame($modified, $site->$in()->get($expected));
-		$this->assertSame($modified, $site->childrenAndDrafts()->get($expected));
+		$this->assertIsPage($modified, $site->$in()->get($expected));
+		$this->assertIsPage($modified, $site->childrenAndDrafts()->get($expected));
 		$this->assertSame($newRoot, $modified->root());
 	}
 
@@ -200,7 +202,7 @@ class PageActionsTest extends TestCase
 			]);
 
 			$in   = 'drafts';
-			$root = $this->tmp . '/content/_drafts/test';
+			$root = static::TMP . '/content/_drafts/test';
 		} else {
 			$page = Page::create([
 				'slug' => 'test',
@@ -208,7 +210,7 @@ class PageActionsTest extends TestCase
 			]);
 
 			$in   = 'children';
-			$root = $this->tmp . '/content/1_test';
+			$root = static::TMP . '/content/1_test';
 		}
 
 		$page = $page->update(['slug' => 'test-de'], 'de');
@@ -500,7 +502,7 @@ class PageActionsTest extends TestCase
 		$this->assertNotNull($page->drafts);
 		$this->assertNotNull($page->childrenAndDrafts);
 
-		$this->assertSame($page, $page->purge());
+		$this->assertIsPage($page, $page->purge());
 
 		$this->assertNull($page->children);
 		$this->assertNull($page->drafts);
@@ -594,7 +596,7 @@ class PageActionsTest extends TestCase
 		$this->assertSame(2, $calls);
 	}
 
-	public function languageProvider()
+	public static function languageProvider(): array
 	{
 		return [
 			[null],
@@ -690,8 +692,8 @@ class PageActionsTest extends TestCase
 		$this->assertSame('A (de)', $page->content('de')->a()->value());
 		$this->assertSame('B (de)', $page->content('de')->b()->value());
 
-		$this->assertSame($page, $drafts->find('test'));
-		$this->assertSame($page, $childrenAndDrafts->find('test'));
+		$this->assertIsPage($page, $drafts->find('test'));
+		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
 
 		// update a single field in the primary language
 		$page = $page->update([
@@ -701,8 +703,8 @@ class PageActionsTest extends TestCase
 		$this->assertSame('A (en)', $page->content('en')->a()->value());
 		$this->assertSame('B modified (en)', $page->content('en')->b()->value());
 
-		$this->assertSame($page, $drafts->find('test'));
-		$this->assertSame($page, $childrenAndDrafts->find('test'));
+		$this->assertIsPage($page, $drafts->find('test'));
+		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
 
 		// update a single field in the secondary language
 		$page = $page->update([
@@ -712,8 +714,8 @@ class PageActionsTest extends TestCase
 		$this->assertSame('A (de)', $page->content('de')->a()->value());
 		$this->assertSame('B modified (de)', $page->content('de')->b()->value());
 
-		$this->assertSame($page, $drafts->find('test'));
-		$this->assertSame($page, $childrenAndDrafts->find('test'));
+		$this->assertIsPage($page, $drafts->find('test'));
+		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
 	}
 
 	public function testChangeStatusDraftHooks()
@@ -746,7 +748,7 @@ class PageActionsTest extends TestCase
 		$drafts = $app->site()->drafts();
 		$childrenAndDrafts = $app->site()->childrenAndDrafts();
 
-		$this->assertSame($page, $children->find('test'));
+		$this->assertIsPage($page, $children->find('test'));
 
 		$newPage = $page->changeStatus('draft');
 
@@ -785,7 +787,7 @@ class PageActionsTest extends TestCase
 		$drafts = $app->site()->drafts();
 		$childrenAndDrafts = $app->site()->childrenAndDrafts();
 
-		$this->assertSame($pageA, $drafts->find('test-a'));
+		$this->assertIsPage($pageA, $drafts->find('test-a'));
 
 		$newPageA = $pageA->changeStatus('listed');
 		$newPageB = $pageB->changeStatus('listed');
@@ -823,7 +825,7 @@ class PageActionsTest extends TestCase
 		$drafts = $app->site()->drafts();
 		$childrenAndDrafts = $app->site()->childrenAndDrafts();
 
-		$this->assertSame($page, $drafts->find('test'));
+		$this->assertIsPage($page, $drafts->find('test'));
 
 		$newPage = $page->changeStatus('unlisted');
 
@@ -851,10 +853,10 @@ class PageActionsTest extends TestCase
 
 		$copy = $page->duplicate('test-copy');
 
-		$this->assertFileDoesNotExist($this->tmp . $copy->root() . '/.lock');
+		$this->assertFileDoesNotExist(static::TMP . $copy->root() . '/.lock');
 
-		$this->assertSame($page, $drafts->find('test'));
-		$this->assertSame($page, $childrenAndDrafts->find('test'));
+		$this->assertIsPage($page, $drafts->find('test'));
+		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
 
 		// check UUID got updated
 		$newUuid = $copy->content()->get('uuid')->value();
@@ -898,8 +900,8 @@ class PageActionsTest extends TestCase
 		$this->assertFileExists($copy->storage()->contentFile('changes', 'en'));
 		$this->assertFileDoesNotExist($copy->storage()->contentFile('changes', 'de'));
 
-		$this->assertSame($page, $drafts->find('test'));
-		$this->assertSame($page, $childrenAndDrafts->find('test'));
+		$this->assertIsPage($page, $drafts->find('test'));
+		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
 	}
 
 	public function testDuplicateMultiLangSlug()
@@ -950,7 +952,7 @@ class PageActionsTest extends TestCase
 			]
 		]);
 
-		F::write($this->tmp . '/content/_drafts/test/foo.jpg', '');
+		F::write(static::TMP . '/content/_drafts/test/foo.jpg', '');
 
 		$copy = $page->duplicate('test-copy', ['files' => true]);
 
@@ -985,7 +987,7 @@ class PageActionsTest extends TestCase
 			]
 		]);
 
-		F::write($this->tmp . '/content/_drafts/test/foo.jpg', '');
+		F::write(static::TMP . '/content/_drafts/test/foo.jpg', '');
 
 		$page = $app->call('de/test');
 		$page->duplicate('test-copy', ['files' => true]);
@@ -1064,7 +1066,7 @@ class PageActionsTest extends TestCase
 				['filename' => 'foo.jpg'],
 			]
 		]);
-		F::write($this->tmp . '/content/_drafts/test/_drafts/foo/foo.jpg', '');
+		F::write(static::TMP . '/content/_drafts/test/_drafts/foo/foo.jpg', '');
 
 		$page = $app->page('test');
 		$copy = $page->duplicate('test-copy', [
@@ -1144,6 +1146,83 @@ class PageActionsTest extends TestCase
 		$this->assertSame(2, $calls);
 	}
 
+	public function testChangeTitleBeforeHookDefaultLanguage()
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		$app = $this->app->clone([
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			],
+			'hooks' => [
+				'page.changeTitle:before' => function (Page $page, $title, $languageCode) use ($phpunit, &$calls) {
+					$phpunit->assertSame('test', $page->title()->value);
+					$phpunit->assertSame('New Title', $title);
+					$phpunit->assertNull($languageCode);
+					$calls++;
+				},
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$page->changeTitle('New Title');
+
+		$this->assertSame(1, $calls);
+	}
+
+	public function testChangeTitleBeforeHookSecondaryLanguage()
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		$app = $this->app->clone([
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			],
+			'hooks' => [
+				'page.changeTitle:before' => function (Page $page, $title, $languageCode) use ($phpunit, &$calls) {
+					$phpunit->assertSame('test', $page->title()->value);
+					$phpunit->assertSame('New Title', $title);
+					$phpunit->assertSame('de', $languageCode);
+					$calls++;
+				},
+			]
+		]);
+
+		$app->impersonate('kirby');
+		$app->setCurrentLanguage('de');
+
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$page->changeTitle('New Title', 'de');
+
+		$this->assertSame(1, $calls);
+	}
+
 	public function testCreateHooks()
 	{
 		$calls = 0;
@@ -1152,7 +1231,7 @@ class PageActionsTest extends TestCase
 		$app = $this->app->clone([
 			'hooks' => [
 				'page.create:before' => function (Page $page, $input) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf(Page::class, $page);
+					$phpunit->assertIsPage($page);
 					$phpunit->assertSame('test', $input['slug']);
 					$phpunit->assertSame('default', $input['model']);
 					$phpunit->assertSame('default', $input['template']);
@@ -1161,7 +1240,7 @@ class PageActionsTest extends TestCase
 					$calls++;
 				},
 				'page.create:after' => function (Page $page) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf(Page::class, $page);
+					$phpunit->assertIsPage($page);
 					$phpunit->assertSame('test', $page->slug());
 					$calls++;
 				}
@@ -1185,14 +1264,14 @@ class PageActionsTest extends TestCase
 		$app = $this->app->clone([
 			'hooks' => [
 				'page.delete:before' => function (Page $page, $force) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf(Page::class, $page);
+					$phpunit->assertIsPage($page);
 					$phpunit->assertFalse($force);
 					$phpunit->assertFileExists($page->root());
 					$calls++;
 				},
 				'page.delete:after' => function ($status, Page $page) use ($phpunit, &$calls) {
 					$phpunit->assertTrue($status);
-					$phpunit->assertInstanceOf(Page::class, $page);
+					$phpunit->assertIsPage($page);
 					$phpunit->assertFileDoesNotExist($page->root());
 					$calls++;
 				}

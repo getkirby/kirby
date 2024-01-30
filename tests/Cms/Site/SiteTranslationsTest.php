@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class SiteTranslationsTest extends TestCase
 {
@@ -87,7 +87,7 @@ class SiteTranslationsTest extends TestCase
 		$this->assertSame(['en', 'de'], $site->translations()->keys());
 	}
 
-	public function visitProvider()
+	public static function visitProvider(): array
 	{
 		return [
 			['en', 'Site', 'English Test'],

@@ -89,6 +89,7 @@ export default {
 		},
 		url: String
 	},
+	emits: ["focus"],
 	computed: {
 		options() {
 			return [

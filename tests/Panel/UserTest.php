@@ -6,8 +6,8 @@ use Kirby\Cms\App;
 use Kirby\Cms\Blueprint;
 use Kirby\Cms\User as ModelUser;
 use Kirby\Filesystem\Dir;
+use Kirby\TestCase;
 use Kirby\Toolkit\Str;
-use PHPUnit\Framework\TestCase;
 
 class ModelUserTestForceLocked extends ModelUser
 {
@@ -22,8 +22,9 @@ class ModelUserTestForceLocked extends ModelUser
  */
 class UserTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Panel.User';
+
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
@@ -31,16 +32,17 @@ class UserTest extends TestCase
 
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => static::TMP,
 			]
 		]);
 
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		$this->app->session()->destroy();
+		Dir::remove(static::TMP);
 	}
 
 	/**
@@ -63,6 +65,9 @@ class UserTest extends TestCase
 	public function testDropdownTotp(): void
 	{
 		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
 			'options' => [
 				'auth' => [
 					'methods' => ['password' => ['2fa' => true]]
@@ -121,7 +126,7 @@ class UserTest extends TestCase
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => static::TMP,
 			],
 			'blueprints' => [
 				'users/editor' => [
@@ -147,7 +152,7 @@ class UserTest extends TestCase
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => static::TMP,
 			],
 			'site' => [
 				'children' => [

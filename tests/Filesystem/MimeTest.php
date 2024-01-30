@@ -2,14 +2,14 @@
 
 namespace Kirby\Filesystem;
 
-use PHPUnit\Framework\TestCase as TestCase;
+use Kirby\TestCase as TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Filesystem\Mime
  */
 class MimeTest extends TestCase
 {
-	protected $fixtures = __DIR__ . '/fixtures/mime';
+	public const FIXTURES = __DIR__ . '/fixtures/mime';
 
 	/**
 	 * @covers ::fix
@@ -35,8 +35,8 @@ class MimeTest extends TestCase
 	public function testFixSvg()
 	{
 		$this->assertSame('image/svg+xml', Mime::fix('something.svg', 'image/svg', 'svg'));
-		$this->assertSame('image/svg+xml', Mime::fix($this->fixtures . '/optimized.svg', 'text/html', 'svg'));
-		$this->assertSame('image/svg+xml', Mime::fix($this->fixtures . '/unoptimized.svg', 'text/html', 'svg'));
+		$this->assertSame('image/svg+xml', Mime::fix(static::FIXTURES . '/optimized.svg', 'text/html', 'svg'));
+		$this->assertSame('image/svg+xml', Mime::fix(static::FIXTURES . '/unoptimized.svg', 'text/html', 'svg'));
 	}
 
 	/**
@@ -62,7 +62,7 @@ class MimeTest extends TestCase
 	 */
 	public function testFromSvg()
 	{
-		$mime = Mime::fromSvg(__DIR__ . '/fixtures/mime/optimized.svg');
+		$mime = Mime::fromSvg(static::FIXTURES . '/optimized.svg');
 		$this->assertSame('image/svg+xml', $mime);
 	}
 
@@ -137,7 +137,7 @@ class MimeTest extends TestCase
 	 */
 	public function testTypeWithOptimizedSvg()
 	{
-		$mime = Mime::type($this->fixtures . '/optimized.svg');
+		$mime = Mime::type(static::FIXTURES . '/optimized.svg');
 		$this->assertSame('image/svg+xml', $mime);
 	}
 
@@ -146,7 +146,7 @@ class MimeTest extends TestCase
 	 */
 	public function testTypeWithUnoptimizedSvg()
 	{
-		$mime = Mime::type($this->fixtures . '/unoptimized.svg');
+		$mime = Mime::type(static::FIXTURES . '/unoptimized.svg');
 		$this->assertSame('image/svg+xml', $mime);
 	}
 
@@ -155,7 +155,7 @@ class MimeTest extends TestCase
 	 */
 	public function testTypeWithJson()
 	{
-		$mime = Mime::type($this->fixtures . '/something.json');
+		$mime = Mime::type(static::FIXTURES . '/something.json');
 		$this->assertSame('application/json', $mime);
 	}
 

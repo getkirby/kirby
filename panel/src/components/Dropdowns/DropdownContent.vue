@@ -17,10 +17,10 @@
 			<!-- @slot Content of the dropdown which overrides passed `options` prop -->
 			<slot>
 				<template v-for="(option, index) in items">
-					<hr v-if="option === '-'" :key="_uid + '-item-' + index" />
+					<hr v-if="option === '-'" :key="'separator-' + index" />
 					<k-dropdown-item
 						v-else-if="option.when ?? true"
-						:key="_uid + '-item-' + index"
+						:key="'item-' + index"
 						v-bind="option"
 						@click="onOptionClick(option)"
 					>
@@ -33,8 +33,6 @@
 </template>
 
 <script>
-import Vue from "vue";
-
 let OpenDropdown = null;
 
 /**
@@ -245,8 +243,8 @@ export default {
 				}
 			}
 
-			// drill down to the element of a component
-			if (this.opener instanceof Vue) {
+			// drill down to the element of a Vue component
+			if (this.opener.$el) {
 				this.opener = this.opener.$el;
 			}
 

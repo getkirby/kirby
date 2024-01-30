@@ -4,12 +4,14 @@ namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
 use Kirby\Form\Field;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class UsersRoutesTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.UsersRoutes';
+
 	protected $app;
-	protected $fixtures;
 
 	public function setUp(): void
 	{
@@ -28,7 +30,7 @@ class UsersRoutesTest extends TestCase
 				]
 			],
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/UsersRoutesTest'
+				'index' => static::TMP
 			],
 			'users' => [
 				[
@@ -52,17 +54,15 @@ class UsersRoutesTest extends TestCase
 		App::destroy();
 		Field::$types = [];
 		Section::$types = [];
-		Dir::remove($this->fixtures);
+		Dir::remove(static::TMP);
 	}
 
 	public function testAvatar()
 	{
-		$this->app->impersonate('kirby');
-
 		// create an avatar for the user
 		$this->app->user('admin@getkirby.com')->createFile([
 			'filename' => 'profile.jpg',
-			'source'   => __DIR__ . '/fixtures/avatar.jpg',
+			'source'   => static::FIXTURES . '/avatar.jpg',
 			'template' => 'avatar',
 		]);
 
@@ -73,12 +73,10 @@ class UsersRoutesTest extends TestCase
 
 	public function testAvatarDelete()
 	{
-		$this->app->impersonate('kirby');
-
 		// create an avatar for the user
 		$this->app->user('admin@getkirby.com')->createFile([
 			'filename' => 'profile.jpg',
-			'source'   => __DIR__ . '/fixtures/avatar.jpg',
+			'source'   => static::FIXTURES . '/avatar.jpg',
 			'template' => 'avatar',
 		]);
 

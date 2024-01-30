@@ -3,7 +3,7 @@
 	"description": "The Kirby core",
 	"license": "proprietary",
 	"type": "kirby-cms",
-	"version": "4.0.3",
+	"version": "4.1.0",
 	"keywords": [
 		"kirby",
 		"cms",
@@ -99,6 +99,8 @@
 		"analyze:composer": "composer validate --strict --no-check-version --no-check-all",
 		"analyze:phpmd": "phpmd . ansi phpmd.xml.dist --exclude 'dependencies/*,tests/*,vendor/*'",
 		"analyze:psalm": "psalm",
+		"bench": "phpbench run --report=aggregate --ref baseline",
+		"bench:baseline": "phpbench run --report=aggregate --tag baseline",
 		"build": "./scripts/build",
 		"ci": [
 			"@fix",
@@ -106,8 +108,8 @@
 			"@test"
 		],
 		"fix": "php-cs-fixer fix",
-		"test": "phpunit --stderr",
-		"test:coverage": "XDEBUG_MODE=coverage phpunit --stderr --coverage-html=tests/coverage",
+		"test": "phpunit",
+		"test:coverage": "XDEBUG_MODE=coverage phpunit --coverage-html=tests/coverage",
 		"zip": "composer archive --format=zip --file=dist"
 	}
 }

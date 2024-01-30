@@ -89,6 +89,7 @@ class Filename
 			'blur'       => $this->blur(),
 			'bw'         => $this->grayscale(),
 			'q'          => $this->quality(),
+			'sharpen'    => $this->sharpen(),
 		];
 
 		$array = array_filter(
@@ -242,6 +243,18 @@ class Filename
 	protected function sanitizeName(string $name): string
 	{
 		return F::safeBasename($name);
+	}
+
+	/**
+	 * Normalizes the sharpen option value
+	 */
+	public function sharpen(): int|false
+	{
+		return match ($this->attributes['sharpen'] ?? false) {
+			false   => false,
+			true    => 50,
+			default => (int)$this->attributes['sharpen']
+		};
 	}
 
 	/**

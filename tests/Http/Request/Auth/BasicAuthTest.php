@@ -2,7 +2,7 @@
 
 namespace Kirby\Http\Request\Auth;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @covers \Kirby\Http\Request\Auth

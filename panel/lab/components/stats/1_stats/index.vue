@@ -38,7 +38,7 @@ export default {
 			];
 		},
 		reportsWithoutTheme() {
-			return this.$helper.clone(this.reports).map((report) => {
+			return structuredClone(this.reports).map((report) => {
 				report.icon = null;
 				report.theme = null;
 				return report;

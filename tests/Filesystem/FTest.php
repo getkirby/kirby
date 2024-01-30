@@ -4,38 +4,34 @@ namespace Kirby\Filesystem;
 
 use Kirby\Exception\LogicException;
 use Kirby\Http\HeadersSent;
+use Kirby\TestCase as TestCase;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
-use PHPUnit\Framework\TestCase as TestCase;
-
-require_once dirname(__DIR__) . '/Http/mocks.php';
 
 /**
  * @coversDefaultClass \Kirby\Filesystem\F
  */
 class FTest extends TestCase
 {
-	protected $fixtures;
+	public const FIXTURES = __DIR__ . '/fixtures/f';
+	public const TMP      = KIRBY_TMP_DIR . '/Filesystem.F';
+
 	protected $hasErrorHandler = false;
 	protected $sample;
 	protected $test;
-	protected $tmp;
 
 	public function setUp(): void
 	{
-		$this->fixtures = __DIR__ . '/fixtures/f';
-		$this->sample   = $this->fixtures . '/test.txt';
-		$this->tmp      = __DIR__ . '/tmp';
-		$this->test     = $this->tmp . '/moved.txt';
+		$this->sample = static::FIXTURES . '/test.txt';
+		$this->test   = static::TMP . '/moved.txt';
 
-		Dir::remove($this->tmp);
-		Dir::make($this->tmp);
+		Dir::remove(static::TMP);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		F::unlink($this->test);
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 
 		if ($this->hasErrorHandler === true) {
 			restore_error_handler();
@@ -70,7 +66,7 @@ class FTest extends TestCase
 	 */
 	public function testCopy()
 	{
-		$origin = $this->tmp . '/a.txt';
+		$origin = static::TMP . '/a.txt';
 		F::write($origin, 'test');
 
 		$this->assertFileDoesNotExist($this->test);
@@ -167,8 +163,8 @@ class FTest extends TestCase
 	 */
 	public function testLink()
 	{
-		$src  = $this->tmp . '/a.txt';
-		$link = $this->tmp . '/b.txt';
+		$src  = static::TMP . '/a.txt';
+		$link = static::TMP . '/b.txt';
 
 		F::write($src, 'test');
 
@@ -309,8 +305,8 @@ class FTest extends TestCase
 	 */
 	public function testLinkSymlink()
 	{
-		$src  = $this->tmp . '/a.txt';
-		$link = $this->tmp . '/b.txt';
+		$src  = static::TMP . '/a.txt';
+		$link = static::TMP . '/b.txt';
 
 		F::write($src, 'test');
 
@@ -323,8 +319,8 @@ class FTest extends TestCase
 	 */
 	public function testLinkExistingLink()
 	{
-		$src  = $this->tmp . '/a.txt';
-		$link = $this->tmp . '/b.txt';
+		$src  = static::TMP . '/a.txt';
+		$link = static::TMP . '/b.txt';
 
 		F::write($src, 'test');
 		F::link($src, $link);
@@ -337,8 +333,8 @@ class FTest extends TestCase
 	 */
 	public function testLinkWithMissingSource()
 	{
-		$src  = $this->tmp . '/a.txt';
-		$link = $this->tmp . '/b.txt';
+		$src  = static::TMP . '/a.txt';
+		$link = static::TMP . '/b.txt';
 
 		$this->expectExceptionMessage('Expection');
 		$this->expectExceptionMessage('The file "' . $src . '" does not exist and cannot be linked');
@@ -352,24 +348,24 @@ class FTest extends TestCase
 	public function testLoad()
 	{
 		// basic behavior
-		F::write($file = $this->tmp . '/test.php', '<?php return "foo";');
+		F::write($file = static::TMP . '/test.php', '<?php return "foo";');
 		$this->assertSame('foo', F::load($file));
 
 		// non-existing file
 		$this->assertSame('foo', F::load('does-not-exist.php', 'foo'));
 
 		// type mismatch
-		F::write($file = $this->tmp . '/test.php', '<?php return "foo";');
+		F::write($file = static::TMP . '/test.php', '<?php return "foo";');
 		$expected = ['a' => 'b'];
 		$this->assertSame($expected, F::load($file, $expected));
 
 		// type mismatch with overwritten $fallback
-		F::write($file = $this->tmp . '/test.php', '<?php $fallback = "test"; return "foo";');
+		F::write($file = static::TMP . '/test.php', '<?php $fallback = "test"; return "foo";');
 		$expected = ['a' => 'b'];
 		$this->assertSame($expected, F::load($file, $expected));
 
 		// with data
-		F::write($file = $this->tmp . '/test.php', '<?php return $variable;');
+		F::write($file = static::TMP . '/test.php', '<?php return $variable;');
 		$this->assertSame('foobar', F::load($file, null, ['variable' => 'foobar']));
 
 		// with overwritten $data
@@ -379,11 +375,11 @@ class FTest extends TestCase
 		$this->assertSame('foobar', F::load($file, null, ['variable' => 'foobar', 'file' => null]));
 
 		// protection against accidental output (without output)
-		F::write($file = $this->tmp . '/test.php', '<?php return "foo";');
+		F::write($file = static::TMP . '/test.php', '<?php return "foo";');
 		$this->assertSame('foo', F::load($file, allowOutput: false));
 
 		// no protection against accidental output (with output)
-		F::write($file = $this->tmp . '/test.php', '<?php Kirby\Http\HeadersSent::$value = true; return "foo";');
+		F::write($file = static::TMP . '/test.php', '<?php Kirby\Http\HeadersSent::$value = true; return "foo";');
 		$this->assertSame('foo', F::load($file));
 	}
 
@@ -395,7 +391,7 @@ class FTest extends TestCase
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Disallowed output from file file.php:123, possible accidental whitespace?');
 
-		F::write($file = $this->tmp . '/test.php', '<?php Kirby\Http\HeadersSent::$value = true; return "foo";');
+		F::write($file = static::TMP . '/test.php', '<?php Kirby\Http\HeadersSent::$value = true; return "foo";');
 
 		F::load($file, allowOutput: false);
 	}
@@ -406,13 +402,13 @@ class FTest extends TestCase
 	public function testLoadClasses()
 	{
 		F::loadClasses([
-			'ftest\\a' => __DIR__ . '/fixtures/f/load/a/a.php',
-			'ftest\\output' => __DIR__ . '/fixtures/f/load/output.php'
+			'ftest\\a' => static::FIXTURES . '/load/a/a.php',
+			'ftest\\output' => static::FIXTURES . '/load/output.php'
 		]);
 
 		F::loadClasses([
 			'FTest\\B' => 'B.php',
-		], __DIR__ . '/fixtures/f/load/B');
+		], static::FIXTURES . '/load/B');
 
 		$this->assertTrue(class_exists('FTest\\A'));
 		$this->assertTrue(class_exists('FTest\\B'));
@@ -429,18 +425,18 @@ class FTest extends TestCase
 	public function testLoadOnce()
 	{
 		// basic behavior
-		F::write($file = $this->tmp . '/test1.php', '<?php return "foo";');
+		F::write($file = static::TMP . '/test1.php', '<?php return "foo";');
 		$this->assertTrue(F::loadOnce($file));
 
 		// non-existing file
 		$this->assertFalse(F::loadOnce('does-not-exist.php'));
 
 		// protection against accidental output (without output)
-		F::write($file = $this->tmp . '/test2.php', '<?php return "foo";');
+		F::write($file = static::TMP . '/test2.php', '<?php return "foo";');
 		$this->assertTrue(F::loadOnce($file, allowOutput: false));
 
 		// no protection against accidental output (with output)
-		F::write($file = $this->tmp . '/test3.php', '<?php Kirby\Http\HeadersSent::$value = true; return "foo";');
+		F::write($file = static::TMP . '/test3.php', '<?php Kirby\Http\HeadersSent::$value = true; return "foo";');
 		$this->assertTrue(F::loadOnce($file));
 	}
 
@@ -452,7 +448,7 @@ class FTest extends TestCase
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Disallowed output from file file.php:123, possible accidental whitespace?');
 
-		F::write($file = $this->tmp . '/test4.php', '<?php Kirby\Http\HeadersSent::$value = true; return "foo";');
+		F::write($file = static::TMP . '/test4.php', '<?php Kirby\Http\HeadersSent::$value = true; return "foo";');
 
 		F::loadOnce($file, allowOutput: false);
 	}
@@ -462,7 +458,7 @@ class FTest extends TestCase
 	 */
 	public function testMove()
 	{
-		F::write($origin = $this->tmp . '/a.txt', 'test');
+		F::write($origin = static::TMP . '/a.txt', 'test');
 
 		// simply move file
 		$this->assertFileDoesNotExist($this->test);
@@ -503,12 +499,12 @@ class FTest extends TestCase
 			$tmpDir = sys_get_temp_dir();
 		}
 
-		if (stat($this->tmp)['dev'] === stat($tmpDir)['dev']) {
+		if (stat(static::TMP)['dev'] === stat($tmpDir)['dev']) {
 			$this->markTestSkipped('Temporary directory "' . $tmpDir . '" is on the same filesystem');
 			return;
 		}
 
-		F::write($origin = $this->tmp . '/a.txt', 'test');
+		F::write($origin = static::TMP . '/a.txt', 'test');
 		$this->test = $tmpDir . '/kirby-test-' . uniqid();
 
 		// simply move file
@@ -586,8 +582,8 @@ class FTest extends TestCase
 	{
 		$locale = I18n::$locale;
 
-		F::write($a = $this->tmp . '/a.txt', 'test');
-		F::write($b = $this->tmp . '/b.txt', 'test');
+		F::write($a = static::TMP . '/a.txt', 'test');
+		F::write($b = static::TMP . '/b.txt', 'test');
 
 		// for file path
 		$this->assertSame('4 B', F::niceSize($a));
@@ -638,7 +634,7 @@ class FTest extends TestCase
 	 */
 	public function testRemove()
 	{
-		F::write($a = $this->tmp . '/a.jpg', '');
+		F::write($a = static::TMP . '/a.jpg', '');
 
 		$this->assertFileExists($a);
 
@@ -652,7 +648,7 @@ class FTest extends TestCase
 	 */
 	public function testRemoveAlreadyRemoved()
 	{
-		$this->assertFileDoesNotExist($a = $this->tmp . '/a.jpg');
+		$this->assertFileDoesNotExist($a = static::TMP . '/a.jpg');
 
 		$this->assertTrue(F::remove($a));
 
@@ -664,7 +660,7 @@ class FTest extends TestCase
 	 */
 	public function testRemoveDirectory()
 	{
-		Dir::make($a = $this->tmp . '/a');
+		Dir::make($a = static::TMP . '/a');
 
 		$this->assertDirectoryExists($a);
 
@@ -678,8 +674,8 @@ class FTest extends TestCase
 	 */
 	public function testRemoveLink()
 	{
-		F::write($a = $this->tmp . '/a.jpg', '');
-		symlink($a, $b = $this->tmp . '/b.jpg');
+		F::write($a = static::TMP . '/a.jpg', '');
+		symlink($a, $b = static::TMP . '/b.jpg');
 
 		$this->assertFileExists($a);
 		$this->assertTrue(is_link($b));
@@ -695,15 +691,15 @@ class FTest extends TestCase
 	 */
 	public function testRemoveGlob()
 	{
-		F::write($a = $this->tmp . '/a.jpg', '');
-		F::write($b = $this->tmp . '/a.1234.jpg', '');
-		F::write($c = $this->tmp . '/a.3456.jpg', '');
+		F::write($a = static::TMP . '/a.jpg', '');
+		F::write($b = static::TMP . '/a.1234.jpg', '');
+		F::write($c = static::TMP . '/a.3456.jpg', '');
 
 		$this->assertFileExists($a);
 		$this->assertFileExists($b);
 		$this->assertFileExists($c);
 
-		F::remove($this->tmp . '/a*.jpg');
+		F::remove(static::TMP . '/a*.jpg');
 
 		$this->assertFileDoesNotExist($a);
 		$this->assertFileDoesNotExist($b);
@@ -715,7 +711,7 @@ class FTest extends TestCase
 	 */
 	public function testRename()
 	{
-		F::write($origin = $this->tmp . '/a.txt', 'test');
+		F::write($origin = static::TMP . '/a.txt', 'test');
 
 		// simply rename file
 		$this->assertFileDoesNotExist($this->test);
@@ -814,8 +810,8 @@ class FTest extends TestCase
 	 */
 	public function testSize()
 	{
-		F::write($a = $this->tmp . '/a.txt', 'test');
-		F::write($b = $this->tmp . '/b.txt', 'test');
+		F::write($a = static::TMP . '/a.txt', 'test');
+		F::write($b = static::TMP . '/b.txt', 'test');
 
 		$this->assertSame(4, F::size($a));
 		$this->assertSame(4, F::size($b));
@@ -842,7 +838,7 @@ class FTest extends TestCase
 	 */
 	public function testTypeWithoutExtension()
 	{
-		F::write($file = $this->tmp . '/test', '<?php echo "foo"; ?>');
+		F::write($file = static::TMP . '/test', '<?php echo "foo"; ?>');
 
 		$this->assertSame('text/x-php', F::mime($file));
 		$this->assertSame('code', F::type($file));
@@ -863,17 +859,17 @@ class FTest extends TestCase
 	 */
 	public function testUnlink()
 	{
-		touch($this->tmp . '/file');
-		symlink($this->tmp . '/file', $this->tmp . '/link-exists');
-		symlink($this->tmp . '/invalid', $this->tmp . '/link-invalid');
+		touch(static::TMP . '/file');
+		symlink(static::TMP . '/file', static::TMP . '/link-exists');
+		symlink(static::TMP . '/invalid', static::TMP . '/link-invalid');
 
-		$this->assertTrue(F::unlink($this->tmp . '/file'));
-		$this->assertTrue(F::unlink($this->tmp . '/link-exists'));
-		$this->assertTrue(F::unlink($this->tmp . '/link-invalid'));
+		$this->assertTrue(F::unlink(static::TMP . '/file'));
+		$this->assertTrue(F::unlink(static::TMP . '/link-exists'));
+		$this->assertTrue(F::unlink(static::TMP . '/link-invalid'));
 
-		$this->assertFileDoesNotExist($this->tmp . '/file');
-		$this->assertFalse(is_link($this->tmp . '/link-exists'));
-		$this->assertFalse(is_link($this->tmp . '/link-invalid'));
+		$this->assertFileDoesNotExist(static::TMP . '/file');
+		$this->assertFalse(is_link(static::TMP . '/link-exists'));
+		$this->assertFalse(is_link(static::TMP . '/link-invalid'));
 	}
 
 	/**
@@ -881,7 +877,7 @@ class FTest extends TestCase
 	 */
 	public function testUnlinkAlredyDeleted()
 	{
-		$this->assertTrue(F::unlink($this->tmp . '/does-not-exist'));
+		$this->assertTrue(F::unlink(static::TMP . '/does-not-exist'));
 	}
 
 	/**
@@ -897,7 +893,7 @@ class FTest extends TestCase
 
 			$this->assertSame(E_WARNING, $errno);
 
-			$expectedPrefix = 'unlink(' . $this->tmp . '/folder): ';
+			$expectedPrefix = 'unlink(' . static::TMP . '/folder): ';
 			$expected = [
 				$expectedPrefix . 'Is a directory',
 				$expectedPrefix . 'Operation not permitted'
@@ -906,9 +902,9 @@ class FTest extends TestCase
 			$this->assertTrue(in_array($errstr, $expected, true));
 		});
 
-		mkdir($this->tmp . '/folder');
+		mkdir(static::TMP . '/folder');
 
-		$this->assertFalse(F::unlink($this->tmp . '/folder'));
+		$this->assertFalse(F::unlink(static::TMP . '/folder'));
 
 		$this->assertTrue($called);
 	}
@@ -976,9 +972,9 @@ class FTest extends TestCase
 	 */
 	public function testSimilar()
 	{
-		F::write($a = $this->tmp . '/a.jpg', '');
-		F::write($b = $this->tmp . '/a.1234.jpg', '');
-		F::write($c = $this->tmp . '/a.3456.jpg', '');
+		F::write($a = static::TMP . '/a.jpg', '');
+		F::write($b = static::TMP . '/a.1234.jpg', '');
+		F::write($c = static::TMP . '/a.3456.jpg', '');
 
 		$expected = [
 			$b,

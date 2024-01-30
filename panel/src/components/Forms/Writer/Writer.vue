@@ -5,7 +5,7 @@
 		:data-disabled="disabled"
 		:data-empty="isEmpty"
 		:data-placeholder="placeholder"
-		:data-toolbar-inline="Boolean(toolbar.inline)"
+		:data-toolbar-inline="Boolean(toolbar.inline ?? true)"
 		:spellcheck="spellcheck"
 		class="k-writer"
 	>
@@ -106,6 +106,7 @@ export const props = {
 
 export default {
 	mixins: [props],
+	emits: ["input"],
 	data() {
 		return {
 			editor: null,

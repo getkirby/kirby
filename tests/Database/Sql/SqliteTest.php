@@ -4,8 +4,8 @@ namespace Kirby\Database\Sql;
 
 use Kirby\Database\Database;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\TestCase;
 use Kirby\Toolkit\A;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Database\Sql\Sqlite

@@ -7,7 +7,7 @@ use IntlDateFormatter;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Query\TestUser as QueryTestUser;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 use TypeError;
 
 /**

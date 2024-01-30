@@ -6,22 +6,23 @@ use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Image\QrCode;
+use Kirby\TestCase;
 use Kirby\Toolkit\Totp;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Panel\UserTotpEnableDialog
  */
 class UserTotpEnableDialogTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Panel.UserTotpEnableDialog';
+
 	protected App $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => static::TMP,
 			],
 			'users' => [
 				[
@@ -31,7 +32,7 @@ class UserTotpEnableDialogTest extends TestCase
 			'user' => 'test@getkirby.com'
 		]);
 
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
@@ -39,7 +40,7 @@ class UserTotpEnableDialogTest extends TestCase
 		// clear session file first
 		$this->app->session()->destroy();
 
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 
 		// clear fake json requests
 		$_GET = [];

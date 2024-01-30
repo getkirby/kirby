@@ -2,11 +2,11 @@
 
 namespace Kirby\Cms;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class UserPermissionsTest extends TestCase
 {
-	public function actionProvider()
+	public static function actionProvider(): array
 	{
 		return [
 			['create'],

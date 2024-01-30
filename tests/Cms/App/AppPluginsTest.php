@@ -12,8 +12,6 @@ use Kirby\Image\Image;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\I18n;
 
-require_once __DIR__ . '/../mocks.php';
-
 class DummyAuthChallenge extends Challenge
 {
 	public static function isAvailable(User $user, string $mode): bool
@@ -53,15 +51,11 @@ class DummyUser extends User
  */
 class AppPluginsTest extends TestCase
 {
-	public $fixtures;
+	public const FIXTURES = __DIR__ . '/fixtures';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.AppPlugins';
 
 	// used for testPluginLoader()
 	public static $calledPluginsLoadedHook = false;
-
-	public function setUp(): void
-	{
-		App::destroy();
-	}
 
 	public function testApi()
 	{
@@ -247,7 +241,7 @@ class AppPluginsTest extends TestCase
 	{
 		$kirby = new App([
 			'roots' => [
-				'index' => $fixtures = __DIR__ . '/fixtures/AppPluginsTest/testAuthChallenge'
+				'index' => static::TMP
 			],
 			'authChallenges' => [
 				'dummy' => 'Kirby\Cms\DummyAuthChallenge'
@@ -282,7 +276,6 @@ class AppPluginsTest extends TestCase
 		);
 
 		$kirby->session()->destroy();
-		Dir::remove($fixtures);
 	}
 
 	public function testBlueprint()
@@ -303,7 +296,7 @@ class AppPluginsTest extends TestCase
 	{
 		$kirby = new App([
 			'roots' => [
-				'index' => $fixtures = __DIR__ . '/fixtures/AppPluginsTest/testCacheType'
+				'index' => static::TMP
 			],
 			'cacheTypes' => [
 				'file' => DummyCache::class
@@ -316,8 +309,6 @@ class AppPluginsTest extends TestCase
 		]);
 
 		$this->assertInstanceOf(DummyCache::class, $kirby->cache('pages'));
-
-		Dir::remove($fixtures);
 	}
 
 	public function testCollection()
@@ -331,13 +322,11 @@ class AppPluginsTest extends TestCase
 				'index' => '/dev/null'
 			],
 			'collections' => [
-				'test' => function () use ($pages) {
-					return $pages;
-				}
+				'test' => fn () => $pages
 			],
 		]);
 
-		$this->assertSame($page, $kirby->collection('test')->first());
+		$this->assertIsPage($page, $kirby->collection('test')->first());
 	}
 
 	public function testCollectionFilters()
@@ -427,7 +416,7 @@ class AppPluginsTest extends TestCase
 				'index' => '/dev/null'
 			],
 			'fields' => [
-				'dummy' => __DIR__ . '/fixtures/fields/DummyField.php'
+				'dummy' => static::FIXTURES . '/fields/DummyField.php'
 			]
 		]);
 
@@ -534,7 +523,7 @@ class AppPluginsTest extends TestCase
 		$kirby = new App([
 			'roots' => [
 				'index'  => '/dev/null',
-				'models' => __DIR__ . '/fixtures/models'
+				'models' => static::FIXTURES . '/models'
 			]
 		]);
 
@@ -611,10 +600,11 @@ class AppPluginsTest extends TestCase
 	public function testExtensionsFromFolders()
 	{
 		Page::$models = [];
+		Dir::copy(static::FIXTURES . '/AppPluginsTest', static::TMP);
 
 		$kirby = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/AppPluginsTest'
+				'index' => static::TMP
 			]
 		]);
 
@@ -920,13 +910,15 @@ class AppPluginsTest extends TestCase
 		$phpUnit  = $this;
 		$executed = 0;
 
+		Dir::copy(static::FIXTURES . '/AppPluginsTest', $tmp = static::TMP);
+
 		$kirby = new App([
 			'roots' => [
-				'index'   => $this->fixtures = __DIR__ . '/fixtures/AppPluginsTest',
-				'plugins' => $this->fixtures . '/site/plugins-loader'
+				'index'   => static::TMP,
+				'plugins' => static::TMP . '/site/plugins-loader'
 			],
 			'hooks' => [
-				'system.loadPlugins:after' => function () use ($phpUnit, &$executed) {
+				'system.loadPlugins:after' => function () use ($phpUnit, &$executed, $tmp) {
 					if (count($this->plugins()) === 2) {
 						$phpUnit->assertSame([
 							'kirby/manual1' => new Plugin('kirby/manual1', []),
@@ -941,7 +933,7 @@ class AppPluginsTest extends TestCase
 										// just a dummy closure to compare against
 									}
 								],
-								'root' => $phpUnit->fixtures . '/site/plugins-loader/test1'
+								'root' => $tmp . '/site/plugins-loader/test1'
 							])
 						], $this->plugins());
 					}
@@ -970,10 +962,12 @@ class AppPluginsTest extends TestCase
 
 	public function testPluginLoaderAnonymous()
 	{
+		Dir::copy(static::FIXTURES . '/AppPluginsTest', static::TMP);
+
 		$kirby = new App([
 			'roots' => [
-				'index'   => $this->fixtures = __DIR__ . '/fixtures/AppPluginsTest',
-				'plugins' => $dir = $this->fixtures . '/site/plugins-loader-anonymous'
+				'index'   => static::TMP,
+				'plugins' => $dir = static::TMP . '/site/plugins-loader-anonymous'
 			]
 		]);
 

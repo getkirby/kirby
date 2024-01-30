@@ -2,7 +2,7 @@
 
 namespace Kirby\Text;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Text\Markdown

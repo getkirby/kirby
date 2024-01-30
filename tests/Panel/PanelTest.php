@@ -7,16 +7,17 @@ use Kirby\Cms\Blueprint;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
+use Kirby\TestCase;
 use Kirby\Toolkit\A;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Panel
  */
 class PanelTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Panel.Panel';
+
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
@@ -24,16 +25,16 @@ class PanelTest extends TestCase
 
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => static::TMP,
 			]
 		]);
 
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 		// fix installation issues by creating directories
-		Dir::make($this->tmp . '/content');
-		Dir::make($this->tmp . '/media');
-		Dir::make($this->tmp . '/site/accounts');
-		Dir::make($this->tmp . '/site/sessions');
+		Dir::make(static::TMP . '/content');
+		Dir::make(static::TMP . '/media');
+		Dir::make(static::TMP . '/site/accounts');
+		Dir::make(static::TMP . '/site/sessions');
 
 		// let's pretend we are on a supported server
 		$_SERVER['SERVER_SOFTWARE'] = 'php';
@@ -44,7 +45,7 @@ class PanelTest extends TestCase
 		// clear session file first
 		$this->app->session()->destroy();
 
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 
 		// clear fake json requests
 		$_GET = [];

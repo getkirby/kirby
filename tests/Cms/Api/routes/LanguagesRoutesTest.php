@@ -2,18 +2,19 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Filesystem\Dir;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class LanguagesRoutesTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.LanguagesRoutes';
+
 	protected $app;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $fixtures = __DIR__ . '/fixtures/LanguagesRoutesTest'
+				'index' => static::TMP
 			],
 			'options' => [
 				'api.allowImpersonation' => true,
@@ -33,8 +34,6 @@ class LanguagesRoutesTest extends TestCase
 		]);
 
 		$this->app->impersonate('kirby');
-
-		Dir::remove($fixtures);
 	}
 
 	public function testList()

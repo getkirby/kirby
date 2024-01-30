@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class LockRoutesTest extends TestCase
 {

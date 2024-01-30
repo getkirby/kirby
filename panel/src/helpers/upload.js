@@ -37,7 +37,11 @@ export default async (file, params) => {
 
 		// add all other attributes to form data
 		for (const attribute in options.attributes) {
-			data.append(attribute, options.attributes[attribute]);
+			const value = options.attributes[attribute];
+
+			if (value !== null && value !== undefined) {
+				data.append(attribute, value);
+			}
 		}
 
 		const progress = (event) => {

@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class AppLanguagesTest extends TestCase
 {
@@ -49,7 +49,7 @@ class AppLanguagesTest extends TestCase
 		$this->assertNull($app->languageCode('fr'));
 	}
 
-	public function detectedLanguageProvider(): array
+	public static function detectedLanguageProvider(): array
 	{
 		return [
 			['en', 'en'],

@@ -1,9 +1,12 @@
 <template>
 	<span :data-invalid="!valid" class="k-counter">
 		<span>{{ count }}</span>
-		<span v-if="min && max" class="k-counter-rules">({{ min }}–{{ max }})</span>
-		<span v-else-if="min" class="k-counter-rules">≥ {{ min }}</span>
-		<span v-else-if="max" class="k-counter-rules">≤ {{ max }}</span>
+
+		<span v-if="min || max" class="k-counter-rules">
+			<template v-if="min && max">{{ min }}–{{ max }}</template>
+			<template v-else-if="min">≥ {{ min }}</template>
+			<template v-else-if="max">≤ {{ max }}</template>
+		</span>
 	</span>
 </template>
 
@@ -53,13 +56,10 @@ export default {
 	color: var(--color-gray-900);
 }
 .k-counter[data-invalid="true"] {
-	box-shadow: none;
-	border: 0;
 	color: var(--color-red-700);
 }
 .k-counter-rules {
 	color: var(--color-gray-600);
-	font-weight: var(--font-normal);
 	padding-inline-start: 0.5rem;
 }
 </style>

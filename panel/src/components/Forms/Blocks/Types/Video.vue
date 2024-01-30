@@ -2,6 +2,7 @@
 	<k-block-figure
 		:caption="content.caption"
 		:caption-marks="captionMarks"
+		:disabled="disabled"
 		:empty-text="$t('field.blocks.video.placeholder') + ' …'"
 		:is-empty="!video"
 		empty-icon="video"
@@ -19,11 +20,13 @@
 </template>
 
 <script>
+import Block from "./Default.vue";
+
 /**
  * @displayName BlockTypeVideo
- * @internal
  */
 export default {
+	extends: Block,
 	computed: {
 		captionMarks() {
 			return this.field("caption", { marks: true }).marks;

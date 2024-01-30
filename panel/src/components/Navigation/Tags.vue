@@ -76,6 +76,7 @@ export default {
 			type: Boolean
 		}
 	},
+	emits: ["edit", "input"],
 	data() {
 		return {
 			tags: []
@@ -108,7 +109,7 @@ export default {
 			handler() {
 				// make sure values are not reactive
 				// otherwise this could have nasty side-effects
-				let tags = this.$helper.object.clone(this.value);
+				let tags = structuredClone(this.value);
 
 				// sort all tags by the available options
 				if (this.sort === true) {

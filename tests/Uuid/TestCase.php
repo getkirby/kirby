@@ -3,24 +3,21 @@
 namespace Kirby\Uuid;
 
 use Kirby\Cms\App;
-use Kirby\Filesystem\Dir;
-use PHPUnit\Framework\TestCase as BaseTestCase;
+use Kirby\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
 	protected $app;
-	protected $tmp;
 
 	protected function setUp(): void
 	{
-		$this->tmp = __DIR__ . '/tmp';
 		$this->app = $this->app();
-		Dir::make($this->tmp);
+		$this->setUpTmp();
 	}
 
 	protected function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		$this->tearDownTmp();
 		Uuids::cache()->flush();
 	}
 
@@ -28,7 +25,7 @@ class TestCase extends BaseTestCase
 	{
 		return new App([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => $this->hasTmp() ? static::TMP : '/dev/null',
 			],
 			'options' => [
 				'url' => 'https://getkirby.com'

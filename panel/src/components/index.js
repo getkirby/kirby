@@ -26,7 +26,6 @@ export default {
 		app.use(Layout);
 		app.use(Misc);
 		app.use(Navigation);
-		app.use(Text);
 		app.use(Sections);
 		app.use(Text);
 		app.use(View);

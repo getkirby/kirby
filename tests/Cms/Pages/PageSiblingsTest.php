@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class PageSiblingsTest extends TestCase
 {
@@ -28,7 +28,7 @@ class PageSiblingsTest extends TestCase
 		return $this->app->site();
 	}
 
-	protected function collection()
+	protected function collection(): array
 	{
 		return [
 			['slug' => 'project-a'],

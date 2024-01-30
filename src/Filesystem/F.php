@@ -800,11 +800,11 @@ class F
 			);
 		}
 
-		try {
-			return filesize($file);
-		} catch (Throwable) {
-			return 0;
+		if ($size = @filesize($file)) {
+			return $size;
 		}
+
+		return 0;
 	}
 
 	/**

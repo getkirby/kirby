@@ -352,6 +352,31 @@ class A
 	}
 
 	/**
+	 * Join array elements as a string,
+	 * also supporting nested arrays
+	 */
+	public static function implode(
+		array $array,
+		string $separator = ''
+	): string {
+		$result = '';
+
+		foreach ($array as $value) {
+			if (empty($result) === false) {
+				$result .= $separator;
+			}
+
+			if (is_array($value) === true) {
+				$value = static::implode($value, $separator);
+			}
+
+			$result .= $value;
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Checks whether an array is associative or not
 	 *
 	 * <code>
@@ -914,9 +939,7 @@ class A
 	 *
 	 * // with callback
 	 * A::update($user, [
-	 *   'username' => function ($username) {
-	 *     return $username . ' j. simpson'
-	 *   }
+	 *   'username' => fn ($username) => $username . ' j. simpson'
 	 * ]);
 	 * </code>
 	 */

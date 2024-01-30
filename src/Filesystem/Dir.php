@@ -169,7 +169,10 @@ class Dir
 			$result[] = $entry;
 
 			if ($recursive === true && is_dir($root) === true) {
-				$result = array_merge($result, static::index($root, true, $ignore, $entry));
+				$result = [
+					...$result,
+					...static::index($root, true, $ignore, $entry)
+				];
 			}
 		}
 
@@ -402,10 +405,8 @@ class Dir
 
 		$parent = dirname($dir);
 
-		if ($recursive === true) {
-			if (is_dir($parent) === false) {
-				static::make($parent, true);
-			}
+		if ($recursive === true && is_dir($parent) === false) {
+			static::make($parent, true);
 		}
 
 		if (is_writable($parent) === false) {
@@ -429,18 +430,19 @@ class Dir
 	 * @param 'date'|'intl'|'strftime'|null $handler Custom date handler or `null`
 	 *                                               for the globally configured one
 	 */
-	public static function modified(string $dir, string $format = null, string|null $handler = null): int|string
-	{
+	public static function modified(
+		string $dir,
+		string $format = null,
+		string|null $handler = null
+	): int|string {
 		$modified = filemtime($dir);
 		$items    = static::read($dir);
 
 		foreach ($items as $item) {
-			if (is_file($dir . '/' . $item) === true) {
-				$newModified = filemtime($dir . '/' . $item);
-			} else {
-				$newModified = static::modified($dir . '/' . $item);
-			}
-
+			$newModified = match (is_file($dir . '/' . $item)) {
+				true  => filemtime($dir . '/' . $item),
+				false => static::modified($dir . '/' . $item)
+			};
 			$modified = ($newModified > $modified) ? $newModified : $modified;
 		}
 
@@ -595,7 +597,10 @@ class Dir
 				return true;
 			}
 
-			if (is_dir($subdir) === true && static::wasModifiedAfter($subdir, $time) === true) {
+			if (
+				is_dir($subdir) === true &&
+				static::wasModifiedAfter($subdir, $time) === true
+			) {
 				return true;
 			}
 		}

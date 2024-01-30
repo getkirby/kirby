@@ -24,6 +24,7 @@
 		</ul>
 		<figcaption v-if="content.caption">
 			<k-writer
+				:disabled="disabled"
 				:inline="true"
 				:marks="captionMarks"
 				:value="content.caption"
@@ -34,11 +35,13 @@
 </template>
 
 <script>
+import Block from "./Default.vue";
+
 /**
  * @displayName BlockTypeGallery
- * @internal
  */
 export default {
+	extends: Block,
 	computed: {
 		captionMarks() {
 			return this.field("caption", { marks: true }).marks;
@@ -61,7 +64,12 @@ export default {
 	line-height: 0;
 	align-items: center;
 	justify-content: center;
+}
+.k-block-type-gallery:not([data-disabled="true"]) ul {
 	cursor: pointer;
+}
+.k-block-type-gallery[data-disabled="true"] .k-block-type-gallery-placeholder {
+	background: var(--color-gray-250);
 }
 .k-block-type-gallery-placeholder {
 	background: var(--color-background);

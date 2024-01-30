@@ -3,26 +3,30 @@
 namespace Kirby\Query;
 
 use Kirby\Cms\App;
-use Kirby\Cms\File;
-use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
-use Kirby\Cms\Site;
-use Kirby\Cms\User;
+use Kirby\Filesystem\Dir;
 use Kirby\Image\QrCode;
 use Kirby\Toolkit\I18n;
 
 /**
  * @coversDefaultClass Kirby\Query\Query
  */
-class QueryDefaultFunctionsTest extends \PHPUnit\Framework\TestCase
+class QueryDefaultFunctionsTest extends \Kirby\TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Query.QueryDefaultFunctions';
+
+	public function tearDown(): void
+	{
+		Dir::remove(static::TMP);
+	}
+
 	public function testKirby()
 	{
 		$query = new Query('kirby');
 		$this->assertInstanceOf(App::class, $query->resolve());
 
 		$query = new Query('kirby.site');
-		$this->assertInstanceOf(Site::class, $query->resolve());
+		$this->assertIsSite($query->resolve());
 	}
 
 	public function testCollection()
@@ -65,10 +69,10 @@ class QueryDefaultFunctionsTest extends \PHPUnit\Framework\TestCase
 		]);
 
 		$query = new Query('file("test.jpg")');
-		$this->assertInstanceOf(File::class, $query->resolve());
+		$this->assertIsFile($query->resolve());
 
 		$query = new Query('file("a/test.jpg")');
-		$this->assertInstanceOf(File::class, $query->resolve());
+		$this->assertIsFile($query->resolve());
 
 		$query = new Query('file("b/test.jpg")');
 		$this->assertNull($query->resolve());
@@ -77,6 +81,9 @@ class QueryDefaultFunctionsTest extends \PHPUnit\Framework\TestCase
 	public function testPage()
 	{
 		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
 			'site' => [
 				'children' => [
 					[
@@ -125,10 +132,10 @@ class QueryDefaultFunctionsTest extends \PHPUnit\Framework\TestCase
 		]);
 
 		$query = new Query('site');
-		$this->assertInstanceOf(Site::class, $query->resolve());
+		$this->assertIsSite($query->resolve());
 
 		$query = new Query('site.children.first');
-		$this->assertInstanceOf(Page::class, $query->resolve());
+		$this->assertIsPage($query->resolve());
 	}
 
 	public function testT()
@@ -159,7 +166,7 @@ class QueryDefaultFunctionsTest extends \PHPUnit\Framework\TestCase
 		]);
 
 		$query = new Query('user("user://user-a")');
-		$this->assertInstanceOf(User::class, $query->resolve());
+		$this->assertIsUser($query->resolve());
 
 		$query = new Query('user("user://user-a").email');
 		$this->assertSame('foo@bar.com', $query->resolve());

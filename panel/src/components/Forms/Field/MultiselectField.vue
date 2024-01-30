@@ -1,7 +1,7 @@
 <template>
 	<k-field
 		v-bind="$props"
-		:input="_uid"
+		:input="id"
 		:counter="counterOptions"
 		class="k-multiselect-field"
 	>
@@ -9,9 +9,7 @@
 		<k-input
 			v-else
 			v-bind="$props"
-			:id="_uid"
 			ref="input"
-			theme="field"
 			type="multiselect"
 			v-on="$listeners"
 		/>

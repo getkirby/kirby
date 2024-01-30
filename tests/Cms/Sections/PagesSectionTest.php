@@ -5,21 +5,21 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Panel\Model;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class PagesSectionTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.PagesSection';
+
 	protected $app;
-	protected $tmp;
 
 	public function setUp(): void
 	{
-		App::destroy();
-		Dir::make($this->tmp = __DIR__ . '/tmp');
+		Dir::make(static::TMP);
 
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			]
 		]);
 
@@ -28,7 +28,8 @@ class PagesSectionTest extends TestCase
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
+		App::destroy();
 	}
 
 	public function testHeadline()
@@ -126,7 +127,7 @@ class PagesSectionTest extends TestCase
 		]);
 	}
 
-	public function statusProvider()
+	public static function statusProvider(): array
 	{
 		return [
 			[null, 'all'],
@@ -154,7 +155,7 @@ class PagesSectionTest extends TestCase
 		$this->assertSame($expected, $section->status());
 	}
 
-	public function addableStatusProvider()
+	public static function addableStatusProvider(): array
 	{
 		return [
 			['all', true],
@@ -353,7 +354,7 @@ class PagesSectionTest extends TestCase
 		$this->assertSame('C', $section->data()[2]['text']);
 	}
 
-	public function sortableStatusProvider()
+	public static function sortableStatusProvider(): array
 	{
 		return [
 			['all', true],

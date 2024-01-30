@@ -9,7 +9,9 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class XmlTest extends TestCase
 {
-	protected $type = 'xml';
+	public const TMP = KIRBY_TMP_DIR . '/Sane.Xml';
+
+	protected static $type = 'xml';
 
 	public function tearDown(): void
 	{
@@ -29,9 +31,9 @@ class XmlTest extends TestCase
 		$this->assertStringEqualsFile($fixture, $sanitized);
 	}
 
-	public function allowedProvider()
+	public static function allowedProvider()
 	{
-		return $this->fixtureList('allowed', 'xml');
+		return static::fixtureList('allowed', 'xml');
 	}
 
 	public function testAllowedCustomDomainAllowlist()
@@ -57,9 +59,9 @@ class XmlTest extends TestCase
 		Xml::validateFile($this->fixture($file));
 	}
 
-	public function invalidProvider()
+	public static function invalidProvider()
 	{
-		return $this->fixtureList('invalid', 'xml');
+		return static::fixtureList('invalid', 'xml');
 	}
 
 	public function testDisallowedJavascriptUrl()
