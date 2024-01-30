@@ -41,10 +41,10 @@
 </template>
 
 <script>
-import { disabled, help, label, name, required } from "@/mixins/props.js";
+import { disabled, help, id, label, name, required } from "@/mixins/props.js";
 
 export const props = {
-	mixins: [disabled, help, label, name, required],
+	mixins: [disabled, help, id, label, name, required],
 	props: {
 		counter: [Boolean, Object],
 		endpoints: Object,

@@ -88,10 +88,9 @@
 
 <script>
 import { props as Field } from "@/components/Forms/Field.vue";
-import { id } from "@/mixins/props.js";
 
 export default {
-	mixins: [Field, id],
+	mixins: [Field],
 	inheritAttrs: false,
 	props: {
 		autofocus: Boolean,
