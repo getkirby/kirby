@@ -76,10 +76,10 @@
 
 <script>
 import { set } from "vue";
-import { autofocus, disabled } from "@/mixins/props.js";
+import { autofocus, disabled, id } from "@/mixins/props.js";
 
 export const props = {
-	mixins: [autofocus, disabled],
+	mixins: [autofocus, disabled, id],
 	props: {
 		empty: String,
 		endpoints: Object,
