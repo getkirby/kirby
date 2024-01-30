@@ -698,7 +698,7 @@ class Str
 		string $string = null,
 		string $needle,
 		bool $caseInsensitive = false
-	): int|bool {
+	): int|false {
 		if ($needle === '') {
 			throw new InvalidArgumentException('The needle must not be empty');
 		}

@@ -35,7 +35,7 @@ class Panel
 	/**
 	 * Normalize a panel area
 	 */
-	public static function area(string $id, array|string $area): array
+	public static function area(string $id, array $area): array
 	{
 		$area['id']                = $id;
 		$area['label']           ??= $id;
