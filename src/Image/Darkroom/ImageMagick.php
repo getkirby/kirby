@@ -85,7 +85,7 @@ class ImageMagick extends Darkroom
 		return parent::defaults() + [
 			'bin'       => 'convert',
 			'interlace' => false,
-			'threads'    => 1,
+			'threads'   => 1,
 		];
 	}
 
