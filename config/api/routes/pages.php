@@ -4,8 +4,6 @@
 /**
  * Page Routes
  */
-
-
 return [
 	[
 		'pattern' => 'pages/(:any)',
@@ -114,6 +112,15 @@ return [
 		'action'  => function (string $id, string $fieldName, string $path = null) {
 			if ($page = $this->page($id)) {
 				return $this->fieldApi($page, $fieldName, $path);
+			}
+		}
+	],
+	[
+		'pattern' => 'pages/(:any)/sections/(:any)/(:all?)',
+		'method'  => 'ALL',
+		'action'  => function (string $id, string $sectionName, string $path = null) {
+			if ($page = $this->page($id)) {
+				return $this->sectionApi($page, $sectionName, $path);
 			}
 		}
 	],

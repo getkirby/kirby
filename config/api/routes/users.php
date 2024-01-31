@@ -208,4 +208,14 @@ return [
 			return $this->fieldApi($this->user($id), $fieldName, $path);
 		}
 	],
+	[
+		'pattern' => [
+			'(account)/sections/(:any)/(:all?)',
+			'users/(:any)/sections/(:any)/(:all?)',
+		],
+		'method'  => 'ALL',
+		'action'  => function (string $id, string $sectionName, string $path = null) {
+			return $this->sectionApi($this->user($id), $sectionName, $path);
+		}
+	],
 ];

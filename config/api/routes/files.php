@@ -26,6 +26,15 @@ return [
 		}
 	],
 	[
+		'pattern' => $filePattern . '/fields/(:any)/(:all?)',
+		'method'  => 'ALL',
+		'action'  => function (string $parent, string $filename, string $sectionName, string $path = null) {
+			if ($file = $this->file($parent, $filename)) {
+				return $this->sectionApi($file, $sectionName, $path);
+			}
+		}
+	],
+	[
 		'pattern' => $parentPattern,
 		'method'  => 'GET',
 		'action'  => function (string $path) {

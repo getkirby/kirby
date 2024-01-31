@@ -186,6 +186,29 @@ class Api extends BaseApi
 	}
 
 	/**
+	 * @throws \Kirby\Exception\NotFoundException if the section type cannot be found or the section cannot be loaded
+	 */
+	public function sectionApi(
+		ModelWithContent $model,
+		string $name,
+		string|null $path = null
+	): mixed {
+
+		$section = $model->blueprint()?->section($name);
+
+		$sectionApi = $this->clone([
+			'data'   => array_merge($this->data(), ['section' => $section]),
+			'routes' => $section->api(),
+		]);
+
+		return $sectionApi->call(
+			$path,
+			$this->requestMethod(),
+			$this->requestData()
+		);
+	}
+
+	/**
 	 * Returns the current Session instance
 	 *
 	 * @param array $options Additional options, see the session component

@@ -97,6 +97,12 @@ return [
 		'action'  => function (string $fieldName, string $path = null) {
 			return $this->fieldApi($this->site(), $fieldName, $path);
 		}
-	]
-
+	],
+	[
+		'pattern' => 'site/sections/(:any)/(:all?)',
+		'method'  => 'ALL',
+		'action'  => function (string $sectionName, string $path = null) {
+			return $this->sectionApi($this->site(), $sectionName, $path);
+		}
+	],
 ];
