@@ -145,26 +145,14 @@ class Blueprint
 		$templates = [];
 
 		foreach ($fields as $field) {
-			// files or textare field
-			if (
-				$field['type'] === 'files' ||
-				$field['type'] === 'textarea'
-			) {
-				$uploads = $field['uploads'] ?? null;
-
-				// only if the `uploads` parent is this model
-				if ($target = $uploads['parent'] ?? null) {
-					if ($this->model->id() !== $target) {
-						continue;
-					}
-				}
-
-				$templates[] = $uploads['template'] ?? 'default';
+			// fields with uploads settings
+			if (isset($field['uploads']) === true && is_array($field['uploads']) === true) {
+				$templates = array_merge($templates, $this->acceptedFileTemplatesFromFieldUploads($field['uploads']));
 				continue;
 			}
 
-			// structure field
-			if ($field['type'] === 'structure') {
+			// structure and object fields
+			if (isset($field['fields']) === true && is_array($field['fields']) === true) {
 				$fields    = $this->acceptedFileTemplatesFromFields($field['fields']);
 				$templates = array_merge($templates, $fields);
 				continue;
@@ -172,6 +160,21 @@ class Blueprint
 		}
 
 		return $templates;
+	}
+
+	/**
+	 * Extracts templates from field uploads settings
+	 */
+	protected function acceptedFileTemplatesFromFieldUploads(array $uploads): array
+	{
+		// only if the `uploads` parent is this model
+		if ($target = $uploads['parent'] ?? null) {
+			if ($this->model->id() !== $target) {
+				return [];
+			}
+		}
+
+		return [($uploads['template'] ?? 'default')];
 	}
 
 	/**
