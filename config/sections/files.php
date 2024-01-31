@@ -205,6 +205,21 @@ return [
 			];
 		}
 	],
+	'api' => function () {
+		return [
+			[
+				'pattern' => 'sort',
+				'action'  => function () {
+					$this->section()->model()->files()->changeSort(
+						$this->requestBody('files'),
+						$this->requestBody('index')
+					);
+
+					return true;
+				}
+			]
+		];
+	},
 	'toArray' => function () {
 		return [
 			'data'    => $this->data,
