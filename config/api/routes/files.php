@@ -71,11 +71,10 @@ return [
 		'pattern' => $parentPattern . '/sort',
 		'method'  => 'PATCH',
 		'action'  => function (string $path) {
-			$this->files($path)->changeSort(
+			return $this->files($path)->changeSort(
 				$this->requestBody('files'),
 				$this->requestBody('index')
 			);
-			return true;
 		}
 	],
 	[
