@@ -209,6 +209,7 @@ return [
 		return [
 			[
 				'pattern' => 'sort',
+				'method'  => 'PATCH',
 				'action'  => function () {
 					$this->section()->model()->files()->changeSort(
 						$this->requestBody('files'),
@@ -226,7 +227,7 @@ return [
 			'errors'  => $this->errors,
 			'options' => [
 				'accept'   => $this->accept,
-				'apiUrl'   => $this->parent->apiUrl(true),
+				'apiUrl'   => $this->parent->apiUrl(true) . '/sections/' . $this->name,
 				'columns'  => $this->columnsWithTypes(),
 				'empty'    => $this->empty,
 				'headline' => $this->headline,
