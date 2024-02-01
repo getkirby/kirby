@@ -24,7 +24,10 @@ export default {
 			return this.$library.dayjs(this.value);
 		},
 		text() {
-			return this.parsed?.format(this.format);
+			// don't parse and format if custom date value defined
+			return this.column.value?.length > 0 ?
+				this.value :
+				this.parsed?.format(this.format);
 		},
 		time() {
 			return this.column.time ?? this.field.time;
