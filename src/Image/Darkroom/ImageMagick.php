@@ -62,8 +62,8 @@ class ImageMagick extends Darkroom
 	{
 		$command = escapeshellarg($options['bin']);
 
-		// limit to single-threading to keep CPU usage sane
-		$command .= ' -limit thread 1';
+		// default is limiting to single-threading to keep CPU usage sane
+		$command .= ' -limit thread ' . escapeshellarg($options['threads']);
 
 		// append input file
 		return $command . ' ' . escapeshellarg($file);
@@ -77,6 +77,7 @@ class ImageMagick extends Darkroom
 		return parent::defaults() + [
 			'bin'       => 'convert',
 			'interlace' => false,
+			'threads'   => 1,
 		];
 	}
 
