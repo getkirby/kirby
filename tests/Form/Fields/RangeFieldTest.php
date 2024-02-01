@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Fields;
 
+use Kirby\Toolkit\I18n;
+
 class RangeFieldTest extends TestCase
 {
 	public function testDefaultProps()
@@ -39,5 +41,49 @@ class RangeFieldTest extends TestCase
 
 		$this->assertFalse($field->isValid());
 		$this->assertArrayHasKey('max', $field->errors());
+	}
+
+	public function testTooltip()
+	{
+		$field = $this->field('range', [
+			'tooltip' => [
+				'before' => 'per',
+				'after'  => 'months'
+			]
+		]);
+
+		$tooltip = $field->tooltip();
+		$this->assertIsArray($tooltip);
+		$this->assertSame('per', $tooltip['before']);
+		$this->assertSame('months', $tooltip['after']);
+	}
+
+	public function testTooltipTranslation()
+	{
+		$props = [
+			'tooltip' => [
+				'before' => [
+					'en' => 'per',
+					'de' => 'pro'
+				],
+				'after' => [
+					'en' => 'months',
+					'de' => 'monate'
+				]
+			]
+		];
+
+		I18n::$locale = 'en';
+		$tooltip = $this->field('range', $props)->tooltip();
+		$this->assertIsArray($tooltip);
+		$this->assertSame('per', $tooltip['before']);
+		$this->assertSame('months', $tooltip['after']);
+
+
+		I18n::$locale = 'de';
+		$tooltip = $this->field('range', $props)->tooltip();
+		$this->assertIsArray($tooltip);
+		$this->assertSame('pro', $tooltip['before']);
+		$this->assertSame('monate', $tooltip['after']);
 	}
 }
