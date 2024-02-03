@@ -117,15 +117,11 @@ class LanguageTranslations
 	 */
 	public function setTranslations(self|array $translations = []): static
 	{
-		if (empty($translations) === false) {
-			if ($translations instanceof self) {
-				$this->data = $translations->toArray();
-			} else {
-				$this->data = $translations;
-			}
-		} else {
-			$this->data = static::load();
-		}
+		$this->data = match (true) {
+			empty($translations) === true => static::load(),
+			$translations instanceof self => $translations->toArray(),
+			default                       => $translations
+		};
 
 		return $this;
 	}

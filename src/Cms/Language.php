@@ -62,6 +62,7 @@ class Language
 		$this->name         = trim($props['name'] ?? $this->code);
 		$this->slugs        = $props['slugs'] ?? [];
 		$this->smartypants  = $props['smartypants'] ?? [];
+		$this->translations = (new LanguageTranslations($this))->load($props['translations'] ?? []);
 		$this->url          = $props['url'] ?? null;
 
 		if ($locale = $props['locale'] ?? null) {
@@ -69,8 +70,6 @@ class Language
 		} else {
 			$this->locale = [LC_ALL => $this->code];
 		}
-
-		$this->setTranslations($props['translations'] ?? []);
 	}
 
 	/**
@@ -414,7 +413,7 @@ class Language
 			// inject translations from custom root
 			// returns existing translations
 			// if custom root is not defined as fallback
-			$data['translations'] = $this
+			$existingData['translations'] = $this
 				->translationsObject()
 				->load($existingData['translations'] ?? []);
 		} catch (Throwable) {
