@@ -323,7 +323,7 @@ class Dir
 			// look if a content file can be found
 			// for any of the available models
 			foreach (Page::$models as $modelName => $modelClass) {
-				if (file_exists($root . '/' . $modelName . '.' . $contentExtension)) {
+				if (file_exists($root . '/' . $modelName . '.' . $contentExtension) === true) {
 					$model = $modelName;
 					break;
 				}
