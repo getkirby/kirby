@@ -232,6 +232,9 @@ class Dir
 			return $inventory;
 		}
 
+		// lazily get the default language code
+		$languageCode = App::instance(null, true)?->defaultLanguage()?->code();
+
 		// a temporary store for all content files
 		$content = [];
 
@@ -254,7 +257,7 @@ class Dir
 					$item,
 					$root,
 					$contentExtension,
-					$multilang
+					$languageCode
 				);
 				continue;
 			}
@@ -305,7 +308,7 @@ class Dir
 		string $item,
 		string $root,
 		string $contentExtension = 'txt',
-		bool $multilang = false
+		string|null $languageCode = null
 	): array {
 		// extract the slug and num of the directory
 		if ($separator = strpos($item, static::$numSeparator)) {
@@ -315,9 +318,8 @@ class Dir
 
 		// determine the model
 		if (empty(Page::$models) === false) {
-			if ($multilang === true) {
-				$code = App::instance()->defaultLanguage()->code();
-				$contentExtension = $code . '.' . $contentExtension;
+			if ($languageCode !== null) {
+				$contentExtension = $languageCode . '.' . $contentExtension;
 			}
 
 			// look if a content file can be found
