@@ -153,6 +153,9 @@ class BlueprintTest extends TestCase
 				'files/d' => [
 					'name' => 'd',
 				],
+				'files/e' => [
+					'name' => 'e',
+				],
 			]
 		]);
 
@@ -193,11 +196,26 @@ class BlueprintTest extends TestCase
 							]
 						]
 					]
+				],
+				'e' => [
+					'type' => 'blocks',
+					'fieldsets' => [
+						'text' => [
+							'fields' => [
+								'text' => [
+									'type' => 'object',
+									'uploads' => [
+										'template' => 'e'
+									]
+								]
+							]
+						]
+					]
 				]
 			]
 		]);
 
-		$this->assertSame(['a', 'b', 'c', 'd'], $blueprint->acceptedFileTemplates());
+		$this->assertSame(['a', 'b', 'c', 'd', 'e'], $blueprint->acceptedFileTemplates());
 	}
 
 	/**

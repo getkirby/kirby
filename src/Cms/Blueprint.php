@@ -157,6 +157,29 @@ class Blueprint
 				$templates = array_merge($templates, $fields);
 				continue;
 			}
+
+			// layout and blocks fields
+			if (isset($field['fieldsets']) === true && is_array($field['fieldsets']) === true) {
+				$fieldsets = $this->acceptedFileTemplatesFromFieldsets($field['fieldsets']);
+				$templates = array_merge($templates, $fieldsets);
+				continue;
+			}
+		}
+
+		return $templates;
+	}
+
+	/**
+	 * Gathers the allowed file templates from fieldsets
+	 */
+	protected function acceptedFileTemplatesFromFieldsets(array $fieldsets): array
+	{
+		$templates = [];
+
+		foreach ($fieldsets as $fieldset) {
+			foreach (($fieldset['tabs'] ?? []) as $tab) {
+				$templates = array_merge($templates, $this->acceptedFileTemplatesFromFields($tab['fields'] ?? []));
+			}
 		}
 
 		return $templates;
