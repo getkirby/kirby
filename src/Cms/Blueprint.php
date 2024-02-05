@@ -147,21 +147,28 @@ class Blueprint
 		foreach ($fields as $field) {
 			// fields with uploads settings
 			if (isset($field['uploads']) === true && is_array($field['uploads']) === true) {
-				$templates = array_merge($templates, $this->acceptedFileTemplatesFromFieldUploads($field['uploads']));
+				$templates = [
+					...$templates,
+					...$this->acceptedFileTemplatesFromFieldUploads($field['uploads'])
+				];
 				continue;
 			}
 
 			// structure and object fields
 			if (isset($field['fields']) === true && is_array($field['fields']) === true) {
-				$fields    = $this->acceptedFileTemplatesFromFields($field['fields']);
-				$templates = array_merge($templates, $fields);
+				$templates = [
+					...$templates,
+					...$this->acceptedFileTemplatesFromFields($field['fields']),
+				];
 				continue;
 			}
 
 			// layout and blocks fields
 			if (isset($field['fieldsets']) === true && is_array($field['fieldsets']) === true) {
-				$fieldsets = $this->acceptedFileTemplatesFromFieldsets($field['fieldsets']);
-				$templates = array_merge($templates, $fieldsets);
+				$templates = [
+					...$templates,
+					...$this->acceptedFileTemplatesFromFieldsets($field['fieldsets'])
+				];
 				continue;
 			}
 		}
