@@ -71,7 +71,7 @@ class Api extends BaseApi
 		$field = Form::for($model)->field($name);
 
 		$fieldApi = $this->clone([
-			'data'   => array_merge($this->data(), ['field' => $field]),
+			'data'   => [...$this->data(), 'field' => $field],
 			'routes' => $field->api(),
 		]);
 
@@ -196,7 +196,7 @@ class Api extends BaseApi
 		$section = $model->blueprint()?->section($name);
 
 		$sectionApi = $this->clone([
-			'data'   => array_merge($this->data(), ['section' => $section]),
+			'data'   => [...$this->data(), 'section' => $section],
 			'routes' => $section->api(),
 		]);
 
