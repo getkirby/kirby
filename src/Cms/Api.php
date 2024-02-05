@@ -193,7 +193,6 @@ class Api extends BaseApi
 		string $name,
 		string|null $path = null
 	): mixed {
-
 		$section = $model->blueprint()?->section($name);
 
 		$sectionApi = $this->clone([
