@@ -43,6 +43,7 @@
 					v-else
 					:id="id"
 					ref="input"
+					:disabled="disabled"
 					:pattern="currentType.pattern ?? null"
 					:placeholder="currentType.placeholder"
 					:value="linkValue"
@@ -343,5 +344,12 @@ export default {
 }
 .k-link-field .k-bubbles-field-preview .k-bubble {
 	font-size: var(--text-sm);
+}
+
+.k-link-field[data-disabled="true"] .k-link-input-model-placeholder {
+	display: none;
+}
+.k-link-field[data-disabled="true"] input::placeholder {
+	opacity: 0;
 }
 </style>

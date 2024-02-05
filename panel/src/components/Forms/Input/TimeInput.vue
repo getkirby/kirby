@@ -72,3 +72,9 @@ export default {
 	}
 };
 </script>
+
+<style>
+.k-time-input:disabled::placeholder {
+	opacity: 0;
+}
+</style>
