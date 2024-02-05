@@ -85,6 +85,13 @@ return [
 		}
 	],
 	[
+		'pattern' => 'site/fields/(:any)/(:all?)',
+		'method'  => 'ALL',
+		'action'  => function (string $fieldName, string|null $path = null) {
+			return $this->fieldApi($this->site(), $fieldName, $path);
+		}
+	],
+	[
 		'pattern' => 'site/sections/(:any)',
 		'method'  => 'GET',
 		'action'  => function (string $sectionName) {
@@ -92,16 +99,9 @@ return [
 		}
 	],
 	[
-		'pattern' => 'site/fields/(:any)/(:all?)',
-		'method'  => 'ALL',
-		'action'  => function (string $fieldName, string $path = null) {
-			return $this->fieldApi($this->site(), $fieldName, $path);
-		}
-	],
-	[
 		'pattern' => 'site/sections/(:any)/(:all?)',
 		'method'  => 'ALL',
-		'action'  => function (string $sectionName, string $path = null) {
+		'action'  => function (string $sectionName, string|null $path = null) {
 			return $this->sectionApi($this->site(), $sectionName, $path);
 		}
 	],
