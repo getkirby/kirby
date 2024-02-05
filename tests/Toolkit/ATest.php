@@ -497,6 +497,30 @@ class ATest extends TestCase
 	}
 
 	/**
+	 * @covers ::prepend
+	 */
+	public function testPrepend()
+	{
+		// associative
+		$one    = ['a' => 'A', 'b' => 'B', 'c' => 'C'];
+		$two    = ['d' => 'D', 'e' => 'E', 'f' => 'F'];
+		$result = A::prepend($one, $two);
+		$this->assertSame(['d' => 'D', 'e' => 'E', 'f' => 'F', 'a' => 'A', 'b' => 'B', 'c' => 'C'], $result);
+
+		// numeric
+		$one    = ['a', 'b', 'c'];
+		$two    = ['d', 'e', 'f'];
+		$result = A::prepend($one, $two);
+		$this->assertSame(['d', 'e', 'f', 'a', 'b', 'c'], $result);
+
+		// mixed
+		$one    = ['a' => 'A', 'b' => 'B', 'c' => 'C'];
+		$two    = ['d', 'e', 'f'];
+		$result = A::prepend($one, $two);
+		$this->assertSame(['d', 'e', 'f', 'a' => 'A', 'b' => 'B', 'c' => 'C'], $result);
+	}
+
+	/**
 	 * @covers ::pluck
 	 */
 	public function testPluck()

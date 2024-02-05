@@ -400,6 +400,18 @@ class StrTest extends TestCase
 	/**
 	 * @covers ::excerpt
 	 */
+	public function testExcerptWithoutSpaces()
+	{
+		$string   = 'ThisIsALongTextWithSomeHtml';
+		$expected = 'ThisIsALongText …';
+		$result   = Str::excerpt($string, 15);
+
+		$this->assertSame($expected, $result);
+	}
+
+	/**
+	 * @covers ::excerpt
+	 */
 	public function testExcerptWithLineBreaks()
 	{
 		$string   = 'This is a long text ' . PHP_EOL . ' with some html';

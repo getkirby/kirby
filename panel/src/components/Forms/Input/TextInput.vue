@@ -34,4 +34,7 @@ export default {
 .k-text-input[data-font="monospace"] {
 	font-family: var(--font-mono);
 }
+.k-text-input:disabled::placeholder {
+	opacity: 0;
+}
 </style>

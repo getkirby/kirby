@@ -105,5 +105,6 @@ export default {
 }
 .k-input[data-type="toggle"][data-disabled="true"] {
 	box-shadow: none;
+	border: 1px solid var(--color-border);
 }
 </style>

@@ -488,7 +488,16 @@ class Str
 			return $string;
 		}
 
-		return static::substr($string, 0, mb_strrpos(static::substr($string, 0, $chars), ' ')) . $rep;
+		// shorten the string to the specified number of characters,
+		// but make sure to not cut off in the middle of a word
+		$excerpt = static::substr($string, 0, $chars);
+		$cutoff  = mb_strrpos($excerpt, ' ');
+
+		if ($cutoff !== false) {
+			$excerpt = static::substr($string, 0, $cutoff);
+		}
+
+		return $excerpt . $rep;
 	}
 
 	/**
