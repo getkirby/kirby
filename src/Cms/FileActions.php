@@ -100,6 +100,11 @@ trait FileActions
 	 */
 	public function changeSort(int $sort): static
 	{
+		// skip if the sort number stays the same
+		if ($this->sort()->value() === $sort) {
+			return $this;
+		}
+
 		return $this->commit(
 			'changeSort',
 			['file' => $this, 'position' => $sort],
