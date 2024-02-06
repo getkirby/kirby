@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Component;
 
@@ -44,6 +45,21 @@ class Section extends Component
 		$attrs['type']   = $type;
 
 		parent::__construct($type, $attrs);
+	}
+
+	/**
+	 * Returns field api call
+	 */
+	public function api(): mixed
+	{
+		if (
+			isset($this->options['api']) === true &&
+			$this->options['api'] instanceof Closure
+		) {
+			return $this->options['api']->call($this);
+		}
+
+		return null;
 	}
 
 	public function errors(): array

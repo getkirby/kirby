@@ -6,6 +6,7 @@ use Kirby\Filesystem\F;
  * User Routes
  */
 return [
+	// @codeCoverageIgnoreStart
 	[
 		'pattern' => 'users',
 		'method'  => 'GET',
@@ -188,6 +189,16 @@ return [
 	],
 	[
 		'pattern' => [
+			'(account)/fields/(:any)/(:all?)',
+			'users/(:any)/fields/(:any)/(:all?)',
+		],
+		'method'  => 'ALL',
+		'action'  => function (string $id, string $fieldName, string|null $path = null) {
+			return $this->fieldApi($this->user($id), $fieldName, $path);
+		}
+	],
+	[
+		'pattern' => [
 			'(account)/sections/(:any)',
 			'users/(:any)/sections/(:any)',
 		],
@@ -200,12 +211,13 @@ return [
 	],
 	[
 		'pattern' => [
-			'(account)/fields/(:any)/(:all?)',
-			'users/(:any)/fields/(:any)/(:all?)',
+			'(account)/sections/(:any)/(:all?)',
+			'users/(:any)/sections/(:any)/(:all?)',
 		],
 		'method'  => 'ALL',
-		'action'  => function (string $id, string $fieldName, string $path = null) {
-			return $this->fieldApi($this->user($id), $fieldName, $path);
+		'action'  => function (string $id, string $sectionName, string|null $path = null) {
+			return $this->sectionApi($this->user($id), $sectionName, $path);
 		}
 	],
+	// @codeCoverageIgnoreEnd
 ];
