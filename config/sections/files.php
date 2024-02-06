@@ -205,6 +205,7 @@ return [
 			];
 		}
 	],
+	// @codeCoverageIgnoreStart
 	'api' => function () {
 		return [
 			[
@@ -221,6 +222,7 @@ return [
 			]
 		];
 	},
+	// @codeCoverageIgnoreEnd
 	'toArray' => function () {
 		return [
 			'data'    => $this->data,
