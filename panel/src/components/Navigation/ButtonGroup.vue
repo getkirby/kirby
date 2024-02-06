@@ -75,6 +75,7 @@ export default {
  */
 .k-button-group:where([data-layout="collapsed"]) {
 	gap: 0;
+	flex-wrap: nowrap;
 }
 
 .k-button-group[data-layout="collapsed"]
