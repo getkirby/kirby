@@ -5,7 +5,7 @@
  * Site Routes
  */
 return [
-
+	// @codeCoverageIgnoreStart
 	[
 		'pattern' => 'site',
 		'action'  => function () {
@@ -105,4 +105,5 @@ return [
 			return $this->sectionApi($this->site(), $sectionName, $path);
 		}
 	],
+	// @codeCoverageIgnoreEnd
 ];

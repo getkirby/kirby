@@ -6,6 +6,7 @@ use Kirby\Filesystem\F;
  * User Routes
  */
 return [
+	// @codeCoverageIgnoreStart
 	[
 		'pattern' => 'users',
 		'method'  => 'GET',
@@ -218,4 +219,5 @@ return [
 			return $this->sectionApi($this->user($id), $sectionName, $path);
 		}
 	],
+	// @codeCoverageIgnoreEnd
 ];

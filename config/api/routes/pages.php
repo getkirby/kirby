@@ -5,6 +5,7 @@
  * Page Routes
  */
 return [
+	// @codeCoverageIgnoreStart
 	[
 		'pattern' => 'pages/(:any)',
 		'method'  => 'GET',
@@ -124,4 +125,5 @@ return [
 			}
 		}
 	],
+	// @codeCoverageIgnoreEnd
 ];
