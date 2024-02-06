@@ -193,7 +193,9 @@ class Api extends BaseApi
 		string $name,
 		string|null $path = null
 	): mixed {
-		$section = $model->blueprint()?->section($name);
+		if (!$section = $model->blueprint()?->section($name)) {
+			throw new NotFoundException('The section "' . $name . '" could not be found');
+		}
 
 		$sectionApi = $this->clone([
 			'data'   => [...$this->data(), 'section' => $section],
