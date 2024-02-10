@@ -1,7 +1,28 @@
 <script>
 import DateInput from "./DateInput.vue";
 
+export const IsoProps = {
+	props: {
+		/**
+		 * The last allowed time as ISO time string
+		 * @example `22:30:00`
+		 */
+		max: String,
+		/**
+		 * The first allowed time as ISO time string
+		 * @example `01:30:00`
+		 */
+		min: String,
+		/**
+		 * Value must be provided as ISO time string
+		 * @example `22:33:00`
+		 */
+		value: String
+	}
+};
+
 export const props = {
+	mixins: [IsoProps],
 	props: {
 		/**
 		 * Format to parse and display the time
@@ -12,18 +33,6 @@ export const props = {
 			type: String,
 			default: "HH:mm"
 		},
-		/**
-		 * The last allowed time
-		 * as ISO time string
-		 * @example `22:30:00`
-		 */
-		max: String,
-		/**
-		 * The first allowed time
-		 * as ISO time string
-		 * @example `01:30:00`
-		 */
-		min: String,
 		/**
 		 * Rounding to the nearest step.
 		 * Requires an object with a `unit`
@@ -42,12 +51,7 @@ export const props = {
 		type: {
 			type: String,
 			default: "time"
-		},
-		/**
-		 * Value must be provided as ISO time string
-		 * @example `22:33:00`
-		 */
-		value: String
+		}
 	}
 };
 

@@ -1,6 +1,6 @@
 <template>
 	<k-lab-form>
-		<k-lab-examples>
+		<k-lab-examples class="k-lab-input-examples">
 			<k-lab-example label="Default">
 				<k-timeoptions-input
 					name="timeoptions"
@@ -38,6 +38,22 @@
 				<k-timeoptions-input
 					:disabled="true"
 					:value="value"
+					@input="value = $event"
+				/>
+			</k-lab-example>
+
+			<k-lab-example label="Min: 12:00">
+				<k-timeoptions-input
+					:value="value"
+					min="12:00:00"
+					@input="value = $event"
+				/>
+			</k-lab-example>
+
+			<k-lab-example label="Max: 18:00">
+				<k-timeoptions-input
+					:value="value"
+					max="18:00:00"
 					@input="value = $event"
 				/>
 			</k-lab-example>
