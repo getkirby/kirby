@@ -1,6 +1,8 @@
 <template>
 	<k-range-input
 		v-bind="$props"
+		:min="0"
+		:max="360"
 		class="k-hue-input"
 		@input="$emit('input', $event)"
 	/>
@@ -13,14 +15,10 @@ import Input from "./RangeInput.vue";
 export const props = {
 	mixins: [RangeInputProps],
 	props: {
-		max: {
-			default: 360,
-			type: Number
-		},
-		min: {
-			default: 0,
-			type: Number
-		},
+		// unset unused/fixed props
+		max: null,
+		min: null,
+
 		step: {
 			default: 1,
 			type: Number
