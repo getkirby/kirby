@@ -8,7 +8,15 @@ $parentPattern = '(account|pages/[^/]+|site|users/[^/]+)/files';
  * Files Routes
  */
 return [
-
+	[
+		'pattern' => $filePattern . '/fields/(:any)/(:all?)',
+		'method'  => 'ALL',
+		'action'  => function (string $parent, string $filename, string $fieldName, string|null $path = null) {
+			if ($file = $this->file($parent, $filename)) {
+				return $this->fieldApi($file, $fieldName, $path);
+			}
+		}
+	],
 	[
 		'pattern' => $filePattern . '/sections/(:any)',
 		'method'  => 'GET',
@@ -17,11 +25,11 @@ return [
 		}
 	],
 	[
-		'pattern' => $filePattern . '/fields/(:any)/(:all?)',
+		'pattern' => $filePattern . '/sections/(:any)/(:all?)',
 		'method'  => 'ALL',
-		'action'  => function (string $parent, string $filename, string $fieldName, string $path = null) {
+		'action'  => function (string $parent, string $filename, string $sectionName, string|null $path = null) {
 			if ($file = $this->file($parent, $filename)) {
-				return $this->fieldApi($file, $fieldName, $path);
+				return $this->sectionApi($file, $sectionName, $path);
 			}
 		}
 	],

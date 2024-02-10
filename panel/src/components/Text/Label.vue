@@ -75,6 +75,7 @@ export default {
 	height: var(--height-xs);
 	font-weight: var(--font-semi);
 	min-width: 0;
+	flex: 1;
 }
 [aria-disabled="true"] .k-label {
 	opacity: var(--opacity-disabled);
