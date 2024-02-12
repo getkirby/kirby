@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use DateTimeZone;
 use IntlDateFormatter;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
