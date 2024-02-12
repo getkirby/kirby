@@ -147,14 +147,14 @@ class FileBlueprint extends Blueprint
 		if (is_array($accept['mime']) === true) {
 			// determine the extensions for each MIME type
 			$extensions = array_map(
-				fn($pattern) => Mime::toExtensions($pattern, true),
+				fn ($pattern) => Mime::toExtensions($pattern, true),
 				$accept['mime']
 			);
 
 			$fromMime = array_unique(array_merge(...$extensions));
 
 			// return early to ignore the other options
-			return implode(',', array_map(fn($ext) => ".$ext", $fromMime));
+			return implode(',', array_map(fn ($ext) => ".$ext", $fromMime));
 		}
 
 		$restrictions = [];
@@ -188,7 +188,7 @@ class FileBlueprint extends Blueprint
 		$list = array_unique($list);
 
 		// format the list to include a leading dot on each extension
-		return implode(',', array_map(fn($ext) => ".$ext", $list));
+		return implode(',', array_map(fn ($ext) => ".$ext", $list));
 
 		// unknown restrictions, accept everything
 		return '*';
