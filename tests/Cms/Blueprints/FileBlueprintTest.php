@@ -2,7 +2,6 @@
 
 use Kirby\Cms\Blueprint;
 use Kirby\Cms\File;
-use Kirby\Cms\FileBlueprint;
 use Kirby\Cms\Page;
 use Kirby\TestCase;
 
