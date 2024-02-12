@@ -14,7 +14,8 @@ class FileBlueprintTest extends TestCase
 	protected ?Page $parent;
 	protected array $acceptCases;
 
-	protected function setUp(): void {
+	protected function setUp(): void
+	{
 		$this->parent = Page::factory([
 			'slug' => 'test'
 		]);
@@ -85,7 +86,8 @@ class FileBlueprintTest extends TestCase
 		}
 	}
 
-	protected function tearDown(): void {
+	protected function tearDown(): void
+	{
 		Blueprint::$loaded = [];
 		$this->parent = null;
 	}
@@ -93,8 +95,9 @@ class FileBlueprintTest extends TestCase
 	/**
 	 * @covers ::acceptAttribute
 	 */
-	public function testAcceptAttribute() {
-		foreach($this->acceptCases as $name => $case) {
+	public function testAcceptAttribute()
+	{
+		foreach ($this->acceptCases as $name => $case) {
 			$file = new File([
 				'filename' => 'tmp',
 				'parent'   => $this->parent,
