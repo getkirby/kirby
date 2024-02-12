@@ -273,7 +273,7 @@ class DateTest extends TestCase
 		$this->assertSame($date, $date->round($unit, $size));
 		$this->assertSame($expected, $date->format('Y-m-d H:i:s'));
 	}
-	
+
 	public static function roundProvider(): array
 	{
 		return [
