@@ -267,13 +267,13 @@ class DateTest extends TestCase
 	 * @covers ::round
 	 * @dataProvider roundProvider
 	 */
-	public function testRound(string $unit, int $size, string $input, string $expected)
+	public function testRound(string $unit, int $size, string $input, string $timezone, string $expected)
 	{
-		$date = new Date($input);
+		$date = new Date($input, new DateTimeZone($timezone));
 		$this->assertSame($date, $date->round($unit, $size));
 		$this->assertSame($expected, $date->format('Y-m-d H:i:s'));
 	}
-
+	
 	public static function roundProvider(): array
 	{
 		return [
