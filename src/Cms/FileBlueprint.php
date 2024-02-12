@@ -151,7 +151,7 @@ class FileBlueprint extends Blueprint
 				$accept['mime']
 			);
 
-			$fromMime = array_unique(array_merge(...$extensions));
+			$fromMime = array_unique(array_merge(...array_values($extensions)));
 
 			// return early to ignore the other options
 			return implode(',', array_map(fn ($ext) => ".$ext", $fromMime));
@@ -168,7 +168,7 @@ class FileBlueprint extends Blueprint
 
 			// F::typeToExtensions might return null instead of empty arrays,
 			// we need to filter those out
-			$fromType = array_merge(...array_filter($extensions));
+			$fromType = array_merge(...array_values(array_filter($extensions)));
 			$restrictions[] = $fromType;
 		}
 
