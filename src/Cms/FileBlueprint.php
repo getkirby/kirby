@@ -189,9 +189,6 @@ class FileBlueprint extends Blueprint
 
 		// format the list to include a leading dot on each extension
 		return implode(',', array_map(fn ($ext) => ".$ext", $list));
-
-		// unknown restrictions, accept everything
-		return '*';
 	}
 
 	protected function normalizeAccept(mixed $accept = null): array
