@@ -320,7 +320,7 @@ class DateTest extends TestCase
 		foreach ($timezones as $timezone) {
 			foreach ($inputs as $label => $arguments) {
 				$arguments[] = $timezone;
-				$data[$label . ' '. $timezone] = $arguments;
+				$data[$label . ' ' . $timezone] = $arguments;
 			}
 		}
 
