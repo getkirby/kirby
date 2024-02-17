@@ -3,7 +3,7 @@
 		<k-input v-bind="$props" ref="input" type="url" v-on="$listeners">
 			<template #icon>
 				<k-button
-					v-if="link"
+					v-if="link && isValidUrl"
 					:icon="icon"
 					:link="value"
 					:title="$t('open')"
@@ -37,6 +37,13 @@ export default {
 		icon: {
 			type: String,
 			default: "url"
+		}
+	},
+	computed: {
+		isValidUrl() {
+			return (
+				this.value !== "" && this.$helper.url.isUrl(this.value, true) === true
+			);
 		}
 	},
 	methods: {
