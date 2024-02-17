@@ -6,13 +6,7 @@
 		class="k-tags-field"
 	>
 		<k-empty v-if="hasNoOptions" :icon="icon" :text="$t('options.none')" />
-		<k-input
-			v-else
-			v-bind="$props"
-			ref="input"
-			type="tags"
-			v-on="$listeners"
-		/>
+		<k-input v-else v-bind="$props" ref="input" type="tags" v-on="$listeners" />
 	</k-field>
 </template>
 

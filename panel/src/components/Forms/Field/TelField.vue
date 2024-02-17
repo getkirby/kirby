@@ -1,11 +1,6 @@
 <template>
 	<k-field v-bind="$props" :input="id" class="k-tel-field">
-		<k-input
-			v-bind="$props"
-			ref="input"
-			type="tel"
-			v-on="$listeners"
-		/>
+		<k-input v-bind="$props" ref="input" type="tel" v-on="$listeners" />
 	</k-field>
 </template>
 
