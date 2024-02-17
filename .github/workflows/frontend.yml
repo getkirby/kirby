@@ -125,10 +125,8 @@ jobs:
 
       - name: Check for JavaScript coding style violations (Prettier)
         if: always() && steps.finishPrepare.outcome == 'success'
-        # Use the --check flag in push builds to get a failed CI status
-        run: >
-          npm run format --
-          ${{ github.event_name != 'pull_request' && '--check' || '--write' }}
+        # Use the --check flag to get a failed CI status
+        run: npm run format --check
         working-directory: panel
 
       - name: Create code suggestions from the coding style changes (on PR only)
