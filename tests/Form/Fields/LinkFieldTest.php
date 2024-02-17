@@ -26,8 +26,7 @@ class LinkFieldTest extends TestCase
 			'file',
 			'email',
 			'tel',
-			'anchor',
-			'custom'
+			'anchor'
 		], $field->options());
 	}
 }
