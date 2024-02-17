@@ -1,5 +1,5 @@
 <template>
-	<k-lab-examples>
+	<k-lab-examples class="k-lab-helpers-examples">
 		<k-box theme="text">
 			<k-text>
 				Access the following array helpers in your Vue components through
@@ -210,13 +210,3 @@ export default {
 	mixins: [fromObject, search, sortBy, split]
 };
 </script>
-
-<style>
-.k-lab-example .k-text {
-	margin-bottom: var(--spacing-6);
-}
-.k-lab-example h2 {
-	margin-bottom: var(--spacing-3);
-	font-weight: var(--font-bold);
-}
-</style>
