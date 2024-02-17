@@ -26,10 +26,10 @@ export default (options = {}) => {
 	var normalize = options.insensitive
 		? function (s) {
 				return lowerCase("" + s).replace(tre, "");
-		  }
+			}
 		: function (s) {
 				return ("" + s).replace(tre, "");
-		  };
+			};
 
 	function lowerCase(s) {
 		if (s.toLocaleLowerCase) {

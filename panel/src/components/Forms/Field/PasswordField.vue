@@ -8,12 +8,7 @@
 		<template #options>
 			<slot name="options" />
 		</template>
-		<k-input
-			v-bind="$props"
-			ref="input"
-			type="password"
-			v-on="$listeners"
-		/>
+		<k-input v-bind="$props" ref="input" type="password" v-on="$listeners" />
 	</k-field>
 </template>
 

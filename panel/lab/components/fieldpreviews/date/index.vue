@@ -19,6 +19,14 @@
 			</k-lab-table-cell>
 		</k-lab-example>
 
+		<k-lab-example label="Invalid date">
+			<k-lab-table-cell>
+				<!-- @code -->
+				<k-date-field-preview value="Not a date" />
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
+
 		<k-lab-example label="Time">
 			<k-lab-table-cell>
 				<!-- @code -->
