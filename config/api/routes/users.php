@@ -1,6 +1,8 @@
 <?php
 
+use Kirby\Exception\Exception;
 use Kirby\Filesystem\F;
+use Kirby\Toolkit\Str;
 
 /**
  * User Routes
@@ -79,17 +81,37 @@ return [
         ],
         'method'  => 'POST',
         'action'  => function (string $id) {
-            if ($avatar = $this->user($id)->avatar()) {
-                $avatar->delete();
-            }
+            return $this->upload(
+                function ($source, $filename) use ($id) {
+                    $type = F::type($filename);
+                    if ($type !== 'image') {
+                        throw new Exception([
+                            'key'  => 'file.type.invalid',
+                            'data' => compact('type')
+                        ]);
+                    }
 
-            return $this->upload(function ($source, $filename) use ($id) {
-                return $this->user($id)->createFile([
-                    'filename' => 'profile.' . F::extension($filename),
-                    'template' => 'avatar',
-                    'source'   => $source
-                ]);
-            }, $single = true);
+                    $mime = F::mime($source);
+                    if (Str::startsWith($mime, 'image/') !== true) {
+                        throw new Exception([
+                            'key'  => 'file.mime.invalid',
+                            'data' => compact('mime')
+                        ]);
+                    }
+
+                    // delete the old avatar
+                    if ($avatar = $this->user($id)->avatar()) {
+                        $avatar->delete();
+                    }
+
+                    return $this->user($id)->createFile([
+                        'filename' => 'profile.' . F::extension($filename),
+                        'template' => 'avatar',
+                        'source'   => $source
+                    ]);
+                },
+                $single = true
+            );
         }
     ],
     // @codeCoverageIgnoreEnd
