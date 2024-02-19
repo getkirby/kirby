@@ -261,7 +261,7 @@ class Example
 					$code = preg_replace('/^\t{' . $indents . '}/m', '', $code);
 				}
 
-				$examples[$name] = '<template>' . PHP_EOL . "\t" . trim($code) . PHP_EOL .  '</template>' . $js;
+				$examples[$name] = '<template>' . PHP_EOL . "\t" . trim($code) . PHP_EOL . '</template>' . $js;
 			}
 		}
 
