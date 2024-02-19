@@ -1,5 +1,7 @@
 <template>
+	<span v-if="isEmoji" data-type="emoji">{{ type }}</span>
 	<svg
+		v-else
 		:aria-label="alt"
 		:role="alt ? 'img' : null"
 		:aria-hidden="!alt"
@@ -39,7 +41,12 @@ export const props = {
  * @example <k-icon type="edit" />
  */
 export default {
-	mixins: [props]
+	mixins: [props],
+	computed: {
+		isEmoji() {
+			return this.$helper.string.hasEmoji(this.type);
+		}
+	}
 };
 </script>
 
@@ -63,6 +70,18 @@ export default {
 @keyframes Spin {
 	100% {
 		transform: rotate(360deg);
+	}
+}
+
+/* fix emoji alignment on high-res screens */
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+not all,
+not all,
+not all,
+only screen and (min-resolution: 192dpi),
+only screen and (min-resolution: 2dppx) {
+	.k-button-icon [data-type="emoji"] {
+		font-size: 1.25em;
 	}
 }
 </style>
