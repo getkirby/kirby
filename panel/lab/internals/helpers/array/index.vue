@@ -11,13 +11,21 @@
 					Creates an array from an object:
 					<code>this.$helpers.array.fromObject(object)</code>
 				</p>
-				<!-- @code -->
-				<k-box theme="code">Input: {{ fromObjectInput }}</k-box>
-				<k-box theme="code">
-					Result: {{ $helper.array.fromObject(fromObjectInput) }}
-				</k-box>
-				<!-- @code-end -->
 			</k-text>
+			<!-- @code -->
+			<k-grid variant="fields">
+				<k-column width="1/2">
+					<h2>Input</h2>
+					<k-code language="javascript">{{ fromObjectInput }}</k-code>
+				</k-column>
+				<k-column width="1/2">
+					<h2>Result</h2>
+					<k-code language="javascript">{{
+						$helper.array.fromObject(fromObjectInput)
+					}}</k-code>
+				</k-column>
+			</k-grid>
+			<!-- @code-end -->
 		</k-lab-example>
 
 		<k-lab-example label="$helpers.array.search()">
@@ -29,22 +37,27 @@
 						field: "name" })
 					</code>
 				</p>
-				<!-- @code -->
-				<k-box theme="code">{{ searchInput }}</k-box>
-				<k-input
-					type="text"
-					placeholder="Query"
-					@input="
-						searchQuery = $event;
-						searchResult = $helper.array.search(searchInput, $event, {
-							min: 2,
-							field: 'name'
-						});
-					"
-				/>
-				<k-box theme="code">{{ searchResult }}</k-box>
-				<!-- @code-end -->
 			</k-text>
+
+			<!-- @code -->
+			<k-grid variant="fields">
+				<k-column>
+					<k-input
+						type="text"
+						placeholder="Query"
+						@input="searchQuery = $event"
+					/>
+				</k-column>
+				<k-column width="1/2">
+					<h2>Input</h2>
+					<k-code language="javascript">{{ searchInput }}</k-code>
+				</k-column>
+				<k-column width="1/2">
+					<h2>Result</h2>
+					<k-code language="javascript">{{ searchResult }}</k-code>
+				</k-column>
+			</k-grid>
+			<!-- @code-end -->
 		</k-lab-example>
 
 		<k-lab-example label="$helpers.array.sortBy()">
@@ -53,13 +66,21 @@
 					Sorts an array by one or more fields and directions:
 					<code>this.$helpers.array.sortBy(array, "name desc")</code>
 				</p>
-				<!-- @code -->
-				<k-box theme="code">{{ searchInput }}</k-box>
-				<k-box theme="code">{{
-					$helper.array.sortBy(searchInput, "name desc")
-				}}</k-box>
-				<!-- @code-end -->
 			</k-text>
+			<!-- @code -->
+			<k-grid variant="fields">
+				<k-column width="1/2">
+					<h2>Input</h2>
+					<k-code language="javascript">{{ searchInput }}</k-code>
+				</k-column>
+				<k-column width="1/2">
+					<h2>Result</h2>
+					<k-code language="javascript">{{
+						$helper.array.sortBy(searchInput, "name desc")
+					}}</k-code>
+				</k-column>
+			</k-grid>
+			<!-- @code-end -->
 		</k-lab-example>
 
 		<k-lab-example label="$helpers.array.split()">
@@ -68,11 +89,21 @@
 					Splits an array into groups by a delimiter entry:
 					<code>this.$helpers.array.split(array, "-")</code>
 				</p>
-				<!-- @code -->
-				<k-box theme="code">{{ splitInput }}</k-box>
-				<k-box theme="code">{{ $helper.array.split(splitInput, "-") }}</k-box>
-				<!-- @code-end -->
 			</k-text>
+			<!-- @code -->
+			<k-grid variant="fields">
+				<k-column width="1/2">
+					<h2>Input</h2>
+					<k-code language="javascript">{{ splitInput }}</k-code>
+				</k-column>
+				<k-column width="1/2">
+					<h2>Result</h2>
+					<k-code language="javascript">{{
+						$helper.array.split(splitInput, "-")
+					}}</k-code>
+				</k-column>
+			</k-grid>
+			<!-- @code-end -->
 		</k-lab-example>
 
 		<k-lab-example label="$helpers.array.wrap()">
@@ -81,14 +112,29 @@
 					Wraps a value in an array (ensures the value will be an array):
 					<code>this.$helpers.array.wrap(value)</code>
 				</p>
-				<k-box theme="code">"aaa", ["aaa"]</k-box>
-				<!-- @code -->
-				<k-box theme="code">
-					{{ $helper.array.wrap("aaa") }},
-					{{ $helper.array.wrap(["aaa"]) }}
-				</k-box>
-				<!-- @code-end -->
 			</k-text>
+			<!-- @code -->
+			<k-grid variant="fields">
+				<k-column width="1/2">
+					<h2>Input</h2>
+					<k-code language="javascript">"aaa"</k-code>
+				</k-column>
+				<k-column width="1/2">
+					<h2>Result</h2>
+					<k-code language="javascript">{{ $helper.array.wrap("aaa") }}</k-code>
+				</k-column>
+				<k-column width="1/2">
+					<h2>Input</h2>
+					<k-code language="javascript">{{ ["aaa"] }}</k-code>
+				</k-column>
+				<k-column width="1/2">
+					<h2>Result</h2>
+					<k-code language="javascript">{{
+						$helper.array.wrap(["aaa"])
+					}}</k-code>
+				</k-column>
+			</k-grid>
+			<!-- @code-end -->
 		</k-lab-example>
 	</k-lab-examples>
 </template>
@@ -97,7 +143,6 @@
 export default {
 	data() {
 		return {
-			searchResult: null,
 			searchQuery: ""
 		};
 	},
@@ -112,6 +157,12 @@ export default {
 				{ id: 3, name: "Jane Doe" }
 			];
 		},
+		searchResult() {
+			return this.$helper.array.search(this.searchInput, this.searchQuery, {
+				min: 0,
+				field: "name"
+			});
+		},
 		splitInput() {
 			return [
 				{ id: 1, name: "John Doe" },
@@ -123,3 +174,13 @@ export default {
 	}
 };
 </script>
+
+<style>
+.k-lab-example .k-text {
+	margin-bottom: var(--spacing-6);
+}
+.k-lab-example h2 {
+	margin-bottom: var(--spacing-3);
+	font-weight: var(--font-bold);
+}
+</style>
