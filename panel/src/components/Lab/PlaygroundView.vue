@@ -126,6 +126,13 @@ export default {
 	margin-bottom: 0;
 }
 
+.k-lab-examples h2 {
+	margin-bottom: var(--spacing-6);
+}
+.k-lab-examples * + h2 {
+	margin-top: var(--spacing-12);
+}
+
 .k-lab-input-examples .k-lab-example-canvas:has(:invalid) {
 	outline: 2px solid var(--color-red-500);
 	outline-offset: -2px;

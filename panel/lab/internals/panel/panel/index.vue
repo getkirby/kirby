@@ -316,12 +316,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.k-lab-examples h2 {
-	margin-bottom: var(--spacing-6);
-}
-.k-lab-examples * + h2 {
-	margin-top: var(--spacing-12);
-}
-</style>
