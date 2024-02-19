@@ -2,6 +2,8 @@ import sort from "./sort";
 import "./regex";
 
 /**
+ * Creates an array from an object
+ *
  * @param {Array|Object} object
  * @returns {Array}
  */
