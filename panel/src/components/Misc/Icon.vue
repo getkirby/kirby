@@ -44,6 +44,11 @@ export default {
 	mixins: [props],
 	computed: {
 		isEmoji() {
+			// skip if string is a valid icon identifier
+			if (/^[a-z0-9_-]+$/.test(this.type) === true) {
+				return false;
+			}
+
 			return this.$helper.string.hasEmoji(this.type);
 		}
 	}
@@ -75,11 +80,11 @@ export default {
 
 /* fix emoji alignment on high-res screens */
 @media only screen and (-webkit-min-device-pixel-ratio: 2),
-not all,
-not all,
-not all,
-only screen and (min-resolution: 192dpi),
-only screen and (min-resolution: 2dppx) {
+	not all,
+	not all,
+	not all,
+	only screen and (min-resolution: 192dpi),
+	only screen and (min-resolution: 2dppx) {
 	.k-button-icon [data-type="emoji"] {
 		font-size: 1.25em;
 	}
