@@ -8,7 +8,7 @@
 		@click="onClick"
 	>
 		<span v-if="icon" class="k-button-icon">
-			<k-icon :type="icon" />
+			<k-icon-frame :icon="icon" back="transparent" />
 		</span>
 		<span v-if="text || $slots.default" class="k-button-text">
 			<!--
