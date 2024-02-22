@@ -5,7 +5,7 @@
 			<code>this.$helpers.array</code>
 		</k-text>
 
-		<k-lab-example label="$helpers.array.fromObject()">
+		<k-lab-example label="$helpers.array.fromObject()" script="fromObject">
 			<k-text>
 				<p>
 					Creates an array from an object:
@@ -28,7 +28,7 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
-		<k-lab-example label="$helpers.array.search()">
+		<k-lab-example label="$helpers.array.search()" script="search">
 			<k-text>
 				<p>
 					Filters an array by a provided query:
@@ -60,7 +60,7 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
-		<k-lab-example label="$helpers.array.sortBy()">
+		<k-lab-example label="$helpers.array.sortBy()" script="sortBy">
 			<k-text>
 				<p>
 					Sorts an array by one or more fields and directions:
@@ -71,19 +71,19 @@
 			<k-grid variant="fields">
 				<k-column width="1/2">
 					<h2>Input</h2>
-					<k-code language="javascript">{{ searchInput }}</k-code>
+					<k-code language="javascript">{{ sortInput }}</k-code>
 				</k-column>
 				<k-column width="1/2">
 					<h2>Result</h2>
 					<k-code language="javascript">{{
-						$helper.array.sortBy(searchInput, "name desc")
+						$helper.array.sortBy(sortInput, "name desc")
 					}}</k-code>
 				</k-column>
 			</k-grid>
 			<!-- @code-end -->
 		</k-lab-example>
 
-		<k-lab-example label="$helpers.array.split()">
+		<k-lab-example label="$helpers.array.split()" script="split">
 			<k-text>
 				<p>
 					Splits an array into groups by a delimiter entry:
@@ -140,16 +140,24 @@
 </template>
 
 <script>
-export default {
+/** @script: fromObject */
+export const fromObject = {
+	computed: {
+		fromObjectInput() {
+			return { a: 1, b: 2, c: 3 };
+		}
+	}
+};
+/** @script-end */
+
+/** @script: search */
+export const search = {
 	data() {
 		return {
 			searchQuery: ""
 		};
 	},
 	computed: {
-		fromObjectInput() {
-			return { a: 1, b: 2, c: 3 };
-		},
 		searchInput() {
 			return [
 				{ id: 1, name: "John Doe" },
@@ -162,7 +170,28 @@ export default {
 				min: 0,
 				field: "name"
 			});
-		},
+		}
+	}
+};
+/** @script-end */
+
+/** @script: sortBy */
+export const sortBy = {
+	computed: {
+		sortInput() {
+			return [
+				{ id: 1, name: "John Doe" },
+				{ id: 2, name: "Homer Simpson" },
+				{ id: 3, name: "Jane Doe" }
+			];
+		}
+	}
+};
+/** @script-end */
+
+/** @script: split */
+export const split = {
+	computed: {
 		splitInput() {
 			return [
 				{ id: 1, name: "John Doe" },
@@ -172,6 +201,11 @@ export default {
 			];
 		}
 	}
+};
+/** @script-end */
+
+export default {
+	mixins: [fromObject, search, sortBy, split]
 };
 </script>
 
