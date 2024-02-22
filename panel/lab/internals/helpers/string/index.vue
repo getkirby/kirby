@@ -1,9 +1,11 @@
 <template>
 	<k-lab-examples class="k-lab-helpers-examples">
-		<k-text>
-			Access the following string helpers in your Vue components through
-			<code>this.$helper.string</code>
-		</k-text>
+		<k-box theme="text">
+			<k-text>
+				Access the following string helpers in your Vue components through
+				<code>this.$helper.string</code>
+			</k-text>
+		</k-box>
 
 		<k-lab-example label="$helper.string.camelToKebab()" script="camelCase">
 			<k-text>
