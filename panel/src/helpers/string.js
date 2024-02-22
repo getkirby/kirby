@@ -221,8 +221,7 @@ export function stripHTML(string) {
 }
 
 /**
- * Replaces template placeholders in string
- * with provided values
+ * Replaces template placeholders in string with provided values
  * @param {string} string
  * @param {Object} values
  * @returns {string}

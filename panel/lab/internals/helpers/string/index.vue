@@ -251,19 +251,17 @@
 					<code>this.$helpers.string.slug(string, rules, allowed, separator)</code>
 				</p>
 
-				<p>
-					<ul>
-						<li>
-							<code>rules</code> (array): Array of custom rules for replacing characters, e.g. <code>[{ "ä": "ae" }]</code>
-						</li>
-						<li>
-							<code>allowed</code> (string): Allowed characters, default is <code>a-z0-9</code>
-						</li>
-						<li>
-							<code>separator</code> (string): Separator for the slug, default is <code>-</code>
-						</li>
-					</ul>
-				</p>
+				<ul>
+					<li>
+						<code>rules</code> (array): Array of custom rules for replacing characters, e.g. <code>[{ "ä": "ae" }]</code>
+					</li>
+					<li>
+						<code>allowed</code> (string): Allowed characters, default is <code>a-z0-9</code>
+					</li>
+					<li>
+						<code>separator</code> (string): Separator for the slug, default is <code>-</code>
+					</li>
+				</ul>
 			</k-text>
 
 			<!-- @code -->
@@ -340,6 +338,37 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
+		<k-lab-example label="$helpers.string.template()" script="template">
+			<k-text>
+				<p>
+					Replaces template placeholders in string with provided values:
+					<code>this.$helpers.string.template(string, values)</code>
+				</p>
+			</k-text>
+			<!-- @code -->
+			<k-grid variant="fields">
+				<k-column width="1/2">
+					<h2>Input</h2>
+					<k-input
+						type="text"
+						:value="template"
+						@input="template = $event"
+					/>
+					<br>
+					<k-code language="javascript">{{
+						templateValues
+					}}</k-code>
+				</k-column>
+				<k-column width="1/2">
+					<h2>Result</h2>
+					<k-code language="text">{{
+						$helper.string.template(template, templateValues)
+					}}</k-code>
+				</k-column>
+			</k-grid>
+			<!-- @code-end -->
+		</k-lab-example>
+
 		<k-lab-example label="$helpers.string.ucwords()" script="ucwords">
 			<k-text>
 				<p>
@@ -391,6 +420,20 @@
 					}}</k-code>
 				</k-column>
 			</k-grid>
+			<!-- @code-end -->
+		</k-lab-example>
+
+		<k-lab-example label="$helpers.string.uuid()">
+			<k-text>
+				<p>
+					Returns a unique ID:
+					<code>this.$helpers.string.uuid()</code>
+				</p>
+			</k-text>
+			<!-- @code -->
+			<k-code language="javascript">{{
+				$helper.string.uuid()
+			}}</k-code>
 			<!-- @code-end -->
 		</k-lab-example>
 
@@ -499,6 +542,25 @@ export const slug = {
 };
 /** @script-end */
 
+/** @script: template */
+export const template = {
+	data() {
+		return {
+			template: "This is { foo } and {{ baz }}",
+		}
+	},
+	computed: {
+		templateValues() {
+			return {
+				"foo": "bar",
+				"baz": "qux"
+			}
+		}
+
+	}
+};
+/** @script-end */
+
 /** @script: ucfirst */
 export const ucfirst = {
 	data() {
@@ -541,6 +603,7 @@ export default {
 		random,
 		rtrim,
 		slug,
+		template,
 		ucfirst,
 		ucwords,
 		unhtml
