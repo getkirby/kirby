@@ -1,9 +1,11 @@
 <template>
 	<k-lab-examples>
-		<k-text>
-			Access the following array helpers in your Vue components through
-			<code>this.$helpers.array</code>
-		</k-text>
+		<k-box theme="text">
+			<k-text>
+				Access the following array helpers in your Vue components through
+				<code>this.$helpers.array</code>
+			</k-text>
+		</k-box>
 
 		<k-lab-example label="$helpers.array.fromObject()" script="fromObject">
 			<k-text>
