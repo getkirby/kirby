@@ -3,15 +3,15 @@
 		<k-box theme="text">
 			<k-text>
 				Access the following array helpers in your Vue components through
-				<code>this.$helpers.array</code>
+				<code>this.$helper.array</code>
 			</k-text>
 		</k-box>
 
-		<k-lab-example label="$helpers.array.fromObject()" script="fromObject">
+		<k-lab-example label="$helper.array.fromObject()" script="fromObject">
 			<k-text>
 				<p>
 					Creates an array from an object:
-					<code>this.$helpers.array.fromObject(object)</code>
+					<code>this.$helper.array.fromObject(object)</code>
 				</p>
 			</k-text>
 			<!-- @code -->
@@ -30,12 +30,12 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
-		<k-lab-example label="$helpers.array.search()" script="search">
+		<k-lab-example label="$helper.array.search()" script="search">
 			<k-text>
 				<p>
 					Filters an array by a provided query:
 					<code>
-						this.$helpers.array.search(array, "{{ searchQuery }}", { min: 2,
+						this.$helper.array.search(array, "{{ searchQuery }}", { min: 2,
 						field: "name" })
 					</code>
 				</p>
@@ -62,11 +62,11 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
-		<k-lab-example label="$helpers.array.sortBy()" script="sortBy">
+		<k-lab-example label="$helper.array.sortBy()" script="sortBy">
 			<k-text>
 				<p>
 					Sorts an array by one or more fields and directions:
-					<code>this.$helpers.array.sortBy(array, "name desc")</code>
+					<code>this.$helper.array.sortBy(array, "name desc")</code>
 				</p>
 			</k-text>
 			<!-- @code -->
@@ -85,11 +85,11 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
-		<k-lab-example label="$helpers.array.split()" script="split">
+		<k-lab-example label="$helper.array.split()" script="split">
 			<k-text>
 				<p>
 					Splits an array into groups by a delimiter entry:
-					<code>this.$helpers.array.split(array, "-")</code>
+					<code>this.$helper.array.split(array, "-")</code>
 				</p>
 			</k-text>
 			<!-- @code -->
@@ -108,11 +108,11 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
-		<k-lab-example label="$helpers.array.wrap()">
+		<k-lab-example label="$helper.array.wrap()">
 			<k-text>
 				<p>
 					Wraps a value in an array (ensures the value will be an array):
-					<code>this.$helpers.array.wrap(value)</code>
+					<code>this.$helper.array.wrap(value)</code>
 				</p>
 			</k-text>
 			<!-- @code -->

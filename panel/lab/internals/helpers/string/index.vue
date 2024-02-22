@@ -2,14 +2,14 @@
 	<k-lab-examples class="k-lab-helpers-examples">
 		<k-text>
 			Access the following string helpers in your Vue components through
-			<code>this.$helpers.string</code>
+			<code>this.$helper.string</code>
 		</k-text>
 
-		<k-lab-example label="$helpers.string.camelToKebab()" script="camelCase">
+		<k-lab-example label="$helper.string.camelToKebab()" script="camelCase">
 			<k-text>
 				<p>
 					Converts camel-case to kebab-case:
-					<code>this.$helpers.string.camelToKebab(string)</code>
+					<code>this.$helper.string.camelToKebab(string)</code>
 				</p>
 			</k-text>
 			<!-- @code -->
@@ -32,11 +32,11 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
-		<k-lab-example label="$helpers.string.escapeHTML()" script="html">
+		<k-lab-example label="$helper.string.escapeHTML()" script="html">
 			<k-text>
 				<p>
 					Escapes HTML in string:
-					<code>this.$helpers.string.escapeHTML(string)</code>
+					<code>this.$helper.string.escapeHTML(string)</code>
 				</p>
 			</k-text>
 			<!-- @code -->
@@ -59,11 +59,11 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
-		<k-lab-example label="$helpers.string.hasEmoji()" script="emoji">
+		<k-lab-example label="$helper.string.hasEmoji()" script="emoji">
 			<k-text>
 				<p>
 					Checks if string contains an emoji:
-					<code>this.$helpers.string.hasEmoji(string)</code>
+					<code>this.$helper.string.hasEmoji(string)</code>
 				</p>
 			</k-text>
 			<!-- @code -->
@@ -84,11 +84,11 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
-		<k-lab-example label="$helpers.string.isEmpty()" script="empty">
+		<k-lab-example label="$helper.string.isEmpty()" script="empty">
 			<k-text>
 				<p>
 					Checks if a string is empty:
-					<code>this.$helpers.string.isEmpty(string)</code>
+					<code>this.$helper.string.isEmpty(string)</code>
 				</p>
 			</k-text>
 			<!-- @code -->
@@ -109,11 +109,11 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
-		<k-lab-example label="$helpers.string.lcfirst()" script="lcfirst">
+		<k-lab-example label="$helper.string.lcfirst()" script="lcfirst">
 			<k-text>
 				<p>
 					Turns first letter lowercase:
-					<code>this.$helpers.string.lcfirst(string)</code>
+					<code>this.$helper.string.lcfirst(string)</code>
 				</p>
 			</k-text>
 			<!-- @code -->
@@ -134,11 +134,11 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
-		<k-lab-example label="$helpers.string.ltrim()" script="ltrim">
+		<k-lab-example label="$helper.string.ltrim()" script="ltrim">
 			<k-text>
 				<p>
 					Trims the given character(s) at the beginning of the string:
-					<code>this.$helpers.string.ltrim(string, replace)</code>
+					<code>this.$helper.string.ltrim(string, replace)</code>
 				</p>
 			</k-text>
 			<!-- @code -->
@@ -159,11 +159,11 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
-		<k-lab-example label="$helpers.string.pad()" script="pad">
+		<k-lab-example label="$helper.string.pad()" script="pad">
 			<k-text>
 				<p>
 					Prefixes string with 0 until length is reached:
-					<code>this.$helpers.string.pad(string, length)</code>
+					<code>this.$helper.string.pad(string, length)</code>
 				</p>
 			</k-text>
 			<!-- @code -->
@@ -194,11 +194,11 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
-		<k-lab-example label="$helpers.string.random()" script="random">
+		<k-lab-example label="$helper.string.random()" script="random">
 			<k-text>
 				<p>
 					Generate random alpha-num string of specified length:
-					<code>this.$helpers.string.random(length)</code>
+					<code>this.$helper.string.random(length)</code>
 				</p>
 			</k-text>
 			<!-- @code -->
@@ -219,11 +219,11 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
-		<k-lab-example label="$helpers.string.rtrim()" script="rtrim">
+		<k-lab-example label="$helper.string.rtrim()" script="rtrim">
 			<k-text>
 				<p>
 					Trims the given character(s) at the end of the string:
-					<code>this.$helpers.string.rtrim(string, replace)</code>
+					<code>this.$helper.string.rtrim(string, replace)</code>
 				</p>
 			</k-text>
 			<!-- @code -->
@@ -244,11 +244,11 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
-		<k-lab-example label="$helpers.string.slug()" script="slug">
+		<k-lab-example label="$helper.string.slug()" script="slug">
 			<k-text>
 				<p>
 					Convert string to ASCII slug:
-					<code>this.$helpers.string.slug(string, rules, allowed, separator)</code>
+					<code>this.$helper.string.slug(string, rules, allowed, separator)</code>
 				</p>
 
 				<ul>
@@ -284,11 +284,11 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
-		<k-lab-example label="$helpers.string.stripHTML()" script="html">
+		<k-lab-example label="$helper.string.stripHTML()" script="html">
 			<k-text>
 				<p>
 					Removes HTML from a string:
-					<code>this.$helpers.string.stripHTML(string)</code>
+					<code>this.$helper.string.stripHTML(string)</code>
 				</p>
 			</k-text>
 			<!-- @code -->
@@ -311,11 +311,11 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
-		<k-lab-example label="$helpers.string.ucfirst()" script="ucfirst">
+		<k-lab-example label="$helper.string.ucfirst()" script="ucfirst">
 			<k-text>
 				<p>
 					Turns first letter uppercase:
-					<code>this.$helpers.string.ucfirst(string)</code>
+					<code>this.$helper.string.ucfirst(string)</code>
 				</p>
 			</k-text>
 			<!-- @code -->
@@ -338,11 +338,11 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
-		<k-lab-example label="$helpers.string.template()" script="template">
+		<k-lab-example label="$helper.string.template()" script="template">
 			<k-text>
 				<p>
 					Replaces template placeholders in string with provided values:
-					<code>this.$helpers.string.template(string, values)</code>
+					<code>this.$helper.string.template(string, values)</code>
 				</p>
 			</k-text>
 			<!-- @code -->
@@ -369,11 +369,11 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
-		<k-lab-example label="$helpers.string.ucwords()" script="ucwords">
+		<k-lab-example label="$helper.string.ucwords()" script="ucwords">
 			<k-text>
 				<p>
 					Turns first letter of each word uppercase:
-					<code>this.$helpers.string.ucwords(string)</code>
+					<code>this.$helper.string.ucwords(string)</code>
 				</p>
 			</k-text>
 			<!-- @code -->
@@ -396,11 +396,11 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
-		<k-lab-example label="$helpers.string.unescapeHTML()" script="unhtml">
+		<k-lab-example label="$helper.string.unescapeHTML()" script="unhtml">
 			<k-text>
 				<p>
 					Turns escaped HTML entities into actual characters again:
-					<code>this.$helpers.string.unescapeHTML(string)</code>
+					<code>this.$helper.string.unescapeHTML(string)</code>
 				</p>
 			</k-text>
 			<!-- @code -->
@@ -423,11 +423,11 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
-		<k-lab-example label="$helpers.string.uuid()">
+		<k-lab-example label="$helper.string.uuid()">
 			<k-text>
 				<p>
 					Returns a unique ID:
-					<code>this.$helpers.string.uuid()</code>
+					<code>this.$helper.string.uuid()</code>
 				</p>
 			</k-text>
 			<!-- @code -->
