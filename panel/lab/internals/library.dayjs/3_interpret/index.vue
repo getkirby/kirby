@@ -8,41 +8,39 @@
 		</k-box>
 
 		<k-lab-example label="dayjs.interpret(input, 'date')" :code="false">
-			<k-code language="javascript"
-				>this.$library.dayjs.interpret("23-09-12", "date"): dayjs|null</k-code
-			>
+			<k-code language="javascript">this.$library.dayjs.interpret("23-09-12", "date"): dayjs|null</k-code>
 
-			<div>
-				<k-input
-					type="text"
-					placeholder="Type date …"
-					style="min-width: 16rem"
-					@input="interpret($event, 'date')"
-				/>
-
-				<div>&rarr;</div>
-
-				<k-box theme="code">{{ date ?? "-" }}</k-box>
-			</div>
+			<k-grid variant="fields">
+				<k-column width="1/2">
+					<k-input
+						type="text"
+						placeholder="Type date …"
+						style="min-width: 16rem"
+						@input="interpret($event, 'date')"
+					/>
+				</k-column>
+				<k-column width="1/2">
+					<k-box theme="code">{{ date ?? "-" }}</k-box>
+				</k-column>
+			</k-grid>
 		</k-lab-example>
 
 		<k-lab-example label="dayjs.interpret(input, 'time')" :code="false">
-			<k-code language="javascript"
-				>this.$library.dayjs.interpret("9:12", "time"): dayjs|null</k-code
-			>
+			<k-code language="javascript">this.$library.dayjs.interpret("9:12", "time"): dayjs|null</k-code>
 
-			<div>
-				<k-input
-					type="text"
-					placeholder="Type time …"
-					style="min-width: 16rem"
-					@input="interpret($event, 'time')"
-				/>
-
-				<div>&rarr;</div>
-
-				<k-box theme="code">{{ time ?? "-" }}</k-box>
-			</div>
+			<k-grid variant="fields">
+				<k-column width="1/2">
+					<k-input
+						type="text"
+						placeholder="Type time …"
+						style="min-width: 16rem"
+						@input="interpret($event, 'time')"
+					/>
+				</k-column>
+				<k-column width="1/2">
+					<k-box theme="code">{{ time ?? "-" }}</k-box>
+				</k-column>
+			</k-grid>
 		</k-lab-example>
 	</k-lab-examples>
 </template>
@@ -66,13 +64,7 @@ export default {
 </script>
 
 <style>
-.k-lab-example-canvas > .k-code {
+.k-lab-example .k-code {
 	margin-bottom: var(--spacing-6);
-}
-
-.k-lab-example-canvas > div {
-	display: flex;
-	align-items: center;
-	gap: var(--spacing-6);
 }
 </style>

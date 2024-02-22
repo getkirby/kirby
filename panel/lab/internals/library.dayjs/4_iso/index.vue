@@ -9,123 +9,115 @@
 		</k-box>
 
 		<k-lab-example label="dayjs.iso()" :code="false">
-			<k-code language="javascript"
-				>this.$library.dayjs.iso("2023-09-12", "date"): dayjs</k-code
-			>
+			<k-code language="javascript">this.$library.dayjs.iso("2023-09-12", "date"): dayjs</k-code>
 
-			<div>
-				<k-input
-					type="text"
-					:placeholder="stringPlaceholder"
-					style="min-width: 12rem"
-					@input="parse"
-				/>
-
-				<k-input
-					type="select"
-					:options="[
-						{ text: 'datetime', value: 'full' },
-						{ text: 'date', value: 'date' },
-						{ text: 'time', value: 'time' }
-					]"
-					:empty="false"
-					:value="mode"
-					@input="mode = $event"
-				/>
-
-				<div>&rarr;</div>
-
-				<k-box theme="code">{{ string ?? "-" }}</k-box>
-			</div>
+			<k-grid variant="fields">
+				<k-column width="1/4">
+					<k-input
+						type="text"
+						:placeholder="stringPlaceholder"
+						style="min-width: 12rem"
+						@input="parse"
+					/>
+				</k-column>
+				<k-column width="1/4">
+					<k-input
+						type="select"
+						:options="[
+							{ text: 'datetime', value: 'full' },
+							{ text: 'date', value: 'date' },
+							{ text: 'time', value: 'time' }
+						]"
+						:empty="false"
+						:value="mode"
+						@input="mode = $event"
+					/>
+				</k-column>
+				<k-column width="1/2">
+					<k-box theme="code">{{ string ?? "-" }}</k-box>
+				</k-column>
+			</k-grid>
 		</k-lab-example>
 
 		<k-lab-example label="dayjs.toISO()" :code="false">
 			<k-code language="javascript">myDayjsObject.toIso("date"): string</k-code>
 
-			<div>
-				<div>
-					<k-input
-						type="number"
-						placeholder="Year"
-						:value="year"
-						@input="
-							year = $event;
-							generate();
-						"
-					/>
-					<k-input
-						type="number"
-						placeholder="Month"
-						:value="month"
-						@input="
-							month = $event;
-							generate();
-						"
-					/>
-					<k-input
-						type="number"
-						placeholder="Day"
-						:value="day"
-						@input="
-							day = $event;
-							generate();
-						"
-					/>
-					<k-input
-						type="number"
-						placeholder="Hour"
-						:value="hour"
-						@input="
-							hour = $event;
-							generate();
-						"
-					/>
-					<k-input
-						type="number"
-						placeholder="Minute"
-						:value="minute"
-						@input="
-							minute = $event;
-							generate();
-						"
-					/>
-					<k-input
-						type="number"
-						placeholder="Second"
-						:value="second"
-						@input="
-							second = $event;
-							generate();
-						"
-					/>
-				</div>
+			<k-input
+				type="number"
+				placeholder="Year"
+				:value="year"
+				@input="
+					year = $event;
+					generate();
+				"
+			/>
+			<k-input
+				type="number"
+				placeholder="Month"
+				:value="month"
+				@input="
+					month = $event;
+					generate();
+				"
+			/>
+			<k-input
+				type="number"
+				placeholder="Day"
+				:value="day"
+				@input="
+					day = $event;
+					generate();
+				"
+			/>
+			<k-input
+				type="number"
+				placeholder="Hour"
+				:value="hour"
+				@input="
+					hour = $event;
+					generate();
+				"
+			/>
+			<k-input
+				type="number"
+				placeholder="Minute"
+				:value="minute"
+				@input="
+					minute = $event;
+					generate();
+				"
+			/>
+			<k-input
+				type="number"
+				placeholder="Second"
+				:value="second"
+				@input="
+					second = $event;
+					generate();
+				"
+			/>
 
-				<k-input
-					type="select"
-					:options="[
-						{ text: 'datetime', value: 'full' },
-						{ text: 'date', value: 'date' },
-						{ text: 'time', value: 'time' }
-					]"
-					:empty="false"
-					:value="mode"
-					@input="
-						mode = $event;
-						generate();
-					"
-				/>
+			<k-input
+				type="select"
+				:options="[
+					{ text: 'datetime', value: 'full' },
+					{ text: 'date', value: 'date' },
+					{ text: 'time', value: 'time' }
+				]"
+				:empty="false"
+				:value="mode"
+				@input="
+					mode = $event;
+					generate();
+				"
+			/>
 
-				<div>&rarr;</div>
-
-				<k-box theme="code">{{ iso ?? "-" }}</k-box>
-			</div>
+			<k-box theme="code">{{ iso ?? "-" }}</k-box>
 		</k-lab-example>
 	</k-lab-examples>
 </template>
 
 <script>
-import generate from "scripts/docs.mjs";
-
 export default {
 	data() {
 		return {
@@ -179,13 +171,7 @@ export default {
 </script>
 
 <style>
-.k-lab-example-canvas > .k-code {
+.k-lab-example .k-code {
 	margin-bottom: var(--spacing-6);
-}
-
-.k-lab-example-canvas > div {
-	display: flex;
-	align-items: center;
-	gap: var(--spacing-6);
 }
 </style>
