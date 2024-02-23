@@ -341,7 +341,7 @@ class Dir
 
 	/**
 	 * Determines the main template for the inventory
-	 * from all collected content files, ignory file meta files
+	 * from all collected content files, ignore file meta files
 	 */
 	protected static function inventoryTemplate(
 		array $content,
