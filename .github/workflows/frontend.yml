@@ -108,32 +108,10 @@ jobs:
 
       - name: Check for JavaScript coding style violations (ESLint)
         if: always() && steps.finishPrepare.outcome == 'success'
-        # Use the --no-fix flag in push builds to get a failed CI status
-        run: >
-          npm run lint -- --max-warnings 0 --format stylish
-          ${{ github.event_name != 'pull_request' && '--no-fix' || '' }}
+        run: npm run lint -- --max-warnings 0 --format stylish --no-fix
         working-directory: panel
-
-      - name: Create code suggestions from the coding style changes (on PR only)
-        if: >
-          always() && steps.finishPrepare.outcome == 'success' &&
-          github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@3d7fde6859623ad6174df5fd662677a0eb63310a # pin@v1
-        with:
-          tool_name: ESLint
-          fail_on_error: "true"
 
       - name: Check for JavaScript coding style violations (Prettier)
         if: always() && steps.finishPrepare.outcome == 'success'
-        # Use the --check flag to get a failed CI status
         run: npm run format --check
         working-directory: panel
-
-      - name: Create code suggestions from the coding style changes (on PR only)
-        if: >
-          always() && steps.finishPrepare.outcome == 'success' &&
-          github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@3d7fde6859623ad6174df5fd662677a0eb63310a # pin@v1
-        with:
-          tool_name: Prettier
-          fail_on_error: "true"
