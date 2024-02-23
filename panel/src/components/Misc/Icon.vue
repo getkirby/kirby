@@ -44,11 +44,6 @@ export default {
 	mixins: [props],
 	computed: {
 		isEmoji() {
-			// skip if string is a valid icon identifier
-			if (/^[a-z0-9_-]+$/.test(this.type) === true) {
-				return false;
-			}
-
 			return this.$helper.string.hasEmoji(this.type);
 		}
 	}
