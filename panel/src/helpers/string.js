@@ -64,6 +64,11 @@ export function hasEmoji(string) {
 		return false;
 	}
 
+	// skip if string has no valid emoji at all
+	if (/^[a-z0-9_-]+$/.test(string) === true) {
+		return false;
+	}
+
 	// Source: https://thekevinscott.com/emojis-in-javascript/
 	const result = string.match(
 		// eslint-disable-next-line no-misleading-character-class
