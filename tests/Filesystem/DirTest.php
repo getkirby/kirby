@@ -280,7 +280,9 @@ class DirTest extends TestCase
 			'2_project-b',
 			'cover.jpg',
 			'cover.jpg.txt',
-			'projects.txt'
+			'projects.txt',
+			'_ignore.txt',
+			'.invisible'
 		]);
 
 		$this->assertSame('project-a', $inventory['children'][0]['slug']);
@@ -291,6 +293,8 @@ class DirTest extends TestCase
 
 		$this->assertSame('cover.jpg', $inventory['files']['cover.jpg']['filename']);
 		$this->assertSame('jpg', $inventory['files']['cover.jpg']['extension']);
+		$this->assertArrayNotHasKey('_ignore.txt', $inventory['files']);
+		$this->assertArrayNotHasKey('.invisible', $inventory['files']);
 
 		$this->assertSame('projects', $inventory['template']);
 	}
@@ -371,6 +375,7 @@ class DirTest extends TestCase
 
 	/**
 	 * @covers ::inventory
+	 * @covers ::inventoryTemplate
 	 */
 	public function testInventoryMissingTemplate()
 	{
@@ -385,6 +390,7 @@ class DirTest extends TestCase
 
 	/**
 	 * @covers ::inventory
+	 * @covers ::inventoryTemplate
 	 */
 	public function testInventoryTemplateWithDotInFilename()
 	{
@@ -400,6 +406,7 @@ class DirTest extends TestCase
 
 	/**
 	 * @covers ::inventory
+	 * @covers ::inventoryTemplate
 	 */
 	public function testInventoryExtension()
 	{
@@ -415,6 +422,7 @@ class DirTest extends TestCase
 
 	/**
 	 * @covers ::inventory
+	 * @covers ::inventoryTemplate
 	 */
 	public function testInventoryIgnore()
 	{
@@ -429,6 +437,7 @@ class DirTest extends TestCase
 
 	/**
 	 * @covers ::inventory
+	 * @covers ::inventoryTemplate
 	 */
 	public function testInventoryMultilang()
 	{
@@ -445,9 +454,9 @@ class DirTest extends TestCase
 
 	/**
 	 * @covers ::inventory
-	 * @covers ::inventoryModels
+	 * @covers ::inventoryChild
 	 */
-	public function testInventoryModels()
+	public function testInventoryChildModels()
 	{
 		Page::$models = [
 			'a' => 'A',
@@ -469,9 +478,9 @@ class DirTest extends TestCase
 
 	/**
 	 * @covers ::inventory
-	 * @covers ::inventoryModels
+	 * @covers ::inventoryChild
 	 */
-	public function testInventoryMultilangModels()
+	public function testInventoryChildMultilangModels()
 	{
 		new App([
 			'roots' => [
