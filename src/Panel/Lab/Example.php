@@ -255,13 +255,23 @@ class Example
 				if (preg_match_all('/^(\t*)\S/m', $code, $indents)) {
 					// get minimum indent
 					$indents = array_map(fn ($i) => strlen($i), $indents[1]);
-					$indents = min($indents) - 1;
+					$indents = min($indents);
+
+					if (empty($js) === false) {
+						$indents--;
+					}
 
 					// strip minimum indent from each line
 					$code = preg_replace('/^\t{' . $indents . '}/m', '', $code);
 				}
 
-				$examples[$name] = '<template>' . PHP_EOL . "\t" . trim($code) . PHP_EOL . '</template>' . $js;
+				$code = trim($code);
+
+				if (empty($js) === false) {
+					$code = '<template>' . PHP_EOL . "\t" . $code . PHP_EOL . '</template>';
+				}
+
+				$examples[$name] = $code . $js;
 			}
 		}
 
