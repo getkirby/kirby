@@ -204,22 +204,48 @@ class Example
 		$file ??= '';
 
 		// extract parts
-		$parts['template'] = $this->vueTemplate($file);
-		$parts['examples'] = $this->vueExamples($parts['template']);
 		$parts['script']   = $this->vueScript($file);
+		$parts['template'] = $this->vueTemplate($file);
+		$parts['examples'] = $this->vueExamples($parts['template'], $parts['script']);
 		$parts['style']    = $this->vueStyle($file);
 
 		return $parts;
 	}
 
-	public function vueExamples(string|null $template): array
+	public function vueExamples(string|null $template, string|null $script): array
 	{
 		$template ??= '';
 		$examples   = [];
+		$scripts    = [];
 
-		if (preg_match_all('!<k-lab-example[\s|\n].*?label="(.*?)".*?>(.*?)<\/k-lab-example>!s', $template, $matches)) {
+		if (preg_match_all('!\/\*\* \@script: (.*?)\*\/(.*?)\/\*\* \@script-end \*\/!s', $script, $matches)) {
 			foreach ($matches[1] as $key => $name) {
 				$code = $matches[2][$key];
+				$code = preg_replace('!const (.*?) \=!', 'default', $code);
+
+				$scripts[trim($name)] = $code;
+			}
+		}
+
+		if (preg_match_all('!<k-lab-example[\s|\n].*?label="(.*?)"(.*?)>(.*?)<\/k-lab-example>!s', $template, $matches)) {
+			foreach ($matches[1] as $key => $name) {
+				$tail = $matches[2][$key];
+				$code = $matches[3][$key];
+
+				$scriptId = trim(preg_replace_callback('!script="(.*?)"!', function ($match) {
+					return trim($match[1]);
+				}, $tail));
+
+				$scriptBlock = $scripts[$scriptId] ?? null;
+
+				if (empty($scriptBlock) === false) {
+					$js  = PHP_EOL . PHP_EOL;
+					$js .= '<script>';
+					$js .= $scriptBlock;
+					$js .= '</script>';
+				} else {
+					$js = '';
+				}
 
 				// only use the code between the @code and @code-end comments
 				if (preg_match('$<!-- @code -->(.*?)<!-- @code-end -->$s', $code, $match)) {
@@ -231,11 +257,21 @@ class Example
 					$indents = array_map(fn ($i) => strlen($i), $indents[1]);
 					$indents = min($indents);
 
+					if (empty($js) === false) {
+						$indents--;
+					}
+
 					// strip minimum indent from each line
 					$code = preg_replace('/^\t{' . $indents . '}/m', '', $code);
 				}
 
-				$examples[$name] = trim($code);
+				$code = trim($code);
+
+				if (empty($js) === false) {
+					$code = '<template>' . PHP_EOL . "\t" . $code . PHP_EOL . '</template>';
+				}
+
+				$examples[$name] = $code . $js;
 			}
 		}
 
