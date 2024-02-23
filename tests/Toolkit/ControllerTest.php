@@ -10,15 +10,6 @@ class ControllerTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures';
 
 	/**
-	 * @covers ::call
-	 */
-	public function testCall()
-	{
-		$controller = new Controller(fn () => 'test');
-		$this->assertSame('test', $controller->call());
-	}
-
-	/**
 	 * @covers ::arguments
 	 */
 	public function testArguments()
@@ -47,7 +38,7 @@ class ControllerTest extends TestCase
 	/**
 	 * @covers ::arguments
 	 */
-	public function testVariadicArguments()
+	public function testArgumentsVariadic()
 	{
 		$controller = new Controller(fn ($c, ...$args) => $c . '/' . implode('', $args));
 
@@ -56,6 +47,26 @@ class ControllerTest extends TestCase
 			'b' => 'B',
 			'c' => 'C'
 		]));
+	}
+
+	/**
+	 * @covers ::arguments
+	 */
+	public function testArgumentsNoDefaultNull()
+	{
+		$controller = new Controller(fn ($a, $b = 'foo') => ($a === null ? 'null' : $a) . ($b === null ? 'null' : $b));
+
+		$this->assertSame('nullfoo', $controller->call());
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::call
+	 */
+	public function testCall()
+	{
+		$controller = new Controller(fn () => 'test');
+		$this->assertSame('test', $controller->call());
 	}
 
 	/**
@@ -72,7 +83,7 @@ class ControllerTest extends TestCase
 	/**
 	 * @covers ::call
 	 */
-	public function testMissingParameter()
+	public function testCallMissingParameter()
 	{
 		$controller = new Controller(fn ($a) => $a);
 		$this->assertNull($controller->call());

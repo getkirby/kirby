@@ -631,6 +631,7 @@ class DomTest extends TestCase
 	/**
 	 * @dataProvider isAllowedAttrProvider
 	 * @covers ::isAllowedAttr
+	 * @covers ::normalizeSanitizeOptions
 	 */
 	public function testIsAllowedAttr(string $tag, string $attr, $allowedAttrs, $allowedAttrPrefixes, $allowedTags, $expected)
 	{
@@ -790,6 +791,7 @@ class DomTest extends TestCase
 	/**
 	 * @dataProvider isAllowedGlobalAttrProvider
 	 * @covers ::isAllowedGlobalAttr
+	 * @covers ::normalizeSanitizeOptions
 	 */
 	public function testIsAllowedGlobalAttr(string $name, $allowedAttrs, $allowedAttrPrefixes, $expected)
 	{
@@ -941,6 +943,7 @@ class DomTest extends TestCase
 	/**
 	 * @dataProvider isAllowedUrlProvider
 	 * @covers ::isAllowedUrl
+	 * @covers ::normalizeSanitizeOptions
 	 */
 	public function testIsAllowedUrl(string $url, $expected, array $options = [])
 	{
@@ -1253,6 +1256,7 @@ class DomTest extends TestCase
 	/**
 	 * @dataProvider listContainsNameProvider
 	 * @covers ::listContainsName
+	 * @covers ::normalizeSanitizeOptions
 	 */
 	public function testListContainsName(array $list, array $node, $allowedNamespaces, string|null $compare, $expected)
 	{
