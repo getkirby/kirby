@@ -507,6 +507,14 @@ class QueryTest extends TestCase
 
 		$this->assertSame(3, $count);
 
+		// between (with strings)
+		$count = $this->database
+			->table('users')
+			->where('username', 'between', ['george', 'mark'])
+			->count();
+
+		$this->assertSame(3, $count);
+
 		// 'AND' as value
 		$count = $this->database
 			->table('users')
