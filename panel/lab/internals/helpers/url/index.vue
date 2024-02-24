@@ -133,6 +133,35 @@
 			</k-grid>
 			<!-- @code-end -->
 		</k-lab-example>
+
+		<k-lab-example label="$helper.url.makeAbsolute()" script="absolute">
+			<k-text>
+				<p>Make sure the URL is absolute:</p>
+				<!-- prettier-ignore -->
+				<k-code language="javascript">this.$helper.url.makeAbsolute(path): string</k-code>
+			</k-text>
+
+			<!-- @code -->
+			<k-grid variant="fields">
+				<k-column width="1/2">
+					<h2>Input</h2>
+					<k-input type="text" :value="absolute" @input="absolute = $event" />
+				</k-column>
+				<k-column width="1/2">
+					<h2>Result</h2>
+					<k-code>{{ $helper.url.makeAbsolute(absolute) }}</k-code>
+				</k-column>
+			</k-grid>
+			<!-- @code-end -->
+		</k-lab-example>
+
+		<k-lab-example label="$helper.url.toObject()" :code="false">
+			<k-text>
+				<p>Converts any given url to a URL object:</p>
+				<!-- prettier-ignore -->
+				<k-code language="javascript">this.$helper.url.toObject(url, origin): URL</k-code>
+			</k-text>
+		</k-lab-example>
 	</k-lab-examples>
 </template>
 
@@ -161,7 +190,17 @@ export const query = {
 };
 /** @script-end */
 
+/** @script: absolute */
+export const absolute = {
+	data() {
+		return {
+			absolute: "docs"
+		};
+	}
+};
+/** @script-end */
+
 export default {
-	mixins: [url, query]
+	mixins: [url, query, absolute]
 };
 </script>
