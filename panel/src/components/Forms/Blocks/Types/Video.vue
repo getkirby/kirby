@@ -47,15 +47,11 @@ export default {
 			return this.content.poster?.[0]?.url;
 		},
 		video() {
-			if (this.content.location === "web") {
-				return this.$helper.embed.video(this.content.url ?? "", true);
+			if (this.content.location === "kirby") {
+				return this.content.video?.[0]?.url;
 			}
 
-			if (this.content.video?.[0]?.url) {
-				return this.content.video[0].url;
-			}
-
-			return null;
+			return this.$helper.embed.video(this.content.url ?? "", true);
 		}
 	}
 };
