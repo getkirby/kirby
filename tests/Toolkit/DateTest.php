@@ -54,6 +54,36 @@ class DateTest extends TestCase
 	}
 
 	/**
+	 * @covers ::ceil
+	 */
+	public function testCeil()
+	{
+		$date = new Date('2021-12-12 12:12:12');
+
+		$date->ceil('second');
+		$this->assertSame('2021-12-12 12:12:13', $date->format('Y-m-d H:i:s'));
+
+		$date->ceil('minute');
+		$this->assertSame('2021-12-12 12:13:00', $date->format('Y-m-d H:i:s'));
+
+		$date->ceil('hour');
+		$this->assertSame('2021-12-12 13:00:00', $date->format('Y-m-d H:i:s'));
+
+		$date->ceil('day');
+		$this->assertSame('2021-12-13 00:00:00', $date->format('Y-m-d H:i:s'));
+
+		$date->ceil('month');
+		$this->assertSame('2022-01-01 00:00:00', $date->format('Y-m-d H:i:s'));
+
+		$date->ceil('year');
+		$this->assertSame('2023-01-01 00:00:00', $date->format('Y-m-d H:i:s'));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid rounding unit');
+		$date->ceil('foo');
+	}
+
+	/**
 	 * @covers ::compare
 	 */
 	public function testCompare()
@@ -75,6 +105,36 @@ class DateTest extends TestCase
 		$this->assertSame(12, $date->day());
 		$this->assertSame(13, $date->day(13));
 		$this->assertSame('2021-12-13', $date->format('Y-m-d'));
+	}
+
+	/**
+	 * @covers ::floor
+	 */
+	public function testFloor()
+	{
+		$date = new Date('2021-12-12 12:12:12');
+
+		$date->floor('second');
+		$this->assertSame('2021-12-12 12:12:12', $date->format('Y-m-d H:i:s'));
+
+		$date->floor('minute');
+		$this->assertSame('2021-12-12 12:12:00', $date->format('Y-m-d H:i:s'));
+
+		$date->floor('hour');
+		$this->assertSame('2021-12-12 12:00:00', $date->format('Y-m-d H:i:s'));
+
+		$date->floor('day');
+		$this->assertSame('2021-12-12 00:00:00', $date->format('Y-m-d H:i:s'));
+
+		$date->floor('month');
+		$this->assertSame('2021-12-01 00:00:00', $date->format('Y-m-d H:i:s'));
+
+		$date->floor('year');
+		$this->assertSame('2021-01-01 00:00:00', $date->format('Y-m-d H:i:s'));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid rounding unit');
+		$date->floor('foo');
 	}
 
 	/**
@@ -239,6 +299,19 @@ class DateTest extends TestCase
 		$this->assertSame(12, $date->month());
 		$this->assertSame(11, $date->month(11));
 		$this->assertSame('2021-11-12', $date->format('Y-m-d'));
+	}
+
+	/**
+	 * @covers ::nearest
+	 */
+	public function testNearest()
+	{
+		$date = new Date('2021-12-12');
+		$a    = new Date('2021-12-11');
+		$b    = new Date('2021-12-15');
+		$c    = new Date('2021-11-11');
+
+		$this->assertSame($a, $date->nearest($a, $b, $c));
 	}
 
 	/**

@@ -4,15 +4,17 @@ namespace Kirby\Query;
 
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\TestCase;
 use stdClass;
 
 /**
- * @coversDefaultClass Kirby\Query\Segments
+ * @coversDefaultClass \Kirby\Query\Segments
  */
-class SegmentsTest extends \Kirby\TestCase
+class SegmentsTest extends TestCase
 {
 	/**
 	 * @covers ::factory
+	 * @covers ::__construct
 	 */
 	public function testFactory()
 	{

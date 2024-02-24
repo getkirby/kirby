@@ -62,10 +62,11 @@ enum LicenseStatus: string
 	/**
 	 * Returns the dialog according to the status
 	 */
-	public function dialog(): string
+	public function dialog(): string|null
 	{
 		return match ($this) {
 			static::Missing => 'registration',
+			static::Demo    => null,
 			default         => 'license'
 		};
 	}

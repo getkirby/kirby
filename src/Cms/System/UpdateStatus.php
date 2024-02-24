@@ -158,7 +158,9 @@ class UpdateStatus
 		// collect all matching custom messages
 		$filters = [
 			'kirby' => $this->app->version(),
-			'php'   => phpversion()
+			// some PHP version strings contain extra info that makes them
+			// invalid so we need to strip it off
+			'php'   => preg_replace('/^([^~+-]+).*$/', '$1', phpversion())
 		];
 
 		if ($type === 'plugin') {

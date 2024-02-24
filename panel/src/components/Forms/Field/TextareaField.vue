@@ -5,12 +5,7 @@
 		:counter="counterOptions"
 		class="k-textarea-field"
 	>
-		<k-input
-			v-bind="$props"
-			ref="input"
-			type="textarea"
-			v-on="$listeners"
-		/>
+		<k-input v-bind="$props" ref="input" type="textarea" v-on="$listeners" />
 	</k-field>
 </template>
 

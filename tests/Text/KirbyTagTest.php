@@ -12,6 +12,8 @@ use Kirby\TestCase;
  */
 class KirbyTagTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Text.KirbyTag';
+
 	public function setUp(): void
 	{
 		KirbyTag::$types = [
@@ -162,6 +164,148 @@ class KirbyTagTest extends TestCase
 	}
 
 	/**
+	 * @covers ::file
+	 */
+	public function testFile()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'files' => [
+							[
+								'filename' => 'a.jpg'
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$page = $app->page('a');
+		$file = $page->file('a.jpg');
+		$tag  = new KirbyTag('image', 'foo');
+		$this->assertSame($file, $tag->file('a/a.jpg'));
+	}
+
+	/**
+	 * @covers ::file
+	 */
+	public function testFileInParent()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'files' => [
+							[
+								'filename' => 'a.jpg'
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$page = $app->page('a');
+		$file = $page->file('a.jpg');
+		$tag  = new KirbyTag('image', 'foo', [], [
+			'parent' => $page,
+		]);
+		$this->assertSame($file, $tag->file('a.jpg'));
+	}
+
+	/**
+	 * @covers ::file
+	 */
+	public function testFileInFileParent()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'files' => [
+							[
+								'filename' => 'a.jpg'
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$page = $app->page('a');
+		$file = $page->file('a.jpg');
+		$tag  = new KirbyTag('image', 'foo', [], [
+			'parent' => $file,
+		]);
+		$this->assertSame($file, $tag->file('a.jpg'));
+	}
+
+	/**
+	 * @covers ::file
+	 */
+	public function testFileFromUuid()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'files' => [
+							[
+								'filename' => 'a.jpg',
+								'content' => ['uuid' => 'image-uuid']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$page = $app->page('a');
+		$file = $page->file('a.jpg');
+		$tag  = new KirbyTag('image', 'foo');
+		$this->assertSame($file, $tag->file('file://image-uuid'));
+
+		// with parent
+		$tag = new KirbyTag('image', 'foo', [], [
+			'parent' => $page,
+		]);
+		$this->assertSame($file, $tag->file('file://image-uuid'));
+	}
+
+	/**
+	 * @covers ::kirby
+	 */
+	public function testKirby()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			]
+		]);
+
+		$tag = new KirbyTag('image', 'b.jpg');
+		$this->assertSame($app, $tag->kirby());
+	}
+
+	/**
 	 * @covers ::option
 	 */
 	public function testOption()
@@ -188,7 +332,10 @@ class KirbyTagTest extends TestCase
 		$this->assertSame('optionC', $tag->option('c', 'optionC'));
 	}
 
-	public function testWithParent()
+	/**
+	 * @covers ::parent
+	 */
+	public function testParent()
 	{
 		$app = new App([
 			'roots' => [
@@ -201,12 +348,6 @@ class KirbyTagTest extends TestCase
 						'files' => [
 							[
 								'filename' => 'a.jpg'
-							],
-							[
-								'filename' => 'b.jpg'
-							],
-							[
-								'filename' => 'c.jpg'
 							]
 						]
 					]
@@ -214,25 +355,12 @@ class KirbyTagTest extends TestCase
 			]
 		]);
 
-		$page = $app->page('a');
-		$image = $page->image('b.jpg');
-		$expected = '<figure><img alt="" src="/media/pages/a/' . $image->mediaHash() . '/b.jpg"></figure>';
-
-		$this->assertSame($expected, $app->kirbytag('image', 'b.jpg', [], [
+		$page  = $app->page('a');
+		$tag   = new KirbyTag('image', 'b.jpg', [], [
 			'parent' => $page,
-		]));
-	}
+		]);
 
-	/**
-	 * @covers ::parse
-	 * @dataProvider parseProvider
-	 */
-	public function testParse(string $string, array $data, array $options, array $expected)
-	{
-		$tag = KirbyTag::parse($string, $data, $options);
-		foreach ($expected as $key => $value) {
-			$this->assertSame($value, $tag->$key);
-		}
+		$this->assertSame($page, $tag->parent());
 	}
 
 	public static function parseProvider(): array
@@ -384,6 +512,18 @@ class KirbyTagTest extends TestCase
 				]
 			],
 		];
+	}
+
+	/**
+	 * @covers ::parse
+	 * @dataProvider parseProvider
+	 */
+	public function testParse(string $string, array $data, array $options, array $expected)
+	{
+		$tag = KirbyTag::parse($string, $data, $options);
+		foreach ($expected as $key => $value) {
+			$this->assertSame($value, $tag->$key);
+		}
 	}
 
 	/**

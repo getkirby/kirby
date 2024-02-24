@@ -102,7 +102,7 @@ export default {
 				? {
 						x: this.color.s * 100,
 						y: (1 - this.color.v) * 100
-				  }
+					}
 				: null;
 		},
 		hsl() {

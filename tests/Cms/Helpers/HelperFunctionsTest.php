@@ -34,6 +34,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function tearDown(): void
 	{
+		parent::tearDown();
 		Dir::remove(static::TMP);
 	}
 

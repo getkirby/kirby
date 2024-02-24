@@ -95,6 +95,7 @@ class OptionsQueryTest extends TestCase
 
 	/**
 	 * @covers ::resolve
+	 * @covers ::itemToDefaults
 	 */
 	public function testResolveForArray()
 	{
@@ -124,8 +125,8 @@ class OptionsQueryTest extends TestCase
 		// with non-associative array
 		$options = (new OptionsQuery(
 			query: 'page.mySimpleArray',
-			value: '{{ arrayItem.value }}',
-			text:  '{{ arrayItem.value }}',
+			value: '{{ item.value }}',
+			text:  '{{ item.value }}',
 		))->render($model);
 
 		$this->assertSame('tag1', $options[0]['value']);
@@ -136,6 +137,7 @@ class OptionsQueryTest extends TestCase
 
 	/**
 	 * @covers ::resolve
+	 * @covers ::itemToDefaults
 	 */
 	public function testResolveForStructure()
 	{
@@ -171,6 +173,7 @@ class OptionsQueryTest extends TestCase
 
 	/**
 	 * @covers ::resolve
+	 * @covers ::itemToDefaults
 	 */
 	public function testResolveForBlock()
 	{
@@ -198,6 +201,7 @@ class OptionsQueryTest extends TestCase
 
 	/**
 	 * @covers ::resolve
+	 * @covers ::itemToDefaults
 	 */
 	public function testResolveForPages()
 	{
@@ -226,6 +230,7 @@ class OptionsQueryTest extends TestCase
 
 	/**
 	 * @covers ::resolve
+	 * @covers ::itemToDefaults
 	 */
 	public function testResolveForFile()
 	{
@@ -250,6 +255,7 @@ class OptionsQueryTest extends TestCase
 
 	/**
 	 * @covers ::resolve
+	 * @covers ::itemToDefaults
 	 */
 	public function testResolveForUser()
 	{
@@ -271,6 +277,7 @@ class OptionsQueryTest extends TestCase
 
 	/**
 	 * @covers ::resolve
+	 * @covers ::itemToDefaults
 	 */
 	public function testResolveForOptions()
 	{

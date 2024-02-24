@@ -1,11 +1,6 @@
 <template>
 	<k-field v-bind="$props" :input="id" class="k-url-field">
-		<k-input
-			v-bind="$props"
-			ref="input"
-			type="url"
-			v-on="$listeners"
-		>
+		<k-input v-bind="$props" ref="input" type="url" v-on="$listeners">
 			<template #icon>
 				<k-button
 					v-if="link"

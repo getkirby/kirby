@@ -30,7 +30,7 @@ export default class Extensions {
 					...(["node", "mark"].includes(type)
 						? {
 								type: schema[`${type}s`][name]
-						  }
+							}
 						: {})
 				});
 
@@ -105,7 +105,7 @@ export default class Extensions {
 		return excludedExtensions instanceof Array
 			? this.extensions.filter(
 					(extension) => !excludedExtensions.includes(extension.name)
-			  )
+				)
 			: this.extensions;
 	}
 
