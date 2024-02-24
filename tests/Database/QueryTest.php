@@ -499,6 +499,14 @@ class QueryTest extends TestCase
 
 		$this->assertSame(2, $count);
 
+		// between
+		$count = $this->database
+			->table('users')
+			->where('balance', 'between', [100, 200])
+			->count();
+
+		$this->assertSame(3, $count);
+
 		// 'AND' as value
 		$count = $this->database
 			->table('users')
