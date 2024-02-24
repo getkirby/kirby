@@ -905,11 +905,13 @@ class Query
 						}
 
 						// add that to the where clause in parenthesis or seperated by AND
-						$result = $key . ' ' . $predicate . (
-							in_array($predicate, ['IN', 'NOT IN'])
-							? ' (' . implode(', ', $values) . ')' // IN predicate
-							: ' ' . $values[0] . ' AND ' . $values[1] // BETWEEN predicate
-						);
+						$values = match ($predicate) {
+							'IN', 
+							'NOT IN'      => '(' . implode(', ', $values) . ')',
+							'BETWEEN', 
+							'NOT BETWEEN' => $values[0] . ' AND ' . $values[1]
+						};
+						$result = $key . ' ' . $predicate . ' ' . $values;
 
 						// ->where('username', 'like', 'myuser');
 					} else {
