@@ -16,11 +16,11 @@
 				/>
 				<k-button
 					v-if="github"
+					:link="github"
 					icon="github"
 					size="sm"
-					variant="filled"
-					:link="github"
 					target="_blank"
+					variant="filled"
 				/>
 			</k-button-group>
 		</k-header>

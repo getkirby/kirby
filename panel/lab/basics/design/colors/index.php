@@ -22,5 +22,6 @@ return [
 		700,
 		800,
 		900
-	]
+	],
+	'source' => 'panel/src/styles/config/colors.css'
 ];

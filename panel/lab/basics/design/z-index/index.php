@@ -14,5 +14,6 @@ return [
 		'toolbar',
 		'content',
 		'background',
-	]
+	],
+	'source' => 'panel/src/styles/config/z-index.css'
 ];
