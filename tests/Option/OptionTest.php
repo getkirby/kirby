@@ -11,22 +11,26 @@ class OptionTest extends TestCase
 {
 	/**
 	 * @covers ::__construct
+	 * @covers ::id
 	 */
 	public function testConstruct()
 	{
 		// string
 		$option = new Option('test');
 		$this->assertSame('test', $option->value);
+		$this->assertSame('test', $option->id());
 		$this->assertSame('test', $option->text->translations['en']);
 
 		// int
 		$option = new Option(1);
 		$this->assertSame(1, $option->value);
+		$this->assertSame(1, $option->id());
 		$this->assertSame(1, $option->text->translations['en']);
 
 		// float
 		$option = new Option(1.1);
 		$this->assertSame(1.1, $option->value);
+		$this->assertSame(1.1, $option->id());
 		$this->assertSame(1.1, $option->text->translations['en']);
 	}
 

@@ -2,8 +2,10 @@
 
 namespace Kirby\Query;
 
+use Kirby\Cms\App;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\TestCase;
 use stdClass;
 
 class MyObj
@@ -33,9 +35,9 @@ class MyGetObj
 }
 
 /**
- * @coversDefaultClass Kirby\Query\Segment
+ * @coversDefaultClass \Kirby\Query\Segment
  */
-class SegmentTest extends \Kirby\TestCase
+class SegmentTest extends TestCase
 {
 	public static function scalarProvider(): array
 	{
@@ -74,6 +76,7 @@ class SegmentTest extends \Kirby\TestCase
 
 	/**
 	 * @covers ::factory
+	 * @covers ::__construct
 	 */
 	public function testFactory()
 	{
@@ -116,6 +119,7 @@ class SegmentTest extends \Kirby\TestCase
 		$this->assertSame('bar', $segment->resolve(null, $obj));
 	}
 
+
 	/**
 	 * @covers ::resolve
 	 * @covers ::resolveArray
@@ -125,6 +129,17 @@ class SegmentTest extends \Kirby\TestCase
 		$segment = Segment::factory('foo', 1);
 		$data    = ['foo' => $expected = [1, 2]];
 		$this->assertSame($expected, $segment->resolve($data));
+	}
+
+	/**
+	 * @covers ::resolve
+	 * @covers ::resolveArray
+	 */
+	public function testResolveArrayClosure()
+	{
+		$segment = Segment::factory('foo', 0);
+		$data    = ['foo' => fn () => 'bar'];
+		$this->assertSame('bar', $segment->resolve(null, $data));
 	}
 
 	/**
@@ -151,6 +166,16 @@ class SegmentTest extends \Kirby\TestCase
 
 		$segment = Segment::factory('foo(2)', 1);
 		$segment->resolve(['foo' => 'bar']);
+	}
+
+	/**
+	 * @covers ::resolve
+	 * @covers ::resolveArray
+	 */
+	public function testResolveArrayFromGlobalEntry()
+	{
+		$segment = Segment::factory('kirby');
+		$this->assertSame(App::instance(), $segment->resolve(null, []));
 	}
 
 	/**
