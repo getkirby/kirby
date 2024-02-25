@@ -14,7 +14,7 @@ describe.concurrent("panel.user", () => {
 			id: null,
 			language: null,
 			role: null,
-			theme: null,
+			theme: "light",
 			username: null
 		};
 
