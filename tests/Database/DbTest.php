@@ -26,7 +26,8 @@ class DbTest extends TestCase
             "fname" TEXT,
             "lname" TEXT,
             "password" TEXT NOT NULL,
-            "email" TEXT NOT NULL
+            "email" TEXT NOT NULL,
+			"active" INTEGER NOT NULL
             );
         ');
 
@@ -36,7 +37,8 @@ class DbTest extends TestCase
 			'fname'    => 'John',
 			'lname'    => 'Lennon',
 			'email'    => 'john@test.com',
-			'password' => 'beatles'
+			'password' => 'beatles',
+			'active'   => true,
 		]);
 
 		Db::insert('users', [
@@ -44,7 +46,8 @@ class DbTest extends TestCase
 			'fname'    => 'Paul',
 			'lname'    => 'McCartney',
 			'email'    => 'paul@test.com',
-			'password' => 'beatles'
+			'password' => 'beatles',
+			'active'   => true,
 		]);
 
 		Db::insert('users', [
@@ -52,7 +55,8 @@ class DbTest extends TestCase
 			'fname'    => 'George',
 			'lname'    => 'Harrison',
 			'email'    => 'george@test.com',
-			'password' => 'beatles'
+			'password' => 'beatles',
+			'active'   => false,
 		]);
 	}
 
@@ -177,6 +181,10 @@ class DbTest extends TestCase
 		$result = Db::select('users', 'username', null, 'username ASC', 1, 1);
 		$this->assertCount(1, $result);
 		$this->assertSame('john', $result->first()->username());
+
+		$result = Db::select('users', 'username', ['active' => false]);
+		$this->assertCount(1, $result);
+		$this->assertSame('george', $result->first()->username());
 	}
 
 	/**
@@ -228,10 +236,12 @@ class DbTest extends TestCase
 			'fname'    => 'Ringo',
 			'lname'    => 'Starr',
 			'email'    => 'ringo@test.com',
-			'password' => 'beatles'
+			'password' => 'beatles',
+			'active'   => false,
 		]);
 		$this->assertSame(4, $result);
 		$this->assertSame('ringo@test.com', Db::row('users', '*', ['username' => 'ringo'])->email());
+		$this->assertSame('0', Db::row('users', '*', ['username' => 'ringo'])->active());
 	}
 
 	/**
@@ -243,6 +253,11 @@ class DbTest extends TestCase
 		$this->assertTrue($result);
 		$this->assertSame('john@gmail.com', Db::row('users', '*', ['username' => 'john'])->email());
 		$this->assertSame('paul@test.com', Db::row('users', '*', ['username' => 'paul'])->email());
+
+		$result = Db::update('users', ['active' => false], ['username' => 'john']);
+		$this->assertTrue($result);
+		$this->assertSame('0', Db::row('users', '*', ['username' => 'john'])->active());
+		$this->assertSame('1', Db::row('users', '*', ['username' => 'paul'])->active());
 	}
 
 	/**
