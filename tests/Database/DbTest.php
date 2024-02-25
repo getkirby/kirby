@@ -253,6 +253,11 @@ class DbTest extends TestCase
 		$this->assertTrue($result);
 		$this->assertSame('john@gmail.com', Db::row('users', '*', ['username' => 'john'])->email());
 		$this->assertSame('paul@test.com', Db::row('users', '*', ['username' => 'paul'])->email());
+
+		$result = Db::update('users', ['active' => false], ['username' => 'john']);
+		$this->assertTrue($result);
+		$this->assertSame('0', Db::row('users', '*', ['username' => 'john'])->active());
+		$this->assertSame('1', Db::row('users', '*', ['username' => 'paul'])->active());
 	}
 
 	/**
