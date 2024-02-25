@@ -270,16 +270,4 @@ jobs:
 
       - name: Check for PHP coding style violations
         if: always() && steps.finishPrepare.outcome == 'success'
-        # Use the --dry-run flag in push builds to get a failed CI status
-        run: >
-          php-cs-fixer fix --diff
-          ${{ github.event_name != 'pull_request' && '--dry-run' || '' }}
-
-      - name: Create code suggestions from the coding style changes (on PR only)
-        if: >
-          always() && steps.finishPrepare.outcome == 'success' &&
-          github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@3d7fde6859623ad6174df5fd662677a0eb63310a # pin@v1
-        with:
-          tool_name: PHP-CS-Fixer
-          fail_on_error: "true"
+        run: php-cs-fixer fix --diff --dry-run
