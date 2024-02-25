@@ -31,7 +31,8 @@ class QueryTest extends TestCase
             "lname" TEXT,
             "password" TEXT NOT NULL,
             "email" TEXT NOT NULL,
-            "balance" INTEGER
+            "balance" INTEGER,
+			"active" INTEGER NOT NULL
             );
         ');
 
@@ -63,7 +64,8 @@ class QueryTest extends TestCase
 			'lname'    => 'Lennon',
 			'email'    => 'john@test.com',
 			'password' => 'beatles',
-			'balance'  => 200
+			'balance'  => 200,
+			'active'   => true,
 		]);
 
 		$this->database->table('users')->insert([
@@ -73,7 +75,8 @@ class QueryTest extends TestCase
 			'lname'    => 'McCartney',
 			'email'    => 'paul@test.com',
 			'password' => 'beatles',
-			'balance'  => 150
+			'balance'  => 150,
+			'active'   => true,
 		]);
 
 		$this->database->table('users')->insert([
@@ -83,7 +86,8 @@ class QueryTest extends TestCase
 			'lname'    => 'Harrison',
 			'email'    => 'george@test.com',
 			'password' => 'beatles',
-			'balance'  => 100
+			'balance'  => 100,
+			'active'   => false,
 		]);
 
 		$this->database->table('users')->insert([
@@ -93,7 +97,8 @@ class QueryTest extends TestCase
 			'lname'    => 'Otto',
 			'email'    => 'mark@test.com',
 			'password' => 'beatles',
-			'balance'  => 50
+			'balance'  => 50,
+			'active'   => true,
 		]);
 
 		$this->database->table('users')->insert([
@@ -103,7 +108,8 @@ class QueryTest extends TestCase
 			'lname'    => 'Bar',
 			'email'    => 'foo@bar.com',
 			'password' => 'AND',
-			'balance'  => -30
+			'balance'  => -30,
+			'active'   => false,
 		]);
 	}
 
@@ -474,6 +480,22 @@ class QueryTest extends TestCase
 			->count();
 
 		$this->assertSame(4, $count);
+
+		// boolean comparison
+		$count = $this->database
+			->table('users')
+			->where('active = ?', [false])
+			->count();
+
+		$this->assertSame(2, $count);
+
+		// boolean comparison
+		$count = $this->database
+			->table('users')
+			->where('active', '=', false)
+			->count();
+
+		$this->assertSame(2, $count);
 
 		// like 1
 		$count = $this->database
