@@ -320,7 +320,7 @@ class Database
 				};
 
 				$this->statement->bindValue($parameter, $value, $type);
-			}	
+			}
 			$this->statement->execute();
 
 			$this->affected  = $this->statement->rowCount();
