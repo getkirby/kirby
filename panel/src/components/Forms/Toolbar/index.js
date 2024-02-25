@@ -1,5 +1,5 @@
 import Toolbar from "./Toolbar.vue";
-import TextareaToolbar from "./Toolbar.vue";
+import TextareaToolbar from "./TextareaToolbar.vue";
 import WriterToolbar from "../Writer/Toolbar.vue";
 import ToolbarEmailDialog from "./EmailDialog.vue";
 import ToolbarLinkDialog from "./LinkDialog.vue";
