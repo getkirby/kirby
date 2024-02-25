@@ -481,6 +481,14 @@ class QueryTest extends TestCase
 
 		$this->assertSame(4, $count);
 
+		// numeric comparison (2 arguments)
+		$count = $this->database
+			->table('users')
+			->where('balance > ?', 0)
+			->count();
+
+		$this->assertSame(4, $count);
+
 		// boolean comparison
 		$count = $this->database
 			->table('users')
@@ -493,6 +501,14 @@ class QueryTest extends TestCase
 		$count = $this->database
 			->table('users')
 			->where('active', '=', false)
+			->count();
+
+		$this->assertSame(2, $count);
+
+		// boolean comparison (2 arguments)
+		$count = $this->database
+			->table('users')
+			->where('active = ?', false)
 			->count();
 
 		$this->assertSame(2, $count);
