@@ -70,7 +70,7 @@ export default {
 	--icon-color: var(--color-gray-200);
 }
 .k-panel[data-theme="dark"] .k-user-view-image .k-icon-frame {
-	--back: var(--color-gray-400);
-	--icon-color: var(--color-gray-700);
+	--back: var(--color-gray-300);
+	--icon-color: var(--color-gray-600);
 }
 </style>
