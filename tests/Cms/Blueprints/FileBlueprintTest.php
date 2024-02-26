@@ -10,110 +10,85 @@ use Kirby\TestCase;
  */
 class FileBlueprintTest extends TestCase
 {
-	protected ?Page $parent;
-	protected array $acceptCases;
-
-	protected function setUp(): void
-	{
-		$this->parent = Page::factory([
-			'slug' => 'test'
-		]);
-
-		$this->acceptCases = [
-			'acceptWildcard' => [
-				'accept' => 'image/*',
-				'expected' => ['.jpg', '.jpeg', '.gif', '.png'],
-				'notExpected' => ['.js', '.pdf', '.docx', '.zip']
+	public static function acceptAttributeProvider() {
+		return [
+			[
+				'wildcard', // case name
+				'image/*', // accept option in blueprint
+				['.jpg', '.jpeg', '.gif', '.png'], // expected extensions
+				['.js', '.pdf', '.docx', '.zip'] // not expected extensions
 			],
-			'acceptMimeAsString' => [
-				'accept' => 'image/jpeg, image/png',
-				'expected' => ['.jpg', '.jpeg', '.png'],
-				'notExpected' => ['.gif', '.js', '.pdf', '.docx', '.zip']
+			[
+				'mimeAsString',
+				'image/jpeg, image/png',
+				['.jpg', '.jpeg', '.png'],
+				['.gif', '.js', '.pdf', '.docx', '.zip']
 			],
-			'acceptMimeAsProperty' => [
-				'accept' => [
-					'mime' => 'image/jpeg, image/png'
-				],
-				'expected' => ['.jpg', '.jpeg', '.png'],
-				'notExpected' => ['.gif', '.js', '.pdf', '.docx', '.zip']
+			[
+				'mimeAsProperty',
+				['mime' => 'image/jpeg, image/png'],
+				['.jpg', '.jpeg', '.png'],
+				['.gif', '.js', '.pdf', '.docx', '.zip']
 			],
-			'acceptExtensions' => [
-				'accept' => [
-					'extension' => 'jpg, png'
-				],
-				'expected' => ['.jpg', '.png'],
-				'notExpected' => ['.gif', '.jpeg', '.js', '.pdf', '.docx', '.zip']
+			[
+				'extensions',
+				['extension' => 'jpg, png'],
+				['.jpg', '.png'],
+				['.gif', '.jpeg', '.js', '.pdf', '.docx', '.zip']
 			],
-			'acceptExtensionsAndMime' => [
-				'accept' => [
-					'extension' => 'foo, bar', // when mime is present, extensions are ignored
-					'mime' => 'image/jpeg, image/png'
-				],
-				'expected' => ['.jpg', '.jpeg', '.png'],
-				'notExpected' => ['.gif', '.js', '.pdf', '.docx', '.zip', '.foo', '.bar']
+			[
+				'extensionsAndMime',
+				['extension' => 'foo, bar', 'mime' => 'image/jpeg, image/png'],
+				['.jpg', '.jpeg', '.png'],
+				['.gif', '.js', '.pdf', '.docx', '.zip', '.foo', '.bar']
 			],
-			'acceptType' => [
-				'accept' => [
-					'type' => 'image'
-				],
-				'expected' => ['.jpg', '.jpeg', '.gif', '.png'],
-				'notExpected' => ['.js', '.pdf', '.docx', '.zip']
+			[
+				'type',
+				['type' => 'image'],
+				['.jpg', '.jpeg', '.gif', '.png'],
+				['.js', '.pdf', '.docx', '.zip']
 			],
-			'acceptTypeAndMime' => [
-				'accept' => [
-					'type' => 'document', // when mime is present, type is ignored
-					'mime' => 'image/jpeg, image/png'
-				],
-				'expected' => ['.jpg', '.jpeg', '.png'],
-				'notExpected' => ['.gif', '.js', '.pdf', '.docx', '.zip']
+			[
+				'typeAndMime',
+				['type' => 'document', 'mime' => 'image/jpeg, image/png'],
+				['.jpg', '.jpeg', '.png'],
+				['.gif', '.js', '.pdf', '.docx', '.zip']
 			],
-			'acceptInteresect' => [
-				'accept' => [
-					'type' => 'image',
-					'extension' => 'jpg, png, foo, bar', // foo bar should be ignored
-				],
-				'expected' => ['.jpg', '.png'],
-				'notExpected' => ['.gif', '.js', '.pdf', '.docx', '.zip', '.foo', '.bar']
+			[
+				'intersect',
+				['type' => 'image', 'extension' => 'jpg, png, foo, bar'],
+				['.jpg', '.png'],
+				['.gif', '.js', '.pdf', '.docx', '.zip', '.foo', '.bar']
 			],
 		];
 
-		// set up the blueprint files
-		foreach ($this->acceptCases as $name => $case) {
-			Blueprint::$loaded['files/' . $name] = [
-				'accept' => $case['accept']
-			];
-		}
-	}
-
-	protected function tearDown(): void
-	{
-		Blueprint::$loaded = [];
-		$this->parent = null;
 	}
 
 	/**
 	 * @covers ::acceptAttribute
+	 * @dataProvider acceptAttributeProvider
 	 */
-	public function testAcceptAttribute()
+	public function testAcceptAttribute($name, $accept, $expected, $notExpected)
 	{
-		foreach ($this->acceptCases as $name => $case) {
-			$file = new File([
-				'filename' => 'tmp',
-				'parent'   => $this->parent,
-				'template' => $name
-			]);
-			$acceptAttribute = $file->blueprint()->acceptAttribute();
+		Blueprint::$loaded['files/' . $name] = [
+			'accept' => $accept
+		];
 
-			$expected = $case['expected'];
-			$notExpected = $case['notExpected'];
+		$file = new File([
+			'filename' => 'tmp',
+			'parent'   => $this->createMock(Page::class),
+			'template' => $name
+		]);
+		$acceptAttribute = $file->blueprint()->acceptAttribute();
 
-			foreach ($expected as $extension) {
-				$this->assertStringContainsString($extension, $acceptAttribute, "Case $name: $extension should be accepted");
-			}
-
-			foreach ($notExpected as $extension) {
-				$this->assertStringNotContainsString($extension, $acceptAttribute, "Case $name: $extension should not be accepted");
-			}
+		foreach ($expected as $extension) {
+			$this->assertStringContainsString($extension, $acceptAttribute, "Case $name: $extension should be accepted");
 		}
+
+		foreach ($notExpected as $extension) {
+			$this->assertStringNotContainsString($extension, $acceptAttribute, "Case $name: $extension should not be accepted");
+		}
+
+		unset(Blueprint::$loaded['files/' . $name]);
 	}
 }
