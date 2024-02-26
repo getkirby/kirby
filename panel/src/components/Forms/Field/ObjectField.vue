@@ -32,13 +32,12 @@
 							:key="field.name"
 							@click="open(field.name)"
 						>
-							<th data-has-button data-mobile="true">
+							<th data-has-button>
 								<button type="button">{{ field.label }}</button>
 							</th>
 							<k-table-cell
 								:column="field"
 								:field="field"
-								:mobile="true"
 								:value="object[field.name]"
 								@input="cell(field.name, $event)"
 							/>

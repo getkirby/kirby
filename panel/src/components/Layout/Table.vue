@@ -542,12 +542,14 @@ export default {
 	}
 
 	/**	Reset any custom column widths **/
-	.k-table
-		:where(th, td):not(.k-table-index-column):not(.k-table-options-column) {
+	.k-table:has([data-mobile])
+		:where(th, td):not(.k-table-index-column):not(.k-table-options-column):not(
+			[style*="width:"]
+		) {
 		width: auto !important;
 	}
 
-	.k-table :where(th, td):not([data-mobile="true"]) {
+	.k-table:has([data-mobile]) :where(th, td):not([data-mobile="true"]) {
 		display: none;
 	}
 }
