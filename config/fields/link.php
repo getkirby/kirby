@@ -22,8 +22,7 @@ return [
 				'file',
 				'email',
 				'tel',
-				'anchor',
-				'custom'
+				'anchor'
 			];
 		},
 		'value' => function (string|null $value = null) {

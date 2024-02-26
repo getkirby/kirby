@@ -19,4 +19,9 @@ You can also use the [security advisory form on GitHub](https://github.com/getki
 
 We will send you a response as soon as possible and will keep you informed on our progress towards a fix and announcement.
 
-**Please do not write to us publicly, e.g. in the forum, on Discord or in a GitHub issue. A public report can give attackers valuable time to exploit the issue before it is fixed. By letting us know directly and coordinating the disclosure with us, you can help to protect other Kirby users from such attacks.**
+> [!IMPORTANT]
+> Please do not write to us publicly, e.g. in the forum, on Discord or in a GitHub issue. A public report can give attackers valuable time to exploit the issue before it is fixed.
+> 
+> By letting us know directly and coordinating the disclosure with us, you can help to protect other Kirby users from such attacks.
+> 
+> Also please do *not* request a CVE ID from organizations like MITRE. The responsible CVE Numbering Authority (CNA) for Kirby is GitHub. We can and will request a CVE ID for each confirmed vulnerability and will provide it to you in advance of the coordinated release.
