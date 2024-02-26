@@ -161,7 +161,7 @@ class FileBlueprint extends Blueprint
 		// get extensions from "type" option
 		if (is_array($accept['type']) === true) {
 			$extensions = array_map(
-				fn($type) => F::typeToExtensions($type) ?? [],
+				fn ($type) => F::typeToExtensions($type) ?? [],
 				$accept['type']
 			);
 

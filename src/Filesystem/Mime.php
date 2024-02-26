@@ -287,7 +287,7 @@ class Mime
 				}
 			} else {
 				if ($matchWildcards === true) {
-					if($testMime($value) === true) {
+					if ($testMime($value) === true) {
 						$extensions[] = $key;
 					}
 				} else {
