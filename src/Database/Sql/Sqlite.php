@@ -44,7 +44,7 @@ class Sqlite extends Sql
 			'timestamp' => '{{ name }} INTEGER {{ null }} {{ default }} {{ unique }}',
 			'bool'      => '{{ name }} INTEGER {{ null }} {{ default }} {{ unique }}',
 			'float'     => '{{ name }} REAL {{ null }} {{ default }} {{ unique }}',
-			'decimal'   => '{{ name }} REAL {{ null }} {{ default }} {{ unique }}' 
+			'decimal'   => '{{ name }} REAL {{ null }} {{ default }} {{ unique }}'
 		];
 	}
 

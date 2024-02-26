@@ -159,10 +159,10 @@ abstract class Sql
 	 * @param string $name Column name
 	 * @param array $column Column definition array; valid keys:
 	 *                      - `type` (required): Column template to use
-	 * 						- `unsigned`: Whether an int column is signed or unsigned (boolean)
-	 * 						- `size`: The size of varchar (int)
-	 * 						- `precision`: The precision of a decimal type
-	 * 						- `decimal_places`: The number of decimal places for a decimal type
+	 *                      - `unsigned`: Whether an int column is signed or unsigned (boolean)
+	 *                      - `size`: The size of varchar (int)
+	 *                      - `precision`: The precision of a decimal type
+	 *                      - `decimal_places`: The number of decimal places for a decimal type
 	 *                      - `null`: Whether the column may be NULL (boolean)
 	 *                      - `key`: Index this column is part of; special values `'primary'` for PRIMARY KEY and `true` for automatic naming
 	 *                      - `unique`: Whether the index (or if not set the column itself) has a UNIQUE constraint
