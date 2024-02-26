@@ -24,7 +24,7 @@ export default class Link extends Mark {
 				// we insert the link as text
 				if (
 					selection.empty &&
-					this.editor.activeMarks.includes('link') === false
+					this.editor.activeMarks.includes("link") === false
 				) {
 					this.editor.insertText(attrs.href, true);
 				}

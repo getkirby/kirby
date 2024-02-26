@@ -17,7 +17,7 @@
 				:details="details"
 				:image="{
 					...image,
-					src: 'https://picsum.photos/800/1200',
+					src: 'https://picsum.photos/800/1200'
 				}"
 				url="https://getkirby.com"
 				@focus="focus = $event"
@@ -30,7 +30,7 @@
 				:details="details"
 				:image="{
 					...image,
-					src: 'https://picsum.photos/800/800',
+					src: 'https://picsum.photos/800/800'
 				}"
 				url="https://getkirby.com"
 				@focus="focus = $event"
@@ -41,7 +41,7 @@
 				:details="details"
 				:image="{
 					icon: 'markdown',
-					color: 'orange-600',
+					color: 'orange-600'
 				}"
 				url="https://getkirby.com"
 			/>
@@ -53,7 +53,7 @@
 export default {
 	data() {
 		return {
-			focus: null,
+			focus: null
 		};
 	},
 	computed: {
@@ -64,14 +64,14 @@ export default {
 				{ title: "URL", text: "some-image.jpg", link: "https://getkirby.com" },
 				{ title: "Size", text: "1.2 MB" },
 				{ title: "Dimensions", text: "1220 × 800" },
-				{ title: "Orientation", text: "square" },
+				{ title: "Orientation", text: "square" }
 			];
 		},
 		image() {
 			return {
-				src: "https://picsum.photos/1200/800",
+				src: "https://picsum.photos/1200/800"
 			};
-		},
-	},
+		}
+	}
 };
 </script>

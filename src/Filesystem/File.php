@@ -277,6 +277,15 @@ class File
 		if (is_array($rules['mime'] ?? null) === true) {
 			$mime = $this->mime();
 
+			// the MIME type could not be determined, but matching
+			// to it was requested explicitly
+			if ($mime === null) {
+				throw new Exception([
+					'key'  => 'file.mime.missing',
+					'data' => ['filename' => $this->filename()]
+				]);
+			}
+
 			// determine if any pattern matches the MIME type;
 			// once any pattern matches, `$carry` is `true` and the rest is skipped
 			$matches = array_reduce(

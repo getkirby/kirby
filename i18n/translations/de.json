@@ -347,7 +347,7 @@
 	"file": "Datei",
 	"file.blueprint": "Du kannst zusätzliche Felder und Bereiche für diese Datei in <strong>/site/blueprints/files/{blueprint}.yml</strong> anlegen",
 	"file.changeTemplate": "Vorlage ändern",
-	"file.changeTemplate.notice": "Das Ändern der Dateivoralge wird alle Inhalte von Feldern entfernen, deren Feldtypen nicht übereinstimmen. Wenn die neue Vorlage bestimmte Regeln definiert, z.B. Bildabmessungen, werden diese unwiderruflich angewandt. Benutze diese Funktion mit Vorsicht.",
+	"file.changeTemplate.notice": "Das Ändern der Dateivorlage wird alle Inhalte von Feldern entfernen, deren Feldtypen nicht übereinstimmen. Wenn die neue Vorlage bestimmte Regeln definiert, z.B. Bildabmessungen, werden diese unwiderruflich angewandt. Benutze diese Funktion mit Vorsicht.",
 	"file.delete.confirm": "Willst du die Datei <strong>{filename}</strong> <br>wirklich löschen?",
 	"file.focus.placeholder": "Fokuspunkt setzen",
 	"file.focus.reset": "Fokuspunkt entfernen",
