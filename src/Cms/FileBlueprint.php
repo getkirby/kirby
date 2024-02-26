@@ -132,7 +132,6 @@ class FileBlueprint extends Blueprint
 	 * This behavior might change in the future to instead return the union of mime, extensions and types.
 	 *
 	 * @since 4.2.0
-	 * @return string
 	 */
 	public function acceptAttribute(): string
 	{
@@ -162,28 +161,25 @@ class FileBlueprint extends Blueprint
 		// get extensions from "type" option
 		if (is_array($accept['type']) === true) {
 			$extensions = array_map(
-				F::typeToExtensions(...),
+				fn($type) => F::typeToExtensions($type) ?? [],
 				$accept['type']
 			);
 
-			// F::typeToExtensions might return null instead of empty arrays,
-			// we need to filter those out
-			$fromType = array_merge(...array_values(array_filter($extensions)));
+			$fromType = array_merge(...array_values($extensions));
 			$restrictions[] = $fromType;
 		}
 
 		// get extensions from "extension" option
 		if (is_array($accept['extension']) === true) {
-			$fromExtension = $accept['extension'];
-			$restrictions[] = $fromExtension;
+			$restrictions[] = $accept['extension'];
 		}
 
 		// intersect all restrictions
-		if (count($restrictions) > 1) {
-			$list = array_intersect(...$restrictions);
-		} else {
-			$list = $restrictions[0];
-		}
+		$list = match (count($restrictions)) {
+			0 => [],
+			1 => $restrictions[0],
+			default => array_intersect(...$restrictions)
+		};
 
 		$list = array_unique($list);
 
