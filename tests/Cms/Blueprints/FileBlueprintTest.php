@@ -10,7 +10,8 @@ use Kirby\TestCase;
  */
 class FileBlueprintTest extends TestCase
 {
-	public static function acceptAttributeProvider() {
+	public static function acceptAttributeProvider()
+	{
 		return [
 			[
 				'wildcard', // case name
@@ -61,7 +62,6 @@ class FileBlueprintTest extends TestCase
 				['.gif', '.js', '.pdf', '.docx', '.zip', '.foo', '.bar']
 			],
 		];
-
 	}
 
 	/**
@@ -79,6 +79,7 @@ class FileBlueprintTest extends TestCase
 			'parent'   => $this->createMock(Page::class),
 			'template' => $name
 		]);
+
 		$acceptAttribute = $file->blueprint()->acceptAttribute();
 
 		foreach ($expected as $extension) {
