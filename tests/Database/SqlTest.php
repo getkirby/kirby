@@ -358,6 +358,71 @@ class SqlTest extends TestCase
 			$table['query']
 		);
 		$this->assertSame([], $table['bindings']);
+
+		// with varchar and size
+		$table = $this->sql->createTable('table', [
+			'test'    => ['type' => 'varchar', 'size' => 50],
+			'another' => ['type' => 'varchar', 'size' => 100, 'null' => false]
+		]);
+		$this->assertSame(
+			'CREATE TABLE `table` (' . PHP_EOL .
+			'`test` varchar(50) NULL,' . PHP_EOL .
+			'`another` varchar(100) NOT NULL' . PHP_EOL .
+			')',
+			$table['query']
+		);
+
+		// int type signed and unsigned
+		$table = $this->sql->createTable('table', [
+			'test'    => ['type' => 'int'],
+			'another' => ['type' => 'int', 'unsigned' => false, 'null' => false]
+		]);
+		$this->assertSame(
+			'CREATE TABLE `table` (' . PHP_EOL .
+			'`test` INT(11) UNSIGNED NULL,' . PHP_EOL .
+			'`another` INT(11)  NOT NULL' . PHP_EOL .
+			')',
+			$table['query']
+		);
+
+		// float type
+		$table = $this->sql->createTable('table', [
+			'test'    => ['type' => 'float'],
+			'another' => ['type' => 'float', 'null' => false]
+		]);
+		$this->assertSame(
+			'CREATE TABLE `table` (' . PHP_EOL .
+			'`test` DOUBLE NULL,' . PHP_EOL .
+			'`another` DOUBLE NOT NULL' . PHP_EOL .
+			')',
+			$table['query']
+		);
+
+		// decimal type
+		$table = $this->sql->createTable('table', [
+			'test'    => ['type' => 'decimal'],
+			'another' => ['type' => 'decimal', 'null' => false]
+		]);
+		$this->assertSame(
+			'CREATE TABLE `table` (' . PHP_EOL .
+			'`test` DECIMAL(14, 4) NULL,' . PHP_EOL .
+			'`another` DECIMAL(14, 4) NOT NULL' . PHP_EOL .
+			')',
+			$table['query']
+		);
+
+		// decimal type with precision and decimal_places
+		$table = $this->sql->createTable('table', [
+			'test'    => ['type' => 'decimal', 'precision' => 10],
+			'another' => ['type' => 'decimal', 'precision' => 12, 'decimal_places' => 2, 'null' => false]
+		]);
+		$this->assertSame(
+			'CREATE TABLE `table` (' . PHP_EOL .
+			'`test` DECIMAL(10, 4) NULL,' . PHP_EOL .
+			'`another` DECIMAL(12, 2) NOT NULL' . PHP_EOL .
+			')',
+			$table['query']
+		);
 	}
 
 	/**
