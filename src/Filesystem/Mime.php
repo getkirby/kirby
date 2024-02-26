@@ -275,26 +275,26 @@ class Mime
 		$testMime = fn (string $v) => static::matches($v, $mime);
 
 		foreach (static::$types as $key => $value) {
-			$isArray = is_array($value) === true;
-
-			if ($matchWildcards === true) {
-				if ($isArray === true && A::some($value, $testMime)) {
-					$extensions[] = $key;
+			if (is_array($value) === true) {
+				if ($matchWildcards === true) {
+					if (A::some($value, $testMime)) {
+						$extensions[] = $key;
+					}
+				} else {
+					if (in_array($mime, $value) === true) {
+						$extensions[] = $key;
+					}
 				}
-
-				if ($isArray === false && $testMime($value) === true) {
-					$extensions[] = $key;
+			} else {
+				if ($matchWildcards === true) {
+					if($testMime($value) === true) {
+						$extensions[] = $key;
+					}
+				} else {
+					if ($value === $mime) {
+						$extensions[] = $key;
+					}
 				}
-
-				continue;
-			}
-
-			if ($isArray === true && in_array($mime, $value) === true) {
-				$extensions[] = $key;
-			}
-
-			if ($isArray === false && $value === $mime) {
-				$extensions[] = $key;
 			}
 		}
 
