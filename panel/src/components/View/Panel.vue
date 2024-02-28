@@ -6,7 +6,7 @@
 		:data-language-default="$panel.language.isDefault"
 		:data-menu="$panel.menu.isOpen ? 'true' : 'false'"
 		:data-role="$panel.user.role"
-		:data-theme="$panel.user.theme"
+		:data-theme="$panel.theme.current"
 		:data-translation="$panel.translation.code"
 		:data-user="$panel.user.id"
 		:dir="$panel.direction"

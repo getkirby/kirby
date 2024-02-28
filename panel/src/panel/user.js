@@ -6,9 +6,6 @@ export const defaults = () => {
 		id: null,
 		language: null,
 		role: null,
-		theme: window.matchMedia?.("(prefers-color-scheme: dark)").matches
-			? "dark"
-			: "light",
 		username: null
 	};
 };

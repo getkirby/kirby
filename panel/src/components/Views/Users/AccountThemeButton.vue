@@ -4,21 +4,18 @@
 		:text="text"
 		size="sm"
 		variant="filled"
-		@click="$dialog(dialog)"
+		@click="$panel.theme.toggle()"
 	/>
 </template>
 
 <script>
 export default {
 	computed: {
-		dialog() {
-			return "account/theme/" + (this.isDark ? "light" : "dark");
-		},
 		icon() {
 			return this.isDark ? "sun" : "moon";
 		},
 		isDark() {
-			return this.$panel.user.theme === "dark";
+			return this.$panel.theme.current === "dark";
 		},
 		text() {
 			return this.isDark ? this.$t("dark.off") : this.$t("dark.on");

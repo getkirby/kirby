@@ -200,12 +200,11 @@ class View
 			'$user'        => function () use ($user) {
 				if ($user) {
 					return [
-						'email'       => $user->email(),
-						'id'          => $user->id(),
-						'language'    => $user->language(),
-						'role'        => $user->role()->id(),
-						'theme'       => $user->theme()->value(),
-						'username'    => $user->username(),
+						'email'    => $user->email(),
+						'id'       => $user->id(),
+						'language' => $user->language(),
+						'role'     => $user->role()->id(),
+						'username' => $user->username(),
 					];
 				}
 
