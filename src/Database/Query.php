@@ -869,7 +869,7 @@ class Query
 					$this->bindings($args[1]);
 
 				// ->where('username like ?', 'myuser')
-				} elseif (is_string($args[0]) === true && is_string($args[1]) === true) {
+				} elseif (is_string($args[0]) === true && is_scalar($args[1]) === true) {
 					// prepared where clause
 					$result = $args[0];
 
