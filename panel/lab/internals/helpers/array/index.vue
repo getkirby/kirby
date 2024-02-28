@@ -1,19 +1,17 @@
 <template>
 	<k-lab-examples class="k-lab-helpers-examples">
-		<k-box theme="text">
-			<k-text>
-				Access the following array helpers in your Vue components through
-				<code>this.$helper.array</code>
-			</k-text>
-		</k-box>
+		<k-text>
+			Access the following array helpers in your Vue components through
+			<code>this.$helper.array</code>
+		</k-text>
 
 		<k-lab-example label="$helper.array.fromObject()" script="fromObject">
 			<k-text>
-				<p>
-					Creates an array from an object:
-					<code>this.$helper.array.fromObject(object)</code>
-				</p>
+				<p>Creates an array from an object:</p>
+				<!-- prettier-ignore -->
+				<k-code language="javascript">this.$helper.array.fromObject(object): array</k-code>
 			</k-text>
+
 			<!-- @code -->
 			<k-grid variant="fields">
 				<k-column width="1/2">
@@ -32,13 +30,9 @@
 
 		<k-lab-example label="$helper.array.search()" script="search">
 			<k-text>
-				<p>
-					Filters an array by a provided query:
-					<code>
-						this.$helper.array.search(array, "{{ searchQuery }}", { min: 2,
-						field: "name" })
-					</code>
-				</p>
+				<p>Filters an array by a provided query:</p>
+				<!-- prettier-ignore -->
+				<k-code language="javascript">this.$helper.array.search(array, "{{ searchQuery }}", { min: 2,	field: "name" }): array</k-code>
 			</k-text>
 
 			<!-- @code -->
@@ -64,11 +58,11 @@
 
 		<k-lab-example label="$helper.array.sortBy()" script="sortBy">
 			<k-text>
-				<p>
-					Sorts an array by one or more fields and directions:
-					<code>this.$helper.array.sortBy(array, "name desc")</code>
-				</p>
+				<p>Sorts an array by one or more fields and directions:</p>
+				<!-- prettier-ignore -->
+				<k-code language="javascript">this.$helper.array.sortBy(array, "name desc"): array</k-code>
 			</k-text>
+
 			<!-- @code -->
 			<k-grid variant="fields">
 				<k-column width="1/2">
@@ -87,11 +81,11 @@
 
 		<k-lab-example label="$helper.array.split()" script="split">
 			<k-text>
-				<p>
-					Splits an array into groups by a delimiter entry:
-					<code>this.$helper.array.split(array, "-")</code>
-				</p>
+				<p>Splits an array into groups by a delimiter entry:</p>
+				<!-- prettier-ignore -->
+				<k-code language="javascript">this.$helper.array.split(array, "-"): array</k-code>
 			</k-text>
+
 			<!-- @code -->
 			<k-grid variant="fields">
 				<k-column width="1/2">
@@ -110,11 +104,11 @@
 
 		<k-lab-example label="$helper.array.wrap()">
 			<k-text>
-				<p>
-					Wraps a value in an array (ensures the value will be an array):
-					<code>this.$helper.array.wrap(value)</code>
-				</p>
+				<p>Wraps a value in an array (ensures the value will be an array):</p>
+				<!-- prettier-ignore -->
+				<k-code language="javascript">this.$helper.array.wrap(value): array</k-code>
 			</k-text>
+
 			<!-- @code -->
 			<k-grid variant="fields">
 				<k-column width="1/2">
