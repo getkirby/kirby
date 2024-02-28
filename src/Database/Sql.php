@@ -138,7 +138,7 @@ abstract class Sql
 			'timestamp' => '{{ name }} TIMESTAMP {{ null }} {{ default }} {{ unique }}',
 			'bool'      => '{{ name }} TINYINT(1) {{ null }} {{ default }} {{ unique }}',
 			'float'     => '{{ name }} DOUBLE {{ null }} {{ default }} {{ unique }}',
-			'decimal'   => '{{ name }} DECIMAL({{ precision }}, {{ decimal_places }}) {{ null }} {{ default }} {{ unique }}'
+			'decimal'   => '{{ name }} DECIMAL({{ precision }}, {{ decimalPlaces }}) {{ null }} {{ default }} {{ unique }}'
 		];
 	}
 
@@ -162,7 +162,7 @@ abstract class Sql
 	 *                      - `unsigned`: Whether an int column is signed or unsigned (boolean)
 	 *                      - `size`: The size of varchar (int)
 	 *                      - `precision`: The precision of a decimal type
-	 *                      - `decimal_places`: The number of decimal places for a decimal type
+	 *                      - `decimalPlaces`: The number of decimal places for a decimal type
 	 *                      - `null`: Whether the column may be NULL (boolean)
 	 *                      - `key`: Index this column is part of; special values `'primary'` for PRIMARY KEY and `true` for automatic naming
 	 *                      - `unique`: Whether the index (or if not set the column itself) has a UNIQUE constraint
@@ -225,7 +225,7 @@ abstract class Sql
 			'unsigned'       => $unsigned,
 			'size'           => $column['size'] ?? 255,
 			'precision'      => $column['precision'] ?? 14,
-			'decimal_places' => $column['decimal_places'] ?? 4,
+			'decimalPlaces'  => $column['decimalPlaces'] ?? 4,
 			'null'           => $null,
 			'default'        => $columnDefault['query'],
 			'unique'         => $uniqueColumn

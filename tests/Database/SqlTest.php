@@ -411,10 +411,10 @@ class SqlTest extends TestCase
 			$table['query']
 		);
 
-		// decimal type with precision and decimal_places
+		// decimal type with precision and decimalPlaces
 		$table = $this->sql->createTable('table', [
 			'test'    => ['type' => 'decimal', 'precision' => 10],
-			'another' => ['type' => 'decimal', 'precision' => 12, 'decimal_places' => 2, 'null' => false]
+			'another' => ['type' => 'decimal', 'precision' => 12, 'decimalPlaces' => 2, 'null' => false]
 		]);
 		$this->assertSame(
 			'CREATE TABLE `table` (' . PHP_EOL .
