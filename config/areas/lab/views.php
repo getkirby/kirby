@@ -109,6 +109,16 @@ return [
 			$props    = $example->props();
 			$vue      = $example->vue();
 
+			if (Docs::installed() === true && $docs = $props['docs'] ?? null) {
+				$docs = new Docs($docs);
+			}
+
+			$github = $docs?->github();
+
+			if ($source = $props['source'] ?? null) {
+				$github ??= 'https://github.com/getkirby/kirby/tree/main/' . $source;
+			}
+
 			return [
 				'component' => 'k-lab-playground-view',
 				'breadcrumb' => [
@@ -121,10 +131,10 @@ return [
 					]
 				],
 				'props' => [
-					'docs'     => $props['docs'] ?? null,
+					'docs'     => $docs?->name(),
 					'examples' => $vue['examples'],
 					'file'     => $example->module(),
-					'github'   => $example->github(),
+					'github'   => $github,
 					'props'    => $props,
 					'styles'   => $vue['style'],
 					'tab'      => $example->tab(),

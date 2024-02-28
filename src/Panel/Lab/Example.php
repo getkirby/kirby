@@ -2,12 +2,10 @@
 
 namespace Kirby\Panel\Lab;
 
-use Kirby\Cms\App;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Http\Response;
-use Kirby\Toolkit\Str;
 
 /**
  * One or multiple lab examples with one or multiple tabs
@@ -79,17 +77,6 @@ class Example
 	public function file(string $filename): string
 	{
 		return $this->parent->root() . '/' . $this->path() . '/' . $filename;
-	}
-
-	public function github(): string
-	{
-		$path = Str::after($this->root(), App::instance()->root('kirby'));
-
-		if ($tab = $this->tab()) {
-			$path .= '/' . $tab;
-		}
-
-		return 'https://github.com/getkirby/kirby/tree/main' . $path;
 	}
 
 	public function id(): string
