@@ -297,24 +297,20 @@ class Blueprint
 			];
 		}
 
-		$extends = $props['extends'] ?? null;
-
-		if ($extends === null) {
-			return $props;
-		}
-
-		foreach (A::wrap($extends) as $extend) {
-			try {
-				$mixin = static::find($extend);
-				$mixin = static::extend($mixin);
-				$props = A::merge($mixin, $props, A::MERGE_REPLACE);
-			} catch (Exception) {
-				// keep the props unextended if the snippet wasn't found
+		if ($extends = $props['extends'] ?? null) {
+			foreach (A::wrap($extends) as $extend) {
+				try {
+					$mixin = static::find($extend);
+					$mixin = static::extend($mixin);
+					$props = A::merge($mixin, $props, A::MERGE_REPLACE);
+				} catch (Exception) {
+					// keep the props unextended if the snippet wasn't found
+				}
 			}
-		}
 
-		// remove the extends flag
-		unset($props['extends']);
+			// remove the extends flag
+			unset($props['extends']);
+		}
 
 		return $props;
 	}
@@ -391,6 +387,7 @@ class Blueprint
 		if (is_string($file) === true && F::exists($file) === true) {
 			return static::$loaded[$name] = Data::read($file);
 		}
+
 		if (is_array($file) === true) {
 			return static::$loaded[$name] = $file;
 		}
@@ -465,7 +462,10 @@ class Blueprint
 				continue;
 			}
 
-			$columnProps = $this->convertFieldsToSections($tabName . '-col-' . $columnKey, $columnProps);
+			$columnProps = $this->convertFieldsToSections(
+				$tabName . '-col-' . $columnKey,
+				$columnProps
+			);
 
 			// inject getting started info, if the sections are empty
 			if (empty($columnProps['sections']) === true) {
@@ -478,10 +478,14 @@ class Blueprint
 				];
 			}
 
-			$columns[$columnKey] = array_merge($columnProps, [
+			$columns[$columnKey] = [
+				...$columnProps,
 				'width'    => $columnProps['width'] ?? '1/1',
-				'sections' => $this->normalizeSections($tabName, $columnProps['sections'] ?? [])
-			]);
+				'sections' => $this->normalizeSections(
+					$tabName,
+					$columnProps['sections'] ?? []
+				)
+			];
 		}
 
 		return $columns;
@@ -501,10 +505,9 @@ class Blueprint
 	/**
 	 * Normalize field props for a single field
 	 *
-	 * @param array|string $props
 	 * @throws \Kirby\Exception\InvalidArgumentException If the filed name is missing or the field type is invalid
 	 */
-	public static function fieldProps($props): array
+	public static function fieldProps(array|string $props): array
 	{
 		$props = static::extend($props);
 
@@ -543,12 +546,13 @@ class Blueprint
 		}
 
 		// add some useful defaults
-		return array_merge($props, [
+		return [
+			...$props,
 			'label' => $props['label'] ?? ucfirst($name),
 			'name'  => $name,
 			'type'  => $type,
 			'width' => $props['width'] ?? '1/1',
-		]);
+		];
 	}
 
 	/**
@@ -607,11 +611,16 @@ class Blueprint
 
 			// resolve field groups
 			if ($fieldProps['type'] === 'group') {
-				if (empty($fieldProps['fields']) === false && is_array($fieldProps['fields']) === true) {
+				if (
+					empty($fieldProps['fields']) === false &&
+					is_array($fieldProps['fields']) === true
+				) {
 					$index  = array_search($fieldName, array_keys($fields));
-					$before = array_slice($fields, 0, $index);
-					$after  = array_slice($fields, $index + 1);
-					$fields = array_merge($before, $fieldProps['fields'] ?? [], $after);
+					$fields = [
+						...array_slice($fields, 0, $index),
+						...$fieldProps['fields'] ?? [],
+						...array_slice($fields, $index + 1)
+					];
 				} else {
 					unset($fields[$fieldName]);
 				}
@@ -626,11 +635,9 @@ class Blueprint
 	/**
 	 * Normalizes blueprint options. This must be used in the
 	 * constructor of an extended class, if you want to make use of it.
-	 *
-	 * @param array|true|false|null|string $options
 	 */
 	protected function normalizeOptions(
-		$options,
+		array|string|bool|null $options,
 		array $defaults,
 		array $aliases = []
 	): array {
@@ -656,7 +663,7 @@ class Blueprint
 			}
 		}
 
-		return array_merge($defaults, $options);
+		return [...$defaults, ...$options];
 	}
 
 	/**
@@ -681,10 +688,11 @@ class Blueprint
 			// inject all section extensions
 			$sectionProps = $this->extend($sectionProps);
 
-			$sections[$sectionName] = $sectionProps = array_merge($sectionProps, [
+			$sections[$sectionName] = $sectionProps = [
+				...$sectionProps,
 				'name' => $sectionName,
 				'type' => $type = $sectionProps['type'] ?? $sectionName
-			]);
+			];
 
 			if (empty($type) === true || is_string($type) === false) {
 				$sections[$sectionName] = [
@@ -734,7 +742,7 @@ class Blueprint
 		}
 
 		// store all normalized sections
-		$this->sections = array_merge($this->sections, $sections);
+		$this->sections = [...$this->sections, ...$sections];
 
 		return $sections;
 	}
@@ -764,13 +772,14 @@ class Blueprint
 			$tabProps = $this->convertFieldsToSections($tabName, $tabProps);
 			$tabProps = $this->convertSectionsToColumns($tabName, $tabProps);
 
-			$tabs[$tabName] = array_merge($tabProps, [
+			$tabs[$tabName] = [
+				...$tabProps,
 				'columns' => $this->normalizeColumns($tabName, $tabProps['columns'] ?? []),
 				'icon'    => $tabProps['icon']  ?? null,
 				'label'   => $this->i18n($tabProps['label'] ?? ucfirst($tabName)),
 				'link'    => $this->model->panel()->url(true) . '/?tab=' . $tabName,
 				'name'    => $tabName,
-			]);
+			];
 		}
 
 		return $this->tabs = $tabs;

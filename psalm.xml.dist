@@ -31,6 +31,9 @@
 				<file name="src/Toolkit/Date.php" />
 			</errorLevel>
 		</MethodSignatureMismatch>
+
+		<!-- Don't warn about duplicate array keys as Psalm will throw false positive when unpacking arrays -->
+		<DuplicateArrayKey errorLevel="suppress" />
 	</issueHandlers>
 
 	<plugins>
