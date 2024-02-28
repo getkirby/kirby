@@ -1,7 +1,7 @@
 <script>
 import DateInput from "./DateInput.vue";
 
-export const IsoProps = {
+export const IsoTimeProps = {
 	props: {
 		/**
 		 * The last allowed time as ISO time string
@@ -22,7 +22,7 @@ export const IsoProps = {
 };
 
 export const props = {
-	mixins: [IsoProps],
+	mixins: [IsoTimeProps],
 	props: {
 		/**
 		 * Format to parse and display the time

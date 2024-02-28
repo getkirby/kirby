@@ -56,10 +56,10 @@
 
 <script>
 import Input, { props as InputProps } from "@/mixins/input.js";
-import { IsoProps as TimeProps } from "./TimeInput.vue";
+import { IsoTimeProps } from "./TimeInput.vue";
 
 export const props = {
-	mixins: [InputProps, TimeProps]
+	mixins: [InputProps, IsoTimeProps]
 };
 
 /**

@@ -24,7 +24,7 @@
 <script>
 import Input, { props as InputProps } from "@/mixins/input.js";
 
-export const IsoProps = {
+export const IsoDateProps = {
 	props: {
 		/**
 		 * The last allowed date as ISO date string
@@ -45,7 +45,7 @@ export const IsoProps = {
 };
 
 export const props = {
-	mixins: [InputProps, IsoProps],
+	mixins: [InputProps, IsoDateProps],
 	props: {
 		/**
 		 * Format to parse and display the date

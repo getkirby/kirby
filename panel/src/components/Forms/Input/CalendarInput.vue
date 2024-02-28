@@ -88,7 +88,7 @@
 
 <script>
 import { props as InputProps } from "@/mixins/input.js";
-import { IsoProps as DateProps } from "./DateInput.vue";
+import { IsoDateProps } from "./DateInput.vue";
 
 /**
  * The Calendar component is mainly used for our `DateInput` component, but it could be used as stand-alone calendar as well with a little CSS love.
@@ -97,7 +97,7 @@ import { IsoProps as DateProps } from "./DateInput.vue";
  * @example <k-calendar-input :value="value" @input="value = $event" />
  */
 export default {
-	mixins: [InputProps, DateProps],
+	mixins: [InputProps, IsoDateProps],
 	data() {
 		return {
 			maxdate: null,
