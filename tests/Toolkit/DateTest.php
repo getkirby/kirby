@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use DateTimeZone;
 use IntlDateFormatter;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
@@ -340,16 +341,24 @@ class DateTest extends TestCase
 	 * @covers ::round
 	 * @dataProvider roundProvider
 	 */
-	public function testRound(string $unit, int $size, string $input, string $expected)
+	public function testRound(string $unit, int $size, string $input, string $expected, string $timezone)
 	{
-		$date = new Date($input);
+		$date = new Date($input, new DateTimeZone($timezone));
 		$this->assertSame($date, $date->round($unit, $size));
 		$this->assertSame($expected, $date->format('Y-m-d H:i:s'));
 	}
 
 	public static function roundProvider(): array
 	{
-		return [
+		$timezones = [
+			'UTC',
+			'Europe/London',
+			'Europe/Berlin',
+			'America/New_York',
+			'Asia/Tokyo'
+		];
+
+		$inputs = [
 			'1s: no change'  => ['second', 1, '2020-02-29 16:05:15', '2020-02-29 16:05:15'],
 			'5s: no change'  => ['second', 5, '2020-02-29 16:05:15', '2020-02-29 16:05:15'],
 			'5s: floor'      => ['second', 5, '2020-02-29 16:05:12', '2020-02-29 16:05:10'],
@@ -376,8 +385,19 @@ class DateTest extends TestCase
 			'1Y: no change'  => ['year', 1, '2020-02-14 09:05:15', '2020-01-01 00:00:00'],
 			'1Y: ceil sub'   => ['year', 1, '2020-09-29 16:05:15', '2021-01-01 00:00:00'],
 
-			'kirby/issues/3642' => ['minute', 5, '2021-08-18 10:59:00', '2021-08-18 11:00:00'],
+			'kirby/issues/3642' => ['minute', 5, '2021-08-18 10:59:00', '2021-08-18 11:00:00']
 		];
+
+		$data = [];
+
+		foreach ($timezones as $timezone) {
+			foreach ($inputs as $label => $arguments) {
+				$arguments[] = $timezone;
+				$data[$label . ' ' . $timezone] = $arguments;
+			}
+		}
+
+		return $data;
 	}
 
 	/**
