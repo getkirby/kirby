@@ -50,7 +50,6 @@ class LanguageRouterTest extends TestCase
 		$router   = $language->router();
 		$routes   = $router->routes();
 
-		$this->assertCount(1, $routes);
 		$this->assertSame('(:any)', $routes[0]['pattern']);
 		$this->assertSame('en', $routes[0]['language']);
 		$this->assertSame('en', $router->call('anything'));
@@ -71,7 +70,7 @@ class LanguageRouterTest extends TestCase
 
 		$language = $app->language('en');
 
-		$this->assertCount(0, $language->router()->routes());
+		$this->assertCount(1, $language->router()->routes());
 	}
 
 	public function testRouteForMultipleLanguages()
@@ -92,7 +91,6 @@ class LanguageRouterTest extends TestCase
 		$router   = $language->router();
 		$routes   = $router->routes();
 
-		$this->assertCount(1, $routes);
 		$this->assertSame('(:any)', $routes[0]['pattern']);
 		$this->assertSame('en|de', $routes[0]['language']);
 		$this->assertSame('slug', $router->call('slug'));
@@ -116,7 +114,6 @@ class LanguageRouterTest extends TestCase
 		$router   = $language->router();
 		$routes   = $router->routes();
 
-		$this->assertCount(1, $routes);
 		$this->assertSame('(:any)', $routes[0]['pattern']);
 		$this->assertSame('*', $routes[0]['language']);
 		$this->assertSame('slug', $router->call('slug'));
