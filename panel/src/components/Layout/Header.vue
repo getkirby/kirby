@@ -93,7 +93,7 @@ export default {
 :root {
 	--header-color-back: var(--color-light);
 	--header-padding-block: var(--spacing-4);
-	--header-sticky-offset: calc(var(--scroll-top) + 4rem);
+	--header-sticky-offset: var(--scroll-top);
 }
 
 .k-header {
@@ -164,5 +164,8 @@ export default {
 	position: sticky;
 	top: var(--scroll-top);
 	z-index: var(--z-toolbar);
+}
+:root:has(.k-header[data-has-buttons="true"]) {
+	--header-sticky-offset: calc(var(--scroll-top) + 4rem);
 }
 </style>
