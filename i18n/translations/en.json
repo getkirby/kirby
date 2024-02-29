@@ -27,6 +27,9 @@
 	"date": "Date",
 	"date.select": "Select a date",
 
+	"dark.on": "Lights off",
+	"dark.off": "Lights on",
+
 	"day": "Day",
 	"days.fri": "Fri",
 	"days.mon": "Mon",

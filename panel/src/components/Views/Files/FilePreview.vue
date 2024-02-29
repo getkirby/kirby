@@ -129,10 +129,20 @@ export default {
 };
 </script>
 <style>
+:root {
+	--file-preview-back: var(--color-gray-900);
+	--file-preview-text: hsla(0, 100%, var(--color-l-max), 0.75);
+}
+
+.k-panel[data-theme="dark"] {
+	--file-preview-back: var(--color-gray-100);
+	--file-preview-text: hsla(0, 100%, var(--color-l-min), 0.75);
+}
+
 .k-file-preview {
 	display: grid;
 	align-items: stretch;
-	background: var(--color-gray-900);
+	background: var(--file-preview-back);
 	border-radius: var(--rounded-lg);
 	margin-bottom: var(--spacing-12);
 	overflow: hidden;
@@ -182,7 +192,7 @@ export default {
 	width: var(--size);
 	height: var(--size);
 	content: "";
-	background: var(--color-white);
+	background: white;
 	border-radius: 50%;
 }
 .k-file-preview:not([data-has-focus="true"]) .k-coords-input-thumb {
@@ -211,11 +221,10 @@ export default {
 }
 .k-file-preview-details :where(dd, a) {
 	font-size: var(--text-xs);
-	color: rgb(255 255 255 / 0.5);
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	color: rgba(255, 255, 255, 0.75);
+	color: var(--file-preview-text);
 	font-size: var(--text-sm);
 }
 .k-file-preview-focus-info dd {
@@ -226,10 +235,12 @@ export default {
 .k-file-preview-focus-info .k-button {
 	--button-color-back: var(--color-gray-800);
 	--button-padding: var(--spacing-2);
-	--button-color-back: var(--color-gray-800);
 }
 .k-file-preview[data-has-focus="true"] .k-file-preview-focus-info .k-button {
 	flex-direction: row-reverse;
+}
+.k-panel[data-theme="dark"] .k-file-preview-focus-info .k-button {
+	--button-color-back: var(--color-gray-400);
 }
 
 @container (min-width: 36rem) {

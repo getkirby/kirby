@@ -138,7 +138,12 @@ export default {
 
 <style>
 :root {
-	--overlay-color-back: var(--color-backdrop);
+	--overlay-color-back: rgba(0, 0, 0, 0.6);
+	--overlay-color-back-dimmed: rgba(0, 0, 0, 0.2);
+}
+
+.k-panel[data-theme="dark"] {
+	--overlay-color-back-dimmed: rgba(0, 0, 0, 0.8);
 }
 
 .k-overlay[open] {
@@ -173,7 +178,7 @@ export default {
 }
 
 .k-overlay[open][data-type="drawer"] > .k-portal {
-	--overlay-color-back: rgba(0, 0, 0, 0.2);
+	--overlay-color-back: var(--overlay-color-back-dimmed);
 	display: flex;
 	align-items: stretch;
 	justify-content: flex-end;

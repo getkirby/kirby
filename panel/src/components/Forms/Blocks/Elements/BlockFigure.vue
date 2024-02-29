@@ -65,7 +65,7 @@ export default {
 	--button-width: 100%;
 	--button-height: 6rem;
 	--button-color-text: var(--color-text-dimmed);
-	--button-color-back: var(--color-gray-200);
+	--button-color-back: var(--color-light);
 }
 
 .k-block-figure-empty,

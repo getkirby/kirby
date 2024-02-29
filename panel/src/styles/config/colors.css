@@ -1,5 +1,6 @@
 :root {
 	/* Lightness */
+	--color-l-max: 100%;
 	--color-l-100: 98%;
 	--color-l-200: 94%;
 	--color-l-300: 88%;
@@ -9,6 +10,7 @@
 	--color-l-700: 45%;
 	--color-l-800: 30%;
 	--color-l-900: 15%;
+	--color-l-min: 0%;
 
 	/* Colors */
 	--color-red-h: 0;
@@ -239,17 +241,18 @@
 	--color-gray-900: hsl(var(--color-gray-hs), var(--color-gray-l-900));
 
 	/** Shortcuts **/
-	--color-backdrop: rgba(0, 0, 0, 0.6);
-	--color-black: black;
+	--color-black: hsl(0, 0%, var(--color-l-min));
 	--color-border: var(--color-gray-300);
+	--color-border-dimmed: hsla(0, 0%, var(--color-l-min), 0.1);
 	--color-dark: var(--color-gray-900);
 	--color-focus: var(--color-blue-600);
 	--color-light: var(--color-gray-200);
 	--color-text: var(--color-black);
 	--color-text-dimmed: var(--color-gray-700);
-	--color-white: white;
+	--color-white: hsl(0, 0%, var(--color-l-max));
 
 	/** @deprecated */
+	--color-backdrop: rgba(0, 0, 0, 0.6);
 	--color-background: var(--color-light);
 	--color-gray: var(--color-gray-600);
 	--color-red: var(--color-red-600);
@@ -270,4 +273,22 @@
 	--color-positive-light: var(--color-green-500);
 	--color-positive-outline: var(--color-green-900);
 	--color-text-light: var(--color-text-dimmed);
+}
+
+:root:has(.k-panel[data-theme="dark"]) {
+	--color-l-max: 0%;
+	--color-l-100: 3%;
+	--color-l-200: 10%;
+	--color-l-300: 17%;
+	--color-l-400: 25%;
+	--color-l-500: 36%;
+	--color-l-600: 52%;
+	--color-l-700: 62%;
+	--color-l-800: 70%;
+	--color-l-900: 80%;
+	--color-l-min: 97%;
+
+	--color-gray-250: #0f0f0f;
+
+	color-scheme: dark;
 }

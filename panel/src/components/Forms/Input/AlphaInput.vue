@@ -42,10 +42,13 @@ export default {
 
 <style>
 .k-alpha-input {
-	--range-track-back: linear-gradient(to right, transparent, currentColor);
+	--range-track-back: linear-gradient(to right, transparent, black);
 	--range-track-height: var(--range-thumb-size);
 
-	color: black;
-	background: var(--color-white) var(--pattern-light);
+	background: white var(--pattern-light);
+}
+
+.k-panel[data-theme="dark"] .k-alpha-input {
+	background: white var(--pattern-dark);
 }
 </style>

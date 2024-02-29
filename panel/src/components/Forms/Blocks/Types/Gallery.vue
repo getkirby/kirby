@@ -72,7 +72,7 @@ export default {
 	background: var(--color-gray-250);
 }
 .k-block-type-gallery-placeholder {
-	background: var(--color-background);
+	background: var(--color-light);
 }
 .k-block-type-gallery figcaption {
 	padding-top: 0.5rem;

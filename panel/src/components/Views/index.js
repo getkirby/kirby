@@ -20,6 +20,7 @@ import SystemView from "./System/SystemView.vue";
 import TableUpdateStatusCell from "./System/TableUpdateStatusCell.vue";
 
 import AccountView from "./Users/AccountView.vue";
+import AccountThemeButton from "./Users/AccountThemeButton.vue";
 import UserAvatar from "./Users/UserAvatar.vue";
 import UserProfile from "./Users/UserProfile.vue";
 import UserView from "./Users/UserView.vue";
@@ -51,6 +52,7 @@ export default {
 		app.component("k-table-update-status-cell", TableUpdateStatusCell);
 
 		app.component("k-account-view", AccountView);
+		app.component("k-account-theme-button", AccountThemeButton);
 		app.component("k-user-avatar", UserAvatar);
 		app.component("k-user-profile", UserProfile);
 		app.component("k-user-view", UserView);

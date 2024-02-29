@@ -10,6 +10,7 @@ import Language from "./language.js";
 import Plugins from "./plugins.js";
 import Menu from "./menu.js";
 import System from "./system.js";
+import Theme from "./theme.js";
 import Translation from "./translation.js";
 import { buildUrl, isUrl } from "@/helpers/url.js";
 import { reactive } from "vue";
@@ -72,6 +73,7 @@ export default {
 		this.activation = Activation(this);
 		this.drag = Drag(this);
 		this.events = Events(this);
+		this.theme = Theme(this);
 		this.upload = Upload(this);
 
 		// state objects
