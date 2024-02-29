@@ -153,10 +153,13 @@ export default {
 				if (button === "|") {
 					layout.push("|");
 				} else if (available[button]) {
-					// ensure that click handler is bound to this component
-					// so that plugins can use `this.command` etc.
-					const command = available[button];
-					command.click = command.click?.bind(this);
+					const command = {
+						...available[button],
+						click: () => {
+							available[button].click?.call(this);
+						}
+					};
+
 					layout.push(command);
 				}
 			}
