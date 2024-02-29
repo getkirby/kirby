@@ -14,7 +14,6 @@
 				<k-code language="javascript">this.$helper.object.isEmpty(value): boolean</k-code>
 			</k-text>
 
-			<!-- @code -->
 			<k-grid variant="fields">
 				<k-column width="1/2">
 					<h2>Input</h2>
@@ -75,7 +74,6 @@
 					}}</k-code>
 				</k-column>
 			</k-grid>
-			<!-- @code-end -->
 		</k-lab-example>
 
 		<k-lab-example label="$helper.object.isObject()" :code="false">
@@ -85,7 +83,6 @@
 				<k-code language="javascript">this.$helper.object.isObject(value): boolean</k-code>
 			</k-text>
 
-			<!-- @code -->
 			<k-grid variant="fields">
 				<k-column width="1/2">
 					<h2>Input</h2>
@@ -122,7 +119,6 @@
 					}}</k-code>
 				</k-column>
 			</k-grid>
-			<!-- @code-end -->
 		</k-lab-example>
 
 		<k-lab-example label="$helper.object.length()" :code="false">
@@ -132,7 +128,6 @@
 				<k-code language="javascript">this.$helper.object.length(object): int</k-code>
 			</k-text>
 
-			<!-- @code -->
 			<k-grid variant="fields">
 				<k-column width="1/2">
 					<h2>Input</h2>
@@ -151,7 +146,6 @@
 					}}</k-code>
 				</k-column>
 			</k-grid>
-			<!-- @code-end -->
 		</k-lab-example>
 
 		<k-lab-example label="$helper.object.merge()" :code="false">
@@ -161,7 +155,6 @@
 				<k-code language="javascript">this.$helper.object.merge(target, source): object</k-code>
 			</k-text>
 
-			<!-- @code -->
 			<k-grid variant="fields">
 				<k-column width="1/2">
 					<h2>Input</h2>
@@ -174,7 +167,6 @@
 					}}</k-code>
 				</k-column>
 			</k-grid>
-			<!-- @code-end -->
 		</k-lab-example>
 
 		<k-lab-example label="$helper.object.same()" :code="false">
@@ -184,7 +176,6 @@
 				<k-code language="javascript">this.$helper.object.same(a, b): boolean</k-code>
 			</k-text>
 
-			<!-- @code -->
 			<k-grid variant="fields">
 				<k-column width="1/2">
 					<h2>Input</h2>
@@ -205,7 +196,6 @@
 					}}</k-code>
 				</k-column>
 			</k-grid>
-			<!-- @code-end -->
 		</k-lab-example>
 
 		<k-lab-example label="$helper.object.toLowerKeys()" :code="false">
@@ -215,7 +205,6 @@
 				<k-code language="javascript">this.$helper.object.toLowerKeys(object): object</k-code>
 			</k-text>
 
-			<!-- @code -->
 			<k-grid variant="fields">
 				<k-column width="1/2">
 					<h2>Input</h2>
@@ -228,7 +217,6 @@
 					}}</k-code>
 				</k-column>
 			</k-grid>
-			<!-- @code-end -->
 		</k-lab-example>
 	</k-lab-examples>
 </template>
