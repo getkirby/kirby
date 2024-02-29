@@ -16,11 +16,11 @@
 				/>
 				<k-button
 					v-if="github"
+					:link="github"
 					icon="github"
 					size="sm"
-					variant="filled"
-					:link="github"
 					target="_blank"
+					variant="filled"
 				/>
 			</k-button-group>
 		</k-header>
@@ -133,9 +133,8 @@ export default {
 	margin-top: var(--spacing-12);
 }
 
-.k-lab-input-examples .k-lab-example-canvas:has(:invalid) {
+.k-lab-input-examples .k-lab-example:has(:invalid) {
 	outline: 2px solid var(--color-red-500);
-	outline-offset: -2px;
 }
 
 .k-lab-input-examples-focus .k-lab-example-canvas > .k-button {

@@ -32,8 +32,19 @@ export default (option, Dayjs, dayjs) => {
 	 * @param {string} format
 	 * @returns {Object|null}
 	 */
-	dayjs.iso = function (string, format = "datetime") {
-		const dt = dayjs(string, dayjsISOformat(format));
+	dayjs.iso = function (string, format) {
+		if (format) {
+			format = dayjsISOformat(format);
+		}
+
+		// if no format is provided, try to parse any of the three ISO formats
+		format ??= [
+			dayjsISOformat("datetime"),
+			dayjsISOformat("date"),
+			dayjsISOformat("time")
+		];
+
+		const dt = dayjs(string, format);
 
 		if (!dt || !dt.isValid()) {
 			return null;

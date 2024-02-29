@@ -80,6 +80,8 @@ export const props = {
 
 /**
  * @example <k-input :value="range" @input="range = $event" name="range" type="range" />
+ *
+ * @todo remove vuelidate parts in v5 - until then we keep parrallel validation
  */
 export default {
 	mixins: [Input, props],
@@ -88,6 +90,11 @@ export default {
 			// If the minimum is below 0, the baseline should be placed at .
 			// Otherwise place the baseline at the minimum
 			return this.min < 0 ? 0 : this.min;
+		},
+		isEmpty() {
+			return (
+				this.value === "" || this.value === undefined || this.value === null
+			);
 		},
 		label() {
 			return this.required || this.value || this.value === 0
@@ -103,10 +110,14 @@ export default {
 	watch: {
 		position() {
 			this.onInvalid();
+		},
+		value() {
+			this.validate();
 		}
 	},
 	mounted() {
 		this.onInvalid();
+		this.validate();
 
 		if (this.$props.autofocus) {
 			this.focus();
@@ -129,6 +140,23 @@ export default {
 		},
 		onInput(value) {
 			this.$emit("input", value);
+		},
+		validate() {
+			const errors = [];
+
+			if (this.required && this.isEmpty === true) {
+				errors.push(this.$t("error.validation.required"));
+			}
+
+			if (this.isEmpty === false && this.min && this.value < this.min) {
+				errors.push(this.$t("error.validation.min", { min: this.min }));
+			}
+
+			if (this.isEmpty === false && this.max && this.value > this.max) {
+				errors.push(this.$t("error.validation.max", { max: this.max }));
+			}
+
+			this.$refs.range?.setCustomValidity(errors.join(", "));
 		}
 	},
 	validations() {

@@ -107,16 +107,16 @@ class Date extends DateTime
 		static::validateUnit($unit);
 
 		$formats = [
-			'year'   => 'Y-01-01P',
-			'month'  => 'Y-m-01P',
-			'day'    => 'Y-m-dP',
-			'hour'   => 'Y-m-d H:00:00P',
-			'minute' => 'Y-m-d H:i:00P',
-			'second' => 'Y-m-d H:i:sP'
+			'year'   => 'Y-01-01',
+			'month'  => 'Y-m-01',
+			'day'    => 'Y-m-d',
+			'hour'   => 'Y-m-d H:00:00',
+			'minute' => 'Y-m-d H:i:00',
+			'second' => 'Y-m-d H:i:s'
 		];
 
-		$flooredDate = date($formats[$unit], $this->timestamp());
-		$this->set($flooredDate);
+		$flooredDate = $this->format($formats[$unit]);
+		$this->set($flooredDate, $this->timezone());
 		return $this;
 	}
 
