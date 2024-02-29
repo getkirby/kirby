@@ -35,3 +35,9 @@ export default {
 	inheritAttrs: false
 };
 </script>
+
+<style>
+.k-icon-frame [data-type="emoji"] {
+	overflow: visible;
+}
+</style>
