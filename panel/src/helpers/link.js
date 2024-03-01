@@ -1,3 +1,9 @@
+/**
+ * Detects the type of a link
+ * @param {String} value
+ * @param {Object} _types Custom types, otherwise default types are used
+ * @returns {Object}
+ */
 export function detect(value, _types) {
 	value = value ?? "";
 	_types = _types ?? types();
@@ -19,14 +25,29 @@ export function detect(value, _types) {
 	}
 }
 
+/**
+ * Converts file permalink to file UUID
+ * @param {String} value
+ * @returns {String}
+ */
 export function getFileUUID(value) {
 	return value.replace("/@/file/", "file://");
 }
 
+/**
+ * Converts page permalink to page UUID
+ * @param {String} value
+ * @returns {String}
+ */
 export function getPageUUID(value) {
 	return value.replace("/@/page/", "page://");
 }
 
+/**
+ * Checks if string is a file UUID or permalink
+ * @param {String} value
+ * @returns {Boolean}
+ */
 export function isFileUUID(value) {
 	return (
 		value.startsWith("file://") === true ||
@@ -34,6 +55,11 @@ export function isFileUUID(value) {
 	);
 }
 
+/**
+ * Checks if string is a file UUID or permalink
+ * @param {String} value
+ * @returns {Boolean}
+ */
 export function isPageUUID(value) {
 	return (
 		value === "site://" ||
@@ -42,6 +68,12 @@ export function isPageUUID(value) {
 	);
 }
 
+/**
+ * Returns preview data for the link
+ * @param {Object} { type, link }
+ * @param {Array} fields
+ * @returns
+ */
 export async function preview({ type, link }, fields) {
 	if (type === "page" && link) {
 		return await previewForPage(link, fields);

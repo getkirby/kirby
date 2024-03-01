@@ -19,8 +19,7 @@ export const name = (filename) => {
 };
 
 /**
- * Creates a nice human-readable file size string
- * with size unit
+ * Creates a nice human-readable file size string with size unit
  *
  * @param {Number} size
  * @returns {String}
