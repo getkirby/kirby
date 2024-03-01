@@ -22,7 +22,9 @@
 				</k-column>
 				<k-column width="1/2">
 					<h2>Result</h2>
-					<k-code>{{ $helper.link.detect(detect) }}</k-code>
+					<k-code language="javascript">{{
+						$helper.link.detect(detect)
+					}}</k-code>
 				</k-column>
 			</k-grid>
 			<!-- @code-end -->
@@ -43,7 +45,7 @@
 				</k-column>
 				<k-column width="1/2">
 					<h2>Result</h2>
-					<k-code>{{ previewResult }}</k-code>
+					<k-code language="javascript">{{ previewResult }}</k-code>
 				</k-column>
 			</k-grid>
 			<!-- @code-end -->
@@ -58,7 +60,7 @@
 
 			<!-- @code -->
 			<h2>Result</h2>
-			<k-code>{{ $helper.link.types() }}</k-code>
+			<k-code language="javascript">{{ $helper.link.types() }}</k-code>
 			<!-- @code-end -->
 		</k-lab-example>
 	</k-lab-examples>
