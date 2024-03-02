@@ -20,7 +20,7 @@ export const props = {
 };
 
 /**
- * Display a list of <k-bubble>
+ * Display a list of `<k-bubble>`
  * @since 3.7.0
  *
  * @example <k-bubbles :bubbles="['Hello', 'World']" />
@@ -30,7 +30,7 @@ export default {
 	inheritAttrs: false,
 	props: {
 		/**
-		 * Array or string of bubbles, see <k-bubble> for available props.  If string, will be split by comma.
+		 * Array or string of bubbles, see `<k-bubble>` for available props.  If string, will be split by comma.
 		 */
 		bubbles: [Array, String]
 	},
