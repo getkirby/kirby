@@ -46,6 +46,7 @@
 					:disabled="disabled"
 					:pattern="currentType.pattern ?? null"
 					:placeholder="currentType.placeholder"
+					:required="required"
 					:value="linkValue"
 					@invalid="onInvalid"
 					@input="onInput"
