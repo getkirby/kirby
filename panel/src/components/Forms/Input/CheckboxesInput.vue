@@ -1,13 +1,17 @@
 <template>
-	<ul
-		:style="{ '--columns': columns }"
-		class="k-checkboxes-input k-grid"
-		data-variant="choices"
-	>
-		<li v-for="(choice, index) in choices" :key="index">
-			<k-choice-input v-bind="choice" @input="input(choice.value, $event)" />
-		</li>
-	</ul>
+	<fieldset :disabled="disabled" class="k-checkboxes-input">
+		<legend class="sr-only">{{ $t("options") }}</legend>
+		<ul :style="{ '--columns': columns }" class="k-grid" data-variant="choices">
+			<li v-for="(choice, index) in choices" :key="index">
+				<k-choice-input v-bind="choice" @input="input(choice.value, $event)" />
+			</li>
+		</ul>
+
+		<k-countable-input
+			v-bind="{ min, max, required }"
+			:value="JSON.stringify(selected)"
+		/>
+	</fieldset>
 </template>
 
 <script>
