@@ -19,6 +19,23 @@
 				@input="value = $event"
 			/>
 		</k-lab-example>
+
+		<k-lab-example label="Required">
+			<k-object-field
+				:fields="{
+					name: {
+						label: 'Name',
+						name: 'name',
+						saveable: true,
+						type: 'text'
+					}
+				}"
+				:required="true"
+				:value="value"
+				label="Object"
+				@input="value = $event"
+			/>
+		</k-lab-example>
 	</k-lab-examples>
 </template>
 

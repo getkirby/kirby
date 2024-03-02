@@ -53,6 +53,14 @@
 		<template v-else>
 			<k-empty icon="box">{{ $t("fields.empty") }}</k-empty>
 		</template>
+
+		<!-- Validation -->
+		<input
+			type="checkbox"
+			:checked="!isEmpty"
+			:required="required"
+			class="input-hidden"
+		/>
 	</k-field>
 </template>
 
