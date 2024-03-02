@@ -1,11 +1,8 @@
 /**
- * Wrapper for form inputs that can have multiple values,
- * taking care of adding native validation for
- *   - required
- *   - min
- *   - max
+ * Helper input element taking care of adding native validation for
+ * required, min and/or max to groups of inputs or complex inputs
  */
-export default class CountableInput extends HTMLElement {
+export default class InputValidator extends HTMLElement {
 	static formAssociated = true;
 
 	static get observedAttributes() {

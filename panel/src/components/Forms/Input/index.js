@@ -7,7 +7,6 @@ import ColornameInput from "./ColornameInput.vue";
 import ColoroptionsInput from "./ColoroptionsInput.vue";
 import ColorpickerInput from "./ColorpickerInput.vue";
 import CoordsInput from "./CoordsInput.vue";
-import CountableInput from "./CountableInput.js";
 import DateInput from "./DateInput.vue";
 import EmailInput from "./EmailInput.vue";
 import HueInput from "./HueInput.vue";
@@ -33,12 +32,14 @@ import TogglesInput from "./TogglesInput.vue";
 import UrlInput from "./UrlInput.vue";
 import WriterInput from "./WriterInput.vue";
 
+import Validator from "./Validator.js";
+
 /** @deprecated */
 import Writer from "../Writer/Writer.vue";
 
 export default {
 	install(app) {
-		customElements.define("k-countable-input", CountableInput);
+		customElements.define("k-input-validator", Validator);
 
 		app.component("k-alpha-input", AlphaInput);
 		app.component("k-calendar-input", CalendarInput);
