@@ -7,7 +7,7 @@
 			</li>
 		</ul>
 
-		<k-countable-input
+		<k-input-validator
 			v-bind="{ min, max, required }"
 			:value="JSON.stringify(selected)"
 		/>

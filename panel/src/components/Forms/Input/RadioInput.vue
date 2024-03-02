@@ -11,7 +11,7 @@
 			</li>
 		</ul>
 
-		<k-countable-input :required="required" :value="JSON.stringify(value)" />
+		<k-input-validator :required="required" :value="JSON.stringify(value)" />
 	</fieldset>
 </template>
 
