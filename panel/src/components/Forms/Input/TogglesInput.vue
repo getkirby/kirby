@@ -1,39 +1,43 @@
 <template>
-	<ul
-		:data-invalid="$v.$invalid"
-		:data-labels="labels"
-		:style="{ '--options': columns ?? options.length }"
-		class="k-toggles-input"
-	>
-		<li
-			v-for="(option, index) in options"
-			:key="index"
-			:data-disabled="disabled"
+	<fieldset :disabled="disabled" class="k-toggles-input">
+		<legend class="sr-only">{{ $t("options") }}</legend>
+		<ul
+			:data-invalid="$v.$invalid"
+			:data-labels="labels"
+			:style="{ '--options': columns ?? options.length }"
 		>
-			<input
-				:id="id + '-' + index"
-				:aria-label="option.text"
-				:disabled="disabled"
-				:value="option.value"
-				:name="id"
-				:checked="value === option.value"
-				class="input-hidden"
-				type="radio"
-				@click="onClick(option.value)"
-				@change="onInput(option.value)"
-			/>
-			<label :for="id + '-' + index" :title="option.text">
-				<k-icon v-if="option.icon" :type="option.icon" />
-				<!-- eslint-disable vue/no-v-html -->
-				<span
-					v-if="labels || !option.icon"
-					class="k-toggles-text"
-					v-html="option.text"
+			<li
+				v-for="(option, index) in options"
+				:key="index"
+				:data-disabled="disabled"
+			>
+				<input
+					:id="id + '-' + index"
+					:aria-label="option.text"
+					:disabled="disabled"
+					:value="option.value"
+					:name="id"
+					:checked="value === option.value"
+					class="input-hidden"
+					type="radio"
+					@click="onClick(option.value)"
+					@change="onInput(option.value)"
 				/>
-				<!-- eslint-enable vue/no-v-html -->
-			</label>
-		</li>
-	</ul>
+				<label :for="id + '-' + index" :title="option.text">
+					<k-icon v-if="option.icon" :type="option.icon" />
+					<!-- eslint-disable vue/no-v-html -->
+					<span
+						v-if="labels || !option.icon"
+						class="k-toggles-text"
+						v-html="option.text"
+					/>
+					<!-- eslint-enable vue/no-v-html -->
+				</label>
+			</li>
+		</ul>
+
+		<k-countable-input :required="required" :value="JSON.stringify(value)" />
+	</fieldset>
 </template>
 
 <script>
@@ -111,7 +115,7 @@ export default {
 	display: flex;
 }
 
-.k-toggles-input {
+.k-toggles-input ul {
 	display: grid;
 	grid-template-columns: repeat(var(--options), minmax(0, 1fr));
 	gap: 1px;
