@@ -15,12 +15,7 @@
 					<h1 class="sr-only">
 						{{ $t("installation") }}
 					</h1>
-					<k-fieldset
-						:fields="fields"
-						:novalidate="true"
-						:value="user"
-						@input="user = $event"
-					/>
+					<k-fieldset :fields="fields" :value="user" @input="user = $event" />
 					<k-button
 						:text="$t('install')"
 						icon="check"

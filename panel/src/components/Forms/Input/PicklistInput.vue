@@ -70,12 +70,6 @@
 import Input, { props as InputProps } from "@/mixins/input.js";
 import { autofocus, disabled, options, required } from "@/mixins/props.js";
 
-import {
-	required as validateRequired,
-	minLength as validateMinLength,
-	maxLength as validateMaxLength
-} from "vuelidate/lib/validators";
-
 export const picklist = {
 	mixins: [autofocus, disabled, options, required],
 	props: {
@@ -228,17 +222,6 @@ export default {
 			return this.create === false && this.filteredOptions.length === 0;
 		}
 	},
-	watch: {
-		value: {
-			handler() {
-				/**
-				 * Validation failed
-				 */
-				this.$emit("invalid", this.$v.$invalid, this.$v);
-			},
-			immediate: true
-		}
-	},
 	methods: {
 		add() {
 			if (this.showCreate) {
@@ -288,15 +271,6 @@ export default {
 			 */
 			this.$emit("input", values);
 		}
-	},
-	validations() {
-		return {
-			value: {
-				required: this.required ? validateRequired : true,
-				minLength: this.min ? validateMinLength(this.min) : true,
-				maxLength: this.max ? validateMaxLength(this.max) : true
-			}
-		};
 	}
 };
 </script>

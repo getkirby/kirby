@@ -1,6 +1,6 @@
 <template>
 	<k-field v-bind="$props" :input="id" class="k-link-field">
-		<k-input v-bind="$props" :invalid="isInvalid" :icon="false">
+		<k-input v-bind="$props" :icon="false">
 			<div class="k-link-input-header">
 				<!-- Type selector -->
 				<k-button
@@ -48,7 +48,6 @@
 					:placeholder="currentType.placeholder"
 					:required="required"
 					:value="linkValue"
-					@invalid="onInvalid"
 					@input="onInput"
 				/>
 			</div>
@@ -122,11 +121,7 @@ export default {
 			/**
 			 * Open/close state for the file or page browser
 			 */
-			expanded: false,
-			/**
-			 * Validation state for the wrapping `k-input` component
-			 */
-			isInvalid: false
+			expanded: false
 		};
 	},
 	computed: {
@@ -214,9 +209,6 @@ export default {
 
 			this.$emit("input", this.currentType.value(value));
 		},
-		onInvalid(invalid) {
-			this.isInvalid = !!invalid;
-		},
 		onOutsideClick(event) {
 			if (this.$el.contains(event.target) === false) {
 				this.expanded = false;
@@ -240,9 +232,6 @@ export default {
 			if (type === this.currentType.id) {
 				return;
 			}
-
-			// reset validation
-			this.isInvalid = false;
 
 			// set the new type
 			this.linkType = type;

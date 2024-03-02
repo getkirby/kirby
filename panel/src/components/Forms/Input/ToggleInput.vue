@@ -13,7 +13,6 @@
 <script>
 import Input from "@/mixins/input.js";
 import { props as ChoiceInputProps } from "./ChoiceInput.vue";
-import { required as validateRequired } from "vuelidate/lib/validators";
 
 export const props = {
 	mixins: [ChoiceInputProps],
@@ -49,14 +48,7 @@ export default {
 			return text;
 		}
 	},
-	watch: {
-		value() {
-			this.onInvalid();
-		}
-	},
 	mounted() {
-		this.onInvalid();
-
 		if (this.$props.autofocus) {
 			this.focus();
 		}
@@ -70,19 +62,9 @@ export default {
 		onInput(checked) {
 			this.$emit("input", checked);
 		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
-		},
 		select() {
 			this.$el.focus();
 		}
-	},
-	validations() {
-		return {
-			value: {
-				required: this.required ? validateRequired : true
-			}
-		};
 	}
 };
 </script>

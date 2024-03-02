@@ -36,14 +36,6 @@ import {
 	spellcheck
 } from "@/mixins/props.js";
 
-import {
-	required as validateRequired,
-	minLength as validateMinLength,
-	maxLength as validateMaxLength,
-	email as validateEmail,
-	url as validateUrl
-} from "vuelidate/lib/validators";
-
 export const props = {
 	mixins: [
 		InputProps,
@@ -75,14 +67,7 @@ export const props = {
  */
 export default {
 	mixins: [Input, props],
-	watch: {
-		value() {
-			this.onInvalid();
-		}
-	},
 	mounted() {
-		this.onInvalid();
-
 		if (this.$props.autofocus) {
 			this.focus();
 		}
@@ -92,28 +77,9 @@ export default {
 		}
 	},
 	methods: {
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
-		},
 		select() {
 			this.$el.select();
 		}
-	},
-	validations() {
-		const validateMatch = (value) => {
-			return (!this.required && !value) || !this.$el.validity.patternMismatch;
-		};
-
-		return {
-			value: {
-				required: this.required ? validateRequired : true,
-				minLength: this.minlength ? validateMinLength(this.minlength) : true,
-				maxLength: this.maxlength ? validateMaxLength(this.maxlength) : true,
-				email: this.type === "email" ? validateEmail : true,
-				url: this.type === "url" ? validateUrl : true,
-				pattern: this.pattern ? validateMatch : true
-			}
-		};
 	}
 };
 </script>

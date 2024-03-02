@@ -41,7 +41,6 @@
 						type: 'hidden'
 					}
 				}"
-				:novalidate="true"
 				:value="value"
 				class="k-totp-dialog-fields"
 				@input="$emit('input', $event)"

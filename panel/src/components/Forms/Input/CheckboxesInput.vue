@@ -18,12 +18,6 @@
 import Input, { props as InputProps } from "@/mixins/input.js";
 import { options } from "@/mixins/props.js";
 
-import {
-	required as validateRequired,
-	minLength as validateMinLength,
-	maxLength as validateMaxLength
-} from "vuelidate/lib/validators";
-
 export const props = {
 	mixins: [InputProps, options],
 	props: {
@@ -72,7 +66,6 @@ export default {
 		value: {
 			handler(value) {
 				this.selected = Array.isArray(value) ? value : [];
-				this.validate();
 			},
 			immediate: true
 		}
@@ -94,19 +87,7 @@ export default {
 		},
 		select() {
 			this.focus();
-		},
-		validate() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
 		}
-	},
-	validations() {
-		return {
-			selected: {
-				required: this.required ? validateRequired : true,
-				min: this.min ? validateMinLength(this.min) : true,
-				max: this.max ? validateMaxLength(this.max) : true
-			}
-		};
 	}
 };
 </script>

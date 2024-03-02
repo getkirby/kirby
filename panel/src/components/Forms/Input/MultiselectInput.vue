@@ -41,12 +41,6 @@ import { props as TagsProps } from "@/components/Navigation/Tags.vue";
 
 import { name, required } from "@/mixins/props.js";
 
-import {
-	required as validateRequired,
-	minLength as validateMinLength,
-	maxLength as validateMaxLength
-} from "vuelidate/lib/validators";
-
 export const props = {
 	mixins: [name, required, TagsProps, PicklistInputProps],
 	props: {
@@ -54,23 +48,6 @@ export const props = {
 			default: () => [],
 			type: Array
 		}
-	},
-	watch: {
-		value: {
-			handler() {
-				this.$emit("invalid", this.$v.$invalid, this.$v);
-			},
-			immediate: true
-		}
-	},
-	validations() {
-		return {
-			value: {
-				required: this.required ? validateRequired : true,
-				minLength: this.min ? validateMinLength(this.min) : true,
-				maxLength: this.max ? validateMaxLength(this.max) : true
-			}
-		};
 	},
 	methods: {
 		open() {

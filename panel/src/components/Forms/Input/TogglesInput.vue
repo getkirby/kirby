@@ -2,7 +2,6 @@
 	<fieldset :disabled="disabled" class="k-toggles-input">
 		<legend class="sr-only">{{ $t("options") }}</legend>
 		<ul
-			:data-invalid="$v.$invalid"
 			:data-labels="labels"
 			:style="{ '--options': columns ?? options.length }"
 		>
@@ -43,8 +42,6 @@
 <script>
 import Input, { props as InputProps } from "@/mixins/input.js";
 
-import { required as validateRequired } from "vuelidate/lib/validators";
-
 export const props = {
 	mixins: [InputProps],
 	props: {
@@ -59,14 +56,7 @@ export const props = {
 
 export default {
 	mixins: [Input, props],
-	watch: {
-		value() {
-			this.onInvalid();
-		}
-	},
 	mounted() {
-		this.onInvalid();
-
 		if (this.$props.autofocus) {
 			this.focus();
 		}
@@ -86,19 +76,9 @@ export default {
 		onInput(value) {
 			this.$emit("input", value);
 		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
-		},
 		select() {
 			this.focus();
 		}
-	},
-	validations() {
-		return {
-			value: {
-				required: this.required ? validateRequired : true
-			}
-		};
 	}
 };
 </script>

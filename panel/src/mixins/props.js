@@ -7,7 +7,6 @@ import font from "./props/font.js";
 import help from "./props/help.js";
 import icon from "./props/icon.js";
 import id from "./props/id.js";
-import invalid from "./props/invalid.js";
 import label from "./props/label.js";
 import layout from "./props/layout.js";
 import maxlength from "./props/maxlength.js";
@@ -30,7 +29,6 @@ export {
 	help,
 	icon,
 	id,
-	invalid,
 	label,
 	layout,
 	maxlength,

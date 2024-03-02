@@ -68,12 +68,6 @@ import {
 	spellcheck
 } from "@/mixins/props.js";
 
-import {
-	required as validateRequired,
-	minLength as validateMinLength,
-	maxLength as validateMaxLength
-} from "vuelidate/lib/validators";
-
 export const props = {
 	mixins: [InputProps, maxlength, minlength, placeholder, spellcheck],
 	props: {
@@ -121,11 +115,8 @@ export const props = {
 	},
 	computed: {
 		characters() {
-			return this.counterValue.length;
-		},
-		counterValue() {
 			const plain = this.$helper.string.stripHTML(this.value);
-			return this.$helper.string.unescapeHTML(plain);
+			return this.$helper.string.unescapeHTML(plain).length;
 		}
 	}
 };
@@ -163,8 +154,6 @@ export default {
 				this.html = newValue;
 				this.editor.setContent(this.html);
 			}
-
-			this.onInvalid();
 		}
 	},
 	mounted() {
@@ -265,8 +254,6 @@ export default {
 
 		this.$panel.events.on("click", this.onBlur);
 		this.$panel.events.on("focus", this.onBlur);
-
-		this.onInvalid();
 
 		if (this.$props.autofocus) {
 			this.focus();
@@ -394,9 +381,6 @@ export default {
 		focus() {
 			this.editor.focus();
 		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
-		},
 		getSplitContent() {
 			return this.editor.getHTMLStartToSelectionToEnd();
 		},
@@ -435,15 +419,6 @@ export default {
 
 			this.$refs.output.setCustomValidity(error);
 		}
-	},
-	validations() {
-		return {
-			counterValue: {
-				required: this.required ? validateRequired : true,
-				minLength: this.minlength ? validateMinLength(this.minlength) : true,
-				maxLength: this.maxlength ? validateMaxLength(this.maxlength) : true
-			}
-		};
 	}
 };
 </script>
