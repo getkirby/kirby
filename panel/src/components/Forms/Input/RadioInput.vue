@@ -1,17 +1,18 @@
 <template>
-	<ul
-		:style="{ '--columns': columns }"
-		class="k-radio-input k-grid"
-		data-variant="choices"
-	>
-		<li v-for="(choice, index) in choices" :key="index">
-			<k-choice-input
-				v-bind="choice"
-				@click.native.stop="toggle(choice.value)"
-				@input="$emit('input', choice.value)"
-			/>
-		</li>
-	</ul>
+	<fieldset :disabled="disabled" class="k-radio-input">
+		<legend class="sr-only">{{ $t("options") }}</legend>
+		<ul :style="{ '--columns': columns }" class="k-grid" data-variant="choices">
+			<li v-for="(choice, index) in choices" :key="index">
+				<k-choice-input
+					v-bind="choice"
+					@click.native.stop="toggle(choice.value)"
+					@input="$emit('input', choice.value)"
+				/>
+			</li>
+		</ul>
+
+		<k-countable-input :required="required" :value="JSON.stringify(value)" />
+	</fieldset>
 </template>
 
 <script>
