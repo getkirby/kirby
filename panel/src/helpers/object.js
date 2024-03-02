@@ -51,7 +51,7 @@ export function isObject(input) {
  * @since 4.0.0
  *
  * @param {object} object
- * @returns int
+ * @returns {int}
  */
 export function length(object) {
 	return Object.keys(object ?? {}).length;

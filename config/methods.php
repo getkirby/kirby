@@ -148,7 +148,7 @@ return function (App $app) {
 			$files  = new Files([]);
 
 			foreach ($field->toData($separator) as $id) {
-				if ($file = $parent->kirby()->file($id, $parent)) {
+				if (is_string($id) === true && $file = $parent->kirby()->file($id, $parent)) {
 					$files->add($file);
 				}
 			}

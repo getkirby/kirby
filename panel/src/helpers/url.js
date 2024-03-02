@@ -1,5 +1,6 @@
 /**
  * Returns the base URL from the <base> element
+ *
  * @since 4.0.0
  * @returns {URL}
  */
@@ -10,6 +11,9 @@ export function base() {
 }
 
 /**
+ * Turns the given object into an URL query string
+ * and appends it, if given, to the query of the origin
+ *
  * @since 4.0.0
  * @param {object} query
  * @param {string|URL} origin
@@ -142,8 +146,8 @@ export function toObject(url, origin) {
 
 export default {
 	base,
-	buildUrl,
 	buildQuery,
+	buildUrl,
 	isAbsolute,
 	isSameOrigin,
 	isUrl,
