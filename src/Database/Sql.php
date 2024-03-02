@@ -132,11 +132,13 @@ abstract class Sql
 	{
 		return [
 			'id'        => '{{ name }} INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY',
-			'varchar'   => '{{ name }} varchar(255) {{ null }} {{ default }} {{ unique }}',
+			'varchar'   => '{{ name }} varchar({{ size }}) {{ null }} {{ default }} {{ unique }}',
 			'text'      => '{{ name }} TEXT {{ unique }}',
-			'int'       => '{{ name }} INT(11) UNSIGNED {{ null }} {{ default }} {{ unique }}',
+			'int'       => '{{ name }} INT(11) {{ unsigned }} {{ null }} {{ default }} {{ unique }}',
 			'timestamp' => '{{ name }} TIMESTAMP {{ null }} {{ default }} {{ unique }}',
-			'bool'      => '{{ name }} TINYINT(1) {{ null }} {{ default }} {{ unique }}'
+			'bool'      => '{{ name }} TINYINT(1) {{ null }} {{ default }} {{ unique }}',
+			'float'     => '{{ name }} DOUBLE {{ null }} {{ default }} {{ unique }}',
+			'decimal'   => '{{ name }} DECIMAL({{ precision }}, {{ decimalPlaces }}) {{ null }} {{ default }} {{ unique }}'
 		];
 	}
 
@@ -157,6 +159,10 @@ abstract class Sql
 	 * @param string $name Column name
 	 * @param array $column Column definition array; valid keys:
 	 *                      - `type` (required): Column template to use
+	 *                      - `unsigned`: Whether an int column is signed or unsigned (boolean)
+	 *                      - `size`: The size of varchar (int)
+	 *                      - `precision`: The precision of a decimal type
+	 *                      - `decimalPlaces`: The number of decimal places for a decimal type
 	 *                      - `null`: Whether the column may be NULL (boolean)
 	 *                      - `key`: Index this column is part of; special values `'primary'` for PRIMARY KEY and `true` for automatic naming
 	 *                      - `unique`: Whether the index (or if not set the column itself) has a UNIQUE constraint
@@ -191,6 +197,13 @@ abstract class Sql
 			}
 		}
 
+		// unsigned (defaults to true for backwards compatibility)
+		if (isset($column['unsigned']) === true && $column['unsigned'] === false) {
+			$unsigned = '';
+		} else {
+			$unsigned = 'UNSIGNED';
+		}
+
 		// unique
 		$uniqueKey = false;
 		$uniqueColumn = null;
@@ -208,11 +221,15 @@ abstract class Sql
 		$columnDefault = $this->columnDefault($name, $column);
 
 		$query = trim(Str::template($template, [
-			'name'    => $this->quoteIdentifier($name),
-			'null'    => $null,
-			'default' => $columnDefault['query'],
-			'unique'  => $uniqueColumn
-		], ['fallback' => '']));
+			'name'           => $this->quoteIdentifier($name),
+			'unsigned'       => $unsigned,
+			'size'           => $column['size'] ?? 255,
+			'precision'      => $column['precision'] ?? 14,
+			'decimalPlaces'  => $column['decimalPlaces'] ?? 4,
+			'null'           => $null,
+			'default'        => $columnDefault['query'],
+			'unique'         => $uniqueColumn
+		], ['fallback'  => '']));
 
 		return [
 			'query'    => $query,
