@@ -7,6 +7,15 @@
 		<k-lab-example label="Default">
 			<k-layout-field label="Layout" :value="value" @input="value = $event" />
 		</k-lab-example>
+
+		<k-lab-example label="Required">
+			<k-layout-field
+				label="Layout"
+				:required="true"
+				:value="value"
+				@input="value = $event"
+			/>
+		</k-lab-example>
 	</k-lab-examples>
 </template>
 
