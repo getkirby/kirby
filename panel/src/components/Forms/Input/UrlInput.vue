@@ -22,7 +22,14 @@ export const props = {
 			type: String,
 			default: () => window.panel.$t("url.placeholder")
 		}
-	},
+	}
+};
+
+/**
+ * @example <k-input :value="url" @input="url = $event" name="url" type="url" />
+ */
+export default {
+	mixins: [StringInput, props],
 	watch: {
 		value: {
 			handler() {
@@ -44,12 +51,5 @@ export const props = {
 			this.$el?.setCustomValidity(errors.join(", "));
 		}
 	}
-};
-
-/**
- * @example <k-input :value="url" @input="url = $event" name="url" type="url" />
- */
-export default {
-	mixins: [StringInput, props]
 };
 </script>
