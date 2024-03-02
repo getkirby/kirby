@@ -41,6 +41,22 @@
 					@input="value = $event"
 				/>
 			</k-lab-example>
+
+			<k-lab-example label="Minlegth: 5">
+				<k-email-input :minlength="5" :value="value" @input="value = $event" />
+			</k-lab-example>
+
+			<k-lab-example label="Maxlength: 5">
+				<k-email-input :maxlength="5" :value="value" @input="value = $event" />
+			</k-lab-example>
+
+			<k-lab-example label="Pattern: must end @getkirby.com">
+				<k-email-input
+					pattern="[a-z]+@getkirby\.com"
+					:value="value"
+					@input="value = $event"
+				/>
+			</k-lab-example>
 		</k-lab-examples>
 	</k-lab-form>
 </template>
