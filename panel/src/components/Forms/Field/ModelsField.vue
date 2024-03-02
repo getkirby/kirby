@@ -27,6 +27,11 @@
 				</template>
 			</k-collection>
 		</k-dropzone>
+
+		<k-input-validator
+			v-bind="{ min, max, required }"
+			:value="JSON.stringify(value)"
+		/>
 	</k-field>
 </template>
 
@@ -43,6 +48,7 @@ export default {
 		info: String,
 		link: Boolean,
 		max: Number,
+		min: Number,
 		/**
 		 * If false, only a single item can be selected
 		 */
