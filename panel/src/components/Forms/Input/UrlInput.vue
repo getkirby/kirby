@@ -22,6 +22,27 @@ export const props = {
 			type: String,
 			default: () => window.panel.$t("url.placeholder")
 		}
+	},
+	watch: {
+		value: {
+			handler() {
+				this.validate();
+			},
+			immediate: true
+		}
+	},
+	methods: {
+		validate() {
+			const errors = [];
+
+			// use custom stricter URL validation as the
+			// default HTML5 validation is too permissive
+			if (this.value && this.$helper.url.isUrl(this.value, true) === false) {
+				errors.push(this.$t("error.validation.url"));
+			}
+
+			this.$el?.setCustomValidity(errors.join(", "));
+		}
 	}
 };
 
