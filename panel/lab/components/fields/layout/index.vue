@@ -1,5 +1,5 @@
 <template>
-	<k-lab-examples>
+	<k-lab-examples class="k-lab-field-examples">
 		<k-box theme="notice" icon="alert">
 			The blocks field does not work without the backend yet
 		</k-box>

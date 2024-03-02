@@ -1,5 +1,5 @@
 <template>
-	<k-lab-examples>
+	<k-lab-examples class="k-lab-field-examples">
 		<k-lab-example label="No fields">
 			<k-object-field label="Object" />
 		</k-lab-example>
