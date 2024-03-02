@@ -83,6 +83,11 @@
 		<template v-else>
 			<k-empty icon="list-bullet">{{ $t("fields.empty") }}</k-empty>
 		</template>
+
+		<k-input-validator
+			v-bind="{ min, max, required }"
+			:value="JSON.stringify(items)"
+		/>
 	</k-field>
 </template>
 

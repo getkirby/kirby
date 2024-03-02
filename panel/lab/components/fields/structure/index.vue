@@ -11,6 +11,15 @@
 				@input="value = $event"
 			/>
 		</k-lab-example>
+
+		<k-lab-example label="Required">
+			<k-structure-field
+				label="Structure"
+				:required="true"
+				:value="value"
+				@input="value = $event"
+			/>
+		</k-lab-example>
 	</k-lab-examples>
 </template>
 
