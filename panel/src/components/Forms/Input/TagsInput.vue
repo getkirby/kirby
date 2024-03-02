@@ -21,6 +21,7 @@
 				@keydown.native="toggle"
 			/>
 		</k-tags>
+
 		<k-picklist-dropdown
 			ref="replace"
 			v-bind="picklist"
@@ -30,6 +31,7 @@
 			@create="replace"
 			@input="replace"
 		/>
+
 		<k-picklist-dropdown
 			ref="create"
 			v-bind="picklist"
@@ -37,6 +39,11 @@
 			:value="value"
 			@create="create"
 			@input="pick"
+		/>
+
+		<k-input-validator
+			v-bind="{ min, max, required }"
+			:value="JSON.stringify(value)"
 		/>
 	</div>
 </template>
