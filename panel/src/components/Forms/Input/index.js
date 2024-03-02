@@ -7,6 +7,7 @@ import ColornameInput from "./ColornameInput.vue";
 import ColoroptionsInput from "./ColoroptionsInput.vue";
 import ColorpickerInput from "./ColorpickerInput.vue";
 import CoordsInput from "./CoordsInput.vue";
+import CountableInput from "./CountableInput.js";
 import DateInput from "./DateInput.vue";
 import EmailInput from "./EmailInput.vue";
 import HueInput from "./HueInput.vue";
@@ -37,6 +38,8 @@ import Writer from "../Writer/Writer.vue";
 
 export default {
 	install(app) {
+		customElements.define("k-countable-input", CountableInput);
+
 		app.component("k-alpha-input", AlphaInput);
 		app.component("k-calendar-input", CalendarInput);
 		app.component("k-checkbox-input", CheckboxInput);
