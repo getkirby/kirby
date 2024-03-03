@@ -174,7 +174,7 @@ export default {
 	--button-color-back: var(--color-white);
 	box-shadow: var(--shadow);
 }
-.k-panel[data-theme="dark"] .k-panel-menu-button[aria-current] {
+.k-panel[data-theme="dark"] .k-panel-menu-button[aria-current="true"] {
 	--button-color-back: var(--color-gray-400);
 }
 
