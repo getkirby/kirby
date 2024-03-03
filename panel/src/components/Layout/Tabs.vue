@@ -4,6 +4,7 @@
 			v-for="btn in buttons"
 			ref="visible"
 			:key="btn.name"
+			v-bind="btn"
 			variant="dimmed"
 			class="k-tab-button"
 		>
