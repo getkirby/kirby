@@ -1,6 +1,7 @@
 <template>
 	<component
 		:is="component"
+		:class="$attrs.class"
 		:data-has-icon="Boolean(icon)"
 		:data-has-text="Boolean(text || $slots.default)"
 		v-bind="attrs"

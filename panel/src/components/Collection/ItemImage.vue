@@ -1,6 +1,10 @@
 <template>
-	<k-image-frame v-if="image.src" v-bind="attrs" class="k-item-image" />
-	<k-icon-frame v-else v-bind="attrs" class="k-item-image" />
+	<component
+		:is="component"
+		v-bind="attrs"
+		:class="$attrs.class"
+		class="k-item-image"
+	/>
 </template>
 
 <script>
@@ -39,6 +43,9 @@ export default {
 				ratio: this.layout === "list" ? "auto" : this.image.ratio,
 				size: this.sizes
 			};
+		},
+		component() {
+			return this.image.src ? "k-image-frame" : "k-icon-frame";
 		},
 		sizes() {
 			switch (this.width) {

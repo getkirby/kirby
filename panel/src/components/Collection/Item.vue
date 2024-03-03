@@ -1,7 +1,7 @@
 <template>
 	<div
 		v-bind="data"
-		:class="layout ? 'k-' + layout + '-item' : false"
+		:class="[layout ? 'k-' + layout + '-item' : layout, $attrs.class]"
 		:data-has-image="hasFigure"
 		:data-layout="layout"
 		:data-theme="theme"
