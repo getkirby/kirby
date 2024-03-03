@@ -1,10 +1,8 @@
 <template>
-	<k-field :input="uid" v-bind="$props" class="k-range-field">
+	<k-field v-bind="$props" :input="id" class="k-range-field">
 		<k-input
 			v-bind="$props"
-			:id="uid"
 			ref="input"
-			theme="field"
 			type="range"
 			@input="$emit('input', $event)"
 		/>

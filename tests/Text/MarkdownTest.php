@@ -2,7 +2,7 @@
 
 namespace Kirby\Text;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Text\Markdown
@@ -71,6 +71,17 @@ class MarkdownTest extends TestCase
 		$md       = file_get_contents(static::FIXTURES . '/markdown.md');
 		$html     = file_get_contents(static::FIXTURES . '/markdown.html');
 		$this->assertSame($html, $markdown->parse($md));
+	}
+
+	/**
+	 * @covers ::parse
+	 */
+	public function testParseInline()
+	{
+		$markdown = new Markdown();
+		$md       = file_get_contents(static::FIXTURES . '/inline.md');
+		$html     = file_get_contents(static::FIXTURES . '/inline.html');
+		$this->assertSame($html, $markdown->parse($md, true));
 	}
 
 	/**

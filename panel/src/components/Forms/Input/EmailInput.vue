@@ -1,9 +1,10 @@
 <template>
 	<k-string-input
 		v-bind="$props"
-		class="k-email-input"
 		type="email"
+		class="k-email-input"
 		@input="$emit('input', $event)"
+		@invalid="($invalid, $v) => $emit('invalid', $invalid, $v)"
 	/>
 </template>
 

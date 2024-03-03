@@ -7,14 +7,12 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Cookie;
+use Kirby\TestCase;
 use Kirby\Toolkit\Obj;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\SymmetricCrypto;
-use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use TypeError;
-
-require_once __DIR__ . '/mocks.php';
 
 /**
  * @coversDefaultClass \Kirby\Session\Session
@@ -1373,7 +1371,7 @@ class SessionTest extends TestCase
 	 * @param Session $session
 	 * @return void
 	 */
-	protected function assertWriteMode(bool $expected, Session $session)
+	protected function assertWriteMode(bool $expected, Session $session): void
 	{
 		$reflector = new ReflectionClass(Session::class);
 		$writeModeProperty = $reflector->getProperty('writeMode');

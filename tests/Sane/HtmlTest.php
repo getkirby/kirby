@@ -10,6 +10,8 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class HtmlTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Sane.Html';
+
 	protected static $type = 'html';
 
 	/**

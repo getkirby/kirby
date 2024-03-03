@@ -55,7 +55,7 @@ return [
 		'parent' => function () {
 			return $this->parentModel();
 		},
-		'files' => function () {
+		'models' => function () {
 			if ($this->query !== null) {
 				$files = $this->parent->query($this->query, Files::class) ?? new Files([]);
 			} else {
@@ -99,6 +99,9 @@ return [
 
 			return $files;
 		},
+		'files' => function () {
+			return $this->models;
+		},
 		'data' => function () {
 			$data = [];
 
@@ -106,7 +109,7 @@ return [
 			// a different parent model
 			$dragTextAbsolute = $this->model->is($this->parent) === false;
 
-			foreach ($this->files as $file) {
+			foreach ($this->models as $file) {
 				$panel = $file->panel();
 
 				$item = [
@@ -137,7 +140,7 @@ return [
 			return $data;
 		},
 		'total' => function () {
-			return $this->files->pagination()->total();
+			return $this->models->pagination()->total();
 		},
 		'errors' => function () {
 			$errors = [];
@@ -191,24 +194,43 @@ return [
 				'multiple'   => $multiple,
 				'max'        => $max,
 				'api'        => $this->parent->apiUrl(true) . '/files',
-				'attributes' => array_filter([
+				'attributes' => [
 					// TODO: an edge issue that needs to be solved:
-					//		 if multiple users load the same section at the same time
-					// 		 and upload a file, uploaded files have the same sort number
+					//		 if multiple users load the same section
+					//       at the same time and upload a file,
+					//       uploaded files have the same sort number
 					'sort'     => $this->sortable === true ? $this->total + 1 : null,
 					'template' => $template
-				])
+				]
 			];
 		}
 	],
+	// @codeCoverageIgnoreStart
+	'api' => function () {
+		return [
+			[
+				'pattern' => 'sort',
+				'method'  => 'PATCH',
+				'action'  => function () {
+					$this->section()->model()->files()->changeSort(
+						$this->requestBody('files'),
+						$this->requestBody('index')
+					);
+
+					return true;
+				}
+			]
+		];
+	},
+	// @codeCoverageIgnoreEnd
 	'toArray' => function () {
 		return [
 			'data'    => $this->data,
 			'errors'  => $this->errors,
 			'options' => [
 				'accept'   => $this->accept,
-				'apiUrl'   => $this->parent->apiUrl(true),
-				'columns'  => $this->columns,
+				'apiUrl'   => $this->parent->apiUrl(true) . '/sections/' . $this->name,
+				'columns'  => $this->columnsWithTypes(),
 				'empty'    => $this->empty,
 				'headline' => $this->headline,
 				'help'     => $this->help,

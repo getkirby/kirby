@@ -4,29 +4,30 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class PageSortTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.PageSort';
+
 	protected $app;
-	protected $fixtures;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/PageSortTest'
+				'index' => static::TMP
 			]
 		]);
 
 		$this->app->impersonate('kirby');
 
-		Dir::make($this->fixtures);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->fixtures);
+		Dir::remove(static::TMP);
 	}
 
 	public function site()
@@ -626,10 +627,10 @@ class PageSortTest extends TestCase
 
 		$this->assertSame(array_reverse($chars), $this->site()->children()->keys());
 
-		$this->assertDirectoryExists($this->fixtures . '/content/4_a');
-		$this->assertDirectoryExists($this->fixtures . '/content/3_b');
-		$this->assertDirectoryExists($this->fixtures . '/content/2_c');
-		$this->assertDirectoryExists($this->fixtures . '/content/1_d');
+		$this->assertDirectoryExists(static::TMP . '/content/4_a');
+		$this->assertDirectoryExists(static::TMP . '/content/3_b');
+		$this->assertDirectoryExists(static::TMP . '/content/2_c');
+		$this->assertDirectoryExists(static::TMP . '/content/1_d');
 	}
 
 	public function testUpdateWithDateBasedNumbering()

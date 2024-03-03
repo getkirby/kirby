@@ -20,7 +20,7 @@ window.panel.plugin = function (plugin, extensions) {
 		}
 
 		window.panel.plugins.components[`k-block-type-${name}`] = {
-			extends: "k-block-type",
+			extends: "k-block-type-default",
 			...options
 		};
 	});

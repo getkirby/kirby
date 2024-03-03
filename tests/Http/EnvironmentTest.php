@@ -4,19 +4,14 @@ namespace Kirby\Http;
 
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Http\Environment
  */
 class EnvironmentTest extends TestCase
 {
-	protected $config = null;
-
-	public function setUp(): void
-	{
-		$this->config = __DIR__ . '/fixtures/EnvironmentTest';
-	}
+	public const FIXTURES = __DIR__ . '/fixtures/EnvironmentTest';
 
 	public function tearDown(): void
 	{
@@ -1075,7 +1070,7 @@ class EnvironmentTest extends TestCase
 			'SERVER_NAME' => 'example.com'
 		]);
 
-		$this->assertSame('test option', $env->options($this->config)['test']);
+		$this->assertSame('test option', $env->options(static::FIXTURES)['test']);
 	}
 
 	public function testOptionsFromServerAddress()
@@ -1084,7 +1079,7 @@ class EnvironmentTest extends TestCase
 			'SERVER_ADDR' => '127.0.0.1'
 		]);
 
-		$this->assertSame('test address option', $env->options($this->config)['test']);
+		$this->assertSame('test address option', $env->options(static::FIXTURES)['test']);
 	}
 
 	public function testOptionsFromInvalidHost()
@@ -1098,7 +1093,7 @@ class EnvironmentTest extends TestCase
 			'SERVER_NAME' => 'example.com'
 		]);
 
-		$this->assertSame([], $env->options($this->config));
+		$this->assertSame([], $env->options(static::FIXTURES));
 	}
 
 	public function testOptionsFromCLI()
@@ -1107,7 +1102,7 @@ class EnvironmentTest extends TestCase
 			'cli' => true
 		]);
 
-		$this->assertSame('test cli option', $env->options($this->config)['test']);
+		$this->assertSame('test cli option', $env->options(static::FIXTURES)['test']);
 	}
 
 	/**
@@ -1607,7 +1602,7 @@ class EnvironmentTest extends TestCase
 	public function testToArray()
 	{
 		$env = new Environment([
-			'root' => $this->config,
+			'root' => static::FIXTURES,
 		], [
 			'SERVER_NAME' => 'example.com'
 		]);

@@ -157,72 +157,17 @@ class File extends ModelWithContent
 	 */
 	public function blueprints(string $inSection = null): array
 	{
+		// get cached results for the current file model
+		// (except when collecting for a specific section)
 		if ($inSection === null && $this->blueprints !== null) {
 			return $this->blueprints; // @codeCoverageIgnore
 		}
 
 		// always include the current template as option
-		$template  = $this->template() ?? 'default';
-		$templates = [$template];
-		$parent    = $this->parent();
-
-		// what file templates/blueprints should be considered is
-		// defined bythe parent's blueprint: which templates it allows
-		// in files sections as well as files fields
-		$blueprint = $parent->blueprint();
-
-		$fromFields = function ($fields) use (&$fromFields, $parent) {
-			$templates = [];
-
-			foreach ($fields as $field) {
-				// files or textare field
-				if (
-					$field['type'] === 'files' ||
-					$field['type'] === 'textarea'
-				) {
-					$uploads = $field['uploads'] ?? null;
-
-					// only if the `uploads` parent is the actual parent
-					if ($target = $uploads['parent'] ?? null) {
-						if ($parent->id() !== $target) {
-							continue;
-						}
-					}
-
-					$templates[] = $uploads['template'] ?? 'default';
-					continue;
-				}
-
-				// structure field
-				if ($field['type'] === 'structure') {
-					$fields    = $fromFields($field['fields']);
-					$templates = array_merge($templates, $fields);
-					continue;
-				}
-			}
-
-			return $templates;
-		};
-
-		// collect all allowed templates…
-		foreach ($blueprint->sections() as $section) {
-			// if collecting for a specific section, skip all others
-			if ($inSection !== null && $section->name() !== $inSection) {
-				continue;
-			}
-
-			//  …from files sections
-			if ($section->type() === 'files') {
-				$templates[] = $section->template() ?? 'default';
-				continue;
-			}
-
-			//  …from fields
-			if ($section->type() === 'fields') {
-				$fields    = $fromFields($section->fields());
-				$templates = array_merge($templates, $fields);
-			}
-		}
+		$templates = [
+			$this->template() ?? 'default',
+			...$this->parent()->blueprint()->acceptedFileTemplates($inSection)
+		];
 
 		// make sure every template is only included once
 		$templates = array_unique(array_filter($templates));

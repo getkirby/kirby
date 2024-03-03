@@ -2,13 +2,15 @@
 
 namespace Kirby\Toolkit;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Toolkit\Xml
  */
 class XmlTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures/xml';
+
 	/**
 	 * @covers       ::attr
 	 * @dataProvider attrProvider
@@ -69,14 +71,13 @@ class XmlTest extends TestCase
 		$this->assertSame('    <name>Homer</name>', Xml::create('Homer', 'name', false, '    ', 1));
 		$this->assertSame('    <name>Homer</name>', Xml::create('Homer', 'name', false, '  ', 2));
 
-		$fixtures = __DIR__ . '/fixtures/xml';
 		$data = [
 			'@name'       => 'contact',
 			'@attributes' => ['type' => 'husband'],
 			'@value'      => 'Homer'
 		];
-		$this->assertSame($data, Xml::parse(file_get_contents($fixtures . '/contact.xml')));
-		$this->assertStringEqualsFile($fixtures . '/contact.xml', Xml::create($data, 'contact'));
+		$this->assertSame($data, Xml::parse(file_get_contents(static::FIXTURES . '/contact.xml')));
+		$this->assertStringEqualsFile(static::FIXTURES . '/contact.xml', Xml::create($data, 'contact'));
 
 		$data = [
 			'@name' => 'contacts',
@@ -95,9 +96,9 @@ class XmlTest extends TestCase
 				]
 			]
 		];
-		$this->assertSame($data, Xml::parse(file_get_contents($fixtures . '/contacts.xml')));
-		$this->assertStringEqualsFile($fixtures . '/contacts_nowrapper.xml', Xml::create($contacts, 'contact', false));
-		$this->assertStringEqualsFile($fixtures . '/contacts.xml', Xml::create($data, 'contacts'));
+		$this->assertSame($data, Xml::parse(file_get_contents(static::FIXTURES . '/contacts.xml')));
+		$this->assertStringEqualsFile(static::FIXTURES . '/contacts_nowrapper.xml', Xml::create($contacts, 'contact', false));
+		$this->assertStringEqualsFile(static::FIXTURES . '/contacts.xml', Xml::create($data, 'contacts'));
 
 		$data = [
 			'@name' => 'simpsons',
@@ -129,12 +130,12 @@ class XmlTest extends TestCase
 				]
 			]
 		];
-		$this->assertSame($data, Xml::parse(file_get_contents($fixtures . '/simpsons.xml')));
-		$this->assertStringEqualsFile($fixtures . '/simpsons.xml', Xml::create($data, 'invalid'));
-		$this->assertStringEqualsFile($fixtures . '/simpsons_4spaces.xml', Xml::create($data, 'invalid', true, '    '));
+		$this->assertSame($data, Xml::parse(file_get_contents(static::FIXTURES . '/simpsons.xml')));
+		$this->assertStringEqualsFile(static::FIXTURES . '/simpsons.xml', Xml::create($data, 'invalid'));
+		$this->assertStringEqualsFile(static::FIXTURES . '/simpsons_4spaces.xml', Xml::create($data, 'invalid', true, '    '));
 
 		unset($data['@name']);
-		$this->assertStringEqualsFile($fixtures . '/simpsons.xml', Xml::create($data, 'simpsons'));
+		$this->assertStringEqualsFile(static::FIXTURES . '/simpsons.xml', Xml::create($data, 'simpsons'));
 
 		$this->assertNull(Xml::parse('<this>is invalid</that>'));
 	}
@@ -158,7 +159,7 @@ class XmlTest extends TestCase
 	 */
 	public function testParseRecursiveEntities()
 	{
-		$xml = file_get_contents(__DIR__ . '/fixtures/xml/billion-laughs.xml');
+		$xml = file_get_contents(static::FIXTURES . '/billion-laughs.xml');
 		$this->assertNull(Xml::parse($xml));
 	}
 

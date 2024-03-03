@@ -64,6 +64,11 @@ export function hasEmoji(string) {
 		return false;
 	}
 
+	// skip if string has no valid emoji at all
+	if (/^[a-z0-9_-]+$/.test(string) === true) {
+		return false;
+	}
+
 	// Source: https://thekevinscott.com/emojis-in-javascript/
 	const result = string.match(
 		// eslint-disable-next-line no-misleading-character-class
@@ -107,7 +112,7 @@ export function lcfirst(string) {
  * @returns {string}
  */
 export function ltrim(string = "", replace = "") {
-	const expression = new RegExp(`^(${replace})+`, "g");
+	const expression = new RegExp(`^(${RegExp.escape(replace)})+`, "g");
 	return string.replace(expression, "");
 }
 
@@ -153,7 +158,7 @@ export function random(length) {
  * @returns {string}
  */
 export function rtrim(string = "", replace = "") {
-	const expression = new RegExp(`(${replace})+$`, "g");
+	const expression = new RegExp(`(${RegExp.escape(replace)})+$`, "g");
 	return string.replace(expression, "");
 }
 
@@ -221,8 +226,7 @@ export function stripHTML(string) {
 }
 
 /**
- * Replaces template placeholders in string
- * with provided values
+ * Replaces template placeholders in string with provided values
  * @param {string} string
  * @param {Object} values
  * @returns {string}

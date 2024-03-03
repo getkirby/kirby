@@ -319,6 +319,11 @@ export default {
 .k-button:where([data-variant="filled"]):not([aria-disabled="true"]):hover {
 	filter: brightness(97%);
 }
+.k-panel[data-theme="dark"]
+	.k-button:where([data-variant="filled"]):not([aria-disabled]):hover {
+	filter: brightness(87%);
+}
+
 .k-button:where([data-theme][data-variant="filled"]) {
 	--button-color-icon: var(--theme-color-700);
 	--button-color-back: var(--theme-color-back);
@@ -369,7 +374,7 @@ export default {
 
 /** Dropdown arrow **/
 .k-button-arrow {
-	--icon-size: 10px;
+	--icon-size: 14px;
 	width: max-content;
 	margin-inline-start: -0.125rem;
 }

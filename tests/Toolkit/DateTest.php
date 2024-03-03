@@ -2,10 +2,11 @@
 
 namespace Kirby\Toolkit;
 
+use DateTimeZone;
 use IntlDateFormatter;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Toolkit\Date
@@ -54,6 +55,36 @@ class DateTest extends TestCase
 	}
 
 	/**
+	 * @covers ::ceil
+	 */
+	public function testCeil()
+	{
+		$date = new Date('2021-12-12 12:12:12');
+
+		$date->ceil('second');
+		$this->assertSame('2021-12-12 12:12:13', $date->format('Y-m-d H:i:s'));
+
+		$date->ceil('minute');
+		$this->assertSame('2021-12-12 12:13:00', $date->format('Y-m-d H:i:s'));
+
+		$date->ceil('hour');
+		$this->assertSame('2021-12-12 13:00:00', $date->format('Y-m-d H:i:s'));
+
+		$date->ceil('day');
+		$this->assertSame('2021-12-13 00:00:00', $date->format('Y-m-d H:i:s'));
+
+		$date->ceil('month');
+		$this->assertSame('2022-01-01 00:00:00', $date->format('Y-m-d H:i:s'));
+
+		$date->ceil('year');
+		$this->assertSame('2023-01-01 00:00:00', $date->format('Y-m-d H:i:s'));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid rounding unit');
+		$date->ceil('foo');
+	}
+
+	/**
 	 * @covers ::compare
 	 */
 	public function testCompare()
@@ -75,6 +106,36 @@ class DateTest extends TestCase
 		$this->assertSame(12, $date->day());
 		$this->assertSame(13, $date->day(13));
 		$this->assertSame('2021-12-13', $date->format('Y-m-d'));
+	}
+
+	/**
+	 * @covers ::floor
+	 */
+	public function testFloor()
+	{
+		$date = new Date('2021-12-12 12:12:12');
+
+		$date->floor('second');
+		$this->assertSame('2021-12-12 12:12:12', $date->format('Y-m-d H:i:s'));
+
+		$date->floor('minute');
+		$this->assertSame('2021-12-12 12:12:00', $date->format('Y-m-d H:i:s'));
+
+		$date->floor('hour');
+		$this->assertSame('2021-12-12 12:00:00', $date->format('Y-m-d H:i:s'));
+
+		$date->floor('day');
+		$this->assertSame('2021-12-12 00:00:00', $date->format('Y-m-d H:i:s'));
+
+		$date->floor('month');
+		$this->assertSame('2021-12-01 00:00:00', $date->format('Y-m-d H:i:s'));
+
+		$date->floor('year');
+		$this->assertSame('2021-01-01 00:00:00', $date->format('Y-m-d H:i:s'));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid rounding unit');
+		$date->floor('foo');
 	}
 
 	/**
@@ -242,6 +303,19 @@ class DateTest extends TestCase
 	}
 
 	/**
+	 * @covers ::nearest
+	 */
+	public function testNearest()
+	{
+		$date = new Date('2021-12-12');
+		$a    = new Date('2021-12-11');
+		$b    = new Date('2021-12-15');
+		$c    = new Date('2021-11-11');
+
+		$this->assertSame($a, $date->nearest($a, $b, $c));
+	}
+
+	/**
 	 * @covers ::now
 	 */
 	public function testNow()
@@ -267,16 +341,24 @@ class DateTest extends TestCase
 	 * @covers ::round
 	 * @dataProvider roundProvider
 	 */
-	public function testRound(string $unit, int $size, string $input, string $expected)
+	public function testRound(string $unit, int $size, string $input, string $expected, string $timezone)
 	{
-		$date = new Date($input);
+		$date = new Date($input, new DateTimeZone($timezone));
 		$this->assertSame($date, $date->round($unit, $size));
 		$this->assertSame($expected, $date->format('Y-m-d H:i:s'));
 	}
 
 	public static function roundProvider(): array
 	{
-		return [
+		$timezones = [
+			'UTC',
+			'Europe/London',
+			'Europe/Berlin',
+			'America/New_York',
+			'Asia/Tokyo'
+		];
+
+		$inputs = [
 			'1s: no change'  => ['second', 1, '2020-02-29 16:05:15', '2020-02-29 16:05:15'],
 			'5s: no change'  => ['second', 5, '2020-02-29 16:05:15', '2020-02-29 16:05:15'],
 			'5s: floor'      => ['second', 5, '2020-02-29 16:05:12', '2020-02-29 16:05:10'],
@@ -303,8 +385,19 @@ class DateTest extends TestCase
 			'1Y: no change'  => ['year', 1, '2020-02-14 09:05:15', '2020-01-01 00:00:00'],
 			'1Y: ceil sub'   => ['year', 1, '2020-09-29 16:05:15', '2021-01-01 00:00:00'],
 
-			'kirby/issues/3642' => ['minute', 5, '2021-08-18 10:59:00', '2021-08-18 11:00:00'],
+			'kirby/issues/3642' => ['minute', 5, '2021-08-18 10:59:00', '2021-08-18 11:00:00']
 		];
+
+		$data = [];
+
+		foreach ($timezones as $timezone) {
+			foreach ($inputs as $label => $arguments) {
+				$arguments[] = $timezone;
+				$data[$label . ' ' . $timezone] = $arguments;
+			}
+		}
+
+		return $data;
 	}
 
 	/**

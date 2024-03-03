@@ -488,7 +488,16 @@ class Str
 			return $string;
 		}
 
-		return static::substr($string, 0, mb_strrpos(static::substr($string, 0, $chars), ' ')) . $rep;
+		// shorten the string to the specified number of characters,
+		// but make sure to not cut off in the middle of a word
+		$excerpt = static::substr($string, 0, $chars);
+		$cutoff  = mb_strrpos($excerpt, ' ');
+
+		if ($cutoff !== false) {
+			$excerpt = static::substr($string, 0, $cutoff);
+		}
+
+		return $excerpt . $rep;
 	}
 
 	/**
@@ -698,7 +707,7 @@ class Str
 		string $string = null,
 		string $needle,
 		bool $caseInsensitive = false
-	): int|bool {
+	): int|false {
 		if ($needle === '') {
 			throw new InvalidArgumentException('The needle must not be empty');
 		}

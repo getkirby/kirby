@@ -69,6 +69,8 @@
 				</tr>
 			</tfoot>
 		</table>
+
+		<!-- Hidden input for validation -->
 		<input
 			:id="id"
 			:disabled="disabled"
@@ -77,7 +79,7 @@
 			:name="name"
 			:required="required"
 			:value="value"
-			class="sr-only"
+			class="input-hidden"
 			tabindex="-1"
 			type="date"
 		/>
@@ -86,6 +88,7 @@
 
 <script>
 import { props as InputProps } from "@/mixins/input.js";
+import { IsoDateProps } from "./DateInput.vue";
 
 /**
  * The Calendar component is mainly used for our `DateInput` component, but it could be used as stand-alone calendar as well with a little CSS love.
@@ -94,27 +97,7 @@ import { props as InputProps } from "@/mixins/input.js";
  * @example <k-calendar-input :value="value" @input="value = $event" />
  */
 export default {
-	mixins: [InputProps],
-	props: {
-		/**
-		 * The last allowed date
-		 * @example `2020-12-31`
-		 */
-		max: String,
-		/**
-		 * The first allowed date
-		 * @example `2020-01-01`
-		 */
-		min: String,
-		/**
-		 * ISO date/datetime string
-		 * @example `2020-03-05`
-		 */
-		value: {
-			default: "",
-			type: String
-		}
-	},
+	mixins: [InputProps, IsoDateProps],
 	data() {
 		return {
 			maxdate: null,

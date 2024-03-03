@@ -123,18 +123,21 @@ export default (panel, key, defaults) => {
 				panel.notification.close();
 			}
 
-			// block the overflow until we can use :has for this.
-			document.documentElement.setAttribute("data-overlay", "true");
-			document.documentElement.style.setProperty(
-				"--scroll-top",
-				window.scrollY + "px"
-			);
-
 			// open the modal feature via url or with a state object
 			await parent.open.call(this, modal, options);
 
-			// mark the modal as open
-			this.isOpen = true;
+			// only mark this as open if a component has been defined
+			if (this.component) {
+				// block the overflow until we can use :has for this.
+				document.documentElement.setAttribute("data-overlay", "true");
+				document.documentElement.style.setProperty(
+					"--scroll-top",
+					window.scrollY + "px"
+				);
+
+				// mark the modal as open
+				this.isOpen = true;
+			}
 
 			return this.state();
 		},

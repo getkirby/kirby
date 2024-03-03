@@ -9,11 +9,13 @@ use Kirby\Filesystem\Dir;
 
 class AppCachesTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.AppCaches';
+
 	public function app(array $props = [])
 	{
 		return new App(array_merge([
 			'roots' => [
-				'index' => __DIR__ . '/fixtures/AppCachesTest',
+				'index' => static::TMP,
 			]
 		], $props));
 	}
@@ -22,7 +24,7 @@ class AppCachesTest extends TestCase
 	{
 		parent::tearDown();
 
-		Dir::remove(__DIR__ . '/fixtures/AppCachesTest');
+		Dir::remove(static::TMP);
 	}
 
 	public function testDisabledCache()
@@ -67,7 +69,7 @@ class AppCachesTest extends TestCase
 			'options' => [
 				'cache.pages' => [
 					'type' => 'file',
-					'root' => $root = __DIR__ . '/fixtures/AppCachesTest/cache'
+					'root' => $root = static::TMP . '/cache'
 				]
 			]
 		]);
@@ -88,7 +90,7 @@ class AppCachesTest extends TestCase
 			'options' => [
 				'cache.pages' => [
 					'type' => 'file',
-					'root' => $root = __DIR__ . '/fixtures/AppCachesTest/cache'
+					'root' => $root = static::TMP . '/cache'
 				]
 			]
 		]);

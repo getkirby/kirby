@@ -7,13 +7,13 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 
-require_once __DIR__ . '/mocks.php';
-
 /**
  * @coversDefaultClass \Kirby\Sane\Sane
  */
 class SaneTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Sane.Sane';
+
 	protected static $type = 'sane';
 
 	/**

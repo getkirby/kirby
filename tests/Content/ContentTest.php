@@ -4,7 +4,7 @@ namespace Kirby\Content;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass Kirby\Content\Content
@@ -243,7 +243,7 @@ class ContentTest extends TestCase
 		$page = new Page(['slug' => 'another-test']);
 		$this->content->setParent($page);
 
-		$this->assertSame($page, $this->content->parent());
+		$this->assertIsPage($page, $this->content->parent());
 	}
 
 	/**

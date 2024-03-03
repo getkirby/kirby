@@ -8,15 +8,16 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Uri;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Home
  */
 class HomeTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Panel.Home';
+
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
@@ -27,7 +28,7 @@ class HomeTest extends TestCase
 
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => static::TMP,
 			],
 			'options' => [
 				'panel' => [
@@ -36,14 +37,14 @@ class HomeTest extends TestCase
 			],
 		]);
 
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
 		$this->app->session()->destroy();
 		unset($_SERVER['SERVER_SOFTWARE']);
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	/**

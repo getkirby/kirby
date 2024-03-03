@@ -59,7 +59,7 @@ export default {
 		id: (state) => (id) => {
 			id = id ?? state.current;
 
-			if (id.includes("?language=") === false) {
+			if (id && id.includes("?language=") === false) {
 				id += "?language=" + window.panel.language.code;
 			}
 

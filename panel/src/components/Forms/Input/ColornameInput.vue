@@ -1,6 +1,8 @@
 <template>
 	<k-string-input
 		v-bind="$props"
+		:spellcheck="false"
+		autocomplete="off"
 		class="k-colorname-input"
 		type="text"
 		@blur="onBlur"
@@ -17,16 +19,20 @@ import StringInput, { props as StringInputProps } from "./StringInput.vue";
 export const props = {
 	mixins: [StringInputProps],
 	props: {
+		// unset props
+		autocomplete: null,
+		font: null,
+		maxlength: null,
+		minlength: null,
+		pattern: null,
+		spellcheck: null,
+
 		/**
 		 * Add the alpha value to the color name
 		 */
 		alpha: {
 			type: Boolean,
 			default: true
-		},
-		autocomplete: {
-			default: "off",
-			type: String
 		},
 		/**
 		 * @values "hex", "rgb", "hsl"
@@ -35,10 +41,6 @@ export const props = {
 			type: String,
 			default: "hex",
 			validator: (format) => ["hex", "rgb", "hsl"].includes(format)
-		},
-		spellcheck: {
-			default: false,
-			type: Boolean
 		}
 	}
 };

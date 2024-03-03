@@ -4,7 +4,11 @@
 			<!-- Header row -->
 			<thead>
 				<tr>
-					<th v-if="hasIndexColumn" data-mobile class="k-table-index-column">
+					<th
+						v-if="hasIndexColumn"
+						data-mobile="true"
+						class="k-table-index-column"
+					>
 						#
 					</th>
 
@@ -34,7 +38,11 @@
 						</slot>
 					</th>
 
-					<th v-if="hasOptions" data-mobile class="k-table-options-column"></th>
+					<th
+						v-if="hasOptions"
+						data-mobile="true"
+						class="k-table-options-column"
+					></th>
 				</tr>
 			</thead>
 
@@ -60,7 +68,7 @@
 						<td
 							v-if="hasIndexColumn"
 							:data-sortable="sortable && row.sortable !== false"
-							data-mobile
+							data-mobile="true"
 							class="k-table-index-column"
 						>
 							<slot
@@ -108,7 +116,11 @@
 						/>
 
 						<!-- Options -->
-						<td v-if="hasOptions" data-mobile class="k-table-options-column">
+						<td
+							v-if="hasOptions"
+							data-mobile="true"
+							class="k-table-options-column"
+						>
 							<slot name="options" v-bind="{ row, rowIndex }">
 								<k-options-dropdown
 									:options="row.options ?? options"
@@ -347,11 +359,15 @@ export default {
 :root {
 	--table-cell-padding: var(--spacing-3);
 	--table-color-back: var(--color-white);
-	--table-color-border: var(--color-background);
+	--table-color-border: var(--color-light);
 	--table-color-hover: var(--color-gray-100);
 	--table-color-th-back: var(--color-gray-100);
 	--table-color-th-text: var(--color-text-dimmed);
 	--table-row-height: var(--input-height);
+}
+
+.k-panel[data-theme="dark"] {
+	--table-color-border: var(--color-border);
 }
 
 /* Table Layout */
@@ -522,6 +538,21 @@ export default {
 	}
 	.k-table thead th {
 		position: static;
+	}
+
+	/** Make sure that the option toggle does not create huge row heights **/
+	.k-table .k-options-dropdown-toggle {
+		aspect-ratio: auto !important;
+	}
+
+	/**	Reset any custom column widths **/
+	.k-table
+		:where(th, td):not(.k-table-index-column):not(.k-table-options-column) {
+		width: auto !important;
+	}
+
+	.k-table :where(th, td):not([data-mobile="true"]) {
+		display: none;
 	}
 }
 

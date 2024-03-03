@@ -88,12 +88,11 @@ export function convert(color, format) {
 }
 
 /**
- * Tries to parse a string as HEX, RGB or HSL
- * color and returns an object with type, string and values
+ * Tries to parse a string as HEX, RGB or HSL color
  * @since 4.0.0
  *
  * @param {string} string
- * @returns {object|null}
+ * @returns {object|string|null}
  */
 export function parse(string) {
 	let values;
@@ -182,6 +181,7 @@ export function parseAs(string, format) {
  *
  * @param {object|string} color
  * @param {string} format hex, rgb, hsl or hsv
+ * @param {boolean} alpha
  * @returns {string}
  */
 export function toString(color, format, alpha = true) {

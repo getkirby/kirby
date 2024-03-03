@@ -4,19 +4,21 @@ namespace Kirby\Cms;
 
 use Kirby\Cache\Value;
 use Kirby\Filesystem\Dir;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class PageCacheTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures/PageCacheTest';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.PageCache';
+
 	protected $app;
-	protected $tmp;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index'     => $this->tmp = __DIR__ . '/tmp',
-				'templates' => __DIR__ . '/fixtures/PageCacheTest'
+				'index'     => static::TMP,
+				'templates' => static::FIXTURES
 			],
 			'site' => [
 				'children' => [
@@ -54,12 +56,12 @@ class PageCacheTest extends TestCase
 			]
 		]);
 
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 
 		unset(
 			$_COOKIE['foo'],

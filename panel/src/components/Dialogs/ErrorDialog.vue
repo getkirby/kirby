@@ -79,7 +79,7 @@ export default {
 	white-space: pre-line;
 }
 .k-error-details li:not(:last-child) {
-	border-bottom: 1px solid var(--color-background);
+	border-bottom: 1px solid var(--color-light);
 	padding-bottom: 0.25rem;
 	margin-bottom: 0.25rem;
 }

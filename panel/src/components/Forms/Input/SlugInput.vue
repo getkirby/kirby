@@ -17,7 +17,7 @@
 		spellcheck="false"
 		type="text"
 		class="k-text-input"
-		@input="$emit('input', $event.target.value)"
+		@input="$emit('input', $event)"
 	/>
 </template>
 
@@ -27,14 +27,23 @@ import TextInput, { props as TextInputProps } from "./TextInput.vue";
 export const props = {
 	mixins: [TextInputProps],
 	props: {
+		/**
+		 * Allow only specific characters for slug generation
+		 */
 		allow: {
 			type: String,
 			default: ""
 		},
+		/**
+		 * Values of other form inputs available for slug generation
+		 */
 		formData: {
 			type: Object,
 			default: () => ({})
 		},
+		/**
+		 * Name of the input to generate the slug from
+		 */
 		sync: {
 			type: String
 		}

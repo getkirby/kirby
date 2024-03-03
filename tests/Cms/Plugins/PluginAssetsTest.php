@@ -4,40 +4,42 @@ namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Cms\PluginAssets
  */
 class PluginAssetsTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures/plugin-assets';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.PluginAssets';
+
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp/PluginAssetsTest';
 
 	public function setUp(): void
 	{
-		$a = $this->tmp . '/site/plugins/a';
+		$a = static::TMP . '/site/plugins/a';
 		F::write($a . '/index.php', '<?php Kirby::plugin("getkirby/a", []);');
 		F::write($a . '/assets/test.css', 'test');
 
-		$b = $this->tmp . '/site/plugins/b';
+		$b = static::TMP . '/site/plugins/b';
 		F::write($b . '/index.php', '<?php Kirby::plugin("getkirby/b", ["assets" => ["' . $b . '/foo/bar.css"]]);');
 		F::write($b . '/foo/bar.css', 'test');
 
-		$c = $this->tmp . '/site/plugins/c';
+		$c = static::TMP . '/site/plugins/c';
 		F::write($c . '/index.php', '<?php Kirby::plugin("getkirby/c", ["assets" => ["test.css" => "' . $c . '/foo/bar.css"]]);');
 		F::write($c . '/foo/bar.css', 'test');
 
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			]
 		]);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	/**
@@ -47,11 +49,11 @@ class PluginAssetsTest extends TestCase
 	{
 		// create orphans
 		F::write(
-			$a = $this->tmp . '/media/plugins/getkirby/a/orphan.css',
+			$a = static::TMP . '/media/plugins/getkirby/a/orphan.css',
 			'test'
 		);
 		F::write(
-			$b = $this->tmp . '/media/plugins/getkirby/a/assets/orphan.css',
+			$b = static::TMP . '/media/plugins/getkirby/a/assets/orphan.css',
 			'test'
 		);
 
@@ -72,10 +74,10 @@ class PluginAssetsTest extends TestCase
 	{
 		// assets defined in plugin config
 		$plugin = new Plugin('getkirby/test-plugin', [
-			'root'   => $root = __DIR__ . '/tmp',
+			'root'   => static::TMP,
 			'assets' => [
-				'test.css' => $root . '/test.css',
-				'test.js'  => $root . '/test.js'
+				'test.css' => static::TMP . '/test.css',
+				'test.js'  => static::TMP . '/test.js'
 			]
 		]);
 
@@ -94,58 +96,58 @@ class PluginAssetsTest extends TestCase
 	{
 		// assets defined in plugin config
 		$plugin = new Plugin('getkirby/test-plugin', [
-			'root'   => $root = __DIR__ . '/fixtures/plugin-assets',
+			'root'   => static::FIXTURES,
 			'assets' => [
-				'c.css' => $root . '/a.css',
-				'd.css' => $root . '/foo/b.css'
+				'c.css' => static::FIXTURES . '/a.css',
+				'd.css' => static::FIXTURES . '/foo/b.css'
 			]
 		]);
 
 		$assets = PluginAssets::factory($plugin);
 		$this->assertInstanceOf(PluginAssets::class, $assets);
 		$this->assertSame(2, $assets->count());
-		$this->assertSame($root . '/a.css', $assets->get('c.css')->root());
-		$this->assertSame($root . '/foo/b.css', $assets->get('d.css')->root());
+		$this->assertSame(static::FIXTURES . '/a.css', $assets->get('c.css')->root());
+		$this->assertSame(static::FIXTURES . '/foo/b.css', $assets->get('d.css')->root());
 
 		// assets defined as non-associative array in the plugin config
 		$plugin = new Plugin('getkirby/test-plugin', [
-			'root'   => $root,
+			'root'   => static::FIXTURES,
 			'assets' => [
-				$root . '/a.css',
-				$root . '/foo/b.css'
+				static::FIXTURES . '/a.css',
+				static::FIXTURES . '/foo/b.css'
 			]
 		]);
 
 		$assets = PluginAssets::factory($plugin);
 		$this->assertInstanceOf(PluginAssets::class, $assets);
 		$this->assertSame(2, $assets->count());
-		$this->assertSame($root . '/a.css', $assets->get('a.css')->root());
-		$this->assertSame($root . '/foo/b.css', $assets->get('foo/b.css')->root());
+		$this->assertSame(static::FIXTURES . '/a.css', $assets->get('a.css')->root());
+		$this->assertSame(static::FIXTURES . '/foo/b.css', $assets->get('foo/b.css')->root());
 
 		// assets defined als closure in the plugin config
 		$plugin = new Plugin('getkirby/test-plugin', [
-			'root'   => __DIR__ . '/fixtures/plugin-assets',
+			'root'   => static::FIXTURES,
 			'assets' => fn () => [
-				$root . '/a.css',
-				$root . '/foo/b.css'
+				static::FIXTURES . '/a.css',
+				static::FIXTURES . '/foo/b.css'
 			]
 		]);
 
 		$assets = PluginAssets::factory($plugin);
 		$this->assertInstanceOf(PluginAssets::class, $assets);
 		$this->assertSame(2, $assets->count());
-		$this->assertSame($root . '/a.css', $assets->get('a.css')->root());
-		$this->assertSame($root . '/foo/b.css', $assets->get('foo/b.css')->root());
+		$this->assertSame(static::FIXTURES . '/a.css', $assets->get('a.css')->root());
+		$this->assertSame(static::FIXTURES . '/foo/b.css', $assets->get('foo/b.css')->root());
 
 		// assets gathered from `assets` folder inside plugin root
 		$plugin = new Plugin('getkirby/test-plugin', [
-			'root' => __DIR__ . '/fixtures/plugin-assets'
+			'root' => static::FIXTURES
 		]);
 
 		$assets = PluginAssets::factory($plugin);
 		$this->assertInstanceOf(PluginAssets::class, $assets);
 		$this->assertSame(1, $assets->count());
-		$this->assertSame($root . '/assets/test.css', $assets->get('test.css')->root());
+		$this->assertSame(static::FIXTURES . '/assets/test.css', $assets->get('test.css')->root());
 	}
 
 	/**
@@ -154,7 +156,7 @@ class PluginAssetsTest extends TestCase
 	public function testPlugin()
 	{
 		$plugin = new Plugin('getkirby/test-plugin', [
-			'root' => __DIR__ . '/fixtures/plugin-assets'
+			'root' => static::FIXTURES
 		]);
 
 		$assets = PluginAssets::factory($plugin);
@@ -166,10 +168,10 @@ class PluginAssetsTest extends TestCase
 	 */
 	public function testResolve()
 	{
-		touch($this->tmp . '/site/plugins/b/foo/bar.css', 1337000000);
+		touch(static::TMP . '/site/plugins/b/foo/bar.css', 1337000000);
 
 		// right path and hash
-		$media    = $this->tmp . '/media/plugins/getkirby/b/110971429-1337000000/foo/bar.css';
+		$media    = static::TMP . '/media/plugins/getkirby/b/110971429-1337000000/foo/bar.css';
 		$response = PluginAssets::resolve(
 			'getkirby/b',
 			'110971429-1337000000',
@@ -181,7 +183,7 @@ class PluginAssetsTest extends TestCase
 		$this->assertSame('text/css', $response->type());
 
 		// wrong path
-		$media    = $this->tmp . '/media/plugins/getkirby/b/110971429-1337000000/assets/foo.css';
+		$media    = static::TMP . '/media/plugins/getkirby/b/110971429-1337000000/assets/foo.css';
 		$response = PluginAssets::resolve(
 			'getkirby/b',
 			'110971429-1337000000',
@@ -193,7 +195,7 @@ class PluginAssetsTest extends TestCase
 
 		// wrong hash
 		// TODO: remove when media hash is enforced as mandatory
-		// $media    = $this->tmp . '/media/plugins/getkirby/b/110971429-1337000000/foo/bar.css';
+		// $media    = static::TMP . '/media/plugins/getkirby/b/110971429-1337000000/foo/bar.css';
 		// $response = PluginAssets::resolve(
 		// 	'getkirby/b',
 		// 	'110971429-12345678',
@@ -204,9 +206,9 @@ class PluginAssetsTest extends TestCase
 		// $this->assertFalse(is_link($media));
 
 		// correct: different path and root
-		touch($this->tmp . '/site/plugins/c/foo/bar.css', 1337000000);
+		touch(static::TMP . '/site/plugins/c/foo/bar.css', 1337000000);
 
-		$media    = $this->tmp . '/media/plugins/getkirby/c/3526409702-1337000000/test.css';
+		$media    = static::TMP . '/media/plugins/getkirby/c/3526409702-1337000000/test.css';
 		$response = PluginAssets::resolve(
 			'getkirby/c',
 			'3526409702-1337000000',
@@ -220,9 +222,9 @@ class PluginAssetsTest extends TestCase
 
 	public function testResolveAutomaticFromAssetsFolder()
 	{
-		touch($this->tmp . '/site/plugins/a/assets/test.css', 1337000000);
+		touch(static::TMP . '/site/plugins/a/assets/test.css', 1337000000);
 
-		$media    = $this->tmp . '/media/plugins/getkirby/a/3526409702-1337000000/test.css';
+		$media    = static::TMP . '/media/plugins/getkirby/a/3526409702-1337000000/test.css';
 		$response = PluginAssets::resolve(
 			'getkirby/a',
 			'3526409702-1337000000',
@@ -234,7 +236,7 @@ class PluginAssetsTest extends TestCase
 		$this->assertSame('text/css', $response->type());
 
 
-		$media    = $this->tmp . '/media/plugins/getkirby/a/3526409702-1337000000/assets/test.css';
+		$media    = static::TMP . '/media/plugins/getkirby/a/3526409702-1337000000/assets/test.css';
 		$response = PluginAssets::resolve(
 			'getkirby/a',
 			'3526409702-1337000000',

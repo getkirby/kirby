@@ -3,6 +3,7 @@
 		<k-writer-input
 			ref="input"
 			v-bind="textField"
+			:disabled="disabled"
 			:inline="true"
 			:keys="keys"
 			:value="content.text"
@@ -11,6 +12,7 @@
 		<k-input
 			v-if="levels.length > 1"
 			ref="level"
+			:disabled="disabled"
 			:empty="false"
 			:options="levels"
 			:value="content.level"
@@ -22,11 +24,14 @@
 </template>
 
 <script>
+import Block from "./Default.vue";
+
 /**
  * @displayName BlockTypeHeading
- * @internal
  */
 export default {
+	extends: Block,
+	inheritAttrs: false,
 	emits: ["append", "open", "split", "update"],
 	computed: {
 		isSplitable() {
@@ -113,7 +118,7 @@ export default {
 	--text-size: var(--text-sm);
 	line-height: 1.5em;
 }
-.k-block-type-heading-input .k-writer .ProseMirror strong {
+.k-block-type-heading-input .k-writer-input .ProseMirror strong {
 	font-weight: 700;
 }
 .k-block-type-heading-level {

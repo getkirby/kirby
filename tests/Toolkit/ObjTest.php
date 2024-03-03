@@ -10,6 +10,7 @@ use Kirby\Exception\InvalidArgumentException;
 class ObjTest extends TestCase
 {
 	/**
+	 * covers ::__construct
 	 * @covers ::__call
 	 */
 	public function test__call()

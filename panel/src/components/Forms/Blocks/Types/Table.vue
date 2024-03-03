@@ -9,13 +9,15 @@
 </template>
 
 <script>
+import Block from "./Default.vue";
+
 /**
  * Preview for the `table` block
  *
  * @displayName BlockTypeTable
- * @internal
  */
 export default {
+	extends: Block,
 	inheritAttrs: false,
 	computed: {
 		/**

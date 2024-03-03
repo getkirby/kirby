@@ -6,24 +6,24 @@
 			containerType ? 'k-block-container-type-' + containerType : ''
 		]"
 		:data-batched="isBatched"
-		:data-disabled="fieldset.disabled"
+		:data-disabled="isDisabled"
 		:data-hidden="isHidden"
 		:data-id="id"
 		:data-last-selected="isLastSelected"
 		:data-selected="isSelected"
 		:data-translate="fieldset.translate"
 		class="k-block-container"
-		tabindex="0"
+		:tabindex="isDisabled ? null : 0"
 		@keydown.ctrl.j.prevent.stop="$emit('merge')"
 		@keydown.ctrl.alt.down.prevent.stop="$emit('selectDown')"
 		@keydown.ctrl.alt.up.prevent.stop="$emit('selectUp')"
 		@keydown.ctrl.shift.down.prevent.stop="$emit('sortDown')"
 		@keydown.ctrl.shift.up.prevent.stop="$emit('sortUp')"
 		@keydown.ctrl.backspace.stop="backspace"
-		@focus.stop="$emit('focus')"
+		@focus.stop="onFocus"
 		@focusin.stop="onFocusIn"
 	>
-		<div :class="className" class="k-block">
+		<div :class="className" :data-disabled="isDisabled" class="k-block">
 			<component
 				:is="customComponent"
 				ref="editor"
@@ -34,20 +34,27 @@
 		</div>
 
 		<k-block-options
+			v-if="!isDisabled"
 			ref="options"
-			:is-batched="isBatched"
-			:is-editable="isEditable"
-			:is-full="isFull"
-			:is-hidden="isHidden"
-			:is-mergable="isMergable"
-			:is-splitable="isSplitable()"
+			v-bind="{
+				isBatched,
+				isEditable,
+				isFull,
+				isHidden,
+				isMergable,
+				isSplitable: isSplitable()
+			}"
 			v-on="listenersForOptions"
 		/>
 	</div>
 </template>
 
 <script>
+import { props as BlockProps } from "./Types/Default.vue";
+import { props as BlockOptionsProps } from "./BlockOptions.vue";
+
 export default {
+	mixins: [BlockProps, BlockOptionsProps],
 	inheritAttrs: false,
 	props: {
 		/**
@@ -58,52 +65,9 @@ export default {
 			type: [Array, Object]
 		},
 		/**
-		 * The block content is an object of values, depending
-		 * on the block type.
-		 */
-		content: {
-			default: () => ({}),
-			type: [Array, Object]
-		},
-		/**
-		 * API endpoints `{ field, model, section }`
-		 */
-		endpoints: {
-			default: () => ({}),
-			type: [Array, Object]
-		},
-		/**
-		 * The fieldset definition with all fields, tabs, etc.
-		 */
-		fieldset: {
-			default: () => ({}),
-			type: Object
-		},
-		/**
-		 * A unique ID for the block
-		 */
-		id: String,
-		/**
-		 * If `true` the block is selected together with other blocks
-		 */
-		isBatched: Boolean,
-		/**
-		 * If `true` the blocks field is full and no more blocks can be added
-		 */
-		isFull: Boolean,
-		/**
-		 * If `true` the block is hidden on the frontend
-		 */
-		isHidden: Boolean,
-		/**
-		 * If `true` the block is the last selected item in a list of batched blocks.
-		 * The last one shows the toolbar.
+		 * If `true` the block is the last selected item in a list of batched blocks.  The last one shows the toolbar.
 		 */
 		isLastSelected: Boolean,
-		/**
-		 * If `true` the block can be merged with another selected block when it is batched.
-		 */
-		isMergable: Boolean,
 		/**
 		 * If `true` the block is marked as selected
 		 */
@@ -153,7 +117,7 @@ export default {
 		className() {
 			let className = ["k-block-type-" + this.type];
 
-			if (this.fieldset.preview !== this.type) {
+			if (this.fieldset.preview && this.fieldset.preview !== this.type) {
 				className.push("k-block-type-" + this.fieldset.preview);
 			}
 
@@ -190,6 +154,9 @@ export default {
 			}
 
 			return "k-block-type-default";
+		},
+		isDisabled() {
+			return this.disabled === true || this.fieldset.disabled === true;
 		},
 		isEditable() {
 			return this.fieldset.editable !== false;
@@ -307,11 +274,18 @@ export default {
 			this.$emit("close");
 			this.focus();
 		},
+		onFocus(event) {
+			if (this.disabled) {
+				return;
+			}
+
+			this.$emit("focus", event);
+		},
 		onFocusIn(event) {
 			// skip focus if the event is coming from the options buttons
 			// to preserve the current focus (since options buttons directly
 			// trigger events and don't need any focus themselves)
-			if (this.$refs.options?.$el?.contains(event.target)) {
+			if (this.disabled || this.$refs.options?.$el?.contains(event.target)) {
 				return;
 			}
 
@@ -321,7 +295,7 @@ export default {
 			this.$emit("update", value);
 		},
 		open(tab, replace = false) {
-			if (!this.isEditable || this.isBatched) {
+			if (!this.isEditable || this.isBatched || this.isDisabled) {
 				return;
 			}
 
@@ -390,7 +364,7 @@ export default {
 	border-radius: var(--rounded);
 }
 .k-block-container:not(:last-of-type) {
-	border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+	border-bottom: 1px dashed var(--color-border-dimmed);
 }
 .k-block-container:focus {
 	outline: 0;
@@ -426,8 +400,8 @@ export default {
 	vertical-align: middle;
 	display: inline-grid;
 }
-[data-disabled="true"] .k-block-container {
-	background: var(--color-background);
+.k-block-container[data-disabled="true"] {
+	background: var(--color-light);
 }
 
 /* Collapse long blocks while dragging */

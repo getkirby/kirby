@@ -109,7 +109,7 @@ if (Helpers::hasOverride('deprecated') === false) { // @codeCoverageIgnore
 	}
 }
 
-if (Helpers::hasOverride('dump') === false) { // @codeCoverageIgnore
+if (Helpers::hasOverride('dump') === false && function_exists('dump') === false) { // @codeCoverageIgnore
 	/**
 	 * Simple object and variable dumper
 	 * to help with debugging.

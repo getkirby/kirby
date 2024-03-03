@@ -6,12 +6,14 @@ use FilesystemIterator;
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
-use PHPUnit\Framework\TestCase as BaseTestCase;
+use Kirby\TestCase as BaseTestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
 class TestCase extends BaseTestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	protected static $type;
 
 	public function setUp(): void
@@ -26,7 +28,7 @@ class TestCase extends BaseTestCase
 	public function tearDown(): void
 	{
 		App::destroy();
-		Dir::remove(__DIR__ . '/tmp');
+		Dir::remove(static::TMP);
 	}
 
 	/**
@@ -38,13 +40,13 @@ class TestCase extends BaseTestCase
 	 */
 	protected function fixture(string $name, bool $tmp = false): string
 	{
-		$fixtureRoot = __DIR__ . '/fixtures/' . static::$type . '/' . $name;
+		$fixtureRoot = static::FIXTURES . '/' . static::$type . '/' . $name;
 
 		if ($tmp === false) {
 			return $fixtureRoot;
 		}
 
-		$tmpRoot = __DIR__ . '/tmp/' . static::$type . '/' . $name;
+		$tmpRoot = static::TMP . '/' . static::$type . '/' . $name;
 		F::copy($fixtureRoot, $tmpRoot);
 		return $tmpRoot;
 	}
@@ -61,7 +63,7 @@ class TestCase extends BaseTestCase
 		string $directory,
 		string $extension
 	): array {
-		$root = __DIR__ . '/fixtures/' . static::$type;
+		$root = static::FIXTURES . '/' . static::$type;
 
 		$directory = new RecursiveDirectoryIterator(
 			$root . '/' . $directory,

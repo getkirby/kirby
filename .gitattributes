@@ -6,9 +6,11 @@
 # tests
 .codecov.yml export-ignore
 .php-cs-fixer.dist.php export-ignore
+phpbench.json export-ignore
 phpmd.xml.dist export-ignore
 phpunit.xml.dist export-ignore
 psalm.xml.dist export-ignore
+bench/ export-ignore
 tests/ export-ignore
 
 # panel
@@ -24,7 +26,7 @@ panel/public export-ignore
 panel/README.md export-ignore
 panel/scripts export-ignore
 panel/src export-ignore
-panel/vite.config.js export-ignore
+panel/vite.config.mjs export-ignore
 panel/vitest.setup.js export-ignore
 
 # other

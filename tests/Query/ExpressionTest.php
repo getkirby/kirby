@@ -3,11 +3,12 @@
 namespace Kirby\Query;
 
 use Kirby\Exception\LogicException;
+use Kirby\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Query\Expression
+ * @coversDefaultClass \Kirby\Query\Expression
  */
-class ExpressionTest extends \PHPUnit\Framework\TestCase
+class ExpressionTest extends TestCase
 {
 	/**
 	 * @covers ::__construct

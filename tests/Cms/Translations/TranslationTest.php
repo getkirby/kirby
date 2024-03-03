@@ -4,6 +4,8 @@ namespace Kirby\Cms;
 
 class TranslationTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	public function testProps()
 	{
 		$translation = new Translation('en', [
@@ -23,13 +25,13 @@ class TranslationTest extends TestCase
 
 	public function testLoad()
 	{
-		$translation = Translation::load('de', __DIR__ . '/fixtures/translations/de.json');
+		$translation = Translation::load('de', static::FIXTURES . '/translations/de.json');
 
 		$this->assertSame('de', $translation->code());
 		$this->assertSame('Deutsch', $translation->name());
 
 		// invalid
-		$translation = Translation::load('zz', __DIR__ . '/fixtures/translations/zz.json');
+		$translation = Translation::load('zz', static::FIXTURES . '/translations/zz.json');
 
 		$this->assertSame('zz', $translation->code());
 		$this->assertSame([], $translation->data());
@@ -37,7 +39,7 @@ class TranslationTest extends TestCase
 
 	public function testToArray()
 	{
-		$translation = Translation::load('de', __DIR__ . '/fixtures/translations/de.json');
+		$translation = Translation::load('de', static::FIXTURES . '/translations/de.json');
 
 		$this->assertSame([
 			'code' => 'de',

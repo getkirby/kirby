@@ -7,14 +7,7 @@ namespace Kirby\Toolkit;
  */
 class ControllerTest extends TestCase
 {
-	/**
-	 * @covers ::call
-	 */
-	public function testCall()
-	{
-		$controller = new Controller(fn () => 'test');
-		$this->assertSame('test', $controller->call());
-	}
+	public const FIXTURES = __DIR__ . '/fixtures';
 
 	/**
 	 * @covers ::arguments
@@ -45,7 +38,7 @@ class ControllerTest extends TestCase
 	/**
 	 * @covers ::arguments
 	 */
-	public function testVariadicArguments()
+	public function testArgumentsVariadic()
 	{
 		$controller = new Controller(fn ($c, ...$args) => $c . '/' . implode('', $args));
 
@@ -54,6 +47,26 @@ class ControllerTest extends TestCase
 			'b' => 'B',
 			'c' => 'C'
 		]));
+	}
+
+	/**
+	 * @covers ::arguments
+	 */
+	public function testArgumentsNoDefaultNull()
+	{
+		$controller = new Controller(fn ($a, $b = 'foo') => ($a === null ? 'null' : $a) . ($b === null ? 'null' : $b));
+
+		$this->assertSame('nullfoo', $controller->call());
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::call
+	 */
+	public function testCall()
+	{
+		$controller = new Controller(fn () => 'test');
+		$this->assertSame('test', $controller->call());
 	}
 
 	/**
@@ -70,7 +83,7 @@ class ControllerTest extends TestCase
 	/**
 	 * @covers ::call
 	 */
-	public function testMissingParameter()
+	public function testCallMissingParameter()
 	{
 		$controller = new Controller(fn ($a) => $a);
 		$this->assertNull($controller->call());
@@ -81,7 +94,7 @@ class ControllerTest extends TestCase
 	 */
 	public function testLoad()
 	{
-		$root       = __DIR__ . '/fixtures/controller/controller.php';
+		$root       = static::FIXTURES . '/controller/controller.php';
 		$controller = Controller::load($root);
 		$this->assertSame('loaded', $controller->call());
 	}
@@ -91,7 +104,7 @@ class ControllerTest extends TestCase
 	 */
 	public function testLoadNonExisting()
 	{
-		$root       = __DIR__ . '/fixtures/controller/does-not-exist.php';
+		$root       = static::FIXTURES . '/controller/does-not-exist.php';
 		$controller = Controller::load($root);
 		$this->assertNull($controller);
 	}
@@ -101,7 +114,7 @@ class ControllerTest extends TestCase
 	 */
 	public function testLoadInvalidController()
 	{
-		$root       = __DIR__ . '/fixtures/controller/invalid.php';
+		$root       = static::FIXTURES . '/controller/invalid.php';
 		$controller = Controller::load($root);
 		$this->assertNull($controller);
 	}

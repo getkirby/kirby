@@ -83,8 +83,8 @@ export default {
 	--toolbar-size: var(--height);
 	--toolbar-text: var(--color-black);
 	--toolbar-back: var(--color-white);
-	--toolbar-hover: rgba(239, 239, 239, 0.5);
-	--toolbar-border: rgba(0, 0, 0, 0.1);
+	--toolbar-hover: hsla(0, 0%, var(--color-l-min), 0.4);
+	--toolbar-border: hsla(0, 100%, var(--color-l-min), 0.1);
 	--toolbar-current: var(--color-focus);
 }
 
@@ -103,7 +103,7 @@ export default {
 .k-toolbar[data-theme="dark"] {
 	--toolbar-text: var(--color-white);
 	--toolbar-back: var(--color-black);
-	--toolbar-hover: rgba(255, 255, 255, 0.2);
+	--toolbar-hover: hsla(0, 0%, var(--color-l-max), 0.2);
 	--toolbar-border: var(--color-gray-800);
 }
 
@@ -136,7 +136,7 @@ export default {
 
 :where(.k-textarea-input, .k-writer-input):not(:focus-within) {
 	--toolbar-text: var(--color-gray-400);
-	--toolbar-border: var(--color-background);
+	--toolbar-border: var(--color-light);
 }
 /** TODO: .k-toolbar:not([data-inline="true"]):has(~ :focus-within) */
 :where(.k-textarea-input, .k-writer-input):focus-within

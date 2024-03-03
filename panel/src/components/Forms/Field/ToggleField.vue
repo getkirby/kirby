@@ -1,10 +1,8 @@
 <template>
-	<k-field v-bind="$props" :input="uid" class="k-toggle-field">
+	<k-field v-bind="$props" :input="id" class="k-toggle-field">
 		<k-input
 			v-bind="$props"
-			:id="uid"
 			ref="input"
-			theme="field"
 			type="toggle"
 			@input="$emit('input', $event)"
 		/>

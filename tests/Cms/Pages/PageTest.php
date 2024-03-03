@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Panel\Page as Panel;
 use ReflectionMethod;
@@ -17,11 +16,8 @@ class PageTestModel extends Page
  */
 class PageTest extends TestCase
 {
-	public function tearDown(): void
-	{
-		parent::tearDown();
-		Dir::remove(__DIR__ . '/fixtures/PageTest');
-	}
+	public const FIXTURES = __DIR__ . '/fixtures';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.Page';
 
 	public function testBlueprints()
 	{
@@ -416,7 +412,7 @@ class PageTest extends TestCase
 			'site' => $site
 		]);
 
-		$this->assertSame($site, $page->site());
+		$this->assertIsSite($site, $page->site());
 	}
 
 	public function testInvalidSite()
@@ -812,13 +808,13 @@ class PageTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index'   => $index = __DIR__ . '/fixtures/PageTest/modified',
-				'content' => $index
+				'index'   => static::TMP,
+				'content' => static::TMP
 			]
 		]);
 
 		// create a page
-		F::write($file = $index . '/test/test.txt', 'test');
+		F::write($file = static::TMP . '/test/test.txt', 'test');
 
 		$modified = filemtime($file);
 		$page     = $app->page('test');
@@ -841,8 +837,8 @@ class PageTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index'   => $index = __DIR__ . '/fixtures/PageTest/modified',
-				'content' => $index
+				'index'   => static::TMP,
+				'content' => static::TMP
 			],
 			'languages' => [
 				[
@@ -858,13 +854,13 @@ class PageTest extends TestCase
 		]);
 
 		// create the english page
-		F::write($file = $index . '/test/test.en.txt', 'test');
+		F::write($file = static::TMP . '/test/test.en.txt', 'test');
 		touch($file, $modified = \time() + 2);
 
 		$this->assertSame($modified, $app->page('test')->modified());
 
 		// create the german page
-		F::write($file = $index . '/test/test.de.txt', 'test');
+		F::write($file = static::TMP . '/test/test.de.txt', 'test');
 		touch($file, $modified = \time() + 5);
 
 		// change the language
@@ -878,8 +874,8 @@ class PageTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index'   => $index = __DIR__ . '/fixtures/PageTest/modified',
-				'content' => $index
+				'index'   => static::TMP,
+				'content' => static::TMP
 			],
 			'languages' => [
 				[
@@ -895,11 +891,11 @@ class PageTest extends TestCase
 		]);
 
 		// create the english page
-		F::write($file = $index . '/test/test.en.txt', 'test');
+		F::write($file = static::TMP . '/test/test.en.txt', 'test');
 		touch($file, $modifiedEnContent = \time() + 2);
 
 		// create the german page
-		F::write($file = $index . '/test/test.de.txt', 'test');
+		F::write($file = static::TMP . '/test/test.de.txt', 'test');
 		touch($file, $modifiedDeContent = \time() + 5);
 
 		$page = $app->page('test');
@@ -994,11 +990,11 @@ class PageTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => __DIR__ . '/fixtures/PageTest'
+				'index' => static::TMP
 			],
 			'templates' => [
-				'foo' => __DIR__ . '/fixtures/PageTemplateTest/template.php',
-				'bar' => __DIR__ . '/fixtures/PageTemplateTest/template.php',
+				'foo' => static::FIXTURES . '/PageTemplateTest/template.php',
+				'bar' => static::FIXTURES . '/PageTemplateTest/template.php',
 			],
 			'site' => [
 				'children' => [
@@ -1042,7 +1038,7 @@ class PageTest extends TestCase
 		$this->assertSame($app, $data['kirby']);
 		$this->assertSame($app->site(), $data['site']);
 		$this->assertSame($app->site()->children(), $data['pages']);
-		$this->assertInstanceOf(Page::class, $data['page']);
+		$this->assertIsPage($data['page']);
 		$this->assertSame('New Foo Title', $data['page']->title()->value());
 
 		// invalid test
@@ -1098,10 +1094,10 @@ class PageTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => __DIR__ . '/fixtures/PageTest'
+				'index' => static::TMP
 			],
 			'templates' => [
-				'bar' => __DIR__ . '/fixtures/PageRenderHookTest/bar.php'
+				'bar' => static::FIXTURES . '/PageRenderHookTest/bar.php'
 			],
 			'site' => [
 				'children' => [
@@ -1130,10 +1126,10 @@ class PageTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => __DIR__ . '/fixtures/PageTest'
+				'index' => static::TMP
 			],
 			'templates' => [
-				'foo' => __DIR__ . '/fixtures/PageRenderHookTest/foo.php'
+				'foo' => static::FIXTURES . '/PageRenderHookTest/foo.php'
 			],
 			'site' => [
 				'children' => [

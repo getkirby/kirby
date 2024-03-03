@@ -5,19 +5,20 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Exception\DuplicateException;
 use Kirby\Filesystem\Dir;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class LanguagesTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.Languages';
+
 	protected $app;
 	protected $languages;
-	protected $tmp;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp = __DIR__ . '/tmp/LanguagesTest',
+				'index' => static::TMP,
 			],
 			'languages' => [
 				[
@@ -41,14 +42,14 @@ class LanguagesTest extends TestCase
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	public function testCodes()
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp = __DIR__ . '/tmp/LanguagesTest',
+				'index' => static::TMP,
 			],
 			'languages' => [
 				[
@@ -71,7 +72,7 @@ class LanguagesTest extends TestCase
 
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp = __DIR__ . '/tmp/LanguagesTest',
+				'index' => static::TMP,
 			]
 		]);
 
@@ -89,16 +90,16 @@ class LanguagesTest extends TestCase
 	{
 		$this->app->clone([
 			'roots' => [
-				'languages' => $root = __DIR__ . '/tmp/LanguagesTest'
+				'languages' => static::TMP
 			]
 		]);
 
-		Data::write($root . '/en.php', [
+		Data::write(static::TMP . '/en.php', [
 			'code' => 'en',
 			'default' => true
 		]);
 
-		Data::write($root . '/de.php', [
+		Data::write(static::TMP . '/de.php', [
 			'code' => 'de'
 		]);
 
@@ -108,7 +109,7 @@ class LanguagesTest extends TestCase
 		$this->assertSame(['de', 'en'], $languages->codes());
 		$this->assertSame('en', $languages->default()->code());
 
-		Dir::remove($root);
+		Dir::remove(static::TMP);
 	}
 
 	public function testDefault()

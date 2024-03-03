@@ -14,5 +14,6 @@ return [
 		'2xl',
 		'3xl',
 		'4xl'
-	]
+	],
+	'source' => 'panel/src/styles/config/font-family.css'
 ];

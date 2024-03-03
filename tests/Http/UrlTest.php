@@ -3,7 +3,7 @@
 namespace Kirby\Http;
 
 use Kirby\Cms\App;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class UrlTest extends TestCase
 {
@@ -83,6 +83,7 @@ class UrlTest extends TestCase
 		$this->assertTrue(Url::isAbsolute('tel:1234567'));
 		$this->assertTrue(Url::isAbsolute('geo:49.0158,8.3239?z=11'));
 		$this->assertFalse(Url::isAbsolute('../getkirby.com/docs'));
+		$this->assertFalse(Url::isAbsolute('javascript:alert("XSS")'));
 	}
 
 	public function testMakeAbsolute()

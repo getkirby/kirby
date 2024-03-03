@@ -148,7 +148,7 @@ return function (App $app) {
 			$files  = new Files([]);
 
 			foreach ($field->toData($separator) as $id) {
-				if ($file = $parent->kirby()->file($id, $parent)) {
+				if (is_string($id) === true && $file = $parent->kirby()->file($id, $parent)) {
 					$files->add($file);
 				}
 			}
@@ -257,7 +257,7 @@ return function (App $app) {
 			try {
 				return Structure::factory(
 					Data::decode($field->value, 'yaml'),
-					['parent' => $field->parent()]
+					['parent' => $field->parent(), 'field' => $field]
 				);
 			} catch (Exception) {
 				$message = 'Invalid structure data for "' . $field->key() . '" field';
@@ -481,10 +481,9 @@ return function (App $app) {
 
 				foreach ($elements as $element) {
 					foreach ($attributes as $attribute) {
-						if ($element->hasAttribute($attribute) && $url = $element->getAttribute($attribute)) {
+						if ($element->hasAttribute($attribute) && $uuid = $element->getAttribute($attribute)) {
 							try {
-								if ($uuid = Uuid::for($url)) {
-									$url = $uuid->model()?->url();
+								if ($url = Uuid::for($uuid)?->model()?->url()) {
 									$element->setAttribute($attribute, $url);
 								}
 							} catch (InvalidArgumentException) {

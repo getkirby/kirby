@@ -6,17 +6,19 @@ use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Exception\Exception;
 use Kirby\Exception\LogicException;
-use PHPUnit\Framework\TestCase as TestCase;
+use Kirby\TestCase as TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Image\Image
  */
 class ImageTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	protected function _image($file = 'cat.jpg')
 	{
 		return new Image([
-			'root' => __DIR__ . '/fixtures/image/' . $file,
+			'root' => static::FIXTURES . '/image/' . $file,
 			'url'  => 'https://foo.bar/' . $file
 		]);
 	}
@@ -89,7 +91,7 @@ class ImageTest extends TestCase
 			'content'  => ['alt' => 'Test text']
 		]);
 		$image = new Image([
-			'root'  => __DIR__ . '/fixtures/image/cat.jpg',
+			'root'  => static::FIXTURES . '/image/cat.jpg',
 			'url'   => 'https://foo.bar/cat.jpg',
 			'model' => $file
 		]);
@@ -104,7 +106,7 @@ class ImageTest extends TestCase
 	{
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Calling Image::html() requires that the URL property is not null');
-		$file = new Image(['root' => __DIR__ . '/fixtures/image/cat.jpg']);
+		$file = new Image(['root' => static::FIXTURES . '/image/cat.jpg']);
 		$file->html();
 	}
 

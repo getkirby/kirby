@@ -4,18 +4,19 @@ namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class SiteActionsTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.SiteActions';
+
 	protected $app;
-	protected $fixtures = __DIR__ . '/fixtures/SiteActionsTest';
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->fixtures
+				'index' => static::TMP
 			],
 			'users' => [
 				[
@@ -37,12 +38,12 @@ class SiteActionsTest extends TestCase
 			]
 		]);
 
-		Dir::make($this->fixtures);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->fixtures);
+		Dir::remove(static::TMP);
 	}
 
 	public function site()
@@ -69,7 +70,7 @@ class SiteActionsTest extends TestCase
 
 	public function testCreateFile()
 	{
-		F::write($source = $this->fixtures . '/source.md', '');
+		F::write($source = static::TMP . '/source.md', '');
 
 		$file = $this->site()->createFile([
 			'filename' => 'test.md',
@@ -88,10 +89,10 @@ class SiteActionsTest extends TestCase
 	public function testUpdate()
 	{
 		$site = $this->site()->update([
-			'copyright' => 2018
+			'copyright' => '2018'
 		]);
 
-		$this->assertSame(2018, $site->copyright()->value());
+		$this->assertSame('2018', $site->copyright()->value());
 	}
 
 	public function testChangeTitleHooks()
@@ -118,6 +119,70 @@ class SiteActionsTest extends TestCase
 		$app->site()->changeTitle('New Title');
 
 		$this->assertSame(2, $calls);
+	}
+
+	public function testChangeTitleHookBeforeHookDefaultLanguage()
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		$app = $this->app->clone([
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			],
+			'hooks' => [
+				'site.changeTitle:before' => function (Site $site, $title, $languageCode) use ($phpunit, &$calls) {
+					$phpunit->assertNull($site->title()->value());
+					$phpunit->assertSame('New Title', $title);
+					$phpunit->assertNull($languageCode);
+					$calls++;
+				}
+			]
+		]);
+
+		$app->site()->changeTitle('New Title');
+
+		$this->assertSame(1, $calls);
+	}
+
+	public function testChangeTitleHookBeforeHookSecondaryLanguage()
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		$app = $this->app->clone([
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			],
+			'hooks' => [
+				'site.changeTitle:before' => function (Site $site, $title, $languageCode) use ($phpunit, &$calls) {
+					$phpunit->assertNull($site->title()->value());
+					$phpunit->assertSame('New Title', $title);
+					$phpunit->assertSame('de', $languageCode);
+					$calls++;
+				}
+			]
+		]);
+
+		$app->site()->changeTitle('New Title', 'de');
+
+		$this->assertSame(1, $calls);
 	}
 
 	public function testUpdateHooks()

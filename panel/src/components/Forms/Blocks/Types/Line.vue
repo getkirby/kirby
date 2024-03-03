@@ -7,7 +7,6 @@
 <script>
 /**
  * @displayName BlockTypeLine
- * @internal
  */
 export default {};
 </script>

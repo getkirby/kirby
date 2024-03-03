@@ -3,10 +3,11 @@
 namespace Kirby\Form\Fields;
 
 use Kirby\Cms\Page;
-use Kirby\Form\Field;
 
 class PagePickerMixinTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Form.Fields.PagePickerMixin';
+
 	public function setUp(): void
 	{
 		parent::setUp();
@@ -17,18 +18,17 @@ class PagePickerMixinTest extends TestCase
 
 	public function testPagesWithoutParent()
 	{
-		Field::$types = [
-			'test' => [
-				'mixins'  => ['pagepicker'],
-				'methods' => [
-					'pages' => function () {
-						return $this->pagepicker();
-					}
-				]
-			]
-		];
-
 		$app = $this->app->clone([
+			'fields' => [
+				'test' => [
+					'mixins'  => ['pagepicker'],
+					'methods' => [
+						'pages' => function () {
+							return $this->pagepicker();
+						}
+					]
+				]
+			],
 			'site' => [
 				'children' => [
 					['slug' => 'a'],
@@ -63,20 +63,19 @@ class PagePickerMixinTest extends TestCase
 
 	public function testPagesWithParent()
 	{
-		Field::$types = [
-			'test' => [
-				'mixins'  => ['pagepicker'],
-				'methods' => [
-					'pages' => function () {
-						return $this->pagepicker([
-							'parent' => 'a'
-						]);
-					}
-				]
-			]
-		];
-
 		$app = $this->app->clone([
+			'fields' => [
+				'test' => [
+					'mixins'  => ['pagepicker'],
+					'methods' => [
+						'pages' => function () {
+							return $this->pagepicker([
+								'parent' => 'a'
+							]);
+						}
+					]
+				]
+			],
 			'site' => [
 				'children' => [
 					[
@@ -114,18 +113,20 @@ class PagePickerMixinTest extends TestCase
 
 	public function testPageChildren()
 	{
-		Field::$types = [
-			'test' => [
-				'mixins'  => ['pagepicker'],
-				'methods' => [
-					'pages' => function () {
-						return $this->pagepicker([
-							'query' => 'page.children'
-						]);
-					}
+		$this->app->clone([
+			'fields' => [
+				'test' => [
+					'mixins'  => ['pagepicker'],
+					'methods' => [
+						'pages' => function () {
+							return $this->pagepicker([
+								'query' => 'page.children'
+							]);
+						}
+					]
 				]
-			]
-		];
+			],
+		]);
 
 		$page = new Page([
 			'slug' => 'test',
@@ -164,19 +165,21 @@ class PagePickerMixinTest extends TestCase
 
 	public function testPageChildrenWithoutSubpages()
 	{
-		Field::$types = [
-			'test' => [
-				'mixins'  => ['pagepicker'],
-				'methods' => [
-					'pages' => function () {
-						return $this->pagepicker([
-							'query'    => 'page.children',
-							'subpages' => false
-						]);
-					}
+		$this->app->clone([
+			'fields' => [
+				'test' => [
+					'mixins'  => ['pagepicker'],
+					'methods' => [
+						'pages' => function () {
+							return $this->pagepicker([
+								'query'    => 'page.children',
+								'subpages' => false
+							]);
+						}
+					]
 				]
-			]
-		];
+			],
+		]);
 
 		$page = new Page([
 			'slug' => 'test',
@@ -211,21 +214,23 @@ class PagePickerMixinTest extends TestCase
 
 	public function testMap()
 	{
-		Field::$types = [
-			'test' => [
-				'mixins'  => ['pagepicker'],
-				'methods' => [
-					'pages' => function () {
-						return $this->pagepicker([
-							'query' => 'page.children',
-							'map'   => function ($page) {
-								return $page->id();
-							}
-						]);
-					}
+		$this->app->clone([
+			'fields' => [
+				'test' => [
+					'mixins'  => ['pagepicker'],
+					'methods' => [
+						'pages' => function () {
+							return $this->pagepicker([
+								'query' => 'page.children',
+								'map'   => function ($page) {
+									return $page->id();
+								}
+							]);
+						}
+					]
 				]
-			]
-		];
+			],
+		]);
 
 		$page = new Page([
 			'slug' => 'test',

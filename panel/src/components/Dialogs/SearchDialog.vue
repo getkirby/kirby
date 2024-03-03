@@ -59,7 +59,7 @@
 					v-else-if="items.length < pagination.total"
 					icon="search"
 					variant="dimmed"
-					@click="$go('search', { query: { type, query } })"
+					@click="$go('search', { query: { current, query } })"
 				>
 					{{ $t("search.all", { count: pagination.total }) }}
 				</k-button>
@@ -74,6 +74,9 @@ import Search from "@/mixins/search.js";
 
 export default {
 	mixins: [Dialog, Search],
+	props: {
+		type: String
+	},
 	emits: ["cancel"],
 	data() {
 		return {
@@ -81,28 +84,30 @@ export default {
 			items: [],
 			pagination: {},
 			selected: -1,
-			type: this.$panel.searches[this.$panel.view.search]
-				? this.$panel.view.search
-				: Object.keys(this.$panel.searches)[0]
+			current:
+				this.type ??
+				(this.$panel.searches[this.$panel.view.search]
+					? this.$panel.view.search
+					: Object.keys(this.$panel.searches)[0])
 		};
 	},
 	computed: {
 		currentType() {
-			return this.$panel.searches[this.type] ?? this.types[0];
+			return this.$panel.searches[this.current] ?? this.types[0];
 		},
 		types() {
 			return Object.values(this.$panel.searches).map((search) => ({
 				...search,
-				current: this.type === search.id,
+				current: this.current === search.id,
 				click: () => {
-					this.type = search.id;
+					this.current = search.id;
 					this.focus();
 				}
 			}));
 		}
 	},
 	watch: {
-		type() {
+		current() {
 			this.search();
 		}
 	},
@@ -147,7 +152,7 @@ export default {
 					throw Error("Empty query");
 				}
 
-				const response = await this.$search(this.type, this.query);
+				const response = await this.$search(this.current, this.query);
 				this.items = response.results;
 				this.pagination = response.pagination;
 			} catch (error) {

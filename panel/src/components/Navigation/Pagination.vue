@@ -35,17 +35,19 @@
 				@keydown.right.stop
 			>
 				<form method="dialog" @click.stop @submit="goTo($refs.page.value)">
-					<label :for="uid">{{ $t("pagination.page") }}:</label>
-					<select :id="uid" ref="page" :autofocus="true">
-						<option
-							v-for="p in pages"
-							:key="p"
-							:selected="page === p"
-							:value="p"
-						>
-							{{ p }}
-						</option>
-					</select>
+					<label>
+						{{ $t("pagination.page") }}:
+						<select ref="page" :autofocus="true">
+							<option
+								v-for="p in pages"
+								:key="p"
+								:selected="page === p"
+								:value="p"
+							>
+								{{ p }}
+							</option>
+						</select>
+					</label>
 					<k-button type="submit" icon="check" />
 				</form>
 			</k-dropdown-content>
@@ -109,15 +111,15 @@ export default {
 	},
 	emits: ["paginate"],
 	computed: {
-		end() {
-			return Math.min(this.start - 1 + this.limit, this.total);
-		},
 		detailsText() {
 			if (this.limit === 1) {
 				return this.start;
 			}
 
 			return this.start + "-" + this.end;
+		},
+		end() {
+			return Math.min(this.start - 1 + this.limit, this.total);
 		},
 		offset() {
 			return this.start - 1;
@@ -199,8 +201,10 @@ export default {
 	justify-content: space-between;
 }
 .k-pagination-selector label {
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-2);
 	padding-inline-start: var(--spacing-3);
-	padding-inline-end: var(--spacing-2);
 }
 .k-pagination-selector select {
 	--height: calc(var(--button-height) - 0.5rem);

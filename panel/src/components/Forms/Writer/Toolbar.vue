@@ -12,7 +12,7 @@
 
 <script>
 /**
- * Toolbar for `k-writer-input`
+ * Toolbar for `k-writer`
  * @displayName WriterToolbar
  * @internal
  */
@@ -338,7 +338,7 @@ export default {
 </script>
 
 <style>
-/** TODO: .k-writer:has(.k-toolbar:not([data-inline="true"])) */
+/** TODO: .k-writer-input:has(.k-toolbar:not([data-inline="true"])) */
 .k-writer-input:not([data-toolbar-inline="true"]):not([data-disabled="true"]) {
 	grid-template-areas: "topbar" "content";
 	grid-template-rows: var(--toolbar-size) 1fr;

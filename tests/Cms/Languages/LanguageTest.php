@@ -7,30 +7,31 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Cms\Language
  */
 class LanguageTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.Language';
+
 	protected $app;
-	protected $tmp;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp = __DIR__ . '/tmp/LanguageTest',
+				'index' => static::TMP,
 			]
 		]);
 
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	/**
@@ -108,7 +109,7 @@ class LanguageTest extends TestCase
 
 		new App([
 			'roots' => [
-				'index' => $this->tmp = __DIR__ . '/tmp/CreateHooksTest',
+				'index' => static::TMP,
 			],
 			'hooks' => [
 				'language.create:before' => function (Language $language, array $input) use ($phpunit, &$calls) {
@@ -163,7 +164,7 @@ class LanguageTest extends TestCase
 
 		new App([
 			'roots' => [
-				'index' => $this->tmp = __DIR__ . '/tmp/DeleteHooksTest',
+				'index' => static::TMP,
 			],
 			'hooks' => [
 				'language.delete:before' => function (Language $language) use ($phpunit, &$calls) {
@@ -231,7 +232,7 @@ class LanguageTest extends TestCase
 	{
 		new App([
 			'roots' => [
-				'index' => __DIR__ . '/tmp'
+				'index' => static::TMP
 			]
 		]);
 
@@ -244,8 +245,6 @@ class LanguageTest extends TestCase
 		F::write($language->root(), 'test');
 
 		$this->assertTrue($language->exists());
-
-		Dir::remove(__DIR__ . '/tmp');
 	}
 
 	/**
@@ -469,7 +468,7 @@ class LanguageTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $tmp = __DIR__ . '/tmp'
+				'index' => static::TMP
 			]
 		]);
 
@@ -477,7 +476,7 @@ class LanguageTest extends TestCase
 			'code' => 'de'
 		]);
 
-		$this->assertSame($tmp . '/site/languages/de.php', $language->root());
+		$this->assertSame(static::TMP . '/site/languages/de.php', $language->root());
 	}
 
 	/**
@@ -499,12 +498,12 @@ class LanguageTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index'     => $tmp = __DIR__ . '/tmp/LanguageTest',
-				'languages' => $tmp
+				'index'     => static::TMP,
+				'languages' => static::TMP
 			]
 		]);
 
-		$file = $tmp . '/de.php';
+		$file = static::TMP . '/de.php';
 
 		// default
 		$language = new Language([
@@ -564,8 +563,6 @@ class LanguageTest extends TestCase
 		$data = include $file;
 
 		$this->assertSame('test', $data['custom']);
-
-		Dir::remove($tmp);
 	}
 
 	/**
@@ -650,7 +647,7 @@ class LanguageTest extends TestCase
 	 */
 	public function testUpdate()
 	{
-		Dir::make($this->tmp . '/content');
+		Dir::make(static::TMP . '/content');
 
 		$language = Language::create([
 			'code' => 'en'
@@ -668,7 +665,7 @@ class LanguageTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => static::TMP,
 			]
 		]);
 
@@ -718,12 +715,11 @@ class LanguageTest extends TestCase
 		$calls = 0;
 		$phpunit = $this;
 
-		$this->tmp = __DIR__ . '/tmp/UpdateHooksTest';
-		Dir::make($this->tmp . '/content');
+		Dir::make(static::TMP . '/content');
 
 		new App([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => static::TMP,
 			],
 			'hooks' => [
 				'language.update:before' => function (Language $language, array $input) use ($phpunit, &$calls) {

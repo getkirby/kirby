@@ -6,18 +6,19 @@ use Kirby\Exception\AuthException;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class ContentLockTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.ContentLock';
+
 	protected $app;
-	protected $fixtures;
 
 	public function app()
 	{
 		return new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/ContentLockTest'
+				'index' => static::TMP
 			],
 			'site' => [
 				'children' => [
@@ -36,12 +37,12 @@ class ContentLockTest extends TestCase
 	public function setUp(): void
 	{
 		$this->app = $this->app();
-		Dir::make($this->fixtures . '/content/test');
+		Dir::make(static::TMP . '/content/test');
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->fixtures);
+		Dir::remove(static::TMP);
 	}
 
 	public function testCreate()
@@ -124,11 +125,11 @@ class ContentLockTest extends TestCase
 
 		$app->impersonate('test@getkirby.com');
 		$page->lock()->create();
-		$this->assertFileExists($this->fixtures . '/content/test/.lock');
+		$this->assertFileExists(static::TMP . '/content/test/.lock');
 
 		$app->impersonate('homer@simpson.com');
 		$data = $page->lock()->get();
-		$this->assertFileExists($this->fixtures . '/content/test/.lock');
+		$this->assertFileExists(static::TMP . '/content/test/.lock');
 		$this->assertNotEmpty($data);
 		$this->assertFalse($data['unlockable']);
 		$this->assertSame('test@getkirby.com', $data['email']);
@@ -136,7 +137,7 @@ class ContentLockTest extends TestCase
 
 		$app->users()->remove($app->user('test@getkirby.com'));
 		$data = $page->lock()->get();
-		$this->assertFileDoesNotExist($this->fixtures . '/content/test/.lock');
+		$this->assertFileDoesNotExist(static::TMP . '/content/test/.lock');
 		$this->assertFalse($data);
 	}
 

@@ -10,7 +10,7 @@ use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass Kirby\Content\PlainTextContentStorageHandler
@@ -18,17 +18,18 @@ use PHPUnit\Framework\TestCase;
  */
 class PlainTextContentStorageHandlerTest extends TestCase
 {
-	protected $tmp = __DIR__ . '/tmp';
+	public const TMP = KIRBY_TMP_DIR . '/Content.PlainTextContentStorage';
+
 	protected $model;
 	protected $storage;
 
 	public function setUp(): void
 	{
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 
 		$this->model = new Page([
 			'kirby'    => new App(),
-			'root'     => $this->tmp,
+			'root'     => static::TMP,
 			'slug'     => 'a-page',
 			'template' => 'article'
 		]);
@@ -39,7 +40,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	public function tearDown(): void
 	{
 		App::destroy();
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	/**
@@ -53,7 +54,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		];
 
 		$this->storage->create('changes', 'en', $fields);
-		$this->assertSame($fields, Data::read($this->tmp . '/_changes/article.en.txt'));
+		$this->assertSame($fields, Data::read(static::TMP . '/_changes/article.en.txt'));
 	}
 
 	/**
@@ -67,7 +68,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		];
 
 		$this->storage->create('changes', 'default', $fields);
-		$this->assertSame($fields, Data::read($this->tmp . '/_changes/article.txt'));
+		$this->assertSame($fields, Data::read(static::TMP . '/_changes/article.txt'));
 	}
 
 	/**
@@ -81,7 +82,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		];
 
 		$this->storage->create('published', 'en', $fields);
-		$this->assertSame($fields, Data::read($this->tmp . '/article.en.txt'));
+		$this->assertSame($fields, Data::read(static::TMP . '/article.en.txt'));
 	}
 
 	/**
@@ -95,7 +96,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		];
 
 		$this->storage->create('published', 'default', $fields);
-		$this->assertSame($fields, Data::read($this->tmp . '/article.txt'));
+		$this->assertSame($fields, Data::read(static::TMP . '/article.txt'));
 	}
 
 	/**
@@ -116,7 +117,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	{
 		// test idempotency
 		$this->storage->delete('published', 'default');
-		$this->assertDirectoryDoesNotExist($this->tmp);
+		$this->assertDirectoryDoesNotExist(static::TMP);
 	}
 
 	/**
@@ -124,14 +125,14 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testDeleteChangesMultiLang()
 	{
-		Dir::make($this->tmp . '/_changes');
-		touch($this->tmp . '/article.en.txt');
-		touch($this->tmp . '/_changes/article.en.txt');
+		Dir::make(static::TMP . '/_changes');
+		touch(static::TMP . '/article.en.txt');
+		touch(static::TMP . '/_changes/article.en.txt');
 
 		$this->storage->delete('changes', 'en');
-		$this->assertFileDoesNotExist($this->tmp . '/_changes/article.en.txt');
-		$this->assertDirectoryDoesNotExist($this->tmp . '/_changes');
-		$this->assertDirectoryExists($this->tmp);
+		$this->assertFileDoesNotExist(static::TMP . '/_changes/article.en.txt');
+		$this->assertDirectoryDoesNotExist(static::TMP . '/_changes');
+		$this->assertDirectoryExists(static::TMP);
 	}
 
 	/**
@@ -139,13 +140,13 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testDeleteChangesSingleLang()
 	{
-		Dir::make($this->tmp . '/_changes');
-		touch($this->tmp . '/article.txt');
-		touch($this->tmp . '/_changes/article.txt');
+		Dir::make(static::TMP . '/_changes');
+		touch(static::TMP . '/article.txt');
+		touch(static::TMP . '/_changes/article.txt');
 
 		$this->storage->delete('changes', 'default');
-		$this->assertFileDoesNotExist($this->tmp . '/_changes/article.txt');
-		$this->assertDirectoryDoesNotExist($this->tmp . '/_changes');
+		$this->assertFileDoesNotExist(static::TMP . '/_changes/article.txt');
+		$this->assertDirectoryDoesNotExist(static::TMP . '/_changes');
 	}
 
 	/**
@@ -153,13 +154,13 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testDeletePublishedMultiLang()
 	{
-		Dir::make($this->tmp . '/_changes');
-		touch($this->tmp . '/article.en.txt');
-		touch($this->tmp . '/_changes/article.en.txt');
+		Dir::make(static::TMP . '/_changes');
+		touch(static::TMP . '/article.en.txt');
+		touch(static::TMP . '/_changes/article.en.txt');
 
 		$this->storage->delete('published', 'en');
-		$this->assertFileDoesNotExist($this->tmp . '/article.en.txt');
-		$this->assertDirectoryExists($this->tmp);
+		$this->assertFileDoesNotExist(static::TMP . '/article.en.txt');
+		$this->assertDirectoryExists(static::TMP);
 	}
 
 	/**
@@ -167,13 +168,13 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testDeletePublishedSingleLang()
 	{
-		Dir::make($this->tmp . '/_changes');
-		touch($this->tmp . '/article.txt');
-		touch($this->tmp . '/_changes/article.txt');
+		Dir::make(static::TMP . '/_changes');
+		touch(static::TMP . '/article.txt');
+		touch(static::TMP . '/_changes/article.txt');
 
 		$this->storage->delete('published', 'default');
-		$this->assertFileDoesNotExist($this->tmp . '/article.txt');
-		$this->assertDirectoryExists($this->tmp);
+		$this->assertFileDoesNotExist(static::TMP . '/article.txt');
+		$this->assertDirectoryExists(static::TMP);
 	}
 
 	/**
@@ -202,9 +203,9 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testExistsSomeExistingMultiLang(string $id, string|null $language, array $expected)
 	{
-		Dir::make($this->tmp . '/_changes');
-		touch($this->tmp . '/article.txt');
-		touch($this->tmp . '/_changes/article.en.txt');
+		Dir::make(static::TMP . '/_changes');
+		touch(static::TMP . '/article.txt');
+		touch(static::TMP . '/_changes/article.en.txt');
 
 		new App([
 			'languages' => [
@@ -227,9 +228,9 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testExistsSomeExistingSingleLang(string $id, string|null $language, array $expected)
 	{
-		Dir::make($this->tmp . '/_changes');
-		touch($this->tmp . '/article.txt');
-		touch($this->tmp . '/_changes/article.en.txt');
+		Dir::make(static::TMP . '/_changes');
+		touch(static::TMP . '/article.txt');
+		touch(static::TMP . '/_changes/article.en.txt');
 
 		$this->assertSame($expected[1], $this->storage->exists($id, $language));
 	}
@@ -272,9 +273,9 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testModifiedSomeExisting(string $id, string $language, int|null $expected)
 	{
-		Dir::make($this->tmp . '/_changes');
-		touch($this->tmp . '/article.txt', 1234567890);
-		touch($this->tmp . '/_changes/article.en.txt', 1234567890);
+		Dir::make(static::TMP . '/_changes');
+		touch(static::TMP . '/article.txt', 1234567890);
+		touch(static::TMP . '/_changes/article.en.txt', 1234567890);
 
 		$this->assertSame($expected, $this->storage->modified($id, $language));
 	}
@@ -310,8 +311,8 @@ class PlainTextContentStorageHandlerTest extends TestCase
 			'text'  => 'Bar'
 		];
 
-		Dir::make($this->tmp . '/_changes');
-		Data::write($this->tmp . '/_changes/article.en.txt', $fields);
+		Dir::make(static::TMP . '/_changes');
+		Data::write(static::TMP . '/_changes/article.en.txt', $fields);
 
 		$this->assertSame($fields, $this->storage->read('changes', 'en'));
 	}
@@ -326,8 +327,8 @@ class PlainTextContentStorageHandlerTest extends TestCase
 			'text'  => 'Bar'
 		];
 
-		Dir::make($this->tmp . '/_changes');
-		Data::write($this->tmp . '/_changes/article.txt', $fields);
+		Dir::make(static::TMP . '/_changes');
+		Data::write(static::TMP . '/_changes/article.txt', $fields);
 
 		$this->assertSame($fields, $this->storage->read('changes', 'default'));
 	}
@@ -342,7 +343,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 			'text'  => 'Bar'
 		];
 
-		Data::write($this->tmp . '/article.en.txt', $fields);
+		Data::write(static::TMP . '/article.en.txt', $fields);
 
 		$this->assertSame($fields, $this->storage->read('published', 'en'));
 	}
@@ -357,7 +358,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 			'text'  => 'Bar'
 		];
 
-		Data::write($this->tmp . '/article.txt', $fields);
+		Data::write(static::TMP . '/article.txt', $fields);
 
 		$this->assertSame($fields, $this->storage->read('published', 'default'));
 	}
@@ -378,16 +379,16 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testTouchChangesMultiLang()
 	{
-		Dir::make($this->tmp . '/_changes');
-		touch($this->tmp . '/_changes/article.en.txt', 123456);
-		$this->assertSame(123456, filemtime($this->tmp . '/_changes/article.en.txt'));
+		Dir::make(static::TMP . '/_changes');
+		touch(static::TMP . '/_changes/article.en.txt', 123456);
+		$this->assertSame(123456, filemtime(static::TMP . '/_changes/article.en.txt'));
 
 		$minTime = time();
 
 		$this->storage->touch('changes', 'en');
 
 		clearstatcache();
-		$this->assertGreaterThanOrEqual($minTime, filemtime($this->tmp . '/_changes/article.en.txt'));
+		$this->assertGreaterThanOrEqual($minTime, filemtime(static::TMP . '/_changes/article.en.txt'));
 	}
 
 	/**
@@ -395,16 +396,16 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testTouchChangesSingleLang()
 	{
-		Dir::make($this->tmp . '/_changes');
-		touch($this->tmp . '/_changes/article.txt', 123456);
-		$this->assertSame(123456, filemtime($this->tmp . '/_changes/article.txt'));
+		Dir::make(static::TMP . '/_changes');
+		touch(static::TMP . '/_changes/article.txt', 123456);
+		$this->assertSame(123456, filemtime(static::TMP . '/_changes/article.txt'));
 
 		$minTime = time();
 
 		$this->storage->touch('changes', 'default');
 
 		clearstatcache();
-		$this->assertGreaterThanOrEqual($minTime, filemtime($this->tmp . '/_changes/article.txt'));
+		$this->assertGreaterThanOrEqual($minTime, filemtime(static::TMP . '/_changes/article.txt'));
 	}
 
 	/**
@@ -412,15 +413,15 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testTouchPublishedMultiLang()
 	{
-		touch($this->tmp . '/article.en.txt', 123456);
-		$this->assertSame(123456, filemtime($this->tmp . '/article.en.txt'));
+		touch(static::TMP . '/article.en.txt', 123456);
+		$this->assertSame(123456, filemtime(static::TMP . '/article.en.txt'));
 
 		$minTime = time();
 
 		$this->storage->touch('published', 'en');
 
 		clearstatcache();
-		$this->assertGreaterThanOrEqual($minTime, filemtime($this->tmp . '/article.en.txt'));
+		$this->assertGreaterThanOrEqual($minTime, filemtime(static::TMP . '/article.en.txt'));
 	}
 
 	/**
@@ -428,15 +429,15 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testTouchPublishedSingleLang()
 	{
-		touch($this->tmp . '/article.txt', 123456);
-		$this->assertSame(123456, filemtime($this->tmp . '/article.txt'));
+		touch(static::TMP . '/article.txt', 123456);
+		$this->assertSame(123456, filemtime(static::TMP . '/article.txt'));
 
 		$minTime = time();
 
 		$this->storage->touch('published', 'default');
 
 		clearstatcache();
-		$this->assertGreaterThanOrEqual($minTime, filemtime($this->tmp . '/article.txt'));
+		$this->assertGreaterThanOrEqual($minTime, filemtime(static::TMP . '/article.txt'));
 	}
 
 	/**
@@ -460,11 +461,11 @@ class PlainTextContentStorageHandlerTest extends TestCase
 			'text'  => 'Bar'
 		];
 
-		Dir::make($this->tmp . '/_changes');
-		Data::write($this->tmp . '/_changes/article.en.txt', $fields);
+		Dir::make(static::TMP . '/_changes');
+		Data::write(static::TMP . '/_changes/article.en.txt', $fields);
 
 		$this->storage->update('changes', 'en', $fields);
-		$this->assertSame($fields, Data::read($this->tmp . '/_changes/article.en.txt'));
+		$this->assertSame($fields, Data::read(static::TMP . '/_changes/article.en.txt'));
 	}
 
 	/**
@@ -477,11 +478,11 @@ class PlainTextContentStorageHandlerTest extends TestCase
 			'text'  => 'Bar'
 		];
 
-		Dir::make($this->tmp . '/_changes');
-		Data::write($this->tmp . '/_changes/article.txt', $fields);
+		Dir::make(static::TMP . '/_changes');
+		Data::write(static::TMP . '/_changes/article.txt', $fields);
 
 		$this->storage->update('changes', 'default', $fields);
-		$this->assertSame($fields, Data::read($this->tmp . '/_changes/article.txt'));
+		$this->assertSame($fields, Data::read(static::TMP . '/_changes/article.txt'));
 	}
 
 	/**
@@ -494,10 +495,10 @@ class PlainTextContentStorageHandlerTest extends TestCase
 			'text'  => 'Bar'
 		];
 
-		Data::write($this->tmp . '/article.en.txt', $fields);
+		Data::write(static::TMP . '/article.en.txt', $fields);
 
 		$this->storage->update('published', 'en', $fields);
-		$this->assertSame($fields, Data::read($this->tmp . '/article.en.txt'));
+		$this->assertSame($fields, Data::read(static::TMP . '/article.en.txt'));
 	}
 
 	/**
@@ -510,10 +511,10 @@ class PlainTextContentStorageHandlerTest extends TestCase
 			'text'  => 'Bar'
 		];
 
-		Data::write($this->tmp . '/article.txt', $fields);
+		Data::write(static::TMP . '/article.txt', $fields);
 
 		$this->storage->update('published', 'default', $fields);
-		$this->assertSame($fields, Data::read($this->tmp . '/article.txt'));
+		$this->assertSame($fields, Data::read(static::TMP . '/article.txt'));
 	}
 
 	/**
@@ -535,7 +536,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			]
 		]);
 
@@ -559,7 +560,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		};
 
 		$storage = new PlainTextContentStorageHandler($model);
-		$this->assertSame($this->tmp . '/' . $expected, $storage->contentFile($id, $language));
+		$this->assertSame(static::TMP . '/' . $expected, $storage->contentFile($id, $language));
 	}
 
 	public static function contentFileProvider(): array
@@ -592,7 +593,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			]
 		]);
 
@@ -604,7 +605,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		]);
 
 		$storage = new PlainTextContentStorageHandler($model);
-		$this->assertSame($this->tmp . '/' . $expected, $storage->contentFile('changes', $language));
+		$this->assertSame(static::TMP . '/' . $expected, $storage->contentFile('changes', $language));
 	}
 
 	/**
@@ -615,13 +616,13 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			]
 		]);
 
 		$model = new Page([
 			'kirby' => $app,
-			'root' => $this->tmp,
+			'root' => static::TMP,
 			'isDraft' => true,
 			'slug' => 'a-page',
 			'template' => 'article'
@@ -671,8 +672,8 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		]);
 
 		$this->assertSame([
-			$this->tmp . '/_changes/article.en.txt',
-			$this->tmp . '/_changes/article.de.txt'
+			static::TMP . '/_changes/article.en.txt',
+			static::TMP . '/_changes/article.de.txt'
 		], $this->storage->contentFiles('changes'));
 	}
 
@@ -682,7 +683,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	public function testContentFilesChangesSingleLang()
 	{
 		$this->assertSame([
-			$this->tmp . '/_changes/article.txt'
+			static::TMP . '/_changes/article.txt'
 		], $this->storage->contentFiles('changes'));
 	}
 
@@ -704,8 +705,8 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		]);
 
 		$this->assertSame([
-			$this->tmp . '/article.en.txt',
-			$this->tmp . '/article.de.txt'
+			static::TMP . '/article.en.txt',
+			static::TMP . '/article.de.txt'
 		], $this->storage->contentFiles('published'));
 	}
 
@@ -715,7 +716,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	public function testContentFilesPublishedSingleLang()
 	{
 		$this->assertSame([
-			$this->tmp . '/article.txt'
+			static::TMP . '/article.txt'
 		], $this->storage->contentFiles('published'));
 	}
 

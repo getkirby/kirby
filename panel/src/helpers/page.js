@@ -1,3 +1,11 @@
+/**
+ * Returns props for a page status button
+ * @internal
+ *
+ * @param {string} status
+ * @param {boolean} disabled
+ * @returns {object}
+ */
 export function status(status, disabled = false) {
 	const button = {
 		class: "k-status-icon",

@@ -1,9 +1,10 @@
 <template>
 	<k-string-input
 		v-bind="$props"
-		class="k-url-input"
 		type="url"
+		class="k-url-input"
 		@input="$emit('input', $event)"
+		@invalid="($invalid, $v) => $emit('invalid', $invalid, $v)"
 	/>
 </template>
 
@@ -25,9 +26,9 @@ export const props = {
 };
 
 /**
- * @example <k-url-input :value="value" @input="value = $event" />
+ * @example <k-input :value="url" @input="url = $event" name="url" type="url" />
  */
 export default {
-	mixins: [StringInput]
+	mixins: [StringInput, props]
 };
 </script>

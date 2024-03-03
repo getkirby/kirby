@@ -1,5 +1,5 @@
 <template>
-	<k-field v-bind="$props" :input="uid" class="k-color-field">
+	<k-field v-bind="$props" :input="id" class="k-color-field">
 		<!-- Mode: options -->
 		<k-coloroptions-input
 			v-if="mode === 'options'"
@@ -10,7 +10,7 @@
 		/>
 
 		<!-- Mode: picker/input -->
-		<k-input v-else v-bind="$props" theme="field" type="color">
+		<k-input v-else v-bind="$props" type="color">
 			<template #before>
 				<template v-if="mode === 'picker'">
 					<button
@@ -27,7 +27,7 @@
 							v-bind="$props"
 							:options="convertedOptions"
 							@input="$emit('input', $event)"
-							@click.stop
+							@click.native.stop
 						/>
 					</k-dropdown-content>
 				</template>
@@ -39,7 +39,8 @@
 			</template>
 
 			<template v-if="currentOption?.text" #after>
-				{{ currentOption.text }}
+				<!-- eslint-disable-next-line vue/no-v-html -->
+				<span v-html="currentOption.text" />
 			</template>
 
 			<template v-if="mode === 'picker'" #icon>

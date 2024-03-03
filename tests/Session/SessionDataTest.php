@@ -3,9 +3,7 @@
 namespace Kirby\Session;
 
 use Kirby\Exception\LogicException;
-use PHPUnit\Framework\TestCase;
-
-require_once __DIR__ . '/mocks.php';
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Session\SessionData

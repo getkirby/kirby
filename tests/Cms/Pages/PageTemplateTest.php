@@ -4,22 +4,24 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\NotFoundException;
 use Kirby\Template\Template;
-use PHPUnit\Framework\TestCase as TestCase;
+use Kirby\TestCase as TestCase;
 
 class PageTemplateTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures/PageTemplateTest';
+
 	protected $app;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'templates' => [
-				'default'               => __DIR__ . '/fixtures/PageTemplateTest/template.php',
-				'default.json'          => __DIR__ . '/fixtures/PageTemplateTest/template.php',
-				'default.xml'           => __DIR__ . '/fixtures/PageTemplateTest/template.php',
-				'template'              => __DIR__ . '/fixtures/PageTemplateTest/template.php',
-				'template.json'         => __DIR__ . '/fixtures/PageTemplateTest/template.php',
-				'another-template.json' => __DIR__ . '/fixtures/PageTemplateTest/template.php'
+				'default'               => static::FIXTURES . '/template.php',
+				'default.json'          => static::FIXTURES . '/template.php',
+				'default.xml'           => static::FIXTURES . '/template.php',
+				'template'              => static::FIXTURES . '/template.php',
+				'template.json'         => static::FIXTURES . '/template.php',
+				'another-template.json' => static::FIXTURES . '/template.php'
 			],
 			'site' => [
 				'children' => [

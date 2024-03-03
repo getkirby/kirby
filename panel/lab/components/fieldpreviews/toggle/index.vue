@@ -1,23 +1,32 @@
 <template>
 	<k-lab-examples>
-		<k-lab-field-preview-example
-			:value="value"
-			label="Default"
-			type="toggle"
-			@input="value = $event"
-		/>
-		<k-lab-field-preview-example
-			:field="{ text: ['no', 'yes'] }"
-			:value="value"
-			label="Text"
-			type="toggle"
-			@input="value = $event"
-		/>
-		<k-lab-field-preview-example
-			label="Empty"
-			type="toggle"
-			@input="value = $event"
-		/>
+		<k-lab-example label="Default">
+			<k-lab-table-cell>
+				<!-- @code -->
+				<k-toggle-field-preview :value="value" @input="value = $event" />
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
+
+		<k-lab-example label="Text">
+			<k-lab-table-cell>
+				<!-- @code -->
+				<k-toggle-field-preview
+					:field="{ text: ['no', 'yes'] }"
+					:value="value"
+					@input="value = $event"
+				/>
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
+
+		<k-lab-example label="Empty">
+			<k-lab-table-cell>
+				<!-- @code -->
+				<k-toggle-field-preview />
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
 	</k-lab-examples>
 </template>
 
@@ -25,8 +34,8 @@
 export default {
 	data() {
 		return {
-			value: false,
+			value: false
 		};
-	},
+	}
 };
 </script>

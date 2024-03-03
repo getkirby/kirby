@@ -3,6 +3,28 @@
 </template>
 
 <script>
+export const props = {
+	props: {
+		/**
+		 * Block is slected together with other blocks
+		 */
+		isBatched: Boolean,
+		/**
+		 * No more blocks can be added
+		 */
+		isFull: Boolean,
+		/**
+		 * Block is displayed as hidden
+		 */
+		isHidden: Boolean,
+		/**
+		 * Block can be merged with all other selected blocks
+		 * @since 4.0.0
+		 */
+		isMergable: Boolean
+	}
+};
+
 /**
  * Floating options menu for a block that
  * appears when the block is focused/selected.
@@ -10,28 +32,12 @@
  * @example <k-block-options :is-editable="true" />
  */
 export default {
+	mixins: [props],
 	props: {
-		/**
-		 * Block is slected together with other blocks
-		 */
-		isBatched: Boolean,
 		/**
 		 * Block can be edited
 		 */
 		isEditable: Boolean,
-		/**
-		 * No more blocks can be added
-		 */
-		isFull: Boolean,
-		/**
-		 * Block is hidden
-		 */
-		isHidden: Boolean,
-		/**
-		 * Block can be merged with other blocks
-		 * @since 4.0.0
-		 */
-		isMergable: Boolean,
 		/**
 		 * Block can be split into multiple blocks
 		 * @since 4.0.0
@@ -197,7 +203,7 @@ export default {
 	box-shadow: var(--shadow-toolbar);
 }
 .k-block-options > .k-button:not(:last-of-type) {
-	border-inline-end: 1px solid var(--color-background);
+	border-inline-end: 1px solid var(--color-light);
 }
 .k-block-options .k-dropdown-content {
 	margin-top: 0.5rem;

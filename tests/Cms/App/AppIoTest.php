@@ -4,16 +4,18 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\Exception;
 use Kirby\Http\Response;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class AppIoTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	public function app()
 	{
 		return new App([
 			'roots' => [
 				'index'     => '/dev/null',
-				'templates' => __DIR__ . '/fixtures/AppIoTest/templates'
+				'templates' => static::FIXTURES . '/AppIoTest/templates'
 			]
 		]);
 	}

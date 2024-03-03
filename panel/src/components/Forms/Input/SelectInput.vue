@@ -10,7 +10,6 @@
 			:required="required"
 			:value="selected"
 			class="k-select-input-native"
-			v-on="listeners"
 			@change="onInput($event.target.value)"
 			@click="onClick"
 		>
@@ -33,6 +32,8 @@
 <script>
 import Input, { props as InputProps } from "@/mixins/input.js";
 import { options, placeholder } from "@/mixins/props.js";
+
+import { required as validateRequired } from "vuelidate/lib/validators";
 
 export const props = {
 	mixins: [InputProps, options, placeholder],
@@ -92,9 +93,12 @@ export default {
 	watch: {
 		value(value) {
 			this.selected = value;
+			this.onInvalid();
 		}
 	},
 	mounted() {
+		this.onInvalid();
+
 		if (this.$props.autofocus) {
 			this.focus();
 		}
@@ -106,6 +110,9 @@ export default {
 		onClick(event) {
 			event.stopPropagation();
 			this.$emit("click", event);
+		},
+		onInvalid() {
+			this.$emit("invalid", this.$v.$invalid, this.$v);
 		},
 		onInput(value) {
 			this.selected = value;
@@ -125,6 +132,13 @@ export default {
 
 			return text;
 		}
+	},
+	validations() {
+		return {
+			selected: {
+				required: this.required ? validateRequired : true
+			}
+		};
 	}
 };
 </script>

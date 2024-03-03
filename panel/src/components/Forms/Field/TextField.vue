@@ -1,7 +1,7 @@
 <template>
 	<k-field
 		v-bind="$props"
-		:input="uid"
+		:input="id"
 		:counter="counterOptions"
 		class="k-text-field"
 	>
@@ -10,10 +10,8 @@
 		</template>
 		<k-input
 			v-bind="$props"
-			:id="uid"
 			ref="input"
 			:type="inputType"
-			theme="field"
 			@input="$emit('input', $event)"
 		/>
 	</k-field>

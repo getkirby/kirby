@@ -82,7 +82,7 @@ return [
 
 			return $parent;
 		},
-		'pages' => function () {
+		'models' => function () {
 			if ($this->query !== null) {
 				$pages = $this->parent->query($this->query, Pages::class) ?? new Pages([]);
 			} else {
@@ -156,13 +156,16 @@ return [
 
 			return $pages;
 		},
+		'pages' => function () {
+			return $this->models;
+		},
 		'total' => function () {
-			return $this->pages->pagination()->total();
+			return $this->models->pagination()->total();
 		},
 		'data' => function () {
 			$data = [];
 
-			foreach ($this->pages as $page) {
+			foreach ($this->models as $page) {
 				$panel       = $page->panel();
 				$permissions = $page->permissions();
 
@@ -284,7 +287,7 @@ return [
 			'errors'  => $this->errors,
 			'options' => [
 				'add'      => $this->add,
-				'columns'  => $this->columns,
+				'columns'  => $this->columnsWithTypes(),
 				'empty'    => $this->empty,
 				'headline' => $this->headline,
 				'help'     => $this->help,

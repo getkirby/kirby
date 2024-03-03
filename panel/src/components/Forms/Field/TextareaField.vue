@@ -1,16 +1,14 @@
 <template>
 	<k-field
 		v-bind="$props"
-		:input="uid"
+		:input="id"
 		:counter="counterOptions"
 		class="k-textarea-field"
 	>
 		<k-input
 			v-bind="$props"
-			:id="uid"
 			ref="input"
 			type="textarea"
-			theme="field"
 			@input="$emit('input', $event)"
 		/>
 	</k-field>

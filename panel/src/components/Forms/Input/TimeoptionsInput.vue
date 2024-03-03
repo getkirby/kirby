@@ -37,14 +37,29 @@
 				</li>
 			</ul>
 		</div>
+
+		<!-- Hidden input for validation -->
+		<input
+			:id="id"
+			:disabled="disabled"
+			:min="min"
+			:max="max"
+			:name="name"
+			:required="required"
+			:value="value"
+			class="input-hidden"
+			tabindex="-1"
+			type="time"
+		/>
 	</div>
 </template>
 
 <script>
 import Input, { props as InputProps } from "@/mixins/input.js";
+import { IsoTimeProps } from "./TimeInput.vue";
 
 export const props = {
-	mixins: [InputProps]
+	mixins: [InputProps, IsoTimeProps]
 };
 
 /**

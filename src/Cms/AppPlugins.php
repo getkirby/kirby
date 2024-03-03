@@ -659,6 +659,11 @@ trait AppPlugins
 	 */
 	protected function extensionsFromSystem(): void
 	{
+		// Always start with fresh fields and sections
+		// from the core and add plugins on top of that
+		FormField::$types = [];
+		Section::$types   = [];
+
 		// mixins
 		FormField::$mixins = $this->core->fieldMixins();
 		Section::$mixins   = $this->core->sectionMixins();
@@ -674,8 +679,8 @@ trait AppPlugins
 		$this->extendCacheTypes($this->core->cacheTypes());
 		$this->extendComponents($this->core->components());
 		$this->extendBlueprints($this->core->blueprints());
-		$this->extendFields($this->core->fields());
 		$this->extendFieldMethods($this->core->fieldMethods());
+		$this->extendFields($this->core->fields());
 		$this->extendSections($this->core->sections());
 		$this->extendSnippets($this->core->snippets());
 		$this->extendTags($this->core->kirbyTags());

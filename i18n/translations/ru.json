@@ -135,7 +135,7 @@
 
 	"error.license.domain": "Лицензия на этот домен отсутствует",
 	"error.license.email": "Пожалуйста, введите правильный Email",
-	"error.license.format": "Please enter a valid license code",
+	"error.license.format": "Пожалуйста, введите правильный лицензионный код",
 	"error.license.verification": "Лицензия не подтверждена",
 
 	"error.login.totp.confirm.invalid": "Неверный код",
@@ -417,7 +417,7 @@
 	"license.activate": "Активировать сейчас",
 	"license.activate.label": "Пожалуйста, активируйте Вашу лицензию",
 	"license.activate.domain": "Ваша лицензия будет активирована на {host}.",
-	"license.activate.local": "Вы собираетесьактивировать лицензию на локальный домен {host}. Если этот сайт будет размещен на общедоступном домене, то, пожалуйста, укажите его вместо {host}.",
+	"license.activate.local": "Вы собираетесь активировать лицензию на локальный домен {host}. Если этот сайт будет размещен на общедоступном домене, то, пожалуйста, укажите его вместо {host}.",
 	"license.activated": "Активировано",
 	"license.buy": "Купить лицензию",
 	"license.code": "Код",
@@ -425,8 +425,8 @@
 	"license.code.label": "Пожалуйста вставьте код лицензии",
 	"license.status.active.info": "Включает обновления до {date}",
 	"license.status.active.label": "Действительная лицензия",
-	"license.status.demo.info": "This is a demo installation",
-	"license.status.demo.label": "Demo",
+	"license.status.demo.info": "Это демонстрационная установка",
+	"license.status.demo.label": "Демо",
 	"license.status.inactive.info": "Обновите лицензию для перехода на новые версии",
 	"license.status.inactive.label": "Нет новых обновлений",
 	"license.status.legacy.bubble": "Вы готовы обновить вашу лицензию?",

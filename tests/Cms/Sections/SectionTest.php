@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class SectionTest extends TestCase
 {
@@ -26,6 +26,39 @@ class SectionTest extends TestCase
 	public function tearDown(): void
 	{
 		Section::$types = $this->sectionTypes;
+	}
+
+	public function testApi()
+	{
+		// no defined as default
+		Section::$types = [
+			'test' => []
+		];
+
+		$model = new Page(['slug' => 'test']);
+
+		$section = new Section('test', [
+			'model' => $model,
+		]);
+
+		$this->assertNull($section->api());
+
+		// return simple string
+		Section::$types = [
+			'test' => [
+				'api' => function () {
+					return 'Hello World';
+				}
+			]
+		];
+
+		$model = new Page(['slug' => 'test']);
+
+		$section = new Section('test', [
+			'model' => $model,
+		]);
+
+		$this->assertSame('Hello World', $section->api());
 	}
 
 	public function testMissingModel()

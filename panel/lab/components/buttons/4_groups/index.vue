@@ -47,5 +47,24 @@
 				</k-dropdown-content>
 			</k-button-group>
 		</k-lab-example>
+		<k-lab-example label="layout: collapsed wrap test">
+			<k-bar style="max-width: 23rem">
+				<k-label>Alonglabelshouldnotbreakthebuttongroup</k-label>
+				<k-button-group layout="collapsed">
+					<k-button variant="filled" icon="edit">Edit</k-button>
+					<k-button
+						variant="filled"
+						icon="dots"
+						@click="$refs.dropdown.toggle()"
+					/>
+					<k-dropdown-content ref="dropdown" align-x="end">
+						<k-dropdown-item icon="edit">Edit</k-dropdown-item>
+						<k-dropdown-item icon="copy">Duplicate</k-dropdown-item>
+						<hr />
+						<k-dropdown-item icon="trash">Delete</k-dropdown-item>
+					</k-dropdown-content>
+				</k-button-group>
+			</k-bar>
+		</k-lab-example>
 	</k-lab-examples>
 </template>

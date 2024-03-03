@@ -15,22 +15,25 @@
 					<k-block
 						:ref="'block-' + block.id"
 						:key="block.id"
-						v-bind="block"
-						:endpoints="endpoints"
-						:fieldset="fieldset(block)"
-						:is-batched="isSelected(block) && selected.length > 1"
-						:is-last-selected="isLastSelected(block)"
-						:is-full="isFull"
-						:is-hidden="block.isHidden === true"
-						:is-mergable="isMergable"
-						:is-selected="isSelected(block)"
-						:next="prevNext(index + 1)"
-						:prev="prevNext(index - 1)"
+						v-bind="{
+							...block,
+							disabled,
+							endpoints,
+							fieldset: fieldset(block),
+							isBatched: isSelected(block) && selected.length > 1,
+							isFull,
+							isHidden: block.isHidden === true,
+							isLastSelected: isLastSelected(block),
+							isMergable,
+							isSelected: isSelected(block),
+							next: prevNext(index + 1),
+							prev: prevNext(index - 1)
+						}"
 						@append="add($event, index + 1)"
 						@chooseToAppend="choose(index + 1)"
 						@chooseToConvert="chooseToConvert(block)"
 						@chooseToPrepend="choose(index)"
-						@click="onClickBlock(block, $event)"
+						@click.native="onClickBlock(block, $event)"
 						@close="isEditing = false"
 						@copy="copy()"
 						@duplicate="duplicate(block, index)"
@@ -73,13 +76,11 @@
 </template>
 
 <script>
-import { useUid } from "@/helpers/useUid.js";
+import { autofocus, disabled, id } from "@/mixins/props.js";
 
-export default {
-	inheritAttrs: false,
+export const props = {
+	mixins: [autofocus, disabled, id],
 	props: {
-		autofocus: Boolean,
-		disabled: Boolean,
 		empty: String,
 		endpoints: Object,
 		fieldsets: Object,
@@ -94,7 +95,12 @@ export default {
 			default: () => []
 		}
 	},
-	emits: ["input"],
+	emits: ["input"]
+};
+
+export default {
+	mixins: [props],
+	inheritAttrs: false,
 	data() {
 		return {
 			blocks: this.value ?? [],
@@ -106,7 +112,7 @@ export default {
 	computed: {
 		draggableOptions() {
 			return {
-				id: useUid(),
+				id: this.id,
 				handle: ".k-sort-handle",
 				list: this.blocks,
 				move: this.move,

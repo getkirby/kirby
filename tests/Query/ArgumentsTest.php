@@ -2,10 +2,12 @@
 
 namespace Kirby\Query;
 
+use Kirby\TestCase;
+
 /**
- * @coversDefaultClass Kirby\Query\Arguments
+ * @coversDefaultClass \Kirby\Query\Arguments
  */
-class ArgumentsTest extends \PHPUnit\Framework\TestCase
+class ArgumentsTest extends TestCase
 {
 	/**
 	 * @covers ::factory

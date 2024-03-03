@@ -14,4 +14,5 @@ return [
 		36,
 		48
 	],
+	'source' => 'panel/src/styles/config/spacing.css'
 ];

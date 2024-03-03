@@ -23,3 +23,10 @@ export default {
 	methods: {}
 };
 </script>
+
+<style>
+.k-writer-input {
+	background-color: white;
+	border-radius: var(--rounded);
+}
+</style>

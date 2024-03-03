@@ -8,17 +8,18 @@ use Kirby\Filesystem\F;
 
 class UserActionsTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.UserActions';
+
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
-		Dir::remove($this->tmp);
-		Data::write($this->tmp . '/accounts/admin/index.php', [
+		Dir::remove(static::TMP);
+		Data::write(static::TMP . '/accounts/admin/index.php', [
 			'email' => 'admin@domain.com',
 			'role' => 'admin'
 		]);
-		Data::write($this->tmp . '/accounts/editor/index.php', [
+		Data::write(static::TMP . '/accounts/editor/index.php', [
 			'email' => 'editor@domain.com',
 			'role' => 'editor'
 		]);
@@ -34,8 +35,8 @@ class UserActionsTest extends TestCase
 			],
 			'roots' => [
 				'index'    => '/dev/null',
-				'accounts' => $this->tmp . '/accounts',
-				'sessions' => $this->tmp . '/sessions'
+				'accounts' => static::TMP . '/accounts',
+				'sessions' => static::TMP . '/sessions'
 			],
 			'user'  => 'admin@domain.com'
 		]);
@@ -44,7 +45,7 @@ class UserActionsTest extends TestCase
 	public function tearDown(): void
 	{
 		$this->app->session()->destroy();
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 		App::destroy();
 	}
 
@@ -125,18 +126,18 @@ class UserActionsTest extends TestCase
 	public function testChangeTotp()
 	{
 		$user = $this->app->user('admin@domain.com');
-		F::write($this->tmp . '/accounts/admin/.htpasswd', 'a very secure hash');
+		F::write(static::TMP . '/accounts/admin/.htpasswd', 'a very secure hash');
 		$this->assertNull($user->secret('totp'));
 
 		$user->changeTotp('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
 		$this->assertSame(
 			"a very secure hash\n" . '{"totp":"ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"}',
-			F::read($this->tmp . '/accounts/admin/.htpasswd')
+			F::read(static::TMP . '/accounts/admin/.htpasswd')
 		);
 		$this->assertSame('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', $user->secret('totp'));
 
 		$user->changeTotp(null);
-		$this->assertSame('a very secure hash', F::read($this->tmp . '/accounts/admin/.htpasswd'));
+		$this->assertSame('a very secure hash', F::read(static::TMP . '/accounts/admin/.htpasswd'));
 		$this->assertNull($user->secret('totp'));
 	}
 

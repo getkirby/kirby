@@ -2,9 +2,9 @@
 
 namespace Kirby\Http;
 
+use Kirby\TestCase;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Obj;
-use PHPUnit\Framework\TestCase;
 
 class VisitorTest extends TestCase
 {

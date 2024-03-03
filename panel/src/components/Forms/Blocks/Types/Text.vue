@@ -3,6 +3,7 @@
 		:is="component"
 		ref="input"
 		v-bind="textField"
+		:disabled="disabled"
 		:keys="keys"
 		:value="content.text"
 		class="k-block-type-text-input"
@@ -11,11 +12,13 @@
 </template>
 
 <script>
+import Block from "./Default.vue";
+
 /**
  * @displayName BlockTypeText
- * @internal
  */
 export default {
+	extends: Block,
 	emits: ["open", "split", "update"],
 	computed: {
 		component() {
@@ -62,7 +65,7 @@ export default {
 			});
 		},
 		split() {
-			const contents = this.input().getSplitContent?.();
+			const contents = this.$refs.input.getSplitContent?.();
 
 			if (contents) {
 				if (this.textField.type === "writer") {

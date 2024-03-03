@@ -6,13 +6,18 @@ use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Form\Form
  */
 class FormTest extends TestCase
 {
+	public function tearDown(): void
+	{
+		App::destroy();
+	}
+
 	public function testDataWithoutFields()
 	{
 		$form = new Form([
@@ -47,7 +52,7 @@ class FormTest extends TestCase
 		$this->assertSame('info', $field['type']);
 		$this->assertSame('Error in "test" field.', $field['label']);
 		$this->assertStringContainsString('<p>This is an error in file:', $field['text']);
-		$this->assertStringContainsString('tests/Form/FormTest.php line: 34</p>', $field['text']);
+		$this->assertStringContainsString('tests/Form/FormTest.php line: 39</p>', $field['text']);
 		$this->assertSame('negative', $field['theme']);
 	}
 
@@ -367,6 +372,8 @@ class FormTest extends TestCase
 
 	public function testPageForm()
 	{
+		App::instance();
+
 		$page = new Page([
 			'slug' => 'test',
 			'content' => [

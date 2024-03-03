@@ -8,7 +8,7 @@ use Kirby\Cms\Page as ModelPage;
 use Kirby\Cms\Site as ModelSite;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class CustomContentLockIsLocked extends ContentLock
 {
@@ -96,23 +96,24 @@ class ModelSiteWithImageMethod extends ModelSite
  */
 class ModelTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Panel.Model';
+
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => static::TMP,
 			]
 		]);
 
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	protected function panel(array $props = [])
@@ -386,6 +387,38 @@ class ModelTest extends TestCase
 	/**
 	 * @covers ::image
 	 */
+	public function testImageWithBlueprintFalse()
+	{
+		$app  = $this->app->clone([
+			'blueprints' => [
+				'pages/foo' => [
+					'image' => false
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'template' => 'foo'
+					]
+				]
+			]
+		]);
+
+		$panel = $app->page('test')->panel();
+		$image = $panel->image(['icon' => 'heart']);
+		$this->assertSame('heart', $image['icon']);
+
+		$image = $panel->image([]);
+		$this->assertNull($image);
+
+		$image = $panel->image();
+		$this->assertNull($image);
+	}
+
+	/**
+	 * @covers ::image
+	 */
 	public function testImageWithQuery()
 	{
 		$site  = new ModelSiteWithImageMethod();
@@ -412,7 +445,7 @@ class ModelTest extends TestCase
 		$site = new ModelSiteNoLocking();
 		$this->assertFalse($site->panel()->lock());
 
-		Dir::make($this->tmp . '/content');
+		Dir::make(static::TMP . '/content');
 		$app = $this->app->clone();
 		$app->impersonate('kirby');
 

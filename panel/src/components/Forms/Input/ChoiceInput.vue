@@ -92,11 +92,20 @@ export default {
 
 /* Field context */
 :where(.k-checkboxes-field, .k-radio-field) .k-choice-input {
-	background: var(--input-color-back);
 	min-height: var(--input-height);
 	padding-block: var(--spacing-2);
 	padding-inline: var(--spacing-3);
 	border-radius: var(--input-rounded);
+}
+
+:where(.k-checkboxes-field, .k-radio-field)
+	.k-choice-input:not([aria-disabled="true"]) {
+	background: var(--input-color-back);
 	box-shadow: var(--shadow);
+}
+
+:where(.k-checkboxes-field, .k-radio-field)
+	.k-choice-input[aria-disabled="true"] {
+	border: 1px solid var(--input-color-border);
 }
 </style>

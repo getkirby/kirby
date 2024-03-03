@@ -1,5 +1,5 @@
 /**
- * Returns a percentage string fro the provided fraction
+ * Returns a percentage string for the provided fraction
  *
  * @param {String} fraction fraction to convert to a percentage
  * @param {String} fallback default value if fraction cannot be parsed

@@ -31,6 +31,12 @@
 <script>
 import Input, { props as InputProps } from "@/mixins/input.js";
 
+import {
+	required as validateRequired,
+	minValue as validateMinValue,
+	maxValue as validateMaxValue
+} from "vuelidate/lib/validators";
+
 export const props = {
 	mixins: [InputProps],
 	props: {
@@ -53,7 +59,8 @@ export const props = {
 		 * The amount to increment when dragging the slider. This can be a decimal.
 		 */
 		step: {
-			type: [Number, String]
+			type: [Number, String],
+			default: 1
 		},
 		/**
 		 * The slider tooltip can have text before and after the value.
@@ -73,6 +80,8 @@ export const props = {
 
 /**
  * @example <k-input :value="range" @input="range = $event" name="range" type="range" />
+ *
+ * @todo remove vuelidate parts in v5 - until then we keep parrallel validation
  */
 export default {
 	mixins: [Input, props],
@@ -99,11 +108,15 @@ export default {
 		}
 	},
 	watch: {
+		position() {
+			this.onInvalid();
+		},
 		value() {
 			this.validate();
 		}
 	},
 	mounted() {
+		this.onInvalid();
 		this.validate();
 
 		if (this.$props.autofocus) {
@@ -122,22 +135,38 @@ export default {
 				minimumFractionDigits: digits
 			}).format(value);
 		},
+		onInvalid() {
+			this.$emit("invalid", this.$v.$invalid, this.$v);
+		},
 		onInput(value) {
 			this.$emit("input", value);
 		},
 		validate() {
-			let error = "";
+			const errors = [];
 
 			if (this.required && this.isEmpty === true) {
-				error = this.$t("error.validation.required");
-			} else if (this.isEmpty === false && this.min && this.value < this.min) {
-				error = this.$t("error.validation.min", { min: this.min });
-			} else if (this.isEmpty === false && this.max && this.value > this.max) {
-				error = this.$t("error.validation.max", { max: this.max });
+				errors.push(this.$t("error.validation.required"));
 			}
 
-			this.$refs.range.setCustomValidity(error);
+			if (this.isEmpty === false && this.min && this.value < this.min) {
+				errors.push(this.$t("error.validation.min", { min: this.min }));
+			}
+
+			if (this.isEmpty === false && this.max && this.value > this.max) {
+				errors.push(this.$t("error.validation.max", { max: this.max }));
+			}
+
+			this.$refs.range?.setCustomValidity(errors.join(", "));
 		}
+	},
+	validations() {
+		return {
+			position: {
+				required: this.required ? validateRequired : true,
+				min: this.min ? validateMinValue(this.min) : true,
+				max: this.max ? validateMaxValue(this.max) : true
+			}
+		};
 	}
 };
 </script>
@@ -147,6 +176,7 @@ export default {
 	--range-track-height: 1px;
 	--range-track-back: var(--color-gray-300);
 	--range-tooltip-back: var(--color-black);
+
 	display: flex;
 	align-items: center;
 	border-radius: var(--range-track-height);
@@ -156,7 +186,6 @@ export default {
 }
 .k-range-input-tooltip {
 	position: relative;
-	max-width: 20%;
 	display: flex;
 	align-items: center;
 	color: var(--color-white);
@@ -166,8 +195,8 @@ export default {
 	text-align: center;
 	border-radius: var(--rounded-sm);
 	background: var(--range-tooltip-back);
-	margin-inline-start: 1rem;
-	padding: 0 0.25rem;
+	margin-inline-start: var(--spacing-3);
+	padding: 0 var(--spacing-1);
 	white-space: nowrap;
 }
 .k-range-input-tooltip::after {

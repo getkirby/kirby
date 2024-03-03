@@ -7,8 +7,8 @@
 
 <script>
 /**
-* @deprecated 4.0.0
-*/
+ * @deprecated 4.0.0
+ */
 export default {
 	props: {
 		/**
@@ -18,9 +18,7 @@ export default {
 		align: String
 	},
 	created() {
-		window.panel.deprecated(
-			"<k-view> will be removed in a future version."
-		);
+		window.panel.deprecated("<k-view> will be removed in a future version.");
 	}
 };
 </script>

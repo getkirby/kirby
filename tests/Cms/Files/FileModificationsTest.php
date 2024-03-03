@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Asset;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class FileModificationsTest extends TestCase
 {
@@ -122,9 +122,7 @@ class FileModificationsTest extends TestCase
 	{
 		$app = $this->app->clone([
 			'components' => [
-				'file::version' => function ($kirby, $file, $options = []) {
-					return 'image';
-				}
+				'file::version' => fn ($kirby, $file, $options = []) => 'image'
 			]
 		]);
 
@@ -179,7 +177,7 @@ class FileModificationsTest extends TestCase
 	public function testThumbWithNoOptions()
 	{
 		$file = $this->app->file('test.jpg');
-		$this->assertSame($file, $file->thumb([]));
+		$this->assertIsFile($file, $file->thumb([]));
 	}
 
 	public function testBlur()
@@ -324,5 +322,35 @@ class FileModificationsTest extends TestCase
 
 		$file = $app->file('test.jpg');
 		$file->resize(100, 200, 10);
+	}
+
+	public function testSharpen()
+	{
+		$app = $this->app->clone([
+			'components' => [
+				'file::version' => function ($kirby, $file, $options = []) {
+					$this->assertSame(['sharpen' => 50], $options);
+					return $file;
+				}
+			]
+		]);
+
+		$file = $app->file('test.jpg');
+		$file->sharpen();
+	}
+
+	public function testSharpenWithCustomValue()
+	{
+		$app = $this->app->clone([
+			'components' => [
+				'file::version' => function ($kirby, $file, $options = []) {
+					$this->assertSame(['sharpen' => 20], $options);
+					return $file;
+				}
+			]
+		]);
+
+		$file = $app->file('test.jpg');
+		$file->sharpen(20);
 	}
 }

@@ -4,19 +4,20 @@ namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\TestCase;
 use Kirby\Toolkit\Str;
-use PHPUnit\Framework\TestCase;
 
 class ContentLocksTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.ContentLocks';
+
 	protected $app;
-	protected $fixtures;
 
 	public function app()
 	{
 		return new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/ContentLocksTest'
+				'index' => static::TMP
 			],
 			'site' => [
 				'children' => [
@@ -31,12 +32,12 @@ class ContentLocksTest extends TestCase
 	public function setUp(): void
 	{
 		$this->app = $this->app();
-		Dir::make($this->fixtures);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->fixtures);
+		Dir::remove(static::TMP);
 	}
 
 	public function testFile()
@@ -57,9 +58,9 @@ class ContentLocksTest extends TestCase
 	{
 		$app = $this->app;
 		$page = $app->page('test');
-		$root = $this->fixtures . '/content/test';
+		$root = static::TMP . '/content/test';
 
-		// create fixtures directory
+		// create temp directory
 		$this->assertSame($root . '/.lock', $app->locks()->file($page));
 		Dir::make($root);
 

@@ -1,35 +1,24 @@
 <template>
-	<fieldset
+	<div
+		ref="editor"
 		v-direction
 		:data-disabled="disabled"
 		:data-empty="isEmpty"
 		:data-placeholder="placeholder"
-		:data-toolbar-inline="Boolean(toolbar.inline)"
+		:data-toolbar-inline="Boolean(toolbar.inline ?? true)"
 		:spellcheck="spellcheck"
-		class="k-writer-input k-writer"
+		class="k-writer k-writer-input"
 	>
-		<legend class="sr-only">Writer</legend>
-
 		<k-writer-toolbar
 			v-if="editor && !disabled"
 			ref="toolbar"
 			v-bind="toolbarOptions"
 			@command="onCommand"
 		/>
-
-		<textarea
-			ref="output"
-			:name="name"
-			:required="required"
-			:value="value"
-			class="input-hidden"
-			tabindex="-1"
-		/>
-	</fieldset>
+	</div>
 </template>
 
 <script>
-// Main classes
 import Editor from "../Writer/Editor";
 import Mark from "../Writer/Mark";
 import Node from "../Writer/Node";
@@ -70,6 +59,12 @@ import {
 	spellcheck
 } from "@/mixins/props.js";
 
+import {
+	required as validateRequired,
+	minLength as validateMinLength,
+	maxLength as validateMaxLength
+} from "vuelidate/lib/validators";
+
 export const props = {
 	mixins: [InputProps, maxlength, minlength, placeholder, spellcheck],
 	props: {
@@ -101,6 +96,9 @@ export const props = {
 			type: Function,
 			default: () => () => false
 		},
+		/**
+		 * See `k-writer-toolbar` for available options
+		 */
 		toolbar: {
 			type: Object,
 			default: () => ({
@@ -113,15 +111,16 @@ export const props = {
 		}
 	},
 	computed: {
-		characters() {
+		counterValue() {
 			const plain = this.$helper.string.stripHTML(this.value);
-			return this.$helper.string.unescapeHTML(plain).length;
+			return this.$helper.string.unescapeHTML(plain);
 		}
 	}
 };
 
 export default {
 	mixins: [Input, props],
+	emits: ["input"],
 	data() {
 		return {
 			editor: null,
@@ -152,6 +151,8 @@ export default {
 				this.html = newValue;
 				this.editor.setContent(this.html);
 			}
+
+			this.onInvalid();
 		}
 	},
 	mounted() {
@@ -230,7 +231,6 @@ export default {
 					}
 
 					this.$emit("input", this.html);
-					this.validate();
 				}
 			},
 			extensions: [
@@ -250,14 +250,14 @@ export default {
 		this.isEmpty = this.editor.isEmpty();
 		this.json = this.editor.getJSON();
 
-		this.validate();
+		this.$panel.events.on("click", this.onBlur);
+		this.$panel.events.on("focus", this.onBlur);
+
+		this.onInvalid();
 
 		if (this.$props.autofocus) {
 			this.focus();
 		}
-
-		this.$panel.events.on("click", this.onBlur);
-		this.$panel.events.on("focus", this.onBlur);
 	},
 	beforeDestroy() {
 		this.editor.destroy();
@@ -381,6 +381,9 @@ export default {
 		focus() {
 			this.editor.focus();
 		},
+		onInvalid() {
+			this.$emit("invalid", this.$v.$invalid, this.$v);
+		},
 		getSplitContent() {
 			return this.editor.getHTMLStartToSelectionToEnd();
 		},
@@ -391,30 +394,16 @@ export default {
 		},
 		onCommand(command, ...args) {
 			this.editor.command(command, ...args);
-		},
-		validate() {
-			let error = "";
-
-			if (
-				this.isEmpty === false &&
-				this.minlength &&
-				this.characters < this.minlength
-			) {
-				error = this.$t("error.validation.minlength", {
-					min: this.minlength
-				});
-			} else if (
-				this.isEmpty === false &&
-				this.maxlength &&
-				this.characters > this.maxlength
-			) {
-				error = this.$t("error.validation.maxlength", {
-					max: this.maxlength
-				});
-			}
-
-			this.$refs.output.setCustomValidity(error);
 		}
+	},
+	validations() {
+		return {
+			counterValue: {
+				required: this.required ? validateRequired : true,
+				minLength: this.minlength ? validateMinLength(this.minlength) : true,
+				maxLength: this.maxlength ? validateMaxLength(this.maxlength) : true
+			}
+		};
 	}
 };
 </script>
@@ -427,6 +416,7 @@ export default {
 	grid-template-areas: "content";
 	gap: var(--spacing-1);
 }
+
 .k-writer-input .ProseMirror {
 	overflow-wrap: break-word;
 	word-wrap: break-word;
@@ -434,7 +424,7 @@ export default {
 	white-space: pre-wrap;
 	font-variant-ligatures: none;
 	grid-area: content;
-	padding: var(--input-padding);
+	padding: var(--input-padding-multiline);
 }
 .k-writer-input .ProseMirror:focus {
 	outline: 0;
@@ -442,9 +432,11 @@ export default {
 .k-writer-input .ProseMirror * {
 	caret-color: currentColor;
 }
+
 .k-writer-input .ProseMirror hr.ProseMirror-selectednode {
 	outline: var(--outline);
 }
+
 .k-writer-input[data-placeholder][data-empty="true"]::before {
 	grid-area: content;
 	content: attr(data-placeholder);
@@ -453,6 +445,6 @@ export default {
 	white-space: pre-wrap;
 	word-wrap: break-word;
 	line-height: var(--text-line-height);
-	padding: var(--input-padding);
+	padding: var(--input-padding-multiline);
 }
 </style>

@@ -7,7 +7,7 @@ use IntlDateFormatter;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Query\TestUser as QueryTestUser;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 use TypeError;
 
 /**
@@ -393,6 +393,18 @@ class StrTest extends TestCase
 		$string   = 'This is a long text   <br>with some html';
 		$expected = 'This is a long text with …';
 		$result   = Str::excerpt($string, 27);
+
+		$this->assertSame($expected, $result);
+	}
+
+	/**
+	 * @covers ::excerpt
+	 */
+	public function testExcerptWithoutSpaces()
+	{
+		$string   = 'ThisIsALongTextWithSomeHtml';
+		$expected = 'ThisIsALongText …';
+		$result   = Str::excerpt($string, 15);
 
 		$this->assertSame($expected, $result);
 	}

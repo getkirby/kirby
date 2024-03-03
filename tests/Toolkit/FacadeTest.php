@@ -2,7 +2,7 @@
 
 namespace Kirby\Toolkit;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 class ObjFacade extends Facade
 {

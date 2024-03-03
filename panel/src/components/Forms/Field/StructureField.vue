@@ -1,5 +1,5 @@
 <template>
-	<k-field v-bind="$props" class="k-structure-field" @click.stop>
+	<k-field v-bind="$props" class="k-structure-field" @click.native.stop>
 		<template v-if="hasFields && !disabled" #options>
 			<k-button-group layout="collapsed">
 				<k-button
@@ -40,52 +40,49 @@
 		</template>
 
 		<template v-if="hasFields">
-			<k-array-input
-				v-bind="{
-					min,
-					max,
-					name,
-					required
-				}"
-				:value="JSON.stringify(items)"
+			<!-- Empty State -->
+			<k-empty
+				v-if="items.length === 0"
+				:data-invalid="isInvalid"
+				icon="list-bullet"
+				@click="add()"
 			>
-				<!-- Empty State -->
-				<k-empty v-if="items.length === 0" icon="list-bullet" @click="add()">
-					{{ empty ?? $t("field.structure.empty") }}
-				</k-empty>
+				{{ empty ?? $t("field.structure.empty") }}
+			</k-empty>
 
-				<!-- Table -->
-				<template v-else>
-					<k-table
-						:columns="columns"
-						:disabled="disabled"
-						:fields="fields"
-						:empty="$t('field.structure.empty')"
-						:index="index"
-						:options="options"
-						:pagination="limit ? pagination : false"
-						:rows="paginatedItems"
-						:sortable="isSortable"
-						@cell="open($event.row, $event.columnIndex)"
-						@input="save"
-						@option="option"
-						@paginate="paginate"
+			<!-- Table -->
+			<template v-else>
+				<k-table
+					:columns="columns"
+					:disabled="disabled"
+					:fields="fields"
+					:empty="$t('field.structure.empty')"
+					:index="index"
+					:options="options"
+					:pagination="limit ? pagination : false"
+					:rows="paginatedItems"
+					:sortable="isSortable"
+					:data-invalid="isInvalid"
+					@cell="open($event.row, $event.columnIndex)"
+					@input="save"
+					@option="option"
+					@paginate="paginate"
+				/>
+
+				<footer v-if="more">
+					<k-button
+						:title="$t('add')"
+						icon="add"
+						size="xs"
+						variant="filled"
+						@click="add()"
 					/>
-
-					<footer v-if="more">
-						<k-button
-							:title="$t('add')"
-							icon="add"
-							size="xs"
-							variant="filled"
-							@click="add()"
-						/>
-					</footer>
-				</template>
-			</k-array-input>
+				</footer>
+			</template>
 		</template>
-
-		<k-empty v-else icon="list-bullet">{{ $t("fields.empty") }}</k-empty>
+		<template v-else>
+			<k-empty icon="list-bullet">{{ $t("fields.empty") }}</k-empty>
+		</template>
 	</k-field>
 </template>
 
@@ -197,6 +194,25 @@ export default {
 		},
 		hasFields() {
 			return this.$helper.object.length(this.fields) > 0;
+		},
+		/**
+		 * Returns if field is invalid
+		 * @returns {bool}
+		 */
+		isInvalid() {
+			if (this.disabled === true) {
+				return false;
+			}
+
+			if (this.min && this.items.length < this.min) {
+				return true;
+			}
+
+			if (this.max && this.items.length > this.max) {
+				return true;
+			}
+
+			return false;
 		},
 		/**
 		 * Returns whether the rows can be sorted
@@ -333,7 +349,7 @@ export default {
 		},
 
 		close() {
-			this.$panel.drawer.close(this.uid);
+			this.$panel.drawer.close(this.id);
 		},
 
 		/**
@@ -390,7 +406,7 @@ export default {
 
 			this.$panel.drawer.open({
 				component: "k-structure-drawer",
-				id: this.uid,
+				id: this.id,
 				props: {
 					icon: this.icon ?? "list-bullet",
 					next: this.items[index + 1],
@@ -412,7 +428,7 @@ export default {
 						this.$panel.drawer.props.next = this.items[index + 1];
 						this.$panel.drawer.props.prev = this.items[index - 1];
 
-						this.items[index] = value;
+						this.$set(this.items, index, value);
 						this.save();
 					},
 					next: () => {
@@ -527,7 +543,7 @@ export default {
 				return items;
 			}
 
-			return items.sortBy(this.sortBy);
+			return this.$helper.array.sortBy(items, this.sortBy);
 		},
 		/**
 		 * Converts field value to internal

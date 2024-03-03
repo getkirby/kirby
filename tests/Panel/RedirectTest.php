@@ -2,7 +2,7 @@
 
 namespace Kirby\Panel;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Redirect

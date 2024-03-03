@@ -5,17 +5,18 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
+use Kirby\TestCase;
 use Kirby\Toolkit\I18n;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Cms\Blueprint
  */
 class BlueprintTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.Blueprint';
+
 	protected $app;
 	protected $model;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
@@ -27,12 +28,12 @@ class BlueprintTest extends TestCase
 
 		$this->model = new Page(['slug' => 'a']);
 
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	/**
@@ -110,6 +111,231 @@ class BlueprintTest extends TestCase
 
 		$this->assertSame($expected, $blueprint->toArray()['tabs']);
 		$this->assertSame($expected['main'], $blueprint->tab());
+	}
+
+	/**
+	 * @covers ::acceptedFileTemplates
+	 */
+	public function testAcceptedFileTemplatesDefault()
+	{
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'name'  => 'default',
+			'sections' => [
+				'files' => [
+					'type' => 'files',
+				],
+			]
+		]);
+
+		$this->assertSame(['default'], $blueprint->acceptedFileTemplates());
+	}
+
+	/**
+	 * @covers ::acceptedFileTemplates
+	 */
+	public function testAcceptedFileTemplatesFromFields()
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'blueprints' => [
+				'files/a' => [
+					'name' => 'a',
+				],
+				'files/b' => [
+					'name' => 'b',
+				],
+				'files/c' => [
+					'name' => 'c',
+				],
+				'files/d' => [
+					'name' => 'd',
+				],
+				'files/e' => [
+					'name' => 'e',
+				],
+			]
+		]);
+
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'name'  => 'default',
+			'fields' => [
+				'a' => [
+					'type' => 'files',
+					'uploads' => [
+						'template' => 'a'
+					]
+				],
+				'b' => [
+					'type' => 'textarea',
+					'uploads' => [
+						'template' => 'b'
+					]
+				],
+				'c' => [
+					'type'   => 'structure',
+					'fields' => [
+						'text' => [
+							'type' => 'textarea',
+							'uploads' => [
+								'template' => 'c'
+							]
+						]
+					]
+				],
+				'd' => [
+					'type'   => 'object',
+					'fields' => [
+						'text' => [
+							'type' => 'object',
+							'uploads' => [
+								'template' => 'd'
+							]
+						]
+					]
+				],
+				'e' => [
+					'type' => 'blocks',
+					'fieldsets' => [
+						'text' => [
+							'fields' => [
+								'text' => [
+									'type' => 'object',
+									'uploads' => [
+										'template' => 'e'
+									]
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->assertSame(['a', 'b', 'c', 'd', 'e'], $blueprint->acceptedFileTemplates());
+	}
+
+	/**
+	 * @covers ::acceptedFileTemplates
+	 */
+	public function testAcceptedFileTemplatesFromFieldsAndSections()
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'blueprints' => [
+				'files/a' => [
+					'name' => 'a',
+				],
+				'files/b' => [
+					'name' => 'b',
+				],
+				'files/c' => [
+					'name' => 'c',
+				],
+			]
+		]);
+
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'name'  => 'default',
+			'sections' => [
+				'fields' => [
+					'type' => 'fields',
+					'fields' => [
+						'a' => [
+							'type' => 'files',
+							'uploads' => [
+								'template' => 'a'
+							]
+						],
+						'b' => [
+							'type' => 'textarea',
+							'uploads' => [
+								'template' => 'b'
+							]
+						],
+					],
+				],
+				'files' => [
+					'type'     => 'files',
+					'template' => 'c'
+				]
+			]
+		]);
+
+		$this->assertSame(['a', 'b', 'c'], $blueprint->acceptedFileTemplates());
+	}
+
+	/**
+	 * @covers ::acceptedFileTemplates
+	 */
+	public function testAcceptedFileTemplatesFromSection()
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'blueprints' => [
+				'files/a' => [
+					'name' => 'a',
+				]
+			]
+		]);
+
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'name'  => 'default',
+			'sections' => [
+				'a' => [
+					'type'     => 'files',
+					'template' => 'a'
+				],
+			]
+		]);
+
+		$this->assertSame(['a'], $blueprint->acceptedFileTemplates('a'));
+	}
+
+	/**
+	 * @covers ::acceptedFileTemplates
+	 */
+	public function testAcceptedFileTemplatesFromSections()
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'blueprints' => [
+				'files/a' => [
+					'name' => 'a',
+				],
+				'files/b' => [
+					'name' => 'b',
+				],
+			]
+		]);
+
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'name'  => 'default',
+			'sections' => [
+				'a' => [
+					'type'     => 'files',
+					'template' => 'a'
+				],
+				'b' => [
+					'type'     => 'files',
+					'template' => 'b'
+				]
+			]
+		]);
+
+		$this->assertSame(['a', 'b'], $blueprint->acceptedFileTemplates());
 	}
 
 	/**
@@ -432,16 +658,16 @@ class BlueprintTest extends TestCase
 		$this->app = $this->app->clone([
 			'roots' => [
 				'index' => '/dev/null',
-				'blueprints' => $this->tmp,
+				'blueprints' => static::TMP,
 			],
 			'blueprints' => [
 				'pages/test' => function () {
-					return $this->tmp . '/custom/test.yml';
+					return static::TMP . '/custom/test.yml';
 				}
 			]
 		]);
 
-		Data::write($this->tmp . '/custom/test.yml', ['title' => 'Test']);
+		Data::write(static::TMP . '/custom/test.yml', ['title' => 'Test']);
 
 		$blueprint = Blueprint::factory('pages/test', null, new Page(['slug' => 'test']));
 

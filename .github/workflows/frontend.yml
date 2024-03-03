@@ -93,10 +93,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # pin@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # pin@v3
 
       - name: Set up Node.js problem matchers and cache npm dependencies
-        uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # pin@v3
+        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # pin@v3
         with:
           cache: "npm"
           cache-dependency-path: panel/package-lock.json
@@ -108,34 +108,10 @@ jobs:
 
       - name: Check for JavaScript coding style violations (ESLint)
         if: always() && steps.finishPrepare.outcome == 'success'
-        # Use the --no-fix flag in push builds to get a failed CI status
-        run: >
-          npm run lint -- --max-warnings 0 --format stylish
-          ${{ github.event_name != 'pull_request' && '--no-fix' || '' }}
+        run: npm run lint -- --max-warnings 0 --format stylish --no-fix
         working-directory: panel
-
-      - name: Create code suggestions from the coding style changes (on PR only)
-        if: >
-          always() && steps.finishPrepare.outcome == 'success' &&
-          github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@3f60d0e826f0873905e0eeca522d562a6e67afbd # pin@v1
-        with:
-          tool_name: ESLint
-          fail_on_error: "true"
 
       - name: Check for JavaScript coding style violations (Prettier)
         if: always() && steps.finishPrepare.outcome == 'success'
-        # Use the --check flag in push builds to get a failed CI status
-        run: >
-          npm run format --
-          ${{ github.event_name != 'pull_request' && '--check' || '--write' }}
+        run: npm run format --check
         working-directory: panel
-
-      - name: Create code suggestions from the coding style changes (on PR only)
-        if: >
-          always() && steps.finishPrepare.outcome == 'success' &&
-          github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@3f60d0e826f0873905e0eeca522d562a6e67afbd # pin@v1
-        with:
-          tool_name: Prettier
-          fail_on_error: "true"

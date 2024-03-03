@@ -9,6 +9,7 @@ import focus from "./focus.js";
 import isComponent from "./isComponent.js";
 import isUploadEvent from "./isUploadEvent.js";
 import keyboard from "./keyboard.js";
+import link from "./link.js";
 import object from "./object.js";
 import page from "./page.js";
 import ratio from "./ratio.js";
@@ -34,6 +35,7 @@ export default {
 			field,
 			file,
 			keyboard,
+			link,
 			object,
 			page,
 			pad: string.pad,

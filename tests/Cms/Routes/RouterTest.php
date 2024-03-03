@@ -3,30 +3,12 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\NotFoundException;
-use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\I18n;
 
 class RouterTest extends TestCase
 {
-	protected $app;
-	protected $fixtures;
-
-	public function setUp(): void
-	{
-		$this->fixtures = __DIR__ . '/fixtures/RouterTest';
-
-		$this->app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
-	}
-
-	public function tearDown(): void
-	{
-		Dir::remove($this->fixtures);
-	}
+	public const TMP = KIRBY_TMP_DIR . '/Cms.Router';
 
 	public function testHomeRoute()
 	{
@@ -39,7 +21,7 @@ class RouterTest extends TestCase
 		]);
 
 		$page = $app->call('');
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertSame('home', $page->id());
 	}
 
@@ -105,19 +87,19 @@ class RouterTest extends TestCase
 		]);
 
 		$page = $app->call('projects');
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertSame('projects', $page->id());
 	}
 
 	public function testPageRepresentationRoute()
 	{
-		F::write($template = $this->fixtures . '/test.php', 'html');
-		F::write($template = $this->fixtures . '/test.xml.php', 'xml');
+		F::write($template = static::TMP . '/test.php', 'html');
+		F::write($template = static::TMP . '/test.xml.php', 'xml');
 
 		$app = new App([
 			'roots' => [
 				'index'     => '/dev/null',
-				'templates' => $this->fixtures
+				'templates' => static::TMP
 			],
 			'site' => [
 				'children' => [
@@ -158,7 +140,7 @@ class RouterTest extends TestCase
 		]);
 
 		$file = $app->call('projects/cover.jpg');
-		$this->assertInstanceOf(File::class, $file);
+		$this->assertIsFile($file);
 		$this->assertSame('projects/cover.jpg', $file->id());
 	}
 
@@ -175,7 +157,7 @@ class RouterTest extends TestCase
 		]);
 
 		$file = $app->call('background.jpg');
-		$this->assertInstanceOf(File::class, $file);
+		$this->assertIsFile($file);
 		$this->assertSame('background.jpg', $file->id());
 	}
 
@@ -197,7 +179,7 @@ class RouterTest extends TestCase
 		]);
 
 		$page = $app->call('projects/project-a');
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertSame('projects/project-a', $page->id());
 	}
 
@@ -377,7 +359,7 @@ class RouterTest extends TestCase
 		// fr
 		$page = $app->call('fr');
 
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertSame('home', $page->id());
 		$this->assertSame('fr', $app->language()->code());
 		$this->assertSame('fr', I18n::locale());
@@ -385,7 +367,7 @@ class RouterTest extends TestCase
 		// en
 		$page = $app->call('en');
 
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertSame('home', $page->id());
 		$this->assertSame('en', $app->language()->code());
 		$this->assertSame('en', I18n::locale());
@@ -425,7 +407,7 @@ class RouterTest extends TestCase
 		// fr
 		$page = $app->call('/');
 
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertSame('home', $page->id());
 		$this->assertSame('fr', $app->language()->code());
 		$this->assertSame('fr', I18n::locale());
@@ -433,7 +415,7 @@ class RouterTest extends TestCase
 		// en
 		$page = $app->call('en');
 
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertSame('home', $page->id());
 		$this->assertSame('en', $app->language()->code());
 		$this->assertSame('en', I18n::locale());
@@ -482,7 +464,7 @@ class RouterTest extends TestCase
 		// home
 		$page = $app->call('');
 
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertSame('home', $page->id());
 		$this->assertSame($language, $app->language()->code());
 		$this->assertSame($language, I18n::locale());
@@ -527,7 +509,7 @@ class RouterTest extends TestCase
 		// home
 		$page = $app->call('subfolder');
 
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertSame('home', $page->id());
 		$this->assertSame($language, $app->language()->code());
 		$this->assertSame($language, I18n::locale());
@@ -639,7 +621,7 @@ class RouterTest extends TestCase
 		// en
 		$page = $app->call('en/projects');
 
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertSame('projects', $page->id());
 		$this->assertSame('en', $app->language()->code());
 		$this->assertSame('en', I18n::locale());
@@ -647,7 +629,7 @@ class RouterTest extends TestCase
 		// fr
 		$page = $app->call('fr/projects');
 
-		$this->assertInstanceOf(Page::class, $page);
+		$this->assertIsPage($page);
 		$this->assertSame('projects', $page->id());
 		$this->assertSame('fr', $app->language()->code());
 		$this->assertSame('fr', I18n::locale());
@@ -655,13 +637,13 @@ class RouterTest extends TestCase
 
 	public function testMultilangPageRepresentationRoute()
 	{
-		F::write($template = $this->fixtures . '/test.php', 'html');
-		F::write($template = $this->fixtures . '/test.xml.php', 'xml');
+		F::write($template = static::TMP . '/test.php', 'html');
+		F::write($template = static::TMP . '/test.xml.php', 'xml');
 
 		$app = new App([
 			'roots' => [
 				'index'     => '/dev/null',
-				'templates' => $this->fixtures
+				'templates' => static::TMP
 			],
 			'site' => [
 				'children' => [
@@ -713,13 +695,13 @@ class RouterTest extends TestCase
 
 	public function testMultilangPageRepresentationRouteWithoutLanguageCode()
 	{
-		F::write($template = $this->fixtures . '/test.php', 'html');
-		F::write($template = $this->fixtures . '/test.xml.php', 'xml');
+		F::write($template = static::TMP . '/test.php', 'html');
+		F::write($template = static::TMP . '/test.xml.php', 'xml');
 
 		$app = new App([
 			'roots' => [
 				'index'     => '/dev/null',
-				'templates' => $this->fixtures
+				'templates' => static::TMP
 			],
 			'site' => [
 				'children' => [

@@ -4,15 +4,17 @@
 			<k-draggable v-bind="draggableOptions" class="k-layouts" @sort="save">
 				<k-layout
 					v-for="(layout, index) in rows"
-					v-bind="layout"
 					:key="layout.id"
-					:disabled="disabled"
-					:endpoints="endpoints"
-					:fieldset-groups="fieldsetGroups"
-					:fieldsets="fieldsets"
-					:is-selected="selected === layout.id"
-					:layouts="layouts"
-					:settings="settings"
+					v-bind="{
+						...layout,
+						disabled,
+						endpoints,
+						fieldsetGroups,
+						fieldsets,
+						isSelected: selected === layout.id,
+						layouts,
+						settings
+					}"
 					@append="select(index + 1)"
 					@change="change(index, layout)"
 					@copy="copy($event, index)"
@@ -42,24 +44,27 @@
 </template>
 
 <script>
-import { useUid } from "@/helpers/useUid.js";
+import { props as LayoutProps } from "./Layout.vue";
+import { id } from "@/mixins/props.js";
+
+export const props = {
+	mixins: [LayoutProps, id],
+	props: {
+		empty: String,
+		max: Number,
+		selector: Object,
+		value: {
+			type: Array,
+			default: () => []
+		}
+	}
+};
 
 /**
  * @internal
  */
 export default {
-	props: {
-		disabled: Boolean,
-		empty: String,
-		endpoints: Object,
-		fieldsetGroups: Object,
-		fieldsets: Object,
-		layouts: Array,
-		max: Number,
-		selector: Object,
-		settings: Object,
-		value: Array
-	},
+	mixins: [props],
 	emits: ["input"],
 	data() {
 		return {
@@ -72,7 +77,7 @@ export default {
 	computed: {
 		draggableOptions() {
 			return {
-				id: useUid(),
+				id: this.id,
 				handle: true,
 				list: this.rows
 			};

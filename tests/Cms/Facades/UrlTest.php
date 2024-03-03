@@ -2,11 +2,12 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 
 class UrlTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.Url';
+
 	protected $app;
 
 	public function setUp(): void
@@ -79,7 +80,7 @@ class UrlTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $fixtures = __DIR__ . '/fixtures/UrlTest'
+				'index' => static::TMP
 			],
 			'urls' => [
 				'index' => 'https://getkirby.com'
@@ -106,7 +107,5 @@ class UrlTest extends TestCase
 		$expected = 'https://getkirby.com/assets/js/default.js';
 
 		$this->assertSame($expected, Url::toTemplateAsset('js', 'js'));
-
-		Dir::remove($fixtures);
 	}
 }

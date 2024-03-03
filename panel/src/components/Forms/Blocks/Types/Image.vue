@@ -3,6 +3,7 @@
 		:caption="content.caption"
 		:caption-marks="captionMarks"
 		:empty-text="$t('field.blocks.image.placeholder') + ' …'"
+		:disabled="disabled"
 		:is-empty="!src"
 		empty-icon="image"
 		@open="open"
@@ -27,11 +28,13 @@
 </template>
 
 <script>
+import Block from "./Default.vue";
+
 /**
  * @displayName BlockTypeImage
- * @internal
  */
 export default {
+	extends: Block,
 	computed: {
 		captionMarks() {
 			return this.field("caption", { marks: true }).marks;

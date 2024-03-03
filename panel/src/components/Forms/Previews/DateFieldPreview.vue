@@ -24,6 +24,10 @@ export default {
 			return this.$library.dayjs(this.value);
 		},
 		text() {
+			if (this.parsed.isValid() === false) {
+				return this.value;
+			}
+
 			return this.parsed?.format(this.format);
 		},
 		time() {

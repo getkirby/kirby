@@ -7,7 +7,7 @@ use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
-use PHPUnit\Framework\TestCase;
+use Kirby\TestCase;
 use ReflectionMethod;
 
 /**
@@ -16,17 +16,18 @@ use ReflectionMethod;
  */
 class ContentStorageTest extends TestCase
 {
-	protected $tmp = __DIR__ . '/tmp';
+	public const TMP = KIRBY_TMP_DIR . '/Content.ContentStorage';
+
 	protected $model;
 	protected $storage;
 
 	public function setUp(): void
 	{
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 
 		$this->model = new Page([
 			'kirby'    => new App(),
-			'root'     => $this->tmp,
+			'root'     => static::TMP,
 			'slug'     => 'a-page',
 			'template' => 'article'
 		]);
@@ -36,7 +37,7 @@ class ContentStorageTest extends TestCase
 	public function tearDown(): void
 	{
 		App::destroy();
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	/**

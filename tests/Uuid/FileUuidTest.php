@@ -11,6 +11,8 @@ use Kirby\Cms\File;
  */
 class FileUuidTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Uuid.FileUuid';
+
 	/**
 	 * @covers ::findByCache
 	 */
@@ -28,7 +30,7 @@ class FileUuidTest extends TestCase
 
 		// retrieve from cache
 		$this->assertTrue($uuid->isCached());
-		$this->assertTrue($file->is($uuid->model(true)));
+		$this->assertIsFile($file, $uuid->model(true));
 	}
 
 	/**
@@ -40,7 +42,7 @@ class FileUuidTest extends TestCase
 		$uuid  = new FileUuid('file://my-file');
 		$this->assertFalse($uuid->isCached());
 		$this->assertNull($uuid->model(true));
-		$this->assertTrue($file->is($uuid->model()));
+		$this->assertIsFile($file, $uuid->model());
 		$this->assertTrue($uuid->isCached());
 
 		// not found
@@ -89,7 +91,7 @@ class FileUuidTest extends TestCase
 	{
 		$index = FileUuid::index();
 		$this->assertInstanceOf(Generator::class, $index);
-		$this->assertInstanceOf(File::class, $index->current());
+		$this->assertIsFile($index->current());
 		$this->assertSame(4, iterator_count($index));
 	}
 
@@ -139,7 +141,7 @@ class FileUuidTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => static::TMP
 			],
 			'options' => [
 				'languages' => true

@@ -88,7 +88,7 @@ export default {
 			return this.$helper.object.length(this.$panel.searches) > 0;
 		},
 		menus() {
-			return this.$panel.menu.entries.split("-");
+			return this.$helper.array.split(this.$panel.menu.entries, "-");
 		}
 	}
 };
@@ -166,6 +166,7 @@ export default {
 	--button-align: flex-start;
 	--button-height: var(--menu-button-height);
 	--button-width: var(--menu-button-width);
+	--button-padding: 7px;
 	/* Make sure that buttons don't shrink in height */
 	flex-shrink: 0;
 }
@@ -173,6 +174,10 @@ export default {
 	--button-color-back: var(--color-white);
 	box-shadow: var(--shadow);
 }
+.k-panel[data-theme="dark"] .k-panel-menu-button[aria-current] {
+	--button-color-back: var(--color-gray-400);
+}
+
 /* Outline should not vanish behind other buttons */
 .k-panel-menu-button:focus {
 	z-index: 1;
@@ -190,7 +195,7 @@ export default {
 	content: "";
 	position: fixed;
 	inset: 0;
-	background: var(--color-backdrop);
+	background: var(--overlay-color-back);
 	display: var(--menu-display-backdrop);
 	pointer-events: none;
 }

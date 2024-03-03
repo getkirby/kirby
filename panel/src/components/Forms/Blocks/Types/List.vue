@@ -1,6 +1,7 @@
 <template>
 	<k-input
 		ref="input"
+		:disabled="disabled"
 		:keys="keys"
 		:marks="marks"
 		:value="content.text"
@@ -11,11 +12,13 @@
 </template>
 
 <script>
+import Block from "./Default.vue";
+
 /**
  * @displayName BlockTypeList
- * @internal
  */
 export default {
+	extends: Block,
 	emits: ["open", "split", "update"],
 	computed: {
 		isSplitable() {
@@ -65,6 +68,7 @@ export default {
 
 <style>
 .k-block-type-list-input {
+	--input-color-back: transparent;
 	--input-color-border: none;
 	--input-outline-focus: none;
 }

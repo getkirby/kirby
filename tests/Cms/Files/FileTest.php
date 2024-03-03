@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
 use Kirby\Panel\File as Panel;
@@ -16,6 +15,8 @@ class FileTestModel extends File
  */
 class FileTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.File';
+
 	protected function defaults(?App $kirby = null): array
 	{
 		$page = new Page([
@@ -325,7 +326,7 @@ class FileTest extends TestCase
 			'parent' => $page = new Page(['slug' => 'test'])
 		]);
 
-		$this->assertSame($page, $file->page());
+		$this->assertIsPage($page, $file->page());
 
 		$file = $this->file([
 			'parent' => new User([])
@@ -564,16 +565,16 @@ class FileTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index'   => $index = __DIR__ . '/fixtures/FileTest/mediaHash',
-				'content' => $index
+				'index'   => static::TMP,
+				'content' => static::TMP
 			],
 			'options' => [
 				'content.salt' => 'test'
 			]
 		]);
 
-		F::write($index . '/test.jpg', 'test');
-		touch($index . '/test.jpg', 5432112345);
+		F::write(static::TMP . '/test.jpg', 'test');
+		touch(static::TMP . '/test.jpg', 5432112345);
 		$file = $this->file([
 			'kirby'    => $app,
 			'parent'   => $app->site(),
@@ -581,16 +582,14 @@ class FileTest extends TestCase
 		]);
 
 		$this->assertSame('08756f3115-5432112345', $file->mediaHash());
-
-		Dir::remove(dirname($index));
 	}
 
 	public function testMediaToken()
 	{
 		$app = new App([
 			'roots' => [
-				'index'   => $index = __DIR__ . '/fixtures/FileTest/mediaHash',
-				'content' => $index
+				'index'   => static::TMP,
+				'content' => static::TMP
 			],
 			'options' => [
 				'content.salt' => 'test'
@@ -610,13 +609,13 @@ class FileTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index'   => $index = __DIR__ . '/fixtures/FileTest/modified',
-				'content' => $index
+				'index'   => static::TMP,
+				'content' => static::TMP
 			]
 		]);
 
 		// create a file
-		F::write($file = $index . '/test.js', 'test');
+		F::write($file = static::TMP . '/test.js', 'test');
 
 		$modified = filemtime($file);
 		$file     = $app->file('test.js');
@@ -630,40 +629,36 @@ class FileTest extends TestCase
 		// custom date handler
 		$format = '%d.%m.%Y';
 		$this->assertSame(@strftime($format, $modified), $file->modified($format, 'strftime'));
-
-		Dir::remove(dirname($index));
 	}
 
 	public function testModifiedContent()
 	{
 		$app = new App([
 			'roots' => [
-				'index'   => $index = __DIR__ . '/fixtures/FileTest/modified',
-				'content' => $index
+				'index'   => static::TMP,
+				'content' => static::TMP
 			]
 		]);
 
 		// create a file
-		F::write($file = $index . '/test.js', 'test');
+		F::write($file = static::TMP . '/test.js', 'test');
 		touch($file, $modifiedFile = \time() + 2);
 
-		F::write($content = $index . '/test.js.txt', 'test');
+		F::write($content = static::TMP . '/test.js.txt', 'test');
 		touch($file, $modifiedContent = \time() + 5);
 
 		$file = $app->file('test.js');
 
 		$this->assertNotEquals($modifiedFile, $file->modified());
 		$this->assertSame($modifiedContent, $file->modified());
-
-		Dir::remove(dirname($index));
 	}
 
 	public function testModifiedSpecifyingLanguage()
 	{
 		$app = new App([
 			'roots' => [
-				'index'   => $index = __DIR__ . '/fixtures/FileTest/modified',
-				'content' => $index
+				'index'   => static::TMP,
+				'content' => static::TMP
 			],
 			'languages' => [
 				[
@@ -679,22 +674,20 @@ class FileTest extends TestCase
 		]);
 
 		// create a file
-		F::write($index . '/test.js', 'test');
+		F::write(static::TMP . '/test.js', 'test');
 
 		// create the english content
-		F::write($file = $index . '/test.js.en.txt', 'test');
+		F::write($file = static::TMP . '/test.js.en.txt', 'test');
 		touch($file, $modifiedEnContent = \time() + 2);
 
 		// create the german content
-		F::write($file = $index . '/test.js.de.txt', 'test');
+		F::write($file = static::TMP . '/test.js.de.txt', 'test');
 		touch($file, $modifiedDeContent = \time() + 5);
 
 		$file = $app->file('test.js');
 
 		$this->assertSame($modifiedEnContent, $file->modified(null, null, 'en'));
 		$this->assertSame($modifiedDeContent, $file->modified(null, null, 'de'));
-
-		Dir::remove(dirname($index));
 	}
 
 	public function testPanel()
@@ -815,9 +808,7 @@ class FileTest extends TestCase
 				'index' => '/dev/null'
 			],
 			'components' => [
-				'file::url' => function ($kirby, $file, array $options = []) {
-					return 'https://getkirby.com/' . $file->filename();
-				}
+				'file::url' => fn ($kirby, $file, array $options = []) => 'https://getkirby.com/' . $file->filename()
 			],
 			'site' => [
 				'children' => [

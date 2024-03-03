@@ -11,20 +11,17 @@ use Kirby\Filesystem\Dir;
  */
 class FindTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.Find';
+
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $tmp = __DIR__ . 'tmp'
+				'index' => static::TMP
 			]
 		]);
 
-		Dir::make($tmp);
-	}
-
-	public function tearDown(): void
-	{
-		Dir::remove(__DIR__ . 'tmp');
+		Dir::make(static::TMP);
 	}
 
 	/**
@@ -293,16 +290,16 @@ class FindTest extends TestCase
 
 		$app->impersonate('current@getkirby.com');
 
-		$this->assertInstanceOf(User::class, Find::parent('account'));
-		$this->assertInstanceOf(User::class, Find::parent('users/test@getkirby.com'));
-		$this->assertInstanceOf(Site::class, Find::parent('site'));
-		$this->assertInstanceOf(Site::class, Find::parent('/site'));
-		$this->assertInstanceOf(Page::class, Find::parent('pages/a+aa'));
-		$this->assertInstanceOf(Page::class, Find::parent('pages/a aa'));
-		$this->assertInstanceOf(File::class, Find::parent('site/files/sitefile.jpg'));
-		$this->assertInstanceOf(File::class, Find::parent('pages/a/files/a-regular-file.jpg'));
-		$this->assertInstanceOf(File::class, Find::parent('pages/files/files/file-in-files-page.jpg'));
-		$this->assertInstanceOf(File::class, Find::parent('users/test@getkirby.com/files/userfile.jpg'));
+		$this->assertIsUser(Find::parent('account'));
+		$this->assertIsUser(Find::parent('users/test@getkirby.com'));
+		$this->assertIsSite(Find::parent('site'));
+		$this->assertIsSite(Find::parent('/site'));
+		$this->assertIsPage(Find::parent('pages/a+aa'));
+		$this->assertIsPage(Find::parent('pages/a aa'));
+		$this->assertIsFile(Find::parent('site/files/sitefile.jpg'));
+		$this->assertIsFile(Find::parent('pages/a/files/a-regular-file.jpg'));
+		$this->assertIsFile(Find::parent('pages/files/files/file-in-files-page.jpg'));
+		$this->assertIsFile(Find::parent('users/test@getkirby.com/files/userfile.jpg'));
 	}
 
 	/**

@@ -58,6 +58,9 @@ export default {
 	text-underline-offset: 2px;
 	border-radius: var(--rounded-sm);
 }
+.k-panel[data-theme="dark"] .k-activation p :where(button, a) {
+	color: var(--color-pink-600);
+}
 
 /* Hide Button */
 .k-activation-toggle {

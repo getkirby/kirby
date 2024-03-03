@@ -17,7 +17,7 @@
 			v-if="!collapsed"
 			ref="form"
 			:autofocus="true"
-			:disabled="!fieldset.wysiwyg"
+			:disabled="disabled || !fieldset.wysiwyg"
 			:fields="fields"
 			:value="values"
 			class="k-block-type-fields-form"
@@ -27,12 +27,14 @@
 </template>
 
 <script>
+import Block from "./Default.vue";
+
 /**
  * @displayName BlockTypeFields
  * @since 4.0.0
- * @internal
  */
 export default {
+	extends: Block,
 	props: {
 		endpoints: Object,
 		tabs: Object
@@ -99,6 +101,7 @@ export default {
 	background-color: var(--color-gray-200);
 	padding: var(--spacing-6) var(--spacing-6) var(--spacing-8);
 	border-radius: var(--rounded-sm);
+	container: column / inline-size;
 }
 /** TODO: .k-block-container[data-hidden="true"]:has(.k-block-type-fields)
 	:where(.k-drawer-tabs, .k-block-type-fields-form) */

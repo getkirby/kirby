@@ -1,12 +1,30 @@
 <template>
 	<k-lab-examples>
-		<k-lab-field-preview-example label="Default" type="time" value="22:33:00" />
-		<k-lab-field-preview-example
-			:field="{ display: 'HH:mm:ss' }"
-			label="Display"
-			type="time"
-			value="22:33:00"
-		/>
-		<k-lab-field-preview-example label="Empty" type="time" />
+		<k-lab-example label="Default">
+			<k-lab-table-cell>
+				<!-- @code -->
+				<k-time-field-preview value="22:33:00" />
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
+
+		<k-lab-example label="Display">
+			<k-lab-table-cell>
+				<!-- @code -->
+				<k-time-field-preview
+					:field="{ display: 'HH:mm:ss' }"
+					value="22:33:00"
+				/>
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
+
+		<k-lab-example label="Empty">
+			<k-lab-table-cell>
+				<!-- @code -->
+				<k-time-field-preview />
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
 	</k-lab-examples>
 </template>

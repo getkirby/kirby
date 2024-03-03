@@ -12,33 +12,34 @@ use Kirby\Filesystem\F;
  */
 class QrCodeTest extends TestCase
 {
-	protected $tmp = __DIR__ . '/tmp';
+	public const FIXTURES = __DIR__ . '/fixtures/qr';
+	public const TMP      = KIRBY_TMP_DIR . '/Image.QrCode';
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		Dir::remove(static::TMP);
 	}
 
 	public function testToDataUri()
 	{
 		$qr = new QrCode('12345678');
-		$expected = F::read(__DIR__ . '/fixtures/qr/num.txt');
+		$expected = F::read(static::FIXTURES . '/num.txt');
 		$this->assertSame($expected, $qr->toDataUri());
 
 		$qr = new QrCode('ABCDEF12345');
-		$expected = F::read(__DIR__ . '/fixtures/qr/alphanum.txt');
+		$expected = F::read(static::FIXTURES . '/alphanum.txt');
 		$this->assertSame($expected, $qr->toDataUri());
 
 		$qr = new QrCode('https://getkirby.com');
-		$expected = F::read(__DIR__ . '/fixtures/qr/url.txt');
+		$expected = F::read(static::FIXTURES . '/url.txt');
 		$this->assertSame($expected, $qr->toDataUri());
 
 		$qr = new QrCode('🥳🐨🏳️‍🌈');
-		$expected = F::read(__DIR__ . '/fixtures/qr/emoji.txt');
+		$expected = F::read(static::FIXTURES . '/emoji.txt');
 		$this->assertSame($expected, $qr->toDataUri());
 
 		$qr = new QrCode('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.');
-		$expected = F::read(__DIR__ . '/fixtures/qr/lorem.txt');
+		$expected = F::read(static::FIXTURES . '/lorem.txt');
 		$this->assertSame($expected, $qr->toDataUri());
 	}
 
@@ -47,7 +48,7 @@ class QrCodeTest extends TestCase
 		$qr       = new QrCode('https://getkirby.com');
 		$image    = $qr->toImage();
 		$data     = $this->imageContent($image);
-		$expected = F::read(__DIR__ . '/fixtures/qr/image.png');
+		$expected = F::read(static::FIXTURES . '/image.png');
 
 		$this->assertInstanceOf(GdImage::class, $image);
 		$this->assertSame($expected, $data);
@@ -58,7 +59,7 @@ class QrCodeTest extends TestCase
 		$qr       = new QrCode('https://getkirby.com');
 		$image    = $qr->toImage(750);
 		$data     = $this->imageContent($image);
-		$expected = F::read(__DIR__ . '/fixtures/qr/image-size.png');
+		$expected = F::read(static::FIXTURES . '/image-size.png');
 		$this->assertSame($expected, $data);
 	}
 
@@ -67,30 +68,30 @@ class QrCodeTest extends TestCase
 		$qr       = new QrCode('https://getkirby.com');
 		$image    = $qr->toImage(null, '#00ff00', '#0000ff');
 		$data     = $this->imageContent($image);
-		$expected = F::read(__DIR__ . '/fixtures/qr/image-colors.png');
+		$expected = F::read(static::FIXTURES . '/image-colors.png');
 		$this->assertSame($expected, $data);
 	}
 
 	public function testToSvg()
 	{
 		$qr = new QrCode('12345678');
-		$expected = F::read(__DIR__ . '/fixtures/qr/num.svg');
+		$expected = F::read(static::FIXTURES . '/num.svg');
 		$this->assertSame($expected, $qr->toSvg());
 
 		$qr = new QrCode('ABCDEF12345');
-		$expected = F::read(__DIR__ . '/fixtures/qr/alphanum.svg');
+		$expected = F::read(static::FIXTURES . '/alphanum.svg');
 		$this->assertSame($expected, $qr->toSvg());
 
 		$qr = new QrCode('https://getkirby.com');
-		$expected = F::read(__DIR__ . '/fixtures/qr/url.svg');
+		$expected = F::read(static::FIXTURES . '/url.svg');
 		$this->assertSame($expected, $qr->toSvg());
 
 		$qr = new QrCode('🥳🐨🏳️‍🌈');
-		$expected = F::read(__DIR__ . '/fixtures/qr/emoji.svg');
+		$expected = F::read(static::FIXTURES . '/emoji.svg');
 		$this->assertSame($expected, $qr->toSvg());
 
 		$qr = new QrCode('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.');
-		$expected = F::read(__DIR__ . '/fixtures/qr/lorem.svg');
+		$expected = F::read(static::FIXTURES . '/lorem.svg');
 		$this->assertSame($expected, $qr->toSvg());
 	}
 
@@ -120,37 +121,37 @@ class QrCodeTest extends TestCase
 	 */
 	public function testWrite()
 	{
-		Dir::make($this->tmp);
+		Dir::make(static::TMP);
 
 		$qr = new QrCode('https://getkirby.com');
 
-		$qr->write($file = $this->tmp . '/test.svg');
+		$qr->write($file = static::TMP . '/test.svg');
 		$this->assertFileExists($file);
-		$this->assertFileEquals(__DIR__ . '/fixtures/qr/test.svg', $file);
+		$this->assertFileEquals(static::FIXTURES . '/test.svg', $file);
 
-		$qr->write($file = $this->tmp . '/test.png');
+		$qr->write($file = static::TMP . '/test.png');
 		$this->assertFileExists($file);
-		$this->assertFileEquals(__DIR__ . '/fixtures/qr/test.png', $file);
+		$this->assertFileEquals(static::FIXTURES . '/test.png', $file);
 
-		$qr->write($file = $this->tmp . '/test.gif');
+		$qr->write($file = static::TMP . '/test.gif');
 		$this->assertFileExists($file);
-		$this->assertFileEquals(__DIR__ . '/fixtures/qr/test.gif', $file);
+		$this->assertFileEquals(static::FIXTURES . '/test.gif', $file);
 
-		$qr->write($file = $this->tmp . '/test.webp');
+		$qr->write($file = static::TMP . '/test.webp');
 		$this->assertFileExists($file);
-		$this->assertFileEquals(__DIR__ . '/fixtures/qr/test.webp', $file);
+		$this->assertFileEquals(static::FIXTURES . '/test.webp', $file);
 
 		// test JPEG by comparing the output dynamically to avoid issues
 		// with different libraries/library versions in CI
-		$fixture      = __DIR__ . '/fixtures/qr/test.jpg';
+		$fixture      = static::FIXTURES . '/test.jpg';
 		$expectedJpeg = $this->imageContent(imagecreatefromjpeg($fixture));
 
-		$qr->write($file = $this->tmp . '/test.jpg');
+		$qr->write($file = static::TMP . '/test.jpg');
 		$this->assertFileExists($file);
 		$actualJpeg = $this->imageContent(imagecreatefromjpeg($file));
 		$this->assertSame($expectedJpeg, $actualJpeg);
 
-		$qr->write($file = $this->tmp . '/test.jpeg');
+		$qr->write($file = static::TMP . '/test.jpeg');
 		$this->assertFileExists($file);
 		$actualJpeg = $this->imageContent(imagecreatefromjpeg($file));
 		$this->assertSame($expectedJpeg, $actualJpeg);

@@ -4,8 +4,6 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 
-require_once __DIR__ . '/mocks.php';
-
 /**
  * @coversDefaultClass \Kirby\Cms\Responder
  */

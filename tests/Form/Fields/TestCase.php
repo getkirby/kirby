@@ -4,26 +4,24 @@ namespace Kirby\Form\Fields;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
-use Kirby\Filesystem\Dir;
 use Kirby\Form\Field;
 use Kirby\Form\Fields;
-use PHPUnit\Framework\TestCase as BaseTestCase;
+use Kirby\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
 	protected $app;
-	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
 		// start with a fresh set of fields
 		Field::$types = [];
 
-		Dir::make($this->tmp);
+		$this->setUpTmp();
 
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp
+				'index' => $this->hasTmp() ? static::TMP : '/dev/null'
 			],
 			'urls' => [
 				'index' => 'https://getkirby.com/subfolder'
@@ -33,7 +31,7 @@ class TestCase extends BaseTestCase
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->tmp);
+		$this->tearDownTmp();
 	}
 
 	public function app()

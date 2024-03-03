@@ -1,5 +1,5 @@
 <template>
-	<k-field v-bind="$props" class="k-toggles-field">
+	<k-field v-bind="$props" :input="id" class="k-toggles-field">
 		<k-empty
 			v-if="!options?.length"
 			:text="$t('options.none')"
@@ -7,11 +7,9 @@
 		/>
 		<k-input
 			v-else
-			:id="uid"
 			ref="input"
 			:class="{ grow }"
 			v-bind="$props"
-			theme="field"
 			type="toggles"
 			@input="$emit('input', $event)"
 		/>

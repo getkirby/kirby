@@ -1,10 +1,60 @@
 <template>
-	<k-lab-options-input-examples
-		:value="value"
-		type="picklist"
-		@input="value = $event"
-	>
-		<template v-slot="{ options }">
+	<k-lab-form>
+		<k-lab-examples>
+			<k-lab-example label="Default">
+				<k-picklist-input
+					name="picklist"
+					:options="options"
+					:value="value"
+					@input="value = $event"
+				/>
+			</k-lab-example>
+
+			<k-lab-example label="Autofocus">
+				<k-picklist-input
+					:autofocus="true"
+					:options="options"
+					:value="value"
+					@input="value = $event"
+				/>
+			</k-lab-example>
+
+			<k-lab-example label="Required">
+				<k-picklist-input
+					:options="options"
+					:required="true"
+					:value="value"
+					@input="value = $event"
+				/>
+			</k-lab-example>
+
+			<k-lab-example label="Options with info">
+				<k-picklist-input
+					:options="optionsWithInfo"
+					:value="value"
+					@input="value = $event"
+				/>
+			</k-lab-example>
+
+			<k-lab-example label="Focus" class="k-lab-input-examples-focus">
+				<k-picklist-input
+					ref="input"
+					:options="optionsWithInfo"
+					:value="value"
+					@input="value = $event"
+				/>
+				<k-button text="Focus" variant="filled" @click="$refs.input.focus()" />
+			</k-lab-example>
+
+			<k-lab-example label="Disabled">
+				<k-picklist-input
+					:disabled="true"
+					:options="optionsWithInfo"
+					:value="value"
+					@input="value = $event"
+				/>
+			</k-lab-example>
+
 			<k-lab-example label="Multiple: false">
 				<k-picklist-input :multiple="false" :options="options" value="c" />
 			</k-lab-example>
@@ -24,18 +74,32 @@
 			<k-lab-example label="Search: false">
 				<k-picklist-input :options="options" :search="false" />
 			</k-lab-example>
-		</template>
-	</k-lab-options-input-examples>
+		</k-lab-examples>
+	</k-lab-form>
 </template>
 
 <script>
 export default {
 	data() {
 		return {
-			value: []
+			value: null
 		};
 	},
 	computed: {
+		options() {
+			return [
+				{ text: "Option A", value: "a" },
+				{ text: "Option B", value: "b" },
+				{ text: "Option C", value: "c" }
+			];
+		},
+		optionsWithInfo() {
+			return [
+				{ text: "Option A", value: "a", info: "This is some info text" },
+				{ text: "Option B", value: "b", info: "This is some info text" },
+				{ text: "Option C", value: "c", info: "This is some info text" }
+			];
+		},
 		optionsMany() {
 			return [
 				{ text: "Afghanistan", value: "Afghanistan" },
