@@ -20,7 +20,7 @@ export default defineConfig(({ command }) => {
 		vue({
 			template: {
 				compilerOptions: {
-					isCustomElement: (tag) => ["k-array-input"].includes(tag),
+					isCustomElement: (tag) => ["k-input-validator"].includes(tag),
 					compatConfig: {
 						MODE: 3,
 						COMPILER_V_BIND_OBJECT_ORDER: false
