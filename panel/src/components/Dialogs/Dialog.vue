@@ -1,7 +1,7 @@
 <template>
-	<Teleport v-if="visible" to=".k-drawer-portal">
+	<Teleport v-if="visible" to=".k-dialog-portal">
 		<form
-			:class="$vnode.data.staticClass"
+			:class="$attrs.class"
 			:data-has-footer="cancelButton || submitButton"
 			:data-size="size"
 			class="k-dialog"
