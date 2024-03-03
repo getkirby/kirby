@@ -1,17 +1,16 @@
 <template>
 	<nav v-if="tabs.length > 1" class="k-tabs">
 		<k-button
-			v-for="tabBtn in visible"
+			v-for="btn in buttons"
 			ref="visible"
-			:key="tabBtn.name"
-			v-bind="(btn = button(tabBtn))"
+			:key="btn.name"
 			variant="dimmed"
 			class="k-tab-button"
 		>
 			{{ btn.text }}
 
-			<span v-if="tabBtn.badge" :data-theme="theme" class="k-tabs-badge">
-				{{ tabBtn.badge }}
+			<span v-if="btn.badge" :data-theme="theme" class="k-tabs-badge">
+				{{ btn.badge }}
 			</span>
 		</k-button>
 
@@ -74,6 +73,9 @@ export default {
 		};
 	},
 	computed: {
+		buttons() {
+			return this.visible.map(this.button);
+		},
 		current() {
 			const tab =
 				this.tabs.find((tab) => tab.name === this.tab) ?? this.tabs[0];
@@ -106,9 +108,8 @@ export default {
 	methods: {
 		button(tab) {
 			return {
-				link: tab.link,
+				...tab,
 				current: tab.name === this.current,
-				icon: tab.icon,
 				title: tab.label,
 				text: tab.label ?? tab.text ?? tab.name
 			};
