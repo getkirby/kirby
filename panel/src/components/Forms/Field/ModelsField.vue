@@ -37,6 +37,11 @@
 				</k-collection>
 			</k-array-input>
 		</k-dropzone>
+
+		<k-input-validator
+			v-bind="{ min, max, required }"
+			:value="JSON.stringify(value)"
+		/>
 	</k-field>
 </template>
 

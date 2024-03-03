@@ -1,23 +1,11 @@
 <template>
-	<k-array-input
-		ref="input"
-		v-bind="{
-			min,
-			max,
-			name,
-			required
-		}"
-		:class="$options.class"
-		:value="JSON.stringify(value ?? [])"
-		input=".k-tags-input-toggle"
-		class="k-tags-input"
-	>
+	<div class="k-tags-input">
 		<k-tags
 			ref="tags"
 			v-bind="$props"
 			@edit="edit"
 			@input="$emit('input', $event)"
-			@click.stop="$refs.toggle?.$el?.click()"
+			@click.native.stop="$refs.toggle?.$el?.click()"
 		>
 			<k-button
 				v-if="!max || value.length < max"
@@ -29,10 +17,11 @@
 				size="xs"
 				icon="add"
 				@click="$refs.create.open()"
-				@keydown.delete="$refs.tags.focus('prev')"
-				@keydown="toggle"
+				@keydown.native.delete="$refs.tags.focus('prev')"
+				@keydown.native="toggle"
 			/>
 		</k-tags>
+
 		<k-picklist-dropdown
 			ref="replace"
 			v-bind="picklist"
@@ -42,6 +31,7 @@
 			@create="replace"
 			@input="replace"
 		/>
+
 		<k-picklist-dropdown
 			ref="create"
 			v-bind="picklist"
@@ -50,7 +40,12 @@
 			@create="create"
 			@input="pick"
 		/>
-	</k-array-input>
+
+		<k-input-validator
+			v-bind="{ min, max, required }"
+			:value="JSON.stringify(value)"
+		/>
+	</div>
 </template>
 
 <script>
@@ -222,7 +217,6 @@ export default {
 
 <style>
 .k-tags-input {
-	display: block;
 	padding: var(--tags-gap);
 	cursor: pointer;
 }

@@ -11,10 +11,11 @@
 </template>
 
 <script>
-import Input, { props as InputProps } from "@/mixins/input.js";
+import Input from "@/mixins/input.js";
+import { props as ChoiceInputProps } from "./ChoiceInput.vue";
 
 export const props = {
-	mixins: [InputProps],
+	mixins: [ChoiceInputProps],
 	props: {
 		/**
 		 * The text to display next to the toggle. This can either be a string
@@ -55,14 +56,14 @@ export default {
 	methods: {
 		onEnter(e) {
 			if (e.key === "Enter") {
-				this.$refs.input.click();
+				this.$el.click();
 			}
 		},
 		onInput(checked) {
 			this.$emit("input", checked);
 		},
 		select() {
-			this.$refs.input.focus();
+			this.$el.focus();
 		}
 	}
 };

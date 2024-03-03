@@ -1,7 +1,6 @@
 <template>
 	<k-fieldset
 		v-if="hasFields"
-		:novalidate="novalidate"
 		:fields="fields"
 		:value="value"
 		class="k-dialog-fields"
@@ -27,15 +26,6 @@ export const props = {
 		fields: {
 			default: () => [],
 			type: [Array, Object]
-		},
-		/**
-		 * Skip client side validation.
-		 * Validation is skipped by default in
-		 * dialogs. Native input validation still works though.
-		 */
-		novalidate: {
-			default: true,
-			type: Boolean
 		},
 		/**
 		 * An object with all values for the fields

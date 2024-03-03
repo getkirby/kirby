@@ -1,26 +1,16 @@
 <template>
 	<fieldset :disabled="disabled" class="k-checkboxes-input">
 		<legend class="sr-only">{{ $t("options") }}</legend>
+		<ul :style="{ '--columns': columns }" class="k-grid" data-variant="choices">
+			<li v-for="(choice, index) in choices" :key="index">
+				<k-choice-input v-bind="choice" @input="input(choice.value, $event)" />
+			</li>
+		</ul>
 
-		<k-array-input
-			ref="input"
-			v-bind="{
-				min,
-				max,
-				name,
-				required,
-				value: JSON.stringify(value)
-			}"
-		>
-			<ul :style="'--columns:' + columns" class="k-grid" data-variant="choices">
-				<li v-for="(choice, index) in choices" :key="index">
-					<k-choice-input
-						v-bind="choice"
-						@input="input(choice.value, $event)"
-					/>
-				</li>
-			</ul>
-		</k-array-input>
+		<k-input-validator
+			v-bind="{ min, max, required }"
+			:value="JSON.stringify(selected)"
+		/>
 	</fieldset>
 </template>
 
@@ -31,9 +21,13 @@ import { options } from "@/mixins/props.js";
 export const props = {
 	mixins: [InputProps, options],
 	props: {
-		columns: Number,
+		columns: {
+			default: 1,
+			type: Number
+		},
 		max: Number,
 		min: Number,
+		theme: String,
 		/**
 		 * The value for the input should be provided as array. Each value in the array corresponds with the value in the options. If you provide a string, the string will be split by comma.
 		 */
@@ -46,37 +40,53 @@ export const props = {
 
 export default {
 	mixins: [Input, props],
+	data() {
+		return {
+			selected: []
+		};
+	},
 	computed: {
 		choices() {
 			return this.options.map((option, index) => {
 				return {
 					autofocus: this.autofocus && index === 0,
-					checked: this.value?.includes(option.value),
+					checked: this.selected.includes(option.value),
 					disabled: this.disabled || option.disabled,
 					id: `${this.id}-${index}`,
 					info: option.info,
 					label: option.text,
+					name: this.name ?? this.id,
 					type: "checkbox",
 					value: option.value
 				};
 			});
 		}
 	},
+	watch: {
+		value: {
+			handler(value) {
+				this.selected = Array.isArray(value) ? value : [];
+			},
+			immediate: true
+		}
+	},
 	methods: {
 		focus() {
-			(
-				this.$el.querySelector("input:checked") ??
-				this.$el.querySelector("input")
-			)?.focus();
+			this.$el.querySelector("input")?.focus();
 		},
-		input(value, checked) {
-			if (checked === true) {
-				this.$refs.input.add(value);
+		input(key, value) {
+			if (value === true) {
+				this.selected.push(key);
 			} else {
-				this.$refs.input.remove(value);
+				const index = this.selected.indexOf(key);
+				if (index !== -1) {
+					this.selected.splice(index, 1);
+				}
 			}
-
-			this.$emit("input", this.$refs.input.selected);
+			this.$emit("input", this.selected);
+		},
+		select() {
+			this.focus();
 		}
 	}
 };

@@ -1,5 +1,4 @@
 import AlphaInput from "./AlphaInput.vue";
-import ArrayInput from "./ArrayInput.js";
 import CalendarInput from "./CalendarInput.vue";
 import CheckboxInput from "./CheckboxInput.vue";
 import CheckboxesInput from "./CheckboxesInput.vue";
@@ -33,12 +32,14 @@ import TogglesInput from "./TogglesInput.vue";
 import UrlInput from "./UrlInput.vue";
 import WriterInput from "./WriterInput.vue";
 
+import Validator from "./Validator.js";
+
 /** @deprecated */
 import Writer from "../Writer/Writer.vue";
 
 export default {
 	install(app) {
-		customElements.define("k-array-input", ArrayInput);
+		customElements.define("k-input-validator", Validator);
 
 		app.component("k-alpha-input", AlphaInput);
 		app.component("k-calendar-input", CalendarInput);

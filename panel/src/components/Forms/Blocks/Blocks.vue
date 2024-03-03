@@ -86,6 +86,10 @@ export const props = {
 		fieldsets: Object,
 		fieldsetGroups: Object,
 		group: String,
+		min: {
+			type: Number,
+			default: null
+		},
 		max: {
 			type: Number,
 			default: null

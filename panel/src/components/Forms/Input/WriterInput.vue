@@ -15,6 +15,15 @@
 			v-bind="toolbarOptions"
 			@command="onCommand"
 		/>
+
+		<textarea
+			ref="output"
+			:name="name"
+			:required="required"
+			:value="value"
+			class="input-hidden"
+			tabindex="-1"
+		/>
 	</div>
 </template>
 
@@ -58,12 +67,6 @@ import {
 	placeholder,
 	spellcheck
 } from "@/mixins/props.js";
-
-import {
-	required as validateRequired,
-	minLength as validateMinLength,
-	maxLength as validateMaxLength
-} from "vuelidate/lib/validators";
 
 export const props = {
 	mixins: [InputProps, maxlength, minlength, placeholder, spellcheck],
@@ -111,9 +114,9 @@ export const props = {
 		}
 	},
 	computed: {
-		counterValue() {
+		characters() {
 			const plain = this.$helper.string.stripHTML(this.value);
-			return this.$helper.string.unescapeHTML(plain);
+			return this.$helper.string.unescapeHTML(plain).length;
 		}
 	}
 };
@@ -151,8 +154,6 @@ export default {
 				this.html = newValue;
 				this.editor.setContent(this.html);
 			}
-
-			this.onInvalid();
 		}
 	},
 	mounted() {
@@ -231,6 +232,7 @@ export default {
 					}
 
 					this.$emit("input", this.html);
+					this.validate();
 				}
 			},
 			extensions: [
@@ -252,8 +254,6 @@ export default {
 
 		this.$panel.events.on("click", this.onBlur);
 		this.$panel.events.on("focus", this.onBlur);
-
-		this.onInvalid();
 
 		if (this.$props.autofocus) {
 			this.focus();
@@ -381,9 +381,6 @@ export default {
 		focus() {
 			this.editor.focus();
 		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
-		},
 		getSplitContent() {
 			return this.editor.getHTMLStartToSelectionToEnd();
 		},
@@ -394,16 +391,34 @@ export default {
 		},
 		onCommand(command, ...args) {
 			this.editor.command(command, ...args);
-		}
-	},
-	validations() {
-		return {
-			counterValue: {
-				required: this.required ? validateRequired : true,
-				minLength: this.minlength ? validateMinLength(this.minlength) : true,
-				maxLength: this.maxlength ? validateMaxLength(this.maxlength) : true
+		},
+		async validate() {
+			// wait for the next tick to ensure the editor
+			// has updated its content
+			await this.$nextTick();
+
+			let error = "";
+
+			if (
+				this.isEmpty === false &&
+				this.minlength &&
+				this.characters < this.minlength
+			) {
+				error = this.$t("error.validation.minlength", {
+					min: this.minlength
+				});
+			} else if (
+				this.isEmpty === false &&
+				this.maxlength &&
+				this.characters > this.maxlength
+			) {
+				error = this.$t("error.validation.maxlength", {
+					max: this.maxlength
+				});
 			}
-		};
+
+			this.$refs.output.setCustomValidity(error);
+		}
 	}
 };
 </script>

@@ -1,22 +1,10 @@
 <template>
-	<k-array-input
-		ref="input"
-		v-bind="{
-			min,
-			max,
-			name,
-			required
-		}"
-		:class="$options.class"
-		:value="JSON.stringify(value ?? [])"
-		input=".k-multiselect-input-toggle"
-		class="k-multiselect-input"
-	>
+	<div class="k-multiselect-input">
 		<k-tags
 			ref="tags"
 			v-bind="$props"
 			@input="$emit('input', $event)"
-			@click.stop="open"
+			@click.native.stop="open"
 		>
 			<k-button
 				v-if="!max || value.length < max"
@@ -27,23 +15,30 @@
 				class="k-multiselect-input-toggle k-tags-navigatable"
 				size="xs"
 				icon="triangle-down"
-				@keydown.delete="$refs.tags.focus('prev')"
-				@focus="open"
+				@keydown.native.delete="$refs.tags.focus('prev')"
+				@focus.native="open"
 			/>
 		</k-tags>
+
 		<k-picklist-dropdown
 			ref="dropdown"
 			v-bind="$props"
 			:options="options"
 			@input="$emit('input', $event)"
 		/>
-	</k-array-input>
+
+		<k-input-validator
+			v-bind="{ min, max, required }"
+			:value="JSON.stringify(value)"
+		/>
+	</div>
 </template>
 
 <script>
 import Input from "@/mixins/input.js";
 import { picklist as PicklistInputProps } from "@/components/Forms/Input/PicklistInput.vue";
 import { props as TagsProps } from "@/components/Navigation/Tags.vue";
+
 import { name, required } from "@/mixins/props.js";
 
 export const props = {
@@ -68,7 +63,6 @@ export default {
 
 <style>
 .k-multiselect-input {
-	display: block;
 	padding: var(--tags-gap);
 	cursor: pointer;
 }

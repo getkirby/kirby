@@ -18,7 +18,6 @@
 		/>
 		<k-dialog-fields
 			:fields="fields"
-			:novalidate="novalidate"
 			:value="value"
 			@input="$emit('input', $event)"
 			@submit="$emit('submit', $event)"

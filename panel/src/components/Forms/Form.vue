@@ -1,10 +1,10 @@
 <template>
 	<form
 		ref="form"
+		:novalidate="novalidate"
 		method="POST"
 		autocomplete="off"
 		class="k-form"
-		novalidate
 		@submit.prevent="onSubmit"
 	>
 		<!-- @slot Add something above the form -->
@@ -17,7 +17,6 @@
 				ref="fields"
 				:disabled="disabled"
 				:fields="fields"
-				:novalidate="novalidate"
 				:value="value"
 				@focus="onFocus"
 				@input="onInput"

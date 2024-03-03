@@ -1,23 +1,23 @@
 <template>
-	<ul
-		:style="{ '--columns': columns }"
-		class="k-radio-input k-grid"
-		data-variant="choices"
-	>
-		<li v-for="(choice, index) in choices" :key="index">
-			<k-choice-input
-				v-bind="choice"
-				@click.native.stop="toggle(choice.value)"
-				@input="$emit('input', choice.value)"
-			/>
-		</li>
-	</ul>
+	<fieldset :disabled="disabled" class="k-radio-input">
+		<legend class="sr-only">{{ $t("options") }}</legend>
+		<ul :style="{ '--columns': columns }" class="k-grid" data-variant="choices">
+			<li v-for="(choice, index) in choices" :key="index">
+				<k-choice-input
+					v-bind="choice"
+					@click.native.stop="toggle(choice.value)"
+					@input="$emit('input', choice.value)"
+				/>
+			</li>
+		</ul>
+
+		<k-input-validator :required="required" :value="JSON.stringify(value)" />
+	</fieldset>
 </template>
 
 <script>
 import Input, { props as InputProps } from "@/mixins/input.js";
 import { options } from "@/mixins/props.js";
-import { required as validateRequired } from "vuelidate/lib/validators";
 
 export const props = {
 	mixins: [InputProps, options],
@@ -51,14 +51,6 @@ export default {
 			});
 		}
 	},
-	watch: {
-		value: {
-			handler() {
-				this.validate();
-			},
-			immediate: true
-		}
-	},
 	methods: {
 		focus() {
 			this.$el.querySelector("input")?.focus();
@@ -70,17 +62,7 @@ export default {
 			if (value === this.value && this.reset && !this.required) {
 				this.$emit("input", "");
 			}
-		},
-		validate() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
 		}
-	},
-	validations() {
-		return {
-			value: {
-				required: this.required ? validateRequired : true
-			}
-		};
 	}
 };
 </script>

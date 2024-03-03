@@ -1,6 +1,6 @@
 <template>
 	<k-lab-form>
-		<k-lab-examples>
+		<k-lab-examples class="k-lab-input-examples">
 			<k-lab-example label="Default">
 				<k-list-input name="list" :value="value" @input="value = $event" />
 			</k-lab-example>
@@ -32,6 +32,14 @@
 
 			<k-lab-example label="Disabled">
 				<k-list-input :disabled="true" :value="value" @input="value = $event" />
+			</k-lab-example>
+
+			<k-lab-example label="Minlength: 5">
+				<k-list-input :minlength="5" :value="value" @input="value = $event" />
+			</k-lab-example>
+
+			<k-lab-example label="Maxlength: 10">
+				<k-list-input :maxlength="10" :value="value" @input="value = $event" />
 			</k-lab-example>
 		</k-lab-examples>
 	</k-lab-form>

@@ -51,6 +51,7 @@ export const props = {
 	mixins: [LayoutProps, id],
 	props: {
 		empty: String,
+		min: Number,
 		max: Number,
 		selector: Object,
 		value: {

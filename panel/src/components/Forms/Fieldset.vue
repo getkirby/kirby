@@ -19,7 +19,6 @@
 						:disabled="disabled || field.disabled"
 						:form-data="value"
 						:name="fieldName"
-						:novalidate="novalidate"
 						:value="value[fieldName]"
 						@input="onInput($event, field, fieldName)"
 						@focus="$emit('focus', $event, field, fieldName)"
@@ -62,13 +61,6 @@ export default {
 		fields: {
 			type: [Array, Object],
 			default: () => ({})
-		},
-		/**
-		 * If `true`, form fields won't show their validation status on the fly.
-		 */
-		novalidate: {
-			type: Boolean,
-			default: false
 		},
 		/**
 		 * Key/Value object with all values for all fields

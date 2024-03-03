@@ -19,45 +19,48 @@
 		</template>
 
 		<template v-if="hasFields">
-			<k-array-input
-				v-bind="{
-					name,
-					required
-				}"
-				:value="JSON.stringify(object)"
+			<table
+				v-if="!isEmpty"
+				:aria-disabled="disabled"
+				:data-invalid="isInvalid"
+				class="k-table k-object-field-table"
 			>
-				<table
-					v-if="!isEmpty"
-					:aria-disabled="disabled"
-					class="k-table k-object-field-table"
-				>
-					<tbody>
-						<template v-for="field in fields">
-							<tr
-								v-if="field.saveable && $helper.field.isVisible(field, value)"
-								:key="field.name"
-								@click="open(field.name)"
-							>
-								<th data-has-button data-mobile="true">
-									<button type="button">{{ field.label }}</button>
-								</th>
-								<k-table-cell
-									:column="field"
-									:field="field"
-									:mobile="true"
-									:value="object[field.name]"
-									@input="cell(field.name, $event)"
-								/>
-							</tr>
-						</template>
-					</tbody>
-				</table>
-				<k-empty v-else icon="box" @click="add">
-					{{ empty ?? $t("field.object.empty") }}
-				</k-empty>
-			</k-array-input>
+				<tbody>
+					<template v-for="field in fields">
+						<tr
+							v-if="field.saveable && $helper.field.isVisible(field, value)"
+							:key="field.name"
+							@click="open(field.name)"
+						>
+							<th data-has-button data-mobile="true">
+								<button type="button">{{ field.label }}</button>
+							</th>
+							<k-table-cell
+								:column="field"
+								:field="field"
+								:mobile="true"
+								:value="object[field.name]"
+								@input="cell(field.name, $event)"
+							/>
+						</tr>
+					</template>
+				</tbody>
+			</table>
+			<k-empty v-else :data-invalid="isInvalid" icon="box" @click="add">
+				{{ empty ?? $t("field.object.empty") }}
+			</k-empty>
 		</template>
-		<k-empty v-else icon="box">{{ $t("fields.empty") }}</k-empty>
+		<template v-else>
+			<k-empty icon="box">{{ $t("fields.empty") }}</k-empty>
+		</template>
+
+		<!-- Validation -->
+		<input
+			type="checkbox"
+			:checked="!isEmpty"
+			:required="required"
+			class="input-hidden"
+		/>
 	</k-field>
 </template>
 
@@ -85,6 +88,9 @@ export default {
 			return (
 				this.object === null || this.$helper.object.length(this.object) === 0
 			);
+		},
+		isInvalid() {
+			return this.required === true && this.isEmpty;
 		}
 	},
 	watch: {
@@ -102,7 +108,7 @@ export default {
 			this.open();
 		},
 		cell(name, value) {
-			this.object[name] = value;
+			this.$set(this.object, name, value);
 			this.save();
 		},
 		/**
@@ -152,7 +158,7 @@ export default {
 						// sure to make them reactive if they don't
 						// exist yet
 						for (const field in value) {
-							this.object[field] = value[field];
+							this.$set(this.object, field, value[field]);
 						}
 
 						this.save();
