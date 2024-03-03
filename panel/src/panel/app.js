@@ -4,6 +4,14 @@ import { h, resolveComponent } from "vue";
  * @since 4.0.0
  */
 export default {
+	computed: {
+		component() {
+			return this.$panel.view.component;
+		},
+		view() {
+			return this.$panel.view.props;
+		}
+	},
 	created() {
 		/**
 		 * Delegate all required window events to the
@@ -41,11 +49,10 @@ export default {
 		this.$panel.events.unsubscribe();
 	},
 	render() {
-		if (this.$panel.view.component) {
-			const component = resolveComponent(this.$panel.view.component);
-			return h(component, {
-				key: this.$panel.view.component,
-				...this.$panel.view.props
+		if (this.component) {
+			return h(resolveComponent(this.component), {
+				key: this.component,
+				...this.view
 			});
 		}
 	}
