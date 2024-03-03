@@ -68,10 +68,6 @@ export default {
 		// Vue instance
 		this.app = app;
 
-		// register the single source of truth
-		// for all Vue components
-		this.app.config.globalProperties.$panel = this;
-
 		// props
 		this.isLoading = false;
 		this.isOffline = false;
@@ -117,7 +113,13 @@ export default {
 		// Turn the entire panel object
 		// reactive. This will only be applied
 		// to objects and arrays. Methods won't be touched.
-		return reactive(this);
+		const panel = reactive(this);
+
+		// register the single source of truth
+		// for all Vue components
+		this.app.config.globalProperties.$panel = panel;
+
+		return panel;
 	},
 
 	/**
