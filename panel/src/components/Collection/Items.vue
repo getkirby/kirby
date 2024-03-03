@@ -25,7 +25,7 @@
 		@change="$emit('change', $event)"
 		@end="$emit('sort', items, $event)"
 	>
-		<template v-for="(item, itemIndex) in items">
+		<template v-slot="{ item, itemIndex }">
 			<slot v-bind="{ item, itemIndex }">
 				<k-item
 					:key="item.id ?? itemIndex"

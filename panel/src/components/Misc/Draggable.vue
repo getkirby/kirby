@@ -13,8 +13,8 @@
 		@start="onStart"
 	>
 		<!-- @slot Items to be sortable via drag and drop -->
-		<template #item="{ element }">
-			<slot />
+		<template #item="{ element: item, index: itemIndex }">
+			<slot v-bind="{ item, itemIndex }" />
 		</template>
 
 		<template #footer>
