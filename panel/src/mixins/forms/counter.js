@@ -9,21 +9,12 @@ export default {
 		counterOptions() {
 			const value = this.counterValue ?? this.value;
 
-			if (value === null || this.disabled || this.counter === false) {
+			if (this.counter === false || this.disabled || !value) {
 				return false;
 			}
 
-			let count = 0;
-
-			if (value) {
-				if (Array.isArray(value)) {
-					count = value.length;
-				} else {
-					count = String(value).length;
-				}
-			}
 			return {
-				count,
+				count: Array.isArray(value) ? value.length : String(value).length,
 				min: this.$props.min ?? this.$props.minlength,
 				max: this.$props.max ?? this.$props.maxlength
 			};
