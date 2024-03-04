@@ -2,6 +2,9 @@
 
 namespace Kirby\Toolkit;
 
+/**
+ * @coversDefaultClass \Kirby\Toolkit\Config
+ */
 class ConfigTest extends TestCase
 {
 	protected function setUp(): void
@@ -14,12 +17,18 @@ class ConfigTest extends TestCase
 		Config::$data = [];
 	}
 
+	/**
+	 * @covers ::get
+	 */
 	public function testGet()
 	{
 		$this->assertSame('testvalue', Config::get('testvar'));
 		$this->assertSame('defaultvalue', Config::get('nonexistentvar', 'defaultvalue'));
 	}
 
+	/**
+	 * @covers ::set
+	 */
 	public function testSet()
 	{
 		Config::set('anothervar', 'anothervalue');

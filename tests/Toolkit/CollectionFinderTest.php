@@ -2,8 +2,14 @@
 
 namespace Kirby\Toolkit;
 
+/**
+ * @coversDefaultClass \Kirby\Toolkit\Collection
+ */
 class CollectionFinderTest extends TestCase
 {
+	/**
+	 * @covers ::findBy
+	 */
 	public function testFindBy()
 	{
 		$collection = new Collection([
@@ -23,6 +29,9 @@ class CollectionFinderTest extends TestCase
 		], $collection->findBy('email', 'bastian@getkirby.com'));
 	}
 
+	/**
+	 * @covers ::find
+	 */
 	public function testFindKey()
 	{
 		$collection = new Collection([

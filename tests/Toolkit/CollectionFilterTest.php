@@ -17,8 +17,14 @@ class MockCollectionEntry
 	}
 }
 
+/**
+ * @coversDefaultClass \Kirby\Toolkit\Collection
+ */
 class CollectionFilterTest extends TestCase
 {
+	/**
+	 * @covers ::filter
+	 */
 	public function testFilterArray()
 	{
 		$collection = new Collection([
@@ -62,6 +68,9 @@ class CollectionFilterTest extends TestCase
 		$this->assertSame($expected, $result->data());
 	}
 
+	/**
+	 * @covers ::filter
+	 */
 	public function testFilterClosure()
 	{
 		$collection = new Collection([
@@ -654,6 +663,7 @@ class CollectionFilterTest extends TestCase
 	}
 
 	/**
+	 * @covers ::filter
 	 * @dataProvider filterDataProvider
 	 */
 	public function testFilter($attributes, $operator, $test, $expected, $split)
@@ -672,6 +682,9 @@ class CollectionFilterTest extends TestCase
 		$this->assertSame($expected, $result->keys(), $operator);
 	}
 
+	/**
+	 * @covers ::not
+	 */
 	public function testNot()
 	{
 		$collection = new Collection([

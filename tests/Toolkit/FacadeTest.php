@@ -14,8 +14,14 @@ class ObjFacade extends Facade
 	}
 }
 
+/**
+ * @coversDefaultClass \Kirby\Toolkit\Facade
+ */
 class FacadeTest extends TestCase
 {
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testCall()
 	{
 		$this->assertSame('Test', ObjFacade::test());

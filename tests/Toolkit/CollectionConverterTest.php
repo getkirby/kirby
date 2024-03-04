@@ -2,8 +2,14 @@
 
 namespace Kirby\Toolkit;
 
+/**
+ * @coversDefaultClass \Kirby\Toolkit\Collection
+ */
 class CollectionConverterTest extends TestCase
 {
+	/**
+	 * @covers ::toArray
+	 */
 	public function testToArray()
 	{
 		$array = [
@@ -14,6 +20,9 @@ class CollectionConverterTest extends TestCase
 		$this->assertSame($array, $collection->toArray());
 	}
 
+	/**
+	 * @covers ::toArray
+	 */
 	public function testToArrayMap()
 	{
 		$collection = new Collection([
@@ -28,6 +37,9 @@ class CollectionConverterTest extends TestCase
 		}));
 	}
 
+	/**
+	 * @covers ::toJson
+	 */
 	public function testToJson()
 	{
 		$collection = new Collection([
@@ -37,6 +49,9 @@ class CollectionConverterTest extends TestCase
 		$this->assertSame('{"one":"eins","two":"zwei"}', $collection->toJson());
 	}
 
+	/**
+	 * @covers ::toString
+	 */
 	public function testToString()
 	{
 		$collection = new Collection([

@@ -25,8 +25,14 @@ class MockObjectString extends MockObject
 	}
 }
 
+/**
+ * @coversDefaultClass \Kirby\Toolkit\Collection
+ */
 class CollectionSorterTest extends TestCase
 {
+	/**
+	 * @covers ::sort
+	 */
 	public function testSort()
 	{
 		$collection = new Collection([
@@ -71,6 +77,9 @@ class CollectionSorterTest extends TestCase
 		$this->assertSame('blue', $sorted->nth(2)['color']);
 	}
 
+	/**
+	 * @covers ::sort
+	 */
 	public function testSortFlags()
 	{
 		$collection = new Collection([
@@ -99,6 +108,9 @@ class CollectionSorterTest extends TestCase
 		$this->assertSame('img1.png', $sorted->nth(3)['name']);
 	}
 
+	/**
+	 * @covers ::sort
+	 */
 	public function testSortCases()
 	{
 		$collection = new Collection([
@@ -115,6 +127,9 @@ class CollectionSorterTest extends TestCase
 		$this->assertSame('c', $sorted->nth(3)['name']);
 	}
 
+	/**
+	 * @covers ::sort
+	 */
 	public function testSortIntegers()
 	{
 		$collection = new Collection([
@@ -131,6 +146,9 @@ class CollectionSorterTest extends TestCase
 		$this->assertSame(12, $sorted->nth(3)['number']);
 	}
 
+	/**
+	 * @covers ::sort
+	 */
 	public function testSortZeros()
 	{
 		$collection = new Collection([
@@ -159,6 +177,9 @@ class CollectionSorterTest extends TestCase
 		$this->assertSame('4', $sorted->nth(3)['title']);
 	}
 
+	/**
+	 * @covers ::sort
+	 */
 	public function testSortCallable()
 	{
 		$collection = new Collection([
@@ -198,12 +219,18 @@ class CollectionSorterTest extends TestCase
 		$this->assertSame('First Article', $sorted->nth(2)['title']);
 	}
 
+	/**
+	 * @covers ::sort
+	 */
 	public function testSortEmpty()
 	{
 		$collection = new Collection();
 		$this->assertSame($collection, $collection->sort());
 	}
 
+	/**
+	 * @covers ::sort
+	 */
 	public function testSortObjects()
 	{
 		$bastian = new MockObjectString('Bastian');
@@ -222,6 +249,9 @@ class CollectionSorterTest extends TestCase
 		$this->assertSame($sonja, $sorted->nth(2)['name']);
 	}
 
+	/**
+	 * @covers ::sort
+	 */
 	public function testSortNoRecursiveDependencyError()
 	{
 		// arrays; shouldn't be a problem
@@ -271,6 +301,9 @@ class CollectionSorterTest extends TestCase
 		$this->assertSame($sonja, $sorted->nth(3));
 	}
 
+	/**
+	 * @covers ::flip
+	 */
 	public function testFlip()
 	{
 		$collection = new Collection([
@@ -289,6 +322,9 @@ class CollectionSorterTest extends TestCase
 		$this->assertSame('img12.png', $flipped->nth(2)['name']);
 	}
 
+	/**
+	 * @covers ::shuffle
+	 */
 	public function testShuffle()
 	{
 		$collection = new Collection([

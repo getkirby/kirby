@@ -338,6 +338,9 @@ class ATest extends TestCase
 		);
 	}
 
+	/**
+	 * @covers ::map
+	 */
 	public function testMapWithFunction()
 	{
 		$array    = [' A ', 'B ', ' C'];
@@ -346,6 +349,9 @@ class ATest extends TestCase
 		$this->assertSame($expected, A::map($array, 'trim'));
 	}
 
+	/**
+	 * @covers ::map
+	 */
 	public function testMapWithClassMethod()
 	{
 		$array    = ['a', 'b', 'c'];

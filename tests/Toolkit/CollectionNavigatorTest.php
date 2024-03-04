@@ -2,8 +2,15 @@
 
 namespace Kirby\Toolkit;
 
+/**
+ * @coversDefaultClass \Kirby\Toolkit\Collection
+ */
 class CollectionNavigatorTest extends TestCase
 {
+	/**
+	 * @covers ::first
+	 * @covers ::last
+	 */
 	public function testFirstLast()
 	{
 		$collection = new Collection([
@@ -17,6 +24,9 @@ class CollectionNavigatorTest extends TestCase
 		$this->assertSame('vier', $collection->last());
 	}
 
+	/**
+	 * @covers ::nth
+	 */
 	public function testNth()
 	{
 		$collection = new Collection([

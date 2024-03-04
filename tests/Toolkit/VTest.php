@@ -68,6 +68,9 @@ class VTest extends TestCase
 		V::fool('me');
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testAccepted()
 	{
 		$this->assertTrue(V::accepted(true));
@@ -87,12 +90,18 @@ class VTest extends TestCase
 		$this->assertFalse(V::accepted('off'));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testContains()
 	{
 		$this->assertTrue(V::contains('word', 'or'));
 		$this->assertFalse(V::contains('word', 'test'));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testDenied()
 	{
 		$this->assertTrue(V::denied(false));
@@ -112,6 +121,9 @@ class VTest extends TestCase
 		$this->assertFalse(V::denied(null));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testAlpha()
 	{
 		$this->assertTrue(V::alpha('foo'));
@@ -148,6 +160,9 @@ class VTest extends TestCase
 		$this->assertFalse(V::alphanum('uñicode-1234', true));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testBetween()
 	{
 		$this->assertTrue(V::between(4, 3, 5));
@@ -157,6 +172,9 @@ class VTest extends TestCase
 		$this->assertFalse(V::between('kirby', 2, 4));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testDate()
 	{
 		$this->assertTrue(V::date('2017-12-24'));
@@ -168,6 +186,9 @@ class VTest extends TestCase
 		$this->assertFalse(V::date('January 32, 1989'));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testDifferent()
 	{
 		$this->assertTrue(V::different('foo', 'bar'));
@@ -188,12 +209,18 @@ class VTest extends TestCase
 		$this->assertTrue(V::different('true', true, true));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testEndsWith()
 	{
 		$this->assertTrue(V::endsWith('test', 'st'));
 		$this->assertFalse(V::endsWith('test', 'te'));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testSame()
 	{
 		$this->assertTrue(V::same('foo', 'foo'));
@@ -214,6 +241,9 @@ class VTest extends TestCase
 		$this->assertFalse(V::same('true', true, true));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testEmail()
 	{
 		$this->assertTrue(V::email('bastian@getkirby.com'));
@@ -228,6 +258,9 @@ class VTest extends TestCase
 		$this->assertFalse(V::email('@getkirby.com'));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testEmpty()
 	{
 		$this->assertTrue(V::empty(''));
@@ -243,6 +276,9 @@ class VTest extends TestCase
 		$this->assertFalse(V::empty(new Collection(['a'])));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testDateComparison()
 	{
 		$this->assertTrue(V::date('2345-01-01', '==', '01.01.2345'));
@@ -273,6 +309,9 @@ class VTest extends TestCase
 		V::date('2345-01-01', '<>', '2345-01-01');
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testFilename()
 	{
 		$this->assertTrue(V::filename('size.txt'));
@@ -282,6 +321,9 @@ class VTest extends TestCase
 		$this->assertFalse(V::filename('../'));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testIn()
 	{
 		$this->assertTrue(V::in('bastian', ['bastian', 'nico', 'sonja']));
@@ -452,12 +494,18 @@ class VTest extends TestCase
 		$this->assertSame([], $result);
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testNotEmpty()
 	{
 		$this->assertFalse(V::notEmpty(''));
 		$this->assertTrue(V::notEmpty(0));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testNotIn()
 	{
 		$this->assertFalse(V::notIn('bastian', ['bastian', 'nico', 'sonja']));
@@ -466,6 +514,9 @@ class VTest extends TestCase
 		$this->assertTrue(V::notIn('bastian', []));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testInteger()
 	{
 		$this->assertTrue(V::integer(5));
@@ -481,6 +532,9 @@ class VTest extends TestCase
 		$this->assertFalse(V::integer(null, true));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testIp()
 	{
 		$this->assertTrue(V::ip('192.168.255.1'));
@@ -492,6 +546,9 @@ class VTest extends TestCase
 		$this->assertFalse(V::ip('192.168.255.24.23'));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testJson()
 	{
 		$this->assertTrue(V::json('{"foo": "bar"}'));
@@ -505,12 +562,18 @@ class VTest extends TestCase
 		$this->assertFalse(V::json(''));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testLess()
 	{
 		$this->assertTrue(V::less(1, 2));
 		$this->assertFalse(V::less(2, 1));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testMaxLength()
 	{
 		$this->assertTrue(V::maxLength('Kirby', 10));
@@ -520,6 +583,9 @@ class VTest extends TestCase
 		$this->assertFalse(V::maxLength('Kirby', 3));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testMinLength()
 	{
 		$this->assertTrue(V::minLength('Kirby', 2));
@@ -529,6 +595,9 @@ class VTest extends TestCase
 		$this->assertFalse(V::minLength(' Kirby ', 6));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testMaxWords()
 	{
 		$this->assertTrue(V::maxWords('This is Kirby', 10));
@@ -538,6 +607,9 @@ class VTest extends TestCase
 		$this->assertFalse(V::maxWords('This is Kirby', 2));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testMinWords()
 	{
 		$this->assertTrue(V::minWords('This is Kirby', 2));
@@ -547,18 +619,27 @@ class VTest extends TestCase
 		$this->assertFalse(V::minWords('This is Kirby ', 4));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testMore()
 	{
 		$this->assertTrue(V::more(1, 0));
 		$this->assertFalse(V::more(0, 1));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testNotContains()
 	{
 		$this->assertFalse(V::notContains('word', 'or'));
 		$this->assertTrue(V::notContains('word', 'test'));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testNum()
 	{
 		$this->assertTrue(V::num(2));
@@ -570,6 +651,9 @@ class VTest extends TestCase
 		$this->assertFalse(V::num(false));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testRequired()
 	{
 		// required
@@ -580,6 +664,9 @@ class VTest extends TestCase
 		$this->assertFalse(V::required(''));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testRequiredWithReferenceArray()
 	{
 		$this->assertTrue(V::required('a', ['a' => 2]));
@@ -591,6 +678,9 @@ class VTest extends TestCase
 		$this->assertFalse(V::required('a', ['a' => []]));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testSize()
 	{
 		$this->assertTrue(V::size('foo', 3));
@@ -630,6 +720,9 @@ class VTest extends TestCase
 		$this->assertFalse(V::size($field->foo(), 6, '>'));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testSizeInvalid()
 	{
 		$this->expectException('Exception');
@@ -638,6 +731,9 @@ class VTest extends TestCase
 		V::size(false, 5);
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testSizeInvalidObject()
 	{
 		$this->expectException('Exception');
@@ -646,6 +742,9 @@ class VTest extends TestCase
 		V::size(new \stdClass(), 5);
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testTel()
 	{
 		$this->assertTrue(V::tel('+123456789'));
@@ -654,12 +753,18 @@ class VTest extends TestCase
 		$this->assertFalse(V::tel('+1234-56789'));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testTime()
 	{
 		$this->assertTrue(V::time('12:12:12'));
 		$this->assertFalse(V::time('24:24:24'));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testUuid()
 	{
 		$this->assertTrue(V::uuid('site://'));
@@ -689,6 +794,9 @@ class VTest extends TestCase
 		$this->assertFalse(V::uuid('not a page://something'));
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function testUrl()
 	{
 		// based on https://mathiasbynens.be/demo/url-regex

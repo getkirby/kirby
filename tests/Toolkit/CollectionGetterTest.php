@@ -2,8 +2,14 @@
 
 namespace Kirby\Toolkit;
 
+/**
+ * @coversDefaultClass \Kirby\Toolkit\Collection
+ */
 class CollectionGetterTest extends TestCase
 {
+	/**
+	 * @covers ::__call
+	 */
 	public function testGetMagic()
 	{
 		$collection = new Collection([
@@ -16,6 +22,9 @@ class CollectionGetterTest extends TestCase
 		$this->assertNull($collection->three);
 	}
 
+	/**
+	 * @covers ::get
+	 */
 	public function testGet()
 	{
 		$collection = new Collection([
@@ -28,6 +37,9 @@ class CollectionGetterTest extends TestCase
 		$this->assertSame('default', $collection->get('three', 'default'));
 	}
 
+	/**
+	 * @covers ::__call
+	 */
 	public function testMagicMethods()
 	{
 		$collection = new Collection([
@@ -40,6 +52,9 @@ class CollectionGetterTest extends TestCase
 		$this->assertNull($collection->three());
 	}
 
+	/**
+	 * @covers ::toArray
+	 */
 	public function testGetAttribute()
 	{
 		$collection = new Collection([
