@@ -6,6 +6,9 @@
 		<k-lab-example label="too many tabs">
 			<k-tabs :tabs="tabs" />
 		</k-lab-example>
+		<k-lab-example label="theme: notice">
+			<k-tabs :tabs="tabs" theme="notice" />
+		</k-lab-example>
 	</k-lab-examples>
 </template>
 
