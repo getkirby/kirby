@@ -236,6 +236,29 @@ class MenuTest extends TestCase
 	}
 
 	/**
+	 * @covers ::entry
+	 */
+	public function testEntryMultiLanguage()
+	{
+		$menu = new Menu([], [], 'account');
+
+		$entry = $menu->entry([
+			'id'    => 'account',
+			'link'  => 'foo',
+			'label' => [
+				'en' => 'My account',
+				'de' => 'Mein Account'
+			],
+			'menu'  => true
+		]);
+		$this->assertSame([
+			'current' => true,
+			'link'    => 'foo',
+			'text'    => 'My account'
+		], $entry);
+	}
+
+	/**
 	 * @covers ::entries
 	 */
 	public function testEntries()
