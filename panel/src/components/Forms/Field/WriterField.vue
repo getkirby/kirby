@@ -28,7 +28,7 @@ export default {
 	inheritAttrs: false,
 	computed: {
 		counterValue() {
-			const plain = this.$helper.string.stripHTML(this.value);
+			const plain = this.$helper.string.stripHTML(this.value ?? "");
 			return this.$helper.string.unescapeHTML(plain);
 		}
 	},
