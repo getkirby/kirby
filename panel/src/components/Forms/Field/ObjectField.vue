@@ -172,9 +172,17 @@ export default {
 .k-table.k-object-field-table {
 	table-layout: auto;
 }
-@container (min-width: 40rem) {
-	.k-table.k-object-field-table tbody td {
-		max-width: 0;
+.k-table.k-object-field-table tbody td {
+	max-width: 0;
+}
+@container (max-width: 40rem) {
+	.k-object-field {
+		overflow: hidden;
+	}
+	.k-object-field-table.k-table tbody :where(th):is([data-mobile="true"]) {
+		width: 1px !important;
+		white-space: normal;
+		word-break: normal;
 	}
 }
 </style>
