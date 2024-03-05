@@ -172,7 +172,9 @@ export default {
 .k-table.k-object-field-table {
 	table-layout: auto;
 }
-.k-table.k-object-field-table tbody td {
-	max-width: 0;
+@container (min-width: 40rem) {
+	.k-table.k-object-field-table tbody td {
+		max-width: 0;
+	}
 }
 </style>
