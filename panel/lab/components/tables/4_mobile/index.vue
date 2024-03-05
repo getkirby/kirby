@@ -1,8 +1,14 @@
 <template>
 	<k-lab-examples>
 		<k-lab-example label="Horizontal">
+			<k-toggle-input
+				:text="['Scrolling', 'Responsive']"
+				v-model="responsive"
+				label="Responsive"
+			/>
+			<br />
 			<div class="k-table">
-				<table>
+				<table :data-responsive="responsive">
 					<thead>
 						<tr>
 							<th data-mobile="true">TH 1</th>
@@ -27,6 +33,11 @@
 
 <script>
 export default {
+	data() {
+		return {
+			responsive: true
+		};
+	},
 	computed: {
 		options() {
 			return [

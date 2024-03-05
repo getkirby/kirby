@@ -1,6 +1,10 @@
 <template>
 	<div :aria-disabled="disabled" class="k-table">
-		<table :data-disabled="disabled" :data-indexed="hasIndexColumn">
+		<table
+			:data-disabled="disabled"
+			:data-indexed="hasIndexColumn"
+			:data-responsive="isResponsive"
+		>
 			<!-- Header row -->
 			<thead>
 				<tr>
@@ -183,6 +187,10 @@ export default {
 			default: 1
 		},
 		/**
+		 * Enables hiding of columns on mobile
+		 */
+		responsive: Boolean,
+		/**
 		 * Array of table rows
 		 */
 		rows: Array,
@@ -261,6 +269,19 @@ export default {
 				this.options?.length > 0 ||
 				Object.values(this.values).filter((row) => row?.options).length > 0
 			);
+		},
+		isResponsive() {
+			if (this.responsive === true) {
+				return true;
+			}
+
+			if (
+				Object.values(this.columns).find((column) => column.mobile === true)
+			) {
+				return true;
+			}
+
+			return false;
 		}
 	},
 	watch: {
@@ -542,14 +563,17 @@ export default {
 	}
 
 	/**	Reset any custom column widths **/
-	.k-table:has([data-mobile])
+	.k-table
+		table[data-responsive="true"]
 		:where(th, td):not(.k-table-index-column):not(.k-table-options-column):not(
 			[style*="width:"]
 		) {
 		width: auto !important;
 	}
 
-	.k-table:has([data-mobile]) :where(th, td):not([data-mobile="true"]) {
+	.k-table
+		table[data-responsive="true"]
+		:where(th, td):not([data-mobile="true"]) {
 		display: none;
 	}
 }
