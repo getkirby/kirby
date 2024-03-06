@@ -1,5 +1,5 @@
 <template>
-	<k-field v-bind="$props" class="k-layout-field">
+	<k-field v-bind="$props" :class="['k-layout-field', $attrs.class]">
 		<template v-if="!disabled && hasFieldsets" #options>
 			<k-button-group layout="collapsed">
 				<k-button

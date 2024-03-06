@@ -1,5 +1,5 @@
 <template>
-	<figure class="k-block-figure">
+	<figure :class="['k-block-figure', $attrs.class]">
 		<k-button
 			v-if="isEmpty"
 			:disabled="disabled"

@@ -13,7 +13,7 @@
 			step: stepNumber,
 			value: number
 		}"
-		class="k-number-input"
+		:class="['k-number-input', $attrs.class]"
 		type="number"
 		@blur="onBlur"
 		@input="onInput($event.target.value)"

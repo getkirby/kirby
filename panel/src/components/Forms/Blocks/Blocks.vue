@@ -1,8 +1,8 @@
 <template>
 	<div
+		:class="['k-blocks', $attrs.class]"
 		:data-disabled="disabled"
 		:data-empty="blocks.length === 0"
-		class="k-blocks"
 	>
 		<template v-if="hasFieldsets">
 			<k-draggable

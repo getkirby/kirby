@@ -1,5 +1,5 @@
 <template>
-	<k-field v-bind="$props" :input="id" class="k-link-field">
+	<k-field v-bind="$props" :class="['k-link-field', $attrs.class]" :input="id">
 		<k-input v-bind="$props" :icon="false">
 			<div class="k-link-input-header">
 				<!-- Type selector -->

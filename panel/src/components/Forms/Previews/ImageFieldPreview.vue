@@ -1,5 +1,9 @@
 <template>
-	<k-item-image v-if="value" class="k-image-field-preview" :image="value" />
+	<k-item-image
+		v-if="value"
+		:class="['k-image-field-preview', $attrs.class]"
+		:image="value"
+	/>
 </template>
 
 <script>

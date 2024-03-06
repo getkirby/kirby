@@ -6,8 +6,8 @@
 			color: $helper.color(color),
 			background: $helper.color(back)
 		}"
+		:class="['k-bubble', $attrs.class]"
 		:data-has-text="Boolean(text)"
-		class="k-bubble"
 		@click.stop
 	>
 		<!-- @slot Replace the default image -->

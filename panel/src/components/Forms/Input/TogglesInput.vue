@@ -1,5 +1,5 @@
 <template>
-	<fieldset :disabled="disabled" class="k-toggles-input">
+	<fieldset :class="['k-toggles-input', $attrs.class]" :disabled="disabled">
 		<legend class="sr-only">{{ $t("options") }}</legend>
 		<ul
 			:data-labels="labels"

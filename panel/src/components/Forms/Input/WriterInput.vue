@@ -2,12 +2,12 @@
 	<div
 		ref="editor"
 		v-direction
+		:class="['k-writer', 'k-writer-input', $attrs.class]"
 		:data-disabled="disabled"
 		:data-empty="isEmpty"
 		:data-placeholder="placeholder"
 		:data-toolbar-inline="Boolean(toolbar.inline ?? true)"
 		:spellcheck="spellcheck"
-		class="k-writer k-writer-input"
 	>
 		<k-writer-toolbar
 			v-if="editor && !disabled"
@@ -115,7 +115,7 @@ export const props = {
 	},
 	computed: {
 		characters() {
-			const plain = this.$helper.string.stripHTML(this.value);
+			const plain = this.$helper.string.stripHTML(this.value ?? "");
 			return this.$helper.string.unescapeHTML(plain).length;
 		}
 	}

@@ -2,8 +2,7 @@
 	<component
 		:is="component"
 		v-bind="attrs"
-		:class="$attrs.class"
-		class="k-item-image"
+		:class="['k-item-image', $attrs.class]"
 	/>
 </template>
 

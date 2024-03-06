@@ -5,10 +5,10 @@
 		select=":where(.k-tag, .k-tags-navigatable):not(:disabled)"
 	>
 		<k-draggable
+			:class="['k-tags', $attrs.class]"
+			:data-layout="layout"
 			:list="tags"
 			:options="dragOptions"
-			:data-layout="layout"
-			class="k-tags"
 			@end="input"
 		>
 			<k-tag

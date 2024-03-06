@@ -1,5 +1,8 @@
 <template>
-	<p class="k-url-field-preview" :class="$options.class" :data-link="link">
+	<p
+		:class="['k-url-field-preview', $options.class, $attrs.class]"
+		:data-link="link"
+	>
 		{{ column.before }}
 		<k-link :to="link" @click.stop>
 			<span>{{ text }}</span>

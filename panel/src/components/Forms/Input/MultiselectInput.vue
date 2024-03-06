@@ -1,5 +1,5 @@
 <template>
-	<div class="k-multiselect-input">
+	<div :class="['k-multiselect-input', $attrs.class]">
 		<k-tags
 			ref="tags"
 			v-bind="$props"

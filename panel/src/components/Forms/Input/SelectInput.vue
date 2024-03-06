@@ -1,5 +1,9 @@
 <template>
-	<span :data-disabled="disabled" :data-empty="isEmpty" class="k-select-input">
+	<span
+		:class="['k-select-input', $attrs.class]"
+		:data-disabled="disabled"
+		:data-empty="isEmpty"
+	>
 		<select
 			:id="id"
 			ref="input"

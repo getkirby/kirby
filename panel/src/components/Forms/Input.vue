@@ -1,9 +1,8 @@
 <template>
 	<div
-		:class="$attrs.class"
+		:class="['k-input', $attrs.class]"
 		:data-disabled="disabled"
 		:data-type="type"
-		class="k-input"
 	>
 		<span
 			v-if="$slots.before || before"

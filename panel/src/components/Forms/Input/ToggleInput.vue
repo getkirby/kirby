@@ -2,8 +2,9 @@
 	<k-choice-input
 		v-bind="$props"
 		:checked="value"
+		:class="['k-toggle-input', $attrs.class]"
+		:disabled="disabled"
 		:label="label"
-		class="k-toggle-input"
 		type="checkbox"
 		variant="toggle"
 		@input="$emit('input', $event)"

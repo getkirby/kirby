@@ -1,9 +1,9 @@
 <template>
 	<k-field
 		v-bind="$props"
-		:input="id"
+		:class="['k-textarea-field', $attrs.class]"
 		:counter="counterOptions"
-		class="k-textarea-field"
+		:input="id"
 	>
 		<k-input
 			v-bind="$props"

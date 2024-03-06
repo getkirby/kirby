@@ -1,5 +1,5 @@
 <template>
-	<div class="k-toggle-field-preview">
+	<div :class="['k-toggle-field-preview', $attrs.class]">
 		<k-toggle-input
 			:text="text"
 			:value="value"

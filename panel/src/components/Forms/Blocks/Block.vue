@@ -3,7 +3,8 @@
 		ref="container"
 		:class="[
 			'k-block-container-fieldset-' + type,
-			containerType ? 'k-block-container-type-' + containerType : ''
+			containerType ? 'k-block-container-type-' + containerType : '',
+			$attrs.class
 		]"
 		:data-batched="isBatched"
 		:data-disabled="isDisabled"

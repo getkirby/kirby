@@ -1,11 +1,11 @@
 <template>
 	<k-dialog
 		ref="dialog"
+		:class="['k-block-importer', $attrs.class]"
 		:cancel-button="false"
 		:submit-button="false"
 		:visible="true"
 		size="large"
-		class="k-block-importer"
 		@cancel="$emit('cancel')"
 		@submit="$emit('submit')"
 	>

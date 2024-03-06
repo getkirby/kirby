@@ -1,5 +1,8 @@
 <template>
-	<fieldset :disabled="disabled" class="k-checkboxes-input">
+	<fieldset
+		:class="['k-checkboxes-input', 'k-grid', $attrs.class]"
+		:disabled="disabled"
+	>
 		<legend class="sr-only">{{ $t("options") }}</legend>
 		<ul :style="{ '--columns': columns }" class="k-grid" data-variant="choices">
 			<li v-for="(choice, index) in choices" :key="index">

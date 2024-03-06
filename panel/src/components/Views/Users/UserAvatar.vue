@@ -1,31 +1,26 @@
 <template>
-	<div>
-		<k-button
-			:title="$t('avatar')"
-			variant="filled"
-			class="k-user-view-image"
-			@click="model.avatar ? $refs.avatar.toggle() : uploadAvatar()"
-		>
-			<k-image-frame v-if="model.avatar" :cover="true" :src="model.avatar" />
-			<k-icon-frame v-else icon="user" />
-		</k-button>
-		<k-dropdown-content
-			v-if="model.avatar"
-			ref="avatar"
-			:options="[
-				{
-					icon: 'upload',
-					text: $t('change'),
-					click: uploadAvatar
-				},
-				{
-					icon: 'trash',
-					text: $t('delete'),
-					click: deleteAvatar
-				}
-			]"
-		/>
-	</div>
+	<k-button :title="$t('avatar')" class="k-user-view-image" @click="open">
+		<template v-if="model.avatar">
+			<k-image-frame :cover="true" :src="model.avatar" />
+			<k-dropdown-content
+				ref="dropdown"
+				:options="[
+					{
+						icon: 'upload',
+						text: $t('change'),
+						click: upload
+					},
+					{
+						icon: 'trash',
+						text: $t('delete'),
+						click: remove
+					}
+				]"
+			/>
+		</template>
+
+		<k-icon-frame v-else icon="user" />
+	</k-button>
 </template>
 
 <script>
@@ -38,12 +33,19 @@ export default {
 		model: Object
 	},
 	methods: {
-		async deleteAvatar() {
+		open() {
+			if (this.model.avatar) {
+				this.$refs.dropdown.toggle();
+			} else {
+				this.upload();
+			}
+		},
+		async remove() {
 			await this.$api.users.deleteAvatar(this.model.id);
 			this.$panel.notification.success();
 			this.$reload();
 		},
-		uploadAvatar() {
+		upload() {
 			this.$panel.upload.pick({
 				url: this.$panel.urls.api + "/" + this.model.link + "/avatar",
 				accept: "image/*",
