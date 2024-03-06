@@ -16,18 +16,18 @@
 			<table style="table-layout: auto">
 				<tbody>
 					<tr>
-						<th>{{ $t("type") }}</th>
-						<td>{{ license.type }}</td>
+						<th data-mobile="true">{{ $t("type") }}</th>
+						<td data-mobile="true">{{ license.type }}</td>
 					</tr>
 					<tr v-if="license.code">
-						<th>{{ $t("license.code") }}</th>
-						<td class="k-text">
+						<th data-mobile="true">{{ $t("license.code") }}</th>
+						<td data-mobile="true" class="k-text">
 							<code>{{ license.code }}</code>
 						</td>
 					</tr>
 					<tr v-if="license.info">
-						<th>{{ $t("status") }}</th>
-						<td :data-theme="license.theme">
+						<th data-mobile="true">{{ $t("status") }}</th>
+						<td data-mobile="true" :data-theme="license.theme">
 							<p class="k-license-dialog-status">
 								<k-icon :type="license.icon" />
 								{{ license.info }}
