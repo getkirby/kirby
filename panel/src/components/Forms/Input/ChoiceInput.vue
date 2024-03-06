@@ -11,8 +11,8 @@
 				type,
 				value
 			}"
+			:class="[variant === 'invisible' ? 'sr-only' : null, $attrs.class]"
 			:data-variant="variant"
-			:class="{ 'sr-only': variant === 'invisible' }"
 			@input="$emit('input', $event.target.checked)"
 		/>
 		<span v-if="label || info" class="k-choice-input-label">
@@ -25,8 +25,7 @@
 </template>
 
 <script>
-import { props as InputProps } from "@/mixins/input.js";
-import Input from "@/mixins/input.js";
+import Input, { props as InputProps } from "@/mixins/input.js";
 
 export const props = {
 	mixins: [InputProps],

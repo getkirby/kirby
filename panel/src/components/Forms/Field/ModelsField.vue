@@ -1,5 +1,8 @@
 <template>
-	<k-field v-bind="$props" :class="`k-models-field k-${$options.type}-field`">
+	<k-field
+		v-bind="$props"
+		:class="['k-models-field', `k-${$options.type}-field`, $attrs.class]"
+	>
 		<template v-if="!disabled" #options>
 			<k-button-group
 				ref="buttons"

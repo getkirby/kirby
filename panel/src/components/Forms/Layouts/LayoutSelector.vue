@@ -1,7 +1,7 @@
 <template>
 	<k-dialog
 		v-bind="$props"
-		class="k-layout-selector"
+		:class="['k-layout-selector', $attrs.class]"
 		:size="selector?.size ?? 'medium'"
 		@cancel="$emit('cancel')"
 		@submit="$emit('submit', value)"

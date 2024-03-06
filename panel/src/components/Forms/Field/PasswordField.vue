@@ -1,9 +1,9 @@
 <template>
 	<k-field
 		v-bind="$props"
-		:input="id"
+		:class="['k-password-field', $attrs.class]"
 		:counter="counterOptions"
-		class="k-password-field"
+		:input="id"
 	>
 		<template #options>
 			<slot name="options" />

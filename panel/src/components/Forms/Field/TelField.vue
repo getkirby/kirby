@@ -1,5 +1,5 @@
 <template>
-	<k-field v-bind="$props" :input="id" class="k-tel-field">
+	<k-field v-bind="$props" :class="['k-tel-field', $attrs.class]" :input="id">
 		<k-input
 			v-bind="$props"
 			ref="input"

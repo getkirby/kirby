@@ -1,11 +1,10 @@
 <template>
 	<div
 		v-bind="data"
-		:class="layout ? 'k-' + layout + '-item' : false"
+		:class="['k-item', `k-item-${layout}`, $attrs.class]"
 		:data-has-image="hasFigure"
 		:data-layout="layout"
 		:data-theme="theme"
-		class="k-item"
 		@click="$emit('click', $event)"
 		@dragstart="$emit('drag', $event)"
 	>

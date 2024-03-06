@@ -1,9 +1,9 @@
 <template>
 	<ul
+		:class="['k-toggles-input', $attrs.class]"
 		:data-invalid="$v.$invalid"
 		:data-labels="labels"
 		:style="{ '--options': columns ?? options.length }"
-		class="k-toggles-input"
 	>
 		<li
 			v-for="(option, index) in options"

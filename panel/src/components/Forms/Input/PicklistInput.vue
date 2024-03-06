@@ -1,9 +1,9 @@
 <template>
 	<k-navigate
+		:class="['k-picklist-input', $attrs.class]"
 		element="nav"
 		axis="y"
 		select="input[type=search], label, .k-picklist-input-body button"
-		class="k-picklist-input"
 		@prev="$emit('escape')"
 	>
 		<header v-if="search" class="k-picklist-input-header">

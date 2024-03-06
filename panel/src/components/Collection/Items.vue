@@ -18,8 +18,7 @@
 	<!-- Layout: cards, cardlets, list -->
 	<k-draggable
 		v-else
-		class="k-items"
-		:class="'k-' + layout + '-items'"
+		:class="['k-items', 'k-' + layout + '-items', $attrs.class]"
 		:data-layout="layout"
 		:data-size="size"
 		:handle="true"
