@@ -19,17 +19,17 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-	mixins: [InputProps, WriterProps, maxlength, minlength],
-	computed: {
-		counterValue() {
-			const plain = this.$helper.string.stripHTML(this.value);
-			return this.$helper.string.unescapeHTML(plain);
-		}
-	}
+	mixins: [InputProps, WriterProps, maxlength, minlength]
 };
 
 export default {
 	mixins: [Input, props],
+	computed: {
+		counterValue() {
+			const plain = this.$helper.string.stripHTML(this.value ?? "");
+			return this.$helper.string.unescapeHTML(plain);
+		}
+	},
 	watch: {
 		value() {
 			this.onInvalid();
