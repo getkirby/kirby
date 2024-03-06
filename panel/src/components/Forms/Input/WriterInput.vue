@@ -109,12 +109,6 @@ export const props = {
 			type: String,
 			default: ""
 		}
-	},
-	computed: {
-		counterValue() {
-			const plain = this.$helper.string.stripHTML(this.value);
-			return this.$helper.string.unescapeHTML(plain);
-		}
 	}
 };
 
@@ -130,6 +124,10 @@ export default {
 		};
 	},
 	computed: {
+		counterValue() {
+			const plain = this.$helper.string.stripHTML(this.value ?? "");
+			return this.$helper.string.unescapeHTML(plain);
+		},
 		isCursorAtEnd() {
 			return this.editor.selectionIsAtEnd;
 		},

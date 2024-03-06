@@ -128,7 +128,7 @@ class Menu
 			'link'     => $area['link'] ?? null,
 			'dialog'   => $area['dialog'] ?? null,
 			'drawer'   => $area['drawer'] ?? null,
-			'text'     => $area['label'],
+			'text'     => I18n::translate($area['label'], $area['label'])
 		], $menu);
 
 		// unset the link (which is always added by default to an area)
