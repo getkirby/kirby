@@ -59,6 +59,7 @@ class FileBlueprint extends Blueprint
 	 * file upload or `*` if all MIME types are allowed
 	 *
 	 * @deprecated 4.2.0 Use `acceptAttribute` instead
+	 * @todo 5.0.0 Remove method
 	 */
 	public function acceptMime(): string
 	{
@@ -117,19 +118,17 @@ class FileBlueprint extends Blueprint
 		// no restrictions, accept everything
 		return '*';
 	}
-
-
 	/**
 	 * Returns the list of all accepted file extensions
 	 * for file upload or `*` if all extensions are allowed
 	 *
-	 * If a mime type is specified in the blueprint, the extensions and types options are ignored for the browser.
-	 * Extensions and Types, however, are still used to validate an uploaded file on the server.
-	 * This behavior might change in the future to better represent what file extensions are actually allowed.
+	 * If a MIME type is specified in the blueprint, the `extension` and `type` options are ignored for the browser.
+	 * Extensions and types, however, are still used to validate an uploaded file on the server.
+	 * This behavior might change in the future to better represent which file extensions are actually allowed.
 	 *
-	 * If no mime type is specified, the intersection between manually defined extensions and the Kirby "file types" is returned.
+	 * If no MIME type is specified, the intersection between manually defined extensions and the Kirby "file types" is returned.
 	 * If the intersection is empty, an empty string is returned.
-	 * This behavior might change in the future to instead return the union of mime, extensions and types.
+	 * This behavior might change in the future to instead return the union of `mime`, `extension` and `type`.
 	 *
 	 * @since 4.2.0
 	 */

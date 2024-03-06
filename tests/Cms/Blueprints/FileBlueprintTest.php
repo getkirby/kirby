@@ -13,50 +13,42 @@ class FileBlueprintTest extends TestCase
 	public static function acceptAttributeProvider()
 	{
 		return [
-			[
-				'wildcard', // case name
+			'wildcard' => [ // case name
 				'image/*', // accept option in blueprint
 				['.jpg', '.jpeg', '.gif', '.png'], // expected extensions
 				['.js', '.pdf', '.docx', '.zip'] // not expected extensions
 			],
-			[
-				'mimeAsString',
+			'mimeAsString' => [
 				'image/jpeg, image/png',
 				['.jpg', '.jpeg', '.png'],
 				['.gif', '.js', '.pdf', '.docx', '.zip']
 			],
-			[
-				'mimeAsProperty',
+			'mimeAsProperty' => [
 				['mime' => 'image/jpeg, image/png'],
 				['.jpg', '.jpeg', '.png'],
 				['.gif', '.js', '.pdf', '.docx', '.zip']
 			],
-			[
-				'extensions',
+			'extensions' => [
 				['extension' => 'jpg, png'],
 				['.jpg', '.png'],
 				['.gif', '.jpeg', '.js', '.pdf', '.docx', '.zip']
 			],
-			[
-				'extensionsAndMime',
+			'extensionsAndMime' => [
 				['extension' => 'foo, bar', 'mime' => 'image/jpeg, image/png'],
 				['.jpg', '.jpeg', '.png'],
 				['.gif', '.js', '.pdf', '.docx', '.zip', '.foo', '.bar']
 			],
-			[
-				'type',
+			'type' => [
 				['type' => 'image'],
 				['.jpg', '.jpeg', '.gif', '.png'],
 				['.js', '.pdf', '.docx', '.zip']
 			],
-			[
-				'typeAndMime',
+			'typeAndMime' => [
 				['type' => 'document', 'mime' => 'image/jpeg, image/png'],
 				['.jpg', '.jpeg', '.png'],
 				['.gif', '.js', '.pdf', '.docx', '.zip']
 			],
-			[
-				'intersect',
+			'intersect' => [
 				['type' => 'image', 'extension' => 'jpg, png, foo, bar'],
 				['.jpg', '.png'],
 				['.gif', '.js', '.pdf', '.docx', '.zip', '.foo', '.bar']
@@ -64,32 +56,35 @@ class FileBlueprintTest extends TestCase
 		];
 	}
 
+	public function tearDown(): void
+	{
+		unset(Blueprint::$loaded['files/acceptAttribute']);
+	}
+
 	/**
 	 * @covers ::acceptAttribute
 	 * @dataProvider acceptAttributeProvider
 	 */
-	public function testAcceptAttribute($name, $accept, $expected, $notExpected)
+	public function testAcceptAttribute($accept, $expected, $notExpected)
 	{
-		Blueprint::$loaded['files/' . $name] = [
+		Blueprint::$loaded['files/acceptAttribute'] = [
 			'accept' => $accept
 		];
 
 		$file = new File([
 			'filename' => 'tmp',
 			'parent'   => $this->createMock(Page::class),
-			'template' => $name
+			'template' => 'acceptAttribute'
 		]);
 
 		$acceptAttribute = $file->blueprint()->acceptAttribute();
 
 		foreach ($expected as $extension) {
-			$this->assertStringContainsString($extension, $acceptAttribute, "Case $name: $extension should be accepted");
+			$this->assertStringContainsString($extension, $acceptAttribute);
 		}
 
 		foreach ($notExpected as $extension) {
-			$this->assertStringNotContainsString($extension, $acceptAttribute, "Case $name: $extension should not be accepted");
+			$this->assertStringNotContainsString($extension, $acceptAttribute);
 		}
-
-		unset(Blueprint::$loaded['files/' . $name]);
 	}
 }
