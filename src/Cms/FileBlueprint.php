@@ -118,6 +118,7 @@ class FileBlueprint extends Blueprint
 		// no restrictions, accept everything
 		return '*';
 	}
+
 	/**
 	 * Returns the list of all accepted file extensions
 	 * for file upload or `*` if all extensions are allowed
