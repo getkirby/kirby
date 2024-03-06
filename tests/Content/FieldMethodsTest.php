@@ -429,6 +429,20 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame('<p>This is a <a href="/a">test</a><img src="/media/pages/a/' . $hash . '/test.jpg"></p>. This should not be <a href="https://getkirby.com">affected</a>.', (string)$result);
 	}
 
+	public function testPermalinksToUrlsWithMissingUUID()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+		]);
+
+		$field  = $this->field('<p>This is a <a href="/@/page/my-page">test</a></p>.');
+		$result = $field->permalinksToUrls();
+
+		$this->assertSame('<p>This is a <a href="/@/page/my-page">test</a></p>.', (string)$result);
+	}
+
 	public function testToStructure()
 	{
 		$data = [

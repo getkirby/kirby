@@ -59,7 +59,9 @@ class Remote
 		// use the system CA store by default if
 		// one has been configured in php.ini
 		$cainfo = ini_get('curl.cainfo');
-		if (empty($cainfo) === false && is_file($cainfo) === true) {
+
+		// Suppress warnings e.g. if system CA is outside of open_basedir (See: issue #6236)
+		if (empty($cainfo) === false && @is_file($cainfo) === true) {
 			$defaults['ca'] = self::CA_SYSTEM;
 		}
 
