@@ -1,5 +1,6 @@
 <template>
 	<k-block-title
+		:class="$attrs.class"
 		:content="content"
 		:fieldset="fieldset"
 		@dblclick.native="$emit('open')"

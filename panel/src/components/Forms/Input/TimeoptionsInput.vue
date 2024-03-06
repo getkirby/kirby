@@ -1,5 +1,5 @@
 <template>
-	<div class="k-timeoptions-input">
+	<div :class="['k-timeoptions-input', $attrs.class]">
 		<div>
 			<h3>
 				<k-icon type="sun" /> <span class="sr-only">{{ $t("day") }}</span>

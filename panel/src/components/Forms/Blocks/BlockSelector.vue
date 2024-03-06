@@ -1,10 +1,10 @@
 <template>
 	<k-dialog
+		:class="['k-block-selector', $attrs.class]"
 		:cancel-button="false"
 		:size="size"
 		:submit-button="false"
 		:visible="true"
-		class="k-block-selector"
 		@cancel="$emit('cancel')"
 		@submit="$emit('submit', value)"
 	>

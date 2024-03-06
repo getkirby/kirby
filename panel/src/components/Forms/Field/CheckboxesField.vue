@@ -1,9 +1,9 @@
 <template>
 	<k-field
 		v-bind="$props"
-		:input="id + '-0'"
+		:class="['k-checkboxes-field', $attrs.class]"
 		:counter="counterOptions"
-		class="k-checkboxes-field"
+		:input="id + '-0'"
 	>
 		<k-empty
 			v-if="!options?.length"

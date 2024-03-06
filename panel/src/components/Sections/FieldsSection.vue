@@ -1,8 +1,8 @@
 <template>
 	<k-section
 		v-if="!isLoading"
-		:headline="issue ? 'Error' : null"
-		class="k-fields-section"
+		:class="['k-fields-section', $attrs.class]"
+		:headline="issue ? $t('error') : null"
 	>
 		<k-box
 			v-if="issue"

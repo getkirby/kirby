@@ -1,8 +1,8 @@
 <template>
 	<div
 		:aria-disabled="disabled"
+		:class="['k-coords-input', $attrs.class]"
 		:data-empty="!value"
-		class="k-coords-input"
 		@mousedown="onDrag"
 		@click="onMove"
 		@keydown="onKeys"
