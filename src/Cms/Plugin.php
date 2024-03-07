@@ -26,7 +26,6 @@ use Throwable;
 class Plugin
 {
 	protected PluginAssets $assets;
-	protected string $root;
 
 	// caches
 	protected array|null $info = null;
@@ -41,12 +40,25 @@ class Plugin
 	public function __construct(
 		protected string $name,
 		protected array $extends = [],
+
+		protected string|null $root = null,
 		protected string|null $version = null
 	) {
 		static::validateName($name);
 
-		$this->root = $extends['root'] ?? dirname(debug_backtrace()[0]['file']);
-		$this->info = empty($extends['info']) === false && is_array($extends['info']) ? $extends['info'] : null;
+		// TODO: Remove in v5
+		if ($root = $extends['root'] ?? null) {
+			Helpers::deprecated('Plugin "' . $name . '": Passing the `root` inside the `extends` array has been deprecated. Pass it directly as named argument `root`.', 'plugin-extends-root');
+			$this->root ??= $root;
+		}
+
+		$this->root ??= dirname(debug_backtrace()[0]['file']);
+
+		// TODO: Remove info property in v5
+		if ($info = $extends['info'] ?? null) {
+			Helpers::deprecated('Plugin "' . $name . '": Passing an `info` array inside the `extends` array has been deprecated. Pass the individual entries directly as named arguments.', 'plugin-extends-root');
+			$this->info = empty($info) === false && is_array($info) ? $info : null;
+		}
 
 		unset($this->extends['root'], $this->extends['info']);
 	}
@@ -120,6 +132,7 @@ class Plugin
 	 */
 	public function info(): array
 	{
+		// TODO: remove info prop in v5
 		if (is_array($this->info) === true) {
 			return $this->info;
 		}
