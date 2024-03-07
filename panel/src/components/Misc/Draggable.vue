@@ -25,8 +25,7 @@
 </template>
 
 <script>
-// TODO: turn into a dynmic import again
-import Draggable from "vuedraggable/src/vuedraggable";
+import { defineAsyncComponent } from "vue";
 
 /**
  * The Draggable component implements the
@@ -43,7 +42,9 @@ import Draggable from "vuedraggable/src/vuedraggable";
  */
 export default {
 	components: {
-		draggable: Draggable
+		draggable: defineAsyncComponent(
+			() => import("vuedraggable/src/vuedraggable")
+		)
 	},
 	props: {
 		data: Object,
