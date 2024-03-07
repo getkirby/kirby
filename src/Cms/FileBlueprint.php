@@ -57,6 +57,9 @@ class FileBlueprint extends Blueprint
 	/**
 	 * Returns the list of all accepted MIME types for
 	 * file upload or `*` if all MIME types are allowed
+	 *
+	 * @deprecated 4.2.0 Use `acceptAttribute` instead
+	 * @todo 5.0.0 Remove method
 	 */
 	public function acceptMime(): string
 	{
@@ -114,6 +117,74 @@ class FileBlueprint extends Blueprint
 
 		// no restrictions, accept everything
 		return '*';
+	}
+
+	/**
+	 * Returns the list of all accepted file extensions
+	 * for file upload or `*` if all extensions are allowed
+	 *
+	 * If a MIME type is specified in the blueprint, the `extension` and `type` options are ignored for the browser.
+	 * Extensions and types, however, are still used to validate an uploaded file on the server.
+	 * This behavior might change in the future to better represent which file extensions are actually allowed.
+	 *
+	 * If no MIME type is specified, the intersection between manually defined extensions and the Kirby "file types" is returned.
+	 * If the intersection is empty, an empty string is returned.
+	 * This behavior might change in the future to instead return the union of `mime`, `extension` and `type`.
+	 *
+	 * @since 4.2.0
+	 */
+	public function acceptAttribute(): string
+	{
+		// don't disclose the specific default types
+		if ($this->defaultTypes === true) {
+			return '*';
+		}
+
+		$accept = $this->accept();
+
+		// get extensions from "mime" option
+		if (is_array($accept['mime']) === true) {
+			// determine the extensions for each MIME type
+			$extensions = array_map(
+				fn ($pattern) => Mime::toExtensions($pattern, true),
+				$accept['mime']
+			);
+
+			$fromMime = array_unique(array_merge(...array_values($extensions)));
+
+			// return early to ignore the other options
+			return implode(',', array_map(fn ($ext) => ".$ext", $fromMime));
+		}
+
+		$restrictions = [];
+
+		// get extensions from "type" option
+		if (is_array($accept['type']) === true) {
+			$extensions = array_map(
+				fn ($type) => F::typeToExtensions($type) ?? [],
+				$accept['type']
+			);
+
+			$fromType = array_merge(...array_values($extensions));
+			$restrictions[] = $fromType;
+		}
+
+		// get extensions from "extension" option
+		if (is_array($accept['extension']) === true) {
+			$restrictions[] = $accept['extension'];
+		}
+
+		// intersect all restrictions
+		$list = match (count($restrictions)) {
+			0 => [],
+			1 => $restrictions[0],
+			default => array_intersect(...$restrictions)
+		};
+
+		$list = array_unique($list);
+
+		// format the list to include a leading dot on each extension
+		return implode(',', array_map(fn ($ext) => ".$ext", $list));
 	}
 
 	protected function normalizeAccept(mixed $accept = null): array

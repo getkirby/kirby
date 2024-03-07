@@ -1,13 +1,13 @@
 <template>
 	<k-dialog
 		ref="dialog"
+		v-bind="$props"
 		:submit-button="{
 			icon: 'parent',
 			text: $t('move')
 		}"
 		class="k-page-move-dialog"
 		size="medium"
-		v-bind="$props"
 		@cancel="$emit('cancel')"
 		@submit="$emit('submit', value)"
 	>

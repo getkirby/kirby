@@ -1,9 +1,9 @@
 <template>
 	<component
 		:is="component"
+		v-bind="attrs"
 		:data-has-icon="Boolean(icon)"
 		:data-has-text="Boolean(text || $slots.default)"
-		v-bind="attrs"
 		class="k-button"
 		@click="onClick"
 	>
