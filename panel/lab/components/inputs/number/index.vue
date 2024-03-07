@@ -1,6 +1,6 @@
 <template>
 	<k-lab-form>
-		<k-lab-examples>
+		<k-lab-examples class="k-lab-input-examples">
 			<k-lab-example label="Default">
 				<k-number-input name="number" :value="value" @input="value = $event" />
 			</k-lab-example>

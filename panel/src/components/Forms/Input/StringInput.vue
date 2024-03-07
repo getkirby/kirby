@@ -96,14 +96,12 @@ export default {
 			this.$emit("invalid", this.$v.$invalid, this.$v);
 		},
 		select() {
-			this.$refs.input.select();
+			this.$el.select();
 		}
 	},
 	validations() {
 		const validateMatch = (value) => {
-			return (
-				(!this.required && !value) || !this.$refs.input.validity.patternMismatch
-			);
+			return (!this.required && !value) || !this.$el.validity.patternMismatch;
 		};
 
 		return {
