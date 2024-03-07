@@ -6,63 +6,63 @@
 		class="k-picklist-input"
 		@prev="$emit('escape')"
 	>
-		<header v-if="search" class="k-picklist-input-header">
-			<div class="k-picklist-input-search">
-				<k-search-input
-					ref="search"
-					:autofocus="autofocus"
-					:disabled="disabled"
-					:placeholder="placeholder"
-					:value="query"
-					@input="query = $event"
-					@keydown.escape.native.prevent="escape"
-					@keydown.enter.native.prevent="add"
-				/>
-				<k-button
-					v-if="showCreate"
-					class="k-picklist-input-create"
-					icon="add"
-					size="xs"
-					@click="add"
-				/>
-			</div>
-		</header>
-
-		<template v-if="filteredOptions.length">
-			<div class="k-picklist-input-body">
-				<component
-					:is="multiple ? 'k-checkboxes-input' : 'k-radio-input'"
-					ref="options"
-					:disabled="disabled"
-					:options="choices"
-					:value="value"
-					class="k-picklist-input-options"
-					@input="input"
-					@keydown.native.enter.prevent="enter"
-				/>
-				<k-button
-					v-if="display !== true && filteredOptions.length > display"
-					class="k-picklist-input-more"
-					icon="angle-down"
-					@click="display = true"
-				>
-					{{ $t("options.all", { count: filteredOptions.length }) }}
-				</k-button>
-			</div>
-		</template>
-
-		<template v-else-if="showEmpty">
-			<div class="k-picklist-input-body">
-				<p class="k-picklist-input-empty">
-					{{ $t("options.none") }}
-				</p>
-			</div>
-		</template>
-
 		<k-input-validator
 			v-bind="{ min, max, required }"
 			:value="JSON.stringify(value)"
-		/>
+		>
+			<header v-if="search" class="k-picklist-input-header">
+				<div class="k-picklist-input-search">
+					<k-search-input
+						ref="search"
+						:autofocus="autofocus"
+						:disabled="disabled"
+						:placeholder="placeholder"
+						:value="query"
+						@input="query = $event"
+						@keydown.escape.native.prevent="escape"
+						@keydown.enter.native.prevent="add"
+					/>
+					<k-button
+						v-if="showCreate"
+						class="k-picklist-input-create"
+						icon="add"
+						size="xs"
+						@click="add"
+					/>
+				</div>
+			</header>
+
+			<template v-if="filteredOptions.length">
+				<div class="k-picklist-input-body">
+					<component
+						:is="multiple ? 'k-checkboxes-input' : 'k-radio-input'"
+						ref="options"
+						:disabled="disabled"
+						:options="choices"
+						:value="value"
+						class="k-picklist-input-options"
+						@input="input"
+						@keydown.native.enter.prevent="enter"
+					/>
+					<k-button
+						v-if="display !== true && filteredOptions.length > display"
+						class="k-picklist-input-more"
+						icon="angle-down"
+						@click="display = true"
+					>
+						{{ $t("options.all", { count: filteredOptions.length }) }}
+					</k-button>
+				</div>
+			</template>
+
+			<template v-else-if="showEmpty">
+				<div class="k-picklist-input-body">
+					<p class="k-picklist-input-empty">
+						{{ $t("options.none") }}
+					</p>
+				</div>
+			</template>
+		</k-input-validator>
 	</k-navigate>
 </template>
 
