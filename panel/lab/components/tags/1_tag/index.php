@@ -1,5 +1,5 @@
 <?php
 
 return [
-	'docs' => 'k-tag ',
+	'docs' => 'k-tag',
 ];
