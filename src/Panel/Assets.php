@@ -217,7 +217,7 @@ class Assets
 			[
 				'vue' => [
 					'nonce' => $this->nonce,
-					'src'   => $this->url . '/js/vue.min.js'
+					'src'   => $this->url . '/js/vue.global.prod.js',
 				],
 				'vendor'       => [
 					'nonce' => $this->nonce,

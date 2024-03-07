@@ -33,7 +33,7 @@ export default defineConfig(({ command }) => {
 			viteStaticCopy({
 				targets: [
 					{
-						src: "node_modules/vue/dist/vue.min.js",
+						src: "node_modules/vue/dist/vue.global.prod.js",
 						dest: "js"
 					}
 				]
