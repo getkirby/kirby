@@ -33,23 +33,7 @@
 </template>
 
 <script>
-import Vue from "vue";
-
-import Docs from "./Docs.vue";
-import DocsDrawer from "./DocsDrawer.vue";
-import Example from "./Example.vue";
-import Examples from "./Examples.vue";
-import Form from "./Form.vue";
-import OutputDialog from "./OutputDialog.vue";
-import TableCell from "./TableCell.vue";
-
-Vue.component("k-lab-docs", Docs);
-Vue.component("k-lab-docs-drawer", DocsDrawer);
-Vue.component("k-lab-example", Example);
-Vue.component("k-lab-examples", Examples);
-Vue.component("k-lab-form", Form);
-Vue.component("k-lab-output-dialog", OutputDialog);
-Vue.component("k-lab-table-cell", TableCell);
+import { markRaw } from "vue";
 
 export default {
 	props: {
@@ -100,7 +84,7 @@ export default {
 			component.template = this.template;
 
 			// unwrap to be recognized as new component
-			this.component = { ...component };
+			this.component = markRaw({ ...component });
 
 			// update the code strings for each example
 			window.UiExamples = this.examples;

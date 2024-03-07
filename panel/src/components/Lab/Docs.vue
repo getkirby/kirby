@@ -12,8 +12,6 @@
 </template>
 
 <script>
-import Vue from "vue";
-
 import Deprecated, { props as DeprecatedProps } from "./Docs/Deprecated.vue";
 import Desc, { props as DescProps } from "./Docs/Description.vue";
 import Examples, { props as ExamplesProps } from "./Docs/Examples.vue";
@@ -22,13 +20,6 @@ import Slots, { props as SlotsProps } from "./Docs/Slots.vue";
 import Events, { props as EventsProps } from "./Docs/Events.vue";
 import Methods, { props as MethodsProps } from "./Docs/Methods.vue";
 import DocBlock, { props as DocBlockProps } from "./Docs/DocBlock.vue";
-
-import DocDeprecated from "./DocsDeprecated.vue";
-import DocParams from "./DocsParams.vue";
-import DocTypes from "./DocsTypes.vue";
-Vue.component("k-lab-docs-deprecated", DocDeprecated);
-Vue.component("k-lab-docs-params", DocParams);
-Vue.component("k-lab-docs-types", DocTypes);
 
 export default {
 	components: {
