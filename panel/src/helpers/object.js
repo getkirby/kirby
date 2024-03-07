@@ -1,17 +1,37 @@
+import { isRef, isReactive, isProxy, toRaw } from "vue";
+
 /**
  * Clone provided object or array
  *
  * @param {Object|array} value
  * @returns  {Object|array}
- *
- * @deprecated Use `structuredClone` instead
  */
 export function clone(value) {
 	if (value === undefined) {
 		return undefined;
 	}
 
-	return structuredClone(value);
+	// Unwrap reactive objects and refs deeply
+	const unwrapper = (input) => {
+		if (Array.isArray(input)) {
+			return input.map((item) => unwrapper(item));
+		}
+
+		if (isRef(input) || isReactive(input) || isProxy(input)) {
+			return unwrapper(toRaw(input));
+		}
+
+		if (isObject(input)) {
+			return Object.keys(input).reduce((acc, key) => {
+				acc[key] = unwrapper(input[key]);
+				return acc;
+			}, {});
+		}
+
+		return input;
+	};
+
+	return unwrapper(value);
 }
 
 /**
