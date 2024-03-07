@@ -79,7 +79,7 @@ jobs:
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@a167dc27e7329e600b4fffbbbc8b01b9221ab923 # pin@v1
+        uses: shivammathur/cache-extensions@f9643262bed1015eb7bfad95e63378b23bc2d319 # pin@v1
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
@@ -179,7 +179,7 @@ jobs:
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@a167dc27e7329e600b4fffbbbc8b01b9221ab923 # pin@v1
+        uses: shivammathur/cache-extensions@f9643262bed1015eb7bfad95e63378b23bc2d319 # pin@v1
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}

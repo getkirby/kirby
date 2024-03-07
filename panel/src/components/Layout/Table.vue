@@ -534,7 +534,7 @@ export default {
 /* Mobile */
 @container (max-width: 40rem) {
 	.k-table {
-		overflow-x: scroll;
+		overflow-x: auto;
 	}
 	.k-table thead th {
 		position: static;
