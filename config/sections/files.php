@@ -47,7 +47,7 @@ return [
 					'template' => $this->template
 				]);
 
-				return $file->blueprint()->acceptMime();
+				return $file->blueprint()->acceptAttribute();
 			}
 
 			return null;

@@ -39,7 +39,7 @@ return [
 					'template' => $template
 				]);
 
-				$uploads['accept'] = $file->blueprint()->acceptMime();
+				$uploads['accept'] = $file->blueprint()->acceptAttribute();
 			}
 
 			return $uploads;
