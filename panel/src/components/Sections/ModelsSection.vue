@@ -184,7 +184,7 @@ export default {
 			this.reload();
 		}
 	},
-	created() {
+	mounted() {
 		this.search = debounce(this.search, 200);
 		this.load();
 	},

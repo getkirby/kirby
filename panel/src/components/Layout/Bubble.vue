@@ -74,7 +74,7 @@ export default {
 		 */
 		text: String
 	},
-	created() {
+	mounted() {
 		if (this.back) {
 			window.panel.deprecated(
 				"<k-bubble>: `back` prop will be removed in a future version. Use the `--bubble-back` CSS property instead."

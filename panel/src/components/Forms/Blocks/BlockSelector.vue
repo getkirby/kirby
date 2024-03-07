@@ -112,10 +112,10 @@ export default {
 			return this.$helper.keyboard.metaKey() + "+v";
 		}
 	},
-	created() {
+	mounted() {
 		this.$events.on("paste", this.paste);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("paste", this.paste);
 	},
 	methods: {

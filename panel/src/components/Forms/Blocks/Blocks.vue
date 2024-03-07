@@ -163,7 +163,7 @@ export default {
 			this.blocks = this.value;
 		}
 	},
-	created() {
+	mounted() {
 		this.$events.on("blur", this.onBlur);
 		this.$events.on("click", this.onClickGlobal);
 		this.$events.on("copy", this.onCopy);
@@ -171,7 +171,7 @@ export default {
 		this.$events.on("keyup", this.onKey);
 		this.$events.on("paste", this.onPaste);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("blur", this.onBlur);
 		this.$events.off("click", this.onClickGlobal);
 		this.$events.off("copy", this.onCopy);

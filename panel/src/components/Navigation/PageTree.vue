@@ -26,7 +26,7 @@ export default {
 			state: []
 		};
 	},
-	async created() {
+	async mounted() {
 		if (this.items) {
 			this.state = this.items;
 		} else {

@@ -57,11 +57,11 @@ export default {
 			};
 		}
 	},
-	created() {
+	mounted() {
 		this.$events.on("model.update", this.reload);
 		this.$events.on("file.sort", this.reload);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("model.update", this.reload);
 		this.$events.off("file.sort", this.reload);
 	},

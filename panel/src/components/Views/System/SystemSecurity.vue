@@ -52,7 +52,7 @@ export default {
 			issues: this.$helper.object.clone(this.security)
 		};
 	},
-	async created() {
+	async mounted() {
 		console.info(
 			"Running system health checks for the Panel system view; failed requests in the following console output are expected behavior."
 		);

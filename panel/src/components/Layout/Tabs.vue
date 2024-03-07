@@ -103,7 +103,7 @@ export default {
 			immediate: true
 		}
 	},
-	destroyed() {
+	unmounted() {
 		this.observer?.disconnect();
 	},
 	methods: {

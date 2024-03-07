@@ -55,12 +55,12 @@ export default {
 			immediate: true
 		}
 	},
-	created() {
+	mounted() {
 		this.$events.on("model.reload", this.$reload);
 		this.$events.on("keydown.left", this.toPrev);
 		this.$events.on("keydown.right", this.toNext);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("model.reload", this.$reload);
 		this.$events.off("keydown.left", this.toPrev);
 		this.$events.off("keydown.right", this.toNext);

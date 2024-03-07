@@ -75,7 +75,7 @@ export default {
 			selected: { text: null }
 		};
 	},
-	created() {
+	mounted() {
 		window.panel.deprecated(
 			"<k-autocomplete> will be removed in a future version."
 		);

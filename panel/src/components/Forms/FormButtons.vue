@@ -165,14 +165,14 @@ export default {
 			}
 		}
 	},
-	created() {
+	mounted() {
 		// refresh lock data every 10 seconds
 		if (this.supportsLocking) {
 			this.isLoading = setInterval(this.check, 10000);
 		}
 		this.$events.on("view.save", this.save);
 	},
-	destroyed() {
+	unmounted() {
 		// make sure to clear all intervals
 		clearInterval(this.isLoading);
 		clearInterval(this.isLocking);

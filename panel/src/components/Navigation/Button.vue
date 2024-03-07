@@ -199,7 +199,7 @@ export default {
 			return "button";
 		}
 	},
-	created() {
+	mounted() {
 		if (this.tooltip) {
 			window.panel.deprecated(
 				"<k-button>: the `tooltip` prop will be removed in a future version. Use the `title` prop instead."

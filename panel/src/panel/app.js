@@ -45,7 +45,7 @@ export default {
 		 */
 		this.$store.dispatch("content/init");
 	},
-	destroyed() {
+	unmounted() {
 		this.$panel.events.unsubscribe();
 	},
 	render() {

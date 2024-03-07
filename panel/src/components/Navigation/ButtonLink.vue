@@ -38,7 +38,7 @@ export default {
 		theme: String,
 		tooltip: String
 	},
-	created() {
+	mounted() {
 		window.panel.deprecated(
 			'<k-button-link> will be removed in a future version. Use <k-button link="https//getkirby.com"> instead.'
 		);

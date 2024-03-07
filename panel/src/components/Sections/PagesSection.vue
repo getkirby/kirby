@@ -45,11 +45,11 @@ export default {
 			return "pages";
 		}
 	},
-	created() {
+	mounted() {
 		this.$events.on("page.changeStatus", this.reload);
 		this.$events.on("page.sort", this.reload);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("page.changeStatus", this.reload);
 		this.$events.off("page.sort", this.reload);
 	},

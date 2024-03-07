@@ -17,7 +17,7 @@ export default {
 			theme: null
 		};
 	},
-	async created() {
+	async mounted() {
 		const response = await this.load();
 		this.icon = response.icon;
 		this.label = response.label;

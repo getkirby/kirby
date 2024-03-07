@@ -53,7 +53,7 @@ export default {
 			return "k-login-view";
 		}
 	},
-	created() {
+	mounted() {
 		this.$store.dispatch("content/clear");
 	},
 	methods: {
