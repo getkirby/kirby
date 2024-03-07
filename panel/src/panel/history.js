@@ -1,8 +1,9 @@
+import { reactive } from "vue";
 /**
  * @since 4.0.0
  */
 export default () => {
-	return {
+	return reactive({
 		add(state) {
 			if (!state.id) {
 				throw new Error("The state needs an ID");
@@ -69,5 +70,5 @@ export default () => {
 
 			this.milestones[index] = state;
 		}
-	};
+	});
 };

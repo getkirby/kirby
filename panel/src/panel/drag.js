@@ -1,3 +1,4 @@
+import { reactive } from "vue";
 import State from "./state.js";
 
 export const defaults = () => {
@@ -13,7 +14,7 @@ export const defaults = () => {
 export default () => {
 	const parent = State("drag", defaults());
 
-	return {
+	return reactive({
 		...parent,
 
 		/**
@@ -44,5 +45,5 @@ export default () => {
 			this.type = null;
 			this.data = {};
 		}
-	};
+	});
 };

@@ -1,3 +1,4 @@
+import { reactive } from "vue";
 import Feature, { defaults } from "./feature.js";
 
 /**
@@ -6,7 +7,7 @@ import Feature, { defaults } from "./feature.js";
 export default (panel) => {
 	const parent = Feature(panel, "dropdown", defaults());
 
-	return {
+	return reactive({
 		...parent,
 
 		close() {
@@ -86,5 +87,5 @@ export default (panel) => {
 
 			return parent.set.call(this, state);
 		}
-	};
+	});
 };

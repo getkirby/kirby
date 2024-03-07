@@ -1,8 +1,10 @@
+import { reactive } from "vue";
+
 /**
  * @since 4.0.0
  */
 export default () => {
-	return {
+	return reactive({
 		close() {
 			sessionStorage.setItem("kirby$activation$card", "true");
 			this.isOpen = false;
@@ -14,5 +16,5 @@ export default () => {
 			sessionStorage.removeItem("kirby$activation$card");
 			this.isOpen = true;
 		}
-	};
+	});
 };

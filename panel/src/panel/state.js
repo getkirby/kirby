@@ -1,3 +1,4 @@
+import { reactive } from "vue";
 import { isObject } from "@/helpers/object";
 
 /**
@@ -15,7 +16,7 @@ import { isObject } from "@/helpers/object";
  * @param {Object} defaults Sets the default state
  */
 export default (key, defaults = {}) => {
-	return {
+	return reactive({
 		/**
 		 * State defaults will be reactive and
 		 * must be present immediately in the object
@@ -100,5 +101,5 @@ export default (key, defaults = {}) => {
 
 			return true;
 		}
-	};
+	});
 };

@@ -1,3 +1,4 @@
+import { reactive } from "vue";
 import State from "./state.js";
 
 export const defaults = () => {
@@ -16,7 +17,7 @@ export const defaults = () => {
 export default () => {
 	const parent = State("theme", defaults());
 
-	return {
+	return reactive({
 		...parent,
 
 		toggle() {
@@ -28,5 +29,5 @@ export default () => {
 
 			localStorage.setItem("kirby$theme", this.current);
 		}
-	};
+	});
 };
