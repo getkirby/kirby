@@ -28,8 +28,8 @@
 			<component
 				:is="customComponent"
 				ref="editor"
-				:tabs="tabs"
 				v-bind="$props"
+				:tabs="tabs"
 				v-on="listeners"
 			/>
 		</div>
