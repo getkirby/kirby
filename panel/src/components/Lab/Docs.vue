@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import Deprecated, { props as DeprecatedProps } from "./Docs/Deprecated.vue";
+import { props as DeprecatedProps } from "./Docs/Deprecated.vue";
 import Desc, { props as DescProps } from "./Docs/Description.vue";
 import Examples, { props as ExamplesProps } from "./Docs/Examples.vue";
 import Props, { props as PropsProps } from "./Docs/Props.vue";
@@ -21,9 +21,12 @@ import Events, { props as EventsProps } from "./Docs/Events.vue";
 import Methods, { props as MethodsProps } from "./Docs/Methods.vue";
 import DocBlock, { props as DocBlockProps } from "./Docs/DocBlock.vue";
 
+import DocDeprecated from "./DocsDeprecated.vue";
+import DocParams from "./DocsParams.vue";
+import DocTypes from "./DocsTypes.vue";
+
 export default {
 	components: {
-		"k-lab-docs-deprecated": Deprecated,
 		"k-lab-docs-description": Desc,
 		"k-lab-docs-examples": Examples,
 		"k-lab-docs-props": Props,
@@ -44,6 +47,13 @@ export default {
 	],
 	props: {
 		component: String
+	},
+	created() {
+		if (this.$helper.isComponent("k-lab-docs-deprecated") === false) {
+			window.panel.app.component("k-lab-docs-deprecated", DocDeprecated);
+			window.panel.app.component("k-lab-docs-params", DocParams);
+			window.panel.app.component("k-lab-docs-types", DocTypes);
+		}
 	}
 };
 </script>
