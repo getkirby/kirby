@@ -6,11 +6,12 @@
 		autocomplete="off"
 		class="k-slug-input"
 		@input="$emit('input', $event)"
+		@invalid="($invalid, $v) => $emit('invalid', $invalid, $v)"
 	/>
 </template>
 
 <script>
-import { props as StringInputProps } from "./StringInput.vue";
+import StringInput, { props as StringInputProps } from "./StringInput.vue";
 
 export const props = {
 	mixins: [StringInputProps],
@@ -46,6 +47,7 @@ export const props = {
  * @example <k-input :value="slug" @input="slug = $event" name="slug" type="slug" />
  */
 export default {
+	extends: StringInput,
 	mixins: [props],
 	data() {
 		return {
