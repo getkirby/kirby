@@ -187,7 +187,7 @@ export default {
 			immediate: true
 		}
 	},
-	created() {
+	mounted() {
 		this.$events.on("click", this.onOutsideClick);
 	},
 	destroyed() {

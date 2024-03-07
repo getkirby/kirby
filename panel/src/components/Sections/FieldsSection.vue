@@ -48,7 +48,7 @@ export default {
 			this.fetch();
 		}
 	},
-	created() {
+	mounted() {
 		this.onInput = debounce(this.onInput, 50);
 		this.fetch();
 	},

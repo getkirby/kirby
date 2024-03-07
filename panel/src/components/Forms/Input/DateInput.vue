@@ -137,7 +137,7 @@ export default {
 			immediate: true
 		}
 	},
-	created() {
+	mounted() {
 		// make sure to commit input value when Cmd+S is hit
 		this.$events.on("keydown.cmd.s", this.onBlur);
 	},
