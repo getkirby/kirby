@@ -307,16 +307,19 @@ class Plugin
 	 */
 	public function version(): string|null
 	{
-		$composerName = $this->info()['name']    ?? null;
-		$version      = $this->info()['version'] ?? $this->version ?? null;
+		$name = $this->info()['name'] ?? null;
 
 		try {
-			// if plugin doesn't have version key in composer.json file
-			// try to get version from "vendor/composer/installed.php"
-			$version ??= InstalledVersions::getPrettyVersion($composerName);
+			// try to get version from "vendor/composer/installed.php",
+			// this is the most reliable source for the version
+			$version = InstalledVersions::getPrettyVersion($name);
 		} catch (Throwable) {
-			return null;
+			$version = null;
 		}
+
+		// fallback to the version provided in the plugin's index.php,
+		// then from the composer.json file
+		$version ??= $this->version ?? $this->info()['version'] ?? null;
 
 		if (
 			is_string($version) !== true ||
