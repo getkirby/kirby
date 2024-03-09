@@ -21,6 +21,12 @@
 					:selected="selected"
 					@select="selectFile"
 				/>
+				<k-pagination
+					v-if="pagination"
+					v-bind="pagination"
+					:details="true"
+					@paginate="paginate"
+				/>
 			</div>
 		</div>
 	</div>
@@ -32,6 +38,7 @@
  */
 export default {
 	props: {
+		limit: Number,
 		selected: {
 			type: String
 		}
@@ -41,24 +48,32 @@ export default {
 		return {
 			files: [],
 			page: null,
+			pagination: null,
 			view: "tree"
 		};
 	},
 	methods: {
+		paginate(pagination) {
+			this.selectPage(this.page, pagination.page);
+		},
 		selectFile(file) {
 			this.$emit("select", file);
 		},
-		async selectPage(page) {
-			this.page = page;
+		async selectPage(model, page = 1) {
+			this.page = model;
 
 			const parent =
-				page.id === "/"
+				model.id === "/"
 					? "/site/files"
-					: "/pages/" + this.$api.pages.id(page.id) + "/files";
+					: "/pages/" + this.$api.pages.id(model.id) + "/files";
 
-			const { data } = await this.$api.get(parent, {
-				select: "filename,id,panelImage,url,uuid"
+			const { data, pagination } = await this.$api.get(parent, {
+				select: "filename,id,panelImage,url,uuid",
+				limit: this.limit,
+				page: page
 			});
+
+			this.pagination = pagination;
 
 			this.files = data.map((file) => {
 				return {
@@ -106,6 +121,10 @@ export default {
 }
 .k-file-browser-back-button {
 	display: none;
+}
+
+.k-file-browser .k-pagination {
+	margin-top: var(--spacing-2)
 }
 
 @container (max-width: 30rem) {

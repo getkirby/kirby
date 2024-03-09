@@ -13,6 +13,13 @@ return [
 		'placeholder' => null,
 
 		/**
+		 * Sets the limit to listing files for a page
+		 */
+		'limit' => function (int $limit = null) {
+			return $limit;
+		},
+
+		/**
 		 * @values 'anchor', 'url, 'page, 'file', 'email', 'tel', 'custom'
 		 */
 		'options' => function (array|null $options = null): array {
