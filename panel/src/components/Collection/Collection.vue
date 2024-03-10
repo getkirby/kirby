@@ -4,7 +4,7 @@
 			v-if="items.length === 0"
 			v-bind="empty"
 			:layout="layout"
-			@click="$attrs.onEmpty ? onEmpty : null"
+			v-on="listeners"
 		/>
 
 		<k-items
@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import { getCurrentInstance } from "vue";
 import { props as ItemsProps } from "./Items.vue";
 
 /**
@@ -91,6 +92,17 @@ export default {
 			}
 
 			return true;
+		},
+		listeners() {
+			const instance = getCurrentInstance();
+
+			if (instance?.vnode?.props?.onEmpty !== undefined) {
+				return {
+					click: this.onEmpty
+				};
+			}
+
+			return {};
 		},
 		paginationOptions() {
 			const options =
