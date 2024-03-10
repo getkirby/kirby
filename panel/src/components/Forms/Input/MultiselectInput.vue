@@ -3,6 +3,7 @@
 		<k-input-validator
 			v-bind="{ min, max, required }"
 			:value="JSON.stringify(value)"
+			anchor=".k-multiselect-input-toggle"
 		>
 			<k-tags
 				ref="tags"

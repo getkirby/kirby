@@ -39,55 +39,55 @@
 			</k-button-group>
 		</template>
 
-		<template v-if="hasFields">
-			<!-- Empty State -->
-			<k-empty
-				v-if="items.length === 0"
-				:data-invalid="isInvalid"
-				icon="list-bullet"
-				@click="add()"
-			>
-				{{ empty ?? $t("field.structure.empty") }}
-			</k-empty>
-
-			<!-- Table -->
-			<template v-else>
-				<k-table
-					:columns="columns"
-					:disabled="disabled"
-					:fields="fields"
-					:empty="$t('field.structure.empty')"
-					:index="index"
-					:options="options"
-					:pagination="limit ? pagination : false"
-					:rows="paginatedItems"
-					:sortable="isSortable"
-					:data-invalid="isInvalid"
-					@cell="open($event.row, $event.columnIndex)"
-					@input="save"
-					@option="option"
-					@paginate="paginate"
-				/>
-
-				<footer v-if="more">
-					<k-button
-						:title="$t('add')"
-						icon="add"
-						size="xs"
-						variant="filled"
-						@click="add()"
-					/>
-				</footer>
-			</template>
-		</template>
-		<template v-else>
-			<k-empty icon="list-bullet">{{ $t("fields.empty") }}</k-empty>
-		</template>
-
 		<k-input-validator
 			v-bind="{ min, max, required }"
 			:value="JSON.stringify(items)"
-		/>
+		>
+			<template v-if="hasFields">
+				<!-- Empty State -->
+				<k-empty
+					v-if="items.length === 0"
+					:data-invalid="isInvalid"
+					icon="list-bullet"
+					@click="add()"
+				>
+					{{ empty ?? $t("field.structure.empty") }}
+				</k-empty>
+
+				<!-- Table -->
+				<template v-else>
+					<k-table
+						:columns="columns"
+						:disabled="disabled"
+						:fields="fields"
+						:empty="$t('field.structure.empty')"
+						:index="index"
+						:options="options"
+						:pagination="limit ? pagination : false"
+						:rows="paginatedItems"
+						:sortable="isSortable"
+						:data-invalid="isInvalid"
+						@cell="open($event.row, $event.columnIndex)"
+						@input="save"
+						@option="option"
+						@paginate="paginate"
+					/>
+
+					<footer v-if="more">
+						<k-button
+							:title="$t('add')"
+							icon="add"
+							size="xs"
+							variant="filled"
+							@click="add()"
+						/>
+					</footer>
+				</template>
+			</template>
+			<template v-else>
+				<k-empty icon="list-bullet">{{ $t("fields.empty") }}</k-empty>
+			</template>
+		</k-input-validator>
 	</k-field>
 </template>
 

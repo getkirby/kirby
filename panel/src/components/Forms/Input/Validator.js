@@ -24,22 +24,16 @@ export default class InputValidator extends HTMLElement {
 	}
 
 	connectedCallback() {
+		this.tabIndex = 0;
 		this.validate();
-	}
-
-	// The following properties and methods aren't strictly required,
-	// but browser-level form controls provide them. Providing them helps
-	// ensure consistency with browser-provided controls.
-	get form() {
-		return this.internals.form;
-	}
-
-	get name() {
-		return this.getAttribute("name");
 	}
 
 	checkValidity() {
 		return this.internals.checkValidity();
+	}
+
+	get form() {
+		return this.internals.form;
 	}
 
 	has(value) {
@@ -48,6 +42,10 @@ export default class InputValidator extends HTMLElement {
 
 	get isEmpty() {
 		return this.selected.length === 0;
+	}
+
+	get name() {
+		return this.getAttribute("name");
 	}
 
 	reportValidity() {
@@ -59,9 +57,10 @@ export default class InputValidator extends HTMLElement {
 	}
 
 	validate() {
-		const anchor = this.querySelector(
-			"input, textarea, select, button, :scope > *"
-		);
+		const anchor =
+			this.querySelector(this.getAttribute("anchor")) ??
+			this.querySelector("input, textarea, select, button") ??
+			this.querySelector(":scope > *");
 		const max = parseInt(this.getAttribute("max"));
 		const min = parseInt(this.getAttribute("min"));
 
