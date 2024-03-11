@@ -164,6 +164,11 @@ export default {
 		}
 	},
 	mounted() {
+		// focus first block
+		if (this.$props.autofocus === true) {
+			setTimeout(this.focus, 100);
+		}
+
 		this.$events.on("blur", this.onBlur);
 		this.$events.on("click", this.onClickGlobal);
 		this.$events.on("copy", this.onCopy);
@@ -178,12 +183,6 @@ export default {
 		this.$events.off("keydown", this.onKey);
 		this.$events.off("keyup", this.onKey);
 		this.$events.off("paste", this.onPaste);
-	},
-	mounted() {
-		// focus first block
-		if (this.$props.autofocus === true) {
-			setTimeout(this.focus, 100);
-		}
 	},
 	methods: {
 		async add(type = "text", index) {
