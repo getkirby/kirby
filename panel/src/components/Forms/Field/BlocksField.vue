@@ -1,5 +1,5 @@
 <template>
-	<k-field v-bind="$props" class="k-blocks-field">
+	<k-field v-bind="$props" :class="['k-blocks-field', $attrs.class]">
 		<template v-if="!disabled && hasFieldsets" #options>
 			<k-button-group layout="collapsed">
 				<k-button
@@ -22,13 +22,18 @@
 			</k-button-group>
 		</template>
 
-		<k-blocks
-			ref="blocks"
-			v-bind="$props"
-			@close="opened = $event"
-			@open="opened = $event"
-			@input="$emit('input', $event)"
-		/>
+		<k-input-validator
+			v-bind="{ min, max, required }"
+			:value="JSON.stringify(value)"
+		>
+			<k-blocks
+				ref="blocks"
+				v-bind="$props"
+				@close="opened = $event"
+				@open="opened = $event"
+				@input="$emit('input', $event)"
+			/>
+		</k-input-validator>
 
 		<k-input-validator
 			v-bind="{ min, max, required }"

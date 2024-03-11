@@ -57,7 +57,7 @@ export default {
 			};
 		}
 	},
-	created() {
+	mounted() {
 		this.$events.on("file.delete", this.removeById);
 	},
 	destroyed() {

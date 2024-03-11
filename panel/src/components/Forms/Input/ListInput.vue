@@ -2,9 +2,9 @@
 	<k-writer-input
 		ref="input"
 		v-bind="$props"
+		:class="['k-list-input', $attrs.class]"
 		:extensions="listExtensions"
 		:value="list"
-		class="k-list-input"
 		@input="onInput"
 	/>
 </template>

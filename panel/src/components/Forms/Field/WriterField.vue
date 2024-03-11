@@ -1,9 +1,9 @@
 <template>
 	<k-field
 		v-bind="$props"
-		:input="id"
 		:counter="counterOptions"
-		class="k-writer-field"
+		:class="['k-writer-field', $attrs.class]"
+		:input="id"
 	>
 		<k-input
 			v-bind="$props"
@@ -20,12 +20,18 @@
 <script>
 import { props as Field } from "../Field.vue";
 import { props as Input } from "../Input.vue";
-import { props as Writer } from "@/components/Forms/Input/WriterInput.vue";
+import { props as WriterInput } from "@/components/Forms/Input/WriterInput.vue";
 import counter from "@/mixins/forms/counter.js";
 
 export default {
-	mixins: [Field, Input, Writer, counter],
+	mixins: [Field, Input, WriterInput, counter],
 	inheritAttrs: false,
+	computed: {
+		counterValue() {
+			const plain = this.$helper.string.stripHTML(this.value ?? "");
+			return this.$helper.string.unescapeHTML(plain);
+		}
+	},
 	methods: {
 		focus() {
 			this.$refs.input.focus();

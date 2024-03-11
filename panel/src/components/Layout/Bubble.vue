@@ -6,8 +6,8 @@
 			color: $helper.color(color),
 			background: $helper.color(back)
 		}"
+		:class="['k-bubble', $attrs.class]"
 		:data-has-text="Boolean(text)"
-		class="k-bubble"
 		@click.native.stop
 	>
 		<!-- @slot Replace the default image -->
@@ -74,7 +74,7 @@ export default {
 		 */
 		text: String
 	},
-	created() {
+	mounted() {
 		if (this.back) {
 			window.panel.deprecated(
 				"<k-bubble>: `back` prop will be removed in a future version. Use the `--bubble-back` CSS property instead."

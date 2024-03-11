@@ -1,10 +1,10 @@
 <template>
 	<component
 		:is="component"
+		v-bind="attrs"
 		:data-has-icon="Boolean(icon)"
 		:data-has-text="Boolean(text || $slots.default)"
-		v-bind="attrs"
-		class="k-button"
+		:class="['k-button', $attrs.class]"
 		@click="onClick"
 	>
 		<span v-if="icon" class="k-button-icon">
@@ -199,7 +199,7 @@ export default {
 			return "button";
 		}
 	},
-	created() {
+	mounted() {
 		if (this.tooltip) {
 			window.panel.deprecated(
 				"<k-button>: the `tooltip` prop will be removed in a future version. Use the `title` prop instead."

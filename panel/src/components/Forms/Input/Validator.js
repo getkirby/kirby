@@ -24,23 +24,16 @@ export default class InputValidator extends HTMLElement {
 	}
 
 	connectedCallback() {
-		this.classList.add("input-hidden");
+		this.tabIndex = 0;
 		this.validate();
-	}
-
-	// The following properties and methods aren't strictly required,
-	// but browser-level form controls provide them. Providing them helps
-	// ensure consistency with browser-provided controls.
-	get form() {
-		return this.internals.form;
-	}
-
-	get name() {
-		return this.getAttribute("name");
 	}
 
 	checkValidity() {
 		return this.internals.checkValidity();
+	}
+
+	get form() {
+		return this.internals.form;
 	}
 
 	has(value) {
@@ -49,6 +42,10 @@ export default class InputValidator extends HTMLElement {
 
 	get isEmpty() {
 		return this.selected.length === 0;
+	}
+
+	get name() {
+		return this.getAttribute("name");
 	}
 
 	reportValidity() {
@@ -60,6 +57,10 @@ export default class InputValidator extends HTMLElement {
 	}
 
 	validate() {
+		const anchor =
+			this.querySelector(this.getAttribute("anchor")) ??
+			this.querySelector("input, textarea, select, button") ??
+			this.querySelector(":scope > *");
 		const max = parseInt(this.getAttribute("max"));
 		const min = parseInt(this.getAttribute("min"));
 
@@ -70,17 +71,20 @@ export default class InputValidator extends HTMLElement {
 		if (required && this.entries.length === 0) {
 			this.internals.setValidity(
 				{ valueMissing: true },
-				window.panel.$t("error.validation.required")
+				window.panel.$t("error.validation.required"),
+				anchor
 			);
 		} else if (this.hasAttribute("min") && this.entries.length < min) {
 			this.internals.setValidity(
 				{ rangeUnderflow: true },
-				window.panel.$t("error.validation.min", { min })
+				window.panel.$t("error.validation.min", { min }),
+				anchor
 			);
 		} else if (this.hasAttribute("max") && this.entries.length > max) {
 			this.internals.setValidity(
 				{ rangeOverflow: true },
-				window.panel.$t("error.validation.max", { max })
+				window.panel.$t("error.validation.max", { max }),
+				anchor
 			);
 		} else {
 			this.internals.setValidity({});

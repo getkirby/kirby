@@ -55,7 +55,7 @@ export default {
 			immediate: true
 		}
 	},
-	created() {
+	mounted() {
 		this.$events.on("model.reload", this.$reload);
 		this.$events.on("keydown.left", this.toPrev);
 		this.$events.on("keydown.right", this.toNext);

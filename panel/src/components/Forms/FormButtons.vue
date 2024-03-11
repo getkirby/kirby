@@ -167,7 +167,7 @@ export default {
 			}
 		}
 	},
-	created() {
+	mounted() {
 		// refresh lock data every 10 seconds
 		if (this.supportsLocking) {
 			this.isLoading = setInterval(this.check, 10000);

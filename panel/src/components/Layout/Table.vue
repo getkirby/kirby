@@ -1,5 +1,5 @@
 <template>
-	<div :aria-disabled="disabled" class="k-table">
+	<div :aria-disabled="disabled" :class="['k-table', $attrs.class]">
 		<table :data-disabled="disabled" :data-indexed="hasIndexColumn">
 			<!-- Header row -->
 			<thead>
@@ -534,7 +534,7 @@ export default {
 /* Mobile */
 @container (max-width: 40rem) {
 	.k-table {
-		overflow-x: scroll;
+		overflow-x: auto;
 	}
 	.k-table thead th {
 		position: static;

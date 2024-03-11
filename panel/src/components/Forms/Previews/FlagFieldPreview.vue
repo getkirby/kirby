@@ -2,7 +2,7 @@
 	<k-button
 		v-if="value"
 		v-bind="status"
-		class="k-flag-field-preview"
+		:class="['k-flag-field-preview', $attrs.class]"
 		size="md"
 	/>
 </template>

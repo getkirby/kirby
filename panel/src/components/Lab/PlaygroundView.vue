@@ -5,24 +5,27 @@
 	>
 		<k-header>
 			{{ title }}
-			<k-button-group v-if="docs || github" slot="buttons">
-				<k-button
-					v-if="docs"
-					:text="docs"
-					icon="book"
-					size="sm"
-					variant="filled"
-					@click="openDocs"
-				/>
-				<k-button
-					v-if="github"
-					:link="github"
-					icon="github"
-					size="sm"
-					target="_blank"
-					variant="filled"
-				/>
-			</k-button-group>
+
+			<template #buttons>
+				<k-button-group v-if="docs || github">
+					<k-button
+						v-if="docs"
+						:text="docs"
+						icon="book"
+						size="sm"
+						variant="filled"
+						@click="openDocs"
+					/>
+					<k-button
+						v-if="github"
+						:link="github"
+						icon="github"
+						size="sm"
+						target="_blank"
+						variant="filled"
+					/>
+				</k-button-group>
+			</template>
 		</k-header>
 		<k-tabs :tab="tab" :tabs="tabs" />
 

@@ -1,8 +1,8 @@
 <template>
 	<div
+		:class="['k-blocks', $attrs.class]"
 		:data-disabled="disabled"
 		:data-empty="blocks.length === 0"
-		class="k-blocks"
 	>
 		<template v-if="hasFieldsets">
 			<k-draggable
@@ -163,7 +163,12 @@ export default {
 			this.blocks = this.value;
 		}
 	},
-	created() {
+	mounted() {
+		// focus first block
+		if (this.$props.autofocus === true) {
+			setTimeout(this.focus, 100);
+		}
+
 		this.$events.on("blur", this.onBlur);
 		this.$events.on("click", this.onClickGlobal);
 		this.$events.on("copy", this.onCopy);
@@ -178,12 +183,6 @@ export default {
 		this.$events.off("keydown", this.onKey);
 		this.$events.off("keyup", this.onKey);
 		this.$events.off("paste", this.onPaste);
-	},
-	mounted() {
-		// focus first block
-		if (this.$props.autofocus === true) {
-			setTimeout(this.focus, 100);
-		}
 	},
 	methods: {
 		async add(type = "text", index) {

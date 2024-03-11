@@ -1,9 +1,9 @@
 <template>
 	<k-navigate
+		:class="['k-picklist-input', $attrs.class]"
 		element="nav"
 		axis="y"
 		select="input[type=search], label, .k-picklist-input-body button"
-		class="k-picklist-input"
 		@prev="$emit('escape')"
 	>
 		<header v-if="search" class="k-picklist-input-header">
@@ -30,16 +30,21 @@
 
 		<template v-if="filteredOptions.length">
 			<div class="k-picklist-input-body">
-				<component
-					:is="multiple ? 'k-checkboxes-input' : 'k-radio-input'"
-					ref="options"
-					:disabled="disabled"
-					:options="choices"
-					:value="value"
-					class="k-picklist-input-options"
-					@input="input"
-					@keydown.native.enter.prevent="enter"
-				/>
+				<k-input-validator
+					v-bind="{ min, max, required }"
+					:value="JSON.stringify(value)"
+				>
+					<component
+						:is="multiple ? 'k-checkboxes-input' : 'k-radio-input'"
+						ref="options"
+						:disabled="disabled"
+						:options="choices"
+						:value="value"
+						class="k-picklist-input-options"
+						@input="input"
+						@keydown.native.enter.prevent="enter"
+					/>
+				</k-input-validator>
 				<k-button
 					v-if="display !== true && filteredOptions.length > display"
 					class="k-picklist-input-more"

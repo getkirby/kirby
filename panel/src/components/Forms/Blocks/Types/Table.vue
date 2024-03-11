@@ -1,9 +1,9 @@
 <template>
 	<k-table
+		:class="['k-block-type-table-preview', $attrs.class]"
 		:columns="columns"
 		:empty="$t('field.structure.empty')"
 		:rows="rows"
-		class="k-block-type-table-preview"
 		@dblclick.native="open"
 	/>
 </template>

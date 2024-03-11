@@ -1,9 +1,9 @@
 <template>
 	<k-field
 		v-bind="$props"
-		:input="id"
+		:class="['k-tags-field', $attrs.class]"
 		:counter="counterOptions"
-		class="k-tags-field"
+		:input="id"
 	>
 		<k-empty v-if="hasNoOptions" :icon="icon" :text="$t('options.none')" />
 		<k-input
