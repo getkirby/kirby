@@ -42,7 +42,7 @@ export default {
 			default: "button"
 		}
 	},
-	created() {
+	mounted() {
 		window.panel.deprecated(
 			"<k-button-native> will be removed in a future version. Use <k-button> instead."
 		);

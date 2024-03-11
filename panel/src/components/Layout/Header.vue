@@ -73,7 +73,7 @@ export default {
 		tabs: Array
 	},
 	emits: ["edit"],
-	created() {
+	mounted() {
 		if (this.tabs) {
 			window.panel.deprecated(
 				"<k-header>: `tabs` prop isn't supported anymore and has no effect. Use `<k-tabs>` as standalone component instead."

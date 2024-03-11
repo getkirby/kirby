@@ -52,7 +52,7 @@ export default {
 		}
 	},
 	emits: ["click"],
-	created() {
+	mounted() {
 		if (this.size) {
 			window.panel.deprecated(
 				"<k-headline>: the `size` prop will be removed in a future version. Use the `tag` prop instead."

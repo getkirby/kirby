@@ -23,7 +23,7 @@ export default {
 			return this.$helper.ratio(this.ratio);
 		}
 	},
-	created() {
+	mounted() {
 		window.panel.deprecated(
 			"<k-aspect-ratio> will be removed in a future version. Use the <k-frame> instead."
 		);

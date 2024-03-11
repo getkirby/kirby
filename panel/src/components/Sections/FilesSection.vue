@@ -57,7 +57,7 @@ export default {
 			};
 		}
 	},
-	created() {
+	mounted() {
 		this.$events.on("model.update", this.reload);
 		this.$events.on("file.sort", this.reload);
 	},

@@ -22,7 +22,7 @@ export default {
 			size: null
 		};
 	},
-	async created() {
+	async mounted() {
 		const section = await this.load();
 		this.isLoading = false;
 		this.headline = section.headline;
