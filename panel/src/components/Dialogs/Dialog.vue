@@ -1,10 +1,9 @@
 <template>
 	<Teleport v-if="visible" to=".k-dialog-portal">
 		<form
-			:class="$attrs.class"
+			:class="['k-dialog', $attrs.class]"
 			:data-has-footer="cancelButton || submitButton"
 			:data-size="size"
-			class="k-dialog"
 			method="dialog"
 			@click.stop
 			@submit.prevent="$emit('submit')"
