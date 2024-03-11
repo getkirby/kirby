@@ -9,7 +9,7 @@
  * @deprecated 4.0.0 Use `<k-icon type="loader" />` instead
  */
 export default {
-	created() {
+	mounted() {
 		window.panel.deprecated(
 			'<k-loader> will be removed in a future version. Use <k-icon type="loader" /> instead.'
 		);

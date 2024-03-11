@@ -17,7 +17,7 @@ export default {
 		 */
 		align: String
 	},
-	created() {
+	mounted() {
 		window.panel.deprecated("<k-view> will be removed in a future version.");
 	}
 };

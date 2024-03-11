@@ -32,7 +32,7 @@ export default {
 		security: Array,
 		urls: Object
 	},
-	created() {
+	mounted() {
 		// print exceptions from the backend's update check
 		// to console for debugging
 		if (this.exceptions.length > 0) {

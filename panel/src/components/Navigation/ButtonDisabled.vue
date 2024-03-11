@@ -25,7 +25,7 @@ export default {
 		theme: String,
 		tooltip: String
 	},
-	created() {
+	mounted() {
 		window.panel.deprecated(
 			'<k-button-disabled> will be removed in a future version. Use <k-button :disabled="true"> instead.'
 		);
