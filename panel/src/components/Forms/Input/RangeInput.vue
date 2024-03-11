@@ -1,5 +1,5 @@
 <template>
-	<div :data-disabled="disabled" class="k-range-input">
+	<div :class="['k-range-input', $attrs.class]" :data-disabled="disabled">
 		<input
 			ref="range"
 			v-bind="{

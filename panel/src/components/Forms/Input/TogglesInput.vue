@@ -1,5 +1,5 @@
 <template>
-	<fieldset :disabled="disabled" class="k-toggles-input">
+	<fieldset :disabled="disabled" :class="['k-toggles-input', $attrs.class]">
 		<legend class="sr-only">{{ $t("options") }}</legend>
 
 		<k-input-validator :required="required" :value="JSON.stringify(value)">

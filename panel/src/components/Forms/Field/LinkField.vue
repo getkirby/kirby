@@ -1,5 +1,5 @@
 <template>
-	<k-field v-bind="$props" :input="id" class="k-link-field">
+	<k-field v-bind="$props" :class="['k-link-field', $attrs.class]" :input="id">
 		<k-input v-bind="$props" :invalid="isInvalid" :icon="false">
 			<div class="k-link-input-header">
 				<!-- Type selector -->
@@ -188,7 +188,7 @@ export default {
 			immediate: true
 		}
 	},
-	created() {
+	mounted() {
 		this.$events.on("click", this.onOutsideClick);
 	},
 	destroyed() {

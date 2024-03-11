@@ -1,12 +1,12 @@
 <template>
 	<fieldset
+		:class="['k-colorpicker-input', $attrs.class]"
 		:style="{
 			'--h': hsl.h,
 			'--s': hsl.s,
 			'--l': hsl.l,
 			'--a': hsl.a
 		}"
-		class="k-colorpicker-input"
 	>
 		<legend class="sr-only">{{ $t("color") }}</legend>
 		<k-coords-input

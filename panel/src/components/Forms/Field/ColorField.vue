@@ -1,5 +1,5 @@
 <template>
-	<k-field v-bind="$props" :input="id" class="k-color-field">
+	<k-field v-bind="$props" :class="['k-color-field', $attrs.class]" :input="id">
 		<!-- Mode: options -->
 		<k-coloroptions-input
 			v-if="mode === 'options'"

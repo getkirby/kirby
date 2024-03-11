@@ -1,5 +1,9 @@
 <template>
-	<k-field v-bind="$props" :input="id" class="k-select-field">
+	<k-field
+		v-bind="$props"
+		:class="['k-select-field', $attrs.class]"
+		:input="id"
+	>
 		<k-input
 			v-bind="$props"
 			ref="input"

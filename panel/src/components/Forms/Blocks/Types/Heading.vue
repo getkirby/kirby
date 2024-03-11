@@ -1,5 +1,8 @@
 <template>
-	<div :data-level="content.level" class="k-block-type-heading-input">
+	<div
+		:class="['k-block-type-heading-input', $attrs.class]"
+		:data-level="content.level"
+	>
 		<k-writer-input
 			ref="input"
 			v-bind="textField"

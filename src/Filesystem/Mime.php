@@ -2,6 +2,7 @@
 
 namespace Kirby\Filesystem;
 
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use SimpleXMLElement;
 
@@ -268,18 +269,32 @@ class Mime
 	/**
 	 * Returns all available extensions for a given MIME type
 	 */
-	public static function toExtensions(string $mime = null): array
+	public static function toExtensions(string $mime = null, bool $matchWildcards = false): array
 	{
 		$extensions = [];
+		$testMime = fn (string $v) => static::matches($v, $mime);
 
 		foreach (static::$types as $key => $value) {
-			if (is_array($value) === true && in_array($mime, $value) === true) {
-				$extensions[] = $key;
-				continue;
-			}
-
-			if ($value === $mime) {
-				$extensions[] = $key;
+			if (is_array($value) === true) {
+				if ($matchWildcards === true) {
+					if (A::some($value, $testMime)) {
+						$extensions[] = $key;
+					}
+				} else {
+					if (in_array($mime, $value) === true) {
+						$extensions[] = $key;
+					}
+				}
+			} else {
+				if ($matchWildcards === true) {
+					if ($testMime($value) === true) {
+						$extensions[] = $key;
+					}
+				} else {
+					if ($value === $mime) {
+						$extensions[] = $key;
+					}
+				}
 			}
 		}
 

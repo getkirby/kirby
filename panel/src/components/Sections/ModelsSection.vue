@@ -2,7 +2,7 @@
 	<k-section
 		v-if="isLoading === false"
 		:buttons="buttons"
-		:class="`k-models-section k-${type}-section`"
+		:class="['k-models-section', `k-${type}-section`, $attrs.class]"
 		:data-processing="isProcessing"
 		:headline="options.headline ?? ' '"
 		:invalid="isInvalid"
@@ -184,7 +184,7 @@ export default {
 			this.reload();
 		}
 	},
-	created() {
+	mounted() {
 		this.search = debounce(this.search, 200);
 		this.load();
 	},

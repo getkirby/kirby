@@ -1,13 +1,13 @@
 <template>
 	<component
 		:is="element"
+		:class="['k-frame', $attrs.class]"
 		:data-theme="theme"
 		:style="{
 			'--fit': fit ?? (cover ? 'cover' : 'contain'),
 			'--ratio': ratio,
 			'--back': background
 		}"
-		class="k-frame"
 	>
 		<slot />
 	</component>

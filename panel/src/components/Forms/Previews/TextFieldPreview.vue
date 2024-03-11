@@ -1,5 +1,5 @@
 <template>
-	<p class="k-text-field-preview" :class="$options.class">
+	<p :class="['k-text-field-preview', $options.class, $attrs.class]">
 		{{ column.before }}
 		<slot>{{ text }}</slot>
 		{{ column.after }}
@@ -11,7 +11,6 @@ import FieldPreview from "@/mixins/forms/fieldPreview.js";
 
 export default {
 	mixins: [FieldPreview],
-	inheritAttrs: false,
 	computed: {
 		text() {
 			return this.value;

@@ -11,9 +11,9 @@
 			placeholder,
 			required
 		}"
-		:value="number"
+		:class="['k-number-input', $attrs.class]"
 		:step="stepNumber"
-		class="k-number-input"
+		:value="number"
 		type="number"
 		@blur="onBlur"
 		@input="onInput($event.target.value)"

@@ -117,7 +117,7 @@ export default {
 			opener: null
 		};
 	},
-	created() {
+	mounted() {
 		if (this.align) {
 			window.panel.deprecated(
 				"<k-dropdown-content>: `align` prop will be removed in a future version. Use the `alignX` prop instead."

@@ -1,5 +1,9 @@
 <template>
-	<k-field v-bind="$props" class="k-structure-field" @click.native.stop>
+	<k-field
+		v-bind="$props"
+		:class="['k-structure-field', $attrs.class]"
+		@click.native.stop
+	>
 		<template v-if="hasFields && !disabled" #options>
 			<k-button-group layout="collapsed">
 				<k-button

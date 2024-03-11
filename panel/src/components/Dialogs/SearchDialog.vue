@@ -1,11 +1,11 @@
 <template>
 	<k-dialog
+		v-bind="$props"
 		:cancel-button="false"
 		:submit-button="false"
 		class="k-search-dialog"
 		role="search"
 		size="medium"
-		v-bind="$props"
 		@cancel="$emit('cancel')"
 		@submit="submit"
 	>

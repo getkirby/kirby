@@ -1,5 +1,9 @@
 <template>
-	<k-field v-bind="$props" :input="id" class="k-toggles-field">
+	<k-field
+		v-bind="$props"
+		:class="['k-toggles-field', $attrs.class]"
+		:input="id"
+	>
 		<k-empty
 			v-if="!options?.length"
 			:text="$t('options.none')"

@@ -24,7 +24,7 @@ export default {
 		 */
 		variant: String
 	},
-	created() {
+	mounted() {
 		if (this.gutter) {
 			window.panel.deprecated(
 				'<k-grid>: the `gutter` prop will be removed in a future version. Use `style="gap: "` or `variant` prop instead.'
