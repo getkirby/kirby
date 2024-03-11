@@ -32,11 +32,6 @@
 			:options="options"
 			@input="$emit('input', $event)"
 		/>
-
-		<k-input-validator
-			v-bind="{ min, max, required }"
-			:value="JSON.stringify(value)"
-		/>
 	</div>
 </template>
 

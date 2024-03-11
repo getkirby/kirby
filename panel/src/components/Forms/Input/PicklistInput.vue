@@ -63,11 +63,6 @@
 				</p>
 			</div>
 		</template>
-
-		<k-input-validator
-			v-bind="{ min, max, required }"
-			:value="JSON.stringify(value)"
-		/>
 	</k-navigate>
 </template>
 

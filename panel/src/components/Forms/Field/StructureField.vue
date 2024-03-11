@@ -49,12 +49,7 @@
 		>
 			<template v-if="hasFields">
 				<!-- Empty State -->
-				<k-empty
-					v-if="items.length === 0"
-					:data-invalid="isInvalid"
-					icon="list-bullet"
-					@click="add()"
-				>
+				<k-empty v-if="items.length === 0" icon="list-bullet" @click="add()">
 					{{ empty ?? $t("field.structure.empty") }}
 				</k-empty>
 
@@ -70,7 +65,6 @@
 						:pagination="limit ? pagination : false"
 						:rows="paginatedItems"
 						:sortable="isSortable"
-						:data-invalid="isInvalid"
 						@cell="open($event.row, $event.columnIndex)"
 						@input="save"
 						@option="option"

@@ -35,11 +35,6 @@
 			/>
 		</k-input-validator>
 
-		<k-input-validator
-			v-bind="{ min, max, required }"
-			:value="JSON.stringify(value)"
-		/>
-
 		<footer v-if="!disabled && !isEmpty && !isFull && hasFieldsets">
 			<k-button
 				:title="$t('add')"

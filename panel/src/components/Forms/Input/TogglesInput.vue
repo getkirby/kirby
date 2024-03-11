@@ -4,7 +4,6 @@
 
 		<k-input-validator :required="required" :value="JSON.stringify(value)">
 			<ul
-				:data-invalid="$v.$invalid"
 				:data-labels="labels"
 				:style="{ '--options': columns ?? options.length }"
 			>
