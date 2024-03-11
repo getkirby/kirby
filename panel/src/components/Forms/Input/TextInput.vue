@@ -1,8 +1,8 @@
 <template>
 	<k-string-input
 		v-bind="$props"
+		:class="['k-text-input', $attrs.class]"
 		type="text"
-		class="k-text-input"
 		@input="$emit('input', $event)"
 		@invalid="($invalid, $v) => $emit('invalid', $invalid, $v)"
 	/>

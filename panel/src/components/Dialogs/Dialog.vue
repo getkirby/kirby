@@ -1,10 +1,14 @@
 <template>
 	<portal v-if="visible" to="dialog">
 		<form
-			:class="$vnode.data.staticClass"
+			:class="[
+				'k-dialog',
+				$vnode.data.class,
+				$vnode.data.staticClass,
+				$attrs.class
+			]"
 			:data-has-footer="cancelButton || submitButton"
 			:data-size="size"
-			class="k-dialog"
 			method="dialog"
 			@click.stop
 			@submit.prevent="$emit('submit')"

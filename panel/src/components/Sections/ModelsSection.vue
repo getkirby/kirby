@@ -2,7 +2,7 @@
 	<k-section
 		v-if="isLoading === false"
 		:buttons="buttons"
-		:class="`k-models-section k-${type}-section`"
+		:class="['k-models-section', `k-${type}-section`, $attrs.class]"
 		:data-processing="isProcessing"
 		:headline="options.headline ?? ' '"
 		:invalid="isInvalid"

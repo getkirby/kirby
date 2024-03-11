@@ -1,5 +1,5 @@
 <template>
-	<div :aria-disabled="disabled" class="k-table">
+	<div :aria-disabled="disabled" :class="['k-table', $attrs.class]">
 		<table :data-disabled="disabled" :data-indexed="hasIndexColumn">
 			<!-- Header row -->
 			<thead>

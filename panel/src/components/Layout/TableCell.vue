@@ -1,5 +1,9 @@
 <template>
-	<td :data-align="column.align" :data-mobile="mobile" class="k-table-cell">
+	<td
+		:class="['k-table-cell', $attrs.class]"
+		:data-align="column.align"
+		:data-mobile="mobile"
+	>
 		<!-- Table cell type component -->
 		<component
 			:is="component"

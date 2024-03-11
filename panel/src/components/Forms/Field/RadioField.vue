@@ -1,5 +1,9 @@
 <template>
-	<k-field v-bind="$props" :input="id + '-0'" class="k-radio-field">
+	<k-field
+		v-bind="$props"
+		:class="['k-radio-field', $attrs.class]"
+		:input="id + '-0'"
+	>
 		<k-empty
 			v-if="!options?.length"
 			:text="$t('options.none')"

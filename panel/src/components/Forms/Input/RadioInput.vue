@@ -1,7 +1,7 @@
 <template>
 	<ul
+		:class="['k-radio-input', 'k-grid', $attrs.class]"
 		:style="{ '--columns': columns }"
-		class="k-radio-input k-grid"
 		data-variant="choices"
 	>
 		<li v-for="(choice, index) in choices" :key="index">
