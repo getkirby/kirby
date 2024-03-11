@@ -105,6 +105,6 @@ export default {
 
 :where(.k-checkboxes-field, .k-radio-field)
 	.k-choice-input[aria-disabled="true"] {
-	border: 1px solid var(--input-color-border);
+	outline: 1px solid var(--input-color-border);
 }
 </style>
