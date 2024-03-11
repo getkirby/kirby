@@ -1,26 +1,32 @@
 <template>
 	<div class="k-tags-input">
-		<k-tags
-			ref="tags"
-			v-bind="$props"
-			@edit="edit"
-			@input="$emit('input', $event)"
-			@click.native.stop="$refs.toggle?.$el?.click()"
+		<k-input-validator
+			v-bind="{ min, max, required }"
+			:value="JSON.stringify(value)"
 		>
-			<k-button
-				v-if="!max || value.length < max"
-				:id="id"
-				ref="toggle"
-				:autofocus="autofocus"
-				:disabled="disabled"
-				class="k-tags-input-toggle k-tags-navigatable"
-				size="xs"
-				icon="add"
-				@click="$refs.create.open()"
-				@keydown.native.delete="$refs.tags.focus('prev')"
-				@keydown.native="toggle"
-			/>
-		</k-tags>
+			<k-tags
+				ref="tags"
+				v-bind="$props"
+				@edit="edit"
+				@input="$emit('input', $event)"
+				@click.native.stop="$refs.toggle?.$el?.click()"
+			>
+				<k-button
+					v-if="!max || value.length < max"
+					:id="id"
+					ref="toggle"
+					:autofocus="autofocus"
+					:disabled="disabled"
+					class="k-tags-input-toggle k-tags-navigatable"
+					size="xs"
+					icon="add"
+					@click="$refs.create.open()"
+					@keydown.native.delete="$refs.tags.focus('prev')"
+					@keydown.native="toggle"
+				/>
+			</k-tags>
+		</k-input-validator>
+
 		<k-picklist-dropdown
 			ref="replace"
 			v-bind="picklist"
@@ -30,6 +36,7 @@
 			@create="replace"
 			@input="replace"
 		/>
+
 		<k-picklist-dropdown
 			ref="create"
 			v-bind="picklist"

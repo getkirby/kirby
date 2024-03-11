@@ -113,7 +113,7 @@ export default {
 /** Tracking invalid via CSS */
 /** TODO: replace once invalid state is tracked in panel.content */
 :where(
-		.k-field:has([data-invalid="true"]),
+		.k-field:has(:invalid, [data-invalid="true"]),
 		.k-section:has([data-invalid="true"])
 	)
 	> header
@@ -122,7 +122,7 @@ export default {
 	display: inline-block;
 }
 
-.k-field:has([data-invalid="true"])
+.k-field:has(:invalid, [data-invalid="true"])
 	> .k-field-header
 	> .k-label
 	abbr:has(+ abbr.k-label-invalid) {

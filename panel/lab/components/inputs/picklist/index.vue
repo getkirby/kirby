@@ -63,6 +63,10 @@
 				<k-picklist-input :create="true" :options="options" />
 			</k-lab-example>
 
+			<k-lab-example label="Min: 2">
+				<k-picklist-input :create="true" :options="options" :min="2" />
+			</k-lab-example>
+
 			<k-lab-example label="Max: 2">
 				<k-picklist-input :create="true" :options="options" :max="2" />
 			</k-lab-example>

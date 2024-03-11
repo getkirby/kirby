@@ -22,13 +22,18 @@
 			</k-button-group>
 		</template>
 
-		<k-blocks
-			ref="blocks"
-			v-bind="$props"
-			@close="opened = $event"
-			@open="opened = $event"
-			@input="$emit('input', $event)"
-		/>
+		<k-input-validator
+			v-bind="{ min, max, required }"
+			:value="JSON.stringify(value)"
+		>
+			<k-blocks
+				ref="blocks"
+				v-bind="$props"
+				@close="opened = $event"
+				@open="opened = $event"
+				@input="$emit('input', $event)"
+			/>
+		</k-input-validator>
 
 		<footer v-if="!disabled && !isEmpty && !isFull && hasFieldsets">
 			<k-button

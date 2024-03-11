@@ -133,6 +133,9 @@ export default {
 		};
 	},
 	computed: {
+		characters() {
+			return this.counterValue.length;
+		},
 		counterValue() {
 			const plain = this.$helper.string.stripHTML(this.value ?? "");
 			return this.$helper.string.unescapeHTML(plain);
@@ -262,6 +265,7 @@ export default {
 		this.$panel.events.on("focus", this.onBlur);
 
 		this.onInvalid();
+		this.validate();
 
 		if (this.$props.autofocus) {
 			this.focus();

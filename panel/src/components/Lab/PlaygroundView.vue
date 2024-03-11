@@ -136,7 +136,8 @@ export default {
 	margin-top: var(--spacing-12);
 }
 
-.k-lab-input-examples .k-lab-example:has(:invalid) {
+:where(.k-lab-input-examples, .k-lab-field-examples)
+	.k-lab-example:has(:invalid) {
 	outline: 2px solid var(--color-red-500);
 	outline-offset: -2px;
 }
