@@ -393,9 +393,8 @@ export default {
 			this.editor.command(command, ...args);
 		},
 		async validate() {
-			// wait for the next tick to ensure the editor
-			// has updated its content
-			await this.$nextTick();
+			// add short delay to ensure the editor has updated its content
+			await new Promise((resolve) => setTimeout(() => resolve(""), 50));
 
 			let error = "";
 
