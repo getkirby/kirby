@@ -62,10 +62,13 @@ export default {
 	computed: {
 		choices() {
 			return this.options.map((option, index) => {
+				const checked = this.selected.includes(option.value);
+
 				return {
 					autofocus: this.autofocus && index === 0,
-					checked: this.selected.includes(option.value),
-					disabled: this.disabled || option.disabled,
+					checked: checked,
+					disabled:
+						this.disabled || option.disabled || (!checked && this.isFull),
 					id: `${this.id}-${index}`,
 					info: option.info,
 					label: option.text,
@@ -74,6 +77,9 @@ export default {
 					value: option.value
 				};
 			});
+		},
+		isFull() {
+			return this.max && this.selected.length >= this.max;
 		}
 	},
 	watch: {
