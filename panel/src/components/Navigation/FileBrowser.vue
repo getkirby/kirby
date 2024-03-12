@@ -18,9 +18,12 @@
 				<k-browser
 					v-if="files.length"
 					:items="files"
+					:limit="limit"
 					:selected="selected"
 					@select="selectFile"
 				/>
+			</div>
+			<div class="k-file-browser-pagination">
 				<k-pagination
 					v-if="pagination"
 					v-bind="pagination"
@@ -109,13 +112,19 @@ export default {
 .k-file-browser-layout {
 	display: grid;
 	grid-template-columns: minmax(10rem, 15rem) 1fr;
+	grid-template-rows: 1fr auto;
+	grid-template-areas:
+		"tree items"
+		"tree pagination";
 }
 
 .k-file-browser-tree {
+	grid-area: tree;
 	padding: var(--spacing-2);
 	border-right: 1px solid var(--color-gray-300);
 }
 .k-file-browser-items {
+	grid-area: items;
 	padding: var(--spacing-2);
 	background: var(--color-gray-100);
 }
@@ -123,8 +132,11 @@ export default {
 	display: none;
 }
 
-.k-file-browser .k-pagination {
-	margin-top: var(--spacing-2)
+.k-file-browser-pagination {
+	background: var(--color-gray-100);
+	padding: var(--spacing-2);
+	display: flex;
+	justify-content: end;
 }
 
 @container (max-width: 30rem) {
@@ -146,10 +158,20 @@ export default {
 	.k-file-browser-tree {
 		border-right: 0;
 	}
+	.k-file-browser-pagination {
+		justify-content: start;
+	}
+	.k-file-browser[data-view="files"] .k-file-browser-layout {
+		grid-template-rows: 1fr auto;
+		grid-template-areas:
+			"items"
+			"pagination";
+	}
 	.k-file-browser[data-view="files"] .k-file-browser-tree {
 		display: none;
 	}
-	.k-file-browser[data-view="tree"] .k-file-browser-items {
+	.k-file-browser[data-view="tree"] .k-file-browser-items,
+	.k-file-browser[data-view="tree"] .k-file-browser-pagination {
 		display: none;
 	}
 }
