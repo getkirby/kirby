@@ -4,7 +4,6 @@
 		:class="['k-text-input', $attrs.class]"
 		type="text"
 		@input="$emit('input', $event)"
-		@invalid="($invalid, $v) => $emit('invalid', $invalid, $v)"
 	/>
 </template>
 

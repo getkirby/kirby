@@ -23,7 +23,6 @@
 <script>
 import Input, { props as InputProps } from "@/mixins/input.js";
 import { options } from "@/mixins/props.js";
-import { required as validateRequired } from "vuelidate/lib/validators";
 
 export const props = {
 	mixins: [InputProps, options],
@@ -57,14 +56,6 @@ export default {
 			});
 		}
 	},
-	watch: {
-		value: {
-			handler() {
-				this.validate();
-			},
-			immediate: true
-		}
-	},
 	methods: {
 		focus() {
 			this.$el.querySelector("input")?.focus();
@@ -76,17 +67,7 @@ export default {
 			if (value === this.value && this.reset && !this.required) {
 				this.$emit("input", "");
 			}
-		},
-		validate() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
 		}
-	},
-	validations() {
-		return {
-			value: {
-				required: this.required ? validateRequired : true
-			}
-		};
 	}
 };
 </script>

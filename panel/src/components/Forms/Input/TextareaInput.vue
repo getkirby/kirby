@@ -57,12 +57,6 @@ import {
 	spellcheck
 } from "@/mixins/props.js";
 
-import {
-	required as validateRequired,
-	minLength as validateMinLength,
-	maxLength as validateMaxLength
-} from "vuelidate/lib/validators";
-
 export const props = {
 	mixins: [
 		ToolbarProps,
@@ -116,7 +110,6 @@ export default {
 	},
 	watch: {
 		async value() {
-			this.onInvalid();
 			await this.$nextTick();
 			this.$library.autosize.update(this.$refs.input);
 		}
@@ -124,8 +117,6 @@ export default {
 	async mounted() {
 		await this.$nextTick();
 		this.$library.autosize(this.$refs.input);
-
-		this.onInvalid();
 
 		if (this.$props.autofocus) {
 			this.focus();
@@ -236,9 +227,6 @@ export default {
 		},
 		onInput($event) {
 			this.$emit("input", $event.target.value);
-		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
 		},
 		onOut() {
 			this.$refs.input.blur();
@@ -352,15 +340,6 @@ export default {
 		wrap(before, after) {
 			this.insert(before + this.selection() + (after ?? before));
 		}
-	},
-	validations() {
-		return {
-			value: {
-				required: this.required ? validateRequired : true,
-				minLength: this.minlength ? validateMinLength(this.minlength) : true,
-				maxLength: this.maxlength ? validateMaxLength(this.maxlength) : true
-			}
-		};
 	}
 };
 </script>

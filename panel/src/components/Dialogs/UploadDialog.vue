@@ -39,7 +39,6 @@
 						<k-input
 							:disabled="file.completed"
 							:after="'.' + file.extension"
-							:novalidate="true"
 							:required="true"
 							:value="file.name"
 							class="k-upload-item-input"

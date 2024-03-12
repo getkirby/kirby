@@ -9,7 +9,6 @@ import Legacy from "./panel/legacy.js";
 import Libraries from "./libraries/index.js";
 import Panel from "./panel/panel.js";
 import store from "./store/store.js";
-import Vuelidate from "vuelidate";
 
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
@@ -27,7 +26,6 @@ import "./styles/reset.css";
  */
 Vue.use(Helpers);
 Vue.use(Libraries);
-Vue.use(Vuelidate);
 Vue.use(Components);
 
 /**

@@ -4,7 +4,6 @@
 		type="email"
 		class="k-email-input"
 		@input="$emit('input', $event)"
-		@invalid="($invalid, $v) => $emit('invalid', $invalid, $v)"
 	/>
 </template>
 

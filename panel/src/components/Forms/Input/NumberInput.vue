@@ -26,12 +26,6 @@
 import Input, { props as InputProps } from "@/mixins/input.js";
 import { placeholder } from "@/mixins/props.js";
 
-import {
-	required as validateRequired,
-	minValue as validateMinValue,
-	maxValue as validateMaxValue
-} from "vuelidate/lib/validators";
-
 export const props = {
 	mixins: [InputProps, placeholder],
 	props: {
@@ -65,12 +59,6 @@ export default {
 	watch: {
 		value(value) {
 			this.number = value;
-		},
-		number: {
-			immediate: true,
-			handler() {
-				this.onInvalid();
-			}
 		}
 	},
 	mounted() {
@@ -129,9 +117,6 @@ export default {
 				this.$emit("input", value);
 			}
 		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
-		},
 		onInput(value) {
 			this.number = value;
 			this.emit(value);
@@ -143,15 +128,6 @@ export default {
 		select() {
 			this.$refs.input.select();
 		}
-	},
-	validations() {
-		return {
-			value: {
-				required: this.required ? validateRequired : true,
-				min: this.min ? validateMinValue(this.min) : true,
-				max: this.max ? validateMaxValue(this.max) : true
-			}
-		};
 	}
 };
 </script>

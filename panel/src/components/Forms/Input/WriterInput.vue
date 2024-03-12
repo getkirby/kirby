@@ -68,12 +68,6 @@ import {
 	spellcheck
 } from "@/mixins/props.js";
 
-import {
-	required as validateRequired,
-	minLength as validateMinLength,
-	maxLength as validateMaxLength
-} from "vuelidate/lib/validators";
-
 export const props = {
 	mixins: [InputProps, maxlength, minlength, placeholder, spellcheck],
 	props: {
@@ -134,11 +128,8 @@ export default {
 	},
 	computed: {
 		characters() {
-			return this.counterValue.length;
-		},
-		counterValue() {
 			const plain = this.$helper.string.stripHTML(this.value ?? "");
-			return this.$helper.string.unescapeHTML(plain);
+			return this.$helper.string.unescapeHTML(plain).length;
 		},
 		isCursorAtEnd() {
 			return this.editor.selectionIsAtEnd;
@@ -161,8 +152,6 @@ export default {
 				this.html = newValue;
 				this.editor.setContent(this.html);
 			}
-
-			this.onInvalid();
 		}
 	},
 	mounted() {
@@ -264,7 +253,6 @@ export default {
 		this.$panel.events.on("click", this.onBlur);
 		this.$panel.events.on("focus", this.onBlur);
 
-		this.onInvalid();
 		this.validate();
 
 		if (this.$props.autofocus) {
@@ -393,9 +381,6 @@ export default {
 		focus() {
 			this.editor.focus();
 		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
-		},
 		getSplitContent() {
 			return this.editor.getHTMLStartToSelectionToEnd();
 		},
@@ -408,9 +393,8 @@ export default {
 			this.editor.command(command, ...args);
 		},
 		async validate() {
-			// wait for the next tick to ensure the editor
-			// has updated its content
-			await this.$nextTick();
+			// add short delay to ensure the editor has updated its content
+			await new Promise((resolve) => setTimeout(() => resolve(""), 50));
 
 			let error = "";
 
@@ -434,15 +418,6 @@ export default {
 
 			this.$refs.output.setCustomValidity(error);
 		}
-	},
-	validations() {
-		return {
-			counterValue: {
-				required: this.required ? validateRequired : true,
-				minLength: this.minlength ? validateMinLength(this.minlength) : true,
-				maxLength: this.maxlength ? validateMaxLength(this.maxlength) : true
-			}
-		};
 	}
 };
 </script>

@@ -97,13 +97,6 @@ export default {
 		hasDropzone() {
 			return false;
 		},
-		isInvalid() {
-			return (
-				(this.required && this.selected.length === 0) ||
-				(this.min && this.selected.length < this.min) ||
-				(this.max && this.selected.length > this.max)
-			);
-		},
 		more() {
 			return !this.max || this.max > this.selected.length;
 		}
