@@ -48,6 +48,7 @@ class Plugin
 
 		// TODO: Remove in v5
 		if ($root = $extends['root'] ?? null) {
+			Helpers::deprecated('Plugin "' . $name . '": Passing the `root` inside the `extends` array has been deprecated. Pass it directly as named argument `root`.', 'plugin-extends-root');
 			$this->root ??= $root;
 		}
 
@@ -55,6 +56,7 @@ class Plugin
 
 		// TODO: Remove info property in v5
 		if ($info = $extends['info'] ?? null) {
+			Helpers::deprecated('Plugin "' . $name . '": Passing an `info` array inside the `extends` array has been deprecated. Pass the individual entries directly as named arguments.', 'plugin-extends-root');
 			$this->info = empty($info) === false && is_array($info) ? $info : null;
 		}
 
