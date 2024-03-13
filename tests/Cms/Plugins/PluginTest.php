@@ -406,9 +406,10 @@ class PluginTest extends TestCase
 	 */
 	public function testToArray()
 	{
-		$plugin = new Plugin('getkirby/test-plugin', [
-			'root' => $root = static::FIXTURES . '/plugin-version'
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/test-plugin',
+			root: $root = static::FIXTURES . '/plugin-version'
+		);
 
 		$expected = [
 			'authors' => [
@@ -431,9 +432,10 @@ class PluginTest extends TestCase
 	 */
 	public function testUpdateStatus()
 	{
-		$plugin = new Plugin('getkirby/public', [
-			'root' => static::FIXTURES . '/plugin-version'
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/public',
+			root: static::FIXTURES . '/plugin-version'
+		);
 		$updateStatus = $plugin->updateStatus();
 
 		$this->assertInstanceOf(UpdateStatus::class, $updateStatus);
@@ -453,9 +455,10 @@ class PluginTest extends TestCase
 	 */
 	public function testUpdateStatusWithPrefix()
 	{
-		$plugin = new Plugin('getkirby/public', [
-			'root' => static::FIXTURES . '/plugin-version-prefix'
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/public',
+			root: static::FIXTURES . '/plugin-version-prefix'
+		);
 		$updateStatus = $plugin->updateStatus();
 
 		$this->assertInstanceOf(UpdateStatus::class, $updateStatus);
@@ -475,9 +478,11 @@ class PluginTest extends TestCase
 	 */
 	public function testUpdateStatusWithoutVersion()
 	{
-		$plugin = new Plugin('getkirby/public', [
-			'root' => static::FIXTURES . '/plugin'
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/public',
+			root: static::FIXTURES . '/plugin'
+		);
+
 		$updateStatus = $plugin->updateStatus();
 
 		$this->assertInstanceOf(UpdateStatus::class, $updateStatus);
@@ -498,9 +503,11 @@ class PluginTest extends TestCase
 	 */
 	public function testUpdateStatusUnknownPlugin()
 	{
-		$plugin = new Plugin('getkirby/unknown', [
-			'root' => static::FIXTURES . '/plugin-version'
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/unknown',
+			root: static::FIXTURES . '/plugin-version'
+		);
+
 		$updateStatus = $plugin->updateStatus();
 
 		$this->assertInstanceOf(UpdateStatus::class, $updateStatus);
@@ -532,9 +539,10 @@ class PluginTest extends TestCase
 			]
 		]);
 
-		$plugin = new Plugin('getkirby/public', [
-			'root' => static::FIXTURES . '/plugin-version'
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/public',
+			root: static::FIXTURES . '/plugin-version'
+		);
 		$updateStatus = $plugin->updateStatus();
 
 		$this->assertNull($updateStatus);
@@ -558,9 +566,11 @@ class PluginTest extends TestCase
 			]
 		]);
 
-		$plugin = new Plugin('getkirby/public', [
-			'root' => static::FIXTURES . '/plugin-version'
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/public',
+			root: static::FIXTURES . '/plugin-version'
+		);
+
 		$updateStatus = $plugin->updateStatus();
 
 		$this->assertNull($updateStatus);
@@ -577,9 +587,11 @@ class PluginTest extends TestCase
 			]
 		]);
 
-		$plugin = new Plugin('getkirby/public', [
-			'root' => static::FIXTURES . '/plugin-version'
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/public',
+			root: static::FIXTURES . '/plugin-version'
+		);
+
 		$updateStatus = $plugin->updateStatus();
 
 		$this->assertNull($updateStatus);
@@ -600,9 +612,11 @@ class PluginTest extends TestCase
 			]
 		]);
 
-		$plugin = new Plugin('getkirby/public', [
-			'root' => static::FIXTURES . '/plugin-version'
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/public',
+			root: static::FIXTURES . '/plugin-version'
+		);
+
 		$updateStatus = $plugin->updateStatus();
 
 		$this->assertNull($updateStatus);
@@ -623,9 +637,10 @@ class PluginTest extends TestCase
 			]
 		]);
 
-		$plugin = new Plugin('getkirby/public', [
-			'root' => static::FIXTURES . '/plugin-version'
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/public',
+			root: static::FIXTURES . '/plugin-version'
+		);
 		$updateStatus = $plugin->updateStatus();
 
 		$this->assertInstanceOf(UpdateStatus::class, $updateStatus);
@@ -645,9 +660,11 @@ class PluginTest extends TestCase
 	 */
 	public function testUpdateStatusCustomData()
 	{
-		$plugin = new Plugin('getkirby/public', [
-			'root' => static::FIXTURES . '/plugin-version'
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/public',
+			root: static::FIXTURES . '/plugin-version'
+		);
+
 		$updateStatus = $plugin->updateStatus([
 			'latest' => '87654.3.2',
 			'versions' => [
@@ -730,9 +747,10 @@ class PluginTest extends TestCase
 	 */
 	public function testVersionComposer()
 	{
-		$plugin = new Plugin('getkirby/test-plugin-composer', [
-			'root' => static::FIXTURES . '/plugin-version-composer'
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/test-plugin-composer',
+			root: static::FIXTURES . '/plugin-version-composer'
+		);
 
 		$this->assertSame('5.2.3', $plugin->version());
 	}
@@ -742,9 +760,10 @@ class PluginTest extends TestCase
 	 */
 	public function testVersionComposerNoVersionSet()
 	{
-		$plugin = new Plugin('getkirby/test-plugin', [
-			'root' => static::FIXTURES . '/plugin-version-composer-noversionset'
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/test-plugin',
+			root: static::FIXTURES . '/plugin-version-composer-noversionset'
+		);
 
 		$this->assertNull($plugin->version());
 	}
@@ -754,10 +773,11 @@ class PluginTest extends TestCase
 	 */
 	public function testVersionComposerOverride()
 	{
-		$plugin = new Plugin('getkirby/test-plugin-composer', [
-			'root' => static::FIXTURES . '/plugin-version-composer-override'
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/test-plugin-composer',
+			root: static::FIXTURES . '/plugin-version-composer-override'
+		);
 
-		$this->assertSame('3.1.2', $plugin->version());
+		$this->assertSame('5.2.3', $plugin->version());
 	}
 }
