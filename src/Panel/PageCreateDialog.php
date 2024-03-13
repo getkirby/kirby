@@ -369,9 +369,9 @@ class PageCreateDialog
 		$value = [
 			'parent'   => $this->parentId,
 			'section'  => $this->sectionId,
-			'slug'     => '',
+			'slug'     => $this->slug ?? '',
 			'template' => $this->template,
-			'title'    => '',
+			'title'    => $this->title ?? '',
 			'view'     => $this->viewId,
 		];
 

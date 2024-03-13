@@ -10,6 +10,7 @@
 		<k-button
 			:disabled="start <= 1"
 			:title="$t('prev')"
+			class="k-pagination-button"
 			icon="angle-left"
 			size="xs"
 			variant="filled"
@@ -57,6 +58,7 @@
 		<k-button
 			:disabled="end >= total"
 			:title="$t('next')"
+			class="k-pagination-button"
 			icon="angle-right"
 			size="xs"
 			variant="filled"
