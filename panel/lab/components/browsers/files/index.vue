@@ -1,16 +1,16 @@
 <template>
 	<k-lab-examples>
 		<k-lab-example label="file browser">
-			<k-grid style="--columns: 2; gap: 3rem">
-				<div>
-					<k-headline>Browse …</k-headline>
-					<k-file-browser :selected="selected?.value" @select="selected = $event" />
-				</div>
-				<div v-if="selected">
-					<k-headline>Selected</k-headline>
-					<k-code>{{ selected }}</k-code>
-				</div>
-			</k-grid>
+			<k-headline>Browse …</k-headline>
+			<k-file-browser :selected="selected?.value" @select="selected = $event" />
+		</k-lab-example>
+		<k-lab-example label="pagination">
+			<k-headline>Browse …</k-headline>
+			<k-file-browser
+				:limit="1"
+				:selected="selected?.value"
+				@select="selected = $event"
+			/>
 		</k-lab-example>
 	</k-lab-examples>
 </template>
@@ -19,9 +19,14 @@
 export default {
 	data() {
 		return {
-			selected: null,
+			selected: null
 		};
 	},
+	watch: {
+		selected(value) {
+			console.log(value);
+		}
+	}
 };
 </script>
 

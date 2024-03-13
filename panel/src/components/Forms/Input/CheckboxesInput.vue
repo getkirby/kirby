@@ -1,19 +1,24 @@
 <template>
-	<fieldset
-		:class="['k-checkboxes-input', 'k-grid', $attrs.class]"
-		:disabled="disabled"
-	>
+	<fieldset :disabled="disabled" :class="['k-checkboxes-input', $attrs.class]">
 		<legend class="sr-only">{{ $t("options") }}</legend>
-		<ul :style="{ '--columns': columns }" class="k-grid" data-variant="choices">
-			<li v-for="(choice, index) in choices" :key="index">
-				<k-choice-input v-bind="choice" @input="input(choice.value, $event)" />
-			</li>
-		</ul>
 
 		<k-input-validator
 			v-bind="{ min, max, required }"
 			:value="JSON.stringify(selected)"
-		/>
+		>
+			<ul
+				:style="{ '--columns': columns }"
+				class="k-grid"
+				data-variant="choices"
+			>
+				<li v-for="(choice, index) in choices" :key="index">
+					<k-choice-input
+						v-bind="choice"
+						@input="input(choice.value, $event)"
+					/>
+				</li>
+			</ul>
+		</k-input-validator>
 	</fieldset>
 </template>
 
@@ -51,10 +56,13 @@ export default {
 	computed: {
 		choices() {
 			return this.options.map((option, index) => {
+				const checked = this.selected.includes(option.value);
+
 				return {
 					autofocus: this.autofocus && index === 0,
-					checked: this.selected.includes(option.value),
-					disabled: this.disabled || option.disabled,
+					checked: checked,
+					disabled:
+						this.disabled || option.disabled || (!checked && this.isFull),
 					id: `${this.id}-${index}`,
 					info: option.info,
 					label: option.text,
@@ -63,6 +71,9 @@ export default {
 					value: option.value
 				};
 			});
+		},
+		isFull() {
+			return this.max && this.selected.length >= this.max;
 		}
 	},
 	watch: {

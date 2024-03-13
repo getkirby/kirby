@@ -15,26 +15,26 @@
 		</template>
 
 		<k-dropzone :disabled="!hasDropzone" @drop="drop">
-			<k-collection
-				v-bind="collection"
-				@empty="open"
-				@sort="onInput"
-				@sortChange="$emit('change', $event)"
+			<k-input-validator
+				v-bind="{ min, max, required }"
+				:value="JSON.stringify(value)"
 			>
-				<template v-if="!disabled" #options="{ index }">
-					<k-button
-						:title="$t('remove')"
-						icon="remove"
-						@click="remove(index)"
-					/>
-				</template>
-			</k-collection>
+				<k-collection
+					v-bind="collection"
+					@empty="open"
+					@sort="onInput"
+					@sortChange="$emit('change', $event)"
+				>
+					<template v-if="!disabled" #options="{ index }">
+						<k-button
+							:title="$t('remove')"
+							icon="remove"
+							@click="remove(index)"
+						/>
+					</template>
+				</k-collection>
+			</k-input-validator>
 		</k-dropzone>
-
-		<k-input-validator
-			v-bind="{ min, max, required }"
-			:value="JSON.stringify(value)"
-		/>
 	</k-field>
 </template>
 

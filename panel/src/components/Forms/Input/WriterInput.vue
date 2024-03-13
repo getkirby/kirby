@@ -112,12 +112,6 @@ export const props = {
 			type: String,
 			default: ""
 		}
-	},
-	computed: {
-		characters() {
-			const plain = this.$helper.string.stripHTML(this.value ?? "");
-			return this.$helper.string.unescapeHTML(plain).length;
-		}
 	}
 };
 
@@ -133,6 +127,10 @@ export default {
 		};
 	},
 	computed: {
+		characters() {
+			const plain = this.$helper.string.stripHTML(this.value ?? "");
+			return this.$helper.string.unescapeHTML(plain).length;
+		},
 		isCursorAtEnd() {
 			return this.editor.selectionIsAtEnd;
 		},
@@ -254,6 +252,8 @@ export default {
 
 		this.$panel.events.on("click", this.onBlur);
 		this.$panel.events.on("focus", this.onBlur);
+
+		this.validate();
 
 		if (this.$props.autofocus) {
 			this.focus();
@@ -393,9 +393,8 @@ export default {
 			this.editor.command(command, ...args);
 		},
 		async validate() {
-			// wait for the next tick to ensure the editor
-			// has updated its content
-			await this.$nextTick();
+			// add short delay to ensure the editor has updated its content
+			await new Promise((resolve) => setTimeout(() => resolve(""), 50));
 
 			let error = "";
 

@@ -20,12 +20,16 @@
 			</k-button-group>
 		</template>
 
-		<k-layouts ref="layouts" v-bind="$props" @input="$emit('input', $event)" />
-
 		<k-input-validator
 			v-bind="{ min, max, required }"
 			:value="JSON.stringify(value)"
-		/>
+		>
+			<k-layouts
+				ref="layouts"
+				v-bind="$props"
+				@input="$emit('input', $event)"
+			/>
+		</k-input-validator>
 
 		<footer v-if="!disabled && hasFieldsets">
 			<k-button

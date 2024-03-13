@@ -1,41 +1,42 @@
 <template>
-	<fieldset :class="['k-toggles-input', $attrs.class]" :disabled="disabled">
+	<fieldset :disabled="disabled" :class="['k-toggles-input', $attrs.class]">
 		<legend class="sr-only">{{ $t("options") }}</legend>
-		<ul
-			:data-labels="labels"
-			:style="{ '--options': columns ?? options.length }"
-		>
-			<li
-				v-for="(option, index) in options"
-				:key="index"
-				:data-disabled="disabled"
-			>
-				<input
-					:id="id + '-' + index"
-					:aria-label="option.text"
-					:disabled="disabled"
-					:value="option.value"
-					:name="id"
-					:checked="value === option.value"
-					class="input-hidden"
-					type="radio"
-					@click="onClick(option.value)"
-					@change="onInput(option.value)"
-				/>
-				<label :for="id + '-' + index" :title="option.text">
-					<k-icon v-if="option.icon" :type="option.icon" />
-					<!-- eslint-disable vue/no-v-html -->
-					<span
-						v-if="labels || !option.icon"
-						class="k-toggles-text"
-						v-html="option.text"
-					/>
-					<!-- eslint-enable vue/no-v-html -->
-				</label>
-			</li>
-		</ul>
 
-		<k-input-validator :required="required" :value="JSON.stringify(value)" />
+		<k-input-validator :required="required" :value="JSON.stringify(value)">
+			<ul
+				:data-labels="labels"
+				:style="{ '--options': columns ?? options.length }"
+			>
+				<li
+					v-for="(option, index) in options"
+					:key="index"
+					:data-disabled="disabled"
+				>
+					<input
+						:id="id + '-' + index"
+						:aria-label="option.text"
+						:disabled="disabled"
+						:value="option.value"
+						:name="id"
+						:checked="value === option.value"
+						class="input-hidden"
+						type="radio"
+						@click="onClick(option.value)"
+						@change="onInput(option.value)"
+					/>
+					<label :for="id + '-' + index" :title="option.text">
+						<k-icon v-if="option.icon" :type="option.icon" />
+						<!-- eslint-disable vue/no-v-html -->
+						<span
+							v-if="labels || !option.icon"
+							class="k-toggles-text"
+							v-html="option.text"
+						/>
+						<!-- eslint-enable vue/no-v-html -->
+					</label>
+				</li>
+			</ul>
+		</k-input-validator>
 	</fieldset>
 </template>
 
