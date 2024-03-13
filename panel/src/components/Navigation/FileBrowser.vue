@@ -22,7 +22,7 @@
 					@select="selectFile"
 				/>
 			</div>
-			<div class="k-file-browser-pagination">
+			<div class="k-file-browser-pagination" @click.stop>
 				<k-pagination
 					v-if="pagination"
 					v-bind="pagination"
