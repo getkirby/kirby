@@ -18,7 +18,6 @@
 				<k-browser
 					v-if="files.length"
 					:items="files"
-					:limit="limit"
 					:selected="selected"
 					@select="selectFile"
 				/>
@@ -41,7 +40,10 @@
  */
 export default {
 	props: {
-		limit: Number,
+		limit: {
+			default: 100,
+			type: Number
+		},
 		selected: {
 			type: String
 		}

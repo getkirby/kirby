@@ -62,7 +62,6 @@
 				<div class="k-page-browser">
 					<k-page-tree
 						:current="$helper.link.getPageUUID(value)"
-						:limit="limit"
 						:root="false"
 						@select="selectModel($event)"
 					/>
@@ -75,7 +74,6 @@
 				class="k-link-input-body"
 			>
 				<k-file-browser
-					:limit="limit"
 					:selected="$helper.link.getFileUUID(value)"
 					@select="selectModel($event)"
 				/>
@@ -93,7 +91,6 @@ import { options } from "@/mixins/props.js";
 export const props = {
 	mixins: [FieldProps, InputComponentProps, InputMixinProps, options],
 	props: {
-		limit: Number,
 		value: {
 			default: "",
 			type: String
