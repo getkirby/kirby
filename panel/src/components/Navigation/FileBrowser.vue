@@ -41,7 +41,7 @@
 export default {
 	props: {
 		limit: {
-			default: 100,
+			default: 50,
 			type: Number
 		},
 		selected: {
