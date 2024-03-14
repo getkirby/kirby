@@ -2,7 +2,7 @@
 	<k-field
 		v-bind="$props"
 		:class="['k-structure-field', $attrs.class]"
-		@click.native.stop
+		@click.stop
 	>
 		<template v-if="hasFields && !disabled" #options>
 			<k-button-group layout="collapsed">

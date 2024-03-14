@@ -9,7 +9,7 @@
 				ref="tags"
 				v-bind="$props"
 				@input="$emit('input', $event)"
-				@click.native.stop="open"
+				@click.stop="open"
 			>
 				<k-button
 					v-if="!max || value.length < max"
@@ -20,8 +20,8 @@
 					class="k-multiselect-input-toggle k-tags-navigatable"
 					size="xs"
 					icon="triangle-down"
-					@keydown.native.delete="$refs.tags.focus('prev')"
-					@focus.native="open"
+					@keydown.delete="$refs.tags.focus('prev')"
+					@focus="open"
 				/>
 			</k-tags>
 		</k-input-validator>
