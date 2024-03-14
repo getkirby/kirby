@@ -1,5 +1,10 @@
 <template>
-	<k-field v-bind="$props" :class="['k-date-field', $attrs.class]" :input="id">
+	<k-field
+		v-bind="$props"
+		:class="['k-date-field', $attrs.class]"
+		:input="id"
+		:style="$attrs.style"
+	>
 		<div ref="body" :data-has-time="Boolean(time)" class="k-date-field-body">
 			<!-- Date input -->
 			<k-input

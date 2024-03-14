@@ -1,5 +1,8 @@
 <template>
-	<div :class="['k-bubbles-field-preview', $options.class, $attrs.class]">
+	<div
+		:class="['k-bubbles-field-preview', $options.class, $attrs.class]"
+		:style="$attrs.style"
+	>
 		<k-bubbles :bubbles="bubbles" :html="html" />
 	</div>
 </template>

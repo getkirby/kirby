@@ -1,5 +1,5 @@
 <template>
-	<div :class="['k-multiselect-input', $attrs.class]">
+	<div :class="['k-multiselect-input', $attrs.class]" :style="$attrs.style">
 		<k-input-validator
 			v-bind="{ min, max, required }"
 			:value="JSON.stringify(value)"

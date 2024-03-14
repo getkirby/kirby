@@ -1,5 +1,5 @@
 <template>
-	<div :class="['k-link-field-preview', $attrs.class]">
+	<div :class="['k-link-field-preview', $attrs.class]" :style="$attrs.style">
 		<template v-if="currentType === 'page' || currentType === 'file'">
 			<template v-if="model">
 				<k-tag

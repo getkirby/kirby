@@ -3,6 +3,7 @@
 		:class="['k-table-cell', $attrs.class]"
 		:data-align="column.align"
 		:data-mobile="mobile"
+		:style="$attrs.style"
 	>
 		<!-- Table cell type component -->
 		<component

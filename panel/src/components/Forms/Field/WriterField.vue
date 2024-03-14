@@ -4,6 +4,7 @@
 		:counter="counterOptions"
 		:class="['k-writer-field', $attrs.class]"
 		:input="id"
+		:style="$attrs.style"
 	>
 		<k-input
 			v-bind="$props"

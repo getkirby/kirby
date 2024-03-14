@@ -1,5 +1,9 @@
 <template>
-	<label class="k-choice-input" :aria-disabled="disabled">
+	<label
+		:aria-disabled="disabled"
+		:class="['k-choice-input', $attrs.class]"
+		:style="$attrs.style"
+	>
 		<input
 			v-bind="{
 				autofocus,

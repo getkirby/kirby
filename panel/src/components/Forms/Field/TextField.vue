@@ -4,6 +4,7 @@
 		:class="['k-text-field', $attrs.class]"
 		:counter="counterOptions"
 		:input="id"
+		:style="$attrs.style"
 	>
 		<template #options>
 			<slot name="options" />

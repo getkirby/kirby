@@ -5,6 +5,7 @@
 		:data-has-image="hasFigure"
 		:data-layout="layout"
 		:data-theme="theme"
+		:style="$attrs.style"
 		@click="$emit('click', $event)"
 		@dragstart="$emit('drag', $event)"
 	>
