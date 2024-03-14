@@ -14,6 +14,7 @@
 			value: number
 		}"
 		:class="['k-number-input', $attrs.class]"
+		:style="$attrs.style"
 		type="number"
 		@blur="onBlur"
 		@input="onInput($event.target.value)"

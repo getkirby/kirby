@@ -5,6 +5,7 @@
 		:class="['k-button', $attrs.class]"
 		:data-has-icon="Boolean(icon)"
 		:data-has-text="Boolean(text || $slots.default)"
+		:style="$attrs.style"
 		@click="onClick"
 	>
 		<span v-if="icon" class="k-button-icon">
