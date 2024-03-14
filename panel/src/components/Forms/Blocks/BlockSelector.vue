@@ -4,6 +4,7 @@
 		:cancel-button="false"
 		:size="size"
 		:submit-button="false"
+		:style="$attrs.style"
 		:visible="true"
 		@cancel="$emit('cancel')"
 		@submit="$emit('submit', value)"

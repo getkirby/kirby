@@ -2,9 +2,10 @@
 	<component
 		:is="component"
 		v-bind="attrs"
+		:class="['k-button', $attrs.class]"
 		:data-has-icon="Boolean(icon)"
 		:data-has-text="Boolean(text || $slots.default)"
-		:class="['k-button', $attrs.class]"
+		:style="$attrs.style"
 		@click="onClick"
 	>
 		<span v-if="icon" class="k-button-icon">

@@ -4,6 +4,7 @@
 		:class="['k-tags-field', $attrs.class]"
 		:counter="counterOptions"
 		:input="id"
+		:style="$attrs.style"
 	>
 		<k-empty v-if="hasNoOptions" :icon="icon" :text="$t('options.none')" />
 		<k-input

@@ -1,5 +1,5 @@
 <template>
-	<div :class="['k-block-title', $attrs.class]">
+	<div :class="['k-block-title', $attrs.class]" :style="$attrs.style">
 		<k-icon :type="icon" class="k-block-icon" />
 		<span v-if="name" class="k-block-name">
 			{{ name }}

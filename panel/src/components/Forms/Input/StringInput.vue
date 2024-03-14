@@ -19,6 +19,7 @@
 		:aria-label="ariaLabel"
 		:class="['k-string-input', $attrs.class]"
 		:data-font="font"
+		:style="$attrs.style"
 		@input="$emit('input', $event.target.value)"
 	/>
 </template>

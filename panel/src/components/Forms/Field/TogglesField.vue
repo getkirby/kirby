@@ -3,6 +3,7 @@
 		v-bind="$props"
 		:class="['k-toggles-field', $attrs.class]"
 		:input="id"
+		:style="$attrs.style"
 	>
 		<k-empty
 			v-if="!options?.length"

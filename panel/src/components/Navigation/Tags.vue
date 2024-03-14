@@ -9,6 +9,7 @@
 			:data-layout="layout"
 			:list="tags"
 			:options="dragOptions"
+			:style="$attrs.style"
 			@end="input"
 		>
 			<k-tag

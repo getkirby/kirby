@@ -2,6 +2,7 @@
 	<div
 		:class="['k-block-type-heading-input', $attrs.class]"
 		:data-level="content.level"
+		:style="$attrs.style"
 	>
 		<k-writer-input
 			ref="input"

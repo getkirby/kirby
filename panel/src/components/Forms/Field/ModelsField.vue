@@ -2,6 +2,7 @@
 	<k-field
 		v-bind="$props"
 		:class="['k-models-field', `k-${$options.type}-field`, $attrs.class]"
+		:style="$attrs.style"
 	>
 		<template v-if="!disabled" #options>
 			<k-button-group
