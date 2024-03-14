@@ -1,3 +1,4 @@
+import { reactive } from "vue";
 import { clone, length } from "@/helpers/object.js";
 
 const keep = (id, data) => {
@@ -85,22 +86,22 @@ export default {
 		 * Returns original (in content file) values for passed model ID
 		 */
 		originals: (state, getters) => (id) => {
-			return clone(getters.model(id).originals);
+			return reactive(clone(getters.model(id).originals));
 		},
 		/**
 		 * Returns values (incl. unsaved changes) for passed model ID
 		 */
 		values: (state, getters) => (id) => {
-			return {
+			return reactive({
 				...getters.originals(id),
 				...getters.changes(id)
-			};
+			});
 		},
 		/**
 		 * Returns unsaved changes for passed model ID
 		 */
 		changes: (state, getters) => (id) => {
-			return clone(getters.model(id).changes);
+			return reactive(clone(getters.model(id).changes));
 		}
 	},
 
