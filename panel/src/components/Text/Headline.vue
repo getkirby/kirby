@@ -1,11 +1,5 @@
 <template>
-	<component
-		:is="tag"
-		:data-theme="theme"
-		:data-size="size"
-		class="k-headline"
-		@click="$emit('click', $event)"
-	>
+	<component :is="tag" class="k-headline" @click="$emit('click', $event)">
 		<k-link v-if="link" :to="link">
 			<!-- @slot Content/text of the headline -->
 			<slot />
@@ -28,42 +22,14 @@ export default {
 		 */
 		link: String,
 		/**
-		 * Alternate text sizes
-		 * @deprecated 4.0.0 Use `tag` prop instead to get different sizes
-		 * @values small, large, huge
-		 */
-		size: {
-			type: String
-		},
-		/**
 		 * HTML tag for the headline element
 		 */
 		tag: {
 			type: String,
 			default: "h2"
-		},
-		/**
-		 * Visual look of the headline
-		 * @deprecated 4.0.0
-		 * @values positive, negative
-		 */
-		theme: {
-			type: String
 		}
 	},
-	emits: ["click"],
-	mounted() {
-		if (this.size) {
-			window.panel.deprecated(
-				"<k-headline>: the `size` prop will be removed in a future version. Use the `tag` prop instead."
-			);
-		}
-		if (this.theme) {
-			window.panel.deprecated(
-				"<k-headline>: the `theme` prop will be removed in a future version."
-			);
-		}
-	}
+	emits: ["click"]
 };
 </script>
 
@@ -150,10 +116,5 @@ export default {
 
 .k-text > * + h6 {
 	margin-block-start: calc(var(--text-line-height) * 1.5em);
-}
-
-/** @deprecated */
-.k-headline[data-theme] {
-	color: var(--theme);
 }
 </style>

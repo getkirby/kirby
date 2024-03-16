@@ -1,6 +1,6 @@
 <script>
 /**
- * @deprecated Use `k-writer-input` instead.
+ * @deprecated 5.0.0 Use `k-writer-input` instead.
  */
 export default {
 	extends: "k-writer-input",

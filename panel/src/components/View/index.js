@@ -13,10 +13,5 @@ export default {
 		app.component("k-panel-menu", Menu);
 		app.component("k-panel-outside", Outside);
 		app.component("k-topbar", Topbar);
-
-		// @deprecated 4.0.0 Use `k-panel-inside` instead
-		app.component("k-inside", Inside);
-		// @deprecated 4.0.0 Use `k-panel-outside` instead
-		app.component("k-outside", Outside);
 	}
 };
