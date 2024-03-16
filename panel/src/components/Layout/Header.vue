@@ -18,28 +18,16 @@
 					<!-- @slot Headline text -->
 					<slot />
 				</span>
-				<span class="k-header-title-icon"><k-icon type="edit" /></span>
+				<span class="k-header-title-icon">
+					<k-icon type="edit" />
+				</span>
 			</button>
 			<span v-else class="k-header-title-text"><slot /></span>
 		</h1>
 
-		<div
-			v-if="$slots.buttons || $slots.left || $slots.right"
-			class="k-header-buttons"
-		>
+		<div v-if="$slots.buttons" class="k-header-buttons">
 			<!-- @slot Position for optional buttons opposite the headline -->
 			<slot name="buttons" />
-
-			<!--
-				@slot
-				@deprecated 4.0.0 left slot, use buttons slot instead
-			-->
-			<slot name="left" />
-			<!--
-				@slot
-				@deprecated 4.0.0 right slot, use buttons slot instead
-			-->
-			<slot name="right" />
 		</div>
 	</header>
 </template>
@@ -64,28 +52,9 @@ export default {
 		/**
 		 * Whether the headline is editable
 		 */
-		editable: {
-			type: Boolean
-		},
-		/**
-		 * @deprecated 4.0.0 Has no effect anymore, use `k-tabs` as standalone component instead
-		 */
-		tabs: Array
+		editable: Boolean
 	},
-	emits: ["edit"],
-	mounted() {
-		if (this.tabs) {
-			window.panel.deprecated(
-				"<k-header>: `tabs` prop isn't supported anymore and has no effect. Use `<k-tabs>` as standalone component instead."
-			);
-		}
-
-		if (this.$slots.left || this.$slots.right) {
-			window.panel.deprecated(
-				"<k-header>: left/right slots will be removed in a future version. Use `buttons` slot instead."
-			);
-		}
-	}
+	emits: ["edit"]
 };
 </script>
 
