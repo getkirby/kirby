@@ -1,4 +1,3 @@
-import Dropdown from "./Dropdown.vue";
 import DropdownContent from "./DropdownContent.vue";
 import DropdownItem from "./DropdownItem.vue";
 
@@ -8,7 +7,6 @@ import PicklistDropdown from "./PicklistDropdown.vue";
 
 export default {
 	install(app) {
-		app.component("k-dropdown", Dropdown);
 		app.component("k-dropdown-content", DropdownContent);
 		app.component("k-dropdown-item", DropdownItem);
 

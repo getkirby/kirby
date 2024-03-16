@@ -31,29 +31,15 @@ export default {
 		 * Font size of the text
 		 * @values tiny, small, medium, large, huge
 		 */
-		size: String,
-		/**
-		 * Visual appearance of the text
-		 * @values help
-		 * @deprecated 4.0.0 Use `k-help` class instead
-		 */
-		theme: String
+		size: String
 	},
 	computed: {
 		attrs() {
 			return {
 				class: "k-text",
 				"data-align": this.align,
-				"data-size": this.size,
-				"data-theme": this.theme
+				"data-size": this.size
 			};
-		}
-	},
-	mounted() {
-		if (this.theme) {
-			window.panel.deprecated(
-				'<k-text>: the `theme` prop will be removed in a future version. For help text, add `.k-help "` CSS class instead.'
-			);
 		}
 	}
 };

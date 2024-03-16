@@ -26,8 +26,6 @@ import UserProfile from "./Users/UserProfile.vue";
 import UserView from "./Users/UserView.vue";
 import UsersView from "./Users/UsersView.vue";
 
-import LegacyPluginView from "./LegacyPluginView.vue";
-
 export default {
 	install(app) {
 		app.component("k-error-view", ErrorView);
@@ -57,7 +55,5 @@ export default {
 		app.component("k-user-profile", UserProfile);
 		app.component("k-user-view", UserView);
 		app.component("k-users-view", UsersView);
-
-		app.component("k-plugin-view", LegacyPluginView);
 	}
 };

@@ -37,6 +37,8 @@ let OpenDropdown = null;
 
 /**
  * Dropdowns are constructed with two elements: `<k-dropdown-content>` holds any content shown when opening the dropdown: any number of `<k-dropdown-item>` elements or any other HTML; typically a `<k-button>` then is used to call the `toggle()` method on `<k-dropdown-content>`.
+ *
+ * @todo rename to `k-dropdown` in v6 (with alias to old name)
  */
 export default {
 	props: {
