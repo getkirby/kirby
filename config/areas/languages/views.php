@@ -15,8 +15,8 @@ return [
 			$language     = Find::language($code);
 			$link         = '/languages/' . $language->code();
 			$strings      = [];
-			$foundation   = App::instance()->defaultLanguage()->translations();
-			$translations = $language->translations();
+			$foundation   = App::instance()->defaultLanguage()->translations()->toArray();
+			$translations = $language->translations()->toArray();
 
 			ksort($foundation);
 

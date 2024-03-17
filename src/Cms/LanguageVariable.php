@@ -46,7 +46,7 @@ class LanguageVariable
 
 		$kirby        = App::instance();
 		$language     = $kirby->defaultLanguage();
-		$translations = $language->translations();
+		$translations = $language->translations()->toArray();
 
 		if ($kirby->translation()->get($key) !== null) {
 			if (isset($translations[$key]) === true) {
@@ -72,11 +72,9 @@ class LanguageVariable
 	{
 		// go through all languages and remove the variable
 		foreach ($this->kirby->languages() as $language) {
-			$variables = $language->translations();
-
-			unset($variables[$this->key]);
-
-			$language->update(['translations' => $variables]);
+			$translations = $language->translations();
+			$translations->remove($this->key);
+			$language->update(['translations' => $translations]);
 		}
 
 		return true;
@@ -88,7 +86,7 @@ class LanguageVariable
 	public function exists(): bool
 	{
 		$language = $this->kirby->defaultLanguage();
-		return isset($language->translations()[$this->key]) === true;
+		return $language->translations()->get($this->key) !== null;
 	}
 
 	/**
@@ -105,8 +103,7 @@ class LanguageVariable
 	public function update(string $value): static
 	{
 		$translations = $this->language->translations();
-		$translations[$this->key] = $value;
-
+		$translations->set($this->key, $value);
 		$language = $this->language->update(['translations' => $translations]);
 
 		return $language->variable($this->key);
@@ -117,6 +114,6 @@ class LanguageVariable
 	 */
 	public function value(): string|null
 	{
-		return $this->language->translations()[$this->key] ?? null;
+		return $this->language->translations()->get($this->key);
 	}
 }
