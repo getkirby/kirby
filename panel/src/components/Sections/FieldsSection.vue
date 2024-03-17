@@ -3,6 +3,7 @@
 		v-if="!isLoading"
 		:class="['k-fields-section', $attrs.class]"
 		:headline="issue ? $t('error') : null"
+		:style="$attrs.style"
 	>
 		<k-box
 			v-if="issue"

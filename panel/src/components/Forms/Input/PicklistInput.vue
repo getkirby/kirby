@@ -1,6 +1,7 @@
 <template>
 	<k-navigate
 		:class="['k-picklist-input', $attrs.class]"
+		:style="$attrs.style"
 		element="nav"
 		axis="y"
 		select="input[type=search], label, .k-picklist-input-body button"

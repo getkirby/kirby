@@ -8,6 +8,7 @@
 		:data-placeholder="placeholder"
 		:data-toolbar-inline="Boolean(toolbar.inline ?? true)"
 		:spellcheck="spellcheck"
+		:style="$attrs.style"
 	>
 		<k-writer-toolbar
 			v-if="editor && !disabled"

@@ -1,13 +1,14 @@
 <template>
 	<component
 		:is="link ? 'k-link' : 'p'"
+		:class="['k-bubble', $attrs.class]"
+		:data-has-text="Boolean(text)"
 		:to="link"
 		:style="{
 			color: $helper.color(color),
-			background: $helper.color(back)
+			background: $helper.color(back),
+			...$attrs.style
 		}"
-		:class="['k-bubble', $attrs.class]"
-		:data-has-text="Boolean(text)"
 		@click.native.stop
 	>
 		<!-- @slot Replace the default image -->

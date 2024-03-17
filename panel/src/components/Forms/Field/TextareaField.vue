@@ -4,6 +4,7 @@
 		:class="['k-textarea-field', $attrs.class]"
 		:counter="counterOptions"
 		:input="id"
+		:style="$attrs.style"
 	>
 		<k-input
 			v-bind="$props"

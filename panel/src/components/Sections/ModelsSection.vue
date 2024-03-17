@@ -8,6 +8,7 @@
 		:invalid="isInvalid"
 		:link="options.link"
 		:required="Boolean(options.min)"
+		:style="$attrs.style"
 	>
 		<!-- Error -->
 		<k-box v-if="error" icon="alert" theme="negative">

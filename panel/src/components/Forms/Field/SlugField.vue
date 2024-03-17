@@ -4,6 +4,7 @@
 		:class="['k-slug-field', $attrs.class]"
 		:help="preview"
 		:input="id"
+		:style="$attrs.style"
 	>
 		<template v-if="wizard && wizard.text" #options>
 			<k-button

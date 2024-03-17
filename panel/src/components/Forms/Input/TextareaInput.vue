@@ -3,6 +3,7 @@
 		:class="['k-textarea-input', $attrs.class]"
 		:data-over="over"
 		:data-size="size"
+		:style="$attrs.style"
 	>
 		<div class="k-textarea-input-wrapper">
 			<k-textarea-toolbar

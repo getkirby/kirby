@@ -3,6 +3,7 @@
 		v-bind="$props"
 		:class="['k-radio-field', $attrs.class]"
 		:input="id + '-0'"
+		:style="$attrs.style"
 	>
 		<k-empty
 			v-if="!options?.length"

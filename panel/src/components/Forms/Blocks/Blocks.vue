@@ -3,6 +3,7 @@
 		:class="['k-blocks', $attrs.class]"
 		:data-disabled="disabled"
 		:data-empty="blocks.length === 0"
+		:style="$attrs.style"
 	>
 		<template v-if="hasFieldsets">
 			<k-draggable

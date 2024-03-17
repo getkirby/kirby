@@ -1,5 +1,9 @@
 <template>
-	<fieldset :class="['k-calendar-input', $attrs.class]" @click.stop>
+	<fieldset
+		:class="['k-calendar-input', $attrs.class]"
+		:style="$attrs.style"
+		@click.stop
+	>
 		<legend class="sr-only">{{ $t("date.select") }}</legend>
 		<!-- Month + year selects -->
 		<nav>

@@ -2,6 +2,7 @@
 	<k-frame
 		v-bind="$props"
 		:class="['k-image-frame', 'k-image', $attrs.class]"
+		:style="$attrs.style"
 		element="figure"
 	>
 		<img

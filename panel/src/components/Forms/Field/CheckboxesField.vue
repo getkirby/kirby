@@ -4,6 +4,7 @@
 		:class="['k-checkboxes-field', $attrs.class]"
 		:counter="counterOptions"
 		:input="id + '-0'"
+		:style="$attrs.style"
 	>
 		<k-empty
 			v-if="!options?.length"

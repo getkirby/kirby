@@ -3,6 +3,7 @@
 		:class="['k-select-input', $attrs.class]"
 		:data-disabled="disabled"
 		:data-empty="isEmpty"
+		:style="$attrs.style"
 	>
 		<select
 			:id="id"

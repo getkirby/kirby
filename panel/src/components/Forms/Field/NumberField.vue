@@ -3,6 +3,7 @@
 		v-bind="$props"
 		:class="['k-number-field', $attrs.class]"
 		:input="id"
+		:style="$attrs.style"
 	>
 		<k-input
 			v-bind="$props"

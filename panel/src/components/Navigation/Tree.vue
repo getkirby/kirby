@@ -1,7 +1,7 @@
 <template>
 	<ul
 		:class="['k-tree', $options.name, $attrs.class]"
-		:style="{ '--tree-level': level }"
+		:style="{ '--tree-level': level, ...$attrs.style }"
 	>
 		<li
 			v-for="(item, index) in state"

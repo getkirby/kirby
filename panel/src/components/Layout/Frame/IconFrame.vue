@@ -2,6 +2,7 @@
 	<k-frame
 		v-bind="$props"
 		:class="['k-icon-frame', $attrs.class]"
+		:style="$attrs.style"
 		element="figure"
 	>
 		<k-icon v-bind="{ color, type: icon, alt }" />

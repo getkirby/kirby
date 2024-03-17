@@ -3,6 +3,7 @@
 		v-bind="$props"
 		:class="['k-layout-selector', $attrs.class]"
 		:size="selector?.size ?? 'medium'"
+		:style="$attrs.style"
 		@cancel="$emit('cancel')"
 		@submit="$emit('submit', value)"
 	>

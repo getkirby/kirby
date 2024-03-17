@@ -3,6 +3,7 @@
 		ref="button"
 		v-bind="$props"
 		:class="['k-dropdown-item', $attrs.class]"
+		:style="$attrs.style"
 		@click="onClick"
 	>
 		<!-- @slot The item's content/text -->

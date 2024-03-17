@@ -6,7 +6,8 @@
 		:style="{
 			'--fit': fit ?? (cover ? 'cover' : 'contain'),
 			'--ratio': ratio,
-			'--back': background
+			'--back': background,
+			...$attrs.style
 		}"
 	>
 		<slot />

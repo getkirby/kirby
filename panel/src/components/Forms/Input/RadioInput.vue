@@ -1,5 +1,9 @@
 <template>
-	<fieldset :disabled="disabled" :class="['k-radio-input', $attrs.class]">
+	<fieldset
+		:class="['k-radio-input', $attrs.class]"
+		:disabled="disabled"
+		:style="$attrs.style"
+	>
 		<legend class="sr-only">{{ $t("options") }}</legend>
 
 		<k-input-validator :required="required" :value="JSON.stringify(value)">

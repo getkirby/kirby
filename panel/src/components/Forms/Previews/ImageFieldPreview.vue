@@ -3,6 +3,7 @@
 		v-if="value"
 		:class="['k-image-field-preview', $attrs.class]"
 		:image="value"
+		:style="$attrs.style"
 	/>
 </template>
 

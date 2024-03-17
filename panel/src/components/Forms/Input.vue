@@ -3,6 +3,7 @@
 		:class="['k-input', $attrs.class]"
 		:data-disabled="disabled"
 		:data-type="type"
+		:style="$attrs.style"
 	>
 		<span
 			v-if="$slots.before || before"

@@ -2,6 +2,7 @@
 	<p
 		:class="['k-url-field-preview', $options.class, $attrs.class]"
 		:data-link="link"
+		:style="$attrs.style"
 	>
 		{{ column.before }}
 		<k-link :to="link" @click.native.stop>

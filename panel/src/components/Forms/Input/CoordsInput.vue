@@ -3,6 +3,7 @@
 		:aria-disabled="disabled"
 		:class="['k-coords-input', $attrs.class]"
 		:data-empty="!value"
+		:style="$attrs.style"
 		@mousedown="onDrag"
 		@click="onMove"
 		@keydown="onKeys"

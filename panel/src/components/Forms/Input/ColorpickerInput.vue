@@ -5,7 +5,8 @@
 			'--h': hsl.h,
 			'--s': hsl.s,
 			'--l': hsl.l,
-			'--a': hsl.a
+			'--a': hsl.a,
+			...$attrs.style
 		}"
 	>
 		<legend class="sr-only">{{ $t("color") }}</legend>

@@ -3,6 +3,7 @@
 		ref="dialog"
 		:class="['k-block-importer', $attrs.class]"
 		:cancel-button="false"
+		:style="$attrs.style"
 		:submit-button="false"
 		:visible="true"
 		size="large"
