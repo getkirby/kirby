@@ -437,8 +437,7 @@ class Language
 		// save translations to the custom root and remove translations
 		// to prevent duplication write into the language file
 		if ($this->translationsObject()->root() !== null) {
-			$this->translationsObject()
-				->save($data['translations'] ?? []);
+			$this->translationsObject()->save($data['translations'] ?? []);
 			$data['translations'] = [];
 		}
 

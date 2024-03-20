@@ -41,7 +41,7 @@ class LanguageTranslations
 	 */
 	public function load(array $default = []): array
 	{
-		if ($file = static::root()) {
+		if ($file = $this->root()) {
 			try {
 				return Data::read($file);
 			} catch (Exception) {
@@ -118,7 +118,7 @@ class LanguageTranslations
 	public function setTranslations(self|array $translations = []): static
 	{
 		$this->data = match (true) {
-			empty($translations) === true => static::load(),
+			empty($translations) === true => $this->load(),
 			$translations instanceof self => $translations->toArray(),
 			default                       => $translations
 		};
