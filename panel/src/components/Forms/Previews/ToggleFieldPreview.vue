@@ -1,10 +1,11 @@
 <template>
 	<div class="k-toggle-field-preview">
 		<k-toggle-input
+			:disabled="!isEditable"
 			:text="text"
 			:value="value"
 			@input="$emit('input', $event)"
-			@click.native.stop
+			@click.native="isEditable ? $event.stopPropagation() : null"
 		/>
 	</div>
 </template>
