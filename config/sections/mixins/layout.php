@@ -40,7 +40,8 @@ return [
 					'label'  => ' ',
 					'mobile' => true,
 					'type'   => 'image',
-					'width'  => 'var(--table-row-height)'
+					'width'  => 'var(--table-row-height)',
+					'static' => true
 				];
 			}
 
@@ -88,6 +89,7 @@ return [
 					'mobile' => true,
 					'type'   => 'flag',
 					'width'  => 'var(--table-row-height)',
+					'static' => true
 				];
 			}
 

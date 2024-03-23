@@ -17,6 +17,7 @@
 						:key="columnIndex + '-header'"
 						:data-align="column.align"
 						:data-mobile="column.mobile"
+						:data-static="column.static"
 						:style="{ width: width(column.width) }"
 						class="k-table-column"
 						@click="
@@ -91,6 +92,7 @@
 						<k-table-cell
 							v-for="(column, columnIndex) in columns"
 							:key="rowIndex + '-' + columnIndex"
+							:data-static="column.static"
 							:column="column"
 							:field="fields[columnIndex]"
 							:row="row"
@@ -543,7 +545,11 @@ export default {
 
 	/**	Reset any custom column widths **/
 	.k-table
-		:where(th, td):not(.k-table-index-column):not(.k-table-options-column) {
+		:where(th, td):not(
+			.k-table-index-column,
+			.k-table-options-column,
+			[data-static="true"]
+		) {
 		width: auto !important;
 	}
 
