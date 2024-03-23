@@ -21,13 +21,9 @@ class LayoutMixinTest extends TestCase
 
 		Section::$types['test'] = Section::$types['pages'] = [
 			'mixins' => ['layout'],
-			'props'  => $props = [
-				'info' => function (string $info = null) {
-					return $info;
-				},
-				'text' => function (string $text = null) {
-					return $text;
-				}
+			'props'  => [
+				'info' => fn (string $info = null) => $info,
+				'text' => fn (string $text = null) => $text
 			]
 		];
 	}
@@ -53,7 +49,8 @@ class LayoutMixinTest extends TestCase
 				'label'  => ' ',
 				'mobile' => true,
 				'type'   => 'image',
-				'width'  => 'var(--table-row-height)'
+				'width'  => 'var(--table-row-height)',
+				'static' => true
 			]
 		];
 
@@ -73,7 +70,8 @@ class LayoutMixinTest extends TestCase
 				'label'  => ' ',
 				'mobile' => true,
 				'type'   => 'image',
-				'width'  => 'var(--table-row-height)'
+				'width'  => 'var(--table-row-height)',
+				'static' => true
 			],
 			'title' => [
 				'label'  => 'Title',
@@ -100,6 +98,7 @@ class LayoutMixinTest extends TestCase
 				'mobile' => true,
 				'type'   => 'image',
 				'width'  => 'var(--table-row-height)',
+				'static' => true
 			],
 			'title' => [
 				'label'  => 'Title',
@@ -128,12 +127,14 @@ class LayoutMixinTest extends TestCase
 				'mobile' => true,
 				'type'   => 'image',
 				'width'  => 'var(--table-row-height)',
+				'static' => true
 			],
 			'flag' => [
 				'label'  => ' ',
 				'mobile' => true,
 				'type'   => 'flag',
-				'width'  => 'var(--table-row-height)'
+				'width'  => 'var(--table-row-height)',
+				'static' => true
 			]
 		];
 
@@ -167,6 +168,7 @@ class LayoutMixinTest extends TestCase
 				'mobile' => true,
 				'type'  => 'image',
 				'width' => 'var(--table-row-height)',
+				'static' => true
 			],
 			'dateCell' => [
 				'label' => 'Date',
