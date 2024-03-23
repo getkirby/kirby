@@ -692,7 +692,7 @@ class FilesSectionTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('Alt test', $section->data()[0]['altCell']);
+		$this->assertSame('Alt test', $section->data()[0]['alt']);
 	}
 
 	public function testOptions()
