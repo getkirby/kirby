@@ -256,7 +256,7 @@ class Pages extends Collection
 		$query      = $startAt;
 
 		foreach ($path as $key) {
-			$collection = $item?->children() ?? $this;
+			$collection = $item?->childrenAndDrafts() ?? $this;
 			$query      = ltrim($query . '/' . $key, '/');
 			$item       = $collection->get($query) ?? null;
 
