@@ -8,7 +8,7 @@ export default {
 		app.directive("direction", {
 			inserted(el, binding, vnode) {
 				if (vnode.context.disabled !== true) {
-					el.dir = window.panel.translation.direction;
+					el.dir = window.panel.language.direction;
 				} else {
 					el.dir = null;
 				}
