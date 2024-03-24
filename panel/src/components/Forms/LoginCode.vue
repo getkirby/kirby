@@ -44,16 +44,30 @@
 </template>
 
 <script>
-export default {
+export const props = {
 	props: {
+		/**
+		 * List of available login method names
+		 */
 		methods: Array,
+		/**
+		 * Pending login data (user email, challenge type)
+		 * @value { email: String, challenge: String }
+		 */
 		pending: Object,
+		/**
+		 * Code value to prefill the input
+		 */
 		value: String
-	},
+	}
+};
+
+export default {
+	mixins: [props],
 	emits: ["error"],
 	data() {
 		return {
-			code: this.value || "",
+			code: this.value ?? "",
 			isLoadingBack: false,
 			isLoadingLogin: false
 		};
