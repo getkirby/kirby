@@ -65,8 +65,8 @@ export default {
 			currentForm: null,
 			isLoading: false,
 			user: {
-				email: this.value.email || "",
-				password: this.value.password || "",
+				email: this.value.email ?? "",
+				password: this.value.password ?? "",
 				remember: false
 			}
 		};
