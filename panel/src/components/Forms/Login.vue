@@ -45,7 +45,8 @@
 <script>
 export default {
 	props: {
-		methods: Array
+		methods: Array,
+		value: Object
 	},
 	emits: ["error"],
 	data() {
@@ -53,8 +54,8 @@ export default {
 			currentForm: null,
 			isLoading: false,
 			user: {
-				email: "",
-				password: "",
+				email: this.value.email || "",
+				password: this.value.password || "",
 				remember: false
 			}
 		};

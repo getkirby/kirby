@@ -11,8 +11,19 @@
 			</k-login-alert>
 
 			<k-dialog-body>
-				<k-login-code v-if="form === 'code'" v-bind="$props" @error="onError" />
-				<k-login-plugin v-else :methods="methods" @error="onError" />
+				<k-login-code
+					v-if="form === 'code'"
+					:methods="methods"
+					:pending="pending"
+					:value="value.code"
+					@error="onError"
+				/>
+				<k-login-plugin
+					v-else
+					:methods="methods"
+					:value="value"
+					@error="onError"
+				/>
 			</k-dialog-body>
 		</div>
 	</k-panel-outside>
@@ -30,7 +41,17 @@ export default {
 	},
 	props: {
 		methods: Array,
-		pending: Object
+		pending: Object,
+		value: {
+			type: Object,
+			default() {
+				return {
+					code: "",
+					email: "",
+					password: ""
+				};
+			}
+		}
 	},
 	data() {
 		return {

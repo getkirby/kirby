@@ -47,12 +47,13 @@
 export default {
 	props: {
 		methods: Array,
-		pending: Object
+		pending: Object,
+		value: String
 	},
 	emits: ["error"],
 	data() {
 		return {
-			code: "",
+			code: this.value || "",
 			isLoadingBack: false,
 			isLoadingLogin: false
 		};
