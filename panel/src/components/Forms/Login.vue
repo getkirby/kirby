@@ -1,32 +1,31 @@
 <template>
 	<form class="k-login-form" @submit.prevent="login">
-		<div class="k-login-fields">
-			<button
-				v-if="canToggle === true"
-				class="k-login-toggler"
-				type="button"
-				@click="toggleForm"
-			>
-				{{ toggleText }}
-			</button>
+		<button
+			v-if="canToggle === true"
+			class="k-login-toggler"
+			type="button"
+			@click="toggle"
+		>
+			{{ toggleText }}
+		</button>
 
-			<k-fieldset
-				ref="fieldset"
-				:novalidate="true"
-				:fields="fields"
-				:value="user"
-				@input="user = $event"
+		<k-fieldset
+			ref="fieldset"
+			:novalidate="true"
+			:fields="fields"
+			:value="user"
+			@input="user = $event"
+		/>
+
+		<footer class="k-login-buttons">
+			<k-checkbox-input
+				v-if="isResetForm === false"
+				:label="$t('login.remember')"
+				:checked="user.remember"
+				:value="user.remember"
+				@input="user.remember = $event"
 			/>
-		</div>
 
-		<div class="k-login-buttons">
-			<span v-if="isResetForm === false" class="k-login-checkbox">
-				<k-checkbox-input
-					:value="user.remember"
-					:label="$t('login.remember')"
-					@input="user.remember = $event"
-				/>
-			</span>
 			<k-button
 				class="k-login-button"
 				icon="check"
@@ -35,10 +34,9 @@
 				type="submit"
 				variant="filled"
 			>
-				{{ $t("login" + (isResetForm ? ".reset" : "")) }}
-				<template v-if="isLoading"> … </template>
+				{{ submitText }}
 			</k-button>
-		</div>
+		</footer>
 	</form>
 </template>
 
@@ -48,12 +46,18 @@ export const props = {
 		/**
 		 * List of available login method names
 		 */
-		methods: Array,
+		methods: {
+			type: Array,
+			default: () => []
+		},
 		/**
 		 * Values to prefill the inputs
-		 * @value { email: String, password: String }
+		 * @value { email: String, password: String, remember: Boolean }
 		 */
-		value: Object
+		value: {
+			type: Object,
+			default: () => ({})
+		}
 	}
 };
 
@@ -62,22 +66,36 @@ export default {
 	emits: ["error"],
 	data() {
 		return {
-			currentForm: null,
+			mode: null,
 			isLoading: false,
 			user: {
-				email: this.value.email ?? "",
-				password: this.value.password ?? "",
-				remember: false
+				email: "",
+				password: "",
+				remember: false,
+				...this.value
 			}
 		};
 	},
 	computed: {
+		alternateMode() {
+			if (this.form === "email-password") {
+				return "email";
+			}
+
+			return "email-password";
+		},
 		canToggle() {
+			if (this.codeMode === null) {
+				return false;
+			}
+
+			if (this.methods.includes("password") === false) {
+				return false;
+			}
+
 			return (
-				this.codeMode !== null &&
-				this.methods.includes("password") === true &&
-				(this.methods.includes("password-reset") === true ||
-					this.methods.includes("code") === true)
+				this.methods.includes("password-reset") === true ||
+				this.methods.includes("code") === true
 			);
 		},
 		codeMode() {
@@ -90,7 +108,7 @@ export default {
 			return null;
 		},
 		fields() {
-			let fields = {
+			const fields = {
 				email: {
 					autofocus: true,
 					label: this.$t("email"),
@@ -114,8 +132,8 @@ export default {
 			return fields;
 		},
 		form() {
-			if (this.currentForm) {
-				return this.currentForm;
+			if (this.mode) {
+				return this.mode;
 			}
 
 			if (this.methods[0] === "password") {
@@ -127,28 +145,30 @@ export default {
 		isResetForm() {
 			return this.codeMode === "password-reset" && this.form === "email";
 		},
+		submitText() {
+			const suffix = this.isLoading ? " …" : "";
+
+			if (this.isResetForm) {
+				return this.$t("login.reset") + suffix;
+			}
+
+			return this.$t("login") + suffix;
+		},
 		toggleText() {
 			return this.$t(
-				"login.toggleText." + this.codeMode + "." + this.formOpposite(this.form)
+				"login.toggleText." + this.codeMode + "." + this.alternateMode
 			);
 		}
 	},
 	methods: {
-		formOpposite(input) {
-			if (input === "email-password") {
-				return "email";
-			} else {
-				return "email-password";
-			}
-		},
 		async login() {
 			this.$emit("error", null);
 			this.isLoading = true;
 
 			// clear field data that is not needed for login
-			let user = Object.assign({}, this.user);
+			const user = Object.assign({}, this.user);
 
-			if (this.currentForm === "email") {
+			if (this.mode === "email") {
 				user.password = null;
 			}
 
@@ -173,10 +193,35 @@ export default {
 				this.isLoading = false;
 			}
 		},
-		toggleForm() {
-			this.currentForm = this.formOpposite(this.form);
+		toggle() {
+			this.mode = this.alternateMode;
 			this.$refs.fieldset.focus("email");
 		}
 	}
 };
 </script>
+
+<style>
+.k-login-form {
+	position: relative;
+}
+
+.k-login-form label abbr {
+	visibility: hidden;
+}
+
+.k-login-toggler {
+	position: absolute;
+	top: -2px;
+	inset-inline-end: calc(var(--spacing-2) * -1);
+	color: var(--link-color);
+	text-decoration: underline;
+	text-decoration-color: var(--link-color);
+	text-underline-offset: 1px;
+	height: var(--height-xs);
+	line-height: 1;
+	padding-inline: var(--spacing-2);
+	border-radius: var(--rounded);
+	z-index: 1;
+}
+</style>
