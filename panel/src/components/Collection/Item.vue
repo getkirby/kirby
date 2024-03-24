@@ -148,7 +148,7 @@ export default {
 	background: var(--color-white);
 	box-shadow: var(--shadow);
 	border-radius: var(--rounded);
-	height: var(--item-height);
+	min-height: var(--item-height);
 	container-type: inline-size;
 }
 .k-item:has(a:focus) {
@@ -214,7 +214,6 @@ export default {
 	--item-button-width: auto;
 
 	display: grid;
-	height: var(--item-height);
 	align-items: center;
 	grid-template-columns: 1fr auto;
 }
@@ -226,13 +225,13 @@ export default {
 	--ratio: 1/1;
 	border-start-start-radius: var(--rounded);
 	border-end-start-radius: var(--rounded);
-	height: var(--item-height);
+	height: 100%;
 }
 .k-item[data-layout="list"] .k-item-content {
 	display: flex;
 	min-width: 0;
-	white-space: nowrap;
-	gap: var(--spacing-2);
+	flex-wrap: wrap;
+	column-gap: var(--spacing-4);
 	justify-content: space-between;
 }
 .k-item[data-layout="list"] .k-item-title,
@@ -240,23 +239,6 @@ export default {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
-}
-.k-item[data-layout="list"] .k-item-title {
-	flex-shrink: 1;
-}
-.k-item[data-layout="list"] .k-item-info {
-	flex-shrink: 2;
-}
-
-@container (max-width: 30rem) {
-	.k-item[data-layout="list"] .k-item-title {
-		overflow: hidden;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-	}
-	.k-item[data-layout="list"] .k-item-info {
-		display: none;
-	}
 }
 
 .k-item[data-layout="list"] .k-sort-button {
@@ -306,7 +288,6 @@ export default {
 	border-start-start-radius: var(--rounded);
 	border-end-start-radius: var(--rounded);
 	aspect-ratio: auto;
-	height: var(--item-height);
 }
 .k-item[data-layout="cardlets"] .k-item-content {
 	grid-area: content;
