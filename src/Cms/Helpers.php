@@ -29,14 +29,18 @@ class Helpers
 	 * ```
 	 */
 	public static $deprecations = [
+		// The internal `$model->contentFile*()` methods have been deprecated
+		'model-content-file' => true,
+
+		// Passing an `info` array inside the `extends` array has been deprecated.
+		// Pass the individual entries directly as named arguments.
+		'plugin-extends-root' => false,
+
 		// Passing a single space as value to `Xml::attr()` has been
 		// deprecated. In a future version, passing a single space won't
 		// render an empty value anymore but a single space.
 		// To render an empty value, please pass an empty string.
 		'xml-attr-single-space' => true,
-
-		// The internal `$model->contentFile*()` methods have been deprecated
-		'model-content-file' => true,
 	];
 
 	/**

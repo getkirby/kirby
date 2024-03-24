@@ -26,9 +26,6 @@ use Throwable;
 class Plugin
 {
 	protected PluginAssets $assets;
-	protected array $extends;
-	protected string $name;
-	protected string $root;
 
 	// caches
 	protected array|null $info = null;
@@ -40,14 +37,28 @@ class Plugin
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the plugin name has an invalid format
 	 */
-	public function __construct(string $name, array $extends = [])
-	{
+	public function __construct(
+		protected string $name,
+		protected array $extends = [],
+
+		protected string|null $root = null,
+ 		protected string|null $version = null
+	) {
 		static::validateName($name);
 
-		$this->name    = $name;
-		$this->extends = $extends;
-		$this->root    = $extends['root'] ?? dirname(debug_backtrace()[0]['file']);
-		$this->info    = empty($extends['info']) === false && is_array($extends['info']) ? $extends['info'] : null;
+		// TODO: Remove in v5
+		if ($root = $extends['root'] ?? null) {
+			Helpers::deprecated('Plugin "' . $name . '": Passing the `root` inside the `extends` array has been deprecated. Pass it directly as named argument `root`.', 'plugin-extends-root');
+			$this->root ??= $root;
+		}
+
+		$this->root ??= dirname(debug_backtrace()[0]['file']);
+
+		// TODO: Remove info property in v5
+		if ($info = $extends['info'] ?? null) {
+			Helpers::deprecated('Plugin "' . $name . '": Passing an `info` array inside the `extends` array has been deprecated. Pass the individual entries directly as named arguments.', 'plugin-extends-root');
+			$this->info = empty($info) === false && is_array($info) ? $info : null;
+		}
 
 		unset($this->extends['root'], $this->extends['info']);
 	}
@@ -121,6 +132,7 @@ class Plugin
 	 */
 	public function info(): array
 	{
+		// TODO: remove info prop in v5
 		if (is_array($this->info) === true) {
 			return $this->info;
 		}
@@ -295,16 +307,19 @@ class Plugin
 	 */
 	public function version(): string|null
 	{
-		$composerName = $this->info()['name'] ?? null;
-		$version      = $this->info()['version'] ?? null;
+		$name = $this->info()['name'] ?? null;
 
 		try {
-			// if plugin doesn't have version key in composer.json file
-			// try to get version from "vendor/composer/installed.php"
-			$version ??= InstalledVersions::getPrettyVersion($composerName);
+			// try to get version from "vendor/composer/installed.php",
+			// this is the most reliable source for the version
+			$version = InstalledVersions::getPrettyVersion($name);
 		} catch (Throwable) {
-			return null;
+			$version = null;
 		}
+
+		// fallback to the version provided in the plugin's index.php,
+		// then from the composer.json file
+		$version ??= $this->version ?? $this->info()['version'] ?? null;
 
 		if (
 			is_string($version) !== true ||

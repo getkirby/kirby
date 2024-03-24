@@ -713,17 +713,22 @@ trait AppPlugins
 	 */
 	public static function plugin(
 		string $name,
-		array $extends = null
+		array $extends = null,
+		string|null $version = null,
+		string|null $root = null
 	): PLugin|null {
 		if ($extends === null) {
 			return static::$plugins[$name] ?? null;
 		}
 
-		// get the correct root for the plugin
-		$extends['root'] = $extends['root'] ?? dirname(debug_backtrace()[0]['file']);
+		$plugin = new Plugin(
+			name:    $name,
+			extends: $extends,
+			root:    $root,
+			version: $version
+		);
 
-		$plugin = new Plugin($name, $extends);
-		$name   = $plugin->name();
+		$name = $plugin->name();
 
 		if (isset(static::$plugins[$name]) === true) {
 			throw new DuplicateException('The plugin "' . $name . '" has already been registered');
@@ -792,7 +797,11 @@ trait AppPlugins
 				// register as anonymous plugin (without actual extensions)
 				// to be picked up by the Panel\Document class when
 				// rendering the Panel view
-				static::plugin('plugins/' . $dirname, ['root' => $dir]);
+				static::plugin(
+					name: 'plugins/' . $dirname,
+					extends: [],
+					root: $dir
+				);
 			} else {
 				continue;
 			}
