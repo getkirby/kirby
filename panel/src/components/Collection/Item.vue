@@ -24,7 +24,7 @@
 
 		<!-- Content -->
 		<div class="k-item-content">
-			<h3 class="k-item-title" :title="title">
+			<h3 class="k-item-title" :title="title(text)">
 				<k-link v-if="link !== false" :target="target" :to="link">
 					<!-- eslint-disable-next-line vue/no-v-html -->
 					<span v-html="text ?? '–'" />
@@ -33,7 +33,7 @@
 				<span v-else v-html="text ?? '–'" />
 			</h3>
 			<!-- eslint-disable-next-line vue/no-v-html -->
-			<p v-if="info" class="k-item-info" v-html="info" />
+			<p v-if="info" :title="title(info)" class="k-item-info" v-html="info" />
 		</div>
 
 		<div
@@ -119,17 +119,17 @@ export default {
 	computed: {
 		hasFigure() {
 			return this.image !== false && this.$helper.object.length(this.image) > 0;
-		},
-		title() {
-			return this.$helper.string
-				.stripHTML(this.$helper.string.unescapeHTML(this.text))
-				.trim();
 		}
 	},
 	methods: {
 		onOption(event) {
 			this.$emit("action", event);
 			this.$emit("option", event);
+		},
+		title(text) {
+			return this.$helper.string
+				.stripHTML(this.$helper.string.unescapeHTML(text))
+				.trim();
 		}
 	}
 };
