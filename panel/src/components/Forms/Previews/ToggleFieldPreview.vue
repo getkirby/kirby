@@ -15,6 +15,9 @@ import FieldPreview from "@/mixins/forms/fieldPreview.js";
 
 export default {
 	mixins: [FieldPreview],
+	props: {
+		value: Boolean
+	},
 	emits: ["input"],
 	computed: {
 		isEditable() {

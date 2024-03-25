@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\ModelWithContent;
+use Kirby\Form\Form;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -132,19 +133,17 @@ return [
 				$item['info'] = $model->toString($this->info);
 			}
 
+			// Use form to get the proper values for the columns
+			$form = Form::for($model)->values();
+
 			foreach ($this->columns as $columnName => $column) {
-				// don't overwrite essential columns
-				if (isset($item[$columnName]) === true) {
-					continue;
-				}
-
-				if (empty($column['value']) === false) {
-					$value = $model->toString($column['value']);
-				} else {
-					$value = $model->content()->get($column['id'] ?? $columnName)->value();
-				}
-
-				$item[$columnName] = $value;
+				// don't overwrite columns
+				$item[$columnName] ??= match (empty($column['value'])) {
+					// if column value defined, resolve the query
+					false   => $model->toString($column['value']),
+					// otherwise use the form value
+					default => $form[$column['id'] ?? $columnName] ?? null,
+				};
 			}
 
 			return $item;
