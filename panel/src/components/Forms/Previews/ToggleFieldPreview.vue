@@ -1,10 +1,11 @@
 <template>
 	<div class="k-toggle-field-preview">
 		<k-toggle-input
+			:disabled="!isEditable"
 			:text="text"
 			:value="value"
 			@input="$emit('input', $event)"
-			@click.native.stop
+			@click.native="isEditable ? $event.stopPropagation() : null"
 		/>
 	</div>
 </template>
@@ -16,6 +17,9 @@ export default {
 	mixins: [FieldPreview],
 	emits: ["input"],
 	computed: {
+		isEditable() {
+			return this.field.disabled !== true;
+		},
 		text() {
 			return this.column.text !== false ? this.field.text : null;
 		}
