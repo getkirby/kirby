@@ -27,6 +27,14 @@
 				<!-- @code-end -->
 			</k-lab-table-cell>
 		</k-lab-example>
+
+		<k-lab-example label="Disabled">
+			<k-lab-table-cell>
+				<!-- @code -->
+				<k-toggle-field-preview :field="{ disabled: true }" />
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
 	</k-lab-examples>
 </template>
 

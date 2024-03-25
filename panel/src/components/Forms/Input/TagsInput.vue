@@ -61,6 +61,14 @@ export const props = {
 		accept: {
 			type: String,
 			default: "all"
+		},
+		/**
+		 * Separator which will be used when pasting
+		 * a list of tags to split them into individual tags
+		 */
+		separator: {
+			type: String,
+			default: ","
 		}
 	}
 };
@@ -132,17 +140,21 @@ export default {
 	},
 	methods: {
 		create(input) {
-			// convert input to tag object
-			const tag = this.$refs.tags.tag(input);
+			const inputs = input.split(this.separator).map((tag) => tag.trim());
+			const tags = this.$helper.object.clone(this.value);
 
-			// no new tags if this is full,
-			// check if the tag is accepted
-			if (this.isAllowed(tag) === true) {
-				const tags = this.$helper.object.clone(this.value);
-				tags.push(tag.value);
-				this.$emit("input", tags);
+			for (let tag of inputs) {
+				// convert input to tag object
+				tag = this.$refs.tags.tag(tag, this.separator);
+
+				// no new tags if this is full,
+				// check if the tag is accepted
+				if (this.isAllowed(tag) === true) {
+					tags.push(tag.value);
+				}
 			}
 
+			this.$emit("input", tags);
 			this.$refs.create.close();
 		},
 		async edit(index, tag) {

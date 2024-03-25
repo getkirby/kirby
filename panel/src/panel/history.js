@@ -19,6 +19,9 @@ export default () => {
 		at(index) {
 			return this.milestones.at(index);
 		},
+		clear() {
+			this.milestones = [];
+		},
 		get(id = null) {
 			if (id === null) {
 				return this.milestones;

@@ -168,16 +168,16 @@ class LayoutMixinTest extends TestCase
 				'type'  => 'image',
 				'width' => 'var(--table-row-height)',
 			],
-			'dateCell' => [
+			'date' => [
 				'label' => 'Date',
 				'type'  => 'date',
 				'id'    => 'date'
 			],
-			'simpleCell' => [
+			'simple' => [
 				'label' => 'Simple',
 				'id'    => 'simple'
 			],
-			'translatedCell' => [
+			'translated' => [
 				'label' => 'Translated',
 				'id'    => 'translated'
 			]
@@ -229,8 +229,8 @@ class LayoutMixinTest extends TestCase
 				'href' => '/pages/test'
 			],
 			'image' => null,
-			'dateCell' => '2012-12-12',
-			'htmlCell' => '<i>Some HTML</i>',
+			'date' => '2012-12-12',
+			'html' => '<i>Some HTML</i>',
 		];
 
 		$this->assertSame($expected, $section->columnsValues($item, $model));

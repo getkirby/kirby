@@ -384,7 +384,8 @@ export default {
 			// modals will be closed if the response is null or false.
 			// on undefined, the state of the modal stays untouched
 			else if (state[modal] !== undefined) {
-				this[modal].close();
+				// force close all nested modals
+				this[modal].close(true);
 			}
 		}
 
