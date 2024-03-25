@@ -42,18 +42,30 @@
 </template>
 
 <script>
-export default {
+export const props = {
 	props: {
-		methods: Array
-	},
+		/**
+		 * List of available login method names
+		 */
+		methods: Array,
+		/**
+		 * Values to prefill the inputs
+		 * @value { email: String, password: String }
+		 */
+		value: Object
+	}
+};
+
+export default {
+	mixins: [props],
 	emits: ["error"],
 	data() {
 		return {
 			currentForm: null,
 			isLoading: false,
 			user: {
-				email: "",
-				password: "",
+				email: this.value.email ?? "",
+				password: this.value.password ?? "",
 				remember: false
 			}
 		};
@@ -104,9 +116,11 @@ export default {
 			if (this.currentForm) {
 				return this.currentForm;
 			}
+
 			if (this.methods[0] === "password") {
 				return "email-password";
 			}
+
 			return "email";
 		},
 		isResetForm() {
