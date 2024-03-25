@@ -17,6 +17,9 @@ export default {
 	mixins: [FieldPreview],
 	emits: ["input"],
 	computed: {
+		isEditable() {
+			return this.field.disabled !== true;
+		},
 		text() {
 			return this.column.text !== false ? this.field.text : null;
 		}
