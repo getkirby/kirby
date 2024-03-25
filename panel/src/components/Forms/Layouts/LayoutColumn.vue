@@ -67,7 +67,7 @@ export default {
 .k-layout-column:focus {
 	outline: 0;
 }
-.k-layout-column .k-blocks {
+.k-layout-column > .k-blocks {
 	background: none;
 	box-shadow: none;
 	padding: 0;
@@ -75,19 +75,22 @@ export default {
 	background: var(--color-white);
 	min-height: 4rem;
 }
-.k-layout-column .k-blocks[data-empty="true"] {
+.k-layout-column > .k-blocks[data-empty="true"] {
 	min-height: 6rem;
 }
 
-.k-layout-column .k-blocks-list {
+.k-layout-column > .k-blocks > .k-blocks-list {
 	display: flex;
 	flex-direction: column;
 	height: 100%;
 }
-.k-layout-column .k-blocks .k-block-container:last-of-type {
+.k-layout-column
+	> .k-blocks
+	> .k-blocks-list
+	> .k-block-container:last-of-type {
 	flex-grow: 1;
 }
-.k-layout-column .k-blocks-empty.k-box {
+.k-layout-column > .k-blocks > .k-blocks-list > .k-blocks-empty.k-box {
 	--box-color-back: transparent;
 	position: absolute;
 	inset: 0;
@@ -96,7 +99,7 @@ export default {
 	transition: opacity 0.3s;
 	border: 0;
 }
-.k-layout-column .k-blocks-empty:hover {
+.k-layout-column > .k-blocks > .k-blocks-list > .k-blocks-empty:hover {
 	opacity: 1;
 }
 </style>
