@@ -1,21 +1,23 @@
 <template>
 	<form class="k-login-form" @submit.prevent="login">
-		<button
-			v-if="canToggle === true"
-			class="k-login-toggler"
-			type="button"
-			@click="toggle"
-		>
-			{{ toggleText }}
-		</button>
+		<div class="k-login-fields">
+			<button
+				v-if="canToggle === true"
+				class="k-login-toggler"
+				type="button"
+				@click="toggle"
+			>
+				{{ toggleText }}
+			</button>
 
-		<k-fieldset
-			ref="fieldset"
-			:novalidate="true"
-			:fields="fields"
-			:value="user"
-			@input="user = $event"
-		/>
+			<k-fieldset
+				ref="fieldset"
+				:novalidate="true"
+				:fields="fields"
+				:value="user"
+				@input="user = $event"
+			/>
+		</div>
 
 		<footer class="k-login-buttons">
 			<k-checkbox-input
