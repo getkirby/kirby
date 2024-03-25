@@ -16,7 +16,7 @@
 						v-for="(column, columnIndex) in columns"
 						:key="columnIndex + '-header'"
 						:data-align="column.align"
-						:data-id="columnIndex"
+						:data-column-id="columnIndex"
 						:data-mobile="column.mobile"
 						:style="{ width: width(column.width) }"
 						class="k-table-column"
@@ -547,8 +547,8 @@ export default {
 		:where(th, td):not(
 			.k-table-index-column,
 			.k-table-options-column,
-			[data-id="image"],
-			[data-id="flag"]
+			[data-column-id="image"],
+			[data-column-id="flag"]
 		) {
 		width: auto !important;
 	}
