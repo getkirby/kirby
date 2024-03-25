@@ -3,6 +3,7 @@
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
 
 return [
 	'tree' => [
@@ -22,25 +23,35 @@ return [
 				$value = $uuid ?? '/';
 
 				return [
-					[
-						'children'    => $panel->url(true),
-						'disabled'    => $move?->isMovableTo($site) === false,
-						'hasChildren' => true,
-						'icon'        => 'home',
-						'id'          => '/',
-						'label'       => I18n::translate('view.site'),
-						'open'        => false,
-						'url'         => $url,
-						'uuid'        => $uuid,
-						'value'       => $value
+					'items' => [
+						[
+							'children'    => $panel->url(true),
+							'disabled'    => $move?->isMovableTo($site) === false,
+							'hasChildren' => true,
+							'icon'        => 'home',
+							'id'          => '/',
+							'label'       => I18n::translate('view.site'),
+							'open'        => false,
+							'url'         => $url,
+							'uuid'        => $uuid,
+							'value'       => $value
+						]
 					]
 				];
 			}
 
-			$parent = Find::parent($parent);
-			$pages  = [];
+			$pages    = [];
+			$parent   = Find::parent($parent);
+			$page     = $request->get('page', 1);
+			$limit    = $request->get('limit', 50);
+			$children = $parent->childrenAndDrafts();
+			$children = $children->filterBy('isListable', true);
+			$children = $children->paginate([
+				'limit' => $limit,
+				'page' => $page
+			]);
 
-			foreach ($parent->childrenAndDrafts()->filterBy('isListable', true) as $child) {
+			foreach ($children as $child) {
 				$panel = $child->panel();
 				$uuid  = $child->uuid()?->toString();
 				$url   = $child->url();
@@ -60,7 +71,10 @@ return [
 				];
 			}
 
-			return $pages;
+			return [
+				'items'      => $pages,
+				'pagination' => $children->pagination()->toArray()
+			];
 		}
 	]
 ];
