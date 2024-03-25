@@ -29,7 +29,21 @@ export default (option, Dayjs, dayjs) => {
 				"MMM D": false,
 				"MM YYYY": true,
 				"M YYYY": true,
+				"MMMM DD YYYY": true,
+				"MMMM D YYYY": true,
+				"MMMM DD YY": true,
+				"MMMM D YY": true,
+				"MMMM DD, YYYY": true,
+				"MMMM D, YYYY": true,
+				"MMMM DD, YY": true,
+				"MMMM D, YY": true,
+				"MMMM DD. YYYY": true,
+				"MMMM D. YYYY": true,
+				"MMMM DD. YY": true,
+				"MMMM D. YY": true,
 
+				DDMMYYYY: true,
+				DDMMYY: true,
 				"DD MMMM YYYY": false,
 				"DD MMMM YY": false,
 				"DD MMMM": false,
@@ -64,11 +78,15 @@ export default (option, Dayjs, dayjs) => {
 				D: false
 			},
 			time: {
+				"HHmmss a": false,
+				"HHmm a": false,
+				"HH a": false,
+				HHmmss: false,
+				HHmm: false,
 				"HH:mm:ss a": false,
 				"HH:mm:ss": false,
 				"HH:mm a": false,
 				"HH:mm": false,
-				"HH a": false,
 				HH: false
 			}
 		};
