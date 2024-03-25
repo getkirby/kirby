@@ -40,6 +40,13 @@
 					@select="$emit('select', $event)"
 					@toggle="$emit('toggle', $event)"
 				/>
+
+				<!-- Load more paginate btn -->
+				<li v-if="hasPaginate(item)" class="k-tree-branch k-tree-paginate">
+					<button class="k-tree-folder" type="button" @click="paginate(item)">
+						...
+					</button>
+				</li>
 			</template>
 		</li>
 	</ul>
@@ -75,6 +82,11 @@ export default {
 			state: this.items
 		};
 	},
+	watch: {
+		items() {
+			this.state = this.items;
+		}
+	},
 	methods: {
 		arrow(item) {
 			if (item.loading === true) {
@@ -86,6 +98,9 @@ export default {
 		close(item) {
 			this.$set(item, "open", false);
 			this.$emit("close", item);
+		},
+		hasPaginate(item) {
+			return false;
 		},
 		open(item) {
 			this.$set(item, "open", true);
@@ -192,5 +207,9 @@ li[aria-current] > .k-tree-branch {
 
 .k-tree-folder[disabled] {
 	opacity: var(--opacity-disabled);
+}
+
+.k-tree-paginate {
+	color: var(--color-gray-500);
 }
 </style>

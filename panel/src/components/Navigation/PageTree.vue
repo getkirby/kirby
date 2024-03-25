@@ -17,6 +17,12 @@ export default {
 		current: {
 			type: String
 		},
+		/**
+		 * Items per folder to load at once
+		 */
+		limit: {
+			type: Number
+		},
 		move: {
 			type: String
 		}
@@ -31,7 +37,7 @@ export default {
 			this.state = this.items;
 		} else {
 			// load top-level items (e.g. only site)
-			const items = await this.load(null);
+			const { items } = await this.load(null);
 			await this.open(items[0]);
 
 			// if root is disabled, show the first level of children
@@ -39,11 +45,22 @@ export default {
 		}
 	},
 	methods: {
-		async load(path) {
+		hasPaginate(item) {
+			if (!item.pagination) {
+				return false;
+			}
+
+			return (
+				item.pagination.page * item.pagination.limit < item.pagination.total
+			);
+		},
+		async load(path, page) {
 			return await this.$panel.get("site/tree", {
 				query: {
 					move: this.move ?? null,
-					parent: path
+					parent: path,
+					page: page ?? 1,
+					limit: this.limit ?? null
 				}
 			});
 		},
@@ -56,10 +73,26 @@ export default {
 
 			// children have not been loaded yet
 			if (typeof item.children === "string") {
-				item.children = await this.load(item.children);
+				const { items, pagination } = await this.load(item.children);
+				item.endpoint = item.children;
+				item.children = items;
+				item.pagination = pagination;
 			}
 
 			this.$set(item, "open", true);
+			this.$set(item, "loading", false);
+		},
+		async paginate(item) {
+			this.$set(item, "loading", true);
+
+			// children have not been loaded yet
+			const { items, pagination } = await this.load(
+				item.endpoint,
+				item.pagination.page + 1
+			);
+			this.$set(item, "children", [...item.children, ...items]);
+			this.$set(item, "pagination", pagination);
+
 			this.$set(item, "loading", false);
 		}
 	}
