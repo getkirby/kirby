@@ -3,7 +3,6 @@
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\Str;
 
 return [
 	'tree' => [

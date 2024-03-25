@@ -99,7 +99,7 @@ export default {
 			this.$set(item, "open", false);
 			this.$emit("close", item);
 		},
-		hasPaginate(item) {
+		hasPaginate() {
 			return false;
 		},
 		open(item) {
