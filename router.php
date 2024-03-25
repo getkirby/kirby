@@ -1,7 +1,7 @@
 <?php
 
 $uri = urldecode(
-	parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
+	parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/'
 );
 
 // Emulate Apache's `mod_rewrite` functionality
