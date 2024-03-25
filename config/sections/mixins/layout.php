@@ -77,9 +77,12 @@ return [
 				// keep the original column name as id
 				$column['id'] = $columnName;
 
-				// add the custom column to the array with a key that won't
-				// override the system columns
-				$columns[$columnName . 'Cell'] = $column;
+				// add the custom column to the array
+				// allowing to extend/overwrite existing columns
+				$columns[$columnName] = [
+					...$columns[$columnName] ?? [],
+					...$column
+				];
 			}
 
 			if ($this->type === 'pages') {
