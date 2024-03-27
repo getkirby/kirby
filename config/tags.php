@@ -154,7 +154,7 @@ return [
 				'height' => $tag->height,
 				'class'  => $tag->imgclass,
 				'title'  => $tag->title,
-				'alt'    => $tag->alt ?? ''
+				'alt'    => Str::esc($tag->alt ?? '')
 			]);
 
 			if ($tag->kirby()->option('kirbytext.image.figure', true) === false) {
