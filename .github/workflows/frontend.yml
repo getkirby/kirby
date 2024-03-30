@@ -89,7 +89,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      php: "8.1"
+      php: "8.2"
 
     steps:
       - name: Checkout

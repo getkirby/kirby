@@ -57,7 +57,7 @@ jobs:
     timeout-minutes: 5
     strategy:
       matrix:
-        php: [ "8.1", "8.2", "8.3" ]
+        php: ["8.2", "8.3"]
     env:
       extensions: mbstring, ctype, curl, gd, apcu, memcached
       ini: apc.enabled=1, apc.enable_cli=1, pcov.directory=., "pcov.exclude=\"~(vendor|tests)~\""
@@ -167,7 +167,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      php: "8.1"
+      php: "8.2"
       extensions: mbstring, ctype, curl, gd, apcu, memcached
 
     steps:
@@ -248,7 +248,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      php: "8.1"
+      php: "8.2"
 
     steps:
       - name: Checkout
