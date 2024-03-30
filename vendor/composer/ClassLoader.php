@@ -420,7 +420,7 @@ class ClassLoader
      * @param  string    $class The name of the class
      * @return true|null True if loaded, null otherwise
      */
-    public function loadClass($class)
+    public function loadClass($class): true|null
     {
         if ($file = $this->findFile($class)) {
             $includeFile = self::$includeFile;

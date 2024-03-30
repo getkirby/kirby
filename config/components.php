@@ -324,7 +324,6 @@ return [
 	 * @param string $src Root of the original file
 	 * @param string $dst Template string for the root to the desired destination
 	 * @param array $options All thumb options that should be applied: `width`, `height`, `crop`, `blur`, `grayscale`
-	 * @return string
 	 */
 	'thumb' => function (
 		App $kirby,
