@@ -284,6 +284,14 @@ V::$validators = [
 	},
 
 	/**
+	 * Checks with the callback sent by the user
+	 * It's ideal for one-time custom validations
+	 */
+	'callback' => function ($value, callable $callback): bool {
+		return $callback($value);
+	},
+
+	/**
 	 * Checks if the given string contains the given value
 	 */
 	'contains' => function ($value, $needle): bool {

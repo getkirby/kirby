@@ -87,6 +87,12 @@ class VTest extends TestCase
 		$this->assertFalse(V::accepted('off'));
 	}
 
+	public function testCallback()
+	{
+		$this->assertTrue(V::callback('foo', fn ($value) => $value === 'foo'));
+		$this->assertFalse(V::callback('bar', fn ($value) => $value === 'foo'));
+	}
+
 	public function testContains()
 	{
 		$this->assertTrue(V::contains('word', 'or'));
