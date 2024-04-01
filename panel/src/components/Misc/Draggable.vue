@@ -11,8 +11,6 @@
 </template>
 
 <script>
-import Sortable from "sortablejs";
-
 /**
  * The Draggable component implements the widespread
  * [Sortable.js](https://github.com/RubaXa/Sortable) library.
@@ -88,87 +86,92 @@ export default {
 			deep: true
 		}
 	},
-	mounted() {
-		this.create();
+	async mounted() {
+		const Sortable = (await import("sortablejs")).default;
+
+		this.sortable = Sortable.create(this.$el, {
+			...this.dragOptions,
+
+			// Item dragging started
+			onStart: (event) => {
+				this.$panel.drag.start("data", {});
+			},
+			// Item dragging ended
+			onEnd: (event) => {
+				this.$panel.drag.stop();
+			},
+			// Item is dropped into the list from another list
+			onAdd: (evt) => {
+				if (this.list) {
+					const source = this.getInstance(evt.from);
+					const item = source.list[evt.oldDraggableIndex];
+					this.list.splice(evt.newDraggableIndex, 0, item);
+				}
+			},
+			// Changed sorting within list
+			onUpdate: (evt) => {
+				if (this.list) {
+					const item = this.list[evt.oldDraggableIndex];
+					this.list.splice(evt.oldDraggableIndex, 1);
+					this.list.splice(evt.newDraggableIndex, 0, item);
+				}
+			},
+			// Item is removed from the list into another list
+			onRemove: (evt) => {
+				if (this.list) {
+					this.list.splice(evt.oldDraggableIndex, 1);
+				}
+			},
+
+			// Called by any change to the list
+			onSort: (event) => {
+				this.$emit("sort", event);
+			},
+
+			// Event when you move an item in the list or between lists
+			onMove: (event, originalEvent) => {
+				// ensure footer stays non-sortable at the bottom
+				if (originalEvent.target === this.$refs.footer) {
+					return -1;
+				}
+
+				if (this.move) {
+					// bind data prop of the source and target component
+					// to the event object
+					const form = this.getInstance(event.from);
+					event.fromData = form.$props.data;
+					const to = this.getInstance(event.to);
+					event.toData = to.$props.data;
+
+					// call the provided move callback
+					// to determine if the move is allowed
+					return this.move(event);
+				}
+
+				return true;
+			},
+			// Called when dragging item changes position
+			onChange: (event) => {
+				this.$emit("change", event);
+			}
+		});
 	},
 	methods: {
-		create() {
-			this.sortable = Sortable.create(this.$el, {
-				...this.dragOptions,
-				// Element dragging started
-				onStart: (event) => {
-					this.$panel.drag.start("data", {});
-					this.$emit("start", event);
-				},
-				// Element dragging ended
-				onEnd: (event) => {
-					this.$panel.drag.stop();
-					this.$emit("end", event);
-				},
-				// Element is dropped into the list from another list
-				onAdd: (evt) => {
-					if (this.list) {
-						const source = this.getInstance(evt.from);
-						const element = source.list[evt.oldDraggableIndex];
-						this.list.splice(evt.newDraggableIndex, 0, element);
-					}
-				},
-				// Changed sorting within list
-				onUpdate: (evt) => {
-					if (this.list) {
-						const element = this.list[evt.oldDraggableIndex];
-						this.list.splice(evt.oldDraggableIndex, 1);
-						this.list.splice(evt.newDraggableIndex, 0, element);
-					}
-				},
-				// Element is removed from the list into another list
-				onRemove: (evt) => {
-					if (this.list) {
-						this.list.splice(evt.oldDraggableIndex, 1);
-					}
-				},
-
-				// Called by any change to the list
-				onSort: (event) => {
-					this.$emit("sort", event);
-				},
-
-				// Event when you move an item in the list or between lists
-				onMove: (event, originalEvent) => {
-					// ensure footer stays non-sortable at the bottom
-					if (originalEvent.target === this.$refs.footer) {
-						return -1;
-					}
-
-					if (this.move) {
-						const form = this.getInstance(event.from);
-						event.fromData = form.$props.data;
-						const to = this.getInstance(event.to);
-						event.toData = to.$props.data;
-						console.log(event);
-
-						return this.move(event);
-					}
-
-					return true;
-				},
-				// Called when dragging element changes position
-				onChange: (event) => {
-					this.$emit("change", event);
-				}
-			});
-		},
 		getInstance(element) {
+			// get the Vue instance from HTMLElement
 			element = element.__vue__;
 
+			// if the element is already the draggable component
 			if ("list" in element) {
 				return element;
 			}
 
+			// check if only child is the draggable component
 			if (element.$children.length === 1 && "list" in element.$children[0]) {
 				return element.$children[0];
 			}
 
+			// check if parent is the draggable component
 			if (element.$parent.$options._componentTag === "k-draggable") {
 				return element.$parent;
 			}
