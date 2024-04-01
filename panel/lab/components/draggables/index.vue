@@ -34,5 +34,15 @@
 				</k-box>
 			</k-draggable>
 		</k-lab-example>
+
+		<k-lab-example label="Disabled">
+			<k-draggable
+				:disabled="true"
+				element="k-grid"
+				style="--columns: 1; gap: 2px"
+			>
+				<k-box v-for="n in 4" :key="n" :text="'' + n" theme="white" />
+			</k-draggable>
+		</k-lab-example>
 	</k-lab-examples>
 </template>

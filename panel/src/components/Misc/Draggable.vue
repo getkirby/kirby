@@ -28,6 +28,10 @@ export default {
 	props: {
 		data: Object,
 		/**
+		 * Whether sorting is disabled
+		 */
+		disabled: Boolean,
+		/**
 		 * HTML element for the wrapper
 		 */
 		element: {
