@@ -79,7 +79,7 @@ return [
 							'required'    => true,
 							'counter'     => false,
 							'placeholder' => 'K-',
-							'help'        => I18n::translate('license.code.help') . ' ' . '<a href="https://getkirby.com/buy" target="_blank">' . I18n::translate('license.buy') . ' &rarr;</a>'
+							'help'        => I18n::translate('license.code.help') . ' <a href="https://getkirby.com/buy" target="_blank">' . I18n::translate('license.buy') . ' &rarr;</a>'
 						],
 						'email' => Field::email(['required' => true])
 					],
