@@ -40,6 +40,7 @@ return $config
 		'no_empty_statement' => true,
 		'no_leading_namespace_whitespace' => true,
 		'no_mixed_echo_print' => ['use' => 'echo'],
+		// 'no_superfluous_phpdoc_tags' => true,
 		'no_unneeded_control_parentheses' => true,
 		'no_unused_imports' => true,
 		'no_useless_return' => true,
@@ -47,11 +48,13 @@ return $config
 		// 'phpdoc_add_missing_param_annotation' => ['only_untyped' => false], // adds params in the wrong order
 		'phpdoc_align' => ['align' => 'left'],
 		'phpdoc_indent' => true,
+		'phpdoc_param_order' => true,
 		'phpdoc_scalar' => true,
 		'phpdoc_trim' => true,
 		'short_scalar_cast' => true,
 		'single_line_comment_style' => true,
 		'single_quote' => true,
+		'statement_indentation' => ['stick_comment_to_next_continuous_control_statement' => true],
 		'ternary_to_null_coalescing' => true,
 		'whitespace_after_comma_in_array' => true
 	])
