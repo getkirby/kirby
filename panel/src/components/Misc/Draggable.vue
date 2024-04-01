@@ -95,10 +95,12 @@ export default {
 			// Item dragging started
 			onStart: (event) => {
 				this.$panel.drag.start("data", {});
+				this.$emit("start", event);
 			},
 			// Item dragging ended
 			onEnd: (event) => {
 				this.$panel.drag.stop();
+				this.$emit("end", event);
 			},
 			// Item is dropped into the list from another list
 			onAdd: (evt) => {
