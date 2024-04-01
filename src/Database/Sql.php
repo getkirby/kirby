@@ -146,7 +146,7 @@ abstract class Sql
 	 * Combines an identifier (table and column)
 	 *
 	 * @param $values bool Whether the identifier is going to be used for a VALUES clause;
-	 *                only relevant for SQLite
+	 *               only relevant for SQLite
 	 */
 	public function combineIdentifier(string $table, string $column, bool $values = false): string
 	{
