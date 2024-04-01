@@ -57,12 +57,10 @@ export default {
 	},
 	computed: {
 		dragOptions() {
-			const handle = this.handle === true ? ".k-sort-handle" : this.handle;
-
 			return {
 				group: this.group,
 				disabled: this.disabled,
-				handle: handle,
+				handle: this.handle === true ? ".k-sort-handle" : this.handle,
 				draggable: ">*",
 				dataIdAttr: "data-id",
 				filter: ".k-draggable-footer",

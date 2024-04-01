@@ -21,5 +21,18 @@
 				</template>
 			</k-draggable>
 		</k-lab-example>
+
+		<k-lab-example label="Handles">
+			<k-draggable
+				:handle="true"
+				element="k-grid"
+				style="--columns: 1; gap: 2px"
+			>
+				<k-box v-for="n in 6" :key="n" theme="white">
+					<k-sort-handle />
+					{{ n }}
+				</k-box>
+			</k-draggable>
+		</k-lab-example>
 	</k-lab-examples>
 </template>
