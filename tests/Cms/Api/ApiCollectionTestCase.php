@@ -3,7 +3,7 @@
 namespace Kirby\Cms\Api;
 
 use Kirby\Cms\App;
-use Kirby\Cms\TestCase as TestCase;
+use Kirby\Cms\TestCase  ;
 
 class ApiCollectionTestCase extends TestCase
 {

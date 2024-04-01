@@ -9,7 +9,7 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response;
-use Kirby\TestCase as TestCase;
+use Kirby\TestCase;
 
 class InvalidFileModel
 {
