@@ -418,7 +418,6 @@ class Query
 	/**
 	 * Attaches an order clause
 	 *
-	 * @param string|null $order
 	 * @return $this
 	 */
 	public function order(string $order = null)

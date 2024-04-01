@@ -40,7 +40,7 @@ return $config
 		'no_empty_statement' => true,
 		'no_leading_namespace_whitespace' => true,
 		'no_mixed_echo_print' => ['use' => 'echo'],
-		// 'no_superfluous_phpdoc_tags' => true,
+		'no_superfluous_phpdoc_tags' => true,
 		'no_unneeded_control_parentheses' => true,
 		'no_unused_imports' => true,
 		'no_useless_return' => true,

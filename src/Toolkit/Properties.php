@@ -24,7 +24,6 @@ trait Properties
 	 * Creates an instance with the same
 	 * initial properties.
 	 *
-	 * @param array $props
 	 * @return static
 	 */
 	public function clone(array $props = [])

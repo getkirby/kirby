@@ -198,7 +198,6 @@ class Auth
 	 * for a basic authentication header with
 	 * valid credentials
 	 *
-	 * @param \Kirby\Http\Request\Auth\BasicAuth|null $auth
 	 * @throws \Kirby\Exception\InvalidArgumentException if the authorization header is invalid
 	 * @throws \Kirby\Exception\PermissionException if basic authentication is not allowed
 	 */

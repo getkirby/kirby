@@ -243,8 +243,6 @@ class Pages extends Collection
 
 	/**
 	 * Finds a child or child of a child recursively
-	 *
-	 * @return mixed
 	 */
 	protected function findByKeyRecursive(
 		string $id,
@@ -296,7 +294,6 @@ class Pages extends Collection
 	 * extension pages
 	 *
 	 * @param string $key
-	 * @param mixed $default
 	 * @return \Kirby\Cms\Page|null
 	 */
 	public function get($key, $default = null)
@@ -374,7 +371,6 @@ class Pages extends Collection
 	/**
 	 * Include all given items in the collection
 	 *
-	 * @param mixed ...$args
 	 * @return $this|static
 	 */
 	public function merge(...$args)

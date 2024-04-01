@@ -162,7 +162,6 @@ class User extends ModelWithContent
 	/**
 	 * Prepares the content for the write method
 	 * @internal
-	 * @param string $languageCode|null Not used so far
 	 */
 	public function contentFileData(
 		array $data,

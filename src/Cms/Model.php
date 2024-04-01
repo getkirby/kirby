@@ -42,8 +42,6 @@ abstract class Model
 	/**
 	 * Makes it possible to convert the entire model
 	 * to a string. Mostly useful for debugging
-	 *
-	 * @return string
 	 */
 	public function __toString(): string
 	{
@@ -83,7 +81,6 @@ abstract class Model
 	/**
 	 * Setter for the parent Kirby object
 	 *
-	 * @param \Kirby\Cms\App|null $kirby
 	 * @return $this
 	 */
 	protected function setKirby(App $kirby = null)
@@ -96,7 +93,6 @@ abstract class Model
 	 * Setter for the parent site object
 	 *
 	 * @internal
-	 * @param \Kirby\Cms\Site|null $site
 	 * @return $this
 	 */
 	public function setSite(Site $site = null)
@@ -107,8 +103,6 @@ abstract class Model
 
 	/**
 	 * Convert the model to a simple array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{

@@ -37,10 +37,6 @@ class Collection extends BaseCollection
 
 	/**
 	 * Magic getter function
-	 *
-	 * @param string $key
-	 * @param mixed $arguments
-	 * @return mixed
 	 */
 	public function __call(string $key, $arguments)
 	{
@@ -93,8 +89,6 @@ class Collection extends BaseCollection
 	 * Adds a single object or
 	 * an entire second collection to the
 	 * current collection
-	 *
-	 * @param mixed $object
 	 */
 	public function add($object)
 	{
@@ -115,9 +109,6 @@ class Collection extends BaseCollection
 	/**
 	 * Appends an element to the data array
 	 *
-	 * @param mixed ...$args
-	 * @param mixed $key Optional collection key, will be determined from the item if not given
-	 * @param mixed $item
 	 * @return \Kirby\Cms\Collection
 	 */
 	public function append(...$args)
@@ -140,7 +131,6 @@ class Collection extends BaseCollection
 	/**
 	 * Find a single element by an attribute and its value
 	 *
-	 * @param mixed $value
 	 * @return mixed|null
 	 */
 	public function findBy(string $attribute, $value)
@@ -259,7 +249,6 @@ class Collection extends BaseCollection
 	/**
 	 * Add pagination and return a sliced set of data.
 	 *
-	 * @param mixed ...$arguments
 	 * @return $this|static
 	 */
 	public function paginate(...$arguments)
@@ -294,9 +283,6 @@ class Collection extends BaseCollection
 	/**
 	 * Prepends an element to the data array
 	 *
-	 * @param mixed ...$args
-	 * @param mixed $key Optional collection key, will be determined from the item if not given
-	 * @param mixed $item
 	 * @return \Kirby\Cms\Collection
 	 */
 	public function prepend(...$args)

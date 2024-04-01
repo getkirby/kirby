@@ -986,7 +986,6 @@ trait PageActions
 	 *
 	 * @param \Kirby\Cms\Page $page
 	 * @param string $method Method to call on the parent collections
-	 * @param \Kirby\Cms\Page|null $parentMdel
 	 */
 	protected static function updateParentCollections(
 		$page,

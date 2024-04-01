@@ -312,7 +312,6 @@ class SystemTest extends TestCase
 
 	/**
 	 * @dataProvider providerForRoots
-	 * @param $root
 	 * @throws \Kirby\Exception\PermissionException
 	 */
 	public function testInitPermission($root)
