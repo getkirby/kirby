@@ -29,7 +29,7 @@ class TestCache extends Cache
 		return true;
 	}
 
-	public function retrieve(string $key): ?Value
+	public function retrieve(string $key): null|Value
 	{
 		return $this->store[$key] ?? null;
 	}

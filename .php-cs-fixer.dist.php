@@ -50,7 +50,12 @@ return $config
 		'no_unneeded_control_parentheses' => true,
 		'no_unneeded_import_alias' => true,
 		'no_unused_imports' => true,
+		'no_useless_else' => true,
+		'no_useless_nullsafe_operator' => true,
 		'no_useless_return' => true,
+		'no_whitespace_before_comma_in_array' => true,
+		'no_whitespace_in_blank_line' => true,
+		'nullable_type_declaration' => ['syntax' => 'union'],
 		'ordered_imports' => ['sort_algorithm' => 'alpha'],
 		// 'phpdoc_add_missing_param_annotation' => ['only_untyped' => false], // adds params in the wrong order
 		'phpdoc_align' => ['align' => 'left'],
