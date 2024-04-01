@@ -134,9 +134,10 @@ class Blocks extends Items
 						)
 					) {
 						throw new Exception('Invalid YAML');
-					} else {
-						$input = $yaml;
 					}
+
+					$input = $yaml;
+
 				} catch (Throwable $e) {
 					// the next 2 lines remain after removing block.converter
 					// @codeCoverageIgnoreEnd
