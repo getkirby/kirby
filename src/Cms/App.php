@@ -623,7 +623,7 @@ class App
 			return Uuid::for($path, $parent?->files())->model();
 		}
 
-		$parent   = $parent ?? $this->site();
+		$parent ??= $this->site();
 		$id       = dirname($path);
 		$filename = basename($path);
 
@@ -1141,7 +1141,7 @@ class App
 			return null;
 		}
 
-		$parent = $parent ?? $this->site();
+		$parent ??= $this->site();
 
 		if ($page = $parent->find($id)) {
 			/**

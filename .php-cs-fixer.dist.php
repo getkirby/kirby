@@ -9,9 +9,10 @@ $config = new PhpCsFixer\Config();
 return $config
 	->setRules([
 		'@PSR12' => true,
-		'align_multiline_comment' => ['comment_type' => 'phpdocs_like'],
+		'align_multiline_comment' => ['comment_type' => 'all_multiline'],
 		'array_indentation' => true,
 		'array_syntax' => ['syntax' => 'short'],
+		'assign_null_coalescing_to_coalesce_equal' => true,
 		'cast_spaces' => ['space' => 'none'],
 		// 'class_keyword_remove' => true, // replaces static::class with 'static' (won't work)
 		'combine_consecutive_issets' => true,

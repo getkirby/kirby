@@ -719,7 +719,7 @@ trait AppPlugins
 		}
 
 		// get the correct root for the plugin
-		$extends['root'] = $extends['root'] ?? dirname(debug_backtrace()[0]['file']);
+		$extends['root'] ??= dirname(debug_backtrace()[0]['file']);
 
 		$plugin = new Plugin($name, $extends);
 		$name   = $plugin->name();
