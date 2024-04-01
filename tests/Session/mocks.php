@@ -248,7 +248,9 @@ class TestSessionStore extends SessionStore
 			if ($data === 'invalid-serialization') {
 				$data = 'some gibberish';
 				return hash_hmac('sha256', $data, $this->validKey) . "\n" . $data;
-			} elseif ($data === 'invalid-structure') {
+			}
+
+			if ($data === 'invalid-structure') {
 				return 'some gibberish';
 			}
 

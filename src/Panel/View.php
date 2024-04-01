@@ -326,9 +326,10 @@ class View
 		// handle redirects
 		if ($data instanceof Redirect) {
 			return Response::redirect($data->location(), $data->code());
+		}
 
 		// handle Kirby exceptions
-		} elseif ($data instanceof Exception) {
+		if ($data instanceof Exception) {
 			$data = static::error($data->getMessage(), $data->getHttpCode());
 
 		// handle regular exceptions

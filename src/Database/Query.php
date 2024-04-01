@@ -826,9 +826,10 @@ class Query
 
 				if ($args[0] === null) {
 					return $current;
+				}
 
 				// ->where('username like "myuser"');
-				} elseif (is_string($args[0]) === true) {
+				if (is_string($args[0]) === true) {
 					// simply add the entire string to the where clause
 					// escaping or using bindings has to be done before calling this method
 					$result = $args[0];
