@@ -1118,27 +1118,27 @@ class ATest extends TestCase
 	public function testKeyBy()
 	{
 		$array = [
-			[ 'id' => 1, 'username' => 'bastian'],
-			[ 'id' => 2, 'username' => 'sonja'],
-			[ 'id' => 3, 'username' => 'lukas']
+			['id' => 1, 'username' => 'bastian'],
+			['id' => 2, 'username' => 'sonja'],
+			['id' => 3, 'username' => 'lukas']
 		];
 
 		$array_by_id = [
-			1 => [ 'id' => 1, 'username' => 'bastian'],
-			2 => [ 'id' => 2, 'username' => 'sonja'],
-			3 => [ 'id' => 3, 'username' => 'lukas']
+			1 => ['id' => 1, 'username' => 'bastian'],
+			2 => ['id' => 2, 'username' => 'sonja'],
+			3 => ['id' => 3, 'username' => 'lukas']
 		];
 
 		$array_by_name = [
-			'bastian' => [ 'id' => 1, 'username' => 'bastian'],
-			'sonja'   => [ 'id' => 2, 'username' => 'sonja'],
-			'lukas'   => [ 'id' => 3, 'username' => 'lukas']
+			'bastian' => ['id' => 1, 'username' => 'bastian'],
+			'sonja'   => ['id' => 2, 'username' => 'sonja'],
+			'lukas'   => ['id' => 3, 'username' => 'lukas']
 		];
 
 		$array_by_cb = [
-			'bastian-1' => [ 'id' => 1, 'username' => 'bastian'],
-			'sonja-2'   => [ 'id' => 2, 'username' => 'sonja'],
-			'lukas-3'   => [ 'id' => 3, 'username' => 'lukas']
+			'bastian-1' => ['id' => 1, 'username' => 'bastian'],
+			'sonja-2'   => ['id' => 2, 'username' => 'sonja'],
+			'lukas-3'   => ['id' => 3, 'username' => 'lukas']
 		];
 
 		$this->assertSame($array_by_id, A::keyBy($array, 'id'));
@@ -1161,9 +1161,9 @@ class ATest extends TestCase
 		$this->expectExceptionMessage('The "key by" argument must be a valid key or a callable');
 
 		$array = [
-			[ 'id' => 1, 'username' => 'bastian'],
-			[ 'id' => 2, 'username' => 'sonja'],
-			[ 'id' => 3, 'username' => 'lukas']
+			['id' => 1, 'username' => 'bastian'],
+			['id' => 2, 'username' => 'sonja'],
+			['id' => 3, 'username' => 'lukas']
 		];
 
 		A::keyBy($array, 'nonexistent');

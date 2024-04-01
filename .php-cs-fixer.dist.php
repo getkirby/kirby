@@ -56,7 +56,10 @@ return $config
 		'no_whitespace_before_comma_in_array' => true,
 		'no_whitespace_in_blank_line' => true,
 		'nullable_type_declaration' => ['syntax' => 'union'],
+		'object_operator_without_whitespace' => true,
+		'operator_linebreak' => ['position' => 'end', 'only_booleans' => true],
 		'ordered_imports' => ['sort_algorithm' => 'alpha'],
+		'ordered_types' => ['sort_algorithm' => 'none', 'null_adjustment' => 'always_last'],
 		// 'phpdoc_add_missing_param_annotation' => ['only_untyped' => false], // adds params in the wrong order
 		'phpdoc_align' => ['align' => 'left'],
 		'phpdoc_indent' => true,
@@ -68,6 +71,7 @@ return $config
 		'single_quote' => true,
 		'statement_indentation' => ['stick_comment_to_next_continuous_control_statement' => true],
 		'ternary_to_null_coalescing' => true,
+		'trim_array_spaces' => true,
 		'whitespace_after_comma_in_array' => true
 	])
 	->setRiskyAllowed(true)

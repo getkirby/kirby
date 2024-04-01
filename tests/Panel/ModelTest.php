@@ -423,7 +423,7 @@ class ModelTest extends TestCase
 	{
 		$site  = new ModelSiteWithImageMethod();
 		$panel = new CustomPanelModel($site);
-		$image = $panel->image([ 'back' => '{{ site.panelBack }}']);
+		$image = $panel->image(['back' => '{{ site.panelBack }}']);
 		$this->assertSame('blue', $image['back']);
 	}
 

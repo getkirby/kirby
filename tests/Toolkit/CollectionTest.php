@@ -543,8 +543,8 @@ class CollectionTest extends TestCase
 	public function testIsEmpty()
 	{
 		$collection = new Collection([
-			[ 'name'  => 'Bastian' ],
-			[ 'name' => 'Nico' ]
+			['name'  => 'Bastian'],
+			['name' => 'Nico']
 		]);
 
 		$this->assertTrue($collection->isNotEmpty());

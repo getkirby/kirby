@@ -67,7 +67,7 @@ class FieldOptions extends Node
 					OptionsQuery::polyfill($props['query'] ?? null),
 
 				default =>
-					[ 'type' => 'query', 'query' => $props['options']]
+					['type' => 'query', 'query' => $props['options']]
 			};
 		}
 

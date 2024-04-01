@@ -17,7 +17,7 @@ class FileTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.File';
 
-	protected function defaults(null|App $kirby = null): array
+	protected function defaults(App|null $kirby = null): array
 	{
 		$page = new Page([
 			'kirby' => $kirby,

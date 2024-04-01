@@ -317,9 +317,9 @@ class EscapeTest extends TestCase
 	{
 		$immune = [',', '.', '_']; // Exceptions to escaping ranges
 		for ($chr = 0; $chr < 0xFF; $chr++) {
-			if ($chr >= 0x30 && $chr <= 0x39
-				|| $chr >= 0x41 && $chr <= 0x5A
-				|| $chr >= 0x61 && $chr <= 0x7A
+			if ($chr >= 0x30 && $chr <= 0x39 ||
+				$chr >= 0x41 && $chr <= 0x5A ||
+				$chr >= 0x61 && $chr <= 0x7A
 			) {
 				$literal = $this->codepointToUtf8($chr);
 				$this->assertSame($literal, Escape::js($literal));
@@ -345,9 +345,9 @@ class EscapeTest extends TestCase
 	{
 		$immune = [',', '.', '-', '_']; // Exceptions to escaping ranges
 		for ($chr = 0; $chr < 0xFF; $chr++) {
-			if ($chr >= 0x30 && $chr <= 0x39
-				|| $chr >= 0x41 && $chr <= 0x5A
-				|| $chr >= 0x61 && $chr <= 0x7A
+			if ($chr >= 0x30 && $chr <= 0x39 ||
+				$chr >= 0x41 && $chr <= 0x5A ||
+				$chr >= 0x61 && $chr <= 0x7A
 			) {
 				$literal = $this->codepointToUtf8($chr);
 				$this->assertSame($literal, Escape::attr($literal));
@@ -373,9 +373,9 @@ class EscapeTest extends TestCase
 	{
 		$immune = []; // CSS has no exceptions to escaping ranges
 		for ($chr = 0; $chr < 0xFF; $chr++) {
-			if ($chr >= 0x30 && $chr <= 0x39
-				|| $chr >= 0x41 && $chr <= 0x5A
-				|| $chr >= 0x61 && $chr <= 0x7A
+			if ($chr >= 0x30 && $chr <= 0x39 ||
+				$chr >= 0x41 && $chr <= 0x5A ||
+				$chr >= 0x61 && $chr <= 0x7A
 			) {
 				$literal = $this->codepointToUtf8($chr);
 				$this->assertSame($literal, Escape::css($literal));
