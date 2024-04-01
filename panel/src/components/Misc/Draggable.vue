@@ -3,7 +3,7 @@
 		<!-- @slot Items to be sortable via drag and drop -->
 		<slot />
 
-		<footer v-if="$slots.footer" class="k-draggable-footer">
+		<footer v-if="$slots.footer" ref="footer" class="k-draggable-footer">
 			<!-- @slot Non-sortable footer -->
 			<slot name="footer" />
 		</footer>
@@ -57,18 +57,21 @@ export default {
 	},
 	computed: {
 		dragOptions() {
+			const handle = this.handle === true ? ".k-sort-handle" : this.handle;
+
 			return {
 				group: this.group,
 				disabled: this.disabled,
-				handle: this.handle === true ? "k-sort-handle" : this.handle,
-				filter: ".k-draggable-footer",
+				handle: handle,
+				draggable: ">*",
 				dataIdAttr: "data-id",
+				filter: ".k-draggable-footer",
 				ghostClass: "k-sortable-ghost",
 				fallbackClass: "k-sortable-fallback",
 				forceFallback: true,
-				fallbackOnBody: true,
-				scroll: document.querySelector(".k-panel-main"),
-				...this.options
+				fallbackOnBody: true
+				// scroll: document.querySelector(".k-panel-main"),
+				// ...this.options
 			};
 		}
 	},
@@ -99,6 +102,11 @@ export default {
 					this.$emit("sort", event);
 				},
 				onMove: (event, originalEvent) => {
+					// ensure footer stays non-sortable at the bottom
+					if (originalEvent.target === this.$refs.footer) {
+						return -1;
+					}
+
 					if (this.move) {
 						return this.move(event, originalEvent);
 					}
