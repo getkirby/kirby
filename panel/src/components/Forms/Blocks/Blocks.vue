@@ -116,17 +116,16 @@ export default {
 	computed: {
 		draggableOptions() {
 			return {
-				id: this.id,
 				handle: ".k-sort-handle",
 				list: this.blocks,
+				group: this.group,
 				move: this.move,
-				delay: 10,
 				data: {
 					fieldsets: this.fieldsets,
 					isFull: this.isFull
 				},
 				options: {
-					group: this.group
+					delay: 10
 				}
 			};
 		},
