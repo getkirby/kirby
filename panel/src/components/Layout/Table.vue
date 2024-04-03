@@ -94,6 +94,7 @@
 							:key="rowIndex + '-' + columnIndex"
 							:column="column"
 							:field="fields[columnIndex]"
+							:id="columnIndex"
 							:row="row"
 							:mobile="column.mobile"
 							:value="row[columnIndex]"
