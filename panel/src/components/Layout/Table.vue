@@ -91,10 +91,10 @@
 						<!-- Cell -->
 						<k-table-cell
 							v-for="(column, columnIndex) in columns"
+							:id="columnIndex"
 							:key="rowIndex + '-' + columnIndex"
 							:column="column"
 							:field="fields[columnIndex]"
-							:id="columnIndex"
 							:row="row"
 							:mobile="column.mobile"
 							:value="row[columnIndex]"
