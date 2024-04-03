@@ -137,12 +137,15 @@ return [
 			$form = Form::for($model)->values();
 
 			foreach ($this->columns as $columnName => $column) {
-				// don't overwrite columns
-				$item[$columnName] ??= match (empty($column['value'])) {
+				$item[$columnName] = match (empty($column['value'])) {
 					// if column value defined, resolve the query
 					false   => $model->toString($column['value']),
-					// otherwise use the form value
-					default => $form[$column['id'] ?? $columnName] ?? null,
+					// otherwise use the form value,
+					// but don't overwrite columns
+					default =>
+						$item[$columnName] ??
+						$form[$column['id'] ?? $columnName] ??
+						null,
 				};
 			}
 
