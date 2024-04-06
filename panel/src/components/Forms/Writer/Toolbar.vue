@@ -158,6 +158,15 @@ export default {
 		markButtons() {
 			const available = this.editor.buttons("mark");
 
+			// add node buttons that are meant to be displayed inline
+			const nodes = this.editor.buttons("node");
+
+			for (const node in nodes) {
+				if (nodes[node].inline === true) {
+					available[node] = nodes[node];
+				}
+			}
+
 			if (this.marks === false || this.$helper.object.length(available) === 0) {
 				return {};
 			}
@@ -178,11 +187,15 @@ export default {
 
 			return buttons;
 		},
-		/**
-		 * All nodes that are available and requested based on the `nodes` prop
-		 */
-		nodeButtons() {
+		availableNodes() {
 			const available = this.editor.buttons("node");
+
+			// skip node buttons that are meant to be displayed inline
+			for (const node in available) {
+				if (available[node].inline === true) {
+					delete available[node];
+				}
+			}
 
 			if (this.nodes === false || this.$helper.object.length(available) === 0) {
 				return {};
@@ -193,15 +206,21 @@ export default {
 				delete available.paragraph;
 			}
 
+			return available;
+		},
+		/**
+		 * All nodes that are available and requested based on the `nodes` prop
+		 */
+		nodeButtons() {
 			if (this.nodes === true) {
-				return available;
+				return this.availableNodes;
 			}
 
 			const buttons = {};
 
 			for (const node of this.nodes) {
-				if (available[node]) {
-					buttons[node] = available[node];
+				if (this.availableNodes[node]) {
+					buttons[node] = this.availableNodes[node];
 				}
 			}
 
