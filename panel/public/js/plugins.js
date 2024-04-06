@@ -9,7 +9,9 @@ window.panel.plugins = {
 	use: [],
 	views: {},
 	writerMarks: {},
-	writerNodes: {}
+	writerMarkViews: {},
+	writerNodes: {},
+	writerNodeViews: {}
 };
 
 window.panel.plugin = function (plugin, extensions) {
@@ -78,9 +80,19 @@ window.panel.plugin = function (plugin, extensions) {
 		window.panel.plugins.writerMarks[name] = options;
 	});
 
+	// Writer custom mark views
+	resolve(extensions, "writerMarkViews", (name, options) => {
+		window.panel.plugins.writerMarkViews[name] = options;
+	});
+
 	// Writer custom nodes
 	resolve(extensions, "writerNodes", function (name, options) {
 		window.panel.plugins.writerNodes[name] = options;
+	});
+
+	// Writer custom node views
+	resolve(extensions, "writerNodeViews", function (name, options) {
+		window.panel.plugins.writerNodeViews[name] = options;
 	});
 };
 

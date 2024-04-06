@@ -236,6 +236,8 @@ export default class Editor extends Emitter {
 			handleDrop: (...args) => {
 				this.emit("drop", ...args);
 			},
+			markViews: window.panel.plugins.writerMarkViews,
+			nodeViews: window.panel.plugins.writerNodeViews,
 			state: this.createState()
 		});
 	}
