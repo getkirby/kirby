@@ -123,22 +123,31 @@ export default {
 				onAdd: (evt) => {
 					if (this.list) {
 						const source = this.getInstance(evt.from);
-						const item = source.list[evt.oldDraggableIndex];
-						this.list.splice(evt.newDraggableIndex, 0, item);
+						const oldIndex = evt.oldDraggableIndex;
+						const newIndex = evt.newDraggableIndex;
+						const element = source.list[oldIndex];
+						this.list.splice(newIndex, 0, element);
+						this.$emit("change", { added: { element, newIndex } });
 					}
 				},
 				// Changed sorting within list
 				onUpdate: (evt) => {
 					if (this.list) {
-						const item = this.list[evt.oldDraggableIndex];
-						this.list.splice(evt.oldDraggableIndex, 1);
-						this.list.splice(evt.newDraggableIndex, 0, item);
+						const oldIndex = evt.oldDraggableIndex;
+						const newIndex = evt.newDraggableIndex;
+						const element = this.list[oldIndex];
+						this.list.splice(oldIndex, 1);
+						this.list.splice(newIndex, 0, element);
+						this.$emit("change", { moved: { element, newIndex, oldIndex } });
 					}
 				},
 				// Item is removed from the list into another list
 				onRemove: (evt) => {
 					if (this.list) {
-						this.list.splice(evt.oldDraggableIndex, 1);
+						const oldIndex = evt.oldDraggableIndex;
+						const element = this.list[oldIndex];
+						this.list.splice(oldIndex, 1);
+						this.$emit("change", { removed: { element, oldIndex } });
 					}
 				},
 
@@ -168,10 +177,6 @@ export default {
 					}
 
 					return true;
-				},
-				// Called when dragging item changes position
-				onChange: (event) => {
-					this.$emit("change", event);
 				}
 			});
 		},
