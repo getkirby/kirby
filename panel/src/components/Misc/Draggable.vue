@@ -1,5 +1,5 @@
 <template>
-	<component :is="element" class="k-draggable">
+	<component :is="element" :class="{ 'k-draggable': !dragOptions.disabled }">
 		<!-- @slot Items to be sortable via drag and drop -->
 		<slot />
 
@@ -89,8 +89,12 @@ export default {
 	},
 	watch: {
 		dragOptions: {
-			handler() {
-				this.create();
+			handler(newOptions, oldOptions) {
+				for (const option in newOptions) {
+					if (newOptions[option] !== oldOptions[option]) {
+						this.sortable.option(option, newOptions[option]);
+					}
+				}
 			},
 			deep: true
 		}
