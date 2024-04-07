@@ -11,6 +11,8 @@
 </template>
 
 <script>
+/* eslint-disable vue/no-mutating-props */
+
 /**
  * The Draggable component implements the widespread
  * [Sortable.js](https://github.com/RubaXa/Sortable) library.
