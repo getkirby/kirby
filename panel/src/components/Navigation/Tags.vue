@@ -13,7 +13,7 @@
 		>
 			<k-tag
 				v-for="(item, itemIndex) in tags"
-				:key="itemIndex"
+				:key="item.id ?? item.value ?? item.text"
 				:disabled="disabled"
 				:image="item.image"
 				:removable="!disabled"
