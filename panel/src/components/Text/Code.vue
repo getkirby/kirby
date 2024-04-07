@@ -4,7 +4,7 @@
 			<pre
 				class="k-code"
 				:data-language="language"
-			><code :key="$slots.default().text + '-' + language" :class="language ? `language-${language}` : null"><slot /></code></pre>
+			><code :key="$slots.default()[0].children + '-' + language" :class="language ? `language-${language}` : null"><slot /></code></pre>
 		</div>
 	</k-highlight>
 </template>
