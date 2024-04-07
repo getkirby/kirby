@@ -164,8 +164,10 @@ export default {
 					}
 
 					if (this.move) {
-						// bind data prop of the source and target component
-						// to the event object
+						// bind data props for the element, source and target
+						// component to the event object
+						const element = event.dragged.__vue__;
+						event.draggedData = element.$props;
 						const form = this.getInstance(event.from);
 						event.fromData = form.$props.data;
 						const to = this.getInstance(event.to);
