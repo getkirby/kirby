@@ -123,9 +123,6 @@ export default {
 				data: {
 					fieldsets: this.fieldsets,
 					isFull: this.isFull
-				},
-				options: {
-					delay: 10
 				}
 			};
 		},
