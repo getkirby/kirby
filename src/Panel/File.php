@@ -21,6 +21,15 @@ use Throwable;
 class File extends Model
 {
 	/**
+	 * Default header buttons for the page model
+	 */
+	public static array $buttons = [
+		'preview',
+		'settings',
+		'languages'
+	];
+
+	/**
 	 * @var \Kirby\Cms\File
 	 */
 	protected ModelWithContent $model;

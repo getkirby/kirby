@@ -211,6 +211,14 @@ class Blueprint
 	}
 
 	/**
+	 * Gathers custom config for Panel header buttons
+	 */
+	public function buttons(): array|null
+	{
+		return $this->props['buttons'] ?? null;
+	}
+
+	/**
 	 * Converts all column definitions, that
 	 * are not wrapped in a tab, into a generic tab
 	 */

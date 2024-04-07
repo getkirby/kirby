@@ -1,5 +1,8 @@
 <template>
-	<div v-if="languages.length > 1" class="k-languages-dropdown">
+	<div
+		v-if="languages.length > 1"
+		class="k-header-languages-button k-languages-dropdown"
+	>
 		<k-button
 			:dropdown="true"
 			:text="code"

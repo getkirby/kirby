@@ -22,6 +22,15 @@ use Kirby\Toolkit\I18n;
 class User extends Model
 {
 	/**
+	 * Default header buttons for the page model
+	 */
+	public static array $buttons = [
+		'theme',
+		'settings',
+		'languages'
+	];
+
+	/**
 	 * @var \Kirby\Cms\User
 	 */
 	protected ModelWithContent $model;

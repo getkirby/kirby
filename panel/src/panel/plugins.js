@@ -163,6 +163,7 @@ export default (app, plugins = {}) => {
 	plugins = {
 		components: {},
 		created: [],
+		headerButtons: {},
 		icons: {},
 		login: null,
 		textareaButtons: {},

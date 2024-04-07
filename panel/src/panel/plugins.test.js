@@ -16,6 +16,7 @@ describe.concurrent("panel.plugins", () => {
 		const expected = {
 			components: {},
 			created: [],
+			headerButtons: {},
 			icons: {},
 			login: null,
 			textareaButtons: {},

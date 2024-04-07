@@ -1,9 +1,11 @@
 <template>
 	<k-button
+		v-if="$panel.view.id === 'account'"
 		:icon="icon"
 		:text="text"
 		size="sm"
 		variant="filled"
+		class="k-header-theme-button"
 		@click="$panel.theme.toggle()"
 	/>
 </template>

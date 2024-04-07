@@ -2,6 +2,7 @@ window.panel = window.panel ?? {};
 window.panel.plugins = {
 	components: {},
 	created: [],
+	headerButtons: {},
 	icons: {},
 	routes: [],
 	textareaButtons: {},
@@ -33,6 +34,11 @@ window.panel.plugin = function (plugin, extensions) {
 	// Fields
 	resolve(extensions, "fields", (name, options) => {
 		window.panel.plugins.components[`k-${name}-field`] = options;
+	});
+
+	// Header Buttons
+	resolve(extensions, "headerButtons", (name, options) => {
+		window.panel.plugins.components[`k-header-${name}-button`] = options;
 	});
 
 	// Icons

@@ -22,9 +22,23 @@ use Kirby\Toolkit\A;
  */
 abstract class Model
 {
+	/**
+	 * Default header buttons for the page model
+	 */
+	public static array $buttons = [];
+
 	public function __construct(
 		protected ModelWithContent $model
 	) {
+	}
+
+	/**
+	 * Returns array of names for which
+	 * header buttons should be displayed
+	 */
+	public function buttons(): array
+	{
+		return $this->model->blueprint()->buttons() ?? static::$buttons;
 	}
 
 	/**
@@ -352,6 +366,7 @@ abstract class Model
 		$tab       = $blueprint->tab($request->get('tab')) ?? $tabs[0] ?? null;
 
 		$props = [
+			'buttons'     => $this->buttons(),
 			'lock'        => $this->lock(),
 			'permissions' => $this->model->permissions()->toArray(),
 			'tabs'        => $tabs,

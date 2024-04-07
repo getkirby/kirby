@@ -20,6 +20,16 @@ use Kirby\Toolkit\I18n;
 class Page extends Model
 {
 	/**
+	 * Default header buttons for the page model
+	 */
+	public static array $buttons = [
+		'preview',
+		'settings',
+		'languages',
+		'status'
+	];
+
+	/**
 	 * @var \Kirby\Cms\Page
 	 */
 	protected ModelWithContent $model;

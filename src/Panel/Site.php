@@ -19,6 +19,14 @@ use Kirby\Filesystem\Asset;
 class Site extends Model
 {
 	/**
+	 * Default header buttons for the page model
+	 */
+	public static array $buttons = [
+		'preview',
+		'languages'
+	];
+
+	/**
 	 * @var \Kirby\Cms\Site
 	 */
 	protected ModelWithContent $model;
