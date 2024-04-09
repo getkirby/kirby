@@ -10,6 +10,8 @@ import Libraries from "./libraries/index.js";
 import Panel from "./panel/panel.js";
 import Store from "./store/store.js";
 
+import preserveListeners from "./mixins/preserveListeners.js";
+
 /**
  * Create the Vue application
  */
@@ -26,6 +28,11 @@ window.panel = Panel.create(app, window.panel.plugins);
  */
 import "./styles/config.css";
 import "./styles/reset.css";
+
+/**
+ * Add global mixins
+ */
+app.mixin(preserveListeners);
 
 /**
  * Load all relevant Vue plugins
