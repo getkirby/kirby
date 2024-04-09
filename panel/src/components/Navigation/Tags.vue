@@ -140,7 +140,8 @@ export default {
 				// convert all values to tag objects and filter invalid tags
 				this.tags = tags.map(this.tag).filter((tag) => tag);
 			},
-			immediate: true
+			immediate: true,
+			deep: true
 		}
 	},
 	methods: {
