@@ -169,8 +169,16 @@ export default class Editor extends Emitter {
 		return this.extensions.marks;
 	}
 
+	createMarkViews() {
+		return this.extensions.markViews;
+	}
+
 	createNodes() {
 		return this.extensions.nodes;
+	}
+
+	createNodeViews() {
+		return this.extensions.nodeViews;
 	}
 
 	createPasteRules() {
@@ -236,6 +244,8 @@ export default class Editor extends Emitter {
 			handleDrop: (...args) => {
 				this.emit("drop", ...args);
 			},
+			markViews: this.createMarkViews(),
+			nodeViews: this.createNodeViews(),
 			state: this.createState()
 		});
 	}

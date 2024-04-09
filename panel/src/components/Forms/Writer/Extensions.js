@@ -174,6 +174,19 @@ export default class Extensions {
 			);
 	}
 
+	get markViews() {
+		return this.extensions
+			.filter((extension) => ["mark"].includes(extension.type))
+			.filter((extension) => extension["view"])
+			.reduce(
+				(views, { name, view }) => ({
+					...views,
+					[name]: view
+				}),
+				{}
+			);
+	}
+
 	get nodes() {
 		return this.extensions
 			.filter((extension) => extension.type === "node")
@@ -181,6 +194,19 @@ export default class Extensions {
 				(nodes, { name, schema }) => ({
 					...nodes,
 					[name]: schema
+				}),
+				{}
+			);
+	}
+
+	get nodeViews() {
+		return this.extensions
+			.filter((extension) => ["node"].includes(extension.type))
+			.filter((extension) => extension["view"])
+			.reduce(
+				(views, { name, view }) => ({
+					...views,
+					[name]: view
 				}),
 				{}
 			);
