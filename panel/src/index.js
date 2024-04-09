@@ -73,6 +73,15 @@ app.use(I18n);
 app.use(ErrorHandling);
 app.use(Legacy);
 
+/**
+ * Restore some Vue 2 functionality
+ */
+app.mixin({
+	mounted() {
+		this.$el.__vue__ = this;
+	}
+});
+
 // container queries CSS polyfill
 // TODO: remove when global support for container queries is reached
 if (CSS.supports("container", "foo / inline-size") === false) {
