@@ -168,7 +168,7 @@ class Dom
 	public static function isAllowedAttr(
 		DOMAttr $attr,
 		array $options
-	): bool|string {
+	): true|string {
 		$options = static::normalizeSanitizeOptions($options);
 
 		$allowedTags = $options['allowedTags'];
@@ -218,7 +218,7 @@ class Dom
 	public static function isAllowedGlobalAttr(
 		DOMAttr $attr,
 		array $options
-	): bool|string {
+	): true|string {
 		$options = static::normalizeSanitizeOptions($options);
 
 		$allowedAttrs = $options['allowedAttrs'];
@@ -258,7 +258,7 @@ class Dom
 	public static function isAllowedUrl(
 		string $url,
 		array $options
-	): bool|string {
+	): true|string {
 		$options = static::normalizeSanitizeOptions($options);
 
 		$url = Str::lower($url);
