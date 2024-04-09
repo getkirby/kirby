@@ -18,6 +18,20 @@ import preserveListeners from "./mixins/preserveListeners.js";
 const app = createApp(App);
 
 /**
+ * Load all relevant Vue plugins
+ * that do not depend on the Panel instance
+ */
+app.use(Helpers);
+app.use(Libraries);
+app.use(Store);
+app.use(Components);
+
+/**
+ * Add global mixins
+ */
+app.mixin(preserveListeners);
+
+/**
  * Create the Panel instance
  */
 window.panel = Panel.create(app, window.panel.plugins);
@@ -28,20 +42,6 @@ window.panel = Panel.create(app, window.panel.plugins);
  */
 import "./styles/config.css";
 import "./styles/reset.css";
-
-/**
- * Add global mixins
- */
-app.mixin(preserveListeners);
-
-/**
- * Load all relevant Vue plugins
- * that do not depend on the Panel instance
- */
-app.use(Helpers);
-app.use(Libraries);
-app.use(Store);
-app.use(Components);
 
 /**
  * Load CSS utilities after components

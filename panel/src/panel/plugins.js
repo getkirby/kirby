@@ -35,7 +35,7 @@ export const installComponent = (app, name, options) => {
 	options = installComponentMixins(options);
 
 	// check if the component is replacing a core component
-	if (isComponent(name) === true) {
+	if (isComponent(name, app) === true) {
 		window.console.warn(`Plugin is replacing "${name}"`);
 	}
 
@@ -87,7 +87,7 @@ export const installComponentExtension = (app, name, options) => {
 	}
 
 	// only extend if referenced component exists
-	if (isComponent(options.extends) === false) {
+	if (isComponent(options.extends, app) === false) {
 		window.console.warn(
 			`Problem with plugin trying to register component "${name}": cannot extend non-existent component "${options.extends}"`
 		);
@@ -98,13 +98,7 @@ export const installComponentExtension = (app, name, options) => {
 		return options;
 	}
 
-	options.extends = app.options.components[options.extends].extend({
-		options,
-		components: {
-			...app.options.components,
-			...(options.components ?? {})
-		}
-	});
+	options.extends = app.component(options.extends);
 
 	return options;
 };
