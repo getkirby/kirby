@@ -1,5 +1,10 @@
 <template>
-	<td :data-align="column.align" :data-mobile="mobile" class="k-table-cell">
+	<td
+		:data-align="column.align"
+		:data-column-id="id"
+		:data-mobile="mobile"
+		class="k-table-cell"
+	>
 		<!-- Table cell type component -->
 		<component
 			:is="component"
@@ -25,6 +30,7 @@ export default {
 		 * Optional corresponding field options
 		 */
 		field: Object,
+		id: String,
 		/**
 		 * Keep cell on mobile
 		 */
