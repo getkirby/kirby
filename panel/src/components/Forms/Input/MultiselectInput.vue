@@ -19,7 +19,7 @@
 					:disabled="disabled"
 					class="k-multiselect-input-toggle k-tags-navigatable"
 					size="xs"
-					icon="triangle-down"
+					icon="angle-down"
 					@keydown.native.delete="$refs.tags.focus('prev')"
 					@focus.native="open"
 				/>
