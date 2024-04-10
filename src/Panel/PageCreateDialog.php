@@ -2,11 +2,13 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Cms\File;
 use Kirby\Cms\Find;
 use Kirby\Cms\Page;
 use Kirby\Cms\PageBlueprint;
 use Kirby\Cms\PageRules;
 use Kirby\Cms\Site;
+use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
 use Kirby\Toolkit\A;
@@ -32,7 +34,7 @@ class PageCreateDialog
 	protected string|null $slug;
 	protected string|null $template;
 	protected string|null $title;
-	protected Page|Site $view;
+	protected Page|Site|User|File $view;
 	protected string|null $viewId;
 
 	public static array $fieldTypes = [
@@ -369,9 +371,9 @@ class PageCreateDialog
 		$value = [
 			'parent'   => $this->parentId,
 			'section'  => $this->sectionId,
-			'slug'     => '',
+			'slug'     => $this->slug ?? '',
 			'template' => $this->template,
-			'title'    => '',
+			'title'    => $this->title ?? '',
 			'view'     => $this->viewId,
 		];
 

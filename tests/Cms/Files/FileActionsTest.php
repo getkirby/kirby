@@ -973,13 +973,16 @@ class FileActionsTest extends TestCase
 			'site' => [
 				'files' => [
 					[
-						'filename' => 'site-1.csv'
+						'filename' => 'site-1.csv',
+						'content'  => ['sort' => 1]
 					],
 					[
-						'filename' => 'site-2.csv'
+						'filename' => 'site-2.csv',
+						'content'  => ['sort' => 2]
 					],
 					[
-						'filename' => 'site-3.csv'
+						'filename' => 'site-3.csv',
+						'content'  => ['sort' => 3]
 					]
 				],
 			],
@@ -987,21 +990,23 @@ class FileActionsTest extends TestCase
 				'file.changeSort:before' => function (File $file, $position) use ($phpunit, &$calls) {
 					$phpunit->assertIsFile($file);
 					$phpunit->assertSame(3, $position);
-					$phpunit->assertNull($file->sort()->value());
+					$phpunit->assertSame(1, $file->sort()->value());
 					$calls++;
 				},
 				'file.changeSort:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
 					$phpunit->assertIsFile($newFile);
 					$phpunit->assertIsFile($oldFile);
 					$phpunit->assertSame(3, $newFile->sort()->value());
-					$phpunit->assertNull($oldFile->sort()->value());
+					$phpunit->assertSame(1, $oldFile->sort()->value());
 					$calls++;
 				},
 			]
 		]);
 
-		$app->site()->file()->changeSort(3);
+		$app->site()->file()->changeSort(1);
+		$this->assertSame(0, $calls);
 
+		$app->site()->file()->changeSort(3);
 		$this->assertSame(2, $calls);
 	}
 

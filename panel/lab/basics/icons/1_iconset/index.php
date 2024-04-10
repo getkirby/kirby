@@ -13,5 +13,6 @@ foreach ($svg->defs->children() as $symbol) {
 }
 
 return [
-	'icons' => $icons
+	'icons'  => $icons,
+	'source' => 'panel/public/img/icons.svg'
 ];

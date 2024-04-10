@@ -74,7 +74,7 @@ export default {
 			return [...segments, ...this.crumbs];
 		}
 	},
-	created() {
+	mounted() {
 		if (this.view) {
 			window.panel.deprecated(
 				"<k-breadcrumb>: `view` prop will be removed in a future version. Use `crumbs` instead."

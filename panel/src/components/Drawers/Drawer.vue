@@ -78,6 +78,7 @@ export default {
 
 .k-drawer {
 	--header-sticky-offset: calc(var(--drawer-body-padding) * -1);
+
 	z-index: var(--z-toolbar);
 	display: flex;
 	flex-basis: var(--drawer-width);

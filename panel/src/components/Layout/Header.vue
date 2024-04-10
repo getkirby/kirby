@@ -73,7 +73,7 @@ export default {
 		tabs: Array
 	},
 	emits: ["edit"],
-	created() {
+	mounted() {
 		if (this.tabs) {
 			window.panel.deprecated(
 				"<k-header>: `tabs` prop isn't supported anymore and has no effect. Use `<k-tabs>` as standalone component instead."
@@ -93,7 +93,7 @@ export default {
 :root {
 	--header-color-back: var(--color-light);
 	--header-padding-block: var(--spacing-4);
-	--header-sticky-offset: calc(var(--scroll-top) + 4rem);
+	--header-sticky-offset: var(--scroll-top);
 }
 
 .k-header {
@@ -164,5 +164,8 @@ export default {
 	position: sticky;
 	top: var(--scroll-top);
 	z-index: var(--z-toolbar);
+}
+:root:has(.k-header[data-has-buttons="true"]) {
+	--header-sticky-offset: calc(var(--scroll-top) + 4rem);
 }
 </style>

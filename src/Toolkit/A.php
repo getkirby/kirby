@@ -255,7 +255,7 @@ class A
 	 * // result: ['cat' => 'miao', 'dog' => 'wuff'];
 	 * </code>
 	 *
-	 * @param array $array The source array
+	 * @param mixed $array The source array
 	 * @param string|int|array|null $key The key to look for
 	 * @param mixed $default Optional default value, which
 	 *                       should be returned if no element
@@ -588,7 +588,7 @@ class A
 	 */
 	public static function prepend(array $array, array $prepend): array
 	{
-		return $prepend + $array;
+		return static::merge($prepend, $array, A::MERGE_APPEND);
 	}
 
 	/**

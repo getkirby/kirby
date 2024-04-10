@@ -57,6 +57,24 @@ describe.concurrent("panel.drawer.history", () => {
 		expect(history.has("b")).toStrictEqual(false);
 	});
 
+	it("should clear items", async () => {
+		const history = History();
+
+		history.add({
+			id: "a"
+		});
+
+		history.add({
+			id: "b"
+		});
+
+		expect(history.get()).toStrictEqual([{ id: "a" }, { id: "b" }]);
+
+		history.clear();
+
+		expect(history.get()).toStrictEqual([]);
+	});
+
 	it("should go to milestone", async () => {
 		const history = History();
 

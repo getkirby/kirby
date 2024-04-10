@@ -219,7 +219,7 @@ class KirbyTag
 	 */
 	public function parent(): ModelWithContent|null
 	{
-		return $this->data['parent'];
+		return $this->data['parent'] ?? null;
 	}
 
 	public function render(): string

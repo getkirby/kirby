@@ -13,7 +13,7 @@ export default {
 	props: {
 		id: String
 	},
-	created() {
+	mounted() {
 		window.panel.deprecated(
 			"<k-plugin-view> will be removed in a future version."
 		);

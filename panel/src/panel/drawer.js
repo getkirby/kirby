@@ -30,10 +30,16 @@ export default (panel) => {
 		/**
 		 * Closes the drawer and goes back to the
 		 * parent one if it has been stored
+		 * @param {String|true} id Which drawer to close, true for all
 		 */
 		async close(id) {
 			if (this.isOpen === false) {
 				return;
+			}
+
+			// Force close all drawers
+			if (id === true) {
+				this.history.clear();
 			}
 
 			// Compare the drawer id to avoid closing

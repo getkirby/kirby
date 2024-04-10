@@ -47,7 +47,7 @@ return [
 					'template' => $this->template
 				]);
 
-				return $file->blueprint()->acceptMime();
+				return $file->blueprint()->acceptAttribute();
 			}
 
 			return null;
@@ -205,13 +205,31 @@ return [
 			];
 		}
 	],
+	// @codeCoverageIgnoreStart
+	'api' => function () {
+		return [
+			[
+				'pattern' => 'sort',
+				'method'  => 'PATCH',
+				'action'  => function () {
+					$this->section()->model()->files()->changeSort(
+						$this->requestBody('files'),
+						$this->requestBody('index')
+					);
+
+					return true;
+				}
+			]
+		];
+	},
+	// @codeCoverageIgnoreEnd
 	'toArray' => function () {
 		return [
 			'data'    => $this->data,
 			'errors'  => $this->errors,
 			'options' => [
 				'accept'   => $this->accept,
-				'apiUrl'   => $this->parent->apiUrl(true),
+				'apiUrl'   => $this->parent->apiUrl(true) . '/sections/' . $this->name,
 				'columns'  => $this->columnsWithTypes(),
 				'empty'    => $this->empty,
 				'headline' => $this->headline,

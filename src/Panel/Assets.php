@@ -121,35 +121,72 @@ class Assets
 	 * Returns array of favicon icons
 	 * based on config option
 	 *
+	 * @todo Deprecate `url` option in v5, use `href` option instead
+	 * @todo Deprecate `rel` usage as array key in v5, use `rel` option instead
+	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public function favicons(): array
 	{
 		$icons = $this->kirby->option('panel.favicon', [
-			'apple-touch-icon' => [
-				'type' => 'image/png',
-				'url'  => $this->url . '/apple-touch-icon.png',
+			[
+				'rel'   => 'apple-touch-icon',
+				'type'  => 'image/png',
+				'href'  => $this->url . '/apple-touch-icon.png'
 			],
-			'alternate icon' => [
-				'type' => 'image/png',
-				'url'  => $this->url . '/favicon.png',
+			[
+				'rel'   => 'alternate icon',
+				'type'  => 'image/png',
+				'href'  => $this->url . '/favicon.png'
 			],
-			'shortcut icon' => [
-				'type' => 'image/svg+xml',
-				'url'  => $this->url . '/favicon.svg',
+			[
+				'rel'   => 'shortcut icon',
+				'type'  => 'image/svg+xml',
+				'href'  => $this->url . '/favicon.svg'
+			],
+			[
+				'rel'   => 'apple-touch-icon',
+				'type'  => 'image/png',
+				'href'  => $this->url . '/apple-touch-icon-dark.png',
+				'media' => '(prefers-color-scheme: dark)'
+			],
+			[
+				'rel'   => 'alternate icon',
+				'type'  => 'image/png',
+				'href'  => $this->url . '/favicon-dark.png',
+				'media' => '(prefers-color-scheme: dark)'
 			]
 		]);
 
 		if (is_array($icons) === true) {
-			return $icons;
+			// normalize options
+			foreach ($icons as $rel => &$icon) {
+				// TODO: remove this backward compatibility check in v6
+				if (isset($icon['url']) === true) {
+					$icon['href'] = $icon['url'];
+					unset($icon['url']);
+				}
+
+				// TODO: remove this backward compatibility check in v6
+				if (is_string($rel) === true && isset($icon['rel']) === false) {
+					$icon['rel'] = $rel;
+				}
+
+				$icon['href']  = Url::to($icon['href']);
+				$icon['nonce'] = $this->nonce;
+			}
+
+			return array_values($icons);
 		}
 
 		// make sure to convert favicon string to array
 		if (is_string($icons) === true) {
 			return [
-				'shortcut icon' => [
-					'type' => F::mime($icons),
-					'url'  => $icons,
+				[
+					'rel'   => 'shortcut icon',
+					'type'  => F::mime($icons),
+					'href'  => Url::to($icons),
+					'nonce' => $this->nonce
 				]
 			];
 		}

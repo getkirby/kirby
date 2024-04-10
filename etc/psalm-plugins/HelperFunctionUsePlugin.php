@@ -27,7 +27,8 @@ class HelperFunctionUsePlugin implements \Psalm\Plugin\EventHandler\AfterFunctio
 			$event->getFunctionId()
 		);
 
-		// if the function is a Kirby helper, consider this function call an issue
+		// if the function is a Kirby helper,
+		// consider this function call an issue
 		if ($storage->location->file_path === dirname(__FILE__, 3) . '/config/helpers.php') {
 			IssueBuffer::accepts(
 				new HelperFunctionUse(

@@ -801,7 +801,7 @@ class PagesSectionTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('2012-12-12', $section->data()[0]['dateCell']);
+		$this->assertSame('2012-12-12', $section->data()[0]['date']);
 	}
 
 	public function testOptions()

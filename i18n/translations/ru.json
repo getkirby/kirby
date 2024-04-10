@@ -71,7 +71,7 @@
 
 	"error": "Ошибка",
 	"error.access.code": "Неверный код",
-	"error.access.login": "Неправильный логин",
+	"error.access.login": "Неверный логин или пароль",
 	"error.access.panel": "У вас нет права доступа к панели",
 	"error.access.view": "У вас нет прав доступа к этой части панели",
 
@@ -317,9 +317,16 @@
 	"field.blocks.quote.citation.placeholder": "Автор …",
 	"field.blocks.text.name": "Текст",
 	"field.blocks.text.placeholder": "Текст …",
+	"field.blocks.video.autoplay": "Автовоспроизведение",
 	"field.blocks.video.caption": "Подпись",
+	"field.blocks.video.controls": "Элементы управления",
+	"field.blocks.video.location": "Расположение",
+	"field.blocks.video.loop": "Зациклить",
+	"field.blocks.video.muted": "Без звука",
 	"field.blocks.video.name": "Видео",
 	"field.blocks.video.placeholder": "Введите ссылку на видео",
+	"field.blocks.video.poster": "Обложка",
+	"field.blocks.video.preload": "Предзагрузка",
 	"field.blocks.video.url.label": "Ссылка на видео",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
@@ -447,7 +454,7 @@
 
 	"lock.unsaved": "Несохраненные изменения",
 	"lock.unsaved.empty": "Несохраненных изменений нет",
-	"lock.isLocked": "Несохраненные изменения <strong>{email}</strong>",
+	"lock.isLocked": "Несохраненные изменения {email}",
 	"lock.unlock": "Разблокировать",
 	"lock.unlock.submit": "Разблокируйте и перезапишите несохраненные изменения <strong>{email}</strong>",
 	"lock.isUnlocked": "Были перезаписаны другим пользователем",

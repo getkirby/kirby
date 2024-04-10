@@ -2,11 +2,77 @@ name: field.blocks.video.name
 icon: video
 preview: video
 fields:
+  location:
+    label: field.blocks.video.location
+    type: radio
+    columns: 2
+    default: "web"
+    options:
+      kirby: "{{ t('field.blocks.image.location.internal') }}"
+      web: "{{ t('field.blocks.image.location.external') }}"
   url:
     label: field.blocks.video.url.label
     type: url
     placeholder: field.blocks.video.url.placeholder
+    when:
+      location: web
+  video:
+    label: field.blocks.video.name
+    type: files
+    query: model.videos
+    multiple: false
+    # you might want to add a template for videos here
+    when:
+      location: kirby
+  poster:
+    label: field.blocks.video.poster
+    type: files
+    query: model.images
+    multiple: false
+    image:
+      back: black
+    uploads:
+      template: blocks/image
+    when:
+      location: kirby
   caption:
     label: field.blocks.video.caption
     type: writer
     inline: true
+  autoplay:
+    label: field.blocks.video.autoplay
+    type: toggle
+    width: 1/3
+    when:
+      location: kirby
+  muted:
+    label: field.blocks.video.muted
+    type: toggle
+    width: 1/3
+    default: true
+    when:
+      location: kirby
+  loop:
+    label: field.blocks.video.loop
+    type: toggle
+    width: 1/3
+    when:
+      location: kirby
+  controls:
+    label: field.blocks.video.controls
+    type: toggle
+    width: 1/3
+    default: true
+    when:
+      location: kirby
+  preload:
+    label: field.blocks.video.preload
+    type: select
+    width: 2/3
+    default: auto
+    options:
+      - auto
+      - metadata
+      - none
+    when:
+      location: kirby

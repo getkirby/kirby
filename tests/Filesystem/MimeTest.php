@@ -130,6 +130,23 @@ class MimeTest extends TestCase
 
 		$extensions = Mime::toExtensions('text/css');
 		$this->assertSame(['css'], $extensions);
+
+		// test matchWildcards: false (default value)
+		$extensions = Mime::toExtensions('image/*');
+		$this->assertSame(0, count($extensions));
+
+		// test matchWildcards: true
+		$extensions = Mime::toExtensions('image/*', true);
+		// use we only check for a positive and negative subset instead of a complete list,
+		// this should make sure the test doesn't break when a new image type is added
+		$shouldContain = ['jpg', 'jpeg', 'gif', 'png'];
+		$shouldNotContain = ['js', 'pdf', 'zip', 'docx'];
+		foreach ($shouldContain as $ext) {
+			$this->assertContains($ext, $extensions);
+		}
+		foreach ($shouldNotContain as $ext) {
+			$this->assertNotContains($ext, $extensions);
+		}
 	}
 
 	/**

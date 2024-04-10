@@ -5,24 +5,27 @@
 	>
 		<k-header>
 			{{ title }}
-			<k-button-group v-if="docs || github" slot="buttons">
-				<k-button
-					v-if="docs"
-					:text="docs"
-					icon="book"
-					size="sm"
-					variant="filled"
-					@click="openDocs"
-				/>
-				<k-button
-					v-if="github"
-					icon="github"
-					size="sm"
-					variant="filled"
-					:link="github"
-					target="_blank"
-				/>
-			</k-button-group>
+
+			<template #buttons>
+				<k-button-group v-if="docs || github">
+					<k-button
+						v-if="docs"
+						:text="docs"
+						icon="book"
+						size="sm"
+						variant="filled"
+						@click="openDocs"
+					/>
+					<k-button
+						v-if="github"
+						:link="github"
+						icon="github"
+						size="sm"
+						target="_blank"
+						variant="filled"
+					/>
+				</k-button-group>
+			</template>
 		</k-header>
 		<k-tabs :tab="tab" :tabs="tabs" />
 
@@ -126,7 +129,28 @@ export default {
 	margin-bottom: 0;
 }
 
+.k-lab-examples h2 {
+	margin-bottom: var(--spacing-6);
+}
+.k-lab-examples * + h2 {
+	margin-top: var(--spacing-12);
+}
+
+.k-lab-input-examples .k-lab-example:has(:invalid) {
+	outline: 2px solid var(--color-red-500);
+	outline-offset: -2px;
+}
+
 .k-lab-input-examples-focus .k-lab-example-canvas > .k-button {
 	margin-top: var(--spacing-6);
+}
+
+.k-lab-helpers-examples .k-lab-example .k-text {
+	margin-bottom: var(--spacing-6);
+}
+
+.k-lab-helpers-examples h2 {
+	margin-bottom: var(--spacing-3);
+	font-weight: var(--font-bold);
 }
 </style>

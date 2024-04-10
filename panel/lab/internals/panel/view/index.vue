@@ -161,7 +161,7 @@
 					Reloads and updates the props for the current view. This will only
 					rerender the parts that have changed according to the props. The view
 					component will not necessarily be rerenderd. That's the main
-					difference to <code>window.panbel.view.reload()</code>
+					difference to <code>window.panel.view.reload()</code>
 				</p>
 			</k-text>
 		</k-lab-example>
@@ -171,7 +171,7 @@
 				<p>
 					Reloads and rerenders the current view. If you want to refresh the
 					props of the view without forcing an entire rerender process, use
-					<code>window.panbel.view.refresh()</code> instead.
+					<code>window.panel.view.refresh()</code> instead.
 				</p>
 			</k-text>
 		</k-lab-example>
@@ -185,12 +185,3 @@
 		</k-lab-example>
 	</k-lab-examples>
 </template>
-
-<style>
-.k-lab-examples h2 {
-	margin-bottom: var(--spacing-6);
-}
-.k-lab-examples * + h2 {
-	margin-top: var(--spacing-12);
-}
-</style>

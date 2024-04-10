@@ -1,7 +1,6 @@
 <template>
 	<input
 		:id="id"
-		ref="input"
 		v-direction
 		:autofocus="autofocus"
 		:class="`k-text-input k-${type}-input`"
@@ -25,18 +24,8 @@
 <script>
 import Input, { props as InputProps } from "@/mixins/input.js";
 
-export const props = {
-	mixins: [InputProps],
+export const IsoDateProps = {
 	props: {
-		/**
-		 * Format to parse and display the date
-		 * @values YYYY, YY, MM, M, DD, D
-		 * @example "MM/DD/YY"
-		 */
-		display: {
-			type: String,
-			default: "DD.MM.YYYY"
-		},
 		/**
 		 * The last allowed date as ISO date string
 		 * @example "2025-12-31"
@@ -47,6 +36,27 @@ export const props = {
 		 * @example "2020-01-01"
 		 */
 		min: String,
+		/**
+		 * Value must be provided as ISO date string
+		 * @example "2012-12-12"
+		 */
+		value: String
+	}
+};
+
+export const props = {
+	mixins: [InputProps, IsoDateProps],
+	props: {
+		/**
+		 * Format to parse and display the date
+		 * @values YYYY, YY, MM, M, DD, D
+		 * @example "MM/DD/YY"
+		 */
+		display: {
+			type: String,
+			default: "DD.MM.YYYY"
+		},
+
 		/**
 		 * Rounding to the nearest step.
 		 * @value { unit: "second"|"minute"|"hour"|"date"|"month"|"year", size: number }
@@ -64,12 +74,7 @@ export const props = {
 		type: {
 			type: String,
 			default: "date"
-		},
-		/**
-		 * Value must be provided as ISO date string
-		 * @example "2012-12-12"
-		 */
-		value: String
+		}
 	}
 };
 
@@ -83,6 +88,8 @@ export const props = {
  * input parts via tab key).
  *
  * @example <k-input :value="date" @input="date = $event" type="date" name="date" />
+ *
+ * @todo remove vuelidate parts in v5 - until then we keep parrallel validation
  */
 export default {
 	mixins: [Input, props],
@@ -130,7 +137,7 @@ export default {
 			immediate: true
 		}
 	},
-	created() {
+	mounted() {
 		// make sure to commit input value when Cmd+S is hit
 		this.$events.on("keydown.cmd.s", this.onBlur);
 	},
@@ -198,6 +205,7 @@ export default {
 		commit(dt) {
 			this.dt = dt;
 			this.formatted = this.pattern.format(dt);
+			this.validate();
 			this.$emit("invalid", this.$v.$invalid, this.$v);
 		},
 		/**
@@ -281,7 +289,7 @@ export default {
 		 */
 		async onTab(event) {
 			// step out of the field if it is empty
-			if (this.$refs.input.value == "") {
+			if (this.$el.value == "") {
 				return;
 			}
 
@@ -292,9 +300,9 @@ export default {
 
 			// if an exact part is selected
 			if (
-				this.$refs.input &&
-				selection.start === this.$refs.input.selectionStart &&
-				selection.end === this.$refs.input.selectionEnd - 1
+				this.$el &&
+				selection.start === this.$el.selectionStart &&
+				selection.end === this.$el.selectionEnd - 1
 			) {
 				// move backward on shift + tab
 				if (event.shiftKey) {
@@ -319,8 +327,8 @@ export default {
 			} else {
 				// nothing or no part fully selected
 				if (
-					this.$refs.input &&
-					this.$refs.input.selectionStart == selection.end + 1 &&
+					this.$el &&
+					this.$el.selectionStart == selection.end + 1 &&
 					selection.index == this.pattern.parts.length - 1
 				) {
 					// cursor at the end of the pattern, jump out
@@ -328,13 +336,10 @@ export default {
 				}
 
 				// more than one part selected, select last affected part
-				else if (
-					this.$refs.input &&
-					this.$refs.input.selectionEnd - 1 > selection.end
-				) {
+				else if (this.$el && this.$el.selectionEnd - 1 > selection.end) {
 					const last = this.pattern.at(
-						this.$refs.input.selectionEnd,
-						this.$refs.input.selectionEnd
+						this.$el.selectionEnd,
+						this.$el.selectionEnd
 					);
 
 					this.select(this.pattern.parts[last.index]);
@@ -355,9 +360,13 @@ export default {
 		 * @return {Object|null}
 		 */
 		parse() {
-			let value = this.$refs.input.value;
-			// interpret and round to nearest step
-			value = this.$library.dayjs.interpret(value, this.inputType);
+			// interpret the input value
+			const value = this.$library.dayjs.interpret(
+				this.$el.value,
+				this.inputType
+			);
+
+			// and round to nearest step
 			return this.round(value);
 		},
 		/**
@@ -376,11 +385,8 @@ export default {
 		 * @public
 		 */
 		select(part) {
-			if (!part) {
-				part = this.selection();
-			}
-
-			this.$refs.input?.setSelectionRange(part.start, part.end + 1);
+			part ??= this.selection();
+			this.$el?.setSelectionRange(part.start, part.end + 1);
 		},
 		/**
 		 * Selects the first pattern if available
@@ -417,10 +423,7 @@ export default {
 		 * @returns {Object}
 		 */
 		selection() {
-			return this.pattern.at(
-				this.$refs.input.selectionStart,
-				this.$refs.input.selectionEnd
-			);
+			return this.pattern.at(this.$el.selectionStart, this.$el.selectionEnd);
 		},
 		/**
 		 * Converts ISO string to dayjs object
@@ -437,6 +440,37 @@ export default {
 		 */
 		toISO(dt) {
 			return dt?.toISO(this.inputType);
+		},
+		validate() {
+			const errors = [];
+
+			if (this.required && !this.dt) {
+				errors.push(this.$t("error.validation.required"));
+			}
+
+			if (
+				this.min &&
+				this.dt?.validate(this.min, "min", this.rounding.unit) === false
+			) {
+				errors.push(
+					this.$t("error.validation.date.after", {
+						date: this.min
+					})
+				);
+			}
+
+			if (
+				this.max &&
+				this.dt?.validate(this.max, "max", this.rounding.unit) === false
+			) {
+				errors.push(
+					this.$t("error.validation.date.before", {
+						date: this.max
+					})
+				);
+			}
+
+			this.$el?.setCustomValidity(errors.join(", "));
 		}
 	},
 	validations() {
@@ -456,3 +490,9 @@ export default {
 	}
 };
 </script>
+
+<style>
+.k-date-input:disabled::placeholder {
+	opacity: 0;
+}
+</style>

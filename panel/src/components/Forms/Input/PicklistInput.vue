@@ -328,6 +328,9 @@ export default {
 	visibility: hidden;
 }
 
+.k-picklist-input-options.k-grid {
+	--columns: 1;
+}
 .k-picklist-input-options li + li {
 	margin-top: var(--spacing-1);
 }

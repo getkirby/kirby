@@ -305,7 +305,23 @@ class Database
 		// try to prepare and execute the sql
 		try {
 			$this->statement = $this->connection->prepare($query);
-			$this->statement->execute($bindings);
+			// bind parameters to statement
+			foreach ($bindings as $parameter => $value) {
+				// positional parameters start at 1
+				if (is_int($parameter)) {
+					$parameter++;
+				}
+
+				$type = match (gettype($value)) {
+					'integer' => PDO::PARAM_INT,
+					'boolean' => PDO::PARAM_BOOL,
+					'NULL'    => PDO::PARAM_NULL,
+					default   => PDO::PARAM_STR
+				};
+
+				$this->statement->bindValue($parameter, $value, $type);
+			}
+			$this->statement->execute();
 
 			$this->affected  = $this->statement->rowCount();
 			$this->lastId    = Str::startsWith($query, 'insert ', true) ? $this->connection->lastInsertId() : null;

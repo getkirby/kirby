@@ -49,7 +49,7 @@ export default {
 			};
 		}
 	},
-	created() {
+	mounted() {
 		if (this.theme) {
 			window.panel.deprecated(
 				'<k-text>: the `theme` prop will be removed in a future version. For help text, add `.k-help "` CSS class instead.'

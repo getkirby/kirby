@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\ModelWithContent;
+use Kirby\Form\Form;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -77,9 +78,12 @@ return [
 				// keep the original column name as id
 				$column['id'] = $columnName;
 
-				// add the custom column to the array with a key that won't
-				// override the system columns
-				$columns[$columnName . 'Cell'] = $column;
+				// add the custom column to the array
+				// allowing to extend/overwrite existing columns
+				$columns[$columnName] = [
+					...$columns[$columnName] ?? [],
+					...$column
+				];
 			}
 
 			if ($this->type === 'pages') {
@@ -129,19 +133,20 @@ return [
 				$item['info'] = $model->toString($this->info);
 			}
 
+			// Use form to get the proper values for the columns
+			$form = Form::for($model)->values();
+
 			foreach ($this->columns as $columnName => $column) {
-				// don't overwrite essential columns
-				if (isset($item[$columnName]) === true) {
-					continue;
-				}
-
-				if (empty($column['value']) === false) {
-					$value = $model->toString($column['value']);
-				} else {
-					$value = $model->content()->get($column['id'] ?? $columnName)->value();
-				}
-
-				$item[$columnName] = $value;
+				$item[$columnName] = match (empty($column['value'])) {
+					// if column value defined, resolve the query
+					false   => $model->toString($column['value']),
+					// otherwise use the form value,
+					// but don't overwrite columns
+					default =>
+						$item[$columnName] ??
+						$form[$column['id'] ?? $columnName] ??
+						null,
+				};
 			}
 
 			return $item;

@@ -57,7 +57,7 @@ export default {
 			};
 		}
 	},
-	created() {
+	mounted() {
 		this.$events.on("model.update", this.reload);
 		this.$events.on("file.sort", this.reload);
 	},
@@ -89,7 +89,7 @@ export default {
 			this.isProcessing = true;
 
 			try {
-				await this.$api.patch(this.options.apiUrl + "/files/sort", {
+				await this.$api.patch(this.options.apiUrl + "/sort", {
 					files: items.map((item) => item.id),
 					index: this.pagination.offset
 				});

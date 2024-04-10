@@ -1,6 +1,6 @@
 <template>
 	<div class="k-user-profile">
-		<k-user-avatar :model="model" :aria-disabled="isLocked" />
+		<k-user-avatar :disabled="isLocked" :model="model" />
 
 		<k-button-group
 			:buttons="[

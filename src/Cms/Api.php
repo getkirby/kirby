@@ -71,7 +71,7 @@ class Api extends BaseApi
 		$field = Form::for($model)->field($name);
 
 		$fieldApi = $this->clone([
-			'data'   => array_merge($this->data(), ['field' => $field]),
+			'data'   => [...$this->data(), 'field' => $field],
 			'routes' => $field->api(),
 		]);
 
@@ -183,6 +183,30 @@ class Api extends BaseApi
 		}
 
 		return $pages->query($this->requestBody());
+	}
+
+	/**
+	 * @throws \Kirby\Exception\NotFoundException if the section type cannot be found or the section cannot be loaded
+	 */
+	public function sectionApi(
+		ModelWithContent $model,
+		string $name,
+		string|null $path = null
+	): mixed {
+		if (!$section = $model->blueprint()?->section($name)) {
+			throw new NotFoundException('The section "' . $name . '" could not be found');
+		}
+
+		$sectionApi = $this->clone([
+			'data'   => [...$this->data(), 'section' => $section],
+			'routes' => $section->api(),
+		]);
+
+		return $sectionApi->call(
+			$path,
+			$this->requestMethod(),
+			$this->requestData()
+		);
 	}
 
 	/**
