@@ -23,7 +23,7 @@ class Silo
 	public static function set(string|array $key, $value = null): array
 	{
 		if (is_array($key) === true) {
-			return static::$data = array_merge(static::$data, $key);
+			return static::$data = [...static::$data, ...$key];
 		}
 
 		static::$data[$key] = $value;

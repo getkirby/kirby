@@ -216,9 +216,7 @@ class Api extends BaseApi
 	 */
 	public function session(array $options = []): Session
 	{
-		return $this->kirby->session(array_merge([
-			'detect' => true
-		], $options));
+		return $this->kirby->session(['detect' => true, ...$options]);
 	}
 
 	/**
@@ -234,7 +232,6 @@ class Api extends BaseApi
 	 * returns the current authenticated user if no
 	 * id is passed
 	 *
-	 * @param string|null $id User's id
 	 * @throws \Kirby\Exception\NotFoundException if the user for the given id cannot be found
 	 */
 	public function user(string|null $id = null): User|null

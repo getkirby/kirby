@@ -189,17 +189,24 @@ class App
 		$extensions = $this->extensions['api'] ?? [];
 		$routes     = (include $root . '/routes.php')($this);
 
-		$api = [
+		return $this->api = new Api([
 			'debug'          => $this->option('debug', false),
 			'authentication' => $extensions['authentication'] ?? include $root . '/authentication.php',
-			'data'           => $extensions['data']           ?? [],
-			'collections'    => array_merge($extensions['collections'] ?? [], include $root . '/collections.php'),
-			'models'         => array_merge($extensions['models']      ?? [], include $root . '/models.php'),
-			'routes'         => array_merge($routes, $extensions['routes'] ?? []),
+			'data'           => $extensions['data'] ?? [],
+			'collections'    => [
+				...$extensions['collections'] ?? [],
+				...include $root . '/collections.php'
+			],
+			'models'         => [
+				...$extensions['models'] ?? [],
+				...include $root . '/models.php'
+			],
+			'routes'         => [
+				...$routes,
+				...$extensions['routes'] ?? []
+			],
 			'kirby'          => $this,
-		];
-
-		return $this->api = new Api($api);
+		]);
 	}
 
 	/**
@@ -237,7 +244,12 @@ class App
 			foreach ($nameWildcards as $nameWildcard) {
 				// the $event object is passed by reference
 				// and will be modified down the chain
-				$this->apply($nameWildcard, $event->arguments(), $modify, $event);
+				$this->apply(
+					$nameWildcard,
+					$event->arguments(),
+					$modify,
+					$event
+				);
 			}
 		}
 
@@ -255,7 +267,7 @@ class App
 		foreach ($this->options as $key => $value) {
 			// detect option keys with the `vendor.plugin.option` format
 			if (preg_match('/^([a-z0-9-]+\.[a-z0-9-]+)\.(.*)$/i', $key, $matches) === 1) {
-				list(, $plugin, $option) = $matches;
+				[, $plugin, $option] = $matches;
 
 				// verify that it's really a plugin option
 				if (isset(static::$plugins[str_replace('.', '/', $plugin)]) !== true) {
@@ -270,7 +282,10 @@ class App
 
 				// move the option to the plugin option array
 				// don't overwrite nested arrays completely but merge them
-				$this->options[$plugin] = array_replace_recursive($this->options[$plugin], [$option => $value]);
+				$this->options[$plugin] = array_replace_recursive(
+					$this->options[$plugin],
+					[$option => $value]
+				);
 				unset($this->options[$key]);
 			}
 		}
@@ -286,7 +301,7 @@ class App
 	 */
 	protected function bakeRoots(array $roots = null): static
 	{
-		$roots = array_merge($this->core->roots(), (array)$roots);
+		$roots = [...$this->core->roots(), ...$roots ?? []];
 		$this->roots = Ingredients::bake($roots);
 		return $this;
 	}
@@ -298,7 +313,7 @@ class App
 	 */
 	protected function bakeUrls(array $urls = null): static
 	{
-		$urls = array_merge($this->core->urls(), (array)$urls);
+		$urls = [...$this->core->urls(), ...$urls ?? []];
 		$this->urls = Ingredients::bake($urls);
 		return $this;
 	}
@@ -363,13 +378,14 @@ class App
 	 */
 	public function collection(string $name, array $options = [])
 	{
-		return $this->collections()->get($name, array_merge($options, [
+		return $this->collections()->get($name, [
+			...$options,
 			'kirby' => $this,
 			'site'  => $site = $this->site(),
 			'pages' => new LazyValue(fn () => $site->children()),
 			'users' => new LazyValue(fn () => $this->users())
 
-		]));
+		]);
 	}
 
 	/**
@@ -419,11 +435,10 @@ class App
 	 */
 	public function contentToken(mixed $model, string $value): string
 	{
-		if (method_exists($model, 'root') === true) {
-			$default = $model->root();
-		} else {
-			$default = $this->root('content');
-		}
+		$default = match (method_exists($model, 'root')) {
+			true  => $model->root(),
+			false => $this->root('content')
+		};
 
 		$salt = $this->option('content.salt', $default);
 
@@ -477,7 +492,8 @@ class App
 		}
 
 		// controller from site root
-		$controller   = Controller::load($this->root('controllers') . '/' . $name . '.php');
+		$root         = $this->root('controllers') . '/' . $name . '.php';
+		$controller   = Controller::load($root);
 		// controller from extension
 		$controller ??= $this->extension('controllers', $name);
 
@@ -571,7 +587,8 @@ class App
 				$languageLocale = $language->locale(LC_ALL);
 				$acceptedLocale = $acceptedLang->locale();
 
-				return $languageLocale === $acceptedLocale ||
+				return
+					$languageLocale === $acceptedLocale ||
 					$acceptedLocale === Str::substr($languageLocale, 0, 2);
 			};
 
@@ -715,12 +732,11 @@ class App
 
 		// any direct exception will be turned into an error page
 		if ($input instanceof Throwable) {
-			if ($input instanceof Exception) {
-				$code = $input->getHttpCode();
-			} else {
-				$code = $input->getCode();
-			}
 			$message = $input->getMessage();
+			$code    = match (true) {
+				$input instanceof Exception => $input->getHttpCode(),
+				default                     => $input->getCode()
+			};
 
 			if ($code < 400 || $code > 599) {
 				$code = 500;
@@ -761,10 +777,7 @@ class App
 			// lazily (only if they are not already set);
 			// the case-insensitive nature of headers will be
 			// handled by PHP's `header()` function
-			$data['headers'] = array_merge(
-				$response->headers(),
-				$data['headers']
-			);
+			$data['headers'] = [...$response->headers(), ...$data['headers']];
 
 			return new Response($data);
 		}
@@ -923,7 +936,10 @@ class App
 		}
 
 		if ($this->languages !== null) {
-			return $clone === true ? clone $this->languages : $this->languages;
+			return match($clone) {
+				true  => clone $this->languages,
+				false => $this->languages
+			};
 		}
 
 		return $this->languages = Languages::load();
@@ -953,10 +969,10 @@ class App
 	public function markdown(string $text = null, array $options = null): string
 	{
 		// merge global options with local options
-		$options = array_merge(
-			$this->options['markdown'] ?? [],
-			(array)$options
-		);
+		$options = [
+			...$this->options['markdown'] ?? [],
+			...$options ?? []
+		];
 
 		return ($this->component('markdown'))($this, $text, $options);
 	}
@@ -1059,7 +1075,11 @@ class App
 		// merge into one clean options array;
 		// the `env.php` options always override everything else
 		$hostAddrOptions = $this->environment()->options($root);
-		$this->options = array_replace_recursive($this->options, $hostAddrOptions, $envOptions);
+		$this->options = array_replace_recursive(
+			$this->options,
+			$hostAddrOptions,
+			$envOptions
+		);
 
 		// reload the environment if the host/address config has overridden
 		// the `url` option; this ensures that the base URL is correct
@@ -1113,14 +1133,21 @@ class App
 				$this->api = null;
 			}
 
-			if (isset($options['home']) === true || isset($options['error']) === true) {
+			if (
+				isset($options['home']) === true ||
+				isset($options['error']) === true
+			) {
 				$this->site = null;
 			}
 
 			// checks custom language definition for slugs
 			if ($slugsOption = $this->option('slugs')) {
-				// slugs option must be set to string or "slugs" => ["language" => "de"] as array
-				if (is_string($slugsOption) === true || isset($slugsOption['language']) === true) {
+				// slugs option must be set to string or
+				// "slugs" => ["language" => "de"] as array
+				if (
+					is_string($slugsOption) === true ||
+					isset($slugsOption['language']) === true
+				) {
 					$this->i18n();
 				}
 			}
@@ -1141,7 +1168,7 @@ class App
 			return null;
 		}
 
-		$parent = $parent ?? $this->site();
+		$parent ??= $this->site();
 
 		if ($page = $parent->find($id)) {
 			/**
@@ -1375,7 +1402,7 @@ class App
 
 		$registry = $this->extensions('routes');
 		$system   = $this->core->routes();
-		$routes   = array_merge($system['before'], $registry, $system['after']);
+		$routes   = [...$system['before'], ...$registry, ...$system['after']];
 
 		return $this->routes = $routes;
 	}
@@ -1518,7 +1545,7 @@ class App
 			$languageSmartypants = $this->language()->smartypants() ?? [];
 
 			if (empty($languageSmartypants) === false) {
-				$options = array_merge($options, $languageSmartypants);
+				$options = [...$options, ...$languageSmartypants];
 			}
 		}
 

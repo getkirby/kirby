@@ -167,9 +167,7 @@ class Find
 		// get a specific user by id
 		return $kirby->user($id) ?? throw new NotFoundException([
 			'key'  => 'user.notFound',
-			'data' => [
-				'name' => $id
-			]
+			'data' => ['name' => $id]
 		]);
 	}
 }

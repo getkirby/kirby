@@ -785,7 +785,7 @@ class Collection extends Iterator implements Countable
 			$row = $this->getAttribute($item, $field);
 
 			if ($split !== null) {
-				$result = array_merge($result, Str::split($row, $split));
+				$result = [...$result, ...Str::split($row, $split)];
 			} else {
 				$result[] = $row;
 			}

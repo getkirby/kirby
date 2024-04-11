@@ -221,15 +221,19 @@ class Auth
 			}
 		}
 
-		$request   = $this->kirby->request();
-		$auth    ??= $request->auth();
+		$request = $this->kirby->request();
+		$auth  ??= $request->auth();
 
 		if (!$auth || $auth->type() !== 'basic') {
 			throw new InvalidArgumentException('Invalid authorization header');
 		}
 
-		// only allow basic auth when https is enabled or insecure requests permitted
-		if ($request->ssl() === false && $this->kirby->option('api.allowInsecure', false) !== true) {
+		// only allow basic auth when https is enabled or
+		// insecure requests permitted
+		if (
+			$request->ssl() === false &&
+			$this->kirby->option('api.allowInsecure', false) !== true
+		) {
 			throw new PermissionException('Basic authentication is only allowed over HTTPS');
 		}
 
@@ -269,6 +273,7 @@ class Auth
 
 		if ($passwordTimestamp = $user->passwordTimestamp()) {
 			$loginTimestamp = $session->data()->get('kirby.loginTimestamp');
+
 			if (is_int($loginTimestamp) !== true) {
 				// session that was created before Kirby
 				// 3.5.8.3, 3.6.6.3, 3.7.5.2, 3.8.4.1 or 3.9.6
@@ -444,7 +449,11 @@ class Auth
 		bool $allowImpersonation = true
 	): Status {
 		// try to return from cache
-		if ($this->status && $session === null && $allowImpersonation === true) {
+		if (
+			$this->status &&
+			$session === null &&
+			$allowImpersonation === true
+		) {
 			return $this->status;
 		}
 
@@ -453,13 +462,13 @@ class Auth
 		$props = ['kirby' => $this->kirby];
 		if ($user = $this->user($sessionObj, $allowImpersonation)) {
 			// a user is currently logged in
-			if ($allowImpersonation === true && $this->impersonate !== null) {
-				$props['status'] = 'impersonated';
-			} else {
-				$props['status'] = 'active';
-			}
+			$props['email']  = $user->email();
+			$props['status'] = match (true) {
+				$allowImpersonation === true &&
+				$this->impersonate !== null  => 'impersonated',
+				default                      => 'active'
+			};
 
-			$props['email'] = $user->email();
 		} elseif ($email = $sessionObj->get('kirby.challenge.email')) {
 			// a challenge is currently pending
 			$props['status']            = 'pending';
@@ -583,7 +592,8 @@ class Auth
 
 		// remove entries that are no longer needed
 		$originalLog = $log;
-		$time = time() - $this->kirby->option('auth.timeout', 3600);
+		$time        = time() - $this->kirby->option('auth.timeout', 3600);
+
 		foreach ($log as $category => $entries) {
 			$log[$category] = array_filter(
 				$entries,
@@ -633,8 +643,8 @@ class Auth
 	public function flush(): void
 	{
 		$this->impersonate = null;
-		$this->status = null;
-		$this->user = null;
+		$this->status      = null;
+		$this->user        = null;
 	}
 
 	/**
@@ -782,9 +792,11 @@ class Auth
 		try {
 			$session = $this->kirby->session();
 
-			// time-limiting; check this early so that we can destroy the session no
-			// matter if the user exists (avoids leaking user information to attackers)
+			// time-limiting; check this early so that we can
+			// destroy the session no matter if the user exists
+			// (avoids leaking user information to attackers)
 			$timeout = $session->get('kirby.challenge.timeout');
+
 			if ($timeout !== null && time() > $timeout) {
 				// this challenge can never be completed,
 				// so delete it immediately

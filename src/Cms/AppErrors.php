@@ -152,7 +152,10 @@ trait AppErrors
 					'code'      => $code,
 					'message'   => $exception->getMessage(),
 					'details'   => $details,
-					'file'      => F::relativepath($exception->getFile(), $this->environment()->get('DOCUMENT_ROOT', '')),
+					'file'      => F::relativepath(
+						$exception->getFile(),
+						$this->environment()->get('DOCUMENT_ROOT', '')
+					),
 					'line'      => $exception->getLine(),
 				], $httpCode);
 			} else {

@@ -42,7 +42,7 @@ class Email
 		$this->options = App::instance()->option('email', []);
 
 		// build a prop array based on preset and props
-		$preset = $this->preset($preset);
+		$preset      = $this->preset($preset);
 		$this->props = array_merge($preset, $props);
 
 		// add transport settings
@@ -104,17 +104,15 @@ class Email
 			$html = $this->getTemplate($this->props['template'], 'html');
 			$text = $this->getTemplate($this->props['template'], 'text');
 
-			if ($html->exists()) {
-				$this->props['body'] = [
-					'html' => $html->render($data)
-				];
+			if ($html->exists() === true) {
+				$this->props['body'] = ['html' => $html->render($data)];
 
-				if ($text->exists()) {
+				if ($text->exists() === true) {
 					$this->props['body']['text'] = $text->render($data);
 				}
 
 			// fallback to single email text template
-			} elseif ($text->exists()) {
+			} elseif ($text->exists() === true) {
 				$this->props['body'] = $text->render($data);
 			} else {
 				throw new NotFoundException('The email template "' . $this->props['template'] . '" cannot be found');
@@ -235,6 +233,11 @@ class Email
 	 */
 	protected function transformUserMultiple(string $prop): void
 	{
-		$this->props[$prop] = $this->transformModel($prop, User::class, 'name', 'email');
+		$this->props[$prop] = $this->transformModel(
+			$prop,
+			User::class,
+			'name',
+			'email'
+		);
 	}
 }

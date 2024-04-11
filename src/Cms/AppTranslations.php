@@ -52,7 +52,7 @@ trait AppTranslations
 			if ($this->multilang() === true) {
 				// first try to fall back to the configured default language
 				$defaultCode = $this->defaultLanguage()->code();
-				$fallback = [$defaultCode];
+				$fallback    = [$defaultCode];
 
 				// if the default language is specified with a country code
 				// (e.g. `en-us`), also try with just the language code
@@ -148,8 +148,8 @@ trait AppTranslations
 	 */
 	public function translation(string|null $locale = null): Translation
 	{
-		$locale = $locale ?? I18n::locale();
-		$locale = basename($locale);
+		$locale ??= I18n::locale();
+		$locale   = basename($locale);
 
 		// prefer loading them from the translations collection
 		if ($this->translations instanceof Translations) {
@@ -163,11 +163,15 @@ trait AppTranslations
 
 		// inject current language translations
 		if ($language = $this->language($locale)) {
-			$inject = array_merge($inject, $language->translations());
+			$inject = [...$inject, ...$language->translations()];
 		}
 
 		// load from disk instead
-		return Translation::load($locale, $this->root('i18n:translations') . '/' . $locale . '.json', $inject);
+		return Translation::load(
+			$locale,
+			$this->root('i18n:translations') . '/' . $locale . '.json',
+			$inject
+		);
 	}
 
 	/**
@@ -189,14 +193,17 @@ trait AppTranslations
 
 				// merges language translations with extensions translations
 				if (empty($languageTranslations) === false) {
-					$translations[$languageCode] = array_merge(
-						$translations[$languageCode] ?? [],
-						$languageTranslations
-					);
+					$translations[$languageCode] = [
+						...$translations[$languageCode] ?? [],
+						...$languageTranslations
+					];
 				}
 			}
 		}
 
-		return $this->translations = Translations::load($this->root('i18n:translations'), $translations);
+		return $this->translations = Translations::load(
+			$this->root('i18n:translations'),
+			$translations
+		);
 	}
 }

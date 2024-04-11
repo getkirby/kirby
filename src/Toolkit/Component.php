@@ -269,7 +269,7 @@ class Component
 			return $closure->call($this);
 		}
 
-		$array = array_merge($this->attrs, $this->props, $this->computed);
+		$array = [...$this->attrs, ...$this->props, ...$this->computed];
 
 		ksort($array);
 

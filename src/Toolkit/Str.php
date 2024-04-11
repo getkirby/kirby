@@ -679,7 +679,7 @@ class Str
 			$pool = [];
 
 			foreach ($type as $t) {
-				$pool = array_merge($pool, static::pool($t));
+				$pool = [...$pool, ...static::pool($t)];
 			}
 		} else {
 			$pool = match (strtolower($type)) {
@@ -688,8 +688,8 @@ class Str
 				'alpha'      => static::pool(['alphaLower', 'alphaUpper']),
 				'num'        => range(0, 9),
 				'alphanum'   => static::pool(['alpha', 'num']),
-				'base32'     => array_merge(static::pool('alphaUpper'), range(2, 7)),
-				'base32hex'  => array_merge(range(0, 9), range('A', 'V')),
+				'base32'     => [...static::pool('alphaUpper'), ...range(2, 7)],
+				'base32hex'  => [...range(0, 9), ...range('A', 'V')],
 				default      => []
 			};
 		}
