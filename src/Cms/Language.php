@@ -29,6 +29,9 @@ use Throwable;
  */
 class Language
 {
+	/**
+	 * @use HasSiblings<\Kirby\Cms\Languages>
+	 */
 	use HasSiblings;
 
 	/**
@@ -436,8 +439,9 @@ class Language
 
 	/**
 	 * Private siblings collector
+	 * @internal
 	 */
-	protected function siblingsCollection(): Collection
+	protected function siblingsCollection(): Languages
 	{
 		return App::instance()->languages();
 	}

@@ -23,6 +23,9 @@ use Kirby\Toolkit\Str;
  */
 class Item
 {
+	/**
+	 * @use HasSiblings<self::ITEMS_CLASS>
+	 */
 	use HasSiblings;
 
 	public const ITEMS_CLASS = Items::class;

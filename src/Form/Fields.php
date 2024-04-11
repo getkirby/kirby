@@ -14,7 +14,7 @@ use Kirby\Toolkit\Collection;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * @extends \Kirby\Toolkit\Collection<\Kirby\Form\Field>
+ * @extends \Kirby\Toolkit\Collection<\Kirby\Form\Field|\Kirby\Form\FieldClass>
  */
 class Fields extends Collection
 {
