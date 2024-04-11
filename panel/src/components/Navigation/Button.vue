@@ -318,11 +318,9 @@ export default {
 .k-button:where([data-variant="filled"]):not([aria-disabled]):hover {
 	filter: brightness(97%);
 }
-.k-button:where([data-theme$="-icon"][data-variant="filled"]) {
-	--button-color-icon: var(--theme-color-600);
-}
-.k-button:where([data-theme][data-variant="filled"]):not(
-		[data-theme$="-icon"]
+
+.k-button:where([data-theme]):not([data-theme$="-icon"]):where(
+		[data-variant="filled"]
 	) {
 	--button-color-icon: var(--theme-color-700);
 	--button-color-back: var(--theme-color-back);
