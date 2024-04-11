@@ -16,7 +16,8 @@ use Kirby\Exception\InvalidArgumentException;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @template-extends \Kirby\Cms\Collection<\Kirby\Cms\Item>
+ * @template TValue of \Kirby\Cms\Item
+ * @template-extends \Kirby\Cms\Collection<TValue>
  */
 class Items extends Collection
 {

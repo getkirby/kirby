@@ -16,7 +16,7 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @template-extends \Kirby\Cms\Collection<\Kirby\Cms\Layout>
+ * @template-extends \Kirby\Cms\Items<\Kirby\Cms\Layout>
  */
 class Layouts extends Items
 {
