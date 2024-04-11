@@ -307,13 +307,12 @@ export default {
 	--button-color-text: var(--button-color-dimmed-off);
 }
 .k-button:where([data-theme][data-variant="dimmed"]) {
-	--button-color-icon: var(--theme-color-icon);
 	--button-color-dimmed-on: var(--theme-color-text-dimmed);
 	--button-color-dimmed-off: var(--theme-color-text);
 }
 
 /** Filled Buttons **/
-.k-button:where([data-variant="filled"]) {
+.k-button:where([data-variant="filled"], [data-variant="filled-icon"]) {
 	--button-color-back: var(--color-gray-300);
 }
 .k-button:where([data-variant="filled"]):not([aria-disabled]):hover {
@@ -323,6 +322,11 @@ export default {
 	--button-color-icon: var(--theme-color-700);
 	--button-color-back: var(--theme-color-back);
 	--button-color-text: var(--theme-color-text);
+}
+
+.k-button:where([data-theme][data-variant="filled-icon"]) {
+	--button-color-back: var(--color-gray-300);
+	--button-color-icon: var(--theme-color-600);
 }
 
 /** Icon Buttons **/
