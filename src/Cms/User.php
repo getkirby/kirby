@@ -115,11 +115,12 @@ class User extends ModelWithContent
 	 */
 	public function __debugInfo(): array
 	{
-		return array_merge($this->toArray(), [
+		return [
+			...$this->toArray(),
 			'avatar'  => $this->avatar(),
 			'content' => $this->content(),
 			'role'    => $this->role()
-		]);
+		];
 	}
 
 	/**
@@ -675,14 +676,15 @@ class User extends ModelWithContent
 	 */
 	public function toArray(): array
 	{
-		return array_merge(parent::toArray(), [
+		return [
+			...parent::toArray(),
 			'avatar'   => $this->avatar()?->toArray(),
 			'email'    => $this->email(),
 			'id'       => $this->id(),
 			'language' => $this->language(),
 			'role'     => $this->role()->name(),
 			'username' => $this->username()
-		]);
+		];
 	}
 
 	/**

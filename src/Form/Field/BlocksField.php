@@ -221,10 +221,10 @@ class BlocksField extends FieldClass
 
 					$fieldApi = $this->clone([
 						'routes' => $field->api(),
-						'data'   => array_merge(
-							$this->data(),
-							['field' => $field]
-						)
+						'data'   => [
+							...$this->data(),
+							'field' => $field
+						]
 					]);
 
 					return $fieldApi->call(

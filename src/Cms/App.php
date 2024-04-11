@@ -1573,7 +1573,7 @@ class App
 		$snippet = ($this->component('snippet'))(
 			$this,
 			$name,
-			array_merge($this->data, $data),
+			[...$this->data, ...$data],
 			$slots
 		);
 

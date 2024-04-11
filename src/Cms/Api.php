@@ -55,9 +55,10 @@ class Api extends BaseApi
 	 */
 	public function clone(array $props = []): static
 	{
-		return parent::clone(array_merge([
-			'kirby' => $this->kirby
-		], $props));
+		return parent::clone([
+			'kirby' => $this->kirby,
+			...$props
+		]);
 	}
 
 	/**

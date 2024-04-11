@@ -192,9 +192,10 @@ class Exif
 	 */
 	public function __debugInfo(): array
 	{
-		return array_merge($this->toArray(), [
+		return [
+			...$this->toArray(),
 			'camera'   => $this->camera(),
 			'location' => $this->location()
-		]);
+		];
 	}
 }

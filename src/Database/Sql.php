@@ -322,13 +322,13 @@ abstract class Sql
 	 */
 	public function delete(array $params = []): array
 	{
-		$defaults = [
+		$options = [
 			'table'    => '',
 			'where'    => null,
-			'bindings' => []
+			'bindings' => [],
+			...$params
 		];
 
-		$options  = array_merge($defaults, $params);
 		$bindings = $options['bindings'];
 		$query    = ['DELETE'];
 
@@ -363,7 +363,7 @@ abstract class Sql
 	{
 		if (empty($input['query']) === false) {
 			$query[]  = $input['query'];
-			$bindings = array_merge($bindings, $input['bindings']);
+			$bindings = [...$bindings, ...$input['bindings']];
 		}
 	}
 
@@ -555,7 +555,7 @@ abstract class Sql
 	 */
 	public function select(array $params = []): array
 	{
-		$defaults = [
+		$options = [
 			'table'    => '',
 			'columns'  => '*',
 			'join'     => null,
@@ -566,10 +566,10 @@ abstract class Sql
 			'order'    => null,
 			'offset'   => 0,
 			'limit'    => null,
-			'bindings' => []
+			'bindings' => [],
+			...$params
 		];
 
-		$options  = array_merge($defaults, $params);
 		$bindings = $options['bindings'];
 		$query    = ['SELECT'];
 
@@ -709,14 +709,14 @@ abstract class Sql
 	 */
 	public function update(array $params = []): array
 	{
-		$defaults = [
+		$options = [
 			'table'    => null,
 			'values'   => null,
 			'where'    => null,
-			'bindings' => []
+			'bindings' => [],
+			...$params
 		];
 
-		$options  = array_merge($defaults, $params);
 		$bindings = $options['bindings'];
 
 		// start the query

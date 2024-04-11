@@ -203,10 +203,11 @@ class Image extends File
 	 */
 	public function toArray(): array
 	{
-		$array = array_merge(parent::toArray(), [
+		$array = [
+			...parent::toArray(),
 			'dimensions' => $this->dimensions()->toArray(),
 			'exif'       => $this->exif()->toArray(),
-		]);
+		];
 
 		ksort($array);
 

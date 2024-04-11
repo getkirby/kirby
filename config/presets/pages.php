@@ -40,19 +40,36 @@ return function (array $props) {
 
 
 	if ($drafts !== false) {
-		$sections['drafts'] = $section(I18n::translate('pages.status.draft'), 'drafts', $drafts);
+		$sections['drafts'] = $section(
+			I18n::translate('pages.status.draft'),
+			'drafts',
+			$drafts
+		);
 	}
 
 	if ($unlisted !== false) {
-		$sections['unlisted'] = $section(I18n::translate('pages.status.unlisted'), 'unlisted', $unlisted);
+		$sections['unlisted'] = $section(
+			I18n::translate('pages.status.unlisted'),
+			'unlisted',
+			$unlisted
+		);
 	}
 
 	if ($listed !== false) {
-		$sections['listed'] = $section(I18n::translate('pages.status.listed'), 'listed', $listed);
+		$sections['listed'] = $section(
+			I18n::translate('pages.status.listed'),
+			'listed',
+			$listed
+		);
 	}
 
 	// cleaning up
-	unset($props['drafts'], $props['unlisted'], $props['listed'], $props['templates']);
+	unset(
+		$props['drafts'],
+		$props['unlisted'],
+		$props['listed'],
+		$props['templates']
+	);
 
-	return array_merge($props, ['sections' => $sections]);
+	return [...$props, 'sections' => $sections];
 };

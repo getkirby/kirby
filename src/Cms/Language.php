@@ -395,8 +395,11 @@ class Language
 	public function rules(): array
 	{
 		$code = $this->locale(LC_CTYPE);
-		$data = static::loadRules($code);
-		return array_merge($data, $this->slugs());
+
+		return [
+			...static::loadRules($code),
+			...$this->slugs()
+		];
 	}
 
 	/**
@@ -413,7 +416,8 @@ class Language
 			$existingData = [];
 		}
 
-		$props = [
+		$data = [
+			...$existingData,
 			'code'         => $this->code(),
 			'default'      => $this->isDefault(),
 			'direction'    => $this->direction(),
@@ -422,8 +426,6 @@ class Language
 			'translations' => $this->translations(),
 			'url'          => $this->url,
 		];
-
-		$data = array_merge($existingData, $props);
 
 		ksort($data);
 

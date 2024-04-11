@@ -84,9 +84,10 @@ return [
 			$job = $mediaRoot . '/.jobs/' . $thumbName . '.json';
 
 			try {
-				Data::write($job, array_merge($options, [
-					'filename' => $file->filename()
-				]));
+				Data::write(
+					$job,
+					[...$options, 'filename' => $file->filename()]
+				);
 			} catch (Throwable) {
 				// if thumb doesn't exist yet and job file cannot
 				// be created, return
@@ -149,16 +150,15 @@ return [
 			$params = ['fields' => Str::split($params, '|')];
 		}
 
-		$defaults = [
+		$collection = clone $collection;
+		$query      = trim($query ?? '');
+		$options    = [
 			'fields'    => [],
 			'minlength' => 2,
 			'score'     => [],
 			'words'     => false,
+			...$params
 		];
-
-		$collection  = clone $collection;
-		$options     = array_merge($defaults, $params);
-		$query       = trim($query ?? '');
 
 		// empty or too short search query
 		if (Str::length($query) < $options['minlength']) {
@@ -203,10 +203,11 @@ return [
 				$keys[] = 'role';
 			} elseif ($item instanceof Page) {
 				// apply the default score for pages
-				$options['score'] = array_merge(
-					['id' => 64, 'title' => 64],
-					$options['score']
-				);
+				$options['score'] = [
+					'id'    => 64,
+					'title' => 64,
+					...$options['score']
+				];
 			}
 
 			if (empty($options['fields']) === false) {

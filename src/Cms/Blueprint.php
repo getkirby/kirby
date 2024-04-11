@@ -185,7 +185,10 @@ class Blueprint
 
 		foreach ($fieldsets as $fieldset) {
 			foreach (($fieldset['tabs'] ?? []) as $tab) {
-				$templates = array_merge($templates, $this->acceptedFileTemplatesFromFields($tab['fields'] ?? []));
+				$templates = [
+					...$templates,
+					...$this->acceptedFileTemplatesFromFields($tab['fields'] ?? [])
+				];
 			}
 		}
 

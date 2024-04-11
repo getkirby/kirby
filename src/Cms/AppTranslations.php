@@ -32,7 +32,7 @@ trait AppTranslations
 				$this->multilang() === true &&
 				$language = $this->languages()->find($locale)
 			) {
-				$data = array_merge($data, $language->translations());
+				$data = [...$data, ...$language->translations()];
 			}
 
 

@@ -440,10 +440,10 @@ class QrCode
 			default => throw new LogicException('Invalid QR mode') // @codeCoverageIgnore
 		};
 
-		$code = array_merge($code, array_fill(0, 4, 0));
+		$code = [...$code, ...array_fill(0, 4, 0)];
 
 		if ($remainder = count($code) % 8) {
-			$code = array_merge($code, array_fill(0, 8 - $remainder, 0));
+			$code = [...$code, ...array_fill(0, 8 - $remainder, 0)];
 		}
 
 		// convert from bit level to byte level

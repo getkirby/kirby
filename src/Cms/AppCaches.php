@@ -93,7 +93,7 @@ trait AppCaches
 			return $defaults;
 		}
 
-		return array_merge($defaults, $options);
+		return [...$defaults, ...$options];
 	}
 
 	/**

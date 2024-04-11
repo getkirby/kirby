@@ -123,7 +123,7 @@ class Content
 		}
 
 		// preserve existing fields
-		return array_merge($this->data, $data);
+		return [...$this->data, ...$data];
 	}
 
 	/**

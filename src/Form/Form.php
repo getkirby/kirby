@@ -69,7 +69,7 @@ class Form
 
 		foreach ($fields as $name => $props) {
 			// inject stuff from the form constructor (model, etc.)
-			$props = array_merge($inject, $props);
+			$props = [...$inject, ...$props];
 
 			// inject the name
 			$props['name'] = $name = strtolower($name);
@@ -97,7 +97,7 @@ class Form
 		if ($strict !== true) {
 			// use all given values, no matter
 			// if there's a field or not.
-			$input = array_merge($values, $input);
+			$input = [...$values, ...$input];
 
 			foreach ($input as $key => $value) {
 				$this->values[$key] ??= $value;
@@ -175,13 +175,12 @@ class Form
 			$message .= ' line: ' . $exception->getLine();
 		}
 
-		$props = array_merge($props, [
+		return Field::factory('info', [
+			...$props,
 			'label' => 'Error in "' . $props['name'] . '" field.',
 			'theme' => 'negative',
 			'text'  => strip_tags($message),
 		]);
-
-		return Field::factory('info', $props);
 	}
 
 	/**
@@ -244,7 +243,7 @@ class Form
 		}
 
 		// set a few defaults
-		$props['values']   = array_merge($original, $values);
+		$props['values']   = [...$original, ...$values];
 		$props['fields'] ??= [];
 		$props['model']    = $model;
 
