@@ -338,8 +338,7 @@ class Collection extends Iterator implements Countable
 		callable $validator,
 		array $values,
 		$test
-	): bool
-	{
+	): bool {
 		$matches = 0;
 
 		foreach ($values as $value) {

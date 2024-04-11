@@ -36,19 +36,6 @@ class Collection extends BaseCollection
 	protected $pagination;
 
 	/**
-	 * Stores the parent object, which is needed
-	 * in some collections to get the finder methods right.
-	 */
-
-	public function __call(string $key, $arguments)
-	{
-		// collection methods
-		if ($this->hasMethod($key) === true) {
-			return $this->callMethod($key, $arguments);
-		}
-	}
-
-	/**
 	 * Creates a new Collection with the given objects
 	 *
 	 * @param object|null $parent Stores the parent object,
@@ -61,6 +48,14 @@ class Collection extends BaseCollection
 	) {
 		foreach ($objects as $object) {
 			$this->add($object);
+		}
+	}
+
+	public function __call(string $key, $arguments)
+	{
+		// collection methods
+		if ($this->hasMethod($key) === true) {
+			return $this->callMethod($key, $arguments);
 		}
 	}
 

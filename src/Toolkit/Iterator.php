@@ -28,7 +28,7 @@ use IteratorAggregate;
 class Iterator implements IteratorAggregate
 {
 	/**
-     * @var array<TKey, TValue>
+	 * @var array<TKey, TValue>
 	 */
 	public array $data = [];
 
