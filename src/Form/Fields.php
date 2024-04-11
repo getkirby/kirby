@@ -13,6 +13,8 @@ use Kirby\Toolkit\Collection;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ *
+ * @template-extends \Kirby\Toolkit\Collection<\Kirby\Form\Field>
  */
 class Fields extends Collection
 {

@@ -16,6 +16,8 @@ use Kirby\Filesystem\F;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @template-extends \Kirby\Cms\Collection<\Kirby\Cms\Translation>
  */
 class Translations extends Collection
 {

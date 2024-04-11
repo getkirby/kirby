@@ -11,6 +11,8 @@ namespace Kirby\Cms;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @template-extends \Kirby\Cms\Collection<\Kirby\Cms\LayoutColumn>
  */
 class LayoutColumns extends Items
 {

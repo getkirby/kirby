@@ -20,9 +20,16 @@ use IteratorAggregate;
  * 										in this class would require
  * 										implementing them throughout
  * 										the code base: https://github.com/getkirby/kirby/pull/4886#pullrequestreview-1203577545
+ *
+ * @template TKey of array-key
+ * @template TValue
+ * @template-implements \IteratorAggregate<TKey, TValue>
  */
 class Iterator implements IteratorAggregate
 {
+	/**
+     * @var array<TKey, TValue>
+	 */
 	public array $data = [];
 
 	public function __construct(array $data = [])
@@ -32,6 +39,7 @@ class Iterator implements IteratorAggregate
 
 	/**
 	 * Get an iterator for the items.
+	 * @return \ArrayIterator<TKey, TValue>
 	 */
 	public function getIterator(): ArrayIterator
 	{
@@ -56,6 +64,7 @@ class Iterator implements IteratorAggregate
 
 	/**
 	 * Returns the current element
+	 * @return TValue
 	 */
 	public function current(): mixed
 	{
@@ -65,6 +74,7 @@ class Iterator implements IteratorAggregate
 	/**
 	 * Moves the cursor to the previous element
 	 * and returns it
+	 * @return TValue
 	 */
 	public function prev(): mixed
 	{
@@ -74,6 +84,7 @@ class Iterator implements IteratorAggregate
 	/**
 	 * Moves the cursor to the next element
 	 * and returns it
+	 * @return TValue
 	 */
 	public function next(): mixed
 	{
@@ -107,7 +118,7 @@ class Iterator implements IteratorAggregate
 	/**
 	 * Tries to find the index number for the given element
 	 *
-	 * @param mixed $needle the element to search for
+	 * @param TValue $needle the element to search for
 	 * @return int|false the index (int) of the element or false
 	 */
 	public function indexOf(mixed $needle): int|false
@@ -118,7 +129,7 @@ class Iterator implements IteratorAggregate
 	/**
 	 * Tries to find the key for the given element
 	 *
-	 * @param mixed $needle the element to search for
+	 * @param TValue $needle the element to search for
 	 * @return int|string|false the name of the key or false
 	 */
 	public function keyOf(mixed $needle): int|string|false
@@ -128,6 +139,7 @@ class Iterator implements IteratorAggregate
 
 	/**
 	 * Checks by key if an element is included
+	 * @param TKey $key
 	 */
 	public function has(mixed $key): bool
 	{
@@ -136,6 +148,7 @@ class Iterator implements IteratorAggregate
 
 	/**
 	 * Checks if the current key is set
+	 * @param TKey $key
 	 */
 	public function __isset(mixed $key): bool
 	{

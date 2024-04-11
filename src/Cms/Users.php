@@ -19,6 +19,8 @@ use Kirby\Uuid\HasUuids;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @template-extends \Kirby\Cms\Collection<\Kirby\Cms\User>
  */
 class Users extends Collection
 {
@@ -39,14 +41,14 @@ class Users extends Collection
 	 * an entire second collection to the
 	 * current collection
 	 *
-	 * @param \Kirby\Cms\Users|\Kirby\Cms\User|string $object
+	 * @param self\Kirby\Cms\Users|\Kirby\Cms\User|string $object
 	 * @return $this
 	 * @throws \Kirby\Exception\InvalidArgumentException When no `User` or `Users` object or an ID of an existing user is passed
 	 */
 	public function add($object): static
 	{
 		// add a users collection
-		if ($object instanceof self) {
+		if ($object instanceof Users) {
 			$this->data = [...$this->data, ...$object->data];
 
 		// add a user by id
