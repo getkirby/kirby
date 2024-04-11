@@ -20,7 +20,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @template-extends \Kirby\Cms\Collection<\Kirby\Cms\PluginAsset>
+ * @extends \Kirby\Cms\Collection<\Kirby\Cms\PluginAsset>
  */
 class PluginAssets extends Collection
 {

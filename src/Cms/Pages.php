@@ -21,7 +21,7 @@ use Kirby\Uuid\HasUuids;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @template-extends \Kirby\Cms\Collection<\Kirby\Cms\Page>
+ * @extends \Kirby\Cms\Collection<\Kirby\Cms\Page>
  */
 class Pages extends Collection
 {

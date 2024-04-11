@@ -15,7 +15,7 @@ use Kirby\Toolkit\Collection;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * @template-extends \Kirby\Toolkit\Collection<\Kirby\Query\Segment>
+ * @extends \Kirby\Toolkit\Collection<\Kirby\Query\Segment>
  */
 class Segments extends Collection
 {

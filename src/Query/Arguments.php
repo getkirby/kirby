@@ -15,7 +15,7 @@ use Kirby\Toolkit\Collection;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * @template-extends \Kirby\Toolkit\Collection<\Kirby\Query\Argument>
+ * @extends \Kirby\Toolkit\Collection<\Kirby\Query\Argument>
  */
 class Arguments extends Collection
 {

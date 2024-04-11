@@ -18,7 +18,7 @@ use Exception;
  * @license   https://opensource.org/licenses/MIT
  *
  * @template TValue
- * @template-extends \Kirby\Toolkit\Iterator<string, TValue>
+ * @extends \Kirby\Toolkit\Iterator<string, TValue>
  */
 class Collection extends Iterator implements Countable
 {

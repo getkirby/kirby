@@ -23,7 +23,7 @@ use IteratorAggregate;
  *
  * @template TKey of array-key
  * @template TValue
- * @template-implements \IteratorAggregate<TKey, TValue>
+ * @implements \IteratorAggregate<TKey, TValue>
  */
 class Iterator implements IteratorAggregate
 {

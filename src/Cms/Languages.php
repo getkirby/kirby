@@ -14,7 +14,7 @@ use Kirby\Filesystem\F;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @template-extends \Kirby\Cms\Collection<\Kirby\Cms\Language>
+ * @extends \Kirby\Cms\Collection<\Kirby\Cms\Language>
  */
 class Languages extends Collection
 {

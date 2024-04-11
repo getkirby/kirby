@@ -21,7 +21,7 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @template-extends \Kirby\Cms\Items<\Kirby\Cms\Block>
+ * @extends \Kirby\Cms\Items<\Kirby\Cms\Block>
  */
 class Blocks extends Items
 {

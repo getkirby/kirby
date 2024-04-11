@@ -20,7 +20,7 @@ use Kirby\Uuid\HasUuids;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @template-extends \Kirby\Cms\Collection<\Kirby\Cms\User>
+ * @extends \Kirby\Cms\Collection<\Kirby\Cms\User>
  */
 class Users extends Collection
 {

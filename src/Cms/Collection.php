@@ -24,7 +24,7 @@ use Kirby\Uuid\Uuid;
  * @license   https://getkirby.com/license
  *
  * @template TValue
- * @template-extends \Kirby\Toolkit\Collection<TValue>
+ * @extends \Kirby\Toolkit\Collection<TValue>
  */
 class Collection extends BaseCollection
 {
