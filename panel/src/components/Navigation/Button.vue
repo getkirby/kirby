@@ -312,21 +312,21 @@ export default {
 }
 
 /** Filled Buttons **/
-.k-button:where([data-variant="filled"], [data-variant="filled-icon"]) {
+.k-button:where([data-variant="filled"]) {
 	--button-color-back: var(--color-gray-300);
 }
 .k-button:where([data-variant="filled"]):not([aria-disabled]):hover {
 	filter: brightness(97%);
 }
-.k-button:where([data-theme][data-variant="filled"]) {
+.k-button:where([data-theme$="-icon"][data-variant="filled"]) {
+	--button-color-icon: var(--theme-color-600);
+}
+.k-button:where([data-theme][data-variant="filled"]):not(
+		[data-theme$="-icon"]
+	) {
 	--button-color-icon: var(--theme-color-700);
 	--button-color-back: var(--theme-color-back);
 	--button-color-text: var(--theme-color-text);
-}
-
-.k-button:where([data-theme][data-variant="filled-icon"]) {
-	--button-color-back: var(--color-gray-300);
-	--button-color-icon: var(--theme-color-600);
 }
 
 /** Icon Buttons **/
