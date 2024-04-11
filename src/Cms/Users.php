@@ -41,7 +41,7 @@ class Users extends Collection
 	 * an entire second collection to the
 	 * current collection
 	 *
-	 * @param self\Kirby\Cms\Users|\Kirby\Cms\User|string $object
+	 * @param \Kirby\Cms\Users|\Kirby\Cms\User|string $object
 	 * @return $this
 	 * @throws \Kirby\Exception\InvalidArgumentException When no `User` or `Users` object or an ID of an existing user is passed
 	 */
