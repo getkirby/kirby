@@ -17,9 +17,9 @@ use IteratorAggregate;
  * @license   https://opensource.org/licenses/MIT
  *
  * @psalm-suppress MissingTemplateParam Implementing template params
- * 										in this class would require
- * 										implementing them throughout
- * 										the code base: https://github.com/getkirby/kirby/pull/4886#pullrequestreview-1203577545
+ *                                      in this class would require
+ *                                      implementing them throughout
+ *                                      the code base: https://github.com/getkirby/kirby/pull/4886#pullrequestreview-1203577545
  *
  * @template TKey of array-key
  * @template TValue
