@@ -436,7 +436,7 @@ class Collection extends Iterator implements Countable
 	 * @param TDefault $default
 	 * @return TValue|TDefault|null
 	 */
-	public function get(string $key, $default = null)
+	public function get(string $key, mixed $default = null)
 	{
 		return $this->__get($key) ?? $default;
 	}
