@@ -13,7 +13,6 @@ export default function (regexp, type, getAttrs) {
 
 				const isLink = !!marks.filter((x) => x.type.name === "link")[0];
 
-				// eslint-disable-next-line
 				while (!isLink && (match = regexp.exec(text)) !== null) {
 					if (parent?.type?.allowsMarkType(type) && match[1]) {
 						const start = match.index;

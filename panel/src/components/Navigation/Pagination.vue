@@ -157,7 +157,7 @@ export default {
 					offset: start - 1,
 					total: this.total
 				});
-			} catch (e) {
+			} catch {
 				// pagination stopped
 			}
 		},
