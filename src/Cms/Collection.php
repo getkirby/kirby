@@ -115,9 +115,7 @@ class Collection extends BaseCollection
 	 * $collection->append('key', $object);
 	 * ```
 	 *
-	 * If not collection key is passed, it will be determined from the item (id)
-	 *
-	 * @param array|string|TValue ...$args
+	 * @param string|TValue ...$args
 	 * @return $this
 	 */
 	public function append(...$args): static
@@ -299,9 +297,7 @@ class Collection extends BaseCollection
 	 * $collection->prepend('key', $object);
 	 * ```
 	 *
-	 * If not collection key is passed, it will be determined from the item (id)
-	 *
-	 * @param array|string|TValue ...$args
+	 * @param string|TValue ...$args
 	 * @return $this
 	 */
 	public function prepend(...$args): static

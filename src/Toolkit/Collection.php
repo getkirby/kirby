@@ -42,18 +42,9 @@ class Collection extends Iterator implements Countable
 	protected $pagination;
 
 	/**
-	 * Magic getter function
-	 *
-	 * @return TValue|null
-	 */
-	public function __call(string $key, $arguments)
-	{
-		return $this->__get($key);
-	}
-
-	/**
 	 * Constructor
 	 *
+	 * @param array<string, TValue> $data
 	 * @param bool $caseSensitive Whether the collection keys should be
 	 *                            treated as case-sensitive
 	 */
@@ -61,6 +52,16 @@ class Collection extends Iterator implements Countable
 	{
 		$this->caseSensitive = $caseSensitive;
 		$this->set($data);
+	}
+
+	/**
+	 * Magic getter function
+	 *
+	 * @return TValue|null
+	 */
+	public function __call(string $key, $arguments)
+	{
+		return $this->__get($key);
 	}
 
 	/**
@@ -128,7 +129,7 @@ class Collection extends Iterator implements Countable
 	 * $collection->append($value);
 	 * ```
 	 *
-	 * @param array|string|TValue ...$args
+	 * @param string|TValue ...$args
 	 * @return $this
 	 */
 	public function append(...$args): static
@@ -744,7 +745,7 @@ class Collection extends Iterator implements Countable
 	 * $collection->prepend($value);
 	 * ```
 	 *
-	 * @param array|string|TValue ...$args
+	 * @param string|TValue ...$args
 	 * @return $this
 	 */
 	public function prepend(...$args): static
