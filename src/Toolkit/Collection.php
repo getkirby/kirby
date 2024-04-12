@@ -125,7 +125,7 @@ class Collection extends Iterator implements Countable
 	 *
 	 * ```php
 	 * $collection->append('key', $value);
-	 * $collection->append([$value1, $value2]);
+	 * $collection->append($value);
 	 * ```
 	 *
 	 * @param array|string|TValue ...$args
@@ -741,7 +741,7 @@ class Collection extends Iterator implements Countable
 	 *
 	 * ```php
 	 * $collection->prepend('key', $value);
-	 * $collection->prepend([$value1, $value2]);
+	 * $collection->prepend($value);
 	 * ```
 	 *
 	 * @param array|string|TValue ...$args

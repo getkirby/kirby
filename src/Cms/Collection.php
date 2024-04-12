@@ -113,7 +113,6 @@ class Collection extends BaseCollection
 	 * ```php
 	 * $collection->append($object);
 	 * $collection->append('key', $object);
-	 * $collection->append([$object1, $object2]);
 	 * ```
 	 *
 	 * If not collection key is passed, it will be determined from the item (id)
@@ -298,7 +297,6 @@ class Collection extends BaseCollection
 	 * ```php
 	 * $collection->prepend($object);
 	 * $collection->prepend('key', $object);
-	 * $collection->prepend([$object1, $object2]);
 	 * ```
 	 *
 	 * If not collection key is passed, it will be determined from the item (id)
