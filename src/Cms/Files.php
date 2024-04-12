@@ -41,14 +41,14 @@ class Files extends Collection
 	 * an entire second collection to the
 	 * current collection
 	 *
-	 * @param \Kirby\Cms\Files|\Kirby\Cms\File|string $object
+	 * @param static|\Kirby\Cms\File|string $object
 	 * @return $this
 	 * @throws \Kirby\Exception\InvalidArgumentException When no `File` or `Files` object or an ID of an existing file is passed
 	 */
 	public function add($object): static
 	{
 		// add a files collection
-		if ($object instanceof Files) {
+		if ($object instanceof self) {
 			$this->data = [...$this->data, ...$object->data];
 
 		// add a file by id

@@ -35,7 +35,7 @@ class Page extends ModelWithContent
 	use HasFiles;
 	use HasMethods;
 	/**
-	 * @use HasSiblings<\Kirby\Cms\Pages>
+	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Pages>
 	 */
 	use HasSiblings;
 	use PageActions;

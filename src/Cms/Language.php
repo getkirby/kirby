@@ -30,7 +30,7 @@ use Throwable;
 class Language
 {
 	/**
-	 * @use HasSiblings<\Kirby\Cms\Languages>
+	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Languages>
 	 */
 	use HasSiblings;
 
@@ -439,7 +439,6 @@ class Language
 
 	/**
 	 * Private siblings collector
-	 * @internal
 	 */
 	protected function siblingsCollection(): Languages
 	{

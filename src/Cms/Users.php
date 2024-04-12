@@ -48,7 +48,7 @@ class Users extends Collection
 	public function add($object): static
 	{
 		// add a users collection
-		if ($object instanceof Users) {
+		if ($object instanceof self) {
 			$this->data = [...$this->data, ...$object->data];
 
 		// add a user by id

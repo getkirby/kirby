@@ -88,7 +88,7 @@ class Collection extends BaseCollection
 	 * an entire second collection to the
 	 * current collection
 	 *
-	 * @param TValue|self|array $object
+	 * @param static|TValue|array $object
 	 * @return $this
 	 */
 	public function add($object): static

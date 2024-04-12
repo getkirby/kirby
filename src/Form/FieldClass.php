@@ -26,7 +26,7 @@ use Throwable;
 abstract class FieldClass
 {
 	/**
-	 * @use HasSiblings<\Kirby\Form\Fields>
+	 * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
 	 */
 	use HasSiblings;
 

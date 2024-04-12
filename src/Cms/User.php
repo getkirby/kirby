@@ -30,7 +30,7 @@ class User extends ModelWithContent
 	use HasFiles;
 	use HasMethods;
 	/**
-	 * @use HasSiblings<\Kirby\Cms\Users>
+	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Users>
 	 */
 	use HasSiblings;
 	use UserActions;
@@ -667,7 +667,6 @@ class User extends ModelWithContent
 
 	/**
 	 * Returns the parent Users collection
-	 * @internal
 	 */
 	protected function siblingsCollection(): Users
 	{

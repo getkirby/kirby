@@ -19,6 +19,8 @@ use Kirby\Content\Content;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @extends \Kirby\Cms\Item<\Kirby\Cms\Structure>
  */
 class StructureObject extends Item
 {

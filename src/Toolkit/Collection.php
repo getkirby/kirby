@@ -432,8 +432,9 @@ class Collection extends Iterator implements Countable
 	/**
 	 * Getter
 	 *
-	 * @param mixed $default
-	 * @return mixed
+	 * @template TDefault
+	 * @param TDefault $default
+	 * @return TValue|TDefault|null
 	 */
 	public function get(string $key, $default = null)
 	{
@@ -1115,8 +1116,6 @@ class Collection extends Iterator implements Countable
 
 	/**
 	 * @see \Kirby\Toolkit\Collection::not()
-	 *
-	 * @param string ...$keys any number of keys, passed as individual arguments
 	 */
 	public function without(string ...$keys): static
 	{

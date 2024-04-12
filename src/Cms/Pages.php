@@ -61,7 +61,7 @@ class Pages extends Collection
 		$site = App::instance()->site();
 
 		// add a pages collection
-		if ($object instanceof Pages) {
+		if ($object instanceof self) {
 			$this->data = [...$this->data, ...$object->data];
 
 		// add a page by id
@@ -295,10 +295,8 @@ class Pages extends Collection
 	/**
 	 * Custom getter that is able to find
 	 * extension pages
-	 *
-	 * @param mixed $default
 	 */
-	public function get(string $key, $default = null): Page|null
+	public function get(string $key, mixed $default = null): Page|null
 	{
 		if ($key === null) {
 			return null;

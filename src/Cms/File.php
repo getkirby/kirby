@@ -36,7 +36,7 @@ class File extends ModelWithContent
 	use FileModifications;
 	use HasMethods;
 	/**
-	 * @use HasSiblings<\Kirby\Cms\Files>
+	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Files>
 	 */
 	use HasSiblings;
 	use IsFile;
