@@ -158,7 +158,6 @@ class Collection extends BaseCollection
 	 *
 	 * @param string|\Closure $field
 	 * @param bool $caseInsensitive Ignore upper/lowercase for group names
-	 * @return self
 	 * @throws \Kirby\Exception\Exception
 	 */
 	public function group(
@@ -166,7 +165,7 @@ class Collection extends BaseCollection
 		bool $caseInsensitive = true
 	): self {
 		if (is_string($field) === true) {
-			$groups = new Collection([], $this->parent());
+			$groups = new self([], $this->parent());
 
 			foreach ($this->data as $key => $item) {
 				$value = $this->getAttribute($item, $field);
@@ -195,7 +194,12 @@ class Collection extends BaseCollection
 			return $groups;
 		}
 
-		return parent::group($field, $caseInsensitive);
+		// use the parent method but unwrap the Toolkit collection
+		// and rewrap it as a Cms collection
+		return new self(
+			parent::group($field, $caseInsensitive)->data,
+			$this->parent()
+		);
 	}
 
 	/**
