@@ -39,6 +39,7 @@ return $config
 		'no_mixed_echo_print' => ['use' => 'echo'],
 		'no_short_bool_cast' => true,
 		'no_superfluous_elseif' => true,
+		'no_superfluous_phpdoc_tags' => ['allow_unused_params' => true],
 		'no_unneeded_braces' => true,
 		'no_unneeded_control_parentheses' => true,
 		'no_unneeded_import_alias' => true,
@@ -52,7 +53,6 @@ return $config
 		'operator_linebreak' => ['position' => 'end', 'only_booleans' => true],
 		'ordered_imports' => ['sort_algorithm' => 'alpha'],
 		'ordered_types' => ['sort_algorithm' => 'none', 'null_adjustment' => 'always_last'],
-		// 'phpdoc_add_missing_param_annotation' => ['only_untyped' => false], // adds params in the wrong order
 		'phpdoc_align' => ['align' => 'left'],
 		'phpdoc_indent' => true,
 		'phpdoc_param_order' => true,
