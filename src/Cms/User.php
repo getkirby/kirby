@@ -29,6 +29,9 @@ class User extends ModelWithContent
 {
 	use HasFiles;
 	use HasMethods;
+	/**
+	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Users>
+	 */
 	use HasSiblings;
 	use UserActions;
 

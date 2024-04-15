@@ -19,6 +19,8 @@ use Kirby\Uuid\HasUuids;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @extends \Kirby\Cms\Collection<\Kirby\Cms\User>
  */
 class Users extends Collection
 {

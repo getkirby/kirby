@@ -19,6 +19,8 @@ use Throwable;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @extends \Kirby\Cms\Item<\Kirby\Cms\Blocks>
  */
 class Block extends Item
 {

@@ -13,6 +13,8 @@ use Kirby\Toolkit\Collection;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ *
+ * @extends \Kirby\Toolkit\Collection<\Kirby\Form\Field|\Kirby\Form\FieldClass>
  */
 class Fields extends Collection
 {
@@ -21,7 +23,7 @@ class Fields extends Collection
 	 * This takes care of validation and of setting
 	 * the collection prop on each object correctly.
 	 *
-	 * @param object|array $field
+	 * @param \Kirby\Form\Field|\Kirby\Form\FieldClass|array $field
 	 */
 	public function __set(string $name, $field): void
 	{

@@ -16,6 +16,8 @@ use Kirby\Toolkit\Str;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @extends \Kirby\Cms\Items<\Kirby\Cms\Fieldset>
  */
 class Fieldsets extends Items
 {

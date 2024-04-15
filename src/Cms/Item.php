@@ -20,9 +20,14 @@ use Kirby\Toolkit\Str;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @template TCollection of \Kirby\Cms\Items
  */
 class Item
 {
+	/**
+	 * @use \Kirby\Cms\HasSiblings<TCollection>
+	 */
 	use HasSiblings;
 
 	public const ITEMS_CLASS = Items::class;

@@ -22,46 +22,40 @@ use Kirby\Uuid\Uuid;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @template TValue
+ * @extends \Kirby\Toolkit\Collection<TValue>
  */
 class Collection extends BaseCollection
 {
 	use HasMethods;
 
 	/**
-	 * Stores the parent object, which is needed
-	 * in some collections to get the finder methods right.
-	 *
-	 * @var object
+	 * @var \Kirby\Cms\Pagination|null
 	 */
-	protected $parent;
+	protected $pagination;
 
 	/**
-	 * Magic getter function
+	 * Creates a new Collection with the given objects
 	 *
-	 * @param string $key
-	 * @param mixed $arguments
-	 * @return mixed
+	 * @param object|null $parent Stores the parent object,
+	 *                            which is needed in some collections
+	 *                            to get the finder methods right
 	 */
+	public function __construct(
+		iterable $objects = [],
+		protected object|null $parent = null
+	) {
+		foreach ($objects as $object) {
+			$this->add($object);
+		}
+	}
+
 	public function __call(string $key, $arguments)
 	{
 		// collection methods
 		if ($this->hasMethod($key) === true) {
 			return $this->callMethod($key, $arguments);
-		}
-	}
-
-	/**
-	 * Creates a new Collection with the given objects
-	 *
-	 * @param array $objects
-	 * @param object|null $parent
-	 */
-	public function __construct($objects = [], $parent = null)
-	{
-		$this->parent = $parent;
-
-		foreach ($objects as $object) {
-			$this->add($object);
 		}
 	}
 
@@ -72,7 +66,7 @@ class Collection extends BaseCollection
 	 * child classes can override it again to add validation
 	 * and custom behavior depending on the object type
 	 *
-	 * @param object $object
+	 * @param TValue $object
 	 */
 	public function __set(string $id, $object): void
 	{
@@ -84,7 +78,7 @@ class Collection extends BaseCollection
 	 * override from the Toolkit Collection is needed to
 	 * make the CMS collections case-sensitive
 	 */
-	public function __unset($id)
+	public function __unset(string $id)
 	{
 		unset($this->data[$id]);
 	}
@@ -94,9 +88,10 @@ class Collection extends BaseCollection
 	 * an entire second collection to the
 	 * current collection
 	 *
-	 * @param mixed $object
+	 * @param static|TValue|array $object
+	 * @return $this
 	 */
-	public function add($object)
+	public function add($object): static
 	{
 		if ($object instanceof self) {
 			$this->data = [...$this->data, ...$object->data];
@@ -115,12 +110,15 @@ class Collection extends BaseCollection
 	/**
 	 * Appends an element to the data array
 	 *
-	 * @param mixed ...$args
-	 * @param mixed $key Optional collection key, will be determined from the item if not given
-	 * @param mixed $item
-	 * @return \Kirby\Cms\Collection
+	 * ```php
+	 * $collection->append($object);
+	 * $collection->append('key', $object);
+	 * ```
+	 *
+	 * @param string|TValue ...$args
+	 * @return $this
 	 */
-	public function append(...$args)
+	public function append(...$args): static
 	{
 		if (count($args) === 1) {
 			// try to determine the key from the provided item
@@ -141,7 +139,7 @@ class Collection extends BaseCollection
 	 * Find a single element by an attribute and its value
 	 *
 	 * @param mixed $value
-	 * @return mixed|null
+	 * @return TValue|null
 	 */
 	public function findBy(string $attribute, $value)
 	{
@@ -158,15 +156,16 @@ class Collection extends BaseCollection
 	 * Groups the items by a given field or callback. Returns a collection
 	 * with an item for each group and a collection for each group.
 	 *
-	 * @param string|Closure $field
+	 * @param string|\Closure $field
 	 * @param bool $caseInsensitive Ignore upper/lowercase for group names
-	 * @return \Kirby\Cms\Collection
 	 * @throws \Kirby\Exception\Exception
 	 */
-	public function group($field, bool $caseInsensitive = true)
-	{
+	public function group(
+		$field,
+		bool $caseInsensitive = true
+	): self {
 		if (is_string($field) === true) {
-			$groups = new Collection([], $this->parent());
+			$groups = new self([], $this->parent());
 
 			foreach ($this->data as $key => $item) {
 				$value = $this->getAttribute($item, $field);
@@ -195,14 +194,19 @@ class Collection extends BaseCollection
 			return $groups;
 		}
 
-		return parent::group($field, $caseInsensitive);
+		// use the parent method but unwrap the Toolkit collection
+		// and rewrap it as a Cms collection
+		return new self(
+			parent::group($field, $caseInsensitive)->data,
+			$this->parent()
+		);
 	}
 
 	/**
 	 * Checks if the given object or id
 	 * is in the collection
 	 *
-	 * @param string|object $key
+	 * @param string|TValue $key
 	 */
 	public function has($key): bool
 	{
@@ -218,7 +222,7 @@ class Collection extends BaseCollection
 	 * The method will automatically detect objects
 	 * or ids and then search accordingly.
 	 *
-	 * @param string|object $needle
+	 * @param string|TValue $needle
 	 */
 	public function indexOf($needle): int|false
 	{
@@ -232,10 +236,10 @@ class Collection extends BaseCollection
 	/**
 	 * Returns a Collection without the given element(s)
 	 *
-	 * @param mixed ...$keys any number of keys, passed as individual arguments
-	 * @return \Kirby\Cms\Collection
+	 * @param string|array|object ...$keys any number of keys,
+	 *                                     passed as individual arguments
 	 */
-	public function not(...$keys)
+	public function not(string|array|object ...$keys): static
 	{
 		$collection = $this->clone();
 
@@ -262,7 +266,7 @@ class Collection extends BaseCollection
 	 * @param mixed ...$arguments
 	 * @return $this|static
 	 */
-	public function paginate(...$arguments)
+	public function paginate(...$arguments): static
 	{
 		$this->pagination = Pagination::for($this, ...$arguments);
 
@@ -274,11 +278,9 @@ class Collection extends BaseCollection
 	}
 
 	/**
-	 * Get the pagination object
-	 *
-	 * @return \Kirby\Cms\Pagination|null
+	 * Get the previously added pagination object
 	 */
-	public function pagination()
+	public function pagination(): Pagination|null
 	{
 		return $this->pagination;
 	}
@@ -286,7 +288,7 @@ class Collection extends BaseCollection
 	/**
 	 * Returns the parent model
 	 */
-	public function parent()
+	public function parent(): object|null
 	{
 		return $this->parent;
 	}
@@ -294,12 +296,15 @@ class Collection extends BaseCollection
 	/**
 	 * Prepends an element to the data array
 	 *
-	 * @param mixed ...$args
-	 * @param mixed $key Optional collection key, will be determined from the item if not given
-	 * @param mixed $item
-	 * @return \Kirby\Cms\Collection
+	 * ```php
+	 * $collection->prepend($object);
+	 * $collection->prepend('key', $object);
+	 * ```
+	 *
+	 * @param string|TValue ...$args
+	 * @return $this
 	 */
-	public function prepend(...$args)
+	public function prepend(...$args): static
 	{
 		if (count($args) === 1) {
 			// try to determine the key from the provided item
@@ -320,10 +325,8 @@ class Collection extends BaseCollection
 	 * Runs a combination of filter, sort, not,
 	 * offset, limit, search and paginate on the collection.
 	 * Any part of the query is optional.
-	 *
-	 * @return static
 	 */
-	public function query(array $arguments = [])
+	public function query(array $arguments = []): static
 	{
 		$paginate = $arguments['paginate'] ?? null;
 		$search   = $arguments['search'] ?? null;
@@ -350,9 +353,9 @@ class Collection extends BaseCollection
 	/**
 	 * Removes an object
 	 *
-	 * @param mixed $key the name of the key
+	 * @param string|TValue $key the name of the key
 	 */
-	public function remove($key)
+	public function remove(string|object $key): static
 	{
 		if (is_object($key) === true) {
 			$key = $key->id();
