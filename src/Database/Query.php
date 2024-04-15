@@ -826,7 +826,6 @@ class Query
 
 				if ($args[0] === null) {
 					return $current;
-
 				}
 
 				// ->where('username like "myuser"');

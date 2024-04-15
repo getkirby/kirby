@@ -139,7 +139,6 @@ class Blocks extends Items
 					}
 
 					$input = $yaml;
-
 				} catch (Throwable $e) {
 					// the next 2 lines remain after removing block.converter
 					// @codeCoverageIgnoreEnd

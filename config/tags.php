@@ -211,10 +211,9 @@ return [
 					}
 
 					throw new NotFoundException($error);
-
-				} else {
-					$tag->value = Url::to($tag->kirby()->site()->errorPageId());
 				}
+
+				$tag->value = Url::to($tag->kirby()->site()->errorPageId());
 			}
 
 			return Html::a($tag->value, $tag->text, [
