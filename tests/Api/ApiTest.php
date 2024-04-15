@@ -720,7 +720,7 @@ class ApiTest extends TestCase
 		$api = new Api([
 			'requestMethod' => 'POST',
 			'requestData' => [
-				'files' => [ ]
+				'files' => []
 			]
 		]);
 

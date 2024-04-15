@@ -321,8 +321,8 @@ class ViewTest extends TestCase
 	{
 		$this->app = $this->app->clone([
 			'languages' => [
-				[ 'code' => 'en', 'name' => 'English', 'default' => true ],
-				[ 'code' => 'de', 'name' => 'Deutsch']
+				['code' => 'en', 'name' => 'English', 'default' => true],
+				['code' => 'de', 'name' => 'Deutsch']
 			],
 			'options' => [
 				'languages' => true
@@ -366,9 +366,9 @@ class ViewTest extends TestCase
 	{
 		$this->app = $this->app->clone([
 			'languages' => [
-				[ 'code' => 'en', 'name' => 'English', 'default' => true],
-				[ 'code' => 'de', 'name' => 'Deutsch'],
-				[ 'code' => 'ar', 'name' => 'Arabic', 'direction' => 'rtl'],
+				['code' => 'en', 'name' => 'English', 'default' => true],
+				['code' => 'de', 'name' => 'Deutsch'],
+				['code' => 'ar', 'name' => 'Arabic', 'direction' => 'rtl'],
 			],
 			'options' => [
 				'languages' => true

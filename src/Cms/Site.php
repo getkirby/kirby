@@ -268,8 +268,6 @@ class Site extends ModelWithContent
 
 	/**
 	 * Compares the current object with the given site object
-	 *
-	 * @param mixed $site
 	 */
 	public function is($site): bool
 	{

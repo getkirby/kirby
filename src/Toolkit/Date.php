@@ -287,8 +287,6 @@ class Date extends DateTime
 
 	/**
 	 * Returns an instance of the current datetime
-	 *
-	 * @param \DateTimeZone|null $timezone
 	 */
 	public static function now(DateTimeZone|null $timezone = null): static
 	{

@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\NotFoundException;
 use Kirby\Template\Template;
-use Kirby\TestCase as TestCase;
+use Kirby\TestCase;
 
 class PageTemplateTest extends TestCase
 {

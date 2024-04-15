@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\TestCase as TestCase;
+use Kirby\TestCase;
 
 class StructureObjectMethodsTest extends TestCase
 {

@@ -135,7 +135,7 @@ class Files extends Collection
 	 *                                  `null` for the current locale,
 	 *                                  `false` to disable number formatting
 	 */
-	public function niceSize(string|null|false $locale = null): string
+	public function niceSize(string|false|null $locale = null): string
 	{
 		return F::niceSize($this->size(), $locale);
 	}

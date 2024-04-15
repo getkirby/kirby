@@ -132,14 +132,18 @@ return [
 						'max' => $max->format($format)
 					]
 				]);
-			} elseif ($min && $value->isMin($min) === false) {
+			}
+
+			if ($min && $value->isMin($min) === false) {
 				throw new Exception([
 					'key' => 'validation.date.after',
 					'data' => [
 						'date' => $min->format($format),
 					]
 				]);
-			} elseif ($max && $value->isMax($max) === false) {
+			}
+
+			if ($max && $value->isMax($max) === false) {
 				throw new Exception([
 					'key' => 'validation.date.before',
 					'data' => [

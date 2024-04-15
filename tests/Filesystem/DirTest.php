@@ -4,7 +4,7 @@ namespace Kirby\Filesystem;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
-use Kirby\TestCase as TestCase;
+use Kirby\TestCase;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 

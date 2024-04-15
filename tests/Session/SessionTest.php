@@ -1368,8 +1368,6 @@ class SessionTest extends TestCase
 	 * Asserts the state of the write mode of the given session
 	 *
 	 * @param bool $expected Whether the write mode should be true or false right now
-	 * @param Session $session
-	 * @return void
 	 */
 	protected function assertWriteMode(bool $expected, Session $session): void
 	{

@@ -138,7 +138,6 @@ class Collection extends BaseCollection
 	/**
 	 * Find a single element by an attribute and its value
 	 *
-	 * @param mixed $value
 	 * @return TValue|null
 	 */
 	public function findBy(string $attribute, $value)
@@ -263,7 +262,6 @@ class Collection extends BaseCollection
 	/**
 	 * Add pagination and return a sliced set of data.
 	 *
-	 * @param mixed ...$arguments
 	 * @return $this|static
 	 */
 	public function paginate(...$arguments): static
