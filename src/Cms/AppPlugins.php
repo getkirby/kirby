@@ -93,9 +93,9 @@ trait AppPlugins
 
 	/**
 	 * Register all given extensions
-	 *
 	 * @internal
-	 * @param \Kirby\Cms\Plugin $plugin|null The plugin which defined those extensions
+	 *
+	 * @param \Kirby\Cms\Plugin|null $plugin The plugin which defined those extensions
 	 */
 	public function extend(
 		array $extensions,
