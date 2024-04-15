@@ -22,7 +22,7 @@ class SortMixinTest extends TestCase
 		Section::$types['test'] = [
 			'mixins' => ['sort'],
 			'props'  => [
-				'query' => function (string $query = null) {
+				'query' => function (string|null $query = null) {
 					return $query;
 				}
 			]
@@ -31,7 +31,7 @@ class SortMixinTest extends TestCase
 		Section::$types['pages'] = [
 			'mixins' => ['sort'],
 			'props'  => [
-				'status' => function (string $status = null) {
+				'status' => function (string|null $status = null) {
 					return $status;
 				},
 			]

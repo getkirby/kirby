@@ -49,6 +49,7 @@ return $config
 		'no_useless_return' => true,
 		'no_whitespace_before_comma_in_array' => true,
 		'nullable_type_declaration' => ['syntax' => 'union'],
+		'nullable_type_declaration_for_default_null_value' => true,
 		'object_operator_without_whitespace' => true,
 		'operator_linebreak' => ['position' => 'end', 'only_booleans' => true],
 		'ordered_imports' => ['sort_algorithm' => 'alpha'],

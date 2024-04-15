@@ -577,7 +577,7 @@ trait PageActions
 	 * Create the sorting number for the page
 	 * depending on the blueprint settings
 	 */
-	public function createNum(int $num = null): int
+	public function createNum(int|null $num = null): int
 	{
 		$mode = $this->blueprint()->num();
 
@@ -825,7 +825,7 @@ trait PageActions
 	/**
 	 * @throws \Kirby\Exception\LogicException If the page is not included in the siblings collection
 	 */
-	protected function resortSiblingsAfterListing(int $position = null): bool
+	protected function resortSiblingsAfterListing(int|null $position = null): bool
 	{
 		// get all siblings including the current page
 		$siblings = $this

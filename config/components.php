@@ -119,7 +119,7 @@ return [
 	 */
 	'markdown' => function (
 		App $kirby,
-		string $text = null,
+		string|null $text = null,
 		array $options = []
 	): string {
 		static $markdown;
@@ -271,7 +271,7 @@ return [
 	 */
 	'smartypants' => function (
 		App $kirby,
-		string $text = null,
+		string|null $text = null,
 		array $options = []
 	): string {
 		static $smartypants;
@@ -354,7 +354,7 @@ return [
 	 */
 	'url' => function (
 		App $kirby,
-		string $path = null,
+		string|null $path = null,
 		$options = null
 	): string {
 		$language = null;

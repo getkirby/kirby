@@ -149,7 +149,7 @@ class Session
 	 * @param string|null $mode Optional new transmission mode
 	 * @return string Transmission mode
 	 */
-	public function mode(string $mode = null): string
+	public function mode(string|null $mode = null): string
 	{
 		if ($mode !== null) {
 			// only allow this if this is a new session, otherwise the change
@@ -214,7 +214,7 @@ class Session
 	 * @param int|null $duration Optional new duration in seconds to set
 	 * @return int Number of seconds
 	 */
-	public function duration(int $duration = null): int
+	public function duration(int|null $duration = null): int
 	{
 		if ($duration !== null) {
 			// verify that the duration is at least 1 second

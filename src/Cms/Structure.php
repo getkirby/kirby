@@ -32,7 +32,7 @@ class Structure extends Items
 	 * an array of item props
 	 */
 	public static function factory(
-		array $items = null,
+		array|null $items = null,
 		array $params = []
 	): static {
 		if (is_array($items) === true) {

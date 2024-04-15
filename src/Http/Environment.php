@@ -153,8 +153,8 @@ class Environment
 	 * @param array|null $info Optional override for `$_SERVER`
 	 */
 	public function detect(
-		array $options = null,
-		array $info = null
+		array|null $options = null,
+		array|null $info = null
 	): array {
 		$options = [
 			'cli'     => null,

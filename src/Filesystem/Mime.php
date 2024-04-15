@@ -251,7 +251,7 @@ class Mime
 	/**
 	 * Returns the extension for a given MIME type
 	 */
-	public static function toExtension(string $mime = null): string|false
+	public static function toExtension(string|null $mime = null): string|false
 	{
 		foreach (static::$types as $key => $value) {
 			if (is_array($value) === true && in_array($mime, $value) === true) {
@@ -269,7 +269,7 @@ class Mime
 	/**
 	 * Returns all available extensions for a given MIME type
 	 */
-	public static function toExtensions(string $mime = null, bool $matchWildcards = false): array
+	public static function toExtensions(string|null $mime = null, bool $matchWildcards = false): array
 	{
 		$extensions = [];
 		$testMime = fn (string $v) => static::matches($v, $mime);

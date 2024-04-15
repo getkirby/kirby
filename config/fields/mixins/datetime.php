@@ -7,7 +7,7 @@ return [
 		/**
 		 * Defines a custom format that is used when the field is saved
 		 */
-		'format' => function (string $format = null) {
+		'format' => function (string|null $format = null) {
 			return $format;
 		}
 	],

@@ -613,7 +613,7 @@ abstract class FieldClass
 	}
 
 	protected function valueToJson(
-		array $value = null,
+		array|null $value = null,
 		bool $pretty = false
 	): string {
 		$constants = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
@@ -625,7 +625,7 @@ abstract class FieldClass
 		return json_encode($value, $constants);
 	}
 
-	protected function valueToYaml(array $value = null): string
+	protected function valueToYaml(array|null $value = null): string
 	{
 		return Data::encode($value, 'yaml');
 	}

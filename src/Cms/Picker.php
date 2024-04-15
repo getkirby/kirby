@@ -68,7 +68,7 @@ abstract class Picker
 	 * array that is already optimized for the
 	 * panel picker component.
 	 */
-	public function itemsToArray(Collection $items = null): array
+	public function itemsToArray(Collection|null $items = null): array
 	{
 		if ($items === null) {
 			return [];

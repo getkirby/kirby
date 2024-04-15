@@ -115,7 +115,7 @@ return function (App $app) {
 		'toDate' => function (
 			Field $field,
 			string|IntlDateFormatter|null $format = null,
-			string $fallback = null
+			string|null $fallback = null
 		) use ($app): string|int|null {
 			if (empty($field->value) === true && $fallback === null) {
 				return null;
@@ -504,7 +504,7 @@ return function (App $app) {
 		 */
 		'query' => function (
 			Field $field,
-			string $expect = null
+			string|null $expect = null
 		) use ($app): mixed {
 			if ($parent = $field->parent()) {
 				return $parent->query($field->value, $expect);

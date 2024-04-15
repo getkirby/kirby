@@ -189,7 +189,7 @@ class Collection extends Iterator implements Countable
 	 *
 	 * @return array|$this
 	 */
-	public function data(array $data = null): array|static
+	public function data(array|null $data = null): array|static
 	{
 		if ($data === null) {
 			return $this->data;
@@ -708,7 +708,7 @@ class Collection extends Iterator implements Countable
 	 */
 	public function pluck(
 		string $field,
-		string $split = null,
+		string|null $split = null,
 		bool $unique = false
 	): array {
 		$result = [];
@@ -884,7 +884,7 @@ class Collection extends Iterator implements Countable
 	 * @return $this|static
 	 * @psalm-return ($offset is 0 && $limit is null ? $this : static)
 	 */
-	public function slice(int $offset = 0, int $limit = null): static
+	public function slice(int $offset = 0, int|null $limit = null): static
 	{
 		if ($offset === 0 && $limit === null) {
 			return $this;
@@ -1050,7 +1050,7 @@ class Collection extends Iterator implements Countable
 	/**
 	 * Converts the object into an array
 	 */
-	public function toArray(Closure $map = null): array
+	public function toArray(Closure|null $map = null): array
 	{
 		if ($map !== null) {
 			return array_map($map, $this->data);
@@ -1080,7 +1080,7 @@ class Collection extends Iterator implements Countable
 	 * with all values. If a mapping Closure is passed,
 	 * all values are processed by the Closure.
 	 */
-	public function values(Closure $map = null): array
+	public function values(Closure|null $map = null): array
 	{
 		$data = $map === null ? $this->data : array_map($map, $this->data);
 		return array_values($data);
@@ -1098,7 +1098,7 @@ class Collection extends Iterator implements Countable
 	public function when(
 		$condition,
 		Closure $callback,
-		Closure $fallback = null
+		Closure|null $fallback = null
 	) {
 		if ($condition) {
 			return $callback->call($this, $condition);

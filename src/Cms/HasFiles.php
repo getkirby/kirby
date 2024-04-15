@@ -64,7 +64,7 @@ trait HasFiles
 	 * Returns a specific file by filename or the first one
 	 */
 	public function file(
-		string $filename = null,
+		string|null $filename = null,
 		string $in = 'files'
 	): File|null {
 		if ($filename === null) {
@@ -153,7 +153,7 @@ trait HasFiles
 	/**
 	 * Returns a specific image by filename or the first one
 	 */
-	public function image(string $filename = null): File|null
+	public function image(string|null $filename = null): File|null
 	{
 		return $this->file($filename, 'images');
 	}
@@ -171,7 +171,7 @@ trait HasFiles
 	 *
 	 * @return $this
 	 */
-	protected function setFiles(array $files = null): static
+	protected function setFiles(array|null $files = null): static
 	{
 		if ($files !== null) {
 			$this->files = Files::factory($files, $this);
