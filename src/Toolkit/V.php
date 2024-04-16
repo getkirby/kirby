@@ -474,28 +474,28 @@ V::$validators = [
 	/**
 	 * Checks if the number of characters in the value equals or is below the given maximum
 	 */
-	'maxLength' => function (string|null $value = null, $max): bool {
+	'maxLength' => function (string|null $value, $max): bool {
 		return Str::length(trim($value)) <= $max;
 	},
 
 	/**
 	 * Checks if the number of characters in the value equals or is greater than the given minimum
 	 */
-	'minLength' => function (string|null $value = null, $min): bool {
+	'minLength' => function (string|null $value, $min): bool {
 		return Str::length(trim($value)) >= $min;
 	},
 
 	/**
 	 * Checks if the number of words in the value equals or is below the given maximum
 	 */
-	'maxWords' => function (string|null $value = null, $max): bool {
+	'maxWords' => function (string|null $value, $max): bool {
 		return V::max(explode(' ', trim($value)), $max) === true;
 	},
 
 	/**
 	 * Checks if the number of words in the value equals or is below the given maximum
 	 */
-	'minWords' => function (string|null $value = null, $min): bool {
+	'minWords' => function (string|null $value, $min): bool {
 		return V::min(explode(' ', trim($value)), $min) === true;
 	},
 
