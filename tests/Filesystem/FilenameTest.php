@@ -2,7 +2,7 @@
 
 namespace Kirby\Filesystem;
 
-use Kirby\TestCase as TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Filesystem\Filename

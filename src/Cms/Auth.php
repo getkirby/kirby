@@ -198,7 +198,6 @@ class Auth
 	 * for a basic authentication header with
 	 * valid credentials
 	 *
-	 * @param \Kirby\Http\Request\Auth\BasicAuth|null $auth
 	 * @throws \Kirby\Exception\InvalidArgumentException if the authorization header is invalid
 	 * @throws \Kirby\Exception\PermissionException if basic authentication is not allowed
 	 */
@@ -584,8 +583,8 @@ class Auth
 		}
 
 		// ensure that the category arrays are defined
-		$log['by-ip']    = $log['by-ip'] ?? [];
-		$log['by-email'] = $log['by-email'] ?? [];
+		$log['by-ip']    ??= [];
+		$log['by-email'] ??= [];
 
 		// remove all elements on the top level with different keys (old structure)
 		$log = array_intersect_key($log, array_flip(['by-ip', 'by-email']));

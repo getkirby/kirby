@@ -93,9 +93,9 @@ trait AppPlugins
 
 	/**
 	 * Register all given extensions
-	 *
 	 * @internal
-	 * @param \Kirby\Cms\Plugin $plugin|null The plugin which defined those extensions
+	 *
+	 * @param \Kirby\Cms\Plugin|null $plugin The plugin which defined those extensions
 	 */
 	public function extend(
 		array $extensions,
@@ -855,7 +855,7 @@ trait AppPlugins
 		}
 
 		// get the correct root for the plugin
-		$extends['root'] = $extends['root'] ?? dirname(debug_backtrace()[0]['file']);
+		$extends['root'] ??= dirname(debug_backtrace()[0]['file']);
 
 		$plugin = new Plugin($name, $extends);
 		$name   = $plugin->name();

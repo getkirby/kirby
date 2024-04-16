@@ -50,8 +50,6 @@ class MockTime
 /**
  * Mock for the PHP usleep() function to skip over
  * waiting times while testing
- *
- * @param int $microSeconds
  */
 function usleep(int $microSeconds): void
 {

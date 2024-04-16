@@ -26,7 +26,7 @@ return function (array $props) {
 
 		// inject the global templates definition
 		if (empty($templates) === false) {
-			$props['templates'] = $props['templates'] ?? $templates;
+			$props['templates'] ??= $templates;
 		}
 
 		return array_replace_recursive($defaults, $props);

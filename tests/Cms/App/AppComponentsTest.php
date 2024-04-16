@@ -338,7 +338,7 @@ class AppComponentsTest extends TestCase
 		$this->assertSame('plugin', $app->snippet(['does-not-exist', 'plugin']));
 
 		// fallback from plugin with field
-		$this->assertSame('plugin', $app->snippet(['does-not-exist', new Field(null, 'test', 'plugin') ]));
+		$this->assertSame('plugin', $app->snippet(['does-not-exist', new Field(null, 'test', 'plugin')]));
 
 		// inject data
 		$this->assertSame('test', $app->snippet('variable', ['message' => 'test']));

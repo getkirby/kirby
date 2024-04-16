@@ -38,10 +38,6 @@ class Loader
 	 */
 	protected $withPlugins;
 
-	/**
-	 * @param \Kirby\Cms\App $kirby
-	 * @param bool $withPlugins
-	 */
 	public function __construct(App $kirby, bool $withPlugins = true)
 	{
 		$this->kirby       = $kirby;

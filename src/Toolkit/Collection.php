@@ -217,8 +217,6 @@ class Collection extends Iterator implements Countable
 
 	/**
 	 * Adds all elements to a cloned collection
-	 *
-	 * @param mixed $items
 	 */
 	public function extend($items): static
 	{
@@ -386,7 +384,6 @@ class Collection extends Iterator implements Countable
 	/**
 	 * Find a single element by an attribute and its value
 	 *
-	 * @param mixed $value
 	 * @return TValue|null
 	 */
 	public function findBy(string $attribute, $value)
@@ -447,9 +444,6 @@ class Collection extends Iterator implements Countable
 	 * in the collection. This is useful if elements in the collection
 	 * might be objects, arrays or anything else and you need to
 	 * get the value independently from that. We use it for `filter`.
-	 *
-	 * @param mixed $related
-	 * @return mixed
 	 */
 	public function getAttribute(
 		array|object $item,
@@ -687,7 +681,6 @@ class Collection extends Iterator implements Countable
 	/**
 	 * Add pagination and return a sliced set of data
 	 *
-	 * @param mixed ...$arguments
 	 * @return $this|static
 	 */
 	public function paginate(...$arguments): static
@@ -1101,7 +1094,6 @@ class Collection extends Iterator implements Countable
 	 *
 	 * @since 3.3.0
 	 * @param mixed $condition a truthy or falsy value
-	 * @return mixed
 	 */
 	public function when(
 		$condition,
