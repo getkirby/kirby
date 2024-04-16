@@ -388,7 +388,7 @@ class Str
 		for ($i = 0; $i < static::length($string); $i++) {
 			$char = static::substr($string, $i, 1);
 			$char = mb_convert_encoding($char, 'UCS-4BE', 'UTF-8');
-			list(, $code) = unpack('N', $char);
+			[, $code] = unpack('N', $char);
 			$encoded .= rand(1, 2) === 1 ? '&#' . $code . ';' : '&#x' . dechex($code) . ';';
 		}
 
