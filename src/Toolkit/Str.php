@@ -275,7 +275,7 @@ class Str
 	 *
 	 * @param string $value The string to convert
 	 */
-	public static function camel(string|null $value = null): string
+	public static function camel(string|null $value): string
 	{
 		return lcfirst(static::studly($value));
 	}
@@ -286,7 +286,7 @@ class Str
 	 *
 	 * @param string $value The string to convert
 	 */
-	public static function camelToKebab(string|null $value = null): string
+	public static function camelToKebab(string|null $value): string
 	{
 		return static::lower(preg_replace('!([a-z0-9])([A-Z])!', '$1-$2', $value));
 	}
@@ -504,9 +504,8 @@ class Str
 	 * Convert the value to a float with a decimal
 	 * point, no matter what the locale setting is
 	 */
-	public static function float(
-		string|int|float|null $value = null
-	): string {
+	public static function float(string|int|float|null $value): string
+	{
 		// make sure $value is not null
 		$value ??= '';
 
@@ -571,7 +570,7 @@ class Str
 	/**
 	 * Convert a string to kebab case.
 	 */
-	public static function kebab(string|null $value = null): string
+	public static function kebab(string|null $value): string
 	{
 		return static::snake($value, '-');
 	}
@@ -579,7 +578,7 @@ class Str
 	/**
 	 * Convert a kebab case string to camel case.
 	 */
-	public static function kebabToCamel(string|null $value = null): string
+	public static function kebabToCamel(string|null $value): string
 	{
 		return ucfirst(preg_replace_callback(
 			'/-(.)/',
@@ -591,7 +590,7 @@ class Str
 	/**
 	 * A UTF-8 safe version of strlen()
 	 */
-	public static function length(string|null $string = null): int
+	public static function length(string|null $string): int
 	{
 		return mb_strlen($string ?? '', 'UTF-8');
 	}
@@ -599,7 +598,7 @@ class Str
 	/**
 	 * A UTF-8 safe version of strtolower()
 	 */
-	public static function lower(string|null $string = null): string
+	public static function lower(string|null $string): string
 	{
 		return mb_strtolower($string ?? '', 'UTF-8');
 	}
@@ -964,7 +963,7 @@ class Str
 	 * @return string The filled-in and partially escaped string
 	 */
 	public static function safeTemplate(
-		string|null $string = null,
+		string|null $string,
 		array $data = [],
 		array $options = []
 	): string {
@@ -1021,7 +1020,7 @@ class Str
 	 * @return string The shortened string
 	 */
 	public static function short(
-		string|null $string = null,
+		string|null $string,
 		int $length = 0,
 		string $appendix = '…'
 	): string {
@@ -1126,7 +1125,7 @@ class Str
 	 * @return string The safe string
 	 */
 	public static function slug(
-		string|null $string = null,
+		string|null $string,
 		string|null $separator = null,
 		string|null $allowed = null,
 		int $maxlength = 128
@@ -1169,7 +1168,7 @@ class Str
 	 * Convert a string to snake case.
 	 */
 	public static function snake(
-		string|null $value = null,
+		string|null $value,
 		string $delimiter = '_'
 	): string {
 		if (ctype_lower($value) === false) {
@@ -1240,7 +1239,7 @@ class Str
 	 *
 	 * @param string $value The string to convert
 	 */
-	public static function studly(string|null $value = null): string
+	public static function studly(string|null $value): string
 	{
 		$value = str_replace(['-', '_'], ' ', $value);
 		$value = ucwords($value);
@@ -1251,7 +1250,7 @@ class Str
 	 * A UTF-8 safe version of substr()
 	 */
 	public static function substr(
-		string|null $string = null,
+		string|null $string,
 		int $start = 0,
 		int|null $length = null
 	): string {
@@ -1280,7 +1279,7 @@ class Str
 	 * @return string The filled-in string
 	 */
 	public static function template(
-		string|null $string = null,
+		string|null $string,
 		array $data = [],
 		array $options = []
 	): string {
@@ -1377,7 +1376,7 @@ class Str
 	/**
 	 * A UTF-8 safe version of ucfirst()
 	 */
-	public static function ucfirst(string|null $string = null): string
+	public static function ucfirst(string|null $string): string
 	{
 		$first = static::substr($string, 0, 1);
 		$rest  = static::substr($string, 1);
@@ -1387,7 +1386,7 @@ class Str
 	/**
 	 * A UTF-8 safe version of ucwords()
 	 */
-	public static function ucwords(string|null $string = null): string
+	public static function ucwords(string|null $string): string
 	{
 		return mb_convert_case($string ?? '', MB_CASE_TITLE, 'UTF-8');
 	}
@@ -1402,7 +1401,7 @@ class Str
 	 *
 	 * </code>
 	 */
-	public static function unhtml(string|null $string = null): string
+	public static function unhtml(string|null $string): string
 	{
 		return Html::decode($string);
 	}
@@ -1427,7 +1426,7 @@ class Str
 	/**
 	 * A UTF-8 safe version of strotoupper()
 	 */
-	public static function upper(string|null $string = null): string
+	public static function upper(string|null $string): string
 	{
 		return mb_strtoupper($string ?? '', 'UTF-8');
 	}
@@ -1465,7 +1464,7 @@ class Str
 	 * typographical widows at the end of a paragraph –
 	 * that's a single word in the last line
 	 */
-	public static function widont(string|null $string = null): string
+	public static function widont(string|null $string): string
 	{
 		// make sure $string is string
 		$string ??= '';

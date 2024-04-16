@@ -1539,7 +1539,6 @@ EOT;
 		$this->assertSame('Omelette du&nbsp;fromage.', Str::widont('Omelette du fromage.'));
 		$this->assertSame('Omelette du&nbsp;fromage?', Str::widont('Omelette du fromage?'));
 		$this->assertSame('Omelette du&nbsp;fromage&nbsp;?', Str::widont('Omelette du fromage ?'));
-		$this->assertSame('', Str::widont());
 	}
 
 	/**
