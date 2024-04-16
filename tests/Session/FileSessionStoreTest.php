@@ -48,11 +48,11 @@ class FileSessionStoreTest extends TestCase
 		unset($this->store);
 
 		// make sure the directory and in files are writable before trying to delete
-		chmod(static::TMP, 0777);
+		chmod(static::TMP, 0o777);
 
 		$files = array_diff(scandir(static::TMP) ?? [], ['.', '..']);
 		foreach ($files as $file) {
-			chmod(static::TMP . '/' . $file, 0777);
+			chmod(static::TMP . '/' . $file, 0o777);
 		}
 
 		Dir::remove(static::TMP);
@@ -68,7 +68,7 @@ class FileSessionStoreTest extends TestCase
 		$this->expectExceptionCode('error.session.filestore.dirNotWritable');
 
 		Dir::make(static::TMP, true);
-		chmod(static::TMP, 0555);
+		chmod(static::TMP, 0o555);
 
 		new FileSessionStore(static::TMP);
 	}
@@ -208,7 +208,7 @@ class FileSessionStoreTest extends TestCase
 		$this->expectExceptionCode('error.session.filestore.notOpened');
 
 		// session files need to have read and write permissions even for reading
-		chmod(static::TMP . '/1234567890.abcdefghijabcdefghij.sess', 0444);
+		chmod(static::TMP . '/1234567890.abcdefghijabcdefghij.sess', 0o444);
 		$this->store->get(1234567890, 'abcdefghijabcdefghij');
 	}
 
