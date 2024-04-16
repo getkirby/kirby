@@ -256,7 +256,7 @@ class FieldMethodsTest extends TestCase
 	public function testToInt()
 	{
 		$this->assertSame(1, $this->field('1')->toInt());
-		$this->assertTrue(is_int($this->field('1')->toInt()));
+		$this->assertIsInt($this->field('1')->toInt());
 	}
 
 	public function testToLink()

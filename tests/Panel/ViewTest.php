@@ -269,7 +269,7 @@ class ViewTest extends TestCase
 		$this->assertSame([], $view['breadcrumb']);
 		$this->assertSame(200, $view['code']);
 		$this->assertSame('', $view['path']);
-		$this->assertTrue(is_int($view['timestamp']));
+		$this->assertIsInt($view['timestamp']);
 		$this->assertSame([], $view['props']);
 		$this->assertSame('pages', $view['search']);
 

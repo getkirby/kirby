@@ -91,7 +91,7 @@ class SqliteTest extends TestCase
 			'\)$/m',
 			$table['query']
 		);
-		$this->assertSame(2, count($table['bindings']));
+		$this->assertCount(2, $table['bindings']);
 		$this->assertSame('test default', A::first($table['bindings']));
 		$this->assertSame('another default', A::last($table['bindings']));
 
