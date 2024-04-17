@@ -83,7 +83,7 @@ abstract class Model
 	 *
 	 * @return $this
 	 */
-	protected function setKirby(App $kirby = null)
+	protected function setKirby(App|null $kirby = null)
 	{
 		static::$kirby = $kirby;
 		return $this;
@@ -95,7 +95,7 @@ abstract class Model
 	 * @internal
 	 * @return $this
 	 */
-	public function setSite(Site $site = null)
+	public function setSite(Site|null $site = null)
 	{
 		$this->site = $site;
 		return $this;

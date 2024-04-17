@@ -464,7 +464,7 @@ class Dom
 			$namespaceUri = null;
 			$itemLocal    = $item;
 			if (Str::contains($item, ':') === true) {
-				list($namespaceName, $itemLocal) = explode(':', $item);
+				[$namespaceName, $itemLocal] = explode(':', $item);
 				$namespaceUri = $allowedNamespaces[$namespaceName] ?? null;
 			} else {
 				// list items without namespace are from the default namespace

@@ -244,7 +244,7 @@ class User extends ModelWithContent
 	 */
 	public static function hashPassword(
 		#[SensitiveParameter]
-		string $password = null
+		string|null $password = null
 	): string|null {
 		if ($password !== null) {
 			$password = password_hash($password, PASSWORD_DEFAULT);
@@ -284,7 +284,7 @@ class User extends ModelWithContent
 	/**
 	 * Compares the current object with the given user object
 	 */
-	public function is(User $user = null): bool
+	public function is(User|null $user = null): bool
 	{
 		if ($user === null) {
 			return false;
@@ -639,7 +639,7 @@ class User extends ModelWithContent
 	 *
 	 * @return $this
 	 */
-	protected function setBlueprint(array $blueprint = null): static
+	protected function setBlueprint(array|null $blueprint = null): static
 	{
 		if ($blueprint !== null) {
 			$blueprint['model'] = $this;
@@ -698,7 +698,7 @@ class User extends ModelWithContent
 	 *                              (`null` to keep the original token)
 	 */
 	public function toString(
-		string $template = null,
+		string|null $template = null,
 		array $data = [],
 		string|null $fallback = '',
 		string $handler = 'template'
@@ -726,7 +726,7 @@ class User extends ModelWithContent
 	 */
 	public function validatePassword(
 		#[SensitiveParameter]
-		string $password = null
+		string|null $password = null
 	): bool {
 		if (empty($this->password()) === true) {
 			throw new NotFoundException(['key' => 'user.password.undefined']);

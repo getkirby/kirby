@@ -420,7 +420,7 @@ class Query
 	 *
 	 * @return $this
 	 */
-	public function order(string $order = null)
+	public function order(string|null $order = null)
 	{
 		$this->order = $order;
 		return $this;

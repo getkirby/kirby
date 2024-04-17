@@ -51,7 +51,7 @@ class Items extends Collection
 	 * an array of item props
 	 */
 	public static function factory(
-		array $items = null,
+		array|null $items = null,
 		array $params = []
 	): static {
 		if (empty($items) === true || is_array($items) === false) {
@@ -96,7 +96,7 @@ class Items extends Collection
 	/**
 	 * Convert the items to an array
 	 */
-	public function toArray(Closure $map = null): array
+	public function toArray(Closure|null $map = null): array
 	{
 		return array_values(parent::toArray($map));
 	}

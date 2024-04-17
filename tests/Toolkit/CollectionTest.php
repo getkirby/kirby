@@ -151,7 +151,7 @@ class CollectionTest extends TestCase
 	public function testCount()
 	{
 		$this->assertSame(3, $this->collection->count());
-		$this->assertSame(3, count($this->collection));
+		$this->assertCount(3, $this->collection);
 	}
 
 	/**

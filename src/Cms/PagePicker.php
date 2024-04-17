@@ -80,7 +80,7 @@ class PagePicker extends Picker
 	 * parent model that is currently selected
 	 * in the page picker.
 	 */
-	public function modelToArray(Page|Site $model = null): array|null
+	public function modelToArray(Page|Site|null $model = null): array|null
 	{
 		if ($model === null) {
 			return null;

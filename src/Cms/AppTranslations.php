@@ -111,7 +111,7 @@ trait AppTranslations
 	 * @internal
 	 */
 	public function setCurrentLanguage(
-		string $languageCode = null
+		string|null $languageCode = null
 	): Language|null {
 		if ($this->multilang() === false) {
 			Locale::set($this->option('locale', 'en_US.utf-8'));
@@ -136,7 +136,7 @@ trait AppTranslations
 	 *
 	 * @internal
 	 */
-	public function setCurrentTranslation(string $translationCode = null): void
+	public function setCurrentTranslation(string|null $translationCode = null): void
 	{
 		I18n::$locale = $translationCode ?? 'en';
 	}

@@ -17,7 +17,7 @@ class ExpressionTest extends TestCase
 	public function testFactory()
 	{
 		$expression = Expression::factory('a ? b : c');
-		$this->assertSame(5, count($expression->parts));
+		$this->assertCount(5, $expression->parts);
 		$this->assertInstanceOf(Argument::class, $expression->parts[0]);
 		$this->assertIsString($expression->parts[1]);
 		$this->assertInstanceOf(Argument::class, $expression->parts[2]);

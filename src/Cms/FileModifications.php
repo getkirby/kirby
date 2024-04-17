@@ -38,7 +38,7 @@ trait FileModifications
 	 */
 	public function crop(
 		int $width,
-		int $height = null,
+		int|null $height = null,
 		$options = null
 	): FileVersion|File|Asset {
 		$quality = null;
@@ -94,9 +94,9 @@ trait FileModifications
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public function resize(
-		int $width = null,
-		int $height = null,
-		int $quality = null
+		int|null $width = null,
+		int|null $height = null,
+		int|null $quality = null
 	): FileVersion|File|Asset {
 		return $this->thumb([
 			'width'   => $width,

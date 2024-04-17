@@ -27,7 +27,7 @@ class Media
 	 * and to copy it to the media folder.
 	 */
 	public static function link(
-		Page|Site|User $model = null,
+		Page|Site|User|null $model,
 		string $hash,
 		string $filename
 	): Response|false {

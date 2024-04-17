@@ -550,7 +550,7 @@ class DirTest extends TestCase
 	{
 		Dir::make(static::TMP);
 
-		$this->assertTrue(is_int(Dir::modified(static::TMP)));
+		$this->assertIsInt(Dir::modified(static::TMP));
 	}
 
 	/**

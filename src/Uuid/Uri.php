@@ -61,7 +61,7 @@ class Uri extends BaseUri
 	 * Returns the ID part of the UUID string
 	 * (and sets it when new one passed)
 	 */
-	public function host(string $host = null): string|null
+	public function host(string|null $host = null): string|null
 	{
 		if ($host !== null) {
 			return $this->host = $host;

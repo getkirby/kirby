@@ -23,7 +23,7 @@ trait HasSiblings
 	 *
 	 * @param TCollection|null $collection
 	 */
-	public function hasNext(Collection $collection = null): bool
+	public function hasNext(Collection|null $collection = null): bool
 	{
 		return $this->next($collection) !== null;
 	}
@@ -33,7 +33,7 @@ trait HasSiblings
 	 *
 	 * @param TCollection|null $collection
 	 */
-	public function hasPrev(Collection $collection = null): bool
+	public function hasPrev(Collection|null $collection = null): bool
 	{
 		return $this->prev($collection) !== null;
 	}
@@ -43,7 +43,7 @@ trait HasSiblings
 	 *
 	 * @param TCollection|null $collection
 	 */
-	public function indexOf(Collection $collection = null): int|false
+	public function indexOf(Collection|null $collection = null): int|false
 	{
 		$collection ??= $this->siblingsCollection();
 		return $collection->indexOf($this);
@@ -54,7 +54,7 @@ trait HasSiblings
 	 *
 	 * @param TCollection|null $collection
 	 */
-	public function isFirst(Collection $collection = null): bool
+	public function isFirst(Collection|null $collection = null): bool
 	{
 		$collection ??= $this->siblingsCollection();
 		return $collection->first()->is($this);
@@ -65,7 +65,7 @@ trait HasSiblings
 	 *
 	 * @param TCollection|null $collection
 	 */
-	public function isLast(Collection $collection = null): bool
+	public function isLast(Collection|null $collection = null): bool
 	{
 		$collection ??= $this->siblingsCollection();
 		return $collection->last()->is($this);
@@ -76,7 +76,7 @@ trait HasSiblings
 	 *
 	 * @param TCollection|null $collection
 	 */
-	public function isNth(int $n, Collection $collection = null): bool
+	public function isNth(int $n, Collection|null $collection = null): bool
 	{
 		return $this->indexOf($collection) === $n;
 	}
@@ -102,7 +102,7 @@ trait HasSiblings
 	 * @param TCollection|null $collection
 	 * @return TCollection
 	 */
-	public function nextAll(Collection $collection = null): Collection
+	public function nextAll(Collection|null $collection = null): Collection
 	{
 		$collection ??= $this->siblingsCollection();
 		return $collection->slice($this->indexOf($collection) + 1);
@@ -117,7 +117,7 @@ trait HasSiblings
 	 * @param TCollection|null $collection
 	 * @return static|null
 	 */
-	public function prev(Collection $collection = null)
+	public function prev(Collection|null $collection = null)
 	{
 		$collection ??= $this->siblingsCollection();
 		return $collection->nth($this->indexOf($collection) - 1);
@@ -129,7 +129,7 @@ trait HasSiblings
 	 * @param TCollection|null $collection
 	 * @return TCollection
 	 */
-	public function prevAll(Collection $collection = null): Collection
+	public function prevAll(Collection|null $collection = null): Collection
 	{
 		$collection ??= $this->siblingsCollection();
 		return $collection->slice(0, $this->indexOf($collection));

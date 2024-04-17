@@ -122,7 +122,7 @@ class Email
 	/**
 	 * Returns an email template by name and type
 	 */
-	protected function getTemplate(string $name, string $type = null): Template
+	protected function getTemplate(string $name, string|null $type = null): Template
 	{
 		return App::instance()->template('emails/' . $name, $type, 'text');
 	}
@@ -160,7 +160,7 @@ class Email
 		string $prop,
 		string $class,
 		string $contentValue,
-		string $contentKey = null
+		string|null $contentKey = null
 	): array {
 		$value = $this->props[$prop] ?? [];
 

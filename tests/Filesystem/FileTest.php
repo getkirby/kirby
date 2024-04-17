@@ -37,7 +37,7 @@ class FileTest extends TestCase
 	public function tearDown(): void
 	{
 		if (file_exists(static::TMP . '/unreadable.txt') === true) {
-			chmod(static::TMP . '/unreadable.txt', 0755);
+			chmod(static::TMP . '/unreadable.txt', 0o755);
 		}
 
 		static::$block = [];
@@ -619,7 +619,7 @@ class FileTest extends TestCase
 	{
 		$file = new File(static::TMP . '/unreadable.txt');
 		$file->write('test');
-		chmod($file->root(), 0000);
+		chmod($file->root(), 0o000);
 		$this->assertFalse($file->read());
 	}
 
@@ -873,7 +873,7 @@ class FileTest extends TestCase
 
 		$file = new File(static::TMP . '/unwritable.txt');
 		$file->write('test');
-		chmod($file->root(), 0555);
+		chmod($file->root(), 0o555);
 		$file->write('kirby');
 	}
 

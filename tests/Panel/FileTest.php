@@ -405,7 +405,7 @@ class FileTest extends TestCase
 
 		// fallback to model itself
 		$image = (new File($page->file()))->image('foo.bar');
-		$this->assertFalse(empty($image));
+		$this->assertNotEmpty($image);
 	}
 
 	/**

@@ -109,7 +109,7 @@ class Permissions
 		}
 	}
 
-	public function for(string $category = null, string $action = null): bool
+	public function for(string|null $category = null, string|null $action = null): bool
 	{
 		if ($action === null) {
 			if ($this->hasCategory($category) === false) {

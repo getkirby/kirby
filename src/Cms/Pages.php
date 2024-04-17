@@ -145,8 +145,8 @@ class Pages extends Collection
 	 */
 	public static function factory(
 		array $pages,
-		Page|Site $model = null,
-		bool $draft = null
+		Page|Site|null $model = null,
+		bool|null $draft = null
 	): static {
 		$model  ??= App::instance()->site();
 		$children = new static([], $model);
@@ -249,7 +249,7 @@ class Pages extends Collection
 	 */
 	protected function findByKeyRecursive(
 		string $id,
-		string $startAt = null,
+		string|null $startAt = null,
 		bool $multiLang = false
 	): Page|null {
 		$path       = explode('/', $id);

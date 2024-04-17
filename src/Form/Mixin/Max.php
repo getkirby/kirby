@@ -11,7 +11,7 @@ trait Max
 		return $this->max;
 	}
 
-	protected function setMax(int $max = null)
+	protected function setMax(int|null $max = null)
 	{
 		$this->max = $max;
 	}

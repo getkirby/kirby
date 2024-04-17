@@ -202,7 +202,7 @@ class UserTest extends TestCase
 
 		// fallback to model itself
 		$image = (new User($user))->image('foo.bar');
-		$this->assertFalse(empty($image));
+		$this->assertNotEmpty($image);
 	}
 
 	/**

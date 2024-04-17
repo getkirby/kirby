@@ -38,8 +38,8 @@ class VTest extends TestCase
 	 */
 	public function testValidators()
 	{
-		$this->assertFalse(empty(V::$validators));
-		$this->assertFalse(empty(V::validators()));
+		$this->assertNotEmpty(V::$validators);
+		$this->assertNotEmpty(V::validators());
 	}
 
 	/**

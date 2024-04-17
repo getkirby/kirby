@@ -312,7 +312,7 @@ class FileRules
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the MIME type is missing or forbidden
 	 */
-	public static function validMime(File $file, string $mime = null): bool
+	public static function validMime(File $file, string|null $mime = null): bool
 	{
 		// make it easier to compare the mime
 		$mime = strtolower($mime);
