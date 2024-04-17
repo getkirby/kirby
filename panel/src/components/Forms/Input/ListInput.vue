@@ -4,6 +4,7 @@
 		v-bind="$props"
 		:class="['k-list-input', $attrs.class]"
 		:extensions="listExtensions"
+		:style="$attrs.style"
 		:value="list"
 		@input="onInput"
 	/>

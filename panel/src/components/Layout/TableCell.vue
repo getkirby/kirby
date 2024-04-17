@@ -4,6 +4,7 @@
 		:data-align="column.align"
 		:data-column-id="id"
 		:data-mobile="mobile"
+		:style="$attrs.style"
 	>
 		<!-- Table cell type component -->
 		<component

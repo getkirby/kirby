@@ -1,5 +1,8 @@
 <template>
-	<p :class="['k-text-field-preview', $options.class, $attrs.class]">
+	<p
+		:class="['k-text-field-preview', $options.class, $attrs.class]"
+		:style="$attrs.style"
+	>
 		{{ column.before }}
 		<slot>{{ text }}</slot>
 		{{ column.after }}

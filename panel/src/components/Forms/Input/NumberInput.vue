@@ -13,6 +13,7 @@
 		}"
 		:class="['k-number-input', $attrs.class]"
 		:step="stepNumber"
+		:style="$attrs.style"
 		:value="number"
 		type="number"
 		@blur="onBlur"

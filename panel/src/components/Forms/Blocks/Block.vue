@@ -2,6 +2,7 @@
 	<div
 		ref="container"
 		:class="[
+			'k-block-container',
 			'k-block-container-fieldset-' + type,
 			containerType ? 'k-block-container-type-' + containerType : '',
 			$attrs.class
@@ -13,7 +14,7 @@
 		:data-last-selected="isLastSelected"
 		:data-selected="isSelected"
 		:data-translate="fieldset.translate"
-		class="k-block-container"
+		:style="$attrs.style"
 		:tabindex="isDisabled ? null : 0"
 		@keydown.ctrl.j.prevent.stop="$emit('merge')"
 		@keydown.ctrl.alt.down.prevent.stop="$emit('selectDown')"

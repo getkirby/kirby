@@ -4,6 +4,7 @@
 		:columns="columns"
 		:empty="$t('field.structure.empty')"
 		:rows="rows"
+		:style="$attrs.style"
 		@dblclick.native="open"
 	/>
 </template>

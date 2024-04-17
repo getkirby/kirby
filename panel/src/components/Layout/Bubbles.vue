@@ -1,5 +1,5 @@
 <template>
-	<ul :class="['k-bubbles', $attrs.class]">
+	<ul :class="['k-bubbles', $attrs.class]" :style="$attrs.style">
 		<li v-for="(bubble, id) in items" :key="id">
 			<k-bubble v-bind="bubble" :html="html" />
 		</li>

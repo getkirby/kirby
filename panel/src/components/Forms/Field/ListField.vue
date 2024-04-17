@@ -4,6 +4,7 @@
 		:class="['k-list-field', $attrs.class]"
 		:counter="false"
 		:input="id"
+		:style="$attrs.style"
 	>
 		<k-input
 			v-bind="$props"

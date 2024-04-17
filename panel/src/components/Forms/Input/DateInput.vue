@@ -7,6 +7,7 @@
 		:disabled="disabled"
 		:placeholder="display"
 		:required="required"
+		:style="$attrs.style"
 		:value="formatted"
 		autocomplete="off"
 		spellcheck="false"

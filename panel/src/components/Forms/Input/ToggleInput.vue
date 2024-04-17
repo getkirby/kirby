@@ -5,6 +5,7 @@
 		:class="['k-toggle-input', $attrs.class]"
 		:disabled="disabled"
 		:label="label"
+		:style="$attrs.style"
 		type="checkbox"
 		variant="toggle"
 		@input="$emit('input', $event)"

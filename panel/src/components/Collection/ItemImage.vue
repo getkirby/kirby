@@ -3,6 +3,7 @@
 		:is="component"
 		v-bind="attrs"
 		:class="['k-item-image', $attrs.class]"
+		:style="$attrs.style"
 	/>
 </template>
 
