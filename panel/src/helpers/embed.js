@@ -14,7 +14,7 @@ export function youtube(url, doNotTrack = false) {
 
 	try {
 		uri = new URL(url);
-	} catch (e) {
+	} catch {
 		return false;
 	}
 
@@ -103,7 +103,7 @@ export function vimeo(url, doNotTrack = false) {
 
 	try {
 		uri = new URL(url);
-	} catch (e) {
+	} catch {
 		return false;
 	}
 

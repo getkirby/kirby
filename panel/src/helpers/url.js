@@ -97,7 +97,7 @@ export function isUrl(url, strict) {
 	// validate it
 	try {
 		new URL(url, window.location);
-	} catch (error) {
+	} catch {
 		return false;
 	}
 

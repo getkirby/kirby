@@ -102,7 +102,7 @@ async function previewForFile(id, fields = ["filename", "panelImage"]) {
 			label: file.filename,
 			image: file.panelImage
 		};
-	} catch (e) {
+	} catch {
 		return null;
 	}
 }
@@ -123,7 +123,7 @@ async function previewForPage(id, fields = ["title", "panelImage"]) {
 			label: page.title,
 			image: page.panelImage
 		};
-	} catch (e) {
+	} catch {
 		return null;
 	}
 }
