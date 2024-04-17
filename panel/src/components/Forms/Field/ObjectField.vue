@@ -127,8 +127,6 @@ export default {
 			this.object = {};
 			this.save();
 		},
-		// TODO: field is not yet used to pre-focus correct field
-		// eslint-disable-next-line no-unused-vars
 		open(field) {
 			if (this.disabled) {
 				return false;

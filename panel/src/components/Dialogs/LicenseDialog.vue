@@ -47,7 +47,6 @@ export const props = {
 	mixins: [Dialog],
 	props: {
 		license: Object,
-		// eslint-disable-next-line vue/require-prop-types
 		size: {
 			default: "large"
 		}

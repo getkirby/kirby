@@ -214,7 +214,7 @@ export default {
 
 					try {
 						data = JSON.parse(json);
-					} catch (e) {
+					} catch {
 						// fail silently
 					}
 
