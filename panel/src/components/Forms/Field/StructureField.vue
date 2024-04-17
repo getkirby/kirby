@@ -161,16 +161,6 @@ export default {
 	},
 	computed: {
 		/**
-		 * Config options for `k-draggable`
-		 * @returns {Object}
-		 */
-		dragOptions() {
-			return {
-				disabled: !this.isSortable,
-				fallbackClass: "k-sortable-row-fallback"
-			};
-		},
-		/**
 		 * Index of first row that is displayed
 		 * @returns {number}
 		 */
