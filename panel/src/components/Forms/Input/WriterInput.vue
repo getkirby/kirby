@@ -417,7 +417,7 @@ export default {
 				});
 			}
 
-			this.$refs.output.setCustomValidity(error);
+			this.$refs.output?.setCustomValidity(error);
 		}
 	}
 };

@@ -117,17 +117,13 @@ export default {
 	computed: {
 		draggableOptions() {
 			return {
-				id: this.id,
 				handle: ".k-sort-handle",
 				list: this.blocks,
+				group: this.group,
 				move: this.move,
-				delay: 10,
 				data: {
 					fieldsets: this.fieldsets,
 					isFull: this.isFull
-				},
-				options: {
-					group: this.group
 				}
 			};
 		},
@@ -420,10 +416,8 @@ export default {
 		move(event) {
 			// moving block between fields
 			if (event.from !== event.to) {
-				const block = event.draggedContext.element;
-				const to =
-					event.relatedContext.component.componentData ||
-					event.relatedContext.component.$parent.componentData;
+				const block = event.draggedData;
+				const to = event.toData;
 
 				// fieldset is not supported in target field
 				if (Object.keys(to.fieldsets).includes(block.type) === false) {
