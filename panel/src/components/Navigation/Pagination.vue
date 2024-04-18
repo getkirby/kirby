@@ -68,8 +68,6 @@
 </template>
 
 <script>
-import { useUid } from "@/helpers/useUid.js";
-
 /**
  * @example <k-pagination
  *   :details="true"
@@ -131,9 +129,6 @@ export default {
 		},
 		start() {
 			return (this.page - 1) * this.limit + 1;
-		},
-		uid() {
-			return useUid();
 		}
 	},
 	methods: {
