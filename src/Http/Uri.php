@@ -88,11 +88,10 @@ class Uri
 	public function __construct(array|string $props = [], array $inject = [])
 	{
 		if (is_string($props) === true) {
-			$props = parse_url($props);
+			$props             = parse_url($props);
 			$props['username'] = $props['user'] ?? null;
 			$props['password'] = $props['pass'] ?? null;
-
-			$props = array_merge($props, $inject);
+			$props             = [...$props, ...$inject];
 		}
 
 		// parse the path and extract params

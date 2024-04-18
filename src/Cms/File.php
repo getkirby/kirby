@@ -35,6 +35,9 @@ class File extends ModelWithContent
 	use FileActions;
 	use FileModifications;
 	use HasMethods;
+	/**
+	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Files>
+	 */
 	use HasSiblings;
 	use IsFile;
 
@@ -124,10 +127,11 @@ class File extends ModelWithContent
 	 */
 	public function __debugInfo(): array
 	{
-		return array_merge($this->toArray(), [
+		return [
+			...$this->toArray(),
 			'content'  => $this->content(),
 			'siblings' => $this->siblings(),
-		]);
+		];
 	}
 
 	/**
@@ -155,7 +159,7 @@ class File extends ModelWithContent
 	 * Returns an array with all blueprints that are available for the file
 	 * by comparing files sections and files fields of the parent model
 	 */
-	public function blueprints(string $inSection = null): array
+	public function blueprints(string|null $inSection = null): array
 	{
 		// get cached results for the current file model
 		// (except when collecting for a specific section)
@@ -227,7 +231,7 @@ class File extends ModelWithContent
 	 */
 	public function contentFileData(
 		array $data,
-		string $languageCode = null
+		string|null $languageCode = null
 	): array {
 		// only add the template in, if the $data array
 		// doesn't explicitly unsets it
@@ -298,10 +302,10 @@ class File extends ModelWithContent
 	 */
 	public function html(array $attr = []): string
 	{
-		return $this->asset()->html(array_merge(
-			['alt' => $this->alt()],
-			$attr
-		));
+		return $this->asset()->html([
+			'alt' => $this->alt(),
+			...$attr
+		]);
 	}
 
 	/**
@@ -446,7 +450,7 @@ class File extends ModelWithContent
 	 * Timestamp of the last modification
 	 * of the content file
 	 */
-	protected function modifiedContent(string $languageCode = null): int
+	protected function modifiedContent(string|null $languageCode = null): int
 	{
 		return $this->storage()->modified('published', $languageCode) ?? 0;
 	}
@@ -551,7 +555,7 @@ class File extends ModelWithContent
 	 *
 	 * @return $this
 	 */
-	protected function setBlueprint(array $blueprint = null): static
+	protected function setBlueprint(array|null $blueprint = null): static
 	{
 		if ($blueprint !== null) {
 			$blueprint['model'] = $this;
@@ -563,7 +567,6 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the parent Files collection
-	 * @internal
 	 */
 	protected function siblingsCollection(): Files
 	{
@@ -605,10 +608,12 @@ class File extends ModelWithContent
 	 */
 	public function toArray(): array
 	{
-		return array_merge(parent::toArray(), $this->asset()->toArray(), [
+		return [
+			...parent::toArray(),
+			...$this->asset()->toArray(),
 			'id'       => $this->id(),
 			'template' => $this->template(),
-		]);
+		];
 	}
 
 	/**

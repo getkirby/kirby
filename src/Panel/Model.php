@@ -125,11 +125,11 @@ abstract class Model
 		}
 
 		// merge with defaults and blueprint option
-		$settings = array_merge(
-			$this->imageDefaults(),
-			$settings ?? [],
-			$blueprint ?? [],
-		);
+		$settings = [
+			...$this->imageDefaults(),
+			...$settings ?? [],
+			...$blueprint ?? [],
+		];
 
 		if ($image = $this->imageSource($settings['query'] ?? null)) {
 			// main url

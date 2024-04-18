@@ -11,7 +11,7 @@ return [
 		/**
 		 * Sets the query to a parent to find items for the list
 		 */
-		'parent' => function (string $parent = null) {
+		'parent' => function (string|null $parent = null) {
 			return $parent;
 		}
 	],

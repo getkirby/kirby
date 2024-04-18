@@ -34,13 +34,12 @@ class MemCached extends Cache
 	 */
 	public function __construct(array $options = [])
 	{
-		$defaults = [
+		parent::__construct([
 			'host'    => 'localhost',
 			'port'    => 11211,
 			'prefix'  => null,
-		];
-
-		parent::__construct(array_merge($defaults, $options));
+			...$options
+		]);
 
 		$this->connection = new MemcachedExt();
 		$this->enabled = $this->connection->addServer(

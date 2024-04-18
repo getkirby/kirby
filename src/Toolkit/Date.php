@@ -287,8 +287,6 @@ class Date extends DateTime
 
 	/**
 	 * Returns an instance of the current datetime
-	 *
-	 * @param \DateTimeZone|null $timezone
 	 */
 	public static function now(DateTimeZone|null $timezone = null): static
 	{
@@ -425,17 +423,19 @@ class Date extends DateTime
 		}
 
 		if (is_array($input) === true) {
-			$input = array_merge($default, $input);
-			$input['unit'] = strtolower($input['unit']);
-			return $input;
+			return [
+				...$default,
+				...$input,
+				'unit' => strtolower($input['unit'])
+			];
 		}
 
 		if (is_int($input) === true) {
-			return array_merge($default, ['size' => $input]);
+			return [...$default, 'size' => $input];
 		}
 
 		if (is_string($input) === true) {
-			return array_merge($default, ['unit' => strtolower($input)]);
+			return [...$default, 'unit' => strtolower($input)];
 		}
 
 		throw new InvalidArgumentException('Invalid input');

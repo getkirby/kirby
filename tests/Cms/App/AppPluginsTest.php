@@ -972,7 +972,7 @@ class AppPluginsTest extends TestCase
 		]);
 
 		$plugins = $kirby->plugins();
-		$this->assertSame(1, count($plugins));
+		$this->assertCount(1, $plugins);
 
 		$plugin = array_pop($plugins);
 		$this->assertSame('plugins/test5', $plugin->name());

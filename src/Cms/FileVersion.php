@@ -108,10 +108,10 @@ class FileVersion
 	 */
 	public function toArray(): array
 	{
-		$array = array_merge(
-			$this->asset()->toArray(),
-			['modifications' => $this->modifications()]
-		);
+		$array = [
+			...$this->asset()->toArray(),
+			'modifications' => $this->modifications()
+		];
 
 		ksort($array);
 

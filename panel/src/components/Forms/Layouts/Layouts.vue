@@ -78,7 +78,6 @@ export default {
 	computed: {
 		draggableOptions() {
 			return {
-				id: this.id,
 				handle: true,
 				list: this.rows
 			};

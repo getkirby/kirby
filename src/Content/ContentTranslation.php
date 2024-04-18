@@ -71,10 +71,10 @@ class ContentTranslation
 			$this->isDefault() === false &&
 			$defaultLanguage = $parent->kirby()->defaultLanguage()
 		) {
-			$content = array_merge(
-				$parent->translation($defaultLanguage->code())?->content() ?? [],
-				$content
-			);
+			$content = [
+				...$parent->translation($defaultLanguage->code())?->content() ?? [],
+				...$content
+			];
 		}
 
 		return $content;
@@ -145,13 +145,13 @@ class ContentTranslation
 	 *
 	 * @return $this
 	 */
-	public function update(array $data = null, bool $overwrite = false): static
+	public function update(array|null $data = null, bool $overwrite = false): static
 	{
 		$data = array_change_key_case((array)$data);
 
 		$this->content = match ($overwrite) {
 			true    => $data,
-			default => array_merge($this->content(), $data)
+			default => [...$this->content(), ...$data]
 		};
 
 		return $this;

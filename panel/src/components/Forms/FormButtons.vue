@@ -228,7 +228,7 @@ export default {
 			if (lock === true) {
 				try {
 					await this.$api.patch(...this.api);
-				} catch (error) {
+				} catch {
 					// If setting lock failed, a competing lock has been set between
 					// API calls. In that case, discard changes, stop setting lock
 					clearInterval(this.isLocking);

@@ -335,7 +335,7 @@ class Query
 	public function bindings(array|null $bindings = null): array|static
 	{
 		if (is_array($bindings) === true) {
-			$this->bindings = array_merge($this->bindings, $bindings);
+			$this->bindings = [...$this->bindings, ...$bindings];
 			return $this;
 		}
 
@@ -418,10 +418,9 @@ class Query
 	/**
 	 * Attaches an order clause
 	 *
-	 * @param string|null $order
 	 * @return $this
 	 */
-	public function order(string $order = null)
+	public function order(string|null $order = null)
 	{
 		$this->order = $order;
 		return $this;
@@ -827,9 +826,10 @@ class Query
 
 				if ($args[0] === null) {
 					return $current;
+				}
 
 				// ->where('username like "myuser"');
-				} elseif (is_string($args[0]) === true) {
+				if (is_string($args[0]) === true) {
 					// simply add the entire string to the where clause
 					// escaping or using bindings has to be done before calling this method
 					$result = $args[0];
@@ -852,7 +852,7 @@ class Query
 					call_user_func($args[0], $query);
 
 					// copy over the bindings from the nested query
-					$this->bindings = array_merge($this->bindings, $query->bindings);
+					$this->bindings = [...$this->bindings, ...$query->bindings];
 
 					$result = '(' . $query->where . ')';
 				}

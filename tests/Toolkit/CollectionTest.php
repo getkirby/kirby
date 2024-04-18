@@ -2,6 +2,8 @@
 
 namespace Kirby\Toolkit;
 
+use Exception;
+
 class StringObject
 {
 	protected $value;
@@ -149,7 +151,7 @@ class CollectionTest extends TestCase
 	public function testCount()
 	{
 		$this->assertSame(3, $this->collection->count());
-		$this->assertSame(3, count($this->collection));
+		$this->assertCount(3, $this->collection);
 	}
 
 	/**
@@ -440,7 +442,7 @@ class CollectionTest extends TestCase
 	{
 		$collection = new Collection(['a' => 'A']);
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Can only group by string values or by providing a callback function');
 
 		$collection->group(1);
@@ -543,8 +545,8 @@ class CollectionTest extends TestCase
 	public function testIsEmpty()
 	{
 		$collection = new Collection([
-			[ 'name'  => 'Bastian' ],
-			[ 'name' => 'Nico' ]
+			['name'  => 'Bastian'],
+			['name' => 'Nico']
 		]);
 
 		$this->assertTrue($collection->isNotEmpty());

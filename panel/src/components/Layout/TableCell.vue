@@ -2,6 +2,7 @@
 	<td
 		:class="['k-table-cell', $attrs.class]"
 		:data-align="column.align"
+		:data-column-id="id"
 		:data-mobile="mobile"
 		:style="$attrs.style"
 	>
@@ -30,6 +31,7 @@ export default {
 		 * Optional corresponding field options
 		 */
 		field: Object,
+		id: String,
 		/**
 		 * Keep cell on mobile
 		 */

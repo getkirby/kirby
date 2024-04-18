@@ -34,13 +34,14 @@ class AutoSession
 		array $options = []
 	) {
 		// merge options with defaults
-		$this->options = array_merge([
+		$this->options = [
 			'durationNormal' => 7200,
 			'durationLong'   => 1209600,
 			'timeout'        => 1800,
 			'cookieName'     => 'kirby_session',
-			'gcInterval'     => 100
-		], $options);
+			'gcInterval'     => 100,
+			...$options
+		];
 
 		// create an internal instance of the low-level Sessions class
 		$this->sessions = new Sessions($store, [
@@ -60,11 +61,12 @@ class AutoSession
 	public function get(array $options = []): Session
 	{
 		// merge options with defaults
-		$options = array_merge([
+		$options = [
 			'detect'     => false,
 			'createMode' => 'cookie',
-			'long'       => false
-		], $options);
+			'long'       => false,
+			...$options
+		];
 
 		// determine expiry options based on the session type
 		if ($options['long'] === true) {

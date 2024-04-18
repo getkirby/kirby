@@ -44,7 +44,7 @@ class SystemTest extends TestCase
 	public function tearDown(): void
 	{
 		if ($this->subTmp !== null) {
-			chmod($this->subTmp, 0755);
+			chmod($this->subTmp, 0o755);
 			Dir::remove($this->subTmp);
 		}
 
@@ -312,7 +312,6 @@ class SystemTest extends TestCase
 
 	/**
 	 * @dataProvider providerForRoots
-	 * @param $root
 	 * @throws \Kirby\Exception\PermissionException
 	 */
 	public function testInitPermission($root)
@@ -330,7 +329,7 @@ class SystemTest extends TestCase
 		Dir::make($this->subTmp);
 
 		// set no writable
-		chmod($this->subTmp, 0444);
+		chmod($this->subTmp, 0o444);
 
 		// /site/accounts
 		$this->expectException(PermissionException::class);

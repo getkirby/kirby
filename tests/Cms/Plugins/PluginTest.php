@@ -412,8 +412,8 @@ class PluginTest extends TestCase
 
 		$expected = [
 			'authors' => [
-				[ 'name' => 'A', 'email' => 'a@getkirby.com' ],
-				[ 'name' => 'B', 'email' => 'b@getkirby.com' ]
+				['name' => 'A', 'email' => 'a@getkirby.com'],
+				['name' => 'B', 'email' => 'b@getkirby.com']
 			],
 			'description' => 'Some really nice description',
 			'name'        => 'getkirby/test-plugin',

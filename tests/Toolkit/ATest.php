@@ -92,12 +92,12 @@ class ATest extends TestCase
 	{
 		// The value should be passed to the callback
 		A::every(['foo', 'bar'], function ($value) {
-			$this->assertTrue(is_string($value), 'The value should be passed to the callback');
+			$this->assertIsString($value, 'The value should be passed to the callback');
 		});
 
 		// The key should be passed to the callback
 		A::every(['foo' => 1, 'bar' => 2], function ($value, $key = null) {
-			$this->assertTrue(is_string($key), 'The key should be passed to the callback');
+			$this->assertIsString($key, 'The key should be passed to the callback');
 		});
 
 		// the array should be passed to the callback
@@ -593,12 +593,12 @@ class ATest extends TestCase
 	{
 		// The value should be passed to the callback
 		A::some(['foo', 'bar'], function ($value = null) {
-			$this->assertTrue(is_string($value), 'The value should be passed to the callback');
+			$this->assertIsString($value, 'The value should be passed to the callback');
 		});
 
 		// The key should be passed to the callback
 		A::some(['foo' => 1, 'bar' => 2], function ($value = null, $key = null) {
-			$this->assertTrue(is_string($key), 'The key should be passed to the callback');
+			$this->assertIsString($key, 'The key should be passed to the callback');
 		});
 
 		// the array should be passed to the callback
@@ -681,7 +681,7 @@ class ATest extends TestCase
 		// Assert existence and correctness of keys
 		$random1 = A::random($array, 1);
 		$this->assertTrue(in_array(array_values($random1)[0], $array));
-		$this->assertTrue(array_key_exists(array_key_first($random1), $array));
+		$this->assertArrayHasKey(array_key_first($random1), $array);
 
 		// Assert order of keys in non-shuffled random
 		$random2 = A::random($array, 2);
@@ -1118,27 +1118,27 @@ class ATest extends TestCase
 	public function testKeyBy()
 	{
 		$array = [
-			[ 'id' => 1, 'username' => 'bastian'],
-			[ 'id' => 2, 'username' => 'sonja'],
-			[ 'id' => 3, 'username' => 'lukas']
+			['id' => 1, 'username' => 'bastian'],
+			['id' => 2, 'username' => 'sonja'],
+			['id' => 3, 'username' => 'lukas']
 		];
 
 		$array_by_id = [
-			1 => [ 'id' => 1, 'username' => 'bastian'],
-			2 => [ 'id' => 2, 'username' => 'sonja'],
-			3 => [ 'id' => 3, 'username' => 'lukas']
+			1 => ['id' => 1, 'username' => 'bastian'],
+			2 => ['id' => 2, 'username' => 'sonja'],
+			3 => ['id' => 3, 'username' => 'lukas']
 		];
 
 		$array_by_name = [
-			'bastian' => [ 'id' => 1, 'username' => 'bastian'],
-			'sonja'   => [ 'id' => 2, 'username' => 'sonja'],
-			'lukas'   => [ 'id' => 3, 'username' => 'lukas']
+			'bastian' => ['id' => 1, 'username' => 'bastian'],
+			'sonja'   => ['id' => 2, 'username' => 'sonja'],
+			'lukas'   => ['id' => 3, 'username' => 'lukas']
 		];
 
 		$array_by_cb = [
-			'bastian-1' => [ 'id' => 1, 'username' => 'bastian'],
-			'sonja-2'   => [ 'id' => 2, 'username' => 'sonja'],
-			'lukas-3'   => [ 'id' => 3, 'username' => 'lukas']
+			'bastian-1' => ['id' => 1, 'username' => 'bastian'],
+			'sonja-2'   => ['id' => 2, 'username' => 'sonja'],
+			'lukas-3'   => ['id' => 3, 'username' => 'lukas']
 		];
 
 		$this->assertSame($array_by_id, A::keyBy($array, 'id'));
@@ -1161,9 +1161,9 @@ class ATest extends TestCase
 		$this->expectExceptionMessage('The "key by" argument must be a valid key or a callable');
 
 		$array = [
-			[ 'id' => 1, 'username' => 'bastian'],
-			[ 'id' => 2, 'username' => 'sonja'],
-			[ 'id' => 3, 'username' => 'lukas']
+			['id' => 1, 'username' => 'bastian'],
+			['id' => 2, 'username' => 'sonja'],
+			['id' => 3, 'username' => 'lukas']
 		];
 
 		A::keyBy($array, 'nonexistent');

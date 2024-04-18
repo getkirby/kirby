@@ -167,10 +167,11 @@ class Response
 	 */
 	public static function file(string $file, array $props = []): static
 	{
-		$props = array_merge([
+		$props = [
 			'body' => F::read($file),
-			'type' => F::extensionToMime(F::extension($file))
-		], $props);
+			'type' => F::extensionToMime(F::extension($file)),
+			...$props
+		];
 
 		// if we couldn't serve a correct MIME type, force
 		// the browser to display the file as plain text to

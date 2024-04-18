@@ -68,7 +68,7 @@ export default {
 			try {
 				// first try to parse the color via the library
 				return this.$library.colors.toString(value, this.format, this.alpha);
-			} catch (e) {
+			} catch {
 				// if that fails,
 				// create a new secret tester
 				const test = document.createElement("div");

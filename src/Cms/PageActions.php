@@ -561,12 +561,13 @@ trait PageActions
 	 */
 	public function createChild(array $props): Page
 	{
-		$props = array_merge($props, [
+		$props = [
+			...$props,
 			'url'    => null,
 			'num'    => null,
 			'parent' => $this,
 			'site'   => $this->site(),
-		]);
+		];
 
 		$modelClass = Page::$models[$props['template'] ?? null] ?? Page::class;
 		return $modelClass::create($props);
@@ -576,7 +577,7 @@ trait PageActions
 	 * Create the sorting number for the page
 	 * depending on the blueprint settings
 	 */
-	public function createNum(int $num = null): int
+	public function createNum(int|null $num = null): int
 	{
 		$mode = $this->blueprint()->num();
 
@@ -824,7 +825,7 @@ trait PageActions
 	/**
 	 * @throws \Kirby\Exception\LogicException If the page is not included in the siblings collection
 	 */
-	protected function resortSiblingsAfterListing(int $position = null): bool
+	protected function resortSiblingsAfterListing(int|null $position = null): bool
 	{
 		// get all siblings including the current page
 		$siblings = $this
@@ -986,7 +987,6 @@ trait PageActions
 	 *
 	 * @param \Kirby\Cms\Page $page
 	 * @param string $method Method to call on the parent collections
-	 * @param \Kirby\Cms\Page|null $parentMdel
 	 */
 	protected static function updateParentCollections(
 		$page,

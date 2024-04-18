@@ -13,6 +13,8 @@ use Kirby\Filesystem\F;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @extends \Kirby\Cms\Collection<\Kirby\Cms\Language>
  */
 class Languages extends Collection
 {

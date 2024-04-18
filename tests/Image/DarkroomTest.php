@@ -8,7 +8,7 @@ class DarkroomTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 
-	public function file(string $driver = null)
+	public function file(string|null $driver = null)
 	{
 		if ($driver !== null) {
 			return static::FIXTURES . '/image/cat-' . $driver . '.jpg';

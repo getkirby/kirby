@@ -15,6 +15,8 @@ use Throwable;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @extends \Kirby\Cms\Items<\Kirby\Cms\Layout>
  */
 class Layouts extends Items
 {
@@ -26,7 +28,7 @@ class Layouts extends Items
 	public static array $methods = [];
 
 	public static function factory(
-		array $items = null,
+		array|null $items = null,
 		array $params = []
 	): static {
 		// convert single layout to layouts array

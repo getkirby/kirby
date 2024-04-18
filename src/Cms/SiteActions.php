@@ -76,14 +76,13 @@ trait SiteActions
 	 */
 	public function createChild(array $props): Page
 	{
-		$props = array_merge($props, [
+		return Page::create([
+			...$props,
 			'url'    => null,
 			'num'    => null,
 			'parent' => null,
 			'site'   => $this,
 		]);
-
-		return Page::create($props);
 	}
 
 	/**

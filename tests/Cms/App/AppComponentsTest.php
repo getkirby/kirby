@@ -159,7 +159,7 @@ class AppComponentsTest extends TestCase
 	{
 		$this->kirby = $this->kirby->clone([
 			'components' => [
-				'markdown' => function (App $kirby, string $text = null, array $options = []) {
+				'markdown' => function (App $kirby, string|null $text = null, array $options = []) {
 					$result = Html::encode($text);
 
 					if (($options['inline'] ?? false) === false) {
@@ -338,7 +338,7 @@ class AppComponentsTest extends TestCase
 		$this->assertSame('plugin', $app->snippet(['does-not-exist', 'plugin']));
 
 		// fallback from plugin with field
-		$this->assertSame('plugin', $app->snippet(['does-not-exist', new Field(null, 'test', 'plugin') ]));
+		$this->assertSame('plugin', $app->snippet(['does-not-exist', new Field(null, 'test', 'plugin')]));
 
 		// inject data
 		$this->assertSame('test', $app->snippet('variable', ['message' => 'test']));

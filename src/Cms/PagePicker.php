@@ -29,12 +29,13 @@ class PagePicker extends Picker
 	 */
 	public function defaults(): array
 	{
-		return array_merge(parent::defaults(), [
+		return [
+			...parent::defaults(),
 			// Page ID of the selected parent. Used to navigate
 			'parent' => null,
 			// enable/disable subpage navigation
 			'subpages' => true,
-		]);
+		];
 	}
 
 	/**
@@ -79,7 +80,7 @@ class PagePicker extends Picker
 	 * parent model that is currently selected
 	 * in the page picker.
 	 */
-	public function modelToArray(Page|Site $model = null): array|null
+	public function modelToArray(Page|Site|null $model = null): array|null
 	{
 		if ($model === null) {
 			return null;

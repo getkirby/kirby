@@ -45,10 +45,14 @@ return [
 			$plugins = $system->plugins()->values(function ($plugin) use (&$exceptions) {
 				$authors      = $plugin->authorsNames();
 				$updateStatus = $plugin->updateStatus();
-				$version      = $updateStatus?->toArray() ?? $plugin->version() ?? '–';
+				$version      = $updateStatus?->toArray();
+				$version    ??= $plugin->version() ?? '–';
 
 				if ($updateStatus !== null) {
-					$exceptions = array_merge($exceptions, $updateStatus->exceptionMessages());
+					$exceptions = [
+						...$exceptions,
+						...$updateStatus->exceptionMessages()
+					];
 				}
 
 				return [

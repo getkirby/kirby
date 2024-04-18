@@ -153,16 +153,16 @@ class Environment
 	 * @param array|null $info Optional override for `$_SERVER`
 	 */
 	public function detect(
-		array $options = null,
-		array $info = null
+		array|null $options = null,
+		array|null $info = null
 	): array {
-		$defaults = [
+		$options = [
 			'cli'     => null,
-			'allowed' => null
+			'allowed' => null,
+			...$options ?? []
 		];
 
-		$info  ??= $_SERVER;
-		$options = array_merge($defaults, $options ?? []);
+		$info ??= $_SERVER;
 
 		$this->info          = static::sanitize($info);
 		$this->cli           = $this->detectCli($options['cli']);

@@ -49,8 +49,6 @@ class Status
 
 	/**
 	 * Class constructor
-	 *
-	 * @param array $props
 	 */
 	public function __construct(array $props)
 	{

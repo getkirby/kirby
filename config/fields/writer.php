@@ -36,14 +36,14 @@ return [
 		/**
 		 * Maximum number of allowed characters
 		 */
-		'maxlength' => function (int $maxlength = null) {
+		'maxlength' => function (int|null $maxlength = null) {
 			return $maxlength;
 		},
 
 		/**
 		 * Minimum number of required characters
 		 */
-		'minlength' => function (int $minlength = null) {
+		'minlength' => function (int|null $minlength = null) {
 			return $minlength;
 		},
 		/**

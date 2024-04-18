@@ -269,7 +269,7 @@ class ViewTest extends TestCase
 		$this->assertSame([], $view['breadcrumb']);
 		$this->assertSame(200, $view['code']);
 		$this->assertSame('', $view['path']);
-		$this->assertTrue(is_int($view['timestamp']));
+		$this->assertIsInt($view['timestamp']);
 		$this->assertSame([], $view['props']);
 		$this->assertSame('pages', $view['search']);
 
@@ -321,8 +321,8 @@ class ViewTest extends TestCase
 	{
 		$this->app = $this->app->clone([
 			'languages' => [
-				[ 'code' => 'en', 'name' => 'English', 'default' => true ],
-				[ 'code' => 'de', 'name' => 'Deutsch']
+				['code' => 'en', 'name' => 'English', 'default' => true],
+				['code' => 'de', 'name' => 'Deutsch']
 			],
 			'options' => [
 				'languages' => true
@@ -366,9 +366,9 @@ class ViewTest extends TestCase
 	{
 		$this->app = $this->app->clone([
 			'languages' => [
-				[ 'code' => 'en', 'name' => 'English', 'default' => true],
-				[ 'code' => 'de', 'name' => 'Deutsch'],
-				[ 'code' => 'ar', 'name' => 'Arabic', 'direction' => 'rtl'],
+				['code' => 'en', 'name' => 'English', 'default' => true],
+				['code' => 'de', 'name' => 'Deutsch'],
+				['code' => 'ar', 'name' => 'Arabic', 'direction' => 'rtl'],
 			],
 			'options' => [
 				'languages' => true

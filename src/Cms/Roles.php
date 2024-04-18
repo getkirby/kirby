@@ -15,6 +15,8 @@ namespace Kirby\Cms;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @extends \Kirby\Cms\Collection<\Kirby\Cms\Role>
  */
 class Roles extends Collection
 {
@@ -90,7 +92,7 @@ class Roles extends Collection
 		return $collection->sort('name', 'asc');
 	}
 
-	public static function load(string $root = null, array $inject = []): static
+	public static function load(string|null $root = null, array $inject = []): static
 	{
 		$kirby = App::instance();
 		$roles = new static();

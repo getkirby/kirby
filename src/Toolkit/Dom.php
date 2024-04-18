@@ -168,7 +168,7 @@ class Dom
 	public static function isAllowedAttr(
 		DOMAttr $attr,
 		array $options
-	): bool|string {
+	): true|string {
 		$options = static::normalizeSanitizeOptions($options);
 
 		$allowedTags = $options['allowedTags'];
@@ -218,7 +218,7 @@ class Dom
 	public static function isAllowedGlobalAttr(
 		DOMAttr $attr,
 		array $options
-	): bool|string {
+	): true|string {
 		$options = static::normalizeSanitizeOptions($options);
 
 		$allowedAttrs = $options['allowedAttrs'];
@@ -258,7 +258,7 @@ class Dom
 	public static function isAllowedUrl(
 		string $url,
 		array $options
-	): bool|string {
+	): true|string {
 		$options = static::normalizeSanitizeOptions($options);
 
 		$url = Str::lower($url);
@@ -464,7 +464,7 @@ class Dom
 			$namespaceUri = null;
 			$itemLocal    = $item;
 			if (Str::contains($item, ':') === true) {
-				list($namespaceName, $itemLocal) = explode(':', $item);
+				[$namespaceName, $itemLocal] = explode(':', $item);
 				$namespaceUri = $allowedNamespaces[$namespaceName] ?? null;
 			} else {
 				// list items without namespace are from the default namespace
@@ -869,14 +869,20 @@ class Dom
 
 				// custom check (if the attribute is still in the document)
 				if ($attr->ownerElement !== null && $options['attrCallback']) {
-					$errors = array_merge($errors, $options['attrCallback']($attr, $options) ?? []);
+					$errors = [
+						...$errors,
+						...$options['attrCallback']($attr, $options) ?? []
+					];
 				}
 			}
 		}
 
 		// custom check
 		if ($options['elementCallback']) {
-			$errors = array_merge($errors, $options['elementCallback']($element, $options) ?? []);
+			$errors = [
+				...$errors,
+				...$options['elementCallback']($element, $options) ?? []
+			];
 		}
 	}
 

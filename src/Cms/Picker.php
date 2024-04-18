@@ -23,7 +23,7 @@ abstract class Picker
 	 */
 	public function __construct(array $params = [])
 	{
-		$this->options = array_merge($this->defaults(), $params);
+		$this->options = [...$this->defaults(), ...$params];
 		$this->kirby   = $this->options['model']->kirby();
 		$this->site    = $this->kirby->site();
 	}
@@ -68,7 +68,7 @@ abstract class Picker
 	 * array that is already optimized for the
 	 * panel picker component.
 	 */
-	public function itemsToArray(Collection $items = null): array
+	public function itemsToArray(Collection|null $items = null): array
 	{
 		if ($items === null) {
 			return [];

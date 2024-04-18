@@ -68,10 +68,11 @@ class Translation
 			return $this->data;
 		}
 
-		// get the fallback array
-		$fallback = App::instance()->translation('en')->data();
-
-		return array_merge($fallback, $this->data);
+		return [
+			// add the fallback array
+			...App::instance()->translation('en')->data(),
+			...$this->data
+		];
 	}
 
 	/**
@@ -87,7 +88,7 @@ class Translation
 	 * Returns a single translation
 	 * string by key
 	 */
-	public function get(string $key, string $default = null): string|null
+	public function get(string $key, string|null $default = null): string|null
 	{
 		return $this->data[$key] ?? $default;
 	}
@@ -111,7 +112,7 @@ class Translation
 		array $inject = []
 	): static {
 		try {
-			$data = array_merge(Data::read($root), $inject);
+			$data = [...Data::read($root), ...$inject];
 		} catch (Exception) {
 			$data = [];
 		}

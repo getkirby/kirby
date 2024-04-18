@@ -68,7 +68,10 @@
 
 				<!-- Rows -->
 				<template v-else>
-					<tr v-for="(row, rowIndex) in values" :key="rowIndex">
+					<tr
+						v-for="(row, rowIndex) in values"
+						:key="row.id ?? row._id ?? row.value ?? JSON.stringify(row)"
+					>
 						<!-- Index & drag handle -->
 						<td
 							v-if="hasIndexColumn"
@@ -95,7 +98,8 @@
 						<!-- Cell -->
 						<k-table-cell
 							v-for="(column, columnIndex) in columns"
-							:key="rowIndex + '-' + columnIndex"
+							:id="columnIndex"
+							:key="columnIndex"
 							:column="column"
 							:field="fields[columnIndex]"
 							:row="row"
@@ -244,7 +248,7 @@ export default {
 		 */
 		dragOptions() {
 			return {
-				disabled: !this.sortable,
+				disabled: !this.sortable || this.rows.length === 0,
 				fallbackClass: "k-table-row-fallback",
 				ghostClass: "k-table-row-ghost"
 			};

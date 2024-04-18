@@ -20,7 +20,7 @@ class LazyValueTest extends TestCase
 		$value    = new LazyValue(fn () => $expected);
 		$this->assertInstanceOf(LazyValue::class, $value);
 		$this->assertNotInstanceOf(Closure::class, $value);
-		$this->assertFalse(is_callable($value));
+		$this->assertIsNotCallable($value);
 		$this->assertSame($expected, $value->resolve());
 	}
 

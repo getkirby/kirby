@@ -34,6 +34,9 @@ class Page extends ModelWithContent
 	use HasChildren;
 	use HasFiles;
 	use HasMethods;
+	/**
+	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Pages>
+	 */
 	use HasSiblings;
 	use PageActions;
 	use PageSiblings;
@@ -173,13 +176,14 @@ class Page extends ModelWithContent
 	 */
 	public function __debugInfo(): array
 	{
-		return array_merge($this->toArray(), [
+		return [
+			...$this->toArray(),
 			'content'      => $this->content(),
 			'children'     => $this->children(),
 			'siblings'     => $this->siblings(),
 			'translations' => $this->translations(),
 			'files'        => $this->files(),
-		]);
+		];
 	}
 
 	/**
@@ -307,12 +311,13 @@ class Page extends ModelWithContent
 		string $contentType = 'html'
 	): array {
 		// create the template data
-		$data = array_merge($data, [
+		$data = [
+			...$data,
 			'kirby' => $kirby = $this->kirby(),
 			'site'  => $site  = $this->site(),
 			'pages' => new LazyValue(fn () => $site->children()),
 			'page'  => new LazyValue(fn () => $site->visit($this))
-		]);
+		];
 
 		// call the template controller if there's one.
 		$controllerData = $kirby->controller(
@@ -773,7 +778,7 @@ class Page extends ModelWithContent
 	 * This is only used for drafts so far.
 	 * @internal
 	 */
-	public function isVerified(string $token = null): bool
+	public function isVerified(string|null $token = null): bool
 	{
 		if (
 			$this->isPublished() === true &&
@@ -1088,7 +1093,7 @@ class Page extends ModelWithContent
 	 *
 	 * @return $this
 	 */
-	protected function setBlueprint(array $blueprint = null): static
+	protected function setBlueprint(array|null $blueprint = null): static
 	{
 		if ($blueprint !== null) {
 			$blueprint['model'] = $this;
@@ -1103,7 +1108,7 @@ class Page extends ModelWithContent
 	 *
 	 * @return $this
 	 */
-	protected function setTemplate(string $template = null): static
+	protected function setTemplate(string|null $template = null): static
 	{
 		if ($template !== null) {
 			$this->intendedTemplate = $this->kirby()->template($template);
@@ -1117,7 +1122,7 @@ class Page extends ModelWithContent
 	 *
 	 * @return $this
 	 */
-	protected function setUrl(string $url = null): static
+	protected function setUrl(string|null $url = null): static
 	{
 		if (is_string($url) === true) {
 			$url = rtrim($url, '/');
@@ -1130,7 +1135,7 @@ class Page extends ModelWithContent
 	/**
 	 * Returns the slug of the page
 	 */
-	public function slug(string $languageCode = null): string
+	public function slug(string|null $languageCode = null): string
 	{
 		if ($this->kirby()->multilang() === true) {
 			$languageCode      ??= $this->kirby()->languageCode();
@@ -1196,7 +1201,8 @@ class Page extends ModelWithContent
 	 */
 	public function toArray(): array
 	{
-		return array_merge(parent::toArray(), [
+		return [
+			...parent::toArray(),
 			'children'  => $this->children()->keys(),
 			'files'     => $this->files()->keys(),
 			'id'        => $this->id(),
@@ -1209,7 +1215,7 @@ class Page extends ModelWithContent
 			'uid'       => $this->uid(),
 			'uri'       => $this->uri(),
 			'url'       => $this->url()
-		]);
+		];
 	}
 
 	/**
@@ -1242,7 +1248,7 @@ class Page extends ModelWithContent
 	 * The uri is the same as the id, except
 	 * that it will be translated in multi-language setups
 	 */
-	public function uri(string $languageCode = null): string
+	public function uri(string|null $languageCode = null): string
 	{
 		// set the id, depending on the parent
 		if ($parent = $this->parent()) {
@@ -1298,7 +1304,7 @@ class Page extends ModelWithContent
 	 */
 	public function urlForLanguage(
 		$language = null,
-		array $options = null
+		array|null $options = null
 	): string {
 		if ($options !== null) {
 			return Url::to($this->urlForLanguage($language), $options);

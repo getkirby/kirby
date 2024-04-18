@@ -28,10 +28,10 @@ class BlocksTest extends TestCase
 	public function testBlockquote()
 	{
 		$html = <<<HTML
-            <blockquote>
-                Test
-            </blockquote>
-        HTML;
+			<blockquote>
+				Test
+			</blockquote>
+			HTML;
 
 		$element  = $this->element($html, '//blockquote');
 		$expected = [
@@ -48,10 +48,10 @@ class BlocksTest extends TestCase
 	public function testBlockquoteWithMarks()
 	{
 		$html = <<<HTML
-            <blockquote>
-                <p><b>Bold</b> <i>Italic</i></p>
-            </blockquote>
-        HTML;
+			<blockquote>
+				<p><b>Bold</b> <i>Italic</i></p>
+			</blockquote>
+			HTML;
 
 		$element  = $this->element($html, '//blockquote');
 		$expected = [
@@ -68,11 +68,11 @@ class BlocksTest extends TestCase
 	public function testBlockquoteWithParagraphs()
 	{
 		$html = <<<HTML
-            <blockquote>
-                <p>A</p>
-                <p>B</p>
-            </blockquote>
-        HTML;
+			<blockquote>
+				<p>A</p>
+				<p>B</p>
+			</blockquote>
+			HTML;
 
 		$element  = $this->element($html, '//blockquote');
 		$expected = [
@@ -89,11 +89,11 @@ class BlocksTest extends TestCase
 	public function testBlockquoteWithFooter()
 	{
 		$html = <<<HTML
-            <blockquote>
-                Test
-                <footer>Albert Einstein</footer>
-            </blockquote>
-        HTML;
+			<blockquote>
+				Test
+				<footer>Albert Einstein</footer>
+			</blockquote>
+			HTML;
 
 		$element  = $this->element($html, '//blockquote');
 		$expected = [
@@ -189,10 +189,10 @@ class BlocksTest extends TestCase
 	public function testHeading()
 	{
 		$html = <<<HTML
-            <h1>
-                Test
-            </h1>
-        HTML;
+			<h1>
+				Test
+			</h1>
+			HTML;
 
 		$element  = $this->element($html, '//h1');
 		$expected = [
@@ -219,10 +219,10 @@ class BlocksTest extends TestCase
 	public function testHeadingLevel($level)
 	{
 		$html = <<<HTML
-            <$level>
-                Test
-            </$level>
-        HTML;
+			<$level>
+				Test
+			</$level>
+			HTML;
 
 		$element  = $this->element($html, '//' . $level);
 		$expected = [
@@ -239,10 +239,10 @@ class BlocksTest extends TestCase
 	public function testHeadingId()
 	{
 		$html = <<<HTML
-            <h1 id="test">
-                Test
-            </h1>
-        HTML;
+			<h1 id="test">
+				Test
+			</h1>
+			HTML;
 
 		$element  = $this->element($html, '//h1');
 		$expected = [
@@ -260,8 +260,8 @@ class BlocksTest extends TestCase
 	public function testIframe()
 	{
 		$html = <<<HTML
-            <iframe src="https://getkirby.com"></iframe>
-        HTML;
+			<iframe src="https://getkirby.com"></iframe>
+			HTML;
 
 		$element  = $this->element($html, '//iframe');
 		$expected = [
@@ -277,8 +277,8 @@ class BlocksTest extends TestCase
 	public function testIframeWithVimeoVideo()
 	{
 		$html = <<<HTML
-            <iframe src="https://player.vimeo.com/video/1"></iframe>
-        HTML;
+			<iframe src="https://player.vimeo.com/video/1"></iframe>
+			HTML;
 
 		$element  = $this->element($html, '//iframe');
 		$expected = [
@@ -295,8 +295,8 @@ class BlocksTest extends TestCase
 	public function testIframeWithYoutubeVideo()
 	{
 		$html = <<<HTML
-            <iframe src="https://youtube.com/embed/1"></iframe>
-        HTML;
+			<iframe src="https://youtube.com/embed/1"></iframe>
+			HTML;
 
 		$element  = $this->element($html, '//iframe');
 		$expected = [
@@ -313,8 +313,8 @@ class BlocksTest extends TestCase
 	public function testIframeWithYoutubeNoCookieVideo()
 	{
 		$html = <<<HTML
-            <iframe src="https://youtube-nocookie.com/embed/1"></iframe>
-        HTML;
+			<iframe src="https://youtube-nocookie.com/embed/1"></iframe>
+			HTML;
 
 		$element  = $this->element($html, '//iframe');
 		$expected = [
@@ -331,11 +331,11 @@ class BlocksTest extends TestCase
 	public function testIframeWithCaption()
 	{
 		$html = <<<HTML
-            <figure>
-                <iframe src="https://youtube.com/embed/1"></iframe>
-                <figcaption>Test</figcaption>
-            </figure>
-        HTML;
+			<figure>
+				<iframe src="https://youtube.com/embed/1"></iframe>
+				<figcaption>Test</figcaption>
+			</figure>
+			HTML;
 
 		$element  = $this->element($html, '//iframe');
 		$expected = [
@@ -352,11 +352,11 @@ class BlocksTest extends TestCase
 	public function testIframeWithCaptionAndMarks()
 	{
 		$html = <<<HTML
-            <figure>
-                <iframe src="https://youtube.com/embed/1"></iframe>
-                <figcaption><b>Bold</b><i>Italic</i></figcaption>
-            </figure>
-        HTML;
+			<figure>
+				<iframe src="https://youtube.com/embed/1"></iframe>
+				<figcaption><b>Bold</b><i>Italic</i></figcaption>
+			</figure>
+			HTML;
 
 		$element  = $this->element($html, '//iframe');
 		$expected = [
@@ -373,8 +373,8 @@ class BlocksTest extends TestCase
 	public function testImg()
 	{
 		$html = <<<HTML
-            <img src="https://getkirby.com/image.jpg">
-        HTML;
+			<img src="https://getkirby.com/image.jpg">
+			HTML;
 
 		$element  = $this->element($html, '//img');
 		$expected = [
@@ -394,8 +394,8 @@ class BlocksTest extends TestCase
 	public function testImgWithAlt()
 	{
 		$html = <<<HTML
-            <img src="https://getkirby.com/image.jpg" alt="Test">
-        HTML;
+			<img src="https://getkirby.com/image.jpg" alt="Test">
+			HTML;
 
 		$element  = $this->element($html, '//img');
 		$expected = [
@@ -415,10 +415,10 @@ class BlocksTest extends TestCase
 	public function testImgWithLink()
 	{
 		$html = <<<HTML
-            <a href="https://getkirby.com">
-                <img src="https://getkirby.com/image.jpg" alt="Test">
-            </a>
-        HTML;
+			<a href="https://getkirby.com">
+				<img src="https://getkirby.com/image.jpg" alt="Test">
+			</a>
+			HTML;
 
 		$element  = $this->element($html, '//img');
 		$expected = [
@@ -438,11 +438,11 @@ class BlocksTest extends TestCase
 	public function testImgWithCaption()
 	{
 		$html = <<<HTML
-            <figure>
-                <img src="https://getkirby.com/image.jpg" alt="Test">
-                <figcaption>Test</figcaption>
-            </figure>
-        HTML;
+			<figure>
+				<img src="https://getkirby.com/image.jpg" alt="Test">
+				<figcaption>Test</figcaption>
+			</figure>
+			HTML;
 
 		$element  = $this->element($html, '//img');
 		$expected = [
@@ -462,13 +462,13 @@ class BlocksTest extends TestCase
 	public function testImgWithLinkAndCaption()
 	{
 		$html = <<<HTML
-            <figure>
-                <a href="https://getkirby.com">
-                    <img src="https://getkirby.com/image.jpg" alt="Test">
-                    <figcaption>Test</figcaption>
-                </a>
-            </figure>
-        HTML;
+			<figure>
+				<a href="https://getkirby.com">
+					<img src="https://getkirby.com/image.jpg" alt="Test">
+					<figcaption>Test</figcaption>
+				</a>
+			</figure>
+			HTML;
 
 		$element  = $this->element($html, '//img');
 		$expected = [
@@ -488,12 +488,12 @@ class BlocksTest extends TestCase
 	public function testList()
 	{
 		$html = <<<HTML
-            <ul>
-                <li>A</li>
-                <li>B</li>
-                <li>C</li>
-            </ul>
-        HTML;
+			<ul>
+				<li>A</li>
+				<li>B</li>
+				<li>C</li>
+			</ul>
+			HTML;
 
 		$element  = $this->element($html, '//ul');
 		$expected = '<ul><li>A</li><li>B</li><li>C</li></ul>';
@@ -504,10 +504,10 @@ class BlocksTest extends TestCase
 	public function testListWithMarks()
 	{
 		$html = <<<HTML
-            <ul>
-                <li><b>Bold</b><i>Italic</i></li>
-            </ul>
-        HTML;
+			<ul>
+				<li><b>Bold</b><i>Italic</i></li>
+			</ul>
+			HTML;
 
 		$element  = $this->element($html, '//ul');
 		$expected = '<ul><li><b>Bold</b><i>Italic</i></li></ul>';
@@ -518,18 +518,18 @@ class BlocksTest extends TestCase
 	public function testListNested()
 	{
 		$html = <<<HTML
-            <ul>
-                <li>A</li>
-                <li>
-                    <ol>
-                        <li>1</li>
-                        <li>2</li>
-                        <li>3</li>
-                    </ol>
-                </li>
-                <li>C</li>
-            </ul>
-        HTML;
+			<ul>
+				<li>A</li>
+				<li>
+					<ol>
+						<li>1</li>
+						<li>2</li>
+						<li>3</li>
+					</ol>
+				</li>
+				<li>C</li>
+			</ul>
+			HTML;
 
 		$element  = $this->element($html, '//ul');
 		$expected = '<ul><li>A</li><li><ol><li>1</li><li>2</li><li>3</li></ol></li><li>C</li></ul>';
@@ -540,8 +540,8 @@ class BlocksTest extends TestCase
 	public function testPre()
 	{
 		$html = <<<HTML
-            <pre>Code</pre>
-        HTML;
+			<pre>Code</pre>
+			HTML;
 
 		$element  = $this->element($html, '//pre');
 		$expected = [
@@ -558,8 +558,8 @@ class BlocksTest extends TestCase
 	public function testPreWithCode()
 	{
 		$html = <<<HTML
-            <pre><code>Code</code></pre>
-        HTML;
+			<pre><code>Code</code></pre>
+			HTML;
 
 		$element  = $this->element($html, '//pre');
 		$expected = [
@@ -576,8 +576,8 @@ class BlocksTest extends TestCase
 	public function testPreWithLanguage()
 	{
 		$html = <<<HTML
-            <pre><code class="language-php">Code</code></pre>
-        HTML;
+			<pre><code class="language-php">Code</code></pre>
+			HTML;
 
 		$element  = $this->element($html, '//pre');
 		$expected = [
@@ -609,8 +609,8 @@ class BlocksTest extends TestCase
 	public function testTable()
 	{
 		$html = <<<HTML
-            <table></table>
-        HTML;
+			<table></table>
+			HTML;
 
 		$element  = $this->element($html, '//table');
 		$expected = [

@@ -248,7 +248,9 @@ class TestSessionStore extends SessionStore
 			if ($data === 'invalid-serialization') {
 				$data = 'some gibberish';
 				return hash_hmac('sha256', $data, $this->validKey) . "\n" . $data;
-			} elseif ($data === 'invalid-structure') {
+			}
+
+			if ($data === 'invalid-structure') {
 				return 'some gibberish';
 			}
 
@@ -257,15 +259,14 @@ class TestSessionStore extends SessionStore
 				// created session: it has its own HMAC, prepend it again
 
 				return $this->hmacs[$name] . "\n" . serialize($data);
-			} else {
-				// test session, add an HMAC based on the $validKey
-
-				$data = serialize($data);
-				return hash_hmac('sha256', $data, $this->validKey) . "\n" . $data;
 			}
-		} else {
-			throw new Exception('Session does not exist');
+
+			// test session, add an HMAC based on the $validKey
+			$data = serialize($data);
+			return hash_hmac('sha256', $data, $this->validKey) . "\n" . $data;
 		}
+
+		throw new Exception('Session does not exist');
 	}
 
 	public function set(int $expiryTime, string $id, string $data): void

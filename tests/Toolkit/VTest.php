@@ -38,8 +38,8 @@ class VTest extends TestCase
 	 */
 	public function testValidators()
 	{
-		$this->assertFalse(empty(V::$validators));
-		$this->assertFalse(empty(V::validators()));
+		$this->assertNotEmpty(V::$validators);
+		$this->assertNotEmpty(V::validators());
 	}
 
 	/**
@@ -85,6 +85,12 @@ class VTest extends TestCase
 		$this->assertFalse(V::accepted('0'));
 		$this->assertFalse(V::accepted(null));
 		$this->assertFalse(V::accepted('off'));
+	}
+
+	public function testCallback()
+	{
+		$this->assertTrue(V::callback('foo', fn ($value) => $value === 'foo'));
+		$this->assertFalse(V::callback('bar', fn ($value) => $value === 'foo'));
 	}
 
 	public function testContains()

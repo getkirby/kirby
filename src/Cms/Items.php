@@ -15,6 +15,9 @@ use Kirby\Exception\InvalidArgumentException;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @template TValue of \Kirby\Cms\Item
+ * @extends \Kirby\Cms\Collection<TValue>
  */
 class Items extends Collection
 {
@@ -32,7 +35,7 @@ class Items extends Collection
 	/**
 	 * @var \Kirby\Cms\ModelWithContent
 	 */
-	protected $parent;
+	protected object|null $parent = null;
 
 	public function __construct($objects = [], array $options = [])
 	{
@@ -48,7 +51,7 @@ class Items extends Collection
 	 * an array of item props
 	 */
 	public static function factory(
-		array $items = null,
+		array|null $items = null,
 		array $params = []
 	): static {
 		if (empty($items) === true || is_array($items) === false) {
@@ -93,7 +96,7 @@ class Items extends Collection
 	/**
 	 * Convert the items to an array
 	 */
-	public function toArray(Closure $map = null): array
+	public function toArray(Closure|null $map = null): array
 	{
 		return array_values(parent::toArray($map));
 	}

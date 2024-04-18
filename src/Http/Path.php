@@ -14,6 +14,8 @@ use Kirby\Toolkit\Str;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ *
+ * @extends \Kirby\Toolkit\Collection<string>
  */
 class Path extends Collection
 {

@@ -112,7 +112,7 @@ abstract class Sql
 	public function columnName(string $table, string $column, bool $enforceQualified = false): string|null
 	{
 		// ensure we have clean $table and $column values without qualified identifiers
-		list($table, $column) = $this->splitIdentifier($table, $column);
+		[$table, $column] = $this->splitIdentifier($table, $column);
 
 		// combine the identifiers again
 		if ($this->database->validateColumn($table, $column) === true) {
@@ -145,8 +145,8 @@ abstract class Sql
 	/**
 	 * Combines an identifier (table and column)
 	 *
-	 * @param $values bool Whether the identifier is going to be used for a VALUES clause;
-	 *                only relevant for SQLite
+	 * @param bool $values Whether the identifier is going to be used for a VALUES clause;
+	 *                     only relevant for SQLite
 	 */
 	public function combineIdentifier(string $table, string $column, bool $values = false): string
 	{
@@ -322,13 +322,13 @@ abstract class Sql
 	 */
 	public function delete(array $params = []): array
 	{
-		$defaults = [
+		$options = [
 			'table'    => '',
 			'where'    => null,
-			'bindings' => []
+			'bindings' => [],
+			...$params
 		];
 
-		$options  = array_merge($defaults, $params);
 		$bindings = $options['bindings'];
 		$query    = ['DELETE'];
 
@@ -363,7 +363,7 @@ abstract class Sql
 	{
 		if (empty($input['query']) === false) {
 			$query[]  = $input['query'];
-			$bindings = array_merge($bindings, $input['bindings']);
+			$bindings = [...$bindings, ...$input['bindings']];
 		}
 	}
 
@@ -555,7 +555,7 @@ abstract class Sql
 	 */
 	public function select(array $params = []): array
 	{
-		$defaults = [
+		$options = [
 			'table'    => '',
 			'columns'  => '*',
 			'join'     => null,
@@ -566,10 +566,10 @@ abstract class Sql
 			'order'    => null,
 			'offset'   => 0,
 			'limit'    => null,
-			'bindings' => []
+			'bindings' => [],
+			...$params
 		];
 
-		$options  = array_merge($defaults, $params);
 		$bindings = $options['bindings'];
 		$query    = ['SELECT'];
 
@@ -624,7 +624,7 @@ abstract class Sql
 			$result = [];
 
 			foreach ($columns as $column) {
-				list($table, $columnPart) = $this->splitIdentifier($table, $column);
+				[$table, $columnPart] = $this->splitIdentifier($table, $column);
 
 				if ($this->validateColumn($table, $columnPart) === true) {
 					$result[] = $this->combineIdentifier($table, $columnPart);
@@ -709,14 +709,14 @@ abstract class Sql
 	 */
 	public function update(array $params = []): array
 	{
-		$defaults = [
+		$options = [
 			'table'    => null,
 			'values'   => null,
 			'where'    => null,
-			'bindings' => []
+			'bindings' => [],
+			...$params
 		];
 
-		$options  = array_merge($defaults, $params);
 		$bindings = $options['bindings'];
 
 		// start the query

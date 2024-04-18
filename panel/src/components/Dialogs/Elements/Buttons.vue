@@ -22,11 +22,36 @@ export const props = {
 			type: [Boolean, String, Object]
 		},
 		/**
+		 * Whether to disable the submit button
+		 * @deprecated 4.0.0 use the `submit-button` prop instead
+		 */
+		disabled: {
+			default: false,
+			type: Boolean
+		},
+		/**
+		 * The icon type for the submit button
+		 * @deprecated 4.0.0 use the `submit-button` prop instead
+		 */
+		icon: {
+			default: "check",
+			type: String
+		},
+		/**
 		 * Options for the submit button
 		 */
 		submitButton: {
 			type: [Boolean, String, Object],
 			default: true
+		},
+		/**
+		 * The theme of the submit button
+		 * @values "positive", "negative"
+		 * @deprecated 4.0.0 use the `submit-button` prop instead
+		 */
+		theme: {
+			default: "positive",
+			type: String
 		}
 	}
 };
@@ -51,8 +76,10 @@ export default {
 		submit() {
 			return this.button(this.submitButton, {
 				class: "k-dialog-button-submit",
-				disabled: this.$panel.dialog.isLoading,
+				disabled: this.disabled || this.$panel.dialog.isLoading,
+				icon: this.icon,
 				text: this.$t("confirm"),
+				theme: this.theme,
 				type: "submit",
 				variant: "filled"
 			});

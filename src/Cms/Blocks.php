@@ -20,6 +20,8 @@ use Throwable;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @extends \Kirby\Cms\Items<\Kirby\Cms\Block>
  */
 class Blocks extends Items
 {
@@ -54,7 +56,7 @@ class Blocks extends Items
 	 * catch blocks from layouts
 	 */
 	public static function factory(
-		array $items = null,
+		array|null $items = null,
 		array $params = []
 	): static {
 		$items = static::extractFromLayouts($items);
@@ -134,9 +136,9 @@ class Blocks extends Items
 						)
 					) {
 						throw new Exception('Invalid YAML');
-					} else {
-						$input = $yaml;
 					}
+
+					$input = $yaml;
 				} catch (Throwable $e) {
 					// the next 2 lines remain after removing block.converter
 					// @codeCoverageIgnoreEnd

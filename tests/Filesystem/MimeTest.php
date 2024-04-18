@@ -2,7 +2,7 @@
 
 namespace Kirby\Filesystem;
 
-use Kirby\TestCase as TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Filesystem\Mime
@@ -133,7 +133,7 @@ class MimeTest extends TestCase
 
 		// test matchWildcards: false (default value)
 		$extensions = Mime::toExtensions('image/*');
-		$this->assertSame(0, count($extensions));
+		$this->assertCount(0, $extensions);
 
 		// test matchWildcards: true
 		$extensions = Mime::toExtensions('image/*', true);

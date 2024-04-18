@@ -296,7 +296,7 @@ class StructureFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertTrue(is_float($field->data()[0]['number']));
+		$this->assertIsFloat($field->data()[0]['number']);
 	}
 
 	public function testEmpty()

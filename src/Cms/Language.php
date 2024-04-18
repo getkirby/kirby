@@ -29,6 +29,9 @@ use Throwable;
  */
 class Language
 {
+	/**
+	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Languages>
+	 */
 	use HasSiblings;
 
 	/**
@@ -326,7 +329,7 @@ class Language
 	 *
 	 * @param int $category If passed, returns the locale for the specified category (e.g. LC_ALL) as string
 	 */
-	public function locale(int $category = null): array|string|null
+	public function locale(int|null $category = null): array|string|null
 	{
 		if ($category !== null) {
 			return $this->locale[$category] ?? $this->locale[LC_ALL] ?? null;
@@ -395,8 +398,11 @@ class Language
 	public function rules(): array
 	{
 		$code = $this->locale(LC_CTYPE);
-		$data = static::loadRules($code);
-		return array_merge($data, $this->slugs());
+
+		return [
+			...static::loadRules($code),
+			...$this->slugs()
+		];
 	}
 
 	/**
@@ -413,7 +419,8 @@ class Language
 			$existingData = [];
 		}
 
-		$props = [
+		$data = [
+			...$existingData,
 			'code'         => $this->code(),
 			'default'      => $this->isDefault(),
 			'direction'    => $this->direction(),
@@ -422,8 +429,6 @@ class Language
 			'translations' => $this->translations(),
 			'url'          => $this->url,
 		];
-
-		$data = array_merge($existingData, $props);
 
 		ksort($data);
 
@@ -435,7 +440,7 @@ class Language
 	/**
 	 * Private siblings collector
 	 */
-	protected function siblingsCollection(): Collection
+	protected function siblingsCollection(): Languages
 	{
 		return App::instance()->languages();
 	}
@@ -495,7 +500,7 @@ class Language
 	 * Update language properties and save them
 	 * @internal
 	 */
-	public function update(array $props = null): static
+	public function update(array|null $props = null): static
 	{
 		// don't change the language code
 		unset($props['code']);
