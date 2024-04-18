@@ -1,9 +1,7 @@
 <template>
 	<component :is="element" :class="{ 'k-draggable': !dragOptions.disabled }">
 		<!-- @slot Items to be sortable via drag and drop -->
-		<template #item="{ element: item, index: itemIndex }">
-			<slot v-bind="{ item, itemIndex }" />
-		</template>
+		<slot />
 
 		<footer v-if="$slots.footer" ref="footer" class="k-draggable-footer">
 			<!-- @slot Non-sortable footer -->
