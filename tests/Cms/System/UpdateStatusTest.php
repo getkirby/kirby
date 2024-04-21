@@ -2,10 +2,12 @@
 
 namespace Kirby\Cms\System;
 
+use Kirby\Cms\License;
 use Kirby\Cms\Plugin;
 use Kirby\Data\Json;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use ReflectionProperty;
 
 /**
  * @coversDefaultClass \Kirby\Cms\System\UpdateStatus
@@ -55,7 +57,8 @@ class UpdateStatusTest extends TestCase
 				'*' => [
 					'description' => 'Actively supported',
 					'latest' => '88888.8.8',
-					'status' => 'active-support'
+					'status' => 'active-support',
+					'initialRelease' => '2023-11-28'
 				]
 			],
 			'urls' => [
@@ -68,7 +71,8 @@ class UpdateStatusTest extends TestCase
 			'php' => [
 				'8.0' => '2023-11-26',
 				'8.1' => '2024-11-25',
-				'8.2' => '2025-12-08'
+				'8.2' => '2025-12-08',
+				'8.3' => '2026-11-23'
 			],
 			'incidents' => [],
 			'messages' => [],
@@ -87,13 +91,15 @@ class UpdateStatusTest extends TestCase
 			'versions' => [
 				'*' => [
 					'latest' => '88888.8.6',
-					'status' => 'active-support'
+					'status' => 'active-support',
+					'initialRelease' => '2023-11-28'
 				]
 			],
 			'php' => [
 				'8.0' => '2023-11-26',
 				'8.1' => '2024-11-25',
-				'8.2' => '2025-12-08'
+				'8.2' => '2025-12-08',
+				'8.3' => '2026-11-23'
 			],
 			'urls' => [
 				'*' => [
@@ -123,7 +129,8 @@ class UpdateStatusTest extends TestCase
 				'*' => [
 					'description' => 'Actively supported',
 					'latest' => '88888.8.8',
-					'status' => 'active-support'
+					'status' => 'active-support',
+					'initialRelease' => '2023-11-28'
 				]
 			],
 			'urls' => [
@@ -136,7 +143,8 @@ class UpdateStatusTest extends TestCase
 			'php' => [
 				'8.0' => '2023-11-26',
 				'8.1' => '2024-11-25',
-				'8.2' => '2025-12-08'
+				'8.2' => '2025-12-08',
+				'8.3' => '2026-11-23'
 			],
 			'incidents' => [],
 			'messages' => [],
@@ -241,7 +249,8 @@ class UpdateStatusTest extends TestCase
 				'*' => [
 					'description' => 'Actively supported',
 					'latest' => '88888.8.8',
-					'status' => 'active-support'
+					'status' => 'active-support',
+					'initialRelease' => '2023-11-28'
 				]
 			],
 			'urls' => [
@@ -254,7 +263,8 @@ class UpdateStatusTest extends TestCase
 			'php' => [
 				'8.0' => '2023-11-26',
 				'8.1' => '2024-11-25',
-				'8.2' => '2025-12-08'
+				'8.2' => '2025-12-08',
+				'8.3' => '2026-11-23'
 			],
 			'incidents' => [],
 			'messages' => [],
@@ -353,12 +363,12 @@ class UpdateStatusTest extends TestCase
 	 */
 	public function testLogic(
 		string $packageType,
-		string|null $version,
+		array $packageData,
 		bool $securityOnly,
 		array|null $data,
 		array $expected
 	) {
-		$package      = $this->$packageType($version);
+		$package      = $this->$packageType(...$packageData);
 		$updateStatus = new UpdateStatus($package, $securityOnly, $data);
 
 		foreach ($expected as $method => $value) {
@@ -372,7 +382,7 @@ class UpdateStatusTest extends TestCase
 			// update check (Kirby)
 			'Kirby up-to-date' => [
 				'app',
-				'88888.8.8',
+				['88888.8.8'],
 				false,
 				static::data('basic'),
 				[
@@ -391,7 +401,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Kirby unreleased' => [
 				'app',
-				'88888.8.9-rc.1',
+				['88888.8.9-rc.1'],
 				false,
 				static::data('basic'),
 				[
@@ -410,7 +420,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Kirby security-update' => [
 				'app',
-				'77777.1.2',
+				['77777.1.2'],
 				false,
 				static::data('basic'),
 				[
@@ -443,7 +453,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Kirby security-upgrade' => [
 				'app',
-				'55555.1.2',
+				['55555.1.2'],
 				false,
 				static::data('basic'),
 				[
@@ -476,7 +486,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Kirby not-vulnerable (update "no-vulnerabilities")' => [
 				'app',
-				'77777.7.6',
+				['77777.7.6'],
 				true,
 				static::data('basic'),
 				[
@@ -495,7 +505,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Kirby not-vulnerable (update)' => [
 				'app',
-				'66666.6.5',
+				['66666.6.5'],
 				true,
 				static::data('basic'),
 				[
@@ -512,9 +522,28 @@ class UpdateStatusTest extends TestCase
 					'exceptionMessages' => []
 				]
 			],
+			'Kirby not-vulnerable (free major update)' => [
+				'app',
+				['66666.6.6', '2023-11-28'],
+				true,
+				static::data('basic'),
+				[
+					'currentVersion' => '66666.6.6',
+					'icon' => 'check',
+					'label' => 'No known vulnerabilities',
+					'latestVersion' => '88888.8.8',
+					'messages' => [],
+					'status' => 'not-vulnerable',
+					'targetVersion' => null,
+					'theme' => 'positive',
+					'url' => 'https://getkirby.com/old-releases/66666.6.6',
+					'vulnerabilities' => [],
+					'exceptionMessages' => []
+				]
+			],
 			'Kirby not-vulnerable (upgrade)' => [
 				'app',
-				'77777.7.7',
+				['77777.7.7'],
 				true,
 				static::data('basic'),
 				[
@@ -533,7 +562,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Kirby update' => [
 				'app',
-				'77777.7.6',
+				['77777.7.6'],
 				false,
 				static::data('basic'),
 				[
@@ -550,9 +579,47 @@ class UpdateStatusTest extends TestCase
 					'exceptionMessages' => []
 				]
 			],
-			'Kirby upgrade' => [
+			'Kirby free major update' => [
 				'app',
-				'77777.7.7',
+				['66666.6.6', '2023-11-28'],
+				false,
+				static::data('basic'),
+				[
+					'currentVersion' => '66666.6.6',
+					'icon' => 'info',
+					'label' => 'Free update 77777.7.7 available',
+					'latestVersion' => '88888.8.8',
+					'messages' => [],
+					'status' => 'update',
+					'targetVersion' => '77777.7.7',
+					'theme' => 'info',
+					'url' => 'https://getkirby.com/old-releases/77777.0',
+					'vulnerabilities' => [],
+					'exceptionMessages' => []
+				]
+			],
+			'Kirby upgrade (without license)' => [
+				'app',
+				['77777.7.7'],
+				false,
+				static::data('basic'),
+				[
+					'currentVersion' => '77777.7.7',
+					'icon' => 'info',
+					'label' => 'Upgrade 88888.8.8 available',
+					'latestVersion' => '88888.8.8',
+					'messages' => [],
+					'status' => 'upgrade',
+					'targetVersion' => '88888.8.8',
+					'theme' => 'info',
+					'url' => 'https://getkirby.com/releases/88888',
+					'vulnerabilities' => [],
+					'exceptionMessages' => []
+				]
+			],
+			'Kirby upgrade (with inactive license)' => [
+				'app',
+				['77777.7.7', '2023-11-28'],
 				false,
 				static::data('basic'),
 				[
@@ -573,7 +640,7 @@ class UpdateStatusTest extends TestCase
 			// update check (plugin)
 			'Plugin up-to-date' => [
 				'plugin',
-				'88888.8.8',
+				['88888.8.8'],
 				false,
 				static::data('basic'),
 				[
@@ -595,7 +662,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Plugin unreleased' => [
 				'plugin',
-				'88888.8.9-rc.1',
+				['88888.8.9-rc.1'],
 				false,
 				static::data('basic'),
 				[
@@ -617,7 +684,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Plugin security-update' => [
 				'plugin',
-				'77777.1.2',
+				['77777.1.2'],
 				false,
 				static::data('basic'),
 				[
@@ -656,7 +723,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Plugin security-upgrade' => [
 				'plugin',
-				'55555.1.2',
+				['55555.1.2'],
 				false,
 				static::data('basic'),
 				[
@@ -695,7 +762,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Plugin update' => [
 				'plugin',
-				'77777.7.6',
+				['77777.7.6'],
 				false,
 				static::data('basic'),
 				[
@@ -717,7 +784,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Plugin upgrade' => [
 				'plugin',
-				'77777.7.7',
+				['77777.7.7'],
 				false,
 				static::data('basic'),
 				[
@@ -739,7 +806,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Plugin with prefix' => [
 				'plugin',
-				'v77777.7.7',
+				['v77777.7.7'],
 				false,
 				static::data('basic'),
 				[
@@ -761,7 +828,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Plugin with invalid version' => [
 				'plugin',
-				'not a version',
+				['not a version'],
 				false,
 				static::data('basic'),
 				[
@@ -783,7 +850,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Plugin without version' => [
 				'plugin',
-				null,
+				[null],
 				false,
 				static::data('basic'),
 				[
@@ -807,7 +874,7 @@ class UpdateStatusTest extends TestCase
 			// vulnerabilities
 			'Vulnerability sorting' => [
 				'app',
-				'77777.1.2',
+				['77777.1.2'],
 				false,
 				static::data('incidents-severity'),
 				[
@@ -888,7 +955,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Unstable release' => [
 				'app',
-				'77777.0.0-rc.1',
+				['77777.0.0-rc.1'],
 				false,
 				static::data('basic'),
 				[
@@ -921,7 +988,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Minimum security update' => [
 				'app',
-				'77777.1.2',
+				['77777.1.2'],
 				false,
 				static::data('incidents-cascade'),
 				[
@@ -954,7 +1021,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Incidents with infinite loop' => [
 				'app',
-				'77777.1.2',
+				['77777.1.2'],
 				false,
 				static::data('incidents-loop'),
 				[
@@ -989,7 +1056,7 @@ class UpdateStatusTest extends TestCase
 			// messages
 			'Messages' => [
 				'app',
-				'77777.6.0',
+				['77777.6.0'],
 				false,
 				static::data('basic'),
 				[
@@ -1014,7 +1081,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'EOL warning (Kirby)' => [
 				'app',
-				'44444.1.2',
+				['44444.1.2'],
 				false,
 				static::data('basic'),
 				[
@@ -1052,7 +1119,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'EOL warning (plugin)' => [
 				'plugin',
-				'44444.1.2',
+				['44444.1.2'],
 				false,
 				static::data('basic'),
 				[
@@ -1090,7 +1157,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'EOL warning (PHP)' => [
 				'app',
-				'88888.8.8',
+				['88888.8.8'],
 				false,
 				static::data('php'),
 				[
@@ -1117,7 +1184,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'EOL warning with custom link' => [
 				'app',
-				'44444.1.2',
+				['44444.1.2'],
 				false,
 				static::data('eol-link'),
 				[
@@ -1157,7 +1224,7 @@ class UpdateStatusTest extends TestCase
 			// invalid/incomplete data array
 			'No data' => [
 				'plugin',
-				'77777.7.7',
+				['77777.7.7'],
 				false,
 				null,
 				[
@@ -1179,7 +1246,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Empty data' => [
 				'app',
-				'77777.7.7',
+				['77777.7.7'],
 				false,
 				[],
 				[
@@ -1201,7 +1268,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'No latest version (update)' => [
 				'app',
-				'77777.7.5',
+				['77777.7.5'],
 				false,
 				static::data('no-latest'),
 				[
@@ -1220,7 +1287,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'No latest version (upgrade)' => [
 				'app',
-				'77777.7.7',
+				['77777.7.7'],
 				false,
 				static::data('no-latest'),
 				[
@@ -1239,7 +1306,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'No versions' => [
 				'app',
-				'77777.7.7',
+				['77777.7.7'],
 				false,
 				static::data('no-versions'),
 				[
@@ -1260,7 +1327,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'No URLs' => [
 				'app',
-				'77777.7.7',
+				['77777.7.7'],
 				false,
 				static::data('no-urls'),
 				[
@@ -1281,7 +1348,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'No PHP' => [
 				'app',
-				'77777.7.7',
+				['77777.7.7'],
 				false,
 				static::data('no-php'),
 				[
@@ -1300,7 +1367,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'No incidents' => [
 				'app',
-				'77777.7.7',
+				['77777.7.7'],
 				false,
 				static::data('no-incidents'),
 				[
@@ -1319,7 +1386,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'No messages' => [
 				'app',
-				'77777.7.7',
+				['77777.7.7'],
 				false,
 				static::data('no-messages'),
 				[
@@ -1338,7 +1405,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Missing URL entry' => [
 				'app',
-				'77777.7.7',
+				['77777.7.7'],
 				false,
 				static::data('no-url-entry'),
 				[
@@ -1359,7 +1426,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'URL entry without `changes` key' => [
 				'app',
-				'77777.7.7',
+				['77777.7.7'],
 				false,
 				static::data('url-entry-without-changes'),
 				[
@@ -1380,7 +1447,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Missing version entry' => [
 				'app',
-				'77777.7.7',
+				['77777.7.7'],
 				false,
 				static::data('no-version-entry'),
 				[
@@ -1401,7 +1468,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Missing version entry (with vulnerability)' => [
 				'app',
-				'77777.4.3',
+				['77777.4.3'],
 				false,
 				static::data('no-version-entry'),
 				[
@@ -1436,7 +1503,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Version entry without `latest` key' => [
 				'app',
-				'77777.7.5',
+				['77777.7.5'],
 				false,
 				static::data('version-entry-without-latest'),
 				[
@@ -1455,7 +1522,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Invalid constraint (message)' => [
 				'app',
-				'77777.7.7',
+				['77777.7.7'],
 				false,
 				static::data('invalid-constraint-message'),
 				[
@@ -1479,7 +1546,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Invalid constraint (incident)' => [
 				'app',
-				'77777.3.2',
+				['77777.3.2'],
 				false,
 				static::data('invalid-constraint-incident'),
 				[
@@ -1501,7 +1568,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Invalid constraint (URL entry)' => [
 				'app',
-				'77777.7.5',
+				['77777.7.5'],
 				false,
 				static::data('invalid-constraint-url'),
 				[
@@ -1523,7 +1590,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Invalid constraint (version entry)' => [
 				'app',
-				'77777.7.5',
+				['77777.7.5'],
 				false,
 				static::data('invalid-constraint-version'),
 				[
@@ -1545,7 +1612,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Missing constraint (message)' => [
 				'app',
-				'77777.7.7',
+				['77777.7.7'],
 				false,
 				static::data('missing-constraint-message'),
 				[
@@ -1567,7 +1634,7 @@ class UpdateStatusTest extends TestCase
 			],
 			'Missing constraint (incident)' => [
 				'app',
-				'77777.3.2',
+				['77777.3.2'],
 				false,
 				static::data('missing-constraint-incident'),
 				[
@@ -1610,14 +1677,19 @@ class UpdateStatusTest extends TestCase
 		$this->assertSame($expected, $updateStatus->messages());
 	}
 
-	protected function app(string $version): MockApp
+	protected function app(string $version, string|null $activation = null): MockApp
 	{
 		MockApp::$version = $version;
-		return new MockApp([
+		$app = new MockApp([
 			'roots' => [
 				'index' => static::TMP
 			]
 		]);
+
+		$property = new ReflectionProperty($app->system(), 'license');
+		$property->setValue($app->system(), new License(activation: $activation));
+
+		return $app;
 	}
 
 	protected static function data(string $name): array
