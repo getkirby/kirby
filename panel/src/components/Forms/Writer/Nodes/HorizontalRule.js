@@ -1,9 +1,8 @@
 import Node from "../Node";
 
 export default class HorizontalRule extends Node {
-	commands({ type }) {
-		return () => (state, dispatch) =>
-			dispatch(state.tr.replaceSelectionWith(type.create()));
+	commands({ type, utils }) {
+		return () => utils.insertNode(type);
 	}
 
 	inputRules({ type, utils }) {
