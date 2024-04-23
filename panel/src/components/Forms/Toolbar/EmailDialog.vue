@@ -3,6 +3,23 @@ import EmailDialog from "@/components/Dialogs/EmailDialog.vue";
 
 export default {
 	extends: EmailDialog,
+	props: {
+		// eslint-disable-next-line vue/require-prop-types
+		fields: {
+			default: () => ({
+				href: {
+					label: window.panel.$t("email"),
+					type: "email",
+					icon: "email"
+				},
+				title: {
+					label: window.panel.$t("link.text"),
+					type: "text",
+					icon: "title"
+				}
+			})
+		},
+	},
 	methods: {
 		submit() {
 			const email = this.values.href ?? "";
