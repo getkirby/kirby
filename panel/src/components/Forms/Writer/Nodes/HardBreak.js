@@ -6,10 +6,7 @@ export default class HardBreak extends Node {
 	}
 
 	createHardBreak(utils, type) {
-		return utils.chainCommands(utils.exitCode, (state, dispatch) => {
-			dispatch(state.tr.replaceSelectionWith(type.create()).scrollIntoView());
-			return true;
-		});
+		return utils.chainCommands(utils.exitCode, utils.insertNode(type));
 	}
 
 	get defaults() {
