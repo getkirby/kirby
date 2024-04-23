@@ -307,6 +307,7 @@ export default {
 	--button-color-text: var(--button-color-dimmed-off);
 }
 .k-button:where([data-theme][data-variant="dimmed"]) {
+	--button-color-icon: var(--theme-color-icon);
 	--button-color-dimmed-on: var(--theme-color-text-dimmed);
 	--button-color-dimmed-off: var(--theme-color-text);
 }
