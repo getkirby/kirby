@@ -32,6 +32,7 @@
 }
 
 /* Color themes */
+[data-theme="red"],
 [data-theme="error"],
 [data-theme="negative"] {
 	--theme-color-h: var(--color-red-h);
@@ -39,34 +40,51 @@
 	--theme-color-boost: var(--color-red-boost);
 }
 
+[data-theme="orange"],
 [data-theme="notice"] {
 	--theme-color-h: var(--color-orange-h);
 	--theme-color-s: var(--color-orange-s);
 	--theme-color-boost: var(--color-orange-boost);
 }
 
+[data-theme="yellow"],
 [data-theme="warning"] {
 	--theme-color-h: var(--color-yellow-h);
 	--theme-color-s: var(--color-yellow-s);
 	--theme-color-boost: var(--color-yellow-boost);
 }
 
+[data-theme="blue"],
 [data-theme="info"] {
 	--theme-color-h: var(--color-blue-h);
 	--theme-color-s: var(--color-blue-s);
 	--theme-color-boost: var(--color-blue-boost);
 }
 
+[data-theme="pink"],
 [data-theme="love"] {
 	--theme-color-h: var(--color-pink-h);
 	--theme-color-s: var(--color-pink-s);
 	--theme-color-boost: var(--color-pink-boost);
 }
 
+[data-theme="green"],
 [data-theme="positive"] {
 	--theme-color-h: var(--color-green-h);
 	--theme-color-s: var(--color-green-s);
 	--theme-color-boost: var(--color-green-boost);
+}
+
+[data-theme="aqua"] {
+	--theme-color-h: var(--color-aqua-h);
+	--theme-color-s: var(--color-aqua-s);
+	--theme-color-boost: var(--color-aqua-boost);
+}
+
+[data-theme="purple"] {
+	--theme-color-h: var(--color-purple-h);
+	--theme-color-s: var(--color-purple-s);
+	--theme-color-boost: var(--color-purple-boost);
 }
 
 [data-theme="passive"] {
