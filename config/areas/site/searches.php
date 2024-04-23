@@ -22,7 +22,7 @@ return [
 					'text' => Escape::html($page->title()->value()),
 					'link' => $page->panel()->url(true),
 					'info' => Escape::html($page->id()),
-					'uuid' => $page->uuid()->toString(),
+					'uuid' => $page->uuid()?->toString(),
 				]),
 				'pagination' => $pages->pagination()->toArray()
 			];

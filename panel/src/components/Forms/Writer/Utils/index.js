@@ -25,6 +25,7 @@ import {
 // custom
 import getMarkAttrs from "./getMarkAttrs";
 import getNodeAttrs from "./getNodeAttrs";
+import insertNode from "./insertNode";
 import markInputRule from "./markInputRule";
 import markIsActive from "./markIsActive";
 import markPasteRule from "./markPasteRule";
@@ -61,6 +62,7 @@ export default {
 	// custom
 	getMarkAttrs,
 	getNodeAttrs,
+	insertNode,
 	markInputRule,
 	markIsActive,
 	markPasteRule,

@@ -393,6 +393,46 @@ class UpdateStatus
 	}
 
 	/**
+	 * Finds the maximum possible major update
+	 * that is included with the current license
+	 *
+	 * @return string|null Version number of the update or
+	 *                     `null` if no free update is possible
+	 */
+	protected function findMaximumFreeUpdate(): string|null
+	{
+		// get the timestamp of included updates
+		$renewal = $this->app->system()->license()->renewal();
+
+		if ($renewal === null || $this->data === null) {
+			return null;
+		}
+
+		foreach ($this->data['versions'] ?? [] as $entry) {
+			$initialRelease = $entry['initialRelease'] ?? null;
+			$latest         = $entry['latest'] ?? '';
+
+			// skip entries of irrelevant releases
+			if (
+				is_string($initialRelease) !== true ||
+				version_compare($latest, $this->currentVersion, '<=') === true
+			) {
+				continue;
+			}
+
+			$timestamp = strtotime($initialRelease);
+
+			// update is free if the initial release was before the
+			// license renewal date
+			if (is_int($timestamp) === true && $timestamp < $renewal) {
+				return $latest;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Finds the minimum possible security update
 	 * to fix all known vulnerabilities
 	 *
@@ -655,13 +695,26 @@ class UpdateStatus
 			];
 		}
 
-		// check if free updates are possible from the current version
+		// check if updates within the same major version are possible
 		$latest = $versionEntry['latest'] ?? null;
 		if (is_string($latest) === true && $latest !== $this->currentVersion) {
 			return $this->targetData = [
 				'status'  => 'update',
 				'url'     => $this->urlFor($latest, 'changes'),
 				'version' => $latest
+			];
+		}
+
+		// check if the license includes updates to a newer major version
+		if ($version = $this->findMaximumFreeUpdate()) {
+			// extract the part before the first dot
+			// to find the major release page URL
+			preg_match('/^(\w+)\./', $version, $matches);
+
+			return $this->targetData = [
+				'status'  => 'update',
+				'url'     => $this->urlFor($matches[1] . '.0', 'changes'),
+				'version' => $version
 			];
 		}
 
