@@ -87,6 +87,7 @@
 	--theme-color-boost: var(--color-purple-boost);
 }
 
+[data-theme="gray"],
 [data-theme="passive"] {
 	--theme-color-h: var(--color-gray-h);
 	--theme-color-s: var(--color-gray-s);
