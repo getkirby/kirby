@@ -7,6 +7,7 @@ return [
 		'warning',
 		'positive',
 		'info',
+		'love',
 		null,
 		'empty',
 	]

@@ -27,13 +27,24 @@
 				Button
 			</k-button>
 		</k-lab-example>
+		<k-lab-example :flex="true" label="variant: filled with themed icon">
+			<k-button
+				v-for="theme in themes"
+				:key="theme"
+				:theme="theme + '-icon'"
+				variant="filled"
+				icon="edit"
+			>
+				Button
+			</k-button>
+		</k-lab-example>
 	</k-lab-examples>
 </template>
 
 <script>
 export default {
 	props: {
-		themes: Array,
-	},
+		themes: Array
+	}
 };
 </script>
