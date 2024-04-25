@@ -56,13 +56,11 @@ class Assets
 	 */
 	public function css(): array
 	{
-		$css = A::merge(
-			[
-				'index'   => $this->url . '/css/style.min.css',
-				'plugins' => $this->plugins->url('css')
-			],
-			$this->custom('panel.css')
-		);
+		$css = [
+			'index'   => $this->url . '/css/style.min.css',
+			'plugins' => $this->plugins->url('css'),
+			...$this->custom('panel.css')
+		];
 
 		// during dev mode we do not need to load
 		// the general stylesheet (as styling will be inlined)
@@ -213,41 +211,37 @@ class Assets
 	 */
 	public function js(): array
 	{
-		$js = A::merge(
-			[
-				'vue' => [
-					'nonce' => $this->nonce,
-					'src'   => $this->url . '/js/vue.min.js'
-				],
-				'vendor'       => [
-					'nonce' => $this->nonce,
-					'src'   => $this->url . '/js/vendor.min.js',
-					'type'  => 'module'
-				],
-				'pluginloader' => [
-					'nonce' => $this->nonce,
-					'src'   => $this->url . '/js/plugins.js',
-					'type'  => 'module'
-				],
-				'plugins'      => [
-					'nonce' => $this->nonce,
-					'src'   => $this->plugins->url('js'),
-					'defer' => true
-				]
+		$js = [
+			'vue' => [
+				'nonce' => $this->nonce,
+				'src'   => $this->url . '/js/vue.min.js'
 			],
-			A::map($this->custom('panel.js'), fn ($src) => [
+			'vendor' => [
+				'nonce' => $this->nonce,
+				'src'   => $this->url . '/js/vendor.min.js',
+				'type'  => 'module'
+			],
+			'pluginloader' => [
+				'nonce' => $this->nonce,
+				'src'   => $this->url . '/js/plugins.js',
+				'type'  => 'module'
+			],
+			'plugins' => [
+				'nonce' => $this->nonce,
+				'src'   => $this->plugins->url('js'),
+				'defer' => true
+			],
+			...A::map($this->custom('panel.js'), fn ($src) => [
 				'nonce' => $this->nonce,
 				'src'   => $src,
 				'type'  => 'module'
 			]),
-			[
-				'index' => [
-					'nonce' => $this->nonce,
-					'src'   => $this->url . '/js/index.min.js',
-					'type'  => 'module'
-				],
-			]
-		);
+			'index' => [
+				'nonce' => $this->nonce,
+				'src'   => $this->url . '/js/index.min.js',
+				'type'  => 'module'
+			],
+		];
 
 
 		// during dev mode, add vite client and adapt
