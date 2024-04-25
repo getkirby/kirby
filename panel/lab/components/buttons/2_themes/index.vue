@@ -35,7 +35,11 @@
 				Button
 			</k-button>
 		</k-lab-example>
-		<k-lab-example :flex="true" label="theme: ${color} | variant: filled">
+		<k-lab-example
+			:flex="true"
+			label="theme: ${color} | variant: filled"
+			script="themes"
+		>
 			<k-button
 				v-for="theme in themes"
 				:key="theme"
