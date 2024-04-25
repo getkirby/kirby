@@ -9,6 +9,11 @@
 </template>
 
 <script>
+/**
+ * Wrapper button group that dynamically renders the
+ * respective header button components passed as `buttons` prop.
+ * @internal
+ */
 export default {
 	props: {
 		buttons: Array

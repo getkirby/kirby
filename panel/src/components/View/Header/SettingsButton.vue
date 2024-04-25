@@ -20,6 +20,10 @@
 </template>
 
 <script>
+/**
+ * Header button to open the model's settings dropdown
+ * @since 5.0.0
+ */
 export default {
 	inheritAttrs: false,
 	computed: {

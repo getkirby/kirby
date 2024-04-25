@@ -12,6 +12,10 @@
 </template>
 
 <script>
+/**
+ * Header button to open the model's preview in a new tab
+ * @since 5.0.0
+ */
 export default {
 	computed: {
 		isAvailable() {

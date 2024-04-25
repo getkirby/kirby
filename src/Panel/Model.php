@@ -33,8 +33,7 @@ abstract class Model
 	}
 
 	/**
-	 * Returns array of names for which
-	 * header buttons should be displayed
+	 * Returns header button names which should be displayed
 	 */
 	public function buttons(): array
 	{

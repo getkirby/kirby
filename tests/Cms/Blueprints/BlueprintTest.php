@@ -339,6 +339,20 @@ class BlueprintTest extends TestCase
 	}
 
 	/**
+	 * @covers ::buttons
+	 */
+	public function testButtons()
+	{
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'name'  => 'default',
+			'buttons' => ['foo', 'bar']
+		]);
+
+		$this->assertSame(['foo', 'bar'], $blueprint->buttons());
+	}
+
+	/**
 	 * @covers ::__debugInfo
 	 */
 	public function testDebugInfo()

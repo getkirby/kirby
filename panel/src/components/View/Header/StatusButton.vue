@@ -12,6 +12,10 @@
 </template>
 
 <script>
+/**
+ * Header button to change the page status
+ * @since 5.0.0
+ */
 export default {
 	inheritAttrs: false,
 	computed: {

@@ -123,6 +123,20 @@ class ModelTest extends TestCase
 	}
 
 	/**
+	 * @covers ::buttons
+	 */
+	public function testButtons()
+	{
+		$panel = $this->panel();
+		$this->assertSame([], $panel->buttons());
+
+		Model::$buttons[] = 'foo';
+		$this->assertSame(['foo'], $panel->buttons());
+
+		Model::$buttons = [];
+	}
+
+	/**
 	 * @covers ::__construct
 	 * @covers ::content
 	 */
