@@ -1,11 +1,15 @@
 <template>
 	<k-lab-examples>
-		<k-lab-example :flex="true" label="theme: none">
+		<k-lab-example :flex="true" label="theme: none" script="themes">
 			<k-button v-for="theme in themes" :key="theme" :theme="theme" icon="edit">
 				Button
 			</k-button>
 		</k-lab-example>
-		<k-lab-example :flex="true" label="theme: none | variant: dimmed">
+		<k-lab-example
+			:flex="true"
+			label="theme: none | variant: dimmed"
+			script="themes"
+		>
 			<k-button
 				v-for="theme in themes"
 				:key="theme"
@@ -16,7 +20,11 @@
 				Button
 			</k-button>
 		</k-lab-example>
-		<k-lab-example :flex="true" label="theme: ${color}-icon | variant: dimmed ">
+		<k-lab-example
+			:flex="true"
+			label="theme: ${color}-icon | variant: dimmed "
+			script="themes"
+		>
 			<k-button
 				v-for="theme in themes"
 				:key="theme"
@@ -38,7 +46,11 @@
 				Button
 			</k-button>
 		</k-lab-example>
-		<k-lab-example :flex="true" label="theme: ${color}-icon | variant: filled">
+		<k-lab-example
+			:flex="true"
+			label="theme: ${color}-icon | variant: filled"
+			script="themes"
+		>
 			<k-button
 				v-for="theme in themes"
 				:key="theme"
@@ -56,9 +68,27 @@
 </template>
 
 <script>
-export default {
-	props: {
-		themes: Array
+/** @script: themes */
+export const themes = {
+	computed: {
+		themes() {
+			return [
+				null,
+				"red",
+				"orange",
+				"yellow",
+				"green",
+				"aqua",
+				"blue",
+				"purple",
+				"pink"
+			];
+		}
 	}
+};
+/** @script-end */
+
+export default {
+	mixins: [themes]
 };
 </script>
