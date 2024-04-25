@@ -232,13 +232,11 @@ class Assets
 			[
 				'vendor'       => [
 					'nonce' => $this->nonce,
-					'src'   => $this->url . '/js/vendor.min.js',
-					'type'  => 'module'
+					'src'   => $this->url . '/js/vendor.min.js'
 				],
 				'pluginloader' => [
 					'nonce' => $this->nonce,
-					'src'   => $this->url . '/js/plugins.js',
-					'type'  => 'module'
+					'src'   => $this->url . '/js/plugins.js'
 				],
 				'plugins'      => [
 					'nonce' => $this->nonce,
@@ -248,14 +246,12 @@ class Assets
 			],
 			A::map($this->custom('panel.js'), fn ($src) => [
 				'nonce' => $this->nonce,
-				'src'   => $src,
-				'type'  => 'module'
+				'src'   => $src
 			]),
 			[
 				'index' => [
 					'nonce' => $this->nonce,
-					'src'   => $this->url . '/js/index.min.js',
-					'type'  => 'module'
+					'src'   => $this->url . '/js/index.min.js'
 				],
 			]
 		);
@@ -267,14 +263,12 @@ class Assets
 		if ($this->dev === true) {
 			$js['vite'] = [
 				'nonce' => $this->nonce,
-				'src'   => $this->url . '/@vite/client',
-				'type'  => 'module'
+				'src'   => $this->url . '/@vite/client'
 			];
 
 			$js['index'] = [
 				'nonce' => $this->nonce,
-				'src'   => $this->url . '/src/index.js',
-				'type'  => 'module'
+				'src'   => $this->url . '/src/index.js'
 			];
 
 			// remove the vendor script

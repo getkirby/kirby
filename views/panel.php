@@ -45,7 +45,7 @@ use Kirby\Toolkit\Html;
   <?php endforeach ?>
 
   <?php foreach ($assets['js'] as $js): ?>
-  <?php if (($js['type'] ?? null) === 'module'): ?>
+  <?php if (($js['defer'] ?? null) !== true): ?>
   <link rel="modulepreload" href="<?= $js['src'] ?>">
   <?php endif ?>
   <?php endforeach ?>
@@ -66,11 +66,11 @@ use Kirby\Toolkit\Html;
     window.fiber = <?= json_encode($fiber) ?>;
   </script>
 
-<script type="module" nonce="<?= $nonce ?>">
-	<?php foreach ($assets['js'] as $key => $js): ?>
+<?php foreach ($assets['js'] as $key => $js): ?>
+<script type="module" nonce="<?= $nonce ?>" <?= e(($js['defer'] ?? null), 'defer', null) ?>>
 	import('<?= $js['src'] ?>')
-	<?php endforeach ?>
 </script>
+<?php endforeach ?>
 
 </body>
 </html>
