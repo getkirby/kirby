@@ -292,6 +292,9 @@ export default {
 	--button-color-icon: var(--theme-color-icon);
 	--button-color-text: var(--theme-color-text);
 }
+.k-button[data-theme$="-icon"] {
+	--button-color-text: currentColor;
+}
 
 /** Dimmed Buttons **/
 .k-button:where([data-variant="dimmed"]) {
