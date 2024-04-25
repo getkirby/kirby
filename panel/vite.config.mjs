@@ -54,7 +54,17 @@ function createCustomServer() {
  * depending on the mode (development or build)
  */
 function createPlugins(mode) {
-	const plugins = [vue(), splitVendorChunkPlugin(), kirby()];
+	const plugins = [
+		vue({
+			template: {
+				compilerOptions: {
+					isCustomElement: (tag) => ["k-input-validator"].includes(tag)
+				}
+			}
+		}),
+		splitVendorChunkPlugin(),
+		kirby()
+	];
 
 	// when building…
 	if (mode === "build") {
