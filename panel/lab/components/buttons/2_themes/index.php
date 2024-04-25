@@ -2,13 +2,14 @@
 
 return [
 	'themes' => [
-		'negative',
-		'notice',
-		'warning',
-		'positive',
-		'info',
-		'love',
 		null,
-		'empty',
+		'red',
+		'orange',
+		'yellow',
+		'green',
+		'aqua',
+		'blue',
+		'purple',
+		'pink',
 	]
 ];
