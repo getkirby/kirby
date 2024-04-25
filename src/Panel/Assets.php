@@ -56,13 +56,11 @@ class Assets
 	 */
 	public function css(): array
 	{
-		$css = A::merge(
-			[
-				'index'   => $this->url . '/css/style.min.css',
-				'plugins' => $this->plugins->url('css')
-			],
-			$this->custom('panel.css')
-		);
+		$css = [
+			'index'   => $this->url . '/css/style.min.css',
+			'plugins' => $this->plugins->url('css'),
+			...$this->custom('panel.css')
+		];
 
 		// during dev mode we do not need to load
 		// the general stylesheet (as styling will be inlined)
@@ -199,8 +197,8 @@ class Assets
 	 */
 	public function icons(): string
 	{
-		$dir  = $this->kirby->root('panel') . '/';
-		$dir .= $this->dev ? 'public' : 'dist';
+		$dir   = $this->kirby->root('panel') . '/';
+		$dir  .= $this->dev ? 'public' : 'dist';
 		$icons = F::read($dir . '/img/icons.svg');
 		$icons = preg_replace('/<!--(.|\s)*?-->/', '', $icons);
 		return $icons;
@@ -228,51 +226,45 @@ class Assets
 	 */
 	public function js(): array
 	{
-		$js = A::merge(
-			[
-				'vendor'       => [
-					'nonce' => $this->nonce,
-					'src'   => $this->url . '/js/vendor.min.js'
-				],
-				'pluginloader' => [
-					'nonce' => $this->nonce,
-					'src'   => $this->url . '/js/plugins.js'
-				],
-				'plugins'      => [
-					'nonce' => $this->nonce,
-					'src'   => $this->plugins->url('js'),
-					'defer' => true
-				]
+		$js = [
+			'vendor' => [
+				'nonce' => $this->nonce,
+				'src'   => $this->url . '/js/vendor.min.js'
 			],
-			A::map($this->custom('panel.js'), fn ($src) => [
+			'pluginloader' => [
+				'nonce' => $this->nonce,
+				'src'   => $this->url . '/js/plugins.js'
+			],
+			'plugins' => [
+				'nonce' => $this->nonce,
+				'src'   => $this->plugins->url('js'),
+				'defer' => true
+			],
+			...A::map($this->custom('panel.js'), fn ($src) => [
 				'nonce' => $this->nonce,
 				'src'   => $src
 			]),
-			[
-				'index' => [
-					'nonce' => $this->nonce,
-					'src'   => $this->url . '/js/index.min.js'
-				],
-			]
-		);
+			'index' => [
+				'nonce' => $this->nonce,
+				'src'   => $this->url . '/js/index.min.js'
+			],
+		];
 
 
 		// during dev mode, add vite client and adapt
 		// path to `index.js` - vendor does not need
 		// to be loaded in dev mode
 		if ($this->dev === true) {
+			// load the non-minified index.js, remove vendor script and
+			//  development version of Vue
+			$js['vendor']['src'] = null;
+			$js['index']['src']  = $this->url . '/src/index.js';
+
+			// add vite dev client
 			$js['vite'] = [
 				'nonce' => $this->nonce,
 				'src'   => $this->url . '/@vite/client'
 			];
-
-			$js['index'] = [
-				'nonce' => $this->nonce,
-				'src'   => $this->url . '/src/index.js'
-			];
-
-			// remove the vendor script
-			$js['vendor']['src'] = null;
 		}
 
 		return array_filter($js, fn ($js) => empty($js['src']) === false);

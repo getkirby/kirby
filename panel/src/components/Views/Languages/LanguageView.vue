@@ -6,31 +6,34 @@
 
 		<k-header :editable="true" @edit="update()">
 			{{ name }}
-			<k-button-group slot="buttons">
-				<k-button
-					:link="url"
-					:title="$t('open')"
-					icon="open"
-					size="sm"
-					target="_blank"
-					variant="filled"
-				/>
-				<k-button
-					:title="$t('settings')"
-					icon="cog"
-					size="sm"
-					variant="filled"
-					@click="update()"
-				/>
-				<k-button
-					v-if="deletable"
-					:title="$t('delete')"
-					icon="trash"
-					size="sm"
-					variant="filled"
-					@click="remove()"
-				/>
-			</k-button-group>
+
+			<template #buttons>
+				<k-button-group>
+					<k-button
+						:link="url"
+						:title="$t('open')"
+						icon="open"
+						size="sm"
+						target="_blank"
+						variant="filled"
+					/>
+					<k-button
+						:title="$t('settings')"
+						icon="cog"
+						size="sm"
+						variant="filled"
+						@click="update()"
+					/>
+					<k-button
+						v-if="deletable"
+						:title="$t('delete')"
+						icon="trash"
+						size="sm"
+						variant="filled"
+						@click="remove()"
+					/>
+				</k-button-group>
+			</template>
 		</k-header>
 
 		<k-section :headline="$t('language.settings')">
