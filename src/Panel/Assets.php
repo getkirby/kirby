@@ -108,13 +108,10 @@ class Assets
 	public function external(): array
 	{
 		return [
-			'css'            => $this->css(),
-			'icons'          => $this->favicons(),
-			'import-maps'    => $this->importMaps(),
-			// loader for plugins' index.dev.mjs files – inlined,
-			// so we provide the code instead of the asset URL
-			'plugin-imports' => $this->plugins->read('mjs'),
-			'js'             => $this->js()
+			'css'         => $this->css(),
+			'icons'       => $this->favicons(),
+			'import-maps' => $this->importMaps(),
+			'js'          => $this->js()
 		];
 	}
 
