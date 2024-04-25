@@ -217,7 +217,7 @@ class Assets
 
 		// during dev mode, load the dev version of Vue
 		if ($this->dev === true) {
-			$map['vue'] = $this->url . '/js/vue.esm-browser.js';
+			$map['vue'] = $this->url . '/node_modules/vue/dist/vue.esm-browser.js';
 		}
 
 		return $map;

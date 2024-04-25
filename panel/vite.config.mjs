@@ -4,7 +4,6 @@ import path from "path";
 import { defineConfig, splitVendorChunkPlugin } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { viteStaticCopy } from "vite-plugin-static-copy";
-import externalGlobals from "rollup-plugin-external-globals";
 import kirby from "./scripts/vite-kirby.mjs";
 
 let customServer;
@@ -79,7 +78,7 @@ export default defineConfig(({ command }) => {
 		resolve: {
 			alias: {
 				"@": path.resolve(__dirname, "src"),
-				vue: "vue/dist/vue.esm-browser.js"
+				vue: "vue/dist/vue.esm-bundler.js"
 			}
 		},
 		server: {
