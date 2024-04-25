@@ -110,6 +110,7 @@ class Assets
 		return [
 			'css'            => $this->css(),
 			'icons'          => $this->favicons(),
+			'import-maps'    => $this->importMaps(),
 			// loader for plugins' index.dev.mjs files – inlined,
 			// so we provide the code instead of the asset URL
 			'plugin-imports' => $this->plugins->read('mjs'),
@@ -209,16 +210,29 @@ class Assets
 	}
 
 	/**
+	 * Get all import maps
+	 */
+	public function importMaps(): array
+	{
+		$map = [
+			'vue' => $this->url . '/js/vue.esm-browser.prod.js',
+		];
+
+		// during dev mode, load the dev version of Vue
+		if ($this->dev === true) {
+			$map['vue'] = $this->url . '/js/vue.esm-browser.js';
+		}
+
+		return $map;
+	}
+
+	/**
 	 * Get all js files
 	 */
 	public function js(): array
 	{
 		$js = A::merge(
 			[
-				'vue' => [
-					'nonce' => $this->nonce,
-					'src'   => $this->url . '/js/vue.global.prod.js',
-				],
 				'vendor'       => [
 					'nonce' => $this->nonce,
 					'src'   => $this->url . '/js/vendor.min.js',
@@ -265,9 +279,6 @@ class Assets
 				'src'   => $this->url . '/src/index.js',
 				'type'  => 'module'
 			];
-
-			// load the development version of Vue
-			$js['vue']['src'] = $this->url . '/node_modules/vue/dist/vue.global.js';
 
 			// remove the vendor script
 			$js['vendor']['src'] = null;

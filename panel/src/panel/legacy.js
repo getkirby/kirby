@@ -1,6 +1,3 @@
-/* eslint-disable-next-line no-unused-vars */
-import Vue from "vue";
-
 /**
  * This is the graveyard for all deprecated
  * aliases. We can remove them step by step

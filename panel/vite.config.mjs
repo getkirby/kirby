@@ -37,22 +37,15 @@ export default defineConfig(({ command }) => {
 			viteStaticCopy({
 				targets: [
 					{
-						src: "node_modules/vue/dist/vue.global.prod.js",
+						src: "node_modules/vue/dist/vue.esm-browser.js",
+						dest: "js"
+					},
+					{
+						src: "node_modules/vue/dist/vue.esm-browser.prod.js",
 						dest: "js"
 					}
 				]
 			})
-		);
-	}
-
-	if (!process.env.VITEST) {
-		plugins.push(
-			// Externalize Vue so it's not loaded from node_modules
-			// but accessed via window.Vue
-			{
-				...externalGlobals({ vue: "Vue" }),
-				enforce: "post"
-			}
 		);
 	}
 
@@ -69,6 +62,7 @@ export default defineConfig(({ command }) => {
 			minify: "terser",
 			cssCodeSplit: false,
 			rollupOptions: {
+				external: ["vue"],
 				input: "./src/index.js",
 				output: {
 					entryFileNames: "js/[name].min.js",
