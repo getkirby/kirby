@@ -293,24 +293,28 @@ export default {
 	--button-color-icon: var(--theme-color-icon);
 	--button-color-text: var(--theme-color-text);
 }
+.k-button:where([data-theme$="-icon"]) {
+	--button-color-text: currentColor;
+}
 
 /** Dimmed Buttons **/
 .k-button:where([data-variant="dimmed"]) {
 	--button-color-icon: var(--color-text);
-	--button-color-dimmed-on: var(--color-text-dimmed);
-	--button-color-dimmed-off: var(--color-text);
-	--button-color-text: var(--button-color-dimmed-on);
+	--button-color-text: var(--color-text-dimmed);
 }
 .k-button:where([data-variant="dimmed"]):not([aria-disabled="true"]):is(
 		:hover,
 		[aria-current="true"]
-	) {
-	--button-color-text: var(--button-color-dimmed-off);
+	)
+	.k-button-text {
+	filter: brightness(75%);
 }
-.k-button:where([data-theme][data-variant="dimmed"]) {
+.k-button:where([data-variant="dimmed"][data-theme]) {
 	--button-color-icon: var(--theme-color-icon);
-	--button-color-dimmed-on: var(--theme-color-text-dimmed);
-	--button-color-dimmed-off: var(--theme-color-text);
+	--button-color-text: var(--theme-color-text-dimmed);
+}
+.k-button:where([data-variant="dimmed"][data-theme$="-icon"]) {
+	--button-color-text: var(--color-text-dimmed);
 }
 
 /** Filled Buttons **/
@@ -321,14 +325,20 @@ export default {
 	filter: brightness(97%);
 }
 .k-panel[data-theme="dark"]
-	.k-button:where([data-variant="filled"]):not([aria-disabled]):hover {
+	.k-button:where([data-variant="filled"]):not([aria-disabled="true"]):hover {
 	filter: brightness(87%);
 }
 
-.k-button:where([data-theme][data-variant="filled"]) {
+.k-button:where([data-variant="filled"][data-theme]) {
 	--button-color-icon: var(--theme-color-700);
 	--button-color-back: var(--theme-color-back);
-	--button-color-text: var(--theme-color-text);
+}
+.k-button:where([data-theme$="-icon"][data-variant="filled"]) {
+	--button-color-icon: hsl(
+		var(--theme-color-hs),
+		57%
+	); /* slightly improve the contrast */
+	--button-color-back: var(--color-gray-300);
 }
 
 /** Icon Buttons **/
