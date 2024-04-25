@@ -201,8 +201,8 @@ class Assets
 	 */
 	public function icons(): string
 	{
-		$dir  = $this->kirby->root('panel') . '/';
-		$dir .= $this->dev ? 'public' : 'dist';
+		$dir   = $this->kirby->root('panel') . '/';
+		$dir  .= $this->dev ? 'public' : 'dist';
 		$icons = F::read($dir . '/img/icons.svg');
 		$icons = preg_replace('/<!--(.|\s)*?-->/', '', $icons);
 		return $icons;
@@ -254,23 +254,18 @@ class Assets
 		// path to `index.js` - vendor does not need
 		// to be loaded in dev mode
 		if ($this->dev === true) {
+			// load the non-minified index.js, remove vendor script and
+			//  development version of Vue
+			$js['vendor']['src'] = null;
+			$js['index']['src']  = $this->url . '/src/index.js';
+			$js['vue']['src']    = $this->url . '/node_modules/vue/dist/vue.js';
+
+			// add vite dev client
 			$js['vite'] = [
 				'nonce' => $this->nonce,
 				'src'   => $this->url . '/@vite/client',
 				'type'  => 'module'
 			];
-
-			$js['index'] = [
-				'nonce' => $this->nonce,
-				'src'   => $this->url . '/src/index.js',
-				'type'  => 'module'
-			];
-
-			// load the development version of Vue
-			$js['vue']['src'] = $this->url . '/node_modules/vue/dist/vue.js';
-
-			// remove the vendor script
-			$js['vendor']['src'] = null;
 		}
 
 		return array_filter($js, fn ($js) => empty($js['src']) === false);
