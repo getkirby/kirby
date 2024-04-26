@@ -237,8 +237,11 @@ class Content
 		array|null $content = null,
 		bool $overwrite = false
 	): static {
-		$content = array_change_key_case((array)$content, CASE_LOWER);
-		$this->data = $overwrite === true ? $content : array_merge($this->data, $content);
+		$content    = array_change_key_case((array)$content, CASE_LOWER);
+		$this->data = match($overwrite) {
+			true  => $content,
+			false => [...$this->data, ...$content]
+		};
 
 		// clear cache of Field objects
 		$this->fields = [];
