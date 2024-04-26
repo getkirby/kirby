@@ -34,9 +34,6 @@ class Helpers
 		// render an empty value anymore but a single space.
 		// To render an empty value, please pass an empty string.
 		'xml-attr-single-space' => true,
-
-		// The internal `$model->contentFile*()` methods have been deprecated
-		'model-content-file' => true,
 	];
 
 	/**
