@@ -165,47 +165,6 @@ abstract class ModelWithContent implements Identifiable
 	}
 
 	/**
-	 * Returns the absolute path to the content file;
-	 * NOTE: only supports the published content file
-	 * (use `$model->storage()->contentFile()` for other versions)
-	 * @internal
-	 * @deprecated 4.0.0
-	 * @todo Remove in v5
-	 * @codeCoverageIgnore
-	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the language for the given code does not exist
-	 */
-	public function contentFile(
-		string|null $languageCode = null,
-		bool $force = false
-	): string {
-		Helpers::deprecated('The internal $model->contentFile() method has been deprecated. You can use $model->storage()->contentFile() instead, however please note that this method is also internal and may be removed in the future.', 'model-content-file');
-
-		return $this->storage()->contentFile(
-			$this->storage()->defaultVersion(),
-			$languageCode,
-			$force
-		);
-	}
-
-	/**
-	 * Returns an array with all content files;
-	 * NOTE: only supports the published content file
-	 * (use `$model->storage()->contentFiles()` for other versions)
-	 * @deprecated 4.0.0
-	 * @todo Remove in v5
-	 * @codeCoverageIgnore
-	 */
-	public function contentFiles(): array
-	{
-		Helpers::deprecated('The internal $model->contentFiles() method has been deprecated. You can use $model->storage()->contentFiles() instead, however please note that this method is also internal and may be removed in the future.', 'model-content-file');
-
-		return $this->storage()->contentFiles(
-			$this->storage()->defaultVersion()
-		);
-	}
-
-	/**
 	 * Prepares the content that should be written
 	 * to the text file
 	 * @internal
@@ -216,43 +175,6 @@ abstract class ModelWithContent implements Identifiable
 	): array {
 		return $data;
 	}
-
-	/**
-	 * Returns the absolute path to the
-	 * folder in which the content file is
-	 * located
-	 * @internal
-	 * @deprecated 4.0.0
-	 * @todo Remove in v5
-	 * @codeCoverageIgnore
-	 */
-	public function contentFileDirectory(): string|null
-	{
-		Helpers::deprecated('The internal $model->contentFileDirectory() method has been deprecated. Please let us know via a GitHub issue if you need this method and tell us your use case.', 'model-content-file');
-		return $this->root();
-	}
-
-	/**
-	 * Returns the extension of the content file
-	 * @internal
-	 * @deprecated 4.0.0
-	 * @todo Remove in v5
-	 * @codeCoverageIgnore
-	 */
-	public function contentFileExtension(): string
-	{
-		Helpers::deprecated('The internal $model->contentFileName() method has been deprecated. Please let us know via a GitHub issue if you need this method and tell us your use case.', 'model-content-file');
-		return $this->kirby()->contentExtension();
-	}
-
-	/**
-	 * Needs to be declared by the final model
-	 * @internal
-	 * @deprecated 4.0.0
-	 * @todo Remove in v5
-	 * @codeCoverageIgnore
-	 */
-	abstract public function contentFileName(): string;
 
 	/**
 	 * Converts model to new blueprint

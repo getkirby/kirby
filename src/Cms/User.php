@@ -185,20 +185,6 @@ class User extends ModelWithContent
 		return $data;
 	}
 
-	/**
-	 * Filename for the content file
-	 *
-	 * @internal
-	 * @deprecated 4.0.0
-	 * @todo Remove in v5
-	 * @codeCoverageIgnore
-	 */
-	public function contentFileName(): string
-	{
-		Helpers::deprecated('The internal $model->contentFileName() method has been deprecated. Please let us know via a GitHub issue if you need this method and tell us your use case.', 'model-content-file');
-		return 'user';
-	}
-
 	protected function credentials(): array
 	{
 		return $this->credentials ??= $this->readCredentials();
@@ -748,15 +734,6 @@ class User extends ModelWithContent
 		}
 
 		return true;
-	}
-
-	/**
-	 * @deprecated 4.0.0 Use `->secretsFile()` instead
-	 * @codeCoverageIgnore
-	 */
-	protected function passwordFile(): string
-	{
-		return $this->secretsFile();
 	}
 
 	/**

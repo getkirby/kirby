@@ -23,11 +23,6 @@ class ExtendedModelWithContent extends ModelWithContent
 		// nothing to commit in the test
 	}
 
-	public function contentFileName(): string
-	{
-		return 'test.txt';
-	}
-
 	public function panel(): PanelPage
 	{
 		return new PanelPage($this);
