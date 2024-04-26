@@ -275,6 +275,26 @@ class ModelWithContentTest extends TestCase
 		$this->assertSame([], $model->blueprints('foo'));
 	}
 
+	public function testKirby()
+	{
+		$kirby = new App();
+		$model = new Page([
+			'slug'  => 'foo',
+			'kirby' => $kirby
+		]);
+		$this->assertSame($kirby, $model->kirby());
+	}
+
+	public function testSite()
+	{
+		$site  = new Site();
+		$model = new Page([
+			'slug' => 'foo',
+			'site' => $site
+		]);
+		$this->assertIsSite($site, $model->site());
+	}
+
 	public function testToSafeString()
 	{
 		$model = new Page(['slug' => 'foo', 'content' => ['title' => 'value &']]);

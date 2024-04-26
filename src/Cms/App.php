@@ -133,7 +133,7 @@ class App
 
 		// set the singleton
 		if (static::$instance === null || $setInstance === true) {
-			static::$instance = ModelWithContent::$kirby = Model::$kirby =  $this;
+			static::$instance = ModelWithContent::$kirby = $this;
 		}
 
 		// setup the I18n class with the translation loader
