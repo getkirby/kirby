@@ -67,6 +67,7 @@ class VideoKirbyTagTest extends TestCase
                                 caption: Lorem ipsum
                                 controls: false
                                 class: video-class
+								disablepictureinpicture: true
                                 height: 350
                                 loop: true
                                 muted: true
@@ -90,7 +91,7 @@ class VideoKirbyTagTest extends TestCase
 		$image = $page->file('sample.jpg');
 		$video = $page->file('sample.mp4');
 
-		$expected = '<figure class="video-class" style="border: none"><video autoplay height="350" loop muted playsinline poster="' . $image->url() . '" preload="auto" width="500"><source src="' . $video->url() . '" type="video/mp4"></video><figcaption>Lorem ipsum</figcaption></figure>';
+		$expected = '<figure class="video-class" style="border: none"><video autoplay disablepictureinpicture height="350" loop muted playsinline poster="' . $image->url() . '" preload="auto" width="500"><source src="' . $video->url() . '" type="video/mp4"></video><figcaption>Lorem ipsum</figcaption></figure>';
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
