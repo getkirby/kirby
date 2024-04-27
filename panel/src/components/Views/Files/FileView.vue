@@ -53,7 +53,7 @@
 			</template>
 		</k-header>
 
-		<k-file-preview v-bind="preview" />
+		<component :is="previewComponent" v-bind="preview" />
 
 		<k-model-tabs :tab="tab.name" :tabs="tabs" />
 
@@ -74,6 +74,17 @@ export default {
 	extends: ModelView,
 	props: {
 		preview: Object
+	},
+	computed: {
+		previewComponent() {
+			if (
+				this.$helper.isComponent("k-file-" + this.preview.type + "-preview")
+			) {
+				return "k-file-" + this.preview.type + "-preview";
+			}
+
+			return "k-file-default-preview";
+		}
 	},
 	methods: {
 		action(action) {

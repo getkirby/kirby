@@ -3,6 +3,8 @@ import SearchView from "./SearchView.vue";
 
 import FileView from "./Files/FileView.vue";
 import FilePreview from "./Files/FilePreview.vue";
+import FileDefaultPreview from "./Files/FileDefaultPreview.vue";
+import FileImagePreview from "./Files/FileImagePreview.vue";
 import FileFocusButton from "./Files/FileFocusButton.vue";
 
 import LanguagesView from "./Languages/LanguagesView.vue";
@@ -34,6 +36,8 @@ export default {
 
 		app.component("k-file-view", FileView);
 		app.component("k-file-preview", FilePreview);
+		app.component("k-file-default-preview", FileDefaultPreview);
+		app.component("k-file-image-preview", FileImagePreview);
 		app.component("k-file-focus-button", FileFocusButton);
 
 		app.component("k-languages-view", LanguagesView);

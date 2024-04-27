@@ -406,6 +406,7 @@ class File extends Model
 						'back'  => 'transparent',
 						'ratio' => '1/1'
 					], 'cards'),
+					'type'      => $file->type(),
 					'url'       => $url = $file->previewUrl(),
 					'details'   => [
 						[
