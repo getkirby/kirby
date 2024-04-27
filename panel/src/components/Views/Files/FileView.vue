@@ -53,7 +53,7 @@
 			</template>
 		</k-header>
 
-		<k-file-preview v-bind="preview" :focus="focus" @focus="setFocus" />
+		<k-file-preview v-bind="preview" />
 
 		<k-model-tabs :tab="tab.name" :tabs="tabs" />
 
@@ -75,19 +75,6 @@ export default {
 	props: {
 		preview: Object
 	},
-	computed: {
-		focus() {
-			const focus = this.$store.getters["content/values"]()["focus"];
-
-			if (!focus) {
-				return;
-			}
-
-			const [x, y] = focus.replaceAll("%", "").split(" ");
-
-			return { x: parseFloat(x), y: parseFloat(y) };
-		}
-	},
 	methods: {
 		action(action) {
 			switch (action) {
@@ -97,13 +84,6 @@ export default {
 						...this.model
 					});
 			}
-		},
-		setFocus(focus) {
-			if (this.$helper.object.isObject(focus) === true) {
-				focus = `${focus.x}% ${focus.y}%`;
-			}
-
-			this.$store.dispatch("content/update", ["focus", focus]);
 		}
 	}
 };
