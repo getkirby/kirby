@@ -21,20 +21,18 @@ class InstallationTest extends AreaTestCase
 		$this->assertSame('Installation', $view['title']);
 		$this->assertSame('k-installation-view', $view['component']);
 
-		// cli is not a valid server, therefor installation fails
 		$this->assertFalse($view['props']['isInstallable']);
 		$this->assertFalse($view['props']['isInstalled']);
-		$this->assertFalse($view['props']['isOk']);
+		$this->assertTrue($view['props']['isOk']);
 
 		$requirements = [
 			'accounts' => true,
-			'content' => true,
-			'curl' => true,
+			'content'  => true,
+			'curl'     => true,
 			'sessions' => true,
 			'mbstring' => true,
-			'media' => true,
-			'php' => true,
-			'server' => false
+			'media'    => true,
+			'php'      => true,
 		];
 
 		$this->assertSame($requirements, $view['props']['requirements']);
@@ -53,7 +51,6 @@ class InstallationTest extends AreaTestCase
 		$this->assertTrue($view['props']['isInstallable']);
 		$this->assertFalse($view['props']['isInstalled']);
 		$this->assertTrue($view['props']['isOk']);
-		$this->assertTrue($view['props']['requirements']['server']);
 	}
 
 	public function testInstallationWhenInstalled()
