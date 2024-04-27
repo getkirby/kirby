@@ -1,0 +1,32 @@
+<template>
+	<k-file-preview :details="details">
+		<template #thumb>
+			<k-icon
+				:color="$helper.color(image.color)"
+				:type="image.icon"
+				class="k-item-icon"
+			/>
+		</template>
+	</k-file-preview>
+</template>
+
+<script>
+export default {
+	props: {
+		details: {
+			default: () => [],
+			type: Array
+		},
+		image: {
+			default: () => ({}),
+			type: Object
+		}
+	}
+};
+</script>
+
+<style>
+.k-file-preview-thumb > .k-icon {
+	--icon-size: 3rem;
+}
+</style>
