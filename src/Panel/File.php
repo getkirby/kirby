@@ -300,12 +300,12 @@ class File extends Model
 	public function isFocusable(): bool
 	{
 		// blueprint option
-		$option = $this->model->blueprint()->focus();
+		$focusable   = $this->model->blueprint()->focus();
 		// fallback to whether the file is viewable
 		// (images should be focusable by default, others not)
-		$option ??= $this->model->isViewable();
+		$focusable ??= $this->model->isViewable();
 
-		if ($option === false) {
+		if ($focusable === false) {
 			return false;
 		}
 
@@ -385,6 +385,56 @@ class File extends Model
 			'type'     => $this->model->type(),
 			'url'      => $this->model->url()
 		];
+	}
+
+	/**
+	 * Returns the data for the file preview component
+	 * @since 4.3.0
+	 */
+	public function preview(): array
+	{
+		$file    = $this->model;
+		$preview = [
+			'type'    => $file->type(),
+			'url'     => $url = $file->previewUrl(),
+			'details' => [
+				[
+					'title' => I18n::translate('template'),
+					'text'  => $file->template() ?? '—'
+				],
+				[
+					'title' => I18n::translate('mime'),
+					'text'  => $file->mime()
+				],
+				[
+					'title' => I18n::translate('url'),
+					'text'  => $file->id(),
+					'link'  => $url
+				],
+				[
+					'title' => I18n::translate('size'),
+					'text'  => $file->niceSize()
+				],
+			],
+			'image' => $this->image([
+				'back'  => 'transparent',
+				'ratio' => '1/1'
+			], 'cards')
+		];
+
+		if ($file->type() === 'image') {
+			$preview['focusable'] = $this->isFocusable();
+			$preview['details'][] = [
+				'title' => I18n::translate('dimensions'),
+				'text'  => $file->dimensions() . ' ' . I18n::translate('pixel')
+			];
+			$preview['details'][] = [
+				'title' => I18n::translate('orientation'),
+				'text'  => I18n::translate('orientation.' . $file->dimensions()->orientation())
+			];
+		}
+
+		return $preview;
 	}
 
 	/**
