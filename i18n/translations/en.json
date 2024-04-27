@@ -386,7 +386,6 @@
 	"installation.issues.mbstring": "The <code>MB String</code> extension is required",
 	"installation.issues.media": "The <code>/media</code> folder does not exist or is not writable",
 	"installation.issues.php": "Make sure to use <code>PHP 8+</code>",
-	"installation.issues.server": "Kirby requires <code>Apache</code>, <code>Nginx</code> or <code>Caddy</code>",
 	"installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
 
 	"language": "Language",

@@ -135,8 +135,9 @@ class SystemTest extends TestCase
 			['Nginx', true],
 			['caddy', true],
 			['Caddy', true],
-			['iis', false],
-			['something', false],
+			['iis', true],
+			['something', true],
+			[null, false]
 		];
 	}
 
@@ -619,11 +620,10 @@ class SystemTest extends TestCase
 	}
 
 	/**
-	 * @covers ::server
 	 * @covers ::serverSoftware
 	 * @dataProvider providerForServerSoftware
 	 */
-	public function testServer($software, $expected)
+	public function testServerSoftware($software, $expected)
 	{
 		$app = $this->app->clone([
 			'server' => [
@@ -632,54 +632,12 @@ class SystemTest extends TestCase
 		]);
 
 		$system = new System($app);
-		$server = $system->server();
-
-		$this->assertSame($expected, $server);
 
 		if ($expected === true) {
 			$this->assertSame($software, $system->serverSoftware());
 		} else {
-			$this->assertNull($system->serverSoftware());
+			$this->assertSame('–', $system->serverSoftware());
 		}
-	}
-
-	/**
-	 * @covers ::server
-	 * @covers ::serverSoftware
-	 */
-	public function testServerOverwrite()
-	{
-		// single server
-		$app = $this->app->clone([
-			'options' => [
-				'servers' => 'symfony'
-			],
-			'server' => [
-				'SERVER_SOFTWARE' => 'symfony'
-			]
-		]);
-
-		$system = new System($app);
-		$server = $system->server();
-
-		$this->assertSame('symfony', $system->serverSoftware());
-		$this->assertTrue($server);
-
-		// array of servers
-		$app = $this->app->clone([
-			'options' => [
-				'servers' => ['symfony', 'apache']
-			],
-			'server' => [
-				'SERVER_SOFTWARE' => 'symfony'
-			]
-		]);
-
-		$system = new System($app);
-		$server = $system->server();
-
-		$this->assertSame('symfony', $system->serverSoftware());
-		$this->assertTrue($server);
 	}
 
 	/**
@@ -690,7 +648,6 @@ class SystemTest extends TestCase
 	 * @covers ::mbstring
 	 * @covers ::media
 	 * @covers ::php
-	 * @covers ::server
 	 * @covers ::status
 	 * @covers ::toArray
 	 * @covers ::__debugInfo
@@ -701,13 +658,12 @@ class SystemTest extends TestCase
 
 		$expected = [
 			'accounts' => true,
-			'content' => true,
-			'curl' => true,
+			'content'  => true,
+			'curl'     => true,
 			'sessions' => true,
 			'mbstring' => true,
-			'media' => true,
-			'php' => true,
-			'server' => false,
+			'media'    => true,
+			'php'      => true
 		];
 		$this->assertSame($expected, $system->status());
 		$this->assertSame($expected, $system->toArray());
