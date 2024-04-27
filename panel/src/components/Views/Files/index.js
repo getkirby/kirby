@@ -4,6 +4,7 @@ import FilePreview from "./FilePreview.vue";
 import FileAudioPreview from "./FileAudioPreview.vue";
 import FileDefaultPreview from "./FileDefaultPreview.vue";
 import FileImagePreview from "./FileImagePreview.vue";
+import FileVideoPreview from "./FileVideoPreview.vue";
 
 import FileFocusButton from "./FileFocusButton.vue";
 
@@ -15,6 +16,7 @@ export default {
 		app.component("k-file-audio-preview", FileAudioPreview);
 		app.component("k-file-default-preview", FileDefaultPreview);
 		app.component("k-file-image-preview", FileImagePreview);
+		app.component("k-file-video-preview", FileVideoPreview);
 
 		app.component("k-file-focus-button", FileFocusButton);
 	}
