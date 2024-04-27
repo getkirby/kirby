@@ -459,25 +459,33 @@ class App
 		string $contentType = 'html'
 	): array {
 		$name = basename(strtolower($name));
+		$data = [];
 
+		// always use the site controller as defaults, if available
+		if ($controller = $this->controllerLookup('site')) {
+			$data = (array)$controller->call($this, $arguments);
+		}
+
+		// try to find a specific representation controller
 		if ($controller = $this->controllerLookup($name, $contentType)) {
-			return (array)$controller->call($this, $arguments);
+			return [
+				...$data,
+				...(array)$controller->call($this, $arguments)
+			];
 		}
 
 		if ($contentType !== 'html') {
 			// no luck for a specific representation controller?
 			// let's try the html controller instead
 			if ($controller = $this->controllerLookup($name)) {
-				return (array)$controller->call($this, $arguments);
+				return [
+					...$data,
+					...(array)$controller->call($this, $arguments)
+				];
 			}
 		}
 
-		// still no luck? Let's take the site controller
-		if ($controller = $this->controllerLookup('site')) {
-			return (array)$controller->call($this, $arguments);
-		}
-
-		return [];
+		return $data;
 	}
 
 	/**
