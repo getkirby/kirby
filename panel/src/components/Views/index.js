@@ -1,11 +1,7 @@
 import ErrorView from "./ErrorView.vue";
 import SearchView from "./SearchView.vue";
 
-import FileView from "./Files/FileView.vue";
-import FilePreview from "./Files/FilePreview.vue";
-import FileDefaultPreview from "./Files/FileDefaultPreview.vue";
-import FileImagePreview from "./Files/FileImagePreview.vue";
-import FileFocusButton from "./Files/FileFocusButton.vue";
+import Files from "./Files/index.js";
 
 import LanguagesView from "./Languages/LanguagesView.vue";
 import LanguageView from "./Languages/LanguageView.vue";
@@ -31,14 +27,10 @@ import LegacyPluginView from "./LegacyPluginView.vue";
 
 export default {
 	install(app) {
+		app.use(Files);
+
 		app.component("k-error-view", ErrorView);
 		app.component("k-search-view", SearchView);
-
-		app.component("k-file-view", FileView);
-		app.component("k-file-preview", FilePreview);
-		app.component("k-file-default-preview", FileDefaultPreview);
-		app.component("k-file-image-preview", FileImagePreview);
-		app.component("k-file-focus-button", FileFocusButton);
 
 		app.component("k-languages-view", LanguagesView);
 		app.component("k-language-view", LanguageView);
