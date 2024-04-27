@@ -232,11 +232,30 @@ return [
 				return false;
 			}
 
-			if (in_array($this->status, ['draft', 'all']) === false) {
+			if ($this->isFull() === true) {
 				return false;
 			}
 
-			if ($this->isFull() === true) {
+			// ensure that the add button is only shown when
+			// the section is displaying pages with the same status
+			// as the status that is used for page creation
+			$statuses = [];
+
+			foreach ($this->blueprintNames() as $blueprint) {
+				try {
+					$props      = Blueprint::load('pages/' . $blueprint);
+					$statuses[] = $props['create']['status'] ?? 'draft';
+				} catch (Throwable) {
+				}
+			}
+
+			$statuses = array_unique($statuses);
+
+			if (count($statuses) > 1 && $this->status !== 'all') {
+				return false;
+			}
+
+			if (in_array($this->status, [...$statuses, 'all']) === false) {
 				return false;
 			}
 
@@ -249,22 +268,12 @@ return [
 	'methods' => [
 		'blueprints' => function () {
 			$blueprints = [];
-			$templates  = empty($this->create) === false ? A::wrap($this->create) : $this->templates;
-
-			if (empty($templates) === true) {
-				$templates = $this->kirby()->blueprints();
-			}
-
-			// excludes ignored templates
-			if ($templatesIgnore = $this->templatesIgnore) {
-				$templates = array_diff($templates, $templatesIgnore);
-			}
 
 			// convert every template to a usable option array
 			// for the template select box
-			foreach ($templates as $template) {
+			foreach ($this->blueprintNames() as $blueprint) {
 				try {
-					$props = Blueprint::load('pages/' . $template);
+					$props = Blueprint::load('pages/' . $blueprint);
 
 					$blueprints[] = [
 						'name'  => basename($props['name']),
@@ -272,14 +281,28 @@ return [
 					];
 				} catch (Throwable) {
 					$blueprints[] = [
-						'name'  => basename($template),
-						'title' => ucfirst($template),
+						'name'  => basename($blueprint),
+						'title' => ucfirst($blueprint),
 					];
 				}
 			}
 
 			return $blueprints;
-		}
+		},
+		'blueprintNames' => function () {
+			$blueprints  = empty($this->create) === false ? A::wrap($this->create) : $this->templates;
+
+			if (empty($blueprints) === true) {
+				$blueprints = $this->kirby()->blueprints();
+			}
+
+			// excludes ignored templates
+			if ($templatesIgnore = $this->templatesIgnore) {
+				$blueprints = array_diff($blueprints, $templatesIgnore);
+			}
+
+			return $blueprints;
+		},
 	],
 	'toArray' => function () {
 		return [
