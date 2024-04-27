@@ -4,7 +4,17 @@
 			{{ $t("view.system") }}
 		</k-header>
 
-		<k-section :headline="$t('environment')">
+		<k-section
+			:headline="$t('environment')"
+			:buttons="[
+				{
+					text: $t('system.info.copy'),
+					icon: 'copy',
+					responsive: true,
+					click: copy
+				}
+			]"
+		>
 			<k-stats :reports="environment" size="medium" class="k-system-info" />
 		</k-section>
 
@@ -41,6 +51,30 @@ export default {
 			);
 			this.exceptions.map((exception) => console.warn(exception));
 			console.info("End of errors from the update check.");
+		}
+	},
+	methods: {
+		copy() {
+			const info = JSON.stringify(
+				{
+					version: this.environment[1].value,
+					license: this.environment[0].value,
+					php: this.environment[2].value,
+					server: this.environment[3].value,
+					security: this.security.map((issue) => issue.text),
+					plugins: this.plugins.map((plugin) => ({
+						name: plugin.name.text,
+						version: plugin.version.currentVersion
+					}))
+				},
+				null,
+				2
+			);
+
+			this.$helper.clipboard.write(info);
+			this.$panel.notification.success({
+				message: this.$t("system.info.copied")
+			});
 		}
 	}
 };
