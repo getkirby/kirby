@@ -83,10 +83,14 @@ export default {
 	align-items: center;
 	justify-content: center;
 	height: 100%;
-	padding: var(--spacing-12);
+	padding: var(--spacing-10);
 	container-type: size;
 }
-
+.k-file-preview-thumb :where(img, audio, video) {
+	width: auto;
+	max-width: 100cqw;
+	max-height: 100cqh;
+}
 .k-file-preview-thumb > .k-button {
 	position: absolute;
 	top: var(--spacing-2);

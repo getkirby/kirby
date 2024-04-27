@@ -97,12 +97,6 @@ export default {
 </script>
 
 <style>
-.k-file-preview-thumb img {
-	width: auto;
-	max-width: 100cqw;
-	max-height: 100cqh;
-}
-
 .k-file-preview .k-coords-input {
 	--opacity-disabled: 1;
 	--range-thumb-color: hsl(216 60% 60% / 0.75);
