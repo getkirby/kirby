@@ -126,21 +126,6 @@ class SystemTest extends TestCase
 		];
 	}
 
-	public static function providerForServerSoftware(): array
-	{
-		return [
-			['apache', true],
-			['Apache', true],
-			['nginx', true],
-			['Nginx', true],
-			['caddy', true],
-			['Caddy', true],
-			['iis', true],
-			['something', true],
-			[null, false]
-		];
-	}
-
 	public static function providerForServerNames(): array
 	{
 		return [
@@ -621,23 +606,32 @@ class SystemTest extends TestCase
 
 	/**
 	 * @covers ::serverSoftware
-	 * @dataProvider providerForServerSoftware
 	 */
-	public function testServerSoftware($software, $expected)
+	public function testServerSoftware()
 	{
 		$app = $this->app->clone([
 			'server' => [
-				'SERVER_SOFTWARE' => $software
+				'SERVER_SOFTWARE' => $software = 'Apache'
 			]
 		]);
 
 		$system = new System($app);
+		$this->assertSame($software, $system->serverSoftware());
+	}
 
-		if ($expected === true) {
-			$this->assertSame($software, $system->serverSoftware());
-		} else {
-			$this->assertSame('–', $system->serverSoftware());
-		}
+	/**
+	 * @covers ::serverSoftware
+	 */
+	public function testServerSoftwareInvalid()
+	{
+		$app = $this->app->clone([
+			'server' => [
+				'SERVER_SOFTWARE' => null
+			]
+		]);
+
+		$system = new System($app);
+		$this->assertSame('–', $system->serverSoftware());
 	}
 
 	/**

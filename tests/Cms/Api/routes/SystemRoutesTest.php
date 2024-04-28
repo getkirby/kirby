@@ -19,19 +19,6 @@ class SystemRoutesTest extends TestCase
 		]);
 	}
 
-	public function testGetWithValidServerSoftware()
-	{
-		$app = $this->app->clone([
-			'server' => [
-				'SERVER_SOFTWARE' => 'apache'
-			]
-		]);
-
-		$response = $app->api()->call('system', 'GET');
-
-		$this->assertTrue($response['data']['isOk']);
-	}
-
 	public function testGetWithoutUser()
 	{
 		$response = $this->app->api()->call('system', 'GET');
