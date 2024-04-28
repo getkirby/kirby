@@ -14,25 +14,34 @@
 			</k-coords-input>
 		</template>
 
-		<!-- <div v-if="image.src" class="k-file-preview-focus-info">
-			<dt>{{ $t("file.focus.title") }}</dt>
-			<dd>
-				<k-file-focus-button
-					v-if="focusable"
-					ref="focus"
-					:focus="focus"
-					@set="setFocus"
-				/>
-				<template v-else-if="focus">
-					{{ focus.x }}% {{ focus.y }}%
-				</template>
-				<template v-else>–</template>
-			</dd>
-		</div> -->
+		<template #details>
+			<div v-if="image.src" class="k-file-preview-focus-info">
+				<dt>{{ $t("file.focus.title") }}</dt>
+				<dd>
+					<k-button
+						v-if="focusable"
+						ref="focus"
+						:icon="focus ? 'cancel-small' : 'preview'"
+						:title="focus ? $t('file.focus.reset') : undefined"
+						size="xs"
+						variant="filled"
+						@click="focus ? setFocus(undefined) : setFocus({ x: 50, y: 50 })"
+					>
+						<template v-if="focus">{{ focus.x }}% {{ focus.y }}%</template>
+						<template v-else>{{ $t("file.focus.placeholder") }}</template>
+					</k-button>
+					<template v-else-if="focus"> {{ focus.x }}% {{ focus.y }}% </template>
+					<template v-else>–</template>
+				</dd>
+			</div>
+		</template>
 	</k-file-preview>
 </template>
 
 <script>
+/**
+ * @since 4.3.0
+ */
 export default {
 	props: {
 		details: {
