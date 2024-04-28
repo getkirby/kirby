@@ -236,9 +236,18 @@ return [
 				return false;
 			}
 
-			// ensure that the add button is only shown when
-			// the section is displaying pages with the same status
-			// as the status that is used for page creation
+			// form here on, we need to check with which status
+			// the pages are created and if the section can show
+			// these newly created pages
+
+			// if the section shows pages no matter what status they have,
+			// we can always show the add button
+			if ($this->status === 'all') {
+				return true;
+			}
+
+			// collect all statuses of the blueprints
+			// that are allowed to be created
 			$statuses = [];
 
 			foreach ($this->blueprintNames() as $blueprint) {
@@ -246,16 +255,16 @@ return [
 					$props      = Blueprint::load('pages/' . $blueprint);
 					$statuses[] = $props['create']['status'] ?? 'draft';
 				} catch (Throwable) {
+					$statuses[] = 'draft'; // @codeCoverageIgnore
 				}
 			}
 
 			$statuses = array_unique($statuses);
 
-			if (count($statuses) > 1 && $this->status !== 'all') {
-				return false;
-			}
-
-			if (in_array($this->status, [...$statuses, 'all']) === false) {
+			// if there are multiple statuses or if the section is showing
+			// a different status than new pages would be created with,
+			// we cannot show the add button
+			if (count($statuses) > 1 || $this->status !== $statuses[0]) {
 				return false;
 			}
 
