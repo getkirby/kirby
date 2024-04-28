@@ -431,7 +431,7 @@ class File extends Model
 		foreach (static::$previews as $callback) {
 			$preview = array_merge_recursive(
 				$preview,
-				$callback->call($this, $file, $preview) ?? []
+				$callback($file, $preview) ?? []
 			);
 		}
 
@@ -530,7 +530,7 @@ class File extends Model
 File::$previews[] = function (CmsFile $file, array $preview) {
 	if ($file->type() === 'image') {
 		return [
-			'focusable' => $this->isFocusable(),
+			'focusable' => $file->panel()->isFocusable(),
 			'details'   => [
 				[
 					'title' => I18n::translate('dimensions'),
