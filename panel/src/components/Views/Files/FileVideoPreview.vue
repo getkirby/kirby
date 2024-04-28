@@ -4,9 +4,7 @@
 		:options="options"
 		class="k-file-video-preview"
 	>
-		<template #thumb>
-			<video controls preload="metadata" :src="url" />
-		</template>
+		<video controls preload="metadata" :src="url" />
 	</k-file-preview>
 </template>
 
@@ -48,14 +46,6 @@ export default {
 
 @container (min-width: 65rem) {
 	.k-file-video-preview {
-		grid-template-columns: 50% auto;
-	}
-	.k-file-video-preview .k-file-preview-thumb-column {
-		aspect-ratio: 16/9;
-	}
-}
-@container (min-width: 90rem) {
-	.k-file-video-preview .k-file-preview-layout {
 		grid-template-columns: 50% auto;
 	}
 	.k-file-video-preview .k-file-preview-thumb-column {

@@ -1,8 +1,10 @@
 <template>
-	<k-file-preview :details="details" :options="options">
-		<template #thumb>
-			<audio controls preload="metadata" :src="url" />
-		</template>
+	<k-file-preview
+		:details="details"
+		:options="options"
+		class="k-file-audio-preview"
+	>
+		<audio controls preload="metadata" :src="url" />
 	</k-file-preview>
 </template>
 

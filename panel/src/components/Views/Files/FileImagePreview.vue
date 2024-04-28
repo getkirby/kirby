@@ -3,19 +3,18 @@
 		:details="details"
 		:options="options"
 		:data-has-focus="Boolean(focus)"
+		class="k-file-image-preview"
 	>
-		<template #thumb>
-			<k-coords-input
-				:disabled="!focusable"
-				:value="focus"
-				@input="setFocus($event)"
-			>
-				<img v-bind="image" @dragstart.prevent />
-			</k-coords-input>
-		</template>
+		<k-coords-input
+			:disabled="!focusable"
+			:value="focus"
+			@input="setFocus($event)"
+		>
+			<img v-bind="image" @dragstart.prevent />
+		</k-coords-input>
 
 		<template #details>
-			<div v-if="image.src" class="k-file-preview-focus-info">
+			<div v-if="image.src" class="k-file-image-preview-focus">
 				<dt>{{ $t("file.focus.title") }}</dt>
 				<dd>
 					<k-button
@@ -106,14 +105,14 @@ export default {
 </script>
 
 <style>
-.k-file-preview .k-coords-input {
+.k-file-image-preview .k-coords-input {
 	--opacity-disabled: 1;
 	--range-thumb-color: hsl(216 60% 60% / 0.75);
 	--range-thumb-size: 1.25rem;
 	--range-thumb-shadow: none;
 	cursor: crosshair;
 }
-.k-file-preview .k-coords-input-thumb::after {
+.k-file-image-preview .k-coords-input-thumb::after {
 	--size: 0.4rem;
 	--pos: calc(50% - (var(--size) / 2));
 
@@ -126,20 +125,17 @@ export default {
 	background: white;
 	border-radius: 50%;
 }
-.k-file-preview:not([data-has-focus="true"]) .k-coords-input-thumb {
+.k-file-image-preview:not([data-has-focus="true"]) .k-coords-input-thumb {
 	display: none;
 }
 
-.k-file-preview-focus-info dd {
+.k-file-image-preview-focus dd {
 	display: flex;
 	align-items: center;
 }
-.k-file-preview-focus-info .k-button {
+.k-file-image-preview-focus .k-button {
 	--button-color-back: var(--color-gray-800);
 	--button-padding: var(--spacing-2);
 	--button-color-back: var(--color-gray-800);
-}
-.k-file-preview[data-has-focus="true"] .k-file-preview-focus-info .k-button {
-	flex-direction: row-reverse;
 }
 </style>

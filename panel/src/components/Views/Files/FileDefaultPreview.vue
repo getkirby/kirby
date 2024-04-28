@@ -1,12 +1,10 @@
 <template>
 	<k-file-preview :details="details">
-		<template #thumb>
-			<k-icon
-				:color="$helper.color(image.color)"
-				:type="image.icon"
-				class="k-item-icon"
-			/>
-		</template>
+		<k-icon
+			:color="$helper.color(image.color)"
+			:type="image.icon"
+			class="k-item-icon"
+		/>
 	</k-file-preview>
 </template>
 
