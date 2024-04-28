@@ -342,7 +342,7 @@ class SystemTest extends TestCase
 	/**
 	 * @covers ::info
 	 */
-	public function testIinfo()
+	public function testInfo()
 	{
 		$app = $this->app->clone([]);
 		$system = new System($app);
