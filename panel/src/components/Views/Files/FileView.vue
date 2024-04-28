@@ -47,6 +47,10 @@ export default {
 	},
 	computed: {
 		previewComponent() {
+			if (this.$helper.isComponent(this.preview.component)) {
+				return this.preview.component;
+			}
+
 			if (
 				this.$helper.isComponent("k-file-" + this.preview.type + "-preview")
 			) {
