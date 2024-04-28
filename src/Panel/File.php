@@ -26,6 +26,11 @@ class File extends Model
 	protected ModelWithContent $model;
 
 	/**
+	 * Closures to determine the right preview component for the file
+	 */
+	public static array $previews = [];
+
+	/**
 	 * Breadcrumb array
 	 */
 	public function breadcrumb(): array
@@ -406,16 +411,12 @@ class File extends Model
 			], 'cards')
 		];
 
-		if ($file->type() === 'image') {
-			$preview['focusable'] = $this->isFocusable();
-			$preview['details'][] = [
-				'title' => I18n::translate('dimensions'),
-				'text'  => $file->dimensions() . ' ' . I18n::translate('pixel')
-			];
-			$preview['details'][] = [
-				'title' => I18n::translate('orientation'),
-				'text'  => I18n::translate('orientation.' . $file->dimensions()->orientation())
-			];
+		// apply custom preview data providers from plugins
+		foreach (static::$previews as $callback) {
+			$preview = array_merge_recursive(
+				$preview,
+				$callback->call($this, $file, $preview) ?? []
+			);
 		}
 
 		return $preview;
@@ -507,3 +508,24 @@ class File extends Model
 		];
 	}
 }
+
+/**
+ * Additional data for images' file previews
+ */
+File::$previews[] = function (CmsFile $file, array $preview) {
+	if ($file->type() === 'image') {
+		return [
+			'focusable' => $this->isFocusable(),
+			'details'   => [
+				[
+					'title' => I18n::translate('dimensions'),
+					'text'  => $file->dimensions() . ' ' . I18n::translate('pixel')
+				],
+				[
+					'title' => I18n::translate('orientation'),
+					'text'  => I18n::translate('orientation.' . $file->dimensions()->orientation())
+				]
+			],
+		];
+	}
+};
