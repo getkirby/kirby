@@ -326,6 +326,26 @@ class SystemTest extends TestCase
 	}
 
 	/**
+	 * @covers ::info
+	 */
+	public function testInfo()
+	{
+		$app = $this->app->clone([
+			'languages' => [
+				'en' => [
+					'code' => 'en'
+				],
+				'de' => [
+					'code' => 'de'
+				]
+			],
+		]);
+		$system = new System($app);
+		$info   = $system->info();
+		$this->assertSame(['en', 'de'], $info['languages']);
+	}
+
+	/**
 	 * @covers ::is2FA
 	 */
 	public function testIs2FA()
