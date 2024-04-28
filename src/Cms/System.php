@@ -380,31 +380,11 @@ class System
 	}
 
 	/**
-	 * Check for a valid server environment
-	 */
-	public function server(): bool
-	{
-		return $this->serverSoftware() !== null;
-	}
-
-	/**
 	 * Returns the detected server software
 	 */
-	public function serverSoftware(): string|null
+	public function serverSoftware(): string
 	{
-		$servers = $this->app->option('servers', [
-			'apache',
-			'caddy',
-			'litespeed',
-			'nginx',
-			'php'
-		]);
-
-		$software = $this->app->environment()->get('SERVER_SOFTWARE', '');
-
-		preg_match('!(' . implode('|', A::wrap($servers)) . ')!i', $software, $matches);
-
-		return $matches[0] ?? null;
+		return $this->app->environment()->get('SERVER_SOFTWARE', '–');
 	}
 
 	/**
@@ -421,14 +401,13 @@ class System
 	public function status(): array
 	{
 		return [
-			'accounts'  => $this->accounts(),
-			'content'   => $this->content(),
-			'curl'      => $this->curl(),
-			'sessions'  => $this->sessions(),
-			'mbstring'  => $this->mbstring(),
-			'media'     => $this->media(),
-			'php'       => $this->php(),
-			'server'    => $this->server(),
+			'accounts' => $this->accounts(),
+			'content'  => $this->content(),
+			'curl'     => $this->curl(),
+			'sessions' => $this->sessions(),
+			'mbstring' => $this->mbstring(),
+			'media'    => $this->media(),
+			'php'      => $this->php()
 		];
 	}
 

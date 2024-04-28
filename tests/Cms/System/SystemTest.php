@@ -126,20 +126,6 @@ class SystemTest extends TestCase
 		];
 	}
 
-	public static function providerForServerSoftware(): array
-	{
-		return [
-			['apache', true],
-			['Apache', true],
-			['nginx', true],
-			['Nginx', true],
-			['caddy', true],
-			['Caddy', true],
-			['iis', false],
-			['something', false],
-		];
-	}
-
 	public static function providerForServerNames(): array
 	{
 		return [
@@ -619,67 +605,33 @@ class SystemTest extends TestCase
 	}
 
 	/**
-	 * @covers ::server
 	 * @covers ::serverSoftware
-	 * @dataProvider providerForServerSoftware
 	 */
-	public function testServer($software, $expected)
+	public function testServerSoftware()
 	{
 		$app = $this->app->clone([
 			'server' => [
-				'SERVER_SOFTWARE' => $software
+				'SERVER_SOFTWARE' => $software = 'Apache'
 			]
 		]);
 
 		$system = new System($app);
-		$server = $system->server();
-
-		$this->assertSame($expected, $server);
-
-		if ($expected === true) {
-			$this->assertSame($software, $system->serverSoftware());
-		} else {
-			$this->assertNull($system->serverSoftware());
-		}
+		$this->assertSame($software, $system->serverSoftware());
 	}
 
 	/**
-	 * @covers ::server
 	 * @covers ::serverSoftware
 	 */
-	public function testServerOverwrite()
+	public function testServerSoftwareInvalid()
 	{
-		// single server
 		$app = $this->app->clone([
-			'options' => [
-				'servers' => 'symfony'
-			],
 			'server' => [
-				'SERVER_SOFTWARE' => 'symfony'
+				'SERVER_SOFTWARE' => null
 			]
 		]);
 
 		$system = new System($app);
-		$server = $system->server();
-
-		$this->assertSame('symfony', $system->serverSoftware());
-		$this->assertTrue($server);
-
-		// array of servers
-		$app = $this->app->clone([
-			'options' => [
-				'servers' => ['symfony', 'apache']
-			],
-			'server' => [
-				'SERVER_SOFTWARE' => 'symfony'
-			]
-		]);
-
-		$system = new System($app);
-		$server = $system->server();
-
-		$this->assertSame('symfony', $system->serverSoftware());
-		$this->assertTrue($server);
+		$this->assertSame('–', $system->serverSoftware());
 	}
 
 	/**
@@ -690,7 +642,6 @@ class SystemTest extends TestCase
 	 * @covers ::mbstring
 	 * @covers ::media
 	 * @covers ::php
-	 * @covers ::server
 	 * @covers ::status
 	 * @covers ::toArray
 	 * @covers ::__debugInfo
@@ -701,13 +652,12 @@ class SystemTest extends TestCase
 
 		$expected = [
 			'accounts' => true,
-			'content' => true,
-			'curl' => true,
+			'content'  => true,
+			'curl'     => true,
 			'sessions' => true,
 			'mbstring' => true,
-			'media' => true,
-			'php' => true,
-			'server' => false,
+			'media'    => true,
+			'php'      => true
 		];
 		$this->assertSame($expected, $system->status());
 		$this->assertSame($expected, $system->toArray());

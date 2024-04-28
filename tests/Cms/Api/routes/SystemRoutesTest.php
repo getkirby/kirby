@@ -19,34 +19,6 @@ class SystemRoutesTest extends TestCase
 		]);
 	}
 
-	public function testGetWithInvalidServerSoftware()
-	{
-		// set invalid server software
-		$app = $this->app->clone([
-			'server' => [
-				'SERVER_SOFTWARE' => 'invalid'
-			]
-		]);
-
-		$response = $app->api()->call('system', 'GET');
-
-		$this->assertFalse($response['data']['isOk']);
-		$this->assertFalse($response['data']['requirements']['server']);
-	}
-
-	public function testGetWithValidServerSoftware()
-	{
-		$app = $this->app->clone([
-			'server' => [
-				'SERVER_SOFTWARE' => 'apache'
-			]
-		]);
-
-		$response = $app->api()->call('system', 'GET');
-
-		$this->assertTrue($response['data']['isOk']);
-	}
-
 	public function testGetWithoutUser()
 	{
 		$response = $this->app->api()->call('system', 'GET');
