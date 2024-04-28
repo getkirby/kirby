@@ -11,6 +11,9 @@
 </template>
 
 <script>
+/**
+ * @since 4.3.0
+ */
 export default {
 	props: {
 		details: {
