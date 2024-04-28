@@ -344,9 +344,19 @@ class SystemTest extends TestCase
 	 */
 	public function testInfo()
 	{
-		$app = $this->app->clone([]);
+		$app = $this->app->clone([
+			'languages' => [
+				'en' => [
+					'code' => 'en'
+				],
+				'de' => [
+					'code' => 'de'
+				]
+			],
+		]);
 		$system = new System($app);
-		$this->assertIsArray($system->info());
+		$info   = $system->info();
+		$this->assertSame(['en', 'de'], $info['languages']);
 	}
 
 	/**
