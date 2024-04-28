@@ -34,12 +34,17 @@
 						</template>
 					</dd>
 				</div>
+
+				<slot name="details" />
 			</dl>
 		</div>
 	</div>
 </template>
 
 <script>
+/**
+ * @since 4.3.0
+ */
 export default {
 	props: {
 		details: {
