@@ -163,6 +163,24 @@ class System
 	}
 
 	/**
+	 * Returns an array with relevant system information
+	 * used for debugging
+	 * @since 4.3.0
+	 */
+	public function info(): array
+	{
+		return [
+			'kirby'     => $this->app->version(),
+			'php'       => phpversion(),
+			'server'    => $this->serverSoftware(),
+			'license'   => $this->license()->label(),
+			'languages' => $this->app->languages()->values(
+				fn ($lang) => $lang->code()
+			)
+		];
+	}
+
+	/**
 	 * Create the most important folders
 	 * if they don't exist yet
 	 *

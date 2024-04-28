@@ -38,6 +38,7 @@ export default {
 	props: {
 		environment: Array,
 		exceptions: Array,
+		info: Object,
 		plugins: Array,
 		security: Array,
 		urls: Object
@@ -57,10 +58,7 @@ export default {
 		copy() {
 			const info = JSON.stringify(
 				{
-					version: this.environment[1].value,
-					license: this.environment[0].value,
-					php: this.environment[2].value,
-					server: this.environment[3].value,
+					info: this.info,
 					security: this.security.map((issue) => issue.text),
 					plugins: this.plugins.map((plugin) => ({
 						name: plugin.name.text,

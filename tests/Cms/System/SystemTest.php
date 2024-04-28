@@ -340,6 +340,16 @@ class SystemTest extends TestCase
 	}
 
 	/**
+	 * @covers ::info
+	 */
+	public function testIinfo()
+	{
+		$app = $this->app->clone([]);
+		$system = new System($app);
+		$this->assertIsArray($system->info());
+	}
+
+	/**
 	 * @covers ::is2FA
 	 */
 	public function testIs2FA()
