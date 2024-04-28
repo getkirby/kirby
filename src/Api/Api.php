@@ -605,6 +605,8 @@ class Api
 	 * Added debug parameter for testing purposes as we did in the Email class
 	 *
 	 * @throws \Exception If request has no files or there was an error with the upload
+	 *
+	 * @todo Move most of the logic to `Api\Upload` class
 	 */
 	public function upload(
 		Closure $callback,

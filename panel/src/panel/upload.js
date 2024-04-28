@@ -2,7 +2,7 @@ import { uuid } from "@/helpers/string";
 import State from "./state.js";
 import listeners from "./listeners.js";
 import queue from "@/helpers/queue.js";
-import upload from "@/helpers/upload.js";
+import { chunked as upload } from "@/helpers/upload.js";
 import { extension, name, niceSize } from "@/helpers/file.js";
 
 export const defaults = () => {
@@ -312,15 +312,19 @@ export default (panel) => {
 		},
 		async upload(file, attributes) {
 			try {
-				const response = await upload(file.src, {
-					attributes: attributes,
-					headers: { "x-csrf": panel.system.csrf },
-					filename: file.name + "." + file.extension,
-					url: this.url,
-					progress: (xhr, src, progress) => {
-						file.progress = progress;
-					}
-				});
+				const response = await upload(
+					file.src,
+					{
+						attributes: attributes,
+						headers: { "x-csrf": panel.system.csrf },
+						filename: file.name + "." + file.extension,
+						url: this.url,
+						progress: (xhr, src, progress) => {
+							file.progress = progress;
+						}
+					},
+					panel.config.upload
+				);
 
 				file.completed = true;
 				file.model = response.data;

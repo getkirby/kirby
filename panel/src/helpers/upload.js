@@ -1,3 +1,45 @@
+import { random } from "./string.js";
+
+/**
+ * Uploads a file in chunks
+ * @param {File} file - file to upload
+ * @param {Object} params - upload options (see `upload` method for details)
+ * @param {number} size - chunk size in bytes
+ */
+export async function chunked(file, params, size = 5242880) {
+	const parts = Math.ceil(file.size / size);
+	const id = random(4).toLowerCase();
+	let response;
+
+	for (let i = 0; i < parts; i++) {
+		const start = i * size;
+		const end = Math.min(start + size, file.size);
+		const chunk = parts > 1 ? file.slice(start, end, file.type) : file;
+
+		// when more than one part, add flag to
+		// recognize chunked upload and its last chunk
+		if (parts > 1) {
+			params.headers = {
+				...params.headers,
+				"Upload-Length": file.size,
+				"Upload-Offset": start,
+				"Upload-Id": id
+			};
+		}
+
+		response = await upload(chunk, {
+			...params,
+			// calculate the total progress based on chunk progress
+			progress: (xhr, chunk, percent) => {
+				const total = (i + percent / 100) / parts;
+				params.progress(xhr, file, Math.round(total * 100));
+			}
+		});
+	}
+
+	return response;
+}
+
 /**
  * Uploads a file using XMLHttpRequest.
  *
@@ -13,7 +55,7 @@
  * @param {Function} params.success - callback when upload succeeded
  * @param {Function} params.error - callback when upload failed
  */
-export default async (file, params) => {
+export async function upload(file, params) {
 	return new Promise((resolve, reject) => {
 		const defaults = {
 			url: "/",
@@ -96,4 +138,6 @@ export default async (file, params) => {
 
 		xhr.send(data);
 	});
-};
+}
+
+export default upload;
