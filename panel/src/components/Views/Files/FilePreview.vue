@@ -2,7 +2,7 @@
 	<div class="k-file-preview">
 		<div class="k-file-preview-thumb-column">
 			<div class="k-file-preview-thumb">
-				<slot name="thumb" />
+				<slot />
 
 				<template v-if="options.length">
 					<k-button
@@ -163,11 +163,6 @@ export default {
 	}
 	.k-file-preview-thumb-column {
 		aspect-ratio: 1/1;
-	}
-}
-@container (min-width: 90rem) {
-	.k-file-preview-layout {
-		grid-template-columns: 25% auto;
 	}
 }
 </style>
