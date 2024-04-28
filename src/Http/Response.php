@@ -200,6 +200,7 @@ class Response
 			'body' => F::read($file),
 			'type' => F::extensionToMime(F::extension($file)),
 			'headers' => [
+				'Accept-Ranges'  => 'bytes',
 				'Content-Length' => F::size($file),
 			]
 		], $props));
@@ -317,6 +318,7 @@ class Response
 			'body'    => fn () => F::stream($file, $start, $end),
 			'type'    => F::extensionToMime(F::extension($file)),
 			'headers' => [
+				'Accept-Ranges' => 'bytes',
 				'Content-Length' => $size,
 				'Content-Range'  => 'bytes ' . $start . '-' . $end . '/' . $size,
 			]
