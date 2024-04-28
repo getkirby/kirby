@@ -67,7 +67,7 @@ class VideoKirbyTagTest extends TestCase
                                 caption: Lorem ipsum
                                 controls: false
                                 class: video-class
-								disablepictureinpicture: true
+                                disablepictureinpicture: true
                                 height: 350
                                 loop: true
                                 muted: true
