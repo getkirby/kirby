@@ -491,13 +491,8 @@ class SystemTest extends TestCase
 	public function testIsOk()
 	{
 		$app = $this->app->clone([
-			'options' => [
-				'panel' => [
-					'install' => true
-				]
-			],
 			'server' => [
-				'REMOTE_ADDR' => '127.0.0.1',
+				'REMOTE_ADDR'     => '127.0.0.1',
 				'SERVER_SOFTWARE' => 'Apache'
 			]
 		]);
@@ -505,6 +500,22 @@ class SystemTest extends TestCase
 		$system = new System($app);
 
 		$this->assertTrue($system->isOk());
+	}
+
+	/**
+	 * @covers ::isOk
+	 */
+	public function testIsOkContentMissingPermissions()
+	{
+		$app    = $this->app->clone([]);
+		$system = new System($app);
+
+		$before = fileperms($app->root('content'));
+		chmod($app->root('content'), 0000);
+
+		$this->assertFalse($system->isOk());
+
+		chmod($app->root('content'), $before);
 	}
 
 	/**
