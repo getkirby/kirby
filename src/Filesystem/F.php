@@ -808,6 +808,46 @@ class F
 	}
 
 	/**
+	 * Continously outputs the file between the provided range
+	 *
+	 * @since 4.3.0
+	 */
+	public static function stream(
+		string $file,
+		int $start = 0,
+		int $end = null
+	): void {
+		$size  = static::size($file);
+		$end ??= $size;
+
+		// force range into file boundaries
+		$start  = max(0, $start);
+		$end    = min($end, $size);
+
+		// requesting the full file
+		if ($start === 0 && $end === $size) {
+			echo static::read($file);
+			return;
+		}
+
+		$handle = fopen($file, 'rb');
+		fseek($handle, $start);
+
+		if (feof($handle) === false) {
+			throw new Exception('Invalid file handle');
+		}
+
+		while ($start < $end) {
+			$chunk  = fread($handle, min(8 * 1024, $end - $start));
+			$start += strlen($chunk);
+			echo $chunk;
+			flush();
+		}
+
+		fclose($handle);
+	}
+
+	/**
 	 * Categorize the file
 	 *
 	 * @param string $file Either the file path or extension

@@ -4,6 +4,7 @@ namespace Kirby\Http;
 
 use Closure;
 use Exception;
+use Kirby\Cms\App;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
 
@@ -29,7 +30,7 @@ class Response
 	/**
 	 * The response body
 	 */
-	protected string $body;
+	protected string|Closure $body;
 
 	/**
 	 * The HTTP response code
@@ -50,7 +51,7 @@ class Response
 	 * Creates a new response object
 	 */
 	public function __construct(
-		string|array $body = '',
+		string|Closure|array $body = '',
 		string|null $type = null,
 		int|null $code = null,
 		array|null $headers = null,
@@ -103,6 +104,10 @@ class Response
 	 */
 	public function body(): string
 	{
+		if (is_callable($this->body) === true) {
+			return call_user_func($this->body);
+		}
+
 		return $this->body;
 	}
 
@@ -165,12 +170,19 @@ class Response
 	 *
 	 * @param array $props Custom overrides for response props (e.g. headers)
 	 */
-	public static function file(string $file, array $props = []): static
-	{
-		$props = array_merge([
-			'body' => F::read($file),
-			'type' => F::extensionToMime(F::extension($file))
-		], $props);
+	public static function file(
+		string $file,
+		array $props = [],
+		string|false|null $range = null
+	): static {
+		// if no range is specified, lazily check request for HTTP_RANGE header
+		$range ??= App::instance(null, true)?->request()->header('range');
+
+		if (is_string($range) === true) {
+			if ($response = static::range($file, $range, $props)) {
+				return $response;
+			}
+		}
 
 		// if we couldn't serve a correct MIME type, force
 		// the browser to display the file as plain text to
@@ -184,9 +196,14 @@ class Response
 			$props['headers']['X-Content-Type-Options'] = 'nosniff';
 		}
 
-		return new static($props);
+		return new static(array_merge_recursive([
+			'body' => F::read($file),
+			'type' => F::extensionToMime(F::extension($file)),
+			'headers' => [
+				'Content-Length' => F::size($file),
+			]
+		], $props));
 	}
-
 
 	/**
 	 * Redirects to the given Urls
@@ -255,6 +272,55 @@ class Response
 			'type'    => 'application/json',
 			'headers' => $headers
 		]);
+	}
+
+	/**
+	 * Creates a bytes range response for a file
+	 * based on the passed range string
+	 *
+	 * @since 4.3.0
+	 */
+	protected static function range(
+		string $file,
+		string $range,
+		array $props = []
+	): static|null {
+		preg_match("/^bytes=(\d*)-(\d*)/", $range, $matches);
+
+		if ($matches === false) {
+			return null;
+		}
+
+		$size  = F::size($file);
+		$start = $matches[1];
+		$end   = $matches[2];
+
+		if ($start === '') {
+			$start = $size - (int)$end;
+			$end   = $size;
+		}
+
+		if ($end === '') {
+			$end = $size;
+		}
+
+		$start = (int)$start;
+		$end   = (int)$end;
+
+		// range out of bounds: provide specific response
+		if ($start < 0 || $start >= $end || $end > $size) {
+			return new static(['code' => 416]);
+		}
+
+		return new static(array_merge_recursive([
+			'code'    => 206,
+			'body'    => fn () => F::stream($file, $start, $end),
+			'type'    => F::extensionToMime(F::extension($file)),
+			'headers' => [
+				'Content-Length' => $size,
+				'Content-Range'  => 'bytes ' . $start . '-' . $end . '/' . $size,
+			]
+		], $props));
 	}
 
 	/**
