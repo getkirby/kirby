@@ -194,17 +194,21 @@ export default {
 			}
 
 			// click handler is an action string
-			// which is emitted to the parent as well as globally
+			// which is emitted to the parent
 			if (typeof option.click === "string") {
-				this.$emit("action", option.click);
-				this.$events.emit("dropdown:" + option.click);
-				return;
+				return this.$emit("action", option.click);
 			}
 
 			// click handler is an object with a name and payload
-			// which is emitted globally
+			// and optional flag to also emit globally
 			if (option.click) {
-				this.$events.emit(option.click.name, option.click.payload);
+				if (option.click.name) {
+					this.$emit(option.click.name, option.click.payload);
+				}
+
+				if (option.click.global) {
+					this.$events.emit(option.click.global, option.click.payload);
+				}
 			}
 		},
 		/**
