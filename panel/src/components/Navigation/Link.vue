@@ -2,6 +2,7 @@
 	<a
 		v-if="to && !disabled"
 		ref="link"
+		:download="download"
 		:href="href"
 		:rel="relAttr"
 		:tabindex="tabindex"
@@ -19,6 +20,38 @@
 </template>
 
 <script>
+export const props = {
+	props: {
+		/**
+		 * A disabled button/link will have no pointer events and
+		 * the opacity is be reduced.
+		 */
+		disabled: Boolean,
+		/**
+		 * Whether the link should be downloaded directly
+		 */
+		download: Boolean,
+		/**
+		 * `rel` attribute for the link
+		 */
+		rel: String,
+		/**
+		 * Custom tabindex; only use if you really know
+		 * how to adjust the order properly
+		 */
+		tabindex: [String, Number],
+		/**
+		 * Set the target of the link
+		 */
+		target: String,
+		/**
+		 * The title attribute can be used to add additional text
+		 * to the button/link, which is shown on mouseover.
+		 */
+		title: String
+	}
+};
+
 /**
  * Wapper around a native HTML `<a>` element that ensures the
  * correct routing behavior for Panel as well as external links.
@@ -26,15 +59,8 @@
  * @example <k-link to="https://getkirby.com">Kirby Website</k-link>
  */
 export default {
+	mixins: [props],
 	props: {
-		/**
-		 * Disabled links will have no pointer events and cannot be clicked or focused.
-		 */
-		disabled: Boolean,
-		rel: String,
-		tabindex: [String, Number],
-		target: String,
-		title: String,
 		/**
 		 * The path or absolute URL for the link.
 		 */
