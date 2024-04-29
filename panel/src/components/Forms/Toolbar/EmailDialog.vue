@@ -6,19 +6,15 @@ export default {
 	props: {
 		// eslint-disable-next-line vue/require-prop-types
 		fields: {
-			default: () => ({
-				href: {
-					label: window.panel.$t("email"),
-					type: "email",
-					icon: "email"
-				},
-				title: {
-					label: window.panel.$t("link.text"),
-					type: "text",
-					icon: "title"
-				}
-			})
-		},
+			default: () => {
+				const fields = EmailDialog.props.fields.default();
+
+				// change the label to "Link Text"
+				fields.title.label = window.panel.$t("link.text");
+
+				return fields;
+			}
+		}
 	},
 	methods: {
 		submit() {
