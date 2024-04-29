@@ -511,7 +511,7 @@ class SystemTest extends TestCase
 		$system = new System($app);
 
 		$before = fileperms($app->root('content'));
-		chmod($app->root('content'), 0000);
+		chmod($app->root('content'), 0o000);
 
 		$this->assertFalse($system->isOk());
 
