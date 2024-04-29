@@ -12,23 +12,16 @@
 </template>
 
 <script>
+import { props as ButtonProps } from "@/components/Navigation/Button.vue";
+
 /**
  * Item to be used within `<k-dropdown-content>`
  * @example <k-dropdown-item>Option A</k-dropdown-item>
  * @internal
  */
 export default {
+	mixins: [ButtonProps],
 	inheritAttrs: false,
-	props: {
-		current: [Boolean, String],
-		disabled: Boolean,
-		icon: String,
-		image: [String, Object],
-		link: String,
-		target: String,
-		theme: String,
-		upload: String
-	},
 	emit: ["click"],
 	methods: {
 		focus() {
