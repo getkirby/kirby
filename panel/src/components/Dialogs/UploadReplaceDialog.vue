@@ -41,7 +41,7 @@
 					<k-icon-frame
 						v-else
 						:color="original.image?.color ?? 'white'"
-						:icon="original.image?.icon ?? 'file'"
+						:icon="original.image?.icon ?? previewIcon(file.type)"
 						back="black"
 						ratio="1/1"
 					/>

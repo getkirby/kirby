@@ -30,10 +30,10 @@
 							/>
 							<k-icon-frame
 								v-else
+								:icon="previewIcon(file.type)"
 								back="black"
 								color="white"
 								ratio="1/1"
-								icon="file"
 							/>
 						</a>
 						<k-input
@@ -117,6 +117,21 @@ export default {
 				"image/avif",
 				"image/svg+xml"
 			].includes(mime);
+		},
+		previewIcon(mime) {
+			if (mime.startsWith("image/")) {
+				return "file-image";
+			}
+
+			if (mime.startsWith("audio/")) {
+				return "file-audio";
+			}
+
+			if (mime.startsWith("video/")) {
+				return "file-video";
+			}
+
+			return "file";
 		}
 	}
 };
@@ -145,6 +160,8 @@ export default {
 	min-height: 6rem;
 }
 .k-upload-item-preview {
+	--icon-size: 1.75rem;
+
 	grid-area: preview;
 	display: flex;
 	width: 100%;
