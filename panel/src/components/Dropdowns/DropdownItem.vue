@@ -19,8 +19,6 @@
 	</k-button>
 </template>
 
-current: [Boolean, String],
-
 <script>
 import { props as ButtonProps } from "@/components/Navigation/Button.vue";
 
