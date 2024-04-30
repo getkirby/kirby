@@ -426,8 +426,7 @@ class File extends Model
 
 		// additional props for default image preview
 		if ($file->type() === 'image') {
-			$preview['props'] = [
-				...$preview['props'],
+			$preview['props'] = array_merge_recursive($preview['props'], [
 				'focusable' => $file->panel()->isFocusable(),
 				'details'   => [
 					[
@@ -439,7 +438,7 @@ class File extends Model
 						'text'  => I18n::translate('orientation.' . $file->dimensions()->orientation())
 					]
 				],
-			];
+			]);
 		}
 
 		// apply custom preview data providers from plugins
