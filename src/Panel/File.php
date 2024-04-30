@@ -400,39 +400,41 @@ class File extends Model
 	{
 		$file    = $this->model;
 		$preview = [
-			'type'    => $file->type(),
-			'url'     => $url = $file->previewUrl(),
-			'details' => [
-				[
-					'title' => I18n::translate('template'),
-					'text'  => $file->template() ?? '—'
+			'component' => 'k-file-' . $file->type() . '-preview',
+			'props' => [
+				'url'     => $url = $file->previewUrl(),
+				'details' => [
+					[
+						'title' => I18n::translate('template'),
+						'text'  => $file->template() ?? '—'
+					],
+					[
+						'title' => I18n::translate('mime'),
+						'text'  => $file->mime()
+					],
+					[
+						'title' => I18n::translate('url'),
+						'text'  => $file->id(),
+						'link'  => $url
+					],
+					[
+						'title' => I18n::translate('size'),
+						'text'  => $file->niceSize()
+					],
 				],
-				[
-					'title' => I18n::translate('mime'),
-					'text'  => $file->mime()
-				],
-				[
-					'title' => I18n::translate('url'),
-					'text'  => $file->id(),
-					'link'  => $url
-				],
-				[
-					'title' => I18n::translate('size'),
-					'text'  => $file->niceSize()
-				],
-			],
-			'image' => $this->image([
-				'back'  => 'transparent',
-				'ratio' => '1/1'
-			], 'cards')
+				'image' => $this->image([
+					'back'  => 'transparent',
+					'ratio' => '1/1'
+				], 'cards')
+			]
 		];
 
 		// apply custom preview data providers from plugins
 		foreach (static::$previews as $callback) {
-			$preview = array_merge_recursive(
-				$preview,
-				$callback($file, $preview) ?? []
-			);
+			if ($custom = $callback($file)) {
+				$preview = array_merge_recursive($preview, $custom);
+				break;
+			}
 		}
 
 		return $preview;
@@ -527,20 +529,22 @@ class File extends Model
 /**
  * Additional data for images' file previews
  */
-File::$previews[] = function (CmsFile $file, array $preview) {
+File::$previews[] = function (CmsFile $file) {
 	if ($file->type() === 'image') {
 		return [
-			'focusable' => $file->panel()->isFocusable(),
-			'details'   => [
-				[
-					'title' => I18n::translate('dimensions'),
-					'text'  => $file->dimensions() . ' ' . I18n::translate('pixel')
+			'props' => [
+				'focusable' => $file->panel()->isFocusable(),
+				'details'   => [
+					[
+						'title' => I18n::translate('dimensions'),
+						'text'  => $file->dimensions() . ' ' . I18n::translate('pixel')
+					],
+					[
+						'title' => I18n::translate('orientation'),
+						'text'  => I18n::translate('orientation.' . $file->dimensions()->orientation())
+					]
 				],
-				[
-					'title' => I18n::translate('orientation'),
-					'text'  => I18n::translate('orientation.' . $file->dimensions()->orientation())
-				]
-			],
+			]
 		];
 	}
 };
