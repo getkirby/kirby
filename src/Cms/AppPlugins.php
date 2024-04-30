@@ -301,6 +301,7 @@ trait AppPlugins
 
 	/**
 	 * Registers additional file preview handlers
+	 * @since 5.0.0
 	 */
 	protected function extendFilePreviews(array $previews): array
 	{
@@ -828,7 +829,6 @@ trait AppPlugins
 		$this->extendComponents($this->core->components());
 		$this->extendBlueprints($this->core->blueprints());
 		$this->extendFieldMethods($this->core->fieldMethods());
-		$this->extendFilePreviews($this->core->filePreviews());
 		$this->extendFields($this->core->fields());
 		$this->extendSections($this->core->sections());
 		$this->extendSnippets($this->core->snippets());

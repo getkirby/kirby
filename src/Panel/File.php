@@ -389,7 +389,7 @@ class File extends Model
 
 	/**
 	 * Returns the data for the file preview component
-	 * @since 4.3.0
+	 * @since 5.0.0
 	 */
 	public function preview(): array
 	{
@@ -423,6 +423,25 @@ class File extends Model
 				], 'cards')
 			]
 		];
+
+		// additional props for default image preview
+		if ($file->type() === 'image') {
+			$preview = array_merge_recursive($preview, [
+				'props' => [
+					'focusable' => $file->panel()->isFocusable(),
+					'details'   => [
+						[
+							'title' => I18n::translate('dimensions'),
+							'text'  => $file->dimensions() . ' ' . I18n::translate('pixel')
+						],
+						[
+							'title' => I18n::translate('orientation'),
+							'text'  => I18n::translate('orientation.' . $file->dimensions()->orientation())
+						]
+					],
+				]
+			]);
+		}
 
 		// apply custom preview data providers from plugins
 		$extensions = $this->model->kirby()->extensions('filePreviews');

@@ -10,7 +10,8 @@
 
 <script>
 /**
- * @since 4.3.0
+ * File view preview for video files
+ * @since 5.0.0
  */
 export default {
 	props: {
