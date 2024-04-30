@@ -27,11 +27,6 @@ class File extends Model
 	protected ModelWithContent $model;
 
 	/**
-	 * Closures to determine the right preview component for the file
-	 */
-	public static array $previews = [];
-
-	/**
 	 * Breadcrumb array
 	 */
 	public function breadcrumb(): array
@@ -430,8 +425,10 @@ class File extends Model
 		];
 
 		// apply custom preview data providers from plugins
-		foreach (static::$previews as $callback) {
-			if ($custom = $callback($file)) {
+		$extensions = $this->model->kirby()->extensions('filePreviews');
+
+		foreach ($extensions as $extension) {
+			if ($custom = $extension($file)) {
 				$preview = array_merge_recursive($preview, $custom);
 				break;
 			}
@@ -525,26 +522,3 @@ class File extends Model
 		];
 	}
 }
-
-/**
- * Additional data for images' file previews
- */
-File::$previews[] = function (CmsFile $file) {
-	if ($file->type() === 'image') {
-		return [
-			'props' => [
-				'focusable' => $file->panel()->isFocusable(),
-				'details'   => [
-					[
-						'title' => I18n::translate('dimensions'),
-						'text'  => $file->dimensions() . ' ' . I18n::translate('pixel')
-					],
-					[
-						'title' => I18n::translate('orientation'),
-						'text'  => I18n::translate('orientation.' . $file->dimensions()->orientation())
-					]
-				],
-			]
-		];
-	}
-};
