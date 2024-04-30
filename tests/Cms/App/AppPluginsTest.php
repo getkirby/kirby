@@ -398,6 +398,29 @@ class AppPluginsTest extends TestCase
 		$this->assertSame('shaw', $field->peter());
 	}
 
+	/**
+	 * @covers ::extendFilePreviews
+	 */
+	public function testFilePreviews()
+	{
+		new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'filePreviews' => [
+				function (File $file) {
+					return [
+						'component' => 'k-file-my-preview'
+					];
+				}
+			]
+		]);
+
+		$page = new Page(['slug' => 'test']);
+		$file = new File(['filename' => 'test.jpg', 'parent' => $page]);
+		$this->assertSame('k-file-my-preview', $file->panel()->preview()['component']);
+	}
+
 	public function testKirbyTag()
 	{
 		$kirby = new App([

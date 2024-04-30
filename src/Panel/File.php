@@ -426,21 +426,20 @@ class File extends Model
 
 		// additional props for default image preview
 		if ($file->type() === 'image') {
-			$preview = array_merge_recursive($preview, [
-				'props' => [
-					'focusable' => $file->panel()->isFocusable(),
-					'details'   => [
-						[
-							'title' => I18n::translate('dimensions'),
-							'text'  => $file->dimensions() . ' ' . I18n::translate('pixel')
-						],
-						[
-							'title' => I18n::translate('orientation'),
-							'text'  => I18n::translate('orientation.' . $file->dimensions()->orientation())
-						]
+			$preview['props'] = [
+				...$preview['props'],
+				'focusable' => $file->panel()->isFocusable(),
+				'details'   => [
+					[
+						'title' => I18n::translate('dimensions'),
+						'text'  => $file->dimensions() . ' ' . I18n::translate('pixel')
 					],
-				]
-			]);
+					[
+						'title' => I18n::translate('orientation'),
+						'text'  => I18n::translate('orientation.' . $file->dimensions()->orientation())
+					]
+				],
+			];
 		}
 
 		// apply custom preview data providers from plugins
@@ -448,7 +447,17 @@ class File extends Model
 
 		foreach ($extensions as $extension) {
 			if ($custom = $extension($file)) {
-				$preview = array_merge_recursive($preview, $custom);
+				// if an extension claims to handle this file's preview,
+				// overwrite the component (if provided) and extend the props
+				$preview = [
+					'component' =>
+						$custom['component'] ??
+						$preview['component'],
+					'props' => [
+						...$preview['props'],
+						...$custom['props'] ?? []
+					]
+				];
 				break;
 			}
 		}
