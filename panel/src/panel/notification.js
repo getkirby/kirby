@@ -11,6 +11,7 @@ export const defaults = () => {
 		icon: null,
 		isOpen: false,
 		message: null,
+		theme: null,
 		timeout: null,
 		type: null
 	};
@@ -89,8 +90,7 @@ export default (panel = {}) => {
 			// convert strings to full error objects
 			if (typeof error === "string") {
 				error = {
-					message: error,
-					type: "error"
+					message: error
 				};
 			}
 
@@ -105,16 +105,16 @@ export default (panel = {}) => {
 			if (panel.context === "view") {
 				panel.dialog.open({
 					component: "k-error-dialog",
-					props: error,
-					type: "error"
+					props: error
 				});
 			}
 
 			// show the error notification bar
 			return this.open({
 				message: error.message,
-				type: "error",
-				icon: "alert"
+				icon: "alert",
+				theme: "negative",
+				type: "error"
 			});
 		},
 
@@ -209,21 +209,11 @@ export default (panel = {}) => {
 			}
 
 			return this.open({
-				timeout: 4000,
-				type: "success",
 				icon: "check",
+				theme: "positive",
+				timeout: 4000,
 				...success
 			});
-		},
-
-		/**
-		 * Getter that converts the notification type
-		 * into the matching notification component theme
-		 *
-		 * @returns {String}
-		 */
-		get theme() {
-			return this.type === "error" ? "negative" : "positive";
 		},
 
 		/**

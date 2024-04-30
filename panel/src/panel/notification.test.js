@@ -19,6 +19,7 @@ describe("panel.notification", () => {
 			icon: null,
 			isOpen: false,
 			message: null,
+			theme: null,
 			timeout: null,
 			type: null
 		};

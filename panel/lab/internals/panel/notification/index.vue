@@ -9,7 +9,7 @@
 				</p>
 				<k-code>{{ $panel.notification.context || "&nbsp;" }}</k-code>
 				<k-button
-					icon="alert"
+					icon="megaphone"
 					variant="filled"
 					@click="$panel.notification.success('Yay')"
 				/>
@@ -24,7 +24,7 @@
 				</p>
 				<k-code>{{ $panel.notification.details || "&nbsp;" }}</k-code>
 				<k-button
-					icon="alert"
+					icon="megaphone"
 					variant="filled"
 					@click="
 						$panel.notification.success({
@@ -44,7 +44,7 @@
 				</p>
 				<k-code>{{ $panel.notification.icon || "&nbsp;" }}</k-code>
 				<k-button
-					icon="alert"
+					icon="megaphone"
 					variant="filled"
 					@click="
 						$panel.notification.success({
@@ -63,7 +63,7 @@
 				</p>
 				<k-code>{{ $panel.notification.message || "&nbsp;" }}</k-code>
 				<k-button
-					icon="alert"
+					icon="megaphone"
 					variant="filled"
 					@click="
 						$panel.notification.success({
@@ -81,7 +81,7 @@
 				</p>
 				<k-code>{{ $panel.notification.timeout || "&nbsp;" }}</k-code>
 				<k-button
-					icon="alert"
+					icon="megaphone"
 					variant="filled"
 					@click="
 						$panel.notification.success({
@@ -100,7 +100,7 @@
 				</p>
 				<k-code>{{ $panel.notification.type || "&nbsp;" }}</k-code>
 				<k-button
-					icon="alert"
+					icon="megaphone"
 					variant="filled"
 					@click="
 						$panel.notification.success({
@@ -118,7 +118,7 @@
 				<k-code language="js">window.panel.notification.close();</k-code>
 				<p>Closes the current notification</p>
 				<k-button
-					icon="alert"
+					icon="megaphone"
 					variant="filled"
 					@click="$panel.notification.success('Nice one!')"
 				/>
@@ -136,7 +136,7 @@
 				>
 				<p>Used to show a deprecation warning in the console.</p>
 				<k-button
-					icon="alert"
+					icon="megaphone"
 					variant="filled"
 					@click="$panel.notification.deprecated('Don`t use this anymore')"
 				/>
@@ -149,7 +149,7 @@
 				>
 				<p>Displays an error notification.</p>
 				<k-button
-					icon="alert"
+					icon="megaphone"
 					variant="filled"
 					@click="$panel.notification.error('Something went wrong')"
 				/>
@@ -162,7 +162,7 @@
 				>
 				<p>Displays a fatal error in an iframe overlay for better isolation</p>
 				<k-button
-					icon="alert"
+					icon="megaphone"
 					variant="filled"
 					@click="$panel.notification.fatal('Something went wrong')"
 				/>
@@ -174,11 +174,18 @@
 					>window.panel.notification.open(notification);</k-code
 				>
 				<p>Open a custom notification</p>
+				<k-input :value="icon" type="text" @input="icon = $event" />
+				<k-input :value="text" type="text" @input="text = $event" />
+				<k-input :value="theme" type="text" @input="theme = $event" />
 				<k-button
-					icon="alert"
+					icon="megaphone"
 					variant="filled"
 					@click="
-						$panel.notification.open({ type: 'success', message: 'Nice one!' })
+						$panel.notification.open({
+							message: text,
+							icon,
+							theme
+						})
 					"
 				/>
 			</k-text>
@@ -190,7 +197,7 @@
 				>
 				<p>Displays a success notification</p>
 				<k-button
-					icon="alert"
+					icon="megaphone"
 					variant="filled"
 					@click="$panel.notification.success('Nice one!')"
 				/>
@@ -198,3 +205,15 @@
 		</k-lab-example>
 	</k-lab-examples>
 </template>
+
+<script>
+export default {
+	data() {
+		return {
+			icon: "check",
+			text: "Yay",
+			theme: "positive"
+		};
+	}
+};
+</script>
