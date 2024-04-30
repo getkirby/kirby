@@ -31,6 +31,7 @@ import { props as ButtonProps } from "@/components/Navigation/Button.vue";
  */
 export default {
 	mixins: [ButtonProps],
+	inheritAttrs: false,
 	props: {
 		// unset unnecessary props
 		autofocus: null,
@@ -44,7 +45,6 @@ export default {
 		type: null,
 		variant: null
 	},
-	inheritAttrs: false,
 	emit: ["click"],
 	methods: {
 		focus() {
