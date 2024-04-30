@@ -22,11 +22,6 @@ use Kirby\Toolkit\A;
  */
 abstract class Model
 {
-	/**
-	 * Default header buttons for the page model
-	 */
-	public static array $buttons = [];
-
 	public function __construct(
 		protected ModelWithContent $model
 	) {
@@ -35,10 +30,7 @@ abstract class Model
 	/**
 	 * Returns header button names which should be displayed
 	 */
-	public function buttons(): array
-	{
-		return $this->model->blueprint()->buttons() ?? static::$buttons;
-	}
+	abstract public function buttons(): array;
 
 	/**
 	 * Get the content values for the model

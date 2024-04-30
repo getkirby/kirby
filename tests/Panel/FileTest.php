@@ -43,6 +43,17 @@ class FileTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
+	protected function panel(array $props = [])
+	{
+		$page = new ModelPage([
+			'slug'  => 'test',
+			'files' => [
+				['filename' => 'test.jpg', ...$props],
+			]
+		]);
+		return new File($page->file('test.jpg'));
+	}
+
 	/**
 	 * @covers ::breadcrumb
 	 */
@@ -115,6 +126,18 @@ class FileTest extends TestCase
 				'link'  => '/users/test/files/test.jpg'
 			]
 		], $file->breadcrumb());
+	}
+
+	/**
+	 * @covers ::buttons
+	 */
+	public function testButtons()
+	{
+		$this->assertSame([
+			'preview',
+			'settings',
+			'languages'
+		], $this->panel()->buttons());
 	}
 
 	/**

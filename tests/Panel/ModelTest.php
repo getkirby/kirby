@@ -67,6 +67,11 @@ class ModelSiteTestForceUnlocked extends ModelSite
 
 class CustomPanelModel extends Model
 {
+	public function buttons(): array
+	{
+		return [];
+	}
+
 	public function path(): string
 	{
 		return 'custom';
@@ -120,20 +125,6 @@ class ModelTest extends TestCase
 	{
 		$site = new ModelSite($props);
 		return new CustomPanelModel($site);
-	}
-
-	/**
-	 * @covers ::buttons
-	 */
-	public function testButtons()
-	{
-		$panel = $this->panel();
-		$this->assertSame([], $panel->buttons());
-
-		Model::$buttons[] = 'foo';
-		$this->assertSame(['foo'], $panel->buttons());
-
-		Model::$buttons = [];
 	}
 
 	/**

@@ -20,16 +20,6 @@ use Kirby\Toolkit\I18n;
 class Page extends Model
 {
 	/**
-	 * Default header buttons for the page model
-	 */
-	public static array $buttons = [
-		'preview',
-		'settings',
-		'languages',
-		'status'
-	];
-
-	/**
 	 * @var \Kirby\Cms\Page
 	 */
 	protected ModelWithContent $model;
@@ -47,6 +37,22 @@ class Page extends Model
 				'link'  => $parent->panel()->url(true),
 			]
 		);
+	}
+
+	/**
+	 * Returns header button names which should be displayed
+	 * on the page view
+	 */
+	public function buttons(): array
+	{
+		return
+			$this->model->blueprint()->buttons() ??
+			$this->model->kirby()->option('panel.headerButtons.page', [
+				'preview',
+				'settings',
+				'languages',
+				'status'
+			]);
 	}
 
 	/**

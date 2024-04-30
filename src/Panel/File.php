@@ -21,15 +21,6 @@ use Throwable;
 class File extends Model
 {
 	/**
-	 * Default header buttons for the page model
-	 */
-	public static array $buttons = [
-		'preview',
-		'settings',
-		'languages'
-	];
-
-	/**
 	 * @var \Kirby\Cms\File
 	 */
 	protected ModelWithContent $model;
@@ -71,6 +62,21 @@ class File extends Model
 		];
 
 		return $breadcrumb;
+	}
+
+	/**
+	 * Returns header button names which should be displayed
+	 * on the file view
+	 */
+	public function buttons(): array
+	{
+		return
+			$this->model->blueprint()->buttons() ??
+			$this->model->kirby()->option('panel.headerButtons.file', [
+				'preview',
+				'settings',
+				'languages'
+			]);
 	}
 
 	/**

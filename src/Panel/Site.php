@@ -19,17 +19,23 @@ use Kirby\Filesystem\Asset;
 class Site extends Model
 {
 	/**
-	 * Default header buttons for the page model
-	 */
-	public static array $buttons = [
-		'preview',
-		'languages'
-	];
-
-	/**
 	 * @var \Kirby\Cms\Site
 	 */
 	protected ModelWithContent $model;
+
+	/**
+	 * Returns header button names which should be displayed
+	 * on the site view
+	 */
+	public function buttons(): array
+	{
+		return
+			$this->model->blueprint()->buttons() ??
+			$this->model->kirby()->option('panel.headerButtons.site', [
+				'preview',
+				'languages'
+			]);
+	}
 
 	/**
 	 * Returns the setup for a dropdown option
