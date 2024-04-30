@@ -174,6 +174,11 @@ export default (panel = {}) => {
 				return this.success(notification);
 			}
 
+			// add timeout if not error or fatal notification
+			if (notification.type !== "error" && notification.type !== "fatal") {
+				notification.timeout ??= 4000;
+			}
+
 			// set the new state
 			this.set({
 				// add the current editing context
@@ -211,7 +216,6 @@ export default (panel = {}) => {
 			return this.open({
 				icon: "check",
 				theme: "positive",
-				timeout: 4000,
 				...success
 			});
 		},
