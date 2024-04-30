@@ -232,11 +232,39 @@ return [
 				return false;
 			}
 
-			if (in_array($this->status, ['draft', 'all']) === false) {
+			if ($this->isFull() === true) {
 				return false;
 			}
 
-			if ($this->isFull() === true) {
+			// form here on, we need to check with which status
+			// the pages are created and if the section can show
+			// these newly created pages
+
+			// if the section shows pages no matter what status they have,
+			// we can always show the add button
+			if ($this->status === 'all') {
+				return true;
+			}
+
+			// collect all statuses of the blueprints
+			// that are allowed to be created
+			$statuses = [];
+
+			foreach ($this->blueprintNames() as $blueprint) {
+				try {
+					$props      = Blueprint::load('pages/' . $blueprint);
+					$statuses[] = $props['create']['status'] ?? 'draft';
+				} catch (Throwable) {
+					$statuses[] = 'draft'; // @codeCoverageIgnore
+				}
+			}
+
+			$statuses = array_unique($statuses);
+
+			// if there are multiple statuses or if the section is showing
+			// a different status than new pages would be created with,
+			// we cannot show the add button
+			if (count($statuses) > 1 || $this->status !== $statuses[0]) {
 				return false;
 			}
 
@@ -249,22 +277,12 @@ return [
 	'methods' => [
 		'blueprints' => function () {
 			$blueprints = [];
-			$templates  = empty($this->create) === false ? A::wrap($this->create) : $this->templates;
-
-			if (empty($templates) === true) {
-				$templates = $this->kirby()->blueprints();
-			}
-
-			// excludes ignored templates
-			if ($templatesIgnore = $this->templatesIgnore) {
-				$templates = array_diff($templates, $templatesIgnore);
-			}
 
 			// convert every template to a usable option array
 			// for the template select box
-			foreach ($templates as $template) {
+			foreach ($this->blueprintNames() as $blueprint) {
 				try {
-					$props = Blueprint::load('pages/' . $template);
+					$props = Blueprint::load('pages/' . $blueprint);
 
 					$blueprints[] = [
 						'name'  => basename($props['name']),
@@ -272,14 +290,28 @@ return [
 					];
 				} catch (Throwable) {
 					$blueprints[] = [
-						'name'  => basename($template),
-						'title' => ucfirst($template),
+						'name'  => basename($blueprint),
+						'title' => ucfirst($blueprint),
 					];
 				}
 			}
 
 			return $blueprints;
-		}
+		},
+		'blueprintNames' => function () {
+			$blueprints  = empty($this->create) === false ? A::wrap($this->create) : $this->templates;
+
+			if (empty($blueprints) === true) {
+				$blueprints = $this->kirby()->blueprints();
+			}
+
+			// excludes ignored templates
+			if ($templatesIgnore = $this->templatesIgnore) {
+				$blueprints = array_diff($blueprints, $templatesIgnore);
+			}
+
+			return $blueprints;
+		},
 	],
 	'toArray' => function () {
 		return [
