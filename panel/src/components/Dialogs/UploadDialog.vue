@@ -8,81 +8,76 @@
 		@submit="$emit('submit')"
 	>
 		<k-dropzone @drop="$panel.upload.select($event)">
-			<template v-if="$panel.upload.files.length === 0">
-				<k-empty icon="upload" layout="cards" @click="$panel.upload.pick()">
-					{{ $t("files.empty") }}
-				</k-empty>
-			</template>
-			<template v-else>
-				<ul class="k-upload-items">
-					<li
-						v-for="file in $panel.upload.files"
-						:key="file.id"
-						:data-completed="file.completed"
-						class="k-upload-item"
-					>
-						<a :href="file.url" class="k-upload-item-preview" target="_blank">
-							<k-image-frame
-								v-if="isPreviewable(file.type)"
-								:cover="true"
-								:src="file.url"
-								back="pattern"
-							/>
-							<k-icon-frame
-								v-else
-								:icon="previewIcon(file.type)"
-								back="black"
-								color="white"
-								ratio="1/1"
-							/>
-						</a>
-						<k-input
-							:disabled="file.completed"
-							:after="'.' + file.extension"
-							:novalidate="true"
-							:required="true"
-							:value="file.name"
-							class="k-upload-item-input"
-							type="slug"
-							@input="file.name = $event"
+			<!-- No files yet -->
+			<k-empty
+				v-if="$panel.upload.files.length === 0"
+				icon="upload"
+				layout="cards"
+				@click="$panel.upload.pick()"
+			>
+				{{ $t("files.empty") }}
+			</k-empty>
+
+			<!-- Files list -->
+			<ul v-else class="k-upload-items">
+				<li
+					v-for="file in $panel.upload.files"
+					:key="file.id"
+					:data-completed="file.completed"
+					class="k-upload-item"
+				>
+					<k-upload-dialog-preview
+						:mime="file.type"
+						:url="file.url"
+						color="white"
+					/>
+
+					<k-input
+						:disabled="file.completed"
+						:after="'.' + file.extension"
+						:novalidate="true"
+						:required="true"
+						:value="file.name"
+						class="k-upload-item-input"
+						type="slug"
+						@input="file.name = $event"
+					/>
+
+					<div class="k-upload-item-body">
+						<p class="k-upload-item-meta">
+							{{ file.niceSize }}
+							<template v-if="file.progress"> - {{ file.progress }}% </template>
+						</p>
+						<p v-if="file.error" class="k-upload-item-error">
+							{{ file.error }}
+						</p>
+						<k-progress
+							v-else-if="file.progress"
+							:value="file.progress"
+							class="k-upload-item-progress"
 						/>
-						<div class="k-upload-item-body">
-							<p class="k-upload-item-meta">
-								{{ file.niceSize }}
-								<template v-if="file.progress">
-									- {{ file.progress }}%
-								</template>
-							</p>
-							<p v-if="file.error" class="k-upload-item-error">
-								{{ file.error }}
-							</p>
-							<k-progress
-								v-else-if="file.progress"
-								:value="file.progress"
-								class="k-upload-item-progress"
-							/>
-						</div>
-						<div class="k-upload-item-toggle">
-							<k-button
-								v-if="!file.completed && !file.progress"
-								icon="remove"
-								@click="$panel.upload.remove(file.id)"
-							/>
+					</div>
 
-							<div v-else-if="!file.completed">
-								<k-icon type="loader" />
-							</div>
+					<div class="k-upload-item-toggle">
+						<k-button
+							v-if="!file.completed && !file.progress"
+							icon="remove"
+							@click="$panel.upload.remove(file.id)"
+						/>
 
-							<k-button
-								v-else
-								icon="check"
-								theme="positive"
-								@click="$panel.upload.remove(file.id)"
-							/>
+						<div v-else-if="!file.completed">
+							<k-icon type="loader" />
 						</div>
-					</li>
-				</ul>
-			</template>
+
+						<k-button
+							v-else
+							icon="check"
+							theme="positive"
+							@click="$panel.upload.remove(file.id)"
+						/>
+					</div>
+				</li>
+			</ul>
 		</k-dropzone>
 	</k-dialog>
 </template>
@@ -104,34 +99,6 @@ export default {
 					text: window.panel.$t("upload")
 				};
 			}
-		}
-	},
-	methods: {
-		isPreviewable(mime) {
-			return [
-				"image/jpeg",
-				"image/jpg",
-				"image/gif",
-				"image/png",
-				"image/webp",
-				"image/avif",
-				"image/svg+xml"
-			].includes(mime);
-		},
-		previewIcon(mime) {
-			if (mime.startsWith("image/")) {
-				return "file-image";
-			}
-
-			if (mime.startsWith("audio/")) {
-				return "file-audio";
-			}
-
-			if (mime.startsWith("video/")) {
-				return "file-video";
-			}
-
-			return "file";
 		}
 	}
 };

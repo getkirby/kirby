@@ -6,6 +6,8 @@ import Notification from "./Notification.vue";
 import Search from "./Search.vue";
 import Text from "./Text.vue";
 
+import UploadPreview from "./UploadPreview.vue";
+
 export default {
 	install(app) {
 		app.component("k-dialog-body", Body);
@@ -15,5 +17,7 @@ export default {
 		app.component("k-dialog-notification", Notification);
 		app.component("k-dialog-search", Search);
 		app.component("k-dialog-text", Text);
+
+		app.component("k-upload-dialog-preview", UploadPreview);
 	}
 };

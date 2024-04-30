@@ -8,18 +8,11 @@
 	>
 		<ul class="k-upload-items">
 			<li class="k-upload-original">
-				<k-image
-					v-if="isPreviewable(original.mime)"
-					:cover="true"
-					:src="original.url"
-					back="pattern"
-				/>
-				<k-icon-frame
-					v-else
+				<k-upload-dialog-preview
 					:color="original.image?.color ?? 'white'"
-					:icon="original.image?.icon ?? 'file'"
-					back="black"
-					ratio="1/1"
+					:icon="original.image?.icon"
+					:url="original.url"
+					:mime="original.mime"
 				/>
 			</li>
 
@@ -31,21 +24,13 @@
 				:data-completed="file.completed"
 				class="k-upload-item"
 			>
-				<a :href="file.url" class="k-upload-item-preview" target="_blank">
-					<k-image
-						v-if="isPreviewable(file.type)"
-						:cover="true"
-						:src="file.url"
-						back="pattern"
-					/>
-					<k-icon-frame
-						v-else
-						:color="original.image?.color ?? 'white'"
-						:icon="original.image?.icon ?? previewIcon(file.type)"
-						back="black"
-						ratio="1/1"
-					/>
-				</a>
+				<k-upload-dialog-preview
+					:color="original.image?.color ?? 'white'"
+					:icon="original.image?.icon"
+					:url="file.url"
+					:mime="file.type"
+				/>
+
 				<k-input
 					:value="$helper.file.name(original.filename)"
 					:disabled="true"
@@ -53,6 +38,7 @@
 					class="k-upload-item-input"
 					type="text"
 				/>
+
 				<div class="k-upload-item-body">
 					<p class="k-upload-item-meta">
 						{{ file.niceSize }}
@@ -60,12 +46,14 @@
 					</p>
 					<p class="k-upload-item-error">{{ file.error }}</p>
 				</div>
+
 				<div class="k-upload-item-progress">
 					<k-progress
 						v-if="file.progress > 0 && !file.error"
 						:value="file.progress"
 					/>
 				</div>
+
 				<div class="k-upload-item-toggle">
 					<k-button
 						v-if="file.completed"
@@ -73,6 +61,7 @@
 						theme="positive"
 						@click="$panel.upload.remove(file.id)"
 					/>
+
 					<div v-else-if="file.progress">
 						<k-icon type="loader" />
 					</div>
