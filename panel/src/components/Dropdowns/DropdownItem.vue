@@ -1,7 +1,16 @@
 <template>
 	<k-button
 		ref="button"
-		v-bind="$props"
+		v-bind="{
+			current,
+			dialog,
+			drawer,
+			disabled,
+			icon,
+			link,
+			target,
+			theme
+		}"
 		class="k-dropdown-item"
 		@click="onClick"
 	>
@@ -9,6 +18,8 @@
 		<slot />
 	</k-button>
 </template>
+
+current: [Boolean, String],
 
 <script>
 import { props as ButtonProps } from "@/components/Navigation/Button.vue";
@@ -20,6 +31,19 @@ import { props as ButtonProps } from "@/components/Navigation/Button.vue";
  */
 export default {
 	mixins: [ButtonProps],
+	props: {
+		// unset unnecessary props
+		autofocus: null,
+		click: null,
+		dropdown: null,
+		element: null,
+		responsive: null,
+		role: null,
+		selected: null,
+		size: null,
+		type: null,
+		variant: null
+	},
 	inheritAttrs: false,
 	emit: ["click"],
 	methods: {
