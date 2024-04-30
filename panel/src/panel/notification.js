@@ -119,6 +119,26 @@ export default (panel = {}) => {
 		},
 
 		/**
+		 * Shortcut to create an info
+		 * notification. You can pass a simple
+		 * string or a state object.
+		 *
+		 * @param {Object|String} info
+		 * @returns {Object} The notification state
+		 */
+		info(info = {}) {
+			if (typeof info === "string") {
+				info = { message: info };
+			}
+
+			return this.open({
+				icon: "info",
+				theme: "info",
+				...info
+			});
+		},
+
+		/**
 		 * Checks if the notification is a fatal
 		 * error. Those are displayed in the <k-fatal>
 		 * component which sends them to an isolated
@@ -204,11 +224,7 @@ export default (panel = {}) => {
 		 * @param {Object|String} success
 		 * @returns {Object} The notification state
 		 */
-		success(success) {
-			if (!success) {
-				success = {};
-			}
-
+		success(success = {}) {
 			if (typeof success === "string") {
 				success = { message: success };
 			}

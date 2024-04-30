@@ -55,6 +55,19 @@
 				/>
 			</k-text>
 		</k-lab-example>
+		<k-lab-example label="info" :code="false">
+			<k-text>
+				<k-code language="js"
+					>window.panel.notification.info(notification);</k-code
+				>
+				<p>Displays an info notification</p>
+				<k-button
+					icon="megaphone"
+					variant="filled"
+					@click="$panel.notification.info('Did you know?')"
+				/>
+			</k-text>
+		</k-lab-example>
 		<k-lab-example label="message" :code="false">
 			<k-text>
 				<p>
