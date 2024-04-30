@@ -30,6 +30,7 @@
 						:mime="file.type"
 						:url="file.url"
 						color="white"
+						class="k-upload-item-preview"
 					/>
 
 					<k-input
@@ -158,6 +159,7 @@ export default {
 	grid-area: input;
 	font-size: var(--text-sm);
 	border-bottom: 1px solid var(--color-light);
+	border-start-end-radius: var(--rounded);
 }
 .k-upload-item-input.k-input:focus-within {
 	outline: 2px solid var(--color-focus);

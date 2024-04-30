@@ -29,6 +29,7 @@
 					:icon="original.image?.icon"
 					:url="file.url"
 					:mime="file.type"
+					class="k-upload-item-preview"
 				/>
 
 				<k-input
@@ -106,6 +107,10 @@ export default {
 	border-radius: var(--rounded);
 	box-shadow: var(--shadow);
 	overflow: hidden;
+}
+
+.k-upload-item-input {
+	--input-color-back: var(--color-white) !important;
 }
 
 .k-upload-replace-dialog .k-upload-item {

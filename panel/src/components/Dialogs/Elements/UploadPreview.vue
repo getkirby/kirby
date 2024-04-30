@@ -1,5 +1,5 @@
 <template>
-	<a :href="url" class="k-upload-item-preview" target="_blank">
+	<a :href="url" target="_blank">
 		<k-image v-if="isPreviewable" :cover="true" :src="url" back="pattern" />
 		<k-icon-frame
 			v-else
