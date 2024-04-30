@@ -229,6 +229,14 @@ class Core
 	}
 
 	/**
+	 * Returns an array of file preview handlers
+	 */
+	public function filePreviews(): array
+	{
+		return require $this->root . '/areas/files/previews.php';
+	}
+
+	/**
 	 * Returns an array of all paths and class names of panel fields
 	 *
 	 * Traditional panel fields are located in `/kirby/config/fields`

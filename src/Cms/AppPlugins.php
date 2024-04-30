@@ -11,6 +11,7 @@ use Kirby\Filesystem\F;
 use Kirby\Filesystem\Mime;
 use Kirby\Form\Field as FormField;
 use Kirby\Image\Image;
+use Kirby\Panel\File as PanelFile;
 use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection as ToolkitCollection;
@@ -57,6 +58,7 @@ trait AppPlugins
 		'collectionMethods' => [],
 		'fieldMethods' => [],
 		'fileMethods' => [],
+		'filePreviews' => [],
 		'fileTypes' => [],
 		'filesMethods' => [],
 		'fields' => [],
@@ -294,6 +296,17 @@ trait AppPlugins
 		return $this->extensions['fileMethods'] = File::$methods = [
 			...File::$methods,
 			...$methods
+		];
+	}
+
+	/**
+	 * Registers additional file preview handlers
+	 */
+	protected function extendFilePreviews(array $previews): array
+	{
+		return $this->extensions['filePreviews'] = [
+			...$this->extensions['filePreviews'],
+			...$previews
 		];
 	}
 
@@ -815,6 +828,7 @@ trait AppPlugins
 		$this->extendComponents($this->core->components());
 		$this->extendBlueprints($this->core->blueprints());
 		$this->extendFieldMethods($this->core->fieldMethods());
+		$this->extendFilePreviews($this->core->filePreviews());
 		$this->extendFields($this->core->fields());
 		$this->extendSections($this->core->sections());
 		$this->extendSnippets($this->core->snippets());
