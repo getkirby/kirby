@@ -74,6 +74,9 @@ export default {
 .k-block-type-gallery-placeholder {
 	background: var(--color-background);
 }
+.k-block-type-gallery img {
+	background: var(--pattern-light);
+}
 .k-block-type-gallery figcaption {
 	padding-top: 0.5rem;
 	color: var(--color-gray-600);

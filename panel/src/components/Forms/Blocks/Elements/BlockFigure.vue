@@ -50,6 +50,9 @@ export default {
 .k-block-figure-container:not([data-disabled="true"]) {
 	cursor: pointer;
 }
+.k-block-figure-container img {
+	background: var(--pattern-light);
+}
 .k-block-figure iframe {
 	border: 0;
 	pointer-events: none;
