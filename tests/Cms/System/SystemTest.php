@@ -507,15 +507,14 @@ class SystemTest extends TestCase
 	 */
 	public function testIsOkContentMissingPermissions()
 	{
-		$app    = $this->app->clone([]);
-		$system = new System($app);
+		// reset permissions in `tearDown()`
+		$this->subTmp = static::TMP . '/content';
 
-		$before = fileperms($app->root('content'));
-		chmod($app->root('content'), 0o000);
+		$system = new System($this->app);
+
+		chmod($this->app->root('content'), 0o000);
 
 		$this->assertFalse($system->isOk());
-
-		chmod($app->root('content'), $before);
 	}
 
 	/**
