@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Generator;
+use Kirby\Api\Api;
 use Kirby\Data\Data;
 use Kirby\Email\Email as BaseEmail;
 use Kirby\Exception\ErrorPageException;

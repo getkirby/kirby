@@ -1,10 +1,10 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Api;
 
-use Kirby\Cms\Api\ApiCollectionTestCase;
+use Kirby\Cms\Site;
 
-class ChildrenApiCollectionTest extends ApiCollectionTestCase
+class ChildrenCollectionTest extends CollectionTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.ChildrenApiCollection';
 

@@ -1,8 +1,9 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Api;
 
 use Exception;
+use Kirby\Cms\App;
 use Kirby\TestCase;
 
 class LanguagesRoutesTest extends TestCase

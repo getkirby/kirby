@@ -1,11 +1,11 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Api;
 
-use Kirby\Cms\Api\ApiCollectionTestCase;
+use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 
-class UsersApiCollectionTest extends ApiCollectionTestCase
+class UsersCollectionTest extends CollectionTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.UsersApiCollection';
 
