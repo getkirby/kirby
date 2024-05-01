@@ -5,6 +5,7 @@ namespace Kirby\Panel;
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Throwable;
 
@@ -449,15 +450,7 @@ class File extends Model
 			if ($custom = $extension($file)) {
 				// if an extension claims to handle this file's preview,
 				// overwrite the component (if provided) and extend the props
-				$preview = [
-					'component' =>
-						$custom['component'] ??
-						$preview['component'],
-					'props' => [
-						...$preview['props'],
-						...$custom['props'] ?? []
-					]
-				];
+				$preview = A::merge($preview, $custom);
 				break;
 			}
 		}
