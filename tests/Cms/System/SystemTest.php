@@ -675,6 +675,33 @@ class SystemTest extends TestCase
 	}
 
 	/**
+	 * @covers ::content
+	 * @covers ::status
+	 */
+	public function testStatusContentMissingPermissions()
+	{
+		// reset permissions in `tearDown()`
+		$this->subTmp = static::TMP . '/content';
+
+		$system = new System($this->app);
+
+		chmod($this->app->root('content'), 0o000);
+
+		$expected = [
+			'accounts' => true,
+			'content'  => false,
+			'curl'     => true,
+			'sessions' => true,
+			'mbstring' => true,
+			'media'    => true,
+			'php'      => true
+		];
+		$this->assertSame($expected, $system->status());
+		$this->assertSame($expected, $system->toArray());
+		$this->assertSame($expected, $system->__debugInfo());
+	}
+
+	/**
 	 * @covers ::title
 	 */
 	public function testTitle()
