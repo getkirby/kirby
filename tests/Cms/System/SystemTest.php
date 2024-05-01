@@ -511,13 +511,8 @@ class SystemTest extends TestCase
 	public function testIsOk()
 	{
 		$app = $this->app->clone([
-			'options' => [
-				'panel' => [
-					'install' => true
-				]
-			],
 			'server' => [
-				'REMOTE_ADDR' => '127.0.0.1',
+				'REMOTE_ADDR'     => '127.0.0.1',
 				'SERVER_SOFTWARE' => 'Apache'
 			]
 		]);
@@ -525,6 +520,21 @@ class SystemTest extends TestCase
 		$system = new System($app);
 
 		$this->assertTrue($system->isOk());
+	}
+
+	/**
+	 * @covers ::isOk
+	 */
+	public function testIsOkContentMissingPermissions()
+	{
+		// reset permissions in `tearDown()`
+		$this->subTmp = static::TMP . '/content';
+
+		$system = new System($this->app);
+
+		chmod($this->app->root('content'), 0o000);
+
+		$this->assertFalse($system->isOk());
 	}
 
 	/**
@@ -673,6 +683,33 @@ class SystemTest extends TestCase
 		$expected = [
 			'accounts' => true,
 			'content'  => true,
+			'curl'     => true,
+			'sessions' => true,
+			'mbstring' => true,
+			'media'    => true,
+			'php'      => true
+		];
+		$this->assertSame($expected, $system->status());
+		$this->assertSame($expected, $system->toArray());
+		$this->assertSame($expected, $system->__debugInfo());
+	}
+
+	/**
+	 * @covers ::content
+	 * @covers ::status
+	 */
+	public function testStatusContentMissingPermissions()
+	{
+		// reset permissions in `tearDown()`
+		$this->subTmp = static::TMP . '/content';
+
+		$system = new System($this->app);
+
+		chmod($this->app->root('content'), 0o000);
+
+		$expected = [
+			'accounts' => true,
+			'content'  => false,
 			'curl'     => true,
 			'sessions' => true,
 			'mbstring' => true,
