@@ -35,6 +35,16 @@
 				@rename="rename"
 			/>
 		</k-lab-example>
+		<k-lab-example label="Not editable">
+			<k-upload-item
+				:editable="false"
+				extension="jpeg"
+				type="image/jpeg"
+				name="test"
+				niceSize="128 kB"
+				url="https://picsum.photos/200/200"
+			/>
+		</k-lab-example>
 		<k-lab-example label="Error">
 			<k-upload-item
 				extension="jpeg"

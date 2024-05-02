@@ -12,17 +12,34 @@
 </template>
 
 <script>
+export const props = {
+	props: {
+		/**
+		 * Preview icon color
+		 */
+		color: String,
+		/**
+		 * Preview icon type
+		 */
+		icon: String,
+		/**
+		 * MIME type
+		 */
+		type: String,
+		/**
+		 * Upload URL
+		 */
+		url: String
+	}
+};
+
 /**
+ * Preview an upload with its image or
+ * a representative icon
  * @since 4.3.0
- * @internal
  */
 export default {
-	props: {
-		color: String,
-		icon: String,
-		type: String,
-		url: String
-	},
+	mixins: [props],
 	computed: {
 		fallbackColor() {
 			return "white";

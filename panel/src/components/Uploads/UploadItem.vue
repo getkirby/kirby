@@ -1,9 +1,14 @@
 <template>
 	<li :data-completed="completed" class="k-upload-item">
-		<k-upload-item-preview :type="type" :url="url" />
+		<k-upload-item-preview
+			:color="color"
+			:icon="icon"
+			:type="type"
+			:url="url"
+		/>
 
 		<k-input
-			:disabled="completed"
+			:disabled="completed || !editable"
 			:after="'.' + extension"
 			:novalidate="true"
 			:required="true"
@@ -30,28 +35,78 @@
 
 		<div class="k-upload-item-toggle">
 			<k-button
-				v-if="!completed && !progress"
+				v-if="!completed && !progress && removable"
 				icon="remove"
 				@click="$emit('remove')"
 			/>
-			<k-button v-else-if="!completed" :disabled="true" icon="loader" />
-			<k-button v-else icon="check" theme="positive" @click="$emit('remove')" />
+			<k-button
+				v-else-if="!completed && progress"
+				:disabled="true"
+				icon="loader"
+			/>
+			<k-button
+				v-else-if="completed"
+				icon="check"
+				theme="positive"
+				@click="$emit('remove')"
+			/>
 		</div>
 	</li>
 </template>
 
 <script>
+import { props as Preview } from "./UploadItemPreview.vue";
+
+/**
+ * Represents one file to upload in an upload dialog
+ * @since 4.3.0
+ */
 export default {
+	mixins: [Preview],
 	props: {
+		/**
+		 * Whether the upload is completed
+		 */
 		completed: Boolean,
+		/**
+		 * Whether the file name is editable
+		 */
+		editable: {
+			type: Boolean,
+			default: true
+		},
+		/**
+		 * Upload error to display
+		 */
 		error: [String, Boolean],
+		/**
+		 * File extension
+		 */
 		extension: String,
+		/**
+		 * Unique id of file
+		 */
 		id: String,
+		/**
+		 * Filename
+		 */
 		name: String,
+		/**
+		 * File size to display
+		 */
 		niceSize: String,
+		/**
+		 * Upload progress
+		 * @value 0-100
+		 */
 		progress: Number,
-		type: String,
-		url: String
+		/**
+		 * Whether the file is removable
+		 */
+		removable: {
+			type: Boolean,
+			default: true
+		}
 	}
 };
 </script>
@@ -92,6 +147,9 @@ export default {
 	z-index: 1;
 	border-radius: var(--rounded);
 }
+.k-upload-item-input.k-input[data-disabled="true"] {
+	--input-color-back: var(--color-white);
+}
 .k-upload-item-input .k-input-after {
 	color: var(--color-gray-600);
 }
@@ -107,6 +165,7 @@ export default {
 .k-upload-item-progress {
 	--progress-height: 0.25rem;
 	--progress-color-back: var(--color-light);
+	margin-bottom: 0.3125rem;
 }
 .k-upload-item-toggle {
 	grid-area: toggle;

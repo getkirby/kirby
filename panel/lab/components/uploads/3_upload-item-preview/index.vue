@@ -18,6 +18,12 @@
 		<k-lab-example label="Video">
 			<k-upload-item-preview type="video/mp4" url="/some.mp4" />
 		</k-lab-example>
+		<k-lab-example label="Icon">
+			<k-upload-item-preview icon="image" url="/some.mp4" />
+		</k-lab-example>
+		<k-lab-example label="Color">
+			<k-upload-item-preview color="aqua-500" icon="image" url="/some.mp4" />
+		</k-lab-example>
 	</k-lab-examples>
 </template>
 
