@@ -242,11 +242,13 @@ class Assets
 			],
 			...A::map($this->custom('panel.js'), fn ($src) => [
 				'nonce' => $this->nonce,
-				'src'   => $src
+				'src'   => $src,
+				'defer' => true
 			]),
 			'index' => [
 				'nonce' => $this->nonce,
-				'src'   => $this->url . '/js/index.min.js'
+				'src'   => $this->url . '/js/index.min.js',
+				'defer' => true
 			],
 		];
 
