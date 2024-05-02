@@ -221,7 +221,7 @@ class Example
 
 				$scriptId = trim(preg_replace_callback(
 					'!script="(.*?)"!',
-					fn($match) => trim($match[1]),
+					fn ($match) => trim($match[1]),
 					$tail
 				));
 
