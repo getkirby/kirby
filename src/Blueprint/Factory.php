@@ -64,7 +64,7 @@ class Factory
 		foreach ($properties as $property => $value) {
 			try {
 				$properties[$property] = static::forProperty($class, $property, $value);
-			} catch (ReflectionException $e) {
+			} catch (ReflectionException) {
 				// the property does not exist
 				unset($properties[$property]);
 			}
