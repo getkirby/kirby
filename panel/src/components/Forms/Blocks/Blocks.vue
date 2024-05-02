@@ -597,7 +597,7 @@ export default {
 
 			if (index !== -1) {
 				this.deselect(block);
-				this.$delete(this.blocks, index);
+				this.blocks.splice(index, 1);
 				this.save();
 			}
 		},
@@ -629,7 +629,7 @@ export default {
 						for (const id of this.selected) {
 							const index = this.findIndex(id);
 							if (index !== -1) {
-								this.$delete(this.blocks, index);
+								this.blocks.splice(index, 1);
 							}
 						}
 

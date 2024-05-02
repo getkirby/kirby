@@ -12,15 +12,8 @@ import kirby from "./scripts/vite-kirby.mjs";
 function createAliases(proxy) {
 	return {
 		"@": path.resolve(__dirname, "src"),
+		// use absolute proxied url to avoid Vue being loaded twice
 		vue: proxy.target + ":3000/node_modules/vue/dist/vue.esm-browser.js"
-	};
-}
-
-function createProxy() {
-	return {
-		target: process.env.VUE_APP_DEV_SERVER ?? "https://sandbox.test",
-		changeOrigin: true,
-		secure: false
 	};
 }
 
@@ -105,7 +98,11 @@ function createTest() {
  * Returns the Vite configuration
  */
 export default defineConfig(({ mode }) => {
-	const proxy = createProxy();
+	const proxy = {
+		target: process.env.VUE_APP_DEV_SERVER ?? "https://sandbox.test",
+		changeOrigin: true,
+		secure: false
+	};
 
 	return {
 		plugins: createPlugins(mode),

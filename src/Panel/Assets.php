@@ -218,7 +218,7 @@ class Assets
 			$map['vue'] = $this->url . '/node_modules/vue/dist/vue.esm-browser.js';
 		}
 
-		return $map;
+		return array_filter($map);
 	}
 
 	/**
