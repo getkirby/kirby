@@ -76,7 +76,7 @@ trait HasFiles
 			return Uuid::for($filename, $this->$in())->model();
 		}
 
-		if (strpos($filename, '/') !== false) {
+		if (str_contains($filename, '/') === true) {
 			$path     = dirname($filename);
 			$filename = basename($filename);
 

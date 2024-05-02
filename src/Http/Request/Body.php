@@ -86,7 +86,7 @@ class Body implements Stringable
 			return $this->data = $json;
 		}
 
-		if (strstr($contents, '=') !== false) {
+		if (str_contains($contents, '=') === true) {
 			// try to parse the body as query string
 			parse_str($contents, $parsed);
 

@@ -99,7 +99,7 @@ class Roles extends Collection
 
 		// load roles from plugins
 		foreach ($kirby->extensions('blueprints') as $name => $blueprint) {
-			if (substr($name, 0, 6) !== 'users/') {
+			if (str_starts_with($name, 'users/') === false) {
 				continue;
 			}
 

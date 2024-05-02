@@ -172,7 +172,7 @@ class KirbyTag
 
 		// use substr instead of rtrim to keep non-tagged brackets
 		// (link: file.pdf text: Download (PDF))
-		if (substr($tag, -1) === ')') {
+		if (str_ends_with($tag, ')') === true) {
 			$tag = substr($tag, 0, -1);
 		}
 

@@ -293,7 +293,7 @@ class F
 		}
 
 		// check for the mime type
-		if (strpos($value, '/') !== false) {
+		if (str_contains($value, '/') === true) {
 			return static::mime($file) === $value;
 		}
 
@@ -653,7 +653,7 @@ class F
 				throw new Exception(sprintf('The parent directory does not exist: "%s"', $in));
 			}
 
-			if (substr($realpath, 0, strlen($parent)) !== $parent) {
+			if (str_starts_with($realpath, $parent) === false) {
 				throw new Exception('The file is not within the parent directory');
 			}
 		}
@@ -711,7 +711,7 @@ class F
 	 */
 	public static function remove(string $file): bool
 	{
-		if (strpos($file, '*') !== false) {
+		if (str_contains($file, '*') === true) {
 			foreach (glob($file) as $f) {
 				static::remove($f);
 			}

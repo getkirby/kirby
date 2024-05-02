@@ -206,7 +206,7 @@ class Pages extends Collection
 		$key = trim($key, '/');
 
 		// strip extensions from the id
-		if (strpos($key, '.') !== false) {
+		if (str_contains($key, '.') === true) {
 			$info = pathinfo($key);
 
 			if ($info['dirname'] !== '.') {

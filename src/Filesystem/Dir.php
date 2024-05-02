@@ -242,7 +242,10 @@ class Dir
 		// loop through all directory items and collect all relevant information
 		foreach ($items as $item) {
 			// ignore all items with a leading dot or underscore
-			if (in_array(substr($item, 0, 1), ['.', '_']) === true) {
+			if (
+				str_starts_with($item, '.') ||
+				str_starts_with($item, '_')
+			) {
 				continue;
 			}
 

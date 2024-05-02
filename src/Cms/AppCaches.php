@@ -111,7 +111,7 @@ trait AppCaches
 
 		// plain keys without dots don't need further investigation
 		// since they can never be from a plugin.
-		if (strpos($key, '.') === false) {
+		if (str_contains($key, '.') === false) {
 			return $prefixedKey;
 		}
 

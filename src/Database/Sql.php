@@ -690,11 +690,17 @@ abstract class Sql
 	public function unquoteIdentifier(string $identifier): string
 	{
 		// remove quotes around the identifier
-		if (in_array(Str::substr($identifier, 0, 1), ['"', '`']) === true) {
+		if (
+			str_starts_with($identifier, '"') ||
+			str_starts_with($identifier, '`')
+		) {
 			$identifier = Str::substr($identifier, 1);
 		}
 
-		if (in_array(Str::substr($identifier, -1), ['"', '`']) === true) {
+		if (
+			str_ends_with($identifier, '"') ||
+			str_ends_with($identifier, '`')
+		) {
 			$identifier = Str::substr($identifier, 0, -1);
 		}
 

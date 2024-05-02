@@ -914,7 +914,10 @@ trait AppPlugins
 		$loaded = [];
 
 		foreach (Dir::read($root) as $dirname) {
-			if (in_array(substr($dirname, 0, 1), ['.', '_']) === true) {
+			if (
+				str_starts_with($dirname, '.') ||
+				str_starts_with($dirname, '_')
+			) {
 				continue;
 			}
 

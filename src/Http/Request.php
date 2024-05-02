@@ -310,8 +310,8 @@ class Request
 
 		foreach (Environment::getGlobally() as $key => $value) {
 			if (
-				substr($key, 0, 5) !== 'HTTP_' &&
-				substr($key, 0, 14) !== 'REDIRECT_HTTP_'
+				str_starts_with($key, 'HTTP_') === false &&
+				str_starts_with($key, 'REDIRECT_HTTP_') === false
 			) {
 				continue;
 			}

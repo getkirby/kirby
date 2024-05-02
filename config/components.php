@@ -393,7 +393,7 @@ return [
 		// keep relative urls
 		if (
 			$path !== null &&
-			(substr($path, 0, 2) === './' || substr($path, 0, 3) === '../')
+			(str_starts_with($path, './')  || str_starts_with($path, '../'))
 		) {
 			return $path;
 		}

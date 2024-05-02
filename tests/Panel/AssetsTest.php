@@ -414,7 +414,7 @@ class AssetsTest extends TestCase
 		$icons = $assets->icons();
 
 		$this->assertNotNull($icons);
-		$this->assertTrue(strpos($icons, '<svg', 0) !== false);
+		$this->assertTrue(str_contains($icons, '<svg'));
 	}
 
 	/**
