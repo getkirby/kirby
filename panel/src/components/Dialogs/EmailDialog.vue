@@ -24,7 +24,7 @@ export default {
 					icon: "email"
 				},
 				title: {
-					label: window.panel.$t("link.text"),
+					label: window.panel.$t("title"),
 					type: "text",
 					icon: "title"
 				}

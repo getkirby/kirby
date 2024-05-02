@@ -23,7 +23,7 @@ class PageUuid extends ModelUuid
 	/**
 	 * @var \Kirby\Cms\Page|null
 	 */
-	public Identifiable|null $model;
+	public Identifiable|null $model = null;
 
 	/**
 	 * Looks up UUID in cache and resolves

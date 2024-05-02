@@ -287,20 +287,6 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Returns the content text file
-	 * which is found by the inventory method
-	 * @internal
-	 * @deprecated 4.0.0
-	 * @todo Remove in v5
-	 * @codeCoverageIgnore
-	 */
-	public function contentFileName(string|null $languageCode = null): string
-	{
-		Helpers::deprecated('The internal $model->contentFileName() method has been deprecated. Please let us know via a GitHub issue if you need this method and tell us your use case.', 'model-content-file');
-		return $this->intendedTemplate()->name();
-	}
-
-	/**
 	 * Call the page controller
 	 * @internal
 	 *

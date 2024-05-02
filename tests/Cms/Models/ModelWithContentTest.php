@@ -23,11 +23,6 @@ class ExtendedModelWithContent extends ModelWithContent
 		// nothing to commit in the test
 	}
 
-	public function contentFileName(): string
-	{
-		return 'test.txt';
-	}
-
 	public function panel(): PanelPage
 	{
 		return new PanelPage($this);
@@ -273,6 +268,26 @@ class ModelWithContentTest extends TestCase
 
 		// non-existing section
 		$this->assertSame([], $model->blueprints('foo'));
+	}
+
+	public function testKirby()
+	{
+		$kirby = new App();
+		$model = new Page([
+			'slug'  => 'foo',
+			'kirby' => $kirby
+		]);
+		$this->assertSame($kirby, $model->kirby());
+	}
+
+	public function testSite()
+	{
+		$site  = new Site();
+		$model = new Page([
+			'slug' => 'foo',
+			'site' => $site
+		]);
+		$this->assertIsSite($site, $model->site());
 	}
 
 	public function testToSafeString()

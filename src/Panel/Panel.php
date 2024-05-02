@@ -337,15 +337,15 @@ class Panel
 
 		// register all routes from areas
 		foreach ($areas as $areaId => $area) {
-			$routes = array_merge(
-				$routes,
-				static::routesForViews($areaId, $area),
-				static::routesForSearches($areaId, $area),
-				static::routesForDialogs($areaId, $area),
-				static::routesForDrawers($areaId, $area),
-				static::routesForDropdowns($areaId, $area),
-				static::routesForRequests($areaId, $area),
-			);
+			$routes = [
+				...$routes,
+				...static::routesForViews($areaId, $area),
+				...static::routesForSearches($areaId, $area),
+				...static::routesForDialogs($areaId, $area),
+				...static::routesForDrawers($areaId, $area),
+				...static::routesForDropdowns($areaId, $area),
+				...static::routesForRequests($areaId, $area),
+			];
 		}
 
 		// if the Panel is already installed and/or the

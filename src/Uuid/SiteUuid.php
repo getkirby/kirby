@@ -23,7 +23,7 @@ class SiteUuid extends Uuid
 	/**
 	 * @var \Kirby\Cms\Site|null
 	 */
-	public Identifiable|null $model;
+	public Identifiable|null $model = null;
 
 	/*
 	 * Returns empty string since

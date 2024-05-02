@@ -24,11 +24,11 @@ export function status(status, disabled = false) {
 	}
 
 	if (status === "draft") {
-		button.theme = "negative";
+		button.theme = "negative-icon";
 	} else if (status === "unlisted") {
-		button.theme = "info";
+		button.theme = "info-icon";
 	} else {
-		button.theme = "positive";
+		button.theme = "positive-icon";
 	}
 
 	return button;

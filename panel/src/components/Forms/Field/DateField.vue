@@ -134,10 +134,10 @@ export default {
 		 */
 		isEmpty() {
 			if (this.time) {
-				return this.iso.date === null && this.iso.time;
+				return !this.iso.date || !this.iso.time;
 			}
 
-			return this.iso.date === null;
+			return !this.iso.date;
 		}
 	},
 	watch: {

@@ -51,7 +51,6 @@
 						v-if="status"
 						v-bind="statusBtn"
 						class="k-page-view-status"
-						variant="filled"
 						@click="$dialog(id + '/changeStatus')"
 					/>
 				</k-button-group>
@@ -105,11 +104,5 @@ export default {
 /** TODO: .k-page-view:has(.k-tabs) .k-page-view-header */
 .k-page-view[data-has-tabs="true"] .k-page-view-header {
 	margin-bottom: 0;
-}
-
-.k-page-view-status {
-	--button-color-back: var(--color-gray-300);
-	--button-color-icon: var(--theme-color-600);
-	--button-color-text: initial;
 }
 </style>

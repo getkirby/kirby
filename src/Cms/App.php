@@ -133,7 +133,7 @@ class App
 
 		// set the singleton
 		if (static::$instance === null || $setInstance === true) {
-			static::$instance = ModelWithContent::$kirby = Model::$kirby =  $this;
+			static::$instance = ModelWithContent::$kirby = $this;
 		}
 
 		// setup the I18n class with the translation loader
@@ -170,7 +170,7 @@ class App
 			'roots'     => $this->roots(),
 			'site'      => $this->site(),
 			'urls'      => $this->urls(),
-			'version'   => $this->version(),
+			'version'   => static::version(),
 		];
 	}
 
@@ -459,25 +459,33 @@ class App
 		string $contentType = 'html'
 	): array {
 		$name = basename(strtolower($name));
+		$data = [];
 
+		// always use the site controller as defaults, if available
+		if ($controller = $this->controllerLookup('site')) {
+			$data = (array)$controller->call($this, $arguments);
+		}
+
+		// try to find a specific representation controller
 		if ($controller = $this->controllerLookup($name, $contentType)) {
-			return (array)$controller->call($this, $arguments);
+			return [
+				...$data,
+				...(array)$controller->call($this, $arguments)
+			];
 		}
 
 		if ($contentType !== 'html') {
 			// no luck for a specific representation controller?
 			// let's try the html controller instead
 			if ($controller = $this->controllerLookup($name)) {
-				return (array)$controller->call($this, $arguments);
+				return [
+					...$data,
+					...(array)$controller->call($this, $arguments)
+				];
 			}
 		}
 
-		// still no luck? Let's take the site controller
-		if ($controller = $this->controllerLookup('site')) {
-			return (array)$controller->call($this, $arguments);
-		}
-
-		return [];
+		return $data;
 	}
 
 	/**

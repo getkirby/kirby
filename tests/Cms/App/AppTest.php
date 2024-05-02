@@ -1311,11 +1311,14 @@ class AppTest extends TestCase
 		]);
 
 		Page::factory([
-			'slug' => 'test',
+			'slug'     => 'test',
 			'template' => 'test'
 		]);
 
-		$this->assertSame(['foo' => 'bar'], $app->controller('test'));
+		$this->assertSame([
+			'title' => 'Site',
+			'foo'   => 'bar'
+		], $app->controller('test'));
 	}
 
 	/**
@@ -1382,11 +1385,14 @@ class AppTest extends TestCase
 		]);
 
 		Page::factory([
-			'slug' => 'test',
+			'slug'     => 'test',
 			'template' => 'foo'
 		]);
 
-		$this->assertSame(['foo' => 'bar'], $app->controller('test', [], 'json'));
+		$this->assertSame([
+			'title' => 'Site',
+			'foo'   => 'bar'
+		], $app->controller('test', [], 'json'));
 	}
 
 	/**
@@ -1403,7 +1409,7 @@ class AppTest extends TestCase
 		]);
 
 		Page::factory([
-			'slug' => 'test',
+			'slug'     => 'test',
 			'template' => 'none'
 		]);
 

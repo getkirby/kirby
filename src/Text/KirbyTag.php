@@ -177,7 +177,7 @@ class KirbyTag
 		}
 
 		$pos  = strpos($tag, ':');
-		$type = trim(substr($tag, 0, $pos ? $pos : null));
+		$type = trim(substr($tag, 0, $pos ?: null));
 		$type = strtolower($type);
 		$attr = static::$types[$type]['attr'] ?? [];
 

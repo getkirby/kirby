@@ -7,7 +7,7 @@ use Kirby\Content\Field;
 use Kirby\Toolkit\Obj;
 use stdClass;
 
-class MockObject extends Model
+class MockObject
 {
 	protected $id;
 	protected $group;

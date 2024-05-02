@@ -287,8 +287,14 @@ export default (panel) => {
 				file.error = null;
 				file.progress = 0;
 
+				// clone the attributes to ensure that
+				// each file has its own copy, e.g. of sort
+				// (otherwise all files would use the state
+				// of attributes from the last file in the loop)
+				const attributes = { ...this.attributes };
+
 				// add file to upload queue
-				files.push(async () => await this.upload(file));
+				files.push(async () => await this.upload(file, attributes));
 
 				const sort = this.attributes?.sort;
 
@@ -305,10 +311,10 @@ export default (panel) => {
 				return this.done();
 			}
 		},
-		async upload(file) {
+		async upload(file, attributes) {
 			try {
 				const response = await upload(file.src, {
-					attributes: this.attributes,
+					attributes: attributes,
 					headers: { "x-csrf": panel.system.csrf },
 					filename: file.name + "." + file.extension,
 					url: this.url,

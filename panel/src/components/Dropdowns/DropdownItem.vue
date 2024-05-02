@@ -23,11 +23,8 @@ export default {
 		current: [Boolean, String],
 		disabled: Boolean,
 		icon: String,
-		image: [String, Object],
 		link: String,
-		target: String,
-		theme: String,
-		upload: String
+		target: String
 	},
 	emit: ["click"],
 	methods: {
