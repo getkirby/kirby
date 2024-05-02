@@ -11,6 +11,7 @@ export const defaults = () => {
 		icon: null,
 		isOpen: false,
 		message: null,
+		theme: null,
 		timeout: null,
 		type: null
 	};
@@ -89,8 +90,7 @@ export default (panel = {}) => {
 			// convert strings to full error objects
 			if (typeof error === "string") {
 				error = {
-					message: error,
-					type: "error"
+					message: error
 				};
 			}
 
@@ -105,16 +105,36 @@ export default (panel = {}) => {
 			if (panel.context === "view") {
 				panel.dialog.open({
 					component: "k-error-dialog",
-					props: error,
-					type: "error"
+					props: error
 				});
 			}
 
 			// show the error notification bar
 			return this.open({
 				message: error.message,
-				type: "error",
-				icon: "alert"
+				icon: "alert",
+				theme: "negative",
+				type: "error"
+			});
+		},
+
+		/**
+		 * Shortcut to create an info
+		 * notification. You can pass a simple
+		 * string or a state object.
+		 *
+		 * @param {Object|String} info
+		 * @returns {Object} The notification state
+		 */
+		info(info = {}) {
+			if (typeof info === "string") {
+				info = { message: info };
+			}
+
+			return this.open({
+				icon: "info",
+				theme: "info",
+				...info
 			});
 		},
 
@@ -174,6 +194,11 @@ export default (panel = {}) => {
 				return this.success(notification);
 			}
 
+			// add timeout if not error or fatal notification
+			if (notification.type !== "error" && notification.type !== "fatal") {
+				notification.timeout ??= 4000;
+			}
+
 			// set the new state
 			this.set({
 				// add the current editing context
@@ -199,31 +224,16 @@ export default (panel = {}) => {
 		 * @param {Object|String} success
 		 * @returns {Object} The notification state
 		 */
-		success(success) {
-			if (!success) {
-				success = {};
-			}
-
+		success(success = {}) {
 			if (typeof success === "string") {
 				success = { message: success };
 			}
 
 			return this.open({
-				timeout: 4000,
-				type: "success",
 				icon: "check",
+				theme: "positive",
 				...success
 			});
-		},
-
-		/**
-		 * Getter that converts the notification type
-		 * into the matching notification component theme
-		 *
-		 * @returns {String}
-		 */
-		get theme() {
-			return this.type === "error" ? "negative" : "positive";
 		},
 
 		/**

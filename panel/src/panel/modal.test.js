@@ -147,8 +147,8 @@ describe.concurrent("panel/modal.js", () => {
 			message: "Test"
 		});
 
-		expect(panel.notification.type).toStrictEqual("success");
 		expect(panel.notification.message).toStrictEqual("Test");
+		expect(panel.notification.theme).toStrictEqual("positive");
 	});
 
 	it("should emit panel events after submit", async () => {

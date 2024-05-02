@@ -19,6 +19,7 @@ describe("panel.notification", () => {
 			icon: null,
 			isOpen: false,
 			message: null,
+			theme: null,
 			timeout: null,
 			type: null
 		};
@@ -99,12 +100,16 @@ describe("panel.notification", () => {
 		const notification = Notification(panel);
 
 		notification.success("Test");
-
 		expect(notification.theme).toStrictEqual("positive");
 
-		notification.error("Test");
+		notification.info("Test");
+		expect(notification.theme).toStrictEqual("info");
 
+		notification.error("Test");
 		expect(notification.theme).toStrictEqual("negative");
+
+		notification.open({ theme: "love" });
+		expect(notification.theme).toStrictEqual("love");
 	});
 
 	it("should set a timer for success notifications", async () => {
