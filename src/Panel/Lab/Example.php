@@ -219,9 +219,11 @@ class Example
 				$tail = $matches[2][$key];
 				$code = $matches[3][$key];
 
-				$scriptId = trim(preg_replace_callback('!script="(.*?)"!', function ($match) {
-					return trim($match[1]);
-				}, $tail));
+				$scriptId = trim(preg_replace_callback(
+					'!script="(.*?)"!',
+					fn ($match) => trim($match[1]),
+					$tail
+				));
 
 				$scriptBlock = $scripts[$scriptId] ?? null;
 

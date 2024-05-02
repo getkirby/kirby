@@ -580,7 +580,7 @@ class F
 		}
 
 		// the math magic
-		$size = round($size / pow(1024, ($unit = floor(log($size, 1024)))), 2);
+		$size = round($size / 1024 ** ($unit = floor(log($size, 1024))), 2);
 
 		// format the number if requested
 		if ($locale !== false) {

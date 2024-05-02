@@ -386,10 +386,13 @@ class Str
 		$encoded = '';
 
 		for ($i = 0; $i < static::length($string); $i++) {
-			$char = static::substr($string, $i, 1);
-			$char = mb_convert_encoding($char, 'UCS-4BE', 'UTF-8');
-			list(, $code) = unpack('N', $char);
-			$encoded .= rand(1, 2) === 1 ? '&#' . $code . ';' : '&#x' . dechex($code) . ';';
+			$char     = static::substr($string, $i, 1);
+			$char     = mb_convert_encoding($char, 'UCS-4BE', 'UTF-8');
+			[, $code] = unpack('N', $char);
+			$encoded .= match (random_int(1, 2)) {
+				1 => '&#' . $code . ';',
+				2 => '&#x' . dechex($code) . ';'
+			};
 		}
 
 		return $encoded;

@@ -170,7 +170,7 @@ class App
 			'roots'     => $this->roots(),
 			'site'      => $this->site(),
 			'urls'      => $this->urls(),
-			'version'   => $this->version(),
+			'version'   => static::version(),
 		];
 	}
 
@@ -255,7 +255,7 @@ class App
 		foreach ($this->options as $key => $value) {
 			// detect option keys with the `vendor.plugin.option` format
 			if (preg_match('/^([a-z0-9-]+\.[a-z0-9-]+)\.(.*)$/i', $key, $matches) === 1) {
-				list(, $plugin, $option) = $matches;
+				[, $plugin, $option] = $matches;
 
 				// verify that it's really a plugin option
 				if (isset(static::$plugins[str_replace('.', '/', $plugin)]) !== true) {
@@ -623,7 +623,7 @@ class App
 			return Uuid::for($path, $parent?->files())->model();
 		}
 
-		$parent   = $parent ?? $this->site();
+		$parent ??= $this->site();
 		$id       = dirname($path);
 		$filename = basename($path);
 
@@ -1141,7 +1141,7 @@ class App
 			return null;
 		}
 
-		$parent = $parent ?? $this->site();
+		$parent ??= $this->site();
 
 		if ($page = $parent->find($id)) {
 			/**

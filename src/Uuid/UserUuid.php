@@ -23,7 +23,7 @@ class UserUuid extends Uuid
 	/**
 	 * @var \Kirby\Cms\User|null
 	 */
-	public Identifiable|null $model;
+	public Identifiable|null $model = null;
 
 	/*
 	 * Returns the user ID

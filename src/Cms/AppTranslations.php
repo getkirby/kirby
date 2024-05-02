@@ -148,7 +148,7 @@ trait AppTranslations
 	 */
 	public function translation(string|null $locale = null): Translation
 	{
-		$locale = $locale ?? I18n::locale();
+		$locale ??= I18n::locale();
 		$locale = basename($locale);
 
 		// prefer loading them from the translations collection
