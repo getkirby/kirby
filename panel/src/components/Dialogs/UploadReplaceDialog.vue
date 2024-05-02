@@ -9,7 +9,7 @@
 		<ul class="k-upload-items">
 			<li class="k-upload-original">
 				<k-upload-item-preview
-					:color="original.image?.color ?? 'white'"
+					:color="original.image?.color"
 					:icon="original.image?.icon"
 					:url="original.url"
 					:type="original.mime"

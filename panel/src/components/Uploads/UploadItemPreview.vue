@@ -42,18 +42,30 @@ export default {
 	mixins: [props],
 	computed: {
 		fallbackColor() {
+			if (this.type?.startsWith("image/")) {
+				return "orange-500";
+			}
+
+			if (this.type?.startsWith("audio/")) {
+				return "aqua-500";
+			}
+
+			if (this.type?.startsWith("video/")) {
+				return "yellow-500";
+			}
+
 			return "white";
 		},
 		fallbackIcon() {
-			if (this.type.startsWith("image/")) {
+			if (this.type?.startsWith("image/")) {
 				return "image";
 			}
 
-			if (this.type.startsWith("audio/")) {
+			if (this.type?.startsWith("audio/")) {
 				return "audio";
 			}
 
-			if (this.type.startsWith("video/")) {
+			if (this.type?.startsWith("video/")) {
 				return "video";
 			}
 

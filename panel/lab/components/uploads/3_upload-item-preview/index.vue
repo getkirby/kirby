@@ -22,7 +22,7 @@
 			<k-upload-item-preview icon="image" url="/some.mp4" />
 		</k-lab-example>
 		<k-lab-example label="Color">
-			<k-upload-item-preview color="aqua-500" icon="image" url="/some.mp4" />
+			<k-upload-item-preview color="pink-500" icon="heart" url="/some.mp4" />
 		</k-lab-example>
 	</k-lab-examples>
 </template>
