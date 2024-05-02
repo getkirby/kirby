@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Controller;
+use Stringable;
 
 /**
  * The Event object is created whenever the `$kirby->trigger()`
@@ -19,7 +20,7 @@ use Kirby\Toolkit\Controller;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Event
+class Event implements Stringable
 {
 	/**
 	 * The full event name

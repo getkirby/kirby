@@ -4,6 +4,7 @@ namespace Kirby\Http;
 
 use Kirby\Toolkit\Obj;
 use Kirby\Toolkit\Str;
+use Stringable;
 
 /**
  * A wrapper around a URL params
@@ -16,7 +17,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-class Params extends Obj
+class Params extends Obj implements Stringable
 {
 	public static string|null $separator = null;
 

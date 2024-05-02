@@ -13,6 +13,7 @@ use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Toolkit\Str;
+use Stringable;
 
 /**
  * The `Uuid` classes provide an interface to connect
@@ -40,7 +41,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-abstract class Uuid
+abstract class Uuid implements Stringable
 {
 	protected const TYPE = 'uuid';
 

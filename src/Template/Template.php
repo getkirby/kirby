@@ -6,6 +6,7 @@ use Exception;
 use Kirby\Cms\App;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Tpl;
+use Stringable;
 
 /**
  * Represents a Kirby template and takes care
@@ -17,7 +18,7 @@ use Kirby\Toolkit\Tpl;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Template
+class Template implements Stringable
 {
 	/**
 	 * Global template data

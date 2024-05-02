@@ -9,6 +9,7 @@ use DateTimeZone;
 use Exception;
 use IntlDateFormatter;
 use Kirby\Exception\InvalidArgumentException;
+use Stringable;
 
 /**
  * Extension for PHP's `DateTime` class
@@ -21,7 +22,7 @@ use Kirby\Exception\InvalidArgumentException;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-class Date extends DateTime
+class Date extends DateTime implements Stringable
 {
 	/**
 	 * Class constructor

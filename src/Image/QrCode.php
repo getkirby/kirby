@@ -7,6 +7,7 @@ use GdImage;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
+use Stringable;
 
 /**
  * Creates a QR code
@@ -47,7 +48,7 @@ use Kirby\Filesystem\F;
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-class QrCode
+class QrCode implements Stringable
 {
 	public function __construct(public string $data)
 	{

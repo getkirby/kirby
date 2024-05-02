@@ -9,6 +9,7 @@ use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
+use Stringable;
 use Throwable;
 
 /**
@@ -27,7 +28,7 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Language
+class Language implements Stringable
 {
 	/**
 	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Languages>

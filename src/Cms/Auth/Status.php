@@ -5,7 +5,7 @@ namespace Kirby\Cms\Auth;
 use Kirby\Cms\App;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Toolkit\Properties;
+use Stringable;
 
 /**
  * Information container for the
@@ -18,7 +18,7 @@ use Kirby\Toolkit\Properties;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Status
+class Status implements Stringable
 {
 	/**
 	 * Type of the active challenge

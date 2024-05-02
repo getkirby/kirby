@@ -3,6 +3,7 @@
 namespace Kirby\Filesystem;
 
 use Kirby\Toolkit\Str;
+use Stringable;
 
 /**
  * The `Filename` class handles complex
@@ -26,7 +27,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Filename
+class Filename implements Stringable
 {
 	/**
 	 * List of all applicable attributes
