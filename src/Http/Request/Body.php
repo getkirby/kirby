@@ -2,6 +2,8 @@
 
 namespace Kirby\Http\Request;
 
+use Stringable;
+
 /**
  * The Body class parses the
  * request body and provides a nice
@@ -14,7 +16,7 @@ namespace Kirby\Http\Request;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-class Body
+class Body implements Stringable
 {
 	use Data;
 

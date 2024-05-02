@@ -4,6 +4,7 @@ namespace Kirby\Content;
 
 use Closure;
 use Kirby\Cms\ModelWithContent;
+use Stringable;
 
 /**
  * Every field in a Kirby content text file
@@ -25,7 +26,7 @@ use Kirby\Cms\ModelWithContent;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Field
+class Field implements Stringable
 {
 	/**
 	 * Field method aliases

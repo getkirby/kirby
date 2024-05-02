@@ -11,6 +11,7 @@ use Kirby\Sane\Sane;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\Html;
 use Kirby\Toolkit\V;
+use Stringable;
 
 /**
  * Flexible File object with a set of helpful
@@ -24,7 +25,7 @@ use Kirby\Toolkit\V;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class File
+class File implements Stringable
 {
 	/**
 	 * Parent file model

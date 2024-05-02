@@ -3,6 +3,7 @@
 namespace Kirby\Template;
 
 use Kirby\Exception\LogicException;
+use Stringable;
 
 /**
  * The slot class catches all content
@@ -16,7 +17,7 @@ use Kirby\Exception\LogicException;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Slot
+class Slot implements Stringable
 {
 	/**
 	 * The captured slot content

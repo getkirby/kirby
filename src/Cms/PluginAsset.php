@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\F;
+use Stringable;
 
 /**
  * Representing a plugin asset with methods
@@ -15,7 +16,7 @@ use Kirby\Filesystem\F;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class PluginAsset
+class PluginAsset implements Stringable
 {
 	public function __construct(
 		protected string $path,

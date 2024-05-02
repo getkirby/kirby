@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Mime;
 use Kirby\Toolkit\Str;
+use Stringable;
 
 /**
  * Global response configuration
@@ -15,7 +16,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Responder
+class Responder implements Stringable
 {
 	/**
 	 * Timestamp when the response expires

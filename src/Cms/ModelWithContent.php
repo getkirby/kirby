@@ -15,6 +15,7 @@ use Kirby\Toolkit\Str;
 use Kirby\Uuid\Identifiable;
 use Kirby\Uuid\Uuid;
 use Kirby\Uuid\Uuids;
+use Stringable;
 use Throwable;
 
 /**
@@ -26,7 +27,7 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-abstract class ModelWithContent implements Identifiable
+abstract class ModelWithContent implements Identifiable, Stringable
 {
 	/**
 	 * Each model must define a CLASS_ALIAS
@@ -642,7 +643,7 @@ abstract class ModelWithContent implements Identifiable
 	 */
 	public function __toString(): string
 	{
-		return $this->id();
+		return (string)$this->id();
 	}
 
 	/**
