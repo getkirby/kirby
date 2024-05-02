@@ -255,7 +255,7 @@ class App
 		foreach ($this->options as $key => $value) {
 			// detect option keys with the `vendor.plugin.option` format
 			if (preg_match('/^([a-z0-9-]+\.[a-z0-9-]+)\.(.*)$/i', $key, $matches) === 1) {
-				list(, $plugin, $option) = $matches;
+				[, $plugin, $option] = $matches;
 
 				// verify that it's really a plugin option
 				if (isset(static::$plugins[str_replace('.', '/', $plugin)]) !== true) {
