@@ -8,11 +8,11 @@
 	>
 		<ul class="k-upload-items">
 			<li class="k-upload-original">
-				<k-upload-dialog-preview
+				<k-upload-item-preview
 					:color="original.image?.color ?? 'white'"
 					:icon="original.image?.icon"
 					:url="original.url"
-					:mime="original.mime"
+					:type="original.mime"
 				/>
 			</li>
 
@@ -24,12 +24,11 @@
 				:data-completed="file.completed"
 				class="k-upload-item"
 			>
-				<k-upload-dialog-preview
-					:color="original.image?.color ?? 'white'"
+				<k-upload-item-preview
+					:color="original.image?.color"
 					:icon="original.image?.icon"
+					:type="file.type"
 					:url="file.url"
-					:mime="file.type"
-					class="k-upload-item-preview"
 				/>
 
 				<k-input
