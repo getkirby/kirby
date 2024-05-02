@@ -42,7 +42,7 @@ class LanguageRules
 	/**
 	 * Validates if the language can be updated
 	 */
-	public static function update(Language $language)
+	public static function update(Language $language): void
 	{
 		static::validLanguageCode($language);
 		static::validLanguageName($language);
