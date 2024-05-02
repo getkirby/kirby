@@ -274,7 +274,7 @@ class AppTest extends TestCase
 			]
 		]);
 		$this->assertSame(hash_hmac('sha1', 'test', '/dev/null/content'), $app->contentToken('model', 'test'));
-		$this->assertSame(hash_hmac('sha1', 'test', '/dev/null'), $app->contentToken($app, 'test'));
+		$this->assertSame(hash_hmac('sha1', 'test', '/dev/null/content'), $app->contentToken($app, 'test'));
 
 		// with custom static salt
 		$app = new App([
