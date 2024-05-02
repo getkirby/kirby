@@ -21,6 +21,16 @@
 				@action="onAction"
 			/>
 		</k-lab-example>
+		<k-lab-example
+			:flex="true"
+			label="click global handler"
+			script="clickGlobalHandler"
+		>
+			<k-options-dropdown
+				:options="optionsWithGlobalHandler"
+				variant="filled"
+			/>
+		</k-lab-example>
 	</k-lab-examples>
 </template>
 
@@ -100,7 +110,59 @@ export const clickStringHandler = {
 };
 /** @script-end */
 
+/** @script: clickGlobalHandler */
+export const clickGlobalHandler = {
+	created() {
+		this.$panel.events.on("dropdown:action", this.onGlobalAction);
+	},
+	destroyed() {
+		this.$panel.events.off("dropdown:action", this.onGlobalAction);
+	},
+	computed: {
+		optionsWithGlobalHandler() {
+			return [
+				{
+					text: "Edit",
+					icon: "edit",
+					click: {
+						global: "dropdown:action",
+						payload: "edit"
+					}
+				},
+				{
+					text: "Duplicate",
+					icon: "copy",
+					click: {
+						global: "dropdown:action",
+						payload: "duplicate"
+					}
+				},
+				"-",
+				{
+					text: "Delete",
+					icon: "trash",
+					click: {
+						global: "dropdown:action",
+						payload: "delete"
+					}
+				}
+			];
+		}
+	},
+	methods: {
+		onGlobalAction(payload) {
+			console.log(payload);
+		}
+	}
+};
+/**	@script-end */
+
 export default {
-	mixins: [multipleOptions, singleOption, clickStringHandler]
+	mixins: [
+		multipleOptions,
+		singleOption,
+		clickStringHandler,
+		clickGlobalHandler
+	]
 };
 </script>
