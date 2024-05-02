@@ -9,23 +9,25 @@ import kirby from "./scripts/vite-kirby.mjs";
 /**
  * Returns all aliases used in the project
  */
-function createAliases() {
+function createAliases(proxy) {
 	return {
 		"@": path.resolve(__dirname, "src"),
-		vue: "vue/dist/vue.esm-bundler.js"
+		vue: proxy.target + ":3000/node_modules/vue/dist/vue.esm-browser.js"
+	};
+}
+
+function createProxy() {
+	return {
+		target: process.env.VUE_APP_DEV_SERVER ?? "https://sandbox.test",
+		changeOrigin: true,
+		secure: false
 	};
 }
 
 /**
  * Returns the server configuration
  */
-function createServer() {
-	const proxy = {
-		target: process.env.VUE_APP_DEV_SERVER ?? "http://sandbox.test",
-		changeOrigin: true,
-		secure: false
-	};
-
+function createServer(proxy) {
 	return {
 		proxy: {
 			"/api": proxy,
@@ -67,7 +69,7 @@ function createPlugins(mode) {
 	];
 
 	// when building…
-	if (mode === "build") {
+	if (mode === "production") {
 		//copy Vue to the dist directory
 		plugins.push(
 			viteStaticCopy({
@@ -102,9 +104,11 @@ function createTest() {
 /**
  * Returns the Vite configuration
  */
-export default defineConfig(({ command }) => {
+export default defineConfig(({ mode }) => {
+	const proxy = createProxy();
+
 	return {
-		plugins: createPlugins(command),
+		plugins: createPlugins(mode),
 		base: "./",
 		build: {
 			minify: "terser",
@@ -125,9 +129,9 @@ export default defineConfig(({ command }) => {
 			holdUntilCrawlEnd: false
 		},
 		resolve: {
-			alias: createAliases()
+			alias: createAliases(proxy)
 		},
-		server: createServer(),
+		server: createServer(proxy),
 		test: createTest()
 	};
 });
