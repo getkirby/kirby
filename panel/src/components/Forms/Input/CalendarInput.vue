@@ -99,13 +99,15 @@ import { IsoDateProps } from "./DateInput.vue";
 export default {
 	mixins: [InputProps, IsoDateProps],
 	data() {
+		const today = this.$library.dayjs();
+
 		return {
 			maxdate: null,
 			mindate: null,
-			month: null,
+			month: today.month(),
 			selected: null,
-			today: this.$library.dayjs(),
-			year: null
+			today: today,
+			year: today.year()
 		};
 	},
 	computed: {
@@ -309,8 +311,10 @@ export default {
 		 * @param {number} day
 		 * @param {number} month
 		 */
-		toDate(day = 1, month = this.month) {
-			return this.$library.dayjs(`${this.year}-${month + 1}-${day}`);
+		toDate(day = 1, month) {
+			return this.$library.dayjs(
+				`${this.year}-${(month ?? this.month) + 1}-${day}`
+			);
 		},
 		/**
 		 * Generates select options between min and max
