@@ -50,7 +50,7 @@ class FileVersion
 
 		// content fields
 		if ($this->original() instanceof File) {
-			return $this->original()->content()->get($method, $arguments);
+			return $this->original()->content()->get($method);
 		}
 	}
 
