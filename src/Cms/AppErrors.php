@@ -148,7 +148,7 @@ trait AppErrors
 			if ($this->option('debug') === true) {
 				echo Response::json([
 					'status'    => 'error',
-					'exception' => get_class($exception),
+					'exception' => $exception::class,
 					'code'      => $code,
 					'message'   => $exception->getMessage(),
 					'details'   => $details,

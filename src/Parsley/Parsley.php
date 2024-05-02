@@ -227,7 +227,7 @@ class Parsley
 		$skip = ['DOMComment', 'DOMDocumentType'];
 
 		// unwanted element types
-		if (in_array(get_class($element), $skip) === true) {
+		if (in_array($element::class, $skip) === true) {
 			return false;
 		}
 

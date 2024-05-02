@@ -432,7 +432,7 @@ class Api
 			return $this->collection($collection, $object);
 		}
 
-		throw new NotFoundException(sprintf('The object "%s" cannot be resolved', get_class($object)));
+		throw new NotFoundException(sprintf('The object "%s" cannot be resolved', $object::class));
 	}
 
 	/**
@@ -542,7 +542,7 @@ class Api
 			'status'    => 'error',
 			'message'   => $e->getMessage(),
 			'code'      => empty($e->getCode()) === true ? 500 : $e->getCode(),
-			'exception' => get_class($e),
+			'exception' => $e::class,
 			'key'       => null,
 			'file'      => F::relativepath($e->getFile(), $docRoot),
 			'line'      => $e->getLine(),
