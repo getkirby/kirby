@@ -1,19 +1,18 @@
 <template>
 	<nav v-if="tabs.length > 1" class="k-tabs">
-		<k-button
-			v-for="btn in buttons"
-			ref="visible"
-			:key="btn.name"
-			v-bind="btn"
-			variant="dimmed"
-			class="k-tab-button"
-		>
-			{{ btn.text }}
-
+		<div v-for="btn in buttons" :key="btn.name" class="k-tabs-tab">
+			<k-button
+				ref="visible"
+				v-bind="btn"
+				variant="dimmed"
+				class="k-tab-button"
+			>
+				{{ btn.text }}
+			</k-button>
 			<span v-if="btn.badge" :data-theme="theme" class="k-tabs-badge">
 				{{ btn.badge }}
 			</span>
-		</k-button>
+		</div>
 
 		<template v-if="invisible.length">
 			<k-button
@@ -154,6 +153,10 @@ export default {
 	gap: var(--spacing-1);
 	margin-bottom: var(--spacing-12);
 	margin-inline: calc(var(--button-padding) * -1);
+}
+
+.k-tabs-tab {
+	position: relative;
 }
 
 .k-tab-button.k-button {

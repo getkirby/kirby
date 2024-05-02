@@ -170,7 +170,7 @@ class App
 			'roots'     => $this->roots(),
 			'site'      => $this->site(),
 			'urls'      => $this->urls(),
-			'version'   => $this->version(),
+			'version'   => static::version(),
 		];
 	}
 

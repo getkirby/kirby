@@ -20,7 +20,7 @@ class Html extends Xml
 	/**
 	 * An internal store for an HTML entities translation table
 	 */
-	public static array|null $entities;
+	public static array|null $entities = null;
 
 	/**
 	 * List of HTML tags that can be used inline

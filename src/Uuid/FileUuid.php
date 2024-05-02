@@ -22,7 +22,7 @@ class FileUuid extends ModelUuid
 	/**
 	 * @var \Kirby\Cms\File|null
 	 */
-	public Identifiable|null $model;
+	public Identifiable|null $model = null;
 
 	/**
 	 * Looks up UUID in cache and resolves to file object;

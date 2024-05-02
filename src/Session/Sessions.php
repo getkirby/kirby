@@ -218,7 +218,7 @@ class Sessions
 	 * @internal
 	 * @param \Kirby\Session\Session $session Session instance to push to the cache
 	 */
-	public function updateCache(Session $session)
+	public function updateCache(Session $session): void
 	{
 		$this->cache[$session->token()] = $session;
 	}

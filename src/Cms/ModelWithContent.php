@@ -46,7 +46,7 @@ abstract class ModelWithContent implements Identifiable
 	public static App $kirby;
 	protected Site|null $site;
 	protected ContentStorage $storage;
-	public Collection|null $translations;
+	public Collection|null $translations = null;
 
 	/**
 	 * Store values used to initilaize object

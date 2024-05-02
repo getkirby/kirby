@@ -76,7 +76,7 @@ class Component
 		}
 
 		$this->attrs   = $attrs;
-		$this->options = $options = $this->setup($type);
+		$this->options = $options = static::setup($type);
 		$this->methods = $methods = $options['methods'] ?? [];
 
 		foreach ($attrs as $attrName => $attrValue) {
