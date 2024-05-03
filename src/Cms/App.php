@@ -892,7 +892,7 @@ class App
 	 */
 	public function language(string $code = null): Language|null
 	{
-		return match($code ?? 'current') {
+		return match ($code ?? 'current') {
 			'default' => $this->defaultLanguage(),
 			'current' => $this->currentLanguage(),
 			default   => $this->languages()->find($code)
