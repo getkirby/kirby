@@ -1,7 +1,7 @@
 <template>
-	<k-button-group class="k-header-buttons">
+	<k-button-group class="k-view-buttons">
 		<component
-			:is="`k-header-${button}-button`"
+			:is="`k-view-${button}-button`"
 			v-for="button in buttons"
 			:key="button"
 		/>
@@ -11,7 +11,7 @@
 <script>
 /**
  * Wrapper button group that dynamically renders the
- * respective header button components passed as `buttons` prop.
+ * respective view button components passed as `buttons` prop.
  * @internal
  */
 export default {

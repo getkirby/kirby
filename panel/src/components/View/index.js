@@ -1,15 +1,14 @@
 import Activation from "./Activation.vue";
+import Buttons from "./Buttons/index.js";
 import Inside from "./Inside.vue";
 import Menu from "./Menu.vue";
 import Outside from "./Outside.vue";
 import Panel from "./Panel.vue";
 import Topbar from "./Topbar.vue";
 
-import Header from "./Header/index.js";
-
 export default {
 	install(app) {
-		app.use(Header);
+		app.use(Buttons);
 
 		app.component("k-activation", Activation);
 		app.component("k-panel", Panel);

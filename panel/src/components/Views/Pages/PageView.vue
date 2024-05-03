@@ -18,7 +18,7 @@
 			{{ model.title }}
 
 			<template #buttons>
-				<k-header-buttons :buttons="buttons" />
+				<k-view-buttons :buttons="buttons" />
 				<k-form-buttons :lock="lock" />
 			</template>
 		</k-header>

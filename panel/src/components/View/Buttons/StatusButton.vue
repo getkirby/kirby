@@ -39,7 +39,7 @@ export default {
 	mounted() {
 		if (this.$panel.view.component !== "k-page-view") {
 			console.error(
-				"The status header button should only be used for the page view."
+				"The status view button should only be used for the page view."
 			);
 		}
 	}

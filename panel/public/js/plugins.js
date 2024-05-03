@@ -38,7 +38,7 @@ window.panel.plugin = function (plugin, extensions) {
 
 	// Header Buttons
 	resolve(extensions, "headerButtons", (name, options) => {
-		window.panel.plugins.components[`k-header-${name}-button`] = options;
+		window.panel.plugins.components[`k-view-${name}-button`] = options;
 	});
 
 	// Icons
