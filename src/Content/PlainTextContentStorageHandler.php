@@ -34,9 +34,9 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	 * @param string $lang Code `'default'` in a single-lang installation
 	 * @param array<string, string> $fields Content fields
 	 */
-	public function create(string $versionType, string $lang, array $fields): void
+	public function create(VersionId $versionId, string $lang, array $fields): void
 	{
-		$success = Data::write($this->contentFile($versionType, $lang), $fields);
+		$success = Data::write($this->contentFile($versionId, $lang), $fields);
 
 		// @codeCoverageIgnoreStart
 		if ($success !== true) {
@@ -50,9 +50,9 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	 *
 	 * @param string $lang Code `'default'` in a single-lang installation
 	 */
-	public function delete(string $version, string $lang): void
+	public function delete(VersionId $versionId, string $lang): void
 	{
-		$contentFile = $this->contentFile($version, $lang);
+		$contentFile = $this->contentFile($versionId, $lang);
 		$success = F::unlink($contentFile);
 
 		// @codeCoverageIgnoreStart
@@ -83,10 +83,10 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	 * @param string|null $lang Code `'default'` in a single-lang installation;
 	 *                          checks for "any language" if not provided
 	 */
-	public function exists(string $version, string|null $lang): bool
+	public function exists(VersionId $versionId, string|null $lang): bool
 	{
 		if ($lang === null) {
-			foreach ($this->contentFiles($version) as $file) {
+			foreach ($this->contentFiles($versionId) as $file) {
 				if (is_file($file) === true) {
 					return true;
 				}
@@ -95,7 +95,7 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 			return false;
 		}
 
-		return is_file($this->contentFile($version, $lang)) === true;
+		return is_file($this->contentFile($versionId, $lang)) === true;
 	}
 
 	/**
@@ -104,9 +104,9 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	 *
 	 * @param string $lang Code `'default'` in a single-lang installation
 	 */
-	public function modified(string $version, string $lang): int|null
+	public function modified(VersionId $versionId, string $lang): int|null
 	{
-		$modified = F::modified($this->contentFile($version, $lang));
+		$modified = F::modified($this->contentFile($versionId, $lang));
 
 		if (is_int($modified) === true) {
 			return $modified;
@@ -120,24 +120,20 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	 *
 	 * @param string $lang Code `'default'` in a single-lang installation
 	 * @return array<string, string>
-	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function read(string $version, string $lang): array
+	public function read(VersionId $versionId, string $lang): array
 	{
-		return Data::read($this->contentFile($version, $lang));
+		return Data::read($this->contentFile($versionId, $lang));
 	}
 
 	/**
 	 * Updates the modification timestamp of an existing version
 	 *
 	 * @param string $lang Code `'default'` in a single-lang installation
-	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function touch(string $version, string $lang): void
+	public function touch(VersionId $versionId, string $lang): void
 	{
-		$success = touch($this->contentFile($version, $lang));
+		$success = touch($this->contentFile($versionId, $lang));
 
 		// @codeCoverageIgnoreStart
 		if ($success !== true) {
@@ -151,12 +147,10 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	 *
 	 * @param string $lang Code `'default'` in a single-lang installation
 	 * @param array<string, string> $fields Content fields
-	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function update(string $version, string $lang, array $fields): void
+	public function update(VersionId $versionId, string $lang, array $fields): void
 	{
-		$success = Data::write($this->contentFile($version, $lang), $fields);
+		$success = Data::write($this->contentFile($versionId, $lang), $fields);
 
 		// @codeCoverageIgnoreStart
 		if ($success !== true) {
@@ -173,12 +167,8 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	 *
 	 * @throws \Kirby\Exception\LogicException If the model type doesn't have a known content filename
 	 */
-	public function contentFile(string $version, string $lang): string
+	public function contentFile(VersionId $versionId, string $lang): string
 	{
-		if (in_array($version, ['published', 'changes']) !== true) {
-			throw new InvalidArgumentException('Invalid version identifier "' . $version . '"');
-		}
-
 		$extension = $this->model->kirby()->contentExtension();
 		$directory = $this->model->root();
 
@@ -201,10 +191,10 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 			// changes versions don't need anything extra
 			// (drafts already have the `_drafts` prefix in their root),
 			// but a published version is not possible
-			if ($version === 'published') {
+			if ($versionId === VersionId::PUBLISHED) {
 				throw new LogicException('Drafts cannot have a published content file');
 			}
-		} elseif ($version === 'changes') {
+		} elseif ($versionId === VersionId::CHANGES) {
 			// other model type or published page that has a changes subfolder
 			$directory .= '/_changes';
 		}
@@ -220,16 +210,16 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	 * Returns an array with content files of all languages
 	 * @internal To be made `protected` when the CMS core no longer relies on it
 	 */
-	public function contentFiles(string $version): array
+	public function contentFiles(VersionId $versionId): array
 	{
 		if ($this->model->kirby()->multilang() === true) {
 			return $this->model->kirby()->languages()->values(
-				fn ($lang) => $this->contentFile($version, $lang)
+				fn ($lang) => $this->contentFile($versionId, $lang)
 			);
 		}
 
 		return [
-			$this->contentFile($version, 'default')
+			$this->contentFile($versionId, 'default')
 		];
 	}
 
@@ -240,14 +230,14 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	 * @param string $toLang Code `'default'` in a single-lang installation
 	 */
 	public function move(
-		string $fromVersion,
+		VersionId $fromVersionId,
 		string $fromLang,
-		string $toVersion,
+		VersionId $toVersionId,
 		string $toLang
 	): void {
 		F::move(
-			$this->contentFile($fromVersion, $fromLang),
-			$this->contentFile($toVersion, $toLang)
+			$this->contentFile($fromVersionId, $fromLang),
+			$this->contentFile($toVersionId, $toLang)
 		);
 	}
 }
