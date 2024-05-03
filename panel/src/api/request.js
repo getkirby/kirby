@@ -29,11 +29,11 @@ export default (api) => {
 		}
 
 		// remove null headers
-		Object.keys(options.headers).forEach((key) => {
+		for (const key in options.headers) {
 			if (options.headers[key] === null) {
 				delete options.headers[key];
 			}
-		});
+		}
 
 		// build the request URL
 		options.url = rtrim(api.endpoint, "/") + "/" + ltrim(path, "/");
