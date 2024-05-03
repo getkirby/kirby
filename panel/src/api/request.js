@@ -28,6 +28,13 @@ export default (api) => {
 			options.method = "POST";
 		}
 
+		// remove null headers
+		Object.keys(options.headers).forEach((key) => {
+			if (options.headers[key] === null) {
+				delete options.headers[key];
+			}
+		});
+
 		// build the request URL
 		options.url = rtrim(api.endpoint, "/") + "/" + ltrim(path, "/");
 
