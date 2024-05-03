@@ -107,7 +107,8 @@ export default {
 			type: Boolean,
 			default: true
 		}
-	}
+	},
+	emits: ["remove", "rename"]
 };
 </script>
 

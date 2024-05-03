@@ -12,12 +12,14 @@
 
 <script>
 /**
+ * Represents multiple files to upload in an upload dialog
  * @since 4.3.0
  */
 export default {
 	props: {
 		items: Array
-	}
+	},
+	emits: ["remove", "rename"]
 };
 </script>
 
