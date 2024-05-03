@@ -30,8 +30,8 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\Config;
 use Kirby\Toolkit\Controller;
 use Kirby\Toolkit\LazyValue;
-use Kirby\Toolkit\Str;
 use Kirby\Toolkit\Locale;
+use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuid;
 use Throwable;
 
