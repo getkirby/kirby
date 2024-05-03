@@ -892,6 +892,10 @@ class App
 	 */
 	public function language(string $code = null): Language|null
 	{
+		if ($this->multilang() === false) {
+			return null;
+		}
+
 		return match ($code ?? 'current') {
 			'default' => $this->defaultLanguage(),
 			'current' => $this->currentLanguage(),
