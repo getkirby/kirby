@@ -7,7 +7,7 @@
 			icon="cog"
 			variant="filled"
 			size="sm"
-			class="k-header-settings-button k-view-options"
+			class="k-view-settings-button k-view-options"
 			@click="$refs.settings.toggle()"
 		/>
 		<k-dropdown-content

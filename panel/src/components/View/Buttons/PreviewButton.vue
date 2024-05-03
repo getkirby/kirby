@@ -7,7 +7,7 @@
 		size="sm"
 		target="_blank"
 		variant="filled"
-		class="k-header-preview-button"
+		class="k-view-preview-button"
 	/>
 </template>
 

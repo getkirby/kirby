@@ -6,7 +6,7 @@
 		:text="status.label"
 		size="sm"
 		variant="filled"
-		class="k-header-status-button k-page-status-button"
+		class="k-view-status-button k-page-status-button"
 		@click="$dialog(model.link + '/changeStatus')"
 	/>
 </template>

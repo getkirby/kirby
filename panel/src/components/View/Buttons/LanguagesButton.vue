@@ -1,7 +1,7 @@
 <template>
 	<div
 		v-if="languages.length > 1"
-		class="k-header-languages-button k-languages-dropdown"
+		class="k-view-languages-button k-languages-dropdown"
 	>
 		<k-button
 			:dropdown="true"

@@ -5,7 +5,7 @@
 		:text="text"
 		size="sm"
 		variant="filled"
-		class="k-header-theme-button"
+		class="k-view-theme-button"
 		@click="$panel.theme.toggle()"
 	/>
 </template>
