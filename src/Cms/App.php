@@ -539,9 +539,9 @@ class App
 	}
 
 	/**
-	 * Returns the current language, set by `static::setCurrentLanguage`
+	 * Returns the current language, if set by `static::setCurrentLanguage`
 	 */
-	public function currentLanguage(): Language
+	public function currentLanguage(): Language|null
 	{
 		return $this->language ??= $this->defaultLanguage();
 	}
