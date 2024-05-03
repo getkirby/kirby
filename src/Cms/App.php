@@ -435,10 +435,11 @@ class App
 	 */
 	public function contentToken(mixed $model, string $value): string
 	{
-		$default = match (method_exists($model, 'root')) {
-			true  => $model->root(),
-			false => $this->root('content')
-		};
+		$default = $this->root('content');
+
+		if (method_exists($model, 'id') === true) {
+			$default .= '/' . $model->id();
+		}
 
 		$salt = $this->option('content.salt', $default);
 
