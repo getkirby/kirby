@@ -31,7 +31,7 @@ class Site extends Model
 	{
 		return
 			$this->model->blueprint()->buttons() ??
-			$this->model->kirby()->option('panel.headerButtons.site', [
+			$this->model->kirby()->option('panel.viewButtons.site', [
 				'preview',
 				'languages'
 			]);

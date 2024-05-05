@@ -18,7 +18,7 @@
 
 <script>
 /**
- * Header button to switch between content languages
+ * View header button to switch between content languages
  * @since 4.0.0
  */
 export default {

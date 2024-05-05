@@ -13,7 +13,7 @@
 
 <script>
 /**
- * Header button to open the model's preview in a new tab
+ * View header button to open the model's preview in a new tab
  * @since 5.0.0
  */
 export default {
@@ -31,12 +31,13 @@ export default {
 		},
 		link() {
 			return (
-				this.$panel.view.props.model.previewUrl ??
-				this.$panel.view.props.preview?.url
+				this.$panel.view.props.model?.previewUrl ??
+				this.$panel.view.props.preview?.url ??
+				this.$panel.view.props.url
 			);
 		},
 		permissions() {
-			return this.$panel.view.props.permissions;
+			return this.$panel.view.props.permissions ?? {};
 		}
 	}
 };

@@ -163,12 +163,12 @@ export default (app, plugins = {}) => {
 	plugins = {
 		components: {},
 		created: [],
-		headerButtons: {},
 		icons: {},
 		login: null,
 		textareaButtons: {},
-		use: [],
 		thirdParty: {},
+		use: [],
+		viewButtons: {},
 		writerMarks: {},
 		writerNodes: {},
 		...plugins

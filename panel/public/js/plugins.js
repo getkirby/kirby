@@ -2,12 +2,12 @@ window.panel = window.panel ?? {};
 window.panel.plugins = {
 	components: {},
 	created: [],
-	headerButtons: {},
 	icons: {},
 	routes: [],
 	textareaButtons: {},
 	thirdParty: {},
 	use: [],
+	viewButtons: {},
 	views: {},
 	writerMarks: {},
 	writerNodes: {}
@@ -36,11 +36,6 @@ window.panel.plugin = function (plugin, extensions) {
 		window.panel.plugins.components[`k-${name}-field`] = options;
 	});
 
-	// Header Buttons
-	resolve(extensions, "headerButtons", (name, options) => {
-		window.panel.plugins.components[`k-view-${name}-button`] = options;
-	});
-
 	// Icons
 	resolve(extensions, "icons", (name, options) => {
 		window.panel.plugins.icons[name] = options;
@@ -52,6 +47,11 @@ window.panel.plugin = function (plugin, extensions) {
 			...options,
 			mixins: ["section", ...(options.mixins ?? [])]
 		};
+	});
+
+	// View Buttons
+	resolve(extensions, "viewButtons", (name, options) => {
+		window.panel.plugins.components[`k-view-${name}-button`] = options;
 	});
 
 	// `Vue.use`

@@ -18,7 +18,7 @@
 			{{ model.filename }}
 
 			<template #buttons>
-				<k-view-buttons :buttons="buttons" />
+				<k-view-buttons :buttons="buttons" @action="onAction" />
 				<k-form-buttons :lock="lock" />
 			</template>
 		</k-header>
@@ -59,6 +59,15 @@ export default {
 		}
 	},
 	methods: {
+		onAction(action) {
+			switch (action) {
+				case "replace":
+					return this.$panel.upload.replace({
+						...this.preview,
+						...this.model
+					});
+			}
+		},
 		setFocus(focus) {
 			if (this.$helper.object.isObject(focus) === true) {
 				focus = `${focus.x}% ${focus.y}%`;

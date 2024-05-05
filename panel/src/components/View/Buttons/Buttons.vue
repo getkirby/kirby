@@ -4,6 +4,7 @@
 			:is="`k-view-${button}-button`"
 			v-for="button in buttons"
 			:key="button"
+			@action="$emit('action', $event)"
 		/>
 	</k-button-group>
 </template>
@@ -17,6 +18,7 @@
 export default {
 	props: {
 		buttons: Array
-	}
+	},
+	emits: ["action"]
 };
 </script>

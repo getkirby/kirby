@@ -47,7 +47,7 @@ class Page extends Model
 	{
 		return
 			$this->model->blueprint()->buttons() ??
-			$this->model->kirby()->option('panel.headerButtons.page', [
+			$this->model->kirby()->option('panel.viewButtons.page', [
 				'preview',
 				'settings',
 				'languages',

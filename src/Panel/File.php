@@ -72,7 +72,7 @@ class File extends Model
 	{
 		return
 			$this->model->blueprint()->buttons() ??
-			$this->model->kirby()->option('panel.headerButtons.file', [
+			$this->model->kirby()->option('panel.viewButtons.file', [
 				'preview',
 				'settings',
 				'languages'

@@ -47,7 +47,7 @@ class User extends Model
 	{
 		return
 			$this->model->blueprint()->buttons() ??
-			$this->model->kirby()->option('panel.headerButtons.user', [
+			$this->model->kirby()->option('panel.viewButtons.user', [
 				'theme',
 				'settings',
 				'languages'

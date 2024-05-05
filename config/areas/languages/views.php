@@ -12,10 +12,11 @@ return [
 			return App::instance()->option('languages.variables', true) !== false;
 		},
 		'action'  => function (string $code) {
+			$kirby        = App::instance();
 			$language     = Find::language($code);
 			$link         = '/languages/' . $language->code();
 			$strings      = [];
-			$foundation   = App::instance()->defaultLanguage()->translations();
+			$foundation   = $kirby->defaultLanguage()->translations();
 			$translations = $language->translations();
 
 			ksort($foundation);
@@ -67,6 +68,11 @@ return [
 					]
 				],
 				'props'      => [
+					'buttons' => $kirby->option('panel.viewButtons.language', [
+						'preview',
+						'settings',
+						'remove'
+					]),
 					'deletable'    => $language->isDeletable(),
 					'code'         => Escape::html($language->code()),
 					'default'      => $language->isDefault(),
@@ -107,6 +113,9 @@ return [
 			return [
 				'component' => 'k-languages-view',
 				'props'     => [
+					'buttons' => $kirby->option('panel.viewButtons.languages', [
+						'add'
+					]),
 					'languages' => $kirby->languages()->values(fn ($language) => [
 						'deletable' => $language->isDeletable(),
 						'default'   => $language->isDefault(),

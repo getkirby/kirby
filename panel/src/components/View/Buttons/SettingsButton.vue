@@ -8,40 +8,41 @@
 			variant="filled"
 			size="sm"
 			class="k-view-settings-button k-view-options"
-			@click="$refs.settings.toggle()"
+			@click="onClick"
 		/>
 		<k-dropdown-content
-			ref="settings"
-			:options="$dropdown(model.link)"
+			v-if="dropdown"
+			ref="dropdown"
+			:options="$dropdown(dropdown)"
 			align-x="end"
-			@action="action"
+			@action="$emit('action', $event)"
 		/>
 	</div>
 </template>
 
 <script>
 /**
- * Header button to open the model's settings dropdown
+ * View header button to open the model's settings dropdown
  * @since 5.0.0
  */
 export default {
 	inheritAttrs: false,
+	emits: ["action"],
 	computed: {
+		dropdown() {
+			return this.model?.link;
+		},
 		model() {
 			return this.$panel.view.props.model;
 		}
 	},
 	methods: {
-		action(action) {
-			if (this.$panel.view.component === "k-file-view") {
-				switch (action) {
-					case "replace":
-						return this.$panel.upload.replace({
-							...this.$panel.view.props.preview,
-							...this.model
-						});
-				}
+		onClick() {
+			if (this.dropdown) {
+				return this.$refs.dropdown.toggle();
 			}
+
+			this.$emit("action", "settings");
 		}
 	}
 };

@@ -211,7 +211,7 @@ class Blueprint
 	}
 
 	/**
-	 * Gathers custom config for Panel header buttons
+	 * Gathers custom config for Panel view buttons
 	 */
 	public function buttons(): array|null
 	{
