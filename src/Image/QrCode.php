@@ -49,8 +49,25 @@ use Kirby\Filesystem\F;
  */
 class QrCode
 {
+	protected int $border = 4;
+
 	public function __construct(public string $data)
 	{
+	}
+
+	/**
+	 * Gets or sets the Quiet Zone border around the QR Code.
+	 * The default value is 4.
+	 *
+	 * @param int|null $border The border size in modules
+	 * @return int The border size in modules
+	 */
+	public function border(int|null $border = null): int
+	{
+		if ($border !== null) {
+			$this->border = $border;
+		}
+		return $this->border;
 	}
 
 	/**
@@ -403,8 +420,9 @@ class QrCode
 		[$mask, $mtx] = $this->applyBestMask($mtx, $size);
 		$mtx = $this->finalizeMatrix($mtx, $size, $ecl, $mask, $version);
 
+		$q = $this->border;
 		return [
-			'q'    => [4, 4, 4, 4],
+			'q'    => [$q, $q, $q, $q],
 			'size' => [$size, $size],
 			'bits' => $mtx
 		];
