@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Content\VersionId;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
@@ -471,8 +472,8 @@ trait PageActions
 				$ignore[] = $file->root();
 
 				// append all content files
-				array_push($ignore, ...$file->storage()->contentFiles('published'));
-				array_push($ignore, ...$file->storage()->contentFiles('changes'));
+				array_push($ignore, ...$file->storage()->contentFiles(VersionId::published()));
+				array_push($ignore, ...$file->storage()->contentFiles(VersionId::changes()));
 			}
 		}
 
