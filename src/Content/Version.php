@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\ModelWithContent;
+use Kirby\Exception\NotFoundException;
 
 /**
  * The Version class handles all actions for a single
@@ -39,7 +40,7 @@ class Version
 	/**
 	 * Creates a new version for the given language
 	 */
-	public function create(string $language, array $fields): void
+	public function create(array $fields, string $language = 'default'): void
 	{
 		$this->model->storage()->create($this->id, $language, $fields);
 	}
@@ -49,15 +50,35 @@ class Version
 	 */
 	public function delete(string|null $language = null): void
 	{
-		// delete a single language
-		if ($language !== null) {
-			$this->model->storage()->delete($this->id, $language);
+		// delete all languages
+		if ($language === null) {
+			foreach ($this->model->kirby()->languages() as $language) {
+				$this->model->storage()->delete($this->id, $language->code());
+			}
+		}
+
+		// delete the default language in single-language mode
+		if ($this->model->kirby()->multilang() === false) {
+			$this->model->storage()->delete($this->id, 'default');
 			return;
 		}
 
-		// delete all languages
-		foreach ($this->model->kirby()->languages() as $language) {
-			$this->model->storage()->delete($this->id, $language->code());
+		// delete a single language
+		$this->model->storage()->delete($this->id, $language);
+		return;
+	}
+
+	/**
+	 * Ensure that the version exists and otherwise
+     * throw an exception
+	 *
+	 * @throws \Kirby\Exception\NotFoundException if the version does not exist
+	 */
+	public function ensure(
+		string $language = 'default'
+	): void {
+		if ($this->exists($language) !== true) {
+			throw new NotFoundException('Version "' . $this->id . ' (' . $language . ')" does not already exist');
 		}
 	}
 
@@ -85,8 +106,25 @@ class Version
 		return $this->model;
 	}
 
+	/**
+	 * Returns the modification timestamp of a version
+	 * if it exists
+	 *
+	 * @param string $lang Code `'default'` in a single-lang installation
+	 */
+	public function modified(
+		string $language = 'default'
+	): int|null {
+		$this->ensure($language);
+		return $this->model->storage()->modified($this->id, $language);
+	}
+
+	/**
+	 * Moves the version to a new language and/or version
+	 */
 	public function move(string $fromLanguage, VersionId $toVersionId, string $toLanguage): void
 	{
+		$this->ensure($fromLanguage);
 		$this->model->storage()->move($this->id, $fromLanguage, $toVersionId, $toLanguage);
 	}
 
@@ -98,6 +136,7 @@ class Version
 	 */
 	public function read(string $language = 'default'): array
 	{
+		$this->ensure($language);
 		return $this->model->storage()->read($this->id, $language);
 	}
 
@@ -108,8 +147,25 @@ class Version
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function touch(string $language): void
+	public function touch(string|null $language = null): void
 	{
+		// touch all languages
+		if ($language === null) {
+			foreach ($this->model->kirby()->languages() as $language) {
+				$this->touch($language->code());
+			}
+		}
+
+		// make sure the version exists
+		$this->ensure($language);
+
+		// touch the default language in single-language mode
+		if ($this->model->kirby()->multilang() === false) {
+			$this->model->storage()->touch($this->id, 'default');
+			return;
+		}
+
+		// touch a single language
 		$this->model->storage()->touch($this->id, $language);
 	}
 
@@ -121,8 +177,9 @@ class Version
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function update(string $language, array $fields): void
+	public function update(array $fields, string $language = 'default'): void
 	{
+		$this->ensure($language);
 		$this->model->storage()->update($this->id, $language, $fields);
 	}
 }
