@@ -25,12 +25,12 @@ class VersionId implements Stringable
 	/**
 	 * Latest stable version of the content
 	 */
-	const PUBLISHED = 'published';
+	public const PUBLISHED = 'published';
 
 	/**
 	 * Latest changes to the content (optional)
 	 */
-	const CHANGES   = 'changes';
+	public const CHANGES   = 'changes';
 
 	/**
 	 * @throws \Kirby\Exception\InvalidArgumentException If the version ID is not valid
@@ -41,6 +41,14 @@ class VersionId implements Stringable
 		if (in_array($value, [static::CHANGES, static::PUBLISHED]) === false) {
 			throw new InvalidArgumentException('Invalid Version ID');
 		}
+	}
+
+	/**
+	 * Converts the VersionId instance to a simple string value
+	 */
+	public function __toString(): string
+	{
+		return $this->value;
 	}
 
 	/**
@@ -76,9 +84,9 @@ class VersionId implements Stringable
 	}
 
 	/**
-	 * Converts the VersionId instance to a simple string value
+	 * Returns the ID value
 	 */
-	public function __toString(): string
+	public function value(): string
 	{
 		return $this->value;
 	}
