@@ -40,10 +40,9 @@ interface ContentStorageHandler
 	/**
 	 * Checks if a version exists
 	 *
-	 * @param string|null $lang Code `'default'` in a single-lang installation;
-	 *                          checks for "any language" if not provided
+	 * @param string $lang Code `'default'` in a single-lang installation
 	 */
-	public function exists(VersionId $versionId, string|null $lang): bool;
+	public function exists(VersionId $versionId, string $lang): bool;
 
 	/**
 	 * Returns the modification timestamp of a version if it exists

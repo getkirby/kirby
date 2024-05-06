@@ -205,21 +205,10 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	/**
 	 * Checks if a version exists
 	 *
-	 * @param string|null $lang Code `'default'` in a single-lang installation;
-	 *                          checks for "any language" if not provided
+	 * @param string|null $lang Code `'default'` in a single-lang installation
 	 */
-	public function exists(VersionId $versionId, string|null $lang): bool
+	public function exists(VersionId $versionId, string $lang): bool
 	{
-		if ($lang === null) {
-			foreach ($this->contentFiles($versionId) as $file) {
-				if (is_file($file) === true) {
-					return true;
-				}
-			}
-
-			return false;
-		}
-
 		return is_file($this->contentFile($versionId, $lang)) === true;
 	}
 
