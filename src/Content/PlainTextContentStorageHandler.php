@@ -28,6 +28,68 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	}
 
 	/**
+	 * Returns the absolute path to the content file
+	 * @internal To be made `protected` when the CMS core no longer relies on it
+	 *
+	 * @param string $lang Code `'default'` in a single-lang installation
+	 */
+	public function contentFile(VersionId $versionId, string $lang): string
+	{
+		$extension = $this->model->kirby()->contentExtension();
+		$directory = $this->model->root();
+
+		$directory = match ($this->model::CLASS_ALIAS) {
+			'file'  => dirname($this->model->root()),
+			default => $this->model->root()
+		};
+
+		$filename = match ($this->model::CLASS_ALIAS) {
+			'file'  => $this->model->filename(),
+			'page'  => $this->model->intendedTemplate()->name(),
+			'site',
+			'user'  => $this->model::CLASS_ALIAS,
+			// @codeCoverageIgnoreStart
+			default => throw new LogicException('Cannot determine content filename for model type "' . $this->model::CLASS_ALIAS . '"')
+			// @codeCoverageIgnoreEnd
+		};
+
+		if ($this->model::CLASS_ALIAS === 'page' && $this->model->isDraft() === true) {
+			// changes versions don't need anything extra
+			// (drafts already have the `_drafts` prefix in their root),
+			// but a published version is not possible
+			if ($versionId->is(VersionId::PUBLISHED)) {
+				throw new LogicException('Drafts cannot have a published content file');
+			}
+		} elseif ($versionId->is(VersionId::CHANGES)) {
+			// other model type or published page that has a changes subfolder
+			$directory .= '/_changes';
+		}
+
+		if ($lang !== 'default') {
+			return $directory . '/' . $filename . '.' . $lang . '.' . $extension;
+		}
+
+		return $directory . '/' . $filename . '.' . $extension;
+	}
+
+	/**
+	 * Returns an array with content files of all languages
+	 * @internal To be made `protected` when the CMS core no longer relies on it
+	 */
+	public function contentFiles(VersionId $versionId): array
+	{
+		if ($this->model->kirby()->multilang() === true) {
+			return $this->model->kirby()->languages()->values(
+				fn ($lang) => $this->contentFile($versionId, $lang)
+			);
+		}
+
+		return [
+			$this->contentFile($versionId, 'default')
+		];
+	}
+
+	/**
 	 * Creates a new version
 	 *
 	 * @param string $lang Code `'default'` in a single-lang installation
@@ -37,13 +99,7 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	 */
 	public function create(VersionId $versionId, string $lang, array $fields): void
 	{
-		$success = Data::write($this->contentFile($versionId, $lang), $fields);
-
-		// @codeCoverageIgnoreStart
-		if ($success !== true) {
-			throw new Exception('Could not write new content file');
-		}
-		// @codeCoverageIgnoreEnd
+		$this->write($versionId, $lang, $fields);
 	}
 
 	/**
@@ -117,6 +173,24 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	}
 
 	/**
+	 * Moves content from one version-language combination to another
+	 *
+	 * @param string $fromLang Code `'default'` in a single-lang installation
+	 * @param string $toLang Code `'default'` in a single-lang installation
+	 */
+	public function move(
+		VersionId $fromVersionId,
+		string $fromLang,
+		VersionId $toVersionId,
+		string $toLang
+	): void {
+		F::move(
+			$this->contentFile($fromVersionId, $fromLang),
+			$this->contentFile($toVersionId, $toLang)
+		);
+	}
+
+	/**
 	 * Returns the stored content fields
 	 *
 	 * @param string $lang Code `'default'` in a single-lang installation
@@ -155,94 +229,25 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	 */
 	public function update(VersionId $versionId, string $lang, array $fields): void
 	{
+		$this->write($versionId, $lang, $fields);
+	}
+
+	/**
+	 * Writes the content fields of an existing version
+	 *
+	 * @param array<string, string> $fields Content fields
+	 *
+	 * @throws \Kirby\Exception\Exception If the content cannot be written
+	 */
+	protected function write(VersionId $versionId, string $lang, array $fields): void
+	{
 		$success = Data::write($this->contentFile($versionId, $lang), $fields);
 
 		// @codeCoverageIgnoreStart
 		if ($success !== true) {
-			throw new Exception('Could not write existing content file');
+			throw new Exception('Could not write the content file');
 		}
 		// @codeCoverageIgnoreEnd
 	}
 
-	/**
-	 * Returns the absolute path to the content file
-	 * @internal To be made `protected` when the CMS core no longer relies on it
-	 *
-	 * @param string $lang Code `'default'` in a single-lang installation
-	 *
-	 * @throws \Kirby\Exception\LogicException If the model type doesn't have a known content filename
-	 */
-	public function contentFile(VersionId $versionId, string $lang): string
-	{
-		$extension = $this->model->kirby()->contentExtension();
-		$directory = $this->model->root();
-
-		$directory = match ($this->model::CLASS_ALIAS) {
-			'file'  => dirname($this->model->root()),
-			default => $this->model->root()
-		};
-
-		$filename = match ($this->model::CLASS_ALIAS) {
-			'file'  => $this->model->filename(),
-			'page'  => $this->model->intendedTemplate()->name(),
-			'site',
-			'user'  => $this->model::CLASS_ALIAS,
-			// @codeCoverageIgnoreStart
-			default => throw new LogicException('Cannot determine content filename for model type "' . $this->model::CLASS_ALIAS . '"')
-			// @codeCoverageIgnoreEnd
-		};
-
-		if ($this->model::CLASS_ALIAS === 'page' && $this->model->isDraft() === true) {
-			// changes versions don't need anything extra
-			// (drafts already have the `_drafts` prefix in their root),
-			// but a published version is not possible
-			if ($versionId->is(VersionId::PUBLISHED)) {
-				throw new LogicException('Drafts cannot have a published content file');
-			}
-		} elseif ($versionId->is(VersionId::CHANGES)) {
-			// other model type or published page that has a changes subfolder
-			$directory .= '/_changes';
-		}
-
-		if ($lang !== 'default') {
-			return $directory . '/' . $filename . '.' . $lang . '.' . $extension;
-		}
-
-		return $directory . '/' . $filename . '.' . $extension;
-	}
-
-	/**
-	 * Returns an array with content files of all languages
-	 * @internal To be made `protected` when the CMS core no longer relies on it
-	 */
-	public function contentFiles(VersionId $versionId): array
-	{
-		if ($this->model->kirby()->multilang() === true) {
-			return $this->model->kirby()->languages()->values(
-				fn ($lang) => $this->contentFile($versionId, $lang)
-			);
-		}
-
-		return [
-			$this->contentFile($versionId, 'default')
-		];
-	}
-
-	/**
-	 * Moves content from one version-language combination to another
-	 *
-	 * @param string $fromLang Code `'default'` in a single-lang installation
-	 * @param string $toLang Code `'default'` in a single-lang installation
-	 */
-	public function move(
-		VersionId $fromVersionId,
-		string $fromLang,
-		VersionId $toVersionId,
-		string $toLang
-	): void {
-		F::move(
-			$this->contentFile($fromVersionId, $fromLang),
-			$this->contentFile($toVersionId, $toLang)
-		);
-	}
 }
