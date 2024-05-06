@@ -190,10 +190,10 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 			// changes versions don't need anything extra
 			// (drafts already have the `_drafts` prefix in their root),
 			// but a published version is not possible
-			if ($versionId === VersionId::PUBLISHED) {
+			if ($versionId->is(VersionId::PUBLISHED)) {
 				throw new LogicException('Drafts cannot have a published content file');
 			}
-		} elseif ($versionId === VersionId::CHANGES) {
+		} elseif ($versionId->is(VersionId::CHANGES)) {
 			// other model type or published page that has a changes subfolder
 			$directory .= '/_changes';
 		}

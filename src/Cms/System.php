@@ -77,7 +77,7 @@ class System
 		switch ($folder) {
 			case 'content':
 				return $url . '/' . basename($this->app->site()->storage()->contentFile(
-					VersionId::PUBLISHED,
+					VersionId::published(),
 					'default'
 				));
 			case 'git':

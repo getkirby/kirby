@@ -118,10 +118,10 @@ class ContentStorage
 			$this->model instanceof Page === true &&
 			$this->model->isDraft() === true
 		) {
-			return VersionId::CHANGES;
+			return VersionId::changes();
 		}
 
-		return VersionId::PUBLISHED;
+		return VersionId::published();
 	}
 
 	/**
@@ -157,13 +157,13 @@ class ContentStorage
 	 */
 	public function dynamicVersions(): array
 	{
-		$versions = [VersionId::CHANGES];
+		$versions = [VersionId::changes()];
 
 		if (
 			$this->model instanceof Page === false ||
 			$this->model->isDraft() === false
 		) {
-			$versions[] = VersionId::PUBLISHED;
+			$versions[] = VersionId::published();
 		}
 
 		return $versions;
