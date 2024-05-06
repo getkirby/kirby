@@ -827,10 +827,8 @@ class Page extends ModelWithContent
 		string|null $handler = null,
 		string|null $languageCode = null
 	): int|string|false|null {
-		$identifier = $this->isDraft() === true ? VersionId::changes() : VersionId::published();
-
 		$modified = $this->storage()->modified(
-			$identifier,
+			VersionId::default($this),
 			$languageCode
 		);
 
