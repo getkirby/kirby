@@ -2,11 +2,11 @@
 
 namespace Kirby\Content;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 
 /**
  * @coversDefaultClass Kirby\Content\VersionId
- * @covers ::__construct
  */
 class VersionIdTest extends TestCase
 {
@@ -19,6 +19,17 @@ class VersionIdTest extends TestCase
 		$version = VersionId::changes();
 
 		$this->assertSame('changes', $version->value());
+	}
+
+	/**
+	 * @covers ::__construct
+	 */
+	public function testConstructWithInvalidId()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid Version ID');
+
+		new VersionId('foo');
 	}
 
 	/**
@@ -54,5 +65,14 @@ class VersionIdTest extends TestCase
 		$version = VersionId::published();
 
 		$this->assertSame('published', $version->value());
+	}
+
+	/**
+	 * @covers ::__toString
+	 */
+	public function testToString()
+	{
+		$this->assertSame('published', (string)VersionId::published());
+		$this->assertSame('changes', (string)VersionId::changes());
 	}
 }
