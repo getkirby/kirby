@@ -2,7 +2,11 @@
 
 namespace Kirby\Content;
 
+use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\Page;
+use Kirby\Cms\Site;
+use Kirby\Cms\User;
 use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\LogicException;
@@ -28,6 +32,25 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	}
 
 	/**
+	 * Creates the absolute directory path for the model
+	 */
+	public function contentDirectory(VersionId $versionId): string
+	{
+		$directory = match (true) {
+			$this->model instanceof File
+				=> dirname($this->model->root()),
+			default
+			=> $this->model->root()
+		};
+
+		if ($versionId->is(VersionId::CHANGES)) {
+			$directory .= '/_changes';
+		}
+
+		return $directory;
+	}
+
+	/**
 	 * Returns the absolute path to the content file
 	 * @internal To be made `protected` when the CMS core no longer relies on it
 	 *
@@ -35,41 +58,86 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	 */
 	public function contentFile(VersionId $versionId, string $lang): string
 	{
-		$extension = $this->model->kirby()->contentExtension();
-		$directory = $this->model->root();
-
-		$directory = match ($this->model::CLASS_ALIAS) {
-			'file'  => dirname($this->model->root()),
-			default => $this->model->root()
-		};
-
-		$filename = match ($this->model::CLASS_ALIAS) {
-			'file'  => $this->model->filename(),
-			'page'  => $this->model->intendedTemplate()->name(),
-			'site',
-			'user'  => $this->model::CLASS_ALIAS,
+		// get the filename without extension and language code
+		return match (true) {
+			$this->model instanceof File => $this->contentFileForFile($this->model, $versionId, $lang),
+			$this->model instanceof Page => $this->contentFileForPage($this->model, $versionId, $lang),
+			$this->model instanceof Site => $this->contentFileForSite($this->model, $versionId, $lang),
+			$this->model instanceof User => $this->contentFileForUser($this->model, $versionId, $lang),
 			// @codeCoverageIgnoreStart
-			default => throw new LogicException('Cannot determine content filename for model type "' . $this->model::CLASS_ALIAS . '"')
+			default => throw new LogicException('Cannot determine content file for model type "' . $this->model::CLASS_ALIAS . '"')
 			// @codeCoverageIgnoreEnd
 		};
+	}
 
-		if ($this->model::CLASS_ALIAS === 'page' && $this->model->isDraft() === true) {
-			// changes versions don't need anything extra
-			// (drafts already have the `_drafts` prefix in their root),
-			// but a published version is not possible
-			if ($versionId->is(VersionId::PUBLISHED)) {
+	/**
+	 * Returns the absolute path to the content file of a file model
+	 *
+	 * @param string $lang Code `'default'` in a single-lang installation
+	 */
+	protected function contentFileForFile(File $model, VersionId $versionId, string $lang): string
+	{
+		return $this->contentDirectory($versionId) . '/' . $this->contentFilename($model->filename(), $lang);
+	}
+
+	/**
+	 * Returns the absolute path to the content file of a page model
+	 *
+	 * @param string $lang Code `'default'` in a single-lang installation
+	 */
+	protected function contentFileForPage(Page $model, VersionId $versionId, string $lang): string
+	{
+		$directory = $this->contentDirectory($versionId);
+
+		if ($model->isDraft() === true) {
+			if ($versionId->is(Versionid::PUBLISHED) === true) {
 				throw new LogicException('Drafts cannot have a published content file');
 			}
-		} elseif ($versionId->is(VersionId::CHANGES)) {
-			// other model type or published page that has a changes subfolder
-			$directory .= '/_changes';
+
+			// drafts already have the `_drafts` prefix in their root.
+			// `_changes` must not be added to it in addition to that.
+			$directory = $this->model->root();
 		}
+
+		return $directory . '/' . $this->contentFilename($model->intendedTemplate()->name(), $lang);
+	}
+
+	/**
+	 * Returns the absolute path to the content file of a site model
+	 *
+	 * @param string $lang Code `'default'` in a single-lang installation
+	 */
+	protected function contentFileForSite(Site $model, VersionId $versionId, string $lang): string
+	{
+		return $this->contentDirectory($versionId) . '/' . $this->contentFilename('site', $lang);
+	}
+
+	/**
+	 * Returns the absolute path to the content file of a user model
+	 *
+	 * @param string $lang Code `'default'` in a single-lang installation
+	 */
+	protected function contentFileForUser(User $model, VersionId $versionId, string $lang): string
+	{
+		return $this->contentDirectory($versionId) . '/' . $this->contentFilename('user', $lang);
+	}
+
+	/**
+	 * Creates a filename with extension and optional language code
+	 * in a multi-language installation
+	 *
+	 * @param string $lang Code `'default'` in a single-lang installation
+	 */
+	public function contentFilename(string $name, string $lang): string
+	{
+		$kirby     = $this->model->kirby();
+		$extension = $kirby->contentExtension();
 
 		if ($lang !== 'default') {
-			return $directory . '/' . $filename . '.' . $lang . '.' . $extension;
+			return $name . '.' . $lang . '.' . $extension;
 		}
 
-		return $directory . '/' . $filename . '.' . $extension;
+		return $name . '.' . $extension;
 	}
 
 	/**
