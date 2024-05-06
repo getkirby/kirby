@@ -109,22 +109,6 @@ class ContentStorage
 	}
 
 	/**
-	 * Returns the default version identifier for the model
-	 * @internal
-	 */
-	public function defaultVersion(): VersionId
-	{
-		if (
-			$this->model instanceof Page === true &&
-			$this->model->isDraft() === true
-		) {
-			return VersionId::changes();
-		}
-
-		return VersionId::published();
-	}
-
-	/**
 	 * Deletes an existing version in an idempotent way if it was already deleted
 	 *
 	 * @param string $lang Code `'default'` in a single-lang installation
