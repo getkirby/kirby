@@ -258,7 +258,7 @@ class ContentStorage
 		string $lang
 	): void {
 		if ($this->exists($versionId, $lang) !== true) {
-			throw new NotFoundException('Version "' . $versionId->value . ' (' . $lang . ')" does not already exist');
+			throw new NotFoundException('Version "' . $versionId . ' (' . $lang . ')" does not already exist');
 		}
 	}
 
