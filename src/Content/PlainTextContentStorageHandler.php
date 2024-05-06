@@ -32,6 +32,8 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	 *
 	 * @param string $lang Code `'default'` in a single-lang installation
 	 * @param array<string, string> $fields Content fields
+     *
+	 * @throws \Kirby\Exception\Exception If the file cannot be written
 	 */
 	public function create(VersionId $versionId, string $lang, array $fields): void
 	{
@@ -146,6 +148,8 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	 *
 	 * @param string $lang Code `'default'` in a single-lang installation
 	 * @param array<string, string> $fields Content fields
+	 *
+	 * @throws \Kirby\Exception\Exception If the file cannot be written
 	 */
 	public function update(VersionId $versionId, string $lang, array $fields): void
 	{
