@@ -1,5 +1,8 @@
 <template>
-	<div v-if="languages.length > 1" class="k-languages-dropdown">
+	<div
+		v-if="languages.length > 1"
+		class="k-view-languages-button k-languages-dropdown"
+	>
 		<k-button
 			:dropdown="true"
 			:text="code"
@@ -15,6 +18,7 @@
 
 <script>
 /**
+ * View header button to switch between content languages
  * @since 4.0.0
  */
 export default {

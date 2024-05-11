@@ -42,6 +42,12 @@ class PageTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
+	protected function panel(array $props = [])
+	{
+		$page = new ModelPage(['slug' => 'test', ...$props]);
+		return new Page($page);
+	}
+
 	/**
 	 * @covers ::breadcrumb
 	 */
@@ -86,6 +92,19 @@ class PageTest extends TestCase
 				'link'  => '/pages/a+b+c'
 			]
 		], $page->breadcrumb());
+	}
+
+	/**
+	 * @covers ::buttons
+	 */
+	public function testButtons()
+	{
+		$this->assertSame([
+			'preview',
+			'settings',
+			'languages',
+			'status'
+		], $this->panel()->buttons());
 	}
 
 	/**

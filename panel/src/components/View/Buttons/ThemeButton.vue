@@ -1,14 +1,20 @@
 <template>
 	<k-button
+		v-if="$panel.view.id === 'account'"
 		:icon="icon"
 		:text="text"
 		size="sm"
 		variant="filled"
+		class="k-view-theme-button"
 		@click="$panel.theme.toggle()"
 	/>
 </template>
 
 <script>
+/**
+ * View header button to toggle the Panel theme
+ * @since 5.0.0
+ */
 export default {
 	computed: {
 		icon() {

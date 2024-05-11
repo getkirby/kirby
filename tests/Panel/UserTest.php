@@ -45,6 +45,12 @@ class UserTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
+	protected function panel(array $props = [])
+	{
+		$user = new ModelUser(['id' => 'test', ...$props]);
+		return new User($user);
+	}
+
 	/**
 	 * @covers ::breadcrumb
 	 */
@@ -57,6 +63,18 @@ class UserTest extends TestCase
 		$breadcrumb = (new User($model))->breadcrumb();
 		$this->assertSame('test@getkirby.com', $breadcrumb[0]['label']);
 		$this->assertStringStartsWith('/users/', $breadcrumb[0]['link']);
+	}
+
+	/**
+	 * @covers ::buttons
+	 */
+	public function testButtons()
+	{
+		$this->assertSame([
+			'theme',
+			'settings',
+			'languages',
+		], $this->panel()->buttons());
 	}
 
 	/**

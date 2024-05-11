@@ -28,6 +28,11 @@ abstract class Model
 	}
 
 	/**
+	 * Returns header button names which should be displayed
+	 */
+	abstract public function buttons(): array;
+
+	/**
 	 * Get the content values for the model
 	 */
 	public function content(): array
@@ -352,6 +357,7 @@ abstract class Model
 		$tab       = $blueprint->tab($request->get('tab')) ?? $tabs[0] ?? null;
 
 		$props = [
+			'buttons'     => $this->buttons(),
 			'lock'        => $this->lock(),
 			'permissions' => $this->model->permissions()->toArray(),
 			'tabs'        => $tabs,

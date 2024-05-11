@@ -24,6 +24,20 @@ class Site extends Model
 	protected ModelWithContent $model;
 
 	/**
+	 * Returns header button names which should be displayed
+	 * on the site view
+	 */
+	public function buttons(): array
+	{
+		return
+			$this->model->blueprint()->buttons() ??
+			$this->model->kirby()->option('panel.viewButtons.site', [
+				'preview',
+				'languages'
+			]);
+	}
+
+	/**
 	 * Returns the setup for a dropdown option
 	 * which is used in the changes dropdown
 	 * for example.

@@ -40,6 +40,22 @@ class Page extends Model
 	}
 
 	/**
+	 * Returns header button names which should be displayed
+	 * on the page view
+	 */
+	public function buttons(): array
+	{
+		return
+			$this->model->blueprint()->buttons() ??
+			$this->model->kirby()->option('panel.viewButtons.page', [
+				'preview',
+				'settings',
+				'languages',
+				'status'
+			]);
+	}
+
+	/**
 	 * Provides a kirbytag or markdown
 	 * tag for the page, which will be
 	 * used in the panel, when the page

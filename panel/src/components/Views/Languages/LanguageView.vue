@@ -8,31 +8,7 @@
 			{{ name }}
 
 			<template #buttons>
-				<k-button-group>
-					<k-button
-						:link="url"
-						:title="$t('open')"
-						icon="open"
-						size="sm"
-						target="_blank"
-						variant="filled"
-					/>
-					<k-button
-						:title="$t('settings')"
-						icon="cog"
-						size="sm"
-						variant="filled"
-						@click="update()"
-					/>
-					<k-button
-						v-if="deletable"
-						:title="$t('delete')"
-						icon="trash"
-						size="sm"
-						variant="filled"
-						@click="remove()"
-					/>
-				</k-button-group>
+				<k-view-buttons :buttons="buttons" @action="onAction" />
 			</template>
 		</k-header>
 
@@ -84,6 +60,7 @@
  */
 export default {
 	props: {
+		buttons: Array,
 		code: String,
 		deletable: Boolean,
 		direction: String,
@@ -99,6 +76,12 @@ export default {
 		createTranslation() {
 			this.$dialog(`languages/${this.id}/translations/create`);
 		},
+		onAction(action) {
+			switch (action) {
+				case "settings":
+					return this.update();
+			}
+		},
 		option(option, row) {
 			// for the compatibility of the encoded url in different environments,
 			// it is also encoded with base64 to reduce special characters
@@ -107,9 +90,6 @@ export default {
 					encodeURIComponent(row.key)
 				)}/${option}`
 			);
-		},
-		remove() {
-			this.$dialog(`languages/${this.id}/delete`);
 		},
 		update(focus) {
 			this.$dialog(`languages/${this.id}/update`, {
