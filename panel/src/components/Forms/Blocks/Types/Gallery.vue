@@ -1,5 +1,5 @@
 <template>
-	<figure>
+	<figure :style="{ '--block-img-back': back }">
 		<ul @dblclick="open">
 			<template v-if="!content.images?.length">
 				<li
@@ -43,6 +43,15 @@ import Block from "./Default.vue";
 export default {
 	extends: Block,
 	computed: {
+		back() {
+			const back = this.fieldset.back;
+
+			if (back?.startsWith("pattern")) {
+				return `var(--${back})`;
+			}
+
+			return `var(--color-${back}, ${back})`;
+		},
 		captionMarks() {
 			return this.field("caption", { marks: true }).marks;
 		},
@@ -75,7 +84,7 @@ export default {
 	background: var(--color-background);
 }
 .k-block-type-gallery img {
-	background: var(--pattern-light);
+	background: var(--block-img-back);
 }
 .k-block-type-gallery figcaption {
 	padding-top: 0.5rem;

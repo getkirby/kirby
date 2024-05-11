@@ -1,5 +1,5 @@
 <template>
-	<figure class="k-block-figure">
+	<figure :style="{ '--block-img-back': backValue }" class="k-block-figure">
 		<k-button
 			v-if="isEmpty"
 			:disabled="disabled"
@@ -32,6 +32,7 @@
 export default {
 	inheritAttrs: false,
 	props: {
+		back: String,
 		caption: String,
 		captionMarks: {
 			default: true,
@@ -42,7 +43,16 @@ export default {
 		emptyIcon: String,
 		emptyText: String
 	},
-	emits: ["open", "update"]
+	emits: ["open", "update"],
+	computed: {
+		backValue() {
+			if (this.back?.startsWith("pattern")) {
+				return `var(--${this.back})`;
+			}
+
+			return `var(--color-${this.back}, ${this.back})`;
+		}
+	}
 };
 </script>
 
@@ -51,7 +61,7 @@ export default {
 	cursor: pointer;
 }
 .k-block-figure-container img {
-	background: var(--pattern-light);
+	background: var(--block-img-back);
 }
 .k-block-figure iframe {
 	border: 0;

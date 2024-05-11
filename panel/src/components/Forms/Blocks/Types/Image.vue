@@ -1,5 +1,6 @@
 <template>
 	<k-block-figure
+		:back="fieldset.back"
 		:caption="content.caption"
 		:caption-marks="captionMarks"
 		:empty-text="$t('field.blocks.image.placeholder') + ' …'"
@@ -9,6 +10,7 @@
 		@open="open"
 		@update="update"
 	>
+		{{ fieldset }}
 		<template v-if="src">
 			<k-image-frame
 				v-if="ratio"
