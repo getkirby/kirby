@@ -724,7 +724,7 @@ trait AppPlugins
 		$plugin = new Plugin(
 			name:    $name,
 			extends: $extends,
-			root:    $root,
+			root:    $root ?? dirname(debug_backtrace()[0]['file']),
 			version: $version
 		);
 
