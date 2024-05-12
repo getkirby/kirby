@@ -714,7 +714,7 @@ trait AppPlugins
 	public static function plugin(
 		string $name,
 		array $extends = null,
-		string|null $version = null,
+		array $info = [],
 		string|null $root = null
 	): PLugin|null {
 		if ($extends === null) {
@@ -724,8 +724,8 @@ trait AppPlugins
 		$plugin = new Plugin(
 			name:    $name,
 			extends: $extends,
+			info:    $info,
 			root:    $root ?? dirname(debug_backtrace()[0]['file']),
-			version: $version
 		);
 
 		$name = $plugin->name();

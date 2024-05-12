@@ -26,9 +26,6 @@ use Throwable;
 class Plugin
 {
 	protected PluginAssets $assets;
-
-	// caches
-	protected array|null $info = null;
 	protected UpdateStatus|null $updateStatus = null;
 
 	/**
@@ -40,8 +37,8 @@ class Plugin
 	public function __construct(
 		protected string $name,
 		protected array $extends = [],
-		protected string|null $root = null,
-		protected string|null $version = null
+		protected array $info = [],
+		protected string|null $root = null
 	) {
 		static::validateName($name);
 
@@ -49,17 +46,31 @@ class Plugin
 		if ($root = $extends['root'] ?? null) {
 			Helpers::deprecated('Plugin "' . $name . '": Passing the `root` inside the `extends` array has been deprecated. Pass it directly as named argument `root`.', 'plugin-extends-root');
 			$this->root ??= $root;
+			unset($this->extends['root']);
 		}
 
 		$this->root ??= dirname(debug_backtrace()[0]['file']);
 
 		// TODO: Remove info property in v5
 		if ($info = $extends['info'] ?? null) {
-			Helpers::deprecated('Plugin "' . $name . '": Passing an `info` array inside the `extends` array has been deprecated. Pass the individual entries directly as named arguments.', 'plugin-extends-root');
-			$this->info = empty($info) === false && is_array($info) ? $info : null;
+			Helpers::deprecated('Plugin "' . $name . '": Passing an `info` array inside the `extends` array has been deprecated. Pass the individual entries directly as named `info` argument.', 'plugin-extends-root');
+
+			if (empty($info) === false && is_array($info) === true) {
+				$this->info = [...$info, ...$this->info];
+			}
+
+			unset($this->extends['info']);
 		}
 
-		unset($this->extends['root'], $this->extends['info']);
+		// read composer.json and use as info fallback
+		try {
+			$info = Data::read($this->manifest());
+		} catch (Exception) {
+			// there is no manifest file or it is invalid
+			$info = [];
+		}
+
+		$this->info   = [...$info, ...$this->info];
 	}
 
 	/**
@@ -127,23 +138,11 @@ class Plugin
 	}
 
 	/**
-	 * Returns the raw data from composer.json
+	 * Returns the info data (from composer.json)
 	 */
 	public function info(): array
 	{
-		// TODO: remove info prop in v5
-		if (is_array($this->info) === true) {
-			return $this->info;
-		}
-
-		try {
-			$info = Data::read($this->manifest());
-		} catch (Exception) {
-			// there is no manifest file or it is invalid
-			$info = [];
-		}
-
-		return $this->info = $info;
+		return $this->info;
 	}
 
 	/**
@@ -317,8 +316,8 @@ class Plugin
 		}
 
 		// fallback to the version provided in the plugin's index.php,
-		// then from the composer.json file
-		$version ??= $this->version ?? $this->info()['version'] ?? null;
+		// or from the composer.json file
+		$version ??= $this->info()['version'] ?? null;
 
 		if (
 			is_string($version) !== true ||
