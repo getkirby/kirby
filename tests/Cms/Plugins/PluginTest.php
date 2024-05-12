@@ -170,7 +170,7 @@ class PluginTest extends TestCase
 	 */
 	public function testId()
 	{
-		$plugin = new Plugin( $id = 'abc-1234/DEF-56789');
+		$plugin = new Plugin($id = 'abc-1234/DEF-56789');
 		$this->assertSame($id, $plugin->id());
 	}
 
@@ -216,6 +216,23 @@ class PluginTest extends TestCase
 		);
 
 		$this->assertSame('MIT', $plugin->info()['license']);
+	}
+
+	/**
+	 * @covers ::info
+	 */
+	public function testInfoFromPropAndManifest()
+	{
+		$plugin = new Plugin(
+			name: 'getkirby/test-plugin',
+			root: static::FIXTURES . '/plugin-version',
+			info: [
+				'version' => '2.1.0'
+			]
+		);
+
+		$this->assertSame('MIT', $plugin->info()['license']);
+		$this->assertSame('2.1.0', $plugin->info()['version']);
 	}
 
 	/**
