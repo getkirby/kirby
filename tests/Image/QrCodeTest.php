@@ -72,6 +72,15 @@ class QrCodeTest extends TestCase
 		$this->assertSame($expected, $data);
 	}
 
+	public function testToImageBorder()
+	{
+		$qr       = new QrCode('https://getkirby.com');
+		$image    = $qr->toImage(null, '#000000', '#ffffff', 0);
+		$data     = $this->imageContent($image);
+		$expected = F::read(static::FIXTURES . '/image-border.png');
+		$this->assertSame($expected, $data);
+	}
+
 	public function testToSvg()
 	{
 		$qr = new QrCode('12345678');
