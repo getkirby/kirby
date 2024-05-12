@@ -40,9 +40,8 @@ class Plugin
 	public function __construct(
 		protected string $name,
 		protected array $extends = [],
-
 		protected string|null $root = null,
- 		protected string|null $version = null
+		protected string|null $version = null
 	) {
 		static::validateName($name);
 
