@@ -37,6 +37,7 @@
 		</div>
 
 		<div
+			v-if="buttons?.length || options || $slots.options"
 			class="k-item-options"
 			:data-only-option="!buttons?.length || (!options && !$slots.options)"
 		>
