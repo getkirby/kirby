@@ -60,13 +60,15 @@ class QrCode implements Stringable
 	 * @param int|null $size Image width/height in pixels, defaults to a size per module of 4x4
 	 * @param string $color Foreground color in hex format
 	 * @param string $back Background color in hex format
+	 * @param int $border Border size in number of modules
 	 */
 	public function toDataUri(
 		int|null $size = null,
 		string $color = '#000000',
-		string $back = '#ffffff'
+		string $back = '#ffffff',
+		int $border = 4
 	): string {
-		$image = $this->toImage($size, $color, $back);
+		$image = $this->toImage($size, $color, $back, $border);
 
 		ob_start();
 		imagepng($image);
@@ -83,14 +85,16 @@ class QrCode implements Stringable
 	 * @param int|null $size Image width/height in pixels, defaults to a size per module of 4x4
 	 * @param string $color Foreground color in hex format
 	 * @param string $back Background color in hex format
+	 * @param int $border Border size in number of modules
 	 */
 	public function toImage(
 		int|null $size = null,
 		string $color = '#000000',
-		string $back = '#ffffff'
+		string $back = '#ffffff',
+		int $border = 4
 	): GdImage {
 		// get code and size measurements
-		$code   = $this->encode();
+		$code   = $this->encode($border);
 		[$width, $height] = $this->measure($code);
 		$size ??= ceil($width * 4);
 		$ws     = $size / $width;
@@ -133,13 +137,15 @@ class QrCode implements Stringable
 	 * @param int|string|null $size Optional CSS width of the `<svg>` element
 	 * @param string $color Foreground color in hex format
 	 * @param string $back Background color in hex format
+	 * @param int $border Border size in number of modules
 	 */
 	public function toSvg(
 		int|string|null $size = null,
 		string $color = '#000000',
-		string $back = '#ffffff'
+		string $back = '#ffffff',
+		int $border = 4
 	): string {
-		$code = $this->encode();
+		$code = $this->encode($border);
 		[$vbw, $vbh] = $this->measure($code);
 
 		$modules = $this->eachModuleGroup(
@@ -168,15 +174,17 @@ class QrCode implements Stringable
 	 * @param int|string|null $size Optional image width/height in pixels (defaults to a size per module of 4x4) or CSS width of the `<svg>` element
 	 * @param string $color Foreground color in hex format
 	 * @param string $back Background color in hex format
+	 * @param int $border Border size in number of modules
 	 */
 	public function write(
 		string $file,
 		int|string|null $size = null,
 		string $color = '#000000',
-		string $back = '#ffffff'
+		string $back = '#ffffff',
+		int $border = 4
 	): void {
 		$format = F::extension($file);
-		$args    = [$size, $color, $back];
+		$args    = [$size, $color, $back, $border];
 
 		match ($format) {
 			'gif'   => imagegif($this->toImage(...$args), $file),
@@ -396,7 +404,7 @@ class QrCode implements Stringable
 		return $result;
 	}
 
-	protected function encode(): array
+	protected function encode(int $q = 4): array
 	{
 		[$data, $version, $ecl, $ec] = $this->encodeData();
 		$data = $this->encodeErrorCorrection($data, $ec, $version);
@@ -405,7 +413,7 @@ class QrCode implements Stringable
 		$mtx = $this->finalizeMatrix($mtx, $size, $ecl, $mask, $version);
 
 		return [
-			'q'    => [4, 4, 4, 4],
+			'q'    => [$q, $q, $q, $q],
 			'size' => [$size, $size],
 			'bits' => $mtx
 		];
