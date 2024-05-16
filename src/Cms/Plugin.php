@@ -38,7 +38,8 @@ class Plugin
 		protected string $name,
 		protected array $extends = [],
 		protected array $info = [],
-		protected string|null $root = null
+		protected string|null $root = null,
+		protected string|null $version = null,
 	) {
 		static::validateName($name);
 
@@ -70,7 +71,7 @@ class Plugin
 			$info = [];
 		}
 
-		$this->info   = [...$info, ...$this->info];
+		$this->info = [...$info, ...$this->info];
 	}
 
 	/**
@@ -315,9 +316,9 @@ class Plugin
 			$version = null;
 		}
 
-		// fallback to the version provided in the plugin's index.php,
-		// or from the composer.json file
-		$version ??= $this->info()['version'] ?? null;
+		// fallback to the version provided in the plugin's index.php: as named
+		// argument, entry in the info array or from the composer.json file
+		$version ??= $this->version ?? $this->info()['version'] ?? null;
 
 		if (
 			is_string($version) !== true ||

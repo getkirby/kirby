@@ -228,11 +228,13 @@ class PluginTest extends TestCase
 			root: static::FIXTURES . '/plugin-version',
 			info: [
 				'version' => '2.1.0'
-			]
+			],
+			version: '5.3.0'
 		);
 
 		$this->assertSame('MIT', $plugin->info()['license']);
 		$this->assertSame('2.1.0', $plugin->info()['version']);
+		$this->assertSame('5.3.0', $plugin->version());
 	}
 
 	/**
@@ -741,6 +743,20 @@ class PluginTest extends TestCase
 		);
 
 		$this->assertSame('1.0.0', $plugin->version());
+	}
+
+	/**
+	 * @covers ::version
+	 */
+	public function testVersionFromArgument()
+	{
+		$plugin = new Plugin(
+			name: 'getkirby/test-plugin',
+			root: static::FIXTURES . '/plugin-version',
+			version: '1.2.0'
+		);
+
+		$this->assertSame('1.2.0', $plugin->version());
 	}
 
 	/**
