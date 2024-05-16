@@ -131,6 +131,8 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	 * Updates the modification timestamp of an existing version
 	 *
 	 * @param string $lang Code `'default'` in a single-lang installation
+	 *
+	 * @throws \Kirby\Exception\Exception If the file cannot be touched
 	 */
 	public function touch(VersionId $versionId, string $lang): void
 	{
