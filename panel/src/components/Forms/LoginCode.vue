@@ -21,9 +21,9 @@
 			<k-button
 				class="k-login-button k-login-back-button"
 				icon="angle-left"
+				link="/logout"
 				size="lg"
 				variant="filled"
-				@click="$go('/logout')"
 			>
 				{{ $t("back") }}
 			</k-button>
@@ -36,8 +36,7 @@
 				theme="positive"
 				variant="filled"
 			>
-				{{ $t("login" + (mode === "password-reset" ? ".reset" : "")) }}
-				<template v-if="isLoading"> … </template>
+				{{ submitText }}
 			</k-button>
 		</footer>
 	</form>
@@ -82,6 +81,15 @@ export default {
 			return this.methods.includes("password-reset")
 				? "password-reset"
 				: "login";
+		},
+		submitText() {
+			const suffix = this.isLoading ? " …" : "";
+
+			if (this.mode === "password-reset") {
+				return this.$t("login.reset") + suffix;
+			}
+
+			return this.$t("login") + suffix;
 		}
 	},
 	methods: {

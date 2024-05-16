@@ -168,7 +168,7 @@ export default {
 			this.isLoading = true;
 
 			// clear field data that is not needed for login
-			const user = Object.assign({}, this.user);
+			const user = { ...this.user };
 
 			if (this.mode === "email") {
 				user.password = null;
