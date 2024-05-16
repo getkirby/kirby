@@ -1,7 +1,9 @@
 <template>
-	<k-panel-outside :class="viewClass">
+	<k-panel-outside
+		:class="form === 'code' ? 'k-login-code-view' : 'k-login-view'"
+	>
 		<!-- <div> as single child for grid layout -->
-		<div class="k-dialog k-login-dialog">
+		<div class="k-dialog k-login k-login-dialog">
 			<h1 class="sr-only">
 				{{ $t("login") }}
 			</h1>
@@ -16,7 +18,12 @@
 					v-bind="{ methods, pending, value: value.code }"
 					@error="onError"
 				/>
-				<k-login-plugin v-else v-bind="{ methods, value }" @error="onError" />
+				<component
+					:is="component"
+					v-else
+					v-bind="{ methods, value }"
+					@error="onError"
+				/>
 			</k-dialog-body>
 		</div>
 	</k-panel-outside>
@@ -24,14 +31,14 @@
 
 <script>
 import { props as LoginCodeProps } from "@/components/Forms/LoginCode.vue";
-import LoginForm, { props as LoginProps } from "@/components/Forms/Login.vue";
+import { props as LoginProps } from "@/components/Forms/Login.vue";
 
 /**
  * @internal
  */
 export default {
 	components: {
-		"k-login-plugin": window.panel.plugins.login ?? LoginForm
+		"k-login-plugin": window.panel.plugins.login
 	},
 	mixins: [LoginCodeProps, LoginProps],
 	props: {
@@ -53,19 +60,11 @@ export default {
 		};
 	},
 	computed: {
-		form() {
-			if (this.pending.email) {
-				return "code";
-			}
-
-			return "login";
+		component() {
+			return window.panel.plugins.login ? "k-login-plugin" : "k-login";
 		},
-		viewClass() {
-			if (this.form === "code") {
-				return "k-login-code-view";
-			}
-
-			return "k-login-view";
+		form() {
+			return this.pending.email ? "code" : "login";
 		}
 	},
 	mounted() {
@@ -92,33 +91,11 @@ export default {
 </script>
 
 <style>
-.k-login-dialog {
+.k-login {
 	--dialog-color-back: var(--color-white);
 	--dialog-shadow: var(--shadow);
+
 	container-type: inline-size;
-}
-
-.k-login-fields {
-	position: relative;
-}
-
-.k-login-toggler {
-	position: absolute;
-	top: -2px;
-	inset-inline-end: calc(var(--spacing-2) * -1);
-	z-index: 1;
-	color: var(--link-color);
-	padding-inline: var(--spacing-2);
-	text-decoration: underline;
-	text-decoration-color: var(--link-color);
-	text-underline-offset: 1px;
-	height: var(--height-xs);
-	line-height: 1;
-	border-radius: var(--rounded);
-}
-
-.k-login-form label abbr {
-	visibility: hidden;
 }
 
 .k-login-buttons {

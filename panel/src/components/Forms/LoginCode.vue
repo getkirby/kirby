@@ -1,6 +1,6 @@
 <template>
 	<form class="k-login-form k-login-code-form" @submit.prevent="login">
-		<k-user-info :user="pending.email" />
+		<k-user-info v-if="pending.email" :user="pending.email" />
 
 		<k-text-field
 			:autofocus="true"
@@ -17,15 +17,15 @@
 			@input="code = $event"
 		/>
 
-		<div class="k-login-buttons">
+		<footer class="k-login-buttons">
 			<k-button
 				class="k-login-button k-login-back-button"
 				icon="angle-left"
+				link="/logout"
 				size="lg"
 				variant="filled"
-				@click="back"
 			>
-				{{ $t("back") }} <template v-if="isLoadingBack"> … </template>
+				{{ $t("back") }}
 			</k-button>
 
 			<k-button
@@ -36,10 +36,9 @@
 				theme="positive"
 				variant="filled"
 			>
-				{{ $t("login" + (mode === "password-reset" ? ".reset" : "")) }}
-				<template v-if="isLoadingLogin"> … </template>
+				{{ submitText }}
 			</k-button>
-		</div>
+		</footer>
 	</form>
 </template>
 
@@ -49,12 +48,18 @@ export const props = {
 		/**
 		 * List of available login method names
 		 */
-		methods: Array,
+		methods: {
+			type: Array,
+			default: () => []
+		},
 		/**
 		 * Pending login data (user email, challenge type)
 		 * @value { email: String, challenge: String }
 		 */
-		pending: Object,
+		pending: {
+			type: Object,
+			default: () => ({ challenge: "email" })
+		},
 		/**
 		 * Code value to prefill the input
 		 */
@@ -68,27 +73,29 @@ export default {
 	data() {
 		return {
 			code: this.value ?? "",
-			isLoadingBack: false,
-			isLoadingLogin: false
+			isLoading: false
 		};
 	},
 	computed: {
 		mode() {
-			if (this.methods.includes("password-reset") === true) {
-				return "password-reset";
+			return this.methods.includes("password-reset")
+				? "password-reset"
+				: "login";
+		},
+		submitText() {
+			const suffix = this.isLoading ? " …" : "";
+
+			if (this.mode === "password-reset") {
+				return this.$t("login.reset") + suffix;
 			}
 
-			return "login";
+			return this.$t("login") + suffix;
 		}
 	},
 	methods: {
-		async back() {
-			this.isLoadingBack = true;
-			this.$go("/logout");
-		},
 		async login() {
 			this.$emit("error", null);
-			this.isLoadingLogin = true;
+			this.isLoading = true;
 
 			try {
 				await this.$api.auth.verifyCode(this.code);
@@ -106,7 +113,7 @@ export default {
 			} catch (error) {
 				this.$emit("error", error);
 			} finally {
-				this.isLoadingLogin = false;
+				this.isLoading = false;
 			}
 		}
 	}
