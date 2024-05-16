@@ -65,12 +65,12 @@ class Version
 
 		// delete a single language
 		$this->model->storage()->delete($this->id, $language);
-		return;
+
 	}
 
 	/**
 	 * Ensure that the version exists and otherwise
-     * throw an exception
+	 * throw an exception
 	 *
 	 * @throws \Kirby\Exception\NotFoundException if the version does not exist
 	 */
@@ -130,7 +130,7 @@ class Version
 
 	/**
 	 * Returns the stored content fields
-     *
+	 *
 	 * @param string $lang Code `'default'` in a single-lang installation
 	 * @return array<string, string>
 	 */
@@ -172,8 +172,8 @@ class Version
 	/**
 	 * Updates the content fields of an existing version
 	 *
-	 * @param string $lang Code `'default'` in a single-lang installation
 	 * @param array<string, string> $fields Content fields
+	 * @param string $lang Code `'default'` in a single-lang installation
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
