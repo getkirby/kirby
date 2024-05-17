@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Generator;
+use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
@@ -73,9 +74,8 @@ class ContentStorage
 	public function contentFile(
 		VersionId $versionId,
 		string $lang,
-		bool $force = false
 	): string {
-		$lang = $this->language($lang, $force);
+		$lang = $this->language($lang);
 		return $this->handler->contentFile($versionId, $lang);
 	}
 
@@ -116,9 +116,8 @@ class ContentStorage
 	public function delete(
 		VersionId $versionId,
 		string|null $lang = null,
-		bool $force = false
 	): void {
-		$lang = $this->language($lang, $force);
+		$lang = $this->language($lang);
 		$this->handler->delete($versionId, $lang);
 	}
 
@@ -253,7 +252,13 @@ class ContentStorage
 		string $lang
 	): void {
 		if ($this->exists($versionId, $lang) !== true) {
-			throw new NotFoundException('Version "' . $versionId . ' (' . $lang . ')" does not already exist');
+
+			$message = match($this->model->kirby()->multilang()) {
+				true  => 'Version "' . $versionId . ' (' . $lang . ')" does not already exist',
+				false => 'Version "' . $versionId . '" does not already exist',
+			};
+
+			throw new NotFoundException($message);
 		}
 	}
 
@@ -262,32 +267,21 @@ class ContentStorage
 	 * used for storage
 	 *
 	 * @param bool $force If set to `true`, the language code is not validated
-	 * @return string Language code
 	 */
 	protected function language(
 		string|null $languageCode = null,
-		bool $force = false
-	): string {
-		// in force mode, use the provided language code even in single-lang for
-		// compatibility with the previous behavior in `$model->contentFile()`
-		if ($force === true) {
-			return $languageCode ?? 'default';
+	): Language {
+		// single language
+		if ($this->model->kirby()->multilang() === false) {
+			return Language::single();
 		}
 
-		// in multi-lang, …
-		if ($this->model->kirby()->multilang() === true) {
-			// look up the actual language object if possible
-			$language = $this->model->kirby()->language($languageCode);
-
-			// validate the language code
-			if ($language === null) {
-				throw new InvalidArgumentException('Invalid language: ' . $languageCode);
-			}
-
-			return $language->code();
+		// look up the actual language object if possible
+		if ($language = $this->model->kirby()->language($languageCode)) {
+			return $language;
 		}
 
-		// otherwise use hardcoded "default" code for single lang
-		return 'default';
+		// validate the language code
+		throw new InvalidArgumentException('Invalid language: ' . $languageCode);
 	}
 }

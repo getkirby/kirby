@@ -87,8 +87,7 @@ class ContentTranslation
 	{
 		return $this->contentFile = $this->parent->storage()->contentFile(
 			VersionId::default($this->parent),
-			$this->code,
-			true
+			$this->code
 		);
 	}
 

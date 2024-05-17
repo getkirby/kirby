@@ -4,6 +4,7 @@ namespace Kirby\Content;
 
 use Kirby\Cms\App;
 use Kirby\Cms\File;
+use Kirby\Cms\Language;
 use Kirby\Cms\Page;
 use Kirby\Cms\User;
 use Kirby\Data\Data;
@@ -19,21 +20,66 @@ class PlainTextContentStorageHandlerTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Content.PlainTextContentStorage';
 
+	protected $app;
 	protected $model;
 	protected $storage;
 
 	public function setUp(): void
 	{
 		Dir::make(static::TMP);
+	}
 
-		$this->model = new Page([
-			'kirby'    => new App(),
-			'root'     => static::TMP,
-			'slug'     => 'a-page',
-			'template' => 'article'
+	public function setUpMultiLanguage(): void
+	{
+		$this->app = new App([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de'
+				]
+			],
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'a-page',
+						'template' => 'article',
+					]
+				]
+			]
 		]);
 
+		$this->model   = $this->app->page('a-page');
 		$this->storage = new PlainTextContentStorageHandler($this->model);
+
+		Dir::make($this->model->root());
+	}
+
+	public function setUpSingleLanguage(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'a-page',
+						'template' => 'article'
+					]
+				]
+			]
+		]);
+
+		$this->model   = $this->app->page('a-page');
+		$this->storage = new PlainTextContentStorageHandler($this->model);
+
+		Dir::make($this->model->root());
 	}
 
 	public function tearDown(): void
@@ -47,13 +93,15 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testCreateChangesMultiLang()
 	{
+		$this->setUpMultiLanguage();
+
 		$fields = [
 			'title' => 'Foo',
 			'text'  => 'Bar'
 		];
 
-		$this->storage->create(VersionId::changes(), 'en', $fields);
-		$this->assertSame($fields, Data::read(static::TMP . '/_changes/article.en.txt'));
+		$this->storage->create(VersionId::changes(), $this->app->language('en'), $fields);
+		$this->assertSame($fields, Data::read($this->model->root() . '/_changes/article.en.txt'));
 	}
 
 	/**
@@ -61,13 +109,15 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testCreateChangesSingleLang()
 	{
+		$this->setUpSingleLanguage();
+
 		$fields = [
 			'title' => 'Foo',
 			'text'  => 'Bar'
 		];
 
-		$this->storage->create(VersionId::changes(), 'default', $fields);
-		$this->assertSame($fields, Data::read(static::TMP . '/_changes/article.txt'));
+		$this->storage->create(VersionId::changes(), Language::single(), $fields);
+		$this->assertSame($fields, Data::read($this->model->root() . '/_changes/article.txt'));
 	}
 
 	/**
@@ -75,13 +125,15 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testCreatePublishedMultiLang()
 	{
+		$this->setUpMultiLanguage();
+
 		$fields = [
 			'title' => 'Foo',
 			'text'  => 'Bar'
 		];
 
-		$this->storage->create(VersionId::published(), 'en', $fields);
-		$this->assertSame($fields, Data::read(static::TMP . '/article.en.txt'));
+		$this->storage->create(VersionId::published(), $this->app->language('en'), $fields);
+		$this->assertSame($fields, Data::read($this->model->root() . '/article.en.txt'));
 	}
 
 	/**
@@ -89,13 +141,15 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testCreatePublishedSingleLang()
 	{
+		$this->setUpSingleLanguage();
+
 		$fields = [
 			'title' => 'Foo',
 			'text'  => 'Bar'
 		];
 
-		$this->storage->create(VersionId::published(), 'default', $fields);
-		$this->assertSame($fields, Data::read(static::TMP . '/article.txt'));
+		$this->storage->create(VersionId::published(), Language::single(), $fields);
+		$this->assertSame($fields, Data::read($this->model->root() . '/article.txt'));
 	}
 
 	/**
@@ -103,9 +157,11 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testDeleteNonExisting()
 	{
+		$this->setUpSingleLanguage();
+
 		// test idempotency
-		$this->storage->delete(VersionId::published(), 'default');
-		$this->assertDirectoryDoesNotExist(static::TMP);
+		$this->storage->delete(VersionId::published(), Language::single());
+		$this->assertDirectoryDoesNotExist($this->model->root());
 	}
 
 	/**
@@ -113,14 +169,16 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testDeleteChangesMultiLang()
 	{
-		Dir::make(static::TMP . '/_changes');
-		touch(static::TMP . '/article.en.txt');
-		touch(static::TMP . '/_changes/article.en.txt');
+		$this->setUpMultiLanguage();
 
-		$this->storage->delete(VersionId::changes(), 'en');
-		$this->assertFileDoesNotExist(static::TMP . '/_changes/article.en.txt');
-		$this->assertDirectoryDoesNotExist(static::TMP . '/_changes');
-		$this->assertDirectoryExists(static::TMP);
+		Dir::make($this->model->root() . '/_changes');
+		touch($this->model->root() . '/article.en.txt');
+		touch($this->model->root() . '/_changes/article.en.txt');
+
+		$this->storage->delete(VersionId::changes(), $this->app->language('en'));
+		$this->assertFileDoesNotExist($this->model->root() . '/_changes/article.en.txt');
+		$this->assertDirectoryDoesNotExist($this->model->root() . '/_changes');
+		$this->assertDirectoryExists($this->model->root());
 	}
 
 	/**
@@ -128,13 +186,15 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testDeleteChangesSingleLang()
 	{
-		Dir::make(static::TMP . '/_changes');
-		touch(static::TMP . '/article.txt');
-		touch(static::TMP . '/_changes/article.txt');
+		$this->setUpSingleLanguage();
 
-		$this->storage->delete(VersionId::changes(), 'default');
-		$this->assertFileDoesNotExist(static::TMP . '/_changes/article.txt');
-		$this->assertDirectoryDoesNotExist(static::TMP . '/_changes');
+		Dir::make($this->model->root() . '/_changes');
+		touch($this->model->root() . '/article.txt');
+		touch($this->model->root() . '/_changes/article.txt');
+
+		$this->storage->delete(VersionId::changes(), Language::single());
+		$this->assertFileDoesNotExist($this->model->root() . '/_changes/article.txt');
+		$this->assertDirectoryDoesNotExist($this->model->root() . '/_changes');
 	}
 
 	/**
@@ -142,13 +202,15 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testDeletePublishedMultiLang()
 	{
-		Dir::make(static::TMP . '/_changes');
-		touch(static::TMP . '/article.en.txt');
-		touch(static::TMP . '/_changes/article.en.txt');
+		$this->setUpMultiLanguage();
 
-		$this->storage->delete(VersionId::published(), 'en');
-		$this->assertFileDoesNotExist(static::TMP . '/article.en.txt');
-		$this->assertDirectoryExists(static::TMP);
+		Dir::make($this->model->root() . '/_changes');
+		touch($this->model->root() . '/_changes/article.en.txt');
+		touch($this->model->root() . '/article.en.txt');
+
+		$this->storage->delete(VersionId::published(), $this->app->language('en'));
+		$this->assertFileDoesNotExist($this->model->root() . '/article.en.txt');
+		$this->assertDirectoryExists($this->model->root());
 	}
 
 	/**
@@ -156,64 +218,86 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testDeletePublishedSingleLang()
 	{
-		Dir::make(static::TMP . '/_changes');
-		touch(static::TMP . '/article.txt');
-		touch(static::TMP . '/_changes/article.txt');
+		$this->setUpSingleLanguage();
 
-		$this->storage->delete(VersionId::published(), 'default');
-		$this->assertFileDoesNotExist(static::TMP . '/article.txt');
-		$this->assertDirectoryExists(static::TMP);
+		Dir::make($this->model->root() . '/_changes');
+		touch($this->model->root() . '/_changes/article.txt');
+		touch($this->model->root() . '/article.txt');
+
+		$this->storage->delete(VersionId::published(), Language::single());
+		$this->assertFileDoesNotExist($this->model->root() . '/article.txt');
+		$this->assertDirectoryExists($this->model->root());
 	}
 
 	/**
 	 * @covers ::exists
-	 * @dataProvider existsProvider
 	 */
-	public function testExistsNoneExisting(VersionId $id, string $language)
+	public function testExistsNoneExistingMultiLanguage()
 	{
-		$this->assertFalse($this->storage->exists($id, $language));
+		$this->setUpMultiLanguage();
+
+		$this->assertFalse($this->storage->exists(VersionId::changes(), $this->app->language('en')));
+		$this->assertFalse($this->storage->exists(VersionId::changes(), $this->app->language('de')));
 	}
 
-	public static function existsProvider(): array
+	/**
+	 * @covers ::exists
+	 */
+	public function testExistsNoneExistingSingleLanguage()
 	{
-		return [
-			[VersionId::changes(), 'default', [false, false]],
-			[VersionId::changes(), 'en', [true, true]],
-			[VersionId::published(), 'default', [true, true]],
-			[VersionId::published(), 'en', [false, false]]
-		];
+		$this->setUpSingleLanguage();
+
+		$this->assertFalse($this->storage->exists(VersionId::changes(), Language::single()));
 	}
 
 	/**
 	 * @covers ::modified
-	 * @dataProvider modifiedProvider
 	 */
-	public function testModifiedNoneExisting(VersionId $id, string $language)
+	public function testModifiedNoneExistingMultiLanguage()
 	{
-		$this->assertNull($this->storage->modified($id, $language));
+		$this->setUpMultiLanguage();
+
+		$this->assertNull($this->storage->modified(VersionId::changes(), $this->app->language('en')));
+		$this->assertNull($this->storage->modified(VersionId::published(), $this->app->language('en')));
 	}
 
 	/**
 	 * @covers ::modified
-	 * @dataProvider modifiedProvider
 	 */
-	public function testModifiedSomeExisting(VersionId $id, string $language, int|null $expected)
+	public function testModifiedNoneExistingSingleLanguage()
 	{
-		Dir::make(static::TMP . '/_changes');
-		touch(static::TMP . '/article.txt', 1234567890);
-		touch(static::TMP . '/_changes/article.en.txt', 1234567890);
+		$this->setUpSingleLanguage();
 
-		$this->assertSame($expected, $this->storage->modified($id, $language));
+		$this->assertNull($this->storage->modified(VersionId::changes(), Language::single()));
+		$this->assertNull($this->storage->modified(VersionId::published(), Language::single()));
 	}
 
-	public static function modifiedProvider(): array
+	/**
+	 * @covers ::modified
+	 */
+	public function testModifiedSomeExistingMultiLanguage()
 	{
-		return [
-			[VersionId::changes(), 'default', null],
-			[VersionId::changes(), 'en', 1234567890],
-			[VersionId::published(), 'default', 1234567890],
-			[VersionId::published(), 'en', null]
-		];
+		$this->setUpMultiLanguage();
+
+		Dir::make($this->model->root() . '/_changes');
+		touch($this->model->root() . '/_changes/article.en.txt', $modified = 1234567890);
+
+		$this->assertSame($modified, $this->storage->modified(VersionId::changes(), $this->app->language('en')));
+		$this->assertNull($this->storage->modified(VersionId::published(), $this->app->language('en')));
+	}
+
+	/**
+	 * @covers ::modified
+	 */
+	public function testModifiedSomeExistingSingleLanguage()
+	{
+		$this->setUpSingleLanguage();
+
+		Dir::make(static::TMP . '/content/a-page/_changes');
+		touch(static::TMP . '/content/a-page/_changes/article.txt', $modified = 1234567890);
+
+		$this->assertSame($modified, $this->storage->modified(VersionId::changes(), Language::single()));
+		$this->assertNull($this->storage->modified(VersionId::published(), Language::single()));
 	}
 
 	/**
@@ -221,15 +305,17 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testReadChangesMultiLang()
 	{
+		$this->setUpMultiLanguage();
+
 		$fields = [
 			'title' => 'Foo',
 			'text'  => 'Bar'
 		];
 
-		Dir::make(static::TMP . '/_changes');
-		Data::write(static::TMP . '/_changes/article.en.txt', $fields);
+		Dir::make($this->model->root() . '/_changes');
+		Data::write($this->model->root() . '/_changes/article.en.txt', $fields);
 
-		$this->assertSame($fields, $this->storage->read(VersionId::changes(), 'en'));
+		$this->assertSame($fields, $this->storage->read(VersionId::changes(), $this->app->language('en')));
 	}
 
 	/**
@@ -237,15 +323,17 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testReadChangesSingleLang()
 	{
+		$this->setUpSingleLanguage();
+
 		$fields = [
 			'title' => 'Foo',
 			'text'  => 'Bar'
 		];
 
-		Dir::make(static::TMP . '/_changes');
-		Data::write(static::TMP . '/_changes/article.txt', $fields);
+		Dir::make($this->model->root() . '/_changes');
+		Data::write($this->model->root() . '/_changes/article.txt', $fields);
 
-		$this->assertSame($fields, $this->storage->read(VersionId::changes(), 'default'));
+		$this->assertSame($fields, $this->storage->read(VersionId::changes(), Language::single()));
 	}
 
 	/**
@@ -253,14 +341,16 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testReadPublishedMultiLang()
 	{
+		$this->setUpMultiLanguage();
+
 		$fields = [
 			'title' => 'Foo',
 			'text'  => 'Bar'
 		];
 
-		Data::write(static::TMP . '/article.en.txt', $fields);
+		Data::write($this->model->root() . '/article.en.txt', $fields);
 
-		$this->assertSame($fields, $this->storage->read(VersionId::published(), 'en'));
+		$this->assertSame($fields, $this->storage->read(VersionId::published(), $this->app->language('en')));
 	}
 
 	/**
@@ -268,14 +358,16 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testReadPublishedSingleLang()
 	{
+		$this->setUpSingleLanguage();
+
 		$fields = [
 			'title' => 'Foo',
 			'text'  => 'Bar'
 		];
 
-		Data::write(static::TMP . '/article.txt', $fields);
+		Data::write($this->model->root() . '/article.txt', $fields);
 
-		$this->assertSame($fields, $this->storage->read(VersionId::published(), 'default'));
+		$this->assertSame($fields, $this->storage->read(VersionId::published(), Language::single()));
 	}
 
 	/**
@@ -283,16 +375,20 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testTouchChangesMultiLang()
 	{
-		Dir::make(static::TMP . '/_changes');
-		touch(static::TMP . '/_changes/article.en.txt', 123456);
-		$this->assertSame(123456, filemtime(static::TMP . '/_changes/article.en.txt'));
+		$this->setUpMultiLanguage();
+
+		$root = $this->model->root() . '/_changes';
+
+		Dir::make($root);
+		touch($root . '/article.en.txt', 123456);
+		$this->assertSame(123456, filemtime($root . '/article.en.txt'));
 
 		$minTime = time();
 
-		$this->storage->touch(VersionId::changes(), 'en');
+		$this->storage->touch(VersionId::changes(), $this->app->language('en'));
 
 		clearstatcache();
-		$this->assertGreaterThanOrEqual($minTime, filemtime(static::TMP . '/_changes/article.en.txt'));
+		$this->assertGreaterThanOrEqual($minTime, filemtime($root . '/article.en.txt'));
 	}
 
 	/**
@@ -300,16 +396,20 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testTouchChangesSingleLang()
 	{
-		Dir::make(static::TMP . '/_changes');
-		touch(static::TMP . '/_changes/article.txt', 123456);
-		$this->assertSame(123456, filemtime(static::TMP . '/_changes/article.txt'));
+		$this->setUpSingleLanguage();
+
+		$root = $this->model->root() . '/_changes';
+
+		Dir::make($root);
+		touch($root . '/article.txt', 123456);
+		$this->assertSame(123456, filemtime($root . '/article.txt'));
 
 		$minTime = time();
 
-		$this->storage->touch(VersionId::changes(), 'default');
+		$this->storage->touch(VersionId::changes(), Language::single());
 
 		clearstatcache();
-		$this->assertGreaterThanOrEqual($minTime, filemtime(static::TMP . '/_changes/article.txt'));
+		$this->assertGreaterThanOrEqual($minTime, filemtime($root . '/article.txt'));
 	}
 
 	/**
@@ -317,15 +417,19 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testTouchPublishedMultiLang()
 	{
-		touch(static::TMP . '/article.en.txt', 123456);
-		$this->assertSame(123456, filemtime(static::TMP . '/article.en.txt'));
+		$this->setUpMultiLanguage();
+
+		$root = $this->model->root() . '/article.en.txt';
+
+		touch($root, 123456);
+		$this->assertSame(123456, filemtime($root));
 
 		$minTime = time();
 
-		$this->storage->touch(VersionId::published(), 'en');
+		$this->storage->touch(VersionId::published(), $this->app->language('en'));
 
 		clearstatcache();
-		$this->assertGreaterThanOrEqual($minTime, filemtime(static::TMP . '/article.en.txt'));
+		$this->assertGreaterThanOrEqual($minTime, filemtime($root));
 	}
 
 	/**
@@ -333,15 +437,19 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testTouchPublishedSingleLang()
 	{
-		touch(static::TMP . '/article.txt', 123456);
-		$this->assertSame(123456, filemtime(static::TMP . '/article.txt'));
+		$this->setUpSingleLanguage();
+
+		$root = $this->model->root() . '/article.txt';
+
+		touch($root, 123456);
+		$this->assertSame(123456, filemtime($root));
 
 		$minTime = time();
 
-		$this->storage->touch(VersionId::published(), 'default');
+		$this->storage->touch(VersionId::published(), Language::single());
 
 		clearstatcache();
-		$this->assertGreaterThanOrEqual($minTime, filemtime(static::TMP . '/article.txt'));
+		$this->assertGreaterThanOrEqual($minTime, filemtime($root));
 	}
 
 	/**
@@ -349,6 +457,8 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testUpdateChangesMultiLang()
 	{
+		$this->setUpMultiLanguage();
+
 		$fields = [
 			'title' => 'Foo',
 			'text'  => 'Bar'
@@ -357,7 +467,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		Dir::make(static::TMP . '/_changes');
 		Data::write(static::TMP . '/_changes/article.en.txt', $fields);
 
-		$this->storage->update(VersionId::changes(), 'en', $fields);
+		$this->storage->update(VersionId::changes(), $this->app->language('en'), $fields);
 		$this->assertSame($fields, Data::read(static::TMP . '/_changes/article.en.txt'));
 	}
 
@@ -366,6 +476,8 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testUpdateChangesSingleLang()
 	{
+		$this->setUpSingleLanguage();
+
 		$fields = [
 			'title' => 'Foo',
 			'text'  => 'Bar'
@@ -374,7 +486,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		Dir::make(static::TMP . '/_changes');
 		Data::write(static::TMP . '/_changes/article.txt', $fields);
 
-		$this->storage->update(VersionId::changes(), 'default', $fields);
+		$this->storage->update(VersionId::changes(), Language::single(), $fields);
 		$this->assertSame($fields, Data::read(static::TMP . '/_changes/article.txt'));
 	}
 
@@ -383,6 +495,8 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testUpdatePublishedMultiLang()
 	{
+		$this->setUpMultiLanguage();
+
 		$fields = [
 			'title' => 'Foo',
 			'text'  => 'Bar'
@@ -390,7 +504,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 
 		Data::write(static::TMP . '/article.en.txt', $fields);
 
-		$this->storage->update(VersionId::published(), 'en', $fields);
+		$this->storage->update(VersionId::published(), $this->app->language('en'), $fields);
 		$this->assertSame($fields, Data::read(static::TMP . '/article.en.txt'));
 	}
 
@@ -399,6 +513,8 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testUpdatePublishedSingleLang()
 	{
+		$this->setUpSingleLanguage();
+
 		$fields = [
 			'title' => 'Foo',
 			'text'  => 'Bar'
@@ -406,23 +522,19 @@ class PlainTextContentStorageHandlerTest extends TestCase
 
 		Data::write(static::TMP . '/article.txt', $fields);
 
-		$this->storage->update(VersionId::published(), 'default', $fields);
+		$this->storage->update(VersionId::published(), Language::single(), $fields);
 		$this->assertSame($fields, Data::read(static::TMP . '/article.txt'));
 	}
 
 	/**
 	 * @covers ::contentFile
-	 * @dataProvider contentFileProvider
+	 * @dataProvider contentFileProviderMultiLang
 	 */
-	public function testContentFile(string $type, VersionId $id, string $language, string $expected)
+	public function testContentFileMultiLang(string $type, VersionId $id, string $language, string $expected)
 	{
-		$app = new App([
-			'roots' => [
-				'index' => static::TMP
-			]
-		]);
+		$this->setUpMultiLanguage();
 
-		$site = $app->site();
+		$site = $this->app->site();
 
 		$model = match ($type) {
 			'file' => new File([
@@ -430,80 +542,107 @@ class PlainTextContentStorageHandlerTest extends TestCase
 				'filename' => 'image.jpg'
 			]),
 			'page' => new Page([
-				'kirby'    => $app,
+				'kirby'    => $this->app,
 				'slug'     => 'a-page',
 				'template' => 'article'
 			]),
 			'site' => $site,
 			'user' => new User([
-				'kirby' => $app,
+				'kirby' => $this->app,
 				'id'    => 'abcdefgh'
 			])
 		};
 
 		$storage = new PlainTextContentStorageHandler($model);
-		$this->assertSame(static::TMP . '/' . $expected, $storage->contentFile($id, $language));
+		$this->assertSame(static::TMP . '/' . $expected, $storage->contentFile($id, $this->app->language($language)));
 	}
 
-	public static function contentFileProvider(): array
+	public static function contentFileProviderMultiLang(): array
 	{
 		return [
-			['file', VersionId::changes(), 'default', 'content/_changes/image.jpg.txt'],
 			['file', VersionId::changes(), 'en', 'content/_changes/image.jpg.en.txt'],
-			['file', VersionId::published(), 'default', 'content/image.jpg.txt'],
 			['file', VersionId::published(), 'en', 'content/image.jpg.en.txt'],
-			['page', VersionId::changes(), 'default', 'content/a-page/_changes/article.txt'],
 			['page', VersionId::changes(), 'en', 'content/a-page/_changes/article.en.txt'],
-			['page', VersionId::published(), 'default', 'content/a-page/article.txt'],
 			['page', VersionId::published(), 'en', 'content/a-page/article.en.txt'],
-			['site', VersionId::changes(), 'default', 'content/_changes/site.txt'],
 			['site', VersionId::changes(), 'en', 'content/_changes/site.en.txt'],
-			['site', VersionId::published(), 'default', 'content/site.txt'],
 			['site', VersionId::published(), 'en', 'content/site.en.txt'],
-			['user', VersionId::changes(), 'default', 'site/accounts/abcdefgh/_changes/user.txt'],
 			['user', VersionId::changes(), 'en', 'site/accounts/abcdefgh/_changes/user.en.txt'],
-			['user', VersionId::published(), 'default', 'site/accounts/abcdefgh/user.txt'],
 			['user', VersionId::published(), 'en', 'site/accounts/abcdefgh/user.en.txt'],
 		];
 	}
 
 	/**
 	 * @covers ::contentFile
-	 * @dataProvider contentFileDraftProvider
+	 * @dataProvider contentFileProviderSingleLang
 	 */
-	public function testContentFileDraft(string $language, string $expected)
+	public function testContentFileSingleLang(string $type, VersionId $id, string $expected)
 	{
-		$app = new App([
-			'roots' => [
-				'index' => static::TMP
-			]
-		]);
+		$this->setUpSingleLanguage();
+
+		$site = $this->app->site();
+
+		$model = match ($type) {
+			'file' => new File([
+				'parent'   => $site,
+				'filename' => 'image.jpg'
+			]),
+			'page' => new Page([
+				'kirby'    => $this->app,
+				'slug'     => 'a-page',
+				'template' => 'article'
+			]),
+			'site' => $site,
+			'user' => new User([
+				'kirby' => $this->app,
+				'id'    => 'abcdefgh'
+			])
+		};
+
+		$storage = new PlainTextContentStorageHandler($model);
+		$this->assertSame(static::TMP . '/' . $expected, $storage->contentFile($id, Language::single()));
+	}
+
+	public static function contentFileProviderSingleLang(): array
+	{
+		return [
+			['file', VersionId::changes(), 'content/_changes/image.jpg.txt'],
+			['file', VersionId::published(), 'content/image.jpg.txt'],
+			['page', VersionId::changes(), 'content/a-page/_changes/article.txt'],
+			['page', VersionId::published(), 'content/a-page/article.txt'],
+			['site', VersionId::changes(), 'content/_changes/site.txt'],
+			['site', VersionId::published(), 'content/site.txt'],
+			['user', VersionId::changes(), 'site/accounts/abcdefgh/_changes/user.txt'],
+			['user', VersionId::published(), 'site/accounts/abcdefgh/user.txt'],
+		];
+	}
+
+	/**
+	 * @covers ::contentFile
+	 */
+	public function testContentFileDraft()
+	{
+		$this->setUpSingleLanguage();
 
 		$model = new Page([
-			'kirby' => $app,
+			'kirby' => $this->app,
 			'isDraft' => true,
 			'slug' => 'a-page',
 			'template' => 'article'
 		]);
 
 		$storage = new PlainTextContentStorageHandler($model);
-		$this->assertSame(static::TMP . '/' . $expected, $storage->contentFile(VersionId::changes(), $language));
+		$this->assertSame(static::TMP . '/content/_drafts/a-page/article.txt', $storage->contentFile(VersionId::changes(), Language::single()));
 	}
 
 	/**
 	 * @covers ::contentFile
-	 * @dataProvider contentFileDraftProvider
 	 */
-	public function testContentFileDraftPublished(string $language, string $expected)
+	public function testContentFileDraftPublished()
 	{
-		$app = new App([
-			'roots' => [
-				'index' => static::TMP
-			]
-		]);
+		$this->setUpSingleLanguage();
 
 		$model = new Page([
-			'kirby' => $app,
+			'kirby' => $this->app,
 			'root' => static::TMP,
 			'isDraft' => true,
 			'slug' => 'a-page',
@@ -514,36 +653,19 @@ class PlainTextContentStorageHandlerTest extends TestCase
 
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Drafts cannot have a published content file');
-		$storage->contentFile(VersionId::published(), $language);
+		$storage->contentFile(VersionId::published(), Language::single());
 	}
 
-	public static function contentFileDraftProvider(): array
-	{
-		return [
-			['default', 'content/_drafts/a-page/article.txt'],
-			['en', 'content/_drafts/a-page/article.en.txt'],
-		];
-	}
 	/**
 	 * @covers ::contentFiles
 	 */
 	public function testContentFilesChangesMultiLang()
 	{
-		new App([
-			'languages' => [
-				[
-					'code' => 'en',
-					'default' => true
-				],
-				[
-					'code' => 'de'
-				]
-			]
-		]);
+		$this->setUpMultiLanguage();
 
 		$this->assertSame([
-			static::TMP . '/_changes/article.en.txt',
-			static::TMP . '/_changes/article.de.txt'
+			$this->model->root() . '/_changes/article.en.txt',
+			$this->model->root() . '/_changes/article.de.txt'
 		], $this->storage->contentFiles(VersionId::changes()));
 	}
 
@@ -552,8 +674,10 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testContentFilesChangesSingleLang()
 	{
+		$this->setUpSingleLanguage();
+
 		$this->assertSame([
-			static::TMP . '/_changes/article.txt'
+			$this->model->root() . '/_changes/article.txt'
 		], $this->storage->contentFiles(VersionId::changes()));
 	}
 
@@ -562,21 +686,11 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testContentFilesPublishedMultiLang()
 	{
-		new App([
-			'languages' => [
-				[
-					'code' => 'en',
-					'default' => true
-				],
-				[
-					'code' => 'de'
-				]
-			]
-		]);
+		$this->setUpMultiLanguage();
 
 		$this->assertSame([
-			static::TMP . '/article.en.txt',
-			static::TMP . '/article.de.txt'
+			$this->model->root() . '/article.en.txt',
+			$this->model->root() . '/article.de.txt'
 		], $this->storage->contentFiles(VersionId::published()));
 	}
 
@@ -585,8 +699,10 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 */
 	public function testContentFilesPublishedSingleLang()
 	{
+		$this->setUpSingleLanguage();
+
 		$this->assertSame([
-			static::TMP . '/article.txt'
+			$this->model->root() . '/article.txt'
 		], $this->storage->contentFiles(VersionId::published()));
 	}
 }
