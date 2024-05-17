@@ -21,7 +21,9 @@ use Kirby\Cms\ModelWithContent;
  */
 abstract class ContentStorageHandler
 {
-	abstract public function __construct(ModelWithContent $model);
+	public function __construct(protected ModelWithContent $model)
+	{
+	}
 
 	/**
 	 * Creates a new version

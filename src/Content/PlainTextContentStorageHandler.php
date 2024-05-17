@@ -28,10 +28,6 @@ use Kirby\Filesystem\F;
  */
 class PlainTextContentStorageHandler extends ContentStorageHandler
 {
-	public function __construct(protected ModelWithContent $model)
-	{
-	}
-
 	/**
 	 * Creates the absolute directory path for the model
 	 */
