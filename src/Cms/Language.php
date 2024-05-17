@@ -447,6 +447,19 @@ class Language implements Stringable
 	}
 
 	/**
+	 * Create a placeholder language object in a
+	 * single-language installation
+	 */
+	public static function single(): static
+	{
+		return new static([
+			'code'    => 'en',
+			'default' => true,
+			'locale'  => App::instance()->option('locale', 'en_US.utf-8')
+		]);
+	}
+
+	/**
 	 * Returns the custom slug rules for this language
 	 */
 	public function slugs(): array

@@ -566,6 +566,17 @@ class LanguageTest extends TestCase
 	}
 
 	/**
+	 * @covers ::single
+	 */
+	public function testSingle()
+	{
+		$language = Language::single();
+
+		$this->assertSame('en', $language->code());
+		$this->assertSame('en', $language->name());
+	}
+
+	/**
 	 * @covers ::toArray
 	 * @covers ::__debugInfo
 	 */
