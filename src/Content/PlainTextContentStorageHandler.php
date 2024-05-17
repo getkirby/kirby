@@ -26,7 +26,7 @@ use Kirby\Filesystem\F;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class PlainTextContentStorageHandler implements ContentStorageHandler
+class PlainTextContentStorageHandler extends ContentStorageHandler
 {
 	public function __construct(protected ModelWithContent $model)
 	{
