@@ -1,6 +1,8 @@
 <template>
 	<k-button
-		v-if="$panel.view.props.deletable"
+		v-if="
+			$panel.view.component === 'k-language-view' && $panel.view.props.deletable
+		"
 		:title="$t('delete')"
 		icon="trash"
 		size="sm"

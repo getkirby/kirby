@@ -1,5 +1,6 @@
 <template>
 	<k-button
+		v-if="$panel.view.component === 'k-users-view'"
 		:disabled="!$panel.permissions.users.create"
 		:text="$t('user.create')"
 		icon="add"

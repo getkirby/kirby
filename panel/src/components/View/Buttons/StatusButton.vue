@@ -1,6 +1,6 @@
 <template>
 	<k-button
-		v-if="status"
+		v-if="$panel.view.component === 'k-page-view' && status"
 		v-bind="button"
 		:responsive="true"
 		:text="status.label"
@@ -34,13 +34,6 @@ export default {
 		},
 		status() {
 			return this.$panel.view.props.status;
-		}
-	},
-	mounted() {
-		if (this.$panel.view.component !== "k-page-view") {
-			console.error(
-				"The status view button should only be used for the page view."
-			);
 		}
 	}
 };
