@@ -76,10 +76,7 @@ class System
 
 		switch ($folder) {
 			case 'content':
-				return $url . '/' . basename($this->app->site()->storage()->contentFile(
-					VersionId::published(),
-					'default'
-				));
+				return $url . '/' . basename($this->app->site()->version(VersionId::published())->contentFile());
 			case 'git':
 				return $url . '/config';
 			case 'kirby':
