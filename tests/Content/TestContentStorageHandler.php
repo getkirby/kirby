@@ -16,10 +16,12 @@ class TestContentStorageHandler extends ContentStorageHandler
 
 	public function exists(VersionId $versionId, Language $language): bool
 	{
+		return true;
 	}
 
 	public function modified(VersionId $versionId, Language $language): int|null
 	{
+		return null;
 	}
 
 	public function move(
@@ -32,6 +34,7 @@ class TestContentStorageHandler extends ContentStorageHandler
 
 	public function read(VersionId $versionId, Language $language): array
 	{
+		return [];
 	}
 
 	public function touch(VersionId $versionId, Language $language): void

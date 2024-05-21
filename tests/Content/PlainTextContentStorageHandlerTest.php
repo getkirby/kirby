@@ -2,7 +2,6 @@
 
 namespace Kirby\Content;
 
-use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Language;
 use Kirby\Cms\Page;
@@ -10,7 +9,6 @@ use Kirby\Cms\User;
 use Kirby\Data\Data;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
-use Kirby\TestCase;
 
 /**
  * @coversDefaultClass Kirby\Content\PlainTextContentStorageHandler
@@ -20,71 +18,20 @@ class PlainTextContentStorageHandlerTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Content.PlainTextContentStorage';
 
-	protected $model;
 	protected $storage;
-
-	public function setUp(): void
-	{
-		Dir::make(static::TMP);
-	}
 
 	public function setUpMultiLanguage(): void
 	{
-		$this->app = new App([
-			'languages' => [
-				[
-					'code'    => 'en',
-					'default' => true
-				],
-				[
-					'code' => 'de'
-				]
-			],
-			'roots' => [
-				'index' => static::TMP
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'a-page',
-						'template' => 'article',
-					]
-				]
-			]
-		]);
+		parent::setUpMultiLanguage();
 
-		$this->model   = $this->app->page('a-page');
 		$this->storage = new PlainTextContentStorageHandler($this->model);
-
-		Dir::make($this->model->root());
 	}
 
 	public function setUpSingleLanguage(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'a-page',
-						'template' => 'article'
-					]
-				]
-			]
-		]);
+		parent::setUpSingleLanguage();
 
-		$this->model   = $this->app->page('a-page');
 		$this->storage = new PlainTextContentStorageHandler($this->model);
-
-		Dir::make($this->model->root());
-	}
-
-	public function tearDown(): void
-	{
-		App::destroy();
-		Dir::remove(static::TMP);
 	}
 
 	/**
