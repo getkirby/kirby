@@ -102,6 +102,17 @@ abstract class ContentStorageHandler
 	): void;
 
 	/**
+	 * Adapts all versions when converting languages
+	 * @internal
+	 */
+	public function moveLanguage(Language $fromLanguage, Language $toLanguage): void
+	{
+		foreach ($this->dynamicVersions() as $versionId) {
+			$this->move($versionId, $fromLanguage, $versionId, $toLanguage);
+		}
+	}
+
+	/**
 	 * Returns the stored content fields
 	 *
 	 * @return array<string, string>
