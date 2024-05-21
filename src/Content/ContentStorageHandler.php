@@ -2,6 +2,7 @@
 
 namespace Kirby\Content;
 
+use Generator;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
@@ -24,6 +25,26 @@ abstract class ContentStorageHandler
 {
 	public function __construct(protected ModelWithContent $model)
 	{
+	}
+
+	/**
+	 * Returns generator for all existing versions-languages combinations
+	 *
+	 * @return Generator<VersionId|Language>
+	 * @todo 4.0.0 consider more descpritive name
+	 */
+	public function all(): Generator
+	{
+		$kirby     = $this->model->kirby();
+		$languages = $kirby->multilang() === false ? [Language::single()] : $kirby->languages();
+
+		foreach ($languages as $language) {
+			foreach ($this->dynamicVersions() as $versionId) {
+				if ($this->exists($versionId, $language) === true) {
+					yield $versionId => $language;
+				}
+			}
+		}
 	}
 
 	/**
