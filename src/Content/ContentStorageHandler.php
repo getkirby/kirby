@@ -60,6 +60,17 @@ abstract class ContentStorageHandler
 	abstract public function delete(VersionId $versionId, Language $language): void;
 
 	/**
+	 * Deletes all versions when deleting a language
+	 * @internal
+	 */
+	public function deleteLanguage(Language $language): void
+	{
+		foreach ($this->dynamicVersions() as $version) {
+			$this->delete($version, $language);
+		}
+	}
+
+	/**
 	 * Returns all versions availalbe for the model that can be updated.
 	 *
 	 * @todo We might want to move this directly to the models later or work
