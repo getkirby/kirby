@@ -3,7 +3,6 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\App;
-use Kirby\Cms\Page;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;

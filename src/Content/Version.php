@@ -41,7 +41,7 @@ class Version
 
 	/**
 	 * Creates a new version for the given language
-     *
+	 *
 	 * @param array<string, string> $fields Content fields
 	 */
 	public function create(array $fields, string $language = 'default'): void
@@ -120,7 +120,7 @@ class Version
 
 	/**
 	 * Converts a "user-facing" language code to a `Language` object
-     * to be used in storage methods
+	 * to be used in storage methods
 	 */
 	protected function language(
 		string|null $languageCode = null,
