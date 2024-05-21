@@ -372,6 +372,22 @@ class VersionTest extends TestCase
 	/**
 	 * @covers ::modified
 	 */
+	public function testModifiedMultiLanguageIfNotExists(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$this->assertNull($version->modified('en'));
+		$this->assertNull($version->modified('de'));
+	}
+
+	/**
+	 * @covers ::modified
+	 */
 	public function testModifiedSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
@@ -384,6 +400,21 @@ class VersionTest extends TestCase
 		touch($this->model->root() . '/article.txt', $modified = 123456);
 
 		$this->assertSame($modified, $version->modified());
+	}
+
+	/**
+	 * @covers ::modified
+	 */
+	public function testModifiedSingleLanguageIfNotExists(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$this->assertNull($version->modified());
 	}
 
 	/**
