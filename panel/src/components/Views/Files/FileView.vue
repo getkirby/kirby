@@ -16,39 +16,9 @@
 			@edit="$dialog(id + '/changeName')"
 		>
 			{{ model.filename }}
+
 			<template #buttons>
-				<k-button-group>
-					<k-button
-						:link="preview.url"
-						:responsive="true"
-						:title="$t('open')"
-						class="k-file-view-options"
-						icon="open"
-						size="sm"
-						target="_blank"
-						variant="filled"
-					/>
-
-					<k-button
-						:disabled="isLocked"
-						:dropdown="true"
-						:title="$t('settings')"
-						icon="cog"
-						size="sm"
-						variant="filled"
-						class="k-file-view-options"
-						@click="$refs.settings.toggle()"
-					/>
-					<k-dropdown-content
-						ref="settings"
-						:options="$dropdown(id)"
-						align-x="end"
-						@action="action"
-					/>
-
-					<k-languages-dropdown />
-				</k-button-group>
-
+				<k-view-buttons :buttons="buttons" @action="onAction" />
 				<k-form-buttons :lock="lock" />
 			</template>
 		</k-header>
@@ -89,7 +59,7 @@ export default {
 		}
 	},
 	methods: {
-		action(action) {
+		onAction(action) {
 			switch (action) {
 				case "replace":
 					return this.$panel.upload.replace({

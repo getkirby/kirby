@@ -65,6 +65,21 @@ class File extends Model
 	}
 
 	/**
+	 * Returns header button names which should be displayed
+	 * on the file view
+	 */
+	public function buttons(): array
+	{
+		return
+			$this->model->blueprint()->buttons() ??
+			$this->model->kirby()->option('panel.viewButtons.file', [
+				'preview',
+				'settings',
+				'languages'
+			]);
+	}
+
+	/**
 	 * Provides a kirbytag or markdown
 	 * tag for the file, which will be
 	 * used in the panel, when the file

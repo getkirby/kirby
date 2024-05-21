@@ -3,15 +3,9 @@
 		<k-header>
 			{{ $t("view.languages") }}
 
-			<k-button-group slot="buttons">
-				<k-button
-					:text="$t('language.create')"
-					icon="add"
-					size="sm"
-					variant="filled"
-					@click="$dialog('languages/create')"
-				/>
-			</k-button-group>
+			<template #buttons>
+				<k-view-buttons :buttons="buttons" />
+			</template>
 		</k-header>
 
 		<template v-if="languages.length > 0">
@@ -44,6 +38,7 @@
  */
 export default {
 	props: {
+		buttons: Array,
 		languages: {
 			type: Array,
 			default: () => []

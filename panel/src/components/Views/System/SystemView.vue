@@ -2,6 +2,10 @@
 	<k-panel-inside class="k-system-view">
 		<k-header>
 			{{ $t("view.system") }}
+
+			<template #buttons>
+				<k-view-buttons :buttons="buttons" />
+			</template>
 		</k-header>
 
 		<k-section
@@ -36,6 +40,7 @@ export default {
 		Security
 	},
 	props: {
+		buttons: Array,
 		environment: Array,
 		exceptions: Array,
 		info: Object,

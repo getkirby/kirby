@@ -40,6 +40,21 @@ class User extends Model
 	}
 
 	/**
+	 * Returns header button names which should be displayed
+	 * on the site view
+	 */
+	public function buttons(): array
+	{
+		return
+			$this->model->blueprint()->buttons() ??
+			$this->model->kirby()->option('panel.viewButtons.user', [
+				'theme',
+				'settings',
+				'languages'
+			]);
+	}
+
+	/**
 	 * Provides options for the user dropdown
 	 */
 	public function dropdown(array $options = []): array
