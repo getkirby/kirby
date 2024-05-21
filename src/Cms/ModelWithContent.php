@@ -202,10 +202,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 					$content = $this->content($code)->convertTo($blueprint);
 
 					// delete the old text file
-					$this->storage()->delete(
-						$identifier,
-						$code
-					);
+					$this->version($identifier)->delete($code);
 
 					// save to re-create the translation content file
 					// with the converted/updated content
@@ -229,7 +226,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		$content = $this->content()->convertTo($blueprint);
 
 		// delete the old text file
-		$this->storage()->delete($identifier, 'default');
+		$this->version($identifier)->delete('default');
 
 		return $new->save($content);
 	}
