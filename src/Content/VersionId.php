@@ -79,8 +79,12 @@ class VersionId implements Stringable
 	/**
 	 * Creates a VersionId instance from a simple string value
 	 */
-	public static function from(string $value): static
+	public static function from(self|string $value): static
 	{
+		if ($value instanceof static) {
+			return $value;
+		}
+
 		return new static($value);
 	}
 
