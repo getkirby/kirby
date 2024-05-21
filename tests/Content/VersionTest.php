@@ -123,6 +123,37 @@ class VersionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::contentFile
+	 */
+	public function testContentFileMultiLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$this->assertSame($this->model->root() . '/article.en.txt', $version->contentFile());
+		$this->assertSame($this->model->root() . '/article.de.txt', $version->contentFile('de'));
+	}
+
+	/**
+	 * @covers ::contentFile
+	 */
+	public function testContentFileSingleLanguage(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$this->assertSame($this->model->root() . '/article.txt', $version->contentFile());
+	}
+
+	/**
 	 * @covers ::create
 	 */
 	public function testCreateMultiLanguage(): void

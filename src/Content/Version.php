@@ -40,6 +40,18 @@ class Version
 	}
 
 	/**
+	 * Provides simplified access to the absolute content file path.
+	 * This should stay an internal method and be removed as soon as
+	 * the dependency on file storage methods is resolved more clearly.
+	 *
+	 * @internal
+	 */
+	public function contentFile(string $language = 'default'): string
+	{
+		return $this->model->storage()->contentFile($this->id, $this->language($language));
+	}
+
+	/**
 	 * Creates a new version for the given language
 	 *
 	 * @param array<string, string> $fields Content fields
