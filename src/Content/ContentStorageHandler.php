@@ -140,6 +140,19 @@ abstract class ContentStorageHandler
 	abstract public function touch(VersionId $versionId, Language $language): void;
 
 	/**
+	 * Touches all versions of a language
+	 * @internal
+	 */
+	public function touchLanguage(Language $language): void
+	{
+		foreach ($this->dynamicVersions() as $version) {
+			if ($this->exists($version, $language) === true) {
+				$this->touch($version, $language);
+			}
+		}
+	}
+
+	/**
 	 * Updates the content fields of an existing version
 	 *
 	 * @param array<string, string> $fields Content fields
