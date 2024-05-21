@@ -755,10 +755,10 @@ abstract class ModelWithContent implements Identifiable, Stringable
 
 		try {
 			// we can only update if the version already exists
-			$this->storage()->update($id, $languageCode, $data);
+			$this->version($id)->update($data, $languageCode ?? 'default');
 		} catch (NotFoundException) {
 			// otherwise create a new version
-			$this->storage()->create($id, $languageCode, $data);
+			$this->version($id)->create($data, $languageCode ?? 'default');
 		}
 
 		return true;
