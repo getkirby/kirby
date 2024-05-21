@@ -85,13 +85,8 @@ class ContentTranslation
 	 */
 	public function contentFile(): string
 	{
-		// temporary compatibility change (TODO: take this from the parent `ModelVersion` object)
-		$identifier = $this->parent::CLASS_ALIAS === 'page' && $this->parent->isDraft() === true ?
-			'changes' :
-			'published';
-
 		return $this->contentFile = $this->parent->storage()->contentFile(
-			$identifier,
+			VersionId::default($this->parent),
 			$this->code,
 			true
 		);

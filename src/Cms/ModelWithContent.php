@@ -7,6 +7,7 @@ use Kirby\Content\Content;
 use Kirby\Content\ContentStorage;
 use Kirby\Content\ContentTranslation;
 use Kirby\Content\PlainTextContentStorageHandler;
+use Kirby\Content\VersionId;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form;
@@ -187,7 +188,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		$new = $this->clone(['template' => $blueprint]);
 
 		// temporary compatibility change (TODO: also convert changes)
-		$identifier = $this->storage()->defaultVersion();
+		$identifier = VersionId::default($this);
 
 		// for multilang, we go through all translations and
 		// covnert the content for each of them, remove the content file
@@ -418,7 +419,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	{
 		try {
 			return $this->storage()->read(
-				$this->storage()->defaultVersion(),
+				VersionId::default($this),
 				$languageCode
 			);
 		} catch (NotFoundException) {
@@ -737,7 +738,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	public function writeContent(array $data, string|null $languageCode = null): bool
 	{
 		$data = $this->contentFileData($data, $languageCode);
-		$id   = $this->storage()->defaultVersion();
+		$id   = VersionId::default($this);
 
 		try {
 			// we can only update if the version already exists
