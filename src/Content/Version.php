@@ -154,8 +154,11 @@ class Version
 	public function modified(
 		string $language = 'default'
 	): int|null {
-		$this->ensure($language);
-		return $this->model->storage()->modified($this->id, $this->language($language));
+		if ($this->exists($language) === true) {
+			return $this->model->storage()->modified($this->id, $this->language($language));
+		}
+
+		return null;
 	}
 
 	/**
