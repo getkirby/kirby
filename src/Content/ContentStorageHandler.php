@@ -4,6 +4,7 @@ namespace Kirby\Content;
 
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\Page;
 
 /**
  * Abstract for content storage handlers;
@@ -36,6 +37,28 @@ abstract class ContentStorageHandler
 	 * Deletes an existing version in an idempotent way if it was already deleted
 	 */
 	abstract public function delete(VersionId $versionId, Language $language): void;
+
+	/**
+	 * Returns all versions availalbe for the model that can be updated.
+	 *
+	 * @todo We might want to move this directly to the models later or work
+	 *       with a Versions class
+	 *
+	 * @internal
+	 */
+	public function dynamicVersions(): array
+	{
+		$versions = [VersionId::changes()];
+
+		if (
+			$this->model instanceof Page === false ||
+			$this->model->isDraft() === false
+		) {
+			$versions[] = VersionId::published();
+		}
+
+		return $versions;
+	}
 
 	/**
 	 * Checks if a version exists
