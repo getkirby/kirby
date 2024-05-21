@@ -176,17 +176,17 @@ class Language implements Stringable
 
 		$language->save();
 
+		// update the main languages collection in the app instance
+		$kirby->languages(false)->append($language->code(), $language);
+
 		if ($languages->count() === 0) {
 			foreach ($kirby->models() as $model) {
-				$model->storage()->convertLanguage(
+				$model->storage()->moveLanguage(
 					Language::single(),
 					$language
 				);
 			}
 		}
-
-		// update the main languages collection in the app instance
-		$kirby->languages(false)->append($language->code(), $language);
 
 		// trigger after hook
 		$kirby->trigger(
@@ -227,9 +227,9 @@ class Language implements Stringable
 
 		foreach ($kirby->models() as $model) {
 			if ($this->isLast() === true) {
-				$model->storage()->convertLanguage($this, Language::single());
+				$model->storage()->moveLanguage($this, Language::single());
 			} else {
-				$model->storage()->deleteLanguage($code);
+				$model->storage()->deleteLanguage($this);
 			}
 		}
 
