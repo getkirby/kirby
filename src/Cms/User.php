@@ -204,10 +204,7 @@ class User extends ModelWithContent
 	 */
 	public function exists(): bool
 	{
-		return $this->storage()->exists(
-			VersionId::published(),
-			'default'
-		);
+		return $this->version(VersionId::published())->exists('default');
 	}
 
 	/**
@@ -469,7 +466,7 @@ class User extends ModelWithContent
 		string|null $handler = null,
 		string|null $languageCode = null
 	): int|string|false {
-		$modifiedContent = $this->storage()->modified(VersionId::published(), $languageCode);
+		$modifiedContent = $this->version(VersionId::published())->modified($languageCode ?? 'current');
 		$modifiedIndex   = F::modified($this->root() . '/index.php');
 		$modifiedTotal   = max([$modifiedContent, $modifiedIndex]);
 
