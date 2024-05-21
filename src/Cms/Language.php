@@ -174,17 +174,17 @@ class Language implements Stringable
 
 		$language->save();
 
+		// update the main languages collection in the app instance
+		$kirby->languages(false)->append($language->code(), $language);
+
 		if ($languages->count() === 0) {
 			foreach ($kirby->models() as $model) {
-				$model->storage()->convertLanguage(
-					'default',
-					$language->code()
+				$model->storage()->moveLanguage(
+					$kirby->defaultLanguage(),
+					$language
 				);
 			}
 		}
-
-		// update the main languages collection in the app instance
-		$kirby->languages(false)->append($language->code(), $language);
 
 		// trigger after hook
 		$kirby->trigger(
@@ -223,16 +223,16 @@ class Language implements Stringable
 			throw new Exception('The language could not be deleted');
 		}
 
-		foreach ($kirby->models() as $model) {
-			if ($this->isLast() === true) {
-				$model->storage()->convertLanguage($code, 'default');
-			} else {
-				$model->storage()->deleteLanguage($code);
-			}
-		}
-
 		// get the original language collection and remove the current language
 		$kirby->languages(false)->remove($code);
+
+		foreach ($kirby->models() as $model) {
+			if ($this->isLast() === true) {
+				$model->storage()->moveLanguage($this, $kirby->defaultLanguage());
+			} else {
+				$model->storage()->deleteLanguage($this);
+			}
+		}
 
 		// trigger after hook
 		$kirby->trigger('language.delete:after', [
