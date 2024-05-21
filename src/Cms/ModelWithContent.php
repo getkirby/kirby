@@ -7,6 +7,7 @@ use Kirby\Content\Content;
 use Kirby\Content\ContentStorage;
 use Kirby\Content\ContentTranslation;
 use Kirby\Content\PlainTextContentStorageHandler;
+use Kirby\Content\Version;
 use Kirby\Content\VersionId;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
@@ -728,6 +729,18 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	public function uuid(): Uuid|null
 	{
 		return Uuid::for($this);
+	}
+
+	/**
+	 * Returns a content version instance
+	 * @since 5.0.0
+	 */
+	public function version(VersionId|string $versionId): Version
+	{
+		return new Version(
+			model: $this,
+			id: VersionId::from($versionId)
+		);
 	}
 
 	/**
