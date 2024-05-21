@@ -2,12 +2,9 @@
 
 namespace Kirby\Content;
 
-use Kirby\Cms\App;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Filesystem\Dir;
-use Kirby\TestCase;
 
 /**
  * @coversDefaultClass Kirby\Content\Version
@@ -16,9 +13,6 @@ use Kirby\TestCase;
 class VersionTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Content.Version';
-
-	protected $app;
-	protected $model;
 
 	public function assertContentFileExists(string|null $language = null, VersionId|null $versionId = null)
 	{
@@ -41,68 +35,6 @@ class VersionTest extends TestCase
 			// language code
 			($language === null ? '' : '.' . $language) .
 			'.txt';
-	}
-
-	public function setUp(): void
-	{
-		Dir::make(static::TMP);
-	}
-
-	public function setUpMultiLanguage(): void
-	{
-		$this->app = new App([
-			'languages' => [
-				[
-					'code'    => 'en',
-					'default' => true
-				],
-				[
-					'code' => 'de'
-				]
-			],
-			'roots' => [
-				'index' => static::TMP
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'a-page',
-						'template' => 'article',
-					]
-				]
-			]
-		]);
-
-		$this->model = $this->app->page('a-page');
-
-		Dir::make($this->model->root());
-	}
-
-	public function setUpSingleLanguage(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'a-page',
-						'template' => 'article'
-					]
-				]
-			]
-		]);
-
-		$this->model = $this->app->page('a-page');
-
-		Dir::make($this->model->root());
-	}
-
-	public function tearDown(): void
-	{
-		App::destroy();
-		Dir::remove(static::TMP);
 	}
 
 	/**
