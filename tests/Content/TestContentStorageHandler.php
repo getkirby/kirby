@@ -20,6 +20,14 @@ class TestContentStorageHandler extends ContentStorageHandler
 		return null;
 	}
 
+	public function move(
+		VersionId $fromVersionId,
+		Language $fromLanguage,
+		VersionId $toVersionId,
+		Language $toLanguage
+	): void {
+	}
+
 	public function read(VersionId $versionId, Language $language): array
 	{
 		return [];
