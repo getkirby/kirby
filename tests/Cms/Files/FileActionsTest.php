@@ -106,19 +106,19 @@ class FileActionsTest extends TestCase
 		// create an empty dummy file
 		F::write($file->root(), '');
 		// ...and an empty content file for it
-		F::write($file->storage()->contentFile(VersionId::published(), 'default'), '');
+		F::write($file->version(VersionId::published())->contentFile('default'), '');
 
 		$this->assertFileExists($file->root());
-		$this->assertFileExists($file->storage()->contentFile(VersionId::published(), 'default'));
+		$this->assertFileExists($file->version(VersionId::published())->contentFile('default'));
 
 		$result = $file->changeName('test');
 
 		$this->assertNotSame($file->root(), $result->root());
 		$this->assertSame('test.csv', $result->filename());
 		$this->assertFileExists($result->root());
-		$this->assertFileExists($result->storage()->contentFile(VersionId::published(), 'default'));
+		$this->assertFileExists($result->version(VersionId::published())->contentFile('default'));
 		$this->assertFileDoesNotExist($file->root());
-		$this->assertFileDoesNotExist($file->storage()->contentFile(VersionId::published(), 'default'));
+		$this->assertFileDoesNotExist($file->version(VersionId::published())->contentFile('default'));
 	}
 
 	public static function fileProviderMultiLang(): array
@@ -142,20 +142,20 @@ class FileActionsTest extends TestCase
 		// create an empty dummy file
 		F::write($file->root(), '');
 		// ...and empty content files for it
-		F::write($file->storage()->contentFile(VersionId::published(), 'en'), '');
-		F::write($file->storage()->contentFile(VersionId::published(), 'de'), '');
+		F::write($file->version(VersionId::published())->contentFile('en'), '');
+		F::write($file->version(VersionId::published())->contentFile('de'), '');
 
 		$this->assertFileExists($file->root());
-		$this->assertFileExists($file->storage()->contentFile(VersionId::published(), 'en'));
-		$this->assertFileExists($file->storage()->contentFile(VersionId::published(), 'de'));
+		$this->assertFileExists($file->version(VersionId::published())->contentFile('en'));
+		$this->assertFileExists($file->version(VersionId::published())->contentFile('de'));
 
 		$result = $file->changeName('test');
 
 		$this->assertNotEquals($file->root(), $result->root());
 		$this->assertSame('test.csv', $result->filename());
 		$this->assertFileExists($result->root());
-		$this->assertFileExists($result->storage()->contentFile(VersionId::published(), 'en'));
-		$this->assertFileExists($result->storage()->contentFile(VersionId::published(), 'de'));
+		$this->assertFileExists($result->version(VersionId::published())->contentFile('en'));
+		$this->assertFileExists($result->version(VersionId::published())->contentFile('de'));
 	}
 
 	public function testChangeTemplate()
@@ -377,9 +377,9 @@ class FileActionsTest extends TestCase
 		$this->assertNull($modified->caption()->value());
 		$this->assertSame('Das ist der Text', $modified->text()->value());
 
-		$this->assertFileExists($modified->storage()->contentFile(VersionId::published(), 'en'));
-		$this->assertFileExists($modified->storage()->contentFile(VersionId::published(), 'de'));
-		$this->assertFileDoesNotExist($modified->storage()->contentFile(VersionId::published(), 'fr'));
+		$this->assertFileExists($modified->version(VersionId::published())->contentFile('en'));
+		$this->assertFileExists($modified->version(VersionId::published())->contentFile('de'));
+		$this->assertFileDoesNotExist($modified->version(VersionId::published())->contentFile('fr'));
 	}
 
 	public function testChangeTemplateDefault()
@@ -755,17 +755,17 @@ class FileActionsTest extends TestCase
 		// create an empty dummy file
 		F::write($file->root(), '');
 		// ...and an empty content file for it
-		F::write($file->storage()->contentFile(VersionId::published(), 'default'), '');
+		F::write($file->version(VersionId::published())->contentFile('default'), '');
 
 		$this->assertFileExists($file->root());
-		$this->assertFileExists($file->storage()->contentFile(VersionId::published(), 'default'));
+		$this->assertFileExists($file->version(VersionId::published())->contentFile('default'));
 
 		$result = $file->delete();
 
 		$this->assertTrue($result);
 
 		$this->assertFileDoesNotExist($file->root());
-		$this->assertFileDoesNotExist($file->storage()->contentFile(VersionId::published(), 'default'));
+		$this->assertFileDoesNotExist($file->version(VersionId::published())->contentFile('default'));
 	}
 
 	/**
@@ -875,11 +875,11 @@ class FileActionsTest extends TestCase
 		F::write($file->root(), '');
 
 		$this->assertFileExists($file->root());
-		$this->assertFileDoesNotExist($file->storage()->contentFile(VersionId::published(), 'default'));
+		$this->assertFileDoesNotExist($file->version(VersionId::published())->contentFile('default'));
 
 		$file = $file->clone(['content' => ['caption' => 'save']])->save();
 
-		$this->assertFileExists($file->storage()->contentFile(VersionId::published(), 'default'));
+		$this->assertFileExists($file->version(VersionId::published())->contentFile('default'));
 	}
 
 	/**
