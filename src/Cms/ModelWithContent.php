@@ -666,7 +666,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 
 		$this->translations = new Collection();
 
-		foreach ($this->kirby()->languages() as $language) {
+		foreach (Languages::ensure() as $language) {
 			$translation = new ContentTranslation([
 				'parent' => $this,
 				'code'   => $language->code(),
