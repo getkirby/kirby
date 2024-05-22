@@ -71,6 +71,22 @@ class Languages extends Collection
 	}
 
 	/**
+	 * Provides a collection of installed languages, even
+	 * if in single-language mode. In single-language mode
+	 * `Language::single()` is used to create the default language
+	 */
+	public static function ensure(): static
+	{
+		$kirby = App::instance();
+
+		if ($kirby->multilang() === true) {
+			return $kirby->languages();
+		}
+
+		return new static([Language::single()]);
+	}
+
+	/**
 	 * Convert all defined languages to a collection
 	 * @internal
 	 */

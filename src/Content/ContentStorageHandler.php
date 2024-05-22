@@ -4,6 +4,7 @@ namespace Kirby\Content;
 
 use Generator;
 use Kirby\Cms\Language;
+use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Exception\NotFoundException;
@@ -36,10 +37,7 @@ abstract class ContentStorageHandler
 	 */
 	public function all(): Generator
 	{
-		$kirby     = $this->model->kirby();
-		$languages = $kirby->multilang() === false ? [Language::single()] : $kirby->languages();
-
-		foreach ($languages as $language) {
+		foreach (Languages::ensure() as $language) {
 			foreach ($this->dynamicVersions() as $versionId) {
 				if ($this->exists($versionId, $language) === true) {
 					yield $versionId => $language;
