@@ -5,7 +5,6 @@ namespace Kirby\Content;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\NotFoundException;
 
 /**
  * The Version class handles all actions for a single
@@ -86,16 +85,7 @@ class Version
 	public function ensure(
 		Language|string $language = 'default'
 	): bool {
-		if ($this->exists($language) === true) {
-			return true;
-		}
-
-		$message = match($this->model->kirby()->multilang()) {
-			true  => 'Version "' . $this->id . ' (' . $language . ')" does not already exist',
-			false => 'Version "' . $this->id . '" does not already exist',
-		};
-
-		throw new NotFoundException($message);
+		return $this->model->storage()->ensure($this->id, $this->language($language));
 	}
 
 	/**
