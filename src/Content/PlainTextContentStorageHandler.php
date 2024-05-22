@@ -205,7 +205,7 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	/**
 	 * Checks if a version exists
 	 *
-	 * @param string|null $lang Code `'default'` in a single-lang installation
+	 * @param string $lang Code `'default'` in a single-lang installation
 	 */
 	public function exists(VersionId $versionId, string $lang): bool
 	{
@@ -292,6 +292,7 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	/**
 	 * Writes the content fields of an existing version
 	 *
+	 * @param string $lang Code `'default'` in a single-lang installation
 	 * @param array<string, string> $fields Content fields
 	 *
 	 * @throws \Kirby\Exception\Exception If the content cannot be written

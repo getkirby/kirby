@@ -156,7 +156,7 @@ class ContentStorage
 	/**
 	 * Checks if a version exists
 	 *
-	 * @param string|null $lang Code `'default'` in a single-lang installation
+	 * @param string $lang Code `'default'` in a single-lang installation
 	 */
 	public function exists(
 		VersionId $versionId,
