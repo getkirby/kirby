@@ -6,6 +6,7 @@ use Generator;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
+use Kirby\Exception\NotFoundException;
 
 /**
  * Abstract for content storage handlers;
@@ -52,7 +53,10 @@ abstract class ContentStorageHandler
 	 *
 	 * @param array<string, string> $fields Content fields
 	 */
-	abstract public function create(VersionId $versionId, Language $language, array $fields): void;
+	public function create(VersionId $versionId, Language $language, array $fields): void
+	{
+		$this->write($versionId, $language, $fields);
+	}
 
 	/**
 	 * Deletes an existing version in an idempotent way if it was already deleted
@@ -92,6 +96,26 @@ abstract class ContentStorageHandler
 	}
 
 	/**
+	 * Checks if a version/language combination exists and otherwise
+	 * will throw a NotFoundException
+	 *
+	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
+	 */
+	public function ensure(VersionId $versionId, Language $language): bool
+	{
+		if ($this->exists($versionId, $language) !== true) {
+			$message = match($this->model->kirby()->multilang()) {
+				true  => 'Version "' . $versionId . ' (' . $language->code() . ')" does not already exist',
+				false => 'Version "' . $versionId . '" does not already exist',
+			};
+
+			throw new NotFoundException($message);
+		}
+
+		return true;
+	}
+
+	/**
 	 * Checks if a version exists
 	 */
 	abstract public function exists(VersionId $versionId, Language $language): bool;
@@ -104,12 +128,21 @@ abstract class ContentStorageHandler
 	/**
 	 * Moves content from one version-language combination to another
 	 */
-	abstract public function move(
+	public function move(
 		VersionId $fromVersionId,
 		Language $fromLanguage,
 		VersionId $toVersionId,
 		Language $toLanguage
-	): void;
+	): void {
+		// read the existing fields
+		$fields = $this->read($fromVersionId, $fromLanguage);
+
+		// create the new version
+		$this->create($toVersionId, $toLanguage, $fields);
+
+		// clean up the old version
+		$this->delete($fromVersionId, $fromLanguage);
+	}
 
 	/**
 	 * Adapts all versions when converting languages
@@ -158,7 +191,20 @@ abstract class ContentStorageHandler
 	 *
 	 * @param array<string, string> $fields Content fields
 	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
+	 * @throws \Kirby\Exception\Exception If the file cannot be written
 	 */
-	abstract public function update(VersionId $versionId, Language $language, array $fields): void;
+	public function update(VersionId $versionId, Language $language, array $fields): void
+	{
+		$this->ensure($versionId, $language);
+		$this->write($versionId, $language, $fields);
+	}
+
+	/**
+	 * Writes the content fields of an existing version
+	 *
+	 * @param array<string, string> $fields Content fields
+	 *
+	 * @throws \Kirby\Exception\Exception If the content cannot be written
+	 */
+	abstract protected function write(VersionId $versionId, Language $language, array $fields): void;
 }

@@ -6,10 +6,6 @@ use Kirby\Cms\Language;
 
 class TestContentStorageHandler extends ContentStorageHandler
 {
-	public function create(VersionId $versionId, Language $language, array $fields): void
-	{
-	}
-
 	public function delete(VersionId $versionId, Language $language): void
 	{
 	}
@@ -24,14 +20,6 @@ class TestContentStorageHandler extends ContentStorageHandler
 		return null;
 	}
 
-	public function move(
-		VersionId $fromVersionId,
-		Language $fromLanguage,
-		VersionId $toVersionId,
-		Language $toLanguage
-	): void {
-	}
-
 	public function read(VersionId $versionId, Language $language): array
 	{
 		return [];
@@ -41,7 +29,7 @@ class TestContentStorageHandler extends ContentStorageHandler
 	{
 	}
 
-	public function update(VersionId $versionId, Language $language, array $fields): void
+	public function write(VersionId $versionId, Language $language, array $fields): void
 	{
 	}
 }
