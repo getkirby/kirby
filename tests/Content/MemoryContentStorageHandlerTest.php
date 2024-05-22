@@ -7,11 +7,18 @@ use Kirby\Cms\Language;
 /**
  * @coversDefaultClass Kirby\Content\MemoryContentStorageHandler
  * @covers ::__construct
+ * @covers ::cacheId
  */
 class MemoryContentStorageHandlerTest extends TestCase
 {
 	protected $storage;
 
+	/**
+	 * @covers ::create
+	 * @covers ::delete
+	 * @covers ::exists
+	 * @covers ::write
+	 */
 	public function assertCreateAndDelete(VersionId $versionId, Language $language): void
 	{
 		$this->storage->create($versionId, $language, []);
@@ -23,6 +30,12 @@ class MemoryContentStorageHandlerTest extends TestCase
 		$this->assertFalse($this->storage->exists($versionId, $language));
 	}
 
+	/**
+	 * @covers ::create
+	 * @covers ::exists
+	 * @covers ::read
+	 * @covers ::write
+	 */
 	public function assertCreateAndRead(VersionId $versionId, Language $language): void
 	{
 		$fields = [
@@ -31,6 +44,30 @@ class MemoryContentStorageHandlerTest extends TestCase
 		];
 
 		$this->storage->create($versionId, $language, $fields);
+
+		$this->assertTrue($this->storage->exists($versionId, $language));
+		$this->assertSame($fields, $this->storage->read($versionId, $language));
+	}
+
+	/**
+	 * @covers ::create
+	 * @covers ::exists
+	 * @covers ::read
+	 * @covers ::update
+	 * @covers ::write
+	 */
+	public function assertCreateAndUpdate(VersionId $versionId, Language $language): void
+	{
+		$fields = [
+			'title' => 'Foo',
+			'text'  => 'Bar'
+		];
+
+		$this->storage->create($versionId, $language, []);
+
+		$this->assertSame([], $this->storage->read($versionId, $language));
+
+		$this->storage->update($versionId, $language, $fields);
 
 		$this->assertTrue($this->storage->exists($versionId, $language));
 		$this->assertSame($fields, $this->storage->read($versionId, $language));
@@ -108,6 +145,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 
 	/**
 	 * @covers ::delete
+	 * @covers ::exists
 	 */
 	public function testDeleteNonExisting()
 	{
@@ -285,5 +323,31 @@ class MemoryContentStorageHandlerTest extends TestCase
 		$this->storage->touch($versionId, $language);
 
 		$this->assertGreaterThanOrEqual($time, $this->storage->modified($versionId, $language));
+	}
+
+	/**
+	 * @covers ::update
+	 */
+	public function testUpdateMultiLang()
+	{
+		$this->setUpMultiLanguage();
+
+		$versionId = VersionId::changes();
+		$language  = $this->app->language('en');
+
+		$this->assertCreateAndUpdate($versionId, $language);
+	}
+
+	/**
+	 * @covers ::update
+	 */
+	public function testUpdateSingleLang()
+	{
+		$this->setUpSingleLanguage();
+
+		$versionId = VersionId::changes();
+		$language  = Language::single();
+
+		$this->assertCreateAndUpdate($versionId, $language);
 	}
 }
