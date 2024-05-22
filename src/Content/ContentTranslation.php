@@ -19,7 +19,6 @@ class ContentTranslation
 {
 	protected string $code;
 	protected array|null $content;
-	protected string $contentFile;
 	protected ModelWithContent $parent;
 	protected string|null $slug;
 
@@ -85,7 +84,7 @@ class ContentTranslation
 	 */
 	public function contentFile(): string
 	{
-		return $this->contentFile = $this->parent->version()->contentFile($this->code);
+		return $this->parent->version()->contentFile($this->code);
 	}
 
 	/**
@@ -95,7 +94,7 @@ class ContentTranslation
 	{
 		return
 			empty($this->content) === false ||
-			file_exists($this->contentFile()) === true;
+			$this->parent->version()->exists($this->code);
 	}
 
 	/**
