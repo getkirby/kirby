@@ -142,18 +142,6 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 	}
 
 	/**
-	 * Creates a new version
-	 *
-	 * @param array<string, string> $fields Content fields
-	 *
-	 * @throws \Kirby\Exception\Exception If the file cannot be written
-	 */
-	public function create(VersionId $versionId, Language $language, array $fields): void
-	{
-		$this->write($versionId, $language, $fields);
-	}
-
-	/**
 	 * Deletes an existing version in an idempotent way if it was already deleted
 	 */
 	public function delete(VersionId $versionId, Language $language): void
@@ -245,18 +233,6 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 			throw new Exception('Could not touch existing content file');
 		}
 		// @codeCoverageIgnoreEnd
-	}
-
-	/**
-	 * Updates the content fields of an existing version
-	 *
-	 * @param array<string, string> $fields Content fields
-	 *
-	 * @throws \Kirby\Exception\Exception If the file cannot be written
-	 */
-	public function update(VersionId $versionId, Language $language, array $fields): void
-	{
-		$this->write($versionId, $language, $fields);
 	}
 
 	/**
