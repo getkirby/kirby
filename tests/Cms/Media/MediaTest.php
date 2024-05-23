@@ -57,6 +57,11 @@ class MediaTest extends TestCase
 		$this->assertFalse(Media::link(null, 'hash', 'filename.jpg'));
 	}
 
+	public function testLinkNonExistingFile()
+	{
+		$this->assertFalse(Media::link($this->app->site(), 'hash', 'filename.jpg'));
+	}
+
 	public function testPublish()
 	{
 		$site = new Site();
