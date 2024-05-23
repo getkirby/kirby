@@ -715,7 +715,8 @@ trait AppPlugins
 		string $name,
 		array $extends = null,
 		array $info = [],
-		string|null $root = null
+		string|null $root = null,
+		string|null $version = null
 	): PLugin|null {
 		if ($extends === null) {
 			return static::$plugins[$name] ?? null;
@@ -725,7 +726,9 @@ trait AppPlugins
 			name:    $name,
 			extends: $extends,
 			info:    $info,
-			root:    $root ?? dirname(debug_backtrace()[0]['file']),
+			// TODO: Remove fallback to $extends in v5
+			root:    $root ?? $extends['root'] ?? dirname(debug_backtrace()[0]['file']),
+			version: $version
 		);
 
 		$name = $plugin->name();
