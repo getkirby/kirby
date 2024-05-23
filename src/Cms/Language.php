@@ -6,6 +6,7 @@ use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
@@ -250,6 +251,29 @@ class Language implements Stringable
 	public function direction(): string
 	{
 		return $this->direction;
+	}
+
+	/**
+	 * Converts a "user-facing" language code to a `Language` object
+	 *
+	 * @throws \Kirby\Exception\NotFoundException If the language does not exist
+	 */
+	public static function ensure(string|null $code = null): static
+	{
+		$kirby = App::instance();
+
+		// single language
+		if ($kirby->multilang() === false) {
+			return static::single();
+		}
+
+		// look up the actual language object if possible
+		if ($language = $kirby->language($code)) {
+			return $language;
+		}
+
+		// validate the language code
+		throw new NotFoundException('Invalid language: ' . $code);
 	}
 
 	/**
