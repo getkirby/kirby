@@ -60,7 +60,7 @@ class Media
 		try {
 			return static::thumb($model, $hash, $filename);
 		} catch (NotFoundException) {
-			// render the error page if some stuff for thumb generating not found
+			// render the error page if there is no job for this filename
 			return false;
 		}
 	}
