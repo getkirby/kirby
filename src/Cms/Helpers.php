@@ -32,8 +32,10 @@ class Helpers
 		// The internal `$model->contentFile*()` methods have been deprecated
 		'model-content-file' => true,
 
-		// Passing an `info` array inside the `extends` array has been deprecated.
-		// Pass the individual entries directly as named arguments.
+		// Passing an `info` array inside the `extends` array
+		// has been deprecated. Pass the individual entries (e.g. root, version)
+		// directly as named arguments.
+		// TODO: switch to true in v6
 		'plugin-extends-root' => false,
 
 		// Passing a single space as value to `Xml::attr()` has been

@@ -861,7 +861,7 @@ trait AppPlugins
 			name:    $name,
 			extends: $extends,
 			info:    $info,
-			// TODO: Remove fallback to $extends in v5
+			// TODO: Remove fallback to $extends in v7
 			root:    $root ?? $extends['root'] ?? dirname(debug_backtrace()[0]['file']),
 			version: $version
 		);
