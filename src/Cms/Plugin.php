@@ -43,7 +43,7 @@ class Plugin
 	) {
 		static::validateName($name);
 
-		// TODO: Remove in v5
+		// TODO: Remove in v7
 		if ($root = $extends['root'] ?? null) {
 			Helpers::deprecated('Plugin "' . $name . '": Passing the `root` inside the `extends` array has been deprecated. Pass it directly as named argument `root`.', 'plugin-extends-root');
 			$this->root ??= $root;
@@ -52,7 +52,7 @@ class Plugin
 
 		$this->root ??= dirname(debug_backtrace()[0]['file']);
 
-		// TODO: Remove in v5
+		// TODO: Remove in v7
 		if ($info = $extends['info'] ?? null) {
 			Helpers::deprecated('Plugin "' . $name . '": Passing an `info` array inside the `extends` array has been deprecated. Pass the individual entries directly as named `info` argument.', 'plugin-extends-root');
 
