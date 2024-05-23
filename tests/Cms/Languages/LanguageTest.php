@@ -223,6 +223,42 @@ class LanguageTest extends TestCase
 		$this->assertSame('ltr', $language->direction());
 	}
 
+	public function testEnsureInMultiLanguageMode()
+	{
+		new App([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true,
+				],
+				[
+					'code'    => 'de',
+				],
+			]
+		]);
+
+		$language = Language::ensure();
+
+		$this->assertSame('en', $language->code());
+
+		$language = Language::ensure('de');
+
+		$this->assertSame('de', $language->code());
+	}
+
+	public function testEnsureInSingleLanguageMode()
+	{
+		new App([
+			'roots' => [
+				'index' => static::TMP,
+			]
+		]);
+
+		$language = Language::ensure();
+
+		$this->assertSame('en', $language->code());
+	}
+
 	/**
 	 * @covers ::exists
 	 */
