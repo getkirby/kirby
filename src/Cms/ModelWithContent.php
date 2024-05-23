@@ -644,15 +644,14 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	/**
 	 * Returns a single translation by language code
 	 * If no code is specified the current translation is returned
+	 *
+	 * @throws \Kirby\Exception\NotFoundException If the language does not exist
 	 */
 	public function translation(
 		string|null $languageCode = null
 	): ContentTranslation|null {
-		if ($language = $this->kirby()->language($languageCode)) {
-			return $this->translations()->find($language->code());
-		}
-
-		return null;
+		$language = Language::ensure($languageCode ?? 'current');
+		return $this->translations()->find($language->code());
 	}
 
 	/**

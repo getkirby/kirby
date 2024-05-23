@@ -117,18 +117,7 @@ class Version
 			return $languageCode;
 		}
 
-		// single language
-		if ($this->model->kirby()->multilang() === false) {
-			return Language::single();
-		}
-
-		// look up the actual language object if possible
-		if ($language = $this->model->kirby()->language($languageCode)) {
-			return $language;
-		}
-
-		// validate the language code
-		throw new InvalidArgumentException('Invalid language: ' . $languageCode);
+		return Language::ensure($languageCode);
 	}
 
 	/**
