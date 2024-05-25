@@ -34,7 +34,7 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	/**
 	 * Creates the absolute directory path for the model
 	 */
-	public function contentDirectory(VersionId $versionId): string
+	protected function contentDirectory(VersionId $versionId): string
 	{
 		$directory = match (true) {
 			$this->model instanceof File
@@ -128,7 +128,7 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	 *
 	 * @param string $lang Code `'default'` in a single-lang installation
 	 */
-	public function contentFilename(string $name, string $lang): string
+	protected function contentFilename(string $name, string $lang): string
 	{
 		$kirby     = $this->model->kirby();
 		$extension = $kirby->contentExtension();
