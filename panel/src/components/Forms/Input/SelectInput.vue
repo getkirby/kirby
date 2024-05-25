@@ -63,6 +63,7 @@ export default {
 			return this.placeholder ?? "—";
 		},
 		hasEmptyOption() {
+			// empty option is only hidden if the field is both required and has a default
 			return !(this.required && this.default);
 		},
 		isEmpty() {
