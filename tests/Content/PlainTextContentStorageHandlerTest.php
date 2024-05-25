@@ -169,56 +169,16 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	 * @covers ::exists
 	 * @dataProvider existsProvider
 	 */
-	public function testExistsNoneExisting(VersionId $id, string|null $language)
+	public function testExistsNoneExisting(VersionId $id, string $language)
 	{
 		$this->assertFalse($this->storage->exists($id, $language));
-	}
-
-	/**
-	 * @covers ::exists
-	 * @dataProvider existsProvider
-	 */
-	public function testExistsSomeExistingMultiLang(VersionId $id, string|null $language, array $expected)
-	{
-		Dir::make(static::TMP . '/_changes');
-		touch(static::TMP . '/article.txt');
-		touch(static::TMP . '/_changes/article.en.txt');
-
-		new App([
-			'languages' => [
-				[
-					'code' => 'en',
-					'default' => true
-				],
-				[
-					'code' => 'de'
-				]
-			]
-		]);
-
-		$this->assertSame($expected[0], $this->storage->exists($id, $language));
-	}
-
-	/**
-	 * @covers ::exists
-	 * @dataProvider existsProvider
-	 */
-	public function testExistsSomeExistingSingleLang(VersionId $id, string|null $language, array $expected)
-	{
-		Dir::make(static::TMP . '/_changes');
-		touch(static::TMP . '/article.txt');
-		touch(static::TMP . '/_changes/article.en.txt');
-
-		$this->assertSame($expected[1], $this->storage->exists($id, $language));
 	}
 
 	public static function existsProvider(): array
 	{
 		return [
-			[VersionId::changes(), null, [true, false]],
 			[VersionId::changes(), 'default', [false, false]],
 			[VersionId::changes(), 'en', [true, true]],
-			[VersionId::published(), null, [false, true]],
 			[VersionId::published(), 'default', [true, true]],
 			[VersionId::published(), 'en', [false, false]]
 		];

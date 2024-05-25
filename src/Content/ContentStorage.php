@@ -156,18 +156,13 @@ class ContentStorage
 	/**
 	 * Checks if a version exists
 	 *
-	 * @param string|null $lang Code `'default'` in a single-lang installation;
-	 *                          checks for "any language" if not provided
+	 * @param string $lang Code `'default'` in a single-lang installation
 	 */
 	public function exists(
 		VersionId $versionId,
-		string|null $lang
+		string $lang
 	): bool {
-		if ($lang !== null) {
-			$lang = $this->language($lang);
-		}
-
-		return $this->handler->exists($versionId, $lang);
+		return $this->handler->exists($versionId, $this->language($lang));
 	}
 
 	/**
