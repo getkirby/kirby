@@ -13,6 +13,7 @@
 			:novalidate="true"
 			:required="true"
 			:value="name"
+			allow="a-z0-9@._-"
 			class="k-upload-item-input"
 			type="slug"
 			@input="$emit('rename', $event)"
