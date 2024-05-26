@@ -2,7 +2,7 @@
 	<a
 		v-if="to && !disabled"
 		ref="link"
-		:download="download"
+		:download="downloadAttr"
 		:href="href"
 		:rel="relAttr"
 		:tabindex="tabindex"
@@ -68,6 +68,9 @@ export default {
 	},
 	emits: ["click"],
 	computed: {
+		downloadAttr() {
+			return this.download ? this.href.split("/").pop() : undefined;
+		},
 		href() {
 			if (typeof this.to === "function") {
 				return "";
