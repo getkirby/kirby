@@ -44,151 +44,14 @@ class UploadTest extends TestCase
 		App::destroy();
 	}
 
-	/**
-	 * @covers ::chunk
-	 */
-	public function testChunkNoChunks()
+	protected function api(array $props = []): Api
 	{
-		$source = static::TMP . '/test.md';
-		$api    = new Api([]);
-		$this->assertSame($source, Upload::chunk($api, $source, 'a.md'));
+		 return new Api($props);
 	}
 
-	/**
-	 * @covers ::chunk
-	 */
-	public function testChunkFirstChunkFullLength()
+	protected function upload(array $api = []): Upload
 	{
-		$source = static::TMP . '/test.md';
-		F::write($source, 'abcdef');
-		$size = F::size($source);
-
-		$api = new Api([
-			'requestData' => [
-				'headers' => [
-					'Upload-Length' => $size,
-					'Upload-Offset' => 0,
-					'Upload-Id'     => 'abcd'
-				]
-			]
-		]);
-
-		$this->assertSame(
-			$file = static::TMP . '/site/cache/.uploads/test.md',
-			Upload::chunk($api, $source, basename($source))
-		);
-		$this->assertFileExists($file);
-		$this->assertFileDoesNotExist('abcd-' . $file);
-	}
-
-	/**
-	 * @covers ::chunk
-	 */
-	public function testChunkFirstChunkPartialLength()
-	{
-		$source = static::TMP . '/test.md';
-		F::write($source, 'abcdef');
-
-		$api = new Api([
-			'requestData' => [
-				'headers' => [
-					'Upload-Length' => 3000,
-					'Upload-Offset' => 0,
-					'Upload-Id'     => 'abcd'
-				]
-			]
-		]);
-
-		$dir = static::TMP . '/site/cache/.uploads';
-		$this->assertNull(Upload::chunk($api, $source, basename($source)));
-		$this->assertFileDoesNotExist($dir . '/test.md');
-		$this->assertFileExists($dir . '/abcd-test.md');
-	}
-
-	/**
-	 * @covers ::chunk
-	 */
-	public function testChunkIdRemoveUnallowedCharacters()
-	{
-		$source = static::TMP . '/test.md';
-		F::write($source, 'abcdef');
-
-		$api = new Api([
-			'requestData' => [
-				'headers' => [
-					'Upload-Length' => 3000,
-					'Upload-Offset' => 0,
-					'Upload-Id'     => '../a/b!!cd'
-				]
-			]
-		]);
-
-		$dir = static::TMP . '/site/cache/.uploads';
-		$this->assertNull(Upload::chunk($api, $source, basename($source)));
-		$this->assertFileDoesNotExist($dir . '/test.md');
-		$this->assertFileExists($dir . '/abcd-test.md');
-	}
-
-	/**
-	 * @covers ::chunk
-	 */
-	public function testChunkFilenameNoDirectoryTraversal()
-	{
-		$source = static::TMP . '/test.md';
-		F::write($source, 'abcdef');
-
-		$api = new Api([
-			'requestData' => [
-				'headers' => [
-					'Upload-Length' => 3000,
-					'Upload-Offset' => 0,
-					'Upload-Id'     => 'abcd'
-				]
-			]
-		]);
-
-		$dir = static::TMP . '/site/cache/.uploads';
-		$this->assertNull(Upload::chunk($api, $source, '../../test.md'));
-		$this->assertFileDoesNotExist($dir . '/test.md');
-		$this->assertFileExists($dir . '/abcd-test.md');
-	}
-
-	/**
-	 * @covers ::chunk
-	 */
-	public function testChunkSuccesfulAll()
-	{
-		$source = static::TMP . '/test.md';
-		F::write($source, 'abc');
-		$api    = new Api([
-			'requestData' => [
-				'headers' => [
-					'Upload-Length' => 6,
-					'Upload-Offset' => 0,
-					'Upload-Id'     => 'abcd'
-				]
-			]
-		]);
-
-		$this->assertNull(Upload::chunk($api, $source, basename($source)));
-
-		$source = static::TMP . '/test.md';
-		F::write($source, 'def');
-		$api    = new Api([
-			'requestData' => [
-				'headers' => [
-					'Upload-Length' => 6,
-					'Upload-Offset' => 3,
-					'Upload-Id'     => 'abcd'
-				]
-			]
-		]);
-
-		$file = static::TMP . '/site/cache/.uploads/test.md';
-		$this->assertSame($file, Upload::chunk($api, $source, 'test.md'));
-		$this->assertFileExists($file);
-		$this->assertFileDoesNotExist('abcd-' . $file);
-		$this->assertSame('abcdef', F::read($file));
+		return new Upload(api: $this->api($api));
 	}
 
 	/**
@@ -227,9 +90,9 @@ class UploadTest extends TestCase
 	}
 
 	/**
-	 * @covers ::clean
+	 * @covers ::cleanTmpDirectory
 	 */
-	public function testClean()
+	public function testCleanTmpDirectory()
 	{
 		$dir = static::TMP . '/site/cache/.uploads';
 		F::write($a = $dir . '/abcd-a.md', '');
@@ -240,7 +103,7 @@ class UploadTest extends TestCase
 		$this->assertFileExists($a);
 		$this->assertFileExists($b);
 
-		Upload::clean();
+		Upload::cleanTmpDirectory();
 
 		$this->assertDirectoryExists($dir);
 		$this->assertFileExists($a);
@@ -248,11 +111,144 @@ class UploadTest extends TestCase
 
 		touch($a, time() - 86400 - 1);
 
-		Upload::clean();
+		Upload::cleanTmpDirectory();
 
 		$this->assertDirectoryDoesNotExist($dir);
 		$this->assertFileDoesNotExist($a);
 		$this->assertFileDoesNotExist($b);
+	}
+
+	/**
+	 * @covers ::processChunk
+	 */
+	public function testProcessChunkFirstChunkFullLength()
+	{
+		$source = static::TMP . '/test.md';
+		F::write($source, 'abcdef');
+		$size   = F::size($source);
+		$upload = $this->upload([
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => $size,
+					'Upload-Offset' => 0,
+					'Upload-Id'     => 'abcd'
+				]
+			]
+		]);
+
+		$this->assertSame(
+			$file = static::TMP . '/site/cache/.uploads/test.md',
+			$upload->processChunk($source, basename($source))
+		);
+		$this->assertFileExists($file);
+		$this->assertFileDoesNotExist('abcd-' . $file);
+	}
+
+	/**
+	 * @covers ::processChunk
+	 */
+	public function testProcessChunkFirstChunkPartialLength()
+	{
+		$source = static::TMP . '/test.md';
+		F::write($source, 'abcdef');
+		$upload = $this->upload([
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => 3000,
+					'Upload-Offset' => 0,
+					'Upload-Id'     => 'abcd'
+				]
+			]
+		]);
+
+		$dir = static::TMP . '/site/cache/.uploads';
+		$this->assertNull($upload->processChunk($source, basename($source)));
+		$this->assertFileDoesNotExist($dir . '/test.md');
+		$this->assertFileExists($dir . '/abcd-test.md');
+	}
+
+	/**
+	 * @covers ::processChunk
+	 */
+	public function testProcessChunkIdRemoveUnallowedCharacters()
+	{
+		$source = static::TMP . '/test.md';
+		F::write($source, 'abcdef');
+		$upload = $this->upload([
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => 3000,
+					'Upload-Offset' => 0,
+					'Upload-Id'     => '../a/b!!cd'
+				]
+			]
+		]);
+
+		$dir = static::TMP . '/site/cache/.uploads';
+		$this->assertNull($upload->processChunk($source, basename($source)));
+		$this->assertFileDoesNotExist($dir . '/test.md');
+		$this->assertFileExists($dir . '/abcd-test.md');
+	}
+
+	/**
+	 * @covers ::processChunk
+	 */
+	public function testProcessChunkFilenameNoDirectoryTraversal()
+	{
+		$source = static::TMP . '/test.md';
+		F::write($source, 'abcdef');
+		$upload = $this->upload([
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => 3000,
+					'Upload-Offset' => 0,
+					'Upload-Id'     => 'abcd'
+				]
+			]
+		]);
+
+		$dir = static::TMP . '/site/cache/.uploads';
+		$this->assertNull($upload->processChunk($source, '../../test.md'));
+		$this->assertFileDoesNotExist($dir . '/test.md');
+		$this->assertFileExists($dir . '/abcd-test.md');
+	}
+
+	/**
+	 * @covers ::processChunk
+	 */
+	public function testProcessChunkSuccesfulAll()
+	{
+		$source = static::TMP . '/test.md';
+		F::write($source, 'abc');
+		$upload = $this->upload([
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => 6,
+					'Upload-Offset' => 0,
+					'Upload-Id'     => 'abcd'
+				]
+			]
+		]);
+
+		$this->assertNull($upload->processChunk($source, basename($source)));
+
+		$source = static::TMP . '/test.md';
+		F::write($source, 'def');
+		$upload = $this->upload([
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => 6,
+					'Upload-Offset' => 3,
+					'Upload-Id'     => 'abcd'
+				]
+			]
+		]);
+
+		$file = static::TMP . '/site/cache/.uploads/test.md';
+		$this->assertSame($file, $upload->processChunk($source, 'test.md'));
+		$this->assertFileExists($file);
+		$this->assertFileDoesNotExist('abcd-' . $file);
+		$this->assertSame('abcdef', F::read($file));
 	}
 
 	/**
@@ -262,8 +258,7 @@ class UploadTest extends TestCase
 	{
 		$source = static::TMP . '/test.md';
 		F::write($source, 'abcdef');
-
-		$api = new Api([
+		$upload = $this->upload([
 			'requestData' => [
 				'headers' => [
 					'Upload-Length' => 3000,
@@ -273,10 +268,10 @@ class UploadTest extends TestCase
 			]
 		]);
 
-		$this->assertNull(Upload::chunk($api, $source, basename($source)));
+		$this->assertNull($upload->processChunk($source, basename($source)));
 		$this->expectException(DuplicateException::class);
 		$this->expectExceptionMessage('A tmp file upload with the same filename and upload id already exists: abcd-test.md');
-		Upload::chunk($api, $source, basename($source));
+		$upload->processChunk($source, basename($source));
 	}
 
 	/**
@@ -286,8 +281,7 @@ class UploadTest extends TestCase
 	{
 		$source = static::TMP . '/a.md';
 		F::write($source, 'abcdef');
-
-		$api = new Api([
+		$upload = $this->upload([
 			'requestData' => [
 				'headers' => [
 					'Upload-Length' => 3000,
@@ -297,9 +291,9 @@ class UploadTest extends TestCase
 			]
 		]);
 
-		$this->assertNull(Upload::chunk($api, $source, basename($source)));
+		$this->assertNull($upload->processChunk($source, basename($source)));
 
-		$api = new Api([
+		$upload = $this->upload([
 			'requestData' => [
 				'headers' => [
 					'Upload-Length' => 3000,
@@ -311,7 +305,7 @@ class UploadTest extends TestCase
 
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Chunk offset 1500 does not match the existing tmp upload file size of 6');
-		Upload::chunk($api, $source, basename($source));
+		$upload->processChunk($source, basename($source));
 	}
 
 	/**
@@ -321,8 +315,7 @@ class UploadTest extends TestCase
 	{
 		$source = static::TMP . '/a.md';
 		F::write($source, 'abcdef');
-
-		$api = new Api([
+		$upload = $this->upload([
 			'requestData' => [
 				'headers' => [
 					'Upload-Length' => 3000,
@@ -334,7 +327,7 @@ class UploadTest extends TestCase
 
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Chunk offset 10 for non-existing tmp file: abcd-a.md');
-		Upload::chunk($api, $source, basename($source));
+		$upload->processChunk($source, basename($source));
 	}
 
 	/**
@@ -343,7 +336,7 @@ class UploadTest extends TestCase
 	public function testValidateChunkInvalidExtension()
 	{
 		$source = static::TMP . '/a.php';
-		$api    = new Api([
+		$upload = $this->upload([
 			'requestData' => [
 				'headers' => [
 					'Upload-Length' => 3000,
@@ -355,7 +348,7 @@ class UploadTest extends TestCase
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('You are not allowed to upload PHP files');
-		Upload::chunk($api, $source, basename($source));
+		$upload->processChunk($source, basename($source));
 	}
 
 	/**
@@ -372,7 +365,7 @@ class UploadTest extends TestCase
 				]
 			]
 		]);
-		$api    = new Api([
+		$upload = $this->upload([
 			'requestData' => [
 				'body' => [
 					'template' => 'test'
@@ -387,7 +380,7 @@ class UploadTest extends TestCase
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.file.maxsize');
-		Upload::chunk($api, $source, basename($source));
+		$upload->processChunk($source, basename($source));
 	}
 
 	/**
@@ -408,7 +401,7 @@ class UploadTest extends TestCase
 				]
 			]
 		]);
-		$api    = new Api([
+		$upload = $this->upload([
 			'requestData' => [
 				'body' => [
 					'template' => 'test'
@@ -423,6 +416,6 @@ class UploadTest extends TestCase
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.file.maxsize');
-		Upload::chunk($api, $source, basename($source));
+		$upload->processChunk($source, basename($source));
 	}
 }
