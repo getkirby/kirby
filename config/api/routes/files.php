@@ -49,15 +49,6 @@ return [
 			// move_uploaded_file() not working with unit test
 			// @codeCoverageIgnoreStart
 			return $this->upload(function ($source, $filename) use ($path) {
-				// check if upload is sent in chunks and handle them
-				$source = Upload::chunk($this, $source, $filename);
-
-				// complete files return an absolute path;
-				// if file is not yet complete, end here
-				if ($source === null) {
-					return;
-				}
-
 				// move the source file to the content folder
 				return $this->parent($path)->createFile([
 					'content' => [

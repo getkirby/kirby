@@ -2,16 +2,18 @@
 
 namespace Kirby\Api;
 
+use Closure;
+use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\FileRules;
 use Kirby\Cms\Page;
 use Kirby\Exception\DuplicateException;
-use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
 /**
@@ -28,76 +30,27 @@ use Kirby\Toolkit\Str;
  */
 class Upload
 {
-	/**
-	 * Handle chunked uploads by merging all chunks
-	 * in the tmp directory and only returning the new
-	 * $source path to the tmp file once complete
-	 *
-	 * @throws \Kirby\Exception\DuplicateException Duplicate first chunk (same filename and id)
-	 * @throws \Kirby\Exception\Exception Chunk offset does not match existing tmp file
-	 * @throws \Kirby\Exception\NotFoundException Subsequent chunk has no  existing tmp file
-	 */
-	public static function chunk(
-		Api $api,
-		string $source,
-		string $filename
-	): string|null {
-		// if the file is uploaded in chunks…
-		if ($total = (int)$api->requestHeaders('Upload-Length')) {
-			// ensure the tmp upload directory exists
-			Dir::make($dir = static::tmp());
-
-			// create path for file in tmp upload directory;
-			// prefix with id while file isn't completely uploaded yet
-			$id       = static::chunkId($api->requestHeaders('Upload-Id'));
-			$filename = basename($filename);
-			$tmpRoot  = $dir . '/' . $id . '-' . $filename;
-
-			// validate various aspects of the request
-			// to ensure the chunk isn't trying to do malicious actions
-			static::validateChunk(
-				source:   $source,
-				tmp:      $tmpRoot,
-				total:    $total,
-				offset:   $api->requestHeaders('Upload-Offset'),
-				template: $api->requestBody('template'),
-			);
-
-			// stream chunk content and append it to partial file
-			stream_copy_to_stream(
-				fopen($source, 'r'),
-				fopen($tmpRoot, 'a')
-			);
-
-			// clear file stat cache so the following call to `F::size`
-			// really returns the updated file size
-			clearstatcache();
-
-			// if file isn't complete yet, return early
-			if (F::size($tmpRoot) < $total) {
-				return null;
-			}
-
-			// remove id from partial filename now the file is complete,
-			// so we can pass the path from the tmp upload directory
-			// as new source path for the file back to the API upload method
-			rename(
-				$tmpRoot,
-				$newRoot = $dir . '/' . $filename
-			);
-
-			return $newRoot;
-		}
-
-		return $source;
+	public function __construct(
+		protected Api $api,
+		protected bool $single = true,
+		protected bool $debug = false
+	) {
 	}
 
 	/**
 	 * Ensures a clean chunk ID by stripping forbidden characters
+	 *
+	 * @throws \Kirby\Exception\InvalidArgumentException Too short ID string
 	 */
 	public static function chunkId(string $id): string
 	{
-		return Str::slug($id, '', 'a-z0-9');
+		$id = Str::slug($id, '', 'a-z0-9');
+
+		if (strlen($id) < 3) {
+			throw new InvalidArgumentException('Chunk ID must at least be 3 characters long');
+		}
+
+		return $id;
 	}
 
 	/**
@@ -122,7 +75,7 @@ class Upload
 	/**
 	 * Clean up tmp directory of stale files
 	 */
-	public static function clean(): void
+	public static function cleanTmpDirectory(): void
 	{
 		foreach (Dir::files($dir = static::tmp(), [], true) as $file) {
 			// remove any file that hasn't been altered
@@ -139,6 +92,227 @@ class Upload
 	}
 
 	/**
+	 * Throws the appropriate translated upload error message
+	 *
+	 * @throws \Exception Any upload error
+	 */
+	public static function error(string $error): void
+	{
+		// get error messages from translation
+		$message = [
+			UPLOAD_ERR_INI_SIZE   => I18n::translate('upload.error.iniSize'),
+			UPLOAD_ERR_FORM_SIZE  => I18n::translate('upload.error.formSize'),
+			UPLOAD_ERR_PARTIAL    => I18n::translate('upload.error.partial'),
+			UPLOAD_ERR_NO_FILE    => I18n::translate('upload.error.noFile'),
+			UPLOAD_ERR_NO_TMP_DIR => I18n::translate('upload.error.tmpDir'),
+			UPLOAD_ERR_CANT_WRITE => I18n::translate('upload.error.cantWrite'),
+			UPLOAD_ERR_EXTENSION  => I18n::translate('upload.error.extension')
+		];
+
+		throw new Exception(
+			$message[$error] ??
+			I18n::translate('upload.error.default', 'The file could not be uploaded')
+		);
+	}
+
+	/**
+	 * Sanitize the filename and extension
+	 * based on the detected mime type
+	 */
+	public static function filename(array $upload): string
+	{
+		// get the extension of the uploaded file
+		$extension = F::extension($upload['name']);
+
+		// try to detect the correct mime and add the extension
+		// accordingly. This will avoid .tmp filenames
+		if (
+			empty($extension) === true ||
+			in_array($extension, ['tmp', 'temp']) === true
+		) {
+			$mime      = F::mime($upload['tmp_name']);
+			$extension = F::mimeToExtension($mime);
+			$filename  = F::name($upload['name']) . '.' . $extension;
+			return $filename;
+		}
+
+		return basename($upload['name']);
+	}
+
+	/**
+	 * Move the tmp file to a location including the extension,
+	 * for better mime detection
+	 */
+	public function move(array $upload, string $source): void
+	{
+		if (
+			$this->debug === false &&
+			move_uploaded_file($upload['tmp_name'], $source) === false
+		) {
+			throw new Exception(
+				I18n::translate('upload.error.cantMove')
+			);
+		}
+	}
+
+	/**
+	 * Upload the files and call closure for each file
+	 *
+	 * @throws \Exception Any upload error
+	 */
+	public function process(Closure $callback): array
+	{
+		$files   = $this->api->requestFiles();
+		$uploads = [];
+		$errors  = [];
+
+		static::validateFiles($files);
+
+		foreach ($files as $upload) {
+			if (
+				isset($upload['tmp_name']) === false &&
+				is_array($upload) === true
+			) {
+				continue;
+			}
+
+			try {
+				if ($upload['error'] !== 0) {
+					static::error($upload['error']);
+				}
+
+				$filename = static::filename($upload);
+				$source   = dirname($upload['tmp_name']);
+				$source   = $source  . '/' . uniqid() . '.' . $filename;
+
+				// move upload file to tmp location
+				$this->move($upload, $source);
+
+				// if the file is uploaded in chunks…
+				if ($this->api->requestHeaders('Upload-Length')) {
+					$source = $this->processChunk($source, $filename);
+				}
+
+				// apply callback only to complete uploads
+				// (incomplete chunk request will return empty $source)
+				$data = match ($source) {
+					null    => null,
+					default => $callback($source, $filename)
+				};
+
+				$uploads[$upload['name']] = match (true) {
+					is_object($data) => $this->api->resolve($data)->toArray(),
+					default          => $data
+				};
+			} catch (Exception $e) {
+				$errors[$upload['name']] = $e->getMessage();
+			}
+
+			if ($this->single === true) {
+				break;
+			}
+		}
+
+		return $this->response($uploads, $errors);
+	}
+
+	/**
+	 * Handle chunked uploads by merging all chunks
+	 * in the tmp directory and only returning the new
+	 * $source path to the tmp file once complete
+	 *
+	 * @throws \Kirby\Exception\DuplicateException Duplicate first chunk (same filename and id)
+	 * @throws \Kirby\Exception\Exception Chunk offset does not match existing tmp file
+	 * @throws \Kirby\Exception\InvalidArgumentException Too short ID string
+	 * @throws \Kirby\Exception\NotFoundException Subsequent chunk has no  existing tmp file
+	 */
+	public function processChunk(
+		string $source,
+		string $filename
+	): string|null {
+		// ensure the tmp upload directory exists
+		Dir::make($dir = static::tmp());
+
+		// create path for file in tmp upload directory;
+		// prefix with id while file isn't completely uploaded yet
+		$id       = $this->api->requestHeaders('Upload-Id', '');
+		$id       = static::chunkId($id);
+		$total    = (int)$this->api->requestHeaders('Upload-Length');
+		$filename = basename($filename);
+		$tmpRoot  = $dir . '/' . $id . '-' . $filename;
+
+		// validate various aspects of the request
+		// to ensure the chunk isn't trying to do malicious actions
+		static::validateChunk(
+			source:   $source,
+			tmp:      $tmpRoot,
+			total:    $total,
+			offset:   $this->api->requestHeaders('Upload-Offset'),
+			template: $this->api->requestBody('template'),
+		);
+
+		// stream chunk content and append it to partial file
+		stream_copy_to_stream(
+			fopen($source, 'r'),
+			fopen($tmpRoot, 'a')
+		);
+
+		// clear file stat cache so the following call to `F::size`
+		// really returns the updated file size
+		clearstatcache();
+
+		// if file isn't complete yet, return early
+		if (F::size($tmpRoot) < $total) {
+			return null;
+		}
+
+		// remove id from partial filename now the file is complete,
+		// so we can pass the path from the tmp upload directory
+		// as new source path for the file back to the API upload method
+		rename(
+			$tmpRoot,
+			$source = $dir . '/' . $filename
+		);
+
+		return $source;
+	}
+
+	/**
+	 * Convert uploads and errors in response array for API response
+	 */
+	public function response(
+		array $uploads,
+		array $errors
+	): array
+	{
+		if (count($uploads) + count($errors) === 1) {
+			if (empty($errors) === false) {
+				return [
+					'status'  => 'error',
+					'message' => current($errors)
+				];
+			}
+
+			return [
+				'status' => 'ok',
+				'data'   => current($uploads)
+			];
+		}
+
+		if (empty($errors) === false) {
+			return [
+				'status' => 'error',
+				'errors' => $errors
+			];
+		}
+
+		return [
+			'status' => 'ok',
+			'data'   => $uploads
+		];
+	}
+
+	/**
 	 * Returns root of directory used for
 	 * temporarily storing (incomplete) uploads
 	 * @codeCoverageIgnore
@@ -152,7 +326,7 @@ class Upload
 	 * Ensures the sent chunk is valid
 	 *
 	 * @throws \Kirby\Exception\DuplicateException Duplicate first chunk (same filename and id)
-	 * @throws \Kirby\Exception\Exception Chunk offset does not match existing tmp file
+	 * @throws \Kirby\Exception\InvalidArgumentException Chunk offset does not match existing tmp file
 	 * @throws \Kirby\Exception\InvalidArgumentException The maximum file size for this blueprint was exceeded
 	 * @throws \Kirby\Exception\NotFoundException Subsequent chunk has no  existing tmp file
 	 */
@@ -208,7 +382,36 @@ class Upload
 
 		// sent chunk's offset is not the continuation of the tmp file
 		if ($offset !== F::size($tmp)) {
-			throw new Exception('Chunk offset ' . $offset . ' does not match the existing tmp upload file size of ' . F::size($tmp));
+			throw new InvalidArgumentException('Chunk offset ' . $offset . ' does not match the existing tmp upload file size of ' . F::size($tmp));
+		}
+	}
+
+	/**
+	 * Validate the files array for upload
+	 *
+	 * @throws \Exception No files were uploaded
+	 */
+	public static function validateFiles(array $files): void
+	{
+		if (empty($files) === true) {
+			$postMaxSize       = Str::toBytes(ini_get('post_max_size'));
+			$uploadMaxFileSize = Str::toBytes(ini_get('upload_max_filesize'));
+
+			if ($postMaxSize < $uploadMaxFileSize) {
+				throw new Exception(
+					I18n::translate(
+						'upload.error.iniPostSize',
+						'The uploaded file exceeds the post_max_size directive in php.ini'
+					)
+				);
+			}
+
+			throw new Exception(
+				I18n::translate(
+					'upload.error.noFiles',
+					'No files were uploaded'
+				)
+			);
 		}
 	}
 }
