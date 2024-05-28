@@ -307,6 +307,43 @@ class UploadTest extends TestCase
 	}
 
 	/**
+	 * @covers ::process
+	 */
+	public function testProcessWithChunk()
+	{
+		$source = static::TMP . '/test.md';
+		F::write($source, 'abcdef');
+
+		$upload = $this->upload([
+			'requestMethod' => 'POST',
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => 3000,
+					'Upload-Offset' => 0,
+					'Upload-Id'     => 'abcd'
+				],
+				'files' => [
+					[
+						'name'     => 'test.md',
+						'tmp_name' => $source,
+						'size'     => F::size($source),
+						'error'    => 0
+					]
+				]
+			]
+		], false, true);
+
+		$dir = static::TMP . '/site/cache/.uploads';
+		$this->assertSame([
+			'status' => 'ok',
+			'data'   => null
+		], $upload->process(function () {
+		}));
+		$this->assertFileDoesNotExist($dir . '/test.md');
+		$this->assertFileExists($dir . '/abcd-test.md');
+	}
+
+	/**
 	 * @covers ::processChunk
 	 */
 	public function testProcessChunkFirstChunkFullLength()
