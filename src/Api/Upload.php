@@ -93,7 +93,7 @@ class Upload
 	}
 
 	/**
-	 * Throws the appropriate translated upload error message
+	 * Throws an exception with the appropriate translated error message
 	 *
 	 * @throws \Exception Any upload error
 	 */
@@ -141,24 +141,6 @@ class Upload
 	}
 
 	/**
-	 * Move the tmp file to a location including the extension,
-	 * for better mime detection
-	 *
-	 * @codeCoverageIgnore
-	 */
-	public function move(array $upload, string $source): void
-	{
-		if (
-			$this->debug === false &&
-			move_uploaded_file($upload['tmp_name'], $source) === false
-		) {
-			throw new Exception(
-				I18n::translate('upload.error.cantMove')
-			);
-		}
-	}
-
-	/**
 	 * Upload the files and call closure for each file
 	 *
 	 * @throws \Exception Any upload error
@@ -185,11 +167,7 @@ class Upload
 				}
 
 				$filename = static::filename($upload);
-				$source   = dirname($upload['tmp_name']);
-				$source   = $source . '/' . uniqid() . '.' . $filename;
-
-				// move upload file to tmp location
-				$this->move($upload, $source);
+				$source   = $this->source($upload['tmp_name'], $filename);
 
 				// if the file is uploaded in chunks…
 				if ($this->api->requestHeaders('Upload-Length')) {
@@ -312,6 +290,27 @@ class Upload
 			'status' => 'ok',
 			'data'   => $uploads
 		];
+	}
+
+	/**
+	 * Move the tmp file to a location including the extension,
+	 * for better mime detection and return updated source path
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public function source(string $source, string $filename): string
+	{
+		if ($this->debug === true) {
+			return $source;
+		}
+
+		$target = dirname($source) . '/' . uniqid() . '.' . $filename;
+
+		if (move_uploaded_file($source, $target)) {
+			return $target;
+		}
+
+		throw new Exception(I18n::translate('upload.error.cantMove'));
 	}
 
 	/**
