@@ -1,7 +1,5 @@
 <?php
 
-use Kirby\Api\Upload;
-
 // routing pattern to match all models with files
 $filePattern   = '(account/|pages/[^/]+/|site/|users/[^/]+/|)files/(:any)';
 $parentPattern = '(account|pages/[^/]+|site|users/[^/]+)/files';

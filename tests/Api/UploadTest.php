@@ -2,10 +2,10 @@
 
 namespace Kirby\Api;
 
+use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\Blueprint;
 use Kirby\Exception\DuplicateException;
-use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
@@ -46,12 +46,19 @@ class UploadTest extends TestCase
 
 	protected function api(array $props = []): Api
 	{
-		 return new Api($props);
+		return new Api($props);
 	}
 
-	protected function upload(array $api = []): Upload
-	{
-		return new Upload(api: $this->api($api));
+	protected function upload(
+		array $api = [],
+		bool $single = true,
+		bool $debug = false
+	): Upload {
+		return new Upload(
+			api:    $this->api($api),
+			single: $single,
+			debug:  $debug
+		);
 	}
 
 	/**
@@ -63,6 +70,16 @@ class UploadTest extends TestCase
 		$this->assertSame('abcd', Upload::chunkId('ab/cd'));
 		$this->assertSame('abcd', Upload::chunkId('../../ab/cd'));
 		$this->assertSame('abcd', Upload::chunkId('a-b/../cd.'));
+	}
+
+	/**
+	 * @covers ::chunkId
+	 */
+	public function testChunkIdInvalid()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Chunk ID must at least be 3 characters long');
+		Upload::chunkId('a-b-');
 	}
 
 	/**
@@ -116,6 +133,177 @@ class UploadTest extends TestCase
 		$this->assertDirectoryDoesNotExist($dir);
 		$this->assertFileDoesNotExist($a);
 		$this->assertFileDoesNotExist($b);
+	}
+
+	/**
+	 * @covers ::error
+	 */
+	public function testError()
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('No file was uploaded');
+		Upload::error(UPLOAD_ERR_NO_FILE);
+	}
+
+	/**
+	 * @covers ::error
+	 */
+	public function testErrorUnknown()
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('The file could not be uploaded');
+		Upload::error(999);
+	}
+
+	/**
+	 * @covers ::filename
+	 */
+	public function testFilename()
+	{
+		$this->assertSame('foo.md', Upload::filename(['name' => 'foo.md']));
+		$this->assertSame('foo.jpg', Upload::filename([
+			'tmp_name' => 'foo.jpg',
+			'name'     => 'foo.tmp'
+		]));
+	}
+
+	/**
+	 * @covers ::process
+	 */
+	public function testProcessSingle()
+	{
+		$upload = $this->upload([
+			'requestMethod' => 'POST',
+			'requestData' => [
+				'files' => [
+					[
+						'name'     => 'test.txt',
+						'tmp_name' => KIRBY_TMP_DIR . '/api.upload/abc',
+						'size'     => 123,
+						'error'    => 0
+					]
+				]
+			]
+		], true, true);
+
+		$phpunit = $this;
+		$uploads = [];
+		$data = $upload->process(function ($source, $filename) use ($phpunit, &$uploads) {
+			// can't test souce path with dynamic uniqid
+			// $phpunit->assertSame('uniqid.test.txt', $source);
+			$phpunit->assertSame('test.txt', $filename);
+
+			return $uploads = [
+				'filename' => $filename
+			];
+		});
+
+		$this->assertSame([
+			'status' => 'ok',
+			'data' => $uploads
+		], $data);
+	}
+
+	/**
+	 * @covers ::process
+	 */
+	public function testProcessMultiple()
+	{
+		$upload = $this->upload([
+			'requestMethod' => 'POST',
+			'requestData' => [
+				'files' => [
+					[
+						'name'     => 'foo.txt',
+						'tmp_name' => KIRBY_TMP_DIR . '/api.upload/foo',
+						'size'     => 123,
+						'error'    => 0
+					],
+					[
+						'name'     => 'bar.txt',
+						'tmp_name' => KIRBY_TMP_DIR . '/api.upload/bar',
+						'size'     => 123,
+						'error'    => 0
+					],
+					[
+						'name'     => 'invalid.txt',
+					]
+				]
+			]
+		], false, true);
+
+		$data = $upload->process(function ($source, $filename) {
+			return [
+				'filename' => $filename
+			];
+		});
+
+		$this->assertSame([
+			'status' => 'ok',
+			'data' => [
+				'foo.txt' => ['filename' => 'foo.txt'],
+				'bar.txt' => ['filename' => 'bar.txt'],
+			]
+		], $data);
+	}
+
+	/**
+	 * @covers ::process
+	 */
+	public function testProcessError()
+	{
+		$upload = $this->upload([
+			'requestMethod' => 'POST',
+			'requestData' => [
+				'files' => [
+					[
+						'name'     => 'test.txt',
+						'tmp_name' => KIRBY_TMP_DIR . '/api.upload/abc',
+						'size'     => 123,
+						'error'    => UPLOAD_ERR_PARTIAL
+					]
+				]
+			]
+		], true, true);
+
+		// move_uploaded_file error
+		$data = $upload->process(function ($source) {
+		});
+
+		$this->assertSame([
+			'status'  => 'error',
+			'message' => 'The uploaded file was only partially uploaded'
+		], $data);
+	}
+
+	/**
+	 * @covers ::process
+	 */
+	public function testProcessException()
+	{
+		$upload = $this->upload([
+			'requestMethod' => 'POST',
+			'requestData' => [
+				'files' => [
+					[
+						'name'     => 'test.txt',
+						'tmp_name' => KIRBY_TMP_DIR . '/api.upload/abc',
+						'size'     => 123,
+						'error'    => 0
+					]
+				]
+			]
+		]);
+
+		// move_uploaded_file error
+		$data = $upload->process(function ($source) {
+			// empty closure
+		});
+
+		$this->assertSame([
+			'status'  => 'error',
+			'message' => 'The uploaded file could not be moved'
+		], $data);
 	}
 
 	/**
@@ -252,6 +440,43 @@ class UploadTest extends TestCase
 	}
 
 	/**
+	 * @covers ::response
+	 */
+	public function testResponse()
+	{
+		// nothing
+		$response = Upload::response([], []);
+		$this->assertSame('ok', $response['status']);
+		$this->assertNull($response['data']);
+
+		// 1 upload
+		$response = Upload::response(['foo'], []);
+		$this->assertSame('ok', $response['status']);
+		$this->assertSame('foo', $response['data']);
+
+		// 2 uploads
+		$response = Upload::response($expected = ['foo', 'bar'], []);
+		$this->assertSame('ok', $response['status']);
+		$this->assertSame($expected, $response['data']);
+
+		// error without uploads
+		$response = Upload::response([], ['err']);
+		$this->assertSame('error', $response['status']);
+		$this->assertSame('err', $response['message']);
+
+		// error with 1 upload
+		$response = Upload::response(['foo'], $expected = ['quz']);
+		$this->assertSame('error', $response['status']);
+		$this->assertSame($expected, $response['errors']);
+
+		// error with 2 uploads
+		$response = Upload::response(['foo', 'bar'], $expected = ['quz']);
+		$this->assertSame('error', $response['status']);
+		$this->assertSame($expected, $response['errors']);
+	}
+
+
+	/**
 	 * @covers ::validateChunk
 	 */
 	public function testValidateChunkDuplicate()
@@ -303,7 +528,7 @@ class UploadTest extends TestCase
 			]
 		]);
 
-		$this->expectException(Exception::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Chunk offset 1500 does not match the existing tmp upload file size of 6');
 		$upload->processChunk($source, basename($source));
 	}
@@ -417,5 +642,21 @@ class UploadTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.file.maxsize');
 		$upload->processChunk($source, basename($source));
+	}
+
+	/**
+	 * @covers ::validateFiles
+	 */
+	public function testValidateFilesEmpty()
+	{
+		ini_set('upload_max_filesize', '10M');
+		ini_set('post_max_size', '20M');
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('No files were uploaded');
+
+		$upload = $this->upload();
+		$upload->process(function () {
+		});
 	}
 }

@@ -12,9 +12,7 @@ use Kirby\Http\Response;
 use Kirby\Http\Route;
 use Kirby\Http\Router;
 use Kirby\Toolkit\Collection as BaseCollection;
-use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Pagination;
-use Kirby\Toolkit\Str;
 use Throwable;
 
 /**

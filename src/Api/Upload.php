@@ -17,8 +17,9 @@ use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
 /**
- * The Upload class supports file uploads in the
- * context of the API
+ * The Upload class handles file uploads in the
+ * context of the API. It adds support for chunked
+ * uploads.
  *
  * @package   Kirby Api
  * @author    Nico Hoffmann <nico@getkirby.com>
@@ -96,7 +97,7 @@ class Upload
 	 *
 	 * @throws \Exception Any upload error
 	 */
-	public static function error(string $error): void
+	public static function error(int $error): void
 	{
 		// get error messages from translation
 		$message = [
@@ -142,6 +143,8 @@ class Upload
 	/**
 	 * Move the tmp file to a location including the extension,
 	 * for better mime detection
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function move(array $upload, string $source): void
 	{
@@ -183,7 +186,7 @@ class Upload
 
 				$filename = static::filename($upload);
 				$source   = dirname($upload['tmp_name']);
-				$source   = $source  . '/' . uniqid() . '.' . $filename;
+				$source   = $source . '/' . uniqid() . '.' . $filename;
 
 				// move upload file to tmp location
 				$this->move($upload, $source);
@@ -213,7 +216,7 @@ class Upload
 			}
 		}
 
-		return $this->response($uploads, $errors);
+		return static::response($uploads, $errors);
 	}
 
 	/**
@@ -280,12 +283,11 @@ class Upload
 	/**
 	 * Convert uploads and errors in response array for API response
 	 */
-	public function response(
+	public static function response(
 		array $uploads,
 		array $errors
-	): array
-	{
-		if (count($uploads) + count($errors) === 1) {
+	): array {
+		if (count($uploads) + count($errors) <= 1) {
 			if (empty($errors) === false) {
 				return [
 					'status'  => 'error',
@@ -295,7 +297,7 @@ class Upload
 
 			return [
 				'status' => 'ok',
-				'data'   => current($uploads)
+				'data'   => $uploads ? current($uploads) : null
 			];
 		}
 
@@ -391,12 +393,13 @@ class Upload
 	 *
 	 * @throws \Exception No files were uploaded
 	 */
-	public static function validateFiles(array $files): void
+	protected static function validateFiles(array $files): void
 	{
 		if (empty($files) === true) {
 			$postMaxSize       = Str::toBytes(ini_get('post_max_size'));
 			$uploadMaxFileSize = Str::toBytes(ini_get('upload_max_filesize'));
 
+			// @codeCoverageIgnoreStart
 			if ($postMaxSize < $uploadMaxFileSize) {
 				throw new Exception(
 					I18n::translate(
@@ -405,6 +408,7 @@ class Upload
 					)
 				);
 			}
+			// @codeCoverageIgnoreEnd
 
 			throw new Exception(
 				I18n::translate(
