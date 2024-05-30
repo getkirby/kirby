@@ -8,10 +8,7 @@ import FileFocusButton from "./Files/FileFocusButton.vue";
 import LanguagesView from "./Languages/LanguagesView.vue";
 import LanguageView from "./Languages/LanguageView.vue";
 
-import LoginView from "./Login/LoginView.vue";
-import InstallationView from "./Login/InstallationView.vue";
-import ResetPasswordView from "./Login/ResetPasswordView.vue";
-import UserInfo from "./Login/UserInfo.vue";
+import Login from "./Login/index.js";
 
 import PageView from "./Pages/PageView.vue";
 import SiteView from "./Pages/SiteView.vue";
@@ -39,10 +36,7 @@ export default {
 		app.component("k-languages-view", LanguagesView);
 		app.component("k-language-view", LanguageView);
 
-		app.component("k-login-view", LoginView);
-		app.component("k-installation-view", InstallationView);
-		app.component("k-reset-password-view", ResetPasswordView);
-		app.component("k-user-info", UserInfo);
+		app.use(Login);
 
 		app.component("k-page-view", PageView);
 		app.component("k-site-view", SiteView);
