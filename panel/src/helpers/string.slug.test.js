@@ -70,6 +70,11 @@ describe.concurrent("$helper.string.slug()", () => {
 		expect(resultB).toBe("a-b");
 	});
 
+	it("should produces safe filenames", () => {
+		const result = slug("-what a view@2x.png_", [], "a-z0-9@._-");
+		expect(result).toBe("what-a-view@2x.png");
+	});
+
 	it("should return empty string when no param sent", () => {
 		const result = slug();
 		expect(result).toBe("");
