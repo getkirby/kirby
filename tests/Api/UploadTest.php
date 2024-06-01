@@ -107,9 +107,9 @@ class UploadTest extends TestCase
 	}
 
 	/**
-	 * @covers ::cleanTmpDirectory
+	 * @covers ::cleanTmpDir
 	 */
-	public function testCleanTmpDirectory()
+	public function testCleanTmpDir()
 	{
 		$dir = static::TMP . '/site/cache/.uploads';
 		F::write($a = $dir . '/abcd-a.md', '');
@@ -120,7 +120,7 @@ class UploadTest extends TestCase
 		$this->assertFileExists($a);
 		$this->assertFileExists($b);
 
-		Upload::cleanTmpDirectory();
+		Upload::cleanTmpDir();
 
 		$this->assertDirectoryExists($dir);
 		$this->assertFileExists($a);
@@ -128,7 +128,7 @@ class UploadTest extends TestCase
 
 		touch($a, time() - 86400 - 1);
 
-		Upload::cleanTmpDirectory();
+		Upload::cleanTmpDir();
 
 		$this->assertDirectoryDoesNotExist($dir);
 		$this->assertFileDoesNotExist($a);

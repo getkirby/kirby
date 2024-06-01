@@ -48,7 +48,9 @@ class Upload
 		$id = Str::slug($id, '', 'a-z0-9');
 
 		if (strlen($id) < 3) {
-			throw new InvalidArgumentException('Chunk ID must at least be 3 characters long');
+			throw new InvalidArgumentException(
+				'Chunk ID must at least be 3 characters long'
+			);
 		}
 
 		return $id;
@@ -76,9 +78,9 @@ class Upload
 	/**
 	 * Clean up tmp directory of stale files
 	 */
-	public static function cleanTmpDirectory(): void
+	public static function cleanTmpDir(): void
 	{
-		foreach (Dir::files($dir = static::tmp(), [], true) as $file) {
+		foreach (Dir::files($dir = static::tmpDir(), [], true) as $file) {
 			// remove any file that hasn't been altered
 			// in the last 24 hours
 			if (F::modified($file) < time() - 86400) {
@@ -212,7 +214,7 @@ class Upload
 		string $filename
 	): string|null {
 		// ensure the tmp upload directory exists
-		Dir::make($dir = static::tmp());
+		Dir::make($dir = static::tmpDir());
 
 		// create path for file in tmp upload directory;
 		// prefix with id while file isn't completely uploaded yet
@@ -318,7 +320,7 @@ class Upload
 	 * temporarily storing (incomplete) uploads
 	 * @codeCoverageIgnore
 	 */
-	protected static function tmp(): string
+	protected static function tmpDir(): string
 	{
 		return App::instance()->root('cache') . '/.uploads';
 	}
@@ -363,7 +365,9 @@ class Upload
 			// sent chunk is expected to be the first part,
 			// but tmp file already exists
 			if (F::exists($tmp) === true) {
-				throw new DuplicateException('A tmp file upload with the same filename and upload id already exists: ' . $filename);
+				throw new DuplicateException(
+					'A tmp file upload with the same filename and upload id already exists: ' . $filename
+				);
 			}
 
 			// validate file (extension, name) for first chunk;
@@ -378,12 +382,16 @@ class Upload
 		// validate subsequent chunks:
 		// no tmp in place
 		if (F::exists($tmp) === false) {
-			throw new NotFoundException('Chunk offset ' . $offset . ' for non-existing tmp file: ' . $filename);
+			throw new NotFoundException(
+				'Chunk offset ' . $offset . ' for non-existing tmp file: ' . $filename
+			);
 		}
 
 		// sent chunk's offset is not the continuation of the tmp file
 		if ($offset !== F::size($tmp)) {
-			throw new InvalidArgumentException('Chunk offset ' . $offset . ' does not match the existing tmp upload file size of ' . F::size($tmp));
+			throw new InvalidArgumentException(
+				'Chunk offset ' . $offset . ' does not match the existing tmp upload file size of ' . F::size($tmp)
+			);
 		}
 	}
 

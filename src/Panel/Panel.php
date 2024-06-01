@@ -150,7 +150,7 @@ class Panel
 		// run garbage collection with a chance of 10%;
 		if (mt_rand(1, 10000) <= 0.1 * 10000) {
 			// clean up leftover upload chunks
-			Upload::cleanTmpDirectory();
+			Upload::cleanTmpDir();
 		}
 	}
 

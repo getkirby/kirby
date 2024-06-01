@@ -2,7 +2,7 @@ import { uuid } from "@/helpers/string";
 import State from "./state.js";
 import listeners from "./listeners.js";
 import queue from "@/helpers/queue.js";
-import { chunked as upload } from "@/helpers/upload.js";
+import { uploadAsChunks } from "@/helpers/upload.js";
 import { extension, name, niceSize } from "@/helpers/file.js";
 
 export const defaults = () => {
@@ -312,7 +312,7 @@ export default (panel) => {
 		},
 		async upload(file, attributes) {
 			try {
-				const response = await upload(
+				const response = await uploadAsChunks(
 					file.src,
 					{
 						attributes: attributes,
