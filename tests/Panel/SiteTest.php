@@ -40,6 +40,17 @@ class SiteTest extends TestCase
 	}
 
 	/**
+	 * @covers ::buttons
+	 */
+	public function testButtons()
+	{
+		$this->assertSame([
+			'preview',
+			'languages',
+		], $this->panel()->buttons());
+	}
+
+	/**
 	 * @covers ::dropdownOption
 	 */
 	public function testDropdownOption(): void

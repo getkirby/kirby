@@ -5,6 +5,7 @@ namespace Kirby\Http;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use SensitiveParameter;
+use Stringable;
 use Throwable;
 
 /**
@@ -16,7 +17,7 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-class Uri
+class Uri implements Stringable
 {
 	/**
 	 * Cache for the current Uri object

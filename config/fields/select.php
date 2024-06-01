@@ -17,7 +17,7 @@ return [
 			return $icon;
 		},
 		/**
-		 * Custom placeholder string for empty option.
+		 * Text shown when no option is selected yet
 		 */
 		'placeholder' => function (string $placeholder = '—') {
 			return $placeholder;

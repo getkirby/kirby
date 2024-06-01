@@ -636,7 +636,11 @@ class PageTest extends TestCase
 		]);
 
 		if ($draft === true && $expected !== null) {
-			$expected = str_replace('{token}', 'token=' . hash_hmac('sha1', $page->id() . $page->template(), $page->root()), $expected);
+			$expected = str_replace(
+				'{token}',
+				'token=' . hash_hmac('sha1', $page->id() . $page->template(), $page->kirby()->root('content') . '/' . $page->id()),
+				$expected
+			);
 		}
 
 		$this->assertSame($expected, $page->previewUrl());
@@ -650,16 +654,25 @@ class PageTest extends TestCase
 
 	public function testToken()
 	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			]
+		]);
+
 		$page = new Page([
 			'slug'     => 'test',
-			'root'     => '/var/www/content/test',
 			'template' => 'default'
 		]);
 
 		$method = new ReflectionMethod(Page::class, 'token');
 		$method->setAccessible(true);
 
-		$expected = hash_hmac('sha1', 'test' . 'default', '/var/www/content/test');
+		$expected = hash_hmac(
+			'sha1',
+			'testdefault',
+			'/dev/null/content/test'
+		);
 		$this->assertSame($expected, $method->invoke($page));
 	}
 

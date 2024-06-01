@@ -28,29 +28,28 @@ interface ContentStorageHandler
 	 * @param string $lang Code `'default'` in a single-lang installation
 	 * @param array<string, string> $fields Content fields
 	 */
-	public function create(string $versionType, string $lang, array $fields): void;
+	public function create(VersionId $versionId, string $lang, array $fields): void;
 
 	/**
 	 * Deletes an existing version in an idempotent way if it was already deleted
 	 *
 	 * @param string $lang Code `'default'` in a single-lang installation
 	 */
-	public function delete(string $version, string $lang): void;
+	public function delete(VersionId $versionId, string $lang): void;
 
 	/**
 	 * Checks if a version exists
 	 *
-	 * @param string|null $lang Code `'default'` in a single-lang installation;
-	 *                          checks for "any language" if not provided
+	 * @param string $lang Code `'default'` in a single-lang installation
 	 */
-	public function exists(string $version, string|null $lang): bool;
+	public function exists(VersionId $versionId, string $lang): bool;
 
 	/**
 	 * Returns the modification timestamp of a version if it exists
 	 *
 	 * @param string $lang Code `'default'` in a single-lang installation
 	 */
-	public function modified(string $version, string $lang): int|null;
+	public function modified(VersionId $versionId, string $lang): int|null;
 
 	/**
 	 * Moves content from one version-language combination to another
@@ -59,9 +58,9 @@ interface ContentStorageHandler
 	 * @param string $toLang Code `'default'` in a single-lang installation
 	 */
 	public function move(
-		string $fromVersion,
+		VersionId $fromVersionId,
 		string $fromLang,
-		string $toVersion,
+		VersionId $toVersionId,
 		string $toLang
 	): void;
 
@@ -73,7 +72,7 @@ interface ContentStorageHandler
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function read(string $version, string $lang): array;
+	public function read(VersionId $versionId, string $lang): array;
 
 	/**
 	 * Updates the modification timestamp of an existing version
@@ -82,7 +81,7 @@ interface ContentStorageHandler
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function touch(string $version, string $lang): void;
+	public function touch(VersionId $versionId, string $lang): void;
 
 	/**
 	 * Updates the content fields of an existing version
@@ -92,5 +91,5 @@ interface ContentStorageHandler
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function update(string $version, string $lang, array $fields): void;
+	public function update(VersionId $versionId, string $lang, array $fields): void;
 }

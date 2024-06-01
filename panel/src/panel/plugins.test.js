@@ -19,8 +19,9 @@ describe.concurrent("panel.plugins", () => {
 			icons: {},
 			login: null,
 			textareaButtons: {},
-			use: [],
 			thirdParty: {},
+			use: [],
+			viewButtons: {},
 			writerMarks: {},
 			writerNodes: {}
 		};

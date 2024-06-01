@@ -22,6 +22,7 @@ export default {
 	props: {
 		current: [Boolean, String],
 		disabled: Boolean,
+		download: Boolean,
 		icon: String,
 		link: String,
 		target: String

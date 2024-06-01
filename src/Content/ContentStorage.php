@@ -53,9 +53,9 @@ class ContentStorage
 	public function all(): Generator
 	{
 		foreach ($this->model->kirby()->languages()->codes() as $lang) {
-			foreach ($this->dynamicVersions() as $version) {
-				if ($this->exists($version, $lang) === true) {
-					yield $version => $lang;
+			foreach ($this->dynamicVersions() as $versionId) {
+				if ($this->exists($versionId, $lang) === true) {
+					yield $versionId => $lang;
 				}
 			}
 		}
@@ -71,12 +71,12 @@ class ContentStorage
 	 * @throws \Kirby\Exception\LogicException If the model type doesn't have a known content filename
 	 */
 	public function contentFile(
-		string $version,
+		VersionId $versionId,
 		string $lang,
 		bool $force = false
 	): string {
 		$lang = $this->language($lang, $force);
-		return $this->handler->contentFile($version, $lang);
+		return $this->handler->contentFile($versionId, $lang);
 	}
 
 	/**
@@ -88,8 +88,8 @@ class ContentStorage
 		$from = $this->language($from, true);
 		$to   = $this->language($to, true);
 
-		foreach ($this->dynamicVersions() as $version) {
-			$this->handler->move($version, $from, $version, $to);
+		foreach ($this->dynamicVersions() as $versionId) {
+			$this->handler->move($versionId, $from, $versionId, $to);
 		}
 	}
 
@@ -100,28 +100,12 @@ class ContentStorage
 	 * @param array<string, string> $fields Content fields
 	 */
 	public function create(
-		string $versionType,
+		VersionId $versionId,
 		string|null $lang,
 		array $fields
 	): void {
 		$lang = $this->language($lang);
-		$this->handler->create($versionType, $lang, $fields);
-	}
-
-	/**
-	 * Returns the default version identifier for the model
-	 * @internal
-	 */
-	public function defaultVersion(): string
-	{
-		if (
-			$this->model instanceof Page === true &&
-			$this->model->isDraft() === true
-		) {
-			return 'changes';
-		}
-
-		return 'published';
+		$this->handler->create($versionId, $lang, $fields);
 	}
 
 	/**
@@ -130,12 +114,12 @@ class ContentStorage
 	 * @param string $lang Code `'default'` in a single-lang installation
 	 */
 	public function delete(
-		string $version,
+		VersionId $versionId,
 		string|null $lang = null,
 		bool $force = false
 	): void {
 		$lang = $this->language($lang, $force);
-		$this->handler->delete($version, $lang);
+		$this->handler->delete($versionId, $lang);
 	}
 
 	/**
@@ -157,13 +141,13 @@ class ContentStorage
 	 */
 	public function dynamicVersions(): array
 	{
-		$versions = ['changes'];
+		$versions = [VersionId::changes()];
 
 		if (
 			$this->model instanceof Page === false ||
 			$this->model->isDraft() === false
 		) {
-			$versions[] = 'published';
+			$versions[] = VersionId::published();
 		}
 
 		return $versions;
@@ -172,18 +156,13 @@ class ContentStorage
 	/**
 	 * Checks if a version exists
 	 *
-	 * @param string|null $lang Code `'default'` in a single-lang installation;
-	 *                          checks for "any language" if not provided
+	 * @param string $lang Code `'default'` in a single-lang installation
 	 */
 	public function exists(
-		string $version,
-		string|null $lang
+		VersionId $versionId,
+		string $lang
 	): bool {
-		if ($lang !== null) {
-			$lang = $this->language($lang);
-		}
-
-		return $this->handler->exists($version, $lang);
+		return $this->handler->exists($versionId, $this->language($lang));
 	}
 
 	/**
@@ -193,11 +172,11 @@ class ContentStorage
 	 * @param string $lang Code `'default'` in a single-lang installation
 	 */
 	public function modified(
-		string $version,
+		VersionId $versionId,
 		string|null $lang = null
 	): int|null {
 		$lang = $this->language($lang);
-		return $this->handler->modified($version, $lang);
+		return $this->handler->modified($versionId, $lang);
 	}
 
 	/**
@@ -209,12 +188,12 @@ class ContentStorage
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
 	public function read(
-		string $version,
+		VersionId $versionId,
 		string|null $lang = null
 	): array {
 		$lang = $this->language($lang);
-		$this->ensureExistingVersion($version, $lang);
-		return $this->handler->read($version, $lang);
+		$this->ensureExistingVersion($versionId, $lang);
+		return $this->handler->read($versionId, $lang);
 	}
 
 	/**
@@ -225,12 +204,12 @@ class ContentStorage
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
 	public function touch(
-		string $version,
+		VersionId $versionId,
 		string|null $lang = null
 	): void {
 		$lang = $this->language($lang);
-		$this->ensureExistingVersion($version, $lang);
-		$this->handler->touch($version, $lang);
+		$this->ensureExistingVersion($versionId, $lang);
+		$this->handler->touch($versionId, $lang);
 	}
 
 	/**
@@ -257,24 +236,24 @@ class ContentStorage
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
 	public function update(
-		string $version,
+		VersionId $versionId,
 		string|null $lang = null,
 		array $fields = []
 	): void {
 		$lang = $this->language($lang);
-		$this->ensureExistingVersion($version, $lang);
-		$this->handler->update($version, $lang, $fields);
+		$this->ensureExistingVersion($versionId, $lang);
+		$this->handler->update($versionId, $lang, $fields);
 	}
 
 	/**
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
 	protected function ensureExistingVersion(
-		string $version,
+		VersionId $versionId,
 		string $lang
 	): void {
-		if ($this->exists($version, $lang) !== true) {
-			throw new NotFoundException('Version "' . $version . ' (' . $lang . ')" does not already exist');
+		if ($this->exists($versionId, $lang) !== true) {
+			throw new NotFoundException('Version "' . $versionId . ' (' . $lang . ')" does not already exist');
 		}
 	}
 

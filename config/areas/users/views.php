@@ -18,7 +18,10 @@ return [
 			return [
 				'component' => 'k-users-view',
 				'props'     => [
-					'role' => function () use ($kirby, $roles, $role) {
+					'buttons' => $kirby->option('panel.viewButtons.users', [
+						'add'
+					]),
+					'role' => function () use ($roles, $role) {
 						if ($role) {
 							return $roles[$role] ?? null;
 						}

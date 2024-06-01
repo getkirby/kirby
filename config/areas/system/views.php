@@ -87,6 +87,7 @@ return [
 			return [
 				'component' => 'k-system-view',
 				'props'     => [
+					'buttons'     => $kirby->option('panel.viewButtons.system', []),
 					'environment' => $environment,
 					'exceptions'  => $kirby->option('debug') === true ? $exceptions : [],
 					'info'        => $system->info(),

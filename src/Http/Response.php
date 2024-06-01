@@ -6,6 +6,7 @@ use Closure;
 use Exception;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
+use Stringable;
 
 /**
  * Representation of an Http response,
@@ -18,7 +19,7 @@ use Kirby\Filesystem\F;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-class Response
+class Response implements Stringable
 {
 	/**
 	 * Store for all registered headers,

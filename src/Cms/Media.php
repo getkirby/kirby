@@ -57,7 +57,12 @@ class Media
 		}
 
 		// try to generate a thumb for the file
-		return static::thumb($model, $hash, $filename);
+		try {
+			return static::thumb($model, $hash, $filename);
+		} catch (NotFoundException) {
+			// render the error page if there is no job for this filename
+			return false;
+		}
 	}
 
 	/**

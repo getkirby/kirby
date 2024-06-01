@@ -7,6 +7,7 @@ use Kirby\Content\Content;
 use Kirby\Content\ContentStorage;
 use Kirby\Content\ContentTranslation;
 use Kirby\Content\PlainTextContentStorageHandler;
+use Kirby\Content\VersionId;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form;
@@ -15,6 +16,7 @@ use Kirby\Toolkit\Str;
 use Kirby\Uuid\Identifiable;
 use Kirby\Uuid\Uuid;
 use Kirby\Uuid\Uuids;
+use Stringable;
 use Throwable;
 
 /**
@@ -26,7 +28,7 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-abstract class ModelWithContent implements Identifiable
+abstract class ModelWithContent implements Identifiable, Stringable
 {
 	/**
 	 * Each model must define a CLASS_ALIAS
@@ -186,7 +188,7 @@ abstract class ModelWithContent implements Identifiable
 		$new = $this->clone(['template' => $blueprint]);
 
 		// temporary compatibility change (TODO: also convert changes)
-		$identifier = $this->storage()->defaultVersion();
+		$identifier = VersionId::default($this);
 
 		// for multilang, we go through all translations and
 		// covnert the content for each of them, remove the content file
@@ -417,7 +419,7 @@ abstract class ModelWithContent implements Identifiable
 	{
 		try {
 			return $this->storage()->read(
-				$this->storage()->defaultVersion(),
+				VersionId::default($this),
 				$languageCode
 			);
 		} catch (NotFoundException) {
@@ -642,7 +644,7 @@ abstract class ModelWithContent implements Identifiable
 	 */
 	public function __toString(): string
 	{
-		return $this->id();
+		return (string)$this->id();
 	}
 
 	/**
@@ -736,7 +738,7 @@ abstract class ModelWithContent implements Identifiable
 	public function writeContent(array $data, string|null $languageCode = null): bool
 	{
 		$data = $this->contentFileData($data, $languageCode);
-		$id   = $this->storage()->defaultVersion();
+		$id   = VersionId::default($this);
 
 		try {
 			// we can only update if the version already exists

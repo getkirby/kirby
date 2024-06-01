@@ -30,6 +30,7 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\Config;
 use Kirby\Toolkit\Controller;
 use Kirby\Toolkit\LazyValue;
+use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuid;
 use Throwable;
@@ -435,10 +436,11 @@ class App
 	 */
 	public function contentToken(mixed $model, string $value): string
 	{
-		$default = match (method_exists($model, 'root')) {
-			true  => $model->root(),
-			false => $this->root('content')
-		};
+		$default = $this->root('content');
+
+		if (method_exists($model, 'id') === true) {
+			$default .= '/' . $model->id();
+		}
 
 		$salt = $this->option('content.salt', $default);
 
@@ -560,6 +562,14 @@ class App
 		}
 
 		return false;
+	}
+
+	/**
+	 * Returns the current language, if set by `static::setCurrentLanguage`
+	 */
+	public function currentLanguage(): Language|null
+	{
+		return $this->language ??= $this->defaultLanguage();
 	}
 
 	/**
@@ -900,7 +910,8 @@ class App
 	}
 
 	/**
-	 * Returns the current language
+	 * Returns the language by code or shortcut (`default`, `current`).
+	 * Passing `null` is an alias for passing `current`
 	 */
 	public function language(string|null $code = null): Language|null
 	{
@@ -908,19 +919,11 @@ class App
 			return null;
 		}
 
-		if ($code === 'default') {
-			return $this->defaultLanguage();
-		}
-
-		// if requesting a non-default language,
-		// find it but don't cache it
-		if ($code !== null) {
-			return $this->languages()->find($code);
-		}
-
-		// otherwise return language set by `AppTranslation::setCurrentLanguage`
-		// or default language
-		return $this->language ??= $this->defaultLanguage();
+		return match ($code ?? 'current') {
+			'default' => $this->defaultLanguage(),
+			'current' => $this->currentLanguage(),
+			default   => $this->languages()->find($code)
+		};
 	}
 
 	/**
@@ -1443,6 +1446,31 @@ class App
 			$this->root('sessions'),
 			$this->option('session', [])
 		);
+	}
+
+	/**
+	 * Load and set the current language if it exists
+	 * Otherwise fall back to the default language
+	 *
+	 * @internal
+	 */
+	public function setCurrentLanguage(
+		string|null $languageCode = null
+	): Language|null {
+		if ($this->multilang() === false) {
+			Locale::set($this->option('locale', 'en_US.utf-8'));
+			return $this->language = null;
+		}
+
+		$this->language   = $this->language($languageCode);
+		$this->language ??= $this->defaultLanguage();
+
+		Locale::set($this->language->locale());
+
+		// add language slug rules to Str class
+		Str::$language = $this->language->rules();
+
+		return $this->language;
 	}
 
 	/**

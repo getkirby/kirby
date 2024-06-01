@@ -26,27 +26,7 @@
 			</template>
 
 			<template #buttons>
-				<k-account-theme-button v-if="$panel.view.id === 'account'" />
-
-				<k-button-group>
-					<k-button
-						:disabled="isLocked"
-						:dropdown="true"
-						:title="$t('settings')"
-						icon="cog"
-						size="sm"
-						variant="filled"
-						class="k-user-view-options"
-						@click="$refs.settings.toggle()"
-					/>
-					<k-dropdown-content
-						ref="settings"
-						align-x="end"
-						:options="$dropdown(id)"
-					/>
-					<k-languages-dropdown />
-				</k-button-group>
-
+				<k-view-buttons :buttons="buttons" />
 				<k-form-buttons :lock="lock" />
 			</template>
 		</k-header>

@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use Exception;
 use Kirby\Content\Field;
+use Kirby\Content\VersionId;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
@@ -204,7 +205,7 @@ class User extends ModelWithContent
 	public function exists(): bool
 	{
 		return $this->storage()->exists(
-			'published',
+			VersionId::published(),
 			'default'
 		);
 	}
@@ -468,7 +469,7 @@ class User extends ModelWithContent
 		string|null $handler = null,
 		string|null $languageCode = null
 	): int|string|false {
-		$modifiedContent = $this->storage()->modified('published', $languageCode);
+		$modifiedContent = $this->storage()->modified(VersionId::published(), $languageCode);
 		$modifiedIndex   = F::modified($this->root() . '/index.php');
 		$modifiedTotal   = max([$modifiedContent, $modifiedIndex]);
 

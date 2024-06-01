@@ -67,6 +67,11 @@ class ModelSiteTestForceUnlocked extends ModelSite
 
 class CustomPanelModel extends Model
 {
+	public function buttons(): array
+	{
+		return [];
+	}
+
 	public function path(): string
 	{
 		return 'custom';

@@ -50,9 +50,9 @@ class ContentStorageTest extends TestCase
 			'text'  => 'Bar'
 		];
 
-		$this->assertFalse($this->storage->exists('changes', 'en'));
-		$this->storage->create('changes', 'en', $fields);
-		$this->assertTrue($this->storage->exists('changes', 'en'));
+		$this->assertFalse($this->storage->exists(VersionId::changes(), 'en'));
+		$this->storage->create(VersionId::changes(), 'en', $fields);
+		$this->assertTrue($this->storage->exists(VersionId::changes(), 'en'));
 	}
 
 	/**
@@ -65,9 +65,9 @@ class ContentStorageTest extends TestCase
 			'text'  => 'Bar'
 		];
 
-		$this->assertFalse($this->storage->exists('changes', 'default'));
-		$this->storage->create('changes', 'default', $fields);
-		$this->assertTrue($this->storage->exists('changes', 'default'));
+		$this->assertFalse($this->storage->exists(VersionId::changes(), 'default'));
+		$this->storage->create(VersionId::changes(), 'default', $fields);
+		$this->assertTrue($this->storage->exists(VersionId::changes(), 'default'));
 	}
 
 	/**
@@ -79,7 +79,7 @@ class ContentStorageTest extends TestCase
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Version "published (default)" does not already exist');
 
-		$this->storage->read('published', 'default');
+		$this->storage->read(VersionId::published(), 'default');
 	}
 
 	/**
@@ -91,7 +91,7 @@ class ContentStorageTest extends TestCase
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Version "published (default)" does not already exist');
 
-		$this->storage->touch('published', 'default');
+		$this->storage->touch(VersionId::published(), 'default');
 	}
 
 	/**
@@ -108,7 +108,7 @@ class ContentStorageTest extends TestCase
 			'text'  => 'Bar'
 		];
 
-		$this->storage->update('published', 'default', $fields);
+		$this->storage->update(VersionId::published(), 'default', $fields);
 	}
 
 	/**

@@ -3,6 +3,7 @@
 namespace Kirby\Image;
 
 use Kirby\Toolkit\Str;
+use Stringable;
 
 /**
  * The Dimension class is used to provide additional
@@ -16,7 +17,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-class Dimensions
+class Dimensions implements Stringable
 {
 	public function __construct(
 		public int $width,
