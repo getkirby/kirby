@@ -763,14 +763,17 @@ class FTest extends TestCase
 		// without extension
 		$this->assertSame('uber-genious', F::safeName('über genious'));
 
-		// with leading dash
-		$this->assertSame('super.jpg', F::safeName('-super.jpg'));
+		// with leading and trailing dash
+		$this->assertSame('super.jpg', F::safeName('-super.jpg-'));
 
-		// with leading underscore
-		$this->assertSame('super.jpg', F::safeName('_super.jpg'));
+		// with leading and trailing underscore
+		$this->assertSame('super.jpg', F::safeName('_super.jpg_'));
 
-		// with leading dot
-		$this->assertSame('super.jpg', F::safeName('.super.jpg'));
+		// with leading and trailing dot
+		$this->assertSame('super.jpg', F::safeName('.super.jpg.'));
+
+		// leave allowed characters untouched
+		$this->assertSame('file.a@b_c-d.jpg', F::safeName('file.a@b_c-d.jpg'));
 	}
 
 	/**
@@ -786,6 +789,8 @@ class FTest extends TestCase
 
 		// without extension
 		$this->assertSame('uber-genious', F::safeBasename('über genious'));
+		$this->assertSame('uber', F::safeBasename('über.genious'));
+		$this->assertSame('uber.genious', F::safeBasename('über.genious', false));
 
 		// with leading dash
 		$this->assertSame('super', F::safeBasename('-super.jpg'));
@@ -801,6 +806,7 @@ class FTest extends TestCase
 
 		$this->assertSame('txt', F::safeExtension('über genious.txt'));
 		$this->assertSame('taxt', F::safeExtension('über genious.täxt'));
+		$this->assertSame('taxt', F::safeExtension('täxt', false));
 		$this->assertSame('', F::safeExtension('über genious'));
 		$this->assertSame('jpg', F::safeExtension('-super.jpg'));
 	}
