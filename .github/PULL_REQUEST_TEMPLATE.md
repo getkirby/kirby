@@ -6,11 +6,19 @@ Use this section for review hints, explanations or discussion points/todos.
 Make sure to point your PR to the relevant develop branches, e.g.
 `develop-patch`, `develop-minor` or `v5/develop`
 
+How to contribute: https://contribute.getkirby.com
+-->
+
+### What has changed?
+
+### Why was it changed?
+
+
+## Changelog
+<!--
 Add relevant release notes: Features, Enhancements, Fixes, Deprecated.
 Reference issues from the `kirby` repo or ideas from `feedback.getkirby.com`.
 Always mention whether your PR introduces breaking changes.
-
-How to contribute: https://contribute.getkirby.com
 -->
 
 ### Fixes
@@ -23,7 +31,7 @@ How to contribute: https://contribute.getkirby.com
 ## Docs
 <!--
 Add any notes that help to document the feature/changes. Doesn't need
-to be your best writing, just a few words and/or code snipptets.
+to be your best writing, just a few words and/or code snippets.
 -->
 
 
@@ -32,8 +40,6 @@ to be your best writing, just a few words and/or code snipptets.
 <!--
 If you can help to check off the following tasks, that'd be great.
 If not, don't worry - we will take care of it.
-
-More details: https://contribute.getkirby.com
 -->
 
 - [ ] In-code documentation (wherever needed)
