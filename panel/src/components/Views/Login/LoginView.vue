@@ -13,7 +13,7 @@
 			</k-login-alert>
 
 			<k-dialog-body>
-				<k-login-code
+				<k-login-code-form
 					v-if="form === 'code'"
 					v-bind="{ methods, pending, value: value.code }"
 					@error="onError"
@@ -30,17 +30,17 @@
 </template>
 
 <script>
-import { props as LoginCodeProps } from "@/components/Forms/LoginCode.vue";
-import { props as LoginProps } from "@/components/Forms/Login.vue";
+import { props as LoginCodeFormProps } from "./LoginCodeForm.vue";
+import { props as LoginFormProps } from "./LoginForm.vue";
 
 /**
  * @internal
  */
 export default {
 	components: {
-		"k-login-plugin": window.panel.plugins.login
+		"k-login-plugin-form": window.panel.plugins.login
 	},
-	mixins: [LoginCodeProps, LoginProps],
+	mixins: [LoginCodeFormProps, LoginFormProps],
 	props: {
 		/**
 		 * Values to prefill the inputs
@@ -61,7 +61,9 @@ export default {
 	},
 	computed: {
 		component() {
-			return window.panel.plugins.login ? "k-login-plugin" : "k-login";
+			return window.panel.plugins.login
+				? "k-login-plugin-form"
+				: "k-login-form";
 		},
 		form() {
 			return this.pending.email ? "code" : "login";
