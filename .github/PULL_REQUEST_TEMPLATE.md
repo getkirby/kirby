@@ -1,4 +1,4 @@
-## This PR …
+## Description
 <!--
 A clear and concise description of the PR.
 Use this section for review hints, explanations or discussion points/todos.
@@ -11,7 +11,14 @@ How to contribute: https://contribute.getkirby.com
 
 ### What has changed?
 
+
+
 ### Why was it changed?
+
+
+
+### What should reviewers know?
+
 
 
 ## Changelog
@@ -22,6 +29,7 @@ Always mention whether your PR introduces breaking changes.
 -->
 
 ### Fixes
+
 
 
 ### Breaking changes
