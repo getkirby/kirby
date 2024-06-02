@@ -9,15 +9,15 @@ Make sure to point your PR to the relevant develop branches, e.g.
 How to contribute: https://contribute.getkirby.com
 -->
 
-### What has changed?
+### This PR changes…
 
 
 
-### Why was it changed?
+### Reason
 
 
 
-### What should reviewers know?
+### For reviewers
 
 
 
@@ -52,7 +52,7 @@ If not, don't worry - we will take care of it.
 
 - [ ] In-code documentation (wherever needed)
 - [ ] Unit tests for fixed bug/feature
-- [ ] Tests and checks all pass
+- [ ] Tests and CI checks all pass
 
 ### For review team
 <!--
