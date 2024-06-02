@@ -9,15 +9,15 @@ Make sure to point your PR to the relevant develop branches, e.g.
 How to contribute: https://contribute.getkirby.com
 -->
 
-### This PR changes…
+### Summary of changes
 
 
 
-### Reason
+### Reasoning
 
 
 
-### For reviewers
+### Additional context
 
 
 
