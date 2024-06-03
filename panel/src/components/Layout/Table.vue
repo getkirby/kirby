@@ -479,6 +479,7 @@ export default {
 .k-table .k-table-index-column {
 	width: var(--table-row-height);
 	text-align: center;
+	padding-inline: 0;
 }
 .k-table .k-table-index {
 	font-size: var(--text-xs);
