@@ -4,7 +4,7 @@ namespace Kirby\Content;
 
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Exception\InvalidArgumentException;
+use Throwable;
 
 /**
  * The Version class handles all actions for a single
@@ -32,9 +32,15 @@ class Version
 	 */
 	public function content(Language|string $language = 'default'): Content
 	{
+		try {
+			$data = $this->model->storage()->read($this->id, $this->language($language));
+		} catch (Throwable) {
+			$data = [];
+		}
+
 		return new Content(
 			parent: $this->model,
-			data:   $this->model->storage()->read($this->id, $this->language($language)),
+			data: $data,
 		);
 	}
 
