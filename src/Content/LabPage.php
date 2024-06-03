@@ -2,6 +2,10 @@
 
 namespace Kirby\Content;
 
+use Kirby\Cms\App;
+use Kirby\Cms\Collection;
+use Kirby\Cms\Language;
+use Kirby\Cms\Languages;
 use Kirby\Cms\Page;
 
 /**
@@ -38,6 +42,57 @@ class LabPage extends Page
 		$this->version()->create($content, 'default');
 
 		return $this;
+	}
+
+	/**
+	 */
+	protected function setTranslations(array|null $translations = null): static
+	{
+		// don't set anything if there's no content
+		if ($translations === null) {
+			return $this;
+		}
+
+		// switch to in-memory content storage
+		$this->storage = new MemoryContentStorageHandler(
+			model: $this
+		);
+
+		// go through all translations and create a default version for it
+		foreach ($translations as $translation) {
+			$language = Language::ensure($translation['code'] ?? 'default');
+			$content  = $translation['content'] ?? [];
+
+			// add the custom slug to the content array
+			if (isset($translation['slug']) === true) {
+				$content['slug'] = $translation['slug'] ?? null;
+			}
+
+			$this->version()->create($content, $language->code());
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Returns a single translation by language code
+	 * If no code is specified the current translation is returned
+	 *
+	 * @throws \Kirby\Exception\NotFoundException If the language does not exist
+	 */
+	public function translation(
+		string|null $languageCode = null
+	): ContentTranslation|null {
+		$languageCode ??= Language::ensure($languageCode)->code();
+		return $this->translations()->find($languageCode);
+	}
+
+	/**
+	 * Returns the translations collection
+	 */
+	public function translations(): ContentTranslations
+	{
+		return ContentTranslations::load(model: $this);
 	}
 
 }
