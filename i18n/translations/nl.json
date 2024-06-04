@@ -114,7 +114,7 @@
 	"error.file.minheight": "De hoogte van de afbeelding moet minimaal {height} pixels zijn",
 	"error.file.minsize": "Het bestand is te klein",
 	"error.file.minwidth": "De breedte van de afbeelding moet minimaal {width} pixels zijn",
-	"error.file.name.unique": "The filename must be unique",
+	"error.file.name.unique": "De bestandsnaam moet uniek zijn",
 	"error.file.name.missing": "De bestandsnaam mag niet leeg zijn",
 	"error.file.notFound": "Het bestand kan niet worden gevonden",
 	"error.file.orientation": "De oriëntatie van de afbeelding moet \"{orientation}\" zijn",
