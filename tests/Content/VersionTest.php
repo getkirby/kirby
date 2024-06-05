@@ -171,7 +171,7 @@ class VersionTest extends TestCase
 
 		$this->assertSame('Test', $version->read()['title']);
 
-		$version->create([
+		$version->update([
 			'title' => 'Updated Title'
 		]);
 
