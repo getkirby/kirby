@@ -274,8 +274,13 @@ class Language implements Stringable
 	 */
 	public function isDeletable(): bool
 	{
+		// a single-language object cannot be deleted
+		if ($this->isSingle() === true) {
+			return false;
+		}
+
 		// the default language can only be deleted if it's the last
-		if ($this->isSingle() === true && $this->isDefault() === true && $this->isLast() === false) {
+		if ($this->isDefault() === true && $this->isLast() === false) {
 			return false;
 		}
 
