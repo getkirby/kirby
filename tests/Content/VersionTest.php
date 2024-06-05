@@ -225,15 +225,22 @@ class VersionTest extends TestCase
 		);
 
 		$this->assertContentFileDoesNotExist('de');
+		$this->assertContentFileDoesNotExist('en');
 
-		$version->create([
+		Data::write($this->contentFile('en'), [
 			'title' => 'Test'
-		], 'de');
+		]);
 
+		Data::write($this->contentFile('de'), [
+			'title' => 'Test'
+		]);
+
+		$this->assertContentFileExists('en');
 		$this->assertContentFileExists('de');
 
-		$version->delete('de');
+		$version->delete();
 
+		$this->assertContentFileDoesNotExist('en');
 		$this->assertContentFileDoesNotExist('de');
 	}
 
@@ -252,7 +259,7 @@ class VersionTest extends TestCase
 
 		$this->assertContentFileDoesNotExist();
 
-		$version->create([
+		Data::write($this->contentFile(), [
 			'title' => 'Test'
 		]);
 
