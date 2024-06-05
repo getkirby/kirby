@@ -107,13 +107,13 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		$version->create([
+		Data::write($this->contentFile('en'), [
 			'title' => 'Test'
-		], 'en');
+		]);
 
-		$version->create([
+		Data::write($this->contentFile('de'), [
 			'title' => 'Töst'
-		], 'de');
+		]);
 
 		$this->assertSame('Test', $version->content('en')->get('title')->value());
 		$this->assertSame('Töst', $version->content('de')->get('title')->value());
@@ -131,7 +131,7 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		$version->create([
+		Data::write($this->contentFile(), [
 			'title' => 'Test'
 		]);
 
@@ -282,7 +282,10 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		$version->create([], 'de');
+		Data::write($this->contentFile('de'), [
+			'title' => 'Test'
+		]);
+
 		$this->assertTrue($version->ensure('de'));
 	}
 
@@ -298,7 +301,10 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		$version->create([]);
+		Data::write($this->contentFile(), [
+			'title' => 'Test'
+		]);
+
 		$this->assertTrue($version->ensure());
 	}
 
