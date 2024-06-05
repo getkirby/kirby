@@ -213,7 +213,6 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::delete
-	 * @covers ::deleteLanguage
 	 */
 	public function testDeleteMultiLanguage(): void
 	{
@@ -246,7 +245,6 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::delete
-	 * @covers ::deleteLanguage
 	 */
 	public function testDeleteSingleLanguage(): void
 	{
