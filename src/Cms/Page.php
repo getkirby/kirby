@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Content\Field;
-use Kirby\Content\VersionId;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
