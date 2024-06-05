@@ -61,6 +61,8 @@ class LanguageConversionTest extends TestCase
 		// the content should still be loadable for the page
 		$this->assertSame('Title', $page->content()->title()->value());
 		$this->assertSame('Title', $page->content('en')->title()->value());
+
+		$this->assertSame('Title', Data::read($page->root() . '/test.en.txt')['title']);
 	}
 
 	public function testConvertFromMultiLanguageToSingleLanguage(): void
@@ -123,6 +125,7 @@ class LanguageConversionTest extends TestCase
 
 		// the page should still load the english content
 		$this->assertSame('English Title', $page->content()->title()->value());
+		$this->assertSame('English Title', Data::read($page->root() . '/test.txt')['title']);
 	}
 
 }
