@@ -416,7 +416,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	public function readContent(string|null $languageCode = null): array
 	{
 		try {
-			return $this->version(VersionId::default($this))->read($languageCode ?? 'default');
+			return $this->version()->read($languageCode ?? 'default');
 		} catch (NotFoundException) {
 			// only if the content file really does not exist, it's ok
 			// to return empty content. Otherwise this could lead to
@@ -745,14 +745,16 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	public function writeContent(array $data, string|null $languageCode = null): bool
 	{
 		$data = $this->contentFileData($data, $languageCode);
-		$id   = VersionId::default($this);
+
+		// update the default language, unless a specific language is passed
+		$languageCode ??= 'default';
 
 		try {
 			// we can only update if the version already exists
-			$this->version($id)->update($data, $languageCode ?? 'default');
+			$this->version()->update($data, $languageCode);
 		} catch (NotFoundException) {
 			// otherwise create a new version
-			$this->version($id)->create($data, $languageCode ?? 'default');
+			$this->version()->create($data, $languageCode);
 		}
 
 		return true;
