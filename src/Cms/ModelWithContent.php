@@ -729,11 +729,11 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 * Returns a content version instance
 	 * @since 5.0.0
 	 */
-	public function version(VersionId|string $versionId): Version
+	public function version(VersionId|string|null $versionId = null): Version
 	{
 		return new Version(
 			model: $this,
-			id: VersionId::from($versionId)
+			id: VersionId::from($versionId ?? VersionId::default($this))
 		);
 	}
 
