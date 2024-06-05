@@ -39,7 +39,12 @@ class LabPage extends Page
 			model: $this
 		);
 
-		$this->version()->create($content, 'default');
+		Translation::create(
+			model: $this,
+			version: $this->version(),
+			language: Language::ensure('default'),
+			fields: $content,
+		);
 
 		return $this;
 	}
@@ -58,18 +63,11 @@ class LabPage extends Page
 			model: $this
 		);
 
-		// go through all translations and create a default version for it
-		foreach ($translations as $translation) {
-			$language = Language::ensure($translation['code'] ?? 'default');
-			$content  = $translation['content'] ?? [];
-
-			// add the custom slug to the content array
-			if (isset($translation['slug']) === true) {
-				$content['slug'] = $translation['slug'] ?? null;
-			}
-
-			$this->version()->create($content, $language->code());
-		}
+		Translations::create(
+			model: $this,
+			version: $this->version(),
+			translations: $translations
+		);
 
 		return $this;
 	}
@@ -77,22 +75,21 @@ class LabPage extends Page
 	/**
 	 * Returns a single translation by language code
 	 * If no code is specified the current translation is returned
-	 *
-	 * @throws \Kirby\Exception\NotFoundException If the language does not exist
 	 */
 	public function translation(
 		string|null $languageCode = null
-	): ContentTranslation|null {
-		$languageCode ??= Language::ensure($languageCode)->code();
-		return $this->translations()->find($languageCode);
+	): Translation|null {
+		return $this->translations()->find($languageCode ?? 'current');
 	}
 
 	/**
 	 * Returns the translations collection
 	 */
-	public function translations(): ContentTranslations
+	public function translations(): Translations
 	{
-		return ContentTranslations::load(model: $this);
+		return Translations::load(
+			model: $this,
+			version: $this->version()
+		);
 	}
-
 }

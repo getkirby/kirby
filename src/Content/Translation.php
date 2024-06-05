@@ -16,27 +16,16 @@ use Kirby\Cms\ModelWithContent;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class ContentTranslation
+class Translation extends ContentTranslation
 {
-	protected string $code;
-	protected array|null $content;
-	protected ModelWithContent $parent;
-	protected string|null $slug;
-
 	/**
 	 * Creates a new translation object
 	 */
-	public function __construct(array $props)
-	{
-		$this->code   = $props['code'];
-		$this->parent = $props['parent'];
-		$this->slug   = $props['slug'] ?? null;
-
-		if ($content = $props['content'] ?? null) {
-			$this->content = array_change_key_case($content);
-		} else {
-			$this->content = null;
-		}
+	public function __construct(
+		protected ModelWithContent $model,
+		protected Version $version,
+		protected Language $language
+	) {
 	}
 
 	/**
@@ -54,7 +43,7 @@ class ContentTranslation
 	 */
 	public function code(): string
 	{
-		return $this->code;
+		return $this->language->code();
 	}
 
 	/**
@@ -63,21 +52,7 @@ class ContentTranslation
 	 */
 	public function content(): array
 	{
-		$parent  = $this->parent();
-		$content = $this->content ??= $parent->readContent($this->code());
-
-		// merge with the default content
-		if (
-			$this->isDefault() === false &&
-			$defaultLanguage = $parent->kirby()->defaultLanguage()
-		) {
-			$content = [
-				...$parent->translation($defaultLanguage->code())?->content() ?? [],
-				...$content
-			];
-		}
-
-		return $content;
+		return $this->version->read($this->language->code());
 	}
 
 	/**
@@ -85,7 +60,7 @@ class ContentTranslation
 	 */
 	public function contentFile(): string
 	{
-		return $this->parent->version()->contentFile($this->code);
+		return $this->version->contentFile($this->language->code());
 	}
 
 	public static function create(
@@ -102,10 +77,11 @@ class ContentTranslation
 
 		$version->create($fields, $language->code());
 
-		return new ContentTranslation([
-			'parent' => $model,
-			'code'   => $language->code(),
-		]);
+		return new static(
+			model: $model,
+			version: $version,
+			language: $language,
+		);
 	}
 
 	/**
@@ -113,9 +89,7 @@ class ContentTranslation
 	 */
 	public function exists(): bool
 	{
-		return
-			empty($this->content) === false ||
-			$this->parent->version()->exists($this->code);
+		return $this->version->exists($this->code);
 	}
 
 	/**
@@ -132,15 +106,23 @@ class ContentTranslation
 	 */
 	public function isDefault(): bool
 	{
-		return $this->code() === $this->parent->kirby()->defaultLanguage()?->code();
+		return $this->language->isDefault();
+	}
+
+	/**
+	 * Returns the language
+	 */
+	public function language(): Language
+	{
+		return $this->language;
 	}
 
 	/**
 	 * Returns the parent page, file or site object
 	 */
-	public function parent(): ModelWithContent
+	public function model(): ModelWithContent
 	{
-		return $this->parent;
+		return $this->model;
 	}
 
 	/**
@@ -148,7 +130,7 @@ class ContentTranslation
 	 */
 	public function slug(): string|null
 	{
-		return $this->slug ??= ($this->content()['slug'] ?? null);
+		return $this->content()['slug'] ?? null;
 	}
 
 	/**
@@ -180,5 +162,13 @@ class ContentTranslation
 			'exists'  => $this->exists(),
 			'slug'    => $this->slug(),
 		];
+	}
+
+	/**
+	 * Returns the version
+	 */
+	public function version(): Version
+	{
+		return $this->version;
 	}
 }
