@@ -62,35 +62,19 @@ class Version
 	}
 
 	/**
-	 * Deletes a version by language or for any language
-	 *
-	 * @param string|null $language If null, all available languages will be deleted
+	 * Deletes a version with all its languages
 	 */
-	public function delete(string|null $language = null): void
+	public function delete(): void
 	{
-		// delete a single language
+		// delete the default language in single-language mode
 		if ($this->model->kirby()->multilang() === false) {
-			$this->deleteLanguage('default');
-		}
-
-		// delete a specific language
-		if ($language !== null) {
-			$this->deleteLanguage($language);
-			return;
+			$this->model->storage()->delete($this->id, $this->language('default'));
 		}
 
 		// delete all languages
 		foreach ($this->model->kirby()->languages() as $language) {
-			$this->deleteLanguage($language);
+			$this->model->storage()->delete($this->id, $language);
 		}
-	}
-
-	/**
-	 * Deletes a version by a specific language
-	 */
-	public function deleteLanguage(string $language = 'default'): void
-	{
-		$this->model->storage()->delete($this->id, $this->language($language));
 	}
 
 	/**
