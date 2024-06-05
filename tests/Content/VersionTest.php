@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\App;
+use Kirby\Data\Data;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
@@ -16,6 +17,21 @@ class VersionTest extends TestCase
 
 	protected $app;
 	protected $model;
+
+	public function assertContentFileExists(string|null $language = null)
+	{
+		$this->assertFileExists($this->contentFile($language));
+	}
+
+	public function assertContentFileDoesNotExist(string|null $language = null)
+	{
+		$this->assertFileDoesNotExist($this->contentFile($language));
+	}
+
+	public function contentFile(string|null $language = null): string
+	{
+		return $this->model->root() . '/article' . ($language === null ? '' : '.' . $language) . '.txt';
+	}
 
 	public function setUp(): void
 	{
@@ -134,8 +150,8 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		$this->assertSame($this->model->root() . '/article.en.txt', $version->contentFile());
-		$this->assertSame($this->model->root() . '/article.de.txt', $version->contentFile('de'));
+		$this->assertSame($this->contentFile('en'), $version->contentFile());
+		$this->assertSame($this->contentFile('de'), $version->contentFile('de'));
 	}
 
 	/**
@@ -150,7 +166,7 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		$this->assertSame($this->model->root() . '/article.txt', $version->contentFile());
+		$this->assertSame($this->contentFile(), $version->contentFile());
 	}
 
 	/**
@@ -165,13 +181,13 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		$this->assertFalse($version->exists('de'));
+		$this->assertContentFileDoesNotExist('de');
 
 		$version->create([
 			'title' => 'Test'
 		], 'de');
 
-		$this->assertTrue($version->exists('de'));
+		$this->assertContentFileExists('de');
 	}
 
 	/**
@@ -186,13 +202,13 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		$this->assertFalse($version->exists());
+		$this->assertContentFileDoesNotExist();
 
 		$version->create([
 			'title' => 'Test'
 		]);
 
-		$this->assertTrue($version->exists());
+		$this->assertContentFileExists();
 	}
 
 	/**
@@ -208,17 +224,17 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		$this->assertFalse($version->exists('de'));
+		$this->assertContentFileDoesNotExist('de');
 
 		$version->create([
 			'title' => 'Test'
 		], 'de');
 
-		$this->assertTrue($version->exists('de'));
+		$this->assertContentFileExists('de');
 
 		$version->delete('de');
 
-		$this->assertFalse($version->exists('de'));
+		$this->assertContentFileDoesNotExist('de');
 	}
 
 	/**
@@ -234,17 +250,17 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		$this->assertFalse($version->exists());
+		$this->assertContentFileDoesNotExist();
 
 		$version->create([
 			'title' => 'Test'
 		]);
 
-		$this->assertTrue($version->exists());
+		$this->assertContentFileExists();
 
 		$version->delete();
 
-		$this->assertFalse($version->exists());
+		$this->assertContentFileDoesNotExist();
 	}
 
 	/**
@@ -329,7 +345,7 @@ class VersionTest extends TestCase
 
 		$this->assertFalse($version->exists('de'));
 
-		$version->create([], 'de');
+		Data::write($this->contentFile('de'), []);
 
 		$this->assertTrue($version->exists('de'));
 	}
@@ -348,7 +364,7 @@ class VersionTest extends TestCase
 
 		$this->assertFalse($version->exists());
 
-		$version->create([]);
+		Data::write($this->contentFile(), []);
 
 		$this->assertTrue($version->exists());
 	}
@@ -395,7 +411,7 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		touch($this->model->root() . '/article.de.txt', $modified = 123456);
+		touch($this->contentFile('de'), $modified = 123456);
 
 		$this->assertSame($modified, $version->modified('de'));
 	}
@@ -428,7 +444,7 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		touch($this->model->root() . '/article.txt', $modified = 123456);
+		touch($this->contentFile(), $modified = 123456);
 
 		$this->assertSame($modified, $version->modified());
 	}
@@ -460,13 +476,13 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		$version->create($contentEN = [
+		Data::write($this->contentFile('en'), $contentEN = [
 			'title' => 'Test'
-		], 'en');
+		]);
 
-		$version->create($contentDE = [
+		Data::write($this->contentFile('de'), $contentDE = [
 			'title' => 'Töst'
-		], 'de');
+		]);
 
 		$this->assertSame($contentEN, $version->read('en'));
 		$this->assertSame($contentDE, $version->read('de'));
@@ -484,7 +500,7 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		$version->create($content = [
+		Data::write($this->contentFile(), $content = [
 			'title' => 'Test'
 		]);
 
@@ -504,7 +520,7 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		touch($root = $this->model->root() . '/article.de.txt', 123456);
+		touch($root = $this->contentFile('de'), 123456);
 		$this->assertSame(123456, filemtime($root));
 
 		$minTime = time();
@@ -529,7 +545,7 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		touch($root = $this->model->root() . '/article.txt', 123456);
+		touch($root = $this->contentFile(), 123456);
 		$this->assertSame(123456, filemtime($root));
 
 		$minTime = time();
@@ -553,17 +569,15 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		$version->create([
+		Data::write($file = $this->contentFile('de'), $content = [
 			'title' => 'Test'
-		], 'de');
-
-		$this->assertSame('Test', $version->read('de')['title']);
+		]);
 
 		$version->update([
 			'title' => 'Updated Title'
 		], 'de');
 
-		$this->assertSame('Updated Title', $version->read('de')['title']);
+		$this->assertSame('Updated Title', Data::read($file)['title']);
 	}
 
 	/**
@@ -578,16 +592,14 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		$version->create([
+		Data::write($file = $this->contentFile(), $content = [
 			'title' => 'Test'
 		]);
-
-		$this->assertSame('Test', $version->read()['title']);
 
 		$version->update([
 			'title' => 'Updated Title'
 		]);
 
-		$this->assertSame('Updated Title', $version->read()['title']);
+		$this->assertSame('Updated Title', Data::read($file)['title']);
 	}
 }
