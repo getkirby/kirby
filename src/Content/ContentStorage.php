@@ -83,11 +83,8 @@ class ContentStorage
 	 * Adapts all versions when converting languages
 	 * @internal
 	 */
-	public function convertLanguage(string $from, string $to): void
+	public function convertLanguage(Language $from, Language $to): void
 	{
-		$from = $this->language($from, true);
-		$to   = $this->language($to, true);
-
 		foreach ($this->dynamicVersions() as $versionId) {
 			$this->handler->move($versionId, $from, $versionId, $to);
 		}
@@ -127,7 +124,7 @@ class ContentStorage
 	 */
 	public function deleteLanguage(string|null $lang): void
 	{
-		$lang = $this->language($lang, true);
+		$lang = $this->language($lang);
 
 		foreach ($this->dynamicVersions() as $version) {
 			$this->handler->delete($version, $lang);
@@ -217,7 +214,7 @@ class ContentStorage
 	 */
 	public function touchLanguage(string|null $lang): void
 	{
-		$lang = $this->language($lang, true);
+		$lang = $this->language($lang);
 
 		foreach ($this->dynamicVersions() as $version) {
 			if ($this->exists($version, $lang) === true) {
@@ -265,8 +262,6 @@ class ContentStorage
 	/**
 	 * Converts a "user-facing" language code to a "raw" language code to be
 	 * used for storage
-	 *
-	 * @param bool $force If set to `true`, the language code is not validated
 	 */
 	protected function language(
 		string|null $languageCode = null,

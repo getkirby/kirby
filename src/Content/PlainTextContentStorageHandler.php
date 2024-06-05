@@ -122,7 +122,7 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 		$kirby     = $this->model->kirby();
 		$extension = $kirby->contentExtension();
 
-		if ($kirby->multilang() === true) {
+		if ($language->isSingle() === false) {
 			return $name . '.' . $language->code() . '.' . $extension;
 		}
 

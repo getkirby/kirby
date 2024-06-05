@@ -281,6 +281,27 @@ class LanguageTest extends TestCase
 	}
 
 	/**
+	 * @covers ::isSingle
+	 */
+	public function testIsSingle()
+	{
+		// default
+		$language = new Language([
+			'code' => 'en'
+		]);
+
+		$this->assertFalse($language->isSingle());
+
+		// true
+		$language = new Language([
+			'code'   => 'en',
+			'single' => true
+		]);
+
+		$this->assertTrue($language->isSingle());
+	}
+
+	/**
 	 * @covers ::locale
 	 */
 	public function testLocale()
