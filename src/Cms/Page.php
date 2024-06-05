@@ -830,7 +830,7 @@ class Page extends ModelWithContent
 		string|null $handler = null,
 		string|null $languageCode = null
 	): int|string|false|null {
-		$modified = $this->version(VersionId::default($this))->modified(
+		$modified = $this->version()->modified(
 			$languageCode ?? 'current'
 		);
 
