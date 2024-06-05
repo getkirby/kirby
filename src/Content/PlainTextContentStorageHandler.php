@@ -117,7 +117,7 @@ class PlainTextContentStorageHandler implements ContentStorageHandler
 	 * Creates a filename with extension and optional language code
 	 * in a multi-language installation
 	 */
-	public function contentFilename(string $name, Language $language): string
+	protected function contentFilename(string $name, Language $language): string
 	{
 		$kirby     = $this->model->kirby();
 		$extension = $kirby->contentExtension();
