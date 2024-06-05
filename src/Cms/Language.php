@@ -297,6 +297,7 @@ class Language implements Stringable
 
 	/**
 	 * Checks if this is the single language object
+	 * @internal
 	 */
 	public function isSingle(): bool
 	{
