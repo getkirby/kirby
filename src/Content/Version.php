@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\Language;
+use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
 use Throwable;
 
@@ -32,15 +33,9 @@ class Version
 	 */
 	public function content(Language|string $language = 'default'): Content
 	{
-		try {
-			$data = $this->model->storage()->read($this->id, $this->language($language));
-		} catch (Throwable) {
-			$data = [];
-		}
-
 		return new Content(
 			parent: $this->model,
-			data: $data,
+			data: $this->read($language),
 		);
 	}
 
@@ -71,13 +66,8 @@ class Version
 	 */
 	public function delete(): void
 	{
-		// delete the default language in single-language mode
-		if ($this->model->kirby()->multilang() === false) {
-			$this->model->storage()->delete($this->id, $this->language('default'));
-		}
-
 		// delete all languages
-		foreach ($this->model->kirby()->languages() as $language) {
+		foreach (Languages::ensure() as $language) {
 			$this->model->storage()->delete($this->id, $language);
 		}
 	}
@@ -172,8 +162,42 @@ class Version
 	 */
 	public function read(Language|string $language = 'default'): array
 	{
+		try {
+			return $this->model->storage()->read($this->id, $this->language($language));
+		} catch (Throwable) {
+			return [];
+		}
+	}
+
+	/**
+	 * Replaces the content of the current version with the given fields
+	 *
+	 * @param array<string, string> $fields Content fields
+	 *
+	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
+	 */
+	public function replace(array $fields, string $language = 'default'): void
+	{
 		$this->ensure($language);
-		return $this->model->storage()->read($this->id, $this->language($language));
+		$this->model->storage()->update($this->id, $this->language($language), $fields);
+	}
+
+	/**
+	 * Save will either try to create, update or replace the current version
+	 */
+	public function save(
+		array $fields,
+		string $language = 'default',
+		bool $overwrite = false
+	): void {
+		match (true) {
+			$this->exists($language) === false
+				=> $this->create($fields, $language),
+			$overwrite
+				=> $this->replace($fields, $language),
+			default
+				=> $this->update($fields, $language)
+		};
 	}
 
 	/**
@@ -224,7 +248,13 @@ class Version
 	 */
 	public function update(array $fields, Language|string $language = 'default'): void
 	{
+		// make sure the version exists before it can be updated
 		$this->ensure($language);
+
+		// merge the previous state with the new state to always
+		// update to a complete version
+		$fields = [...$this->read($language), ...$fields];
+
 		$this->model->storage()->update($this->id, $this->language($language), $fields);
 	}
 }

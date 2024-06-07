@@ -23,6 +23,49 @@ class LabPage extends Page
 	}
 
 	/**
+	 * @deprecated since 5.0.0 Use `::version()->read()` instead
+	 */
+	public function readContent(string|null $languageCode = null): array
+	{
+		return $this->version()->read($languageCode ?? 'current');
+	}
+
+	/**
+	 * @deprecated since 5.0.0 Use `::version()->save()` instead
+	 */
+	public function save(
+		array|null $data = null,
+		string|null $languageCode = null,
+		bool $overwrite = false
+	): static {
+		$this->version()->save($data, $languageCode ?? 'current', $overwrite);
+		return $this;
+	}
+
+	/**
+	 * @deprecated since 5.0.0 Use `::version()->save()` instead
+	 */
+	protected function saveContent(
+		array|null $data = null,
+		bool $overwrite = false
+	): static {
+		$this->version()->save($data, 'current', $overwrite);
+		return $this;
+	}
+
+	/**
+	 * @deprecated since 5.0.0 Use `::version()->save()` instead
+	 */
+	protected function saveTranslation(
+		array|null $data = null,
+		string|null $languageCode = null,
+		bool $overwrite = false
+	): static {
+		$this->version()->save($data, $languageCode ?? 'current', $overwrite);
+		return $this;
+	}
+
+	/**
 	 * Sets the content when initializing a model manually.
 	 * This will switch to the in memory storage to keep the
 	 * content there instead of on disk or in a database.
@@ -43,13 +86,15 @@ class LabPage extends Page
 			model: $this,
 			version: $this->version(),
 			language: Language::ensure('default'),
-			fields: $content,
+			fields: $content
 		);
 
 		return $this;
 	}
 
 	/**
+	 * Stores in-memory translations for the model if they
+	 * are passed to the constructor with the translations prop.
 	 */
 	protected function setTranslations(array|null $translations = null): static
 	{
@@ -91,5 +136,14 @@ class LabPage extends Page
 			model: $this,
 			version: $this->version()
 		);
+	}
+
+	/**
+	 * @deprecated since 5.0.0 Use `::version()->save()` instead
+	 */
+	public function writeContent(array $data, string|null $languageCode = null): bool
+	{
+		$this->version()->save($data, $languageCode ?? 'default', true);
+		return true;
 	}
 }

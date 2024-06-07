@@ -8,6 +8,7 @@ use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Exception\NotFoundException;
+use Kirby\Uuid\Uuids;
 
 /**
  * Abstract for content storage handlers;
@@ -53,7 +54,15 @@ abstract class ContentStorageHandler
 	 */
 	public function create(VersionId $versionId, Language $language, array $fields): void
 	{
-		$this->write($versionId, $language, $fields);
+		$this->write(
+			versionId: $versionId,
+			language: $language,
+			fields: $this->normalizeFields(
+				versionId: $versionId,
+				language: $language,
+				fields: $fields
+			)
+		);
 	}
 
 	/**
@@ -155,6 +164,35 @@ abstract class ContentStorageHandler
 	}
 
 	/**
+	 * Remove all fields that should not be stored
+	 * in the given version or for the given language
+	 */
+	protected function normalizeFields(
+		VersionId $versionId,
+		Language $language,
+		array $fields
+	): array {
+		// keep all fields for the default language
+		if ($language->isDefault() === true) {
+			return $fields;
+		}
+
+		// remove all fields that should not be translatable
+		foreach ($this->model->blueprint()->fields() as $field) {
+			if (($field['translate'] ?? true) === false) {
+				$fields[strtolower($field['name'])] = null;
+			}
+		}
+
+		// remove UUID for non-default languages
+		if (Uuids::enabled() === true && isset($fields['uuid']) === true) {
+			$fields['uuid'] = null;
+		}
+
+		return $fields;
+	}
+
+	/**
 	 * Returns the stored content fields
 	 *
 	 * @return array<string, string>
@@ -193,7 +231,15 @@ abstract class ContentStorageHandler
 	public function update(VersionId $versionId, Language $language, array $fields): void
 	{
 		$this->ensure($versionId, $language);
-		$this->write($versionId, $language, $fields);
+		$this->write(
+			versionId: $versionId,
+			language: $language,
+			fields: $this->normalizeFields(
+				versionId: $versionId,
+				language: $language,
+				fields: $fields
+			)
+		);
 	}
 
 	/**
