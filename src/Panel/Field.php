@@ -40,11 +40,14 @@ class Field
 		$routes = [];
 
 		foreach ($field->dialogs() as $dialogId => $dialog) {
-			$routes = array_merge($routes, Dialog::routes(
-				id: $dialogId,
-				areaId: 'site',
-				options: $dialog
-			));
+			$routes = [
+				...$routes,
+				...Dialog::routes(
+					id: $dialogId,
+					areaId: 'site',
+					options: $dialog
+				)
+			];
 		}
 
 		return Router::execute($path, $method, $routes);
@@ -66,11 +69,14 @@ class Field
 		$routes = [];
 
 		foreach ($field->drawers() as $drawerId => $drawer) {
-			$routes = array_merge($routes, Drawer::routes(
-				id: $drawerId,
-				areaId: 'site',
-				options: $drawer
-			));
+			$routes = [
+				...$routes,
+				...Drawer::routes(
+					id: $drawerId,
+					areaId: 'site',
+					options: $drawer
+				)
+			];
 		}
 
 		return Router::execute($path, $method, $routes);

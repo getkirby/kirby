@@ -380,12 +380,15 @@ class Panel
 		$routes  = [];
 
 		foreach ($dialogs as $dialogId => $dialog) {
-			$routes = array_merge($routes, Dialog::routes(
-				id: $dialogId,
-				areaId: $areaId,
-				prefix: 'dialogs',
-				options: $dialog
-			));
+			$routes = [
+				...$routes,
+				...Dialog::routes(
+					id: $dialogId,
+					areaId: $areaId,
+					prefix: 'dialogs',
+					options: $dialog
+				)
+			];
 		}
 
 		return $routes;
@@ -400,12 +403,15 @@ class Panel
 		$routes  = [];
 
 		foreach ($drawers as $drawerId => $drawer) {
-			$routes = array_merge($routes, Drawer::routes(
-				id: $drawerId,
-				areaId: $areaId,
-				prefix: 'drawers',
-				options: $drawer
-			));
+			$routes = [
+				...$routes,
+				...Drawer::routes(
+					id: $drawerId,
+					areaId: $areaId,
+					prefix: 'drawers',
+					options: $drawer
+				)
+			];
 		}
 
 		return $routes;
@@ -420,12 +426,15 @@ class Panel
 		$routes    = [];
 
 		foreach ($dropdowns as $dropdownId => $dropdown) {
-			$routes = array_merge($routes, Dropdown::routes(
-				id: $dropdownId,
-				areaId: $areaId,
-				prefix: 'dropdowns',
-				options: $dropdown
-			));
+			$routes = [
+				...$routes,
+				...Dropdown::routes(
+					id: $dropdownId,
+					areaId: $areaId,
+					prefix: 'dropdowns',
+					options: $dropdown
+				)
+			];
 		}
 
 		return $routes;
