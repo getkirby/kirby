@@ -4,7 +4,7 @@
 		:checked="value"
 		:class="['k-toggle-input', $attrs.class]"
 		:disabled="disabled"
-		:label="label"
+		:label="labelText"
 		:style="$attrs.style"
 		type="checkbox"
 		variant="toggle"
@@ -38,7 +38,7 @@ export const props = {
 export default {
 	mixins: [Input, props],
 	computed: {
-		label() {
+		labelText() {
 			// Add fallback for text
 			const text = this.text ?? [this.$t("off"), this.$t("on")];
 
