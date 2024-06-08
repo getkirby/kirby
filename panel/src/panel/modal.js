@@ -234,7 +234,7 @@ export default (panel, key, defaults) => {
 
 			for (const event in state.dispatch) {
 				const payload = state.dispatch[event];
-				panel.app.$store.dispatch(
+				panel.app.config.globalProperties.$store.dispatch(
 					event,
 					Array.isArray(payload) === true ? [...payload] : payload
 				);
