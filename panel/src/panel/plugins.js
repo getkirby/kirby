@@ -17,9 +17,14 @@ import section from "@/mixins/section.js";
  */
 export const installComponent = (app, name, options) => {
 	// make sure component has something to show
-	if (!options.template && !options.render && !options.extends) {
+	if (
+		!options.template &&
+		!options.render &&
+		!options.setup &&
+		!options.extends
+	) {
 		throw new Error(
-			`Neither template nor render method provided. Nor extending a component when loading plugin component "${name}". The component has not been registered.`
+			`Neither template, render nor setup method provided. Nor extending a component when loading plugin component "${name}". The component has not been registered.`
 		);
 	}
 
