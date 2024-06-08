@@ -23,9 +23,7 @@ class CollectionConverterTest extends TestCase
 		$this->assertSame([
 			'one'   => 'einsy',
 			'two'   => 'zweiy'
-		], $collection->toArray(function ($item) {
-			return $item . 'y';
-		}));
+		], $collection->toArray(fn ($item) => $item . 'y'));
 	}
 
 	public function testToJson()

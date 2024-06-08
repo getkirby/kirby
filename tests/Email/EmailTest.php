@@ -206,9 +206,7 @@ class EmailTest extends TestCase
 		// invalid
 		$mail = $this->_email([
 			'transport'  => $transport,
-			'beforeSend' => $beforeSend = function ($mailer) {
-				return 'string';
-			}
+			'beforeSend' => $beforeSend = fn ($mailer) => 'string'
 		], PHPMailer::class);
 
 		$this->expectException(InvalidArgumentException::class);

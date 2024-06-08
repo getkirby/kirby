@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\ContentLock;
+use Kirby\Cms\File as ModelFile;
 use Kirby\Cms\Page as ModelPage;
 use Kirby\Cms\Site as ModelSite;
 use Kirby\Filesystem\Asset;
@@ -150,7 +151,7 @@ class ModelTest extends TestCase
 			'options' => [
 				'panel' => [
 					'markdown' => [
-						'fileDragText' => function (\Kirby\Cms\File $file, string $url) {
+						'fileDragText' => function (ModelFile $file, string $url) {
 							if ($file->extension() === 'heic') {
 								return sprintf('![](%s)', $file->id());
 							}
@@ -193,7 +194,7 @@ class ModelTest extends TestCase
 			'options' => [
 				'panel' => [
 					'kirbytext' => [
-						'fileDragText' => function (\Kirby\Cms\File $file, string $url) {
+						'fileDragText' => function (ModelFile $file, string $url) {
 							if ($file->extension() === 'heic') {
 								return sprintf('(image: %s)', $file->id());
 							}

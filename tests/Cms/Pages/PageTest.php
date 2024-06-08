@@ -707,9 +707,7 @@ class PageTest extends TestCase
 			],
 			'options' => [
 				'content' => [
-					'salt' => function ($page) {
-						return $page->date();
-					}
+					'salt' => fn ($page) => $page->date()
 				]
 			]
 		]);
@@ -956,9 +954,7 @@ class PageTest extends TestCase
 	public function testPageMethods()
 	{
 		Page::$methods = [
-			'test' => function () {
-				return 'homer';
-			}
+			'test' => fn () => 'homer'
 		];
 
 		$page = new Page(['slug' => 'test']);
@@ -1033,9 +1029,7 @@ class PageTest extends TestCase
 					return compact('page');
 				},
 				// invalid return
-				'bar' => function ($page) {
-					return ['page' => 'string'];
-				}
+				'bar' => fn ($page) => ['page' => 'string']
 			]
 		]);
 

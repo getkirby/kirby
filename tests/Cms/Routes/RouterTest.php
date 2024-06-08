@@ -313,9 +313,7 @@ class RouterTest extends TestCase
 			'routes' => [
 				[
 					'pattern' => $pattern,
-					'action'  => function () {
-						return 'test';
-					}
+					'action'  => fn () => 'test'
 				]
 			]
 		]);

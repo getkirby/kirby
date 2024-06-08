@@ -178,7 +178,7 @@ class PageTest extends TestCase
 				'panel' => [
 					'kirbytext' => false,
 					'markdown' => [
-						'pageDragText' => function (\Kirby\Cms\Page $page) {
+						'pageDragText' => function (ModelPage $page) {
 							return sprintf('Links sind toll: %s', $page->url());
 						},
 					]
@@ -209,7 +209,7 @@ class PageTest extends TestCase
 			'options' => [
 				'panel' => [
 					'kirbytext' => [
-						'pageDragText' => function (\Kirby\Cms\Page $page) {
+						'pageDragText' => function (ModelPage $page) {
 							return sprintf('Links sind toll: %s', $page->url());
 						},
 					]

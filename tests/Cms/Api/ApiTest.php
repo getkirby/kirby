@@ -52,16 +52,12 @@ class ApiTest extends TestCase
 			'options' => [
 				'api' => [
 					'allowImpersonation' => true,
-					'authentication' => function () {
-						return true;
-					},
-					'routes' => [
+					'authentication'     => fn () => true,
+					'routes'             => [
 						[
 							'pattern' => 'foo',
 							'method'  => 'GET',
-							'action'  => function () {
-								return 'something';
-							}
+							'action'  => fn () => 'something'
 						]
 					]
 				],
@@ -664,18 +660,14 @@ class ApiTest extends TestCase
 		$app = $this->app->clone([
 			'sections' => [
 				'test' => [
-					'api' => function () {
-						return [
-							[
-								'pattern' => '/message',
-								'action'  => function () {
-									return [
-										'message' => 'Test'
-									];
-								}
+					'api' => fn () => [
+						[
+							'pattern' => '/message',
+							'action'  => fn () => [
+								'message' => 'Test'
 							]
-						];
-					}
+						]
+					]
 				]
 			],
 			'blueprints' => [

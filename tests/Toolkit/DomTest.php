@@ -1850,9 +1850,10 @@ class DomTest extends TestCase
 		$dom    = new Dom($code, 'XML');
 		$errors = $dom->sanitize($options);
 
-		$this->assertSame($expectedErrors, array_map(function ($error) {
-			return $error->getMessage();
-		}, $errors));
+		$this->assertSame(
+			$expectedErrors,
+			array_map(fn ($error) => $error->getMessage(), $errors)
+		);
 		$this->assertSame($expectedCode, $dom->toString());
 	}
 

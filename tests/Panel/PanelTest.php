@@ -539,14 +539,12 @@ class PanelTest extends TestCase
 			'dropdowns' => [
 				'test' => [
 					'pattern' => 'test',
-					'action'  => $action = function () {
-						return [
-							[
-								'text' => 'Test',
-								'link' => '/test'
-							]
-						];
-					}
+					'action'  => $action = fn () => [
+						[
+							'text' => 'Test',
+							'link' => '/test'
+						]
+					]
 				]
 			]
 		];
@@ -575,14 +573,12 @@ class PanelTest extends TestCase
 			'dropdowns' => [
 				'test' => [
 					'pattern' => 'test',
-					'options' => $action = function () {
-						return [
-							[
-								'text' => 'Test',
-								'link' => '/test'
-							]
-						];
-					}
+					'options' => $action = fn () => [
+						[
+							'text' => 'Test',
+							'link' => '/test'
+						]
+					]
 				]
 			]
 		];
@@ -609,14 +605,12 @@ class PanelTest extends TestCase
 	{
 		$area = [
 			'dropdowns' => [
-				'test' => $action = function () {
-					return [
-						[
-							'text' => 'Test',
-							'link' => '/test'
-						]
-					];
-				}
+				'test' => $action = fn () => [
+					[
+						'text' => 'Test',
+						'link' => '/test'
+					]
+				]
 			]
 		];
 

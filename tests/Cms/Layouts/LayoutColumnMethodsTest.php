@@ -15,9 +15,7 @@ class LayoutColumnMethodsTest extends TestCase
 				'index' => '/dev/null',
 			],
 			'layoutColumnMethods' => [
-				'test' => function () {
-					return 'layout column method';
-				}
+				'test' => fn () => 'layout column method'
 			]
 		]);
 	}

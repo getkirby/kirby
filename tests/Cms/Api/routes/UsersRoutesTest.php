@@ -237,22 +237,16 @@ class UsersRoutesTest extends TestCase
 			],
 			'fields' => [
 				'test' => [
-					'api' => function () {
-						return [
-							[
-								'pattern' => '/',
-								'action'  => function () {
-									return 'Test home route';
-								}
-							],
-							[
-								'pattern' => 'nested',
-								'action'  => function () {
-									return 'Test nested route';
-								}
-							],
-						];
-					}
+					'api' => fn () => [
+						[
+							'pattern' => '/',
+							'action'  => fn () => 'Test home route'
+						],
+						[
+							'pattern' => 'nested',
+							'action'  => fn () => 'Test nested route'
+						],
+					]
 				]
 			]
 		]);
@@ -431,11 +425,9 @@ class UsersRoutesTest extends TestCase
 			],
 			'sections' => [
 				'test' => [
-					'toArray' => function () {
-						return [
-							'foo' => 'bar'
-						];
-					}
+					'toArray' => fn () => [
+						'foo' => 'bar'
+					]
 				]
 			]
 		]);

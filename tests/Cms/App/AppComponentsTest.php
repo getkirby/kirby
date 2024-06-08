@@ -44,9 +44,7 @@ class AppComponentsTest extends TestCase
 	{
 		$this->kirby->clone([
 			'components' => [
-				'css' => function ($kirby, $url, $options) {
-					return '/test.css';
-				}
+				'css' => fn ($kirby, $url, $options) => '/test.css'
 			]
 		]);
 
@@ -58,9 +56,7 @@ class AppComponentsTest extends TestCase
 	{
 		$this->kirby->clone([
 			'components' => [
-				'js' => function ($kirby, $url, $options) {
-					return '/test.js';
-				}
+				'js' => fn ($kirby, $url, $options) => '/test.js'
 			]
 		]);
 
@@ -361,9 +357,7 @@ class AppComponentsTest extends TestCase
 	{
 		$this->kirby->clone([
 			'components' => [
-				'url' => function ($kirby, $path, $options) {
-					return 'test';
-				}
+				'url' => fn ($kirby, $path, $options) => 'test'
 			]
 		]);
 

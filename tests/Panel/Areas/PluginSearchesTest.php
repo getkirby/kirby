@@ -22,9 +22,7 @@ class PluginSearchesTest extends AreaTestCase
 					'search' => 'test',
 					'searches' => [
 						'test' => [
-							'query' => function (string|null $query = null) {
-								return [['a'], ['b'], ['c']];
-							},
+							'query' => fn (string|null $query = null) => [['a'], ['b'], ['c']]
 						]
 					]
 				]

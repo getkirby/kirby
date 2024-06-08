@@ -183,11 +183,9 @@ class CollectionTest extends TestCase
 	 */
 	public function testFilter()
 	{
-		$func = function ($element) {
-			return ($element === 'My second element') ? true : false;
-		};
-
-		$filtered = $this->collection->filter($func);
+		$filtered = $this->collection->filter(
+			fn ($element) => $element === 'My second element'
+		);
 
 		$this->assertSame('My second element', $filtered->first());
 		$this->assertSame('My second element', $filtered->last());
@@ -336,9 +334,7 @@ class CollectionTest extends TestCase
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid grouping value for key: a');
 
-		$collection->group(function ($item) {
-			return false;
-		});
+		$collection->group(fn ($item) => false);
 	}
 
 	/**
@@ -389,10 +385,7 @@ class CollectionTest extends TestCase
 			'group'    => new StringObject('client')
 		];
 
-		$groups = $collection->group(function ($item) {
-			return $item['group'];
-		});
-
+		$groups = $collection->group(fn ($item) => $item['group']);
 		$this->assertCount(2, $groups->admin());
 		$this->assertCount(1, $groups->client());
 
@@ -982,9 +975,9 @@ class CollectionTest extends TestCase
 	 */
 	public function testValuesMap()
 	{
-		$values = $this->collection->values(function ($item) {
-			return Str::after($item, 'My ');
-		});
+		$values = $this->collection->values(
+			fn ($item) => Str::after($item, 'My ')
+		);
 
 		$this->assertSame([
 			'first element',

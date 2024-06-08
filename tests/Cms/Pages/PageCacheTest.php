@@ -143,9 +143,7 @@ class PageCacheTest extends TestCase
 		$app = $this->app->clone([
 			'options' => [
 				'cache.pages' => [
-					'ignore' => function ($page) {
-						return $page->id() === 'default';
-					}
+					'ignore' => fn ($page) => $page->id() === 'default'
 				]
 			]
 		]);

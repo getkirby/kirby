@@ -135,9 +135,7 @@ class RouterTest extends TestCase
 			[
 				[
 					'pattern' => '/',
-					'action'  => function () {
-						return 'test';
-					}
+					'action'  => fn () => 'test'
 				]
 			],
 			$hooks
@@ -225,9 +223,7 @@ class RouterTest extends TestCase
 				],
 				[
 					'pattern' => 'a',
-					'action'  => function () {
-						return 'a';
-					}
+					'action'  => fn () => 'a'
 				]
 			],
 			$hooks

@@ -47,9 +47,7 @@ class CollectionTest extends TestCase
 	{
 		$kirby = $this->kirby([
 			'collectionMethods' => [
-				'test' => function () {
-					return 'collection test';
-				}
+				'test' => fn () => 'collection test'
 			],
 			'roots' => [
 				'index' => '/dev/null'
@@ -502,9 +500,7 @@ class CollectionTest extends TestCase
 			new MockObject(['id' => 'c'])
 		]);
 
-		$array = $collection->toArray(function ($object) {
-			return $object->id();
-		});
+		$array = $collection->toArray(fn ($object) => $object->id());
 
 		$this->assertSame($array, [
 			'a' => 'a',

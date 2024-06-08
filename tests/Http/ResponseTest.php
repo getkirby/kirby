@@ -98,9 +98,11 @@ class ResponseTest extends TestCase
 	 */
 	public function testGuardAgainstOutput()
 	{
-		$result = Response::guardAgainstOutput(function ($arg1, $arg2) {
-			return $arg1 . '-' . $arg2;
-		}, '12', '34');
+		$result = Response::guardAgainstOutput(
+			fn ($arg1, $arg2) => $arg1 . '-' . $arg2,
+			'12',
+			'34'
+		);
 
 		$this->assertSame('12-34', $result);
 	}
@@ -112,9 +114,11 @@ class ResponseTest extends TestCase
 	{
 		HeadersSent::$value = true;
 
-		$result = Response::guardAgainstOutput(function ($arg1, $arg2) {
-			return $arg1 . '-' . $arg2;
-		}, '12', '34');
+		$result = Response::guardAgainstOutput(
+			fn ($arg1, $arg2) => $arg1 . '-' . $arg2,
+			'12',
+			'34'
+		);
 
 		$this->assertSame('12-34', $result);
 	}

@@ -15,9 +15,7 @@ class LayoutsMethodsTest extends TestCase
 				'index' => '/dev/null',
 			],
 			'layoutsMethods' => [
-				'test' => function () {
-					return 'layouts method';
-				}
+				'test' => fn () => 'layouts method'
 			]
 		]);
 	}
