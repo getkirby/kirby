@@ -108,11 +108,10 @@ class Roles extends Collection
 				$blueprint = $blueprint($kirby);
 			}
 
-			if (is_array($blueprint) === true) {
-				$role = Role::factory($blueprint, $inject);
-			} else {
-				$role = Role::load($blueprint, $inject);
-			}
+			$role = match (is_array($blueprint)) {
+				true  => Role::factory($blueprint, $inject),
+				false => Role::load($blueprint, $inject)
+			};
 
 			$roles->set($role->id(), $role);
 		}

@@ -379,11 +379,10 @@ class Page extends ModelWithContent
 			return $this->diruri;
 		}
 
-		if ($this->isDraft() === true) {
-			$dirname = '_drafts/' . $this->dirname();
-		} else {
-			$dirname = $this->dirname();
-		}
+		$dirname = match ($this->isDraft()) {
+			true  => '_drafts/' . $this->dirname(),
+			false => $this->dirname()
+		};
 
 		if ($parent = $this->parent()) {
 			return $this->diruri = $parent->diruri() . '/' . $dirname;

@@ -43,7 +43,10 @@ class License
 		protected string|null $signature = null,
 	) {
 		// normalize the email address
-		$this->email = $this->email === null ? null : $this->normalizeEmail($this->email);
+		$this->email = match($email) {
+			null    => null,
+			default => $this->normalizeEmail($email)
+		};
 	}
 
 	/**

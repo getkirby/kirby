@@ -184,11 +184,12 @@ trait FileModifications
 
 		// fallback to content file options
 		if (($options['crop'] ?? false) === true) {
-			if ($this instanceof ModelWithContent === true) {
-				$options['crop'] = $this->focus()->value() ?? 'center';
-			} else {
-				$options['crop'] = 'center';
-			}
+			$options['crop'] = match (true) {
+				$this instanceof ModelWithContent
+					=> $this->focus()->value() ?? 'center',
+				default
+				=> 'center'
+			};
 		}
 
 		// fallback to global config options

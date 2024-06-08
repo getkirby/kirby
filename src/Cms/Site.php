@@ -353,19 +353,11 @@ class Site extends ModelWithContent
 	 */
 	public function previewUrl(): string|null
 	{
-		$preview = $this->blueprint()->preview();
-
-		if ($preview === false) {
-			return null;
-		}
-
-		if ($preview === true) {
-			$url = $this->url();
-		} else {
-			$url = $preview;
-		}
-
-		return $url;
+		return match ($preview = $this->blueprint()->preview()) {
+			true    => $this->url(),
+			false   => null,
+			default => $preview
+		};
 	}
 
 	/**
@@ -389,8 +381,10 @@ class Site extends ModelWithContent
 	/**
 	 * Search all pages in the site
 	 */
-	public function search(string|null $query = null, string|array $params = []): Pages
-	{
+	public function search(
+		string|null $query = null,
+		string|array $params = []
+	): Pages {
 		return $this->index()->search($query, $params);
 	}
 
@@ -402,8 +396,10 @@ class Site extends ModelWithContent
 	protected function setBlueprint(array|null $blueprint = null): static
 	{
 		if ($blueprint !== null) {
-			$blueprint['model'] = $this;
-			$this->blueprint = new SiteBlueprint($blueprint);
+			$this->blueprint = new SiteBlueprint([
+				'model' => $this,
+				...$blueprint
+			]);
 		}
 
 		return $this;
@@ -447,11 +443,9 @@ class Site extends ModelWithContent
 		string|null $languageCode = null,
 		array|null $options = null
 	): string {
-		if ($language = $this->kirby()->language($languageCode)) {
-			return $language->url();
-		}
-
-		return $this->kirby()->url();
+		return
+			$this->kirby()->language($languageCode)?->url() ??
+			$this->kirby()->url();
 	}
 
 	/**

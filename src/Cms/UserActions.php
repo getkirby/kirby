@@ -226,11 +226,10 @@ trait UserActions
 			$user->writePassword($user->password());
 
 			// always create users in the default language
-			if ($user->kirby()->multilang() === true) {
-				$languageCode = $user->kirby()->defaultLanguage()->code();
-			} else {
-				$languageCode = null;
-			}
+			$languageCode = match ($user->kirby()->multilang()) {
+				true  => $user->kirby()->defaultLanguage()->code(),
+				false => null
+			};
 
 			// add the user to users collection
 			$user->kirby()->users()->add($user);
