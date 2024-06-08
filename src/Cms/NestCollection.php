@@ -25,6 +25,8 @@ class NestCollection extends BaseCollection
 	 */
 	public function toArray(Closure|null $map = null): array
 	{
-		return parent::toArray($map ?? fn ($object) => $object->toArray());
+		return parent::toArray(
+			$map ?? fn ($object) => $object->toArray()
+		);
 	}
 }

@@ -145,9 +145,7 @@ class DbTest extends TestCase
 			'prefix'   => 'myprefix_'
 		]);
 
-		Db::$queries['test'] = function ($test) {
-			return $test . ' test';
-		};
+		Db::$queries['test'] = fn ($test) => $test . ' test';
 		$this->assertSame('This is a test', Db::test('This is a'));
 		unset(Db::$queries['test']);
 

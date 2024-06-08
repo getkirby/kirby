@@ -173,14 +173,14 @@ class Permissions
 	 */
 	protected function setCategories(array $settings): static
 	{
-		foreach ($settings as $categoryName => $categoryActions) {
-			if (is_bool($categoryActions) === true) {
-				$this->setCategory($categoryName, $categoryActions);
+		foreach ($settings as $name => $actions) {
+			if (is_bool($actions) === true) {
+				$this->setCategory($name, $actions);
 			}
 
-			if (is_array($categoryActions) === true) {
-				foreach ($categoryActions as $actionName => $actionSetting) {
-					$this->setAction($categoryName, $actionName, $actionSetting);
+			if (is_array($actions) === true) {
+				foreach ($actions as $action => $setting) {
+					$this->setAction($name, $action, $setting);
 				}
 			}
 		}
@@ -198,8 +198,8 @@ class Permissions
 			throw new InvalidArgumentException('Invalid permissions category');
 		}
 
-		foreach ($this->actions[$category] as $actionName => $actionSetting) {
-			$this->actions[$category][$actionName] = $setting;
+		foreach ($this->actions[$category] as $action => $actionSetting) {
+			$this->actions[$category][$action] = $setting;
 		}
 
 		return $this;

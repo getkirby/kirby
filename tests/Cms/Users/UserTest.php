@@ -472,9 +472,7 @@ class UserTest extends TestCase
 	public function testUserMethods()
 	{
 		User::$methods = [
-			'test' => function () {
-				return 'homer';
-			}
+			'test' => fn () => 'homer'
 		];
 
 		$user = new User([

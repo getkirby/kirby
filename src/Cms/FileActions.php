@@ -225,7 +225,8 @@ trait FileActions
 		}
 
 		// prefer the filename from the props
-		$props['filename'] = F::safeName($props['filename'] ?? basename($props['source']));
+		$props['filename'] ??= basename($props['source']);
+		$props['filename']   = F::safeName($props['filename']);
 
 		$props['model'] = strtolower($props['template'] ?? 'default');
 

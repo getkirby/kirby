@@ -23,9 +23,7 @@ class PagePickerMixinTest extends TestCase
 				'test' => [
 					'mixins'  => ['pagepicker'],
 					'methods' => [
-						'pages' => function () {
-							return $this->pagepicker();
-						}
+						'pages' => fn () => $this->pagepicker()
 					]
 				]
 			],
@@ -68,11 +66,9 @@ class PagePickerMixinTest extends TestCase
 				'test' => [
 					'mixins'  => ['pagepicker'],
 					'methods' => [
-						'pages' => function () {
-							return $this->pagepicker([
-								'parent' => 'a'
-							]);
-						}
+						'pages' => fn () => $this->pagepicker([
+							'parent' => 'a'
+						])
 					]
 				]
 			],
@@ -118,11 +114,9 @@ class PagePickerMixinTest extends TestCase
 				'test' => [
 					'mixins'  => ['pagepicker'],
 					'methods' => [
-						'pages' => function () {
-							return $this->pagepicker([
-								'query' => 'page.children'
-							]);
-						}
+						'pages' => fn () => $this->pagepicker([
+							'query' => 'page.children'
+						])
 					]
 				]
 			],
@@ -170,12 +164,10 @@ class PagePickerMixinTest extends TestCase
 				'test' => [
 					'mixins'  => ['pagepicker'],
 					'methods' => [
-						'pages' => function () {
-							return $this->pagepicker([
-								'query'    => 'page.children',
-								'subpages' => false
-							]);
-						}
+						'pages' => fn () => $this->pagepicker([
+							'query'    => 'page.children',
+							'subpages' => false
+						])
 					]
 				]
 			],
@@ -219,14 +211,10 @@ class PagePickerMixinTest extends TestCase
 				'test' => [
 					'mixins'  => ['pagepicker'],
 					'methods' => [
-						'pages' => function () {
-							return $this->pagepicker([
-								'query' => 'page.children',
-								'map'   => function ($page) {
-									return $page->id();
-								}
-							]);
-						}
+						'pages' => fn () => $this->pagepicker([
+							'query' => 'page.children',
+							'map'   => fn ($page) => $page->id()
+						])
 					]
 				]
 			],

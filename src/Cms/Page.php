@@ -225,8 +225,10 @@ class Page extends ModelWithContent
 			return $this->blueprints;
 		}
 
-		$blueprints      = [];
-		$templates       = $this->blueprint()->changeTemplate() ?? $this->blueprint()->options()['changeTemplate'] ?? [];
+		$blueprints  = [];
+		$templates   = $this->blueprint()->changeTemplate() ?? null;
+		$templates ??= $this->blueprint()->options()['changeTemplate'] ?? [];
+
 		$currentTemplate = $this->intendedTemplate()->name();
 
 		if (is_array($templates) === false) {
@@ -377,11 +379,10 @@ class Page extends ModelWithContent
 			return $this->diruri;
 		}
 
-		if ($this->isDraft() === true) {
-			$dirname = '_drafts/' . $this->dirname();
-		} else {
-			$dirname = $this->dirname();
-		}
+		$dirname = match ($this->isDraft()) {
+			true  => '_drafts/' . $this->dirname(),
+			false => $this->dirname()
+		};
 
 		if ($parent = $this->parent()) {
 			return $this->diruri = $parent->diruri() . '/' . $dirname;
@@ -458,7 +459,9 @@ class Page extends ModelWithContent
 			return $this->intendedTemplate;
 		}
 
-		return $this->setTemplate($this->inventory()['template'])->intendedTemplate();
+		return $this
+			->setTemplate($this->inventory()['template'])
+			->intendedTemplate();
 	}
 
 	/**
@@ -936,7 +939,6 @@ class Page extends ModelWithContent
 		if ($this->isDraft() === true) {
 			$uri = new Uri($url);
 			$uri->query->token = $this->token();
-
 			$url = $uri->toString();
 		}
 

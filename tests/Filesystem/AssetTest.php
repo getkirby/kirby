@@ -23,9 +23,7 @@ class AssetTest extends TestCase
 				'index' => 'https://getkirby.com'
 			],
 			'assetMethods' => [
-				'test' => function () {
-					return 'asset method';
-				}
+				'test' => fn () => 'asset method'
 			]
 		]);
 	}

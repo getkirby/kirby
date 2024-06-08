@@ -649,9 +649,7 @@ class BlueprintTest extends TestCase
 
 		$this->app = $this->app->clone([
 			'blueprints' => [
-				'pages/test' => function () {
-					return ['title' => 'Test'];
-				}
+				'pages/test' => fn () => ['title' => 'Test']
 			]
 		]);
 
@@ -675,9 +673,7 @@ class BlueprintTest extends TestCase
 				'blueprints' => static::TMP,
 			],
 			'blueprints' => [
-				'pages/test' => function () {
-					return static::TMP . '/custom/test.yml';
-				}
+				'pages/test' => fn () => static::TMP . '/custom/test.yml'
 			]
 		]);
 

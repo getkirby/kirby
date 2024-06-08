@@ -27,7 +27,7 @@ class Email
 
 	/**
 	 * Props for the email object; will be passed to the
-	 * Kirby\Email\Email class
+	 * \Kirby\Email\Email class
 	 */
 	protected array $props;
 

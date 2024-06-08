@@ -2,6 +2,7 @@
 
 namespace Kirby\Data;
 
+use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
@@ -58,7 +59,7 @@ class DataTest extends TestCase
 	 */
 	public function testMissingHandler()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Missing handler for type: "foo"');
 
 		Data::handler('foo');
@@ -166,7 +167,7 @@ class DataTest extends TestCase
 	 */
 	public function testReadInvalid()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Missing handler for type: "foo"');
 
 		Data::read(static::TMP . '/data.foo');
@@ -178,7 +179,7 @@ class DataTest extends TestCase
 	 */
 	public function testWriteInvalid()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Missing handler for type: "foo"');
 
 		$data = [

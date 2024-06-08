@@ -139,7 +139,7 @@ class Blocks extends Items
 					}
 
 					$input = $yaml;
-				} catch (Throwable $e) {
+				} catch (Throwable) {
 					// the next 2 lines remain after removing block.converter
 					// @codeCoverageIgnoreEnd
 					$parser = new Parsley((string)$input, new BlockSchema());

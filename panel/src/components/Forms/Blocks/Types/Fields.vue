@@ -95,6 +95,7 @@ export default {
 .k-block-type-fields-header .k-block-title {
 	padding-block: var(--spacing-3);
 	cursor: pointer;
+	white-space: nowrap;
 }
 
 .k-block-type-fields-form {

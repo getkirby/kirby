@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 
@@ -154,7 +155,7 @@ class FilesSectionTest extends TestCase
 
 	public function testParentCollectionFail()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The parent for the section "files" has to be a page, site or user object');
 
 		$app = new App([

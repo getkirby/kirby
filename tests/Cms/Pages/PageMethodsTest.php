@@ -12,14 +12,10 @@ class PageMethodsTest extends TestCase
 	{
 		$this->app = new App([
 			'pageMethods' => [
-				'test' => function () {
-					return 'page method';
-				}
+				'test' => fn () => 'page method'
 			],
 			'pagesMethods' => [
-				'test' => function () {
-					return 'pages method';
-				}
+				'test' => fn () => 'pages method'
 			],
 			'site' => [
 				'children' => [

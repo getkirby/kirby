@@ -5,6 +5,7 @@ namespace Kirby\Http;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use TypeError;
 
 class UriTest extends TestCase
 {
@@ -196,9 +197,9 @@ class UriTest extends TestCase
 
 	public function testInvalidPortFormat1()
 	{
-		$this->expectException('TypeError');
+		$this->expectException(TypeError::class);
 
-		$url = new Uri(['port' => 'a']);
+		new Uri(['port' => 'a']);
 	}
 
 	public function testInvalidPortFormat2()

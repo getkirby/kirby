@@ -2,6 +2,7 @@
 
 namespace Kirby\Data;
 
+use Exception;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
 
@@ -40,7 +41,7 @@ class HandlerTest extends TestCase
 	{
 		$file = static::TMP . '/does-not-exist.json';
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The file "' . $file . '" does not exist or cannot be read');
 
 		CustomHandler::read($file);

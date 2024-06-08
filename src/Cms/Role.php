@@ -103,8 +103,10 @@ class Role implements Stringable
 
 	public static function load(string $file, array $inject = []): static
 	{
-		$data = Data::read($file);
-		$data['name'] = F::name($file);
+		$data = [
+			...Data::read($file),
+			'name' => F::name($file)
+		];
 
 		return static::factory($data, $inject);
 	}

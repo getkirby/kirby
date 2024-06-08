@@ -67,14 +67,10 @@ class AppPluginsTest extends TestCase
 				'routes' => [
 					[
 						'pattern' => 'awesome',
-						'action'  => function () {
-							return 'nice';
-						}
+						'action'  => fn () => 'nice'
 					]
 				],
-				'authentication' => function () {
-					return true;
-				}
+				'authentication' => fn () => true
 			]
 		]);
 
@@ -89,9 +85,7 @@ class AppPluginsTest extends TestCase
 				'routes' => [
 					[
 						'pattern' => 'a',
-						'action'  => function () {
-							return 'a';
-						}
+						'action'  => fn () => 'a'
 					]
 				]
 			]
@@ -102,9 +96,7 @@ class AppPluginsTest extends TestCase
 				'routes' => [
 					[
 						'pattern' => 'b',
-						'action'  => function () {
-							return 'b';
-						}
+						'action'  => fn () => 'b'
 					]
 				]
 			]
@@ -115,9 +107,7 @@ class AppPluginsTest extends TestCase
 				'routes' => [
 					[
 						'pattern' => 'c',
-						'action'  => function () {
-							return 'c';
-						}
+						'action'  => fn () => 'c'
 					]
 				]
 			]
@@ -128,9 +118,7 @@ class AppPluginsTest extends TestCase
 				'index' => '/dev/null'
 			],
 			'api' => [
-				'authentication' => function () {
-					return true;
-				}
+				'authentication' => fn () => true
 			],
 		]);
 
@@ -145,31 +133,23 @@ class AppPluginsTest extends TestCase
 	{
 		App::plugin('test/a', [
 			'api' => [
-				'routes' => function ($kirby) {
-					return [
-						[
-							'pattern' => 'a',
-							'action'  => function () use ($kirby) {
-								return $kirby->root('index');
-							}
-						]
-					];
-				}
+				'routes' => fn ($kirby) => [
+					[
+						'pattern' => 'a',
+						'action'  => fn () => $kirby->root('index')
+					]
+				]
 			]
 		]);
 
 		App::plugin('test/b', [
 			'api' => [
-				'routes' => function ($kirby) {
-					return [
-						[
-							'pattern' => 'b',
-							'action'  => function () {
-								return 'b';
-							}
-						]
-					];
-				}
+				'routes' => fn ($kirby) => [
+					[
+						'pattern' => 'b',
+						'action'  => fn () => 'b'
+					]
+				]
 			]
 		]);
 
@@ -178,9 +158,7 @@ class AppPluginsTest extends TestCase
 				'routes' => [
 					[
 						'pattern' => 'c',
-						'action'  => function () {
-							return 'c';
-						}
+						'action'  => fn () => 'c'
 					]
 				]
 			]
@@ -191,9 +169,7 @@ class AppPluginsTest extends TestCase
 				'index' => '/dev/null'
 			],
 			'api' => [
-				'authentication' => function () {
-					return true;
-				}
+				'authentication' => fn () => true
 			],
 		]);
 
@@ -211,16 +187,12 @@ class AppPluginsTest extends TestCase
 				'test' => 'Test'
 			],
 			'api' => [
-				'routes' => function ($kirby) {
-					return [
-						[
-							'pattern' => 'test',
-							'action'  => function () use ($kirby) {
-								return $kirby->option('your.plugin.test');
-							}
-						]
-					];
-				}
+				'routes' => fn ($kirby) => [
+					[
+						'pattern' => 'test',
+						'action'  => fn () => $kirby->option('your.plugin.test')
+					]
+				]
 			]
 		]);
 
@@ -342,9 +314,7 @@ class AppPluginsTest extends TestCase
 			],
 			'collectionFilters' => [
 				'**' => $filter = [
-					'validator' => function ($value, $test) {
-						return $value === 'foo';
-					}
+					'validator' => fn ($value, $test) => $value === 'foo'
 				]
 			]
 		]);
@@ -380,9 +350,7 @@ class AppPluginsTest extends TestCase
 				'index' => '/dev/null'
 			],
 			'controllers' => [
-				'test' => function () {
-					return ['foo' => 'bar'];
-				}
+				'test' => fn () => ['foo' => 'bar']
 			]
 		]);
 
@@ -396,9 +364,7 @@ class AppPluginsTest extends TestCase
 				'index' => '/dev/null'
 			],
 			'fieldMethods' => [
-				'test' => function () {
-					return 'test';
-				}
+				'test' => fn () => 'test'
 			]
 		]);
 
@@ -440,14 +406,10 @@ class AppPluginsTest extends TestCase
 			],
 			'tags' => [
 				'test' => [
-					'html' => function () {
-						return 'test';
-					}
+					'html' => fn () => 'test'
 				],
 				'FoO' => [
-					'html' => function () {
-						return 'test';
-					}
+					'html' => fn () => 'test'
 				]
 			]
 		]);
@@ -466,9 +428,7 @@ class AppPluginsTest extends TestCase
 				'index' => '/dev/null'
 			],
 			'pageMethods' => [
-				'test' => function () {
-					return 'test';
-				}
+				'test' => fn () => 'test'
 			]
 		]);
 
@@ -486,9 +446,7 @@ class AppPluginsTest extends TestCase
 				'index' => '/dev/null'
 			],
 			'pagesMethods' => [
-				'test' => function () {
-					return 'test';
-				}
+				'test' => fn () => 'test'
 			]
 		]);
 
@@ -731,9 +689,7 @@ class AppPluginsTest extends TestCase
 			'routes' => [
 				[
 					'pattern' => 'test',
-					'action'  => function () {
-						return 'test';
-					}
+					'action'  => fn () => 'test'
 				]
 			]
 		]);
@@ -747,16 +703,12 @@ class AppPluginsTest extends TestCase
 			'roots' => [
 				'index' => '/dev/null'
 			],
-			'routes' => function () {
-				return [
-					[
-						'pattern' => 'test',
-						'action'  => function () {
-							return 'test';
-						}
-					]
-				];
-			}
+			'routes' => fn () => [
+				[
+					'pattern' => 'test',
+					'action'  => fn () => 'test'
+				]
+			]
 		]);
 
 		$this->assertSame('test', $kirby->call('test'));
@@ -850,9 +802,7 @@ class AppPluginsTest extends TestCase
 				'index' => '/dev/null'
 			],
 			'userMethods' => [
-				'test' => function () {
-					return 'test';
-				}
+				'test' => fn () => 'test'
 			]
 		]);
 
@@ -892,9 +842,7 @@ class AppPluginsTest extends TestCase
 				'index' => '/dev/null'
 			],
 			'usersMethods' => [
-				'test' => function () {
-					return 'test';
-				}
+				'test' => fn () => 'test'
 			]
 		]);
 
@@ -1031,9 +979,7 @@ class AppPluginsTest extends TestCase
 				'index' => '/dev/null'
 			],
 			'areas' => [
-				'todos' => function () {
-					return [];
-				}
+				'todos' => fn () => []
 			]
 		]);
 

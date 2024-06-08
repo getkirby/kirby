@@ -154,7 +154,11 @@ class User extends ModelWithContent
 	public function blueprint(): UserBlueprint
 	{
 		try {
-			return $this->blueprint ??= UserBlueprint::factory('users/' . $this->role(), 'users/default', $this);
+			return $this->blueprint ??= UserBlueprint::factory(
+				'users/' . $this->role(),
+				'users/default',
+				$this
+			);
 		} catch (Exception) {
 			return $this->blueprint ??= new UserBlueprint([
 				'model' => $this,
@@ -494,8 +498,7 @@ class User extends ModelWithContent
 	 */
 	public function nameOrEmail(): Field
 	{
-		$name = $this->name();
-		return $name->isNotEmpty() ? $name : new Field($this, 'email', $this->email());
+		return $this->name()->or(new Field($this, 'email', $this->email()));
 	}
 
 	/**
@@ -562,7 +565,9 @@ class User extends ModelWithContent
 
 		$name = $this->role ?? $this->credentials()['role'] ?? 'visitor';
 
-		return $this->role = $this->kirby()->roles()->find($name) ?? Role::nobody();
+		return $this->role =
+			$this->kirby()->roles()->find($name) ??
+			Role::nobody();
 	}
 
 	/**
@@ -629,8 +634,10 @@ class User extends ModelWithContent
 	protected function setBlueprint(array|null $blueprint = null): static
 	{
 		if ($blueprint !== null) {
-			$blueprint['model'] = $this;
-			$this->blueprint = new UserBlueprint($blueprint);
+			$this->blueprint = new UserBlueprint([
+				...$blueprint,
+				'model' => $this
+			]);
 		}
 
 		return $this;
@@ -644,10 +651,10 @@ class User extends ModelWithContent
 	protected function sessionFromOptions(Session|array|null $session): Session
 	{
 		// use passed session options or session object if set
-		if (is_array($session) === true) {
+		$session ??= ['detect' => true];
+
+		if ($session instanceof Session === false) {
 			$session = $this->kirby()->session($session);
-		} elseif ($session instanceof Session === false) {
-			$session = $this->kirby()->session(['detect' => true]);
 		}
 
 		return $session;
@@ -690,8 +697,12 @@ class User extends ModelWithContent
 		string|null $fallback = '',
 		string $handler = 'template'
 	): string {
-		$template ??= $this->email();
-		return parent::toString($template, $data, $fallback, $handler);
+		return parent::toString(
+			$template ?? $this->email(),
+			$data,
+			$fallback,
+			$handler
+		);
 	}
 
 	/**
@@ -701,7 +712,7 @@ class User extends ModelWithContent
 	 */
 	public function username(): string|null
 	{
-		return $this->name()->or($this->email())->value();
+		return $this->nameOrEmail()->value();
 	}
 
 	/**

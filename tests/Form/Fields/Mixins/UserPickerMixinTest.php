@@ -36,9 +36,7 @@ class UserPickerMixinTest extends TestCase
 			'test' => [
 				'mixins'  => ['userpicker'],
 				'methods' => [
-					'users' => function () {
-						return $this->userpicker()['data'];
-					}
+					'users' => fn () => $this->userpicker()['data']
 				]
 			]
 		];
@@ -65,11 +63,9 @@ class UserPickerMixinTest extends TestCase
 			'test' => [
 				'mixins'  => ['userpicker'],
 				'methods' => [
-					'users' => function () {
-						return $this->userpicker([
-							'query' => 'kirby.users.role("editor")'
-						])['data'];
-					}
+					'users' => fn () => $this->userpicker([
+						'query' => 'kirby.users.role("editor")'
+					])['data']
 				]
 			]
 		];
@@ -95,13 +91,9 @@ class UserPickerMixinTest extends TestCase
 			'test' => [
 				'mixins'  => ['userpicker'],
 				'methods' => [
-					'users' => function () {
-						return $this->userpicker([
-							'map' => function ($user) {
-								return $user->email();
-							}
-						])['data'];
-					}
+					'users' => fn () => $this->userpicker([
+						'map' => fn ($user) => $user->email()
+					])['data']
 				]
 			]
 		];

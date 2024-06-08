@@ -32,16 +32,12 @@ class LanguageRouterTest extends TestCase
 				[
 					'pattern'  => '(:any)',
 					'language' => 'en',
-					'action'   => function (Language $langauge, $slug) {
-						return 'en';
-					}
+					'action'   => fn (Language $langauge, $slug) => 'en'
 				],
 				[
 					'pattern'  => '(:any)',
 					'language' => 'de',
-					'action'   => function (Language $langauge, $slug) {
-						return 'de';
-					}
+					'action'   => fn (Language $langauge, $slug) => 'de'
 				]
 			]
 		]);
@@ -62,9 +58,7 @@ class LanguageRouterTest extends TestCase
 			'routes' => [
 				[
 					'pattern'  => '(:any)',
-					'action'   => function ($slug) {
-						return $slug;
-					}
+					'action'   => fn ($slug) => $slug
 				]
 			]
 		]);
@@ -81,9 +75,7 @@ class LanguageRouterTest extends TestCase
 				[
 					'pattern'  => '(:any)',
 					'language' => 'en|de',
-					'action'   => function (Language $language, $slug) {
-						return $slug;
-					}
+					'action'   => fn (Language $language, $slug) => $slug
 				]
 			]
 		]);
@@ -105,9 +97,7 @@ class LanguageRouterTest extends TestCase
 				[
 					'pattern'  => '(:any)',
 					'language' => '*',
-					'action'   => function (Language $language, $slug) {
-						return $slug;
-					}
+					'action'   => fn (Language $language, $slug) => $slug
 				]
 			]
 		]);
@@ -135,9 +125,7 @@ class LanguageRouterTest extends TestCase
 					'pattern'  => '(:any)',
 					'language' => '*',
 					'page'     => 'notes',
-					'action'   => function (Language $language, Page $page, $slug) {
-						return $slug;
-					}
+					'action'   => fn (Language $language, Page $page, $slug) => $slug
 				]
 			]
 		]);
@@ -164,9 +152,7 @@ class LanguageRouterTest extends TestCase
 					],
 					'language' => '*',
 					'page'     => 'notes',
-					'action'   => function (Language $language, Page $page, $slug) {
-						return $slug;
-					}
+					'action'   => fn (Language $language, Page $page, $slug) => $slug
 				]
 			]
 		]);
@@ -191,9 +177,7 @@ class LanguageRouterTest extends TestCase
 					'pattern'  => '(:any)',
 					'language' => '*',
 					'page'     => 'does-not-exist',
-					'action'   => function (Language $language, Page $page, $slug) {
-						return $slug;
-					}
+					'action'   => fn (Language $language, Page $page, $slug) => $slug
 				]
 			]
 		]);

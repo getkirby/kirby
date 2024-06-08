@@ -15,9 +15,7 @@ class StructureObjectMethodsTest extends TestCase
 				'index' => '/dev/null',
 			],
 			'structureObjectMethods' => [
-				'test' => function () {
-					return 'structure object method';
-				}
+				'test' => fn () => 'structure object method'
 			]
 		]);
 	}

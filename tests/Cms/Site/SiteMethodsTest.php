@@ -12,9 +12,7 @@ class SiteMethodsTest extends TestCase
 	{
 		$this->app = new App([
 			'siteMethods' => [
-				'test' => function () {
-					return 'site method';
-				}
+				'test' => fn () => 'site method'
 			],
 			'site' => [
 				'children' => [

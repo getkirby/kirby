@@ -15,9 +15,7 @@ class StructureMethodsTest extends TestCase
 				'index' => '/dev/null',
 			],
 			'structureMethods' => [
-				'test' => function () {
-					return 'structure method';
-				}
+				'test' => fn () => 'structure method'
 			]
 		]);
 	}

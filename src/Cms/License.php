@@ -43,7 +43,10 @@ class License
 		protected string|null $signature = null,
 	) {
 		// normalize the email address
-		$this->email = $this->email === null ? null : $this->normalizeEmail($this->email);
+		$this->email = match($email) {
+			null    => null,
+			default => $this->normalizeEmail($email)
+		};
 	}
 
 	/**
@@ -452,10 +455,10 @@ class License
 	public function status(): LicenseStatus
 	{
 		return $this->status ??= match (true) {
-			$this->isMissing()  === true => LicenseStatus::Missing,
-			$this->isLegacy()   === true => LicenseStatus::Legacy,
-			$this->isInactive() === true => LicenseStatus::Inactive,
-			default                      => LicenseStatus::Active
+			$this->isMissing()  => LicenseStatus::Missing,
+			$this->isLegacy()   => LicenseStatus::Legacy,
+			$this->isInactive() => LicenseStatus::Inactive,
+			default             => LicenseStatus::Active
 		};
 	}
 

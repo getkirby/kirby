@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use TypeError;
+
 class SiteFilesTest extends TestCase
 {
 	public function testDefaultFiles()
@@ -12,11 +14,8 @@ class SiteFilesTest extends TestCase
 
 	public function testInvalidFiles()
 	{
-		$this->expectException('TypeError');
-
-		$site = new Site([
-			'files' => 'files'
-		]);
+		$this->expectException(TypeError::class);
+		new Site(['files' => 'files']);
 	}
 
 	public function testFiles()

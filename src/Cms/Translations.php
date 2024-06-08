@@ -48,7 +48,11 @@ class Translations extends Collection
 			}
 
 			$locale      = F::name($filename);
-			$translation = Translation::load($locale, $root . '/' . $filename, $inject[$locale] ?? []);
+			$translation = Translation::load(
+				$locale,
+				$root . '/' . $filename,
+				$inject[$locale] ?? []
+			);
 
 			$collection->data[$locale] = $translation;
 		}

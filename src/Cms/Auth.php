@@ -545,7 +545,7 @@ class Auth
 			if (($details['reason'] ?? null) !== 'rate-limited') {
 				try {
 					$this->track($email);
-				} catch (Throwable $e) {
+				} catch (Throwable) {
 					// $e is overwritten with the exception
 					// from the track method if there's one
 				}

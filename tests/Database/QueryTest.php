@@ -335,9 +335,7 @@ class QueryTest extends TestCase
 			->table('users')
 			->where(['username' => 'john']);
 
-		$x = function ($row, $key) {
-			return $row['fname'] . ' ' . $row['lname'];
-		};
+		$x = fn ($row, $key) => $row['fname'] . ' ' . $row['lname'];
 
 		$this->assertSame('John Lennon', (clone $query)->fetch($x)->first());
 		$this->assertSame('John Lennon', (clone $query)->fetch([$this, 'fetchTestCallable'])->first());
@@ -564,7 +562,7 @@ class QueryTest extends TestCase
 
 	public function testWhereInvalidPredicate()
 	{
-		$this->expectException('InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid predicate INV');
 
 		$this->database
@@ -575,7 +573,7 @@ class QueryTest extends TestCase
 
 	public function testWhereInvalidPredicateOperator()
 	{
-		$this->expectException('InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid predicate/operator <!>');
 
 		$this->database

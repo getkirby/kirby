@@ -32,8 +32,11 @@ trait PageActions
 	 * of copy objects for single or multilang environments
 	 * @internal
 	 */
-	protected function adaptCopy(Page $copy, bool $files = false, bool $children = false): Page
-	{
+	protected function adaptCopy(
+		Page $copy,
+		bool $files = false,
+		bool $children = false
+	): Page {
 		if ($this->kirby()->multilang() === true) {
 			foreach ($this->kirby()->languages() as $language) {
 				// overwrite with new UUID for the page and files
@@ -248,8 +251,10 @@ trait PageActions
 	 * @param int|null $position Optional sorting number
 	 * @throws \Kirby\Exception\InvalidArgumentException If an invalid status is being passed
 	 */
-	public function changeStatus(string $status, int|null $position = null): static
-	{
+	public function changeStatus(
+		string $status,
+		int|null $position = null
+	): static {
 		return match ($status) {
 			'draft'    => $this->changeStatusToDraft(),
 			'listed'   => $this->changeStatusToListed($position),

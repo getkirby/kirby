@@ -76,9 +76,7 @@ class LoaderTest extends TestCase
 			'areas' => [
 				'site' => [
 					'dropdowns' => [
-						'page' => function () {
-							return 'foo';
-						}
+						'page' => fn () => 'foo'
 					]
 				]
 			]

@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Content\Content;
+use TypeError;
+
 class SiteContentTest extends TestCase
 {
 	public function testDefaultContent()
@@ -26,10 +29,7 @@ class SiteContentTest extends TestCase
 
 	public function testInvalidContent()
 	{
-		$this->expectException('TypeError');
-
-		$site = new Site([
-			'content' => 'content'
-		]);
+		$this->expectException(TypeError::class);
+		new Site(['content' => 'content']);
 	}
 }

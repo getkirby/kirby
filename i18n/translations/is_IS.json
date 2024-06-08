@@ -556,14 +556,14 @@
 	"page.status.draft.description": "Þessi síða er uppkast og er aðeins sýnileg vefstjórum eða gegnum laumu tengil.",
 	"page.status.listed": "Útgefin og listuð",
 	"page.status.listed.description": "Síðan er útgefin og listuð.",
-	"page.status.unlisted": "Útgefin",
+	"page.status.unlisted": "Útgefin en ólistuð",
 	"page.status.unlisted.description": "Síðan er útgefin en þó ólistuð.",
 
 	"pages": "Síður",
 	"pages.empty": "Engar síður enn",
 	"pages.status.draft": "Uppköst",
 	"pages.status.listed": "Útgefnar og listaðar",
-	"pages.status.unlisted": "Útgefnar",
+	"pages.status.unlisted": "Útgefnar en ólistaðar",
 
 	"pagination.page": "Síða",
 

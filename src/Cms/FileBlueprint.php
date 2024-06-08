@@ -104,12 +104,11 @@ class FileBlueprint extends Blueprint
 		}
 
 		if ($restrictions !== []) {
-			if (count($restrictions) > 1) {
-				// only return the MIME types that are allowed by all restrictions
-				$mimes = array_intersect(...$restrictions);
-			} else {
-				$mimes = $restrictions[0];
-			}
+			// only return the MIME types that are allowed by all restrictions
+			$mimes = match (count($restrictions) > 1) {
+				true  => array_intersect(...$restrictions),
+				false => $restrictions[0]
+			};
 
 			// filter out empty MIME types and duplicates
 			return implode(', ', array_filter(array_unique($mimes)));
@@ -190,13 +189,13 @@ class FileBlueprint extends Blueprint
 	protected function normalizeAccept(mixed $accept = null): array
 	{
 		$accept = match (true) {
-			is_string($accept) 		=> ['mime' => $accept],
+			is_string($accept) => ['mime' => $accept],
 			// explicitly no restrictions at all
-			$accept === true 		=> ['mime' => null],
+			$accept === true => ['mime' => null],
 			// no custom restrictions
 			empty($accept) === true => [],
 			// custom restrictions
-			default 				=> $accept
+			default => $accept
 		};
 
 		$accept = array_change_key_case($accept);

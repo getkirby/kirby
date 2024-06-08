@@ -22,9 +22,7 @@ class MinSectionMixinTest extends TestCase
 		Section::$types['test'] = [
 			'mixins'   => ['min'],
 			'computed' => [
-				'total' => function () {
-					return 10;
-				}
+				'total' => fn () => 10
 			]
 		];
 	}

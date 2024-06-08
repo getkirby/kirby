@@ -22,9 +22,7 @@ class MaxSectionMixinTest extends TestCase
 		Section::$types['test'] = [
 			'mixins'   => ['max'],
 			'computed' => [
-				'total' => function () {
-					return 10;
-				}
+				'total' => fn () => 10
 			]
 		];
 	}

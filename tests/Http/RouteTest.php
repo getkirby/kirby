@@ -15,9 +15,7 @@ class RouteTest extends TestCase
 
 	public function testConstruct()
 	{
-		$route = new Route('/', 'POST', $func = function () {
-			return 'test';
-		});
+		$route = new Route('/', 'POST', $func = fn () => 'test');
 
 		$this->assertSame('', $route->pattern());
 		$this->assertSame('POST', $route->method());
