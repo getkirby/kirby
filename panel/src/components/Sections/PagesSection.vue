@@ -1,4 +1,5 @@
 <script>
+import { toRaw } from "vue";
 import ModelsSection from "@/components/Sections/ModelsSection.vue";
 
 export default {
@@ -8,38 +9,34 @@ export default {
 			return this.options.add && this.$panel.permissions.pages.create;
 		},
 		items() {
-			return this.data.map((page) => {
-				const disabled = page.permissions.changeStatus === false;
-				const status = this.$helper.page.status(page.status, disabled);
-				status.click = () => this.$dialog(page.link + "/changeStatus");
-
-				page.flag = {
-					status: page.status,
-					disabled: disabled,
-					click: () => this.$dialog(page.link + "/changeStatus")
-				};
-
-				page.sortable = page.permissions.sort && this.options.sortable;
-				page.deletable = this.data.length > this.options.min;
-				page.column = this.column;
-				page.buttons = [status, ...(page.buttons ?? [])];
-				page.options = this.$dropdown(page.link, {
+			return this.data.map((page) => ({
+				...page,
+				buttons: [
+					{
+						...this.$helper.page.status(
+							page.status,
+							page.permissions.changeStatus === false
+						),
+						click: () => this.$dialog(page.link + "/changeStatus")
+					},
+					...(page.buttons ?? [])
+				],
+				column: this.column,
+				data: {
+					"data-id": page.id,
+					"data-status": page.status,
+					"data-template": page.template
+				},
+				deletable: this.data.length > this.options.min,
+				options: this.$dropdown(page.link, {
 					query: {
 						view: "list",
 						delete: page.deletable,
 						sort: page.sortable
 					}
-				});
-
-				// add data-attributes info for item
-				page.data = {
-					"data-id": page.id,
-					"data-status": page.status,
-					"data-template": page.template
-				};
-
-				return page;
-			});
+				}),
+				sortable: page.permissions.sort && this.options.sortable
+			}));
 		},
 		type() {
 			return "pages";
