@@ -2,6 +2,8 @@
 
 namespace Kirby\Toolkit;
 
+use Error;
+
 class TplTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
@@ -14,7 +16,7 @@ class TplTest extends TestCase
 
 	public function testLoadWithBadTemplate()
 	{
-		$this->expectException('Error');
+		$this->expectException(Error::class);
 		Tpl::load(static::FIXTURES . '/tpl/bad.php');
 	}
 

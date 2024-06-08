@@ -110,8 +110,11 @@ class Html extends Xml
 	 * @param array $attr Additional attributes for the tag
 	 * @return string The generated HTML
 	 */
-	public static function a(string $href, $text = null, array $attr = []): string
-	{
+	public static function a(
+		string $href,
+		$text = null,
+		array $attr = []
+	): string {
 		if (Str::startsWith($href, 'mailto:')) {
 			return static::email(substr($href, 7), $text, $attr);
 		}
