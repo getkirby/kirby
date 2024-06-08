@@ -20,8 +20,6 @@ class PageCreateTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PageCreate';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

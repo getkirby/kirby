@@ -14,13 +14,11 @@ class SessionAuthTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Http.Request.Auth.SessionAuth';
 
-	protected $kirby;
-
 	public function setUp(): void
 	{
 		Dir::make(static::TMP . '/site/sessions');
 
-		$this->kirby = new App([
+		$this->app = new App([
 			'roots' => [
 				'index' => static::TMP
 			]
@@ -29,13 +27,13 @@ class SessionAuthTest extends TestCase
 
 	public function tearDown(): void
 	{
-		$this->kirby->session()->destroy();
+		$this->app->session()->destroy();
 		Dir::remove(static::TMP);
 	}
 
 	public function testInstance()
 	{
-		$session = $this->kirby->session();
+		$session = $this->app->session();
 		$session->ensureToken();
 
 		$auth = new SessionAuth($session->token());

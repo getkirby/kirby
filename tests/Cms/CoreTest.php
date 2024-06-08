@@ -7,7 +7,7 @@ namespace Kirby\Cms;
  */
 class CoreTest extends TestCase
 {
-	protected $core;
+	protected Core $core;
 
 	public function setUp(): void
 	{

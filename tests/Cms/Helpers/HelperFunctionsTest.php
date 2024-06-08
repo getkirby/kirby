@@ -14,13 +14,11 @@ class HelperFunctionsTest extends HelpersTestCase
 	public const FIXTURES = __DIR__ . '/fixtures/HelpersTest';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.HelperFunctions';
 
-	protected $kirby;
-
 	public function setUp(): void
 	{
 		Dir::copy(static::FIXTURES, static::TMP);
 
-		$this->kirby = new Kirby([
+		$this->app = new Kirby([
 			'roots' => [
 				'index' => static::TMP
 			],
@@ -64,7 +62,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testCollection()
 	{
-		$this->kirby->clone([
+		$this->app->clone([
 			'site' => [
 				'children' => [
 					['slug' => 'test']
@@ -86,7 +84,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testCsrf()
 	{
-		$session = $this->kirby->session();
+		$session = $this->app->session();
 
 		// should generate token
 		$session->remove('kirby.csrf');
@@ -206,7 +204,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testDumpOnServer()
 	{
-		$this->kirby = $this->kirby->clone([
+		$this->app = $this->app->clone([
 			'cli' => false
 		]);
 
@@ -254,7 +252,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testImage()
 	{
-		$app = $this->kirby->clone([
+		$app = $this->app->clone([
 			'site' => [
 				'files' => [
 					['filename' => 'sitefile.jpg']
@@ -474,7 +472,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testKirby()
 	{
-		$this->assertSame($this->kirby, kirby());
+		$this->assertSame($this->app, kirby());
 	}
 
 	public function testKirbyTag()
@@ -562,7 +560,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testOption()
 	{
-		$app = $this->kirby->clone([
+		$app = $this->app->clone([
 			'options' => [
 				'foo' => 'bar'
 			]
@@ -574,7 +572,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testPage()
 	{
-		$app = $this->kirby->clone([
+		$app = $this->app->clone([
 			'site' => [
 				'children' => [
 					[
@@ -603,7 +601,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testPages()
 	{
-		$app = $this->kirby->clone([
+		$app = $this->app->clone([
 			'site' => [
 				'children' => [
 					[
@@ -622,7 +620,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testParam()
 	{
-		$this->kirby->clone([
+		$this->app->clone([
 			'server' => [
 				'REQUEST_URI' => '/projects/filter:current/b%2Fb%3A:value-B%2FB%3A'
 			]
@@ -634,7 +632,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testParams()
 	{
-		$this->kirby->clone([
+		$this->app->clone([
 			'server' => [
 				'REQUEST_URI' => '/projects/a:value-a/b%2Fb%3A:value-B%2FB%3A?foo=path'
 			],
@@ -651,7 +649,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertInstanceOf(QrCode::class, $qr);
 		$this->assertSame($url, $qr->data);
 
-		$app = $this->kirby->clone([
+		$app = $this->app->clone([
 			'site' => [
 				'children' => [
 					[
@@ -700,7 +698,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testSite()
 	{
-		$this->assertSame($this->kirby->site(), site());
+		$this->assertSame($this->app->site(), site());
 	}
 
 	public function testSize()
@@ -728,7 +726,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testSmartypantsWithKirbytext()
 	{
-		$this->kirby->clone([
+		$this->app->clone([
 			'roots' => [
 				'index' => '/dev/null'
 			],
@@ -745,7 +743,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testSnippet()
 	{
-		$this->kirby->clone([
+		$this->app->clone([
 			'roots' => [
 				'index'     => '/dev/null',
 				'snippets'  => static::FIXTURES,
@@ -758,7 +756,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testSnippetNullArgument()
 	{
-		$this->kirby->clone([
+		$this->app->clone([
 			'roots' => [
 				'index'     => '/dev/null',
 				'snippets'  => static::FIXTURES,
@@ -771,7 +769,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testSnippetNotExists()
 	{
-		$this->kirby->clone([
+		$this->app->clone([
 			'roots' => [
 				'index'     => '/dev/null',
 				'snippets'  => static::FIXTURES,
@@ -784,7 +782,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testSnippetAlternatives()
 	{
-		$this->kirby->clone([
+		$this->app->clone([
 			'roots' => [
 				'index'     => '/dev/null',
 				'snippets'  => static::FIXTURES,
@@ -801,7 +799,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testSnippetObject()
 	{
-		$this->kirby->clone([
+		$this->app->clone([
 			'roots' => [
 				'index'     => '/dev/null',
 				'snippets'  => static::FIXTURES,
@@ -816,7 +814,7 @@ class HelperFunctionsTest extends HelpersTestCase
 	{
 		$this->expectOutputString('Hello world');
 
-		$this->kirby->clone([
+		$this->app->clone([
 			'roots' => [
 				'index'     => '/dev/null',
 				'snippets'  => static::FIXTURES,
@@ -828,7 +826,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testSnippetWithSlots()
 	{
-		$this->kirby->clone([
+		$this->app->clone([
 			'roots' => [
 				'snippets' => static::FIXTURES
 			]
@@ -904,7 +902,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testTc()
 	{
-		$this->kirby->clone([
+		$this->app->clone([
 			'translations' => [
 				'en' => [
 					'car' => ['No cars', 'One car', 'Two cars', 'Many cars']
@@ -921,7 +919,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testTcWithPlaceholders()
 	{
-		$this->kirby->clone([
+		$this->app->clone([
 			'translations' => [
 				'en' => [
 					'car' => ['No cars', 'One car', '{{ count }} cars']
@@ -945,7 +943,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testUrl()
 	{
-		$this->kirby->clone([
+		$this->app->clone([
 			'options' => [
 				'url' => $url = 'https://getkirby.com'
 			]
@@ -957,7 +955,7 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testUrlWithOptions()
 	{
-		$this->kirby->clone([
+		$this->app->clone([
 			'options' => [
 				'url' => $url = 'https://getkirby.com'
 			]

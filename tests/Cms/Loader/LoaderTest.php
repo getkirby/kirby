@@ -11,7 +11,7 @@ class LoaderTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 
-	public $loader;
+	public Loader $loader;
 
 	public function setUp(): void
 	{

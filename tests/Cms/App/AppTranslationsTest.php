@@ -13,7 +13,6 @@ class AppTranslationsTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.AppTranslations';
 
-	protected $app;
 	protected $locale = [];
 	protected $localeSuffix;
 

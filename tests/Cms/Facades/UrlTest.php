@@ -8,8 +8,6 @@ class UrlTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Url';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

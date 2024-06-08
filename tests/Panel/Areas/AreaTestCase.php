@@ -14,8 +14,6 @@ abstract class AreaTestCase extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Areas.AreaTestCase';
 
-	protected $app;
-
 	public function app(array $params)
 	{
 		return $this->app = $this->app->clone($params);

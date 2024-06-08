@@ -14,7 +14,6 @@ class PluginsTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Plugins';
 
-	protected $app;
 	protected $cssA;
 	protected $cssB;
 	protected $cssC;

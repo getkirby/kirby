@@ -17,7 +17,6 @@ class AuthProtectionTest extends TestCase
 
 	public $failedEmail;
 
-	protected $app;
 	protected $auth;
 
 	public function setUp(): void

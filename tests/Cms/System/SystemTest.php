@@ -18,7 +18,6 @@ class SystemTest extends TestCase
 
 	protected static $updateStatusHost;
 
-	protected $app;
 	protected $subTmp;
 
 	public static function setUpBeforeClass(): void

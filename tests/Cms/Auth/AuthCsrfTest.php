@@ -11,7 +11,6 @@ class AuthCsrfTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.AuthCsrf';
 
-	protected $app;
 	protected $auth;
 
 	public function setUp(): void
