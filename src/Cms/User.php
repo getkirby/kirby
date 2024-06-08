@@ -498,8 +498,7 @@ class User extends ModelWithContent
 	 */
 	public function nameOrEmail(): Field
 	{
-		$name = $this->name();
-		return $name->isNotEmpty() ? $name : new Field($this, 'email', $this->email());
+		return $this->name()->or(new Field($this, 'email', $this->email()));
 	}
 
 	/**
