@@ -452,10 +452,10 @@ class License
 	public function status(): LicenseStatus
 	{
 		return $this->status ??= match (true) {
-			$this->isMissing()  === true => LicenseStatus::Missing,
-			$this->isLegacy()   === true => LicenseStatus::Legacy,
-			$this->isInactive() === true => LicenseStatus::Inactive,
-			default                      => LicenseStatus::Active
+			$this->isMissing()  => LicenseStatus::Missing,
+			$this->isLegacy()   => LicenseStatus::Legacy,
+			$this->isInactive() => LicenseStatus::Inactive,
+			default             => LicenseStatus::Active
 		};
 	}
 

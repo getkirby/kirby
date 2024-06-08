@@ -35,13 +35,8 @@ trait UserActions
 		$email = trim($email);
 
 		return $this->commit('changeEmail', ['user' => $this, 'email' => Idn::decodeEmail($email)], function ($user, $email) {
-			$user = $user->clone([
-				'email' => $email
-			]);
-
-			$user->updateCredentials([
-				'email' => $email
-			]);
+			$user = $user->clone(['email' => $email]);
+			$user->updateCredentials(['email' => $email]);
 
 			// update the users collection
 			$user->kirby()->users()->set($user->id(), $user);
@@ -56,13 +51,8 @@ trait UserActions
 	public function changeLanguage(string $language): static
 	{
 		return $this->commit('changeLanguage', ['user' => $this, 'language' => $language], function ($user, $language) {
-			$user = $user->clone([
-				'language' => $language,
-			]);
-
-			$user->updateCredentials([
-				'language' => $language
-			]);
+			$user = $user->clone(['language' => $language]);
+			$user->updateCredentials(['language' => $language]);
 
 			// update the users collection
 			$user->kirby()->users()->set($user->id(), $user);
@@ -79,13 +69,8 @@ trait UserActions
 		$name = trim($name);
 
 		return $this->commit('changeName', ['user' => $this, 'name' => $name], function ($user, $name) {
-			$user = $user->clone([
-				'name' => $name
-			]);
-
-			$user->updateCredentials([
-				'name' => $name
-			]);
+			$user = $user->clone(['name' => $name]);
+			$user->updateCredentials(['name' => $name]);
 
 			// update the users collection
 			$user->kirby()->users()->set($user->id(), $user);
@@ -128,13 +113,8 @@ trait UserActions
 	public function changeRole(string $role): static
 	{
 		return $this->commit('changeRole', ['user' => $this, 'role' => $role], function ($user, $role) {
-			$user = $user->clone([
-				'role' => $role,
-			]);
-
-			$user->updateCredentials([
-				'role' => $role
-			]);
+			$user = $user->clone(['role' => $role]);
+			$user->updateCredentials(['role' => $role]);
 
 			// update the users collection
 			$user->kirby()->users()->set($user->id(), $user);
@@ -221,7 +201,8 @@ trait UserActions
 			$data['password'] = User::hashPassword($props['password']);
 		}
 
-		$props['role'] = $props['model'] = strtolower($props['role'] ?? 'default');
+		$props['role'] ??= 'default';
+		$props['role']   = $props['model'] = strtolower($props['role']);
 
 		$user = User::factory($data);
 

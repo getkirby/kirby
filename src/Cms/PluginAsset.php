@@ -94,8 +94,11 @@ class PluginAsset implements Stringable
 	 */
 	public function publishAt(string $path): void
 	{
-		$media = $this->plugin()->mediaRoot() . '/' . $path;
-		F::link($this->root(), $media, 'symlink');
+		F::link(
+			$this->root(),
+			$this->plugin()->mediaRoot() . '/' . $path,
+			'symlink'
+		);
 	}
 
 	public function root(): string

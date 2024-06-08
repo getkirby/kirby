@@ -32,7 +32,7 @@ class PagePicker extends Picker
 		return [
 			...parent::defaults(),
 			// Page ID of the selected parent. Used to navigate
-			'parent' => null,
+			'parent'   => null,
 			// enable/disable subpage navigation
 			'subpages' => true,
 		];
