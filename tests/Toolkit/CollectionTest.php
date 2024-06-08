@@ -333,7 +333,7 @@ class CollectionTest extends TestCase
 	{
 		$collection = new Collection(['a' => 'A']);
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid grouping value for key: a');
 
 		$collection->group(function ($item) {
@@ -348,12 +348,10 @@ class CollectionTest extends TestCase
 	{
 		$collection = new Collection(['a' => 'A']);
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('You cannot group by arrays or objects');
 
-		$collection->group(function ($item) {
-			return ['a' => 'b'];
-		});
+		$collection->group(fn ($item) => ['a' => 'b']);
 	}
 
 	/**
@@ -363,12 +361,10 @@ class CollectionTest extends TestCase
 	{
 		$collection = new Collection(['a' => 'A']);
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('You cannot group by arrays or objects');
 
-		$collection->group(function ($item) {
-			return new Obj(['a' => 'b']);
-		});
+		$collection->group(fn ($item) => new Obj(['a' => 'b']));
 	}
 
 	/**

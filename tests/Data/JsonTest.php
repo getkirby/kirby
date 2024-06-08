@@ -2,6 +2,7 @@
 
 namespace Kirby\Data;
 
+use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 
@@ -70,7 +71,7 @@ class JsonTest extends TestCase
 	 */
 	public function testDecodeCorrupted1()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('JSON string is invalid');
 
 		Json::decode('some gibberish');
@@ -81,7 +82,7 @@ class JsonTest extends TestCase
 	 */
 	public function testDecodeCorrupted2()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('JSON string is invalid');
 
 		Json::decode('true');

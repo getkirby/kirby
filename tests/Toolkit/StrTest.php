@@ -889,7 +889,7 @@ class StrTest extends TestCase
 	 */
 	public function testReplacementsInvalid()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 
 		Str::replacements('string', ['array'], 1);
 	}
@@ -939,7 +939,7 @@ class StrTest extends TestCase
 	 */
 	public function testReplaceReplacementsInvalid()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 
 		Str::replaceReplacements('some string', [
 			[

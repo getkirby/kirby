@@ -2,6 +2,7 @@
 
 namespace Kirby\Http;
 
+use Exception;
 use Kirby\Exception\LogicException;
 use Kirby\TestCase;
 
@@ -86,7 +87,7 @@ class ResponseTest extends TestCase
 
 	public function testDownloadWithMissingFile()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The file could not be found');
 
 		Response::download('does/not/exist.txt');

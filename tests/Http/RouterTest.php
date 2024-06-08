@@ -2,7 +2,10 @@
 
 namespace Kirby\Http;
 
+use Exception;
+use InvalidArgumentException;
 use Kirby\TestCase;
+use TypeError;
 
 class RouterTest extends TestCase
 {
@@ -55,7 +58,7 @@ class RouterTest extends TestCase
 
 	public function testRegisterInvalidRoute()
 	{
-		$this->expectException('InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid route parameters');
 
 		$router = new Router([
@@ -65,14 +68,14 @@ class RouterTest extends TestCase
 
 	public function testRegisterInvalidData()
 	{
-		$this->expectException('TypeError');
+		$this->expectException(TypeError::class);
 
-		$router = new Router('route');
+		new Router('route');
 	}
 
 	public function testFindWithNonexistingMethod()
 	{
-		$this->expectException('InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid routing method: KIRBY');
 		$this->expectExceptionCode(400);
 
@@ -82,7 +85,7 @@ class RouterTest extends TestCase
 
 	public function testFindNonexistingRoute()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No route found for path: "a" and request method: "GET"');
 		$this->expectExceptionCode(404);
 
@@ -190,7 +193,7 @@ class RouterTest extends TestCase
 		$result = $router->call('c');
 		$this->assertSame('c', $result);
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No route found for path: "d" and request method: "GET"');
 
 		$result = $router->call('d');

@@ -7,6 +7,7 @@ use DOMAttr;
 use DOMDocument;
 use DOMDocumentType;
 use DOMElement;
+use Exception;
 use Kirby\AssertionFailedError;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
@@ -1862,7 +1863,7 @@ class DomTest extends TestCase
 	 */
 	public function testSanitizeDoctypeCallbackException()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('This exception is not caught as validation error');
 
 		$dom = new Dom('<!DOCTYPE xml><xml/>', 'XML');

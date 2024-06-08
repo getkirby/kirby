@@ -564,7 +564,7 @@ class QueryTest extends TestCase
 
 	public function testWhereInvalidPredicate()
 	{
-		$this->expectException('InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid predicate INV');
 
 		$this->database
@@ -575,7 +575,7 @@ class QueryTest extends TestCase
 
 	public function testWhereInvalidPredicateOperator()
 	{
-		$this->expectException('InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid predicate/operator <!>');
 
 		$this->database

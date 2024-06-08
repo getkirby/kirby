@@ -2,6 +2,7 @@
 
 namespace Kirby\Filesystem;
 
+use Exception as GlobalException;
 use Kirby\Cms\App;
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\Page;
@@ -125,7 +126,7 @@ class FileTest extends TestCase
 	 */
 	public function testCopyToExisting()
 	{
-		$this->expectException('Exception');
+		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('could not be copied');
 
 		$file = $this->_file();
@@ -137,7 +138,7 @@ class FileTest extends TestCase
 	 */
 	public function testCopyNonExisting()
 	{
-		$this->expectException('Exception');
+		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('could not be copied');
 
 		$file = $this->_file('a.txt');
@@ -149,7 +150,7 @@ class FileTest extends TestCase
 	 */
 	public function testCopyFail()
 	{
-		$this->expectException('Exception');
+		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('could not be copied');
 
 		static::$block[] = 'copy';
@@ -206,7 +207,7 @@ class FileTest extends TestCase
 	 */
 	public function testDeleteFail()
 	{
-		$this->expectException('Exception');
+		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('could not be deleted');
 
 		static::$block[] = 'unlink';
@@ -539,7 +540,7 @@ class FileTest extends TestCase
 	 */
 	public function testMoveToExisting()
 	{
-		$this->expectException('Exception');
+		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('could not be moved');
 
 		$file = $this->_file();
@@ -551,7 +552,7 @@ class FileTest extends TestCase
 	 */
 	public function testMoveNonExisting()
 	{
-		$this->expectException('Exception');
+		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('could not be moved');
 
 		$file = $this->_file('a.txt');
@@ -563,7 +564,7 @@ class FileTest extends TestCase
 	 */
 	public function testMoveFail()
 	{
-		$this->expectException('Exception');
+		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('could not be moved');
 
 		static::$block[] = 'rename';
@@ -641,7 +642,7 @@ class FileTest extends TestCase
 	 */
 	public function testRenameFail()
 	{
-		$this->expectException('Exception');
+		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('The file: "' . static::TMP . '/test.js" could not be renamed to: "awesome"');
 
 		static::$block[] = 'rename';
@@ -868,7 +869,7 @@ class FileTest extends TestCase
 	 */
 	public function testWriteUnwritable()
 	{
-		$this->expectException('Exception');
+		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('is not writable');
 
 		$file = new File(static::TMP . '/unwritable.txt');
@@ -882,7 +883,7 @@ class FileTest extends TestCase
 	 */
 	public function testWriteFail()
 	{
-		$this->expectException('Exception');
+		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('could not be written');
 
 		static::$block[] = 'file_put_contents';

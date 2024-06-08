@@ -2,6 +2,7 @@
 
 namespace Kirby\Sane;
 
+use Exception;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -43,7 +44,7 @@ class HandlerTest extends TestCase
 	{
 		$file = $this->fixture('does-not-exist.svg');
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The file "' . $file . '" does not exist');
 
 		CustomHandler::sanitizeFile($file);
@@ -90,7 +91,7 @@ class HandlerTest extends TestCase
 	{
 		$file = $this->fixture('does-not-exist.svg');
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The file "' . $file . '" does not exist');
 
 		CustomHandler::validateFile($file);

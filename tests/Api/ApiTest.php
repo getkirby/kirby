@@ -2,6 +2,7 @@
 
 namespace Kirby\Api;
 
+use Exception;
 use Kirby\Cms\Response;
 use Kirby\Cms\User;
 use Kirby\Exception\NotFoundException;
@@ -724,7 +725,7 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$api->upload(function ($source) {
 			// empty closure
 		});

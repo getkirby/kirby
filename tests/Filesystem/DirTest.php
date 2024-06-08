@@ -2,6 +2,7 @@
 
 namespace Kirby\Filesystem;
 
+use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\TestCase;
@@ -111,7 +112,7 @@ class DirTest extends TestCase
 	 */
 	public function testCopyMissingSource()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The directory "/does-not-exist" does not exist');
 
 		$src    = '/does-not-exist';
@@ -128,7 +129,7 @@ class DirTest extends TestCase
 		$src    = static::FIXTURES . '/copy';
 		$target = static::FIXTURES . '/copy';
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The target directory "' . $target . '" exists');
 
 		Dir::copy($src, $target);
@@ -142,7 +143,7 @@ class DirTest extends TestCase
 		$src    = static::FIXTURES . '/copy';
 		$target = '';
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The target directory "' . $target . '" could not be created');
 
 		Dir::copy($src, $target);
@@ -536,7 +537,7 @@ class DirTest extends TestCase
 	{
 		$test = static::TMP . '/test';
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('A file with the name "' . $test . '" already exists');
 
 		F::write($test, '');
