@@ -6,7 +6,7 @@
 		</div>
 
 		<ol>
-			<li v-for="(crumb, index) in segments" :key="index">
+			<li v-for="(crumb, index) in segments" :key="$helper.uid()">
 				<k-button
 					:icon="crumb.loading ? 'loader' : crumb.icon"
 					:link="crumb.link"

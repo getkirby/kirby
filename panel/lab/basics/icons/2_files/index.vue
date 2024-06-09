@@ -14,7 +14,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr v-for="(preview, index) in previews" :key="index">
+						<tr v-for="preview in previews" :key="$helper.uid()">
 							<td class="k-table-cell">
 								<k-icon-frame
 									:icon="getIcon(preview)"

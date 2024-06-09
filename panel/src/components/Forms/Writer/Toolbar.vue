@@ -108,6 +108,7 @@ export default {
 				}
 
 				buttons.push({
+					id: "nodes",
 					current: Boolean(this.activeNode),
 					icon: this.activeNode.icon ?? "title",
 					dropdown: nodes
@@ -130,6 +131,7 @@ export default {
 					}
 
 					buttons.push({
+						id: markType,
 						current: this.editor.activeMarks.includes(markType),
 						icon: mark.icon,
 						label: mark.label,

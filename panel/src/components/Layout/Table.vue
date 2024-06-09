@@ -18,7 +18,7 @@
 
 					<th
 						v-for="(column, columnIndex) in columns"
-						:key="columnIndex + '-header'"
+						:key="$helper.uid() + '-header'"
 						:data-align="column.align"
 						:data-column-id="columnIndex"
 						:data-mobile="column.mobile"
@@ -70,7 +70,7 @@
 				<template v-else>
 					<tr
 						v-for="(row, rowIndex) in values"
-						:key="row.id ?? row._id ?? row.value ?? JSON.stringify(row)"
+						:key="row.id ?? row._id ?? row.value ?? $helper.uid()"
 					>
 						<!-- Index & drag handle -->
 						<td
@@ -99,7 +99,7 @@
 						<k-table-cell
 							v-for="(column, columnIndex) in columns"
 							:id="columnIndex"
-							:key="columnIndex"
+							:key="$helper.uid()"
 							:column="column"
 							:field="fields[columnIndex]"
 							:row="row"

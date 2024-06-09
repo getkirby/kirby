@@ -15,7 +15,7 @@
 				class="k-grid"
 				data-variant="choices"
 			>
-				<li v-for="(choice, index) in choices" :key="index">
+				<li v-for="choice in choices" :key="choice.value">
 					<k-choice-input
 						v-bind="choice"
 						@input="input(choice.value, $event)"
