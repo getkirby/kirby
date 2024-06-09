@@ -70,7 +70,7 @@
 				<template v-else>
 					<tr
 						v-for="(row, rowIndex) in values"
-						:key="row.id ?? row._id ?? row.value ?? JSON.stringify(row)"
+						:key="row.id ?? row._id ?? row.value ?? rowIndex"
 					>
 						<!-- Index & drag handle -->
 						<td

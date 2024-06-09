@@ -12,7 +12,7 @@
 				style="--columns: 9; gap: var(--spacing-3)"
 			>
 				<k-box
-					v-for="(step, index) in steps"
+					v-for="step in steps"
 					:key="step"
 					:style="{
 						background: `var(--color-${name}-${step})`,

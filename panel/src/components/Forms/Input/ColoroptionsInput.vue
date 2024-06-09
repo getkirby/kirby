@@ -6,7 +6,7 @@
 	>
 		<legend class="sr-only">{{ $t("options") }}</legend>
 		<ul>
-			<li v-for="(choice, index) in choices" :key="index">
+			<li v-for="choice in choices" :key="choice.value">
 				<label :title="choice.title">
 					<input
 						:autofocus="autofocus && index === 0"

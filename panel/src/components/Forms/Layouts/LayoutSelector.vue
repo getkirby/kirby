@@ -14,8 +14,8 @@
 			class="k-layout-selector-options"
 		>
 			<button
-				v-for="(columns, layoutIndex) in layouts"
-				:key="layoutIndex"
+				v-for="columns in layouts"
+				:key="columns.join(',')"
 				:aria-current="value === columns"
 				:aria-label="columns.join(',')"
 				:value="columns"
@@ -24,8 +24,8 @@
 			>
 				<k-grid aria-hidden>
 					<k-column
-						v-for="(column, columnIndex) in columns"
-						:key="columnIndex"
+						v-for="(column, index) in columns"
+						:key="index"
 						:width="column"
 					/>
 				</k-grid>

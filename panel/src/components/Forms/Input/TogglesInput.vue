@@ -13,7 +13,7 @@
 			>
 				<li
 					v-for="(option, index) in options"
-					:key="index"
+					:key="option.value"
 					:data-disabled="disabled"
 				>
 					<input

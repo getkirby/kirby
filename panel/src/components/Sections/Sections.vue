@@ -7,25 +7,17 @@
 	/>
 	<k-grid v-else class="k-sections" variant="columns">
 		<k-column
-			v-for="(column, columnIndex) in tab.columns"
-			:key="parent + '-column-' + columnIndex"
+			v-for="column in tab.columns"
+			:key="JSON.stringify(column)"
 			:width="column.width"
 			:sticky="column.sticky"
 		>
-			<template v-for="(section, sectionIndex) in column.sections">
+			<template v-for="section in column.sections">
 				<template v-if="isVisible(section)">
 					<component
 						:is="'k-' + section.type + '-section'"
 						v-if="exists(section.type)"
-						:key="
-							parent +
-							'-column-' +
-							columnIndex +
-							'-section-' +
-							sectionIndex +
-							'-' +
-							blueprint
-						"
+						:key="(section.id ?? JSON.stringify(section)) + '-' + blueprint"
 						v-bind="section"
 						:column="column.width"
 						:lock="lock"
@@ -37,9 +29,7 @@
 					/>
 					<template v-else>
 						<k-box
-							:key="
-								parent + '-column-' + columnIndex + '-section-' + sectionIndex
-							"
+							:key="section.id ?? $helper.uid()"
 							:text="$t('error.section.type.invalid', { type: section.type })"
 							icon="alert"
 							theme="negative"

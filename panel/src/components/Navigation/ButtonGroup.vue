@@ -3,8 +3,8 @@
 		<slot v-if="$slots.default" />
 		<template v-else>
 			<k-button
-				v-for="(button, index) in buttons"
-				:key="index"
+				v-for="button in buttons"
+				:key="JSON.stringify(button)"
 				v-bind="{
 					variant,
 					theme,

@@ -42,8 +42,8 @@
 			<tbody>
 				<tr v-for="week in weeks" :key="'week_' + week">
 					<td
-						v-for="(day, dayIndex) in days(week)"
-						:key="'day_' + dayIndex"
+						v-for="day in days(week)"
+						:key="'day_' + day"
 						:aria-current="isToday(day) ? 'date' : false"
 						:aria-selected="isSelected(day) ? 'date' : false"
 						class="k-calendar-day"

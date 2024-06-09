@@ -4,9 +4,9 @@
 		class="k-lab-docs-section k-lab-docs-examples"
 	>
 		<k-headline class="h3">Examples</k-headline>
-		<k-code v-for="(example, index) in examples" :key="index" language="html">{{
-			example.content
-		}}</k-code>
+		<k-code v-for="(example, index) in examples" :key="index" language="html">
+			{{ example.content }}
+		</k-code>
 	</section>
 </template>
 

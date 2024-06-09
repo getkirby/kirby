@@ -42,8 +42,8 @@
 		>
 			<!-- Buttons -->
 			<k-button
-				v-for="(button, buttonIndex) in buttons"
-				:key="'button-' + buttonIndex"
+				v-for="button in buttons"
+				:key="button.id ?? $helper.uid()"
 				v-bind="button"
 			/>
 

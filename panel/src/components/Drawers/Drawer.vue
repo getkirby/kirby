@@ -19,7 +19,7 @@
 					<template v-for="(option, index) in options">
 						<template v-if="option.dropdown">
 							<k-button
-								:key="'btn-' + index"
+								:key="'dropdown-btn-' + index"
 								v-bind="option"
 								class="k-drawer-option"
 								@click="$refs['dropdown-' + index][0].toggle()"

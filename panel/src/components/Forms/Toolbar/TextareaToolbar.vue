@@ -154,6 +154,7 @@ export default {
 					layout.push("|");
 				} else if (available[button]) {
 					const command = {
+						id: button,
 						...available[button],
 						click: () => {
 							available[button].click?.call(this);
