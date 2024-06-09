@@ -110,7 +110,7 @@ export default {
 			handler() {
 				// make sure values are not reactive
 				// otherwise this could have nasty side-effects
-				let tags = structuredClone(this.value);
+				let tags = this.$helper.object.clone(this.value);
 
 				// sort all tags by the available options
 				if (this.sort === true) {

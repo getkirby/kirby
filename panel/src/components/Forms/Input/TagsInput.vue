@@ -141,7 +141,7 @@ export default {
 	methods: {
 		create(input) {
 			const inputs = input.split(this.separator).map((tag) => tag.trim());
-			const tags = structuredClone(this.value);
+			const tags = this.$helper.object.clone(this.value);
 
 			for (let tag of inputs) {
 				// convert input to tag object
@@ -201,7 +201,7 @@ export default {
 			}
 
 			// replace the tag at the given index
-			const tags = structuredClone(this.value);
+			const tags = this.$helper.object.clone(this.value);
 			tags.splice(index, 1, updated.value);
 			this.$emit("input", tags);
 
