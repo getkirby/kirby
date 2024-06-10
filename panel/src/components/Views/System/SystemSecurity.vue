@@ -40,7 +40,7 @@ export default {
 	},
 	data() {
 		return {
-			issues: structuredClone(this.security)
+			issues: this.$helper.object.clone(this.security)
 		};
 	},
 	async mounted() {

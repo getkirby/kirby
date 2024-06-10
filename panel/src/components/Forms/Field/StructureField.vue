@@ -432,7 +432,7 @@ export default {
 
 				case "duplicate":
 					this.add({
-						...structuredClone(row),
+						...this.$helper.object.clone(row),
 						_id: this.$helper.uuid()
 					});
 					break;

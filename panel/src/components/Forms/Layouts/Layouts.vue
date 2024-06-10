@@ -135,7 +135,7 @@ export default {
 			});
 		},
 		duplicate(index, layout) {
-			const copy = structuredClone(layout);
+			const copy = this.$helper.object.clone(layout);
 
 			// replace all unique IDs for layouts, columns and blocks
 			// the method processes a single object and returns it as an array
@@ -200,7 +200,7 @@ export default {
 				// move throught the new layout rows in steps of columns per row
 				for (let i = 0; i < chunks; i += newLayout.columns.length) {
 					const copy = {
-						...structuredClone(newLayout),
+						...this.$helper.object.clone(newLayout),
 						id: this.$helper.uuid()
 					};
 

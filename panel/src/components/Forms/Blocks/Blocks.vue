@@ -337,7 +337,7 @@ export default {
 		},
 		async duplicate(block, index) {
 			const copy = {
-				...structuredClone(block),
+				...this.$helper.object.clone(block),
 				id: this.$helper.uuid()
 			};
 			this.blocks.splice(index + 1, 0, copy);
@@ -677,7 +677,7 @@ export default {
 			if (to < 0) {
 				return;
 			}
-			let blocks = structuredClone(this.blocks);
+			let blocks = this.$helper.object.clone(this.blocks);
 			blocks.splice(from, 1);
 			blocks.splice(to, 0, block);
 			this.blocks = blocks;
@@ -687,7 +687,7 @@ export default {
 		},
 		async split(block, index, contents) {
 			// prepare old block with reduced content chunk
-			const oldBlock = structuredClone(block);
+			const oldBlock = this.$helper.object.clone(block);
 			oldBlock.content = { ...oldBlock.content, ...contents[0] };
 
 			// create a new block and merge in default contents as

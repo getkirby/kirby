@@ -3,8 +3,6 @@
  *
  * @param {Object|array} value
  * @returns  {Object|array}
- *
- * @deprecated 4.1.0 Use `structuredClone` instead
  */
 export function clone(value) {
 	if (value === undefined) {
