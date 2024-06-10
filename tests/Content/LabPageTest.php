@@ -234,4 +234,74 @@ class LabPageTest extends TestCase
 		$this->assertCount(1, $translations);
 		$this->assertSame($content, $translations->first()->content());
 	}
+
+	public function testUpdateMultiLanguage()
+	{
+		$this->setUpMultiLanguage();
+
+		$page = new LabPage([
+			'slug'     => 'test',
+			'template' => 'article'
+		]);
+
+		// make sure to be authenticated
+		$this->app->impersonate('kirby');
+
+		// write something to the content file to make sure it
+		// can be read from disk for the test.
+		Data::write($page->root() . '/article.en.txt', $en = [
+			'title' => 'Test English'
+		]);
+
+		Data::write($page->root() . '/article.de.txt', $de = [
+			'title' => 'Test Deutsch'
+		]);
+
+		$updatedPage = $page->update([
+			'title' => 'Updated Test English'
+		], 'en');
+
+		$updatedPage = $page->update([
+			'title' => 'Updated Test Deutsch'
+		], 'de');
+
+		// check if the old version is still the same
+		$this->assertSame('Test English', $page->title()->value());
+
+		$this->assertSame('Updated Test English', $updatedPage->title()->value());
+		$this->assertSame('Updated Test English', $updatedPage->content('en')->title()->value());
+		$this->assertSame('Updated Test English', Data::read($updatedPage->root() . '/article.en.txt')['title']);
+
+		$this->assertSame('Updated Test Deutsch', $updatedPage->content('de')->title()->value());
+		$this->assertSame('Updated Test Deutsch', Data::read($updatedPage->root() . '/article.de.txt')['title']);
+	}
+
+	public function testUpdateSingleLanguage()
+	{
+		$this->setUpSingleLanguage();
+
+		$page = new LabPage([
+			'slug'     => 'test',
+			'template' => 'article'
+		]);
+
+		// make sure to be authenticated
+		$this->app->impersonate('kirby');
+
+		// write something to the content file to make sure it
+		// can be read from disk for the test.
+		Data::write($page->root() . '/article.txt', $content = [
+			'title' => 'Test'
+		]);
+
+		$updatedPage = $page->update([
+			'title' => 'Updated title'
+		]);
+
+		// check if the old version is still the same
+		$this->assertSame('Test', $page->title()->value());
+
+		$this->assertSame('Updated title', $updatedPage->title()->value());
+		$this->assertSame('Updated title', Data::read($updatedPage->root() . '/article.txt')['title']);
+	}
 }

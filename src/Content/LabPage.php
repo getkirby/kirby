@@ -15,6 +15,18 @@ use Kirby\Cms\Page;
 class LabPage extends Page
 {
 	/**
+	 * Creates a new instance with the same
+	 * initial properties
+	 *
+	 * @todo eventually refactor without need of propertyData
+	 */
+	public function clone(array $props = []): static
+	{
+		$this->storage = MemoryContentStorageHandler::from($this->storage);
+		return parent::clone($props);
+	}
+
+	/**
 	 * Returns the content for the default version and given language code
 	 */
 	public function content(string|null $languageCode = null): Content
@@ -38,8 +50,9 @@ class LabPage extends Page
 		string|null $languageCode = null,
 		bool $overwrite = false
 	): static {
-		$this->version()->save($data, $languageCode ?? 'current', $overwrite);
-		return $this;
+		$clone = $this->clone();
+		$clone->version()->save($data, $languageCode ?? 'current', $overwrite);
+		return $clone;
 	}
 
 	/**
@@ -49,8 +62,9 @@ class LabPage extends Page
 		array|null $data = null,
 		bool $overwrite = false
 	): static {
-		$this->version()->save($data, 'current', $overwrite);
-		return $this;
+		$clone = $this->clone();
+		$clone->version()->save($data, 'current', $overwrite);
+		return $clone;
 	}
 
 	/**
@@ -61,8 +75,9 @@ class LabPage extends Page
 		string|null $languageCode = null,
 		bool $overwrite = false
 	): static {
-		$this->version()->save($data, $languageCode ?? 'current', $overwrite);
-		return $this;
+		$clone = $this->clone();
+		$clone->version()->save($data, $languageCode ?? 'current', $overwrite);
+		return $clone;
 	}
 
 	/**
@@ -143,7 +158,7 @@ class LabPage extends Page
 	 */
 	public function writeContent(array $data, string|null $languageCode = null): bool
 	{
-		$this->version()->save($data, $languageCode ?? 'default', true);
+		$this->clone()->version()->save($data, $languageCode ?? 'default', true);
 		return true;
 	}
 }
