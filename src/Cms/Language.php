@@ -45,6 +45,7 @@ class Language implements Stringable
 	protected string $direction;
 	protected array $locale;
 	protected string $name;
+	protected bool $single;
 	protected array $slugs;
 	protected array $smartypants;
 	protected array $translations;
@@ -64,6 +65,7 @@ class Language implements Stringable
 		$this->default      = ($props['default'] ?? false) === true;
 		$this->direction    = ($props['direction'] ?? null) === 'rtl' ? 'rtl' : 'ltr';
 		$this->name         = trim($props['name'] ?? $this->code);
+		$this->single       = $props['single'] ?? false;
 		$this->slugs        = $props['slugs'] ?? [];
 		$this->smartypants  = $props['smartypants'] ?? [];
 		$this->translations = $props['translations'] ?? [];
@@ -177,8 +179,8 @@ class Language implements Stringable
 		if ($languages->count() === 0) {
 			foreach ($kirby->models() as $model) {
 				$model->storage()->convertLanguage(
-					'default',
-					$language->code()
+					Language::single(),
+					$language
 				);
 			}
 		}
@@ -225,7 +227,7 @@ class Language implements Stringable
 
 		foreach ($kirby->models() as $model) {
 			if ($this->isLast() === true) {
-				$model->storage()->convertLanguage($code, 'default');
+				$model->storage()->convertLanguage($this, Language::single());
 			} else {
 				$model->storage()->deleteLanguage($code);
 			}
@@ -272,6 +274,11 @@ class Language implements Stringable
 	 */
 	public function isDeletable(): bool
 	{
+		// a single-language object cannot be deleted
+		if ($this->isSingle() === true) {
+			return false;
+		}
+
 		// the default language can only be deleted if it's the last
 		if ($this->isDefault() === true && $this->isLast() === false) {
 			return false;
@@ -286,6 +293,15 @@ class Language implements Stringable
 	public function isLast(): bool
 	{
 		return App::instance()->languages()->count() === 1;
+	}
+
+	/**
+	 * Checks if this is the single language object
+	 * @internal
+	 */
+	public function isSingle(): bool
+	{
+		return $this->single;
 	}
 
 	/**
@@ -444,6 +460,20 @@ class Language implements Stringable
 	protected function siblingsCollection(): Languages
 	{
 		return App::instance()->languages();
+	}
+
+	/**
+	 * Create a placeholder language object in a
+	 * single-language installation
+	 */
+	public static function single(): static
+	{
+		return new static([
+			'code'    => 'en',
+			'default' => true,
+			'locale'  => App::instance()->option('locale', 'en_US.utf-8'),
+			'single'  => true
+		]);
 	}
 
 	/**
