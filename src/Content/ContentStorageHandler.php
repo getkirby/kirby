@@ -6,7 +6,7 @@ use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 
 /**
- * Interface for content storage handlers;
+ * Abstract for content storage handlers;
  * note that it is so far not viable to build custom
  * handlers because the CMS core relies on the filesystem
  * and cannot fully benefit from this abstraction yet
@@ -19,36 +19,38 @@ use Kirby\Cms\ModelWithContent;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-interface ContentStorageHandler
+abstract class ContentStorageHandler
 {
-	public function __construct(ModelWithContent $model);
+	public function __construct(protected ModelWithContent $model)
+	{
+	}
 
 	/**
 	 * Creates a new version
 	 *
 	 * @param array<string, string> $fields Content fields
 	 */
-	public function create(VersionId $versionId, Language $language, array $fields): void;
+	abstract public function create(VersionId $versionId, Language $language, array $fields): void;
 
 	/**
 	 * Deletes an existing version in an idempotent way if it was already deleted
 	 */
-	public function delete(VersionId $versionId, Language $language): void;
+	abstract public function delete(VersionId $versionId, Language $language): void;
 
 	/**
 	 * Checks if a version exists
 	 */
-	public function exists(VersionId $versionId, Language $language): bool;
+	abstract public function exists(VersionId $versionId, Language $language): bool;
 
 	/**
 	 * Returns the modification timestamp of a version if it exists
 	 */
-	public function modified(VersionId $versionId, Language $language): int|null;
+	abstract public function modified(VersionId $versionId, Language $language): int|null;
 
 	/**
 	 * Moves content from one version-language combination to another
 	 */
-	public function move(
+	abstract public function move(
 		VersionId $fromVersionId,
 		Language $fromLanguage,
 		VersionId $toVersionId,
@@ -62,14 +64,14 @@ interface ContentStorageHandler
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function read(VersionId $versionId, Language $language): array;
+	abstract public function read(VersionId $versionId, Language $language): array;
 
 	/**
 	 * Updates the modification timestamp of an existing version
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function touch(VersionId $versionId, Language $language): void;
+	abstract public function touch(VersionId $versionId, Language $language): void;
 
 	/**
 	 * Updates the content fields of an existing version
@@ -78,5 +80,5 @@ interface ContentStorageHandler
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function update(VersionId $versionId, Language $language, array $fields): void;
+	abstract public function update(VersionId $versionId, Language $language, array $fields): void;
 }

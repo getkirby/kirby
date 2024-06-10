@@ -4,7 +4,6 @@ namespace Kirby\Content;
 
 use Kirby\Cms\File;
 use Kirby\Cms\Language;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
@@ -26,12 +25,8 @@ use Kirby\Filesystem\F;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class PlainTextContentStorageHandler implements ContentStorageHandler
+class PlainTextContentStorageHandler extends ContentStorageHandler
 {
-	public function __construct(protected ModelWithContent $model)
-	{
-	}
-
 	/**
 	 * Creates the absolute directory path for the model
 	 */
