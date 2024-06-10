@@ -61,7 +61,7 @@ class Model
 		) {
 			$class = match ($this->data) {
 				null    => 'null',
-				default => get_class($this->data),
+				default => $this->data::class,
 			};
 			throw new Exception(sprintf('Invalid model type "%s" expected: "%s"', $class, $schema['type']));
 		}

@@ -205,7 +205,7 @@ abstract class Uuid implements Stringable
 			// $seed instanceof StructureObject
 			// 	=> new StructureUuid(model: $seed, context: $context),
 			default
-			=> throw new InvalidArgumentException('UUID not supported for: ' . get_class($seed))
+			=> throw new InvalidArgumentException('UUID not supported for: ' . $seed::class)
 		};
 	}
 

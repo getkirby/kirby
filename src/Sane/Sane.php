@@ -5,6 +5,7 @@ namespace Kirby\Sane;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
+use Kirby\Toolkit\A;
 
 /**
  * The `Sane` class validates that files
@@ -123,10 +124,9 @@ class Sane
 			default:
 				// more than one matching handler;
 				// sanitizing with all handlers will not leave much in the output
-				$handlerNames = array_map('get_class', $handlers);
 				throw new LogicException(
 					'Cannot sanitize file as more than one handler applies: ' .
-					implode(', ', $handlerNames)
+					implode(', ', A::map($handlers, fn ($handler) => $handler::class))
 				);
 		}
 	}
@@ -194,7 +194,7 @@ class Sane
 
 		foreach ($options as $option) {
 			$handler      = static::handler($option, $lazy);
-			$handlerClass = $handler ? get_class($handler) : null;
+			$handlerClass = $handler ? $handler::class : null;
 
 			// ensure that each handler class is only returned once
 			if (
