@@ -5,6 +5,7 @@ namespace Kirby\Content;
 use Kirby\Cms\Language;
 use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
+use Throwable;
 
 /**
  * The Version class handles all actions for a single
@@ -156,13 +157,14 @@ class Version
 	 * Returns the stored content fields
 	 *
 	 * @return array<string, string>
-	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
 	public function read(Language|string $language = 'default'): array
 	{
-		$this->ensure($language);
-		return $this->model->storage()->read($this->id, $this->language($language));
+		try {
+			return $this->model->storage()->read($this->id, $this->language($language));
+		} catch (Throwable) {
+			return [];
+		}
 	}
 
 	/**
