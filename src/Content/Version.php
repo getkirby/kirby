@@ -86,16 +86,16 @@ class Version
 	public function ensure(
 		Language|string $language = 'default'
 	): bool {
-		if ($this->exists($language) !== true) {
-			$message = match($this->model->kirby()->multilang()) {
-				true  => 'Version "' . $this->id . ' (' . $language . ')" does not already exist',
-				false => 'Version "' . $this->id . '" does not already exist',
-			};
-
-			throw new NotFoundException($message);
+		if ($this->exists($language) === true) {
+			return true;
 		}
 
-		return true;
+		$message = match($this->model->kirby()->multilang()) {
+			true  => 'Version "' . $this->id . ' (' . $language . ')" does not already exist',
+			false => 'Version "' . $this->id . '" does not already exist',
+		};
+
+		throw new NotFoundException($message);
 	}
 
 	/**
