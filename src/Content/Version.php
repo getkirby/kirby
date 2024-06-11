@@ -86,8 +86,8 @@ class Version
 	 */
 	public function ensure(
 		Language|string $language = 'default'
-	): bool {
-		return $this->model->storage()->ensure($this->id, $this->language($language));
+	): void {
+		$this->model->storage()->ensure($this->id, $this->language($language));
 	}
 
 	/**

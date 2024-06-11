@@ -101,18 +101,18 @@ abstract class ContentStorageHandler
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function ensure(VersionId $versionId, Language $language): bool
+	public function ensure(VersionId $versionId, Language $language): void
 	{
-		if ($this->exists($versionId, $language) !== true) {
-			$message = match($this->model->kirby()->multilang()) {
-				true  => 'Version "' . $versionId . ' (' . $language->code() . ')" does not already exist',
-				false => 'Version "' . $versionId . '" does not already exist',
-			};
-
-			throw new NotFoundException($message);
+		if ($this->exists($versionId, $language) === true) {
+			return;
 		}
 
-		return true;
+		$message = match($this->model->kirby()->multilang()) {
+			true  => 'Version "' . $versionId . ' (' . $language->code() . ')" does not already exist',
+			false => 'Version "' . $versionId . '" does not already exist',
+		};
+
+		throw new NotFoundException($message);
 	}
 
 	/**
