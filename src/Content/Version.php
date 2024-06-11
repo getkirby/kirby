@@ -85,9 +85,9 @@ class Version
 	 */
 	public function ensure(
 		Language|string $language = 'default'
-	): bool {
+	): void {
 		if ($this->exists($language) === true) {
-			return true;
+			return;
 		}
 
 		$message = match($this->model->kirby()->multilang()) {

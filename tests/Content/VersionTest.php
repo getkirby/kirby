@@ -310,8 +310,8 @@ class VersionTest extends TestCase
 			'title' => 'Test'
 		]);
 
-		$this->assertTrue($version->ensure('de'));
-		$this->assertTrue($version->ensure($this->app->language('de')));
+		$this->assertNull($version->ensure('de'));
+		$this->assertNull($version->ensure($this->app->language('de')));
 	}
 
 	/**
@@ -330,7 +330,7 @@ class VersionTest extends TestCase
 			'title' => 'Test'
 		]);
 
-		$this->assertTrue($version->ensure());
+		$this->assertNull($version->ensure());
 	}
 
 	/**
