@@ -65,14 +65,7 @@ class Version
 	 */
 	public function delete(): void
 	{
-		// delete the default language in single-language mode
-		if ($this->model->kirby()->multilang() === false) {
-			$this->model->storage()->delete($this->id, $this->language('default'));
-			return;
-		}
-
-		// delete all languages
-		foreach ($this->model->kirby()->languages() as $language) {
+		foreach (Languages::ensure() as $language) {
 			$this->model->storage()->delete($this->id, $language);
 		}
 	}
