@@ -119,6 +119,14 @@ abstract class ContentStorageHandler
 	abstract public function exists(VersionId $versionId, Language $language): bool;
 
 	/**
+	 * Returns the related model
+	 */
+	public function model(): ModelWithContent
+	{
+		return $this->model;
+	}
+
+	/**
 	 * Returns the modification timestamp of a version if it exists
 	 */
 	abstract public function modified(VersionId $versionId, Language $language): int|null;
