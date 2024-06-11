@@ -165,6 +165,8 @@ class Version
 
 	/**
 	 * Moves the version to a new language and/or version
+	 *
+	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
 	public function move(
 		Language|string $fromLanguage,
@@ -184,6 +186,8 @@ class Version
 	 * Returns the stored content fields
 	 *
 	 * @return array<string, string>
+	 *
+	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
 	public function read(Language|string $language = 'default'): array
 	{
@@ -194,38 +198,10 @@ class Version
 	/**
 	 * Updates the modification timestamp of an existing version
 	 *
-	 * @param Language|string|null $language If null, all available languages will be touched
-	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function touch(Language|string|null $language = null): void
+	public function touch(Language|string $language = 'default'): void
 	{
-		// touch a single language
-		if ($this->model->kirby()->multilang() === false) {
-			$this->touchLanguage('default');
-			return;
-		}
-
-		// touch a specific language
-		if ($language !== null) {
-			$this->touchLanguage($language);
-			return;
-		}
-
-		// touch all languages
-		foreach ($this->model->kirby()->languages() as $language) {
-			$this->touchLanguage($language);
-		}
-	}
-
-	/**
-	 * Updates the modification timestamp of a specific language
-	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
-	 */
-	protected function touchLanguage(Language|string $language = 'default'): void
-	{
-		// make sure the version exists
 		$this->ensure($language);
 		$this->model->storage()->touch($this->id, $this->language($language));
 	}

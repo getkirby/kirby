@@ -669,36 +669,6 @@ class VersionTest extends TestCase
 	 * @covers ::touchLanguage
 	 * @covers ::language
 	 */
-	public function testTouchAllLanguages(): void
-	{
-		$this->setUpMultiLanguage();
-
-		$version = new Version(
-			model: $this->model,
-			id: VersionId::published()
-		);
-
-		touch($rootEN = $this->contentFile('en'), 123456);
-		touch($rootDE = $this->contentFile('de'), 123456);
-
-		$this->assertSame(123456, filemtime($rootEN));
-		$this->assertSame(123456, filemtime($rootDE));
-
-		$minTime = time();
-
-		$version->touch();
-
-		clearstatcache();
-
-		$this->assertGreaterThanOrEqual($minTime, filemtime($rootEN));
-		$this->assertGreaterThanOrEqual($minTime, filemtime($rootDE));
-	}
-
-	/**
-	 * @covers ::touch
-	 * @covers ::touchLanguage
-	 * @covers ::language
-	 */
 	public function testTouchMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
