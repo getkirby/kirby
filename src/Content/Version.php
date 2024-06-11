@@ -201,6 +201,11 @@ class Version
 	public function update(array $fields, Language|string $language = 'default'): void
 	{
 		$this->ensure($language);
+
+		// merge the previous state with the new state to always
+		// update to a complete version
+		$fields = [...$this->read($language), ...$fields];
+
 		$this->model->storage()->update($this->id, $this->language($language), $fields);
 	}
 }
