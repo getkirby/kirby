@@ -168,6 +168,19 @@ class Version
 	}
 
 	/**
+	 * Replaces the content of the current version with the given fields
+	 *
+	 * @param array<string, string> $fields Content fields
+	 *
+	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
+	 */
+	public function replace(array $fields, string $language = 'default'): void
+	{
+		$this->ensure($language);
+		$this->model->storage()->update($this->id, $this->language($language), $fields);
+	}
+
+	/**
 	 * Updates the modification timestamp of an existing version
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
