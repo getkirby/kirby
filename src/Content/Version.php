@@ -194,7 +194,7 @@ class Version
 	/**
 	 * Updates the modification timestamp of an existing version
 	 *
-	 * @param string|null $language If null, all available languages will be touched
+	 * @param Language|string|null $language If null, all available languages will be touched
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
@@ -223,7 +223,7 @@ class Version
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function touchLanguage(Language|string $language = 'default'): void
+	protected function touchLanguage(Language|string $language = 'default'): void
 	{
 		// make sure the version exists
 		$this->ensure($language);
