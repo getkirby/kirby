@@ -666,7 +666,6 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::touch
-	 * @covers ::touchLanguage
 	 * @covers ::language
 	 */
 	public function testTouchMultiLanguage(): void
@@ -700,7 +699,6 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::touch
-	 * @covers ::touchLanguage
 	 */
 	public function testTouchSingleLanguage(): void
 	{
