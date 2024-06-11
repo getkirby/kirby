@@ -4,7 +4,6 @@ namespace Kirby\Content;
 
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Exception\InvalidArgumentException;
 
 /**
  * The Version class handles all actions for a single
