@@ -258,8 +258,12 @@ class Language implements Stringable
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the language does not exist
 	 */
-	public static function ensure(string|null $code = null): static
+	public static function ensure(self|string|null $code = null): static
 	{
+		if ($code instanceof self) {
+			return $code;
+		}
+
 		$kirby = App::instance();
 
 		// single language

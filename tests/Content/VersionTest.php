@@ -3,7 +3,6 @@
 namespace Kirby\Content;
 
 use Kirby\Data\Data;
-use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 
 /**
@@ -315,7 +314,7 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Invalid language: fr');
 
 		$version->ensure('fr');
