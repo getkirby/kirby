@@ -115,10 +115,6 @@ class Version
 	protected function language(
 		Language|string|null $languageCode = null,
 	): Language {
-		if ($languageCode instanceof Language) {
-			return $languageCode;
-		}
-
 		return Language::ensure($languageCode);
 	}
 
