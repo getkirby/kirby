@@ -11,6 +11,7 @@ use Kirby\TestCase;
 
 /**
  * @coversDefaultClass Kirby\Content\Version
+ * @covers ::__construct
  */
 class VersionTest extends TestCase
 {
