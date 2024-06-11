@@ -4,6 +4,7 @@ namespace Kirby\Content;
 
 use Kirby\Cms\App;
 use Kirby\Data\Data;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
@@ -366,6 +367,25 @@ class VersionTest extends TestCase
 		$this->expectExceptionMessage('Version "published" does not already exist');
 
 		$version->ensure();
+	}
+
+	/**
+	 * @covers ::ensure
+	 * @covers ::language
+	 */
+	public function testEnsureWithInvalidLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid language: fr');
+
+		$version->ensure('fr');
 	}
 
 	/**
