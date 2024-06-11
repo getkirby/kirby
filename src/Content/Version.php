@@ -35,7 +35,7 @@ class Version
 	{
 		return new Content(
 			parent: $this->model,
-			data:   $this->model->storage()->read($this->id, $this->language($language)),
+			data:   $this->read($language),
 		);
 	}
 
