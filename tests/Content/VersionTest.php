@@ -18,19 +18,27 @@ class VersionTest extends TestCase
 	protected $app;
 	protected $model;
 
-	public function assertContentFileExists(string|null $language = null)
+	public function assertContentFileExists(string|null $language = null, VersionId|null $versionId = null)
 	{
-		$this->assertFileExists($this->contentFile($language));
+		$this->assertFileExists($this->contentFile($language, $versionId));
 	}
 
-	public function assertContentFileDoesNotExist(string|null $language = null)
+	public function assertContentFileDoesNotExist(string|null $language = null, VersionId|null $versionId = null)
 	{
-		$this->assertFileDoesNotExist($this->contentFile($language));
+		$this->assertFileDoesNotExist($this->contentFile($language, $versionId));
 	}
 
-	public function contentFile(string|null $language = null): string
+	public function contentFile(string|null $language = null, VersionId|null $versionId = null): string
 	{
-		return $this->model->root() . '/article' . ($language === null ? '' : '.' . $language) . '.txt';
+		return
+			$this->model->root() .
+			// add the changes folder
+			($versionId?->value() === 'changes' ? '/_changes/' : '/') .
+			// template
+			'article' .
+			// language code
+			($language === null ? '' : '.' . $language) .
+			'.txt';
 	}
 
 	public function setUp(): void
@@ -499,6 +507,95 @@ class VersionTest extends TestCase
 		);
 
 		$this->assertNull($version->modified());
+	}
+
+	/**
+	 * @covers ::move
+	 */
+	public function testMoveToLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: $versionId = VersionId::published()
+		);
+
+		$this->assertContentFileDoesNotExist('en');
+		$this->assertContentFileDoesNotExist('de');
+
+		$fileEN = $this->contentFile('en');
+		$fileDE = $this->contentFile('de');
+
+		Data::write($fileEN, $content = [
+			'title' => 'Test'
+		]);
+
+		$this->assertContentFileExists('en');
+		$this->assertContentFileDoesNotExist('de');
+
+		// move with string arguments
+		$version->move('en', $versionId, 'de');
+
+		$this->assertContentFileDoesNotExist('en');
+		$this->assertContentFileExists('de');
+
+		$this->assertSame($content, Data::read($fileDE));
+
+		// move with Language arguments
+		$version->move($this->app->language('de'), $versionId, $this->app->language('en'));
+
+		$this->assertContentFileExists('en');
+		$this->assertContentFileDoesNotExist('de');
+
+		$this->assertSame($content, Data::read($fileEN));
+	}
+
+	/**
+	 * @covers ::move
+	 */
+	public function testMoveToVersion(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$versionPublished = new Version(
+			model: $this->model,
+			id: $versionIdPublished = VersionId::published()
+		);
+
+		$versionChanges = new Version(
+			model: $this->model,
+			id: $versionIdChanges = VersionId::changes()
+		);
+
+		$this->assertContentFileDoesNotExist('en', $versionIdPublished);
+		$this->assertContentFileDoesNotExist('en', $versionIdChanges);
+
+		$fileENPublished = $this->contentFile('en', $versionIdPublished);
+		$fileENChanges   = $this->contentFile('en', $versionIdChanges);
+
+		Data::write($fileENPublished, $content = [
+			'title' => 'Test'
+		]);
+
+		$this->assertContentFileExists('en', $versionIdPublished);
+		$this->assertContentFileDoesNotExist('en', $versionIdChanges);
+
+		// move with string arguments
+		$versionPublished->move('en', $versionIdChanges, 'en');
+
+		$this->assertContentFileDoesNotExist('en', $versionIdPublished);
+		$this->assertContentFileExists('en', $versionIdChanges);
+
+		$this->assertSame($content, Data::read($fileENChanges));
+
+		// move the version back
+		$versionChanges->move('en', $versionIdPublished, 'en');
+
+		$this->assertContentFileDoesNotExist('en', $versionIdChanges);
+		$this->assertContentFileExists('en', $versionIdPublished);
+
+		$this->assertSame($content, Data::read($fileENPublished));
 	}
 
 	/**
