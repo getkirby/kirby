@@ -10,8 +10,6 @@ use Kirby\TestCase;
 class LanguagesTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Languages';
-
-	protected $app;
 	protected $languages;
 
 	public function setUp(): void

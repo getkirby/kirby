@@ -11,8 +11,6 @@ class PageCacheTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures/PageCacheTest';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.PageCache';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

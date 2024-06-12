@@ -10,8 +10,6 @@ use Kirby\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
-	protected $app;
-
 	public function setUp(): void
 	{
 		// start with a fresh set of fields

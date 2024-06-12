@@ -77,9 +77,9 @@ class ContentStorageTest extends TestCase
 	public function testReadDoesNotExist()
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Version "published (default)" does not already exist');
+		$this->expectExceptionMessage('Version "published" does not already exist');
 
-		$this->storage->read(VersionId::published(), 'default');
+		$this->storage->read(VersionId::published());
 	}
 
 	/**
@@ -89,9 +89,9 @@ class ContentStorageTest extends TestCase
 	public function testTouchDoesNotExist()
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Version "published (default)" does not already exist');
+		$this->expectExceptionMessage('Version "published" does not already exist');
 
-		$this->storage->touch(VersionId::published(), 'default');
+		$this->storage->touch(VersionId::published());
 	}
 
 	/**
@@ -101,7 +101,7 @@ class ContentStorageTest extends TestCase
 	public function testUpdateDoesNotExist()
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Version "published (default)" does not already exist');
+		$this->expectExceptionMessage('Version "published" does not already exist');
 
 		$fields = [
 			'title' => 'Foo',
@@ -113,9 +113,8 @@ class ContentStorageTest extends TestCase
 
 	/**
 	 * @covers ::language
-	 * @dataProvider languageProvider
 	 */
-	public function testLanguageMultiLang(string|null $languageCode, bool $force, array $expectedCodes)
+	public function testLanguageMultiLang()
 	{
 		$app = new App([
 			'languages' => [
@@ -129,8 +128,17 @@ class ContentStorageTest extends TestCase
 			]
 		]);
 
-		$language = $this->language($this->storage, $languageCode, $force);
-		$this->assertSame($expectedCodes[0], $language);
+		$language = $this->language($this->storage, 'en');
+		$this->assertSame('en', $language->code());
+
+		$language = $this->language($this->storage, 'de');
+		$this->assertSame('de', $language->code());
+
+		$language = $this->language($this->storage, 'default');
+		$this->assertSame('en', $language->code());
+
+		$language = $this->language($this->storage);
+		$this->assertSame('en', $language->code());
 	}
 
 	/**
@@ -158,12 +166,14 @@ class ContentStorageTest extends TestCase
 
 	/**
 	 * @covers ::language
-	 * @dataProvider languageProvider
 	 */
-	public function testLanguageSingleLang(string|null $languageCode, bool $force, array $expectedCodes)
+	public function testLanguageSingleLang()
 	{
-		$language = $this->language($this->storage, $languageCode, $force);
-		$this->assertSame($expectedCodes[1], $language);
+		$language = $this->language($this->storage, 'en');
+		$this->assertSame('en', $language->code());
+
+		$language = $this->language($this->storage, 'de');
+		$this->assertSame('en', $language->code());
 	}
 
 	/**
@@ -172,7 +182,7 @@ class ContentStorageTest extends TestCase
 	public function testLanguageSingleLangInvalid()
 	{
 		$language = $this->language($this->storage, 'fr', false);
-		$this->assertSame('default', $language);
+		$this->assertSame('en', $language->code());
 	}
 
 	public static function languageProvider(): array

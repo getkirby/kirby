@@ -9,8 +9,6 @@ use Kirby\TestCase;
 
 class FileModificationsTest extends TestCase
 {
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

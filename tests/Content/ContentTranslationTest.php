@@ -109,9 +109,18 @@ class ContentTranslationTest extends TestCase
 	public function testContentFile()
 	{
 		$app = new App([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de'
+				]
+			],
 			'roots' => [
 				'content' => '/content',
-			]
+			],
 		]);
 
 		$page = new Page([

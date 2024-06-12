@@ -7,8 +7,6 @@ use Kirby\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
-	protected $app;
-
 	protected function setUp(): void
 	{
 		$this->app = $this->app();

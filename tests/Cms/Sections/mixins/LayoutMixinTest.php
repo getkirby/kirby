@@ -6,7 +6,6 @@ use Kirby\TestCase;
 
 class LayoutMixinTest extends TestCase
 {
-	protected $app;
 	protected $page;
 
 	public function setUp(): void

@@ -13,8 +13,6 @@ class LanguageVariableTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.LanguageVariable';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

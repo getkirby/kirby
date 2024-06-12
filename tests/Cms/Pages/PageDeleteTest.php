@@ -10,8 +10,6 @@ class PageDeleteTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PageDelete';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

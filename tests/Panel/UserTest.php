@@ -24,8 +24,6 @@ class UserTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.User';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		Blueprint::$loaded = [];

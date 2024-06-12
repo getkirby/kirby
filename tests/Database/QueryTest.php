@@ -5,6 +5,7 @@ namespace Kirby\Database;
 use InvalidArgumentException;
 use Kirby\TestCase;
 use Kirby\Toolkit\Collection;
+use Kirby\Toolkit\Pagination;
 use PDOException;
 
 /**
@@ -669,7 +670,7 @@ class QueryTest extends TestCase
 
 		$this->assertCount(5, $results);
 		$this->assertSame('John', $results->first()->fname());
-		$this->assertTrue(get_class($pagination) === 'Kirby\Toolkit\Pagination');
+		$this->assertTrue($pagination instanceof Pagination);
 		$this->assertSame(1, $pagination->pages());
 		$this->assertSame(5, $pagination->total());
 		$this->assertSame(1, $pagination->page());
@@ -683,7 +684,7 @@ class QueryTest extends TestCase
 
 		$this->assertCount(1, $results);
 		$this->assertSame('George', $results->first()->fname());
-		$this->assertTrue(get_class($pagination) === 'Kirby\Toolkit\Pagination');
+		$this->assertTrue($pagination instanceof Pagination);
 		$this->assertSame(5, $pagination->pages());
 		$this->assertSame(5, $pagination->total());
 		$this->assertSame(3, $pagination->page());
@@ -697,7 +698,7 @@ class QueryTest extends TestCase
 
 		$this->assertCount(2, $results);
 		$this->assertSame('Mark', $results->first()->fname());
-		$this->assertTrue(get_class($pagination) === 'Kirby\Toolkit\Pagination');
+		$this->assertTrue($pagination instanceof Pagination);
 		$this->assertSame(2, $pagination->pages());
 		$this->assertSame(5, $pagination->total());
 		$this->assertSame(2, $pagination->page());

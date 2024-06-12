@@ -11,8 +11,6 @@ class LinkKirbyTagTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Text.LinkKirbyTag';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

@@ -15,7 +15,6 @@ class ApiTest extends TestCase
 
 	protected $api;
 	protected $locale;
-	protected $app;
 
 	public function setUp(): void
 	{

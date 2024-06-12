@@ -38,11 +38,11 @@ export default {
 			];
 		},
 		reportsWithoutTheme() {
-			return this.$helper.object.clone(this.reports).map((report) => {
-				report.icon = null;
-				report.theme = null;
-				return report;
-			});
+			return this.reports.map((report) => ({
+				...report,
+				icon: null,
+				theme: null
+			}));
 		}
 	}
 };

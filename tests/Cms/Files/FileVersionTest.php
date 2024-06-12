@@ -7,8 +7,6 @@ class FileVersionTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures/files';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.FileVersion';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

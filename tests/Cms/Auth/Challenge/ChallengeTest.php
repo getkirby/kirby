@@ -25,7 +25,6 @@ class ChallengeTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Auth.Challenge';
 
-	protected $app;
 	protected $session;
 
 	public function setUp(): void

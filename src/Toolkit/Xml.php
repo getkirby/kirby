@@ -339,7 +339,10 @@ class Xml
 			// of the respective type to a simple string;
 			// don't do anything with special `@` metadata keys
 			foreach ($array as $name => $item) {
-				if (substr($name, 0, 1) !== '@' && count($item) === 1) {
+				if (
+					str_starts_with($name, '@') === false &&
+					count($item) === 1
+				) {
 					$array[$name] = $item[0];
 				}
 			}

@@ -20,8 +20,6 @@ class AuthChallengeTest extends TestCase
 	public const TMP = KIRBY_TMP_DIR . '/Cms.AuthChallenge';
 
 	public $failedEmail;
-
-	protected $app;
 	protected $auth;
 
 	public function setUp(): void

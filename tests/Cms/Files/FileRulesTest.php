@@ -15,8 +15,6 @@ class FileRulesTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures/files';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.FileRules';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

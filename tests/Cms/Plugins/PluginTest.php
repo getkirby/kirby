@@ -19,8 +19,6 @@ class PluginTest extends TestCase
 	protected static $classLoader;
 	protected static $updateStatusHost;
 
-	protected $app;
-
 	public static function setUpBeforeClass(): void
 	{
 		static::$updateStatusHost = UpdateStatus::$host;

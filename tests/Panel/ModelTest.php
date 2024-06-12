@@ -104,8 +104,6 @@ class ModelTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Model';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

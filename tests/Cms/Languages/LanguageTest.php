@@ -16,8 +16,6 @@ class LanguageTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Language';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([
@@ -278,6 +276,27 @@ class LanguageTest extends TestCase
 			'default' => 'foo'
 		]);
 		$this->assertFalse($language->isDefault());
+	}
+
+	/**
+	 * @covers ::isSingle
+	 */
+	public function testIsSingle()
+	{
+		// default
+		$language = new Language([
+			'code' => 'en'
+		]);
+
+		$this->assertFalse($language->isSingle());
+
+		// true
+		$language = new Language([
+			'code'   => 'en',
+			'single' => true
+		]);
+
+		$this->assertTrue($language->isSingle());
 	}
 
 	/**
@@ -563,6 +582,17 @@ class LanguageTest extends TestCase
 		$data = include $file;
 
 		$this->assertSame('test', $data['custom']);
+	}
+
+	/**
+	 * @covers ::single
+	 */
+	public function testSingle()
+	{
+		$language = Language::single();
+
+		$this->assertSame('en', $language->code());
+		$this->assertSame('en', $language->name());
 	}
 
 	/**

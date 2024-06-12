@@ -10,8 +10,6 @@ class PageTemplateTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/PageTemplateTest';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

@@ -9,34 +9,39 @@ export default {
 			return this.options.add && this.$panel.permissions.pages.create;
 		},
 		items() {
-			return this.data.map((page) => ({
-				...page,
-				buttons: [
-					{
-						...this.$helper.page.status(
-							page.status,
-							page.permissions.changeStatus === false
-						),
-						click: () => this.$dialog(page.link + "/changeStatus")
+			return this.data.map((page) => {
+				const sortable = page.permissions.sort && this.options.sortable;
+				const deletable = this.data.length > this.options.min;
+
+				return {
+					...page,
+					buttons: [
+						{
+							...this.$helper.page.status(
+								page.status,
+								page.permissions.changeStatus === false
+							),
+							click: () => this.$dialog(page.link + "/changeStatus")
+						},
+						...(page.buttons ?? [])
+					],
+					column: this.column,
+					data: {
+						"data-id": page.id,
+						"data-status": page.status,
+						"data-template": page.template
 					},
-					...(page.buttons ?? [])
-				],
-				column: this.column,
-				data: {
-					"data-id": page.id,
-					"data-status": page.status,
-					"data-template": page.template
-				},
-				deletable: this.data.length > this.options.min,
-				options: this.$dropdown(page.link, {
-					query: {
-						view: "list",
-						delete: page.deletable,
-						sort: page.sortable
-					}
-				}),
-				sortable: page.permissions.sort && this.options.sortable
-			}));
+					deletable,
+					options: this.$dropdown(page.link, {
+						query: {
+							view: "list",
+							delete: deletable,
+							sort: sortable
+						}
+					}),
+					sortable
+				};
+			});
 		},
 		type() {
 			return "pages";
