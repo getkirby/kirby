@@ -6,6 +6,7 @@ use Kirby\Cms\Collection;
 use Kirby\Cms\Language;
 use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Exception\NotFoundException;
 
 /**
  * @package   Kirby Content
