@@ -70,6 +70,7 @@ class Version
 		// delete the default language in single-language mode
 		if ($this->model->kirby()->multilang() === false) {
 			$this->model->storage()->delete($this->id, $this->language('default'));
+			return;
 		}
 
 		// delete all languages
