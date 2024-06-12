@@ -3,10 +3,11 @@
 namespace Kirby\Content;
 
 use Kirby\Data\Data;
+use Kirby\Exception\NotFoundException;
 
 class LabPageTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Content.LabeModel';
+	public const TMP = KIRBY_TMP_DIR . '/Content.LabPage';
 
 	public function testCloneMultiLanguage()
 	{
@@ -14,7 +15,15 @@ class LabPageTest extends TestCase
 
 		$page = new LabPage([
 			'slug'     => 'test',
-			'template' => 'article'
+			'template' => 'article',
+		]);
+
+		Data::write($page->root() . '/article.en.txt', $contentEN = [
+			'title' => 'Title English'
+		]);
+
+		Data::write($page->root() . '/article.de.txt', $contentDE = [
+			'title' => 'Title Deutsch'
 		]);
 
 		$this->assertInstanceOf(PlainTextContentStorageHandler::class, $page->storage());
@@ -23,6 +32,69 @@ class LabPageTest extends TestCase
 
 		$this->assertInstanceOf(MemoryContentStorageHandler::class, $page->storage());
 		$this->assertInstanceOf(PlainTextContentStorageHandler::class, $clone->storage());
+
+		// check the content of the original
+		$this->assertSame($contentEN, $page->version()->read('en'));
+		$this->assertSame($contentDE, $page->version()->read('de'));
+
+		// check the content of the clone
+		$this->assertSame($contentEN, $clone->version()->read('en'));
+		$this->assertSame($contentDE, $clone->version()->read('de'));
+
+		// modify the content of the model on disk
+		Data::write($clone->root() . '/article.en.txt', $updatedContentEN = [
+			'title' => 'Updated Title English'
+		]);
+
+		Data::write($clone->root() . '/article.de.txt', $updatedContentDE = [
+			'title' => 'Updated Title Deutsch'
+		]);
+
+		// check the content of the clone
+		$this->assertSame($updatedContentEN, $clone->version()->read('en'));
+		$this->assertSame($updatedContentDE, $clone->version()->read('de'));
+
+		// check that the content of the original is still the same as before
+		$this->assertSame($contentEN, $page->version()->read('en'));
+		$this->assertSame($contentDE, $page->version()->read('de'));
+	}
+
+	public function testCloneSingleLanguage()
+	{
+		$this->setUpSingleLanguage();
+
+		$page = new LabPage([
+			'slug'     => 'test',
+			'template' => 'article',
+		]);
+
+		Data::write($page->root() . '/article.txt', $content = [
+			'title' => 'Title'
+		]);
+
+		$this->assertInstanceOf(PlainTextContentStorageHandler::class, $page->storage());
+
+		$clone = $page->clone();
+
+		$this->assertInstanceOf(MemoryContentStorageHandler::class, $page->storage());
+		$this->assertInstanceOf(PlainTextContentStorageHandler::class, $clone->storage());
+
+		// check the content of the original
+		$this->assertSame($content, $page->version()->read());
+
+		// check the content of the clone
+		$this->assertSame($content, $clone->version()->read());
+
+		// modify the content of the model on disk
+		Data::write($clone->root() . '/article.txt', $updatedContent = [
+			'title' => 'Updated Title'
+		]);
+
+		// check the content of the clone
+		$this->assertSame($updatedContent, $clone->version()->read());
+
+		// check that the content of the original is still the same as before
+		$this->assertSame($content, $page->version()->read());
 	}
 
 	public function testContentMultiLanguage()
@@ -218,6 +290,20 @@ class LabPageTest extends TestCase
 		]);
 
 		$this->assertSame('test', $page->slug());
+	}
+
+	public function testSlugWithInvalidLanguage()
+	{
+		$this->setUpMultiLanguage();
+
+		$page = new LabPage([
+			'slug' => 'test'
+		]);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('Invalid language: fr');
+
+		$page->slug('fr');
 	}
 
 	public function testTranslationMultiLanguage()
