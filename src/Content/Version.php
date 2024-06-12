@@ -162,10 +162,28 @@ class Version
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function replace(array $fields, string $language = 'default'): void
+	public function replace(array $fields, Language|string $language = 'default'): void
 	{
 		$this->ensure($language);
 		$this->model->storage()->update($this->id, Language::ensure($language), $fields);
+	}
+
+	/**
+	 * Convenience wrapper around ::create, ::replace and ::update.
+	 */
+	public function save(
+		array $fields,
+		Language|string $language = 'default',
+		bool $overwrite = false
+	): void {
+		match (true) {
+			$this->exists() === false
+				=> $this->create($fields, $language),
+			$overwrite === true
+				=> $this->replace($fields, $language),
+			default
+			=> $this->update($fields, $language)
+		};
 	}
 
 	/**
