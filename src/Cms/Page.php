@@ -131,17 +131,19 @@ class Page extends ModelWithContent
 			throw new InvalidArgumentException('The page slug is required');
 		}
 
-		parent::__construct($props);
-
+		// the draft state needs to be set before running
+		// ::setContent or ::setTranslations
+		$this->isDraft = $props['isDraft'] ?? false;
 		$this->slug    = $props['slug'];
 		// Sets the dirname manually, which works
 		// more reliable in connection with the inventory
 		// than computing the dirname afterwards
 		$this->dirname = $props['dirname'] ?? null;
-		$this->isDraft = $props['isDraft'] ?? false;
 		$this->num     = $props['num'] ?? null;
 		$this->parent  = $props['parent'] ?? null;
 		$this->root    = $props['root'] ?? null;
+
+		parent::__construct($props);
 
 		$this->setBlueprint($props['blueprint'] ?? null);
 		$this->setChildren($props['children'] ?? null);
