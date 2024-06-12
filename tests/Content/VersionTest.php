@@ -128,6 +128,7 @@ class VersionTest extends TestCase
 
 		$this->assertSame('Test', $version->content('en')->get('title')->value());
 		$this->assertSame('Test', $version->content($this->app->language('en'))->get('title')->value());
+		$this->assertSame('Test', $version->content()->get('title')->value());
 		$this->assertSame('Töst', $version->content('de')->get('title')->value());
 		$this->assertSame('Töst', $version->content($this->app->language('de'))->get('title')->value());
 	}
