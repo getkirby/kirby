@@ -49,7 +49,7 @@ class Params extends Obj implements Stringable
 		$slash = false;
 
 		if (is_string($path) === true) {
-			$slash = substr($path, -1, 1) === '/';
+			$slash = str_ends_with($path, '/') === true;
 			$path  = Str::split($path, '/');
 		}
 
@@ -58,7 +58,7 @@ class Params extends Obj implements Stringable
 			$separator = static::separator();
 
 			foreach ($path as $index => $p) {
-				if (strpos($p, $separator) === false) {
+				if (str_contains($p, $separator) === false) {
 					continue;
 				}
 

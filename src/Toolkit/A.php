@@ -289,7 +289,7 @@ class A
 		}
 
 		// extract data from nested array structures using the dot notation
-		if (strpos($key, '.') !== false) {
+		if (str_contains($key, '.') === true) {
 			$keys     = explode('.', $key);
 			$firstKey = array_shift($keys);
 

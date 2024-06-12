@@ -330,7 +330,7 @@ class Environment
 		$term = getenv('TERM');
 
 		if (
-			substr($sapi, 0, 3) === 'cgi' &&
+			str_starts_with($sapi, 'cgi') === true &&
 			$term &&
 			$term !== 'unknown'
 		) {

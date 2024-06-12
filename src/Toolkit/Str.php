@@ -516,7 +516,7 @@ class Str
 		$value = (string)$value;
 
 		// Convert exponential to decimal, 1e-8 as 0.00000001
-		if (strpos(strtolower($value), 'e') !== false) {
+		if (str_contains(strtolower($value), 'e') === true) {
 			$value = rtrim(sprintf('%.16f', (float)$value), '0');
 		}
 

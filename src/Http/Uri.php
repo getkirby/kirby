@@ -506,7 +506,7 @@ class Uri implements Stringable
 		// use the full path;
 		// automatically detect the trailing slash from it if possible
 		if (is_string($props['path']) === true) {
-			$props['slash'] = substr($props['path'], -1, 1) === '/';
+			$props['slash'] = str_ends_with($props['path'], '/') === true;
 		}
 
 		return $props;

@@ -1184,7 +1184,7 @@ Collection::$filters['not in'] = [
  * Contains Filter
  */
 Collection::$filters['*='] = [
-	'validator' => fn ($value, $test) => strpos($value, $test) !== false,
+	'validator' => fn ($value, $test) => str_contains($value, $test) === true,
 	'strict'    => false
 ];
 
@@ -1192,7 +1192,7 @@ Collection::$filters['*='] = [
  * Not Contains Filter
  */
 Collection::$filters['!*='] = [
-	'validator' => fn ($value, $test) => strpos($value, $test) === false
+	'validator' => fn ($value, $test) => str_contains($value, $test) === false
 ];
 
 /**
