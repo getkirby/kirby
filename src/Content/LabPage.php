@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\Collection;
+use Kirby\Cms\Helpers;
 use Kirby\Cms\Language;
 use Kirby\Cms\Page;
 
@@ -37,6 +38,8 @@ class LabPage extends Page
 	 */
 	public function readContent(string|null $languageCode = null): array
 	{
+		Helpers::deprecated('`$model->readContent()` has been deprecated. Use `$model->version()->read()` instead.', 'model-read-content');
+
 		return $this->version()->read($languageCode ?? 'current');
 	}
 
@@ -48,6 +51,8 @@ class LabPage extends Page
 		string|null $languageCode = null,
 		bool $overwrite = false
 	): static {
+		Helpers::deprecated('`$model->save()` has been deprecated. Use `$model->version()->save()` instead.', 'model-save');
+
 		$clone = $this->clone();
 		$clone->version()->save($data ?? [], $languageCode ?? 'current', $overwrite);
 		return $clone;
@@ -60,6 +65,8 @@ class LabPage extends Page
 		array|null $data = null,
 		bool $overwrite = false
 	): static {
+		Helpers::deprecated('`$model->saveContent()` has been deprecated. Use `$model->version()->save()` instead.', 'model-save-content');
+
 		$clone = $this->clone();
 		$clone->version()->save($data ?? [], 'current', $overwrite);
 		return $clone;
@@ -73,6 +80,8 @@ class LabPage extends Page
 		string|null $languageCode = null,
 		bool $overwrite = false
 	): static {
+		Helpers::deprecated('`$model->saveTranslation()` has been deprecated. Use `$model->version()->save()` instead.', 'model-save-translation');
+
 		$clone = $this->clone();
 		$clone->version()->save($data ?? [], $languageCode ?? 'current', $overwrite);
 		return $clone;
@@ -156,7 +165,9 @@ class LabPage extends Page
 	 */
 	public function writeContent(array $data, string|null $languageCode = null): bool
 	{
-		$this->clone()->version()->save($data, $languageCode ?? 'default', true);
+		Helpers::deprecated('`$model->writeContent()` has been deprecated. Use `$model->version()->save()` instead.', 'model-write-content');
+
+		$this->clone()->version()->save($data, $languageCode ?? 'current', true);
 		return true;
 	}
 }
