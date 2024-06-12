@@ -135,6 +135,7 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::content
+	 * @covers ::language
 	 */
 	public function testContentSingleLanguage(): void
 	{
