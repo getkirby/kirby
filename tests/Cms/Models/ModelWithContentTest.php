@@ -432,9 +432,39 @@ class ModelWithContentTest extends TestCase
 
 		$current = $app->page('foo')->translation();
 		$this->assertSame('Deutscher Titel', $current->content()['title']);
+	}
+
+	public function testTranslationWithInvalidLanguauge()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'options' => [
+				'languages' => true
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'foo',
+					]
+				],
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+				]
+			]
+		]);
+
+		$this->expectException(\Kirby\Exception\NotFoundException::class);
+		$this->expectExceptionMessage('Invalid language: fr');
 
 		$fr = $app->page('foo')->translation('fr');
-		$this->assertNull($fr);
 	}
 
 	public function testUuid()
