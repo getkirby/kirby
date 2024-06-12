@@ -3,10 +3,10 @@
 		<!-- @slot Items to be sortable via drag and drop -->
 		<slot />
 
-		<footer v-if="$slots.footer" ref="footer" class="k-draggable-footer">
+		<template v-if="$slots.footer">
 			<!-- @slot Non-sortable footer -->
 			<slot name="footer" />
-		</footer>
+		</template>
 	</component>
 </template>
 
@@ -102,6 +102,7 @@ export default {
 		}
 	},
 	mounted() {
+		this.disableFooter();
 		this.create();
 	},
 	methods: {
@@ -159,10 +160,10 @@ export default {
 				},
 
 				// Event when you move an item in the list or between lists
-				onMove: (event, originalEvent) => {
+				onMove: (event) => {
 					// ensure footer stays non-sortable at the bottom
-					if (originalEvent.target === this.$refs.footer) {
-						return -1;
+					if (event.dragged.classList.contains("k-draggable-footer")) {
+						return false;
 					}
 
 					if (this.move) {
@@ -183,6 +184,21 @@ export default {
 					return true;
 				}
 			});
+		},
+		disableFooter() {
+			if (this.$slots.footer) {
+				// get as many nodes from the back of the list
+				// as footer elements are present
+				const nodes = [...this.$el.childNodes].slice(
+					-1 * this.$slots.footer.length
+				);
+
+				// add class to any node in the footer slot
+				// to allow filtering it as non-draggable
+				for (const node of nodes) {
+					node.classList?.add("k-draggable-footer");
+				}
+			}
 		},
 		getInstance(element) {
 			// get the Vue instance from HTMLElement
