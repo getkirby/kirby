@@ -169,6 +169,57 @@ class LabPageTest extends TestCase
 		$this->assertSame($content, $page->translation('en')->content());
 	}
 
+	public function testSlugMultiLanguage()
+	{
+		$this->setUpMultiLanguage();
+
+		$page = new LabPage([
+			'slug' => 'test',
+			'translations' => [
+				[
+					'code' => 'en',
+					// should be ignored
+					'slug' => 'english-slug'
+				],
+				[
+					'code' => 'de',
+					// should be considered
+					'slug' => 'deutscher-slug'
+				]
+			]
+		]);
+
+		// the slug for the default language will always be the slug prop
+		$this->assertSame('test', $page->slug());
+		$this->assertSame('test', $page->slug('en'));
+
+		// the slug for non-default languages can be customized
+		$this->assertSame('deutscher-slug', $page->slug('de'));
+	}
+
+	public function testSlugSingleLanguage()
+	{
+		$this->setUpSingleLanguage();
+
+		$page = new LabPage([
+			'slug' => 'test',
+			'translations' => [
+				[
+					'code' => 'en',
+					'content' => $content = [
+						'title' => 'Test'
+					],
+					// setting a custom slug should not have any effect
+					// in single language setups. The slug prop is still
+					// the dominant factor here.
+					'slug' => 'foo'
+				]
+			]
+		]);
+
+		$this->assertSame('test', $page->slug());
+	}
+
 	public function testTranslationMultiLanguage()
 	{
 		$this->setUpMultiLanguage();

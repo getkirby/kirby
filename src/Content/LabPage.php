@@ -144,6 +144,22 @@ class LabPage extends Page
 	}
 
 	/**
+	 * Returns the slug of the page
+	 */
+	public function slug(string|null $languageCode = null): string
+	{
+		if ($this->kirby()->multilang() === true) {
+			$language = Language::ensure($languageCode ?? 'current');
+
+			if ($language->isDefault() !== true) {
+				return $this->translation($language)->slug() ?? $this->slug;
+			}
+		}
+
+		return $this->slug;
+	}
+
+	/**
 	 * Returns a single translation by language code
 	 * If no code is specified the current translation is returned
 	 */
