@@ -590,6 +590,66 @@ class VersionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::replace
+	 */
+	public function testReplaceMultiLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		Data::write($fileEN = $this->contentFile('en'), [
+			'title'    => 'Test English',
+			'subtitle' => 'Subtitle English'
+		]);
+
+		Data::write($fileDE = $this->contentFile('de'), [
+			'title'    => 'Test Deutsch',
+			'subtitle' => 'Subtitle Deutsch'
+		]);
+
+		// with Language argument
+		$version->replace([
+			'title' => 'Updated Title English'
+		], $this->app->language('en'));
+
+		// with string argument
+		$version->replace([
+			'title' => 'Updated Title Deutsch',
+		], 'de');
+
+		$this->assertSame(['title' => 'Updated Title English'], Data::read($fileEN));
+		$this->assertSame(['title' => 'Updated Title Deutsch'], Data::read($fileDE));
+	}
+
+	/**
+	 * @covers ::replace
+	 */
+	public function testReplaceSingleLanguage(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		Data::write($file = $this->contentFile(), $content = [
+			'title'    => 'Title',
+			'subtitle' => 'Subtitle'
+		]);
+
+		$version->replace([
+			'title' => 'Updated Title'
+		]);
+
+		$this->assertSame(['title' => 'Updated Title'], Data::read($file));
+	}
+
+	/**
 	 * @covers ::touch
 	 */
 	public function testTouchMultiLanguage(): void
@@ -658,11 +718,13 @@ class VersionTest extends TestCase
 		);
 
 		Data::write($fileEN = $this->contentFile('en'), [
-			'title' => 'Test English'
+			'title'    => 'Test English',
+			'subtitle' => 'Subtitle English'
 		]);
 
 		Data::write($fileDE = $this->contentFile('de'), [
-			'title' => 'Test Deutsch'
+			'title'    => 'Test Deutsch',
+			'subtitle' => 'Subtitle Deutsch'
 		]);
 
 		// with Language argument
@@ -672,11 +734,13 @@ class VersionTest extends TestCase
 
 		// with string argument
 		$version->update([
-			'title' => 'Updated Title Deutsch'
+			'title' => 'Updated Title Deutsch',
 		], 'de');
 
 		$this->assertSame('Updated Title English', Data::read($fileEN)['title']);
+		$this->assertSame('Subtitle English', Data::read($fileEN)['subtitle']);
 		$this->assertSame('Updated Title Deutsch', Data::read($fileDE)['title']);
+		$this->assertSame('Subtitle Deutsch', Data::read($fileDE)['subtitle']);
 	}
 
 	/**
@@ -692,7 +756,8 @@ class VersionTest extends TestCase
 		);
 
 		Data::write($file = $this->contentFile(), $content = [
-			'title' => 'Test'
+			'title'    => 'Title',
+			'subtitle' => 'Subtitle'
 		]);
 
 		$version->update([
@@ -700,5 +765,6 @@ class VersionTest extends TestCase
 		]);
 
 		$this->assertSame('Updated Title', Data::read($file)['title']);
+		$this->assertSame('Subtitle', Data::read($file)['subtitle']);
 	}
 }
