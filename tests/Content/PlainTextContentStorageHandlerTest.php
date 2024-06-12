@@ -20,7 +20,6 @@ class PlainTextContentStorageHandlerTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Content.PlainTextContentStorage';
 
-	protected $app;
 	protected $model;
 	protected $storage;
 

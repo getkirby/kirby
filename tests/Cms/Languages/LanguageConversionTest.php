@@ -11,8 +11,6 @@ class LanguageConversionTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.LanguageConversion';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		Dir::make(static::TMP);

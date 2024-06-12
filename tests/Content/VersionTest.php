@@ -17,7 +17,6 @@ class VersionTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Content.Version';
 
-	protected $app;
 	protected $model;
 
 	public function assertContentFileExists(string|null $language = null, VersionId|null $versionId = null)
