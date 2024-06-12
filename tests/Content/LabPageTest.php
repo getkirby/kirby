@@ -8,6 +8,23 @@ class LabPageTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Content.LabeModel';
 
+	public function testCloneMultiLanguage()
+	{
+		$this->setUpMultiLanguage();
+
+		$page = new LabPage([
+			'slug'     => 'test',
+			'template' => 'article'
+		]);
+
+		$this->assertInstanceOf(PlainTextContentStorageHandler::class, $page->storage());
+
+		$clone = $page->clone();
+
+		$this->assertInstanceOf(MemoryContentStorageHandler::class, $page->storage());
+		$this->assertInstanceOf(PlainTextContentStorageHandler::class, $clone->storage());
+	}
+
 	public function testContentMultiLanguage()
 	{
 		$this->setUpMultiLanguage();
