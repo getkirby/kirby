@@ -48,7 +48,7 @@ class Version
 	 */
 	public function contentFile(Language|string $language = 'default'): string
 	{
-		return $this->model->storage()->contentFile($this->id, $this->language($language));
+		return $this->model->storage()->contentFile($this->id, Language::ensure($language));
 	}
 
 	/**
@@ -59,7 +59,7 @@ class Version
 	 */
 	public function create(array $fields, Language|string $language = 'default'): void
 	{
-		$this->model->storage()->create($this->id, $this->language($language), $fields);
+		$this->model->storage()->create($this->id, Language::ensure($language), $fields);
 	}
 
 	/**
@@ -81,7 +81,7 @@ class Version
 	public function ensure(
 		Language|string $language = 'default'
 	): void {
-		$this->model->storage()->ensure($this->id, $this->language($language));
+		$this->model->storage()->ensure($this->id, Language::ensure($language));
 	}
 
 	/**
@@ -89,7 +89,7 @@ class Version
 	 */
 	public function exists(Language|string $language = 'default'): bool
 	{
-		return $this->model->storage()->exists($this->id, $this->language($language));
+		return $this->model->storage()->exists($this->id, Language::ensure($language));
 	}
 
 	/**
@@ -98,18 +98,6 @@ class Version
 	public function id(): VersionId
 	{
 		return $this->id;
-	}
-
-	/**
-	 * Converts a "user-facing" language code or Language object
-	 * to a `Language` object to be used in storage methods
-	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException if the language code does not match a valid language
-	 */
-	protected function language(
-		Language|string|null $languageCode = null,
-	): Language {
-		return Language::ensure($languageCode);
 	}
 
 	/**
@@ -128,7 +116,7 @@ class Version
 		Language|string $language = 'default'
 	): int|null {
 		if ($this->exists($language) === true) {
-			return $this->model->storage()->modified($this->id, $this->language($language));
+			return $this->model->storage()->modified($this->id, Language::ensure($language));
 		}
 
 		return null;
@@ -147,9 +135,9 @@ class Version
 		$this->ensure($fromLanguage);
 		$this->model->storage()->move(
 			fromVersionId: $this->id,
-			fromLanguage: $this->language($fromLanguage),
+			fromLanguage: Language::ensure($fromLanguage),
 			toVersionId: $toVersionId,
-			toLanguage: $this->language($toLanguage)
+			toLanguage: Language::ensure($toLanguage)
 		);
 	}
 
@@ -161,7 +149,7 @@ class Version
 	public function read(Language|string $language = 'default'): array
 	{
 		try {
-			return $this->model->storage()->read($this->id, $this->language($language));
+			return $this->model->storage()->read($this->id, Language::ensure($language));
 		} catch (Throwable) {
 			return [];
 		}
@@ -177,7 +165,7 @@ class Version
 	public function replace(array $fields, string $language = 'default'): void
 	{
 		$this->ensure($language);
-		$this->model->storage()->update($this->id, $this->language($language), $fields);
+		$this->model->storage()->update($this->id, Language::ensure($language), $fields);
 	}
 
 	/**
@@ -188,7 +176,7 @@ class Version
 	public function touch(Language|string $language = 'default'): void
 	{
 		$this->ensure($language);
-		$this->model->storage()->touch($this->id, $this->language($language));
+		$this->model->storage()->touch($this->id, Language::ensure($language));
 	}
 
 	/**
@@ -206,6 +194,6 @@ class Version
 		// update to a complete version
 		$fields = [...$this->read($language), ...$fields];
 
-		$this->model->storage()->update($this->id, $this->language($language), $fields);
+		$this->model->storage()->update($this->id, Language::ensure($language), $fields);
 	}
 }

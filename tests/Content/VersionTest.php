@@ -38,7 +38,6 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::content
-	 * @covers ::language
 	 */
 	public function testContentMultiLanguage(): void
 	{
@@ -86,7 +85,6 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::contentFile
-	 * @covers ::language
 	 */
 	public function testContentFileMultiLanguage(): void
 	{
@@ -121,7 +119,6 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::create
-	 * @covers ::language
 	 */
 	public function testCreateMultiLanguage(): void
 	{
@@ -229,7 +226,6 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::ensure
-	 * @covers ::language
 	 */
 	public function testEnsureMultiLanguage(): void
 	{
@@ -305,7 +301,6 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::ensure
-	 * @covers ::language
 	 */
 	public function testEnsureWithInvalidLanguage(): void
 	{
@@ -324,7 +319,6 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::exists
-	 * @covers ::language
 	 */
 	public function testExistsMultiLanguage(): void
 	{
@@ -395,7 +389,6 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::modified
-	 * @covers ::language
 	 */
 	public function testModifiedMultiLanguage(): void
 	{
@@ -414,7 +407,6 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::modified
-	 * @covers ::language
 	 */
 	public function testModifiedMultiLanguageIfNotExists(): void
 	{
@@ -554,7 +546,6 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::read
-	 * @covers ::language
 	 */
 	public function testReadMultiLanguage(): void
 	{
@@ -600,7 +591,6 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::touch
-	 * @covers ::language
 	 */
 	public function testTouchMultiLanguage(): void
 	{
@@ -657,7 +647,6 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::update
-	 * @covers ::language
 	 */
 	public function testUpdateMultiLanguage(): void
 	{
