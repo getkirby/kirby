@@ -53,6 +53,7 @@ class Version
 
 	/**
 	 * Creates a new version for the given language
+	 * @todo Convert to a static method that creates the version initially with all relevant languages
 	 *
 	 * @param array<string, string> $fields Content fields
 	 */
