@@ -9,8 +9,6 @@ class LanguagesRoutesTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.LanguagesRoutes';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

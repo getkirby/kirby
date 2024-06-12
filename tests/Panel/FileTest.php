@@ -25,8 +25,6 @@ class FileTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.File';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

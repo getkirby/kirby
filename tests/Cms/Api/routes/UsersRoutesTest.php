@@ -11,8 +11,6 @@ class UsersRoutesTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.UsersRoutes';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		Blueprint::$loaded = [];

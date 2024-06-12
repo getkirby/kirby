@@ -11,7 +11,7 @@ class AFile
 {
 	use IsFile;
 
-	public $foo = 'bar';
+	public string $foo = 'bar';
 }
 
 /**

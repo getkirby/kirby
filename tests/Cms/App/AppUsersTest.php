@@ -13,8 +13,6 @@ class AppUsersTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.AppUsers';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

@@ -12,8 +12,6 @@ class ContentLockTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.ContentLock';
 
-	protected $app;
-
 	public function app()
 	{
 		return new App([

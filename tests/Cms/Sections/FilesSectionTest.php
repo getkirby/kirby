@@ -10,8 +10,6 @@ class FilesSectionTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FilesSection';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		Dir::make(static::TMP);

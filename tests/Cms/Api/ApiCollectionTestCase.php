@@ -8,7 +8,6 @@ use Kirby\Cms\TestCase;
 class ApiCollectionTestCase extends TestCase
 {
 	protected $api;
-	protected $app;
 
 	public function setUp(): void
 	{

@@ -14,8 +14,6 @@ class FileActionsTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures/files';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.FileActions';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		Dir::make(static::TMP);

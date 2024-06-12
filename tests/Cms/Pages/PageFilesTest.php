@@ -6,8 +6,6 @@ class PageFilesTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PageFiles';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

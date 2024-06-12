@@ -7,8 +7,6 @@ use Kirby\TestCase;
 
 class LanguageRouterTest extends TestCase
 {
-	protected $app;
-
 	public function setUp(): void
 	{
 		App::destroy();

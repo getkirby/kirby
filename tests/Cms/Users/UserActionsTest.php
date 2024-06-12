@@ -10,8 +10,6 @@ class UserActionsTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.UserActions';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		Dir::remove(static::TMP);
