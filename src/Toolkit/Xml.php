@@ -111,17 +111,20 @@ class Xml
 			return $name . '="' . $name . '"';
 		}
 
-		if (is_array($value) === true) {
-			if (isset($value['value'], $value['escape'])) {
-				$value = $value['escape'] === true ? static::encode($value['value']) : $value['value'];
-			} else {
-				$value = implode(' ', array_filter(
-					$value,
-					fn ($value) => !empty($value) || is_numeric($value)
-				));
-			}
+		if (is_array($value) === false) {
+			return $name . '="' . static::encode($value) . '"';
+		}
+
+		if (isset($value['value'], $value['escape'])) {
+			$value = match ($value['escape']) {
+				true    => static::encode($value['value']),
+				default => $value['value']
+			};
 		} else {
-			$value = static::encode($value);
+			$value = implode(' ', array_filter(
+				$value,
+				fn ($value) => !empty($value) || is_numeric($value)
+			));
 		}
 
 		return $name . '="' . $value . '"';
@@ -149,56 +152,78 @@ class Xml
 		string $indent = '  ',
 		int $level = 0
 	): string {
-		if (is_array($props) === true) {
-			if (A::isAssociative($props) === true) {
-				// a tag with attributes or named children
-
-				// extract metadata from special array keys
-				$name       = $props['@name'] ?? $name;
-				$attributes = $props['@attributes'] ?? [];
-				$value      = $props['@value'] ?? null;
-				if (isset($props['@namespaces'])) {
-					foreach ($props['@namespaces'] as $key => $namespace) {
-						$key = 'xmlns' . (($key) ? ':' . $key : '');
-						$attributes[$key] = $namespace;
-					}
-				}
-
-				// continue with just the children
-				unset($props['@name'], $props['@attributes'], $props['@namespaces'], $props['@value']);
-
-				if (count($props) > 0) {
-					// there are children, use them instead of the value
-
-					$value = [];
-					foreach ($props as $childName => $childItem) {
-						// render the child, but don't include the indentation of the first line
-						$value[] = trim(static::create($childItem, $childName, false, $indent, $level + 1));
-					}
-				}
-
-				$result = static::tag($name, $value, $attributes, $indent, $level);
-			} else {
-				// just children
-
-				$result = [];
-				foreach ($props as $childItem) {
-					$result[] = static::create($childItem, $name, false, $indent, $level);
-				}
-
-				$result = implode(PHP_EOL, $result);
-			}
-		} else {
-			// scalar value
-
-			$result = static::tag($name, $props, [], $indent, $level);
-		}
+		$string = '';
 
 		if ($head === true) {
-			return '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL . $result;
+			$string = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
 		}
 
-		return $result;
+		// scalar value
+		if (is_array($props) === false) {
+			return $string . static::tag($name, $props, [], $indent, $level);
+		}
+
+		// a tag with attributes or named children
+		if (A::isAssociative($props) === true) {
+			// extract metadata from special array keys
+			$name       = $props['@name'] ?? $name;
+			$attributes = $props['@attributes'] ?? [];
+			$value      = $props['@value'] ?? null;
+			if (isset($props['@namespaces'])) {
+				foreach ($props['@namespaces'] as $key => $namespace) {
+					$key = 'xmlns' . (($key) ? ':' . $key : '');
+					$attributes[$key] = $namespace;
+				}
+			}
+
+			// continue with just the children
+			unset(
+				$props['@name'],
+				$props['@attributes'],
+				$props['@namespaces'],
+				$props['@value']
+			);
+
+			if (count($props) > 0) {
+				// there are children, use them instead of the value
+				$value = [];
+
+				foreach ($props as $childName => $childItem) {
+					// render the child,
+					// but don't include the indentation of the first line
+					$value[] = trim(static::create(
+						$childItem,
+						$childName,
+						false,
+						$indent,
+						$level + 1
+					));
+				}
+			}
+
+			return $string . static::tag(
+				$name,
+				$value,
+				$attributes,
+				$indent,
+				$level
+			);
+		}
+
+		// just children
+		$result = [];
+
+		foreach ($props as $childItem) {
+			$result[] = static::create(
+				$childItem,
+				$name,
+				false,
+				$indent,
+				$level
+			);
+		}
+
+		return $string . implode(PHP_EOL, $result);
 	}
 
 	/**
