@@ -386,7 +386,6 @@
 	"installation.issues.mbstring": "<code>MB String</code> eklentisi gerekli",
 	"installation.issues.media": "<code>/media</code> klasörü yok yada yazılamaz",
 	"installation.issues.php": "<code>PHP 8+</code> kullandığınızdan emin olun. ",
-	"installation.issues.server": "Kirby <code>Apache</code>, <code>Nginx</code> veya <code>Caddy</code> gerektirir",
 	"installation.issues.sessions": "<code>/site/sessions</code> klasörü mevcut değil veya yazılabilir değil",
 
 	"language": "Dil",
@@ -618,6 +617,8 @@
 	"stats.empty": "Rapor yok",
 	"status": "Durum",
 
+	"system.info.copy": "Copy info",
+	"system.info.copied": "System info copied",
 	"system.issues.content": "İçerik klasörü açığa çıkmış görünüyor",
 	"system.issues.eol.kirby": "Yüklü Kirby sürümünüz kullanım ömrünün sonuna ulaştı ve daha fazla güvenlik güncellemesi almayacak",
 	"system.issues.eol.plugin": "{ plugin } eklentisinin yüklü sürümü kullanım ömrünün sonuna ulaştı ve daha fazla güvenlik güncellemesi almayacak",

@@ -386,7 +386,6 @@
 	"installation.issues.mbstring": "Wymagane jest rozszerzenie <code>MB String</code>",
 	"installation.issues.media": "Folder <code>/media</code> nie istnieje lub nie ma uprawnień do zapisu",
 	"installation.issues.php": "Upewnij się, że używasz <code>PHP 8+</code>",
-	"installation.issues.server": "Kirby wymaga <code>Apache</code>, <code>Nginx</code> lub <code>Caddy</code>",
 	"installation.issues.sessions": "Folder <code>/site/sessions</code> nie istnieje lub nie ma uprawnień do zapisu",
 
 	"language": "J\u0119zyk",
@@ -618,6 +617,8 @@
 	"stats.empty": "Brak raportów",
 	"status": "Status",
 
+	"system.info.copy": "Copy info",
+	"system.info.copied": "System info copied",
 	"system.issues.content": "Zdaje się, że folder „content” jest wystawiony na publiczny dostęp",
 	"system.issues.eol.kirby": "Twoja zainstalowana wersja Kirby osiągnęła koniec okresu wsparcia i nie będzie otrzymywać dalszych aktualizacji zabezpieczeń",
 	"system.issues.eol.plugin": "Twoja zainstalowana wersja wtyczki { plugin } osiągnęła koniec okresu wsparcia i nie będzie otrzymywać dalszych aktualizacji zabezpieczeń",

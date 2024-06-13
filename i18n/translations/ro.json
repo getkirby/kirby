@@ -386,7 +386,6 @@
 	"installation.issues.mbstring": "Extensia <code>MB String</code> este necesară",
 	"installation.issues.media": "Directorul <code>/media</code> nu există sau nu are permisiuni de scriere",
 	"installation.issues.php": "Asigură-te că folosești <code>PHP 8+</code>",
-	"installation.issues.server": "Kirby are nevoie de <code>Apache</code>, <code>Nginx</code> sau <code>Caddy</code>",
 	"installation.issues.sessions": "Directorul <code>/site/sessions</code> folder nu există sau nu are permisiuni de scriere",
 
 	"language": "Limba",
@@ -618,6 +617,8 @@
 	"stats.empty": "Niciun raport",
 	"status": "Stare",
 
+	"system.info.copy": "Copy info",
+	"system.info.copied": "System info copied",
 	"system.issues.content": "Directorul de conținut pare să fie expus",
 	"system.issues.eol.kirby": "Versiunea instalată de Kirby a ajuns la sfârșitul vieții utile și nu va mai primi actualizări de securitate.",
 	"system.issues.eol.plugin": "Versiunea instalată a plugin-ului { plugin } a ajuns la sfârșitul vieții utile și nu va mai primi actualizări de securitate.",

@@ -386,7 +386,6 @@
 	"installation.issues.mbstring": "L’extension <code>MB String</code> est requise",
 	"installation.issues.media": "Le dossier <code>/media</code> n’existe pas ou n’est pas accessible en écriture",
 	"installation.issues.php": "Veuillez utiliser <code>PHP 8+</code>",
-	"installation.issues.server": "Kirby requiert <code>Apache</code>, <code>Nginx</code> ou <code>Caddy</code>",
 	"installation.issues.sessions": "Le dossier <code>/site/sessions</code> n’existe pas ou n’est pas accessible en écriture",
 
 	"language": "Langue",
@@ -618,6 +617,8 @@
 	"stats.empty": "Aucun rapport",
 	"status": "Statut",
 
+	"system.info.copy": "Copy info",
+	"system.info.copied": "System info copied",
 	"system.issues.content": "Le dossier content semble exposé",
 	"system.issues.eol.kirby": "La version de Kirby installée a atteint la fin de son cycle de vie et ne recevra plus de mises à jour de sécurité",
 	"system.issues.eol.plugin": "La version du plugin { plugin } installée a atteint la fin de son cycle de vie et ne recevra plus de mises à jour de sécurité",
