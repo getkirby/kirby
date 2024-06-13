@@ -386,7 +386,6 @@
 	"installation.issues.mbstring": "افزونه <code>MB String</code> مورد نیاز است",
 	"installation.issues.media": "پوشه <code>/media</code> موجود نیست یا قابل نوشتن نیست",
 	"installation.issues.php": "لطفا از پی‌اچ‌پی 8 یا بالاتر استفاده کنید",
-	"installation.issues.server": "کربی نیاز به <code>Apache</code>، <code>Nginx</code> یا <code>Caddy</code> دارد",
 	"installation.issues.sessions": "پوشه <code>/site/sessions</code> وجود ندارد یا قابل نوشتن نیست",
 
 	"language": "\u0632\u0628\u0627\u0646",
@@ -618,6 +617,8 @@
 	"stats.empty": "No reports",
 	"status": "وضعیت",
 
+	"system.info.copy": "Copy info",
+	"system.info.copied": "System info copied",
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",

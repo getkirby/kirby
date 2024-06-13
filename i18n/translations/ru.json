@@ -386,7 +386,6 @@
 	"installation.issues.mbstring": "Расширение <code>MB String</code> необходимо",
 	"installation.issues.media": "Каталог <code>/media</code> не существует или нет прав записи",
 	"installation.issues.php": "Убедитесь, что используется <code>PHP 8+</code>",
-	"installation.issues.server": "Kirby требует <code>Apache</code>, <code>Nginx</code> или <code>Caddy</code> ",
 	"installation.issues.sessions": "Каталог <code>/site/sessions</code> не существует или нет прав записи",
 
 	"language": "\u042f\u0437\u044b\u043a",
@@ -618,6 +617,8 @@
 	"stats.empty": "Статистики нет",
 	"status": "Статус",
 
+	"system.info.copy": "Copy info",
+	"system.info.copied": "System info copied",
 	"system.issues.content": "Похоже, к папке content есть несанкционированный доступ",
 	"system.issues.eol.kirby": "Срок службы установленной вами версии Kirby истек, и она больше не будет получать обновления для системы безопасности",
 	"system.issues.eol.plugin": "Срок службы установленной вами версии плагина { plugin } истек, и он не будет получать дальнейших обновлений для системы безопасности",

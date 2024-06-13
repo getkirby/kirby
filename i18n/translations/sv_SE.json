@@ -386,7 +386,6 @@
 	"installation.issues.mbstring": "Tillägget <code>MB String</code> krävs",
 	"installation.issues.media": "Mappen <code>/media</code> finns inte eller är inte skrivbar",
 	"installation.issues.php": "Se till att du använder <code>PHP 8+</code>",
-	"installation.issues.server": "Kirby kräver <code>Apache</code>, <code>Nginx</code> eller <code>Caddy</code>",
 	"installation.issues.sessions": "Mappen <code>/site/sessions</code> finns inte eller är inte skrivbar",
 
 	"language": "Spr\u00e5k",
@@ -618,6 +617,8 @@
 	"stats.empty": "Inga rapporter",
 	"status": "Status",
 
+	"system.info.copy": "Copy info",
+	"system.info.copied": "System info copied",
 	"system.issues.content": "Mappen content verkar vara exponerad",
 	"system.issues.eol.kirby": "Din installerade Kirby-version har nått slutet av sin livscykel och kommer inte att få fler säkerhetsuppdateringar",
 	"system.issues.eol.plugin": "Den installerade versionen av tillägget { plugin } har nått slutet på sin livscykel och kommer inte att få fler säkerhetsuppdateringar.",
