@@ -1,0 +1,1 @@
+{"description":"Represents multiple files to upload in an upload dialog","tags":{"since":[{"description":"4.3.0","title":"since"}]},"displayName":"UploadItems","props":[{"name":"items","type":{"name":"array"}}],"events":[{"name":"rename"},{"name":"remove"}],"component":"k-upload-items","sourceFile":"src/components/Uploads/UploadItems.vue"}

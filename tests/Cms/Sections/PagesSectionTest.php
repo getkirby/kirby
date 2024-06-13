@@ -155,6 +155,16 @@ class PagesSectionTest extends TestCase
 		$this->assertSame($expected, $section->status());
 	}
 
+	public function testAdd()
+	{
+		$section = new Section('pages', [
+			'name'  => 'test',
+			'model' => new Page(['slug' => 'test']),
+		]);
+
+		$this->assertTrue($section->add());
+	}
+
 	public static function addableStatusProvider(): array
 	{
 		return [
@@ -166,28 +176,83 @@ class PagesSectionTest extends TestCase
 		];
 	}
 
-	public function testAdd()
-	{
-		$section = new Section('pages', [
-			'name'  => 'test',
-			'model' => new Page(['slug' => 'test']),
-		]);
-
-		$this->assertTrue($section->add());
-	}
-
 	/**
 	 * @dataProvider addableStatusProvider
 	 */
 	public function testAddWhenStatusIs($input, $expected)
 	{
 		$section = new Section('pages', [
-			'name'     => 'test',
-			'model'    => new Page(['slug' => 'test']),
-			'status'   => $input
+			'name'   => 'test',
+			'model'  => new Page(['slug' => 'test']),
+			'status' => $input
 		]);
 
 		$this->assertSame($expected, $section->add());
+	}
+
+	public static function addableStatusCreateProvider(): array
+	{
+		return [
+			['draft', 'all', true],
+			['draft', 'draft', true],
+			['draft', 'unlisted', false],
+			['draft', 'listed', false],
+			['unlisted', 'all', true],
+			['unlisted', 'draft', false],
+			['unlisted', 'unlisted', true],
+			['unlisted', 'listed', false],
+			['listed', 'all', true],
+			['listed', 'draft', false],
+			['listed', 'unlisted', false],
+			['listed', 'listed', true],
+		];
+	}
+
+	/**
+	 * @dataProvider addableStatusCreateProvider
+	 */
+	public function testAddWhenStatusCreatedMatchesStatusShown($create, $shown, $expected)
+	{
+		$this->app->clone([
+			'blueprints' => [
+				'pages/child' => [
+					'create' => ['status' => $create]
+				]
+			]
+		]);
+
+		$section = new Section('pages', [
+			'name'     => 'test',
+			'model'    => new Page(['slug' => 'test']),
+			'status'   => $shown,
+			'template' => 'child'
+		]);
+
+		$this->assertSame($expected, $section->add());
+		Blueprint::$loaded = [];
+	}
+
+	public function testAddWhenMultipleStatusCreated()
+	{
+		$this->app->clone([
+			'blueprints' => [
+				'pages/child-a' => [
+					'create' => ['status' => 'listed']
+				],
+				'pages/child-b' => [
+					'create' => ['status' => 'unlisted']
+				]
+			]
+		]);
+
+		$section = new Section('pages', [
+			'name'      => 'test',
+			'model'     => new Page(['slug' => 'test']),
+			'status'    => 'listed',
+			'templates' => ['child-a', 'child-b']
+		]);
+
+		$this->assertFalse($section->add());
 	}
 
 	public function testAddWhenSectionIsFull()

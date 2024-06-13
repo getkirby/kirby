@@ -575,8 +575,8 @@ class Auth
 		}
 
 		// ensure that the category arrays are defined
-		$log['by-ip']    = $log['by-ip'] ?? [];
-		$log['by-email'] = $log['by-email'] ?? [];
+		$log['by-ip']    ??= [];
+		$log['by-email'] ??= [];
 
 		// remove all elements on the top level with different keys (old structure)
 		$log = array_intersect_key($log, array_flip(['by-ip', 'by-email']));

@@ -86,16 +86,6 @@ export default {
 			const [x, y] = focus.replaceAll("%", "").split(" ");
 
 			return { x: parseFloat(x), y: parseFloat(y) };
-		},
-		isFocusable() {
-			return (
-				!this.isLocked &&
-				this.preview.image.src &&
-				this.permissions.update &&
-				(!window.panel.multilang ||
-					window.panel.languages.length === 0 ||
-					window.panel.language.default)
-			);
 		}
 	},
 	methods: {

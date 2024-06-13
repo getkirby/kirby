@@ -8,76 +8,24 @@
 	>
 		<ul class="k-upload-items">
 			<li class="k-upload-original">
-				<k-image
-					v-if="isPreviewable(original.mime)"
-					:cover="true"
-					:src="original.url"
-					back="pattern"
-				/>
-				<k-icon-frame
-					v-else
-					:color="original.image?.color ?? 'white'"
-					:icon="original.image?.icon ?? 'file'"
-					back="black"
-					ratio="1/1"
+				<k-upload-item-preview
+					:color="original.image?.color"
+					:icon="original.image?.icon"
+					:url="original.url"
+					:type="original.mime"
 				/>
 			</li>
 
 			<li>&larr;</li>
 
-			<li
-				v-for="file in $panel.upload.files"
-				:key="file.id"
-				:data-completed="file.completed"
-				class="k-upload-item"
-			>
-				<a :href="file.url" class="k-upload-item-preview" target="_blank">
-					<k-image
-						v-if="isPreviewable(file.type)"
-						:cover="true"
-						:src="file.url"
-						back="pattern"
-					/>
-					<k-icon-frame
-						v-else
-						:color="original.image?.color ?? 'white'"
-						:icon="original.image?.icon ?? 'file'"
-						back="black"
-						ratio="1/1"
-					/>
-				</a>
-				<k-input
-					:value="$helper.file.name(original.filename)"
-					:disabled="true"
-					:after="'.' + file.extension"
-					class="k-upload-item-input"
-					type="text"
-				/>
-				<div class="k-upload-item-body">
-					<p class="k-upload-item-meta">
-						{{ file.niceSize }}
-						<template v-if="file.progress"> - {{ file.progress }}% </template>
-					</p>
-					<p class="k-upload-item-error">{{ file.error }}</p>
-				</div>
-				<div class="k-upload-item-progress">
-					<k-progress
-						v-if="file.progress > 0 && !file.error"
-						:value="file.progress"
-					/>
-				</div>
-				<div class="k-upload-item-toggle">
-					<k-button
-						v-if="file.completed"
-						icon="check"
-						theme="positive"
-						@click="$panel.upload.remove(file.id)"
-					/>
-					<div v-else-if="file.progress">
-						<k-icon type="loader" />
-					</div>
-				</div>
-			</li>
+			<k-upload-item
+				v-bind="file"
+				:color="original.image?.color"
+				:editable="false"
+				:icon="original.image?.icon"
+				:name="$helper.file.name(original.filename)"
+				:removable="false"
+			/>
 		</ul>
 	</k-dialog>
 </template>
@@ -100,6 +48,11 @@ export default {
 					text: window.panel.$t("replace")
 				};
 			}
+		}
+	},
+	computed: {
+		file() {
+			return this.$panel.upload.files[0];
 		}
 	}
 };

@@ -580,7 +580,7 @@ class F
 		}
 
 		// the math magic
-		$size = round($size / pow(1024, ($unit = floor(log($size, 1024)))), 2);
+		$size = round($size / 1024 ** ($unit = floor(log($size, 1024))), 2);
 
 		// format the number if requested
 		if ($locale !== false) {
@@ -756,20 +756,32 @@ class F
 	 * Sanitize a file's name (without extension)
 	 * @since 4.0.0
 	 */
-	public static function safeBasename(string $string): string
-	{
-		$name = static::name($string);
-		return Str::slug($name, '-', 'a-z0-9@._-');
+	public static function safeBasename(
+		string $string,
+		bool $extract = true
+	): string {
+		// extract only the name part from whole filename string
+		if ($extract === true) {
+			$string = static::name($string);
+		}
+
+		return Str::slug($string, '-', 'a-z0-9@._-');
 	}
 
 	/**
 	 * Sanitize a file's extension
 	 * @since 4.0.0
 	 */
-	public static function safeExtension(string $string): string
-	{
-		$extension = static::extension($string);
-		return Str::slug($extension);
+	public static function safeExtension(
+		string $string,
+		bool $extract = true
+	): string {
+		// extract only the extension part from whole filename string
+		if ($extract === true) {
+			$string = static::extension($string);
+		}
+
+		return Str::slug($string);
 	}
 
 	/**

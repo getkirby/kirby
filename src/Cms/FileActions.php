@@ -47,7 +47,9 @@ trait FileActions
 		string|null $extension = null
 	): static {
 		if ($sanitize === true) {
-			$name = F::safeName($name);
+			// sanitize the basename part only
+			// as the extension isn't included in $name
+			$name = F::safeBasename($name, false);
 		}
 
 		// if no extension is passed, make sure to maintain current one
@@ -139,8 +141,8 @@ trait FileActions
 
 			// rename and/or resize the file if configured by new blueprint
 			$create = $file->blueprint()->create();
+			$file = $file->manipulate($create);
 			$file = $file->changeExtension($file, $create['format'] ?? null);
-			$file->manipulate($create);
 
 			return $file;
 		});
@@ -266,7 +268,6 @@ trait FileActions
 		// we need to already rename it so that the correct file rules
 		// are applied
 		$create = $file->blueprint()->create();
-		$file = $file->changeExtension($file, $create['format'] ?? null);
 
 		// run the hook
 		$arguments = compact('file', 'upload');
@@ -284,6 +285,7 @@ trait FileActions
 
 			// resize the file on upload if configured
 			$file = $file->manipulate($create);
+			$file = $file->changeExtension($file, $create['format'] ?? null);
 
 			// store the content if necessary
 			// (always create files in the default language)
@@ -384,8 +386,8 @@ trait FileActions
 
 			// apply the resizing/crop options from the blueprint
 			$create = $file->blueprint()->create();
-			$file   = $file->changeExtension($file, $create['format'] ?? null);
 			$file   = $file->manipulate($create);
+			$file   = $file->changeExtension($file, $create['format'] ?? null);
 
 			// return a fresh clone
 			return $file->clone();

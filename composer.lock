@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "43b28f916503f0f7a7fcfaf5ce174692",
+    "content-hash": "c551d482274b5418356af010c4845227",
     "packages": [
         {
             "name": "christian-riesen/base32",
@@ -67,16 +67,16 @@
         },
         {
             "name": "claviska/simpleimage",
-            "version": "4.1.0",
+            "version": "4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claviska/SimpleImage.git",
-                "reference": "1dcb9c785c44960890970d26e25c437a2a252bbf"
+                "reference": "dfbe53c01dae8467468ef2b817c09b786a7839d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claviska/SimpleImage/zipball/1dcb9c785c44960890970d26e25c437a2a252bbf",
-                "reference": "1dcb9c785c44960890970d26e25c437a2a252bbf",
+                "url": "https://api.github.com/repos/claviska/SimpleImage/zipball/dfbe53c01dae8467468ef2b817c09b786a7839d2",
+                "reference": "dfbe53c01dae8467468ef2b817c09b786a7839d2",
                 "shasum": ""
             },
             "require": {
@@ -108,7 +108,7 @@
             "description": "A PHP class that makes working with images as simple as possible.",
             "support": {
                 "issues": "https://github.com/claviska/SimpleImage/issues",
-                "source": "https://github.com/claviska/SimpleImage/tree/4.1.0"
+                "source": "https://github.com/claviska/SimpleImage/tree/4.2.0"
             },
             "funding": [
                 {
@@ -116,7 +116,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-03-04T15:41:11+00:00"
+            "time": "2024-04-15T16:07:16+00:00"
         },
         {
             "name": "composer/semver",
@@ -627,16 +627,16 @@
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "v3.4.0",
+            "version": "v3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "7c3aff79d10325257a001fcf92d991f24fc967cf"
+                "reference": "0e0d29ce1f20deffb4ab1b016a7257c4f1e789a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/7c3aff79d10325257a001fcf92d991f24fc967cf",
-                "reference": "7c3aff79d10325257a001fcf92d991f24fc967cf",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/0e0d29ce1f20deffb4ab1b016a7257c4f1e789a1",
+                "reference": "0e0d29ce1f20deffb4ab1b016a7257c4f1e789a1",
                 "shasum": ""
             },
             "require": {
@@ -645,7 +645,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "3.4-dev"
+                    "dev-main": "3.5-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -674,7 +674,7 @@
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.4.0"
+                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.5.0"
             },
             "funding": [
                 {
@@ -690,7 +690,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-23T14:45:45+00:00"
+            "time": "2024-04-18T09:32:20+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -1018,16 +1018,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v6.4.3",
+            "version": "v6.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "d75715985f0f94f978e3a8fa42533e10db921b90"
+                "reference": "52903de178d542850f6f341ba92995d3d63e60c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/d75715985f0f94f978e3a8fa42533e10db921b90",
-                "reference": "d75715985f0f94f978e3a8fa42533e10db921b90",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/52903de178d542850f6f341ba92995d3d63e60c9",
+                "reference": "52903de178d542850f6f341ba92995d3d63e60c9",
                 "shasum": ""
             },
             "require": {
@@ -1070,7 +1070,7 @@
             "description": "Loads and dumps YAML files",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/yaml/tree/v6.4.3"
+                "source": "https://github.com/symfony/yaml/tree/v6.4.8"
             },
             "funding": [
                 {
@@ -1086,7 +1086,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-01-23T14:51:35+00:00"
+            "time": "2024-05-31T14:49:08+00:00"
         }
     ],
     "packages-dev": [],

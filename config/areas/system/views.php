@@ -85,6 +85,7 @@ return [
 				'props'     => [
 					'environment' => $environment,
 					'exceptions'  => $kirby->option('debug') === true ? $exceptions : [],
+					'info'        => $system->info(),
 					'plugins'     => $plugins,
 					'security'    => $security,
 					'urls'        => [

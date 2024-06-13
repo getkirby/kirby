@@ -4,21 +4,61 @@ import path from "path";
 import { defineConfig, splitVendorChunkPlugin } from "vite";
 import vue from "@vitejs/plugin-vue2";
 import { viteStaticCopy } from "vite-plugin-static-copy";
-import externalGlobals from "rollup-plugin-external-globals";
+import externalize from "rollup-plugin-external-globals";
 import kirby from "./scripts/vite-kirby.mjs";
 
-let customServer;
-try {
-	customServer = require("./vite.config.custom.js");
-} catch (err) {
-	customServer = {};
+/**
+ * Returns all aliases used in the project
+ */
+function createAliases() {
+	return {
+		"@": path.resolve(__dirname, "src")
+	};
 }
 
-export default defineConfig(({ command }) => {
-	// gather plugins depending on environment
+/**
+ * Returns the server configuration
+ */
+function createServer() {
+	const proxy = {
+		target: process.env.VUE_APP_DEV_SERVER ?? "http://sandbox.test",
+		changeOrigin: true,
+		secure: false
+	};
+
+	return {
+		proxy: {
+			"/api": proxy,
+			"/env": proxy,
+			"/media": proxy
+		},
+		open: proxy.target + "/panel",
+		port: 3000,
+		...createCustomServer()
+	};
+}
+
+/**
+ * Returns custom server configuration, if it exists
+ */
+function createCustomServer() {
+	try {
+		return require("./vite.config.custom.js");
+	} catch {
+		return {};
+	}
+}
+
+/**
+ * Returns an array of plugins used,
+ * depending on the mode (development or build)
+ */
+function createPlugins(mode) {
 	const plugins = [vue(), splitVendorChunkPlugin(), kirby()];
 
-	if (command === "build") {
+	// when building…
+	if (mode === "build") {
+		//copy Vue to the dist directory
 		plugins.push(
 			viteStaticCopy({
 				targets: [
@@ -36,20 +76,32 @@ export default defineConfig(({ command }) => {
 			// Externalize Vue so it's not loaded from node_modules
 			// but accessed via window.Vue
 			{
-				...externalGlobals({ vue: "Vue" }),
+				...externalize({ vue: "Vue" }),
 				enforce: "post"
 			}
 		);
 	}
 
-	const proxy = {
-		target: process.env.VUE_APP_DEV_SERVER ?? "http://sandbox.test",
-		changeOrigin: true,
-		secure: false
-	};
+	return plugins;
+}
 
+/**
+ * Returns vitest configuration
+ */
+function createTest() {
 	return {
-		plugins,
+		environment: "node",
+		include: ["**/*.test.js"],
+		setupFiles: ["vitest.setup.js"]
+	};
+}
+
+/**
+ * Returns the Vite configuration
+ */
+export default defineConfig(({ command }) => {
+	return {
+		plugins: createPlugins(command),
 		define: {
 			// Fix vuelidate error
 			"process.env.BUILD": JSON.stringify("production")
@@ -73,24 +125,9 @@ export default defineConfig(({ command }) => {
 			holdUntilCrawlEnd: false
 		},
 		resolve: {
-			alias: {
-				"@": path.resolve(__dirname, "src")
-			}
+			alias: createAliases()
 		},
-		server: {
-			proxy: {
-				"/api": proxy,
-				"/env": proxy,
-				"/media": proxy
-			},
-			open: proxy.target + "/panel",
-			port: 3000,
-			...customServer
-		},
-		test: {
-			environment: "node",
-			include: ["**/*.test.js"],
-			setupFiles: ["vitest.setup.js"]
-		}
+		server: createServer(),
+		test: createTest()
 	};
 });

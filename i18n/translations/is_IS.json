@@ -386,7 +386,6 @@
 	"installation.issues.mbstring": "<code>MB String</code> er hér bráðnauðsynleg",
 	"installation.issues.media": "<code>/media</code> mappan er annaðhvort ekki til eða er ekki skrifanleg",
 	"installation.issues.php": "Notaðu <code>PHP 8+</code>",
-	"installation.issues.server": "Kirby krefst <code>Apache</code>, <code>Nginx</code> eða <code>Caddy</code>",
 	"installation.issues.sessions": "<code>/site/sessions</code> mappan er annaðhvort ekki til eða er ekki skrifanleg",
 
 	"language": "Tungumál",
@@ -556,14 +555,14 @@
 	"page.status.draft.description": "Þessi síða er uppkast og er aðeins sýnileg vefstjórum eða gegnum laumu tengil.",
 	"page.status.listed": "Útgefin og listuð",
 	"page.status.listed.description": "Síðan er útgefin og listuð.",
-	"page.status.unlisted": "Útgefin",
+	"page.status.unlisted": "Útgefin en ólistuð",
 	"page.status.unlisted.description": "Síðan er útgefin en þó ólistuð.",
 
 	"pages": "Síður",
 	"pages.empty": "Engar síður enn",
 	"pages.status.draft": "Uppköst",
 	"pages.status.listed": "Útgefnar og listaðar",
-	"pages.status.unlisted": "Útgefnar",
+	"pages.status.unlisted": "Útgefnar en ólistaðar",
 
 	"pagination.page": "Síða",
 
@@ -618,6 +617,8 @@
 	"stats.empty": "Engar skýrslur",
 	"status": "Staða",
 
+	"system.info.copy": "Copy info",
+	"system.info.copied": "System info copied",
 	"system.issues.content": "Efnismappan virðist vera berskjölduð",
 	"system.issues.eol.kirby": "Uppsett Kirby eintak þitt hefur runnið sitt skeið á enda og mun ekki verða uppfært framar",
 	"system.issues.eol.plugin": "Uppsett eintak þitt  af viðbótinni  { plugin } hefur runnið sitt skeið á enda og mun ekki verða uppfærð framar",

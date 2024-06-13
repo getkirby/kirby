@@ -25,58 +25,81 @@
 	--theme-color-900: hsl(var(--theme-color-hs), var(--theme-color-l-900));
 
 	--theme-color-text: var(--theme-color-900);
-	--theme-color-text-dimmed: var(--theme-color-700);
+	--theme-color-text-dimmed: hsl(
+		var(--theme-color-h),
+		calc(var(--theme-color-s) - 60%),
+		50%
+	);
 	--theme-color-back: var(--theme-color-400);
 	--theme-color-hover: var(--theme-color-500);
 	--theme-color-icon: var(--theme-color-600);
 }
 
 /* Color themes */
-[data-theme="error"],
-[data-theme="negative"] {
+[data-theme^="red"],
+[data-theme^="error"],
+[data-theme^="negative"] {
 	--theme-color-h: var(--color-red-h);
 	--theme-color-s: var(--color-red-s);
 	--theme-color-boost: var(--color-red-boost);
 }
 
-[data-theme="notice"] {
+[data-theme^="orange"],
+[data-theme^="notice"] {
 	--theme-color-h: var(--color-orange-h);
 	--theme-color-s: var(--color-orange-s);
 	--theme-color-boost: var(--color-orange-boost);
 }
 
-[data-theme="warning"] {
+[data-theme^="yellow"],
+[data-theme^="warning"] {
 	--theme-color-h: var(--color-yellow-h);
 	--theme-color-s: var(--color-yellow-s);
 	--theme-color-boost: var(--color-yellow-boost);
 }
 
-[data-theme="info"] {
+[data-theme^="blue"],
+[data-theme^="info"] {
 	--theme-color-h: var(--color-blue-h);
 	--theme-color-s: var(--color-blue-s);
 	--theme-color-boost: var(--color-blue-boost);
 }
 
-[data-theme="love"] {
+[data-theme^="pink"],
+[data-theme^="love"] {
 	--theme-color-h: var(--color-pink-h);
 	--theme-color-s: var(--color-pink-s);
 	--theme-color-boost: var(--color-pink-boost);
 }
 
-[data-theme="positive"] {
+[data-theme^="green"],
+[data-theme^="positive"] {
 	--theme-color-h: var(--color-green-h);
 	--theme-color-s: var(--color-green-s);
 	--theme-color-boost: var(--color-green-boost);
 }
 
-[data-theme="passive"] {
+[data-theme^="aqua"] {
+	--theme-color-h: var(--color-aqua-h);
+	--theme-color-s: var(--color-aqua-s);
+	--theme-color-boost: var(--color-aqua-boost);
+}
+
+[data-theme^="purple"] {
+	--theme-color-h: var(--color-purple-h);
+	--theme-color-s: var(--color-purple-s);
+	--theme-color-boost: var(--color-purple-boost);
+}
+
+[data-theme^="gray"],
+[data-theme^="passive"] {
 	--theme-color-h: var(--color-gray-h);
 	--theme-color-s: var(--color-gray-s);
 	--theme-color-boost: 10%;
 }
 
-[data-theme="white"],
-[data-theme="text"] {
+[data-theme^="white"],
+[data-theme^="text"] {
 	--theme-color-back: var(--color-white);
 	--theme-color-icon: var(--color-gray-800);
 	--theme-color-text: var(--color-text);
@@ -84,7 +107,7 @@
 }
 
 /* Special Themes */
-[data-theme="dark"] {
+[data-theme^="dark"] {
 	--theme-color-h: var(--color-gray-h);
 	--theme-color-s: var(--color-gray-s);
 	--theme-color-boost: var(--color-gray-boost);

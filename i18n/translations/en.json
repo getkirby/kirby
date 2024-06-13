@@ -386,7 +386,6 @@
 	"installation.issues.mbstring": "The <code>MB String</code> extension is required",
 	"installation.issues.media": "The <code>/media</code> folder does not exist or is not writable",
 	"installation.issues.php": "Make sure to use <code>PHP 8+</code>",
-	"installation.issues.server": "Kirby requires <code>Apache</code>, <code>Nginx</code> or <code>Caddy</code>",
 	"installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
 
 	"language": "Language",
@@ -618,6 +617,8 @@
 	"stats.empty": "No reports",
 	"status": "Status",
 
+	"system.info.copy": "Copy info",
+	"system.info.copied": "System info copied",
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",

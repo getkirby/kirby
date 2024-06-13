@@ -1182,7 +1182,10 @@ class StrTest extends TestCase
 		// Allow underscores
 		$this->assertSame('a_b', Str::slug('a_b', '-', 'a-z0-9_'));
 
-		// store default defaults
+		// Trim non-alphanum characters
+		$this->assertSame('a@b-c.b', Str::slug('.a@b c.b-', '-', 'a-z0-9@._-'));
+
+		// Store default defaults
 		$defaults = Str::$defaults['slug'];
 
 		// Custom str defaults

@@ -114,7 +114,7 @@
 	"error.file.minheight": "De hoogte van de afbeelding moet minimaal {height} pixels zijn",
 	"error.file.minsize": "Het bestand is te klein",
 	"error.file.minwidth": "De breedte van de afbeelding moet minimaal {width} pixels zijn",
-	"error.file.name.unique": "The filename must be unique",
+	"error.file.name.unique": "De bestandsnaam moet uniek zijn",
 	"error.file.name.missing": "De bestandsnaam mag niet leeg zijn",
 	"error.file.notFound": "Het bestand kan niet worden gevonden",
 	"error.file.orientation": "De oriëntatie van de afbeelding moet \"{orientation}\" zijn",
@@ -386,7 +386,6 @@
 	"installation.issues.mbstring": "De <code>MB String</code> extensie is verplicht",
 	"installation.issues.media": "De map <code>/media</code>bestaat niet of heeft geen schrijfrechten",
 	"installation.issues.php": "Gebruik <code>PHP8+</code>",
-	"installation.issues.server": "Kirby vereist <code>Apache</code>, <code>Nginx</code> of <code>Caddy</code>",
 	"installation.issues.sessions": "De map <code>/site/sessions</code> bestaat niet of heeft geen schrijfrechten",
 
 	"language": "Taal",
@@ -618,6 +617,8 @@
 	"stats.empty": "Geen rapporten",
 	"status": "Status",
 
+	"system.info.copy": "Copy info",
+	"system.info.copied": "System info copied",
 	"system.issues.content": "De content map lijkt zichtbaar te zijn",
 	"system.issues.eol.kirby": "De geïnstalleerde Kirby versie is niet meer actueel en zal geen verdere beveiligingsupdates meer ontvangen.",
 	"system.issues.eol.plugin": "De geïnstalleerde versie van plugin { plugin } is niet meer actueel en zal geen verdere beveiligingsupdates meer ontvangen.",

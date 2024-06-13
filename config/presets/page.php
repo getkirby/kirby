@@ -44,7 +44,7 @@ return function ($props) {
 	}
 
 	if (empty($sidebar) === true) {
-		$props['fields'] = $props['fields'] ?? [];
+		$props['fields'] ??= [];
 
 		unset(
 			$props['files'],

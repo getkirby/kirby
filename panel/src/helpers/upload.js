@@ -62,7 +62,7 @@ export default async (file, params) => {
 
 			try {
 				response = JSON.parse(event.target.response);
-			} catch (error) {
+			} catch {
 				response = {
 					status: "error",
 					message: "The file could not be uploaded"

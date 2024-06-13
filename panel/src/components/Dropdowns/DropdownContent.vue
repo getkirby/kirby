@@ -187,10 +187,28 @@ export default {
 		onOptionClick(option) {
 			this.close();
 
+			// click handler is a callback function
+			// which is executed
 			if (typeof option.click === "function") {
-				option.click.call(this);
-			} else if (option.click) {
-				this.$emit("action", option.click);
+				return option.click.call(this);
+			}
+
+			// click handler is an action string
+			// which is emitted to the parent
+			if (typeof option.click === "string") {
+				return this.$emit("action", option.click);
+			}
+
+			// click handler is an object with a name and payload
+			// and optional flag to also emit globally
+			if (option.click) {
+				if (option.click.name) {
+					this.$emit(option.click.name, option.click.payload);
+				}
+
+				if (option.click.global) {
+					this.$events.emit(option.click.global, option.click.payload);
+				}
 			}
 		},
 		/**

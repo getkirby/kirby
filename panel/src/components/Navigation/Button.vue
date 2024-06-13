@@ -25,12 +25,10 @@
 </template>
 
 <script>
-/**
- * @example <k-button icon="check">Save</k-button>
- * @example <k-button icon="check" size="sm" variant="filled">Save</k-button>
- */
-export default {
-	inheritAttrs: false,
+import { props as LinkProps } from "@/components/Navigation/Link.vue";
+
+export const props = {
+	mixins: [LinkProps],
 	props: {
 		/**
 		 * Sets autofocus on button (when supported by element)
@@ -52,11 +50,6 @@ export default {
 		 * Name/path of a dialog to open on click
 		 */
 		dialog: String,
-		/**
-		 * A disabled button will have no pointer events and
-		 * the opacity is be reduced.
-		 */
-		disabled: Boolean,
 		/**
 		 * Name/path of a drawer to open on click
 		 */
@@ -89,11 +82,7 @@ export default {
 		 */
 		responsive: [Boolean, String],
 		/**
-		 * `rel` attribute for when using with `link`
-		 */
-		rel: String,
-		/**
-		 * `role` attribute for when using with `link`
+		 * `role` attribute for the button
 		 */
 		role: String,
 		/**
@@ -101,20 +90,11 @@ export default {
 		 */
 		selected: [String, Boolean],
 		/**
-		 * Specific sizes for buttong styling
+		 * Specific sizes for button styling
 		 * @since 4.0.0
 		 * @values "xs", "sm"
 		 */
 		size: String,
-		/**
-		 * In connection with the `link` attribute, you can also set the
-		 * target of the link. This does not apply to regular buttons.
-		 */
-		target: String,
-		/**
-		 * Custom tabindex. Only use if you really know how to adjust the order properly.
-		 */
-		tabindex: String,
 		/**
 		 * The button text
 		 */
@@ -123,12 +103,6 @@ export default {
 		 * With the theme you can control the general design of the button.
 		 */
 		theme: String,
-		/**
-		 * The title attribute can be used to add additional text
-		 * to the button, which is shown on mouseover.
-		 * @since 4.0.0
-		 */
-		title: String,
 		/**
 		 * @deprecated 4.0.0 Use the `title` prop instead
 		 */
@@ -147,7 +121,16 @@ export default {
 		 * @values "filled", "dimmed"
 		 */
 		variant: String
-	},
+	}
+};
+
+/**
+ * @example <k-button icon="check">Save</k-button>
+ * @example <k-button icon="check" size="sm" variant="filled">Save</k-button>
+ */
+export default {
+	mixins: [props],
+	inheritAttrs: false,
 	emits: ["click"],
 	computed: {
 		attrs() {
@@ -169,13 +152,14 @@ export default {
 			if (this.component === "k-link") {
 				// For `<a>`/`<k-link>` element:
 				attrs["disabled"] = this.disabled;
+				attrs["download"] = this.download;
 				attrs["to"] = this.link;
 				attrs["rel"] = this.rel;
-				attrs["role"] = this.role;
 				attrs["target"] = this.target;
 			} else if (this.component === "button") {
 				// For `<button>` element:
 				attrs["autofocus"] = this.autofocus;
+				attrs["role"] = this.role;
 				attrs["type"] = this.type;
 			}
 
@@ -292,24 +276,28 @@ export default {
 	--button-color-icon: var(--theme-color-icon);
 	--button-color-text: var(--theme-color-text);
 }
+.k-button:where([data-theme$="-icon"]) {
+	--button-color-text: currentColor;
+}
 
 /** Dimmed Buttons **/
 .k-button:where([data-variant="dimmed"]) {
 	--button-color-icon: var(--color-text);
-	--button-color-dimmed-on: var(--color-text-dimmed);
-	--button-color-dimmed-off: var(--color-text);
-	--button-color-text: var(--button-color-dimmed-on);
+	--button-color-text: var(--color-text-dimmed);
 }
 .k-button:where([data-variant="dimmed"]):not([aria-disabled]):is(
 		:hover,
 		[aria-current]
-	) {
-	--button-color-text: var(--button-color-dimmed-off);
+	)
+	.k-button-text {
+	filter: brightness(75%);
 }
-.k-button:where([data-theme][data-variant="dimmed"]) {
+.k-button:where([data-variant="dimmed"][data-theme]) {
 	--button-color-icon: var(--theme-color-icon);
-	--button-color-dimmed-on: var(--theme-color-text-dimmed);
-	--button-color-dimmed-off: var(--theme-color-text);
+	--button-color-text: var(--theme-color-text-dimmed);
+}
+.k-button:where([data-variant="dimmed"][data-theme$="-icon"]) {
+	--button-color-text: var(--color-text-dimmed);
 }
 
 /** Filled Buttons **/
@@ -319,10 +307,16 @@ export default {
 .k-button:where([data-variant="filled"]):not([aria-disabled]):hover {
 	filter: brightness(97%);
 }
-.k-button:where([data-theme][data-variant="filled"]) {
+.k-button:where([data-variant="filled"][data-theme]) {
 	--button-color-icon: var(--theme-color-700);
 	--button-color-back: var(--theme-color-back);
-	--button-color-text: var(--theme-color-text);
+}
+.k-button:where([data-theme$="-icon"][data-variant="filled"]) {
+	--button-color-icon: hsl(
+		var(--theme-color-hs),
+		57%
+	); /* slightly improve the contrast */
+	--button-color-back: var(--color-gray-300);
 }
 
 /** Icon Buttons **/

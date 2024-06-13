@@ -386,7 +386,6 @@
 	"installation.issues.mbstring": "A extensão <code>MB String</code> é necessária",
 	"installation.issues.media": "A pasta <code>/media</code> não existe ou não tem permissão de escrita",
 	"installation.issues.php": "Certifique-se que está a usar o <code>PHP 8+</code>",
-	"installation.issues.server": "O Kirby necessita do <code>Apache</code>, <code>Nginx</code> ou <code>Caddy</code>",
 	"installation.issues.sessions": "A pasta <code>/site/sessions</code> não existe ou não tem permissão de escrita",
 
 	"language": "Idioma",
@@ -618,6 +617,8 @@
 	"stats.empty": "Sem relatórios",
 	"status": "Estado",
 
+	"system.info.copy": "Copy info",
+	"system.info.copied": "System info copied",
 	"system.issues.content": "A pasta content parece não estar protegida",
 	"system.issues.eol.kirby": "A versão instalada do Kirby chegou ao fim da sua vida útil e não irá receber mais atualizações de segurança",
 	"system.issues.eol.plugin": "A versão instalada do plugin { plugin } chegou ao fim da sua vida útil e não irá receber mais atualizações de segurança",

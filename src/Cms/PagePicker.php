@@ -22,7 +22,7 @@ class PagePicker extends Picker
 	// remove once our implementation is better
 	protected Pages|null $items = null;
 	protected Pages|null $itemsForQuery = null;
-	protected Page|Site|null $parent;
+	protected Page|Site|null $parent = null;
 
 	/**
 	 * Extends the basic defaults

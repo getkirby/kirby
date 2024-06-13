@@ -20,7 +20,7 @@ abstract class ModelUuid extends Uuid
 	/**
 	 * @var \Kirby\Cms\ModelWithContent|null
 	 */
-	public Identifiable|null $model;
+	public Identifiable|null $model = null;
 
 	/**
 	 * Looks up UUID in local and global index

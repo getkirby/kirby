@@ -125,7 +125,7 @@ export default {
 				});
 				this.items = response.results;
 				this.pagination = response.pagination;
-			} catch (error) {
+			} catch {
 				this.items = [];
 				this.pagination = {};
 			} finally {

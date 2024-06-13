@@ -386,7 +386,6 @@
 	"installation.issues.mbstring": "Az <code>MB String</code> bővítmény engedélyezése szükséges",
 	"installation.issues.media": "A <code>/media</code> mappa nem létezik vagy nem írható",
 	"installation.issues.php": "Bizonyosodj meg róla, hogy az általad használt PHP-verzió <code>PHP 8+</code>",
-	"installation.issues.server": "A Kirby az alábbi szervereken futtatható: <code>Apache</code>, <code>Nginx</code> vagy <code>Caddy</code>",
 	"installation.issues.sessions": "A <code>/site/sessions</code> könyvtár nem létezik vagy nem írható",
 
 	"language": "Nyelv",
@@ -618,6 +617,8 @@
 	"stats.empty": "No reports",
 	"status": "Állapot",
 
+	"system.info.copy": "Copy info",
+	"system.info.copied": "System info copied",
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",

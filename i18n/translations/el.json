@@ -386,7 +386,6 @@
 	"installation.issues.mbstring": "Απαιτείται η επέκταση <code>MB String</code> ",
 	"installation.issues.media": "Ο φάκελος <code>/media</code>  δεν υπάρχει ή δεν είναι εγγράψιμος",
 	"installation.issues.php": "Βεβαιωθείτε ότι χρησιμοποιήτε <code>PHP 8+</code>",
-	"installation.issues.server": "To Kirby απαιτεί <code>Apache</code>, <code>Nginx</code> ή <code>Caddy</code>",
 	"installation.issues.sessions": "Ο φάκελος <code>/site/sessions</code> δεν υπάρχει ή δεν είναι εγγράψιμος",
 
 	"language": "\u0393\u03bb\u03ce\u03c3\u03c3\u03b1",
@@ -618,6 +617,8 @@
 	"stats.empty": "No reports",
 	"status": "Kατάσταση",
 
+	"system.info.copy": "Copy info",
+	"system.info.copied": "System info copied",
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",

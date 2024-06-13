@@ -210,8 +210,8 @@ export function slug(string, rules = [], allowed = "", separator = "-") {
 	string = string.replace("/", separator);
 
 	// trim leading and trailing non-word-chars
-	string = string.replace(new RegExp("^[^" + allowed + "]+", "g"), "");
-	string = string.replace(new RegExp("[^" + allowed + "]+$", "g"), "");
+	string = string.replace(new RegExp("^[^a-z0-9]+", "g"), "");
+	string = string.replace(new RegExp("[^a-z0-9]+$", "g"), "");
 
 	return string;
 }

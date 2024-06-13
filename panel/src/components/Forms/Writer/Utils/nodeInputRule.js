@@ -6,7 +6,7 @@ export default function (regexp, type, getAttrs) {
 		const { tr } = state;
 
 		if (match[0]) {
-			tr.replaceWith(start - 1, end, type.create(attrs));
+			tr.replaceWith(start, end, type.create(attrs));
 		}
 
 		return tr;

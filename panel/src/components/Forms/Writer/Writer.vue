@@ -285,11 +285,6 @@ export default {
 				enter: this.inline
 			});
 
-			// inline fields only get the hard break
-			if (this.inline === true) {
-				return [hardBreak];
-			}
-
 			return this.filterExtensions(
 				{
 					bulletList: new BulletList(),
@@ -308,6 +303,11 @@ export default {
 						allowed.includes("orderedList")
 					) {
 						installed.push(new ListItem());
+					}
+
+					// inline fields should not have  non-inline nodes
+					if (this.inline === true) {
+						installed = installed.filter((node) => node.schema.inline === true);
 					}
 
 					// always install the hard break

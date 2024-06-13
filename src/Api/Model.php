@@ -59,7 +59,11 @@ class Model
 			isset($schema['type']) === true &&
 			$this->data instanceof $schema['type'] === false
 		) {
-			throw new Exception(sprintf('Invalid model type "%s" expected: "%s"', get_class($this->data), $schema['type']));
+			$class = match ($this->data) {
+				null    => 'null',
+				default => get_class($this->data),
+			};
+			throw new Exception(sprintf('Invalid model type "%s" expected: "%s"', $class, $schema['type']));
 		}
 	}
 
