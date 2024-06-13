@@ -31,7 +31,7 @@ abstract class ContentStorageHandler
 	 * Returns generator for all existing versions-languages combinations
 	 *
 	 * @return Generator<VersionId|Language>
-	 * @todo 4.0.0 consider more descpritive name
+	 * @todo 4.0.0 consider more descpritive name and maybe move to a different class
 	 */
 	public function all(): Generator
 	{
@@ -62,6 +62,7 @@ abstract class ContentStorageHandler
 	/**
 	 * Deletes all versions when deleting a language
 	 * @internal
+	 * @todo Move to Language class
 	 */
 	public function deleteLanguage(Language $language): void
 	{
@@ -115,6 +116,7 @@ abstract class ContentStorageHandler
 	/**
 	 * Adapts all versions when converting languages
 	 * @internal
+	 * @todo Move to Language class
 	 */
 	public function moveLanguage(Language $fromLanguage, Language $toLanguage): void
 	{
@@ -142,6 +144,7 @@ abstract class ContentStorageHandler
 	/**
 	 * Touches all versions of a language
 	 * @internal
+	 * @todo Move to Language class
 	 */
 	public function touchLanguage(Language $language): void
 	{
