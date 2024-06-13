@@ -2,6 +2,7 @@
 
 namespace Kirby\Api;
 
+use Exception;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\TestCase;
@@ -46,7 +47,7 @@ class CollectionTest extends TestCase
 		$this->assertSame(['key' => 'c'], $result[2]);
 
 		// invalid select
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid select keys');
 		$collection->select(0)->toArray();
 	}

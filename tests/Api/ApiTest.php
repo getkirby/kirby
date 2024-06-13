@@ -2,6 +2,7 @@
 
 namespace Kirby\Api;
 
+use Exception;
 use Kirby\Cms\Response;
 use Kirby\Cms\User;
 use Kirby\Exception\NotFoundException;
@@ -163,9 +164,9 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$instance = new \Kirby\Toolkit\Collection([
-			new \Kirby\Toolkit\Obj(['id' => 'a']),
-			new \Kirby\Toolkit\Obj(['id' => 'b']),
+		$instance = new Collection([
+			new Obj(['id' => 'a']),
+			new Obj(['id' => 'b']),
 		]);
 
 		$collection = $api->collection('test', $instance);
@@ -365,9 +366,9 @@ class ApiTest extends TestCase
 		$result = $api->render('test', 'POST');
 
 		$expected = [
-			'status' => 'ok',
+			'status'  => 'ok',
 			'message' => 'ok',
-			'code' => 200
+			'code'    => 200
 		];
 
 		$this->assertInstanceOf(HttpResponse::class, $result);
@@ -459,7 +460,7 @@ class ApiTest extends TestCase
 					'pattern' => 'test',
 					'method'  => 'POST',
 					'action'  => function () {
-						throw new \Exception('nope');
+						throw new Exception('nope');
 					}
 				]
 			]
@@ -496,12 +497,10 @@ class ApiTest extends TestCase
 					'pattern' => 'test',
 					'method'  => 'POST',
 					'action'  => function () {
-						throw new \Kirby\Exception\NotFoundException([
+						throw new NotFoundException([
 							'key'      => 'test',
 							'fallback' => 'Test',
-							'details'  => [
-								'a' => 'A'
-							]
+							'details'  => ['a' => 'A']
 						]);
 					}
 				]
@@ -531,7 +530,7 @@ class ApiTest extends TestCase
 					'pattern' => 'test',
 					'method'  => 'POST',
 					'action'  => function () {
-						throw new \Kirby\Exception\NotFoundException([
+						throw new NotFoundException([
 							'key'      => 'test',
 							'fallback' => 'Test',
 							'details'  => [
@@ -574,7 +573,7 @@ class ApiTest extends TestCase
 					'pattern' => 'test',
 					'method'  => 'POST',
 					'action'  => function () {
-						throw new \Exception('nope', 1000);
+						throw new Exception('nope', 1000);
 					}
 				]
 			]
@@ -612,7 +611,7 @@ class ApiTest extends TestCase
 	{
 		$api = new Api([
 			'requestMethod' => 'POST',
-			'requestData' => [
+			'requestData'   => [
 				'files' => [
 					[
 						'name'     => 'test.txt',
@@ -634,7 +633,7 @@ class ApiTest extends TestCase
 		});
 
 		$phpunit->assertSame([
-			'status' => 'error',
+			'status'  => 'error',
 			'message' => 'The uploaded file could not be moved'
 		], $data);
 
@@ -652,7 +651,7 @@ class ApiTest extends TestCase
 
 		$phpunit->assertSame([
 			'status' => 'ok',
-			'data' => $uploads
+			'data'   => $uploads
 		], $data);
 
 		// multiple
@@ -669,7 +668,7 @@ class ApiTest extends TestCase
 
 		$phpunit->assertSame([
 			'status' => 'ok',
-			'data' => $uploads
+			'data'   => $uploads
 		], $data);
 	}
 
@@ -677,7 +676,7 @@ class ApiTest extends TestCase
 	{
 		$api = new Api([
 			'requestMethod' => 'POST',
-			'requestData' => [
+			'requestData'   => [
 				'files' => [
 					[
 						'name'     => 'foo.txt',
@@ -708,7 +707,7 @@ class ApiTest extends TestCase
 
 		$phpunit->assertSame([
 			'status' => 'ok',
-			'data' => [
+			'data'   => [
 				'foo.txt' => ['filename' => 'foo.txt'],
 				'bar.txt' => ['filename' => 'bar.txt'],
 			]
@@ -719,12 +718,10 @@ class ApiTest extends TestCase
 	{
 		$api = new Api([
 			'requestMethod' => 'POST',
-			'requestData' => [
-				'files' => [ ]
-			]
+			'requestData'   => ['files' => []]
 		]);
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$api->upload(function ($source) {
 			// empty closure
 		});
