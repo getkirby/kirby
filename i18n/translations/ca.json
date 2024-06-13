@@ -386,7 +386,6 @@
 	"installation.issues.mbstring": "Es requereix l'extensió de <code>MB String</code>",
 	"installation.issues.media": "La carpeta <code>/media</code> no existeix o no es pot escriure",
 	"installation.issues.php": "Assegureu-vos d'utilitzar <code>PHP 8+</code>",
-	"installation.issues.server": "Kirby requereix <code>Apache</code>, <code>Nginx</code> o <code>Caddy</code>",
 	"installation.issues.sessions": "La carpeta <code>/site/sessions</code> no existeix o no es pot escriure",
 
 	"language": "Idioma",
@@ -618,6 +617,8 @@
 	"stats.empty": "No reports",
 	"status": "Estat",
 
+	"system.info.copy": "Copy info",
+	"system.info.copied": "System info copied",
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",

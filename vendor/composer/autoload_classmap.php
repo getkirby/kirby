@@ -157,6 +157,7 @@ return array(
     'Kirby\\Content\\ContentTranslation' => $baseDir . '/src/Content/ContentTranslation.php',
     'Kirby\\Content\\Field' => $baseDir . '/src/Content/Field.php',
     'Kirby\\Content\\PlainTextContentStorageHandler' => $baseDir . '/src/Content/PlainTextContentStorageHandler.php',
+    'Kirby\\Content\\Version' => $baseDir . '/src/Content/Version.php',
     'Kirby\\Content\\VersionId' => $baseDir . '/src/Content/VersionId.php',
     'Kirby\\Data\\Data' => $baseDir . '/src/Data/Data.php',
     'Kirby\\Data\\Handler' => $baseDir . '/src/Data/Handler.php',

@@ -386,7 +386,6 @@
 	"installation.issues.mbstring": "Je vyžadováno rozšíření<code>MB String</code>",
 	"installation.issues.media": "Složka<code>/media</code> neexistuje, nebo nemá povolený zápis",
 	"installation.issues.php": "Ujistěte se, že používáte<code>PHP 8+</code>",
-	"installation.issues.server": "Kirby vyžaduje<code>Apache</code>, <code>Nginx</code> nebo<code>Caddy</code>",
 	"installation.issues.sessions": "Složka<code>/site/sessions</code> neexistuje, nebo nemá povolený zápis",
 
 	"language": "Jazyk",
@@ -618,6 +617,8 @@
 	"stats.empty": "Žádná hlášení",
 	"status": "Stav",
 
+	"system.info.copy": "Copy info",
+	"system.info.copied": "System info copied",
 	"system.issues.content": "Složka content je zřejmě přístupná zvenčí",
 	"system.issues.eol.kirby": "Instalovaná verze Kirby dosáhla konce životnosti a nebude již dále dostávat bezpečnostní aktualizace",
 	"system.issues.eol.plugin": "Instalovaná verze doplňku { plugin } dosáhla konce životnosti a nebude již dále dostávat bezpečnostní aktualizace",

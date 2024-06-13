@@ -386,7 +386,6 @@
 	"installation.issues.mbstring": "Die <code>MB String</code> Erweiterung wird benötigt",
 	"installation.issues.media": "Der <code>/media</code> Ordner ist nicht beschreibbar",
 	"installation.issues.php": "Bitte verwende <code>PHP 8+</code>",
-	"installation.issues.server": "Kirby benötigt <code>Apache</code>, <code>Nginx</code> or <code>Caddy</code>",
 	"installation.issues.sessions": "<code>/site/sessions</code> ist nicht beschreibbar",
 
 	"language": "Sprache",
@@ -618,6 +617,8 @@
 	"stats.empty": "Keine Daten",
 	"status": "Status",
 
+	"system.info.copy": "Info kopieren",
+	"system.info.copied": "System Info wurde kopiert",
 	"system.issues.content": "Der content Ordner scheint öffentlich zugänglich zu sein",
 	"system.issues.eol.kirby": "Deine Kirby Installation ist veraltet und erhält keine weiteren Sicherheitsupdates",
 	"system.issues.eol.plugin": "Deine Version des { plugin } Plugins ist veraltet und erhält keine weiteren Sicherheitsupdates",

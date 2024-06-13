@@ -278,6 +278,7 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Content\\ContentTranslation' => __DIR__ . '/../..' . '/src/Content/ContentTranslation.php',
         'Kirby\\Content\\Field' => __DIR__ . '/../..' . '/src/Content/Field.php',
         'Kirby\\Content\\PlainTextContentStorageHandler' => __DIR__ . '/../..' . '/src/Content/PlainTextContentStorageHandler.php',
+        'Kirby\\Content\\Version' => __DIR__ . '/../..' . '/src/Content/Version.php',
         'Kirby\\Content\\VersionId' => __DIR__ . '/../..' . '/src/Content/VersionId.php',
         'Kirby\\Data\\Data' => __DIR__ . '/../..' . '/src/Data/Data.php',
         'Kirby\\Data\\Handler' => __DIR__ . '/../..' . '/src/Data/Handler.php',

@@ -386,7 +386,6 @@
 	"installation.issues.mbstring": "<code>MB String</code>-laajennos on pakollinen",
 	"installation.issues.media": "<code>/media</code> -kansio ei ole olemassa tai siihen ei voi kirjoittaa",
 	"installation.issues.php": "Varmista että <code>PHP 8+</code> on käytössä",
-	"installation.issues.server": "Kirby tarvitsee jonkun seuraavista: <code>Apache</code>, <code>Nginx</code> tai <code>Caddy</code>",
 	"installation.issues.sessions": "<code>/site/sessions</code> -kansio ei ole olemassa tai siihen ei voi kirjoittaa",
 
 	"language": "Kieli",
@@ -618,6 +617,8 @@
 	"stats.empty": "Ei raportteja",
 	"status": "Tila",
 
+	"system.info.copy": "Copy info",
+	"system.info.copied": "System info copied",
 	"system.issues.content": "Content-kansio näyttäisi olevan julkinen",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
