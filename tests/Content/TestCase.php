@@ -10,7 +10,6 @@ class TestCase extends BaseTestCase
 {
 	public const TMP = KIRBY_TMP_DIR;
 
-	protected $app;
 	protected $model;
 
 	public function setUp(): void
