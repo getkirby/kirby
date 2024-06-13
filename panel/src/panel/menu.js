@@ -23,11 +23,12 @@ export default (panel) => {
 		 * @param {Event} event
 		 */
 		blur(event) {
-			if (media.matches === false) {
+			const menu = document.querySelector(".k-panel-menu");
+
+			if (!menu || media.matches === false) {
 				return false;
 			}
 
-			const menu = document.querySelector(".k-panel-menu");
 			const toggle = document.querySelector(".k-panel-menu-proxy");
 
 			if (
