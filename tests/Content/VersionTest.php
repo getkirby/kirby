@@ -36,6 +36,43 @@ class VersionTest extends TestCase
 			'.txt';
 	}
 
+	public function createContentMultiLanguage(): array
+	{
+		Data::write($fileEN = $this->contentFile('en'), $contentEN = [
+			'title'    => 'Title English',
+			'subtitle' => 'Subtitle English'
+		]);
+
+		Data::write($fileDE = $this->contentFile('de'), $contentDE = [
+			'title'    => 'Title Deutsch',
+			'subtitle' => 'Subtitle Deutsch'
+		]);
+
+		return [
+			'en' => [
+				'content' => $contentEN,
+				'file'    => $fileEN,
+			],
+			'de' => [
+				'content' => $contentDE,
+				'file'    => $fileDE,
+			]
+		];
+	}
+
+	public function createContentSingleLanguage(): array
+	{
+		Data::write($file = $this->contentFile(), $content = [
+			'title'    => 'Title',
+			'subtitle' => 'Subtitle'
+		]);
+
+		return [
+			'content' => $content,
+			'file'    => $file
+		];
+	}
+
 	/**
 	 * @covers ::content
 	 */
@@ -48,19 +85,13 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		Data::write($this->contentFile('en'), [
-			'title' => 'Test'
-		]);
+		$expected = $this->createContentMultiLanguage();
 
-		Data::write($this->contentFile('de'), [
-			'title' => 'Töst'
-		]);
-
-		$this->assertSame('Test', $version->content('en')->get('title')->value());
-		$this->assertSame('Test', $version->content($this->app->language('en'))->get('title')->value());
-		$this->assertSame('Test', $version->content()->get('title')->value());
-		$this->assertSame('Töst', $version->content('de')->get('title')->value());
-		$this->assertSame('Töst', $version->content($this->app->language('de'))->get('title')->value());
+		$this->assertSame($expected['en']['content']['title'], $version->content('en')->get('title')->value());
+		$this->assertSame($expected['en']['content']['title'], $version->content($this->app->language('en'))->get('title')->value());
+		$this->assertSame($expected['en']['content']['title'], $version->content()->get('title')->value());
+		$this->assertSame($expected['de']['content']['title'], $version->content('de')->get('title')->value());
+		$this->assertSame($expected['de']['content']['title'], $version->content($this->app->language('de'))->get('title')->value());
 	}
 
 	/**
@@ -75,11 +106,9 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		Data::write($this->contentFile(), [
-			'title' => 'Test'
-		]);
+		$expected = $this->createContentSingleLanguage();
 
-		$this->assertSame('Test', $version->content()->get('title')->value());
+		$this->assertSame($expected['content']['title'], $version->content()->get('title')->value());
 	}
 
 	/**
@@ -181,13 +210,7 @@ class VersionTest extends TestCase
 		$this->assertContentFileDoesNotExist('de');
 		$this->assertContentFileDoesNotExist('en');
 
-		Data::write($this->contentFile('en'), [
-			'title' => 'Test'
-		]);
-
-		Data::write($this->contentFile('de'), [
-			'title' => 'Test'
-		]);
+		$this->createContentMultiLanguage();
 
 		$this->assertContentFileExists('en');
 		$this->assertContentFileExists('de');
@@ -212,9 +235,7 @@ class VersionTest extends TestCase
 
 		$this->assertContentFileDoesNotExist();
 
-		Data::write($this->contentFile(), [
-			'title' => 'Test'
-		]);
+		$this->createContentSingleLanguage();
 
 		$this->assertContentFileExists();
 
@@ -235,9 +256,10 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		Data::write($this->contentFile('de'), [
-			'title' => 'Test'
-		]);
+		$this->createContentMultiLanguage();
+
+		$this->assertNull($version->ensure('en'));
+		$this->assertNull($version->ensure($this->app->language('en')));
 
 		$this->assertNull($version->ensure('de'));
 		$this->assertNull($version->ensure($this->app->language('de')));
@@ -255,9 +277,7 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		Data::write($this->contentFile(), [
-			'title' => 'Test'
-		]);
+		$this->createContentSingleLanguage();
 
 		$this->assertNull($version->ensure());
 	}
@@ -328,10 +348,16 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
+		$this->assertFalse($version->exists('en'));
+		$this->assertFalse($version->exists($this->app->language('en')));
+
 		$this->assertFalse($version->exists('de'));
 		$this->assertFalse($version->exists($this->app->language('de')));
 
-		Data::write($this->contentFile('de'), []);
+		$this->createContentMultiLanguage();
+
+		$this->assertTrue($version->exists('en'));
+		$this->assertTrue($version->exists($this->app->language('en')));
 
 		$this->assertTrue($version->exists('de'));
 		$this->assertTrue($version->exists($this->app->language('de')));
@@ -351,7 +377,7 @@ class VersionTest extends TestCase
 
 		$this->assertFalse($version->exists());
 
-		Data::write($this->contentFile(), []);
+		$this->createContentSingleLanguage();
 
 		$this->assertTrue($version->exists());
 	}
@@ -555,18 +581,12 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		Data::write($this->contentFile('en'), $contentEN = [
-			'title' => 'Test'
-		]);
+		$expected = $this->createContentMultiLanguage();
 
-		Data::write($this->contentFile('de'), $contentDE = [
-			'title' => 'Töst'
-		]);
-
-		$this->assertSame($contentEN, $version->read('en'));
-		$this->assertSame($contentEN, $version->read($this->app->language('en')));
-		$this->assertSame($contentDE, $version->read('de'));
-		$this->assertSame($contentDE, $version->read($this->app->language('de')));
+		$this->assertSame($expected['en']['content'], $version->read('en'));
+		$this->assertSame($expected['en']['content'], $version->read($this->app->language('en')));
+		$this->assertSame($expected['de']['content'], $version->read('de'));
+		$this->assertSame($expected['de']['content'], $version->read($this->app->language('de')));
 	}
 
 	/**
@@ -581,11 +601,9 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		Data::write($this->contentFile(), $content = [
-			'title' => 'Test'
-		]);
+		$expected = $this->createContentSingleLanguage();
 
-		$this->assertSame($content, $version->read());
+		$this->assertSame($expected['content'], $version->read());
 	}
 
 	/**
@@ -600,15 +618,7 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		Data::write($fileEN = $this->contentFile('en'), [
-			'title'    => 'Test English',
-			'subtitle' => 'Subtitle English'
-		]);
-
-		Data::write($fileDE = $this->contentFile('de'), [
-			'title'    => 'Test Deutsch',
-			'subtitle' => 'Subtitle Deutsch'
-		]);
+		$expected = $this->createContentMultiLanguage();
 
 		// with Language argument
 		$version->replace([
@@ -620,8 +630,8 @@ class VersionTest extends TestCase
 			'title' => 'Updated Title Deutsch',
 		], 'de');
 
-		$this->assertSame(['title' => 'Updated Title English'], Data::read($fileEN));
-		$this->assertSame(['title' => 'Updated Title Deutsch'], Data::read($fileDE));
+		$this->assertSame(['title' => 'Updated Title English'], Data::read($expected['en']['file']));
+		$this->assertSame(['title' => 'Updated Title Deutsch'], Data::read($expected['de']['file']));
 	}
 
 	/**
@@ -636,16 +646,164 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		Data::write($file = $this->contentFile(), $content = [
-			'title'    => 'Title',
-			'subtitle' => 'Subtitle'
-		]);
+		$expected = $this->createContentSingleLanguage();
 
 		$version->replace([
 			'title' => 'Updated Title'
 		]);
 
-		$this->assertSame(['title' => 'Updated Title'], Data::read($file));
+		$this->assertSame(['title' => 'Updated Title'], Data::read($expected['file']));
+	}
+
+	/**
+	 * @covers ::save
+	 */
+	public function testSaveExistingMultiLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$expected = $this->createContentMultiLanguage();
+
+		// with Language argument
+		$version->save([
+			'title' => 'Updated Title English'
+		], $this->app->language('en'));
+
+		// with string argument
+		$version->save([
+			'title' => 'Updated Title Deutsch',
+		], 'de');
+
+		$this->assertSame('Updated Title English', Data::read($expected['en']['file'])['title']);
+		$this->assertSame('Subtitle English', Data::read($expected['en']['file'])['subtitle']);
+		$this->assertSame('Updated Title Deutsch', Data::read($expected['de']['file'])['title']);
+		$this->assertSame('Subtitle Deutsch', Data::read($expected['de']['file'])['subtitle']);
+	}
+
+	/**
+	 * @covers ::save
+	 */
+	public function testSaveExistingSingleLanguage(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$expected = $this->createContentSingleLanguage();
+
+		$version->save([
+			'title' => 'Updated Title'
+		]);
+
+		$this->assertSame('Updated Title', Data::read($expected['file'])['title']);
+		$this->assertSame('Subtitle', Data::read($expected['file'])['subtitle']);
+	}
+
+	/**
+	 * @covers ::save
+	 */
+	public function testSaveNonExistingMultiLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$this->assertContentFileDoesNotExist('en');
+		$this->assertContentFileDoesNotExist('de');
+
+		// with Language argument
+		$version->save([
+			'title' => 'Test'
+		], $this->app->language('en'));
+
+		// with string argument
+		$version->save([
+			'title' => 'Test'
+		], 'de');
+
+		$this->assertContentFileExists('en');
+		$this->assertContentFileExists('de');
+	}
+
+	/**
+	 * @covers ::save
+	 */
+	public function testSaveNonExistingSingleLanguage(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$this->assertContentFileDoesNotExist();
+
+		$version->save([
+			'title' => 'Test'
+		]);
+
+		$this->assertContentFileExists();
+	}
+
+	/**
+	 * @covers ::save
+	 */
+	public function testSaveOverwriteMultiLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$expected = $this->createContentMultiLanguage();
+
+		// with Language argument
+		$version->save([
+			'title' => 'Updated Title English'
+		], $this->app->language('en'), true);
+
+		// with string argument
+		$version->save([
+			'title' => 'Updated Title Deutsch',
+		], 'de', true);
+
+		$this->assertSame(['title' => 'Updated Title English'], Data::read($expected['en']['file']));
+		$this->assertSame(['title' => 'Updated Title Deutsch'], Data::read($expected['de']['file']));
+	}
+
+	/**
+	 * @covers ::save
+	 */
+	public function testSaveOverwriteSingleLanguage(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$expected = $this->createContentSingleLanguage();
+
+		$version->save([
+			'title' => 'Updated Title'
+		], 'default', true);
+
+		$this->assertSame(['title' => 'Updated Title'], Data::read($expected['file']));
 	}
 
 	/**
@@ -716,15 +874,7 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		Data::write($fileEN = $this->contentFile('en'), [
-			'title'    => 'Test English',
-			'subtitle' => 'Subtitle English'
-		]);
-
-		Data::write($fileDE = $this->contentFile('de'), [
-			'title'    => 'Test Deutsch',
-			'subtitle' => 'Subtitle Deutsch'
-		]);
+		$expected = $this->createContentMultiLanguage();
 
 		// with Language argument
 		$version->update([
@@ -736,10 +886,10 @@ class VersionTest extends TestCase
 			'title' => 'Updated Title Deutsch',
 		], 'de');
 
-		$this->assertSame('Updated Title English', Data::read($fileEN)['title']);
-		$this->assertSame('Subtitle English', Data::read($fileEN)['subtitle']);
-		$this->assertSame('Updated Title Deutsch', Data::read($fileDE)['title']);
-		$this->assertSame('Subtitle Deutsch', Data::read($fileDE)['subtitle']);
+		$this->assertSame('Updated Title English', Data::read($expected['en']['file'])['title']);
+		$this->assertSame('Subtitle English', Data::read($expected['en']['file'])['subtitle']);
+		$this->assertSame('Updated Title Deutsch', Data::read($expected['de']['file'])['title']);
+		$this->assertSame('Subtitle Deutsch', Data::read($expected['de']['file'])['subtitle']);
 	}
 
 	/**
@@ -754,16 +904,13 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		Data::write($file = $this->contentFile(), $content = [
-			'title'    => 'Title',
-			'subtitle' => 'Subtitle'
-		]);
+		$expected = $this->createContentSingleLanguage();
 
 		$version->update([
 			'title' => 'Updated Title'
 		]);
 
-		$this->assertSame('Updated Title', Data::read($file)['title']);
-		$this->assertSame('Subtitle', Data::read($file)['subtitle']);
+		$this->assertSame('Updated Title', Data::read($expected['file'])['title']);
+		$this->assertSame('Subtitle', Data::read($expected['file'])['subtitle']);
 	}
 }

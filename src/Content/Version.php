@@ -177,7 +177,7 @@ class Version
 		bool $overwrite = false
 	): void {
 		match (true) {
-			$this->exists() === false
+			$this->exists($language) === false
 				=> $this->create($fields, $language),
 			$overwrite === true
 				=> $this->replace($fields, $language),
