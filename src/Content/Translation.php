@@ -16,7 +16,7 @@ use Kirby\Cms\ModelWithContent;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Translation extends ContentTranslation
+class Translation
 {
 	/**
 	 * Creates a new translation object
@@ -40,6 +40,8 @@ class Translation extends ContentTranslation
 	/**
 	 * Returns the language code of the
 	 * translation
+	 *
+	 * @deprecated since 5.0.0 Use `::language()->code()` instead
 	 */
 	public function code(): string
 	{
@@ -49,14 +51,18 @@ class Translation extends ContentTranslation
 	/**
 	 * Returns the translation content
 	 * as plain array
+	 *
+	 * @deprecated since 5.0.0 Use `::version()->content()` instead
 	 */
-	public function content(): array
+	public function content(): Content
 	{
-		return $this->version->read($this->language);
+		return $this->version->content($this->language);
 	}
 
 	/**
 	 * Absolute path to the translation content file
+	 *
+	 * @deprecated since 5.0.0 Use `::version()->contentFile()` instead
 	 */
 	public function contentFile(): string
 	{
@@ -89,6 +95,8 @@ class Translation extends ContentTranslation
 
 	/**
 	 * Checks if the translation file exists
+	 *
+	 * @deprecated since 5.0.0 Use `::version()->exists()` instead
 	 */
 	public function exists(): bool
 	{
@@ -100,12 +108,14 @@ class Translation extends ContentTranslation
 	 */
 	public function id(): string
 	{
-		return $this->code();
+		return $this->language->code();
 	}
 
 	/**
 	 * Checks if the this is the default translation
 	 * of the model
+	 *
+	 * @deprecated since 5.0.0 Use `::language()->isDefault()` instead
 	 */
 	public function isDefault(): bool
 	{
@@ -133,22 +143,7 @@ class Translation extends ContentTranslation
 	 */
 	public function slug(): string|null
 	{
-		return $this->content()['slug'] ?? null;
-	}
-
-	/**
-	 * Merge the old and new data
-	 */
-	public function update(array|null $data = null, bool $overwrite = false): static
-	{
-		$data = array_change_key_case((array)$data);
-
-		$this->content = match ($overwrite) {
-			true    => $data,
-			default => [...$this->content(), ...$data]
-		};
-
-		return $this;
+		return $this->version->read()['slug'] ?? null;
 	}
 
 	/**
@@ -158,9 +153,9 @@ class Translation extends ContentTranslation
 	public function toArray(): array
 	{
 		return [
-			'code'    => $this->code(),
-			'content' => $this->content(),
-			'exists'  => $this->exists(),
+			'code'    => $this->language->code(),
+			'content' => $this->version->content($this->language)->toArray(),
+			'exists'  => $this->version->exists($this->language),
 			'slug'    => $this->slug(),
 		];
 	}
