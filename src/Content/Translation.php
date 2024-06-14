@@ -143,7 +143,7 @@ class Translation extends ContentTranslation
 	 */
 	public function slug(): string|null
 	{
-		return $this->version->read()['slug'] ?? null;
+		return $this->version->read($this->language)['slug'] ?? null;
 	}
 
 	/**
