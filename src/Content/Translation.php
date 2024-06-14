@@ -45,6 +45,7 @@ class Translation extends ContentTranslation
 	 */
 	public function code(): string
 	{
+		Helpers::deprecated('`$translation->code()` has been deprecated. Use `$translation->language()->code()` instead.', 'translation-code');
 		return $this->language->code();
 	}
 
@@ -56,6 +57,7 @@ class Translation extends ContentTranslation
 	 */
 	public function content(): array
 	{
+		Helpers::deprecated('`$translation->content()` has been deprecated. Use `$translation->version()->content()` instead.', 'translation-content');
 		return $this->version->content($this->language)->toArray();
 	}
 
@@ -66,6 +68,7 @@ class Translation extends ContentTranslation
 	 */
 	public function contentFile(): string
 	{
+		Helpers::deprecated('`$translation->contentFile()` has been deprecated. Use `$translation->version()->contentFile()` instead.', 'translation-contentFile');
 		return $this->version->contentFile($this->language);
 	}
 
@@ -100,6 +103,7 @@ class Translation extends ContentTranslation
 	 */
 	public function exists(): bool
 	{
+		Helpers::deprecated('`$translation->exists()` has been deprecated. Use `$translation->version()->exists()` instead.', 'translation-exists');
 		return $this->version->exists($this->language);
 	}
 
@@ -119,6 +123,7 @@ class Translation extends ContentTranslation
 	 */
 	public function isDefault(): bool
 	{
+		Helpers::deprecated('`$translation->isDefault()` has been deprecated. Use `$translation->language()->isDefault()` instead.', 'translation-isDefault');
 		return $this->language->isDefault();
 	}
 
