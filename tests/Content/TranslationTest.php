@@ -274,18 +274,30 @@ class TranslationTest extends TestCase
 	{
 		$this->setUpMultiLanguage();
 
-		$translation = new Translation(
+		$translationEN = new Translation(
 			model: $this->model,
 			version: $this->model->version(),
 			language: Language::ensure('en')
 		);
 
+		$translationDE = new Translation(
+			model: $this->model,
+			version: $this->model->version(),
+			language: Language::ensure('de')
+		);
+
 		Data::write($this->contentFile('en'), [
 			'title' => 'Test',
-			'slug'  => 'foo'
+			'slug'  => 'english-slug'
 		]);
 
-		$this->assertSame('foo', $translation->slug());
+		Data::write($this->contentFile('de'), [
+			'title' => 'Test',
+			'slug'  => 'german-slug'
+		]);
+
+		$this->assertSame('english-slug', $translationEN->slug());
+		$this->assertSame('german-slug', $translationDE->slug());
 	}
 
 	/**
