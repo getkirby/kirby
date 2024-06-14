@@ -16,7 +16,7 @@ use Kirby\Cms\ModelWithContent;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Translation
+class Translation extends ContentTranslation
 {
 	/**
 	 * Creates a new translation object
@@ -52,11 +52,11 @@ class Translation
 	 * Returns the translation content
 	 * as plain array
 	 *
-	 * @deprecated since 5.0.0 Use `::version()->content()` instead
+	 * @deprecated since 5.0.0 Use `::version()->content()->toArray()` instead
 	 */
-	public function content(): Content
+	public function content(): array
 	{
-		return $this->version->content($this->language);
+		return $this->version->content($this->language)->toArray();
 	}
 
 	/**
