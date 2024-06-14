@@ -59,8 +59,8 @@ class TranslationTest extends TestCase
 
 		$expected = $this->createContentMultiLanguage();
 
-		$this->assertSame($expected['en']['content'], $translationEN->content()->toArray());
-		$this->assertSame($expected['de']['content'], $translationDE->content()->toArray());
+		$this->assertSame($expected['en']['content'], $translationEN->content());
+		$this->assertSame($expected['de']['content'], $translationDE->content());
 	}
 
 	/**
@@ -78,7 +78,7 @@ class TranslationTest extends TestCase
 
 		$expected = $this->createContentSingleLanguage();
 
-		$this->assertSame($expected['content'], $translation->content()->toArray());
+		$this->assertSame($expected['content'], $translation->content());
 	}
 
 	/**
@@ -132,7 +132,7 @@ class TranslationTest extends TestCase
 		$this->assertSame($this->model, $translation->model());
 		$this->assertSame($version, $translation->version());
 		$this->assertSame($language, $translation->language());
-		$this->assertSame($content, $translation->content()->toArray());
+		$this->assertSame($content, $translation->content());
 		$this->assertTrue($translation->exists());
 	}
 
@@ -153,7 +153,7 @@ class TranslationTest extends TestCase
 			slug: 'foo'
 		);
 
-		$this->assertSame(['title' => 'Test', 'slug' => 'foo'], $translation->content()->toArray());
+		$this->assertSame(['title' => 'Test', 'slug' => 'foo'], $translation->content());
 		$this->assertSame('foo', $translation->slug());
 	}
 
