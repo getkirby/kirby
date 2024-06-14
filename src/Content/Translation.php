@@ -2,6 +2,7 @@
 
 namespace Kirby\Content;
 
+use Kirby\Cms\Helpers;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 
