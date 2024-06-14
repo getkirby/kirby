@@ -225,7 +225,7 @@ class LanguageTest extends TestCase
 
 	public function testEnsureInMultiLanguageMode()
 	{
-		new App([
+		$app = new App([
 			'languages' => [
 				[
 					'code'    => 'en',
@@ -237,11 +237,18 @@ class LanguageTest extends TestCase
 			]
 		]);
 
+		// default language
 		$language = Language::ensure();
 
 		$this->assertSame('en', $language->code());
 
+		// with language code
 		$language = Language::ensure('de');
+
+		$this->assertSame('de', $language->code());
+
+		// with language object
+		$language = Language::ensure($app->language('de'));
 
 		$this->assertSame('de', $language->code());
 	}
