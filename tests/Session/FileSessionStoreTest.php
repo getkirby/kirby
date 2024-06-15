@@ -9,6 +9,7 @@ use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
 use ReflectionClass;
+use ReflectionProperty;
 
 /**
  * @coversDefaultClass \Kirby\Session\FileSessionStore
@@ -17,9 +18,9 @@ class FileSessionStoreTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Session.FileSessionStore';
 
-	protected $store;
-	protected $storeHandles;
-	protected $storeIsLocked;
+	protected SessionStore$store;
+	protected ReflectionProperty $storeHandles;
+	protected ReflectionProperty $storeIsLocked;
 
 	public function setUp(): void
 	{

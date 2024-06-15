@@ -9,7 +9,7 @@ use Kirby\Toolkit\Str;
 
 class TestCase extends BaseTestCase
 {
-	protected $page = null;
+	protected Page|null $page = null;
 
 	public function setUp(): void
 	{

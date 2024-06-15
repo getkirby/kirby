@@ -13,8 +13,8 @@ class ApiTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Api';
 
-	protected $api;
-	protected $locale;
+	protected Api $api;
+	protected string $locale;
 
 	public function setUp(): void
 	{

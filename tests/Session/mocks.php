@@ -12,13 +12,13 @@ class InvalidSessionStore
 
 class TestSessionStore extends SessionStore
 {
-	public $validKey   = '74686973206973207468652076616c6964206b657920696e2068657821203a29';
-	public $invalidKey = '616e64207965702c2074686174277320616e2065617374657220656767e280a6';
+	public string $validKey   = '74686973206973207468652076616c6964206b657920696e2068657821203a29';
+	public string $invalidKey = '616e64207965702c2074686174277320616e2065617374657220656767e280a6';
 
-	public $sessions = [];
-	public $hmacs    = [];
-	public $isLocked = [];
-	public $collectedGarbage = false;
+	public array $sessions = [];
+	public array $hmacs    = [];
+	public array $isLocked = [];
+	public bool $collectedGarbage = false;
 
 	public function __construct()
 	{

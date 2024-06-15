@@ -16,9 +16,8 @@ class SystemTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures/SystemTest';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.System';
 
-	protected static $updateStatusHost;
-
-	protected $subTmp;
+	protected static string $updateStatusHost;
+	protected string|null $subTmp = null;
 
 	public static function setUpBeforeClass(): void
 	{

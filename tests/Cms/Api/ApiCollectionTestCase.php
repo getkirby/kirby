@@ -2,12 +2,13 @@
 
 namespace Kirby\Cms\Api;
 
+use Kirby\Cms\Api;
 use Kirby\Cms\App;
 use Kirby\Cms\TestCase;
 
 class ApiCollectionTestCase extends TestCase
 {
-	protected $api;
+	protected Api $api;
 
 	public function setUp(): void
 	{

@@ -80,7 +80,7 @@ class Database
 	/**
 	 * The last result set
 	 */
-	protected $lastResult;
+	protected mixed $lastResult;
 
 	/**
 	 * Optional prefix for table names

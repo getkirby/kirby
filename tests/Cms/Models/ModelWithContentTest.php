@@ -49,11 +49,9 @@ class BrokenModelWithContent extends ExtendedModelWithContent
 
 class BlueprintsModelWithContent extends ExtendedModelWithContent
 {
-	protected $testModel;
-
-	public function __construct(ModelWithContent $model)
-	{
-		$this->testModel = $model;
+	public function __construct(
+		protected ModelWithContent $testModel
+	) {
 	}
 
 	public function blueprint(): Blueprint

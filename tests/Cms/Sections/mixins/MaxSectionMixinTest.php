@@ -6,7 +6,7 @@ use Kirby\TestCase;
 
 class MaxSectionMixinTest extends TestCase
 {
-	protected $page;
+	protected Page $page;
 
 	public function setUp(): void
 	{

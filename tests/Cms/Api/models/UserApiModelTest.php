@@ -8,7 +8,7 @@ class UserApiModelTest extends ApiModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.UserApiModel';
 
-	protected $user;
+	protected User $user;
 
 	public function setUp(): void
 	{

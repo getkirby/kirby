@@ -3,7 +3,6 @@
 namespace Kirby\Database;
 
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\TestCase;
 use PDO;
 use PDOException;
 
@@ -12,8 +11,6 @@ use PDOException;
  */
 class DatabaseTest extends TestCase
 {
-	protected $database;
-
 	public function setUp(): void
 	{
 		$this->database = new Database([

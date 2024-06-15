@@ -6,7 +6,7 @@ use Kirby\Cms\Api\ApiModelTestCase;
 
 class UserBlueprintApiModelTest extends ApiModelTestCase
 {
-	protected $user;
+	protected User $user;
 
 	public function setUp(): void
 	{

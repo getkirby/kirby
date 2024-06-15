@@ -6,27 +6,22 @@ use Kirby\TestCase;
 
 class HeaderTest extends TestCase
 {
-	protected $statusHeaders;
-
-	protected function setUp(): void
-	{
-		// incomplete list compared to Header::$codes, mostly for
-		// testing Header::success and other named methods
-		$this->statusHeaders = [
-			200 => 'HTTP/1.1 200 OK',
-			201 => 'HTTP/1.1 201 Created',
-			202 => 'HTTP/1.1 202 Accepted',
-			301 => 'HTTP/1.1 301 Moved Permanently',
-			302 => 'HTTP/1.1 302 Found',
-			400 => 'HTTP/1.1 400 Bad Request',
-			403 => 'HTTP/1.1 403 Forbidden',
-			404 => 'HTTP/1.1 404 Not Found',
-			410 => 'HTTP/1.1 410 Gone',
-			451 => 'HTTP/1.1 451 Unavailable For Legal Reasons',
-			500 => 'HTTP/1.1 500 Internal Server Error',
-			503 => 'HTTP/1.1 503 Service Unavailable'
-		];
-	}
+	// incomplete list compared to Header::$codes, mostly for
+	// testing Header::success and other named methods
+	protected array $statusHeaders = [
+		200 => 'HTTP/1.1 200 OK',
+		201 => 'HTTP/1.1 201 Created',
+		202 => 'HTTP/1.1 202 Accepted',
+		301 => 'HTTP/1.1 301 Moved Permanently',
+		302 => 'HTTP/1.1 302 Found',
+		400 => 'HTTP/1.1 400 Bad Request',
+		403 => 'HTTP/1.1 403 Forbidden',
+		404 => 'HTTP/1.1 404 Not Found',
+		410 => 'HTTP/1.1 410 Gone',
+		451 => 'HTTP/1.1 451 Unavailable For Legal Reasons',
+		500 => 'HTTP/1.1 500 Internal Server Error',
+		503 => 'HTTP/1.1 503 Service Unavailable'
+	];
 
 	public function testCreateSingle()
 	{
