@@ -270,32 +270,37 @@ class Mime
 	/**
 	 * Returns all available extensions for a given MIME type
 	 */
-	public static function toExtensions(string|null $mime = null, bool $matchWildcards = false): array
-	{
+	public static function toExtensions(
+		string|null $mime = null,
+		bool $matchWildcards = false
+	): array {
 		$extensions = [];
-		$testMime = fn (string $v) => static::matches($v, $mime);
+		$testMime   = fn (string $v): bool => static::matches($v, $mime);
 
 		foreach (static::$types as $key => $value) {
-			if (is_array($value) === true) {
-				if ($matchWildcards === true) {
-					if (A::some($value, $testMime)) {
-						$extensions[] = $key;
-					}
-				} else {
-					if (in_array($mime, $value) === true) {
-						$extensions[] = $key;
-					}
-				}
-			} else {
-				if ($matchWildcards === true) {
-					if ($testMime($value) === true) {
-						$extensions[] = $key;
-					}
-				} else {
-					if ($value === $mime) {
-						$extensions[] = $key;
-					}
-				}
+			if (
+				(
+					is_array($value) &&
+					$matchWildcards &&
+					A::some($value, $testMime)
+				) ||
+				(
+					is_array($value) &&
+					$matchWildcards === false &&
+					in_array($mime, $value)
+				) ||
+				(
+					is_array($value) === false &&
+					$matchWildcards &&
+					$testMime($value)
+				) ||
+				(
+					is_array($value) === false &&
+					$matchWildcards === false &&
+					$value === $mime
+				)
+			) {
+				$extensions[] = $key;
 			}
 		}
 
