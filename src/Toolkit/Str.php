@@ -139,7 +139,8 @@ class Str
 			// check for the q param ("quality" of the type)
 			foreach ($parts as $param) {
 				$param = static::split($param, '=');
-				if (A::get($param, 0) === 'q' && !empty($param[1])) {
+
+				if (A::get($param, 0) === 'q' && empty($param[1]) === false) {
 					$quality = $param[1];
 				}
 			}
@@ -288,7 +289,8 @@ class Str
 	 */
 	public static function camelToKebab(string|null $value): string
 	{
-		return static::lower(preg_replace('!([a-z0-9])([A-Z])!', '$1-$2', $value));
+		$value = preg_replace('!([a-z0-9])([A-Z])!', '$1-$2', $value);
+		return static::lower($value);
 	}
 
 	/**
@@ -303,7 +305,11 @@ class Str
 			return true;
 		}
 
-		$method = $caseInsensitive === true ? 'stripos' : 'strpos';
+		$method = match ($caseInsensitive) {
+			true  => 'stripos',
+			false => 'strpos'
+		};
+
 		return call_user_func($method, $string ?? '', $needle) !== false;
 	}
 
@@ -630,7 +636,10 @@ class Str
 		int $offset = 0
 	): array|null {
 		$result = preg_match($pattern, $string, $matches, $flags, $offset);
-		return ($result === 1) ? $matches : null;
+		return match ($result) {
+			1       => $matches,
+			default => null
+		};
 	}
 
 	/**
@@ -667,7 +676,10 @@ class Str
 		int $offset = 0
 	): array|null {
 		$result = preg_match_all($pattern, $string, $matches, $flags, $offset);
-		return ($result > 0) ? $matches : null;
+		return match ($result > 0) {
+			true  => $matches,
+			false => null
+		};
 	}
 
 	/**

@@ -26,22 +26,25 @@ class ATest extends TestCase
 	public function testAppend()
 	{
 		// associative
-		$one    = ['a' => 'A', 'b' => 'B', 'c' => 'C'];
-		$two    = ['d' => 'D', 'e' => 'E', 'f' => 'F'];
+		$one      = ['a' => 'A', 'b' => 'B', 'c' => 'C'];
+		$two      = ['d' => 'D', 'e' => 'E', 'f' => 'F'];
+		$expected = ['a' => 'A', 'b' => 'B', 'c' => 'C', 'd' => 'D', 'e' => 'E', 'f' => 'F'];
 		$result = A::append($one, $two);
-		$this->assertSame(['a' => 'A', 'b' => 'B', 'c' => 'C', 'd' => 'D', 'e' => 'E', 'f' => 'F'], $result);
+		$this->assertSame($expected, $result);
 
 		// numeric
-		$one    = ['a', 'b', 'c'];
-		$two    = ['d', 'e', 'f'];
+		$one      = ['a', 'b', 'c'];
+		$two      = ['d', 'e', 'f'];
+		$expected = ['a', 'b', 'c', 'd', 'e', 'f'];
 		$result = A::append($one, $two);
-		$this->assertSame(['a', 'b', 'c', 'd', 'e', 'f'], $result);
+		$this->assertSame($expected, $result);
 
 		// mixed
-		$one    = ['a' => 'A', 'b' => 'B', 'c' => 'C'];
-		$two    = ['d', 'e', 'f'];
+		$one      = ['a' => 'A', 'b' => 'B', 'c' => 'C'];
+		$two      = ['d', 'e', 'f'];
+		$expected = ['a' => 'A', 'b' => 'B', 'c' => 'C', 'd', 'e', 'f'];
 		$result = A::append($one, $two);
-		$this->assertSame(['a' => 'A', 'b' => 'B', 'c' => 'C', 'd', 'e', 'f'], $result);
+		$this->assertSame($expected, $result);
 	}
 
 	/**
@@ -78,9 +81,7 @@ class ATest extends TestCase
 	 */
 	public function testCount()
 	{
-		$array = $this->_array();
-
-		$this->assertSame(3, A::count($array));
+		$this->assertSame(3, A::count($this->_array()));
 		$this->assertSame(2, A::count(['cat', 'dog']));
 		$this->assertSame(0, A::count([]));
 	}
@@ -92,18 +93,28 @@ class ATest extends TestCase
 	{
 		// The value should be passed to the callback
 		A::every(['foo', 'bar'], function ($value) {
-			$this->assertIsString($value, 'The value should be passed to the callback');
+			$this->assertIsString(
+				$value,
+				'The value should be passed to the callback'
+			);
 		});
 
 		// The key should be passed to the callback
 		A::every(['foo' => 1, 'bar' => 2], function ($value, $key = null) {
-			$this->assertIsString($key, 'The key should be passed to the callback');
+			$this->assertIsString(
+				$key,
+				'The key should be passed to the callback'
+			);
 		});
 
 		// the array should be passed to the callback
 		$arr = ['foo'];
 		A::every($arr, function ($value, $key = null, $array = null) use ($arr) {
-			$this->assertSame($array, $arr, 'The array should be passed to the callback');
+			$this->assertSame(
+				$array,
+				$arr,
+				'The array should be passed to the callback'
+			);
 		});
 
 		// It should return false if any callback returns false
@@ -118,7 +129,11 @@ class ATest extends TestCase
 			$counter++;
 			return $value === 'foo';
 		});
-		$this->assertSame(2, $counter, 'It should return early if any callback returns false');
+		$this->assertSame(
+			2,
+			$counter,
+			'It should return early if any callback returns false'
+		);
 
 		// falsy values should be treated as false
 		$this->assertFalse(
@@ -157,7 +172,11 @@ class ATest extends TestCase
 		// The array should be passed to the callback
 		$arr = ['foo'];
 		A::find($arr, function ($value = null, $key = null, $array = null) use ($arr) {
-			$this->assertSame($array, $arr, 'The array should be passed to the callback');
+			$this->assertSame(
+				$array,
+				$arr,
+				'The array should be passed to the callback'
+			);
 		});
 
 		// It should return null if no value matches the callback
@@ -168,10 +187,7 @@ class ATest extends TestCase
 
 		// It should return null if the array is empty
 		$this->assertNull(
-			A::find(
-				[],
-				fn ($value) => true
-			),
+			A::find([], fn ($value) => true),
 			'It should return null if the array is empty'
 		);
 
@@ -181,7 +197,11 @@ class ATest extends TestCase
 			$counter++;
 			return $value === 'bar';
 		});
-		$this->assertSame(2, $counter, 'It should return early if a value matches the callback');
+		$this->assertSame(
+			2,
+			$counter,
+			'It should return early if a value matches the callback'
+		);
 
 		// falsy values should be treated as false
 		$this->assertSame(
@@ -225,12 +245,12 @@ class ATest extends TestCase
 		$this->assertSame('toot', A::get($array, 'elephant', 'toot'));
 
 		$this->assertSame([
-			'cat' => 'miao',
+			'cat'       => 'miao',
 			'elephant'  => null,
 		], A::get($array, ['cat', 'elephant']));
 
 		$this->assertSame([
-			'cat' => 'miao',
+			'cat'       => 'miao',
 			'elephant'  => 'toot',
 		], A::get($array, ['cat', 'elephant'], 'toot'));
 	}

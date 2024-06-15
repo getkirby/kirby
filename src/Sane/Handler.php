@@ -25,7 +25,10 @@ abstract class Handler
 	 * @param bool $isExternal Whether the string is from an external file
 	 *                         that may be accessed directly
 	 */
-	abstract public static function sanitize(string $string, bool $isExternal = false): string;
+	abstract public static function sanitize(
+		string $string,
+		bool $isExternal = false
+	): string;
 
 	/**
 	 * Sanitizes the contents of a file by overwriting
@@ -50,7 +53,10 @@ abstract class Handler
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
 	 * @throws \Kirby\Exception\Exception On other errors
 	 */
-	abstract public static function validate(string $string, bool $isExternal = false): void;
+	abstract public static function validate(
+		string $string,
+		bool $isExternal = false
+	): void;
 
 	/**
 	 * Validates the contents of a file

@@ -65,9 +65,11 @@ class Obj extends stdClass
 			}
 
 			$result = [];
+
 			foreach ($property as $key) {
 				$result[$key] = $this->$key ?? $fallback[$key] ?? null;
 			}
+
 			return $result;
 		}
 
@@ -82,14 +84,12 @@ class Obj extends stdClass
 		$result = [];
 
 		foreach ((array)$this as $key => $value) {
-			if (
-				is_object($value) === true &&
-				method_exists($value, 'toArray')
-			) {
-				$result[$key] = $value->toArray();
-			} else {
-				$result[$key] = $value;
-			}
+			$result[$key] = match (true) {
+				is_object($value) === true && method_exists($value, 'toArray')
+					=> $value->toArray(),
+				default
+				=> $value
+			};
 		}
 
 		return $result;

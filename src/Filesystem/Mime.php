@@ -22,10 +22,8 @@ class Mime
 {
 	/**
 	 * Extension to MIME type map
-	 *
-	 * @var array
 	 */
-	public static $types = [
+	public static array $types = [
 		'ai'    => 'application/postscript',
 		'aif'   => 'audio/x-aiff',
 		'aifc'  => 'audio/x-aiff',
@@ -178,7 +176,10 @@ class Mime
 	 */
 	public static function fromFileInfo(string $file): string|false
 	{
-		if (function_exists('finfo_file') === true && file_exists($file) === true) {
+		if (
+			function_exists('finfo_file') === true &&
+			file_exists($file) === true
+		) {
 			$finfo = finfo_open(FILEINFO_MIME_TYPE);
 			$mime  = finfo_file($finfo, $file);
 			finfo_close($finfo);

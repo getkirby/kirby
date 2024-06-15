@@ -80,7 +80,7 @@ class View implements Stringable
 		$content = ob_get_contents();
 		ob_end_clean();
 
-		if (($exception ?? null) !== null) {
+		if (isset($exception) === true) {
 			throw $exception;
 		}
 

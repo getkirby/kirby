@@ -82,8 +82,11 @@ class Sane
 	 * @param bool $isExternal Whether the string is from an external file
 	 *                         that may be accessed directly
 	 */
-	public static function sanitize(string $string, string $type, bool $isExternal = false): string
-	{
+	public static function sanitize(
+		string $string,
+		string $type,
+		bool $isExternal = false
+	): string {
 		return static::handler($type)->sanitize($string, $isExternal);
 	}
 

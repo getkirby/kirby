@@ -39,7 +39,10 @@ class V
 	): array {
 		$errors = static::value($input, $rules, $messages, false);
 
-		return $errors === true ? [] : $errors;
+		return match ($errors) {
+			true    => [],
+			default => $errors
+		};
 	}
 
 	/**
@@ -146,7 +149,11 @@ class V
 			$arguments[$parameter->getName()] = $value;
 		}
 
-		return I18n::template($translationKey, 'The "' . $validatorName . '" validation failed', $arguments);
+		return I18n::template(
+			$translationKey,
+			'The "' . $validatorName . '" validation failed',
+			$arguments
+		);
 	}
 
 	/**
@@ -170,29 +177,33 @@ class V
 	): bool|array {
 		$errors = [];
 
-		foreach ($rules as $validatorName => $validatorOptions) {
-			if (is_int($validatorName)) {
-				$validatorName    = $validatorOptions;
-				$validatorOptions = [];
+		foreach ($rules as $validator => $options) {
+			if (is_int($validator) === true) {
+				$validator = $options;
+				$options   = [];
 			}
 
-			if (is_array($validatorOptions) === false) {
-				$validatorOptions = [$validatorOptions];
+			if (is_array($options) === false) {
+				$options = [$options];
 			}
 
-			$validatorName = strtolower($validatorName);
+			$validator = strtolower($validator);
 
-			if (static::$validatorName($value, ...$validatorOptions) === false) {
-				$message = $messages[$validatorName] ?? static::message($validatorName, $value, ...$validatorOptions);
-				$errors[$validatorName] = $message;
+			if (static::$validator($value, ...$options) === false) {
+				$errors[$validator] =
+					$messages[$validator] ??
+					static::message($validator, $value, ...$options);
 
 				if ($fail === true) {
-					throw new Exception($message);
+					throw new Exception($errors[$validator]);
 				}
 			}
 		}
 
-		return empty($errors) === true ? true : $errors;
+		return match(empty($errors)) {
+			false => $errors,
+			true  => true
+		};
 	}
 
 	/**
@@ -202,29 +213,29 @@ class V
 	 */
 	public static function input(array $input, array $rules): bool
 	{
-		foreach ($rules as $fieldName => $fieldRules) {
-			$fieldValue = $input[$fieldName] ?? null;
+		foreach ($rules as $field => $rules) {
+			$value = $input[$field] ?? null;
 
 			// first check for required fields
 			if (
-				($fieldRules['required'] ?? false) === true &&
-				$fieldValue === null
+				($rules['required'] ?? false) === true &&
+				$value === null
 			) {
-				throw new Exception(sprintf('The "%s" field is missing', $fieldName));
+				throw new Exception(sprintf('The "%s" field is missing', $field));
 			}
 
 			// remove the required rule
-			unset($fieldRules['required']);
+			unset($rules['required']);
 
 			// skip validation for empty fields
-			if ($fieldValue === null) {
+			if ($value === null) {
 				continue;
 			}
 
 			try {
-				static::value($fieldValue, $fieldRules);
+				static::value($value, $rules);
 			} catch (Exception $e) {
-				throw new Exception(sprintf($e->getMessage() . ' for field "%s"', $fieldName));
+				throw new Exception(sprintf($e->getMessage() . ' for field "%s"', $field));
 			}
 		}
 
