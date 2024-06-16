@@ -29,9 +29,9 @@ abstract class ContentStorageHandler
 
 	/**
 	 * Returns generator for all existing version-language combinations
+	 * @todo 5.0.0 Consider more descriptive name and maybe move to a different class
 	 *
 	 * @return Generator<\Kirby\Content\VersionId, \Kirby\Cms\Language>
-	 * @todo 5.0.0 Consider more descriptive name and maybe move to a different class
 	 */
 	public function all(): Generator
 	{
@@ -73,11 +73,9 @@ abstract class ContentStorageHandler
 
 	/**
 	 * Returns all versions available for the model that can be updated
-	 *
+	 * @internal
 	 * @todo We might want to move this directly to the models later or work
 	 *       with a `Versions` class
-	 *
-	 * @internal
 	 */
 	public function dynamicVersions(): array
 	{
