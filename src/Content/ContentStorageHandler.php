@@ -30,7 +30,7 @@ abstract class ContentStorageHandler
 	/**
 	 * Returns generator for all existing version-language combinations
 	 *
-	 * @return Generator<VersionId|Language>
+	 * @return Generator<\Kirby\Content\VersionId, \Kirby\Cms\Language>
 	 * @todo 5.0.0 Consider more descriptive name and maybe move to a different class
 	 */
 	public function all(): Generator
