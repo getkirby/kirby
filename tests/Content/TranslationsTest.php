@@ -35,8 +35,8 @@ class TranslationsTest extends TestCase
 		);
 
 		$this->assertCount(2, $translations);
-		$this->assertSame('en', $translations->first()->code());
-		$this->assertSame('de', $translations->last()->code());
+		$this->assertSame('en', $translations->first()->language()->code());
+		$this->assertSame('de', $translations->last()->language()->code());
 	}
 
 	/**
@@ -67,7 +67,7 @@ class TranslationsTest extends TestCase
 		);
 
 		$this->assertCount(1, $translations);
-		$this->assertSame('en', $translations->first()->code());
+		$this->assertSame('en', $translations->first()->language()->code());
 		$this->assertTrue($translations->first()->language()->isSingle());
 	}
 
@@ -83,10 +83,10 @@ class TranslationsTest extends TestCase
 			version: $this->model->version()
 		);
 
-		$this->assertSame('en', $translations->findByKey('en')->code());
-		$this->assertSame('en', $translations->findByKey('default')->code());
-		$this->assertSame('en', $translations->findByKey('current')->code());
-		$this->assertSame('de', $translations->findByKey('de')->code());
+		$this->assertSame('en', $translations->findByKey('en')->language()->code());
+		$this->assertSame('en', $translations->findByKey('default')->language()->code());
+		$this->assertSame('en', $translations->findByKey('current')->language()->code());
+		$this->assertSame('de', $translations->findByKey('de')->language()->code());
 		$this->assertNull($translations->findByKey('fr'));
 	}
 
@@ -102,9 +102,9 @@ class TranslationsTest extends TestCase
 			version: $this->model->version()
 		);
 
-		$this->assertSame('en', $translations->findByKey('en')->code());
-		$this->assertSame('en', $translations->findByKey('default')->code());
-		$this->assertSame('en', $translations->findByKey('current')->code());
+		$this->assertSame('en', $translations->findByKey('en')->language()->code());
+		$this->assertSame('en', $translations->findByKey('default')->language()->code());
+		$this->assertSame('en', $translations->findByKey('current')->language()->code());
 	}
 
 	/**
@@ -120,8 +120,8 @@ class TranslationsTest extends TestCase
 		);
 
 		$this->assertCount(2, $translations);
-		$this->assertSame('en', $translations->first()->code());
-		$this->assertSame('de', $translations->last()->code());
+		$this->assertSame('en', $translations->first()->language()->code());
+		$this->assertSame('de', $translations->last()->language()->code());
 	}
 
 	/**
@@ -137,7 +137,7 @@ class TranslationsTest extends TestCase
 		);
 
 		$this->assertCount(1, $translations);
-		$this->assertSame('en', $translations->first()->code());
+		$this->assertSame('en', $translations->first()->language()->code());
 		$this->assertTrue($translations->first()->language()->isSingle());
 	}
 }

@@ -31,10 +31,10 @@ class TranslationTest extends TestCase
 			language: Language::ensure('de')
 		);
 
-		$this->assertSame('en', $translationEN->code());
+		$this->assertSame('en', $translationEN->language()->code());
 		$this->assertSame('en', $translationEN->id());
 
-		$this->assertSame('de', $translationDE->code());
+		$this->assertSame('de', $translationDE->language()->code());
 		$this->assertSame('de', $translationDE->id());
 	}
 
@@ -48,19 +48,19 @@ class TranslationTest extends TestCase
 		$translationEN = new Translation(
 			model: $this->model,
 			version: $this->model->version(),
-			language: Language::ensure('en')
+			language: $languageEN = Language::ensure('en')
 		);
 
 		$translationDE = new Translation(
 			model: $this->model,
 			version: $this->model->version(),
-			language: Language::ensure('de')
+			language: $languageDE = Language::ensure('de')
 		);
 
 		$expected = $this->createContentMultiLanguage();
 
-		$this->assertSame($expected['en']['content'], $translationEN->content());
-		$this->assertSame($expected['de']['content'], $translationDE->content());
+		$this->assertSame($expected['en']['content'], $translationEN->version()->content($languageEN)->toArray());
+		$this->assertSame($expected['de']['content'], $translationDE->version()->content($languageDE)->toArray());
 	}
 
 	/**
@@ -78,7 +78,7 @@ class TranslationTest extends TestCase
 
 		$expected = $this->createContentSingleLanguage();
 
-		$this->assertSame($expected['content'], $translation->content());
+		$this->assertSame($expected['content'], $translation->version()->content()->toArray());
 	}
 
 	/**
@@ -94,7 +94,7 @@ class TranslationTest extends TestCase
 			language: Language::ensure('en')
 		);
 
-		$this->assertSame($this->model->root() . '/article.en.txt', $translation->contentFile());
+		$this->assertSame($this->model->root() . '/article.en.txt', $translation->version()->contentFile());
 	}
 
 	/**
@@ -110,7 +110,7 @@ class TranslationTest extends TestCase
 			language: Language::single()
 		);
 
-		$this->assertSame($this->model->root() . '/article.txt', $translation->contentFile());
+		$this->assertSame($this->model->root() . '/article.txt', $translation->version()->contentFile());
 	}
 
 	/**
@@ -132,8 +132,8 @@ class TranslationTest extends TestCase
 		$this->assertSame($this->model, $translation->model());
 		$this->assertSame($version, $translation->version());
 		$this->assertSame($language, $translation->language());
-		$this->assertSame($content, $translation->content());
-		$this->assertTrue($translation->exists());
+		$this->assertSame($content, $translation->version()->content()->toArray());
+		$this->assertTrue($translation->version()->exists());
 	}
 
 	/**
@@ -153,7 +153,7 @@ class TranslationTest extends TestCase
 			slug: 'foo'
 		);
 
-		$this->assertSame(['title' => 'Test', 'slug' => 'foo'], $translation->content());
+		$this->assertSame(['title' => 'Test', 'slug' => 'foo'], $translation->version()->content()->toArray());
 		$this->assertSame('foo', $translation->slug());
 	}
 
@@ -176,13 +176,13 @@ class TranslationTest extends TestCase
 			language: Language::ensure('de')
 		);
 
-		$this->assertFalse($translationEN->exists());
-		$this->assertFalse($translationDE->exists());
+		$this->assertFalse($translationEN->version()->exists());
+		$this->assertFalse($translationDE->version()->exists());
 
 		$this->createContentMultiLanguage();
 
-		$this->assertTrue($translationEN->exists());
-		$this->assertTrue($translationDE->exists());
+		$this->assertTrue($translationEN->version()->exists());
+		$this->assertTrue($translationDE->version()->exists());
 	}
 
 	/**
@@ -198,11 +198,11 @@ class TranslationTest extends TestCase
 			language: Language::single()
 		);
 
-		$this->assertFalse($translation->exists());
+		$this->assertFalse($translation->version()->exists());
 
 		$this->createContentSingleLanguage();
 
-		$this->assertTrue($translation->exists());
+		$this->assertTrue($translation->version()->exists());
 	}
 
 	/**
@@ -224,8 +224,8 @@ class TranslationTest extends TestCase
 			language: Language::ensure('de')
 		);
 
-		$this->assertTrue($en->isDefault());
-		$this->assertFalse($de->isDefault());
+		$this->assertTrue($en->language()->isDefault());
+		$this->assertFalse($de->language()->isDefault());
 	}
 
 	/**
