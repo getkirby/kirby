@@ -1,0 +1,1 @@
+{"description":"View header button to open the model's settings dropdown","tags":{"since":[{"description":"5.0.0","title":"since"}]},"displayName":"SettingsButton","events":[{"name":"action","type":{"names":["undefined"]}}],"component":"k-settings-button","sourceFile":"src/components/View/Buttons/SettingsButton.vue"}
