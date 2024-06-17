@@ -3,7 +3,7 @@
 namespace Kirby\Content;
 
 /**
- * @coversDefaultClass Kirby\Content\Translations
+ * @coversDefaultClass \Kirby\Content\Translations
  * @covers ::__construct
  */
 class TranslationsTest extends TestCase
