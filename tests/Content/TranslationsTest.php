@@ -2,6 +2,8 @@
 
 namespace Kirby\Content;
 
+use Kirby\Exception\NotFoundException;
+
 /**
  * @coversDefaultClass \Kirby\Content\Translations
  * @covers ::__construct
@@ -87,7 +89,6 @@ class TranslationsTest extends TestCase
 		$this->assertSame('en', $translations->findByKey('default')->language()->code());
 		$this->assertSame('en', $translations->findByKey('current')->language()->code());
 		$this->assertSame('de', $translations->findByKey('de')->language()->code());
-		$this->assertNull($translations->findByKey('fr'));
 	}
 
 	/**
@@ -105,6 +106,24 @@ class TranslationsTest extends TestCase
 		$this->assertSame('en', $translations->findByKey('en')->language()->code());
 		$this->assertSame('en', $translations->findByKey('default')->language()->code());
 		$this->assertSame('en', $translations->findByKey('current')->language()->code());
+	}
+
+	/**
+	 * @covers ::findByKey
+	 */
+	public function testFindByKeyWithInvalidLanguage()
+	{
+		$this->setUpMultiLanguage();
+
+		$translations = Translations::load(
+			model: $this->model,
+			version: $this->model->version()
+		);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('Invalid language: fr');
+
+		$translations->findByKey('fr');
 	}
 
 	/**
