@@ -159,6 +159,29 @@ class LabPageTest extends TestCase
 		$this->assertSame([], $page->content()->toArray());
 	}
 
+	public function testContentWithNonDefaultCurrentLanguage()
+	{
+		$this->setUpMultiLanguage();
+
+		// switch to German as the current language
+		$this->app->setCurrentLanguage('de');
+
+		$page = new LabPage([
+			'slug'     => 'test',
+			'template' => 'article'
+		]);
+
+		// write something to the content file to make sure it
+		// can be read from disk for the test.
+		Data::write($page->root() . '/article.de.txt', $content = [
+			'title' => 'Test'
+		]);
+
+		$this->assertSame($content, $page->content()->toArray());
+		$this->assertSame($content, $page->content('current')->toArray());
+		$this->assertSame($content, $page->content('de')->toArray());
+	}
+
 	public function testSetContentMultiLanguage()
 	{
 		$this->setUpMultiLanguage();
