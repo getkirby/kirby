@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Kirby\Data\Data;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 
 class LabPageTest extends TestCase
@@ -136,7 +137,7 @@ class LabPageTest extends TestCase
 		$this->assertSame($content, $page->content()->toArray());
 	}
 
-	public function testContentNonExistingMultiLanguage()
+	public function testContentWithInvalidLanguage()
 	{
 		$this->setUpMultiLanguage();
 
@@ -144,19 +145,10 @@ class LabPageTest extends TestCase
 			'slug' => 'test'
 		]);
 
-		$this->assertSame([], $page->content('en')->toArray());
-		$this->assertSame([], $page->content('de')->toArray());
-	}
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('Invalid language: fr');
 
-	public function testContentNonExistingSingleLanguage()
-	{
-		$this->setUpSingleLanguage();
-
-		$page = new LabPage([
-			'slug' => 'test'
-		]);
-
-		$this->assertSame([], $page->content()->toArray());
+		$page->content('fr');
 	}
 
 	public function testContentWithNonDefaultCurrentLanguage()
@@ -180,6 +172,29 @@ class LabPageTest extends TestCase
 		$this->assertSame($content, $page->content()->toArray());
 		$this->assertSame($content, $page->content('current')->toArray());
 		$this->assertSame($content, $page->content('de')->toArray());
+	}
+
+	public function testContentWithoutFieldsMultiLanguage()
+	{
+		$this->setUpMultiLanguage();
+
+		$page = new LabPage([
+			'slug' => 'test'
+		]);
+
+		$this->assertSame([], $page->content('en')->toArray());
+		$this->assertSame([], $page->content('de')->toArray());
+	}
+
+	public function testContentWithoutFieldsSingleLanguage()
+	{
+		$this->setUpSingleLanguage();
+
+		$page = new LabPage([
+			'slug' => 'test'
+		]);
+
+		$this->assertSame([], $page->content()->toArray());
 	}
 
 	public function testSetContentMultiLanguage()

@@ -148,8 +148,10 @@ class Version
 	 */
 	public function read(Language|string $language = 'default'): array
 	{
+		$language = Language::ensure($language);
+
 		try {
-			return $this->model->storage()->read($this->id, Language::ensure($language));
+			return $this->model->storage()->read($this->id, $language);
 		} catch (Throwable) {
 			return [];
 		}
