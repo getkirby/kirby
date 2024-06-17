@@ -6,7 +6,6 @@ use Kirby\Cms\Collection;
 use Kirby\Cms\Language;
 use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Exception\NotFoundException;
 
 /**
  * @package   Kirby Content
@@ -52,11 +51,7 @@ class Translations extends Collection
 	 */
 	public function findByKey(string $key): Translation|null
 	{
-		try {
-			return parent::get(Language::ensure($key)->code());
-		} catch (NotFoundException) {
-			return null;
-		}
+		return parent::get(Language::ensure($key)->code());
 	}
 
 	/**
