@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Content\Version;
+use Kirby\Content\VersionId;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Page as PanelPage;
 use Kirby\Uuid\PageUuid;
@@ -450,10 +451,12 @@ class ModelWithContentTest extends TestCase
 		$model = new Site();
 		$this->assertInstanceOf(Version::class, $model->version('published'));
 		$this->assertSame('published', $model->version('published')->id()->value());
+		$this->assertSame('published', $model->version(VersionId::published())->id()->value());
 
 		$model = new Page(['slug' => 'foo']);
 		$this->assertInstanceOf(Version::class, $model->version('published'));
 		$this->assertSame('published', $model->version('published')->id()->value());
+		$this->assertSame('published', $model->version(VersionId::published())->id()->value());
 	}
 
 	public function testVersionFallback()
