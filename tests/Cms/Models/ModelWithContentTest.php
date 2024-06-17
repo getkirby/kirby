@@ -449,11 +449,11 @@ class ModelWithContentTest extends TestCase
 	{
 		$model = new Site();
 		$this->assertInstanceOf(Version::class, $model->version('published'));
-		$this->assertSame('published', $model->version()->id()->value());
+		$this->assertSame('published', $model->version('published')->id()->value());
 
 		$model = new Page(['slug' => 'foo']);
 		$this->assertInstanceOf(Version::class, $model->version('published'));
-		$this->assertSame('published', $model->version()->id()->value());
+		$this->assertSame('published', $model->version('published')->id()->value());
 	}
 
 	public function testVersionFallback()
