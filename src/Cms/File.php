@@ -426,7 +426,7 @@ class File extends ModelWithContent
 	 */
 	protected function modifiedContent(string|null $languageCode = null): int
 	{
-		return $this->version(VersionId::published())->modified($languageCode ?? 'default') ?? 0;
+		return $this->version(VersionId::published())->modified($languageCode ?? 'current') ?? 0;
 	}
 
 	/**
