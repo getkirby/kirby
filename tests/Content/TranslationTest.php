@@ -6,7 +6,7 @@ use Kirby\Cms\Language;
 use Kirby\Data\Data;
 
 /**
- * @coversDefaultClass Kirby\Content\Translation
+ * @coversDefaultClass \Kirby\Content\Translation
  * @covers ::__construct
  */
 class TranslationTest extends TestCase
