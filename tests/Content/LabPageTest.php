@@ -3,7 +3,6 @@
 namespace Kirby\Content;
 
 use Kirby\Data\Data;
-use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 
 class LabPageTest extends TestCase
