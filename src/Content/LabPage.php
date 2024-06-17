@@ -2,7 +2,6 @@
 
 namespace Kirby\Content;
 
-use Kirby\Cms\Collection;
 use Kirby\Cms\Helpers;
 use Kirby\Cms\Language;
 use Kirby\Cms\Page;
@@ -47,16 +46,11 @@ class LabPage extends Page
 		return $this->version()->read($languageCode ?? 'current');
 	}
 
-	/**
-	 * @deprecated since 5.0.0 Use `::version()->save()` instead
-	 */
 	public function save(
 		array|null $data = null,
 		string|null $languageCode = null,
 		bool $overwrite = false
 	): static {
-		Helpers::deprecated('`$model->save()` has been deprecated. Use `$model->version()->save()` instead.', 'model-save');
-
 		$clone = $this->clone();
 		$clone->version()->save($data ?? [], $languageCode ?? 'current', $overwrite);
 		return $clone;

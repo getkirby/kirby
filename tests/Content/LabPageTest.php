@@ -215,10 +215,10 @@ class LabPageTest extends TestCase
 
 		$this->assertSame($en, $page->content()->toArray());
 		$this->assertSame($en, $page->content('en')->toArray());
-		$this->assertSame($en, $page->translation('en')->content());
+		$this->assertSame($en, $page->translation('en')->version()->content('en')->toArray());
 
 		$this->assertSame($de, $page->content('de')->toArray());
-		$this->assertSame($de, $page->translation('de')->content());
+		$this->assertSame($de, $page->translation('de')->version()->content('de')->toArray());
 	}
 
 	public function testSetTranslationSingleLanguage()
@@ -238,7 +238,7 @@ class LabPageTest extends TestCase
 		]);
 
 		$this->assertSame($content, $page->content()->toArray());
-		$this->assertSame($content, $page->translation('en')->content());
+		$this->assertSame($content, $page->translation('en')->version()->content('en')->toArray());
 	}
 
 	public function testSlugMultiLanguage()
@@ -323,8 +323,8 @@ class LabPageTest extends TestCase
 			'title' => 'Test Deutsch'
 		]);
 
-		$this->assertSame($en, $page->translation('en')->content());
-		$this->assertSame($de, $page->translation('de')->content());
+		$this->assertSame($en, $page->translation('en')->version()->content('en')->toArray());
+		$this->assertSame($de, $page->translation('de')->version()->content('de')->toArray());
 	}
 
 	public function testTranslationSingleLanguage()
@@ -340,8 +340,8 @@ class LabPageTest extends TestCase
 			'title' => 'Test'
 		]);
 
-		$this->assertSame($content, $page->translation()->content());
-		$this->assertSame($content, $page->translation('en')->content());
+		$this->assertSame($content, $page->translation()->version()->content()->toArray());
+		$this->assertSame($content, $page->translation('en')->version()->content('en')->toArray());
 	}
 
 	public function testTranslationsMultiLanguage()
@@ -364,8 +364,8 @@ class LabPageTest extends TestCase
 		$translations = $page->translations();
 
 		$this->assertCount(2, $translations);
-		$this->assertSame($en, $translations->find('en')->content());
-		$this->assertSame($de, $translations->find('de')->content());
+		$this->assertSame($en, $translations->find('en')->version()->content('en')->toArray());
+		$this->assertSame($de, $translations->find('de')->version()->content('de')->toArray());
 	}
 
 	public function testTranslationsSingleLanguage()
@@ -386,7 +386,7 @@ class LabPageTest extends TestCase
 		$translations = $page->translations();
 
 		$this->assertCount(1, $translations);
-		$this->assertSame($content, $translations->first()->content());
+		$this->assertSame($content, $translations->first()->version()->content('en')->toArray());
 	}
 
 	public function testUpdateMultiLanguage()
@@ -403,11 +403,11 @@ class LabPageTest extends TestCase
 
 		// write something to the content file to make sure it
 		// can be read from disk for the test.
-		Data::write($page->root() . '/article.en.txt', $en = [
+		Data::write($page->root() . '/article.en.txt', [
 			'title' => 'Test English'
 		]);
 
-		Data::write($page->root() . '/article.de.txt', $de = [
+		Data::write($page->root() . '/article.de.txt', [
 			'title' => 'Test Deutsch'
 		]);
 
