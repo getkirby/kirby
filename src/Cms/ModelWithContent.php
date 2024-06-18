@@ -7,6 +7,7 @@ use Kirby\Content\Content;
 use Kirby\Content\ContentStorage;
 use Kirby\Content\ContentTranslation;
 use Kirby\Content\PlainTextContentStorageHandler;
+use Kirby\Content\Version;
 use Kirby\Content\VersionId;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
@@ -201,10 +202,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 					$content = $this->content($code)->convertTo($blueprint);
 
 					// delete the old text file
-					$this->storage()->delete(
-						$identifier,
-						$code
-					);
+					$this->version($identifier)->delete($code);
 
 					// save to re-create the translation content file
 					// with the converted/updated content
@@ -228,7 +226,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		$content = $this->content()->convertTo($blueprint);
 
 		// delete the old text file
-		$this->storage()->delete($identifier, 'default');
+		$this->version($identifier)->delete('default');
 
 		return $new->save($content);
 	}
@@ -418,10 +416,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	public function readContent(string|null $languageCode = null): array
 	{
 		try {
-			return $this->storage()->read(
-				VersionId::default($this),
-				$languageCode
-			);
+			return $this->version()->read($languageCode ?? 'default');
 		} catch (NotFoundException) {
 			// only if the content file really does not exist, it's ok
 			// to return empty content. Otherwise this could lead to
@@ -731,6 +726,18 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	}
 
 	/**
+	 * Returns a content version instance
+	 * @since 5.0.0
+	 */
+	public function version(VersionId|string|null $versionId = null): Version
+	{
+		return new Version(
+			model: $this,
+			id: VersionId::from($versionId ?? VersionId::default($this))
+		);
+	}
+
+	/**
 	 * Low level data writer method
 	 * to store the given data on disk or anywhere else
 	 * @internal
@@ -738,14 +745,16 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	public function writeContent(array $data, string|null $languageCode = null): bool
 	{
 		$data = $this->contentFileData($data, $languageCode);
-		$id   = VersionId::default($this);
+
+		// update the default language, unless a specific language is passed
+		$languageCode ??= 'default';
 
 		try {
 			// we can only update if the version already exists
-			$this->storage()->update($id, $languageCode, $data);
+			$this->version()->update($data, $languageCode);
 		} catch (NotFoundException) {
 			// otherwise create a new version
-			$this->storage()->create($id, $languageCode, $data);
+			$this->version()->create($data, $languageCode);
 		}
 
 		return true;
