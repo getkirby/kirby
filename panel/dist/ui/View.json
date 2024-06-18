@@ -1,1 +1,0 @@
-{"description":"","tags":{"deprecated":[{"description":"4.0.0","title":"deprecated"}]},"displayName":"View","props":[{"name":"align","description":"To center the content","tags":{},"values":["center"],"type":{"name":"string"}}],"slots":[{"name":"default","description":"where your content goes"}],"component":"k-view","sourceFile":"src/components/Layout/View.vue"}
