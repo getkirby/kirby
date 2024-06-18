@@ -178,7 +178,7 @@ class Language implements Stringable
 
 		if ($languages->count() === 0) {
 			foreach ($kirby->models() as $model) {
-				$model->storage()->convertLanguage(
+				$model->storage()->moveLanguage(
 					Language::single(),
 					$language
 				);
@@ -227,9 +227,9 @@ class Language implements Stringable
 
 		foreach ($kirby->models() as $model) {
 			if ($this->isLast() === true) {
-				$model->storage()->convertLanguage($this, Language::single());
+				$model->storage()->moveLanguage($this, Language::single());
 			} else {
-				$model->storage()->deleteLanguage($code);
+				$model->storage()->deleteLanguage($this);
 			}
 		}
 
