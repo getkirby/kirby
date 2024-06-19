@@ -112,10 +112,11 @@ class LabPageTest extends TestCase
 			'title' => 'Test'
 		]);
 
+		$this->assertSame($content, $page->content()->toArray());
 		$this->assertSame($content, $page->content('en')->toArray());
 
-		$this->markTestIncomplete('TODO: The following assertion is only correct as long as we don’t merge translated content. It’s a breaking change so far compared to the previous behavior and needs to be fixed.');
-		$this->assertSame([], $page->content('de')->toArray());
+		// make sure that the content fallback works
+		$this->assertSame($page->content('en')->toArray(), $page->content('de')->toArray());
 	}
 
 	public function testContentSingleLanguage()
@@ -134,6 +135,25 @@ class LabPageTest extends TestCase
 		]);
 
 		$this->assertSame($content, $page->content()->toArray());
+	}
+
+	public function testContentWithFallback()
+	{
+		$this->setUpMultiLanguage();
+
+		$page = new LabPage([
+			'slug'     => 'test',
+			'template' => 'article'
+		]);
+
+		// write something to the content file to make sure it
+		// can be read from disk for the test.
+		Data::write($page->root() . '/article.en.txt', $content = [
+			'title' => 'Test'
+		]);
+
+		$this->assertSame($content, $page->content('en')->toArray());
+		$this->assertSame($page->content('en')->toArray(), $page->content('de')->toArray());
 	}
 
 	public function testContentWithInvalidLanguage()
@@ -225,8 +245,8 @@ class LabPageTest extends TestCase
 		$this->assertSame($content, $page->content()->toArray());
 		$this->assertSame($content, $page->content('en')->toArray());
 
-		$this->markTestIncomplete('TODO: The following assertion is only correct as long as we don’t merge translated content. It’s a breaking change so far compared to the previous behavior and needs to be fixed.');
-		$this->assertSame([], $page->content('de')->toArray());
+		// make sure that the content fallback works
+		$this->assertSame($page->content('en')->toArray(), $page->content('de')->toArray());
 	}
 
 	public function testSetContentSingleLanguage()

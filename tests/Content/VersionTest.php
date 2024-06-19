@@ -52,6 +52,31 @@ class VersionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::content
+	 */
+	public function testContentWithFallback(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		// write something to the content file to make sure it
+		// can be read from disk for the test.
+		Data::write($this->model->root() . '/article.en.txt', $content = [
+			'title' => 'Test'
+		]);
+
+		$this->assertSame($content, $version->content()->toArray());
+		$this->assertSame($content, $version->content('en')->toArray());
+
+		// make sure that the content fallback works
+		$this->assertSame($version->content('en')->toArray(), $version->content('de')->toArray());
+	}
+
+	/**
 	 * @covers ::contentFile
 	 */
 	public function testContentFileMultiLanguage(): void

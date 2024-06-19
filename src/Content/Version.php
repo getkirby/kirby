@@ -33,9 +33,25 @@ class Version
 	 */
 	public function content(Language|string $language = 'default'): Content
 	{
+		$language = Language::ensure($language);
+		$fields   = $this->read($language);
+
+		// This is where we merge content from the default language
+		// to provide a fallback for missing/untranslated fields.
+		//
+		// @todo This is the critical point that needs to be removed/refactored
+		// in the future, to provide multi-language support with truly
+		// individual versions of pages and no longer enforce the fallback.
+		if ($language->isDefault() === false) {
+			$fields = [
+				...$this->read('default'),
+				...$fields
+			];
+		}
+
 		return new Content(
 			parent: $this->model,
-			data:   $this->read($language),
+			data:   $fields,
 		);
 	}
 
