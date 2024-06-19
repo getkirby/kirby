@@ -136,6 +136,63 @@ class VersionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::create
+	 * @covers ::convertFieldNamesToLowerCase
+	 * @covers ::removeUnwantedFields
+	 */
+	public function testCreateWithDirtyFields(): void
+	{
+		$this->setUpMultiLanguage();
+
+		// add a blueprint with an untranslatable field
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/article' => [
+					'fields' => [
+						'date' => [
+							'type'      => 'date',
+							'translate' => false
+						]
+					]
+				]
+			]
+		]);
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		// primary language
+		$version->create([
+			'title'    => 'Test',
+			'uuid'     => '12345',
+			'Subtitle' => 'Subtitle',
+			'date'     => '2012-12-12'
+		], 'en');
+
+		// secondary language
+		$version->create([
+			'title'    => 'Test',
+			'uuid'     => '12345',
+			'Subtitle' => 'Subtitle',
+			'date'     => '2012-12-12'
+		], 'de');
+
+		// check for lower case field names
+		$this->assertArrayHasKey('subtitle', $version->read('en'));
+		$this->assertArrayHasKey('subtitle', $version->read('de'));
+
+		// check for removed uuid field in secondary language
+		$this->assertArrayHasKey('uuid', $version->read('en'));
+		$this->assertArrayNotHasKey('uuid', $version->read('de'));
+
+		// check for untranslatable fields
+		$this->assertArrayHasKey('date', $version->read('en'));
+		$this->assertArrayNotHasKey('date', $version->read('de'));
+	}
+
+	/**
 	 * @covers ::delete
 	 */
 	public function testDeleteMultiLanguage(): void
@@ -547,6 +604,29 @@ class VersionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::read
+	 * @covers ::convertFieldNamesToLowerCase
+	 */
+	public function testReadWithDirtyFields(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		Data::write($this->contentFile(), [
+			'Title'    => 'Dirty title',
+			'subTitle' => 'Dirty subtitle'
+		]);
+
+		// check for lower case field names
+		$this->assertArrayHasKey('title', $version->read());
+		$this->assertArrayHasKey('subtitle', $version->read());
+	}
+
+	/**
 	 * @covers ::replace
 	 */
 	public function testReplaceMultiLanguage(): void
@@ -593,6 +673,65 @@ class VersionTest extends TestCase
 		]);
 
 		$this->assertSame(['title' => 'Updated Title'], Data::read($expected['file']));
+	}
+
+	/**
+	 * @covers ::replace
+	 * @covers ::convertFieldNamesToLowerCase
+	 * @covers ::removeUnwantedFields
+	 */
+	public function testReplaceWithDirtyFields(): void
+	{
+		$this->setUpMultiLanguage();
+
+		// add a blueprint with an untranslatable field
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/article' => [
+					'fields' => [
+						'date' => [
+							'type'      => 'date',
+							'translate' => false
+						]
+					]
+				]
+			]
+		]);
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$this->createContentMultiLanguage();
+
+		// primary language
+		$version->replace([
+			'title'    => 'Test',
+			'uuid'     => '12345',
+			'Subtitle' => 'Subtitle',
+			'date'     => '2012-12-12'
+		], 'en');
+
+		// secondary language
+		$version->replace([
+			'title'    => 'Test',
+			'uuid'     => '12345',
+			'Subtitle' => 'Subtitle',
+			'date'     => '2012-12-12'
+		], 'de');
+
+		// check for lower case field names
+		$this->assertArrayHasKey('subtitle', $version->read('en'));
+		$this->assertArrayHasKey('subtitle', $version->read('de'));
+
+		// check for removed uuid field in secondary language
+		$this->assertArrayHasKey('uuid', $version->read('en'));
+		$this->assertArrayNotHasKey('uuid', $version->read('de'));
+
+		// check for untranslatable fields
+		$this->assertArrayHasKey('date', $version->read('en'));
+		$this->assertArrayNotHasKey('date', $version->read('de'));
 	}
 
 	/**
@@ -852,5 +991,64 @@ class VersionTest extends TestCase
 
 		$this->assertSame('Updated Title', Data::read($expected['file'])['title']);
 		$this->assertSame('Subtitle', Data::read($expected['file'])['subtitle']);
+	}
+
+	/**
+	 * @covers ::update
+	 * @covers ::convertFieldNamesToLowerCase
+	 * @covers ::removeUnwantedFields
+	 */
+	public function testUpdateWithDirtyFields(): void
+	{
+		$this->setUpMultiLanguage();
+
+		// add a blueprint with an untranslatable field
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/article' => [
+					'fields' => [
+						'date' => [
+							'type'      => 'date',
+							'translate' => false
+						]
+					]
+				]
+			]
+		]);
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$this->createContentMultiLanguage();
+
+		// primary language
+		$version->update([
+			'title'    => 'Test',
+			'uuid'     => '12345',
+			'Subtitle' => 'Subtitle',
+			'date'     => '2012-12-12'
+		], 'en');
+
+		// secondary language
+		$version->update([
+			'title'    => 'Test',
+			'uuid'     => '12345',
+			'Subtitle' => 'Subtitle',
+			'date'     => '2012-12-12'
+		], 'de');
+
+		// check for lower case field names
+		$this->assertArrayHasKey('subtitle', $version->read('en'));
+		$this->assertArrayHasKey('subtitle', $version->read('de'));
+
+		// check for removed uuid field in secondary language
+		$this->assertArrayHasKey('uuid', $version->read('en'));
+		$this->assertArrayNotHasKey('uuid', $version->read('de'));
+
+		// check for untranslatable fields
+		$this->assertArrayHasKey('date', $version->read('en'));
+		$this->assertArrayNotHasKey('date', $version->read('de'));
 	}
 }
