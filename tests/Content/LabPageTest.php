@@ -196,6 +196,21 @@ class LabPageTest extends TestCase
 		$this->assertSame([], $page->content()->toArray());
 	}
 
+	public function testHardcopy()
+	{
+		$this->setUpMultiLanguage();
+
+		$page = new LabPage([
+			'slug'     => 'test',
+			'template' => 'article',
+		]);
+
+		$clone = $page->hardcopy();
+
+		$this->assertInstanceOf(MemoryContentStorageHandler::class, $page->storage());
+		$this->assertInstanceOf(PlainTextContentStorageHandler::class, $clone->storage());
+	}
+
 	public function testSetContentMultiLanguage()
 	{
 		$this->setUpMultiLanguage();

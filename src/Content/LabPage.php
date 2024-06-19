@@ -24,7 +24,7 @@ class LabPage extends Page
 		// before creating the clone. The storage of the clone can
 		// afterwards be mutated without affecting the content in the
 		// original instance.
-		$this->storage = MemoryContentStorageHandler::from($this->storage);
+		$this->storage = MemoryContentStorageHandler::from($this->storage());
 		return parent::clone($props);
 	}
 
