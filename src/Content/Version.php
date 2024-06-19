@@ -52,6 +52,15 @@ class Version
 	}
 
 	/**
+	 * Make sure that all field names are converted to lower
+	 * case to be able to merge and filter them properly
+	 */
+	protected function convertFieldNamesToLowerCase(array $fields): array
+	{
+		return array_change_key_case($fields, CASE_LOWER);
+	}
+
+	/**
 	 * Creates a new version for the given language
 	 * @todo Convert to a static method that creates the version initially with all relevant languages
 	 *
@@ -59,7 +68,12 @@ class Version
 	 */
 	public function create(array $fields, Language|string $language = 'default'): void
 	{
-		$this->model->storage()->create($this->id, Language::ensure($language), $fields);
+		$language = Language::ensure($language);
+
+		$fields = $this->convertFieldNamesToLowerCase($fields);
+		$fields = $this->removeUnwantedFields($fields, $language);
+
+		$this->model->storage()->create($this->id, $language, $fields);
 	}
 
 	/**
@@ -151,10 +165,35 @@ class Version
 		$language = Language::ensure($language);
 
 		try {
-			return $this->model->storage()->read($this->id, $language);
+			$fields = $this->model->storage()->read($this->id, $language);
+			$fields = $this->convertFieldNamesToLowerCase($fields);
+			return $fields;
 		} catch (Throwable) {
 			return [];
 		}
+	}
+
+	/**
+	 * Remove fields that should not be stored for the given version and language
+	 */
+	protected function removeUnwantedFields(array $fields, Language $language): array
+	{
+		// the default language stores all fields
+		if ($language->isDefault() === true) {
+			return $fields;
+		}
+
+		// remove all untranslatable fields
+		foreach ($this->model->blueprint()->fields() as $field) {
+			if (($field['translate'] ?? true) === false) {
+				unset($fields[strtolower($field['name'])]);
+			}
+		}
+
+		// remove UUID for non-default languages
+		unset($fields['uuid']);
+
+		return $fields;
 	}
 
 	/**
@@ -167,7 +206,13 @@ class Version
 	public function replace(array $fields, Language|string $language = 'default'): void
 	{
 		$this->ensure($language);
-		$this->model->storage()->update($this->id, Language::ensure($language), $fields);
+
+		$language = Language::ensure($language);
+
+		$fields = $this->convertFieldNamesToLowerCase($fields);
+		$fields = $this->removeUnwantedFields($fields, $language);
+
+		$this->model->storage()->update($this->id, $language, $fields);
 	}
 
 	/**
@@ -210,10 +255,18 @@ class Version
 	{
 		$this->ensure($language);
 
+		$language = Language::ensure($language);
+
 		// merge the previous state with the new state to always
 		// update to a complete version
-		$fields = [...$this->read($language), ...$fields];
+		$fields = [
+			...$this->read($language),
+			...$this->convertFieldNamesToLowerCase($fields)
+		];
 
-		$this->model->storage()->update($this->id, Language::ensure($language), $fields);
+		// make sure to not store unnecessary fields for the version & language
+		$fields = $this->removeUnwantedFields($fields, $language);
+
+		$this->model->storage()->update($this->id, $language, $fields);
 	}
 }
