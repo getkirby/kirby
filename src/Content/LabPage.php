@@ -46,6 +46,10 @@ class LabPage extends Page
 		return $this->version()->read($languageCode ?? 'current');
 	}
 
+	/**
+	 * Stores the content on disk
+	 * @internal
+	 */
 	public function save(
 		array|null $data = null,
 		string|null $languageCode = null,
