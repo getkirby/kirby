@@ -13,12 +13,6 @@ class MemoryContentStorageHandlerTest extends TestCase
 {
 	protected $storage;
 
-	/**
-	 * @covers ::create
-	 * @covers ::delete
-	 * @covers ::exists
-	 * @covers ::write
-	 */
 	public function assertCreateAndDelete(VersionId $versionId, Language $language): void
 	{
 		$this->storage->create($versionId, $language, []);
@@ -30,12 +24,6 @@ class MemoryContentStorageHandlerTest extends TestCase
 		$this->assertFalse($this->storage->exists($versionId, $language));
 	}
 
-	/**
-	 * @covers ::create
-	 * @covers ::exists
-	 * @covers ::read
-	 * @covers ::write
-	 */
 	public function assertCreateAndRead(VersionId $versionId, Language $language): void
 	{
 		$fields = [
@@ -49,13 +37,6 @@ class MemoryContentStorageHandlerTest extends TestCase
 		$this->assertSame($fields, $this->storage->read($versionId, $language));
 	}
 
-	/**
-	 * @covers ::create
-	 * @covers ::exists
-	 * @covers ::read
-	 * @covers ::update
-	 * @covers ::write
-	 */
 	public function assertCreateAndUpdate(VersionId $versionId, Language $language): void
 	{
 		$fields = [
