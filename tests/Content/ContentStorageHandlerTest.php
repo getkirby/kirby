@@ -274,6 +274,7 @@ class ContentStorageHandlerTest extends TestCase
 	}
 
 	/**
+	 * @covers ::move
 	 * @covers ::moveLanguage
 	 */
 	public function testMoveSingleLanguageToMultiLanguage()
@@ -305,6 +306,7 @@ class ContentStorageHandlerTest extends TestCase
 	}
 
 	/**
+	 * @covers ::move
 	 * @covers ::moveLanguage
 	 */
 	public function testMoveMultiLanguageToSingleLanguage()
