@@ -81,8 +81,6 @@ class File extends ModelWithContent
 	 */
 	public function __construct(array $props)
 	{
-		parent::__construct($props);
-
 		if (isset($props['filename'], $props['parent']) === false) {
 			throw new InvalidArgumentException('The filename and parent are required');
 		}
@@ -94,6 +92,8 @@ class File extends ModelWithContent
 		// auto root detection
 		$this->root     = null;
 		$this->url      = $props['url'] ?? null;
+
+		parent::__construct($props);
 
 		$this->setBlueprint($props['blueprint'] ?? null);
 	}
