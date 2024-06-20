@@ -330,6 +330,20 @@ class ContentStorageHandlerTest extends TestCase
 	}
 
 	/**
+	 * @covers ::model
+	 */
+	public function testModel()
+	{
+		$this->setUpSingleLanguage();
+
+		$handler = new TestContentStorageHandler(
+			model: $this->model
+		);
+
+		$this->assertSame($this->model, $handler->model());
+	}
+
+	/**
 	 * @covers ::move
 	 */
 	public function testMoveMultiLanguage()
