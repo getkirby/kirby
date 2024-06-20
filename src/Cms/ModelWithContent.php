@@ -735,19 +735,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 */
 	public function writeContent(array $data, string|null $languageCode = null): bool
 	{
-		$data = $this->contentFileData($data, $languageCode);
-
-		// update the default language, unless a specific language is passed
-		$languageCode ??= 'default';
-
-		try {
-			// we can only update if the version already exists
-			$this->version()->update($data, $languageCode);
-		} catch (NotFoundException) {
-			// otherwise create a new version
-			$this->version()->create($data, $languageCode);
-		}
-
+		$this->version()->save($data, $languageCode ?? 'current', true);
 		return true;
 	}
 }
