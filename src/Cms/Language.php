@@ -257,6 +257,7 @@ class Language implements Stringable
 	 * Converts a "user-facing" language code to a `Language` object
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the language does not exist
+	 * @internal
 	 */
 	public static function ensure(self|string|null $code = null): static
 	{

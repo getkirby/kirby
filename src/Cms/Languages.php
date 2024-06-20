@@ -74,6 +74,8 @@ class Languages extends Collection
 	 * Provides a collection of installed languages, even
 	 * if in single-language mode. In single-language mode
 	 * `Language::single()` is used to create the default language
+	 *
+	 * @internal
 	 */
 	public static function ensure(): static
 	{
