@@ -71,6 +71,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 	/**
 	 * @covers ::create
 	 * @covers ::read
+	 * @covers ::write
 	 */
 	public function testCreateAndReadChangesMultiLang()
 	{
@@ -85,6 +86,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 	/**
 	 * @covers ::create
 	 * @covers ::read
+	 * @covers ::write
 	 */
 	public function testCreateAndReadChangesSingleLang()
 	{
@@ -99,6 +101,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 	/**
 	 * @covers ::create
 	 * @covers ::read
+	 * @covers ::write
 	 */
 	public function testCreateAndReadPublishedMultiLang()
 	{
@@ -113,6 +116,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 	/**
 	 * @covers ::create
 	 * @covers ::read
+	 * @covers ::write
 	 */
 	public function testCreateAndReadPublishedSingleLang()
 	{
@@ -308,6 +312,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 
 	/**
 	 * @covers ::update
+	 * @covers ::write
 	 */
 	public function testUpdateMultiLang()
 	{
@@ -321,6 +326,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 
 	/**
 	 * @covers ::update
+	 * @covers ::write
 	 */
 	public function testUpdateSingleLang()
 	{
