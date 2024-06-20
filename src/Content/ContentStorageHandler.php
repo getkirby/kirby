@@ -97,7 +97,7 @@ abstract class ContentStorageHandler
 
 	/**
 	 * Checks if a version/language combination exists and otherwise
-	 * will throw a NotFoundException
+	 * will throw a `NotFoundException`
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
