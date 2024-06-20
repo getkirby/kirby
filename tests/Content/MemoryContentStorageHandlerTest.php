@@ -202,6 +202,42 @@ class MemoryContentStorageHandlerTest extends TestCase
 	/**
 	 * @covers ::exists
 	 */
+	public function testExistsMultiLanguage()
+	{
+		$this->setUpMultiLanguage();
+
+		$versionId = VersionId::published();
+
+		$this->assertFalse($this->storage->exists($versionId, $this->app->language('en')));
+		$this->assertFalse($this->storage->exists($versionId, $this->app->language('de')));
+
+		$this->storage->create($versionId, $this->app->language('en'), []);
+		$this->storage->create($versionId, $this->app->language('de'), []);
+
+		$this->assertTrue($this->storage->exists($versionId, $this->app->language('en')));
+		$this->assertTrue($this->storage->exists($versionId, $this->app->language('de')));
+	}
+
+	/**
+	 * @covers ::exists
+	 */
+	public function testExistsSingleLanguage()
+	{
+		$this->setUpSingleLanguage();
+
+		$versionId = VersionId::published();
+		$language  = Language::single();
+
+		$this->assertFalse($this->storage->exists($versionId, $language));
+
+		$this->storage->create($versionId, $language, []);
+
+		$this->assertTrue($this->storage->exists($versionId, $language));
+	}
+
+	/**
+	 * @covers ::exists
+	 */
 	public function testExistsNoneExistingMultiLanguage()
 	{
 		$this->setUpMultiLanguage();
