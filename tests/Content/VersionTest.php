@@ -607,6 +607,24 @@ class VersionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::read
+	 */
+	public function testReadWithInvalidLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('Invalid language: fr');
+
+		$version->read('fr');
+	}
+
+	/**
 	 * @covers ::replace
 	 */
 	public function testReplaceMultiLanguage(): void
