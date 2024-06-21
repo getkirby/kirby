@@ -290,6 +290,27 @@ class Language implements Stringable
 	}
 
 	/**
+	 * Compare too language objects
+	 */
+	public function is(self $language): bool
+	{
+		return $this->id() === $language->id();
+	}
+
+	/**
+	 * Checks if this is language is the
+	 * current language
+	 */
+	public function isCurrent(): bool
+	{
+		if ($this->isSingle() === true) {
+			return true;
+		}
+
+		return App::instance()->currentLanguage()->is($this);
+	}
+
+	/**
 	 * Checks if this is the default language
 	 * for the site.
 	 */

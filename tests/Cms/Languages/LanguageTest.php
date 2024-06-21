@@ -299,6 +299,49 @@ class LanguageTest extends TestCase
 	}
 
 	/**
+	 * @covers ::is
+	 */
+	public function testIs()
+	{
+		$en = new Language([
+			'code' => 'en'
+		]);
+
+		$de = new Language([
+			'code' => 'de'
+		]);
+
+		$this->assertTrue($en->is($en));
+		$this->assertFalse($en->is($de));
+	}
+
+	/**
+	 * @covers ::isCurrent
+	 */
+	public function testIsCurrent()
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				[
+					'code' => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+				]
+			]
+		]);
+
+		$this->assertTrue($this->app->language('en')->isCurrent());
+		$this->assertFalse($this->app->language('de')->isCurrent());
+
+		$this->app->setCurrentLanguage('de');
+
+		$this->assertTrue($this->app->language('de')->isCurrent());
+		$this->assertFalse($this->app->language('en')->isCurrent());
+	}
+
+	/**
 	 * @covers ::isDefault
 	 */
 	public function testIsDefault()
