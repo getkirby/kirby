@@ -251,6 +251,16 @@ class LanguageTest extends TestCase
 		$language = Language::ensure($app->language('de'));
 
 		$this->assertSame('de', $language->code());
+
+		// with `current` keyword
+		$language = Language::ensure('current');
+
+		$this->assertSame('en', $language->code());
+
+		// with `default` keyword
+		$language = Language::ensure('default');
+
+		$this->assertSame('en', $language->code());
 	}
 
 	public function testEnsureInSingleLanguageMode()
