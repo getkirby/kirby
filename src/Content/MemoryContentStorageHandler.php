@@ -51,19 +51,7 @@ class MemoryContentStorageHandler extends ContentStorageHandler
 	 */
 	public function exists(VersionId $versionId, Language $language): bool
 	{
-		$data = $this->cache->get($this->cacheId($versionId, $language));
-
-		// validate the cached data
-		if (
-			isset($data['fields']) === true &&
-			is_array($data['fields']) === true &&
-			isset($data['modified']) === true &&
-			is_int($data['modified']) === true
-		) {
-			return true;
-		}
-
-		return false;
+		return $this->cache->exists($this->cacheId($versionId, $language));
 	}
 
 	/**
@@ -75,7 +63,7 @@ class MemoryContentStorageHandler extends ContentStorageHandler
 			return null;
 		}
 
-		return $this->cache->get($this->cacheId($versionId, $language))['modified'];
+		return $this->cache->modified($this->cacheId($versionId, $language));
 	}
 
 	/**
@@ -88,7 +76,7 @@ class MemoryContentStorageHandler extends ContentStorageHandler
 	public function read(VersionId $versionId, Language $language): array
 	{
 		$this->ensure($versionId, $language);
-		return $this->cache->get($this->cacheId($versionId, $language))['fields'];
+		return $this->cache->get($this->cacheId($versionId, $language));
 	}
 
 	/**
@@ -122,9 +110,6 @@ class MemoryContentStorageHandler extends ContentStorageHandler
 	 */
 	protected function write(VersionId $versionId, Language $language, array $fields): void
 	{
-		$this->cache->set($this->cacheId($versionId, $language), [
-			'fields'   => $fields,
-			'modified' => time()
-		]);
+		$this->cache->set($this->cacheId($versionId, $language), $fields);
 	}
 }
