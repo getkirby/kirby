@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Content\Version;
 use Kirby\Content\VersionId;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Panel\Page as PanelPage;
 use Kirby\Uuid\PageUuid;
 use Kirby\Uuid\SiteUuid;
@@ -155,7 +156,7 @@ class ModelWithContentTest extends TestCase
 			]
 		]);
 
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Invalid language: fr');
 
 		$app->page('foo')->content('fr');
