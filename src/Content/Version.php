@@ -86,10 +86,11 @@ class Version
 	{
 		$language = Language::ensure($language);
 
-		$fields = $this->convertFieldNamesToLowerCase($fields);
-		$fields = $this->removeUnwantedFields($fields, $language);
-
-		$this->model->storage()->create($this->id, $language, $fields);
+		$this->model->storage()->create(
+			versionId: $this->id,
+			language: $language,
+			fields: $this->prepareFieldsBeforeWrite($fields, $language)
+		);
 	}
 
 	/**
@@ -172,28 +173,17 @@ class Version
 	}
 
 	/**
-	 * Returns the stored content fields
-	 *
-	 * @return array<string, string>
+	 * Prepare fields to be written by removing unwanted fields
+	 * depending on the language or model and by cleaning the field names
 	 */
-	public function read(Language|string $language = 'default'): array
+	protected function prepareFieldsBeforeWrite(array $fields, Language $language): array
 	{
-		$language = Language::ensure($language);
+		// convert all field names to lower case
+		$fields = $this->convertFieldNamesToLowerCase($fields);
 
-		try {
-			$fields = $this->model->storage()->read($this->id, $language);
-			$fields = $this->convertFieldNamesToLowerCase($fields);
-			return $fields;
-		} catch (Throwable) {
-			return [];
-		}
-	}
+		// make sure to store the right fields for the model
+		$fields = $this->model->contentFileData($fields, $language);
 
-	/**
-	 * Remove fields that should not be stored for the given version and language
-	 */
-	protected function removeUnwantedFields(array $fields, Language $language): array
-	{
 		// the default language stores all fields
 		if ($language->isDefault() === true) {
 			return $fields;
@@ -213,6 +203,33 @@ class Version
 	}
 
 	/**
+	 * Make sure that reading from storage will always
+	 * return a usable set of fields with clean field names
+	 */
+	protected function prepareFieldsAfterRead(array $fields, Language $language): array
+	{
+		return $this->convertFieldNamesToLowerCase($fields);
+	}
+
+	/**
+	 * Returns the stored content fields
+	 *
+	 * @return array<string, string>
+	 */
+	public function read(Language|string $language = 'default'): array
+	{
+		$language = Language::ensure($language);
+
+		try {
+			$fields = $this->model->storage()->read($this->id, $language);
+			$fields = $this->prepareFieldsAfterRead($fields, $language);
+			return $fields;
+		} catch (Throwable) {
+			return [];
+		}
+	}
+
+	/**
 	 * Replaces the content of the current version with the given fields
 	 *
 	 * @param array<string, string> $fields Content fields
@@ -225,10 +242,11 @@ class Version
 
 		$language = Language::ensure($language);
 
-		$fields = $this->convertFieldNamesToLowerCase($fields);
-		$fields = $this->removeUnwantedFields($fields, $language);
-
-		$this->model->storage()->update($this->id, $language, $fields);
+		$this->model->storage()->update(
+			versionId: $this->id,
+			language: $language,
+			fields: $this->prepareFieldsBeforeWrite($fields, $language)
+		);
 	}
 
 	/**
@@ -280,9 +298,10 @@ class Version
 			...$this->convertFieldNamesToLowerCase($fields)
 		];
 
-		// make sure to not store unnecessary fields for the version & language
-		$fields = $this->removeUnwantedFields($fields, $language);
-
-		$this->model->storage()->update($this->id, $language, $fields);
+		$this->model->storage()->update(
+			versionId: $this->id,
+			language: $language,
+			fields: $this->prepareFieldsBeforeWrite($fields, $language)
+		);
 	}
 }

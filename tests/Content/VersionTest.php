@@ -223,7 +223,7 @@ class VersionTest extends TestCase
 	/**
 	 * @covers ::create
 	 * @covers ::convertFieldNamesToLowerCase
-	 * @covers ::removeUnwantedFields
+	 * @covers ::prepareFieldsBeforeWrite
 	 */
 	public function testCreateWithDirtyFields(): void
 	{
@@ -653,6 +653,8 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::read
+	 * @covers ::convertFieldNamesToLowerCase
+	 * @covers ::prepareFieldsAfterRead
 	 */
 	public function testReadMultiLanguage(): void
 	{
@@ -673,6 +675,8 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::read
+	 * @covers ::convertFieldNamesToLowerCase
+	 * @covers ::prepareFieldsAfterRead
 	 */
 	public function testReadSingleLanguage(): void
 	{
@@ -691,6 +695,7 @@ class VersionTest extends TestCase
 	/**
 	 * @covers ::read
 	 * @covers ::convertFieldNamesToLowerCase
+	 * @covers ::prepareFieldsAfterRead
 	 */
 	public function testReadWithDirtyFields(): void
 	{
@@ -713,6 +718,8 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::read
+	 * @covers ::convertFieldNamesToLowerCase
+	 * @covers ::prepareFieldsAfterRead
 	 */
 	public function testReadWithInvalidLanguage(): void
 	{
@@ -731,6 +738,8 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::replace
+	 * @covers ::convertFieldNamesToLowerCase
+	 * @covers ::prepareFieldsBeforeWrite
 	 */
 	public function testReplaceMultiLanguage(): void
 	{
@@ -759,6 +768,8 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::replace
+	 * @covers ::convertFieldNamesToLowerCase
+	 * @covers ::prepareFieldsBeforeWrite
 	 */
 	public function testReplaceSingleLanguage(): void
 	{
@@ -781,7 +792,7 @@ class VersionTest extends TestCase
 	/**
 	 * @covers ::replace
 	 * @covers ::convertFieldNamesToLowerCase
-	 * @covers ::removeUnwantedFields
+	 * @covers ::prepareFieldsBeforeWrite
 	 */
 	public function testReplaceWithDirtyFields(): void
 	{
@@ -1099,7 +1110,7 @@ class VersionTest extends TestCase
 	/**
 	 * @covers ::update
 	 * @covers ::convertFieldNamesToLowerCase
-	 * @covers ::removeUnwantedFields
+	 * @covers ::prepareFieldsBeforeWrite
 	 */
 	public function testUpdateWithDirtyFields(): void
 	{
