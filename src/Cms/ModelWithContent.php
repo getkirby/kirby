@@ -10,7 +10,6 @@ use Kirby\Content\PlainTextContentStorageHandler;
 use Kirby\Content\Version;
 use Kirby\Content\VersionId;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form;
 use Kirby\Panel\Model;
 use Kirby\Toolkit\Str;
@@ -132,21 +131,11 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	{
 		// single language support
 		if ($this->kirby()->multilang() === false) {
-			if ($this->content instanceof Content) {
-				return $this->content;
-			}
-
-			// don't normalize field keys (already handled by the `Data` class)
-			return $this->content = new Content($this->readContent(), $this, false);
+			return $this->content ??= $this->version()->content('default');
 		}
 
 		// get the targeted language
-		$language = $this->kirby()->language($languageCode);
-
-		// stop if the language does not exist
-		if ($language === null) {
-			throw new InvalidArgumentException('Invalid language: ' . $languageCode);
-		}
+		$language = Language::ensure($languageCode);
 
 		// only fetch from cache for the current language
 		if ($languageCode === null && $this->content instanceof Content) {
