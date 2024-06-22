@@ -274,37 +274,30 @@ class Mime
 		string|null $mime = null,
 		bool $matchWildcards = false
 	): array {
-		$extensions = [];
-		$testMime   = fn (string $v): bool => static::matches($v, $mime);
+		// get all extensions
+		$extensions = array_keys(static::$types);
 
-		foreach (static::$types as $key => $value) {
-			if (
-				(
-					is_array($value) &&
-					$matchWildcards &&
-					A::some($value, $testMime)
-				) ||
-				(
-					is_array($value) &&
-					$matchWildcards === false &&
-					in_array($mime, $value)
-				) ||
-				(
-					is_array($value) === false &&
-					$matchWildcards &&
-					$testMime($value)
-				) ||
-				(
-					is_array($value) === false &&
-					$matchWildcards === false &&
-					$value === $mime
-				)
-			) {
-				$extensions[] = $key;
+		// filter extensions for given MIME type
+		$extensions = A::filter(
+			$extensions,
+			function ($extension) use ($mime, $matchWildcards) {
+				// get corresponding MIME types as array
+				$mimes = A::wrap(static::$types[$extension]);
+
+				if ($matchWildcards) {
+					// check if at least one MIME type with wildcards matches
+					return A::some(
+						$mimes,
+						fn (string $v): bool => static::matches($v, $mime)
+					);
+				}
+
+				// check if at least one MIME type matches exactly
+				return in_array($mime, $mimes);
 			}
-		}
+		);
 
-		return $extensions;
+		return array_values($extensions);
 	}
 
 	/**
