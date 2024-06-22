@@ -1,19 +1,16 @@
 <template>
-	<k-file-preview
-		:details="details"
-		:options="options"
-		:data-has-focus="Boolean(focus)"
-		class="k-file-image-preview"
-	>
-		<k-coords-input
-			:disabled="!focusable"
-			:value="focus"
-			@input="setFocus($event)"
-		>
-			<img v-bind="image" @dragstart.prevent />
-		</k-coords-input>
+	<div :data-has-focus="Boolean(focus)" class="k-file-image-preview">
+		<k-file-preview-thumb>
+			<k-coords-input
+				:disabled="!focusable"
+				:value="focus"
+				@input="setFocus($event)"
+			>
+				<img v-bind="image" @dragstart.prevent />
+			</k-coords-input>
+		</k-file-preview-thumb>
 
-		<template #details>
+		<k-file-preview-details :details="details">
 			<div v-if="image.src" class="k-file-image-preview-focus">
 				<dt>{{ $t("file.focus.title") }}</dt>
 				<dd>
@@ -33,8 +30,8 @@
 					<template v-else>–</template>
 				</dd>
 			</div>
-		</template>
-	</k-file-preview>
+		</k-file-preview-details>
+	</div>
 </template>
 
 <script>
@@ -106,6 +103,15 @@ export default {
 </script>
 
 <style>
+.k-file-image-preview {
+	display: grid;
+	align-items: stretch;
+}
+
+.k-file-image-preview .k-file-preview-thumb-column {
+	aspect-ratio: 1/1;
+}
+
 .k-file-image-preview .k-coords-input {
 	--opacity-disabled: 1;
 	--range-thumb-color: hsl(216 60% 60% / 0.75);
@@ -138,5 +144,23 @@ export default {
 	--button-color-back: var(--color-gray-800);
 	--button-padding: var(--spacing-2);
 	--button-color-back: var(--color-gray-800);
+}
+
+@container (min-width: 36rem) {
+	.k-file-image-preview {
+		grid-template-columns: 50% auto;
+	}
+	.k-file-image-preview-thumb-column {
+		aspect-ratio: auto;
+	}
+}
+
+@container (min-width: 65rem) {
+	.k-file-image-preview {
+		grid-template-columns: 33.333% auto;
+	}
+	.k-file-image-preview-thumb-column {
+		aspect-ratio: 1/1;
+	}
 }
 </style>

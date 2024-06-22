@@ -1,11 +1,10 @@
 <template>
-	<k-file-preview
-		:details="details"
-		:options="options"
-		class="k-file-video-preview"
-	>
-		<video controls preload="metadata" :src="url" />
-	</k-file-preview>
+	<div class="k-file-video-preview">
+		<k-file-preview-thumb :options="options">
+			<video controls preload="metadata" :src="url" />
+		</k-file-preview-thumb>
+		<k-file-preview-details :details="details" />
+	</div>
 </template>
 
 <script>
@@ -43,14 +42,5 @@ export default {
 <style>
 .k-file-video-preview .k-file-preview-thumb-column {
 	aspect-ratio: 16/9;
-}
-
-@container (min-width: 65rem) {
-	.k-file-video-preview {
-		grid-template-columns: 50% auto;
-	}
-	.k-file-video-preview .k-file-preview-thumb-column {
-		aspect-ratio: 16/9;
-	}
 }
 </style>

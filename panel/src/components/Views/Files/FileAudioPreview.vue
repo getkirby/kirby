@@ -1,11 +1,8 @@
 <template>
-	<k-file-preview
-		:details="details"
-		:options="options"
-		class="k-file-audio-preview"
-	>
+	<div class="k-file-audio-preview">
 		<audio controls preload="metadata" :src="url" />
-	</k-file-preview>
+		<k-file-preview-details :details="details" />
+	</div>
 </template>
 
 <script>
@@ -19,23 +16,13 @@ export default {
 			default: () => [],
 			type: Array
 		},
-		image: {
-			default: () => ({}),
-			type: Object
-		},
 		url: String
-	},
-	computed: {
-		options() {
-			return [
-				{
-					icon: "download",
-					text: this.$t("download"),
-					link: this.url,
-					download: true
-				}
-			];
-		}
 	}
 };
 </script>
+
+<style>
+.k-file-audio-preview audio {
+	width: 100%;
+}
+</style>
