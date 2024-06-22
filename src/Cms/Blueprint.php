@@ -25,24 +25,16 @@ use Throwable;
  */
 class Blueprint
 {
-	public static $presets = [];
-	public static $loaded = [];
+	public static array $presets = [];
+	public static array $loaded = [];
 
-	protected $fields = [];
-	protected $model;
-	protected $props;
-	protected $sections = [];
-	protected $tabs = [];
+	protected array $fields = [];
+	protected ModelWithContent $model;
+	protected array $props;
+	protected array $sections = [];
+	protected array $tabs = [];
 
 	protected array|null $fileTemplates = null;
-
-	/**
-	 * Magic getter/caller for any blueprint prop
-	 */
-	public function __call(string $key, array|null $arguments = null): mixed
-	{
-		return $this->props[$key] ?? null;
-	}
 
 	/**
 	 * Creates a new blueprint object with the given props
@@ -86,6 +78,14 @@ class Blueprint
 		$props['tabs'] = $this->normalizeTabs($props['tabs'] ?? []);
 
 		$this->props = $props;
+	}
+
+	/**
+	 * Magic getter/caller for any blueprint prop
+	 */
+	public function __call(string $key, array|null $arguments = null): mixed
+	{
+		return $this->props[$key] ?? null;
 	}
 
 	/**

@@ -14,15 +14,15 @@ class PluginsTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Plugins';
 
-	protected $cssA;
-	protected $cssB;
-	protected $cssC;
-	protected $jsA;
-	protected $jsB;
-	protected $jsC;
-	protected $mjsA;
-	protected $mjsB;
-	protected $mjsC;
+	protected string $cssA;
+	protected string $cssB;
+	protected string $cssC;
+	protected string $jsA;
+	protected string $jsB;
+	protected string $jsC;
+	protected string $mjsA;
+	protected string $mjsB;
+	protected string $mjsC;
 
 	public function setUp(): void
 	{

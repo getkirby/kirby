@@ -6,7 +6,7 @@ use Kirby\TestCase;
 
 class IngredientsTest extends TestCase
 {
-	protected $ingredients;
+	protected Ingredients $ingredients;
 
 	public function setUp(): void
 	{

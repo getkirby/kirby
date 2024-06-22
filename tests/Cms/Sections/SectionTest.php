@@ -7,7 +7,7 @@ use Kirby\TestCase;
 
 class SectionTest extends TestCase
 {
-	protected $sectionTypes;
+	protected array $sectionTypes;
 
 	public function setUp(): void
 	{

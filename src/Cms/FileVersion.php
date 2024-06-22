@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\IsFile;
 
 /**
@@ -18,7 +19,7 @@ class FileVersion
 	use IsFile;
 
 	protected array $modifications;
-	protected $original;
+	protected File|Asset $original;
 
 	public function __construct(array $props)
 	{

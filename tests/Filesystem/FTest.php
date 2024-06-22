@@ -17,9 +17,9 @@ class FTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures/f';
 	public const TMP      = KIRBY_TMP_DIR . '/Filesystem.F';
 
-	protected $hasErrorHandler = false;
-	protected $sample;
-	protected $test;
+	protected bool $hasErrorHandler = false;
+	protected string $sample;
+	protected string $test;
 
 	public function setUp(): void
 	{

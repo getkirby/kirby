@@ -3,7 +3,6 @@
 namespace Kirby\Database;
 
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\TestCase;
 use ReflectionProperty;
 
 /**
@@ -13,7 +12,7 @@ class DbTest extends TestCase
 {
 	public function setUp(): void
 	{
-		Db::connect([
+		$this->database = Db::connect([
 			'database' => ':memory:',
 			'type'     => 'sqlite'
 		]);

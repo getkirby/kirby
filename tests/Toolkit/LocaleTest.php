@@ -11,8 +11,8 @@ use Kirby\TestCase;
  */
 class LocaleTest extends TestCase
 {
-	protected $locales = [];
-	protected $localeSuffix;
+	protected array $locales = [];
+	protected string $localeSuffix = '';
 
 	public function setUp(): void
 	{
@@ -21,11 +21,13 @@ class LocaleTest extends TestCase
 
 		// test which locale suffix the system supports
 		setlocale(LC_ALL, 'de_DE.' . $this->localeSuffix);
-		if (setlocale(LC_ALL, '0') === 'de_DE.' . $this->localeSuffix) {
-			$this->localeSuffix = 'utf8';
-		} else {
-			$this->localeSuffix = 'UTF-8';
-		}
+
+		$this->localeSuffix = match (
+			setlocale(LC_ALL, '0') === 'de_DE.' . $this->localeSuffix
+		) {
+			true => 'utf8',
+			false => 'UTF-8'
+		};
 
 		// now set a baseline
 		setlocale(LC_ALL, 'C');

@@ -3,7 +3,6 @@
 namespace Kirby\Database;
 
 use InvalidArgumentException;
-use Kirby\TestCase;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Pagination;
 use PDOException;
@@ -13,8 +12,6 @@ use PDOException;
  */
 class QueryTest extends TestCase
 {
-	protected $database;
-
 	public function setUp(): void
 	{
 		$this->database = new Database([

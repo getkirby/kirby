@@ -36,7 +36,7 @@ class MockPageForStatsSection extends Page
 
 class StatsSectionTest extends TestCase
 {
-	protected $model;
+	protected ModelWithContent $model;
 
 	public function setUp(): void
 	{

@@ -12,7 +12,7 @@ use Kirby\TestCase;
  */
 class FieldTest extends TestCase
 {
-	protected $originalMixins;
+	protected array $originalMixins;
 
 	public function setUp(): void
 	{

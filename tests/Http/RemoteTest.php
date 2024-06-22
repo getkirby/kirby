@@ -11,8 +11,8 @@ class RemoteTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Http.Remote';
 
-	protected $cwd;
-	protected $defaults;
+	protected string|false $cwd;
+	protected array $defaults;
 
 	public function setUp(): void
 	{
