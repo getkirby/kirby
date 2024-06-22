@@ -23,7 +23,7 @@
 			</template>
 		</k-header>
 
-		<component :is="previewComponent" v-bind="preview.props" />
+		<k-file-preview v-bind="preview" />
 
 		<k-model-tabs :tab="tab.name" :tabs="tabs" />
 
@@ -44,15 +44,6 @@ export default {
 	extends: ModelView,
 	props: {
 		preview: Object
-	},
-	computed: {
-		previewComponent() {
-			if (this.$helper.isComponent(this.preview.component)) {
-				return this.preview.component;
-			}
-
-			return "k-file-default-preview";
-		}
 	},
 	methods: {
 		onAction(action) {
