@@ -284,7 +284,7 @@ class Mime
 				// get corresponding MIME types as array
 				$mimes = A::wrap(static::$types[$extension]);
 
-				if ($matchWildcards) {
+				if ($matchWildcards === true) {
 					// check if at least one MIME type with wildcards matches
 					return A::some(
 						$mimes,
@@ -297,6 +297,7 @@ class Mime
 			}
 		);
 
+		// renumber array with consecutive keys
 		return array_values($extensions);
 	}
 
