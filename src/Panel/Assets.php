@@ -231,14 +231,13 @@ class Assets
 				'nonce' => $this->nonce,
 				'src'   => $this->url . '/js/vendor.min.js'
 			],
-			'pluginloader' => [
+			'plugin-registry' => [
 				'nonce' => $this->nonce,
 				'src'   => $this->url . '/js/plugins.js'
 			],
 			'plugins' => [
 				'nonce' => $this->nonce,
 				'src'   => $this->plugins->url('js'),
-				'defer' => true
 			],
 			...A::map($this->custom('panel.js'), fn ($src) => [
 				'nonce' => $this->nonce,

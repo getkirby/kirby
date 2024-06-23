@@ -66,11 +66,16 @@ use Kirby\Toolkit\Html;
     window.fiber = <?= json_encode($fiber) ?>;
   </script>
 
-<?php foreach ($assets['js'] as $key => $js): ?>
-<script type="module" nonce="<?= $nonce ?>" <?= e(($js['defer'] ?? null), 'defer', null) ?>>
-	import('<?= $js['src'] ?>')
-</script>
-<?php endforeach ?>
+	<?php foreach ($assets['js'] as $key => $js): ?>
+	<?php if ($key === 'plugin-registry'): ?>
+	<?= Html::tag('script', '', $js) . PHP_EOL ?>
+
+	<?php else: ?>
+	<script type="module" nonce="<?= $nonce ?>" <?= e(($js['defer'] ?? null), 'defer', null) ?>>
+		import('<?= $js['src'] ?>')
+	</script>
+	<?php endif ?>
+	<?php endforeach ?>
 
 </body>
 </html>
