@@ -26,7 +26,7 @@ use Kirby\Toolkit\Str;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
- * @since     4.3.0
+ * @since     4.4.0
  * @internal
  */
 class Upload
@@ -349,7 +349,7 @@ class Upload
 		// if the blueprint `maxsize` option is set,
 		// ensure that the total size communicated in the header
 		// as well as the current tmp size after adding this chunk
-		// does not exceed the max limit
+		// do not exceed the max limit
 		if (
 			($max = $file->blueprint()->accept()['maxsize'] ?? null) &&
 			(
