@@ -11,7 +11,7 @@ use Kirby\Toolkit\Obj;
  */
 class HelpersTest extends HelpersTestCase
 {
-	protected $deprecations = [];
+	protected array $deprecations = [];
 
 	public function setUp(): void
 	{

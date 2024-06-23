@@ -9,6 +9,7 @@ use Kirby\Cms\User;
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
 use Kirby\Exception\NotFoundException;
+use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\Filename;
 use Kirby\Http\Uri;
@@ -58,15 +59,13 @@ return [
 	/**
 	 * Adapt file characteristics
 	 *
-	 * @param \Kirby\Cms\File|\Kirby\Filesystem\Asset $file The file object
 	 * @param array $options All thumb options (width, height, crop, blur, grayscale)
-	 * @return \Kirby\Cms\File|\Kirby\Cms\FileVersion|\Kirby\Filesystem\Asset
 	 */
 	'file::version' => function (
 		App $kirby,
-		$file,
+		File|Asset $file,
 		array $options = []
-	) {
+	): File|Asset|FileVersion {
 		// if file is not resizable, return
 		if ($file->isResizable() === false) {
 			return $file;

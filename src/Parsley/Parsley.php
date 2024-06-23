@@ -2,7 +2,9 @@
 
 namespace Kirby\Parsley;
 
+use DOMComment;
 use DOMDocument;
+use DOMDocumentType;
 use DOMElement;
 use DOMNode;
 use DOMText;
@@ -224,10 +226,11 @@ class Parsley
 	 */
 	public function parseNode(DOMNode $element): bool
 	{
-		$skip = ['DOMComment', 'DOMDocumentType'];
-
 		// unwanted element types
-		if (in_array($element::class, $skip) === true) {
+		if (
+			$element instanceof DOMComment ||
+			$element instanceof DOMDocumentType
+		) {
 			return false;
 		}
 
@@ -239,12 +242,13 @@ class Parsley
 
 		$this->endInlineBlock();
 
+
 		// known block nodes
 		if ($this->isBlock($element) === true) {
 			/**
 			 * @var DOMElement $element
 			 */
-			if ($parser = ($this->nodes[$element->tagName]['parse'] ?? null)) {
+			if ($parser = $this->nodes[$element->tagName]['parse'] ?? null) {
 				if ($result = $parser(new Element($element, $this->marks))) {
 					$this->blocks[] = $result;
 				}

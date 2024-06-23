@@ -9,7 +9,7 @@ class BlocksTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 
-	protected $page;
+	protected Page $page;
 
 	public function setUp(): void
 	{

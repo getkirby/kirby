@@ -59,10 +59,19 @@ class VersionIdTest extends TestCase
 	 * @covers ::from
 	 * @covers ::value
 	 */
-	public function testFrom()
+	public function testFromString()
 	{
 		$version = VersionId::from('published');
+		$this->assertSame('published', $version->value());
+	}
 
+	/**
+	 * @covers ::from
+	 * @covers ::value
+	 */
+	public function testFromInstance()
+	{
+		$version = VersionId::from(VersionId::published());
 		$this->assertSame('published', $version->value());
 	}
 

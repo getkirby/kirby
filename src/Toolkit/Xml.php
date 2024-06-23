@@ -56,10 +56,8 @@ class Xml
 
 	/**
 	 * Closing string for void tags
-	 *
-	 * @var string
 	 */
-	public static $void = ' />';
+	public static string $void = ' />';
 
 	/**
 	 * Generates a single attribute or a list of attributes
@@ -80,6 +78,7 @@ class Xml
 			}
 
 			$attributes = [];
+
 			foreach ($name as $key => $val) {
 				if (is_int($key) === true) {
 					$key = $val;
@@ -284,12 +283,12 @@ class Xml
 		// get all XML namespaces of the whole document to iterate over later;
 		// we don't need the global namespace (empty string) in the list
 		$usedNamespaces = $element->getNamespaces(true);
-		if (isset($usedNamespaces[''])) {
-			unset($usedNamespaces['']);
-		}
+
+		unset($usedNamespaces['']);
 
 		// now collect element metadata of the parent
 		$array = [];
+
 		if ($collectName === true) {
 			$array['@name'] = $element->getName();
 		}
@@ -297,14 +296,16 @@ class Xml
 		// collect attributes with each defined document namespace;
 		// also check for attributes without any namespace
 		$attributeArray = [];
+
 		foreach ([0 => null, ...array_keys($usedNamespaces)] as $namespace) {
-			$prefix     = ($namespace) ? $namespace . ':' : '';
+			$prefix     = $namespace ? $namespace . ':' : '';
 			$attributes = $element->attributes($namespace, true);
 
 			foreach ($attributes as $key => $value) {
 				$attributeArray[$prefix . $key] = (string)$value;
 			}
 		}
+
 		if (count($attributeArray) > 0) {
 			$array['@attributes'] = $attributeArray;
 		}
@@ -317,8 +318,9 @@ class Xml
 		// check for children with each defined document namespace;
 		// also check for children without any namespace
 		$hasChildren = false;
+
 		foreach ([0 => null, ...array_keys($usedNamespaces)] as $namespace) {
-			$prefix = ($namespace) ? $namespace . ':' : '';
+			$prefix   = $namespace ? $namespace . ':' : '';
 			$children = $element->children($namespace, true);
 
 			if (count($children) > 0) {

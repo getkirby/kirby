@@ -36,11 +36,6 @@ class Component
 	public static array $types = [];
 
 	/**
-	 * An array of all passed attributes
-	 */
-	protected array $attrs = [];
-
-	/**
 	 * An array of all computed properties
 	 */
 	protected array $computed = [];
@@ -62,20 +57,19 @@ class Component
 	protected array $props = [];
 
 	/**
-	 * The component type
-	 */
-	protected string $type;
-
-	/**
 	 * Creates a new component for the given type
+	 *
+	 * @param string $type The component type
+	 * @param array $attrs An array of all passed attributes
 	 */
-	public function __construct(string $type, array $attrs = [])
-	{
+	public function __construct(
+		protected string $type,
+		protected array $attrs = []
+	) {
 		if (isset(static::$types[$type]) === false) {
 			throw new InvalidArgumentException('Undefined component type: ' . $type);
 		}
 
-		$this->attrs   = $attrs;
 		$this->options = $options = static::setup($type);
 		$this->methods = $methods = $options['methods'] ?? [];
 
@@ -91,6 +85,8 @@ class Component
 			$this->applyComputed($options['computed']);
 		}
 
+		// Reset main properties to avoid them being overwritten
+		// when applying props and computes
 		$this->attrs   = $attrs;
 		$this->methods = $methods;
 		$this->options = $options;

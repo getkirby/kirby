@@ -9,8 +9,8 @@ use stdClass;
 
 class MockObject
 {
-	protected $id;
-	protected $group;
+	protected string|Field $id;
+	protected string|null $group;
 
 	public function __construct(array $props = [])
 	{
@@ -18,12 +18,12 @@ class MockObject
 		$this->group = $props['group'] ?? null;
 	}
 
-	public function id()
+	public function id(): string|Field
 	{
 		return $this->id;
 	}
 
-	public function group()
+	public function group(): string|null
 	{
 		return $this->group;
 	}
@@ -33,7 +33,7 @@ class MockObject
 		return ['id' => $this->id];
 	}
 
-	public function uuid()
+	public function uuid(): string|Field
 	{
 		return $this->id;
 	}

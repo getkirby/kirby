@@ -4,7 +4,6 @@ namespace Kirby\Database\Sql;
 
 use Kirby\Database\Database;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\TestCase;
 use Kirby\Toolkit\A;
 
 /**
@@ -12,9 +11,6 @@ use Kirby\Toolkit\A;
  */
 class SqliteTest extends TestCase
 {
-	protected $database;
-	protected $sql;
-
 	public function setUp(): void
 	{
 		$this->database = new Database([

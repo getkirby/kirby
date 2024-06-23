@@ -4,11 +4,9 @@ namespace Kirby\Toolkit;
 
 class MockCollectionEntry
 {
-	public $value;
-
-	public function __construct($value)
-	{
-		$this->value = $value;
+	public function __construct(
+		protected string $value
+	) {
 	}
 
 	public function __toString(): string

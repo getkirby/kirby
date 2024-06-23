@@ -55,17 +55,13 @@ class Html extends Xml
 	 * ```php
 	 * Html::$void = ' />'
 	 * ```
-	 *
-	 * @var string
 	 */
-	public static $void = '>';
+	public static string $void = '>';
 
 	/**
 	 * List of HTML tags that are considered to be self-closing
-	 *
-	 * @var array
 	 */
-	public static $voidList = [
+	public static array $voidList = [
 		'area',
 		'base',
 		'br',
@@ -162,9 +158,9 @@ class Html extends Xml
 
 		// HTML supports named entities
 		$entities = parent::entities();
-		$html = array_keys($entities);
-		$xml  = array_values($entities);
-		$attr = str_replace($xml, $html, $attr);
+		$html     = array_keys($entities);
+		$xml      = array_values($entities);
+		$attr     = str_replace($xml, $html, $attr);
 
 		if ($attr) {
 			return $before . $attr . $after;
@@ -208,10 +204,9 @@ class Html extends Xml
 			$text = [Str::encode($address)];
 		}
 
-		$email = Str::encode($email);
-		$attr  = [
+		$attr = [
 			'href' => [
-				'value'  => 'mailto:' . $email,
+				'value'  => 'mailto:' . Str::encode($email),
 				'escape' => false
 			],
 			...$attr
@@ -244,7 +239,13 @@ class Html extends Xml
 
 		if ($keepTags === true) {
 			$list = static::entities();
-			unset($list['"'], $list['<'], $list['>'], $list['&']);
+
+			unset(
+				$list['"'],
+				$list['<'],
+				$list['>'],
+				$list['&']
+			);
 
 			$search = array_keys($list);
 			$values = array_values($list);
@@ -534,7 +535,7 @@ class Html extends Xml
 			isset($attr['allow']) === false &&
 			($attr['allowfullscreen'] ?? true) === true
 		) {
-			$attr['allow'] = 'fullscreen';
+			$attr['allow']           = 'fullscreen';
 			$attr['allowfullscreen'] = true;
 		}
 

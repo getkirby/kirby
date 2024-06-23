@@ -9,8 +9,8 @@ class FileVersionApiModelTest extends ApiModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FileVersionApiModel';
 
-	protected $file;
-	protected $parent;
+	protected File $file;
+	protected Site|Page|User $parent;
 
 	public function setUp(): void
 	{

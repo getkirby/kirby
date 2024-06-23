@@ -6,14 +6,12 @@ use Exception;
 
 class StringObject
 {
-	protected $value;
-
-	public function __construct(string $value)
-	{
-		$this->value = $value;
+	public function __construct(
+		protected string $value
+	) {
 	}
 
-	public function __toString()
+	public function __toString(): string
 	{
 		return $this->value;
 	}
@@ -24,8 +22,8 @@ class StringObject
  */
 class CollectionTest extends TestCase
 {
-	protected $collection;
-	protected $sampleData;
+	protected Collection $collection;
+	protected array $sampleData;
 
 	public function setUp(): void
 	{

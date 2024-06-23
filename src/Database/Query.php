@@ -82,7 +82,7 @@ class Query
 	/**
 	 * WHERE clause
 	 */
-	protected $where = null;
+	protected string|null $where = null;
 
 	/**
 	 * GROUP BY clause
@@ -92,12 +92,12 @@ class Query
 	/**
 	 * HAVING clause
 	 */
-	protected $having = null;
+	protected string|null $having = null;
 
 	/**
 	 * ORDER BY clause
 	 */
-	protected $order = null;
+	protected string|null $order = null;
 
 	/**
 	 * The offset, which should be applied to the select query

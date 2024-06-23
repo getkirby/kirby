@@ -15,7 +15,7 @@ class BlueprintTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Blueprint';
 
-	protected $model;
+	protected ModelWithContent $model;
 
 	public function setUp(): void
 	{

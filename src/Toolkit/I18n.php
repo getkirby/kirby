@@ -72,14 +72,19 @@ class I18n
 			return 'none';
 		}
 
-		return $count === 1 ? 'singular' : 'plural';
+		return match ($count) {
+			1       => 'singular',
+			default => 'plural'
+		};
 	}
 
 	/**
 	 * Formats a number
 	 */
-	public static function formatNumber(int|float $number, string|null $locale = null): string
-	{
+	public static function formatNumber(
+		int|float $number,
+		string|null $locale = null
+	): string {
 		$locale  ??= static::locale();
 		$formatter = static::decimalNumberFormatter($locale);
 		$number    = $formatter?->format($number) ?? $number;
@@ -273,8 +278,9 @@ class I18n
 	/**
 	 * Returns (and creates) a decimal number formatter for a given locale
 	 */
-	protected static function decimalNumberFormatter(string $locale): NumberFormatter|null
-	{
+	protected static function decimalNumberFormatter(
+		string $locale
+	): NumberFormatter|null {
 		if ($formatter = static::$decimalsFormatters[$locale] ?? null) {
 			return $formatter;
 		}

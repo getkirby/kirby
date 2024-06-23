@@ -24,8 +24,10 @@ class Svgz extends Svg
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed or recompressed
 	 */
-	public static function sanitize(string $string, bool $isExternal = false): string
-	{
+	public static function sanitize(
+		string $string,
+		bool $isExternal = false
+	): string {
 		$string = static::uncompress($string);
 		$string = parent::sanitize($string, $isExternal);
 		$string = @gzencode($string);
@@ -46,8 +48,10 @@ class Svgz extends Svg
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
 	 */
-	public static function validate(string $string, bool $isExternal = false): void
-	{
+	public static function validate(
+		string $string,
+		bool $isExternal = false
+	): void {
 		$string = static::uncompress($string);
 		parent::validate($string, $isExternal);
 	}

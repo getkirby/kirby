@@ -107,6 +107,7 @@ class Locale
 		if (is_array($locale) === true) {
 			// replace string constant keys with the constant values
 			$convertedLocale = [];
+
 			foreach ($locale as $key => $value) {
 				$convertedLocale[static::normalizeConstant($key)] = $value;
 			}
@@ -147,8 +148,9 @@ class Locale
 	 * Tries to convert an `LC_*` constant name
 	 * to its constant value
 	 */
-	protected static function normalizeConstant(int|string $constant): int|string
-	{
+	protected static function normalizeConstant(
+		int|string $constant
+	): int|string {
 		if (
 			is_string($constant) === true &&
 			Str::startsWith($constant, 'LC_') === true
@@ -169,11 +171,13 @@ class Locale
 	protected static function supportedConstants(bool $withAll = false): array
 	{
 		$names = static::LOCALE_CONSTANTS;
+
 		if ($withAll === true) {
 			array_unshift($names, 'LC_ALL');
 		}
 
 		$constants = [];
+
 		foreach ($names as $name) {
 			if (defined($name) === true) {
 				$constants[constant($name)] = $name;
