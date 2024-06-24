@@ -61,18 +61,16 @@ class Translations extends Collection
 		ModelWithContent $model,
 		Version $version
 	): static {
-		$translations = new static();
+		$translations = [];
 
 		foreach (Languages::ensure() as $language) {
-			$translation = new Translation(
+			$translations[] = new Translation(
 				model: $model,
 				version: $version,
 				language: $language
 			);
-
-			$translations->data[$language->code()] = $translation;
 		}
 
-		return $translations;
+		return new static($translations);
 	}
 }
