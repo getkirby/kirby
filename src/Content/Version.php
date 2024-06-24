@@ -5,6 +5,7 @@ namespace Kirby\Content;
 use Kirby\Cms\Language;
 use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 
 /**
@@ -209,6 +210,32 @@ class Version
 	protected function prepareFieldsAfterRead(array $fields, Language $language): array
 	{
 		return $this->convertFieldNamesToLowerCase($fields);
+	}
+
+	/**
+	 * This method can only be applied to the "changes" version.
+	 * It will copy all fields over to the "published" version and delete
+	 * this version afterwards.
+	 */
+	public function publish(Language|string $language = 'default'): void
+	{
+		if ($this->id->value() === VersionId::PUBLISHED) {
+			throw new LogicException('This version is already published');
+		}
+
+		$language = Language::ensure($language);
+
+		// the version needs to exist
+		$this->ensure($language);
+
+		// update the default version
+		$this->model->version(VersionId::default($this->model))->save(
+			fields: $this->read($language),
+			language: $language
+		);
+
+		// delete the changes
+		$this->delete($language);
 	}
 
 	/**
