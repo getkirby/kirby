@@ -78,6 +78,29 @@ class LanguagesTest extends TestCase
 		$this->assertSame(['default'], $app->languages()->codes());
 	}
 
+	public function testEnsureInMultiLanguageMode()
+	{
+		$languages = Languages::ensure();
+
+		$this->assertCount(2, $languages);
+		$this->assertSame('en', $languages->first()->code());
+		$this->assertSame('de', $languages->last()->code());
+	}
+
+	public function testEnsureInSingleLanguageMode()
+	{
+		new App([
+			'roots' => [
+				'index' => static::TMP,
+			]
+		]);
+
+		$languages = Languages::ensure();
+
+		$this->assertCount(1, $languages);
+		$this->assertSame('en', $languages->first()->code());
+	}
+
 	public function testLoad()
 	{
 		$this->assertCount(2, $this->languages);

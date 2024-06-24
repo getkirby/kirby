@@ -3,8 +3,8 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\Language;
+use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Exception\InvalidArgumentException;
 
 /**
  * The Version class handles all actions for a single
@@ -66,14 +66,7 @@ class Version
 	 */
 	public function delete(): void
 	{
-		// delete the default language in single-language mode
-		if ($this->model->kirby()->multilang() === false) {
-			$this->model->storage()->delete($this->id, $this->language('default'));
-			return;
-		}
-
-		// delete all languages
-		foreach ($this->model->kirby()->languages() as $language) {
+		foreach (Languages::ensure() as $language) {
 			$this->model->storage()->delete($this->id, $language);
 		}
 	}
@@ -115,22 +108,7 @@ class Version
 	protected function language(
 		Language|string|null $languageCode = null,
 	): Language {
-		if ($languageCode instanceof Language) {
-			return $languageCode;
-		}
-
-		// single language
-		if ($this->model->kirby()->multilang() === false) {
-			return Language::single();
-		}
-
-		// look up the actual language object if possible
-		if ($language = $this->model->kirby()->language($languageCode)) {
-			return $language;
-		}
-
-		// validate the language code
-		throw new InvalidArgumentException('Invalid language: ' . $languageCode);
+		return Language::ensure($languageCode);
 	}
 
 	/**
