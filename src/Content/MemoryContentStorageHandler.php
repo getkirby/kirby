@@ -91,19 +91,6 @@ class MemoryContentStorageHandler extends ContentStorageHandler
 	}
 
 	/**
-	 * Updates the content fields of an existing version
-	 *
-	 * @param array<string, string> $fields Content fields
-	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
-	 */
-	public function update(VersionId $versionId, Language $language, array $fields): void
-	{
-		$this->ensure($versionId, $language);
-		$this->write($versionId, $language, $fields);
-	}
-
-	/**
 	 * Writes the content fields of an existing version
 	 *
 	 * @param array<string, string> $fields Content fields
