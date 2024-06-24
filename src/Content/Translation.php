@@ -42,7 +42,7 @@ class Translation extends ContentTranslation
 	 * Returns the language code of the
 	 * translation
 	 *
-	 * @deprecated since 5.0.0 Use `::language()->code()` instead
+	 * @deprecated 5.0.0 Use `::language()->code()` instead
 	 */
 	public function code(): string
 	{
@@ -54,7 +54,7 @@ class Translation extends ContentTranslation
 	 * Returns the translation content
 	 * as plain array
 	 *
-	 * @deprecated since 5.0.0 Use `::version()->content()->toArray()` instead
+	 * @deprecated 5.0.0 Use `::version()->content()->toArray()` instead
 	 */
 	public function content(): array
 	{
@@ -65,7 +65,7 @@ class Translation extends ContentTranslation
 	/**
 	 * Absolute path to the translation content file
 	 *
-	 * @deprecated since 5.0.0 Use `::version()->contentFile()` instead
+	 * @deprecated 5.0.0
 	 */
 	public function contentFile(): string
 	{
@@ -100,7 +100,7 @@ class Translation extends ContentTranslation
 	/**
 	 * Checks if the translation file exists
 	 *
-	 * @deprecated since 5.0.0 Use `::version()->exists()` instead
+	 * @deprecated 5.0.0 Use `::version()->exists()` instead
 	 */
 	public function exists(): bool
 	{
@@ -120,7 +120,7 @@ class Translation extends ContentTranslation
 	 * Checks if the this is the default translation
 	 * of the model
 	 *
-	 * @deprecated since 5.0.0 Use `::language()->isDefault()` instead
+	 * @deprecated 5.0.0 Use `::language()->isDefault()` instead
 	 */
 	public function isDefault(): bool
 	{
