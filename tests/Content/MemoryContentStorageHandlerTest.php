@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\Language;
+use Kirby\Exception\NotFoundException;
 
 /**
  * @coversDefaultClass Kirby\Content\MemoryContentStorageHandler
@@ -308,6 +309,19 @@ class MemoryContentStorageHandlerTest extends TestCase
 
 		$this->assertIsInt($this->storage->modified($changes, $language));
 		$this->assertNull($this->storage->modified(VersionId::published(), $language));
+	}
+
+	/**
+	 * @covers ::read
+	 */
+	public function testReadWhenMissing()
+	{
+		$this->setUpSingleLanguage();
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('Version "changes" does not already exist');
+
+		$this->storage->read(VersionId::changes(), Language::single());
 	}
 
 	/**

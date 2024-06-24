@@ -694,6 +694,22 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::read
+	 */
+	public function testReadWhenMissing(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$this->assertFileDoesNotExist($this->contentFile());
+		$this->assertNull($version->read());
+	}
+
+	/**
+	 * @covers ::read
 	 * @covers ::convertFieldNamesToLowerCase
 	 * @covers ::prepareFieldsAfterRead
 	 */
