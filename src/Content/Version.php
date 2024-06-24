@@ -5,7 +5,7 @@ namespace Kirby\Content;
 use Kirby\Cms\Language;
 use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
-use Throwable;
+use Kirby\Exception\NotFoundException;
 
 /**
  * The Version class handles all actions for a single
@@ -34,7 +34,7 @@ class Version
 	public function content(Language|string $language = 'default'): Content
 	{
 		$language = Language::ensure($language);
-		$fields   = $this->read($language);
+		$fields   = $this->read($language) ?? [];
 
 		// This is where we merge content from the default language
 		// to provide a fallback for missing/untranslated fields.
@@ -44,7 +44,7 @@ class Version
 		// individual versions of pages and no longer enforce the fallback.
 		if ($language->isDefault() === false) {
 			$fields = [
-				...$this->read('default'),
+				...$this->read('default') ?? [],
 				...$fields
 			];
 		}
@@ -214,9 +214,9 @@ class Version
 	/**
 	 * Returns the stored content fields
 	 *
-	 * @return array<string, string>
+	 * @return array<string, string>|null
 	 */
-	public function read(Language|string $language = 'default'): array
+	public function read(Language|string $language = 'default'): array|null
 	{
 		$language = Language::ensure($language);
 
@@ -224,8 +224,8 @@ class Version
 			$fields = $this->model->storage()->read($this->id, $language);
 			$fields = $this->prepareFieldsAfterRead($fields, $language);
 			return $fields;
-		} catch (Throwable) {
-			return [];
+		} catch (NotFoundException) {
+			return null;
 		}
 	}
 
