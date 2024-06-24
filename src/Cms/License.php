@@ -22,7 +22,7 @@ use Throwable;
  */
 class License
 {
-	protected const HISTORY = [
+	public const HISTORY = [
 		'3' => '2019-02-05',
 		'4' => '2023-11-28'
 	];
