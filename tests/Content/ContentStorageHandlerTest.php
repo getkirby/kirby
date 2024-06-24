@@ -34,10 +34,18 @@ class ContentStorageHandlerTest extends TestCase
 
 		$versions = iterator_to_array($handler->all(), false);
 
-		// The TestContentStorage handler always returns true
-		// for every version and language. Thus there should be
-		// 2 versions for every language.
-		//
+		$this->assertCount(0, $versions);
+
+		// create all possible versions
+		$handler->create(VersionId::published(), $this->app->language('en'), []);
+		$handler->create(VersionId::published(), $this->app->language('de'), []);
+
+		$handler->create(VersionId::changes(), $this->app->language('en'), []);
+		$handler->create(VersionId::changes(), $this->app->language('de'), []);
+
+		// count again
+		$versions = iterator_to_array($handler->all(), false);
+
 		// article.en.txt
 		// article.de.txt
 		// _changes/article.en.txt
@@ -61,10 +69,15 @@ class ContentStorageHandlerTest extends TestCase
 
 		$versions = iterator_to_array($handler->all(), false);
 
-		// The TestContentStorage handler always returns true
-		// for every version and language. Thus there should be
-		// 2 versions in a single language installation.
-		//
+		$this->assertCount(0, $versions);
+
+		// create all possible versions
+		$handler->create(VersionId::published(), Language::single(), []);
+		$handler->create(VersionId::changes(), Language::single(), []);
+
+		// count again
+		$versions = iterator_to_array($handler->all(), false);
+
 		// article.txt
 		// _changes/article.txt
 		$this->assertCount(2, $versions);
@@ -81,6 +94,18 @@ class ContentStorageHandlerTest extends TestCase
 			new Page(['slug' => 'test', 'isDraft' => false])
 		);
 
+		$versions = iterator_to_array($handler->all(), false);
+
+		$this->assertCount(0, $versions);
+
+		// create all possible versions
+		$handler->create(VersionId::published(), $this->app->language('en'), []);
+		$handler->create(VersionId::published(), $this->app->language('de'), []);
+
+		$handler->create(VersionId::changes(), $this->app->language('en'), []);
+		$handler->create(VersionId::changes(), $this->app->language('de'), []);
+
+		// count again
 		$versions = iterator_to_array($handler->all(), false);
 
 		// A page that's not in draft mode can have published and changes versions
@@ -101,6 +126,17 @@ class ContentStorageHandlerTest extends TestCase
 
 		$versions = iterator_to_array($handler->all(), false);
 
+		$this->assertCount(0, $versions);
+
+		$handler->create(VersionId::published(), $this->app->language('en'), []);
+		$handler->create(VersionId::published(), $this->app->language('de'), []);
+
+		$handler->create(VersionId::changes(), $this->app->language('en'), []);
+		$handler->create(VersionId::changes(), $this->app->language('de'), []);
+
+		// count again
+		$versions = iterator_to_array($handler->all(), false);
+
 		// A draft page has only changes and thus should only have
 		// a changes for every language, but no published versions
 		$this->assertCount(2, $versions);
@@ -117,6 +153,15 @@ class ContentStorageHandlerTest extends TestCase
 			new Page(['slug' => 'test', 'isDraft' => false])
 		);
 
+		$versions = iterator_to_array($handler->all(), false);
+
+		$this->assertCount(0, $versions);
+
+		// create all possible versions
+		$handler->create(VersionId::published(), Language::single(), []);
+		$handler->create(VersionId::changes(), Language::single(), []);
+
+		// count again
 		$versions = iterator_to_array($handler->all(), false);
 
 		// A page that's not in draft mode can have published and changes versions
@@ -136,6 +181,15 @@ class ContentStorageHandlerTest extends TestCase
 
 		$versions = iterator_to_array($handler->all(), false);
 
+		$this->assertCount(0, $versions);
+
+		// create all possible versions
+		$handler->create(VersionId::published(), Language::single(), []);
+		$handler->create(VersionId::changes(), Language::single(), []);
+
+		// count again
+		$versions = iterator_to_array($handler->all(), false);
+
 		// A draft page has only changes and thus should only have
 		// a single version in a single language installation
 		$this->assertCount(1, $versions);
@@ -148,22 +202,21 @@ class ContentStorageHandlerTest extends TestCase
 	{
 		$this->setUpMultiLanguage();
 
-		// Use the plain text handler, as the abstract class and the test handler do not
-		// implement the necessary methods to test this.
-		$handler = new PlainTextContentStorageHandler(
+		$handler = new TestContentStorageHandler(
 			model: $this->model
 		);
 
-		Data::write($filePublished = $this->model->root() . '/article.de.txt', []);
-		Data::write($fileChanges   = $this->model->root() . '/_changes/article.de.txt', []);
+		// create two versions for the German language
+		$handler->create(VersionId::published(), $this->app->language('de'), []);
+		$handler->create(VersionId::changes(), $this->app->language('de'), []);
 
-		$this->assertFileExists($filePublished);
-		$this->assertFileExists($fileChanges);
+		$this->assertTrue($handler->exists(VersionId::published(), $this->app->language('de')));
+		$this->assertTrue($handler->exists(VersionId::changes(), $this->app->language('de')));
 
 		$handler->deleteLanguage($this->app->language('de'));
 
-		$this->assertFileDoesNotExist($filePublished);
-		$this->assertFileDoesNotExist($fileChanges);
+		$this->assertFalse($handler->exists(VersionId::published(), $this->app->language('de')));
+		$this->assertFalse($handler->exists(VersionId::changes(), $this->app->language('de')));
 	}
 
 	/**
@@ -175,20 +228,23 @@ class ContentStorageHandlerTest extends TestCase
 
 		// Use the plain text handler, as the abstract class and the test handler do not
 		// implement the necessary methods to test this.
-		$handler = new PlainTextContentStorageHandler(
+		$handler = new TestContentStorageHandler(
 			model: $this->model
 		);
 
-		Data::write($filePublished = $this->model->root() . '/article.txt', []);
-		Data::write($fileChanges   = $this->model->root() . '/_changes/article.txt', []);
+		$language = Language::single();
 
-		$this->assertFileExists($filePublished);
-		$this->assertFileExists($fileChanges);
+		// create two versions
+		$handler->create(VersionId::published(), $language, []);
+		$handler->create(VersionId::changes(), $language, []);
 
-		$handler->deleteLanguage(Language::single());
+		$this->assertTrue($handler->exists(VersionId::published(), $language));
+		$this->assertTrue($handler->exists(VersionId::changes(), $language));
 
-		$this->assertFileDoesNotExist($filePublished);
-		$this->assertFileDoesNotExist($fileChanges);
+		$handler->deleteLanguage($language);
+
+		$this->assertFalse($handler->exists(VersionId::published(), $language));
+		$this->assertFalse($handler->exists(VersionId::changes(), $language));
 	}
 
 	/**
@@ -274,14 +330,68 @@ class ContentStorageHandlerTest extends TestCase
 	}
 
 	/**
+	 * @covers ::move
+	 */
+	public function testMoveMultiLanguage()
+	{
+		$this->setUpMultiLanguage();
+
+		$handler = new TestContentStorageHandler(
+			model: $this->model
+		);
+
+		$en = $this->app->language('en');
+		$de = $this->app->language('de');
+
+		$handler->create(VersionId::published(), $en, []);
+
+		$this->assertTrue($handler->exists(VersionId::published(), $en));
+		$this->assertFalse($handler->exists(VersionId::published(), $de));
+
+		$handler->move(
+			VersionId::published(),
+			$en,
+			VersionId::published(),
+			$de
+		);
+
+		$this->assertFalse($handler->exists(VersionId::published(), $en));
+		$this->assertTrue($handler->exists(VersionId::published(), $de));
+	}
+
+	public function testMoveSingleLanguage()
+	{
+		$this->setUpSingleLanguage();
+
+		$handler = new TestContentStorageHandler(
+			model: $this->model
+		);
+
+		$handler->create(VersionId::published(), Language::single(), []);
+
+		$this->assertTrue($handler->exists(VersionId::published(), Language::single()));
+		$this->assertFalse($handler->exists(VersionId::changes(), Language::single()));
+
+		$handler->move(
+			VersionId::published(),
+			Language::single(),
+			VersionId::changes(),
+			Language::single()
+		);
+
+		$this->assertFalse($handler->exists(VersionId::published(), Language::single()));
+		$this->assertTrue($handler->exists(VersionId::changes(), Language::single()));
+	}
+
+	/**
 	 * @covers ::moveLanguage
 	 */
 	public function testMoveSingleLanguageToMultiLanguage()
 	{
 		$this->setUpMultiLanguage();
 
-		// Use the plain text handler, as the abstract class and the test handler do not
-		// implement the necessary methods to test this.
+		// Use the plain text handler, as it offers the most
+		// realistic, testable results for this test
 		$handler = new PlainTextContentStorageHandler(
 			model: $this->model
 		);
@@ -311,8 +421,8 @@ class ContentStorageHandlerTest extends TestCase
 	{
 		$this->setUpMultiLanguage();
 
-		// Use the plain text handler, as the abstract class and the test handler do not
-		// implement the necessary methods to test this.
+		// Use the plain text handler, as it offers the most
+		// realistic, testable results for this test
 		$handler = new PlainTextContentStorageHandler(
 			model: $this->model
 		);

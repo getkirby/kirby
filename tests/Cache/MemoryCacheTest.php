@@ -116,4 +116,18 @@ class MemoryCacheTest extends TestCase
 		$this->assertTrue($cache2->exists('a'));
 		$this->assertTrue($cache2->exists('b'));
 	}
+
+	/**
+	 * @covers ::modified
+	 */
+	public function testModified()
+	{
+		$cache = new MemoryCache();
+
+		$time = time();
+
+		$cache->set('a', 'A basic value');
+
+		$this->assertGreaterThanOrEqual($time, $cache->modified('a'));
+	}
 }

@@ -410,11 +410,11 @@ class PlainTextContentStorageHandlerTest extends TestCase
 			'text'  => 'Bar'
 		];
 
-		Dir::make(static::TMP . '/_changes');
-		Data::write(static::TMP . '/_changes/article.en.txt', $fields);
+		Dir::make($this->model->root() . '/_changes');
+		Data::write($this->model->root() . '/_changes/article.en.txt', $fields);
 
 		$this->storage->update(VersionId::changes(), $this->app->language('en'), $fields);
-		$this->assertSame($fields, Data::read(static::TMP . '/_changes/article.en.txt'));
+		$this->assertSame($fields, Data::read($this->model->root() . '/_changes/article.en.txt'));
 	}
 
 	/**
@@ -429,11 +429,11 @@ class PlainTextContentStorageHandlerTest extends TestCase
 			'text'  => 'Bar'
 		];
 
-		Dir::make(static::TMP . '/_changes');
-		Data::write(static::TMP . '/_changes/article.txt', $fields);
+		Dir::make($this->model->root() . '/_changes');
+		Data::write($this->model->root() . '/_changes/article.txt', $fields);
 
 		$this->storage->update(VersionId::changes(), Language::single(), $fields);
-		$this->assertSame($fields, Data::read(static::TMP . '/_changes/article.txt'));
+		$this->assertSame($fields, Data::read($this->model->root() . '/_changes/article.txt'));
 	}
 
 	/**
@@ -448,10 +448,10 @@ class PlainTextContentStorageHandlerTest extends TestCase
 			'text'  => 'Bar'
 		];
 
-		Data::write(static::TMP . '/article.en.txt', $fields);
+		Data::write($this->model->root() . '/article.en.txt', $fields);
 
 		$this->storage->update(VersionId::published(), $this->app->language('en'), $fields);
-		$this->assertSame($fields, Data::read(static::TMP . '/article.en.txt'));
+		$this->assertSame($fields, Data::read($this->model->root() . '/article.en.txt'));
 	}
 
 	/**
@@ -466,10 +466,10 @@ class PlainTextContentStorageHandlerTest extends TestCase
 			'text'  => 'Bar'
 		];
 
-		Data::write(static::TMP . '/article.txt', $fields);
+		Data::write($this->model->root() . '/article.txt', $fields);
 
 		$this->storage->update(VersionId::published(), Language::single(), $fields);
-		$this->assertSame($fields, Data::read(static::TMP . '/article.txt'));
+		$this->assertSame($fields, Data::read($this->model->root() . '/article.txt'));
 	}
 
 	/**
