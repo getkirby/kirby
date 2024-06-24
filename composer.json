@@ -36,16 +36,16 @@
 		"ext-libxml": "*",
 		"ext-mbstring": "*",
 		"ext-openssl": "*",
-		"claviska/simpleimage": "4.0.6",
+		"claviska/simpleimage": "4.2.0",
 		"composer/semver": "3.4.0",
 		"filp/whoops": "2.15.4",
 		"getkirby/composer-installer": "^1.2.1",
 		"laminas/laminas-escaper": "2.13.0",
 		"michelf/php-smartypants": "1.8.1",
-		"phpmailer/phpmailer": "6.8.1",
-		"symfony/polyfill-intl-idn": "1.28.0",
-		"symfony/polyfill-mbstring": "1.28.0",
-		"symfony/yaml": "5.4.30 || 6.4.8"
+		"phpmailer/phpmailer": "6.9.1",
+		"symfony/polyfill-intl-idn": "1.30.0",
+		"symfony/polyfill-mbstring": "1.30.0",
+		"symfony/yaml": "6.4.8"
 	},
 	"replace": {
 		"symfony/polyfill-php72": "*"
