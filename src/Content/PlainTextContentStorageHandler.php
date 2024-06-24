@@ -213,9 +213,11 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 	 * Returns the stored content fields
 	 *
 	 * @return array<string, string>
+	 * @throws \Kirby\Exception\NotFoundException If the content file is missing
 	 */
 	public function read(VersionId $versionId, Language $language): array
 	{
+		$this->ensure($versionId, $language);
 		return Data::read($this->contentFile($versionId, $language));
 	}
 
