@@ -290,8 +290,13 @@ export default {
 				context.commit("CURRENT", null);
 			}
 		},
-		revert(context, id) {
+		async revert(context, id) {
 			id = context.getters.id(id);
+
+			const model = context.getters.model(id);
+
+			await window.panel.post(model.api + "/changes/discard");
+
 			context.commit("REVERT", id);
 		},
 		async save(context, id) {
@@ -314,7 +319,8 @@ export default {
 
 			// Send updated values to API
 			try {
-				await window.panel.api.patch(model.api, data);
+				// await window.panel.api.patch(model.api, data);
+				await window.panel.post(model.api + "/changes/publish", data);
 
 				// re-create model with updated values as originals
 				context.commit("CREATE", [
@@ -333,6 +339,12 @@ export default {
 		},
 		update(context, [field, value, id]) {
 			id = id ?? context.state.current;
+
+			const model = context.getters.model(id);
+			const data = { ...model.originals, ...model.changes };
+
+			// TODO: debounce save calls
+			window.panel.post(model.api + "/changes/save", data);
 
 			if (field === null) {
 				for (const field in value) {
