@@ -366,6 +366,8 @@ class ContentStorageHandlerTest extends TestCase
 		// create a new handler with all the versions from the first one
 		$handlerB = TestContentStorageHandler::from($handlerA);
 
+		$this->assertNotSame($handlerA, $handlerB);
+
 		$this->assertSame($publishedEN, $handlerB->read($versionPublished, $en));
 		$this->assertSame($publishedDE, $handlerB->read($versionPublished, $de));
 
