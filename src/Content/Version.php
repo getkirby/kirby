@@ -295,7 +295,7 @@ class Version
 		// update to a complete version
 		$fields = [
 			...$this->read($language),
-			...$this->convertFieldNamesToLowerCase($fields)
+			...$fields
 		];
 
 		$this->model->storage()->update(
