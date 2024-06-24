@@ -5,6 +5,7 @@ namespace Kirby\Panel;
 use Closure;
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Content\VersionId;
 use Kirby\Filesystem\Asset;
 use Kirby\Form\Form;
 use Kirby\Http\Uri;
@@ -37,7 +38,15 @@ abstract class Model
 	 */
 	public function content(): array
 	{
-		return Form::for($this->model)->values();
+		$changes = $this->model->version(VersionId::changes());
+		$values  = [];
+
+		// inject the changes if they exist
+		if ($changes->exists('current') === true) {
+			$values = $changes->read('current');
+		}
+
+		return Form::for($this->model, ['values' => $values])->values();
 	}
 
 	/**
