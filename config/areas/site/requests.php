@@ -2,9 +2,70 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
+use Kirby\Content\VersionId;
 use Kirby\Toolkit\I18n;
 
 return [
+	'page.changes.discard' => [
+		'pattern' => 'pages/(:any)/changes/discard',
+		'method'  => 'POST',
+		'action'  => function (string $path) {
+			Find::page($path)->version(VersionId::changes())->delete();
+
+			return [
+				'status' => 'ok'
+			];
+		}
+	],
+	'page.changes.publish' => [
+		'pattern' => 'pages/(:any)/changes/publish',
+		'method'  => 'POST',
+		'action'  => function (string $path) {
+			$page = Find::page($path);
+
+			// get the changes version
+			$changes = $page->version(VersionId::changes());
+
+			// save the submitted changes first
+			$changes->save(
+				fields: [
+					...$page->version(VersionId::published())->read(),
+					...App::instance()->request()->get(),
+				],
+				language: 'current'
+			);
+
+			// publish the changes
+			$changes->publish(
+				language: 'current'
+			);
+
+			return [
+				'status' => 'ok'
+			];
+		}
+	],
+	'page.changes.save' => [
+		'pattern' => 'pages/(:any)/changes/save',
+		'method'  => 'POST',
+		'action'  => function (string $path) {
+			$page = Find::page($path);
+
+			// combine the new field changes with the
+			// last published state
+			$page->version(VersionId::changes())->save(
+				fields: [
+					...$page->version(VersionId::published())->read(),
+					...App::instance()->request()->get(),
+				],
+				language: 'current'
+			);
+
+			return [
+				'status' => 'ok'
+			];
+		}
+	],
 	'tree' => [
 		'pattern' => 'site/tree',
 		'action'  => function () {
