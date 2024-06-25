@@ -67,14 +67,15 @@ use Kirby\Toolkit\Html;
   </script>
 
 	<?php foreach ($assets['js'] as $key => $js): ?>
-	<?php if ($key === 'plugin-registry'): ?>
-	<?= Html::tag('script', '', $js) . PHP_EOL ?>
-
-	<?php else: ?>
-	<script type="module" nonce="<?= $nonce ?>" <?= e(($js['defer'] ?? null), 'defer', null) ?>>
-		import('<?= $js['src'] ?>')
-	</script>
-	<?php endif ?>
+	<?= Html::tag(
+		'script',
+		'',
+		[
+				...$js,
+				'nonce' => $nonce,
+				'type'  => $key !== 'plugin-registry' ? 'module' : null
+		]
+	) . PHP_EOL ?>
 	<?php endforeach ?>
 
 </body>
