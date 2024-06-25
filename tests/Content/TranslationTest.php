@@ -274,30 +274,18 @@ class TranslationTest extends TestCase
 	{
 		$this->setUpMultiLanguage();
 
-		$translationEN = new Translation(
-			model: $this->model,
-			version: $this->model->version(),
-			language: Language::ensure('en')
-		);
-
-		$translationDE = new Translation(
+		$translation = new Translation(
 			model: $this->model,
 			version: $this->model->version(),
 			language: Language::ensure('de')
 		);
-
-		Data::write($this->contentFile('en'), [
-			'title' => 'Test',
-			'slug'  => 'english-slug'
-		]);
 
 		Data::write($this->contentFile('de'), [
 			'title' => 'Test',
 			'slug'  => 'german-slug'
 		]);
 
-		$this->assertSame('english-slug', $translationEN->slug());
-		$this->assertSame('german-slug', $translationDE->slug());
+		$this->assertSame('german-slug', $translation->slug());
 	}
 
 	/**
@@ -310,10 +298,10 @@ class TranslationTest extends TestCase
 		$translation = new Translation(
 			model: $this->model,
 			version: $this->model->version(),
-			language: Language::ensure('en')
+			language: Language::ensure('de')
 		);
 
-		Data::write($this->contentFile('en'), [
+		Data::write($this->contentFile('de'), [
 			'title' => 'Test',
 		]);
 
