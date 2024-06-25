@@ -43,7 +43,7 @@ class Helpers
 		// Some of them can be replaced by using `Version` class methods instead
 		// (see method comments). `Content\Translation::contentFile` should be avoided
 		//  entirely and has no recommended replacement.
-		'translation-methods' => false,
+		'translation-methods' => true,
 
 		// Passing a single space as value to `Xml::attr()` has been
 		// deprecated. In a future version, passing a single space won't
