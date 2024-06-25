@@ -415,14 +415,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 */
 	public function readContent(string|null $languageCode = null): array
 	{
-		try {
-			return $this->version()->read($languageCode ?? 'default');
-		} catch (NotFoundException) {
-			// only if the content file really does not exist, it's ok
-			// to return empty content. Otherwise this could lead to
-			// content loss in case of file reading issues
-			return [];
-		}
+		return $this->version()->read($languageCode ?? 'default') ?? [];
 	}
 
 	/**
