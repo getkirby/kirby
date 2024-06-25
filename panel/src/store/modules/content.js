@@ -343,15 +343,19 @@ export default {
 			const model = context.getters.model(id);
 			const data = { ...model.originals, ...model.changes };
 
-			// TODO: debounce save calls
-			window.panel.post(model.api + "/changes/save", data);
-
 			if (field === null) {
 				for (const field in value) {
 					context.commit("UPDATE", [id, field, value[field]]);
 				}
 			} else {
 				context.commit("UPDATE", [id, field, value]);
+			}
+
+			if (context.getters.hasChanges() === true) {
+				// TODO: debounce save calls
+				window.panel.post(model.api + "/changes/save", data);
+			} else {
+				window.panel.post(model.api + "/changes/discard");
 			}
 		}
 	}
