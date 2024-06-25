@@ -257,14 +257,17 @@ class Version
 		Language|string $language = 'default',
 		bool $overwrite = false
 	): void {
-		match (true) {
-			$this->exists($language) === false
-				=> $this->create($fields, $language),
-			$overwrite === true
-				=> $this->replace($fields, $language),
-			default
-			=> $this->update($fields, $language)
-		};
+		if ($this->exists($language) === false) {
+			$this->create($fields, $language);
+			return;
+		}
+
+		if ($overwrite === true) {
+			$this->replace($fields, $language);
+			return;
+		}
+
+		$this->update($fields, $language);
 	}
 
 	/**
