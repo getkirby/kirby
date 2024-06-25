@@ -4,6 +4,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Content\VersionId;
 use Kirby\Form\Form;
+use Kirby\Panel\Routes\Changes;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -50,30 +51,10 @@ return [
 		'pattern' => 'pages/(:any)/changes/save',
 		'method'  => 'POST',
 		'action'  => function (string $path) {
-			$page  = Find::page($path);
-			$input = $page->kirby()->request()->get();
-
-			// we need to run the input through the form
-			// class to get a set of storable field values
-			// that we can send to the content storage handler
-			$form = Form::for($page, [
-				'ignoreDisabled' => true,
-				'input'          => $input,
-			]);
-
-			// combine the new field changes with the
-			// last published state
-			$page->version(VersionId::changes())->save(
-				fields: [
-					...$page->version(VersionId::published())->read(),
-					...$form->strings(),
-				],
-				language: 'current'
+			return Changes::save(
+				model: Find::page($path),
+				input: App::instance()->request()->get()
 			);
-
-			return [
-				'status' => 'ok'
-			];
 		}
 	],
 	'tree' => [
