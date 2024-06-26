@@ -4,47 +4,30 @@ use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Content\VersionId;
 use Kirby\Form\Form;
-use Kirby\Panel\Routes\Changes;
+use Kirby\Panel\Controller\Changes;
 use Kirby\Toolkit\I18n;
 
+$files = require __DIR__ . '/../files/requests.php';
+
 return [
+	// Page Changes
 	'page.changes.discard' => [
 		'pattern' => 'pages/(:any)/changes/discard',
 		'method'  => 'POST',
 		'action'  => function (string $path) {
-			Find::page($path)->version(VersionId::changes())->delete();
-
-			return [
-				'status' => 'ok'
-			];
+			return Changes::discard(
+				model: Find::page($path),
+			);
 		}
 	],
 	'page.changes.publish' => [
 		'pattern' => 'pages/(:any)/changes/publish',
 		'method'  => 'POST',
 		'action'  => function (string $path) {
-			$page = Find::page($path);
-
-			// get the changes version
-			$changes = $page->version(VersionId::changes());
-
-			// save the submitted changes first
-			$changes->save(
-				fields: [
-					...$page->version(VersionId::published())->read(),
-					...App::instance()->request()->get(),
-				],
-				language: 'current'
+			return Changes::publish(
+				model: Find::page($path),
+				input: App::instance()->request()->get()
 			);
-
-			// publish the changes
-			$changes->publish(
-				language: 'current'
-			);
-
-			return [
-				'status' => 'ok'
-			];
 		}
 	],
 	'page.changes.save' => [
@@ -57,6 +40,67 @@ return [
 			);
 		}
 	],
+
+	// Page File Changes
+	'page.file.changes.discard' => [
+		...$files['changes.discard'],
+		'pattern' => '(pages/.*?)/files/(:any)/changes/discard',
+	],
+	'page.file.changes.publish' => [
+		...$files['changes.publish'],
+		'pattern' => '(pages/.*?)/files/(:any)/changes/publish',
+	],
+	'page.file.changes.save' => [
+		...$files['changes.save'],
+		'pattern' => '(pages/.*?)/files/(:any)/changes/save',
+	],
+
+	// Site Changes
+	'site.changes.discard' => [
+		'pattern' => '(site)/changes/discard',
+		'method'  => 'POST',
+		'action'  => function () {
+			return Changes::discard(
+				model: App::instance()->site(),
+			);
+		}
+	],
+	'site.changes.publish' => [
+		'pattern' => '(site)/changes/publish',
+		'method'  => 'POST',
+		'action'  => function () {
+			return Changes::publish(
+				model: App::instance()->site(),
+				input: App::instance()->request()->get()
+			);
+		}
+	],
+	'site.changes.save' => [
+		'pattern' => '(site)/changes/save',
+		'method'  => 'POST',
+		'action'  => function () {
+			return Changes::save(
+				model: App::instance()->site(),
+				input: App::instance()->request()->get()
+			);
+		}
+	],
+
+	// Site File Changes
+	'site.file.changes.discard' => [
+		...$files['changes.discard'],
+		'pattern' => '(site)/files/(:any)/changes/discard',
+	],
+	'site.file.changes.publish' => [
+		...$files['changes.publish'],
+		'pattern' => '(site)/files/(:any)/changes/publish',
+	],
+	'site.file.changes.save' => [
+		...$files['changes.save'],
+		'pattern' => '(site)/files/(:any)/changes/save',
+	],
+
+	// Tree Navigation
 	'tree' => [
 		'pattern' => 'site/tree',
 		'action'  => function () {
