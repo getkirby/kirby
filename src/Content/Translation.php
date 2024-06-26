@@ -69,7 +69,7 @@ class Translation extends ContentTranslation
 	 */
 	public function contentFile(): string
 	{
-		Helpers::deprecated('Please let us know if you have a use case for a replacement.', 'translation-methods');
+		Helpers::deprecated('`$translation->contentFile()` has been deprecated. Please let us know if you have a use case for a replacement.', 'translation-methods');
 		return $this->version->contentFile($this->language);
 	}
 
