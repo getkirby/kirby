@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Panel\Routes;
+namespace Kirby\Panel\Controller;
 
 use Kirby\Cms\ModelWithContent;
 use Kirby\Content\VersionId;
@@ -8,6 +8,36 @@ use Kirby\Form\Form;
 
 class Changes
 {
+	public static function discard(ModelWithContent $model)
+	{
+		$model->version(VersionId::changes())->delete();
+
+		return [
+			'status' => 'ok'
+		];
+	}
+
+	public static function publish(ModelWithContent $model, array $input)
+	{
+		// save the given changes first
+		static::save(
+			model: $model,
+			input: $input
+		);
+
+		// get the changes version
+		$changes = $model->version(VersionId::changes());
+
+		// publish the changes
+		$changes->publish(
+			language: 'current'
+		);
+
+		return [
+			'status' => 'ok'
+		];
+	}
+
 	public static function save(ModelWithContent $model, array $input)
 	{
 		// we need to run the input through the form
@@ -32,6 +62,5 @@ class Changes
 			'status' => 'ok'
 		];
 	}
-
 }
 
