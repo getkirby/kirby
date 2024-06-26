@@ -75,6 +75,9 @@ class Translation extends ContentTranslation
 
 	/**
 	 * Creates a new Translation for the given model
+	 *
+	 * @todo Needs to be refactored as soon as Version::create becomes static
+	 * 		 (see https://github.com/getkirby/kirby/pull/6491#discussion_r1652264408)
 	 */
 	public static function create(
 		ModelWithContent $model,
