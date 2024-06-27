@@ -22,8 +22,8 @@
 
 		<!-- Fatal iframe -->
 		<k-fatal
-			v-if="$panel.notification.isFatal && $panel.notification.isOpen"
-			:html="$panel.notification.message"
+			v-if="$notification.isFatal && $notification.isOpen"
+			:html="$notification.message"
 		/>
 
 		<!-- Offline warning -->

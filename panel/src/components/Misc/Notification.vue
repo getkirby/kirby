@@ -1,11 +1,11 @@
 <template>
 	<div
-		v-if="$panel.notification.isOpen"
-		:data-theme="$panel.notification.theme"
+		v-if="$notification.isOpen"
+		:data-theme="$notification.theme"
 		class="k-notification"
 	>
-		<p>{{ $panel.notification.message }}</p>
-		<k-button icon="cancel" @click="$panel.notification.close()" />
+		<p>{{ $notification.message }}</p>
+		<k-button icon="cancel" @click="$notification.close()" />
 	</div>
 </template>
 

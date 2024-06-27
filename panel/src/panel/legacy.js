@@ -44,6 +44,7 @@ export default {
 			"license",
 			"menu",
 			"multilang",
+			"notification",
 			"permissions",
 			"search",
 			"searches",

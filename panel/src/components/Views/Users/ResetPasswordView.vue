@@ -60,15 +60,11 @@ export default {
 	methods: {
 		async submit() {
 			if (!this.values.password || this.values.password.length < 8) {
-				return this.$panel.notification.error(
-					this.$t("error.user.password.invalid")
-				);
+				return this.$notification.error(this.$t("error.user.password.invalid"));
 			}
 
 			if (this.values.password !== this.values.passwordConfirmation) {
-				return this.$panel.notification.error(
-					this.$t("error.user.password.notSame")
-				);
+				return this.$notification.error(this.$t("error.user.password.notSame"));
 			}
 
 			this.isLoading = true;
@@ -79,10 +75,10 @@ export default {
 					this.values.password
 				);
 
-				this.$panel.notification.success();
+				this.$notification.success();
 				this.$go("/");
 			} catch (error) {
-				this.$panel.notification.error(error);
+				this.$notification.error(error);
 			} finally {
 				this.isLoading = false;
 			}

@@ -102,7 +102,7 @@ export default {
 			this.$helper.clipboard.write(JSON.stringify(copy), e);
 
 			// a sign that it has been pasted
-			this.$panel.notification.success({
+			this.$notification.success({
 				message: this.$t("copy.success", { count: copy.length ?? 1 }),
 				icon: "template"
 			});
@@ -234,7 +234,7 @@ export default {
 			}
 
 			// a sign that it has been pasted
-			this.$panel.notification.success({
+			this.$notification.success({
 				message: this.$t("paste.success", { count: rows.length }),
 				icon: "download"
 			});

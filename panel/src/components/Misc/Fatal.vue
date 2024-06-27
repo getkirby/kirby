@@ -3,7 +3,7 @@
 		<div class="k-fatal-box">
 			<div data-theme="negative" class="k-notification">
 				<p>The JSON response could not be parsed</p>
-				<k-button icon="cancel" @click.stop="$panel.notification.close()" />
+				<k-button icon="cancel" @click.stop="$notification.close()" />
 			</div>
 			<iframe ref="iframe" class="k-fatal-iframe" />
 		</div>

@@ -44,7 +44,7 @@ export default {
 		 * @param {String} error
 		 */
 		error(error) {
-			this.$panel.notification.error(error);
+			this.$notification.error(error);
 		},
 		/**
 		 * Sets the focus on the first usable input

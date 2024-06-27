@@ -166,7 +166,7 @@ export default {
 					globals: ["$system", "$translation"]
 				});
 
-				this.$panel.notification.success({
+				this.$notification.success({
 					message: this.$t("welcome") + "!",
 					icon: "smile"
 				});

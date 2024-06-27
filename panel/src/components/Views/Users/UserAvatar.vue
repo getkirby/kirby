@@ -42,7 +42,7 @@ export default {
 		},
 		async remove() {
 			await this.$api.users.deleteAvatar(this.model.id);
-			this.$panel.notification.success();
+			this.$notification.success();
 			this.$reload();
 		},
 		upload() {

@@ -1,6 +1,6 @@
 <template>
 	<k-notification
-		v-if="$panel.notification.context === 'drawer'"
+		v-if="$notification.context === 'drawer'"
 		class="k-drawer-notification"
 	/>
 </template>

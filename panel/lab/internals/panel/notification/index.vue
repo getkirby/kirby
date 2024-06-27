@@ -7,11 +7,11 @@
 					<code>window.panel.notification.context</code> returns context where
 					the notification should be displayed (view, dialog, drawer).
 				</p>
-				<k-code>{{ $panel.notification.context || "&nbsp;" }}</k-code>
+				<k-code>{{ $notification.context || "&nbsp;" }}</k-code>
 				<k-button
 					icon="megaphone"
 					variant="filled"
-					@click="$panel.notification.success('Yay')"
+					@click="$notification.success('Yay')"
 				/>
 			</k-text>
 		</k-lab-example>
@@ -22,12 +22,12 @@
 					additional details to be shown with the notification. This is used for
 					error details for example.
 				</p>
-				<k-code>{{ $panel.notification.details || "&nbsp;" }}</k-code>
+				<k-code>{{ $notification.details || "&nbsp;" }}</k-code>
 				<k-button
 					icon="megaphone"
 					variant="filled"
 					@click="
-						$panel.notification.success({
+						$notification.success({
 							message: 'Yay',
 							details: { foo: 'bar' }
 						})
@@ -42,12 +42,12 @@
 					which might be defined for the notification. The default icon depends
 					on the notification type.
 				</p>
-				<k-code>{{ $panel.notification.icon || "&nbsp;" }}</k-code>
+				<k-code>{{ $notification.icon || "&nbsp;" }}</k-code>
 				<k-button
 					icon="megaphone"
 					variant="filled"
 					@click="
-						$panel.notification.success({
+						$notification.success({
 							icon: 'edit',
 							message: 'Edited'
 						})
@@ -64,7 +64,7 @@
 				<k-button
 					icon="megaphone"
 					variant="filled"
-					@click="$panel.notification.info('Did you know?')"
+					@click="$notification.info('Did you know?')"
 				/>
 			</k-text>
 		</k-lab-example>
@@ -74,12 +74,12 @@
 					<code>window.panel.notification.message</code> returns the
 					notification message
 				</p>
-				<k-code>{{ $panel.notification.message || "&nbsp;" }}</k-code>
+				<k-code>{{ $notification.message || "&nbsp;" }}</k-code>
 				<k-button
 					icon="megaphone"
 					variant="filled"
 					@click="
-						$panel.notification.success({
+						$notification.success({
 							message: 'Hello'
 						})
 					"
@@ -92,12 +92,12 @@
 					<code>window.panel.notification.timeout</code> returns the timeout
 					when the notification will automatically disappear again.
 				</p>
-				<k-code>{{ $panel.notification.timeout || "&nbsp;" }}</k-code>
+				<k-code>{{ $notification.timeout || "&nbsp;" }}</k-code>
 				<k-button
 					icon="megaphone"
 					variant="filled"
 					@click="
-						$panel.notification.success({
+						$notification.success({
 							message: 'Yay',
 							timeout: 2000
 						})
@@ -111,12 +111,12 @@
 					<code>window.panel.notification.type</code> returns the notification
 					type (error, fatal, success)
 				</p>
-				<k-code>{{ $panel.notification.type || "&nbsp;" }}</k-code>
+				<k-code>{{ $notification.type || "&nbsp;" }}</k-code>
 				<k-button
 					icon="megaphone"
 					variant="filled"
 					@click="
-						$panel.notification.success({
+						$notification.success({
 							message: 'Yay'
 						})
 					"
@@ -133,12 +133,12 @@
 				<k-button
 					icon="megaphone"
 					variant="filled"
-					@click="$panel.notification.success('Nice one!')"
+					@click="$notification.success('Nice one!')"
 				/>
 				<k-button
 					icon="cancel"
 					variant="filled"
-					@click="$panel.notification.close()"
+					@click="$notification.close()"
 				/>
 			</k-text>
 		</k-lab-example>
@@ -151,7 +151,7 @@
 				<k-button
 					icon="megaphone"
 					variant="filled"
-					@click="$panel.notification.deprecated('Don`t use this anymore')"
+					@click="$notification.deprecated('Don`t use this anymore')"
 				/>
 			</k-text>
 		</k-lab-example>
@@ -164,7 +164,7 @@
 				<k-button
 					icon="megaphone"
 					variant="filled"
-					@click="$panel.notification.error('Something went wrong')"
+					@click="$notification.error('Something went wrong')"
 				/>
 			</k-text>
 		</k-lab-example>
@@ -177,7 +177,7 @@
 				<k-button
 					icon="megaphone"
 					variant="filled"
-					@click="$panel.notification.fatal('Something went wrong')"
+					@click="$notification.fatal('Something went wrong')"
 				/>
 			</k-text>
 		</k-lab-example>
@@ -194,7 +194,7 @@
 					icon="megaphone"
 					variant="filled"
 					@click="
-						$panel.notification.open({
+						$notification.open({
 							message: text,
 							icon,
 							theme
@@ -212,7 +212,7 @@
 				<k-button
 					icon="megaphone"
 					variant="filled"
-					@click="$panel.notification.success('Nice one!')"
+					@click="$notification.success('Nice one!')"
 				/>
 			</k-text>
 		</k-lab-example>

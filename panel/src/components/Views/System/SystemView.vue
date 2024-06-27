@@ -75,7 +75,7 @@ export default {
 			);
 
 			this.$helper.clipboard.write(info);
-			this.$panel.notification.success({
+			this.$notification.success({
 				message: this.$t("system.info.copied")
 			});
 		}

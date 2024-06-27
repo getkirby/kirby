@@ -1,6 +1,6 @@
 <template>
 	<k-notification
-		v-if="$panel.notification.context === 'dialog'"
+		v-if="$notification.context === 'dialog'"
 		class="k-dialog-notification"
 	/>
 </template>

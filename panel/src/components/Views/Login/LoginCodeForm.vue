@@ -99,7 +99,7 @@ export default {
 			try {
 				await this.$api.auth.verifyCode(this.code);
 
-				this.$panel.notification.success({
+				this.$notification.success({
 					message: this.$t("welcome") + "!",
 					icon: "smile"
 				});

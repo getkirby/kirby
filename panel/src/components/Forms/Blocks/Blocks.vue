@@ -262,7 +262,7 @@ export default {
 			this.selected = blocks.map((block) => block.id);
 
 			// a sign that it has been copied
-			this.$panel.notification.success({
+			this.$notification.success({
 				message: this.$t("copy.success", { count: blocks.length }),
 				icon: "template"
 			});
@@ -572,7 +572,7 @@ export default {
 			this.save();
 
 			// a sign that it has been pasted
-			this.$panel.notification.success({
+			this.$notification.success({
 				message: this.$t("paste.success", { count: blocks.length }),
 				icon: "download"
 			});

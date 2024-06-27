@@ -33,10 +33,10 @@ export default {
 	computed: {
 		notification() {
 			if (
-				this.$panel.notification.context === "view" &&
-				!this.$panel.notification.isFatal
+				this.$notification.context === "view" &&
+				!this.$notification.isFatal
 			) {
-				return this.$panel.notification;
+				return this.$notification;
 			}
 
 			return null;

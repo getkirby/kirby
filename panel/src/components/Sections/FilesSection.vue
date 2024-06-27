@@ -52,7 +52,7 @@ export default {
 				url: this.$panel.urls.api + "/" + this.options.upload.api,
 				on: {
 					complete: () => {
-						this.$panel.notification.success({ context: "view" });
+						this.$notification.success({ context: "view" });
 					}
 				}
 			};
@@ -94,7 +94,7 @@ export default {
 					files: items.map((item) => item.id),
 					index: this.pagination.offset
 				});
-				this.$panel.notification.success();
+				this.$notification.success();
 				this.$events.emit("file.sort");
 			} catch (error) {
 				this.$panel.error(error);

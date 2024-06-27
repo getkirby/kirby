@@ -272,7 +272,7 @@ export default {
 
 			await this.$store.dispatch("content/save");
 			this.$events.emit("model.update");
-			this.$panel.notification.success();
+			this.$notification.success();
 		},
 		async unlock(unlock = true) {
 			const api = [this.$panel.view.path + "/unlock", null, null, true];
