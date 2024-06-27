@@ -119,6 +119,33 @@ abstract class ContentStorageHandler
 	abstract public function exists(VersionId $versionId, Language $language): bool;
 
 	/**
+	 * Creates a new storage instance with all the versions
+	 * from the given storage instance.
+	 */
+	public static function from(self $fromStorage): static
+	{
+		$toStorage = new static(
+			model: $fromStorage->model()
+		);
+
+		// copy all versions from the given storage instance
+		// and add them to the new storage instance.
+		foreach ($fromStorage->all() as $versionId => $language) {
+			$toStorage->create($versionId, $language, $fromStorage->read($versionId, $language));
+		}
+
+		return $toStorage;
+	}
+
+	/**
+	 * Returns the related model
+	 */
+	public function model(): ModelWithContent
+	{
+		return $this->model;
+	}
+
+	/**
 	 * Returns the modification timestamp of a version if it exists
 	 */
 	abstract public function modified(VersionId $versionId, Language $language): int|null;

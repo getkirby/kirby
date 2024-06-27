@@ -330,6 +330,66 @@ class ContentStorageHandlerTest extends TestCase
 	}
 
 	/**
+	 * @covers ::from
+	 */
+	public function testFrom()
+	{
+		$this->setUpMultiLanguage();
+
+		$handlerA = new PlainTextContentStorageHandler(
+			model: $this->model
+		);
+
+		$versionPublished = VersionId::published();
+		$versionChanges   = VersionId::changes();
+
+		$en = $this->app->language('en');
+		$de = $this->app->language('de');
+
+		// create all possible versions
+		$handlerA->create($versionPublished, $en, $publishedEN = [
+			'title' => 'Published EN'
+		]);
+
+		$handlerA->create($versionPublished, $de, $publishedDE = [
+			'title' => 'Published DE'
+		]);
+
+		$handlerA->create($versionChanges, $en, $changesEN = [
+			'title' => 'Changes EN'
+		]);
+
+		$handlerA->create($versionChanges, $de, $changesDE = [
+			'title' => 'Changes DE'
+		]);
+
+		// create a new handler with all the versions from the first one
+		$handlerB = TestContentStorageHandler::from($handlerA);
+
+		$this->assertNotSame($handlerA, $handlerB);
+
+		$this->assertSame($publishedEN, $handlerB->read($versionPublished, $en));
+		$this->assertSame($publishedDE, $handlerB->read($versionPublished, $de));
+
+		$this->assertSame($changesEN, $handlerB->read($versionChanges, $en));
+		$this->assertSame($changesDE, $handlerB->read($versionChanges, $de));
+	}
+
+	/**
+	 * @covers ::model
+	 */
+	public function testModel()
+	{
+		$this->setUpSingleLanguage();
+
+		$handler = new TestContentStorageHandler(
+			model: $this->model
+		);
+
+		$this->assertSame($this->model, $handler->model());
+	}
+
+	/**
 	 * @covers ::move
 	 */
 	public function testMoveMultiLanguage()
