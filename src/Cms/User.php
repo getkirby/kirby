@@ -80,14 +80,14 @@ class User extends ModelWithContent
 		// so it also gets stored in propertyData prop
 		$props['id'] ??= $this->createId();
 
-		parent::__construct($props);
-
 		$this->id       = $props['id'];
 		$this->email    = $set('email', fn ($email) => Str::lower(trim($email)));
 		$this->language = $set('language', fn ($language) => trim($language));
 		$this->name     = $set('name', fn ($name) => trim(strip_tags($name)));
 		$this->password = $props['password'] ?? null;
 		$this->role     = $set('role', fn ($role) => Str::lower(trim($role)));
+
+		parent::__construct($props);
 
 		$this->setBlueprint($props['blueprint'] ?? null);
 		$this->setFiles($props['files'] ?? null);
