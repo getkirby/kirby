@@ -37,6 +37,7 @@ export default {
 		const polyfills = [
 			"api",
 			"config",
+			"content",
 			"direction",
 			"events",
 			"language",

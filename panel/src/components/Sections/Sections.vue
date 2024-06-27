@@ -63,7 +63,7 @@ export default {
 	emits: ["submit"],
 	computed: {
 		content() {
-			return this.$store.getters["content/values"]();
+			return this.$content.values;
 		}
 	},
 	methods: {

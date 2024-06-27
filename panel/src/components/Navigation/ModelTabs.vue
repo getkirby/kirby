@@ -16,7 +16,7 @@ export default {
 	},
 	computed: {
 		withBadges() {
-			const changed = Object.keys(this.$store.getters["content/changes"]());
+			const changed = Object.keys(this.$content.changed);
 
 			return this.tabs.map((tab) => {
 				// collect all fields per tab

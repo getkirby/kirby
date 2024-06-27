@@ -19,7 +19,7 @@
 
 			<template #buttons>
 				<k-view-buttons :buttons="buttons" @action="onAction" />
-				<k-form-buttons :lock="lock" />
+				<k-form-buttons />
 			</template>
 		</k-header>
 
@@ -47,7 +47,7 @@ export default {
 	},
 	computed: {
 		focus() {
-			const focus = this.$store.getters["content/values"]()["focus"];
+			const focus = this.$content.values["focus"];
 
 			if (!focus) {
 				return;
@@ -73,7 +73,7 @@ export default {
 				focus = `${focus.x}% ${focus.y}%`;
 			}
 
-			this.$store.dispatch("content/update", ["focus", focus]);
+			this.$content.set("focus", focus);
 		}
 	}
 };

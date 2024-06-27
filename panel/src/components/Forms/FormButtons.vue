@@ -21,9 +21,6 @@
 import { set } from "vue";
 
 export default {
-	props: {
-		lock: [Boolean, Object]
-	},
 	data() {
 		return {
 			isLoading: null,
@@ -54,12 +51,12 @@ export default {
 			if (this.mode === "lock") {
 				return [
 					{
-						icon: this.lock.data.unlockable ? "unlock" : "loader",
+						icon: this.$content.lock.unlockable ? "unlock" : "loader",
 						text: this.$t("lock.isLocked", {
-							email: this.$esc(this.lock.data.email)
+							email: this.$esc(this.$content.lock.email)
 						}),
 						title: this.$t("lock.unlock"),
-						disabled: !this.lock.data.unlockable,
+						disabled: !this.$content.lock.unlockable,
 						click: () => this.unlock()
 					}
 				];
@@ -88,7 +85,7 @@ export default {
 			}
 
 			if (this.mode === "lock") {
-				return !this.lock.data.unlockable;
+				return !this.$content.lock.unlockable;
 			}
 
 			if (this.mode === "changes") {
@@ -98,7 +95,7 @@ export default {
 			return false;
 		},
 		hasChanges() {
-			return this.$store.getters["content/hasChanges"]();
+			return this.$content.hasUnpublishedChanges;
 		},
 		isDisabled() {
 			return this.$store.state.content.status.enabled === false;
@@ -121,10 +118,10 @@ export default {
 			return null;
 		},
 		lockState() {
-			return this.supportsLocking && this.lock ? this.lock.state : null;
+			return this.supportsLocking && this.$content.lock?.state;
 		},
 		supportsLocking() {
-			return this.lock !== false;
+			return this.$content.lock !== false;
 		},
 		theme() {
 			if (this.mode === "lock") {
@@ -189,7 +186,7 @@ export default {
 		},
 		download() {
 			let content = "";
-			const changes = this.$store.getters["content/changes"]();
+			const changes = this.$content.changed;
 
 			for (const key in changes) {
 				const change = changes[key];
@@ -234,7 +231,7 @@ export default {
 					// If setting lock failed, a competing lock has been set between
 					// API calls. In that case, discard changes, stop setting lock
 					clearInterval(this.isLocking);
-					this.$store.dispatch("content/revert");
+					this.$content.discard();
 				}
 			}
 
@@ -247,7 +244,7 @@ export default {
 		async resolve() {
 			// remove content unlock and throw away unsaved changes
 			await this.unlock(false);
-			this.$store.dispatch("content/revert");
+			this.$content.discard();
 		},
 		revert() {
 			this.$panel.dialog.open({
@@ -261,18 +258,14 @@ export default {
 				},
 				on: {
 					submit: () => {
-						this.$store.dispatch("content/revert");
+						this.$content.discard();
 						this.$panel.dialog.close();
 					}
 				}
 			});
 		},
-		async save(e) {
-			e?.preventDefault?.();
-
-			await this.$store.dispatch("content/save");
-			this.$events.emit("model.update");
-			this.$panel.notification.success();
+		save(e) {
+			this.$content.publish(e);
 		},
 		async unlock(unlock = true) {
 			const api = [this.$panel.view.path + "/unlock", null, null, true];
@@ -286,7 +279,7 @@ export default {
 							text: this.$t("lock.unlock")
 						},
 						text: this.$t("lock.unlock.submit", {
-							email: this.$esc(this.lock.data.email)
+							email: this.$esc(this.$content.lock.email)
 						})
 					},
 					on: {

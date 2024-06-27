@@ -19,7 +19,7 @@
 
 			<template #buttons>
 				<k-view-buttons :buttons="buttons" />
-				<k-form-buttons :lock="lock" />
+				<k-form-buttons />
 			</template>
 		</k-header>
 
