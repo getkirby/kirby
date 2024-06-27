@@ -19,6 +19,7 @@
 						:is-published="isPublished"
 						:is-saved="isSaved"
 						:is-locked="isLocked ? 'bastian@getkirby.com' : false"
+						preview="https://getkirby.com"
 						@discard="log('discard')"
 						@save="log('save')"
 						@publish="log('publish')"
@@ -61,10 +62,11 @@
 		</k-lab-example>
 
 		<k-lab-example label="Published">
-			<k-form-controls :is-published="true" />
+			<k-form-controls :is-published="true" preview="https://getkirby.com" />
 		</k-lab-example>
 		<k-lab-example label="Unsaved">
 			<k-form-controls
+				preview="https://getkirby.com"
 				@discard="log('discard')"
 				@save="log('save')"
 				@publish="log('publish')"
@@ -73,17 +75,22 @@
 		<k-lab-example label="Saved">
 			<k-form-controls
 				:is-saved="true"
+				preview="https://getkirby.com"
 				@discard="log('discard')"
 				@publish="log('publish')"
 			/>
 		</k-lab-example>
 		<k-lab-example label="Locked">
-			<k-form-controls is-locked="bastian@getkirby.com" />
+			<k-form-controls
+				is-locked="bastian@getkirby.com"
+				preview="https://getkirby.com"
+			/>
 		</k-lab-example>
 		<k-lab-example label="Draft: Saved">
 			<k-form-controls
 				:is-draft="true"
 				:is-saved="true"
+				preview="https://getkirby.com"
 				@discard="log('discard')"
 				@publish="log('publish')"
 			/>

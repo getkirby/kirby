@@ -372,6 +372,8 @@
 	"form.discard": "Discard changes",
 	"form.discard.confirm": "Do you really want to <strong>delete all unpublished changes</strong>?",
 	"form.locked": "This content is disabled for you as it is currently edited by another user",
+	"form.preview": "Preview changes",
+	"form.preview.draft": "Preview draft",
 	"form.publish": "Publish",
 	"form.published": "Published",
 	"form.save": "Save",

@@ -43,7 +43,11 @@ export default {
 		/**
 		 * Whether all content are saved
 		 */
-		isSaved: Boolean
+		isSaved: Boolean,
+		/**
+		 * Optional URL for preview dropdown entry
+		 */
+		preview: String
 	},
 	emits: ["discard", "publish", "save"],
 	computed: {
@@ -87,17 +91,34 @@ export default {
 			];
 		},
 		dropdown() {
-			const dropdown = [];
-
-			if (this.isLocked) {
-				return dropdown;
+			if (this.isPublished) {
+				return [];
 			}
 
-			if (this.isPublished === false && this.isDraft === false) {
+			const dropdown = [];
+
+			if (this.isLocked === false && this.isDraft === false) {
 				dropdown.push({
 					icon: "trash",
 					text: this.$t("form.discard"),
 					click: () => this.discard()
+				});
+			}
+
+			console.log(
+				this.preview,
+				this.isPublished,
+				this.preview && this.isPublished === false
+			);
+
+			if (this.preview && this.isPublished === false) {
+				dropdown.push({
+					icon: "preview",
+					link: this.preview,
+					text: this.isDraft
+						? this.$t("form.preview.draft")
+						: this.$t("form.preview"),
+					target: "_blank"
 				});
 			}
 
