@@ -4,6 +4,7 @@ namespace Kirby\Content;
 
 use Kirby\Cms\Language;
 use Kirby\Data\Data;
+use Kirby\Exception\Exception;
 
 /**
  * @coversDefaultClass \Kirby\Content\Translation
@@ -268,6 +269,25 @@ class TranslationTest extends TestCase
 	}
 
 	/**
+	 * @covers ::parent
+	 */
+	public function testParent()
+	{
+		$this->setUpSingleLanguage();
+
+		$translation = new Translation(
+			model: $this->model,
+			version: $version = $this->model->version(),
+			language: Language::ensure('default')
+		);
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('`$translation->parent()` has been deprecated. Please use `$translation->model()` instead');
+
+		$translation->parent();
+	}
+
+	/**
 	 * @covers ::slug
 	 */
 	public function testSlugExists()
@@ -306,6 +326,25 @@ class TranslationTest extends TestCase
 		]);
 
 		$this->assertNull($translation->slug());
+	}
+
+	/**
+	 * @covers ::update
+	 */
+	public function testUpdate()
+	{
+		$this->setUpSingleLanguage();
+
+		$translation = new Translation(
+			model: $this->model,
+			version: $version = $this->model->version(),
+			language: Language::ensure('default')
+		);
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('`$translation->update()` has been deprecated. Please use `$model->version()->update()` instead');
+
+		$translation->update();
 	}
 
 	/**

@@ -5,6 +5,7 @@ namespace Kirby\Content;
 use Kirby\Cms\Helpers;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Exception\Exception;
 
 /**
  * Each page, file or site can have multiple
@@ -148,6 +149,14 @@ class Translation extends ContentTranslation
 	}
 
 	/**
+	 * @deprecated 5.0.0 Use `$translation->model()` instead
+	 */
+	public function parent(): ModelWithContent
+	{
+		throw new Exception('`$translation->parent()` has been deprecated. Please use `$translation->model()` instead');
+	}
+
+	/**
 	 * Returns the custom translation slug
 	 */
 	public function slug(): string|null
@@ -167,6 +176,14 @@ class Translation extends ContentTranslation
 			'exists'  => $this->version->exists($this->language),
 			'slug'    => $this->slug(),
 		];
+	}
+
+	/**
+	 * @deprecated 5.0.0 Use `$model->version()->update()` instead
+	 */
+	public function update(array|null $data = null, bool $overwrite = false): static
+	{
+		throw new Exception('`$translation->update()` has been deprecated. Please use `$model->version()->update()` instead');
 	}
 
 	/**
