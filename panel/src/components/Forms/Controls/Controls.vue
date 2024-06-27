@@ -11,7 +11,7 @@
 		<template v-if="dropdown.length">
 			<k-button
 				:theme="buttons[0].theme"
-				icon="dots"
+				icon="angle-down"
 				size="sm"
 				variant="filled"
 				@click="$refs.dropdown.toggle()"
@@ -104,12 +104,6 @@ export default {
 					click: () => this.discard()
 				});
 			}
-
-			console.log(
-				this.preview,
-				this.isPublished,
-				this.preview && this.isPublished === false
-			);
 
 			if (this.preview && this.isPublished === false) {
 				dropdown.push({
