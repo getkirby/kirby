@@ -7,6 +7,7 @@ import { extension, name, niceSize } from "@/helpers/file.js";
 
 export const defaults = () => {
 	return {
+		abort: null,
 		accept: "*",
 		attributes: {},
 		files: [],
@@ -40,6 +41,9 @@ export default (panel) => {
 		 */
 		cancel() {
 			this.emit("cancel");
+
+			// abort any ongoing requests
+			this.abort?.abort();
 
 			// emit complete event if any files have been completed,
 			// e.g. when first submit/upload yielded any errors and
@@ -266,6 +270,9 @@ export default (panel) => {
 				throw new Error("The upload URL is missing");
 			}
 
+			// prepare the abort controller
+			this.abort = new AbortController();
+
 			// gather upload tasks for all files
 			const files = [];
 
@@ -315,9 +322,10 @@ export default (panel) => {
 				const response = await uploadAsChunks(
 					file.src,
 					{
+						abort: this.abort.signal,
 						attributes: attributes,
-						headers: { "x-csrf": panel.system.csrf },
 						filename: file.name + "." + file.extension,
+						headers: { "x-csrf": panel.system.csrf },
 						url: this.url,
 						progress: (xhr, src, progress) => {
 							file.progress = progress;

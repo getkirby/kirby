@@ -10,6 +10,7 @@ import { random } from "./string.js";
  * @param {string} params.filename - filename to use for the upload
  * @param {Object} params.headers - request headers
  * @param {Object} params.attributes - additional attributes
+ * @param {AbortSignal} params.abort - signal to abort the upload request
  * @param {Function} params.progress - callback whenever the progress changes
  * @param {Function} params.complete - callback when upload completed
  * @param {Function} params.success - callback when upload succeeded
@@ -96,6 +97,11 @@ export async function upload(file, params) {
 			xhr.setRequestHeader(header, options.headers[header]);
 		}
 
+		// abort the XHR when abort signal is triggered
+		options.abort?.addEventListener("abort", () => {
+			xhr.abort();
+		});
+
 		xhr.send(data);
 	});
 }
@@ -112,6 +118,12 @@ export async function uploadAsChunks(file, params, size = 5242880) {
 	let response;
 
 	for (let i = 0; i < parts; i++) {
+		// break if upload got aborted in the meantime
+		if (params.abort?.aborted) {
+			break;
+		}
+
+		// slice chunk at the right positions
 		const start = i * size;
 		const end = Math.min(start + size, file.size);
 		const chunk = parts > 1 ? file.slice(start, end, file.type) : file;
