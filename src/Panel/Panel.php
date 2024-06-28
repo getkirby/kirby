@@ -3,6 +3,7 @@
 namespace Kirby\Panel;
 
 use Closure;
+use Kirby\Api\Upload;
 use Kirby\Cms\App;
 use Kirby\Cms\Url as CmsUrl;
 use Kirby\Cms\User;
@@ -137,6 +138,21 @@ class Panel
 		return true;
 	}
 
+	/**
+	 * Garbage collection which runs with a probability
+	 * of 10% on each Panel request
+	 *
+	 * @since 5.0.0
+	 * @codeCoverageIgnore
+	 */
+	protected static function garbage(): void
+	{
+		// run garbage collection with a chance of 10%;
+		if (mt_rand(1, 10000) <= 0.1 * 10000) {
+			// clean up leftover upload chunks
+			Upload::cleanTmpDir();
+		}
+	}
 
 	/**
 	 * Redirect to a Panel url
@@ -261,6 +277,9 @@ class Panel
 		if ($kirby->option('panel') === false) {
 			return null;
 		}
+
+		// run garbage collection
+		static::garbage();
 
 		// set the translation for Panel UI before
 		// gathering areas and routes, so that the

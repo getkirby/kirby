@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Api\Upload;
 use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Http\Response;
@@ -278,6 +279,7 @@ class View
 				'debug'       => $kirby->option('debug', false),
 				'kirbytext'   => $kirby->option('panel.kirbytext', true),
 				'translation' => $kirby->option('panel.language', 'en'),
+				'upload'      => Upload::chunkSize(),
 			],
 			'$system' => function () use ($kirby) {
 				$locales = [];
