@@ -57,6 +57,7 @@ trait AppPlugins
 		'collectionMethods' => [],
 		'fieldMethods' => [],
 		'fileMethods' => [],
+		'filePreviews' => [],
 		'fileTypes' => [],
 		'filesMethods' => [],
 		'fields' => [],
@@ -294,6 +295,18 @@ trait AppPlugins
 		return $this->extensions['fileMethods'] = File::$methods = [
 			...File::$methods,
 			...$methods
+		];
+	}
+
+	/**
+	 * Registers additional file preview handlers
+	 * @since 5.0.0
+	 */
+	protected function extendFilePreviews(array $previews): array
+	{
+		return $this->extensions['filePreviews'] = [
+			...$this->extensions['filePreviews'],
+			...$previews
 		];
 	}
 

@@ -817,6 +817,105 @@ class FileTest extends TestCase
 	}
 
 	/**
+	 * @covers ::preview
+	 */
+	public function testPreview()
+	{
+		$page = new ModelPage([
+			'slug'  => 'test',
+			'files' => [
+				['filename' => 'test.pdf']
+			]
+		]);
+
+		$panel   = new File($page->file('test.pdf'));
+		$preview = $panel->preview();
+
+		$this->assertSame('k-file-document-preview', $preview['component']);
+		$this->assertCount(4, $preview['props']['details']);
+		$this->assertSame('document', $preview['props']['image']['icon']);
+		$this->assertArrayNotHasKey('focusable', $preview['props']);
+	}
+
+	/**
+	 * @covers ::preview
+	 */
+	public function testPreviewImage()
+	{
+		$page = new ModelPage([
+			'slug'  => 'test',
+			'files' => [
+				['filename' => 'test.jpg']
+			]
+		]);
+
+		$panel   = new File($page->file('test.jpg'));
+		$preview = $panel->preview();
+
+		$this->assertSame('k-file-image-preview', $preview['component']);
+		$this->assertCount(6, $preview['props']['details']);
+		$this->assertArrayHasKey('focusable', $preview['props']);
+	}
+
+	/**
+	 * @covers ::preview
+	 */
+	public function testPreviewWithExtensions()
+	{
+		$page = new ModelPage([
+			'slug'  => 'test',
+			'files' => [
+				['filename' => 'test.mp4']
+			]
+		]);
+
+		$panel   = new File($page->file('test.mp4'));
+		$preview = $panel->preview();
+
+		$this->assertSame('k-file-video-preview', $preview['component']);
+		$this->assertCount(4, $preview['props']['details']);
+
+		new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'filePreviews' => [
+				function (ModelFile $file) {
+					// should be skipped
+					if ($file->extension() === 'pdf') {
+						return [
+							'component' => 'custom-pdf-preview'
+						];
+					}
+				},
+				function (ModelFile $file) {
+					if ($file->extension() === 'mp4') {
+						return [
+							'component' => 'custom-mp4-preview',
+							'props'    => [
+								'foo' => 'bar',
+								'details' => [
+									[
+										'title' => 'Foo',
+										'text'  => 'Bar'
+									]
+								]
+							]
+						];
+					}
+				}
+			]
+		]);
+
+		$panel   = new File($page->file('test.mp4'));
+		$preview = $panel->preview();
+
+		$this->assertSame('custom-mp4-preview', $preview['component']);
+		$this->assertCount(5, $preview['props']['details']);
+		$this->assertSame('bar', $preview['props']['foo']);
+	}
+
+	/**
 	 * @covers ::props
 	 */
 	public function testProps()
@@ -845,10 +944,11 @@ class FileTest extends TestCase
 		$this->assertArrayHasKey('type', $props['model']);
 
 		$this->assertArrayHasKey('preview', $props);
-		$this->assertArrayHasKey('image', $props['preview']);
-		$this->assertArrayHasKey('url', $props['preview']);
-		$this->assertArrayHasKey('details', $props['preview']);
-		$this->assertCount(6, $props['preview']['details']);
+		$this->assertArrayHasKey('component', $props['preview']);
+		$this->assertArrayHasKey('image', $props['preview']['props']);
+		$this->assertArrayHasKey('url', $props['preview']['props']);
+		$this->assertArrayHasKey('details', $props['preview']['props']);
+		$this->assertCount(6, $props['preview']['props']['details']);
 
 		// inherited props
 		$this->assertArrayHasKey('blueprint', $props);
