@@ -40,6 +40,15 @@ return [
 			);
 		}
 	],
+	'page.changes.unlock' => [
+		'pattern' => 'pages/(:any)/changes/unlock',
+		'method'  => 'POST',
+		'action'  => function (string $path) {
+			return Changes::unlock(
+				model: Find::page($path),
+			);
+		}
+	],
 
 	// Page File Changes
 	'page.file.changes.discard' => [
@@ -54,10 +63,14 @@ return [
 		...$files['changes.save'],
 		'pattern' => '(pages/.*?)/files/(:any)/changes/save',
 	],
+	'page.file.changes.unlock' => [
+		...$files['changes.unlock'],
+		'pattern' => '(pages/.*?)/files/(:any)/changes/unlock',
+	],
 
 	// Site Changes
 	'site.changes.discard' => [
-		'pattern' => '(site)/changes/discard',
+		'pattern' => 'site/changes/discard',
 		'method'  => 'POST',
 		'action'  => function () {
 			return Changes::discard(
@@ -66,7 +79,7 @@ return [
 		}
 	],
 	'site.changes.publish' => [
-		'pattern' => '(site)/changes/publish',
+		'pattern' => 'site/changes/publish',
 		'method'  => 'POST',
 		'action'  => function () {
 			return Changes::publish(
@@ -76,12 +89,21 @@ return [
 		}
 	],
 	'site.changes.save' => [
-		'pattern' => '(site)/changes/save',
+		'pattern' => 'site/changes/save',
 		'method'  => 'POST',
 		'action'  => function () {
 			return Changes::save(
 				model: App::instance()->site(),
 				input: App::instance()->request()->get()
+			);
+		}
+	],
+	'site.changes.unlock' => [
+		'pattern' => 'site/changes/unlock',
+		'method'  => 'POST',
+		'action'  => function () {
+			return Changes::unlock(
+				model: App::instance()->site(),
 			);
 		}
 	],
@@ -98,6 +120,10 @@ return [
 	'site.file.changes.save' => [
 		...$files['changes.save'],
 		'pattern' => '(site)/files/(:any)/changes/save',
+	],
+	'site.file.changes.unlock' => [
+		...$files['changes.unlock'],
+		'pattern' => '(site)/files/(:any)/changes/unlock',
 	],
 
 	// Tree Navigation

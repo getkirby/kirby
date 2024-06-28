@@ -4,6 +4,7 @@ namespace Kirby\Panel\Controller;
 
 use Kirby\Cms\ModelWithContent;
 use Kirby\Content\VersionId;
+use Kirby\Exception\Exception;
 use Kirby\Form\Form;
 
 class Changes
@@ -62,5 +63,9 @@ class Changes
 			'status' => 'ok'
 		];
 	}
-}
 
+	public static function unlock(ModelWithContent $model)
+	{
+		throw new Exception('Not yet implemented');
+	}
+}
