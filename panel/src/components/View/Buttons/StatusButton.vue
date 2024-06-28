@@ -23,7 +23,7 @@ export default {
 			return this.$helper.page.status.call(
 				this,
 				this.model.status,
-				!this.permissions.changeStatus || this.$panel.view.isLocked
+				!this.permissions.changeStatus || this.$panel.content.isLocked
 			);
 		},
 		model() {

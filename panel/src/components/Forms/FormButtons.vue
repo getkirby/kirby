@@ -98,7 +98,7 @@ export default {
 			return this.$panel.content.hasUnpublishedChanges;
 		},
 		isLocked() {
-			return this.lockState === "lock";
+			return this.$panel.content.isLocked;
 		},
 		isUnlocked() {
 			return this.lockState === "unlock";
@@ -138,7 +138,10 @@ export default {
 		hasChanges: {
 			handler(changes, before) {
 				if (this.supportsLocking === true) {
-					if (this.isLocked === false && this.isUnlocked === false) {
+					if (
+						this.$panel.content.isLocked === false &&
+						this.isUnlocked === false
+					) {
 						if (changes === true) {
 							// unsaved changes, write lock every 30 seconds
 							this.locking();

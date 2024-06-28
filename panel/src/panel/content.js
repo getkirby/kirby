@@ -45,6 +45,14 @@ export default (panel) => {
 		isPublishing: false,
 		isSaving: false,
 		/**
+		 * Whether the content is currently locked by another user
+		 *
+		 * @returns {Boolean}
+		 */
+		get isLocked() {
+			return this.lock?.state === "lock";
+		},
+		/**
 		 * Content lock state of the model
 		 *
 		 * @returns {Object|null|false}

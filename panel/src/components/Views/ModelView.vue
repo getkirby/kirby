@@ -37,7 +37,7 @@ export default {
 			return this.model.link;
 		},
 		isLocked() {
-			return this.$panel.view.isLocked;
+			return this.$panel.content.isLocked;
 		},
 		protectedFields() {
 			return [];
