@@ -9,7 +9,7 @@ export default (panel) => {
 		 *
 		 * @returns {Object}
 		 */
-		get changed() {
+		get changes() {
 			return panel.app.$store.getters["content/changes"]();
 		},
 		/**
@@ -111,7 +111,7 @@ export default (panel) => {
 		get values() {
 			return {
 				...this.published,
-				...this.changed
+				...this.changes
 			};
 		}
 	};

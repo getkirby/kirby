@@ -186,7 +186,7 @@ export default {
 		},
 		download() {
 			let content = "";
-			const changes = this.$panel.content.changed;
+			const changes = this.$panel.content.changes;
 
 			for (const key in changes) {
 				const change = changes[key];
