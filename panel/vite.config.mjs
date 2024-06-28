@@ -21,7 +21,7 @@ function createAliases() {
  */
 function createServer() {
 	const proxy = {
-		target: process.env.VUE_APP_DEV_SERVER ?? "http://sandbox.test",
+		target: process.env.SERVER ?? "http://sandbox.test",
 		changeOrigin: true,
 		secure: false
 	};
