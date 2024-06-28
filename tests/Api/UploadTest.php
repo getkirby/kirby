@@ -19,8 +19,6 @@ class UploadTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Api.Upload';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		Dir::make(static::TMP);
