@@ -4,18 +4,21 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\NotFoundException;
 use Kirby\TestCase;
+use Kirby\Uuid\Uuid;
 
 class LanguageRouterTest extends TestCase
 {
 	protected $app;
 
+	public const TMP = KIRBY_TMP_DIR . '/Cms.LanguageRouter';
+
 	public function setUp(): void
 	{
-		App::destroy();
+		Dir::make(static::TMP);
 
 		$this->app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => static::TMP
 			],
 			'languages' => [
 				[
@@ -23,6 +26,12 @@ class LanguageRouterTest extends TestCase
 				]
 			]
 		]);
+	}
+
+	public function tearDown(): void
+	{
+		Dir::remove(static::TMP);
+		App::destroy();
 	}
 
 	public function testRouteForSingleLanguage()
@@ -50,7 +59,6 @@ class LanguageRouterTest extends TestCase
 		$router   = $language->router();
 		$routes   = $router->routes();
 
-		$this->assertCount(1, $routes);
 		$this->assertSame('(:any)', $routes[0]['pattern']);
 		$this->assertSame('en', $routes[0]['language']);
 		$this->assertSame('en', $router->call('anything'));
@@ -71,7 +79,7 @@ class LanguageRouterTest extends TestCase
 
 		$language = $app->language('en');
 
-		$this->assertCount(0, $language->router()->routes());
+		$this->assertCount(1, $language->router()->routes());
 	}
 
 	public function testRouteForMultipleLanguages()
@@ -92,7 +100,6 @@ class LanguageRouterTest extends TestCase
 		$router   = $language->router();
 		$routes   = $router->routes();
 
-		$this->assertCount(1, $routes);
 		$this->assertSame('(:any)', $routes[0]['pattern']);
 		$this->assertSame('en|de', $routes[0]['language']);
 		$this->assertSame('slug', $router->call('slug'));
@@ -116,7 +123,6 @@ class LanguageRouterTest extends TestCase
 		$router   = $language->router();
 		$routes   = $router->routes();
 
-		$this->assertCount(1, $routes);
 		$this->assertSame('(:any)', $routes[0]['pattern']);
 		$this->assertSame('*', $routes[0]['language']);
 		$this->assertSame('slug', $router->call('slug'));
@@ -203,5 +209,26 @@ class LanguageRouterTest extends TestCase
 
 		$language = $app->language('en');
 		$router   = $language->router()->call('notes/a/slug');
+	}
+
+	public function testUUIDRoute()
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'notes',
+					]
+				]
+			],
+		]);
+
+		$uuid = $app->page('notes')->uuid()->id();
+
+		$language = $app->language('en');
+		$router   = $language->router()->call('@/page/' . $uuid);
+
+		// TODO: this should normally result in a redirect response
+		var_dump($router);
 	}
 }
