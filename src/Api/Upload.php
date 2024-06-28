@@ -26,7 +26,7 @@ use Kirby\Toolkit\Str;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
- * @since     4.4.0
+ * @since     5.0.0
  * @internal
  */
 class Upload

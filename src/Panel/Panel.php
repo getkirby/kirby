@@ -142,7 +142,7 @@ class Panel
 	 * Garbage collection which runs with a probability
 	 * of 10% on each Panel request
 	 *
-	 * @since 4.4.0
+	 * @since 5.0.0
 	 * @codeCoverageIgnore
 	 */
 	protected static function garbage(): void
