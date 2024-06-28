@@ -67,7 +67,7 @@ export default {
 				return [
 					{
 						theme: "passive",
-						text: this.$t("form.published"),
+						text: this.$t("published"),
 						icon: "check",
 						disabled: true
 					}
@@ -77,14 +77,14 @@ export default {
 			return [
 				{
 					theme: "positive",
-					text: this.isSaved ? this.$t("form.saved") : this.$t("form.save"),
+					text: this.isSaved ? this.$t("saved") : this.$t("save"),
 					icon: this.isSaved ? "check" : "draft",
 					disabled: this.isSaved,
 					click: () => this.$emit("save")
 				},
 				{
 					theme: "positive",
-					text: this.$t("form.publish"),
+					text: this.$t("publish"),
 					icon: "live",
 					click: () => this.$emit("publish")
 				}

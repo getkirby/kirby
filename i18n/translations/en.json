@@ -374,10 +374,6 @@
 	"form.locked": "This content is disabled for you as it is currently edited by another user",
 	"form.preview": "Preview changes",
 	"form.preview.draft": "Preview draft",
-	"form.publish": "Publish",
-	"form.published": "Published",
-	"form.save": "Save",
-	"form.saved": "Saved",
 
 	"hide": "Hide",
 	"hour": "Hour",
@@ -588,6 +584,10 @@
 	"plugins": "Plugins",
 	"prev": "Previous",
 	"preview": "Preview",
+
+	"publish": "Publish",
+	"published": "Published",
+
 	"remove": "Remove",
 	"rename": "Rename",
 	"renew": "Renew",
@@ -607,6 +607,7 @@
 	"role.nobody.title": "Nobody",
 
 	"save": "Save",
+	"saved": "Saved",
 	"search": "Search",
 	"search.min": "Enter {min} characters to search",
 	"search.all": "Show all {count} results",
