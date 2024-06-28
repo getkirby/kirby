@@ -143,9 +143,8 @@ export async function uploadAsChunks(file, params, size = 5242880) {
 			...params,
 			// calculate the total progress based on chunk progress
 			progress: (xhr, chunk, percent) => {
-				const start = i * size;
-				const current = chunk.size * (percent / 100);
-				const total = (start + current) / file.size;
+				const progress = chunk.size * (percent / 100);
+				const total = (start + progress) / file.size;
 				params.progress(xhr, file, Math.round(total * 100));
 			}
 		});
