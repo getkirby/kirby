@@ -1,7 +1,7 @@
 /* eslint-env node */
 import path from "path";
 
-import { defineConfig, splitVendorChunkPlugin } from "vite";
+import { defineConfig, loadEnv, splitVendorChunkPlugin } from "vite";
 import vue from "@vitejs/plugin-vue2";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import externalize from "rollup-plugin-external-globals";
@@ -21,7 +21,7 @@ function createAliases() {
  */
 function createServer() {
 	const proxy = {
-		target: process.env.VUE_APP_DEV_SERVER ?? "http://sandbox.test",
+		target: process.env.SERVER ?? "http://sandbox.test",
 		changeOrigin: true,
 		secure: false
 	};
@@ -99,7 +99,14 @@ function createTest() {
 /**
  * Returns the Vite configuration
  */
-export default defineConfig(({ command }) => {
+export default defineConfig(({ command, mode }) => {
+	// Load env file based on `mode` in the current working directory.
+	// Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
+	process.env = {
+		...process.env,
+		...loadEnv(mode, process.cwd(), '')
+	};
+
 	return {
 		plugins: createPlugins(command),
 		define: {
