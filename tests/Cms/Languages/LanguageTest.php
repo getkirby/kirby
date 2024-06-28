@@ -566,6 +566,31 @@ class LanguageTest extends TestCase
 	}
 
 	/**
+	 * @covers ::save
+	 */
+	public function testSaveCustomTranslations()
+	{
+		new App([
+			'roots' => [
+				'index'     => static::TMP,
+				'languages' => static::TMP . '/languages',
+				'translations' => static::TMP . '/translations'
+			]
+		]);
+
+		$file = static::TMP . '/translations/en.php';
+		F::write($file, '');
+		$language = new Language([
+			'code' => 'en'
+		]);
+		$language->save();
+		$language->variable('foo')->update('bar');
+		$translations = $language->translationsObject();
+
+		$this->assertSame(['foo' => 'bar'], $translations->toArray());
+	}
+
+	/**
 	 * @covers ::toArray
 	 * @covers ::__debugInfo
 	 */
