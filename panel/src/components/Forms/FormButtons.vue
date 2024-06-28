@@ -107,7 +107,7 @@ export default {
 			return this.lockState === "unlock";
 		},
 		mode() {
-			if (this.lockState !== null) {
+			if (this.lockState) {
 				return this.lockState;
 			}
 
