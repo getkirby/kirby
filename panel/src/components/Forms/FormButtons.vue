@@ -51,12 +51,12 @@ export default {
 			if (this.mode === "lock") {
 				return [
 					{
-						icon: this.$content.lock.unlockable ? "unlock" : "loader",
+						icon: this.$panel.content.lock.unlockable ? "unlock" : "loader",
 						text: this.$t("lock.isLocked", {
-							email: this.$esc(this.$content.lock.email)
+							email: this.$esc(this.$panel.content.lock.email)
 						}),
 						title: this.$t("lock.unlock"),
-						disabled: !this.$content.lock.unlockable,
+						disabled: !this.$panel.content.lock.unlockable,
 						click: () => this.unlock()
 					}
 				];
@@ -85,7 +85,7 @@ export default {
 			}
 
 			if (this.mode === "lock") {
-				return !this.$content.lock.unlockable;
+				return !this.$panel.content.lock.unlockable;
 			}
 
 			if (this.mode === "changes") {
@@ -95,7 +95,7 @@ export default {
 			return false;
 		},
 		hasChanges() {
-			return this.$content.hasUnpublishedChanges;
+			return this.$panel.content.hasUnpublishedChanges;
 		},
 		isDisabled() {
 			return this.$store.state.content.status.enabled === false;
@@ -118,10 +118,10 @@ export default {
 			return null;
 		},
 		lockState() {
-			return this.supportsLocking && this.$content.lock?.state;
+			return this.supportsLocking && this.$panel.content.lock?.state;
 		},
 		supportsLocking() {
-			return this.$content.lock !== false;
+			return this.$panel.content.lock !== false;
 		},
 		theme() {
 			if (this.mode === "lock") {
@@ -186,7 +186,7 @@ export default {
 		},
 		download() {
 			let content = "";
-			const changes = this.$content.changed;
+			const changes = this.$panel.content.changed;
 
 			for (const key in changes) {
 				const change = changes[key];
@@ -231,7 +231,7 @@ export default {
 					// If setting lock failed, a competing lock has been set between
 					// API calls. In that case, discard changes, stop setting lock
 					clearInterval(this.isLocking);
-					this.$content.discard();
+					this.$panel.content.discard();
 				}
 			}
 
@@ -244,7 +244,7 @@ export default {
 		async resolve() {
 			// remove content unlock and throw away unsaved changes
 			await this.unlock(false);
-			this.$content.discard();
+			this.$panel.content.discard();
 		},
 		revert() {
 			this.$panel.dialog.open({
@@ -258,14 +258,14 @@ export default {
 				},
 				on: {
 					submit: () => {
-						this.$content.discard();
+						this.$panel.content.discard();
 						this.$panel.dialog.close();
 					}
 				}
 			});
 		},
 		save(e) {
-			this.$content.publish(e);
+			this.$panel.content.publish(e);
 		},
 		async unlock(unlock = true) {
 			const api = [this.$panel.view.path + "/unlock", null, null, true];
@@ -279,7 +279,7 @@ export default {
 							text: this.$t("lock.unlock")
 						},
 						text: this.$t("lock.unlock.submit", {
-							email: this.$esc(this.$content.lock.email)
+							email: this.$esc(this.$panel.content.lock.email)
 						})
 					},
 					on: {

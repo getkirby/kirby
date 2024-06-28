@@ -47,7 +47,7 @@ export default {
 	},
 	computed: {
 		focus() {
-			const focus = this.$content.values["focus"];
+			const focus = this.$panel.content.values["focus"];
 
 			if (!focus) {
 				return;
@@ -73,7 +73,7 @@ export default {
 				focus = `${focus.x}% ${focus.y}%`;
 			}
 
-			this.$content.set("focus", focus);
+			this.$panel.content.set("focus", focus);
 		}
 	}
 };

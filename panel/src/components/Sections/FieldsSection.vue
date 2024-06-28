@@ -39,7 +39,7 @@ export default {
 	},
 	computed: {
 		values() {
-			return this.$content.values;
+			return this.$panel.content.values;
 		}
 	},
 	watch: {
@@ -74,11 +74,11 @@ export default {
 			}
 		},
 		onInput(values, field, fieldName) {
-			this.$content.set(fieldName, values[fieldName]);
+			this.$panel.content.set(fieldName, values[fieldName]);
 		},
 		onSubmit(values) {
 			// ensure that all values are actually committed to content store
-			this.$content.set(values);
+			this.$panel.content.set(values);
 			this.$events.emit("keydown.cmd.s", values);
 		}
 	}

@@ -13,7 +13,7 @@
 			:sticky="column.sticky"
 		>
 			<template v-for="(section, sectionIndex) in column.sections">
-				<template v-if="$helper.field.isVisible(section, content)">
+				<template v-if="isVisible(section)">
 					<component
 						:is="'k-' + section.type + '-section'"
 						v-if="exists(section.type)"
@@ -63,12 +63,15 @@ export default {
 	emits: ["submit"],
 	computed: {
 		content() {
-			return this.$content.values;
+			return this.$panel.content.values;
 		}
 	},
 	methods: {
 		exists(type) {
 			return this.$helper.isComponent(`k-${type}-section`);
+		},
+		isVisible(section) {
+			return this.$helper.field.isVisible(section, this.content);
 		}
 	}
 };
