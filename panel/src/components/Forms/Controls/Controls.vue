@@ -99,7 +99,7 @@ export default {
 
 			if (this.isLocked === false && this.isDraft === false) {
 				dropdown.push({
-					icon: "trash",
+					icon: "undo",
 					text: this.$t("form.discard"),
 					click: () => this.discard()
 				});
