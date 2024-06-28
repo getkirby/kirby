@@ -42,6 +42,8 @@ export default (panel) => {
 		get isDraft() {
 			return panel.view.props.model.status === "draft";
 		},
+		isPublishing: false,
+		isSaving: false,
 		/**
 		 * Content lock state of the model
 		 *
@@ -69,9 +71,11 @@ export default (panel) => {
 		async publish(e) {
 			e?.preventDefault?.();
 
+			this.isPublishing = true;
 			await panel.app.$store.dispatch("content/save");
 			panel.events.emit("model.update");
 			panel.notification.success();
+			this.isPublishing = false;
 		},
 		/**
 		 * Returns all fields and their already published values
@@ -84,7 +88,11 @@ export default (panel) => {
 		/**
 		 * Saves any changes
 		 */
-		async save() {},
+		async save() {
+			this.isSaving = true;
+			// …
+			this.isSaving = false;
+		},
 		/**
 		 * Updates the value of fields/a field
 		 *

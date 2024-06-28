@@ -10,7 +10,7 @@
 			v-bind="button"
 			size="sm"
 			variant="filled"
-			:disabled="isDisabled"
+			:disabled="disabled"
 			:responsive="true"
 			:theme="theme"
 		/>
@@ -89,16 +89,13 @@ export default {
 			}
 
 			if (this.mode === "changes") {
-				return this.isDisabled;
+				return this.$panel.content.isPublishing;
 			}
 
 			return false;
 		},
 		hasChanges() {
 			return this.$panel.content.hasUnpublishedChanges;
-		},
-		isDisabled() {
-			return this.$store.state.content.status.enabled === false;
 		},
 		isLocked() {
 			return this.lockState === "lock";
