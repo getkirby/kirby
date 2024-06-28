@@ -40,7 +40,7 @@
 			/>
 		</div>
 
-		<div v-if="query?.length > 1" class="k-search-dialog-results">
+		<div v-if="query?.length > 1 && !isLoading" class="k-search-dialog-results">
 			<!-- Results -->
 			<k-collection
 				v-if="items.length"
