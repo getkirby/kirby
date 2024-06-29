@@ -110,16 +110,12 @@ export default (panel) => {
 			this.isSaving = false;
 		},
 		/**
-		 * Updates the value of fields/a field
+		 * Updates the values of fields
 		 *
-		 * @param {String|Object} fields
+		 * @param {Object} fields
 		 * @param {any} value
 		 */
-		set(fields, value) {
-			if (typeof fields === "string") {
-				fields = { [fields]: value };
-			}
-
+		set(fields) {
 			panel.app.$store.dispatch("content/update", [null, fields]);
 		},
 		/**
