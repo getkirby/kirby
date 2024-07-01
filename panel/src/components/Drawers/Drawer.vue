@@ -17,16 +17,16 @@
 			>
 				<slot name="options">
 					<template v-for="(option, index) in options">
-						<template v-if="option.dropdown">
+						<template v-if="option.dropdown" :set="(uid = $helper.uid())">
 							<k-button
-								:key="'btn-' + index"
+								:key="'dropdown-btn-' + uid"
 								v-bind="option"
 								class="k-drawer-option"
 								@click="$refs['dropdown-' + index][0].toggle()"
 							/>
 							<k-dropdown-content
 								:ref="'dropdown-' + index"
-								:key="'dropdown-' + index"
+								:key="'dropdown-' + uid"
 								:options="option.dropdown"
 								align-x="end"
 								theme="light"
@@ -35,7 +35,7 @@
 
 						<k-button
 							v-else
-							:key="index"
+							:key="$helper.uid()"
 							v-bind="option"
 							class="k-drawer-option"
 						/>

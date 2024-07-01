@@ -4,8 +4,8 @@
 		:style="{ '--tree-level': level, ...$attrs.style }"
 	>
 		<li
-			v-for="(item, index) in state"
-			:key="index"
+			v-for="item in state"
+			:key="item.id ?? $helper.uid()"
 			:aria-expanded="item.open"
 			:aria-current="item.value === current"
 		>

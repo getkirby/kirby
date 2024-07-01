@@ -1,11 +1,11 @@
 <template>
 	<nav class="k-toolbar" :data-theme="theme">
 		<template v-for="(button, index) in buttons">
-			<hr v-if="button === '|'" :key="index" />
+			<hr v-if="button === '|'" :key="'separator-' + $helper.uid()" />
 
 			<k-button
 				v-else-if="button.when ?? true"
-				:key="index"
+				:key="button.id ?? $helper.uid()"
 				:current="button.current"
 				:disabled="button.disabled"
 				:icon="button.icon"
@@ -21,7 +21,7 @@
 			/>
 			<k-dropdown-content
 				v-if="(button.when ?? true) && button.dropdown?.length"
-				:key="index + '-dropdown'"
+				:key="$helper.uid() + '-dropdown'"
 				:ref="index + '-dropdown'"
 				:options="button.dropdown"
 				:theme="theme === 'dark' ? 'light' : 'dark'"

@@ -8,8 +8,8 @@
 			@leave="$emit('leave')"
 		>
 			<k-dropdown-item
-				v-for="(item, index) in matches"
-				:key="index"
+				v-for="item in matches"
+				:key="$helper.uid()"
 				v-bind="item"
 				@mousedown.native="onSelect(item)"
 				@keydown.native.tab.prevent="onSelect(item)"

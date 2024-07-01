@@ -19,7 +19,7 @@
 			<!-- Menus -->
 			<menu
 				v-for="(menu, menuIndex) in menus"
-				:key="menuIndex"
+				:key="$helper.uid()"
 				:data-second-last="menuIndex === menus.length - 2"
 				class="k-panel-menu-buttons"
 			>
