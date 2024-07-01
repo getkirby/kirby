@@ -73,12 +73,12 @@ export default {
 				this.isLoading = false;
 			}
 		},
-		onInput(values, field, fieldName) {
-			this.$panel.content.set(fieldName, values[fieldName]);
+		onInput(values) {
+			this.$panel.content.set(values);
 		},
 		onSubmit(values) {
 			// ensure that all values are actually committed to content store
-			this.$panel.content.set(values);
+			this.onInput(values);
 			this.$events.emit("keydown.cmd.s", values);
 		}
 	}
