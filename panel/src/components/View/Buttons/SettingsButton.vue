@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<k-button
-			:disabled="$panel.view.isLocked"
+			:disabled="$panel.content.isLocked"
 			:dropdown="true"
 			:title="$t('settings')"
 			icon="cog"

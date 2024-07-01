@@ -22,10 +22,6 @@ export default (panel) => {
 	return {
 		...parent,
 
-		get isLocked() {
-			return this.props.lock?.state === "lock";
-		},
-
 		/**
 		 * Setting the active view state
 		 * will also change the document title
