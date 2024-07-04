@@ -58,8 +58,5 @@ export default {
 			app.config.globalProperties[key] = window.panel[key] =
 				window.panel[polyfill];
 		}
-
-		// Kirbyup relies on this
-		window.panel.$vue = window.panel.app;
 	}
 };
