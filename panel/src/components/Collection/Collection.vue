@@ -4,7 +4,7 @@
 			v-if="items.length === 0"
 			v-bind="empty"
 			:layout="layout"
-			v-on="$listeners['empty'] ? { click: onEmpty } : {}"
+			v-on="listeners"
 		/>
 
 		<k-items
@@ -91,6 +91,14 @@ export default {
 			}
 
 			return true;
+		},
+		listeners() {
+			if (this.$listeners["empty"]) {
+				return {
+					click: this.onEmpty
+				};
+			}
+			return {};
 		},
 		paginationOptions() {
 			const options =
