@@ -163,7 +163,7 @@ export default {
 			});
 		},
 		focus() {
-			this.$el.querySelector("textarea")?.focus();
+			this.$refs.input.focus();
 		},
 		insert(text) {
 			const input = this.$refs.input;
@@ -258,7 +258,7 @@ export default {
 			}
 		},
 		onSubmit($event) {
-			$event.target.form?.requestSubmit();
+			return this.$emit("submit", $event);
 		},
 		parseSelection() {
 			const selection = this.selection();
