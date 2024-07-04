@@ -34,9 +34,18 @@
  */
 export default {
 	props: {
-		exceptions: Array,
-		security: Array,
-		urls: Object
+		exceptions: {
+			type: Array,
+			default: () => []
+		},
+		security: {
+			type: Array,
+			default: () => []
+		},
+		urls: {
+			type: Object,
+			default: () => ({})
+		}
 	},
 	data() {
 		return {
