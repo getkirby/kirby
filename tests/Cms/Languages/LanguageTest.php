@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
@@ -102,6 +103,39 @@ class LanguageTest extends TestCase
 	/**
 	 * @covers ::create
 	 */
+	public function testCreateNoPermissions()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'blueprints' => [
+				'users/editor' => [
+					'name' => 'editor',
+					'permissions' => [
+						'languages' => [
+							'create' => false
+						]
+					]
+				],
+			],
+			'users' => [
+				['email' => 'test@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to create a language');
+
+		$app->impersonate('test@getkirby.com');
+		Language::create([
+			'code' => 'en'
+		]);
+	}
+
+	/**
+	 * @covers ::create
+	 */
 	public function testCreateHooks()
 	{
 		$calls = 0;
@@ -152,6 +186,39 @@ class LanguageTest extends TestCase
 	{
 		$language = Language::create(['code' => 'en']);
 		$this->assertTrue($language->delete());
+	}
+
+	/**
+	 * @covers ::delete
+	 */
+	public function testDeleteNoPermissions()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'blueprints' => [
+				'users/editor' => [
+					'name' => 'editor',
+					'permissions' => [
+						'languages' => [
+							'create' => true,
+							'delete' => false
+						]
+					]
+				],
+			],
+			'users' => [
+				['email' => 'test@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to delete the language');
+
+		$app->impersonate('test@getkirby.com');
+		$language = Language::create(['code' => 'en']);
+		$language->delete();
 	}
 
 	/**

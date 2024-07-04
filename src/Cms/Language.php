@@ -6,6 +6,7 @@ use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
@@ -145,8 +146,13 @@ class Language
 	 */
 	public static function create(array $props): static
 	{
+		$kirby = App::instance();
+
+		if ($kirby->user()?->role()->permissions()->for('languages', 'create') === false) {
+			throw new PermissionException('You are not allowed to create a language');
+		}
+
 		$props['code'] = Str::slug($props['code'] ?? null);
-		$kirby         = App::instance();
 		$languages     = $kirby->languages();
 
 		// make the first language the default language
@@ -205,6 +211,10 @@ class Language
 	{
 		$kirby = App::instance();
 		$code  = $this->code();
+
+		if ($kirby->user()?->role()->permissions()->for('languages', 'delete') === false) {
+			throw new PermissionException('You are not allowed to delete the language');
+		}
 
 		if ($this->isDeletable() === false) {
 			throw new Exception('The language cannot be deleted');

@@ -5,6 +5,7 @@
 
 			<k-button-group slot="buttons">
 				<k-button
+					:disabled="!$panel.permissions.languages.create"
 					:text="$t('language.create')"
 					icon="add"
 					size="sm"
@@ -84,7 +85,7 @@ export default {
 					{
 						icon: "trash",
 						text: this.$t("delete"),
-						disabled: language.deletable === false,
+						disabled: language.deletable === false || !this.$panel.permissions.languages.delete,
 						click: () => this.$dialog(`languages/${language.id}/delete`)
 					}
 				]
