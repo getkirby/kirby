@@ -102,7 +102,7 @@ export default defineConfig(({ mode }) => {
 	};
 
 	const proxy = {
-		target: process.env.SERVER ?? "http://sandbox.test",
+		target: process.env.SERVER ?? "https://sandbox.test",
 		changeOrigin: true,
 		secure: false
 	};
