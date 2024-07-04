@@ -10,7 +10,6 @@ use Kirby\Content\PlainTextContentStorageHandler;
 use Kirby\Content\Version;
 use Kirby\Content\VersionId;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form;
 use Kirby\Panel\Model;
 use Kirby\Toolkit\Str;
@@ -132,21 +131,11 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	{
 		// single language support
 		if ($this->kirby()->multilang() === false) {
-			if ($this->content instanceof Content) {
-				return $this->content;
-			}
-
-			// don't normalize field keys (already handled by the `Data` class)
-			return $this->content = new Content($this->readContent(), $this, false);
+			return $this->content ??= $this->version()->content('default');
 		}
 
 		// get the targeted language
-		$language = $this->kirby()->language($languageCode);
-
-		// stop if the language does not exist
-		if ($language === null) {
-			throw new InvalidArgumentException('Invalid language: ' . $languageCode);
-		}
+		$language = Language::ensure($languageCode);
 
 		// only fetch from cache for the current language
 		if ($languageCode === null && $this->content instanceof Content) {
@@ -415,14 +404,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 */
 	public function readContent(string|null $languageCode = null): array
 	{
-		try {
-			return $this->version()->read($languageCode ?? 'default');
-		} catch (NotFoundException) {
-			// only if the content file really does not exist, it's ok
-			// to return empty content. Otherwise this could lead to
-			// content loss in case of file reading issues
-			return [];
-		}
+		return $this->version()->read($languageCode ?? 'default') ?? [];
 	}
 
 	/**
@@ -644,15 +626,14 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	/**
 	 * Returns a single translation by language code
 	 * If no code is specified the current translation is returned
+	 *
+	 * @throws \Kirby\Exception\NotFoundException If the language does not exist
 	 */
 	public function translation(
 		string|null $languageCode = null
 	): ContentTranslation|null {
-		if ($language = $this->kirby()->language($languageCode)) {
-			return $this->translations()->find($language->code());
-		}
-
-		return null;
+		$language = Language::ensure($languageCode ?? 'current');
+		return $this->translations()->find($language->code());
 	}
 
 	/**
@@ -743,19 +724,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 */
 	public function writeContent(array $data, string|null $languageCode = null): bool
 	{
-		$data = $this->contentFileData($data, $languageCode);
-
-		// update the default language, unless a specific language is passed
-		$languageCode ??= 'default';
-
-		try {
-			// we can only update if the version already exists
-			$this->version()->update($data, $languageCode);
-		} catch (NotFoundException) {
-			// otherwise create a new version
-			$this->version()->create($data, $languageCode);
-		}
-
+		$this->version()->save($data, $languageCode ?? 'default', true);
 		return true;
 	}
 }

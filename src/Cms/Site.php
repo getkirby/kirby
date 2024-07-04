@@ -81,12 +81,12 @@ class Site extends ModelWithContent
 	 */
 	public function __construct(array $props = [])
 	{
-		parent::__construct($props);
-
 		$this->errorPageId = $props['errorPageId'] ?? 'error';
 		$this->homePageId  = $props['homePageId'] ?? 'home';
 		$this->page        = $props['page'] ?? null;
 		$this->url         = $props['url'] ?? null;
+
+		parent::__construct($props);
 
 		$this->setBlueprint($props['blueprint'] ?? null);
 		$this->setChildren($props['children'] ?? null);

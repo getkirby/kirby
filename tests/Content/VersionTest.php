@@ -3,7 +3,6 @@
 namespace Kirby\Content;
 
 use Kirby\Data\Data;
-use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 
 /**
@@ -14,32 +13,8 @@ class VersionTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Content.Version';
 
-	public function assertContentFileExists(string|null $language = null, VersionId|null $versionId = null)
-	{
-		$this->assertFileExists($this->contentFile($language, $versionId));
-	}
-
-	public function assertContentFileDoesNotExist(string|null $language = null, VersionId|null $versionId = null)
-	{
-		$this->assertFileDoesNotExist($this->contentFile($language, $versionId));
-	}
-
-	public function contentFile(string|null $language = null, VersionId|null $versionId = null): string
-	{
-		return
-			$this->model->root() .
-			// add the changes folder
-			($versionId?->value() === 'changes' ? '/_changes/' : '/') .
-			// template
-			'article' .
-			// language code
-			($language === null ? '' : '.' . $language) .
-			'.txt';
-	}
-
 	/**
 	 * @covers ::content
-	 * @covers ::language
 	 */
 	public function testContentMultiLanguage(): void
 	{
@@ -50,24 +25,17 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		Data::write($this->contentFile('en'), [
-			'title' => 'Test'
-		]);
+		$expected = $this->createContentMultiLanguage();
 
-		Data::write($this->contentFile('de'), [
-			'title' => 'Töst'
-		]);
-
-		$this->assertSame('Test', $version->content('en')->get('title')->value());
-		$this->assertSame('Test', $version->content($this->app->language('en'))->get('title')->value());
-		$this->assertSame('Test', $version->content()->get('title')->value());
-		$this->assertSame('Töst', $version->content('de')->get('title')->value());
-		$this->assertSame('Töst', $version->content($this->app->language('de'))->get('title')->value());
+		$this->assertSame($expected['en']['content']['title'], $version->content('en')->get('title')->value());
+		$this->assertSame($expected['en']['content']['title'], $version->content($this->app->language('en'))->get('title')->value());
+		$this->assertSame($expected['en']['content']['title'], $version->content()->get('title')->value());
+		$this->assertSame($expected['de']['content']['title'], $version->content('de')->get('title')->value());
+		$this->assertSame($expected['de']['content']['title'], $version->content($this->app->language('de'))->get('title')->value());
 	}
 
 	/**
 	 * @covers ::content
-	 * @covers ::language
 	 */
 	public function testContentSingleLanguage(): void
 	{
@@ -78,16 +46,38 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		Data::write($this->contentFile(), [
+		$expected = $this->createContentSingleLanguage();
+
+		$this->assertSame($expected['content']['title'], $version->content()->get('title')->value());
+	}
+
+	/**
+	 * @covers ::content
+	 */
+	public function testContentWithFallback(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		// write something to the content file to make sure it
+		// can be read from disk for the test.
+		Data::write($this->model->root() . '/article.en.txt', $content = [
 			'title' => 'Test'
 		]);
 
-		$this->assertSame('Test', $version->content()->get('title')->value());
+		$this->assertSame($content, $version->content()->toArray());
+		$this->assertSame($content, $version->content('en')->toArray());
+
+		// make sure that the content fallback works
+		$this->assertSame($version->content('en')->toArray(), $version->content('de')->toArray());
 	}
 
 	/**
 	 * @covers ::contentFile
-	 * @covers ::language
 	 */
 	public function testContentFileMultiLanguage(): void
 	{
@@ -122,7 +112,6 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::create
-	 * @covers ::language
 	 */
 	public function testCreateMultiLanguage(): void
 	{
@@ -172,6 +161,63 @@ class VersionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::create
+	 * @covers ::convertFieldNamesToLowerCase
+	 * @covers ::prepareFieldsBeforeWrite
+	 */
+	public function testCreateWithDirtyFields(): void
+	{
+		$this->setUpMultiLanguage();
+
+		// add a blueprint with an untranslatable field
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/article' => [
+					'fields' => [
+						'date' => [
+							'type'      => 'date',
+							'translate' => false
+						]
+					]
+				]
+			]
+		]);
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		// primary language
+		$version->create([
+			'title'    => 'Test',
+			'uuid'     => '12345',
+			'Subtitle' => 'Subtitle',
+			'date'     => '2012-12-12'
+		], 'en');
+
+		// secondary language
+		$version->create([
+			'title'    => 'Test',
+			'uuid'     => '12345',
+			'Subtitle' => 'Subtitle',
+			'date'     => '2012-12-12'
+		], 'de');
+
+		// check for lower case field names
+		$this->assertArrayHasKey('subtitle', $version->read('en'));
+		$this->assertArrayHasKey('subtitle', $version->read('de'));
+
+		// check for removed uuid field in secondary language
+		$this->assertArrayHasKey('uuid', $version->read('en'));
+		$this->assertArrayNotHasKey('uuid', $version->read('de'));
+
+		// check for untranslatable fields
+		$this->assertArrayHasKey('date', $version->read('en'));
+		$this->assertArrayNotHasKey('date', $version->read('de'));
+	}
+
+	/**
 	 * @covers ::delete
 	 */
 	public function testDeleteMultiLanguage(): void
@@ -186,13 +232,7 @@ class VersionTest extends TestCase
 		$this->assertContentFileDoesNotExist('de');
 		$this->assertContentFileDoesNotExist('en');
 
-		Data::write($this->contentFile('en'), [
-			'title' => 'Test'
-		]);
-
-		Data::write($this->contentFile('de'), [
-			'title' => 'Test'
-		]);
+		$this->createContentMultiLanguage();
 
 		$this->assertContentFileExists('en');
 		$this->assertContentFileExists('de');
@@ -217,9 +257,7 @@ class VersionTest extends TestCase
 
 		$this->assertContentFileDoesNotExist();
 
-		Data::write($this->contentFile(), [
-			'title' => 'Test'
-		]);
+		$this->createContentSingleLanguage();
 
 		$this->assertContentFileExists();
 
@@ -230,7 +268,6 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::ensure
-	 * @covers ::language
 	 */
 	public function testEnsureMultiLanguage(): void
 	{
@@ -241,9 +278,10 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		Data::write($this->contentFile('de'), [
-			'title' => 'Test'
-		]);
+		$this->createContentMultiLanguage();
+
+		$this->assertNull($version->ensure('en'));
+		$this->assertNull($version->ensure($this->app->language('en')));
 
 		$this->assertNull($version->ensure('de'));
 		$this->assertNull($version->ensure($this->app->language('de')));
@@ -261,9 +299,7 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		Data::write($this->contentFile(), [
-			'title' => 'Test'
-		]);
+		$this->createContentSingleLanguage();
 
 		$this->assertNull($version->ensure());
 	}
@@ -306,7 +342,6 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::ensure
-	 * @covers ::language
 	 */
 	public function testEnsureWithInvalidLanguage(): void
 	{
@@ -317,7 +352,7 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Invalid language: fr');
 
 		$version->ensure('fr');
@@ -325,7 +360,6 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::exists
-	 * @covers ::language
 	 */
 	public function testExistsMultiLanguage(): void
 	{
@@ -336,10 +370,16 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
+		$this->assertFalse($version->exists('en'));
+		$this->assertFalse($version->exists($this->app->language('en')));
+
 		$this->assertFalse($version->exists('de'));
 		$this->assertFalse($version->exists($this->app->language('de')));
 
-		Data::write($this->contentFile('de'), []);
+		$this->createContentMultiLanguage();
+
+		$this->assertTrue($version->exists('en'));
+		$this->assertTrue($version->exists($this->app->language('en')));
 
 		$this->assertTrue($version->exists('de'));
 		$this->assertTrue($version->exists($this->app->language('de')));
@@ -359,7 +399,7 @@ class VersionTest extends TestCase
 
 		$this->assertFalse($version->exists());
 
-		Data::write($this->contentFile(), []);
+		$this->createContentSingleLanguage();
 
 		$this->assertTrue($version->exists());
 	}
@@ -396,7 +436,6 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::modified
-	 * @covers ::language
 	 */
 	public function testModifiedMultiLanguage(): void
 	{
@@ -415,7 +454,6 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::modified
-	 * @covers ::language
 	 */
 	public function testModifiedMultiLanguageIfNotExists(): void
 	{
@@ -555,7 +593,8 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::read
-	 * @covers ::language
+	 * @covers ::convertFieldNamesToLowerCase
+	 * @covers ::prepareFieldsAfterRead
 	 */
 	public function testReadMultiLanguage(): void
 	{
@@ -566,22 +605,18 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		Data::write($this->contentFile('en'), $contentEN = [
-			'title' => 'Test'
-		]);
+		$expected = $this->createContentMultiLanguage();
 
-		Data::write($this->contentFile('de'), $contentDE = [
-			'title' => 'Töst'
-		]);
-
-		$this->assertSame($contentEN, $version->read('en'));
-		$this->assertSame($contentEN, $version->read($this->app->language('en')));
-		$this->assertSame($contentDE, $version->read('de'));
-		$this->assertSame($contentDE, $version->read($this->app->language('de')));
+		$this->assertSame($expected['en']['content'], $version->read('en'));
+		$this->assertSame($expected['en']['content'], $version->read($this->app->language('en')));
+		$this->assertSame($expected['de']['content'], $version->read('de'));
+		$this->assertSame($expected['de']['content'], $version->read($this->app->language('de')));
 	}
 
 	/**
 	 * @covers ::read
+	 * @covers ::convertFieldNamesToLowerCase
+	 * @covers ::prepareFieldsAfterRead
 	 */
 	public function testReadSingleLanguage(): void
 	{
@@ -592,16 +627,336 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		Data::write($this->contentFile(), $content = [
+		$expected = $this->createContentSingleLanguage();
+
+		$this->assertSame($expected['content'], $version->read());
+	}
+
+	/**
+	 * @covers ::read
+	 */
+	public function testReadWhenMissing(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$this->assertFileDoesNotExist($this->contentFile());
+		$this->assertNull($version->read());
+	}
+
+	/**
+	 * @covers ::read
+	 * @covers ::convertFieldNamesToLowerCase
+	 * @covers ::prepareFieldsAfterRead
+	 */
+	public function testReadWithDirtyFields(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		Data::write($this->contentFile(), [
+			'Title'    => 'Dirty title',
+			'subTitle' => 'Dirty subtitle'
+		]);
+
+		// check for lower case field names
+		$this->assertArrayHasKey('title', $version->read());
+		$this->assertArrayHasKey('subtitle', $version->read());
+	}
+
+	/**
+	 * @covers ::read
+	 * @covers ::convertFieldNamesToLowerCase
+	 * @covers ::prepareFieldsAfterRead
+	 */
+	public function testReadWithInvalidLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('Invalid language: fr');
+
+		$version->read('fr');
+	}
+
+	/**
+	 * @covers ::replace
+	 * @covers ::convertFieldNamesToLowerCase
+	 * @covers ::prepareFieldsBeforeWrite
+	 */
+	public function testReplaceMultiLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$expected = $this->createContentMultiLanguage();
+
+		// with Language argument
+		$version->replace([
+			'title' => 'Updated Title English'
+		], $this->app->language('en'));
+
+		// with string argument
+		$version->replace([
+			'title' => 'Updated Title Deutsch',
+		], 'de');
+
+		$this->assertSame(['title' => 'Updated Title English'], Data::read($expected['en']['file']));
+		$this->assertSame(['title' => 'Updated Title Deutsch'], Data::read($expected['de']['file']));
+	}
+
+	/**
+	 * @covers ::replace
+	 * @covers ::convertFieldNamesToLowerCase
+	 * @covers ::prepareFieldsBeforeWrite
+	 */
+	public function testReplaceSingleLanguage(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$expected = $this->createContentSingleLanguage();
+
+		$version->replace([
+			'title' => 'Updated Title'
+		]);
+
+		$this->assertSame(['title' => 'Updated Title'], Data::read($expected['file']));
+	}
+
+	/**
+	 * @covers ::replace
+	 * @covers ::convertFieldNamesToLowerCase
+	 * @covers ::prepareFieldsBeforeWrite
+	 */
+	public function testReplaceWithDirtyFields(): void
+	{
+		$this->setUpMultiLanguage();
+
+		// add a blueprint with an untranslatable field
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/article' => [
+					'fields' => [
+						'date' => [
+							'type'      => 'date',
+							'translate' => false
+						]
+					]
+				]
+			]
+		]);
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$this->createContentMultiLanguage();
+
+		// primary language
+		$version->replace([
+			'title'    => 'Test',
+			'uuid'     => '12345',
+			'Subtitle' => 'Subtitle',
+			'date'     => '2012-12-12'
+		], 'en');
+
+		// secondary language
+		$version->replace([
+			'title'    => 'Test',
+			'uuid'     => '12345',
+			'Subtitle' => 'Subtitle',
+			'date'     => '2012-12-12'
+		], 'de');
+
+		// check for lower case field names
+		$this->assertArrayHasKey('subtitle', $version->read('en'));
+		$this->assertArrayHasKey('subtitle', $version->read('de'));
+
+		// check for removed uuid field in secondary language
+		$this->assertArrayHasKey('uuid', $version->read('en'));
+		$this->assertArrayNotHasKey('uuid', $version->read('de'));
+
+		// check for untranslatable fields
+		$this->assertArrayHasKey('date', $version->read('en'));
+		$this->assertArrayNotHasKey('date', $version->read('de'));
+	}
+
+	/**
+	 * @covers ::save
+	 */
+	public function testSaveExistingMultiLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$expected = $this->createContentMultiLanguage();
+
+		// with Language argument
+		$version->save([
+			'title' => 'Updated Title English'
+		], $this->app->language('en'));
+
+		// with string argument
+		$version->save([
+			'title' => 'Updated Title Deutsch',
+		], 'de');
+
+		$this->assertSame('Updated Title English', Data::read($expected['en']['file'])['title']);
+		$this->assertSame('Subtitle English', Data::read($expected['en']['file'])['subtitle']);
+		$this->assertSame('Updated Title Deutsch', Data::read($expected['de']['file'])['title']);
+		$this->assertSame('Subtitle Deutsch', Data::read($expected['de']['file'])['subtitle']);
+	}
+
+	/**
+	 * @covers ::save
+	 */
+	public function testSaveExistingSingleLanguage(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$expected = $this->createContentSingleLanguage();
+
+		$version->save([
+			'title' => 'Updated Title'
+		]);
+
+		$this->assertSame('Updated Title', Data::read($expected['file'])['title']);
+		$this->assertSame('Subtitle', Data::read($expected['file'])['subtitle']);
+	}
+
+	/**
+	 * @covers ::save
+	 */
+	public function testSaveNonExistingMultiLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$this->assertContentFileDoesNotExist('en');
+		$this->assertContentFileDoesNotExist('de');
+
+		// with Language argument
+		$version->save([
+			'title' => 'Test'
+		], $this->app->language('en'));
+
+		// with string argument
+		$version->save([
+			'title' => 'Test'
+		], 'de');
+
+		$this->assertContentFileExists('en');
+		$this->assertContentFileExists('de');
+	}
+
+	/**
+	 * @covers ::save
+	 */
+	public function testSaveNonExistingSingleLanguage(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$this->assertContentFileDoesNotExist();
+
+		$version->save([
 			'title' => 'Test'
 		]);
 
-		$this->assertSame($content, $version->read());
+		$this->assertContentFileExists();
+	}
+
+	/**
+	 * @covers ::save
+	 */
+	public function testSaveOverwriteMultiLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$expected = $this->createContentMultiLanguage();
+
+		// with Language argument
+		$version->save([
+			'title' => 'Updated Title English'
+		], $this->app->language('en'), true);
+
+		// with string argument
+		$version->save([
+			'title' => 'Updated Title Deutsch',
+		], 'de', true);
+
+		$this->assertSame(['title' => 'Updated Title English'], Data::read($expected['en']['file']));
+		$this->assertSame(['title' => 'Updated Title Deutsch'], Data::read($expected['de']['file']));
+	}
+
+	/**
+	 * @covers ::save
+	 */
+	public function testSaveOverwriteSingleLanguage(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$expected = $this->createContentSingleLanguage();
+
+		$version->save([
+			'title' => 'Updated Title'
+		], 'default', true);
+
+		$this->assertSame(['title' => 'Updated Title'], Data::read($expected['file']));
 	}
 
 	/**
 	 * @covers ::touch
-	 * @covers ::language
 	 */
 	public function testTouchMultiLanguage(): void
 	{
@@ -658,7 +1013,6 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::update
-	 * @covers ::language
 	 */
 	public function testUpdateMultiLanguage(): void
 	{
@@ -669,13 +1023,7 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		Data::write($fileEN = $this->contentFile('en'), [
-			'title' => 'Test English'
-		]);
-
-		Data::write($fileDE = $this->contentFile('de'), [
-			'title' => 'Test Deutsch'
-		]);
+		$expected = $this->createContentMultiLanguage();
 
 		// with Language argument
 		$version->update([
@@ -684,11 +1032,13 @@ class VersionTest extends TestCase
 
 		// with string argument
 		$version->update([
-			'title' => 'Updated Title Deutsch'
+			'title' => 'Updated Title Deutsch',
 		], 'de');
 
-		$this->assertSame('Updated Title English', Data::read($fileEN)['title']);
-		$this->assertSame('Updated Title Deutsch', Data::read($fileDE)['title']);
+		$this->assertSame('Updated Title English', Data::read($expected['en']['file'])['title']);
+		$this->assertSame('Subtitle English', Data::read($expected['en']['file'])['subtitle']);
+		$this->assertSame('Updated Title Deutsch', Data::read($expected['de']['file'])['title']);
+		$this->assertSame('Subtitle Deutsch', Data::read($expected['de']['file'])['subtitle']);
 	}
 
 	/**
@@ -703,14 +1053,72 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		Data::write($file = $this->contentFile(), $content = [
-			'title' => 'Test'
-		]);
+		$expected = $this->createContentSingleLanguage();
 
 		$version->update([
 			'title' => 'Updated Title'
 		]);
 
-		$this->assertSame('Updated Title', Data::read($file)['title']);
+		$this->assertSame('Updated Title', Data::read($expected['file'])['title']);
+		$this->assertSame('Subtitle', Data::read($expected['file'])['subtitle']);
+	}
+
+	/**
+	 * @covers ::update
+	 * @covers ::convertFieldNamesToLowerCase
+	 * @covers ::prepareFieldsBeforeWrite
+	 */
+	public function testUpdateWithDirtyFields(): void
+	{
+		$this->setUpMultiLanguage();
+
+		// add a blueprint with an untranslatable field
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/article' => [
+					'fields' => [
+						'date' => [
+							'type'      => 'date',
+							'translate' => false
+						]
+					]
+				]
+			]
+		]);
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$this->createContentMultiLanguage();
+
+		// primary language
+		$version->update([
+			'title'    => 'Test',
+			'uuid'     => '12345',
+			'Subtitle' => 'Subtitle',
+			'date'     => '2012-12-12'
+		], 'en');
+
+		// secondary language
+		$version->update([
+			'title'    => 'Test',
+			'uuid'     => '12345',
+			'Subtitle' => 'Subtitle',
+			'date'     => '2012-12-12'
+		], 'de');
+
+		// check for lower case field names
+		$this->assertArrayHasKey('subtitle', $version->read('en'));
+		$this->assertArrayHasKey('subtitle', $version->read('de'));
+
+		// check for removed uuid field in secondary language
+		$this->assertArrayHasKey('uuid', $version->read('en'));
+		$this->assertArrayNotHasKey('uuid', $version->read('de'));
+
+		// check for untranslatable fields
+		$this->assertArrayHasKey('date', $version->read('en'));
+		$this->assertArrayNotHasKey('date', $version->read('de'));
 	}
 }

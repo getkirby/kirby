@@ -131,8 +131,6 @@ class Page extends ModelWithContent
 			throw new InvalidArgumentException('The page slug is required');
 		}
 
-		parent::__construct($props);
-
 		$this->slug    = $props['slug'];
 		// Sets the dirname manually, which works
 		// more reliable in connection with the inventory
@@ -142,6 +140,8 @@ class Page extends ModelWithContent
 		$this->num     = $props['num'] ?? null;
 		$this->parent  = $props['parent'] ?? null;
 		$this->root    = $props['root'] ?? null;
+
+		parent::__construct($props);
 
 		$this->setBlueprint($props['blueprint'] ?? null);
 		$this->setChildren($props['children'] ?? null);

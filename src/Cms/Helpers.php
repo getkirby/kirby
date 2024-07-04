@@ -38,6 +38,13 @@ class Helpers
 		// TODO: switch to true in v6
 		'plugin-extends-root' => false,
 
+		// The `Content\Translation` class keeps a set of methods from the old
+		// `ContentTranslation` class for compatibility that should no longer be used.
+		// Some of them can be replaced by using `Version` class methods instead
+		// (see method comments). `Content\Translation::contentFile` should be avoided
+		//  entirely and has no recommended replacement.
+		'translation-methods' => true,
+
 		// Passing a single space as value to `Xml::attr()` has been
 		// deprecated. In a future version, passing a single space won't
 		// render an empty value anymore but a single space.

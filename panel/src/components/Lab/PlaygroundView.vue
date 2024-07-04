@@ -3,7 +3,7 @@
 		:data-has-tabs="tabs.length > 1"
 		class="k-lab-playground-view"
 	>
-		<k-header>
+		<k-header class="k-lab-playground-header">
 			{{ title }}
 
 			<template #buttons>
@@ -127,7 +127,7 @@ export default {
 </script>
 
 <style>
-.k-lab-playground-view[data-has-tabs="true"] .k-header {
+.k-lab-playground-view[data-has-tabs="true"] .k-lab-playground-header {
 	margin-bottom: 0;
 }
 

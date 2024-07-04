@@ -13,10 +13,12 @@ require_once __DIR__ . '/PhpUnitExtension.php';
 
 // ensure that all mocks are loaded before tests start running
 // to avoid issues when running via ParaTest
+require_once __DIR__ . '/Api/mocks.php';
 require_once __DIR__ . '/Cache/mocks.php';
 require_once __DIR__ . '/Cms/mocks.php';
 require_once __DIR__ . '/Cms/Auth/mocks.php';
 require_once __DIR__ . '/Cms/System/mocks.php';
+require_once __DIR__ . '/Content/mocks.php';
 require_once __DIR__ . '/Data/mocks.php';
 require_once __DIR__ . '/Database/mocks.php';
 require_once __DIR__ . '/Filesystem/mocks.php';

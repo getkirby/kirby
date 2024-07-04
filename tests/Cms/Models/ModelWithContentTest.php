@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use Kirby\Content\Version;
 use Kirby\Content\VersionId;
-use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Panel\Page as PanelPage;
 use Kirby\Uuid\PageUuid;
 use Kirby\Uuid\SiteUuid;
@@ -153,7 +153,7 @@ class ModelWithContentTest extends TestCase
 			]
 		]);
 
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Invalid language: fr');
 
 		$app->page('foo')->content('fr');
@@ -430,9 +430,39 @@ class ModelWithContentTest extends TestCase
 
 		$current = $app->page('foo')->translation();
 		$this->assertSame('Deutscher Titel', $current->content()['title']);
+	}
+
+	public function testTranslationWithInvalidLanguauge()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'options' => [
+				'languages' => true
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'foo',
+					]
+				],
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+				]
+			]
+		]);
+
+		$this->expectException(\Kirby\Exception\NotFoundException::class);
+		$this->expectExceptionMessage('Invalid language: fr');
 
 		$fr = $app->page('foo')->translation('fr');
-		$this->assertNull($fr);
 	}
 
 	public function testUuid()

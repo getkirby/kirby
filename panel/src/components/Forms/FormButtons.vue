@@ -10,7 +10,7 @@
 			v-bind="button"
 			size="sm"
 			variant="filled"
-			:disabled="isDisabled"
+			:disabled="disabled"
 			:responsive="true"
 			:theme="theme"
 		/>
@@ -19,9 +19,6 @@
 
 <script>
 export default {
-	props: {
-		lock: [Boolean, Object]
-	},
 	data() {
 		return {
 			isLoading: null,
@@ -52,12 +49,12 @@ export default {
 			if (this.mode === "lock") {
 				return [
 					{
-						icon: this.lock.data.unlockable ? "unlock" : "loader",
+						icon: this.$panel.content.lock.unlockable ? "unlock" : "loader",
 						text: this.$t("lock.isLocked", {
-							email: this.$esc(this.lock.data.email)
+							email: this.$esc(this.$panel.content.lock.email)
 						}),
 						title: this.$t("lock.unlock"),
-						disabled: !this.lock.data.unlockable,
+						disabled: !this.$panel.content.lock.unlockable,
 						click: () => this.unlock()
 					}
 				];
@@ -86,29 +83,26 @@ export default {
 			}
 
 			if (this.mode === "lock") {
-				return !this.lock.data.unlockable;
+				return !this.$panel.content.lock.unlockable;
 			}
 
 			if (this.mode === "changes") {
-				return this.isDisabled;
+				return this.$panel.content.isPublishing;
 			}
 
 			return false;
 		},
 		hasChanges() {
-			return this.$store.getters["content/hasChanges"]();
-		},
-		isDisabled() {
-			return this.$store.state.content.status.enabled === false;
+			return this.$panel.content.hasUnpublishedChanges;
 		},
 		isLocked() {
-			return this.lockState === "lock";
+			return this.$panel.content.isLocked;
 		},
 		isUnlocked() {
 			return this.lockState === "unlock";
 		},
 		mode() {
-			if (this.lockState !== null) {
+			if (this.lockState) {
 				return this.lockState;
 			}
 
@@ -119,10 +113,10 @@ export default {
 			return null;
 		},
 		lockState() {
-			return this.supportsLocking && this.lock ? this.lock.state : null;
+			return this.supportsLocking && this.$panel.content.lock?.state;
 		},
 		supportsLocking() {
-			return this.lock !== false;
+			return this.$panel.content.lock !== false;
 		},
 		theme() {
 			if (this.mode === "lock") {
@@ -142,7 +136,10 @@ export default {
 		hasChanges: {
 			handler(changes, before) {
 				if (this.supportsLocking === true) {
-					if (this.isLocked === false && this.isUnlocked === false) {
+					if (
+						this.$panel.content.isLocked === false &&
+						this.isUnlocked === false
+					) {
 						if (changes === true) {
 							// unsaved changes, write lock every 30 seconds
 							this.locking();
@@ -187,7 +184,7 @@ export default {
 		},
 		download() {
 			let content = "";
-			const changes = this.$store.getters["content/changes"]();
+			const changes = this.$panel.content.changes;
 
 			for (const key in changes) {
 				const change = changes[key];
@@ -232,7 +229,7 @@ export default {
 					// If setting lock failed, a competing lock has been set between
 					// API calls. In that case, discard changes, stop setting lock
 					clearInterval(this.isLocking);
-					this.$store.dispatch("content/revert");
+					this.$panel.content.discard();
 				}
 			}
 
@@ -245,7 +242,7 @@ export default {
 		async resolve() {
 			// remove content unlock and throw away unsaved changes
 			await this.unlock(false);
-			this.$store.dispatch("content/revert");
+			this.$panel.content.discard();
 		},
 		revert() {
 			this.$panel.dialog.open({
@@ -259,18 +256,14 @@ export default {
 				},
 				on: {
 					submit: () => {
-						this.$store.dispatch("content/revert");
+						this.$panel.content.discard();
 						this.$panel.dialog.close();
 					}
 				}
 			});
 		},
-		async save(e) {
-			e?.preventDefault?.();
-
-			await this.$store.dispatch("content/save");
-			this.$events.emit("model.update");
-			this.$panel.notification.success();
+		save(e) {
+			this.$panel.content.publish(e);
 		},
 		async unlock(unlock = true) {
 			const api = [this.$panel.view.path + "/unlock", null, null, true];
@@ -284,7 +277,7 @@ export default {
 							text: this.$t("lock.unlock")
 						},
 						text: this.$t("lock.unlock.submit", {
-							email: this.$esc(this.lock.data.email)
+							email: this.$esc(this.$panel.content.lock.email)
 						})
 					},
 					on: {

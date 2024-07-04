@@ -1,5 +1,6 @@
 import Activation from "./activiation.js";
 import Api from "@/api/index.js";
+import Content from "./content.js";
 import Dialog from "./dialog.js";
 import Drag from "./drag.js";
 import Drawer from "./drawer.js";
@@ -74,6 +75,7 @@ export default {
 		this.isOffline = false;
 
 		this.activation = Activation(this);
+		this.content = Content(this);
 		this.drag = Drag(this);
 		this.events = Events(this);
 		this.theme = Theme(this);
