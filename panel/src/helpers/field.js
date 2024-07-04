@@ -1,3 +1,5 @@
+import { clone } from "./object.js";
+
 /**
  * Loads the default value for a field definition
  * @internal
@@ -7,7 +9,7 @@
  */
 export function defaultValue(field) {
 	if (field.default !== undefined) {
-		return structuredClone(field.default);
+		return clone(field.default);
 	}
 
 	const component =
