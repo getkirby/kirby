@@ -9,12 +9,12 @@
 			min,
 			name,
 			placeholder,
-			required
+			required,
+			step: stepNumber,
+			value: number
 		}"
 		:class="['k-number-input', $attrs.class]"
-		:step="stepNumber"
 		:style="$attrs.style"
-		:value="number"
 		type="number"
 		@blur="onBlur"
 		@input="onInput($event.target.value)"
