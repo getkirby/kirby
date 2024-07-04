@@ -26,12 +26,12 @@ use Kirby\Toolkit\A;
  */
 class Assets
 {
-	protected bool $dev;
+	protected bool $isDev;
+	protected bool $isPluginDev;
 	protected App $kirby;
 	protected string $nonce;
 	protected Plugins $plugins;
 	protected string $url;
-	protected bool $vite;
 
 	public function __construct()
 	{
@@ -39,13 +39,17 @@ class Assets
 		$this->nonce   = $this->kirby->nonce();
 		$this->plugins = new Plugins();
 
-		$vite       = $this->kirby->roots()->panel() . '/.vite-running';
-		$this->vite = is_file($vite) === true;
-
-		// get the assets from the Vite dev server in dev mode;
+		// check if Panel is running in dev mode to
+		// get the assets from the Vite dev server;
 		// dev mode = explicitly enabled in the config AND Vite is running
-		$dev       = $this->kirby->option('panel.dev', false);
-		$this->dev = $dev !== false && $this->vite === true;
+		$this->isDev =
+			$this->kirby->option('panel.dev', false) !== false &&
+			is_file($this->kirby->root('panel') . '/.vite-running') === true;
+
+		// check if any plugin is running in dev mode to
+		// load the non-production version of Vue
+		$this->isPluginDev =
+			is_file($this->kirby->root('plugins'). '/.vite-running') === true;
 
 		// get the base URL
 		$this->url = $this->url();
@@ -64,7 +68,7 @@ class Assets
 
 		// during dev mode we do not need to load
 		// the general stylesheet (as styling will be inlined)
-		if ($this->dev === true) {
+		if ($this->isDev === true) {
 			$css['index'] = null;
 		}
 
@@ -198,7 +202,10 @@ class Assets
 	public function icons(): string
 	{
 		$dir   = $this->kirby->root('panel') . '/';
-		$dir  .= $this->dev ? 'public' : 'dist';
+		$dir  .= match ($this->isDev) {
+			true  => 'public',
+			false => 'dist'
+		};
 		$icons = F::read($dir . '/img/icons.svg');
 		$icons = preg_replace('/<!--(.|\s)*?-->/', '', $icons);
 		return $icons;
@@ -210,13 +217,16 @@ class Assets
 	public function importMaps(): array
 	{
 		$map = [
-			'vue' => $this->url . '/js/vue.esm-browser.prod.js',
+			'vue' => match (true) {
+				// during dev mode, load the dev version of Vue
+				$this->isDev       => $this->url . '/node_modules/vue/dist/vue.esm-browser.js',
+				// when any plugin is in dev mode, also load the dev version
+				// of Vue  but from the dist folder, not node_modules
+				$this->isPluginDev => $this->url . '/js/vue.esm-browser.js',
+				// otherwise use the production version of Vue
+				default            => $this->url . '/js/vue.esm-browser.prod.js'
+			}
 		];
-
-		// during dev mode, load the dev version of Vue
-		if ($this->dev === true) {
-			$map['vue'] = $this->url . '/node_modules/vue/dist/vue.esm-browser.js';
-		}
 
 		return array_filter($map);
 	}
@@ -255,9 +265,9 @@ class Assets
 		// during dev mode, add vite client and adapt
 		// path to `index.js` - vendor does not need
 		// to be loaded in dev mode
-		if ($this->dev === true) {
+		if ($this->isDev === true) {
 			// load the non-minified index.js, remove vendor script and
-			//  development version of Vue
+			// development version of Vue
 			$js['vendor']['src'] = null;
 			$js['index']['src']  = $this->url . '/src/index.js';
 
@@ -309,12 +319,13 @@ class Assets
 	public function url(): string
 	{
 		// vite is not running, use production assets
-		if ($this->dev === false) {
+		if ($this->isDev === false) {
 			return $this->kirby->url('media') . '/panel/' . $this->kirby->versionHash();
 		}
 
 		// explicitly configured base URL
 		$dev = $this->kirby->option('panel.dev');
+
 		if (is_string($dev) === true) {
 			return $dev;
 		}
