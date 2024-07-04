@@ -1,5 +1,4 @@
 <script>
-import { toRaw } from "vue";
 import ModelsSection from "@/components/Sections/ModelsSection.vue";
 
 export default {
