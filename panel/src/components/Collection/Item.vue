@@ -1,7 +1,7 @@
 <template>
 	<div
 		v-bind="data"
-		:class="['k-item', `k-item-${layout}`, $attrs.class]"
+		:class="['k-item', `k-${layout}-item`, $attrs.class]"
 		:data-has-image="hasFigure"
 		:data-layout="layout"
 		:data-theme="theme"
