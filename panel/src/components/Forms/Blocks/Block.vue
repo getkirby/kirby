@@ -195,7 +195,7 @@ export default {
 					if (typeof this.$refs.editor.open === "function") {
 						this.$refs.editor.open();
 					} else {
-						open();
+						this.open();
 					}
 				}
 			};
