@@ -10,13 +10,15 @@ export default (panel) => {
 		 * @returns {Object}
 		 */
 		get changes() {
-			return panel.app.$store.getters["content/changes"]();
+			return panel.app.config.globalProperties.$store.getters[
+				"content/changes"
+			]();
 		},
 		/**
 		 * Removes all unpublished changes
 		 */
 		discard() {
-			panel.app.$store.dispatch("content/revert");
+			panel.app.config.globalProperties.$store.dispatch("content/revert");
 		},
 		/**
 		 * Whether the model has changes that haven't been saved yet
@@ -32,7 +34,9 @@ export default (panel) => {
 		 * @returns {Boolean}
 		 */
 		get hasUnpublishedChanges() {
-			return panel.app.$store.getters["content/hasChanges"]();
+			return panel.app.config.globalProperties.$store.getters[
+				"content/hasChanges"
+			]();
 		},
 		/**
 		 * Whether the model is a draft
@@ -80,7 +84,7 @@ export default (panel) => {
 			e?.preventDefault?.();
 
 			this.isPublishing = true;
-			await panel.app.$store.dispatch("content/save");
+			await panel.app.config.globalProperties.$store.dispatch("content/save");
 			panel.events.emit("model.update");
 			panel.notification.success();
 			this.isPublishing = false;
@@ -91,7 +95,9 @@ export default (panel) => {
 		 * @returns {Object}
 		 */
 		get published() {
-			return panel.app.$store.getters["content/originals"]();
+			return panel.app.config.globalProperties.$store.getters[
+				"content/originals"
+			]();
 		},
 		/**
 		 * Saves any changes
@@ -112,7 +118,10 @@ export default (panel) => {
 				fields = { [fields]: value };
 			}
 
-			panel.app.$store.dispatch("content/update", [null, fields]);
+			panel.app.config.globalProperties.$store.dispatch("content/update", [
+				null,
+				fields
+			]);
 		},
 		/**
 		 * Removes the content lock for the current user,
