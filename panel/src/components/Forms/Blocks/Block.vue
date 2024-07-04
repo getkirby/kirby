@@ -46,17 +46,7 @@
 				isMergable,
 				isSplitable: isSplitable()
 			}"
-			v-on="{
-				...listeners,
-				split: () => $refs.editor.split(),
-				open: () => {
-					if (typeof $refs.editor.open === 'function') {
-						$refs.editor.open();
-					} else {
-						open();
-					}
-				}
-			}"
+			v-on="listenersForOptions"
 		/>
 	</div>
 </template>
@@ -195,6 +185,19 @@ export default {
 				sortUp: () => this.$emit("sortUp"),
 				split: (event) => this.$emit("split", event),
 				update: (event) => this.$emit("update", event)
+			};
+		},
+		listenersForOptions() {
+			return {
+				...this.listeners,
+				split: () => this.$refs.editor.split(),
+				open: () => {
+					if (typeof this.$refs.editor.open === "function") {
+						this.$refs.editor.open();
+					} else {
+						this.open();
+					}
+				}
 			};
 		},
 		tabs() {
