@@ -77,7 +77,6 @@ export const props = {
 		 * @values small, medium, large, huge
 		 */
 		size: String,
-		theme: String,
 		value: String
 	}
 };
