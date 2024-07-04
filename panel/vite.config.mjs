@@ -19,13 +19,7 @@ function createAliases() {
 /**
  * Returns the server configuration
  */
-function createServer() {
-	const proxy = {
-		target: process.env.SERVER ?? "http://sandbox.test",
-		changeOrigin: true,
-		secure: false
-	};
-
+function createServer(proxy) {
 	return {
 		proxy: {
 			"/api": proxy,
@@ -57,7 +51,7 @@ function createPlugins(mode) {
 	const plugins = [vue(), splitVendorChunkPlugin(), kirby()];
 
 	// when building…
-	if (mode === "build") {
+	if (mode === "production") {
 		//copy Vue to the dist directory
 		plugins.push(
 			viteStaticCopy({
@@ -99,16 +93,22 @@ function createTest() {
 /**
  * Returns the Vite configuration
  */
-export default defineConfig(({ command, mode }) => {
+export default defineConfig(({ mode }) => {
 	// Load env file based on `mode` in the current working directory.
 	// Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
 	process.env = {
 		...process.env,
-		...loadEnv(mode, process.cwd(), '')
+		...loadEnv(mode, process.cwd(), "")
+	};
+
+	const proxy = {
+		target: process.env.SERVER ?? "http://sandbox.test",
+		changeOrigin: true,
+		secure: false
 	};
 
 	return {
-		plugins: createPlugins(command),
+		plugins: createPlugins(mode),
 		base: "./",
 		build: {
 			minify: "terser",
@@ -130,7 +130,7 @@ export default defineConfig(({ command, mode }) => {
 		resolve: {
 			alias: createAliases()
 		},
-		server: createServer(),
+		server: createServer(proxy),
 		test: createTest()
 	};
 });
