@@ -32,15 +32,15 @@
 		"eslint": "^9.6.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-vue": "^9.27.0",
-		"glob": "^10.4.2",
+		"glob": "^11.0.0",
 		"jsdom": "^24.1.0",
 		"prettier": "^3.3.2",
 		"rollup-plugin-external-globals": "^0.11.0",
 		"terser": "^5.31.1",
 		"vite": "^5.3.3",
 		"vite-plugin-static-copy": "^1.0.6",
-		"vitest": "^1.6.0",
-		"vue-docgen-api": "^4.78.0",
+		"vitest": "^2.0.1",
+		"vue-docgen-api": "^4.79.1",
 		"vue-template-compiler": "^2.7.16"
 	},
 	"browserslist": [
