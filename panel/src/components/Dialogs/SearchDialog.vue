@@ -50,13 +50,6 @@ export default {
 			}
 		},
 		async search({ type, query }) {
-			// Skip API call if query empty
-			if (query === null || query.length < 2) {
-				this.results = null;
-				this.pagination = {};
-				return;
-			}
-
 			const response = await this.$panel.search(type, query);
 
 			if (response) {

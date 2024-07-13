@@ -40,14 +40,17 @@ export default (panel) => {
 		 * @returns {Object} { code, path, referrer, results, timestamp }
 		 */
 		async query(type, query, options) {
-			if (!query) {
-				// open the search dialog
-				return this.open(type);
-			}
-
 			// abort any previous ongoing search requests
 			this.controller?.abort();
 			this.controller = new AbortController();
+
+			// skip API call if query empty
+			if (query.length < 2) {
+				return {
+					results: null,
+					pagination: {}
+				};
+			}
 
 			this.requests++;
 

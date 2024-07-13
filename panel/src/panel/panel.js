@@ -296,6 +296,11 @@ export default {
 	 * @returns {Object} { code, path, referrer, results, timestamp }
 	 */
 	async search(type, query, options) {
+		// open the search dialog
+		if (query === undefined) {
+			return this.searcher.open(type);
+		}
+
 		return this.searcher.query(type, query, options);
 	},
 

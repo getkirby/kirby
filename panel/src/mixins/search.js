@@ -18,7 +18,7 @@ export default {
 	},
 	data() {
 		return {
-			query: null
+			query: ""
 		};
 	},
 	watch: {

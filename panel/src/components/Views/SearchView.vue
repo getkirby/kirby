@@ -128,13 +128,6 @@ export default {
 
 			window.history.pushState("", "", url.toString());
 
-			// Skip API call if query empty
-			if (this.query === null || this.query.length < 2) {
-				this.results = [];
-				this.pagination = {};
-				return;
-			}
-
 			const response = await this.$panel.search(
 				this.currentType.id,
 				this.query,
@@ -145,7 +138,7 @@ export default {
 			);
 
 			if (response) {
-				this.results = response.results;
+				this.results = response.results ?? [];
 				this.pagination = response.pagination;
 			}
 		}
