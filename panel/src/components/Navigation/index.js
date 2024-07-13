@@ -9,6 +9,7 @@ import Navigate from "./Navigate.vue";
 import PageTree from "./PageTree.vue";
 import Pagination from "./Pagination.vue";
 import PrevNext from "./PrevNext.vue";
+import Search from "./Search.vue";
 import Tag from "./Tag.vue";
 import Tags from "./Tags.vue";
 import Tree from "./Tree.vue";
@@ -31,6 +32,7 @@ export default {
 		app.component("k-page-tree", PageTree);
 		app.component("k-pagination", Pagination);
 		app.component("k-prev-next", PrevNext);
+		app.component("k-search", Search);
 		app.component("k-tag", Tag);
 		app.component("k-tags", Tags);
 		app.component("k-tree", Tree);
