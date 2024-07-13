@@ -43,9 +43,9 @@ export default {
 		focus() {
 			this.$refs.search?.focus();
 		},
-		navigate(item) {
-			if (item) {
-				this.$go(item.link);
+		navigate(result) {
+			if (result) {
+				this.$go(result.link);
 				this.close();
 			}
 		},
