@@ -239,42 +239,40 @@ class Assets
 		$js = [
 			'vendor' => [
 				'nonce' => $this->nonce,
-				'src'   => $this->url . '/js/vendor.min.js'
+				'src'   => $this->url . '/js/vendor.min.js',
+				'type'  => 'module'
 			],
 			'plugin-registry' => [
 				'nonce' => $this->nonce,
 				'src'   => $this->url . '/js/plugins.js'
 			],
-			'plugins' => [
-				'nonce' => $this->nonce,
-				'src'   => $this->plugins->url('js'),
-			],
 			...A::map($this->custom('panel.js'), fn ($src) => [
 				'nonce' => $this->nonce,
 				'src'   => $src,
-				'defer' => true
+				'type'  => 'module',
+				'defer' => true,
 			]),
 			'index' => [
-				'nonce' => $this->nonce,
-				'src'   => $this->url . '/js/index.min.js',
-				'defer' => true
+				'nonce'   => $this->nonce,
+				'src'     => $this->url . '/js/index.min.js',
+				'plugins' => $this->plugins->url('js'),
 			],
 		];
-
 
 		// during dev mode, add vite client and adapt
 		// path to `index.js` - vendor does not need
 		// to be loaded in dev mode
 		if ($this->isDev === true) {
-			// load the non-minified index.js, remove vendor script and
-			// development version of Vue
+			// load the non-minified index.js, remove vendor script
+			// and development version of Vue
 			$js['vendor']['src'] = null;
 			$js['index']['src']  = $this->url . '/src/index.js';
 
 			// add vite dev client
 			$js['vite'] = [
 				'nonce' => $this->nonce,
-				'src'   => $this->url . '/@vite/client'
+				'src'   => $this->url . '/@vite/client',
+				'type'  => 'module'
 			];
 		}
 
