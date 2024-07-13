@@ -2,7 +2,9 @@
  * This is the graveyard for all deprecated
  * aliases. We can remove them step by step
  * in future major releases to clean up.
+ *
  * @since 4.0.0
+ * @deprecated 4.0.0
  */
 export default {
 	install(app) {
@@ -15,8 +17,6 @@ export default {
 		window.panel.search = window.panel.search.bind(window.panel);
 
 		/**
-		 * @deprecated 4.0.0 Dollar Sign Shortcuts for panel data
-		 *
 		 * @example
 		 * // Old:
 		 * `window.panel.$config`
@@ -59,7 +59,6 @@ export default {
 
 		/**
 		 * Some more shortcuts to the Panel's features
-		 * @deprecated 4.0.0 Dollar Sign Shortcuts for panel data
 		 */
 		app.config.globalProperties.$dialog = window.panel.dialog.open.bind(
 			window.panel.dialog
