@@ -13,6 +13,13 @@ import Store from "./store/store.js";
 import preserveListeners from "./mixins/preserveListeners.js";
 
 /**
+ * Global styles need to be loaded before
+ * components
+ */
+import "./styles/config.css";
+import "./styles/reset.css";
+
+/**
  * Create the Vue application
  */
 const app = createApp(App);
@@ -37,34 +44,10 @@ app.mixin(preserveListeners);
 window.panel = Panel.create(app, window.panel.plugins);
 
 /**
- * Global styles need to be loaded before
- * components
- */
-import "./styles/config.css";
-import "./styles/reset.css";
-
-/**
  * Load CSS utilities after components
  * to increase specificity
  */
 import "./styles/utilities.css";
-
-/**
- * Some shortcuts to the Panel's features
- */
-app.config.globalProperties.$dialog = window.panel.dialog.open.bind(
-	window.panel.dialog
-);
-app.config.globalProperties.$drawer = window.panel.drawer.open.bind(
-	window.panel.drawer
-);
-app.config.globalProperties.$dropdown = window.panel.dropdown.openAsync.bind(
-	window.panel.dropdown
-);
-app.config.globalProperties.$go = window.panel.view.open.bind(
-	window.panel.view
-);
-app.config.globalProperties.$reload = window.panel.reload.bind(window.panel);
 
 /**
  * Additional functionalities and app configuration
