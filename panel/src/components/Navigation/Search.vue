@@ -2,16 +2,16 @@
 	<div class="k-search-bar">
 		<div class="k-search-bar-input">
 			<!-- Type select -->
-			<template v-if="typesOptions.length > 1">
+			<template v-if="typesDropdown.length > 1">
 				<k-button
 					:dropdown="true"
-					:icon="currentType.icon"
-					:text="currentType.label"
+					:icon="types[type].icon"
+					:text="types[type].label"
 					variant="dimmed"
 					class="k-search-bar-types"
 					@click="$refs.types.toggle()"
 				/>
-				<k-dropdown-content ref="types" :options="typesOptions" />
+				<k-dropdown-content ref="types" :options="typesDropdown" />
 			</template>
 
 			<!-- Input -->
@@ -93,10 +93,7 @@ export default {
 		};
 	},
 	computed: {
-		currentType() {
-			return this.types[this.type];
-		},
-		typesOptions() {
+		typesDropdown() {
 			return Object.values(this.types).map((search) => ({
 				...search,
 				current: this.type === search.id,
@@ -117,20 +114,13 @@ export default {
 			this.$refs.input?.focus();
 		},
 		onDown() {
-			if (this.selected < this.results.length - 1) {
-				this.select(this.selected + 1);
-			}
+			this.select(Math.min(this.selected + 1, this.results.length - 1));
 		},
 		onEnter() {
 			this.$emit("navigate", this.results[this.selected] ?? this.results[0]);
 		},
-		onTab() {
-			this.$emit("navigate", this.results[this.selected]);
-		},
 		onUp() {
-			if (this.selected >= 0) {
-				this.select(this.selected - 1);
-			}
+			this.select(Math.max(this.selected - 1, -1));
 		},
 		async search() {
 			this.$refs.types?.close();
