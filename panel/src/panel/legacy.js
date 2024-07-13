@@ -64,13 +64,13 @@ export default {
 		/**
 		 * Some more shortcuts to the Panel's features
 		 */
-		Vue.prototype.$dialog = window.panel.dialog.open.bind(window.panel.dialog);
-		Vue.prototype.$drawer = window.panel.drawer.open.bind(window.panel.drawer);
-		Vue.prototype.$dropdown = window.panel.dropdown.openAsync.bind(
+		app.prototype.$dialog = window.panel.dialog.open.bind(window.panel.dialog);
+		app.prototype.$drawer = window.panel.drawer.open.bind(window.panel.drawer);
+		app.prototype.$dropdown = window.panel.dropdown.openAsync.bind(
 			window.panel.dropdown
 		);
-		Vue.prototype.$go = window.panel.view.open.bind(window.panel.view);
-		Vue.prototype.$reload = window.panel.reload.bind(window.panel);
+		app.prototype.$go = window.panel.view.open.bind(window.panel.view);
+		app.prototype.$reload = window.panel.reload.bind(window.panel);
 
 		// Kirbyup relies on this
 		window.panel.$vue = window.panel.app;
