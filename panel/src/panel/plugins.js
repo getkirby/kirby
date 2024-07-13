@@ -12,32 +12,30 @@ import section from "@/mixins/section.js";
  *
  * @param {Vue} app
  * @param {String} name
- * @param {Object} options
+ * @param {Object} component
  * @returns {Object} The updated component options
  */
-export const installComponent = (app, name, options) => {
+export const installComponent = (app, name, component) => {
 	// make sure component has something to show
 	if (
-		!options.template &&
-		!options.render &&
-		!options.setup &&
-		!options.extends
+		!component.template &&
+		!component.render &&
+		!component.setup &&
+		!component.extends
 	) {
 		throw new Error(
-			`Neither template, render nor setup method provided. Nor extending a component when loading plugin component "${name}". The component has not been registered.`
+			`Plugin component "${name}" is not providing any template, render or setup method, neither is it extending a component. The component has not been registered.`
 		);
 	}
 
 	// extend the component if it defines extensions
-	options = installComponentExtension(app, name, options);
+	component = resolveComponentExtension(app, name, component);
 
 	// remove a render method if there’s a template
-	if (options.template) {
-		options.render = null;
-	}
+	component = resolveComponentRender(component);
 
 	// add mixins
-	options = installComponentMixins(options);
+	component = resolveComponentMixins(component);
 
 	// check if the component is replacing a core component
 	if (isComponent(name, app) === true) {
@@ -45,10 +43,10 @@ export const installComponent = (app, name, options) => {
 	}
 
 	// register the component
-	app.component(name, options);
+	app.component(name, component);
 
-	// return its options
-	return options;
+	// return component options
+	return component;
 };
 
 /**
@@ -66,71 +64,15 @@ export const installComponents = (app, components) => {
 
 	const installed = {};
 
-	for (const [name, options] of Object.entries(components)) {
+	for (const [name, component] of Object.entries(components)) {
 		try {
-			installed[name] = installComponent(app, name, options);
+			installed[name] = installComponent(app, name, component);
 		} catch (error) {
 			window.console.warn(error.message);
 		}
 	}
 
 	return installed;
-};
-
-/**
- * Extends a component if it defines an extension
- * @since 4.0.0
- *
- * @param {Vue} app
- * @param {String} name
- * @param {Object} options
- * @returns {Object} The updated/extended options
- */
-export const installComponentExtension = (app, name, options) => {
-	if (typeof options?.extends !== "string") {
-		return options;
-	}
-
-	// only extend if referenced component exists
-	if (isComponent(options.extends, app) === false) {
-		window.console.warn(
-			`Problem with plugin trying to register component "${name}": cannot extend non-existent component "${options.extends}"`
-		);
-
-		// remove the extension
-		options.extends = null;
-
-		return options;
-	}
-
-	options.extends = app.component(options.extends);
-
-	return options;
-};
-
-/**
- * Install available mixins if they are required
- * @since 4.0.0
- *
- * @param {Object} options
- * @returns {Object} The updated options
- */
-export const installComponentMixins = (options) => {
-	if (Array.isArray(options.mixins) === false) {
-		return options;
-	}
-
-	const mixins = {
-		dialog,
-		drawer,
-		section
-	};
-
-	options.mixins = options.mixins.map((mixin) =>
-		typeof mixin === "string" ? mixins[mixin] : mixin
-	);
-
-	return options;
 };
 
 /**
@@ -154,12 +96,84 @@ export const installPlugins = (app, plugins) => {
 };
 
 /**
+ * Resolves a component extension if defined as component name
+ * @since 5.0.0
+ *
+ * @param {Vue} app
+ * @param {String} name
+ * @param {Object} component
+ * @returns {Object} The updated/extended component options
+ */
+export const resolveComponentExtension = (app, name, component) => {
+	if (typeof component?.extends !== "string") {
+		return component;
+	}
+
+	// only extend if referenced component exists
+	if (isComponent(component.extends, app) === false) {
+		window.console.warn(
+			`Problem with plugin trying to register component "${name}": cannot extend non-existent component "${component.extends}"`
+		);
+
+		// remove the extension
+		component.extends = null;
+
+		return component;
+	}
+
+	component.extends = app.component(component.extends);
+
+	return component;
+};
+
+/**
+ * Resolve available mixins if they are defined
+ * @since 5.0.0
+ *
+ * @param {Object} component
+ * @returns {Object} The updated component options
+ */
+export const resolveComponentMixins = (component) => {
+	if (Array.isArray(component.mixins) === false) {
+		return component;
+	}
+
+	const mixins = {
+		dialog,
+		drawer,
+		section
+	};
+
+	component.mixins = component.mixins.map((mixin) =>
+		typeof mixin === "string" ? mixins[mixin] : mixin
+	);
+
+	return component;
+};
+
+/**
+ * Resolve a component's competing template/render options
+ * @since 5.0.0
+ *
+ * @param {Object} component
+ * @returns {Object} The updated component options
+ */
+export const resolveComponentRender = (component) => {
+	if (component.template) {
+		component.render = null;
+	}
+
+	return component;
+};
+
+/**
  * The plugin module installs all given plugins
  * and makes them accessible at window.panel.plugins
  * @since 4.0.0
  */
 export default (app, plugins = {}) => {
-	plugins = {
+	return {
+		// defaults
 		components: {},
 		created: [],
 		icons: {},
@@ -170,11 +184,15 @@ export default (app, plugins = {}) => {
 		viewButtons: {},
 		writerMarks: {},
 		writerNodes: {},
-		...plugins
+
+		// registered
+		...plugins,
+		use: installPlugins(app, plugins.use),
+		components: installComponents(app, plugins.components),
+
+		// expose helper functions for kirbyup
+		resolveComponentExtension,
+		resolveComponentMixins,
+		resolveComponentRender
 	};
-
-	plugins.use = installPlugins(app, plugins.use);
-	plugins.components = installComponents(app, plugins.components);
-
-	return plugins;
 };
