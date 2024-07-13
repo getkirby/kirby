@@ -4,7 +4,7 @@ import { isObject } from "@/helpers/object.js";
 import Feature, { defaults as featureDefaults } from "./feature.js";
 import focus from "@/helpers/focus.js";
 import "@/helpers/array.js";
-import { set } from "vue";
+import { reactive, set } from "vue";
 import { wrap } from "@/helpers/array.js";
 
 /**
@@ -29,7 +29,7 @@ export const defaults = () => {
 export default (panel, key, defaults) => {
 	const parent = Feature(panel, key, defaults);
 
-	return {
+	return reactive({
 		...parent,
 
 		/**
@@ -310,5 +310,5 @@ export default (panel, key, defaults) => {
 		get value() {
 			return this.props?.value;
 		}
-	};
+	});
 };

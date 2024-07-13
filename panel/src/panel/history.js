@@ -1,10 +1,10 @@
-import { set } from "vue";
+import { reactive, set } from "vue";
 
 /**
  * @since 4.0.0
  */
 export default () => {
-	return {
+	return reactive({
 		add(state) {
 			if (!state.id) {
 				throw new Error("The state needs an ID");
@@ -74,5 +74,5 @@ export default () => {
 
 			set(this.milestones, index, state);
 		}
-	};
+	});
 };

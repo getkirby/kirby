@@ -1,3 +1,4 @@
+import { reactive } from "vue";
 import { isUrl } from "@/helpers/url";
 import listeners from "./listeners.js";
 import State from "./state.js";
@@ -39,7 +40,7 @@ export const defaults = () => {
 export default (panel, key, defaults) => {
 	const parent = State(key, defaults);
 
-	return {
+	return reactive({
 		/**
 		 * Features inherit all the state methods
 		 * and reactive defaults are also merged
@@ -240,5 +241,5 @@ export default (panel, key, defaults) => {
 		url() {
 			return panel.url(this.path, this.query);
 		}
-	};
+	});
 };

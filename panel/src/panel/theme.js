@@ -1,3 +1,4 @@
+import { reactive } from "vue";
 import State from "./state.js";
 
 export const defaults = () => {
@@ -12,7 +13,7 @@ export const defaults = () => {
 export default () => {
 	const parent = State("theme", defaults());
 
-	return {
+	return reactive({
 		...parent,
 
 		get current() {
@@ -34,5 +35,5 @@ export default () => {
 				? "dark"
 				: "light";
 		}
-	};
+	});
 };
