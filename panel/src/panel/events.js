@@ -352,39 +352,6 @@ export default (panel) => {
 			for (const event in events.window) {
 				window.removeEventListener(event, this[event]);
 			}
-		},
-
-		/**
-		 * @deprecated 4.0.0 use this.on instead
-		 */
-		$on(...args) {
-			window.panel.deprecated(
-				"`events.$on` will be removed in a future version. Use `events.on` instead."
-			);
-
-			emitter.on(...args);
-		},
-
-		/**
-		 * @deprecated 4.0.0 use this.emit instead
-		 */
-		$emit(...args) {
-			window.panel.deprecated(
-				"`events.$emit` will be removed in a future version. Use `events.emit` instead."
-			);
-
-			emitter.emit(...args);
-		},
-
-		/**
-		 * @deprecated 4.0.0 use this.off instead
-		 */
-		$off(...args) {
-			window.panel.deprecated(
-				"`events.$off` will be removed in a future version. Use `events.off` instead."
-			);
-
-			emitter.off(...args);
 		}
 	};
 };
