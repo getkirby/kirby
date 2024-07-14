@@ -95,7 +95,7 @@ class PanelTest extends TestCase
 		]);
 
 		// unauthenticated / installed
-		$areas = Panel::areas($this->app);
+		$areas = Panel::areas();
 
 		$this->assertArrayHasKey('login', $areas);
 		$this->assertArrayHasKey('logout', $areas);
@@ -105,7 +105,7 @@ class PanelTest extends TestCase
 		$this->app->impersonate('test@getkirby.com');
 
 		// authenticated
-		$areas = Panel::areas($this->app);
+		$areas = Panel::areas();
 
 		$this->assertArrayHasKey('search', $areas);
 		$this->assertArrayHasKey('site', $areas);
@@ -125,7 +125,7 @@ class PanelTest extends TestCase
 
 		$app->impersonate('test@getkirby.com');
 
-		$areas = Panel::areas($app);
+		$areas = Panel::areas();
 
 		$this->assertArrayHasKey('todos', $areas);
 		$this->assertCount(8, $areas);
