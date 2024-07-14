@@ -1,7 +1,10 @@
 <template>
 	<div :data-has-styles="Boolean(styles)" @dblclick="$emit('open')">
 		<header class="k-block-type-fields-header">
-			<k-block-title :content="content" :fieldset="fieldset" />
+			<k-block-title
+				:content="content"
+				:fieldset="{ ...fieldset, icon: isLoading ? 'loader' : fieldset.icon }"
+			/>
 		</header>
 
 		<div
@@ -9,13 +12,6 @@
 			class="k-block-type-snippet-html"
 			v-html="snippet"
 		/>
-
-		<div
-			v-else-if="isLoading"
-			class="k-block-type-snippet-html k-block-type-snippet-loader"
-		>
-			<k-icon type="loader" /> Loading block snippet preview…
-		</div>
 
 		<component :is="'style'" v-if="styles" v-html="styles" />
 	</div>
@@ -95,14 +91,6 @@ export default {
 	padding: var(--spacing-3);
 	border-radius: var(--rounded-sm);
 	container: column / inline-size;
-}
-
-.k-block-type-snippet-loader {
-	display: flex;
-	align-items: center;
-	justify-content: flex-start;
-	gap: var(--spacing-2);
-	color: var(--color-text-dimmed);
 }
 
 .k-block-container-type-snippet
