@@ -124,11 +124,6 @@ Object.defineProperty(Array.prototype, "split", {
 	configurable: true
 });
 
-/**
- * @deprecated 4.1.0 `Array.wrap()` will be removed in a future version. Use `this.$helper.array.wrap()` instead.
- */
-Array.wrap = wrap;
-
 export default {
 	fromObject,
 	search,

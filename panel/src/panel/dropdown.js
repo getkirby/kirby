@@ -73,7 +73,6 @@ export default (panel) => {
 
 		set(state) {
 			// deprecated dropdown responses only return the options
-			// TODO: remove in v5
 			if (state.options) {
 				// panel.deprecated(
 				// 	"`pandel.dropdown`: responses should return the full state object. Only returning the options has been deprecated and will be removed in a future version."

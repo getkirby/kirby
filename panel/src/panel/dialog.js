@@ -96,6 +96,7 @@ export default (panel) => {
 		 * opens it manually.
 		 *
 		 * @param {any} dialog Vue component
+		 * @deprecated 4.0.0
 		 */
 		async openComponent(dialog) {
 			panel.deprecated(

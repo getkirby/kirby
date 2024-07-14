@@ -5,6 +5,7 @@ import Feature, { defaults as featureDefaults } from "./feature.js";
 import focus from "@/helpers/focus.js";
 import "@/helpers/array.js";
 import { set } from "vue";
+import { wrap } from "@/helpers/array.js";
 
 /**
  * Additional default values for modals
@@ -251,7 +252,7 @@ export default (panel, key, defaults) => {
 		successEvents(state) {
 			if (state.event) {
 				// wrap single events to treat them all at once
-				const events = Array.wrap(state.event);
+				const events = wrap(state.event);
 
 				// emit all defined events
 				for (const event of events) {
