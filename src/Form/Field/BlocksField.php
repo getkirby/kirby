@@ -7,6 +7,7 @@ use Kirby\Cms\Block;
 use Kirby\Cms\Blocks as BlocksCollection;
 use Kirby\Cms\Fieldset;
 use Kirby\Cms\Fieldsets;
+use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
@@ -190,6 +191,44 @@ class BlocksField extends FieldClass
 					$blocks  = BlocksCollection::factory($value);
 
 					return $field->pasteBlocks($blocks->toArray());
+				}
+			],
+			[
+				'pattern' => 'snippet',
+				'method'  => 'GET',
+				'action'  => function () use ($field): array {
+					// Block
+					$type    = get('block', 'default');
+					$content = json_decode(get('content'), true) ?? [];
+					$model   = Find::parent(get('model'));
+
+					$fieldset = json_decode(get('fieldset'), true);
+					$fieldset = Fieldset::factory($fieldset);
+
+					$form = new Form([
+						'fields' => $fieldset->fields(),
+						'model'  => $model,
+						'strict' => true,
+						'values' => $content,
+					]);
+
+					$block = Block::factory([
+						'type'    => $type,
+						'parent'  => $model,
+						'content' => $form->content()
+					]);
+
+					// Styles
+					$css = asset('assets/blocks/' . $type . '.css');
+
+					if ($css->exists()) {
+						$styles = $css->read();
+					}
+
+					return [
+						'html'    => $block->toHtml(),
+						'styles'  => $styles ?? null,
+					];
 				}
 			],
 			[

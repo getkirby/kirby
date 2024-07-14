@@ -24,6 +24,7 @@ import BlockTypeMarkdown from "./Types/Markdown.vue";
 import BlockTypeQuote from "./Types/Quote.vue";
 import BlockTypeTable from "./Types/Table.vue";
 import BlockTypeText from "./Types/Text.vue";
+import BlockTypeSnippet from "./Types/Snippet.vue";
 import BlockTypeVideo from "./Types/Video.vue";
 
 export default {
@@ -50,6 +51,7 @@ export default {
 		app.component("k-block-type-list", BlockTypeList);
 		app.component("k-block-type-markdown", BlockTypeMarkdown);
 		app.component("k-block-type-quote", BlockTypeQuote);
+		app.component("k-block-type-snippet", BlockTypeSnippet);
 		app.component("k-block-type-table", BlockTypeTable);
 		app.component("k-block-type-text", BlockTypeText);
 		app.component("k-block-type-video", BlockTypeVideo);
