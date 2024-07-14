@@ -33,6 +33,9 @@ use Throwable;
  */
 class Panel
 {
+	// cache
+	protected static array $areas;
+
 	/**
 	 * Normalize a panel area
 	 */
@@ -55,6 +58,10 @@ class Panel
 	 */
 	public static function areas(): array
 	{
+		if (isset(static::$areas) === true) {
+			return static::$areas; // @codeCoverageIgnore
+		}
+
 		$kirby  = App::instance();
 		$system = $kirby->system();
 		$user   = $kirby->user();
@@ -65,7 +72,7 @@ class Panel
 			$system->isOk() === false ||
 			$system->isInstalled() === false
 		) {
-			return [
+			return static::$areas = [
 				'installation' => static::area(
 					'installation',
 					$areas['installation']
@@ -75,7 +82,7 @@ class Panel
 
 		// not yet authenticated
 		if (!$user) {
-			return [
+			return static::$areas = [
 				'logout' => static::area('logout', $areas['logout']),
 				// login area last because it defines a fallback route
 				'login'  => static::area('login', $areas['login']),
@@ -97,7 +104,7 @@ class Panel
 			$result[$id] = static::area($id, $area);
 		}
 
-		return $result;
+		return static::$areas = $result;
 	}
 
 	/**
