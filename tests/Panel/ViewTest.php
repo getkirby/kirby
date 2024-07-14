@@ -340,15 +340,19 @@ class ViewTest extends TestCase
 				'code'      => 'en',
 				'default'   => true,
 				'direction' => 'ltr',
+				'locale'    => [LC_ALL => 'en'],
 				'name'      => 'English',
-				'rules'     => Language::loadRules('en')
+				'rules'     => Language::loadRules('en'),
+				'url'       => '/en'
 			],
 			[
 				'code'      => 'de',
 				'default'   => false,
 				'direction' => 'ltr',
+				'locale'    => [LC_ALL => 'de'],
 				'name'      => 'Deutsch',
-				'rules'     => Language::loadRules('de')
+				'rules'     => Language::loadRules('de'),
+				'url'       => '/de'
 			]
 		];
 
