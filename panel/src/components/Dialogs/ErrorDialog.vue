@@ -47,7 +47,7 @@ export default {
 	emits: ["cancel"],
 	computed: {
 		detailsList() {
-			return Array.fromObject(this.details);
+			return this.$helper.array.fromObject(this.details);
 		}
 	}
 };
