@@ -60,7 +60,7 @@ export default (panel) => {
 		get lock() {
 			const lock = panel.view.props.lock;
 
-			if (lock === false) {
+			if (!lock) {
 				return false;
 			}
 
