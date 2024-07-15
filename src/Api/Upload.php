@@ -29,7 +29,7 @@ use Kirby\Toolkit\Str;
  * @since     5.0.0
  * @internal
  */
-class Upload
+readonly class Upload
 {
 	public function __construct(
 		protected Api $api,
