@@ -57,12 +57,6 @@ Vue.use(I18n);
 Vue.use(ErrorHandling);
 Vue.use(Legacy);
 
-// container queries CSS polyfill
-// TODO: remove when global support for container queries is reached
-if (CSS.supports("container", "foo / inline-size") === false) {
-	import("container-query-polyfill");
-}
-
 /**
  * Mount the Vue application
  */
