@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use Exception;
 use Kirby\Cms\Auth\ErrorneousChallenge;
-use Kirby\Email\Email;
+use Kirby\Email\Mailer;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
@@ -25,8 +25,8 @@ class AuthChallengeTest extends TestCase
 	public function setUp(): void
 	{
 		Auth::$challenges['errorneous'] = ErrorneousChallenge::class;
-		Email::$debug = true;
-		Email::$emails = [];
+		Mailer::$debug = true;
+		Mailer::$emails = [];
 		$_SERVER['SERVER_NAME'] = 'kirby.test';
 
 		$self = $this;
@@ -74,8 +74,8 @@ class AuthChallengeTest extends TestCase
 		Dir::remove(static::TMP);
 
 		unset(Auth::$challenges['errorneous']);
-		Email::$debug = false;
-		Email::$emails = [];
+		Mailer::$debug = false;
+		Mailer::$emails = [];
 		unset($_SERVER['SERVER_NAME']);
 		$this->failedEmail = null;
 	}
@@ -111,7 +111,7 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame(1800, $session->timeout());
 		$this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
 		$this->assertSame('email', $session->get('kirby.challenge.type'));
-		preg_match('/^[0-9]{3} [0-9]{3}$/m', Email::$emails[0]->body()->text(), $codeMatches);
+		preg_match('/^[0-9]{3} [0-9]{3}$/m', Mailer::$emails[0]->body()->text(), $codeMatches);
 		$this->assertTrue(password_verify(str_replace(' ', '', $codeMatches[0]), $session->get('kirby.challenge.code')));
 		$this->assertSame(MockTime::$time + 600, $session->get('kirby.challenge.timeout'));
 		$this->assertNull($this->failedEmail);
@@ -352,7 +352,7 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame(1800, $session->timeout());
 		$this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
 		$this->assertSame('email', $session->get('kirby.challenge.type'));
-		preg_match('/^[0-9]{3} [0-9]{3}$/m', Email::$emails[0]->body()->text(), $codeMatches);
+		preg_match('/^[0-9]{3} [0-9]{3}$/m', Mailer::$emails[0]->body()->text(), $codeMatches);
 		$this->assertTrue(password_verify(str_replace(' ', '', $codeMatches[0]), $session->get('kirby.challenge.code')));
 		$this->assertSame(MockTime::$time + 600, $session->get('kirby.challenge.timeout'));
 		$this->assertNull($this->failedEmail);
@@ -376,7 +376,7 @@ class AuthChallengeTest extends TestCase
 		$this->assertFalse($session->timeout());
 		$this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
 		$this->assertSame('email', $session->get('kirby.challenge.type'));
-		preg_match('/^[0-9]{3} [0-9]{3}$/m', Email::$emails[0]->body()->text(), $codeMatches);
+		preg_match('/^[0-9]{3} [0-9]{3}$/m', Mailer::$emails[0]->body()->text(), $codeMatches);
 		$this->assertTrue(password_verify(str_replace(' ', '', $codeMatches[0]), $session->get('kirby.challenge.code')));
 		$this->assertSame(MockTime::$time + 600, $session->get('kirby.challenge.timeout'));
 		$this->assertNull($this->failedEmail);

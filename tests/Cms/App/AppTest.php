@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
-use Kirby\Email\PHPMailer;
+use Kirby\Email\Email;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
@@ -387,7 +387,7 @@ class AppTest extends TestCase
 			]
 		);
 
-		$this->assertInstanceOf(PHPMailer::class, $email);
+		$this->assertInstanceOf(Email::class, $email);
 	}
 
 	/**
@@ -760,20 +760,6 @@ class AppTest extends TestCase
 
 		$this->assertInstanceOf(Roles::class, $app->roles());
 	}
-
-	// TODO: debug is not working properly
-	// public function testEmail()
-	// {
-	//     $app = new App();
-	//     $email = $app->email([
-	//         'from' => 'no-reply@supercompany.com',
-	//         'to' => 'someone@gmail.com',
-	//         'subject' => 'Thank you for your contact request',
-	//         'body' => 'We will never reply',
-	//         'debug' => true
-	//     ]);
-	//     $this->assertInstanceOf(\Kirby\Email\Email::class, $email);
-	// }
 
 	public function testRoute()
 	{

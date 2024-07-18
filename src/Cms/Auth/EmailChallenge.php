@@ -68,8 +68,7 @@ class EmailChallenge extends Challenge
 		);
 
 		$kirby->email([
-			'from'     => $from,
-			'fromName' => $name,
+			'from'     => [$from => $name],
 			'to'       => $user,
 			'subject'  => $subject,
 			'template' => 'auth/' . $mode,

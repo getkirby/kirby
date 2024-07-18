@@ -4,23 +4,20 @@ namespace Kirby\Cms;
 
 use Kirby\Content\Field;
 use Kirby\Email\Email;
+use Kirby\Email\Mailer;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Template\Template;
 use Kirby\Toolkit\Obj;
 
-class CustomEmailProvider extends Email
+class CustomEmailProvider extends Mailer
 {
 	public static string|null $apiKey = null;
-
-	public function __construct(array $props = [], bool $debug = false)
-	{
-		parent::__construct($props, $debug);
-	}
 
 	public function send(bool $debug = false): bool
 	{
 		static::$apiKey = 'KIRBY';
+		$this->email->isSent = true;
 		return true;
 	}
 }
@@ -398,28 +395,25 @@ class AppComponentsTest extends TestCase
 	{
 		$app = $this->app->clone([
 			'components' => [
-				'email' => function ($kirby, $props, $debug) {
-					return new CustomEmailProvider($props, $debug);
+				'email' => function ($kirby, $email, $debug): bool {
+					$mailer = new CustomEmailProvider($email);
+					return $mailer->send($debug);
 				}
 			]
 		]);
 
 		$email = $app->email([
-			'from' => 'no-reply@supercompany.com',
-			'to' => 'someone@gmail.com',
+			'from'    => 'no-reply@supercompany.com',
+			'to'      => 'someone@gmail.com',
 			'subject' => 'Thank you for your contact request',
-			'body' => 'We will never reply'
-		], ['debug' => true]);
+			'body'    => 'We will never reply'
+		], debug: true);
 
-		$this->assertInstanceOf(CustomEmailProvider::class, $email);
-		$this->assertTrue(property_exists($email, 'apiKey'));
-		$this->assertSame('no-reply@supercompany.com', $email->from());
-		$this->assertSame(['someone@gmail.com' => null], $email->to());
+		$this->assertInstanceOf(Email::class, $email);
+		$this->assertSame('no-reply@supercompany.com', $email->from()->email());
+		$this->assertSame('someone@gmail.com', $email->to()[0]->email());
 		$this->assertSame('Thank you for your contact request', $email->subject());
 		$this->assertSame('We will never reply', $email->body()->text());
-
-		$this->assertNull($email::$apiKey);
-		$email->send();
-		$this->assertSame('KIRBY', $email::$apiKey);
+		$this->assertTrue($email->isSent());
 	}
 }

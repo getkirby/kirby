@@ -7,7 +7,8 @@ use Kirby\Cms\FileVersion;
 use Kirby\Cms\Page;
 use Kirby\Cms\User;
 use Kirby\Data\Data;
-use Kirby\Email\PHPMailer as Emailer;
+use Kirby\Email\Email;
+use Kirby\Email\Mailer;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\F;
@@ -38,10 +39,11 @@ return [
 	 */
 	'email' => function (
 		App $kirby,
-		array $props = [],
+		Email $email,
 		bool $debug = false
-	) {
-		return new Emailer($props, $debug);
+	): bool {
+		$mailer = new Mailer($email);
+		return $mailer->send($debug);
 	},
 
 	/**

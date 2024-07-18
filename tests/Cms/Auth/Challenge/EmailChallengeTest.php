@@ -4,7 +4,7 @@ namespace Kirby\Cms\Auth;
 
 use Kirby\Cms\App;
 use Kirby\Cms\TestCase;
-use Kirby\Email\Email;
+use Kirby\Email\Mailer;
 use Kirby\Filesystem\Dir;
 
 /**
@@ -17,8 +17,8 @@ class EmailChallengeTest extends TestCase
 
 	public function setUp(): void
 	{
-		Email::$debug = true;
-		Email::$emails = [];
+		Mailer::$debug = true;
+		Mailer::$emails = [];
 		$_SERVER['SERVER_NAME'] = 'kirby.test';
 
 		$this->app = new App([
@@ -52,8 +52,8 @@ class EmailChallengeTest extends TestCase
 	{
 		Dir::remove(static::TMP);
 
-		Email::$debug = false;
-		Email::$emails = [];
+		Mailer::$debug = false;
+		Mailer::$emails = [];
 		unset($_SERVER['SERVER_NAME']);
 	}
 
@@ -77,11 +77,12 @@ class EmailChallengeTest extends TestCase
 		$code1 = EmailChallenge::create($user, $options);
 		$this->assertStringMatchesFormat('%d', $code1);
 		$this->assertSame(6, strlen($code1));
-		$this->assertCount(1, Email::$emails);
-		$email = Email::$emails[0];
-		$this->assertSame('noreply@kirby.test', $email->from());
-		$this->assertSame('Test Site', $email->fromName());
-		$this->assertSame(['homer@simpsons.com' => 'Homer'], $email->to());
+		$this->assertCount(1, Mailer::$emails);
+		$email = Mailer::$emails[0];
+		$this->assertSame('noreply@kirby.test', $email->from()->email());
+		$this->assertSame('Test Site', $email->from()->name());
+		$this->assertSame('homer@simpsons.com', $email->to()[0]->email());
+		$this->assertSame('Homer', $email->to()[0]->name());
 		$this->assertSame('Your login code', $email->subject());
 		$this->assertStringContainsString('login code', $email->body()->text());
 		$this->assertStringContainsString('Homer', $email->body()->text());
@@ -111,11 +112,12 @@ class EmailChallengeTest extends TestCase
 		$code = EmailChallenge::create($user, $options);
 		$this->assertStringMatchesFormat('%d', $code);
 		$this->assertSame(6, strlen($code));
-		$this->assertCount(1, Email::$emails);
-		$email = Email::$emails[0];
-		$this->assertSame('noreply@example.com', $email->from());
-		$this->assertSame('Test Site', $email->fromName());
-		$this->assertSame(['homer@simpsons.com' => 'Homer'], $email->to());
+		$this->assertCount(1, Mailer::$emails);
+		$email = Mailer::$emails[0];
+		$this->assertSame('noreply@example.com', $email->from()->email());
+		$this->assertSame('Test Site', $email->from()->name());
+		$this->assertSame('homer@simpsons.com', $email->to()[0]->email());
+		$this->assertSame('Homer', $email->to()[0]->name());
 		$this->assertSame('Your login code', $email->subject());
 		$this->assertStringContainsString('login code', $email->body()->text());
 		$this->assertStringContainsString('Homer', $email->body()->text());
@@ -137,11 +139,12 @@ class EmailChallengeTest extends TestCase
 		$code1 = EmailChallenge::create($user, $options);
 		$this->assertStringMatchesFormat('%d', $code1);
 		$this->assertSame(6, strlen($code1));
-		$this->assertCount(1, Email::$emails);
-		$email = Email::$emails[0];
-		$this->assertSame('noreply@kirby.test', $email->from());
-		$this->assertSame('Test Site', $email->fromName());
-		$this->assertSame(['homer@simpsons.com' => 'Homer'], $email->to());
+		$this->assertCount(1, Mailer::$emails);
+		$email = Mailer::$emails[0];
+		$this->assertSame('noreply@kirby.test', $email->from()->email());
+		$this->assertSame('Test Site', $email->from()->name());
+		$this->assertSame('homer@simpsons.com', $email->to()[0]->email());
+		$this->assertSame('Homer', $email->to()[0]->name());
 		$this->assertSame('Your login code', $email->subject());
 		$this->assertStringContainsString('login code', $email->body()->text());
 		$this->assertStringContainsString('Homer', $email->body()->text());
@@ -166,11 +169,12 @@ class EmailChallengeTest extends TestCase
 		$code1 = EmailChallenge::create($user, $options);
 		$this->assertStringMatchesFormat('%d', $code1);
 		$this->assertSame(6, strlen($code1));
-		$this->assertCount(1, Email::$emails);
-		$email = Email::$emails[0];
-		$this->assertSame('noreply@kirby.test', $email->from());
-		$this->assertSame('Test Site', $email->fromName());
-		$this->assertSame(['marge@simpsons.com' => ''], $email->to());
+		$this->assertCount(1, Mailer::$emails);
+		$email = Mailer::$emails[0];
+		$this->assertSame('noreply@kirby.test', $email->from()->email());
+		$this->assertSame('Test Site', $email->from()->name());
+		$this->assertSame('marge@simpsons.com', $email->to()[0]->email());
+		$this->assertSame('', $email->to()[0]->name());
 		$this->assertSame('Your password reset code', $email->subject());
 		$this->assertStringContainsString('password reset code', $email->body()->text());
 		$this->assertStringContainsString('marge@simpsons.com', $email->body()->text());
@@ -195,11 +199,12 @@ class EmailChallengeTest extends TestCase
 		$code1 = EmailChallenge::create($user, $options);
 		$this->assertStringMatchesFormat('%d', $code1);
 		$this->assertSame(6, strlen($code1));
-		$this->assertCount(1, Email::$emails);
-		$email = Email::$emails[0];
-		$this->assertSame('noreply@kirby.test', $email->from());
-		$this->assertSame('Test Site', $email->fromName());
-		$this->assertSame(['bart@simpsons.com' => ''], $email->to());
+		$this->assertCount(1, Mailer::$emails);
+		$email = Mailer::$emails[0];
+		$this->assertSame('noreply@kirby.test', $email->from()->email());
+		$this->assertSame('Test Site', $email->from()->name());
+		$this->assertSame('bart@simpsons.com', $email->to()[0]->email());
+		$this->assertSame('', $email->to()[0]->name());
 		$this->assertSame('Dein Anmeldecode', $email->subject());
 		$this->assertStringContainsString('Anmeldecode für das Kirby Panel', $email->body()->text());
 		$this->assertStringContainsString('bart@simpsons.com', $email->body()->text());
@@ -235,11 +240,12 @@ class EmailChallengeTest extends TestCase
 		$code = EmailChallenge::create($user, $options);
 		$this->assertStringMatchesFormat('%d', $code);
 		$this->assertSame(6, strlen($code));
-		$this->assertCount(1, Email::$emails);
-		$email = Email::$emails[0];
-		$this->assertSame('test@example.com', $email->from());
-		$this->assertSame('Test', $email->fromName());
-		$this->assertSame(['homer@simpsons.com' => 'Homer'], $email->to());
+		$this->assertCount(1, Mailer::$emails);
+		$email = Mailer::$emails[0];
+		$this->assertSame('test@example.com', $email->from()->email());
+		$this->assertSame('Test', $email->from()->name());
+		$this->assertSame('homer@simpsons.com', $email->to()[0]->email());
+		$this->assertSame('Homer', $email->to()[0]->name());
 		$this->assertSame('Custom subject', $email->subject());
 		$this->assertSame(
 			"homer@simpsons.com\nTest Site\n7\n" . substr($code, 0, 3) . ' ' . substr($code, 3, 3),
@@ -265,11 +271,12 @@ class EmailChallengeTest extends TestCase
 		$code = EmailChallenge::create($user, $options);
 		$this->assertStringMatchesFormat('%d', $code);
 		$this->assertSame(6, strlen($code));
-		$this->assertCount(1, Email::$emails);
-		$email = Email::$emails[0];
-		$this->assertSame('noreply@kirby.test', $email->from());
-		$this->assertSame('Test Site', $email->fromName());
-		$this->assertSame(['homer@simpsons.com' => 'Homer'], $email->to());
+		$this->assertCount(1, Mailer::$emails);
+		$email = Mailer::$emails[0];
+		$this->assertSame('noreply@kirby.test', $email->from()->email());
+		$this->assertSame('Test Site', $email->from()->name());
+		$this->assertSame('homer@simpsons.com', $email->to()[0]->email());
+		$this->assertSame('Homer', $email->to()[0]->name());
 		$this->assertSame('Your login code', $email->subject());
 		$this->assertSame(
 			"homer@simpsons.com\nTest Site\n7\n" . substr($code, 0, 3) . ' ' . substr($code, 3, 3),
