@@ -162,24 +162,41 @@ trait FileActions
 		array $arguments,
 		Closure $callback
 	): mixed {
-		$old            = $this->hardcopy();
-		$kirby          = $this->kirby();
-		$argumentValues = array_values($arguments);
+		$kirby = $this->kirby();
+		$old   = $this->hardcopy();
+		$apply = array_key_first($arguments);
 
-		$this->rules()->$action(...$argumentValues);
-		$kirby->trigger('file.' . $action . ':before', $arguments);
+		// run before hook and apply result to first argument
+		$arguments[$apply] = $kirby->apply(
+			'file.' . $action . ':before',
+			$arguments,
+			$apply
+		);
 
-		$result = $callback(...$argumentValues);
+		$values = array_values($arguments);
 
-		$argumentsAfter = match ($action) {
+		// check page rules
+		$this->rules()->$action(...$values);
+
+		// run closure
+		$result = $callback(...$values);
+
+		// determine arguments for after hook depending on the action
+		$after = match ($action) {
 			'create' => ['file' => $result],
 			'delete' => ['status' => $result, 'file' => $old],
 			default  => ['newFile' => $result, 'oldFile' => $old]
 		};
 
-		$kirby->trigger('file.' . $action . ':after', $argumentsAfter);
+		// run after hook and apply return as result
+		$result = $kirby->apply(
+			'file.' . $action . ':after',
+			$after,
+			array_key_first($after)
+		);
 
 		$kirby->cache('pages')->flush();
+
 		return $result;
 	}
 

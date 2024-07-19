@@ -409,27 +409,42 @@ trait PageActions
 		array $arguments,
 		Closure $callback
 	): mixed {
-		$old            = $this->hardcopy();
-		$kirby          = $this->kirby();
-		$argumentValues = array_values($arguments);
+		$kirby = $this->kirby();
+		$old   = $this->hardcopy();
+		$apply = array_key_first($arguments);
 
-		$this->rules()->$action(...$argumentValues);
-		$kirby->trigger('page.' . $action . ':before', $arguments);
+		// run before hook and apply result to first argument
+		$arguments[$apply] = $kirby->apply(
+			'page.' . $action . ':before',
+			$arguments,
+			$apply
+		);
 
-		$result = $callback(...$argumentValues);
+		$values = array_values($arguments);
 
-		if ($action === 'create') {
-			$argumentsAfter = ['page' => $result];
-		} elseif ($action === 'duplicate') {
-			$argumentsAfter = ['duplicatePage' => $result, 'originalPage' => $old];
-		} elseif ($action === 'delete') {
-			$argumentsAfter = ['status' => $result, 'page' => $old];
-		} else {
-			$argumentsAfter = ['newPage' => $result, 'oldPage' => $old];
-		}
-		$kirby->trigger('page.' . $action . ':after', $argumentsAfter);
+		// check page rules
+		$this->rules()->$action(...$values);
+
+		// run closure
+		$result = $callback(...$values);
+
+		// determine arguments for after hook depending on the action
+		$after = match ($action) {
+			'create'    => ['page' => $result],
+			'duplicate' => ['duplicatePage' => $result, 'originalPage' => $old],
+			'delete'    => ['status' => $result, 'page' => $old],
+			default     => ['newPage' => $result, 'oldPage' => $old]
+		};
+
+		// run after hook and apply return as result
+		$result = $kirby->apply(
+			'page.' . $action . ':after',
+			$after,
+			array_key_first($after)
+		);
 
 		$kirby->cache('pages')->flush();
+
 		return $result;
 	}
 
@@ -440,13 +455,13 @@ trait PageActions
 	 */
 	public function copy(array $options = []): static
 	{
-		$slug        = $options['slug']      ?? $this->slug();
-		$isDraft     = $options['isDraft']   ?? $this->isDraft();
-		$parent      = $options['parent']    ?? null;
-		$parentModel = $options['parent']    ?? $this->site();
-		$num         = $options['num']       ?? null;
-		$children    = $options['children']  ?? false;
-		$files       = $options['files']     ?? false;
+		$slug        = $options['slug']     ?? $this->slug();
+		$isDraft     = $options['isDraft']  ?? $this->isDraft();
+		$parent      = $options['parent']   ?? null;
+		$parentModel = $options['parent']   ?? $this->site();
+		$num         = $options['num']      ?? null;
+		$children    = $options['children'] ?? false;
+		$files       = $options['files']    ?? false;
 
 		// clean up the slug
 		$slug = Str::slug($slug);

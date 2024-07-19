@@ -29,18 +29,34 @@ trait SiteActions
 		array $arguments,
 		Closure $callback
 	): mixed {
-		$old            = $this->hardcopy();
-		$kirby          = $this->kirby();
-		$argumentValues = array_values($arguments);
+		$kirby = $this->kirby();
+		$old   = $this->hardcopy();
+		$apply = array_key_first($arguments);
 
-		$this->rules()->$action(...$argumentValues);
-		$kirby->trigger('site.' . $action . ':before', $arguments);
+		// run before hook and apply result to first argument
+		$arguments[$apply] = $kirby->apply(
+			'site.' . $action . ':before',
+			$arguments,
+			$apply
+		);
 
-		$result = $callback(...$argumentValues);
+		$values = array_values($arguments);
 
-		$kirby->trigger('site.' . $action . ':after', ['newSite' => $result, 'oldSite' => $old]);
+		// check page rules
+		$this->rules()->$action(...$values);
+
+		// run closure
+		$result = $callback(...$values);
+
+		// run after hook and apply return as result
+		$result = $kirby->apply(
+			'site.' . $action . ':after',
+			['newSite' => $result, 'oldSite' => $old],
+			'newSite'
+		);
 
 		$kirby->cache('pages')->flush();
+
 		return $result;
 	}
 
