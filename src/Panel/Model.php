@@ -295,6 +295,11 @@ abstract class Model
 		return $this->model->lock()?->toArray() ?? false;
 	}
 
+	public function model(): ModelWithContent
+	{
+		return $this->model;
+	}
+
 	/**
 	 * Returns an array of all actions
 	 * that can be performed in the Panel
