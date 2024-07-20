@@ -1,49 +1,24 @@
 <template>
-	<div>
-		<k-button
-			:disabled="$panel.content.isLocked"
-			:dropdown="true"
-			:title="$t('settings')"
-			icon="cog"
-			variant="filled"
-			size="sm"
-			class="k-view-settings-button k-view-options"
-			@click="onClick"
-		/>
-		<k-dropdown-content
-			v-if="dropdown"
-			ref="dropdown"
-			:options="$dropdown(dropdown)"
-			align-x="end"
-			@action="$emit('action', $event)"
-		/>
-	</div>
+	<k-view-button
+		v-bind="$props"
+		:disabled="$panel.content.isLocked"
+		@action="$emit('action', $event)"
+	/>
 </template>
 
 <script>
+import Button from "./Button.vue";
+
 /**
  * View header button to open the model's settings dropdown
+ * @displayName ViewSettingsButton
  * @since 5.0.0
+ * @deprecated 5.0.0
+ * @internal
+ * @todo implement fully on backend when changes feature implemented
  */
 export default {
-	inheritAttrs: false,
-	emits: ["action"],
-	computed: {
-		dropdown() {
-			return this.model?.link;
-		},
-		model() {
-			return this.$panel.view.props.model;
-		}
-	},
-	methods: {
-		onClick() {
-			if (this.dropdown) {
-				return this.$refs.dropdown.toggle();
-			}
-
-			this.$emit("action", "settings");
-		}
-	}
+	extends: Button,
+	emits: ["action"]
 };
 </script>
