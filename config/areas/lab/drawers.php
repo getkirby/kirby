@@ -6,7 +6,7 @@ return [
 	'lab.docs' => [
 		'pattern' => 'lab/docs/(:any)',
 		'load'    => function (string $component) {
-			if (Docs::installed() === false) {
+			if (Docs::isInstalled() === false) {
 				return [
 					'component' => 'k-text-drawer',
 					'props' => [

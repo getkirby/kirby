@@ -11,7 +11,7 @@ return [
 				'component' => 'k-lab-index-view',
 				'props' => [
 					'categories' => Category::all(),
-					'info'       => Category::installed() ? null : 'The default Lab examples are not installed.',
+					'info'       => Category::isInstalled() ? null : 'The default Lab examples are not installed.',
 					'tab'        => 'examples',
 				],
 			];
@@ -20,7 +20,7 @@ return [
 	'lab.docs' => [
 		'pattern' => 'lab/docs',
 		'action'  => function () {
-			$props = match (Docs::installed()) {
+			$props = match (Docs::isInstalled()) {
 				true => [
 					'categories' => [['examples' => Docs::all()]],
 					'tab'        => 'docs',
@@ -58,7 +58,7 @@ return [
 				]
 			];
 
-			if (Docs::installed() === false) {
+			if (Docs::isInstalled() === false) {
 				return [
 					'component'  => 'k-lab-index-view',
 					'title'      => $component,
@@ -109,8 +109,15 @@ return [
 			$props    = $example->props();
 			$vue      = $example->vue();
 
-			if (Docs::installed() === true && $docs = $props['docs'] ?? null) {
-				$docs = new Docs($docs);
+			if ($docs = $props['docs'] ?? null) {
+				if (
+					Docs::isInstalled() === true &&
+					Docs::exists($docs) === true
+				) {
+					$docs = new Docs($docs);
+				} else {
+					$docs = null;
+				}
 			}
 
 			$github = $docs?->github();
