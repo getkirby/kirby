@@ -10,6 +10,7 @@ return function ($kirby) {
 		'icon'      => 'home',
 		'label'     => $kirby->site()->blueprint()->title() ?? I18n::translate('view.site'),
 		'menu'      => true,
+		'buttons'   => require __DIR__ . '/site/buttons.php',
 		'dialogs'   => require __DIR__ . '/site/dialogs.php',
 		'drawers'   => require __DIR__ . '/site/drawers.php',
 		'dropdowns' => require __DIR__ . '/site/dropdowns.php',
