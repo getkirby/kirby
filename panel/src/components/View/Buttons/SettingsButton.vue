@@ -27,7 +27,7 @@
  */
 export default {
 	inheritAttrs: false,
-	emits: ["action"],
+	emits: ["action", "click"],
 	computed: {
 		dropdown() {
 			return this.model?.link;
@@ -42,7 +42,7 @@ export default {
 				return this.$refs.dropdown.toggle();
 			}
 
-			this.$emit("action", "settings");
+			this.$emit("click");
 		}
 	}
 };
