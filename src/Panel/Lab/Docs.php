@@ -8,7 +8,6 @@ use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
-use Throwable;
 
 /**
  * Docs for a single Vue component
@@ -115,7 +114,7 @@ class Docs
 		return [];
 	}
 
-	public static function exists(string $name ): bool
+	public static function exists(string $name): bool
 	{
 		return
 			file_exists(static::file($name, 'dist')) ||
