@@ -4,11 +4,11 @@
 			<k-prev-next :prev="prev" :next="next" />
 		</template>
 
-		<k-header :editable="true" @edit="update()">
+		<k-header :editable="true" @edit="$dialog(`languages/${id}/update`)">
 			{{ name }}
 
 			<template #buttons>
-				<k-view-buttons :buttons="buttons" @action="onAction" />
+				<k-view-buttons :buttons="buttons" />
 			</template>
 		</k-header>
 
@@ -76,12 +76,6 @@ export default {
 		createTranslation() {
 			this.$dialog(`languages/${this.id}/translations/create`);
 		},
-		onAction(action) {
-			switch (action) {
-				case "settings":
-					return this.update();
-			}
-		},
 		option(option, row) {
 			// for the compatibility of the encoded url in different environments,
 			// it is also encoded with base64 to reduce special characters
@@ -90,15 +84,6 @@ export default {
 					encodeURIComponent(row.key)
 				)}/${option}`
 			);
-		},
-		update(focus) {
-			this.$dialog(`languages/${this.id}/update`, {
-				on: {
-					ready: () => {
-						this.$panel.dialog.focus(focus);
-					}
-				}
-			});
 		},
 		updateTranslation({ row }) {
 			// for the compatibility of the encoded url in different environments,

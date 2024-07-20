@@ -366,7 +366,7 @@ abstract class Model
 		$tab       = $blueprint->tab($request->get('tab')) ?? $tabs[0] ?? null;
 
 		$props = [
-			'buttons'     => $this->buttons(),
+			'buttons'     => fn () => $this->buttons(),
 			'lock'        => $this->lock(),
 			'permissions' => $this->model->permissions()->toArray(),
 			'tabs'        => $tabs,

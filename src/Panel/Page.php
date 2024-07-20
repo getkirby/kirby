@@ -5,6 +5,7 @@ namespace Kirby\Panel;
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
+use Kirby\Panel\Ui\Buttons\ViewButtons;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -40,19 +41,17 @@ class Page extends Model
 	}
 
 	/**
-	 * Returns header button names which should be displayed
+	 * Returns header buttons which should be displayed
 	 * on the page view
 	 */
 	public function buttons(): array
 	{
-		return
-			$this->model->blueprint()->buttons() ??
-			$this->model->kirby()->option('panel.viewButtons.page', [
-				'preview',
-				'settings',
-				'languages',
-				'status'
-			]);
+		return ViewButtons::view($this)->defaults(
+			'preview',
+			'settings',
+			'languages',
+			'status'
+		)->render(['page' => $this->model()]);
 	}
 
 	/**
@@ -359,12 +358,7 @@ class Page extends Model
 				'status'     => $page->status(),
 				'title'      => $page->title()->toString(),
 				'uuid'       => fn () => $page->uuid()?->toString(),
-			],
-			'status' => function () use ($page) {
-				if ($status = $page->status()) {
-					return $page->blueprint()->status()[$status] ?? null;
-				}
-			},
+			]
 		];
 	}
 
