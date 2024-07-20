@@ -9,6 +9,7 @@ import Settings from "./SettingsButton.vue";
 import Status from "./StatusButton.vue";
 import Theme from "./ThemeButton.vue";
 
+import Button from "./Button.vue";
 import Buttons from "./Buttons.vue";
 
 export default {
@@ -24,6 +25,7 @@ export default {
 		app.component("k-view-status-button", Status);
 		app.component("k-view-theme-button", Theme);
 
+		app.component("k-view-button", Button);
 		app.component("k-view-buttons", Buttons);
 
 		// @deprecated
