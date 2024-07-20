@@ -1,12 +1,10 @@
 <template>
-	<k-button
+	<k-view-button
 		v-if="isAvailable"
 		:link="link"
 		:title="$t('open')"
 		icon="open"
-		size="sm"
 		target="_blank"
-		variant="filled"
 		class="k-view-preview-button"
 	/>
 </template>
@@ -14,7 +12,9 @@
 <script>
 /**
  * View header button to open the model's preview in a new tab
+ * @displayName ViewPreviewButton
  * @since 5.0.0
+ * @internal
  */
 export default {
 	computed: {

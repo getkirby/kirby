@@ -1,48 +1,33 @@
 <template>
-	<div>
-		<k-button
-			:disabled="$panel.content.isLocked"
-			:dropdown="true"
-			:title="$t('settings')"
-			icon="cog"
-			variant="filled"
-			size="sm"
-			class="k-view-settings-button k-view-options"
-			@click="onClick"
-		/>
-		<k-dropdown-content
-			v-if="dropdown"
-			ref="dropdown"
-			:options="$dropdown(dropdown)"
-			align-x="end"
-			@action="$emit('action', $event)"
-		/>
-	</div>
+	<k-view-button
+		:disabled="$panel.content.isLocked"
+		:title="$t('settings')"
+		icon="cog"
+		class="k-view-settings-button k-view-options"
+		:options="hasDropdown ? dropdown : null"
+		@click="$emit('action', 'settings')"
+	/>
 </template>
 
 <script>
 /**
  * View header button to open the model's settings dropdown
+ * @displayName ViewSettingsButton
  * @since 5.0.0
+ * @internal
  */
 export default {
 	inheritAttrs: false,
 	emits: ["action", "click"],
 	computed: {
+		hasDropdown() {
+			return Boolean(this.dropdown);
+		},
 		dropdown() {
 			return this.model?.link;
 		},
 		model() {
 			return this.$panel.view.props.model;
-		}
-	},
-	methods: {
-		onClick() {
-			if (this.dropdown) {
-				return this.$refs.dropdown.toggle();
-			}
-
-			this.$emit("click");
 		}
 	}
 };

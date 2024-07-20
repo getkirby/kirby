@@ -1,25 +1,19 @@
 <template>
-	<div
-		v-if="languages.length > 1"
+	<k-view-button
+		:options="options"
+		:text="code"
+		icon="translate"
+		responsive="text"
 		class="k-view-languages-button k-languages-dropdown"
-	>
-		<k-button
-			:dropdown="true"
-			:text="code"
-			icon="translate"
-			responsive="text"
-			size="sm"
-			variant="filled"
-			@click="$refs.languages.toggle()"
-		/>
-		<k-dropdown-content ref="languages" :options="options" />
-	</div>
+	/>
 </template>
 
 <script>
 /**
  * View header button to switch between content languages
+ * @displayName ViewLanguagesButton
  * @since 4.0.0
+ * @internal
  */
 export default {
 	computed: {
