@@ -18,10 +18,10 @@ trait SiteActions
 	/**
 	 * Commits a site action, by following these steps
 	 *
-	 * 1. checks the action rules
-	 * 2. sends the before hook
+	 * 1. applies the `before` hook
+	 * 2. checks the action rules
 	 * 3. commits the store action
-	 * 4. sends the after hook
+	 * 4. applies the `after` hook
 	 * 5. returns the result
 	 */
 	protected function commit(
@@ -30,25 +30,34 @@ trait SiteActions
 		Closure $callback
 	): mixed {
 		$kirby = $this->kirby();
-		$old   = $this->hardcopy();
-		$apply = array_key_first($arguments);
 
-		// run before hook and apply result to first argument
-		$arguments[$apply] = $kirby->apply(
+		// store copy of the model to be passed
+		// to the `after` hook for comparison
+		$old = $this->hardcopy();
+
+		// run `before` hook and pass all arguments;
+		// the very first argument (which should be the model)
+		// is modified by the return value from the hook (if any returned)
+		$appliedTo = array_key_first($arguments);
+		$arguments[$appliedTo] = $kirby->apply(
 			'site.' . $action . ':before',
 			$arguments,
-			$apply
+			$appliedTo
 		);
 
-		$values = array_values($arguments);
+		// get just the values of argument, so that spreading them
+		// as arguments in a method call gets only assigned by order
+		// not by key name
+		$argumentValues = array_values($arguments);
 
-		// check page rules
-		$this->rules()->$action(...$values);
+		// check site rules
+		$this->rules()->$action(...$argumentValues);
 
-		// run closure
-		$result = $callback(...$values);
+		// run the main action closure
+		$result = $callback(...$argumentValues);
 
-		// run after hook and apply return as result
+		// run `after` hook and apply return to action result
+		// (first argument, usually the new model) if anything returned
 		$result = $kirby->apply(
 			'site.' . $action . ':after',
 			['newSite' => $result, 'oldSite' => $old],
