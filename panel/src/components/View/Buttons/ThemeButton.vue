@@ -1,27 +1,26 @@
 <template>
-	<div v-if="$panel.view.id === 'account'">
-		<k-button
-			:dropdown="true"
-			:icon="current === 'light' ? 'sun' : 'moon'"
-			:text="$t('theme')"
-			size="sm"
-			variant="filled"
-			class="k-view-theme-button"
-			@click="$refs.dropdown.toggle()"
-		/>
-		<k-dropdown-content ref="dropdown" :options="options" align-x="end" />
-	</div>
+	<k-view-button
+		:dropdown="options"
+		:icon="icon"
+		:text="$t('theme')"
+		class="k-view-theme-button"
+		@click.native="$panel.theme.toggle()"
+	/>
 </template>
 
 <script>
 /**
  * View header button to toggle the Panel theme
+ * @displayName ViewThemeButton
  * @since 5.0.0
  */
 export default {
 	computed: {
 		current() {
 			return this.$panel.theme.current;
+		},
+		icon() {
+			return this.current === "light" ? "sun" : "moon";
 		},
 		options() {
 			return [
