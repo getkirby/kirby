@@ -50,9 +50,6 @@ class SiteTest extends AreaTestCase
 
 		$this->assertNull($props['next']);
 		$this->assertNull($props['prev']);
-
-		$this->assertSame('Draft', $props['status']['label']);
-		$this->assertSame('The page is in draft mode and only visible for logged in editors or via secret link', $props['status']['text']);
 	}
 
 	public function testPageFileWithoutModel(): void

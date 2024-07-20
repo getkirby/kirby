@@ -296,6 +296,15 @@ abstract class Model
 	}
 
 	/**
+	 * Returns the parent CMS model
+	 * @since 5.0.0
+	 */
+	public function model(): ModelWithContent
+	{
+		return $this->model;
+	}
+
+	/**
 	 * Returns an array of all actions
 	 * that can be performed in the Panel
 	 * This also checks for the lock status
@@ -357,7 +366,7 @@ abstract class Model
 		$tab       = $blueprint->tab($request->get('tab')) ?? $tabs[0] ?? null;
 
 		$props = [
-			'buttons'     => $this->buttons(),
+			'buttons'     => fn () => $this->buttons(),
 			'lock'        => $this->lock(),
 			'permissions' => $this->model->permissions()->toArray(),
 			'tabs'        => $tabs,
