@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Ui;
 
 use Kirby\Exception\LogicException;
+use Kirby\Toolkit\Str;
 
 /**
  * @package   Kirby Panel
@@ -50,6 +51,7 @@ abstract class Component
 	{
 		return [
 			'component' => $this->component,
+			'key'       => Str::random(12, 'alphaNum'),
 			'props'     => $this->props()
 		];
 	}
