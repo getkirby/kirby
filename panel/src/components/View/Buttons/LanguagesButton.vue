@@ -1,58 +1,35 @@
 <template>
-	<div
-		v-if="languages.length > 1"
-		class="k-view-languages-button k-languages-dropdown"
-	>
-		<k-button
-			:dropdown="true"
-			:text="code"
-			icon="translate"
-			responsive="text"
-			size="sm"
-			variant="filled"
-			@click="$refs.languages.toggle()"
-		/>
-		<k-dropdown-content ref="languages" :options="options" />
-	</div>
+	<k-view-button v-bind="$props" :options="languages" />
 </template>
 
 <script>
+import { props as ButtonProps } from "@/components/Navigation/Button.vue";
+
 /**
  * View header button to switch between content languages
+ * @displayName ViewLanguagesButton
  * @since 4.0.0
  */
 export default {
+	mixins: [ButtonProps],
+	props: {
+		options: {
+			type: Array,
+			default: () => []
+		}
+	},
 	computed: {
-		code() {
-			return this.language.code.toUpperCase();
-		},
-		language() {
-			return this.$panel.language;
-		},
 		languages() {
-			return this.$panel.languages;
-		},
-		options() {
-			const options = [];
+			return this.options.map((option) => {
+				if (option === "-") {
+					return option;
+				}
 
-			// add the primary/default language first
-			const primaryLanguage = this.languages.find(
-				(language) => language.default === true
-			);
-
-			options.push(this.item(primaryLanguage));
-			options.push("-");
-
-			// add all secondary languages after the separator
-			const secondaryLanguages = this.languages.filter(
-				(language) => language.default === false
-			);
-
-			for (const language of secondaryLanguages) {
-				options.push(this.item(language));
-			}
-
-			return options;
+				return {
+					...option,
+					click: () => this.change(option)
+				};
+			});
 		}
 	},
 	methods: {
@@ -62,13 +39,6 @@ export default {
 					language: language.code
 				}
 			});
-		},
-		item(language) {
-			return {
-				click: () => this.change(language),
-				current: language.code === this.language.code,
-				text: language.name
-			};
 		}
 	}
 };
