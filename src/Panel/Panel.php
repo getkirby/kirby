@@ -14,6 +14,7 @@ use Kirby\Http\Response;
 use Kirby\Http\Router;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\Tpl;
 use Throwable;
@@ -98,6 +99,20 @@ class Panel
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Collect all registered buttons from areas
+	 * @since 5.0.0
+	 */
+	public static function buttons(): array
+	{
+		return array_merge(...array_values(
+			A::map(
+				Panel::areas(),
+				fn ($area) => $area['buttons'] ?? []
+			)
+		));
 	}
 
 	/**
