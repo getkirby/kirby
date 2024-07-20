@@ -8,7 +8,6 @@ use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 use Kirby\TestCase;
-use Kirby\Toolkit\A;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Panel
@@ -129,6 +128,43 @@ class PanelTest extends TestCase
 
 		$this->assertArrayHasKey('todos', $areas);
 		$this->assertCount(8, $areas);
+	}
+
+	/**
+	 * @covers ::buttons
+	 */
+	public function testButtons(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				[
+					'email' => 'test@getkirby.com',
+					'role'  => 'admin'
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+		$core = Panel::buttons();
+
+		// add custom buttons
+		$this->app = $this->app->clone([
+			'areas' => [
+				'test' => fn () => [
+					'buttons' => [
+						'a' => ['component' => 'test-a'],
+						'b' => ['component' => 'test-b']
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+		$withCustoms = Panel::buttons();
+
+		$this->assertSame(2, count($withCustoms) - count($core));
+		$this->assertSame(['component' => 'test-b'], array_pop($withCustoms));
+		$this->assertSame(['component' => 'test-a'], array_pop($withCustoms));
 	}
 
 	/**
