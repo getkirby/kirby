@@ -71,6 +71,7 @@ export default {
 	flex-wrap: wrap;
 	align-items: baseline;
 	justify-content: space-between;
+	column-gap: var(--spacing-3);
 	border-bottom: 1px solid var(--color-border);
 	background: var(--header-color-back);
 	padding-top: var(--header-padding-block);
@@ -123,7 +124,6 @@ export default {
 
 .k-header-buttons {
 	display: flex;
-	flex-shrink: 0;
 	gap: var(--spacing-2);
 	margin-bottom: var(--header-padding-block);
 }
