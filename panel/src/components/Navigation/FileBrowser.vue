@@ -48,7 +48,7 @@ export default {
 		 * A page uuid/id which should be preselected
 		 */
 		opened: {
-			String
+			type: String
 		},
 		selected: {
 			type: String
