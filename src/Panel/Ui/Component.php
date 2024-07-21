@@ -68,7 +68,7 @@ abstract class Component
 		return [
 			'component' => $this->component,
 			'key'       => Str::random(10, 'alphaNum'),
-			'props'     => $this->props()
+			'props'     => array_filter($this->props())
 		];
 	}
 }
