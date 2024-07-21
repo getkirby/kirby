@@ -1,5 +1,5 @@
 <template>
-	<div class="k-tags-input">
+	<div :data-can-add="canAdd" class="k-tags-input">
 		<k-tags
 			ref="tags"
 			v-bind="$props"
@@ -8,7 +8,7 @@
 			@click.native.stop="$refs.toggle?.$el?.click()"
 		>
 			<k-button
-				v-if="!max || value.length < max"
+				v-if="canAdd"
 				:id="id"
 				ref="toggle"
 				:autofocus="autofocus"
@@ -75,6 +75,9 @@ export default {
 		};
 	},
 	computed: {
+		canAdd() {
+			return !this.max || this.value.length < this.max;
+		},
 		creatableOptions() {
 			// tags should be unique, so when creating,
 			// only show options that are not already selected
@@ -155,7 +158,9 @@ export default {
 			this.$refs.replace.open();
 		},
 		focus() {
-			this.$refs.create.open();
+			if (this.canAdd) {
+				this.$refs.create.open();
+			}
 		},
 		isAllowed(tag) {
 			if (typeof tag !== "object" || tag.value.trim().length === 0) {
@@ -223,6 +228,8 @@ export default {
 <style>
 .k-tags-input {
 	padding: var(--tags-gap);
+}
+.k-tags-input[data-can-add="true"] {
 	cursor: pointer;
 }
 
