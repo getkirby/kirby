@@ -60,7 +60,7 @@ export default {
 			files: [],
 			page: null,
 			pagination: null,
-			view: "tree"
+			view: this.opened ? "files" : "tree"
 		};
 	},
 	methods: {
