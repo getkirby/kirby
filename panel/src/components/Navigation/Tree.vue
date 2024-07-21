@@ -4,7 +4,7 @@
 			v-for="item in state"
 			:key="item.value"
 			:aria-expanded="item.open"
-			:aria-current="item.value === current"
+			:aria-current="isItem(item, current)"
 		>
 			<p
 				class="k-tree-branch"
@@ -87,6 +87,9 @@ export default {
 		close(item) {
 			this.$set(item, "open", false);
 			this.$emit("close", item);
+		},
+		isItem(item, target) {
+			return item.value === target;
 		},
 		open(item) {
 			this.$set(item, "open", true);

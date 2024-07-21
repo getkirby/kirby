@@ -44,8 +44,13 @@ export default {
 		}
 	},
 	methods: {
-		findItem(value) {
-			return this.state.find((item) => item.value === value);
+		findItem(id) {
+			return this.state.find((item) => this.isItem(item, id));
+		},
+		isItem(item, target) {
+			return (
+				item.value === target || item.uuid === target || item.id === target
+			);
 		},
 		async load(path) {
 			return await this.$panel.get("site/tree", {
