@@ -75,7 +75,7 @@ class ImageMagick extends Darkroom
 	protected function defaults(): array
 	{
 		return parent::defaults() + [
-			'bin'       => 'convert',
+			'bin'       => 'magick',
 			'interlace' => false,
 			'threads'   => 1,
 		];
@@ -150,7 +150,7 @@ class ImageMagick extends Darkroom
 
 		// log broken commands
 		if ($return !== 0) {
-			throw new Exception('The imagemagick convert command could not be executed: ' . $command);
+			throw new Exception('The imagemagick magick command could not be executed: ' . $command);
 		}
 
 		return $options;

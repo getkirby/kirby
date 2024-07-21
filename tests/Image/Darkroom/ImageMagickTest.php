@@ -43,7 +43,7 @@ class ImageMagickTest extends TestCase
 			'scaleWidth' => 1.0,
 			'sharpen' => null,
 			'width' => 500,
-			'bin' => 'convert',
+			'bin' => 'magick',
 			'interlace' => false,
 			'threads' => 1,
 			'sourceWidth' => 500,
@@ -104,7 +104,7 @@ class ImageMagickTest extends TestCase
 	public function testKeepColorProfileStripMeta(string $basename, bool $crop)
 	{
 		$im = new ImageMagick([
-			'bin' => 'convert',
+			'bin' => 'magick',
 			'crop' => $crop,
 			'width' => 250, // do some arbitrary transformation
 		]);
