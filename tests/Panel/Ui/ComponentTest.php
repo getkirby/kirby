@@ -70,9 +70,6 @@ class ComponentTest extends TestCase
 		$result = $component->render();
 		$this->assertSame('k-foo', $result['component']);
 		$this->assertIsString($result['key']);
-		$this->assertSame([
-			'class' => 'my-class',
-			'style' => null
-		], $result['props']);
+		$this->assertSame(['class' => 'my-class'], $result['props']);
 	}
 }
