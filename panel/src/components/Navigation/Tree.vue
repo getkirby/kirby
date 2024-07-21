@@ -1,8 +1,8 @@
 <template>
 	<ul :class="$options.name" class="k-tree" :style="{ '--tree-level': level }">
 		<li
-			v-for="(item, index) in state"
-			:key="index"
+			v-for="item in state"
+			:key="item.value"
 			:aria-expanded="item.open"
 			:aria-current="item.value === current"
 		>
@@ -32,6 +32,7 @@
 			<template v-if="item.hasChildren && item.open">
 				<component
 					:is="$options.name"
+					:ref="item.value"
 					v-bind="$props"
 					:items="item.children"
 					:level="level + 1"
