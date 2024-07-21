@@ -69,14 +69,10 @@ return [
 			$kirby   = App::instance();
 			$request = $kirby->request();
 			$page    = $kirby->page($request->get('page'));
-			$parents = [];
 
-			foreach ($page->parents()->flip() as $parent) {
-				$uuid      = $parent->uuid()?->toString();
-				$parents[] = $uuid ?? $parent->id();
-			}
-
-			return $parents;
+			return $page->parents()->flip()->values(
+				fn ($parent) => $parent->uuid()?->toString() ?? $parent->id()
+			);
 		}
 	]
 ];
