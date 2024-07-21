@@ -4,6 +4,9 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 
+/**
+ * @coversDefaultClass \Kirby\Cms\Permissions
+ */
 class PermissionsTest extends TestCase
 {
 	public function tearDown(): void
@@ -131,5 +134,31 @@ class PermissionsTest extends TestCase
 		];
 
 		new Permissions();
+	}
+
+	/**
+	 * @covers ::for
+	 */
+	public function testForDefault()
+	{
+		// exists
+		$p = new Permissions();
+		$this->assertTrue($p->for('access', 'site'));
+
+		// category does not exist
+		$p = new Permissions();
+		$this->assertFalse($p->for('foo'));
+
+		// category does not exist with custom default
+		$p = new Permissions();
+		$this->assertTrue($p->for('foo', default:true));
+
+		// action does not exist
+		$p = new Permissions();
+		$this->assertFalse($p->for('access', 'foo'));
+
+		// action does not exist with custom default
+		$p = new Permissions();
+		$this->assertTrue($p->for('access', 'foo', default:true));
 	}
 }
