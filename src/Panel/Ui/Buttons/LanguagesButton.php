@@ -35,16 +35,16 @@ class LanguagesButton extends ViewButton
 		);
 	}
 
-	protected function option(Language $language): array
+	public function option(Language $language): array
 	{
 		return [
 			'text'    => $language->name(),
 			'code'    => $language->code(),
-			'current' => $language->code() === $this->kirby->language()->code(),
+			'current' => $language->code() === $this->kirby->language()?->code(),
 		];
 	}
 
-	protected function options(): array
+	public function options(): array
 	{
 		$languages = $this->kirby->languages();
 		$options   = [];

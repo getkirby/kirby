@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Ui\Buttons;
 
+use Kirby\Cms\Language;
 use Kirby\Panel\Areas\AreaTestCase;
 
 /**
@@ -11,29 +12,37 @@ use Kirby\Panel\Areas\AreaTestCase;
 class LanguagesButtonTest extends AreaTestCase
 {
 	/**
-	 * @covers ::render
+	 * @covers ::option
 	 */
-	public function testSingleLang()
+	public function testOption()
 	{
-		$button = new LanguagesButton();
-		$this->assertNull($button->render());
+		$language = new Language(['name' => 'Deutsch', 'code' => 'de']);
+		$button   = new LanguagesButton();
+		$this->assertSame([
+			'text'    => 'Deutsch',
+			'code'    => 'de',
+			'current' => false
+		], $button->option($language));
 	}
 
 	/**
-	 * @covers ::option
 	 * @covers ::options
-	 * @covers ::props
-	 * @covers ::render
 	 */
-	public function tesMultiLang()
+	public function testOptionsSingleLang()
+	{
+		$button   = new LanguagesButton();
+		$this->assertSame([], $button->options());
+	}
+
+	/**
+	 * @covers ::options
+	 */
+	public function testOptionsMultiLang()
 	{
 		$this->enableMultilang();
 		$this->installLanguages();
 
-		$button = new LanguagesButton();
-		$this->assertSame('k-view-languages-button', $button->component);
-		$this->assertSame('k-view-languages-button', $button->class);
-		$this->assertSame('translate', $button->icon);
+		$button   = new LanguagesButton();
 		$this->assertSame([
 			[
 				'text'    => 'English',
@@ -46,7 +55,32 @@ class LanguagesButtonTest extends AreaTestCase
 				'code'    => 'de',
 				'current' => false
 			]
-		], $button->options);
+		], $button->options());
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderSingleLang()
+	{
+		$button = new LanguagesButton();
+		$this->assertNull($button->render());
+	}
+
+	/**
+	 * @covers ::props
+	 * @covers ::render
+	 */
+	public function testRenderMultiLang()
+	{
+		$this->enableMultilang();
+		$this->installLanguages();
+
+		$button = new LanguagesButton();
+		$this->assertSame('k-view-languages-button', $button->component);
+		$this->assertSame('k-view-languages-button', $button->class);
+		$this->assertSame('translate', $button->icon);
+		$this->assertCount(3, $button->options);
 		$this->assertSame('text', $button->responsive);
 		$this->assertSame('EN', $button->text);
 
