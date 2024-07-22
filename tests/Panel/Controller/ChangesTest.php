@@ -74,8 +74,4 @@ class ChangesTest extends TestCase
 
 		$this->assertSame(['title' => 'Test'], $changes);
 	}
-
-	public function testUnlock()
-	{
-	}
 }
