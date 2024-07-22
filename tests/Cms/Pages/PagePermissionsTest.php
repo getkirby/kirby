@@ -393,6 +393,22 @@ class PagePermissionsTest extends TestCase
 	/**
 	 * @covers ::canSort
 	 */
+	public function testCanNotFoundDefault()
+	{
+		$this->app->impersonate('bastian');
+
+		$page = new Page([
+			'slug' => 'test',
+			'num'  => 1
+		]);
+
+		$this->assertFalse($page->permissions()->can('foo'));
+		$this->assertTrue($page->permissions()->can('foo', true));
+	}
+
+	/**
+	 * @covers ::canSort
+	 */
 	public function testCannotSortUnlistedPages()
 	{
 		$this->app->impersonate('kirby');
@@ -464,5 +480,21 @@ class PagePermissionsTest extends TestCase
 		]);
 
 		$this->assertFalse($page->permissions()->can('sort'));
+	}
+
+	/**
+	 * @covers ::canSort
+	 */
+	public function testCannotNotFoundDefault()
+	{
+		$this->app->impersonate('bastian');
+
+		$page = new Page([
+			'slug' => 'test',
+			'num'  => 1
+		]);
+
+		$this->assertTrue($page->permissions()->cannot('foo'));
+		$this->assertFalse($page->permissions()->cannot('foo', true));
 	}
 }
