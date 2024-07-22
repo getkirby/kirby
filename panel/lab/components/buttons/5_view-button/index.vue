@@ -17,5 +17,25 @@
 				:options="[{ text: 'Option A' }, { text: 'Option B' }]"
 			/>
 		</k-lab-example>
+		<k-lab-example label="Languages button">
+			<k-view-languages-button
+				:options="[{ text: 'English' }, '-', { text: 'Deutsch' }]"
+				text="EN"
+				icon="translate"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Settings button">
+			<k-view-settings-button icon="cog" options="pages/sections+info" />
+		</k-lab-example>
+		<k-lab-example label="Status button">
+			<k-view-status-button
+				text="Draft"
+				icon="status-draft"
+				theme="negative-icon"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Theme button">
+			<k-view-theme-button />
+		</k-lab-example>
 	</k-lab-examples>
 </template>
