@@ -3,12 +3,14 @@
 use Kirby\Toolkit\I18n;
 
 return function ($kirby) {
+	$blueprint = $kirby->site()->blueprint();
+
 	return [
 		'breadcrumbLabel' => function () use ($kirby) {
 			return $kirby->site()->title()->or(I18n::translate('view.site'))->toString();
 		},
-		'icon'      => 'home',
-		'label'     => $kirby->site()->blueprint()->title() ?? I18n::translate('view.site'),
+		'icon'      => $blueprint->icon() ?? 'home',
+		'label'     => $blueprint->title() ?? I18n::translate('view.site'),
 		'menu'      => true,
 		'dialogs'   => require __DIR__ . '/site/dialogs.php',
 		'drawers'   => require __DIR__ . '/site/drawers.php',
