@@ -33,7 +33,7 @@
 			/>
 		</div>
 
-		<div v-if="!isLoading && results" class="k-search-bar-results">
+		<div v-if="results" class="k-search-bar-results">
 			<!-- Results -->
 			<k-collection
 				v-if="results.length"
