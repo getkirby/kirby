@@ -2,6 +2,7 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
+use Kirby\Panel\Controller\Changes;
 use Kirby\Toolkit\I18n;
 
 $files = require __DIR__ . '/../files/requests.php';
