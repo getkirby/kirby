@@ -65,6 +65,7 @@ export default {
 .k-search-dialog {
 	--dialog-padding: 0;
 	--dialog-rounded: var(--rounded);
+	overflow: visible;
 }
 .k-overlay[open][data-type="dialog"] > .k-portal > .k-search-dialog {
 	margin-top: 0;
