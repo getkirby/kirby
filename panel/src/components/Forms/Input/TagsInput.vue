@@ -13,7 +13,7 @@
 				ref="toggle"
 				:autofocus="autofocus"
 				:disabled="disabled"
-				class="k-tags-input-toggle k-tags-navigatable"
+				class="k-tags-input-toggle k-tags-navigatable input-focus"
 				size="xs"
 				icon="add"
 				@click="$refs.create.open()"
