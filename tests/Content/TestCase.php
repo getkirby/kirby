@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\App;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
 use Kirby\TestCase as BaseTestCase;
 
@@ -10,7 +11,7 @@ class TestCase extends BaseTestCase
 {
 	public const TMP = KIRBY_TMP_DIR;
 
-	protected $model;
+	protected ModelWithContent $model;
 
 	public function assertContentFileExists(string|null $language = null, VersionId|null $versionId = null)
 	{
