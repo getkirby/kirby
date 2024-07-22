@@ -100,16 +100,14 @@ export default {
 	display: flex;
 	align-items: center;
 	min-width: 0;
+	transition: flex-shrink 0.1s;
 }
 .k-breadcrumb ol li:not(:last-child)::after {
 	content: var(--breadcrumb-divider);
 	opacity: 0.175;
 	flex-shrink: 0;
 }
-.k-breadcrumb ol li {
-	min-width: 0;
-	transition: flex-shrink 0.1s;
-}
+
 .k-breadcrumb .k-icon[data-type="loader"] {
 	opacity: 0.5;
 }
