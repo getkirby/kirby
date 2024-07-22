@@ -295,6 +295,10 @@ abstract class Model
 		return $this->model->lock()?->toArray() ?? false;
 	}
 
+	/**
+	 * Returns the corresponding model object
+	 * @since 5.0.0
+	 */
 	public function model(): ModelWithContent
 	{
 		return $this->model;
