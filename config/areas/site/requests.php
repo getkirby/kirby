@@ -62,5 +62,17 @@ return [
 
 			return $pages;
 		}
+	],
+	'tree.parents' => [
+		'pattern' => 'site/tree/parents',
+		'action'  => function () {
+			$kirby   = App::instance();
+			$request = $kirby->request();
+			$page    = $kirby->page($request->get('page'));
+
+			return $page->parents()->flip()->values(
+				fn ($parent) => $parent->uuid()?->toString() ?? $parent->id()
+			);
+		}
 	]
 ];
