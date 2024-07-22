@@ -1,11 +1,9 @@
 <template>
-	<k-button
+	<k-view-button
 		v-if="$panel.view.component === 'k-page-view' && status"
 		v-bind="button"
 		:responsive="true"
 		:text="status.label"
-		size="sm"
-		variant="filled"
 		class="k-view-status-button k-page-status-button"
 		@click="$dialog(model.link + '/changeStatus')"
 	/>
@@ -14,17 +12,22 @@
 <script>
 /**
  * View header button to change the page status
+ * @displayName ViewStatusButton
  * @since 5.0.0
+ * @internal
  */
 export default {
 	inheritAttrs: false,
 	computed: {
 		button() {
-			return this.$helper.page.status.call(
-				this,
-				this.model.status,
-				!this.permissions.changeStatus || this.$panel.content.isLocked
-			);
+			return {
+				...this.$helper.page.status.call(
+					this,
+					this.model.status,
+					!this.permissions.changeStatus || this.$panel.content.isLocked
+				),
+				size: "sm"
+			};
 		},
 		model() {
 			return this.$panel.view.props.model;

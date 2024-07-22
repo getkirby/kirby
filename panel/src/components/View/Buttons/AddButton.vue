@@ -1,11 +1,9 @@
 <template>
 	<component :is="component" v-if="component" />
-	<k-button
+	<k-view-button
 		v-else
 		:text="$t('add')"
 		icon="add"
-		size="sm"
-		variant="filled"
 		@click="$emit('action', 'add')"
 	/>
 </template>

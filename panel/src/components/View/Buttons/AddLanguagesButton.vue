@@ -1,9 +1,7 @@
 <template>
-	<k-button
+	<k-view-button
 		:text="$t('language.create')"
 		icon="add"
-		size="sm"
-		variant="filled"
 		@click="$dialog('languages/create')"
 	/>
 </template>
