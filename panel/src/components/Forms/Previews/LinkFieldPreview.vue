@@ -1,5 +1,12 @@
 <template>
-	<div :class="['k-link-field-preview', $attrs.class]" :style="$attrs.style">
+	<div
+		:class="{
+			'k-link-field-preview': true,
+			'k-url-field-preview': isLink,
+			[$attrs.class]: true
+		}"
+		:style="$attrs.style"
+	>
 		<template v-if="currentType === 'page' || currentType === 'file'">
 			<template v-if="model">
 				<k-tag
@@ -16,7 +23,9 @@
 		</template>
 		<template v-else-if="isLink">
 			<p class="k-text">
-				<a :href="value" target="_blank">{{ detected.link }}</a>
+				<a :href="value" target="_blank">
+					<span>{{ detected.link }}</span>
+				</a>
 			</p>
 		</template>
 		<template v-else>

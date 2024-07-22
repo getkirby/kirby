@@ -101,4 +101,8 @@ export default {
 	)[data-placeholder][data-empty="true"]:before {
 	padding: var(--spacing-3) var(--spacing-6);
 }
+
+.k-block-type-text-input.k-textarea-input .k-textarea-input-native {
+	padding: var(--input-padding-multiline);
+}
 </style>

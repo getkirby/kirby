@@ -79,6 +79,7 @@
 				class="k-link-input-body"
 			>
 				<k-file-browser
+					:opened="$panel.view.props.model.uuid ?? $panel.view.props.model.id"
 					:selected="$helper.link.getFileUUID(value)"
 					@select="selectModel($event)"
 				/>

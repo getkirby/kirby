@@ -358,6 +358,7 @@ class Page extends Model
 				'previewUrl' => $page->previewUrl(),
 				'status'     => $page->status(),
 				'title'      => $page->title()->toString(),
+				'uuid'       => $page->uuid()?->toString(),
 			],
 			'status' => function () use ($page) {
 				if ($status = $page->status()) {

@@ -10,15 +10,15 @@ export default {
 	extends: Tree,
 	inheritAttrs: false,
 	props: {
-		root: {
-			default: true,
-			type: Boolean
-		},
 		current: {
 			type: String
 		},
 		move: {
 			type: String
+		},
+		root: {
+			default: true,
+			type: Boolean
 		}
 	},
 	data() {
@@ -36,9 +36,22 @@ export default {
 
 			// if root is disabled, show the first level of children
 			this.state = this.root ? items : items[0].children;
+
+			// open current recursively, but only trigger from top-level PageTree
+			if (this.current) {
+				this.preselect(this.current);
+			}
 		}
 	},
 	methods: {
+		findItem(id) {
+			return this.state.find((item) => this.isItem(item, id));
+		},
+		isItem(item, target) {
+			return (
+				item.value === target || item.uuid === target || item.id === target
+			);
+		},
 		async load(path) {
 			return await this.$panel.get("site/tree", {
 				query: {
@@ -61,6 +74,34 @@ export default {
 
 			this.$set(item, "open", true);
 			this.$set(item, "loading", false);
+		},
+		async preselect(page) {
+			// get array of parent uuids/ids
+			const parents = await this.$panel.get("site/tree/parents", {
+				query: {
+					page
+				}
+			});
+
+			// if root is included, add the site as top-level parent
+			if (this.root) {
+				parents.unshift("site://");
+			}
+
+			let tree = this;
+
+			// go through all parents, try to find the matching item,
+			// open it and pass forward the pointer to that tree component
+			for (let index = 0; index < parents.length; index++) {
+				const value = parents[index];
+				const item = tree.findItem(value);
+				await this.open(item);
+				tree = tree.$refs[value][0];
+			}
+
+			// find current page in deepest tree and trigger select listeners
+			const item = tree.findItem(page);
+			this.$emit("select", item);
 		}
 	}
 };
