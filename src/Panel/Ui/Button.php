@@ -17,8 +17,8 @@ class Button extends Component
 {
 	public function __construct(
 		public string $component = 'k-button',
-		public string|bool|null $current = null,
 		public string|null $class = null,
+		public string|bool|null $current = null,
 		public string|null $dialog = null,
 		public bool $disabled = false,
 		public string|null $drawer = null,

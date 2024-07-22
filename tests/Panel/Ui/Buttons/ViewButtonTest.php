@@ -149,8 +149,10 @@ class ViewButtonTest extends AreaTestCase
 		$this->assertSame([
 			'class'      => null,
 			'style'      => null,
+			'current'    => null,
 			'dialog'     => null,
 			'disabled'   => false,
+			'drawer'     => null,
 			'dropdown'   => null,
 			'icon'       => 'smile',
 			'link'       => null,
