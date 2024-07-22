@@ -71,7 +71,7 @@ class Site extends Model
 				'link'       => $this->url(true),
 				'previewUrl' => $this->model->previewUrl(),
 				'title'      => $this->model->title()->toString(),
-				'uuid'       => $this->model->uuid()?->toString(),
+				'uuid'       => fn () => $this->model->uuid()?->toString(),
 			]
 		]);
 	}
