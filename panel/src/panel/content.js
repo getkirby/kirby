@@ -1,8 +1,10 @@
+import { reactive } from "vue";
+
 /**
  * @since 5.0.0
  */
 export default (panel) => {
-	return {
+	return reactive({
 		/**
 		 * Returns all fields and their values that
 		 * have been changed but not yet published
@@ -126,5 +128,5 @@ export default (panel) => {
 				...this.changes
 			};
 		}
-	};
+	});
 };

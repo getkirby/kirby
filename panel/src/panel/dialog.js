@@ -1,3 +1,4 @@
+import { reactive } from "vue";
 import Modal, { defaults as modalDefaults } from "./modal.js";
 
 export const defaults = () => {
@@ -27,7 +28,7 @@ export default (panel) => {
 
 	const parent = Modal(panel, "dialog", defaults());
 
-	return {
+	return reactive({
 		...parent,
 
 		/**
@@ -131,5 +132,5 @@ export default (panel) => {
 
 			return state;
 		}
-	};
+	});
 };

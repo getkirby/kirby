@@ -1,3 +1,4 @@
+import { reactive } from "vue";
 import { uuid } from "@/helpers/string";
 import State from "./state.js";
 import listeners from "./listeners.js";
@@ -32,7 +33,7 @@ export const defaults = () => {
 export default (panel) => {
 	const parent = State("upload", defaults());
 
-	return {
+	return reactive({
 		...parent,
 		...listeners(),
 		input: null,
@@ -347,5 +348,5 @@ export default (panel) => {
 				file.progress = 0;
 			}
 		}
-	};
+	});
 };
