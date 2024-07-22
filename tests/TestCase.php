@@ -4,6 +4,7 @@ namespace Kirby;
 
 use Kirby\Cms\App;
 use Kirby\Cms\File;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
@@ -13,6 +14,7 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 class TestCase extends BaseTestCase
 {
 	protected App $app;
+	protected ModelWithContent $model;
 
 	/**
 	 * Whether $actual is a File object

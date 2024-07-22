@@ -4,7 +4,6 @@ namespace Kirby\Content;
 
 use Kirby\Cms\App;
 use Kirby\Data\Data;
-use Kirby\Filesystem\Dir;
 use Kirby\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
