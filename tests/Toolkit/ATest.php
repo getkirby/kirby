@@ -702,7 +702,7 @@ class ATest extends TestCase
 	 */
 	public function testRandomInvalidCount()
 	{
-		$this->expectException(Exception::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('$count is larger than available array items');
 		A::random([1, 2, 3], 4);
 	}

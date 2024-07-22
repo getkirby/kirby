@@ -747,7 +747,7 @@ class A
 		bool $shuffle = false
 	): array {
 		if ($count > count($array)) {
-			throw new Exception('$count is larger than available array items');
+			throw new InvalidArgumentException('$count is larger than available array items');
 		}
 
 		if ($shuffle === true) {
