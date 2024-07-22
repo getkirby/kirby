@@ -138,6 +138,7 @@ export default {
 			const attrs = {
 				"aria-current": this.current,
 				"aria-disabled": this.disabled,
+				"aria-label": this.title ?? this.text,
 				"aria-selected": this.selected,
 				"data-responsive": this.responsive,
 				"data-size": this.size,
