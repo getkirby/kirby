@@ -415,7 +415,7 @@ class File extends Model
 				'template'   => $file->template(),
 				'type'       => $file->type(),
 				'url'        => $file->url(),
-				'uuid'       => $file->uuid()?->toString(),
+				'uuid'       => fn () => $file->uuid()?->toString(),
 			],
 			'preview' => [
 				'focusable' => $this->isFocusable(),
