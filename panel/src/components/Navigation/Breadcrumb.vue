@@ -102,6 +102,13 @@ export default {
 	min-width: 0;
 	transition: flex-shrink 0.1s;
 }
+.k-breadcrumb ol li:has(.k-icon) {
+	/*
+	 * without a useful min-width, the item will vanish completely on hover of a very long other item.
+	 * 2.25rem helps to keep at least the icon visible for items with icons.
+	 */
+	min-width: 2.25rem;
+}
 .k-breadcrumb ol li:not(:last-child)::after {
 	content: var(--breadcrumb-divider);
 	opacity: 0.175;
