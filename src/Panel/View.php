@@ -214,6 +214,7 @@ class View
 
 				// make sure that views and dialogs are gone
 				unset(
+					$view['buttons'],
 					$view['dialogs'],
 					$view['drawers'],
 					$view['dropdowns'],
