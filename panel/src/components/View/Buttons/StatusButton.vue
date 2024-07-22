@@ -20,11 +20,14 @@ export default {
 	inheritAttrs: false,
 	computed: {
 		button() {
-			return this.$helper.page.status.call(
-				this,
-				this.model.status,
-				!this.permissions.changeStatus || this.$panel.content.isLocked
-			);
+			return {
+				...this.$helper.page.status.call(
+					this,
+					this.model.status,
+					!this.permissions.changeStatus || this.$panel.content.isLocked
+				),
+				size: "sm"
+			};
 		},
 		model() {
 			return this.$panel.view.props.model;
