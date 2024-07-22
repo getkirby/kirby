@@ -75,63 +75,12 @@ class TestCase extends BaseTestCase
 
 	public function setUp(): void
 	{
-		Dir::make(static::TMP);
-	}
-
-	public function setUpMultiLanguage(): void
-	{
-		$this->app = new App([
-			'languages' => [
-				[
-					'code'    => 'en',
-					'default' => true
-				],
-				[
-					'code' => 'de'
-				]
-			],
-			'roots' => [
-				'index' => static::TMP
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'a-page',
-						'template' => 'article',
-					]
-				]
-			]
-		]);
-
-		$this->model = $this->app->page('a-page');
-
-		Dir::make($this->model->root());
-	}
-
-	public function setUpSingleLanguage(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'a-page',
-						'template' => 'article'
-					]
-				]
-			]
-		]);
-
-		$this->model = $this->app->page('a-page');
-
-		Dir::make($this->model->root());
+		$this->setUpTmp();
 	}
 
 	public function tearDown(): void
 	{
 		App::destroy();
-		Dir::remove(static::TMP);
+		$this->tearDownTmp();
 	}
 }

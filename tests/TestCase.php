@@ -92,6 +92,66 @@ class TestCase extends BaseTestCase
 		return defined(static::class . '::TMP');
 	}
 
+	/**
+	 * Set up a new multi language app instance with
+	 * English and German pre-installed and a test page called
+	 * `a-page` with an `article` template
+	 */
+	public function setUpMultiLanguage(): void
+	{
+		$this->app = new App([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de'
+				]
+			],
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'a-page',
+						'template' => 'article',
+					]
+				]
+			]
+		]);
+
+		$this->model = $this->app->page('a-page');
+
+		Dir::make($this->model->root());
+	}
+
+	/**
+	 * Set up a new single language app instance with
+	 * a test page called `a-page` with an `article` template
+	 */
+	public function setUpSingleLanguage(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'a-page',
+						'template' => 'article'
+					]
+				]
+			]
+		]);
+
+		$this->model = $this->app->page('a-page');
+
+		Dir::make($this->model->root());
+	}
+
 	protected function setUpTmp(): void
 	{
 		if ($this->hasTmp() === true) {
