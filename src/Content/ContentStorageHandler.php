@@ -192,6 +192,8 @@ abstract class ContentStorageHandler
 	 */
 	abstract public function read(VersionId $versionId, Language $language): array;
 
+	public function replace(string $version, string $lang, array $search, array $replace): void;
+
 	/**
 	 * Updates the modification timestamp of an existing version
 	 *
