@@ -158,7 +158,7 @@ class PageCopy extends Blueprint
 	): Page {
 		$copy = new static($copy, $files, $children);
 		$copy->adapt();
-		$copy->replace();
+		$copy->apply();
 		return $copy->result();
 	}
 

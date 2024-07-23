@@ -70,10 +70,26 @@ class PageCopyTest extends TestCase
 							[
 								'slug'     => 'test-a',
 								'content'  => ['uuid' => 'aa'],
+								'files' => [
+									[
+										'filename' => 'test-a.jpg',
+										'content'  => ['uuid' => 'file-aa'],
+									],
+									[
+										'filename' => 'test-b.jpg',
+										'content'  => ['uuid' => 'file-ab'],
+									],
+								]
 							],
 							[
 								'slug'     => 'test-b',
 								'content'  => ['uuid' => 'ab'],
+								'children' => [
+									[
+										'slug'     => 'test-ba',
+										'content'  => ['uuid' => 'aba'],
+									]
+								]
 							]
 						],
 						'files' => [
@@ -100,8 +116,10 @@ class PageCopyTest extends TestCase
 			'file://file-a',
 			'file://file-b',
 			'page://aa',
+			'file://file-aa',
+			'file://file-ab',
 			'page://ab',
+			'page://aba',
 		], array_keys($copy->uuids));
 	}
-
 }
