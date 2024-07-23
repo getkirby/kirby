@@ -72,12 +72,7 @@ trait PageActions
 				}
 
 				// remove all translated slugs
-				if (
-					$language->isDefault() === false &&
-					$copy->translation($language)->exists() === true
-				) {
-					$copy = $copy->save(['slug' => null], $language->code());
-				}
+				$copy = $this->adaptCopySlug($copy, $language);
 			}
 
 			return $copy;
@@ -103,6 +98,31 @@ trait PageActions
 					$this->adaptCopy($child, true);
 				}
 			}
+		}
+
+		return $copy;
+	}
+
+	/**
+	 * Adapts slug for copied pages
+	 * @internal
+	 */
+	protected function adaptCopySlug(
+		Page $copy,
+		Language|null $language
+	): Page {
+		// single lang setup
+		if ($language === null) {
+			return $copy;
+		}
+
+		// don't remove slug from default language
+		if ($language->isDefault() === true) {
+			return $copy;
+		}
+
+		if ($copy->translation($language)->exists() === true) {
+			$copy = $copy->save(['slug' => null], $language->code());
 		}
 
 		return $copy;
