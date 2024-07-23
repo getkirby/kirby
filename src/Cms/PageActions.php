@@ -37,31 +37,23 @@ trait PageActions
 		bool $files = false,
 		bool $children = false
 	): Page {
-		if ($this->kirby()->multilang() === true) {
-			foreach ($this->kirby()->languages() as $language) {
-				// overwrite with new UUID for the page and files
-				// for default language (remove old, add new)
-				$copy = $this->adaptCopyUuids(
-					$copy,
-					$language,
-					$files,
-					$children
-				);
+		$languages = match ($this->kirby()->multilang()) {
+			true  => $this->kirby()->languages(),
+			false => [null]
+		};
 
-				// remove all translated slugs
-				$copy = $this->adaptCopySlug($copy, $language);
-			}
+		foreach ($languages as $language) {
+			// replace UUIDs for newly generated pages and files
+			$copy = $this->adaptCopyUuids(
+				$copy,
+				$language,
+				$files,
+				$children
+			);
 
-			return $copy;
+			// remove all translated slugs
+			$copy = $this->adaptCopySlug($copy, $language);
 		}
-
-		// overwrite with new UUID for the page and files (remove old, add new)
-		$copy = $this->adaptCopyUuids(
-			$copy,
-			null,
-			$files,
-			$children
-		);
 
 		return $copy;
 	}
@@ -92,7 +84,9 @@ trait PageActions
 	}
 
 	/**
-	 * Adapts UUIDs for copied pages
+	 * Adapts UUIDs for copied pages,
+	 * replacing the old UUID with a newly generated one
+	 * for all newly generated pages and files
 	 * @internal
 	 */
 	protected function adaptCopyUuids(
