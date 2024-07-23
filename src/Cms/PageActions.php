@@ -41,35 +41,12 @@ trait PageActions
 			foreach ($this->kirby()->languages() as $language) {
 				// overwrite with new UUID for the page and files
 				// for default language (remove old, add new)
-				if (
-					Uuids::enabled() === true &&
-					$language->isDefault() === true
-				) {
-					$copy = $copy->save(
-						['uuid' => Uuid::generate()],
-						$language->code()
-					);
-
-					// regenerate UUIDs of page files
-					if ($files !== false) {
-						foreach ($copy->files() as $file) {
-							$file->save(
-								['uuid' => Uuid::generate()],
-								$language->code()
-							);
-						}
-					}
-
-					// regenerate UUIDs of all page children
-					if ($children !== false) {
-						foreach ($copy->index(true) as $child) {
-							// always adapt files of subpages as they are
-							// currently always copied; but don't adapt
-							// children because we already operate on the index
-							$this->adaptCopy($child, true);
-						}
-					}
-				}
+				$copy = $this->adaptCopyUuids(
+					$copy,
+					$language,
+					$files,
+					$children
+				);
 
 				// remove all translated slugs
 				$copy = $this->adaptCopySlug($copy, $language);
@@ -79,26 +56,12 @@ trait PageActions
 		}
 
 		// overwrite with new UUID for the page and files (remove old, add new)
-		if (Uuids::enabled() === true) {
-			$copy = $copy->save(['uuid' => Uuid::generate()]);
-
-			// regenerate UUIDs of page files
-			if ($files !== false) {
-				foreach ($copy->files() as $file) {
-					$file->save(['uuid' => Uuid::generate()]);
-				}
-			}
-
-			// regenerate UUIDs of all page children
-			if ($children !== false) {
-				foreach ($copy->index(true) as $child) {
-					// always adapt files of subpages as they are currently
-					// always copied; but don't adapt children because we
-					// already operate on the index
-					$this->adaptCopy($child, true);
-				}
-			}
-		}
+		$copy = $this->adaptCopyUuids(
+			$copy,
+			null,
+			$files,
+			$children
+		);
 
 		return $copy;
 	}
@@ -123,6 +86,52 @@ trait PageActions
 
 		if ($copy->translation($language)->exists() === true) {
 			$copy = $copy->save(['slug' => null], $language->code());
+		}
+
+		return $copy;
+	}
+
+	/**
+	 * Adapts UUIDs for copied pages
+	 * @internal
+	 */
+	protected function adaptCopyUuids(
+		Page $copy,
+		Language|null $language,
+		bool $files,
+		bool $children
+	): Page {
+		if (Uuids::enabled() === false) {
+			return $copy;
+		}
+
+		if ($language instanceof Language && $language->isDefault() === false) {
+			return $copy;
+		}
+
+		$copy = $copy->save(
+			['uuid' => Uuid::generate()],
+			$language?->code()
+		);
+
+		// regenerate UUIDs of page files
+		if ($files) {
+			foreach ($copy->files() as $file) {
+				$file->save(
+					['uuid' => Uuid::generate()],
+					$language?->code()
+				);
+			}
+		}
+
+		// regenerate UUIDs of all page children
+		if ($children) {
+			foreach ($copy->index(true) as $child) {
+				// always adapt files of subpages as they are
+				// currently always copied; but don't adapt
+				// children because we already operate on the index
+				$this->adaptCopy($child, true);
+			}
 		}
 
 		return $copy;
