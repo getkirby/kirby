@@ -391,7 +391,7 @@ class PagePermissionsTest extends TestCase
 	}
 
 	/**
-	 * @covers ::canSort
+	 * @covers ::can
 	 */
 	public function testCanNotFoundDefault()
 	{
@@ -483,7 +483,7 @@ class PagePermissionsTest extends TestCase
 	}
 
 	/**
-	 * @covers ::canSort
+	 * @covers ::cannot
 	 */
 	public function testCannotNotFoundDefault()
 	{
@@ -495,6 +495,6 @@ class PagePermissionsTest extends TestCase
 		]);
 
 		$this->assertTrue($page->permissions()->cannot('foo'));
-		$this->assertFalse($page->permissions()->cannot('foo', true));
+		$this->assertFalse($page->permissions()->cannot('foo', false));
 	}
 }
