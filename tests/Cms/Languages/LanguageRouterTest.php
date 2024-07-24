@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\NotFoundException;
 use Kirby\TestCase;
-use Kirby\Uuid\Uuid;
 
 class LanguageRouterTest extends TestCase
 {
@@ -223,12 +222,13 @@ class LanguageRouterTest extends TestCase
 			],
 		]);
 
-		$uuid = $app->page('notes')->uuid()->id();
+		$uuid = $app->page('notes')->uuid();
+		$uuid->populate();
 
 		$language = $app->language('en');
-		$router   = $language->router()->call('@/page/' . $uuid);
+		$response = $language->router()->call('@/page/' . $uuid->id());
 
-		// TODO: this should normally result in a redirect response
-		var_dump($router);
+		$this->assertSame(302, $response->code());
+		$this->assertSame('/en/notes', $response->header('Location'));
 	}
 }
