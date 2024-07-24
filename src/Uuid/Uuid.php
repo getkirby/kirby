@@ -222,7 +222,7 @@ abstract class Uuid implements Stringable
 			return Str::uuid();
 		}
 
-		return Str::random($length, 'alphaNum');
+		return Str::lower(Str::random($length, 'alphaNum'));
 	}
 
 	/**
