@@ -447,7 +447,7 @@ trait PageActions
 		$copy = $parentModel->clone()->findPageOrDraft($slug);
 
 		// normalize copy object
-		$copy = PageCopy::for(
+		$copy = PageCopy::process(
 			copy: $copy,
 			original: $this,
 			files: $files,
