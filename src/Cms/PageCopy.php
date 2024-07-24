@@ -137,18 +137,24 @@ class PageCopy extends Blueprint
 
 		foreach ($this->children() as $child) {
 			$child = new PageCopy($child, files: true, uuids: $this->uuids);
-			$child->replace();
+			$child->applyUuids();
 		}
 	}
 
 	public function children(): Pages
 	{
-		return $this->children ? $this->copy->index(true) : new Pages();
+		return match($this->children) {
+			true  => $this->copy->index(drafts: true),
+			false => new Pages()
+		};
 	}
 
 	public function files(): Files
 	{
-		return $this->files ? $this->copy->files() : new Files();
+		return match($this->files) {
+			true  => $this->copy->files(),
+			false => new Files()
+		};
 	}
 
 	public static function for(
