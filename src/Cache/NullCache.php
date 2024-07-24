@@ -23,15 +23,19 @@ class NullCache extends Cache
 	}
 
 	/**
-	 * Writes an item to the cache for a given number of minutes and
-	 * returns whether the operation was successful
-	 *
-	 * <code>
-	 *   // put an item in the cache for 15 minutes
-	 *   $cache->set('value', 'my value', 15);
-	 * </code>
+	 * Flushes the entire cache and returns
+	 * whether the operation was successful
 	 */
-	public function set(string $key, $value, int $minutes = 0): bool
+	public function flush(): bool
+	{
+		return true;
+	}
+
+	/**
+	 * Removes an item from the cache and returns
+	 * whether the operation was successful
+	 */
+	public function remove(string $key): bool
 	{
 		return true;
 	}
@@ -46,19 +50,15 @@ class NullCache extends Cache
 	}
 
 	/**
-	 * Removes an item from the cache and returns
-	 * whether the operation was successful
+	 * Writes an item to the cache for a given number of minutes and
+	 * returns whether the operation was successful
+	 *
+	 * <code>
+	 *   // put an item in the cache for 15 minutes
+	 *   $cache->set('value', 'my value', 15);
+	 * </code>
 	 */
-	public function remove(string $key): bool
-	{
-		return true;
-	}
-
-	/**
-	 * Flushes the entire cache and returns
-	 * whether the operation was successful
-	 */
-	public function flush(): bool
+	public function set(string $key, $value, int $minutes = 0): bool
 	{
 		return true;
 	}

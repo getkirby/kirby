@@ -19,16 +19,11 @@ use Closure;
 abstract class Cache
 {
 	/**
-	 * Stores all options for the driver
-	 */
-	protected array $options = [];
-
-	/**
 	 * Sets all parameters which are needed to connect to the cache storage
 	 */
-	public function __construct(array $options = [])
-	{
-		$this->options = $options;
+	public function __construct(
+		protected array $options = []
+	) {
 	}
 
 	/**

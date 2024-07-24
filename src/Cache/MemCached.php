@@ -32,8 +32,9 @@ class MemCached extends Cache
 	 *                       'port'   (default: 11211)
 	 *                       'prefix' (default: null)
 	 */
-	public function __construct(array $options = [])
-	{
+	public function __construct(
+		array $options = []
+	) {
 		parent::__construct([
 			'host'    => 'localhost',
 			'port'    => 11211,
@@ -58,6 +59,35 @@ class MemCached extends Cache
 	}
 
 	/**
+	 * Flushes the entire cache and returns
+	 * whether the operation was successful;
+	 * WARNING: Memcached only supports flushing the whole cache at once!
+	 */
+	public function flush(): bool
+	{
+		return $this->connection->flush();
+	}
+
+	/**
+	 * Removes an item from the cache and returns
+	 * whether the operation was successful
+	 */
+	public function remove(string $key): bool
+	{
+		return $this->connection->delete($this->key($key));
+	}
+
+	/**
+	 * Internal method to retrieve the raw cache value;
+	 * needs to return a Value object or null if not found
+	 */
+	public function retrieve(string $key): Value|null
+	{
+		$value = $this->connection->get($this->key($key));
+		return Value::fromJson($value);
+	}
+
+	/**
 	 * Writes an item to the cache for a given number of minutes and
 	 * returns whether the operation was successful
 	 *
@@ -72,34 +102,5 @@ class MemCached extends Cache
 		$value   = (new Value($value, $minutes))->toJson();
 		$expires = $this->expiration($minutes);
 		return $this->connection->set($key, $value, $expires);
-	}
-
-	/**
-	 * Internal method to retrieve the raw cache value;
-	 * needs to return a Value object or null if not found
-	 */
-	public function retrieve(string $key): Value|null
-	{
-		$value = $this->connection->get($this->key($key));
-		return Value::fromJson($value);
-	}
-
-	/**
-	 * Removes an item from the cache and returns
-	 * whether the operation was successful
-	 */
-	public function remove(string $key): bool
-	{
-		return $this->connection->delete($this->key($key));
-	}
-
-	/**
-	 * Flushes the entire cache and returns
-	 * whether the operation was successful;
-	 * WARNING: Memcached only supports flushing the whole cache at once!
-	 */
-	public function flush(): bool
-	{
-		return $this->connection->flush();
 	}
 }

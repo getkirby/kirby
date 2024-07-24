@@ -30,8 +30,9 @@ class FileCache extends Cache
 	 *                       'prefix' (default: none)
 	 *                       'extension' (file extension for cache files, default: none)
 	 */
-	public function __construct(array $options)
-	{
+	public function __construct(
+		array $options
+	) {
 		parent::__construct([
 			'root'      => null,
 			'prefix'    => null,
@@ -51,20 +52,28 @@ class FileCache extends Cache
 	}
 
 	/**
+	 * Checks when the cache has been created;
+	 * returns the creation timestamp on success
+	 * and false if the item does not exist
+	 */
+	public function created(string $key): int|false
+	{
+		// use the modification timestamp
+		// as indicator when the cache has been created/overwritten
+		clearstatcache();
+
+		// get the file for this cache key
+		$file = $this->file($key);
+		return file_exists($file) ? filemtime($file) : false;
+	}
+
+	/**
 	 * Returns whether the cache is ready to
 	 * store values
 	 */
 	public function enabled(): bool
 	{
 		return is_writable($this->root) === true;
-	}
-
-	/**
-	 * Returns the full root including prefix
-	 */
-	public function root(): string
-	{
-		return $this->root;
 	}
 
 	/**
@@ -116,47 +125,19 @@ class FileCache extends Cache
 	}
 
 	/**
-	 * Writes an item to the cache for a given number of minutes and
-	 * returns whether the operation was successful
-	 *
-	 * <code>
-	 *   // put an item in the cache for 15 minutes
-	 *   $cache->set('value', 'my value', 15);
-	 * </code>
+	 * Flushes the entire cache and returns
+	 * whether the operation was successful
 	 */
-	public function set(string $key, $value, int $minutes = 0): bool
+	public function flush(): bool
 	{
-		$file = $this->file($key);
+		if (
+			Dir::remove($this->root) === true &&
+			Dir::make($this->root) === true
+		) {
+			return true;
+		}
 
-		return F::write($file, (new Value($value, $minutes))->toJson());
-	}
-
-	/**
-	 * Internal method to retrieve the raw cache value;
-	 * needs to return a Value object or null if not found
-	 */
-	public function retrieve(string $key): Value|null
-	{
-		$file  = $this->file($key);
-		$value = F::read($file);
-
-		return $value ? Value::fromJson($value) : null;
-	}
-
-	/**
-	 * Checks when the cache has been created;
-	 * returns the creation timestamp on success
-	 * and false if the item does not exist
-	 */
-	public function created(string $key): int|false
-	{
-		// use the modification timestamp
-		// as indicator when the cache has been created/overwritten
-		clearstatcache();
-
-		// get the file for this cache key
-		$file = $this->file($key);
-		return file_exists($file) ? filemtime($file) : false;
+		return false; // @codeCoverageIgnore
 	}
 
 	/**
@@ -209,18 +190,38 @@ class FileCache extends Cache
 	}
 
 	/**
-	 * Flushes the entire cache and returns
-	 * whether the operation was successful
+	 * Internal method to retrieve the raw cache value;
+	 * needs to return a Value object or null if not found
 	 */
-	public function flush(): bool
+	public function retrieve(string $key): Value|null
 	{
-		if (
-			Dir::remove($this->root) === true &&
-			Dir::make($this->root) === true
-		) {
-			return true;
-		}
+		$file  = $this->file($key);
+		$value = F::read($file);
 
-		return false; // @codeCoverageIgnore
+		return $value ? Value::fromJson($value) : null;
+	}
+
+	/**
+	 * Returns the full root including prefix
+	 */
+	public function root(): string
+	{
+		return $this->root;
+	}
+
+	/**
+	 * Writes an item to the cache for a given number of minutes and
+	 * returns whether the operation was successful
+	 *
+	 * <code>
+	 *   // put an item in the cache for 15 minutes
+	 *   $cache->set('value', 'my value', 15);
+	 * </code>
+	 */
+	public function set(string $key, $value, int $minutes = 0): bool
+	{
+		$file = $this->file($key);
+
+		return F::write($file, (new Value($value, $minutes))->toJson());
 	}
 }
