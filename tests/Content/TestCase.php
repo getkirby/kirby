@@ -5,6 +5,7 @@ namespace Kirby\Content;
 use Kirby\Cms\App;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
+use Kirby\FileSystem\Dir;
 use Kirby\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
@@ -76,6 +77,44 @@ class TestCase extends BaseTestCase
 	public function setUp(): void
 	{
 		$this->setUpTmp();
+	}
+
+	public function setUpMultiLanguage(
+		array|null $site = null
+	): void {
+		parent::setUpMultiLanguage(
+			site: $site ?? [
+				'children' => [
+					[
+						'slug'     => 'a-page',
+						'template' => 'article'
+					]
+				]
+			]
+		);
+
+		$this->model = $this->app->page('a-page');
+
+		Dir::make($this->model->root());
+	}
+
+	public function setUpSingleLanguage(
+		array|null $site = null
+	): void {
+		parent::setUpSingleLanguage(
+			site: $site ?? [
+				'children' => [
+					[
+						'slug'     => 'a-page',
+						'template' => 'article'
+					]
+				]
+			]
+		);
+
+		$this->model = $this->app->page('a-page');
+
+		Dir::make($this->model->root());
 	}
 
 	public function tearDown(): void

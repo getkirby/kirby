@@ -21,16 +21,18 @@ class PlainTextContentStorageHandlerTest extends TestCase
 
 	protected $storage;
 
-	public function setUpMultiLanguage(): void
-	{
-		parent::setUpMultiLanguage();
+	public function setUpMultiLanguage(
+		array|null $site = null
+	): void {
+		parent::setUpMultiLanguage(site: $site);
 
 		$this->storage = new PlainTextContentStorageHandler($this->model);
 	}
 
-	public function setUpSingleLanguage(): void
-	{
-		parent::setUpSingleLanguage();
+	public function setUpSingleLanguage(
+		array|null $site = null
+	): void {
+		parent::setUpSingleLanguage(site: $site);
 
 		$this->storage = new PlainTextContentStorageHandler($this->model);
 	}

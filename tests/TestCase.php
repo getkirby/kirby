@@ -4,7 +4,6 @@ namespace Kirby;
 
 use Kirby\Cms\App;
 use Kirby\Cms\File;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
@@ -14,7 +13,6 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 class TestCase extends BaseTestCase
 {
 	protected App $app;
-	protected ModelWithContent $model;
 
 	/**
 	 * Whether $actual is a File object
@@ -96,11 +94,11 @@ class TestCase extends BaseTestCase
 
 	/**
 	 * Set up a new multi language app instance with
-	 * English and German pre-installed and a test page called
-	 * `a-page` with an `article` template
+	 * English and German pre-installed
 	 */
-	public function setUpMultiLanguage(): void
-	{
+	public function setUpMultiLanguage(
+		array|null $site = null
+	): void {
 		$this->app = new App([
 			'languages' => [
 				[
@@ -114,44 +112,22 @@ class TestCase extends BaseTestCase
 			'roots' => [
 				'index' => static::TMP
 			],
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'a-page',
-						'template' => 'article',
-					]
-				]
-			]
+			'site' => $site ?? []
 		]);
-
-		$this->model = $this->app->page('a-page');
-
-		Dir::make($this->model->root());
 	}
 
 	/**
-	 * Set up a new single language app instance with
-	 * a test page called `a-page` with an `article` template
+	 * Set up a new single language app instance
 	 */
-	public function setUpSingleLanguage(): void
-	{
+	public function setUpSingleLanguage(
+		array|null $site = null
+	): void {
 		$this->app = new App([
 			'roots' => [
 				'index' => static::TMP
 			],
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'a-page',
-						'template' => 'article'
-					]
-				]
-			]
+			'site' => $site ?? []
 		]);
-
-		$this->model = $this->app->page('a-page');
-
-		Dir::make($this->model->root());
 	}
 
 	protected function setUpTmp(): void

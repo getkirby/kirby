@@ -14,7 +14,16 @@ class ChangesTest extends TestCase
 	public function setUp(): void
 	{
 		$this->setUpTmp();
-		$this->setUpSingleLanguage();
+		$this->setUpSingleLanguage(site: [
+			'children' => [
+				[
+					'slug'     => 'article',
+					'template' => 'article'
+				]
+			]
+		]);
+
+		$this->page = $this->app->page('article');
 	}
 
 	public function tearDown(): void
@@ -24,9 +33,9 @@ class ChangesTest extends TestCase
 
 	public function testDiscard()
 	{
-		Data::write($file = $this->model->root() . '/_changes/article.txt', []);
+		Data::write($file = $this->page->root() . '/_changes/article.txt', []);
 
-		$response = Changes::discard($this->model);
+		$response = Changes::discard($this->page);
 
 		$this->assertSame(['status' => 'ok'], $response);
 
@@ -35,10 +44,10 @@ class ChangesTest extends TestCase
 
 	public function testPublish()
 	{
-		Data::write($this->model->root() . '/article.txt', []);
-		Data::write($file = $this->model->root() . '/_changes/article.txt', []);
+		Data::write($this->page->root() . '/article.txt', []);
+		Data::write($file = $this->page->root() . '/_changes/article.txt', []);
 
-		$response = Changes::publish($this->model, [
+		$response = Changes::publish($this->page, [
 			'title' => 'Test'
 		]);
 
@@ -48,29 +57,29 @@ class ChangesTest extends TestCase
 		$this->assertFileDoesNotExist($file);
 
 		// and the content file should be updated with the input
-		$published = Data::read($this->model->root() . '/article.txt');
+		$published = Data::read($this->page->root() . '/article.txt');
 
 		$this->assertSame(['title' => 'Test'], $published);
 	}
 
 	public function testSave()
 	{
-		Data::write($this->model->root() . '/article.txt', []);
-		Data::write($this->model->root() . '/_changes/article.txt', []);
+		Data::write($this->page->root() . '/article.txt', []);
+		Data::write($this->page->root() . '/_changes/article.txt', []);
 
-		$response = Changes::save($this->model, [
+		$response = Changes::save($this->page, [
 			'title' => 'Test'
 		]);
 
 		$this->assertSame(['status' => 'ok'], $response);
 
 		// the content file should be untouched
-		$published = Data::read($this->model->root() . '/article.txt');
+		$published = Data::read($this->page->root() . '/article.txt');
 
 		$this->assertSame([], $published);
 
 		// the changes file should have the changes
-		$changes = Data::read($this->model->root() . '/_changes/article.txt');
+		$changes = Data::read($this->page->root() . '/_changes/article.txt');
 
 		$this->assertSame(['title' => 'Test'], $changes);
 	}
