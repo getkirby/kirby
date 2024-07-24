@@ -32,7 +32,7 @@
 			<directory suffix=".php">./config/templates</directory>
 			<file>./config/aliases.php</file>
 			<file>./config/setup.php</file>
-			<file>./config/areas/accounts/requests.php</file>
+			<file>./config/areas/account/requests.php</file>
 			<file>./config/areas/files/requests.php</file>
 			<file>./config/areas/site/requests.php</file>
 			<file>./config/areas/users/requests.php</file>
