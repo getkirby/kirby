@@ -296,6 +296,15 @@ abstract class Model
 	}
 
 	/**
+	 * Returns the corresponding model object
+	 * @since 5.0.0
+	 */
+	public function model(): ModelWithContent
+	{
+		return $this->model;
+	}
+
+	/**
 	 * Returns an array of all actions
 	 * that can be performed in the Panel
 	 * This also checks for the lock status
