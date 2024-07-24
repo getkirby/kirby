@@ -55,16 +55,18 @@ class MemoryContentStorageHandlerTest extends TestCase
 		$this->assertSame($fields, $this->storage->read($versionId, $language));
 	}
 
-	public function setUpMultiLanguage(): void
-	{
-		parent::setUpMultiLanguage();
+	public function setUpMultiLanguage(
+		array|null $site = null
+	): void {
+		parent::setUpMultiLanguage(site: $site);
 
 		$this->storage = new MemoryContentStorageHandler($this->model);
 	}
 
-	public function setUpSingleLanguage(): void
-	{
-		parent::setUpSingleLanguage();
+	public function setUpSingleLanguage(
+		array|null $site = null
+	): void {
+		parent::setUpSingleLanguage(site: $site);
 
 		$this->storage = new MemoryContentStorageHandler($this->model);
 	}

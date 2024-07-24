@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Kirby\Data\Data;
+use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 
 /**
@@ -589,6 +590,56 @@ class VersionTest extends TestCase
 		$this->assertContentFileExists('en', $versionIdPublished);
 
 		$this->assertSame($content, Data::read($fileENPublished));
+	}
+
+	/**
+	 * @covers ::publish
+	 */
+	public function testPublish()
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		Data::write($filePublished = $this->contentFile(null, VersionId::published()), [
+			'title' => 'Title published'
+		]);
+
+		Data::write($fileChanges = $this->contentFile(null, VersionId::changes()), [
+			'title' => 'Title changes'
+		]);
+
+		$this->assertFileExists($filePublished);
+		$this->assertFileExists($fileChanges);
+
+		$version->publish();
+
+		$this->assertFileDoesNotExist($fileChanges);
+
+		$this->assertSame('Title changes', Data::read($filePublished)['title']);
+	}
+
+	/**
+	 * @covers ::publish
+	 */
+	public function testPublishAlreadyPublishedVersion()
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$this->createContentSingleLanguage();
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('This version is already published');
+
+		$version->publish();
 	}
 
 	/**
