@@ -198,7 +198,7 @@ abstract class ContentStorageHandler
 	 * @param string $lang Code `'default'` in a single-lang installation
 	 * @param array $map search-replace mapping where all keys are replaced by their values
 	 *
-	 *  @throws \Kirby\Exception\NotFoundException If the version does not exist
+	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
 	public function replace(
 		string $version,

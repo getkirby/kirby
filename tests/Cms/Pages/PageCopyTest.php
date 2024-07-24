@@ -161,6 +161,64 @@ class PageCopyTest extends TestCase
 	}
 
 	/**
+	 * @covers ::convertChildrenUuids
+	 */
+	public function testConvertUuidsClearChildren(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'original',
+						'content'  => ['uuid' => 'a'],
+						'children' => [
+							[
+								'slug'     => 'test-a',
+								'content'  => ['uuid' => 'aa'],
+								'files'    => [
+									[
+										'filename' => 'test-a.jpg',
+										'content'  => ['uuid' => 'file-aa'],
+									],
+									[
+										'filename' => 'test-b.jpg',
+										'content'  => ['uuid' => 'file-ab'],
+									],
+								]
+							],
+							[
+								'slug'    => 'test-b',
+								'content' => ['uuid' => 'ab']
+							]
+						]
+					],
+					[
+						'slug'     => 'copy',
+						'content'  => ['uuid' => 'a'],
+					],
+				]
+			]
+		]);
+
+		$page     = $app->page('copy');
+		$original = $app->page('original');
+
+		$copy = new PageCopy($page, $original);
+		$copy->convertUuids(null);
+		$this->assertSame([
+			'page://a',
+			'page://aa',
+			'file://file-aa',
+			'file://file-ab',
+			'page://ab',
+		], array_keys($copy->uuids));
+		$this->assertSame('', $copy->uuids['page://aa']);
+		$this->assertSame('', $copy->uuids['file://file-aa']);
+		$this->assertSame('', $copy->uuids['file://file-ab']);
+		$this->assertSame('', $copy->uuids['page://ab']);
+	}
+
+	/**
 	 * @covers ::convertFileUuids
 	 */
 	public function testConvertUuidsClearFiles(): void

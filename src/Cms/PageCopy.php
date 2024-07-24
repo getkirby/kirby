@@ -78,6 +78,7 @@ class PageCopy
 	 */
 	protected function convertChildrenUuids(Language|null $language): void
 	{
+		// re-generate UUIDs and track changes
 		foreach ($this->children() as $child) {
 			// always adapt files of subpages as they are
 			// currently always copied; but don't adapt
@@ -86,6 +87,19 @@ class PageCopy
 			$child->convertUuids($language);
 			$this->uuids = [...$this->uuids, ...$child->uuids];
 		}
+
+		// if children have not been copied over,
+		// track all children UUIDs from original page to
+		// remove/replace with empty string
+		if ($this->children === false) {
+			foreach ($this->original?->index(drafts: true) ?? [] as $child) {
+				$this->uuids[$child->uuid()->toString()] = '';
+
+				foreach ($child->files() as $file) {
+					$this->uuids[$file->uuid()->toString()] = '';
+				}
+			}
+		}
 	}
 
 	/**
@@ -93,7 +107,6 @@ class PageCopy
 	 */
 	protected function convertFileUuids(Language|null $language): void
 	{
-		// if files have been copied,
 		// re-generate UUIDs and track changes
 		foreach ($this->files() as $file) {
 			// store old file UUID
