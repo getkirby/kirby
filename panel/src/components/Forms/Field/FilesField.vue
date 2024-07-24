@@ -51,6 +51,7 @@ export default {
 						}
 
 						this.onInput();
+						this.$events.emit("file.upload");
 						this.$events.emit("model.update");
 					}
 				}

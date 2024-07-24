@@ -53,6 +53,7 @@ export default {
 				on: {
 					complete: () => {
 						this.$panel.notification.success({ context: "view" });
+						this.$events.emit("file.upload");
 					}
 				}
 			};

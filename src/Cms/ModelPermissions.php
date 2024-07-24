@@ -43,8 +43,16 @@ abstract class ModelPermissions
 		return $this->toArray();
 	}
 
-	public function can(string $action): bool
-	{
+	/**
+	 * Returns whether the current user is allowed to do
+	 * a certain action on the model
+	 *
+	 * @param bool $default Will be returned if $action does not exist
+	 */
+	public function can(
+		string $action,
+		bool $default = false
+	): bool {
 		$user = $this->user->id();
 		$role = $this->user->role()->id();
 
@@ -95,12 +103,20 @@ abstract class ModelPermissions
 			}
 		}
 
-		return $this->permissions->for($this->category, $action);
+		return $this->permissions->for($this->category, $action, $default);
 	}
 
-	public function cannot(string $action): bool
-	{
-		return $this->can($action) === false;
+	/**
+	 * Returns whether the current user is not allowed to do
+	 * a certain action on the model
+	 *
+	 * @param bool $default Will be returned if $action does not exist
+	 */
+	public function cannot(
+		string $action,
+		bool $default = true
+	): bool {
+		return $this->can($action, !$default) === false;
 	}
 
 	public function toArray(): array

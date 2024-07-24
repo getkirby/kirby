@@ -718,6 +718,16 @@ class ATest extends TestCase
 	}
 
 	/**
+	 * @covers ::random
+	 */
+	public function testRandomInvalidCount()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('$count is larger than available array items');
+		A::random([1, 2, 3], 4);
+	}
+
+	/**
 	 * @covers ::fill
 	 */
 	public function testFill()
