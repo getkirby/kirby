@@ -108,7 +108,7 @@ class PageCopy extends Blueprint
 			// currently always copied; but don't adapt
 			// children because we already operate on the index
 			$child = new PageCopy($child, files: true, uuids: $this->uuids);
-			$child->adapt();
+			$child->adaptUuids($language);
 			$this->uuids = [...$this->uuids, ...$child->uuids];
 		}
 	}
