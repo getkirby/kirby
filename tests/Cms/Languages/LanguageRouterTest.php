@@ -217,6 +217,9 @@ class LanguageRouterTest extends TestCase
 				'children' => [
 					[
 						'slug' => 'notes',
+					],
+					[
+						'slug' => 'albums',
 					]
 				]
 			],
@@ -230,5 +233,10 @@ class LanguageRouterTest extends TestCase
 
 		$this->assertSame(302, $response->code());
 		$this->assertSame('/en/notes', $response->header('Location'));
+
+		// not cached
+		$uuid = $app->page('albums')->uuid();
+		$response = $language->router()->call('@/page/' . $uuid->id());
+		$this->assertFalse($response);
 	}
 }
