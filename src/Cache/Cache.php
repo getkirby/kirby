@@ -178,6 +178,12 @@ abstract class Cache
 	}
 
 	/**
+	 * Whether the cache has any entry,
+	 * irrespective whether the entries have expired or not
+	 */
+	abstract public function isEmpty(): bool;
+
+	/**
 	 * Adds the prefix to the key if given
 	 */
 	protected function key(string $key): string

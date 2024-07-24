@@ -32,6 +32,15 @@ class NullCache extends Cache
 	}
 
 	/**
+	 * Whether the cache has any entry,
+	 * irrespective whether the entries have expired or not
+	 */
+	public function isEmpty(): bool
+	{
+		return true;
+	}
+
+	/**
 	 * Removes an item from the cache and returns
 	 * whether the operation was successful
 	 */
