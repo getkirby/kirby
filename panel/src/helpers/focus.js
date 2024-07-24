@@ -26,12 +26,11 @@ export default function focus(element, field) {
 	}
 
 	const selectors = [
-		"[autofocus]",
-		"[data-autofocus]",
-		"input",
-		"textarea",
-		"select",
-		"[contenteditable=true]",
+		// prioritize elements that have set autofocus explicitly
+		":where([autofocus], [data-autofocus])",
+		// treat all types of inputs equally as second-best
+		":where(input, textarea, select, [contenteditable=true], .input-focus)",
+		// prefer submit button over other buttons
 		"[type=submit]",
 		"button"
 	];
