@@ -6,7 +6,7 @@ use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 
 /**
- * @coversDefaultClass \Kirby\Page\PageCopy
+ * @coversDefaultClass \Kirby\Cms\PageCopy
  */
 class PageCopyTest extends TestCase
 {
