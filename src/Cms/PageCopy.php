@@ -24,6 +24,7 @@ class PageCopy extends Blueprint
 {
 	public function __construct(
 		public Page $copy,
+		public Page|null $original = null,
 		public bool $files = false,
 		public bool $children = false,
 		public array $uuids = []
@@ -101,6 +102,12 @@ class PageCopy extends Blueprint
 			);
 		}
 
+		if ($this->files === false) {
+			foreach ($this->original?->files() ?? [] as $file) {
+				$this->uuids[$file->uuid()->toString()] = '';
+			}
+		}
+
 		// re-generate UUIDs for each child recursively
 		// and merge with the tracked changed UUIDs
 		foreach ($this->children() as $child) {
@@ -131,10 +138,11 @@ class PageCopy extends Blueprint
 
 	public static function for(
 		Page $copy,
+		Page $original,
 		bool $files = false,
 		bool $children = false
 	): Page {
-		$copy = new static($copy, $files, $children);
+		$copy = new static($copy, $original, $files, $children);
 		$copy->adapt();
 		$copy->replaceUuids();
 		return $copy->result();

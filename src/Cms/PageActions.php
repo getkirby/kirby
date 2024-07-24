@@ -447,7 +447,12 @@ trait PageActions
 		$copy = $parentModel->clone()->findPageOrDraft($slug);
 
 		// normalize copy object
-		$copy = PageCopy::for($copy, $files, $children);
+		$copy = PageCopy::for(
+			copy: $copy,
+			original: $this,
+			files: $files,
+			children: $children
+		);
 
 		// add copy to siblings
 		static::updateParentCollections($copy, 'append', $parentModel);
