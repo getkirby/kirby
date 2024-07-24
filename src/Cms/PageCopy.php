@@ -113,34 +113,6 @@ class PageCopy extends Blueprint
 		}
 	}
 
-	/**
-	 * Applies adaptations to the content of everything copied
-	 */
-	public function apply(): void
-	{
-		$this->applyUuids();
-	}
-
-	/**
-	 * Replace old UUIDs with new UUIDs in the content
-	 */
-	public function applyUuids(): void
-	{
-		$search  = array_keys($this->uuids);
-		$replace = array_values($this->uuids);
-
-		$this->copy->storage()->replace($search, $replace);
-
-		foreach ($this->files() as $file) {
-			$file->storage()->replace($search, $replace);
-		}
-
-		foreach ($this->children() as $child) {
-			$child = new PageCopy($child, files: true, uuids: $this->uuids);
-			$child->applyUuids();
-		}
-	}
-
 	public function children(): Pages
 	{
 		return match($this->children) {
@@ -164,7 +136,7 @@ class PageCopy extends Blueprint
 	): Page {
 		$copy = new static($copy, $files, $children);
 		$copy->adapt();
-		$copy->apply();
+		$copy->replaceUuids();
 		return $copy->result();
 	}
 
@@ -176,6 +148,23 @@ class PageCopy extends Blueprint
 			true  => $kirby->languages(),
 			false => [null]
 		};
+	}
+
+	/**
+	 * Replace old UUIDs with new UUIDs in the content
+	 */
+	public function replaceUuids(): void
+	{
+		$this->copy->storage()->replace($this->uuids);
+
+		foreach ($this->files() as $file) {
+			$file->storage()->replace($this->uuids);
+		}
+
+		foreach ($this->children() as $child) {
+			$child = new PageCopy($child, files: true, uuids: $this->uuids);
+			$child->replaceUuids();
+		}
 	}
 
 	/**
