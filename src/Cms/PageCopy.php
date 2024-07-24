@@ -34,7 +34,7 @@ class PageCopy
 	 */
 	public function children(): Pages
 	{
-		return match($this->children) {
+		return match ($this->children) {
 			true  => $this->copy->index(drafts: true),
 			false => new Pages()
 		};
@@ -45,7 +45,8 @@ class PageCopy
 	 * replacing the old UUID with a newly generated one
 	 * for all newly generated pages and files
 	 */
-	public function convertUuids(Language|null $language): void {
+	public function convertUuids(Language|null $language): void
+	{
 		if (Uuids::enabled() === false) {
 			return;
 		}
@@ -123,7 +124,7 @@ class PageCopy
 	 */
 	public function files(): Files
 	{
-		return match($this->files) {
+		return match ($this->files) {
 			true  => $this->copy->files(),
 			false => new Files()
 		};
@@ -150,7 +151,7 @@ class PageCopy
 	 */
 	public static function process(
 		Page $copy,
-		Page $original,
+		Page|null $original = null,
 		bool $files = false,
 		bool $children = false
 	): Page {
@@ -172,7 +173,8 @@ class PageCopy
 	/**
 	 * Removes translated slug for copied page
 	 */
-	public function removeSlug(Language|null $language): void {
+	public function removeSlug(Language|null $language): void
+	{
 		// single lang setup
 		if ($language === null) {
 			return;
