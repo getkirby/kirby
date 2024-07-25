@@ -6,6 +6,7 @@ use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
 use Kirby\Panel\Ui\Buttons\ViewButtons;
+use Kirby\Panel\Ui\FilePreview;
 use Kirby\Toolkit\I18n;
 use Throwable;
 
@@ -420,41 +421,7 @@ class File extends Model
 				'url'        => $file->url(),
 				'uuid'       => fn () => $file->uuid()?->toString(),
 			],
-			'preview' => [
-				'focusable' => $this->isFocusable(),
-				'image'     => $this->image([
-					'back'  => 'transparent',
-					'ratio' => '1/1'
-				], 'cards'),
-				'url'       => $url = $file->previewUrl(),
-				'details'   => [
-					[
-						'title' => I18n::translate('template'),
-						'text'  => $file->template() ?? '—'
-					],
-					[
-						'title' => I18n::translate('mime'),
-						'text'  => $file->mime()
-					],
-					[
-						'title' => I18n::translate('url'),
-						'text'  => $id,
-						'link'  => $url
-					],
-					[
-						'title' => I18n::translate('size'),
-						'text'  => $file->niceSize()
-					],
-					[
-						'title' => I18n::translate('dimensions'),
-						'text'  => $file->type() === 'image' ? $file->dimensions() . ' ' . I18n::translate('pixel') : '—'
-					],
-					[
-						'title' => I18n::translate('orientation'),
-						'text'  => $file->type() === 'image' ? I18n::translate('orientation.' . $dimensions->orientation()) : '—'
-					],
-				]
-			]
+			'preview' => FilePreview::factory($this->model)->render()
 		];
 	}
 

@@ -79,9 +79,6 @@ export default {
 			default: () => [],
 			type: Array
 		},
-		focus: {
-			type: Object
-		},
 		focusable: Boolean,
 		image: {
 			default: () => ({}),
@@ -91,6 +88,17 @@ export default {
 	},
 	emits: ["focus"],
 	computed: {
+		focus() {
+			const focus = this.$panel.content.values["focus"];
+
+			if (!focus) {
+				return;
+			}
+
+			const [x, y] = focus.replaceAll("%", "").split(" ");
+
+			return { x: parseFloat(x), y: parseFloat(y) };
+		},
 		options() {
 			return [
 				{
@@ -116,14 +124,11 @@ export default {
 	},
 	methods: {
 		setFocus(focus) {
-			if (!focus) {
-				return this.$emit("focus", null);
+			if (this.$helper.object.isObject(focus) === true) {
+				focus = `${focus.x.toFixed(1)}% ${focus.y.toFixed(1)}%`;
 			}
 
-			this.$emit("focus", {
-				x: focus.x.toFixed(1),
-				y: focus.y.toFixed(1)
-			});
+			this.$panel.content.set({ focus });
 		}
 	}
 };

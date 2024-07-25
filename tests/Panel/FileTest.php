@@ -849,12 +849,7 @@ class FileTest extends TestCase
 		$this->assertArrayHasKey('url', $props['model']);
 		$this->assertArrayHasKey('template', $props['model']);
 		$this->assertArrayHasKey('type', $props['model']);
-
 		$this->assertArrayHasKey('preview', $props);
-		$this->assertArrayHasKey('image', $props['preview']);
-		$this->assertArrayHasKey('url', $props['preview']);
-		$this->assertArrayHasKey('details', $props['preview']);
-		$this->assertCount(6, $props['preview']['details']);
 
 		// inherited props
 		$this->assertArrayHasKey('blueprint', $props);
