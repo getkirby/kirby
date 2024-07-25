@@ -294,7 +294,7 @@
 	"field.blocks.heading.name": "Heading",
 	"field.blocks.heading.text": "Text",
 	"field.blocks.heading.placeholder": "Heading …",
-	"field.blocks.figure.back.plain": "White",
+	"field.blocks.figure.back.plain": "Plain",
 	"field.blocks.figure.back.pattern.light": "Pattern (light)",
 	"field.blocks.figure.back.pattern.dark": "Pattern (dark)",
 	"field.blocks.image.alt": "Alternative text",
