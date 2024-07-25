@@ -13,7 +13,12 @@
 			align-x="end"
 			:options="[
 				{ text: 'White', value: 'white', click: 'var(--color-white)' },
-				{ text: 'Pattern', value: 'pattern', click: 'var(--pattern)' },
+				{
+					text: 'Pattern (light)',
+					value: 'pattern',
+					click: 'var(--pattern-light)'
+				},
+				{ text: 'Pattern (dark)', value: 'pattern', click: 'var(--pattern)' },
 				{ text: 'Dark', value: 'dark', click: 'var(--color-dark)' }
 			]"
 			@action="$emit('input', $event)"
