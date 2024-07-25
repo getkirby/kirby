@@ -1,5 +1,5 @@
 <template>
-	<k-frame v-bind="$props" :style="{ color: color }" class="k-color-frame">
+	<k-frame v-bind="$props" :style="{ '--back': color }" class="k-color-frame">
 		<slot />
 	</k-frame>
 </template>
@@ -45,7 +45,7 @@ export default {
 	box-shadow: 0 0 0 1px inset hsla(0, 0%, var(--color-frame-darkness), 0.175);
 	position: absolute;
 	inset: 0;
-	background-color: currentColor;
+	background: var(--back);
 	content: "";
 }
 </style>

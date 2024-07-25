@@ -25,6 +25,16 @@
 				/>
 			</k-grid>
 		</k-lab-example>
+		<k-lab-example label="Pattern">
+			<k-grid style="--columns: 3; gap: var(--spacing-6)">
+				<k-color-frame
+					v-for="ratio in ratios"
+					:key="ratio"
+					:ratio="ratio"
+					color="var(--pattern)"
+				/>
+			</k-grid>
+		</k-lab-example>
 	</k-lab-examples>
 </template>
 
@@ -33,7 +43,7 @@ export default {
 	computed: {
 		ratios() {
 			return ["1/1", "4/3", "16/9"];
-		},
-	},
+		}
+	}
 };
 </script>
