@@ -34,13 +34,21 @@ export default {
 
 <style>
 .k-block-background-dropdown > .k-button {
-	--color-frame-size: 1.25rem;
+	--color-frame-rounded: 0;
+	--color-frame-size: 1.5rem;
 	--button-height: 1.5rem;
-	--button-padding: 0.125rem;
+	--button-padding: 0 0.125rem;
+	--button-color-back: var(--color-white);
 	gap: 0.25rem;
-	box-shadow: var(--shadow);
+	box-shadow: var(--shadow-toolbar);
+	border: 1px solid var(--color-white);
 }
-
+.k-block-background-dropdown .k-color-frame {
+	border-right: 1px solid var(--color-gray-300);
+}
+.k-block-background-dropdown .k-color-frame::after {
+	box-shadow: none;
+}
 .k-block .k-block-background-dropdown {
 	position: absolute;
 	inset-inline-end: var(--spacing-3);
