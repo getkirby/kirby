@@ -74,20 +74,20 @@ class FilePreviewTest extends TestCase
 				[
 					'title' => 'Template',
 					'text'  => '—',
-		        ],
-		        [
-		            'title' => 'Media Type',
-		            'text'  => 'image/jpeg',
-		        ],
-		        [
-		            'title' => 'Url',
-		            'text'  => 'test/test.jpg',
-		            'link'  => '/test/test.jpg',
-		        ],
-		        [
-		            'title' => 'Size',
-		            'text' => '0 KB',
-		        ]
+				],
+				[
+					'title' => 'Media Type',
+					'text'  => 'image/jpeg',
+				],
+				[
+					'title' => 'Url',
+					'text'  => '/test/test.jpg',
+					'link'  => '/test/test.jpg',
+				],
+				[
+					'title' => 'Size',
+					'text' => '0 KB',
+				]
 			],
 			'url' => '/test/test.jpg'
 		], $component->props());
