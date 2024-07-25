@@ -6,7 +6,7 @@ use Kirby\Cms\Language;
 use Kirby\Exception\LogicException;
 
 /**
- * @coversDefaultClass Kirby\Content\ImmutableMemoryContentStorageHandler
+ * @coversDefaultClass \Kirby\Content\ImmutableMemoryContentStorageHandler
  * @covers ::__construct
  */
 class ImmutableMemoryContentStorageHandlerTest extends TestCase
