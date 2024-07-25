@@ -8,6 +8,7 @@ import BlockPasteboard from "./BlockPasteboard.vue";
 import BlockSelector from "./BlockSelector.vue";
 
 // elements
+import BlockBackgroundDropdown from "./Elements/BlockBackgroundDropdown.vue";
 import BlockFigure from "./Elements/BlockFigure.vue";
 import BlockTitle from "./Elements/BlockTitle.vue";
 
@@ -36,6 +37,7 @@ export default {
 		app.component("k-block-selector", BlockSelector);
 
 		// elements
+		app.component("k-block-background-dropdown", BlockBackgroundDropdown);
 		app.component("k-block-figure", BlockFigure);
 		app.component("k-block-title", BlockTitle);
 
