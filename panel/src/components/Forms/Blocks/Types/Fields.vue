@@ -40,7 +40,6 @@ import Block from "./Default.vue";
 export default {
 	extends: Block,
 	props: {
-		endpoints: Object,
 		tabs: Object
 	},
 	data() {

@@ -1,5 +1,9 @@
 <template>
-	<figure class="k-block-figure">
+	<figure
+		:data-empty="isEmpty"
+		:style="{ '--block-figure-back': back }"
+		class="k-block-figure"
+	>
 		<k-button
 			v-if="isEmpty"
 			:disabled="disabled"
@@ -16,15 +20,14 @@
 		>
 			<slot />
 		</span>
-		<figcaption v-if="caption">
-			<k-writer
-				:disabled="disabled"
-				:inline="true"
-				:marks="captionMarks"
-				:value="caption"
-				@input="$emit('update', { caption: $event })"
-			/>
-		</figcaption>
+
+		<k-block-figure-caption
+			v-if="caption"
+			:disabled="disabled"
+			:marks="captionMarks"
+			:value="caption"
+			@input="$emit('update', { caption: $event })"
+		/>
 	</figure>
 </template>
 
@@ -32,6 +35,7 @@
 export default {
 	inheritAttrs: false,
 	props: {
+		back: String,
 		caption: String,
 		captionMarks: {
 			default: true,
@@ -47,6 +51,10 @@ export default {
 </script>
 
 <style>
+.k-block-figure:not([data-empty="true"]) {
+	--block-figure-back: var(--color-white);
+	background: var(--block-figure-back);
+}
 .k-block-figure-container:not([data-disabled="true"]) {
 	cursor: pointer;
 }
