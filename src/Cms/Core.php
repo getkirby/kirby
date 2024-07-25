@@ -276,6 +276,14 @@ class Core
 	}
 
 	/**
+	 * Returns a map of all default file preview handlers
+	 */
+	public function filePreviews(): array
+	{
+		return [];
+	}
+
+	/**
 	 * Returns a map of all kirbytag aliases
 	 */
 	public function kirbyTagAliases(): array
