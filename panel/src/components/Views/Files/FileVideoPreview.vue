@@ -18,10 +18,6 @@ export default {
 			default: () => [],
 			type: Array
 		},
-		image: {
-			default: () => ({}),
-			type: Object
-		},
 		url: String
 	},
 	computed: {

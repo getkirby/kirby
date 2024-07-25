@@ -10,7 +10,12 @@
 					style="color: var(--color-gray-500)"
 					@click="$refs.dropdown.toggle()"
 				/>
-				<k-dropdown-content ref="dropdown" :options="options" theme="light" />
+				<k-dropdown-content
+					ref="dropdown"
+					:options="options"
+					theme="light"
+					@action="$emit('action', $event)"
+				/>
 			</template>
 		</div>
 	</div>

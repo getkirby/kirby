@@ -1,5 +1,5 @@
 <template>
-	<component :is="availableComponent" v-bind="props" class="k-file-preview" />
+	<component :is="preview" v-bind="props" class="k-file-preview" />
 </template>
 
 <script>
@@ -13,7 +13,7 @@ export default {
 		props: Object
 	},
 	computed: {
-		availableComponent() {
+		preview() {
 			if (this.$helper.isComponent(this.component)) {
 				return this.component;
 			}

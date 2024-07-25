@@ -305,8 +305,10 @@ trait AppPlugins
 	protected function extendFilePreviews(array $previews): array
 	{
 		return $this->extensions['filePreviews'] = [
+			...$previews,
+			// make sure new previews go first, so that custom
+			// handler can override core default previews
 			...$this->extensions['filePreviews'],
-			...$previews
 		];
 	}
 
@@ -829,6 +831,7 @@ trait AppPlugins
 		$this->extendBlueprints($this->core->blueprints());
 		$this->extendFieldMethods($this->core->fieldMethods());
 		$this->extendFields($this->core->fields());
+		$this->extendFilePreviews($this->core->filePreviews());
 		$this->extendSections($this->core->sections());
 		$this->extendSnippets($this->core->snippets());
 		$this->extendTags($this->core->kirbyTags());

@@ -1,6 +1,6 @@
 <template>
-	<div :data-has-focus="Boolean(focus)" class="k-file-image-preview">
-		<k-file-preview-thumb>
+	<div :data-has-focus="hasFocus" class="k-file-image-preview">
+		<k-file-preview-thumb :options="options">
 			<k-coords-input
 				:disabled="!focusable"
 				:value="focus"
@@ -23,10 +23,12 @@
 						variant="filled"
 						@click="focus ? setFocus(undefined) : setFocus({ x: 50, y: 50 })"
 					>
-						<template v-if="focus">{{ focus.x }}% {{ focus.y }}%</template>
+						<template v-if="hasFocus">{{ focus.x }}% {{ focus.y }}%</template>
 						<template v-else>{{ $t("file.focus.placeholder") }}</template>
 					</k-button>
-					<template v-else-if="focus"> {{ focus.x }}% {{ focus.y }}% </template>
+					<template v-else-if="hasFocus">
+						{{ focus.x }}% {{ focus.y }}%
+					</template>
 					<template v-else>–</template>
 				</dd>
 			</div>
@@ -55,7 +57,7 @@ export default {
 	emits: ["focus"],
 	computed: {
 		focus() {
-			const focus = this.$store.getters["content/values"]()["focus"];
+			const focus = this.$panel.content.values["focus"];
 
 			if (!focus) {
 				return;
@@ -64,6 +66,9 @@ export default {
 			const [x, y] = focus.replaceAll("%", "").split(" ");
 
 			return { x: parseFloat(x), y: parseFloat(y) };
+		},
+		hasFocus() {
+			return Boolean(this.focus);
 		},
 		options() {
 			return [
@@ -76,14 +81,14 @@ export default {
 				{
 					icon: "cancel",
 					text: this.$t("file.focus.reset"),
-					click: () => this.$refs.focus.reset(),
-					when: this.focusable && this.focus
+					click: () => this.setFocus(undefined),
+					when: this.focusable && this.hasFocus
 				},
 				{
 					icon: "preview",
 					text: this.$t("file.focus.placeholder"),
-					click: () => this.$refs.focus.set(),
-					when: this.focusable && !this.focus
+					click: () => this.setFocus({ x: 50, y: 50 }),
+					when: this.focusable && !this.hasFocus
 				}
 			];
 		}
@@ -96,7 +101,7 @@ export default {
 				focus = `${focus.x.toFixed(1)}% ${focus.y.toFixed(1)}%`;
 			}
 
-			this.$store.dispatch("content/update", ["focus", focus]);
+			this.$panel.content.set({ focus });
 		}
 	}
 };

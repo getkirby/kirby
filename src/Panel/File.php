@@ -6,6 +6,7 @@ use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
 use Kirby\Panel\Ui\Buttons\ViewButtons;
+use Kirby\Panel\Ui\FilePreview;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Throwable;
@@ -389,75 +390,6 @@ class File extends Model
 	}
 
 	/**
-	 * Returns the data for the file preview component
-	 * @since 5.0.0
-	 */
-	public function preview(): array
-	{
-		$file    = $this->model;
-		$preview = [
-			'component' => 'k-file-' . $file->type() . '-preview',
-			'props' => [
-				'url'     => $url = $file->previewUrl(),
-				'details' => [
-					[
-						'title' => I18n::translate('template'),
-						'text'  => $file->template() ?? '—'
-					],
-					[
-						'title' => I18n::translate('mime'),
-						'text'  => $file->mime()
-					],
-					[
-						'title' => I18n::translate('url'),
-						'text'  => $file->id(),
-						'link'  => $url
-					],
-					[
-						'title' => I18n::translate('size'),
-						'text'  => $file->niceSize()
-					],
-				],
-				'image' => $this->image([
-					'back'  => 'transparent',
-					'ratio' => '1/1'
-				], 'cards')
-			]
-		];
-
-		// additional props for default image preview
-		if ($file->type() === 'image') {
-			$preview['props'] = array_merge_recursive($preview['props'], [
-				'focusable' => $file->panel()->isFocusable(),
-				'details'   => [
-					[
-						'title' => I18n::translate('dimensions'),
-						'text'  => $file->dimensions() . ' ' . I18n::translate('pixel')
-					],
-					[
-						'title' => I18n::translate('orientation'),
-						'text'  => I18n::translate('orientation.' . $file->dimensions()->orientation())
-					]
-				],
-			]);
-		}
-
-		// apply custom preview data providers from plugins
-		$extensions = $this->model->kirby()->extensions('filePreviews');
-
-		foreach ($extensions as $extension) {
-			if ($custom = $extension($file)) {
-				// if an extension claims to handle this file's preview,
-				// overwrite the component (if provided) and extend the props
-				$preview = A::merge($preview, $custom);
-				break;
-			}
-		}
-
-		return $preview;
-	}
-
-	/**
 	 * Returns the data array for the
 	 * view's component props
 	 * @internal
@@ -486,7 +418,7 @@ class File extends Model
 				'url'        => $file->url(),
 				'uuid'       => fn () => $file->uuid()?->toString(),
 			],
-			'preview' => $this->preview()
+			'preview' => FilePreview::factory($this->model)->render()
 		];
 	}
 
