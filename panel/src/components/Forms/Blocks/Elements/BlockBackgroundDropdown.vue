@@ -18,8 +18,7 @@
 					value: 'pattern',
 					click: 'var(--pattern-light)'
 				},
-				{ text: 'Pattern (dark)', value: 'pattern', click: 'var(--pattern)' },
-				{ text: 'Dark', value: 'dark', click: 'var(--color-dark)' }
+				{ text: 'Pattern (dark)', value: 'pattern', click: 'var(--pattern)' }
 			]"
 			@action="$emit('input', $event)"
 		/>
