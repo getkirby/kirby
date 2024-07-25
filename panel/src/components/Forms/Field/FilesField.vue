@@ -26,7 +26,11 @@ export default {
 		emptyProps() {
 			return {
 				icon: "image",
-				text: this.empty ?? this.$t("field.files.empty")
+				text:
+					this.empty ??
+					(this.multiple && this.max !== 1
+						? this.$t("field.files.empty")
+						: this.$t("field.files.empty.single"))
 			};
 		},
 		hasDropzone() {

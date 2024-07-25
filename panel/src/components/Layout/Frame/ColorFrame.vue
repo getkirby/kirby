@@ -2,7 +2,7 @@
 	<k-frame
 		v-bind="$props"
 		:class="['k-color-frame', $attrs.class]"
-		:style="{ color, ...$attrs.style }"
+		:style="{ '--color-frame-back': color, ...$attrs.style }"
 	>
 		<slot />
 	</k-frame>
@@ -32,6 +32,7 @@ export default {
 
 <style>
 :root {
+	--color-frame-back: none;
 	--color-frame-rounded: var(--rounded);
 	--color-frame-size: 100%;
 	--color-frame-darkness: 0%;
@@ -49,7 +50,7 @@ export default {
 	box-shadow: 0 0 0 1px inset hsla(0, 0%, var(--color-frame-darkness), 0.175);
 	position: absolute;
 	inset: 0;
-	background-color: currentColor;
+	background: var(--color-frame-back);
 	content: "";
 }
 </style>
