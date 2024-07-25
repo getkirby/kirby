@@ -242,7 +242,7 @@ class File implements Stringable
 
 	/**
 	 * Checks if a preview can be displayed for the file
-	 * in the panel or in the frontend
+	 * in the Panel or in the frontend
 	 */
 	public function isViewable(): bool
 	{
