@@ -12,13 +12,12 @@
 			ref="dropdown"
 			align-x="end"
 			:options="[
-				{ text: 'White', value: 'white', click: 'var(--color-white)' },
+				{ text: 'White', click: 'var(--color-white)' },
 				{
 					text: 'Pattern (light)',
-					value: 'pattern',
 					click: 'var(--pattern-light)'
 				},
-				{ text: 'Pattern (dark)', value: 'pattern', click: 'var(--pattern)' }
+				{ text: 'Pattern (dark)', click: 'var(--pattern)' }
 			]"
 			@action="$emit('input', $event)"
 		/>
