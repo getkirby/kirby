@@ -2,6 +2,7 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
+use Kirby\Panel\Ui\Buttons\ViewButtons;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 
@@ -68,11 +69,10 @@ return [
 					]
 				],
 				'props'      => [
-					'buttons' => $kirby->option('panel.viewButtons.language', [
-						'preview',
-						'settings',
-						'remove'
-					]),
+					'buttons' => fn () =>
+						ViewButtons::view('language')
+							->defaults('preview', 'settings', 'remove')
+							->render(['language' => $language]),
 					'deletable'    => $language->isDeletable(),
 					'code'         => Escape::html($language->code()),
 					'default'      => $language->isDefault(),
@@ -113,9 +113,10 @@ return [
 			return [
 				'component' => 'k-languages-view',
 				'props'     => [
-					'buttons' => $kirby->option('panel.viewButtons.languages', [
-						'add'
-					]),
+					'buttons' => fn () =>
+						ViewButtons::view('languages')
+							->defaults('add')
+							->render(),
 					'languages' => $kirby->languages()->values(fn ($language) => [
 						'deletable' => $language->isDeletable(),
 						'default'   => $language->isDefault(),

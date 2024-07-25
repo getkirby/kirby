@@ -1,6 +1,5 @@
 <template>
 	<k-view-button
-		v-if="$panel.view.id === 'account'"
 		:icon="current === 'light' ? 'sun' : 'moon'"
 		:options="options"
 		:text="$t('theme')"

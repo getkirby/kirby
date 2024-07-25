@@ -5,6 +5,7 @@ namespace Kirby\Panel;
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
+use Kirby\Panel\Ui\Buttons\ViewButtons;
 use Kirby\Toolkit\I18n;
 use Throwable;
 
@@ -70,13 +71,11 @@ class File extends Model
 	 */
 	public function buttons(): array
 	{
-		return
-			$this->model->blueprint()->buttons() ??
-			$this->model->kirby()->option('panel.viewButtons.file', [
-				'preview',
-				'settings',
-				'languages'
-			]);
+		return ViewButtons::view($this)->defaults(
+			'preview',
+			'settings',
+			'languages'
+		)->render(['file' => $this->model()]);
 	}
 
 	/**

@@ -2,6 +2,7 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
+use Kirby\Panel\Ui\Buttons\ViewButtons;
 use Kirby\Toolkit\Escape;
 
 return [
@@ -18,9 +19,10 @@ return [
 			return [
 				'component' => 'k-users-view',
 				'props'     => [
-					'buttons' => $kirby->option('panel.viewButtons.users', [
-						'add'
-					]),
+					'buttons' => fn () =>
+						ViewButtons::view('users')
+							->defaults('add')
+							->render(['role' => $role]),
 					'role' => function () use ($roles, $role) {
 						if ($role) {
 							return $roles[$role] ?? null;

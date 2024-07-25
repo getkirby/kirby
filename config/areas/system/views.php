@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\App;
+use Kirby\Panel\Ui\Buttons\ViewButtons;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -87,7 +88,8 @@ return [
 			return [
 				'component' => 'k-system-view',
 				'props'     => [
-					'buttons'     => $kirby->option('panel.viewButtons.system', []),
+					'buttons'     => fn () =>
+						ViewButtons::view('system')->render(),
 					'environment' => $environment,
 					'exceptions'  => $kirby->option('debug') === true ? $exceptions : [],
 					'info'        => $system->info(),
