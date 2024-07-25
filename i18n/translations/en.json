@@ -350,6 +350,7 @@
 	"field.structure.empty": "No entries yet",
 
 	"field.users.empty": "No users selected yet",
+	"field.users.empty.single": "No user selected yet",
 
 	"fields.empty": "No fields yet",
 
