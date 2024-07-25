@@ -331,6 +331,7 @@
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
 	"field.files.empty": "No files selected yet",
+	"field.files.empty.single": "No file selected yet",
 
 	"field.layout.change": "Change layout",
 	"field.layout.delete": "Delete layout",
@@ -342,12 +343,14 @@
 	"field.object.empty": "No information yet",
 
 	"field.pages.empty": "No pages selected yet",
+	"field.pages.empty.single": "No page selected yet",
 
 	"field.structure.delete.confirm": "Do you really want to delete this row?",
 	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
 	"field.structure.empty": "No entries yet",
 
 	"field.users.empty": "No users selected yet",
+	"field.users.empty.single": "No user selected yet",
 
 	"fields.empty": "No fields yet",
 
