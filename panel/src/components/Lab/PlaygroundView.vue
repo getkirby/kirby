@@ -7,24 +7,7 @@
 			{{ title }}
 
 			<template #buttons>
-				<k-button-group v-if="docs || github">
-					<k-button
-						v-if="docs"
-						:text="docs"
-						icon="book"
-						size="sm"
-						variant="filled"
-						@click="openDocs"
-					/>
-					<k-button
-						v-if="github"
-						:link="github"
-						icon="github"
-						size="sm"
-						target="_blank"
-						variant="filled"
-					/>
-				</k-button-group>
+				<k-view-buttons :buttons="buttons" />
 			</template>
 		</k-header>
 		<k-tabs :tab="tab" :tabs="tabs" />
@@ -56,6 +39,7 @@ Vue.component("k-lab-table-cell", TableCell);
 
 export default {
 	props: {
+		buttons: Array,
 		docs: String,
 		examples: [Object, Array],
 		file: String,
@@ -107,9 +91,6 @@ export default {
 
 			// update the code strings for each example
 			window.UiExamples = this.examples;
-		},
-		openDocs() {
-			this.$panel.drawer.open(`lab/docs/${this.docs}`);
 		},
 		async reloadComponent() {
 			await this.$panel.view.refresh();

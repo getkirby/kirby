@@ -72,14 +72,36 @@ return [
 
 			$docs = new Docs($component);
 
+			// header buttons
+			$buttons = [];
+
+			if ($lab = $docs->lab()) {
+				$buttons[] = [
+					'props' => [
+						'text' => 'Lab examples',
+						'icon' => 'lab',
+						'link' => '/lab/' . $lab
+					]
+				];
+			}
+
+			$buttons[] = [
+				'props' => [
+					'icon'   => 'github',
+					'link'   => $docs->github(),
+					'target' => '_blank'
+				]
+			];
+
 			return [
 				'component'  => 'k-lab-docs-view',
 				'title'      => $component,
 				'breadcrumb' => $crumbs,
 				'props'      => [
+					'buttons'   => $buttons,
 					'component' => $component,
 					'docs'      => $docs->toArray(),
-					'lab'       => $docs->lab()
+					'lab'       => $lab
 				]
 			];
 		}
@@ -126,6 +148,29 @@ return [
 				$github ??= 'https://github.com/getkirby/kirby/tree/main/' . $source;
 			}
 
+			// header buttons
+			$buttons = [];
+
+			if ($docs) {
+				$buttons[] = [
+					'props' => [
+						'text'   => $docs->name(),
+						'icon'   => 'book',
+						'drawer' => 'lab/docs/' . $docs->name()
+					]
+				];
+			}
+
+			if ($github) {
+				$buttons[] = [
+					'props' => [
+						'icon'   => 'github',
+						'link'   => $github,
+						'target' => '_blank'
+					]
+				];
+			}
+
 			return [
 				'component' => 'k-lab-playground-view',
 				'breadcrumb' => [
@@ -138,6 +183,7 @@ return [
 					]
 				],
 				'props' => [
+					'buttons'  => $buttons,
 					'docs'     => $docs?->name(),
 					'examples' => $vue['examples'],
 					'file'     => $example->module(),
