@@ -52,7 +52,7 @@ class Page extends Model
 			'languages',
 			'status'
 		)->bind(['page' => $this->model()])
-		->render();
+			->render();
 	}
 
 	/**

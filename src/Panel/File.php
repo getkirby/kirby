@@ -76,7 +76,7 @@ class File extends Model
 			'settings',
 			'languages'
 		)->bind(['file' => $this->model()])
-		->render();
+			->render();
 	}
 
 	/**

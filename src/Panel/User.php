@@ -51,7 +51,7 @@ class User extends Model
 			'settings',
 			'languages'
 		)->bind(['user' => $this->model()])
-		->render();
+			->render();
 	}
 
 	/**

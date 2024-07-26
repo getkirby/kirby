@@ -34,7 +34,7 @@ class Site extends Model
 			'preview',
 			'languages'
 		)->bind(['site' => $this->model()])
-		->render();
+			->render();
 	}
 
 	/**
