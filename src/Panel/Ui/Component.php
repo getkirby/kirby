@@ -19,6 +19,8 @@ use Kirby\Toolkit\Str;
  */
 abstract class Component
 {
+	protected string $key;
+
 	public function __construct(
 		public string $component,
 		public string|null $class = null,
@@ -50,6 +52,15 @@ abstract class Component
 	}
 
 	/**
+	 * Returns a (unique) key that can be used
+	 * for Vue's `:key` attribute
+	 */
+	public function key(): string
+	{
+		return $this->key ??= Str::random(10, 'alphaNum');
+	}
+
+	/**
 	 * Returns the props that will be passed to the Vue component
 	 */
 	public function props(): array
@@ -67,7 +78,7 @@ abstract class Component
 	{
 		return [
 			'component' => $this->component,
-			'key'       => Str::random(10, 'alphaNum'),
+			'key'       => $this->key(),
 			'props'     => array_filter($this->props())
 		];
 	}

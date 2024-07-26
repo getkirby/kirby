@@ -20,7 +20,7 @@ class ComponentTest extends TestCase
 	 */
 	public function testGetterSetter()
 	{
-		$component = new UiComponent(component: 'k-foo');
+		$component = new UiComponent(component: 'k-test');
 
 		$this->assertNull($component->class);
 		$this->assertNull($component->class());
@@ -35,11 +35,21 @@ class ComponentTest extends TestCase
 	public function testGetterSetterInvalid()
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The property "foo" does not exist on the UI component "k-foo"');
-		$component = new UiComponent(component: 'k-foo');
+		$this->expectExceptionMessage('The property "foo" does not exist on the UI component "k-test"');
+		$component = new UiComponent(component: 'k-test');
 		$component->foo('my-class');
 	}
 
+	/**
+	 * @covers ::key
+	 */
+	public function testKey()
+	{
+		$component = new UiComponent(component: 'k-test');
+
+		$this->assertIsString($component->key());
+		$this->assertSame($component->render()['key'], $component->key());
+	}
 
 	/**
 	 * @covers ::props
@@ -47,7 +57,7 @@ class ComponentTest extends TestCase
 	public function testProps()
 	{
 		$component = new UiComponent(
-			component: 'k-foo',
+			component: 'k-test',
 			class: 'my-class'
 		);
 
@@ -63,12 +73,12 @@ class ComponentTest extends TestCase
 	public function testRender()
 	{
 		$component = new UiComponent(
-			component: 'k-foo',
+			component: 'k-test',
 			class: 'my-class'
 		);
 
 		$result = $component->render();
-		$this->assertSame('k-foo', $result['component']);
+		$this->assertSame('k-test', $result['component']);
 		$this->assertIsString($result['key']);
 		$this->assertSame(['class' => 'my-class'], $result['props']);
 	}
