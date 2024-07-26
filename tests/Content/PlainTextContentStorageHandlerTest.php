@@ -10,6 +10,7 @@ use Kirby\Data\Data;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 
 /**
  * @coversDefaultClass Kirby\Content\PlainTextContentStorageHandler
@@ -178,6 +179,90 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		$this->assertDirectoryExists($this->model->root());
 	}
 
+	public function testExistsForFile()
+	{
+		$this->setUpSingleLanguage([
+			'children' => [
+				[
+					'slug'  => 'test',
+					'files' => [
+						[
+							'filename' => 'test.jpg'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->model   = $this->app->file('test/test.jpg');
+		$this->storage = $this->model->storage();
+
+		// the file does not exist on disk, which also indicates that the version does not exist yet
+		$this->assertFalse($this->storage->exists(VersionId::published(), Language::single()));
+
+		// create a dummy file to pretend it exists
+		F::write($this->model->root(), '');
+
+		$this->assertTrue($this->storage->exists(VersionId::published(), Language::single()));
+	}
+
+	public function testExistsForPage()
+	{
+		$this->setUpSingleLanguage();
+
+		// remove the page folder after the setUp method to check for non-existing storage
+		Dir::remove($this->model->root());
+
+		// the page does not exist on disk, which also indicates that the version does not exist yet
+		$this->assertFalse($this->storage->exists(VersionId::published(), Language::single()));
+
+		// create a dummy folder to pretend it exists
+		Dir::make($this->model->root());
+
+		$this->assertTrue($this->storage->exists(VersionId::published(), Language::single()));
+	}
+
+	public function testExistsForSite()
+	{
+		$this->setUpSingleLanguage();
+
+		$this->model   = $this->app->site();
+		$this->storage = $this->model->storage();
+
+		// remove the content folder after the setUp method to check for non-existing storage
+		Dir::remove($this->model->root());
+
+		// the content folder does not exist on disk, which also indicates that the version does not exist yet
+		$this->assertFalse($this->storage->exists(VersionId::published(), Language::single()));
+
+		// create a dummy content folder to pretend it exists
+		Dir::make($this->model->root());
+
+		$this->assertTrue($this->storage->exists(VersionId::published(), Language::single()));
+	}
+
+	public function testExistsForUser()
+	{
+		$this->setUpSingleLanguage();
+
+		$this->app = $this->app->clone([
+			'users' => [
+				['id' => 'test']
+			]
+		]);
+
+		$this->model   = $this->app->user('test');
+		$this->storage = $this->model->storage();
+
+		// the account folder does not exist on disk, which also indicates that the version does not exist yet
+		$this->assertFalse($this->storage->exists(VersionId::published(), Language::single()));
+
+		// create a dummy account folder to pretend it exists
+		Dir::make($this->model->root());
+
+		$this->assertTrue($this->storage->exists(VersionId::published(), Language::single()));
+	}
+
 	/**
 	 * @covers ::exists
 	 */
@@ -283,6 +368,85 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		Data::write($this->model->root() . '/_changes/article.txt', $fields);
 
 		$this->assertSame($fields, $this->storage->read(VersionId::changes(), Language::single()));
+	}
+
+	/**
+	 * @covers ::read
+	 */
+	public function testReadDefaultsForFile()
+	{
+		$this->setUpSingleLanguage([
+			'children' => [
+				[
+					'slug'  => 'test',
+					'files' => [
+						[
+							'filename' => 'test.jpg'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->model   = $this->app->file('test/test.jpg');
+		$this->storage = $this->model->storage();
+
+		// create a dummy file to pretend it exists
+		F::write($this->model->root(), '');
+
+		$this->assertSame([], $this->storage->read(VersionId::published(), Language::single()));
+	}
+
+	/**
+	 * @covers ::read
+	 */
+	public function testReadDefaultsForPage()
+	{
+		$this->setUpSingleLanguage();
+
+		$expected = [
+			'title' => 'a-page'
+		];
+
+		$this->assertSame($expected, $this->storage->read(VersionId::published(), Language::single()));
+	}
+
+	/**
+	 * @covers ::read
+	 */
+	public function testReadDefaultsForSite()
+	{
+		$this->setUpSingleLanguage();
+
+		$this->model   = $this->app->site();
+		$this->storage = $this->model->storage();
+
+		// create a dummy content folder to pretend it exists
+		Dir::make($this->model->root());
+
+		$this->assertSame([], $this->storage->read(VersionId::published(), Language::single()));
+	}
+
+	/**
+	 * @covers ::read
+	 */
+	public function testReadDefaultsForUser()
+	{
+		$this->setUpSingleLanguage();
+
+		$this->app = $this->app->clone([
+			'users' => [
+				['id' => 'test']
+			]
+		]);
+
+		$this->model   = $this->app->user('test');
+		$this->storage = $this->model->storage();
+
+		// create a dummy account folder to pretend it exists
+		Dir::make($this->model->root());
+
+		$this->assertSame([], $this->storage->read(VersionId::published(), Language::single()));
 	}
 
 	/**

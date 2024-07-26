@@ -176,7 +176,28 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 	 */
 	public function exists(VersionId $versionId, Language $language): bool
 	{
-		return is_file($this->contentFile($versionId, $language)) === true;
+		/**
+		 * The non-default version or non-default language version only exists if
+		 * there's actually a text file for it.
+		 */
+		if (VersionId::default($this->model)->is($versionId) === false || $language->isDefault() === false) {
+			return file_exists($this->contentFile($versionId, $language)) === true;
+		}
+
+		/**
+		 * If the default version exists, depends on different cases for each model.
+		 * Page, Site and User exist as soon as the folder is there. A File exists as
+		 * soon as the file is there.
+		 */
+		return match (true) {
+			$this->model instanceof File => is_file($this->model->root()) === true,
+			$this->model instanceof Page,
+			$this->model instanceof Site,
+			$this->model instanceof User => is_dir($this->model->root()) === true,
+			// @codeCoverageIgnoreStart
+			default => throw new LogicException('Cannot determine existance for model type "' . $this->model::CLASS_ALIAS . '"')
+			// @codeCoverageIgnoreEnd
+		};
 	}
 
 	/**
@@ -218,7 +239,25 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 	public function read(VersionId $versionId, Language $language): array
 	{
 		$this->ensure($versionId, $language);
-		return Data::read($this->contentFile($versionId, $language));
+
+		/**
+		 * Read from the content file if it exists
+		 */
+		$contentFile = $this->contentFile($versionId, $language);
+
+		if (file_exists($contentFile) === true) {
+			return Data::read($contentFile);
+		}
+
+		/**
+		 * Provide default content for each model type
+		 */
+		return match (true) {
+			$this->model instanceof Page => [
+				'title' => $this->model->slug()
+			],
+			default => []
+		};
 	}
 
 	/**
