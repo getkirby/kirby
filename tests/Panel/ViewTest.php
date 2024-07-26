@@ -6,6 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
+use Kirby\Panel\Ui\View as UiView;
 use Kirby\TestCase;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
@@ -570,6 +571,25 @@ class ViewTest extends TestCase
 
 		$this->assertSame('application/json', $response->type());
 		$this->assertSame('true', $response->header('X-Fiber'));
+	}
+
+	/**
+	 * @covers ::response
+	 */
+	public function testResponseForUiView()
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'_json' => true
+				]
+			]
+		]);
+
+		$view = new UiView(id: 'test');
+		$response = View::response($view);
+
+		$this->assertSame('k-test-view', json_decode($response->body(), true)['$view']['component']);
 	}
 
 	/**

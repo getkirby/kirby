@@ -6,6 +6,7 @@ use Kirby\Api\Upload;
 use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Http\Response;
+use Kirby\Panel\Ui\View as UiView;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -314,8 +315,12 @@ class View
 			return Response::redirect($data->location(), $data->code());
 		}
 
+		// handle UI view objects
+		if ($data instanceof UiView) {
+			$data = $data->render();
+
 		// handle Kirby exceptions
-		if ($data instanceof Exception) {
+		} elseif ($data instanceof Exception) {
 			$data = static::error($data->getMessage(), $data->getHttpCode());
 
 		// handle regular exceptions
