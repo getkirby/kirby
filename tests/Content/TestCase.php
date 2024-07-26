@@ -37,14 +37,14 @@ class TestCase extends BaseTestCase
 			'.txt';
 	}
 
-	public function createContentMultiLanguage(): array
+	public function createContentMultiLanguage(VersionId|null $versionId = null): array
 	{
-		Data::write($fileEN = $this->contentFile('en'), $contentEN = [
+		Data::write($fileEN = $this->contentFile('en', $versionId), $contentEN = [
 			'title'    => 'Title English',
 			'subtitle' => 'Subtitle English'
 		]);
 
-		Data::write($fileDE = $this->contentFile('de'), $contentDE = [
+		Data::write($fileDE = $this->contentFile('de', $versionId), $contentDE = [
 			'title'    => 'Title Deutsch',
 			'subtitle' => 'Subtitle Deutsch'
 		]);
@@ -61,9 +61,9 @@ class TestCase extends BaseTestCase
 		];
 	}
 
-	public function createContentSingleLanguage(): array
+	public function createContentSingleLanguage(VersionId|null $versionId = null): array
 	{
-		Data::write($file = $this->contentFile(), $content = [
+		Data::write($file = $this->contentFile(null, $versionId), $content = [
 			'title'    => 'Title',
 			'subtitle' => 'Subtitle'
 		]);
@@ -112,7 +112,7 @@ class TestCase extends BaseTestCase
 			]
 		);
 
-		$this->model = $this->app->page('a-page');
+		$this->model = $this->app->site()->children()->first();
 
 		Dir::make($this->model->root());
 	}
