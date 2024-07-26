@@ -165,25 +165,27 @@ class TranslationTest extends TestCase
 	{
 		$this->setUpMultiLanguage();
 
+		$versionId = VersionId::changes();
+
 		$translationEN = new Translation(
 			model: $this->model,
-			version: $this->model->version(),
+			version: $this->model->version($versionId),
 			language: Language::ensure('en')
 		);
 
 		$translationDE = new Translation(
 			model: $this->model,
-			version: $this->model->version(),
+			version: $this->model->version($versionId),
 			language: Language::ensure('de')
 		);
 
-		$this->assertFalse($translationEN->version()->exists());
-		$this->assertFalse($translationDE->version()->exists());
+		$this->assertFalse($translationEN->version($versionId)->exists());
+		$this->assertFalse($translationDE->version($versionId)->exists());
 
-		$this->createContentMultiLanguage();
+		$this->createContentMultiLanguage($versionId);
 
-		$this->assertTrue($translationEN->version()->exists());
-		$this->assertTrue($translationDE->version()->exists());
+		$this->assertTrue($translationEN->version($versionId)->exists());
+		$this->assertTrue($translationDE->version($versionId)->exists());
 	}
 
 	/**
@@ -193,17 +195,19 @@ class TranslationTest extends TestCase
 	{
 		$this->setUpSingleLanguage();
 
+		$versionId = VersionId::changes();
+
 		$translation = new Translation(
 			model: $this->model,
-			version: $this->model->version(),
+			version: $this->model->version($versionId),
 			language: Language::single()
 		);
 
-		$this->assertFalse($translation->version()->exists());
+		$this->assertFalse($translation->version($versionId)->exists());
 
-		$this->createContentSingleLanguage();
+		$this->createContentSingleLanguage($versionId);
 
-		$this->assertTrue($translation->version()->exists());
+		$this->assertTrue($translation->version($versionId)->exists());
 	}
 
 	/**

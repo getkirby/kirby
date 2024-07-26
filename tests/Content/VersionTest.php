@@ -314,11 +314,11 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::changes()
 		);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Version "published (de)" does not already exist');
+		$this->expectExceptionMessage('Version "changes (de)" does not already exist');
 
 		$version->ensure('de');
 	}
@@ -332,11 +332,11 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::changes()
 		);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Version "published" does not already exist');
+		$this->expectExceptionMessage('Version "changes" does not already exist');
 
 		$version->ensure();
 	}
@@ -368,7 +368,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: $versionId = VersionId::changes()
 		);
 
 		$this->assertFalse($version->exists('en'));
@@ -377,7 +377,7 @@ class VersionTest extends TestCase
 		$this->assertFalse($version->exists('de'));
 		$this->assertFalse($version->exists($this->app->language('de')));
 
-		$this->createContentMultiLanguage();
+		$this->createContentMultiLanguage($versionId);
 
 		$this->assertTrue($version->exists('en'));
 		$this->assertTrue($version->exists($this->app->language('en')));
@@ -395,12 +395,12 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: $versionId = VersionId::changes()
 		);
 
 		$this->assertFalse($version->exists());
 
-		$this->createContentSingleLanguage();
+		$this->createContentSingleLanguage($versionId);
 
 		$this->assertTrue($version->exists());
 	}
@@ -692,7 +692,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::changes()
 		);
 
 		$this->assertFileDoesNotExist($this->contentFile());
