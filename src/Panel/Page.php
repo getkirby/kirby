@@ -51,7 +51,8 @@ class Page extends Model
 			'settings',
 			'languages',
 			'status'
-		)->render(['page' => $this->model()]);
+		)->bind(['page' => $this->model()])
+		->render();
 	}
 
 	/**

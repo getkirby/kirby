@@ -72,7 +72,8 @@ return [
 					'buttons' => fn () =>
 						ViewButtons::view('language')
 							->defaults('preview', 'settings', 'remove')
-							->render(['language' => $language]),
+							->bind(['language' => $language])
+							->render(),
 					'deletable'    => $language->isDeletable(),
 					'code'         => Escape::html($language->code()),
 					'default'      => $language->isDefault(),

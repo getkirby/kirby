@@ -22,7 +22,8 @@ return [
 					'buttons' => fn () =>
 						ViewButtons::view('users')
 							->defaults('add')
-							->render(['role' => $role]),
+							->bind(['role' => $role])
+							->render(),
 					'role' => function () use ($roles, $role) {
 						if ($role) {
 							return $roles[$role] ?? null;

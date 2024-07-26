@@ -49,6 +49,22 @@ class ViewButtonsTest extends AreaTestCase
 	}
 
 	/**
+	 * @covers ::bind
+	 */
+	public function testBind()
+	{
+		$buttons = new ViewButtons('foo');
+		$this->assertSame([], $buttons->data);
+
+		$buttons = new ViewButtons('foo', data: ['foo' => 'bar']);
+		$this->assertSame(['foo' => 'bar'], $buttons->data);
+
+		$buttons = new ViewButtons('foo', data: ['foo' => 'bar']);
+		$buttons->bind(['homer' => 'simpson']);
+		$this->assertSame(['foo' => 'bar', 'homer' => 'simpson'], $buttons->data);
+	}
+
+	/**
 	 * @covers ::defaults
 	 */
 	public function testDefaults()

@@ -75,7 +75,8 @@ class File extends Model
 			'preview',
 			'settings',
 			'languages'
-		)->render(['file' => $this->model()]);
+		)->bind(['file' => $this->model()])
+		->render();
 	}
 
 	/**

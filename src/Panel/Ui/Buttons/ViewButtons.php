@@ -21,12 +21,25 @@ class ViewButtons
 {
 	public function __construct(
 		public readonly string $view,
-		public array|null $buttons = null
+		public array|null $buttons = null,
+		public array $data = []
 	) {
 		$this->buttons ??= App::instance()->option(
 			'panel.viewButtons.' . $view
 		);
 	}
+
+	/**
+	 * Adds data passed to view button closures
+	 *
+	 * @return $this
+	 */
+	public function bind(array $data): static
+	{
+		$this->data = [...$this->data, ...$data];
+		return $this;
+	}
+
 
 	/**
 	 * Sets the default buttons
@@ -42,12 +55,16 @@ class ViewButtons
 	/**
 	 * Returns array of button component-props definitions
 	 */
-	public function render(array $args = []): array
+	public function render(): array
 	{
 		$buttons = A::map(
 			$this->buttons ?? [],
 			fn ($button) =>
-				ViewButton::factory($button, $this->view, $args)?->render()
+				ViewButton::factory(
+					$button,
+					$this->view,
+					$this->data
+				)?->render()
 		);
 
 		return array_values(array_filter($buttons));

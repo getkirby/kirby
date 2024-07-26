@@ -55,14 +55,14 @@ class ViewButton extends Button
 	public static function factory(
 		string|array|Closure $button,
 		string|null $view = null,
-		array $args = []
+		array $data = []
 	): static|null {
 		// referenced by name
 		if (is_string($button) === true) {
 			$button = static::find($button, $view);
 		}
 
-		$button = static::resolve($button, $args);
+		$button = static::resolve($button, $data);
 
 		if (
 			$button === null ||
@@ -139,7 +139,7 @@ class ViewButton extends Button
 	 */
 	public static function resolve(
 		Closure|array $button,
-		array $args = []
+		array $data = []
 	): static|array|null {
 		if ($button instanceof Closure) {
 			$kirby      = App::instance();
@@ -148,7 +148,7 @@ class ViewButton extends Button
 				'kirby' => $kirby,
 				'site'  => $kirby->site(),
 				'user'  => $kirby->user(),
-				...$args
+				...$data
 			]);
 		}
 
