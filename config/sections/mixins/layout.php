@@ -22,6 +22,14 @@ return [
 			return in_array($layout, $layouts) ? $layout : 'list';
 		},
 		/**
+		 * Whether the raw content file values should be used for the table column previews. Should not be used unless it eases performance issues in your setup introduced with Kirby 4.2
+		 *
+		 * @todo remove when Form classes have been refactored
+		 */
+		'rawvalues' => function (bool $rawvalues = false) {
+			return $rawvalues;
+		},
+		/**
 		 * The size option controls the size of cards. By default cards are auto-sized and the cards grid will always fill the full width. With a size you can disable auto-sizing. Available sizes: `tiny`, `small`, `medium`, `large`, `huge`, `full`
 		 */
 		'size' => function (string $size = 'auto') {
@@ -133,8 +141,10 @@ return [
 				$item['info'] = $model->toString($this->info);
 			}
 
-			// Use form to get the proper values for the columns
-			$form = Form::for($model)->values();
+			if ($this->rawvalues !== true) {
+				// Use form to get the proper values for the columns
+				$form = Form::for($model)->values();
+			}
 
 			foreach ($this->columns as $columnName => $column) {
 				$item[$columnName] = match (empty($column['value'])) {
@@ -144,8 +154,10 @@ return [
 					// but don't overwrite columns
 					default =>
 						$item[$columnName] ??
-						$form[$column['id'] ?? $columnName] ??
-						null,
+						match ($this->rawvalues) {
+							true    => $model->content()->get($column['id'] ?? $columnName)->value(),
+							default => $form[$column['id'] ?? $columnName] ?? null
+						}
 				};
 			}
 
