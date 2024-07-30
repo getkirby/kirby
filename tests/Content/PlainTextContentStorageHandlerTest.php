@@ -108,9 +108,18 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	{
 		$this->setUpSingleLanguage();
 
+		$versionId = VersionId::published();
+		$language  = Language::single();
+
+		$this->assertContentFileDoesNotExist($language, $versionId);
+
 		// test idempotency
-		$this->storage->delete(VersionId::published(), Language::single());
-		$this->assertDirectoryDoesNotExist($this->model->root());
+		$this->storage->delete($versionId, $language);
+
+		$this->assertContentFileDoesNotExist($language, $versionId);
+
+		// The page directory should not be deleted
+		$this->assertDirectoryExists($this->model->root());
 	}
 
 	/**
