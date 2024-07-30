@@ -143,6 +143,7 @@ return [
 
 			// if forcing raw values, get those directly from content file
 			// TODO: remove once Form classes have been refactored
+			// @codeCoverageIgnoreStart
 			if ($this->rawvalues === true) {
 				foreach ($this->columns as $columnName => $column) {
 					$item[$columnName] = match (empty($column['value'])) {
@@ -156,6 +157,7 @@ return [
 
 				return $item;
 			}
+			// @codeCoverageIgnoreEnd
 
 			// Use form to get the proper values for the columns
 			$form = Form::for($model)->values();
