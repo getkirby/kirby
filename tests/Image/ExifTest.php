@@ -6,9 +6,9 @@ use ReflectionClass;
 
 class ExifTest extends TestCase
 {
-	protected function _exif($filename = 'cat.jpg')
+	protected function _exif($filename = 'image/cat.jpg')
 	{
-		$image = new Image(static::FIXTURES . '/image/' . $filename);
+		$image = new Image(static::FIXTURES . '/' . $filename);
 		return new Exif($image);
 	}
 
@@ -89,6 +89,15 @@ class ExifTest extends TestCase
 	{
 		$exif  = $this->_exif();
 		$this->assertNull($exif->focalLength());
+	}
+
+	public function testOrientation()
+	{
+		$exif  = $this->_exif('orientation/Landscape_0.jpg');
+		$this->assertSame(0, $exif->orientation());
+
+		$exif  = $this->_exif('orientation/Landscape_6.jpg');
+		$this->assertSame(6, $exif->orientation());
 	}
 
 	public function testParseTimestampDateTimeOriginal()
