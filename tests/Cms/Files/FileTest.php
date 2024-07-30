@@ -769,7 +769,7 @@ class FileTest extends TestCase
 		]);
 
 		$file = $page->file('test.pdf');
-		$this->assertSame('/media/pages/test/' . $file->mediaHash() . '/test.pdf', $file->previewUrl());
+		$this->assertNull($file->previewUrl());
 	}
 
 	public function testPreviewUrlForDraft()
@@ -807,13 +807,61 @@ class FileTest extends TestCase
 		$this->assertSame($file->url(), $file->previewUrl());
 	}
 
-	public function testPreviewUrlForPageWithCustomPreviewSetting()
+	public function testPreviewUrlForPageWithDeniedPreviewSetting()
 	{
 		$app = new App([
 			'blueprints' => [
 				'pages/test' => [
 					'options' => [
 						'preview' => false
+					]
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test',
+						'files'    => [
+							[
+								'filename' => 'test.pdf'
+							]
+						]
+					]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'roles' => [
+				[
+					'id'    => 'editor',
+					'name'  => 'editor',
+				]
+			]
+		]);
+
+		// authenticate
+		$app->impersonate('test@getkirby.com');
+
+		$file = $app->file('test/test.pdf');
+		$this->assertNull($file->previewUrl());
+	}
+
+	public function testPreviewUrlForPageWithCustomPreviewSetting()
+	{
+		$app = new App([
+			'blueprints' => [
+				'pages/test' => [
+					'options' => [
+						'preview' => '/foo/bar'
 					]
 				]
 			],
