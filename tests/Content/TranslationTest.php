@@ -168,22 +168,27 @@ class TranslationTest extends TestCase
 		$translationEN = new Translation(
 			model: $this->model,
 			version: $this->model->version(),
-			language: Language::ensure('en')
+			language: $languageEN = Language::ensure('en')
 		);
 
 		$translationDE = new Translation(
 			model: $this->model,
 			version: $this->model->version(),
-			language: Language::ensure('de')
+			language: $languageDE = Language::ensure('de')
 		);
 
-		$this->assertFalse($translationEN->version()->exists());
-		$this->assertFalse($translationDE->version()->exists());
+		// the default version + default language exists as soon as the
+		// model directory exists
+		$this->assertTrue($translationEN->version()->exists($languageEN));
+
+		// the secondary language only exists as soon as
+		// the content file exists
+		$this->assertFalse($translationDE->version()->exists($languageDE));
 
 		$this->createContentMultiLanguage();
 
-		$this->assertTrue($translationEN->version()->exists());
-		$this->assertTrue($translationDE->version()->exists());
+		$this->assertTrue($translationEN->version()->exists($languageEN));
+		$this->assertTrue($translationDE->version()->exists($languageDE));
 	}
 
 	/**
@@ -199,10 +204,7 @@ class TranslationTest extends TestCase
 			language: Language::single()
 		);
 
-		$this->assertFalse($translation->version()->exists());
-
-		$this->createContentSingleLanguage();
-
+		// the version exists as soon as the directory exists
 		$this->assertTrue($translation->version()->exists());
 	}
 
