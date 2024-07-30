@@ -15,10 +15,23 @@ export default function (regexp, type, getAttrs) {
 
 				while (!isLink && (match = regexp.exec(text)) !== null) {
 					if (parent?.type?.allowsMarkType(type) && match[1]) {
-						const start = match.index;
-						const end = start + match[0].length;
-						const textStart = start + match[0].indexOf(match[1]);
-						const textEnd = textStart + match[1].length;
+						let start, end, textStart, textEnd;
+
+						if (match[0].startsWith(" ")) {
+							// support improved regex with lookaheads
+							// (they always include a leading space in the match)
+							start = match.index + (match[0].length - match[1].length);
+							end = start + match[1].length;
+							textStart = start + match[1].indexOf(match[2]);
+							textEnd = textStart + match[2].length;
+						} else {
+							// older, more simple regex
+							start = match.index;
+							end = start + match[0].length;
+							textStart = start + match[0].indexOf(match[1]);
+							textEnd = textStart + match[1].length;
+						}
+
 						const attrs =
 							getAttrs instanceof Function ? getAttrs(match) : getAttrs;
 

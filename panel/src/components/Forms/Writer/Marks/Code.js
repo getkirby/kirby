@@ -13,7 +13,9 @@ export default class Code extends Mark {
 	}
 
 	inputRules({ type, utils }) {
-		return [utils.markInputRule(/(?:`)([^`]+)(?:`)$/, type)];
+		return [
+			utils.markInputRule(/(?:^|\s)(`(?!\s+`)((?:[^`]+))`(?!\s+`))$/, type)
+		];
 	}
 
 	keys() {
@@ -27,7 +29,9 @@ export default class Code extends Mark {
 	}
 
 	pasteRules({ type, utils }) {
-		return [utils.markPasteRule(/(?:`)([^`]+)(?:`)/g, type)];
+		return [
+			utils.markPasteRule(/(?:^|\s)(`(?!\s+`)((?:[^`]+))`(?!\s+`))/g, type)
+		];
 	}
 
 	get schema() {
