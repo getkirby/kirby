@@ -258,6 +258,53 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		$this->assertNull($this->storage->modified(VersionId::published(), Language::single()));
 	}
 
+	public function testMove()
+	{
+		$this->setUpSingleLanguage();
+
+		// create some content to move
+		$this->createContentSingleLanguage();
+
+		// the source file should exist now
+		$this->assertFileExists($this->model->root() . '/article.txt');
+
+		// but the destination file should not be there yet
+		$this->assertFileDoesNotExist($this->model->root() . '/_changes/article.txt');
+
+		$this->storage->move(
+			VersionId::published(),
+			Language::single(),
+			VersionId::changes(),
+			Language::single()
+		);
+
+		// the source file should no longer exist
+		$this->assertFileDoesNotExist($this->model->root() . '/article.txt');
+
+		// but the destination file should be there
+		$this->assertFileExists($this->model->root() . '/_changes/article.txt');
+	}
+
+	public function testMoveNonExistingContentFile()
+	{
+		$this->setUpSingleLanguage();
+
+		$this->assertFileDoesNotExist($this->model->root() . '/article.txt');
+
+		$this->storage->move(
+			VersionId::published(),
+			Language::single(),
+			VersionId::changes(),
+			Language::single()
+		);
+
+		// the source file should still not exist
+		$this->assertFileDoesNotExist($this->model->root() . '/article.txt');
+
+		// but the destination file should now be there
+		$this->assertFileExists($this->model->root() . '/_changes/article.txt');
+	}
+
 	/**
 	 * @covers ::read
 	 */

@@ -242,8 +242,19 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 		VersionId $toVersionId,
 		Language $toLanguage
 	): void {
+		// make sure the source version exists
+		$this->ensure($fromVersionId, $fromLanguage);
+
+		// check for an existing content file
+		$contentFile = $this->contentFile($fromVersionId, $fromLanguage);
+
+		// create the source file if it doesn't exist so far
+		if (file_exists($contentFile) === false) {
+			$this->touch($fromVersionId, $fromLanguage);
+		}
+
 		F::move(
-			$this->contentFile($fromVersionId, $fromLanguage),
+			$contentFile,
 			$this->contentFile($toVersionId, $toLanguage)
 		);
 	}
