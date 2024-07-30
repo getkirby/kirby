@@ -37,6 +37,7 @@ class Permissions
 			'list'           => true,
 			'read'           => true,
 			'replace'        => true,
+			'sort'           => true,
 			'update'         => true
 		],
 		'languages' => [

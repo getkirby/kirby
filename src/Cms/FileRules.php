@@ -60,6 +60,13 @@ class FileRules
 	 */
 	public static function changeSort(File $file, int $sort): bool
 	{
+		if ($file->permissions()->sort() !== true) {
+			throw new PermissionException([
+				'key'  => 'file.sort.permission',
+				'data' => ['filename' => $file->filename()]
+			]);
+		}
+
 		return true;
 	}
 

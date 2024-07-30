@@ -22,26 +22,21 @@ export default {
 			};
 		},
 		items() {
-			return this.data.map((file) => {
-				const sortable = this.options.sortable;
-
-				return {
-					...file,
-					column: this.column,
-					data: {
-						"data-id": file.id,
-						"data-template": file.template
-					},
-					options: this.$dropdown(file.link, {
-						query: {
-							view: "list",
-							update: sortable,
-							delete: this.data.length > this.options.min
-						}
-					}),
-					sortable
-				};
-			});
+			return this.data.map((file) => ({
+				...file,
+				column: this.column,
+				data: {
+					"data-id": file.id,
+					"data-template": file.template
+				},
+				options: this.$dropdown(file.link, {
+					query: {
+						view: "list",
+						delete: this.data.length > this.options.min
+					}
+				}),
+				sortable: file.permissions.sort && this.options.sortable
+			}));
 		},
 		type() {
 			return "files";

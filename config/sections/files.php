@@ -110,7 +110,8 @@ return [
 			$dragTextAbsolute = $this->model->is($this->parent) === false;
 
 			foreach ($this->models as $file) {
-				$panel = $file->panel();
+				$panel       = $file->panel();
+				$permissions = $file->permissions();
 
 				$item = [
 					'dragText'  => $panel->dragText('auto', $dragTextAbsolute),
@@ -125,6 +126,9 @@ return [
 					'link'      => $panel->url(true),
 					'mime'      => $file->mime(),
 					'parent'    => $file->parent()->panel()->path(),
+					'permissions' => [
+						'sort' => $permissions->can('sort'),
+					],
 					'template'  => $file->template(),
 					'text'      => $file->toSafeString($this->text),
 					'url'       => $file->url(),

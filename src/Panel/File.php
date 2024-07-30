@@ -134,7 +134,7 @@ class File extends Model
 	{
 		$file     = $this->model;
 		$request  = $file->kirby()->request();
-		$defaults = $request->get(['view', 'update', 'delete']);
+		$defaults = $request->get(['view', 'delete']);
 		$options  = [...$defaults, ...$options];
 
 		$permissions = $this->options(['preview']);
@@ -164,7 +164,7 @@ class File extends Model
 				'dialog'   => $url . '/changeSort',
 				'icon'     => 'sort',
 				'text'     => I18n::translate('file.sort'),
-				'disabled' => $this->isDisabledDropdownOption('update', $options, $permissions)
+				'disabled' => $this->isDisabledDropdownOption('sort', $options, $permissions)
 			];
 		}
 
