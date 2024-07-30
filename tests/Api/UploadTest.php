@@ -285,13 +285,17 @@ class UploadTest extends TestCase
 				'files' => [
 					[
 						'name'     => 'test.txt',
-						'tmp_name' => KIRBY_TMP_DIR . '/api.upload/abc',
+						'tmp_name' => $tmp = KIRBY_TMP_DIR . '/api.upload/abc',
 						'size'     => 123,
 						'error'    => 0
 					]
 				]
 			]
 		]);
+
+		$this->assertFalse(F::exists($tmp));
+		touch($tmp);
+		$this->assertTrue(F::exists($tmp));
 
 		// move_uploaded_file error
 		$data = $upload->process(function ($source) {
@@ -302,6 +306,7 @@ class UploadTest extends TestCase
 			'status'  => 'error',
 			'message' => 'The uploaded file could not be moved'
 		], $data);
+		$this->assertFalse(F::exists($tmp));
 	}
 
 	/**
