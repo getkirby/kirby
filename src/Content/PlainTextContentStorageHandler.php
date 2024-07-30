@@ -147,24 +147,32 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 	public function delete(VersionId $versionId, Language $language): void
 	{
 		$contentFile = $this->contentFile($versionId, $language);
-		$success = F::unlink($contentFile);
 
 		// @codeCoverageIgnoreStart
-		if ($success !== true) {
+		if (F::unlink($contentFile) !== true) {
 			throw new Exception('Could not delete content file');
 		}
 		// @codeCoverageIgnoreEnd
 
-		// clean up empty directories
-		$contentDir = dirname($contentFile);
-		if (
-			Dir::exists($contentDir) === true &&
-			Dir::isEmpty($contentDir) === true
-		) {
-			$success = rmdir($contentDir);
+		// clean up empty _changes directories
+		if ($versionId->is(VersionId::changes()) === true) {
+			$this->deleteEmptyDirectory(dirname($contentFile));
+		}
+	}
 
+	/**
+	 * Helper to delete empty _changes directories
+	 *
+	 * @throws \Kirby\Exception\Exception if the directory cannot be deleted
+	 */
+	protected function deleteEmptyDirectory(string $directory): void
+	{
+		if (
+			Dir::exists($directory) === true &&
+			Dir::isEmpty($directory) === true
+		) {
 			// @codeCoverageIgnoreStart
-			if ($success !== true) {
+			if (Dir::remove($directory) !== true) {
 				throw new Exception('Could not delete empty content directory');
 			}
 			// @codeCoverageIgnoreEnd
