@@ -5,6 +5,7 @@ namespace Kirby\Panel\Ui;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Ui\FilePreviews\FileDefaultPreview;
 use Kirby\TestCase;
 
@@ -14,6 +15,10 @@ class FileDummyPreview extends FilePreview
 	{
 		return $file->type() === 'document';
 	}
+}
+
+class FileInvalidPreview
+{
 }
 
 /**
@@ -57,6 +62,30 @@ class FilePreviewTest extends TestCase
 		$file      = new File(['filename' => 'test.xls', 'parent' => $page]);
 		$component = FilePreview::factory($file);
 		$this->assertInstanceOf(FileDummyPreview::class, $component);
+	}
+
+	/**
+	 * @covers ::factory
+	 */
+	public function testFactoryWithCustomHandlerInvalid()
+	{
+		new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'filePreviews' => [
+				FileInvalidPreview::class,
+				FileDummyPreview::class
+			]
+		]);
+
+		$page = new Page(['slug' => 'test']);
+		$file = new File(['filename' => 'test.jpg', 'parent' => $page]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('File preview handler "Kirby\Panel\Ui\FileInvalidPreview" must extend Kirby\Panel\Ui\FilePreview');
+
+		FilePreview::factory($file);
 	}
 
 	/**

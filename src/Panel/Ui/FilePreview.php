@@ -4,6 +4,7 @@ namespace Kirby\Panel\Ui;
 
 use Kirby\Cms\App;
 use Kirby\Cms\File;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Ui\FilePreviews\FileDefaultPreview;
 use Kirby\Toolkit\I18n;
 
@@ -70,6 +71,10 @@ abstract class FilePreview extends Component
 		$handlers = App::instance()->extensions('filePreviews');
 
 		foreach ($handlers as $handler) {
+			if (is_subclass_of($handler, FilePreview::class) === false) {
+				throw new InvalidArgumentException('File preview handler "' . $handler . '" must extend Kirby\Panel\Ui\FilePreview');
+			}
+
 			if ($handler::accepts($file) === true) {
 				return new $handler($file);
 			}
