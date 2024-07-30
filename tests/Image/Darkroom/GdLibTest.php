@@ -44,7 +44,6 @@ class GdLibTest extends TestCase
 		copy(static::FIXTURES . '/cat.jpg', $file = static::TMP . '/cat.jpg');
 
 		$this->assertSame([
-			'autoOrient' => true,
 			'blur' => false,
 			'crop' => false,
 			'format' => null,

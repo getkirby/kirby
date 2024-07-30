@@ -170,19 +170,72 @@ class DimensionsTest extends TestCase
 	 */
 	public function testForImage()
 	{
-		$dimensions = Dimensions::forImage(__DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.jpg');
+		$image = new Image([
+			'root' => __DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.jpg'
+		]);
+		$dimensions = Dimensions::forImage($image);
 		$this->assertSame(600, $dimensions->width());
 		$this->assertSame(400, $dimensions->height());
 
-		$dimensions = Dimensions::forImage(__DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.webp');
+		$image = new Image([
+			'root' => __DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.webp'
+		]);
+
+		$dimensions = Dimensions::forImage($image);
 		$this->assertSame(600, $dimensions->width());
 		$this->assertSame(400, $dimensions->height());
 
 		if (version_compare(phpversion(), '8.2.0') >= 0) {
-			$dimensions = Dimensions::forImage(__DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.avif');
+			$image = new Image([
+				'root' => __DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.avif'
+			]);
+
+			$dimensions = Dimensions::forImage($image);
 			$this->assertSame(600, $dimensions->width());
 			$this->assertSame(400, $dimensions->height());
 		}
+	}
+
+	public static function imageOrientationProvider(): array
+	{
+		return [
+			['Landscape_0.jpg', 1800, 1200],
+			['Landscape_1.jpg', 1800, 1200],
+			['Landscape_2.jpg', 1800, 1200],
+			['Landscape_3.jpg', 1800, 1200],
+			['Landscape_4.jpg', 1800, 1200],
+			['Landscape_5.jpg', 1800, 1200],
+			['Landscape_6.jpg', 1800, 1200],
+			['Landscape_7.jpg', 1800, 1200],
+			['Landscape_8.jpg', 1800, 1200],
+			['Portrait_0.jpg', 1200, 1800],
+			['Portrait_1.jpg', 1200, 1800],
+			['Portrait_2.jpg', 1200, 1800],
+			['Portrait_3.jpg', 1200, 1800],
+			['Portrait_4.jpg', 1200, 1800],
+			['Portrait_5.jpg', 1200, 1800],
+			['Portrait_6.jpg', 1200, 1800],
+			['Portrait_7.jpg', 1200, 1800],
+			['Portrait_8.jpg', 1200, 1800]
+		];
+	}
+
+	/**
+	 * @dataProvider imageOrientationProvider
+	 * @covers ::forImage
+	 */
+	public function testForImageOrientation(
+		string $filename,
+		int $width,
+		int $height
+	) {
+		$image = new Image([
+			'root' => __DIR__ . '/fixtures/orientation/' . $filename
+		]);
+
+		$dimensions = Dimensions::forImage($image);
+		$this->assertSame($width, $dimensions->width());
+		$this->assertSame($height, $dimensions->height());
 	}
 
 	/**
