@@ -186,27 +186,22 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 	{
 		$contentFile = $this->contentFile($versionId, $language);
 
-		/**
-		 * The version definitely exists, if there's a
-		 * matching content file
-		 */
+		// The version definitely exists, if there's a
+		// matching content file
 		if (file_exists($contentFile) === true) {
 			return true;
 		}
 
-		/**
-		 * A non-default version or non-default language version does not exist
-		 * if the content file was not found
-		 */
+		// A non-default version or non-default language version does not exist
+		// if the content file was not found
 		if (VersionId::default($this->model)->is($versionId) === false || $language->isDefault() === false) {
 			return false;
 		}
 
-		/**
-		 * Wether the default version exists, depends on different cases for each model.
-		 * Page, Site and User exist as soon as the folder is there. A File exists as
-		 * soon as the file is there.
-		 */
+		// Wether the default version exists,
+		// depends on different cases for each model.
+		// Page, Site and User exist as soon as the folder is there.
+		// A File exists as soon as the file is there.
 		return match (true) {
 			$this->model instanceof File => is_file($this->model->root()) === true,
 			$this->model instanceof Page,
@@ -267,11 +262,9 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 	 */
 	public function read(VersionId $versionId, Language $language): array
 	{
-		/**
-		 * Verify that the version exists. The `::exists` method
-		 * makes sure to validate this correctly, based on the
-		 * requested version and language
-		 */
+		// Verify that the version exists. The `::exists` method
+		// makes sure to validate this correctly, based on the
+		// requested version and language
 		$this->ensure($versionId, $language);
 
 		$contentFile = $this->contentFile($versionId, $language);
@@ -280,12 +273,10 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 			return Data::read($contentFile);
 		}
 
-		/**
-		 * For existing versions that don't have a content file yet,
-		 * we can safely return an empty array that can be filled later.
-		 * This might be the case for pages that only have a directory
-		 * so far, or for files that don't have any metadata yet.
-		 */
+		// For existing versions that don't have a content file yet,
+		// we can safely return an empty array that can be filled later.
+		// This might be the case for pages that only have a directory
+		// so far, or for files that don't have any metadata yet.
 		return [];
 	}
 
