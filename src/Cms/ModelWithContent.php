@@ -129,13 +129,24 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 */
 	public function content(string|null $languageCode = null): Content
 	{
-		// single language support
-		if ($this->kirby()->multilang() === false) {
-			return $this->content ??= $this->version()->content('default');
-		}
-
 		// get the targeted language
 		$language = Language::ensure($languageCode);
+
+		// fetch a specific version in preview render mode
+		// @todo this entire block can be radically simplified as soon
+		// as the models use the versions exclusively.
+		if (VersionId::$render ?? null) {
+			$version = $this->version(VersionId::render($this));
+
+			if ($version->exists($language) === true) {
+				return $version->content($language);
+			}
+		}
+
+		// single language support
+		if ($this->kirby()->multilang() === false) {
+			return $this->content ??= $this->version()->content($language);
+		}
 
 		// only fetch from cache for the current language
 		if ($languageCode === null && $this->content instanceof Content) {
