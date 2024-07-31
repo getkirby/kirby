@@ -167,7 +167,7 @@ class Validations
 				// ensure that that pattern needs to match the whole
 				// input value from start to end, not just a partial match
 				// https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/pattern#overview
-				$pattern = '^(?:' . trim($pattern, '/') . ')$';
+				$pattern = '^(?:' . $pattern . ')$';
 
 				if (V::match($value, '/' . $pattern . '/i') === false) {
 					throw new InvalidArgumentException(
