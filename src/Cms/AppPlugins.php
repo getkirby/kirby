@@ -57,6 +57,7 @@ trait AppPlugins
 		'collectionMethods' => [],
 		'fieldMethods' => [],
 		'fileMethods' => [],
+		'filePreviews' => [],
 		'fileTypes' => [],
 		'filesMethods' => [],
 		'fields' => [],
@@ -294,6 +295,20 @@ trait AppPlugins
 		return $this->extensions['fileMethods'] = File::$methods = [
 			...File::$methods,
 			...$methods
+		];
+	}
+
+	/**
+	 * Registers additional file preview handlers
+	 * @since 5.0.0
+	 */
+	protected function extendFilePreviews(array $previews): array
+	{
+		return $this->extensions['filePreviews'] = [
+			...$previews,
+			// make sure new previews go first, so that custom
+			// handler can override core default previews
+			...$this->extensions['filePreviews'],
 		];
 	}
 
@@ -816,6 +831,7 @@ trait AppPlugins
 		$this->extendBlueprints($this->core->blueprints());
 		$this->extendFieldMethods($this->core->fieldMethods());
 		$this->extendFields($this->core->fields());
+		$this->extendFilePreviews($this->core->filePreviews());
 		$this->extendSections($this->core->sections());
 		$this->extendSnippets($this->core->snippets());
 		$this->extendTags($this->core->kirbyTags());
