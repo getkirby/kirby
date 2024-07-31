@@ -32,7 +32,13 @@ class VersionId implements Stringable
 	/**
 	 * Latest changes to the content (optional)
 	 */
-	public const CHANGES   = 'changes';
+	public const CHANGES = 'changes';
+
+	/**
+	 * A global store for a version id that should be
+	 * rendered for each model in a live preview scenario.
+	 */
+	public static self|null $render = null;
 
 	/**
 	 * @throws \Kirby\Exception\InvalidArgumentException If the version ID is not valid
@@ -102,6 +108,16 @@ class VersionId implements Stringable
 	public static function published(): static
 	{
 		return new static(static::PUBLISHED);
+	}
+
+	/**
+	 * Returns the VersionId which should be rendered for the given
+	 * Model. This can be changed by overwriting the static `::$render` property
+	 * and thus can be used to render different versions for all models (e.g. in a preview)
+	 */
+	public static function render(ModelWithContent $model): static
+	{
+		return static::$render ?? static::default($model);
 	}
 
 	/**
