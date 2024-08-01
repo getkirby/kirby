@@ -194,22 +194,44 @@ class SiteTest extends TestCase
 			['https://test.com', 'https://test.com'],
 			['{{ site.url }}#test', '/#test'],
 			[false, null],
+			[null, null, false],
 		];
 	}
 
 	/**
 	 * @dataProvider previewUrlProvider
 	 */
-	public function testCustomPreviewUrl($input, $expected)
-	{
+	public function testCustomPreviewUrl(
+		$input,
+		$expected,
+		bool $authenticated = true
+	): void {
 		$app = new App([
 			'roots' => [
 				'index' => '/dev/null'
 			],
 			'urls' => [
 				'index' => '/'
+			],
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'roles' => [
+				[
+					'id'    => 'editor',
+					'name'  => 'editor',
+				]
 			]
 		]);
+
+		// authenticate
+		if ($authenticated) {
+			$app->impersonate('test@getkirby.com');
+		}
 
 		$options = [];
 

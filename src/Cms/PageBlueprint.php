@@ -180,7 +180,7 @@ class PageBlueprint extends Blueprint
 			return $this->model->toString($preview);
 		}
 
-		return $preview;
+		return $this->model->permissions()->can('preview', true);
 	}
 
 	/**

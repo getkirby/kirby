@@ -725,6 +725,25 @@ class FileTest extends TestCase
 
 	public function testPreviewUrl()
 	{
+		$app = $this->app->clone([
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'roles' => [
+				[
+					'id'    => 'editor',
+					'name'  => 'editor',
+				]
+			]
+		]);
+
+		// authenticate
+		$app->impersonate('test@getkirby.com');
+
 		$page = new Page([
 			'slug'  => 'test',
 			'files' => [
@@ -738,8 +757,42 @@ class FileTest extends TestCase
 		$this->assertSame('/test/test.pdf', $file->previewUrl());
 	}
 
+	public function testPreviewUrlUnauthenticated()
+	{
+		$page = new Page([
+			'slug'  => 'test',
+			'files' => [
+				[
+					'filename' => 'test.pdf'
+				]
+			]
+		]);
+
+		$file = $page->file('test.pdf');
+		$this->assertNull($file->previewUrl());
+	}
+
 	public function testPreviewUrlForDraft()
 	{
+		$app = $this->app->clone([
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'roles' => [
+				[
+					'id'    => 'editor',
+					'name'  => 'editor',
+				]
+			]
+		]);
+
+		// authenticate
+		$app->impersonate('test@getkirby.com');
+
 		$page = new Page([
 			'slug'    => 'test',
 			'isDraft' => true,
@@ -754,7 +807,7 @@ class FileTest extends TestCase
 		$this->assertSame($file->url(), $file->previewUrl());
 	}
 
-	public function testPreviewUrlForPageWithCustomPreviewSetting()
+	public function testPreviewUrlForPageWithDeniedPreviewSetting()
 	{
 		$app = new App([
 			'blueprints' => [
@@ -779,8 +832,72 @@ class FileTest extends TestCase
 						]
 					]
 				]
+			],
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'roles' => [
+				[
+					'id'    => 'editor',
+					'name'  => 'editor',
+				]
 			]
 		]);
+
+		// authenticate
+		$app->impersonate('test@getkirby.com');
+
+		$file = $app->file('test/test.pdf');
+		$this->assertNull($file->previewUrl());
+	}
+
+	public function testPreviewUrlForPageWithCustomPreviewSetting()
+	{
+		$app = new App([
+			'blueprints' => [
+				'pages/test' => [
+					'options' => [
+						'preview' => '/foo/bar'
+					]
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test',
+						'files'    => [
+							[
+								'filename' => 'test.pdf'
+							]
+						]
+					]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'roles' => [
+				[
+					'id'    => 'editor',
+					'name'  => 'editor',
+				]
+			]
+		]);
+
+		// authenticate
+		$app->impersonate('test@getkirby.com');
 
 		$file = $app->file('test/test.pdf');
 		$this->assertSame($file->url(), $file->previewUrl());
@@ -788,6 +905,25 @@ class FileTest extends TestCase
 
 	public function testPreviewUrlForUserFile()
 	{
+		$app = $this->app->clone([
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'roles' => [
+				[
+					'id'    => 'editor',
+					'name'  => 'editor',
+				]
+			]
+		]);
+
+		// authenticate
+		$app->impersonate('test@getkirby.com');
+
 		$user = new User([
 			'email' => 'test@getkirby.com',
 			'files' => [
@@ -820,8 +956,24 @@ class FileTest extends TestCase
 						]
 					]
 				]
+			],
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'roles' => [
+				[
+					'id'    => 'editor',
+					'name'  => 'editor',
+				]
 			]
 		]);
+
+		// authenticate
+		$app->impersonate('test@getkirby.com');
 
 		$file = $app->file('test/test.pdf');
 		$this->assertSame('https://getkirby.com/test.pdf', $file->previewUrl());
