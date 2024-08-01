@@ -198,7 +198,7 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 			return false;
 		}
 
-		// Wether the default version exists,
+		// Whether the default version exists,
 		// depends on different cases for each model.
 		// Page, Site and User exist as soon as the folder is there.
 		// A File exists as soon as the file is there.
