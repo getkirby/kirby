@@ -82,7 +82,6 @@ class DarkroomTest extends TestCase
 		$darkroom = new Darkroom();
 		$options  = $darkroom->preprocess('/dev/null');
 
-		$this->assertTrue($options['autoOrient']);
 		$this->assertFalse($options['crop']);
 		$this->assertFalse($options['blur']);
 		$this->assertFalse($options['grayscale']);

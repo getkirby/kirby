@@ -51,7 +51,6 @@ class Darkroom
 	protected function defaults(): array
 	{
 		return [
-			'autoOrient'  => true,
 			'blur'        => false,
 			'crop'        => false,
 			'format'      => null,

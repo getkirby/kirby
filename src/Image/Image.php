@@ -83,7 +83,7 @@ class Image extends File
 			'image/png',
 			'image/webp'
 		])) {
-			return $this->dimensions = Dimensions::forImage($this->root);
+			return $this->dimensions = Dimensions::forImage($this);
 		}
 
 		if ($this->extension() === 'svg') {
