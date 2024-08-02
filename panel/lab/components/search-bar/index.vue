@@ -54,7 +54,7 @@ export default {
 </script>
 
 <style>
-.k-search-bar {
+.k-lab-example .k-search-bar {
 	background: var(--color-gray-100);
 }
 </style>
