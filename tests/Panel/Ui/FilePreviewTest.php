@@ -35,8 +35,9 @@ class FilePreviewTest extends TestCase
 		$page = new Page(['slug' => 'test']);
 		$file = new File(['filename' => 'test.jpg', 'parent' => $page]);
 
-		$component = FilePreview::factory($file);
-		$this->assertInstanceOf(FileDefaultPreview::class, $component);
+		$preview = FilePreview::factory($file);
+		$this->assertInstanceOf(FilePreview::class, $preview);
+		$this->assertSame('k-file-default-preview', $preview->component);
 	}
 
 	/**
@@ -55,13 +56,13 @@ class FilePreviewTest extends TestCase
 
 		$page = new Page(['slug' => 'test']);
 
-		$file      = new File(['filename' => 'test.jpg', 'parent' => $page]);
-		$component = FilePreview::factory($file);
-		$this->assertInstanceOf(FileDefaultPreview::class, $component);
+		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
+		$preview = FilePreview::factory($file);
+		$this->assertInstanceOf(FilePreview::class, $preview);
 
 		$file      = new File(['filename' => 'test.xls', 'parent' => $page]);
-		$component = FilePreview::factory($file);
-		$this->assertInstanceOf(FileDummyPreview::class, $component);
+		$preview = FilePreview::factory($file);
+		$this->assertInstanceOf(FileDummyPreview::class, $preview);
 	}
 
 	/**
@@ -94,32 +95,35 @@ class FilePreviewTest extends TestCase
 	 */
 	public function testProps()
 	{
-		$page      = new Page(['slug' => 'test']);
-		$file      = new File(['filename' => 'test.jpg', 'parent' => $page]);
-		$component = new FileDummyPreview($file);
+		$page    = new Page(['slug' => 'test']);
+		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
+		$preview = new FileDummyPreview($file);
+		$props   = $preview->props();
 
 		$this->assertSame([
-			'details' => [
-				[
-					'title' => 'Template',
-					'text'  => '—',
-				],
-				[
-					'title' => 'Media Type',
-					'text'  => 'image/jpeg',
-				],
-				[
-					'title' => 'Url',
-					'text'  => '/test/test.jpg',
-					'link'  => '/test/test.jpg',
-				],
-				[
-					'title' => 'Size',
-					'text' => '0 KB',
-				]
+			[
+				'title' => 'Template',
+				'text'  => '—',
 			],
-			'url' => '/test/test.jpg'
-		], $component->props());
+			[
+				'title' => 'Media Type',
+				'text'  => 'image/jpeg',
+			],
+			[
+				'title' => 'Url',
+				'text'  => '/test/test.jpg',
+				'link'  => '/test/test.jpg',
+			],
+			[
+				'title' => 'Size',
+				'text' => '0 KB',
+			]
+		], $props['details']);
+
+		$this->assertSame('image', $props['image']['icon']);
+		$this->assertFalse($props['image']['cover']);
+		$this->assertIsString($props['image']['src']);
+		$this->assertSame('/test/test.jpg', $props['url']);
 	}
 
 	/**
