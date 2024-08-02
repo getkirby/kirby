@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Generator;
+use Kirby\Content\VersionId;
 use Kirby\Data\Data;
 use Kirby\Email\Email as BaseEmail;
 use Kirby\Exception\ErrorPageException;
@@ -1278,13 +1279,30 @@ class App
 		// search for the page by path
 		$page = $site->find($path);
 
+		// access token and requested version
+		$user        = $this->user();
+		$request     = $this->request();
+		$accessToken = $request->get('_token');
+		$versionId   = VersionId::from($request->get('_version', 'published'));
+
 		// search for a draft if the page cannot be found
 		if (!$page && $draft = $site->draft($path)) {
 			if (
 				$this->user() ||
-				$draft->isVerified($this->request()->get('token'))
+				$draft->isVerified($accessToken)
 			) {
 				$page = $draft;
+			}
+		}
+
+		// activate the changes preview if requested
+		// and the credentials are correct
+		if ($versionId->is(VersionId::changes()) === true) {
+			if (
+				$this->user() ||
+				$page->isVerifiedByToken($accessToken) === true
+			) {
+				VersionId::$render = $versionId;
 			}
 		}
 

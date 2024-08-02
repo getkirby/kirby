@@ -776,11 +776,19 @@ class Page extends ModelWithContent
 			return true;
 		}
 
-		if ($token === null) {
-			return false;
+		return $this->isVerifiedByToken($token);
+	}
+
+	/**
+	 * Validates the given token
+	 */
+	public function isVerifiedByToken(string|null $token): bool
+	{
+		if ($token !== null && $this->token() === $token) {
+			return true;
 		}
 
-		return $this->token() === $token;
+		return false;
 	}
 
 	/**
