@@ -9,7 +9,7 @@
 		@cancel="$emit('cancel')"
 		@submit="submit"
 	>
-		<k-search
+		<k-search-bar
 			ref="search"
 			:default-type="type ?? $panel.view.search"
 			:is-loading="$panel.searcher.isLoading"
