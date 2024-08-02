@@ -601,6 +601,7 @@
 
 	"save": "Save",
 	"search": "Search",
+	"searching": "Searching",
 	"search.min": "Enter {min} characters to search",
 	"search.all": "Show all {count} results",
 	"search.results.none": "No results",

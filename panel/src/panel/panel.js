@@ -9,6 +9,7 @@ import Notification from "./notification.js";
 import Language from "./language.js";
 import Plugins from "./plugins.js";
 import Menu from "./menu.js";
+import Search from "./search.js";
 import System from "./system.js";
 import Translation from "./translation.js";
 import { buildUrl, isUrl } from "@/helpers/url.js";
@@ -72,6 +73,7 @@ export default {
 		this.activation = Activation(this);
 		this.drag = Drag(this);
 		this.events = Events(this);
+		this.searcher = Search(this);
 		this.upload = Upload(this);
 
 		// state objects
@@ -286,7 +288,7 @@ export default {
 
 	/**
 	 * Use one of the installed search types
-	 * to search for content in the panel
+	 * to search for content in the Panel
 	 *
 	 * @param {String} type
 	 * @param {Object} query
@@ -295,23 +297,11 @@ export default {
 	 */
 	async search(type, query, options) {
 		// open the search dialog
-		if (!query) {
-			// close menu on mobile
-			this.menu.escape();
-
-			return this.dialog.open({
-				component: "k-search-dialog",
-				props: {
-					type: type
-				}
-			});
+		if (query === undefined) {
+			return this.searcher.open(type);
 		}
 
-		const { $search } = await this.get(`/search/${type}`, {
-			query: { query, ...options }
-		});
-
-		return $search;
+		return this.searcher.query(type, query, options);
 	},
 
 	/**
