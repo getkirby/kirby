@@ -41,6 +41,7 @@ class FileBlueprint extends Blueprint
 				'list'     	     => null,
 				'read'       	 => null,
 				'replace'    	 => null,
+				'sort'           => null,
 				'update'     	 => null,
 			]
 		);

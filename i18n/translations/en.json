@@ -118,6 +118,7 @@
 	"error.file.name.missing": "The filename must not be empty",
 	"error.file.notFound": "The file \"{filename}\" cannot be found",
 	"error.file.orientation": "The orientation of the image must be \"{orientation}\"",
+	"error.file.sort.permission": "You are not allowed to change the sorting of \"{filename}\"",
 	"error.file.type.forbidden": "You are not allowed to upload {type} files",
 	"error.file.type.invalid": "Invalid file type: {type}",
 	"error.file.undefined": "The file cannot be found",

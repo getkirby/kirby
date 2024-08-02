@@ -75,8 +75,32 @@ class FileRulesTest extends TestCase
 
 	public function testChangeSort()
 	{
-		$file = $this->createMock(File::class);
+		$page = new Page([
+			'slug' => 'test',
+			'files' => [
+				['filename' => 'a.jpg'],
+				['filename' => 'b.jpg']
+			]
+		]);
+
+		$file = $page->file('a.jpg');
+
 		$this->assertTrue(FileRules::changeSort($file, 1));
+	}
+
+	public function testChangeSortWithoutPermissions()
+	{
+		$permissions = $this->createMock(FilePermissions::class);
+		$permissions->method('__call')->with('sort')->willReturn(false);
+
+		$file = $this->createMock(File::class);
+		$file->method('permissions')->willReturn($permissions);
+		$file->method('filename')->willReturn('test.jpg');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to change the sorting of "test.jpg"');
+
+		FileRules::changeSort($file, 1);
 	}
 
 	public function testChangeToSameNameWithDifferentException()
