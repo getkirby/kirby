@@ -303,6 +303,66 @@ class PageTest extends TestCase
 		$this->assertFalse($page->isUnlisted());
 	}
 
+	public function testIsVerifiedWithDraft()
+	{
+		$draft = new Page([
+			'slug'    => 'test',
+			'isDraft' => true
+		]);
+
+		$method = new ReflectionMethod(Page::class, 'token');
+		$method->setAccessible(true);
+
+		$token = $method->invoke($draft);
+
+		$this->assertTrue($draft->isVerified($token));
+		$this->assertFalse($draft->isVerified('not-the-correct-token'));
+		$this->assertFalse($draft->isVerified(null));
+	}
+
+	public function testIsVerifiedWithChildOfDraft()
+	{
+		$page = new Page([
+			'slug'    => 'test',
+			'isDraft' => true,
+			'children' => [
+				[
+					'slug' => 'test-child',
+				]
+			]
+		]);
+
+		$child = $page->find('test-child');
+
+		$this->assertFalse($child->isVerified());
+	}
+
+	public function testIsVerifiedWithPublishedPage()
+	{
+		$page = new Page([
+			'slug' => 'test',
+		]);
+
+		$this->assertTrue($page->isVerified());
+	}
+
+	public function testIsVerifiedByToken()
+	{
+		$page = new Page([
+			'slug'  => 'test',
+			'num' => 1
+		]);
+
+		$method = new ReflectionMethod(Page::class, 'token');
+		$method->setAccessible(true);
+
+		$token = $method->invoke($page);
+
+		$this->assertTrue($page->isVerifiedByToken($token));
+		$this->assertFalse($page->isVerifiedByToken('not-the-correct-token'));
+		$this->assertFalse($page->isVerifiedByToken(null));
+	}
+
 	public function testNum()
 	{
 		$page = new Page([

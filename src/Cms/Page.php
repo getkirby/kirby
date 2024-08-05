@@ -769,6 +769,12 @@ class Page extends ModelWithContent
 	 */
 	public function isVerified(string|null $token = null): bool
 	{
+		// if a valid token exists, the page is definitely verified
+		if ($this->isVerifiedByToken($token) === true) {
+			return true;
+		}
+
+		// public pages don't need extra verification
 		if (
 			$this->isPublished() === true &&
 			$this->parents()->findBy('status', 'draft') === null
@@ -776,7 +782,7 @@ class Page extends ModelWithContent
 			return true;
 		}
 
-		return $this->isVerifiedByToken($token);
+		return false;
 	}
 
 	/**
