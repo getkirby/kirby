@@ -9,6 +9,87 @@ class AppResolveTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.AppResolve';
 
+	public function testResolveDraftPageUnauthenticated()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'drafts' => [
+					[
+						'slug' => 'draft',
+					]
+				]
+			]
+		]);
+
+		// without token or authenticated user,
+		// the draft should not be found
+		$result = $app->resolve('draft');
+		$this->assertNull($result);
+	}
+
+	public function testResolveDraftPageAuthenticated()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'drafts' => [
+					[
+						'slug' => 'draft',
+					]
+				]
+			]
+		]);
+
+		// authenticate to verify access to the draft
+		$app->impersonate('kirby');
+
+		$result = $app->resolve('draft');
+		$this->assertIsPage($result);
+	}
+
+	public function testResolveDraftPageWithToken()
+	{
+		$token = hash_hmac(
+			'sha1',
+			// combination of id and template
+			'draftdefault',
+			// salt
+			'salty'
+		);
+
+		$app = new App([
+			'options' => [
+				'content' => [
+					'salt' => 'salty'
+				]
+			],
+			'request' => [
+				'query' => [
+					'_token' => $token
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'drafts' => [
+					[
+						'slug'     => 'draft',
+						'template' => 'default'
+					]
+				]
+			]
+		]);
+
+		$result = $app->resolve('draft');
+		$this->assertIsPage($result);
+	}
+
 	public function testResolveHomePage()
 	{
 		$app = new App([
