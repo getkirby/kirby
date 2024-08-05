@@ -1297,7 +1297,7 @@ class App
 
 		// activate the changes preview if requested
 		// and the credentials are correct
-		if ($versionId->is(VersionId::changes()) === true) {
+		if ($page && $versionId->is(VersionId::changes()) === true) {
 			if (
 				$this->user() ||
 				$page->isVerifiedByToken($accessToken) === true

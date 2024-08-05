@@ -2,12 +2,148 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Content\VersionId;
 use Kirby\Filesystem\F;
 
 class AppResolveTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.AppResolve';
+
+	public function tearDown(): void
+	{
+		parent::tearDown();
+
+		// make sure to switch back to regular render mode
+		VersionId::$render = null;
+	}
+
+	public function testResolveChangesUnauthenticated()
+	{
+		$app = new App([
+			'request' => [
+				'query' => [
+					'_version' => 'changes'
+				]
+			],
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+					]
+				]
+			]
+		]);
+
+		$page = $app->page('test');
+
+		// create some changes
+		$page->version('changes')->save([
+			'title' => 'Changed title'
+		]);
+
+		$result = $app->resolve('test');
+
+		// check that the page gets resolved
+		$this->assertIsPage($result);
+
+		// the render mode is still null, which
+		// keeps rendering the published version
+		// because there's no token or authenticated user
+		$this->assertNull(VersionId::$render);
+	}
+
+	public function testResolveChangesAuthenticated()
+	{
+		$app = new App([
+			'request' => [
+				'query' => [
+					'_version' => 'changes'
+				]
+			],
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+					]
+				]
+			]
+		]);
+
+		// create some changes
+		$app->page('test')->version('changes')->save([
+			'title' => 'Changed title'
+		]);
+
+		$app->impersonate('kirby');
+
+		$result = $app->resolve('test');
+
+		// check that the page gets resolved
+		$this->assertIsPage($result);
+
+		// the render mode is now set to `changes`
+		// because a user is authenticated and may
+		// view the changes
+		$this->assertTrue(VersionId::$render->is(VersionId::changes()));
+	}
+
+	public function testResolveChangesWithToken()
+	{
+		$token = hash_hmac(
+			'sha1',
+			// combination of id and template
+			'testdefault',
+			// salt
+			'salty'
+		);
+
+		$app = new App([
+			'options' => [
+				'content' => [
+					'salt' => 'salty'
+				]
+			],
+			'request' => [
+				'query' => [
+					'_token'   => $token,
+					'_version' => 'changes'
+				]
+			],
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'default'
+					]
+				]
+			]
+		]);
+
+		// create some changes
+		$app->page('test')->version('changes')->save([
+			'title' => 'Changed title'
+		]);
+
+		$result = $app->resolve('test');
+
+		// check that the page gets resolved
+		$this->assertIsPage($result);
+
+		// the render mode is now set to `changes`
+		// because a user is authenticated and may
+		// view the changes
+		$this->assertTrue(VersionId::$render->is(VersionId::changes()));
+	}
 
 	public function testResolveDraftPageUnauthenticated()
 	{
