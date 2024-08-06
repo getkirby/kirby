@@ -35,7 +35,7 @@ class FilePreview extends Component
 	 */
 	public static function accepts(File $file): bool
 	{
-		throw new LogicException('Filew preview classes must define the static ::accepts() method');
+		throw new LogicException('File preview classes must define the static ::accepts() method');
 	}
 
 	/**
@@ -84,7 +84,7 @@ class FilePreview extends Component
 			}
 		}
 
-		return new static($file);
+		return new self($file);
 	}
 
 	/**

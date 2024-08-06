@@ -6,7 +6,6 @@ use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Panel\Ui\FilePreviews\FileDefaultPreview;
 use Kirby\TestCase;
 
 class FileDummyPreview extends FilePreview
