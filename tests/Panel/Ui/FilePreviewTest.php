@@ -27,6 +27,37 @@ class FileInvalidPreview
 class FilePreviewTest extends TestCase
 {
 	/**
+	 * @covers ::details
+	 */
+	public function testDetails()
+	{
+		$page    = new Page(['slug' => 'test']);
+		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
+		$preview = new FilePreview($file);
+		$details = $preview->details();
+
+		$this->assertSame([
+			[
+				'title' => 'Template',
+				'text'  => '—',
+			],
+			[
+				'title' => 'Media Type',
+				'text'  => 'image/jpeg',
+			],
+			[
+				'title' => 'Url',
+				'text'  => '/test/test.jpg',
+				'link'  => '/test/test.jpg',
+			],
+			[
+				'title' => 'Size',
+				'text' => '0 KB',
+			]
+		], $details);
+	}
+
+	/**
 	 * @covers ::factory
 	 */
 	public function testFactory()
@@ -89,40 +120,32 @@ class FilePreviewTest extends TestCase
 	}
 
 	/**
-	 * @covers ::details
 	 * @covers ::image
+	 */
+	public function testImage()
+	{
+		$page    = new Page(['slug' => 'test']);
+		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
+		$preview = new FilePreview($file);
+		$image   = $preview->image();
+
+		$this->assertSame('image', $image['icon']);
+		$this->assertFalse($image['cover']);
+		$this->assertIsString($image['src']);
+	}
+
+	/**
 	 * @covers ::props
 	 */
 	public function testProps()
 	{
 		$page    = new Page(['slug' => 'test']);
 		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
-		$preview = new FileDummyPreview($file);
+		$preview = new FilePreview($file);
 		$props   = $preview->props();
 
-		$this->assertSame([
-			[
-				'title' => 'Template',
-				'text'  => '—',
-			],
-			[
-				'title' => 'Media Type',
-				'text'  => 'image/jpeg',
-			],
-			[
-				'title' => 'Url',
-				'text'  => '/test/test.jpg',
-				'link'  => '/test/test.jpg',
-			],
-			[
-				'title' => 'Size',
-				'text' => '0 KB',
-			]
-		], $props['details']);
-
-		$this->assertSame('image', $props['image']['icon']);
-		$this->assertFalse($props['image']['cover']);
-		$this->assertIsString($props['image']['src']);
+		$this->assertIsArray($props['details']);
+		$this->assertIsArray($props['image']);
 		$this->assertSame('/test/test.jpg', $props['url']);
 	}
 
