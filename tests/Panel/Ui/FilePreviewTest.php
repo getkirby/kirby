@@ -90,6 +90,7 @@ class FilePreviewTest extends TestCase
 
 	/**
 	 * @covers ::details
+	 * @covers ::image
 	 * @covers ::props
 	 */
 	public function testProps()
