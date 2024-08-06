@@ -70,7 +70,7 @@ class FilePreviewTest extends TestCase
 	public function testFactory()
 	{
 		$page = new Page(['slug' => 'test']);
-		$file = new File(['filename' => 'test.jpg', 'parent' => $page]);
+		$file = new File(['filename' => 'test.pdf', 'parent' => $page]);
 
 		$component = FilePreview::factory($file);
 		$this->assertInstanceOf(DefaultFilePreview::class, $component);

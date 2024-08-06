@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Ui\FilePreviews;
 
 use Kirby\Cms\File;
+use Kirby\Panel\Ui\FilePreview;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -14,9 +15,13 @@ use Kirby\Toolkit\I18n;
  * @since     5.0.0
  * @internal
  */
-class FileImagePreview extends FileDefaultPreview
+class FileImagePreview extends FilePreview
 {
-	public string $component = 'k-file-image-preview';
+	public function __construct(
+		public File $file,
+		public string $component = 'k-file-image-preview'
+	) {
+	}
 
 	public static function accepts(File $file): bool
 	{
