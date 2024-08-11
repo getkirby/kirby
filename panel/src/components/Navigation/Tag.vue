@@ -129,8 +129,8 @@ export default {
 .k-tag[data-theme="light"] {
 	--tag-color-back: var(--color-light);
 	--tag-color-text: var(--color-black);
-	--tag-color-disabled-back: var(--color-gray-400);
-	--tag-color-disabled-text: var(--tag-color-text);
+	--tag-color-disabled-back: var(--color-gray-200);
+	--tag-color-disabled-text: var(--color-gray-600);
 }
 
 .k-tag {
@@ -146,7 +146,7 @@ export default {
 	border-radius: var(--tag-rounded);
 	user-select: none;
 }
-button.k-tag {
+button.k-tag:not([aria-disabled="true"]) {
 	cursor: pointer;
 }
 .k-tag:not([aria-disabled="true"]):focus {
