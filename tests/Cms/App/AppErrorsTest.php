@@ -19,6 +19,8 @@ class AppErrorsTest extends TestCase
 	{
 		parent::setUp();
 
+		ErrorLog::$log = '';
+
 		// Whoops is normally enabled by default, but disabled in CI
 		// to reduce memory leaks; in this test class we need it!
 		$this->originalApp = $this->app;
@@ -76,6 +78,39 @@ class AppErrorsTest extends TestCase
 
 		$this->assertSame('Some error message', $result);
 		$this->assertStringContainsString('Exception: Some error message in', ErrorLog::$log);
+	}
+
+	/**
+	 * @covers ::getAdditionalWhoopsHandler
+	 */
+	public function testExceptionHookDisableLogging()
+	{
+		$result = null;
+
+		$app = $this->app->clone([
+			'hooks' => [
+				'system.exception' => function ($exception) use (&$result) {
+					$result = $exception->getMessage();
+					return false;
+				}
+			]
+		]);
+
+		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
+		$whoopsMethod->setAccessible(true);
+
+		$whoops  = $whoopsMethod->invoke($app);
+		$handler = $whoops->getHandlers()[1];
+
+		// test CallbackHandler with \Exception class
+		$exception = new \Exception('Some error message');
+		$handler->setException($exception);
+
+		// handle the exception
+		$this->_getBufferedContent($handler);
+
+		$this->assertSame('Some error message', $result);
+		$this->assertSame('', ErrorLog::$log);
 	}
 
 	/**
