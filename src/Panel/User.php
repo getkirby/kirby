@@ -223,7 +223,7 @@ class User extends Model
 
 		return array_merge(
 			parent::props(),
-			$account ? [] : $this->prevNext(),
+			$this->prevNext(),
 			[
 				'blueprint' => $this->model->role()->name(),
 				'model' => [
