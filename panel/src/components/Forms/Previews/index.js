@@ -46,7 +46,6 @@ export default {
 		app.component("k-multiselect-field-preview", BubblesFieldPreview);
 		app.component("k-radio-field-preview", BubblesFieldPreview);
 		app.component("k-select-field-preview", BubblesFieldPreview);
-		app.component("k-tags-field-preview", BubblesFieldPreview);
 		app.component("k-toggles-field-preview", BubblesFieldPreview);
 	}
 };
