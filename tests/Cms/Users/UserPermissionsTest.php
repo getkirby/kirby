@@ -4,6 +4,9 @@ namespace Kirby\Cms;
 
 use Kirby\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Cms\UserPermissions
+ */
 class UserPermissionsTest extends TestCase
 {
 	public static function actionProvider(): array
@@ -120,20 +123,131 @@ class UserPermissionsTest extends TestCase
 		$this->assertFalse($perms->can($action));
 	}
 
-	public function testChangeSingleRole()
+	/**
+	 * @covers ::canChangeRole
+	 */
+	public function testChangeRole()
 	{
-		new App([
+		// admin to change role of another admin
+		$app = new App([
 			'roots' => [
 				'index' => '/dev/null'
 			],
 			'roles' => [
-				['name' => 'admin']
-			]
+				['name' => 'admin'],
+				['name' => 'editor']
+			],
+			'user'  => 'another-admin@getkirby.com',
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'email' => 'another-admin@getkirby.com',
+					'role'  => 'admin'
+				]
+			],
 		]);
 
-		$user  = new User(['email' => 'test@getkirby.com']);
-		$perms = $user->permissions();
+		$user = $app->user('admin@getkirby.com');
+		$this->assertTrue($user->permissions()->can('changeRole'));
 
-		$this->assertFalse($perms->can('changeRole'));
+		// non-admin to change role of an admin
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor']
+			],
+			'user'  => 'editor@getkirby.com',
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+		]);
+
+		$user = $app->user('admin@getkirby.com');
+		$this->assertFalse($user->permissions()->can('changeRole'));
+
+		// change role of last admin
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor']
+			],
+			'user'  => 'admin@getkirby.com',
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				]
+			],
+		]);
+
+		$user = $app->user('admin@getkirby.com');
+		$this->assertFalse($user->permissions()->can('changeRole'));
+
+		// change role if only one role is available
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor']
+			],
+			'user'  => 'editor@getkirby.com',
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+		]);
+
+		$user = $app->user('editor@getkirby.com');
+		$this->assertFalse($user->permissions()->can('changeRole'));
+
+		// change role if multiple roles are available
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor'],
+				['name' => 'guest']
+			],
+			'user'  => 'editor@getkirby.com',
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+		]);
+
+		$user = $app->user('editor@getkirby.com');
+		$this->assertTrue($user->permissions()->can('changeRole'));
 	}
 }

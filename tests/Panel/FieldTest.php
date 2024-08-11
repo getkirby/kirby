@@ -219,78 +219,113 @@ class FieldTest extends TestCase
 	 */
 	public function testRole(): void
 	{
-		$field = Field::role();
-		$expected = [
-			'label'   => 'Role',
-			'type'    => 'hidden',
-			'options' => []
-		];
-
-		$this->assertSame($expected, $field);
-
-		// without authenticated user
 		$this->app = $this->app->clone([
-			'blueprints' => [
-				'users/admin'  => [
-					'name'        => 'admin',
-					'title'       => 'Admin',
-					'description' => 'Admin description'
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor'],
+				['name' => 'guest']
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
 				],
-				'users/editor' => [
-					'name'        => 'editor',
-					'title'       => 'Editor',
-					'description' => 'Editor description'
-				],
-				'users/client' => [
-					'name'  => 'client',
-					'title' => 'Client'
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
 				]
-			]
+			],
 		]);
 
-		$field = Field::role();
+
+		// pass user
+		$this->app->impersonate('admin@getkirby.com');
+		$user  = $this->app->user('editor@getkirby.com');
+		$field = Field::role($user);
 		$expected = [
 			'label'   => 'Role',
 			'type'    => 'radio',
 			'options' => [
 				[
-					'text' => 'Client',
-					'info' => 'No description',
-					'value' => 'client'
-				],
-				[
-					'text' => 'Editor',
-					'info' => 'Editor description',
-					'value' => 'editor'
-				],
-			]
-		];
-
-		$this->assertSame($expected, $field);
-
-		// with authenticated admin
-		$this->app->impersonate('kirby');
-
-		$field = Field::role();
-		$expected = [
-			'label'   => 'Role',
-			'type'    => 'radio',
-			'options' => [
-				[
-					'text' => 'Admin',
-					'info' => 'Admin description',
+					'text'  => 'Admin',
+					'info'  => 'No description',
 					'value' => 'admin'
 				],
 				[
-					'text' => 'Client',
-					'info' => 'No description',
-					'value' => 'client'
-				],
-				[
-					'text' => 'Editor',
-					'info' => 'Editor description',
+					'text'  => 'Editor',
+					'info'  => 'No description',
 					'value' => 'editor'
 				],
+				[
+					'text'  => 'Guest',
+					'info'  => 'No description',
+					'value' => 'guest'
+				]
+			]
+		];
+
+		$this->assertSame($expected, $field);
+
+		// pass no user
+		$field = Field::role();
+		$expected = [
+			'label'   => 'Role',
+			'type'    => 'radio',
+			'options' => [
+				[
+					'text'  => 'Admin',
+					'info'  => 'No description',
+					'value' => 'admin'
+				],
+				[
+					'text'  => 'Editor',
+					'info'  => 'No description',
+					'value' => 'editor'
+				],
+				[
+					'text'  => 'Guest',
+					'info'  => 'No description',
+					'value' => 'guest'
+				]
+			]
+		];
+
+		$this->assertSame($expected, $field);
+
+		// pass no user, but current user is not an admin
+		$this->app->impersonate('editor@getkirby.com');
+		$field = Field::role();
+		$expected = [
+			'label'   => 'Role',
+			'type'    => 'radio',
+			'options' => [
+				[
+					'text'  => 'Editor',
+					'info'  => 'No description',
+					'value' => 'editor'
+				],
+				[
+					'text'  => 'Guest',
+					'info'  => 'No description',
+					'value' => 'guest'
+				]
+			]
+		];
+
+		$this->assertSame($expected, $field);
+
+		// last admin
+		$user  = $this->app->user('admin@getkirby.com');
+		$field = Field::role($user);
+		$expected = [
+			'label'   => 'Role',
+			'type'    => 'hidden',
+			'options' => [
+				[
+					'text'  => 'Admin',
+					'info'  => 'No description',
+					'value' => 'admin'
+				]
 			]
 		];
 

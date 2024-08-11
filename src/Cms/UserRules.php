@@ -101,29 +101,7 @@ class UserRules
 	 */
 	public static function changeRole(User $user, string $role): bool
 	{
-		// protect admin from role changes by non-admin
-		if (
-			$user->kirby()->user()->isAdmin() === false &&
-			$user->isAdmin() === true
-		) {
-			throw new PermissionException([
-				'key'  => 'user.changeRole.permission',
-				'data' => ['name' => $user->username()]
-			]);
-		}
-
-		// prevent non-admins making a user to admin
-		if (
-			$user->kirby()->user()->isAdmin() === false &&
-			$role === 'admin'
-		) {
-			throw new PermissionException([
-				'key'  => 'user.changeRole.toAdmin'
-			]);
-		}
-
-		static::validRole($user, $role);
-
+		// prevent demoting the last admin
 		if ($role !== 'admin' && $user->isLastAdmin() === true) {
 			throw new LogicException([
 				'key'  => 'user.changeRole.lastAdmin',
@@ -131,12 +109,26 @@ class UserRules
 			]);
 		}
 
+		// prevent non-admins promoting a user to the admin role
+		if (
+			$user->kirby()->user()->isAdmin() === false &&
+			$role === 'admin'
+		) {
+			throw new PermissionException([
+				'key' => 'user.changeRole.toAdmin'
+			]);
+		}
+
+		// check permissions
 		if ($user->permissions()->changeRole() !== true) {
 			throw new PermissionException([
 				'key'  => 'user.changeRole.permission',
 				'data' => ['name' => $user->username()]
 			]);
 		}
+
+		// prevent changing to role that is not available for user
+		static::validRole($user, $role);
 
 		return true;
 	}
@@ -373,7 +365,7 @@ class UserRules
 	 */
 	public static function validRole(User $user, string $role): bool
 	{
-		if ($user->kirby()->roles()->find($role) instanceof Role) {
+		if ($user->roles()->find($role) instanceof Role) {
 			return true;
 		}
 

@@ -39,7 +39,7 @@ return [
 						'translation'  => Field::translation([
 							'required' => true
 						]),
-						'role' => Field::role([
+						'role' => Field::role(props: [
 							'required' => true
 						])
 					],
@@ -228,7 +228,7 @@ return [
 				'component' => 'k-form-dialog',
 				'props' => [
 					'fields' => [
-						'role' => Field::role([
+						'role' => Field::role($user, [
 							'label'    => I18n::translate('user.changeRole.select'),
 							'required' => true,
 						])

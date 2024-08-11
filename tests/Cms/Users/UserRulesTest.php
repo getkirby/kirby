@@ -8,6 +8,9 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 
+/**
+ * @coversDefaultClass \Kirby\Cms\UserRules
+ */
 class UserRulesTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
@@ -116,118 +119,131 @@ class UserRulesTest extends TestCase
 		UserRules::changeEmail($kirby->user('user@domain.com'), 'admin@domain.com');
 	}
 
-	public function testChangeRoleWithoutPermissions()
+	/**
+	 * @covers ::changeRole
+	 */
+	public function testChangeRoleDemoteLastAdmin()
 	{
-		$kirby = new App([
+		// demoting last admin
+		$app = new App([
 			'roots' => [
-				'site' => static::FIXTURES,
+				'index' => '/dev/null'
 			],
-			'user' => 'admin@domain.com',
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor']
+			],
+			'user'  => 'admin@getkirby.com',
 			'users' => [
-				['email' => 'editor@domain.com', 'role' => 'admin'],
-				['email' => 'admin@domain.com', 'role' => 'admin']
-			]
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				]
+			],
 		]);
 
-		$kirby->impersonate('admin@domain.com');
-
-		$permissions = $this->createMock(UserPermissions::class);
-		$permissions->method('__call')->with('changeRole')->willReturn(false);
-
-		$user = $this->createMock(User::class);
-		$user->method('kirby')->willReturn($kirby);
-		$user->method('permissions')->willReturn($permissions);
-		$user->method('username')->willReturn('test');
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to change the role for the user "test"');
-
-		UserRules::changeRole($user, 'admin');
-	}
-
-	public function testChangeRoleFromAdminByAdmin()
-	{
-		$kirby = new App([
-			'roots' => [
-				'site' => static::FIXTURES,
-			],
-			'user' => 'admin@domain.com',
-			'users' => [
-				['email' => 'user@domain.com', 'role' => 'admin'],
-				['email' => 'admin@domain.com', 'role' => 'admin']
-			]
-		]);
-		$kirby->impersonate('admin@domain.com');
-
-		$this->assertTrue(UserRules::changeRole($kirby->user('user@domain.com'), 'editor'));
-	}
-
-	public function testChangeRoleFromAdminByNonAdmin()
-	{
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode('error.user.changeRole.permission');
-
-		$kirby = new App([
-			'roots' => [
-				'site' => static::FIXTURES,
-			],
-			'user' => 'user@domain.com',
-			'users' => [
-				['email' => 'user@domain.com', 'role' => 'editor'],
-				['email' => 'admin@domain.com', 'role' => 'admin']
-			]
-		]);
-		$kirby->impersonate('user@domain.com');
-
-		UserRules::changeRole($kirby->user('admin@domain.com'), 'editor');
-	}
-
-	public function testChangeRoleToAdminByAdmin()
-	{
-		$kirby = new App([
-			'roots' => [
-				'site' => static::FIXTURES,
-			],
-			'user' => 'user1@domain.com',
-			'users' => [
-				['email' => 'user1@domain.com', 'role' => 'admin'],
-				['email' => 'user2@domain.com', 'role' => 'editor']
-			]
-		]);
-		$kirby->impersonate('user1@domain.com');
-
-		$this->assertTrue(UserRules::changeRole($kirby->user('user2@domain.com'), 'admin'));
-	}
-
-	public function testChangeRoleToAdminByNonAdmin()
-	{
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode('error.user.changeRole.toAdmin');
-
-		$kirby = new App([
-			'roots' => [
-				'site' => static::FIXTURES,
-			],
-			'user' => 'user1@domain.com',
-			'users' => [
-				['email' => 'user1@domain.com', 'role' => 'editor'],
-				['email' => 'user2@domain.com', 'role' => 'editor']
-			]
-		]);
-		$kirby->impersonate('user1@domain.com');
-
-		UserRules::changeRole($kirby->user('user2@domain.com'), 'admin');
-	}
-
-	public function testChangeRoleLastAdmin()
-	{
 		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.user.changeRole.lastAdmin');
 
-		$kirby = $this->appWithAdmin();
-		$kirby->impersonate('admin@domain.com');
+		$user = $app->user('admin@getkirby.com');
+		UserRules::changeRole($user, 'editor');
+	}
 
-		UserRules::changeRole($kirby->user('admin@domain.com'), 'editor');
+	/**
+	 * @covers ::changeRole
+	 */
+	public function testChangeRolePromoteToAdmin()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor']
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'email' => 'a@getkirby.com',
+					'role'  => 'editor'
+				],
+				[
+					'email' => 'b@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+		]);
+
+		// by admin
+		$app->impersonate('admin@getkirby.com');
+		$user = $app->user('b@getkirby.com');
+		$this->assertTrue(UserRules::changeRole($user, 'admin'));
+
+		// by non-admin
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionCode('error.user.changeRole.toAdmin');
+
+		$app->impersonate('a@getkirby.com');
+		$user = $app->user('b@getkirby.com');
+		UserRules::changeRole($user, 'admin');
+	}
+
+	/**
+	 * @covers ::changeRole
+	 */
+	public function testChangeRolePermissions()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'roles' => [
+				[
+					'name' => 'manager',
+					'permissions' => [
+						'users' => [
+							'changeRole' => true,
+						]
+					]
+				],
+				[
+					'name' => 'editor',
+					'permissions' => [
+						'users' => [
+							'changeRole' => false,
+						]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'manager@getkirby.com',
+					'role'  => 'manager'
+				],
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+		]);
+
+		// with permission
+		$app->impersonate('manager@getkirby.com');
+		$user = $app->user('editor@getkirby.com');
+		$this->assertTrue(UserRules::changeRole($user, 'manager'));
+
+		// without permission
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionCode('error.user.changeRole.permission');
+		$this->expectExceptionMessage('You are not allowed to change the role for the user "manager@getkirby.com"');
+
+		$app->impersonate('editor@getkirby.com');
+		$user = $app->user('manager@getkirby.com');
+		UserRules::changeRole($user, 'editor');
 	}
 
 	public function testChangeTotp()
