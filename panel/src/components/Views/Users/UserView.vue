@@ -7,7 +7,7 @@
 		class="k-user-view"
 	>
 		<template #topbar>
-			<k-prev-next v-if="model.account" :prev="prev" :next="next" />
+			<k-prev-next :prev="prev" :next="next" />
 		</template>
 
 		<k-header
