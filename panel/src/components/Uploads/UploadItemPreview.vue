@@ -1,11 +1,16 @@
 <template>
 	<a :href="url" class="k-upload-item-preview" target="_blank">
-		<k-image v-if="isPreviewable" :cover="true" :src="url" back="pattern" />
+		<k-image
+			v-if="isPreviewable"
+			:cover="cover"
+			:src="url"
+			:back="back ?? 'pattern'"
+		/>
 		<k-icon-frame
 			v-else
 			:color="color ?? fallbackColor"
 			:icon="icon ?? fallbackIcon"
-			back="black"
+			:back="back ?? 'black'"
 			ratio="1/1"
 		/>
 	</a>
@@ -15,9 +20,17 @@
 export const props = {
 	props: {
 		/**
+		 * Preview back color
+		 */
+		back: String,
+		/**
 		 * Preview icon color
 		 */
 		color: String,
+		cover: {
+			type: Boolean,
+			default: true
+		},
 		/**
 		 * Preview icon type
 		 */
