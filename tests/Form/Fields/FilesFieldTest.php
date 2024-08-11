@@ -75,6 +75,7 @@ class FilesFieldTest extends TestCase
 		$this->assertNull($field->max());
 		$this->assertTrue($field->multiple());
 		$this->assertTrue($field->save());
+		$this->assertSame('uuid', $field->store());
 	}
 
 	public function testValue()
@@ -291,5 +292,38 @@ class FilesFieldTest extends TestCase
 		]);
 
 		$this->assertSame($this->app->site(), $field->parentModel());
+	}
+
+	public function testStore()
+	{
+		// Default
+		$field = $this->field('files', [
+			'model' => new Page(['slug' => 'test']),
+		]);
+
+		$this->assertSame('uuid', $field->store());
+
+		// Custom
+		$field = $this->field('files', [
+			'model' => new Page(['slug' => 'test']),
+			'store' => 'id'
+		]);
+
+		$this->assertSame('id', $field->store());
+
+		// Disabled UUIDs
+		$this->app->clone([
+			'options' => [
+				'content' => [
+					'uuid' => false
+				]
+			]
+		]);
+
+		$field = $this->field('files', [
+			'model' => new Page(['slug' => 'test']),
+		]);
+
+		$this->assertSame('id', $field->store());
 	}
 }
