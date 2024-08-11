@@ -4,6 +4,7 @@
 		:style="$attrs.style"
 	>
 		<k-tags
+			:draggable="false"
 			:html="html"
 			:value="tags"
 			element="ul"
