@@ -168,6 +168,9 @@ trait FileActions
 		// to the `after` hook for comparison
 		$old = $this->hardcopy();
 
+		// check file rules
+		$this->rules()->$action(...array_values($arguments));
+
 		// run `before` hook and pass all arguments;
 		// the very first argument (which should be the model)
 		// is modified by the return value from the hook (if any returned)
@@ -178,16 +181,11 @@ trait FileActions
 			$appliedTo
 		);
 
-		// get just the values of argument, so that spreading them
-		// as arguments in a method call gets only assigned by order
-		// not by key name
-		$argumentValues = array_values($arguments);
-
-		// check file rules
-		$this->rules()->$action(...$argumentValues);
+		// check file rules again, after the hook got applied
+		$this->rules()->$action(...array_values($arguments));
 
 		// run the main action closure
-		$result = $callback(...$argumentValues);
+		$result = $callback(...array_values($arguments));
 
 		// determine arguments for `after` hook depending on the action
 		$argumentsAfter = match ($action) {
