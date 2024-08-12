@@ -2,7 +2,7 @@
 	<div
 		:data-disabled="disabled"
 		:data-translate="translate"
-		:class="'k-field k-field-name-' + name"
+		:class="['k-field', `k-field-name-${name}`, `k-field-type-${type}`]"
 		@focusin="$emit('focus', $event)"
 		@focusout="$emit('blur', $event)"
 	>
