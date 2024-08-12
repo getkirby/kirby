@@ -153,7 +153,7 @@ class LanguageRoutesTest extends TestCase
 		$this->assertSame($app->page('page1'), $result);
 
 		$result = $app->call('de/page1');
-		$this->assertInstanceOf(Response::class, $result);
+		$this->assertInstanceOf(Responder::class, $result);
 		$this->assertSame(302, $result->code());
 		$this->assertSame('/de/seite1?foo=bar', $result->header('Location'));
 

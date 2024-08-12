@@ -46,7 +46,7 @@ class LanguageRoutes
 								$url .= '?' . $query;
 							}
 
-							return Response::redirect($url);
+							return $kirby->response()->redirect($url);
 						}
 					}
 
