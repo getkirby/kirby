@@ -37,7 +37,19 @@ abstract class Model
 	 */
 	public function content(): array
 	{
-		return Form::for($this->model)->values();
+		$version = $this->model->version('changes');
+		$changes = [];
+
+		if ($version->exists() === true) {
+			$changes = $version->content()->toArray();
+		}
+
+		return Form::for(
+			model: $this->model,
+			props: [
+				'values' => $changes
+			]
+		)->values();
 	}
 
 	/**

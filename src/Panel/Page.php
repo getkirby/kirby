@@ -4,7 +4,6 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Content\VersionId;
 use Kirby\Filesystem\Asset;
 use Kirby\Panel\Ui\Buttons\ViewButtons;
 use Kirby\Toolkit\I18n;
@@ -372,25 +371,11 @@ class Page extends Model
 	 */
 	public function view(): array
 	{
-		$page = $this->model;
-
-		// This is placed here as a proof of concept
-		// @todo we need to find a better place for it
-		// to switch into changes mode in the panel
-		VersionId::$render = VersionId::changes();
-
-		$view = [
-			'breadcrumb' => $page->panel()->breadcrumb(),
+		return [
+			'breadcrumb' => $this->model->panel()->breadcrumb(),
 			'component'  => 'k-page-view',
 			'props'      => $this->props(),
-			'title'      => $page->title()->toString(),
+			'title'      => $this->model->title()->toString(),
 		];
-
-		// The render mode needs to be undone here to keep unit tests working
-		// That's the downside of such static properties. They are likely to
-		// cause side-effects
-		VersionId::$render = null;
-
-		return $view;
 	}
 }
