@@ -23,7 +23,11 @@ return [
 				$uploads = [];
 			}
 
-			$uploads['accept'] = '*';
+			$uploads['accept']  = '*';
+
+			if ($preview = $this->image) {
+				$uploads['preview'] = $preview;
+			}
 
 			if ($template = $uploads['template'] ?? null) {
 				// get parent object for upload target

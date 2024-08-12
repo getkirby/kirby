@@ -1,7 +1,9 @@
 <template>
 	<li :data-completed="completed" class="k-upload-item">
 		<k-upload-item-preview
+			:back="back"
 			:color="color"
+			:cover="cover"
 			:icon="icon"
 			:type="type"
 			:url="url"

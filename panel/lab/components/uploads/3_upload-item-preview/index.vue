@@ -1,9 +1,24 @@
 <template>
 	<k-lab-examples>
-		<k-lab-example label="Image with preview">
+		<k-lab-example label="Image">
 			<k-upload-item-preview
 				type="image/jpeg"
-				url="https://picsum.photos/200/200"
+				url="https://picsum.photos/100/200"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Image & cover: false">
+			<k-upload-item-preview
+				:cover="false"
+				type="image/jpeg"
+				url="https://picsum.photos/100/200"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Image & cover: false & back: white">
+			<k-upload-item-preview
+				back="white"
+				:cover="false"
+				type="image/jpeg"
+				url="https://picsum.photos/100/200"
 			/>
 		</k-lab-example>
 		<k-lab-example label="Image without preview">
