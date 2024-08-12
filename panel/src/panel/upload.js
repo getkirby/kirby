@@ -106,6 +106,7 @@ export default (panel) => {
 			const url = URL.createObjectURL(file);
 
 			return {
+				...this.preview,
 				completed: false,
 				error: null,
 				extension: extension(file.name),

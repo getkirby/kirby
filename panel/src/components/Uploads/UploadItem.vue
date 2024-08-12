@@ -1,8 +1,9 @@
 <template>
 	<li :data-completed="completed" class="k-upload-item">
 		<k-upload-item-preview
-			v-bind="$panel.upload.preview"
+			:back="back"
 			:color="color"
+			:cover="cover"
 			:icon="icon"
 			:type="type"
 			:url="url"
