@@ -334,12 +334,9 @@ export default {
 	overflow: auto;
 }
 .k-link-field .k-bubbles-field-preview {
-	--bubble-rounded: var(--rounded-sm);
-	--bubble-size: var(--height-sm);
+	--tag-rounded: var(--rounded-sm);
+	--tag-size: var(--height-sm);
 	padding-inline: 0;
-}
-.k-link-field .k-bubbles-field-preview .k-bubble {
-	font-size: var(--text-sm);
 }
 
 .k-link-field[data-disabled="true"] .k-link-input-model-placeholder {

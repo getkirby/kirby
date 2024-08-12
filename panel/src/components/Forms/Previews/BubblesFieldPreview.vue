@@ -11,6 +11,9 @@
 import FieldPreview from "@/mixins/forms/fieldPreview.js";
 import { props as BubblesProps } from "@/components/Layout/Bubbles.vue";
 
+/**
+ * @deprecated 5.0.0 Use `<k-tags-field-preview>` instead
+ */
 export default {
 	mixins: [FieldPreview, BubblesProps],
 	props: {
@@ -47,6 +50,11 @@ export default {
 				return bubble;
 			});
 		}
+	},
+	mounted() {
+		window.panel.deprecated(
+			"<k-bubbles-field-preview> will be removed in a future version. Use <k-tags-field-preview> instead."
+		);
 	}
 };
 </script>

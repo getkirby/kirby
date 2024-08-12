@@ -1,8 +1,8 @@
 <script>
-import BubblesFieldPreview from "./BubblesFieldPreview.vue";
+import TagsFieldPreview from "./TagsFieldPreview.vue";
 
 export default {
-	extends: BubblesFieldPreview,
+	extends: TagsFieldPreview,
 	class: "k-users-field-preview",
 	computed: {
 		bubble() {

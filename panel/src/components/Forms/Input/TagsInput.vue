@@ -7,6 +7,7 @@
 			<k-tags
 				ref="tags"
 				v-bind="$props"
+				:removable="true"
 				@edit="edit"
 				@input="$emit('input', $event)"
 				@click.native.stop="$refs.toggle?.$el?.click()"
