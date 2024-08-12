@@ -199,7 +199,7 @@ trait AppErrors
 				'isLogged'
 			);
 
-			if ($isLogged === true) {
+			if ($isLogged !== false) {
 				error_log($exception);
 			}
 
