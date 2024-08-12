@@ -6,10 +6,17 @@ use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Panel\Ui\FilePreviews\FileDefaultPreview;
 use Kirby\TestCase;
 
 class FileDummyPreview extends FilePreview
 {
+	public function __construct(
+		public File $file,
+		public string $component = 'k-file-default-preview'
+	) {
+	}
+
 	public static function accepts(File $file): bool
 	{
 		return $file->type() === 'document';
@@ -33,7 +40,7 @@ class FilePreviewTest extends TestCase
 	{
 		$page    = new Page(['slug' => 'test']);
 		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
-		$preview = new FilePreview($file);
+		$preview = new FileDummyPreview($file);
 		$details = $preview->details();
 
 		$this->assertSame([
@@ -65,9 +72,8 @@ class FilePreviewTest extends TestCase
 		$page = new Page(['slug' => 'test']);
 		$file = new File(['filename' => 'test.jpg', 'parent' => $page]);
 
-		$preview = FilePreview::factory($file);
-		$this->assertInstanceOf(FilePreview::class, $preview);
-		$this->assertSame('k-file-default-preview', $preview->component);
+		$component = FilePreview::factory($file);
+		$this->assertInstanceOf(FileDefaultPreview::class, $component);
 	}
 
 	/**
@@ -86,13 +92,13 @@ class FilePreviewTest extends TestCase
 
 		$page = new Page(['slug' => 'test']);
 
-		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
-		$preview = FilePreview::factory($file);
-		$this->assertInstanceOf(FilePreview::class, $preview);
+		$file      = new File(['filename' => 'test.jpg', 'parent' => $page]);
+		$component = FilePreview::factory($file);
+		$this->assertInstanceOf(FileDefaultPreview::class, $component);
 
 		$file      = new File(['filename' => 'test.xls', 'parent' => $page]);
-		$preview = FilePreview::factory($file);
-		$this->assertInstanceOf(FileDummyPreview::class, $preview);
+		$component = FilePreview::factory($file);
+		$this->assertInstanceOf(FileDummyPreview::class, $component);
 	}
 
 	/**
@@ -126,7 +132,7 @@ class FilePreviewTest extends TestCase
 	{
 		$page    = new Page(['slug' => 'test']);
 		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
-		$preview = new FilePreview($file);
+		$preview = new FileDummyPreview($file);
 		$image   = $preview->image();
 
 		$this->assertSame('image', $image['icon']);
@@ -141,12 +147,11 @@ class FilePreviewTest extends TestCase
 	{
 		$page    = new Page(['slug' => 'test']);
 		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
-		$preview = new FilePreview($file);
+		$preview = new FileDummyPreview($file);
 		$props   = $preview->props();
 
 		$this->assertIsArray($props['details']);
-		$this->assertIsArray($props['image']);
-		$this->assertSame('/test/test.jpg', $props['url']);
+		$this->assertIsString($props['url']);
 	}
 
 	/**

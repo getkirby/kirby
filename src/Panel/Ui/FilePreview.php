@@ -5,7 +5,7 @@ namespace Kirby\Panel\Ui;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\LogicException;
+use Kirby\Panel\Ui\FilePreviews\FileDefaultPreview;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -19,24 +19,19 @@ use Kirby\Toolkit\I18n;
  * @since     5.0.0
  * @internal
  */
-class FilePreview extends Component
+abstract class FilePreview extends Component
 {
 	public function __construct(
 		public File $file,
-		public string $component = 'k-file-default-preview'
+		public string $component
 	) {
 	}
 
 	/**
 	 * Returns true if this class should
 	 * handle the preview of this file
-	 *
-	 * @codeCoverageIgnore
 	 */
-	public static function accepts(File $file): bool
-	{
-		throw new LogicException('File preview classes must define the static ::accepts() method');
-	}
+	abstract public static function accepts(File $file): bool;
 
 	/**
 	 * Returns detail information about the file
@@ -75,8 +70,8 @@ class FilePreview extends Component
 		$handlers = App::instance()->extensions('filePreviews');
 
 		foreach ($handlers as $handler) {
-			if (is_subclass_of($handler, static::class) === false) {
-				throw new InvalidArgumentException('File preview handler "' . $handler . '" must extend ' . static::class);
+			if (is_subclass_of($handler, self::class) === false) {
+				throw new InvalidArgumentException('File preview handler "' . $handler . '" must extend ' . self::class);
 			}
 
 			if ($handler::accepts($file) === true) {
@@ -84,7 +79,7 @@ class FilePreview extends Component
 			}
 		}
 
-		return new self($file);
+		return new FileDefaultPreview($file);
 	}
 
 	/**
@@ -102,7 +97,6 @@ class FilePreview extends Component
 	{
 		return [
 			'details' => $this->details(),
-			'image'   => $this->image(),
 			'url'     => $this->file->previewUrl()
 		];
 	}
