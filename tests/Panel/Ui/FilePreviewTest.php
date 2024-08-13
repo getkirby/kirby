@@ -33,6 +33,18 @@ class InvalidFilePreview
  */
 class FilePreviewTest extends TestCase
 {
+	public function setUp(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+		]);
+
+		// authenticate for preview URL
+		$this->app->impersonate('kirby');
+	}
+
 	/**
 	 * @covers ::details
 	 */
