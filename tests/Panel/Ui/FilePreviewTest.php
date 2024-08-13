@@ -163,6 +163,7 @@ class FilePreviewTest extends TestCase
 		$props   = $preview->props();
 
 		$this->assertIsArray($props['details']);
+		$this->assertIsArray($props['image']);
 		$this->assertIsString($props['url']);
 	}
 

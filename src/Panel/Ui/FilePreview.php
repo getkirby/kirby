@@ -97,6 +97,7 @@ abstract class FilePreview extends Component
 	{
 		return [
 			'details' => $this->details(),
+			'image'   => $this->image(),
 			'url'     => $this->file->previewUrl()
 		];
 	}
