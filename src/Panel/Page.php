@@ -371,13 +371,11 @@ class Page extends Model
 	 */
 	public function view(): array
 	{
-		$page = $this->model;
-
 		return [
-			'breadcrumb' => $page->panel()->breadcrumb(),
+			'breadcrumb' => $this->model->panel()->breadcrumb(),
 			'component'  => 'k-page-view',
 			'props'      => $this->props(),
-			'title'      => $page->title()->toString(),
+			'title'      => $this->model->title()->toString(),
 		];
 	}
 }

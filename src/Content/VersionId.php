@@ -32,7 +32,13 @@ class VersionId implements Stringable
 	/**
 	 * Latest changes to the content (optional)
 	 */
-	public const CHANGES   = 'changes';
+	public const CHANGES = 'changes';
+
+	/**
+	 * A global store for a version id that should be
+	 * rendered for each model in a live preview scenario.
+	 */
+	public static self|null $render = null;
 
 	/**
 	 * @throws \Kirby\Exception\InvalidArgumentException If the version ID is not valid

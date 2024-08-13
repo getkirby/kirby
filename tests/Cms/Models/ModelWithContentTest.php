@@ -230,6 +230,39 @@ class ModelWithContentTest extends TestCase
 		$this->assertNull($model->lock());
 	}
 
+	public function testContentWithChanges()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'foo',
+					]
+				],
+			]
+		]);
+
+		$page = $app->page('foo');
+
+		$this->assertSame(null, $page->content()->title()->value());
+
+		// create some changes
+		$page->version('changes')->save([
+			'title' => 'Test'
+		]);
+
+		VersionId::$render = VersionId::changes();
+
+		$this->assertSame('Test', $page->content()->title()->value());
+
+		VersionId::$render = null;
+
+		$this->assertSame(null, $page->content()->title()->value());
+	}
+
 	/**
 	 * @dataProvider modelsProvider
 	 */
