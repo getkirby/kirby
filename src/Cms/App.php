@@ -1276,34 +1276,23 @@ class App
 			throw new NotFoundException('The home page does not exist');
 		}
 
-		// search for the page by path
-		$page = $site->find($path);
+		// search for the page or draft by path
+		$page = $site->find($path) ?? $site->draft($path);
 
 		// access token and requested version
-		$user        = $this->user();
-		$request     = $this->request();
-		$accessToken = $request->get('_token');
-		$versionId   = VersionId::from($request->get('_version', 'published'));
+		$user      = $this->user();
+		$request   = $this->request();
+		$token     = $request->get('_token');
+		$versionId = VersionId::from($request->get('_version', 'published'));
 
-		// search for a draft if the page cannot be found
-		if (!$page && $draft = $site->draft($path)) {
-			if (
-				$this->user() ||
-				$draft->isVerified($accessToken)
-			) {
-				$page = $draft;
-			}
+		// validate if the page and version can be previewed at all
+		if ($page->isPreviewable(versionId: $versionId, token: $token) === false) {
+			return null;
 		}
 
 		// activate the changes preview if requested
-		// and the credentials are correct
-		if ($page && $versionId->is(VersionId::changes()) === true) {
-			if (
-				$this->user() ||
-				$page->isVerifiedByToken($accessToken) === true
-			) {
-				VersionId::$render = $versionId;
-			}
+		if ($versionId->is(VersionId::changes()) === true) {
+			VersionId::$render = $versionId;
 		}
 
 		// try to resolve content representations if the path has an extension

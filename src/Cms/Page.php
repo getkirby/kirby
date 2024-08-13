@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Content\Field;
+use Kirby\Content\VersionId;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
@@ -432,6 +433,18 @@ class Page extends ModelWithContent
 	}
 
 	/**
+	 * Validates the given token
+	 */
+	public function hasToken(string|null $token): bool
+	{
+		if ($token !== null && $this->token() === $token) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Returns the Page Id
 	 */
 	public function id(): string
@@ -539,6 +552,14 @@ class Page extends ModelWithContent
 	public function isAncestorOf(Page $child): bool
 	{
 		return $child->parents()->has($this->id()) === true;
+	}
+
+	/**
+	 * Checks if the page is the ancestor of a draft page
+	 */
+	public function isAncestorOfADraft(): bool
+	{
+		return $this->parents()->findBy('status', 'draft') !== null;
 	}
 
 	/**
@@ -726,6 +747,41 @@ class Page extends ModelWithContent
 	}
 
 	/**
+	 * Checks if a page can be accessed publicly.
+	 * This is used to check if a draft or changes
+	 * can be previewed.
+	 *
+	 * @internal
+	 */
+	public function isPreviewable(
+		VersionId|string|null $versionId = null,
+		string|null $token = null,
+	): bool {
+		// if a valid token exists, the page can be accessed
+		if ($this->hasToken($token) === true) {
+			return true;
+		}
+
+		// if there's an authenticated user, the page can be previewed
+		if ($this->kirby()->user() !== null) {
+			return true;
+		}
+
+		// without a token or user, drafts or ancestors of drafts
+		// cannot be previewed
+		if ($this->isDraft() === true || $this->isAncestorOfADraft() === true) {
+			return false;
+		}
+
+		// without a token or user, changes can also not be previewed
+		if ($this->version($versionId)->id()->is(VersionId::changes()) === true) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Checks if the page is not a draft.
 	 */
 	public function isPublished(): bool
@@ -760,41 +816,6 @@ class Page extends ModelWithContent
 	public function isUnlisted(): bool
 	{
 		return $this->isPublished() && $this->num() === null;
-	}
-
-	/**
-	 * Checks if the page access is verified.
-	 * This is only used for drafts so far.
-	 * @internal
-	 */
-	public function isVerified(string|null $token = null): bool
-	{
-		// if a valid token exists, the page is definitely verified
-		if ($this->isVerifiedByToken($token) === true) {
-			return true;
-		}
-
-		// public pages don't need extra verification
-		if (
-			$this->isPublished() === true &&
-			$this->parents()->findBy('status', 'draft') === null
-		) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Validates the given token
-	 */
-	public function isVerifiedByToken(string|null $token): bool
-	{
-		if ($token !== null && $this->token() === $token) {
-			return true;
-		}
-
-		return false;
 	}
 
 	/**
