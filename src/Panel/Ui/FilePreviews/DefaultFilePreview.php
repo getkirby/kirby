@@ -16,11 +16,11 @@ use Kirby\Panel\Ui\FilePreview;
  * @since     5.0.0
  * @internal
  */
-class FileDefaultPreview extends FilePreview
+class DefaultFilePreview extends FilePreview
 {
 	public function __construct(
 		public File $file,
-		public string $component = 'k-file-default-preview'
+		public string $component = 'k-default-file-preview'
 	) {
 	}
 

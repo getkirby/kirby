@@ -6,14 +6,14 @@ use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Panel\Ui\FilePreviews\FileDefaultPreview;
+use Kirby\Panel\Ui\FilePreviews\DefaultFilePreview;
 use Kirby\TestCase;
 
-class FileDummyPreview extends FilePreview
+class DummyFilePreview extends FilePreview
 {
 	public function __construct(
 		public File $file,
-		public string $component = 'k-file-default-preview'
+		public string $component = 'k-dummy-file-preview'
 	) {
 	}
 
@@ -23,7 +23,7 @@ class FileDummyPreview extends FilePreview
 	}
 }
 
-class FileInvalidPreview
+class InvalidFilePreview
 {
 }
 
@@ -40,7 +40,7 @@ class FilePreviewTest extends TestCase
 	{
 		$page    = new Page(['slug' => 'test']);
 		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
-		$preview = new FileDummyPreview($file);
+		$preview = new DummyFilePreview($file);
 		$details = $preview->details();
 
 		$this->assertSame([
@@ -73,7 +73,7 @@ class FilePreviewTest extends TestCase
 		$file = new File(['filename' => 'test.jpg', 'parent' => $page]);
 
 		$component = FilePreview::factory($file);
-		$this->assertInstanceOf(FileDefaultPreview::class, $component);
+		$this->assertInstanceOf(DefaultFilePreview::class, $component);
 	}
 
 	/**
@@ -86,7 +86,7 @@ class FilePreviewTest extends TestCase
 				'index' => '/dev/null'
 			],
 			'filePreviews' => [
-				FileDummyPreview::class
+				DummyFilePreview::class
 			]
 		]);
 
@@ -94,11 +94,11 @@ class FilePreviewTest extends TestCase
 
 		$file      = new File(['filename' => 'test.jpg', 'parent' => $page]);
 		$component = FilePreview::factory($file);
-		$this->assertInstanceOf(FileDefaultPreview::class, $component);
+		$this->assertInstanceOf(DefaultFilePreview::class, $component);
 
 		$file      = new File(['filename' => 'test.xls', 'parent' => $page]);
 		$component = FilePreview::factory($file);
-		$this->assertInstanceOf(FileDummyPreview::class, $component);
+		$this->assertInstanceOf(DummyFilePreview::class, $component);
 	}
 
 	/**
@@ -111,8 +111,8 @@ class FilePreviewTest extends TestCase
 				'index' => '/dev/null'
 			],
 			'filePreviews' => [
-				FileInvalidPreview::class,
-				FileDummyPreview::class
+				InvalidFilePreview::class,
+				DummyFilePreview::class
 			]
 		]);
 
@@ -120,7 +120,7 @@ class FilePreviewTest extends TestCase
 		$file = new File(['filename' => 'test.jpg', 'parent' => $page]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('File preview handler "Kirby\Panel\Ui\FileInvalidPreview" must extend Kirby\Panel\Ui\FilePreview');
+		$this->expectExceptionMessage('File preview handler "Kirby\Panel\Ui\InvalidFilePreview" must extend Kirby\Panel\Ui\FilePreview');
 
 		FilePreview::factory($file);
 	}
@@ -132,7 +132,7 @@ class FilePreviewTest extends TestCase
 	{
 		$page    = new Page(['slug' => 'test']);
 		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
-		$preview = new FileDummyPreview($file);
+		$preview = new DummyFilePreview($file);
 		$image   = $preview->image();
 
 		$this->assertSame('image', $image['icon']);
@@ -147,7 +147,7 @@ class FilePreviewTest extends TestCase
 	{
 		$page    = new Page(['slug' => 'test']);
 		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
-		$preview = new FileDummyPreview($file);
+		$preview = new DummyFilePreview($file);
 		$props   = $preview->props();
 
 		$this->assertIsArray($props['details']);
@@ -161,8 +161,8 @@ class FilePreviewTest extends TestCase
 	{
 		$page      = new Page(['slug' => 'test']);
 		$file      = new File(['filename' => 'test.jpg', 'parent' => $page]);
-		$component = new FileDummyPreview($file);
+		$component = new DummyFilePreview($file);
 
-		$this->assertSame('k-file-default-preview', $component->render()['component']);
+		$this->assertSame('k-dummy-file-preview', $component->render()['component']);
 	}
 }

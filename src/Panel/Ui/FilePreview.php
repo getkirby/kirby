@@ -5,7 +5,7 @@ namespace Kirby\Panel\Ui;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Panel\Ui\FilePreviews\FileDefaultPreview;
+use Kirby\Panel\Ui\FilePreviews\DefaultFilePreview;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -79,7 +79,7 @@ abstract class FilePreview extends Component
 			}
 		}
 
-		return new FileDefaultPreview($file);
+		return new DefaultFilePreview($file);
 	}
 
 	/**

@@ -7,10 +7,10 @@ use Kirby\Cms\Page;
 use Kirby\TestCase;
 
 /**
- * @coversDefaultClass \Kirby\Panel\Ui\FilePreviews\FileDefaultPreview
+ * @coversDefaultClass \Kirby\Panel\Ui\FilePreviews\DefaultFilePreview
  * @covers ::__construct
  */
-class FileDefaultPreviewTest extends TestCase
+class DefaultFilePreviewTest extends TestCase
 {
 	/**
 	 * @covers ::accepts
@@ -20,7 +20,7 @@ class FileDefaultPreviewTest extends TestCase
 		$page = new Page(['slug' => 'test']);
 		$file = new File(['filename' => 'test.jpg', 'parent' => $page]);
 
-		$this->assertTrue(FileDefaultPreview::accepts($file));
+		$this->assertTrue(DefaultFilePreview::accepts($file));
 	}
 
 	/**
@@ -31,7 +31,7 @@ class FileDefaultPreviewTest extends TestCase
 	{
 		$page      = new Page(['slug' => 'test']);
 		$file      = new File(['filename' => 'test.jpg', 'parent' => $page]);
-		$component = new FileDefaultPreview($file);
+		$component = new DefaultFilePreview($file);
 		$props     = $component->props();
 
 		$this->assertIsArray($props['image']);
