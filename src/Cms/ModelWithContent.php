@@ -136,7 +136,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		// @todo this entire block can be radically simplified as soon
 		// as the models use the versions exclusively.
 		if (VersionId::$render ?? null) {
-			$version = $this->version(VersionId::render($this));
+			$version = $this->version(VersionId::$render);
 
 			if ($version->exists($language) === true) {
 				return $version->content($language);
