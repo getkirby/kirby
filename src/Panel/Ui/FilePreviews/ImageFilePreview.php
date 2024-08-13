@@ -15,11 +15,11 @@ use Kirby\Toolkit\I18n;
  * @since     5.0.0
  * @internal
  */
-class FileImagePreview extends FilePreview
+class ImageFilePreview extends FilePreview
 {
 	public function __construct(
 		public File $file,
-		public string $component = 'k-file-image-preview'
+		public string $component = 'k-image-file-preview'
 	) {
 	}
 

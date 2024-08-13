@@ -33,6 +33,18 @@ class InvalidFilePreview
  */
 class FilePreviewTest extends TestCase
 {
+	public function setUp(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+		]);
+
+		// authenticate for preview URL
+		$this->app->impersonate('kirby');
+	}
+
 	/**
 	 * @covers ::details
 	 */
@@ -72,8 +84,8 @@ class FilePreviewTest extends TestCase
 		$page = new Page(['slug' => 'test']);
 		$file = new File(['filename' => 'test.pdf', 'parent' => $page]);
 
-		$component = FilePreview::factory($file);
-		$this->assertInstanceOf(DefaultFilePreview::class, $component);
+		$preview = FilePreview::factory($file);
+		$this->assertInstanceOf(DefaultFilePreview::class, $preview);
 	}
 
 	/**
@@ -92,13 +104,13 @@ class FilePreviewTest extends TestCase
 
 		$page = new Page(['slug' => 'test']);
 
-		$file      = new File(['filename' => 'test.jpg', 'parent' => $page]);
-		$component = FilePreview::factory($file);
-		$this->assertInstanceOf(DefaultFilePreview::class, $component);
+		$file    = new File(['filename' => 'test.foo', 'parent' => $page]);
+		$preview = FilePreview::factory($file);
+		$this->assertInstanceOf(DefaultFilePreview::class, $preview);
 
-		$file      = new File(['filename' => 'test.xls', 'parent' => $page]);
-		$component = FilePreview::factory($file);
-		$this->assertInstanceOf(DummyFilePreview::class, $component);
+		$file    = new File(['filename' => 'test.xls', 'parent' => $page]);
+		$preview = FilePreview::factory($file);
+		$this->assertInstanceOf(DummyFilePreview::class, $preview);
 	}
 
 	/**
@@ -159,10 +171,10 @@ class FilePreviewTest extends TestCase
 	 */
 	public function testRender()
 	{
-		$page      = new Page(['slug' => 'test']);
-		$file      = new File(['filename' => 'test.jpg', 'parent' => $page]);
-		$component = new DummyFilePreview($file);
+		$page    = new Page(['slug' => 'test']);
+		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
+		$preview = new DummyFilePreview($file);
 
-		$this->assertSame('k-dummy-file-preview', $component->render()['component']);
+		$this->assertSame('k-dummy-file-preview', $preview->render()['component']);
 	}
 }

@@ -10,7 +10,7 @@ use Kirby\Cms\Auth\EmailChallenge;
 use Kirby\Cms\Auth\TotpChallenge;
 use Kirby\Form\Field\BlocksField;
 use Kirby\Form\Field\LayoutField;
-use Kirby\Panel\Ui\FilePreviews\FileImagePreview;
+use Kirby\Panel\Ui\FilePreviews\ImageFilePreview;
 
 /**
  * The Core class lists all parts of Kirby
@@ -282,7 +282,7 @@ class Core
 	public function filePreviews(): array
 	{
 		return [
-			FileImagePreview::class
+			ImageFilePreview::class
 		];
 	}
 

@@ -7,10 +7,10 @@ use Kirby\Cms\Page;
 use Kirby\TestCase;
 
 /**
- * @coversDefaultClass \Kirby\Panel\Ui\FilePreviews\FileImagePreview
+ * @coversDefaultClass \Kirby\Panel\Ui\FilePreviews\ImageFilePreview
  * @covers ::__construct
  */
-class FileImagePreviewTest extends TestCase
+class ImageFilePreviewTest extends TestCase
 {
 	/**
 	 * @covers ::accepts
@@ -20,10 +20,10 @@ class FileImagePreviewTest extends TestCase
 		$page = new Page(['slug' => 'test']);
 
 		$file = new File(['filename' => 'test.jpg', 'parent' => $page]);
-		$this->assertTrue(FileImagePreview::accepts($file));
+		$this->assertTrue(ImageFilePreview::accepts($file));
 
 		$file = new File(['filename' => 'test.xls', 'parent' => $page]);
-		$this->assertFalse(FileImagePreview::accepts($file));
+		$this->assertFalse(ImageFilePreview::accepts($file));
 	}
 
 	/**
@@ -33,7 +33,7 @@ class FileImagePreviewTest extends TestCase
 	{
 		$page    = new Page(['slug' => 'test']);
 		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
-		$preview = new FileImagePreview($file);
+		$preview = new ImageFilePreview($file);
 		$details = $preview->details();
 
 		$detail = array_pop($details);
@@ -50,7 +50,7 @@ class FileImagePreviewTest extends TestCase
 	{
 		$page    = new Page(['slug' => 'test']);
 		$file    = new File(['filename' => 'test.xls', 'parent' => $page]);
-		$preview = new FileImagePreview($file);
+		$preview = new ImageFilePreview($file);
 		$props   = $preview->props();
 		$this->assertFalse($props['focusable']);
 	}
