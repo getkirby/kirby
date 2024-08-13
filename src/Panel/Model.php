@@ -43,8 +43,9 @@ abstract class Model
 		if ($version->exists() === true) {
 			$changes = $version->content()->toArray();
 		}
-// create a form which will collect the published values for the model,
-// but also pass along unpublished changes as overwrites
+
+		// create a form which will collect the published values for the model,
+		// but also pass along unpublished changes as overwrites
 		return Form::for(
 			model: $this->model,
 			props: [
