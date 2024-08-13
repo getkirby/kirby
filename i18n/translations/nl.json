@@ -617,8 +617,8 @@
 	"stats.empty": "Geen rapporten",
 	"status": "Status",
 
-	"system.info.copy": "Copy info",
-	"system.info.copied": "System info copied",
+	"system.info.copy": "Kopieer informatie",
+	"system.info.copied": "Systeem informatie gekopieerd",
 	"system.issues.content": "De content map lijkt zichtbaar te zijn",
 	"system.issues.eol.kirby": "De geïnstalleerde Kirby versie is niet meer actueel en zal geen verdere beveiligingsupdates meer ontvangen.",
 	"system.issues.eol.plugin": "De geïnstalleerde versie van plugin { plugin } is niet meer actueel en zal geen verdere beveiligingsupdates meer ontvangen.",
