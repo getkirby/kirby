@@ -111,16 +111,6 @@ class VersionId implements Stringable
 	}
 
 	/**
-	 * Returns the VersionId which should be rendered for the given
-	 * Model. This can be changed by overwriting the static `::$render` property
-	 * and thus can be used to render different versions for all models (e.g. in a preview)
-	 */
-	public static function render(ModelWithContent $model): static
-	{
-		return static::$render ?? static::default($model);
-	}
-
-	/**
 	 * Returns the ID value
 	 */
 	public function value(): string
