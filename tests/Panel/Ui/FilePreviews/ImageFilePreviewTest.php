@@ -4,6 +4,7 @@ namespace Kirby\Panel\Ui\FilePreviews;
 
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
+use Kirby\Panel\Ui\FilePreview;
 use Kirby\TestCase;
 
 /**
@@ -41,6 +42,17 @@ class ImageFilePreviewTest extends TestCase
 
 		$detail = array_pop($details);
 		$this->assertSame('Dimensions', $detail['title']);
+	}
+
+	/**
+	 * @coversNothing
+	 */
+	public function testFactory()
+	{
+		$page    = new Page(['slug' => 'test']);
+		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
+		$preview = FilePreview::factory($file);
+		$this->assertInstanceOf(ImageFilePreview::class, $preview);
 	}
 
 	/**
