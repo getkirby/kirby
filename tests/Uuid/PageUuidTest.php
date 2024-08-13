@@ -156,7 +156,6 @@ class PageUuidTest extends TestCase
 							],
 							[
 								'code' => 'de',
-								'slug' => 'bar',
 								'content' => [
 									'title' => 'Bar',
 								]

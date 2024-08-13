@@ -120,4 +120,42 @@ class LanguageRoutesTest extends TestCase
 		$this->assertSame(1, $d);
 		$this->assertSame(2, $e);
 	}
+
+	public function testRedirectWhenNonTranslatedSlugs()
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'         => 'page1',
+						'translations' => [
+							[
+								'code' => 'en',
+							],
+							[
+								'code' => 'de',
+								'slug' => 'seite1',
+							]
+						]
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'foo' => 'bar',
+				]
+			]
+		]);
+
+		$result = $app->call('page1');
+		$this->assertSame($app->page('page1'), $result);
+
+		$result = $app->call('de/page1');
+		$this->assertInstanceOf(Responder::class, $result);
+		$this->assertSame(302, $result->code());
+		$this->assertSame('/de/seite1?foo=bar', $result->header('Location'));
+
+		$result = $app->call('de/seite1');
+		$this->assertSame($app->page('page1'), $result);
+	}
 }

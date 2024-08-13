@@ -41,6 +41,7 @@ export default {
 				accept: this.uploads.accept,
 				max: this.max,
 				multiple: this.multiple,
+				preview: this.uploads.preview,
 				url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload",
 				on: {
 					done: (files) => {

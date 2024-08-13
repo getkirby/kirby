@@ -248,4 +248,42 @@ class ImageKirbyTagTest extends TestCase
 			'parent' => $page,
 		]));
 	}
+
+	public function testWithWidthHeightAuto()
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'kirbytext' => [
+					'image' => [
+						'width'  => 'auto',
+						'height' => 'auto'
+					]
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null',
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'root' => __DIR__ . '/fixtures/kirbytext/image-auto',
+						'files' => [
+							[
+								'filename' => 'cat.jpg',
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$page  = $app->page('a');
+		$image = $page->image('cat.jpg');
+		$expected = '<figure><img alt="" height="500" src="/media/pages/a/' . $image->mediaHash() . '/cat.jpg" width="500"></figure>';
+
+		$this->assertSame($expected, $app->kirbytag('image', 'cat.jpg', [], [
+			'parent' => $page,
+		]));
+	}
 }

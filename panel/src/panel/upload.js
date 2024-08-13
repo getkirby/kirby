@@ -14,6 +14,7 @@ export const defaults = () => {
 		files: [],
 		max: null,
 		multiple: true,
+		preview: {},
 		replacing: null,
 		url: null
 	};
@@ -110,6 +111,7 @@ export default (panel) => {
 			const url = URL.createObjectURL(file);
 
 			return {
+				...this.preview,
 				completed: false,
 				error: null,
 				extension: extension(file.name),
@@ -142,6 +144,9 @@ export default (panel) => {
 
 			const dialog = {
 				component: "k-upload-dialog",
+				props: {
+					preview: this.preview
+				},
 				on: {
 					cancel: () => this.cancel(),
 					submit: async () => {
@@ -152,10 +157,10 @@ export default (panel) => {
 				}
 			};
 
-			// when replacing a file, use decdicated dialog component
+			// when replacing a file, use dedicated dialog component
 			if (this.replacing) {
 				dialog.component = "k-upload-replace-dialog";
-				dialog.props = { original: this.replacing };
+				dialog.props.original = this.replacing;
 			}
 
 			panel.dialog.open(dialog);
