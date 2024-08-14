@@ -1259,14 +1259,28 @@ class App
 		// set the current locale
 		$this->setCurrentLanguage($language);
 
-		$request  = $this->request();
-		$resolver = new PathResolver(kirby: $this);
+		$resolver  = new PathResolver(kirby: $this);
+		$request   = $this->request();
+		$token     = $request->get('_token');
+		$version   = $request->get('_version', 'published');
+		$versionId = VersionId::from($version);
 
-		return $resolver->resolve(
-			path: $path,
-			token: $request->get('_token'),
-			versionId: $request->get('_version', 'published')
-		);
+		try {
+			$response = $resolver->resolve(
+				path: $path,
+				versionId: $versionId,
+				token: $token,
+			);
+		} catch (Throwable $e) {
+			$response = $e;
+		}
+
+		// activate the changes preview if requested
+		if ($versionId->is(VersionId::changes()) === true) {
+			VersionId::$render = $versionId;
+		}
+
+		return $this->io($response);
 	}
 
 	/**
