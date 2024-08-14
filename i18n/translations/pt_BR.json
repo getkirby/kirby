@@ -617,8 +617,8 @@
 	"stats.empty": "Nenhum relatório",
 	"status": "Estado",
 
-	"system.info.copy": "Copy info",
-	"system.info.copied": "System info copied",
+	"system.info.copy": "Copiar informação",
+	"system.info.copied": "Informação de sistema copiada",
 	"system.issues.content": "A pasta \"content\" parece não estar protegida",
 	"system.issues.eol.kirby": "A versão instalada do Kirby chegou ao fim da sua vida útil e não irá receber mais atualizações de segurança",
 	"system.issues.eol.plugin": "A versão instalada do plugin {plugin} chegou ao fim da sua vida útil e não irá receber mais atualizações de segurança",

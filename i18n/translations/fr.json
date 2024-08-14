@@ -617,8 +617,8 @@
 	"stats.empty": "Aucun rapport",
 	"status": "Statut",
 
-	"system.info.copy": "Copy info",
-	"system.info.copied": "System info copied",
+	"system.info.copy": "Copier les informations",
+	"system.info.copied": "Informations système copiées",
 	"system.issues.content": "Le dossier content semble exposé",
 	"system.issues.eol.kirby": "La version de Kirby installée a atteint la fin de son cycle de vie et ne recevra plus de mises à jour de sécurité",
 	"system.issues.eol.plugin": "La version du plugin { plugin } installée a atteint la fin de son cycle de vie et ne recevra plus de mises à jour de sécurité",
