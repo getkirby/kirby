@@ -96,7 +96,7 @@ class ViewButton extends Button
 		}
 
 		// assume it must be a custom view button component
-		return ['component' => 'k-view-' . $name . '-button'];
+		return ['component' => 'k-' . $name . '-view-button'];
 	}
 
 	/**

@@ -9,7 +9,7 @@
 <script>
 /**
  * View header button to toggle the Panel theme
- * @displayName ViewThemeButton
+ * @displayName ThemeViewButton
  * @since 5.0.0
  * @internal
  */

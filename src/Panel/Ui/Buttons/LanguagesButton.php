@@ -26,8 +26,8 @@ class LanguagesButton extends ViewButton
 		$this->kirby = App::instance();
 
 		parent::__construct(
-			component: 'k-view-languages-button',
-			class: 'k-view-languages-button',
+			component: 'k-languages-view-button',
+			class: 'k-languages-view-button',
 			icon: 'translate',
 			options: $this->options(),
 			responsive: 'text',

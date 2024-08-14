@@ -31,7 +31,7 @@ class PageStatusButton extends ViewButton
 		}
 
 		parent::__construct(
-			class: 'k-view-status-button k-page-status-button',
+			class: 'k-status-view-button k-page-status-button',
 			dialog: $page->panel()->url(true) . '/changeStatus',
 			disabled: $disabled,
 			icon: 'status-' . $status,

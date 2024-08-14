@@ -11,7 +11,7 @@ import Button from "./Button.vue";
 
 /**
  * View header button to open the model's settings dropdown
- * @displayName ViewSettingsButton
+ * @displayName SettingsViewButton
  * @since 5.0.0
  * @deprecated 5.0.0
  * @internal

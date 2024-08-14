@@ -21,7 +21,7 @@ class PreviewButton extends ViewButton
 		public string|null $link
 	) {
 		parent::__construct(
-			class: 'k-view-preview-button',
+			class: 'k-preview-view-button',
 			icon: 'open',
 			link: $link,
 			target: '_blank',
