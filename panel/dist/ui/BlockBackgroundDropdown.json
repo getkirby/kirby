@@ -1,0 +1,1 @@
+{"displayName":"BlockBackgroundDropdown","description":"","tags":{},"props":[{"name":"value","type":{"name":"string"}}],"events":[{"name":"input"}],"component":"k-block-background-dropdown","sourceFile":"src/components/Forms/Blocks/Elements/BlockBackgroundDropdown.vue"}
