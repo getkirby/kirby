@@ -747,41 +747,6 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Checks if a page can be accessed publicly.
-	 * This is used to check if a draft or changes
-	 * can be previewed.
-	 *
-	 * @internal
-	 */
-	public function isPreviewable(
-		VersionId|string|null $versionId = null,
-		string|null $token = null,
-	): bool {
-		// if a valid token exists, the page can be accessed
-		if ($this->hasToken($token) === true) {
-			return true;
-		}
-
-		// if there's an authenticated user, the page can be previewed
-		if ($this->kirby()->user() !== null) {
-			return true;
-		}
-
-		// without a token or user, drafts or ancestors of drafts
-		// cannot be previewed
-		if ($this->isDraft() === true || $this->isAncestorOfADraft() === true) {
-			return false;
-		}
-
-		// without a token or user, changes can also not be previewed
-		if ($this->version($versionId)->id()->is(VersionId::changes()) === true) {
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	 * Checks if the page is not a draft.
 	 */
 	public function isPublished(): bool
@@ -816,6 +781,41 @@ class Page extends ModelWithContent
 	public function isUnlisted(): bool
 	{
 		return $this->isPublished() && $this->num() === null;
+	}
+
+	/**
+	 * Checks if a page can be accessed publicly.
+	 * This is used to check if a draft or changes
+	 * can be previewed.
+	 *
+	 * @internal
+	 */
+	public function isViewable(
+		VersionId|string|null $versionId = null,
+		string|null $token = null,
+	): bool {
+		// if a valid token exists, the page can be accessed
+		if ($this->hasToken($token) === true) {
+			return true;
+		}
+
+		// if there's an authenticated user, the page can be viewed
+		if ($this->kirby()->user() !== null) {
+			return true;
+		}
+
+		// without a token or user, drafts or ancestors of drafts
+		// cannot be viewed
+		if ($this->isDraft() === true || $this->isAncestorOfADraft() === true) {
+			return false;
+		}
+
+		// without a token or user, a non-default version (changes) can also not be viewed
+		if ($this->version($versionId)->id()->is(VersionId::default($this)) === false) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

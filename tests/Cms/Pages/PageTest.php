@@ -276,7 +276,7 @@ class PageTest extends TestCase
 		$this->assertFalse($page->isListed());
 	}
 
-	public function testIsPreviewableWithDraft()
+	public function testIsViewableWithDraft()
 	{
 		$draft = new Page([
 			'slug'    => 'test',
@@ -288,12 +288,12 @@ class PageTest extends TestCase
 
 		$token = $method->invoke($draft);
 
-		$this->assertTrue($draft->isPreviewable(token: $token));
-		$this->assertFalse($draft->isPreviewable(token: 'not-the-correct-token'));
-		$this->assertFalse($draft->isPreviewable());
+		$this->assertTrue($draft->isViewable(token: $token));
+		$this->assertFalse($draft->isViewable(token: 'not-the-correct-token'));
+		$this->assertFalse($draft->isViewable());
 	}
 
-	public function testIsPreviewableWithChildOfDraft()
+	public function testIsViewableWithChildOfDraft()
 	{
 		$page = new Page([
 			'slug'    => 'test',
@@ -307,16 +307,16 @@ class PageTest extends TestCase
 
 		$child = $page->find('test-child');
 
-		$this->assertFalse($child->isPreviewable());
+		$this->assertFalse($child->isViewable());
 	}
 
-	public function testIsPreviewableWithPublishedPage()
+	public function testIsViewableWithPublishedPage()
 	{
 		$page = new Page([
 			'slug' => 'test',
 		]);
 
-		$this->assertTrue($page->isPreviewable());
+		$this->assertTrue($page->isViewable());
 	}
 
 	/**
