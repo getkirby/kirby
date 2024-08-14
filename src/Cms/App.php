@@ -1259,79 +1259,14 @@ class App
 		// set the current locale
 		$this->setCurrentLanguage($language);
 
-		// directly prevent path with incomplete content representation
-		if (Str::endsWith($path, '.') === true) {
-			return null;
-		}
+		$request  = $this->request();
+		$resolver = new PathResolver(kirby: $this);
 
-		// the site is needed a couple times here
-		$site = $this->site();
-
-		// use the home page
-		if ($path === null) {
-			if ($homePage = $site->homePage()) {
-				return $homePage;
-			}
-
-			throw new NotFoundException('The home page does not exist');
-		}
-
-		// search for the page or draft by path
-		$page = $site->find($path) ?? $site->draft($path);
-
-		// access token and requested version
-		$user      = $this->user();
-		$request   = $this->request();
-		$token     = $request->get('_token');
-		$versionId = VersionId::from($request->get('_version', 'published'));
-
-		// validate if the page and version can be previewed at all
-		if ($page->isPreviewable(versionId: $versionId, token: $token) === false) {
-			return null;
-		}
-
-		// activate the changes preview if requested
-		if ($versionId->is(VersionId::changes()) === true) {
-			VersionId::$render = $versionId;
-		}
-
-		// try to resolve content representations if the path has an extension
-		$extension = F::extension($path);
-
-		// no content representation? then return the page
-		if (empty($extension) === true) {
-			return $page;
-		}
-
-		// only try to return a representation
-		// when the page has been found
-		if ($page) {
-			try {
-				$response = $this->response();
-				$output   = $page->render([], $extension);
-
-				// attach a MIME type based on the representation
-				// only if no custom MIME type was set
-				if ($response->type() === null) {
-					$response->type($extension);
-				}
-
-				return $response->body($output);
-			} catch (NotFoundException) {
-				return null;
-			}
-		}
-
-		$id       = dirname($path);
-		$filename = basename($path);
-
-		// try to resolve image urls for pages and drafts
-		if ($page = $site->findPageOrDraft($id)) {
-			return $page->file($filename);
-		}
-
-		// try to resolve site files at least
-		return $site->file($filename);
+		return $resolver->resolve(
+			path: $path,
+			token: $request->get('_token'),
+			versionId: $request->get('_version', 'published')
+		);
 	}
 
 	/**

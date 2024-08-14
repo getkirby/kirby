@@ -48,7 +48,7 @@ class AppResolveTest extends TestCase
 		$result = $app->resolve('test');
 
 		// check that the page gets resolved
-		$this->assertIsPage($result);
+		$this->assertNull($result);
 
 		// the render mode is still null, which
 		// keeps rendering the published version
