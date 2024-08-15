@@ -31,4 +31,16 @@ class BadMethodCallExceptionTest extends TestCase
 		$this->assertSame('The method "get" does not exist', $exception->getMessage());
 		$this->assertSame(['method' => 'get'], $exception->getData());
 	}
+
+	/**
+	 * @coversNothing
+	 */
+	public function testPlaceholdersWithNamedArguments()
+	{
+		$exception = new BadMethodCallException(
+			data: ['method' => 'get']
+		);
+		$this->assertSame('The method "get" does not exist', $exception->getMessage());
+		$this->assertSame(['method' => 'get'], $exception->getData());
+	}
 }
