@@ -7,7 +7,7 @@ import { props as ButtonProps } from "@/components/Navigation/Button.vue";
 
 /**
  * View header button to switch between content languages
- * @displayName ViewLanguagesButton
+ * @displayName LanguagesViewButton
  * @since 4.0.0
  * @internal
  */

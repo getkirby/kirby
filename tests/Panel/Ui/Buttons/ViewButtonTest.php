@@ -24,13 +24,13 @@ class ViewButtonTest extends AreaTestCase
 	public function testFactoryFromClosure()
 	{
 		$button = ViewButton::factory(
-			fn (string $name) => ['component' => 'k-view-' . $name . '-button'],
+			fn (string $name) => ['component' => 'k-' . $name . '-view-button'],
 			'test',
 			['name' => 'foo']
 		);
 
 		$this->assertInstanceOf(ViewButton::class, $button);
-		$this->assertSame('k-view-foo-button', $button->component);
+		$this->assertSame('k-foo-view-button', $button->component);
 	}
 
 	/**
@@ -39,12 +39,12 @@ class ViewButtonTest extends AreaTestCase
 	public function testFactoryFromDefinition()
 	{
 		$button = ViewButton::factory(
-			['component' => 'k-view-test-button'],
+			['component' => 'k-test-view-button'],
 			'test'
 		);
 
 		$this->assertInstanceOf(ViewButton::class, $button);
-		$this->assertSame('k-view-test-button', $button->component);
+		$this->assertSame('k-test-view-button', $button->component);
 	}
 
 	/**
@@ -104,7 +104,7 @@ class ViewButtonTest extends AreaTestCase
 
 		// custom component
 		$result = ViewButton::find('foo');
-		$this->assertSame(['component' => 'k-view-foo-button'], $result);
+		$this->assertSame(['component' => 'k-foo-view-button'], $result);
 	}
 
 	/**
@@ -120,7 +120,7 @@ class ViewButtonTest extends AreaTestCase
 
 		// flatten array
 		$result = ViewButton::normalize([
-			'component' => 'k-view-foo-button',
+			'component' => 'k-foo-view-button',
 			'props'     => [
 				'icon' => 'add'
 			]
@@ -128,7 +128,7 @@ class ViewButtonTest extends AreaTestCase
 
 		$this->assertSame([
 			'icon'      => 'add',
-			'component' => 'k-view-foo-button',
+			'component' => 'k-foo-view-button',
 		], $result);
 	}
 
@@ -178,15 +178,15 @@ class ViewButtonTest extends AreaTestCase
 			$test->assertFalse($a);
 			$test->assertSame('foo', $b);
 			$test->assertInstanceOf(App::class, $kirby);
-			return ['component' => 'k-view-test-button'];
+			return ['component' => 'k-test-view-button'];
 		}, [
 			'a' => false,
 			'b' => 'foo'
 		]);
 
-		$this->assertSame('k-view-test-button', $result['component']);
+		$this->assertSame('k-test-view-button', $result['component']);
 
-		$result = ViewButton::resolve(['component' => 'k-view-test-button']);
-		$this->assertSame('k-view-test-button', $result['component']);
+		$result = ViewButton::resolve(['component' => 'k-test-view-button']);
+		$this->assertSame('k-test-view-button', $result['component']);
 	}
 }

@@ -51,7 +51,7 @@ window.panel.plugin = function (plugin, extensions) {
 
 	// View Buttons
 	resolve(extensions, "viewButtons", (name, options) => {
-		window.panel.plugins.components[`k-view-${name}-button`] = options;
+		window.panel.plugins.components[`k-${name}-view-button`] = options;
 	});
 
 	// `Vue.use`

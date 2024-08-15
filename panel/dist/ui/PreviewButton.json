@@ -1,1 +1,0 @@
-{"description":"View header button to open the model's preview in a new tab","tags":{"since":[{"description":"5.0.0","title":"since"}]},"displayName":"PreviewButton","component":"k-preview-button","sourceFile":"src/components/View/Buttons/PreviewButton.vue"}

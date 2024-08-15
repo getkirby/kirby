@@ -22,8 +22,8 @@ class SettingsButton extends ViewButton
 		ModelWithContent $model
 	) {
 		parent::__construct(
-			component: 'k-view-settings-button',
-			class: 'k-view-settings-button',
+			component: 'k-settings-view-button',
+			class: 'k-settings-view-button',
 			icon: 'cog',
 			options: $model->panel()->url(true),
 			title: I18n::translate('settings'),

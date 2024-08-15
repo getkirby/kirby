@@ -18,8 +18,8 @@ class SettingsButtonTest extends TestCase
 		$page   = new Page(['slug' => 'test']);
 		$button = new SettingsButton(model: $page);
 
-		$this->assertSame('k-view-settings-button', $button->component);
-		$this->assertSame('k-view-settings-button', $button->class);
+		$this->assertSame('k-settings-view-button', $button->component);
+		$this->assertSame('k-settings-view-button', $button->class);
 		$this->assertSame('cog', $button->icon);
 		$this->assertSame('/pages/test', $button->options);
 		$this->assertSame('Settings', $button->title);

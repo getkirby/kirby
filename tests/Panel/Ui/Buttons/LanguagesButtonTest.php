@@ -77,8 +77,8 @@ class LanguagesButtonTest extends AreaTestCase
 		$this->installLanguages();
 
 		$button = new LanguagesButton();
-		$this->assertSame('k-view-languages-button', $button->component);
-		$this->assertSame('k-view-languages-button', $button->class);
+		$this->assertSame('k-languages-view-button', $button->component);
+		$this->assertSame('k-languages-view-button', $button->class);
 		$this->assertSame('translate', $button->icon);
 		$this->assertCount(3, $button->options);
 		$this->assertSame('text', $button->responsive);
@@ -86,7 +86,7 @@ class LanguagesButtonTest extends AreaTestCase
 
 		$render = $button->render();
 		$this->assertIsArray($render);
-		$this->assertSame('k-view-languages-button', $render['component']);
+		$this->assertSame('k-languages-view-button', $render['component']);
 		$this->assertIsArray($render['props']);
 		$this->assertIsArray($render['props']['options']);
 	}
