@@ -18,7 +18,7 @@ export default {
 				return this.component;
 			}
 
-			return "k-file-default-preview";
+			return "k-default-file-preview";
 		}
 	}
 };
