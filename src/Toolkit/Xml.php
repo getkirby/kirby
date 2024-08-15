@@ -110,17 +110,18 @@ class Xml
 			return $name . '="' . $name . '"';
 		}
 
-		if (is_array($value) === true) {
-			if (isset($value['value'], $value['escape'])) {
-				$value = $value['escape'] === true ? static::encode($value['value']) : $value['value'];
-			} else {
-				$value = implode(' ', array_filter(
-					$value,
-					fn ($value) => !empty($value) || is_numeric($value)
-				));
-			}
-		} else {
+		if (is_array($value) === false) {
 			$value = static::encode($value);
+		} elseif (isset($value['value'], $value['escape']) === true) {
+			$value = match ($value['escape']) {
+				true    => static::encode($value['value']),
+				default => $value['value']
+			};
+		} else {
+			$value = implode(' ', array_filter(
+				$value,
+				fn ($value) => !empty($value) || is_numeric($value)
+			));
 		}
 
 		return $name . '="' . $value . '"';
@@ -387,21 +388,24 @@ class Xml
 		$end        = '</' . $name . '>';
 		$baseIndent = $indent ? str_repeat($indent, $level) : '';
 
-		if (is_array($content) === true) {
-			if (is_string($indent) === true) {
-				$xml = $baseIndent . $start . PHP_EOL;
-				foreach ($content as $line) {
-					$xml .= $baseIndent . $indent . $line . PHP_EOL;
-				}
-				$xml .= $baseIndent . $end;
-			} else {
-				$xml = $start . implode($content) . $end;
-			}
-		} elseif ($content === null) {
-			$xml = $baseIndent . $startShort;
-		} else {
-			$xml = $baseIndent . $start . static::value($content) . $end;
+		if (is_array($content) === false) {
+			return match ($content) {
+				null    => $baseIndent . $startShort,
+				default => $baseIndent . $start . static::value($content) . $end
+			};
 		}
+
+		if (is_string($indent) === false) {
+			return $start . implode($content) . $end;
+		}
+
+		$xml = $baseIndent . $start . PHP_EOL;
+
+		foreach ($content as $line) {
+			$xml .= $baseIndent . $indent . $line . PHP_EOL;
+		}
+
+		$xml .= $baseIndent . $end;
 
 		return $xml;
 	}

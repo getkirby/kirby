@@ -596,11 +596,10 @@ class Dom
 	 */
 	public function toString(bool $normalize = false): string
 	{
-		if ($this->type === 'HTML') {
-			$string = $this->exportHtml($normalize);
-		} else {
-			$string = $this->exportXml($normalize);
-		}
+		$string = match ($this->type) {
+			'HTML'  => $this->exportHtml($normalize),
+			default => $this->exportXml($normalize)
+		};
 
 		// add trailing newline if the input contained one
 		if (rtrim($this->code, "\r\n") !== $this->code) {

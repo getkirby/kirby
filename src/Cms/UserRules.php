@@ -286,11 +286,10 @@ class UserRules
 			]);
 		}
 
-		if ($strict === true) {
-			$duplicate = $user->kirby()->users()->find($email);
-		} else {
-			$duplicate = $user->kirby()->users()->not($user)->find($email);
-		}
+		$duplicate = match ($strict) {
+			true  => $user->kirby()->users()->find($email),
+			false => $user->kirby()->users()->not($user)->find($email)
+		};
 
 		if ($duplicate) {
 			throw new DuplicateException([

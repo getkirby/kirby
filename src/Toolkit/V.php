@@ -96,7 +96,8 @@ class V
 						continue;
 					}
 				} else {
-					// If a field is not required and not filled, no validation should be done.
+					// If a field is not required and not filled,
+					// no validation should be done.
 					continue;
 				}
 
@@ -578,23 +579,19 @@ V::$validators = [
 			$value = $value->value();
 		}
 
-		if (is_numeric($value) === true) {
-			$count = $value;
-		} elseif (is_string($value) === true) {
-			$count = Str::length(trim($value));
-		} elseif (is_array($value) === true) {
-			$count = count($value);
-		} elseif (is_object($value) === true) {
-			if ($value instanceof Countable) {
-				$count = count($value);
-			} elseif (method_exists($value, 'count') === true) {
-				$count = $value->count();
-			} else {
-				throw new Exception('$value is an uncountable object');
-			}
-		} else {
-			throw new Exception('$value is of type without size');
-		}
+		$count = match (true) {
+			is_numeric($value) => $value,
+			is_string($value)  => Str::length(trim($value)),
+			is_array($value)   => count($value),
+			is_object($value)  => match (true) {
+				$value instanceof Countable    => count($value),
+				method_exists($value, 'count') => $value->count(),
+
+				default => throw new Exception('$value is an uncountable object')
+			},
+
+			default => throw new Exception('$value is of type without size')
+		};
 
 		return match ($operator) {
 			'<'     => $count < $size,

@@ -366,11 +366,10 @@ class F
 		// if the loaded file should not produce any output,
 		// call the loaidIsolated method from the Response class
 		// which checks for unintended ouput and throws an error if detected
-		if ($allowOutput === false) {
-			$result = Response::guardAgainstOutput($callback);
-		} else {
-			$result = $callback();
-		}
+		$result = match ($allowOutput) {
+			true  => $callback(),
+			false => Response::guardAgainstOutput($callback),
+		};
 
 		if (
 			$fallback !== null &&

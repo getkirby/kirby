@@ -517,11 +517,10 @@ trait PageActions
 		$page = Page::factory($props);
 
 		// always create pages in the default language
-		if ($page->kirby()->multilang() === true) {
-			$languageCode = $page->kirby()->defaultLanguage()->code();
-		} else {
-			$languageCode = null;
-		}
+		$languageCode = match ($page->kirby()->multilang()) {
+			true  => $page->kirby()->defaultLanguage()->code(),
+			false => null
+		};
 
 		// create a form for the page
 		// use always default language to fill form with default values
@@ -738,11 +737,10 @@ trait PageActions
 			$page->uuid()?->clear(true);
 
 			// move drafts into the drafts folder of the parent
-			if ($page->isDraft() === true) {
-				$newRoot = $parent->root() . '/_drafts/' . $page->dirname();
-			} else {
-				$newRoot = $parent->root() . '/' . $page->dirname();
-			}
+			$newRoot = match ($page->isDraft()) {
+				true  => $parent->root() . '/_drafts/' . $page->dirname(),
+				false => $parent->root() . '/' . $page->dirname()
+			};
 
 			// try to move the page directory on disk
 			if (Dir::move($page->root(), $newRoot) !== true) {

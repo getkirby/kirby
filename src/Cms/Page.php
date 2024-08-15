@@ -982,11 +982,10 @@ class Page extends ModelWithContent
 
 		// fetch the page regularly
 		if ($html === null) {
-			if ($contentType === 'html') {
-				$template = $this->template();
-			} else {
-				$template = $this->representation($contentType);
-			}
+			$template = match ($contentType) {
+				'html'  => $this->template(),
+				default => $this->representation($contentType)
+			};
 
 			if ($template->exists() === false) {
 				throw new NotFoundException([

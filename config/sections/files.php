@@ -183,14 +183,8 @@ return [
 			}
 
 			// count all uploaded files
-			$max = $this->max ? $this->max - $this->total : null;
-
-			if ($this->max && $this->total === $this->max - 1) {
-				$multiple = false;
-			} else {
-				$multiple = true;
-			}
-
+			$max      = $this->max ? $this->max - $this->total : null;
+			$multiple = !$max || $max > 1;
 			$template = $this->template === 'default' ? null : $this->template;
 
 			return [
