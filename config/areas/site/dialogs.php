@@ -431,7 +431,7 @@ return [
 				];
 			}
 
-			$slugAppendix  = Str::slug(I18n::translate('page.duplicate.appendix'));
+			$slugAppendix  = App::slug(I18n::translate('page.duplicate.appendix'));
 			$titleAppendix = I18n::translate('page.duplicate.appendix');
 
 			// if the item to be duplicated already exists

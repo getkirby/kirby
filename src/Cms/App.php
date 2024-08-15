@@ -1524,6 +1524,26 @@ class App
 	}
 
 	/**
+	 * Convert a string to a safe version to be used in a URL,
+	 * using the `slugs.maxlength` option
+	 *
+	 * @param string $string The unsafe string
+	 * @param string $separator To be used instead of space and
+	 *                          other non-word characters.
+	 * @param string $allowed List of all allowed characters (regex)
+	 * @param int $maxlength The maximum length of the slug
+	 * @return string The safe string
+	 */
+	public static function slug(
+		string $string = null,
+		string $separator = null,
+		string $allowed = null,
+	): string {
+		$maxlength = static::instance()->option('slugs.maxlength', 255);
+		return Str::slug($string, $separator, $allowed, $maxlength);
+	}
+
+	/**
 	 * Applies the smartypants rule on the text
 	 *
 	 * @internal
