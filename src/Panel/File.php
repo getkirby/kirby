@@ -301,7 +301,7 @@ class File extends Model
 	public function isFocusable(): bool
 	{
 		// blueprint option
-		$option = $this->model->blueprint()->focus();
+		$option   = $this->model->blueprint()->focus();
 		// fallback to whether the file is viewable
 		// (images should be focusable by default, others not)
 		$option ??= $this->model->isViewable();
