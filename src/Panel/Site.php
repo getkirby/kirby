@@ -5,6 +5,7 @@ namespace Kirby\Panel;
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
+use Kirby\Panel\Ui\Buttons\ViewButtons;
 
 /**
  * Provides information about the site model for the Panel
@@ -24,17 +25,16 @@ class Site extends Model
 	protected ModelWithContent $model;
 
 	/**
-	 * Returns header button names which should be displayed
+	 * Returns header buttons which should be displayed
 	 * on the site view
 	 */
 	public function buttons(): array
 	{
-		return
-			$this->model->blueprint()->buttons() ??
-			$this->model->kirby()->option('panel.viewButtons.site', [
-				'preview',
-				'languages'
-			]);
+		return ViewButtons::view($this)->defaults(
+			'preview',
+			'languages'
+		)->bind(['site' => $this->model()])
+			->render();
 	}
 
 	/**
@@ -86,6 +86,7 @@ class Site extends Model
 				'link'       => $this->url(true),
 				'previewUrl' => $this->model->previewUrl(),
 				'title'      => $this->model->title()->toString(),
+				'uuid'       => fn () => $this->model->uuid()?->toString(),
 			]
 		];
 	}

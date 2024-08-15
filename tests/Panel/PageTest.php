@@ -98,11 +98,11 @@ class PageTest extends TestCase
 	public function testButtons()
 	{
 		$this->assertSame([
-			'preview',
-			'settings',
-			'languages',
-			'status'
-		], $this->panel()->buttons());
+			'k-preview-view-button',
+			'k-settings-view-button',
+			'k-languages-view-button',
+			'k-status-view-button',
+		], array_column($this->panel()->buttons(), 'component'));
 	}
 
 	/**
@@ -542,10 +542,6 @@ class PageTest extends TestCase
 
 		$this->assertNull($props['next']());
 		$this->assertNull($props['prev']());
-		$this->assertSame([
-			'label' => 'Unlisted',
-			'text'  => 'The page is only accessible via URL'
-		], $props['status']());
 	}
 
 	/**
@@ -658,48 +654,6 @@ class PageTest extends TestCase
 		$this->assertSame('/pages/baz?tab=test', $prevNext['next']()['link']);
 
 		$_GET = [];
-	}
-
-	/**
-	 * @covers ::props
-	 */
-	public function testPropsStatus()
-	{
-		$page = new ModelPage([
-			'slug'  => 'test',
-			'num'   => 0
-		]);
-
-		$props = (new Page($page))->props();
-		$this->assertSame([
-			'label' => 'Public',
-			'text'  => 'The page is public for anyone'
-		], $props['status']());
-
-
-		$app = $this->app->clone([
-			'blueprints' => [
-				'pages/note' => [
-					'status' => [
-						'unlisted' => 'Foo',
-					]
-				]
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'test',
-						'template' => 'note'
-					]
-				]
-			]
-		]);
-
-		$props = (new Page($app->page('test')))->props();
-		$this->assertSame([
-			'label' => 'Foo',
-			'text'  => null
-		], $props['status']());
 	}
 
 	/**

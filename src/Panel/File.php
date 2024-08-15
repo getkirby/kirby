@@ -5,6 +5,8 @@ namespace Kirby\Panel;
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
+use Kirby\Panel\Ui\Buttons\ViewButtons;
+use Kirby\Panel\Ui\FilePreview;
 use Kirby\Toolkit\I18n;
 use Throwable;
 
@@ -70,13 +72,12 @@ class File extends Model
 	 */
 	public function buttons(): array
 	{
-		return
-			$this->model->blueprint()->buttons() ??
-			$this->model->kirby()->option('panel.viewButtons.file', [
-				'preview',
-				'settings',
-				'languages'
-			]);
+		return ViewButtons::view($this)->defaults(
+			'preview',
+			'settings',
+			'languages'
+		)->bind(['file' => $this->model()])
+			->render();
 	}
 
 	/**
@@ -134,7 +135,7 @@ class File extends Model
 	{
 		$file     = $this->model;
 		$request  = $file->kirby()->request();
-		$defaults = $request->get(['view', 'update', 'delete']);
+		$defaults = $request->get(['view', 'delete']);
 		$options  = [...$defaults, ...$options];
 
 		$permissions = $this->options(['preview']);
@@ -164,7 +165,7 @@ class File extends Model
 				'dialog'   => $url . '/changeSort',
 				'icon'     => 'sort',
 				'text'     => I18n::translate('file.sort'),
-				'disabled' => $this->isDisabledDropdownOption('update', $options, $permissions)
+				'disabled' => $this->isDisabledDropdownOption('sort', $options, $permissions)
 			];
 		}
 
@@ -301,7 +302,7 @@ class File extends Model
 	public function isFocusable(): bool
 	{
 		// blueprint option
-		$option = $this->model->blueprint()->focus();
+		$option   = $this->model->blueprint()->focus();
 		// fallback to whether the file is viewable
 		// (images should be focusable by default, others not)
 		$option ??= $this->model->isViewable();
@@ -368,12 +369,15 @@ class File extends Model
 		$id   = $this->model->id();
 
 		if (empty($params['model']) === false) {
-			$parent = $this->model->parent();
+			$parent   = $this->model->parent();
+			$absolute = $parent !== $params['model'];
 
 			// if the file belongs to the current parent model,
 			// store only name as ID to keep its path relative to the model
-			$id       = $parent === $params['model'] ? $name : $id;
-			$absolute = $parent !== $params['model'];
+			$id = match ($absolute) {
+				true  => $id,
+				false => $name
+			};
 		}
 
 		$params['text'] ??= '{{ file.filename }}';
@@ -415,42 +419,9 @@ class File extends Model
 				'template'   => $file->template(),
 				'type'       => $file->type(),
 				'url'        => $file->url(),
+				'uuid'       => fn () => $file->uuid()?->toString(),
 			],
-			'preview' => [
-				'focusable' => $this->isFocusable(),
-				'image'     => $this->image([
-					'back'  => 'transparent',
-					'ratio' => '1/1'
-				], 'cards'),
-				'url'       => $url = $file->previewUrl(),
-				'details'   => [
-					[
-						'title' => I18n::translate('template'),
-						'text'  => $file->template() ?? '—'
-					],
-					[
-						'title' => I18n::translate('mime'),
-						'text'  => $file->mime()
-					],
-					[
-						'title' => I18n::translate('url'),
-						'text'  => $id,
-						'link'  => $url
-					],
-					[
-						'title' => I18n::translate('size'),
-						'text'  => $file->niceSize()
-					],
-					[
-						'title' => I18n::translate('dimensions'),
-						'text'  => $file->type() === 'image' ? $file->dimensions() . ' ' . I18n::translate('pixel') : '—'
-					],
-					[
-						'title' => I18n::translate('orientation'),
-						'text'  => $file->type() === 'image' ? I18n::translate('orientation.' . $dimensions->orientation()) : '—'
-					],
-				]
-			]
+			'preview' => FilePreview::factory($this->model)->render()
 		];
 	}
 

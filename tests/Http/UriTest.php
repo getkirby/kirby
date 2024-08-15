@@ -326,6 +326,15 @@ class UriTest extends TestCase
 				'/search/page:2?q=something'
 			],
 
+			// relative path with colon + adding query
+			[
+				'/search/page:2',
+				[
+					'query' => ['q' => 'something']
+				],
+				'/search/page:2?q=something'
+			],
+
 			// path + adding params + query
 			[
 				'https://getkirby.com/search',

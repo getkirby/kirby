@@ -260,6 +260,15 @@ class CoreTest extends TestCase
 	}
 
 	/**
+	 * @covers ::area
+	 */
+	public function testFilePreviews()
+	{
+		$previews = $this->core->filePreviews();
+		$this->assertCount(1, $previews);
+	}
+
+	/**
 	 * @covers ::load
 	 */
 	public function testLoad()

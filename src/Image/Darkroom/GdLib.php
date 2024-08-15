@@ -28,9 +28,9 @@ class GdLib extends Darkroom
 
 		$image = new SimpleImage();
 		$image->fromFile($file);
+		$image->autoOrient();
 
 		$image = $this->resize($image, $options);
-		$image = $this->autoOrient($image, $options);
 		$image = $this->blur($image, $options);
 		$image = $this->grayscale($image, $options);
 		$image = $this->sharpen($image, $options);
@@ -38,19 +38,6 @@ class GdLib extends Darkroom
 		$image->toFile($file, $mime, $options);
 
 		return $options;
-	}
-
-	/**
-	 * Activates the autoOrient option in SimpleImage
-	 * unless this is deactivated
-	 */
-	protected function autoOrient(SimpleImage $image, array $options): SimpleImage
-	{
-		if ($options['autoOrient'] === false) {
-			return $image;
-		}
-
-		return $image->autoOrient();
 	}
 
 	/**

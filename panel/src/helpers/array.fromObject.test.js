@@ -1,19 +1,19 @@
 import { describe, expect, it } from "vitest";
-import "./array.js";
+import { fromObject } from "./array.js";
 
-describe.concurrent("Array.fromObject()", () => {
+describe.concurrent("array.fromObject()", () => {
 	it("should convert object to array", () => {
 		const object = {
 			a: "A",
 			b: "B"
 		};
 
-		expect(Array.fromObject(object)).toEqual(["A", "B"]);
+		expect(fromObject(object)).toEqual(["A", "B"]);
 	});
 
 	it("should not alter an existing array", () => {
 		const object = ["a", "b"];
 
-		expect(Array.fromObject(object)).toEqual(object);
+		expect(fromObject(object)).toEqual(object);
 	});
 });

@@ -29,7 +29,7 @@ use Kirby\Toolkit\Str;
  * @since     5.0.0
  * @internal
  */
-class Upload
+readonly class Upload
 {
 	public function __construct(
 		protected Api $api,
@@ -189,6 +189,9 @@ class Upload
 				};
 			} catch (Exception $e) {
 				$errors[$upload['name']] = $e->getMessage();
+
+				// clean up file from system tmp directory
+				F::unlink($upload['tmp_name']);
 			}
 
 			if ($this->single === true) {

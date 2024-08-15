@@ -522,8 +522,7 @@ class Language implements Stringable
 	}
 
 	/**
-	 * Returns the most important
-	 * properties as array
+	 * Returns the most important properties as array
 	 */
 	public function toArray(): array
 	{

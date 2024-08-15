@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import "./array.js";
+import { split } from "./array.js";
 
 describe.concurrent("Array.split()", () => {
 	it("should split array into groups", () => {
@@ -10,6 +10,6 @@ describe.concurrent("Array.split()", () => {
 			["e", "f"]
 		];
 
-		expect(array.split("|")).toEqual(expected);
+		expect(split(array, "|")).toEqual(expected);
 	});
 });

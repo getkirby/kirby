@@ -1,40 +1,22 @@
 <template>
-	<k-button
-		v-if="$panel.view.component === 'k-page-view' && status"
-		v-bind="button"
-		:responsive="true"
-		:text="status.label"
-		size="sm"
-		variant="filled"
-		class="k-view-status-button k-page-status-button"
-		@click="$dialog(model.link + '/changeStatus')"
+	<k-view-button
+		v-bind="$props"
+		:disabled="disabled || $panel.content.isLocked"
 	/>
 </template>
 
 <script>
+import Button from "./Button.vue";
+
 /**
  * View header button to change the page status
+ * @displayName StatusViewButton
  * @since 5.0.0
+ * @deprecated 5.0.0
+ * @internal
+ * @todo implement fully on backend when changes feature implemented
  */
 export default {
-	inheritAttrs: false,
-	computed: {
-		button() {
-			return this.$helper.page.status.call(
-				this,
-				this.model.status,
-				!this.permissions.changeStatus || this.$panel.content.isLocked
-			);
-		},
-		model() {
-			return this.$panel.view.props.model;
-		},
-		permissions() {
-			return this.$panel.view.props.permissions;
-		},
-		status() {
-			return this.$panel.view.props.status;
-		}
-	}
+	extends: Button
 };
 </script>

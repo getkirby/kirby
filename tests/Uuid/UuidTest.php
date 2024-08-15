@@ -5,6 +5,7 @@ namespace Kirby\Uuid;
 use Generator;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\Str;
 
 class TestUuid extends Uuid
@@ -241,16 +242,28 @@ class UuidTest extends TestCase
 		// default length
 		$id = Uuid::generate();
 		$this->assertSame(16, strlen($id));
+		$this->assertSame($id, strtolower($id));
 
 		// custom length
 		$id = Uuid::generate(5);
 		$this->assertSame(5, strlen($id));
+		$this->assertSame($id, strtolower($id));
 
 		// UUID v4 mode
 		$this->app->clone([
 			'options' => [
 				'content' => [
 					'uuid' => 'uuid-v4'
+				]
+			]
+		]);
+		$id = Uuid::generate();
+		$this->assertSame(36, strlen($id));
+
+		$this->app->clone([
+			'options' => [
+				'content' => [
+					'uuid' => ['format' => 'uuid-v4']
 				]
 			]
 		]);
@@ -426,6 +439,17 @@ class UuidTest extends TestCase
 		$this->assertNull(Uuid::for('page://something')->model());
 		$this->assertNull(Uuid::for('user://something')->model());
 		$this->assertNull(Uuid::for('file://something')->model());
+	}
+
+	/**
+	 * @covers ::model
+	 */
+	public function testModelNotFoundIndexLookupDisabled()
+	{
+		$this->app->clone(['options' => ['content' => ['uuid' => ['index' => false]]]]);
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('Model for UUID page://something could not be found without searching in the site index');
+		Uuid::for('page://something')->model();
 	}
 
 	/**

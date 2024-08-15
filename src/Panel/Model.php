@@ -37,7 +37,21 @@ abstract class Model
 	 */
 	public function content(): array
 	{
-		return Form::for($this->model)->values();
+		$version = $this->model->version('changes');
+		$changes = [];
+
+		if ($version->exists() === true) {
+			$changes = $version->content()->toArray();
+		}
+
+		// create a form which will collect the published values for the model,
+		// but also pass along unpublished changes as overwrites
+		return Form::for(
+			model: $this->model,
+			props: [
+				'values' => $changes
+			]
+		)->values();
 	}
 
 	/**
@@ -296,6 +310,15 @@ abstract class Model
 	}
 
 	/**
+	 * Returns the corresponding model object
+	 * @since 5.0.0
+	 */
+	public function model(): ModelWithContent
+	{
+		return $this->model;
+	}
+
+	/**
 	 * Returns an array of all actions
 	 * that can be performed in the Panel
 	 * This also checks for the lock status
@@ -340,7 +363,7 @@ abstract class Model
 			'link'     => $this->url(true),
 			'sortable' => true,
 			'text'     => $this->model->toSafeString($params['text'] ?? false),
-			'uuid'     => $this->model->uuid()?->toString() ?? $this->model->id(),
+			'uuid'     => $this->model->uuid()?->toString()
 		];
 	}
 
@@ -357,7 +380,7 @@ abstract class Model
 		$tab       = $blueprint->tab($request->get('tab')) ?? $tabs[0] ?? null;
 
 		$props = [
-			'buttons'     => $this->buttons(),
+			'buttons'     => fn () => $this->buttons(),
 			'lock'        => $this->lock(),
 			'permissions' => $this->model->permissions()->toArray(),
 			'tabs'        => $tabs,

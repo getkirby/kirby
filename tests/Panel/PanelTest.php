@@ -8,7 +8,6 @@ use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 use Kirby\TestCase;
-use Kirby\Toolkit\A;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Panel
@@ -95,7 +94,7 @@ class PanelTest extends TestCase
 		]);
 
 		// unauthenticated / installed
-		$areas = Panel::areas($this->app);
+		$areas = Panel::areas();
 
 		$this->assertArrayHasKey('login', $areas);
 		$this->assertArrayHasKey('logout', $areas);
@@ -105,7 +104,7 @@ class PanelTest extends TestCase
 		$this->app->impersonate('test@getkirby.com');
 
 		// authenticated
-		$areas = Panel::areas($this->app);
+		$areas = Panel::areas();
 
 		$this->assertArrayHasKey('search', $areas);
 		$this->assertArrayHasKey('site', $areas);
@@ -125,10 +124,47 @@ class PanelTest extends TestCase
 
 		$app->impersonate('test@getkirby.com');
 
-		$areas = Panel::areas($app);
+		$areas = Panel::areas();
 
 		$this->assertArrayHasKey('todos', $areas);
 		$this->assertCount(8, $areas);
+	}
+
+	/**
+	 * @covers ::buttons
+	 */
+	public function testButtons(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				[
+					'email' => 'test@getkirby.com',
+					'role'  => 'admin'
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+		$core = Panel::buttons();
+
+		// add custom buttons
+		$this->app = $this->app->clone([
+			'areas' => [
+				'test' => fn () => [
+					'buttons' => [
+						'a' => ['component' => 'test-a'],
+						'b' => ['component' => 'test-b']
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+		$withCustoms = Panel::buttons();
+
+		$this->assertSame(2, count($withCustoms) - count($core));
+		$this->assertSame(['component' => 'test-b'], array_pop($withCustoms));
+		$this->assertSame(['component' => 'test-a'], array_pop($withCustoms));
 	}
 
 	/**

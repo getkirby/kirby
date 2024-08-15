@@ -24,9 +24,11 @@ export default (panel) => {
 
 	return reactive({
 		...parent,
+
 		get breadcrumb() {
 			return this.history.milestones;
 		},
+
 		/**
 		 * Closes the drawer and goes back to the
 		 * parent one if it has been stored

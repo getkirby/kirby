@@ -239,14 +239,21 @@ class Dimensions implements Stringable
 	/**
 	 * Detect the dimensions for an image file
 	 */
-	public static function forImage(string $root): static
+	public static function forImage(Image $image): static
 	{
-		if (file_exists($root) === false) {
+		if ($image->exists() === false) {
 			return new static(0, 0);
 		}
 
-		$size = getimagesize($root);
-		return new static($size[0] ?? 0, $size[1] ?? 1);
+		$orientation = $image->exif()->orientation();
+		$size        = $image->imagesize();
+
+		return match ($orientation) {
+			// 5-8 = rotated
+			5, 6, 7, 8 => new static($size[1] ?? 1, $size[0] ?? 0),
+			// 1 = normal; 2-4 = flipped
+			default    => new static($size[0] ?? 0, $size[1] ?? 1)
+		};
 	}
 
 	/**

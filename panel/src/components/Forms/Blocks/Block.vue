@@ -361,7 +361,7 @@ export default {
 <style>
 .k-block-container {
 	position: relative;
-	padding: 0.75rem;
+	padding: var(--spacing-3);
 	background: var(--color-white);
 	border-radius: var(--rounded);
 }
@@ -389,7 +389,7 @@ export default {
 	display: none;
 	position: absolute;
 	top: 0;
-	inset-inline-end: 0.75rem;
+	inset-inline-end: var(--spacing-3);
 	margin-top: calc(-1.75rem + 2px);
 }
 .k-block-container[data-last-selected="true"] > .k-block-options {

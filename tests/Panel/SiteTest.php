@@ -43,9 +43,9 @@ class SiteTest extends TestCase
 	public function testButtons()
 	{
 		$this->assertSame([
-			'preview',
-			'languages',
-		], $this->panel()->buttons());
+			'k-preview-view-button',
+			'k-languages-view-button',
+		], array_column($this->panel()->buttons(), 'component'));
 	}
 
 	/**

@@ -46,6 +46,10 @@ class DummyUser extends User
 {
 }
 
+class DummyFilePreview
+{
+}
+
 /**
  * @coversDefaultClass \Kirby\Cms\AppPlugins
  */
@@ -396,6 +400,23 @@ class AppPluginsTest extends TestCase
 		$this->assertInstanceOf(FormField::class, $field);
 		$this->assertSame('simpson', $field->homer());
 		$this->assertSame('shaw', $field->peter());
+	}
+
+	/**
+	 * @covers ::extendFilePreviews
+	 */
+	public function testFilePreviews()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'filePreviews' => [
+				DummyFilePreview::class
+			]
+		]);
+
+		$this->assertCount(2, $app->extensions('filePreviews'));
 	}
 
 	public function testKirbyTag()

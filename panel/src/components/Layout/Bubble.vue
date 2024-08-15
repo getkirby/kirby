@@ -30,6 +30,7 @@
  * Bubble to display content in an inline context,
  * e.g. the structure preview table
  * @since 3.7.0
+ * @deprecated 5.0.0 Use `<k-tags>` instead
  *
  * @example <k-bubble text="Hello" />
  */
@@ -76,16 +77,9 @@ export default {
 		text: String
 	},
 	mounted() {
-		if (this.back) {
-			window.panel.deprecated(
-				"<k-bubble>: `back` prop will be removed in a future version. Use the `--bubble-back` CSS property instead."
-			);
-		}
-		if (this.color) {
-			window.panel.deprecated(
-				"<k-bubble>: `color` prop will be removed in a future version. Use the `--bubble-text` CSS property instead."
-			);
-		}
+		window.panel.deprecated(
+			"<k-bubble> will be removed in a future version. Use <k-tag> instead."
+		);
 	}
 };
 </script>

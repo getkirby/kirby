@@ -92,6 +92,44 @@ class TestCase extends BaseTestCase
 		return defined(static::class . '::TMP');
 	}
 
+	/**
+	 * Set up a new multi language app instance with
+	 * English and German pre-installed
+	 */
+	public function setUpMultiLanguage(
+		array|null $site = null
+	): void {
+		$this->app = new App([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de'
+				]
+			],
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => $site ?? []
+		]);
+	}
+
+	/**
+	 * Set up a new single language app instance
+	 */
+	public function setUpSingleLanguage(
+		array|null $site = null
+	): void {
+		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => $site ?? []
+		]);
+	}
+
 	protected function setUpTmp(): void
 	{
 		if ($this->hasTmp() === true) {

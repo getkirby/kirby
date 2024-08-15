@@ -1,30 +1,47 @@
 <template>
-	<k-button
-		v-if="$panel.view.id === 'account'"
-		:icon="icon"
-		:text="text"
-		size="sm"
-		variant="filled"
-		class="k-view-theme-button"
-		@click="$panel.theme.toggle()"
+	<k-view-button
+		:icon="current === 'light' ? 'sun' : 'moon'"
+		:options="options"
+		:text="$t('theme')"
 	/>
 </template>
 
 <script>
 /**
  * View header button to toggle the Panel theme
+ * @displayName ThemeViewButton
  * @since 5.0.0
+ * @internal
  */
 export default {
 	computed: {
-		icon() {
-			return this.isDark ? "sun" : "moon";
+		current() {
+			return this.$panel.theme.current;
 		},
-		isDark() {
-			return this.$panel.theme.current === "dark";
+		options() {
+			return [
+				{
+					text: this.$t("theme.light"),
+					icon: "sun",
+					disabled: this.setting === "light",
+					click: () => this.$panel.theme.set("light")
+				},
+				{
+					text: this.$t("theme.dark"),
+					icon: "moon",
+					disabled: this.setting === "dark",
+					click: () => this.$panel.theme.set("dark")
+				},
+				{
+					text: this.$t("theme.automatic"),
+					icon: "wand",
+					disabled: this.setting === null,
+					click: () => this.$panel.theme.reset()
+				}
+			];
 		},
-		text() {
-			return this.isDark ? this.$t("dark.off") : this.$t("dark.on");
+		setting() {
+			return this.$panel.theme.setting;
 		}
 	}
 };

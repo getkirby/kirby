@@ -69,10 +69,10 @@ class UserTest extends TestCase
 	public function testButtons()
 	{
 		$this->assertSame([
-			'theme',
-			'settings',
-			'languages',
-		], $this->panel()->buttons());
+			'k-theme-view-button',
+			'k-settings-view-button',
+			'k-languages-view-button',
+		], array_column($this->panel()->buttons(), 'component'));
 	}
 
 	/**

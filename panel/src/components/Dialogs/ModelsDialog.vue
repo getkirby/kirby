@@ -28,17 +28,10 @@
 			@paginate="paginate"
 		>
 			<template #options="{ item: row }">
-				<k-button
-					v-if="isSelected(row)"
-					:icon="multiple && max !== 1 ? 'check' : 'circle-nested'"
-					:title="$t('remove')"
-					theme="info"
-					@click.stop="toggle(row)"
-				/>
-				<k-button
-					v-else
-					:title="$t('select')"
-					icon="circle-outline"
+				<k-choice-input
+					:checked="isSelected(row)"
+					:type="multiple && max !== 1 ? 'checkbox' : 'radio'"
+					:title="isSelected(row) ? $t('remove') : $t('select')"
 					@click.stop="toggle(row)"
 				/>
 				<slot name="options" v-bind="{ item: row }" />
@@ -165,6 +158,18 @@ export default {
 .k-models-dialog .k-list-item {
 	cursor: pointer;
 }
+.k-models-dialog .k-choice-input {
+	--choice-color-checked: var(--color-focus);
+
+	display: flex;
+	align-items: center;
+	height: var(--item-button-height);
+	margin-inline-end: var(--spacing-3);
+}
+.k-models-dialog .k-choice-input input {
+	top: 0;
+}
+
 .k-models-dialog .k-collection-footer .k-pagination {
 	margin-bottom: 0;
 }

@@ -105,10 +105,6 @@ export const props = {
 		 */
 		theme: String,
 		/**
-		 * @deprecated 4.0.0 Use the `title` prop instead
-		 */
-		tooltip: String,
-		/**
 		 * The type attribute sets the button type like in HTML.
 		 * @values "button", "submit", "reset"
 		 */
@@ -139,6 +135,7 @@ export default {
 			const attrs = {
 				"aria-current": this.current,
 				"aria-disabled": this.disabled,
+				"aria-label": this.text ?? this.title,
 				"aria-selected": this.selected,
 				"data-responsive": this.responsive,
 				"data-size": this.size,
@@ -146,8 +143,7 @@ export default {
 				"data-variant": this.variant,
 				id: this.id,
 				tabindex: this.tabindex,
-				/** @todo button.prop.tooltip.deprecated - adapt @ 5.0 */
-				title: this.title ?? this.tooltip
+				title: this.title
 			};
 
 			if (this.component === "k-link") {
@@ -182,13 +178,6 @@ export default {
 			}
 
 			return "button";
-		}
-	},
-	mounted() {
-		if (this.tooltip) {
-			window.panel.deprecated(
-				"<k-button>: the `tooltip` prop will be removed in a future version. Use the `title` prop instead."
-			);
 		}
 	},
 	methods: {

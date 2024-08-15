@@ -4,10 +4,10 @@
 		:style="{ '--tree-level': level, ...$attrs.style }"
 	>
 		<li
-			v-for="(item, index) in state"
-			:key="index"
+			v-for="item in state"
+			:key="item.value"
 			:aria-expanded="item.open"
-			:aria-current="item.value === current"
+			:aria-current="isItem(item, current)"
 		>
 			<p
 				class="k-tree-branch"
@@ -35,6 +35,7 @@
 			<template v-if="item.hasChildren && item.open">
 				<component
 					:is="$options.name"
+					:ref="item.value"
 					v-bind="$props"
 					:items="item.children"
 					:level="level + 1"
@@ -89,6 +90,9 @@ export default {
 		close(item) {
 			item.open = false;
 			this.$emit("close", item);
+		},
+		isItem(item, target) {
+			return item.value === target;
 		},
 		open(item) {
 			item.open = true;

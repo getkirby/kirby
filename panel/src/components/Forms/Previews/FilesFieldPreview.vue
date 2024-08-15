@@ -1,8 +1,8 @@
 <script>
-import BubblesFieldPreview from "./BubblesFieldPreview.vue";
+import TagsFieldPreview from "./TagsFieldPreview.vue";
 
 export default {
-	extends: BubblesFieldPreview,
+	extends: TagsFieldPreview,
 	class: "k-files-field-preview",
 	props: {
 		html: {
@@ -11,7 +11,7 @@ export default {
 		}
 	},
 	computed: {
-		bubbles() {
+		tags() {
 			return this.value.map((file) => ({
 				text: file.filename,
 				link: file.link,

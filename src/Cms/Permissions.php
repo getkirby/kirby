@@ -37,6 +37,7 @@ class Permissions
 			'list'           => true,
 			'read'           => true,
 			'replace'        => true,
+			'sort'           => true,
 			'update'         => true
 		],
 		'languages' => [
@@ -109,18 +110,21 @@ class Permissions
 		}
 	}
 
-	public function for(string|null $category = null, string|null $action = null): bool
-	{
+	public function for(
+		string|null $category = null,
+		string|null $action = null,
+		bool $default = false
+	): bool {
 		if ($action === null) {
 			if ($this->hasCategory($category) === false) {
-				return false;
+				return $default;
 			}
 
 			return $this->actions[$category];
 		}
 
 		if ($this->hasAction($category, $action) === false) {
-			return false;
+			return $default;
 		}
 
 		return $this->actions[$category][$action];

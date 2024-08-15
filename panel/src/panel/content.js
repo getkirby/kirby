@@ -66,7 +66,7 @@ export default (panel) => {
 		get lock() {
 			const lock = panel.view.props.lock;
 
-			if (lock === false) {
+			if (!lock) {
 				return false;
 			}
 
@@ -110,16 +110,12 @@ export default (panel) => {
 			this.isSaving = false;
 		},
 		/**
-		 * Updates the value of fields/a field
+		 * Updates the values of fields
 		 *
-		 * @param {String|Object} fields
+		 * @param {Object} fields
 		 * @param {any} value
 		 */
-		set(fields, value) {
-			if (typeof fields === "string") {
-				fields = { [fields]: value };
-			}
-
+		set(fields) {
 			panel.app.config.globalProperties.$store.dispatch("content/update", [
 				null,
 				fields

@@ -132,10 +132,10 @@ class FileTest extends TestCase
 	public function testButtons()
 	{
 		$this->assertSame([
-			'preview',
-			'settings',
-			'languages'
-		], $this->panel()->buttons());
+			'k-preview-view-button',
+			'k-settings-view-button',
+			'k-languages-view-button',
+		], array_column($this->panel()->buttons(), 'component'));
 	}
 
 	/**
@@ -533,6 +533,7 @@ class FileTest extends TestCase
 			'list'         	 => true,
 			'read'           => true,
 			'replace'        => true,
+			'sort'           => true,
 			'update'         => true,
 		];
 
@@ -566,6 +567,7 @@ class FileTest extends TestCase
 			'list'           => false,
 			'read'           => false,
 			'replace'        => false,
+			'sort'           => false,
 			'update'         => false,
 		];
 
@@ -582,6 +584,7 @@ class FileTest extends TestCase
 			'list'           => false,
 			'read'           => false,
 			'replace'        => false,
+			'sort'           => false,
 			'update'         => false,
 		];
 
@@ -613,6 +616,7 @@ class FileTest extends TestCase
 			'list'           => true,
 			'read'           => true,
 			'replace'        => false,
+			'sort'           => true,
 			'update'         => true,
 		];
 
@@ -655,6 +659,7 @@ class FileTest extends TestCase
 			'list'           => true,
 			'read'           => true,
 			'replace'        => true,
+			'sort'           => true,
 			'update'         => true,
 		];
 
@@ -699,6 +704,7 @@ class FileTest extends TestCase
 			'list'           => true,
 			'read'           => true,
 			'replace'        => false,
+			'sort'           => true,
 			'update'         => true,
 		];
 
@@ -843,12 +849,7 @@ class FileTest extends TestCase
 		$this->assertArrayHasKey('url', $props['model']);
 		$this->assertArrayHasKey('template', $props['model']);
 		$this->assertArrayHasKey('type', $props['model']);
-
 		$this->assertArrayHasKey('preview', $props);
-		$this->assertArrayHasKey('image', $props['preview']);
-		$this->assertArrayHasKey('url', $props['preview']);
-		$this->assertArrayHasKey('details', $props['preview']);
-		$this->assertCount(6, $props['preview']['details']);
 
 		// inherited props
 		$this->assertArrayHasKey('blueprint', $props);

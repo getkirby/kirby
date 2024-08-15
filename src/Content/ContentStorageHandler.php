@@ -177,7 +177,9 @@ abstract class ContentStorageHandler
 	public function moveLanguage(Language $fromLanguage, Language $toLanguage): void
 	{
 		foreach ($this->dynamicVersions() as $versionId) {
-			$this->move($versionId, $fromLanguage, $versionId, $toLanguage);
+			if ($this->exists($versionId, $fromLanguage) === true) {
+				$this->move($versionId, $fromLanguage, $versionId, $toLanguage);
+			}
 		}
 	}
 

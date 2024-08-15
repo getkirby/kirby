@@ -52,6 +52,8 @@ export default {
 
 .k-topbar-breadcrumb {
 	margin-inline-start: -2px;
+	flex-shrink: 1;
+	min-width: 0;
 }
 
 .k-topbar-spacer {

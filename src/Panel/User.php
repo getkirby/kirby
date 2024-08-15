@@ -7,6 +7,7 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Translation;
 use Kirby\Cms\Url;
 use Kirby\Filesystem\Asset;
+use Kirby\Panel\Ui\Buttons\ViewButtons;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -40,18 +41,17 @@ class User extends Model
 	}
 
 	/**
-	 * Returns header button names which should be displayed
-	 * on the site view
+	 * Returns header buttons which should be displayed
+	 * on the user view
 	 */
 	public function buttons(): array
 	{
-		return
-			$this->model->blueprint()->buttons() ??
-			$this->model->kirby()->option('panel.viewButtons.user', [
-				'theme',
-				'settings',
-				'languages'
-			]);
+		return ViewButtons::view($this)->defaults(
+			'theme',
+			'settings',
+			'languages'
+		)->bind(['user' => $this->model()])
+			->render();
 	}
 
 	/**
@@ -253,6 +253,7 @@ class User extends Model
 				'name'     => $user->name()->toString(),
 				'role'     => $user->role()->title(),
 				'username' => $user->username(),
+				'uuid'     => fn () => $user->uuid()?->toString()
 			]
 		];
 	}

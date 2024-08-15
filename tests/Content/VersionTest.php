@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Kirby\Data\Data;
+use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 
 /**
@@ -313,11 +314,11 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::changes()
 		);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Version "published (de)" does not already exist');
+		$this->expectExceptionMessage('Version "changes (de)" does not already exist');
 
 		$version->ensure('de');
 	}
@@ -331,11 +332,11 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::changes()
 		);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Version "published" does not already exist');
+		$this->expectExceptionMessage('Version "changes" does not already exist');
 
 		$version->ensure();
 	}
@@ -361,7 +362,7 @@ class VersionTest extends TestCase
 	/**
 	 * @covers ::exists
 	 */
-	public function testExistsMultiLanguage(): void
+	public function testExistsPublishedMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -370,16 +371,19 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		$this->assertFalse($version->exists('en'));
-		$this->assertFalse($version->exists($this->app->language('en')));
+		$this->assertDirectoryExists($this->model->root());
 
+		// the default version + default language exists without
+		// content file as long as the page directory exists
+		$this->assertTrue($version->exists('en'));
+		$this->assertTrue($version->exists($this->app->language('en')));
+
+		// the secondary language only exists as soon as the content
+		// file also exists
 		$this->assertFalse($version->exists('de'));
 		$this->assertFalse($version->exists($this->app->language('de')));
 
 		$this->createContentMultiLanguage();
-
-		$this->assertTrue($version->exists('en'));
-		$this->assertTrue($version->exists($this->app->language('en')));
 
 		$this->assertTrue($version->exists('de'));
 		$this->assertTrue($version->exists($this->app->language('de')));
@@ -388,7 +392,7 @@ class VersionTest extends TestCase
 	/**
 	 * @covers ::exists
 	 */
-	public function testExistsSingleLanguage(): void
+	public function testExistsPublishedSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -397,10 +401,10 @@ class VersionTest extends TestCase
 			id: VersionId::published()
 		);
 
-		$this->assertFalse($version->exists());
+		$this->assertDirectoryExists($this->model->root());
 
-		$this->createContentSingleLanguage();
-
+		// the default version exists without content file as long as
+		// the page directory exists
 		$this->assertTrue($version->exists());
 	}
 
@@ -592,6 +596,56 @@ class VersionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::publish
+	 */
+	public function testPublish()
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		Data::write($filePublished = $this->contentFile(null, VersionId::published()), [
+			'title' => 'Title published'
+		]);
+
+		Data::write($fileChanges = $this->contentFile(null, VersionId::changes()), [
+			'title' => 'Title changes'
+		]);
+
+		$this->assertFileExists($filePublished);
+		$this->assertFileExists($fileChanges);
+
+		$version->publish();
+
+		$this->assertFileDoesNotExist($fileChanges);
+
+		$this->assertSame('Title changes', Data::read($filePublished)['title']);
+	}
+
+	/**
+	 * @covers ::publish
+	 */
+	public function testPublishAlreadyPublishedVersion()
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$this->createContentSingleLanguage();
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('This version is already published');
+
+		$version->publish();
+	}
+
+	/**
 	 * @covers ::read
 	 * @covers ::convertFieldNamesToLowerCase
 	 * @covers ::prepareFieldsAfterRead
@@ -635,7 +689,7 @@ class VersionTest extends TestCase
 	/**
 	 * @covers ::read
 	 */
-	public function testReadWhenMissing(): void
+	public function testReadPublishedWithoutContentFile(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -645,7 +699,9 @@ class VersionTest extends TestCase
 		);
 
 		$this->assertFileDoesNotExist($this->contentFile());
-		$this->assertNull($version->read());
+
+		// the page has empty content if there's no default content file
+		$this->assertSame([], $version->read());
 	}
 
 	/**

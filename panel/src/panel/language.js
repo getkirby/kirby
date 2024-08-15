@@ -19,6 +19,7 @@ export default () => {
 
 	return reactive({
 		...parent,
+
 		get isDefault() {
 			return this.default;
 		}

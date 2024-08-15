@@ -3,11 +3,7 @@ import State from "./state.js";
 
 export const defaults = () => {
 	return {
-		current:
-			localStorage.getItem("kirby$theme") ??
-			(window.matchMedia?.("(prefers-color-scheme: dark)").matches
-				? "dark"
-				: "light")
+		setting: localStorage.getItem("kirby$theme")
 	};
 };
 
@@ -20,14 +16,24 @@ export default () => {
 	return reactive({
 		...parent,
 
-		toggle() {
-			if (this.current === "dark") {
-				this.current = "light";
-			} else {
-				this.current = "dark";
-			}
+		get current() {
+			return this.setting ?? this.system;
+		},
 
-			localStorage.setItem("kirby$theme", this.current);
+		reset() {
+			this.setting = null;
+			localStorage.removeItem("kirby$theme");
+		},
+
+		set(theme) {
+			this.setting = theme;
+			localStorage.setItem("kirby$theme", theme);
+		},
+
+		get system() {
+			return window.matchMedia?.("(prefers-color-scheme: dark)").matches
+				? "dark"
+				: "light";
 		}
 	});
 };

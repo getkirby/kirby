@@ -27,9 +27,6 @@
 	"date": "Date",
 	"date.select": "Select a date",
 
-	"dark.on": "Lights off",
-	"dark.off": "Lights on",
-
 	"day": "Day",
 	"days.fri": "Fri",
 	"days.mon": "Mon",
@@ -121,6 +118,7 @@
 	"error.file.name.missing": "The filename must not be empty",
 	"error.file.notFound": "The file \"{filename}\" cannot be found",
 	"error.file.orientation": "The orientation of the image must be \"{orientation}\"",
+	"error.file.sort.permission": "You are not allowed to change the sorting of \"{filename}\"",
 	"error.file.type.forbidden": "You are not allowed to upload {type} files",
 	"error.file.type.invalid": "Invalid file type: {type}",
 	"error.file.undefined": "The file cannot be found",
@@ -297,6 +295,9 @@
 	"field.blocks.heading.name": "Heading",
 	"field.blocks.heading.text": "Text",
 	"field.blocks.heading.placeholder": "Heading …",
+	"field.blocks.figure.back.plain": "Plain",
+	"field.blocks.figure.back.pattern.light": "Pattern (light)",
+	"field.blocks.figure.back.pattern.dark": "Pattern (dark)",
 	"field.blocks.image.alt": "Alternative text",
 	"field.blocks.image.caption": "Caption",
 	"field.blocks.image.crop": "Crop",
@@ -334,6 +335,7 @@
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
 	"field.files.empty": "No files selected yet",
+	"field.files.empty.single": "No file selected yet",
 
 	"field.layout.change": "Change layout",
 	"field.layout.delete": "Delete layout",
@@ -345,12 +347,14 @@
 	"field.object.empty": "No information yet",
 
 	"field.pages.empty": "No pages selected yet",
+	"field.pages.empty.single": "No page selected yet",
 
 	"field.structure.delete.confirm": "Do you really want to delete this row?",
 	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
 	"field.structure.empty": "No entries yet",
 
 	"field.users.empty": "No users selected yet",
+	"field.users.empty.single": "No user selected yet",
 
 	"fields.empty": "No fields yet",
 
@@ -609,6 +613,7 @@
 	"save": "Save",
 	"saved": "Saved",
 	"search": "Search",
+	"searching": "Searching",
 	"search.min": "Enter {min} characters to search",
 	"search.all": "Show all {count} results",
 	"search.results.none": "No results",
@@ -657,6 +662,12 @@
 	"tel": "Phone",
 	"tel.placeholder": "+49123456789",
 	"template": "Template",
+
+	"theme": "Theme",
+	"theme.light": "Lights on",
+	"theme.dark": "Lights off",
+	"theme.automatic": "Match system default",
+
 	"title": "Title",
 	"today": "Today",
 

@@ -1,1 +1,0 @@
-{"description":"View header button to change the page status","tags":{"since":[{"description":"5.0.0","title":"since"}]},"displayName":"StatusButton","component":"k-status-button","sourceFile":"src/components/View/Buttons/StatusButton.vue"}

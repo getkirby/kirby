@@ -3,7 +3,7 @@
 		<div class="k-file-browser-layout">
 			<aside ref="tree" class="k-file-browser-tree">
 				<k-page-tree
-					:current="page?.value"
+					:current="page?.value ?? opened"
 					@select="selectPage"
 					@toggleBranch="togglePage"
 				/>
@@ -44,6 +44,12 @@ export default {
 			default: 50,
 			type: Number
 		},
+		/**
+		 * A page uuid/id which should be preselected
+		 */
+		opened: {
+			type: String
+		},
 		selected: {
 			type: String
 		}
@@ -54,7 +60,7 @@ export default {
 			files: [],
 			page: null,
 			pagination: null,
-			view: "tree"
+			view: this.opened ? "files" : "tree"
 		};
 	},
 	methods: {

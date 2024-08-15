@@ -1,19 +1,19 @@
 <template>
 	<nav :aria-label="label" class="k-breadcrumb">
-		<div v-if="segments.length > 1" class="k-breadcrumb-dropdown">
+		<div v-if="crumbs.length > 1" class="k-breadcrumb-dropdown">
 			<k-button icon="home" @click="$refs.dropdown.toggle()" />
 			<k-dropdown-content ref="dropdown" :options="dropdown" />
 		</div>
 
 		<ol>
-			<li v-for="(crumb, index) in segments" :key="index">
+			<li v-for="(crumb, index) in crumbs" :key="index">
 				<k-button
 					:icon="crumb.loading ? 'loader' : crumb.icon"
 					:link="crumb.link"
 					:disabled="!crumb.link"
 					:text="crumb.text ?? crumb.label"
 					:title="crumb.text ?? crumb.label"
-					:current="index === segments.length - 1 ? 'page' : false"
+					:current="index === crumbs.length - 1 ? 'page' : false"
 					variant="dimmed"
 					size="sm"
 					class="k-breadcrumb-link"
@@ -44,41 +44,15 @@ export default {
 		label: {
 			type: String,
 			default: "Breadcrumb"
-		},
-		/**
-		 * @todo remove in 5.0.0
-		 * @deprecated 4.0.0 Use `crumbs` instead
-		 */
-		view: Object
+		}
 	},
 	computed: {
 		dropdown() {
-			return this.segments.map((link) => ({
+			return this.crumbs.map((link) => ({
 				...link,
 				text: link.label,
 				icon: "angle-right"
 			}));
-		},
-		segments() {
-			const segments = [];
-
-			if (this.view) {
-				segments.push({
-					link: this.view.link,
-					label: this.view.label ?? this.view.breadcrumbLabel,
-					icon: this.view.icon,
-					loading: this.$panel.isLoading
-				});
-			}
-
-			return [...segments, ...this.crumbs];
-		}
-	},
-	mounted() {
-		if (this.view) {
-			window.panel.deprecated(
-				"<k-breadcrumb>: `view` prop will be removed in a future version. Use `crumbs` instead."
-			);
 		}
 	}
 };
@@ -100,16 +74,21 @@ export default {
 	display: flex;
 	align-items: center;
 	min-width: 0;
+	transition: flex-shrink 0.1s;
+}
+.k-breadcrumb ol li:has(.k-icon) {
+	/*
+	 * without a useful min-width, the item will vanish completely on hover of a very long other item.
+	 * 2.25rem helps to keep at least the icon visible for items with icons.
+	 */
+	min-width: 2.25rem;
 }
 .k-breadcrumb ol li:not(:last-child)::after {
 	content: var(--breadcrumb-divider);
 	opacity: 0.175;
 	flex-shrink: 0;
 }
-.k-breadcrumb ol li {
-	min-width: 0;
-	transition: flex-shrink 0.1s;
-}
+
 .k-breadcrumb .k-icon[data-type="loader"] {
 	opacity: 0.5;
 }

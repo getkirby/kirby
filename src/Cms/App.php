@@ -804,7 +804,7 @@ class App
 		if ($input instanceof Page) {
 			try {
 				$html = $input->render();
-			} catch (ErrorPageException $e) {
+			} catch (ErrorPageException|NotFoundException $e) {
 				return $this->io($e);
 			}
 

@@ -1,5 +1,4 @@
 /* Form */
-import Autocomplete from "./Autocomplete.vue";
 import Counter from "./Counter.vue";
 import Form from "./Form.vue";
 import FormButtons from "./FormButtons.vue";
@@ -19,7 +18,6 @@ import Toolbar from "./Toolbar/index.js";
 export default {
 	install(app) {
 		app.component("k-counter", Counter);
-		app.component("k-autocomplete", Autocomplete);
 		app.component("k-form", Form);
 		app.component("k-form-buttons", FormButtons);
 		app.component("k-form-controls", Controls);

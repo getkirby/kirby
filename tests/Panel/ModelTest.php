@@ -469,6 +469,15 @@ class ModelTest extends TestCase
 	}
 
 	/**
+	 * @covers ::model
+	 */
+	public function testModel()
+	{
+		$panel  = $this->panel();
+		$this->assertInstanceOf(ModelSite::class, $panel->model());
+	}
+
+	/**
 	 * @covers ::props
 	 */
 	public function testProps()

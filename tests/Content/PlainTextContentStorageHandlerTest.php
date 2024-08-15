@@ -21,16 +21,18 @@ class PlainTextContentStorageHandlerTest extends TestCase
 
 	protected $storage;
 
-	public function setUpMultiLanguage(): void
-	{
-		parent::setUpMultiLanguage();
+	public function setUpMultiLanguage(
+		array|null $site = null
+	): void {
+		parent::setUpMultiLanguage(site: $site);
 
 		$this->storage = new PlainTextContentStorageHandler($this->model);
 	}
 
-	public function setUpSingleLanguage(): void
-	{
-		parent::setUpSingleLanguage();
+	public function setUpSingleLanguage(
+		array|null $site = null
+	): void {
+		parent::setUpSingleLanguage(site: $site);
 
 		$this->storage = new PlainTextContentStorageHandler($this->model);
 	}
@@ -106,9 +108,18 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	{
 		$this->setUpSingleLanguage();
 
+		$versionId = VersionId::published();
+		$language  = Language::single();
+
+		$this->assertContentFileDoesNotExist($language, $versionId);
+
 		// test idempotency
-		$this->storage->delete(VersionId::published(), Language::single());
-		$this->assertDirectoryDoesNotExist($this->model->root());
+		$this->storage->delete($versionId, $language);
+
+		$this->assertContentFileDoesNotExist($language, $versionId);
+
+		// The page directory should not be deleted
+		$this->assertDirectoryExists($this->model->root());
 	}
 
 	/**
@@ -245,6 +256,53 @@ class PlainTextContentStorageHandlerTest extends TestCase
 
 		$this->assertSame($modified, $this->storage->modified(VersionId::changes(), Language::single()));
 		$this->assertNull($this->storage->modified(VersionId::published(), Language::single()));
+	}
+
+	public function testMove()
+	{
+		$this->setUpSingleLanguage();
+
+		// create some content to move
+		$this->createContentSingleLanguage();
+
+		// the source file should exist now
+		$this->assertFileExists($this->model->root() . '/article.txt');
+
+		// but the destination file should not be there yet
+		$this->assertFileDoesNotExist($this->model->root() . '/_changes/article.txt');
+
+		$this->storage->move(
+			VersionId::published(),
+			Language::single(),
+			VersionId::changes(),
+			Language::single()
+		);
+
+		// the source file should no longer exist
+		$this->assertFileDoesNotExist($this->model->root() . '/article.txt');
+
+		// but the destination file should be there
+		$this->assertFileExists($this->model->root() . '/_changes/article.txt');
+	}
+
+	public function testMoveNonExistingContentFile()
+	{
+		$this->setUpSingleLanguage();
+
+		$this->assertFileDoesNotExist($this->model->root() . '/article.txt');
+
+		$this->storage->move(
+			VersionId::published(),
+			Language::single(),
+			VersionId::changes(),
+			Language::single()
+		);
+
+		// the source file should still not exist
+		$this->assertFileDoesNotExist($this->model->root() . '/article.txt');
+
+		// but the destination file should now be there
+		$this->assertFileExists($this->model->root() . '/_changes/article.txt');
 	}
 
 	/**
