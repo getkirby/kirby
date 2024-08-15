@@ -77,11 +77,12 @@ export default {
 		},
 		async preselect(page) {
 			// get array of parent uuids/ids
-			const parents = await this.$panel.get("site/tree/parents", {
+			const response = await this.$panel.get("site/tree/parents", {
 				query: {
 					page
 				}
 			});
+			const parents = response.data;
 
 			// if root is included, add the site as top-level parent
 			if (this.root) {
