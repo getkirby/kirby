@@ -104,7 +104,7 @@ class ViewButtonTest extends AreaTestCase
 
 		// custom component
 		$result = ViewButton::find('foo');
-		$this->assertSame(['component' => 'k-view-foo-button'], $result);
+		$this->assertSame(['component' => 'k-foo-view-button'], $result);
 	}
 
 	/**

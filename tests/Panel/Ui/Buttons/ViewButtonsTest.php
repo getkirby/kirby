@@ -85,8 +85,8 @@ class ViewButtonsTest extends AreaTestCase
 		$result  = $buttons->render();
 
 		$this->assertCount(2, $result);
-		$this->assertSame('k-view-a-button', $result[0]['component']);
-		$this->assertSame('k-view-b-button', $result[1]['component']);
+		$this->assertSame('k-a-view-button', $result[0]['component']);
+		$this->assertSame('k-b-view-button', $result[1]['component']);
 	}
 
 	/**
