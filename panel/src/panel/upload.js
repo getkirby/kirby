@@ -143,6 +143,7 @@ export default (panel) => {
 					preview: this.preview
 				},
 				on: {
+					open: (dialog) => this.emit("open", dialog),
 					cancel: () => this.cancel(),
 					submit: async () => {
 						panel.dialog.isLoading = true;
