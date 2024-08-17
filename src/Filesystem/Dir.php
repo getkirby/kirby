@@ -317,7 +317,7 @@ class Dir
 		}
 
 		// determine the model
-		if (empty(Page::$models) === false) {
+		if (Page::$models !== []) {
 			if ($multilang === true) {
 				$code = App::instance()->defaultLanguage()->code();
 				$contentExtension = $code . '.' . $contentExtension;

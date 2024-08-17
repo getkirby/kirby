@@ -125,7 +125,7 @@ class Parsley
 	 */
 	public function endInlineBlock(): void
 	{
-		if (empty($this->inline) === true) {
+		if ($this->inline === []) {
 			return;
 		}
 

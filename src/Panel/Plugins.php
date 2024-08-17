@@ -116,7 +116,7 @@ class Plugins
 			// of loading an empty array; this is because the module loader code uses
 			// top level await, which is not compatible with Kirby's minimum browser
 			// version requirements and therefore must not appear in a default setup
-			if (empty($dist)) {
+			if ($dist === []) {
 				return '';
 			}
 

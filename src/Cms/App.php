@@ -1580,7 +1580,7 @@ class App
 		if ($this->multilang() === true) {
 			$languageSmartypants = $this->language()->smartypants() ?? [];
 
-			if (empty($languageSmartypants) === false) {
+			if ($languageSmartypants !== []) {
 				$options = [...$options, ...$languageSmartypants];
 			}
 		}

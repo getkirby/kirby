@@ -103,7 +103,7 @@ class Sqlite extends Sql
 
 		$query = 'CREATE TABLE ' . $this->quoteIdentifier($table) . ' (' . PHP_EOL . $inner['query'] . PHP_EOL . ')';
 
-		if (empty($keys) === false) {
+		if ($keys !== []) {
 			$query .= ';' . PHP_EOL . implode(';' . PHP_EOL, $keys);
 		}
 

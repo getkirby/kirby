@@ -106,7 +106,7 @@ class Snippet extends Tpl
 
 		// create a default slot for the content
 		// that has been captured between start and end
-		if (empty($this->slots) === true) {
+		if ($this->slots === []) {
 			$this->slots['default'] = new Slot('default');
 			$this->slots['default']->content = ob_get_clean();
 		} else {

@@ -317,7 +317,7 @@ class Page extends ModelWithContent
 		// merge controller data with original data safely
 		// to provide original data to template even if
 		// it wasn't returned by the controller explicitly
-		if (empty($controllerData) === false) {
+		if ($controllerData !== []) {
 			$classes = [
 				'kirby' => App::class,
 				'site'  => Site::class,
@@ -959,7 +959,7 @@ class Page extends ModelWithContent
 		$cache = $cacheId = $html = null;
 
 		// try to get the page from cache
-		if (empty($data) === true && $this->isCacheable() === true) {
+		if ($data === [] && $this->isCacheable() === true) {
 			$cache       = $kirby->cache('pages');
 			$cacheId     = $this->cacheId($contentType);
 			$result      = $cache->get($cacheId);

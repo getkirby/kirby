@@ -101,7 +101,7 @@ class BlocksField extends FieldClass
 	public function fieldsetGroups(): array|null
 	{
 		$groups = $this->fieldsets()->groups();
-		return empty($groups) === true ? null : $groups;
+		return $groups === [] ? null : $groups;
 	}
 
 	public function fill(mixed $value = null): void
@@ -243,7 +243,7 @@ class BlocksField extends FieldClass
 
 		// returns empty string to avoid storing empty array as string `[]`
 		// and to consistency work with `$field->isEmpty()`
-		if (empty($blocks) === true) {
+		if ($blocks === []) {
 			return '';
 		}
 
@@ -332,7 +332,7 @@ class BlocksField extends FieldClass
 						$errors = $field->errors();
 
 						// rough first validation
-						if (empty($errors) === false) {
+						if ($errors !== []) {
 							throw new InvalidArgumentException([
 								'key' => 'blocks.validation',
 								'data' => [

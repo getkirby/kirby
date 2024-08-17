@@ -43,7 +43,7 @@ class Example
 
 	public function collectTab(string|null $tab): string|null
 	{
-		if (empty($this->tabs) === true) {
+		if ($this->tabs === []) {
 			return null;
 		}
 

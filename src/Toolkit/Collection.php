@@ -952,7 +952,7 @@ class Collection extends Iterator implements Countable, Stringable
 	public function sort(...$args): static
 	{
 		// there is no need to sort empty collections
-		if (empty($this->data) === true) {
+		if ($this->data === []) {
 			return $this;
 		}
 		$array      = $this->data;

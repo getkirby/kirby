@@ -51,7 +51,7 @@ class BlockConverter
 
 	public static function editorBlocks(array $blocks = []): array
 	{
-		if (empty($blocks) === true) {
+		if ($blocks === []) {
 			return $blocks;
 		}
 

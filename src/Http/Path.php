@@ -37,7 +37,7 @@ class Path extends Collection
 		bool $leadingSlash = false,
 		bool $trailingSlash = false
 	): string {
-		if (empty($this->data) === true) {
+		if ($this->data === []) {
 			return '';
 		}
 

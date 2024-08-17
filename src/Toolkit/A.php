@@ -57,7 +57,7 @@ class A
 	 */
 	public static function average(array $array, int $decimals = 0): float|null
 	{
-		if (empty($array) === true) {
+		if ($array === []) {
 			return null;
 		}
 
