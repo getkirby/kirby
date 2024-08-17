@@ -9,7 +9,6 @@ use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Ui\FilePreviews\AudioFilePreview
- * @covers ::__construct
  */
 class AudioFilePreviewTest extends TestCase
 {
@@ -28,13 +27,15 @@ class AudioFilePreviewTest extends TestCase
 	}
 
 	/**
-	 * @coversNothing
+	 * @covers ::__construct
 	 */
 	public function testFactory()
 	{
 		$page    = new Page(['slug' => 'test']);
 		$file    = new File(['filename' => 'test.mp3', 'parent' => $page]);
+
 		$preview = FilePreview::factory($file);
 		$this->assertInstanceOf(AudioFilePreview::class, $preview);
+		$this->assertSame('k-audio-file-preview', $preview->component);
 	}
 }

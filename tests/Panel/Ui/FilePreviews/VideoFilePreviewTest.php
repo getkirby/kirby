@@ -9,7 +9,6 @@ use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Ui\FilePreviews\VideoFilePreview
- * @covers ::__construct
  */
 class VideoFilePreviewTest extends TestCase
 {
@@ -28,13 +27,15 @@ class VideoFilePreviewTest extends TestCase
 	}
 
 	/**
-	 * @coversNothing
+	 * @covers ::__construct
 	 */
 	public function testFactory()
 	{
 		$page    = new Page(['slug' => 'test']);
 		$file    = new File(['filename' => 'test.mp4', 'parent' => $page]);
+
 		$preview = FilePreview::factory($file);
 		$this->assertInstanceOf(VideoFilePreview::class, $preview);
+		$this->assertSame('k-video-file-preview', $preview->component);
 	}
 }
