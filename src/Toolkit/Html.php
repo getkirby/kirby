@@ -605,7 +605,7 @@ class Html extends Xml
 		$host   = 'https://' . $uri->host() . '/embed';
 		$src    = null;
 
-		$isYoutubeId = function (string|null $id = null): bool {
+		$isYoutubeId = static function (string|null $id = null): bool {
 			if (empty($id) === true) {
 				return false;
 			}

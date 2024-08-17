@@ -601,7 +601,7 @@ class App
 		$visitor   = $this->visitor();
 
 		foreach ($visitor->acceptedLanguages() as $acceptedLang) {
-			$closure = function ($language) use ($acceptedLang) {
+			$closure = static function ($language) use ($acceptedLang) {
 				$languageLocale = $language->locale(LC_ALL);
 				$acceptedLocale = $acceptedLang->locale();
 
