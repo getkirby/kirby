@@ -127,13 +127,13 @@ class Mime
 		// fixing map
 		$map = [
 			'text/html' => [
-				'svg' => [Mime::class, 'fromSvg'],
+				'svg' => Mime::fromSvg(...),
 			],
 			'text/plain' => [
 				'css'  => 'text/css',
 				'json' => 'application/json',
 				'mjs' => 'text/javascript',
-				'svg'  => [Mime::class, 'fromSvg'],
+				'svg'  => Mime::fromSvg(...),
 			],
 			'text/x-asm' => [
 				'css' => 'text/css'

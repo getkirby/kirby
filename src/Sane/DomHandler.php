@@ -153,9 +153,9 @@ class DomHandler extends Handler
 			'allowedDomains'        => static::$allowedDomains,
 			'allowHostRelativeUrls' => static::$allowHostRelativeUrls,
 			'allowedPIs'            => static::$allowedPIs,
-			'attrCallback'          => [static::class, 'sanitizeAttr'],
-			'doctypeCallback'       => [static::class, 'validateDoctype'],
-			'elementCallback'       => [static::class, 'sanitizeElement'],
+			'attrCallback'          => static::sanitizeAttr(...),
+			'doctypeCallback'       => static::validateDoctype(...),
+			'elementCallback'       => static::sanitizeElement(...),
 		];
 
 		// never allow host-relative URLs in external files as we
