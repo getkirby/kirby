@@ -198,9 +198,6 @@ class Collection extends Iterator implements Countable, Stringable
 			return $this->data;
 		}
 
-		// clear all previous data
-		$this->data = [];
-
 		// overwrite the data array
 		$this->data = $data;
 
