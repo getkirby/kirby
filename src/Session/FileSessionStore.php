@@ -73,9 +73,10 @@ class FileSessionStore extends SessionStore
 		touch($path);
 		$this->lock($expiryTime, $id);
 
-		// ensure that no other thread already wrote to the same file, otherwise try again
-		// very unlikely scenario!
+		// ensure that no other thread already wrote to the same file,
+		// otherwise try again (very unlikely scenario!)
 		$contents = $this->get($expiryTime, $id);
+
 		if ($contents !== '') {
 			// @codeCoverageIgnoreStart
 			$this->unlock($expiryTime, $id);
@@ -194,8 +195,9 @@ class FileSessionStore extends SessionStore
 		$path   = $this->path($name);
 		$handle = $this->handle($name);
 
-		// set read lock to prevent other threads from corrupting the data while we read it
-		// only if we don't already have a write lock, which is even better
+		// set read lock to prevent other threads from corrupting
+		// the data while we read it; only if we don't already have
+		// a write lock, which is even better
 		if (isset($this->isLocked[$name]) === false) {
 			$result = flock($handle, LOCK_SH);
 
@@ -281,6 +283,7 @@ class FileSessionStore extends SessionStore
 
 		// write the new contents
 		$result = fwrite($handle, $data);
+
 		if (is_int($result) === false || $result === 0) {
 			// @codeCoverageIgnoreStart
 			throw new Exception([
@@ -410,10 +413,12 @@ class FileSessionStore extends SessionStore
 	 */
 	protected function handle(string $name)
 	{
-		// always verify that the file still exists, even if we already have a handle;
-		// ensures thread-safeness for recently deleted sessions, see $this->destroy()
+		// always verify that the file still exists, even if we
+		// already have a handle; ensures thread-safeness for
+		// recently deleted sessions, see $this->destroy()
 		$path = $this->path($name);
 		clearstatcache();
+
 		if (is_file($path) === false) {
 			throw new NotFoundException([
 				'key'       => 'session.filestore.notFound',
@@ -431,6 +436,7 @@ class FileSessionStore extends SessionStore
 
 		// open a new handle
 		$handle = @fopen($path, 'r+b');
+
 		if (is_resource($handle) === false) {
 			throw new Exception([
 				'key'       => 'session.filestore.notOpened',
@@ -454,8 +460,8 @@ class FileSessionStore extends SessionStore
 		if (isset($this->handles[$name]) === false) {
 			return;
 		}
-		$handle = $this->handles[$name];
 
+		$handle = $this->handles[$name];
 		unset($this->handles[$name]);
 		$result = fclose($handle);
 
