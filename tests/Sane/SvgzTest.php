@@ -11,7 +11,7 @@ class SvgzTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Sane.Svgz';
 
-	protected static $type = 'svgz';
+	protected static string $type = 'svgz';
 
 	/**
 	 * @dataProvider allowedProvider
@@ -20,7 +20,7 @@ class SvgzTest extends TestCase
 	{
 		$fixture = $this->fixture($file);
 
-		$this->assertNull(Svgz::validateFile($fixture));
+		Svgz::validateFile($fixture);
 
 		$input     = file_get_contents($fixture);
 		$sanitized = Svgz::sanitize($input);

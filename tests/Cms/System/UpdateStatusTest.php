@@ -17,8 +17,8 @@ class UpdateStatusTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures/UpdateStatusTest';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.System.UpdateStatus';
 
-	protected static $host;
-	protected static $data = [];
+	protected static string $host;
+	protected static array $data = [];
 
 	public static function setUpBeforeClass(): void
 	{

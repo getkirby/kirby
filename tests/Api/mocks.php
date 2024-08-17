@@ -6,7 +6,7 @@ use Exception;
 
 class IniStore
 {
-	public static $data = [];
+	public static array $data = [];
 }
 
 

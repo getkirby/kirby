@@ -11,7 +11,7 @@ use Kirby\Toolkit\Obj;
 
 class CustomEmailProvider extends Email
 {
-	public static $apiKey;
+	public static string|null $apiKey = null;
 
 	public function __construct(array $props = [], bool $debug = false)
 	{

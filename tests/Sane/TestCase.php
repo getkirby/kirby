@@ -14,7 +14,7 @@ class TestCase extends BaseTestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 
-	protected static $type;
+	protected static string $type;
 
 	public function setUp(): void
 	{

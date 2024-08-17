@@ -9,8 +9,8 @@ use TypeError;
 
 class UriTest extends TestCase
 {
-	protected static $example1 = 'https://getkirby.com';
-	protected static $example2 = 'https://testuser:weakpassword@getkirby.com:3000/docs/getting-started/with:kirby/?q=awesome#top';
+	protected static string $example1 = 'https://getkirby.com';
+	protected static string $example2 = 'https://testuser:weakpassword@getkirby.com:3000/docs/getting-started/with:kirby/?q=awesome#top';
 
 	protected function setUp(): void
 	{

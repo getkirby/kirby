@@ -17,7 +17,7 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class DomTest extends TestCase
 {
-	protected static $testClosures = [];
+	protected static array $testClosures = [];
 
 	public static function setUpBeforeClass(): void
 	{

@@ -14,7 +14,7 @@ class SaneTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Sane.Sane';
 
-	protected static $type = 'sane';
+	protected static string $type = 'sane';
 
 	/**
 	 * @covers ::handler
@@ -104,17 +104,23 @@ class SaneTest extends TestCase
 	{
 		$expected = $this->fixture('doctype-valid.svg');
 		$tmp      = $this->fixture('doctype-valid.svg', true);
-		$this->assertNull(Sane::sanitizeFile($tmp));
+
+		Sane::sanitizeFile($tmp);
+
 		$this->assertFileEquals($expected, $tmp);
 
 		$expected = $this->fixture('external-source-1.sanitized.svg');
 		$tmp      = $this->fixture('external-source-1.svg', true);
-		$this->assertNull(Sane::sanitizeFile($tmp));
+
+		Sane::sanitizeFile($tmp);
+
 		$this->assertFileEquals($expected, $tmp);
 
 		$expected = $this->fixture('xlink-subfolder.sanitized.svg');
 		$tmp      = $this->fixture('xlink-subfolder.svg', true);
-		$this->assertNull(Sane::sanitizeFile($tmp));
+
+		Sane::sanitizeFile($tmp);
+
 		$this->assertFileEquals($expected, $tmp);
 	}
 
@@ -125,12 +131,16 @@ class SaneTest extends TestCase
 	{
 		$expected = $this->fixture('doctype-valid.svg');
 		$tmp      = $this->fixture('doctype-valid.svg', true);
-		$this->assertNull(Sane::sanitizeFile($tmp, 'svg'));
+
+		Sane::sanitizeFile($tmp, 'svg');
+
 		$this->assertFileEquals($expected, $tmp);
 
 		$expected = $this->fixture('external-source-1.sanitized.svg');
 		$tmp      = $this->fixture('external-source-1.svg', true);
-		$this->assertNull(Sane::sanitizeFile($tmp, 'svg'));
+
+		Sane::sanitizeFile($tmp, 'svg');
+
 		$this->assertFileEquals($expected, $tmp);
 	}
 
@@ -140,7 +150,9 @@ class SaneTest extends TestCase
 	 */
 	public function testSanitizeFileLazyHandler()
 	{
-		$this->assertNull(Sane::sanitizeFile($this->fixture('unknown.xyz'), true));
+		$this->assertNull(
+			Sane::sanitizeFile($this->fixture('unknown.xyz'), true)
+		);
 	}
 
 	/**
@@ -165,7 +177,7 @@ class SaneTest extends TestCase
 		$expected = $this->fixture('script-2.sanitized.xml');
 		$tmp      = $this->fixture('script-2.xml', true);
 
-		$this->assertNull(Sane::sanitizeFile($tmp, 'xml'));
+		Sane::sanitizeFile($tmp, 'xml');
 		$this->assertFileEquals($expected, $tmp);
 	}
 

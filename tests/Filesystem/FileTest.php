@@ -26,7 +26,7 @@ class FileTest extends TestCase
 	public const TMP      = KIRBY_TMP_DIR . '/Filesystem.File';
 
 	// used for the mocks
-	public static $block = [];
+	public static array $block = [];
 
 	protected function setUp(): void
 	{
