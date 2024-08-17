@@ -19,10 +19,7 @@
  */
 export default {
 	props: {
-		details: {
-			default: () => [],
-			type: Array
-		},
+		details: Array,
 		image: {
 			default: () => ({}),
 			type: Object

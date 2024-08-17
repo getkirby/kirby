@@ -12,10 +12,7 @@
  */
 export default {
 	props: {
-		details: {
-			default: () => [],
-			type: Array
-		},
+		details: Array,
 		url: String
 	}
 };

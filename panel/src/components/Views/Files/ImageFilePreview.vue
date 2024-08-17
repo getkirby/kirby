@@ -46,10 +46,7 @@
  */
 export default {
 	props: {
-		details: {
-			default: () => [],
-			type: Array
-		},
+		details: Array,
 		focusable: Boolean,
 		image: {
 			default: () => ({}),
