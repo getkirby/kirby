@@ -952,14 +952,12 @@ class Collection extends Iterator implements Countable, Stringable
 	 * @param int $method The sort flag, SORT_REGULAR, SORT_NUMERIC etc.
 	 * @return $this|static
 	 */
-	public function sort(): static
+	public function sort(...$args): static
 	{
 		// there is no need to sort empty collections
 		if (empty($this->data) === true) {
 			return $this;
 		}
-
-		$args       = func_get_args();
 		$array      = $this->data;
 		$collection = $this->clone();
 
