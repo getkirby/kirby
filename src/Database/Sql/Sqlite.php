@@ -97,7 +97,7 @@ class Sqlite extends Sql
 				// SQLite only supports index creation
 				// using a separate CREATE INDEX query
 				$unique = isset($inner['unique'][$key]) ? 'UNIQUE ' : '';
-				$keys[] = 'CREATE ' . $unique . 'INDEX ' . $this->quoteIdentifier($table . '_index_' . $key) .  ' ON ' . $this->quoteIdentifier($table) . ' (' . $columns . ')';
+				$keys[] = 'CREATE ' . $unique . 'INDEX ' . $this->quoteIdentifier($table . '_index_' . $key) . ' ON ' . $this->quoteIdentifier($table) . ' (' . $columns . ')';
 			}
 		}
 

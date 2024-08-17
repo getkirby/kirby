@@ -448,7 +448,10 @@ class Dir
 				true  => filemtime($dir . '/' . $item),
 				false => static::modified($dir . '/' . $item)
 			};
-			$modified = ($newModified > $modified) ? $newModified : $modified;
+
+			if ($newModified > $modified) {
+				$modified = $newModified;
+			}
 		}
 
 		return Str::date($modified, $format, $handler);

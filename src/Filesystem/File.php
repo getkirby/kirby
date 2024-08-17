@@ -128,11 +128,10 @@ class File implements Stringable
 	 */
 	public function dataUri(bool $base64 = true): string
 	{
-		if ($base64 === true) {
-			return 'data:' . $this->mime() . ';base64,' . $this->base64();
-		}
-
-		return 'data:' . $this->mime() . ',' . Escape::url($this->read());
+		return match ($base64) {
+			true  => 'data:' . $this->mime() . ';base64,' . $this->base64(),
+			false => 'data:' . $this->mime() . ',' . Escape::url($this->read())
+		};
 	}
 
 	/**
@@ -156,7 +155,10 @@ class File implements Stringable
 	 */
 	public function download(string|null $filename = null): string
 	{
-		return Response::download($this->root(), $filename ?? $this->filename());
+		return Response::download(
+			$this->root(),
+			$filename ?? $this->filename()
+		);
 	}
 
 	/**
@@ -305,6 +307,7 @@ class File implements Stringable
 
 		if (is_array($rules['extension'] ?? null) === true) {
 			$extension = $this->extension();
+
 			if (in_array($extension, $rules['extension']) !== true) {
 				throw new Exception([
 					'key'  => 'file.extension.invalid',
@@ -315,6 +318,7 @@ class File implements Stringable
 
 		if (is_array($rules['type'] ?? null) === true) {
 			$type = $this->type();
+
 			if (in_array($type, $rules['type']) !== true) {
 				throw new Exception([
 					'key'  => 'file.type.invalid',
