@@ -95,7 +95,7 @@ class DomHandler extends Handler
 		$errors = $dom->sanitize(static::options($isExternal));
 
 		// there may be multiple errors, we can only throw one of them at a time
-		if (count($errors) > 0) {
+		if ($errors !== []) {
 			throw $errors[0];
 		}
 	}

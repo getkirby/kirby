@@ -533,7 +533,7 @@ class A
 
 		// if more than two arrays need to be merged, add the result
 		// as first array and the mode to the end and call the method again
-		if (count($arrays) > 0) {
+		if ($arrays !== []) {
 			array_unshift($arrays, $merged);
 			array_push($arrays, $mode);
 			return static::merge(...$arrays);
@@ -687,7 +687,7 @@ class A
 			}
 
 			// untangle elements where the key uses dot notation
-			if (count($subKeys) > 0) {
+			if ($subKeys !== []) {
 				$value = static::nestByKeys($value, $subKeys);
 			}
 

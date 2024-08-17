@@ -219,7 +219,7 @@ class PageCreateDialog
 		);
 
 		// immediately submit the dialog if there is no editable field
-		if (count($visible) === 0 && count($blueprints) < 2) {
+		if ($visible === [] && count($blueprints) < 2) {
 			$input    = $this->value();
 			$response = $this->submit($input);
 			$response['redirect'] ??= $this->parent->panel()->url(true);

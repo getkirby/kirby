@@ -184,7 +184,7 @@ class Dir
 	 */
 	public static function isEmpty(string $dir): bool
 	{
-		return count(static::read($dir)) === 0;
+		return static::read($dir) === [];
 	}
 
 	/**
