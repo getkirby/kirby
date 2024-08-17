@@ -157,7 +157,8 @@ class Xml
 				$name       = $props['@name'] ?? $name;
 				$attributes = $props['@attributes'] ?? [];
 				$value      = $props['@value'] ?? null;
-				if (isset($props['@namespaces'])) {
+
+				if (isset($props['@namespaces']) === true) {
 					foreach ($props['@namespaces'] as $key => $namespace) {
 						$key = 'xmlns' . (($key) ? ':' . $key : '');
 						$attributes[$key] = $namespace;
@@ -165,25 +166,50 @@ class Xml
 				}
 
 				// continue with just the children
-				unset($props['@name'], $props['@attributes'], $props['@namespaces'], $props['@value']);
+				unset(
+					$props['@name'],
+					$props['@attributes'],
+					$props['@namespaces'],
+					$props['@value']
+				);
 
 				if (count($props) > 0) {
 					// there are children, use them instead of the value
 
 					$value = [];
 					foreach ($props as $childName => $childItem) {
-						// render the child, but don't include the indentation of the first line
-						$value[] = trim(static::create($childItem, $childName, false, $indent, $level + 1));
+						// render the child, but don't include the
+						// indentation of the first line
+						$value[] = trim(static::create(
+							$childItem,
+							$childName,
+							false,
+							$indent,
+							$level + 1
+						));
 					}
 				}
 
-				$result = static::tag($name, $value, $attributes, $indent, $level);
+				$result = static::tag(
+					$name,
+					$value,
+					$attributes,
+					$indent,
+					$level
+				);
 			} else {
 				// just children
 
 				$result = [];
+
 				foreach ($props as $childItem) {
-					$result[] = static::create($childItem, $name, false, $indent, $level);
+					$result[] = static::create(
+						$childItem,
+						$name,
+						false,
+						$indent,
+						$level
+					);
 				}
 
 				$result = implode(PHP_EOL, $result);
@@ -361,6 +387,7 @@ class Xml
 		}
 
 		$array['@value'] = $element;
+
 		return $array;
 	}
 
@@ -386,7 +413,10 @@ class Xml
 		$start      = '<' . $name . ($attr ? ' ' . $attr : '') . '>';
 		$startShort = '<' . $name . ($attr ? ' ' . $attr : '') . static::$void;
 		$end        = '</' . $name . '>';
-		$baseIndent = $indent ? str_repeat($indent, $level) : '';
+		$baseIndent = match ($indent) {
+			null    => '',
+			default => str_repeat($indent, $level)
+		};
 
 		if (is_array($content) === false) {
 			return match ($content) {
@@ -436,8 +466,9 @@ class Xml
 		}
 
 		$encoded = htmlentities($value, ENT_NOQUOTES | ENT_XML1);
+
+		// no CDATA block needed
 		if ($encoded === $value) {
-			// no CDATA block needed
 			return $value;
 		}
 

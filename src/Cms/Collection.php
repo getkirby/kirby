@@ -177,7 +177,7 @@ class Collection extends BaseCollection
 				$value = (string)$value;
 
 				// ignore upper/lowercase for group names
-				if ($caseInsensitive === true) {
+				if ($caseInsensitive) {
 					$value = Str::lower($value);
 				}
 
@@ -334,11 +334,13 @@ class Collection extends BaseCollection
 		$result = parent::query($arguments);
 
 		if (empty($search) === false) {
-			if (is_array($search) === true) {
-				$result = $result->search($search['query'] ?? null, $search['options'] ?? []);
-			} else {
-				$result = $result->search($search);
-			}
+			$result = match (true) {
+				is_array($search) => $result->search(
+					$search['query'] ?? null,
+					$search['options'] ?? []
+				),
+				default => $result->search($search)
+			};
 		}
 
 		if (empty($paginate) === false) {
@@ -379,6 +381,8 @@ class Collection extends BaseCollection
 	 */
 	public function toArray(Closure|null $map = null): array
 	{
-		return parent::toArray($map ?? fn ($object) => $object->toArray());
+		return parent::toArray(
+			$map ?? fn ($object) => $object->toArray()
+		);
 	}
 }

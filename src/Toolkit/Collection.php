@@ -49,8 +49,10 @@ class Collection extends Iterator implements Countable, Stringable
 	 * @param bool $caseSensitive Whether the collection keys should be
 	 *                            treated as case-sensitive
 	 */
-	public function __construct(array $data = [], bool $caseSensitive = false)
-	{
+	public function __construct(
+		array $data = [],
+		bool $caseSensitive = false
+	) {
 		$this->caseSensitive = $caseSensitive;
 		$this->set($data);
 	}
@@ -237,8 +239,11 @@ class Collection extends Iterator implements Countable, Stringable
 		$split    = $args[1] ?? false;
 
 		// filter by custom filter function
-		if (is_string($field) === false && is_callable($field) === true) {
-			$collection = clone $this;
+		if (
+			is_string($field) === false &&
+			is_callable($field) === true
+		) {
+			$collection       = clone $this;
 			$collection->data = array_filter($this->data, $field);
 
 			return $collection;
@@ -373,6 +378,7 @@ class Collection extends Iterator implements Countable, Stringable
 				if (is_object($item) && method_exists($item, 'id') === true) {
 					$key = $item->id();
 				}
+
 				$result[$key] = $item;
 			}
 		}
@@ -394,6 +400,7 @@ class Collection extends Iterator implements Countable, Stringable
 				return $item;
 			}
 		}
+
 		return null;
 	}
 
@@ -452,7 +459,10 @@ class Collection extends Iterator implements Countable, Stringable
 		bool $split = false,
 		$related = null
 	) {
-		$value = $this->{'getAttributeFrom' . gettype($item)}($item, $attribute);
+		$value = $this->{'getAttributeFrom' . gettype($item)}(
+			$item,
+			$attribute
+		);
 
 		if ($split !== false) {
 			return Str::split($value, $split === true ? ',' : $split);
@@ -498,7 +508,7 @@ class Collection extends Iterator implements Countable, Stringable
 				$value = $this->getAttribute($item, $field);
 
 				// ignore upper/lowercase for group names
-				if ($caseInsensitive === true) {
+				if ($caseInsensitive) {
 					return Str::lower($value);
 				}
 
@@ -571,7 +581,7 @@ class Collection extends Iterator implements Countable, Stringable
 	public function intersects(Collection $other): bool
 	{
 		foreach ($this->keys() as $key) {
-			if ($other->has($key)) {
+			if ($other->has($key) === true) {
 				return true;
 			}
 		}
@@ -661,9 +671,11 @@ class Collection extends Iterator implements Countable, Stringable
 	public function not(string ...$keys): static
 	{
 		$collection = clone $this;
+
 		foreach ($keys as $key) {
 			unset($collection->data[$key]);
 		}
+
 		return $collection;
 	}
 
@@ -724,7 +736,7 @@ class Collection extends Iterator implements Countable, Stringable
 			}
 		}
 
-		if ($unique === true) {
+		if ($unique) {
 			$result = array_unique($result);
 		}
 
@@ -793,7 +805,7 @@ class Collection extends Iterator implements Countable, Stringable
 		}
 
 		if ($sort = $arguments['sortBy'] ?? $arguments['sort'] ?? null) {
-			if (is_array($sort)) {
+			if (is_array($sort) === true) {
 				$sort = explode(' ', implode(' ', $sort));
 			} else {
 				// if there are commas in the sort argument, removes it
@@ -803,6 +815,7 @@ class Collection extends Iterator implements Countable, Stringable
 
 				$sort = explode(' ', $sort);
 			}
+
 			$result = $result->sort(...$sort);
 		}
 
@@ -848,13 +861,14 @@ class Collection extends Iterator implements Countable, Stringable
 	 */
 	public function set(string|array $key, $value = null): static
 	{
-		if (is_array($key)) {
+		if (is_array($key) === true) {
 			foreach ($key as $k => $v) {
 				$this->__set($k, $v);
 			}
 		} else {
 			$this->__set($key, $value);
 		}
+
 		return $this;
 	}
 
@@ -885,8 +899,10 @@ class Collection extends Iterator implements Countable, Stringable
 	 * @return $this|static
 	 * @psalm-return ($offset is 0 && $limit is null ? $this : static)
 	 */
-	public function slice(int $offset = 0, int|null $limit = null): static
-	{
+	public function slice(
+		int $offset = 0,
+		int|null $limit = null
+	): static {
 		if ($offset === 0 && $limit === null) {
 			return $this;
 		}
@@ -906,16 +922,19 @@ class Collection extends Iterator implements Countable, Stringable
 			$sort = Str::replace($sort, ',', '');
 		}
 
-		$sortArgs = Str::split($sort, ' ');
+		$args = Str::split($sort, ' ');
 
 		// fill in PHP constants
-		array_walk($sortArgs, function (string &$value) {
-			if (Str::startsWith($value, 'SORT_') === true && defined($value) === true) {
+		array_walk($args, function (string &$value) {
+			if (
+				Str::startsWith($value, 'SORT_') === true &&
+				defined($value) === true
+			) {
 				$value = constant($value);
 			}
 		});
 
-		return $sortArgs;
+		return $args;
 	}
 
 	/**
@@ -1037,13 +1056,14 @@ class Collection extends Iterator implements Countable, Stringable
 
 		// $array has been overwritten by array_multisort
 		$collection->data = $array;
+
 		return $collection;
 	}
 
 	/**
 	 * @see \Kirby\Toolkit\Collection::sort()
 	 */
-	public function sortBy(...$args)
+	public function sortBy(...$args): static
 	{
 		return $this->sort(...$args);
 	}
@@ -1053,11 +1073,10 @@ class Collection extends Iterator implements Countable, Stringable
 	 */
 	public function toArray(Closure|null $map = null): array
 	{
-		if ($map !== null) {
-			return array_map($map, $this->data);
-		}
-
-		return $this->data;
+		return match ($map) {
+			null    => $this->data,
+			default => array_map($map, $this->data)
+		};
 	}
 
 	/**
@@ -1083,7 +1102,11 @@ class Collection extends Iterator implements Countable, Stringable
 	 */
 	public function values(Closure|null $map = null): array
 	{
-		$data = $map === null ? $this->data : array_map($map, $this->data);
+		$data = match ($map) {
+			null    => $this->data,
+			default => array_map($map, $this->data)
+		};
+
 		return array_values($data);
 	}
 
