@@ -17,6 +17,7 @@ class PHPTest extends TestCase
 
 	/**
 	 * @covers ::encode
+	 * @covers ::encodeArray
 	 */
 	public function testEncode()
 	{
