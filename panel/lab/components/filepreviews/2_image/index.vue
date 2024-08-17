@@ -1,31 +1,37 @@
 <template>
 	<k-lab-examples>
 		<k-lab-example label="Landscape">
-			<k-file-preview
-				:focus="focus"
-				:focusable="true"
+			<k-image-file-preview
 				:details="details"
 				:image="image"
 				url="https://getkirby.com"
-				@focus="focus = $event"
+				class="k-file-preview"
 			/>
 		</k-lab-example>
 		<k-lab-example label="Portrait">
-			<k-file-preview
-				:focus="focus"
-				:focusable="true"
+			<k-image-file-preview
 				:details="details"
 				:image="{
 					...image,
 					src: 'https://picsum.photos/800/1200'
 				}"
 				url="https://getkirby.com"
-				@focus="focus = $event"
+				class="k-file-preview"
 			/>
 		</k-lab-example>
 		<k-lab-example label="Square">
-			<k-file-preview
-				:focus="focus"
+			<k-image-file-preview
+				:details="details"
+				:image="{
+					...image,
+					src: 'https://picsum.photos/800/800'
+				}"
+				url="https://getkirby.com"
+				class="k-file-preview"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Focusable">
+			<k-image-file-preview
 				:focusable="true"
 				:details="details"
 				:image="{
@@ -33,17 +39,7 @@
 					src: 'https://picsum.photos/800/800'
 				}"
 				url="https://getkirby.com"
-				@focus="focus = $event"
-			/>
-		</k-lab-example>
-		<k-lab-example label="Icon">
-			<k-file-preview
-				:details="details"
-				:image="{
-					icon: 'markdown',
-					color: 'orange-600'
-				}"
-				url="https://getkirby.com"
+				class="k-file-preview"
 			/>
 		</k-lab-example>
 	</k-lab-examples>
@@ -51,11 +47,6 @@
 
 <script>
 export default {
-	data() {
-		return {
-			focus: null
-		};
-	},
 	computed: {
 		details() {
 			return [

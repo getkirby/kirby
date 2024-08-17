@@ -23,7 +23,7 @@
 			</template>
 		</k-header>
 
-		<k-file-preview v-bind="preview.props" />
+		<k-file-preview v-bind="preview" />
 
 		<k-model-tabs :tab="tab.name" :tabs="tabs" />
 
