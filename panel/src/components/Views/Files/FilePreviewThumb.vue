@@ -7,7 +7,7 @@
 				<k-button
 					icon="dots"
 					size="xs"
-					style="color: var(--color-gray-500)"
+					class="k-file-preview-thumb-dropdown-toggle"
 					@click="$refs.dropdown.toggle()"
 				/>
 				<k-dropdown-content
@@ -57,5 +57,12 @@ export default {
 	position: absolute;
 	top: var(--spacing-2);
 	inset-inline-start: var(--spacing-2);
+}
+
+.k-button.k-file-preview-thumb-dropdown-toggle {
+	--button-color-icon: var(--color-gray-500);
+}
+.k-panel[data-theme="dark"] .k-button.k-file-preview-thumb-dropdown-toggle {
+	--button-color-icon: var(--color-gray-700);
 }
 </style>
