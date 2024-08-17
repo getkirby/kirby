@@ -892,7 +892,7 @@ class Page extends ModelWithContent
 		$parents = new Pages();
 		$page    = $this->parent();
 
-		while ($page !== null) {
+		while ($page instanceof Page) {
 			$parents->append($page->id(), $page);
 			$page = $page->parent();
 		}
