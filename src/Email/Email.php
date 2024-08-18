@@ -3,9 +3,7 @@
 namespace Kirby\Email;
 
 use Closure;
-use Exception;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Toolkit\V;
 
 /**
  * Wrapper for email libraries
@@ -38,10 +36,8 @@ class Email
 	protected array $bcc;
 	protected Closure|null $beforeSend;
 	protected array $cc;
-	protected string $from;
-	protected string|null $fromName;
-	protected string $replyTo;
-	protected string|null $replyToName;
+	protected Address $from;
+	protected Address|null $replyTo = null;
 	protected string $subject;
 	protected array $to;
 	protected array|null $transport;
@@ -61,18 +57,20 @@ class Email
 			$props['body'] = ['text' => $props['body']];
 		}
 
+
 		$this->attachments = $props['attachments'] ?? [];
-		$this->bcc         = $this->resolveEmail($props['bcc'] ?? null);
+		$this->bcc         = Address::factory($props['bcc'] ?? [], multiple: true);
 		$this->beforeSend  = $props['beforeSend'] ?? null;
 		$this->body        = new Body($props['body']);
-		$this->cc          = $this->resolveEmail($props['cc'] ?? null);
-		$this->from        = $this->resolveEmail($props['from'], false);
-		$this->fromName    = $props['fromName'] ?? null;
-		$this->replyTo     = $this->resolveEmail($props['replyTo'] ?? null, false);
-		$this->replyToName = $props['replyToName'] ?? null;
+		$this->cc          = Address::factory($props['cc'] ?? [], multiple: true);
+		$this->from        = Address::factory([$props['from'] => $props['fromName'] ?? null]);
 		$this->subject     = $props['subject'];
-		$this->to          = $this->resolveEmail($props['to']);
+		$this->to          = Address::factory($props['to'], multiple: true);
 		$this->transport   = $props['transport'] ?? null;
+
+		if ($replyTo = $props['replyTo'] ?? null) {
+			$this->replyTo = Address::factory([$replyTo => $props['replyToName'] ?? null]);
+		}
 
 		// @codeCoverageIgnoreStart
 		if (static::$debug === false && $debug === false) {
@@ -104,7 +102,7 @@ class Email
 	 */
 	public function bcc(): array
 	{
-		return $this->bcc;
+		return Address::resolve($this->bcc);
 	}
 
 	/**
@@ -121,7 +119,7 @@ class Email
 	 */
 	public function cc(): array
 	{
-		return $this->cc;
+		return Address::resolve($this->cc);
 	}
 
 	/**
@@ -162,7 +160,7 @@ class Email
 	 */
 	public function from(): string
 	{
-		return $this->from;
+		return $this->from->email();
 	}
 
 	/**
@@ -170,7 +168,7 @@ class Email
 	 */
 	public function fromName(): string|null
 	{
-		return $this->fromName;
+		return $this->from->name();
 	}
 
 	/**
@@ -194,7 +192,7 @@ class Email
 	 */
 	public function replyTo(): string
 	{
-		return $this->replyTo;
+		return $this->replyTo?->email() ?? '';
 	}
 
 	/**
@@ -202,44 +200,7 @@ class Email
 	 */
 	public function replyToName(): string|null
 	{
-		return $this->replyToName;
-	}
-
-	/**
-	 * Converts single or multiple email addresses to a sanitized format
-	 *
-	 * @throws \Exception
-	 */
-	protected function resolveEmail(
-		string|array|null $email = null,
-		bool $multiple = true
-	): array|string {
-		if ($email === null) {
-			return $multiple === true ? [] : '';
-		}
-
-		if (is_array($email) === false) {
-			$email = [$email => null];
-		}
-
-		$result = [];
-		foreach ($email as $address => $name) {
-			// convert simple email arrays to associative arrays
-			if (is_int($address) === true) {
-				// the value is the address, there is no name
-				$address = $name;
-				$result[$address] = null;
-			} else {
-				$result[$address] = $name;
-			}
-
-			// ensure that the address is valid
-			if (V::email($address) === false) {
-				throw new Exception(sprintf('"%s" is not a valid email address', $address));
-			}
-		}
-
-		return $multiple === true ? $result : array_keys($result)[0];
+		return $this->replyTo?->name();
 	}
 
 	/**
@@ -263,7 +224,7 @@ class Email
 	 */
 	public function to(): array
 	{
-		return $this->to;
+		return Address::resolve($this->to);
 	}
 
 	/**
