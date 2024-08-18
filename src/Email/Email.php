@@ -123,29 +123,6 @@ class Email
 	}
 
 	/**
-	 * Creates a new instance while
-	 * merging initial and new properties
-	 * @deprecated 4.0.0
-	 */
-	public function clone(array $props = []): static
-	{
-		return new static(array_merge_recursive([
-			'attachments'   => $this->attachments,
-			'bcc'			=> $this->bcc,
-			'beforeSend'    => $this->beforeSend,
-			'body'			=> $this->body->toArray(),
-			'cc'   			=> $this->cc,
-			'from'			=> $this->from,
-			'fromName'   	=> $this->fromName,
-			'replyTo' 		=> $this->replyTo,
-			'replyToName'	=> $this->replyToName,
-			'subject'   	=> $this->subject,
-			'to'   			=> $this->to,
-			'transport' 	=> $this->transport
-		], $props));
-	}
-
-	/**
 	 * Returns default transport settings
 	 */
 	protected function defaultTransport(): array
