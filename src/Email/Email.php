@@ -4,6 +4,7 @@ namespace Kirby\Email;
 
 use Closure;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\A;
 
 /**
  * Wrapper for email libraries
@@ -58,7 +59,7 @@ class Email
 		}
 
 
-		$this->attachments = $props['attachments'] ?? [];
+		$this->attachments = Attachment::factory($props['attachments'] ?? []);
 		$this->bcc         = Address::factory($props['bcc'] ?? [], multiple: true);
 		$this->beforeSend  = $props['beforeSend'] ?? null;
 		$this->body        = new Body($props['body']);
@@ -86,7 +87,10 @@ class Email
 	 */
 	public function attachments(): array
 	{
-		return $this->attachments;
+		return A::map(
+			$this->attachments,
+			fn ($attachment) => $attachment->root()
+		);
 	}
 
 	/**
