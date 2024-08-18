@@ -62,7 +62,7 @@ class Email
 		$this->attachments = Attachment::factory($props['attachments'] ?? []);
 		$this->bcc         = Address::factory($props['bcc'] ?? [], multiple: true);
 		$this->beforeSend  = $props['beforeSend'] ?? null;
-		$this->body        = new Body($props['body']);
+		$this->body        = Body::factory($props['body']);
 		$this->cc          = Address::factory($props['cc'] ?? [], multiple: true);
 		$this->from        = Address::factory([$props['from'] => $props['fromName'] ?? null]);
 		$this->subject     = $props['subject'];

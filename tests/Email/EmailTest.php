@@ -52,6 +52,37 @@ class EmailTest extends TestCase
 		$this->assertSame(['type' => 'mail'], $email->transport());
 	}
 
+	public function testToArray()
+	{
+		$email = $this->_email([
+			'from'    => $from = 'no-reply@supercompany.com',
+			'to'      => $to = 'someone@gmail.com',
+			'subject' => $subject = 'Thank you for your contact request',
+			'body'    => $body = 'We will never reply',
+		]);
+
+		$expected = [
+			'attachments' => [],
+			'bcc'         => [],
+			'body'        => [
+				'html' => '',
+				'text' => $body
+			],
+			'cc'          => [],
+			'from'        => $from,
+			'fromName'    => null,
+			'replyTo'     => '',
+			'replyToName' => null,
+			'subject'     => $subject,
+			'to'          => [$to => null],
+			'transport'   => [
+				'type' => 'mail'
+			]
+		];
+
+		$this->assertSame($expected, $email->toArray());
+	}
+
 	public function testRequiredProperty()
 	{
 		$this->expectException(Exception::class);
