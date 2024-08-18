@@ -4,7 +4,7 @@ namespace Kirby\Cms\Auth;
 
 use Kirby\Cms\App;
 use Kirby\Cms\TestCase;
-use Kirby\Email\Email;
+use Kirby\Email\PHPMailer;
 use Kirby\Filesystem\Dir;
 
 /**
@@ -17,8 +17,8 @@ class EmailChallengeTest extends TestCase
 
 	public function setUp(): void
 	{
-		Email::$debug = true;
-		Email::$emails = [];
+		PHPMailer::$debug = true;
+		PHPMailer::$emails = [];
 		$_SERVER['SERVER_NAME'] = 'kirby.test';
 
 		$this->app = new App([
@@ -52,8 +52,8 @@ class EmailChallengeTest extends TestCase
 	{
 		Dir::remove(static::TMP);
 
-		Email::$debug = false;
-		Email::$emails = [];
+		PHPMailer::$debug = false;
+		PHPMailer::$emails = [];
 		unset($_SERVER['SERVER_NAME']);
 	}
 
@@ -77,8 +77,8 @@ class EmailChallengeTest extends TestCase
 		$code1 = EmailChallenge::create($user, $options);
 		$this->assertStringMatchesFormat('%d', $code1);
 		$this->assertSame(6, strlen($code1));
-		$this->assertCount(1, Email::$emails);
-		$email = Email::$emails[0];
+		$this->assertCount(1, PHPMailer::$emails);
+		$email = PHPMailer::$emails[0];
 		$this->assertSame('noreply@kirby.test', $email->from());
 		$this->assertSame('Test Site', $email->fromName());
 		$this->assertSame(['homer@simpsons.com' => 'Homer'], $email->to());
@@ -111,8 +111,8 @@ class EmailChallengeTest extends TestCase
 		$code = EmailChallenge::create($user, $options);
 		$this->assertStringMatchesFormat('%d', $code);
 		$this->assertSame(6, strlen($code));
-		$this->assertCount(1, Email::$emails);
-		$email = Email::$emails[0];
+		$this->assertCount(1, PHPMailer::$emails);
+		$email = PHPMailer::$emails[0];
 		$this->assertSame('noreply@example.com', $email->from());
 		$this->assertSame('Test Site', $email->fromName());
 		$this->assertSame(['homer@simpsons.com' => 'Homer'], $email->to());
@@ -137,8 +137,8 @@ class EmailChallengeTest extends TestCase
 		$code1 = EmailChallenge::create($user, $options);
 		$this->assertStringMatchesFormat('%d', $code1);
 		$this->assertSame(6, strlen($code1));
-		$this->assertCount(1, Email::$emails);
-		$email = Email::$emails[0];
+		$this->assertCount(1, PHPMailer::$emails);
+		$email = PHPMailer::$emails[0];
 		$this->assertSame('noreply@kirby.test', $email->from());
 		$this->assertSame('Test Site', $email->fromName());
 		$this->assertSame(['homer@simpsons.com' => 'Homer'], $email->to());
@@ -166,8 +166,8 @@ class EmailChallengeTest extends TestCase
 		$code1 = EmailChallenge::create($user, $options);
 		$this->assertStringMatchesFormat('%d', $code1);
 		$this->assertSame(6, strlen($code1));
-		$this->assertCount(1, Email::$emails);
-		$email = Email::$emails[0];
+		$this->assertCount(1, PHPMailer::$emails);
+		$email = PHPMailer::$emails[0];
 		$this->assertSame('noreply@kirby.test', $email->from());
 		$this->assertSame('Test Site', $email->fromName());
 		$this->assertSame(['marge@simpsons.com' => ''], $email->to());
@@ -195,8 +195,8 @@ class EmailChallengeTest extends TestCase
 		$code1 = EmailChallenge::create($user, $options);
 		$this->assertStringMatchesFormat('%d', $code1);
 		$this->assertSame(6, strlen($code1));
-		$this->assertCount(1, Email::$emails);
-		$email = Email::$emails[0];
+		$this->assertCount(1, PHPMailer::$emails);
+		$email = PHPMailer::$emails[0];
 		$this->assertSame('noreply@kirby.test', $email->from());
 		$this->assertSame('Test Site', $email->fromName());
 		$this->assertSame(['bart@simpsons.com' => ''], $email->to());
@@ -235,8 +235,8 @@ class EmailChallengeTest extends TestCase
 		$code = EmailChallenge::create($user, $options);
 		$this->assertStringMatchesFormat('%d', $code);
 		$this->assertSame(6, strlen($code));
-		$this->assertCount(1, Email::$emails);
-		$email = Email::$emails[0];
+		$this->assertCount(1, PHPMailer::$emails);
+		$email = PHPMailer::$emails[0];
 		$this->assertSame('test@example.com', $email->from());
 		$this->assertSame('Test', $email->fromName());
 		$this->assertSame(['homer@simpsons.com' => 'Homer'], $email->to());
@@ -265,8 +265,8 @@ class EmailChallengeTest extends TestCase
 		$code = EmailChallenge::create($user, $options);
 		$this->assertStringMatchesFormat('%d', $code);
 		$this->assertSame(6, strlen($code));
-		$this->assertCount(1, Email::$emails);
-		$email = Email::$emails[0];
+		$this->assertCount(1, PHPMailer::$emails);
+		$email = PHPMailer::$emails[0];
 		$this->assertSame('noreply@kirby.test', $email->from());
 		$this->assertSame('Test Site', $email->fromName());
 		$this->assertSame(['homer@simpsons.com' => 'Homer'], $email->to());

@@ -19,6 +19,33 @@ use PHPMailer\PHPMailer\PHPMailer as Mailer;
 class PHPMailer extends Email
 {
 	/**
+	 * If set to `true`, the debug mode is enabled
+	 * for all emails
+	 */
+	public static bool $debug = false;
+
+	/**
+	 * Store for sent emails when `Email::$debug`
+	 * is set to `true`
+	 */
+	public static array $emails = [];
+
+	public function __construct(
+		array $props = [],
+		bool $debug = false
+	) {
+		parent::__construct($props);
+
+		// @codeCoverageIgnoreStart
+		if (static::$debug === false && $debug === false) {
+			$this->send();
+		} elseif (static::$debug === true) {
+			static::$emails[] = $this;
+		}
+		// @codeCoverageIgnoreEnd
+	}
+
+	/**
 	 * Sends email via PHPMailer library
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException

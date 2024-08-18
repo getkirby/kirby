@@ -8,6 +8,9 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use PHPMailer\PHPMailer\PHPMailer as Mailer;
 
+/**
+ * @coversDefaultClass \Kirby\Email\Email
+ */
 class EmailTest extends TestCase
 {
 	protected function _email($props = [], $mailer = Email::class)

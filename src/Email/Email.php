@@ -20,18 +20,6 @@ use Kirby\Toolkit\A;
  */
 class Email
 {
-	/**
-	 * If set to `true`, the debug mode is enabled
-	 * for all emails
-	 */
-	public static bool $debug = false;
-
-	/**
-	 * Store for sent emails when `Email::$debug`
-	 * is set to `true`
-	 */
-	public static array $emails = [];
-
 	protected bool $isSent = false;
 
 	protected array $attachments;
@@ -45,13 +33,7 @@ class Email
 	protected array $to;
 	protected array|null $transport;
 
-	/**
-	 * Email constructor
-	 */
-	public function __construct(
-		array $props = [],
-		bool $debug = false
-	) {
+	public function __construct(array $props = []) {
 		foreach (['from', 'to', 'subject'] as $required) {
 			if (isset($props[$required]) === false) {
 				throw new InvalidArgumentException('The property "' . $required . '" is required');
@@ -75,14 +57,6 @@ class Email
 		if ($replyTo = $props['replyTo'] ?? null) {
 			$this->replyTo = Address::factory([$replyTo => $props['replyToName'] ?? null]);
 		}
-
-		// @codeCoverageIgnoreStart
-		if (static::$debug === false && $debug === false) {
-			$this->send();
-		} elseif (static::$debug === true) {
-			static::$emails[] = $this;
-		}
-		// @codeCoverageIgnoreEnd
 	}
 
 	/**
