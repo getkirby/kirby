@@ -3,7 +3,9 @@
 namespace Kirby\Email;
 
 use Exception;
+use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use PHPMailer\PHPMailer\PHPMailer as Mailer;
 
 class EmailTest extends TestCase
@@ -246,5 +248,61 @@ class EmailTest extends TestCase
 		$this->assertInstanceOf('Closure', $mail->beforeSend());
 
 		$mail->send(true);
+	}
+
+	/**
+	 * @covers ::factory
+	 */
+	public function testFactory(): void
+	{
+		$email = Email::factory([
+			'from'    => $from = 'no-reply@supercompany.com',
+			'to'      => $to = 'someone@gmail.com',
+			'subject' => $subject = 'Thank you for your contact request',
+			'body'    => $body = 'We will never reply',
+		]);
+
+		$this->assertSame($from, $email->from());
+		$this->assertSame($to, array_keys($email->to())[0]);
+		$this->assertSame($subject, $email->subject());
+		$this->assertSame($body, $email->body()->text());
+	}
+
+	/**
+	 * @covers ::factory
+	 */
+	public function testFactoryPreset(): void
+	{
+		new App([
+			'options' => [
+				'email' => [
+					'presets' => [
+						'contact' => [
+							'cc' => $cc = 'marketing@supercompany.com',
+						]
+					]
+				]
+			]
+		]);
+
+		$email = Email::factory('contact', [
+			'from'    => 'no-reply@supercompany.com',
+			'to'      => $to = 'nobody@web.de',
+			'subject' => 'Thank you for your contact request',
+			'body'    => 'We will never reply',
+		]);
+
+		$this->assertSame($to, array_keys($email->to())[0]);
+		$this->assertSame($cc, array_keys($email->cc())[0]);
+	}
+
+	/**
+	 * @covers ::factory
+	 */
+	public function testFactoryPresetInvalid(): void
+	{
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionCode('error.email.preset.notFound');
+		Email::factory('not-a-preset');
 	}
 }

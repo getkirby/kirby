@@ -1,1 +1,0 @@
-Cheers, <?= $name ?>!

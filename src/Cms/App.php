@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use Generator;
 use Kirby\Data\Data;
-use Kirby\Email\Email as BaseEmail;
+use Kirby\Email\Email;
 use Kirby\Exception\ErrorPageException;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
@@ -627,10 +627,10 @@ class App
 	/**
 	 * Returns the Email singleton
 	 */
-	public function email(mixed $preset = [], array $props = []): BaseEmail
+	public function email(mixed $preset = [], array $props = []): Email
 	{
 		$debug = $props['debug'] ?? false;
-		$props = (new Email($preset, $props))->toArray();
+		$props = Email::factory($preset, $props)->toArray();
 
 		return ($this->component('email'))($this, $props, $debug);
 	}

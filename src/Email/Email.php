@@ -3,7 +3,9 @@
 namespace Kirby\Email;
 
 use Closure;
+use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\A;
 
 /**
@@ -46,23 +48,24 @@ class Email
 	/**
 	 * Email constructor
 	 */
-	public function __construct(array $props = [], bool $debug = false)
-	{
-		foreach (['body', 'from', 'to', 'subject'] as $required) {
+	public function __construct(
+		array $props = [],
+		bool $debug = false
+	) {
+		foreach (['from', 'to', 'subject'] as $required) {
 			if (isset($props[$required]) === false) {
 				throw new InvalidArgumentException('The property "' . $required . '" is required');
 			}
 		}
 
-		if (is_string($props['body']) === true) {
-			$props['body'] = ['text' => $props['body']];
-		}
-
-
 		$this->attachments = Attachment::factory($props['attachments'] ?? []);
 		$this->bcc         = Address::factory($props['bcc'] ?? [], multiple: true);
 		$this->beforeSend  = $props['beforeSend'] ?? null;
-		$this->body        = Body::factory($props['body']);
+		$this->body        = Body::factory(
+			$props['body'] ?? null,
+			$props['template'] ?? null,
+			$props['data'] ?? []
+		);
 		$this->cc          = Address::factory($props['cc'] ?? [], multiple: true);
 		$this->from        = Address::factory([$props['from'] => $props['fromName'] ?? null]);
 		$this->subject     = $props['subject'];
@@ -134,6 +137,42 @@ class Email
 		return [
 			'type' => 'mail'
 		];
+	}
+	/**
+	 * Creates a new email object from props
+	 * incorporating preset and template
+	 *
+	 * @throws \Kirby\Exception\NotFoundException template wasn't found
+	 *
+	 * @psalm-suppress TooFewArguments
+	 */
+	public static function factory(
+		string|array $preset,
+		array $props = []
+	): static {
+		$kirby   = App::instance();
+		$options = $kirby->option('email', []);
+
+		// resolve preset
+		if (is_string($preset) === true) {
+			$preset = $options['presets'][$preset] ?? null;
+
+			if ($preset === null) {
+				throw new NotFoundException([
+					'key'  => 'email.preset.notFound',
+					'data' => ['name' => $preset]
+				]);
+			}
+		}
+
+		$props = [
+			'transport'  => $options['transport'] ?? [],
+			'beforeSend' => $options['beforeSend'] ?? null,
+			...$preset,
+			...$props
+		];
+
+		return new static($props);
 	}
 
 	/**
