@@ -19,8 +19,6 @@ use Kirby\Toolkit\Controller;
  * @license   https://getkirby.com/license
  * @since     5.0.0
  * @internal
- *
- * @SuppressWarnings(PHPMD.ExcessiveParameterList)
  */
 class ViewButton extends Button
 {
