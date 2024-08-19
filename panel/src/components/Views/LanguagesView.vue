@@ -7,6 +7,7 @@
 				<k-button-group slot="left">
 					<k-button
 						:text="$t('language.create')"
+						:disabled="!$permissions.languages.create"
 						icon="add"
 						@click="$dialog('languages/create')"
 					/>
@@ -30,14 +31,23 @@
 							v-if="secondaryLanguages.length"
 							:items="secondaryLanguages"
 						/>
-						<k-empty v-else icon="globe" @click="$dialog('languages/create')">
+						<k-empty
+							v-else
+							icon="globe"
+							:disabled="!$permissions.languages.create"
+							@click="$dialog('languages/create')"
+						>
 							{{ $t("languages.secondary.empty") }}
 						</k-empty>
 					</section>
 				</template>
 
 				<template v-else-if="languages.length === 0">
-					<k-empty icon="globe" @click="$dialog('languages/create')">
+					<k-empty
+						icon="globe"
+						:disabled="!$permissions.languages.create"
+						@click="$dialog('languages/create')"
+					>
 						{{ $t("languages.empty") }}
 					</k-empty>
 				</template>
@@ -66,12 +76,17 @@ export default {
 					icon: "globe"
 				},
 				link: () => {
+					if (!this.$permissions.languages.update) {
+						return null;
+					}
+
 					this.$dialog(`languages/${language.id}/update`);
 				},
 				options: [
 					{
 						icon: "edit",
 						text: this.$t("edit"),
+						disabled: !this.$permissions.languages.update,
 						click() {
 							this.$dialog(`languages/${language.id}/update`);
 						}
@@ -79,7 +94,10 @@ export default {
 					{
 						icon: "trash",
 						text: this.$t("delete"),
-						disabled: language.default && this.languages.length !== 1,
+						disabled: (
+							(language.default && this.languages.length !== 1) ||
+							!this.$permissions.languages.delete
+						),
 						click() {
 							this.$dialog(`languages/${language.id}/delete`);
 						}
