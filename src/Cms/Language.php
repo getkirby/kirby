@@ -201,8 +201,17 @@ class Language extends Model
      */
     public static function create(array $props)
     {
+        $kirby = App::instance();
+        $user  = $kirby->user();
+
+        if (
+            $user === null ||
+            $user->role()->permissions()->for('languages', 'create') === false
+        ) {
+            throw new PermissionException(['key' => 'language.create.permission']);
+        }
+
         $props['code'] = Str::slug($props['code'] ?? null);
-        $kirby         = App::instance();
         $languages     = $kirby->languages();
 
         // make the first language the default language
@@ -238,9 +247,17 @@ class Language extends Model
     public function delete(): bool
     {
         $kirby     = App::instance();
+        $user      = $kirby->user();
         $languages = $kirby->languages();
         $code      = $this->code();
         $isLast    = $languages->count() === 1;
+
+        if (
+            $user === null ||
+            $user->role()->permissions()->for('languages', 'delete') === false
+        ) {
+            throw new PermissionException(['key' => 'language.delete.permission']);
+        }
 
         if (F::remove($this->root()) !== true) {
             throw new Exception('The language could not be deleted');
@@ -648,6 +665,16 @@ class Language extends Model
      */
     public function update(array $props = null)
     {
+        $kirby = App::instance();
+        $user  = $kirby->user();
+
+        if (
+            $user === null ||
+            $user->role()->permissions()->for('languages', 'update') === false
+        ) {
+            throw new PermissionException(['key' => 'language.update.permission']);
+        }
+
         // don't change the language code
         unset($props['code']);
 
