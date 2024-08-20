@@ -5,6 +5,7 @@ namespace Kirby\Toolkit;
 use DateTimeZone;
 use IntlDateFormatter;
 use Kirby\Cms\App;
+use Kirby\Cms\Language;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 
@@ -147,6 +148,20 @@ class DateTest extends TestCase
 		$this->assertSame(12, $date->hour());
 		$this->assertSame(13, $date->hour(13));
 		$this->assertSame('13:12', $date->format('H:i'));
+	}
+
+	/**
+	 * @covers ::firstWeekday
+	 */
+	public function testFirstWeekday()
+	{
+		$this->assertSame(1, Date::firstWeekday(null));
+
+		$language = new Language(['code' => 'de']);
+		$this->assertSame(2, Date::firstWeekday($language));
+
+		$language = new Language(['code' => 'en']);
+		$this->assertSame(1, Date::firstWeekday($language));
 	}
 
 	/**

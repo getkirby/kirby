@@ -30,7 +30,7 @@
 			<thead>
 				<tr>
 					<th v-for="day in weekdays" :key="'weekday_' + day">
-						{{ day }}
+						{{ $t("days." + day) }}
 					</th>
 				</tr>
 			</thead>
@@ -90,6 +90,8 @@
 import { props as InputProps } from "@/mixins/input.js";
 import { IsoDateProps } from "./DateInput.vue";
 
+const days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+
 /**
  * The Calendar component is mainly used for our `DateInput` component, but it could be used as stand-alone calendar as well with a little CSS love.
  * @since 4.0.0
@@ -119,21 +121,21 @@ export default {
 			return this.toDate().daysInMonth();
 		},
 		/**
-		 * Adjusted weekday number (Sunday is 7 not 0)
+		 * Weekday column number (1-7) the first day of the month
+		 * needs to be placed at
 		 * @returns {number}
 		 */
 		firstWeekday() {
-			const weekday = this.toDate().day();
-			return weekday > 0 ? weekday : 7;
+			const day = days[this.toDate().day()];
+			return this.weekdays.indexOf(day) + 1;
 		},
 		/**
-		 * Translated weekday names
+		 * Ordered weekday names abbreviations
 		 * @returns {array}
 		 */
 		weekdays() {
-			return ["mon", "tue", "wed", "thu", "fri", "sat", "sun"].map((day) =>
-				this.$t("days." + day)
-			);
+			const first = this.$panel.config.weekday - 1;
+			return [...days.slice(first), ...days.slice(0, first)];
 		},
 		/**
 		 * Weeks in the currently viewed month

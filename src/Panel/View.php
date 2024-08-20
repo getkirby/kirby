@@ -6,6 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Http\Response;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Date;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -272,13 +273,22 @@ class View
 	public static function globals(): array
 	{
 		$kirby = App::instance();
+		$user  = $kirby->user();
 
 		return [
-			'$config' => fn () => [
-				'debug'       => $kirby->option('debug', false),
-				'kirbytext'   => $kirby->option('panel.kirbytext', true),
-				'translation' => $kirby->option('panel.language', 'en'),
-			],
+			'$config' => function () use ($kirby, $user) {
+				$language = match ($user) {
+					null    => $kirby->language($kirby->panelLanguage()),
+					default => $kirby->language($user->language())
+				};
+
+				return [
+					'debug'       => $kirby->option('debug', false),
+					'weekday'     => $kirby->option('date.weekday', Date::firstWeekday($language)),
+					'kirbytext'   => $kirby->option('panel.kirbytext', true),
+					'translation' => $kirby->option('panel.language', 'en'),
+				];
+			},
 			'$system' => function () use ($kirby) {
 				$locales = [];
 
@@ -295,12 +305,11 @@ class View
 					'title'   => $kirby->site()->title()->or('Kirby Panel')->toString()
 				];
 			},
-			'$translation' => function () use ($kirby) {
-				if ($user = $kirby->user()) {
-					$translation = $kirby->translation($user->language());
-				} else {
-					$translation = $kirby->translation($kirby->panelLanguage());
-				}
+			'$translation' => function () use ($kirby, $user) {
+				$translation = match ($user) {
+					null    => $kirby->translation($kirby->panelLanguage()),
+					default => $kirby->translation($user->language())
+				};
 
 				return [
 					'code'      => $translation->code(),
