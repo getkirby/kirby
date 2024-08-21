@@ -133,7 +133,7 @@ return [
 			return [
 				'event'  => 'user.changeLanguage',
 				'reload' => [
-					'globals' => '$translation'
+					'globals' => '$translation,$config'
 				]
 			];
 		}
