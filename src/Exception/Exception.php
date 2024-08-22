@@ -102,14 +102,12 @@ class Exception extends \Exception
 
 		if ($message !== null) {
 			$this->isTranslated = false;
-			return parent::__construct($message);
+			parent::__construct($message);
+			return;
 		}
 
 		// define whether message can/should be translated
 		$translate = $args['translate'] ?? $translate;
-
-		// fallback waterfall for message string
-		$message = null;
 
 		// a. translation for provided key in current language
 		// b. translation for provided key in default language
