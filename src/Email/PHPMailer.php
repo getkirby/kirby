@@ -64,32 +64,14 @@ class PHPMailer extends Email
 		}
 
 		// smtp transport settings
-		if (($this->transport()['type'] ?? 'mail') === 'smtp') {
+		if ($this->transport()->type() === 'smtp') {
 			$mailer->isSMTP();
-			$mailer->Host       = $this->transport()['host'] ?? null;
-			$mailer->SMTPAuth   = $this->transport()['auth'] ?? false;
-			$mailer->Username   = $this->transport()['username'] ?? null;
-			$mailer->Password   = $this->transport()['password'] ?? null;
-			$mailer->SMTPSecure = $this->transport()['security'] ?? 'ssl';
-			$mailer->Port       = $this->transport()['port'] ?? null;
-
-			if ($mailer->SMTPSecure === true) {
-				switch ($mailer->Port) {
-					case null:
-					case 587:
-						$mailer->SMTPSecure = 'tls';
-						$mailer->Port = 587;
-						break;
-					case 465:
-						$mailer->SMTPSecure = 'ssl';
-						break;
-					default:
-						throw new InvalidArgumentException(
-							'Could not automatically detect the "security" protocol from the ' .
-							'"port" option, please set it explicitly to "tls" or "ssl".'
-						);
-				}
-			}
+			$mailer->Host       = $this->transport()->host();
+			$mailer->SMTPAuth   = $this->transport()->auth();
+			$mailer->Username   = $this->transport()->username();
+			$mailer->Password   = $this->transport()->password();
+			$mailer->SMTPSecure = $this->transport()->security();
+			$mailer->Port       = $this->transport()->port();
 		}
 
 		// accessible phpMailer instance

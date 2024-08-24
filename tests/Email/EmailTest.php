@@ -49,7 +49,7 @@ class EmailTest extends TestCase
 		$this->assertSame('', $email->body()->html());
 		$this->assertFalse($email->isHtml());
 
-		$this->assertSame(['type' => 'mail'], $email->transport());
+		$this->assertSame('mail', $email->transport()->type());
 	}
 
 	public function testToArray()
@@ -202,7 +202,16 @@ class EmailTest extends TestCase
 
 		$mailer = new Mailer();
 
-		$this->assertSame($transport, $mail->transport());
+		$this->assertSame([
+			'type'     => 'smtp',
+			'host'     => 'mail.getkirby.com',
+			'port'     => 465,
+			'security' => 'ssl',
+			'auth'     => true,
+			'username' => 'test@test.com',
+			'password' => 'randomString',
+		], $mail->transport()->toArray());
+
 		$this->assertSame($mail->beforeSend(), $beforeSend);
 		$this->assertInstanceOf('Closure', $mail->beforeSend());
 
@@ -224,7 +233,16 @@ class EmailTest extends TestCase
 
 		$mailer = new Mailer();
 
-		$this->assertSame($transport, $mail->transport());
+		$this->assertSame([
+			'type'     => 'smtp',
+			'host'     => 'mail.getkirby.com',
+			'port'     => 465,
+			'security' => 'ssl',
+			'auth'     => true,
+			'username' => 'test@test.com',
+			'password' => 'randomString',
+		], $mail->transport()->toArray());
+
 		$this->assertSame($mail->beforeSend(), $beforeSend);
 		$this->assertInstanceOf('Closure', $mail->beforeSend());
 

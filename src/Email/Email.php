@@ -41,7 +41,7 @@ class Email
 	protected Address|null $replyTo = null;
 	protected string $subject;
 	protected array $to;
-	protected array|null $transport;
+	protected Transport $transport;
 
 	/**
 	 * Email constructor
@@ -58,7 +58,6 @@ class Email
 			$props['body'] = ['text' => $props['body']];
 		}
 
-
 		$this->attachments = Attachment::factory($props['attachments'] ?? []);
 		$this->bcc         = Address::factory($props['bcc'] ?? [], multiple: true);
 		$this->beforeSend  = $props['beforeSend'] ?? null;
@@ -67,7 +66,7 @@ class Email
 		$this->from        = Address::factory([$props['from'] => $props['fromName'] ?? null]);
 		$this->subject     = $props['subject'];
 		$this->to          = Address::factory($props['to'], multiple: true);
-		$this->transport   = $props['transport'] ?? null;
+		$this->transport   = new Transport(...$props['transport'] ?? []);
 
 		if ($replyTo = $props['replyTo'] ?? null) {
 			$this->replyTo = Address::factory([$replyTo => $props['replyToName'] ?? null]);
@@ -124,16 +123,6 @@ class Email
 	public function cc(): array
 	{
 		return Address::resolve($this->cc);
-	}
-
-	/**
-	 * Returns default transport settings
-	 */
-	protected function defaultTransport(): array
-	{
-		return [
-			'type' => 'mail'
-		];
 	}
 
 	/**
@@ -211,9 +200,9 @@ class Email
 	/**
 	 * Returns the email transports settings
 	 */
-	public function transport(): array
+	public function transport(): Transport
 	{
-		return $this->transport ?? $this->defaultTransport();
+		return $this->transport;
 	}
 
 	/**
@@ -235,7 +224,7 @@ class Email
 			'replyToName'	=> $this->replyToName(),
 			'subject'   	=> $this->subject(),
 			'to'   			=> $this->to(),
-			'transport' 	=> $this->transport()
+			'transport' 	=> $this->transport()->toArray()
 		];
 	}
 }

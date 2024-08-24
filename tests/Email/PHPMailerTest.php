@@ -129,7 +129,7 @@ class PHPMailerTest extends TestCase
 				$phpunit->assertNull($mailer->Username);
 				$phpunit->assertNull($mailer->Password);
 				$phpunit->assertSame('ssl', $mailer->SMTPSecure);
-				$phpunit->assertNull($mailer->Port);
+				$phpunit->assertSame(465, $mailer->Port);
 
 				$beforeSend = true;
 			}
