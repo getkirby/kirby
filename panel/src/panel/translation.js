@@ -6,12 +6,15 @@ export const defaults = () => {
 		code: null,
 		data: {},
 		direction: "ltr",
-		name: null
+		name: null,
+		weekday: 1
 	};
 };
 
 /**
- * Represents the current interface ranslation
+ * Represents the interface language
+ * for the current user
+ *
  * @since 4.0.0
  */
 export default () => {

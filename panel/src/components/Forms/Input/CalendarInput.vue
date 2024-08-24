@@ -121,20 +121,20 @@ export default {
 			return this.toDate().daysInMonth();
 		},
 		/**
-		 * Weekday column number (1-7) the first day of the month
+		 * Weekday column index (0-6) the first day of the month
 		 * needs to be placed at
 		 * @returns {number}
 		 */
 		firstWeekday() {
 			const day = days[this.toDate().day()];
-			return this.weekdays.indexOf(day) + 1;
+			return this.weekdays.indexOf(day);
 		},
 		/**
 		 * Ordered weekday names abbreviations
 		 * @returns {array}
 		 */
 		weekdays() {
-			const first = this.$panel.config.weekday - 1;
+			const first = this.$panel.translation.weekday;
 			return [...days.slice(first), ...days.slice(0, first)];
 		},
 		/**
@@ -142,11 +142,9 @@ export default {
 		 * @returns {number}
 		 */
 		weeks() {
-			// in which column do we need to start
-			const offset = this.firstWeekday - 1;
 			// how many weeks/rows do we need
 			// to cover offset and all days
-			return Math.ceil((this.numberOfDays + offset) / 7);
+			return Math.ceil((this.numberOfDays + this.firstWeekday) / 7);
 		},
 		/**
 		 * Translated month names
@@ -242,7 +240,7 @@ export default {
 			const end = start + 7;
 
 			for (let x = start; x < end; x++) {
-				const day = x - (this.firstWeekday - 1);
+				const day = x - this.firstWeekday;
 				const isPlaceholder = day <= 0 || day > this.numberOfDays;
 				days.push(!isPlaceholder ? day : "");
 			}

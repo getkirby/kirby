@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+/**
+ * @coversDefaultClass \Kirby\Cms\Translation
+ */
 class TranslationTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
@@ -21,6 +24,37 @@ class TranslationTest extends TestCase
 		$this->assertSame('ltr', $translation->direction());
 		$this->assertSame('en_GB', $translation->locale());
 		$this->assertSame('Test', $translation->get('test'));
+	}
+
+	/**
+	 * @covers ::firstWeekday
+	 */
+	public function testFirstWeekday()
+	{
+		$translation = new Translation('en', [
+			'translation.name'   => 'English',
+			'translation.locale' => 'en_US',
+		]);
+
+		$this->assertSame(0, $translation->firstWeekday());
+
+		$translation = new Translation('de', [
+			'translation.name'   => 'Deutsch',
+			'translation.locale' => 'de_DE',
+		]);
+
+		$this->assertSame(1, $translation->firstWeekday());
+
+		// override via config option
+		new App([
+			'options' => [
+				'date' => [
+					'weekday' => 4
+				]
+			]
+		]);
+
+		$this->assertSame(4, $translation->firstWeekday());
 	}
 
 	public function testLoad()

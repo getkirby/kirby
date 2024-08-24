@@ -7,9 +7,7 @@ use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
 use Exception;
-use IntlCalendar;
 use IntlDateFormatter;
-use Kirby\Cms\Language;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -120,22 +118,6 @@ class Date extends DateTime
 		$flooredDate = $this->format($formats[$unit]);
 		$this->set($flooredDate, $this->timezone());
 		return $this;
-	}
-
-	/**
-	 * Returns the first day of the week (1 = Sunday ... 7 = Saturday)
-	 * for the provided language
-	 *
-	 * @since 4.5.0
-	 */
-	public static function firstWeekday(Language|null $language): int
-	{
-		$locale = match ($language) {
-			null    => 'en',
-			default => $language->locale(LC_TIME)
-		};
-
-		return IntlCalendar::createInstance(null, $locale)->getFirstDayOfWeek();
 	}
 
 	/**
