@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4672bd2a329c4c3665dfb95fbf9629b0",
+    "content-hash": "6fccf95413291dd86cdd677fb5dd1059",
     "packages": [
         {
             "name": "claviska/simpleimage",
