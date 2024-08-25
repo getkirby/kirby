@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use ArrayIterator;
+use Countable;
 use IteratorAggregate;
 
 /**
@@ -25,7 +26,7 @@ use IteratorAggregate;
  * @template TValue
  * @implements \IteratorAggregate<TKey, TValue>
  */
-class Iterator implements IteratorAggregate
+class Iterator implements Countable, IteratorAggregate
 {
 	/**
 	 * @var array<TKey, TValue>

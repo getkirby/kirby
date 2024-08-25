@@ -3,7 +3,6 @@
 namespace Kirby\Toolkit;
 
 use Closure;
-use Countable;
 use Exception;
 use Stringable;
 
@@ -21,7 +20,7 @@ use Stringable;
  * @template TValue
  * @extends \Kirby\Toolkit\Iterator<string, TValue>
  */
-class Collection extends Iterator implements Countable, Stringable
+class Collection extends Iterator implements Stringable
 {
 	/**
 	 * All registered collection filters
