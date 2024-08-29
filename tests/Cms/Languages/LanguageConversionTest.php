@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
+use Kirby\Filesystem\Dir;
 
 /**
  * @coversDefaultClass \Kirby\Cms\Language
@@ -44,9 +45,11 @@ class LanguageConversionTest extends TestCase
 		$this->assertSame('Title', $page->content()->title()->value());
 
 		// create a new Language to switch to multi-language mode
-		Language::create([
-			'code' => 'en',
-		]);
+		$app->impersonate('kirby', function () {
+			Language::create([
+				'code' => 'en',
+			]);
+		});
 
 		// make sure that Kirby actually switched to multi-language mode
 		$this->assertCount(1, $app->languages());
@@ -99,8 +102,10 @@ class LanguageConversionTest extends TestCase
 		$this->assertSame('English Title', $page->content('en')->title()->value());
 		$this->assertSame('German Title', $page->content('de')->title()->value());
 
-		// delete the first language to check file removal.
-		$app->language('de')->delete();
+		// delete the first language to check file removal
+		$app->impersonate('kirby', function () use ($app) {
+			$app->language('de')->delete();
+		});
 
 		// the .de file should now be gone
 		$this->assertFileDoesNotExist($page->root() . '/test.de.txt');
@@ -109,7 +114,9 @@ class LanguageConversionTest extends TestCase
 		$this->assertFileExists($page->root() . '/test.en.txt');
 
 		// delete the last language to switch to single-language mode
-		$app->language('en')->delete();
+		$app->impersonate('kirby', function () use ($app) {
+			$app->language('en')->delete();
+		});
 
 		// the .en file should now be gone
 		$this->assertFileDoesNotExist($page->root() . '/test.en.txt');
