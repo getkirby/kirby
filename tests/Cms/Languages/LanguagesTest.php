@@ -143,6 +143,8 @@ class LanguagesTest extends TestCase
 
 	public function testCreate()
 	{
+		$this->app->impersonate('kirby');
+
 		$language = $this->app->languages()->create([
 			'code' => 'tr'
 		]);

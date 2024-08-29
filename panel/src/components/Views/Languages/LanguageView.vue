@@ -4,7 +4,7 @@
 			<k-prev-next :prev="prev" :next="next" />
 		</template>
 
-		<k-header :editable="true" @edit="update()">
+		<k-header :editable="canUpdate" @edit="update()">
 			{{ name }}
 
 			<template #buttons>
@@ -18,6 +18,7 @@
 						variant="filled"
 					/>
 					<k-button
+						:disabled="!canUpdate"
 						:title="$t('settings')"
 						icon="cog"
 						size="sm"
@@ -26,6 +27,7 @@
 					/>
 					<k-button
 						v-if="deletable"
+						:disabled="!$panel.permissions.languages.delete"
 						:title="$t('delete')"
 						icon="trash"
 						size="sm"
@@ -42,8 +44,12 @@
 
 		<k-section
 			:buttons="[
+				/**
+				 * @todo update disabled prop when new `languageVariables.*` permissions available
+				 */
 				{
 					click: createTranslation,
+					disabled: !canUpdate,
 					icon: 'add',
 					text: $t('add')
 				}
@@ -63,13 +69,14 @@
 							mobile: true
 						}
 					}"
+					:disabled="!canUpdate"
 					:rows="translations"
 					@cell="updateTranslation"
 					@option="option"
 				/>
 			</template>
 			<template v-else>
-				<k-empty icon="translate" @click="createTranslation">
+				<k-empty :disabled="!canUpdate" icon="translate" @click="createTranslation">
 					{{ $t("language.variables.empty") }}
 				</k-empty>
 			</template>
@@ -95,11 +102,24 @@ export default {
 		translations: Array,
 		url: String
 	},
+	computed: {
+		canUpdate() {
+			return this.$panel.permissions.languages.update;
+		}
+	},
 	methods: {
 		createTranslation() {
+			if (!this.canUpdate) {
+				return;
+			}
+
 			this.$dialog(`languages/${this.id}/translations/create`);
 		},
 		option(option, row) {
+			if (!this.canUpdate) {
+				return;
+			}
+
 			// for the compatibility of the encoded url in different environments,
 			// it is also encoded with base64 to reduce special characters
 			this.$dialog(
@@ -121,6 +141,10 @@ export default {
 			});
 		},
 		updateTranslation({ row }) {
+			if (!this.canUpdate) {
+				return;
+			}
+
 			// for the compatibility of the encoded url in different environments,
 			// it is also encoded with base64 to reduce special characters
 			this.$dialog(
