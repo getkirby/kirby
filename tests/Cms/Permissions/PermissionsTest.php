@@ -17,19 +17,32 @@ class PermissionsTest extends TestCase
 	public static function actionsProvider(): array
 	{
 		return [
+			['files', 'access'],
 			['files', 'changeName'],
+			['files', 'changeTemplate'],
 			['files', 'create'],
 			['files', 'delete'],
+			['files', 'list'],
 			['files', 'read'],
 			['files', 'replace'],
 			['files', 'update'],
 
+			['languages', 'create'],
+			['languages', 'delete'],
+			['languages', 'update'],
+
+			['pages', 'access'],
 			['pages', 'changeSlug'],
 			['pages', 'changeStatus'],
 			['pages', 'changeTemplate'],
 			['pages', 'changeTitle'],
 			['pages', 'create'],
 			['pages', 'delete'],
+			['pages', 'duplicate'],
+			['pages', 'list'],
+			['pages', 'move'],
+			['pages', 'preview'],
+			['pages', 'read'],
 			['pages', 'sort'],
 			['pages', 'update'],
 
@@ -56,6 +69,8 @@ class PermissionsTest extends TestCase
 	}
 
 	/**
+	 * @covers ::__construct
+	 * @covers ::for
 	 * @dataProvider actionsProvider
 	 */
 	public function testActions(string $category, $action)

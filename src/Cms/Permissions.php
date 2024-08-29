@@ -42,7 +42,8 @@ class Permissions
 		],
 		'languages' => [
 			'create' => true,
-			'delete' => true
+			'delete' => true,
+			'update' => true
 		],
 		'pages' => [
 			'access'     	 => true,

@@ -20,6 +20,10 @@ return [
 			$foundation   = $kirby->defaultLanguage()->translations();
 			$translations = $language->translations();
 
+			// TODO: update following line and adapt for update and delete options
+			// when new `languageVariables.*` permissions available
+			$canUpdate = $kirby->user()?->role()->permissions()->for('languages', 'update') === true;
+
 			ksort($foundation);
 
 			foreach ($foundation as $key => $value) {
@@ -28,13 +32,14 @@ return [
 					'value'   => $translations[$key] ?? null,
 					'options' => [
 						[
-							'click' => 'update',
-							'icon'  => 'edit',
-							'text'  => I18n::translate('edit'),
+							'click'    => 'update',
+							'disabled' => $canUpdate === false,
+							'icon'     => 'edit',
+							'text'     => I18n::translate('edit'),
 						],
 						[
 							'click'    => 'delete',
-							'disabled' => $language->isDefault() === false,
+							'disabled' => $canUpdate === false || $language->isDefault() === false,
 							'icon'     => 'trash',
 							'text'     => I18n::translate('delete'),
 						]
