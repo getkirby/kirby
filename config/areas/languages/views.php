@@ -20,8 +20,8 @@ return [
 			$foundation   = $kirby->defaultLanguage()->translations();
 			$translations = $language->translations();
 
-			// TODO: update following line and adapt for update and delete options
-			// when new `languageVariables.*` permissions available
+			// TODO: update following line and adapt for update and
+			// delete options when `languageVariables.*` permissions available
 			$canUpdate = $kirby->user()?->role()->permissions()->for('languages', 'update') === true;
 
 			ksort($foundation);

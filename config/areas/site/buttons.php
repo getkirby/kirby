@@ -2,7 +2,7 @@
 
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
-use Kirby\Panel\Ui\Buttons\LanguagesButton;
+use Kirby\Panel\Ui\Buttons\ContentTranslationsButton;
 use Kirby\Panel\Ui\Buttons\PageStatusButton;
 use Kirby\Panel\Ui\Buttons\PreviewButton;
 use Kirby\Panel\Ui\Buttons\SettingsButton;
@@ -25,7 +25,7 @@ return [
 	// `languages` button needs to be in site area, as languages area itself
 	// is only loaded when in multilang setup
 	'languages' => function () {
-		return new LanguagesButton();
+		return new ContentTranslationsButton();
 	},
 
 	// file buttons

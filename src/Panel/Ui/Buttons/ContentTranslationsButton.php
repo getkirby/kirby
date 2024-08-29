@@ -17,7 +17,7 @@ use Kirby\Toolkit\Str;
  * @since     5.0.0
  * @internal
  */
-class LanguagesButton extends ViewButton
+class ContentTranslationsButton extends ViewButton
 {
 	protected App $kirby;
 
@@ -26,8 +26,8 @@ class LanguagesButton extends ViewButton
 		$this->kirby = App::instance();
 
 		parent::__construct(
-			component: 'k-languages-view-button',
-			class: 'k-languages-view-button',
+			component: 'k-content-translations-view-button',
+			class: 'k-content-translations-view-button',
 			icon: 'translate',
 			options: $this->options(),
 			responsive: 'text',
