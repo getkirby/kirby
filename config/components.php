@@ -9,6 +9,7 @@ use Kirby\Cms\User;
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
 use Kirby\Exception\NotFoundException;
+use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\Filename;
 use Kirby\Http\Uri;
@@ -58,15 +59,13 @@ return [
 	/**
 	 * Adapt file characteristics
 	 *
-	 * @param \Kirby\Cms\File|\Kirby\Filesystem\Asset $file The file object
 	 * @param array $options All thumb options (width, height, crop, blur, grayscale)
-	 * @return \Kirby\Cms\File|\Kirby\Cms\FileVersion|\Kirby\Filesystem\Asset
 	 */
 	'file::version' => function (
 		App $kirby,
-		$file,
+		File|Asset $file,
 		array $options = []
-	) {
+	): File|Asset|FileVersion {
 		// if file is not resizable, return
 		if ($file->isResizable() === false) {
 			return $file;
@@ -84,9 +83,10 @@ return [
 			$job = $mediaRoot . '/.jobs/' . $thumbName . '.json';
 
 			try {
-				Data::write($job, array_merge($options, [
-					'filename' => $file->filename()
-				]));
+				Data::write(
+					$job,
+					[...$options, 'filename' => $file->filename()]
+				);
 			} catch (Throwable) {
 				// if thumb doesn't exist yet and job file cannot
 				// be created, return
@@ -118,7 +118,7 @@ return [
 	 */
 	'markdown' => function (
 		App $kirby,
-		string $text = null,
+		string|null $text = null,
 		array $options = []
 	): string {
 		static $markdown;
@@ -149,16 +149,15 @@ return [
 			$params = ['fields' => Str::split($params, '|')];
 		}
 
-		$defaults = [
+		$collection = clone $collection;
+		$query      = trim($query ?? '');
+		$options    = [
 			'fields'    => [],
 			'minlength' => 2,
 			'score'     => [],
 			'words'     => false,
+			...$params
 		];
-
-		$collection  = clone $collection;
-		$options     = array_merge($defaults, $params);
-		$query       = trim($query ?? '');
 
 		// empty or too short search query
 		if (Str::length($query) < $options['minlength']) {
@@ -203,10 +202,11 @@ return [
 				$keys[] = 'role';
 			} elseif ($item instanceof Page) {
 				// apply the default score for pages
-				$options['score'] = array_merge(
-					['id' => 64, 'title' => 64],
-					$options['score']
-				);
+				$options['score'] = [
+					'id'    => 64,
+					'title' => 64,
+					...$options['score']
+				];
 			}
 
 			if (empty($options['fields']) === false) {
@@ -270,7 +270,7 @@ return [
 	 */
 	'smartypants' => function (
 		App $kirby,
-		string $text = null,
+		string|null $text = null,
 		array $options = []
 	): string {
 		static $smartypants;
@@ -324,7 +324,6 @@ return [
 	 * @param string $src Root of the original file
 	 * @param string $dst Template string for the root to the desired destination
 	 * @param array $options All thumb options that should be applied: `width`, `height`, `crop`, `blur`, `grayscale`
-	 * @return string
 	 */
 	'thumb' => function (
 		App $kirby,
@@ -354,7 +353,7 @@ return [
 	 */
 	'url' => function (
 		App $kirby,
-		string $path = null,
+		string|null $path = null,
 		$options = null
 	): string {
 		$language = null;
@@ -393,7 +392,7 @@ return [
 		// keep relative urls
 		if (
 			$path !== null &&
-			(substr($path, 0, 2) === './' || substr($path, 0, 3) === '../')
+			(str_starts_with($path, './')  || str_starts_with($path, '../'))
 		) {
 			return $path;
 		}

@@ -12,13 +12,13 @@ class InvalidSessionStore
 
 class TestSessionStore extends SessionStore
 {
-	public $validKey   = '74686973206973207468652076616c6964206b657920696e2068657821203a29';
-	public $invalidKey = '616e64207965702c2074686174277320616e2065617374657220656767e280a6';
+	public string $validKey   = '74686973206973207468652076616c6964206b657920696e2068657821203a29';
+	public string $invalidKey = '616e64207965702c2074686174277320616e2065617374657220656767e280a6';
 
-	public $sessions = [];
-	public $hmacs    = [];
-	public $isLocked = [];
-	public $collectedGarbage = false;
+	public array $sessions = [];
+	public array $hmacs    = [];
+	public array $isLocked = [];
+	public bool $collectedGarbage = false;
 
 	public function __construct()
 	{
@@ -248,7 +248,9 @@ class TestSessionStore extends SessionStore
 			if ($data === 'invalid-serialization') {
 				$data = 'some gibberish';
 				return hash_hmac('sha256', $data, $this->validKey) . "\n" . $data;
-			} elseif ($data === 'invalid-structure') {
+			}
+
+			if ($data === 'invalid-structure') {
 				return 'some gibberish';
 			}
 
@@ -257,15 +259,14 @@ class TestSessionStore extends SessionStore
 				// created session: it has its own HMAC, prepend it again
 
 				return $this->hmacs[$name] . "\n" . serialize($data);
-			} else {
-				// test session, add an HMAC based on the $validKey
-
-				$data = serialize($data);
-				return hash_hmac('sha256', $data, $this->validKey) . "\n" . $data;
 			}
-		} else {
-			throw new Exception('Session does not exist');
+
+			// test session, add an HMAC based on the $validKey
+			$data = serialize($data);
+			return hash_hmac('sha256', $data, $this->validKey) . "\n" . $data;
 		}
+
+		throw new Exception('Session does not exist');
 	}
 
 	public function set(int $expiryTime, string $id, string $data): void
@@ -338,5 +339,5 @@ function time(): int
 
 class MockTime
 {
-	public static $time = 1337000000;
+	public static int $time = 1337000000;
 }

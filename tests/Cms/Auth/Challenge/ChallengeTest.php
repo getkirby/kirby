@@ -6,6 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\TestCase;
 use Kirby\Cms\User;
 use Kirby\Filesystem\Dir;
+use Kirby\Session\Session;
 
 class MockChallenge extends Challenge
 {
@@ -25,8 +26,7 @@ class ChallengeTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Auth.Challenge';
 
-	protected $app;
-	protected $session;
+	protected Session $session;
 
 	public function setUp(): void
 	{

@@ -14,8 +14,6 @@ class PluginAssetsTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures/plugin-assets';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.PluginAssets';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$a = static::TMP . '/site/plugins/a';

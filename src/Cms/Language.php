@@ -6,9 +6,12 @@ use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
+use Stringable;
 use Throwable;
 
 /**
@@ -27,8 +30,11 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Language
+class Language implements Stringable
 {
+	/**
+	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Languages>
+	 */
 	use HasSiblings;
 
 	/**
@@ -41,6 +47,7 @@ class Language
 	protected string $direction;
 	protected array $locale;
 	protected string $name;
+	protected bool $single;
 	protected array $slugs;
 	protected array $smartypants;
 	protected array $translations;
@@ -60,6 +67,7 @@ class Language
 		$this->default      = ($props['default'] ?? false) === true;
 		$this->direction    = ($props['direction'] ?? null) === 'rtl' ? 'rtl' : 'ltr';
 		$this->name         = trim($props['name'] ?? $this->code);
+		$this->single       = $props['single'] ?? false;
 		$this->slugs        = $props['slugs'] ?? [];
 		$this->smartypants  = $props['smartypants'] ?? [];
 		$this->translations = $props['translations'] ?? [];
@@ -145,8 +153,17 @@ class Language
 	 */
 	public static function create(array $props): static
 	{
+		$kirby = App::instance();
+		$user  = $kirby->user();
+
+		if (
+			$user === null ||
+			$user->role()->permissions()->for('languages', 'create') === false
+		) {
+			throw new PermissionException(['key' => 'language.create.permission']);
+		}
+
 		$props['code'] = Str::slug($props['code'] ?? null);
-		$kirby         = App::instance();
 		$languages     = $kirby->languages();
 
 		// make the first language the default language
@@ -172,9 +189,9 @@ class Language
 
 		if ($languages->count() === 0) {
 			foreach ($kirby->models() as $model) {
-				$model->storage()->convertLanguage(
-					'default',
-					$language->code()
+				$model->storage()->moveLanguage(
+					Language::single(),
+					$language
 				);
 			}
 		}
@@ -204,7 +221,15 @@ class Language
 	public function delete(): bool
 	{
 		$kirby = App::instance();
+		$user  = $kirby->user();
 		$code  = $this->code();
+
+		if (
+			$user === null ||
+			$user->role()->permissions()->for('languages', 'delete') === false
+		) {
+			throw new PermissionException(['key' => 'language.delete.permission']);
+		}
 
 		if ($this->isDeletable() === false) {
 			throw new Exception('The language cannot be deleted');
@@ -221,9 +246,9 @@ class Language
 
 		foreach ($kirby->models() as $model) {
 			if ($this->isLast() === true) {
-				$model->storage()->convertLanguage($code, 'default');
+				$model->storage()->moveLanguage($this, Language::single());
 			} else {
-				$model->storage()->deleteLanguage($code);
+				$model->storage()->deleteLanguage($this);
 			}
 		}
 
@@ -244,6 +269,34 @@ class Language
 	public function direction(): string
 	{
 		return $this->direction;
+	}
+
+	/**
+	 * Converts a "user-facing" language code to a `Language` object
+	 *
+	 * @throws \Kirby\Exception\NotFoundException If the language does not exist
+	 * @internal
+	 */
+	public static function ensure(self|string|null $code = null): static
+	{
+		if ($code instanceof self) {
+			return $code;
+		}
+
+		$kirby = App::instance();
+
+		// single language
+		if ($kirby->multilang() === false) {
+			return static::single();
+		}
+
+		// look up the actual language object if possible
+		if ($language = $kirby->language($code)) {
+			return $language;
+		}
+
+		// validate the language code
+		throw new NotFoundException('Invalid language: ' . $code);
 	}
 
 	/**
@@ -268,6 +321,11 @@ class Language
 	 */
 	public function isDeletable(): bool
 	{
+		// a single-language object cannot be deleted
+		if ($this->isSingle() === true) {
+			return false;
+		}
+
 		// the default language can only be deleted if it's the last
 		if ($this->isDefault() === true && $this->isLast() === false) {
 			return false;
@@ -282,6 +340,15 @@ class Language
 	public function isLast(): bool
 	{
 		return App::instance()->languages()->count() === 1;
+	}
+
+	/**
+	 * Checks if this is the single language object
+	 * @internal
+	 */
+	public function isSingle(): bool
+	{
+		return $this->single;
 	}
 
 	/**
@@ -326,7 +393,7 @@ class Language
 	 *
 	 * @param int $category If passed, returns the locale for the specified category (e.g. LC_ALL) as string
 	 */
-	public function locale(int $category = null): array|string|null
+	public function locale(int|null $category = null): array|string|null
 	{
 		if ($category !== null) {
 			return $this->locale[$category] ?? $this->locale[LC_ALL] ?? null;
@@ -395,8 +462,11 @@ class Language
 	public function rules(): array
 	{
 		$code = $this->locale(LC_CTYPE);
-		$data = static::loadRules($code);
-		return array_merge($data, $this->slugs());
+
+		return [
+			...static::loadRules($code),
+			...$this->slugs()
+		];
 	}
 
 	/**
@@ -413,7 +483,8 @@ class Language
 			$existingData = [];
 		}
 
-		$props = [
+		$data = [
+			...$existingData,
 			'code'         => $this->code(),
 			'default'      => $this->isDefault(),
 			'direction'    => $this->direction(),
@@ -422,8 +493,6 @@ class Language
 			'translations' => $this->translations(),
 			'url'          => $this->url,
 		];
-
-		$data = array_merge($existingData, $props);
 
 		ksort($data);
 
@@ -435,9 +504,23 @@ class Language
 	/**
 	 * Private siblings collector
 	 */
-	protected function siblingsCollection(): Collection
+	protected function siblingsCollection(): Languages
 	{
 		return App::instance()->languages();
+	}
+
+	/**
+	 * Create a placeholder language object in a
+	 * single-language installation
+	 */
+	public static function single(): static
+	{
+		return new static([
+			'code'    => 'en',
+			'default' => true,
+			'locale'  => App::instance()->option('locale', 'en_US.utf-8'),
+			'single'  => true
+		]);
 	}
 
 	/**
@@ -457,8 +540,7 @@ class Language
 	}
 
 	/**
-	 * Returns the most important
-	 * properties as array
+	 * Returns the most important properties as array
 	 */
 	public function toArray(): array
 	{
@@ -495,15 +577,24 @@ class Language
 	 * Update language properties and save them
 	 * @internal
 	 */
-	public function update(array $props = null): static
+	public function update(array|null $props = null): static
 	{
+		$kirby = App::instance();
+		$user  = $kirby->user();
+
+		if (
+			$user === null ||
+			$user->role()->permissions()->for('languages', 'update') === false
+		) {
+			throw new PermissionException(['key' => 'language.update.permission']);
+		}
+
 		// don't change the language code
 		unset($props['code']);
 
 		// make sure the slug is nice and clean
 		$props['slug'] = Str::slug($props['slug'] ?? null);
 
-		$kirby   = App::instance();
 		$updated = $this->clone($props);
 
 		if (isset($props['translations']) === true) {

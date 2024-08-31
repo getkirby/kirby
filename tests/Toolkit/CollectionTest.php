@@ -2,16 +2,16 @@
 
 namespace Kirby\Toolkit;
 
+use Exception;
+
 class StringObject
 {
-	protected $value;
-
-	public function __construct(string $value)
-	{
-		$this->value = $value;
+	public function __construct(
+		protected string $value
+	) {
 	}
 
-	public function __toString()
+	public function __toString(): string
 	{
 		return $this->value;
 	}
@@ -22,8 +22,8 @@ class StringObject
  */
 class CollectionTest extends TestCase
 {
-	protected $collection;
-	protected $sampleData;
+	protected Collection $collection;
+	protected array $sampleData;
 
 	public function setUp(): void
 	{
@@ -149,7 +149,7 @@ class CollectionTest extends TestCase
 	public function testCount()
 	{
 		$this->assertSame(3, $this->collection->count());
-		$this->assertSame(3, count($this->collection));
+		$this->assertCount(3, $this->collection);
 	}
 
 	/**
@@ -181,11 +181,9 @@ class CollectionTest extends TestCase
 	 */
 	public function testFilter()
 	{
-		$func = function ($element) {
-			return ($element === 'My second element') ? true : false;
-		};
-
-		$filtered = $this->collection->filter($func);
+		$filtered = $this->collection->filter(
+			fn ($element) => $element === 'My second element'
+		);
 
 		$this->assertSame('My second element', $filtered->first());
 		$this->assertSame('My second element', $filtered->last());
@@ -331,12 +329,10 @@ class CollectionTest extends TestCase
 	{
 		$collection = new Collection(['a' => 'A']);
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid grouping value for key: a');
 
-		$collection->group(function ($item) {
-			return false;
-		});
+		$collection->group(fn ($item) => false);
 	}
 
 	/**
@@ -346,12 +342,10 @@ class CollectionTest extends TestCase
 	{
 		$collection = new Collection(['a' => 'A']);
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('You cannot group by arrays or objects');
 
-		$collection->group(function ($item) {
-			return ['a' => 'b'];
-		});
+		$collection->group(fn ($item) => ['a' => 'b']);
 	}
 
 	/**
@@ -361,12 +355,10 @@ class CollectionTest extends TestCase
 	{
 		$collection = new Collection(['a' => 'A']);
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('You cannot group by arrays or objects');
 
-		$collection->group(function ($item) {
-			return new Obj(['a' => 'b']);
-		});
+		$collection->group(fn ($item) => new Obj(['a' => 'b']));
 	}
 
 	/**
@@ -391,10 +383,7 @@ class CollectionTest extends TestCase
 			'group'    => new StringObject('client')
 		];
 
-		$groups = $collection->group(function ($item) {
-			return $item['group'];
-		});
-
+		$groups = $collection->group(fn ($item) => $item['group']);
 		$this->assertCount(2, $groups->admin());
 		$this->assertCount(1, $groups->client());
 
@@ -440,7 +429,7 @@ class CollectionTest extends TestCase
 	{
 		$collection = new Collection(['a' => 'A']);
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Can only group by string values or by providing a callback function');
 
 		$collection->group(1);
@@ -543,8 +532,8 @@ class CollectionTest extends TestCase
 	public function testIsEmpty()
 	{
 		$collection = new Collection([
-			[ 'name'  => 'Bastian' ],
-			[ 'name' => 'Nico' ]
+			['name'  => 'Bastian'],
+			['name' => 'Nico']
 		]);
 
 		$this->assertTrue($collection->isNotEmpty());
@@ -984,9 +973,9 @@ class CollectionTest extends TestCase
 	 */
 	public function testValuesMap()
 	{
-		$values = $this->collection->values(function ($item) {
-			return Str::after($item, 'My ');
-		});
+		$values = $this->collection->values(
+			fn ($item) => Str::after($item, 'My ')
+		);
 
 		$this->assertSame([
 			'first element',

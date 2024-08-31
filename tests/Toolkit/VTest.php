@@ -2,10 +2,12 @@
 
 namespace Kirby\Toolkit;
 
+use Exception;
 use Kirby\Cms\App;
 use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use stdClass;
 
 class CanBeCounted implements \Countable
 {
@@ -38,8 +40,8 @@ class VTest extends TestCase
 	 */
 	public function testValidators()
 	{
-		$this->assertFalse(empty(V::$validators));
-		$this->assertFalse(empty(V::validators()));
+		$this->assertNotEmpty(V::$validators);
+		$this->assertNotEmpty(V::validators());
 	}
 
 	/**
@@ -62,7 +64,7 @@ class VTest extends TestCase
 	 */
 	public function testCallInvalidMethod()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The validator does not exist: fool');
 
 		V::fool('me');
@@ -638,7 +640,7 @@ class VTest extends TestCase
 
 	public function testSizeInvalid()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('$value is of type without size');
 
 		V::size(false, 5);
@@ -646,10 +648,10 @@ class VTest extends TestCase
 
 	public function testSizeInvalidObject()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('$value is an uncountable object');
 
-		V::size(new \stdClass(), 5);
+		V::size(new stdClass(), 5);
 	}
 
 	public function testTel()
@@ -858,7 +860,7 @@ class VTest extends TestCase
 		new App();
 
 		if ($result === false) {
-			$this->expectException('Exception');
+			$this->expectException(Exception::class);
 			$this->expectExceptionMessage($message);
 		}
 
@@ -887,10 +889,10 @@ class VTest extends TestCase
 		// load the translation strings
 		new App();
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Please enter "b"');
 
-		$result = V::value('a', [
+		V::value('a', [
 			'same' => 'b'
 		]);
 	}

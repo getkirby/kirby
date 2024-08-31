@@ -166,8 +166,9 @@ export default (app, plugins = {}) => {
 		icons: {},
 		login: null,
 		textareaButtons: {},
-		use: [],
 		thirdParty: {},
+		use: [],
+		viewButtons: {},
 		writerMarks: {},
 		writerNodes: {},
 		...plugins

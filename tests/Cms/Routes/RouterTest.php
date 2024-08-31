@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\I18n;
@@ -312,9 +313,7 @@ class RouterTest extends TestCase
 			'routes' => [
 				[
 					'pattern' => $pattern,
-					'action'  => function () {
-						return 'test';
-					}
+					'action'  => fn () => 'test'
 				]
 			]
 		]);
@@ -324,7 +323,7 @@ class RouterTest extends TestCase
 
 	public function testBadMethodRoute()
 	{
-		$this->expectException('InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid routing method: WURST');
 		$this->expectExceptionCode(400);
 

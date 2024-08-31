@@ -7,10 +7,10 @@ use Kirby\Content\Field;
 use Kirby\Toolkit\Obj;
 use stdClass;
 
-class MockObject extends Model
+class MockObject
 {
-	protected $id;
-	protected $group;
+	protected string|Field $id;
+	protected string|null $group;
 
 	public function __construct(array $props = [])
 	{
@@ -18,12 +18,12 @@ class MockObject extends Model
 		$this->group = $props['group'] ?? null;
 	}
 
-	public function id()
+	public function id(): string|Field
 	{
 		return $this->id;
 	}
 
-	public function group()
+	public function group(): string|null
 	{
 		return $this->group;
 	}
@@ -33,7 +33,7 @@ class MockObject extends Model
 		return ['id' => $this->id];
 	}
 
-	public function uuid()
+	public function uuid(): string|Field
 	{
 		return $this->id;
 	}
@@ -47,9 +47,7 @@ class CollectionTest extends TestCase
 	{
 		$kirby = $this->kirby([
 			'collectionMethods' => [
-				'test' => function () {
-					return 'collection test';
-				}
+				'test' => fn () => 'collection test'
 			],
 			'roots' => [
 				'index' => '/dev/null'
@@ -502,9 +500,7 @@ class CollectionTest extends TestCase
 			new MockObject(['id' => 'c'])
 		]);
 
-		$array = $collection->toArray(function ($object) {
-			return $object->id();
-		});
+		$array = $collection->toArray(fn ($object) => $object->id());
 
 		$this->assertSame($array, [
 			'a' => 'a',

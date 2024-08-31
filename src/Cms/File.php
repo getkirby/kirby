@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Exception;
 use IntlDateFormatter;
+use Kirby\Content\VersionId;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\IsFile;
@@ -35,6 +36,9 @@ class File extends ModelWithContent
 	use FileActions;
 	use FileModifications;
 	use HasMethods;
+	/**
+	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Files>
+	 */
 	use HasSiblings;
 	use IsFile;
 
@@ -77,8 +81,6 @@ class File extends ModelWithContent
 	 */
 	public function __construct(array $props)
 	{
-		parent::__construct($props);
-
 		if (isset($props['filename'], $props['parent']) === false) {
 			throw new InvalidArgumentException('The filename and parent are required');
 		}
@@ -90,6 +92,8 @@ class File extends ModelWithContent
 		// auto root detection
 		$this->root     = null;
 		$this->url      = $props['url'] ?? null;
+
+		parent::__construct($props);
 
 		$this->setBlueprint($props['blueprint'] ?? null);
 	}
@@ -124,10 +128,11 @@ class File extends ModelWithContent
 	 */
 	public function __debugInfo(): array
 	{
-		return array_merge($this->toArray(), [
+		return [
+			...$this->toArray(),
 			'content'  => $this->content(),
 			'siblings' => $this->siblings(),
-		]);
+		];
 	}
 
 	/**
@@ -155,7 +160,7 @@ class File extends ModelWithContent
 	 * Returns an array with all blueprints that are available for the file
 	 * by comparing files sections and files fields of the parent model
 	 */
-	public function blueprints(string $inSection = null): array
+	public function blueprints(string|null $inSection = null): array
 	{
 		// get cached results for the current file model
 		// (except when collecting for a specific section)
@@ -227,7 +232,7 @@ class File extends ModelWithContent
 	 */
 	public function contentFileData(
 		array $data,
-		string $languageCode = null
+		string|null $languageCode = null
 	): array {
 		// only add the template in, if the $data array
 		// doesn't explicitly unsets it
@@ -239,33 +244,6 @@ class File extends ModelWithContent
 		}
 
 		return $data;
-	}
-
-	/**
-	 * Returns the directory in which
-	 * the content file is located
-	 * @internal
-	 * @deprecated 4.0.0
-	 * @todo Remove in v5
-	 * @codeCoverageIgnore
-	 */
-	public function contentFileDirectory(): string
-	{
-		Helpers::deprecated('The internal $model->contentFileDirectory() method has been deprecated. Please let us know via a GitHub issue if you need this method and tell us your use case.', 'model-content-file');
-		return dirname($this->root());
-	}
-
-	/**
-	 * Filename for the content file
-	 * @internal
-	 * @deprecated 4.0.0
-	 * @todo Remove in v5
-	 * @codeCoverageIgnore
-	 */
-	public function contentFileName(): string
-	{
-		Helpers::deprecated('The internal $model->contentFileName() method has been deprecated. Please let us know via a GitHub issue if you need this method and tell us your use case.', 'model-content-file');
-		return $this->filename();
 	}
 
 	/**
@@ -298,10 +276,10 @@ class File extends ModelWithContent
 	 */
 	public function html(array $attr = []): string
 	{
-		return $this->asset()->html(array_merge(
-			['alt' => $this->alt()],
-			$attr
-		));
+		return $this->asset()->html([
+			'alt' => $this->alt(),
+			...$attr
+		]);
 	}
 
 	/**
@@ -446,9 +424,9 @@ class File extends ModelWithContent
 	 * Timestamp of the last modification
 	 * of the content file
 	 */
-	protected function modifiedContent(string $languageCode = null): int
+	protected function modifiedContent(string|null $languageCode = null): int
 	{
-		return $this->storage()->modified('published', $languageCode) ?? 0;
+		return $this->version(VersionId::published())->modified($languageCode ?? 'current') ?? 0;
 	}
 
 	/**
@@ -551,7 +529,7 @@ class File extends ModelWithContent
 	 *
 	 * @return $this
 	 */
-	protected function setBlueprint(array $blueprint = null): static
+	protected function setBlueprint(array|null $blueprint = null): static
 	{
 		if ($blueprint !== null) {
 			$blueprint['model'] = $this;
@@ -563,7 +541,6 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the parent Files collection
-	 * @internal
 	 */
 	protected function siblingsCollection(): Files
 	{
@@ -605,10 +582,12 @@ class File extends ModelWithContent
 	 */
 	public function toArray(): array
 	{
-		return array_merge(parent::toArray(), $this->asset()->toArray(), [
+		return [
+			...parent::toArray(),
+			...$this->asset()->toArray(),
 			'id'       => $this->id(),
 			'template' => $this->template(),
-		]);
+		];
 	}
 
 	/**

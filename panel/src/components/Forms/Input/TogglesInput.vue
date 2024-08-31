@@ -1,45 +1,51 @@
 <template>
-	<ul
-		:data-invalid="$v.$invalid"
-		:data-labels="labels"
-		:style="{ '--options': columns ?? options.length }"
-		class="k-toggles-input"
+	<fieldset
+		:disabled="disabled"
+		:class="['k-toggles-input', $attrs.class]"
+		:style="$attrs.style"
 	>
-		<li
-			v-for="(option, index) in options"
-			:key="index"
-			:data-disabled="disabled"
-		>
-			<input
-				:id="id + '-' + index"
-				:aria-label="option.text"
-				:disabled="disabled"
-				:value="option.value"
-				:name="id"
-				:checked="value === option.value"
-				class="input-hidden"
-				type="radio"
-				@click="onClick(option.value)"
-				@change="onInput(option.value)"
-			/>
-			<label :for="id + '-' + index" :title="option.text">
-				<k-icon v-if="option.icon" :type="option.icon" />
-				<!-- eslint-disable vue/no-v-html -->
-				<span
-					v-if="labels || !option.icon"
-					class="k-toggles-text"
-					v-html="option.text"
-				/>
-				<!-- eslint-enable vue/no-v-html -->
-			</label>
-		</li>
-	</ul>
+		<legend class="sr-only">{{ $t("options") }}</legend>
+
+		<k-input-validator :required="required" :value="JSON.stringify(value)">
+			<ul
+				:data-labels="labels"
+				:style="{ '--options': columns ?? options.length }"
+			>
+				<li
+					v-for="(option, index) in options"
+					:key="index"
+					:data-disabled="disabled"
+				>
+					<input
+						:id="id + '-' + index"
+						:aria-label="option.text"
+						:disabled="disabled"
+						:value="option.value"
+						:name="id"
+						:checked="value === option.value"
+						class="input-hidden"
+						type="radio"
+						@click="onClick(option.value)"
+						@change="onInput(option.value)"
+					/>
+					<label :for="id + '-' + index" :title="option.text">
+						<k-icon v-if="option.icon" :type="option.icon" />
+						<!-- eslint-disable vue/no-v-html -->
+						<span
+							v-if="labels || !option.icon"
+							class="k-toggles-text"
+							v-html="option.text"
+						/>
+						<!-- eslint-enable vue/no-v-html -->
+					</label>
+				</li>
+			</ul>
+		</k-input-validator>
+	</fieldset>
 </template>
 
 <script>
 import Input, { props as InputProps } from "@/mixins/input.js";
-
-import { required as validateRequired } from "vuelidate/lib/validators";
 
 export const props = {
 	mixins: [InputProps],
@@ -55,14 +61,7 @@ export const props = {
 
 export default {
 	mixins: [Input, props],
-	watch: {
-		value() {
-			this.onInvalid();
-		}
-	},
 	mounted() {
-		this.onInvalid();
-
 		if (this.$props.autofocus) {
 			this.focus();
 		}
@@ -82,19 +81,9 @@ export default {
 		onInput(value) {
 			this.$emit("input", value);
 		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
-		},
 		select() {
 			this.focus();
 		}
-	},
-	validations() {
-		return {
-			value: {
-				required: this.required ? validateRequired : true
-			}
-		};
 	}
 };
 </script>
@@ -111,7 +100,7 @@ export default {
 	display: flex;
 }
 
-.k-toggles-input {
+.k-toggles-input ul {
 	display: grid;
 	grid-template-columns: repeat(var(--options), minmax(0, 1fr));
 	gap: 1px;

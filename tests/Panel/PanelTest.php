@@ -8,7 +8,6 @@ use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 use Kirby\TestCase;
-use Kirby\Toolkit\A;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Panel
@@ -16,8 +15,6 @@ use Kirby\Toolkit\A;
 class PanelTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Panel';
-
-	protected $app;
 
 	public function setUp(): void
 	{
@@ -97,7 +94,7 @@ class PanelTest extends TestCase
 		]);
 
 		// unauthenticated / installed
-		$areas = Panel::areas($this->app);
+		$areas = Panel::areas();
 
 		$this->assertArrayHasKey('login', $areas);
 		$this->assertArrayHasKey('logout', $areas);
@@ -107,7 +104,7 @@ class PanelTest extends TestCase
 		$this->app->impersonate('test@getkirby.com');
 
 		// authenticated
-		$areas = Panel::areas($this->app);
+		$areas = Panel::areas();
 
 		$this->assertArrayHasKey('search', $areas);
 		$this->assertArrayHasKey('site', $areas);
@@ -127,10 +124,47 @@ class PanelTest extends TestCase
 
 		$app->impersonate('test@getkirby.com');
 
-		$areas = Panel::areas($app);
+		$areas = Panel::areas();
 
 		$this->assertArrayHasKey('todos', $areas);
 		$this->assertCount(8, $areas);
+	}
+
+	/**
+	 * @covers ::buttons
+	 */
+	public function testButtons(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				[
+					'email' => 'test@getkirby.com',
+					'role'  => 'admin'
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+		$core = Panel::buttons();
+
+		// add custom buttons
+		$this->app = $this->app->clone([
+			'areas' => [
+				'test' => fn () => [
+					'buttons' => [
+						'a' => ['component' => 'test-a'],
+						'b' => ['component' => 'test-b']
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+		$withCustoms = Panel::buttons();
+
+		$this->assertSame(2, count($withCustoms) - count($core));
+		$this->assertSame(['component' => 'test-b'], array_pop($withCustoms));
+		$this->assertSame(['component' => 'test-a'], array_pop($withCustoms));
 	}
 
 	/**
@@ -539,14 +573,12 @@ class PanelTest extends TestCase
 			'dropdowns' => [
 				'test' => [
 					'pattern' => 'test',
-					'action'  => $action = function () {
-						return [
-							[
-								'text' => 'Test',
-								'link' => '/test'
-							]
-						];
-					}
+					'action'  => $action = fn () => [
+						[
+							'text' => 'Test',
+							'link' => '/test'
+						]
+					]
 				]
 			]
 		];
@@ -575,14 +607,12 @@ class PanelTest extends TestCase
 			'dropdowns' => [
 				'test' => [
 					'pattern' => 'test',
-					'options' => $action = function () {
-						return [
-							[
-								'text' => 'Test',
-								'link' => '/test'
-							]
-						];
-					}
+					'options' => $action = fn () => [
+						[
+							'text' => 'Test',
+							'link' => '/test'
+						]
+					]
 				]
 			]
 		];
@@ -609,14 +639,12 @@ class PanelTest extends TestCase
 	{
 		$area = [
 			'dropdowns' => [
-				'test' => $action = function () {
-					return [
-						[
-							'text' => 'Test',
-							'link' => '/test'
-						]
-					];
-				}
+				'test' => $action = fn () => [
+					[
+						'text' => 'Test',
+						'link' => '/test'
+					]
+				]
 			]
 		];
 

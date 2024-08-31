@@ -1,5 +1,11 @@
 <template>
-	<k-field v-bind="$props" :input="id" :help="preview" class="k-slug-field">
+	<k-field
+		v-bind="$props"
+		:class="['k-slug-field', $attrs.class]"
+		:help="preview"
+		:input="id"
+		:style="$attrs.style"
+	>
 		<template v-if="wizard && wizard.text" #options>
 			<k-button
 				:text="wizard.text"
@@ -15,7 +21,7 @@
 			ref="input"
 			:value="slug"
 			type="slug"
-			v-on="$listeners"
+			@input="$emit('input', $event)"
 		/>
 	</k-field>
 </template>

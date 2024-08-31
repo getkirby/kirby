@@ -13,6 +13,8 @@ use Kirby\Filesystem\F;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @extends \Kirby\Cms\Collection<\Kirby\Cms\Language>
  */
 class Languages extends Collection
 {
@@ -66,6 +68,24 @@ class Languages extends Collection
 	public function default(): Language|null
 	{
 		return $this->findBy('isDefault', true) ?? $this->first();
+	}
+
+	/**
+	 * Provides a collection of installed languages, even
+	 * if in single-language mode. In single-language mode
+	 * `Language::single()` is used to create the default language
+	 *
+	 * @internal
+	 */
+	public static function ensure(): static
+	{
+		$kirby = App::instance();
+
+		if ($kirby->multilang() === true) {
+			return $kirby->languages();
+		}
+
+		return new static([Language::single()]);
 	}
 
 	/**

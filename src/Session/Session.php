@@ -22,7 +22,6 @@ use Kirby\Toolkit\SymmetricCrypto;
 class Session
 {
 	// parent data
-	protected Sessions $sessions;
 	protected string $mode;
 
 	// parts of the token
@@ -59,12 +58,11 @@ class Session
 	 *                       - `renewable`: Should it be possible to extend the expiry date?; defaults to `true`
 	 */
 	public function __construct(
-		Sessions $sessions,
+		protected Sessions $sessions,
 		string|null $token,
 		array $options
 	) {
-		$this->sessions = $sessions;
-		$this->mode     = $options['mode'] ?? 'cookie';
+		$this->mode = $options['mode'] ?? 'cookie';
 
 		// ensure that all changes are committed on script termination
 		register_shutdown_function([$this, 'commit']);
@@ -107,6 +105,7 @@ class Session
 				'translate' => false
 			]);
 		}
+
 		if ($this->duration < 0) {
 			// expiry time must be after start time
 			throw new InvalidArgumentException([
@@ -149,7 +148,7 @@ class Session
 	 * @param string|null $mode Optional new transmission mode
 	 * @return string Transmission mode
 	 */
-	public function mode(string $mode = null): string
+	public function mode(string|null $mode = null): string
 	{
 		if ($mode !== null) {
 			// only allow this if this is a new session, otherwise the change
@@ -214,7 +213,7 @@ class Session
 	 * @param int|null $duration Optional new duration in seconds to set
 	 * @return int Number of seconds
 	 */
-	public function duration(int $duration = null): int
+	public function duration(int|null $duration = null): int
 	{
 		if ($duration !== null) {
 			// verify that the duration is at least 1 second
@@ -320,7 +319,8 @@ class Session
 	 */
 	public function commit(): void
 	{
-		// nothing to do if nothing changed or the session has been just created or destroyed
+		// nothing to do if nothing changed or the session
+		// has been just created or destroyed
 		/**
 		 * @todo The $this->destroyed check gets flagged by Psalm for unknown reasons
 		 * @psalm-suppress ParadoxicalCondition
@@ -336,7 +336,8 @@ class Session
 		// collect all data
 		if ($this->newSession !== null) {
 			// the token has changed
-			// we are writing to the old session: it only gets the reference to the new session
+			// we are writing to the old session:
+			// it only gets the reference to the new session
 			// and a shortened expiry time (30 second grace period)
 			$data = [
 				'startTime'  => $this->startTime(),
@@ -574,6 +575,7 @@ class Session
 
 		// only continue if the token has exactly the right amount of parts
 		$expectedParts = ($withoutKey === true) ? 2 : 3;
+
 		if (count($parts) !== $expectedParts) {
 			throw new InvalidArgumentException([
 				'data'      => ['method' => 'Session::parseToken', 'argument' => '$token'],
@@ -587,9 +589,11 @@ class Session
 
 		// verify that all parts were parsed correctly using reassembly
 		$expectedToken = $tokenExpiry . '.' . $tokenId;
+
 		if ($withoutKey === false) {
 			$expectedToken .= '.' . $tokenKey;
 		}
+
 		if ($expectedToken !== $token) {
 			throw new InvalidArgumentException([
 				'data'      => ['method' => 'Session::parseToken', 'argument' => '$token'],

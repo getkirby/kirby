@@ -4,14 +4,12 @@ namespace Kirby\Toolkit;
 
 class MockObject
 {
-	protected $value;
-
-	public function __construct(string $value)
-	{
-		$this->value = $value;
+	public function __construct(
+		protected string $value
+	) {
 	}
 
-	public function value()
+	public function value(): string
 	{
 		return $this->value;
 	}
@@ -19,7 +17,7 @@ class MockObject
 
 class MockObjectString extends MockObject
 {
-	public function __toString()
+	public function __toString(): string
 	{
 		return (string)$this->value;
 	}

@@ -1,12 +1,14 @@
+import { reactive } from "vue";
 import { uuid } from "@/helpers/string";
 import State from "./state.js";
 import listeners from "./listeners.js";
 import queue from "@/helpers/queue.js";
-import upload from "@/helpers/upload.js";
+import { uploadAsChunks } from "@/helpers/upload.js";
 import { extension, name, niceSize } from "@/helpers/file.js";
 
 export const defaults = () => {
 	return {
+		abort: null,
 		accept: "*",
 		attributes: {},
 		files: [],
@@ -32,7 +34,7 @@ export const defaults = () => {
 export default (panel) => {
 	const parent = State("upload", defaults());
 
-	return {
+	return reactive({
 		...parent,
 		...listeners(),
 		input: null,
@@ -41,6 +43,9 @@ export default (panel) => {
 		 */
 		cancel() {
 			this.emit("cancel");
+
+			// abort any ongoing requests
+			this.abort?.abort();
 
 			// emit complete event if any files have been completed,
 			// e.g. when first submit/upload yielded any errors and
@@ -272,6 +277,9 @@ export default (panel) => {
 				throw new Error("The upload URL is missing");
 			}
 
+			// prepare the abort controller
+			this.abort = new AbortController();
+
 			// gather upload tasks for all files
 			const files = [];
 
@@ -318,15 +326,20 @@ export default (panel) => {
 		},
 		async upload(file, attributes) {
 			try {
-				const response = await upload(file.src, {
-					attributes: attributes,
-					headers: { "x-csrf": panel.system.csrf },
-					filename: file.name + "." + file.extension,
-					url: this.url,
-					progress: (xhr, src, progress) => {
-						file.progress = progress;
-					}
-				});
+				const response = await uploadAsChunks(
+					file.src,
+					{
+						abort: this.abort.signal,
+						attributes: attributes,
+						filename: file.name + "." + file.extension,
+						headers: { "x-csrf": panel.system.csrf },
+						url: this.url,
+						progress: (xhr, src, progress) => {
+							file.progress = progress;
+						}
+					},
+					panel.config.upload
+				);
 
 				file.completed = true;
 				file.model = response.data;
@@ -341,5 +354,5 @@ export default (panel) => {
 				file.progress = 0;
 			}
 		}
-	};
+	});
 };

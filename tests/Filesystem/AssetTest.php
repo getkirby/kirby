@@ -4,15 +4,13 @@ namespace Kirby\Filesystem;
 
 use Kirby\Cms\App;
 use Kirby\Exception\BadMethodCallException;
-use Kirby\TestCase as TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Filesystem\Asset
  */
 class AssetTest extends TestCase
 {
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([
@@ -23,9 +21,7 @@ class AssetTest extends TestCase
 				'index' => 'https://getkirby.com'
 			],
 			'assetMethods' => [
-				'test' => function () {
-					return 'asset method';
-				}
+				'test' => fn () => 'asset method'
 			]
 		]);
 	}

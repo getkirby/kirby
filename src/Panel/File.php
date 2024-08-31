@@ -5,6 +5,8 @@ namespace Kirby\Panel;
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
+use Kirby\Panel\Ui\Buttons\ViewButtons;
+use Kirby\Panel\Ui\FilePreview;
 use Kirby\Toolkit\I18n;
 use Throwable;
 
@@ -65,6 +67,20 @@ class File extends Model
 	}
 
 	/**
+	 * Returns header button names which should be displayed
+	 * on the file view
+	 */
+	public function buttons(): array
+	{
+		return ViewButtons::view($this)->defaults(
+			'preview',
+			'settings',
+			'languages'
+		)->bind(['file' => $this->model()])
+			->render();
+	}
+
+	/**
 	 * Provides a kirbytag or markdown
 	 * tag for the file, which will be
 	 * used in the panel, when the file
@@ -119,8 +135,8 @@ class File extends Model
 	{
 		$file     = $this->model;
 		$request  = $file->kirby()->request();
-		$defaults = $request->get(['view', 'update', 'delete']);
-		$options  = array_merge($defaults, $options);
+		$defaults = $request->get(['view', 'delete']);
+		$options  = [...$defaults, ...$options];
 
 		$permissions = $this->options(['preview']);
 		$view        = $options['view'] ?? 'view';
@@ -149,7 +165,7 @@ class File extends Model
 				'dialog'   => $url . '/changeSort',
 				'icon'     => 'sort',
 				'text'     => I18n::translate('file.sort'),
-				'disabled' => $this->isDisabledDropdownOption('update', $options, $permissions)
+				'disabled' => $this->isDisabledDropdownOption('sort', $options, $permissions)
 			];
 		}
 
@@ -228,10 +244,11 @@ class File extends Model
 	 */
 	protected function imageDefaults(): array
 	{
-		return array_merge(parent::imageDefaults(), [
+		return [
+			...parent::imageDefaults(),
 			'color' => $this->imageColor(),
 			'icon'  => $this->imageIcon(),
-		]);
+		];
 	}
 
 	/**
@@ -285,7 +302,7 @@ class File extends Model
 	public function isFocusable(): bool
 	{
 		// blueprint option
-		$option = $this->model->blueprint()->focus();
+		$option   = $this->model->blueprint()->focus();
 		// fallback to whether the file is viewable
 		// (images should be focusable by default, others not)
 		$option ??= $this->model->isViewable();
@@ -365,13 +382,14 @@ class File extends Model
 
 		$params['text'] ??= '{{ file.filename }}';
 
-		return array_merge(parent::pickerData($params), [
+		return [
+			...parent::pickerData($params),
 			'dragText' => $this->dragText('auto', $absolute ?? false),
 			'filename' => $name,
 			'id'	   => $id,
 			'type'     => $this->model->type(),
 			'url'      => $this->model->url()
-		]);
+		];
 	}
 
 	/**
@@ -384,63 +402,27 @@ class File extends Model
 		$file       = $this->model;
 		$dimensions = $file->dimensions();
 
-		return array_merge(
-			parent::props(),
-			$this->prevNext(),
-			[
-				'blueprint' => $this->model->template() ?? 'default',
-				'model' => [
-					'content'    => $this->content(),
-					'dimensions' => $dimensions->toArray(),
-					'extension'  => $file->extension(),
-					'filename'   => $file->filename(),
-					'link'       => $this->url(true),
-					'mime'       => $file->mime(),
-					'niceSize'   => $file->niceSize(),
-					'id'         => $id = $file->id(),
-					'parent'     => $file->parent()->panel()->path(),
-					'template'   => $file->template(),
-					'type'       => $file->type(),
-					'url'        => $file->url(),
-					'uuid'       => fn () => $file->uuid()?->toString(),
-				],
-				'preview' => [
-					'focusable' => $this->isFocusable(),
-					'image'     => $this->image([
-						'back'  => 'transparent',
-						'ratio' => '1/1'
-					], 'cards'),
-					'url'       => $url = $file->previewUrl(),
-					'details'   => [
-						[
-							'title' => I18n::translate('template'),
-							'text'  => $file->template() ?? '—'
-						],
-						[
-							'title' => I18n::translate('mime'),
-							'text'  => $file->mime()
-						],
-						[
-							'title' => I18n::translate('url'),
-							'text'  => $id,
-							'link'  => $url
-						],
-						[
-							'title' => I18n::translate('size'),
-							'text'  => $file->niceSize()
-						],
-						[
-							'title' => I18n::translate('dimensions'),
-							'text'  => $file->type() === 'image' ? $file->dimensions() . ' ' . I18n::translate('pixel') : '—'
-						],
-						[
-							'title' => I18n::translate('orientation'),
-							'text'  => $file->type() === 'image' ? I18n::translate('orientation.' . $dimensions->orientation()) : '—'
-						],
-					]
-				]
-			]
-		);
+		return [
+			...parent::props(),
+			...$this->prevNext(),
+			'blueprint' => $this->model->template() ?? 'default',
+			'model' => [
+				'content'    => $this->content(),
+				'dimensions' => $dimensions->toArray(),
+				'extension'  => $file->extension(),
+				'filename'   => $file->filename(),
+				'link'       => $this->url(true),
+				'mime'       => $file->mime(),
+				'niceSize'   => $file->niceSize(),
+				'id'         => $id = $file->id(),
+				'parent'     => $file->parent()->panel()->path(),
+				'template'   => $file->template(),
+				'type'       => $file->type(),
+				'url'        => $file->url(),
+				'uuid'       => fn () => $file->uuid()?->toString(),
+			],
+			'preview' => FilePreview::factory($this->model)->render()
+		];
 	}
 
 	/**

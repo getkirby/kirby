@@ -5,6 +5,7 @@
 export default {
 	props: {
 		blueprint: String,
+		buttons: Array,
 		next: Object,
 		prev: Object,
 		permissions: {
@@ -36,7 +37,7 @@ export default {
 			return this.model.link;
 		},
 		isLocked() {
-			return this.lock?.state === "lock";
+			return this.$panel.content.isLocked;
 		},
 		protectedFields() {
 			return [];

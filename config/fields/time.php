@@ -36,13 +36,13 @@ return [
 		/**
 		 * Latest time, which can be selected/saved (H:i or H:i:s)
 		 */
-		'max' => function (string $max = null): string|null {
+		'max' => function (string|null $max = null): string|null {
 			return Date::optional($max);
 		},
 		/**
 		 * Earliest time, which can be selected/saved (H:i or H:i:s)
 		 */
-		'min' => function (string $min = null): string|null {
+		'min' => function (string|null $min = null): string|null {
 			return Date::optional($min);
 		},
 
@@ -104,14 +104,18 @@ return [
 						'max' => $min->format($format)
 					]
 				]);
-			} elseif ($min && $value->isMin($min) === false) {
+			}
+
+			if ($min && $value->isMin($min) === false) {
 				throw new Exception([
 					'key' => 'validation.time.after',
 					'data' => [
 						'time' => $min->format($format),
 					]
 				]);
-			} elseif ($max && $value->isMax($max) === false) {
+			}
+
+			if ($max && $value->isMax($max) === false) {
 				throw new Exception([
 					'key' => 'validation.time.before',
 					'data' => [

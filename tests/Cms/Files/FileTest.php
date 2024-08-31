@@ -17,7 +17,7 @@ class FileTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.File';
 
-	protected function defaults(?App $kirby = null): array
+	protected function defaults(App|null $kirby = null): array
 	{
 		$page = new Page([
 			'kirby' => $kirby,
@@ -34,7 +34,7 @@ class FileTest extends TestCase
 	protected function file(array $props = [])
 	{
 		$defaults = $this->defaults($props['kirby'] ?? null);
-		return new File(array_merge($defaults, $props));
+		return new File([...$defaults, ...$props]);
 	}
 
 	public function testAsset()

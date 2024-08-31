@@ -2,12 +2,13 @@
 	<k-section
 		v-if="isLoading === false"
 		:buttons="buttons"
-		:class="`k-models-section k-${type}-section`"
+		:class="['k-models-section', `k-${type}-section`, $attrs.class]"
 		:data-processing="isProcessing"
 		:headline="options.headline ?? ' '"
 		:invalid="isInvalid"
 		:link="options.link"
 		:required="Boolean(options.min)"
+		:style="$attrs.style"
 	>
 		<!-- Error -->
 		<k-box v-if="error" icon="alert" theme="negative">
@@ -29,7 +30,7 @@
 					type="text"
 					class="k-models-section-search"
 					@input="searchterm = $event"
-					@keydown.esc="onSearchToggle"
+					@keydown.native.esc="onSearchToggle"
 				/>
 
 				<!-- Models collection -->

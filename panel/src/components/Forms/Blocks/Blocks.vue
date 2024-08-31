@@ -1,8 +1,9 @@
 <template>
 	<div
+		:class="['k-blocks', $attrs.class]"
 		:data-disabled="disabled"
 		:data-empty="blocks.length === 0"
-		class="k-blocks"
+		:style="$attrs.style"
 	>
 		<template v-if="hasFieldsets">
 			<k-draggable
@@ -86,6 +87,10 @@ export const props = {
 		fieldsets: Object,
 		fieldsetGroups: Object,
 		group: String,
+		min: {
+			type: Number,
+			default: null
+		},
 		max: {
 			type: Number,
 			default: null
@@ -112,17 +117,13 @@ export default {
 	computed: {
 		draggableOptions() {
 			return {
-				id: this.id,
 				handle: ".k-sort-handle",
 				list: this.blocks,
+				group: this.group,
 				move: this.move,
-				delay: 10,
 				data: {
 					fieldsets: this.fieldsets,
 					isFull: this.isFull
-				},
-				options: {
-					group: this.group
 				}
 			};
 		},
@@ -336,7 +337,7 @@ export default {
 		},
 		async duplicate(block, index) {
 			const copy = {
-				...structuredClone(block),
+				...this.$helper.object.clone(block),
 				id: this.$helper.uuid()
 			};
 			this.blocks.splice(index + 1, 0, copy);
@@ -381,7 +382,9 @@ export default {
 		},
 		isInputEvent() {
 			const focused = document.querySelector(":focus");
-			return focused?.matches("input, textarea, [contenteditable], .k-writer");
+			return focused?.matches(
+				"input, textarea, [contenteditable], .k-writer-input"
+			);
 		},
 		isLastSelected(block) {
 			const [lastItem] = this.selected.slice(-1);
@@ -413,10 +416,8 @@ export default {
 		move(event) {
 			// moving block between fields
 			if (event.from !== event.to) {
-				const block = event.draggedContext.element;
-				const to =
-					event.relatedContext.component.componentData ||
-					event.relatedContext.component.$parent.componentData;
+				const block = event.draggedData;
+				const to = event.toData;
 
 				// fieldset is not supported in target field
 				if (Object.keys(to.fieldsets).includes(block.type) === false) {
@@ -676,7 +677,7 @@ export default {
 			if (to < 0) {
 				return;
 			}
-			let blocks = structuredClone(this.blocks);
+			let blocks = this.$helper.object.clone(this.blocks);
 			blocks.splice(from, 1);
 			blocks.splice(to, 0, block);
 			this.blocks = blocks;
@@ -686,7 +687,7 @@ export default {
 		},
 		async split(block, index, contents) {
 			// prepare old block with reduced content chunk
-			const oldBlock = structuredClone(block);
+			const oldBlock = this.$helper.object.clone(block);
 			oldBlock.content = { ...oldBlock.content, ...contents[0] };
 
 			// create a new block and merge in default contents as

@@ -38,7 +38,7 @@ trait FileModifications
 	 */
 	public function crop(
 		int $width,
-		int $height = null,
+		int|null $height = null,
 		$options = null
 	): FileVersion|File|Asset {
 		$quality = null;
@@ -94,9 +94,9 @@ trait FileModifications
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public function resize(
-		int $width = null,
-		int $height = null,
-		int $quality = null
+		int|null $width = null,
+		int|null $height = null,
+		int|null $quality = null
 	): FileVersion|File|Asset {
 		return $this->thumb([
 			'width'   => $width,
@@ -184,11 +184,12 @@ trait FileModifications
 
 		// fallback to content file options
 		if (($options['crop'] ?? false) === true) {
-			if ($this instanceof ModelWithContent === true) {
-				$options['crop'] = $this->focus()->value() ?? 'center';
-			} else {
-				$options['crop'] = 'center';
-			}
+			$options['crop'] = match (true) {
+				$this instanceof ModelWithContent
+					=> $this->focus()->value() ?? 'center',
+				default
+				=> 'center'
+			};
 		}
 
 		// fallback to global config options

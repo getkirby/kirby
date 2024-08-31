@@ -6,6 +6,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Panel\Page as Panel;
 use ReflectionMethod;
+use TypeError;
 
 class PageTestModel extends Page
 {
@@ -217,11 +218,8 @@ class PageTest extends TestCase
 
 	public function testInvalidId()
 	{
-		$this->expectException('TypeError');
-
-		$page = new Page([
-			'slug' => []
-		]);
+		$this->expectException(TypeError::class);
+		new Page(['slug' => []]);
 	}
 
 	/**
@@ -317,9 +315,9 @@ class PageTest extends TestCase
 
 	public function testInvalidNum()
 	{
-		$this->expectException('TypeError');
+		$this->expectException(TypeError::class);
 
-		$page = new Page([
+		new Page([
 			'slug'  => 'test',
 			'num'   => []
 		]);
@@ -396,7 +394,7 @@ class PageTest extends TestCase
 
 	public function testInvalidParent()
 	{
-		$this->expectException('TypeError');
+		$this->expectException(TypeError::class);
 
 		new Page([
 			'slug'     => 'test/child',
@@ -417,9 +415,9 @@ class PageTest extends TestCase
 
 	public function testInvalidSite()
 	{
-		$this->expectException('TypeError');
+		$this->expectException(TypeError::class);
 
-		$page = new Page([
+		new Page([
 			'slug'   => 'test',
 			'site' => 'mysite'
 		]);
@@ -447,10 +445,10 @@ class PageTest extends TestCase
 
 	public function testInvalidTemplate()
 	{
-		$this->expectException('TypeError');
+		$this->expectException(TypeError::class);
 
-		$page = new Page([
-			'slug'       => 'test',
+		new Page([
+			'slug'     => 'test',
 			'template' => []
 		]);
 	}
@@ -489,11 +487,11 @@ class PageTest extends TestCase
 
 	public function testInvalidUrl()
 	{
-		$this->expectException('TypeError');
+		$this->expectException(TypeError::class);
 
-		$page = new Page([
-			'slug'  => 'test',
-			'url' => []
+		new Page([
+			'slug' => 'test',
+			'url'  => []
 		]);
 	}
 
@@ -680,7 +678,11 @@ class PageTest extends TestCase
 		]);
 
 		if ($draft === true && $expected !== null) {
-			$expected = str_replace('{token}', 'token=' . hash_hmac('sha1', $page->id() . $page->template(), $page->root()), $expected);
+			$expected = str_replace(
+				'{token}',
+				'token=' . hash_hmac('sha1', $page->id() . $page->template(), $page->kirby()->root('content') . '/' . $page->id()),
+				$expected
+			);
 		}
 
 		$this->assertSame($expected, $page->previewUrl());
@@ -694,16 +696,25 @@ class PageTest extends TestCase
 
 	public function testToken()
 	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			]
+		]);
+
 		$page = new Page([
 			'slug'     => 'test',
-			'root'     => '/var/www/content/test',
 			'template' => 'default'
 		]);
 
 		$method = new ReflectionMethod(Page::class, 'token');
 		$method->setAccessible(true);
 
-		$expected = hash_hmac('sha1', 'test' . 'default', '/var/www/content/test');
+		$expected = hash_hmac(
+			'sha1',
+			'testdefault',
+			'/dev/null/content/test'
+		);
 		$this->assertSame($expected, $method->invoke($page));
 	}
 
@@ -740,9 +751,7 @@ class PageTest extends TestCase
 			],
 			'options' => [
 				'content' => [
-					'salt' => function ($page) {
-						return $page->date();
-					}
+					'salt' => fn ($page) => $page->date()
 				]
 			]
 		]);
@@ -989,9 +998,7 @@ class PageTest extends TestCase
 	public function testPageMethods()
 	{
 		Page::$methods = [
-			'test' => function () {
-				return 'homer';
-			}
+			'test' => fn () => 'homer'
 		];
 
 		$page = new Page(['slug' => 'test']);
@@ -1066,9 +1073,7 @@ class PageTest extends TestCase
 					return compact('page');
 				},
 				// invalid return
-				'bar' => function ($page) {
-					return ['page' => 'string'];
-				}
+				'bar' => fn ($page) => ['page' => 'string']
 			]
 		]);
 

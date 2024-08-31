@@ -6,8 +6,6 @@ use Kirby\TestCase;
 
 class LockRoutesTest extends TestCase
 {
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

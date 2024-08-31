@@ -5,9 +5,9 @@ import Vue from "vue";
  * This is the graveyard for all deprecated
  * aliases. We can remove them step by step
  * in future major releases to clean up.
- * @since 4.0.0
  *
- * @todo remove in v5
+ * @since 4.0.0
+ * @deprecated 4.0.0
  */
 export default {
 	install(app) {
@@ -60,6 +60,17 @@ export default {
 			const key = `$${polyfill}`;
 			app.prototype[key] = window.panel[key] = window.panel[polyfill];
 		}
+
+		/**
+		 * Some more shortcuts to the Panel's features
+		 */
+		app.prototype.$dialog = window.panel.dialog.open.bind(window.panel.dialog);
+		app.prototype.$drawer = window.panel.drawer.open.bind(window.panel.drawer);
+		app.prototype.$dropdown = window.panel.dropdown.openAsync.bind(
+			window.panel.dropdown
+		);
+		app.prototype.$go = window.panel.view.open.bind(window.panel.view);
+		app.prototype.$reload = window.panel.reload.bind(window.panel);
 
 		// Kirbyup relies on this
 		window.panel.$vue = window.panel.app;

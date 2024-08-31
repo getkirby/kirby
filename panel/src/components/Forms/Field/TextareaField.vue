@@ -1,11 +1,17 @@
 <template>
 	<k-field
 		v-bind="$props"
-		:input="id"
+		:class="['k-textarea-field', $attrs.class]"
 		:counter="counterOptions"
-		class="k-textarea-field"
+		:input="id"
+		:style="$attrs.style"
 	>
-		<k-input v-bind="$props" ref="input" type="textarea" v-on="$listeners" />
+		<k-input
+			v-bind="$props"
+			ref="input"
+			type="textarea"
+			@input="$emit('input', $event)"
+		/>
 	</k-field>
 </template>
 

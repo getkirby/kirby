@@ -25,8 +25,6 @@ class FileTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.File';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([
@@ -41,6 +39,17 @@ class FileTest extends TestCase
 	public function tearDown(): void
 	{
 		Dir::remove(static::TMP);
+	}
+
+	protected function panel(array $props = [])
+	{
+		$page = new ModelPage([
+			'slug'  => 'test',
+			'files' => [
+				['filename' => 'test.jpg', ...$props],
+			]
+		]);
+		return new File($page->file('test.jpg'));
 	}
 
 	/**
@@ -115,6 +124,18 @@ class FileTest extends TestCase
 				'link'  => '/users/test/files/test.jpg'
 			]
 		], $file->breadcrumb());
+	}
+
+	/**
+	 * @covers ::buttons
+	 */
+	public function testButtons()
+	{
+		$this->assertSame([
+			'k-preview-view-button',
+			'k-settings-view-button',
+			'k-languages-view-button',
+		], array_column($this->panel()->buttons(), 'component'));
 	}
 
 	/**
@@ -231,7 +252,7 @@ class FileTest extends TestCase
 				'panel' => [
 					'kirbytext' => false,
 					'markdown' => [
-						'fileDragText' => function (\Kirby\Cms\File $file, string $url) {
+						'fileDragText' => function (ModelFile $file, string $url) {
 							if ($file->extension() === 'heic') {
 								return sprintf('![](%s)', $url);
 							}
@@ -272,7 +293,7 @@ class FileTest extends TestCase
 			'options' => [
 				'panel' => [
 					'kirbytext' => [
-						'fileDragText' => function (\Kirby\Cms\File $file, string $url) {
+						'fileDragText' => function (ModelFile $file, string $url) {
 							if ($file->extension() === 'heic') {
 								return sprintf('(image: %s)', $url);
 							}
@@ -405,7 +426,7 @@ class FileTest extends TestCase
 
 		// fallback to model itself
 		$image = (new File($page->file()))->image('foo.bar');
-		$this->assertFalse(empty($image));
+		$this->assertNotEmpty($image);
 	}
 
 	/**
@@ -512,6 +533,7 @@ class FileTest extends TestCase
 			'list'         	 => true,
 			'read'           => true,
 			'replace'        => true,
+			'sort'           => true,
 			'update'         => true,
 		];
 
@@ -545,6 +567,7 @@ class FileTest extends TestCase
 			'list'           => false,
 			'read'           => false,
 			'replace'        => false,
+			'sort'           => false,
 			'update'         => false,
 		];
 
@@ -561,6 +584,7 @@ class FileTest extends TestCase
 			'list'           => false,
 			'read'           => false,
 			'replace'        => false,
+			'sort'           => false,
 			'update'         => false,
 		];
 
@@ -592,6 +616,7 @@ class FileTest extends TestCase
 			'list'           => true,
 			'read'           => true,
 			'replace'        => false,
+			'sort'           => true,
 			'update'         => true,
 		];
 
@@ -634,6 +659,7 @@ class FileTest extends TestCase
 			'list'           => true,
 			'read'           => true,
 			'replace'        => true,
+			'sort'           => true,
 			'update'         => true,
 		];
 
@@ -678,6 +704,7 @@ class FileTest extends TestCase
 			'list'           => true,
 			'read'           => true,
 			'replace'        => false,
+			'sort'           => true,
 			'update'         => true,
 		];
 
@@ -822,12 +849,7 @@ class FileTest extends TestCase
 		$this->assertArrayHasKey('url', $props['model']);
 		$this->assertArrayHasKey('template', $props['model']);
 		$this->assertArrayHasKey('type', $props['model']);
-
 		$this->assertArrayHasKey('preview', $props);
-		$this->assertArrayHasKey('image', $props['preview']);
-		$this->assertArrayHasKey('url', $props['preview']);
-		$this->assertArrayHasKey('details', $props['preview']);
-		$this->assertCount(6, $props['preview']['details']);
 
 		// inherited props
 		$this->assertArrayHasKey('blueprint', $props);

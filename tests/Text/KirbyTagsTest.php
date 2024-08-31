@@ -17,8 +17,6 @@ class KirbyTagsTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP      = KIRBY_TMP_DIR . '/Text.KirbyTags';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

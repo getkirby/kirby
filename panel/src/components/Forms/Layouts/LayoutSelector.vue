@@ -1,8 +1,9 @@
 <template>
 	<k-dialog
 		v-bind="$props"
-		class="k-layout-selector"
+		:class="['k-layout-selector', $attrs.class]"
 		:size="selector?.size ?? 'medium'"
+		:style="$attrs.style"
 		@cancel="$emit('cancel')"
 		@submit="$emit('submit', value)"
 	>
@@ -113,7 +114,7 @@ export default {
 	--color-border: var(--color-gray-500);
 	--color-back: var(--color-gray-100);
 }
-.k-layout-selector-option[aria-current] {
+.k-layout-selector-option[aria-current="true"] {
 	--color-border: var(--color-focus);
 	--color-back: var(--color-blue-300);
 }

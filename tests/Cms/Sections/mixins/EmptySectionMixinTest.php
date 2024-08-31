@@ -6,8 +6,7 @@ use Kirby\TestCase;
 
 class EmptySectionMixinTest extends TestCase
 {
-	protected $app;
-	protected $page;
+	protected Page $page;
 
 	public function setUp(): void
 	{

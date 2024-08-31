@@ -2,6 +2,7 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
+use Kirby\Panel\Ui\Buttons\ViewButtons;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 
@@ -12,11 +13,16 @@ return [
 			return App::instance()->option('languages.variables', true) !== false;
 		},
 		'action'  => function (string $code) {
+			$kirby        = App::instance();
 			$language     = Find::language($code);
 			$link         = '/languages/' . $language->code();
 			$strings      = [];
-			$foundation   = App::instance()->defaultLanguage()->translations();
+			$foundation   = $kirby->defaultLanguage()->translations();
 			$translations = $language->translations();
+
+			// TODO: update following line and adapt for update and delete options
+			// when new `languageVariables.*` permissions available
+			$canUpdate = $kirby->user()?->role()->permissions()->for('languages', 'update') === true;
 
 			ksort($foundation);
 
@@ -26,13 +32,14 @@ return [
 					'value'   => $translations[$key] ?? null,
 					'options' => [
 						[
-							'click' => 'update',
-							'icon'  => 'edit',
-							'text'  => I18n::translate('edit'),
+							'click'    => 'update',
+							'disabled' => $canUpdate === false,
+							'icon'     => 'edit',
+							'text'     => I18n::translate('edit'),
 						],
 						[
 							'click'    => 'delete',
-							'disabled' => $language->isDefault() === false,
+							'disabled' => $canUpdate === false || $language->isDefault() === false,
 							'icon'     => 'trash',
 							'text'     => I18n::translate('delete'),
 						]
@@ -67,6 +74,11 @@ return [
 					]
 				],
 				'props'      => [
+					'buttons' => fn () =>
+						ViewButtons::view('language')
+							->defaults('preview', 'settings', 'remove')
+							->bind(['language' => $language])
+							->render(),
 					'deletable'    => $language->isDeletable(),
 					'code'         => Escape::html($language->code()),
 					'default'      => $language->isDefault(),
@@ -107,6 +119,10 @@ return [
 			return [
 				'component' => 'k-languages-view',
 				'props'     => [
+					'buttons' => fn () =>
+						ViewButtons::view('languages')
+							->defaults('add')
+							->render(),
 					'languages' => $kirby->languages()->values(fn ($language) => [
 						'deletable' => $language->isDeletable(),
 						'default'   => $language->isDefault(),

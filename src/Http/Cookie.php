@@ -171,7 +171,7 @@ class Cookie
 	protected static function parse(string $string): string|null
 	{
 		// if no hash-value separator is present, we can't parse the value
-		if (strpos($string, '+') === false) {
+		if (str_contains($string, '+') === false) {
 			return null;
 		}
 

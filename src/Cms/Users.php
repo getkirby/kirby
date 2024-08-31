@@ -19,6 +19,8 @@ use Kirby\Uuid\HasUuids;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @extends \Kirby\Cms\Collection<\Kirby\Cms\User>
  */
 class Users extends Collection
 {
@@ -47,7 +49,7 @@ class Users extends Collection
 	{
 		// add a users collection
 		if ($object instanceof self) {
-			$this->data = array_merge($this->data, $object->data);
+			$this->data = [...$this->data, ...$object->data];
 
 		// add a user by id
 		} elseif (

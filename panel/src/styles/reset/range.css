@@ -1,5 +1,5 @@
 :root {
-	--range-thumb-color: var(--color-white);
+	--range-thumb-color: white;
 	--range-thumb-focus-outline: var(--outline);
 	--range-thumb-size: 1rem;
 	--range-thumb-shadow: rgba(0, 0, 0, 0.1) 0 2px 4px 2px,

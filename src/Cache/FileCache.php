@@ -32,13 +32,12 @@ class FileCache extends Cache
 	 */
 	public function __construct(array $options)
 	{
-		$defaults = [
+		parent::__construct([
 			'root'      => null,
 			'prefix'    => null,
-			'extension' => null
-		];
-
-		parent::__construct(array_merge($defaults, $options));
+			'extension' => null,
+			...$options
+		]);
 
 		// build the full root including prefix
 		$this->root = $this->options['root'];

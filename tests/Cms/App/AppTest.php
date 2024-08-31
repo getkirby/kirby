@@ -192,9 +192,7 @@ class AppTest extends TestCase
 				]
 			],
 			'collections' => [
-				'test' => function ($pages) {
-					return $pages;
-				}
+				'test' => fn ($pages) => $pages
 			]
 		]);
 
@@ -274,7 +272,7 @@ class AppTest extends TestCase
 			]
 		]);
 		$this->assertSame(hash_hmac('sha1', 'test', '/dev/null/content'), $app->contentToken('model', 'test'));
-		$this->assertSame(hash_hmac('sha1', 'test', '/dev/null'), $app->contentToken($app, 'test'));
+		$this->assertSame(hash_hmac('sha1', 'test', '/dev/null/content'), $app->contentToken($app, 'test'));
 
 		// with custom static salt
 		$app = new App([
@@ -287,9 +285,7 @@ class AppTest extends TestCase
 		// with callback
 		$app = new App([
 			'options' => [
-				'content.salt' => function ($model) {
-					return 'salt ' . $model;
-				}
+				'content.salt' => fn ($model) => 'salt ' . $model
 			]
 		]);
 		$this->assertSame(hash_hmac('sha1', 'test', 'salt lake city'), $app->contentToken('lake city', 'test'));
@@ -719,16 +715,14 @@ class AppTest extends TestCase
 				]
 			],
 			'options' => [
-				'ready' => $ready = function ($kirby) {
-					return [
-						'test'         => $kirby->root('index'),
-						'another.test' => 'foo',
-						'debug'        => true,
-						'home'         => $kirby->site()->content()->home()->value(),
-						'error'        => $kirby->site()->content()->error()->value(),
-						'slugs'        => 'de'
-					];
-				},
+				'ready' => $ready = fn ($kirby) => [
+					'test'         => $kirby->root('index'),
+					'another.test' => 'foo',
+					'debug'        => true,
+					'home'         => $kirby->site()->content()->home()->value(),
+					'error'        => $kirby->site()->content()->error()->value(),
+					'slugs'        => 'de'
+				],
 				'whoops' => true
 			]
 		]);
@@ -1311,11 +1305,14 @@ class AppTest extends TestCase
 		]);
 
 		Page::factory([
-			'slug' => 'test',
+			'slug'     => 'test',
 			'template' => 'test'
 		]);
 
-		$this->assertSame(['foo' => 'bar'], $app->controller('test'));
+		$this->assertSame([
+			'title' => 'Site',
+			'foo'   => 'bar'
+		], $app->controller('test'));
 	}
 
 	/**
@@ -1329,9 +1326,8 @@ class AppTest extends TestCase
 				'index' => '/dev/null'
 			],
 			'controllers' => [
-				'test' => function () {
-					return ['foo' => 'bar'];
-				}
+				'test' => fn () => ['foo' => 'bar']
+
 			]
 		]);
 
@@ -1382,11 +1378,14 @@ class AppTest extends TestCase
 		]);
 
 		Page::factory([
-			'slug' => 'test',
+			'slug'     => 'test',
 			'template' => 'foo'
 		]);
 
-		$this->assertSame(['foo' => 'bar'], $app->controller('test', [], 'json'));
+		$this->assertSame([
+			'title' => 'Site',
+			'foo'   => 'bar'
+		], $app->controller('test', [], 'json'));
 	}
 
 	/**
@@ -1403,7 +1402,7 @@ class AppTest extends TestCase
 		]);
 
 		Page::factory([
-			'slug' => 'test',
+			'slug'     => 'test',
 			'template' => 'none'
 		]);
 

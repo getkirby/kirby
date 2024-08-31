@@ -12,8 +12,6 @@ class ContentLockTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.ContentLock';
 
-	protected $app;
-
 	public function app()
 	{
 		return new App([
@@ -54,7 +52,7 @@ class ContentLockTest extends TestCase
 		$this->assertTrue($page->lock()->create());
 		$this->assertTrue($page->lock()->create());
 
-		$this->assertFalse(empty($app->locks()->get($page)));
+		$this->assertNotEmpty($app->locks()->get($page));
 	}
 
 	public function testCreateWithExistingLock()
@@ -258,7 +256,7 @@ class ContentLockTest extends TestCase
 		$this->assertTrue($page->lock()->isUnlocked());
 		$this->assertTrue($page->lock()->resolve());
 		$this->assertFalse($page->lock()->isUnlocked());
-		$this->assertTrue(empty($app->locks()->get($page)['unlock']));
+		$this->assertArrayNotHasKey('unlock', $app->locks()->get($page));
 	}
 
 	public function testResolveWithRemainingUnlocks()

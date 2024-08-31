@@ -2,12 +2,10 @@
 
 namespace Kirby\Cms;
 
-use Kirby\TestCase as TestCase;
+use Kirby\TestCase;
 
 class LayoutColumnMethodsTest extends TestCase
 {
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([
@@ -15,9 +13,7 @@ class LayoutColumnMethodsTest extends TestCase
 				'index' => '/dev/null',
 			],
 			'layoutColumnMethods' => [
-				'test' => function () {
-					return 'layout column method';
-				}
+				'test' => fn () => 'layout column method'
 			]
 		]);
 	}

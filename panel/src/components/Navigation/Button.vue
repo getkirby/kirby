@@ -2,9 +2,10 @@
 	<component
 		:is="component"
 		v-bind="attrs"
+		:class="['k-button', $attrs.class]"
 		:data-has-icon="Boolean(icon)"
 		:data-has-text="Boolean(text || $slots.default)"
-		class="k-button"
+		:style="$attrs.style"
 		@click="onClick"
 	>
 		<span v-if="icon" class="k-button-icon">
@@ -104,10 +105,6 @@ export const props = {
 		 */
 		theme: String,
 		/**
-		 * @deprecated 4.0.0 Use the `title` prop instead
-		 */
-		tooltip: String,
-		/**
 		 * The type attribute sets the button type like in HTML.
 		 * @values "button", "submit", "reset"
 		 */
@@ -146,8 +143,7 @@ export default {
 				"data-variant": this.variant,
 				id: this.id,
 				tabindex: this.tabindex,
-				/** @todo button.prop.tooltip.deprecated - adapt @ 5.0 */
-				title: this.title ?? this.tooltip
+				title: this.title
 			};
 
 			if (this.component === "k-link") {
@@ -182,13 +178,6 @@ export default {
 			}
 
 			return "button";
-		}
-	},
-	mounted() {
-		if (this.tooltip) {
-			window.panel.deprecated(
-				"<k-button>: the `tooltip` prop will be removed in a future version. Use the `title` prop instead."
-			);
 		}
 	},
 	methods: {
@@ -286,9 +275,9 @@ export default {
 	--button-color-icon: var(--color-text);
 	--button-color-text: var(--color-text-dimmed);
 }
-.k-button:where([data-variant="dimmed"]):not([aria-disabled]):is(
+.k-button:where([data-variant="dimmed"]):not([aria-disabled="true"]):is(
 		:hover,
-		[aria-current]
+		[aria-current="true"]
 	)
 	.k-button-text {
 	filter: brightness(75%);
@@ -305,9 +294,14 @@ export default {
 .k-button:where([data-variant="filled"]) {
 	--button-color-back: var(--color-gray-300);
 }
-.k-button:where([data-variant="filled"]):not([aria-disabled]):hover {
+.k-button:where([data-variant="filled"]):not([aria-disabled="true"]):hover {
 	filter: brightness(97%);
 }
+.k-panel[data-theme="dark"]
+	.k-button:where([data-variant="filled"]):not([aria-disabled="true"]):hover {
+	filter: brightness(87%);
+}
+
 .k-button:where([data-variant="filled"][data-theme]) {
 	--button-color-icon: var(--theme-color-700);
 	--button-color-back: var(--theme-color-back);
@@ -339,7 +333,7 @@ export default {
 		--button-icon-display: none;
 	}
 	/** TODO: .k-button:is([data-responsive]:has(.k-button-icon)) .k-button-arrow */
-	.k-button[data-responsive][data-has-icon="true"] .k-button-arrow {
+	.k-button[data-responsive="true"][data-has-icon="true"] .k-button-arrow {
 		display: none;
 	}
 }
@@ -370,10 +364,10 @@ export default {
 }
 
 /** Disabled button **/
-.k-button:where([aria-disabled]) {
+.k-button:where([aria-disabled="true"]) {
 	cursor: not-allowed;
 }
-.k-button:where([aria-disabled]) > * {
+.k-button:where([aria-disabled="true"]) > * {
 	opacity: var(--opacity-disabled);
 }
 </style>

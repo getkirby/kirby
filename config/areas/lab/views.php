@@ -11,7 +11,7 @@ return [
 				'component' => 'k-lab-index-view',
 				'props' => [
 					'categories' => Category::all(),
-					'info'       => Category::installed() ? null : 'The default Lab examples are not installed.',
+					'info'       => Category::isInstalled() ? null : 'The default Lab examples are not installed.',
 					'tab'        => 'examples',
 				],
 			];
@@ -20,7 +20,7 @@ return [
 	'lab.docs' => [
 		'pattern' => 'lab/docs',
 		'action'  => function () {
-			$props = match (Docs::installed()) {
+			$props = match (Docs::isInstalled()) {
 				true => [
 					'categories' => [['examples' => Docs::all()]],
 					'tab'        => 'docs',
@@ -58,7 +58,7 @@ return [
 				]
 			];
 
-			if (Docs::installed() === false) {
+			if (Docs::isInstalled() === false) {
 				return [
 					'component'  => 'k-lab-index-view',
 					'title'      => $component,
@@ -72,14 +72,36 @@ return [
 
 			$docs = new Docs($component);
 
+			// header buttons
+			$buttons = [];
+
+			if ($lab = $docs->lab()) {
+				$buttons[] = [
+					'props' => [
+						'text' => 'Lab examples',
+						'icon' => 'lab',
+						'link' => '/lab/' . $lab
+					]
+				];
+			}
+
+			$buttons[] = [
+				'props' => [
+					'icon'   => 'github',
+					'link'   => $docs->github(),
+					'target' => '_blank'
+				]
+			];
+
 			return [
 				'component'  => 'k-lab-docs-view',
 				'title'      => $component,
 				'breadcrumb' => $crumbs,
 				'props'      => [
+					'buttons'   => $buttons,
 					'component' => $component,
 					'docs'      => $docs->toArray(),
-					'lab'       => $docs->lab()
+					'lab'       => $lab
 				]
 			];
 		}
@@ -109,14 +131,44 @@ return [
 			$props    = $example->props();
 			$vue      = $example->vue();
 
-			if (Docs::installed() === true && $docs = $props['docs'] ?? null) {
-				$docs = new Docs($docs);
+			if ($docs = $props['docs'] ?? null) {
+				if (
+					Docs::isInstalled() === true &&
+					Docs::exists($docs) === true
+				) {
+					$docs = new Docs($docs);
+				} else {
+					$docs = null;
+				}
 			}
 
 			$github = $docs?->github();
 
 			if ($source = $props['source'] ?? null) {
 				$github ??= 'https://github.com/getkirby/kirby/tree/main/' . $source;
+			}
+
+			// header buttons
+			$buttons = [];
+
+			if ($docs) {
+				$buttons[] = [
+					'props' => [
+						'text'   => $docs->name(),
+						'icon'   => 'book',
+						'drawer' => 'lab/docs/' . $docs->name()
+					]
+				];
+			}
+
+			if ($github) {
+				$buttons[] = [
+					'props' => [
+						'icon'   => 'github',
+						'link'   => $github,
+						'target' => '_blank'
+					]
+				];
 			}
 
 			return [
@@ -131,6 +183,7 @@ return [
 					]
 				],
 				'props' => [
+					'buttons'  => $buttons,
 					'docs'     => $docs?->name(),
 					'examples' => $vue['examples'],
 					'file'     => $example->module(),

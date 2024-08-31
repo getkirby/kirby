@@ -2,8 +2,10 @@
 	<div
 		ref="container"
 		:class="[
+			'k-block-container',
 			'k-block-container-fieldset-' + type,
-			containerType ? 'k-block-container-type-' + containerType : ''
+			containerType ? 'k-block-container-type-' + containerType : '',
+			$attrs.class
 		]"
 		:data-batched="isBatched"
 		:data-disabled="isDisabled"
@@ -12,7 +14,7 @@
 		:data-last-selected="isLastSelected"
 		:data-selected="isSelected"
 		:data-translate="fieldset.translate"
-		class="k-block-container"
+		:style="$attrs.style"
 		:tabindex="isDisabled ? null : 0"
 		@keydown.ctrl.j.prevent.stop="$emit('merge')"
 		@keydown.ctrl.alt.down.prevent.stop="$emit('selectDown')"
@@ -44,17 +46,7 @@
 				isMergable,
 				isSplitable: isSplitable()
 			}"
-			v-on="{
-				...listeners,
-				split: () => $refs.editor.split(),
-				open: () => {
-					if (typeof $refs.editor.open === 'function') {
-						$refs.editor.open();
-					} else {
-						open();
-					}
-				}
-			}"
+			v-on="listenersForOptions"
 		/>
 	</div>
 </template>
@@ -193,6 +185,19 @@ export default {
 				sortUp: () => this.$emit("sortUp"),
 				split: (event) => this.$emit("split", event),
 				update: (event) => this.$emit("update", event)
+			};
+		},
+		listenersForOptions() {
+			return {
+				...this.listeners,
+				split: () => this.$refs.editor.split(),
+				open: () => {
+					if (typeof this.$refs.editor.open === "function") {
+						this.$refs.editor.open();
+					} else {
+						this.open();
+					}
+				}
 			};
 		},
 		tabs() {
@@ -361,7 +366,7 @@ export default {
 	border-radius: var(--rounded);
 }
 .k-block-container:not(:last-of-type) {
-	border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+	border-bottom: 1px dashed var(--color-border-dimmed);
 }
 .k-block-container:focus {
 	outline: 0;
@@ -398,7 +403,7 @@ export default {
 	display: inline-grid;
 }
 .k-block-container[data-disabled="true"] {
-	background: var(--color-background);
+	background: var(--color-light);
 }
 
 /* Collapse long blocks while dragging */

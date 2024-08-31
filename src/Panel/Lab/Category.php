@@ -33,10 +33,10 @@ class Category
 		$this->root = $root ?? static::base() . '/' . $this->id;
 
 		if (file_exists($this->root . '/index.php') === true) {
-			$this->props = array_merge(
-				require $this->root . '/index.php',
-				$this->props
-			);
+			$this->props = [
+				...require $this->root . '/index.php',
+				...$this->props
+			];
 		}
 	}
 
@@ -92,7 +92,7 @@ class Category
 		return $this->id;
 	}
 
-	public static function installed(): bool
+	public static function isInstalled(): bool
 	{
 		return Dir::exists(static::base()) === true;
 	}

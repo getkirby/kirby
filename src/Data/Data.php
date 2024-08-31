@@ -67,7 +67,7 @@ class Data
 		$handler = new $handler();
 
 		if ($handler instanceof Handler === false) {
-			throw new Exception('Handler for type: "' . $type . '" needs to extend Kirby\\Data\\Handler');
+			throw new Exception('Handler for type: "' . $type . '" needs to extend ' . Handler::class);
 		}
 
 		return $handler;

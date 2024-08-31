@@ -68,6 +68,7 @@ class SessionData
 			foreach ($key as $k) {
 				$this->increment($k, $by, $max);
 			}
+
 			return;
 		}
 
@@ -114,6 +115,7 @@ class SessionData
 			foreach ($key as $k) {
 				$this->decrement($k, $by, $min);
 			}
+
 			return;
 		}
 

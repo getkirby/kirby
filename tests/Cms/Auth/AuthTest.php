@@ -16,8 +16,7 @@ class AuthTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Auth';
 
-	protected $app;
-	protected $auth;
+	protected Auth $auth;
 
 	public function setUp(): void
 	{

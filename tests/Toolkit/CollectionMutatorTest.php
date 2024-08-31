@@ -130,9 +130,7 @@ class CollectionMutatorTest extends TestCase
 		]);
 
 		$this->assertSame('zwei', $collection->two());
-		$collection->map(function ($item) {
-			return $item . '-ish';
-		});
+		$collection->map(fn ($item) => $item . '-ish');
 		$this->assertSame('zwei-ish', $collection->two());
 	}
 

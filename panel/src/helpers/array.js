@@ -95,40 +95,6 @@ export function wrap(array) {
 	return Array.isArray(array) ? array : [array];
 }
 
-/**
- * @deprecated `Array.fromObject()` will be removed in a future version. Use `this.$helper.array.fromObject()` instead.
- */
-Array.fromObject = fromObject;
-
-/**
- * @deprecated `myArray.sortBy()` will be removed in a future version. Use `this.$helper.array.sortBy(myArray, sortBy)` instead.
- */
-Object.defineProperty(Array.prototype, "sortBy", {
-	value: function (sortBy) {
-		return sortBy(this, sortBy);
-	},
-	enumerable: false,
-	writable: true,
-	configurable: true
-});
-
-/**
- * @deprecated `myArray.split()` will be removed in a future version. Use `this.$helper.array.split(myArray, delimiter)` instead.
- */
-Object.defineProperty(Array.prototype, "split", {
-	value: function (delimiter) {
-		return split(this, delimiter);
-	},
-	enumerable: false,
-	writable: true,
-	configurable: true
-});
-
-/**
- * @deprecated `Array.wrap()` will be removed in a future version. Use `this.$helper.array.wrap()` instead.
- */
-Array.wrap = wrap;
-
 export default {
 	fromObject,
 	search,

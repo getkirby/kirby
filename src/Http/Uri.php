@@ -5,6 +5,7 @@ namespace Kirby\Http;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use SensitiveParameter;
+use Stringable;
 use Throwable;
 
 /**
@@ -16,7 +17,7 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-class Uri
+class Uri implements Stringable
 {
 	/**
 	 * Cache for the current Uri object
@@ -100,8 +101,7 @@ class Uri
 
 			$props['username'] = $props['user'] ?? null;
 			$props['password'] = $props['pass'] ?? null;
-
-			$props = array_merge($props, $inject);
+			$props             = [...$props, ...$inject];
 		}
 
 		// parse the path and extract params
@@ -515,7 +515,7 @@ class Uri
 		// use the full path;
 		// automatically detect the trailing slash from it if possible
 		if (is_string($props['path']) === true) {
-			$props['slash'] = substr($props['path'], -1, 1) === '/';
+			$props['slash'] = str_ends_with($props['path'], '/') === true;
 		}
 
 		return $props;

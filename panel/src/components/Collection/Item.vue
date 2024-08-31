@@ -1,11 +1,11 @@
 <template>
 	<div
 		v-bind="data"
-		:class="layout ? 'k-' + layout + '-item' : false"
+		:class="['k-item', `k-${layout}-item`, $attrs.class]"
 		:data-has-image="hasFigure"
 		:data-layout="layout"
 		:data-theme="theme"
-		class="k-item"
+		:style="$attrs.style"
 		@click="$emit('click', $event)"
 		@dragstart="$emit('drag', $event)"
 	>
@@ -24,7 +24,7 @@
 
 		<!-- Content -->
 		<div class="k-item-content">
-			<h3 class="k-item-title" :title="title">
+			<h3 class="k-item-title" :title="title(text)">
 				<k-link v-if="link !== false" :target="target" :to="link">
 					<!-- eslint-disable-next-line vue/no-v-html -->
 					<span v-html="text ?? '–'" />
@@ -33,10 +33,11 @@
 				<span v-else v-html="text ?? '–'" />
 			</h3>
 			<!-- eslint-disable-next-line vue/no-v-html -->
-			<p v-if="info" class="k-item-info" v-html="info" />
+			<p v-if="info" :title="title(info)" class="k-item-info" v-html="info" />
 		</div>
 
 		<div
+			v-if="buttons?.length || options || $slots.options"
 			class="k-item-options"
 			:data-only-option="!buttons?.length || (!options && !$slots.options)"
 		>
@@ -119,17 +120,17 @@ export default {
 	computed: {
 		hasFigure() {
 			return this.image !== false && this.$helper.object.length(this.image) > 0;
-		},
-		title() {
-			return this.$helper.string
-				.stripHTML(this.$helper.string.unescapeHTML(this.text))
-				.trim();
 		}
 	},
 	methods: {
 		onOption(event) {
 			this.$emit("action", event);
 			this.$emit("option", event);
+		},
+		title(text) {
+			return this.$helper.string
+				.stripHTML(this.$helper.string.unescapeHTML(text))
+				.trim();
 		}
 	}
 };
@@ -148,7 +149,7 @@ export default {
 	background: var(--color-white);
 	box-shadow: var(--shadow);
 	border-radius: var(--rounded);
-	height: var(--item-height);
+	min-height: var(--item-height);
 	container-type: inline-size;
 }
 .k-item:has(a:focus) {
@@ -214,7 +215,6 @@ export default {
 	--item-button-width: auto;
 
 	display: grid;
-	height: var(--item-height);
 	align-items: center;
 	grid-template-columns: 1fr auto;
 }
@@ -226,13 +226,13 @@ export default {
 	--ratio: 1/1;
 	border-start-start-radius: var(--rounded);
 	border-end-start-radius: var(--rounded);
-	height: var(--item-height);
+	height: 100%;
 }
 .k-item[data-layout="list"] .k-item-content {
 	display: flex;
 	min-width: 0;
-	white-space: nowrap;
-	gap: var(--spacing-2);
+	flex-wrap: wrap;
+	column-gap: var(--spacing-4);
 	justify-content: space-between;
 }
 .k-item[data-layout="list"] .k-item-title,
@@ -240,23 +240,6 @@ export default {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
-}
-.k-item[data-layout="list"] .k-item-title {
-	flex-shrink: 1;
-}
-.k-item[data-layout="list"] .k-item-info {
-	flex-shrink: 2;
-}
-
-@container (max-width: 30rem) {
-	.k-item[data-layout="list"] .k-item-title {
-		overflow: hidden;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-	}
-	.k-item[data-layout="list"] .k-item-info {
-		display: none;
-	}
 }
 
 .k-item[data-layout="list"] .k-sort-button {
@@ -269,7 +252,7 @@ export default {
 .k-item:is([data-layout="cardlets"], [data-layout="cards"]) .k-sort-button {
 	top: var(--spacing-2);
 	inset-inline-start: var(--spacing-2);
-	background: hsla(0, 0%, 100%, 50%);
+	background: hsla(0, 0%, var(--color-l-max), 50%);
 	backdrop-filter: blur(5px);
 	box-shadow: 0 2px 5px hsla(0, 0%, 0%, 20%);
 	--button-width: 1.5rem;
@@ -281,7 +264,7 @@ export default {
 
 .k-item:is([data-layout="cardlets"], [data-layout="cards"])
 	.k-sort-button:hover {
-	background: hsla(0, 0%, 100%, 95%);
+	background: hsla(0, 0%, var(--color-l-max), 95%);
 }
 
 /** Cardlet */
@@ -306,7 +289,6 @@ export default {
 	border-start-start-radius: var(--rounded);
 	border-end-start-radius: var(--rounded);
 	aspect-ratio: auto;
-	height: var(--item-height);
 }
 .k-item[data-layout="cardlets"] .k-item-content {
 	grid-area: content;

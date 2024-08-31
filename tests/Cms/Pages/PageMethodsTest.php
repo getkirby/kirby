@@ -2,24 +2,18 @@
 
 namespace Kirby\Cms;
 
-use Kirby\TestCase as TestCase;
+use Kirby\TestCase;
 
 class PageMethodsTest extends TestCase
 {
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'pageMethods' => [
-				'test' => function () {
-					return 'page method';
-				}
+				'test' => fn () => 'page method'
 			],
 			'pagesMethods' => [
-				'test' => function () {
-					return 'pages method';
-				}
+				'test' => fn () => 'pages method'
 			],
 			'site' => [
 				'children' => [

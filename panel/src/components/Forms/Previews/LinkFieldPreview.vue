@@ -1,5 +1,12 @@
 <template>
-	<div :class="{ 'k-link-field-preview': true, 'k-url-field-preview': isLink }">
+	<div
+		:class="{
+			'k-link-field-preview': true,
+			'k-url-field-preview': isLink,
+			[$attrs.class]: true
+		}"
+		:style="$attrs.style"
+	>
 		<template v-if="currentType === 'page' || currentType === 'file'">
 			<template v-if="model">
 				<k-tag
@@ -32,7 +39,6 @@ import FieldPreview from "@/mixins/forms/fieldPreview.js";
 
 export default {
 	mixins: [FieldPreview],
-	inheritAttrs: false,
 	props: {
 		removable: Boolean,
 		type: String

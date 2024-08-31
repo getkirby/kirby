@@ -418,12 +418,8 @@ class FormTest extends TestCase
 
 		$form = Form::for($page, [
 			'values' => [
-				'a' => function ($value) {
-					return $value . 'A';
-				},
-				'b' => function ($value) {
-					return $value . 'B';
-				},
+				'a' => fn ($value) => $value . 'A',
+				'b' => fn ($value) => $value . 'B'
 			]
 		]);
 

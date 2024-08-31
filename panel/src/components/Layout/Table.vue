@@ -1,5 +1,9 @@
 <template>
-	<div :aria-disabled="disabled" class="k-table">
+	<div
+		:aria-disabled="disabled"
+		:class="['k-table', $attrs.class]"
+		:style="$attrs.style"
+	>
 		<table :data-disabled="disabled" :data-indexed="hasIndexColumn">
 			<!-- Header row -->
 			<thead>
@@ -66,7 +70,7 @@
 				<template v-else>
 					<tr
 						v-for="(row, rowIndex) in values"
-						:key="rowIndex"
+						:key="row.id ?? row._id ?? row.value ?? JSON.stringify(row)"
 						:class="{
 							'k-table-sortable-row': sortable && row.sortable !== false
 						}"
@@ -97,7 +101,7 @@
 						<k-table-cell
 							v-for="(column, columnIndex) in columns"
 							:id="columnIndex"
-							:key="rowIndex + '-' + columnIndex"
+							:key="columnIndex"
 							:column="column"
 							:field="fields[columnIndex]"
 							:row="row"
@@ -246,7 +250,7 @@ export default {
 		 */
 		dragOptions() {
 			return {
-				disabled: !this.sortable,
+				disabled: !this.sortable || this.rows.length === 0,
 				draggable: ".k-table-sortable-row",
 				fallbackClass: "k-table-row-fallback",
 				ghostClass: "k-table-row-ghost"
@@ -367,11 +371,15 @@ export default {
 :root {
 	--table-cell-padding: var(--spacing-3);
 	--table-color-back: var(--color-white);
-	--table-color-border: var(--color-background);
+	--table-color-border: var(--color-light);
 	--table-color-hover: var(--color-gray-100);
 	--table-color-th-back: var(--color-gray-100);
 	--table-color-th-text: var(--color-text-dimmed);
 	--table-row-height: var(--input-height);
+}
+
+.k-panel[data-theme="dark"] {
+	--table-color-border: var(--color-border);
 }
 
 /* Table Layout */
@@ -419,7 +427,7 @@ export default {
 	color: var(--table-color-th-text);
 	background: var(--table-color-th-back);
 }
-.k-table th[data-has-button] {
+.k-table th[data-has-button="true"] {
 	padding: 0;
 }
 .k-table th button {

@@ -16,8 +16,6 @@ class AssetsTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Assets';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([
@@ -414,7 +412,7 @@ class AssetsTest extends TestCase
 		$icons = $assets->icons();
 
 		$this->assertNotNull($icons);
-		$this->assertTrue(strpos($icons, '<svg', 0) !== false);
+		$this->assertTrue(str_contains($icons, '<svg'));
 	}
 
 	/**

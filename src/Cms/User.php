@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use Exception;
 use Kirby\Content\Field;
+use Kirby\Content\VersionId;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
@@ -29,6 +30,9 @@ class User extends ModelWithContent
 {
 	use HasFiles;
 	use HasMethods;
+	/**
+	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Users>
+	 */
 	use HasSiblings;
 	use UserActions;
 
@@ -76,14 +80,14 @@ class User extends ModelWithContent
 		// so it also gets stored in propertyData prop
 		$props['id'] ??= $this->createId();
 
-		parent::__construct($props);
-
 		$this->id       = $props['id'];
 		$this->email    = $set('email', fn ($email) => Str::lower(trim($email)));
 		$this->language = $set('language', fn ($language) => trim($language));
 		$this->name     = $set('name', fn ($name) => trim(strip_tags($name)));
 		$this->password = $props['password'] ?? null;
 		$this->role     = $set('role', fn ($role) => Str::lower(trim($role)));
+
+		parent::__construct($props);
 
 		$this->setBlueprint($props['blueprint'] ?? null);
 		$this->setFiles($props['files'] ?? null);
@@ -115,11 +119,12 @@ class User extends ModelWithContent
 	 */
 	public function __debugInfo(): array
 	{
-		return array_merge($this->toArray(), [
+		return [
+			...$this->toArray(),
 			'avatar'  => $this->avatar(),
 			'content' => $this->content(),
 			'role'    => $this->role()
-		]);
+		];
 	}
 
 	/**
@@ -149,7 +154,11 @@ class User extends ModelWithContent
 	public function blueprint(): UserBlueprint
 	{
 		try {
-			return $this->blueprint ??= UserBlueprint::factory('users/' . $this->role(), 'users/default', $this);
+			return $this->blueprint ??= UserBlueprint::factory(
+				'users/' . $this->role(),
+				'users/default',
+				$this
+			);
 		} catch (Exception) {
 			return $this->blueprint ??= new UserBlueprint([
 				'model' => $this,
@@ -162,7 +171,8 @@ class User extends ModelWithContent
 	/**
 	 * Prepares the content for the write method
 	 * @internal
-	 * @param string $languageCode|null Not used so far
+	 *
+	 * @param string|null $languageCode Not used so far
 	 */
 	public function contentFileData(
 		array $data,
@@ -178,20 +188,6 @@ class User extends ModelWithContent
 		);
 
 		return $data;
-	}
-
-	/**
-	 * Filename for the content file
-	 *
-	 * @internal
-	 * @deprecated 4.0.0
-	 * @todo Remove in v5
-	 * @codeCoverageIgnore
-	 */
-	public function contentFileName(): string
-	{
-		Helpers::deprecated('The internal $model->contentFileName() method has been deprecated. Please let us know via a GitHub issue if you need this method and tell us your use case.', 'model-content-file');
-		return 'user';
 	}
 
 	protected function credentials(): array
@@ -212,10 +208,7 @@ class User extends ModelWithContent
 	 */
 	public function exists(): bool
 	{
-		return $this->storage()->exists(
-			'published',
-			'default'
-		);
+		return $this->version(VersionId::published())->exists('default');
 	}
 
 	/**
@@ -239,7 +232,7 @@ class User extends ModelWithContent
 	 */
 	public static function hashPassword(
 		#[SensitiveParameter]
-		string $password = null
+		string|null $password = null
 	): string|null {
 		if ($password !== null) {
 			$password = password_hash($password, PASSWORD_DEFAULT);
@@ -279,7 +272,7 @@ class User extends ModelWithContent
 	/**
 	 * Compares the current object with the given user object
 	 */
-	public function is(User $user = null): bool
+	public function is(User|null $user = null): bool
 	{
 		if ($user === null) {
 			return false;
@@ -477,7 +470,7 @@ class User extends ModelWithContent
 		string|null $handler = null,
 		string|null $languageCode = null
 	): int|string|false {
-		$modifiedContent = $this->storage()->modified('published', $languageCode);
+		$modifiedContent = $this->version(VersionId::published())->modified($languageCode ?? 'current');
 		$modifiedIndex   = F::modified($this->root() . '/index.php');
 		$modifiedTotal   = max([$modifiedContent, $modifiedIndex]);
 
@@ -502,8 +495,7 @@ class User extends ModelWithContent
 	 */
 	public function nameOrEmail(): Field
 	{
-		$name = $this->name();
-		return $name->isNotEmpty() ? $name : new Field($this, 'email', $this->email());
+		return $this->name()->or(new Field($this, 'email', $this->email()));
 	}
 
 	/**
@@ -570,7 +562,9 @@ class User extends ModelWithContent
 
 		$name = $this->role ?? $this->credentials()['role'] ?? 'visitor';
 
-		return $this->role = $this->kirby()->roles()->find($name) ?? Role::nobody();
+		return $this->role =
+			$this->kirby()->roles()->find($name) ??
+			Role::nobody();
 	}
 
 	/**
@@ -634,11 +628,13 @@ class User extends ModelWithContent
 	 *
 	 * @return $this
 	 */
-	protected function setBlueprint(array $blueprint = null): static
+	protected function setBlueprint(array|null $blueprint = null): static
 	{
 		if ($blueprint !== null) {
-			$blueprint['model'] = $this;
-			$this->blueprint = new UserBlueprint($blueprint);
+			$this->blueprint = new UserBlueprint([
+				...$blueprint,
+				'model' => $this
+			]);
 		}
 
 		return $this;
@@ -652,10 +648,10 @@ class User extends ModelWithContent
 	protected function sessionFromOptions(Session|array|null $session): Session
 	{
 		// use passed session options or session object if set
-		if (is_array($session) === true) {
+		$session ??= ['detect' => true];
+
+		if ($session instanceof Session === false) {
 			$session = $this->kirby()->session($session);
-		} elseif ($session instanceof Session === false) {
-			$session = $this->kirby()->session(['detect' => true]);
 		}
 
 		return $session;
@@ -675,14 +671,15 @@ class User extends ModelWithContent
 	 */
 	public function toArray(): array
 	{
-		return array_merge(parent::toArray(), [
+		return [
+			...parent::toArray(),
 			'avatar'   => $this->avatar()?->toArray(),
 			'email'    => $this->email(),
 			'id'       => $this->id(),
 			'language' => $this->language(),
 			'role'     => $this->role()->name(),
 			'username' => $this->username()
-		]);
+		];
 	}
 
 	/**
@@ -692,13 +689,17 @@ class User extends ModelWithContent
 	 *                              (`null` to keep the original token)
 	 */
 	public function toString(
-		string $template = null,
+		string|null $template = null,
 		array $data = [],
 		string|null $fallback = '',
 		string $handler = 'template'
 	): string {
-		$template ??= $this->email();
-		return parent::toString($template, $data, $fallback, $handler);
+		return parent::toString(
+			$template ?? $this->email(),
+			$data,
+			$fallback,
+			$handler
+		);
 	}
 
 	/**
@@ -708,7 +709,7 @@ class User extends ModelWithContent
 	 */
 	public function username(): string|null
 	{
-		return $this->name()->or($this->email())->value();
+		return $this->nameOrEmail()->value();
 	}
 
 	/**
@@ -720,7 +721,7 @@ class User extends ModelWithContent
 	 */
 	public function validatePassword(
 		#[SensitiveParameter]
-		string $password = null
+		string|null $password = null
 	): bool {
 		if (empty($this->password()) === true) {
 			throw new NotFoundException(['key' => 'user.password.undefined']);
@@ -742,15 +743,6 @@ class User extends ModelWithContent
 		}
 
 		return true;
-	}
-
-	/**
-	 * @deprecated 4.0.0 Use `->secretsFile()` instead
-	 * @codeCoverageIgnore
-	 */
-	protected function passwordFile(): string
-	{
-		return $this->secretsFile();
 	}
 
 	/**

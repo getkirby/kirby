@@ -122,13 +122,12 @@ class LayoutField extends BlocksField
 
 	public function props(): array
 	{
-		$settings = $this->settings();
-
-		return array_merge(parent::props(), [
+		return [
+			...parent::props(),
 			'layouts'  => $this->layouts(),
 			'selector' => $this->selector(),
-			'settings' => $settings?->toArray()
-		]);
+			'settings' => $this->settings()?->toArray()
+		];
 	}
 
 	public function routes(): array
@@ -175,17 +174,17 @@ class LayoutField extends BlocksField
 			'method'  => 'ALL',
 			'action'  => function (
 				string $fieldName,
-				string $path = null
+				string|null $path = null
 			) use ($field): array {
 				$form  = $field->attrsForm();
 				$field = $form->field($fieldName);
 
 				$fieldApi = $this->clone([
 					'routes' => $field->api(),
-					'data'   => array_merge(
-						$this->data(),
-						['field' => $field]
-					)
+					'data'   => [
+						...$this->data(),
+						'field' => $field
+					]
 				]);
 
 				return $fieldApi->call(

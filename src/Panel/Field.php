@@ -40,11 +40,14 @@ class Field
 		$routes = [];
 
 		foreach ($field->dialogs() as $dialogId => $dialog) {
-			$routes = array_merge($routes, Dialog::routes(
-				id: $dialogId,
-				areaId: 'site',
-				options: $dialog
-			));
+			$routes = [
+				...$routes,
+				...Dialog::routes(
+					id: $dialogId,
+					areaId: 'site',
+					options: $dialog
+				)
+			];
 		}
 
 		return Router::execute($path, $method, $routes);
@@ -66,11 +69,14 @@ class Field
 		$routes = [];
 
 		foreach ($field->drawers() as $drawerId => $drawer) {
-			$routes = array_merge($routes, Drawer::routes(
-				id: $drawerId,
-				areaId: 'site',
-				options: $drawer
-			));
+			$routes = [
+				...$routes,
+				...Drawer::routes(
+					id: $drawerId,
+					areaId: 'site',
+					options: $drawer
+				)
+			];
 		}
 
 		return Router::execute($path, $method, $routes);
@@ -81,11 +87,12 @@ class Field
 	 */
 	public static function email(array $props = []): array
 	{
-		return array_merge([
+		return [
 			'label'   => I18n::translate('email'),
 			'type'    => 'email',
 			'counter' => false,
-		], $props);
+			...$props
+		];
 	}
 
 	/**
@@ -118,12 +125,13 @@ class Field
 			'text'  => $index
 		];
 
-		return array_merge([
+		return [
 			'label'   => I18n::translate('file.sort'),
 			'type'    => 'select',
 			'empty'   => false,
-			'options' => $options
-		], $props);
+			'options' => $options,
+			...$props
+		];
 	}
 
 
@@ -169,12 +177,13 @@ class Field
 			return static::hidden();
 		}
 
-		return array_merge([
+		return [
 			'label'    => I18n::translate('page.changeStatus.position'),
 			'type'     => 'select',
 			'empty'    => false,
 			'options'  => $options,
-		], $props);
+			...$props
+		];
 	}
 
 	/**
@@ -182,10 +191,11 @@ class Field
 	 */
 	public static function password(array $props = []): array
 	{
-		return array_merge([
+		return [
 			'label' => I18n::translate('password'),
-			'type'  => 'password'
-		], $props);
+			'type'  => 'password',
+			...$props
+		];
 	}
 
 	/**
@@ -211,20 +221,22 @@ class Field
 			];
 		}
 
-		return array_merge([
-			'label'    => I18n::translate('role'),
-			'type'     => count($roles) <= 1 ? 'hidden' : 'radio',
-			'options'  => $roles
-		], $props);
+		return [
+			'label'   => I18n::translate('role'),
+			'type'    => count($roles) <= 1 ? 'hidden' : 'radio',
+			'options' => $roles,
+			...$props
+		];
 	}
 
 	public static function slug(array $props = []): array
 	{
-		return array_merge([
+		return [
 			'label' => I18n::translate('slug'),
 			'type'  => 'slug',
-			'allow' => Str::$defaults['slug']['allowed']
-		], $props);
+			'allow' => Str::$defaults['slug']['allowed'],
+			...$props
+		];
 	}
 
 	public static function template(
@@ -240,23 +252,25 @@ class Field
 			];
 		}
 
-		return array_merge([
+		return [
 			'label'    => I18n::translate('template'),
 			'type'     => 'select',
 			'empty'    => false,
 			'options'  => $options,
 			'icon'     => 'template',
-			'disabled' => count($options) <= 1
-		], $props);
+			'disabled' => count($options) <= 1,
+			...$props
+		];
 	}
 
 	public static function title(array $props = []): array
 	{
-		return array_merge([
+		return [
 			'label' => I18n::translate('title'),
 			'type'  => 'text',
 			'icon'  => 'title',
-		], $props);
+			...$props
+		];
 	}
 
 	/**
@@ -272,21 +286,23 @@ class Field
 			];
 		}
 
-		return array_merge([
-			'label'    => I18n::translate('language'),
-			'type'     => 'select',
-			'icon'     => 'translate',
-			'options'  => $translations,
-			'empty'    => false
-		], $props);
+		return [
+			'label'   => I18n::translate('language'),
+			'type'    => 'select',
+			'icon'    => 'translate',
+			'options' => $translations,
+			'empty'   => false,
+			...$props
+		];
 	}
 
 	public static function username(array $props = []): array
 	{
-		return array_merge([
+		return [
 			'icon'  => 'user',
 			'label' => I18n::translate('name'),
 			'type'  => 'text',
-		], $props);
+			...$props
+		];
 	}
 }

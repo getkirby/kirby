@@ -8,8 +8,6 @@ class UserAuthTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.UserAuth';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

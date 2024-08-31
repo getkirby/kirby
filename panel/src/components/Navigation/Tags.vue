@@ -5,18 +5,23 @@
 		select=":where(.k-tag, .k-tags-navigatable):not(:disabled)"
 	>
 		<k-draggable
+			:class="['k-tags', $attrs.class]"
+			:data-layout="layout"
+			:element="element"
 			:list="tags"
 			:options="dragOptions"
-			:data-layout="layout"
-			class="k-tags"
+			:style="$attrs.style"
 			@end="input"
 		>
 			<k-tag
 				v-for="(item, itemIndex) in tags"
-				:key="itemIndex"
+				:key="item.id ?? item.value ?? item.text"
 				:disabled="disabled"
+				:element="elementTag"
+				:html="html"
 				:image="item.image"
-				:removable="!disabled"
+				:removable="removable && !disabled"
+				:theme="theme"
 				name="tag"
 				@click.native.stop
 				@keypress.native.enter="edit(itemIndex, item, $event)"
@@ -35,12 +40,24 @@
 </template>
 
 <script>
-import { disabled, id, options } from "@/mixins/props.js";
+import { id, options } from "@/mixins/props.js";
+import { props as TagProps } from "@/components/Navigation/Tag.vue";
 
 export const props = {
-	mixins: [disabled, id, options],
+	mixins: [TagProps, id, options],
 	inheritAttrs: false,
 	props: {
+		/**
+		 * HTML element to use for the tags list
+		 */
+		element: {
+			type: String,
+			default: "div"
+		},
+		/**
+		 * HTML element to use for each tag
+		 */
+		elementTag: String,
 		/**
 		 * You can set the layout to `"list"` to extend the width of each tag
 		 * to 100% and show them in a list. This is handy in narrow columns
@@ -109,7 +126,7 @@ export default {
 			handler() {
 				// make sure values are not reactive
 				// otherwise this could have nasty side-effects
-				let tags = structuredClone(this.value);
+				let tags = this.$helper.object.clone(this.value);
 
 				// sort all tags by the available options
 				if (this.sort === true) {

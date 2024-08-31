@@ -72,14 +72,19 @@ class I18n
 			return 'none';
 		}
 
-		return $count === 1 ? 'singular' : 'plural';
+		return match ($count) {
+			1       => 'singular',
+			default => 'plural'
+		};
 	}
 
 	/**
 	 * Formats a number
 	 */
-	public static function formatNumber(int|float $number, string $locale = null): string
-	{
+	public static function formatNumber(
+		int|float $number,
+		string|null $locale = null
+	): string {
 		$locale  ??= static::locale();
 		$formatter = static::decimalNumberFormatter($locale);
 		$number    = $formatter?->format($number) ?? $number;
@@ -108,7 +113,7 @@ class I18n
 	 */
 	public static function template(
 		string $key,
-		string|array $fallback = null,
+		string|array|null $fallback = null,
 		array|null $replace = null,
 		string|null $locale = null
 	): string {
@@ -130,8 +135,8 @@ class I18n
 	 */
 	public static function translate(
 		string|array|null $key,
-		string|array $fallback = null,
-		string $locale = null
+		string|array|null $fallback = null,
+		string|null $locale = null
 	): string|array|Closure|null {
 		// use current locale if no specific is passed
 		$locale ??= static::locale();
@@ -242,7 +247,7 @@ class I18n
 	 * by locale. If the translation does not exist
 	 * yet, the loader will try to load it, if defined.
 	 */
-	public static function translation(string $locale = null): array
+	public static function translation(string|null $locale = null): array
 	{
 		$locale ??= static::locale();
 
@@ -273,8 +278,9 @@ class I18n
 	/**
 	 * Returns (and creates) a decimal number formatter for a given locale
 	 */
-	protected static function decimalNumberFormatter(string $locale): NumberFormatter|null
-	{
+	protected static function decimalNumberFormatter(
+		string $locale
+	): NumberFormatter|null {
 		if ($formatter = static::$decimalsFormatters[$locale] ?? null) {
 			return $formatter;
 		}
@@ -304,7 +310,7 @@ class I18n
 	public static function translateCount(
 		string $key,
 		int $count,
-		string $locale = null,
+		string|null $locale = null,
 		bool $formatNumber = true
 	) {
 		$locale    ??= static::locale();

@@ -1,5 +1,5 @@
 <template>
-	<div class="k-headline-field">
+	<div :class="['k-headline-field', $attrs.class]" :style="$attrs.style">
 		<k-headline class="h2">
 			{{ label }}
 		</k-headline>

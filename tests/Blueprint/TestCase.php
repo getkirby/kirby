@@ -10,8 +10,6 @@ use Kirby\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
-	protected $app;
-
 	public function app(array $props = [])
 	{
 		return $this->app = new App(array_replace_recursive([

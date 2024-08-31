@@ -6,8 +6,7 @@ use Kirby\TestCase;
 
 class MaxSectionMixinTest extends TestCase
 {
-	protected $app;
-	protected $page;
+	protected Page $page;
 
 	public function setUp(): void
 	{
@@ -22,9 +21,7 @@ class MaxSectionMixinTest extends TestCase
 		Section::$types['test'] = [
 			'mixins'   => ['max'],
 			'computed' => [
-				'total' => function () {
-					return 10;
-				}
+				'total' => fn () => 10
 			]
 		];
 	}

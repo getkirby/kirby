@@ -34,8 +34,8 @@ export default {
 		isSplitable() {
 			return (
 				this.content.text.length > 0 &&
-				this.input().isCursorAtStart === false &&
-				this.input().isCursorAtEnd === false
+				this.$refs.input.isCursorAtStart === false &&
+				this.$refs.input.isCursorAtEnd === false
 			);
 		},
 		keys() {
@@ -57,9 +57,6 @@ export default {
 		focus() {
 			this.$refs.input.focus();
 		},
-		input() {
-			return this.$refs.input.$refs.input;
-		},
 		merge(blocks) {
 			this.update({
 				text: blocks
@@ -68,7 +65,7 @@ export default {
 			});
 		},
 		split() {
-			const contents = this.input().getSplitContent?.();
+			const contents = this.$refs.input.getSplitContent?.();
 
 			if (contents) {
 				if (this.textField.type === "writer") {
@@ -94,12 +91,12 @@ export default {
 .k-block-container.k-block-container-type-text {
 	padding: 0;
 }
-.k-block-type-text-input.k-writer[data-toolbar-inline="true"] {
+.k-block-type-text-input.k-writer-input[data-toolbar-inline="true"] {
 	padding: var(--spacing-3);
 }
-.k-block-type-text-input.k-writer:not([data-toolbar-inline="true"])
+.k-block-type-text-input.k-writer-input:not([data-toolbar-inline="true"])
 	> .ProseMirror,
-.k-block-type-text-input.k-writer:not(
+.k-block-type-text-input.k-writer-input:not(
 		[data-toolbar-inline="true"]
 	)[data-placeholder][data-empty="true"]:before {
 	padding: var(--spacing-3) var(--spacing-6);

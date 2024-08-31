@@ -1,8 +1,8 @@
 <template>
 	<figure
 		:data-empty="isEmpty"
-		:style="{ '--block-figure-back': back }"
-		class="k-block-figure"
+		:class="['k-block-figure', $attrs.class]"
+		:style="{ '--block-figure-back': back, ...$attrs.style }"
 	>
 		<k-button
 			v-if="isEmpty"
@@ -73,7 +73,7 @@ export default {
 	--button-width: 100%;
 	--button-height: 6rem;
 	--button-color-text: var(--color-text-dimmed);
-	--button-color-back: var(--color-gray-200);
+	--button-color-back: var(--color-light);
 }
 
 .k-block-figure-empty,

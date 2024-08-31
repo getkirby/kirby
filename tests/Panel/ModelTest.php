@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\ContentLock;
+use Kirby\Cms\File as ModelFile;
 use Kirby\Cms\Page as ModelPage;
 use Kirby\Cms\Site as ModelSite;
 use Kirby\Filesystem\Asset;
@@ -67,6 +68,11 @@ class ModelSiteTestForceUnlocked extends ModelSite
 
 class CustomPanelModel extends Model
 {
+	public function buttons(): array
+	{
+		return [];
+	}
+
 	public function path(): string
 	{
 		return 'custom';
@@ -97,8 +103,6 @@ class ModelSiteWithImageMethod extends ModelSite
 class ModelTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Model';
-
-	protected $app;
 
 	public function setUp(): void
 	{
@@ -145,7 +149,7 @@ class ModelTest extends TestCase
 			'options' => [
 				'panel' => [
 					'markdown' => [
-						'fileDragText' => function (\Kirby\Cms\File $file, string $url) {
+						'fileDragText' => function (ModelFile $file, string $url) {
 							if ($file->extension() === 'heic') {
 								return sprintf('![](%s)', $file->id());
 							}
@@ -188,7 +192,7 @@ class ModelTest extends TestCase
 			'options' => [
 				'panel' => [
 					'kirbytext' => [
-						'fileDragText' => function (\Kirby\Cms\File $file, string $url) {
+						'fileDragText' => function (ModelFile $file, string $url) {
 							if ($file->extension() === 'heic') {
 								return sprintf('(image: %s)', $file->id());
 							}
@@ -423,7 +427,7 @@ class ModelTest extends TestCase
 	{
 		$site  = new ModelSiteWithImageMethod();
 		$panel = new CustomPanelModel($site);
-		$image = $panel->image([ 'back' => '{{ site.panelBack }}']);
+		$image = $panel->image(['back' => '{{ site.panelBack }}']);
 		$this->assertSame('blue', $image['back']);
 	}
 
@@ -462,6 +466,15 @@ class ModelTest extends TestCase
 		// unlock
 		$site = new ModelSiteTestForceUnlocked();
 		$this->assertSame('unlock', $site->panel()->lock()['state']);
+	}
+
+	/**
+	 * @covers ::model
+	 */
+	public function testModel()
+	{
+		$panel  = $this->panel();
+		$this->assertInstanceOf(ModelSite::class, $panel->model());
 	}
 
 	/**

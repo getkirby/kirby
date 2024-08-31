@@ -10,8 +10,6 @@ use Kirby\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
-	protected $app;
-
 	public function setUp(): void
 	{
 		// start with a fresh set of fields
@@ -39,9 +37,9 @@ class TestCase extends BaseTestCase
 		return $this->app;
 	}
 
-	public function field(string $type, array $attr = [], ?Fields $formFields = null)
+	public function field(string $type, array $attr = [], Fields|null $formFields = null)
 	{
 		$page = new Page(['slug' => 'test']);
-		return Field::factory($type, array_merge(['model' => $page], $attr), $formFields);
+		return Field::factory($type, ['model' => $page, ...$attr], $formFields);
 	}
 }

@@ -11,8 +11,6 @@ class PageCacheTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures/PageCacheTest';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.PageCache';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([
@@ -143,9 +141,7 @@ class PageCacheTest extends TestCase
 		$app = $this->app->clone([
 			'options' => [
 				'cache.pages' => [
-					'ignore' => function ($page) {
-						return $page->id() === 'default';
-					}
+					'ignore' => fn ($page) => $page->id() === 'default'
 				]
 			]
 		]);

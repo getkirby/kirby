@@ -8,7 +8,7 @@ return [
 	'pages' => [
 		'label' => I18n::translate('pages'),
 		'icon'  => 'page',
-		'query' => function (string $query = null, int $limit, int $page) {
+		'query' => function (string|null $query, int $limit, int $page) {
 			$kirby = App::instance();
 			$pages = $kirby->site()
 				->index(true)
@@ -31,7 +31,7 @@ return [
 	'files' => [
 		'label' => I18n::translate('files'),
 		'icon'  => 'image',
-		'query' => function (string $query = null, int $limit, int $page) {
+		'query' => function (string|null $query, int $limit, int $page) {
 			$kirby = App::instance();
 			$files = $kirby->site()
 				->index(true)

@@ -2,9 +2,10 @@
 
 namespace Kirby\Filesystem;
 
+use Exception;
 use Kirby\Exception\LogicException;
 use Kirby\Http\HeadersSent;
-use Kirby\TestCase as TestCase;
+use Kirby\TestCase;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -16,9 +17,9 @@ class FTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures/f';
 	public const TMP      = KIRBY_TMP_DIR . '/Filesystem.F';
 
-	protected $hasErrorHandler = false;
-	protected $sample;
-	protected $test;
+	protected bool $hasErrorHandler = false;
+	protected string $sample;
+	protected string $test;
 
 	public function setUp(): void
 	{
@@ -188,7 +189,7 @@ class FTest extends TestCase
 	{
 		$path = __DIR__ . '/../does-not-exist.php';
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The file does not exist at the given path: "' . $path . '"');
 
 		F::realpath($path);
@@ -214,7 +215,7 @@ class FTest extends TestCase
 		$parent = __DIR__ . '/../does-not-exist';
 		$file   = __DIR__ . '/../Filesystem/FTest.php';
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The parent directory does not exist: "' . $parent . '"');
 
 		F::realpath($file, $parent);
@@ -228,7 +229,7 @@ class FTest extends TestCase
 		$parent = __DIR__ . '/../Cms';
 		$file   = __DIR__ . '/../Filesystem/FTest.php';
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The file is not within the parent directory');
 
 		F::realpath($file, $parent);

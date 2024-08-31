@@ -24,8 +24,6 @@ class UserTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.User';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		Blueprint::$loaded = [];
@@ -45,6 +43,12 @@ class UserTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
+	protected function panel(array $props = [])
+	{
+		$user = new ModelUser(['id' => 'test', ...$props]);
+		return new User($user);
+	}
+
 	/**
 	 * @covers ::breadcrumb
 	 */
@@ -57,6 +61,18 @@ class UserTest extends TestCase
 		$breadcrumb = (new User($model))->breadcrumb();
 		$this->assertSame('test@getkirby.com', $breadcrumb[0]['label']);
 		$this->assertStringStartsWith('/users/', $breadcrumb[0]['link']);
+	}
+
+	/**
+	 * @covers ::buttons
+	 */
+	public function testButtons()
+	{
+		$this->assertSame([
+			'k-theme-view-button',
+			'k-settings-view-button',
+			'k-languages-view-button',
+		], array_column($this->panel()->buttons(), 'component'));
 	}
 
 	/**
@@ -202,7 +218,7 @@ class UserTest extends TestCase
 
 		// fallback to model itself
 		$image = (new User($user))->image('foo.bar');
-		$this->assertFalse(empty($image));
+		$this->assertNotEmpty($image);
 	}
 
 	/**

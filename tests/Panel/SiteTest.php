@@ -15,8 +15,6 @@ class SiteTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Site';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([
@@ -37,6 +35,17 @@ class SiteTest extends TestCase
 	{
 		$site = new ModelSite($props);
 		return new Site($site);
+	}
+
+	/**
+	 * @covers ::buttons
+	 */
+	public function testButtons()
+	{
+		$this->assertSame([
+			'k-preview-view-button',
+			'k-languages-view-button',
+		], array_column($this->panel()->buttons(), 'component'));
 	}
 
 	/**

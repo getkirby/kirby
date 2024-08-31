@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use TypeError;
+
 class PageContentTest extends TestCase
 {
 	public function testDefaultContent()
@@ -23,9 +25,8 @@ class PageContentTest extends TestCase
 
 	public function testInvalidContent()
 	{
-		$this->expectException('TypeError');
-
-		$page = new Page([
+		$this->expectException(TypeError::class);
+		new Page([
 			'slug'    => 'test',
 			'content' => 'content'
 		]);

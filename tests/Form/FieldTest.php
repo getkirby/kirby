@@ -12,7 +12,7 @@ use Kirby\TestCase;
  */
 class FieldTest extends TestCase
 {
-	protected $originalMixins;
+	protected array $originalMixins;
 
 	public function setUp(): void
 	{
@@ -235,9 +235,7 @@ class FieldTest extends TestCase
 		// return routes
 		Field::$types = [
 			'test' => [
-				'dialogs' => function () use ($routes) {
-					return $routes;
-				}
+				'dialogs' => fn () => $routes
 			]
 		];
 
@@ -360,9 +358,7 @@ class FieldTest extends TestCase
 		Field::$types = [
 			'test' => [
 				'props' => [
-					'icon' => function (string $icon = 'test') {
-						return $icon;
-					}
+					'icon' => fn (string $icon = 'test') => $icon
 				]
 			]
 		];
@@ -411,9 +407,7 @@ class FieldTest extends TestCase
 	{
 		Field::$types = [
 			'test' => [
-				'isEmpty' => function ($value) {
-					return $value === 0;
-				}
+				'isEmpty' => fn ($value) => $value === 0
 			]
 		];
 
@@ -675,13 +669,9 @@ class FieldTest extends TestCase
 		Field::$types = [
 			'test' => [
 				'props' => [
-					'value' => function ($value) {
-						return $value;
-					}
+					'value' => fn ($value) => $value
 				],
-				'save' => function ($value) {
-					return implode(', ', $value);
-				}
+				'save' => fn ($value) => implode(', ', $value)
 			]
 		];
 
@@ -700,9 +690,7 @@ class FieldTest extends TestCase
 		Field::$types = [
 			'test' => [
 				'props' => [
-					'foo' => function ($foo) {
-						return $foo;
-					}
+					'foo' => fn ($foo) => $foo
 				]
 			]
 		];
@@ -998,9 +986,7 @@ class FieldTest extends TestCase
 		// return simple string
 		Field::$types = [
 			'test' => [
-				'api' => function () {
-					return 'Hello World';
-				}
+				'api' => fn () => 'Hello World'
 			]
 		];
 

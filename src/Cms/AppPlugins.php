@@ -57,6 +57,7 @@ trait AppPlugins
 		'collectionMethods' => [],
 		'fieldMethods' => [],
 		'fileMethods' => [],
+		'filePreviews' => [],
 		'fileTypes' => [],
 		'filesMethods' => [],
 		'fields' => [],
@@ -93,13 +94,13 @@ trait AppPlugins
 
 	/**
 	 * Register all given extensions
-	 *
 	 * @internal
-	 * @param \Kirby\Cms\Plugin $plugin|null The plugin which defined those extensions
+	 *
+	 * @param \Kirby\Cms\Plugin|null $plugin The plugin which defined those extensions
 	 */
 	public function extend(
 		array $extensions,
-		Plugin $plugin = null
+		Plugin|null $plugin = null
 	): array {
 		foreach ($this->extensions as $type => $registered) {
 			if (isset($extensions[$type]) === true) {
@@ -120,7 +121,11 @@ trait AppPlugins
 				$api['routes'] = $api['routes']($this);
 			}
 
-			return $this->extensions['api'] = A::merge($this->extensions['api'], $api, A::MERGE_APPEND);
+			return $this->extensions['api'] = A::merge(
+				$this->extensions['api'],
+				$api,
+				A::MERGE_APPEND
+			);
 		}
 
 		return $this->extensions['api'];
@@ -144,7 +149,10 @@ trait AppPlugins
 	 */
 	protected function extendAssetMethods(array $methods): array
 	{
-		return $this->extensions['assetMethods'] = Asset::$methods = array_merge(Asset::$methods, $methods);
+		return $this->extensions['assetMethods'] = Asset::$methods = [
+			...Asset::$methods,
+			...$methods
+		];
 	}
 
 	/**
@@ -152,7 +160,10 @@ trait AppPlugins
 	 */
 	protected function extendAuthChallenges(array $challenges): array
 	{
-		return $this->extensions['authChallenges'] = Auth::$challenges = array_merge(Auth::$challenges, $challenges);
+		return $this->extensions['authChallenges'] = Auth::$challenges = [
+			...Auth::$challenges,
+			...$challenges
+		];
 	}
 
 	/**
@@ -160,7 +171,10 @@ trait AppPlugins
 	 */
 	protected function extendBlockMethods(array $methods): array
 	{
-		return $this->extensions['blockMethods'] = Block::$methods = array_merge(Block::$methods, $methods);
+		return $this->extensions['blockMethods'] = Block::$methods = [
+			...Block::$methods,
+			...$methods
+		];
 	}
 
 	/**
@@ -168,7 +182,10 @@ trait AppPlugins
 	 */
 	protected function extendBlockModels(array $models): array
 	{
-		return $this->extensions['blockModels'] = Block::$models = array_merge(Block::$models, $models);
+		return $this->extensions['blockModels'] = Block::$models = [
+			...Block::$models,
+			...$models
+		];
 	}
 
 	/**
@@ -176,7 +193,10 @@ trait AppPlugins
 	 */
 	protected function extendBlocksMethods(array $methods): array
 	{
-		return $this->extensions['blockMethods'] = Blocks::$methods = array_merge(Blocks::$methods, $methods);
+		return $this->extensions['blockMethods'] = Blocks::$methods = [
+			...Blocks::$methods,
+			...$methods
+		];
 	}
 
 	/**
@@ -184,7 +204,10 @@ trait AppPlugins
 	 */
 	protected function extendBlueprints(array $blueprints): array
 	{
-		return $this->extensions['blueprints'] = array_merge($this->extensions['blueprints'], $blueprints);
+		return $this->extensions['blueprints'] = [
+			...$this->extensions['blueprints'],
+			...$blueprints
+		];
 	}
 
 	/**
@@ -192,7 +215,10 @@ trait AppPlugins
 	 */
 	protected function extendCacheTypes(array $cacheTypes): array
 	{
-		return $this->extensions['cacheTypes'] = array_merge($this->extensions['cacheTypes'], $cacheTypes);
+		return $this->extensions['cacheTypes'] = [
+			...$this->extensions['cacheTypes'],
+			...$cacheTypes
+		];
 	}
 
 	/**
@@ -200,7 +226,10 @@ trait AppPlugins
 	 */
 	protected function extendCommands(array $commands): array
 	{
-		return $this->extensions['commands'] = array_merge($this->extensions['commands'], $commands);
+		return $this->extensions['commands'] = [
+			...$this->extensions['commands'],
+			...$commands
+		];
 	}
 
 	/**
@@ -208,7 +237,10 @@ trait AppPlugins
 	 */
 	protected function extendCollectionFilters(array $filters): array
 	{
-		return $this->extensions['collectionFilters'] = ToolkitCollection::$filters = array_merge(ToolkitCollection::$filters, $filters);
+		return $this->extensions['collectionFilters'] = ToolkitCollection::$filters = [
+			...ToolkitCollection::$filters,
+			...$filters
+		];
 	}
 
 	/**
@@ -216,7 +248,10 @@ trait AppPlugins
 	 */
 	protected function extendCollectionMethods(array $methods): array
 	{
-		return $this->extensions['collectionMethods'] = Collection::$methods = array_merge(Collection::$methods, $methods);
+		return $this->extensions['collectionMethods'] = Collection::$methods = [
+			...Collection::$methods,
+			...$methods
+		];
 	}
 
 	/**
@@ -224,7 +259,10 @@ trait AppPlugins
 	 */
 	protected function extendCollections(array $collections): array
 	{
-		return $this->extensions['collections'] = array_merge($this->extensions['collections'], $collections);
+		return $this->extensions['collections'] = [
+			...$this->extensions['collections'],
+			...$collections
+		];
 	}
 
 	/**
@@ -232,7 +270,10 @@ trait AppPlugins
 	 */
 	protected function extendComponents(array $components): array
 	{
-		return $this->extensions['components'] = array_merge($this->extensions['components'], $components);
+		return $this->extensions['components'] = [
+			...$this->extensions['components'],
+			...$components
+		];
 	}
 
 	/**
@@ -240,7 +281,10 @@ trait AppPlugins
 	 */
 	protected function extendControllers(array $controllers): array
 	{
-		return $this->extensions['controllers'] = array_merge($this->extensions['controllers'], $controllers);
+		return $this->extensions['controllers'] = [
+			...$this->extensions['controllers'],
+			...$controllers
+		];
 	}
 
 	/**
@@ -248,7 +292,24 @@ trait AppPlugins
 	 */
 	protected function extendFileMethods(array $methods): array
 	{
-		return $this->extensions['fileMethods'] = File::$methods = array_merge(File::$methods, $methods);
+		return $this->extensions['fileMethods'] = File::$methods = [
+			...File::$methods,
+			...$methods
+		];
+	}
+
+	/**
+	 * Registers additional file preview handlers
+	 * @since 5.0.0
+	 */
+	protected function extendFilePreviews(array $previews): array
+	{
+		return $this->extensions['filePreviews'] = [
+			...$previews,
+			// make sure new previews go first, so that custom
+			// handler can override core default previews
+			...$this->extensions['filePreviews'],
+		];
 	}
 
 	/**
@@ -275,20 +336,30 @@ trait AppPlugins
 			}
 
 			if ($mime !== null) {
+				// if `Mime::$types[$extension]` is not already an array,
+				// make it one and append the new MIME type
+				// unless it's already in the list
 				if (array_key_exists($extension, Mime::$types) === true) {
-					// if `Mime::$types[$extension]` is not already an array, make it one
-					// and append the new MIME type unless it's already in the list
-					Mime::$types[$extension] = array_unique(array_merge((array)Mime::$types[$extension], (array)$mime));
+					Mime::$types[$extension] = array_unique([
+						...(array)Mime::$types[$extension],
+						...(array)$mime
+					]);
 				} else {
 					Mime::$types[$extension] = $mime;
 				}
 			}
 
-			if ($resizable === true && in_array($extension, Image::$resizableTypes) === false) {
+			if (
+				$resizable === true &&
+				in_array($extension, Image::$resizableTypes) === false
+			) {
 				Image::$resizableTypes[] = $extension;
 			}
 
-			if ($viewable === true && in_array($extension, Image::$viewableTypes) === false) {
+			if (
+				$viewable === true &&
+				in_array($extension, Image::$viewableTypes) === false
+			) {
 				Image::$viewableTypes[] = $extension;
 			}
 		}
@@ -306,7 +377,10 @@ trait AppPlugins
 	 */
 	protected function extendFilesMethods(array $methods): array
 	{
-		return $this->extensions['filesMethods'] = Files::$methods = array_merge(Files::$methods, $methods);
+		return $this->extensions['filesMethods'] = Files::$methods = [
+			...Files::$methods,
+			...$methods
+		];
 	}
 
 	/**
@@ -314,7 +388,10 @@ trait AppPlugins
 	 */
 	protected function extendFieldMethods(array $methods): array
 	{
-		return $this->extensions['fieldMethods'] = Field::$methods = array_merge(Field::$methods, array_change_key_case($methods));
+		return $this->extensions['fieldMethods'] = Field::$methods = [
+			...Field::$methods,
+			...array_change_key_case($methods)
+		];
 	}
 
 	/**
@@ -322,7 +399,10 @@ trait AppPlugins
 	 */
 	protected function extendFields(array $fields): array
 	{
-		return $this->extensions['fields'] = FormField::$types = array_merge(FormField::$types, $fields);
+		return $this->extensions['fields'] = FormField::$types = [
+			...FormField::$types,
+			...$fields
+		];
 	}
 
 	/**
@@ -358,7 +438,10 @@ trait AppPlugins
 	 */
 	protected function extendLayoutMethods(array $methods): array
 	{
-		return $this->extensions['layoutMethods'] = Layout::$methods = array_merge(Layout::$methods, $methods);
+		return $this->extensions['layoutMethods'] = Layout::$methods = [
+			...Layout::$methods,
+			...$methods
+		];
 	}
 
 	/**
@@ -366,7 +449,10 @@ trait AppPlugins
 	 */
 	protected function extendLayoutColumnMethods(array $methods): array
 	{
-		return $this->extensions['layoutColumnMethods'] = LayoutColumn::$methods = array_merge(LayoutColumn::$methods, $methods);
+		return $this->extensions['layoutColumnMethods'] = LayoutColumn::$methods = [
+			...LayoutColumn::$methods,
+			...$methods
+		];
 	}
 
 	/**
@@ -374,7 +460,10 @@ trait AppPlugins
 	 */
 	protected function extendLayoutsMethods(array $methods): array
 	{
-		return $this->extensions['layoutsMethods'] = Layouts::$methods = array_merge(Layouts::$methods, $methods);
+		return $this->extensions['layoutsMethods'] = Layouts::$methods = [
+			...Layouts::$methods,
+			...$methods
+		];
 	}
 
 	/**
@@ -382,13 +471,17 @@ trait AppPlugins
 	 */
 	protected function extendOptions(
 		array $options,
-		Plugin $plugin = null
+		Plugin|null $plugin = null
 	): array {
 		if ($plugin !== null) {
 			$options = [$plugin->prefix() => $options];
 		}
 
-		return $this->extensions['options'] = $this->options = A::merge($options, $this->options, A::MERGE_REPLACE);
+		return $this->extensions['options'] = $this->options = A::merge(
+			$options,
+			$this->options,
+			A::MERGE_REPLACE
+		);
 	}
 
 	/**
@@ -396,7 +489,10 @@ trait AppPlugins
 	 */
 	protected function extendPageMethods(array $methods): array
 	{
-		return $this->extensions['pageMethods'] = Page::$methods = array_merge(Page::$methods, $methods);
+		return $this->extensions['pageMethods'] = Page::$methods = [
+			...Page::$methods,
+			...$methods
+		];
 	}
 
 	/**
@@ -404,7 +500,10 @@ trait AppPlugins
 	 */
 	protected function extendPagesMethods(array $methods): array
 	{
-		return $this->extensions['pagesMethods'] = Pages::$methods = array_merge(Pages::$methods, $methods);
+		return $this->extensions['pagesMethods'] = Pages::$methods = [
+			...Pages::$methods,
+			...$methods
+		];
 	}
 
 	/**
@@ -412,7 +511,10 @@ trait AppPlugins
 	 */
 	protected function extendPageModels(array $models): array
 	{
-		return $this->extensions['pageModels'] = Page::$models = array_merge(Page::$models, $models);
+		return $this->extensions['pageModels'] = Page::$models = [
+			...Page::$models,
+			...$models
+		];
 	}
 
 	/**
@@ -420,7 +522,10 @@ trait AppPlugins
 	 */
 	protected function extendPages(array $pages): array
 	{
-		return $this->extensions['pages'] = array_merge($this->extensions['pages'], $pages);
+		return $this->extensions['pages'] = [
+			...$this->extensions['pages'],
+			...$pages
+		];
 	}
 
 	/**
@@ -428,13 +533,16 @@ trait AppPlugins
 	 */
 	protected function extendPermissions(
 		array $permissions,
-		Plugin $plugin = null
+		Plugin|null $plugin = null
 	): array {
 		if ($plugin !== null) {
 			$permissions = [$plugin->prefix() => $permissions];
 		}
 
-		return $this->extensions['permissions'] = Permissions::$extendedActions = array_merge(Permissions::$extendedActions, $permissions);
+		return $this->extensions['permissions'] = Permissions::$extendedActions = [
+			...Permissions::$extendedActions,
+			...$permissions
+		];
 	}
 
 	/**
@@ -446,7 +554,10 @@ trait AppPlugins
 			$routes = $routes($this);
 		}
 
-		return $this->extensions['routes'] = array_merge($this->extensions['routes'], $routes);
+		return $this->extensions['routes'] = [
+			...$this->extensions['routes'],
+			...$routes
+		];
 	}
 
 	/**
@@ -454,7 +565,10 @@ trait AppPlugins
 	 */
 	protected function extendSections(array $sections): array
 	{
-		return $this->extensions['sections'] = Section::$types = array_merge(Section::$types, $sections);
+		return $this->extensions['sections'] = Section::$types = [
+			...Section::$types,
+			...$sections
+		];
 	}
 
 	/**
@@ -462,7 +576,10 @@ trait AppPlugins
 	 */
 	protected function extendSiteMethods(array $methods): array
 	{
-		return $this->extensions['siteMethods'] = Site::$methods = array_merge(Site::$methods, $methods);
+		return $this->extensions['siteMethods'] = Site::$methods = [
+			...Site::$methods,
+			...$methods
+		];
 	}
 
 	/**
@@ -478,7 +595,10 @@ trait AppPlugins
 	 */
 	protected function extendSnippets(array $snippets): array
 	{
-		return $this->extensions['snippets'] = array_merge($this->extensions['snippets'], $snippets);
+		return $this->extensions['snippets'] = [
+			...$this->extensions['snippets'],
+			...$snippets
+		];
 	}
 
 	/**
@@ -486,7 +606,10 @@ trait AppPlugins
 	 */
 	protected function extendStructureMethods(array $methods): array
 	{
-		return $this->extensions['structureMethods'] = Structure::$methods = array_merge(Structure::$methods, $methods);
+		return $this->extensions['structureMethods'] = Structure::$methods = [
+			...Structure::$methods,
+			...$methods
+		];
 	}
 
 	/**
@@ -494,7 +617,10 @@ trait AppPlugins
 	 */
 	protected function extendStructureObjectMethods(array $methods): array
 	{
-		return $this->extensions['structureObjectMethods'] = StructureObject::$methods = array_merge(StructureObject::$methods, $methods);
+		return $this->extensions['structureObjectMethods'] = StructureObject::$methods = [
+			...StructureObject::$methods,
+			...$methods
+		];
 	}
 
 	/**
@@ -502,7 +628,10 @@ trait AppPlugins
 	 */
 	protected function extendTags(array $tags): array
 	{
-		return $this->extensions['tags'] = KirbyTag::$types = array_merge(KirbyTag::$types, array_change_key_case($tags));
+		return $this->extensions['tags'] = KirbyTag::$types = [
+			...KirbyTag::$types,
+			...array_change_key_case($tags)
+		];
 	}
 
 	/**
@@ -510,7 +639,10 @@ trait AppPlugins
 	 */
 	protected function extendTemplates(array $templates): array
 	{
-		return $this->extensions['templates'] = array_merge($this->extensions['templates'], $templates);
+		return $this->extensions['templates'] = [
+			...$this->extensions['templates'],
+			...$templates
+		];
 	}
 
 	/**
@@ -518,7 +650,10 @@ trait AppPlugins
 	 */
 	protected function extendTranslations(array $translations): array
 	{
-		return $this->extensions['translations'] = array_replace_recursive($this->extensions['translations'], $translations);
+		return $this->extensions['translations'] = array_replace_recursive(
+			$this->extensions['translations'],
+			$translations
+		);
 	}
 
 	/**
@@ -528,7 +663,10 @@ trait AppPlugins
 	 */
 	protected function extendThirdParty(array $extensions): array
 	{
-		return $this->extensions['thirdParty'] = array_replace_recursive($this->extensions['thirdParty'], $extensions);
+		return $this->extensions['thirdParty'] = array_replace_recursive(
+			$this->extensions['thirdParty'],
+			$extensions
+		);
 	}
 
 	/**
@@ -536,7 +674,10 @@ trait AppPlugins
 	 */
 	protected function extendUserMethods(array $methods): array
 	{
-		return $this->extensions['userMethods'] = User::$methods = array_merge(User::$methods, $methods);
+		return $this->extensions['userMethods'] = User::$methods = [
+			...User::$methods,
+			...$methods
+		];
 	}
 
 	/**
@@ -544,7 +685,10 @@ trait AppPlugins
 	 */
 	protected function extendUserModels(array $models): array
 	{
-		return $this->extensions['userModels'] = User::$models = array_merge(User::$models, $models);
+		return $this->extensions['userModels'] = User::$models = [
+			...User::$models,
+			...$models
+		];
 	}
 
 	/**
@@ -552,7 +696,10 @@ trait AppPlugins
 	 */
 	protected function extendUsersMethods(array $methods): array
 	{
-		return $this->extensions['usersMethods'] = Users::$methods = array_merge(Users::$methods, $methods);
+		return $this->extensions['usersMethods'] = Users::$methods = [
+			...Users::$methods,
+			...$methods
+		];
 	}
 
 	/**
@@ -560,7 +707,10 @@ trait AppPlugins
 	 */
 	protected function extendValidators(array $validators): array
 	{
-		return $this->extensions['validators'] = V::$validators = array_merge(V::$validators, $validators);
+		return $this->extensions['validators'] = V::$validators = [
+			...V::$validators,
+			...$validators
+		];
 	}
 
 	/**
@@ -583,7 +733,7 @@ trait AppPlugins
 	 *
 	 * @internal
 	 */
-	public function extensions(string $type = null): array
+	public function extensions(string|null $type = null): array
 	{
 		if ($type === null) {
 			return $this->extensions;
@@ -681,6 +831,7 @@ trait AppPlugins
 		$this->extendBlueprints($this->core->blueprints());
 		$this->extendFieldMethods($this->core->fieldMethods());
 		$this->extendFields($this->core->fields());
+		$this->extendFilePreviews($this->core->filePreviews());
 		$this->extendSections($this->core->sections());
 		$this->extendSnippets($this->core->snippets());
 		$this->extendTags($this->core->kirbyTags());
@@ -713,7 +864,7 @@ trait AppPlugins
 	 */
 	public static function plugin(
 		string $name,
-		array $extends = null,
+		array|null $extends = null,
 		array $info = [],
 		string|null $root = null,
 		string|null $version = null
@@ -747,7 +898,7 @@ trait AppPlugins
 	 * @internal
 	 * @param array|null $plugins Can be used to overwrite the plugins registry
 	 */
-	public function plugins(array $plugins = null): array
+	public function plugins(array|null $plugins = null): array
 	{
 		// overwrite the existing plugins registry
 		if ($plugins !== null) {
@@ -779,7 +930,10 @@ trait AppPlugins
 		$loaded = [];
 
 		foreach (Dir::read($root) as $dirname) {
-			if (in_array(substr($dirname, 0, 1), ['.', '_']) === true) {
+			if (
+				str_starts_with($dirname, '.') ||
+				str_starts_with($dirname, '_')
+			) {
 				continue;
 			}
 

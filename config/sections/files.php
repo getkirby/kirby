@@ -28,7 +28,7 @@ return [
 		/**
 		 * Filters all files by template and also sets the template, which will be used for all uploads
 		 */
-		'template' => function (string $template = null) {
+		'template' => function (string|null $template = null) {
 			return $template;
 		},
 		/**
@@ -110,7 +110,8 @@ return [
 			$dragTextAbsolute = $this->model->is($this->parent) === false;
 
 			foreach ($this->models as $file) {
-				$panel = $file->panel();
+				$panel       = $file->panel();
+				$permissions = $file->permissions();
 
 				$item = [
 					'dragText'  => $panel->dragText('auto', $dragTextAbsolute),
@@ -125,6 +126,9 @@ return [
 					'link'      => $panel->url(true),
 					'mime'      => $file->mime(),
 					'parent'    => $file->parent()->panel()->path(),
+					'permissions' => [
+						'sort' => $permissions->can('sort'),
+					],
 					'template'  => $file->template(),
 					'text'      => $file->toSafeString($this->text),
 					'url'       => $file->url(),
@@ -179,14 +183,8 @@ return [
 			}
 
 			// count all uploaded files
-			$max = $this->max ? $this->max - $this->total : null;
-
-			if ($this->max && $this->total === $this->max - 1) {
-				$multiple = false;
-			} else {
-				$multiple = true;
-			}
-
+			$max      = $this->max ? $this->max - $this->total : null;
+			$multiple = !$max || $max > 1;
 			$template = $this->template === 'default' ? null : $this->template;
 
 			return [

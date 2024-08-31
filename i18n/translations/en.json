@@ -118,6 +118,7 @@
 	"error.file.name.missing": "The filename must not be empty",
 	"error.file.notFound": "The file \"{filename}\" cannot be found",
 	"error.file.orientation": "The orientation of the image must be \"{orientation}\"",
+	"error.file.sort.permission": "You are not allowed to change the sorting of \"{filename}\"",
 	"error.file.type.forbidden": "You are not allowed to upload {type} files",
 	"error.file.type.invalid": "Invalid file type: {type}",
 	"error.file.undefined": "The file cannot be found",
@@ -126,9 +127,12 @@
 	"error.form.notSaved": "The form could not be saved",
 
 	"error.language.code": "Please enter a valid code for the language",
+	"error.language.create.permission": "You are not allowed to create a language",
+	"error.language.delete.permission": "You are not allowed to delete the language",
 	"error.language.duplicate": "The language already exists",
 	"error.language.name": "Please enter a valid name for the language",
 	"error.language.notFound": "The language could not be found",
+	"error.language.update.permission": "You are not allowed to update the language",
 
 	"error.layout.validation.block": "There's an error on the \"{field}\" field in block {blockIndex} using the \"{fieldset}\" block type in layout {layoutIndex}",
 	"error.layout.validation.settings": "There's an error in layout {index} settings",
@@ -372,6 +376,12 @@
 
 	"filter": "Filter",
 
+	"form.discard": "Discard changes",
+	"form.discard.confirm": "Do you really want to <strong>delete all unpublished changes</strong>?",
+	"form.locked": "This content is disabled for you as it is currently edited by another user",
+	"form.preview": "Preview changes",
+	"form.preview.draft": "Preview draft",
+
 	"hide": "Hide",
 	"hour": "Hour",
 	"hue": "Hue",
@@ -581,6 +591,10 @@
 	"plugins": "Plugins",
 	"prev": "Previous",
 	"preview": "Preview",
+
+	"publish": "Publish",
+	"published": "Published",
+
 	"remove": "Remove",
 	"rename": "Rename",
 	"renew": "Renew",
@@ -600,6 +614,7 @@
 	"role.nobody.title": "Nobody",
 
 	"save": "Save",
+	"saved": "Saved",
 	"search": "Search",
 	"searching": "Searching",
 	"search.min": "Enter {min} characters to search",
@@ -650,6 +665,12 @@
 	"tel": "Phone",
 	"tel.placeholder": "+49123456789",
 	"template": "Template",
+
+	"theme": "Theme",
+	"theme.light": "Lights on",
+	"theme.dark": "Lights off",
+	"theme.automatic": "Match system default",
+
 	"title": "Title",
 	"today": "Today",
 

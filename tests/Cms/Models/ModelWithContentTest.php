@@ -3,7 +3,9 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Kirby\Exception\InvalidArgumentException;
+use Kirby\Content\Version;
+use Kirby\Content\VersionId;
+use Kirby\Exception\NotFoundException;
 use Kirby\Panel\Page as PanelPage;
 use Kirby\Uuid\PageUuid;
 use Kirby\Uuid\SiteUuid;
@@ -21,11 +23,6 @@ class ExtendedModelWithContent extends ModelWithContent
 		Closure $callback
 	): mixed {
 		// nothing to commit in the test
-	}
-
-	public function contentFileName(): string
-	{
-		return 'test.txt';
 	}
 
 	public function panel(): PanelPage
@@ -54,11 +51,9 @@ class BrokenModelWithContent extends ExtendedModelWithContent
 
 class BlueprintsModelWithContent extends ExtendedModelWithContent
 {
-	protected $testModel;
-
-	public function __construct(ModelWithContent $model)
-	{
-		$this->testModel = $model;
+	public function __construct(
+		protected ModelWithContent $testModel
+	) {
 	}
 
 	public function blueprint(): Blueprint
@@ -158,7 +153,7 @@ class ModelWithContentTest extends TestCase
 			]
 		]);
 
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Invalid language: fr');
 
 		$app->page('foo')->content('fr');
@@ -235,6 +230,39 @@ class ModelWithContentTest extends TestCase
 		$this->assertNull($model->lock());
 	}
 
+	public function testContentWithChanges()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'foo',
+					]
+				],
+			]
+		]);
+
+		$page = $app->page('foo');
+
+		$this->assertSame(null, $page->content()->title()->value());
+
+		// create some changes
+		$page->version('changes')->save([
+			'title' => 'Test'
+		]);
+
+		VersionId::$render = VersionId::changes();
+
+		$this->assertSame('Test', $page->content()->title()->value());
+
+		VersionId::$render = null;
+
+		$this->assertSame(null, $page->content()->title()->value());
+	}
+
 	/**
 	 * @dataProvider modelsProvider
 	 */
@@ -273,6 +301,26 @@ class ModelWithContentTest extends TestCase
 
 		// non-existing section
 		$this->assertSame([], $model->blueprints('foo'));
+	}
+
+	public function testKirby()
+	{
+		$kirby = new App();
+		$model = new Page([
+			'slug'  => 'foo',
+			'kirby' => $kirby
+		]);
+		$this->assertSame($kirby, $model->kirby());
+	}
+
+	public function testSite()
+	{
+		$site  = new Site();
+		$model = new Page([
+			'slug' => 'foo',
+			'site' => $site
+		]);
+		$this->assertIsSite($site, $model->site());
 	}
 
 	public function testToSafeString()
@@ -415,9 +463,39 @@ class ModelWithContentTest extends TestCase
 
 		$current = $app->page('foo')->translation();
 		$this->assertSame('Deutscher Titel', $current->content()['title']);
+	}
+
+	public function testTranslationWithInvalidLanguauge()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'options' => [
+				'languages' => true
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'foo',
+					]
+				],
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+				]
+			]
+		]);
+
+		$this->expectException(\Kirby\Exception\NotFoundException::class);
+		$this->expectExceptionMessage('Invalid language: fr');
 
 		$fr = $app->page('foo')->translation('fr');
-		$this->assertNull($fr);
 	}
 
 	public function testUuid()
@@ -427,5 +505,29 @@ class ModelWithContentTest extends TestCase
 
 		$model = new Page(['slug' => 'foo']);
 		$this->assertInstanceOf(PageUuid::class, $model->uuid());
+	}
+
+	public function testVersion()
+	{
+		$model = new Site();
+		$this->assertInstanceOf(Version::class, $model->version('published'));
+		$this->assertSame('published', $model->version('published')->id()->value());
+		$this->assertSame('published', $model->version(VersionId::published())->id()->value());
+
+		$model = new Page(['slug' => 'foo']);
+		$this->assertInstanceOf(Version::class, $model->version('published'));
+		$this->assertSame('published', $model->version('published')->id()->value());
+		$this->assertSame('published', $model->version(VersionId::published())->id()->value());
+	}
+
+	public function testVersionFallback()
+	{
+		$model = new Page(['slug' => 'foo']);
+		$this->assertInstanceOf(Version::class, $model->version());
+		$this->assertSame('published', $model->version()->id()->value());
+
+		$model = new Page(['slug' => 'foo', 'isDraft' => true]);
+		$this->assertInstanceOf(Version::class, $model->version());
+		$this->assertSame('changes', $model->version()->id()->value());
 	}
 }

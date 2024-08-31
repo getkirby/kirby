@@ -1,5 +1,9 @@
 <template>
-	<k-field v-bind="$props" :class="`k-models-field k-${$options.type}-field`">
+	<k-field
+		v-bind="$props"
+		:class="['k-models-field', `k-${$options.type}-field`, $attrs.class]"
+		:style="$attrs.style"
+	>
 		<template v-if="!disabled" #options>
 			<k-button-group
 				ref="buttons"
@@ -12,20 +16,25 @@
 		</template>
 
 		<k-dropzone :disabled="!hasDropzone" @drop="drop">
-			<k-collection
-				v-bind="collection"
-				@empty="open"
-				@sort="onInput"
-				@sortChange="$emit('change', $event)"
+			<k-input-validator
+				v-bind="{ min, max, required }"
+				:value="JSON.stringify(value)"
 			>
-				<template v-if="!disabled" #options="{ index }">
-					<k-button
-						:title="$t('remove')"
-						icon="remove"
-						@click="remove(index)"
-					/>
-				</template>
-			</k-collection>
+				<k-collection
+					v-bind="collection"
+					@empty="open"
+					@sort="onInput"
+					@sortChange="$emit('change', $event)"
+				>
+					<template v-if="!disabled" #options="{ index }">
+						<k-button
+							:title="$t('remove')"
+							icon="remove"
+							@click="remove(index)"
+						/>
+					</template>
+				</k-collection>
+			</k-input-validator>
 		</k-dropzone>
 	</k-field>
 </template>
@@ -43,6 +52,7 @@ export default {
 		info: String,
 		link: Boolean,
 		max: Number,
+		min: Number,
 		/**
 		 * If false, only a single item can be selected
 		 */
@@ -87,13 +97,6 @@ export default {
 		},
 		hasDropzone() {
 			return false;
-		},
-		isInvalid() {
-			return (
-				(this.required && this.selected.length === 0) ||
-				(this.min && this.selected.length < this.min) ||
-				(this.max && this.selected.length > this.max)
-			);
 		},
 		more() {
 			return !this.max || this.max > this.selected.length;

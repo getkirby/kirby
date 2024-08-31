@@ -4,7 +4,6 @@ namespace Kirby\Database;
 
 use Kirby\Database\Sql\Sqlite;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\TestCase;
 use Kirby\Toolkit\A;
 
 /**
@@ -12,8 +11,7 @@ use Kirby\Toolkit\A;
  */
 class SqlTest extends TestCase
 {
-	protected $database;
-	protected $sql;
+	protected Sql $sql;
 
 	public function setUp(): void
 	{
@@ -244,7 +242,7 @@ class SqlTest extends TestCase
 			'another' => ['type' => 'varchar', 'default' => 'another default']
 		]);
 		$this->assertMatchesRegularExpression('/^`test` varchar\(255\) NULL DEFAULT :(.*?),' . PHP_EOL . '`another` varchar\(255\) NULL DEFAULT :(.*)$/m', $inner['query']);
-		$this->assertSame(2, count($inner['bindings']));
+		$this->assertCount(2, $inner['bindings']);
 		$this->assertSame('test default', A::first($inner['bindings']));
 		$this->assertSame('another default', A::last($inner['bindings']));
 		$this->assertSame([], $inner['keys']);
@@ -309,7 +307,7 @@ class SqlTest extends TestCase
 			'\)$/m',
 			$table['query']
 		);
-		$this->assertSame(2, count($table['bindings']));
+		$this->assertCount(2, $table['bindings']);
 		$this->assertSame('test default', A::first($table['bindings']));
 		$this->assertSame('another default', A::last($table['bindings']));
 

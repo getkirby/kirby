@@ -4,35 +4,11 @@
 			<k-prev-next :prev="prev" :next="next" />
 		</template>
 
-		<k-header :editable="true" @edit="update()">
+		<k-header :editable="canUpdate" @edit="$dialog(`languages/${id}/update`)">
 			{{ name }}
 
 			<template #buttons>
-				<k-button-group>
-					<k-button
-						:link="url"
-						:title="$t('open')"
-						icon="open"
-						size="sm"
-						target="_blank"
-						variant="filled"
-					/>
-					<k-button
-						:title="$t('settings')"
-						icon="cog"
-						size="sm"
-						variant="filled"
-						@click="update()"
-					/>
-					<k-button
-						v-if="deletable"
-						:title="$t('delete')"
-						icon="trash"
-						size="sm"
-						variant="filled"
-						@click="remove()"
-					/>
-				</k-button-group>
+				<k-view-buttons :buttons="buttons" />
 			</template>
 		</k-header>
 
@@ -42,8 +18,12 @@
 
 		<k-section
 			:buttons="[
+				/**
+				 * @todo update disabled prop when new `languageVariables.*` permissions available
+				 */
 				{
 					click: createTranslation,
+					disabled: !canUpdate,
 					icon: 'add',
 					text: $t('add')
 				}
@@ -63,13 +43,14 @@
 							mobile: true
 						}
 					}"
+					:disabled="!canUpdate"
 					:rows="translations"
 					@cell="updateTranslation"
 					@option="option"
 				/>
 			</template>
 			<template v-else>
-				<k-empty icon="translate" @click="createTranslation">
+				<k-empty :disabled="!canUpdate" icon="translate" @click="createTranslation">
 					{{ $t("language.variables.empty") }}
 				</k-empty>
 			</template>
@@ -84,6 +65,7 @@
  */
 export default {
 	props: {
+		buttons: Array,
 		code: String,
 		deletable: Boolean,
 		direction: String,
@@ -95,11 +77,24 @@ export default {
 		translations: Array,
 		url: String
 	},
+	computed: {
+		canUpdate() {
+			return this.$panel.permissions.languages.update;
+		}
+	},
 	methods: {
 		createTranslation() {
+			if (!this.canUpdate) {
+				return;
+			}
+
 			this.$dialog(`languages/${this.id}/translations/create`);
 		},
 		option(option, row) {
+			if (!this.canUpdate) {
+				return;
+			}
+
 			// for the compatibility of the encoded url in different environments,
 			// it is also encoded with base64 to reduce special characters
 			this.$dialog(
@@ -108,19 +103,11 @@ export default {
 				)}/${option}`
 			);
 		},
-		remove() {
-			this.$dialog(`languages/${this.id}/delete`);
-		},
-		update(focus) {
-			this.$dialog(`languages/${this.id}/update`, {
-				on: {
-					ready: () => {
-						this.$panel.dialog.focus(focus);
-					}
-				}
-			});
-		},
 		updateTranslation({ row }) {
+			if (!this.canUpdate) {
+				return;
+			}
+
 			// for the compatibility of the encoded url in different environments,
 			// it is also encoded with base64 to reduce special characters
 			this.$dialog(

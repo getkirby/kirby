@@ -16,10 +16,8 @@ class PluginTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.Plugin';
 
-	protected static $classLoader;
-	protected static $updateStatusHost;
-
-	protected $app;
+	protected static ClassLoader $classLoader;
+	protected static string $updateStatusHost;
 
 	public static function setUpBeforeClass(): void
 	{
@@ -451,8 +449,8 @@ class PluginTest extends TestCase
 
 		$expected = [
 			'authors' => [
-				[ 'name' => 'A', 'email' => 'a@getkirby.com' ],
-				[ 'name' => 'B', 'email' => 'b@getkirby.com' ]
+				['name' => 'A', 'email' => 'a@getkirby.com'],
+				['name' => 'B', 'email' => 'b@getkirby.com']
 			],
 			'description' => 'Some really nice description',
 			'name'        => 'getkirby/test-plugin',

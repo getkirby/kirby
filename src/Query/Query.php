@@ -80,7 +80,7 @@ class Query
 
 		// merge data with default entries
 		if (is_array($data) === true) {
-			$data = array_merge(static::$entries, $data);
+			$data = [...static::$entries, ...$data];
 		}
 
 		// direct data array access via key
@@ -131,12 +131,12 @@ Query::$entries['site'] = function (): Site {
 
 Query::$entries['t'] = function (
 	string $key,
-	string|array $fallback = null,
-	string $locale = null
+	string|array|null $fallback = null,
+	string|null $locale = null
 ): string|null {
 	return I18n::translate($key, $fallback, $locale);
 };
 
-Query::$entries['user'] = function (string $id = null): User|null {
+Query::$entries['user'] = function (string|null $id = null): User|null {
 	return App::instance()->user($id);
 };

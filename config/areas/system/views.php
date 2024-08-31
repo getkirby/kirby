@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\App;
+use Kirby\Panel\Ui\Buttons\ViewButtons;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -45,10 +46,14 @@ return [
 			$plugins = $system->plugins()->values(function ($plugin) use (&$exceptions) {
 				$authors      = $plugin->authorsNames();
 				$updateStatus = $plugin->updateStatus();
-				$version      = $updateStatus?->toArray() ?? $plugin->version() ?? '–';
+				$version      = $updateStatus?->toArray();
+				$version    ??= $plugin->version() ?? '–';
 
 				if ($updateStatus !== null) {
-					$exceptions = array_merge($exceptions, $updateStatus->exceptionMessages());
+					$exceptions = [
+						...$exceptions,
+						...$updateStatus->exceptionMessages()
+					];
 				}
 
 				return [
@@ -83,6 +88,8 @@ return [
 			return [
 				'component' => 'k-system-view',
 				'props'     => [
+					'buttons'     => fn () =>
+						ViewButtons::view('system')->render(),
 					'environment' => $environment,
 					'exceptions'  => $kirby->option('debug') === true ? $exceptions : [],
 					'info'        => $system->info(),

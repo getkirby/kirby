@@ -14,6 +14,8 @@ use Kirby\Cms\ModelWithContent;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ *
+ * @extends \Kirby\Toolkit\Collection<\Kirby\Option\Option>
  */
 class Options extends Collection
 {

@@ -25,24 +25,16 @@ use Throwable;
  */
 class Blueprint
 {
-	public static $presets = [];
-	public static $loaded = [];
+	public static array $presets = [];
+	public static array $loaded = [];
 
-	protected $fields = [];
-	protected $model;
-	protected $props;
-	protected $sections = [];
-	protected $tabs = [];
+	protected array $fields = [];
+	protected ModelWithContent $model;
+	protected array $props;
+	protected array $sections = [];
+	protected array $tabs = [];
 
 	protected array|null $fileTemplates = null;
-
-	/**
-	 * Magic getter/caller for any blueprint prop
-	 */
-	public function __call(string $key, array $arguments = null): mixed
-	{
-		return $this->props[$key] ?? null;
-	}
 
 	/**
 	 * Creates a new blueprint object with the given props
@@ -89,6 +81,14 @@ class Blueprint
 	}
 
 	/**
+	 * Magic getter/caller for any blueprint prop
+	 */
+	public function __call(string $key, array|null $arguments = null): mixed
+	{
+		return $this->props[$key] ?? null;
+	}
+
+	/**
 	 * Improved `var_dump` output
 	 *
 	 * @codeCoverageIgnore
@@ -102,7 +102,7 @@ class Blueprint
 	 * Gathers what file templates are allowed in
 	 * this model based on the blueprint
 	 */
-	public function acceptedFileTemplates(string $inSection = null): array
+	public function acceptedFileTemplates(string|null $inSection = null): array
 	{
 		// get cached results for the current file model
 		// (except when collecting for a specific section)
@@ -185,7 +185,10 @@ class Blueprint
 
 		foreach ($fieldsets as $fieldset) {
 			foreach (($fieldset['tabs'] ?? []) as $tab) {
-				$templates = array_merge($templates, $this->acceptedFileTemplatesFromFields($tab['fields'] ?? []));
+				$templates = [
+					...$templates,
+					...$this->acceptedFileTemplatesFromFields($tab['fields'] ?? [])
+				];
 			}
 		}
 
@@ -205,6 +208,14 @@ class Blueprint
 		}
 
 		return [($uploads['template'] ?? 'default')];
+	}
+
+	/**
+	 * Gathers custom config for Panel view buttons
+	 */
+	public function buttons(): array|null
+	{
+		return $this->props['buttons'] ?? null;
 	}
 
 	/**
@@ -320,7 +331,7 @@ class Blueprint
 	 */
 	public static function factory(
 		string $name,
-		string $fallback = null,
+		string|null $fallback,
 		ModelWithContent $model
 	): static|null {
 		try {

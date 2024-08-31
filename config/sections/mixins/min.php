@@ -5,7 +5,7 @@ return [
 		/**
 		 * Sets the minimum number of required entries in the section
 		 */
-		'min' => function (int $min = null) {
+		'min' => function (int|null $min = null) {
 			return $min;
 		}
 	],

@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\F;
+use Stringable;
 
 /**
  * Representing a plugin asset with methods
@@ -15,7 +16,7 @@ use Kirby\Filesystem\F;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class PluginAsset
+class PluginAsset implements Stringable
 {
 	public function __construct(
 		protected string $path,
@@ -93,8 +94,11 @@ class PluginAsset
 	 */
 	public function publishAt(string $path): void
 	{
-		$media = $this->plugin()->mediaRoot() . '/' . $path;
-		F::link($this->root(), $media, 'symlink');
+		F::link(
+			$this->root(),
+			$this->plugin()->mediaRoot() . '/' . $path,
+			'symlink'
+		);
 	}
 
 	public function root(): string

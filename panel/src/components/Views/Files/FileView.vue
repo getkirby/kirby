@@ -16,44 +16,14 @@
 			@edit="$dialog(id + '/changeName')"
 		>
 			{{ model.filename }}
+
 			<template #buttons>
-				<k-button-group>
-					<k-button
-						:link="preview.url"
-						:responsive="true"
-						:title="$t('open')"
-						class="k-file-view-options"
-						icon="open"
-						size="sm"
-						target="_blank"
-						variant="filled"
-					/>
-
-					<k-button
-						:disabled="isLocked"
-						:dropdown="true"
-						:title="$t('settings')"
-						icon="cog"
-						size="sm"
-						variant="filled"
-						class="k-file-view-options"
-						@click="$refs.settings.toggle()"
-					/>
-					<k-dropdown-content
-						ref="settings"
-						:options="$dropdown(id)"
-						align-x="end"
-						@action="action"
-					/>
-
-					<k-languages-dropdown />
-				</k-button-group>
-
-				<k-form-buttons :lock="lock" />
+				<k-view-buttons :buttons="buttons" @action="onAction" />
+				<k-form-buttons />
 			</template>
 		</k-header>
 
-		<k-file-preview v-bind="preview" :focus="focus" @focus="setFocus" />
+		<k-file-preview v-bind="preview" />
 
 		<k-model-tabs :tab="tab.name" :tabs="tabs" />
 
@@ -75,21 +45,8 @@ export default {
 	props: {
 		preview: Object
 	},
-	computed: {
-		focus() {
-			const focus = this.$store.getters["content/values"]()["focus"];
-
-			if (!focus) {
-				return;
-			}
-
-			const [x, y] = focus.replaceAll("%", "").split(" ");
-
-			return { x: parseFloat(x), y: parseFloat(y) };
-		}
-	},
 	methods: {
-		action(action) {
+		onAction(action) {
 			switch (action) {
 				case "replace":
 					return this.$panel.upload.replace({
@@ -97,13 +54,6 @@ export default {
 						...this.model
 					});
 			}
-		},
-		setFocus(focus) {
-			if (this.$helper.object.isObject(focus) === true) {
-				focus = `${focus.x}% ${focus.y}%`;
-			}
-
-			this.$store.dispatch("content/update", ["focus", focus]);
 		}
 	}
 };

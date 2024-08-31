@@ -11,6 +11,7 @@ use Kirby\Sane\Sane;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\Html;
 use Kirby\Toolkit\V;
+use Stringable;
 
 /**
  * Flexible File object with a set of helpful
@@ -24,7 +25,7 @@ use Kirby\Toolkit\V;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class File
+class File implements Stringable
 {
 	/**
 	 * Parent file model
@@ -59,8 +60,8 @@ class File
 	 * @throws \Kirby\Exception\InvalidArgumentException When the model does not use the `Kirby\Filesystem\IsFile` trait
 	 */
 	public function __construct(
-		array|string $props = null,
-		string $url = null
+		array|string|null $props = null,
+		string|null $url = null
 	) {
 		// Legacy support for old constructor of
 		// the `Kirby\Image\Image` class
@@ -127,11 +128,10 @@ class File
 	 */
 	public function dataUri(bool $base64 = true): string
 	{
-		if ($base64 === true) {
-			return 'data:' . $this->mime() . ';base64,' . $this->base64();
-		}
-
-		return 'data:' . $this->mime() . ',' . Escape::url($this->read());
+		return match ($base64) {
+			true  => 'data:' . $this->mime() . ';base64,' . $this->base64(),
+			false => 'data:' . $this->mime() . ',' . Escape::url($this->read())
+		};
 	}
 
 	/**
@@ -155,7 +155,10 @@ class File
 	 */
 	public function download(string|null $filename = null): string
 	{
-		return Response::download($this->root(), $filename ?? $this->filename());
+		return Response::download(
+			$this->root(),
+			$filename ?? $this->filename()
+		);
 	}
 
 	/**
@@ -241,7 +244,7 @@ class File
 
 	/**
 	 * Checks if a preview can be displayed for the file
-	 * in the panel or in the frontend
+	 * in the Panel or in the frontend
 	 */
 	public function isViewable(): bool
 	{
@@ -304,6 +307,7 @@ class File
 
 		if (is_array($rules['extension'] ?? null) === true) {
 			$extension = $this->extension();
+
 			if (in_array($extension, $rules['extension']) !== true) {
 				throw new Exception([
 					'key'  => 'file.extension.invalid',
@@ -314,6 +318,7 @@ class File
 
 		if (is_array($rules['type'] ?? null) === true) {
 			$type = $this->type();
+
 			if (in_array($type, $rules['type']) !== true) {
 				throw new Exception([
 					'key'  => 'file.type.invalid',

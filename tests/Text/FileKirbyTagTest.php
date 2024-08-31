@@ -10,8 +10,6 @@ class FileKirbyTagTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Text.FileKirbyTag';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

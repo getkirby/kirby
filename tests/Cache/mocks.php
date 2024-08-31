@@ -20,16 +20,16 @@ function time(): int
 
 class TestCache extends Cache
 {
-	public $store = [];
+	public array $store = [];
 
-	public function set(string $key, $value, int $minutes = 0, int $created = null): bool
+	public function set(string $key, $value, int $minutes = 0, int|null $created = null): bool
 	{
 		$value = new Value($value, $minutes, $created);
 		$this->store[$key] = $value;
 		return true;
 	}
 
-	public function retrieve(string $key): ?Value
+	public function retrieve(string $key): Value|null
 	{
 		return $this->store[$key] ?? null;
 	}

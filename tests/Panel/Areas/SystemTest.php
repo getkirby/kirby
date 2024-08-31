@@ -9,7 +9,7 @@ class SystemTest extends AreaTestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/SystemTest';
 
-	protected static $host;
+	protected static string $host;
 
 	public static function setUpBeforeClass(): void
 	{

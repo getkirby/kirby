@@ -18,30 +18,42 @@ use Kirby\Filesystem\F;
 class PHP extends Handler
 {
 	/**
-	 * Converts an array to PHP file content
+	 * Converts data to PHP file content
 	 *
 	 * @param string $indent For internal use only
 	 */
 	public static function encode($data, string $indent = ''): string
 	{
-		switch (gettype($data)) {
-			case 'array':
-				$indexed = array_keys($data) === range(0, count($data) - 1);
-				$array   = [];
+		return match (gettype($data)) {
+			'array'   => static::encodeArray($data, $indent),
+			'boolean' => $data ? 'true' : 'false',
+			'integer',
+			'double'  => (string)$data,
+			default   => var_export($data, true)
+		};
+	}
 
-				foreach ($data as $key => $value) {
-					$array[] = "$indent    " . ($indexed ? '' : static::encode($key) . ' => ') . static::encode($value, "$indent    ");
-				}
+	/**
+	 * Converts an array to PHP file content
+	 */
+	protected static function encodeArray(array $data, string $indent): string
+	{
+		$indexed = array_is_list($data);
+		$lines   = [];
 
-				return "[\n" . implode(",\n", $array) . "\n" . $indent . ']';
-			case 'boolean':
-				return $data ? 'true' : 'false';
-			case 'integer':
-			case 'double':
-				return (string)$data;
-			default:
-				return var_export($data, true);
+		foreach ($data as $key => $value) {
+			$line = "$indent    ";
+
+			if ($indexed === false) {
+				$line .= static::encode($key) . ' => ';
+			}
+
+			$line .= static::encode($value, "$indent    ");
+
+			$lines[] =  $line;
 		}
+
+		return "[\n" . implode(",\n", $lines) . "\n" . $indent . ']';
 	}
 
 	/**

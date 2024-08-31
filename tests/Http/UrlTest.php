@@ -7,9 +7,9 @@ use Kirby\TestCase;
 
 class UrlTest extends TestCase
 {
-	protected $_yt   = 'http://www.youtube.com/watch?v=9q_aXttJduk';
-	protected $_yts  = 'https://www.youtube.com/watch?v=9q_aXttJduk';
-	protected $_docs = 'http://getkirby.com/docs/';
+	protected string $_yt   = 'http://www.youtube.com/watch?v=9q_aXttJduk';
+	protected string $_yts  = 'https://www.youtube.com/watch?v=9q_aXttJduk';
+	protected string $_docs = 'http://getkirby.com/docs/';
 	protected $_SERVER = null;
 
 	public function setUp(): void

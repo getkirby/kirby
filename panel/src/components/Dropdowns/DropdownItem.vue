@@ -2,7 +2,8 @@
 	<k-button
 		ref="button"
 		v-bind="$props"
-		class="k-dropdown-item"
+		:class="['k-dropdown-item', $attrs.class]"
+		:style="$attrs.style"
 		@click="onClick"
 	>
 		<!-- @slot The item's content/text -->
@@ -21,6 +22,7 @@ export default {
 	props: {
 		current: [Boolean, String],
 		disabled: Boolean,
+		download: Boolean,
 		icon: String,
 		link: String,
 		target: String
@@ -53,10 +55,10 @@ export default {
 .k-dropdown-item.k-button:focus {
 	outline: var(--outline);
 }
-.k-dropdown-item.k-button[aria-current] {
+.k-dropdown-item.k-button[aria-current="true"] {
 	--button-color-text: var(--color-blue-500);
 }
-.k-dropdown-item.k-button:not([aria-disabled]):hover {
+.k-dropdown-item.k-button:not([aria-disabled="true"]):hover {
 	--button-color-back: var(--dropdown-color-hr);
 }
 </style>

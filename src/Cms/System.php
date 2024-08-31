@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Cms\System\UpdateStatus;
+use Kirby\Content\VersionId;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
@@ -75,10 +76,7 @@ class System
 
 		switch ($folder) {
 			case 'content':
-				return $url . '/' . basename($this->app->site()->storage()->contentFile(
-					'published',
-					'default'
-				));
+				return $url . '/' . basename($this->app->site()->version(VersionId::published())->contentFile());
 			case 'git':
 				return $url . '/config';
 			case 'kirby':
@@ -363,7 +361,7 @@ class System
 	public function php(): bool
 	{
 		return
-			version_compare(PHP_VERSION, '8.1.0', '>=') === true &&
+			version_compare(PHP_VERSION, '8.2.0', '>=') === true &&
 			version_compare(PHP_VERSION, '8.4.0', '<')  === true;
 	}
 
@@ -385,7 +383,7 @@ class System
 	 * @throws \Kirby\Exception\Exception
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
-	public function register(string $license = null, string $email = null): bool
+	public function register(string|null $license = null, string|null $email = null): bool
 	{
 		$license = new License(
 			code: $license,

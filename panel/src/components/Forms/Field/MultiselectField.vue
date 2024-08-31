@@ -1,9 +1,10 @@
 <template>
 	<k-field
 		v-bind="$props"
-		:input="id"
+		:class="['k-multiselect-field', $attrs.class]"
 		:counter="counterOptions"
-		class="k-multiselect-field"
+		:input="id"
+		:style="$attrs.style"
 	>
 		<k-empty v-if="hasNoOptions" :icon="icon" :text="$t('options.none')" />
 		<k-input
@@ -11,7 +12,7 @@
 			v-bind="$props"
 			ref="input"
 			type="multiselect"
-			v-on="$listeners"
+			@input="$emit('input', $event)"
 		/>
 	</k-field>
 </template>

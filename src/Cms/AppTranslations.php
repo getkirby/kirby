@@ -31,7 +31,7 @@ trait AppTranslations
 				$this->multilang() === true &&
 				$language = $this->languages()->find($locale)
 			) {
-				$data = array_merge($data, $language->translations());
+				$data = [...$data, ...$language->translations()];
 			}
 
 
@@ -51,7 +51,7 @@ trait AppTranslations
 			if ($this->multilang() === true) {
 				// first try to fall back to the configured default language
 				$defaultCode = $this->defaultLanguage()->code();
-				$fallback = [$defaultCode];
+				$fallback    = [$defaultCode];
 
 				// if the default language is specified with a country code
 				// (e.g. `en-us`), also try with just the language code
@@ -108,7 +108,7 @@ trait AppTranslations
 	 *
 	 * @internal
 	 */
-	public function setCurrentTranslation(string $translationCode = null): void
+	public function setCurrentTranslation(string|null $translationCode = null): void
 	{
 		I18n::$locale = $translationCode ?? 'en';
 	}
@@ -135,7 +135,7 @@ trait AppTranslations
 
 		// inject current language translations
 		if ($language = $this->language($locale)) {
-			$inject = array_merge($inject, $language->translations());
+			$inject = [...$inject, ...$language->translations()];
 		}
 
 		// load from disk instead
@@ -165,14 +165,17 @@ trait AppTranslations
 
 				// merges language translations with extensions translations
 				if (empty($languageTranslations) === false) {
-					$translations[$languageCode] = array_merge(
-						$translations[$languageCode] ?? [],
-						$languageTranslations
-					);
+					$translations[$languageCode] = [
+						...$translations[$languageCode] ?? [],
+						...$languageTranslations
+					];
 				}
 			}
 		}
 
-		return $this->translations = Translations::load($this->root('i18n:translations'), $translations);
+		return $this->translations = Translations::load(
+			$this->root('i18n:translations'),
+			$translations
+		);
 	}
 }

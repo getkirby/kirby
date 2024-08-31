@@ -2,6 +2,7 @@
 
 namespace Kirby\Data;
 
+use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 
@@ -81,7 +82,7 @@ class XmlTest extends TestCase
 	 */
 	public function testDecodeCorrupted()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('XML string is invalid');
 
 		Xml::decode('some gibberish');

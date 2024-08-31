@@ -34,6 +34,9 @@ class Page extends ModelWithContent
 	use HasChildren;
 	use HasFiles;
 	use HasMethods;
+	/**
+	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Pages>
+	 */
 	use HasSiblings;
 	use PageActions;
 	use PageSiblings;
@@ -128,8 +131,6 @@ class Page extends ModelWithContent
 			throw new InvalidArgumentException('The page slug is required');
 		}
 
-		parent::__construct($props);
-
 		$this->slug    = $props['slug'];
 		// Sets the dirname manually, which works
 		// more reliable in connection with the inventory
@@ -139,6 +140,8 @@ class Page extends ModelWithContent
 		$this->num     = $props['num'] ?? null;
 		$this->parent  = $props['parent'] ?? null;
 		$this->root    = $props['root'] ?? null;
+
+		parent::__construct($props);
 
 		$this->setBlueprint($props['blueprint'] ?? null);
 		$this->setChildren($props['children'] ?? null);
@@ -173,13 +176,14 @@ class Page extends ModelWithContent
 	 */
 	public function __debugInfo(): array
 	{
-		return array_merge($this->toArray(), [
+		return [
+			...$this->toArray(),
 			'content'      => $this->content(),
 			'children'     => $this->children(),
 			'siblings'     => $this->siblings(),
 			'translations' => $this->translations(),
 			'files'        => $this->files(),
-		]);
+		];
 	}
 
 	/**
@@ -220,8 +224,10 @@ class Page extends ModelWithContent
 			return $this->blueprints;
 		}
 
-		$blueprints      = [];
-		$templates       = $this->blueprint()->changeTemplate() ?? $this->blueprint()->options()['changeTemplate'] ?? [];
+		$blueprints  = [];
+		$templates   = $this->blueprint()->changeTemplate() ?? null;
+		$templates ??= $this->blueprint()->options()['changeTemplate'] ?? [];
+
 		$currentTemplate = $this->intendedTemplate()->name();
 
 		if (is_array($templates) === false) {
@@ -283,20 +289,6 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Returns the content text file
-	 * which is found by the inventory method
-	 * @internal
-	 * @deprecated 4.0.0
-	 * @todo Remove in v5
-	 * @codeCoverageIgnore
-	 */
-	public function contentFileName(string|null $languageCode = null): string
-	{
-		Helpers::deprecated('The internal $model->contentFileName() method has been deprecated. Please let us know via a GitHub issue if you need this method and tell us your use case.', 'model-content-file');
-		return $this->intendedTemplate()->name();
-	}
-
-	/**
 	 * Call the page controller
 	 * @internal
 	 *
@@ -307,12 +299,13 @@ class Page extends ModelWithContent
 		string $contentType = 'html'
 	): array {
 		// create the template data
-		$data = array_merge($data, [
+		$data = [
+			...$data,
 			'kirby' => $kirby = $this->kirby(),
 			'site'  => $site  = $this->site(),
 			'pages' => new LazyValue(fn () => $site->children()),
 			'page'  => new LazyValue(fn () => $site->visit($this))
-		]);
+		];
 
 		// call the template controller if there's one.
 		$controllerData = $kirby->controller(
@@ -385,11 +378,10 @@ class Page extends ModelWithContent
 			return $this->diruri;
 		}
 
-		if ($this->isDraft() === true) {
-			$dirname = '_drafts/' . $this->dirname();
-		} else {
-			$dirname = $this->dirname();
-		}
+		$dirname = match ($this->isDraft()) {
+			true  => '_drafts/' . $this->dirname(),
+			false => $this->dirname()
+		};
 
 		if ($parent = $this->parent()) {
 			return $this->diruri = $parent->diruri() . '/' . $dirname;
@@ -466,7 +458,9 @@ class Page extends ModelWithContent
 			return $this->intendedTemplate;
 		}
 
-		return $this->setTemplate($this->inventory()['template'])->intendedTemplate();
+		return $this
+			->setTemplate($this->inventory()['template'])
+			->intendedTemplate();
 	}
 
 	/**
@@ -773,7 +767,7 @@ class Page extends ModelWithContent
 	 * This is only used for drafts so far.
 	 * @internal
 	 */
-	public function isVerified(string $token = null): bool
+	public function isVerified(string|null $token = null): bool
 	{
 		if (
 			$this->isPublished() === true &&
@@ -835,11 +829,8 @@ class Page extends ModelWithContent
 		string|null $handler = null,
 		string|null $languageCode = null
 	): int|string|false|null {
-		$identifier = $this->isDraft() === true ? 'changes' : 'published';
-
-		$modified = $this->storage()->modified(
-			$identifier,
-			$languageCode
+		$modified = $this->version()->modified(
+			$languageCode ?? 'current'
 		);
 
 		if ($modified === null) {
@@ -946,7 +937,6 @@ class Page extends ModelWithContent
 		if ($this->isDraft() === true) {
 			$uri = new Uri($url);
 			$uri->query->token = $this->token();
-
 			$url = $uri->toString();
 		}
 
@@ -992,11 +982,10 @@ class Page extends ModelWithContent
 
 		// fetch the page regularly
 		if ($html === null) {
-			if ($contentType === 'html') {
-				$template = $this->template();
-			} else {
-				$template = $this->representation($contentType);
-			}
+			$template = match ($contentType) {
+				'html'  => $this->template(),
+				default => $this->representation($contentType)
+			};
 
 			if ($template->exists() === false) {
 				throw new NotFoundException([
@@ -1088,7 +1077,7 @@ class Page extends ModelWithContent
 	 *
 	 * @return $this
 	 */
-	protected function setBlueprint(array $blueprint = null): static
+	protected function setBlueprint(array|null $blueprint = null): static
 	{
 		if ($blueprint !== null) {
 			$blueprint['model'] = $this;
@@ -1103,7 +1092,7 @@ class Page extends ModelWithContent
 	 *
 	 * @return $this
 	 */
-	protected function setTemplate(string $template = null): static
+	protected function setTemplate(string|null $template = null): static
 	{
 		if ($template !== null) {
 			$this->intendedTemplate = $this->kirby()->template($template);
@@ -1117,7 +1106,7 @@ class Page extends ModelWithContent
 	 *
 	 * @return $this
 	 */
-	protected function setUrl(string $url = null): static
+	protected function setUrl(string|null $url = null): static
 	{
 		if (is_string($url) === true) {
 			$url = rtrim($url, '/');
@@ -1130,7 +1119,7 @@ class Page extends ModelWithContent
 	/**
 	 * Returns the slug of the page
 	 */
-	public function slug(string $languageCode = null): string
+	public function slug(string|null $languageCode = null): string
 	{
 		if ($this->kirby()->multilang() === true) {
 			$languageCode      ??= $this->kirby()->languageCode();
@@ -1196,7 +1185,8 @@ class Page extends ModelWithContent
 	 */
 	public function toArray(): array
 	{
-		return array_merge(parent::toArray(), [
+		return [
+			...parent::toArray(),
 			'children'  => $this->children()->keys(),
 			'files'     => $this->files()->keys(),
 			'id'        => $this->id(),
@@ -1209,7 +1199,7 @@ class Page extends ModelWithContent
 			'uid'       => $this->uid(),
 			'uri'       => $this->uri(),
 			'url'       => $this->url()
-		]);
+		];
 	}
 
 	/**
@@ -1242,7 +1232,7 @@ class Page extends ModelWithContent
 	 * The uri is the same as the id, except
 	 * that it will be translated in multi-language setups
 	 */
-	public function uri(string $languageCode = null): string
+	public function uri(string|null $languageCode = null): string
 	{
 		// set the id, depending on the parent
 		if ($parent = $this->parent()) {
@@ -1298,7 +1288,7 @@ class Page extends ModelWithContent
 	 */
 	public function urlForLanguage(
 		$language = null,
-		array $options = null
+		array|null $options = null
 	): string {
 		if ($options !== null) {
 			return Url::to($this->urlForLanguage($language), $options);

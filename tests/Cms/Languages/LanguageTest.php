@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
@@ -15,8 +16,6 @@ use Kirby\TestCase;
 class LanguageTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Language';
-
-	protected $app;
 
 	public function setUp(): void
 	{
@@ -88,6 +87,8 @@ class LanguageTest extends TestCase
 	 */
 	public function testCreate()
 	{
+		$this->app->impersonate('kirby');
+
 		$language = Language::create([
 			'code' => 'en'
 		]);
@@ -102,15 +103,55 @@ class LanguageTest extends TestCase
 	/**
 	 * @covers ::create
 	 */
+	public function testCreateNoPermissions()
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'users/editor' => [
+					'name' => 'editor',
+					'permissions' => [
+						'languages' => [
+							'create' => false
+						]
+					]
+				],
+			],
+			'users' => [
+				['email' => 'test@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to create a language');
+
+		$app->impersonate('test@getkirby.com');
+		Language::create([
+			'code' => 'en'
+		]);
+	}
+
+	/**
+	 * @covers ::create
+	 */
+	public function testCreateWithoutLoggedUser()
+	{
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to create a language');
+
+		Language::create([
+			'code' => 'en'
+		]);
+	}
+
+	/**
+	 * @covers ::create
+	 */
 	public function testCreateHooks()
 	{
 		$calls = 0;
 		$phpunit = $this;
 
-		new App([
-			'roots' => [
-				'index' => static::TMP,
-			],
+		$app = $this->app->clone([
 			'hooks' => [
 				'language.create:before' => function (Language $language, array $input) use ($phpunit, &$calls) {
 					$phpunit->assertInstanceOf(Language::class, $language);
@@ -126,6 +167,8 @@ class LanguageTest extends TestCase
 				}
 			]
 		]);
+
+		$app->impersonate('kirby');
 
 		Language::create([
 			'code' => 'de'
@@ -150,8 +193,56 @@ class LanguageTest extends TestCase
 	 */
 	public function testDelete()
 	{
+		$this->app->impersonate('kirby');
+
 		$language = Language::create(['code' => 'en']);
 		$this->assertTrue($language->delete());
+	}
+
+	/**
+	 * @covers ::delete
+	 */
+	public function testDeleteNoPermissions()
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'users/editor' => [
+					'name' => 'editor',
+					'permissions' => [
+						'languages' => [
+							'create' => true,
+							'delete' => false
+						]
+					]
+				],
+			],
+			'users' => [
+				['email' => 'test@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to delete the language');
+
+		$app->impersonate('test@getkirby.com');
+		$language = Language::create(['code' => 'en']);
+		$language->delete();
+	}
+
+	/**
+	 * @covers ::delete
+	 */
+	public function testDeleteWithoutLoggedUser()
+	{
+		$this->app->impersonate('kirby');
+		$language = Language::create(['code' => 'en']);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to delete the language');
+
+		// unimpersonate and test the method
+		$this->app->impersonate();
+		$language->delete();
 	}
 
 	/**
@@ -162,7 +253,7 @@ class LanguageTest extends TestCase
 		$calls = 0;
 		$phpunit = $this;
 
-		new App([
+		$app = new App([
 			'roots' => [
 				'index' => static::TMP,
 			],
@@ -181,6 +272,8 @@ class LanguageTest extends TestCase
 				}
 			]
 		]);
+
+		$app->impersonate('kirby');
 
 		$language = Language::create([
 			'code' => 'en',
@@ -223,6 +316,59 @@ class LanguageTest extends TestCase
 			'direction' => 'invalid'
 		]);
 		$this->assertSame('ltr', $language->direction());
+	}
+
+	public function testEnsureInMultiLanguageMode()
+	{
+		$app = new App([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true,
+				],
+				[
+					'code'    => 'de',
+				],
+			]
+		]);
+
+		// default language
+		$language = Language::ensure();
+
+		$this->assertSame('en', $language->code());
+
+		// with language code
+		$language = Language::ensure('de');
+
+		$this->assertSame('de', $language->code());
+
+		// with language object
+		$language = Language::ensure($app->language('de'));
+
+		$this->assertSame('de', $language->code());
+
+		// with `current` keyword
+		$language = Language::ensure('current');
+
+		$this->assertSame('en', $language->code());
+
+		// with `default` keyword
+		$language = Language::ensure('default');
+
+		$this->assertSame('en', $language->code());
+	}
+
+	public function testEnsureInSingleLanguageMode()
+	{
+		new App([
+			'roots' => [
+				'index' => static::TMP,
+			]
+		]);
+
+		$language = Language::ensure();
+
+		$this->assertSame('en', $language->code());
 	}
 
 	/**
@@ -278,6 +424,27 @@ class LanguageTest extends TestCase
 			'default' => 'foo'
 		]);
 		$this->assertFalse($language->isDefault());
+	}
+
+	/**
+	 * @covers ::isSingle
+	 */
+	public function testIsSingle()
+	{
+		// default
+		$language = new Language([
+			'code' => 'en'
+		]);
+
+		$this->assertFalse($language->isSingle());
+
+		// true
+		$language = new Language([
+			'code'   => 'en',
+			'single' => true
+		]);
+
+		$this->assertTrue($language->isSingle());
 	}
 
 	/**
@@ -566,6 +733,17 @@ class LanguageTest extends TestCase
 	}
 
 	/**
+	 * @covers ::single
+	 */
+	public function testSingle()
+	{
+		$language = Language::single();
+
+		$this->assertSame('en', $language->code());
+		$this->assertSame('en', $language->name());
+	}
+
+	/**
 	 * @covers ::toArray
 	 * @covers ::__debugInfo
 	 */
@@ -649,6 +827,8 @@ class LanguageTest extends TestCase
 	{
 		Dir::make(static::TMP . '/content');
 
+		$this->app->impersonate('kirby');
+
 		$language = Language::create([
 			'code' => 'en'
 		]);
@@ -668,6 +848,8 @@ class LanguageTest extends TestCase
 				'index' => static::TMP,
 			]
 		]);
+
+		$app->impersonate('kirby');
 
 		$this->assertFalse($app->multilang());
 		$this->assertNull($app->defaultLanguage());
@@ -717,7 +899,7 @@ class LanguageTest extends TestCase
 
 		Dir::make(static::TMP . '/content');
 
-		new App([
+		$app = new App([
 			'roots' => [
 				'index' => static::TMP,
 			],
@@ -745,10 +927,59 @@ class LanguageTest extends TestCase
 			]
 		]);
 
+		$app->impersonate('kirby');
+
 		$language = Language::create(['code' => 'en']);
 		$language->update(['name' => 'English']);
 
 		$this->assertSame(2, $calls);
+	}
+
+	/**
+	 * @covers ::update
+	 */
+	public function testUpdateNoPermissions()
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'users/editor' => [
+					'name'        => 'editor',
+					'permissions' => [
+						'languages' => [
+							'create' => true,
+							'update' => false
+						]
+					]
+				],
+			],
+			'users'      => [
+				['email' => 'test@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to update the language');
+
+		$app->impersonate('test@getkirby.com');
+
+		$language = Language::create(['code' => 'en']);
+		$language->update(['name' => 'English']);
+	}
+
+	/**
+	 * @covers ::update
+	 */
+	public function testUpdateWithoutLoggedUser()
+	{
+		$this->app->impersonate('kirby');
+		$language = Language::create(['code' => 'en']);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to update the language');
+
+		// unimpersonate and test the method
+		$this->app->impersonate();
+		$language->update(['name' => 'English']);
 	}
 
 	/**

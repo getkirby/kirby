@@ -19,6 +19,8 @@ use Kirby\Uuid\HasUuids;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @extends \Kirby\Cms\Collection<\Kirby\Cms\File>
  */
 class Files extends Collection
 {
@@ -30,11 +32,16 @@ class Files extends Collection
 	public static array $methods = [];
 
 	/**
+	 * @var \Kirby\Cms\Page|\Kirby\Cms\Site|\Kirby\Cms\User
+	 */
+	protected object|null $parent = null;
+
+	/**
 	 * Adds a single file or
 	 * an entire second collection to the
 	 * current collection
 	 *
-	 * @param \Kirby\Cms\Files|\Kirby\Cms\File|string $object
+	 * @param static|\Kirby\Cms\File|string $object
 	 * @return $this
 	 * @throws \Kirby\Exception\InvalidArgumentException When no `File` or `Files` object or an ID of an existing file is passed
 	 */
@@ -42,7 +49,7 @@ class Files extends Collection
 	{
 		// add a files collection
 		if ($object instanceof self) {
-			$this->data = array_merge($this->data, $object->data);
+			$this->data = [...$this->data, ...$object->data];
 
 		// add a file by id
 		} elseif (
@@ -87,8 +94,10 @@ class Files extends Collection
 	/**
 	 * Creates a files collection from an array of props
 	 */
-	public static function factory(array $files, Page|Site|User $parent): static
-	{
+	public static function factory(
+		array $files,
+		Page|Site|User $parent
+	): static {
 		$collection = new static([], $parent);
 
 		foreach ($files as $props) {
@@ -126,7 +135,7 @@ class Files extends Collection
 	 *                                  `null` for the current locale,
 	 *                                  `false` to disable number formatting
 	 */
-	public function niceSize($locale = null): string
+	public function niceSize(string|false|null $locale = null): string
 	{
 		return F::niceSize($this->size(), $locale);
 	}

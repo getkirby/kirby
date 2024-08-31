@@ -10,7 +10,7 @@ class EscapeTest extends TestCase
 	/**
 	 * All character encodings supported by htmlspecialchars()
 	 */
-	protected $supportedEncodings = [
+	protected array $supportedEncodings = [
 		'iso-8859-1',   'iso8859-1',    'iso-8859-5',   'iso8859-5',
 		'iso-8859-15',  'iso8859-15',   'utf-8',        'cp866',
 		'ibm866',       '866',          'cp1251',       'windows-1251',
@@ -22,7 +22,7 @@ class EscapeTest extends TestCase
 		'eucjp-win',    'macroman'
 	];
 
-	protected $htmlSpecialChars = [
+	protected array $htmlSpecialChars = [
 		'\''    => '&#039;',
 		'"'     => '&quot;',
 		'<'     => '&lt;',
@@ -30,7 +30,7 @@ class EscapeTest extends TestCase
 		'&'     => '&amp;',
 	];
 
-	protected $htmlAttrSpecialChars = [
+	protected array $htmlAttrSpecialChars = [
 		'\''    => '&#x27;',
 		// Characters beyond ASCII value 255 to unicode escape
 		'Ā'     => '&#x0100;',
@@ -62,7 +62,7 @@ class EscapeTest extends TestCase
 		' '     => '&#x20;',
 	];
 
-	protected $jsSpecialChars = [
+	protected array $jsSpecialChars = [
 		// HTML special chars - escape without exception to hex
 		'<'     => '\\x3C',
 		'>'     => '\\x3E',
@@ -93,7 +93,7 @@ class EscapeTest extends TestCase
 		' '     => '\\x20',
 	];
 
-	protected $urlSpecialChars = [
+	protected array $urlSpecialChars = [
 		// HTML special chars - escape without exception to percent encoding
 		'<'     => '%3C',
 		'>'     => '%3E',
@@ -128,7 +128,7 @@ class EscapeTest extends TestCase
 		'+'     => '%2B',
 	];
 
-	protected $cssSpecialChars = [
+	protected array $cssSpecialChars = [
 		// HTML special chars - escape without exception to hex
 		'<'     => '\\3C ',
 		'>'     => '\\3E ',
@@ -317,9 +317,10 @@ class EscapeTest extends TestCase
 	{
 		$immune = [',', '.', '_']; // Exceptions to escaping ranges
 		for ($chr = 0; $chr < 0xFF; $chr++) {
-			if ($chr >= 0x30 && $chr <= 0x39
-				|| $chr >= 0x41 && $chr <= 0x5A
-				|| $chr >= 0x61 && $chr <= 0x7A
+			if (
+				$chr >= 0x30 && $chr <= 0x39 ||
+				$chr >= 0x41 && $chr <= 0x5A ||
+				$chr >= 0x61 && $chr <= 0x7A
 			) {
 				$literal = $this->codepointToUtf8($chr);
 				$this->assertSame($literal, Escape::js($literal));
@@ -345,9 +346,10 @@ class EscapeTest extends TestCase
 	{
 		$immune = [',', '.', '-', '_']; // Exceptions to escaping ranges
 		for ($chr = 0; $chr < 0xFF; $chr++) {
-			if ($chr >= 0x30 && $chr <= 0x39
-				|| $chr >= 0x41 && $chr <= 0x5A
-				|| $chr >= 0x61 && $chr <= 0x7A
+			if (
+				$chr >= 0x30 && $chr <= 0x39 ||
+				$chr >= 0x41 && $chr <= 0x5A ||
+				$chr >= 0x61 && $chr <= 0x7A
 			) {
 				$literal = $this->codepointToUtf8($chr);
 				$this->assertSame($literal, Escape::attr($literal));
@@ -373,9 +375,10 @@ class EscapeTest extends TestCase
 	{
 		$immune = []; // CSS has no exceptions to escaping ranges
 		for ($chr = 0; $chr < 0xFF; $chr++) {
-			if ($chr >= 0x30 && $chr <= 0x39
-				|| $chr >= 0x41 && $chr <= 0x5A
-				|| $chr >= 0x61 && $chr <= 0x7A
+			if (
+				$chr >= 0x30 && $chr <= 0x39 ||
+				$chr >= 0x41 && $chr <= 0x5A ||
+				$chr >= 0x61 && $chr <= 0x7A
 			) {
 				$literal = $this->codepointToUtf8($chr);
 				$this->assertSame($literal, Escape::css($literal));

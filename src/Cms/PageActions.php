@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Content\VersionId;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
@@ -31,8 +32,11 @@ trait PageActions
 	 * of copy objects for single or multilang environments
 	 * @internal
 	 */
-	protected function adaptCopy(Page $copy, bool $files = false, bool $children = false): Page
-	{
+	protected function adaptCopy(
+		Page $copy,
+		bool $files = false,
+		bool $children = false
+	): Page {
 		if ($this->kirby()->multilang() === true) {
 			foreach ($this->kirby()->languages() as $language) {
 				// overwrite with new UUID for the page and files
@@ -247,8 +251,10 @@ trait PageActions
 	 * @param int|null $position Optional sorting number
 	 * @throws \Kirby\Exception\InvalidArgumentException If an invalid status is being passed
 	 */
-	public function changeStatus(string $status, int|null $position = null): static
-	{
+	public function changeStatus(
+		string $status,
+		int|null $position = null
+	): static {
 		return match ($status) {
 			'draft'    => $this->changeStatusToDraft(),
 			'listed'   => $this->changeStatusToListed($position),
@@ -392,10 +398,10 @@ trait PageActions
 	/**
 	 * Commits a page action, by following these steps
 	 *
-	 * 1. checks the action rules
-	 * 2. sends the before hook
+	 * 1. applies the `before` hook
+	 * 2. checks the action rules
 	 * 3. commits the store action
-	 * 4. sends the after hook
+	 * 4. applies the `after` hook
 	 * 5. returns the result
 	 */
 	protected function commit(
@@ -403,27 +409,49 @@ trait PageActions
 		array $arguments,
 		Closure $callback
 	): mixed {
-		$old            = $this->hardcopy();
-		$kirby          = $this->kirby();
-		$argumentValues = array_values($arguments);
+		$kirby = $this->kirby();
 
-		$this->rules()->$action(...$argumentValues);
-		$kirby->trigger('page.' . $action . ':before', $arguments);
+		// store copy of the model to be passed
+		// to the `after` hook for comparison
+		$old = $this->hardcopy();
 
-		$result = $callback(...$argumentValues);
+		// check page rules
+		$this->rules()->$action(...array_values($arguments));
 
-		if ($action === 'create') {
-			$argumentsAfter = ['page' => $result];
-		} elseif ($action === 'duplicate') {
-			$argumentsAfter = ['duplicatePage' => $result, 'originalPage' => $old];
-		} elseif ($action === 'delete') {
-			$argumentsAfter = ['status' => $result, 'page' => $old];
-		} else {
-			$argumentsAfter = ['newPage' => $result, 'oldPage' => $old];
-		}
-		$kirby->trigger('page.' . $action . ':after', $argumentsAfter);
+		// run `before` hook and pass all arguments;
+		// the very first argument (which should be the model)
+		// is modified by the return value from the hook (if any returned)
+		$appliedTo = array_key_first($arguments);
+		$arguments[$appliedTo] = $kirby->apply(
+			'page.' . $action . ':before',
+			$arguments,
+			$appliedTo
+		);
+
+		// check page rules again, after the hook got applied
+		$this->rules()->$action(...array_values($arguments));
+
+		// run the main action closure
+		$result = $callback(...array_values($arguments));
+
+		// determine arguments for `after` hook depending on the action
+		$argumentsAfter = match ($action) {
+			'create'    => ['page' => $result],
+			'duplicate' => ['duplicatePage' => $result, 'originalPage' => $old],
+			'delete'    => ['status' => $result, 'page' => $old],
+			default     => ['newPage' => $result, 'oldPage' => $old]
+		};
+
+		// run `after` hook and apply return to action result
+		// (first argument, usually the new model) if anything returned
+		$result = $kirby->apply(
+			'page.' . $action . ':after',
+			$argumentsAfter,
+			array_key_first($argumentsAfter)
+		);
 
 		$kirby->cache('pages')->flush();
+
 		return $result;
 	}
 
@@ -434,13 +462,13 @@ trait PageActions
 	 */
 	public function copy(array $options = []): static
 	{
-		$slug        = $options['slug']      ?? $this->slug();
-		$isDraft     = $options['isDraft']   ?? $this->isDraft();
-		$parent      = $options['parent']    ?? null;
-		$parentModel = $options['parent']    ?? $this->site();
-		$num         = $options['num']       ?? null;
-		$children    = $options['children']  ?? false;
-		$files       = $options['files']     ?? false;
+		$slug        = $options['slug']     ?? $this->slug();
+		$isDraft     = $options['isDraft']  ?? $this->isDraft();
+		$parent      = $options['parent']   ?? null;
+		$parentModel = $options['parent']   ?? $this->site();
+		$num         = $options['num']      ?? null;
+		$children    = $options['children'] ?? false;
+		$files       = $options['files']    ?? false;
 
 		// clean up the slug
 		$slug = Str::slug($slug);
@@ -471,8 +499,8 @@ trait PageActions
 				$ignore[] = $file->root();
 
 				// append all content files
-				array_push($ignore, ...$file->storage()->contentFiles('published'));
-				array_push($ignore, ...$file->storage()->contentFiles('changes'));
+				array_push($ignore, ...$file->storage()->contentFiles(VersionId::published()));
+				array_push($ignore, ...$file->storage()->contentFiles(VersionId::changes()));
 			}
 		}
 
@@ -511,11 +539,10 @@ trait PageActions
 		$page = Page::factory($props);
 
 		// always create pages in the default language
-		if ($page->kirby()->multilang() === true) {
-			$languageCode = $page->kirby()->defaultLanguage()->code();
-		} else {
-			$languageCode = null;
-		}
+		$languageCode = match ($page->kirby()->multilang()) {
+			true  => $page->kirby()->defaultLanguage()->code(),
+			false => null
+		};
 
 		// create a form for the page
 		// use always default language to fill form with default values
@@ -561,12 +588,13 @@ trait PageActions
 	 */
 	public function createChild(array $props): Page
 	{
-		$props = array_merge($props, [
+		$props = [
+			...$props,
 			'url'    => null,
 			'num'    => null,
 			'parent' => $this,
 			'site'   => $this->site(),
-		]);
+		];
 
 		$modelClass = Page::$models[$props['template'] ?? null] ?? Page::class;
 		return $modelClass::create($props);
@@ -576,7 +604,7 @@ trait PageActions
 	 * Create the sorting number for the page
 	 * depending on the blueprint settings
 	 */
-	public function createNum(int $num = null): int
+	public function createNum(int|null $num = null): int
 	{
 		$mode = $this->blueprint()->num();
 
@@ -731,11 +759,10 @@ trait PageActions
 			$page->uuid()?->clear(true);
 
 			// move drafts into the drafts folder of the parent
-			if ($page->isDraft() === true) {
-				$newRoot = $parent->root() . '/_drafts/' . $page->dirname();
-			} else {
-				$newRoot = $parent->root() . '/' . $page->dirname();
-			}
+			$newRoot = match ($page->isDraft()) {
+				true  => $parent->root() . '/_drafts/' . $page->dirname(),
+				false => $parent->root() . '/' . $page->dirname()
+			};
 
 			// try to move the page directory on disk
 			if (Dir::move($page->root(), $newRoot) !== true) {
@@ -824,7 +851,7 @@ trait PageActions
 	/**
 	 * @throws \Kirby\Exception\LogicException If the page is not included in the siblings collection
 	 */
-	protected function resortSiblingsAfterListing(int $position = null): bool
+	protected function resortSiblingsAfterListing(int|null $position = null): bool
 	{
 		// get all siblings including the current page
 		$siblings = $this
@@ -986,7 +1013,6 @@ trait PageActions
 	 *
 	 * @param \Kirby\Cms\Page $page
 	 * @param string $method Method to call on the parent collections
-	 * @param \Kirby\Cms\Page|null $parentMdel
 	 */
 	protected static function updateParentCollections(
 		$page,

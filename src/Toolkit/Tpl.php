@@ -31,7 +31,6 @@ class Tpl
 
 		ob_start();
 
-		$exception = null;
 		try {
 			F::load($file, null, $data);
 		} catch (Throwable $e) {
@@ -41,7 +40,7 @@ class Tpl
 		$content = ob_get_contents();
 		ob_end_clean();
 
-		if ($exception !== null) {
+		if (isset($exception) === true) {
 			throw $exception;
 		}
 

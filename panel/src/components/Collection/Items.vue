@@ -3,6 +3,8 @@
 	<k-table
 		v-if="layout === 'table'"
 		v-bind="table"
+		:class="$attrs.class"
+		:style="$attrs.style"
 		@change="$emit('change', $event)"
 		@sort="$emit('sort', $event)"
 		@option="onOption"
@@ -18,13 +20,13 @@
 	<!-- Layout: cards, cardlets, list -->
 	<k-draggable
 		v-else
-		class="k-items"
-		:class="'k-' + layout + '-items'"
+		:class="['k-items', 'k-' + layout + '-items', $attrs.class]"
 		:data-layout="layout"
 		:data-size="size"
 		:handle="true"
 		:list="items"
 		:options="dragOptions"
+		:style="$attrs.style"
 		@change="$emit('change', $event)"
 		@end="$emit('sort', items, $event)"
 	>

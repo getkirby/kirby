@@ -16,6 +16,8 @@ use TypeError;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
+ * @extends \Kirby\Cms\Collection<\Kirby\Blueprint\Node>
+ *
  * // TODO: include in test coverage once blueprint refactoring is done
  * @codeCoverageIgnore
  */

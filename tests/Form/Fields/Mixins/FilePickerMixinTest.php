@@ -34,9 +34,7 @@ class FilePickerMixinTest extends TestCase
 			'test' => [
 				'mixins'  => ['filepicker'],
 				'methods' => [
-					'files' => function () {
-						return $this->filepicker()['data'];
-					}
+					'files' => fn () => $this->filepicker()['data']
 				]
 			]
 		];
@@ -68,9 +66,7 @@ class FilePickerMixinTest extends TestCase
 			'test' => [
 				'mixins'  => ['filepicker'],
 				'methods' => [
-					'files' => function () {
-						return $this->filepicker()['data'];
-					}
+					'files' => fn () => $this->filepicker()['data']
 				]
 			]
 		];
@@ -102,9 +98,7 @@ class FilePickerMixinTest extends TestCase
 			'test' => [
 				'mixins'  => ['filepicker'],
 				'methods' => [
-					'files' => function () {
-						return $this->filepicker()['data'];
-					}
+					'files' => fn () => $this->filepicker()['data']
 				]
 			]
 		];
@@ -136,9 +130,7 @@ class FilePickerMixinTest extends TestCase
 			'test' => [
 				'mixins'  => ['filepicker'],
 				'methods' => [
-					'files' => function () {
-						return $this->filepicker()['data'];
-					}
+					'files' => fn () => $this->filepicker()['data']
 				]
 			]
 		];
@@ -169,16 +161,12 @@ class FilePickerMixinTest extends TestCase
 			'test' => [
 				'mixins'  => ['filepicker'],
 				'props' => [
-					'query' => function (string $query = null) {
-						return $query;
-					}
+					'query' => fn (string|null $query = null) => $query
 				],
 				'methods' => [
-					'files' => function () {
-						return $this->filepicker([
-							'query' => $this->query
-						])['data'];
-					}
+					'files' => fn () => $this->filepicker([
+						'query' => $this->query
+					])['data']
 				]
 			]
 		];
@@ -213,18 +201,12 @@ class FilePickerMixinTest extends TestCase
 			'test' => [
 				'mixins'  => ['filepicker'],
 				'props' => [
-					'query' => function (string $query = null) {
-						return $query;
-					}
+					'query' => fn (string|null $query = null) => $query
 				],
 				'methods' => [
-					'files' => function () {
-						return $this->filepicker([
-							'map' => function ($file) {
-								return $file->id();
-							}
-						])['data'];
-					}
+					'files' => fn () => $this->filepicker([
+						'map' => fn ($file) => $file->id()
+					])['data']
 				]
 			]
 		];

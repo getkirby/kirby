@@ -9,7 +9,6 @@ import Legacy from "./panel/legacy.js";
 import Libraries from "./libraries/index.js";
 import Panel from "./panel/panel.js";
 import store from "./store/store.js";
-import Vuelidate from "vuelidate";
 
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
@@ -27,7 +26,6 @@ import "./styles/reset.css";
  */
 Vue.use(Helpers);
 Vue.use(Libraries);
-Vue.use(Vuelidate);
 Vue.use(Components);
 
 /**
@@ -45,17 +43,6 @@ import "./styles/utilities.css";
 window.panel = Vue.prototype.$panel = Panel.create(window.panel.plugins);
 
 /**
- * Some shortcuts to the Panel's features
- */
-Vue.prototype.$dialog = window.panel.dialog.open.bind(window.panel.dialog);
-Vue.prototype.$drawer = window.panel.drawer.open.bind(window.panel.drawer);
-Vue.prototype.$dropdown = window.panel.dropdown.openAsync.bind(
-	window.panel.dropdown
-);
-Vue.prototype.$go = window.panel.view.open.bind(window.panel.view);
-Vue.prototype.$reload = window.panel.reload.bind(window.panel);
-
-/**
  * Create the Vue application
  */
 window.panel.app = new Vue({
@@ -69,12 +56,6 @@ window.panel.app = new Vue({
 Vue.use(I18n);
 Vue.use(ErrorHandling);
 Vue.use(Legacy);
-
-// container queries CSS polyfill
-// TODO: remove when global support for container queries is reached
-if (CSS.supports("container", "foo / inline-size") === false) {
-	import("container-query-polyfill");
-}
 
 /**
  * Mount the Vue application

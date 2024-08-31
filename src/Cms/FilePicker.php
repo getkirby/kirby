@@ -22,10 +22,10 @@ class FilePicker extends Picker
 	 */
 	public function defaults(): array
 	{
-		$defaults = parent::defaults();
-		$defaults['text'] = '{{ file.filename }}';
-
-		return $defaults;
+		return [
+			...parent::defaults(),
+			'text' => '{{ file.filename }}'
+		];
 	}
 
 	/**

@@ -613,10 +613,10 @@ class StrTest extends TestCase
 	public function testMatchAll()
 	{
 		$longText = <<<TEXT
-		This is line with "one" and something else to match.
-		This is line with "two" and another thing to match.
-		This is line with "three" and yet another match.
-		TEXT;
+			This is line with "one" and something else to match.
+			This is line with "two" and another thing to match.
+			This is line with "three" and yet another match.
+			TEXT;
 
 		$matches = Str::matchAll($longText, '/"(.*)" and (.*).$/m');
 
@@ -889,7 +889,7 @@ class StrTest extends TestCase
 	 */
 	public function testReplacementsInvalid()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 
 		Str::replacements('string', ['array'], 1);
 	}
@@ -939,7 +939,7 @@ class StrTest extends TestCase
 	 */
 	public function testReplaceReplacementsInvalid()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 
 		Str::replaceReplacements('some string', [
 			[
@@ -1235,11 +1235,11 @@ class StrTest extends TestCase
 
 		// custom separator with line-breaks
 		$string = <<<EOT
-            ---
-            -abc-
-            ---
-            -def-
-EOT;
+			---
+			-abc-
+			---
+			-def-
+			EOT;
 		$this->assertSame(['-abc-', '-def-'], Str::split($string, '---'));
 
 		// input is already an array
@@ -1542,7 +1542,6 @@ EOT;
 		$this->assertSame('Omelette du&nbsp;fromage.', Str::widont('Omelette du fromage.'));
 		$this->assertSame('Omelette du&nbsp;fromage?', Str::widont('Omelette du fromage?'));
 		$this->assertSame('Omelette du&nbsp;fromage&nbsp;?', Str::widont('Omelette du fromage ?'));
-		$this->assertSame('', Str::widont());
 	}
 
 	/**

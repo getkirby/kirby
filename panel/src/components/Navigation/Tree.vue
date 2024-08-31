@@ -1,5 +1,8 @@
 <template>
-	<ul :class="$options.name" class="k-tree" :style="{ '--tree-level': level }">
+	<ul
+		:class="['k-tree', $options.name, $attrs.class]"
+		:style="{ '--tree-level': level, ...$attrs.style }"
+	>
 		<li
 			v-for="item in state"
 			:key="item.value"
@@ -135,12 +138,12 @@ export default {
 	background: var(--tree-color-back);
 }
 .k-tree-branch:hover,
-li[aria-current] > .k-tree-branch {
+li[aria-current="true"] > .k-tree-branch {
 	--tree-color-text: var(--tree-color-selected-text);
 	background: var(--tree-color-hover-back);
 	border-radius: var(--rounded);
 }
-li[aria-current] > .k-tree-branch {
+li[aria-current="true"] > .k-tree-branch {
 	background: var(--tree-color-selected-back);
 }
 .k-tree-toggle {

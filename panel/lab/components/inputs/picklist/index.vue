@@ -1,6 +1,6 @@
 <template>
 	<k-lab-form>
-		<k-lab-examples>
+		<k-lab-examples class="k-lab-input-examples">
 			<k-lab-example label="Default">
 				<k-picklist-input
 					name="picklist"
@@ -61,6 +61,10 @@
 
 			<k-lab-example label="Create">
 				<k-picklist-input :create="true" :options="options" />
+			</k-lab-example>
+
+			<k-lab-example label="Min: 2">
+				<k-picklist-input :create="true" :options="options" :min="2" />
 			</k-lab-example>
 
 			<k-lab-example label="Max: 2">

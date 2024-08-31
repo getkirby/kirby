@@ -13,8 +13,6 @@ class DropdownTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Dropdown';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([
@@ -148,14 +146,12 @@ class DropdownTest extends TestCase
 	{
 		$dropdown = [
 			'pattern' => 'test',
-			'action'  => $action = function () {
-				return [
-					[
-						'text' => 'Test',
-						'link' => '/test'
-					]
-				];
-			}
+			'action'  => $action = fn () => [
+				[
+					'text' => 'Test',
+					'link' => '/test'
+				]
+			]
 		];
 
 		$routes = Dropdown::routes(
@@ -187,14 +183,12 @@ class DropdownTest extends TestCase
 			'dropdowns' => [
 				'test' => [
 					'pattern' => 'test',
-					'options' => $action = function () {
-						return [
-							[
-								'text' => 'Test',
-								'link' => '/test'
-							]
-						];
-					}
+					'options' => $action = fn () => [
+						[
+							'text' => 'Test',
+							'link' => '/test'
+						]
+					]
 				]
 			]
 		];
@@ -221,14 +215,12 @@ class DropdownTest extends TestCase
 	{
 		$area = [
 			'dropdowns' => [
-				'test' => $action = function () {
-					return [
-						[
-							'text' => 'Test',
-							'link' => '/test'
-						]
-					];
-				}
+				'test' => $action = fn () => [
+					[
+						'text' => 'Test',
+						'link' => '/test'
+					]
+				]
 			]
 		];
 

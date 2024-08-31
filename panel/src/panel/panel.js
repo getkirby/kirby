@@ -1,5 +1,6 @@
 import Activation from "./activiation.js";
 import Api from "@/api/index.js";
+import Content from "./content.js";
 import Dialog from "./dialog.js";
 import Drag from "./drag.js";
 import Drawer from "./drawer.js";
@@ -11,6 +12,7 @@ import Plugins from "./plugins.js";
 import Menu from "./menu.js";
 import Search from "./search.js";
 import System from "./system.js";
+import Theme from "./theme.js";
 import Translation from "./translation.js";
 import { buildUrl, isUrl } from "@/helpers/url.js";
 import { reactive } from "vue";
@@ -71,9 +73,11 @@ export default {
 		this.isOffline = false;
 
 		this.activation = Activation(this);
+		this.content = Content(this);
 		this.drag = Drag(this);
 		this.events = Events(this);
 		this.searcher = Search(this);
+		this.theme = Theme(this);
 		this.upload = Upload(this);
 
 		// state objects

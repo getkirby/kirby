@@ -26,26 +26,8 @@
 			</template>
 
 			<template #buttons>
-				<k-button-group>
-					<k-button
-						:disabled="isLocked"
-						:dropdown="true"
-						:title="$t('settings')"
-						icon="cog"
-						size="sm"
-						variant="filled"
-						class="k-user-view-options"
-						@click="$refs.settings.toggle()"
-					/>
-					<k-dropdown-content
-						ref="settings"
-						align-x="end"
-						:options="$dropdown(id)"
-					/>
-					<k-languages-dropdown />
-				</k-button-group>
-
-				<k-form-buttons :lock="lock" />
+				<k-view-buttons :buttons="buttons" />
+				<k-form-buttons />
 			</template>
 		</k-header>
 

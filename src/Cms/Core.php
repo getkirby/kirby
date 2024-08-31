@@ -10,6 +10,7 @@ use Kirby\Cms\Auth\EmailChallenge;
 use Kirby\Cms\Auth\TotpChallenge;
 use Kirby\Form\Field\BlocksField;
 use Kirby\Form\Field\LayoutField;
+use Kirby\Panel\Ui\FilePreviews\ImageFilePreview;
 
 /**
  * The Core class lists all parts of Kirby
@@ -272,6 +273,16 @@ class Core
 			'url'         => $this->root . '/fields/url.php',
 			'users'       => $this->root . '/fields/users.php',
 			'writer'      => $this->root . '/fields/writer.php'
+		];
+	}
+
+	/**
+	 * Returns a map of all default file preview handlers
+	 */
+	public function filePreviews(): array
+	{
+		return [
+			ImageFilePreview::class
 		];
 	}
 

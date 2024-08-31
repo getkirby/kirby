@@ -6,6 +6,7 @@ use Kirby\Content\Content;
 use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
+use Stringable;
 use Throwable;
 
 /**
@@ -19,8 +20,10 @@ use Throwable;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @extends \Kirby\Cms\Item<\Kirby\Cms\Blocks>
  */
-class Block extends Item
+class Block extends Item implements Stringable
 {
 	use HasMethods;
 

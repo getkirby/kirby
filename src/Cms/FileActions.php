@@ -151,10 +151,10 @@ trait FileActions
 	/**
 	 * Commits a file action, by following these steps
 	 *
-	 * 1. checks the action rules
-	 * 2. sends the before hook
+	 * 1. applies the `before` hook
+	 * 2. checks the action rules
 	 * 3. commits the store action
-	 * 4. sends the after hook
+	 * 4. applies the `after` hook
 	 * 5. returns the result
 	 */
 	protected function commit(
@@ -162,24 +162,48 @@ trait FileActions
 		array $arguments,
 		Closure $callback
 	): mixed {
-		$old            = $this->hardcopy();
-		$kirby          = $this->kirby();
-		$argumentValues = array_values($arguments);
+		$kirby = $this->kirby();
 
-		$this->rules()->$action(...$argumentValues);
-		$kirby->trigger('file.' . $action . ':before', $arguments);
+		// store copy of the model to be passed
+		// to the `after` hook for comparison
+		$old = $this->hardcopy();
 
-		$result = $callback(...$argumentValues);
+		// check file rules
+		$this->rules()->$action(...array_values($arguments));
 
+		// run `before` hook and pass all arguments;
+		// the very first argument (which should be the model)
+		// is modified by the return value from the hook (if any returned)
+		$appliedTo = array_key_first($arguments);
+		$arguments[$appliedTo] = $kirby->apply(
+			'file.' . $action . ':before',
+			$arguments,
+			$appliedTo
+		);
+
+		// check file rules again, after the hook got applied
+		$this->rules()->$action(...array_values($arguments));
+
+		// run the main action closure
+		$result = $callback(...array_values($arguments));
+
+		// determine arguments for `after` hook depending on the action
 		$argumentsAfter = match ($action) {
 			'create' => ['file' => $result],
 			'delete' => ['status' => $result, 'file' => $old],
 			default  => ['newFile' => $result, 'oldFile' => $old]
 		};
 
-		$kirby->trigger('file.' . $action . ':after', $argumentsAfter);
+		// run `after` hook and apply return to action result
+		// (first argument, usually the new model) if anything returned
+		$result = $kirby->apply(
+			'file.' . $action . ':after',
+			$argumentsAfter,
+			array_key_first($argumentsAfter)
+		);
 
 		$kirby->cache('pages')->flush();
+
 		return $result;
 	}
 
@@ -225,7 +249,8 @@ trait FileActions
 		}
 
 		// prefer the filename from the props
-		$props['filename'] = F::safeName($props['filename'] ?? basename($props['source']));
+		$props['filename'] ??= basename($props['source']);
+		$props['filename']   = F::safeName($props['filename']);
 
 		$props['model'] = strtolower($props['template'] ?? 'default');
 
@@ -399,8 +424,8 @@ trait FileActions
 	 * @internal
 	 */
 	public function save(
-		array $data = null,
-		string $languageCode = null,
+		array|null $data = null,
+		string|null $languageCode = null,
 		bool $overwrite = false
 	): static {
 		$file = parent::save($data, $languageCode, $overwrite);
@@ -439,8 +464,8 @@ trait FileActions
 	 * @throws \Kirby\Exception\InvalidArgumentException If the input array contains invalid values
 	 */
 	public function update(
-		array $input = null,
-		string $languageCode = null,
+		array|null $input = null,
+		string|null $languageCode = null,
 		bool $validate = false
 	): static {
 		// delete all public media versions when focus field gets changed

@@ -19,22 +19,17 @@ use Closure;
 class Ingredients
 {
 	/**
-	 * @var array
-	 */
-	protected $ingredients = [];
-
-	/**
 	 * Creates a new ingredient collection
 	 */
-	public function __construct(array $ingredients)
-	{
-		$this->ingredients = $ingredients;
+	public function __construct(
+		protected array $ingredients = []
+	) {
 	}
 
 	/**
 	 * Magic getter for single ingredients
 	 */
-	public function __call(string $method, array $args = null): mixed
+	public function __call(string $method, array|null $args = null): mixed
 	{
 		return $this->ingredients[$method] ?? null;
 	}

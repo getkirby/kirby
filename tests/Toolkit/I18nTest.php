@@ -430,17 +430,11 @@ class I18nTest extends TestCase
 	{
 		I18n::$translations = [
 			'en' => [
-				'car' => function ($count) {
-					switch ($count) {
-						case 0:
-							return 'No car';
-						case 1:
-							return 'One car';
-						case in_array($count, [2, 3, 4]) === true:
-							return 'Few cars';
-						default:
-							return 'Many cars';
-					}
+				'car' => fn ($count) => match ($count) {
+					0       => 'No car',
+					1       => 'One car',
+					2, 3, 4 => 'Few cars',
+					default => 'Many cars'
 				}
 			]
 		];

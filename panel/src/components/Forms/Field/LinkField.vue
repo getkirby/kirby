@@ -1,6 +1,11 @@
 <template>
-	<k-field v-bind="$props" :input="id" class="k-link-field">
-		<k-input v-bind="$props" :invalid="isInvalid" :icon="false">
+	<k-field
+		v-bind="$props"
+		:class="['k-link-field', $attrs.class]"
+		:input="id"
+		:style="$attrs.style"
+	>
+		<k-input v-bind="$props" :icon="false">
 			<div class="k-link-input-header">
 				<!-- Type selector -->
 				<k-button
@@ -46,8 +51,8 @@
 					:disabled="disabled"
 					:pattern="currentType.pattern ?? null"
 					:placeholder="currentType.placeholder"
+					:required="required"
 					:value="linkValue"
-					@invalid="onInvalid"
 					@input="onInput"
 				/>
 			</div>
@@ -122,11 +127,7 @@ export default {
 			/**
 			 * Open/close state for the file or page browser
 			 */
-			expanded: false,
-			/**
-			 * Validation state for the wrapping `k-input` component
-			 */
-			isInvalid: false
+			expanded: false
 		};
 	},
 	computed: {
@@ -214,9 +215,6 @@ export default {
 
 			this.$emit("input", this.currentType.value(value));
 		},
-		onInvalid(invalid) {
-			this.isInvalid = !!invalid;
-		},
 		onOutsideClick(event) {
 			if (this.$el.contains(event.target) === false) {
 				this.expanded = false;
@@ -240,9 +238,6 @@ export default {
 			if (type === this.currentType.id) {
 				return;
 			}
-
-			// reset validation
-			this.isInvalid = false;
 
 			// set the new type
 			this.linkType = type;
@@ -339,12 +334,9 @@ export default {
 	overflow: auto;
 }
 .k-link-field .k-bubbles-field-preview {
-	--bubble-rounded: var(--rounded-sm);
-	--bubble-size: var(--height-sm);
+	--tag-rounded: var(--rounded-sm);
+	--tag-size: var(--height-sm);
 	padding-inline: 0;
-}
-.k-link-field .k-bubbles-field-preview .k-bubble {
-	font-size: var(--text-sm);
 }
 
 .k-link-field[data-disabled="true"] .k-link-input-model-placeholder {

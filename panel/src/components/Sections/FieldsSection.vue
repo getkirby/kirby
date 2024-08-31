@@ -1,8 +1,9 @@
 <template>
 	<k-section
 		v-if="!isLoading"
-		:headline="issue ? 'Error' : null"
-		class="k-fields-section"
+		:class="['k-fields-section', $attrs.class]"
+		:headline="issue ? $t('error') : null"
+		:style="$attrs.style"
 	>
 		<k-box
 			v-if="issue"
@@ -38,7 +39,7 @@ export default {
 	},
 	computed: {
 		values() {
-			return this.$store.getters["content/values"]();
+			return this.$panel.content.values;
 		}
 	},
 	watch: {
@@ -72,12 +73,12 @@ export default {
 				this.isLoading = false;
 			}
 		},
-		onInput(values, field, fieldName) {
-			this.$store.dispatch("content/update", [fieldName, values[fieldName]]);
+		onInput(values) {
+			this.$panel.content.set(values);
 		},
 		onSubmit(values) {
 			// ensure that all values are actually committed to content store
-			this.$store.dispatch("content/update", [null, values]);
+			this.onInput(values);
 			this.$events.emit("keydown.cmd.s", values);
 		}
 	}

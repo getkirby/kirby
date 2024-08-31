@@ -20,5 +20,5 @@ function time(): int
 
 class MockTime
 {
-	public static $time = 1337000000;
+	public static int $time = 1337000000;
 }

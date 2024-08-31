@@ -2,13 +2,12 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use Kirby\TestCase;
 
 class LanguagesRoutesTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.LanguagesRoutes';
-
-	protected $app;
 
 	public function setUp(): void
 	{
@@ -54,7 +53,7 @@ class LanguagesRoutesTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No route found for path: "languages" and request method: "GET"');
 
 		$response = $app->api()->call('languages');
@@ -68,7 +67,7 @@ class LanguagesRoutesTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No route found for path: "languages" and request method: "POST"');
 
 		$response = $app->api()->call('languages', 'POST');
@@ -91,7 +90,7 @@ class LanguagesRoutesTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No route found for path: "languages/de" and request method: "GET"');
 
 		$response = $app->api()->call('languages/de');
@@ -105,7 +104,7 @@ class LanguagesRoutesTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No route found for path: "languages/de" and request method: "PATCH"');
 
 		$response = $app->api()->call('languages/de', 'PATCH');
@@ -119,7 +118,7 @@ class LanguagesRoutesTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No route found for path: "languages/de" and request method: "DELETE"');
 
 		$response = $app->api()->call('languages/de', 'DELETE');

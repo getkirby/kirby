@@ -12,7 +12,6 @@
 
 			<k-fieldset
 				ref="fieldset"
-				:novalidate="true"
 				:fields="fields"
 				:value="user"
 				@input="user = $event"

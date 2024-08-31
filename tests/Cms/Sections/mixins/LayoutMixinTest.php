@@ -6,8 +6,7 @@ use Kirby\TestCase;
 
 class LayoutMixinTest extends TestCase
 {
-	protected $app;
-	protected $page;
+	protected Page $page;
 
 	public function setUp(): void
 	{
@@ -21,13 +20,9 @@ class LayoutMixinTest extends TestCase
 
 		Section::$types['test'] = Section::$types['pages'] = [
 			'mixins' => ['layout'],
-			'props'  => $props = [
-				'info' => function (string $info = null) {
-					return $info;
-				},
-				'text' => function (string $text = null) {
-					return $text;
-				}
+			'props'  => [
+				'info' => fn (string|null $info = null) => $info,
+				'text' => fn (string|null $text = null) => $text
 			]
 		];
 	}

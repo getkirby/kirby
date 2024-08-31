@@ -20,9 +20,7 @@ class ValidationsTest extends TestCase
 		Field::$types = [
 			'test' => [
 				'props' => [
-					'options' => function (array $options = []) {
-						return $options;
-					}
+					'options' => fn (array $options = []) => $options
 				]
 			]
 		];

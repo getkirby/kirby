@@ -24,8 +24,6 @@ class PageTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Page';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([
@@ -40,6 +38,12 @@ class PageTest extends TestCase
 	public function tearDown(): void
 	{
 		Dir::remove(static::TMP);
+	}
+
+	protected function panel(array $props = [])
+	{
+		$page = new ModelPage(['slug' => 'test', ...$props]);
+		return new Page($page);
 	}
 
 	/**
@@ -86,6 +90,19 @@ class PageTest extends TestCase
 				'link'  => '/pages/a+b+c'
 			]
 		], $page->breadcrumb());
+	}
+
+	/**
+	 * @covers ::buttons
+	 */
+	public function testButtons()
+	{
+		$this->assertSame([
+			'k-preview-view-button',
+			'k-settings-view-button',
+			'k-languages-view-button',
+			'k-status-view-button',
+		], array_column($this->panel()->buttons(), 'component'));
 	}
 
 	/**
@@ -159,7 +176,7 @@ class PageTest extends TestCase
 				'panel' => [
 					'kirbytext' => false,
 					'markdown' => [
-						'pageDragText' => function (\Kirby\Cms\Page $page) {
+						'pageDragText' => function (ModelPage $page) {
 							return sprintf('Links sind toll: %s', $page->url());
 						},
 					]
@@ -190,7 +207,7 @@ class PageTest extends TestCase
 			'options' => [
 				'panel' => [
 					'kirbytext' => [
-						'pageDragText' => function (\Kirby\Cms\Page $page) {
+						'pageDragText' => function (ModelPage $page) {
 							return sprintf('Links sind toll: %s', $page->url());
 						},
 					]
@@ -525,10 +542,6 @@ class PageTest extends TestCase
 
 		$this->assertNull($props['next']());
 		$this->assertNull($props['prev']());
-		$this->assertSame([
-			'label' => 'Unlisted',
-			'text'  => 'The page is only accessible via URL'
-		], $props['status']());
 	}
 
 	/**
@@ -641,48 +654,6 @@ class PageTest extends TestCase
 		$this->assertSame('/pages/baz?tab=test', $prevNext['next']()['link']);
 
 		$_GET = [];
-	}
-
-	/**
-	 * @covers ::props
-	 */
-	public function testPropsStatus()
-	{
-		$page = new ModelPage([
-			'slug'  => 'test',
-			'num'   => 0
-		]);
-
-		$props = (new Page($page))->props();
-		$this->assertSame([
-			'label' => 'Public',
-			'text'  => 'The page is public for anyone'
-		], $props['status']());
-
-
-		$app = $this->app->clone([
-			'blueprints' => [
-				'pages/note' => [
-					'status' => [
-						'unlisted' => 'Foo',
-					]
-				]
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'test',
-						'template' => 'note'
-					]
-				]
-			]
-		]);
-
-		$props = (new Page($app->page('test')))->props();
-		$this->assertSame([
-			'label' => 'Foo',
-			'text'  => null
-		], $props['status']());
 	}
 
 	/**

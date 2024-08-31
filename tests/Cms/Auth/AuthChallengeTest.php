@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use Kirby\Cms\Auth\ErrorneousChallenge;
 use Kirby\Email\Email;
 use Kirby\Exception\InvalidArgumentException;
@@ -18,10 +19,8 @@ class AuthChallengeTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.AuthChallenge';
 
-	public $failedEmail;
-
-	protected $app;
-	protected $auth;
+	protected Auth $auth;
+	public string|null $failedEmail = null;
 
 	public function setUp(): void
 	{
@@ -187,7 +186,7 @@ class AuthChallengeTest extends TestCase
 	{
 		$auth = $this->app->auth();
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('An error occurred in the challenge');
 		$auth->createChallenge('error@getkirby.com');
 	}

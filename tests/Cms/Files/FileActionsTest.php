@@ -2,18 +2,18 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Content\VersionId;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
 use Kirby\Image\Image;
+use ReflectionClass;
 
 class FileActionsTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/files';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.FileActions';
-
-	protected $app;
 
 	public function setUp(): void
 	{
@@ -105,19 +105,19 @@ class FileActionsTest extends TestCase
 		// create an empty dummy file
 		F::write($file->root(), '');
 		// ...and an empty content file for it
-		F::write($file->storage()->contentFile('published', 'default'), '');
+		F::write($file->version(VersionId::published())->contentFile('default'), '');
 
 		$this->assertFileExists($file->root());
-		$this->assertFileExists($file->storage()->contentFile('published', 'default'));
+		$this->assertFileExists($file->version(VersionId::published())->contentFile('default'));
 
 		$result = $file->changeName('test');
 
 		$this->assertNotSame($file->root(), $result->root());
 		$this->assertSame('test.csv', $result->filename());
 		$this->assertFileExists($result->root());
-		$this->assertFileExists($result->storage()->contentFile('published', 'default'));
+		$this->assertFileExists($result->version(VersionId::published())->contentFile('default'));
 		$this->assertFileDoesNotExist($file->root());
-		$this->assertFileDoesNotExist($file->storage()->contentFile('published', 'default'));
+		$this->assertFileDoesNotExist($file->version(VersionId::published())->contentFile('default'));
 	}
 
 	public static function fileProviderMultiLang(): array
@@ -141,20 +141,20 @@ class FileActionsTest extends TestCase
 		// create an empty dummy file
 		F::write($file->root(), '');
 		// ...and empty content files for it
-		F::write($file->storage()->contentFile('published', 'en'), '');
-		F::write($file->storage()->contentFile('published', 'de'), '');
+		F::write($file->version(VersionId::published())->contentFile('en'), '');
+		F::write($file->version(VersionId::published())->contentFile('de'), '');
 
 		$this->assertFileExists($file->root());
-		$this->assertFileExists($file->storage()->contentFile('published', 'en'));
-		$this->assertFileExists($file->storage()->contentFile('published', 'de'));
+		$this->assertFileExists($file->version(VersionId::published())->contentFile('en'));
+		$this->assertFileExists($file->version(VersionId::published())->contentFile('de'));
 
 		$result = $file->changeName('test');
 
 		$this->assertNotEquals($file->root(), $result->root());
 		$this->assertSame('test.csv', $result->filename());
 		$this->assertFileExists($result->root());
-		$this->assertFileExists($result->storage()->contentFile('published', 'en'));
-		$this->assertFileExists($result->storage()->contentFile('published', 'de'));
+		$this->assertFileExists($result->version(VersionId::published())->contentFile('en'));
+		$this->assertFileExists($result->version(VersionId::published())->contentFile('de'));
 	}
 
 	public function testChangeTemplate()
@@ -376,9 +376,9 @@ class FileActionsTest extends TestCase
 		$this->assertNull($modified->caption()->value());
 		$this->assertSame('Das ist der Text', $modified->text()->value());
 
-		$this->assertFileExists($modified->storage()->contentFile('published', 'en'));
-		$this->assertFileExists($modified->storage()->contentFile('published', 'de'));
-		$this->assertFileDoesNotExist($modified->storage()->contentFile('published', 'fr'));
+		$this->assertFileExists($modified->version(VersionId::published())->contentFile('en'));
+		$this->assertFileExists($modified->version(VersionId::published())->contentFile('de'));
+		$this->assertFileDoesNotExist($modified->version(VersionId::published())->contentFile('fr'));
 	}
 
 	public function testChangeTemplateDefault()
@@ -489,6 +489,94 @@ class FileActionsTest extends TestCase
 
 		$file = $app->page('test')->file('test.pdf');
 		$file->changeTemplate('for-default-b');
+	}
+
+	public function testCommit(): void
+	{
+		$phpunit = $this;
+		$page    = new Page(['slug' => 'text']);
+
+		$app = $this->app->clone([
+			'hooks' => [
+				'file.changeSort:before' => [
+					function (File $file, int $position) use ($phpunit, $page) {
+						$phpunit->assertSame(99, $position);
+						$phpunit->assertSame(1, $file->sort()->value());
+						// altering $file which will be passed
+						// to subsequent hook
+						return new File([
+							'filename' => 'test.jpg',
+							'parent'   => $page,
+							'content'  => ['sort' => 2]
+						]);
+					},
+					function (File $file, int $position) use ($phpunit, $page) {
+						$phpunit->assertSame(99, $position);
+						// altered $file from previous hook
+						$phpunit->assertSame(2, $file->sort()->value());
+						// altering $file which will be used
+						// in the commit callback closure
+						return new File([
+							'filename' => 'test.jpg',
+							'parent'   => $page,
+							'content'  => ['sort' => 3]
+						]);
+					}
+				],
+				'file.changeSort:after' => [
+					function (File $newFile, File $oldFile) use ($phpunit, $page) {
+						$phpunit->assertSame(1, $oldFile->sort()->value());
+						// modified $file from the commit callback closure
+						$phpunit->assertSame(99, $newFile->sort()->value());
+						// altering $newFile which will be passed
+						// to subsequent hook
+						return new File([
+							'filename' => 'test.jpg',
+							'parent'   => $page,
+							'content'  => ['sort' => 4]
+						]);
+					},
+					function (File $newFile, File $oldFile) use ($phpunit, $page) {
+						$phpunit->assertSame(1, $oldFile->sort()->value());
+						// altered $newFile from previous hook
+						$phpunit->assertSame(4, $newFile->sort()->value());
+						// altering $newFile which will be the final result
+						return new File([
+							'filename' => 'test.jpg',
+							'parent'   => $page,
+							'content'  => ['sort' => 5]
+						]);
+					}
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+			'content'  => ['sort' => 1]
+		]);
+		$class  = new ReflectionClass($file);
+		$commit = $class->getMethod('commit');
+		$result = $commit->invokeArgs($file, [
+			'changeSort',
+			['file' => $file, 'position' => 99],
+			function (File $file, int $position) use ($phpunit, $page) {
+				$phpunit->assertSame(99, $position);
+				// altered $page from before hooks
+				$phpunit->assertSame(3, $file->sort()->value());
+				return new File([
+					'filename' => 'test.jpg',
+					'parent'   => $page,
+					'content'  => ['sort' => $position]
+				]);
+			}
+		]);
+
+		// altered result from last after hook
+		$this->assertSame(5, $result->sort()->value());
 	}
 
 	public function testCopyRenewUuid()
@@ -754,17 +842,17 @@ class FileActionsTest extends TestCase
 		// create an empty dummy file
 		F::write($file->root(), '');
 		// ...and an empty content file for it
-		F::write($file->storage()->contentFile('published', 'default'), '');
+		F::write($file->version(VersionId::published())->contentFile('default'), '');
 
 		$this->assertFileExists($file->root());
-		$this->assertFileExists($file->storage()->contentFile('published', 'default'));
+		$this->assertFileExists($file->version(VersionId::published())->contentFile('default'));
 
 		$result = $file->delete();
 
 		$this->assertTrue($result);
 
 		$this->assertFileDoesNotExist($file->root());
-		$this->assertFileDoesNotExist($file->storage()->contentFile('published', 'default'));
+		$this->assertFileDoesNotExist($file->version(VersionId::published())->contentFile('default'));
 	}
 
 	/**
@@ -874,11 +962,11 @@ class FileActionsTest extends TestCase
 		F::write($file->root(), '');
 
 		$this->assertFileExists($file->root());
-		$this->assertFileDoesNotExist($file->storage()->contentFile('published', 'default'));
+		$this->assertFileDoesNotExist($file->version(VersionId::published())->contentFile('default'));
 
 		$file = $file->clone(['content' => ['caption' => 'save']])->save();
 
-		$this->assertFileExists($file->storage()->contentFile('published', 'default'));
+		$this->assertFileExists($file->version(VersionId::published())->contentFile('default'));
 	}
 
 	/**

@@ -1,3 +1,4 @@
+import { reactive } from "vue";
 import Feature, { defaults as featureDefaults } from "./feature.js";
 
 export const defaults = () => {
@@ -19,7 +20,7 @@ export const defaults = () => {
 export default (panel) => {
 	const parent = Feature(panel, "view", defaults());
 
-	return {
+	return reactive({
 		...parent,
 
 		/**
@@ -57,5 +58,5 @@ export default (panel) => {
 		async submit() {
 			throw new Error("Not yet implemented");
 		}
-	};
+	});
 };

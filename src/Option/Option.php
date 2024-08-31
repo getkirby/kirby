@@ -28,7 +28,7 @@ class Option
 		$this->text ??= new NodeText(['en' => $this->value]);
 	}
 
-	public static function factory(string|int|float|null|array $props): static
+	public static function factory(string|int|float|array|null $props): static
 	{
 		if (is_array($props) === false) {
 			$props = ['value' => $props];

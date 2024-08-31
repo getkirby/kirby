@@ -67,8 +67,6 @@ class PageBlueprint extends Blueprint
 
 	/**
 	 * Normalizes the ordering number
-	 *
-	 * @param mixed $num
 	 */
 	protected function normalizeNum($num): string
 	{
@@ -82,8 +80,6 @@ class PageBlueprint extends Blueprint
 
 	/**
 	 * Normalizes the available status options for the page
-	 *
-	 * @param mixed $status
 	 */
 	protected function normalizeStatus($status): array
 	{

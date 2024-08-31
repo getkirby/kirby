@@ -3,7 +3,7 @@
 namespace Kirby\Filesystem;
 
 use Kirby\Cms\App;
-use Kirby\TestCase as TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Filesystem\Filename

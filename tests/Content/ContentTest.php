@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\App;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\TestCase;
 
@@ -11,8 +12,8 @@ use Kirby\TestCase;
  */
 class ContentTest extends TestCase
 {
-	protected $content;
-	protected $parent;
+	protected Content $content;
+	protected ModelWithContent $parent;
 
 	public function setUp(): void
 	{

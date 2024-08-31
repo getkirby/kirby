@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use TypeError;
+
 class SiteChildrenTest extends TestCase
 {
 	public function testDefaultChildren()
@@ -12,11 +14,8 @@ class SiteChildrenTest extends TestCase
 
 	public function testInvalidChildren()
 	{
-		$this->expectException('TypeError');
-
-		$site = new Site([
-			'children' => 'children'
-		]);
+		$this->expectException(TypeError::class);
+		new Site(['children' => 'children']);
 	}
 
 	public function testPages()

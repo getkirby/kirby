@@ -9,8 +9,6 @@ import Pages from "./Pages/index.js";
 import Users from "./Users/index.js";
 import System from "./System/index.js";
 
-import LegacyPluginView from "./LegacyPluginView.vue";
-
 export default {
 	install(app) {
 		app.component("k-error-view", ErrorView);
@@ -23,8 +21,5 @@ export default {
 		app.use(Pages);
 		app.use(System);
 		app.use(Users);
-
-		/* Deprecated */
-		app.component("k-plugin-view", LegacyPluginView);
 	}
 };

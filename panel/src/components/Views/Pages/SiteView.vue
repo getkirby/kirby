@@ -12,21 +12,10 @@
 			@edit="$dialog('site/changeTitle')"
 		>
 			{{ model.title }}
-			<template #buttons>
-				<k-button-group>
-					<k-button
-						:link="model.previewUrl"
-						:title="$t('open')"
-						icon="open"
-						target="_blank"
-						variant="filled"
-						size="sm"
-						class="k-site-view-preview"
-					/>
-					<k-languages-dropdown />
-				</k-button-group>
 
-				<k-form-buttons :lock="lock" />
+			<template #buttons>
+				<k-view-buttons :buttons="buttons" />
+				<k-form-buttons />
 			</template>
 		</k-header>
 

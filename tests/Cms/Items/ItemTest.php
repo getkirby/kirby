@@ -7,9 +7,8 @@ use Kirby\TestCase;
 
 class ItemTest extends TestCase
 {
-	protected $app;
-	protected $field;
-	protected $page;
+	protected Field $field;
+	protected Page $page;
 
 	public function setUp(): void
 	{

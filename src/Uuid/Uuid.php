@@ -14,6 +14,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\Str;
+use Stringable;
 
 /**
  * The `Uuid` classes provide an interface to connect
@@ -41,7 +42,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-abstract class Uuid
+abstract class Uuid implements Stringable
 {
 	protected const TYPE = 'uuid';
 
@@ -205,7 +206,7 @@ abstract class Uuid
 			// $seed instanceof StructureObject
 			// 	=> new StructureUuid(model: $seed, context: $context),
 			default
-			=> throw new InvalidArgumentException('UUID not supported for: ' . get_class($seed))
+			=> throw new InvalidArgumentException('UUID not supported for: ' . $seed::class)
 		};
 	}
 
@@ -228,7 +229,7 @@ abstract class Uuid
 			return Str::uuid();
 		}
 
-		return Str::random($length, 'alphaNum');
+		return Str::lower(Str::random($length, 'alphaNum'));
 	}
 
 	/**

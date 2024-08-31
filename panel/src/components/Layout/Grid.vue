@@ -1,5 +1,5 @@
 <template>
-	<div :data-gutter="gutter" :data-variant="variant" class="k-grid">
+	<div :data-variant="variant" class="k-grid">
 		<!-- @slot All items that will be arranged in the grid -->
 		<slot />
 	</div>
@@ -14,22 +14,10 @@
 export default {
 	props: {
 		/**
-		 * @deprecated 4.0.0 Use `style="gap: "` or `variant` prop instead
-		 * @values "small", "medium", "large", "huge"
-		 */
-		gutter: String,
-		/**
 		 * Variants for common grid-spacing use cases
 		 * @values "columns", "fields"
 		 */
 		variant: String
-	},
-	mounted() {
-		if (this.gutter) {
-			window.panel.deprecated(
-				'<k-grid>: the `gutter` prop will be removed in a future version. Use `style="gap: "` or `variant` prop instead.'
-			);
-		}
 	}
 };
 </script>
@@ -58,45 +46,6 @@ export default {
 
 	.k-grid > * {
 		grid-column: span var(--span);
-	}
-
-	/** @todo grid.gutter.deprecated -Green remove @ 5.0 */
-	.k-grid[data-gutter="small"] {
-		--grid-inline-gap: 1rem;
-		--grid-block-gap: 1rem;
-	}
-	.k-grid:where(
-			[data-gutter="medium"],
-			[data-gutter="large"],
-			[data-gutter="huge"]
-		) {
-		--grid-inline-gap: 1.5rem;
-		--grid-block-gap: 1.5rem;
-	}
-}
-
-@container (min-width: 65em) {
-	.k-grid[data-gutter="large"] {
-		--grid-inline-gap: 3rem;
-	}
-	.k-grid[data-gutter="huge"] {
-		--grid-inline-gap: 4.5rem;
-	}
-}
-@container (min-width: 90em) {
-	.k-grid[data-gutter="large"] {
-		--grid-inline-gap: 4.5rem;
-	}
-	.k-grid[data-gutter="huge"] {
-		--grid-inline-gap: 6rem;
-	}
-}
-@container (min-width: 120em) {
-	.k-grid[data-gutter="large"] {
-		--grid-inline-gap: 6rem;
-	}
-	.k-grid[data-gutter="huge"] {
-		--grid-inline-gap: 7.5rem;
 	}
 }
 

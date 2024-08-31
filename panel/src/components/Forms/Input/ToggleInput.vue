@@ -1,11 +1,11 @@
 <template>
 	<k-choice-input
-		:id="id"
-		ref="input"
+		v-bind="$props"
 		:checked="value"
+		:class="['k-toggle-input', $attrs.class]"
 		:disabled="disabled"
-		:label="label"
-		class="k-toggle-input"
+		:label="labelText"
+		:style="$attrs.style"
 		type="checkbox"
 		variant="toggle"
 		@input="$emit('input', $event)"
@@ -14,13 +14,11 @@
 
 <script>
 import Input from "@/mixins/input.js";
-import { required as validateRequired } from "vuelidate/lib/validators";
+import { props as ChoiceInputProps } from "./ChoiceInput.vue";
 
 export const props = {
+	mixins: [ChoiceInputProps],
 	props: {
-		autofocus: Boolean,
-		disabled: Boolean,
-		id: [Number, String],
 		/**
 		 * The text to display next to the toggle. This can either be a string
 		 * that doesn't change when the toggle switches. Or an array with the
@@ -30,7 +28,6 @@ export const props = {
 		text: {
 			type: [Array, String]
 		},
-		required: Boolean,
 		value: Boolean
 	}
 };
@@ -41,7 +38,7 @@ export const props = {
 export default {
 	mixins: [Input, props],
 	computed: {
-		label() {
+		labelText() {
 			// Add fallback for text
 			const text = this.text ?? [this.$t("off"), this.$t("on")];
 
@@ -53,14 +50,7 @@ export default {
 			return text;
 		}
 	},
-	watch: {
-		value() {
-			this.onInvalid();
-		}
-	},
 	mounted() {
-		this.onInvalid();
-
 		if (this.$props.autofocus) {
 			this.focus();
 		}
@@ -68,25 +58,15 @@ export default {
 	methods: {
 		onEnter(e) {
 			if (e.key === "Enter") {
-				this.$refs.input.click();
+				this.$el.click();
 			}
 		},
 		onInput(checked) {
 			this.$emit("input", checked);
 		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
-		},
 		select() {
-			this.$refs.input.focus();
+			this.$el.focus();
 		}
-	},
-	validations() {
-		return {
-			value: {
-				required: this.required ? validateRequired : true
-			}
-		};
 	}
 };
 </script>
@@ -103,7 +83,7 @@ export default {
 .k-input[data-type="toggle"] .k-toggle-input {
 	padding-inline-start: var(--input-padding);
 }
-.k-input[data-type="toggle"][data-disabled] {
+.k-input[data-type="toggle"][data-disabled="true"] {
 	box-shadow: none;
 	border: 1px solid var(--color-border);
 }

@@ -18,10 +18,10 @@ trait SiteActions
 	/**
 	 * Commits a site action, by following these steps
 	 *
-	 * 1. checks the action rules
-	 * 2. sends the before hook
+	 * 1. applies the `before` hook
+	 * 2. checks the action rules
 	 * 3. commits the store action
-	 * 4. sends the after hook
+	 * 4. applies the `after` hook
 	 * 5. returns the result
 	 */
 	protected function commit(
@@ -29,18 +29,41 @@ trait SiteActions
 		array $arguments,
 		Closure $callback
 	): mixed {
-		$old            = $this->hardcopy();
-		$kirby          = $this->kirby();
-		$argumentValues = array_values($arguments);
+		$kirby = $this->kirby();
 
-		$this->rules()->$action(...$argumentValues);
-		$kirby->trigger('site.' . $action . ':before', $arguments);
+		// store copy of the model to be passed
+		// to the `after` hook for comparison
+		$old = $this->hardcopy();
 
-		$result = $callback(...$argumentValues);
+		// check site rules
+		$this->rules()->$action(...array_values($arguments));
 
-		$kirby->trigger('site.' . $action . ':after', ['newSite' => $result, 'oldSite' => $old]);
+		// run `before` hook and pass all arguments;
+		// the very first argument (which should be the model)
+		// is modified by the return value from the hook (if any returned)
+		$appliedTo = array_key_first($arguments);
+		$arguments[$appliedTo] = $kirby->apply(
+			'site.' . $action . ':before',
+			$arguments,
+			$appliedTo
+		);
+
+		// check site rules again, after the hook got applied
+		$this->rules()->$action(...array_values($arguments));
+
+		// run the main action closure
+		$result = $callback(...array_values($arguments));
+
+		// run `after` hook and apply return to action result
+		// (first argument, usually the new model) if anything returned
+		$result = $kirby->apply(
+			'site.' . $action . ':after',
+			['newSite' => $result, 'oldSite' => $old],
+			'newSite'
+		);
 
 		$kirby->cache('pages')->flush();
+
 		return $result;
 	}
 
@@ -76,14 +99,13 @@ trait SiteActions
 	 */
 	public function createChild(array $props): Page
 	{
-		$props = array_merge($props, [
+		return Page::create([
+			...$props,
 			'url'    => null,
 			'num'    => null,
 			'parent' => null,
 			'site'   => $this,
 		]);
-
-		return Page::create($props);
 	}
 
 	/**

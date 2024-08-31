@@ -2,7 +2,7 @@
 
 namespace Kirby\Filesystem;
 
-use Kirby\TestCase as TestCase;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Filesystem\Mime
@@ -130,21 +130,31 @@ class MimeTest extends TestCase
 
 		$extensions = Mime::toExtensions('text/css');
 		$this->assertSame(['css'], $extensions);
+	}
 
-		// test matchWildcards: false (default value)
+	/**
+	 * @covers ::toExtensions
+	 */
+	public function testToExtensionsMatchWildcards()
+	{
+		// matchWildcards: false (default value)
 		$extensions = Mime::toExtensions('image/*');
-		$this->assertSame(0, count($extensions));
+		$this->assertCount(0, $extensions);
 
-		// test matchWildcards: true
+		// matchWildcards: true
 		$extensions = Mime::toExtensions('image/*', true);
-		// use we only check for a positive and negative subset instead of a complete list,
-		// this should make sure the test doesn't break when a new image type is added
-		$shouldContain = ['jpg', 'jpeg', 'gif', 'png'];
-		$shouldNotContain = ['js', 'pdf', 'zip', 'docx'];
-		foreach ($shouldContain as $ext) {
+
+		// we only check for a positive and negative subset
+		// instead of a complete list to make sure the test
+		// doesn't break when a new image type is added
+
+		// should contain
+		foreach (['jpg', 'jpeg', 'gif', 'png'] as $ext) {
 			$this->assertContains($ext, $extensions);
 		}
-		foreach ($shouldNotContain as $ext) {
+
+		// should not contain
+		foreach (['js', 'pdf', 'zip', 'docx'] as $ext) {
 			$this->assertNotContains($ext, $extensions);
 		}
 	}

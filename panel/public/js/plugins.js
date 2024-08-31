@@ -7,6 +7,7 @@ window.panel.plugins = {
 	textareaButtons: {},
 	thirdParty: {},
 	use: [],
+	viewButtons: {},
 	views: {},
 	writerMarks: {},
 	writerNodes: {}
@@ -46,6 +47,11 @@ window.panel.plugin = function (plugin, extensions) {
 			...options,
 			mixins: ["section", ...(options.mixins ?? [])]
 		};
+	});
+
+	// View Buttons
+	resolve(extensions, "viewButtons", (name, options) => {
+		window.panel.plugins.components[`k-${name}-view-button`] = options;
 	});
 
 	// `Vue.use`

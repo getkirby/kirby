@@ -164,7 +164,7 @@ export default {
 	overflow-x: visible;
 }
 
-.k-tab-button[aria-current]::after {
+.k-tab-button[aria-current="true"]::after {
 	position: absolute;
 	content: "";
 	height: 2px;

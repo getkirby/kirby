@@ -6,18 +6,18 @@ use Exception;
 
 class HeadersSent
 {
-	public static $value = false;
+	public static bool $value = false;
 }
 
 class IniStore
 {
-	public static $data = [];
+	public static array $data = [];
 }
 
 /**
  * Mock for the PHP headers_sent() function (otherwise not available on CLI)
  */
-function headers_sent(string &$file = null, int &$line = null): bool
+function headers_sent(string|null &$file = null, int|null &$line = null): bool
 {
 	if (defined('KIRBY_TESTING') !== true || KIRBY_TESTING !== true) {
 		throw new Exception('Mock headers_sent() was loaded outside of the test environment. This should never happen.');

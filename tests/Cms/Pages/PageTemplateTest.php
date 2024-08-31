@@ -4,13 +4,11 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\NotFoundException;
 use Kirby\Template\Template;
-use Kirby\TestCase as TestCase;
+use Kirby\TestCase;
 
 class PageTemplateTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/PageTemplateTest';
-
-	protected $app;
 
 	public function setUp(): void
 	{
