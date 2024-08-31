@@ -666,7 +666,7 @@ class User extends ModelWithContent
 	 */
 	protected function siblingsCollection(): Users
 	{
-		return $this->kirby()->users();
+		return $this->kirby()->users()->sortBy('username', 'asc');
 	}
 
 	/**
