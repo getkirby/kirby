@@ -59,8 +59,10 @@ export default (panel) => {
 		 *   query: {
 		 *     template: 'some-template'
 		 *   },
-		 *   submit: () => {},
-		 *   cancel: () => {}
+		 *   on: {
+		 *     submit: () => {},
+		 *     cancel: () => {}
+		 *   }
 		 * });
 		 *
 		 * @example
@@ -69,8 +71,10 @@ export default (panel) => {
 		 *   props: {
 		 *      text: 'Do you really want to delete this?'
 		 *   },
-		 *   submit: () => {},
-		 *   cancel: () => {}
+		 *   on: {
+		 *     submit: () => {},
+		 *     cancel: () => {}
+		 *   }
 		 * });
 		 *
 		 * @param {String|Object} dialog
