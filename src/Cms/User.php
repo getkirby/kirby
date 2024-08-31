@@ -67,7 +67,7 @@ class User extends ModelWithContent
 	{
 		// helper function to easily edit values (if not null)
 		// before assigning them to their properties
-		$set = function (string $key, Closure $callback) use ($props) {
+		$set = static function (string $key, Closure $callback) use ($props) {
 			if ($value = $props[$key] ?? null) {
 				$value = $callback($value);
 			}

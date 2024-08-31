@@ -201,9 +201,9 @@ class V
 			}
 		}
 
-		return match(empty($errors)) {
-			false => $errors,
-			true  => true
+		return match ($errors) {
+			[]      => true,
+			default => $errors
 		};
 	}
 

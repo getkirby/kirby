@@ -241,7 +241,7 @@ class App
 
 		// apply wildcard hooks if available
 		$nameWildcards = $event->nameWildcards();
-		if ($originalEvent === null && count($nameWildcards) > 0) {
+		if ($originalEvent === null && $nameWildcards !== []) {
 			foreach ($nameWildcards as $nameWildcard) {
 				// the $event object is passed by reference
 				// and will be modified down the chain
@@ -601,7 +601,7 @@ class App
 		$visitor   = $this->visitor();
 
 		foreach ($visitor->acceptedLanguages() as $acceptedLang) {
-			$closure = function ($language) use ($acceptedLang) {
+			$closure = static function ($language) use ($acceptedLang) {
 				$languageLocale = $language->locale(LC_ALL);
 				$acceptedLocale = $acceptedLang->locale();
 
@@ -1580,7 +1580,7 @@ class App
 		if ($this->multilang() === true) {
 			$languageSmartypants = $this->language()->smartypants() ?? [];
 
-			if (empty($languageSmartypants) === false) {
+			if ($languageSmartypants !== []) {
 				$options = [...$options, ...$languageSmartypants];
 			}
 		}
@@ -1691,7 +1691,7 @@ class App
 
 		// trigger wildcard hooks if available
 		$nameWildcards = $event->nameWildcards();
-		if ($originalEvent === null && count($nameWildcards) > 0) {
+		if ($originalEvent === null && $nameWildcards !== []) {
 			foreach ($nameWildcards as $nameWildcard) {
 				$this->trigger($nameWildcard, $args, $event);
 			}

@@ -95,7 +95,7 @@ class DomHandler extends Handler
 		$errors = $dom->sanitize(static::options($isExternal));
 
 		// there may be multiple errors, we can only throw one of them at a time
-		if (count($errors) > 0) {
+		if ($errors !== []) {
 			throw $errors[0];
 		}
 	}
@@ -153,9 +153,9 @@ class DomHandler extends Handler
 			'allowedDomains'        => static::$allowedDomains,
 			'allowHostRelativeUrls' => static::$allowHostRelativeUrls,
 			'allowedPIs'            => static::$allowedPIs,
-			'attrCallback'          => [static::class, 'sanitizeAttr'],
-			'doctypeCallback'       => [static::class, 'validateDoctype'],
-			'elementCallback'       => [static::class, 'sanitizeElement'],
+			'attrCallback'          => static::sanitizeAttr(...),
+			'doctypeCallback'       => static::validateDoctype(...),
+			'elementCallback'       => static::sanitizeElement(...),
 		];
 
 		// never allow host-relative URLs in external files as we

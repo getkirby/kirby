@@ -725,7 +725,7 @@ class Blueprint
 				$fields = Blueprint::fieldsProps($sectionProps['fields'] ?? []);
 
 				// inject guide fields guide
-				if (empty($fields) === true) {
+				if ($fields === []) {
 					$fields = [
 						$tabName . '-info' => [
 							'label' => 'Fields',

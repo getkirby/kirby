@@ -490,12 +490,12 @@ class Field extends Component
 			empty($this->validate) === false &&
 			($this->isEmpty() === false || $this->isRequired() === true)
 		) {
-			$rules  = A::wrap($this->validate);
-			$errors = V::errors($this->value(), $rules);
+			$rules = A::wrap($this->validate);
 
-			if (empty($errors) === false) {
-				$this->errors = [...$this->errors, ...$errors];
-			}
+			$this->errors = [
+				...$this->errors,
+				...V::errors($this->value(), $rules)
+			];
 		}
 	}
 

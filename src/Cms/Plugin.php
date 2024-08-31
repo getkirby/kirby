@@ -269,7 +269,7 @@ class Plugin
 			$keys = array_map('strlen', array_keys($option));
 			array_multisort($keys, SORT_DESC, $option);
 
-			if (count($option) > 0) {
+			if ($option !== []) {
 				// use the first and therefore longest key (= most specific match)
 				$option = reset($option);
 			} else {

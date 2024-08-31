@@ -138,7 +138,7 @@ class Fieldset extends Item
 			return false;
 		}
 
-		if (count($this->fields) === 0) {
+		if ($this->fields === []) {
 			return false;
 		}
 

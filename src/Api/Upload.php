@@ -271,7 +271,7 @@ readonly class Upload
 		array $errors
 	): array {
 		if (count($uploads) + count($errors) <= 1) {
-			if (empty($errors) === false) {
+			if ($errors !== []) {
 				return [
 					'status'  => 'error',
 					'message' => current($errors)
@@ -284,7 +284,7 @@ readonly class Upload
 			];
 		}
 
-		if (empty($errors) === false) {
+		if ($errors !== []) {
 			return [
 				'status' => 'error',
 				'errors' => $errors
@@ -405,7 +405,7 @@ readonly class Upload
 	 */
 	protected static function validateFiles(array $files): void
 	{
-		if (empty($files) === true) {
+		if ($files === []) {
 			$postMaxSize       = Str::toBytes(ini_get('post_max_size'));
 			$uploadMaxFileSize = Str::toBytes(ini_get('upload_max_filesize'));
 

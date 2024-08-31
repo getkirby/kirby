@@ -65,7 +65,7 @@ class View
 		$globalKeys = Str::split($globals, ',');
 
 		// add requested globals
-		if (empty($globalKeys) === true) {
+		if ($globalKeys === []) {
 			return $data;
 		}
 
@@ -97,7 +97,7 @@ class View
 		$onlyKeys = Str::split($only, ',');
 
 		// if a full request is made, return all data
-		if (empty($onlyKeys) === true) {
+		if ($onlyKeys === []) {
 			return $data;
 		}
 

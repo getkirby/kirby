@@ -173,7 +173,7 @@ class Xml
 					$props['@value']
 				);
 
-				if (count($props) > 0) {
+				if ($props !== []) {
 					// there are children, use them instead of the value
 
 					$value = [];
@@ -333,7 +333,7 @@ class Xml
 			}
 		}
 
-		if (count($attributeArray) > 0) {
+		if ($attributeArray !== []) {
 			$array['@attributes'] = $attributeArray;
 		}
 
@@ -382,7 +382,7 @@ class Xml
 		// we didn't find any XML children above, only use the string value
 		$element = (string)$element;
 
-		if (count($array) === 0) {
+		if ($array === []) {
 			return $element;
 		}
 

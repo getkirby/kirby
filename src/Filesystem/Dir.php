@@ -184,7 +184,7 @@ class Dir
 	 */
 	public static function isEmpty(string $dir): bool
 	{
-		return count(static::read($dir)) === 0;
+		return static::read($dir) === [];
 	}
 
 	/**
@@ -317,7 +317,7 @@ class Dir
 		}
 
 		// determine the model
-		if (empty(Page::$models) === false) {
+		if (Page::$models !== []) {
 			if ($multilang === true) {
 				$code = App::instance()->defaultLanguage()->code();
 				$contentExtension = $code . '.' . $contentExtension;

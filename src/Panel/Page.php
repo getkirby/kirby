@@ -286,7 +286,7 @@ class Page extends Model
 
 		// create siblings collection based on
 		// blueprint navigation
-		$siblings = function (string $direction) use ($page) {
+		$siblings = static function (string $direction) use ($page) {
 			$navigation = $page->blueprint()->navigation();
 			$sortBy     = $navigation['sortBy'] ?? null;
 			$status     = $navigation['status'] ?? null;

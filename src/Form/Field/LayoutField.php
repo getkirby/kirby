@@ -272,7 +272,7 @@ class LayoutField extends BlocksField
 
 		// returns empty string to avoid storing empty array as string `[]`
 		// and to consistency work with `$field->isEmpty()`
-		if (empty($value) === true) {
+		if ($value === []) {
 			return '';
 		}
 
@@ -305,7 +305,7 @@ class LayoutField extends BlocksField
 					foreach ($form->fields() as $field) {
 						$errors = $field->errors();
 
-						if (empty($errors) === false) {
+						if ($errors !== []) {
 							throw new InvalidArgumentException([
 								'key' => 'layout.validation.settings',
 								'data' => [
@@ -341,7 +341,7 @@ class LayoutField extends BlocksField
 								$errors = $field->errors();
 
 								// rough first validation
-								if (empty($errors) === false) {
+								if ($errors !== []) {
 									throw new InvalidArgumentException([
 										'key' => 'layout.validation.block',
 										'data' => [

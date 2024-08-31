@@ -197,9 +197,6 @@ class Collection extends Iterator implements Stringable
 			return $this->data;
 		}
 
-		// clear all previous data
-		$this->data = [];
-
 		// overwrite the data array
 		$this->data = $data;
 
@@ -951,14 +948,12 @@ class Collection extends Iterator implements Stringable
 	 * @param int $method The sort flag, SORT_REGULAR, SORT_NUMERIC etc.
 	 * @return $this|static
 	 */
-	public function sort(): static
+	public function sort(...$args): static
 	{
 		// there is no need to sort empty collections
-		if (empty($this->data) === true) {
+		if ($this->data === []) {
 			return $this;
 		}
-
-		$args       = func_get_args();
 		$array      = $this->data;
 		$collection = $this->clone();
 

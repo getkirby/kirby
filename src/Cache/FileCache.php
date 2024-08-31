@@ -195,7 +195,7 @@ class FileCache extends Cache
 
 				$files = array_diff($files, ['.', '..']);
 
-				if (empty($files) === true && Dir::remove($dir) === true) {
+				if ($files === [] && Dir::remove($dir) === true) {
 					// continue with the next level up
 					$dir = dirname($dir);
 				} else {

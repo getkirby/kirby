@@ -76,7 +76,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	public function blueprints(string|null $inSection = null): array
 	{
 		// helper function
-		$toBlueprints = function (array $sections): array {
+		$toBlueprints = static function (array $sections): array {
 			$blueprints = [];
 
 			foreach ($sections as $section) {

@@ -75,7 +75,7 @@ class Blocks extends Items
 	 */
 	protected static function extractFromLayouts(array $input): array
 	{
-		if (empty($input) === true) {
+		if ($input === []) {
 			return [];
 		}
 
@@ -116,7 +116,10 @@ class Blocks extends Items
 	 */
 	public static function parse(array|string|null $input): array
 	{
-		if (empty($input) === false && is_array($input) === false) {
+		if (
+			empty($input) === false &&
+			is_array($input) === false
+		) {
 			try {
 				$input = Json::decode((string)$input);
 			} catch (Throwable) {
@@ -129,7 +132,7 @@ class Blocks extends Items
 
 					// check for valid yaml
 					if (
-						empty($yaml) === true ||
+						$yaml === [] ||
 						(
 							isset($first['_key']) === false &&
 							isset($first['type']) === false

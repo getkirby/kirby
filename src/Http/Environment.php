@@ -771,7 +771,7 @@ class Environment
 		$ips = array_unique(array_filter($ips));
 
 		// no known ip? Better not assume it's local
-		if (empty($ips) === true) {
+		if ($ips === []) {
 			return false;
 		}
 

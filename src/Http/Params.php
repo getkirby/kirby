@@ -138,7 +138,7 @@ class Params extends Obj implements Stringable
 			}
 		}
 
-		if (empty($params) === true) {
+		if ($params === []) {
 			return '';
 		}
 

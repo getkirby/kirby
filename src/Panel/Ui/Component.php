@@ -42,7 +42,7 @@ abstract class Component
 		}
 
 		// getter
-		if (count($args) === 0) {
+		if ($args === []) {
 			return $this->$name;
 		}
 
