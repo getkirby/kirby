@@ -92,10 +92,16 @@ class Translation
 	 */
 	public function firstWeekday(): int
 	{
-		$weekday = App::instance()->option('date.weekday');
+		$kirby   = App::instance();
+		$weekday = $kirby->option('date.weekday');
 
 		if (is_int($weekday) === true) {
 			return $weekday;
+		}
+		
+		// returns sunday as default first day of week if date handler is not `intl`
+		if ($kirby->option('date.handler') !== 'intl') {
+			return 0;
 		}
 
 		$locale   = $this->locale();
