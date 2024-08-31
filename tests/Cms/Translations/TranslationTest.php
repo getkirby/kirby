@@ -31,6 +31,23 @@ class TranslationTest extends TestCase
 	 */
 	public function testFirstWeekday()
 	{
+		// `date` handler always returns Sunday
+		$translation = new Translation('de', [
+			'translation.name'   => 'Deutsch',
+			'translation.locale' => 'de_DE',
+		]);
+
+		$this->assertSame(0, $translation->firstWeekday());
+
+		// `intl` handler
+		$app = new App([
+			'options' => [
+				'date' => [
+					'handler' => 'intl'
+				]
+			]
+		]);
+
 		$translation = new Translation('en', [
 			'translation.name'   => 'English',
 			'translation.locale' => 'en_US',
@@ -46,7 +63,7 @@ class TranslationTest extends TestCase
 		$this->assertSame(1, $translation->firstWeekday());
 
 		// override via config option
-		new App([
+		$app = $app->clone([
 			'options' => [
 				'date' => [
 					'weekday' => 4

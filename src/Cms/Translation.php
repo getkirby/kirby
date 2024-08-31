@@ -98,16 +98,23 @@ class Translation
 		if (is_int($weekday) === true) {
 			return $weekday;
 		}
-		
-		// returns sunday as default first day of week if date handler is not `intl`
+
+		// returns sunday as default first day of week
+		// if date handler is not `intl`
 		if ($kirby->option('date.handler') !== 'intl') {
 			return 0;
 		}
 
 		$locale   = $this->locale();
 		$calendar = IntlCalendar::createInstance(null, $locale);
+		$day      = $calendar->getFirstDayOfWeek();
 
-		return $calendar->getFirstDayOfWeek() - 1;
+		return match ($day) {
+			// if any error occurs, return Sunday
+			false   => 0, // @codeCoverageIgnore
+			// convert to 0-6 index numbering
+			default => $day - 1
+		};
 	}
 
 	/**
