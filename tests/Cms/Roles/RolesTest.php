@@ -123,7 +123,7 @@ class RolesTest extends TestCase
 	public function testCanBeChanged()
 	{
 		new App([
-			'user'  => 'admin@getkirby.com',
+			'user'  => 'editor@getkirby.com',
 			'users' => [
 				[
 					'email' => 'admin@getkirby.com',
@@ -143,6 +143,10 @@ class RolesTest extends TestCase
 					'name'  => 'editor',
 					'title' => 'Editor'
 				],
+				'users/client' => [
+					'name'  => 'client',
+					'title' => 'Client'
+				]
 			]
 		]);
 
@@ -150,14 +154,14 @@ class RolesTest extends TestCase
 		$canBeChanged = $roles->canBeChanged();
 
 		$this->assertInstanceOf(Roles::class, $roles);
-		$this->assertCount(2, $roles);
-		$this->assertCount(1, $canBeChanged);
+		$this->assertCount(3, $roles);
+		$this->assertCount(2, $canBeChanged);
 	}
 
 	public function testCanBeCreated()
 	{
 		new App([
-			'user'  => 'admin@getkirby.com',
+			'user'  => 'editor@getkirby.com',
 			'users' => [
 				[
 					'email' => 'admin@getkirby.com',
@@ -185,6 +189,6 @@ class RolesTest extends TestCase
 
 		$this->assertInstanceOf(Roles::class, $roles);
 		$this->assertCount(2, $roles);
-		$this->assertCount(2, $canBeCreated);
+		$this->assertCount(1, $canBeCreated);
 	}
 }

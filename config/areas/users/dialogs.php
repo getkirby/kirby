@@ -21,9 +21,14 @@ return [
 		'load' => function () {
 			$kirby = App::instance();
 
+			// get role field definition, incl available role options
+			$roles = Field::role(context: 'create', props: [
+				'required' => true
+			]);
+
 			// get default value for role
 			if ($role = $kirby->request()->get('role')) {
-				$role = $kirby->roles()->find($role)?->id();
+				$role = $kirby->roles()->canBeCreated()->find($role)?->id();
 			}
 
 			return [
@@ -39,9 +44,7 @@ return [
 						'translation'  => Field::translation([
 							'required' => true
 						]),
-						'role' => Field::role(props: [
-							'required' => true
-						])
+						'role' => $roles
 					],
 					'submitButton' => I18n::translate('create'),
 					'value' => [
@@ -49,7 +52,7 @@ return [
 						'email'       => '',
 						'password'    => '',
 						'translation' => $kirby->panelLanguage(),
-						'role'        => $role ?? $kirby->user()->role()->name()
+						'role'        => $role ?? $roles['options'][0]['value'] ?? null
 					]
 				]
 			];
@@ -228,7 +231,7 @@ return [
 				'component' => 'k-form-dialog',
 				'props' => [
 					'fields' => [
-						'role' => Field::role($user, [
+						'role' => Field::role($user, 'change', [
 							'label'    => I18n::translate('user.changeRole.select'),
 							'required' => true,
 						])
