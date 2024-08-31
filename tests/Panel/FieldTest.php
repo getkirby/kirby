@@ -36,7 +36,6 @@ class FieldTest extends TestCase
 
 	/**
 	 * @covers ::email
-	 * @return void
 	 */
 	public function testEmail(): void
 	{
@@ -60,7 +59,6 @@ class FieldTest extends TestCase
 
 	/**
 	 * @covers ::filePosition
-	 * @return void
 	 */
 	public function testFilePosition(): void
 	{
@@ -114,7 +112,6 @@ class FieldTest extends TestCase
 
 	/**
 	 * @covers ::hidden
-	 * @return void
 	 */
 	public function testHidden(): void
 	{
@@ -124,7 +121,6 @@ class FieldTest extends TestCase
 
 	/**
 	 * @covers ::pagePosition
-	 * @return void
 	 */
 	public function testPagePosition(): void
 	{
@@ -178,7 +174,6 @@ class FieldTest extends TestCase
 
 	/**
 	 * @covers ::pagePosition
-	 * @return void
 	 */
 	public function testPagePositionWithNotEnoughOptions(): void
 	{
@@ -199,7 +194,6 @@ class FieldTest extends TestCase
 
 	/**
 	 * @covers ::password
-	 * @return void
 	 */
 	public function testPassword(): void
 	{
@@ -222,7 +216,6 @@ class FieldTest extends TestCase
 
 	/**
 	 * @covers ::role
-	 * @return void
 	 */
 	public function testRole(): void
 	{
@@ -329,7 +322,6 @@ class FieldTest extends TestCase
 
 	/**
 	 * @covers ::title
-	 * @return void
 	 */
 	public function testTitle(): void
 	{
@@ -353,7 +345,6 @@ class FieldTest extends TestCase
 
 	/**
 	 * @covers ::template
-	 * @return void
 	 */
 	public function testTemplate(): void
 	{
@@ -420,7 +411,6 @@ class FieldTest extends TestCase
 
 	/**
 	 * @covers ::translation
-	 * @return void
 	 */
 	public function testTranslation(): void
 	{
@@ -443,7 +433,6 @@ class FieldTest extends TestCase
 
 	/**
 	 * @covers ::username
-	 * @return void
 	 */
 	public function testUsername(): void
 	{

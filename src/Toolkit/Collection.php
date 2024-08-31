@@ -96,8 +96,6 @@ class Collection extends Iterator implements Countable
 	 * Low-level setter for elements
 	 *
 	 * @param string $key string or array
-	 * @param mixed $value
-	 * @return void
 	 */
 	public function __set(string $key, $value): void
 	{

@@ -75,8 +75,6 @@ abstract class AreaTestCase extends TestCase
 	/**
 	 * Fake a ready setup and install
 	 * the first admin user
-	 *
-	 * @return void
 	 */
 	public function install(): void
 	{
@@ -94,8 +92,6 @@ abstract class AreaTestCase extends TestCase
 
 	/**
 	 * Fake a ready setup
-	 *
-	 * @return void
 	 */
 	public function installable(): void
 	{
