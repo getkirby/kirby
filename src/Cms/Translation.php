@@ -3,9 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
-use IntlCalendar;
 use Kirby\Data\Data;
-use Kirby\Toolkit\Date;
 use Kirby\Toolkit\Str;
 
 /**
