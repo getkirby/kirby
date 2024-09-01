@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Exception;
 use IntlCalendar;
 use Kirby\Data\Data;
+use Kirby\Toolkit\Date;
 use Kirby\Toolkit\Str;
 
 /**
@@ -83,39 +84,6 @@ class Translation
 	public function direction(): string
 	{
 		return $this->get('translation.direction', 'ltr');
-	}
-
-	/**
-	 * Returns the first day of the week (0 = Sunday ... 6 = Saturday)
-	 * for the translation's locale (or as defined via config option)
-	 *
-	 * @since 4.5.0
-	 */
-	public function firstWeekday(): int
-	{
-		$kirby   = App::instance();
-		$weekday = $kirby->option('date.weekday');
-
-		if (is_int($weekday) === true) {
-			return $weekday;
-		}
-
-		// returns Monday as default first day of week
-		// if date handler is not `intl`
-		if ($kirby->option('date.handler') !== 'intl') {
-			return 1;
-		}
-
-		$locale   = $this->locale();
-		$calendar = IntlCalendar::createInstance(null, $locale);
-		$day      = $calendar->getFirstDayOfWeek();
-
-		return match ($day) {
-			// if any error occurs, return Monday
-			false   => 1, // @codeCoverageIgnore
-			// convert to 0-6 index numbering
-			default => $day - 1
-		};
 	}
 
 	/**

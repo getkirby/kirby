@@ -7,6 +7,7 @@ use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Http\Response;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Date;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -292,7 +293,7 @@ class View
 					'data'      => $translation->dataWithFallback(),
 					'direction' => $translation->direction(),
 					'name'      => $translation->name(),
-					'weekday'   => $translation->firstWeekday()
+					'weekday'   => Date::firstWeekday($translation->locale())
 				];
 			},
 			'$urls' => fn () => [
