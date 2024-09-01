@@ -100,10 +100,10 @@ class Translation
 			return $weekday;
 		}
 
-		// returns sunday as default first day of week
+		// returns Monday as default first day of week
 		// if date handler is not `intl`
 		if ($kirby->option('date.handler') !== 'intl') {
-			return 0;
+			return 1;
 		}
 
 		$locale   = $this->locale();
@@ -111,8 +111,8 @@ class Translation
 		$day      = $calendar->getFirstDayOfWeek();
 
 		return match ($day) {
-			// if any error occurs, return Sunday
-			false   => 0, // @codeCoverageIgnore
+			// if any error occurs, return Monday
+			false   => 1, // @codeCoverageIgnore
 			// convert to 0-6 index numbering
 			default => $day - 1
 		};

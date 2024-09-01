@@ -37,7 +37,7 @@ class TranslationTest extends TestCase
 			'translation.locale' => 'de_DE',
 		]);
 
-		$this->assertSame(0, $translation->firstWeekday());
+		$this->assertSame(1, $translation->firstWeekday());
 
 		// `intl` handler
 		$app = new App([
