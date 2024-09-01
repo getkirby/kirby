@@ -70,9 +70,11 @@ return [
 			$request = $kirby->request();
 			$page    = $kirby->page($request->get('page'));
 
-			return $page->parents()->flip()->values(
-				fn ($parent) => $parent->uuid()?->toString() ?? $parent->id()
-			);
+			return [
+				'data' => $page->parents()->flip()->values(
+					fn ($parent) => $parent->uuid()?->toString() ?? $parent->id()
+				)
+			];
 		}
 	]
 ];
