@@ -158,9 +158,9 @@
             ),
         ),
         'symfony/yaml' => array(
-            'pretty_version' => 'v7.1.1',
-            'version' => '7.1.1.0',
-            'reference' => 'fa34c77015aa6720469db7003567b9f772492bf2',
+            'pretty_version' => 'v7.1.4',
+            'version' => '7.1.4.0',
+            'reference' => '92e080b851c1c655c786a2da77f188f2dccd0f4b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/yaml',
             'aliases' => array(),
