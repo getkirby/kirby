@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+/**
+ * @coversDefaultClass \Kirby\Cms\Translation
+ */
 class TranslationTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';

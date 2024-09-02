@@ -7,6 +7,7 @@ use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Http\Response;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Date;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -282,17 +283,17 @@ class View
 				];
 			},
 			'$translation' => function () use ($kirby) {
-				if ($user = $kirby->user()) {
-					$translation = $kirby->translation($user->language());
-				} else {
-					$translation = $kirby->translation($kirby->panelLanguage());
-				}
+				$translation = match ($user = $kirby->user()) {
+					null    => $kirby->translation($kirby->panelLanguage()),
+					default => $kirby->translation($user->language())
+				};
 
 				return [
 					'code'      => $translation->code(),
 					'data'      => $translation->dataWithFallback(),
 					'direction' => $translation->direction(),
 					'name'      => $translation->name(),
+					'weekday'   => Date::firstWeekday($translation->locale())
 				];
 			},
 			'$urls' => fn () => [

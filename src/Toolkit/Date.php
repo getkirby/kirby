@@ -7,7 +7,9 @@ use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
 use Exception;
+use IntlCalendar;
 use IntlDateFormatter;
+use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Stringable;
 
@@ -93,6 +95,40 @@ class Date extends DateTime implements Stringable
 
 		$this->setDate($this->year(), $this->month(), $day);
 		return $this->day();
+	}
+
+	/**
+	 * Returns the first day of the week (0 = Sunday ... 6 = Saturday)
+	 * for the given locale (or as defined via config option)
+	 *
+	 * @since 4.5.0
+	 */
+	public static function firstWeekday(string $locale): int
+	{
+		// config option, if available
+		$weekday = App::instance(null, true)?->option('date.weekday');
+
+		if (is_int($weekday) === true) {
+			return $weekday;
+		}
+
+		// returns Monday as default first day of week
+		// if `IntlCalendar` class not available
+		// @codeCoverageIgnoreStart
+		if (class_exists(IntlCalendar::class) === false) {
+			return 1;
+		}
+		// @codeCoverageIgnoreEnd
+
+		$calendar = IntlCalendar::createInstance(null, $locale);
+		$day      = $calendar->getFirstDayOfWeek();
+
+		return match ($day) {
+			// if any error occurs, return Monday
+			false   => 1, // @codeCoverageIgnore
+			// convert to 0-6 index numbering
+			default => $day - 1
+		};
 	}
 
 	/**
