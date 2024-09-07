@@ -199,9 +199,11 @@ class Field
 		$kirby = App::instance();
 
 		// if no $roles where provided, fall back to all roles
-		// but exclude the admin role, if the user
+		$roles ??= $kirby->roles();
+
+		// exclude the admin role, if the user
 		// is not allowed to change role to admin
-		$roles ??= $kirby->roles()->filter(
+		$roles = $roles->filter(
 			fn ($role) =>
 				$role->name() !== 'admin' ||
 				$kirby->user()?->isAdmin() === true
