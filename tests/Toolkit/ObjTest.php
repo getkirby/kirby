@@ -63,6 +63,18 @@ class ObjTest extends TestCase
 	}
 
 	/**
+	 * @covers ::keys
+	 */
+	public function testKeys()
+	{
+		$obj = new Obj(['foo' => 'bar']);
+		$this->assertSame(['foo'], $obj->keys());
+
+		$obj = new Obj(['foo' => 'bar', 'one' => 'first']);
+		$this->assertSame(['foo', 'one'], $obj->keys());
+	}
+
+	/**
 	 * @covers ::toArray
 	 */
 	public function testToArray()

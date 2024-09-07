@@ -75,6 +75,14 @@ class Obj extends stdClass
 	}
 
 	/**
+	 *  Returns the property names as keys
+	 */
+	public function keys(): array
+	{
+		return array_keys((array)$this);
+	}
+
+	/**
 	 * Converts the object to an array
 	 */
 	public function toArray(): array
