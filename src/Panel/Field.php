@@ -198,24 +198,16 @@ class Field
 		array $props = []
 	): array {
 		$kirby = App::instance();
-		$roles = $user?->roles();
+		$roles = $user?->roles($context);
 
 		// if this role field is not for any specific user (but e.g. a new one),
 		// get all roles but filter out the admin role
 		// if the current user is no admin
-		$roles ??= $kirby->roles()->filter(
+		$roles ??= $kirby->roles($context)->filter(
 			fn ($role) =>
 				$role->name() !== 'admin' ||
 				$kirby->user()?->isAdmin() === true
 		);
-
-		// filter roles based on the context
-		// as user options can restrict these further
-		$roles = match ($context) {
-			'create' => $roles->canBeCreated(),
-			'change' => $roles->canBeChanged(),
-			null     => $roles
-		};
 
 		$roles = $roles->values(fn ($role) => [
 			'text'  => $role->title(),

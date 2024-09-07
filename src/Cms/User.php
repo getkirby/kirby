@@ -577,10 +577,10 @@ class User extends ModelWithContent
 	 * Returns all available roles for this user,
 	 * that can be selected by the authenticated user
 	 */
-	public function roles(): Roles
+	public function roles(string|null $context = null): Roles
 	{
 		$kirby = $this->kirby();
-		$roles = $kirby->roles();
+		$roles = $kirby->roles($context);
 
 		// for the last admin, only their current role (admin) is available
 		if ($this->isLastAdmin() === true) {

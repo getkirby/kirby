@@ -767,6 +767,72 @@ class AppTest extends TestCase
 		$this->assertInstanceOf(Roles::class, $app->roles());
 	}
 
+	/**
+	 * @covers ::roles
+	 */
+	public function testRolesInContext()
+	{
+		$app = new App([
+			'user'  => 'editor@getkirby.com',
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'blueprints' => [
+				'users/admin' => [
+					'name' => 'admin'
+				],
+				'users/editor' => [
+					'name' => 'editor'
+				],
+				'users/client' => [
+					'name' => 'client'
+				]
+			]
+		]);
+
+		$this->assertCount(3, $app->roles());
+		$this->assertCount(2, $app->roles('create'));
+		$this->assertCount(2, $app->roles('change'));
+
+		Blueprint::$loaded = [];
+
+		$app = new App([
+			'user'  => 'editor@getkirby.com',
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'blueprints' => [
+				'users/admin' => [
+					'name' => 'admin'
+				],
+				'users/editor' => [
+					'name' => 'editor'
+				],
+				'users/client' => [
+					'name'    => 'client',
+					'options' => [
+						'create' => [
+							'editor' => false
+						],
+						'changeRole' => [
+							'editor' => false
+						]
+					]
+				],
+			]
+		]);
+
+		$this->assertCount(3, $app->roles());
+		$this->assertCount(1, $app->roles('create'));
+		$this->assertCount(1, $app->roles('change'));
+	}
+
 	// TODO: debug is not working properly
 	// public function testEmail()
 	// {

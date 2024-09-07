@@ -28,7 +28,7 @@ return [
 
 			// get default value for role
 			if ($role = $kirby->request()->get('role')) {
-				$role = $kirby->roles()->canBeCreated()->find($role)?->id();
+				$role = $kirby->roles('create')->find($role)?->id();
 			}
 
 			return [

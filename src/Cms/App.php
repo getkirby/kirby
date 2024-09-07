@@ -1302,9 +1302,19 @@ class App
 	/**
 	 * Returns all user roles
 	 */
-	public function roles(): Roles
+	public function roles(string|null $context = null): Roles
 	{
-		return $this->roles ??= Roles::load($this->root('roles'));
+		$roles = $this->roles ??= Roles::load($this->root('roles'));
+
+		// filter roles based on the context
+		// as user options can restrict these further
+		$roles = match ($context) {
+			'create' => $roles->canBeCreated(),
+			'change' => $roles->canBeChanged(),
+			default  => $roles
+		};
+
+		return $roles;
 	}
 
 	/**
