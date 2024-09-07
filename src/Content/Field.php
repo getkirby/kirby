@@ -34,38 +34,21 @@ class Field implements Stringable
 	public static array $aliases = [];
 
 	/**
-	 * The field name
-	 */
-	protected string $key;
-
-	/**
 	 * Registered field methods
 	 */
 	public static array $methods = [];
 
 	/**
-	 * The parent object if available.
-	 * This will be the page, site, user or file
-	 * to which the content belongs
-	 */
-	protected ModelWithContent|null $parent;
-
-	/**
-	 * The value of the field
-	 */
-	public mixed $value;
-
-	/**
 	 * Creates a new field object
+	 *
+	 * @param \Kirby\Cms\ModelWithContent|null $parent Parent object if available. This will be the page, site, user or file to which the content belongs
+	 * @param string $key The field name
 	 */
 	public function __construct(
-		ModelWithContent|null $parent,
-		string $key,
-		mixed $value
+		protected ModelWithContent|null $parent,
+		protected string $key,
+		public mixed $value
 	) {
-		$this->key    = $key;
-		$this->value  = $value;
-		$this->parent = $parent;
 	}
 
 	/**
@@ -161,7 +144,7 @@ class Field implements Stringable
 	 */
 	public function or(mixed $fallback = null): static
 	{
-		if ($this->isNotEmpty()) {
+		if ($this->isNotEmpty() === true) {
 			return $this;
 		}
 
