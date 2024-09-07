@@ -6,6 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
+use Kirby\Cms\Roles;
 use Kirby\Cms\User;
 use Kirby\Form\Form;
 use Kirby\Http\Router;
@@ -193,17 +194,15 @@ class Field
 	 * User role radio buttons
 	 */
 	public static function role(
-		User|null $user = null,
-		string|null $context = null,
-		array $props = []
+		array $props = [],
+		Roles|null $roles = null
 	): array {
 		$kirby = App::instance();
-		$roles = $user?->roles($context);
 
 		// if this role field is not for any specific user (but e.g. a new one),
 		// get all roles but filter out the admin role
 		// if the current user is no admin
-		$roles ??= $kirby->roles($context)->filter(
+		$roles ??= $kirby->roles()->filter(
 			fn ($role) =>
 				$role->name() !== 'admin' ||
 				$kirby->user()?->isAdmin() === true

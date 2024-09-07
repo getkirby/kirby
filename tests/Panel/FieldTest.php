@@ -238,10 +238,10 @@ class FieldTest extends TestCase
 		]);
 
 
-		// pass user
+		// pass roles
 		$this->app->impersonate('admin@getkirby.com');
 		$user  = $this->app->user('editor@getkirby.com');
-		$field = Field::role($user);
+		$field = Field::role(roles: $user->roles());
 		$expected = [
 			'label'   => 'Role',
 			'type'    => 'radio',
@@ -267,7 +267,7 @@ class FieldTest extends TestCase
 
 		$this->assertSame($expected, $field);
 
-		// pass no user
+		// pass no roles
 		$field = Field::role();
 		$expected = [
 			'label'   => 'Role',
@@ -294,7 +294,7 @@ class FieldTest extends TestCase
 
 		$this->assertSame($expected, $field);
 
-		// pass no user, but current user is not an admin
+		// pass no roles, but current user is not an admin
 		$this->app->impersonate('editor@getkirby.com');
 		$field = Field::role();
 		$expected = [
@@ -319,7 +319,7 @@ class FieldTest extends TestCase
 
 		// last admin
 		$user  = $this->app->user('admin@getkirby.com');
-		$field = Field::role($user);
+		$field = Field::role(roles: $user->roles());
 		$expected = [
 			'label'   => 'Role',
 			'type'    => 'radio',

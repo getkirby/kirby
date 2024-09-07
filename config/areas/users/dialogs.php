@@ -20,16 +20,15 @@ return [
 		'pattern' => 'users/create',
 		'load' => function () {
 			$kirby = App::instance();
-
-			// get role field definition, incl available role options
-			$roles = Field::role(context: 'create', props: [
-				'required' => true
-			]);
+			$roles = $kirby->roles('create');
 
 			// get default value for role
 			if ($role = $kirby->request()->get('role')) {
-				$role = $kirby->roles('create')->find($role)?->id();
+				$role = $roles->find($role)?->id();
 			}
+
+			// get role field definition, incl available role options
+			$roles = Field::role(['required' => true], $roles);
 
 			return [
 				'component' => 'k-form-dialog',
@@ -231,10 +230,10 @@ return [
 				'component' => 'k-form-dialog',
 				'props' => [
 					'fields' => [
-						'role' => Field::role($user, 'change', [
+						'role' => Field::role([
 							'label'    => I18n::translate('user.changeRole.select'),
 							'required' => true,
-						])
+						], $user->roles('change'))
 					],
 					'submitButton' => I18n::translate('user.changeRole'),
 					'value' => [
