@@ -275,7 +275,7 @@ class UserTest extends TestCase
 			'changeLanguage' => true,
 			'changeName'     => true,
 			'changePassword' => true,
-			'changeRole'     => false, // just one role
+			'changeRole'     => true,
 			'delete'         => true,
 			'update'         => true,
 		];

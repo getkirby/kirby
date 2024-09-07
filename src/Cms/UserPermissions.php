@@ -39,7 +39,7 @@ class UserPermissions extends ModelPermissions
 			return false;
 		}
 
-		return $this->model->roles()->count() > 1;
+		return true;
 	}
 
 	protected function canCreate(): bool

@@ -222,7 +222,7 @@ class UserPermissionsTest extends TestCase
 		]);
 
 		$user = $app->user('editor@getkirby.com');
-		$this->assertFalse($user->permissions()->can('changeRole'));
+		$this->assertTrue($user->permissions()->can('changeRole'));
 
 		// change role if multiple roles are available
 		$app = new App([
