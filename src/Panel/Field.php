@@ -218,7 +218,7 @@ class Field
 
 		return array_merge([
 			'label'    => I18n::translate('role'),
-			'type'     => count($roles) === 0 ? 'hidden' : 'radio',
+			'type'     => count($roles) < 1 ? 'hidden' : 'radio',
 			'options'  => $roles
 		], $props);
 	}
