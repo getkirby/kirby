@@ -560,7 +560,7 @@ class User extends ModelWithContent
 			return $this->role;
 		}
 
-		$name = $this->role ?? $this->credentials()['role'] ?? 'visitor';
+		$name = $this->role ?? $this->credentials()['role'] ?? 'default';
 
 		return $this->role =
 			$this->kirby()->roles()->find($name) ??
