@@ -26,19 +26,15 @@ class UserActionsTest extends TestCase
 
 		$this->app = new App([
 			'roles' => [
-				[
-					'name' => 'admin'
-				],
-				[
-					'name' => 'editor'
-				]
+				['name' => 'admin'],
+				['name' => 'editor']
 			],
 			'roots' => [
 				'index'    => '/dev/null',
 				'accounts' => static::TMP . '/accounts',
 				'sessions' => static::TMP . '/sessions'
 			],
-			'user'  => 'admin@domain.com'
+			'user' => 'admin@domain.com'
 		]);
 	}
 

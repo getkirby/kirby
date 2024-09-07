@@ -128,7 +128,11 @@ class UserRules
 		}
 
 		// prevent changing to role that is not available for user
-		static::validRole($user, $role);
+		if ($user->roles()->canBeChanged()->find($role) instanceof Role === false) {
+			throw new InvalidArgumentException([
+				'key' => 'user.role.invalid',
+			]);
+		}
 
 		return true;
 	}
@@ -191,15 +195,6 @@ class UserRules
 			return true;
 		}
 
-		// only admins are allowed to add admins
-		$role = $props['role'] ?? null;
-
-		if ($role === 'admin' && $currentUser?->isAdmin() === false) {
-			throw new PermissionException([
-				'key' => 'user.create.permission'
-			]);
-		}
-
 		// check user permissions (if not on install)
 		if (
 			$user->kirby()->users()->count() > 0 &&
@@ -207,6 +202,18 @@ class UserRules
 		) {
 			throw new PermissionException([
 				'key' => 'user.create.permission'
+			]);
+		}
+
+		$role = $props['role'] ?? null;
+
+		// prevent creating a role that is not available for user
+		if (
+			in_array($role, [null, 'default', 'nobody'], true) === false &&
+			$user->kirby()->roles()->canBeCreated()->find($role) instanceof Role === false
+		) {
+			throw new InvalidArgumentException([
+				'key' => 'user.role.invalid',
 			]);
 		}
 
@@ -356,21 +363,5 @@ class UserRules
 		}
 
 		return true;
-	}
-
-	/**
-	 * Validates a user role
-	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the user role does not exist
-	 */
-	public static function validRole(User $user, string $role): bool
-	{
-		if ($user->roles()->find($role) instanceof Role) {
-			return true;
-		}
-
-		throw new InvalidArgumentException([
-			'key' => 'user.role.invalid',
-		]);
 	}
 }

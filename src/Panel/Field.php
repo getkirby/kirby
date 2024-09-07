@@ -194,6 +194,7 @@ class Field
 	 */
 	public static function role(
 		User|null $user = null,
+		string|null $context = null,
 		array $props = []
 	): array {
 		$kirby = App::instance();
@@ -203,8 +204,18 @@ class Field
 		// get all roles but filter out the admin role
 		// if the current user is no admin
 		$roles ??= $kirby->roles()->filter(
-			fn ($role) => $role->name() !== 'admin' || $kirby->user()?->isAdmin() === true
+			fn ($role) =>
+				$role->name() !== 'admin' ||
+				$kirby->user()?->isAdmin() === true
 		);
+
+		// filter roles based on the context
+		// as user options can restrict these further
+		$roles = match ($context) {
+			'create' => $roles->canBeCreated(),
+			'change' => $roles->canBeChanged(),
+			null     => $roles
+		};
 
 		$roles = $roles->values(fn ($role) => [
 			'text'  => $role->title(),
@@ -214,7 +225,8 @@ class Field
 
 		return array_merge([
 			'label'   => I18n::translate('role'),
-			'type'    => count($roles) <= 1 ? 'hidden' : 'radio',
+			'type'    => 'radio',
+			'value'   => count($roles) === 1 ? $roles[0]['value'] : null,
 			'options' => $roles
 		], $props);
 	}

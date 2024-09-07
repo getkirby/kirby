@@ -245,6 +245,7 @@ class FieldTest extends TestCase
 		$expected = [
 			'label'   => 'Role',
 			'type'    => 'radio',
+			'value'   => null,
 			'options' => [
 				[
 					'text'  => 'Admin',
@@ -271,6 +272,7 @@ class FieldTest extends TestCase
 		$expected = [
 			'label'   => 'Role',
 			'type'    => 'radio',
+			'value'   => null,
 			'options' => [
 				[
 					'text'  => 'Admin',
@@ -298,6 +300,7 @@ class FieldTest extends TestCase
 		$expected = [
 			'label'   => 'Role',
 			'type'    => 'radio',
+			'value'   => null,
 			'options' => [
 				[
 					'text'  => 'Editor',
@@ -319,7 +322,8 @@ class FieldTest extends TestCase
 		$field = Field::role($user);
 		$expected = [
 			'label'   => 'Role',
-			'type'    => 'hidden',
+			'type'    => 'radio',
+			'value'   => 'admin',
 			'options' => [
 				[
 					'text'  => 'Admin',
