@@ -5,9 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
@@ -153,18 +151,9 @@ class Language implements Stringable
 	 */
 	public static function create(array $props): static
 	{
-		$kirby = App::instance();
-		$user  = $kirby->user();
-
-		if (
-			$user === null ||
-			$user->role()->permissions()->for('languages', 'create') === false
-		) {
-			throw new PermissionException(['key' => 'language.create.permission']);
-		}
-
-		$props['code'] = Str::slug($props['code'] ?? null);
+		$kirby         = App::instance();
 		$languages     = $kirby->languages();
+		$props['code'] = Str::slug($props['code'] ?? null);
 
 		// make the first language the default language
 		if ($languages->count() === 0) {
@@ -173,20 +162,25 @@ class Language implements Stringable
 
 		$language = new static($props);
 
-		// trigger before hook
-		$kirby->trigger(
+		// validate the new language
+		LanguageRules::create($language);
+
+		// apply before hook
+		$language = $kirby->apply(
 			'language.create:before',
 			[
 				'input'    => $props,
 				'language' => $language
-			]
+			],
+			'language'
 		);
 
-		// validate the new language
+		// re-validate the language after before hook was applied
 		LanguageRules::create($language);
 
 		$language->save();
 
+		// convert content storage to multilang
 		if ($languages->count() === 0) {
 			foreach ($kirby->models() as $model) {
 				$model->storage()->moveLanguage(
@@ -199,13 +193,14 @@ class Language implements Stringable
 		// update the main languages collection in the app instance
 		$kirby->languages(false)->append($language->code(), $language);
 
-		// trigger after hook
-		$kirby->trigger(
+		// apply after hook
+		$language = $kirby->apply(
 			'language.create:after',
 			[
 				'input'    => $props,
 				'language' => $language
-			]
+			],
+			'language'
 		);
 
 		return $language;
@@ -221,31 +216,28 @@ class Language implements Stringable
 	public function delete(): bool
 	{
 		$kirby = App::instance();
-		$user  = $kirby->user();
 		$code  = $this->code();
 
-		if (
-			$user === null ||
-			$user->role()->permissions()->for('languages', 'delete') === false
-		) {
-			throw new PermissionException(['key' => 'language.delete.permission']);
-		}
+		// validate the language rules
+		LanguageRules::delete($this);
 
-		if ($this->isDeletable() === false) {
-			throw new Exception('The language cannot be deleted');
-		}
+		// apply before hook
+		$language = $kirby->apply(
+			'language.delete:before',
+			['language' => $this],
+			'language'
+		);
 
-		// trigger before hook
-		$kirby->trigger('language.delete:before', [
-			'language' => $this
-		]);
+		// re-validate the language rules after before hook was applied
+		LanguageRules::delete($language);
 
-		if (F::remove($this->root()) !== true) {
+		if (F::remove($language->root()) !== true) {
 			throw new Exception('The language could not be deleted');
 		}
 
+		// if needed, convert content storage to single lang
 		foreach ($kirby->models() as $model) {
-			if ($this->isLast() === true) {
+			if ($language->isLast() === true) {
 				$model->storage()->moveLanguage($this, Language::single());
 			} else {
 				$model->storage()->deleteLanguage($this);
@@ -257,7 +249,7 @@ class Language implements Stringable
 
 		// trigger after hook
 		$kirby->trigger('language.delete:after', [
-			'language' => $this
+			'language' => $language
 		]);
 
 		return true;
@@ -580,14 +572,6 @@ class Language implements Stringable
 	public function update(array|null $props = null): static
 	{
 		$kirby = App::instance();
-		$user  = $kirby->user();
-
-		if (
-			$user === null ||
-			$user->role()->permissions()->for('languages', 'update') === false
-		) {
-			throw new PermissionException(['key' => 'language.update.permission']);
-		}
 
 		// don't change the language code
 		unset($props['code']);
@@ -595,23 +579,29 @@ class Language implements Stringable
 		// make sure the slug is nice and clean
 		$props['slug'] = Str::slug($props['slug'] ?? null);
 
-		$updated = $this->clone($props);
-
-		if (isset($props['translations']) === true) {
-			$updated->translations = $props['translations'];
-		}
-
-		// validate the updated language
-		LanguageRules::update($updated);
 
 		// trigger before hook
-		$kirby->trigger('language.update:before', [
-			'language' => $this,
-			'input' => $props
-		]);
+		$language = $kirby->apply(
+			'language.update:before',
+			[
+				'language' => $this,
+				'input'    => $props
+			],
+			'language'
+		);
+
+		// updated language object
+		$language = $language->clone($props);
+
+		if (isset($props['translations']) === true) {
+			$language->translations = $props['translations'];
+		}
+
+		// validate the language rules after before hook was applied
+		LanguageRules::update($language, $this);
 
 		// if language just got promoted to be the new default language…
-		if ($this->isDefault() === false && $updated->isDefault() === true) {
+		if ($this->isDefault() === false && $language->isDefault() === true) {
 			// convert the current default to a non-default language
 			$previous = $kirby->defaultLanguage()?->clone(['default' => false])->save();
 			$kirby->languages(false)->set($previous->code(), $previous);
@@ -621,27 +611,21 @@ class Language implements Stringable
 			}
 		}
 
-		// if language was the default language and got demoted…
-		if (
-			$this->isDefault() === true &&
-			$updated->isDefault() === false &&
-			$kirby->defaultLanguage()->code() === $this->code()
-		) {
-			// ensure another language has already been set as default
-			throw new LogicException('Please select another language to be the primary language');
-		}
-
-		$language = $updated->save();
+		$language = $language->save();
 
 		// make sure the language is also updated in the languages collection
 		$kirby->languages(false)->set($language->code(), $language);
 
 		// trigger after hook
-		$kirby->trigger('language.update:after', [
-			'newLanguage' => $language,
-			'oldLanguage' => $this,
-			'input' => $props
-		]);
+		$language = $kirby->apply(
+			'language.update:after',
+			[
+				'newLanguage' => $language,
+				'oldLanguage' => $this,
+				'input' => $props
+			],
+			'newLanguage'
+		);
 
 		return $language;
 	}
