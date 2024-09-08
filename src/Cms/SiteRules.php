@@ -23,7 +23,7 @@ class SiteRules
 	 * @throws \Kirby\Exception\InvalidArgumentException If the title is empty
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the title
 	 */
-	public static function changeTitle(Site $site, string $title): bool
+	public static function changeTitle(Site $site, string $title): void
 	{
 		if ($site->permissions()->changeTitle() !== true) {
 			throw new PermissionException(['key' => 'site.changeTitle.permission']);
@@ -32,8 +32,6 @@ class SiteRules
 		if (Str::length($title) === 0) {
 			throw new InvalidArgumentException(['key' => 'site.changeTitle.empty']);
 		}
-
-		return true;
 	}
 
 	/**
@@ -41,12 +39,10 @@ class SiteRules
 	 *
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to update the site
 	 */
-	public static function update(Site $site, array $content = []): bool
+	public static function update(Site $site, array $content = []): void
 	{
 		if ($site->permissions()->update() !== true) {
 			throw new PermissionException(['key' => 'site.update.permission']);
 		}
-
-		return true;
 	}
 }

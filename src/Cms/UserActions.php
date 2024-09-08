@@ -273,9 +273,8 @@ trait UserActions
 		do {
 			try {
 				$id = Str::random($length);
-				if (UserRules::validId($this, $id) === true) {
-					return $id;
-				}
+				UserRules::validId($this, $id);
+				return $id;
 
 				// we can't really test for a random match
 				// @codeCoverageIgnoreStart

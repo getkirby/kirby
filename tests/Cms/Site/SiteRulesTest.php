@@ -25,10 +25,10 @@ class SiteRulesTest extends TestCase
 		$app = new App();
 		$app->impersonate('kirby');
 
+		$this->expectNotToPerformAssertions();
+
 		$site = new Site([]);
-		$this->assertTrue(SiteRules::update($site, [
-			'copyright' => '2018'
-		]));
+		SiteRules::update($site, ['copyright' => '2018']);
 	}
 
 	public function testUpdateWithoutPermissions()
