@@ -203,7 +203,9 @@ return [
 			'users/(:any)/roles',
 		],
 		'action'  => function (string $id) {
-			return $this->user($id)->roles();
+			$kirby   = $this->kirby();
+			$purpose = $kirby->request()->get('purpose');
+			return $this->user($id)->roles($purpose);
 		}
 	],
 	[
