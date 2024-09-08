@@ -20,7 +20,7 @@ return [
 		'pattern' => 'users/create',
 		'load' => function () {
 			$kirby = App::instance();
-			$roles = $kirby->roles();
+			$roles = $kirby->user()->roles('create');
 
 			// get default value for role
 			if ($role = $kirby->request()->get('role')) {
@@ -234,7 +234,7 @@ return [
 				'props' => [
 					'fields' => [
 						'role' => Field::role(
-							roles: App::instance()->roles(),
+							roles: $user->roles('change'),
 							props: [
 								'label'    => I18n::translate('user.changeRole.select'),
 								'required' => true,
