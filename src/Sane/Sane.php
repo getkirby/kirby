@@ -202,7 +202,7 @@ class Sane
 			// ensure that each handler class is only returned once
 			if (
 				$handler &&
-				in_array($handlerClass, $handlerClasses) === false
+				in_array($handlerClass, $handlerClasses, true) === false
 			) {
 				$handlers[]       = $handler;
 				$handlerClasses[] = $handlerClass;

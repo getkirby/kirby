@@ -308,7 +308,7 @@ class File implements Stringable
 		if (is_array($rules['extension'] ?? null) === true) {
 			$extension = $this->extension();
 
-			if (in_array($extension, $rules['extension']) !== true) {
+			if (in_array($extension, $rules['extension'], true) !== true) {
 				throw new Exception([
 					'key'  => 'file.extension.invalid',
 					'data' => compact('extension')
@@ -319,7 +319,7 @@ class File implements Stringable
 		if (is_array($rules['type'] ?? null) === true) {
 			$type = $this->type();
 
-			if (in_array($type, $rules['type']) !== true) {
+			if (in_array($type, $rules['type'], true) !== true) {
 				throw new Exception([
 					'key'  => 'file.type.invalid',
 					'data' => compact('type')

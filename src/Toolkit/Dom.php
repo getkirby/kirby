@@ -325,7 +325,7 @@ class Dom
 
 			$hostname = parse_url($url, PHP_URL_HOST);
 
-			if (in_array($hostname, $options['allowedDomains']) === true) {
+			if (in_array($hostname, $options['allowedDomains'], true) === true) {
 				return true;
 			}
 
@@ -897,7 +897,7 @@ class Dom
 		// check for allow-listed processing instructions
 		if (
 			is_array($options['allowedPIs']) === true &&
-			in_array($name, $options['allowedPIs']) === false
+			in_array($name, $options['allowedPIs'], true) === false
 		) {
 			$errors[] = new InvalidArgumentException(
 				'The "' . $name . '" processing instruction (line ' .

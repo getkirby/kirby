@@ -232,7 +232,7 @@ class F
 	public static function extensionToType(string $extension): string|false
 	{
 		foreach (static::$types as $type => $extensions) {
-			if (in_array($extension, $extensions) === true) {
+			if (in_array($extension, $extensions, true) === true) {
 				return $type;
 			}
 		}
@@ -295,7 +295,7 @@ class F
 	public static function is(string $file, string $value): bool
 	{
 		// check for the extension
-		if (in_array($value, static::extensions()) === true) {
+		if (in_array($value, static::extensions(), true) === true) {
 			return static::extension($file) === $value;
 		}
 
@@ -870,7 +870,7 @@ class F
 		$extension = strtolower($extension);
 
 		foreach (static::$types as $type => $extensions) {
-			if (in_array($extension, $extensions) === true) {
+			if (in_array($extension, $extensions, true) === true) {
 				return $type;
 			}
 		}

@@ -55,7 +55,7 @@ abstract class Sql
 		// generate random bindings until the name is unique
 		do {
 			$binding = ':' . $label . '_' . Str::random(8, 'alphaNum');
-		} while (in_array($binding, $this->bindings) === true);
+		} while (in_array($binding, $this->bindings, true) === true);
 
 		// cache the generated binding name for future invocations
 		$this->bindings[] = $binding;
@@ -475,7 +475,7 @@ abstract class Sql
 		$type = strtoupper(trim($type));
 
 		// validate join type
-		if (in_array($type, $types) === false) {
+		if (in_array($type, $types, true) === false) {
 			throw new InvalidArgumentException('Invalid join type ' . $type);
 		}
 

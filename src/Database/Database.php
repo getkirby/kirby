@@ -467,7 +467,7 @@ class Database
 			}
 		}
 
-		return in_array($table, $this->tables) === true;
+		return in_array($table, $this->tables, true) === true;
 	}
 
 	/**
@@ -492,7 +492,7 @@ class Database
 			}
 		}
 
-		return in_array($column, $this->columnWhitelist[$table]) === true;
+		return in_array($column, $this->columnWhitelist[$table], true) === true;
 	}
 
 	/**
@@ -512,7 +512,7 @@ class Database
 		}
 
 		// update cache
-		if (in_array($table, $this->tables ?? []) !== true) {
+		if (in_array($table, $this->tables ?? [], true) !== true) {
 			$this->tables[] = $table;
 		}
 

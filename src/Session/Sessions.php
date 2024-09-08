@@ -50,7 +50,7 @@ class Sessions
 		$gcInterval       = $options['gcInterval'] ?? 100;
 
 		// validate options
-		if (in_array($this->mode, ['cookie', 'header', 'manual']) === false) {
+		if (in_array($this->mode, ['cookie', 'header', 'manual'], true) === false) {
 			throw new InvalidArgumentException([
 				'data' => [
 					'method'   => 'Sessions::__construct',

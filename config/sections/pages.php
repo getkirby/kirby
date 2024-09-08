@@ -44,7 +44,7 @@ return [
 				$status = 'draft';
 			}
 
-			if (in_array($status, ['all', 'draft', 'published', 'listed', 'unlisted']) === false) {
+			if (in_array($status, ['all', 'draft', 'published', 'listed', 'unlisted'], true) === false) {
 				$status = 'all';
 			}
 
@@ -111,7 +111,7 @@ return [
 				// filter by all set templates
 				if (
 					$this->templates &&
-					in_array($intendedTemplate, $this->templates) === false
+					in_array($intendedTemplate, $this->templates, true) === false
 				) {
 					return false;
 				}
@@ -119,7 +119,7 @@ return [
 				// exclude by all ignored templates
 				if (
 					$this->templatesIgnore &&
-					in_array($intendedTemplate, $this->templatesIgnore) === true
+					in_array($intendedTemplate, $this->templatesIgnore, true) === true
 				) {
 					return false;
 				}

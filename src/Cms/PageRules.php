@@ -193,7 +193,7 @@ class PageRules
 
 		if (
 			count($blueprints) <= 1 ||
-			in_array($template, array_column($blueprints, 'name')) === false
+			in_array($template, array_column($blueprints, 'name'), true) === false
 		) {
 			throw new LogicException([
 				'key'  => 'page.changeTemplate.invalid',
@@ -385,7 +385,7 @@ class PageRules
 		}
 
 		// check if the template of this page is allowed as subpage type
-		if (in_array($page->intendedTemplate()->name(), $allowed) === false) {
+		if (in_array($page->intendedTemplate()->name(), $allowed, true) === false) {
 			throw new PermissionException([
 				'key'  => 'page.move.template',
 				'data' => [

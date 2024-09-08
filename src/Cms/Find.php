@@ -100,8 +100,11 @@ class Find
 	 */
 	public static function parent(string $path): ModelWithContent
 	{
-		$path       = trim($path, '/');
-		$modelType  = in_array($path, ['site', 'account']) ? $path : trim(dirname($path), '/');
+		$path      = trim($path, '/');
+		$modelType = match ($path) {
+			'site', 'account' => $path,
+			default           => trim(dirname($path), '/')
+		};
 		$modelTypes = [
 			'site'    => 'site',
 			'users'   => 'user',

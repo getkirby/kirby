@@ -76,7 +76,7 @@ class Dir
 
 			if (
 				is_array($ignore) === true &&
-				in_array($root, $ignore) === true
+				in_array($root, $ignore, true) === true
 			) {
 				continue;
 			}
@@ -160,7 +160,7 @@ class Dir
 
 			if (
 				is_array($ignore) === true &&
-				in_array($root, $ignore) === true
+				in_array($root, $ignore, true) === true
 			) {
 				continue;
 			}
@@ -265,7 +265,7 @@ class Dir
 			$extension = pathinfo($item, PATHINFO_EXTENSION);
 
 			// don't track files with these extensions
-			if (in_array($extension, ['htm', 'html', 'php']) === true) {
+			if (in_array($extension, ['htm', 'html', 'php'], true) === true) {
 				continue;
 			}
 
@@ -545,7 +545,7 @@ class Dir
 		}
 
 		foreach (scandir($dir) as $childName) {
-			if (in_array($childName, ['.', '..']) === true) {
+			if (in_array($childName, ['.', '..'], true) === true) {
 				continue;
 			}
 

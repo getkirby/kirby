@@ -245,7 +245,7 @@ class Uri implements Stringable
 
 		if (
 			$this->port !== null &&
-			in_array($this->port, [80, 443]) === false
+			in_array($this->port, [80, 443], true) === false
 		) {
 			$domain .= ':' . $this->port;
 		}
@@ -396,7 +396,7 @@ class Uri implements Stringable
 	 */
 	public function setScheme(string|null $scheme = null): static
 	{
-		if ($scheme !== null && in_array($scheme, static::$schemes) === false) {
+		if ($scheme !== null && in_array($scheme, static::$schemes, true) === false) {
 			throw new InvalidArgumentException('Invalid URL scheme: ' . $scheme);
 		}
 

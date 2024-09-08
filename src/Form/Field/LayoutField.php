@@ -96,7 +96,7 @@ class LayoutField extends BlocksField
 
 			// remove the row if layout not available for the pasted layout field
 			$columns = array_column($layout['columns'], 'width');
-			if (in_array($columns, $this->layouts()) === false) {
+			if (in_array($columns, $this->layouts(), true) === false) {
 				unset($layouts[$layoutIndex]);
 				continue;
 			}

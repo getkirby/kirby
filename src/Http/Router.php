@@ -175,7 +175,7 @@ class Router
 			if ($arguments !== false) {
 				if (
 					empty($ignore) === true ||
-					in_array($route, $ignore) === false
+					in_array($route, $ignore, true) === false
 				) {
 					return $this->route = $route;
 				}

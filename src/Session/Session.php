@@ -304,7 +304,7 @@ class Session
 			'set'
 		];
 
-		if (in_array($name, $methods) === false) {
+		if (in_array($name, $methods, true) === false) {
 			throw new BadMethodCallException([
 				'data'      => ['method' => 'Session::' . $name],
 				'translate' => false

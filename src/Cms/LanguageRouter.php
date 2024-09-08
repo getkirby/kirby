@@ -60,7 +60,7 @@ class LanguageRouter
 			$languages = Str::split(strtolower($route['language']), '|');
 
 			// validate the language
-			return in_array($language->code(), $languages) === true;
+			return in_array($language->code(), $languages, true) === true;
 		}));
 
 		// add the page-scope if necessary

@@ -375,9 +375,9 @@ class Date extends DateTime implements Stringable
 
 		// validate step size
 		if (
-			in_array($unit, ['day', 'month', 'year']) && $size !== 1 ||
+			in_array($unit, ['day', 'month', 'year'], true) && $size !== 1 ||
 			$unit === 'hour' && 24 % $size !== 0 ||
-			in_array($unit, ['second', 'minute']) && 60 % $size !== 0
+			in_array($unit, ['second', 'minute'], true) && 60 % $size !== 0
 		) {
 			throw new InvalidArgumentException('Invalid rounding size for ' . $unit);
 		}
@@ -558,7 +558,7 @@ class Date extends DateTime implements Stringable
 	protected static function validateUnit(string $unit): void
 	{
 		$units = ['year', 'month', 'day', 'hour', 'minute', 'second'];
-		if (in_array($unit, $units) === false) {
+		if (in_array($unit, $units, true) === false) {
 			throw new InvalidArgumentException('Invalid rounding unit');
 		}
 	}

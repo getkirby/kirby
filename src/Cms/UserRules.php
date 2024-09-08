@@ -308,7 +308,7 @@ class UserRules
 	 */
 	public static function validId(User $user, string $id): bool
 	{
-		if (in_array($id, ['account', 'kirby', 'nobody']) === true) {
+		if (in_array($id, ['account', 'kirby', 'nobody'], true) === true) {
 			throw new InvalidArgumentException('"' . $id . '" is a reserved word and cannot be used as user id');
 		}
 

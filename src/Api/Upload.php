@@ -131,7 +131,7 @@ readonly class Upload
 		// accordingly. This will avoid .tmp filenames
 		if (
 			empty($extension) === true ||
-			in_array($extension, ['tmp', 'temp']) === true
+			in_array($extension, ['tmp', 'temp'], true) === true
 		) {
 			$mime      = F::mime($upload['tmp_name']);
 			$extension = F::mimeToExtension($mime);

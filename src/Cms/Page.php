@@ -235,7 +235,7 @@ class Page extends ModelWithContent
 		}
 
 		// add the current template to the array if it's not already there
-		if (in_array($currentTemplate, $templates) === false) {
+		if (in_array($currentTemplate, $templates, true) === false) {
 			array_unshift($templates, $currentTemplate);
 		}
 
@@ -562,7 +562,7 @@ class Page extends ModelWithContent
 		$request = $kirby->request();
 
 		// disable the pages cache for any request types but GET or HEAD
-		if (in_array($request->method(), ['GET', 'HEAD']) === false) {
+		if (in_array($request->method(), ['GET', 'HEAD'], true) === false) {
 			return false;
 		}
 
@@ -585,7 +585,7 @@ class Page extends ModelWithContent
 
 		// ignore pages by id
 		if (is_array($ignore) === true) {
-			if (in_array($this->id(), $ignore) === true) {
+			if (in_array($this->id(), $ignore, true) === true) {
 				return false;
 			}
 		}

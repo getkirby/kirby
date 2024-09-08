@@ -230,7 +230,7 @@ class System
 	{
 		return
 			$this->is2FA() === true &&
-			in_array('totp', $this->app->auth()->enabledChallenges()) === true;
+			in_array('totp', $this->app->auth()->enabledChallenges(), true) === true;
 	}
 
 	/**

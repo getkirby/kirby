@@ -91,7 +91,7 @@ class FileRules
 		// option for this file
 		if (
 			count($blueprints) <= 1 ||
-			in_array($template, array_column($blueprints, 'name')) === false
+			in_array($template, array_column($blueprints, 'name'), true) === false
 		) {
 			throw new LogicException([
 				'key'  => 'file.changeTemplate.invalid',

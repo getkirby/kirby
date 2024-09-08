@@ -439,11 +439,11 @@ return [
 			$duplicateSlug = $page->slug() . '-' . $slugAppendix;
 			$siblingKeys   = $page->parentModel()->childrenAndDrafts()->pluck('uid');
 
-			if (in_array($duplicateSlug, $siblingKeys) === true) {
+			if (in_array($duplicateSlug, $siblingKeys, true) === true) {
 				$suffixCounter = 2;
 				$newSlug       = $duplicateSlug . $suffixCounter;
 
-				while (in_array($newSlug, $siblingKeys) === true) {
+				while (in_array($newSlug, $siblingKeys, true) === true) {
 					$newSlug = $duplicateSlug . ++$suffixCounter;
 				}
 

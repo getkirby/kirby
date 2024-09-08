@@ -344,7 +344,7 @@ class Html extends Xml
 	 */
 	public static function isVoid(string $tag): bool
 	{
-		return in_array(strtolower($tag), static::$voidList);
+		return in_array(strtolower($tag), static::$voidList, true);
 	}
 
 	/**

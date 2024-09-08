@@ -135,7 +135,7 @@ class Responder implements Stringable
 	public function usesCookie(string $name): void
 	{
 		// only add unique names
-		if (in_array($name, $this->usesCookies) === false) {
+		if (in_array($name, $this->usesCookies, true) === false) {
 			$this->usesCookies[] = $name;
 		}
 	}

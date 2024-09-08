@@ -39,7 +39,7 @@ class Segments extends Collection
 			$segments,
 			function ($segment) use (&$position) {
 				// leave connectors as they are
-				if (in_array($segment, ['.', '?.']) === true) {
+				if (in_array($segment, ['.', '?.'], true) === true) {
 					return $segment;
 				}
 

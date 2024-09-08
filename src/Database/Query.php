@@ -905,7 +905,7 @@ class Query
 					// ->where('quantity', 'between', [10, 50]);
 					$predicate = trim(strtoupper($args[1]));
 					if (is_array($args[2]) === true) {
-						if (in_array($predicate, ['IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN']) === false) {
+						if (in_array($predicate, ['IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN'], true) === false) {
 							throw new InvalidArgumentException('Invalid predicate ' . $predicate);
 						}
 
@@ -938,7 +938,7 @@ class Query
 							'REGEXP', 'NOT REGEXP'
 						];
 
-						if (in_array($predicate, $predicates) === false) {
+						if (in_array($predicate, $predicates, true) === false) {
 							throw new InvalidArgumentException('Invalid predicate/operator ' . $predicate);
 						}
 

@@ -31,9 +31,11 @@ return [
 	],
 	'methods' => [
 		'activeTypes' => function () {
-			return array_filter($this->availableTypes(), function (string $type) {
-				return in_array($type, $this->props['options']) === true;
-			}, ARRAY_FILTER_USE_KEY);
+			return array_filter(
+				$this->availableTypes(),
+				fn (string $type) => in_array($type, $this->props['options'], true),
+				ARRAY_FILTER_USE_KEY
+			);
 		},
 		'availableTypes' => function () {
 			return [

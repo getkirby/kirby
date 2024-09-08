@@ -36,7 +36,7 @@ return [
 		},
 		'sanitizeOption' => function ($value) {
 			$options = array_column($this->options(), 'value');
-			return in_array($value, $options) === true ? $value : null;
+			return in_array($value, $options) ? $value : null;
 		},
 		'sanitizeOptions' => function ($values) {
 			$options = array_column($this->options(), 'value');

@@ -195,7 +195,7 @@ class Parsley
 			}
 
 			$marks = array_column($this->marks, 'tag');
-			return in_array($element->tagName, $marks);
+			return in_array($element->tagName, $marks, true);
 		}
 
 		return false;
@@ -261,7 +261,7 @@ class Parsley
 			/**
 			 * @var DOMElement $element
 			 */
-			if (in_array($element->tagName, $this->skip) === true) {
+			if (in_array($element->tagName, $this->skip, true) === true) {
 				return false;
 			}
 
@@ -274,7 +274,7 @@ class Parsley
 			// wrapper elements should never be converted
 			// to a simple fallback block. Their children
 			// have to be parsed individually.
-			if (in_array($element->tagName, $wrappers) === false) {
+			if (in_array($element->tagName, $wrappers, true) === false) {
 				$node = new Element($element, $this->marks);
 
 				if ($block = $this->fallback($node)) {

@@ -265,7 +265,7 @@ class Mime
 		foreach (static::$types as $key => $value) {
 			if (
 				is_array($value) === true &&
-				in_array($mime, $value) === true
+				in_array($mime, $value, true) === true
 			) {
 				return $key;
 			}
@@ -304,7 +304,7 @@ class Mime
 				}
 
 				// check if at least one MIME type matches exactly
-				return in_array($mime, $mimes);
+				return in_array($mime, $mimes, true);
 			}
 		);
 

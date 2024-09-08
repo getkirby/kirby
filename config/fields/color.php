@@ -24,7 +24,7 @@ return [
 		 * The CSS format (hex, rgb, hsl) to display and store the value
 		 */
 		'format' => function (string $format = 'hex'): string {
-			if (in_array($format, ['hex', 'hsl', 'rgb']) === false) {
+			if (in_array($format, ['hex', 'hsl', 'rgb'], true) === false) {
 				throw new InvalidArgumentException('Unsupported format for color field (supported: hex, rgb, hsl)');
 			}
 
@@ -35,7 +35,7 @@ return [
 		 * show the `options` as toggles
 		 */
 		'mode' => function (string $mode = 'picker'): string {
-			if (in_array($mode, ['picker', 'input', 'options']) === false) {
+			if (in_array($mode, ['picker', 'input', 'options'], true) === false) {
 				throw new InvalidArgumentException('Unsupported mode for color field (supported: picker, input, options)');
 			}
 

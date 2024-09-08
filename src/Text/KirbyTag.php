@@ -63,7 +63,7 @@ class KirbyTag
 			$attrName = strtolower($attrName);
 
 			// applies only defined attributes to safely update
-			if (in_array($attrName, $availableAttrs) === true) {
+			if (in_array($attrName, $availableAttrs, true) === true) {
 				$this->{$attrName} = $attrValue;
 			}
 		}

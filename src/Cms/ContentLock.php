@@ -113,7 +113,7 @@ class ContentLock
 	{
 		$data = $this->data['unlock'] ?? [];
 
-		return in_array($this->user()->id(), $data) === true;
+		return in_array($this->user()->id(), $data, true) === true;
 	}
 
 	/**

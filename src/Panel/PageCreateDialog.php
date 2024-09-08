@@ -160,11 +160,11 @@ class PageCreateDialog
 				throw new InvalidArgumentException('Unknown field  "' . $name . '" in create dialog');
 			}
 
-			if (in_array($field['type'], static::$fieldTypes) === false) {
+			if (in_array($field['type'], static::$fieldTypes, true) === false) {
 				throw new InvalidArgumentException('Field type "' . $field['type'] . '" not supported in create dialog');
 			}
 
-			if (in_array($name, $ignore) === true) {
+			if (in_array($name, $ignore, true) === true) {
 				throw new InvalidArgumentException('Field name "' . $name . '" not allowed as custom field in create dialog');
 			}
 
