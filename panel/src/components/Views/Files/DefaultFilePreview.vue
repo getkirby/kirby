@@ -1,12 +1,12 @@
 <template>
 	<div class="k-default-file-preview">
-		<k-file-preview-thumb>
+		<k-file-preview-frame>
 			<k-icon
 				:color="$helper.color(image.color)"
 				:type="image.icon"
 				class="k-item-icon"
 			/>
-		</k-file-preview-thumb>
+		</k-file-preview-frame>
 
 		<k-file-preview-details :details="details" />
 	</div>
@@ -29,7 +29,7 @@ export default {
 </script>
 
 <style>
-.k-default-file-preview .k-file-preview-thumb > .k-icon {
+.k-default-file-preview .k-file-preview-frame > .k-icon {
 	--icon-size: 3rem;
 }
 

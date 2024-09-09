@@ -1,10 +1,10 @@
 <template>
 	<k-lab-examples>
 		<k-lab-example>
-			<k-file-preview-thumb> 👋 </k-file-preview-thumb>
+			<k-file-preview-frame> 👋 </k-file-preview-frame>
 		</k-lab-example>
 		<k-lab-example label="Options">
-			<k-file-preview-thumb :options="options"> 👋 </k-file-preview-thumb>
+			<k-file-preview-frame :options="options"> 👋 </k-file-preview-frame>
 		</k-lab-example>
 	</k-lab-examples>
 </template>
@@ -20,7 +20,7 @@ export default {
 </script>
 
 <style>
-.k-lab-example-canvas .k-file-preview-thumb-column {
+.k-lab-example-canvas .k-file-preview-frame-column {
 	max-height: 15rem;
 }
 </style>

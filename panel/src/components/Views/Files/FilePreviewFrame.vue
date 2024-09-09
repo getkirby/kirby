@@ -1,13 +1,13 @@
 <template>
-	<div class="k-file-preview-thumb-column">
-		<div class="k-file-preview-thumb">
+	<div class="k-file-preview-frame-column">
+		<div class="k-file-preview-frame">
 			<slot />
 
 			<template v-if="options.length">
 				<k-button
 					icon="dots"
 					size="xs"
-					class="k-file-preview-thumb-dropdown-toggle"
+					class="k-file-preview-frame-dropdown-toggle"
 					@click="$refs.dropdown.toggle()"
 				/>
 				<k-dropdown-content
@@ -36,11 +36,11 @@ export default {
 </script>
 
 <style>
-.k-file-preview-thumb-column {
+.k-file-preview-frame-column {
 	aspect-ratio: 1/1;
 	background: var(--pattern);
 }
-.k-file-preview-thumb {
+.k-file-preview-frame {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -48,21 +48,21 @@ export default {
 	padding: var(--spacing-10);
 	container-type: size;
 }
-.k-file-preview-thumb :where(img, audio, video) {
+.k-file-preview-frame :where(img, audio, video) {
 	width: auto;
 	max-width: 100cqw;
 	max-height: 100cqh;
 }
-.k-file-preview-thumb > .k-button {
+.k-file-preview-frame > .k-button {
 	position: absolute;
 	top: var(--spacing-2);
 	inset-inline-start: var(--spacing-2);
 }
 
-.k-button.k-file-preview-thumb-dropdown-toggle {
+.k-button.k-file-preview-frame-dropdown-toggle {
 	--button-color-icon: var(--color-gray-500);
 }
-.k-panel[data-theme="dark"] .k-button.k-file-preview-thumb-dropdown-toggle {
+.k-panel[data-theme="dark"] .k-button.k-file-preview-frame-dropdown-toggle {
 	--button-color-icon: var(--color-gray-700);
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
 	<div class="k-video-file-preview">
-		<k-file-preview-thumb :options="options">
+		<k-file-preview-frame :options="options">
 			<video controls preload="metadata" :src="url" />
-		</k-file-preview-thumb>
+		</k-file-preview-frame>
 
 		<k-file-preview-details :details="details" />
 	</div>
@@ -34,7 +34,7 @@ export default {
 </script>
 
 <style>
-.k-video-file-preview .k-file-preview-thumb-column {
+.k-video-file-preview .k-file-preview-frame-column {
 	aspect-ratio: 16/9;
 }
 

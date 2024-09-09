@@ -3,7 +3,7 @@
 		:data-has-focus="hasFocus"
 		class="k-default-file-preview k-image-file-preview"
 	>
-		<k-file-preview-thumb :options="options">
+		<k-file-preview-frame :options="options">
 			<k-coords-input
 				:disabled="!focusable"
 				:value="focus"
@@ -11,7 +11,7 @@
 			>
 				<img v-bind="image" @dragstart.prevent />
 			</k-coords-input>
-		</k-file-preview-thumb>
+		</k-file-preview-frame>
 
 		<k-file-preview-details :details="details">
 			<div v-if="image.src" class="k-image-file-preview-focus">
