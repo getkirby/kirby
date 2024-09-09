@@ -102,4 +102,12 @@ class Obj extends stdClass
 	{
 		return json_encode($this->toArray(), ...$arguments);
 	}
+
+	/**
+	 *  Returns the property names as keys
+	 */
+	public function toKeys(): array
+	{
+		return array_keys((array)$this);
+	}
 }
