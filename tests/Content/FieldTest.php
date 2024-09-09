@@ -168,6 +168,11 @@ class FieldTest extends TestCase
 			['false', false],
 			[null, true],
 			['', true],
+			['   ', true],
+			['[]', true],
+			[[], true],
+			['[1]', false],
+			['["a"]', false],
 		];
 	}
 
