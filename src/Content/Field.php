@@ -108,9 +108,17 @@ class Field implements Stringable
 	 */
 	public function isEmpty(): bool
 	{
+		$value = $this->value;
+
+		if (is_string($value) === true) {
+			$value = trim($value);
+		}
+
 		return
-			empty($this->value) === true &&
-			in_array($this->value, [0, '0', false], true) === false;
+			$value === null ||
+			$value === '' ||
+			$value === [] ||
+			$value === '[]';
 	}
 
 	/**

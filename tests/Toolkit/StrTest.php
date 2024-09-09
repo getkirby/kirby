@@ -1205,6 +1205,30 @@ class StrTest extends TestCase
 	}
 
 	/**
+	 * @covers ::slug
+	 */
+	public function testSlugMaxLength()
+	{
+		// default
+		$this->assertSame(
+			'this-is-a-very-long-sentence-that-should-be-used-to-test-the-maxlenght-parameter-of-the-str-slug-method-by-default-it-should-lim',
+			Str::slug('This is a very long sentence that should be used to test the $maxlenght parameter of the Str::slug() method. By default it should limit the slug to 128 characters.')
+		);
+
+		// custom
+		$this->assertSame(
+			'this-is-a-very-long-sentence-that-should-be-used-to-test-the-maxlenght-parameter-of-the-str-slug-method-by-default-it-should-limit-the-slug-to-128-characters-but-we-can-extend-this-to-250',
+			Str::slug('This is a very long sentence that should be used to test the $maxlenght parameter of the Str::slug() method. By default it should limit the slug to 128 characters, but we can extend this to 250.', null, null, 250)
+		);
+
+		// disabled
+		$this->assertSame(
+			'this-is-a-very-long-sentence-that-should-be-used-to-test-the-maxlenght-parameter-of-the-str-slug-method-by-default-it-should-limit-the-slug-to-128-characters-but-we-can-disable-the-shortening',
+			Str::slug('This is a very long sentence that should be used to test the $maxlenght parameter of the Str::slug() method. By default it should limit the slug to 128 characters, but we can disable the shortening.', null, null, false)
+		);
+	}
+
+	/**
 	 * @covers ::snake
 	 */
 	public function testSnake()
