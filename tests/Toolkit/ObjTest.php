@@ -63,18 +63,6 @@ class ObjTest extends TestCase
 	}
 
 	/**
-	 * @covers ::keys
-	 */
-	public function testKeys()
-	{
-		$obj = new Obj(['foo' => 'bar']);
-		$this->assertSame(['foo'], $obj->keys());
-
-		$obj = new Obj(['foo' => 'bar', 'one' => 'first']);
-		$this->assertSame(['foo', 'one'], $obj->keys());
-	}
-
-	/**
 	 * @covers ::toArray
 	 */
 	public function testToArray()
@@ -108,6 +96,18 @@ class ObjTest extends TestCase
 	{
 		$obj = new Obj($expected = ['foo' => 'bar']);
 		$this->assertSame(json_encode($expected), $obj->toJson());
+	}
+
+	/**
+	 * @covers ::toKeys
+	 */
+	public function testToKeys()
+	{
+		$obj = new Obj(['foo' => 'bar']);
+		$this->assertSame(['foo'], $obj->toKeys());
+
+		$obj = new Obj(['foo' => 'bar', 'one' => 'first']);
+		$this->assertSame(['foo', 'one'], $obj->toKeys());
 	}
 
 	/**
