@@ -416,7 +416,7 @@ class AppPluginsTest extends TestCase
 			]
 		]);
 
-		$this->assertCount(2, $app->extensions('filePreviews'));
+		$this->assertCount(4, $app->extensions('filePreviews'));
 	}
 
 	public function testKirbyTag()
