@@ -42,9 +42,10 @@ class FileRulesTest extends TestCase
 			]
 		]);
 
-		$file = $page->file('a.jpg');
+		$this->expectNotToPerformAssertions();
 
-		$this->assertTrue(FileRules::changeName($file, 'c'));
+		$file = $page->file('a.jpg');
+		FileRules::changeName($file, 'c');
 	}
 
 	public function testChangeNameWithEmptyInput()
@@ -83,9 +84,10 @@ class FileRulesTest extends TestCase
 			]
 		]);
 
-		$file = $page->file('a.jpg');
+		$this->expectNotToPerformAssertions();
 
-		$this->assertTrue(FileRules::changeSort($file, 1));
+		$file = $page->file('a.jpg');
+		FileRules::changeSort($file, 1);
 	}
 
 	public function testChangeSortWithoutPermissions()
@@ -113,9 +115,10 @@ class FileRulesTest extends TestCase
 			]
 		]);
 
-		$file = $page->file('a.jpg');
+		$this->expectNotToPerformAssertions();
 
-		$this->assertTrue(FileRules::changeName($file, 'b'));
+		$file = $page->file('a.jpg');
+		FileRules::changeName($file, 'b');
 	}
 
 	public function testChangeNameToExistingFile()
@@ -168,8 +171,10 @@ class FileRulesTest extends TestCase
 
 		$app->impersonate('kirby');
 
+		$this->expectNotToPerformAssertions();
+
 		$file = $app->page('test')->file('test.jpg');
-		$this->assertTrue(FileRules::changeTemplate($file, 'b'));
+		FileRules::changeTemplate($file, 'b');
 	}
 
 	public function testChangeTemplateWithoutPermissions()
@@ -272,10 +277,10 @@ class FileRulesTest extends TestCase
 			]
 		]);
 
-		$upload = new BaseFile($testImage);
-		$create = FileRules::create($newFile, $upload);
+		$this->expectNotToPerformAssertions();
 
-		$this->assertTrue($create);
+		$upload = new BaseFile($testImage);
+		FileRules::create($newFile, $upload);
 	}
 
 	public function testCreateSameFileWithDifferentTemplate()
@@ -529,11 +534,11 @@ class FileRulesTest extends TestCase
 		if ($expected === false) {
 			$this->expectException(InvalidArgumentException::class);
 			$this->expectExceptionMessage($message);
+		} else {
+			$this->expectNotToPerformAssertions();
 		}
 
-		$result = FileRules::validExtension($file, $extension);
-
-		$this->assertTrue($result);
+		FileRules::validExtension($file, $extension);
 	}
 
 	public static function fileProvider(): array
@@ -594,11 +599,11 @@ class FileRulesTest extends TestCase
 		if ($expected === false) {
 			$this->expectException(InvalidArgumentException::class);
 			$this->expectExceptionMessage($message);
+		} else {
+			$this->expectNotToPerformAssertions();
 		}
 
-		$result = FileRules::validFile($file);
-
-		$this->assertTrue($result);
+		FileRules::validFile($file);
 	}
 
 	public function testValidFileSkipMime()
@@ -612,11 +617,11 @@ class FileRulesTest extends TestCase
 		$file->method('extension')->willReturn('jpg');
 		$file->method('mime')->willReturn('text/html');
 
-		$this->assertTrue(FileRules::validFile($file, false));
+		FileRules::validFile($file, false);
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The media type "text/html" is not allowed');
-		$this->assertTrue(FileRules::validFile($file));
+		FileRules::validFile($file);
 	}
 
 	public static function filenameProvider(): array
@@ -642,11 +647,11 @@ class FileRulesTest extends TestCase
 		if ($expected === false) {
 			$this->expectException(InvalidArgumentException::class);
 			$this->expectExceptionMessage($message);
+		} else {
+			$this->expectNotToPerformAssertions();
 		}
 
-		$result = FileRules::validFilename($file, $filename);
-
-		$this->assertTrue($result);
+		FileRules::validFilename($file, $filename);
 	}
 
 	public static function mimeProvider(): array
@@ -672,10 +677,10 @@ class FileRulesTest extends TestCase
 		if ($expected === false) {
 			$this->expectException(InvalidArgumentException::class);
 			$this->expectExceptionMessage($message);
+		} else {
+			$this->expectNotToPerformAssertions();
 		}
 
-		$result = FileRules::validMime($file, $mime);
-
-		$this->assertTrue($result);
+		FileRules::validMime($file, $mime);
 	}
 }

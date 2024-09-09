@@ -25,13 +25,11 @@ class PageRules
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the given number is invalid
 	 */
-	public static function changeNum(Page $page, int|null $num = null): bool
+	public static function changeNum(Page $page, int|null $num = null): void
 	{
 		if ($num !== null && $num < 0) {
 			throw new InvalidArgumentException(['key' => 'page.num.invalid']);
 		}
-
-		return true;
 	}
 
 	/**
@@ -40,7 +38,7 @@ class PageRules
 	 * @throws \Kirby\Exception\DuplicateException If a page with this slug already exists
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the slug
 	 */
-	public static function changeSlug(Page $page, string $slug): bool
+	public static function changeSlug(Page $page, string $slug): void
 	{
 		if ($page->permissions()->changeSlug() !== true) {
 			throw new PermissionException([
@@ -74,8 +72,6 @@ class PageRules
 				]
 			]);
 		}
-
-		return true;
 	}
 
 	/**
@@ -87,12 +83,12 @@ class PageRules
 		Page $page,
 		string $status,
 		int|null $position = null
-	): bool {
+	): void {
 		if (isset($page->blueprint()->status()[$status]) === false) {
 			throw new InvalidArgumentException(['key' => 'page.status.invalid']);
 		}
 
-		return match ($status) {
+		match ($status) {
 			'draft'     => static::changeStatusToDraft($page),
 			'listed'    => static::changeStatusToListed($page, $position),
 			'unlisted'  => static::changeStatusToUnlisted($page),
@@ -105,7 +101,7 @@ class PageRules
 	 *
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the status or the page cannot be converted to a draft
 	 */
-	public static function changeStatusToDraft(Page $page): bool
+	public static function changeStatusToDraft(Page $page): void
 	{
 		if ($page->permissions()->changeStatus() !== true) {
 			throw new PermissionException([
@@ -124,8 +120,6 @@ class PageRules
 				]
 			]);
 		}
-
-		return true;
 	}
 
 	/**
@@ -134,7 +128,7 @@ class PageRules
 	 * @throws \Kirby\Exception\InvalidArgumentException If the given position is invalid
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the status or the status for the page cannot be changed by any user
 	 */
-	public static function changeStatusToListed(Page $page, int $position): bool
+	public static function changeStatusToListed(Page $page, int $position): void
 	{
 		// no need to check for status changing permissions,
 		// instead we need to check for sorting permissions
@@ -148,7 +142,7 @@ class PageRules
 				]);
 			}
 
-			return true;
+			return;
 		}
 
 		static::publish($page);
@@ -156,8 +150,6 @@ class PageRules
 		if ($position !== null && $position < 0) {
 			throw new InvalidArgumentException(['key' => 'page.num.invalid']);
 		}
-
-		return true;
 	}
 
 	/**
@@ -168,8 +160,6 @@ class PageRules
 	public static function changeStatusToUnlisted(Page $page)
 	{
 		static::publish($page);
-
-		return true;
 	}
 
 	/**
@@ -178,7 +168,7 @@ class PageRules
 	 * @throws \Kirby\Exception\LogicException If the template of the page cannot be changed at all
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the template
 	 */
-	public static function changeTemplate(Page $page, string $template): bool
+	public static function changeTemplate(Page $page, string $template): void
 	{
 		if ($page->permissions()->changeTemplate() !== true) {
 			throw new PermissionException([
@@ -200,8 +190,6 @@ class PageRules
 				'data' => ['slug' => $page->slug()]
 			]);
 		}
-
-		return true;
 	}
 
 	/**
@@ -210,7 +198,7 @@ class PageRules
 	 * @throws \Kirby\Exception\InvalidArgumentException If the new title is empty
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the title
 	 */
-	public static function changeTitle(Page $page, string $title): bool
+	public static function changeTitle(Page $page, string $title): void
 	{
 		if ($page->permissions()->changeTitle() !== true) {
 			throw new PermissionException([
@@ -222,8 +210,6 @@ class PageRules
 		}
 
 		static::validateTitleLength($title);
-
-		return true;
 	}
 
 	/**
@@ -233,7 +219,7 @@ class PageRules
 	 * @throws \Kirby\Exception\InvalidArgumentException If the slug is invalid
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to create this page
 	 */
-	public static function create(Page $page): bool
+	public static function create(Page $page): void
 	{
 		if ($page->permissions()->create() !== true) {
 			throw new PermissionException([
@@ -273,8 +259,6 @@ class PageRules
 				'data' => ['slug' => $slug]
 			]);
 		}
-
-		return true;
 	}
 
 	/**
@@ -283,7 +267,7 @@ class PageRules
 	 * @throws \Kirby\Exception\LogicException If the page has children and should not be force-deleted
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to delete the page
 	 */
-	public static function delete(Page $page, bool $force = false): bool
+	public static function delete(Page $page, bool $force = false): void
 	{
 		if ($page->permissions()->delete() !== true) {
 			throw new PermissionException([
@@ -297,8 +281,6 @@ class PageRules
 		if (($page->hasChildren() === true || $page->hasDrafts() === true) && $force === false) {
 			throw new LogicException(['key' => 'page.delete.hasChildren']);
 		}
-
-		return true;
 	}
 
 	/**
@@ -310,7 +292,7 @@ class PageRules
 		Page $page,
 		string $slug,
 		array $options = []
-	): bool {
+	): void {
 		if ($page->permissions()->duplicate() !== true) {
 			throw new PermissionException([
 				'key' => 'page.duplicate.permission',
@@ -321,19 +303,17 @@ class PageRules
 		}
 
 		self::validateSlugLength($slug);
-
-		return true;
 	}
 
 	/**
 	 * Check if the page can be moved
 	 * to the given parent
 	 */
-	public static function move(Page $page, Site|Page $parent): bool
+	public static function move(Page $page, Site|Page $parent): void
 	{
 		// if nothing changes, there's no need for checks
 		if ($parent->is($page->parent()) === true) {
-			return true;
+			return;
 		}
 
 		if ($page->permissions()->move() !== true) {
@@ -394,15 +374,13 @@ class PageRules
 				]
 			]);
 		}
-
-		return true;
 	}
 
 	/**
 	 * Check if the page can be published
 	 * (status change from draft to listed or unlisted)
 	 */
-	public static function publish(Page $page): bool
+	public static function publish(Page $page): void
 	{
 		if ($page->permissions()->changeStatus() !== true) {
 			throw new PermissionException([
@@ -419,8 +397,6 @@ class PageRules
 				'details' => $page->errors()
 			]);
 		}
-
-		return true;
 	}
 
 	/**
@@ -428,7 +404,7 @@ class PageRules
 	 *
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to update the page
 	 */
-	public static function update(Page $page, array $content = []): bool
+	public static function update(Page $page, array $content = []): void
 	{
 		if ($page->permissions()->update() !== true) {
 			throw new PermissionException([
@@ -438,8 +414,6 @@ class PageRules
 				]
 			]);
 		}
-
-		return true;
 	}
 
 	/**

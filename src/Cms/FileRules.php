@@ -27,7 +27,7 @@ class FileRules
 	 * @throws \Kirby\Exception\DuplicateException If a file with this name exists
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to rename the file
 	 */
-	public static function changeName(File $file, string $name): bool
+	public static function changeName(File $file, string $name): void
 	{
 		if ($file->permissions()->changeName() !== true) {
 			throw new PermissionException([
@@ -51,14 +51,12 @@ class FileRules
 				'data' => ['filename' => $duplicate->filename()]
 			]);
 		}
-
-		return true;
 	}
 
 	/**
 	 * Validates if the file can be sorted
 	 */
-	public static function changeSort(File $file, int $sort): bool
+	public static function changeSort(File $file, int $sort): void
 	{
 		if ($file->permissions()->sort() !== true) {
 			throw new PermissionException([
@@ -66,8 +64,6 @@ class FileRules
 				'data' => ['filename' => $file->filename()]
 			]);
 		}
-
-		return true;
 	}
 
 	/**
@@ -76,7 +72,7 @@ class FileRules
 	 * @throws \Kirby\Exception\LogicException If the template of the page cannot be changed at all
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the template
 	 */
-	public static function changeTemplate(File $file, string $template): bool
+	public static function changeTemplate(File $file, string $template): void
 	{
 		if ($file->permissions()->changeTemplate() !== true) {
 			throw new PermissionException([
@@ -102,8 +98,6 @@ class FileRules
 				]
 			]);
 		}
-
-		return true;
 	}
 
 	/**
@@ -112,7 +106,7 @@ class FileRules
 	 * @throws \Kirby\Exception\DuplicateException If a file with the same name exists
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to create the file
 	 */
-	public static function create(File $file, BaseFile $upload): bool
+	public static function create(File $file, BaseFile $upload): void
 	{
 		// We want to ensure that we are not creating duplicate files.
 		// If a file with the same name already exists
@@ -128,7 +122,7 @@ class FileRules
 				$file->sha1() === $upload->sha1() &&
 				$file->template() === $existing->template()
 			) {
-				return true;
+				return;
 			}
 
 			// otherwise throw an error for duplicate file
@@ -148,8 +142,6 @@ class FileRules
 
 		$upload->match($file->blueprint()->accept());
 		$upload->validateContents(true);
-
-		return true;
 	}
 
 	/**
@@ -157,13 +149,11 @@ class FileRules
 	 *
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to delete the file
 	 */
-	public static function delete(File $file): bool
+	public static function delete(File $file): void
 	{
 		if ($file->permissions()->delete() !== true) {
 			throw new PermissionException('The file cannot be deleted');
 		}
-
-		return true;
 	}
 
 	/**
@@ -172,7 +162,7 @@ class FileRules
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to replace the file
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file type of the new file is different
 	 */
-	public static function replace(File $file, BaseFile $upload): bool
+	public static function replace(File $file, BaseFile $upload): void
 	{
 		if ($file->permissions()->replace() !== true) {
 			throw new PermissionException('The file cannot be replaced');
@@ -192,8 +182,6 @@ class FileRules
 
 		$upload->match($file->blueprint()->accept());
 		$upload->validateContents(true);
-
-		return true;
 	}
 
 	/**
@@ -201,13 +189,11 @@ class FileRules
 	 *
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to update the file
 	 */
-	public static function update(File $file, array $content = []): bool
+	public static function update(File $file, array $content = []): void
 	{
 		if ($file->permissions()->update() !== true) {
 			throw new PermissionException('The file cannot be updated');
 		}
-
-		return true;
 	}
 
 	/**
@@ -215,7 +201,7 @@ class FileRules
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the extension is missing or forbidden
 	 */
-	public static function validExtension(File $file, string $extension): bool
+	public static function validExtension(File $file, string $extension): void
 	{
 		// make it easier to compare the extension
 		$extension = strtolower($extension);
@@ -251,8 +237,6 @@ class FileRules
 				'data' => ['extension' => $extension]
 			]);
 		}
-
-		return true;
 	}
 
 	/**
@@ -265,17 +249,14 @@ class FileRules
 	public static function validFile(
 		File $file,
 		string|false|null $mime = null
-	): bool {
-		$validMime = match ($mime) {
-			// request to skip the MIME check for performance reasons
-			false   => true,
-			default => static::validMime($file, $mime ?? $file->mime())
-		};
+	): void {
+		// request to skip the MIME check for performance reasons
+		if ($mime !== false) {
+			static::validMime($file, $mime ?? $file->mime());
+		}
 
-		return
-			$validMime &&
-			static::validExtension($file, $file->extension()) &&
-			static::validFilename($file, $file->filename());
+		static::validExtension($file, $file->extension());
+		static::validFilename($file, $file->filename());
 	}
 
 	/**
@@ -283,7 +264,7 @@ class FileRules
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the filename is missing or forbidden
 	 */
-	public static function validFilename(File $file, string $filename): bool
+	public static function validFilename(File $file, string $filename): void
 	{
 		// make it easier to compare the filename
 		$filename = strtolower($filename);
@@ -310,8 +291,6 @@ class FileRules
 				'data' => ['type' => 'invisible']
 			]);
 		}
-
-		return true;
 	}
 
 	/**
@@ -319,7 +298,7 @@ class FileRules
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the MIME type is missing or forbidden
 	 */
-	public static function validMime(File $file, string|null $mime = null): bool
+	public static function validMime(File $file, string|null $mime = null): void
 	{
 		// make it easier to compare the mime
 		$mime = strtolower($mime ?? '');
@@ -344,7 +323,5 @@ class FileRules
 				'data' => ['mime' => $mime]
 			]);
 		}
-
-		return true;
 	}
 }
