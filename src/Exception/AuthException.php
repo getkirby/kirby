@@ -3,7 +3,6 @@
 namespace Kirby\Exception;
 
 /**
- * AuthException
  * Thrown when authentication is required
  * but no user is logged in.
  *
