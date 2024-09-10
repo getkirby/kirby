@@ -961,49 +961,54 @@ class Collection extends Iterator implements Stringable
 		$fields = [];
 
 		foreach ($args as $arg) {
-			// get the index of the latest field array inside the $fields array
-			$currentField = $fields ? count($fields) - 1 : 0;
+			// get the index of the latest field array inside $fields
+			$field = array_key_last($fields);
 
-			// detect the type of argument
-			// sorting direction
-			$argLower = is_string($arg) ? strtolower($arg) : null;
+			// normalize $arg
+			$arg = is_string($arg) === true ? strtolower($arg) : $arg;
 
-			if ($arg === SORT_ASC || $argLower === 'asc') {
-				$fields[$currentField]['direction'] = SORT_ASC;
-			} elseif ($arg === SORT_DESC || $argLower === 'desc') {
-				$fields[$currentField]['direction'] = SORT_DESC;
+			// $arg defines sorting direction
+			if (
+				$arg === 'asc'  || $arg === SORT_ASC ||
+				$arg === 'desc' || $arg === SORT_DESC
+			) {
+				$fields[$field]['direction'] = match ($arg) {
+					'asc'   => SORT_ASC,
+					'desc'  => SORT_DESC,
+					default => $arg
+				};
 
 			// other string: the field name
 			} elseif (is_string($arg) === true) {
-				$values = [];
+				$fields[] = [
+					'field'  => $arg,
+					'values' => A::map($array, function ($value) use ($collection, $arg) {
+						$value = $collection->getAttribute($value, $arg);
 
-				foreach ($array as $key => $value) {
-					$value = $collection->getAttribute($value, $arg);
-
-					// make sure that we return something sortable
-					// but don't convert other scalars (especially numbers) to strings!
-					$values[$key] = is_scalar($value) === true ? $value : (string)$value;
-				}
-
-				$fields[] = ['field' => $arg, 'values' => $values];
+						// make sure that we return something sortable
+						// but don't convert other scalars (especially numbers)
+						// to strings!
+						return is_scalar($value) === true ? $value : (string)$value;
+					})
+				];
 
 			// callable: custom field values
 			} elseif (is_callable($arg) === true) {
-				$values = [];
+				$fields[] = [
+					'field'  => null,
+					'values' => A::map($array, function ($value) use ($arg) {
+						$value = $arg($value);
 
-				foreach ($array as $key => $value) {
-					$value = $arg($value);
-
-					// make sure that we return something sortable
-					// but don't convert other scalars (especially numbers) to strings!
-					$values[$key] = is_scalar($value) === true ? $value : (string)$value;
-				}
-
-				$fields[] = ['field' => null, 'values' => $values];
+						// make sure that we return something sortable
+						// but don't convert other scalars (especially numbers)
+						// to strings!
+						return is_scalar($value) === true ? $value : (string)$value;
+					})
+				];
 
 			// flags
 			} else {
-				$fields[$currentField]['flags'] = $arg;
+				$fields[$field]['flags'] = $arg;
 			}
 		}
 
@@ -1016,24 +1021,29 @@ class Collection extends Iterator implements Stringable
 			$params[] = $field['flags']     ?? SORT_NATURAL | SORT_FLAG_CASE;
 		}
 
-		// check what kind of collection items we have; only check for the first
-		// item for better performance (we assume that all collection items are
-		// of the same type)
+		// check what kind of collection items we have;
+		// only check for the first item for better performance
+		// (we assume that all collection items are of the same type)
 		$firstItem = $collection->first();
+
 		if (is_object($firstItem) === true) {
 			// avoid the "Nesting level too deep - recursive dependency?" error
 			// when PHP tries to sort by the objects directly (in case all other
 			// fields are 100 % equal for some elements)
 			if (method_exists($firstItem, '__toString') === true) {
-				// PHP can easily convert the objects to strings, so it should
-				// compare them as strings instead of as objects to avoid the recursion
+				// PHP can easily convert the objects to strings,
+				// so it should compare them as strings instead of
+				// as objects to avoid the recursion
 				$params[] = &$array;
 				$params[] = SORT_STRING;
 			} else {
-				// we can't convert the objects to strings, so we need a fallback:
-				// custom fictional field that is guaranteed to have a unique value
-				// for each item; WARNING: may lead to slightly wrong sorting results
-				// and is therefore only used as a fallback if we don't have another way
+				// we can't convert the objects to strings,
+				// so we need a fallback:
+				// custom fictional field that is guaranteed to
+				// have a unique value for each item;
+				// WARNING: may lead to slightly wrong sorting results
+				// and is therefore only used as a fallback
+				// if we don't have another way
 				$params[] = range(1, count($array));
 				$params[] = SORT_ASC;
 				$params[] = SORT_NUMERIC;
