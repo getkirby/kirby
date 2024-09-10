@@ -965,10 +965,7 @@ class Collection extends Iterator implements Stringable
 			$field = array_key_last($fields);
 
 			// normalize $arg
-			$arg = match (true) {
-				is_string($arg) => strtolower($arg),
-				default         => $arg
-			};
+			$arg = is_string($arg) === true ? strtolower($arg) : $arg;
 
 			// $arg defines sorting direction
 			if (
@@ -991,10 +988,7 @@ class Collection extends Iterator implements Stringable
 						// make sure that we return something sortable
 						// but don't convert other scalars (especially numbers)
 						// to strings!
-						return match (true) {
-							is_scalar($value) => $value,
-							default           => (string)$value
-						};
+						return is_scalar($value) === true ? $value : (string)$value;
 					})
 				];
 
@@ -1008,10 +1002,7 @@ class Collection extends Iterator implements Stringable
 						// make sure that we return something sortable
 						// but don't convert other scalars (especially numbers)
 						// to strings!
-						return match (true) {
-							is_scalar($value) => $value,
-							default           => (string)$value
-						};
+						return is_scalar($value) === true ? $value : (string)$value;
 					})
 				];
 
