@@ -13,7 +13,7 @@ return [
 		new PreviewButton(link: $language->url()),
 	'language.settings' => fn (Language $language) =>
 		new LanguageSettingsButton($language),
-	'language.remove' => function (Language $language) {
+	'language.delete' => function (Language $language) {
 		if ($language->isDeletable() === true) {
 			return new LanguageDeleteButton($language);
 		}

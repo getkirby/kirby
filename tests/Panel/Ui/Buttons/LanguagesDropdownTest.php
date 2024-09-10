@@ -6,10 +6,10 @@ use Kirby\Cms\Language;
 use Kirby\Panel\Areas\AreaTestCase;
 
 /**
- * @coversDefaultClass \Kirby\Panel\Ui\Buttons\ContentTranslationsButton
+ * @coversDefaultClass \Kirby\Panel\Ui\Buttons\LanguagesDropdown
  * @covers ::__construct
  */
-class ContentTranslationsButtonTest extends AreaTestCase
+class LanguagesDropdownTest extends AreaTestCase
 {
 	/**
 	 * @covers ::option
@@ -17,7 +17,7 @@ class ContentTranslationsButtonTest extends AreaTestCase
 	public function testOption()
 	{
 		$language = new Language(['name' => 'Deutsch', 'code' => 'de']);
-		$button   = new ContentTranslationsButton();
+		$button   = new LanguagesDropdown();
 		$this->assertSame([
 			'text'    => 'Deutsch',
 			'code'    => 'de',
@@ -30,7 +30,7 @@ class ContentTranslationsButtonTest extends AreaTestCase
 	 */
 	public function testOptionsSingleLang()
 	{
-		$button = new ContentTranslationsButton();
+		$button = new LanguagesDropdown();
 		$this->assertSame([], $button->options());
 	}
 
@@ -42,7 +42,7 @@ class ContentTranslationsButtonTest extends AreaTestCase
 		$this->enableMultilang();
 		$this->installLanguages();
 
-		$button = new ContentTranslationsButton();
+		$button = new LanguagesDropdown();
 		$this->assertSame([
 			[
 				'text'    => 'English',
@@ -63,7 +63,7 @@ class ContentTranslationsButtonTest extends AreaTestCase
 	 */
 	public function testRenderSingleLang()
 	{
-		$button = new ContentTranslationsButton();
+		$button = new LanguagesDropdown();
 		$this->assertNull($button->render());
 	}
 
@@ -76,9 +76,9 @@ class ContentTranslationsButtonTest extends AreaTestCase
 		$this->enableMultilang();
 		$this->installLanguages();
 
-		$button = new ContentTranslationsButton();
-		$this->assertSame('k-content-translations-view-button', $button->component);
-		$this->assertSame('k-content-translations-view-button', $button->class);
+		$button = new LanguagesDropdown();
+		$this->assertSame('k-languages-dropdown', $button->component);
+		$this->assertSame('k-languages-dropdown', $button->class);
 		$this->assertSame('translate', $button->icon);
 		$this->assertCount(3, $button->options);
 		$this->assertSame('text', $button->responsive);
@@ -86,7 +86,7 @@ class ContentTranslationsButtonTest extends AreaTestCase
 
 		$render = $button->render();
 		$this->assertIsArray($render);
-		$this->assertSame('k-content-translations-view-button', $render['component']);
+		$this->assertSame('k-languages-dropdown', $render['component']);
 		$this->assertIsArray($render['props']);
 		$this->assertIsArray($render['props']['options']);
 	}
