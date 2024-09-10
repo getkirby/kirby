@@ -1259,14 +1259,14 @@ class App
 		// set the current locale
 		$this->setCurrentLanguage($language);
 
-		$resolver  = new PathResolver(kirby: $this);
-		$request   = $this->request();
-		$token     = $request->get('_token');
-		$version   = $request->get('_version', 'published');
-		$versionId = VersionId::from($version);
+		$pathfinder = new PathFinder(kirby: $this);
+		$request    = $this->request();
+		$token      = $request->get('_token');
+		$version    = $request->get('_version', 'published');
+		$versionId  = VersionId::from($version);
 
 		try {
-			$response = $resolver->resolve(
+			$response = $pathfinder->find(
 				path: $path,
 				versionId: $versionId,
 				token: $token,

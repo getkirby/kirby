@@ -350,7 +350,7 @@ class AppResolveTest extends TestCase
 
 		// missing file
 		$result = $app->resolve('test.png');
-		$this->assertNull($result);
+		$this->assertInstanceOf(Response::class, $result);
 
 		// existing file
 		$result = $app->resolve('test.jpg');

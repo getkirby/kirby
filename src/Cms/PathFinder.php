@@ -19,7 +19,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class PathResolver
+class PathFinder
 {
 	protected Site $site;
 
@@ -30,14 +30,14 @@ class PathResolver
 		$this->site = $kirby->site();
 	}
 
-	public function resolve(
+	public function find(
 		string|null $path,
 		VersionId $versionId,
 		string|null $token = null,
 	): Page|File|Responder {
 		// use the home page if the path is empty
 		if ($path === null || $path === '' || $path === '/') {
-			return $this->resolveIntoHomePage(
+			return $this->findHomePage(
 				versionId: $versionId,
 				token: $token
 			);
@@ -50,7 +50,7 @@ class PathResolver
 
 		// try to get a page by path
 		if ($page = $this->site->findPageOrDraft($path)) {
-			return $this->resolveIntoPage(
+			return $this->findPage(
 				page: $page,
 				versionId: $versionId,
 				extension: F::extension($path),
@@ -59,19 +59,19 @@ class PathResolver
 		}
 
 		// try to resolve a path that leads to a file
-		return $this->resolveIntoFile(
+		return $this->findFile(
 			path: $path,
 			versionId: $versionId,
 			token: $token
 		);
 	}
 
-	public function resolveIntoErrorPage(
+	public function findErrorPage(
 		VersionId $versionId,
 		string|null $token = null
 	): Page {
 		if ($errorPage = $this->site->errorPage()) {
-			return $this->resolveIntoPage(
+			return $this->findPage(
 				page: $errorPage,
 				versionId: $versionId,
 				token: $token
@@ -85,7 +85,7 @@ class PathResolver
 	 * @throws \Kirby\Exception\PermissionException if the site, page or version cannot be viewed
 	 * @throws \Kirby\Exception\InvalidArgumentException if the path does not contain a filename
 	 */
-	protected function resolveIntoFile(
+	protected function findFile(
 		string $path,
 		VersionId $versionId,
 		string|null $token = null
@@ -101,7 +101,7 @@ class PathResolver
 
 		// try to resolve file urls for pages and drafts
 		if ($page = $this->site->findPageOrDraft($id)) {
-			return $this->resolveIntoPageFile(
+			return $this->findPageFile(
 				page: $page,
 				versionId: $versionId,
 				filename: $filename,
@@ -110,7 +110,7 @@ class PathResolver
 		}
 
 		// try to resolve site files at least
-		return $this->resolveIntoSiteFile(
+		return $this->findSiteFile(
 			site: $this->site,
 			versionId: $versionId,
 			filename: $filename,
@@ -122,12 +122,12 @@ class PathResolver
 	 * @throws \Kirby\Exception\PermissionException if the page or version cannot be viewed
 	 * @throws \Kirby\Exception\NotFoundException if the home page cannot be found
 	 */
-	protected function resolveIntoHomePage(
+	protected function findHomePage(
 		VersionId $versionId,
 		string|null $token = null
 	): Page {
 		if ($homePage = $this->site->homePage()) {
-			return $this->resolveIntoPage(
+			return $this->findPage(
 				page: $homePage,
 				versionId: $versionId,
 				token: $token
@@ -139,9 +139,9 @@ class PathResolver
 
 	/**
 	 * @throws \Kirby\Exception\PermissionException if the page or version cannot be viewed
-	 * @throws \Kirby\Exception\NotFoundException if the page or page representation cannot be found
+	 * @throws \Kirby\Exception\NotFoundException if the page representation cannot be found
 	 */
-	protected function resolveIntoPage(
+	protected function findPage(
 		Page $page,
 		VersionId $versionId,
 		string|null $extension = null,
@@ -149,7 +149,7 @@ class PathResolver
 	): Page|Responder {
 		// handle content representations if there's an extension
 		if (empty($extension) === false) {
-			return $this->resolveIntoPageRepresentation(
+			return $this->findPageRepresentation(
 				page: $page,
 				versionId: $versionId,
 				extension: $extension,
@@ -170,7 +170,7 @@ class PathResolver
 	 * @throws \Kirby\Exception\PermissionException if the page or version cannot be viewed
 	 * @throws \Kirby\Exception\NotFoundException if the file cannot be found
 	 */
-	protected function resolveIntoPageFile(
+	protected function findPageFile(
 		Page $page,
 		VersionId $versionId,
 		string $filename,
@@ -191,9 +191,9 @@ class PathResolver
 
 	/**
 	 * @throws \Kirby\Exception\PermissionException if the page or version cannot be viewed
-	 * @throws \Kirby\Exception\NotFoundException if the content representation cannot be found
+	 * @throws \Kirby\Exception\NotFoundException if the page representation cannot be found
 	 */
-	protected function resolveIntoPageRepresentation(
+	protected function findPageRepresentation(
 		Page $page,
 		VersionId $versionId,
 		string $extension,
@@ -217,7 +217,7 @@ class PathResolver
 		return $response->body($output);
 	}
 
-	protected function resolveIntoSiteFile(
+	protected function findSiteFile(
 		Site $site,
 		VersionId $versionId,
 		string $filename,
@@ -234,6 +234,9 @@ class PathResolver
 		throw new NotFoundException('The file could not be found');
 	}
 
+	/**
+	 * Checks if the page or the requested version is viewable
+	 */
 	protected function validatePageAccess(
 		Page $page,
 		VersionId $versionId,
