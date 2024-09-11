@@ -32,16 +32,13 @@ abstract class Model
 	 */
 	abstract public function buttons(): array;
 
-	/**
-	 * Get the content values for the model
-	 */
-	public function content(): array
+
+	public function changes(): array
 	{
 		$version = $this->model->version('changes');
-		$changes = [];
 
-		if ($version->exists() === true) {
-			$changes = $version->content()->toArray();
+		if ($version->exists() === false) {
+			return [];
 		}
 
 		// create a form which will collect the published values for the model,
@@ -49,9 +46,17 @@ abstract class Model
 		return Form::for(
 			model: $this->model,
 			props: [
-				'values' => $changes
+				'values' => $version->content()->toArray()
 			]
 		)->values();
+	}
+
+	/**
+	 * Get the content values for the model
+	 */
+	public function content(): array
+	{
+		return Form::for($this->model)->values();
 	}
 
 	/**

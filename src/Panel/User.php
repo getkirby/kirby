@@ -245,6 +245,7 @@ class User extends Model
 			'model' => [
 				'account'  => $account,
 				'avatar'   => $user->avatar()?->url(),
+				'changes'  => $this->changes(),
 				'content'  => $this->content(),
 				'email'    => $user->email(),
 				'id'       => $user->id(),
