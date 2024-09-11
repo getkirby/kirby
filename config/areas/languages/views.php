@@ -121,7 +121,7 @@ return [
 				'props'     => [
 					'buttons' => fn () =>
 						ViewButtons::view('languages')
-							->defaults('add')
+							->defaults('create')
 							->render(),
 					'languages' => $kirby->languages()->values(fn ($language) => [
 						'deletable' => $language->isDeletable(),

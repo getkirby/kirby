@@ -6,16 +6,16 @@ use Kirby\Cms\App;
 use Kirby\TestCase;
 
 /**
- * @coversDefaultClass \Kirby\Panel\Ui\Buttons\LanguageAddButton
+ * @coversDefaultClass \Kirby\Panel\Ui\Buttons\LanguageCreateButton
  */
-class LanguageAddButtonTest extends TestCase
+class LanguageCreateButtonTest extends TestCase
 {
 	/**
 	 * @covers ::__construct
 	 */
 	public function testButton()
 	{
-		$button = new LanguageAddButton();
+		$button = new LanguageCreateButton();
 
 		$this->assertSame('languages/create', $button->dialog);
 		$this->assertSame('Add a new language', $button->text);
@@ -52,18 +52,18 @@ class LanguageAddButtonTest extends TestCase
 		]);
 
 		// not authenticated
-		$button = new LanguageAddButton();
+		$button = new LanguageCreateButton();
 		$this->assertTrue($button->disabled);
 
 		// with permission
 		$app->impersonate('editor@getkirby.com', function () {
-			$button = new LanguageAddButton();
+			$button = new LanguageCreateButton();
 			$this->assertFalse($button->disabled);
 		});
 
 		// without permission
 		$app->impersonate('user@getkirby.com', function () {
-			$button = new LanguageAddButton();
+			$button = new LanguageCreateButton();
 			$this->assertTrue($button->disabled);
 		});
 	}

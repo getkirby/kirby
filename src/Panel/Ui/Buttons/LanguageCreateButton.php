@@ -6,7 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Toolkit\I18n;
 
 /**
- * View button to add a new language
+ * View button to create a new language
  *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
@@ -16,7 +16,7 @@ use Kirby\Toolkit\I18n;
  * @since     5.0.0
  * @internal
  */
-class LanguageAddButton extends ViewButton
+class LanguageCreateButton extends ViewButton
 {
 	public function __construct()
 	{

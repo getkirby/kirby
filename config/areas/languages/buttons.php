@@ -1,14 +1,14 @@
 <?php
 
 use Kirby\Cms\Language;
-use Kirby\Panel\Ui\Buttons\LanguageAddButton;
+use Kirby\Panel\Ui\Buttons\LanguageCreateButton;
 use Kirby\Panel\Ui\Buttons\LanguageDeleteButton;
 use Kirby\Panel\Ui\Buttons\LanguageSettingsButton;
 use Kirby\Panel\Ui\Buttons\PreviewButton;
 
 return [
-	'languages.add' => fn () =>
-		new LanguageAddButton(),
+	'languages.create' => fn () =>
+		new LanguageCreateButton(),
 	'language.preview' => fn (Language $language) =>
 		new PreviewButton(link: $language->url()),
 	'language.settings' => fn (Language $language) =>
