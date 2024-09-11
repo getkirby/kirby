@@ -46,12 +46,9 @@ export default {
 	watch: {
 		"$panel.view.timestamp": {
 			handler() {
-				this.$store.dispatch("content/create", {
-					id: this.id,
-					api: this.id,
-					content: this.model.content,
-					ignore: this.protectedFields
-				});
+				this.$panel.content.api = this.id;
+				this.$panel.content.changes = {};
+				this.$panel.content.published = this.model.content;
 			},
 			immediate: true
 		}
