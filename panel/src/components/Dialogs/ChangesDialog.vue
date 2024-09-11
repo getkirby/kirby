@@ -41,12 +41,7 @@ export default {
 	},
 	computed: {
 		ids() {
-			return Object.keys(this.store).filter(
-				(id) => this.$helper.object.length(this.store[id]?.changes) > 0
-			);
-		},
-		store() {
-			return this.$store.state.content.models;
+			return [];
 		}
 	},
 	watch: {
