@@ -56,7 +56,7 @@ class LanguageVariable
 			throw new DuplicateException('The variable is part of the core translation and cannot be overwritten');
 		}
 
-		$translations[$key] = trim($value ?? '');
+		$translations[$key] = $value ?? '';
 
 		$language->update(['translations' => $translations]);
 
@@ -102,10 +102,10 @@ class LanguageVariable
 	/**
 	 * Sets a new value for the language variable
 	 */
-	public function update(string $value): static
+	public function update(string|null $value = null): static
 	{
-		$translations = $this->language->translations();
-		$translations[$this->key] = $value;
+		$translations             = $this->language->translations();
+		$translations[$this->key] = $value ?? '';
 
 		$language = $this->language->update(['translations' => $translations]);
 
