@@ -352,6 +352,7 @@ class Page extends Model
 			'blueprint' => $page->intendedTemplate()->name(),
 			'statusbutton' => (new PageStatusButton($page))->props(),
 			'model' => [
+				'changes'    => $this->changes(),
 				'content'    => $this->content(),
 				'id'         => $page->id(),
 				'link'       => $this->url(true),

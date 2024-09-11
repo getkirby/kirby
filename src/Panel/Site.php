@@ -82,6 +82,7 @@ class Site extends Model
 			...parent::props(),
 			'blueprint' => 'site',
 			'model' => [
+				'changes'    => $this->changes(),
 				'content'    => $this->content(),
 				'link'       => $this->url(true),
 				'previewUrl' => $this->model->previewUrl(),
