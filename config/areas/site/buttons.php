@@ -13,7 +13,28 @@ return [
 	},
 	'page.preview' => function (Page $page) {
 		if ($page->permissions()->can('preview') === true) {
-			return new PreviewButton(link: $page->previewUrl());
+			$button = new PreviewButton(link: $page->previewUrl());
+
+			if ($page->version('changes')->exists() === true) {
+				$button->link = null;
+				$button->options = [
+					[
+						'icon'   => 'preview',
+						'text'   => I18n::translate('form.preview'),
+						'link'   => $page->url() . '?_version=changes',
+						'target' => '_blank'
+					],
+					'-',
+					[
+						'icon'   => 'open',
+						'text'   => 'Open current public version',
+						'link'   => $page->url(),
+						'target' => '_blank'
+					],
+				];
+			}
+
+			return $button;
 		}
 	},
 	'page.settings' => function (Page $page) {
