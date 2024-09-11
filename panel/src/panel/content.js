@@ -1,4 +1,5 @@
 import { reactive } from "vue";
+import { clone, length } from "@/helpers/object.js";
 
 /**
  * @since 5.0.0
@@ -6,19 +7,26 @@ import { reactive } from "vue";
 export default (panel) => {
 	return reactive({
 		/**
-		 * Returns all fields and their values that
-		 * have been changed but not yet published
-		 *
-		 * @returns {Object}
+		 * API endpoint to handle content changes
 		 */
-		get changes() {
-			return panel.app.$store.getters["content/changes"]();
-		},
+		api: null,
+
+		/**
+		 * All fields and their values that
+		 * have been changed but not yet published
+		 */
+		changes: {},
+
+		/**
+		 * All fields and their already published values
+		 */
+		published: {},
+
 		/**
 		 * Removes all unpublished changes
 		 */
 		discard() {
-			panel.app.$store.dispatch("content/revert");
+			this.changes = {};
 		},
 		/**
 		 * Whether the model has changes that haven't been saved yet
@@ -34,7 +42,7 @@ export default (panel) => {
 		 * @returns {Boolean}
 		 */
 		get hasUnpublishedChanges() {
-			return panel.app.$store.getters["content/hasChanges"]();
+			return length(this.changes) > 0;
 		},
 		/**
 		 * Whether the model is a draft
@@ -81,19 +89,23 @@ export default (panel) => {
 		async publish(e) {
 			e?.preventDefault?.();
 
+			if (this.isPublishing === true) {
+				return;
+			}
+
 			this.isPublishing = true;
-			await panel.app.$store.dispatch("content/save");
+
+			// Send updated values to API
+			try {
+				await window.panel.api.patch(this.api, this.values);
+				this.published = this.values;
+				this.changes = {};
+			} finally {
+				this.isPublishing = false;
+			}
+
 			panel.events.emit("model.update");
 			panel.notification.success();
-			this.isPublishing = false;
-		},
-		/**
-		 * Returns all fields and their already published values
-		 *
-		 * @returns {Object}
-		 */
-		get published() {
-			return panel.app.$store.getters["content/originals"]();
 		},
 		/**
 		 * Saves any changes
@@ -110,7 +122,20 @@ export default (panel) => {
 		 * @param {any} value
 		 */
 		set(fields) {
-			panel.app.$store.dispatch("content/update", [null, fields]);
+			const changes = {
+				...clone(this.published),
+				...clone(this.changes),
+				...fields
+			};
+
+			const a = JSON.stringify(this.published);
+			const b = JSON.stringify(changes);
+
+			if (a === b) {
+				this.changes = {};
+			} else {
+				this.changes = changes;
+			}
 		},
 		/**
 		 * Removes the content lock for the current user,
