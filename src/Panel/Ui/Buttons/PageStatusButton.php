@@ -35,7 +35,8 @@ class PageStatusButton extends ViewButton
 			dialog: $page->panel()->url(true) . '/changeStatus',
 			disabled: $disabled,
 			icon: 'status-' . $status,
-			style: '--icon-size: 15px',
+			size: 'xs',
+			style: '--icon-size: 16px',
 			text: $blueprint['label'] ?? $status,
 			title: $title,
 			theme: match($status) {

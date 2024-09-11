@@ -6,6 +6,7 @@ use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
 use Kirby\Panel\Ui\Buttons\ViewButtons;
+use Kirby\Panel\Ui\Buttons\PageStatusButton;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -50,7 +51,6 @@ class Page extends Model
 			'preview',
 			'settings',
 			'languages',
-			'status'
 		)->bind(['page' => $this->model()])
 			->render();
 	}
@@ -350,6 +350,7 @@ class Page extends Model
 			...parent::props(),
 			...$this->prevNext(),
 			'blueprint' => $page->intendedTemplate()->name(),
+			'statusbutton' => (new PageStatusButton($page))->props(),
 			'model' => [
 				'content'    => $this->content(),
 				'id'         => $page->id(),

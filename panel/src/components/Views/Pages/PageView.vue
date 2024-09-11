@@ -7,7 +7,10 @@
 		class="k-page-view"
 	>
 		<template #topbar>
-			<k-prev-next v-if="model.id" :prev="prev" :next="next" />
+			<k-button-group>
+				<k-button v-bind="statusbutton" variant="default" />
+				<k-prev-next v-if="model.id" :prev="prev" :next="next" />
+			</k-button-group>
 		</template>
 
 		<k-header
@@ -40,6 +43,11 @@ import ModelView from "../ModelView.vue";
 
 export default {
 	extends: ModelView,
+	props: {
+		statusbutton: {
+			type: Object
+		}
+	},
 	computed: {
 		protectedFields() {
 			return ["title"];
@@ -52,5 +60,9 @@ export default {
 /** TODO: .k-page-view:has(.k-tabs) .k-page-view-header */
 .k-page-view[data-has-tabs="true"] .k-page-view-header {
 	margin-bottom: 0;
+}
+
+.k-page-status-button .k-button-text {
+	padding-bottom: 1px;
 }
 </style>

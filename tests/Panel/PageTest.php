@@ -101,7 +101,6 @@ class PageTest extends TestCase
 			'k-preview-view-button',
 			'k-settings-view-button',
 			'k-languages-view-button',
-			'k-status-view-button',
 		], array_column($this->panel()->buttons(), 'component'));
 	}
 
