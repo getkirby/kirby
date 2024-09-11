@@ -47,8 +47,12 @@ export default {
 		"$panel.view.timestamp": {
 			handler() {
 				this.$panel.content.api = this.id;
-				this.$panel.content.changes = {};
-				this.$panel.content.published = this.model.content;
+				this.$panel.content.changes = this.$helper.object.clone(
+					this.model.changes
+				);
+				this.$panel.content.published = this.$helper.object.clone(
+					this.model.content
+				);
 			},
 			immediate: true
 		}
