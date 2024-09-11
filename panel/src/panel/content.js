@@ -1,4 +1,4 @@
-import { reactive } from "vue";
+import { reactive, set, del } from "vue";
 import { clone, length } from "@/helpers/object.js";
 
 /**
@@ -25,8 +25,16 @@ export default (panel) => {
 		/**
 		 * Removes all unpublished changes
 		 */
-		discard() {
+		async discard() {
+			if (this.isProcessing === true) {
+				return;
+			}
+
+			this.isDiscarding = true;
+			await panel.post(this.api + "/changes/discard");
 			this.changes = {};
+			panel.view.reload();
+			this.isDiscarding = false;
 		},
 		/**
 		 * Whether the model has changes that haven't been saved yet
@@ -52,8 +60,7 @@ export default (panel) => {
 		get isDraft() {
 			return panel.view.props.model.status === "draft";
 		},
-		isPublishing: false,
-		isSaving: false,
+		isDiscarding: false,
 		/**
 		 * Whether the content is currently locked by another user
 		 *
@@ -62,6 +69,18 @@ export default (panel) => {
 		get isLocked() {
 			return this.lock?.state === "lock";
 		},
+		/**
+		 * Global flag for any kind of writing or discarding operation
+		 *
+		 * @returns {Boolean}
+		 */
+		get isProcessing() {
+			return this.isPublishing || this.isDiscarding || this.isSaving;
+		},
+
+		isPublishing: false,
+		isSaving: false,
+
 		/**
 		 * Content lock state of the model
 		 *
@@ -89,7 +108,7 @@ export default (panel) => {
 		async publish(e) {
 			e?.preventDefault?.();
 
-			if (this.isPublishing === true) {
+			if (this.isPublishing === true || this.isDiscarding === true) {
 				return;
 			}
 
@@ -97,9 +116,8 @@ export default (panel) => {
 
 			// Send updated values to API
 			try {
-				await window.panel.api.patch(this.api, this.values);
-				this.published = this.values;
-				this.changes = {};
+				await panel.post(this.api + "/changes/publish", this.values);
+				await panel.view.reload();
 			} finally {
 				this.isPublishing = false;
 			}
@@ -111,8 +129,12 @@ export default (panel) => {
 		 * Saves any changes
 		 */
 		async save() {
+			if (this.isProcessing === true) {
+				return true;
+			}
+
 			this.isSaving = true;
-			// …
+			await panel.post(this.api + "/changes/save", this.values);
 			this.isSaving = false;
 		},
 		/**
@@ -121,21 +143,9 @@ export default (panel) => {
 		 * @param {Object} fields
 		 * @param {any} value
 		 */
-		set(fields) {
-			const changes = {
-				...clone(this.published),
-				...clone(this.changes),
-				...fields
-			};
-
-			const a = JSON.stringify(this.published);
-			const b = JSON.stringify(changes);
-
-			if (a === b) {
-				this.changes = {};
-			} else {
-				this.changes = changes;
-			}
+		set(values) {
+			this.changes = values;
+			this.save();
 		},
 		/**
 		 * Removes the content lock for the current user,
