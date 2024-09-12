@@ -296,7 +296,7 @@ class PageCopyTest extends TestCase
 		$app = $this->app->clone([
 			'site' => [
 				'children' => [
-					[ 'slug' => 'test']
+					['slug' => 'test']
 				]
 			]
 		]);
