@@ -54,6 +54,7 @@ class PageCreateDialog
 		'tags',
 		'tel',
 		'text',
+		'toggle',
 		'toggles',
 		'time',
 		'url'
