@@ -271,7 +271,7 @@ readonly class Upload
 		array $errors
 	): array {
 		if (count($uploads) + count($errors) <= 1) {
-			if ($errors !== []) {
+			if (count($errors) > 0) {
 				return [
 					'status'  => 'error',
 					'message' => current($errors)
@@ -284,7 +284,7 @@ readonly class Upload
 			];
 		}
 
-		if ($errors !== []) {
+		if (count($errors) > 0) {
 			return [
 				'status' => 'error',
 				'errors' => $errors

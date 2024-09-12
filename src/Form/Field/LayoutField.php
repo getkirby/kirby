@@ -305,7 +305,7 @@ class LayoutField extends BlocksField
 					foreach ($form->fields() as $field) {
 						$errors = $field->errors();
 
-						if ($errors !== []) {
+						if (count($errors) > 0) {
 							throw new InvalidArgumentException([
 								'key' => 'layout.validation.settings',
 								'data' => [
@@ -341,7 +341,7 @@ class LayoutField extends BlocksField
 								$errors = $field->errors();
 
 								// rough first validation
-								if ($errors !== []) {
+								if (count($errors) > 0) {
 									throw new InvalidArgumentException([
 										'key' => 'layout.validation.block',
 										'data' => [

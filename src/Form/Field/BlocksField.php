@@ -332,7 +332,7 @@ class BlocksField extends FieldClass
 						$errors = $field->errors();
 
 						// rough first validation
-						if ($errors !== []) {
+						if (count($errors) > 0) {
 							throw new InvalidArgumentException([
 								'key' => 'blocks.validation',
 								'data' => [
