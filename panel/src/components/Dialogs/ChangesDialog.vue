@@ -41,6 +41,7 @@ export default {
 	},
 	computed: {
 		ids() {
+			// TODO: replace with ids from user .txt
 			return [];
 		}
 	},
