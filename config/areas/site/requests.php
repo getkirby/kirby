@@ -5,6 +5,8 @@ use Kirby\Cms\Find;
 use Kirby\Toolkit\I18n;
 
 return [
+	// @codeCoverageIgnoreStart
+	// TODO: move to controller class and add unit tests
 	'tree' => [
 		'pattern' => 'site/tree',
 		'action'  => function () {
@@ -70,9 +72,12 @@ return [
 			$request = $kirby->request();
 			$page    = $kirby->page($request->get('page'));
 
-			return $page->parents()->flip()->values(
-				fn ($parent) => $parent->uuid()?->toString() ?? $parent->id()
-			);
+			return [
+				'data' => $page->parents()->flip()->values(
+					fn ($parent) => $parent->uuid()?->toString() ?? $parent->id()
+				)
+			];
 		}
 	]
+	// @codeCoverageIgnoreEnd
 ];

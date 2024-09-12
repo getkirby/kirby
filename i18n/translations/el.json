@@ -126,9 +126,12 @@
 	"error.form.notSaved": "Δεν ήταν δυνατή η αποθήκευση της φόρμας",
 
 	"error.language.code": "Please enter a valid code for the language",
+	"error.language.create.permission": "You are not allowed to create a language",
+	"error.language.delete.permission": "You are not allowed to delete the language",
 	"error.language.duplicate": "The language already exists",
 	"error.language.name": "Please enter a valid name for the language",
 	"error.language.notFound": "The language could not be found",
+	"error.language.update.permission": "You are not allowed to update the language",
 
 	"error.layout.validation.block": "There's an error on the \"{field}\" field in block {blockIndex} using the \"{fieldset}\" block type in layout {layoutIndex}",
 	"error.layout.validation.settings": "There's an error in layout {index} settings",

@@ -126,9 +126,12 @@
 	"error.form.notSaved": "El formulario no pudo ser guardado",
 
 	"error.language.code": "Por favor, introduce un código válido para el idioma",
+	"error.language.create.permission": "You are not allowed to create a language",
+	"error.language.delete.permission": "You are not allowed to delete the language",
 	"error.language.duplicate": "El idioma ya existe",
 	"error.language.name": "Por favor, introduce un nombre válido para el idioma",
 	"error.language.notFound": "No se pudo encontrar el idioma",
+	"error.language.update.permission": "You are not allowed to update the language",
 
 	"error.layout.validation.block": "Hay un error en el campo \"{field}\" del bloque {blockIndex} que utiliza el tipo de bloque \"{fieldset}\" en el layout {layoutIndex}",
 	"error.layout.validation.settings": "Hay un error en los ajustes del layout {index}",

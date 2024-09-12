@@ -126,9 +126,12 @@
 	"error.form.notSaved": "Formularul nu a putut fi salvat",
 
 	"error.language.code": "Te rog introdu un cod valid pentru limbă",
+	"error.language.create.permission": "You are not allowed to create a language",
+	"error.language.delete.permission": "You are not allowed to delete the language",
 	"error.language.duplicate": "Limba există deja",
 	"error.language.name": "Te rog introdu un nume valid pentru limbă",
 	"error.language.notFound": "Limba nu a fost găsită",
+	"error.language.update.permission": "You are not allowed to update the language",
 
 	"error.layout.validation.block": "Există o eroare la câmpul \"{field}\" în blocul {blockIndex} care utilizează tipul de bloc \"{fieldset}\" în aranjamentul {layoutIndex}",
 	"error.layout.validation.settings": "Există o eroare la setările aranjamentului {index}",
