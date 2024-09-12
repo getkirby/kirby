@@ -72,13 +72,6 @@ class VersionId implements Stringable
 	 */
 	public static function default(ModelWithContent $model): static
 	{
-		if (
-			$model instanceof Page === true &&
-			$model->isDraft() === true
-		) {
-			return VersionId::changes();
-		}
-
 		return VersionId::published();
 	}
 

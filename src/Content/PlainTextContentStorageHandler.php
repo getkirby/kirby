@@ -77,19 +77,7 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 	 */
 	protected function contentFileForPage(Page $model, VersionId $versionId, Language $language): string
 	{
-		$directory = $this->contentDirectory($versionId);
-
-		if ($model->isDraft() === true) {
-			if ($versionId->is(Versionid::PUBLISHED) === true) {
-				throw new LogicException('Drafts cannot have a published content file');
-			}
-
-			// drafts already have the `_drafts` prefix in their root.
-			// `_changes` must not be added to it in addition to that.
-			$directory = $this->model->root();
-		}
-
-		return $directory . '/' . $this->contentFilename($model->intendedTemplate()->name(), $language);
+		return $this->contentDirectory($versionId) . '/' . $this->contentFilename($model->intendedTemplate()->name(), $language);
 	}
 
 	/**
