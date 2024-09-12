@@ -215,10 +215,23 @@ class PageCopy
 			return;
 		}
 
-		$this->copy->storage()->replace($this->uuids);
+		foreach ($this->copy->storage()->all() as $versionId => $language) {
+			$this->copy->storage()->replaceStrings(
+				$versionId,
+				$language,
+				$this->uuids
+			);
+		}
+
 
 		foreach ($this->files() as $file) {
-			$file->storage()->replace($this->uuids);
+			foreach ($file->storage()->all() as $versionId => $language) {
+				$file->storage()->replaceStrings(
+					$versionId,
+					$language,
+					$this->uuids
+				);
+			}
 		}
 
 		foreach ($this->children() as $child) {

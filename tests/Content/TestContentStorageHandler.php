@@ -40,6 +40,11 @@ class TestContentStorageHandler extends ContentStorageHandler
 		return $this->store[$this->key($versionId, $language)] ?? [];
 	}
 
+	public function replaceStrings(VersionId $versionId, Language $language, array $map): void
+	{
+		throw new Exception('Not implemented');
+	}
+
 	public function touch(VersionId $versionId, Language $language): void
 	{
 		throw new Exception('Not implemented');

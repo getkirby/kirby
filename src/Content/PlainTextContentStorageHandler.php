@@ -281,22 +281,18 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 	}
 
 	/**
-	 * Searches and replaces one or multiple strings in all versions
-	 *
-	 * @param string $lang Code `'default'` in a single-lang installation
-	 * @param array $map search-replace mapping where all keys are replaced by their values
+	 * Searches and replaces one or multiple strings
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function replace(
-		string $version,
-		string $lang,
+	public function replaceStrings(
+		VersionId $versionId,
+		Language $language,
 		array $map
 	): void {
-		$file = $this->contentFile($version, $lang);
+		$file = $this->contentFile($versionId, $language);
 		F::replace($file, $map);
 	}
-
 
 	/**
 	 * Updates the modification timestamp of an existing version
