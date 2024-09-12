@@ -126,9 +126,12 @@
 	"error.form.notSaved": "Formularen kunne ikke gemmes",
 
 	"error.language.code": "Indtast venligst en gyldig kode for sproget",
+	"error.language.create.permission": "You are not allowed to create a language",
+	"error.language.delete.permission": "You are not allowed to delete the language",
 	"error.language.duplicate": "Sproget eksisterer allerede",
 	"error.language.name": "Indtast venligst et gyldigt navn for sproget",
 	"error.language.notFound": "Sproget fandtes ikke",
+	"error.language.update.permission": "You are not allowed to update the language",
 
 	"error.layout.validation.block": "There's an error on the \"{field}\" field in block {blockIndex} using the \"{fieldset}\" block type in layout {layoutIndex}",
 	"error.layout.validation.settings": "Der er fejl i layout {index} indstillinger",

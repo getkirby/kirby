@@ -126,9 +126,12 @@
 	"error.form.notSaved": "항목을 저장할 수 없습니다.",
 
 	"error.language.code": "올바른 언어 코드를 입력하세요.",
+	"error.language.create.permission": "You are not allowed to create a language",
+	"error.language.delete.permission": "You are not allowed to delete the language",
 	"error.language.duplicate": "이미 등록한 언어입니다.",
 	"error.language.name": "올바른 언어명을 입력하세요.",
 	"error.language.notFound": "언어를 찾을 수 없습니다.",
+	"error.language.update.permission": "You are not allowed to update the language",
 
 	"error.layout.validation.block": "레이아웃({layoutIndex})의 특정 블록 유형({fieldset})을 사용하는 블록({blockIndex})의 특정 필드({field})에 오류가 있습니다.",
 	"error.layout.validation.settings": "레이아웃({index}) 옵션을 확인하세요.",

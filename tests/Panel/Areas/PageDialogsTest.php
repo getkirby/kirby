@@ -342,6 +342,7 @@ class PageDialogsTest extends AreaTestCase
 		$this->assertFalse($props['fields']['title']['disabled']);
 		$this->assertSame('URL appendix', $props['fields']['slug']['label']);
 		$this->assertFalse($props['fields']['slug']['disabled']);
+		$this->assertSame('/', $props['fields']['slug']['path']);
 		$this->assertSame('Create from title', $props['fields']['slug']['wizard']['text']);
 		$this->assertSame('title', $props['fields']['slug']['wizard']['field']);
 
@@ -349,6 +350,31 @@ class PageDialogsTest extends AreaTestCase
 		$this->assertSame('test', $props['value']['slug']);
 
 		$this->assertSame('Change', $props['submitButton']);
+	}
+
+	public function testChangeTitlePathWithParent(): void
+	{
+		$this->app([
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'a',
+						'children' => [
+							['slug' => 'b']
+						]
+					]
+				]
+			]
+		]);
+
+		$this->login();
+
+		$dialog = $this->dialog('pages/a+b/changeTitle');
+		$props  = $dialog['props'];
+
+		$this->assertFormDialog($dialog);
+
+		$this->assertSame('/a/', $props['fields']['slug']['path']);
 	}
 
 	public function testChangeTitleOnSubmit(): void

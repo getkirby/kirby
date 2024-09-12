@@ -126,9 +126,12 @@
 	"error.form.notSaved": "Formulář nemohl být uložen",
 
 	"error.language.code": "Zadejte prosím platný kód jazyka",
+	"error.language.create.permission": "You are not allowed to create a language",
+	"error.language.delete.permission": "You are not allowed to delete the language",
 	"error.language.duplicate": "Jazyk již existuje",
 	"error.language.name": "Zadejte prosím platné jméno jazyka",
 	"error.language.notFound": "Jazyk nebyl nalezen",
+	"error.language.update.permission": "You are not allowed to update the language",
 
 	"error.layout.validation.block": "V rozvržení {layoutIndex} je v poli \"{field}\" v bloku {blockIndex} při použití \"{fieldset}\" typu chyba",
 	"error.layout.validation.settings": "Chyba v nastavení rozvržení {index}",
