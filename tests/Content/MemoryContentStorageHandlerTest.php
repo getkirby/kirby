@@ -12,7 +12,7 @@ use Kirby\Exception\NotFoundException;
  */
 class MemoryContentStorageHandlerTest extends TestCase
 {
-	protected $storage;
+	protected MemoryContentStorageHandler $storage;
 
 	public function assertCreateAndDelete(VersionId $versionId, Language $language): void
 	{
@@ -324,6 +324,34 @@ class MemoryContentStorageHandlerTest extends TestCase
 		$this->expectExceptionMessage('Version "changes" does not already exist');
 
 		$this->storage->read(VersionId::changes(), Language::single());
+	}
+
+	/**
+	 * @covers ::replaceStrings
+	 */
+	public function testReplaceStrings()
+	{
+		$this->setUpMultiLanguage();
+
+		$versionId = VersionId::changes();
+		$language  = $this->app->language('en');
+
+		$fields = [
+			'foo' => 'one step',
+			'bar' => 'two steps'
+		];
+
+		$this->storage->create($versionId, $language, $fields);
+		$this->assertSame($fields, $this->storage->read($versionId, $language));
+
+		$this->storage->replaceStrings($versionId, $language, ['step' => 'jump']);
+
+		$expected = [
+			'foo' => 'one jump',
+			'bar' => 'two jumps'
+		];
+
+		$this->assertSame($expected, $this->storage->read($versionId, $language));
 	}
 
 	/**
