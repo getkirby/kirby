@@ -450,8 +450,8 @@ trait PageActions
 		$copy = PageCopy::process(
 			copy: $copy,
 			original: $this,
-			files: $files,
-			children: $children
+			withFiles: $files,
+			withChildren: $children
 		);
 
 		// add copy to siblings

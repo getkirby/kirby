@@ -748,21 +748,21 @@ class FTest extends TestCase
 	}
 
 	/**
-	 * @covers ::replace
+	 * @covers ::replaceStrings
 	 */
-	public function testReplace()
+	public function testReplaceStrings()
 	{
 		file_put_contents($this->test, $content = 'my content is awesome');
 
 		$this->assertSame($content, F::read($this->test));
 
-		F::replace($this->test, 'content', 'work');
+		F::replaceStrings($this->test, 'content', 'work');
 		$this->assertSame('my work is awesome', F::read($this->test));
 
-		F::replace($this->test, ['work', 'awesome'], ['health', 'important']);
+		F::replaceStrings($this->test, ['work', 'awesome'], ['health', 'important']);
 		$this->assertSame('my health is important', F::read($this->test));
 
-		F::replace($this->test, ['health' => 'trip', 'important' => 'exhausting']);
+		F::replaceStrings($this->test, ['health' => 'trip', 'important' => 'exhausting']);
 		$this->assertSame('my trip is exhausting', F::read($this->test));
 	}
 

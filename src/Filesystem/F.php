@@ -756,7 +756,7 @@ class F
 	/**
 	 * Searches and replaces one or multiple strings in a file
 	 */
-	public static function replace(
+	public static function replaceStrings(
 		string $file,
 		string|array $search,
 		string|array|null $replace = null

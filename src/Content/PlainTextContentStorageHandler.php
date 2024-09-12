@@ -291,7 +291,7 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 		array $map
 	): void {
 		$file = $this->contentFile($versionId, $language);
-		F::replace($file, $map);
+		F::replaceStrings($file, $map);
 	}
 
 	/**

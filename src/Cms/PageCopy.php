@@ -23,8 +23,8 @@ class PageCopy
 	public function __construct(
 		public Page $copy,
 		public Page|null $original = null,
-		public bool $files = false,
-		public bool $children = false,
+		public bool $withFiles = false,
+		public bool $withChildren = false,
 		public array $uuids = []
 	) {
 	}
@@ -34,10 +34,11 @@ class PageCopy
 	 */
 	public function children(): Pages
 	{
-		return match ($this->children) {
-			true  => $this->copy->index(drafts: true),
-			false => new Pages()
-		};
+		if ($this->withChildren === true) {
+			return $this->copy->index(drafts: true);
+		}
+
+		return new Pages();
 	}
 
 	/**
@@ -51,7 +52,10 @@ class PageCopy
 			return;
 		}
 
-		if ($language instanceof Language && $language->isDefault() === false) {
+		if (
+			$language instanceof Language &&
+			$language->isDefault() === false
+		) {
 			return;
 		}
 
@@ -83,7 +87,7 @@ class PageCopy
 			// always adapt files of subpages as they are
 			// currently always copied; but don't adapt
 			// children because we already operate on the index
-			$child = new PageCopy($child, files: true, uuids: $this->uuids);
+			$child = new PageCopy($child, withFiles: true, uuids: $this->uuids);
 			$child->convertUuids($language);
 			$this->uuids = [...$this->uuids, ...$child->uuids];
 		}
@@ -91,7 +95,7 @@ class PageCopy
 		// if children have not been copied over,
 		// track all children UUIDs from original page to
 		// remove/replace with empty string
-		if ($this->children === false) {
+		if ($this->withChildren === false) {
 			foreach ($this->original?->index(drafts: true) ?? [] as $child) {
 				$this->uuids[$child->uuid()->toString()] = '';
 
@@ -125,7 +129,7 @@ class PageCopy
 		// if files have not been copied over,
 		// track file UUIDs from original page to
 		// remove/replace with empty string
-		if ($this->files === false) {
+		if ($this->withFiles === false) {
 			foreach ($this->original?->files() ?? [] as $file) {
 				$this->uuids[$file->uuid()->toString()] = '';
 			}
@@ -137,10 +141,11 @@ class PageCopy
 	 */
 	public function files(): Files
 	{
-		return match ($this->files) {
-			true  => $this->copy->files(),
-			false => new Files()
-		};
+		if ($this->withFiles === true) {
+			return $this->copy->files();
+		}
+
+		return new Files();
 	}
 
 	/**
@@ -152,10 +157,11 @@ class PageCopy
 	{
 		$kirby = App::instance();
 
-		return match ($kirby->multilang()) {
-			true  => $kirby->languages(),
-			false => [null]
-		};
+		if ($kirby->multilang() === true) {
+			return $kirby->languages();
+		}
+
+		return [null];
 	}
 
 	/**
@@ -165,10 +171,10 @@ class PageCopy
 	public static function process(
 		Page $copy,
 		Page|null $original = null,
-		bool $files = false,
-		bool $children = false
+		bool $withFiles = false,
+		bool $withChildren = false
 	): Page {
-		$converter = new static($copy, $original, $files, $children);
+		$converter = new static($copy, $original, $withFiles, $withChildren);
 
 		// loop through all languages to remove slug from non-default
 		// languages and re-generate UUIDs (and track changes)
@@ -184,7 +190,9 @@ class PageCopy
 	}
 
 	/**
-	 * Removes translated slug for copied page
+	 * Removes translated slug for copied page.
+	 * This is needed to avoid translated slug
+	 * collisions with the original page.
 	 */
 	public function removeSlug(Language|null $language): void
 	{
@@ -235,7 +243,7 @@ class PageCopy
 		}
 
 		foreach ($this->children() as $child) {
-			$child = new PageCopy($child, files: true, uuids: $this->uuids);
+			$child = new PageCopy($child, withFiles: true, uuids: $this->uuids);
 			$child->replaceUuids();
 		}
 	}

@@ -52,10 +52,10 @@ class PageCopyTest extends TestCase
 
 		$page = $app->page('test');
 
-		$copy = new PageCopy($page, children: true);
+		$copy = new PageCopy($page, withChildren: true);
 		$this->assertCount(2, $copy->children());
 
-		$copy = new PageCopy($page, children: false);
+		$copy = new PageCopy($page, withChildren: false);
 		$this->assertCount(0, $copy->children());
 	}
 
@@ -120,7 +120,7 @@ class PageCopyTest extends TestCase
 		$this->assertSame(['page://a'], array_keys($copy->uuids));
 
 		// with children (and their files)
-		$copy = new PageCopy($page, children: true);
+		$copy = new PageCopy($page, withChildren: true);
 		$copy->convertUuids(null);
 		$this->assertSame([
 			'page://a',
@@ -132,7 +132,7 @@ class PageCopyTest extends TestCase
 		], array_keys($copy->uuids));
 
 		// with files and children
-		$copy = new PageCopy($page, files: true, children: true);
+		$copy = new PageCopy($page, withFiles: true, withChildren: true);
 		$copy->convertUuids(null);
 		$this->assertSame([
 			'page://a',
@@ -147,13 +147,13 @@ class PageCopyTest extends TestCase
 
 		// with non-default language
 		$language = new Language(['code' => 'de', 'default' => false]);
-		$copy = new PageCopy($page, files: true, children: true);
+		$copy = new PageCopy($page, withFiles: true, withChildren: true);
 		$copy->convertUuids($language);
 		$this->assertSame([], array_keys($copy->uuids));
 
 		// UUIDs disabled
 		$app = $app->clone(['options' => ['content' => ['uuid' => false]]]);
-		$copy = new PageCopy($page, files: true, children: true);
+		$copy = new PageCopy($page, withFiles: true, withChildren: true);
 		$copy->convertUuids(null);
 		$this->assertSame([], array_keys($copy->uuids));
 	}
@@ -281,10 +281,10 @@ class PageCopyTest extends TestCase
 
 		$page = $app->page('test');
 
-		$copy = new PageCopy($page, files: true);
+		$copy = new PageCopy($page, withFiles: true);
 		$this->assertCount(2, $copy->files());
 
-		$copy = new PageCopy($page, files: false);
+		$copy = new PageCopy($page, withFiles: false);
 		$this->assertCount(0, $copy->files());
 	}
 
@@ -349,7 +349,7 @@ class PageCopyTest extends TestCase
 		]);
 
 		$page       = $app->page('test');
-		$normalized = PageCopy::process($page, children: true);
+		$normalized = PageCopy::process($page, withChildren: true);
 		$this->assertNotSame('page://a', $normalized->uuid()->toString());
 		$this->assertNotSame('page://aa', $normalized->find('test-a')->uuid()->toString());
 		$this->assertNotSame('file://file-aa', $normalized->find('test-a')->file()->uuid()->toString());
@@ -444,7 +444,7 @@ class PageCopyTest extends TestCase
 		$page     = $app->page('test');
 		$original = $app->page('original');
 
-		$copy = new PageCopy($page, $original, children: true);
+		$copy = new PageCopy($page, $original, withChildren: true);
 		$copy->convertUuids(null);
 		$this->assertSame($content, $page->text()->value());
 
