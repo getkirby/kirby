@@ -126,9 +126,12 @@
 	"error.form.notSaved": "Formos nepavyko išsaugoti",
 
 	"error.language.code": "Prašome įrašyti teisingą kalbos kodą",
+	"error.language.create.permission": "You are not allowed to create a language",
+	"error.language.delete.permission": "You are not allowed to delete the language",
 	"error.language.duplicate": "Tokia kalba jau yra",
 	"error.language.name": "Prašome įrašyti teisingą kalbos pavadinimą",
 	"error.language.notFound": "Nepavyko rasti šios kalbos",
+	"error.language.update.permission": "You are not allowed to update the language",
 
 	"error.layout.validation.block": "There's an error on the \"{field}\" field in block {blockIndex} using the \"{fieldset}\" block type in layout {layoutIndex}",
 	"error.layout.validation.settings": "Yra klaida išdėstymo {index} nustatymuose",

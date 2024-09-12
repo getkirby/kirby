@@ -126,9 +126,12 @@
 	"error.form.notSaved": "Das Formular konnte nicht gespeichert werden",
 
 	"error.language.code": "Bitte gib einen gültigen Code für die Sprache an",
+	"error.language.create.permission": "Du darfst keine Sprache anlegen",
+	"error.language.delete.permission": "Du darfst diese Sprache nicht löschen",
 	"error.language.duplicate": "Die Sprache besteht bereits",
 	"error.language.name": "Bitte gib einen gültigen Namen für die Sprache an",
 	"error.language.notFound": "Die Sprache konnte nicht gefunden werden",
+	"error.language.update.permission": "Du darfst diese Sprache nicht bearbeiten",
 
 	"error.layout.validation.block": "Fehler im \"{field}\" Feld in Block {blockIndex} mit dem Blocktyp \"{fieldset}\" in Layout {layoutIndex}",
 	"error.layout.validation.settings": "Fehler in den Einstellungen von Layout {index}",

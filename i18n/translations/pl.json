@@ -126,9 +126,12 @@
 	"error.form.notSaved": "Nie udało się zapisać formularza",
 
 	"error.language.code": "Wprowadź poprawny kod języka.",
+	"error.language.create.permission": "You are not allowed to create a language",
+	"error.language.delete.permission": "You are not allowed to delete the language",
 	"error.language.duplicate": "Język już istnieje.",
 	"error.language.name": "Wprowadź poprawną nazwę języka.",
 	"error.language.notFound": "Język nie został odnaleziony",
+	"error.language.update.permission": "You are not allowed to update the language",
 
 	"error.layout.validation.block": "Wystąpił błąd w polu „{field}” w bloku {blockIndex} o typie bloku „{fieldset}” w układzie {layoutIndex}",
 	"error.layout.validation.settings": "W ustawieniach układu {index} jest błąd",

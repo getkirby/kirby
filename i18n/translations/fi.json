@@ -126,9 +126,12 @@
 	"error.form.notSaved": "Lomaketta ei voitu tallentaa",
 
 	"error.language.code": "Anna kielen lyhenne",
+	"error.language.create.permission": "You are not allowed to create a language",
+	"error.language.delete.permission": "You are not allowed to delete the language",
 	"error.language.duplicate": "Kieli on jo olemassa",
 	"error.language.name": "Anna kielen nimi",
 	"error.language.notFound": "Kieltä ei löytynyt",
+	"error.language.update.permission": "You are not allowed to update the language",
 
 	"error.layout.validation.block": "There's an error on the \"{field}\" field in block {blockIndex} using the \"{fieldset}\" block type in layout {layoutIndex}",
 	"error.layout.validation.settings": "Virhe asetelman {index} asetuksissa",

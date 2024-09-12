@@ -3,7 +3,7 @@
         'name' => 'getkirby/cms',
         'pretty_version' => '4.4.0-rc.1',
         'version' => '4.4.0.0-RC1',
-        'reference' => null,
+        'reference' => NULL,
         'type' => 'kirby-cms',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -49,7 +49,7 @@
         'getkirby/cms' => array(
             'pretty_version' => '4.4.0-rc.1',
             'version' => '4.4.0.0-RC1',
-            'reference' => null,
+            'reference' => NULL,
             'type' => 'kirby-cms',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

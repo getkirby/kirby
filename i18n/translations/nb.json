@@ -126,9 +126,12 @@
 	"error.form.notSaved": "Skjemaet kunne ikke lagres",
 
 	"error.language.code": "Vennligst skriv inn gyldig språkkode",
+	"error.language.create.permission": "You are not allowed to create a language",
+	"error.language.delete.permission": "You are not allowed to delete the language",
 	"error.language.duplicate": "Språket eksisterer allerede",
 	"error.language.name": "Vennligst skriv inn et gyldig navn for språket",
 	"error.language.notFound": "Finner ikke språket",
+	"error.language.update.permission": "You are not allowed to update the language",
 
 	"error.layout.validation.block": "Det er en feilmelding på \"{field}\" feltet i blokk {blockIndex} med bruk av \"{fieldset}\" blokktypen i layout {layoutIndex}",
 	"error.layout.validation.settings": "Det er en feil i layout {index} innstillinger",
