@@ -119,6 +119,13 @@ abstract class ModelUuid extends Uuid
 			$this->populate();
 		}
 
-		return App::instance()->url() . '/@/' . static::TYPE . '/' . $this->id();
+		$kirby = App::instance();
+		$url   = $kirby->url();
+
+		if ($language = $kirby->language('current')) {
+			$url .= '/' . $language->code();
+		}
+
+		return $url . '/@/' . static::TYPE . '/' . $this->id();
 	}
 }

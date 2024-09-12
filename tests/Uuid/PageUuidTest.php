@@ -131,6 +131,9 @@ class PageUuidTest extends TestCase
 			'roots' => [
 				'index' => static::TMP
 			],
+			'urls' => [
+				'index' => 'https://getkirby.com'
+			],
 			'options' => [
 				'languages' => true
 			],
@@ -188,5 +191,7 @@ class PageUuidTest extends TestCase
 
 		// the secondary language must not have the uuid in the content file
 		$this->assertNull($page->readContent('de')['uuid'] ?? null);
+
+		$this->assertStringStartsWith('https://getkirby.com/' . $language . '/@/page/', $page->uuid()->url());
 	}
 }
