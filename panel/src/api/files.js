@@ -17,8 +17,8 @@ export default (api) => ({
 		return file;
 	},
 	id(id) {
-		if (id.startsWith("/@/file/") === true) {
-			return id.replace("/@/file/", "@");
+		if (id.match(/^\/(.*\/)?@\/file\//) === true) {
+			return id.replace(/^\/(.*\/)?@\/file\//, "@");
 		}
 
 		if (id.startsWith("file://") === true) {

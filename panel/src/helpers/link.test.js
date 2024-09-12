@@ -45,12 +45,24 @@ describe("$helper.link.getFileUUID()", () => {
 		expect(link.getFileUUID("/@/file/324hjk24")).toStrictEqual(
 			"file://324hjk24"
 		);
+		expect(link.getFileUUID("/en/@/file/324hjk24")).toStrictEqual(
+			"file://324hjk24"
+		);
+		expect(link.getFileUUID("/de/@/file/324hjk24")).toStrictEqual(
+			"file://324hjk24"
+		);
 	});
 });
 
 describe("$helper.link.getPageUUID()", () => {
 	it("should return UUID from permalink", () => {
 		expect(link.getPageUUID("/@/page/324hjk24")).toStrictEqual(
+			"page://324hjk24"
+		);
+		expect(link.getPageUUID("/en/@/page/324hjk24")).toStrictEqual(
+			"page://324hjk24"
+		);
+		expect(link.getPageUUID("/de/@/page/324hjk24")).toStrictEqual(
 			"page://324hjk24"
 		);
 	});
@@ -60,6 +72,7 @@ describe("$helper.link.isFileUUID()", () => {
 	it("should detect UUID", () => {
 		expect(link.isFileUUID("file://324hjk24")).toBeTruthy();
 		expect(link.isFileUUID("/@/file/324hjk24")).toBeTruthy();
+		expect(link.isFileUUID("/en/@/file/324hjk24")).toBeTruthy();
 	});
 });
 
@@ -67,6 +80,7 @@ describe("$helper.link.isPageUUID()", () => {
 	it("should detect UUID", () => {
 		expect(link.isPageUUID("page://324hjk24")).toBeTruthy();
 		expect(link.isPageUUID("/@/page/324hjk24")).toBeTruthy();
+		expect(link.isPageUUID("/en/@/page/324hjk24")).toBeTruthy();
 		expect(link.isPageUUID("site://")).toBeTruthy();
 	});
 });
