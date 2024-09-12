@@ -126,9 +126,12 @@
 	"error.form.notSaved": "Форма не может быть сохранена",
 
 	"error.language.code": "Пожалуйста, впишите правильный код языка",
+	"error.language.create.permission": "You are not allowed to create a language",
+	"error.language.delete.permission": "You are not allowed to delete the language",
 	"error.language.duplicate": "Язык уже есть",
 	"error.language.name": "Пожалуйста, впишите правильное название языка",
 	"error.language.notFound": "Не получилось найти этот язык",
+	"error.language.update.permission": "You are not allowed to update the language",
 
 	"error.layout.validation.block": "Ошибка в поле \"{field}\" в блоке {blockIndex} типа \"{fieldset}\" внутри разметки {layoutIndex}",
 	"error.layout.validation.settings": "Ошибка в настройках макета {index}",

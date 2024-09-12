@@ -212,6 +212,23 @@ class ValidationsTest extends TestCase
 		Validations::pattern($field, '#MMM');
 	}
 
+	public function testPatternInvalidMatchButMore()
+	{
+		$page  = new Page(['slug' => 'test']);
+		$field = new Field('test', [
+			'pattern' => '\d{3,4}',
+			'model'   => $page
+		]);
+
+		$this->assertTrue(Validations::pattern($field, '123'));
+		$this->assertTrue(Validations::pattern($field, '1234'));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The value does not match the expected pattern');
+
+		Validations::pattern($field, '12345');
+	}
+
 	public function testRequiredValid()
 	{
 		$page  = new Page(['slug' => 'test']);

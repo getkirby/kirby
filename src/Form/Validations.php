@@ -162,11 +162,18 @@ class Validations
 	 */
 	public static function pattern(Field|FieldClass $field, mixed $value): bool
 	{
-		if ($field->isEmpty($value) === false && $field->pattern() !== null) {
-			if (V::match($value, '/' . $field->pattern() . '/i') === false) {
-				throw new InvalidArgumentException(
-					V::message('match')
-				);
+		if ($field->isEmpty($value) === false) {
+			if ($pattern = $field->pattern()) {
+				// ensure that that pattern needs to match the whole
+				// input value from start to end, not just a partial match
+				// https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/pattern#overview
+				$pattern = '^(?:' . $pattern . ')$';
+
+				if (V::match($value, '/' . $pattern . '/i') === false) {
+					throw new InvalidArgumentException(
+						V::message('match')
+					);
+				}
 			}
 		}
 

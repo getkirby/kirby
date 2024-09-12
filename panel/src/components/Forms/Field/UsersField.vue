@@ -8,7 +8,11 @@ export default {
 		emptyProps() {
 			return {
 				icon: "users",
-				text: this.empty ?? this.$t("field.users.empty")
+				text:
+					this.empty ??
+					(this.multiple && this.max !== 1
+						? this.$t("field.users.empty")
+						: this.$t("field.users.empty.single"))
 			};
 		}
 	}

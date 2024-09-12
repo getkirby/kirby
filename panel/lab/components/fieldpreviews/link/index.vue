@@ -55,5 +55,15 @@
 				<!-- @code-end -->
 			</k-lab-table-cell>
 		</k-lab-example>
+
+		<k-lab-example label="URL with overflow">
+			<k-lab-table-cell>
+				<!-- @code -->
+				<k-link-field-preview
+					value="https://getkirby.com/this-is-a-super-long-link-lahsdjkahskdjahskjdhaksjdhkajshdkashdjashdkahjsdkjahsdkjashdkjahskdjhaksjhdkashjdkahjsdajshkdhjahjkd"
+				/>
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
 	</k-lab-examples>
 </template>

@@ -7,6 +7,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Http\Router;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\Uuid;
 
 /**
  * The language router is used internally
@@ -83,6 +84,27 @@ class LanguageRouter
 				}
 			}
 		}
+
+		// Language-specific UUID URLs
+		$routes[] = [
+			'pattern' => '@/(page|file)/(:all)',
+			'method'  => 'ALL',
+			'env'     => 'site',
+			'action'  => function (string $languageCode, string $type, string $id) use ($kirby, $language) {
+				// try to resolve to model, but only from UUID cache;
+				// this ensures that only existing UUIDs can be queried
+				// and attackers can't force Kirby to go through the whole
+				// site index with a non-existing UUID
+				if ($model = Uuid::for($type . '://' . $id)?->model(true)) {
+					return $kirby
+						->response()
+						->redirect($model->url($language->code()));
+				}
+
+				// render the error page
+				return false;
+			}
+		];
 
 		return $routes;
 	}

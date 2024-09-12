@@ -194,6 +194,7 @@ return [
 				'multiple'   => $multiple,
 				'max'        => $max,
 				'api'        => $this->parent->apiUrl(true) . '/files',
+				'preview'    => $this->image,
 				'attributes' => [
 					// TODO: an edge issue that needs to be solved:
 					//		 if multiple users load the same section

@@ -8,11 +8,11 @@
 				slot="buttons"
 				:aria-label="$t('search')"
 				:autofocus="true"
+				:icon="isLoading ? 'loader' : 'search'"
 				:placeholder="$t('search') + ' …'"
 				:spellcheck="false"
 				:value="query"
 				class="k-search-view-input"
-				icon="search"
 				type="text"
 				@input="query = $event"
 			/>
@@ -21,10 +21,10 @@
 
 		<div class="k-search-view-results">
 			<k-collection
-				:items="items"
+				:items="results"
 				:empty="{
-					icon: 'search',
-					text: $t('search.results.none')
+					icon: isLoading ? 'loader' : 'search',
+					text: empty
 				}"
 				:pagination="pagination"
 				@paginate="onPaginate"
@@ -50,9 +50,9 @@ export default {
 	},
 	data() {
 		return {
-			items: [],
 			query: new URLSearchParams(window.location.search).get("query"),
-			pagination: {}
+			pagination: {},
+			results: []
 		};
 	},
 	computed: {
@@ -62,16 +62,30 @@ export default {
 				Object.values(this.$panel.searches)[0]
 			);
 		},
+		empty() {
+			if (this.isLoading) {
+				return this.$t("searching") + "…";
+			}
+
+			if (this.query.length < 2) {
+				return this.$t("search.min", { min: 2 });
+			}
+
+			return this.$t("search.results.none");
+		},
+		isLoading() {
+			return this.$panel.searcher.isLoading;
+		},
 		tabs() {
 			const tabs = [];
 
-			for (const typeId in this.$panel.searches) {
-				const type = this.$panel.searches[typeId];
+			for (const id in this.$panel.searches) {
+				const type = this.$panel.searches[id];
 
 				tabs.push({
 					label: type.label,
-					link: "/search/?type=" + typeId + "&query=" + this.query,
-					name: typeId
+					link: "/search/?type=" + id + "&query=" + this.query,
+					name: id
 				});
 			}
 
@@ -79,6 +93,9 @@ export default {
 		}
 	},
 	watch: {
+		isLoading(state) {
+			this.$panel.isLoading = state;
+		},
 		query: {
 			handler() {
 				// reload results when query changes
@@ -99,8 +116,6 @@ export default {
 			this.search(pagination.page);
 		},
 		async search(page) {
-			this.$panel.isLoading = true;
-
 			if (!page) {
 				page = new URLSearchParams(window.location.search).get("page") ?? 1;
 			}
@@ -113,23 +128,18 @@ export default {
 
 			window.history.pushState("", "", url.toString());
 
-			try {
-				// Skip API call if query empty
-				if (this.query === null || this.query.length < 2) {
-					throw Error("Empty query");
-				}
-
-				const response = await this.$search(this.currentType.id, this.query, {
+			const response = await this.$panel.search(
+				this.currentType.id,
+				this.query,
+				{
 					page,
 					limit: 15
-				});
-				this.items = response.results;
+				}
+			);
+
+			if (response) {
+				this.results = response.results ?? [];
 				this.pagination = response.pagination;
-			} catch {
-				this.items = [];
-				this.pagination = {};
-			} finally {
-				this.$panel.isLoading = false;
 			}
 		}
 	}

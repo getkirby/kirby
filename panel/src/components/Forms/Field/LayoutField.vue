@@ -8,6 +8,7 @@
 					icon="add"
 					variant="filled"
 					size="xs"
+					class="input-focus"
 					@click="$refs.layouts.select(0)"
 				/>
 				<k-button

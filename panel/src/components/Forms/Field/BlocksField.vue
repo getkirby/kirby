@@ -10,6 +10,7 @@
 					icon="add"
 					variant="filled"
 					size="xs"
+					class="input-focus"
 					@click="$refs.blocks.choose(value.length)"
 				/>
 				<k-button

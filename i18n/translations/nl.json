@@ -126,9 +126,12 @@
 	"error.form.notSaved": "Het formulier kon niet worden opgeslagen",
 
 	"error.language.code": "Vul een geldige code voor deze taal in",
+	"error.language.create.permission": "You are not allowed to create a language",
+	"error.language.delete.permission": "You are not allowed to delete the language",
 	"error.language.duplicate": "De taal bestaat al",
 	"error.language.name": "Vul een geldige naam voor deze taal in",
 	"error.language.notFound": "De taal kan niet worden gevonden",
+	"error.language.update.permission": "You are not allowed to update the language",
 
 	"error.layout.validation.block": "Er is een fout opgetreden bij het \"{field}\" veld in blok {blockIndex} in het \"{fieldset}\" bloktype in layout {layoutIndex}",
 	"error.layout.validation.settings": "Er is een fout gevonden in de instellingen van ontwerp {index} ",
@@ -617,8 +620,8 @@
 	"stats.empty": "Geen rapporten",
 	"status": "Status",
 
-	"system.info.copy": "Copy info",
-	"system.info.copied": "System info copied",
+	"system.info.copy": "Kopieer informatie",
+	"system.info.copied": "Systeem informatie gekopieerd",
 	"system.issues.content": "De content map lijkt zichtbaar te zijn",
 	"system.issues.eol.kirby": "De geïnstalleerde Kirby versie is niet meer actueel en zal geen verdere beveiligingsupdates meer ontvangen.",
 	"system.issues.eol.plugin": "De geïnstalleerde versie van plugin { plugin } is niet meer actueel en zal geen verdere beveiligingsupdates meer ontvangen.",

@@ -26,7 +26,11 @@ export default {
 		emptyProps() {
 			return {
 				icon: "image",
-				text: this.empty ?? this.$t("field.files.empty")
+				text:
+					this.empty ??
+					(this.multiple && this.max !== 1
+						? this.$t("field.files.empty")
+						: this.$t("field.files.empty.single"))
 			};
 		},
 		hasDropzone() {
@@ -37,6 +41,7 @@ export default {
 				accept: this.uploads.accept,
 				max: this.max,
 				multiple: this.multiple,
+				preview: this.uploads.preview,
 				url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload",
 				on: {
 					done: (files) => {
@@ -51,6 +56,7 @@ export default {
 						}
 
 						this.onInput();
+						this.$events.emit("file.upload");
 						this.$events.emit("model.update");
 					}
 				}

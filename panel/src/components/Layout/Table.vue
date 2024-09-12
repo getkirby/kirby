@@ -64,11 +64,16 @@
 
 				<!-- Rows -->
 				<template v-else>
-					<tr v-for="(row, rowIndex) in values" :key="rowIndex">
+					<tr
+						v-for="(row, rowIndex) in values"
+						:key="rowIndex"
+						:class="{
+							'k-table-sortable-row': sortable && row.sortable !== false
+						}"
+					>
 						<!-- Index & drag handle -->
 						<td
 							v-if="hasIndexColumn"
-							:data-sortable="sortable && row.sortable !== false"
 							data-mobile="true"
 							class="k-table-index-column"
 						>
@@ -242,6 +247,7 @@ export default {
 		dragOptions() {
 			return {
 				disabled: !this.sortable,
+				draggable: ".k-table-sortable-row",
 				fallbackClass: "k-table-row-fallback",
 				ghostClass: "k-table-row-ghost"
 			};
@@ -491,10 +497,10 @@ export default {
 	--button-width: 100%;
 	display: none;
 }
-.k-table tr:hover .k-table-index-column[data-sortable="true"] .k-table-index {
+.k-table tr.k-table-sortable-row:hover .k-table-index-column .k-table-index {
 	display: none;
 }
-.k-table tr:hover .k-table-index-column[data-sortable="true"] .k-sort-handle {
+.k-table tr.k-table-sortable-row:hover .k-table-index-column .k-sort-handle {
 	display: flex;
 }
 

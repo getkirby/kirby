@@ -583,7 +583,28 @@ class PageTest extends TestCase
 			'slug' => 'test'
 		]);
 
+		// authenticate
+		$app->impersonate('kirby');
+
 		$this->assertSame('/test', $page->previewUrl());
+	}
+
+	public function testPreviewUrlUnauthenticated()
+	{
+		new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'urls' => [
+				'index' => '/'
+			]
+		]);
+
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$this->assertNull($page->previewUrl());
 	}
 
 	public static function previewUrlProvider(): array
@@ -600,22 +621,45 @@ class PageTest extends TestCase
 			['{{ page.url }}?preview=true', '/test?preview=true&{token}', true],
 			[false, null, false],
 			[false, null, true],
+			[null, null, false, false],
 		];
 	}
 
 	/**
 	 * @dataProvider previewUrlProvider
 	 */
-	public function testCustomPreviewUrl($input, $expected, $draft)
-	{
+	public function testCustomPreviewUrl(
+		$input,
+		$expected,
+		bool $draft,
+		bool $authenticated = true
+	): void {
 		$app = new App([
 			'roots' => [
 				'index' => '/dev/null'
 			],
 			'urls' => [
 				'index' => '/'
+			],
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'roles' => [
+				[
+					'id'    => 'editor',
+					'name'  => 'editor',
+				]
 			]
 		]);
+
+		// authenticate
+		if ($authenticated) {
+			$app->impersonate('test@getkirby.com');
+		}
 
 		$options = [];
 

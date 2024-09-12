@@ -1,0 +1,1 @@
+{"displayName":"BlockFigureCaption","description":"","tags":{},"props":[{"name":"disabled","type":{"name":"boolean"}},{"name":"marks","type":{"name":"array|boolean"}},{"name":"value","type":{"name":"string"}}],"events":[{"name":"input"}],"component":"k-block-figure-caption","sourceFile":"src/components/Forms/Blocks/Elements/BlockFigureCaption.vue"}

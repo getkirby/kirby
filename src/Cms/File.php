@@ -624,7 +624,7 @@ class File extends ModelWithContent
 	 * Page URL and the filename as a more stable
 	 * alternative for the media URLs.
 	 */
-	public function previewUrl(): string
+	public function previewUrl(): string|null
 	{
 		$parent = $this->parent();
 		$url    = Url::to($this->id());
@@ -632,6 +632,12 @@ class File extends ModelWithContent
 		switch ($parent::CLASS_ALIAS) {
 			case 'page':
 				$preview = $parent->blueprint()->preview();
+
+				// user has no permission to preview page,
+				// also return null for file preview
+				if ($preview === false) {
+					return null;
+				}
 
 				// the page has a custom preview setting,
 				// thus the file is only accessible through

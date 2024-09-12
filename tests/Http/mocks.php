@@ -2,6 +2,8 @@
 
 namespace Kirby\Http;
 
+use Exception;
+
 class HeadersSent
 {
 	public static $value = false;

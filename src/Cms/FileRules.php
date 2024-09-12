@@ -315,7 +315,7 @@ class FileRules
 	public static function validMime(File $file, string $mime = null): bool
 	{
 		// make it easier to compare the mime
-		$mime = strtolower($mime);
+		$mime = strtolower($mime ?? '');
 
 		if (empty($mime)) {
 			throw new InvalidArgumentException([

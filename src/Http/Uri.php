@@ -88,7 +88,16 @@ class Uri
 	public function __construct(array|string $props = [], array $inject = [])
 	{
 		if (is_string($props) === true) {
-			$props = parse_url($props);
+			// make sure the URL parser works properly when there's a
+			// colon in the string but the string is a relative URL
+			if (Url::isAbsolute($props) === false) {
+				$props = 'https://getkirby.com/' . $props;
+				$props = parse_url($props);
+				unset($props['scheme'], $props['host']);
+			} else {
+				$props = parse_url($props);
+			}
+
 			$props['username'] = $props['user'] ?? null;
 			$props['password'] = $props['pass'] ?? null;
 

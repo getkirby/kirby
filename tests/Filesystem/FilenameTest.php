@@ -2,6 +2,7 @@
 
 namespace Kirby\Filesystem;
 
+use Kirby\Cms\App;
 use Kirby\TestCase as TestCase;
 
 /**
@@ -304,6 +305,23 @@ class FilenameTest extends TestCase
 	{
 		$name = new Filename('/var/www/söme file.jpg', '{{ name }}.{{ extension }}');
 		$this->assertSame('some-file', $name->name());
+	}
+
+	/**
+	 * @covers ::name
+	 */
+	public function testNameSanitizationUserLanguageRules()
+	{
+		$app = new App([
+			'users' => [
+				['email' => 'test@getkirby.com', 'language' => 'ko']
+			]
+		]);
+
+		$app->impersonate('test@getkirby.com');
+
+		$name = new Filename('/var/www/안녕하세요.pdf', '{{ name }}.{{ extension }}');
+		$this->assertSame('annyeonghaseyo', $name->name());
 	}
 
 	public static function qualityOptionProvider(): array

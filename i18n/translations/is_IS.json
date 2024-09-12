@@ -126,9 +126,12 @@
 	"error.form.notSaved": "Ekki tókst að vista upplýsingar úr forminu",
 
 	"error.language.code": "Gófúslega settu inn gildan kóða fyrir tungumál",
+	"error.language.create.permission": "You are not allowed to create a language",
+	"error.language.delete.permission": "You are not allowed to delete the language",
 	"error.language.duplicate": "Þetta tungumál er nú þegar skráð",
 	"error.language.name": "Gott og gyllt nafn fyrir tungumálið",
 	"error.language.notFound": "Tungumálið fannst ekkert",
+	"error.language.update.permission": "You are not allowed to update the language",
 
 	"error.layout.validation.block": "Það er villa í {field} sviðinu í bálkinum {blockIndex} sem notar {fieldset} bálkgerðina í rammanum {layoutIndex}",
 	"error.layout.validation.settings": "Hér er villa í sitllingum fyrir ramman {index}",

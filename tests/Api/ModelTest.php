@@ -4,6 +4,7 @@ namespace Kirby\Api;
 
 use Exception;
 use Kirby\TestCase;
+use stdClass;
 
 class ModelTest extends TestCase
 {
@@ -18,7 +19,7 @@ class ModelTest extends TestCase
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid model type "stdClass" expected: "nonexists"');
 
-		new Model(new Api([]), new \stdClass(), ['type' => 'nonexists']);
+		new Model(new Api([]), new stdClass(), ['type' => 'nonexists']);
 	}
 
 	public function testConstructMissingModel()

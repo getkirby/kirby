@@ -1,14 +1,19 @@
 <template>
 	<k-lab-examples>
-		<k-lab-example label="file browser">
-			<k-headline>Browse …</k-headline>
+		<k-lab-example label="File browser">
 			<k-file-browser :selected="selected?.value" @select="selected = $event" />
 		</k-lab-example>
-		<k-lab-example label="pagination">
-			<k-headline>Browse …</k-headline>
+		<k-lab-example label="Pagination">
 			<k-file-browser
 				:limit="1"
 				:selected="selected?.value"
+				@select="selected = $event"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Page pre-opened">
+			<k-file-browser
+				:selected="selected?.value"
+				opened="sections/files"
 				@select="selected = $event"
 			/>
 		</k-lab-example>

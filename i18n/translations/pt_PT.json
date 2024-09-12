@@ -126,9 +126,12 @@
 	"error.form.notSaved": "Não foi possível guardar o formulário",
 
 	"error.language.code": "Por favor, insira um código válido para o idioma",
+	"error.language.create.permission": "Não tem permissões para criar um idioma",
+	"error.language.delete.permission": "Não tem permissões para eliminar o idioma",
 	"error.language.duplicate": "O idioma já existe",
 	"error.language.name": "Por favor, insira um nome válido para o idioma",
 	"error.language.notFound": "Não foi possível encontrar o idioma",
+	"error.language.update.permission": "Não tem permissões para atualizar o idioma",
 
 	"error.layout.validation.block": "Há um erro no campo \"{field}\" no bloco {blockIndex} a usar o tipo de bloco \"{fieldset}\" no layout {layoutIndex}",
 	"error.layout.validation.settings": "Há um erro na configuração do layout {index}",
@@ -617,8 +620,8 @@
 	"stats.empty": "Sem relatórios",
 	"status": "Estado",
 
-	"system.info.copy": "Copy info",
-	"system.info.copied": "System info copied",
+	"system.info.copy": "Copiar informação",
+	"system.info.copied": "Informação de sistema copiada",
 	"system.issues.content": "A pasta content parece não estar protegida",
 	"system.issues.eol.kirby": "A versão instalada do Kirby chegou ao fim da sua vida útil e não irá receber mais atualizações de segurança",
 	"system.issues.eol.plugin": "A versão instalada do plugin { plugin } chegou ao fim da sua vida útil e não irá receber mais atualizações de segurança",

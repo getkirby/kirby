@@ -11,6 +11,19 @@
 				@rename="rename"
 			/>
 		</k-lab-example>
+		<k-lab-example label="Upload Item with custom preview settings">
+			<k-upload-item
+				:cover="false"
+				back="gray-400"
+				extension="jpeg"
+				type="image/jpeg"
+				name="test"
+				niceSize="128 kB"
+				url="https://picsum.photos/100/300"
+				@remove="remove"
+				@rename="rename"
+			/>
+		</k-lab-example>
 		<k-lab-example label="Progress">
 			<k-upload-item
 				:progress="80"

@@ -126,9 +126,12 @@
 	"error.form.notSaved": "No s'ha pogut desar el formulari",
 
 	"error.language.code": "Introdueix un codi vàlid per a l’idioma",
+	"error.language.create.permission": "You are not allowed to create a language",
+	"error.language.delete.permission": "You are not allowed to delete the language",
 	"error.language.duplicate": "L'idioma ja existeix",
 	"error.language.name": "Introdueix un nom vàlid per a l'idioma",
 	"error.language.notFound": "The language could not be found",
+	"error.language.update.permission": "You are not allowed to update the language",
 
 	"error.layout.validation.block": "There's an error on the \"{field}\" field in block {blockIndex} using the \"{fieldset}\" block type in layout {layoutIndex}",
 	"error.layout.validation.settings": "There's an error in layout {index} settings",

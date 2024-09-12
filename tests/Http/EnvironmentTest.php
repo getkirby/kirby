@@ -1407,7 +1407,7 @@ class EnvironmentTest extends TestCase
 			[
 				'index.php?foo=bar',
 				[
-					'path'  => '',
+					'path'  => 'index.php',
 					'query' => 'foo=bar'
 				]
 			],

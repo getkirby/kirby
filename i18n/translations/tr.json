@@ -126,9 +126,12 @@
 	"error.form.notSaved": "Form kaydedilemedi",
 
 	"error.language.code": "Lütfen dil için geçerli bir kod girin",
+	"error.language.create.permission": "Bir dil oluşturmanıza izin verilmiyor",
+	"error.language.delete.permission": "Dili silmenize izin verilmiyor",
 	"error.language.duplicate": "Bu dil zaten var",
 	"error.language.name": "Lütfen dil için geçerli bir isim girin",
 	"error.language.notFound": "Dil bulunamadı",
+	"error.language.update.permission": "Dili güncellemenize izin verilmiyor",
 
 	"error.layout.validation.block": "{layoutIndex}. sıradaki düzende \"{fieldset}\" blok türünü kullanan {blockIndex}. bloktaki \"{field}\" alanında bir hata var",
 	"error.layout.validation.settings": "{index}. düzen ayarlarında bir hata var",
@@ -617,8 +620,8 @@
 	"stats.empty": "Rapor yok",
 	"status": "Durum",
 
-	"system.info.copy": "Copy info",
-	"system.info.copied": "System info copied",
+	"system.info.copy": "Bilgileri kopyala",
+	"system.info.copied": "Sistem bilgisi kopyalandı",
 	"system.issues.content": "İçerik klasörü açığa çıkmış görünüyor",
 	"system.issues.eol.kirby": "Yüklü Kirby sürümünüz kullanım ömrünün sonuna ulaştı ve daha fazla güvenlik güncellemesi almayacak",
 	"system.issues.eol.plugin": "{ plugin } eklentisinin yüklü sürümü kullanım ömrünün sonuna ulaştı ve daha fazla güvenlik güncellemesi almayacak",

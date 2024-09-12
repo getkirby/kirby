@@ -2,11 +2,10 @@
 	<k-input
 		:autofocus="autofocus"
 		:placeholder="placeholder"
-		:spellcheck="false"
 		:value="value"
 		class="k-dialog-search"
 		icon="search"
-		type="text"
+		type="search"
 		@input="$emit('search', $event)"
 	/>
 </template>
@@ -23,7 +22,6 @@ export default {
 			type: Boolean
 		},
 		placeholder: {
-			default: () => window.panel.$t("search") + " …",
 			type: String
 		},
 		value: {

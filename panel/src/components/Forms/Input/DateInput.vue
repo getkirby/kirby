@@ -17,6 +17,8 @@
 		@keydown.down.stop.prevent="onArrowDown"
 		@keydown.up.stop.prevent="onArrowUp"
 		@keydown.enter.stop.prevent="onEnter"
+		@keydown.meta.s.stop.prevent="onEnter"
+		@keydown.ctrl.s.stop.prevent="onEnter"
 		@keydown.tab="onTab"
 	/>
 </template>
@@ -137,13 +139,6 @@ export default {
 			immediate: true
 		}
 	},
-	mounted() {
-		// make sure to commit input value when Cmd+S is hit
-		this.$events.on("keydown.cmd.s", this.onBlur);
-	},
-	destroyed() {
-		this.$events.off("keydown.cmd.s", this.onBlur);
-	},
 	methods: {
 		/**
 		 * Increment/decrement the current dayjs object based on the
@@ -244,8 +239,10 @@ export default {
 		 * but also emit additional submit event
 		 */
 		async onEnter() {
+			// ensure inout gets parsed and emitted as new value
 			this.onBlur();
 			await this.$nextTick();
+			// only thereafter emit submit so the content gets saved
 			this.$emit("submit");
 		},
 		/**
