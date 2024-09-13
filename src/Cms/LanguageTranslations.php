@@ -2,13 +2,14 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Data\Data;
+use Kirby\Exception\Exception;
 use Kirby\Filesystem\F;
+use Throwable;
 
 /**
- * With helper methods provides get language translations or
- * loads from custom `translations` root
+ * Manages the translations string for a language,
+ * either from the language file or `translations` root
  * @since 5.0.0
  *
  * @package   Kirby Cms
@@ -19,51 +20,61 @@ use Kirby\Filesystem\F;
  */
 class LanguageTranslations
 {
-	protected array $data;
-
 	public function __construct(
 		protected Language $language,
-		self|array $translations = []
+		protected array $data = []
 	) {
-		$this->setTranslations($translations);
+		$this->data = [...$this->load(), ...$this->data];
+	}
+
+	/**
+	 * Deletes the current language translations file
+	 * if custom root defined
+	 */
+	public function delete(): void
+	{
+		if ($file = $this->root()) {
+			if (F::remove($file) !== true) {
+				throw new Exception('The language translations could not be deleted');
+			}
+		}
 	}
 
 	/**
 	 * Returns a single translation string by key
 	 */
-	public function get(string $key, string $default = null): string|null
+	public function get(string $key, string|null $default = null): string|null
 	{
 		return $this->data[$key] ?? $default;
 	}
 
 	/**
-	 * Loads the language translations based on custom roots for provided language code
+	 * Loads the language translations based on custom roots
 	 */
-	public function load(array $default = []): array
+	public function load(): array
 	{
 		if ($file = static::root()) {
 			try {
 				return Data::read($file);
-			} catch (Exception) {
-				return $default;
+			} catch (Throwable) {
+				// skip when an exception thrown
 			}
 		}
 
-		return $default;
+		return [];
 	}
 
 	/**
 	 * Saves the language translations in the custom root
-	 * @internal
-	 *
 	 * @return $this
+	 * @internal
 	 */
 	public function save(array $translations = []): static
 	{
-		$this->setTranslations($translations);
+		$this->data = $translations;
 
 		if ($root = $this->root()) {
-			Data::write($root, $translations);
+			Data::write($root, $this->data);
 		}
 
 		return $this;
@@ -74,15 +85,8 @@ class LanguageTranslations
 	 */
 	public function root(): string|null
 	{
-		$kirby = App::instance();
-		$root  = $kirby->root('translations');
-		$file  = ($root ?? '') . '/' . $this->language->code() . '.php';
-
-		if (
-			$root !== null &&
-			F::exists($file) === true
-		) {
-			return $file;
+		if ($root = App::instance()->root('translations')) {
+			return $root . '/' . $this->language->code() . '.php';
 		}
 
 		return null;
@@ -111,30 +115,19 @@ class LanguageTranslations
 	}
 
 	/**
-	 * Set translations
-	 *
-	 * @return $this
-	 */
-	public function setTranslations(self|array $translations = []): static
-	{
-		if (empty($translations) === false) {
-			if ($translations instanceof self) {
-				$this->data = $translations->toArray();
-			} else {
-				$this->data = $translations;
-			}
-		} else {
-			$this->data = static::load();
-		}
-
-		return $this;
-	}
-
-	/**
 	 * Returns translations
 	 */
 	public function toArray(): array
 	{
 		return $this->data;
+	}
+
+	/**
+	 * Updates the translations data
+	 */
+	public function update(array $data = []): static
+	{
+		$this->data = $data;
+		return $this;
 	}
 }
