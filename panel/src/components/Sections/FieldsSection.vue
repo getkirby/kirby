@@ -16,7 +16,7 @@
 			:fields="fields"
 			:validate="true"
 			:value="content"
-			:disabled="lock && lock.state === 'lock'"
+			:disabled="lock.isActive === true"
 			@input="$emit('input', $event)"
 			@submit="$emit('submit', $event)"
 		/>

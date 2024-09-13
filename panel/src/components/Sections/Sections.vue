@@ -59,7 +59,7 @@ export default {
 		blueprint: String,
 		content: Object,
 		empty: String,
-		lock: [Boolean, Object],
+		lock: Object,
 		parent: String,
 		tab: Object
 	},
