@@ -1,5 +1,4 @@
 import { reactive } from "vue";
-import debounce from "@/helpers/debounce";
 
 /**
  * @since 5.0.0
@@ -86,14 +85,6 @@ export default (panel) => {
 		},
 		isDiscarding: false,
 		/**
-		 * Whether the content is currently locked by another user
-		 *
-		 * @returns {Boolean}
-		 */
-		get isLocked() {
-			return this.lock?.state === "lock";
-		},
-		/**
 		 * Global flag for any kind of writing or discarding operation
 		 *
 		 * @returns {Boolean}
@@ -104,28 +95,6 @@ export default (panel) => {
 
 		isPublishing: false,
 		isSaving: false,
-
-		/**
-		 * Content lock state of the model
-		 *
-		 * @returns {Object|null|false}
-		 */
-		get lock() {
-			const lock = panel.view.props.lock;
-
-			if (!lock) {
-				return false;
-			}
-
-			if (lock.state === null) {
-				return null;
-			}
-
-			return {
-				...lock.data,
-				state: lock.state
-			};
-		},
 
 		get originals() {
 			return panel.view.props.originals;
@@ -171,11 +140,6 @@ export default (panel) => {
 			this.isSaving = false;
 			this.hasUnsavedChanges = false;
 		},
-		/**
-		 * Removes the content lock for the current user,
-		 * e.g. when closing/leaving the model view
-		 */
-		async unlock() {},
 
 		get values() {
 			return panel.view.props.content;
