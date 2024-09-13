@@ -11,6 +11,29 @@
 			size="sm"
 			variant="filled"
 		/>
+		<k-dropdown-content
+			v-if="lock.isActive"
+			ref="lock"
+			align-x="end"
+			class="k-form-controls-dropdown"
+		>
+			<p>
+				{{ $t("form.locked") }}
+			</p>
+			<hr />
+			<dl>
+				<div>
+					<dt><k-icon type="user" /></dt>
+					<dd>{{ lock.user.email }}</dd>
+				</div>
+				<div>
+					<dt><k-icon type="clock" /></dt>
+					<dd>12 minutes ago</dd>
+				</div>
+			</dl>
+			<hr />
+			<k-dropdown-item icon="preview">Preview changes</k-dropdown-item>
+		</k-dropdown-content>
 	</k-button-group>
 </template>
 
@@ -39,9 +62,10 @@ export default {
 				return [
 					{
 						theme: "negative",
+						dropdown: true,
 						text: this.lock.user.email,
 						icon: "lock",
-						click: () => this.locked()
+						click: () => this.$refs.lock.toggle()
 					}
 				];
 			}
@@ -85,14 +109,25 @@ export default {
 					}
 				}
 			});
-		},
-		locked() {
-			this.$panel.notification.open({
-				icon: "lock",
-				theme: "negative",
-				message: this.$t("form.locked")
-			});
 		}
 	}
 };
 </script>
+
+<style>
+.k-form-controls-dropdown {
+	max-width: 15rem;
+}
+.k-form-controls-dropdown p {
+	line-height: var(--leading-normal);
+	padding: var(--spacing-1) var(--spacing-2);
+}
+.k-form-controls-dropdown dl div {
+	padding: var(--spacing-1) var(--spacing-2);
+	line-height: var(--leading-normal);
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	color: var(--color-gray-500);
+}
+</style>
