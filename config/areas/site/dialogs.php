@@ -643,13 +643,7 @@ return [
 	'changes' => [
 		'pattern' => 'changes',
 		'load'    => function () {
-			$dialog = new ChangesDialog();
-			return $dialog->load();
+			return (new ChangesDialog())->load();
 		},
-		'submit' => function () {
-			$dialog = new ChangesDialog();
-			$ids    = App::instance()->request()->get('ids');
-			return $dialog->submit($ids);
-		}
 	],
 ];

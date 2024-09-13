@@ -1,13 +1,24 @@
 <template>
 	<k-dialog v-bind="$props" class="k-changes-dialog">
-		<template v-if="loading === false">
-			<k-headline>{{ $t("lock.unsaved") }}</k-headline>
-			<k-items v-if="changes.length" :items="changes" layout="list" />
-			<k-empty v-else icon="edit-line">{{ $t("lock.unsaved.empty") }}</k-empty>
-		</template>
-		<template v-else>
-			<k-icon type="loader" />
-		</template>
+		<section v-if="pages.length">
+			<k-headline>Unsaved pages</k-headline>
+			<k-items :items="pages" layout="list" />
+		</section>
+
+		<section v-if="files.length">
+			<k-headline>Unsaved files</k-headline>
+			<k-items :items="files" layout="list" />
+		</section>
+
+		<section v-if="users.length">
+			<k-headline>Unsaved accounts</k-headline>
+			<k-items :items="users" layout="list" />
+		</section>
+
+		<section v-if="!pages.length && !files.length && !users.length">
+			<k-headline>Unsaved changes</k-headline>
+			<k-empty icon="edit-line">{{ $t("lock.unsaved.empty") }}</k-empty>
+		</section>
 	</k-dialog>
 </template>
 
@@ -24,11 +35,11 @@ export default {
 		cancelButton: {
 			default: false
 		},
-		changes: {
+		files: {
 			type: Array
 		},
-		loading: {
-			type: Boolean
+		pages: {
+			type: Array
 		},
 		// eslint-disable-next-line vue/require-prop-types
 		size: {
@@ -37,31 +48,18 @@ export default {
 		// eslint-disable-next-line vue/require-prop-types
 		submitButton: {
 			default: false
-		}
-	},
-	computed: {
-		ids() {
-			// TODO: replace with ids from user .txt
-			return [];
-		}
-	},
-	watch: {
-		ids: {
-			handler(ids) {
-				this.$panel.dialog.refresh({
-					method: "POST",
-					body: {
-						ids: ids
-					}
-				});
-			},
-			immediate: true
+		},
+		users: {
+			type: Array
 		}
 	}
 };
 </script>
 
 <style>
+.k-changes-dialog section + section {
+	margin-top: var(--spacing-6);
+}
 .k-changes-dialog .k-headline {
 	margin-top: -0.5rem;
 	margin-bottom: var(--spacing-3);
