@@ -105,6 +105,17 @@ class Version
 	}
 
 	/**
+	 * Returns the changed fields, compared to the given version
+	 */
+	public function diff(VersionId|string $versionId): array
+	{
+		$a = $this->read() ?? [];
+		$b = $this->model->version(VersionId::from($versionId))->read() ?? [];
+
+		return array_diff($a, $b);
+	}
+
+	/**
 	 * Ensure that the version exists and otherwise
 	 * throw an exception
 	 *

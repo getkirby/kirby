@@ -280,6 +280,17 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	}
 
 	/**
+	 * Check if the model has a "changes" version
+	 */
+	public function hasChanges(): bool
+	{
+		$changes = $this->version(VersionId::changes());
+		$diff    = $changes->diff(VersionId::published());
+
+		return $changes->exists() === true && count($diff) > 0;
+	}
+
+	/**
 	 * Each model must return a unique id
 	 */
 	public function id(): string|null
