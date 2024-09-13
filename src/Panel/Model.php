@@ -28,17 +28,24 @@ abstract class Model
 	}
 
 	/**
+	 * API endpoint for this view
+	 */
+	public function api(): string
+	{
+		return $this->url(true);
+	}
+
+	/**
 	 * Returns header button names which should be displayed
 	 */
 	abstract public function buttons(): array;
 
-
-	public function changes(): array
+	public function changes(): array|null
 	{
 		$version = $this->model->version('changes');
 
 		if ($version->exists() === false) {
-			return [];
+			return null;
 		}
 
 		// create a form which will collect the published values for the model,
@@ -380,12 +387,17 @@ abstract class Model
 	public function props(): array
 	{
 		$blueprint = $this->model->blueprint();
+		$originals = $this->content();
+		$content   = $this->changes() ?? $originals;
 		$request   = $this->model->kirby()->request();
 		$tabs      = $blueprint->tabs();
 		$tab       = $blueprint->tab($request->get('tab')) ?? $tabs[0] ?? null;
 
 		$props = [
+			'api'         => $this->api(),
 			'buttons'     => fn () => $this->buttons(),
+			'content'     => $content,
+			'originals'   => $originals,
 			'lock'        => $this->lock(),
 			'permissions' => $this->model->permissions()->toArray(),
 			'tabs'        => $tabs,

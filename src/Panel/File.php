@@ -407,8 +407,6 @@ class File extends Model
 			...$this->prevNext(),
 			'blueprint' => $this->model->template() ?? 'default',
 			'model' => [
-				'changes'    => $this->changes(),
-				'content'    => $this->content(),
 				'dimensions' => $dimensions->toArray(),
 				'extension'  => $file->extension(),
 				'filename'   => $file->filename(),
