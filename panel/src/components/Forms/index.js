@@ -1,7 +1,6 @@
 /* Form */
 import Counter from "./Counter.vue";
 import Form from "./Form.vue";
-import FormButtons from "./FormButtons.vue";
 import Controls from "./Controls/Controls.vue";
 import Field from "./Field.vue";
 import Fieldset from "./Fieldset.vue";
@@ -19,7 +18,6 @@ export default {
 	install(app) {
 		app.component("k-counter", Counter);
 		app.component("k-form", Form);
-		app.component("k-form-buttons", FormButtons);
 		app.component("k-form-controls", Controls);
 		app.component("k-field", Field);
 		app.component("k-fieldset", Fieldset);

@@ -1,5 +1,9 @@
 <template>
-	<k-button-group layout="collapsed" class="k-form-controls">
+	<k-button-group
+		v-if="buttons.length"
+		layout="collapsed"
+		class="k-form-controls"
+	>
 		<k-button
 			v-for="button in buttons"
 			:key="button.text"
@@ -7,21 +11,12 @@
 			size="sm"
 			variant="filled"
 		/>
-
-		<template v-if="dropdown.length">
-			<k-button
-				:theme="buttons[0].theme"
-				icon="angle-down"
-				size="sm"
-				variant="filled"
-				@click="$refs.dropdown.toggle()"
-			/>
-			<k-dropdown-content ref="dropdown" :options="dropdown" align-x="end" />
-		</template>
 	</k-button-group>
 </template>
 
 <script>
+import { length } from "@/helpers/object.js";
+
 /**
  * @displayName FormControls
  * @since 5.0.0
@@ -29,94 +24,46 @@
 export default {
 	props: {
 		/**
-		 * Whether the model is currently a draft
+		 * An object of changed fields and their changed values
 		 */
-		isDraft: Boolean,
+		changes: Object,
 		/**
 		 * Whether the content is locked, and if, by whom
 		 */
-		isLocked: [String, Boolean],
-		/**
-		 * Whether the content is fully published (no changes)
-		 */
-		isPublished: Boolean,
-		/**
-		 * Whether all content are saved
-		 */
-		isSaved: Boolean,
-		/**
-		 * Optional URL for preview dropdown entry
-		 */
-		preview: String
+		lock: Object
 	},
-	emits: ["discard", "publish", "save"],
+	emits: ["discard", "submit"],
 	computed: {
 		buttons() {
-			if (this.isLocked) {
+			if (this.lock?.isActive === true) {
 				return [
 					{
 						theme: "negative",
-						text: this.isLocked,
+						text: this.lock.user.email,
 						icon: "lock",
 						click: () => this.locked()
 					}
 				];
 			}
 
-			if (this.isPublished) {
+			if (length(this.changes) !== 0) {
 				return [
 					{
-						theme: "passive",
-						text: this.$t("published"),
+						theme: "notice",
+						text: this.$t("revert"),
+						icon: "undo",
+						click: () => this.discard()
+					},
+					{
+						theme: "notice",
+						text: this.$t("save"),
 						icon: "check",
-						disabled: true
+						click: () => this.$emit("submit")
 					}
 				];
 			}
 
-			return [
-				{
-					theme: "positive",
-					text: this.isSaved ? this.$t("saved") : this.$t("save"),
-					icon: this.isSaved ? "check" : "draft",
-					disabled: this.isSaved,
-					click: () => this.$emit("save")
-				},
-				{
-					theme: "positive",
-					text: this.$t("publish"),
-					icon: "live",
-					click: () => this.$emit("publish")
-				}
-			];
-		},
-		dropdown() {
-			if (this.isPublished) {
-				return [];
-			}
-
-			const dropdown = [];
-
-			if (this.isLocked === false && this.isDraft === false) {
-				dropdown.push({
-					icon: "undo",
-					text: this.$t("form.discard"),
-					click: () => this.discard()
-				});
-			}
-
-			if (this.preview && this.isPublished === false) {
-				dropdown.push({
-					icon: "preview",
-					link: this.preview,
-					text: this.isDraft
-						? this.$t("form.preview.draft")
-						: this.$t("form.preview"),
-					target: "_blank"
-				});
-			}
-
-			return dropdown;
+			return [];
 		}
 	},
 	methods: {
