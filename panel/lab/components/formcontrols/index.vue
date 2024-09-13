@@ -15,21 +15,18 @@
 					/>
 
 					<k-form-controls
-						:is-draft="isDraft"
-						:is-published="isPublished"
-						:is-saved="isSaved"
-						:is-locked="isLocked ? 'bastian@getkirby.com' : false"
+						:changes="changes"
+						:lock="lock"
 						preview="https://getkirby.com"
 						@discard="log('discard')"
-						@save="log('save')"
-						@publish="log('publish')"
+						@submit="log('submit')"
 					/>
 				</k-button-group>
 			</k-header>
 
 			<k-grid
 				style="
-					--columns: 2;
+					--columns: 3;
 					--grid-inline-gap: var(--spacing-1);
 					--grid-block-gap: var(--spacing-1);
 				"
@@ -37,62 +34,36 @@
 				<k-input
 					type="toggle"
 					:value="isDraft"
-					text="is-draft"
+					text="draft"
 					@input="isDraft = $event"
 				/>
 				<k-input
 					type="toggle"
-					:value="isSaved"
-					text="is-saved"
-					@input="isSaved = $event"
-				/>
-				<k-input
-					type="toggle"
-					:value="isPublished"
-					text="is-published"
-					@input="isPublished = $event"
+					:value="isChanged"
+					text="changes"
+					@input="isChanged = $event"
 				/>
 				<k-input
 					type="toggle"
 					:value="isLocked"
-					text="is-locked"
+					text="lock"
 					@input="isLocked = $event"
 				/>
 			</k-grid>
 		</k-lab-example>
 
-		<k-lab-example label="Published">
-			<k-form-controls :is-published="true" preview="https://getkirby.com" />
-		</k-lab-example>
 		<k-lab-example label="Unsaved">
 			<k-form-controls
-				preview="https://getkirby.com"
+				:changes="{ heading: 'This has changed' }"
 				@discard="log('discard')"
-				@save="log('save')"
-				@publish="log('publish')"
-			/>
-		</k-lab-example>
-		<k-lab-example label="Saved">
-			<k-form-controls
-				:is-saved="true"
-				preview="https://getkirby.com"
-				@discard="log('discard')"
-				@publish="log('publish')"
+				@submit="log('submit')"
 			/>
 		</k-lab-example>
 		<k-lab-example label="Locked">
 			<k-form-controls
-				is-locked="bastian@getkirby.com"
-				preview="https://getkirby.com"
-			/>
-		</k-lab-example>
-		<k-lab-example label="Draft: Saved">
-			<k-form-controls
-				:is-draft="true"
-				:is-saved="true"
-				preview="https://getkirby.com"
+				:lock="{ isActive: true, user: { email: 'test@getkirby.com' } }"
 				@discard="log('discard')"
-				@publish="log('publish')"
+				@submit="log('submit')"
 			/>
 		</k-lab-example>
 	</k-lab-examples>
@@ -104,9 +75,34 @@ export default {
 		return {
 			isDraft: false,
 			isLocked: false,
-			isPublished: false,
-			isSaved: false
+			isChanged: false
 		};
+	},
+	computed: {
+		changes() {
+			if (this.isChanged) {
+				return {
+					heading: "This has changed"
+				};
+			}
+
+			return {};
+		},
+		lock() {
+			const lock = {
+				isActive: false,
+				user: {
+					email: null
+				}
+			};
+
+			if (this.isLocked) {
+				lock.isActive = true;
+				lock.user.email = "test@getkirby.com";
+			}
+
+			return lock;
+		}
 	},
 	methods: {
 		log(action) {
