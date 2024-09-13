@@ -5,15 +5,21 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Cms\Collection;
 use Kirby\Cms\Find;
+use Kirby\Content\Changes;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\Escape;
 use Throwable;
 
 class ChangesDialog
 {
+	public function changes(): Changes
+	{
+		return App::instance()->site()->changes();
+	}
+
 	public function files(): array
 	{
-		return $this->items(App::instance()->user()->changes()->files());
+		return $this->items($this->changes()->files());
 	}
 
 	public function items(Collection $models): array
@@ -41,12 +47,12 @@ class ChangesDialog
 
 	public function pages(): array
 	{
-		return $this->items(App::instance()->user()->changes()->pages());
+		return $this->items($this->changes()->pages());
 	}
 
 	public function users(): array
 	{
-		return $this->items(App::instance()->user()->changes()->users());
+		return $this->items($this->changes()->users());
 	}
 
 }

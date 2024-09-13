@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 use Closure;
 use Exception;
-use Kirby\Content\Changes;
 use Kirby\Content\Field;
 use Kirby\Content\VersionId;
 use Kirby\Exception\InvalidArgumentException;
@@ -167,15 +166,6 @@ class User extends ModelWithContent
 				'title' => 'Default',
 			]);
 		}
-	}
-
-	/**
-	 * CRUD interface for unsaved
-	 * changes by the user
-	 */
-	public function changes(): Changes
-	{
-		return new Changes($this);
 	}
 
 	/**

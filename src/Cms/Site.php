@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Content\Changes;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
@@ -177,6 +178,15 @@ class Site extends ModelWithContent
 		$crumb->append($this->page()->id(), $this->page());
 
 		return $crumb;
+	}
+
+	/**
+	 * CRUD interface for unsaved changes
+	 * in pages, files and user accounts
+	 */
+	public function changes(): Changes
+	{
+		return new Changes($this);
 	}
 
 	/**

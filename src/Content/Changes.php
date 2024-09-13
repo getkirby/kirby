@@ -5,6 +5,7 @@ namespace Kirby\Content;
 use Kirby\Cms\Files;
 use Kirby\Cms\Pages;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Cms\Users;
 
@@ -19,7 +20,7 @@ class Changes
 {
 
 	public function __construct(
-		protected User $user
+		protected Site $site
 	) {
 	}
 
@@ -28,7 +29,7 @@ class Changes
 	 */
 	public function files(): Files
 	{
-		return $this->user->content()->get('changes')->toFiles();
+		return $this->site->content()->get('changes')->toFiles();
 	}
 
 	/**
@@ -36,7 +37,7 @@ class Changes
 	 */
 	public function pages(): Pages
 	{
-		return $this->user->content()->get('changes')->toPages();
+		return $this->site->content()->get('changes')->toPages();
 	}
 
 	/**
@@ -44,13 +45,13 @@ class Changes
 	 */
 	public function track(ModelWithContent $model): void
 	{
-		$changes = $this->user->content()->get('changes')->yaml();
+		$changes = $this->site->content()->get('changes')->yaml();
 		$changes[] = (string)$model->uuid();
 
 		// make sure that each UUID is only stored once
 		$changes = array_unique($changes);
 
-		$this->user->update([
+		$this->site->update([
 			'changes' => array_values($changes)
 		]);
 	}
@@ -60,7 +61,7 @@ class Changes
 	 */
 	public function untrack(ModelWithContent $model)
 	{
-		$changes = $this->user->content()->get('changes')->yaml();
+		$changes = $this->site->content()->get('changes')->yaml();
 		$uuid    = (string)$model->uuid();
 		$index   = array_search($uuid, $changes);
 
@@ -68,7 +69,7 @@ class Changes
 			unset($changes[$index]);
 		}
 
-		$this->user->update([
+		$this->site->update([
 			'changes' => array_values($changes)
 		]);
 	}
@@ -78,6 +79,6 @@ class Changes
 	 */
 	public function users(): Users
 	{
-		return $this->user->content()->get('changes')->toUsers();
+		return $this->site->content()->get('changes')->toUsers();
 	}
 }

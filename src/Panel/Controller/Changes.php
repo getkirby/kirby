@@ -28,7 +28,7 @@ class Changes
 		$model->version(VersionId::changes())->delete();
 
 		// remove the model from the user's list of unsaved changes
-		App::instance()->user()->changes()->untrack($model);
+		App::instance()->site()->changes()->untrack($model);
 
 		return [
 			'status' => 'ok'
@@ -55,7 +55,7 @@ class Changes
 		);
 
 		// remove the model from the user's list of unsaved changes
-		App::instance()->user()->changes()->untrack($model);
+		App::instance()->site()->changes()->untrack($model);
 
 		return [
 			'status' => 'ok'
@@ -86,7 +86,7 @@ class Changes
 		);
 
 		// add the model to the user's list of unsaved changes
-		App::instance()->user()->changes()->track($model);
+		App::instance()->site()->changes()->track($model);
 
 		return [
 			'status' => 'ok'
