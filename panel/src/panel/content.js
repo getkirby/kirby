@@ -1,5 +1,5 @@
-import { reactive, set, del } from "vue";
-import { clone, length } from "@/helpers/object.js";
+import { reactive } from "vue";
+import debounce from "@/helpers/debounce";
 
 /**
  * @since 5.0.0
@@ -9,18 +9,39 @@ export default (panel) => {
 		/**
 		 * API endpoint to handle content changes
 		 */
-		api: null,
+		get api() {
+			return panel.view.props.api;
+		},
 
 		/**
-		 * All fields and their values that
-		 * have been changed but not yet published
+		 * Updates the values of fields
+		 *
+		 * @param {Object} fields
+		 * @param {any} value
 		 */
-		changes: {},
+		change(values) {
+			panel.view.props.content = {
+				...panel.view.props.originals,
+				...values
+			};
 
-		/**
-		 * All fields and their already published values
-		 */
-		published: {},
+			this.hasUnsavedChanges = true;
+		},
+
+		get changes() {
+			const changes = {};
+
+			for (const field in panel.view.props.content) {
+				const changed = JSON.stringify(panel.view.props.content[field]);
+				const original = JSON.stringify(panel.view.props.originals[field]);
+
+				if (changed !== original) {
+					changes[field] = panel.view.props.content[field];
+				}
+			}
+
+			return changes;
+		},
 
 		/**
 		 * Removes all unpublished changes
@@ -31,8 +52,10 @@ export default (panel) => {
 			}
 
 			this.isDiscarding = true;
+
 			await panel.post(this.api + "/changes/discard");
-			this.changes = {};
+
+			panel.view.props.content = panel.view.props.originals;
 			panel.view.reload();
 			this.isDiscarding = false;
 		},
@@ -41,16 +64,17 @@ export default (panel) => {
 		 *
 		 * @returns {Boolean}
 		 */
-		get hasUnsavedChanges() {
-			return false;
-		},
+		hasUnsavedChanges: false,
 		/**
 		 * Whether the model has changes that haven't been published yet
 		 *
 		 * @returns {Boolean}
 		 */
 		get hasUnpublishedChanges() {
-			return length(this.changes) > 0;
+			return (
+				JSON.stringify(panel.view.props.content) !==
+				JSON.stringify(panel.view.props.originals)
+			);
 		},
 		/**
 		 * Whether the model is a draft
@@ -102,12 +126,15 @@ export default (panel) => {
 				state: lock.state
 			};
 		},
+
+		get originals() {
+			return panel.view.props.originals;
+		},
+
 		/**
 		 * Publishes any changes
 		 */
-		async publish(e) {
-			e?.preventDefault?.();
-
+		async publish() {
 			if (this.isPublishing === true || this.isDiscarding === true) {
 				return;
 			}
@@ -116,8 +143,14 @@ export default (panel) => {
 
 			// Send updated values to API
 			try {
-				await panel.post(this.api + "/changes/publish", this.values);
-				await panel.view.reload();
+				await panel.post(
+					this.api + "/changes/publish",
+					panel.view.props.content
+				);
+
+				panel.view.props.originals = panel.view.props.content;
+
+				await panel.view.refresh();
 			} finally {
 				this.isPublishing = false;
 			}
@@ -134,34 +167,18 @@ export default (panel) => {
 			}
 
 			this.isSaving = true;
-			await panel.post(this.api + "/changes/save", this.values);
+			await panel.post(this.api + "/changes/save", panel.view.props.content);
 			this.isSaving = false;
-		},
-		/**
-		 * Updates the values of fields
-		 *
-		 * @param {Object} fields
-		 * @param {any} value
-		 */
-		set(values) {
-			this.changes = values;
-			this.save();
+			this.hasUnsavedChanges = false;
 		},
 		/**
 		 * Removes the content lock for the current user,
 		 * e.g. when closing/leaving the model view
 		 */
 		async unlock() {},
-		/**
-		 * Returns all fields and values incl. changes
-		 *
-		 * @returns {Object}
-		 */
+
 		get values() {
-			return {
-				...this.published,
-				...this.changes
-			};
+			return panel.view.props.content;
 		}
 	});
 };

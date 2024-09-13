@@ -1,5 +1,12 @@
 <template>
-	<component :is="preview" v-bind="props" class="k-file-preview" />
+	<component
+		:is="preview"
+		:content="content"
+		v-bind="props"
+		class="k-file-preview"
+		@input="$emit('input', $event)"
+		@submit="$emit('submit', $event)"
+	/>
 </template>
 
 <script>
@@ -10,8 +17,10 @@
 export default {
 	props: {
 		component: String,
+		content: Object,
 		props: Object
 	},
+	emits: ["input", "submit"],
 	computed: {
 		preview() {
 			if (this.$helper.isComponent(this.component)) {

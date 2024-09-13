@@ -28,11 +28,13 @@
 						"
 						v-bind="section"
 						:column="column.width"
+						:content="content"
 						:lock="lock"
 						:name="section.name"
 						:parent="parent"
 						:timestamp="$panel.view.timestamp"
 						:class="'k-section-name-' + section.name"
+						@input="$emit('input', $event)"
 						@submit="$emit('submit', $event)"
 					/>
 					<template v-else>
@@ -54,18 +56,14 @@
 <script>
 export default {
 	props: {
-		empty: String,
 		blueprint: String,
+		content: Object,
+		empty: String,
 		lock: [Boolean, Object],
 		parent: String,
 		tab: Object
 	},
-	emits: ["submit"],
-	computed: {
-		content() {
-			return this.$panel.content.values;
-		}
-	},
+	emits: ["input", "submit"],
 	methods: {
 		exists(type) {
 			return this.$helper.isComponent(`k-${type}-section`);
