@@ -15,7 +15,12 @@
 
 			<template #buttons>
 				<k-view-buttons :buttons="buttons" />
-				<k-form-buttons @discard="onDiscard" @submit="onSubmit" />
+				<k-form-controls
+					:changes="changes"
+					:lock="lock"
+					@discard="onDiscard"
+					@submit="onSubmit"
+				/>
 			</template>
 		</k-header>
 

@@ -10,9 +10,7 @@ export default {
 		blueprint: String,
 		buttons: Array,
 		content: Object,
-		lock: {
-			type: [Boolean, Object]
-		},
+		lock: Object,
 		model: {
 			type: Object,
 			default: () => ({})
@@ -43,9 +41,6 @@ export default {
 		},
 		id() {
 			return this.model.link;
-		},
-		isLocked() {
-			return this.$panel.content.isLocked;
 		},
 		protectedFields() {
 			return [];
