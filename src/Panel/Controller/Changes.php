@@ -81,6 +81,10 @@ class Changes
 			fields: [
 				...$model->version(VersionId::published())->read(),
 				...$form->strings(),
+
+				// TODO: this needs to be applied in the Version class
+				// and is only a temporary solution
+				'lock' => App::instance()->user()->id()
 			],
 			language: 'current'
 		);
