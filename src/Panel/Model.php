@@ -318,7 +318,7 @@ abstract class Model
 	 */
 	public function lock(): array|false
 	{
-		return $this->model->lock()?->toArray() ?? false;
+		return $this->model->lock()->toArray();
 	}
 
 	/**
