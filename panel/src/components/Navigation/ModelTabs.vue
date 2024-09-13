@@ -8,7 +8,10 @@
  */
 export default {
 	props: {
-		changes: Object,
+		changes: {
+			type: Object,
+			default: () => {}
+		},
 		tab: String,
 		tabs: {
 			type: Array,

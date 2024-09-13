@@ -42,6 +42,9 @@ export default {
 		id() {
 			return this.model.link;
 		},
+		isLocked() {
+			return this.lock.isActive === true;
+		},
 		protectedFields() {
 			return [];
 		}
