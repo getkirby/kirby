@@ -29,7 +29,7 @@ class Changes
 	 */
 	public function files(): Files
 	{
-		return $this->site->content()->get('changes')->toFiles();
+		return $this->site->content()->get('changes')->toFiles()->filter('hasChanges', true);
 	}
 
 	/**
@@ -37,7 +37,7 @@ class Changes
 	 */
 	public function pages(): Pages
 	{
-		return $this->site->content()->get('changes')->toPages();
+		return $this->site->content()->get('changes')->toPages()->filter('hasChanges', true);
 	}
 
 	/**
@@ -79,6 +79,6 @@ class Changes
 	 */
 	public function users(): Users
 	{
-		return $this->site->content()->get('changes')->toUsers();
+		return $this->site->content()->get('changes')->toUsers()->filter('hasChanges', true);
 	}
 }
