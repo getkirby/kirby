@@ -47,10 +47,10 @@ class Page extends Model
 	public function buttons(): array
 	{
 		return ViewButtons::view($this)->defaults(
+			'status',
 			'preview',
 			'settings',
 			'languages',
-			'status'
 		)->bind(['page' => $this->model()])
 			->render();
 	}
