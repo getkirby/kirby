@@ -30,26 +30,26 @@ class FileRules
 	public static function changeName(File $file, string $name): void
 	{
 		if ($file->permissions()->changeName() !== true) {
-			throw new PermissionException([
-				'key'  => 'file.changeName.permission',
-				'data' => ['filename' => $file->filename()]
-			]);
+			throw new PermissionException(
+				key: 'file.changeName.permission',
+				data: ['filename' => $file->filename()]
+			);
 		}
 
 		if (Str::length($name) === 0) {
-			throw new InvalidArgumentException([
-				'key' => 'file.changeName.empty'
-			]);
+			throw new InvalidArgumentException(
+				key: 'file.changeName.empty'
+			);
 		}
 
 		$parent    = $file->parent();
 		$duplicate = $parent->files()->not($file)->findBy('filename', $name . '.' . $file->extension());
 
 		if ($duplicate) {
-			throw new DuplicateException([
-				'key'  => 'file.duplicate',
-				'data' => ['filename' => $duplicate->filename()]
-			]);
+			throw new DuplicateException(
+				key: 'file.duplicate',
+				data: ['filename' => $duplicate->filename()]
+			);
 		}
 	}
 
@@ -59,10 +59,10 @@ class FileRules
 	public static function changeSort(File $file, int $sort): void
 	{
 		if ($file->permissions()->sort() !== true) {
-			throw new PermissionException([
-				'key'  => 'file.sort.permission',
-				'data' => ['filename' => $file->filename()]
-			]);
+			throw new PermissionException(
+				key: 'file.sort.permission',
+				data: ['filename' => $file->filename()]
+			);
 		}
 	}
 
@@ -75,10 +75,10 @@ class FileRules
 	public static function changeTemplate(File $file, string $template): void
 	{
 		if ($file->permissions()->changeTemplate() !== true) {
-			throw new PermissionException([
-				'key'  => 'file.changeTemplate.permission',
-				'data' => ['id' => $file->id()]
-			]);
+			throw new PermissionException(
+				key: 'file.changeTemplate.permission',
+				data: ['id' => $file->id()]
+			);
 		}
 
 		$blueprints = $file->blueprints();
@@ -89,14 +89,14 @@ class FileRules
 			count($blueprints) <= 1 ||
 			in_array($template, array_column($blueprints, 'name'), true) === false
 		) {
-			throw new LogicException([
-				'key'  => 'file.changeTemplate.invalid',
-				'data' => [
+			throw new LogicException(
+				key: 'file.changeTemplate.invalid',
+				data: [
 					'id' 		 => $file->id(),
 					'template'   => $template,
 					'blueprints' => implode(', ', array_column($blueprints, 'name'))
 				]
-			]);
+			);
 		}
 	}
 
@@ -126,12 +126,12 @@ class FileRules
 			}
 
 			// otherwise throw an error for duplicate file
-			throw new DuplicateException([
-				'key'  => 'file.duplicate',
-				'data' => [
+			throw new DuplicateException(
+				key: 'file.duplicate',
+				data: [
 					'filename' => $file->filename()
 				]
-			]);
+			);
 		}
 
 		if ($file->permissions()->create() !== true) {
@@ -174,10 +174,10 @@ class FileRules
 			(string)$upload->mime() !== (string)$file->mime() &&
 			(string)$upload->extension() !== (string)$file->extension()
 		) {
-			throw new InvalidArgumentException([
-				'key'  => 'file.mime.differs',
-				'data' => ['mime' => $file->mime()]
-			]);
+			throw new InvalidArgumentException(
+				key: 'file.mime.differs',
+				data: ['mime' => $file->mime()]
+			);
 		}
 
 		$upload->match($file->blueprint()->accept());
@@ -207,10 +207,10 @@ class FileRules
 		$extension = strtolower($extension);
 
 		if (empty($extension) === true) {
-			throw new InvalidArgumentException([
-				'key'  => 'file.extension.missing',
-				'data' => ['filename' => $file->filename()]
-			]);
+			throw new InvalidArgumentException(
+				key: 'file.extension.missing',
+				data: ['filename' => $file->filename()]
+			);
 		}
 
 		if (
@@ -218,24 +218,24 @@ class FileRules
 			Str::contains($extension, 'phar') !== false ||
 			Str::contains($extension, 'pht') !== false
 		) {
-			throw new InvalidArgumentException([
-				'key'  => 'file.type.forbidden',
-				'data' => ['type' => 'PHP']
-			]);
+			throw new InvalidArgumentException(
+				key: 'file.type.forbidden',
+				data: ['type' => 'PHP']
+			);
 		}
 
 		if (Str::contains($extension, 'htm') !== false) {
-			throw new InvalidArgumentException([
-				'key'  => 'file.type.forbidden',
-				'data' => ['type' => 'HTML']
-			]);
+			throw new InvalidArgumentException(
+				key: 'file.type.forbidden',
+				data: ['type' => 'HTML']
+			);
 		}
 
 		if (V::in($extension, ['exe', App::instance()->contentExtension()]) !== false) {
-			throw new InvalidArgumentException([
-				'key'  => 'file.extension.forbidden',
-				'data' => ['extension' => $extension]
-			]);
+			throw new InvalidArgumentException(
+				key: 'file.extension.forbidden',
+				data: ['extension' => $extension]
+			);
 		}
 	}
 
@@ -271,25 +271,23 @@ class FileRules
 
 		// check for missing filenames
 		if (empty($filename)) {
-			throw new InvalidArgumentException([
-				'key'  => 'file.name.missing'
-			]);
+			throw new InvalidArgumentException(key: 'file.name.missing');
 		}
 
 		// Block htaccess files
 		if (Str::startsWith($filename, '.ht')) {
-			throw new InvalidArgumentException([
-				'key'  => 'file.type.forbidden',
-				'data' => ['type' => 'Apache config']
-			]);
+			throw new InvalidArgumentException(
+				key: 'file.type.forbidden',
+				data: ['type' => 'Apache config']
+			);
 		}
 
 		// Block invisible files
 		if (Str::startsWith($filename, '.')) {
-			throw new InvalidArgumentException([
-				'key'  => 'file.type.forbidden',
-				'data' => ['type' => 'invisible']
-			]);
+			throw new InvalidArgumentException(
+				key: 'file.type.forbidden',
+				data: ['type' => 'invisible']
+			);
 		}
 	}
 
@@ -304,24 +302,24 @@ class FileRules
 		$mime = strtolower($mime ?? '');
 
 		if (empty($mime)) {
-			throw new InvalidArgumentException([
-				'key'  => 'file.mime.missing',
-				'data' => ['filename' => $file->filename()]
-			]);
+			throw new InvalidArgumentException(
+				key: 'file.mime.missing',
+				data: ['filename' => $file->filename()]
+			);
 		}
 
 		if (Str::contains($mime, 'php')) {
-			throw new InvalidArgumentException([
-				'key'  => 'file.type.forbidden',
-				'data' => ['type' => 'PHP']
-			]);
+			throw new InvalidArgumentException(
+				key: 'file.type.forbidden',
+				data: ['type' => 'PHP']
+			);
 		}
 
 		if (V::in($mime, ['text/html', 'application/x-msdownload'])) {
-			throw new InvalidArgumentException([
-				'key'  => 'file.mime.forbidden',
-				'data' => ['mime' => $mime]
-			]);
+			throw new InvalidArgumentException(
+				key: 'file.mime.forbidden',
+				data:['mime' => $mime]
+			);
 		}
 	}
 }

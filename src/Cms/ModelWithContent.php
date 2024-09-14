@@ -688,10 +688,10 @@ abstract class ModelWithContent implements Identifiable, Stringable
 
 		// validate the input
 		if ($validate === true && $form->isInvalid() === true) {
-			throw new InvalidArgumentException([
-				'fallback' => 'Invalid form with errors',
-				'details'  => $form->errors()
-			]);
+			throw new InvalidArgumentException(
+				fallback: 'Invalid form with errors',
+				details: $form->errors()
+			);
 		}
 
 		return $this->commit(

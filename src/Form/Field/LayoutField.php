@@ -306,12 +306,10 @@ class LayoutField extends BlocksField
 						$errors = $field->errors();
 
 						if (count($errors) > 0) {
-							throw new InvalidArgumentException([
-								'key' => 'layout.validation.settings',
-								'data' => [
-									'index' => $layoutIndex
-								]
-							]);
+							throw new InvalidArgumentException(
+								key:'layout.validation.settings',
+								data: ['index' => $layoutIndex]
+							);
 						}
 					}
 
@@ -342,15 +340,15 @@ class LayoutField extends BlocksField
 
 								// rough first validation
 								if (count($errors) > 0) {
-									throw new InvalidArgumentException([
-										'key' => 'layout.validation.block',
-										'data' => [
+									throw new InvalidArgumentException(
+										key: 'layout.validation.block',
+										data: [
 											'blockIndex'  => $blockIndex,
 											'field'       => $field->label(),
 											'fieldset'    => $fieldset->name(),
 											'layoutIndex' => $layoutIndex
 										]
-									]);
+									);
 								}
 							}
 						}

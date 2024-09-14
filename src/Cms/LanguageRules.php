@@ -31,18 +31,16 @@ class LanguageRules
 		static::validLanguageName($language);
 
 		if ($language->exists() === true) {
-			throw new DuplicateException([
-				'key'  => 'language.duplicate',
-				'data' => [
-					'code' => $language->code()
-				]
-			]);
+			throw new DuplicateException(
+				key: 'language.duplicate',
+				data: ['code' => $language->code()]
+			);
 		}
 
 		$user = App::instance()->user();
 
 		if ($user?->role()->permissions()->for('languages', 'create') !== true) {
-			throw new PermissionException(['key' => 'language.create.permission']);
+			throw new PermissionException(key: 'language.create.permission');
 		}
 	}
 
@@ -61,9 +59,9 @@ class LanguageRules
 		$user = App::instance()->user();
 
 		if ($user?->role()->permissions()->for('languages', 'delete') !== true) {
-			throw new PermissionException([
-				'key' => 'language.delete.permission'
-			]);
+			throw new PermissionException(
+				key: 'language.delete.permission'
+			);
 		}
 	}
 
@@ -92,9 +90,9 @@ class LanguageRules
 		$user = $kirby->user();
 
 		if ($user?->role()->permissions()->for('languages', 'update') !== true) {
-			throw new PermissionException([
-				'key' => 'language.update.permission'
-			]);
+			throw new PermissionException(
+				key: 'language.update.permission'
+			);
 		}
 	}
 
@@ -106,13 +104,13 @@ class LanguageRules
 	public static function validLanguageCode(Language $language): void
 	{
 		if (Str::length($language->code()) < 2) {
-			throw new InvalidArgumentException([
-				'key'  => 'language.code',
-				'data' => [
+			throw new InvalidArgumentException(
+				key: 'language.code',
+				data: [
 					'code' => $language->code(),
 					'name' => $language->name()
 				]
-			]);
+			);
 		}
 	}
 
@@ -124,13 +122,13 @@ class LanguageRules
 	public static function validLanguageName(Language $language): void
 	{
 		if (Str::length($language->name()) < 1) {
-			throw new InvalidArgumentException([
-				'key'  => 'language.name',
-				'data' => [
+			throw new InvalidArgumentException(
+				key: 'language.name',
+				data: [
 					'code' => $language->code(),
 					'name' => $language->name()
 				]
-			]);
+			);
 		}
 	}
 }

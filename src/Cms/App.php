@@ -1230,7 +1230,7 @@ class App
 		 *
 		 * We need page token verification for this before v5
 		 * hits beta. This rough implementation will only help
-		 * to get the panel integration up and running during the alpha
+		 * to get the panel integration up and running during the alpha
 		 */
 		if ($this->request()->get('_version') === 'changes') {
 			VersionId::$render = VersionId::changes();
@@ -1284,7 +1284,9 @@ class App
 				return $homePage;
 			}
 
-			throw new NotFoundException('The home page does not exist');
+			throw new NotFoundException(
+				'The home page does not exist'
+			);
 		}
 
 		// search for the page by path
@@ -1756,7 +1758,9 @@ class App
 		try {
 			return static::$version ??= Data::read(dirname(__DIR__, 2) . '/composer.json')['version'] ?? null;
 		} catch (Throwable) {
-			throw new LogicException('The Kirby version cannot be detected. The composer.json is probably missing or not readable.');
+			throw new LogicException(
+				'The Kirby version cannot be detected. The composer.json is probably missing or not readable.'
+			);
 		}
 	}
 

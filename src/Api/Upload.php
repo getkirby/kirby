@@ -113,8 +113,7 @@ readonly class Upload
 		];
 
 		throw new Exception(
-			$message[$error] ??
-			I18n::translate('upload.error.default', 'The file could not be uploaded')
+			message: $message[$error] ?? I18n::translate('upload.error.default', 'The file could not be uploaded')
 		);
 	}
 
@@ -315,7 +314,7 @@ readonly class Upload
 			return $target;
 		}
 
-		throw new Exception(I18n::translate('upload.error.cantMove'));
+		throw new Exception(message: I18n::translate('upload.error.cantMove'));
 	}
 
 	/**
@@ -360,7 +359,7 @@ readonly class Upload
 				(F::size($source) + F::size($tmp)) > $max
 			)
 		) {
-			throw new InvalidArgumentException(['key' => 'file.maxsize']);
+			throw new InvalidArgumentException(key: 'file.maxsize');
 		}
 
 		// validate the first chunk
@@ -412,6 +411,7 @@ readonly class Upload
 			// @codeCoverageIgnoreStart
 			if ($postMaxSize < $uploadMaxFileSize) {
 				throw new Exception(
+					message:
 					I18n::translate(
 						'upload.error.iniPostSize',
 						'The uploaded file exceeds the post_max_size directive in php.ini'
@@ -421,6 +421,7 @@ readonly class Upload
 			// @codeCoverageIgnoreEnd
 
 			throw new Exception(
+				message:
 				I18n::translate(
 					'upload.error.noFiles',
 					'No files were uploaded'

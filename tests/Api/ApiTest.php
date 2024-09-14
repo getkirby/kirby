@@ -431,7 +431,7 @@ class ApiTest extends TestCase
 					'pattern' => 'test',
 					'method'  => 'POST',
 					'action'  => function () {
-						throw new \Exception('nope');
+						throw new Exception('nope');
 					}
 				]
 			]
@@ -497,11 +497,11 @@ class ApiTest extends TestCase
 					'pattern' => 'test',
 					'method'  => 'POST',
 					'action'  => function () {
-						throw new NotFoundException([
-							'key'      => 'test',
-							'fallback' => 'Test',
-							'details'  => ['a' => 'A']
-						]);
+						throw new NotFoundException(
+							key: 'test',
+							fallback: 'Test',
+							details: ['a' => 'A']
+						);
 					}
 				]
 			]
@@ -530,13 +530,11 @@ class ApiTest extends TestCase
 					'pattern' => 'test',
 					'method'  => 'POST',
 					'action'  => function () {
-						throw new NotFoundException([
-							'key'      => 'test',
-							'fallback' => 'Test',
-							'details'  => [
-								'a' => 'A'
-							]
-						]);
+						throw new NotFoundException(
+							key: 'test',
+							fallback: 'Test',
+							details: ['a' => 'A']
+						);
 					}
 				]
 			]
@@ -554,7 +552,7 @@ class ApiTest extends TestCase
 			'exception' => NotFoundException::class,
 			'key'       => 'error.test',
 			'file'      => '/' . basename(__FILE__),
-			'line'      => __LINE__ - 24,
+			'line'      => __LINE__ - 22,
 			'details'   => ['a' => 'A'],
 			'route'     => 'test',
 		];

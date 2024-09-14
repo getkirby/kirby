@@ -77,7 +77,9 @@ return [
 				$parent instanceof Site === false &&
 				$parent instanceof Page === false
 			) {
-				throw new InvalidArgumentException('The parent is invalid. You must choose the site or a page as parent.');
+				throw new InvalidArgumentException(
+					'The parent is invalid. You must choose the site or a page as parent.'
+				);
 			}
 
 			return $parent;

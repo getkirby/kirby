@@ -63,7 +63,9 @@ class Pagination
 		// otherwise limit the page number to the bounds
 		if ($this->page < $min || $this->page > $max) {
 			if (static::$validate === true) {
-				throw new ErrorPageException('Pagination page ' . $this->page . ' does not exist, expected ' . $min . '-' . $max);
+				throw new ErrorPageException(
+					'Pagination page ' . $this->page . ' does not exist, expected ' . $min . '-' . $max
+				);
 			}
 
 			$this->page = max(min($this->page, $max), $min);

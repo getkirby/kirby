@@ -124,7 +124,7 @@ class Panel
 	): bool {
 		// a user has to be logged in
 		if ($user === null) {
-			throw new PermissionException(['key' => 'access.panel']);
+			throw new PermissionException(key: 'access.panel');
 		}
 
 		// get all access permissions for the user role
@@ -132,7 +132,7 @@ class Panel
 
 		// check for general panel access
 		if (($permissions['panel'] ?? true) !== true) {
-			throw new PermissionException(['key' => 'access.panel']);
+			throw new PermissionException(key: 'access.panel');
 		}
 
 		// don't check if the area is not defined
@@ -147,7 +147,7 @@ class Panel
 
 		// no access
 		if ($permissions[$areaId] !== true) {
-			throw new PermissionException(['key' => 'access.view']);
+			throw new PermissionException(key: 'access.view');
 		}
 
 		return true;

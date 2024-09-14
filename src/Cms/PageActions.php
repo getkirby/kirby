@@ -457,10 +457,9 @@ trait PageActions
 
 	/**
 	 * Copies the page to a new parent
+	 * @internal
 	 *
 	 * @throws \Kirby\Exception\DuplicateException If the page already exists
-	 *
-	 * @internal
 	 */
 	public function copy(array $options = []): static
 	{
@@ -476,12 +475,10 @@ trait PageActions
 		$slug = Url::slug($slug);
 
 		if ($parentModel->findPageOrDraft($slug)) {
-			throw new DuplicateException([
-				'key'  => 'page.duplicate',
-				'data' => [
-					'slug' => $slug
-				]
-			]);
+			throw new DuplicateException(
+				key: 'page.duplicate',
+				data: ['slug' => $slug]
+			);
 		}
 
 		$tmp = new static([
@@ -768,9 +765,7 @@ trait PageActions
 
 			// try to move the page directory on disk
 			if (Dir::move($page->root(), $newRoot) !== true) {
-				throw new LogicException([
-					'key' => 'page.move.directory'
-				]);
+				throw new LogicException(key: 'page.move.directory');
 			}
 
 			// flush all collection caches to be sure that
@@ -779,9 +774,7 @@ trait PageActions
 
 			// double-check if the new child can actually be found
 			if (!$newPage = $parent->childrenAndDrafts()->find($page->slug())) {
-				throw new LogicException([
-					'key' => 'page.move.notFound'
-				]);
+				throw new LogicException(key: 'page.move.notFound');
 			}
 
 			return $newPage;

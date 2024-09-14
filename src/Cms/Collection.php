@@ -171,7 +171,9 @@ class Collection extends BaseCollection
 
 				// make sure that there's always a proper value to group by
 				if (!$value) {
-					throw new InvalidArgumentException('Invalid grouping value for key: ' . $key);
+					throw new InvalidArgumentException(
+						'Invalid grouping value for key: ' . $key
+					);
 				}
 
 				$value = (string)$value;

@@ -82,7 +82,9 @@ abstract class Handler
 		$contents = F::read($file);
 
 		if ($contents === false) {
-			throw new Exception('The file "' . $file . '" does not exist');
+			throw new Exception(
+				'The file "' . $file . '" does not exist'
+			);
 		}
 
 		return $contents;

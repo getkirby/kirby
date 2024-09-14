@@ -78,12 +78,12 @@ class SessionData
 		$value = $this->get($key, 0);
 
 		if (is_int($value) === false) {
-			throw new LogicException([
-				'key'       => 'session.data.increment.nonInt',
-				'data'      => ['key' => $key],
-				'fallback'  => 'Session value "' . $key . '" is not an integer and cannot be incremented',
-				'translate' => false
-			]);
+			throw new LogicException(
+				key: 'session.data.increment.nonInt',
+				data: ['key' => $key],
+				fallback: 'Session value "' . $key . '" is not an integer and cannot be incremented',
+				translate: false
+			);
 		}
 
 		// increment the value, but ensure $max constraint
@@ -125,12 +125,12 @@ class SessionData
 		$value = $this->get($key, 0);
 
 		if (is_int($value) === false) {
-			throw new LogicException([
-				'key'       => 'session.data.decrement.nonInt',
-				'data'      => ['key' => $key],
-				'fallback'  => 'Session value "' . $key . '" is not an integer and cannot be decremented',
-				'translate' => false
-			]);
+			throw new LogicException(
+				key: 'session.data.decrement.nonInt',
+				data: ['key' => $key],
+				fallback: 'Session value "' . $key . '" is not an integer and cannot be decremented',
+				translate: false
+			);
 		}
 
 		// decrement the value, but ensure $min constraint

@@ -26,11 +26,11 @@ class SiteRules
 	public static function changeTitle(Site $site, string $title): void
 	{
 		if ($site->permissions()->changeTitle() !== true) {
-			throw new PermissionException(['key' => 'site.changeTitle.permission']);
+			throw new PermissionException(key: 'site.changeTitle.permission');
 		}
 
 		if (Str::length($title) === 0) {
-			throw new InvalidArgumentException(['key' => 'site.changeTitle.empty']);
+			throw new InvalidArgumentException(key: 'site.changeTitle.empty');
 		}
 	}
 
@@ -42,7 +42,7 @@ class SiteRules
 	public static function update(Site $site, array $content = []): void
 	{
 		if ($site->permissions()->update() !== true) {
-			throw new PermissionException(['key' => 'site.update.permission']);
+			throw new PermissionException(key: 'site.update.permission');
 		}
 	}
 }

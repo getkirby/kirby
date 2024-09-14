@@ -291,21 +291,23 @@ class BlocksField extends FieldClass
 		return [
 			'blocks' => function ($value) {
 				if ($this->min && count($value) < $this->min) {
-					throw new InvalidArgumentException([
-						'key'  => 'blocks.min.' . ($this->min === 1 ? 'singular' : 'plural'),
-						'data' => [
-							'min' => $this->min
-						]
-					]);
+					throw new InvalidArgumentException(
+						key: match ($this->min) {
+							1       => 'blocks.min.singular',
+							default => 'blocks.min.plural'
+						},
+						data: ['min' => $this->min]
+					);
 				}
 
 				if ($this->max && count($value) > $this->max) {
-					throw new InvalidArgumentException([
-						'key'  => 'blocks.max.' . ($this->max === 1 ? 'singular' : 'plural'),
-						'data' => [
-							'max' => $this->max
-						]
-					]);
+					throw new InvalidArgumentException(
+						key: match ($this->max) {
+							1       => 'blocks.max.singular',
+							default => 'blocks.max.plural'
+						},
+						data: ['max' => $this->max]
+					);
 				}
 
 				$fields = [];
@@ -333,14 +335,14 @@ class BlocksField extends FieldClass
 
 						// rough first validation
 						if (count($errors) > 0) {
-							throw new InvalidArgumentException([
-								'key' => 'blocks.validation',
-								'data' => [
+							throw new InvalidArgumentException(
+								key:'blocks.validation',
+								data: [
 									'field'    => $field->label(),
 									'fieldset' => $fieldset->name(),
 									'index'    => $index
 								]
-							]);
+							);
 						}
 					}
 				}

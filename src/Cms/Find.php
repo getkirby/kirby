@@ -38,12 +38,10 @@ class Find
 			return $file;
 		}
 
-		throw new NotFoundException([
-			'key'  => 'file.notFound',
-			'data' => [
-				'filename' => $filename
-			]
-		]);
+		throw new NotFoundException(
+			key: 'file.notFound',
+			data: ['filename' => $filename]
+		);
 	}
 
 	/**
@@ -58,12 +56,10 @@ class Find
 			return $language;
 		}
 
-		throw new NotFoundException([
-			'key'  => 'language.notFound',
-			'data' => [
-				'code' => $code
-			]
-		]);
+		throw new NotFoundException(
+			key: 'language.notFound',
+			data: ['code' => $code]
+		);
 	}
 
 	/**
@@ -83,12 +79,10 @@ class Find
 			return $page;
 		}
 
-		throw new NotFoundException([
-			'key'  => 'page.notFound',
-			'data' => [
-				'slug' => $id
-			]
-		]);
+		throw new NotFoundException(
+			key: 'page.notFound',
+			data: ['slug' => $id]
+		);
 	}
 
 	/**
@@ -132,9 +126,9 @@ class Find
 			default   => throw new InvalidArgumentException('Invalid model type: ' . $modelType)
 		};
 
-		return $model ?? throw new NotFoundException([
-			'key' => $modelName . '.undefined'
-		]);
+		return $model ?? throw new NotFoundException(
+			key: $modelName . '.undefined'
+		);
 	}
 
 	/**
@@ -162,15 +156,13 @@ class Find
 				$kirby->option('api.allowImpersonation', false)
 			);
 
-			return $user ?? throw new NotFoundException([
-				'key' => 'user.undefined'
-			]);
+			return $user ?? throw new NotFoundException(key: 'user.undefined');
 		}
 
 		// get a specific user by id
-		return $kirby->user($id) ?? throw new NotFoundException([
-			'key'  => 'user.notFound',
-			'data' => ['name' => $id]
-		]);
+		return $kirby->user($id) ?? throw new NotFoundException(
+			key: 'user.notFound',
+			data: ['name' => $id]
+		);
 	}
 }

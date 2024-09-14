@@ -64,7 +64,9 @@ class Locale
 		$normalizedCategory = static::normalizeConstant($category);
 
 		if (is_int($normalizedCategory) !== true) {
-			throw new InvalidArgumentException('Invalid locale category "' . $category . '"');
+			throw new InvalidArgumentException(
+				'Invalid locale category "' . $category . '"'
+			);
 		}
 
 		if ($normalizedCategory !== LC_ALL) {
@@ -72,7 +74,9 @@ class Locale
 			$locale = setlocale($normalizedCategory, 0);
 
 			if (is_string($locale) !== true) {
-				throw new Exception('Could not determine locale for category "' . $category . '"');
+				throw new Exception(
+					'Could not determine locale for category "' . $category . '"'
+				);
 			}
 
 			return $locale;

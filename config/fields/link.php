@@ -138,17 +138,17 @@ return [
 				$detected = true;
 
 				if ($options['validate']($link) === false) {
-					throw new InvalidArgumentException([
-						'key' => 'validation.' . $type
-					]);
+					throw new InvalidArgumentException(
+						key: 'validation.' . $type
+					);
 				}
 			}
 
 			// none of the configured types has been detected
 			if ($detected === false) {
-				throw new InvalidArgumentException([
-					'key' => 'validation.linkType'
-				]);
+				throw new InvalidArgumentException(
+					key: 'validation.linkType'
+				);
 			}
 
 			return true;

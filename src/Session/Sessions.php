@@ -51,13 +51,13 @@ class Sessions
 
 		// validate options
 		if (in_array($this->mode, ['cookie', 'header', 'manual'], true) === false) {
-			throw new InvalidArgumentException([
-				'data' => [
+			throw new InvalidArgumentException(
+				data: [
 					'method'   => 'Sessions::__construct',
 					'argument' => '$options[\'mode\']'
 				],
-				'translate' => false
-			]);
+				translate: false
+			);
 		}
 
 		// trigger automatic garbage collection with the given probability
@@ -73,13 +73,13 @@ class Sessions
 				$this->collectGarbage();
 			}
 		} elseif ($gcInterval !== false) {
-			throw new InvalidArgumentException([
-				'data' => [
+			throw new InvalidArgumentException(
+				data: [
 					'method'   => 'Sessions::__construct',
 					'argument' => '$options[\'gcInterval\']'
 				],
-				'translate' => false
-			]);
+				translate: false
+			);
 		}
 	}
 
@@ -131,14 +131,14 @@ class Sessions
 		$token = match ($this->mode) {
 			'cookie' => $this->tokenFromCookie(),
 			'header' => $this->tokenFromHeader(),
-			'manual' => throw new LogicException([
-				'key'       => 'session.sessions.manualMode',
-				'fallback'  => 'Cannot automatically get current session in manual mode',
-				'translate' => false,
-				'httpCode'  => 500
-			]),
+			'manual' => throw new LogicException(
+				key: 'session.sessions.manualMode',
+				fallback: 'Cannot automatically get current session in manual mode',
+				translate: false,
+				httpCode: 500
+			),
 			// unexpected error that shouldn't occur
-			default => throw new Exception(['translate' => false]) // @codeCoverageIgnore
+			default => throw new Exception(translate: false) // @codeCoverageIgnore
 		};
 
 		// no token was found, no session

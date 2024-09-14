@@ -40,13 +40,13 @@ class FileSessionStore extends SessionStore
 
 		// make sure it is usable for storage
 		if (is_writable($this->path) === false) {
-			throw new Exception([
-				'key'       => 'session.filestore.dirNotWritable',
-				'data'      => ['path' => $this->path],
-				'fallback'  => 'The session storage directory "' . $path . '" is not writable',
-				'translate' => false,
-				'httpCode'  => 500
-			]);
+			throw new Exception(
+				key: 'session.filestore.dirNotWritable',
+				data: ['path' => $this->path],
+				fallback: 'The session storage directory "' . $path . '" is not writable',
+				translate: false,
+				httpCode: 500
+			);
 		}
 	}
 
@@ -127,12 +127,12 @@ class FileSessionStore extends SessionStore
 
 		// @codeCoverageIgnoreStart
 		if ($result !== true) {
-			throw new Exception([
-				'key'       => 'session.filestore.unexpectedFilesystemError',
-				'fallback'  => 'Unexpected file system error',
-				'translate' => false,
-				'httpCode'  => 500
-			]);
+			throw new Exception(
+				key: 'session.filestore.unexpectedFilesystemError',
+				fallback: 'Unexpected file system error',
+				translate: false,
+				httpCode: 500
+			);
 		}
 		// @codeCoverageIgnoreEnd
 
@@ -168,12 +168,12 @@ class FileSessionStore extends SessionStore
 
 		// @codeCoverageIgnoreStart
 		if ($result !== true) {
-			throw new Exception([
-				'key'       => 'session.filestore.unexpectedFilesystemError',
-				'fallback'  => 'Unexpected file system error',
-				'translate' => false,
-				'httpCode'  => 500
-			]);
+			throw new Exception(
+				key: 'session.filestore.unexpectedFilesystemError',
+				fallback: 'Unexpected file system error',
+				translate: false,
+				httpCode: 500
+			);
 		}
 		// @codeCoverageIgnoreEnd
 
@@ -203,12 +203,12 @@ class FileSessionStore extends SessionStore
 
 			if ($result !== true) {
 				// @codeCoverageIgnoreStart
-				throw new Exception([
-					'key'       => 'session.filestore.unexpectedFilesystemError',
-					'fallback'  => 'Unexpected file system error',
-					'translate' => false,
-					'httpCode'  => 500
-				]);
+				throw new Exception(
+					key: 'session.filestore.unexpectedFilesystemError',
+					fallback: 'Unexpected file system error',
+					translate: false,
+					httpCode: 500
+				);
 				// @codeCoverageIgnoreEnd
 			}
 		}
@@ -230,12 +230,12 @@ class FileSessionStore extends SessionStore
 
 			if ($result !== true) {
 				// @codeCoverageIgnoreStart
-				throw new Exception([
-					'key'       => 'session.filestore.unexpectedFilesystemError',
-					'fallback'  => 'Unexpected file system error',
-					'translate' => false,
-					'httpCode'  => 500
-				]);
+				throw new Exception(
+					key: 'session.filestore.unexpectedFilesystemError',
+					fallback: 'Unexpected file system error',
+					translate: false,
+					httpCode: 500
+				);
 				// @codeCoverageIgnoreEnd
 			}
 		}
@@ -260,24 +260,24 @@ class FileSessionStore extends SessionStore
 
 		// validate that we have an exclusive lock already
 		if (isset($this->isLocked[$name]) === false) {
-			throw new LogicException([
-				'key'       => 'session.filestore.notLocked',
-				'data'      => ['name' => $name],
-				'fallback'  => 'Cannot write to session "' . $name . '", because it is not locked',
-				'translate' => false,
-				'httpCode'  => 500
-			]);
+			throw new LogicException(
+				key: 'session.filestore.notLocked',
+				data: ['name' => $name],
+				fallback: 'Cannot write to session "' . $name . '", because it is not locked',
+				translate: false,
+				httpCode: 500
+			);
 		}
 
 		// delete all file contents first
 		if (rewind($handle) !== true || ftruncate($handle, 0) !== true) {
 			// @codeCoverageIgnoreStart
-			throw new Exception([
-				'key'       => 'session.filestore.unexpectedFilesystemError',
-				'fallback'  => 'Unexpected file system error',
-				'translate' => false,
-				'httpCode'  => 500
-			]);
+			throw new Exception(
+				key: 'session.filestore.unexpectedFilesystemError',
+				fallback: 'Unexpected file system error',
+				translate: false,
+				httpCode: 500
+			);
 			// @codeCoverageIgnoreEnd
 		}
 
@@ -286,12 +286,12 @@ class FileSessionStore extends SessionStore
 
 		if (is_int($result) === false || $result === 0) {
 			// @codeCoverageIgnoreStart
-			throw new Exception([
-				'key'       => 'session.filestore.unexpectedFilesystemError',
-				'fallback'  => 'Unexpected file system error',
-				'translate' => false,
-				'httpCode'  => 500
-			]);
+			throw new Exception(
+				key: 'session.filestore.unexpectedFilesystemError',
+				fallback: 'Unexpected file system error',
+				translate: false,
+				httpCode: 500
+			);
 			// @codeCoverageIgnoreEnd
 		}
 	}
@@ -324,12 +324,12 @@ class FileSessionStore extends SessionStore
 		// file still exists, delete it
 		if (@F::unlink($path) !== true) {
 			// @codeCoverageIgnoreStart
-			throw new Exception([
-				'key'       => 'session.filestore.unexpectedFilesystemError',
-				'fallback'  => 'Unexpected file system error',
-				'translate' => false,
-				'httpCode'  => 500
-			]);
+			throw new Exception(
+				key: 'session.filestore.unexpectedFilesystemError',
+				fallback: 'Unexpected file system error',
+				translate: false,
+				httpCode: 500
+			);
 			// @codeCoverageIgnoreEnd
 		}
 	}
@@ -420,13 +420,13 @@ class FileSessionStore extends SessionStore
 		clearstatcache();
 
 		if (is_file($path) === false) {
-			throw new NotFoundException([
-				'key'       => 'session.filestore.notFound',
-				'data'      => ['name' => $name],
-				'fallback'  => 'Session file "' . $name . '" does not exist',
-				'translate' => false,
-				'httpCode'  => 404
-			]);
+			throw new NotFoundException(
+				key: 'session.filestore.notFound',
+				data: ['name' => $name],
+				fallback: 'Session file "' . $name . '" does not exist',
+				translate: false,
+				httpCode: 404
+			);
 		}
 
 		// return from cache
@@ -438,13 +438,13 @@ class FileSessionStore extends SessionStore
 		$handle = @fopen($path, 'r+b');
 
 		if (is_resource($handle) === false) {
-			throw new Exception([
-				'key'       => 'session.filestore.notOpened',
-				'data'      => ['name' => $name],
-				'fallback'  => 'Session file "' . $name . '" could not be opened',
-				'translate' => false,
-				'httpCode'  => 500
-			]);
+			throw new Exception(
+				key: 'session.filestore.notOpened',
+				data: ['name' => $name],
+				fallback: 'Session file "' . $name . '" could not be opened',
+				translate: false,
+				httpCode: 500
+			);
 		}
 
 		return $this->handles[$name] = $handle;
@@ -467,12 +467,12 @@ class FileSessionStore extends SessionStore
 
 		if ($result !== true) {
 			// @codeCoverageIgnoreStart
-			throw new Exception([
-				'key'       => 'session.filestore.unexpectedFilesystemError',
-				'fallback'  => 'Unexpected file system error',
-				'translate' => false,
-				'httpCode'  => 500
-			]);
+			throw new Exception(
+				key: 'session.filestore.unexpectedFilesystemError',
+				fallback: 'Unexpected file system error',
+				translate: false,
+				httpCode: 500
+			);
 			// @codeCoverageIgnoreEnd
 		}
 	}

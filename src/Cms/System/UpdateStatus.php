@@ -350,14 +350,10 @@ class UpdateStatus
 		try {
 			return Semver::satisfies($version, $constraint);
 		} catch (Exception $e) {
-			$package = $this->packageName();
-			$message = 'Error comparing version constraint for ' . $package . ' ' . $reason . ': ' . $e->getMessage();
-
-			$exception = new KirbyException([
-				'fallback' => $message,
-				'previous' => $e
-			]);
-			$this->exceptions[] = $exception;
+			$this->exceptions[] = new KirbyException(
+				previous: $e,
+				fallback: 'Error comparing version constraint for ' . $this->packageName() . ' ' . $reason . ': ' . $e->getMessage(),
+			);
 
 			return false;
 		}
@@ -378,7 +374,9 @@ class UpdateStatus
 			foreach ($filters as $key => $version) {
 				if (isset($item[$key]) !== true) {
 					$package = $this->packageName();
-					$this->exceptions[] = new KirbyException('Missing constraint ' . $key . ' for ' . $package . ' ' . $reason);
+					$this->exceptions[] = new KirbyException(
+						'Missing constraint ' . $key . ' for ' . $package . ' ' . $reason
+					);
 
 					return false;
 				}
@@ -547,7 +545,9 @@ class UpdateStatus
 		// before we request the data, ensure we have a writable cache;
 		// this reduces strain on the CDN from repeated requests
 		if ($cache->enabled() === false) {
-			$this->exceptions[] = new KirbyException('Cannot check for updates without a working "updates" cache');
+			$this->exceptions[] = new KirbyException(
+				'Cannot check for updates without a working "updates" cache'
+			);
 
 			return null;
 		}
@@ -578,10 +578,10 @@ class UpdateStatus
 			$package = $this->packageName();
 			$message = 'Could not load update data for ' . $package . ': ' . $e->getMessage();
 
-			$exception = new KirbyException([
-				'fallback' => $message,
-				'previous' => $e
-			]);
+			$exception = new KirbyException(
+				fallback: $message,
+				previous: $e
+			);
 			$this->exceptions[] = $exception;
 
 			// if the request timed out, prevent additional

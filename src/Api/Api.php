@@ -234,7 +234,9 @@ class Api
 		array|BaseCollection|null $collection = null
 	): Collection {
 		if (isset($this->collections[$name]) === false) {
-			throw new NotFoundException(sprintf('The collection "%s" does not exist', $name));
+			throw new NotFoundException(
+				message: sprintf('The collection "%s" does not exist', $name)
+			);
 		}
 
 		return new Collection($this, $collection, $this->collections[$name]);
@@ -261,7 +263,9 @@ class Api
 		}
 
 		if ($this->hasData($key) === false) {
-			throw new NotFoundException(sprintf('Api data for "%s" does not exist', $key));
+			throw new NotFoundException(
+				message: sprintf('Api data for "%s" does not exist', $key)
+			);
 		}
 
 		// lazy-load data wrapped in Closures
@@ -321,7 +325,9 @@ class Api
 		$name ??= $this->match($this->models, $object);
 
 		if (isset($this->models[$name]) === false) {
-			throw new NotFoundException(sprintf('The model "%s" does not exist', $name ?? 'NULL'));
+			throw new NotFoundException(
+				message: sprintf('The model "%s" does not exist', $name ?? 'NULL')
+			);
 		}
 
 		return new Model($this, $object, $this->models[$name]);
@@ -430,7 +436,9 @@ class Api
 			return $this->collection($collection, $object);
 		}
 
-		throw new NotFoundException(sprintf('The object "%s" cannot be resolved', $object::class));
+		throw new NotFoundException(
+			message: sprintf('The object "%s" cannot be resolved', $object::class)
+		);
 	}
 
 	/**

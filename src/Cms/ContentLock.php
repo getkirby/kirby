@@ -54,7 +54,7 @@ class ContentLock
 			$this->data['lock']['user'] !== $this->user()->id()
 		) {
 			$id = ContentLocks::id($this->model);
-			throw new DuplicateException($id . ' is already locked');
+			throw new DuplicateException(message: $id . ' is already locked');
 		}
 
 		$this->data['lock'] = [
@@ -138,10 +138,10 @@ class ContentLock
 
 		// check if lock was set by another user
 		if ($this->data['lock']['user'] !== $this->user()->id()) {
-			throw new LogicException([
-				'fallback' => 'The content lock can only be removed by the user who created it. Use unlock instead.',
-				'httpCode' => 409
-			]);
+			throw new LogicException(
+				fallback: 'The content lock can only be removed by the user who created it. Use unlock instead.',
+				httpCode: 409
+			);
 		}
 
 		return $this->clearLock();

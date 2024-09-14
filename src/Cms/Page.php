@@ -988,9 +988,7 @@ class Page extends ModelWithContent
 			};
 
 			if ($template->exists() === false) {
-				throw new NotFoundException([
-					'key' => 'template.default.notFound'
-				]);
+				throw new NotFoundException(key: 'template.default.notFound');
 			}
 
 			$kirby->data = $this->controller($data, $contentType);

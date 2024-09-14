@@ -27,7 +27,9 @@ return [
 
 			// csrf token check
 			if ($auth->type() === 'session' && $auth->csrf() === false) {
-				throw new InvalidArgumentException('Invalid CSRF token');
+				throw new InvalidArgumentException(
+					'Invalid CSRF token'
+				);
 			}
 
 			$user = $auth->verifyChallenge($this->requestBody('code'));
@@ -49,7 +51,9 @@ return [
 
 			// csrf token check
 			if ($auth->type() === 'session' && $auth->csrf() === false) {
-				throw new InvalidArgumentException('Invalid CSRF token');
+				throw new InvalidArgumentException(
+					'Invalid CSRF token'
+				);
 			}
 
 			$email    = $this->requestBody('email');
@@ -58,7 +62,9 @@ return [
 
 			if ($password) {
 				if (isset($methods['password']) !== true) {
-					throw new InvalidArgumentException('Login with password is not enabled');
+					throw new InvalidArgumentException(
+						'Login with password is not enabled'
+					);
 				}
 
 				if (
@@ -73,7 +79,9 @@ return [
 				$mode = match (true) {
 					isset($methods['code']) 		  => 'login',
 					isset($methods['password-reset']) => 'password-reset',
-					default => throw new InvalidArgumentException('Login without password is not enabled')
+					default => throw new InvalidArgumentException(
+						'Login without password is not enabled'
+					)
 				};
 
 				$status = $auth->createChallenge($email, $long, $mode);

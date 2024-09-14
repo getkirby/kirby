@@ -70,7 +70,9 @@ class PHP extends Handler
 	public static function read(string $file): array
 	{
 		if (is_file($file) !== true) {
-			throw new Exception('The file "' . $file . '" does not exist');
+			throw new Exception(
+				'The file "' . $file . '" does not exist'
+			);
 		}
 
 		return (array)F::load($file, [], allowOutput: false);

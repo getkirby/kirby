@@ -358,9 +358,9 @@ class PageCreateDialog
 			$form = Form::for($this->model(), ['values' => $input['content']]);
 
 			if ($form->isInvalid() === true) {
-				throw new InvalidArgumentException([
-					'key' => 'page.changeStatus.incomplete'
-				]);
+				throw new InvalidArgumentException(
+					key: 'page.changeStatus.incomplete'
+				);
 			}
 		}
 

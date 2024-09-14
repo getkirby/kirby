@@ -61,7 +61,9 @@ class Data
 		}
 
 		if ($handler === null || class_exists($handler) === false) {
-			throw new Exception('Missing handler for type: "' . $type . '"');
+			throw new Exception(
+				'Missing handler for type: "' . $type . '"'
+			);
 		}
 
 		$handler = new $handler();

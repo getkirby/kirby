@@ -210,13 +210,13 @@ return [
 					$errors = $field->errors();
 
 					if (empty($errors) === false) {
-						throw new InvalidArgumentException([
-							'key'  => 'structure.validation',
-							'data' => [
+						throw new InvalidArgumentException(
+							key: 'structure.validation',
+							data: [
 								'field' => $field->label() ?? Str::ucfirst($field->name()),
 								'index' => $index + 1
 							]
-						]);
+						);
 					}
 				}
 			}

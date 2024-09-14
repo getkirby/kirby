@@ -28,12 +28,10 @@ return [
 			$page = Find::page($id);
 
 			if ($page->blueprint()->num() !== 'default') {
-				throw new PermissionException([
-					'key'  => 'page.sort.permission',
-					'data' => [
-						'slug' => $page->slug()
-					]
-				]);
+				throw new PermissionException(
+					key: 'page.sort.permission',
+					data: ['slug' => $page->slug()]
+				);
 			}
 
 			return [
@@ -150,12 +148,10 @@ return [
 			$blueprints = $page->blueprints();
 
 			if (count($blueprints) <= 1) {
-				throw new Exception([
-					'key'  => 'page.changeTemplate.invalid',
-					'data' => [
-						'slug' => $id
-					]
-				]);
+				throw new Exception(
+					key: 'page.changeTemplate.invalid',
+					data: ['slug' => $id]
+				);
 			}
 
 			return [
@@ -372,7 +368,7 @@ return [
 				$page->childrenAndDrafts()->count() > 0 &&
 				$request->get('check') !== $page->title()->value()
 			) {
-				throw new InvalidArgumentException(['key' => 'page.delete.confirm']);
+				throw new InvalidArgumentException(key: 'page.delete.confirm');
 			}
 
 			$page->delete(true);

@@ -40,10 +40,10 @@ trait AppCaches
 		$types = $this->extensions['cacheTypes'] ?? [];
 
 		if (array_key_exists($type, $types) === false) {
-			throw new InvalidArgumentException([
-				'key'  => 'cache.type.invalid',
-				'data' => ['type' => $type]
-			]);
+			throw new InvalidArgumentException(
+				key: 'cache.type.invalid',
+				data: ['type' => $type]
+			);
 		}
 
 		$className = $types[$type];
@@ -53,10 +53,10 @@ trait AppCaches
 
 		// check if it is a usable cache object
 		if ($cache instanceof Cache === false) {
-			throw new InvalidArgumentException([
-				'key'  => 'cache.type.invalid',
-				'data' => ['type' => $type]
-			]);
+			throw new InvalidArgumentException(
+				key: 'cache.type.invalid',
+				data: ['type' => $type]
+			);
 		}
 
 		return $this->caches[$key] = $cache;

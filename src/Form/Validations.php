@@ -26,9 +26,7 @@ class Validations
 	{
 		if ($field->isEmpty($value) === false) {
 			if (is_bool($value) === false) {
-				throw new InvalidArgumentException([
-					'key' => 'validation.boolean'
-				]);
+				throw new InvalidArgumentException(key: 'validation.boolean');
 			}
 		}
 
@@ -45,7 +43,7 @@ class Validations
 		if ($field->isEmpty($value) === false) {
 			if (V::date($value) !== true) {
 				throw new InvalidArgumentException(
-					V::message('date', $value)
+					message: V::message('date', $value)
 				);
 			}
 		}
@@ -63,7 +61,7 @@ class Validations
 		if ($field->isEmpty($value) === false) {
 			if (V::email($value) === false) {
 				throw new InvalidArgumentException(
-					V::message('email', $value)
+					message: V::message('email', $value)
 				);
 			}
 		}
@@ -84,7 +82,7 @@ class Validations
 		) {
 			if (V::max($value, $field->max()) === false) {
 				throw new InvalidArgumentException(
-					V::message('max', $value, $field->max())
+					message: V::message('max', $value, $field->max())
 				);
 			}
 		}
@@ -105,7 +103,7 @@ class Validations
 		) {
 			if (V::maxLength($value, $field->maxlength()) === false) {
 				throw new InvalidArgumentException(
-					V::message('maxlength', $value, $field->maxlength())
+					message: V::message('maxlength', $value, $field->maxlength())
 				);
 			}
 		}
@@ -126,7 +124,7 @@ class Validations
 		) {
 			if (V::min($value, $field->min()) === false) {
 				throw new InvalidArgumentException(
-					V::message('min', $value, $field->min())
+					message: V::message('min', $value, $field->min())
 				);
 			}
 		}
@@ -147,7 +145,7 @@ class Validations
 		) {
 			if (V::minLength($value, $field->minlength()) === false) {
 				throw new InvalidArgumentException(
-					V::message('minlength', $value, $field->minlength())
+					message: V::message('minlength', $value, $field->minlength())
 				);
 			}
 		}
@@ -171,7 +169,7 @@ class Validations
 
 				if (V::match($value, '/' . $pattern . '/i') === false) {
 					throw new InvalidArgumentException(
-						V::message('match')
+						message: V::message('match')
 					);
 				}
 			}
@@ -192,9 +190,7 @@ class Validations
 			$field->save() === true &&
 			$field->isEmpty($value) === true
 		) {
-			throw new InvalidArgumentException([
-				'key' => 'validation.required'
-			]);
+			throw new InvalidArgumentException(key: 'validation.required');
 		}
 
 		return true;
@@ -211,9 +207,7 @@ class Validations
 			$values = array_column($field->options(), 'value');
 
 			if (in_array($value, $values, true) !== true) {
-				throw new InvalidArgumentException([
-					'key' => 'validation.option'
-				]);
+				throw new InvalidArgumentException(key: 'validation.option');
 			}
 		}
 
@@ -231,9 +225,9 @@ class Validations
 			$values = array_column($field->options(), 'value');
 			foreach ($value as $val) {
 				if (in_array($val, $values, true) === false) {
-					throw new InvalidArgumentException([
-						'key' => 'validation.option'
-					]);
+					throw new InvalidArgumentException(
+						key: 'validation.option'
+					);
 				}
 			}
 		}
@@ -251,7 +245,7 @@ class Validations
 		if ($field->isEmpty($value) === false) {
 			if (V::time($value) !== true) {
 				throw new InvalidArgumentException(
-					V::message('time', $value)
+					message: V::message('time', $value)
 				);
 			}
 		}
@@ -269,7 +263,7 @@ class Validations
 		if ($field->isEmpty($value) === false) {
 			if (V::url($value) === false) {
 				throw new InvalidArgumentException(
-					V::message('url', $value)
+					message: V::message('url', $value)
 				);
 			}
 		}
