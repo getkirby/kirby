@@ -31,7 +31,7 @@ export function detect(value, _types) {
  * @returns {String}
  */
 export function getFileUUID(value) {
-	return value.replace(/^\/(.*\/)?@\/file\//, "file://");
+	return value.replace("/@/file/", "file://");
 }
 
 /**
@@ -51,7 +51,7 @@ export function getPageUUID(value) {
 export function isFileUUID(value) {
 	return (
 		value.startsWith("file://") === true ||
-		value.match(/^\/(.*\/)?@\/file\//) !== null
+		value.startsWith("/@/file/") === true
 	);
 }
 

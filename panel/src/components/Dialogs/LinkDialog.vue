@@ -59,7 +59,10 @@ export default {
 		submit() {
 			let permalink = "/@/$1/";
 
-			if (window.panel.language.code) {
+			if (
+				this.values.href.startsWith("page://") &&
+				window.panel.language.code
+			) {
 				permalink = "/" + window.panel.language.code + permalink;
 			}
 

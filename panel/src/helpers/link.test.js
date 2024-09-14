@@ -45,12 +45,6 @@ describe("$helper.link.getFileUUID()", () => {
 		expect(link.getFileUUID("/@/file/324hjk24")).toStrictEqual(
 			"file://324hjk24"
 		);
-		expect(link.getFileUUID("/en/@/file/324hjk24")).toStrictEqual(
-			"file://324hjk24"
-		);
-		expect(link.getFileUUID("/de/@/file/324hjk24")).toStrictEqual(
-			"file://324hjk24"
-		);
 	});
 });
 
@@ -72,7 +66,6 @@ describe("$helper.link.isFileUUID()", () => {
 	it("should detect UUID", () => {
 		expect(link.isFileUUID("file://324hjk24")).toBeTruthy();
 		expect(link.isFileUUID("/@/file/324hjk24")).toBeTruthy();
-		expect(link.isFileUUID("/en/@/file/324hjk24")).toBeTruthy();
 	});
 });
 

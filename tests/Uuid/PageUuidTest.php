@@ -124,7 +124,7 @@ class PageUuidTest extends TestCase
 	/**
 	 * @dataProvider multilangProvider
 	 * @covers ::id
-	 * @covers \Kirby\Uuid\ModelUuid::url
+	 * @covers ::url
 	 */
 	public function testMultilang(string $language, string $title)
 	{
