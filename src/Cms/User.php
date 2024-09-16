@@ -568,33 +568,36 @@ class User extends ModelWithContent
 	}
 
 	/**
-	 * Returns all available roles
-	 * for this user, that can be selected
-	 * by the authenticated user
+	 * Returns all available roles for this user,
+	 * that can be selected by the authenticated user
+	 *
+	 * @param string|null $purpose User action for which the roles are used (create, change)
 	 */
-	public function roles(): Roles
+	public function roles(string|null $purpose = null): Roles
 	{
 		$kirby = $this->kirby();
 		$roles = $kirby->roles();
 
-		// a collection with just the one role of the user
-		$myRole = $roles->filter('id', $this->role()->id());
-
-		// if there's an authenticated user …
-		// admin users can select pretty much any role
-		if ($kirby->user()?->isAdmin() === true) {
-			// except if the user is the last admin
-			if ($this->isLastAdmin() === true) {
-				// in which case they have to stay admin
-				return $myRole;
-			}
-
-			// return all roles for mighty admins
-			return $roles;
+		// for the last admin, only their current role (admin) is available
+		if ($this->isLastAdmin() === true) {
+			// a collection with just the one role of the user
+			return $roles->filter('id', $this->role()->id());
 		}
 
-		// any other user can only keep their role
-		return $myRole;
+		// filter roles based on the user action
+		// as user permissions and/or options can restrict these further
+		$roles = match ($purpose) {
+			'create' => $roles->canBeCreated(),
+			'change' => $roles->canBeChanged(),
+			default  => $roles
+		};
+
+		// exclude the admin role, if the user isn't an admin themselves
+		if ($kirby->user()?->isAdmin() !== true) {
+			$roles = $roles->filter(fn ($role) => $role->name() !== 'admin');
+		}
+
+		return $roles;
 	}
 
 	/**

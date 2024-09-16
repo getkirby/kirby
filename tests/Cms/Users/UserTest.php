@@ -341,6 +341,107 @@ class UserTest extends TestCase
 		];
 	}
 
+	/**
+	 * @covers ::roles
+	 */
+	public function testRoles(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor'],
+				['name' => 'guest']
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+		]);
+
+		// last admin has only admin role as option
+		$user  = $app->user('admin@getkirby.com');
+		$roles = $user->roles()->values(fn ($role) => $role->id());
+		$this->assertSame(['admin'], $roles);
+
+		// normal user should not have admin as option
+		$user  = $app->user('editor@getkirby.com');
+		$roles = $user->roles()->values(fn ($role) => $role->id());
+		$this->assertSame(['editor', 'guest'], $roles);
+
+		// only if current user is admin, normal user can also have admin option
+		$app->impersonate('admin@getkirby.com');
+		$user  = $app->user('editor@getkirby.com');
+		$roles = $user->roles()->values(fn ($role) => $role->id());
+		$this->assertSame(['admin', 'editor', 'guest'], $roles);
+	}
+
+	/**
+	 * @covers ::roles
+	 */
+	public function testRolesFilteredForPurpose(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'blueprints' => [
+				'users/admin' => [
+					'name' => 'admin',
+				],
+				'users/editor' => [
+					'name' => 'editor',
+				],
+				'users/client' => [
+					'name'    => 'client',
+					'options' => [
+						'create' => [
+							'editor' => false
+						]
+					]
+				],
+				'users/guest' => [
+					'name' => 'guest',
+					'options' => [
+						'changeRole' => [
+							'editor' => false
+						]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+		$user  = $app->user('editor@getkirby.com');
+
+		$roles = $user->roles()->values(fn ($role) => $role->id());
+		$this->assertSame(['client', 'editor', 'guest'], $roles);
+
+		$roles = $user->roles('create')->values(fn ($role) => $role->id());
+		$this->assertSame(['editor', 'guest'], $roles);
+
+		$roles = $user->roles('change')->values(fn ($role) => $role->id());
+		$this->assertSame(['client', 'editor'], $roles);
+	}
+
 	public function testSecret()
 	{
 		$app = new App([
