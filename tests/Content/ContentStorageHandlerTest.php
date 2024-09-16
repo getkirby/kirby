@@ -506,6 +506,38 @@ class ContentStorageHandlerTest extends TestCase
 	}
 
 	/**
+	 * @covers ::replaceStrings
+	 */
+	public function testReplaceStrings()
+	{
+		$this->setUpMultiLanguage();
+
+		$versionId = VersionId::changes();
+		$language  = $this->app->language('en');
+
+		$handler = new TestContentStorageHandler(
+			model: $this->model
+		);
+
+		$fields = [
+			'foo' => 'one step',
+			'bar' => 'two steps'
+		];
+
+		$handler->create($versionId, $language, $fields);
+		$this->assertSame($fields, $handler->read($versionId, $language));
+
+		$handler->replaceStrings($versionId, $language, ['step' => 'jump']);
+
+		$expected = [
+			'foo' => 'one jump',
+			'bar' => 'two jumps'
+		];
+
+		$this->assertSame($expected, $handler->read($versionId, $language));
+	}
+
+	/**
 	 * @covers ::touchLanguage
 	 */
 	public function testTouchLanguageMultiLanguage()

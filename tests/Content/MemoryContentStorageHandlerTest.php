@@ -327,34 +327,6 @@ class MemoryContentStorageHandlerTest extends TestCase
 	}
 
 	/**
-	 * @covers ::replaceStrings
-	 */
-	public function testReplaceStrings()
-	{
-		$this->setUpMultiLanguage();
-
-		$versionId = VersionId::changes();
-		$language  = $this->app->language('en');
-
-		$fields = [
-			'foo' => 'one step',
-			'bar' => 'two steps'
-		];
-
-		$this->storage->create($versionId, $language, $fields);
-		$this->assertSame($fields, $this->storage->read($versionId, $language));
-
-		$this->storage->replaceStrings($versionId, $language, ['step' => 'jump']);
-
-		$expected = [
-			'foo' => 'one jump',
-			'bar' => 'two jumps'
-		];
-
-		$this->assertSame($expected, $this->storage->read($versionId, $language));
-	}
-
-	/**
 	 * @covers ::touch
 	 */
 	public function testTouchMultiLang()
