@@ -2,8 +2,6 @@
 
 namespace Kirby\Content;
 
-use Kirby\Cms\ModelWithContent;
-use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
 use Stringable;
 
