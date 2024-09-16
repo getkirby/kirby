@@ -85,7 +85,7 @@ class LanguageTranslations
 	 */
 	public function root(): string|null
 	{
-		if ($root = App::instance()->root('translations')) {
+		if ($root = App::instance()->root('language:variables')) {
 			return $root . '/' . $this->language->code() . '.php';
 		}
 
