@@ -23,7 +23,12 @@
 			</template>
 		</k-header>
 
-		<k-file-preview v-bind="preview" />
+		<k-file-preview
+			v-bind="preview"
+			:content="content"
+			@input="onInput"
+			@submit="onSubmit"
+		/>
 
 		<k-model-tabs :tab="tab.name" :tabs="tabs" />
 
