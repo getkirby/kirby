@@ -2,8 +2,6 @@
 
 namespace Kirby\Content;
 
-use Kirby\Cms\File;
-use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 

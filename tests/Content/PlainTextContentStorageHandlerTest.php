@@ -7,7 +7,6 @@ use Kirby\Cms\Language;
 use Kirby\Cms\Page;
 use Kirby\Cms\User;
 use Kirby\Data\Data;
-use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 
