@@ -15,7 +15,7 @@
 
 			<template #buttons>
 				<k-view-buttons :buttons="buttons" />
-				<k-form-buttons />
+				<k-form-buttons @discard="onDiscard" @submit="onSubmit" />
 			</template>
 		</k-header>
 
@@ -23,11 +23,13 @@
 
 		<k-sections
 			:blueprint="blueprint"
+			:content="content"
 			:empty="$t('site.blueprint')"
 			:lock="lock"
 			:tab="tab"
 			parent="site"
-			@submit="$emit('submit', $event)"
+			@input="onInput"
+			@submit="onSubmit"
 		/>
 	</k-panel-inside>
 </template>

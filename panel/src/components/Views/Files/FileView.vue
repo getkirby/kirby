@@ -19,7 +19,7 @@
 
 			<template #buttons>
 				<k-view-buttons :buttons="buttons" @action="onAction" />
-				<k-form-buttons />
+				<k-form-buttons @discard="onDiscard" @submit="onSubmit" />
 			</template>
 		</k-header>
 
@@ -29,10 +29,13 @@
 
 		<k-sections
 			:blueprint="blueprint"
+			:content="content"
 			:empty="$t('file.blueprint', { blueprint: $esc(blueprint) })"
 			:lock="lock"
 			:parent="id"
 			:tab="tab"
+			@input="onInput"
+			@submit="onSubmit"
 		/>
 	</k-panel-inside>
 </template>
