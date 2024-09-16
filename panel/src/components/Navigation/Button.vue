@@ -19,7 +19,7 @@
 			</slot>
 		</span>
 		<span v-if="dropdown && (text || $slots.default)" class="k-button-arrow">
-			<k-icon type="angle-down" />
+			<k-icon type="angle-dropdown" />
 		</span>
 	</component>
 </template>
@@ -364,9 +364,9 @@ export default {
 
 /** Dropdown arrow **/
 .k-button-arrow {
-	--icon-size: 14px;
 	width: max-content;
-	margin-inline-start: -0.125rem;
+	margin-inline-start: -0.25rem;
+	margin-inline-end: -0.125rem;
 }
 
 /** Disabled button **/
