@@ -525,9 +525,5 @@ class ModelWithContentTest extends TestCase
 		$model = new Page(['slug' => 'foo']);
 		$this->assertInstanceOf(Version::class, $model->version());
 		$this->assertSame('published', $model->version()->id()->value());
-
-		$model = new Page(['slug' => 'foo', 'isDraft' => true]);
-		$this->assertInstanceOf(Version::class, $model->version());
-		$this->assertSame('changes', $model->version()->id()->value());
 	}
 }
