@@ -8,8 +8,8 @@ use Kirby\Filesystem\F;
 use Throwable;
 
 /**
- * Manages the translations string for a language,
- * either from the language file or `translations` root
+ * Manages the variables string for a language,
+ * either from the language file or `language:variables` root
  * @since 5.0.0
  *
  * @package   Kirby Cms
@@ -18,7 +18,7 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class LanguageTranslations
+class LanguageVariables
 {
 	public function __construct(
 		protected Language $language,
@@ -28,20 +28,20 @@ class LanguageTranslations
 	}
 
 	/**
-	 * Deletes the current language translations file
+	 * Deletes the current language variables file
 	 * if custom root defined
 	 */
 	public function delete(): void
 	{
 		if ($file = $this->root()) {
 			if (F::remove($file) !== true) {
-				throw new Exception('The language translations could not be deleted');
+				throw new Exception('The language variables could not be deleted');
 			}
 		}
 	}
 
 	/**
-	 * Returns a single translation string by key
+	 * Returns a single variable string by key
 	 */
 	public function get(string $key, string|null $default = null): string|null
 	{
@@ -49,7 +49,7 @@ class LanguageTranslations
 	}
 
 	/**
-	 * Loads the language translations based on custom roots
+	 * Loads the language variables based on custom roots
 	 */
 	public function load(): array
 	{
@@ -65,13 +65,13 @@ class LanguageTranslations
 	}
 
 	/**
-	 * Saves the language translations in the custom root
+	 * Saves the language variables in the custom root
 	 * @return $this
 	 * @internal
 	 */
-	public function save(array $translations = []): static
+	public function save(array $variables = []): static
 	{
-		$this->data = $translations;
+		$this->data = $variables;
 
 		if ($root = $this->root()) {
 			Data::write($root, $this->data);
@@ -81,7 +81,7 @@ class LanguageTranslations
 	}
 
 	/**
-	 * Returns custom translations root path if defined
+	 * Returns custom variables root path if defined
 	 */
 	public function root(): string|null
 	{
@@ -93,7 +93,7 @@ class LanguageTranslations
 	}
 
 	/**
-	 * Removes a translation key
+	 * Removes a variable key
 	 *
 	 * @return $this
 	 */
@@ -104,7 +104,7 @@ class LanguageTranslations
 	}
 
 	/**
-	 * Sets the translation key
+	 * Sets the variable key
 	 *
 	 * @return $this
 	 */
@@ -115,7 +115,7 @@ class LanguageTranslations
 	}
 
 	/**
-	 * Returns translations
+	 * Returns variables
 	 */
 	public function toArray(): array
 	{
@@ -123,7 +123,7 @@ class LanguageTranslations
 	}
 
 	/**
-	 * Updates the translations data
+	 * Updates the variables data
 	 */
 	public function update(array $data = []): static
 	{

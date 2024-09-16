@@ -17,8 +17,8 @@ return [
 			$language     = Find::language($code);
 			$link         = '/languages/' . $language->code();
 			$strings      = [];
-			$foundation   = $kirby->defaultLanguage()->translations()->toArray();
-			$translations = $language->translations()->toArray();
+			$foundation   = $kirby->defaultLanguage()->variables()->toArray();
+			$variables    = $language->variables()->toArray();
 
 			// TODO: update following line and adapt for update and
 			// delete options when `languageVariables.*` permissions available
@@ -29,7 +29,7 @@ return [
 			foreach ($foundation as $key => $value) {
 				$strings[] = [
 					'key'     => $key,
-					'value'   => $translations[$key] ?? null,
+					'value'   => $variables[$key] ?? null,
 					'options' => [
 						[
 							'click'    => 'update',

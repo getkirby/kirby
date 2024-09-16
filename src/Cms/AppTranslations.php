@@ -33,7 +33,7 @@ trait AppTranslations
 			) {
 				$data = [
 					...$data,
-					...$language->translations()->toArray()
+					...$language->variables()->toArray()
 				];
 			}
 
@@ -140,7 +140,7 @@ trait AppTranslations
 		if ($language = $this->language($locale)) {
 			$inject = [
 				...$inject,
-				...$language->translations()->toArray()
+				...$language->variables()->toArray()
 			];
 		}
 
@@ -166,14 +166,14 @@ trait AppTranslations
 		// injects languages translations
 		if ($languages = $this->languages()) {
 			foreach ($languages as $language) {
-				$languageCode         = $language->code();
-				$languageTranslations = $language->translations()->toArray();
+				$languageCode      = $language->code();
+				$languageVariables = $language->variables()->toArray();
 
 				// merges language translations with extensions translations
-				if (empty($languageTranslations) === false) {
+				if (empty($languageVariables) === false) {
 					$translations[$languageCode] = [
 						...$translations[$languageCode] ?? [],
-						...$languageTranslations
+						...$languageVariables
 					];
 				}
 			}
