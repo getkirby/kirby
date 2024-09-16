@@ -228,8 +228,8 @@ class Version
 		// the version needs to exist
 		$this->ensure($language);
 
-		// update the default version
-		$this->model->version(VersionId::default($this->model))->save(
+		// update the published version
+		$this->model->version(VersionId::published())->save(
 			fields: $this->read($language),
 			language: $language
 		);

@@ -189,7 +189,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		$new = $this->clone(['template' => $blueprint]);
 
 		// temporary compatibility change (TODO: also convert changes)
-		$identifier = VersionId::default($this);
+		$identifier = VersionId::published();
 
 		// for multilang, we go through all translations and
 		// covnert the content for each of them, remove the content file
@@ -724,7 +724,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	{
 		return new Version(
 			model: $this,
-			id: VersionId::from($versionId ?? VersionId::default($this))
+			id: VersionId::from($versionId ?? VersionId::published())
 		);
 	}
 

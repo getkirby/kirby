@@ -68,14 +68,6 @@ class VersionId implements Stringable
 	}
 
 	/**
-	 * Returns the default version id for the model
-	 */
-	public static function default(ModelWithContent $model): static
-	{
-		return VersionId::published();
-	}
-
-	/**
 	 * Creates a VersionId instance from a simple string value
 	 */
 	public static function from(VersionId|string $value): static

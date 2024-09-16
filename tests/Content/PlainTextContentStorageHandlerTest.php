@@ -649,29 +649,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		]);
 
 		$storage = new PlainTextContentStorageHandler($model);
-		$this->assertSame(static::TMP . '/content/_drafts/a-page/article.txt', $storage->contentFile(VersionId::changes(), Language::single()));
-	}
-
-	/**
-	 * @covers ::contentFile
-	 */
-	public function testContentFileDraftPublished()
-	{
-		$this->setUpSingleLanguage();
-
-		$model = new Page([
-			'kirby' => $this->app,
-			'root' => static::TMP,
-			'isDraft' => true,
-			'slug' => 'a-page',
-			'template' => 'article'
-		]);
-
-		$storage = new PlainTextContentStorageHandler($model);
-
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Drafts cannot have a published content file');
-		$storage->contentFile(VersionId::published(), Language::single());
+		$this->assertSame(static::TMP . '/content/_drafts/a-page/_changes/article.txt', $storage->contentFile(VersionId::changes(), Language::single()));
 	}
 
 	/**
