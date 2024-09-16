@@ -180,9 +180,9 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 			return true;
 		}
 
-		// A non-default version or non-default language version does not exist
+		// A changed version or non-default language version does not exist
 		// if the content file was not found
-		if (VersionId::default($this->model)->is($versionId) === false || $language->isDefault() === false) {
+		if (VersionId::published()->is($versionId) === false || $language->isDefault() === false) {
 			return false;
 		}
 

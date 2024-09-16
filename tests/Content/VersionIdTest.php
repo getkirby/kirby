@@ -35,27 +35,6 @@ class VersionIdTest extends TestCase
 	}
 
 	/**
-	 * @covers ::default
-	 */
-	public function testDefault()
-	{
-		$draft   = new Page(['slug' => 'test', 'isDraft' => true]);
-		$version = VersionId::default($draft);
-
-		$this->assertTrue($version->is(VersionId::CHANGES));
-
-		$unlisted = new Page(['slug' => 'test', 'isDraft' => false]);
-		$version  = VersionId::default($unlisted);
-
-		$this->assertTrue($version->is(VersionId::PUBLISHED));
-
-		$file    = new File(['filename' => 'foo.jpg', 'parent' => $unlisted]);
-		$version = VersionId::default($file);
-
-		$this->assertTrue($version->is(VersionId::PUBLISHED));
-	}
-
-	/**
 	 * @covers ::from
 	 * @covers ::value
 	 */
