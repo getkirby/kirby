@@ -61,7 +61,9 @@ class PHP extends Handler
 	 */
 	public static function decode($string): array
 	{
-		throw new BadMethodCallException('The PHP::decode() method is not implemented');
+		throw new BadMethodCallException(
+			message: 'The PHP::decode() method is not implemented'
+		);
 	}
 
 	/**
@@ -71,7 +73,7 @@ class PHP extends Handler
 	{
 		if (is_file($file) !== true) {
 			throw new Exception(
-				'The file "' . $file . '" does not exist'
+				message: 'The file "' . $file . '" does not exist'
 			);
 		}
 

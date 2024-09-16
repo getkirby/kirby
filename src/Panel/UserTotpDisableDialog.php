@@ -91,7 +91,7 @@ class UserTotpDisableDialog
 				$this->user->validatePassword($password);
 			} elseif ($this->kirby->user()->isAdmin() === false) {
 				throw new PermissionException(
-					'You are not allowed to disable TOTP for other users'
+					message: 'You are not allowed to disable TOTP for other users'
 				);
 			}
 

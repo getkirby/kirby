@@ -65,7 +65,7 @@ class Locale
 
 		if (is_int($normalizedCategory) !== true) {
 			throw new InvalidArgumentException(
-				'Invalid locale category "' . $category . '"'
+				message: 'Invalid locale category "' . $category . '"'
 			);
 		}
 
@@ -75,7 +75,7 @@ class Locale
 
 			if (is_string($locale) !== true) {
 				throw new Exception(
-					'Could not determine locale for category "' . $category . '"'
+					message: 'Could not determine locale for category "' . $category . '"'
 				);
 			}
 
@@ -123,7 +123,9 @@ class Locale
 			return [LC_ALL => $locale];
 		}
 
-		throw new InvalidArgumentException('Locale must be string or array');
+		throw new InvalidArgumentException(
+			message: 'Locale must be string or array'
+		);
 	}
 
 	/**

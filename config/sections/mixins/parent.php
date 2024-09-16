@@ -25,7 +25,7 @@ return [
 
 				if (!$parent) {
 					throw new Exception(
-						'The parent for the query "' . $query . '" cannot be found in the section "' . $this->name() . '"'
+						message: 'The parent for the query "' . $query . '" cannot be found in the section "' . $this->name() . '"'
 					);
 				}
 
@@ -36,7 +36,7 @@ return [
 					$parent instanceof User === false
 				) {
 					throw new Exception(
-						'The parent for the section "' . $this->name() . '" has to be a page, site or user object'
+						message: 'The parent for the section "' . $this->name() . '" has to be a page, site or user object'
 					);
 				}
 			}

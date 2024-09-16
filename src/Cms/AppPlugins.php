@@ -886,7 +886,7 @@ trait AppPlugins
 
 		if (isset(static::$plugins[$name]) === true) {
 			throw new DuplicateException(
-				'The plugin "' . $name . '" has already been registered'
+				message: 'The plugin "' . $name . '" has already been registered'
 			);
 		}
 

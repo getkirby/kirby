@@ -834,7 +834,9 @@ class App
 			return $response->json($input)->send();
 		}
 
-		throw new InvalidArgumentException('Unexpected input');
+		throw new InvalidArgumentException(
+			message: 'Unexpected input'
+		);
 	}
 
 	/**
@@ -1285,7 +1287,7 @@ class App
 			}
 
 			throw new NotFoundException(
-				'The home page does not exist'
+				message: 'The home page does not exist'
 			);
 		}
 
@@ -1759,7 +1761,7 @@ class App
 			return static::$version ??= Data::read(dirname(__DIR__, 2) . '/composer.json')['version'] ?? null;
 		} catch (Throwable) {
 			throw new LogicException(
-				'The Kirby version cannot be detected. The composer.json is probably missing or not readable.'
+				message: 'The Kirby version cannot be detected. The composer.json is probably missing or not readable.'
 			);
 		}
 	}

@@ -35,7 +35,7 @@ return [
 
 				if ($parent === null) {
 					throw new InvalidArgumentException(
-						'"' . $uploads['parent'] . '" could not be resolved as a valid parent for the upload'
+						message: '"' . $uploads['parent'] . '" could not be resolved as a valid parent for the upload'
 					);
 				}
 
@@ -55,7 +55,7 @@ return [
 		'upload' => function (Api $api, $params, Closure $map) {
 			if ($params === false) {
 				throw new Exception(
-					'Uploads are disabled for this field'
+					message: 'Uploads are disabled for this field'
 				);
 			}
 
@@ -73,7 +73,7 @@ return [
 
 				if ($file instanceof File === false) {
 					throw new Exception(
-						'The file could not be uploaded'
+						message: 'The file could not be uploaded'
 					);
 				}
 

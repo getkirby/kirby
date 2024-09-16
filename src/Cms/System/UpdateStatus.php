@@ -546,7 +546,7 @@ class UpdateStatus
 		// this reduces strain on the CDN from repeated requests
 		if ($cache->enabled() === false) {
 			$this->exceptions[] = new KirbyException(
-				'Cannot check for updates without a working "updates" cache'
+				message: 'Cannot check for updates without a working "updates" cache'
 			);
 
 			return null;
@@ -556,7 +556,7 @@ class UpdateStatus
 		// we collect it below for debugging
 		try {
 			if (static::$timedOut === true) {
-				throw new Exception('Previous remote request timed out'); // @codeCoverageIgnore
+				throw new Exception(message: 'Previous remote request timed out'); // @codeCoverageIgnore
 			}
 
 			$response = Remote::get(
@@ -566,13 +566,13 @@ class UpdateStatus
 
 			// allow status code HTTP 200 or 0 (e.g. for the file:// protocol)
 			if (in_array($response->code(), [0, 200], true) !== true) {
-				throw new Exception('HTTP error ' . $response->code()); // @codeCoverageIgnore
+				throw new Exception(message: 'HTTP error ' . $response->code()); // @codeCoverageIgnore
 			}
 
 			$data = $response->json();
 
 			if (is_array($data) !== true) {
-				throw new Exception('Invalid JSON data');
+				throw new Exception(message: 'Invalid JSON data');
 			}
 		} catch (Exception $e) {
 			$package = $this->packageName();

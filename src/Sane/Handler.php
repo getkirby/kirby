@@ -83,7 +83,7 @@ abstract class Handler
 
 		if ($contents === false) {
 			throw new Exception(
-				'The file "' . $file . '" does not exist'
+				message: 'The file "' . $file . '" does not exist'
 			);
 		}
 

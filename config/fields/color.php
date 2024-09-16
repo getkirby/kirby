@@ -26,7 +26,7 @@ return [
 		'format' => function (string $format = 'hex'): string {
 			if (in_array($format, ['hex', 'hsl', 'rgb'], true) === false) {
 				throw new InvalidArgumentException(
-					'Unsupported format for color field (supported: hex, rgb, hsl)'
+					message: 'Unsupported format for color field (supported: hex, rgb, hsl)'
 				);
 			}
 
@@ -39,7 +39,7 @@ return [
 		'mode' => function (string $mode = 'picker'): string {
 			if (in_array($mode, ['picker', 'input', 'options'], true) === false) {
 				throw new InvalidArgumentException(
-					'Unsupported mode for color field (supported: picker, input, options)'
+					message: 'Unsupported mode for color field (supported: picker, input, options)'
 				);
 			}
 

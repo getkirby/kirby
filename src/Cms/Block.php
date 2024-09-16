@@ -69,7 +69,7 @@ class Block extends Item implements Stringable
 
 		if (isset($params['type']) === false) {
 			throw new InvalidArgumentException(
-				'The block type is missing'
+				message: 'The block type is missing'
 			);
 		}
 

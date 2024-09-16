@@ -49,25 +49,25 @@ return [
 			// csrf token check
 			if ($auth->type() === 'session' && $auth->csrf() === false) {
 				throw new InvalidArgumentException(
-					'Invalid CSRF token'
+					message: 'Invalid CSRF token'
 				);
 			}
 
 			if ($system->isOk() === false) {
 				throw new Exception(
-					'The server is not setup correctly'
+					message: 'The server is not setup correctly'
 				);
 			}
 
 			if ($system->isInstallable() === false) {
 				throw new Exception(
-					'The Panel cannot be installed'
+					message: 'The Panel cannot be installed'
 				);
 			}
 
 			if ($system->isInstalled() === true) {
 				throw new Exception(
-					'The Panel is already installed'
+					message: 'The Panel is already installed'
 				);
 			}
 

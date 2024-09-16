@@ -154,7 +154,7 @@ class Translation extends ContentTranslation
 	public function parent(): ModelWithContent
 	{
 		throw new Exception(
-			'`$translation->parent()` has been deprecated. Please use `$translation->model()` instead'
+			message: '`$translation->parent()` has been deprecated. Please use `$translation->model()` instead'
 		);
 	}
 
@@ -186,7 +186,7 @@ class Translation extends ContentTranslation
 	public function update(array|null $data = null, bool $overwrite = false): static
 	{
 		throw new Exception(
-			'`$translation->update()` has been deprecated. Please use `$model->version()->update()` instead'
+			message: '`$translation->update()` has been deprecated. Please use `$model->version()->update()` instead'
 		);
 	}
 

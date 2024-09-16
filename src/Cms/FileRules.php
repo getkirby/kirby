@@ -271,7 +271,9 @@ class FileRules
 
 		// check for missing filenames
 		if (empty($filename)) {
-			throw new InvalidArgumentException(key: 'file.name.missing');
+			throw new InvalidArgumentException(
+				key: 'file.name.missing'
+			);
 		}
 
 		// Block htaccess files

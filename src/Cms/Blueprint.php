@@ -45,13 +45,13 @@ class Blueprint
 	{
 		if (empty($props['model']) === true) {
 			throw new InvalidArgumentException(
-				'A blueprint model is required'
+				message: 'A blueprint model is required'
 			);
 		}
 
 		if ($props['model'] instanceof ModelWithContent === false) {
 			throw new InvalidArgumentException(
-				'Invalid blueprint model'
+				message: 'Invalid blueprint model'
 			);
 		}
 
@@ -528,7 +528,7 @@ class Blueprint
 
 		if (isset($props['name']) === false) {
 			throw new InvalidArgumentException(
-				'The field name is missing'
+				message: 'The field name is missing'
 			);
 		}
 
@@ -537,7 +537,7 @@ class Blueprint
 
 		if ($type !== 'group' && isset(Field::$types[$type]) === false) {
 			throw new InvalidArgumentException(
-				'Invalid field type ("' . $type . '")'
+				message: 'Invalid field type ("' . $type . '")'
 			);
 		}
 

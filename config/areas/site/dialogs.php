@@ -368,7 +368,9 @@ return [
 				$page->childrenAndDrafts()->count() > 0 &&
 				$request->get('check') !== $page->title()->value()
 			) {
-				throw new InvalidArgumentException(key: 'page.delete.confirm');
+				throw new InvalidArgumentException(
+					key: 'page.delete.confirm'
+				);
 			}
 
 			$page->delete(true);

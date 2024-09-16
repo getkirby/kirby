@@ -196,7 +196,7 @@ class Api extends BaseApi
 	): mixed {
 		if (!$section = $model->blueprint()?->section($name)) {
 			throw new NotFoundException(
-				'The section "' . $name . '" could not be found'
+				message: 'The section "' . $name . '" could not be found'
 			);
 		}
 

@@ -39,7 +39,7 @@ abstract class Handler
 
 		if ($contents === false) {
 			throw new Exception(
-				'The file "' . $file . '" does not exist or cannot be read'
+				message: 'The file "' . $file . '" does not exist or cannot be read'
 			);
 		}
 

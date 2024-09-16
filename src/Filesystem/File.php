@@ -80,7 +80,9 @@ class File implements Stringable
 			$this->model !== null &&
 			method_exists($this->model, 'hasIsFileTrait') !== true
 		) {
-			throw new InvalidArgumentException('The model object must use the "Kirby\Filesystem\IsFile" trait');
+			throw new InvalidArgumentException(
+				message: 'The model object must use the "Kirby\Filesystem\IsFile" trait'
+			);
 		}
 	}
 
@@ -116,7 +118,7 @@ class File implements Stringable
 	{
 		if (F::copy($this->root(), $target, $force) !== true) {
 			throw new Exception(
-				'The file "' . $this->root() . '" could not be copied'
+				message: 'The file "' . $this->root() . '" could not be copied'
 			);
 		}
 
@@ -143,7 +145,7 @@ class File implements Stringable
 	{
 		if (F::remove($this->root()) !== true) {
 			throw new Exception(
-				'The file "' . $this->root() . '" could not be deleted'
+				message: 'The file "' . $this->root() . '" could not be deleted'
 			);
 		}
 
@@ -386,7 +388,7 @@ class File implements Stringable
 	{
 		if (F::move($this->root(), $newRoot, $overwrite) !== true) {
 			throw new Exception(
-				'The file: "' . $this->root() . '" could not be moved to: "' . $newRoot . '"'
+				message: 'The file: "' . $this->root() . '" could not be moved to: "' . $newRoot . '"'
 			);
 		}
 
@@ -443,7 +445,7 @@ class File implements Stringable
 
 		if ($newRoot === false) {
 			throw new Exception(
-				'The file: "' . $this->root() . '" could not be renamed to: "' . $newName . '"'
+				message: 'The file: "' . $this->root() . '" could not be renamed to: "' . $newName . '"'
 			);
 		}
 
@@ -570,7 +572,7 @@ class File implements Stringable
 	{
 		if (F::write($this->root(), $content) !== true) {
 			throw new Exception(
-				'The file "' . $this->root() . '" could not be written'
+				message: 'The file "' . $this->root() . '" could not be written'
 			);
 		}
 

@@ -54,7 +54,9 @@ class ContentLock
 			$this->data['lock']['user'] !== $this->user()->id()
 		) {
 			$id = ContentLocks::id($this->model);
-			throw new DuplicateException(message: $id . ' is already locked');
+			throw new DuplicateException(
+				message: $id . ' is already locked'
+			);
 		}
 
 		$this->data['lock'] = [
@@ -217,6 +219,8 @@ class ContentLock
 	protected function user(): User
 	{
 		return $this->kirby()->user() ??
-			throw new AuthException('No user authenticated.');
+			throw new AuthException(
+				message: 'No user authenticated.'
+			);
 	}
 }

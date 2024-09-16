@@ -222,7 +222,9 @@ return [
 						$error .= ' for the link text "' . $tag->text . '"';
 					}
 
-					throw new NotFoundException(message: $error);
+					throw new NotFoundException(
+						message: $error
+					);
 				}
 
 				$tag->value = Url::to($tag->kirby()->site()->errorPageId());

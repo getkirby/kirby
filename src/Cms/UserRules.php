@@ -115,7 +115,9 @@ class UserRules
 			$user->kirby()->user()->isAdmin() === false &&
 			$role === 'admin'
 		) {
-			throw new PermissionException(key: 'user.changeRole.toAdmin');
+			throw new PermissionException(
+				key: 'user.changeRole.toAdmin'
+			);
 		}
 
 		static::validRole($user, $role);
@@ -152,7 +154,9 @@ class UserRules
 			$currentUser->is($user) === false &&
 			$currentUser->isAdmin() === false
 		) {
-			throw new PermissionException('You cannot change the time-based code for ' . $user->email());
+			throw new PermissionException(
+				message: 'You cannot change the time-based code for ' . $user->email()
+			);
 		}
 
 		// safety check to avoid accidental insecure secrets;
@@ -195,7 +199,9 @@ class UserRules
 		$role = $props['role'] ?? null;
 
 		if ($role === 'admin' && $currentUser?->isAdmin() === false) {
-			throw new PermissionException(key: 'user.create.permission');
+			throw new PermissionException(
+				key: 'user.create.permission'
+			);
 		}
 
 		// check user permissions (if not on install)
@@ -203,7 +209,9 @@ class UserRules
 			$user->kirby()->users()->count() > 0 &&
 			$user->permissions()->create() !== true
 		) {
-			throw new PermissionException(key: 'user.create.permission');
+			throw new PermissionException(
+				key: 'user.create.permission'
+			);
 		}
 	}
 
@@ -216,11 +224,15 @@ class UserRules
 	public static function delete(User $user): void
 	{
 		if ($user->isLastAdmin() === true) {
-			throw new LogicException(key: 'user.delete.lastAdmin');
+			throw new LogicException(
+				key: 'user.delete.lastAdmin'
+			);
 		}
 
 		if ($user->isLastUser() === true) {
-			throw new LogicException(key: 'user.delete.lastUser');
+			throw new LogicException(
+				key: 'user.delete.lastUser'
+			);
 		}
 
 		if ($user->permissions()->delete() !== true) {
@@ -261,7 +273,9 @@ class UserRules
 		bool $strict = false
 	): void {
 		if (V::email($email ?? null) === false) {
-			throw new InvalidArgumentException(key: 'user.email.invalid');
+			throw new InvalidArgumentException(
+				key: 'user.email.invalid'
+			);
 		}
 
 		$duplicate = match ($strict) {

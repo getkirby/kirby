@@ -26,7 +26,9 @@ class Validations
 	{
 		if ($field->isEmpty($value) === false) {
 			if (is_bool($value) === false) {
-				throw new InvalidArgumentException(key: 'validation.boolean');
+				throw new InvalidArgumentException(
+					key: 'validation.boolean'
+				);
 			}
 		}
 
@@ -190,7 +192,9 @@ class Validations
 			$field->save() === true &&
 			$field->isEmpty($value) === true
 		) {
-			throw new InvalidArgumentException(key: 'validation.required');
+			throw new InvalidArgumentException(
+				key: 'validation.required'
+			);
 		}
 
 		return true;
@@ -207,7 +211,9 @@ class Validations
 			$values = array_column($field->options(), 'value');
 
 			if (in_array($value, $values, true) !== true) {
-				throw new InvalidArgumentException(key: 'validation.option');
+				throw new InvalidArgumentException(
+					key: 'validation.option'
+				);
 			}
 		}
 

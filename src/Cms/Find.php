@@ -123,7 +123,9 @@ class Find
 			// and filename
 			'file'    => static::file(...preg_split('$.*\K(/files/)$', $path)),
 			'user'    => $kirby->user(basename($path)),
-			default   => throw new InvalidArgumentException('Invalid model type: ' . $modelType)
+			default   => throw new InvalidArgumentException(
+				message: 'Invalid model type: ' . $modelType
+			)
 		};
 
 		return $model ?? throw new NotFoundException(
@@ -156,7 +158,9 @@ class Find
 				$kirby->option('api.allowImpersonation', false)
 			);
 
-			return $user ?? throw new NotFoundException(key: 'user.undefined');
+			return $user ?? throw new NotFoundException(
+				key: 'user.undefined'
+			);
 		}
 
 		// get a specific user by id

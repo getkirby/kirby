@@ -409,7 +409,7 @@ return [
 
 			if ($model === null) {
 				throw new NotFoundException(
-					'The model could not be found for "' . $path . '" uuid'
+					message: 'The model could not be found for "' . $path . '" uuid'
 				);
 			}
 

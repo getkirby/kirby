@@ -113,7 +113,9 @@ trait PageActions
 	public function changeNum(int|null $num = null): static
 	{
 		if ($this->isDraft() === true) {
-			throw new LogicException('Drafts cannot change their sorting number');
+			throw new LogicException(
+				message: 'Drafts cannot change their sorting number'
+			);
 		}
 
 		// don't run the action if everything stayed the same
@@ -135,7 +137,9 @@ trait PageActions
 					// of the moved new page to use fly actions on old page in loop
 					$oldPage->root = $newPage->root();
 				} else {
-					throw new LogicException('The page directory cannot be moved');
+					throw new LogicException(
+						message: 'The page directory cannot be moved'
+					);
 				}
 			}
 
@@ -189,7 +193,9 @@ trait PageActions
 
 				// actually move stuff on disk
 				if (Dir::move($oldPage->root(), $newPage->root()) !== true) {
-					throw new LogicException('The page directory cannot be moved');
+					throw new LogicException(
+						message: 'The page directory cannot be moved'
+					);
 				}
 
 				// remove from the siblings
@@ -218,11 +224,15 @@ trait PageActions
 		$language = $this->kirby()->language($languageCode);
 
 		if (!$language) {
-			throw new NotFoundException('The language: "' . $languageCode . '" does not exist');
+			throw new NotFoundException(
+				message: 'The language: "' . $languageCode . '" does not exist'
+			);
 		}
 
 		if ($language->isDefault() === true) {
-			throw new InvalidArgumentException('Use the changeSlug method to change the slug for the default language');
+			throw new InvalidArgumentException(
+				message: 'Use the changeSlug method to change the slug for the default language'
+			);
 		}
 
 		$arguments = ['page' => $this, 'slug' => $slug, 'languageCode' => $language->code()];
@@ -259,7 +269,9 @@ trait PageActions
 			'draft'    => $this->changeStatusToDraft(),
 			'listed'   => $this->changeStatusToListed($position),
 			'unlisted' => $this->changeStatusToUnlisted(),
-			default    => throw new InvalidArgumentException('Invalid status: ' . $status)
+			default    => throw new InvalidArgumentException(
+				message: 'Invalid status: ' . $status
+			)
 		};
 	}
 
@@ -765,7 +777,9 @@ trait PageActions
 
 			// try to move the page directory on disk
 			if (Dir::move($page->root(), $newRoot) !== true) {
-				throw new LogicException(key: 'page.move.directory');
+				throw new LogicException(
+					key: 'page.move.directory'
+				);
 			}
 
 			// flush all collection caches to be sure that
@@ -774,7 +788,9 @@ trait PageActions
 
 			// double-check if the new child can actually be found
 			if (!$newPage = $parent->childrenAndDrafts()->find($page->slug())) {
-				throw new LogicException(key: 'page.move.notFound');
+				throw new LogicException(
+					key: 'page.move.notFound'
+				);
 			}
 
 			return $newPage;
@@ -800,7 +816,9 @@ trait PageActions
 		// actually do it on disk
 		if ($this->exists() === true) {
 			if (Dir::move($this->root(), $page->root()) !== true) {
-				throw new LogicException('The draft folder cannot be moved');
+				throw new LogicException(
+					message: 'The draft folder cannot be moved'
+				);
 			}
 
 			// Get the draft folder and check if there are any other drafts
@@ -863,7 +881,9 @@ trait PageActions
 
 		// if the page is not included in the siblings something went wrong
 		if ($index === false) {
-			throw new LogicException('The page is not included in the sorting index');
+			throw new LogicException(
+				message: 'The page is not included in the sorting index'
+			);
 		}
 
 		if ($position > count($keys)) {
@@ -957,7 +977,9 @@ trait PageActions
 		// actually do it on disk
 		if ($this->exists() === true) {
 			if (Dir::move($this->root(), $page->root()) !== true) {
-				throw new LogicException('The page folder cannot be moved to drafts');
+				throw new LogicException(
+					message: 'The page folder cannot be moved to drafts'
+				);
 			}
 		}
 

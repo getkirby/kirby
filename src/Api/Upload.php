@@ -49,7 +49,7 @@ readonly class Upload
 
 		if (strlen($id) < 3) {
 			throw new InvalidArgumentException(
-				'Chunk ID must at least be 3 characters long'
+				message: 'Chunk ID must at least be 3 characters long'
 			);
 		}
 
@@ -314,7 +314,9 @@ readonly class Upload
 			return $target;
 		}
 
-		throw new Exception(message: I18n::translate('upload.error.cantMove'));
+		throw new Exception(
+			message: I18n::translate('upload.error.cantMove')
+		);
 	}
 
 	/**
@@ -359,7 +361,9 @@ readonly class Upload
 				(F::size($source) + F::size($tmp)) > $max
 			)
 		) {
-			throw new InvalidArgumentException(key: 'file.maxsize');
+			throw new InvalidArgumentException(
+				key: 'file.maxsize'
+			);
 		}
 
 		// validate the first chunk
@@ -368,7 +372,7 @@ readonly class Upload
 			// but tmp file already exists
 			if (F::exists($tmp) === true) {
 				throw new DuplicateException(
-					'A tmp file upload with the same filename and upload id already exists: ' . $filename
+					message: 'A tmp file upload with the same filename and upload id already exists: ' . $filename
 				);
 			}
 
@@ -385,14 +389,14 @@ readonly class Upload
 		// no tmp in place
 		if (F::exists($tmp) === false) {
 			throw new NotFoundException(
-				'Chunk offset ' . $offset . ' for non-existing tmp file: ' . $filename
+				message: 'Chunk offset ' . $offset . ' for non-existing tmp file: ' . $filename
 			);
 		}
 
 		// sent chunk's offset is not the continuation of the tmp file
 		if ($offset !== F::size($tmp)) {
 			throw new InvalidArgumentException(
-				'Chunk offset ' . $offset . ' does not match the existing tmp upload file size of ' . F::size($tmp)
+				message: 'Chunk offset ' . $offset . ' does not match the existing tmp upload file size of ' . F::size($tmp)
 			);
 		}
 	}
