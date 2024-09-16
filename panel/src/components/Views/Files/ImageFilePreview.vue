@@ -46,6 +46,7 @@
  */
 export default {
 	props: {
+		content: Object,
 		details: Array,
 		focusable: Boolean,
 		image: {
@@ -57,7 +58,7 @@ export default {
 	emits: ["focus"],
 	computed: {
 		focus() {
-			const focus = this.$panel.content.values["focus"];
+			const focus = this.content.focus;
 
 			if (!focus) {
 				return;
@@ -101,7 +102,7 @@ export default {
 				focus = `${focus.x.toFixed(1)}% ${focus.y.toFixed(1)}%`;
 			}
 
-			this.$panel.content.set({ focus });
+			this.$emit("input", { focus });
 		}
 	}
 };
