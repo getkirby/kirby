@@ -66,6 +66,17 @@ class VersionId implements Stringable
 	}
 
 	/**
+	 * List of available version ids
+	 */
+	public static function list(): array
+	{
+		return [
+			static::published(),
+			static::changes(),
+		];
+	}
+
+	/**
 	 * Creates a VersionId instance from a simple string value
 	 */
 	public static function from(VersionId|string $value): static

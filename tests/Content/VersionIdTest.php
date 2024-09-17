@@ -66,6 +66,18 @@ class VersionIdTest extends TestCase
 	}
 
 	/**
+	 * @covers ::list
+	 */
+	public function testList()
+	{
+		$list = VersionId::list();
+
+		$this->assertCount(2, $list);
+		$this->assertSame('published', $list[0]->value());
+		$this->assertSame('changes', $list[1]->value());
+	}
+
+	/**
 	 * @covers ::published
 	 * @covers ::value
 	 */

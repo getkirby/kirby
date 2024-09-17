@@ -38,7 +38,7 @@ abstract class ContentStorageHandler
 	public function all(): Generator
 	{
 		foreach (Languages::ensure() as $language) {
-			foreach ([VersionId::published(), VersionId::changes()] as $versionId) {
+			foreach (VersionId::list() as $versionId) {
 				if ($this->exists($versionId, $language) === true) {
 					yield $versionId => $language;
 				}
@@ -68,7 +68,7 @@ abstract class ContentStorageHandler
 	 */
 	public function deleteLanguage(Language $language): void
 	{
-		foreach ([VersionId::published(), VersionId::changes()] as $versionId) {
+		foreach (VersionId::list() as $versionId) {
 			$this->delete($versionId, $language);
 		}
 	}
@@ -156,7 +156,7 @@ abstract class ContentStorageHandler
 	 */
 	public function moveLanguage(Language $fromLanguage, Language $toLanguage): void
 	{
-		foreach ([VersionId::published(), VersionId::changes()] as $versionId) {
+		foreach (VersionId::list() as $versionId) {
 			if ($this->exists($versionId, $fromLanguage) === true) {
 				$this->move($versionId, $fromLanguage, $versionId, $toLanguage);
 			}
@@ -208,7 +208,7 @@ abstract class ContentStorageHandler
 	 */
 	public function touchLanguage(Language $language): void
 	{
-		foreach ([VersionId::published(), VersionId::changes()] as $versionId) {
+		foreach (VersionId::list() as $versionId) {
 			if ($this->exists($versionId, $language) === true) {
 				$this->touch($versionId, $language);
 			}
