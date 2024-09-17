@@ -174,7 +174,8 @@ class UserRulesTest extends TestCase
 			'user' => 'user@domain.com',
 			'users' => [
 				['email' => 'user@domain.com', 'role' => 'editor'],
-				['email' => 'admin@domain.com', 'role' => 'admin']
+				['email' => 'admin@domain.com', 'role' => 'admin'],
+				['email' => 'another@domain.com', 'role' => 'admin']
 			]
 		]);
 		$kirby->impersonate('user@domain.com');
