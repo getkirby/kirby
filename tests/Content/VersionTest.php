@@ -267,6 +267,9 @@ class VersionTest extends TestCase
 		$this->assertContentFileDoesNotExist();
 	}
 
+	/**
+	 * @covers ::diff
+	 */
 	public function testDiffMultiLanguage()
 	{
 		$this->setUpMultiLanguage();
@@ -308,6 +311,9 @@ class VersionTest extends TestCase
 		$this->assertSame($expectedDE, $diffDE);
 	}
 
+	/**
+	 * @covers ::diff
+	 */
 	public function testDiffSingleLanguage()
 	{
 		$this->setUpSingleLanguage();
@@ -341,6 +347,9 @@ class VersionTest extends TestCase
 		$this->assertSame($expected, $diff);
 	}
 
+	/**
+	 * @covers ::diff
+	 */
 	public function testDiffWithoutChanges()
 	{
 		$this->setUpSingleLanguage();
