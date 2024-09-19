@@ -380,6 +380,28 @@ class VersionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::diff
+	 */
+	public function testDiffWithSameVersion()
+	{
+		$this->setUpSingleLanguage();
+
+		$a = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$a->create([
+			'title'    => 'Title',
+			'subtitle' => 'Subtitle',
+		]);
+
+		$diff = $a->diff(VersionId::published());
+
+		$this->assertSame([], $diff);
+	}
+
+	/**
 	 * @covers ::ensure
 	 */
 	public function testEnsureMultiLanguage(): void
