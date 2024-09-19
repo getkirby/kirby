@@ -102,7 +102,10 @@ export default {
 
 			// find current page in deepest tree and trigger select listeners
 			const item = tree.findItem(page);
-			this.$emit("select", item);
+
+			if (item) {
+				this.$emit("select", item);
+			}
 		}
 	}
 };
