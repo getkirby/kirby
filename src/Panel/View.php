@@ -277,7 +277,7 @@ class View
 			'$config' => fn () => [
 				'debug'       => $kirby->option('debug', false),
 				'kirbytext'   => $kirby->option('panel.kirbytext', true),
-				'translation' => $kirby->option('panel.language', 'en')
+				'translation' => $kirby->option('panel.language', 'en'),
 			],
 			'$system' => function () use ($kirby) {
 				$locales = [];
