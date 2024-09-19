@@ -90,7 +90,11 @@ export default {
 
 			// if root is included, add the site as top-level parent
 			if (this.root) {
-				parents.unshift("site://");
+				if (this.$panel.config["content.uuid"]) {
+					parents.unshift("site://");
+				} else {
+					parents.unshift("/");
+				}
 			}
 
 			let tree = this;
@@ -101,10 +105,12 @@ export default {
 				const value = parents[index];
 				const item = tree.findItem(value);
 
-				if (item) {
-					await this.open(item);
-					tree = tree.$refs[value][0];
+				if (!item) {
+					return;
 				}
+
+				await this.open(item);
+				tree = tree.$refs[value][0];
 			}
 
 			// find current page in deepest tree and trigger select listeners

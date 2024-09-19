@@ -275,9 +275,10 @@ class View
 
 		return [
 			'$config' => fn () => [
-				'debug'       => $kirby->option('debug', false),
-				'kirbytext'   => $kirby->option('panel.kirbytext', true),
-				'translation' => $kirby->option('panel.language', 'en'),
+				'debug'        => $kirby->option('debug', false),
+				'kirbytext'    => $kirby->option('panel.kirbytext', true),
+				'translation'  => $kirby->option('panel.language', 'en'),
+				'content.uuid' => $kirby->option('content.uuid') !== false
 			],
 			'$system' => function () use ($kirby) {
 				$locales = [];
