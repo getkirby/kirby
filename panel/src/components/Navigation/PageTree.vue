@@ -61,6 +61,10 @@ export default {
 			});
 		},
 		async open(item) {
+			if (!item) {
+				return;
+			}
+
 			if (item.hasChildren === false) {
 				return false;
 			}
@@ -96,8 +100,11 @@ export default {
 			for (let index = 0; index < parents.length; index++) {
 				const value = parents[index];
 				const item = tree.findItem(value);
-				await this.open(item);
-				tree = tree.$refs[value][0];
+
+				if (item) {
+					await this.open(item);
+					tree = tree.$refs[value][0];
+				}
 			}
 
 			// find current page in deepest tree and trigger select listeners
