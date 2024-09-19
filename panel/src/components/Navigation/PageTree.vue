@@ -83,19 +83,11 @@ export default {
 			// get array of parent uuids/ids
 			const response = await this.$panel.get("site/tree/parents", {
 				query: {
-					page
+					page,
+					root: this.root
 				}
 			});
 			const parents = response.data;
-
-			// if root is included, add the site as top-level parent
-			if (this.root) {
-				if (this.$panel.config["content.uuid"]) {
-					parents.unshift("site://");
-				} else {
-					parents.unshift("/");
-				}
-			}
 
 			let tree = this;
 

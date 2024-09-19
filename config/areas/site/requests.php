@@ -2,7 +2,9 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
+use Kirby\Uuid\Uuids;
 
 return [
 	// @codeCoverageIgnoreStart
@@ -70,18 +72,23 @@ return [
 		'action'  => function () {
 			$kirby   = App::instance();
 			$request = $kirby->request();
+			$root    = $request->get('root');
 			$page    = $kirby->page($request->get('page'));
+			$parents = $page?->parents()?->flip()?->values(
+				fn ($parent) => $parent->uuid()?->toString() ?? $parent->id()
+			) ?? [];
 
-			if ($page === null) {
-				return [
-					'data' => []
-				];
+			// if root is included, add the site as top-level parent
+			if ($root === 'true') {
+				if (Uuids::enabled()) {
+					$parents = A::prepend($parents, ['site://']);
+				} else {
+					$parents = A::prepend($parents, ['/']);
+				}
 			}
 
 			return [
-				'data' => $page->parents()->flip()->values(
-					fn ($parent) => $parent->uuid()?->toString() ?? $parent->id()
-				)
+				'data' => $parents
 			];
 		}
 	]
