@@ -369,7 +369,9 @@ class User extends ModelWithContent
 		Session|array|null $session = null
 	): void {
 		if ($this->id() === 'kirby') {
-			throw new PermissionException('The almighty user "kirby" cannot be used for login, only for raising permissions in code via `$kirby->impersonate()`');
+			throw new PermissionException(
+				message: 'The almighty user "kirby" cannot be used for login, only for raising permissions in code via `$kirby->impersonate()`'
+			);
 		}
 
 		$kirby   = $this->kirby();
@@ -727,22 +729,31 @@ class User extends ModelWithContent
 		string|null $password = null
 	): bool {
 		if (empty($this->password()) === true) {
-			throw new NotFoundException(['key' => 'user.password.undefined']);
+			throw new NotFoundException(
+				key: 'user.password.undefined'
+			);
 		}
 
 		// `UserRules` enforces a minimum length of 8 characters,
 		// so everything below that is a typo
 		if (Str::length($password) < 8) {
-			throw new InvalidArgumentException(['key' => 'user.password.invalid']);
+			throw new InvalidArgumentException(
+				key: 'user.password.invalid'
+			);
 		}
 
 		// too long passwords can cause DoS attacks
 		if (Str::length($password) > 1000) {
-			throw new InvalidArgumentException(['key' => 'user.password.excessive']);
+			throw new InvalidArgumentException(
+				key: 'user.password.excessive'
+			);
 		}
 
 		if (password_verify($password, $this->password()) !== true) {
-			throw new InvalidArgumentException(['key' => 'user.password.wrong', 'httpCode' => 401]);
+			throw new InvalidArgumentException(
+				key: 'user.password.wrong',
+				httpCode: 401
+			);
 		}
 
 		return true;

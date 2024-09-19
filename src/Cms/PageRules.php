@@ -28,7 +28,7 @@ class PageRules
 	public static function changeNum(Page $page, int|null $num = null): void
 	{
 		if ($num !== null && $num < 0) {
-			throw new InvalidArgumentException(['key' => 'page.num.invalid']);
+			throw new InvalidArgumentException(key: 'page.num.invalid');
 		}
 	}
 
@@ -41,12 +41,10 @@ class PageRules
 	public static function changeSlug(Page $page, string $slug): void
 	{
 		if ($page->permissions()->changeSlug() !== true) {
-			throw new PermissionException([
-				'key'  => 'page.changeSlug.permission',
-				'data' => [
-					'slug' => $page->slug()
-				]
-			]);
+			throw new PermissionException(
+				key: 'page.changeSlug.permission',
+				data: ['slug' => $page->slug()]
+			);
 		}
 
 		self::validateSlugLength($slug);
@@ -56,21 +54,17 @@ class PageRules
 		$drafts   = $page->parentModel()->drafts();
 
 		if ($siblings->find($slug)?->is($page) === false) {
-			throw new DuplicateException([
-				'key'  => 'page.duplicate',
-				'data' => [
-					'slug' => $slug
-				]
-			]);
+			throw new DuplicateException(
+				key: 'page.duplicate',
+				data: ['slug' => $slug]
+			);
 		}
 
 		if ($drafts->find($slug)?->is($page) === false) {
-			throw new DuplicateException([
-				'key'  => 'page.draft.duplicate',
-				'data' => [
-					'slug' => $slug
-				]
-			]);
+			throw new DuplicateException(
+				key: 'page.draft.duplicate',
+				data: ['slug' => $slug]
+			);
 		}
 	}
 
@@ -85,14 +79,16 @@ class PageRules
 		int|null $position = null
 	): void {
 		if (isset($page->blueprint()->status()[$status]) === false) {
-			throw new InvalidArgumentException(['key' => 'page.status.invalid']);
+			throw new InvalidArgumentException(key: 'page.status.invalid');
 		}
 
 		match ($status) {
 			'draft'     => static::changeStatusToDraft($page),
 			'listed'    => static::changeStatusToListed($page, $position),
 			'unlisted'  => static::changeStatusToUnlisted($page),
-			default     => throw new InvalidArgumentException(['key' => 'page.status.invalid'])
+			default     => throw new InvalidArgumentException(
+				key: 'page.status.invalid'
+			)
 		};
 	}
 
@@ -104,21 +100,17 @@ class PageRules
 	public static function changeStatusToDraft(Page $page): void
 	{
 		if ($page->permissions()->changeStatus() !== true) {
-			throw new PermissionException([
-				'key'  => 'page.changeStatus.permission',
-				'data' => [
-					'slug' => $page->slug()
-				]
-			]);
+			throw new PermissionException(
+				key: 'page.changeStatus.permission',
+				data: ['slug' => $page->slug()]
+			);
 		}
 
 		if ($page->isHomeOrErrorPage() === true) {
-			throw new PermissionException([
-				'key'  => 'page.changeStatus.toDraft.invalid',
-				'data' => [
-					'slug' => $page->slug()
-				]
-			]);
+			throw new PermissionException(
+				key: 'page.changeStatus.toDraft.invalid',
+				data: ['slug' => $page->slug()]
+			);
 		}
 	}
 
@@ -134,12 +126,10 @@ class PageRules
 		// instead we need to check for sorting permissions
 		if ($page->isListed() === true) {
 			if ($page->isSortable() !== true) {
-				throw new PermissionException([
-					'key'  => 'page.sort.permission',
-					'data' => [
-						'slug' => $page->slug()
-					]
-				]);
+				throw new PermissionException(
+					key: 'page.sort.permission',
+					data: ['slug' => $page->slug()]
+				);
 			}
 
 			return;
@@ -148,7 +138,7 @@ class PageRules
 		static::publish($page);
 
 		if ($position !== null && $position < 0) {
-			throw new InvalidArgumentException(['key' => 'page.num.invalid']);
+			throw new InvalidArgumentException(key: 'page.num.invalid');
 		}
 	}
 
@@ -171,12 +161,10 @@ class PageRules
 	public static function changeTemplate(Page $page, string $template): void
 	{
 		if ($page->permissions()->changeTemplate() !== true) {
-			throw new PermissionException([
-				'key'  => 'page.changeTemplate.permission',
-				'data' => [
-					'slug' => $page->slug()
-				]
-			]);
+			throw new PermissionException(
+				key: 'page.changeTemplate.permission',
+				data: ['slug' => $page->slug()]
+			);
 		}
 
 		$blueprints = $page->blueprints();
@@ -185,10 +173,10 @@ class PageRules
 			count($blueprints) <= 1 ||
 			in_array($template, array_column($blueprints, 'name'), true) === false
 		) {
-			throw new LogicException([
-				'key'  => 'page.changeTemplate.invalid',
-				'data' => ['slug' => $page->slug()]
-			]);
+			throw new LogicException(
+				key: 'page.changeTemplate.invalid',
+				data: ['slug' => $page->slug()]
+			);
 		}
 	}
 
@@ -201,12 +189,10 @@ class PageRules
 	public static function changeTitle(Page $page, string $title): void
 	{
 		if ($page->permissions()->changeTitle() !== true) {
-			throw new PermissionException([
-				'key'  => 'page.changeTitle.permission',
-				'data' => [
-					'slug' => $page->slug()
-				]
-			]);
+			throw new PermissionException(
+				key: 'page.changeTitle.permission',
+				data: ['slug' => $page->slug()]
+			);
 		}
 
 		static::validateTitleLength($title);
@@ -222,24 +208,20 @@ class PageRules
 	public static function create(Page $page): void
 	{
 		if ($page->permissions()->create() !== true) {
-			throw new PermissionException([
-				'key' => 'page.create.permission',
-				'data' => [
-					'slug' => $page->slug()
-				]
-			]);
+			throw new PermissionException(
+				key: 'page.create.permission',
+				data: ['slug' => $page->slug()]
+			);
 		}
 
 		self::validateSlugLength($page->slug());
 		self::validateSlugProtectedPaths($page, $page->slug());
 
 		if ($page->exists() === true) {
-			throw new DuplicateException([
-				'key'  => 'page.draft.duplicate',
-				'data' => [
-					'slug' => $page->slug()
-				]
-			]);
+			throw new DuplicateException(
+				key: 'page.draft.duplicate',
+				data: ['slug' => $page->slug()]
+			);
 		}
 
 		$siblings = $page->parentModel()->children();
@@ -247,17 +229,17 @@ class PageRules
 		$slug     = $page->slug();
 
 		if ($siblings->find($slug)) {
-			throw new DuplicateException([
-				'key'  => 'page.duplicate',
-				'data' => ['slug' => $slug]
-			]);
+			throw new DuplicateException(
+				key: 'page.duplicate',
+				data: ['slug' => $slug]
+			);
 		}
 
 		if ($drafts->find($slug)) {
-			throw new DuplicateException([
-				'key'  => 'page.draft.duplicate',
-				'data' => ['slug' => $slug]
-			]);
+			throw new DuplicateException(
+				key: 'page.draft.duplicate',
+				data: ['slug' => $slug]
+			);
 		}
 	}
 
@@ -270,16 +252,14 @@ class PageRules
 	public static function delete(Page $page, bool $force = false): void
 	{
 		if ($page->permissions()->delete() !== true) {
-			throw new PermissionException([
-				'key' => 'page.delete.permission',
-				'data' => [
-					'slug' => $page->slug()
-				]
-			]);
+			throw new PermissionException(
+				key: 'page.delete.permission',
+				data: ['slug' => $page->slug()]
+			);
 		}
 
 		if (($page->hasChildren() === true || $page->hasDrafts() === true) && $force === false) {
-			throw new LogicException(['key' => 'page.delete.hasChildren']);
+			throw new LogicException(key: 'page.delete.hasChildren');
 		}
 	}
 
@@ -294,12 +274,10 @@ class PageRules
 		array $options = []
 	): void {
 		if ($page->permissions()->duplicate() !== true) {
-			throw new PermissionException([
-				'key' => 'page.duplicate.permission',
-				'data' => [
-					'slug' => $page->slug()
-				]
-			]);
+			throw new PermissionException(
+				key: 'page.duplicate.permission',
+				data: ['slug' => $page->slug()]
+			);
 		}
 
 		self::validateSlugLength($slug);
@@ -317,29 +295,29 @@ class PageRules
 		}
 
 		if ($page->permissions()->move() !== true) {
-			throw new PermissionException([
-				'key' => 'page.move.permission',
-				'data' => [
-					'slug' => $page->slug()
-				]
-			]);
+			throw new PermissionException(
+				key: 'page.move.permission',
+				data: ['slug' => $page->slug()]
+			);
 		}
 
 		// the page cannot be moved into itself
-		if ($parent instanceof Page && ($page->is($parent) === true || $page->isAncestorOf($parent) === true)) {
-			throw new LogicException([
-				'key' => 'page.move.ancestor',
-			]);
+		if (
+			$parent instanceof Page &&
+			(
+				$page->is($parent) === true ||
+				$page->isAncestorOf($parent) === true
+			)
+		) {
+			throw new LogicException(key: 'page.move.ancestor');
 		}
 
 		// check for duplicates
 		if ($parent->childrenAndDrafts()->find($page->slug())) {
-			throw new DuplicateException([
-				'key'  => 'page.move.duplicate',
-				'data' => [
-					'slug' => $page->slug(),
-				]
-			]);
+			throw new DuplicateException(
+				key: 'page.move.duplicate',
+				data: ['slug' => $page->slug()]
+			);
 		}
 
 		$allowed = [];
@@ -366,13 +344,13 @@ class PageRules
 
 		// check if the template of this page is allowed as subpage type
 		if (in_array($page->intendedTemplate()->name(), $allowed, true) === false) {
-			throw new PermissionException([
-				'key'  => 'page.move.template',
-				'data' => [
+			throw new PermissionException(
+				key: 'page.move.template',
+				data: [
 					'template' => $page->intendedTemplate()->name(),
 					'parent'   => $parent->id() ?? '/',
 				]
-			]);
+			);
 		}
 	}
 
@@ -383,19 +361,19 @@ class PageRules
 	public static function publish(Page $page): void
 	{
 		if ($page->permissions()->changeStatus() !== true) {
-			throw new PermissionException([
-				'key'  => 'page.changeStatus.permission',
-				'data' => [
+			throw new PermissionException(
+				key: 'page.changeStatus.permission',
+				data: [
 					'slug' => $page->slug()
 				]
-			]);
+			);
 		}
 
 		if ($page->isDraft() === true && empty($page->errors()) === false) {
-			throw new PermissionException([
-				'key'     => 'page.changeStatus.incomplete',
-				'details' => $page->errors()
-			]);
+			throw new PermissionException(
+				key:  'page.changeStatus.incomplete',
+				details: $page->errors()
+			);
 		}
 	}
 
@@ -407,12 +385,10 @@ class PageRules
 	public static function update(Page $page, array $content = []): void
 	{
 		if ($page->permissions()->update() !== true) {
-			throw new PermissionException([
-				'key'  => 'page.update.permission',
-				'data' => [
-					'slug' => $page->slug()
-				]
-			]);
+			throw new PermissionException(
+				key: 'page.update.permission',
+				data: ['slug' => $page->slug()]
+			);
 		}
 	}
 
@@ -427,21 +403,17 @@ class PageRules
 		$slugLength = Str::length($slug);
 
 		if ($slugLength === 0) {
-			throw new InvalidArgumentException([
-				'key' => 'page.slug.invalid',
-			]);
+			throw new InvalidArgumentException(key: 'page.slug.invalid');
 		}
 
 		if ($slugsMaxlength = App::instance()->option('slugs.maxlength', 255)) {
 			$maxlength = (int)$slugsMaxlength;
 
 			if ($slugLength > $maxlength) {
-				throw new InvalidArgumentException([
-					'key'  => 'page.slug.maxlength',
-					'data' => [
-						'length' => $maxlength
-					]
-				]);
+				throw new InvalidArgumentException(
+					key: 'page.slug.maxlength',
+					data: ['length' => $maxlength]
+				);
 			}
 		}
 	}
@@ -466,12 +438,10 @@ class PageRules
 			$index = array_search($slug, $paths);
 
 			if ($index !== false) {
-				throw new InvalidArgumentException([
-					'key'  => 'page.changeSlug.reserved',
-					'data' => [
-						'path' => $paths[$index]
-					]
-				]);
+				throw new InvalidArgumentException(
+					key: 'page.changeSlug.reserved',
+					data: ['path' => $paths[$index]]
+				);
 			}
 		}
 	}
@@ -484,9 +454,7 @@ class PageRules
 	public static function validateTitleLength(string $title): void
 	{
 		if (Str::length($title) === 0) {
-			throw new InvalidArgumentException([
-				'key' => 'page.changeTitle.empty',
-			]);
+			throw new InvalidArgumentException(key: 'page.changeTitle.empty');
 		}
 	}
 }

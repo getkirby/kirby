@@ -68,7 +68,9 @@ class Block extends Item implements Stringable
 		// @codeCoverageIgnoreEnd
 
 		if (isset($params['type']) === false) {
-			throw new InvalidArgumentException('The block type is missing');
+			throw new InvalidArgumentException(
+				message: 'The block type is missing'
+			);
 		}
 
 		// make sure the content is always defined as array to keep

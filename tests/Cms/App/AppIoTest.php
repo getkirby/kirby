@@ -22,10 +22,10 @@ class AppIoTest extends TestCase
 
 	public function testException()
 	{
-		$response = $this->app()->io(new Exception([
-			'fallback' => 'Nope',
-			'httpCode' => 501
-		]));
+		$response = $this->app()->io(new Exception(
+			fallback: 'Nope',
+			httpCode: 501
+		));
 
 		$this->assertSame(501, $response->code());
 		$this->assertSame('Nope', $response->body());

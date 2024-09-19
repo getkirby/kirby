@@ -408,7 +408,9 @@ return [
 			$model = Uuid::for($path)->model();
 
 			if ($model === null) {
-				throw new NotFoundException('The model could not be found for "' . $path . '" uuid');
+				throw new NotFoundException(
+					message: 'The model could not be found for "' . $path . '" uuid'
+				);
 			}
 
 			$path = $model->url();

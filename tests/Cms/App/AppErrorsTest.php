@@ -376,12 +376,10 @@ class AppErrorsTest extends TestCase
 		]), $this->_getBufferedContent($handlers[0]));
 
 		// test CallbackHandler with \Kirby\Exception\Exception class
-		$exception = new Exception([
-			'data' => [],
-			'details'  => [
-				'Some error message'
-			]
-		]);
+		$exception = new Exception(
+			data: [],
+			details: ['Some error message']
+		);
 		$handlers[0]->setException($exception);
 
 		$this->assertSame(json_encode([

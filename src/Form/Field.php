@@ -53,10 +53,13 @@ class Field extends Component
 		Fields|null $formFields = null
 	) {
 		if (isset(static::$types[$type]) === false) {
-			throw new InvalidArgumentException([
-				'key'  => 'field.type.missing',
-				'data' => ['name' => $attrs['name'] ?? '-', 'type' => $type]
-			]);
+			throw new InvalidArgumentException(
+				key: 'field.type.missing',
+				data: [
+					'name' => $attrs['name'] ?? '-',
+					'type' => $type
+				]
+			);
 		}
 
 		if (isset($attrs['model']) === false) {

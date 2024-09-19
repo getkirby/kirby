@@ -2,6 +2,8 @@
 
 namespace Kirby\Filesystem;
 
+use Exception;
+
 function blockMethod($method, $args)
 {
 	if (defined('KIRBY_TESTING') !== true || KIRBY_TESTING !== true) {

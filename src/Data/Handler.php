@@ -38,7 +38,9 @@ abstract class Handler
 		$contents = F::read($file);
 
 		if ($contents === false) {
-			throw new Exception('The file "' . $file . '" does not exist or cannot be read');
+			throw new Exception(
+				message: 'The file "' . $file . '" does not exist or cannot be read'
+			);
 		}
 
 		return static::decode($contents);

@@ -80,7 +80,9 @@ class File implements Stringable
 			$this->model !== null &&
 			method_exists($this->model, 'hasIsFileTrait') !== true
 		) {
-			throw new InvalidArgumentException('The model object must use the "Kirby\Filesystem\IsFile" trait');
+			throw new InvalidArgumentException(
+				message: 'The model object must use the "Kirby\Filesystem\IsFile" trait'
+			);
 		}
 	}
 
@@ -115,7 +117,9 @@ class File implements Stringable
 	public function copy(string $target, bool $force = false): static
 	{
 		if (F::copy($this->root(), $target, $force) !== true) {
-			throw new Exception('The file "' . $this->root() . '" could not be copied');
+			throw new Exception(
+				message: 'The file "' . $this->root() . '" could not be copied'
+			);
 		}
 
 		return new static($target);
@@ -140,7 +144,9 @@ class File implements Stringable
 	public function delete(): bool
 	{
 		if (F::remove($this->root()) !== true) {
-			throw new Exception('The file "' . $this->root() . '" could not be deleted');
+			throw new Exception(
+				message: 'The file "' . $this->root() . '" could not be deleted'
+			);
 		}
 
 		return true;
@@ -283,10 +289,10 @@ class File implements Stringable
 			// the MIME type could not be determined, but matching
 			// to it was requested explicitly
 			if ($mime === null) {
-				throw new Exception([
-					'key'  => 'file.mime.missing',
-					'data' => ['filename' => $this->filename()]
-				]);
+				throw new Exception(
+					key: 'file.mime.missing',
+					data: ['filename' => $this->filename()]
+				);
 			}
 
 			// determine if any pattern matches the MIME type;
@@ -298,32 +304,30 @@ class File implements Stringable
 			);
 
 			if ($matches !== true) {
-				throw new Exception([
-					'key'  => 'file.mime.invalid',
-					'data' => compact('mime')
-				]);
+				throw new Exception(
+					key: 'file.mime.invalid',
+					data: compact('mime')
+				);
 			}
 		}
 
 		if (is_array($rules['extension'] ?? null) === true) {
 			$extension = $this->extension();
-
 			if (in_array($extension, $rules['extension'], true) !== true) {
-				throw new Exception([
-					'key'  => 'file.extension.invalid',
-					'data' => compact('extension')
-				]);
+				throw new Exception(
+					key: 'file.extension.invalid',
+					data: compact('extension')
+				);
 			}
 		}
 
 		if (is_array($rules['type'] ?? null) === true) {
 			$type = $this->type();
-
 			if (in_array($type, $rules['type'], true) !== true) {
-				throw new Exception([
-					'key'  => 'file.type.invalid',
-					'data' => compact('type')
-				]);
+				throw new Exception(
+					key: 'file.type.invalid',
+					data: compact('type')
+				);
 			}
 		}
 
@@ -335,10 +339,10 @@ class File implements Stringable
 				$validator = $arguments[1];
 
 				if (V::$validator($this->$property(), $rule) === false) {
-					throw new Exception([
-						'key'  => 'file.' . $key,
-						'data' => [$property => $rule]
-					]);
+					throw new Exception(
+						key: 'file.' . $key,
+						data: [$property => $rule]
+					);
 				}
 			}
 		}
@@ -383,7 +387,9 @@ class File implements Stringable
 	public function move(string $newRoot, bool $overwrite = false): static
 	{
 		if (F::move($this->root(), $newRoot, $overwrite) !== true) {
-			throw new Exception('The file: "' . $this->root() . '" could not be moved to: "' . $newRoot . '"');
+			throw new Exception(
+				message: 'The file: "' . $this->root() . '" could not be moved to: "' . $newRoot . '"'
+			);
 		}
 
 		return new static($newRoot);
@@ -438,7 +444,9 @@ class File implements Stringable
 		$newRoot = F::rename($this->root(), $newName, $overwrite);
 
 		if ($newRoot === false) {
-			throw new Exception('The file: "' . $this->root() . '" could not be renamed to: "' . $newName . '"');
+			throw new Exception(
+				message: 'The file: "' . $this->root() . '" could not be renamed to: "' . $newName . '"'
+			);
 		}
 
 		return new static($newRoot);
@@ -563,7 +571,9 @@ class File implements Stringable
 	public function write(string $content): bool
 	{
 		if (F::write($this->root(), $content) !== true) {
-			throw new Exception('The file "' . $this->root() . '" could not be written');
+			throw new Exception(
+				message: 'The file "' . $this->root() . '" could not be written'
+			);
 		}
 
 		return true;

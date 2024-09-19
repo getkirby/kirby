@@ -350,14 +350,10 @@ class UpdateStatus
 		try {
 			return Semver::satisfies($version, $constraint);
 		} catch (Exception $e) {
-			$package = $this->packageName();
-			$message = 'Error comparing version constraint for ' . $package . ' ' . $reason . ': ' . $e->getMessage();
-
-			$exception = new KirbyException([
-				'fallback' => $message,
-				'previous' => $e
-			]);
-			$this->exceptions[] = $exception;
+			$this->exceptions[] = new KirbyException(
+				previous: $e,
+				fallback: 'Error comparing version constraint for ' . $this->packageName() . ' ' . $reason . ': ' . $e->getMessage(),
+			);
 
 			return false;
 		}
@@ -378,7 +374,9 @@ class UpdateStatus
 			foreach ($filters as $key => $version) {
 				if (isset($item[$key]) !== true) {
 					$package = $this->packageName();
-					$this->exceptions[] = new KirbyException('Missing constraint ' . $key . ' for ' . $package . ' ' . $reason);
+					$this->exceptions[] = new KirbyException(
+						'Missing constraint ' . $key . ' for ' . $package . ' ' . $reason
+					);
 
 					return false;
 				}
@@ -547,7 +545,9 @@ class UpdateStatus
 		// before we request the data, ensure we have a writable cache;
 		// this reduces strain on the CDN from repeated requests
 		if ($cache->enabled() === false) {
-			$this->exceptions[] = new KirbyException('Cannot check for updates without a working "updates" cache');
+			$this->exceptions[] = new KirbyException(
+				message: 'Cannot check for updates without a working "updates" cache'
+			);
 
 			return null;
 		}
@@ -556,7 +556,7 @@ class UpdateStatus
 		// we collect it below for debugging
 		try {
 			if (static::$timedOut === true) {
-				throw new Exception('Previous remote request timed out'); // @codeCoverageIgnore
+				throw new Exception(message: 'Previous remote request timed out'); // @codeCoverageIgnore
 			}
 
 			$response = Remote::get(
@@ -566,22 +566,22 @@ class UpdateStatus
 
 			// allow status code HTTP 200 or 0 (e.g. for the file:// protocol)
 			if (in_array($response->code(), [0, 200], true) !== true) {
-				throw new Exception('HTTP error ' . $response->code()); // @codeCoverageIgnore
+				throw new Exception(message: 'HTTP error ' . $response->code()); // @codeCoverageIgnore
 			}
 
 			$data = $response->json();
 
 			if (is_array($data) !== true) {
-				throw new Exception('Invalid JSON data');
+				throw new Exception(message: 'Invalid JSON data');
 			}
 		} catch (Exception $e) {
 			$package = $this->packageName();
 			$message = 'Could not load update data for ' . $package . ': ' . $e->getMessage();
 
-			$exception = new KirbyException([
-				'fallback' => $message,
-				'previous' => $e
-			]);
+			$exception = new KirbyException(
+				fallback: $message,
+				previous: $e
+			);
 			$this->exceptions[] = $exception;
 
 			// if the request timed out, prevent additional

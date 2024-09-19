@@ -94,10 +94,10 @@ class Dom
 				$message .= ': ' . $error->message;
 			}
 
-			throw new InvalidArgumentException([
-				'fallback' => $message,
-				'details'  => compact('error')
-			]);
+			throw new InvalidArgumentException(
+				fallback: $message,
+				details: compact('error')
+			);
 		}
 	}
 

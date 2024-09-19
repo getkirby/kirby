@@ -197,7 +197,9 @@ class Component
 		// load definitions from string
 		if (is_string($definition) === true) {
 			if (is_file($definition) !== true) {
-				throw new Exception('Component definition ' . $definition . ' does not exist');
+				throw new Exception(
+					'Component definition ' . $definition . ' does not exist'
+				);
 			}
 
 			static::$types[$type] = $definition = F::load(

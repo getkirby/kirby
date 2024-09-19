@@ -44,11 +44,15 @@ class Blueprint
 	public function __construct(array $props)
 	{
 		if (empty($props['model']) === true) {
-			throw new InvalidArgumentException('A blueprint model is required');
+			throw new InvalidArgumentException(
+				message: 'A blueprint model is required'
+			);
 		}
 
 		if ($props['model'] instanceof ModelWithContent === false) {
-			throw new InvalidArgumentException('Invalid blueprint model');
+			throw new InvalidArgumentException(
+				message: 'Invalid blueprint model'
+			);
 		}
 
 		$this->model = $props['model'];
@@ -404,10 +408,10 @@ class Blueprint
 		}
 
 		// neither a valid file nor array data
-		throw new NotFoundException([
-			'key'  => 'blueprint.notFound',
-			'data' => ['name' => $name]
-		]);
+		throw new NotFoundException(
+			key: 'blueprint.notFound',
+			data: ['name' => $name]
+		);
 	}
 
 	/**
@@ -523,14 +527,18 @@ class Blueprint
 		$props = static::extend($props);
 
 		if (isset($props['name']) === false) {
-			throw new InvalidArgumentException('The field name is missing');
+			throw new InvalidArgumentException(
+				message: 'The field name is missing'
+			);
 		}
 
 		$name = $props['name'];
 		$type = $props['type'] ?? $name;
 
 		if ($type !== 'group' && isset(Field::$types[$type]) === false) {
-			throw new InvalidArgumentException('Invalid field type ("' . $type . '")');
+			throw new InvalidArgumentException(
+				message: 'Invalid field type ("' . $type . '")'
+			);
 		}
 
 		// support for nested fields

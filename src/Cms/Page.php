@@ -128,7 +128,9 @@ class Page extends ModelWithContent
 	public function __construct(array $props)
 	{
 		if (isset($props['slug']) === false) {
-			throw new InvalidArgumentException('The page slug is required');
+			throw new InvalidArgumentException(
+				message: 'The page slug is required'
+			);
 		}
 
 		$this->slug    = $props['slug'];
@@ -332,7 +334,9 @@ class Page extends ModelWithContent
 					// original data was overwritten, but matches expected type
 					$value instanceof $classes[$key] => $value,
 					// throw error if data was overwritten with wrong type
-					default => throw new InvalidArgumentException('The returned variable "' . $key . '" from the controller "' . $this->template()->name() . '" is not of the required type "' . $classes[$key] . '"')
+					default => throw new InvalidArgumentException(
+						message: 'The returned variable "' . $key . '" from the controller "' . $this->template()->name() . '" is not of the required type "' . $classes[$key] . '"'
+					)
 				};
 			}
 		}
@@ -988,9 +992,9 @@ class Page extends ModelWithContent
 			};
 
 			if ($template->exists() === false) {
-				throw new NotFoundException([
-					'key' => 'template.default.notFound'
-				]);
+				throw new NotFoundException(
+					key: 'template.default.notFound'
+				);
 			}
 
 			$kirby->data = $this->controller($data, $contentType);
@@ -1042,7 +1046,9 @@ class Page extends ModelWithContent
 			return $representation;
 		}
 
-		throw new NotFoundException('The content representation cannot be found');
+		throw new NotFoundException(
+			message: 'The content representation cannot be found'
+		);
 	}
 
 	/**

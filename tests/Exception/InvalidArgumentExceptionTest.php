@@ -23,11 +23,9 @@ class InvalidArgumentExceptionTest extends TestCase
 	 */
 	public function testPlaceholders()
 	{
-		$exception = new InvalidArgumentException([
-			'data' => [
-				'argument' => 'key',
-				'method' => 'get'
-			]
+		$exception = new InvalidArgumentException(data: [
+			'argument' => 'key',
+			'method' => 'get'
 		]);
 		$this->assertSame('Invalid argument "key" in method "get"', $exception->getMessage());
 		$this->assertSame([
