@@ -389,30 +389,6 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	}
 
 	/**
-	 * @covers ::replaceStrings
-	 */
-	public function testReplaceStrings()
-	{
-		$this->setUpMultiLanguage();
-
-		$fields = [
-			'foo' => 'one step',
-			'bar' => 'two steps'
-		];
-
-		Data::write($this->model->root() . '/article.en.txt', $fields);
-
-		$this->storage->replaceStrings(VersionId::published(), $this->app->language('en'), ['step' => 'jump']);
-
-		$expected = [
-			'foo' => 'one jump',
-			'bar' => 'two jumps'
-		];
-
-		$this->assertSame($expected, Data::read($this->model->root() . '/article.en.txt'));
-	}
-
-	/**
 	 * @covers ::touch
 	 */
 	public function testTouchChangesMultiLang()

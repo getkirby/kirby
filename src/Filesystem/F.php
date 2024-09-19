@@ -754,25 +754,6 @@ class F
 	}
 
 	/**
-	 * Searches and replaces one or multiple strings in a file
-	 */
-	public static function replaceStrings(
-		string $file,
-		string|array $search,
-		string|array|null $replace = null
-	): bool {
-		$content = static::read($file);
-
-		if ($replace === null) {
-			$replace = array_values($search);
-			$search  = array_keys($search);
-		}
-
-		$content = str_replace($search, $replace, $content);
-		return static::write($file, $content);
-	}
-
-	/**
 	 * Sanitize a file's full name (filename and extension)
 	 * to strip unwanted special characters
 	 *

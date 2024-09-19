@@ -281,20 +281,6 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 	}
 
 	/**
-	 * Searches and replaces one or multiple strings
-	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
-	 */
-	public function replaceStrings(
-		VersionId $versionId,
-		Language $language,
-		array $map
-	): void {
-		$file = $this->contentFile($versionId, $language);
-		F::replaceStrings($file, $map);
-	}
-
-	/**
 	 * Updates the modification timestamp of an existing version
 	 *
 	 * @throws \Kirby\Exception\Exception If the file cannot be touched
