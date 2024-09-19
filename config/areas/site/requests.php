@@ -72,6 +72,12 @@ return [
 			$request = $kirby->request();
 			$page    = $kirby->page($request->get('page'));
 
+			if ($page === null) {
+				return [
+					'data' => []
+				];
+			}
+
 			return [
 				'data' => $page->parents()->flip()->values(
 					fn ($parent) => $parent->uuid()?->toString() ?? $parent->id()
