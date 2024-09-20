@@ -8,7 +8,7 @@ use Kirby\TestCase;
 use Kirby\Uuid\Uuids;
 
 /**
- * @coversDefaultClass Kirby\Content\Changes
+ * @coversDefaultClass \Kirby\Content\Changes
  */
 class ChangesTest extends TestCase
 {
