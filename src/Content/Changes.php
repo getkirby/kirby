@@ -8,6 +8,7 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
 use Kirby\Cms\Users;
+use Kirby\Toolkit\A;
 
 /**
  * The Changes class tracks changed models
@@ -73,13 +74,10 @@ class Changes
 	 */
 	public function untrack(ModelWithContent $model): void
 	{
-		$changes = $this->field()->yaml();
-		$uuid    = (string)$model->uuid();
-		$index   = array_search($uuid, $changes);
-
-		if ($index !== false) {
-			unset($changes[$index]);
-		}
+		$changes = A::filter(
+			$this->field()->yaml(),
+			fn ($uuid) => $uuid !== (string)$model->uuid()
+		);
 
 		$this->update($changes);
 	}
