@@ -24,8 +24,10 @@ return [
 		 * The CSS format (hex, rgb, hsl) to display and store the value
 		 */
 		'format' => function (string $format = 'hex'): string {
-			if (in_array($format, ['hex', 'hsl', 'rgb']) === false) {
-				throw new InvalidArgumentException('Unsupported format for color field (supported: hex, rgb, hsl)');
+			if (in_array($format, ['hex', 'hsl', 'rgb'], true) === false) {
+				throw new InvalidArgumentException(
+					message: 'Unsupported format for color field (supported: hex, rgb, hsl)'
+				);
 			}
 
 			return $format;
@@ -35,8 +37,10 @@ return [
 		 * show the `options` as toggles
 		 */
 		'mode' => function (string $mode = 'picker'): string {
-			if (in_array($mode, ['picker', 'input', 'options']) === false) {
-				throw new InvalidArgumentException('Unsupported mode for color field (supported: picker, input, options)');
+			if (in_array($mode, ['picker', 'input', 'options'], true) === false) {
+				throw new InvalidArgumentException(
+					message: 'Unsupported mode for color field (supported: picker, input, options)'
+				);
 			}
 
 			return $mode;
@@ -121,24 +125,24 @@ return [
 			}
 
 			if ($this->format === 'hex' && $this->isHex($value) === false) {
-				throw new InvalidArgumentException([
-					'key'  => 'validation.color',
-					'data' => ['format' => 'hex']
-				]);
+				throw new InvalidArgumentException(
+					key: 'validation.color',
+					data: ['format' => 'hex']
+				);
 			}
 
 			if ($this->format === 'rgb' && $this->isRgb($value) === false) {
-				throw new InvalidArgumentException([
-					'key'  => 'validation.color',
-					'data' => ['format' => 'rgb']
-				]);
+				throw new InvalidArgumentException(
+					key: 'validation.color',
+					data: ['format' => 'rgb']
+				);
 			}
 
 			if ($this->format === 'hsl' && $this->isHsl($value) === false) {
-				throw new InvalidArgumentException([
-					'key'  => 'validation.color',
-					'data' => ['format' => 'hsl']
-				]);
+				throw new InvalidArgumentException(
+					key: 'validation.color',
+					data: ['format' => 'hsl']
+				);
 			}
 		}
 	]

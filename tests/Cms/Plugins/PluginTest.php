@@ -16,8 +16,8 @@ class PluginTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.Plugin';
 
-	protected static $classLoader;
-	protected static $updateStatusHost;
+	protected static ClassLoader $classLoader;
+	protected static string $updateStatusHost;
 
 	public static function setUpBeforeClass(): void
 	{

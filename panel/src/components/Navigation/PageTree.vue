@@ -61,6 +61,10 @@ export default {
 			});
 		},
 		async open(item) {
+			if (!item) {
+				return;
+			}
+
 			if (item.hasChildren === false) {
 				return false;
 			}
@@ -77,16 +81,13 @@ export default {
 		},
 		async preselect(page) {
 			// get array of parent uuids/ids
-			const parents = await this.$panel.get("site/tree/parents", {
+			const response = await this.$panel.get("site/tree/parents", {
 				query: {
-					page
+					page,
+					root: this.root
 				}
 			});
-
-			// if root is included, add the site as top-level parent
-			if (this.root) {
-				parents.unshift("site://");
-			}
+			const parents = response.data;
 
 			let tree = this;
 
@@ -95,13 +96,21 @@ export default {
 			for (let index = 0; index < parents.length; index++) {
 				const value = parents[index];
 				const item = tree.findItem(value);
+
+				if (!item) {
+					return;
+				}
+
 				await this.open(item);
 				tree = tree.$refs[value][0];
 			}
 
 			// find current page in deepest tree and trigger select listeners
 			const item = tree.findItem(page);
-			this.$emit("select", item);
+
+			if (item) {
+				this.$emit("select", item);
+			}
 		}
 	}
 };

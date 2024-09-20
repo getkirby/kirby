@@ -52,13 +52,13 @@ class Status implements Stringable
 	 */
 	public function __construct(array $props)
 	{
-		if (in_array($props['status'], ['active', 'impersonated', 'pending', 'inactive']) !== true) {
-			throw new InvalidArgumentException([
-				'data' => [
+		if (in_array($props['status'], ['active', 'impersonated', 'pending', 'inactive'], true) !== true) {
+			throw new InvalidArgumentException(
+				data: [
 					'argument' => '$props[\'status\']',
 					'method'   => 'Status::__construct'
 				]
-			]);
+			);
 		}
 
 		$this->kirby 		 	 = $props['kirby'];
@@ -149,7 +149,7 @@ class Status implements Stringable
 	{
 		// for security, only return the user if they are
 		// already logged in
-		if (in_array($this->status(), ['active', 'impersonated']) !== true) {
+		if (in_array($this->status(), ['active', 'impersonated'], true) !== true) {
 			return null;
 		}
 

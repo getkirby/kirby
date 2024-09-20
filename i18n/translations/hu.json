@@ -126,9 +126,12 @@
 	"error.form.notSaved": "Az űrlap nem menthető",
 
 	"error.language.code": "Kérlek, add meg a nyelv érvényes kódját",
+	"error.language.create.permission": "You are not allowed to create a language",
+	"error.language.delete.permission": "You are not allowed to delete the language",
 	"error.language.duplicate": "A nyelv már létezik",
 	"error.language.name": "Kérlek, add meg a nyelv érvényes nevét",
 	"error.language.notFound": "A nyelv nem található",
+	"error.language.update.permission": "You are not allowed to update the language",
 
 	"error.layout.validation.block": "There's an error on the \"{field}\" field in block {blockIndex} using the \"{fieldset}\" block type in layout {layoutIndex}",
 	"error.layout.validation.settings": "Hibát találtunk a(z) {index} elrendezés beállításaiban",

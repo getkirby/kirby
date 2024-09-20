@@ -76,7 +76,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	public function blueprints(string|null $inSection = null): array
 	{
 		// helper function
-		$toBlueprints = function (array $sections): array {
+		$toBlueprints = static function (array $sections): array {
 			$blueprints = [];
 
 			foreach ($sections as $section) {
@@ -189,7 +189,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		$new = $this->clone(['template' => $blueprint]);
 
 		// temporary compatibility change (TODO: also convert changes)
-		$identifier = VersionId::default($this);
+		$identifier = VersionId::published();
 
 		// for multilang, we go through all translations and
 		// covnert the content for each of them, remove the content file
@@ -688,10 +688,10 @@ abstract class ModelWithContent implements Identifiable, Stringable
 
 		// validate the input
 		if ($validate === true && $form->isInvalid() === true) {
-			throw new InvalidArgumentException([
-				'fallback' => 'Invalid form with errors',
-				'details'  => $form->errors()
-			]);
+			throw new InvalidArgumentException(
+				fallback: 'Invalid form with errors',
+				details: $form->errors()
+			);
 		}
 
 		return $this->commit(
@@ -724,7 +724,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	{
 		return new Version(
 			model: $this,
-			id: VersionId::from($versionId ?? VersionId::default($this))
+			id: VersionId::from($versionId ?? VersionId::published())
 		);
 	}
 

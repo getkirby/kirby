@@ -25,7 +25,7 @@ class Redirect extends Exception
 	{
 		$codes = [301, 302, 303, 307, 308];
 
-		if (in_array($this->getCode(), $codes) === true) {
+		if (in_array($this->getCode(), $codes, true) === true) {
 			return $this->getCode();
 		}
 

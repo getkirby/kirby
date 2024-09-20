@@ -57,7 +57,9 @@ class Config
 		return match (true) {
 			// extension does not exist
 			is_null($extension)
-				=> throw new NotFoundException('"' . $this->path . '" could not be found'),
+				=> throw new NotFoundException(
+					message: '"' . $this->path . '" could not be found'
+				),
 
 			// extension is stored as a file path
 			is_string($extension)

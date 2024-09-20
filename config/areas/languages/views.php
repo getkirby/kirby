@@ -20,6 +20,10 @@ return [
 			$foundation   = $kirby->defaultLanguage()->translations();
 			$translations = $language->translations();
 
+			// TODO: update following line and adapt for update and
+			// delete options when `languageVariables.*` permissions available
+			$canUpdate = $kirby->user()?->role()->permissions()->for('languages', 'update') === true;
+
 			ksort($foundation);
 
 			foreach ($foundation as $key => $value) {
@@ -28,13 +32,14 @@ return [
 					'value'   => $translations[$key] ?? null,
 					'options' => [
 						[
-							'click' => 'update',
-							'icon'  => 'edit',
-							'text'  => I18n::translate('edit'),
+							'click'    => 'update',
+							'disabled' => $canUpdate === false,
+							'icon'     => 'edit',
+							'text'     => I18n::translate('edit'),
 						],
 						[
 							'click'    => 'delete',
-							'disabled' => $language->isDefault() === false,
+							'disabled' => $canUpdate === false || $language->isDefault() === false,
 							'icon'     => 'trash',
 							'text'     => I18n::translate('delete'),
 						]
@@ -71,7 +76,7 @@ return [
 				'props'      => [
 					'buttons' => fn () =>
 						ViewButtons::view('language')
-							->defaults('preview', 'settings', 'remove')
+							->defaults('preview', 'settings', 'delete')
 							->bind(['language' => $language])
 							->render(),
 					'deletable'    => $language->isDeletable(),
@@ -116,7 +121,7 @@ return [
 				'props'     => [
 					'buttons' => fn () =>
 						ViewButtons::view('languages')
-							->defaults('add')
+							->defaults('create')
 							->render(),
 					'languages' => $kirby->languages()->values(fn ($language) => [
 						'deletable' => $language->isDeletable(),

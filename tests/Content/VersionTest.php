@@ -268,6 +268,140 @@ class VersionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::diff
+	 */
+	public function testDiffMultiLanguage()
+	{
+		$this->setUpMultiLanguage();
+
+		$a = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$b = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		$a->create($content = [
+			'title'    => 'Title',
+			'subtitle' => 'Subtitle',
+		], 'en');
+
+		$a->create($content, 'de');
+
+		$b->create($content, 'en');
+
+		$b->create([
+			'title'    => 'Title',
+			'subtitle' => 'Subtitle (changed)',
+		], 'de');
+
+		// no changes in English
+		$diffEN = $a->diff(VersionId::changes(), 'en');
+		$expectedEN = [];
+
+		$this->assertSame($expectedEN, $diffEN);
+
+		// changed subtitle in German
+		$diffDE = $a->diff(VersionId::changes(), 'de');
+		$expectedDE = ['subtitle' => 'Subtitle (changed)'];
+
+		$this->assertSame($expectedDE, $diffDE);
+	}
+
+	/**
+	 * @covers ::diff
+	 */
+	public function testDiffSingleLanguage()
+	{
+		$this->setUpSingleLanguage();
+
+		$a = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$b = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		$a->create([
+			'title'    => 'Title',
+			'subtitle' => 'Subtitle',
+		]);
+
+		$b->create([
+			'title'    => 'Title',
+			'subtitle' => 'Subtitle (changed)',
+		]);
+
+		$diff = $a->diff(VersionId::changes());
+
+		// the result array should contain the changed fields
+		// the changed values
+		$expected = ['subtitle' => 'Subtitle (changed)'];
+
+		$this->assertSame($expected, $diff);
+	}
+
+	/**
+	 * @covers ::diff
+	 */
+	public function testDiffWithoutChanges()
+	{
+		$this->setUpSingleLanguage();
+
+		$a = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$b = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		$a->create([
+			'title'    => 'Title',
+			'subtitle' => 'Subtitle',
+		]);
+
+		$b->create([
+			'title'    => 'Title',
+			'subtitle' => 'Subtitle',
+		]);
+
+		$diff = $a->diff(VersionId::changes());
+
+		$this->assertSame([], $diff);
+	}
+
+	/**
+	 * @covers ::diff
+	 */
+	public function testDiffWithSameVersion()
+	{
+		$this->setUpSingleLanguage();
+
+		$a = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$a->create([
+			'title'    => 'Title',
+			'subtitle' => 'Subtitle',
+		]);
+
+		$diff = $a->diff(VersionId::published());
+
+		$this->assertSame([], $diff);
+	}
+
+	/**
 	 * @covers ::ensure
 	 */
 	public function testEnsureMultiLanguage(): void

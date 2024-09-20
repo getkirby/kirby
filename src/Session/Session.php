@@ -22,7 +22,6 @@ use Kirby\Toolkit\SymmetricCrypto;
 class Session
 {
 	// parent data
-	protected Sessions $sessions;
 	protected string $mode;
 
 	// parts of the token
@@ -59,12 +58,11 @@ class Session
 	 *                       - `renewable`: Should it be possible to extend the expiry date?; defaults to `true`
 	 */
 	public function __construct(
-		Sessions $sessions,
+		protected Sessions $sessions,
 		string|null $token,
 		array $options
 	) {
-		$this->sessions = $sessions;
-		$this->mode     = $options['mode'] ?? 'cookie';
+		$this->mode = $options['mode'] ?? 'cookie';
 
 		// ensure that all changes are committed on script termination
 		register_shutdown_function([$this, 'commit']);
@@ -99,23 +97,24 @@ class Session
 		// validate persistent data
 		if (time() > $this->expiryTime) {
 			// session must not already be expired, but the start time may be in the future
-			throw new InvalidArgumentException([
-				'data' => [
+			throw new InvalidArgumentException(
+				data: [
 					'method'   => 'Session::__construct',
 					'argument' => '$options[\'expiryTime\']'
 				],
-				'translate' => false
-			]);
+				translate: false
+			);
 		}
+
 		if ($this->duration < 0) {
 			// expiry time must be after start time
-			throw new InvalidArgumentException([
-				'data' => [
+			throw new InvalidArgumentException(
+				data: [
 					'method'   => 'Session::__construct',
 					'argument' => '$options[\'startTime\' & \'expiryTime\']'
 				],
-				'translate' => false
-			]);
+				translate: false
+			);
 		}
 
 		// set activity time if a timeout was requested
@@ -155,10 +154,10 @@ class Session
 			// only allow this if this is a new session, otherwise the change
 			// might not be applied correctly to the current request
 			if ($this->token() !== null) {
-				throw new InvalidArgumentException([
-					'data'      => ['method' => 'Session::mode', 'argument' => '$mode'],
-					'translate' => false
-				]);
+				throw new InvalidArgumentException(
+					data: ['method' => 'Session::mode', 'argument' => '$mode'],
+					translate: false
+				);
 			}
 
 			$this->mode = $mode;
@@ -192,10 +191,13 @@ class Session
 
 			// verify that the expiry time is not in the past
 			if ($expiryTime <= time()) {
-				throw new InvalidArgumentException([
-					'data'      => ['method' => 'Session::expiryTime', 'argument' => '$expiryTime'],
-					'translate' => false
-				]);
+				throw new InvalidArgumentException(
+					data: [
+						'method'   => 'Session::expiryTime',
+						'argument' => '$expiryTime'
+					],
+					translate: false
+				);
 			}
 
 			$this->prepareForWriting();
@@ -219,10 +221,13 @@ class Session
 		if ($duration !== null) {
 			// verify that the duration is at least 1 second
 			if ($duration < 1) {
-				throw new InvalidArgumentException([
-					'data'      => ['method' => 'Session::duration', 'argument' => '$duration'],
-					'translate' => false
-				]);
+				throw new InvalidArgumentException(
+					data: [
+						'method'   => 'Session::duration',
+						'argument' => '$duration'
+					],
+					translate: false
+				);
 			}
 
 			$this->prepareForWriting();
@@ -245,10 +250,13 @@ class Session
 		if ($timeout !== null) {
 			// verify that the timeout is at least 1 second
 			if (is_int($timeout) === true && $timeout < 1) {
-				throw new InvalidArgumentException([
-					'data'      => ['method' => 'Session::timeout', 'argument' => '$timeout'],
-					'translate' => false
-				]);
+				throw new InvalidArgumentException(
+					data: [
+						'method'   => 'Session::timeout',
+						'argument' => '$timeout'
+					],
+					translate: false
+				);
 			}
 
 			$this->prepareForWriting();
@@ -305,11 +313,11 @@ class Session
 			'set'
 		];
 
-		if (in_array($name, $methods) === false) {
-			throw new BadMethodCallException([
-				'data'      => ['method' => 'Session::' . $name],
-				'translate' => false
-			]);
+		if (in_array($name, $methods, true) === false) {
+			throw new BadMethodCallException(
+				data: ['method' => 'Session::' . $name],
+				translate: false
+			);
 		}
 
 		return $this->data()->$name(...$arguments);
@@ -320,7 +328,8 @@ class Session
 	 */
 	public function commit(): void
 	{
-		// nothing to do if nothing changed or the session has been just created or destroyed
+		// nothing to do if nothing changed or the session
+		// has been just created or destroyed
 		/**
 		 * @todo The $this->destroyed check gets flagged by Psalm for unknown reasons
 		 * @psalm-suppress ParadoxicalCondition
@@ -336,7 +345,8 @@ class Session
 		// collect all data
 		if ($this->newSession !== null) {
 			// the token has changed
-			// we are writing to the old session: it only gets the reference to the new session
+			// we are writing to the old session:
+			// it only gets the reference to the new session
 			// and a shortened expiry time (30 second grace period)
 			$data = [
 				'startTime'  => $this->startTime(),
@@ -406,11 +416,11 @@ class Session
 	public function renew(): void
 	{
 		if ($this->renewable() !== true) {
-			throw new LogicException([
-				'key'       => 'session.notRenewable',
-				'fallback'  => 'Cannot renew a session that is not renewable, call $session->renewable(true) first',
-				'translate' => false,
-			]);
+			throw new LogicException(
+				key: 'session.notRenewable',
+				fallback: 'Cannot renew a session that is not renewable, call $session->renewable(true) first',
+				translate: false,
+			);
 		}
 
 		$this->prepareForWriting();
@@ -532,12 +542,12 @@ class Session
 		 * @psalm-suppress ParadoxicalCondition
 		 */
 		if ($this->tokenKey === null) {
-			throw new LogicException([
-				'key'       => 'session.readonly',
-				'data'      => ['token' => $this->token()],
-				'fallback'  => 'Session "' . $this->token() . '" is currently read-only because it was accessed via an old session token',
-				'translate' => false
-			]);
+			throw new LogicException(
+				key: 'session.readonly',
+				data: ['token' => $this->token()],
+				fallback: 'Session "' . $this->token() . '" is currently read-only because it was accessed via an old session token',
+				translate: false
+			);
 		}
 
 		$this->sessions->store()->lock($this->tokenExpiry, $this->tokenId);
@@ -574,11 +584,15 @@ class Session
 
 		// only continue if the token has exactly the right amount of parts
 		$expectedParts = ($withoutKey === true) ? 2 : 3;
+
 		if (count($parts) !== $expectedParts) {
-			throw new InvalidArgumentException([
-				'data'      => ['method' => 'Session::parseToken', 'argument' => '$token'],
-				'translate' => false
-			]);
+			throw new InvalidArgumentException(
+				data: [
+					'method'   => 'Session::parseToken',
+					'argument' => '$token'
+				],
+				translate: false
+			);
 		}
 
 		$tokenExpiry = (int)$parts[0];
@@ -587,14 +601,19 @@ class Session
 
 		// verify that all parts were parsed correctly using reassembly
 		$expectedToken = $tokenExpiry . '.' . $tokenId;
+
 		if ($withoutKey === false) {
 			$expectedToken .= '.' . $tokenKey;
 		}
+
 		if ($expectedToken !== $token) {
-			throw new InvalidArgumentException([
-				'data'      => ['method' => 'Session::parseToken', 'argument' => '$token'],
-				'translate' => false
-			]);
+			throw new InvalidArgumentException(
+				data: [
+					'method'   => 'Session::parseToken',
+					'argument' => '$token'
+				],
+				translate: false
+			);
 		}
 
 		$this->tokenExpiry = $tokenExpiry;
@@ -636,18 +655,18 @@ class Session
 			$this->destroyed === true
 		) {
 			// unexpected error that shouldn't occur
-			throw new Exception(['translate' => false]); // @codeCoverageIgnore
+			throw new Exception(translate: false); // @codeCoverageIgnore
 		}
 
 		// make sure that the session exists
 		if ($this->sessions->store()->exists($this->tokenExpiry, $this->tokenId) !== true) {
-			throw new NotFoundException([
-				'key'       => 'session.notFound',
-				'data'      => ['token' => $this->token()],
-				'fallback'  => 'Session "' . $this->token() . '" does not exist',
-				'translate' => false,
-				'httpCode'  => 404
-			]);
+			throw new NotFoundException(
+				key: 'session.notFound',
+				data: ['token' => $this->token()],
+				fallback: 'Session "' . $this->token() . '" does not exist',
+				translate: false,
+				httpCode: 404
+			);
 		}
 
 		// get the session data from the store
@@ -665,26 +684,26 @@ class Session
 			$this->tokenKey !== null &&
 			hash_equals(hash_hmac('sha256', $data, $this->tokenKey), $hmac) !== true
 		) {
-			throw new LogicException([
-				'key'       => 'session.invalid',
-				'data'      => ['token' => $this->token()],
-				'fallback'  => 'Session "' . $this->token() . '" is invalid',
-				'translate' => false,
-				'httpCode'  => 500
-			]);
+			throw new LogicException(
+				key: 'session.invalid',
+				data: ['token' => $this->token()],
+				fallback: 'Session "' . $this->token() . '" is invalid',
+				translate: false,
+				httpCode: 500
+			);
 		}
 
 		// decode the serialized data
 		$data = @unserialize($data);
 
 		if ($data === false) {
-			throw new LogicException([
-				'key'       => 'session.invalid',
-				'data'      => ['token' => $this->token()],
-				'fallback'  => 'Session "' . $this->token() . '" is invalid',
-				'translate' => false,
-				'httpCode'  => 500
-			]);
+			throw new LogicException(
+				key: 'session.invalid',
+				data: ['token' => $this->token()],
+				fallback: 'Session "' . $this->token() . '" is invalid',
+				translate: false,
+				httpCode: 500
+			);
 		}
 
 		// verify start and expiry time
@@ -692,13 +711,13 @@ class Session
 			time() < $data['startTime'] ||
 			time() > $data['expiryTime']
 		) {
-			throw new LogicException([
-				'key'       => 'session.invalid',
-				'data'      => ['token' => $this->token()],
-				'fallback'  => 'Session "' . $this->token() . '" is invalid',
-				'translate' => false,
-				'httpCode'  => 500
-			]);
+			throw new LogicException(
+				key: 'session.invalid',
+				data: ['token' => $this->token()],
+				fallback: 'Session "' . $this->token() . '" is invalid',
+				translate: false,
+				httpCode: 500
+			);
 		}
 
 		// follow to the new session if there is one
@@ -725,13 +744,13 @@ class Session
 		// verify timeout
 		if (is_int($data['timeout']) === true) {
 			if (time() - $data['lastActivity'] > $data['timeout']) {
-				throw new LogicException([
-					'key'       => 'session.invalid',
-					'data'      => ['token' => $this->token()],
-					'fallback'  => 'Session "' . $this->token() . '" is invalid',
-					'translate' => false,
-					'httpCode'  => 500
-				]);
+				throw new LogicException(
+					key: 'session.invalid',
+					data: ['token' => $this->token()],
+					fallback: 'Session "' . $this->token() . '" is invalid',
+					translate: false,
+					httpCode: 500
+				);
 			}
 
 			// set a new activity timestamp, but only every few minutes for better performance

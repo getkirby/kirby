@@ -264,10 +264,10 @@ class AppTranslationsTest extends TestCase
 		I18n::$load = null;
 		I18n::$translations = [];
 
-		$exception = new Exception([
-			'key'      => 'test',
-			'fallback' => $fallbackError = 'This would be the fallback error'
-		]);
+		$exception = new Exception(
+			key: 'test',
+			fallback: $fallbackError = 'This would be the fallback error'
+		);
 
 		$this->assertSame('error.test', $exception->getKey());
 		$this->assertSame($fallbackError, $exception->getMessage());
@@ -277,10 +277,7 @@ class AppTranslationsTest extends TestCase
 	{
 		$this->app();
 
-		$exception = new Exception([
-			'key' => 'test'
-		]);
-
+		$exception = new Exception(key: 'test');
 		$this->assertSame('This is a test error', $exception->getMessage());
 	}
 
@@ -289,10 +286,7 @@ class AppTranslationsTest extends TestCase
 		$app = $this->app();
 		$app->setCurrentTranslation('de');
 
-		$exception = new Exception([
-			'key' => 'test'
-		]);
-
+		$exception = new Exception(key: 'test');
 		$this->assertSame('Das ist ein Testfehler', $exception->getMessage());
 	}
 
@@ -300,11 +294,11 @@ class AppTranslationsTest extends TestCase
 	{
 		$app = $this->app();
 
-		$exception = new Exception([
-			'key'       => 'test',
-			'fallback'  => 'This would be the fallback error',
-			'translate' => false
-		]);
+		$exception = new Exception(
+			key: 'test',
+			fallback: 'This would be the fallback error',
+			translate: false
+		);
 
 		$this->assertSame('error.test', $exception->getKey());
 		$this->assertSame('This would be the fallback error', $exception->getMessage());
@@ -314,10 +308,10 @@ class AppTranslationsTest extends TestCase
 	{
 		$app = $this->app();
 
-		$exception = new Exception([
-			'key'      => 'no-real-key',
-			'fallback' => 'This would be the fallback error'
-		]);
+		$exception = new Exception(
+			key: 'no-real-key',
+			fallback: 'This would be the fallback error'
+		);
 
 		$this->assertSame('error.no-real-key', $exception->getKey());
 		$this->assertSame('This would be the fallback error', $exception->getMessage());

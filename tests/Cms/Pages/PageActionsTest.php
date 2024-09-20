@@ -7,6 +7,7 @@ use Kirby\Content\VersionId;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
+use ReflectionClass;
 
 class PageActionsTest extends TestCase
 {
@@ -450,6 +451,69 @@ class PageActionsTest extends TestCase
 		$this->assertSame($modified, $childrenAndDrafts->find('test'));
 	}
 
+	public function testCommit(): void
+	{
+		$phpunit = $this;
+
+		$app = $this->app->clone([
+			'hooks' => [
+				'page.changeSlug:before' => [
+					function (Page $page, string $slug) use ($phpunit) {
+						$phpunit->assertSame('target', $slug);
+						$phpunit->assertSame('original', $page->slug());
+						// altering $page which will be passed
+						// to subsequent hook
+						return new Page(['slug' => 'a']);
+					},
+					function (Page $page, string $slug) use ($phpunit) {
+						$phpunit->assertSame('target', $slug);
+						// altered $page from previous hook
+						$phpunit->assertSame('a', $page->slug());
+						// altering $page which will be used
+						// in the commit callback closure
+						return new Page(['slug' => 'b']);
+					}
+				],
+				'page.changeSlug:after' => [
+					function (Page $newPage, Page $oldPage) use ($phpunit) {
+						$phpunit->assertSame('original', $oldPage->slug());
+						// modified $page from the commit callback closure
+						$phpunit->assertSame('target', $newPage->slug());
+						// altering $newPage which will be passed
+						// to subsequent hook
+						return new Page(['slug' => 'c']);
+					},
+					function (Page $newPage, Page $oldPage) use ($phpunit) {
+						$phpunit->assertSame('original', $oldPage->slug());
+						// altered $newPage from previous hook
+						$phpunit->assertSame('c', $newPage->slug());
+						// altering $newPage which will be the final result
+						return new Page(['slug' => 'd']);
+					}
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$page   = new Page(['slug' => 'original']);
+		$class  = new ReflectionClass($page);
+		$commit = $class->getMethod('commit');
+		$result = $commit->invokeArgs($page, [
+			'changeSlug',
+			['page' => $page, 'slug' => 'target'],
+			function (Page $page, string $slug) use ($phpunit) {
+				$phpunit->assertSame('target', $slug);
+				// altered $page from before hooks
+				$phpunit->assertSame('b', $page->slug());
+				return new Page(['slug' => $slug]);
+			}
+		]);
+
+		// altered result from last after hook
+		$this->assertSame('d', $result->slug());
+	}
+
 	public function testMove()
 	{
 		$this->app = $this->app->clone([
@@ -889,15 +953,18 @@ class PageActionsTest extends TestCase
 			'parent' => $page,
 			'code'   => 'en',
 		]);
-		$this->assertFileExists($page->version(VersionId::changes())->contentFile('en'));
+
+		$versionId = VersionId::published();
+
+		$this->assertFileExists($page->version($versionId)->contentFile('en'));
 
 		$drafts = $app->site()->drafts();
 		$childrenAndDrafts = $app->site()->childrenAndDrafts();
 
 		$copy = $page->duplicate('test-copy');
 
-		$this->assertFileExists($copy->version(VersionId::changes())->contentFile('en'));
-		$this->assertFileDoesNotExist($copy->version(VersionId::changes())->contentFile('de'));
+		$this->assertFileExists($copy->version($versionId)->contentFile('en'));
+		$this->assertFileDoesNotExist($copy->version($versionId)->contentFile('de'));
 
 		$this->assertIsPage($page, $drafts->find('test'));
 		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
@@ -929,8 +996,11 @@ class PageActionsTest extends TestCase
 			'slug'  => 'test-de'
 		], 'de');
 
-		$this->assertFileExists($page->version(VersionId::changes())->contentFile('en'));
-		$this->assertFileExists($page->version(VersionId::changes())->contentFile('de'));
+		$versionId = VersionId::published();
+
+		$this->assertFileExists($page->version($versionId)->contentFile('en'));
+		$this->assertFileExists($page->version($versionId)->contentFile('de'));
+
 		$this->assertSame('test', $page->slug());
 		$this->assertSame('test-de', $page->slug('de'));
 
@@ -1042,11 +1112,12 @@ class PageActionsTest extends TestCase
 			'code'   => 'en'
 		]);
 
+		$versionId = VersionId::published();
+
 		$copy = $page->duplicate('test-copy', ['children' => true]);
 
-		$this->assertFileExists($copy->version(VersionId::changes())->contentFile('en'));
-		$this->assertFileDoesNotExist($copy->version(VersionId::changes())->contentFile('de'));
-
+		$this->assertFileExists($copy->version($versionId)->contentFile('en'));
+		$this->assertFileDoesNotExist($copy->version($versionId)->contentFile('de'));
 
 		$this->assertNotSame($page->uuid()->id(), $copy->uuid()->id());
 		$this->assertNotSame($app->page('test/foo')->uuid()->id(), $app->page('test-copy/foo')->uuid()->id());

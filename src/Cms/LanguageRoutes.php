@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\F;
-use Kirby\Toolkit\Str;
 
 class LanguageRoutes
 {
@@ -30,25 +29,8 @@ class LanguageRoutes
 				'pattern' => $language->pattern(),
 				'method'  => 'ALL',
 				'env'     => 'site',
-				'action'  => function ($path = null) use ($kirby, $language) {
+				'action'  => function ($path = null) use ($language) {
 					$result = $language->router()->call($path);
-
-					// redirect secondary-language pages that have
-					// been accessed with non-translated slugs in their path
-					// to their fully translated URL
-					if ($path !== null && $result instanceof Page) {
-						if (Str::endsWith($result->url(), $path) === false) {
-							$url   = $result->url();
-							$query = $kirby->request()->query()->toString();
-
-							// preserve query across redirect
-							if (empty($query) === false) {
-								$url .= '?' . $query;
-							}
-
-							return $kirby->response()->redirect($url);
-						}
-					}
 
 					// explicitly test for null as $result can
 					// contain falsy values that should still be returned
@@ -147,11 +129,10 @@ class LanguageRoutes
 
 				// if there's just one language,
 				// we take that to render the home page
-				if ($languages->count() === 1) {
-					$currentLanguage = $languages->first();
-				} else {
-					$currentLanguage = $kirby->defaultLanguage();
-				}
+				$currentLanguage = match ($languages->count()) {
+					1       => $languages->first(),
+					default => $kirby->defaultLanguage()
+				};
 
 				// language detection on the home page with / as URL
 				if ($kirby->url() !== $currentLanguage->url()) {

@@ -33,12 +33,13 @@ export default {
 <style>
 :root {
 	--color-frame-back: none;
+	--color-frame-pattern: var(--pattern-light);
 	--color-frame-rounded: var(--rounded);
 	--color-frame-size: 100%;
 	--color-frame-darkness: 0%;
 }
 .k-color-frame.k-frame {
-	background: var(--pattern-light);
+	background: var(--color-frame-pattern);
 	width: var(--color-frame-size);
 	color: transparent;
 	border-radius: var(--color-frame-rounded);
@@ -52,5 +53,9 @@ export default {
 	inset: 0;
 	background: var(--color-frame-back);
 	content: "";
+}
+
+.k-panel[data-theme="dark"] {
+	--color-frame-pattern: var(--pattern-dark);
 }
 </style>

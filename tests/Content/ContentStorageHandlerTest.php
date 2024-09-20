@@ -5,8 +5,6 @@ namespace Kirby\Content;
 use Kirby\Cms\File;
 use Kirby\Cms\Language;
 use Kirby\Cms\Page;
-use Kirby\Cms\Site;
-use Kirby\Cms\User;
 use Kirby\Data\Data;
 use Kirby\Filesystem\Dir;
 
@@ -116,35 +114,6 @@ class ContentStorageHandlerTest extends TestCase
 	/**
 	 * @covers ::all
 	 */
-	public function testAllMultiLanguageForPageDraft()
-	{
-		$this->setUpMultiLanguage();
-
-		$handler = new TestContentStorageHandler(
-			new Page(['slug' => 'test', 'isDraft' => true])
-		);
-
-		$versions = iterator_to_array($handler->all(), false);
-
-		$this->assertCount(0, $versions);
-
-		$handler->create(VersionId::published(), $this->app->language('en'), []);
-		$handler->create(VersionId::published(), $this->app->language('de'), []);
-
-		$handler->create(VersionId::changes(), $this->app->language('en'), []);
-		$handler->create(VersionId::changes(), $this->app->language('de'), []);
-
-		// count again
-		$versions = iterator_to_array($handler->all(), false);
-
-		// A draft page has only changes and thus should only have
-		// a changes for every language, but no published versions
-		$this->assertCount(2, $versions);
-	}
-
-	/**
-	 * @covers ::all
-	 */
 	public function testAllSingleLanguageForPage()
 	{
 		$this->setUpSingleLanguage();
@@ -166,33 +135,6 @@ class ContentStorageHandlerTest extends TestCase
 
 		// A page that's not in draft mode can have published and changes versions
 		$this->assertCount(2, $versions);
-	}
-
-	/**
-	 * @covers ::all
-	 */
-	public function testAllSingleLanguageForPageDraft()
-	{
-		$this->setUpSingleLanguage();
-
-		$handler = new TestContentStorageHandler(
-			new Page(['slug' => 'test', 'isDraft' => true])
-		);
-
-		$versions = iterator_to_array($handler->all(), false);
-
-		$this->assertCount(0, $versions);
-
-		// create all possible versions
-		$handler->create(VersionId::published(), Language::single(), []);
-		$handler->create(VersionId::changes(), Language::single(), []);
-
-		// count again
-		$versions = iterator_to_array($handler->all(), false);
-
-		// A draft page has only changes and thus should only have
-		// a single version in a single language installation
-		$this->assertCount(1, $versions);
 	}
 
 	/**
@@ -245,88 +187,6 @@ class ContentStorageHandlerTest extends TestCase
 
 		$this->assertFalse($handler->exists(VersionId::published(), $language));
 		$this->assertFalse($handler->exists(VersionId::changes(), $language));
-	}
-
-	/**
-	 * @covers ::dynamicVersions
-	 */
-	public function testDynamicVersionsForFile()
-	{
-		$handler = new TestContentStorageHandler(
-			new File([
-				'filename' => 'test.jpg',
-				'parent'   => new Page(['slug' => 'test'])
-			])
-		);
-
-		$versions = $handler->dynamicVersions();
-
-		$this->assertCount(2, $versions);
-		$this->assertSame(VersionId::CHANGES, $versions[0]->value());
-		$this->assertSame(VersionId::PUBLISHED, $versions[1]->value());
-	}
-
-	/**
-	 * @covers ::dynamicVersions
-	 */
-	public function testDynamicVersionsForPage()
-	{
-		$handler = new TestContentStorageHandler(
-			new Page(['slug' => 'test', 'isDraft' => false])
-		);
-
-		$versions = $handler->dynamicVersions();
-
-		$this->assertCount(2, $versions);
-		$this->assertSame(VersionId::CHANGES, $versions[0]->value());
-		$this->assertSame(VersionId::PUBLISHED, $versions[1]->value());
-	}
-
-	/**
-	 * @covers ::dynamicVersions
-	 */
-	public function testDynamicVersionsForPageDraft()
-	{
-		$handler = new TestContentStorageHandler(
-			new Page(['slug' => 'test', 'isDraft' => true])
-		);
-
-		$versions = $handler->dynamicVersions();
-
-		$this->assertCount(1, $versions);
-		$this->assertSame(VersionId::CHANGES, $versions[0]->value());
-	}
-
-	/**
-	 * @covers ::dynamicVersions
-	 */
-	public function testDynamicVersionsForSite()
-	{
-		$handler = new TestContentStorageHandler(
-			new Site()
-		);
-
-		$versions = $handler->dynamicVersions();
-
-		$this->assertCount(2, $versions);
-		$this->assertSame(VersionId::CHANGES, $versions[0]->value());
-		$this->assertSame(VersionId::PUBLISHED, $versions[1]->value());
-	}
-
-	/**
-	 * @covers ::dynamicVersions
-	 */
-	public function testDynamicVersionsForUser()
-	{
-		$handler = new TestContentStorageHandler(
-			new User(['email' => 'test@getkirby.com'])
-		);
-
-		$versions = $handler->dynamicVersions();
-
-		$this->assertCount(2, $versions);
-		$this->assertSame(VersionId::CHANGES, $versions[0]->value());
-		$this->assertSame(VersionId::PUBLISHED, $versions[1]->value());
 	}
 
 	/**
@@ -503,6 +363,38 @@ class ContentStorageHandlerTest extends TestCase
 
 		$this->assertFileExists($this->model->root() . '/article.txt');
 		$this->assertFileExists($this->model->root() . '/_changes/article.txt');
+	}
+
+	/**
+	 * @covers ::replaceStrings
+	 */
+	public function testReplaceStrings()
+	{
+		$this->setUpMultiLanguage();
+
+		$versionId = VersionId::changes();
+		$language  = $this->app->language('en');
+
+		$handler = new TestContentStorageHandler(
+			model: $this->model
+		);
+
+		$fields = [
+			'foo' => 'one step',
+			'bar' => 'two steps'
+		];
+
+		$handler->create($versionId, $language, $fields);
+		$this->assertSame($fields, $handler->read($versionId, $language));
+
+		$handler->replaceStrings($versionId, $language, ['step' => 'jump']);
+
+		$expected = [
+			'foo' => 'one jump',
+			'bar' => 'two jumps'
+		];
+
+		$this->assertSame($expected, $handler->read($versionId, $language));
 	}
 
 	/**

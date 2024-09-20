@@ -40,8 +40,10 @@ class PageRulesTest extends TestCase
 			'kirby' => $this->appWithAdmin(),
 		]);
 
-		$this->assertTrue(PageRules::changeNum($page, 2));
-		$this->assertTrue(PageRules::changeNum($page));
+		$this->expectNotToPerformAssertions();
+
+		PageRules::changeNum($page, 2);
+		PageRules::changeNum($page);
 	}
 
 	/**
@@ -78,7 +80,7 @@ class PageRulesTest extends TestCase
 			'kirby' => $app,
 		]);
 
-		$this->assertTrue(PageRules::changeSlug($page, 'test-a'));
+		PageRules::changeSlug($page, 'test-a');
 
 		$this->expectException(DuplicateException::class);
 		$this->expectExceptionMessage('A page with the URL appendix "test-b" already exists');
@@ -266,12 +268,14 @@ class PageRulesTest extends TestCase
 			]
 		]);
 
+		$this->expectNotToPerformAssertions();
+
 		$page = new Page([
 			'slug'  => 'test-' . $status,
 			'kirby' => $app,
 		]);
 
-		$this->assertTrue(PageRules::changeStatus($page, $status, ...$args));
+		PageRules::changeStatus($page, $status, ...$args);
 	}
 
 	/**
@@ -310,7 +314,9 @@ class PageRulesTest extends TestCase
 			]
 		]);
 
-		$this->assertTrue(PageRules::changeTemplate($page, 'b'));
+		$this->expectNotToPerformAssertions();
+
+		PageRules::changeTemplate($page, 'b');
 	}
 
 	/**
@@ -501,7 +507,9 @@ class PageRulesTest extends TestCase
 			'slug'  => 'test',
 		]);
 
-		$this->assertTrue(PageRules::delete($page));
+		$this->expectNotToPerformAssertions();
+
+		PageRules::delete($page);
 	}
 
 	/**
@@ -532,7 +540,9 @@ class PageRulesTest extends TestCase
 			'slug'  => 'test',
 		]);
 
-		$this->assertTrue(PageRules::delete($page));
+		$this->expectNotToPerformAssertions();
+
+		PageRules::delete($page);
 	}
 
 	/**
@@ -617,8 +627,9 @@ class PageRulesTest extends TestCase
 			],
 		]);
 
+		$this->expectNotToPerformAssertions();
 
-		$this->assertTrue(PageRules::delete($page, true));
+		PageRules::delete($page, true);
 	}
 
 	/**
@@ -631,7 +642,9 @@ class PageRulesTest extends TestCase
 			'kirby' => $this->appWithAdmin(),
 		]);
 
-		$this->assertTrue(PageRules::duplicate($page, 'test-copy'));
+		$this->expectNotToPerformAssertions();
+
+		PageRules::duplicate($page, 'test-copy');
 	}
 
 	/**
@@ -678,9 +691,11 @@ class PageRulesTest extends TestCase
 			'slug'  => 'test',
 		]);
 
-		$this->assertTrue(PageRules::update($page, [
+		$this->expectNotToPerformAssertions();
+
+		PageRules::update($page, [
 			'color' => 'red'
-		]));
+		]);
 	}
 
 	/**
@@ -802,10 +817,11 @@ class PageRulesTest extends TestCase
 
 		$app->impersonate('kirby');
 
+		$this->expectNotToPerformAssertions();
+
 		$parentB = $app->page('parent-b');
 		$child   = $app->page('parent-a/child');
-
-		$this->assertTrue(PageRules::move($child, $parentB));
+		PageRules::move($child, $parentB);
 	}
 
 	public function testMoveWithoutPermissions()

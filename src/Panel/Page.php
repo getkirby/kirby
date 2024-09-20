@@ -286,7 +286,7 @@ class Page extends Model
 
 		// create siblings collection based on
 		// blueprint navigation
-		$siblings = function (string $direction) use ($page) {
+		$siblings = static function (string $direction) use ($page) {
 			$navigation = $page->blueprint()->navigation();
 			$sortBy     = $navigation['sortBy'] ?? null;
 			$status     = $navigation['status'] ?? null;
@@ -313,12 +313,12 @@ class Page extends Model
 				$templates = (array)($template ?? $page->intendedTemplate());
 
 				// do not filter if template navigation is all
-				if (in_array('all', $templates) === false) {
+				if (in_array('all', $templates, true) === false) {
 					$siblings = $siblings->filter('intendedTemplate', 'in', $templates);
 				}
 
 				// do not filter if status navigation is all
-				if (in_array('all', $statuses) === false) {
+				if (in_array('all', $statuses, true) === false) {
 					$siblings = $siblings->filter('status', 'in', $statuses);
 				}
 			} else {

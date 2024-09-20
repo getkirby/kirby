@@ -24,7 +24,9 @@ return [
 				$parent = $this->model->query($query);
 
 				if (!$parent) {
-					throw new Exception('The parent for the query "' . $query . '" cannot be found in the section "' . $this->name() . '"');
+					throw new Exception(
+						message: 'The parent for the query "' . $query . '" cannot be found in the section "' . $this->name() . '"'
+					);
 				}
 
 				if (
@@ -33,7 +35,9 @@ return [
 					$parent instanceof File === false &&
 					$parent instanceof User === false
 				) {
-					throw new Exception('The parent for the section "' . $this->name() . '" has to be a page, site or user object');
+					throw new Exception(
+						message: 'The parent for the section "' . $this->name() . '" has to be a page, site or user object'
+					);
 				}
 			}
 

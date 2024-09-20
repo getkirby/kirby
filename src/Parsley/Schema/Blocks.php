@@ -187,7 +187,7 @@ class Blocks extends Plain
 				} elseif ($child instanceof DOMElement) {
 					$child = new Element($child);
 					$list  = ['ul', 'ol'];
-					$innerHtml .= match (in_array($child->tagName(), $list)) {
+					$innerHtml .= match (in_array($child->tagName(), $list, true)) {
 						true    => $this->list($child),
 						default => $child->innerHTML($this->marks())
 					};

@@ -304,6 +304,7 @@ class Database
 		// try to prepare and execute the sql
 		try {
 			$this->statement = $this->connection->prepare($query);
+
 			// bind parameters to statement
 			foreach ($bindings as $parameter => $value) {
 				// positional parameters start at 1
@@ -466,7 +467,7 @@ class Database
 			}
 		}
 
-		return in_array($table, $this->tables) === true;
+		return in_array($table, $this->tables, true) === true;
 	}
 
 	/**
@@ -491,7 +492,7 @@ class Database
 			}
 		}
 
-		return in_array($column, $this->columnWhitelist[$table]) === true;
+		return in_array($column, $this->columnWhitelist[$table], true) === true;
 	}
 
 	/**
@@ -511,7 +512,7 @@ class Database
 		}
 
 		// update cache
-		if (in_array($table, $this->tables ?? []) !== true) {
+		if (in_array($table, $this->tables ?? [], true) !== true) {
 			$this->tables[] = $table;
 		}
 
@@ -554,7 +555,10 @@ class Database
 Database::$types['mysql'] = [
 	'sql' => Mysql::class,
 	'dsn' => function (array $params): string {
-		if (isset($params['host']) === false && isset($params['socket']) === false) {
+		if (
+			isset($params['host']) === false &&
+			isset($params['socket']) === false
+		) {
 			throw new InvalidArgumentException('The mysql connection requires either a "host" or a "socket" parameter');
 		}
 

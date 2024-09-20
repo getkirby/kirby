@@ -331,7 +331,7 @@ abstract class Model
 
 		if ($this->model->isLocked()) {
 			foreach ($options as $key => $value) {
-				if (in_array($key, $unlock)) {
+				if (in_array($key, $unlock, true)) {
 					continue;
 				}
 

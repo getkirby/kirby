@@ -105,6 +105,23 @@ class Version
 	}
 
 	/**
+	 * Returns the changed fields, compared to the given version
+	 */
+	public function diff(VersionId|string $versionId, Language|string $language = 'default'): array
+	{
+		$versionId = VersionId::from($versionId);
+
+		if ($versionId->is($this->id) === true) {
+			return [];
+		}
+
+		$a = $this->read($language) ?? [];
+		$b = $this->model->version($versionId)->read($language) ?? [];
+
+		return array_diff($b, $a);
+	}
+
+	/**
 	 * Ensure that the version exists and otherwise
 	 * throw an exception
 	 *
@@ -228,8 +245,8 @@ class Version
 		// the version needs to exist
 		$this->ensure($language);
 
-		// update the default version
-		$this->model->version(VersionId::default($this->model))->save(
+		// update the published version
+		$this->model->version(VersionId::published())->save(
 			fields: $this->read($language),
 			language: $language
 		);

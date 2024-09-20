@@ -437,8 +437,7 @@ class Pages extends Collection
 		}
 
 		return $this->filter(
-			fn ($page) =>
-				!in_array($page->intendedTemplate()->name(), $templates)
+			fn ($page) => in_array($page->intendedTemplate()->name(), $templates, true) === false
 		);
 	}
 
@@ -472,8 +471,7 @@ class Pages extends Collection
 		}
 
 		return $this->filter(
-			fn ($page) =>
-				in_array($page->intendedTemplate()->name(), $templates)
+			fn ($page) => in_array($page->intendedTemplate()->name(), $templates, true)
 		);
 	}
 

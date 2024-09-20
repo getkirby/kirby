@@ -44,7 +44,7 @@ class Segment
 			$type = 'float';
 		}
 
-		$nonExisting = in_array($type, ['array', 'object']) ? 'non-existing ' : '';
+		$nonExisting = in_array($type, ['array', 'object'], true) ? 'non-existing ' : '';
 
 		$error = 'Access to ' . $nonExisting . $label . ' "' . $name . '" on ' . $type;
 

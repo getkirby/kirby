@@ -229,7 +229,7 @@ class Request
 		// the request method can be overwritten with a header
 		$methodOverride = strtoupper(Environment::getGlobally('HTTP_X_HTTP_METHOD_OVERRIDE', ''));
 
-		if (in_array($methodOverride, $methods) === true) {
+		if (in_array($methodOverride, $methods, true) === true) {
 			$method ??= $methodOverride;
 		}
 
@@ -240,7 +240,7 @@ class Request
 		$method = strtoupper($method);
 
 		// sanitize the method
-		if (in_array($method, $methods) === false) {
+		if (in_array($method, $methods, true) === false) {
 			$method = 'GET';
 		}
 

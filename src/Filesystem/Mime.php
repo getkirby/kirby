@@ -127,13 +127,13 @@ class Mime
 		// fixing map
 		$map = [
 			'text/html' => [
-				'svg' => [Mime::class, 'fromSvg'],
+				'svg' => Mime::fromSvg(...),
 			],
 			'text/plain' => [
 				'css'  => 'text/css',
 				'json' => 'application/json',
 				'mjs' => 'text/javascript',
-				'svg'  => [Mime::class, 'fromSvg'],
+				'svg'  => Mime::fromSvg(...),
 			],
 			'text/x-asm' => [
 				'css' => 'text/css'
@@ -149,7 +149,7 @@ class Mime
 			]
 		];
 
-		if ($mode = ($map[$mime][$extension] ?? null)) {
+		if ($mode = $map[$mime][$extension] ?? null) {
 			if (is_callable($mode) === true) {
 				return $mode($file, $mime, $extension);
 			}
@@ -168,7 +168,12 @@ class Mime
 	public static function fromExtension(string $extension): string|null
 	{
 		$mime = static::$types[$extension] ?? null;
-		return is_array($mime) === true ? array_shift($mime) : $mime;
+
+		if (is_array($mime) === true) {
+			$mime = array_shift($mime);
+		}
+
+		return  $mime;
 	}
 
 	/**
@@ -214,7 +219,10 @@ class Mime
 
 			$svg = new SimpleXMLElement(file_get_contents($file));
 
-			if ($svg !== false && $svg->getName() === 'svg') {
+			if (
+				$svg !== false &&
+				$svg->getName() === 'svg'
+			) {
 				return 'image/svg+xml';
 			}
 		}
@@ -255,7 +263,10 @@ class Mime
 	public static function toExtension(string|null $mime = null): string|false
 	{
 		foreach (static::$types as $key => $value) {
-			if (is_array($value) === true && in_array($mime, $value) === true) {
+			if (
+				is_array($value) === true &&
+				in_array($mime, $value, true) === true
+			) {
 				return $key;
 			}
 
@@ -293,7 +304,7 @@ class Mime
 				}
 
 				// check if at least one MIME type matches exactly
-				return in_array($mime, $mimes);
+				return in_array($mime, $mimes, true);
 			}
 		);
 

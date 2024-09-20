@@ -110,17 +110,18 @@ class Xml
 			return $name . '="' . $name . '"';
 		}
 
-		if (is_array($value) === true) {
-			if (isset($value['value'], $value['escape'])) {
-				$value = $value['escape'] === true ? static::encode($value['value']) : $value['value'];
-			} else {
-				$value = implode(' ', array_filter(
-					$value,
-					fn ($value) => !empty($value) || is_numeric($value)
-				));
-			}
-		} else {
+		if (is_array($value) === false) {
 			$value = static::encode($value);
+		} elseif (isset($value['value'], $value['escape']) === true) {
+			$value = match ($value['escape']) {
+				true    => static::encode($value['value']),
+				default => $value['value']
+			};
+		} else {
+			$value = implode(' ', array_filter(
+				$value,
+				fn ($value) => !empty($value) || is_numeric($value)
+			));
 		}
 
 		return $name . '="' . $value . '"';
@@ -156,7 +157,8 @@ class Xml
 				$name       = $props['@name'] ?? $name;
 				$attributes = $props['@attributes'] ?? [];
 				$value      = $props['@value'] ?? null;
-				if (isset($props['@namespaces'])) {
+
+				if (isset($props['@namespaces']) === true) {
 					foreach ($props['@namespaces'] as $key => $namespace) {
 						$key = 'xmlns' . (($key) ? ':' . $key : '');
 						$attributes[$key] = $namespace;
@@ -164,25 +166,50 @@ class Xml
 				}
 
 				// continue with just the children
-				unset($props['@name'], $props['@attributes'], $props['@namespaces'], $props['@value']);
+				unset(
+					$props['@name'],
+					$props['@attributes'],
+					$props['@namespaces'],
+					$props['@value']
+				);
 
-				if (count($props) > 0) {
+				if ($props !== []) {
 					// there are children, use them instead of the value
 
 					$value = [];
 					foreach ($props as $childName => $childItem) {
-						// render the child, but don't include the indentation of the first line
-						$value[] = trim(static::create($childItem, $childName, false, $indent, $level + 1));
+						// render the child, but don't include the
+						// indentation of the first line
+						$value[] = trim(static::create(
+							$childItem,
+							$childName,
+							false,
+							$indent,
+							$level + 1
+						));
 					}
 				}
 
-				$result = static::tag($name, $value, $attributes, $indent, $level);
+				$result = static::tag(
+					$name,
+					$value,
+					$attributes,
+					$indent,
+					$level
+				);
 			} else {
 				// just children
 
 				$result = [];
+
 				foreach ($props as $childItem) {
-					$result[] = static::create($childItem, $name, false, $indent, $level);
+					$result[] = static::create(
+						$childItem,
+						$name,
+						false,
+						$indent,
+						$level
+					);
 				}
 
 				$result = implode(PHP_EOL, $result);
@@ -306,7 +333,7 @@ class Xml
 			}
 		}
 
-		if (count($attributeArray) > 0) {
+		if ($attributeArray !== []) {
 			$array['@attributes'] = $attributeArray;
 		}
 
@@ -355,11 +382,12 @@ class Xml
 		// we didn't find any XML children above, only use the string value
 		$element = (string)$element;
 
-		if (count($array) === 0) {
+		if ($array === []) {
 			return $element;
 		}
 
 		$array['@value'] = $element;
+
 		return $array;
 	}
 
@@ -385,23 +413,29 @@ class Xml
 		$start      = '<' . $name . ($attr ? ' ' . $attr : '') . '>';
 		$startShort = '<' . $name . ($attr ? ' ' . $attr : '') . static::$void;
 		$end        = '</' . $name . '>';
-		$baseIndent = $indent ? str_repeat($indent, $level) : '';
+		$baseIndent = match ($indent) {
+			null    => '',
+			default => str_repeat($indent, $level)
+		};
 
-		if (is_array($content) === true) {
-			if (is_string($indent) === true) {
-				$xml = $baseIndent . $start . PHP_EOL;
-				foreach ($content as $line) {
-					$xml .= $baseIndent . $indent . $line . PHP_EOL;
-				}
-				$xml .= $baseIndent . $end;
-			} else {
-				$xml = $start . implode($content) . $end;
-			}
-		} elseif ($content === null) {
-			$xml = $baseIndent . $startShort;
-		} else {
-			$xml = $baseIndent . $start . static::value($content) . $end;
+		if (is_array($content) === false) {
+			return match ($content) {
+				null    => $baseIndent . $startShort,
+				default => $baseIndent . $start . static::value($content) . $end
+			};
 		}
+
+		if (is_string($indent) === false) {
+			return $start . implode($content) . $end;
+		}
+
+		$xml = $baseIndent . $start . PHP_EOL;
+
+		foreach ($content as $line) {
+			$xml .= $baseIndent . $indent . $line . PHP_EOL;
+		}
+
+		$xml .= $baseIndent . $end;
 
 		return $xml;
 	}
@@ -432,8 +466,9 @@ class Xml
 		}
 
 		$encoded = htmlentities($value, ENT_NOQUOTES | ENT_XML1);
+
+		// no CDATA block needed
 		if ($encoded === $value) {
-			// no CDATA block needed
 			return $value;
 		}
 

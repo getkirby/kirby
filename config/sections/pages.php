@@ -44,7 +44,7 @@ return [
 				$status = 'draft';
 			}
 
-			if (in_array($status, ['all', 'draft', 'published', 'listed', 'unlisted']) === false) {
+			if (in_array($status, ['all', 'draft', 'published', 'listed', 'unlisted'], true) === false) {
 				$status = 'all';
 			}
 
@@ -77,7 +77,9 @@ return [
 				$parent instanceof Site === false &&
 				$parent instanceof Page === false
 			) {
-				throw new InvalidArgumentException('The parent is invalid. You must choose the site or a page as parent.');
+				throw new InvalidArgumentException(
+					message: 'The parent is invalid. You must choose the site or a page as parent.'
+				);
 			}
 
 			return $parent;
@@ -111,7 +113,7 @@ return [
 				// filter by all set templates
 				if (
 					$this->templates &&
-					in_array($intendedTemplate, $this->templates) === false
+					in_array($intendedTemplate, $this->templates, true) === false
 				) {
 					return false;
 				}
@@ -119,7 +121,7 @@ return [
 				// exclude by all ignored templates
 				if (
 					$this->templatesIgnore &&
-					in_array($intendedTemplate, $this->templatesIgnore) === true
+					in_array($intendedTemplate, $this->templatesIgnore, true) === true
 				) {
 					return false;
 				}

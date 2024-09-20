@@ -64,7 +64,7 @@ class Location implements Stringable
 	 */
 	protected function gps(array $coord, string $hemi): float
 	{
-		$degrees = count($coord) > 0 ? $this->num($coord[0]) : 0;
+		$degrees = $coord !== [] ? $this->num($coord[0]) : 0;
 		$minutes = count($coord) > 1 ? $this->num($coord[1]) : 0;
 		$seconds = count($coord) > 2 ? $this->num($coord[2]) : 0;
 

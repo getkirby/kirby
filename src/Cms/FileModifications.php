@@ -129,7 +129,7 @@ trait FileModifications
 			$sizes = $this->kirby()->option('thumbs.srcsets.' . $sizes, []);
 		}
 
-		if (is_array($sizes) === false || empty($sizes) === true) {
+		if (is_array($sizes) === false || $sizes === []) {
 			return null;
 		}
 

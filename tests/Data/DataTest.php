@@ -66,6 +66,19 @@ class DataTest extends TestCase
 	}
 
 	/**
+	 * @covers ::handler
+	 */
+	public function testInvalidHandler()
+	{
+		Data::$handlers['invalid'] = CustomInvalidHandler::class;
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Handler for type: "invalid" needs to extend Kirby\Data\Handler');
+
+		Data::handler('invalid');
+	}
+
+	/**
 	 * @covers ::encode
 	 * @covers ::decode
 	 * @dataProvider handlerProvider

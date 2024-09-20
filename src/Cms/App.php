@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Generator;
+use Kirby\Content\VersionId;
 use Kirby\Data\Data;
 use Kirby\Email\Email as BaseEmail;
 use Kirby\Exception\ErrorPageException;
@@ -241,7 +242,7 @@ class App
 
 		// apply wildcard hooks if available
 		$nameWildcards = $event->nameWildcards();
-		if ($originalEvent === null && count($nameWildcards) > 0) {
+		if ($originalEvent === null && $nameWildcards !== []) {
 			foreach ($nameWildcards as $nameWildcard) {
 				// the $event object is passed by reference
 				// and will be modified down the chain
@@ -601,7 +602,7 @@ class App
 		$visitor   = $this->visitor();
 
 		foreach ($visitor->acceptedLanguages() as $acceptedLang) {
-			$closure = function ($language) use ($acceptedLang) {
+			$closure = static function ($language) use ($acceptedLang) {
 				$languageLocale = $language->locale(LC_ALL);
 				$acceptedLocale = $acceptedLang->locale();
 
@@ -833,7 +834,9 @@ class App
 			return $response->json($input)->send();
 		}
 
-		throw new InvalidArgumentException('Unexpected input');
+		throw new InvalidArgumentException(
+			message: 'Unexpected input'
+		);
 	}
 
 	/**
@@ -1224,6 +1227,17 @@ class App
 			return null;
 		}
 
+		/**
+		 * TODO: very rough preview mode for changes.
+		 *
+		 * We need page token verification for this before v5
+		 * hits beta. This rough implementation will only help
+		 * to get the panel integration up and running during the alpha
+		 */
+		if ($this->request()->get('_version') === 'changes') {
+			VersionId::$render = VersionId::changes();
+		}
+
 		return $this->io($this->call($path, $method));
 	}
 
@@ -1272,7 +1286,9 @@ class App
 				return $homePage;
 			}
 
-			throw new NotFoundException('The home page does not exist');
+			throw new NotFoundException(
+				message: 'The home page does not exist'
+			);
 		}
 
 		// search for the page by path
@@ -1580,7 +1596,7 @@ class App
 		if ($this->multilang() === true) {
 			$languageSmartypants = $this->language()->smartypants() ?? [];
 
-			if (empty($languageSmartypants) === false) {
+			if ($languageSmartypants !== []) {
 				$options = [...$options, ...$languageSmartypants];
 			}
 		}
@@ -1691,7 +1707,7 @@ class App
 
 		// trigger wildcard hooks if available
 		$nameWildcards = $event->nameWildcards();
-		if ($originalEvent === null && count($nameWildcards) > 0) {
+		if ($originalEvent === null && $nameWildcards !== []) {
 			foreach ($nameWildcards as $nameWildcard) {
 				$this->trigger($nameWildcard, $args, $event);
 			}
@@ -1744,7 +1760,9 @@ class App
 		try {
 			return static::$version ??= Data::read(dirname(__DIR__, 2) . '/composer.json')['version'] ?? null;
 		} catch (Throwable) {
-			throw new LogicException('The Kirby version cannot be detected. The composer.json is probably missing or not readable.');
+			throw new LogicException(
+				message: 'The Kirby version cannot be detected. The composer.json is probably missing or not readable.'
+			);
 		}
 	}
 

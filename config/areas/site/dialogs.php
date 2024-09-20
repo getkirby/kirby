@@ -3,6 +3,7 @@
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Cms\PageRules;
+use Kirby\Cms\Url;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
@@ -27,12 +28,10 @@ return [
 			$page = Find::page($id);
 
 			if ($page->blueprint()->num() !== 'default') {
-				throw new PermissionException([
-					'key'  => 'page.sort.permission',
-					'data' => [
-						'slug' => $page->slug()
-					]
-				]);
+				throw new PermissionException(
+					key: 'page.sort.permission',
+					data: ['slug' => $page->slug()]
+				);
 			}
 
 			return [
@@ -149,12 +148,10 @@ return [
 			$blueprints = $page->blueprints();
 
 			if (count($blueprints) <= 1) {
-				throw new Exception([
-					'key'  => 'page.changeTemplate.invalid',
-					'data' => [
-						'slug' => $id
-					]
-				]);
+				throw new Exception(
+					key: 'page.changeTemplate.invalid',
+					data: ['slug' => $id]
+				);
 			}
 
 			return [
@@ -371,7 +368,9 @@ return [
 				$page->childrenAndDrafts()->count() > 0 &&
 				$request->get('check') !== $page->title()->value()
 			) {
-				throw new InvalidArgumentException(['key' => 'page.delete.confirm']);
+				throw new InvalidArgumentException(
+					key: 'page.delete.confirm'
+				);
 			}
 
 			$page->delete(true);
@@ -431,7 +430,7 @@ return [
 				];
 			}
 
-			$slugAppendix  = Str::slug(I18n::translate('page.duplicate.appendix'));
+			$slugAppendix  = Url::slug(I18n::translate('page.duplicate.appendix'));
 			$titleAppendix = I18n::translate('page.duplicate.appendix');
 
 			// if the item to be duplicated already exists
@@ -439,11 +438,11 @@ return [
 			$duplicateSlug = $page->slug() . '-' . $slugAppendix;
 			$siblingKeys   = $page->parentModel()->childrenAndDrafts()->pluck('uid');
 
-			if (in_array($duplicateSlug, $siblingKeys) === true) {
+			if (in_array($duplicateSlug, $siblingKeys, true) === true) {
 				$suffixCounter = 2;
 				$newSlug       = $duplicateSlug . $suffixCounter;
 
-				while (in_array($newSlug, $siblingKeys) === true) {
+				while (in_array($newSlug, $siblingKeys, true) === true) {
 					$newSlug = $duplicateSlug . ++$suffixCounter;
 				}
 

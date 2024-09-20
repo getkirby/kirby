@@ -11,7 +11,7 @@ class XmlTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Sane.Xml';
 
-	protected static $type = 'xml';
+	protected static string $type = 'xml';
 
 	public function tearDown(): void
 	{
@@ -25,7 +25,7 @@ class XmlTest extends TestCase
 	{
 		$fixture = $this->fixture($file);
 
-		$this->assertNull(Xml::validateFile($fixture));
+		Xml::validateFile($fixture);
 
 		$sanitized = Xml::sanitize(file_get_contents($fixture));
 		$this->assertStringEqualsFile($fixture, $sanitized);
@@ -42,7 +42,7 @@ class XmlTest extends TestCase
 
 		$fixture = $this->fixture('allowed/allowed-external-source.xml');
 
-		$this->assertNull(Xml::validateFile($fixture));
+		Xml::validateFile($fixture);
 
 		$sanitized = Xml::sanitize(file_get_contents($fixture));
 		$this->assertStringEqualsFile($fixture, $sanitized);
@@ -150,7 +150,7 @@ class XmlTest extends TestCase
 		$sanitized2 = $this->fixture('sanitized/external-source-1_disallowed.xml');
 
 		// with default $allowedDomains setting
-		$this->assertNull(Xml::validateFile($fixture));
+		Xml::validateFile($fixture);
 
 		$this->assertStringEqualsFile($sanitized1, Xml::sanitize(file_get_contents($fixture)));
 
@@ -171,7 +171,7 @@ class XmlTest extends TestCase
 		$sanitized2 = $this->fixture('sanitized/external-source-2_disallowed.xml');
 
 		// with default $allowedDomains setting
-		$this->assertNull(Xml::validateFile($fixture));
+		Xml::validateFile($fixture);
 
 		$this->assertStringEqualsFile($sanitized1, Xml::sanitize(file_get_contents($fixture)));
 

@@ -54,6 +54,7 @@ class PageCreateDialog
 		'tags',
 		'tel',
 		'text',
+		'toggle',
 		'toggles',
 		'time',
 		'url'
@@ -160,11 +161,11 @@ class PageCreateDialog
 				throw new InvalidArgumentException('Unknown field  "' . $name . '" in create dialog');
 			}
 
-			if (in_array($field['type'], static::$fieldTypes) === false) {
+			if (in_array($field['type'], static::$fieldTypes, true) === false) {
 				throw new InvalidArgumentException('Field type "' . $field['type'] . '" not supported in create dialog');
 			}
 
-			if (in_array($name, $ignore) === true) {
+			if (in_array($name, $ignore, true) === true) {
 				throw new InvalidArgumentException('Field name "' . $name . '" not allowed as custom field in create dialog');
 			}
 
@@ -219,7 +220,7 @@ class PageCreateDialog
 		);
 
 		// immediately submit the dialog if there is no editable field
-		if (count($visible) === 0 && count($blueprints) < 2) {
+		if ($visible === [] && count($blueprints) < 2) {
 			$input    = $this->value();
 			$response = $this->submit($input);
 			$response['redirect'] ??= $this->parent->panel()->url(true);
@@ -357,9 +358,9 @@ class PageCreateDialog
 			$form = Form::for($this->model(), ['values' => $input['content']]);
 
 			if ($form->isInvalid() === true) {
-				throw new InvalidArgumentException([
-					'key' => 'page.changeStatus.incomplete'
-				]);
+				throw new InvalidArgumentException(
+					key: 'page.changeStatus.incomplete'
+				);
 			}
 		}
 

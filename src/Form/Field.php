@@ -53,10 +53,13 @@ class Field extends Component
 		Fields|null $formFields = null
 	) {
 		if (isset(static::$types[$type]) === false) {
-			throw new InvalidArgumentException([
-				'key'  => 'field.type.missing',
-				'data' => ['name' => $attrs['name'] ?? '-', 'type' => $type]
-			]);
+			throw new InvalidArgumentException(
+				key: 'field.type.missing',
+				data: [
+					'name' => $attrs['name'] ?? '-',
+					'type' => $type
+				]
+			);
 		}
 
 		if (isset($attrs['model']) === false) {
@@ -490,12 +493,12 @@ class Field extends Component
 			empty($this->validate) === false &&
 			($this->isEmpty() === false || $this->isRequired() === true)
 		) {
-			$rules  = A::wrap($this->validate);
-			$errors = V::errors($this->value(), $rules);
+			$rules = A::wrap($this->validate);
 
-			if (empty($errors) === false) {
-				$this->errors = [...$this->errors, ...$errors];
-			}
+			$this->errors = [
+				...$this->errors,
+				...V::errors($this->value(), $rules)
+			];
 		}
 	}
 

@@ -61,13 +61,17 @@ class Data
 		}
 
 		if ($handler === null || class_exists($handler) === false) {
-			throw new Exception('Missing handler for type: "' . $type . '"');
+			throw new Exception(
+				message: 'Missing handler for type: "' . $type . '"'
+			);
 		}
 
 		$handler = new $handler();
 
 		if ($handler instanceof Handler === false) {
-			throw new Exception('Handler for type: "' . $type . '" needs to extend Kirby\\Data\\Handler');
+			throw new Exception(
+				message: 'Handler for type: "' . $type . '" needs to extend ' . Handler::class
+			);
 		}
 
 		return $handler;

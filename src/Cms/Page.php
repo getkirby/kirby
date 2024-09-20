@@ -128,7 +128,9 @@ class Page extends ModelWithContent
 	public function __construct(array $props)
 	{
 		if (isset($props['slug']) === false) {
-			throw new InvalidArgumentException('The page slug is required');
+			throw new InvalidArgumentException(
+				message: 'The page slug is required'
+			);
 		}
 
 		$this->slug    = $props['slug'];
@@ -235,7 +237,7 @@ class Page extends ModelWithContent
 		}
 
 		// add the current template to the array if it's not already there
-		if (in_array($currentTemplate, $templates) === false) {
+		if (in_array($currentTemplate, $templates, true) === false) {
 			array_unshift($templates, $currentTemplate);
 		}
 
@@ -317,7 +319,7 @@ class Page extends ModelWithContent
 		// merge controller data with original data safely
 		// to provide original data to template even if
 		// it wasn't returned by the controller explicitly
-		if (empty($controllerData) === false) {
+		if ($controllerData !== []) {
 			$classes = [
 				'kirby' => App::class,
 				'site'  => Site::class,
@@ -332,7 +334,9 @@ class Page extends ModelWithContent
 					// original data was overwritten, but matches expected type
 					$value instanceof $classes[$key] => $value,
 					// throw error if data was overwritten with wrong type
-					default => throw new InvalidArgumentException('The returned variable "' . $key . '" from the controller "' . $this->template()->name() . '" is not of the required type "' . $classes[$key] . '"')
+					default => throw new InvalidArgumentException(
+						message: 'The returned variable "' . $key . '" from the controller "' . $this->template()->name() . '" is not of the required type "' . $classes[$key] . '"'
+					)
 				};
 			}
 		}
@@ -562,7 +566,7 @@ class Page extends ModelWithContent
 		$request = $kirby->request();
 
 		// disable the pages cache for any request types but GET or HEAD
-		if (in_array($request->method(), ['GET', 'HEAD']) === false) {
+		if (in_array($request->method(), ['GET', 'HEAD'], true) === false) {
 			return false;
 		}
 
@@ -585,7 +589,7 @@ class Page extends ModelWithContent
 
 		// ignore pages by id
 		if (is_array($ignore) === true) {
-			if (in_array($this->id(), $ignore) === true) {
+			if (in_array($this->id(), $ignore, true) === true) {
 				return false;
 			}
 		}
@@ -892,7 +896,7 @@ class Page extends ModelWithContent
 		$parents = new Pages();
 		$page    = $this->parent();
 
-		while ($page !== null) {
+		while ($page instanceof Page) {
 			$parents->append($page->id(), $page);
 			$page = $page->parent();
 		}
@@ -959,7 +963,7 @@ class Page extends ModelWithContent
 		$cache = $cacheId = $html = null;
 
 		// try to get the page from cache
-		if (empty($data) === true && $this->isCacheable() === true) {
+		if ($data === [] && $this->isCacheable() === true) {
 			$cache       = $kirby->cache('pages');
 			$cacheId     = $this->cacheId($contentType);
 			$result      = $cache->get($cacheId);
@@ -982,16 +986,15 @@ class Page extends ModelWithContent
 
 		// fetch the page regularly
 		if ($html === null) {
-			if ($contentType === 'html') {
-				$template = $this->template();
-			} else {
-				$template = $this->representation($contentType);
-			}
+			$template = match ($contentType) {
+				'html'  => $this->template(),
+				default => $this->representation($contentType)
+			};
 
 			if ($template->exists() === false) {
-				throw new NotFoundException([
-					'key' => 'template.default.notFound'
-				]);
+				throw new NotFoundException(
+					key: 'template.default.notFound'
+				);
 			}
 
 			$kirby->data = $this->controller($data, $contentType);
@@ -1043,7 +1046,9 @@ class Page extends ModelWithContent
 			return $representation;
 		}
 
-		throw new NotFoundException('The content representation cannot be found');
+		throw new NotFoundException(
+			message: 'The content representation cannot be found'
+		);
 	}
 
 	/**

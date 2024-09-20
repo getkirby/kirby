@@ -59,7 +59,7 @@ class AppPluginsTest extends TestCase
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.AppPlugins';
 
 	// used for testPluginLoader()
-	public static $calledPluginsLoadedHook = false;
+	public static bool $calledPluginsLoadedHook = false;
 
 	public function testApi()
 	{
@@ -416,7 +416,7 @@ class AppPluginsTest extends TestCase
 			]
 		]);
 
-		$this->assertCount(2, $app->extensions('filePreviews'));
+		$this->assertCount(4, $app->extensions('filePreviews'));
 	}
 
 	public function testKirbyTag()

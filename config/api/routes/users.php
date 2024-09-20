@@ -86,18 +86,18 @@ return [
 				function ($source, $filename) use ($id) {
 					$type = F::type($filename);
 					if ($type !== 'image') {
-						throw new Exception([
-							'key'  => 'file.type.invalid',
-							'data' => compact('type')
-						]);
+						throw new Exception(
+							key: 'file.type.invalid',
+							data: compact('type')
+						);
 					}
 
 					$mime = F::mime($source);
 					if (Str::startsWith($mime, 'image/') !== true) {
-						throw new Exception([
-							'key'  => 'file.mime.invalid',
-							'data' => compact('mime')
-						]);
+						throw new Exception(
+							key: 'file.mime.invalid',
+							data: compact('mime')
+						);
 					}
 
 					// delete the old avatar
@@ -203,7 +203,9 @@ return [
 			'users/(:any)/roles',
 		],
 		'action'  => function (string $id) {
-			return $this->user($id)->roles();
+			$kirby   = $this->kirby();
+			$purpose = $kirby->request()->get('purpose');
+			return $this->user($id)->roles($purpose);
 		}
 	],
 	[

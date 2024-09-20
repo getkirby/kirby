@@ -130,7 +130,7 @@ class Pagination extends BasePagination
 
 		if (
 			$this->hasPage($page) === false ||
-			in_array($this->method, ['query', 'param']) === false
+			in_array($this->method, ['query', 'param'], true) === false
 		) {
 			return null;
 		}

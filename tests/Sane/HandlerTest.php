@@ -12,7 +12,7 @@ class HandlerTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Sane.Handler';
 
-	protected static $type = 'sane';
+	protected static string $type = 'sane';
 
 	/**
 	 * @covers ::sanitizeFile
@@ -22,17 +22,23 @@ class HandlerTest extends TestCase
 	{
 		$expected = $this->fixture('doctype-valid.svg');
 		$tmp      = $this->fixture('doctype-valid.svg', true);
-		$this->assertNull(CustomHandler::sanitizeFile($tmp));
+
+		CustomHandler::sanitizeFile($tmp);
+
 		$this->assertFileEquals($expected, $tmp);
 
 		$expected = $this->fixture('external-source-1.sanitized.svg');
 		$tmp      = $this->fixture('external-source-1.svg', true);
-		$this->assertNull(CustomHandler::sanitizeFile($tmp));
+
+		CustomHandler::sanitizeFile($tmp);
+
 		$this->assertFileEquals($expected, $tmp);
 
 		$expected = $this->fixture('xlink-subfolder.sanitized.svg');
 		$tmp      = $this->fixture('xlink-subfolder.svg', true);
-		$this->assertNull(CustomHandler::sanitizeFile($tmp));
+
+		CustomHandler::sanitizeFile($tmp);
+
 		$this->assertFileEquals($expected, $tmp);
 	}
 
@@ -56,7 +62,9 @@ class HandlerTest extends TestCase
 	 */
 	public function testValidateFile()
 	{
-		$this->assertNull(CustomHandler::validateFile($this->fixture('doctype-valid.svg')));
+		$this->assertNull(
+			CustomHandler::validateFile($this->fixture('doctype-valid.svg'))
+		);
 	}
 
 	/**

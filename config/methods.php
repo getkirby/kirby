@@ -80,7 +80,9 @@ return function (App $app) {
 					$message .= ' on parent "' . $parent->title() . '"';
 				}
 
-				throw new InvalidArgumentException($message);
+				throw new InvalidArgumentException(
+					message: $message
+				);
 			}
 		},
 
@@ -266,7 +268,9 @@ return function (App $app) {
 					$message .= ' on parent "' . $parent->id() . '"';
 				}
 
-				throw new InvalidArgumentException($message);
+				throw new InvalidArgumentException(
+					message: $message
+				);
 			}
 		},
 

@@ -149,7 +149,7 @@ return [
 
 			// make the first column visible on mobile
 			// if no other mobile columns are defined
-			if (in_array(true, array_column($columns, 'mobile')) === false) {
+			if (in_array(true, array_column($columns, 'mobile'), true) === false) {
 				$columns[array_key_first($columns)]['mobile'] = true;
 			}
 
@@ -210,13 +210,13 @@ return [
 					$errors = $field->errors();
 
 					if (empty($errors) === false) {
-						throw new InvalidArgumentException([
-							'key'  => 'structure.validation',
-							'data' => [
+						throw new InvalidArgumentException(
+							key: 'structure.validation',
+							data: [
 								'field' => $field->label() ?? Str::ucfirst($field->name()),
 								'index' => $index + 1
 							]
-						]);
+						);
 					}
 				}
 			}

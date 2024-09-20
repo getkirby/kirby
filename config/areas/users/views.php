@@ -21,7 +21,7 @@ return [
 				'props'     => [
 					'buttons' => fn () =>
 						ViewButtons::view('users')
-							->defaults('add')
+							->defaults('create')
 							->bind(['role' => $role])
 							->render(),
 					'role' => function () use ($roles, $role) {

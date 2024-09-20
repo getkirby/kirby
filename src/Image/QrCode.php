@@ -103,7 +103,7 @@ class QrCode implements Stringable
 		// create image baseplate
 		$image = imagecreatetruecolor($size, $size);
 
-		$allocateColor = function (string $hex) use ($image) {
+		$allocateColor = static function (string $hex) use ($image) {
 			$hex = preg_replace('/[^0-9A-Fa-f]/', '', $hex);
 			$r   = hexdec(substr($hex, 0, 2));
 			$g   = hexdec(substr($hex, 2, 2));

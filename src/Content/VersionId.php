@@ -2,8 +2,6 @@
 
 namespace Kirby\Content;
 
-use Kirby\Cms\ModelWithContent;
-use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
 use Stringable;
 
@@ -46,7 +44,7 @@ class VersionId implements Stringable
 	public function __construct(
 		public string $value
 	) {
-		if (in_array($value, [static::CHANGES, static::PUBLISHED]) === false) {
+		if (in_array($value, [static::CHANGES, static::PUBLISHED], true) === false) {
 			throw new InvalidArgumentException('Invalid Version ID');
 		}
 	}
@@ -60,26 +58,22 @@ class VersionId implements Stringable
 	}
 
 	/**
+	 * List of available version ids
+	 */
+	public static function all(): array
+	{
+		return [
+			static::published(),
+			static::changes(),
+		];
+	}
+
+	/**
 	 * Creates a VersionId instance for the latest content changes
 	 */
 	public static function changes(): static
 	{
 		return new static(static::CHANGES);
-	}
-
-	/**
-	 * Returns the default version id for the model
-	 */
-	public static function default(ModelWithContent $model): static
-	{
-		if (
-			$model instanceof Page === true &&
-			$model->isDraft() === true
-		) {
-			return VersionId::changes();
-		}
-
-		return VersionId::published();
 	}
 
 	/**

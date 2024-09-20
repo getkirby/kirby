@@ -28,6 +28,7 @@ class Image extends File
 	protected Dimensions|null $dimensions = null;
 
 	public static array $resizableTypes = [
+		'avif',
 		'jpg',
 		'jpeg',
 		'gif',
@@ -82,7 +83,7 @@ class Image extends File
 			'image/jp2',
 			'image/png',
 			'image/webp'
-		])) {
+		], true)) {
 			return $this->dimensions = Dimensions::forImage($this);
 		}
 
@@ -169,7 +170,7 @@ class Image extends File
 	 */
 	public function isResizable(): bool
 	{
-		return in_array($this->extension(), static::$resizableTypes) === true;
+		return in_array($this->extension(), static::$resizableTypes, true) === true;
 	}
 
 	/**
@@ -178,7 +179,7 @@ class Image extends File
 	 */
 	public function isViewable(): bool
 	{
-		return in_array($this->extension(), static::$viewableTypes) === true;
+		return in_array($this->extension(), static::$viewableTypes, true) === true;
 	}
 
 	/**

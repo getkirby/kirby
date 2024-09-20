@@ -10,8 +10,6 @@ namespace Kirby\Panel\Ui;
  * @license   https://getkirby.com/license
  * @since     5.0.0
  * @internal
- *
- * @SuppressWarnings(PHPMD.ExcessiveParameterList)
  */
 class Button extends Component
 {

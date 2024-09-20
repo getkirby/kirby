@@ -105,6 +105,7 @@ class AutoSession
 			// the duration needs to be extended
 			$session->duration($duration);
 		}
+
 		if ($session->timeout() !== false) {
 			// a timeout exists
 			if ($timeout === false) {
@@ -117,8 +118,9 @@ class AutoSession
 		}
 
 		// if the session has been created and was not yet initialized,
-		// update the mode to a custom mode
-		// don't update back to cookie mode because the "special" behavior always wins
+		// update the mode to a custom mode;
+		// don't update back to cookie mode because the
+		// "special" behavior always wins
 		if ($session->token() === null && $options['createMode'] !== 'cookie') {
 			$session->mode($options['createMode']);
 		}
@@ -127,7 +129,8 @@ class AutoSession
 	}
 
 	/**
-	 * Creates a new empty session that is *not* automatically transmitted to the client
+	 * Creates a new empty session that is *not* automatically
+	 * transmitted to the client;
 	 * Useful for custom applications like a password reset link
 	 * Does *not* affect the automatic session
 	 *

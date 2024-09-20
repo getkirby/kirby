@@ -18,25 +18,23 @@
 
 		<footer class="k-login-buttons">
 			<k-button
-				class="k-login-button k-login-back-button"
+				:text="$t('back')"
 				icon="angle-left"
 				link="/logout"
 				size="lg"
 				variant="filled"
-			>
-				{{ $t("back") }}
-			</k-button>
+				class="k-login-button k-login-back-button"
+			/>
 
 			<k-button
-				class="k-login-button"
+				:text="submitText"
 				icon="check"
 				size="lg"
 				type="submit"
 				theme="positive"
 				variant="filled"
-			>
-				{{ submitText }}
-			</k-button>
+				class="k-login-button"
+			/>
 		</footer>
 	</form>
 </template>

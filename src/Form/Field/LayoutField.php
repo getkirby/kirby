@@ -96,7 +96,7 @@ class LayoutField extends BlocksField
 
 			// remove the row if layout not available for the pasted layout field
 			$columns = array_column($layout['columns'], 'width');
-			if (in_array($columns, $this->layouts()) === false) {
+			if (in_array($columns, $this->layouts(), true) === false) {
 				unset($layouts[$layoutIndex]);
 				continue;
 			}
@@ -272,7 +272,7 @@ class LayoutField extends BlocksField
 
 		// returns empty string to avoid storing empty array as string `[]`
 		// and to consistency work with `$field->isEmpty()`
-		if (empty($value) === true) {
+		if ($value === []) {
 			return '';
 		}
 
@@ -305,13 +305,11 @@ class LayoutField extends BlocksField
 					foreach ($form->fields() as $field) {
 						$errors = $field->errors();
 
-						if (empty($errors) === false) {
-							throw new InvalidArgumentException([
-								'key' => 'layout.validation.settings',
-								'data' => [
-									'index' => $layoutIndex
-								]
-							]);
+						if (count($errors) > 0) {
+							throw new InvalidArgumentException(
+								key:'layout.validation.settings',
+								data: ['index' => $layoutIndex]
+							);
 						}
 					}
 
@@ -341,16 +339,16 @@ class LayoutField extends BlocksField
 								$errors = $field->errors();
 
 								// rough first validation
-								if (empty($errors) === false) {
-									throw new InvalidArgumentException([
-										'key' => 'layout.validation.block',
-										'data' => [
+								if (count($errors) > 0) {
+									throw new InvalidArgumentException(
+										key: 'layout.validation.block',
+										data: [
 											'blockIndex'  => $blockIndex,
 											'field'       => $field->label(),
 											'fieldset'    => $fieldset->name(),
 											'layoutIndex' => $layoutIndex
 										]
-									]);
+									);
 								}
 							}
 						}

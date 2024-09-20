@@ -529,7 +529,7 @@ class Environment
 
 		$protocols = ['https', 'https, http'];
 
-		return in_array(strtolower($protocol), $protocols) === true;
+		return in_array(strtolower($protocol), $protocols, true) === true;
 	}
 
 	/**
@@ -771,13 +771,13 @@ class Environment
 		$ips = array_unique(array_filter($ips));
 
 		// no known ip? Better not assume it's local
-		if (empty($ips) === true) {
+		if ($ips === []) {
 			return false;
 		}
 
 		// stop as soon as a non-local ip is found
 		foreach ($ips as $ip) {
-			if (in_array($ip, ['::1', '127.0.0.1']) === false) {
+			if (in_array($ip, ['::1', '127.0.0.1'], true) === false) {
 				return false;
 			}
 		}

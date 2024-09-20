@@ -2,8 +2,6 @@
 
 namespace Kirby\Content;
 
-use Kirby\Cms\File;
-use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 
@@ -12,6 +10,18 @@ use Kirby\TestCase;
  */
 class VersionIdTest extends TestCase
 {
+	/**
+	 * @covers ::all
+	 */
+	public function testAll()
+	{
+		$list = VersionId::all();
+
+		$this->assertCount(2, $list);
+		$this->assertSame('published', $list[0]->value());
+		$this->assertSame('changes', $list[1]->value());
+	}
+
 	/**
 	 * @covers ::changes
 	 * @covers ::value
@@ -32,27 +42,6 @@ class VersionIdTest extends TestCase
 		$this->expectExceptionMessage('Invalid Version ID');
 
 		new VersionId('foo');
-	}
-
-	/**
-	 * @covers ::default
-	 */
-	public function testDefault()
-	{
-		$draft   = new Page(['slug' => 'test', 'isDraft' => true]);
-		$version = VersionId::default($draft);
-
-		$this->assertTrue($version->is(VersionId::CHANGES));
-
-		$unlisted = new Page(['slug' => 'test', 'isDraft' => false]);
-		$version  = VersionId::default($unlisted);
-
-		$this->assertTrue($version->is(VersionId::PUBLISHED));
-
-		$file    = new File(['filename' => 'foo.jpg', 'parent' => $unlisted]);
-		$version = VersionId::default($file);
-
-		$this->assertTrue($version->is(VersionId::PUBLISHED));
 	}
 
 	/**

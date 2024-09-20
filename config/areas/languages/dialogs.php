@@ -209,9 +209,9 @@ return [
 			$variable = Find::language($languageCode)->variable($translationKey, true);
 
 			if ($variable->exists() === false) {
-				throw new NotFoundException([
-					'key' => 'language.variable.notFound'
-				]);
+				throw new NotFoundException(
+					key: 'language.variable.notFound'
+				);
 			}
 
 			return [
@@ -233,9 +233,9 @@ return [
 			$variable = Find::language($languageCode)->variable($translationKey, true);
 
 			if ($variable->exists() === false) {
-				throw new NotFoundException([
-					'key' => 'language.variable.notFound'
-				]);
+				throw new NotFoundException(
+					key: 'language.variable.notFound'
+				);
 			}
 
 			$fields = $translationDialogFields;
@@ -256,7 +256,7 @@ return [
 		},
 		'submit' => function (string $languageCode, string $translationKey) {
 			Find::language($languageCode)->variable($translationKey, true)->update(
-				App::instance()->request()->get('value')
+				App::instance()->request()->get('value', '')
 			);
 
 			return true;

@@ -126,9 +126,12 @@
 	"error.form.notSaved": "Formulir tidak dapat disimpan",
 
 	"error.language.code": "Masukkan kode bahasa yang valid",
+	"error.language.create.permission": "You are not allowed to create a language",
+	"error.language.delete.permission": "You are not allowed to delete the language",
 	"error.language.duplicate": "Bahasa sudah ada",
 	"error.language.name": "Masukkan nama bahasa yang valid",
 	"error.language.notFound": "Bahasa tidak ditemukan",
+	"error.language.update.permission": "You are not allowed to update the language",
 
 	"error.layout.validation.block": "Ada kesalahan pada bidang \"{field}\" di blok {blockIndex} menggunakan tipe blok \"{fieldset}\" di tata letak {layoutIndex}",
 	"error.layout.validation.settings": "Ada kesalahan di pengaturan tata letak {index}",

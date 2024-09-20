@@ -3,7 +3,6 @@
 namespace Kirby\Toolkit;
 
 use Closure;
-use Countable;
 use Exception;
 use Stringable;
 
@@ -21,7 +20,7 @@ use Stringable;
  * @template TValue
  * @extends \Kirby\Toolkit\Iterator<string, TValue>
  */
-class Collection extends Iterator implements Countable, Stringable
+class Collection extends Iterator implements Stringable
 {
 	/**
 	 * All registered collection filters
@@ -49,8 +48,10 @@ class Collection extends Iterator implements Countable, Stringable
 	 * @param bool $caseSensitive Whether the collection keys should be
 	 *                            treated as case-sensitive
 	 */
-	public function __construct(array $data = [], bool $caseSensitive = false)
-	{
+	public function __construct(
+		array $data = [],
+		bool $caseSensitive = false
+	) {
 		$this->caseSensitive = $caseSensitive;
 		$this->set($data);
 	}
@@ -196,9 +197,6 @@ class Collection extends Iterator implements Countable, Stringable
 			return $this->data;
 		}
 
-		// clear all previous data
-		$this->data = [];
-
 		// overwrite the data array
 		$this->data = $data;
 
@@ -237,8 +235,11 @@ class Collection extends Iterator implements Countable, Stringable
 		$split    = $args[1] ?? false;
 
 		// filter by custom filter function
-		if (is_string($field) === false && is_callable($field) === true) {
-			$collection = clone $this;
+		if (
+			is_string($field) === false &&
+			is_callable($field) === true
+		) {
+			$collection       = clone $this;
 			$collection->data = array_filter($this->data, $field);
 
 			return $collection;
@@ -373,6 +374,7 @@ class Collection extends Iterator implements Countable, Stringable
 				if (is_object($item) && method_exists($item, 'id') === true) {
 					$key = $item->id();
 				}
+
 				$result[$key] = $item;
 			}
 		}
@@ -394,6 +396,7 @@ class Collection extends Iterator implements Countable, Stringable
 				return $item;
 			}
 		}
+
 		return null;
 	}
 
@@ -452,7 +455,10 @@ class Collection extends Iterator implements Countable, Stringable
 		bool $split = false,
 		$related = null
 	) {
-		$value = $this->{'getAttributeFrom' . gettype($item)}($item, $attribute);
+		$value = $this->{'getAttributeFrom' . gettype($item)}(
+			$item,
+			$attribute
+		);
 
 		if ($split !== false) {
 			return Str::split($value, $split === true ? ',' : $split);
@@ -498,7 +504,7 @@ class Collection extends Iterator implements Countable, Stringable
 				$value = $this->getAttribute($item, $field);
 
 				// ignore upper/lowercase for group names
-				if ($caseInsensitive === true) {
+				if ($caseInsensitive) {
 					return Str::lower($value);
 				}
 
@@ -571,7 +577,7 @@ class Collection extends Iterator implements Countable, Stringable
 	public function intersects(Collection $other): bool
 	{
 		foreach ($this->keys() as $key) {
-			if ($other->has($key)) {
+			if ($other->has($key) === true) {
 				return true;
 			}
 		}
@@ -661,9 +667,11 @@ class Collection extends Iterator implements Countable, Stringable
 	public function not(string ...$keys): static
 	{
 		$collection = clone $this;
+
 		foreach ($keys as $key) {
 			unset($collection->data[$key]);
 		}
+
 		return $collection;
 	}
 
@@ -724,7 +732,7 @@ class Collection extends Iterator implements Countable, Stringable
 			}
 		}
 
-		if ($unique === true) {
+		if ($unique) {
 			$result = array_unique($result);
 		}
 
@@ -793,7 +801,7 @@ class Collection extends Iterator implements Countable, Stringable
 		}
 
 		if ($sort = $arguments['sortBy'] ?? $arguments['sort'] ?? null) {
-			if (is_array($sort)) {
+			if (is_array($sort) === true) {
 				$sort = explode(' ', implode(' ', $sort));
 			} else {
 				// if there are commas in the sort argument, removes it
@@ -803,6 +811,7 @@ class Collection extends Iterator implements Countable, Stringable
 
 				$sort = explode(' ', $sort);
 			}
+
 			$result = $result->sort(...$sort);
 		}
 
@@ -848,13 +857,14 @@ class Collection extends Iterator implements Countable, Stringable
 	 */
 	public function set(string|array $key, $value = null): static
 	{
-		if (is_array($key)) {
+		if (is_array($key) === true) {
 			foreach ($key as $k => $v) {
 				$this->__set($k, $v);
 			}
 		} else {
 			$this->__set($key, $value);
 		}
+
 		return $this;
 	}
 
@@ -885,8 +895,10 @@ class Collection extends Iterator implements Countable, Stringable
 	 * @return $this|static
 	 * @psalm-return ($offset is 0 && $limit is null ? $this : static)
 	 */
-	public function slice(int $offset = 0, int|null $limit = null): static
-	{
+	public function slice(
+		int $offset = 0,
+		int|null $limit = null
+	): static {
 		if ($offset === 0 && $limit === null) {
 			return $this;
 		}
@@ -906,16 +918,19 @@ class Collection extends Iterator implements Countable, Stringable
 			$sort = Str::replace($sort, ',', '');
 		}
 
-		$sortArgs = Str::split($sort, ' ');
+		$args = Str::split($sort, ' ');
 
 		// fill in PHP constants
-		array_walk($sortArgs, function (string &$value) {
-			if (Str::startsWith($value, 'SORT_') === true && defined($value) === true) {
+		array_walk($args, function (string &$value) {
+			if (
+				Str::startsWith($value, 'SORT_') === true &&
+				defined($value) === true
+			) {
 				$value = constant($value);
 			}
 		});
 
-		return $sortArgs;
+		return $args;
 	}
 
 	/**
@@ -933,14 +948,12 @@ class Collection extends Iterator implements Countable, Stringable
 	 * @param int $method The sort flag, SORT_REGULAR, SORT_NUMERIC etc.
 	 * @return $this|static
 	 */
-	public function sort(): static
+	public function sort(...$args): static
 	{
 		// there is no need to sort empty collections
-		if (empty($this->data) === true) {
+		if ($this->data === []) {
 			return $this;
 		}
-
-		$args       = func_get_args();
 		$array      = $this->data;
 		$collection = $this->clone();
 
@@ -948,49 +961,54 @@ class Collection extends Iterator implements Countable, Stringable
 		$fields = [];
 
 		foreach ($args as $arg) {
-			// get the index of the latest field array inside the $fields array
-			$currentField = $fields ? count($fields) - 1 : 0;
+			// get the index of the latest field array inside $fields
+			$field = array_key_last($fields);
 
-			// detect the type of argument
-			// sorting direction
-			$argLower = is_string($arg) ? strtolower($arg) : null;
+			// normalize $arg
+			$arg = is_string($arg) === true ? strtolower($arg) : $arg;
 
-			if ($arg === SORT_ASC || $argLower === 'asc') {
-				$fields[$currentField]['direction'] = SORT_ASC;
-			} elseif ($arg === SORT_DESC || $argLower === 'desc') {
-				$fields[$currentField]['direction'] = SORT_DESC;
+			// $arg defines sorting direction
+			if (
+				$arg === 'asc'  || $arg === SORT_ASC ||
+				$arg === 'desc' || $arg === SORT_DESC
+			) {
+				$fields[$field]['direction'] = match ($arg) {
+					'asc'   => SORT_ASC,
+					'desc'  => SORT_DESC,
+					default => $arg
+				};
 
 			// other string: the field name
 			} elseif (is_string($arg) === true) {
-				$values = [];
+				$fields[] = [
+					'field'  => $arg,
+					'values' => A::map($array, function ($value) use ($collection, $arg) {
+						$value = $collection->getAttribute($value, $arg);
 
-				foreach ($array as $key => $value) {
-					$value = $collection->getAttribute($value, $arg);
-
-					// make sure that we return something sortable
-					// but don't convert other scalars (especially numbers) to strings!
-					$values[$key] = is_scalar($value) === true ? $value : (string)$value;
-				}
-
-				$fields[] = ['field' => $arg, 'values' => $values];
+						// make sure that we return something sortable
+						// but don't convert other scalars (especially numbers)
+						// to strings!
+						return is_scalar($value) === true ? $value : (string)$value;
+					})
+				];
 
 			// callable: custom field values
 			} elseif (is_callable($arg) === true) {
-				$values = [];
+				$fields[] = [
+					'field'  => null,
+					'values' => A::map($array, function ($value) use ($arg) {
+						$value = $arg($value);
 
-				foreach ($array as $key => $value) {
-					$value = $arg($value);
-
-					// make sure that we return something sortable
-					// but don't convert other scalars (especially numbers) to strings!
-					$values[$key] = is_scalar($value) === true ? $value : (string)$value;
-				}
-
-				$fields[] = ['field' => null, 'values' => $values];
+						// make sure that we return something sortable
+						// but don't convert other scalars (especially numbers)
+						// to strings!
+						return is_scalar($value) === true ? $value : (string)$value;
+					})
+				];
 
 			// flags
 			} else {
-				$fields[$currentField]['flags'] = $arg;
+				$fields[$field]['flags'] = $arg;
 			}
 		}
 
@@ -1003,24 +1021,29 @@ class Collection extends Iterator implements Countable, Stringable
 			$params[] = $field['flags']     ?? SORT_NATURAL | SORT_FLAG_CASE;
 		}
 
-		// check what kind of collection items we have; only check for the first
-		// item for better performance (we assume that all collection items are
-		// of the same type)
+		// check what kind of collection items we have;
+		// only check for the first item for better performance
+		// (we assume that all collection items are of the same type)
 		$firstItem = $collection->first();
+
 		if (is_object($firstItem) === true) {
 			// avoid the "Nesting level too deep - recursive dependency?" error
 			// when PHP tries to sort by the objects directly (in case all other
 			// fields are 100 % equal for some elements)
 			if (method_exists($firstItem, '__toString') === true) {
-				// PHP can easily convert the objects to strings, so it should
-				// compare them as strings instead of as objects to avoid the recursion
+				// PHP can easily convert the objects to strings,
+				// so it should compare them as strings instead of
+				// as objects to avoid the recursion
 				$params[] = &$array;
 				$params[] = SORT_STRING;
 			} else {
-				// we can't convert the objects to strings, so we need a fallback:
-				// custom fictional field that is guaranteed to have a unique value
-				// for each item; WARNING: may lead to slightly wrong sorting results
-				// and is therefore only used as a fallback if we don't have another way
+				// we can't convert the objects to strings,
+				// so we need a fallback:
+				// custom fictional field that is guaranteed to
+				// have a unique value for each item;
+				// WARNING: may lead to slightly wrong sorting results
+				// and is therefore only used as a fallback
+				// if we don't have another way
 				$params[] = range(1, count($array));
 				$params[] = SORT_ASC;
 				$params[] = SORT_NUMERIC;
@@ -1037,13 +1060,14 @@ class Collection extends Iterator implements Countable, Stringable
 
 		// $array has been overwritten by array_multisort
 		$collection->data = $array;
+
 		return $collection;
 	}
 
 	/**
 	 * @see \Kirby\Toolkit\Collection::sort()
 	 */
-	public function sortBy(...$args)
+	public function sortBy(...$args): static
 	{
 		return $this->sort(...$args);
 	}
@@ -1053,11 +1077,10 @@ class Collection extends Iterator implements Countable, Stringable
 	 */
 	public function toArray(Closure|null $map = null): array
 	{
-		if ($map !== null) {
-			return array_map($map, $this->data);
-		}
-
-		return $this->data;
+		return match ($map) {
+			null    => $this->data,
+			default => array_map($map, $this->data)
+		};
 	}
 
 	/**
@@ -1083,7 +1106,11 @@ class Collection extends Iterator implements Countable, Stringable
 	 */
 	public function values(Closure|null $map = null): array
 	{
-		$data = $map === null ? $this->data : array_map($map, $this->data);
+		$data = match ($map) {
+			null    => $this->data,
+			default => array_map($map, $this->data)
+		};
+
 		return array_values($data);
 	}
 

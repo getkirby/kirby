@@ -3,7 +3,6 @@
 namespace Kirby\Exception;
 
 /**
- * DuplicateException
  * Thrown when an object could not be created
  * because it already exists
  *

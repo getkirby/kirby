@@ -9,7 +9,6 @@ use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Ui\FilePreviews\ImageFilePreview
- * @covers ::__construct
  */
 class ImageFilePreviewTest extends TestCase
 {
@@ -45,14 +44,16 @@ class ImageFilePreviewTest extends TestCase
 	}
 
 	/**
-	 * @coversNothing
+	 * @covers ::__construct
 	 */
 	public function testFactory()
 	{
 		$page    = new Page(['slug' => 'test']);
 		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
+
 		$preview = FilePreview::factory($file);
 		$this->assertInstanceOf(ImageFilePreview::class, $preview);
+		$this->assertSame('k-image-file-preview', $preview->component);
 	}
 
 	/**

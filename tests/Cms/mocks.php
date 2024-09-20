@@ -20,7 +20,7 @@ function error_log(string $message): bool
 
 class ErrorLog
 {
-	public static $log = '';
+	public static string $log = '';
 }
 
 /**
@@ -39,7 +39,7 @@ function time(): int
 
 class MockTime
 {
-	public static $time = 1337000000;
+	public static int $time = 1337000000;
 
 	public static function reset(): void
 	{

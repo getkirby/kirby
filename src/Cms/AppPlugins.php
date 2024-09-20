@@ -330,7 +330,7 @@ trait AppPlugins
 					F::$types[$type] = [];
 				}
 
-				if (in_array($extension, F::$types[$type]) === false) {
+				if (in_array($extension, F::$types[$type], true) === false) {
 					F::$types[$type][] = $extension;
 				}
 			}
@@ -351,14 +351,14 @@ trait AppPlugins
 
 			if (
 				$resizable === true &&
-				in_array($extension, Image::$resizableTypes) === false
+				in_array($extension, Image::$resizableTypes, true) === false
 			) {
 				Image::$resizableTypes[] = $extension;
 			}
 
 			if (
 				$viewable === true &&
-				in_array($extension, Image::$viewableTypes) === false
+				in_array($extension, Image::$viewableTypes, true) === false
 			) {
 				Image::$viewableTypes[] = $extension;
 			}
@@ -885,7 +885,9 @@ trait AppPlugins
 		$name = $plugin->name();
 
 		if (isset(static::$plugins[$name]) === true) {
-			throw new DuplicateException('The plugin "' . $name . '" has already been registered');
+			throw new DuplicateException(
+				message: 'The plugin "' . $name . '" has already been registered'
+			);
 		}
 
 		return static::$plugins[$name] = $plugin;

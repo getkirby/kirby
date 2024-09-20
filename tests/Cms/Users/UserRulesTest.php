@@ -50,7 +50,9 @@ class UserRulesTest extends TestCase
 		$kirby = $this->appWithAdmin();
 		$user  = $kirby->user('user@domain.com');
 
-		$this->assertTrue(UserRules::{'change' . $key}($user, $value));
+		$this->expectNotToPerformAssertions();
+
+		UserRules::{'change' . $key}($user, $value);
 	}
 
 	public static function invalidDataProvider(): array
@@ -159,7 +161,9 @@ class UserRulesTest extends TestCase
 		]);
 		$kirby->impersonate('admin@domain.com');
 
-		$this->assertTrue(UserRules::changeRole($kirby->user('user@domain.com'), 'editor'));
+		$this->expectNotToPerformAssertions();
+
+		UserRules::changeRole($kirby->user('user@domain.com'), 'editor');
 	}
 
 	public function testChangeRoleFromAdminByNonAdmin()
@@ -196,7 +200,9 @@ class UserRulesTest extends TestCase
 		]);
 		$kirby->impersonate('user1@domain.com');
 
-		$this->assertTrue(UserRules::changeRole($kirby->user('user2@domain.com'), 'admin'));
+		$this->expectNotToPerformAssertions();
+
+		UserRules::changeRole($kirby->user('user2@domain.com'), 'admin');
 	}
 
 	public function testChangeRoleToAdminByNonAdmin()
@@ -239,15 +245,17 @@ class UserRulesTest extends TestCase
 			]
 		]);
 
+		$this->expectNotToPerformAssertions();
+
 		// as user for themselves
 		$kirby->impersonate('user@domain.com');
-		$this->assertTrue(UserRules::changeTotp($kirby->user('user@domain.com'), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'));
-		$this->assertTrue(UserRules::changeTotp($kirby->user('user@domain.com'), null));
+		UserRules::changeTotp($kirby->user('user@domain.com'), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
+		UserRules::changeTotp($kirby->user('user@domain.com'), null);
 
 		// as admin for other users
 		$kirby->impersonate('admin@domain.com');
-		$this->assertTrue(UserRules::changeTotp($kirby->user('user@domain.com'), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'));
-		$this->assertTrue(UserRules::changeTotp($kirby->user('user@domain.com'), null));
+		UserRules::changeTotp($kirby->user('user@domain.com'), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
+		UserRules::changeTotp($kirby->user('user@domain.com'), null);
 	}
 
 	public function testChangeTotpAsAnotherUser()
@@ -287,7 +295,9 @@ class UserRulesTest extends TestCase
 			'kirby'    => $this->appWithAdmin()
 		]);
 
-		$this->assertTrue(UserRules::create($user, $props));
+		$this->expectNotToPerformAssertions();
+
+		UserRules::create($user, $props);
 	}
 
 	public function testCreateFirstUserWithoutPassword()
@@ -362,18 +372,22 @@ class UserRulesTest extends TestCase
 
 	public function testUpdate()
 	{
-		$app  = $this->appWithAdmin();
+		$this->expectNotToPerformAssertions();
+
+		$this->appWithAdmin();
 		$user = new User(['email' => 'user@domain.com']);
-		$this->assertTrue(UserRules::update($user, $input = [
+		UserRules::update($user, $input = [
 			'zodiac' => 'lion'
-		], $input));
+		], $input);
 	}
 
 	public function testDelete()
 	{
-		$app  = $this->appWithAdmin();
+		$this->expectNotToPerformAssertions();
+
+		$this->appWithAdmin();
 		$user = new User(['email' => 'user@domain.com']);
-		$this->assertTrue(UserRules::delete($user));
+		UserRules::delete($user);
 	}
 
 	public function testDeleteLastAdmin()

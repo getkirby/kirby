@@ -204,9 +204,9 @@ return [
 
 			// compare passwords
 			if ($password !== $passwordConfirmation) {
-				throw new InvalidArgumentException([
-					'key' => 'user.password.notSame'
-				]);
+				throw new InvalidArgumentException(
+					key: 'user.password.notSame'
+				);
 			}
 
 			// change password if everything's fine

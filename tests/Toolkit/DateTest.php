@@ -109,6 +109,29 @@ class DateTest extends TestCase
 	}
 
 	/**
+	 * @covers ::firstWeekday
+	 */
+	public function testFirstWeekday()
+	{
+		$this->assertSame(1, Date::firstWeekday('de_DE'));
+		$this->assertSame(0, Date::firstWeekday('en_US'));
+
+		// invalid locale
+		$this->assertSame(1, Date::firstWeekday('xxx'));
+
+		// override via config option
+		new App([
+			'options' => [
+				'date' => [
+					'weekday' => 4
+				]
+			]
+		]);
+
+		$this->assertSame(4, Date::firstWeekday('en_US'));
+	}
+
+	/**
 	 * @covers ::floor
 	 */
 	public function testFloor()

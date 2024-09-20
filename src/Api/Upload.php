@@ -49,7 +49,7 @@ readonly class Upload
 
 		if (strlen($id) < 3) {
 			throw new InvalidArgumentException(
-				'Chunk ID must at least be 3 characters long'
+				message: 'Chunk ID must at least be 3 characters long'
 			);
 		}
 
@@ -113,8 +113,7 @@ readonly class Upload
 		];
 
 		throw new Exception(
-			$message[$error] ??
-			I18n::translate('upload.error.default', 'The file could not be uploaded')
+			message: $message[$error] ?? I18n::translate('upload.error.default', 'The file could not be uploaded')
 		);
 	}
 
@@ -131,7 +130,7 @@ readonly class Upload
 		// accordingly. This will avoid .tmp filenames
 		if (
 			empty($extension) === true ||
-			in_array($extension, ['tmp', 'temp']) === true
+			in_array($extension, ['tmp', 'temp'], true) === true
 		) {
 			$mime      = F::mime($upload['tmp_name']);
 			$extension = F::mimeToExtension($mime);
@@ -271,7 +270,7 @@ readonly class Upload
 		array $errors
 	): array {
 		if (count($uploads) + count($errors) <= 1) {
-			if (empty($errors) === false) {
+			if (count($errors) > 0) {
 				return [
 					'status'  => 'error',
 					'message' => current($errors)
@@ -284,7 +283,7 @@ readonly class Upload
 			];
 		}
 
-		if (empty($errors) === false) {
+		if (count($errors) > 0) {
 			return [
 				'status' => 'error',
 				'errors' => $errors
@@ -315,7 +314,9 @@ readonly class Upload
 			return $target;
 		}
 
-		throw new Exception(I18n::translate('upload.error.cantMove'));
+		throw new Exception(
+			message: I18n::translate('upload.error.cantMove')
+		);
 	}
 
 	/**
@@ -360,7 +361,9 @@ readonly class Upload
 				(F::size($source) + F::size($tmp)) > $max
 			)
 		) {
-			throw new InvalidArgumentException(['key' => 'file.maxsize']);
+			throw new InvalidArgumentException(
+				key: 'file.maxsize'
+			);
 		}
 
 		// validate the first chunk
@@ -369,7 +372,7 @@ readonly class Upload
 			// but tmp file already exists
 			if (F::exists($tmp) === true) {
 				throw new DuplicateException(
-					'A tmp file upload with the same filename and upload id already exists: ' . $filename
+					message: 'A tmp file upload with the same filename and upload id already exists: ' . $filename
 				);
 			}
 
@@ -386,14 +389,14 @@ readonly class Upload
 		// no tmp in place
 		if (F::exists($tmp) === false) {
 			throw new NotFoundException(
-				'Chunk offset ' . $offset . ' for non-existing tmp file: ' . $filename
+				message: 'Chunk offset ' . $offset . ' for non-existing tmp file: ' . $filename
 			);
 		}
 
 		// sent chunk's offset is not the continuation of the tmp file
 		if ($offset !== F::size($tmp)) {
 			throw new InvalidArgumentException(
-				'Chunk offset ' . $offset . ' does not match the existing tmp upload file size of ' . F::size($tmp)
+				message: 'Chunk offset ' . $offset . ' does not match the existing tmp upload file size of ' . F::size($tmp)
 			);
 		}
 	}
@@ -405,13 +408,14 @@ readonly class Upload
 	 */
 	protected static function validateFiles(array $files): void
 	{
-		if (empty($files) === true) {
+		if ($files === []) {
 			$postMaxSize       = Str::toBytes(ini_get('post_max_size'));
 			$uploadMaxFileSize = Str::toBytes(ini_get('upload_max_filesize'));
 
 			// @codeCoverageIgnoreStart
 			if ($postMaxSize < $uploadMaxFileSize) {
 				throw new Exception(
+					message:
 					I18n::translate(
 						'upload.error.iniPostSize',
 						'The uploaded file exceeds the post_max_size directive in php.ini'
@@ -421,6 +425,7 @@ readonly class Upload
 			// @codeCoverageIgnoreEnd
 
 			throw new Exception(
+				message:
 				I18n::translate(
 					'upload.error.noFiles',
 					'No files were uploaded'

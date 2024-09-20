@@ -10,12 +10,13 @@ if (
 ) {
 	$url   = $video->url();
 	$attrs = array_filter([
-		'autoplay' => $block->autoplay()->toBool(),
-		'controls' => $block->controls()->toBool(),
-		'loop'     => $block->loop()->toBool(),
-		'muted'    => $block->muted()->toBool(),
-		'poster'   => $block->poster()->toFile()?->url(),
-		'preload'  => $block->preload()->value(),
+		'autoplay'    => $block->autoplay()->toBool(),
+		'controls'    => $block->controls()->toBool(),
+		'loop'        => $block->loop()->toBool(),
+		'muted'       => $block->muted()->toBool() || $block->autoplay()->toBool(),
+		'playsinline' => $block->autoplay()->toBool(),
+		'poster'      => $block->poster()->toFile()?->url(),
+		'preload'     => $block->preload()->value(),
 	]);
 } else {
 	$url = $block->url();

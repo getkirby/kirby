@@ -18,14 +18,23 @@
 					v-if="secondaryLanguages.length"
 					:items="secondaryLanguages"
 				/>
-				<k-empty v-else icon="translate" @click="$dialog('languages/create')">
+				<k-empty
+					v-else
+					icon="translate"
+					:disabled="!$panel.permissions.languages.create"
+					@click="$dialog('languages/create')"
+				>
 					{{ $t("languages.secondary.empty") }}
 				</k-empty>
 			</k-section>
 		</template>
 
 		<template v-else-if="languages.length === 0">
-			<k-empty icon="translate" @click="$dialog('languages/create')">
+			<k-empty
+				icon="translate"
+				:disabled="!$panel.permissions.languages.create"
+				@click="$dialog('languages/create')"
+			>
 				{{ $t("languages.empty") }}
 			</k-empty>
 		</template>
@@ -74,12 +83,14 @@ export default {
 					{
 						icon: "cog",
 						text: this.$t("settings"),
+						disabled: !this.$panel.permissions.languages.update,
 						click: () => this.$dialog(`languages/${language.id}/update`)
 					},
 					{
+						when: language.deletable,
 						icon: "trash",
 						text: this.$t("delete"),
-						disabled: language.deletable === false,
+						disabled: !this.$panel.permissions.languages.delete,
 						click: () => this.$dialog(`languages/${language.id}/delete`)
 					}
 				]

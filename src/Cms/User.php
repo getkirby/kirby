@@ -67,7 +67,7 @@ class User extends ModelWithContent
 	{
 		// helper function to easily edit values (if not null)
 		// before assigning them to their properties
-		$set = function (string $key, Closure $callback) use ($props) {
+		$set = static function (string $key, Closure $callback) use ($props) {
 			if ($value = $props[$key] ?? null) {
 				$value = $callback($value);
 			}
@@ -369,7 +369,9 @@ class User extends ModelWithContent
 		Session|array|null $session = null
 	): void {
 		if ($this->id() === 'kirby') {
-			throw new PermissionException('The almighty user "kirby" cannot be used for login, only for raising permissions in code via `$kirby->impersonate()`');
+			throw new PermissionException(
+				message: 'The almighty user "kirby" cannot be used for login, only for raising permissions in code via `$kirby->impersonate()`'
+			);
 		}
 
 		$kirby   = $this->kirby();
@@ -560,7 +562,7 @@ class User extends ModelWithContent
 			return $this->role;
 		}
 
-		$name = $this->role ?? $this->credentials()['role'] ?? 'visitor';
+		$name = $this->role ?? $this->credentials()['role'] ?? 'default';
 
 		return $this->role =
 			$this->kirby()->roles()->find($name) ??
@@ -568,33 +570,36 @@ class User extends ModelWithContent
 	}
 
 	/**
-	 * Returns all available roles
-	 * for this user, that can be selected
-	 * by the authenticated user
+	 * Returns all available roles for this user,
+	 * that can be selected by the authenticated user
+	 *
+	 * @param string|null $purpose User action for which the roles are used (create, change)
 	 */
-	public function roles(): Roles
+	public function roles(string|null $purpose = null): Roles
 	{
 		$kirby = $this->kirby();
 		$roles = $kirby->roles();
 
-		// a collection with just the one role of the user
-		$myRole = $roles->filter('id', $this->role()->id());
-
-		// if there's an authenticated user …
-		// admin users can select pretty much any role
-		if ($kirby->user()?->isAdmin() === true) {
-			// except if the user is the last admin
-			if ($this->isLastAdmin() === true) {
-				// in which case they have to stay admin
-				return $myRole;
-			}
-
-			// return all roles for mighty admins
-			return $roles;
+		// for the last admin, only their current role (admin) is available
+		if ($this->isLastAdmin() === true) {
+			// a collection with just the one role of the user
+			return $roles->filter('id', $this->role()->id());
 		}
 
-		// any other user can only keep their role
-		return $myRole;
+		// filter roles based on the user action
+		// as user permissions and/or options can restrict these further
+		$roles = match ($purpose) {
+			'create' => $roles->canBeCreated(),
+			'change' => $roles->canBeChanged(),
+			default  => $roles
+		};
+
+		// exclude the admin role, if the user isn't an admin themselves
+		if ($kirby->user()?->isAdmin() !== true) {
+			$roles = $roles->filter(fn ($role) => $role->name() !== 'admin');
+		}
+
+		return $roles;
 	}
 
 	/**
@@ -662,7 +667,7 @@ class User extends ModelWithContent
 	 */
 	protected function siblingsCollection(): Users
 	{
-		return $this->kirby()->users();
+		return $this->kirby()->users()->sortBy('username', 'asc');
 	}
 
 	/**
@@ -724,22 +729,31 @@ class User extends ModelWithContent
 		string|null $password = null
 	): bool {
 		if (empty($this->password()) === true) {
-			throw new NotFoundException(['key' => 'user.password.undefined']);
+			throw new NotFoundException(
+				key: 'user.password.undefined'
+			);
 		}
 
 		// `UserRules` enforces a minimum length of 8 characters,
 		// so everything below that is a typo
 		if (Str::length($password) < 8) {
-			throw new InvalidArgumentException(['key' => 'user.password.invalid']);
+			throw new InvalidArgumentException(
+				key: 'user.password.invalid'
+			);
 		}
 
 		// too long passwords can cause DoS attacks
 		if (Str::length($password) > 1000) {
-			throw new InvalidArgumentException(['key' => 'user.password.excessive']);
+			throw new InvalidArgumentException(
+				key: 'user.password.excessive'
+			);
 		}
 
 		if (password_verify($password, $this->password()) !== true) {
-			throw new InvalidArgumentException(['key' => 'user.password.wrong', 'httpCode' => 401]);
+			throw new InvalidArgumentException(
+				key: 'user.password.wrong',
+				httpCode: 401
+			);
 		}
 
 		return true;

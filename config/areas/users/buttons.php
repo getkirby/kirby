@@ -6,7 +6,7 @@ use Kirby\Panel\Ui\Buttons\ViewButton;
 use Kirby\Toolkit\I18n;
 
 return [
-	'users.add' => function (User $user, string|null $role = null) {
+	'users.create' => function (User $user, string|null $role = null) {
 		return new ViewButton(
 			dialog: 'users/create?role=' . $role,
 			disabled: $user->role()->permissions()->for('users', 'create') !== true,

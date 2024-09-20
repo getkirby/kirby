@@ -6,8 +6,8 @@ use Generator;
 use Kirby\Cms\Language;
 use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Cms\Page;
 use Kirby\Exception\NotFoundException;
+use Kirby\Toolkit\A;
 
 /**
  * Abstract for content storage handlers;
@@ -38,7 +38,7 @@ abstract class ContentStorageHandler
 	public function all(): Generator
 	{
 		foreach (Languages::ensure() as $language) {
-			foreach ($this->dynamicVersions() as $versionId) {
+			foreach (VersionId::all() as $versionId) {
 				if ($this->exists($versionId, $language) === true) {
 					yield $versionId => $language;
 				}
@@ -68,29 +68,9 @@ abstract class ContentStorageHandler
 	 */
 	public function deleteLanguage(Language $language): void
 	{
-		foreach ($this->dynamicVersions() as $version) {
-			$this->delete($version, $language);
+		foreach (VersionId::all() as $versionId) {
+			$this->delete($versionId, $language);
 		}
-	}
-
-	/**
-	 * Returns all versions available for the model that can be updated
-	 * @internal
-	 * @todo We might want to move this directly to the models later or work
-	 *       with a `Versions` class
-	 */
-	public function dynamicVersions(): array
-	{
-		$versions = [VersionId::changes()];
-
-		if (
-			$this->model instanceof Page === false ||
-			$this->model->isDraft() === false
-		) {
-			$versions[] = VersionId::published();
-		}
-
-		return $versions;
 	}
 
 	/**
@@ -176,7 +156,7 @@ abstract class ContentStorageHandler
 	 */
 	public function moveLanguage(Language $fromLanguage, Language $toLanguage): void
 	{
-		foreach ($this->dynamicVersions() as $versionId) {
+		foreach (VersionId::all() as $versionId) {
 			if ($this->exists($versionId, $fromLanguage) === true) {
 				$this->move($versionId, $fromLanguage, $versionId, $toLanguage);
 			}
@@ -193,6 +173,28 @@ abstract class ContentStorageHandler
 	abstract public function read(VersionId $versionId, Language $language): array;
 
 	/**
+	 * Searches and replaces one or multiple strings
+	 *
+	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
+	 */
+	public function replaceStrings(
+		VersionId $versionId,
+		Language $language,
+		array $map
+	): void {
+		$fields = $this->read($versionId, $language);
+		$fields = A::map(
+			$fields,
+			fn ($field) => str_replace(
+				array_keys($map),
+				array_values($map),
+				$field
+			)
+		);
+		$this->update($versionId, $language, $fields);
+	}
+
+	/**
 	 * Updates the modification timestamp of an existing version
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
@@ -206,9 +208,9 @@ abstract class ContentStorageHandler
 	 */
 	public function touchLanguage(Language $language): void
 	{
-		foreach ($this->dynamicVersions() as $version) {
-			if ($this->exists($version, $language) === true) {
-				$this->touch($version, $language);
+		foreach (VersionId::all() as $versionId) {
+			if ($this->exists($versionId, $language) === true) {
+				$this->touch($versionId, $language);
 			}
 		}
 	}

@@ -101,7 +101,7 @@ class BlocksField extends FieldClass
 	public function fieldsetGroups(): array|null
 	{
 		$groups = $this->fieldsets()->groups();
-		return empty($groups) === true ? null : $groups;
+		return $groups === [] ? null : $groups;
 	}
 
 	public function fill(mixed $value = null): void
@@ -243,7 +243,7 @@ class BlocksField extends FieldClass
 
 		// returns empty string to avoid storing empty array as string `[]`
 		// and to consistency work with `$field->isEmpty()`
-		if (empty($blocks) === true) {
+		if ($blocks === []) {
 			return '';
 		}
 
@@ -291,21 +291,23 @@ class BlocksField extends FieldClass
 		return [
 			'blocks' => function ($value) {
 				if ($this->min && count($value) < $this->min) {
-					throw new InvalidArgumentException([
-						'key'  => 'blocks.min.' . ($this->min === 1 ? 'singular' : 'plural'),
-						'data' => [
-							'min' => $this->min
-						]
-					]);
+					throw new InvalidArgumentException(
+						key: match ($this->min) {
+							1       => 'blocks.min.singular',
+							default => 'blocks.min.plural'
+						},
+						data: ['min' => $this->min]
+					);
 				}
 
 				if ($this->max && count($value) > $this->max) {
-					throw new InvalidArgumentException([
-						'key'  => 'blocks.max.' . ($this->max === 1 ? 'singular' : 'plural'),
-						'data' => [
-							'max' => $this->max
-						]
-					]);
+					throw new InvalidArgumentException(
+						key: match ($this->max) {
+							1       => 'blocks.max.singular',
+							default => 'blocks.max.plural'
+						},
+						data: ['max' => $this->max]
+					);
 				}
 
 				$fields = [];
@@ -332,15 +334,15 @@ class BlocksField extends FieldClass
 						$errors = $field->errors();
 
 						// rough first validation
-						if (empty($errors) === false) {
-							throw new InvalidArgumentException([
-								'key' => 'blocks.validation',
-								'data' => [
+						if (count($errors) > 0) {
+							throw new InvalidArgumentException(
+								key:'blocks.validation',
+								data: [
 									'field'    => $field->label(),
 									'fieldset' => $fieldset->name(),
 									'index'    => $index
 								]
-							]);
+							);
 						}
 					}
 				}

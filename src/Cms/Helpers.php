@@ -28,7 +28,7 @@ class Helpers
 	 * Helpers::$deprecations['<deprecation-key>'] = false;
 	 * ```
 	 */
-	public static $deprecations = [
+	public static array $deprecations = [
 		// The internal `$model->contentFile*()` methods have been deprecated
 		'model-content-file' => true,
 

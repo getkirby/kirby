@@ -54,7 +54,9 @@ class ContentLock
 			$this->data['lock']['user'] !== $this->user()->id()
 		) {
 			$id = ContentLocks::id($this->model);
-			throw new DuplicateException($id . ' is already locked');
+			throw new DuplicateException(
+				message: $id . ' is already locked'
+			);
 		}
 
 		$this->data['lock'] = [
@@ -113,7 +115,7 @@ class ContentLock
 	{
 		$data = $this->data['unlock'] ?? [];
 
-		return in_array($this->user()->id(), $data) === true;
+		return in_array($this->user()->id(), $data, true) === true;
 	}
 
 	/**
@@ -138,10 +140,10 @@ class ContentLock
 
 		// check if lock was set by another user
 		if ($this->data['lock']['user'] !== $this->user()->id()) {
-			throw new LogicException([
-				'fallback' => 'The content lock can only be removed by the user who created it. Use unlock instead.',
-				'httpCode' => 409
-			]);
+			throw new LogicException(
+				fallback: 'The content lock can only be removed by the user who created it. Use unlock instead.',
+				httpCode: 409
+			);
 		}
 
 		return $this->clearLock();
@@ -217,6 +219,8 @@ class ContentLock
 	protected function user(): User
 	{
 		return $this->kirby()->user() ??
-			throw new AuthException('No user authenticated.');
+			throw new AuthException(
+				message: 'No user authenticated.'
+			);
 	}
 }
