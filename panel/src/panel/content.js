@@ -82,9 +82,7 @@ export default (panel) => {
 		/**
 		 * Publishes any changes
 		 */
-		async publish(e) {
-			e?.preventDefault?.();
-
+		async publish() {
 			this.isPublishing = true;
 			await panel.app.config.globalProperties.$store.dispatch("content/save");
 			panel.events.emit("model.update");

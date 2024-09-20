@@ -1,4 +1,6 @@
 <script>
+import debounce from "@/helpers/debounce.js";
+
 /**
  * @internal
  */
@@ -33,6 +35,9 @@ export default {
 		}
 	},
 	computed: {
+		content() {
+			return this.$panel.content.values;
+		},
 		id() {
 			return this.model.link;
 		},
@@ -57,16 +62,34 @@ export default {
 		}
 	},
 	mounted() {
+		this.onInput = debounce(this.onInput, 50);
+
 		this.$events.on("model.reload", this.$reload);
 		this.$events.on("keydown.left", this.toPrev);
 		this.$events.on("keydown.right", this.toNext);
+		this.$events.on("view.save", this.onSave);
 	},
 	unmounted() {
 		this.$events.off("model.reload", this.$reload);
 		this.$events.off("keydown.left", this.toPrev);
 		this.$events.off("keydown.right", this.toNext);
+		this.$events.off("view.save", this.onSave);
 	},
 	methods: {
+		onDiscard() {
+			this.$panel.content.discard();
+		},
+		onInput(values) {
+			this.$panel.content.set(values);
+		},
+		onSave(e) {
+			e?.preventDefault?.();
+			this.onSubmit();
+		},
+		onSubmit(values = {}) {
+			this.$panel.content.set(values);
+			this.$panel.content.publish();
+		},
 		toPrev(e) {
 			if (this.prev && e.target.localName === "body") {
 				this.$go(this.prev.link);

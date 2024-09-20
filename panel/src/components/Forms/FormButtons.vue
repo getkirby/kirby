@@ -70,7 +70,7 @@ export default {
 					{
 						icon: "check",
 						text: this.$t("save"),
-						click: () => this.save()
+						click: () => this.$emit("submit")
 					}
 				];
 			}
@@ -167,13 +167,11 @@ export default {
 		if (this.supportsLocking) {
 			this.isLoading = setInterval(this.check, 10000);
 		}
-		this.$events.on("view.save", this.save);
 	},
 	unmounted() {
 		// make sure to clear all intervals
 		clearInterval(this.isLoading);
 		clearInterval(this.isLocking);
-		this.$events.off("view.save", this.save);
 	},
 	methods: {
 		async check() {
@@ -229,7 +227,7 @@ export default {
 					// If setting lock failed, a competing lock has been set between
 					// API calls. In that case, discard changes, stop setting lock
 					clearInterval(this.isLocking);
-					this.$panel.content.discard();
+					this.$emit("discard");
 				}
 			}
 
@@ -242,7 +240,7 @@ export default {
 		async resolve() {
 			// remove content unlock and throw away unsaved changes
 			await this.unlock(false);
-			this.$panel.content.discard();
+			this.$emit("discard");
 		},
 		revert() {
 			this.$panel.dialog.open({
@@ -256,14 +254,11 @@ export default {
 				},
 				on: {
 					submit: () => {
-						this.$panel.content.discard();
 						this.$panel.dialog.close();
+						this.$emit("discard");
 					}
 				}
 			});
-		},
-		save(e) {
-			this.$panel.content.publish(e);
 		},
 		async unlock(unlock = true) {
 			const api = [this.$panel.view.path + "/unlock", null, null, true];
