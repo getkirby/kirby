@@ -953,15 +953,18 @@ class PageActionsTest extends TestCase
 			'parent' => $page,
 			'code'   => 'en',
 		]);
-		$this->assertFileExists($page->version(VersionId::changes())->contentFile('en'));
+
+		$versionId = VersionId::published();
+
+		$this->assertFileExists($page->version($versionId)->contentFile('en'));
 
 		$drafts = $app->site()->drafts();
 		$childrenAndDrafts = $app->site()->childrenAndDrafts();
 
 		$copy = $page->duplicate('test-copy');
 
-		$this->assertFileExists($copy->version(VersionId::changes())->contentFile('en'));
-		$this->assertFileDoesNotExist($copy->version(VersionId::changes())->contentFile('de'));
+		$this->assertFileExists($copy->version($versionId)->contentFile('en'));
+		$this->assertFileDoesNotExist($copy->version($versionId)->contentFile('de'));
 
 		$this->assertIsPage($page, $drafts->find('test'));
 		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
@@ -993,8 +996,11 @@ class PageActionsTest extends TestCase
 			'slug'  => 'test-de'
 		], 'de');
 
-		$this->assertFileExists($page->version(VersionId::changes())->contentFile('en'));
-		$this->assertFileExists($page->version(VersionId::changes())->contentFile('de'));
+		$versionId = VersionId::published();
+
+		$this->assertFileExists($page->version($versionId)->contentFile('en'));
+		$this->assertFileExists($page->version($versionId)->contentFile('de'));
+
 		$this->assertSame('test', $page->slug());
 		$this->assertSame('test-de', $page->slug('de'));
 
@@ -1106,11 +1112,12 @@ class PageActionsTest extends TestCase
 			'code'   => 'en'
 		]);
 
+		$versionId = VersionId::published();
+
 		$copy = $page->duplicate('test-copy', ['children' => true]);
 
-		$this->assertFileExists($copy->version(VersionId::changes())->contentFile('en'));
-		$this->assertFileDoesNotExist($copy->version(VersionId::changes())->contentFile('de'));
-
+		$this->assertFileExists($copy->version($versionId)->contentFile('en'));
+		$this->assertFileDoesNotExist($copy->version($versionId)->contentFile('de'));
 
 		$this->assertNotSame($page->uuid()->id(), $copy->uuid()->id());
 		$this->assertNotSame($app->page('test/foo')->uuid()->id(), $app->page('test-copy/foo')->uuid()->id());

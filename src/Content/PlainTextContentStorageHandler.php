@@ -77,19 +77,7 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 	 */
 	protected function contentFileForPage(Page $model, VersionId $versionId, Language $language): string
 	{
-		$directory = $this->contentDirectory($versionId);
-
-		if ($model->isDraft() === true) {
-			if ($versionId->is(Versionid::PUBLISHED) === true) {
-				throw new LogicException('Drafts cannot have a published content file');
-			}
-
-			// drafts already have the `_drafts` prefix in their root.
-			// `_changes` must not be added to it in addition to that.
-			$directory = $this->model->root();
-		}
-
-		return $directory . '/' . $this->contentFilename($model->intendedTemplate()->name(), $language);
+		return $this->contentDirectory($versionId) . '/' . $this->contentFilename($model->intendedTemplate()->name(), $language);
 	}
 
 	/**
@@ -192,9 +180,9 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 			return true;
 		}
 
-		// A non-default version or non-default language version does not exist
+		// A changed version or non-default language version does not exist
 		// if the content file was not found
-		if (VersionId::default($this->model)->is($versionId) === false || $language->isDefault() === false) {
+		if (VersionId::published()->is($versionId) === false || $language->isDefault() === false) {
 			return false;
 		}
 
