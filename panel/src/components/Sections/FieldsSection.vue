@@ -15,32 +15,29 @@
 		<k-form
 			:fields="fields"
 			:validate="true"
-			:value="values"
+			:value="content"
 			:disabled="lock && lock.state === 'lock'"
-			@input="onInput"
-			@submit="onSubmit"
+			@input="$emit('input', $event)"
+			@submit="$emit('submit', $event)"
 		/>
 	</k-section>
 </template>
 
 <script>
 import SectionMixin from "@/mixins/section.js";
-import debounce from "@/helpers/debounce.js";
 
 export default {
 	mixins: [SectionMixin],
 	inheritAttrs: false,
+	props: {
+		content: Object
+	},
 	data() {
 		return {
 			fields: {},
 			isLoading: true,
 			issue: null
 		};
-	},
-	computed: {
-		values() {
-			return this.$panel.content.values;
-		}
 	},
 	watch: {
 		// Reload values and field definitions
@@ -50,7 +47,6 @@ export default {
 		}
 	},
 	mounted() {
-		this.onInput = debounce(this.onInput, 50);
 		this.fetch();
 	},
 	methods: {
@@ -72,14 +68,6 @@ export default {
 			} finally {
 				this.isLoading = false;
 			}
-		},
-		onInput(values) {
-			this.$panel.content.set(values);
-		},
-		onSubmit(values) {
-			// ensure that all values are actually committed to content store
-			this.onInput(values);
-			this.$events.emit("keydown.cmd.s", values);
 		}
 	}
 };
