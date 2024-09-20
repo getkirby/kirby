@@ -20,6 +20,7 @@ export default {
 		content: Object,
 		props: Object
 	},
+	emits: ["input", "submit"],
 	computed: {
 		preview() {
 			if (this.$helper.isComponent(this.component)) {

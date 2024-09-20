@@ -55,7 +55,7 @@ export default {
 		},
 		url: String
 	},
-	emits: ["focus"],
+	emits: ["focus", "input"],
 	computed: {
 		focus() {
 			const focus = this.content.focus;

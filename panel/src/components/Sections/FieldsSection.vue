@@ -32,6 +32,7 @@ export default {
 	props: {
 		content: Object
 	},
+	emits: ["input", "submit"],
 	data() {
 		return {
 			fields: {},
