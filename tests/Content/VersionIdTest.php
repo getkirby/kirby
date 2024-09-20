@@ -11,6 +11,18 @@ use Kirby\TestCase;
 class VersionIdTest extends TestCase
 {
 	/**
+	 * @covers ::all
+	 */
+	public function testAll()
+	{
+		$list = VersionId::all();
+
+		$this->assertCount(2, $list);
+		$this->assertSame('published', $list[0]->value());
+		$this->assertSame('changes', $list[1]->value());
+	}
+
+	/**
 	 * @covers ::changes
 	 * @covers ::value
 	 */
@@ -63,18 +75,6 @@ class VersionIdTest extends TestCase
 		$this->assertTrue($version->is(VersionId::PUBLISHED));
 		$this->assertFalse($version->is('something-else'));
 		$this->assertFalse($version->is(VersionId::CHANGES));
-	}
-
-	/**
-	 * @covers ::list
-	 */
-	public function testList()
-	{
-		$list = VersionId::list();
-
-		$this->assertCount(2, $list);
-		$this->assertSame('published', $list[0]->value());
-		$this->assertSame('changes', $list[1]->value());
 	}
 
 	/**

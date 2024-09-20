@@ -58,22 +58,22 @@ class VersionId implements Stringable
 	}
 
 	/**
-	 * Creates a VersionId instance for the latest content changes
-	 */
-	public static function changes(): static
-	{
-		return new static(static::CHANGES);
-	}
-
-	/**
 	 * List of available version ids
 	 */
-	public static function list(): array
+	public static function all(): array
 	{
 		return [
 			static::published(),
 			static::changes(),
 		];
+	}
+
+	/**
+	 * Creates a VersionId instance for the latest content changes
+	 */
+	public static function changes(): static
+	{
+		return new static(static::CHANGES);
 	}
 
 	/**
