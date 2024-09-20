@@ -12,7 +12,7 @@ use Kirby\Exception\NotFoundException;
  */
 class MemoryContentStorageHandlerTest extends TestCase
 {
-	protected $storage;
+	protected MemoryContentStorageHandler $storage;
 
 	public function assertCreateAndDelete(VersionId $versionId, Language $language): void
 	{

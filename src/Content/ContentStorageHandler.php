@@ -8,6 +8,7 @@ use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Exception\NotFoundException;
+use Kirby\Toolkit\A;
 
 /**
  * Abstract for content storage handlers;
@@ -191,6 +192,28 @@ abstract class ContentStorageHandler
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
 	abstract public function read(VersionId $versionId, Language $language): array;
+
+	/**
+	 * Searches and replaces one or multiple strings
+	 *
+	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
+	 */
+	public function replaceStrings(
+		VersionId $versionId,
+		Language $language,
+		array $map
+	): void {
+		$fields = $this->read($versionId, $language);
+		$fields = A::map(
+			$fields,
+			fn ($field) => str_replace(
+				array_keys($map),
+				array_values($map),
+				$field
+			)
+		);
+		$this->update($versionId, $language, $fields);
+	}
 
 	/**
 	 * Updates the modification timestamp of an existing version
