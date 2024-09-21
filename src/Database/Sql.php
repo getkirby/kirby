@@ -180,13 +180,17 @@ abstract class Sql
 	{
 		// column type
 		if (isset($column['type']) === false) {
-			throw new InvalidArgumentException('No column type given for column ' . $name);
+			throw new InvalidArgumentException(
+				message: 'No column type given for column ' . $name
+			);
 		}
 
 		$template = $this->columnTypes()[$column['type']] ?? null;
 
 		if (!$template) {
-			throw new InvalidArgumentException('Unsupported column type: ' . $column['type']);
+			throw new InvalidArgumentException(
+				message: 'Unsupported column type: ' . $column['type']
+			);
 		}
 
 		// null option
@@ -476,7 +480,9 @@ abstract class Sql
 
 		// validate join type
 		if (in_array($type, $types, true) === false) {
-			throw new InvalidArgumentException('Invalid join type ' . $type);
+			throw new InvalidArgumentException(
+				message: 'Invalid join type ' . $type
+			);
 		}
 
 		return [
@@ -690,7 +696,9 @@ abstract class Sql
 			],
 
 			// every other number is an error
-			default => throw new InvalidArgumentException('Invalid identifier ' . $identifier)
+			default => throw new InvalidArgumentException(
+				message: 'Invalid identifier ' . $identifier
+			)
 		};
 	}
 
@@ -709,7 +717,9 @@ abstract class Sql
 	{
 		// validate table
 		if ($this->database->validateTable($table) === false) {
-			throw new InvalidArgumentException('Invalid table ' . $table);
+			throw new InvalidArgumentException(
+				message: 'Invalid table ' . $table
+			);
 		}
 
 		return $this->quoteIdentifier($table);
@@ -787,7 +797,9 @@ abstract class Sql
 	public function validateColumn(string $table, string $column): bool
 	{
 		if ($this->database->validateColumn($table, $column) !== true) {
-			throw new InvalidArgumentException('Invalid column ' . $column);
+			throw new InvalidArgumentException(
+				message: 'Invalid column ' . $column
+			);
 		}
 
 		return true;

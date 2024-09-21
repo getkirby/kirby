@@ -8,9 +8,9 @@ use DOMDocument;
 use DOMDocumentType;
 use DOMElement;
 use Exception;
-use Kirby\AssertionFailedError;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\AssertionFailedError;
 
 /**
  * @coversDefaultClass \Kirby\Toolkit\Dom
@@ -40,7 +40,11 @@ class DomTest extends TestCase
 
 				if ($attr->nodeName === 'b') {
 					$attr->ownerElement->removeAttributeNode($attr);
-					return [new InvalidArgumentException('The "b" attribute is not allowed')];
+					return [
+						new InvalidArgumentException(
+							message: 'The "b" attribute is not allowed'
+						)
+					];
 				}
 
 				return [];
@@ -50,7 +54,9 @@ class DomTest extends TestCase
 					throw new AssertionFailedError('Options provided to callback are not complete or invalid');
 				}
 
-				throw new InvalidArgumentException('The "' . $doctype->name . '" doctype is not allowed');
+				throw new InvalidArgumentException(
+					message: 'The "' . $doctype->name . '" doctype is not allowed'
+				);
 			},
 			'sanitize_elementCallback1' => function (DOMElement $element, array $options): void {
 				// no return value
@@ -62,7 +68,11 @@ class DomTest extends TestCase
 
 				if ($element->nodeName === 'b') {
 					Dom::remove($element);
-					return [new InvalidArgumentException('The "b" element is not allowed')];
+					return [
+						new InvalidArgumentException(
+							message: 'The "b" element is not allowed'
+						)
+					];
 				}
 
 				return [];
@@ -1870,7 +1880,9 @@ class DomTest extends TestCase
 		$dom = new Dom('<!DOCTYPE xml><xml/>', 'XML');
 		$dom->sanitize([
 			'doctypeCallback' => function (DOMDocumentType $doctype): void {
-				throw new \InvalidArgumentException('This exception is not caught as validation error');
+				throw new \InvalidArgumentException(
+					message: 'This exception is not caught as validation error'
+				);
 			}
 		]);
 	}

@@ -63,7 +63,9 @@ class Field extends Component
 		}
 
 		if (isset($attrs['model']) === false) {
-			throw new InvalidArgumentException('Field requires a model');
+			throw new InvalidArgumentException(
+				message: 'Field requires a model'
+			);
 		}
 
 		$this->formFields = $formFields;

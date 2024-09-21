@@ -237,7 +237,9 @@ class Version
 	public function publish(Language|string $language = 'default'): void
 	{
 		if ($this->id->value() === VersionId::PUBLISHED) {
-			throw new LogicException('This version is already published');
+			throw new LogicException(
+				message: 'This version is already published'
+			);
 		}
 
 		$language = Language::ensure($language);

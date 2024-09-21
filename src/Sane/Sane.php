@@ -72,7 +72,9 @@ class Sane
 			return null;
 		}
 
-		throw new NotFoundException('Missing handler for type: "' . $type . '"');
+		throw new NotFoundException(
+			message: 'Missing handler for type: "' . $type . '"'
+		);
 	}
 
 	/**

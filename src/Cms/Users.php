@@ -65,7 +65,9 @@ class Users extends Collection
 		// give a useful error message on invalid input;
 		// silently ignore "empty" values for compatibility with existing setups
 		} elseif (in_array($object, [null, false, true], true) !== true) {
-			throw new InvalidArgumentException('You must pass a Users or User object or an ID of an existing user to the Users collection');
+			throw new InvalidArgumentException(
+				message: 'You must pass a Users or User object or an ID of an existing user to the Users collection'
+			);
 		}
 
 		return $this;

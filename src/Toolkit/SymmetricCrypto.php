@@ -40,11 +40,15 @@ class SymmetricCrypto
 		protected string|null $secretKey = null,
 	) {
 		if ($password !== null && $secretKey !== null) {
-			throw new InvalidArgumentException('Passing both a secret key and a password is not supported');
+			throw new InvalidArgumentException(
+				message: 'Passing both a secret key and a password is not supported'
+			);
 		}
 
 		if ($secretKey !== null && strlen($secretKey) !== SODIUM_CRYPTO_SECRETBOX_KEYBYTES) {
-			throw new InvalidArgumentException('Invalid secret key length, expected ' . SODIUM_CRYPTO_SECRETBOX_KEYBYTES . ' bytes');
+			throw new InvalidArgumentException(
+				message: 'Invalid secret key length, expected ' . SODIUM_CRYPTO_SECRETBOX_KEYBYTES . ' bytes'
+			);
 		}
 	}
 
@@ -91,7 +95,9 @@ class SymmetricCrypto
 		$props = Json::decode($json);
 
 		if (($props['mode'] ?? null) !== 'secretbox') {
-			throw new InvalidArgumentException('Unsupported encryption mode "' . ($props['mode'] ?? '') . '"');
+			throw new InvalidArgumentException(
+				message: 'Unsupported encryption mode "' . ($props['mode'] ?? '') . '"'
+			);
 		}
 
 		if (
@@ -100,7 +106,9 @@ class SymmetricCrypto
 			isset($props['salt']) !== true ||
 			isset($props['limits']) !== true
 		) {
-			throw new InvalidArgumentException('Input data does not contain all required props');
+			throw new InvalidArgumentException(
+				message: 'Input data does not contain all required props'
+			);
 		}
 
 		$data   = base64_decode($props['data']);
@@ -111,7 +119,9 @@ class SymmetricCrypto
 		$plaintext = sodium_crypto_secretbox_open($data, $nonce, $this->secretKey($salt, $limits));
 
 		if (is_string($plaintext) !== true) {
-			throw new LogicException('Encrypted string was tampered with');
+			throw new LogicException(
+				message: 'Encrypted string was tampered with'
+			);
 		}
 
 		return $plaintext;
@@ -180,7 +190,9 @@ class SymmetricCrypto
 		// derive from password
 		if (isset($this->password) === true) {
 			if ($salt === null || $limits === null) {
-				throw new InvalidArgumentException('Salt and limits are required when deriving a secret key from a password');
+				throw new InvalidArgumentException(
+					message: 'Salt and limits are required when deriving a secret key from a password'
+				);
 			}
 
 			// access from cache

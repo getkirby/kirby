@@ -38,6 +38,6 @@ class YamlSpyc
 
 		// apparently Spyc always returns an array, even for invalid YAML syntax
 		// so this Exception should currently never be thrown
-		throw new InvalidArgumentException('The YAML data cannot be parsed'); // @codeCoverageIgnore
+		throw new InvalidArgumentException(message: 'The YAML data cannot be parsed'); // @codeCoverageIgnore
 	}
 }

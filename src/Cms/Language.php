@@ -57,7 +57,9 @@ class Language implements Stringable
 	public function __construct(array $props)
 	{
 		if (isset($props['code']) === false) {
-			throw new InvalidArgumentException('The property "code" is required');
+			throw new InvalidArgumentException(
+				message: 'The property "code" is required'
+			);
 		}
 
 		static::$kirby      = $props['kirby'] ?? null;
@@ -232,7 +234,7 @@ class Language implements Stringable
 		LanguageRules::delete($language);
 
 		if (F::remove($language->root()) !== true) {
-			throw new Exception('The language could not be deleted');
+			throw new Exception(message: 'The language could not be deleted');
 		}
 
 		// if needed, convert content storage to single lang
@@ -288,7 +290,7 @@ class Language implements Stringable
 		}
 
 		// validate the language code
-		throw new NotFoundException('Invalid language: ' . $code);
+		throw new NotFoundException(message: 'Invalid language: ' . $code);
 	}
 
 	/**

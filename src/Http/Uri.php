@@ -374,7 +374,9 @@ class Uri implements Stringable
 
 		if ($port !== null) {
 			if ($port < 1 || $port > 65535) {
-				throw new InvalidArgumentException('Invalid port format: ' . $port);
+				throw new InvalidArgumentException(
+					message: 'Invalid port format: ' . $port
+				);
 			}
 		}
 
@@ -396,8 +398,13 @@ class Uri implements Stringable
 	 */
 	public function setScheme(string|null $scheme = null): static
 	{
-		if ($scheme !== null && in_array($scheme, static::$schemes, true) === false) {
-			throw new InvalidArgumentException('Invalid URL scheme: ' . $scheme);
+		if (
+			$scheme !== null &&
+			in_array($scheme, static::$schemes, true) === false
+		) {
+			throw new InvalidArgumentException(
+				message: 'Invalid URL scheme: ' . $scheme
+			);
 		}
 
 		$this->scheme = $scheme;

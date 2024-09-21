@@ -76,7 +76,9 @@ trait FileActions
 			}
 
 			if ($newFile->exists() === true) {
-				throw new LogicException('The new file exists and cannot be overwritten');
+				throw new LogicException(
+					message: 'The new file exists and cannot be overwritten'
+				);
 			}
 
 			// rename the main file
@@ -246,7 +248,9 @@ trait FileActions
 	public static function create(array $props, bool $move = false): File
 	{
 		if (isset($props['source'], $props['parent']) === false) {
-			throw new InvalidArgumentException('Please provide the "source" and "parent" props for the File');
+			throw new InvalidArgumentException(
+				message: 'Please provide the "source" and "parent" props for the File'
+			);
 		}
 
 		// prefer the filename from the props
@@ -306,7 +310,9 @@ trait FileActions
 
 			// overwrite the original
 			if (F::$method($upload->root(), $file->root(), true) !== true) {
-				throw new LogicException('The file could not be created');
+				throw new LogicException(
+					message: 'The file could not be created'
+				);
 			}
 
 			// resize the file on upload if configured
@@ -407,7 +413,9 @@ trait FileActions
 
 			// overwrite the original
 			if (F::$method($upload->root(), $file->root(), true) !== true) {
-				throw new LogicException('The file could not be created');
+				throw new LogicException(
+					message: 'The file could not be created'
+				);
 			}
 
 			// apply the resizing/crop options from the blueprint

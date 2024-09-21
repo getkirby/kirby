@@ -70,7 +70,9 @@ class Xml extends DomHandler
 				Str::contains($doctype->name, 'svg', true) === true
 			)
 		) {
-			throw new InvalidArgumentException('The doctype is not allowed in XML files');
+			throw new InvalidArgumentException(
+				message: 'The doctype is not allowed in XML files'
+			);
 		}
 	}
 }

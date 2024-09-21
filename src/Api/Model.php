@@ -49,7 +49,7 @@ class Model
 
 		if ($data === null) {
 			if (($schema['default'] ?? null) instanceof Closure === false) {
-				throw new Exception('Missing model data');
+				throw new Exception(message: 'Missing model data');
 			}
 
 			$this->data = $schema['default']->call($this->api);
@@ -82,7 +82,7 @@ class Model
 		}
 
 		if ($keys !== null && is_array($keys) === false) {
-			throw new Exception('Invalid select keys');
+			throw new Exception(message: 'Invalid select keys');
 		}
 
 		$this->select = $keys;
@@ -109,7 +109,7 @@ class Model
 
 			if (is_string($value) === true) {
 				if ($value === 'any') {
-					throw new Exception('Invalid sub view: "any"');
+					throw new Exception(message: 'Invalid sub view: "any"');
 				}
 
 				$selection[$key] = [

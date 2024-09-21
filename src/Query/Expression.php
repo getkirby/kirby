@@ -101,7 +101,9 @@ class Expression
 			// if `a` isn't false, return `b`, otherwise `c`
 			if ($part === '?') {
 				if (($this->parts[$index + 2] ?? null) !== ':') {
-					throw new LogicException('Query: Incomplete ternary operator (missing matching `? :`)');
+					throw new LogicException(
+						message: 'Query: Incomplete ternary operator (missing matching `? :`)'
+					);
 				}
 
 				if ($base != false) {

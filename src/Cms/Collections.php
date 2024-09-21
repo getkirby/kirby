@@ -119,7 +119,12 @@ class Collections
 		// fallback to collections from plugins
 		$collections = $kirby->extensions('collections');
 
-		return $collections[$name] ??
-			throw new NotFoundException('The collection cannot be found');
+		if ($collection = $collections[$name] ?? null) {
+			return $collection;
+		}
+
+		throw new NotFoundException(
+			message: 'The collection cannot be found'
+		);
 	}
 }

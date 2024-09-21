@@ -208,7 +208,9 @@ class Query
 	public function table(string $table): static
 	{
 		if ($this->database->validateTable($table) === false) {
-			throw new InvalidArgumentException('Invalid table: ' . $table);
+			throw new InvalidArgumentException(
+				message: 'Invalid table: ' . $table
+			);
 		}
 
 		$this->table = $table;
@@ -810,7 +812,10 @@ class Query
 			return $this->findBy($column, $arguments[0]);
 		}
 
-		throw new InvalidArgumentException('Invalid query method: ' . $method, static::ERROR_INVALID_QUERY_METHOD);
+		throw new InvalidArgumentException(
+			message: 'Invalid query method: ' . $method,
+			code: static::ERROR_INVALID_QUERY_METHOD
+		);
 	}
 
 	/**
@@ -906,7 +911,9 @@ class Query
 					$predicate = trim(strtoupper($args[1]));
 					if (is_array($args[2]) === true) {
 						if (in_array($predicate, ['IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN'], true) === false) {
-							throw new InvalidArgumentException('Invalid predicate ' . $predicate);
+							throw new InvalidArgumentException(
+								message: 'Invalid predicate ' . $predicate
+							);
 						}
 
 						// build a list of bound values
@@ -939,7 +946,9 @@ class Query
 						];
 
 						if (in_array($predicate, $predicates, true) === false) {
-							throw new InvalidArgumentException('Invalid predicate/operator ' . $predicate);
+							throw new InvalidArgumentException(
+								message: 'Invalid predicate/operator ' . $predicate
+							);
 						}
 
 						$valueBinding = $sql->bindingName('value');

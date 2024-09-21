@@ -196,6 +196,8 @@ class Helpers
 			return count($value);
 		}
 
-		throw new InvalidArgumentException('Could not determine the size of the given value');
+		throw new InvalidArgumentException(
+			message: 'Could not determine the size of the given value'
+		);
 	}
 }

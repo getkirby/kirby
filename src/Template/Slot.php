@@ -70,7 +70,7 @@ class Slot implements Stringable
 	public function close(): void
 	{
 		if ($this->open === false) {
-			throw new LogicException('The slot has not been opened');
+			throw new LogicException(message: 'The slot has not been opened');
 		}
 
 		$this->content = ob_get_clean();

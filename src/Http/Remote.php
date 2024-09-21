@@ -171,7 +171,9 @@ class Remote
 			$this->curlopt[CURLOPT_SSL_VERIFYPEER] = true;
 			$this->curlopt[CURLOPT_CAPATH] = $this->options['ca'];
 		} else {
-			throw new InvalidArgumentException('Invalid "ca" option for the Remote class');
+			throw new InvalidArgumentException(
+				message: 'Invalid "ca" option for the Remote class'
+			);
 		}
 
 		// add the progress

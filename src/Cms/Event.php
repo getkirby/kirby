@@ -246,7 +246,9 @@ class Event implements Stringable
 	public function updateArgument(string $name, $value): void
 	{
 		if (array_key_exists($name, $this->arguments) !== true) {
-			throw new InvalidArgumentException('The argument ' . $name . ' does not exist');
+			throw new InvalidArgumentException(
+				message: 'The argument ' . $name . ' does not exist'
+			);
 		}
 
 		$this->arguments[$name] = $value;

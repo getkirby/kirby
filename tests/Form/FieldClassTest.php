@@ -2,6 +2,7 @@
 
 namespace Kirby\Form;
 
+use Exception;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
@@ -50,7 +51,7 @@ class ValidatedField extends FieldClass
 			'minlength',
 			'custom' => function ($value) {
 				if ($value !== 'a') {
-					throw new \Exception('Please enter an a');
+					throw new Exception('Please enter an a');
 				}
 			}
 		];

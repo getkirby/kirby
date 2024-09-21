@@ -135,7 +135,7 @@ class Response implements Stringable
 		array $props = []
 	): static {
 		if (file_exists($file) === false) {
-			throw new Exception('The file could not be found');
+			throw new Exception(message: 'The file could not be found');
 		}
 
 		$filename ??= basename($file);

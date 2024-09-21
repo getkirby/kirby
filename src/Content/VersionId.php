@@ -45,7 +45,7 @@ class VersionId implements Stringable
 		public string $value
 	) {
 		if (in_array($value, [static::CHANGES, static::PUBLISHED], true) === false) {
-			throw new InvalidArgumentException('Invalid Version ID');
+			throw new InvalidArgumentException(message: 'Invalid Version ID');
 		}
 	}
 

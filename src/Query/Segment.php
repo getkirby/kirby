@@ -145,7 +145,9 @@ class Segment
 			array_key_exists($this->method, $array) &&
 			$args !== []
 		) {
-			throw new InvalidArgumentException('Cannot access array element "' . $this->method . '" with arguments');
+			throw new InvalidArgumentException(
+				message: 'Cannot access array element "' . $this->method . '" with arguments'
+			);
 		}
 
 		// last, the standard error for trying to access something

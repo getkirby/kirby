@@ -270,7 +270,9 @@ class Panel
 
 		// interpret missing/empty results as not found
 		if ($result === null || $result === false) {
-			$result = new NotFoundException('The data could not be found');
+			$result = new NotFoundException(
+				message: 'The data could not be found'
+			);
 
 		// interpret strings as errors
 		} elseif (is_string($result) === true) {

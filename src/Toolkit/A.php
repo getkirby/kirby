@@ -433,7 +433,9 @@ class A
 			static::pluck($array, $keyBy);
 
 		if (count($keys) !== count($array)) {
-			throw new InvalidArgumentException('The "key by" argument must be a valid key or a callable');
+			throw new InvalidArgumentException(
+				message: 'The "key by" argument must be a valid key or a callable'
+			);
 		}
 
 		return array_combine($keys, $array);
@@ -641,11 +643,11 @@ class A
 		$total = count($array);
 
 		if ($from >= $total || $from < 0) {
-			throw new Exception('Invalid "from" index');
+			throw new Exception(message: 'Invalid "from" index');
 		}
 
 		if ($to >= $total || $to < 0) {
-			throw new Exception('Invalid "to" index');
+			throw new Exception(message: 'Invalid "to" index');
 		}
 
 		// remove the item from the array
@@ -747,7 +749,9 @@ class A
 		bool $shuffle = false
 	): array {
 		if ($count > count($array)) {
-			throw new InvalidArgumentException('$count is larger than available array items');
+			throw new InvalidArgumentException(
+				message: '$count is larger than available array items'
+			);
 		}
 
 		if ($shuffle === true) {

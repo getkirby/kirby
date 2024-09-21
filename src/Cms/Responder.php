@@ -188,7 +188,9 @@ class Responder implements Stringable
 			$parsedExpires = strtotime($expires);
 
 			if (is_int($parsedExpires) !== true) {
-				throw new InvalidArgumentException('Invalid time string "' . $expires . '"');
+				throw new InvalidArgumentException(
+					message: 'Invalid time string "' . $expires . '"'
+				);
 			}
 
 			$expires = $parsedExpires;

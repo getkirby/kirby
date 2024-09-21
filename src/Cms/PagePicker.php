@@ -179,7 +179,9 @@ class PagePicker extends Picker
 			$items instanceof Page  => $items->children(),
 			$items instanceof Pages => $items,
 
-			default => throw new InvalidArgumentException('Your query must return a set of pages')
+			default => throw new InvalidArgumentException(
+				message: 'Your query must return a set of pages'
+			)
 		};
 
 		return $this->itemsForQuery = $items;

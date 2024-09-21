@@ -130,7 +130,9 @@ class Image extends File
 			return Html::img($url, $attr);
 		}
 
-		throw new LogicException('Calling Image::html() requires that the URL property is not null');
+		throw new LogicException(
+			message: 'Calling Image::html() requires that the URL property is not null'
+		);
 	}
 
 	/**

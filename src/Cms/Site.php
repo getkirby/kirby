@@ -470,7 +470,7 @@ class Site extends ModelWithContent
 
 		// handle invalid pages
 		if ($page instanceof Page === false) {
-			throw new InvalidArgumentException('Invalid page object');
+			throw new InvalidArgumentException(message: 'Invalid page object');
 		}
 
 		// set and return the current active page

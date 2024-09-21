@@ -461,7 +461,7 @@ class Svg extends Xml
 		array $options
 	): void {
 		if (mb_strtolower($doctype->name) !== 'svg') {
-			throw new InvalidArgumentException('Invalid doctype');
+			throw new InvalidArgumentException(message: 'Invalid doctype');
 		}
 	}
 
@@ -495,7 +495,9 @@ class Svg extends Xml
 
 		// basic validation before we continue sanitizing/validating
 		if ($root !== 'svg') {
-			throw new InvalidArgumentException('The file is not a SVG (got <' . $root . '>)');
+			throw new InvalidArgumentException(
+				message: 'The file is not a SVG (got <' . $root . '>)'
+			);
 		}
 
 		return $svg;

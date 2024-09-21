@@ -379,7 +379,9 @@ class Date extends DateTime implements Stringable
 			$unit === 'hour' && 24 % $size !== 0 ||
 			in_array($unit, ['second', 'minute'], true) && 60 % $size !== 0
 		) {
-			throw new InvalidArgumentException('Invalid rounding size for ' . $unit);
+			throw new InvalidArgumentException(
+				message: 'Invalid rounding size for ' . $unit
+			);
 		}
 
 		// round to other rounding steps
@@ -475,7 +477,7 @@ class Date extends DateTime implements Stringable
 			return [...$default, 'unit' => strtolower($input)];
 		}
 
-		throw new InvalidArgumentException('Invalid input');
+		throw new InvalidArgumentException(message: 'Invalid input');
 	}
 
 	/**
@@ -527,7 +529,9 @@ class Date extends DateTime implements Stringable
 			'date'     => 'Y-m-d',
 			'time'     => 'H:i:s',
 			'datetime' => 'Y-m-d H:i:s',
-			default    => throw new InvalidArgumentException('Invalid mode')
+			default    => throw new InvalidArgumentException(
+				message: 'Invalid mode'
+			)
 		};
 
 		if ($timezone === true) {
@@ -559,7 +563,9 @@ class Date extends DateTime implements Stringable
 	{
 		$units = ['year', 'month', 'day', 'hour', 'minute', 'second'];
 		if (in_array($unit, $units, true) === false) {
-			throw new InvalidArgumentException('Invalid rounding unit');
+			throw new InvalidArgumentException(
+				message: 'Invalid rounding unit'
+			);
 		}
 	}
 }

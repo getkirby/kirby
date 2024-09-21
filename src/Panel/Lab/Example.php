@@ -34,7 +34,9 @@ class Example
 		$this->root = $this->parent->root() . '/' . $this->id;
 
 		if ($this->exists() === false) {
-			throw new NotFoundException('The example could not be found');
+			throw new NotFoundException(
+				message: 'The example could not be found'
+			);
 		}
 
 		$this->tabs = $this->collectTabs();

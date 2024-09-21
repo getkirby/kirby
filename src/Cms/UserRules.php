@@ -287,12 +287,14 @@ class UserRules
 	{
 		if (in_array($id, ['account', 'kirby', 'nobody'], true) === true) {
 			throw new InvalidArgumentException(
-				'"' . $id . '" is a reserved word and cannot be used as user id'
+				message: '"' . $id . '" is a reserved word and cannot be used as user id'
 			);
 		}
 
 		if ($user->kirby()->users()->find($id)) {
-			throw new DuplicateException('A user with this id exists');
+			throw new DuplicateException(
+				message: 'A user with this id exists'
+			);
 		}
 	}
 

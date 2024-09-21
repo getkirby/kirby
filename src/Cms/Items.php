@@ -59,7 +59,7 @@ class Items extends Collection
 		}
 
 		if (is_array($params) === false) {
-			throw new InvalidArgumentException('Invalid item options');
+			throw new InvalidArgumentException(message: 'Invalid item options');
 		}
 
 		// create a new collection of blocks
@@ -67,7 +67,9 @@ class Items extends Collection
 
 		foreach ($items as $item) {
 			if (is_array($item) === false) {
-				throw new InvalidArgumentException('Invalid data for ' . static::ITEM_CLASS);
+				throw new InvalidArgumentException(
+					message: 'Invalid data for ' . static::ITEM_CLASS
+				);
 			}
 
 			// inject properties from the parent

@@ -98,7 +98,7 @@ class Changes
 	 */
 	public static function unlock(ModelWithContent $model): array
 	{
-		throw new Exception('Not yet implemented');
+		throw new Exception(message: 'Not yet implemented');
 
 		return [
 			'status' => 'ok'

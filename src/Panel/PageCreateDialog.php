@@ -114,7 +114,9 @@ class PageCreateDialog
 		$slug  = $this->blueprint()->create()['slug'] ?? null;
 
 		if ($title === false || $slug === false) {
-			throw new InvalidArgumentException('Page create dialog: title and slug must not be false');
+			throw new InvalidArgumentException(
+				message: 'Page create dialog: title and slug must not be false'
+			);
 		}
 
 		// title field
@@ -158,15 +160,21 @@ class PageCreateDialog
 
 		foreach ($blueprint->create()['fields'] ?? [] as $name) {
 			if (!$field = ($fields[$name] ?? null)) {
-				throw new InvalidArgumentException('Unknown field  "' . $name . '" in create dialog');
+				throw new InvalidArgumentException(
+					message: 'Unknown field  "' . $name . '" in create dialog'
+				);
 			}
 
 			if (in_array($field['type'], static::$fieldTypes, true) === false) {
-				throw new InvalidArgumentException('Field type "' . $field['type'] . '" not supported in create dialog');
+				throw new InvalidArgumentException(
+					message: 'Field type "' . $field['type'] . '" not supported in create dialog'
+				);
 			}
 
 			if (in_array($name, $ignore, true) === true) {
-				throw new InvalidArgumentException('Field name "' . $name . '" not allowed as custom field in create dialog');
+				throw new InvalidArgumentException(
+					message: 'Field name "' . $name . '" not allowed as custom field in create dialog'
+				);
 			}
 
 			// switch all fields to 1/1

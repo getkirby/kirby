@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use Kirby\Content\ContentTranslation;
 use Kirby\Content\VersionId;
 use Kirby\Filesystem\Dir;
@@ -106,7 +107,7 @@ class PageActionsTest extends TestCase
 			],
 			'hooks' => [
 				'page.changeNum:before' => function () {
-					throw new \Exception('This should not be called');
+					throw new Exception('This should not be called');
 				}
 			]
 		]);

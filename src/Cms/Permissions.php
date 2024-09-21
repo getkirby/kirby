@@ -96,7 +96,9 @@ class Permissions
 		// dynamically register the extended actions
 		foreach (static::$extendedActions as $key => $actions) {
 			if (isset($this->actions[$key]) === true) {
-				throw new InvalidArgumentException('The action ' . $key . ' is already a core action');
+				throw new InvalidArgumentException(
+					message: 'The action ' . $key . ' is already a core action'
+				);
 			}
 
 			$this->actions[$key] = $actions;
@@ -200,7 +202,9 @@ class Permissions
 	protected function setCategory(string $category, bool $setting): static
 	{
 		if ($this->hasCategory($category) === false) {
-			throw new InvalidArgumentException('Invalid permissions category');
+			throw new InvalidArgumentException(
+				message: 'Invalid permissions category'
+			);
 		}
 
 		foreach ($this->actions[$category] as $action => $actionSetting) {

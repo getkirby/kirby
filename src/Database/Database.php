@@ -162,7 +162,9 @@ class Database
 		$this->id       = $options['id'];
 
 		if (isset(static::$types[$this->type]) === false) {
-			throw new InvalidArgumentException('Invalid database type: ' . $this->type);
+			throw new InvalidArgumentException(
+				message: 'Invalid database type: ' . $this->type
+			);
 		}
 
 		// fetch the dsn and store it
@@ -559,11 +561,15 @@ Database::$types['mysql'] = [
 			isset($params['host']) === false &&
 			isset($params['socket']) === false
 		) {
-			throw new InvalidArgumentException('The mysql connection requires either a "host" or a "socket" parameter');
+			throw new InvalidArgumentException(
+				message: 'The mysql connection requires either a "host" or a "socket" parameter'
+			);
 		}
 
 		if (isset($params['database']) === false) {
-			throw new InvalidArgumentException('The mysql connection requires a "database" parameter');
+			throw new InvalidArgumentException(
+				message: 'The mysql connection requires a "database" parameter'
+			);
 		}
 
 		$parts = [];
@@ -597,7 +603,9 @@ Database::$types['sqlite'] = [
 	'sql' => Sqlite::class,
 	'dsn' => function (array $params): string {
 		if (isset($params['database']) === false) {
-			throw new InvalidArgumentException('The sqlite connection requires a "database" parameter');
+			throw new InvalidArgumentException(
+				message: 'The sqlite connection requires a "database" parameter'
+			);
 		}
 
 		return 'sqlite:' . $params['database'];

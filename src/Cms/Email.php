@@ -114,7 +114,9 @@ class Email
 			} elseif ($text->exists() === true) {
 				$this->props['body'] = $text->render($data);
 			} else {
-				throw new NotFoundException('The email template "' . $this->props['template'] . '" cannot be found');
+				throw new NotFoundException(
+					message: 'The email template "' . $this->props['template'] . '" cannot be found'
+				);
 			}
 		}
 	}
@@ -187,7 +189,9 @@ class Email
 				}
 			} else {
 				// invalid input
-				throw new InvalidArgumentException('Invalid input for prop "' . $prop . '", expected string or "' . $class . '" object or collection');
+				throw new InvalidArgumentException(
+					message: 'Invalid input for prop "' . $prop . '", expected string or "' . $class . '" object or collection'
+				);
 			}
 		}
 

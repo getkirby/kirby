@@ -71,7 +71,9 @@ abstract class FilePreview extends Component
 
 		foreach ($handlers as $handler) {
 			if (is_subclass_of($handler, self::class) === false) {
-				throw new InvalidArgumentException('File preview handler "' . $handler . '" must extend ' . self::class);
+				throw new InvalidArgumentException(
+					message: 'File preview handler "' . $handler . '" must extend ' . self::class
+				);
 			}
 
 			if ($handler::accepts($file) === true) {

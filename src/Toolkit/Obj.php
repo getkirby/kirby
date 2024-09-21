@@ -61,7 +61,9 @@ class Obj extends stdClass
 			$fallback ??= [];
 
 			if (is_array($fallback) === false) {
-				throw new InvalidArgumentException('The fallback value must be an array when getting multiple properties');
+				throw new InvalidArgumentException(
+					message: 'The fallback value must be an array when getting multiple properties'
+				);
 			}
 
 			$result = [];
