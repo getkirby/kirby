@@ -367,11 +367,6 @@ class UserTest extends TestCase
 			],
 		]);
 
-		// last admin has only admin role as option
-		$user  = $app->user('admin@getkirby.com');
-		$roles = $user->roles()->values(fn ($role) => $role->id());
-		$this->assertSame(['admin'], $roles);
-
 		// normal user should not have admin as option
 		$user  = $app->user('editor@getkirby.com');
 		$roles = $user->roles()->values(fn ($role) => $role->id());
@@ -382,6 +377,11 @@ class UserTest extends TestCase
 		$user  = $app->user('editor@getkirby.com');
 		$roles = $user->roles()->values(fn ($role) => $role->id());
 		$this->assertSame(['admin', 'editor', 'guest'], $roles);
+
+		// last admin has only admin role as option
+		$user  = $app->user('admin@getkirby.com');
+		$roles = $user->roles('change')->values(fn ($role) => $role->id());
+		$this->assertSame(['admin'], $roles);
 	}
 
 	/**
