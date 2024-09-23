@@ -166,7 +166,7 @@ class KirbyTagsTest extends TestCase
 			'undefined' => [
 				'html' => fn () => throw new InvalidArgumentException(
 					message: 'Undefined tag type: undefined'
-					)
+				)
 			]
 		];
 
