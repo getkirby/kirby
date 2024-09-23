@@ -30,19 +30,25 @@ export default {
 			return [
 				{
 					text: "Edit",
-					icon: "edit",
+					icon: "edit"
 				},
 				{
 					text: "Duplicate",
-					icon: "copy",
+					icon: "copy"
+				},
+				"-",
+				{
+					text: "Active item",
+					icon: "heart",
+					current: true
 				},
 				"-",
 				{
 					text: "Delete",
-					icon: "trash",
-				},
+					icon: "trash"
+				}
 			];
-		},
-	},
+		}
+	}
 };
 </script>

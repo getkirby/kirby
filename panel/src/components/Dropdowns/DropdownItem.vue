@@ -48,13 +48,18 @@ export default {
 	--button-rounded: var(--rounded-sm);
 	--button-width: 100%;
 	display: flex;
-	gap: 0.75rem;
 }
 .k-dropdown-item.k-button:focus {
 	outline: var(--outline);
 }
 .k-dropdown-item.k-button[aria-current] {
-	--button-color-text: var(--color-blue-500);
+	--button-color-text: var(--dropdown-color-current);
+}
+.k-dropdown-item.k-button[aria-current]::after {
+	margin-inline-start: auto;
+	text-align: center;
+	content: "✓";
+	padding-inline-start: var(--spacing-1);
 }
 .k-dropdown-item.k-button:not([aria-disabled]):hover {
 	--button-color-back: var(--dropdown-color-hr);
