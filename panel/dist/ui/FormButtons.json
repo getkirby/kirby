@@ -1,1 +1,1 @@
-{"displayName":"FormButtons","description":"","tags":{},"component":"k-form-buttons","sourceFile":"src/components/Forms/FormButtons.vue"}
+{"displayName":"FormButtons","description":"","tags":{},"events":[{"name":"discard"},{"name":"submit"}],"component":"k-form-buttons","sourceFile":"src/components/Forms/FormButtons.vue"}

@@ -202,7 +202,7 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 			// @codeCoverageIgnoreStart
 			default => throw new LogicException(
 				message: 'Cannot determine existence for model type "' . $this->model::CLASS_ALIAS . '"'
-				)
+			)
 			// @codeCoverageIgnoreEnd
 		};
 	}

@@ -1,0 +1,1 @@
+{"description":"File view preview for audio files","tags":{"since":[{"description":"5.0.0","title":"since"}]},"displayName":"AudioFilePreview","props":[{"name":"details","type":{"name":"array"}},{"name":"url","type":{"name":"string"}}],"component":"k-audio-file-preview","sourceFile":"src/components/Views/Files/AudioFilePreview.vue"}
