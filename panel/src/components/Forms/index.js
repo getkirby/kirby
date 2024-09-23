@@ -1,10 +1,10 @@
 /* Form */
 import Counter from "./Counter.vue";
-import Form from "./Form.vue";
-import FormButtons from "./FormButtons.vue";
-import Controls from "./Controls/Controls.vue";
 import Field from "./Field.vue";
 import Fieldset from "./Fieldset.vue";
+import Form from "./Form.vue";
+import FormButtons from "./FormButtons.vue";
+import FormControls from "./FormControls.vue";
 import Input from "./Input.vue";
 
 /* Form parts */
@@ -18,11 +18,11 @@ import Toolbar from "./Toolbar/index.js";
 export default {
 	install(app) {
 		app.component("k-counter", Counter);
-		app.component("k-form", Form);
-		app.component("k-form-buttons", FormButtons);
-		app.component("k-form-controls", Controls);
 		app.component("k-field", Field);
 		app.component("k-fieldset", Fieldset);
+		app.component("k-form", Form);
+		app.component("k-form-buttons", FormButtons);
+		app.component("k-form-controls", FormControls);
 		app.component("k-input", Input);
 
 		app.use(Blocks);
