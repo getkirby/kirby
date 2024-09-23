@@ -151,7 +151,7 @@ class RolesTest extends TestCase
 
 		$app->impersonate('editor@getkirby.com');
 		$canBeChanged = $roles->canBeChanged();
-		$this->assertCount(0, $canBeChanged); // TODO: change once `User::roles()` and `UserPermissions::canChangeRole()` have been improved/fixed
+		$this->assertCount(1, $canBeChanged);
 
 		$app->impersonate('admin@getkirby.com');
 		$canBeChanged = $roles->canBeChanged();
