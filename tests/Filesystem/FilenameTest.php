@@ -290,6 +290,7 @@ class FilenameTest extends TestCase
 
 	/**
 	 * @covers ::name
+	 * @covers ::sanitizeName
 	 */
 	public function testName()
 	{
@@ -299,6 +300,7 @@ class FilenameTest extends TestCase
 
 	/**
 	 * @covers ::name
+	 * @covers ::sanitizeName
 	 */
 	public function testNameSanitization()
 	{
@@ -308,6 +310,7 @@ class FilenameTest extends TestCase
 
 	/**
 	 * @covers ::name
+	 * @covers ::sanitizeName
 	 */
 	public function testNameSanitizationWithLanguageRules()
 	{
