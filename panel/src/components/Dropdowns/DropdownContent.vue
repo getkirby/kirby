@@ -384,7 +384,7 @@ export default {
 .k-dropdown-content[data-theme="light"] {
 	--dropdown-color-bg: var(--color-white);
 	--dropdown-color-text: var(--color-black);
-	--dropdown-color-current: var(--color-blue-700);
+	--dropdown-color-current: var(--color-blue-800);
 	--dropdown-color-hr: rgba(0, 0, 0, 0.1);
 }
 </style>
