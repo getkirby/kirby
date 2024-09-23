@@ -2,7 +2,6 @@
 
 namespace Kirby\Filesystem;
 
-use Kirby\Cms\App;
 use Kirby\TestCase as TestCase;
 
 /**
@@ -291,6 +290,7 @@ class FilenameTest extends TestCase
 
 	/**
 	 * @covers ::name
+	 * @covers ::sanitizeName
 	 */
 	public function testName()
 	{
@@ -300,6 +300,7 @@ class FilenameTest extends TestCase
 
 	/**
 	 * @covers ::name
+	 * @covers ::sanitizeName
 	 */
 	public function testNameSanitization()
 	{
@@ -309,18 +310,16 @@ class FilenameTest extends TestCase
 
 	/**
 	 * @covers ::name
+	 * @covers ::sanitizeName
 	 */
-	public function testNameSanitizationUserLanguageRules()
+	public function testNameSanitizationWithLanguageRules()
 	{
-		$app = new App([
-			'users' => [
-				['email' => 'test@getkirby.com', 'language' => 'ko']
-			]
-		]);
+		$name = new Filename(
+			filename: '/var/www/안녕하세요.pdf',
+			template: '{{ name }}.{{ extension }}',
+			language: 'ko'
+		);
 
-		$app->impersonate('test@getkirby.com');
-
-		$name = new Filename('/var/www/안녕하세요.pdf', '{{ name }}.{{ extension }}');
 		$this->assertSame('annyeonghaseyo', $name->name());
 	}
 

@@ -70,12 +70,19 @@ return [
 		'action'  => function () {
 			$kirby   = App::instance();
 			$request = $kirby->request();
+			$root    = $request->get('root');
 			$page    = $kirby->page($request->get('page'));
+			$parents = $page?->parents()->flip()->values(
+				fn ($parent) => $parent->uuid()?->toString() ?? $parent->id()
+			) ?? [];
+
+			// if root is included, add the site as top-level parent
+			if ($root === 'true') {
+				array_unshift($parents, $kirby->site()->uuid()?->toString() ?? '/');
+			}
 
 			return [
-				'data' => $page->parents()->flip()->values(
-					fn ($parent) => $parent->uuid()?->toString() ?? $parent->id()
-				)
+				'data' => $parents
 			];
 		}
 	]

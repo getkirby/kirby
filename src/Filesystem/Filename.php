@@ -2,7 +2,6 @@
 
 namespace Kirby\Filesystem;
 
-use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Toolkit\Str;
 
@@ -49,7 +48,8 @@ class Filename
 	public function __construct(
 		protected string $filename,
 		protected string $template,
-		protected array $attributes = []
+		protected array $attributes = [],
+		protected string|null $language = null
 	) {
 		$this->name      = $this->sanitizeName($filename);
 		$this->extension = $this->sanitizeExtension(
@@ -234,13 +234,12 @@ class Filename
 	{
 		// temporarily store language rules
 		$rules = Str::$language;
-		$kirby = App::instance(null, true);
 
-		// if current user, add rules for their language to `Str` class
-		if ($user = $kirby?->user()) {
+		// add rules for a particular language to `Str` class
+		if ($this->language !== null) {
 			Str::$language = [
 				...Str::$language,
-				...Language::loadRules($user->language())];
+				...Language::loadRules($this->language)];
 		}
 
 		// sanitize name
