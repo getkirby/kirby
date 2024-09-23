@@ -7,11 +7,11 @@
 					<k-button icon="open" size="sm" variant="filled" />
 					<k-button icon="cog" size="sm" variant="filled" />
 					<k-button
-						:icon="isDraft ? 'circle' : 'circle-filled'"
+						icon="circle-filled"
 						size="sm"
-						variant="filled"
 						text="Public"
 						theme="positive-icon"
+						variant="filled"
 					/>
 
 					<k-form-controls
