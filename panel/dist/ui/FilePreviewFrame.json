@@ -1,0 +1,1 @@
+{"description":"","tags":{"since":[{"description":"5.0.0","title":"since"}]},"displayName":"FilePreviewFrame","props":[{"name":"options","type":{"name":"array"},"defaultValue":{"value":"[]"}}],"events":[{"name":"action"}],"slots":[{"name":"default"}],"component":"k-file-preview-frame","sourceFile":"src/components/Views/Files/FilePreviewFrame.vue"}

@@ -1,0 +1,1 @@
+{"description":"General file view preview for files","tags":{"since":[{"description":"5.0.0","title":"since"}]},"displayName":"DefaultFilePreview","props":[{"name":"details","type":{"name":"array"}},{"name":"image","type":{"name":"object"},"defaultValue":{"value":"{}"}}],"component":"k-default-file-preview","sourceFile":"src/components/Views/Files/DefaultFilePreview.vue"}
