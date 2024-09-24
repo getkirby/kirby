@@ -361,6 +361,53 @@ class UserRulesTest extends TestCase
 		]);
 	}
 
+	public function testCreateInvalidRole()
+	{
+		$app = $this->app()->clone([
+			'users' => [
+				['email' => 'editor@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+
+		$permissions = $this->createMock(UserPermissions::class);
+		$permissions->method('__call')->with('create')->willReturn(true);
+
+		$user = $this->createMock(User::class);
+		$user->method('kirby')->willReturn($app);
+		$user->method('permissions')->willReturn($permissions);
+		$user->method('id')->willReturn('test');
+		$user->method('email')->willReturn('test@getkirby.com');
+		$user->method('language')->willReturn('en');
+
+		// no role
+		$this->assertTrue(UserRules::create($user, [
+			'password' => 12345678
+		]));
+
+		// role: nobody
+		$this->assertTrue(UserRules::create($user, [
+			'password' => 12345678,
+			'role'     => 'nobody'
+		]));
+
+		// role: default
+		$this->assertTrue(UserRules::create($user, [
+			'password' => 12345678,
+			'role'     => 'default'
+		]));
+
+		// invalid role
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Please enter a valid role');
+
+		UserRules::create($user, [
+			'password' => 12345678,
+			'role'     => 'foo'
+		]);
+	}
+
 	public function testUpdate()
 	{
 		$app  = $this->appWithAdmin();
