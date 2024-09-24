@@ -63,7 +63,7 @@ export default {
 		parent: String,
 		tab: Object
 	},
-	emits: ["submit"],
+	emits: ["input", "submit"],
 	methods: {
 		exists(type) {
 			return this.$helper.isComponent(`k-${type}-section`);

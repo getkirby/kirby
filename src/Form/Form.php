@@ -208,12 +208,16 @@ class Form
 				continue;
 			}
 
-			throw new NotFoundException('The field "' . $fieldName . '" could not be found');
+			throw new NotFoundException(
+				message: 'The field "' . $fieldName . '" could not be found'
+			);
 		}
 
 		// it can get this error only if $name is an empty string as $name = ''
 		if ($field === null) {
-			throw new NotFoundException('No field could be loaded');
+			throw new NotFoundException(
+				message: 'No field could be loaded'
+			);
 		}
 
 		return $field;

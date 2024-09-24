@@ -475,7 +475,9 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		$translation = $clone->translation($languageCode);
 
 		if ($translation === null) {
-			throw new InvalidArgumentException('Invalid language: ' . $languageCode);
+			throw new InvalidArgumentException(
+				message: 'Invalid language: ' . $languageCode
+			);
 		}
 
 		// get the content to store
@@ -612,7 +614,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		}
 
 		if ($handler !== 'template' && $handler !== 'safeTemplate') {
-			throw new InvalidArgumentException('Invalid toString handler'); // @codeCoverageIgnore
+			throw new InvalidArgumentException(message: 'Invalid toString handler'); // @codeCoverageIgnore
 		}
 
 		$result = Str::$handler($template, array_replace([

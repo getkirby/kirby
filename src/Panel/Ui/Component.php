@@ -38,7 +38,9 @@ abstract class Component
 	public function __call(string $name, array $args = [])
 	{
 		if (property_exists($this, $name) === false) {
-			throw new LogicException('The property "' . $name . '" does not exist on the UI component "' . $this->component . '"');
+			throw new LogicException(
+				message: 'The property "' . $name . '" does not exist on the UI component "' . $this->component . '"'
+			);
 		}
 
 		// getter

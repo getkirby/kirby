@@ -296,7 +296,9 @@ class Plugin
 	public static function validateName(string $name): void
 	{
 		if (preg_match('!^[a-z0-9-]+\/[a-z0-9-]+$!i', $name) !== 1) {
-			throw new InvalidArgumentException('The plugin name must follow the format "a-z0-9-/a-z0-9-"');
+			throw new InvalidArgumentException(
+				message: 'The plugin name must follow the format "a-z0-9-/a-z0-9-"'
+			);
 		}
 	}
 

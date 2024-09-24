@@ -40,7 +40,9 @@ class Json extends Handler
 		}
 
 		if (is_string($string) === false) {
-			throw new InvalidArgumentException('Invalid JSON data; please pass a string');
+			throw new InvalidArgumentException(
+				message: 'Invalid JSON data; please pass a string'
+			);
 		}
 
 		$result = json_decode($string, true);
@@ -49,6 +51,8 @@ class Json extends Handler
 			return $result;
 		}
 
-		throw new InvalidArgumentException('JSON string is invalid');
+		throw new InvalidArgumentException(
+			message: 'JSON string is invalid'
+		);
 	}
 }

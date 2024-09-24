@@ -193,7 +193,9 @@ class QrCode implements Stringable
 			'png'   => imagepng($this->toImage(...$args), $file),
 			'svg'   => F::write($file, $this->toSvg(...$args)),
 			'webp'  => imagewebp($this->toImage(...$args), $file),
-			default => throw new InvalidArgumentException('Cannot write QR code as ' . $format)
+			default => throw new InvalidArgumentException(
+				message: 'Cannot write QR code as ' . $format
+			)
 		};
 	}
 
@@ -446,7 +448,7 @@ class QrCode implements Stringable
 			0 => $this->encodeNumeric($data, $group),
 			1 => $this->encodeAlphanum($data, $group),
 			2 => $this->encodeBinary($data, $group),
-			default => throw new LogicException('Invalid QR mode') // @codeCoverageIgnore
+			default => throw new LogicException(message: 'Invalid QR mode') // @codeCoverageIgnore
 		};
 
 		$code = [...$code, ...array_fill(0, 4, 0)];
@@ -836,7 +838,7 @@ class QrCode implements Stringable
 			5 => !(((($row * $column) % 2) + (($row * $column) % 3))),
 			6 => !(((($row * $column) % 2) + (($row * $column) % 3)) % 2),
 			7 => !(((($row + $column) % 2) + (($row * $column) % 3)) % 2),
-			default => throw new LogicException('Invalid QR mask') // @codeCoverageIgnore
+			default => throw new LogicException(message: 'Invalid QR mask') // @codeCoverageIgnore
 		};
 	}
 

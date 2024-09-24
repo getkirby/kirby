@@ -40,7 +40,7 @@ class Collection
 
 		if ($data === null) {
 			if (($schema['default'] ?? null) instanceof Closure === false) {
-				throw new Exception('Missing collection data');
+				throw new Exception(message: 'Missing collection data');
 			}
 
 			$this->data = $schema['default']->call($this->api);
@@ -50,7 +50,7 @@ class Collection
 			isset($schema['type']) === true &&
 			$this->data instanceof $schema['type'] === false
 		) {
-			throw new Exception('Invalid collection type');
+			throw new Exception(message: 'Invalid collection type');
 		}
 	}
 
@@ -69,7 +69,7 @@ class Collection
 		}
 
 		if ($keys !== null && is_array($keys) === false) {
-			throw new Exception('Invalid select keys');
+			throw new Exception(message: 'Invalid select keys');
 		}
 
 		$this->select = $keys;

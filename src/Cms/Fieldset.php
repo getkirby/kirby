@@ -42,7 +42,9 @@ class Fieldset extends Item
 	public function __construct(array $params = [])
 	{
 		if (empty($params['type']) === true) {
-			throw new InvalidArgumentException('The fieldset type is missing');
+			throw new InvalidArgumentException(
+				message: 'The fieldset type is missing'
+			);
 		}
 
 		$this->type = $params['id'] = $params['type'];

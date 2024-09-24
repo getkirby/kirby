@@ -78,7 +78,9 @@ class Pages extends Collection
 		// give a useful error message on invalid input;
 		// silently ignore "empty" values for compatibility with existing setups
 		} elseif (in_array($object, [null, false, true], true) !== true) {
-			throw new InvalidArgumentException('You must pass a Pages or Page object or an ID of an existing page to the Pages collection');
+			throw new InvalidArgumentException(
+				message: 'You must pass a Pages or Page object or an ID of an existing page to the Pages collection'
+			);
 		}
 
 		return $this;

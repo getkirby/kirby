@@ -131,7 +131,7 @@ class Route
 	 */
 	public static function next(): void
 	{
-		throw new Exceptions\NextRouteException('next');
+		throw new Exceptions\NextRouteException(message: 'next');
 	}
 
 	/**

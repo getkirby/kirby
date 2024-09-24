@@ -52,7 +52,9 @@ class UserPicker extends Picker
 
 		// catch invalid data
 		if ($users instanceof Users === false) {
-			throw new InvalidArgumentException('Your query must return a set of users');
+			throw new InvalidArgumentException(
+				message: 'Your query must return a set of users'
+			);
 		}
 
 		// search & sort

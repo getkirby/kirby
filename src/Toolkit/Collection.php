@@ -522,17 +522,23 @@ class Collection extends Iterator implements Stringable
 
 				// make sure that there's always a proper value to group by
 				if (!$value) {
-					throw new Exception('Invalid grouping value for key: ' . $key);
+					throw new Exception(
+						message: 'Invalid grouping value for key: ' . $key
+					);
 				}
 
 				// make sure we have a proper key for each group
 				if (is_array($value) === true) {
-					throw new Exception('You cannot group by arrays or objects');
+					throw new Exception(
+						message: 'You cannot group by arrays or objects'
+					);
 				}
 
 				if (is_object($value) === true) {
 					if (method_exists($value, '__toString') === false) {
-						throw new Exception('You cannot group by arrays or objects');
+						throw new Exception(
+							message: 'You cannot group by arrays or objects'
+						);
 					}
 
 					$value = (string)$value;
@@ -550,7 +556,9 @@ class Collection extends Iterator implements Stringable
 			return new self($groups);
 		}
 
-		throw new Exception('Can only group by string values or by providing a callback function');
+		throw new Exception(
+			message: 'Can only group by string values or by providing a callback function'
+		);
 	}
 
 	/**

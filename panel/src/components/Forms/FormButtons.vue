@@ -19,6 +19,7 @@
 
 <script>
 export default {
+	emits: ["discard", "submit"],
 	data() {
 		return {
 			isLoading: null,

@@ -207,7 +207,9 @@ trait FileModifications
 			$result instanceof File === false &&
 			$result instanceof Asset === false
 		) {
-			throw new InvalidArgumentException('The file::version component must return a File, FileVersion or Asset object');
+			throw new InvalidArgumentException(
+				message: 'The file::version component must return a File, FileVersion or Asset object'
+			);
 		}
 
 		return $result;

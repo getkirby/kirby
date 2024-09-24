@@ -107,10 +107,14 @@ class KirbyTagsTest extends TestCase
 				'html' => fn () => throw new Exception('Just for fun')
 			],
 			'invalidargument' => [
-				'html' => fn () => throw new InvalidArgumentException('Just for fun')
+				'html' => fn () => throw new InvalidArgumentException(
+					message: 'Just for fun'
+				)
 			],
 			'undefined' => [
-				'html' => fn () => throw new InvalidArgumentException('Undefined tag type: undefined')
+				'html' => fn () => throw new InvalidArgumentException(
+					message: 'Undefined tag type: undefined'
+				)
 			]
 		];
 
@@ -160,7 +164,9 @@ class KirbyTagsTest extends TestCase
 	{
 		KirbyTag::$types = [
 			'undefined' => [
-				'html' => fn () => throw new InvalidArgumentException('Undefined tag type: undefined')
+				'html' => fn () => throw new InvalidArgumentException(
+					message: 'Undefined tag type: undefined'
+				)
 			]
 		];
 

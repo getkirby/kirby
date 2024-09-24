@@ -80,7 +80,9 @@ class LanguageRouter
 					$routes[$index]['pattern'] = $patterns;
 					$routes[$index]['page']    = $page;
 				} else {
-					throw new NotFoundException('The page "' . $pageId . '" does not exist');
+					throw new NotFoundException(
+						message: 'The page "' . $pageId . '" does not exist'
+					);
 				}
 			}
 		}

@@ -191,7 +191,9 @@ class Assets
 			];
 		}
 
-		throw new InvalidArgumentException('Invalid panel.favicon option');
+		throw new InvalidArgumentException(
+			message: 'Invalid panel.favicon option'
+		);
 	}
 
 	/**
@@ -305,7 +307,9 @@ class Assets
 
 		// copy assets to the dist folder
 		if (Dir::copy($panelRoot, $versionRoot) !== true) {
-			throw new Exception('Panel assets could not be linked');
+			throw new Exception(
+				message: 'Panel assets could not be linked'
+			);
 		}
 
 		return true;

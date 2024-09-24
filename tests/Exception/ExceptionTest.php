@@ -117,7 +117,7 @@ class ExceptionTest extends TestCase
 	 */
 	public function testJustMessageWithNamedArgument()
 	{
-		$exception = new Exception('Another error occurred');
+		$exception = new Exception(message: 'Another error occurred');
 
 		$this->assertSame('error.general', $exception->getKey());
 		$this->assertSame('Another error occurred', $exception->getMessage());
@@ -131,7 +131,7 @@ class ExceptionTest extends TestCase
 	 */
 	public function testPrevious()
 	{
-		$previous  = new Exception('Previous');
+		$previous  = new Exception(message: 'Previous');
 		$exception = new Exception(previous: $previous);
 
 		$this->assertNull($previous->getPrevious());
@@ -143,7 +143,7 @@ class ExceptionTest extends TestCase
 	 */
 	public function testPreviousWithNamedArgument()
 	{
-		$previous  = new Exception('Previous');
+		$previous  = new Exception(message: 'Previous');
 		$exception = new Exception(previous: $previous);
 
 		$this->assertNull($previous->getPrevious());

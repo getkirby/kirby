@@ -11,7 +11,7 @@ return function () {
 		$auth->type($allowImpersonation) === 'session' &&
 		$auth->csrf() === false
 	) {
-		throw new AuthException('Unauthenticated');
+		throw new AuthException(message: 'Unauthenticated');
 	}
 
 	// get user from session or basic auth
@@ -23,5 +23,5 @@ return function () {
 		return $user;
 	}
 
-	throw new AuthException('Unauthenticated');
+	throw new AuthException(message: 'Unauthenticated');
 };

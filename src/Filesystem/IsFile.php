@@ -62,7 +62,9 @@ trait IsFile
 			return $this->asset()->$method(...$arguments);
 		}
 
-		throw new BadMethodCallException('The method: "' . $method . '" does not exist');
+		throw new BadMethodCallException(
+			message: 'The method: "' . $method . '" does not exist'
+		);
 	}
 
 	/**

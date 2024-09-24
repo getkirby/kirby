@@ -41,7 +41,9 @@ class Yaml extends Handler
 		}
 
 		if (is_string($string) === false) {
-			throw new InvalidArgumentException('Invalid YAML data; please pass a string');
+			throw new InvalidArgumentException(
+				message: 'Invalid YAML data; please pass a string'
+			);
 		}
 
 		return match (static::handler()) {

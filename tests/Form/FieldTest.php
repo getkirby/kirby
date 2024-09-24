@@ -951,7 +951,9 @@ class FieldTest extends TestCase
 			'test' => [
 				'validations' => [
 					'test' => function ($value) {
-						throw new InvalidArgumentException('Invalid value: ' . $value);
+						throw new InvalidArgumentException(
+							message: 'Invalid value: ' . $value
+						);
 					}
 				]
 			]

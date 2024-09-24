@@ -347,7 +347,9 @@ V::$validators = [
 			'>='  => $value >= $test,
 			'=='  => $value === $test,
 
-			default => throw new InvalidArgumentException('Invalid date comparison operator: "' . $operator . '". Allowed operators: "==", "!=", "<", "<=", ">", ">="')
+			default => throw new InvalidArgumentException(
+				message: 'Invalid date comparison operator: "' . $operator . '". Allowed operators: "==", "!=", "<", "<=", ">", ">="'
+			)
 		};
 	},
 

@@ -59,7 +59,9 @@ class FilePicker extends Picker
 			$files instanceof User  => $files->files(),
 			$files instanceof Files => $files,
 
-			default => throw new InvalidArgumentException('Your query must return a set of files')
+			default => throw new InvalidArgumentException(
+				message: 'Your query must return a set of files'
+			)
 		};
 
 		// filter protected and hidden pages

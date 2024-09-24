@@ -33,7 +33,7 @@ class Svgz extends Svg
 		$string = @gzencode($string);
 
 		if (is_string($string) !== true) {
-			throw new InvalidArgumentException('Could not recompress gzip data'); // @codeCoverageIgnore
+			throw new InvalidArgumentException(message: 'Could not recompress gzip data'); // @codeCoverageIgnore
 		}
 
 		return $string;
@@ -66,7 +66,9 @@ class Svgz extends Svg
 		$string = @gzdecode($string, 10000000);
 
 		if (is_string($string) !== true) {
-			throw new InvalidArgumentException('Could not uncompress gzip data');
+			throw new InvalidArgumentException(
+				message: 'Could not uncompress gzip data'
+			);
 		}
 
 		return $string;

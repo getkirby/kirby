@@ -2,7 +2,9 @@
 
 namespace Kirby\Panel;
 
+use Exception;
 use Kirby\Cms\App;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 
@@ -122,7 +124,7 @@ class DialogTest extends TestCase
 	 */
 	public function testResponseFromException(): void
 	{
-		$exception = new \Exception('Test');
+		$exception = new Exception('Test');
 		$response  = Dialog::response($exception);
 		$expected  = [
 			'$dialog' => [
@@ -142,7 +144,7 @@ class DialogTest extends TestCase
 	 */
 	public function testResponseFromKirbyException(): void
 	{
-		$exception = new \Kirby\Exception\NotFoundException('Test');
+		$exception = new NotFoundException(message: 'Test');
 		$response  = Dialog::response($exception);
 		$expected  = [
 			'$dialog' => [

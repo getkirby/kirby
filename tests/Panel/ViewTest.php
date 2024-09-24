@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 use Kirby\TestCase;
@@ -609,7 +610,7 @@ class ViewTest extends TestCase
 			]
 		]);
 
-		$exception = new \Kirby\Exception\NotFoundException('Test');
+		$exception = new NotFoundException(message: 'Test');
 		$response  = View::response($exception);
 		$json      = json_decode($response->body(), true);
 

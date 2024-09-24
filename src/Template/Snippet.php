@@ -101,7 +101,9 @@ class Snippet extends Tpl
 		// is only supported if the snippet has
 		// been started before
 		if ($this->open === false) {
-			throw new LogicException('The snippet has not been opened');
+			throw new LogicException(
+				message: 'The snippet has not been opened'
+			);
 		}
 
 		// create a default slot for the content
@@ -296,7 +298,9 @@ class Snippet extends Tpl
 			array_key_exists('slot', $data) === true ||
 			array_key_exists('slots', $data) === true
 		) {
-			throw new InvalidArgumentException('Passing the $slot or $slots variables to snippets is not supported.');
+			throw new InvalidArgumentException(
+				message: 'Passing the $slot or $slots variables to snippets is not supported.'
+			);
 		}
 
 		return [

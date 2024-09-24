@@ -723,7 +723,9 @@ class Str
 		bool $caseInsensitive = false
 	): int|false {
 		if ($needle === '') {
-			throw new InvalidArgumentException('The needle must not be empty');
+			throw new InvalidArgumentException(
+				message: 'The needle must not be empty'
+			);
 		}
 
 		if ($caseInsensitive === true) {
@@ -889,7 +891,9 @@ class Str
 			return [compact('search', 'replace', 'limit')];
 		}
 
-		throw new InvalidArgumentException('Invalid combination of $search, $replace and $limit params.');
+		throw new InvalidArgumentException(
+			message: 'Invalid combination of $search, $replace and $limit params.'
+		);
 	}
 
 	/**
@@ -908,7 +912,9 @@ class Str
 		// behavior is identical to the official PHP str_replace()
 		foreach ($replacements as $replacement) {
 			if (is_int($replacement['limit']) === false) {
-				throw new Exception('Invalid limit "' . $replacement['limit'] . '".');
+				throw new Exception(
+					message: 'Invalid limit "' . $replacement['limit'] . '".'
+				);
 			}
 
 			if ($replacement['limit'] === -1) {

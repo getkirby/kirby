@@ -138,7 +138,7 @@ class Blocks extends Items
 							isset($first['type']) === false
 						)
 					) {
-						throw new Exception('Invalid YAML');
+						throw new Exception(message: 'Invalid YAML');
 					}
 
 					$input = $yaml;

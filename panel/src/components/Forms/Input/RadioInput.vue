@@ -31,7 +31,10 @@ import { options } from "@/mixins/props.js";
 export const props = {
 	mixins: [InputProps, options],
 	props: {
-		columns: Number,
+		columns: {
+			default: 1,
+			type: Number
+		},
 		reset: {
 			default: true,
 			type: Boolean

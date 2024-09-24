@@ -59,7 +59,9 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 			$this->model instanceof Site => $this->contentFileForSite($this->model, $versionId, $language),
 			$this->model instanceof User => $this->contentFileForUser($this->model, $versionId, $language),
 			// @codeCoverageIgnoreStart
-			default => throw new LogicException('Cannot determine content file for model type "' . $this->model::CLASS_ALIAS . '"')
+			default => throw new LogicException(
+				message: 'Cannot determine content file for model type "' . $this->model::CLASS_ALIAS . '"'
+			)
 			// @codeCoverageIgnoreEnd
 		};
 	}
@@ -138,7 +140,7 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 
 		// @codeCoverageIgnoreStart
 		if (F::unlink($contentFile) !== true) {
-			throw new Exception('Could not delete content file');
+			throw new Exception(message: 'Could not delete content file');
 		}
 		// @codeCoverageIgnoreEnd
 
@@ -161,7 +163,9 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 		) {
 			// @codeCoverageIgnoreStart
 			if (Dir::remove($directory) !== true) {
-				throw new Exception('Could not delete empty content directory');
+				throw new Exception(
+					message: 'Could not delete empty content directory'
+				);
 			}
 			// @codeCoverageIgnoreEnd
 		}
@@ -196,7 +200,9 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 			$this->model instanceof Site,
 			$this->model instanceof User => is_dir($this->model->root()) === true,
 			// @codeCoverageIgnoreStart
-			default => throw new LogicException('Cannot determine existance for model type "' . $this->model::CLASS_ALIAS . '"')
+			default => throw new LogicException(
+				message: 'Cannot determine existence for model type "' . $this->model::CLASS_ALIAS . '"'
+			)
 			// @codeCoverageIgnoreEnd
 		};
 	}
@@ -279,7 +285,9 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 
 		// @codeCoverageIgnoreStart
 		if ($success !== true) {
-			throw new Exception('Could not touch existing content file');
+			throw new Exception(
+				message: 'Could not touch existing content file'
+			);
 		}
 		// @codeCoverageIgnoreEnd
 	}
@@ -297,7 +305,7 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 
 		// @codeCoverageIgnoreStart
 		if ($success !== true) {
-			throw new Exception('Could not write the content file');
+			throw new Exception(message: 'Could not write the content file');
 		}
 		// @codeCoverageIgnoreEnd
 	}

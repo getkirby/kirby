@@ -50,7 +50,9 @@ class Totp
 
 		// safety check to avoid accidental insecure secrets
 		if ($force === false && strlen($this->secret) !== 20) {
-			throw new InvalidArgumentException('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
+			throw new InvalidArgumentException(
+				message: 'TOTP secrets should be 32 Base32 digits (= 20 bytes)'
+			);
 		}
 	}
 

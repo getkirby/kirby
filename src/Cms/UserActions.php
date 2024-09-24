@@ -162,7 +162,9 @@ trait UserActions
 		Closure $callback
 	): mixed {
 		if ($this->isKirby() === true) {
-			throw new PermissionException('The Kirby user cannot be changed');
+			throw new PermissionException(
+				message: 'The Kirby user cannot be changed'
+			);
 		}
 
 		$kirby = $this->kirby();
@@ -302,7 +304,9 @@ trait UserActions
 
 			// delete the user directory
 			if (Dir::remove($user->root()) !== true) {
-				throw new LogicException('The user directory for "' . $user->email() . '" could not be deleted');
+				throw new LogicException(
+					message: 'The user directory for "' . $user->email() . '" could not be deleted'
+				);
 			}
 
 			// remove the user from users collection

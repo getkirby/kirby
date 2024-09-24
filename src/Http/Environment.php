@@ -211,7 +211,9 @@ class Environment
 			$baseUrl = A::first($allowed);
 
 			if (is_string($baseUrl) === false) {
-				throw new InvalidArgumentException('Invalid allow list setup for base URLs');
+				throw new InvalidArgumentException(
+					message: 'Invalid allow list setup for base URLs'
+				);
 			}
 
 			$uri = new Uri($baseUrl, ['slash' => false]);
@@ -248,7 +250,9 @@ class Environment
 			}
 		}
 
-		throw new InvalidArgumentException('The environment is not allowed');
+		throw new InvalidArgumentException(
+			message: 'The environment is not allowed'
+		);
 	}
 
 	/**

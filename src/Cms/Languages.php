@@ -39,7 +39,9 @@ class Languages extends Collection
 		);
 
 		if (count($defaults) > 1) {
-			throw new DuplicateException('You cannot have multiple default languages. Please check your language config files.');
+			throw new DuplicateException(
+				message: 'You cannot have multiple default languages. Please check your language config files.'
+			);
 		}
 
 		parent::__construct($objects, null);

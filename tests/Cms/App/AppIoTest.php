@@ -44,7 +44,7 @@ class AppIoTest extends TestCase
 			]
 		]);
 
-		$response = $app->io(new Exception('Nope'));
+		$response = $app->io(new Exception(message: 'Nope'));
 
 		$this->assertSame(500, $response->code());
 		$this->assertSame('Error: Nope', $response->body());

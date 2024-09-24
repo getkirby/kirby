@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Controller;
 
+use Kirby\Cms\App;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Content\VersionId;
 use Kirby\Exception\Exception;
@@ -26,6 +27,9 @@ class Changes
 	{
 		$model->version(VersionId::changes())->delete();
 
+		// remove the model from the user's list of unsaved changes
+		App::instance()->site()->changes()->untrack($model);
+
 		return [
 			'status' => 'ok'
 		];
@@ -49,6 +53,9 @@ class Changes
 		$changes->publish(
 			language: 'current'
 		);
+
+		// remove the model from the user's list of unsaved changes
+		App::instance()->site()->changes()->untrack($model);
 
 		return [
 			'status' => 'ok'
@@ -78,6 +85,9 @@ class Changes
 			language: 'current'
 		);
 
+		// add the model to the user's list of unsaved changes
+		App::instance()->site()->changes()->track($model);
+
 		return [
 			'status' => 'ok'
 		];
@@ -88,7 +98,7 @@ class Changes
 	 */
 	public static function unlock(ModelWithContent $model): array
 	{
-		throw new Exception('Not yet implemented');
+		throw new Exception(message: 'Not yet implemented');
 
 		return [
 			'status' => 'ok'

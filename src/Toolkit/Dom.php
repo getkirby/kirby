@@ -922,11 +922,15 @@ class Dom
 			empty($doctype->publicId) === false ||
 			empty($doctype->systemId) === false
 		) {
-			throw new InvalidArgumentException('The doctype must not reference external files');
+			throw new InvalidArgumentException(
+				message: 'The doctype must not reference external files'
+			);
 		}
 
 		if (empty($doctype->internalSubset) === false) {
-			throw new InvalidArgumentException('The doctype must not define a subset');
+			throw new InvalidArgumentException(
+				message: 'The doctype must not define a subset'
+			);
 		}
 
 		if ($options['doctypeCallback']) {

@@ -135,7 +135,9 @@ class FileRules
 		}
 
 		if ($file->permissions()->create() !== true) {
-			throw new PermissionException('The file cannot be created');
+			throw new PermissionException(
+				message: 'The file cannot be created'
+			);
 		}
 
 		static::validFile($file, $upload->mime());
@@ -152,7 +154,9 @@ class FileRules
 	public static function delete(File $file): void
 	{
 		if ($file->permissions()->delete() !== true) {
-			throw new PermissionException('The file cannot be deleted');
+			throw new PermissionException(
+				message: 'The file cannot be deleted'
+			);
 		}
 	}
 
@@ -165,7 +169,9 @@ class FileRules
 	public static function replace(File $file, BaseFile $upload): void
 	{
 		if ($file->permissions()->replace() !== true) {
-			throw new PermissionException('The file cannot be replaced');
+			throw new PermissionException(
+				message: 'The file cannot be replaced'
+			);
 		}
 
 		static::validMime($file, $upload->mime());
@@ -192,7 +198,9 @@ class FileRules
 	public static function update(File $file, array $content = []): void
 	{
 		if ($file->permissions()->update() !== true) {
-			throw new PermissionException('The file cannot be updated');
+			throw new PermissionException(
+				message: 'The file cannot be updated'
+			);
 		}
 	}
 

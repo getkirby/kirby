@@ -1,0 +1,1 @@
+{"description":"File view preview for video files","tags":{"since":[{"description":"5.0.0","title":"since"}]},"displayName":"VideoFilePreview","props":[{"name":"details","type":{"name":"array"}},{"name":"url","type":{"name":"string"}}],"component":"k-video-file-preview","sourceFile":"src/components/Views/Files/VideoFilePreview.vue"}

@@ -35,7 +35,9 @@ class ImmutableMemoryContentStorageHandler extends MemoryContentStorageHandler
 	 */
 	protected function preventMutation(): void
 	{
-		throw new LogicException('Storage for the ' . $this->model::CLASS_ALIAS . ' is immutable and cannot be deleted. Make sure to use the last alteration of the object.');
+		throw new LogicException(
+			message: 'Storage for the ' . $this->model::CLASS_ALIAS . ' is immutable and cannot be deleted. Make sure to use the last alteration of the object.'
+		);
 	}
 
 	public function touch(VersionId $versionId, Language $language): void

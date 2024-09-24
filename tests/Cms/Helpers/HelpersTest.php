@@ -135,8 +135,12 @@ class HelpersTest extends HelpersTestCase
 		$this->expectExceptionMessage('Exception inside the action');
 
 		Helpers::handleErrors(
-			fn () => throw new Exception('Exception inside the action'),
-			fn () => $this->fail('Condition handler should not be called because no warning was triggered')
+			fn () => throw new Exception(
+				message: 'Exception inside the action'
+			),
+			fn () => $this->fail(
+				'Condition handler should not be called because no warning was triggered'
+			)
 		);
 	}
 

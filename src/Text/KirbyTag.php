@@ -46,7 +46,9 @@ class KirbyTag
 		// type aliases
 		if (isset(static::$types[$type]) === false) {
 			if (isset(static::$aliases[$type]) === false) {
-				throw new InvalidArgumentException('Undefined tag type: ' . $type);
+				throw new InvalidArgumentException(
+					message: 'Undefined tag type: ' . $type
+				);
 			}
 
 			$type = static::$aliases[$type];
@@ -230,7 +232,9 @@ class KirbyTag
 			return (string)$callback($this);
 		}
 
-		throw new BadMethodCallException('Invalid tag render function in tag: ' . $this->type);
+		throw new BadMethodCallException(
+			message: 'Invalid tag render function in tag: ' . $this->type
+		);
 	}
 
 	public function type(): string

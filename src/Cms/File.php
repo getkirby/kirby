@@ -82,7 +82,9 @@ class File extends ModelWithContent
 	public function __construct(array $props)
 	{
 		if (isset($props['filename'], $props['parent']) === false) {
-			throw new InvalidArgumentException('The filename and parent are required');
+			throw new InvalidArgumentException(
+				message: 'The filename and parent are required'
+			);
 		}
 
 		$this->filename = $props['filename'];

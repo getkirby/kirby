@@ -89,7 +89,9 @@ class Txt extends Handler
 		}
 
 		if (is_string($string) === false) {
-			throw new InvalidArgumentException('Invalid TXT data; please pass a string');
+			throw new InvalidArgumentException(
+				message: 'Invalid TXT data; please pass a string'
+			);
 		}
 
 		// remove Unicode BOM at the beginning of the file

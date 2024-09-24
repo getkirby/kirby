@@ -67,7 +67,9 @@ class Component
 		protected array $attrs = []
 	) {
 		if (isset(static::$types[$type]) === false) {
-			throw new InvalidArgumentException('Undefined component type: ' . $type);
+			throw new InvalidArgumentException(
+				message: 'Undefined component type: ' . $type
+			);
 		}
 
 		$this->options = $options = static::setup($type);
