@@ -188,18 +188,4 @@ class LabPage extends Page
 			version: $this->version()
 		);
 	}
-
-	/**
-	 * @deprecated since 5.0.0 Use `::version()->save()` instead
-	 */
-	public function writeContent(array $data, string|null $languageCode = null): bool
-	{
-		Helpers::deprecated('`$model->writeContent()` has been deprecated. Use `$model->version()->save()` instead.', 'model-write-content');
-		$this->version()->save(
-			$data,
-			$languageCode ?? 'current',
-			true
-		);
-		return true;
-	}
 }
