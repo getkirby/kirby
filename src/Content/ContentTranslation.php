@@ -96,7 +96,7 @@ class ContentTranslation
 	{
 		return
 			empty($this->content) === false ||
-			file_exists($this->contentFile()) === true;
+			$this->parent->version()->exists($this->code) === true;
 	}
 
 	/**
