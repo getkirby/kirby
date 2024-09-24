@@ -124,12 +124,16 @@ class PageUuidTest extends TestCase
 	/**
 	 * @dataProvider multilangProvider
 	 * @covers ::id
+	 * @covers ::url
 	 */
 	public function testMultilang(string $language, string $title)
 	{
 		$app = new App([
 			'roots' => [
 				'index' => static::TMP
+			],
+			'urls' => [
+				'index' => 'https://getkirby.com'
 			],
 			'options' => [
 				'languages' => true
@@ -188,5 +192,7 @@ class PageUuidTest extends TestCase
 
 		// the secondary language must not have the uuid in the content file
 		$this->assertNull($page->readContent('de')['uuid'] ?? null);
+
+		$this->assertStringStartsWith('https://getkirby.com/' . $language . '/@/page/', $page->uuid()->url());
 	}
 }
