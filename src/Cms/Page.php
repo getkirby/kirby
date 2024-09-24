@@ -1132,14 +1132,10 @@ class Page extends ModelWithContent
 	public function slug(string|null $languageCode = null): string
 	{
 		if ($this->kirby()->multilang() === true) {
-			$languageCode      ??= $this->kirby()->languageCode();
-			$defaultLanguageCode = $this->kirby()->defaultLanguage()->code();
+			$language = Language::ensure($languageCode ?? 'current');
 
-			if (
-				$languageCode !== $defaultLanguageCode &&
-				$translation = $this->translations()->find($languageCode)
-			) {
-				return $translation->slug() ?? $this->slug;
+			if ($language->isDefault() !== true) {
+				return $this->translation($language)->slug() ?? $this->slug;
 			}
 		}
 

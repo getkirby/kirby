@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Panel\Page as Panel;
 use ReflectionMethod;
@@ -688,10 +689,93 @@ class PageTest extends TestCase
 		$this->assertSame($expected, $page->previewUrl());
 	}
 
-	public function testSlug()
+	/**
+	 * @covers ::slug
+	 */
+	public function testSlugMultiLanguage()
 	{
-		$page = new Page(['slug' => 'test']);
+		$this->setUpMultiLanguage();
+
+		$page = new Page([
+			'slug' => 'test',
+			'translations' => [
+				[
+					'code' => 'en',
+					// should be ignored
+					'slug' => 'english-slug'
+				],
+				[
+					'code' => 'de',
+					// should be considered
+					'slug' => 'deutscher-slug'
+				]
+			]
+		]);
+
+		// the slug for the default language will always be the slug prop
 		$this->assertSame('test', $page->slug());
+		$this->assertSame('test', $page->slug('en'));
+
+		// the slug for non-default languages can be customized
+		$this->assertSame('deutscher-slug', $page->slug('de'));
+	}
+
+	/**
+	 * @covers ::slug
+	 */
+	public function testSlugSingleLanguage()
+	{
+		$this->setUpSingleLanguage();
+
+		$page = new Page([
+			'slug' => 'test',
+			'content' => [
+				[
+					'title' => 'Test',
+					// setting a custom slug should not have any effect
+					// in single language setups. The slug prop is still
+					// the dominant factor here.
+					'slug' => 'foo'
+				]
+			]
+		]);
+
+		$this->assertSame('test', $page->slug());
+
+		$page = new Page([
+			'slug' => 'test',
+			'translations' => [
+				[
+					'code' => 'en',
+					'content' => $content = [
+						'title' => 'Test'
+					],
+					// setting a custom slug should not have any effect
+					// in single language setups. The slug prop is still
+					// the dominant factor here.
+					'slug' => 'foo'
+				]
+			]
+		]);
+
+		$this->assertSame('test', $page->slug());
+	}
+
+	/**
+	 * @covers ::slug
+	 */
+	public function testSlugWithInvalidLanguage()
+	{
+		$this->setUpMultiLanguage();
+
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('Invalid language: fr');
+
+		$page->slug('fr');
 	}
 
 	public function testToken()
