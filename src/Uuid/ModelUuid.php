@@ -82,7 +82,7 @@ abstract class ModelUuid extends Uuid
 		// just to be sure we don't lose content
 		if (empty($data) === true) {
 			usleep(1000);
-			$data = $this->model->readContent('default');
+			$data = $this->model->version()->read('default') ?? [];
 		}
 
 		// add the UUID to the content array
@@ -101,8 +101,7 @@ abstract class ModelUuid extends Uuid
 			$this->model->content('default')->update($data);
 		}
 
-		// overwrite the content in the file;
-		// use the most basic write method to avoid object cloning
-		$this->model->writeContent($data, 'default');
+		// overwrite the content in the version's storage
+		$this->model->version()->save($data, 'default', true);
 	}
 }

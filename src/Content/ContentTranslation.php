@@ -63,8 +63,9 @@ class ContentTranslation
 	 */
 	public function content(): array
 	{
-		$parent  = $this->parent();
-		$content = $this->content ??= $parent->readContent($this->code());
+		$parent   = $this->parent();
+		$language = $this->code();
+		$content  = $this->content ??= $parent->version()->read($language) ?? [];
 
 		// merge with the default content
 		if (
