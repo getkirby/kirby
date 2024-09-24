@@ -37,15 +37,6 @@ class LabPage extends Page
 	}
 
 	/**
-	 * @deprecated since 5.0.0 Use `::version()->read()` instead
-	 */
-	public function readContent(string|null $languageCode = null): array
-	{
-		Helpers::deprecated('`$model->readContent()` has been deprecated. Use `$model->version()->read()` instead.', 'model-read-content');
-		return $this->version()->read($languageCode ?? 'current') ?? [];
-	}
-
-	/**
 	 * Stores the content on disk
 	 * @internal
 	 */

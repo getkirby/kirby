@@ -398,12 +398,12 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	}
 
 	/**
-	 * Read the content from the content file
-	 * @internal
+	 * @deprecated since 5.0.0 Use `::version()->read()` instead
 	 */
 	public function readContent(string|null $languageCode = null): array
 	{
-		return $this->version()->read($languageCode ?? 'default') ?? [];
+		Helpers::deprecated('`$model->readContent()` has been deprecated. Use `$model->version()->read()` instead.', 'model-read-content');
+		return $this->version()->read($languageCode ?? 'current') ?? [];
 	}
 
 	/**
