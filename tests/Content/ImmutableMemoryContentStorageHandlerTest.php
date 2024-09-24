@@ -45,8 +45,7 @@ class ImmutableMemoryContentStorageHandlerTest extends TestCase
 		$this->storage->move(
 			fromVersionId: VersionId::published(),
 			fromLanguage: Language::ensure(),
-			toVersionId: VersionId::changes(),
-			toLanguage: Language::ensure()
+			toVersionId: VersionId::changes()
 		);
 	}
 

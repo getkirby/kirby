@@ -666,7 +666,7 @@ class VersionTest extends TestCase
 		$this->assertContentFileDoesNotExist('de');
 
 		// move with string arguments
-		$version->move('en', $versionId, 'de');
+		$version->move('en', toLanguage: 'de');
 
 		$this->assertContentFileDoesNotExist('en');
 		$this->assertContentFileExists('de');
@@ -674,7 +674,7 @@ class VersionTest extends TestCase
 		$this->assertSame($content, Data::read($fileDE));
 
 		// move with Language arguments
-		$version->move($this->app->language('de'), $versionId, $this->app->language('en'));
+		$version->move($this->app->language('de'), toLanguage: $this->app->language('en'));
 
 		$this->assertContentFileExists('en');
 		$this->assertContentFileDoesNotExist('de');
@@ -713,7 +713,7 @@ class VersionTest extends TestCase
 		$this->assertContentFileDoesNotExist('en', $versionIdChanges);
 
 		// move with string arguments
-		$versionPublished->move('en', $versionIdChanges, 'en');
+		$versionPublished->move('en', $versionIdChanges);
 
 		$this->assertContentFileDoesNotExist('en', $versionIdPublished);
 		$this->assertContentFileExists('en', $versionIdChanges);
@@ -721,7 +721,7 @@ class VersionTest extends TestCase
 		$this->assertSame($content, Data::read($fileENChanges));
 
 		// move the version back
-		$versionChanges->move('en', $versionIdPublished, 'en');
+		$versionChanges->move('en', $versionIdPublished);
 
 		$this->assertContentFileDoesNotExist('en', $versionIdChanges);
 		$this->assertContentFileExists('en', $versionIdPublished);

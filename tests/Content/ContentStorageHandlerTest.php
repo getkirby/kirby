@@ -138,6 +138,122 @@ class ContentStorageHandlerTest extends TestCase
 	}
 
 	/**
+	 * @covers ::copy
+	 */
+	public function testCopyMultiLanguage()
+	{
+		$this->setUpMultiLanguage();
+
+		$handler = new TestContentStorageHandler(
+			model: $this->model
+		);
+
+		$en = $this->app->language('en');
+		$de = $this->app->language('de');
+
+		$handler->create(VersionId::published(), $en, []);
+
+		$this->assertTrue($handler->exists(VersionId::published(), $en));
+		$this->assertFalse($handler->exists(VersionId::published(), $de));
+
+		$handler->copy(
+			VersionId::published(),
+			$en,
+			toLanguage: $de
+		);
+
+		$this->assertTrue($handler->exists(VersionId::published(), $en));
+		$this->assertTrue($handler->exists(VersionId::published(), $de));
+	}
+
+	/**
+	 * @covers ::copy
+	 */
+	public function testCopySingleLanguage()
+	{
+		$this->setUpSingleLanguage();
+
+		$handler = new TestContentStorageHandler(
+			model: $this->model
+		);
+
+		$handler->create(VersionId::published(), Language::single(), []);
+
+		$this->assertTrue($handler->exists(VersionId::published(), Language::single()));
+		$this->assertFalse($handler->exists(VersionId::changes(), Language::single()));
+
+		$handler->copy(
+			VersionId::published(),
+			Language::single(),
+			VersionId::changes()
+		);
+
+		$this->assertTrue($handler->exists(VersionId::published(), Language::single()));
+		$this->assertTrue($handler->exists(VersionId::changes(), Language::single()));
+	}
+
+	/**
+	 * @covers ::copy
+	 */
+	public function testCopytoAnotherStorage()
+	{
+		$this->setUpSingleLanguage();
+
+		$handler1 = new TestContentStorageHandler(
+			model: $this->model
+		);
+
+		$handler2 = new TestContentStorageHandler(
+			model: $this->model
+		);
+
+		$handler1->create(VersionId::published(), Language::single(), []);
+
+		$this->assertTrue($handler1->exists(VersionId::published(), Language::single()));
+		$this->assertFalse($handler2->exists(VersionId::published(), Language::single()));
+
+		$handler1->copy(
+			VersionId::published(),
+			Language::single(),
+			toStorage: $handler2
+		);
+
+		$this->assertTrue($handler1->exists(VersionId::published(), Language::single()));
+		$this->assertTrue($handler2->exists(VersionId::published(), Language::single()));
+	}
+
+	/**
+	 * @covers ::copyAll
+	 */
+	public function testCopyAll()
+	{
+		$this->setUpSingleLanguage();
+
+		$handler1 = new TestContentStorageHandler(
+			model: $this->model
+		);
+
+		$handler2 = new TestContentStorageHandler(
+			model: $this->model
+		);
+
+		$handler1->create(VersionId::published(), Language::single(), []);
+		$handler1->create(VersionId::changes(), Language::single(), []);
+
+		$this->assertTrue($handler1->exists(VersionId::published(), Language::single()));
+		$this->assertTrue($handler1->exists(VersionId::changes(), Language::single()));
+		$this->assertFalse($handler2->exists(VersionId::published(), Language::single()));
+		$this->assertFalse($handler2->exists(VersionId::changes(), Language::single()));
+
+		$handler1->copyAll(to: $handler2);
+
+		$this->assertTrue($handler1->exists(VersionId::published(), Language::single()));
+		$this->assertTrue($handler1->exists(VersionId::changes(), Language::single()));
+		$this->assertTrue($handler2->exists(VersionId::published(), Language::single()));
+		$this->assertTrue($handler2->exists(VersionId::changes(), Language::single()));
+	}
+
+	/**
 	 * @covers ::deleteLanguage
 	 */
 	public function testDeleteLanguageMultiLanguage()
@@ -271,14 +387,16 @@ class ContentStorageHandlerTest extends TestCase
 		$handler->move(
 			VersionId::published(),
 			$en,
-			VersionId::published(),
-			$de
+			toLanguage: $de
 		);
 
 		$this->assertFalse($handler->exists(VersionId::published(), $en));
 		$this->assertTrue($handler->exists(VersionId::published(), $de));
 	}
 
+	/**
+	 * @covers ::move
+	 */
 	public function testMoveSingleLanguage()
 	{
 		$this->setUpSingleLanguage();
@@ -295,12 +413,72 @@ class ContentStorageHandlerTest extends TestCase
 		$handler->move(
 			VersionId::published(),
 			Language::single(),
-			VersionId::changes(),
-			Language::single()
+			VersionId::changes()
 		);
 
 		$this->assertFalse($handler->exists(VersionId::published(), Language::single()));
 		$this->assertTrue($handler->exists(VersionId::changes(), Language::single()));
+	}
+
+	/**
+	 * @covers ::move
+	 */
+	public function testMovetoAnotherStorage()
+	{
+		$this->setUpSingleLanguage();
+
+		$handler1 = new TestContentStorageHandler(
+			model: $this->model
+		);
+
+		$handler2 = new TestContentStorageHandler(
+			model: $this->model
+		);
+
+		$handler1->create(VersionId::published(), Language::single(), []);
+
+		$this->assertTrue($handler1->exists(VersionId::published(), Language::single()));
+		$this->assertFalse($handler2->exists(VersionId::published(), Language::single()));
+
+		$handler1->move(
+			VersionId::published(),
+			Language::single(),
+			toStorage: $handler2
+		);
+
+		$this->assertFalse($handler1->exists(VersionId::published(), Language::single()));
+		$this->assertTrue($handler2->exists(VersionId::published(), Language::single()));
+	}
+
+	/**
+	 * @covers ::moveAll
+	 */
+	public function testMoveAll()
+	{
+		$this->setUpSingleLanguage();
+
+		$handler1 = new TestContentStorageHandler(
+			model: $this->model
+		);
+
+		$handler2 = new TestContentStorageHandler(
+			model: $this->model
+		);
+
+		$handler1->create(VersionId::published(), Language::single(), []);
+		$handler1->create(VersionId::changes(), Language::single(), []);
+
+		$this->assertTrue($handler1->exists(VersionId::published(), Language::single()));
+		$this->assertTrue($handler1->exists(VersionId::changes(), Language::single()));
+		$this->assertFalse($handler2->exists(VersionId::published(), Language::single()));
+		$this->assertFalse($handler2->exists(VersionId::changes(), Language::single()));
+
+		$handler1->moveAll(to: $handler2);
+
+		$this->assertFalse($handler1->exists(VersionId::published(), Language::single()));
+		$this->assertFalse($handler1->exists(VersionId::changes(), Language::single()));
+		$this->assertTrue($handler2->exists(VersionId::published(), Language::single()));
+		$this->assertTrue($handler2->exists(VersionId::changes(), Language::single()));
 	}
 
 	/**

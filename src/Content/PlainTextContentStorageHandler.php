@@ -223,32 +223,6 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 	}
 
 	/**
-	 * Moves content from one version-language combination to another
-	 */
-	public function move(
-		VersionId $fromVersionId,
-		Language $fromLanguage,
-		VersionId $toVersionId,
-		Language $toLanguage
-	): void {
-		// make sure the source version exists
-		$this->ensure($fromVersionId, $fromLanguage);
-
-		// check for an existing content file
-		$contentFile = $this->contentFile($fromVersionId, $fromLanguage);
-
-		// create the source file if it doesn't exist so far
-		if (file_exists($contentFile) === false) {
-			$this->touch($fromVersionId, $fromLanguage);
-		}
-
-		F::move(
-			$contentFile,
-			$this->contentFile($toVersionId, $toLanguage)
-		);
-	}
-
-	/**
 	 * Returns the stored content fields
 	 *
 	 * @return array<string, string>
