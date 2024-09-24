@@ -42,7 +42,7 @@ class LabPage extends Page
 	public function readContent(string|null $languageCode = null): array
 	{
 		Helpers::deprecated('`$model->readContent()` has been deprecated. Use `$model->version()->read()` instead.', 'model-read-content');
-		return $this->version()->read($languageCode ?? 'current');
+		return $this->version()->read($languageCode ?? 'current') ?? [];
 	}
 
 	/**
@@ -55,7 +55,11 @@ class LabPage extends Page
 		bool $overwrite = false
 	): static {
 		$clone = $this->clone();
-		$clone->version()->save($data ?? [], $languageCode ?? 'current', $overwrite);
+		$clone->version()->save(
+			$data ?? [],
+			$languageCode ?? 'current',
+			$overwrite
+		);
 		return $clone;
 	}
 
@@ -69,7 +73,11 @@ class LabPage extends Page
 		Helpers::deprecated('`$model->saveContent()` has been deprecated. Use `$model->version()->save()` instead.', 'model-save-content');
 
 		$clone = $this->clone();
-		$clone->version()->save($data ?? [], 'current', $overwrite);
+		$clone->version()->save(
+			$data ?? [],
+			'current',
+			$overwrite
+		);
 		return $clone;
 	}
 
@@ -84,7 +92,11 @@ class LabPage extends Page
 		Helpers::deprecated('`$model->saveTranslation()` has been deprecated. Use `$model->version()->save()` instead.', 'model-save-translation');
 
 		$clone = $this->clone();
-		$clone->version()->save($data ?? [], $languageCode ?? 'current', $overwrite);
+		$clone->version()->save(
+			$data ?? [],
+			$languageCode ?? 'current',
+			$overwrite
+		);
 		return $clone;
 	}
 
@@ -183,7 +195,11 @@ class LabPage extends Page
 	public function writeContent(array $data, string|null $languageCode = null): bool
 	{
 		Helpers::deprecated('`$model->writeContent()` has been deprecated. Use `$model->version()->save()` instead.', 'model-write-content');
-		$this->version()->save($data, $languageCode ?? 'current', true);
+		$this->version()->save(
+			$data,
+			$languageCode ?? 'current',
+			true
+		);
 		return true;
 	}
 }
