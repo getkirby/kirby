@@ -44,6 +44,9 @@ export default {
 		isLocked() {
 			return this.$panel.content.isLocked;
 		},
+		isUnsaved() {
+			return this.$panel.content.hasUnpublishedChanges;
+		},
 		protectedFields() {
 			return [];
 		}

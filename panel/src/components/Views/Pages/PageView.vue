@@ -19,7 +19,12 @@
 
 			<template #buttons>
 				<k-view-buttons :buttons="buttons" />
-				<k-form-buttons @discard="onDiscard" @submit="onSubmit" />
+				<k-form-controls
+					:is-locked="isLocked"
+					:is-unsaved="isUnsaved"
+					@discard="onDiscard"
+					@submit="onSubmit"
+				/>
 			</template>
 		</k-header>
 
