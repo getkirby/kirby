@@ -47,6 +47,38 @@ abstract class ContentStorageHandler
 	}
 
 	/**
+	 * Copies content from one version-language combination to another
+	 */
+	public function copy(
+		VersionId $fromVersionId,
+		Language $fromLanguage,
+		VersionId|null $toVersionId = null,
+		Language|null $toLanguage = null,
+		ContentStorageHandler|null $toStorage = null
+	): void {
+		// fallbacks to allow keeping the method call lean
+		$toVersionId ??= $fromVersionId;
+		$toLanguage  ??= $fromLanguage;
+		$toStorage   ??= $this;
+
+		// read the existing fields
+		$content = $this->read($fromVersionId, $fromLanguage);
+
+		// create the new version
+		$toStorage->create($toVersionId, $toLanguage, $content);
+	}
+
+	/**
+	 * Copies all content to another storage
+	 */
+	public function copyAll(ContentStorageHandler $to): void
+	{
+		foreach ($this->all() as $versionId => $language) {
+			$this->copy($versionId, $language, toStorage: $to);
+		}
+	}
+
+	/**
 	 * Creates a new version
 	 *
 	 * @param array<string, string> $fields Content fields
@@ -136,17 +168,36 @@ abstract class ContentStorageHandler
 	public function move(
 		VersionId $fromVersionId,
 		Language $fromLanguage,
-		VersionId $toVersionId,
-		Language $toLanguage
+		VersionId|null $toVersionId = null,
+		Language|null $toLanguage = null,
+		ContentStorageHandler|null $toStorage = null
 	): void {
-		// read the existing fields
-		$fields = $this->read($fromVersionId, $fromLanguage);
+		// fallbacks to allow keeping the method call lean
+		$toVersionId ??= $fromVersionId;
+		$toLanguage  ??= $fromLanguage;
+		$toStorage   ??= $this;
 
-		// create the new version
-		$this->create($toVersionId, $toLanguage, $fields);
+		// copy content to new version
+		$this->copy(
+			$fromVersionId,
+			$fromLanguage,
+			$toVersionId,
+			$toLanguage,
+			$toStorage
+		);
 
 		// clean up the old version
 		$this->delete($fromVersionId, $fromLanguage);
+	}
+
+	/**
+	 * Moves all content to another storage
+	 */
+	public function moveAll(ContentStorageHandler $to): void
+	{
+		foreach ($this->all() as $versionId => $language) {
+			$this->move($versionId, $language, toStorage: $to);
+		}
 	}
 
 	/**
@@ -154,11 +205,13 @@ abstract class ContentStorageHandler
 	 * @internal
 	 * @todo Move to `Language` class
 	 */
-	public function moveLanguage(Language $fromLanguage, Language $toLanguage): void
-	{
+	public function moveLanguage(
+		Language $fromLanguage,
+		Language $toLanguage
+	): void {
 		foreach (VersionId::all() as $versionId) {
 			if ($this->exists($versionId, $fromLanguage) === true) {
-				$this->move($versionId, $fromLanguage, $versionId, $toLanguage);
+				$this->move($versionId, $fromLanguage, toLanguage: $toLanguage);
 			}
 		}
 	}
