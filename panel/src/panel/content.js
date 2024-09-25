@@ -6,125 +6,132 @@ import { reactive } from "vue";
 export default (panel) => {
 	return reactive({
 		/**
+		 * API endpoint to handle content changes
+		 */
+		get api() {
+			return panel.view.props.api;
+		},
+
+		/**
 		 * Returns all fields and their values that
-		 * have been changed but not yet published
+		 * have been changed but not yet saved
 		 *
 		 * @returns {Object}
 		 */
 		get changes() {
-			return panel.app.$store.getters["content/changes"]();
+			const changes = {};
+
+			for (const field in panel.view.props.content) {
+				const changed = JSON.stringify(panel.view.props.content[field]);
+				const original = JSON.stringify(panel.view.props.originals[field]);
+
+				if (changed !== original) {
+					changes[field] = panel.view.props.content[field];
+				}
+			}
+
+			return changes;
 		},
+
 		/**
 		 * Removes all unpublished changes
 		 */
-		discard() {
-			panel.app.$store.dispatch("content/revert");
-		},
-		/**
-		 * Whether the model has changes that haven't been saved yet
-		 *
-		 * @returns {Boolean}
-		 */
-		get hasUnsavedChanges() {
-			return false;
-		},
-		/**
-		 * Whether the model has changes that haven't been published yet
-		 *
-		 * @returns {Boolean}
-		 */
-		get hasUnpublishedChanges() {
-			return panel.app.$store.getters["content/hasChanges"]();
-		},
-		/**
-		 * Whether the model is a draft
-		 *
-		 * @returns {Boolean}
-		 */
-		get isDraft() {
-			return panel.view.props.model.status === "draft";
-		},
-		isPublishing: false,
-		isSaving: false,
-		/**
-		 * Whether the content is currently locked by another user
-		 *
-		 * @returns {Boolean}
-		 */
-		get isLocked() {
-			return this.lock?.state === "lock";
-		},
-		/**
-		 * Content lock state of the model
-		 *
-		 * @returns {Object|null|false}
-		 */
-		get lock() {
-			const lock = panel.view.props.lock;
-
-			if (!lock) {
-				return false;
+		async discard() {
+			if (this.isProcessing === true) {
+				return;
 			}
 
-			if (lock.state === null) {
-				return null;
-			}
+			this.isProcessing = true;
 
-			return {
-				...lock.data,
-				state: lock.state
-			};
+			try {
+				await panel.post(this.api + "/changes/discard");
+				panel.view.props.content = panel.view.props.originals;
+				panel.view.reload();
+			} finally {
+				this.isProcessing = false;
+			}
 		},
+
+		/**
+		 * Whether content is currently being discarded, saved or published
+		 *
+		 * @returns {Boolean}
+		 */
+		isProcessing: false,
+
+		/**
+		 * The last published state
+		 *
+		 * @returns {Object}
+		 */
+		get originals() {
+			return panel.view.props.originals;
+		},
+
 		/**
 		 * Publishes any changes
 		 */
 		async publish() {
-			this.isPublishing = true;
-			await panel.app.$store.dispatch("content/save");
+			if (this.isProcessing === true) {
+				return;
+			}
+
+			this.isProcessing = true;
+
+			// Send updated values to API
+			try {
+				await panel.post(
+					this.api + "/changes/publish",
+					panel.view.props.content
+				);
+
+				panel.view.props.originals = panel.view.props.content;
+
+				await panel.view.refresh();
+			} finally {
+				this.isProcessing = false;
+			}
+
 			panel.events.emit("model.update");
 			panel.notification.success();
-			this.isPublishing = false;
 		},
-		/**
-		 * Returns all fields and their already published values
-		 *
-		 * @returns {Object}
-		 */
-		get published() {
-			return panel.app.$store.getters["content/originals"]();
-		},
+
 		/**
 		 * Saves any changes
 		 */
 		async save() {
-			this.isSaving = true;
-			// …
-			this.isSaving = false;
+			if (this.isProcessing === true) {
+				return true;
+			}
+
+			this.isProcessing = true;
+
+			try {
+				await panel.post(this.api + "/changes/save", panel.view.props.content);
+			} finally {
+				this.isProcessing = false;
+			}
 		},
+
 		/**
 		 * Updates the values of fields
 		 *
-		 * @param {Object} fields
-		 * @param {any} value
+		 * @param {Object} values
 		 */
-		set(fields) {
-			panel.app.$store.dispatch("content/update", [null, fields]);
+		update(values) {
+			panel.view.props.content = {
+				...panel.view.props.originals,
+				...values
+			};
 		},
-		/**
-		 * Removes the content lock for the current user,
-		 * e.g. when closing/leaving the model view
-		 */
-		async unlock() {},
+
 		/**
 		 * Returns all fields and values incl. changes
 		 *
 		 * @returns {Object}
 		 */
 		get values() {
-			return {
-				...this.published,
-				...this.changes
-			};
+			return panel.view.props.content;
 		}
 	});
 };

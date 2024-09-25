@@ -35,6 +35,9 @@ export default {
 		}
 	},
 	computed: {
+		changes() {
+			return this.$panel.content.changes;
+		},
 		content() {
 			return this.$panel.content.values;
 		},
@@ -42,10 +45,10 @@ export default {
 			return this.model.link;
 		},
 		isLocked() {
-			return this.$panel.content.isLocked;
+			return false;
 		},
 		isUnsaved() {
-			return this.$panel.content.hasUnpublishedChanges;
+			return this.$helper.object.length(this.changes) > 0;
 		},
 		protectedFields() {
 			return [];
@@ -54,18 +57,17 @@ export default {
 	watch: {
 		"$panel.view.timestamp": {
 			handler() {
-				this.$store.dispatch("content/create", {
-					id: this.id,
-					api: this.id,
-					content: this.model.content,
-					ignore: this.protectedFields
-				});
+				// this is a temporary emulation of what should be coming
+				// directly from the backend.
+				this.$panel.view.props.originals = this.model.content;
+				this.$panel.view.props.content = this.model.content;
+				this.$panel.view.props.api = this.id;
 			},
 			immediate: true
 		}
 	},
 	mounted() {
-		this.onInput = debounce(this.onInput, 50);
+		this.autosave = debounce(this.autosave, 200);
 
 		this.$events.on("model.reload", this.$reload);
 		this.$events.on("keydown.left", this.toPrev);
@@ -79,18 +81,22 @@ export default {
 		this.$events.off("view.save", this.onSave);
 	},
 	methods: {
-		onDiscard() {
-			this.$panel.content.discard();
+		autosave() {
+			this.$panel.content.save();
+		},
+		async onDiscard() {
+			await this.$panel.content.discard();
 		},
 		onInput(values) {
-			this.$panel.content.set(values);
+			this.$panel.content.update(values);
+			this.autosave();
 		},
 		onSave(e) {
 			e?.preventDefault?.();
 			this.onSubmit();
 		},
 		onSubmit(values = {}) {
-			this.$panel.content.set(values);
+			this.$panel.content.update(values);
 			this.$panel.content.publish();
 		},
 		toPrev(e) {
