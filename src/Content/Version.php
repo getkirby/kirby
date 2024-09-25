@@ -178,15 +178,17 @@ class Version
 	 */
 	public function move(
 		Language|string $fromLanguage,
-		VersionId $toVersionId,
-		Language|string $toLanguage
+		VersionId|null $toVersionId = null,
+		Language|string|null $toLanguage = null,
+		ContentStorageHandler|null $toStorage = null
 	): void {
 		$this->ensure($fromLanguage);
 		$this->model->storage()->move(
 			fromVersionId: $this->id,
 			fromLanguage: Language::ensure($fromLanguage),
 			toVersionId: $toVersionId,
-			toLanguage: Language::ensure($toLanguage)
+			toLanguage: $toLanguage ? Language::ensure($toLanguage) : null,
+			toStorage: $toStorage
 		);
 	}
 

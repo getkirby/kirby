@@ -46,7 +46,10 @@
  */
 export default {
 	props: {
-		content: Object,
+		content: {
+			default: () => ({}),
+			type: Object
+		},
 		details: Array,
 		focusable: Boolean,
 		image: {

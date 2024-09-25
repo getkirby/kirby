@@ -22,8 +22,9 @@ class ImmutableMemoryContentStorageHandler extends MemoryContentStorageHandler
 	public function move(
 		VersionId $fromVersionId,
 		Language $fromLanguage,
-		VersionId $toVersionId,
-		Language $toLanguage
+		VersionId|null $toVersionId = null,
+		Language|null $toLanguage = null,
+		ContentStorageHandler|null $toStorage = null
 	): void {
 		$this->preventMutation();
 	}
