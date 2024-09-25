@@ -2,70 +2,53 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Cms\App;
-use Kirby\Cms\Find;
-use Kirby\Http\Uri;
-use Kirby\Toolkit\Escape;
-use Throwable;
+use Kirby\Cms\Collection;
+use Kirby\Content\Changes;
 
 class ChangesDialog
 {
-	public function changes(array $ids = []): array
+	protected Changes $changes;
+
+	public function __construct()
 	{
-		$kirby     = App::instance();
-		$multilang = $kirby->multilang();
-		$changes   = [];
+		$this->changes = new Changes();
+	}
 
-		foreach ($ids as $id) {
-			try {
-				// parse the given ID to extract
-				// the path and an optional query
-				$uri   = new Uri($id);
-				$path  = $uri->path()->toString();
-				$query = $uri->query();
-				$model = Find::parent($path);
-				$item  = $model->panel()->dropdownOption();
+	public function files(): array
+	{
+		return $this->items($this->changes->files());
+	}
 
-				// add the language to each option, if it is included in the query
-				// of the given ID and the language actually exists
-				if (
-					$multilang &&
-					$query->language &&
-					$language = $kirby->language($query->language)
-				) {
-					$item['text'] .= ' (' . $language->code() . ')';
-					$item['link'] .= '?language=' . $language->code();
-				}
+	public function items(Collection $models): array
+	{
+		$items = [];
 
-				$item['text'] = Escape::html($item['text']);
-
-				$changes[] = $item;
-			} catch (Throwable) {
-				continue;
-			}
+		foreach ($models as $model) {
+			$items[] = $model->panel()->dropdownOption();
 		}
 
-		return $changes;
+		return $items;
 	}
 
 	public function load(): array
 	{
-		return $this->state();
-	}
-
-	public function state(bool $loading = true, array $changes = [])
-	{
 		return [
 			'component' => 'k-changes-dialog',
 			'props'     => [
-				'changes' => $changes,
-				'loading' => $loading
+				'files' => $this->files(),
+				'pages' => $this->pages(),
+				'users' => $this->users(),
 			]
 		];
 	}
 
-	public function submit(array $ids): array
+	public function pages(): array
 	{
-		return $this->state(false, $this->changes($ids));
+		return $this->items($this->changes->pages());
+	}
+
+	public function users(): array
+	{
+		return $this->items($this->changes->users());
 	}
 }
