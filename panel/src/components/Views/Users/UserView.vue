@@ -1,7 +1,7 @@
 <template>
 	<k-panel-inside
-		:data-has-tabs="tabs.length > 1"
-		:data-id="model.id"
+		:data-has-tabs="hasTabs"
+		:data-id="id"
 		:data-locked="isLocked"
 		:data-template="blueprint"
 		class="k-user-view"
@@ -13,16 +13,13 @@
 		<k-header
 			:editable="permissions.changeName && !isLocked"
 			class="k-user-view-header"
-			@edit="$dialog(id + '/changeName')"
+			@edit="$dialog(api + '/changeName')"
 		>
-			<span
-				v-if="!model.name || model.name.length === 0"
-				class="k-user-name-placeholder"
-			>
+			<span v-if="!name || name.length === 0" class="k-user-name-placeholder">
 				{{ $t("name") }} …
 			</span>
 			<template v-else>
-				{{ model.name }}
+				{{ name }}
 			</template>
 
 			<template #buttons>
@@ -37,9 +34,14 @@
 		</k-header>
 
 		<k-user-profile
+			:id="id"
+			:api="api"
+			:avatar="avatar"
+			:email="email"
 			:is-locked="isLocked"
-			:model="model"
+			:language="language"
 			:permissions="permissions"
+			:role="role"
 		/>
 
 		<k-model-tabs :tab="tab.name" :tabs="tabs" />
@@ -49,7 +51,7 @@
 			:content="content"
 			:empty="$t('user.blueprint', { blueprint: $esc(blueprint) })"
 			:lock="lock"
-			:parent="id"
+			:parent="api"
 			:tab="tab"
 			@input="onInput"
 			@submit="onSubmit"
@@ -61,7 +63,14 @@
 import ModelView from "../ModelView.vue";
 
 export default {
-	extends: ModelView
+	extends: ModelView,
+	props: {
+		avatar: String,
+		email: String,
+		language: String,
+		name: String,
+		role: String
+	}
 };
 </script>
 

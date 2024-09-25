@@ -399,29 +399,16 @@ class File extends Model
 	 */
 	public function props(): array
 	{
-		$file       = $this->model;
-		$dimensions = $file->dimensions();
-
 		return [
 			...parent::props(),
 			...$this->prevNext(),
 			'blueprint' => $this->model->template() ?? 'default',
-			'model' => [
-				'content'    => $this->content(),
-				'dimensions' => $dimensions->toArray(),
-				'extension'  => $file->extension(),
-				'filename'   => $file->filename(),
-				'link'       => $this->url(true),
-				'mime'       => $file->mime(),
-				'niceSize'   => $file->niceSize(),
-				'id'         => $id = $file->id(),
-				'parent'     => $file->parent()->panel()->path(),
-				'template'   => $file->template(),
-				'type'       => $file->type(),
-				'url'        => $file->url(),
-				'uuid'       => fn () => $file->uuid()?->toString(),
-			],
-			'preview' => FilePreview::factory($this->model)->render()
+			'extension' => $this->model->extension(),
+			'filename'  => $this->model->filename(),
+			'mime'      => $this->model->mime(),
+			'preview'   => FilePreview::factory($this->model)->render(),
+			'type'      => $this->model->type(),
+			'url'       => $this->model->url(),
 		];
 	}
 

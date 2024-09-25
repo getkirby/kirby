@@ -1,3 +1,4 @@
+import { length } from "@/helpers/object";
 import { reactive } from "vue";
 
 /**
@@ -50,6 +51,15 @@ export default (panel) => {
 			} finally {
 				this.isProcessing = false;
 			}
+		},
+
+		/**
+		 * Whether there are any changes
+		 *
+		 * @returns {Boolean}
+		 */
+		get hasChanges() {
+			return length(this.changes) > 0;
 		},
 
 		/**
@@ -119,6 +129,10 @@ export default (panel) => {
 		 * @param {Object} values
 		 */
 		update(values) {
+			if (length(values) === 0) {
+				return;
+			}
+
 			panel.view.props.content = {
 				...panel.view.props.originals,
 				...values

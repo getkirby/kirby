@@ -6,18 +6,19 @@ import debounce from "@/helpers/debounce.js";
  */
 export default {
 	props: {
+		api: String,
 		blueprint: String,
 		buttons: Array,
-		next: Object,
-		prev: Object,
-		permissions: {
-			type: Object,
-			default: () => ({})
-		},
+		content: Object,
+		id: String,
+		link: String,
 		lock: {
 			type: [Boolean, Object]
 		},
-		model: {
+		next: Object,
+		originals: Object,
+		prev: Object,
+		permissions: {
 			type: Object,
 			default: () => ({})
 		},
@@ -32,38 +33,24 @@ export default {
 		tabs: {
 			type: Array,
 			default: () => []
-		}
+		},
+		uuid: String
 	},
 	computed: {
 		changes() {
 			return this.$panel.content.changes;
 		},
-		content() {
-			return this.$panel.content.values;
-		},
-		id() {
-			return this.model.link;
+		hasTabs() {
+			return this.tabs.length > 1;
 		},
 		isLocked() {
 			return false;
 		},
 		isUnsaved() {
-			return this.$helper.object.length(this.changes) > 0;
+			return this.$panel.content.hasChanges;
 		},
 		protectedFields() {
 			return [];
-		}
-	},
-	watch: {
-		"$panel.view.timestamp": {
-			handler() {
-				// this is a temporary emulation of what should be coming
-				// directly from the backend.
-				this.$panel.view.props.originals = this.model.content;
-				this.$panel.view.props.content = this.model.content;
-				this.$panel.view.props.api = this.id;
-			},
-			immediate: true
 		}
 	},
 	mounted() {

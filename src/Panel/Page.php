@@ -344,22 +344,11 @@ class Page extends Model
 	 */
 	public function props(): array
 	{
-		$page = $this->model;
-
 		return [
 			...parent::props(),
 			...$this->prevNext(),
-			'blueprint' => $page->intendedTemplate()->name(),
-			'model' => [
-				'content'    => $this->content(),
-				'id'         => $page->id(),
-				'link'       => $this->url(true),
-				'parent'     => $page->parentModel()->panel()->url(true),
-				'previewUrl' => $page->previewUrl(),
-				'status'     => $page->status(),
-				'title'      => $page->title()->toString(),
-				'uuid'       => fn () => $page->uuid()?->toString(),
-			]
+			'blueprint' => $this->model->intendedTemplate()->name(),
+			'title'     => $this->model->title()->toString(),
 		];
 	}
 

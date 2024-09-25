@@ -343,6 +343,14 @@ abstract class Model
 	}
 
 	/**
+	 * Get the original content values for the model
+	 */
+	public function originals(): array
+	{
+		return Form::for(model: $this->model)->values();
+	}
+
+	/**
 	 * Returns the full path without leading slash
 	 */
 	abstract public function path(): string;
@@ -375,15 +383,22 @@ abstract class Model
 	public function props(): array
 	{
 		$blueprint = $this->model->blueprint();
+		$link      = $this->url(true);
 		$request   = $this->model->kirby()->request();
 		$tabs      = $blueprint->tabs();
 		$tab       = $blueprint->tab($request->get('tab')) ?? $tabs[0] ?? null;
 
 		$props = [
+			'api'         => $link,
 			'buttons'     => fn () => $this->buttons(),
+			'content'     => $this->content(),
+			'id'          => $this->model->id(),
+			'link'        => $link,
 			'lock'        => $this->lock(),
+			'originals'   => $this->originals(),
 			'permissions' => $this->model->permissions()->toArray(),
 			'tabs'        => $tabs,
+			'uuid'        => fn () => $this->model->uuid()?->toString()
 		];
 
 		// only send the tab if it exists

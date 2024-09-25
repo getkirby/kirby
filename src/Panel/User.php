@@ -241,20 +241,14 @@ class User extends Model
 		return [
 			...parent::props(),
 			...$this->prevNext(),
+			'account'   => $account,
+			'avatar'    => $user->avatar()?->url(),
 			'blueprint' => $this->model->role()->name(),
-			'model' => [
-				'account'  => $account,
-				'avatar'   => $user->avatar()?->url(),
-				'content'  => $this->content(),
-				'email'    => $user->email(),
-				'id'       => $user->id(),
-				'language' => $this->translation()->name(),
-				'link'     => $this->url(true),
-				'name'     => $user->name()->toString(),
-				'role'     => $user->role()->title(),
-				'username' => $user->username(),
-				'uuid'     => fn () => $user->uuid()?->toString()
-			]
+			'email'     => $user->email(),
+			'language'  => $this->translation()->name(),
+			'name'      => $user->name()->toString(),
+			'role'      => $user->role()->title(),
+			'username'  => $user->username(),
 		];
 	}
 

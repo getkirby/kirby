@@ -81,13 +81,8 @@ class Site extends Model
 		return [
 			...parent::props(),
 			'blueprint' => 'site',
-			'model' => [
-				'content'    => $this->content(),
-				'link'       => $this->url(true),
-				'previewUrl' => $this->model->previewUrl(),
-				'title'      => $this->model->title()->toString(),
-				'uuid'       => fn () => $this->model->uuid()?->toString(),
-			]
+			'id'        => '/',
+			'title'     => $this->model->title()->toString(),
 		];
 	}
 
