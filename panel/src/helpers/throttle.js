@@ -1,34 +1,52 @@
-export default (func, delay, options = { leading: true, trailing: false }) => {
-	let timer = null,
-		lastRan = null,
-		trailingArgs = null;
+/**
+ * Throttles the callback function
+ *
+ * @param {Function} callback function to debounce
+ * @param {int} delay delay in milliseconds
+ * @param {object} options { leading: true, trailing: false}
+ * @returns {Function}
+ */
+export default (
+	callback,
+	delay,
+	options = { leading: true, trailing: false }
+) => {
+	let timer = null;
+	let last = null;
+	let trailingArgs = null;
 
 	return function (...args) {
+		// called within cooldown period
 		if (timer) {
-			//called within cooldown period
-			lastRan = this; //update context
-			trailingArgs = args; //save for later
+			last = this; // update context
+			trailingArgs = args; // save for later
 			return;
 		}
 
 		if (options.leading) {
-			// if leading
-			func.call(this, ...args); //call the 1st instance
+			// if leading, call the 1st instance
+			callback.call(this, ...args);
 		} else {
-			// else it's trailing
-			lastRan = this; //update context
-			trailingArgs = args; //save for later
+			// else it's trailing: update context & save args for later
+			last = this;
+			trailingArgs = args;
 		}
 
 		const coolDownPeriodComplete = () => {
+			// if trailing and the trailing args exist
 			if (options.trailing && trailingArgs) {
-				// if trailing and the trailing args exist
-				func.call(lastRan, ...trailingArgs); //invoke the instance with stored context "lastRan"
-				lastRan = null; //reset the status of lastRan
-				trailingArgs = null; //reset trailing arguments
-				timer = setTimeout(coolDownPeriodComplete, delay); //clear the timout
+				// invoke the instance with stored context "last"
+				callback.call(last, ...trailingArgs);
+
+				//reset the status of last and trailing arguments
+				last = null;
+				trailingArgs = null;
+
+				// clear the timeout
+				timer = setTimeout(coolDownPeriodComplete, delay);
 			} else {
-				timer = null; // reset timer
+				// reset timer
+				timer = null;
 			}
 		};
 

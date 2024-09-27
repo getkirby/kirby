@@ -55,7 +55,10 @@ export default {
 		}
 	},
 	mounted() {
-		this.autosave = throttle(this.autosave, 1000);
+		this.autosave = throttle(this.autosave, 1000, {
+			leading: true,
+			trailing: true
+		});
 
 		this.$events.on("model.reload", this.$reload);
 		this.$events.on("keydown.left", this.toPrev);
