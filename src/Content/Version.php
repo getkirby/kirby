@@ -214,6 +214,11 @@ class Version
 		// make sure to store the right fields for the model
 		$fields = $this->model->contentFileData($fields, $language);
 
+		// add the editing user
+		if ($this->id->is(VersionId::changes()) === true) {
+			$fields['lock'] = $this->model->kirby()->user()?->id();
+		}
+
 		// the default language stores all fields
 		if ($language->isDefault() === true) {
 			return $fields;
