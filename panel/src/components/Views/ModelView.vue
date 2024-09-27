@@ -15,6 +15,7 @@ export default {
 		lock: {
 			type: [Boolean, Object]
 		},
+		model: Object,
 		next: Object,
 		originals: Object,
 		prev: Object,

@@ -399,16 +399,38 @@ class File extends Model
 	 */
 	public function props(): array
 	{
+		$props = parent::props();
+		$file  = $this->model;
+
+		// Additional model information
+		// @deprecated Use the top-level props instead
+		$model = [
+			'content'    => $props['content'],
+			'dimensions' => $file->dimensions()->toArray(),
+			'extension'  => $file->extension(),
+			'filename'   => $file->filename(),
+			'link'       => $props['link'],
+			'mime'       => $file->mime(),
+			'niceSize'   => $file->niceSize(),
+			'id'         => $props['id'],
+			'parent'     => $file->parent()->panel()->path(),
+			'template'   => $file->template(),
+			'type'       => $file->type(),
+			'url'        => $file->url(),
+			'uuid'       => $props['uuid'],
+		];
+
 		return [
-			...parent::props(),
+			...$props,
 			...$this->prevNext(),
 			'blueprint' => $this->model->template() ?? 'default',
-			'extension' => $this->model->extension(),
-			'filename'  => $this->model->filename(),
-			'mime'      => $this->model->mime(),
+			'extension' => $model['extension'],
+			'filename'  => $model['filename'],
+			'mime'      => $model['mime'],
+			'model'     => $model,
 			'preview'   => FilePreview::factory($this->model)->render(),
-			'type'      => $this->model->type(),
-			'url'       => $this->model->url(),
+			'type'      => $model['type'],
+			'url'       => $model['url'],
 		];
 	}
 

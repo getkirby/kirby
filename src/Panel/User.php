@@ -235,20 +235,37 @@ class User extends Model
 	 */
 	public function props(): array
 	{
-		$user    = $this->model;
+		$props = parent::props();
+		$user  = $this->model;
 		$account = $user->isLoggedIn();
+
+		// Additional model information
+		// @deprecated Use the top-level props instead
+		$model = [
+			'account'  => $user->isLoggedIn(),
+			'avatar'   => $user->avatar()?->url(),
+			'content'  => $props['content'],
+			'email'    => $user->email(),
+			'id'       => $props['id'],
+			'language' => $this->translation()->name(),
+			'link'     => $props['link'],
+			'name'     => $user->name()->toString(),
+			'role'     => $user->role()->title(),
+			'username' => $user->username(),
+			'uuid'     => $props['uuid'],
+		];
 
 		return [
 			...parent::props(),
 			...$this->prevNext(),
-			'account'   => $account,
-			'avatar'    => $user->avatar()?->url(),
+			'avatar'    => $model['avatar'],
 			'blueprint' => $this->model->role()->name(),
-			'email'     => $user->email(),
-			'language'  => $this->translation()->name(),
-			'name'      => $user->name()->toString(),
-			'role'      => $user->role()->title(),
-			'username'  => $user->username(),
+			'email'     => $model['email'],
+			'language'  => $model['language'],
+			'model'     => $model,
+			'name'      => $model['name'],
+			'role'      => $model['role'],
+			'username'  => $model['username'],
 		];
 	}
 

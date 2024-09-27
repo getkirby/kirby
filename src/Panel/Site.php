@@ -78,11 +78,24 @@ class Site extends Model
 	 */
 	public function props(): array
 	{
+		$props = parent::props();
+
+		// Additional model information
+		// @deprecated Use the top-level props instead
+		$model = [
+			'content'    => $props['content'],
+			'link'       => $props['link'],
+			'previewUrl' => $this->model->previewUrl(),
+			'title'      => $this->model->title()->toString(),
+			'uuid'       => $props['uuid'],
+		];
+
 		return [
-			...parent::props(),
+			...$props,
 			'blueprint' => 'site',
 			'id'        => '/',
-			'title'     => $this->model->title()->toString(),
+			'model'     => $model,
+			'title'     => $model['title'],
 		];
 	}
 
