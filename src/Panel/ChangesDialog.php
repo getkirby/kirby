@@ -21,13 +21,9 @@ class ChangesDialog
 
 	public function items(Collection $models): array
 	{
-		$items = [];
-
-		foreach ($models as $model) {
-			$items[] = $model->panel()->dropdownOption();
-		}
-
-		return $items;
+		return $models->values(
+			fn ($model) => $model->panel()->dropdownOption()
+		);
 	}
 
 	public function load(): array
