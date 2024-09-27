@@ -41,14 +41,20 @@ export default {
 		changes() {
 			return this.$panel.content.changes;
 		},
+		editor() {
+			return this.lock.user.email;
+		},
 		hasTabs() {
 			return this.tabs.length > 1;
 		},
 		isLocked() {
-			return false;
+			return this.lock.isLocked;
 		},
 		isUnsaved() {
 			return this.$panel.content.hasChanges;
+		},
+		modified() {
+			return this.lock.modified;
 		},
 		protectedFields() {
 			return [];
