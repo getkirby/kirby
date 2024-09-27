@@ -1,23 +1,25 @@
 <script>
-import debounce from "@/helpers/debounce.js";
+import throttle from "@/helpers/throttle.js";
 
 /**
  * @internal
  */
 export default {
 	props: {
+		api: String,
 		blueprint: String,
 		buttons: Array,
-		next: Object,
-		prev: Object,
-		permissions: {
-			type: Object,
-			default: () => ({})
-		},
+		content: Object,
+		id: String,
+		link: String,
 		lock: {
 			type: [Boolean, Object]
 		},
-		model: {
+		model: Object,
+		next: Object,
+		originals: Object,
+		prev: Object,
+		permissions: {
 			type: Object,
 			default: () => ({})
 		},
@@ -32,40 +34,28 @@ export default {
 		tabs: {
 			type: Array,
 			default: () => []
-		}
+		},
+		uuid: String
 	},
 	computed: {
-		content() {
-			return this.$panel.content.values;
+		changes() {
+			return this.$panel.content.changes;
 		},
-		id() {
-			return this.model.link;
+		hasTabs() {
+			return this.tabs.length > 1;
 		},
 		isLocked() {
-			return this.$panel.content.isLocked;
+			return false;
 		},
 		isUnsaved() {
-			return this.$panel.content.hasUnpublishedChanges;
+			return this.$panel.content.hasChanges;
 		},
 		protectedFields() {
 			return [];
 		}
 	},
-	watch: {
-		"$panel.view.timestamp": {
-			handler() {
-				this.$store.dispatch("content/create", {
-					id: this.id,
-					api: this.id,
-					content: this.model.content,
-					ignore: this.protectedFields
-				});
-			},
-			immediate: true
-		}
-	},
 	mounted() {
-		this.onInput = debounce(this.onInput, 50);
+		this.autosave = throttle(this.autosave, 1000);
 
 		this.$events.on("model.reload", this.$reload);
 		this.$events.on("keydown.left", this.toPrev);
@@ -79,18 +69,22 @@ export default {
 		this.$events.off("view.save", this.onSave);
 	},
 	methods: {
-		onDiscard() {
-			this.$panel.content.discard();
+		autosave() {
+			this.$panel.content.save();
+		},
+		async onDiscard() {
+			await this.$panel.content.discard();
 		},
 		onInput(values) {
-			this.$panel.content.set(values);
+			this.$panel.content.update(values);
+			this.autosave();
 		},
 		onSave(e) {
 			e?.preventDefault?.();
 			this.onSubmit();
 		},
 		onSubmit(values = {}) {
-			this.$panel.content.set(values);
+			this.$panel.content.update(values);
 			this.$panel.content.publish();
 		},
 		toPrev(e) {

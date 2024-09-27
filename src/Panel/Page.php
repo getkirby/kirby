@@ -344,22 +344,27 @@ class Page extends Model
 	 */
 	public function props(): array
 	{
-		$page = $this->model;
+		$props = parent::props();
+
+		// Additional model information
+		// @deprecated Use the top-level props instead
+		$model = [
+			'content'    => $props['content'],
+			'id'         => $props['id'],
+			'link'       => $props['link'],
+			'parent'     => $this->model->parentModel()->panel()->url(true),
+			'previewUrl' => $this->model->previewUrl(),
+			'status'     => $this->model->status(),
+			'title'      => $this->model->title()->toString(),
+			'uuid'       => $props['uuid'],
+		];
 
 		return [
-			...parent::props(),
+			...$props,
 			...$this->prevNext(),
-			'blueprint' => $page->intendedTemplate()->name(),
-			'model' => [
-				'content'    => $this->content(),
-				'id'         => $page->id(),
-				'link'       => $this->url(true),
-				'parent'     => $page->parentModel()->panel()->url(true),
-				'previewUrl' => $page->previewUrl(),
-				'status'     => $page->status(),
-				'title'      => $page->title()->toString(),
-				'uuid'       => fn () => $page->uuid()?->toString(),
-			]
+			'blueprint' => $this->model->intendedTemplate()->name(),
+			'model'     => $model,
+			'title'     => $model['title'],
 		];
 	}
 

@@ -1,29 +1,29 @@
 <template>
 	<div class="k-user-profile">
-		<k-user-avatar :disabled="isLocked" :model="model" />
+		<k-user-avatar :id="id" :api="api" :avatar="avatar" :disabled="isLocked" />
 
 		<k-button-group
 			:buttons="[
 				{
 					icon: 'email',
-					text: `${model.email}`,
-					title: `${$t('email')}: ${model.email}`,
+					text: `${email}`,
+					title: `${$t('email')}: ${email}`,
 					disabled: !permissions.changeEmail || isLocked,
-					click: () => $dialog(model.link + '/changeEmail')
+					click: () => $dialog(api + '/changeEmail')
 				},
 				{
 					icon: 'bolt',
-					text: `${model.role}`,
-					title: `${$t('role')}: ${model.role}`,
+					text: `${role}`,
+					title: `${$t('role')}: ${role}`,
 					disabled: !permissions.changeRole || isLocked,
-					click: () => $dialog(model.link + '/changeRole')
+					click: () => $dialog(api + '/changeRole')
 				},
 				{
 					icon: 'translate',
-					text: `${model.language}`,
-					title: `${$t('language')}: ${model.language}`,
+					text: `${language}`,
+					title: `${$t('language')}: ${language}`,
 					disabled: !permissions.changeLanguage || isLocked,
-					click: () => $dialog(model.link + '/changeLanguage')
+					click: () => $dialog(api + '/changeLanguage')
 				}
 			]"
 		/>
@@ -37,9 +37,14 @@
  */
 export default {
 	props: {
+		api: String,
+		avatar: String,
+		email: String,
+		id: String,
 		isLocked: Boolean,
-		model: Object,
-		permissions: Object
+		language: String,
+		permissions: Object,
+		role: String
 	}
 };
 </script>

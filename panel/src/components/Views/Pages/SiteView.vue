@@ -1,17 +1,17 @@
 <template>
 	<k-panel-inside
-		:data-has-tabs="tabs.length > 1"
+		:data-has-tabs="hasTabs"
+		:data-id="id"
 		:data-locked="isLocked"
-		data-id="/"
-		data-template="site"
+		:data-template="blueprint"
 		class="k-site-view"
 	>
 		<k-header
 			:editable="permissions.changeTitle && !isLocked"
 			class="k-site-view-header"
-			@edit="$dialog('site/changeTitle')"
+			@edit="$dialog(api + '/changeTitle')"
 		>
-			{{ model.title }}
+			{{ title }}
 
 			<template #buttons>
 				<k-view-buttons :buttons="buttons" />
@@ -44,11 +44,8 @@ import ModelView from "../ModelView.vue";
 
 export default {
 	extends: ModelView,
-	emits: ["submit"],
-	computed: {
-		protectedFields() {
-			return ["title"];
-		}
+	props: {
+		title: String
 	}
 };
 </script>
