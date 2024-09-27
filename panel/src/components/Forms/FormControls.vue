@@ -20,21 +20,25 @@
 			<p>
 				{{ $t("form.locked") }}
 			</p>
-			<hr />
-			<dl>
-				<div>
-					<dt><k-icon type="user" /></dt>
-					<dd>{{ editor }}</dd>
-				</div>
-				<div>
-					<dt><k-icon type="clock" /></dt>
-					<dd>{{ modified }}</dd>
-				</div>
-			</dl>
-			<hr />
-			<k-dropdown-item :link="preview" icon="preview" target="_blank">
-				{{ $t("form.preview") }}
-			</k-dropdown-item>
+			<template v-if="editor || modified">
+				<hr />
+				<dl>
+					<div v-if="editor">
+						<dt><k-icon type="user" /></dt>
+						<dd>{{ editor }}</dd>
+					</div>
+					<div v-if="modified">
+						<dt><k-icon type="clock" /></dt>
+						<dd>{{ $library.dayjs(modified).fromNow() }}</dd>
+					</div>
+				</dl>
+			</template>
+			<template v-if="preview">
+				<hr />
+				<k-dropdown-item :link="preview" icon="preview" target="_blank">
+					{{ $t("form.preview") }}
+				</k-dropdown-item>
+			</template>
 		</k-dropdown-content>
 	</k-button-group>
 </template>
