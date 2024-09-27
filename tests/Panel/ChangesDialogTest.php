@@ -10,6 +10,7 @@ use Kirby\Uuid\Uuids;
 
 /**
  * @coversDefaultClass \Kirby\Panel\ChangesDialog
+ * @covers ::__construct
  */
 class ChangesDialogTest extends AreaTestCase
 {
