@@ -1,5 +1,5 @@
 <script>
-import debounce from "@/helpers/debounce.js";
+import throttle from "@/helpers/throttle.js";
 
 /**
  * @internal
@@ -55,7 +55,7 @@ export default {
 		}
 	},
 	mounted() {
-		this.autosave = debounce(this.autosave, 200);
+		this.autosave = throttle(this.autosave, 1000);
 
 		this.$events.on("model.reload", this.$reload);
 		this.$events.on("keydown.left", this.toPrev);
