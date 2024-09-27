@@ -3,10 +3,10 @@
 namespace Kirby\Panel;
 
 use Closure;
-use Kirby\Content\Lock;
-use Kirby\Content\VersionId;
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Content\Lock;
+use Kirby\Content\VersionId;
 use Kirby\Filesystem\Asset;
 use Kirby\Form\Form;
 use Kirby\Http\Uri;

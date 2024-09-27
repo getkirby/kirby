@@ -3,9 +3,7 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\App;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\User;
-use Kirby\Exception\LogicException;
 use Kirby\Toolkit\Str;
 
 /**
