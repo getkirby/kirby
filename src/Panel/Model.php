@@ -391,11 +391,11 @@ abstract class Model
 		$props = [
 			'api'         => $link,
 			'buttons'     => fn () => $this->buttons(),
-			'content'     => $this->content(),
+			'content'     => (object)$this->content(),
 			'id'          => $this->model->id(),
 			'link'        => $link,
 			'lock'        => $this->lock(),
-			'originals'   => $this->originals(),
+			'originals'   => (object)$this->originals(),
 			'permissions' => $this->model->permissions()->toArray(),
 			'tabs'        => $tabs,
 			'uuid'        => fn () => $this->model->uuid()?->toString()
