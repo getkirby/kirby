@@ -19,7 +19,7 @@ use Kirby\Toolkit\Escape;
 class Search
 {
 	public static function files(
-		string $query,
+		string|null $query = null,
 		int|null $limit = null,
 		int $page = 1
 	): array {
@@ -52,7 +52,7 @@ class Search
 	}
 
 	public static function pages(
-		string $query,
+		string|null $query = null,
 		int|null $limit = null,
 		int $page = 1
 	): array {
@@ -79,7 +79,7 @@ class Search
 	}
 
 	public static function users(
-		string $query,
+		string|null $query = null,
 		int|null $limit = null,
 		int $page = 1
 	): array {

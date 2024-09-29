@@ -81,6 +81,10 @@ class SearchTest extends TestCase
 			'purple-fish.jpg'
 		], array_column($result['results'], 'text'));
 		$this->assertNull($result['pagination']);
+
+		// without query
+		$result = Search::files();
+		$this->assertCount(0, $result['results']);
 	}
 
 	/**
@@ -184,6 +188,10 @@ class SearchTest extends TestCase
 			'beautiful-trees'
 		], array_column($result['results'], 'text'));
 		$this->assertNull($result['pagination']);
+
+		// without query
+		$result = Search::pages();
+		$this->assertCount(0, $result['results']);
 	}
 
 	/**
@@ -289,6 +297,10 @@ class SearchTest extends TestCase
 			'homer@simpson.com'
 		], array_column($result['results'], 'text'));
 		$this->assertNull($result['pagination']);
+
+		// without query
+		$result = Search::users();
+		$this->assertCount(0, $result['results']);
 	}
 
 	/**
