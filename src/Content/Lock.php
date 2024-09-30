@@ -46,7 +46,7 @@ class Lock
 		}
 
 		// Read the locked user id from the version
-		$userId = $version->read()['lock'] ?? null;
+		$userId = $version->read('default')['lock'] ?? null;
 
 		// No user? Create the lock for the currently authenticated user
 		$user = App::instance()->user($userId) ?? App::instance()->user();
