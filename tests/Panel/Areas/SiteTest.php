@@ -37,8 +37,14 @@ class SiteTest extends AreaTestCase
 		$model = $props['model'];
 
 		$this->assertSame('default', $props['blueprint']);
-		$this->assertSame(['state' => null, 'data' => false], $props['lock']);
-
+		$this->assertSame([
+			'isLocked' => false,
+			'modified' => null,
+			'user'     => [
+				'id'    => 'test',
+				'email' => 'test@getkirby.com'
+			]
+		], $props['lock']);
 		$this->assertArrayNotHasKey('tab', $props);
 		$this->assertSame([], $props['tabs']);
 
@@ -88,8 +94,14 @@ class SiteTest extends AreaTestCase
 		$model = $props['model'];
 
 		$this->assertSame('image', $props['blueprint']);
-		$this->assertSame(['state' => null, 'data' => false], $props['lock']);
-
+		$this->assertSame([
+			'isLocked' => false,
+			'modified' => null,
+			'user'     => [
+				'id'    => 'test',
+				'email' => 'test@getkirby.com'
+			]
+		], $props['lock']);
 		$this->assertArrayNotHasKey('tab', $props);
 		$this->assertSame([], $props['tabs']);
 
@@ -156,8 +168,14 @@ class SiteTest extends AreaTestCase
 		$model = $props['model'];
 
 		$this->assertSame('image', $props['blueprint']);
-		$this->assertSame(['state' => null, 'data' => false], $props['lock']);
-
+		$this->assertSame([
+			'isLocked' => false,
+			'modified' => null,
+			'user'     => [
+				'id'    => 'test',
+				'email' => 'test@getkirby.com'
+			]
+		], $props['lock']);
 		$this->assertArrayNotHasKey('tab', $props);
 		$this->assertSame([], $props['tabs']);
 
