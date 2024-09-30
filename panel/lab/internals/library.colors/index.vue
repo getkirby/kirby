@@ -8,16 +8,13 @@
 			</k-text>
 		</k-box>
 
-
 		<k-lab-example
 			label="$library.colors.parse()"
 			:code="false"
 			style="--color-frame-size: var(--input-height)"
 		>
 			<k-text>
-				<p>
-					Tries to parse a string as HEX, RGB or HSL color
-				</p>
+				<p>Tries to parse a string as HEX, RGB or HSL color</p>
 			</k-text>
 
 			<k-code language="javascript">this.$library.colors.parse(string)</k-code>
@@ -25,10 +22,15 @@
 			<k-grid variant="fields">
 				<k-column width="1/2" class="flex">
 					<k-color-frame :color="value" />
-					<k-input type="text" placeholder="Type color …" @input="parse" />
+					<k-input
+						:value="value"
+						type="text"
+						placeholder="Type color …"
+						@input="parse"
+					/>
 				</k-column>
 				<k-column width="1/2" class="flex">
-					<k-box theme="code">{{ parsed ?? "{}" }}</k-box>
+					<k-box theme="code">{{ parsed || "–" }}</k-box>
 					<k-color-frame
 						:color="parsed ? $library.colors.toString(parsed) : value"
 					/>
@@ -52,7 +54,12 @@
 			<k-grid variant="fields">
 				<k-column width="1/2" class="flex">
 					<k-color-frame :color="valueAs" />
-					<k-input type="text" placeholder="Type color …" @input="parseAs" />
+					<k-input
+						:value="valueAs"
+						type="text"
+						placeholder="Type color …"
+						@input="parseAs"
+					/>
 					<k-input
 						type="select"
 						:options="[
@@ -69,7 +76,7 @@
 					/>
 				</k-column>
 				<k-column width="1/2" class="flex">
-					<k-box theme="code">{{ parsedAs || "{}" }}</k-box>
+					<k-box theme="code">{{ parsedAs || "–" }}</k-box>
 					<k-color-frame
 						:color="parsedAs ? $library.colors.toString(parsedAs) : value"
 					/>
@@ -78,13 +85,9 @@
 		</k-lab-example>
 
 		<k-lab-example
-			label="$library.colors.toString()"
-			:code="false"
-		>
+		<k-lab-example label="$library.colors.toString()" :code="false">
 			<k-text>
-				<p>
-					Formats color as CSS string.
-				</p>
+				<p>Formats color as CSS string.</p>
 			</k-text>
 
 			<k-code language="javascript">this.$library.colors.toString(color, format, alpha)</k-code>
@@ -109,7 +112,7 @@
 					/>
 					<k-input
 						type="toggle"
-						:text="[ 'Alpha: false', 'Alpha: true' ]"
+						:text="['Alpha: false', 'Alpha: true']"
 						:value="stringAlpha"
 						@input="stringAlpha = $event"
 					/>
@@ -168,7 +171,10 @@ export default {
 .k-lab-example .k-column.flex {
 	display: flex;
 	align-items: center;
-	gap: var(--spacing-3)
+	gap: var(--spacing-3);
+}
+.k-lab-example .k-color-frame {
+	flex-shrink: 0;
 }
 .k-lab-example .k-input {
 	width: 100%;
