@@ -302,9 +302,6 @@ abstract class Model
 
 	/**
 	 * Returns lock info for the Panel
-	 *
-	 * @return array|false array with lock info,
-	 *                     false if locking is not supported
 	 */
 	public function lock(): array
 	{
