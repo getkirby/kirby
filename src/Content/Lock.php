@@ -72,6 +72,10 @@ class Lock
 	 */
 	public function isLocked(): bool
 	{
+		if ($this->user === null) {
+			return false;
+		}
+
 		// the version is not locked if the editing user
 		// is the currently logged in user
 		if ($this->user === App::instance()->user()) {
@@ -122,7 +126,7 @@ class Lock
 	/**
 	 * Returns the user to whom this lock belongs
 	 */
-	public function user(): User
+	public function user(): User|null
 	{
 		return $this->user;
 	}
