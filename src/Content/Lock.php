@@ -23,8 +23,8 @@ use Kirby\Toolkit\Str;
 class Lock
 {
 	public function __construct(
-		protected User $user,
-		protected int $modified,
+		protected User|null $user = null,
+		protected int|null $modified = null,
 	) {
 	}
 
@@ -41,7 +41,7 @@ class Lock
 			// create an open lock for the current user
 			return new static(
 				user: App::instance()->user(),
-				modified: 0
+				modified: null
 			);
 		}
 
@@ -96,6 +96,10 @@ class Lock
 		string|null $format = null,
 		string|null $handler = null
 	): int|string|false|null {
+		if ($this->modified === null) {
+			return null;
+		}
+
 		return Str::date($this->modified, $format, $handler);
 	}
 
@@ -109,8 +113,8 @@ class Lock
 			'isLocked' => $this->isLocked(),
 			'modified' => $this->modified('c'),
 			'user'     => [
-				'id'    => $this->user->id(),
-				'email' => $this->user->email()
+				'id'    => $this->user?->id(),
+				'email' => $this->user?->email()
 			]
 		];
 	}
