@@ -87,6 +87,11 @@ class Version
 	{
 		$language = Language::ensure($language);
 
+		// track the changes
+		if ($this->id->is(VersionId::changes()) === true) {
+			(new Changes())->track($this->model);
+		}
+
 		$this->model->storage()->create(
 			versionId: $this->id,
 			language: $language,
@@ -99,6 +104,11 @@ class Version
 	 */
 	public function delete(): void
 	{
+		// untrack the changes
+		if ($this->id->is(VersionId::changes()) === true) {
+			(new Changes())->untrack($this->model);
+		}
+
 		foreach (Languages::ensure() as $language) {
 			$this->model->storage()->delete($this->id, $language);
 		}
