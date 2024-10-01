@@ -33,6 +33,7 @@
 		<k-file-preview
 			v-bind="preview"
 			:content="content"
+			:is-locked="isLocked"
 			@input="onInput"
 			@submit="onSubmit"
 		/>

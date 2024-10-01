@@ -3,6 +3,7 @@
 		:is="preview"
 		v-bind="props"
 		:content="content"
+		:is-locked="isLocked"
 		class="k-file-preview"
 		@input="$emit('input', $event)"
 		@submit="$emit('submit', $event)"
@@ -18,6 +19,7 @@ export default {
 	props: {
 		component: String,
 		content: Object,
+		isLocked: Boolean,
 		props: Object
 	},
 	emits: ["input", "submit"],
