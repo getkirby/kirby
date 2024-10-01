@@ -29,11 +29,6 @@ export default {
 		this.$panel.events.on("drop", () => {
 			this.$panel.drag.stop();
 		});
-
-		/**
-		 * Setup the content store
-		 */
-		this.$store.dispatch("content/init");
 	},
 	destroyed() {
 		this.$panel.events.unsubscribe();
