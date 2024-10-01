@@ -5,6 +5,10 @@ namespace Kirby\Cms;
 use Exception;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
+use Kirby\Toolkit\A;
+use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
 /**
@@ -217,5 +221,142 @@ class Plugin extends Model
             'root'        => $this->root(),
             'version'     => $this->version()
         ];
+    }
+
+
+    /**
+	 * Autoload the configuration from the current plugins folder.
+     * 
+     * 'Kirby::plugin("your/plugin", Plugin::autoload());'
+     * 
+	 * @param string|array|null $folder string or array of folder to autoload. null = autoloading snippets, blueprint, templates, I18n and options. 
+	 */
+    public static function autoload(
+        string|array|null $folder = null,
+        array $items = []
+    ):array {
+
+        //Load all
+        if ($folder === null) {
+
+            $plugin_name = F::safeName(dirname(__DIR__, 1));
+
+            return A::merge(
+                static::loadFiles('config'),
+                static::autoload([
+                    'snippets',
+                    'templates',
+                    'blueprints'
+                ]),
+                ['translation' => static::loadTranslations(
+                    'I18n',
+                    Str::after($plugin_name, 'kirby-')
+                )]
+
+            );
+
+        }
+
+        if (is_array($folder)) {
+
+            foreach ($folder as $item) {
+                $items = static::autoload($item, $items);
+            }
+            return $items;
+        }
+        
+        $items[$folder] = static::loadFiles(
+            $folder,
+            fn($file) => $file,
+            true
+        );
+
+        return $items;
+
+    }
+
+    /**
+	 * Autoload the translations of the current plugins folder.
+	 */
+    public static function loadTranslations(
+        string $folder = 'I18n',
+        ?string $prefix = null
+    ): array {
+        return static::loadFiles(
+            $folder, 
+            function ($file) use ($prefix) {
+
+                if (F::extension($file, 'json')) {
+                    $data = Data::read($file);
+                }
+
+                $data ??= require_once $file;
+
+                if ($prefix === null) {
+                    return $data;
+                }
+
+                $translations = [];
+
+				foreach ($data as $key => $value) {
+					$translations["{$prefix}.{$key}"] = $value;
+				}
+
+                return $translations;
+                
+            }
+             
+        );
+    }
+
+    /**
+	 * Returns the current plugins folder.
+     * 
+	 * @return array 
+	 */
+    private static function pluginPath()
+    {
+        $path = dirname(__DIR__, 1);
+        $root = App::instance()->root('plugins');
+        if (Str::startsWith($path, $root) === false) {
+            throw new Exception('This method can only be called in a plugin folder');
+        };
+        return $path;
+    }
+
+    /**
+	 * Reads the files of the current plugins folder.
+	 */
+    public static function loadFiles(
+        string $folder,
+        callable $callback = null,
+        bool $recursive = false
+    ): array {
+
+        $callback   ??= fn($value) => require_once $value;
+        $folder     = static::pluginPath() . "/{$folder}";
+
+        if (
+            Str::startsWith(basename($folder), '_') ||
+            Dir::exists($folder) === false
+        ) {
+            return [];
+        }
+
+        return A::reduce(
+            Dir::index($folder, $recursive),
+            function($items, $item) use ($callback, $folder) {
+
+                $key = Str::before($item, '.');
+                $filename = A::last(explode('/', $item));
+
+                if ($key && Str::startsWith($filename, '_') == false ) {
+                    $items[$key] = $callback("{$folder}/{$item}");
+                }
+                    
+                return $items;
+
+            }
+        );
     }
 }
