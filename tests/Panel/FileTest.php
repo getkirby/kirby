@@ -10,11 +10,11 @@ use Kirby\Cms\User as ModelUser;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 
-class ModelFileTestForceLocked extends ModelFile
+class FileForceLocked extends File
 {
-	public function isLocked(): bool
+	public function lock(): array
 	{
-		return true;
+		return ['isLocked' => true];
 	}
 }
 
@@ -550,7 +550,7 @@ class FileTest extends TestCase
 			'slug' => 'test'
 		]);
 
-		$file = new ModelFileTestForceLocked([
+		$file = new ModelFile([
 			'filename' => 'test.jpg',
 			'parent'   => $page
 		]);
@@ -571,7 +571,7 @@ class FileTest extends TestCase
 			'update'         => false,
 		];
 
-		$panel = new File($file);
+		$panel = new FileForceLocked($file);
 		$this->assertSame($expected, $panel->options());
 
 		// with override
@@ -588,7 +588,6 @@ class FileTest extends TestCase
 			'update'         => false,
 		];
 
-		$panel = new File($file);
 		$this->assertSame($expected, $panel->options(['delete']));
 	}
 

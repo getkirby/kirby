@@ -9,11 +9,11 @@ use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use Kirby\Toolkit\Str;
 
-class ModelUserTestForceLocked extends ModelUser
+class UserForceLocked extends User
 {
-	public function isLocked(): bool
+	public function lock(): array
 	{
-		return true;
+		return ['isLocked' => true];
 	}
 }
 
@@ -305,7 +305,7 @@ class UserTest extends TestCase
 	 */
 	public function testOptionsWithLockedUser()
 	{
-		$user = new ModelUserTestForceLocked([
+		$user = new ModelUser([
 			'email' => 'test@getkirby.com',
 		]);
 
@@ -323,7 +323,7 @@ class UserTest extends TestCase
 			'update'         => false,
 		];
 
-		$panel = new User($user);
+		$panel = new UserForceLocked($user);
 		$this->assertSame($expected, $panel->options());
 
 		// with override

@@ -332,7 +332,7 @@ abstract class Model
 	{
 		$options = $this->model->permissions()->toArray();
 
-		if ($this->model->isLocked()) {
+		if ($this->lock()['isLocked'] === true) {
 			foreach ($options as $key => $value) {
 				if (in_array($key, $unlock, true)) {
 					continue;

@@ -305,15 +305,6 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	}
 
 	/**
-	 * Checks if the model is locked for the current user
-	 */
-	public function isLocked(): bool
-	{
-		$lock = $this->lock();
-		return $lock && $lock->isLocked() === true;
-	}
-
-	/**
 	 * Checks if the data has any errors
 	 */
 	public function isValid(): bool
@@ -327,31 +318,6 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	public function kirby(): App
 	{
 		return static::$kirby ??= App::instance();
-	}
-
-	/**
-	 * Returns the lock object for this model
-	 *
-	 * Only if a content directory exists,
-	 * virtual pages will need to overwrite this method
-	 */
-	public function lock(): ContentLock|null
-	{
-		$dir = $this->root();
-
-		if ($this::CLASS_ALIAS === 'file') {
-			$dir = dirname($dir);
-		}
-
-		if (
-			$this->kirby()->option('content.locking', true) &&
-			is_string($dir) === true &&
-			file_exists($dir) === true
-		) {
-			return new ContentLock($this);
-		}
-
-		return null;
 	}
 
 	/**

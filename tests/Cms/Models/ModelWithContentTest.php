@@ -217,19 +217,6 @@ class ModelWithContentTest extends TestCase
 		$this->assertSame('Test', $page->content()->get('title')->value());
 	}
 
-
-	public function testContentLock()
-	{
-		$model = new ExtendedModelWithContent();
-		$this->assertInstanceOf(ContentLock::class, $model->lock());
-	}
-
-	public function testContentLockWithNoDirectory()
-	{
-		$model = new BrokenModelWithContent();
-		$this->assertNull($model->lock());
-	}
-
 	public function testContentWithChanges()
 	{
 		$app = new App([

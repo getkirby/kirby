@@ -449,9 +449,6 @@ trait FileActions
 		Media::unpublish($this->parent()->mediaRoot(), $this);
 
 		if ($onlyMedia !== true) {
-			// remove the lock
-			$this->lock()?->remove();
-
 			// clear UUID cache
 			$this->uuid()?->clear();
 		}

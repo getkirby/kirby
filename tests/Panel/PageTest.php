@@ -9,11 +9,11 @@ use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use Kirby\Toolkit\Str;
 
-class ModelPageTestForceLocked extends ModelPage
+class PageForceLocked extends Page
 {
-	public function isLocked(): bool
+	public function lock(): array
 	{
-		return true;
+		return ['isLocked' => true];
 	}
 }
 
@@ -401,7 +401,7 @@ class PageTest extends TestCase
 	 */
 	public function testOptionsWithLockedPage()
 	{
-		$page = new ModelPageTestForceLocked([
+		$page = new ModelPage([
 			'slug' => 'test',
 		]);
 
@@ -425,7 +425,7 @@ class PageTest extends TestCase
 			'update'         => false,
 		];
 
-		$panel = new Page($page);
+		$panel = new PageForceLocked($page);
 		$this->assertSame($expected, $panel->options());
 
 		// with override
@@ -446,7 +446,6 @@ class PageTest extends TestCase
 			'update'         => false,
 		];
 
-		$panel = new Page($page);
 		$this->assertSame($expected, $panel->options(['preview']));
 	}
 
