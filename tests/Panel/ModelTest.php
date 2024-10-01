@@ -3,68 +3,11 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
-use Kirby\Cms\ContentLock;
 use Kirby\Cms\File as ModelFile;
-use Kirby\Cms\Page as ModelPage;
 use Kirby\Cms\Site as ModelSite;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
-
-class CustomContentLockIsLocked extends ContentLock
-{
-	public function __construct()
-	{
-		$this->model = new ModelPage(['slug' => 'test']);
-	}
-
-	public function get(): array
-	{
-		return ['email' => 'foo@bar.com'];
-	}
-
-	public function isLocked(): bool
-	{
-		return true;
-	}
-
-	public function isUnlocked(): bool
-	{
-		return false;
-	}
-}
-
-class CustomContentLockIsUnlocked extends CustomContentLockIslocked
-{
-	public function isUnlocked(): bool
-	{
-		return true;
-	}
-}
-
-class ModelSiteNoLocking extends ModelSite
-{
-	public function lock(): ContentLock|null
-	{
-		return null;
-	}
-}
-
-class ModelSiteTestForceLocked extends ModelSite
-{
-	public function lock(): ContentLock|null
-	{
-		return new CustomContentLockIsLocked();
-	}
-}
-
-class ModelSiteTestForceUnlocked extends ModelSite
-{
-	public function lock(): ContentLock|null
-	{
-		return new CustomContentLockIsUnlocked();
-	}
-}
 
 class CustomPanelModel extends Model
 {
@@ -445,27 +388,15 @@ class ModelTest extends TestCase
 	 */
 	public function testLock()
 	{
-		// content locking not supported
-		$site = new ModelSiteNoLocking();
-		$this->assertFalse($site->panel()->lock());
-
-		Dir::make(static::TMP . '/content');
-		$app = $this->app->clone();
-		$app->impersonate('kirby');
-
-		// no lock or unlock
 		$site = new ModelSite();
-		$this->assertSame(['state' => null, 'data' => false], $site->panel()->lock());
-
-		// lock
-		$site = new ModelSiteTestForceLocked();
-		$lock = $site->panel()->lock();
-		$this->assertSame('lock', $lock['state']);
-		$this->assertSame('foo@bar.com', $lock['data']['email']);
-
-		// unlock
-		$site = new ModelSiteTestForceUnlocked();
-		$this->assertSame('unlock', $site->panel()->lock()['state']);
+		$this->assertSame([
+			'isLocked' => false,
+			'modified' => null,
+			'user'     => [
+				'id'    => null,
+				'email' => null
+			]
+		], $site->panel()->lock());
 	}
 
 	/**

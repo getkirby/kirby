@@ -5,6 +5,8 @@ namespace Kirby\Panel;
 use Closure;
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Content\Lock;
+use Kirby\Content\VersionId;
 use Kirby\Filesystem\Asset;
 use Kirby\Form\Form;
 use Kirby\Http\Uri;
@@ -300,13 +302,14 @@ abstract class Model
 
 	/**
 	 * Returns lock info for the Panel
-	 *
-	 * @return array|false array with lock info,
-	 *                     false if locking is not supported
 	 */
-	public function lock(): array|false
+	public function lock(): array
 	{
-		return $this->model->lock()?->toArray() ?? false;
+		// get the changes for the current model
+		$version = $this->model->version(VersionId::changes());
+
+		// return lock info for the changes
+		return Lock::for($version)->toArray();
 	}
 
 	/**

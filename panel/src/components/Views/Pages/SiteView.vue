@@ -16,8 +16,10 @@
 			<template #buttons>
 				<k-view-buttons :buttons="buttons" />
 				<k-form-controls
+					:editor="editor"
 					:is-locked="isLocked"
 					:is-unsaved="isUnsaved"
+					:modified="modified"
 					@discard="onDiscard"
 					@submit="onSubmit"
 				/>
