@@ -44,15 +44,13 @@ class Lock
 			);
 		}
 
-		$user = null;
-
 		// Read the locked user id from the version
 		if ($userId = ($version->read('default')['lock'] ?? null)) {
 			$user = App::instance()->user($userId);
 		}
 
 		return new static(
-			user: $user,
+			user: $user ?? null,
 			modified: $version->modified()
 		);
 	}
