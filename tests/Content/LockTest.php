@@ -90,6 +90,29 @@ class LockTest extends TestCase
 	}
 
 	/**
+	 * @covers ::for
+	 */
+	public function testForWithoutUser()
+	{
+		// create the version with the admin user
+		$this->app->impersonate('admin');
+
+		// the published version won't have a user id
+		$version = new Version(
+			model: $this->app->page('test'),
+			id: VersionId::published()
+		);
+
+		$version->create([
+			'title' => 'Test'
+		]);
+
+		$lock = Lock::for($version);
+
+		$this->assertNull($lock->user());
+	}
+
+	/**
 	 * @covers ::isActive
 	 */
 	public function testIsActive()
