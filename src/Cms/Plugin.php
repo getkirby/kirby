@@ -45,12 +45,13 @@ class Plugin extends Model
      * @param string $name
      * @param array $extends
      */
-    public function __construct(string $name, array $extends = [])
+    public function __construct(string $name, ?array $extends = null, $info = [], $root = null, $version = null)
     {
         $this->setName($name);
-        $this->extends = $extends;
-        $this->root    = $extends['root'] ?? dirname(debug_backtrace()[0]['file']);
-        $this->info    = empty($extends['info']) === false && is_array($extends['info']) ? $extends['info'] : null;
+        $this->root    = $root ?? $extends['root'] ?? dirname(debug_backtrace()[0]['file']);
+        $this->extends = $extends ?? $this->autoload();
+        $this->info    = 
+	$imfo ?? empty($extends['info']) === false && is_array($extends['info']) ? $extends['info'] : null;
 
         unset($this->extends['root'], $this->extends['info']);
     }
@@ -231,7 +232,7 @@ class Plugin extends Model
      * 
 	 * @param string|array|null $folder string or array of folder to autoload. null = autoloading snippets, blueprint, templates, I18n and options. 
 	 */
-    public static function autoload(
+    public function autoload(
         string|array|null $folder = null,
         array $items = []
     ):array {
@@ -239,18 +240,16 @@ class Plugin extends Model
         //Load all
         if ($folder === null) {
 
-            $plugin_name = F::safeName(dirname(__DIR__, 1));
-
             return A::merge(
-                static::loadFiles('config'),
-                static::autoload([
+                $this->loadFiles('config'),
+                $this->autoload([
                     'snippets',
                     'templates',
                     'blueprints'
                 ]),
-                ['translation' => static::loadTranslations(
+                ['translation' => $this->loadTranslations(
                     'I18n',
-                    Str::after($plugin_name, 'kirby-')
+                    F::safeName($this->name)
                 )]
 
             );
@@ -260,12 +259,12 @@ class Plugin extends Model
         if (is_array($folder)) {
 
             foreach ($folder as $item) {
-                $items = static::autoload($item, $items);
+                $items = $this->autoload($item, $items);
             }
             return $items;
         }
         
-        $items[$folder] = static::loadFiles(
+        $items[$folder] = $this->loadFiles(
             $folder,
             fn($file) => $file,
             true
@@ -278,11 +277,11 @@ class Plugin extends Model
     /**
 	 * Autoload the translations of the current plugins folder.
 	 */
-    public static function loadTranslations(
+    public function loadTranslations(
         string $folder = 'I18n',
         ?string $prefix = null
     ): array {
-        return static::loadFiles(
+        return $this->loadFiles(
             $folder, 
             function ($file) use ($prefix) {
 
@@ -310,31 +309,16 @@ class Plugin extends Model
     }
 
     /**
-	 * Returns the current plugins folder.
-     * 
-	 * @return array 
-	 */
-    private static function pluginPath()
-    {
-        $path = dirname(__DIR__, 1);
-        $root = App::instance()->root('plugins');
-        if (Str::startsWith($path, $root) === false) {
-            throw new Exception('This method can only be called in a plugin folder');
-        };
-        return $path;
-    }
-
-    /**
 	 * Reads the files of the current plugins folder.
 	 */
-    public static function loadFiles(
+    public function loadFiles(
         string $folder,
         callable $callback = null,
         bool $recursive = false
     ): array {
 
         $callback   ??= fn($value) => require_once $value;
-        $folder     = static::pluginPath() . "/{$folder}";
+        $folder     = $this->root() . "/{$folder}";
 
         if (
             Str::startsWith(basename($folder), '_') ||
