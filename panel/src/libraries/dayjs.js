@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import relativeTime from "dayjs/plugin/relativeTime";
 import interpret from "./dayjs-interpret.js";
 import iso from "./dayjs-iso.js";
 import merge from "./dayjs-merge.js";
@@ -13,7 +12,6 @@ dayjs.extend(interpret);
 dayjs.extend(iso);
 dayjs.extend(merge);
 dayjs.extend(pattern);
-dayjs.extend(relativeTime);
 dayjs.extend(round);
 dayjs.extend(validate);
 

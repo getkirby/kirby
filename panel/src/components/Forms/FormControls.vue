@@ -29,7 +29,9 @@
 					</div>
 					<div v-if="modified">
 						<dt><k-icon type="clock" /></dt>
-						<dd>{{ $library.dayjs(modified).fromNow() }}</dd>
+						<dd>
+							{{ $library.dayjs(modified).format("YYYY-MM-DD HH:mm:ss") }}
+						</dd>
 					</div>
 				</dl>
 			</template>
