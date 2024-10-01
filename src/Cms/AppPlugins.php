@@ -802,19 +802,26 @@ trait AppPlugins
         return $this->core->components()[$component] ?? false;
     }
 
-    /**
-     * Kirby plugin factory and getter
-     *
-     * @param string $name
-     * @param array|null $extends If null is passed it will be used as getter. Otherwise as factory.
-     * @return \Kirby\Cms\Plugin|null
-     * @throws \Kirby\Exception\DuplicateException
-     */
-    public static function plugin(string $name, array $extends = null)
-    {
-        if ($extends === null) {
-            return static::$plugins[$name] ?? null;
-        }
+	/**
+	 * Kirby plugin factory
+	 *
+	 * @param array|null $extends If null is passed it will be take it from the folders. Otherwise as factory.
+	 * @throws \Kirby\Exception\DuplicateException
+	 */
+	public static function plugin(
+		string $name,
+		array $extends = null,
+		array $info = [],
+		string|null $root = null,
+		string|null $version = null
+	): Plugin|null {
+
+		if (
+			$extends === null &&
+			$plugin = static::$plugins[$name] ?? null
+		) {
+			return $plugin;
+		}
 
         // get the correct root for the plugin
         $extends['root'] = $extends['root'] ?? dirname(debug_backtrace()[0]['file']);
