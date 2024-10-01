@@ -214,6 +214,29 @@ class LockTest extends TestCase
 	/**
 	 * @covers ::isLocked
 	 */
+	public function testIsLockedWhenDisabled()
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'content' => [
+					'locking' => false
+				]
+			]
+		]);
+
+		$this->app->impersonate('admin');
+
+		$lock = new Lock(
+			modified: time(),
+			user: $this->app->user('editor')
+		);
+
+		$this->assertFalse($lock->isLocked());
+	}
+
+	/**
+	 * @covers ::isLocked
+	 */
 	public function testIsLockedWithDifferentUserAndOldTimestamp()
 	{
 		$this->app->impersonate('admin');

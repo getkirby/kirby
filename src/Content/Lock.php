@@ -78,6 +78,12 @@ class Lock
 	 */
 	public function isLocked(): bool
 	{
+		// if locking is disabled globally,
+		// the lock is always open
+		if (static::isEnabled() === false) {
+			return false;
+		}
+
 		if ($this->user === null) {
 			return false;
 		}
