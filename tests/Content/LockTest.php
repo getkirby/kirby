@@ -149,6 +149,30 @@ class LockTest extends TestCase
 	}
 
 	/**
+	 * @covers ::isEnabled
+	 */
+	public function testIsEnabled()
+	{
+		$this->assertTrue(Lock::isEnabled());
+	}
+
+	/**
+	 * @covers ::isEnabled
+	 */
+	public function testIsEnabledWhenDisabled()
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'content' => [
+					'locking' => false,
+				]
+			]
+		]);
+
+		$this->assertFalse(Lock::isEnabled());
+	}
+
+	/**
 	 * @covers ::isLocked
 	 */
 	public function testIsLocked()

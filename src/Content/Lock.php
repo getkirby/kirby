@@ -66,6 +66,14 @@ class Lock
 	}
 
 	/**
+	 * Check if content locking is enabled at all
+	 */
+	public static function isEnabled(): bool
+	{
+		return App::instance()->option('content.locking', true) !== false;
+	}
+
+	/**
 	 * Checks if the lock is actually locked
 	 */
 	public function isLocked(): bool
