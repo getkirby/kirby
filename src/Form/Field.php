@@ -446,9 +446,8 @@ class Field extends Component
 
 		unset($array['model']);
 
-		$array['hidden']    = $this->isHidden();
-		$array['saveable']  = $this->save();
-		$array['signature'] = md5(json_encode($array));
+		$array['hidden']   = $this->isHidden();
+		$array['saveable'] = $this->save();
 
 		ksort($array);
 

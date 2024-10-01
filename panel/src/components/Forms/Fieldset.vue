@@ -1,10 +1,10 @@
 <template>
 	<div class="k-fieldset">
 		<k-grid variant="fields">
-			<template v-for="(field, fieldName) in fields">
+			<template v-for="field in fields">
 				<k-column
 					v-if="$helper.field.isVisible(field, value)"
-					:key="field.signature"
+					:key="field.name"
 					:width="field.width"
 				>
 					<!-- @event input Triggered whenever any field value changes -->
@@ -14,21 +14,21 @@
 					<component
 						:is="'k-' + field.type + '-field'"
 						v-if="hasFieldType(field.type)"
-						:ref="fieldName"
+						:ref="field.name"
 						v-bind="field"
 						:disabled="disabled || field.disabled"
 						:form-data="value"
-						:name="fieldName"
-						:value="value[fieldName]"
-						@input="onInput($event, field, fieldName)"
-						@focus="$emit('focus', $event, field, fieldName)"
-						@submit="$emit('submit', $event, field, fieldName)"
+						:name="field.name"
+						:value="value[field.name]"
+						@input="onInput($event, field, field.name)"
+						@focus="$emit('focus', $event, field, field.name)"
+						@submit="$emit('submit', $event, field, field.name)"
 					/>
 					<k-box v-else theme="negative">
 						<k-text size="small">
 							{{
 								$t("error.field.type.missing", {
-									name: fieldName,
+									name: field.name,
 									type: field.type
 								})
 							}}
