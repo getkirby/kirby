@@ -218,7 +218,7 @@ class Version
 		if ($language->isDefault() === true) {
 
 			// add the editing user
-			if ($this->id->is(VersionId::changes()) === true) {
+			if ($this->id->is(VersionId::changes()) === true && Lock::isEnabled() === true) {
 				$fields['lock'] = $this->model->kirby()->user()?->id();
 			}
 
