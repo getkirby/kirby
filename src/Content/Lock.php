@@ -41,7 +41,6 @@ class Lock
 			// create an open lock for the current user
 			return new static(
 				user: App::instance()->user(),
-				modified: null
 			);
 		}
 
