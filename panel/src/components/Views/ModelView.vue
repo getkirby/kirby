@@ -79,12 +79,24 @@ export default {
 	},
 	methods: {
 		autosave() {
+			if (this.isLocked === true) {
+				return false;
+			}
+
 			this.$panel.content.save();
 		},
 		async onDiscard() {
+			if (this.isLocked === true) {
+				return false;
+			}
+
 			await this.$panel.content.discard();
 		},
 		onInput(values) {
+			if (this.isLocked === true) {
+				return false;
+			}
+
 			this.$panel.content.update(values);
 			this.autosave();
 		},
@@ -93,6 +105,10 @@ export default {
 			this.onSubmit();
 		},
 		onSubmit(values = {}) {
+			if (this.isLocked === true) {
+				return false;
+			}
+
 			this.$panel.content.update(values);
 			this.$panel.content.publish();
 		},

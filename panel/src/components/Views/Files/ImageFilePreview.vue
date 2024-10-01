@@ -5,7 +5,7 @@
 	>
 		<k-file-preview-frame :options="options">
 			<k-coords-input
-				:disabled="!focusable"
+				:disabled="!isFocusable"
 				:value="focus"
 				@input="setFocus($event)"
 			>
@@ -18,7 +18,7 @@
 				<dt>{{ $t("file.focus.title") }}</dt>
 				<dd>
 					<k-button
-						v-if="focusable"
+						v-if="isFocusable"
 						ref="focus"
 						:icon="focus ? 'cancel-small' : 'preview'"
 						:title="focus ? $t('file.focus.reset') : undefined"
@@ -56,6 +56,7 @@ export default {
 			default: () => ({}),
 			type: Object
 		},
+		isLocked: Boolean,
 		url: String
 	},
 	emits: ["focus", "input"],
@@ -74,6 +75,9 @@ export default {
 		hasFocus() {
 			return Boolean(this.focus);
 		},
+		isFocusable() {
+			return this.focusable === true && this.isLocked !== true;
+		},
 		options() {
 			return [
 				{
@@ -86,19 +90,23 @@ export default {
 					icon: "cancel",
 					text: this.$t("file.focus.reset"),
 					click: () => this.setFocus(undefined),
-					when: this.focusable && this.hasFocus
+					when: this.isFocusable && this.hasFocus
 				},
 				{
 					icon: "preview",
 					text: this.$t("file.focus.placeholder"),
 					click: () => this.setFocus({ x: 50, y: 50 }),
-					when: this.focusable && !this.hasFocus
+					when: this.isFocusable && !this.hasFocus
 				}
 			];
 		}
 	},
 	methods: {
 		setFocus(focus) {
+			if (this.isFocusable === false) {
+				return false;
+			}
+
 			if (!focus) {
 				focus = null;
 			} else if (this.$helper.object.isObject(focus) === true) {
