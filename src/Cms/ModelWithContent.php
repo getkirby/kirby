@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Content\Content;
 use Kirby\Content\ContentStorageHandler;
 use Kirby\Content\ContentTranslation;
+use Kirby\Content\Lock;
 use Kirby\Content\PlainTextContentStorageHandler;
 use Kirby\Content\Version;
 use Kirby\Content\VersionId;
@@ -305,6 +306,14 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	}
 
 	/**
+	 * Checks if the model is locked for the current user
+	 */
+	public function isLocked(): bool
+	{
+		return $this->lock()->isLocked() === true;
+	}
+
+	/**
 	 * Checks if the data has any errors
 	 */
 	public function isValid(): bool
@@ -318,6 +327,18 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	public function kirby(): App
 	{
 		return static::$kirby ??= App::instance();
+	}
+
+	/**
+	 * Returns lock for the model
+	 */
+	public function lock(): Lock
+	{
+		// get the changes for the current model
+		$version = $this->version(VersionId::changes());
+
+		// return lock object for the changes
+		return Lock::for($version);
 	}
 
 	/**

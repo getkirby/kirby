@@ -10,7 +10,7 @@ use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use Kirby\Toolkit\Str;
 
-class UserForceLocked extends User
+class UserForceLocked extends ModelUser
 {
 	public function lock(): Lock
 	{
@@ -309,7 +309,7 @@ class UserTest extends TestCase
 	 */
 	public function testOptionsWithLockedUser()
 	{
-		$user = new ModelUser([
+		$user = new UserForceLocked([
 			'email' => 'test@getkirby.com',
 		]);
 
@@ -327,7 +327,7 @@ class UserTest extends TestCase
 			'update'         => false,
 		];
 
-		$panel = new UserForceLocked($user);
+		$panel = new User($user);
 		$this->assertSame($expected, $panel->options());
 
 		// with override

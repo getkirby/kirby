@@ -5,8 +5,6 @@ namespace Kirby\Panel;
 use Closure;
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Content\Lock;
-use Kirby\Content\VersionId;
 use Kirby\Filesystem\Asset;
 use Kirby\Form\Form;
 use Kirby\Http\Uri;
@@ -301,18 +299,6 @@ abstract class Model
 	}
 
 	/**
-	 * Returns lock info for the Panel
-	 */
-	public function lock(): Lock
-	{
-		// get the changes for the current model
-		$version = $this->model->version(VersionId::changes());
-
-		// return lock object for the changes
-		return Lock::for($version);
-	}
-
-	/**
 	 * Returns the corresponding model object
 	 * @since 5.0.0
 	 */
@@ -332,7 +318,7 @@ abstract class Model
 	{
 		$options = $this->model->permissions()->toArray();
 
-		if ($this->lock()->isLocked() === true) {
+		if ($this->model->lock()->isLocked() === true) {
 			foreach ($options as $key => $value) {
 				if (in_array($key, $unlock, true)) {
 					continue;
@@ -397,7 +383,7 @@ abstract class Model
 			'content'     => (object)$this->content(),
 			'id'          => $this->model->id(),
 			'link'        => $link,
-			'lock'        => $this->lock()->toArray(),
+			'lock'        => $this->model->lock()->toArray(),
 			'originals'   => (object)$this->originals(),
 			'permissions' => $this->model->permissions()->toArray(),
 			'tabs'        => $tabs,

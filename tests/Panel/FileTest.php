@@ -11,7 +11,7 @@ use Kirby\Content\Lock;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 
-class FileForceLocked extends File
+class FileForceLocked extends ModelFile
 {
 	public function lock(): Lock
 	{
@@ -554,7 +554,7 @@ class FileTest extends TestCase
 			'slug' => 'test'
 		]);
 
-		$file = new ModelFile([
+		$file = new FileForceLocked([
 			'filename' => 'test.jpg',
 			'parent'   => $page
 		]);
@@ -575,7 +575,7 @@ class FileTest extends TestCase
 			'update'         => false,
 		];
 
-		$panel = new FileForceLocked($file);
+		$panel = new File($file);
 		$this->assertSame($expected, $panel->options());
 
 		// with override

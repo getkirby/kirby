@@ -11,7 +11,7 @@ use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use Kirby\Toolkit\Str;
 
-class PageForceLocked extends Page
+class PageForceLocked extends ModelPage
 {
 	public function lock(): Lock
 	{
@@ -406,7 +406,7 @@ class PageTest extends TestCase
 	 */
 	public function testOptionsWithLockedPage()
 	{
-		$page = new ModelPage([
+		$page = new PageForceLocked([
 			'slug' => 'test',
 		]);
 
@@ -430,7 +430,7 @@ class PageTest extends TestCase
 			'update'         => false,
 		];
 
-		$panel = new PageForceLocked($page);
+		$panel = new Page($page);
 		$this->assertSame($expected, $panel->options());
 
 		// with override
