@@ -343,7 +343,10 @@ class PageRules
 		}
 
 		// check if the template of this page is allowed as subpage type
-		if (in_array($page->intendedTemplate()->name(), $allowed, true) === false) {
+		if (
+			$allowed !== [] &&
+			in_array($page->intendedTemplate()->name(), $allowed) === false
+		) {
 			throw new PermissionException(
 				key: 'page.move.template',
 				data: [

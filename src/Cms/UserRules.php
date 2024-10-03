@@ -194,11 +194,23 @@ class UserRules
 		// check user permissions (if not on install)
 		if (
 			$user->kirby()->users()->count() > 0 &&
-			$user->permissions()->can('create') !== true
+			$user->permissions()->create() !== true
 		) {
 			throw new PermissionException(
 				key: 'user.create.permission'
 			);
+		}
+
+		$role = $props['role'] ?? null;
+
+		// prevent creating a role that is not available for user
+		if (
+			in_array($role, [null, 'default', 'nobody'], true) === false &&
+			$user->kirby()->roles('create')->find($role) instanceof Role === false
+		) {
+			throw new InvalidArgumentException([
+				'key' => 'user.role.invalid',
+			]);
 		}
 	}
 

@@ -57,9 +57,16 @@ export default {
 	},
 	methods: {
 		submit() {
-			const href = this.values.href
-				.replace("file://", "/@/file/")
-				.replace("page://", "/@/page/");
+			let permalink = "/@/$1/";
+
+			if (
+				this.values.href.startsWith("page://") &&
+				window.panel.language.code
+			) {
+				permalink = "/" + window.panel.language.code + permalink;
+			}
+
+			const href = this.values.href.replace(/(file|page):\/\//, permalink);
 
 			this.$emit("submit", {
 				...this.values,
