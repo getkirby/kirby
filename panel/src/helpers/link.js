@@ -40,7 +40,7 @@ export function getFileUUID(value) {
  * @returns {String}
  */
 export function getPageUUID(value) {
-	return value.replace("/@/page/", "page://");
+	return value.replace(/^\/(.*\/)?@\/page\//, "page://");
 }
 
 /**
@@ -64,7 +64,7 @@ export function isPageUUID(value) {
 	return (
 		value === "site://" ||
 		value.startsWith("page://") === true ||
-		value.startsWith("/@/page/") === true
+		value.match(/^\/(.*\/)?@\/page\//) !== null
 	);
 }
 
