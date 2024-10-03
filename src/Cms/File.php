@@ -340,11 +340,9 @@ class File extends ModelWithContent
 
 		static $accessible = [];
 
-		if ($template = $this->template()) {
-			return $accessible[$template] ??= $this->permissions()->can('access');
-		}
-
-		return $accessible['__none__'] ??= $this->permissions()->can('access');
+		$role     = $this->kirby()->user()?->role()->id() ?? '__none__';
+		$template = $this->template() ?? '__none__';
+		return $accessible[$role][$template] ??= $this->permissions()->can('access');
 	}
 
 	/**
@@ -365,11 +363,9 @@ class File extends ModelWithContent
 
 		static $listable = [];
 
-		if ($template = $this->template()) {
-			return $listable[$template] ??= $this->permissions()->can('list');
-		}
-
-		return $listable['__none__'] ??= $this->permissions()->can('list');
+		$role     = $this->kirby()->user()?->role()->id() ?? '__none__';
+		$template = $this->template() ?? '__none__';
+		return $listable[$role][$template] ??= $this->permissions()->can('list');
 	}
 
 	/**
@@ -381,11 +377,9 @@ class File extends ModelWithContent
 	{
 		static $readable = [];
 
-		if ($template = $this->template()) {
-			return $readable[$template] ??= $this->permissions()->can('read');
-		}
-
-		return $readable['__none__'] ??= $this->permissions()->can('read');
+		$role     = $this->kirby()->user()?->role()->id() ?? '__none__';
+		$template = $this->template() ?? '__none__';
+		return $readable[$role][$template] ??= $this->permissions()->can('read');
 	}
 
 	/**

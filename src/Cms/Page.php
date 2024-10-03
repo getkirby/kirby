@@ -525,9 +525,10 @@ class Page extends ModelWithContent
 
 		static $accessible = [];
 
+		$role     = $this->kirby()->user()?->role()->id() ?? '__none__';
 		$template = $this->intendedTemplate()->name();
-
-		return $accessible[$template] ??= $this->permissions()->can('access');
+		$accessible[$role] ??= [];
+		return $accessible[$role][$template] ??= $this->permissions()->can('access');
 	}
 
 	/**
@@ -691,9 +692,10 @@ class Page extends ModelWithContent
 
 		static $listable = [];
 
+		$role     = $this->kirby()->user()?->role()->id() ?? '__none__';
 		$template = $this->intendedTemplate()->name();
-
-		return $listable[$template] ??= $this->permissions()->can('list');
+		$listable[$role] ??= [];
+		return $listable[$role][$template] ??= $this->permissions()->can('list');
 	}
 
 	/**
@@ -747,9 +749,10 @@ class Page extends ModelWithContent
 	{
 		static $readable = [];
 
+		$role     = $this->kirby()->user()?->role()->id() ?? '__none__';
 		$template = $this->intendedTemplate()->name();
-
-		return $readable[$template] ??= $this->permissions()->can('read');
+		$readable[$role] ??= [];
+		return $readable[$role][$template] ??= $this->permissions()->can('read');
 	}
 
 	/**
