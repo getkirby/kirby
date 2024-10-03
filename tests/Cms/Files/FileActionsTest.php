@@ -936,6 +936,57 @@ class FileActionsTest extends TestCase
 		$this->assertSame(100, $replacedFile->height());
 	}
 
+	/**
+	 * @dataProvider parentProvider
+	 */
+	public function testManipulateValidFormat($parent)
+	{
+		$original = static::FIXTURES . '/test.jpg';
+
+		$originalFile = File::create([
+			'filename' => 'test.jpg',
+			'source'   => $original,
+			'parent'   => $parent
+		]);
+
+		$this->assertSame(128, $originalFile->width());
+		$this->assertSame(128, $originalFile->height());
+
+		$replacedFile = $originalFile->manipulate([
+			'width'  => 100,
+			'height' => 100,
+			'format' => 'webp'
+		]);
+
+		$this->assertSame('webp', $replacedFile->extension());
+		$this->assertSame(100, $replacedFile->width());
+		$this->assertSame(100, $replacedFile->height());
+	}
+
+	/**
+	 * @dataProvider parentProvider
+	 */
+	public function testManipulateInvalidValidFormat($parent)
+	{
+		$original = static::FIXTURES . '/test.mp4';
+
+		$originalFile = File::create([
+			'filename' => 'test.mp4',
+			'source'   => $original,
+			'parent'   => $parent
+		]);
+
+		$replacedFile = $originalFile->manipulate([
+			'width'  => 100,
+			'height' => 100,
+			'format' => 'webp'
+		]);
+
+		// proves strictly that both are the same object
+		$this->assertSame($originalFile, $replacedFile);
+		$this->assertSame('mp4', $replacedFile->extension());
+	}
+
 	public function testChangeNameHooks()
 	{
 		$calls = 0;
