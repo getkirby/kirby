@@ -523,11 +523,11 @@ class Page extends ModelWithContent
 			return false;
 		}
 
-		static $accessible = [];
-
-		$role     = $this->kirby()->user()?->role()->id() ?? '__none__';
-		$template = $this->intendedTemplate()->name();
+		static $accessible   = [];
+		$role                = $this->kirby()->user()?->role()->id() ?? '__none__';
+		$template            = $this->intendedTemplate()->name();
 		$accessible[$role] ??= [];
+
 		return $accessible[$role][$template] ??= $this->permissions()->can('access');
 	}
 
@@ -690,11 +690,11 @@ class Page extends ModelWithContent
 			return false;
 		}
 
-		static $listable = [];
-
-		$role     = $this->kirby()->user()?->role()->id() ?? '__none__';
-		$template = $this->intendedTemplate()->name();
+		static $listable   = [];
+		$role              = $this->kirby()->user()?->role()->id() ?? '__none__';
+		$template          = $this->intendedTemplate()->name();
 		$listable[$role] ??= [];
+
 		return $listable[$role][$template] ??= $this->permissions()->can('list');
 	}
 
@@ -747,11 +747,11 @@ class Page extends ModelWithContent
 	 */
 	public function isReadable(): bool
 	{
-		static $readable = [];
-
-		$role     = $this->kirby()->user()?->role()->id() ?? '__none__';
-		$template = $this->intendedTemplate()->name();
+		static $readable   = [];
+		$role              = $this->kirby()->user()?->role()->id() ?? '__none__';
+		$template          = $this->intendedTemplate()->name();
 		$readable[$role] ??= [];
+
 		return $readable[$role][$template] ??= $this->permissions()->can('read');
 	}
 
