@@ -304,9 +304,6 @@ class ModelWithContentTest extends TestCase
 		$this->assertSame($kirby, $model->kirby());
 	}
 
-	/**
-	 * @covers ::lock
-	 */
 	public function testLock()
 	{
 		$page = new Page(['slug' => 'foo']);
