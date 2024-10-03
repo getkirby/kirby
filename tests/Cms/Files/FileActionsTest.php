@@ -915,11 +915,9 @@ class FileActionsTest extends TestCase
 	 */
 	public function testManipulate($parent)
 	{
-		$original = static::FIXTURES . '/test.jpg';
-
 		$originalFile = File::create([
 			'filename' => 'test.jpg',
-			'source'   => $original,
+			'source'   => static::FIXTURES . '/test.jpg',
 			'parent'   => $parent
 		]);
 
@@ -939,13 +937,31 @@ class FileActionsTest extends TestCase
 	/**
 	 * @dataProvider parentProvider
 	 */
+	public function testManipulateNonImage($parent)
+	{
+		$originalFile = File::create([
+			'filename' => 'test.mp4',
+			'source'   => static::FIXTURES . '/test.mp4',
+			'parent'   => $parent
+		]);
+
+		$replacedFile = $originalFile->manipulate([
+			'width' => 100,
+			'height' => 100,
+		]);
+
+		// proves strictly that both are the same object
+		$this->assertSame($originalFile, $replacedFile);
+	}
+
+	/**
+	 * @dataProvider parentProvider
+	 */
 	public function testManipulateValidFormat($parent)
 	{
-		$original = static::FIXTURES . '/test.jpg';
-
 		$originalFile = File::create([
 			'filename' => 'test.jpg',
-			'source'   => $original,
+			'source'   => static::FIXTURES . '/test.jpg',
 			'parent'   => $parent
 		]);
 
@@ -968,11 +984,9 @@ class FileActionsTest extends TestCase
 	 */
 	public function testManipulateInvalidValidFormat($parent)
 	{
-		$original = static::FIXTURES . '/test.mp4';
-
 		$originalFile = File::create([
 			'filename' => 'test.mp4',
-			'source'   => $original,
+			'source'   => static::FIXTURES . '/test.mp4',
 			'parent'   => $parent
 		]);
 
