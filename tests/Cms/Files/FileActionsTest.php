@@ -491,6 +491,122 @@ class FileActionsTest extends TestCase
 		$file->changeTemplate('for-default-b');
 	}
 
+	public function testChangeTemplateManipulate()
+	{
+		$testImage = static::FIXTURES . '/test.jpg';
+
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/test-default' => [
+					'sections' => [
+						[
+							'type' => 'files',
+							'template' => 'manipulate-a'
+						],
+						[
+							'type' => 'files',
+							'template' => 'manipulate-b'
+						]
+					]
+				],
+				'files/manipulate-a' => [
+					'title'  => 'Manipulate A',
+				],
+				'files/manipulate-b' => [
+					'title'  => 'Manipulate B',
+					'create' => [
+						'width'  => 100,
+						'height' => 100,
+						'format' => 'webp'
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test-default',
+						'files' => [
+							[
+								'filename' => 'test.jpg',
+								'content'  => ['template' => 'manipulate-a']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+		$page = $app->page('test');
+
+		F::copy($testImage, $page->root() . '/test.jpg');
+		F::write($page->root() . '/test.jpg.txt', 'Template: manipulate-a');
+
+		$file = $page->file('test.jpg');
+		$this->assertSame('jpg', $file->extension());
+		$this->assertSame(128, $file->width());
+		$this->assertSame(128, $file->height());
+
+		$file = $file->changeTemplate('manipulate-b');
+		$this->assertSame('webp', $file->extension());
+		$this->assertSame(100, $file->width());
+		$this->assertSame(100, $file->height());
+	}
+
+	public function testChangeTemplateManipulateNonImage()
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/test-default' => [
+					'sections' => [
+						[
+							'type' => 'files',
+							'template' => 'manipulate-a'
+						],
+						[
+							'type' => 'files',
+							'template' => 'manipulate-b'
+						]
+					]
+				],
+				'files/manipulate-a' => [
+					'title'  => 'Manipulate A',
+				],
+				'files/manipulate-b' => [
+					'title'  => 'Manipulate B',
+					'create' => [
+						'width'  => 100,
+						'height' => 100,
+						'format' => 'webp'
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test-default',
+						'files' => [
+							[
+								'filename' => 'test.pdf',
+								'content'  => ['template' => 'manipulate-a']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$file = $app->page('test')->file('test.pdf');
+		$newFile = $file->changeTemplate('manipulate-b');
+
+		$this->assertSame('pdf', $file->extension());
+		$this->assertSame('pdf', $newFile->extension());
+	}
+
 	public function testCopyRenewUuid()
 	{
 		// create dumy file
@@ -712,6 +828,30 @@ class FileActionsTest extends TestCase
 	/**
 	 * @dataProvider parentProvider
 	 */
+	public function testCreateManipulateNonImage($parent)
+	{
+		$source = static::FIXTURES . '/test.pdf';
+
+		$result = File::create([
+			'filename'  => 'test.pdf',
+			'source'    => $source,
+			'parent'    => $parent,
+			'blueprint' => [
+				'name'   => 'test',
+				'create' => [
+					'width'  => 100,
+					'height' => 100,
+					'format' => 'webp'
+				]
+			]
+		]);
+
+		$this->assertFileEquals($source, $result->root());
+	}
+
+	/**
+	 * @dataProvider parentProvider
+	 */
 	public function testCreateHooks($parent)
 	{
 		$phpunit = $this;
@@ -863,6 +1003,35 @@ class FileActionsTest extends TestCase
 
 		$this->assertSame(F::read($replacement), F::read($replacedFile->root()));
 		$this->assertInstanceOf(Image::class, $replacedFile->asset());
+	}
+
+	/**
+	 * @dataProvider parentProvider
+	 */
+	public function testReplaceManipulateNonImage($parent)
+	{
+		$original    = static::FIXTURES . '/test.pdf';
+		$replacement = static::FIXTURES . '/doc.pdf';
+
+		$originalFile = File::create([
+			'filename' => 'test.pdf',
+			'source'   => $original,
+			'parent'   => $parent,
+			'blueprint' => [
+				'name' => 'test',
+				'create' => [
+					'width'  => 100,
+					'height' => 100,
+					'format' => 'webp'
+				]
+			]
+		]);
+
+		$this->assertFileEquals($original, $originalFile->root());
+
+		$replacedFile = $originalFile->replace($replacement);
+		$this->assertFileEquals($replacement, $replacedFile->root());
+		$this->assertSame('pdf', $replacedFile->extension());
 	}
 
 	/**
