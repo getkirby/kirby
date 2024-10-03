@@ -307,6 +307,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 
 	/**
 	 * Checks if the model is locked for the current user
+	 * @deprecated 5.0.0 Use `->lock()->isLocked()` instead
 	 */
 	public function isLocked(): bool
 	{
