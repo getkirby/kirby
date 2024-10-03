@@ -37,15 +37,6 @@ return [
 			);
 		}
 	],
-	'user.changes.unlock' => [
-		'pattern' => 'users/(:any)/changes/unlock',
-		'method'  => 'POST',
-		'action'  => function (string $path) {
-			return Changes::unlock(
-				model: Find::user($path),
-			);
-		}
-	],
 
 	// User File Changes
 	'user.file.changes.discard' => [
@@ -59,9 +50,5 @@ return [
 	'user.file.changes.save' => [
 		...$files['changes.save'],
 		'pattern' => '(users/.*?)/files/(:any)/changes/save',
-	],
-	'user.file.changes.unlock' => [
-		...$files['changes.unlock'],
-		'pattern' => '(users/.*?)/files/(:any)/changes/unlock',
 	],
 ];

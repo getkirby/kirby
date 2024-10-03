@@ -38,15 +38,6 @@ return [
 			);
 		}
 	],
-	'page.changes.unlock' => [
-		'pattern' => 'pages/(:any)/changes/unlock',
-		'method'  => 'POST',
-		'action'  => function (string $path) {
-			return Changes::unlock(
-				model: Find::page($path),
-			);
-		}
-	],
 
 	// Page File Changes
 	'page.file.changes.discard' => [
@@ -60,10 +51,6 @@ return [
 	'page.file.changes.save' => [
 		...$files['changes.save'],
 		'pattern' => '(pages/.*?)/files/(:any)/changes/save',
-	],
-	'page.file.changes.unlock' => [
-		...$files['changes.unlock'],
-		'pattern' => '(pages/.*?)/files/(:any)/changes/unlock',
 	],
 
 	// Site Changes
@@ -96,15 +83,6 @@ return [
 			);
 		}
 	],
-	'site.changes.unlock' => [
-		'pattern' => 'site/changes/unlock',
-		'method'  => 'POST',
-		'action'  => function () {
-			return Changes::unlock(
-				model: App::instance()->site(),
-			);
-		}
-	],
 
 	// Site File Changes
 	'site.file.changes.discard' => [
@@ -118,10 +96,6 @@ return [
 	'site.file.changes.save' => [
 		...$files['changes.save'],
 		'pattern' => '(site)/files/(:any)/changes/save',
-	],
-	'site.file.changes.unlock' => [
-		...$files['changes.unlock'],
-		'pattern' => '(site)/files/(:any)/changes/unlock',
 	],
 
 	// Tree Navigation

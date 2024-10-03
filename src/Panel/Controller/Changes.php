@@ -5,12 +5,11 @@ namespace Kirby\Panel\Controller;
 use Kirby\Cms\App;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Content\VersionId;
-use Kirby\Exception\Exception;
 use Kirby\Form\Form;
 
 /**
  * The Changes controller takes care of the request logic
- * to save, discard and publish changes, as well as unlocking.
+ * to save, discard and publish changes.
  *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -87,18 +86,6 @@ class Changes
 
 		// add the model to the user's list of unsaved changes
 		App::instance()->site()->changes()->track($model);
-
-		return [
-			'status' => 'ok'
-		];
-	}
-
-	/**
-	 * Removes the user lock from a `changes` version
-	 */
-	public static function unlock(ModelWithContent $model): array
-	{
-		throw new Exception(message: 'Not yet implemented');
 
 		return [
 			'status' => 'ok'

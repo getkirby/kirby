@@ -37,13 +37,5 @@ return [
 				input: App::instance()->request()->get()
 			);
 		}
-	],
-	'changes.unlock' => [
-		'method'  => 'POST',
-		'action'  => function (string $parent, string $filename) {
-			return Changes::unlock(
-				model: Find::file($parent, $filename)
-			);
-		}
 	]
 ];
