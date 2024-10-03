@@ -5,6 +5,7 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Cms\File as ModelFile;
 use Kirby\Cms\Site as ModelSite;
+use Kirby\Content\Lock;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
@@ -389,14 +390,12 @@ class ModelTest extends TestCase
 	public function testLock()
 	{
 		$site = new ModelSite();
-		$this->assertSame([
-			'isLocked' => false,
-			'modified' => null,
-			'user'     => [
-				'id'    => null,
-				'email' => null
-			]
-		], $site->panel()->lock());
+		$lock = $site->panel()->lock();
+
+		$this->assertInstanceOf(Lock::class, $lock);
+		$this->assertFalse($lock->isLocked());
+		$this->assertNull($lock->modified());
+		$this->assertNull($lock->user());
 	}
 
 	/**

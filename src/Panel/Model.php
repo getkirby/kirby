@@ -303,13 +303,13 @@ abstract class Model
 	/**
 	 * Returns lock info for the Panel
 	 */
-	public function lock(): array
+	public function lock(): Lock
 	{
 		// get the changes for the current model
 		$version = $this->model->version(VersionId::changes());
 
-		// return lock info for the changes
-		return Lock::for($version)->toArray();
+		// return lock object for the changes
+		return Lock::for($version);
 	}
 
 	/**
@@ -332,7 +332,7 @@ abstract class Model
 	{
 		$options = $this->model->permissions()->toArray();
 
-		if ($this->lock()['isLocked'] === true) {
+		if ($this->lock()->isLocked() === true) {
 			foreach ($options as $key => $value) {
 				if (in_array($key, $unlock, true)) {
 					continue;
@@ -397,7 +397,7 @@ abstract class Model
 			'content'     => (object)$this->content(),
 			'id'          => $this->model->id(),
 			'link'        => $link,
-			'lock'        => $this->lock(),
+			'lock'        => $this->lock()->toArray(),
 			'originals'   => (object)$this->originals(),
 			'permissions' => $this->model->permissions()->toArray(),
 			'tabs'        => $tabs,
