@@ -16,10 +16,6 @@ return [
 		...$requests['user.changes.save'],
 		'pattern' => '(account)/changes/save',
 	],
-	'account.changes.unlock' => [
-		...$requests['user.changes.unlock'],
-		'pattern' => '(account)/changes/unlock',
-	],
 
 	// Account File Changes
 	'account.file.changes.discard' => [
@@ -33,9 +29,5 @@ return [
 	'account.file.changes.save' => [
 		...$requests['user.file.changes.save'],
 		'pattern' => '(account)/files/(:any)/changes/save',
-	],
-	'account.file.changes.unlock' => [
-		...$requests['user.file.changes.unlock'],
-		'pattern' => '(account)/files/(:any)/changes/unlock',
 	],
 ];
