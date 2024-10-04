@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Content\Lock;
 use Kirby\Content\Version;
 use Kirby\Content\VersionId;
 use Kirby\Exception\NotFoundException;
@@ -10,6 +11,9 @@ use Kirby\Panel\Page as PanelPage;
 use Kirby\Uuid\PageUuid;
 use Kirby\Uuid\SiteUuid;
 
+/**
+ * @coversDefaultClass \Kirby\Cms\ModelWithContent
+ */
 class ExtendedModelWithContent extends ModelWithContent
 {
 	public function blueprint(): Blueprint
@@ -217,19 +221,6 @@ class ModelWithContentTest extends TestCase
 		$this->assertSame('Test', $page->content()->get('title')->value());
 	}
 
-
-	public function testContentLock()
-	{
-		$model = new ExtendedModelWithContent();
-		$this->assertInstanceOf(ContentLock::class, $model->lock());
-	}
-
-	public function testContentLockWithNoDirectory()
-	{
-		$model = new BrokenModelWithContent();
-		$this->assertNull($model->lock());
-	}
-
 	public function testContentWithChanges()
 	{
 		$app = new App([
@@ -311,6 +302,17 @@ class ModelWithContentTest extends TestCase
 			'kirby' => $kirby
 		]);
 		$this->assertSame($kirby, $model->kirby());
+	}
+
+	public function testLock()
+	{
+		$page = new Page(['slug' => 'foo']);
+		$lock = $page->lock();
+
+		$this->assertInstanceOf(Lock::class, $lock);
+		$this->assertFalse($lock->isLocked());
+		$this->assertNull($lock->modified());
+		$this->assertNull($lock->user());
 	}
 
 	public function testSite()

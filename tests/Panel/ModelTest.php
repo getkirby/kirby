@@ -384,22 +384,6 @@ class ModelTest extends TestCase
 	}
 
 	/**
-	 * @covers ::lock
-	 */
-	public function testLock()
-	{
-		$site = new ModelSite();
-		$this->assertSame([
-			'isLocked' => false,
-			'modified' => null,
-			'user'     => [
-				'id'    => null,
-				'email' => null
-			]
-		], $site->panel()->lock());
-	}
-
-	/**
 	 * @covers ::model
 	 */
 	public function testModel()

@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Content\Content;
 use Kirby\Content\ContentStorageHandler;
 use Kirby\Content\ContentTranslation;
+use Kirby\Content\Lock;
 use Kirby\Content\PlainTextContentStorageHandler;
 use Kirby\Content\Version;
 use Kirby\Content\VersionId;
@@ -306,11 +307,11 @@ abstract class ModelWithContent implements Identifiable, Stringable
 
 	/**
 	 * Checks if the model is locked for the current user
+	 * @deprecated 5.0.0 Use `->lock()->isLocked()` instead
 	 */
 	public function isLocked(): bool
 	{
-		$lock = $this->lock();
-		return $lock && $lock->isLocked() === true;
+		return $this->lock()->isLocked() === true;
 	}
 
 	/**
@@ -330,28 +331,15 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	}
 
 	/**
-	 * Returns the lock object for this model
-	 *
-	 * Only if a content directory exists,
-	 * virtual pages will need to overwrite this method
+	 * Returns lock for the model
 	 */
-	public function lock(): ContentLock|null
+	public function lock(): Lock
 	{
-		$dir = $this->root();
+		// get the changes for the current model
+		$version = $this->version(VersionId::changes());
 
-		if ($this::CLASS_ALIAS === 'file') {
-			$dir = dirname($dir);
-		}
-
-		if (
-			$this->kirby()->option('content.locking', true) &&
-			is_string($dir) === true &&
-			file_exists($dir) === true
-		) {
-			return new ContentLock($this);
-		}
-
-		return null;
+		// return lock object for the changes
+		return Lock::for($version);
 	}
 
 	/**

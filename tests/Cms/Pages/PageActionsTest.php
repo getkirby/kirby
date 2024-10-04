@@ -905,8 +905,6 @@ class PageActionsTest extends TestCase
 		$page = $this->app->site()->createChild([
 			'slug' => 'test',
 		]);
-		$page->lock()->create();
-		$this->assertFileExists($this->app->locks()->file($page));
 
 		// check UUID exists
 		$oldUuid = $page->content()->get('uuid')->value();
@@ -916,8 +914,6 @@ class PageActionsTest extends TestCase
 		$childrenAndDrafts = $this->app->site()->childrenAndDrafts();
 
 		$copy = $page->duplicate('test-copy');
-
-		$this->assertFileDoesNotExist(static::TMP . $copy->root() . '/.lock');
 
 		$this->assertIsPage($page, $drafts->find('test'));
 		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
