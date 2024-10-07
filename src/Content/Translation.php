@@ -47,8 +47,9 @@ class Translation extends ContentTranslation
 	 */
 	public function code(): string
 	{
-		Helpers::deprecated('`$translation->code()` has been deprecated. Use `$translation->language()->code()` instead.', 'translation-methods');
-		return $this->language->code();
+		// TODO: Add deprecation warning
+		// Helpers::deprecated('`$translation->code()` has been deprecated. Use `$translation->language()->code()` instead.', 'translation-methods');
+		return $this->language()->code();
 	}
 
 	/**
@@ -59,7 +60,8 @@ class Translation extends ContentTranslation
 	 */
 	public function content(): array
 	{
-		Helpers::deprecated('`$translation->content()->toArray()` has been deprecated. Use `$translation->version()->content()` instead.', 'translation-methods');
+		// TODO: Add deprecation warning
+		// Helpers::deprecated('`$translation->content()->toArray()` has been deprecated. Use `$translation->version()->content()` instead.', 'translation-methods');
 		return $this->version->content($this->language)->toArray();
 	}
 
@@ -70,7 +72,8 @@ class Translation extends ContentTranslation
 	 */
 	public function contentFile(): string
 	{
-		Helpers::deprecated('`$translation->contentFile()` has been deprecated. Please let us know if you have a use case for a replacement.', 'translation-methods');
+		// TODO: Add deprecation warning
+		// Helpers::deprecated('`$translation->contentFile()` has been deprecated. Please let us know if you have a use case for a replacement.', 'translation-methods');
 		return $this->version->contentFile($this->language);
 	}
 
@@ -108,8 +111,9 @@ class Translation extends ContentTranslation
 	 */
 	public function exists(): bool
 	{
-		Helpers::deprecated('`$translation->exists()` has been deprecated. Use `$translation->version()->exists()` instead.', 'translation-methods');
-		return $this->version->exists($this->language);
+		// TODO: Add deprecation warning
+		// Helpers::deprecated('`$translation->exists()` has been deprecated. Use `$translation->version()->exists()` instead.', 'translation-methods');
+		return $this->version()->exists($this->language);
 	}
 
 	/**
@@ -128,8 +132,9 @@ class Translation extends ContentTranslation
 	 */
 	public function isDefault(): bool
 	{
-		Helpers::deprecated('`$translation->isDefault()` has been deprecated. Use `$translation->language()->isDefault()` instead.', 'translation-methods');
-		return $this->language->isDefault();
+		// TODO: Add deprecation warning
+		// Helpers::deprecated('`$translation->isDefault()` has been deprecated. Use `$translation->language()->isDefault()` instead.', 'translation-methods');
+		return $this->language()->isDefault();
 	}
 
 	/**
@@ -153,9 +158,9 @@ class Translation extends ContentTranslation
 	 */
 	public function parent(): ModelWithContent
 	{
-		throw new Exception(
-			message: '`$translation->parent()` has been deprecated. Please use `$translation->model()` instead'
-		);
+		// TODO: Add deprecation warning
+		// Helpers::deprecated('`$translation->parent()` has been deprecated. Please use `$translation->model()` instead.', 'translation-methods');
+		return $this->model();
 	}
 
 	/**
@@ -183,11 +188,14 @@ class Translation extends ContentTranslation
 	/**
 	 * @deprecated 5.0.0 Use `$model->version()->update()` instead
 	 */
-	public function update(array|null $data = null, bool $overwrite = false): static
-	{
-		throw new Exception(
-			message: '`$translation->update()` has been deprecated. Please use `$model->version()->update()` instead'
-		);
+	public function update(
+		array|null $data = null,
+		bool $overwrite = false
+	): static {
+		// TODO: Add deprecation warning
+		// Helpers::deprecated('`$translation->update()` has been deprecated. Please use `$model->version()->save()` instead.', 'translation-methods');
+		$this->version()->save($data, $this->language, $overwrite);
+		return $this;
 	}
 
 	/**
