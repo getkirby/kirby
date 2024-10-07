@@ -65,7 +65,10 @@ class Version
 	 */
 	public function contentFile(Language|string $language = 'default'): string
 	{
-		return $this->model->storage()->contentFile($this->id, Language::ensure($language));
+		return $this->model->storage()->contentFile(
+			$this->id,
+			Language::ensure($language)
+		);
 	}
 
 	/**
@@ -83,8 +86,10 @@ class Version
 	 *
 	 * @param array<string, string> $fields Content fields
 	 */
-	public function create(array $fields, Language|string $language = 'default'): void
-	{
+	public function create(
+		array $fields,
+		Language|string $language = 'default'
+	): void {
 		$language = Language::ensure($language);
 
 		// track the changes
@@ -117,8 +122,10 @@ class Version
 	/**
 	 * Returns the changed fields, compared to the given version
 	 */
-	public function diff(VersionId|string $versionId, Language|string $language = 'default'): array
-	{
+	public function diff(
+		VersionId|string $versionId,
+		Language|string $language = 'default'
+	): array {
 		$versionId = VersionId::from($versionId);
 
 		if ($versionId->is($this->id) === true) {
@@ -140,7 +147,10 @@ class Version
 	public function ensure(
 		Language|string $language = 'default'
 	): void {
-		$this->model->storage()->ensure($this->id, Language::ensure($language));
+		$this->model->storage()->ensure(
+			$this->id,
+			Language::ensure($language)
+		);
 	}
 
 	/**
@@ -148,7 +158,10 @@ class Version
 	 */
 	public function exists(Language|string $language = 'default'): bool
 	{
-		return $this->model->storage()->exists($this->id, Language::ensure($language));
+		return $this->model->storage()->exists(
+			$this->id,
+			Language::ensure($language)
+		);
 	}
 
 	/**
@@ -175,7 +188,10 @@ class Version
 		Language|string $language = 'default'
 	): int|null {
 		if ($this->exists($language) === true) {
-			return $this->model->storage()->modified($this->id, Language::ensure($language));
+			return $this->model->storage()->modified(
+				$this->id,
+				Language::ensure($language)
+			);
 		}
 
 		return null;
@@ -206,8 +222,10 @@ class Version
 	 * Prepare fields to be written by removing unwanted fields
 	 * depending on the language or model and by cleaning the field names
 	 */
-	protected function prepareFieldsBeforeWrite(array $fields, Language $language): array
-	{
+	protected function prepareFieldsBeforeWrite(
+		array $fields,
+		Language $language
+	): array {
 		// convert all field names to lower case
 		$fields = $this->convertFieldNamesToLowerCase($fields);
 
@@ -218,7 +236,10 @@ class Version
 		if ($language->isDefault() === true) {
 
 			// add the editing user
-			if ($this->id->is(VersionId::changes()) === true && Lock::isEnabled() === true) {
+			if (
+				Lock::isEnabled() === true &&
+				$this->id->is(VersionId::changes()) === true
+			) {
 				$fields['lock'] = $this->model->kirby()->user()?->id();
 			}
 
@@ -300,8 +321,10 @@ class Version
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function replace(array $fields, Language|string $language = 'default'): void
-	{
+	public function replace(
+		array $fields,
+		Language|string $language = 'default'
+	): void {
 		$this->ensure($language);
 
 		$language = Language::ensure($language);
@@ -352,8 +375,10 @@ class Version
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function update(array $fields, Language|string $language = 'default'): void
-	{
+	public function update(
+		array $fields,
+		Language|string $language = 'default'
+	): void {
 		$this->ensure($language);
 
 		$language = Language::ensure($language);
