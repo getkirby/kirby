@@ -128,7 +128,6 @@ class App
 		// configurable properties
 		$this->setLanguages($props['languages'] ?? null);
 		$this->setRoles($props['roles'] ?? null);
-		$this->setSite($props['site'] ?? null);
 		$this->setUser($props['user'] ?? null);
 		$this->setUsers($props['users'] ?? null);
 
@@ -146,6 +145,11 @@ class App
 		$this->extensionsFromPlugins();
 		$this->extensionsFromOptions();
 		$this->extensionsFromFolders();
+
+		// make sure to create the site once all props are there
+		// the instance singleton is set and the extensions are loaded.
+		// otherwise multi-language mode might not be detected properly.
+		$this->setSite($props['site'] ?? null);
 
 		// trigger hook for use in plugins
 		$this->trigger('system.loadPlugins:after');
