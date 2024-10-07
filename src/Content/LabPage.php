@@ -55,40 +55,36 @@ class LabPage extends Page
 	}
 
 	/**
-	 * @deprecated since 5.0.0 Use `::version()->save()` instead
+	 * @deprecated since 5.0.0 Use `::save()` instead
 	 */
 	protected function saveContent(
 		array|null $data = null,
 		bool $overwrite = false
 	): static {
-		Helpers::deprecated('`$model->saveContent()` has been deprecated. Use `$model->version()->save()` instead.', 'model-save-content');
+		Helpers::deprecated('`$model->saveContent()` has been deprecated. Use `$model->save()` instead.', 'model-save-content');
 
-		$clone = $this->clone();
-		$clone->version()->save(
-			$data ?? [],
+		return $this->save(
+			$data,
 			'current',
 			$overwrite
 		);
-		return $clone;
 	}
 
 	/**
-	 * @deprecated since 5.0.0 Use `::version()->save()` instead
+	 * @deprecated since 5.0.0 Use `::save()` instead
 	 */
 	protected function saveTranslation(
 		array|null $data = null,
 		string|null $languageCode = null,
 		bool $overwrite = false
 	): static {
-		Helpers::deprecated('`$model->saveTranslation()` has been deprecated. Use `$model->version()->save()` instead.', 'model-save-translation');
+		Helpers::deprecated('`$model->saveTranslation()` has been deprecated. Use `$model->save()` instead.', 'model-save-translation');
 
-		$clone = $this->clone();
-		$clone->version()->save(
-			$data ?? [],
+		return $this->save(
+			$data,
 			$languageCode ?? 'current',
 			$overwrite
 		);
-		return $clone;
 	}
 
 	/**
