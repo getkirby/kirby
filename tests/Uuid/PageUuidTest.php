@@ -4,6 +4,7 @@ namespace Kirby\Uuid;
 
 use Generator;
 use Kirby\Cms\App;
+use Kirby\Data\Data;
 
 /**
  * @coversDefaultClass \Kirby\Uuid\PageUuid
@@ -76,7 +77,10 @@ class PageUuidTest extends TestCase
 	public function testIdGenerateExistingButEmpty()
 	{
 		$page = $this->app->page('page-b');
-		$page->content()->update(['uuid' => '']);
+
+		Data::write($page->root() . '/album.txt', [
+			'uuid' => ''
+		]);
 
 		$uuid = $page->uuid();
 		$this->assertSame(16, strlen($uuid->id()));

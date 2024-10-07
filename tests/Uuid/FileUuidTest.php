@@ -4,6 +4,7 @@ namespace Kirby\Uuid;
 
 use Generator;
 use Kirby\Cms\App;
+use Kirby\Data\Data;
 
 /**
  * @coversDefaultClass \Kirby\Uuid\FileUuid
@@ -76,7 +77,10 @@ class FileUuidTest extends TestCase
 	public function testIdGenerateExistingButEmpty()
 	{
 		$file = $this->app->file('page-b/foo.pdf');
-		$file->content()->update(['uuid' => '']);
+
+		Data::write($file->root() . '.txt', [
+			'uuid' => ''
+		]);
 
 		$uuid = $file->uuid();
 		$this->assertSame(16, strlen($uuid->id()));
