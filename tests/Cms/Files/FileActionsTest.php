@@ -105,10 +105,11 @@ class FileActionsTest extends TestCase
 		// create an empty dummy file
 		F::write($file->root(), '');
 		// ...and an empty content file for it
-		F::write($file->version(VersionId::published())->contentFile('default'), '');
+		F::write($oldContentFile = $file->version(VersionId::published())->contentFile('default'), '');
+
 
 		$this->assertFileExists($file->root());
-		$this->assertFileExists($file->version(VersionId::published())->contentFile('default'));
+		$this->assertFileExists($oldContentFile);
 
 		$result = $file->changeName('test');
 
@@ -117,7 +118,7 @@ class FileActionsTest extends TestCase
 		$this->assertFileExists($result->root());
 		$this->assertFileExists($result->version(VersionId::published())->contentFile('default'));
 		$this->assertFileDoesNotExist($file->root());
-		$this->assertFileDoesNotExist($file->version(VersionId::published())->contentFile('default'));
+		$this->assertFileDoesNotExist($oldContentFile);
 	}
 
 	public static function fileProviderMultiLang(): array
@@ -982,17 +983,17 @@ class FileActionsTest extends TestCase
 		// create an empty dummy file
 		F::write($file->root(), '');
 		// ...and an empty content file for it
-		F::write($file->version(VersionId::published())->contentFile('default'), '');
+		F::write($contentFile = $file->version(VersionId::published())->contentFile('default'), '');
 
 		$this->assertFileExists($file->root());
-		$this->assertFileExists($file->version(VersionId::published())->contentFile('default'));
+		$this->assertFileExists($contentFile);
 
 		$result = $file->delete();
 
 		$this->assertTrue($result);
 
 		$this->assertFileDoesNotExist($file->root());
-		$this->assertFileDoesNotExist($file->version(VersionId::published())->contentFile('default'));
+		$this->assertFileDoesNotExist($contentFile);
 	}
 
 	/**

@@ -28,7 +28,7 @@ class ImmutableMemoryContentStorageHandlerTest extends TestCase
 	public function testDelete()
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Storage for the page is immutable and cannot be deleted. Make sure to use the last alteration of the object.');
+		$this->expectExceptionMessage('Storage for the page is immutable and cannot be altered. Make sure to use the last alteration of the object.');
 
 		$this->storage->delete(VersionId::published(), Language::ensure());
 	}
@@ -40,7 +40,7 @@ class ImmutableMemoryContentStorageHandlerTest extends TestCase
 	public function testMove()
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Storage for the page is immutable and cannot be deleted. Make sure to use the last alteration of the object.');
+		$this->expectExceptionMessage('Storage for the page is immutable and cannot be altered. Make sure to use the last alteration of the object.');
 
 		$this->storage->move(
 			fromVersionId: VersionId::published(),
@@ -56,7 +56,7 @@ class ImmutableMemoryContentStorageHandlerTest extends TestCase
 	public function testTouch()
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Storage for the page is immutable and cannot be deleted. Make sure to use the last alteration of the object.');
+		$this->expectExceptionMessage('Storage for the page is immutable and cannot be altered. Make sure to use the last alteration of the object.');
 
 		$this->storage->touch(VersionId::published(), Language::ensure());
 	}
@@ -70,7 +70,7 @@ class ImmutableMemoryContentStorageHandlerTest extends TestCase
 		$this->storage->create(VersionId::published(), Language::ensure(), []);
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Storage for the page is immutable and cannot be deleted. Make sure to use the last alteration of the object.');
+		$this->expectExceptionMessage('Storage for the page is immutable and cannot be altered. Make sure to use the last alteration of the object.');
 
 		$this->storage->update(VersionId::published(), Language::ensure(), []);
 	}

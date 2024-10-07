@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Content\Content;
 use Kirby\Content\ContentStorageHandler;
 use Kirby\Content\ContentTranslation;
+use Kirby\Content\ImmutableMemoryContentStorageHandler;
 use Kirby\Content\PlainTextContentStorageHandler;
 use Kirby\Content\Version;
 use Kirby\Content\VersionId;
@@ -246,6 +247,17 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		}
 
 		return $this->update([$field => $value]);
+	}
+
+	/**
+	 * Keeps the current state of the content in memory storage.
+	 * Should be done in conjunction with cloning. The storage of the clone
+	 * can afterwards be mutated without affecting the content in the
+	 * original instance
+	 */
+	public function detach(): void
+	{
+		$this->storage = ImmutableMemoryContentStorageHandler::from($this->storage());
 	}
 
 	/**
@@ -696,7 +708,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 			);
 		}
 
-		return $this->commit(
+		$newModel = $this->commit(
 			'update',
 			[
 				static::CLASS_ALIAS => $this,
@@ -707,6 +719,11 @@ abstract class ModelWithContent implements Identifiable, Stringable
 			fn ($model, $values, $strings, $languageCode) =>
 				$model->save($strings, $languageCode, true)
 		);
+
+		// detach storage handler of old object
+		$this->detach();
+
+		return $newModel;
 	}
 
 	/**

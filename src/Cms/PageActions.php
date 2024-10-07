@@ -70,6 +70,9 @@ trait PageActions
 				}
 			}
 
+			// detach storage handler of old object
+			$oldPage->detach();
+
 			// overwrite the child in the parent page
 			static::updateParentCollections($newPage, 'set');
 
@@ -130,6 +133,9 @@ trait PageActions
 
 				Dir::remove($oldPage->mediaRoot());
 			}
+
+			// detach storage handler of old object
+			$oldPage->detach();
 
 			// overwrite the new page in the parent collection
 			static::updateParentCollections($newPage, 'set');
@@ -297,6 +303,9 @@ trait PageActions
 			// convert for new template/blueprint
 			$page = $oldPage->convertTo($template);
 
+			// detach storage handler of old object
+			$oldPage->detach();
+
 			// update the parent collection
 			static::updateParentCollections($page, 'set');
 
@@ -325,12 +334,15 @@ trait PageActions
 		$arguments = ['page' => $this, 'title' => $title, 'languageCode' => $languageCode];
 
 		return $this->commit('changeTitle', $arguments, function ($page, $title, $languageCode) {
-			$page = $page->save(['title' => $title], $languageCode);
+			$newPage = $page->save(['title' => $title], $languageCode);
+
+			// detach storage handler of old object
+			$page->detach();
 
 			// flush the parent cache to get children and drafts right
-			static::updateParentCollections($page, 'set');
+			static::updateParentCollections($newPage, 'set');
 
-			return $page;
+			return $newPage;
 		});
 	}
 
@@ -645,6 +657,9 @@ trait PageActions
 				$page->resortSiblingsAfterUnlisting();
 			}
 
+			// detach storage handler
+			$page->detach();
+
 			return true;
 		});
 	}
@@ -771,6 +786,9 @@ trait PageActions
 		if ($parentModel->childrenAndDrafts !== null) {
 			$parentModel->childrenAndDrafts()->set($page->id(), $page);
 		}
+
+		// detach storage handler of old object
+		$this->detach();
 
 		return $page;
 	}
@@ -926,6 +944,9 @@ trait PageActions
 		}
 
 		$page->resortSiblingsAfterUnlisting();
+
+		// detach storage handler of old object
+		$this->detach();
 
 		return $page;
 	}

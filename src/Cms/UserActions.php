@@ -35,13 +35,16 @@ trait UserActions
 		$email = trim($email);
 
 		return $this->commit('changeEmail', ['user' => $this, 'email' => Idn::decodeEmail($email)], function ($user, $email) {
-			$user = $user->clone(['email' => $email]);
-			$user->updateCredentials(['email' => $email]);
+			$newUser = $user->clone(['email' => $email]);
+			$newUser->updateCredentials(['email' => $email]);
 
 			// update the users collection
-			$user->kirby()->users()->set($user->id(), $user);
+			$user->kirby()->users()->set($newUser->id(), $newUser);
 
-			return $user;
+			// detach storage handler of old object
+			$user->detach();
+
+			return $newUser;
 		});
 	}
 
@@ -51,13 +54,16 @@ trait UserActions
 	public function changeLanguage(string $language): static
 	{
 		return $this->commit('changeLanguage', ['user' => $this, 'language' => $language], function ($user, $language) {
-			$user = $user->clone(['language' => $language]);
-			$user->updateCredentials(['language' => $language]);
+			$newUser = $user->clone(['language' => $language]);
+			$newUser->updateCredentials(['language' => $language]);
 
 			// update the users collection
-			$user->kirby()->users()->set($user->id(), $user);
+			$user->kirby()->users()->set($newUser->id(), $newUser);
 
-			return $user;
+			// detach storage handler of old object
+			$user->detach();
+
+			return $newUser;
 		});
 	}
 
@@ -69,13 +75,16 @@ trait UserActions
 		$name = trim($name);
 
 		return $this->commit('changeName', ['user' => $this, 'name' => $name], function ($user, $name) {
-			$user = $user->clone(['name' => $name]);
-			$user->updateCredentials(['name' => $name]);
+			$newUser = $user->clone(['name' => $name]);
+			$newUser->updateCredentials(['name' => $name]);
 
 			// update the users collection
-			$user->kirby()->users()->set($user->id(), $user);
+			$user->kirby()->users()->set($newUser->id(), $newUser);
 
-			return $user;
+			// detach storage handler of old object
+			$user->detach();
+
+			return $newUser;
 		});
 	}
 
@@ -87,23 +96,26 @@ trait UserActions
 		string $password
 	): static {
 		return $this->commit('changePassword', ['user' => $this, 'password' => $password], function ($user, $password) {
-			$user = $user->clone([
+			$newUser = $user->clone([
 				'password' => $password = User::hashPassword($password)
 			]);
 
-			$user->writePassword($password);
+			$newUser->writePassword($password);
 
 			// update the users collection
-			$user->kirby()->users()->set($user->id(), $user);
+			$user->kirby()->users()->set($newUser->id(), $newUser);
 
 			// keep the user logged in to the current browser
 			// if they changed their own password
 			// (regenerate the session token, update the login timestamp)
 			if ($user->isLoggedIn() === true) {
-				$user->loginPasswordless();
+				$newUser->loginPasswordless();
 			}
 
-			return $user;
+			// detach storage handler of old object
+			$user->detach();
+
+			return $newUser;
 		});
 	}
 
@@ -113,13 +125,16 @@ trait UserActions
 	public function changeRole(string $role): static
 	{
 		return $this->commit('changeRole', ['user' => $this, 'role' => $role], function ($user, $role) {
-			$user = $user->clone(['role' => $role]);
-			$user->updateCredentials(['role' => $role]);
+			$newUser = $user->clone(['role' => $role]);
+			$newUser->updateCredentials(['role' => $role]);
 
 			// update the users collection
-			$user->kirby()->users()->set($user->id(), $user);
+			$user->kirby()->users()->set($newUser->id(), $newUser);
 
-			return $user;
+			// detach storage handler of old object
+			$user->detach();
+
+			return $newUser;
 		});
 	}
 
@@ -311,6 +326,9 @@ trait UserActions
 
 			// remove the user from users collection
 			$user->kirby()->users()->remove($user);
+
+			// detach storage handler of old object
+			$user->detach();
 
 			return true;
 		});

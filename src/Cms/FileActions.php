@@ -87,6 +87,9 @@ trait FileActions
 			// move the content storage versions
 			$oldFile->storage()->moveAll(to: $newFile->storage());
 
+			// detach storage handler of old object
+			$oldFile->detach();
+
 			// update collections
 			$newFile->parent()->files()->remove($oldFile->id());
 			$newFile->parent()->files()->set($newFile->id(), $newFile);
@@ -344,6 +347,9 @@ trait FileActions
 			// remove the file from the sibling collection
 			$file->parent()->files()->remove($file);
 
+			// detach storage handler of old object
+			$file->detach();
+
 			return true;
 		});
 	}
@@ -421,7 +427,12 @@ trait FileActions
 			$file   = $file->manipulate($create);
 
 			// return a fresh clone
-			return $file->clone();
+			$newFile = $file->clone();
+
+			// detach storage handler of old object
+			$file->detach();
+
+			return $newFile;
 		});
 	}
 
