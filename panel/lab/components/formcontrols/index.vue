@@ -51,6 +51,9 @@
 		<k-lab-example label="Unsaved">
 			<k-form-controls
 				:is-unsaved="true"
+				editor="editor@getkirby.com"
+				modified="2024-10-01T17:00:00"
+				preview="https://getkirby.com"
 				@discard="log('discard')"
 				@submit="log('submit')"
 			/>

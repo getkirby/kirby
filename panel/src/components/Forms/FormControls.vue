@@ -12,14 +12,20 @@
 			variant="filled"
 		/>
 		<k-dropdown-content
-			v-if="isLocked"
-			ref="lock"
+			ref="dropdown"
 			align-x="end"
 			class="k-form-controls-dropdown"
 		>
-			<p>
-				{{ $t("form.locked") }}
-			</p>
+			<template v-if="isLocked">
+				<p>
+					{{ $t("form.locked") }}
+				</p>
+			</template>
+			<template v-else>
+				<p>
+					{{ $t("form.unsaved") }}
+				</p>
+			</template>
 			<template v-if="editor || modified">
 				<hr />
 				<dl>
@@ -71,7 +77,7 @@ export default {
 						dropdown: true,
 						text: this.editor,
 						icon: "lock",
-						click: () => this.$refs.lock.toggle()
+						click: () => this.$refs.dropdown.toggle()
 					}
 				];
 			}
@@ -89,6 +95,11 @@ export default {
 						text: this.$t("save"),
 						icon: "check",
 						click: () => this.$emit("submit")
+					},
+					{
+						theme: "notice",
+						icon: "dots",
+						click: () => this.$refs.dropdown.toggle()
 					}
 				];
 			}
