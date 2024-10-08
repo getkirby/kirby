@@ -142,9 +142,7 @@ abstract class ContentStorageHandler
 
 		// copy all versions from the given storage instance
 		// and add them to the new storage instance.
-		foreach ($fromStorage->all() as $versionId => $language) {
-			$toStorage->create($versionId, $language, $fromStorage->read($versionId, $language));
-		}
+		$fromStorage->copyAll($toStorage);
 
 		return $toStorage;
 	}

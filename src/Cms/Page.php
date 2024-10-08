@@ -707,7 +707,8 @@ class Page extends ModelWithContent
 	public function isMovableTo(Page|Site $parent): bool
 	{
 		try {
-			return PageRules::move($this, $parent);
+			PageRules::move($this, $parent);
+			return true;
 		} catch (Throwable) {
 			return false;
 		}
