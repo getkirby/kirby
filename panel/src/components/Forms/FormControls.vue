@@ -1,16 +1,14 @@
 <template>
-	<k-button-group
-		v-if="buttons.length"
-		layout="collapsed"
-		class="k-form-controls"
-	>
-		<k-button
-			v-for="button in buttons"
-			:key="button.text"
-			v-bind="button"
-			size="sm"
-			variant="filled"
-		/>
+	<div v-if="buttons.length" class="k-form-controls">
+		<k-button-group layout="collapsed">
+			<k-button
+				v-for="button in buttons"
+				:key="button.text"
+				v-bind="button"
+				size="sm"
+				variant="filled"
+			/>
+		</k-button-group>
 		<k-dropdown-content
 			ref="dropdown"
 			align-x="end"
@@ -48,7 +46,7 @@
 				</k-dropdown-item>
 			</template>
 		</k-dropdown-content>
-	</k-button-group>
+	</div>
 </template>
 
 <script>
@@ -61,7 +59,7 @@ export default {
 		editor: String,
 		isLocked: Boolean,
 		isUnsaved: Boolean,
-		modified: String,
+		modified: [String, Date],
 		/**
 		 * Preview URL for changes
 		 */
