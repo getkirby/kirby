@@ -234,7 +234,7 @@ return [
 				'props' => [
 					'fields' => [
 						'role' => Field::role(
-							roles: $user->roles('change'),
+							roles: $user->roles('changeRole'),
 							props: [
 								'label'    => I18n::translate('user.changeRole.select'),
 								'required' => true,

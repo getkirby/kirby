@@ -380,7 +380,7 @@ class UserTest extends TestCase
 
 		// last admin has only admin role as option
 		$user  = $app->user('admin@getkirby.com');
-		$roles = $user->roles('change')->values(fn ($role) => $role->id());
+		$roles = $user->roles('changeRole')->values(fn ($role) => $role->id());
 		$this->assertSame(['admin'], $roles);
 	}
 
@@ -430,7 +430,7 @@ class UserTest extends TestCase
 		]);
 
 		$app->impersonate('editor@getkirby.com');
-		$user  = $app->user('editor@getkirby.com');
+		$user = $app->user('editor@getkirby.com');
 
 		$roles = $user->roles()->values(fn ($role) => $role->id());
 		$this->assertSame(['client', 'editor', 'guest'], $roles);
@@ -438,7 +438,7 @@ class UserTest extends TestCase
 		$roles = $user->roles('create')->values(fn ($role) => $role->id());
 		$this->assertSame(['editor', 'guest'], $roles);
 
-		$roles = $user->roles('change')->values(fn ($role) => $role->id());
+		$roles = $user->roles('changeRole')->values(fn ($role) => $role->id());
 		$this->assertSame(['client', 'editor'], $roles);
 	}
 

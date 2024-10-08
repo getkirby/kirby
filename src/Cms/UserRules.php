@@ -128,7 +128,7 @@ class UserRules
 		}
 
 		// prevent changing to role that is not available for user
-		if ($user->roles('change')->find($role) instanceof Role === false) {
+		if ($user->roles('changeRole')->find($role) instanceof Role === false) {
 			throw new InvalidArgumentException([
 				'key' => 'user.role.invalid',
 			]);
