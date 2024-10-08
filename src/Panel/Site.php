@@ -92,10 +92,11 @@ class Site extends Model
 
 		return [
 			...$props,
-			'blueprint' => 'site',
-			'id'        => '/',
-			'model'     => $model,
-			'title'     => $model['title'],
+			'blueprint'  => 'site',
+			'changesUrl' => $this->model->previewUrl() . '?_version=changes',
+			'id'         => '/',
+			'model'      => $model,
+			'title'      => $model['title'],
 		];
 	}
 
