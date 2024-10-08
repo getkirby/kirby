@@ -9,6 +9,7 @@ export default {
 		api: String,
 		blueprint: String,
 		buttons: Array,
+		changesUrl: String,
 		content: Object,
 		id: String,
 		link: String,

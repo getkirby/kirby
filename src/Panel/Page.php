@@ -362,9 +362,10 @@ class Page extends Model
 		return [
 			...$props,
 			...$this->prevNext(),
-			'blueprint' => $this->model->intendedTemplate()->name(),
-			'model'     => $model,
-			'title'     => $model['title'],
+			'blueprint'  => $this->model->intendedTemplate()->name(),
+			'changesUrl' => $this->model->previewUrl() . '?_version=changes',
+			'model'      => $model,
+			'title'      => $model['title'],
 		];
 	}
 
