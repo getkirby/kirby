@@ -218,14 +218,19 @@ class User extends Model
 	 */
 	public function props(): array
 	{
-		$user    = $this->model;
-		$account = $user->isLoggedIn();
+		$user        = $this->model;
+		$account     = $user->isLoggedIn();
+		$permissions = $this->options();
 
 		return array_merge(
 			parent::props(),
 			$this->prevNext(),
 			[
-				'blueprint' => $this->model->role()->name(),
+				'blueprint'         => $this->model->role()->name(),
+				'canChangeEmail'    => $permissions['changeEmail'],
+				'canChangeLanguage' => $permissions['changeLanguage'],
+				'canChangeName'     => $permissions['changeName'],
+				'canChangeRole'     => $permissions['changeRole'] && $this->model->roles('changeRole')->count() > 1,
 				'model' => [
 					'account'  => $account,
 					'avatar'   => $user->avatar()?->url(),
