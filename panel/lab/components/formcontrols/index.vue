@@ -18,7 +18,7 @@
 						:is-unsaved="isUnsaved"
 						:is-locked="isLocked"
 						editor="editor@getkirby.com"
-						modified="5 minutes ago"
+						modified="2024-10-01T17:00:00"
 						preview="https://getkirby.com"
 						@discard="log('discard')"
 						@submit="log('submit')"
