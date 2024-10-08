@@ -120,6 +120,9 @@ export default (panel) => {
 				await panel.post(this.api + "/changes/save", panel.view.props.content);
 			} finally {
 				this.isProcessing = false;
+
+				// update the last modification timestamp
+				panel.view.props.lock.modified = new Date();
 			}
 		},
 
@@ -132,9 +135,6 @@ export default (panel) => {
 			if (length(values) === 0) {
 				return;
 			}
-
-			// update the last modification timestamp
-			panel.view.props.lock.modified = new Date();
 
 			panel.view.props.content = {
 				...panel.view.props.originals,
