@@ -133,6 +133,9 @@ export default (panel) => {
 				return;
 			}
 
+			// update the last modification timestamp
+			panel.view.props.lock.modified = new Date();
+
 			panel.view.props.content = {
 				...panel.view.props.originals,
 				...values
