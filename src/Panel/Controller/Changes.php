@@ -24,10 +24,7 @@ class Changes
 	 */
 	public static function discard(ModelWithContent $model): array
 	{
-		$model->version(VersionId::changes())->delete();
-
-		// remove the model from the user's list of unsaved changes
-		App::instance()->site()->changes()->untrack($model);
+		$model->version(VersionId::changes())->delete('current');
 
 		return [
 			'status' => 'ok'
@@ -83,9 +80,6 @@ class Changes
 			],
 			language: 'current'
 		);
-
-		// add the model to the user's list of unsaved changes
-		App::instance()->site()->changes()->track($model);
 
 		return [
 			'status' => 'ok'
