@@ -908,6 +908,7 @@ class PageRulesTest extends TestCase
 						'related' => [
 							'type'      => 'pages',
 							'parent'    => 'site.find("parent-a")',
+							'create'    => 'album',
 							'templates' => ['article']
 						]
 					]
@@ -1000,6 +1001,7 @@ class PageRulesTest extends TestCase
 					[
 						'slug'     => 'parent-b',
 						'template' => 'photography',
+						'create'   => 'album'
 					]
 				]
 			],
@@ -1008,7 +1010,7 @@ class PageRulesTest extends TestCase
 				'pages/photography' => [
 					'sections' => [
 						'albums' => [
-							'type' => 'pages',
+							'type' => 'pages'
 						]
 					]
 				]
