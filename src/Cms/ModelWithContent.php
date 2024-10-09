@@ -4,10 +4,10 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Content\Content;
-use Kirby\Content\ContentStorageHandler;
 use Kirby\Content\ContentTranslation;
 use Kirby\Content\Lock;
-use Kirby\Content\PlainTextContentStorageHandler;
+use Kirby\Content\PlainTextStorage;
+use Kirby\Content\Storage;
 use Kirby\Content\Version;
 use Kirby\Content\VersionId;
 use Kirby\Exception\InvalidArgumentException;
@@ -48,7 +48,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	public Content|null $content;
 	public static App $kirby;
 	protected Site|null $site;
-	protected ContentStorageHandler $storage;
+	protected Storage $storage;
 	public Collection|null $translations = null;
 
 	/**
@@ -549,11 +549,9 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 * Returns the content storage handler
 	 * @internal
 	 */
-	public function storage(): ContentStorageHandler
+	public function storage(): Storage
 	{
-		return $this->storage ??= new PlainTextContentStorageHandler(
-			model: $this,
-		);
+		return $this->storage ??= new PlainTextStorage(model: $this);
 	}
 
 	/**

@@ -23,7 +23,7 @@ use Kirby\Toolkit\A;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-abstract class ContentStorageHandler
+abstract class Storage
 {
 	public function __construct(protected ModelWithContent $model)
 	{
@@ -54,7 +54,7 @@ abstract class ContentStorageHandler
 		Language $fromLanguage,
 		VersionId|null $toVersionId = null,
 		Language|null $toLanguage = null,
-		ContentStorageHandler|null $toStorage = null
+		Storage|null $toStorage = null
 	): void {
 		// fallbacks to allow keeping the method call lean
 		$toVersionId ??= $fromVersionId;
@@ -71,7 +71,7 @@ abstract class ContentStorageHandler
 	/**
 	 * Copies all content to another storage
 	 */
-	public function copyAll(ContentStorageHandler $to): void
+	public function copyAll(Storage $to): void
 	{
 		foreach ($this->all() as $versionId => $language) {
 			$this->copy($versionId, $language, toStorage: $to);
@@ -168,7 +168,7 @@ abstract class ContentStorageHandler
 		Language $fromLanguage,
 		VersionId|null $toVersionId = null,
 		Language|null $toLanguage = null,
-		ContentStorageHandler|null $toStorage = null
+		Storage|null $toStorage = null
 	): void {
 		// fallbacks to allow keeping the method call lean
 		$toVersionId ??= $fromVersionId;
@@ -191,7 +191,7 @@ abstract class ContentStorageHandler
 	/**
 	 * Moves all content to another storage
 	 */
-	public function moveAll(ContentStorageHandler $to): void
+	public function moveAll(Storage $to): void
 	{
 		foreach ($this->all() as $versionId => $language) {
 			$this->move($versionId, $language, toStorage: $to);

@@ -6,13 +6,13 @@ use Kirby\Cms\Language;
 use Kirby\Exception\NotFoundException;
 
 /**
- * @coversDefaultClass Kirby\Content\MemoryContentStorageHandler
+ * @coversDefaultClass Kirby\Content\MemoryStorage
  * @covers ::__construct
  * @covers ::cacheId
  */
-class MemoryContentStorageHandlerTest extends TestCase
+class MemoryStorageTest extends TestCase
 {
-	protected MemoryContentStorageHandler $storage;
+	protected MemoryStorage $storage;
 
 	public function assertCreateAndDelete(VersionId $versionId, Language $language): void
 	{
@@ -60,7 +60,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 	): void {
 		parent::setUpMultiLanguage(site: $site);
 
-		$this->storage = new MemoryContentStorageHandler($this->model);
+		$this->storage = new MemoryStorage($this->model);
 	}
 
 	public function setUpSingleLanguage(
@@ -68,7 +68,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 	): void {
 		parent::setUpSingleLanguage(site: $site);
 
-		$this->storage = new MemoryContentStorageHandler($this->model);
+		$this->storage = new MemoryStorage($this->model);
 	}
 
 	/**

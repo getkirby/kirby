@@ -25,7 +25,7 @@ use Kirby\Filesystem\F;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class PlainTextContentStorageHandler extends ContentStorageHandler
+class PlainTextStorage extends Storage
 {
 	/**
 	 * Creates the absolute directory path for the model
