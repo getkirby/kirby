@@ -1008,7 +1008,7 @@ class PageRulesTest extends TestCase
 				'pages/photography' => [
 					'sections' => [
 						'albums' => [
-							'type' => 'pages',
+							'type' => 'pages'
 						]
 					]
 				]
