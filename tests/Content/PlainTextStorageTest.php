@@ -11,12 +11,12 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 
 /**
- * @coversDefaultClass Kirby\Content\PlainTextContentStorageHandler
+ * @coversDefaultClass Kirby\Content\PlainTextStorage
  * @covers ::__construct
  */
-class PlainTextContentStorageHandlerTest extends TestCase
+class PlainTextStorageTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Content.PlainTextContentStorage';
+	public const TMP = KIRBY_TMP_DIR . '/Content.PlainTextStorage';
 
 	protected $storage;
 
@@ -25,7 +25,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	): void {
 		parent::setUpMultiLanguage(site: $site);
 
-		$this->storage = new PlainTextContentStorageHandler($this->model);
+		$this->storage = new PlainTextStorage($this->model);
 	}
 
 	public function setUpSingleLanguage(
@@ -33,7 +33,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	): void {
 		parent::setUpSingleLanguage(site: $site);
 
-		$this->storage = new PlainTextContentStorageHandler($this->model);
+		$this->storage = new PlainTextStorage($this->model);
 	}
 
 	/**
@@ -574,7 +574,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 			])
 		};
 
-		$storage = new PlainTextContentStorageHandler($model);
+		$storage = new PlainTextStorage($model);
 		$this->assertSame(static::TMP . '/' . $expected, $storage->contentFile($id, $this->app->language($language)));
 	}
 
@@ -619,7 +619,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 			])
 		};
 
-		$storage = new PlainTextContentStorageHandler($model);
+		$storage = new PlainTextStorage($model);
 		$this->assertSame(static::TMP . '/' . $expected, $storage->contentFile($id, Language::single()));
 	}
 
@@ -651,7 +651,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 			'template' => 'article'
 		]);
 
-		$storage = new PlainTextContentStorageHandler($model);
+		$storage = new PlainTextStorage($model);
 		$this->assertSame(static::TMP . '/content/_drafts/a-page/_changes/article.txt', $storage->contentFile(VersionId::changes(), Language::single()));
 	}
 

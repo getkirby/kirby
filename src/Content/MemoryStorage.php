@@ -13,7 +13,7 @@ use Kirby\Cms\ModelWithContent;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class MemoryContentStorageHandler extends ContentStorageHandler
+class MemoryStorage extends Storage
 {
 	/**
 	 * Cache instance, used to store content in memory

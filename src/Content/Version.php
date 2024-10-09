@@ -206,7 +206,7 @@ class Version
 		Language|string $fromLanguage,
 		VersionId|null $toVersionId = null,
 		Language|string|null $toLanguage = null,
-		ContentStorageHandler|null $toStorage = null
+		Storage|null $toStorage = null
 	): void {
 		$this->ensure($fromLanguage);
 		$this->model->storage()->move(
