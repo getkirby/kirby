@@ -945,7 +945,7 @@ class PageRulesTest extends TestCase
 	/**
 	 * @covers ::move
 	 */
-	public function testMoveWithNoTemplateRestrictions()
+	public function testMoveWithParentWithNoPagesSections()
 	{
 		$app = new App([
 			'roots' => [
@@ -970,10 +970,61 @@ class PageRulesTest extends TestCase
 				]
 			],
 			'blueprints' => [
+				'pages/article' => [],
 				'pages/photography' => [
 					'sections' => [
 						'albums' => [
-							'type'      => 'info',
+							'type' => 'info',
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$parentB = $app->page('parent-b');
+		$child   = $app->page('parent-a/child');
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('The page "parent-b" cannot be a parent of any page because it lacks any pages sections in its blueprint');
+
+		PageRules::move($child, $parentB);
+	}
+
+	/**
+	 * @covers ::move
+	 */
+	public function testMoveWithParentWithNoTemplateRestrictions()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP,
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'parent-a',
+						'template' => 'blog',
+						'children' => [
+							[
+								'slug'     => 'child',
+								'template' => 'article'
+							]
+						]
+					],
+					[
+						'slug'     => 'parent-b',
+						'template' => 'photography',
+					]
+				]
+			],
+			'blueprints' => [
+				'pages/article' => [],
+				'pages/photography' => [
+					'sections' => [
+						'albums' => [
+							'type' => 'pages',
 						]
 					]
 				]
