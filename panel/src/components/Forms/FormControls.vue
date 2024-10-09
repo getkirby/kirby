@@ -41,7 +41,7 @@
 			</template>
 			<template v-if="preview">
 				<hr />
-				<k-dropdown-item :link="preview" icon="preview" target="_blank">
+				<k-dropdown-item :link="preview" icon="preview">
 					{{ $t("form.preview") }}
 				</k-dropdown-item>
 			</template>
