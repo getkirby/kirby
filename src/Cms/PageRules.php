@@ -330,7 +330,7 @@ class PageRules
 			$parent->blueprint()->sections(),
 			fn ($section) =>
 				$section->type() === 'pages' &&
-				$section->parent() === $parent
+				$section->parent()->is($parent)
 		);
 
 		// check if the parent has at least one pages section
@@ -343,17 +343,20 @@ class PageRules
 			]);
 		}
 
-		// go through all allowed blueprints and
-		// add the name to the allow list
+		// go through all allowed templates and
+		// add the name to the allowlist
 		foreach ($sections as $section) {
-			foreach ($section->blueprints() as $blueprint) {
-				$allowed[] = $blueprint['name'];
+			foreach ($section->templates() as $template) {
+				$allowed[] = $template;
 			}
 		}
 
 		// check if the template of this page is allowed as subpage type
 		// for the potential new parent
-		if (in_array($page->intendedTemplate()->name(), $allowed) === false) {
+		if (
+			$allowed !== [] &&
+			in_array($page->intendedTemplate()->name(), $allowed) === false
+		) {
 			throw new PermissionException(
 				key: 'page.move.template',
 				data: [
