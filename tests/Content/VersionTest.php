@@ -238,7 +238,12 @@ class VersionTest extends TestCase
 		$this->assertContentFileExists('en');
 		$this->assertContentFileExists('de');
 
-		$version->delete();
+		$version->delete('en');
+
+		$this->assertContentFileDoesNotExist('en');
+		$this->assertContentFileExists('de');
+
+		$version->delete('de');
 
 		$this->assertContentFileDoesNotExist('en');
 		$this->assertContentFileDoesNotExist('de');
@@ -521,6 +526,35 @@ class VersionTest extends TestCase
 
 		$this->assertTrue($version->exists('de'));
 		$this->assertTrue($version->exists($this->app->language('de')));
+	}
+
+	/**
+	 * @covers ::exists
+	 */
+	public function testExistsWithLanguageWildcard(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$this->createContentMultiLanguage();
+
+		$this->assertTrue($version->exists('en'));
+		$this->assertTrue($version->exists('de'));
+		$this->assertTrue($version->exists('*'));
+
+		// delete the German translation
+		$version->delete('de');
+
+		$this->assertTrue($version->exists('en'));
+		$this->assertFalse($version->exists('de'));
+
+		// The wildcard should now still return true
+		// because the English translation still exists
+		$this->assertTrue($version->exists('*'));
 	}
 
 	/**
