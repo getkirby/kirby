@@ -209,6 +209,20 @@ class FileCacheTest extends TestCase
 	}
 
 	/**
+	 * @covers ::isEmpty
+	 */
+	public function testIsEmpty()
+	{
+		$cache = new FileCache([
+			'root' => static::TMP
+		]);
+
+		$this->assertTrue($cache->isEmpty());
+		$this->assertTrue($cache->set('foo', 'A basic value'));
+		$this->assertFalse($cache->isEmpty());
+	}
+
+	/**
 	 * @covers ::set
 	 * @covers ::created
 	 * @covers ::retrieve

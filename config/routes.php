@@ -8,6 +8,7 @@ use Kirby\Panel\Panel;
 use Kirby\Panel\Plugins;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuid;
+use Kirby\Uuid\Uuids;
 
 return function (App $kirby) {
 	$api   = $kirby->option('api.slug', 'api');
@@ -135,11 +136,17 @@ return function (App $kirby) {
 			'method'  => 'ALL',
 			'env'     => 'site',
 			'action'  => function (string $type, string $id) use ($kirby) {
-				// try to resolve to model, but only from UUID cache;
-				// this ensures that only existing UUIDs can be queried
-				// and attackers can't force Kirby to go through the whole
-				// site index with a non-existing UUID
-				if ($model = Uuid::for($type . '://' . $id)?->model(true)) {
+				// try to resolve to model but if the UUID cache exists
+				// only allow lookup from the cache;
+				// only if the cache doesn't exist, use the index;
+				// this ensures that attackers can't force Kirby to go through
+				// the whole site index with a non-existing UUID
+				$lazy = Uuids::cache()->isEmpty() === false;
+
+				if ($model = Uuid::for($type . '://' . $id)?->model($lazy)) {
+					/**
+					 * @var \Kirby\Cms\Page|\Kirby\Cms\File $model
+					 */
 					return $kirby
 						->response()
 						->redirect($model->url());
