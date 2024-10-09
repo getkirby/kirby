@@ -254,8 +254,10 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 * Should be done in conjunction with cloning. The storage of the clone
 	 * can afterwards be mutated without affecting the content in the
 	 * original instance
+	 *
+	 * @internal
 	 */
-	public function detach(): void
+	public function detachStorage(): void
 	{
 		$this->storage = ImmutableMemoryContentStorageHandler::from($this->storage());
 	}
@@ -721,7 +723,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		);
 
 		// detach storage handler of old object
-		$this->detach();
+		$this->detachStorage();
 
 		return $newModel;
 	}

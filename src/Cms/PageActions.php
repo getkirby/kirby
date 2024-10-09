@@ -71,7 +71,7 @@ trait PageActions
 			}
 
 			// detach storage handler of old object
-			$oldPage->detach();
+			$oldPage->detachStorage();
 
 			// overwrite the child in the parent page
 			static::updateParentCollections($newPage, 'set');
@@ -135,7 +135,7 @@ trait PageActions
 			}
 
 			// detach storage handler of old object
-			$oldPage->detach();
+			$oldPage->detachStorage();
 
 			// overwrite the new page in the parent collection
 			static::updateParentCollections($newPage, 'set');
@@ -304,7 +304,7 @@ trait PageActions
 			$page = $oldPage->convertTo($template);
 
 			// detach storage handler of old object
-			$oldPage->detach();
+			$oldPage->detachStorage();
 
 			// update the parent collection
 			static::updateParentCollections($page, 'set');
@@ -337,7 +337,7 @@ trait PageActions
 			$newPage = $page->save(['title' => $title], $languageCode);
 
 			// detach storage handler of old object
-			$page->detach();
+			$page->detachStorage();
 
 			// flush the parent cache to get children and drafts right
 			static::updateParentCollections($newPage, 'set');
@@ -658,7 +658,7 @@ trait PageActions
 			}
 
 			// detach storage handler
-			$page->detach();
+			$page->detachStorage();
 
 			return true;
 		});
@@ -788,7 +788,7 @@ trait PageActions
 		}
 
 		// detach storage handler of old object
-		$this->detach();
+		$this->detachStorage();
 
 		return $page;
 	}
@@ -946,7 +946,7 @@ trait PageActions
 		$page->resortSiblingsAfterUnlisting();
 
 		// detach storage handler of old object
-		$this->detach();
+		$this->detachStorage();
 
 		return $page;
 	}

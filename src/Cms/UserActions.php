@@ -42,7 +42,7 @@ trait UserActions
 			$user->kirby()->users()->set($newUser->id(), $newUser);
 
 			// detach storage handler of old object
-			$user->detach();
+			$user->detachStorage();
 
 			return $newUser;
 		});
@@ -61,7 +61,7 @@ trait UserActions
 			$user->kirby()->users()->set($newUser->id(), $newUser);
 
 			// detach storage handler of old object
-			$user->detach();
+			$user->detachStorage();
 
 			return $newUser;
 		});
@@ -82,7 +82,7 @@ trait UserActions
 			$user->kirby()->users()->set($newUser->id(), $newUser);
 
 			// detach storage handler of old object
-			$user->detach();
+			$user->detachStorage();
 
 			return $newUser;
 		});
@@ -113,7 +113,7 @@ trait UserActions
 			}
 
 			// detach storage handler of old object
-			$user->detach();
+			$user->detachStorage();
 
 			return $newUser;
 		});
@@ -132,7 +132,7 @@ trait UserActions
 			$user->kirby()->users()->set($newUser->id(), $newUser);
 
 			// detach storage handler of old object
-			$user->detach();
+			$user->detachStorage();
 
 			return $newUser;
 		});
@@ -328,7 +328,7 @@ trait UserActions
 			$user->kirby()->users()->remove($user);
 
 			// detach storage handler of old object
-			$user->detach();
+			$user->detachStorage();
 
 			return true;
 		});
