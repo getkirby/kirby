@@ -40,8 +40,8 @@ abstract class Model
 		$version = $this->model->version('changes');
 		$changes = [];
 
-		if ($version->exists() === true) {
-			$changes = $version->content()->toArray();
+		if ($version->exists('current') === true) {
+			$changes = $version->content('current')->toArray();
 		}
 
 		// create a form which will collect the published values for the model,
