@@ -4,10 +4,12 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Content\Content;
-use Kirby\Content\ContentTranslation;
 use Kirby\Content\Lock;
+use Kirby\Content\MemoryStorage;
 use Kirby\Content\PlainTextStorage;
 use Kirby\Content\Storage;
+use Kirby\Content\Translation;
+use Kirby\Content\Translations;
 use Kirby\Content\Version;
 use Kirby\Content\VersionId;
 use Kirby\Exception\InvalidArgumentException;
@@ -49,7 +51,6 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	public static App $kirby;
 	protected Site|null $site;
 	protected Storage $storage;
-	public Collection|null $translations = null;
 
 	/**
 	 * Store values used to initilaize object
@@ -156,9 +157,12 @@ abstract class ModelWithContent implements Identifiable, Stringable
 
 		// get the translation by code
 		$translation = $this->translation($language->code());
-
-		// don't normalize field keys (already handled by the `ContentTranslation` class)
-		$content = new Content($translation->content(), $this, false);
+		$content     = new Content(
+			data: $translation->toArray()['content'],
+			parent: $this,
+			// already normalized by `Version` class
+			normalize: false
+		);
 
 		// only store the content for the current language
 		if ($languageCode === null) {
@@ -360,9 +364,8 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 */
 	public function purge(): static
 	{
-		$this->blueprints   = null;
-		$this->content      = null;
-		$this->translations = null;
+		$this->blueprints = null;
+		$this->content    = null;
 
 		return $this;
 	}
@@ -522,23 +525,24 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	}
 
 	/**
-	 * Create the translations collection from an array
-	 *
-	 * @return $this
+	 * Stores in-memory translations for the model if they
+	 * are passed to the constructor with the translations prop.
 	 */
 	protected function setTranslations(array|null $translations = null): static
 	{
-		if ($translations !== null) {
-			$this->translations = new Collection();
-
-			foreach ($translations as $props) {
-				$props['parent'] = $this;
-				$translation = new ContentTranslation($props);
-				$this->translations->data[$translation->code()] = $translation;
-			}
-		} else {
-			$this->translations = null;
+		// don't set anything if there's no content
+		if ($translations === null) {
+			return $this;
 		}
+
+		// switch to in-memory content storage
+		$this->storage = new MemoryStorage(model: $this);
+
+		Translations::create(
+			model: $this,
+			version: $this->version(),
+			translations: $translations
+		);
 
 		return $this;
 	}
@@ -631,37 +635,22 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	/**
 	 * Returns a single translation by language code
 	 * If no code is specified the current translation is returned
-	 *
-	 * @throws \Kirby\Exception\NotFoundException If the language does not exist
 	 */
 	public function translation(
 		string|null $languageCode = null
-	): ContentTranslation|null {
-		$language = Language::ensure($languageCode ?? 'current');
-		return $this->translations()->find($language->code());
+	): Translation|null {
+		return $this->translations()->find($languageCode ?? 'current');
 	}
 
 	/**
 	 * Returns the translations collection
 	 */
-	public function translations(): Collection
+	public function translations(): Translations
 	{
-		if ($this->translations !== null) {
-			return $this->translations;
-		}
-
-		$this->translations = new Collection();
-
-		foreach ($this->kirby()->languages() as $language) {
-			$translation = new ContentTranslation([
-				'parent' => $this,
-				'code'   => $language->code(),
-			]);
-
-			$this->translations->data[$translation->code()] = $translation;
-		}
-
-		return $this->translations;
+		return Translations::load(
+			model: $this,
+			version: $this->version()
+		);
 	}
 
 	/**

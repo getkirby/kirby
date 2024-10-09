@@ -315,14 +315,12 @@ class SiteActionsTest extends TestCase
 		$site->drafts();
 		$site->childrenAndDrafts();
 
-		$this->assertNotNull([], $site->translations);
 		$this->assertNotNull($site->children);
 		$this->assertNotNull($site->drafts);
 		$this->assertNotNull($site->childrenAndDrafts);
 
 		$site->purge();
 
-		$this->assertNull($site->translations);
 		$this->assertNull($site->children);
 		$this->assertNull($site->drafts);
 		$this->assertNull($site->childrenAndDrafts);

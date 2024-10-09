@@ -275,7 +275,14 @@ class SiteTest extends TestCase
 		$this->assertFalse($data['homePage']);
 		$this->assertFalse($data['page']);
 		$this->assertNull($data['title']);
-		$this->assertSame([], $data['translations']);
+		$this->assertSame([
+			'en' => [
+				'code'    => 'en',
+				'content' => [],
+				'exists'  => false,
+				'slug'    => null,
+			]
+		], $data['translations']);
 		$this->assertSame('/', $data['url']);
 	}
 

@@ -283,8 +283,10 @@ class TranslationTest extends TestCase
 			language: Language::ensure('default')
 		);
 
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('`$translation->parent()` has been deprecated. Please use `$translation->model()` instead');
+		// TODO: Change when deprecation message is active again
+		$this->expectNotToPerformAssertions();
+		// $this->expectException(Exception::class);
+		// $this->expectExceptionMessage('`$translation->parent()` has been deprecated. Please use `$translation->model()` instead');
 
 		$translation->parent();
 	}
@@ -343,8 +345,10 @@ class TranslationTest extends TestCase
 			language: Language::ensure('default')
 		);
 
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('`$translation->update()` has been deprecated. Please use `$model->version()->update()` instead');
+		// TODO: Change when deprecation message is active again
+		$this->expectNotToPerformAssertions();
+		// $this->expectException(Exception::class);
+		// $this->expectExceptionMessage('`$translation->update()` has been deprecated. Please use `$model->version()->update()` instead');
 
 		$translation->update();
 	}

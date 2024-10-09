@@ -53,10 +53,7 @@ class Translation extends ContentTranslation
 	}
 
 	/**
-	 * Returns the translation content
-	 * as plain array
-	 *
-	 * @deprecated 5.0.0 Use `::version()->content()->toArray()` instead
+	 * Returns the translation content as plain array
 	 */
 	public function content(): array
 	{
@@ -194,7 +191,7 @@ class Translation extends ContentTranslation
 	): static {
 		// TODO: Add deprecation warning
 		// Helpers::deprecated('`$translation->update()` has been deprecated. Please use `$model->version()->save()` instead.', 'translation-methods');
-		$this->version()->save($data, $this->language, $overwrite);
+		$this->version()->save($data ?? [], $this->language, $overwrite);
 		return $this;
 	}
 

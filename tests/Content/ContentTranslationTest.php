@@ -98,6 +98,7 @@ class ContentTranslationTest extends TestCase
 
 		$this->assertSame([
 			'title' => $content['title'],
+			'slug'  => null,
 			'date'  => $defaultContent['date'],
 			'text'  => $content['text']
 		], $translation->content());

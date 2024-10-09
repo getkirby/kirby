@@ -14,6 +14,9 @@ use Kirby\Cms\ModelWithContent;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @todo Remove/merge into new class in v6. Add class alias.
+ * @deprecated 5.0.0 Use `Kirby\Content\Translation` instead
  */
 class ContentTranslation
 {
