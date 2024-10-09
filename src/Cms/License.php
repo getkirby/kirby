@@ -44,11 +44,13 @@ class License
 		protected string|null $date = null,
 		protected string|null $signature = null,
 	) {
-		// normalize the email address
-		$this->email = match($email) {
-			null    => null,
-			default => $this->normalizeEmail($email)
-		};
+		if ($code !== null) {
+			$this->code = trim($code);
+		}
+
+		if ($email !== null) {
+			$this->email = $this->normalizeEmail($email);
+		}
 	}
 
 	/**
