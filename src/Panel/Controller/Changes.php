@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel\Controller;
 
-use Kirby\Cms\App;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Content\VersionId;
 use Kirby\Form\Form;
@@ -24,10 +23,7 @@ class Changes
 	 */
 	public static function discard(ModelWithContent $model): array
 	{
-		$model->version(VersionId::changes())->delete();
-
-		// remove the model from the user's list of unsaved changes
-		App::instance()->site()->changes()->untrack($model);
+		$model->version(VersionId::changes())->delete('current');
 
 		return [
 			'status' => 'ok'
@@ -52,9 +48,6 @@ class Changes
 		$changes->publish(
 			language: 'current'
 		);
-
-		// remove the model from the user's list of unsaved changes
-		App::instance()->site()->changes()->untrack($model);
 
 		return [
 			'status' => 'ok'
@@ -83,9 +76,6 @@ class Changes
 			],
 			language: 'current'
 		);
-
-		// add the model to the user's list of unsaved changes
-		App::instance()->site()->changes()->track($model);
 
 		return [
 			'status' => 'ok'

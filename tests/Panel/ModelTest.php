@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\File as ModelFile;
+use Kirby\Cms\Page as ModelPage;
 use Kirby\Cms\Site as ModelSite;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
@@ -80,7 +81,33 @@ class ModelTest extends TestCase
 				'foo' => 'bar'
 			]
 		]);
+
 		$this->assertSame($content, $panel->content());
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::content
+	 */
+	public function testContentWithChanges()
+	{
+		$panel = new CustomPanelModel(
+			new ModelPage(['slug' => 'test'])
+		);
+
+		$panel->model()->version('published')->save([
+			'foo'  => 'foo',
+			'uuid' => 'test'
+		]);
+
+		$panel->model()->version('changes')->save([
+			'foo' => 'foobar'
+		]);
+
+		$this->assertSame([
+			'foo'  => 'foobar',
+			'uuid' => 'test'
+		], $panel->content());
 	}
 
 	/**

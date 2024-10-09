@@ -105,17 +105,16 @@ class Version
 	}
 
 	/**
-	 * Deletes a version with all its languages
+	 * Deletes a version for a specific language
 	 */
-	public function delete(): void
+	public function delete(Language|string $language = 'default'): void
 	{
-		// untrack the changes
-		if ($this->id->is(VersionId::changes()) === true) {
-			(new Changes())->untrack($this->model);
-		}
+		$this->model->storage()->delete($this->id, Language::ensure($language));
 
-		foreach (Languages::ensure() as $language) {
-			$this->model->storage()->delete($this->id, $language);
+		// untrack the changes if the version does no longer exist
+		// in any of the available languages
+		if ($this->id->is(VersionId::changes()) === true && $this->exists('*') === false) {
+			(new Changes())->untrack($this->model);
 		}
 	}
 
@@ -158,6 +157,18 @@ class Version
 	 */
 	public function exists(Language|string $language = 'default'): bool
 	{
+		// go through all possible languages to check if this
+		// version exists in any language
+		if ($language === '*') {
+			foreach (Languages::ensure() as $language) {
+				if ($this->exists($language) === true) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		return $this->model->storage()->exists(
 			$this->id,
 			Language::ensure($language)
@@ -232,17 +243,21 @@ class Version
 		// make sure to store the right fields for the model
 		$fields = $this->model->contentFileData($fields, $language);
 
+		// add the editing user
+		if (
+			Lock::isEnabled() === true &&
+			$this->id->is(VersionId::changes()) === true
+		) {
+			$fields['lock'] = $this->model->kirby()->user()?->id();
+
+		// remove the lock field for any other version or
+		// if locking is disabled
+		} else {
+			unset($fields['lock']);
+		}
+
 		// the default language stores all fields
 		if ($language->isDefault() === true) {
-
-			// add the editing user
-			if (
-				Lock::isEnabled() === true &&
-				$this->id->is(VersionId::changes()) === true
-			) {
-				$fields['lock'] = $this->model->kirby()->user()?->id();
-			}
-
 			return $fields;
 		}
 
