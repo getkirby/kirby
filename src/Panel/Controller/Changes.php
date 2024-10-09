@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel\Controller;
 
-use Kirby\Cms\App;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Content\VersionId;
 use Kirby\Form\Form;
@@ -49,9 +48,6 @@ class Changes
 		$changes->publish(
 			language: 'current'
 		);
-
-		// remove the model from the user's list of unsaved changes
-		App::instance()->site()->changes()->untrack($model);
 
 		return [
 			'status' => 'ok'
