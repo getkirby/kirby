@@ -51,11 +51,29 @@
 		</header>
 		<main class="k-page-comparison-grid" :data-mode="mode">
 			<section v-if="mode === 'published' || mode === 'side-by-side'">
-				<k-headline>Published version</k-headline>
+				<k-headline>
+					Published version
+					<k-button
+						:link="published"
+						icon="open"
+						size="xs"
+						target="_blank"
+						variant="filled"
+					/>
+				</k-headline>
 				<iframe :src="published"></iframe>
 			</section>
 			<section v-if="mode === 'changes' || mode === 'side-by-side'">
-				<k-headline>Changed version</k-headline>
+				<k-headline>
+					Changed version
+					<k-button
+						:link="changes"
+						icon="open"
+						size="xs"
+						target="_blank"
+						variant="filled"
+					/>
+				</k-headline>
 				<iframe :src="changes"></iframe>
 			</section>
 		</main>
@@ -125,6 +143,9 @@ export default {
 	border-right: 1px solid var(--color-border);
 }
 .k-page-comparison-grid > section .k-headline {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 	margin-bottom: var(--spacing-3);
 }
 .k-page-comparison-grid iframe {
