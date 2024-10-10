@@ -2,11 +2,15 @@
 
 namespace Kirby\Content;
 
+use Kirby\Cache\Cache;
 use Kirby\Cms\App;
+use Kirby\Cms\File;
 use Kirby\Cms\Files;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
+use Kirby\Cms\User;
 use Kirby\Cms\Users;
 use Kirby\Toolkit\A;
 
@@ -23,15 +27,23 @@ use Kirby\Toolkit\A;
 class Changes
 {
 	/**
-	 * Access helper for the field, in which changes are stored
+	 * Access helper for the cache, in which changes are stored
 	 */
-	public function field(): Field
+	public function cache(): Cache
 	{
-		return $this
-			->site()
-			->version(VersionId::published())
-			->content()
-			->get('changes');
+		return App::instance()->cache('changes');
+	}
+
+	/**
+	 * Returns the cache key for a given model
+	 */
+	public function cacheKey(ModelWithContent $model): string
+	{
+		return match(true) {
+			$model instanceof File => 'files',
+			$model instanceof Page => 'pages',
+			$model instanceof User => 'users'
+		};
 	}
 
 	/**
@@ -39,7 +51,16 @@ class Changes
 	 */
 	public function files(): Files
 	{
-		return $this->field()->toFiles();
+		$files = new Files([]);
+		$kirby = App::instance();
+
+		foreach ($this->read('files') as $id) {
+			if ($file = $kirby->file($id)) {
+				$files->add($file);
+			}
+		}
+
+		return $files;
 	}
 
 	/**
@@ -47,15 +68,19 @@ class Changes
 	 */
 	public function pages(): Pages
 	{
-		return $this->field()->toPages();
+		return App::instance()->site()->find(
+			false,
+			false,
+			...$this->read('pages')
+		);
 	}
 
 	/**
-	 * Access helper for the site object
+	 * Read the changes for a given model type
 	 */
-	public function site(): Site
+	public function read(string $key): array
 	{
-		return App::instance()->site();
+		return $this->cache()->get($key) ?? [];
 	}
 
 	/**
@@ -63,10 +88,12 @@ class Changes
 	 */
 	public function track(ModelWithContent $model): void
 	{
-		$changes = $this->field()->yaml();
+		$key = $this->cacheKey($model);
+
+		$changes = $this->read($key);
 		$changes[] = (string)$model->uuid();
 
-		$this->update($changes);
+		$this->update($key, $changes);
 	}
 
 	/**
@@ -74,28 +101,27 @@ class Changes
 	 */
 	public function untrack(ModelWithContent $model): void
 	{
+		// get the cache key for the model type
+		$key = $this->cacheKey($model);
+
+		// remove the model from the list of changes
 		$changes = A::filter(
-			$this->field()->yaml(),
+			$this->read($key),
 			fn ($uuid) => $uuid !== (string)$model->uuid()
 		);
 
-		$this->update($changes);
+		$this->update($key, $changes);
 	}
 
 	/**
 	 * Update the changes field
 	 */
-	public function update(array $changes): void
+	public function update(string $key, array $changes): void
 	{
 		$changes = array_unique($changes);
 		$changes = array_values($changes);
 
-		$this
-			->site()
-			->version(VersionId::published())
-			->update([
-				'changes' => $changes
-			]);
+		$this->cache()->set($key, $changes);
 	}
 
 	/**
@@ -103,6 +129,10 @@ class Changes
 	 */
 	public function users(): Users
 	{
-		return $this->field()->toUsers();
+		return App::instance()->users()->find(
+			false,
+			false,
+			...$this->read('users')
+		);
 	}
 }
