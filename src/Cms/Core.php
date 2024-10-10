@@ -150,6 +150,7 @@ class Core
 	public function caches(): array
 	{
 		return [
+			'changes' => true,
 			'updates' => true,
 			'uuid'    => true,
 		];
