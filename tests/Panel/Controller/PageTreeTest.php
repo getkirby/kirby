@@ -17,30 +17,52 @@ class PageTreeTest extends TestCase
 	public function setUp(): void
 	{
 		$this->setUpTmp();
-		$this->setUpSingleLanguage(site: [
-			'children' => [
-				[
-					'slug'     => 'articles',
-					'content'  => [
-						'title' => 'Blog articles',
-						'uuid'  => 'articles'
-					],
-					'children' => [
-						[
-							'slug' => 'article-1',
-							'content'  => [
-								'uuid'  => 'article-1'
-							],
+
+		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'articles',
+						'content'  => [
+							'title' => 'Blog articles',
+							'uuid'  => 'articles'
 						],
-						[
-							'slug' => 'article-2',
-							'content'  => [
-								'uuid'  => 'article-2'
+						'children' => [
+							[
+								'slug'     => 'article-1',
+								'template' => 'note',
+								'content'  => [
+									'uuid'  => 'article-1'
+								],
 							],
-							'children' => [
-								['slug' => 'subarticle']
-							]
+							[
+								'slug' => 'article-2',
+								'content'  => [
+									'uuid'  => 'article-2'
+								],
+								'children' => [
+									['slug' => 'subarticle']
+								]
+							],
+							[
+								'slug'     => 'article-3',
+								'content'  => [
+									'uuid'  => 'article-3'
+								],
+							],
 						]
+					]
+				]
+			],
+			'blueprints' => [
+				'pages/note' => [
+					'sections' => [
+						'albums' => [
+							'type' => 'pages',
+						],
 					]
 				]
 			]
@@ -74,11 +96,13 @@ class PageTreeTest extends TestCase
 	{
 		$children = $this->tree->children('/pages/articles');
 
-		$this->assertCount(2, $children);
+		$this->assertCount(3, $children);
 		$this->assertSame('page://article-1', $children[0]['value']);
 		$this->assertSame('page://article-2', $children[1]['value']);
+		$this->assertSame('page://article-3', $children[2]['value']);
 		$this->assertFalse($children[0]['disabled']);
 		$this->assertFalse($children[1]['disabled']);
+		$this->assertFalse($children[2]['disabled']);
 	}
 
 	/**
@@ -91,11 +115,13 @@ class PageTreeTest extends TestCase
 			'/pages/articles+article-2',
 		);
 
-		$this->assertCount(2, $children);
+		$this->assertCount(3, $children);
 		$this->assertSame('page://article-1', $children[0]['value']);
 		$this->assertSame('page://article-2', $children[1]['value']);
+		$this->assertSame('page://article-3', $children[2]['value']);
 		$this->assertFalse($children[0]['disabled']);
 		$this->assertTrue($children[1]['disabled']);
+		$this->assertTrue($children[2]['disabled']);
 	}
 
 	/**
@@ -142,8 +168,15 @@ class PageTreeTest extends TestCase
 	public function testEntryWithMoving(): void
 	{
 		$entry = $this->tree->entry(
-			$this->app->page('articles/article-2/subarticle'),
-			$this->app->page('articles/article-2')
+			$this->app->page('articles/article-1'),
+			$this->app->page('articles/article-2/subarticle')
+		);
+
+		$this->assertFalse($entry['disabled']);
+
+		$entry = $this->tree->entry(
+			$this->app->page('articles/article-3'),
+			$this->app->page('articles/article-2/subarticle')
 		);
 
 		$this->assertTrue($entry['disabled']);
