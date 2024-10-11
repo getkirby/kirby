@@ -22,7 +22,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends \Kirby\Plugin\Collection<\Kirby\Plugin\Asset>
+ * @extends \Kirby\Cms\Collection<\Kirby\Plugin\Asset>
  */
 class Assets extends Collection
 {
