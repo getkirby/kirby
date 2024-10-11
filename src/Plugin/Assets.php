@@ -1,8 +1,10 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Plugin;
 
 use Closure;
+use Kirby\Cms\App;
+use Kirby\Cms\Collection;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Http\Response;
@@ -13,16 +15,16 @@ use Kirby\Toolkit\Str;
  * to the media folder, to make them publicly
  * available. This class handles the magic around that.
  *
- * @package   Kirby Cms
+ * @package   Kirby Plugin
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends \Kirby\Cms\Collection<\Kirby\Cms\PluginAsset>
+ * @extends \Kirby\Plugin\Collection<\Kirby\Plugin\Asset>
  */
-class PluginAssets extends Collection
+class Assets extends Collection
 {
 	/**
 	 * Clean old/deprecated assets on every resolve
@@ -123,7 +125,7 @@ class PluginAssets extends Collection
 		$collection = new static([], $plugin);
 
 		foreach ($assets as $path => $root) {
-			$collection->data[$path] = new PluginAsset($path, $root, $plugin);
+			$collection->data[$path] = new Asset($path, $root, $plugin);
 		}
 
 		return $collection;

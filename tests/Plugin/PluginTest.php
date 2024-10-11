@@ -1,14 +1,16 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Plugin;
 
 use Composer\Autoload\ClassLoader;
+use Kirby\Cms\App;
 use Kirby\Cms\System\UpdateStatus;
+use Kirby\Cms\TestCase;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 
 /**
- * @coversDefaultClass Kirby\Cms\Plugin
+ * @coversDefaultClass Kirby\Plugin\Plugin
  * @covers ::__construct
  */
 class PluginTest extends TestCase
@@ -105,7 +107,7 @@ class PluginTest extends TestCase
 			]
 		);
 
-		$this->assertInstanceOf(PluginAssets::class, $plugin->assets());
+		$this->assertInstanceOf(Assets::class, $plugin->assets());
 		$this->assertSame($root . '/a.css', $plugin->asset('c.css')->root());
 	}
 

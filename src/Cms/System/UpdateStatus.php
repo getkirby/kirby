@@ -5,9 +5,9 @@ namespace Kirby\Cms\System;
 use Composer\Semver\Semver;
 use Exception;
 use Kirby\Cms\App;
-use Kirby\Cms\Plugin;
 use Kirby\Exception\Exception as KirbyException;
 use Kirby\Http\Remote;
+use Kirby\Plugin\Plugin;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 

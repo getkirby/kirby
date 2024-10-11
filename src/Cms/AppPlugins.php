@@ -11,6 +11,7 @@ use Kirby\Filesystem\F;
 use Kirby\Filesystem\Mime;
 use Kirby\Form\Field as FormField;
 use Kirby\Image\Image;
+use Kirby\Plugin\Plugin;
 use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection as ToolkitCollection;
@@ -96,7 +97,7 @@ trait AppPlugins
 	 * Register all given extensions
 	 * @internal
 	 *
-	 * @param \Kirby\Cms\Plugin|null $plugin The plugin which defined those extensions
+	 * @param \Kirby\Plugin\Plugin|null $plugin The plugin which defined those extensions
 	 */
 	public function extend(
 		array $extensions,

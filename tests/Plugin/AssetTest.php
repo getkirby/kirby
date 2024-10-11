@@ -1,13 +1,14 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Plugin;
 
 use Kirby\Filesystem\Dir;
+use Kirby\Cms\TestCase;
 
 /**
- * @coversDefaultClass \Kirby\Cms\PluginAsset
+ * @coversDefaultClass \Kirby\Plugin\Asset
  */
-class PluginAssetTest extends TestCase
+class AssetTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/plugin-assets';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.PluginAsset';
@@ -32,7 +33,7 @@ class PluginAssetTest extends TestCase
 	 */
 	public function testExtension()
 	{
-		$asset = new PluginAsset(
+		$asset = new Asset(
 			'test.css',
 			static::TMP . '/test-plugin/assets/test.css',
 			$this->plugin
@@ -46,7 +47,7 @@ class PluginAssetTest extends TestCase
 	 */
 	public function testFilename()
 	{
-		$asset = new PluginAsset(
+		$asset = new Asset(
 			'test.css',
 			static::TMP . '/test-plugin/assets/test.css',
 			$this->plugin
@@ -64,7 +65,7 @@ class PluginAssetTest extends TestCase
 	 */
 	public function testMedia()
 	{
-		$asset = new PluginAsset(
+		$asset = new Asset(
 			'test.css',
 			static::TMP . '/test-plugin/assets/test.css',
 			$this->plugin
@@ -82,7 +83,7 @@ class PluginAssetTest extends TestCase
 	 */
 	public function testModified()
 	{
-		$asset = new PluginAsset(
+		$asset = new Asset(
 			'test.css',
 			static::TMP . '/test-plugin/assets/test.css',
 			$this->plugin
@@ -99,7 +100,7 @@ class PluginAssetTest extends TestCase
 	 */
 	public function testPathRoot()
 	{
-		$asset = new PluginAsset(
+		$asset = new Asset(
 			$path = 'test.css',
 			$root = static::TMP . '/test-plugin/assets/test.css',
 			$plugin = $this->plugin
@@ -115,7 +116,7 @@ class PluginAssetTest extends TestCase
 	 */
 	public function testPublish()
 	{
-		$asset = new PluginAsset(
+		$asset = new Asset(
 			'test.css',
 			static::TMP . '/test-plugin/assets/test.css',
 			$this->plugin
