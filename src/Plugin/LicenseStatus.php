@@ -17,6 +17,7 @@ use Stringable;
 class LicenseStatus implements Stringable
 {
 	public function __construct(
+		protected string $value,
 		protected string $icon,
 		protected string $label,
 		protected string|null $theme = null
@@ -38,31 +39,37 @@ class LicenseStatus implements Stringable
 	{
 		return [
 			'active' => new static(
+				value: 'active',
 				icon: SystemLicenseStatus::Active->icon(),
 				label: SystemLicenseStatus::Active->label(),
 				theme: SystemLicenseStatus::Active->theme()
 			),
 			'demo' => new static(
+				value: 'demo',
 				icon: SystemLicenseStatus::Demo->icon(),
 				label: SystemLicenseStatus::Demo->label(),
 				theme: SystemLicenseStatus::Demo->theme()
 			),
 			'inactive' => new static(
+				value: 'inactive',
 				icon: SystemLicenseStatus::Inactive->icon(),
 				label: SystemLicenseStatus::Inactive->label(),
 				theme: SystemLicenseStatus::Inactive->theme()
 			),
 			'legacy' => new static(
+				value: 'legacy',
 				icon: SystemLicenseStatus::Legacy->icon(),
 				label: SystemLicenseStatus::Legacy->label(),
 				theme: SystemLicenseStatus::Legacy->theme()
 			),
 			'missing' => new static(
+				value: 'missing',
 				icon: SystemLicenseStatus::Missing->icon(),
 				label: SystemLicenseStatus::Missing->label(),
 				theme: SystemLicenseStatus::Missing->theme()
 			),
 			'unknown' => new static(
+				value: 'unknown',
 				icon: 'question',
 				label: 'Unknown license',
 				theme: 'passive'
@@ -73,10 +80,14 @@ class LicenseStatus implements Stringable
 	/**
 	 * Returns a status by its name
 	 */
-	public static function from(self|string $status): static
+	public static function from(self|string|null $status): static
 	{
 		if ($status instanceof self) {
 			return $status;
+		}
+
+		if ($status === null) {
+			return static::defaults()['unknown'];
 		}
 
 		return static::defaults()[$status] ?? static::defaults()['unknown'];
@@ -115,6 +126,15 @@ class LicenseStatus implements Stringable
 			'icon'  => $this->icon(),
 			'label' => $this->label(),
 			'theme' => $this->theme(),
+			'value' => $this->value(),
 		];
+	}
+
+	/**
+	 * Returns the status value
+	 */
+	public function value(): string
+	{
+		return $this->value;
 	}
 }

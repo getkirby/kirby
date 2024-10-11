@@ -22,7 +22,7 @@ class License implements Stringable
 		protected string|null $link = null,
 		LicenseStatus|null $status = null
 	) {
-		$this->status = $status ?? LicenseStatus::from('active');
+		$this->status = $status ?? LicenseStatus::from('unknown');
 	}
 
 	/**
@@ -33,6 +33,9 @@ class License implements Stringable
 		return $this->name();
 	}
 
+	/**
+	 * Creates a license instance from a given value
+	 */
 	public static function from(self|array|string|null $license): static
 	{
 		if ($license instanceof self) {
@@ -54,7 +57,10 @@ class License implements Stringable
 			);
 		}
 
-		return new static(name: $license);
+		return new static(
+			name: $license,
+			status: LicenseStatus::from('active')
+		);
 	}
 
 	/**
