@@ -28,6 +28,7 @@ use Throwable;
 class Plugin
 {
 	protected Assets $assets;
+	protected License $license;
 	protected UpdateStatus|null $updateStatus = null;
 
 	/**
@@ -40,6 +41,7 @@ class Plugin
 		protected string $name,
 		protected array $extends = [],
 		protected array $info = [],
+		License|string|array|null $license = null,
 		protected string|null $root = null,
 		protected string|null $version = null,
 	) {
@@ -74,6 +76,9 @@ class Plugin
 		}
 
 		$this->info = [...$info, ...$this->info];
+
+		// set the license
+		$this->license = License::from($license ?? $this->info['license'] ?? '-');
 	}
 
 	/**
@@ -172,6 +177,14 @@ class Plugin
 	}
 
 	/**
+	 * Returns the license object
+	 */
+	public function license(): License
+	{
+		return $this->license;
+	}
+
+	/**
 	 * Returns the path to the plugin's composer.json
 	 */
 	public function manifest(): string
@@ -236,7 +249,7 @@ class Plugin
 			'authors'     => $this->authors(),
 			'description' => $this->description(),
 			'name'        => $this->name(),
-			'license'     => $this->license(),
+			'license'     => $this->license()->toArray(),
 			'link'        => $this->link(),
 			'root'        => $this->root(),
 			'version'     => $this->version()
