@@ -2,8 +2,8 @@
 
 namespace Kirby\Content;
 
+use Kirby\Cache\Cache;
 use Kirby\Cms\App;
-use Kirby\Cms\Site;
 use Kirby\TestCase;
 use Kirby\Uuid\Uuids;
 
@@ -58,12 +58,13 @@ class ChangesTest extends TestCase
 	}
 
 	/**
-	 * @covers ::field
+	 * @covers ::cache
 	 */
-	public function testField()
+	public function testCache()
 	{
-		$changes = new Changes();
-		$this->assertInstanceOf(Field::class, $changes->field());
+		$cache = App::instance()->cache('changes');
+
+		$this->assertInstanceOf(Cache::class, $cache);
 	}
 
 	/**
@@ -71,10 +72,8 @@ class ChangesTest extends TestCase
 	 */
 	public function testFiles()
 	{
-		$site = App::instance()->site()->update([
-			'changes' => [
-				'file://test'
-			]
+		App::instance()->cache('changes')->set('files', [
+			'file://test'
 		]);
 
 		$changes = new Changes();
@@ -84,14 +83,28 @@ class ChangesTest extends TestCase
 	}
 
 	/**
+	 * @covers ::cacheKey
+	 */
+	public function testCacheKey()
+	{
+		$changes = new Changes();
+
+		$page = $this->app->page('test');
+		$file = $this->app->file('test/test.jpg');
+		$user = $this->app->user('test');
+
+		$this->assertSame('pages', $changes->cacheKey($page));
+		$this->assertSame('files', $changes->cacheKey($file));
+		$this->assertSame('users', $changes->cacheKey($user));
+	}
+
+	/**
 	 * @covers ::pages
 	 */
 	public function testPages()
 	{
-		$site = App::instance()->site()->update([
-			'changes' => [
-				'page://test'
-			]
+		App::instance()->cache('changes')->set('pages', [
+			'page://test'
 		]);
 
 		$changes = new Changes();
@@ -101,12 +114,27 @@ class ChangesTest extends TestCase
 	}
 
 	/**
-	 * @covers ::site
+	 * @covers ::read
 	 */
-	public function testSite()
+	public function testRead()
 	{
+		App::instance()->cache('changes')->set('files', [
+			'file://test'
+		]);
+
+		App::instance()->cache('changes')->set('pages', [
+			'page://test'
+		]);
+
+		App::instance()->cache('changes')->set('users', [
+			'user://test'
+		]);
+
 		$changes = new Changes();
-		$this->assertInstanceOf(Site::class, $changes->site());
+
+		$this->assertSame(['file://test'], $changes->read('files'));
+		$this->assertSame(['page://test'], $changes->read('pages'));
+		$this->assertSame(['user://test'], $changes->read('users'));
 	}
 
 	/**
@@ -140,17 +168,25 @@ class ChangesTest extends TestCase
 	{
 		$changes = new Changes();
 
-		$changes->update([
+		$changes->update('files', [
+			$this->app->file('test/test.jpg')->uuid()->toString(),
+		]);
+
+		$changes->update('pages', [
 			$this->app->page('test')->uuid()->toString(),
-			$this->app->file('test/test.jpg')->toString(),
-			$this->app->user('test')->toString()
+		]);
+
+		$changes->update('users', [
+			$this->app->user('test')->uuid()->toString()
 		]);
 
 		$this->assertCount(1, $changes->files());
 		$this->assertCount(1, $changes->pages());
 		$this->assertCount(1, $changes->users());
 
-		$changes->update([]);
+		$changes->update('files', []);
+		$changes->update('pages', []);
+		$changes->update('users', []);
 
 		$this->assertCount(0, $changes->files());
 		$this->assertCount(0, $changes->pages());
@@ -186,10 +222,8 @@ class ChangesTest extends TestCase
 	 */
 	public function testUsers()
 	{
-		$site = App::instance()->site()->update([
-			'changes' => [
-				'user://test'
-			]
+		App::instance()->cache('changes')->set('users', [
+			'user://test'
 		]);
 
 		$changes = new Changes();
