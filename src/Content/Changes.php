@@ -4,13 +4,10 @@ namespace Kirby\Content;
 
 use Kirby\Cache\Cache;
 use Kirby\Cms\App;
-use Kirby\Cms\File;
 use Kirby\Cms\Files;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
-use Kirby\Cms\User;
 use Kirby\Cms\Users;
 use Kirby\Toolkit\A;
 
@@ -26,12 +23,19 @@ use Kirby\Toolkit\A;
  */
 class Changes
 {
+	protected App $kirby;
+
+	public function __construct()
+	{
+		$this->kirby = App::instance();
+	}
+
 	/**
 	 * Access helper for the cache, in which changes are stored
 	 */
 	public function cache(): Cache
 	{
-		return App::instance()->cache('changes');
+		return $this->kirby->cache('changes');
 	}
 
 	/**
@@ -48,10 +52,9 @@ class Changes
 	public function files(): Files
 	{
 		$files = new Files([]);
-		$kirby = App::instance();
 
 		foreach ($this->read('files') as $id) {
-			if ($file = $kirby->file($id)) {
+			if ($file = $this->kirby->file($id)) {
 				$files->add($file);
 			}
 		}
@@ -64,7 +67,7 @@ class Changes
 	 */
 	public function pages(): Pages
 	{
-		return App::instance()->site()->find(
+		return $this->kirby->site()->find(
 			false,
 			false,
 			...$this->read('pages')
@@ -125,7 +128,7 @@ class Changes
 	 */
 	public function users(): Users
 	{
-		return App::instance()->users()->find(
+		return $this->kirby->users()->find(
 			false,
 			false,
 			...$this->read('users')
