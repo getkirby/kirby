@@ -39,11 +39,7 @@ class Changes
 	 */
 	public function cacheKey(ModelWithContent $model): string
 	{
-		return match(true) {
-			$model instanceof File => 'files',
-			$model instanceof Page => 'pages',
-			$model instanceof User => 'users'
-		};
+		return $model::CLASS_ALIAS . 's';
 	}
 
 	/**
