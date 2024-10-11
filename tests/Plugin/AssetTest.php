@@ -11,7 +11,7 @@ use Kirby\Filesystem\Dir;
 class AssetTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/plugin-assets';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.PluginAsset';
+	public const TMP      = KIRBY_TMP_DIR . '/Plugin.Asset';
 
 	protected Plugin $plugin;
 

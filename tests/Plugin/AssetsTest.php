@@ -13,7 +13,7 @@ use Kirby\TestCase;
 class AssetsTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/plugin-assets';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.PluginAssets';
+	public const TMP      = KIRBY_TMP_DIR . '/Plugin.Assets';
 
 	public function setUp(): void
 	{

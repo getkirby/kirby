@@ -16,7 +16,7 @@ use Kirby\Filesystem\Dir;
 class PluginTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.Plugin';
+	public const TMP      = KIRBY_TMP_DIR . '/Plugin';
 
 	protected static ClassLoader $classLoader;
 	protected static string $updateStatusHost;
