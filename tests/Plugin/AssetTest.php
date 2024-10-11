@@ -2,8 +2,8 @@
 
 namespace Kirby\Plugin;
 
-use Kirby\Filesystem\Dir;
 use Kirby\Cms\TestCase;
+use Kirby\Filesystem\Dir;
 
 /**
  * @coversDefaultClass \Kirby\Plugin\Asset

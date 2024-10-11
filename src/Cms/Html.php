@@ -3,8 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\F;
-use Kirby\Plugin\Plugin;
 use Kirby\Plugin\Assets;
+use Kirby\Plugin\Plugin;
 use Kirby\Toolkit\A;
 
 /**
