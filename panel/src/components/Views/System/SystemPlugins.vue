@@ -16,7 +16,8 @@
 					label: $t('author')
 				},
 				license: {
-					label: $t('license')
+					label: $t('license'),
+					type: 'license'
 				},
 				version: {
 					label: $t('version'),

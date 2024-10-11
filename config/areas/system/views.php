@@ -58,7 +58,7 @@ return [
 
 				return [
 					'author'  => empty($authors) ? '–' : $authors,
-					'license' => $plugin->license() ?? '–',
+					'license' => $plugin->license()->toArray(),
 					'name'    => [
 						'text' => $plugin->name() ?? '–',
 						'href' => $plugin->link(),
