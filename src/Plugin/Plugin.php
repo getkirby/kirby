@@ -1,9 +1,11 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Plugin;
 
 use Composer\InstalledVersions;
 use Exception;
+use Kirby\Cms\App;
+use Kirby\Cms\Helpers;
 use Kirby\Cms\System\UpdateStatus;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
@@ -17,7 +19,7 @@ use Throwable;
  * the composer.json. It also creates the prefix
  * and media url for the plugin.
  *
- * @package   Kirby Cms
+ * @package   Kirby Plugin
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
@@ -25,7 +27,7 @@ use Throwable;
  */
 class Plugin
 {
-	protected PluginAssets $assets;
+	protected Assets $assets;
 	protected UpdateStatus|null $updateStatus = null;
 
 	/**
@@ -85,7 +87,7 @@ class Plugin
 	/**
 	 * Returns the plugin asset object for a specific asset
 	 */
-	public function asset(string $path): PluginAsset|null
+	public function asset(string $path): Asset|null
 	{
 		return $this->assets()->get($path);
 	}
@@ -93,9 +95,9 @@ class Plugin
 	/**
 	 * Returns the plugin assets collection
 	 */
-	public function assets(): PluginAssets
+	public function assets(): Assets
 	{
-		return $this->assets ??= PluginAssets::factory($this);
+		return $this->assets ??= Assets::factory($this);
 	}
 
 	/**
@@ -182,7 +184,7 @@ class Plugin
 	 */
 	public function mediaRoot(): string
 	{
-		return App::instance()->root('media') . '/plugins/' . $this->name();
+		return $this->kirby()->root('media') . '/plugins/' . $this->name();
 	}
 
 	/**
@@ -190,7 +192,7 @@ class Plugin
 	 */
 	public function mediaUrl(): string
 	{
-		return App::instance()->url('media') . '/plugins/' . $this->name();
+		return $this->kirby()->url('media') . '/plugins/' . $this->name();
 	}
 
 	/**
