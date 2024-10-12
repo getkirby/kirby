@@ -128,7 +128,7 @@ class UserRules
 		}
 
 		// prevent changing to role that is not available for user
-		if ($user->roles('changeRole')->find($role) instanceof Role === false) {
+		if ($user->roles()->find($role) instanceof Role === false) {
 			throw new InvalidArgumentException([
 				'key' => 'user.role.invalid',
 			]);
@@ -210,7 +210,7 @@ class UserRules
 		// prevent creating a role that is not available for user
 		if (
 			in_array($role, [null, 'default', 'nobody'], true) === false &&
-			$user->kirby()->roles('create')->find($role) instanceof Role === false
+			$user->kirby()->roles()->canBeCreated()->find($role) instanceof Role === false
 		) {
 			throw new InvalidArgumentException([
 				'key' => 'user.role.invalid',

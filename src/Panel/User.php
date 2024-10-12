@@ -70,7 +70,7 @@ class User extends Model
 			'dialog'   => $url . '/changeRole',
 			'icon'     => 'bolt',
 			'text'     => I18n::translate('user.changeRole'),
-			'disabled' => $this->isDisabledDropdownOption('changeRole', $options, $permissions) || $this->model->roles('changeRole')->count() < 2
+			'disabled' => $this->isDisabledDropdownOption('changeRole', $options, $permissions) || $this->model->roles()->count() < 2
 		];
 
 		$result[] = [
@@ -230,7 +230,7 @@ class User extends Model
 				'canChangeEmail'    => $permissions['changeEmail'],
 				'canChangeLanguage' => $permissions['changeLanguage'],
 				'canChangeName'     => $permissions['changeName'],
-				'canChangeRole'     => $permissions['changeRole'] && $this->model->roles('changeRole')->count() > 1,
+				'canChangeRole'     => $this->model->roles()->count() > 1,
 				'model' => [
 					'account'  => $account,
 					'avatar'   => $user->avatar()?->url(),

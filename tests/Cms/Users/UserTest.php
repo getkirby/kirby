@@ -396,7 +396,7 @@ class UserTest extends TestCase
 
 		// last admin has only admin role as option
 		$user  = $app->user('admin@getkirby.com');
-		$roles = $user->roles('changeRole')->values(fn ($role) => $role->id());
+		$roles = $user->roles()->values(fn ($role) => $role->id());
 		$this->assertSame(['admin'], $roles);
 	}
 
