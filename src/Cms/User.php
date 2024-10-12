@@ -585,13 +585,8 @@ class User extends ModelWithContent
 		$kirby = $this->kirby();
 		$roles = $kirby->roles();
 
-		// for the last admin, only their current role (admin) is available
-		if ($this->isLastAdmin() === true) {
-			return $roles->filter('id', $this->role()->id());
-		}
-
-		// if the current user doesn't have the permission to change the role,
-		// only the current role is available
+		// if the authenticated user doesn't have the permission to change
+		// the role of this user, only the current role is available
 		if ($this->permissions()->can('changeRole') === false) {
 			return $roles->filter('id', $this->role()->id());
 		}
