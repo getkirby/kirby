@@ -464,6 +464,7 @@ class UserTest extends TestCase
 			],
 			'roles' => [
 				['name' => 'admin'],
+				['name' => 'manager'],
 				['name' => 'editor'],
 				['name' => 'guest']
 			],
@@ -482,6 +483,13 @@ class UserTest extends TestCase
 				]
 			],
 			'blueprints' => [
+				'users/manager' => [
+					'options' => [
+						'create' => [
+							'editor' => false
+						]
+					]
+				],
 				'users/editor' => [
 					'permissions' => [
 						'user' => [
@@ -508,6 +516,11 @@ class UserTest extends TestCase
 		$user  = $app->user('guest@getkirby.com');
 		$roles = $user->roles()->values(fn ($role) => $role->id());
 		$this->assertSame(['guest'], $roles);
+
+		// blueprint `create` option limits available roles
+		$user  = $app->user('editor@getkirby.com');
+		$roles = $user->roles()->values(fn ($role) => $role->id());
+		$this->assertSame(['editor', 'guest'], $roles);
 	}
 
 	public function testSecret()

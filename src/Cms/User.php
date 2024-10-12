@@ -591,12 +591,7 @@ class User extends ModelWithContent
 			return $roles->filter('id', $this->role()->id());
 		}
 
-		// exclude the admin role, if the user isn't an admin themselves
-		if ($kirby->user()?->isAdmin() !== true) {
-			$roles = $roles->filter(fn ($role) => $role->name() !== 'admin');
-		}
-
-		return $roles;
+		return $roles->canBeCreated();
 	}
 
 	/**
