@@ -118,6 +118,37 @@ class FieldsTest extends TestCase
 	}
 
 	/**
+	 * @covers ::fill
+	 */
+	public function testFill()
+	{
+		$fields = new Fields([
+			'a' => [
+				'type'  => 'text',
+				'model' => $this->model,
+				'value' => 'A'
+			],
+			'b' => [
+				'type'  => 'text',
+				'model' => $this->model,
+				'value' => 'B'
+			],
+		]);
+
+		$this->assertSame([
+			'a' => 'A',
+			'b' => 'B'
+		], $fields->toArray(fn ($field) => $field->value()));
+
+		$fields->fill($input = [
+			'a' => 'A updated',
+			'b' => 'B updated'
+		]);
+
+		$this->assertSame($input, $fields->toArray(fn ($field) => $field->value()));
+	}
+
+	/**
 	 * @covers ::toArray
 	 */
 	public function testToArray()

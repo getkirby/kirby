@@ -65,6 +65,18 @@ class Fields extends Collection
 	}
 
 	/**
+	 * Sets the value for each field with a matching key in the input array
+	 */
+	public function fill(array $input): static
+	{
+		foreach ($input as $name => $value) {
+			$this->get($name)?->fill($value);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Converts the fields collection to an
 	 * array and also does that for every
 	 * included field.
