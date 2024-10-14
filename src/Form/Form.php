@@ -321,7 +321,7 @@ class Form
 	{
 		$array = [
 			'errors'  => $this->errors(),
-			'fields'  => $this->fields->toArray(fn ($item) => $item->toArray()),
+			'fields'  => $this->fields->toArray(),
 			'invalid' => $this->isInvalid()
 		];
 
