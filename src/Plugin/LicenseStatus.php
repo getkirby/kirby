@@ -80,9 +80,9 @@ class LicenseStatus implements Stringable
 	/**
 	 * Returns a status by its name
 	 */
-	public static function from(self|string|null $status): static
+	public static function from(LicenseStatus|string|null $status): static
 	{
-		if ($status instanceof self) {
+		if ($status instanceof LicenseStatus) {
 			return $status;
 		}
 

@@ -36,9 +36,9 @@ class License implements Stringable
 	/**
 	 * Creates a license instance from a given value
 	 */
-	public static function from(self|array|string|null $license): static
+	public static function from(License|array|string|null $license): static
 	{
-		if ($license instanceof self) {
+		if ($license instanceof License) {
 			return $license;
 		}
 
