@@ -3,6 +3,7 @@
 namespace Kirby\Form;
 
 use Closure;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
 
 /**
@@ -36,6 +37,14 @@ class Fields extends Collection
 		parent::__set($field->name(), $field);
 	}
 
+	/**
+	 * Returns an array with the default value of each field
+	 */
+	public function defaults(): array
+	{
+		return $this->toArray(fn($field) => $field->default());
+	}
+	
 	/**
 	 * Converts the fields collection to an
 	 * array and also does that for every
