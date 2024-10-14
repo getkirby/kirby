@@ -21,6 +21,7 @@ class ComponentTest extends TestCase
 	/**
 	 * @covers ::__construct
 	 * @covers ::__call
+	 * @covers ::applyProp
 	 * @covers ::applyProps
 	 */
 	public function testProp()
@@ -40,6 +41,7 @@ class ComponentTest extends TestCase
 	}
 
 	/**
+	 * @covers ::applyProp
 	 * @covers ::applyProps
 	 */
 	public function testPropWithDefaultValue()
@@ -59,6 +61,7 @@ class ComponentTest extends TestCase
 	}
 
 	/**
+	 * @covers ::applyProp
 	 * @covers ::applyProps
 	 */
 	public function testPropWithFixedValue()
@@ -78,6 +81,7 @@ class ComponentTest extends TestCase
 	}
 
 	/**
+	 * @covers ::applyProp
 	 * @covers ::applyProps
 	 */
 	public function testPropWithInvalidValue()
@@ -97,6 +101,7 @@ class ComponentTest extends TestCase
 	}
 
 	/**
+	 * @covers ::applyProp
 	 * @covers ::applyProps
 	 */
 	public function testPropWithMissingValue()
