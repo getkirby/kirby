@@ -764,6 +764,9 @@ class PageRulesTest extends TestCase
 		PageRules::create($page);
 	}
 
+	/**
+	 * @covers ::move
+	 */
 	public function testMove()
 	{
 		$app = new App([
@@ -808,6 +811,9 @@ class PageRulesTest extends TestCase
 		$this->assertTrue(PageRules::move($child, $parentB));
 	}
 
+	/**
+	 * @covers ::move
+	 */
 	public function testMoveWithoutPermissions()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
@@ -823,6 +829,9 @@ class PageRulesTest extends TestCase
 		PageRules::move($page, new Page(['slug' => 'test']));
 	}
 
+	/**
+	 * @covers ::move
+	 */
 	public function testMoveWithDuplicate()
 	{
 		$app = new App([
@@ -862,6 +871,9 @@ class PageRulesTest extends TestCase
 		PageRules::move($child, $parentB);
 	}
 
+	/**
+	 * @covers ::move
+	 */
 	public function testMoveWithInvalidTemplate()
 	{
 		$app = new App([
@@ -896,6 +908,7 @@ class PageRulesTest extends TestCase
 						'related' => [
 							'type'      => 'pages',
 							'parent'    => 'site.find("parent-a")',
+							'create'    => 'album',
 							'templates' => ['article']
 						]
 					]
@@ -910,6 +923,106 @@ class PageRulesTest extends TestCase
 
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('The "article" template is not accepted as a subpage of "parent-b"');
+
+		PageRules::move($child, $parentB);
+	}
+
+	/**
+	 * @covers ::move
+	 */
+	public function testMoveWithParentWithNoPagesSections()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP,
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'parent-a',
+						'template' => 'blog',
+						'children' => [
+							[
+								'slug'     => 'child',
+								'template' => 'article'
+							]
+						]
+					],
+					[
+						'slug'     => 'parent-b',
+						'template' => 'photography',
+					]
+				]
+			],
+			'blueprints' => [
+				'pages/article' => [],
+				'pages/photography' => [
+					'sections' => [
+						'albums' => [
+							'type' => 'info',
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$parentB = $app->page('parent-b');
+		$child   = $app->page('parent-a/child');
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('The page "parent-b" cannot be a parent of any page because it lacks any pages sections in its blueprint');
+
+		PageRules::move($child, $parentB);
+	}
+
+	/**
+	 * @covers ::move
+	 */
+	public function testMoveWithParentWithNoTemplateRestrictions()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP,
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'parent-a',
+						'template' => 'blog',
+						'children' => [
+							[
+								'slug'     => 'child',
+								'template' => 'article'
+							]
+						]
+					],
+					[
+						'slug'     => 'parent-b',
+						'template' => 'photography',
+						'create'   => 'album'
+					]
+				]
+			],
+			'blueprints' => [
+				'pages/article' => [],
+				'pages/photography' => [
+					'sections' => [
+						'albums' => [
+							'type' => 'pages'
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$parentB = $app->page('parent-b');
+		$child   = $app->page('parent-a/child');
+
+		$this->expectNotToPerformAssertions();
 
 		PageRules::move($child, $parentB);
 	}

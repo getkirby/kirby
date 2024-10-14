@@ -101,17 +101,6 @@ class UserRules
 	 */
 	public static function changeRole(User $user, string $role): bool
 	{
-		// protect admin from role changes by non-admin
-		if (
-			$user->kirby()->user()->isAdmin() === false &&
-			$user->isAdmin() === true
-		) {
-			throw new PermissionException([
-				'key'  => 'user.changeRole.permission',
-				'data' => ['name' => $user->username()]
-			]);
-		}
-
 		// prevent non-admins making a user to admin
 		if (
 			$user->kirby()->user()->isAdmin() === false &&
@@ -122,8 +111,7 @@ class UserRules
 			]);
 		}
 
-		static::validRole($user, $role);
-
+		// prevent demoting the last admin
 		if ($role !== 'admin' && $user->isLastAdmin() === true) {
 			throw new LogicException([
 				'key'  => 'user.changeRole.lastAdmin',
@@ -131,10 +119,18 @@ class UserRules
 			]);
 		}
 
+		// check permissions
 		if ($user->permissions()->changeRole() !== true) {
 			throw new PermissionException([
 				'key'  => 'user.changeRole.permission',
 				'data' => ['name' => $user->username()]
+			]);
+		}
+
+		// prevent changing to role that is not available for user
+		if ($user->roles()->find($role) instanceof Role === false) {
+			throw new InvalidArgumentException([
+				'key' => 'user.role.invalid',
 			]);
 		}
 
@@ -199,15 +195,6 @@ class UserRules
 			return true;
 		}
 
-		// only admins are allowed to add admins
-		$role = $props['role'] ?? null;
-
-		if ($role === 'admin' && $currentUser?->isAdmin() === false) {
-			throw new PermissionException([
-				'key' => 'user.create.permission'
-			]);
-		}
-
 		// check user permissions (if not on install)
 		if (
 			$user->kirby()->users()->count() > 0 &&
@@ -215,6 +202,18 @@ class UserRules
 		) {
 			throw new PermissionException([
 				'key' => 'user.create.permission'
+			]);
+		}
+
+		$role = $props['role'] ?? null;
+
+		// prevent creating a role that is not available for user
+		if (
+			in_array($role, [null, 'default', 'nobody'], true) === false &&
+			$user->kirby()->roles()->canBeCreated()->find($role) instanceof Role === false
+		) {
+			throw new InvalidArgumentException([
+				'key' => 'user.role.invalid',
 			]);
 		}
 
@@ -370,6 +369,7 @@ class UserRules
 	 * Validates a user role
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the user role does not exist
+	 * @deprecated 4.5.0
 	 */
 	public static function validRole(User $user, string $role): bool
 	{

@@ -18,7 +18,8 @@ return [
 			return [
 				'component' => 'k-users-view',
 				'props'     => [
-					'role' => function () use ($kirby, $roles, $role) {
+					'canCreate' => $kirby->roles()->canBeCreated()->count() > 0,
+					'role' => function () use ($roles, $role) {
 						if ($role) {
 							return $roles[$role] ?? null;
 						}

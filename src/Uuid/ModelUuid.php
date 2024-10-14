@@ -2,8 +2,6 @@
 
 namespace Kirby\Uuid;
 
-use Kirby\Cms\App;
-
 /**
  * Base for UUIDs for models where id string
  * is stored in the content, such as pages and files
@@ -106,19 +104,5 @@ abstract class ModelUuid extends Uuid
 		// overwrite the content in the file;
 		// use the most basic write method to avoid object cloning
 		$this->model->writeContent($data, 'default');
-	}
-
-	/**
-	 * Returns permalink url
-	 */
-	public function url(): string
-	{
-		// make sure UUID is cached because the permalink
-		// route only looks up UUIDs from cache
-		if ($this->isCached() === false) {
-			$this->populate();
-		}
-
-		return App::instance()->url() . '/@/' . static::TYPE . '/' . $this->id();
 	}
 }

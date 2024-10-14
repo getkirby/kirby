@@ -272,6 +272,23 @@ class LicenseTest extends TestCase
 	}
 
 	/**
+	 * @covers ::__construct
+	 * @covers ::normalizeEmail
+	 */
+	public function testNormalize()
+	{
+		$code = $this->code(LicenseType::Enterprise);
+
+		$license = new License(
+			code : '   ' . $code . ' ',
+			email: '   mail@getkirby.com '
+		);
+
+		$this->assertSame($code, $license->code());
+		$this->assertSame('mail@getkirby.com', $license->email());
+	}
+
+	/**
 	 * @covers ::normalizeDomain
 	 * @dataProvider providerForLicenseUrls
 	 */

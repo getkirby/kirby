@@ -139,10 +139,9 @@ trait FileActions
 
 			$file = $file->update(['template' => $template]);
 
-			// rename and/or resize the file if configured by new blueprint
+			// resize the file if configured by new blueprint
 			$create = $file->blueprint()->create();
-			$file = $file->manipulate($create);
-			$file = $file->changeExtension($file, $create['format'] ?? null);
+			$file   = $file->manipulate($create);
 
 			return $file;
 		});
@@ -185,6 +184,7 @@ trait FileActions
 
 	/**
 	 * Copy the file to the given page
+	 * @internal
 	 */
 	public function copy(Page $page): static
 	{
@@ -285,7 +285,6 @@ trait FileActions
 
 			// resize the file on upload if configured
 			$file = $file->manipulate($create);
-			$file = $file->changeExtension($file, $create['format'] ?? null);
 
 			// store the content if necessary
 			// (always create files in the default language)
@@ -338,7 +337,14 @@ trait FileActions
 		// generate image file and overwrite it in place
 		$this->kirby()->thumb($this->root(), $this->root(), $options);
 
-		return $this->clone([]);
+		$file = $this->clone();
+
+		// change the file extension if format option configured
+		if ($format = $options['format'] ?? null) {
+			$file = $file->changeExtension($file, $format);
+		}
+
+		return $file;
 	}
 
 	/**
@@ -387,7 +393,6 @@ trait FileActions
 			// apply the resizing/crop options from the blueprint
 			$create = $file->blueprint()->create();
 			$file   = $file->manipulate($create);
-			$file   = $file->changeExtension($file, $create['format'] ?? null);
 
 			// return a fresh clone
 			return $file->clone();

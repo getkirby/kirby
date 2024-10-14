@@ -11,7 +11,7 @@
 		</template>
 
 		<k-header
-			:editable="permissions.changeName && !isLocked"
+			:editable="canChangeName"
 			class="k-user-view-header"
 			@edit="$dialog(id + '/changeName')"
 		>
@@ -50,6 +50,10 @@
 		</k-header>
 
 		<k-user-profile
+			:can-change-email="canChangeEmail"
+			:can-change-language="canChangeLanguage"
+			:can-change-name="canChangeName"
+			:can-change-role="canChangeRole"
 			:is-locked="isLocked"
 			:model="model"
 			:permissions="permissions"
@@ -71,7 +75,13 @@
 import ModelView from "../ModelView.vue";
 
 export default {
-	extends: ModelView
+	extends: ModelView,
+	props: {
+		canChangeEmail: Boolean,
+		canChangeLanguage: Boolean,
+		canChangeName: Boolean,
+		canChangeRole: Boolean
+	}
 };
 </script>
 

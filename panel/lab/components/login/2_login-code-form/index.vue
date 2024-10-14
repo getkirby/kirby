@@ -11,5 +11,8 @@
 				:pending="{ email: 'homer@simpson.com', challenge: 'totp' }"
 			/>
 		</k-lab-example>
+		<k-lab-example label="Password reset">
+			<k-login-code-form :methods="['password-reset']" />
+		</k-lab-example>
 	</k-lab-examples>
 </template>
