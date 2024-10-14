@@ -25,8 +25,12 @@ class Roles extends Collection
 
 	/**
 	 * Returns a filtered list of all
-	 * roles that can be created by the
+	 * roles that can be changed by the
 	 * current user
+	 *
+	 * Use with `$kirby->roles()`. For retrieving
+	 * which roles are available for a specific user,
+	 * use `$user->roles()` without additional filters.
 	 *
 	 * @return $this|static
 	 * @throws \Exception
@@ -50,7 +54,9 @@ class Roles extends Collection
 	/**
 	 * Returns a filtered list of all
 	 * roles that can be created by the
-	 * current user
+	 * current user.
+	 *
+	 * Use with `$kirby->roles()`.
 	 *
 	 * @return $this|static
 	 * @throws \Exception
