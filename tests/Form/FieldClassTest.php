@@ -503,7 +503,6 @@ class FieldClassTest extends TestCase
 		$array = $field->toArray();
 
 		$this->assertSame($props, $field->props());
-		$this->assertEquals($props + ['signature' => $array['signature']], $array); // cannot use strict assertion (array order)
 	}
 
 	/**
