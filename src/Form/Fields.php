@@ -42,9 +42,28 @@ class Fields extends Collection
 	 */
 	public function defaults(): array
 	{
-		return $this->toArray(fn($field) => $field->default());
+		return $this->toArray(fn ($field) => $field->default());
 	}
-	
+
+	/**
+	 * An array of all found in all fields errors
+	 */
+	public function errors(): array
+	{
+		$errors = [];
+
+		foreach ($this->data as $name => $field) {
+			if (empty($field->errors()) === false) {
+				$errors[$name] = [
+					'label'   => $field->label(),
+					'message' => $field->errors()
+				];
+			}
+		}
+
+		return $errors;
+	}
+
 	/**
 	 * Converts the fields collection to an
 	 * array and also does that for every
@@ -52,6 +71,6 @@ class Fields extends Collection
 	 */
 	public function toArray(Closure|null $map = null): array
 	{
-		return A::map($this->data, $map ?? fn($field) => $field->toArray());
+		return A::map($this->data, $map ?? fn ($field) => $field->toArray());
 	}
 }
