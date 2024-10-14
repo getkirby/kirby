@@ -66,7 +66,7 @@ class PluginTest extends TestCase
 			root: static::FIXTURES . '/plugin'
 		);
 
-		$this->assertSame('MIT', $plugin->license());
+		$this->assertSame('https://getkirby.com', $plugin->homepage());
 	}
 
 	/**
@@ -248,6 +248,12 @@ class PluginTest extends TestCase
 		);
 
 		$this->assertSame([], $plugin->info());
+	}
+
+	public function testLicense(): void
+	{
+		$plugin = new Plugin(name: 'getkirby/test-plugin');
+		$this->assertInstanceOf(License::class, $plugin->license());
 	}
 
 	/**
@@ -456,7 +462,16 @@ class PluginTest extends TestCase
 			],
 			'description' => 'Some really nice description',
 			'name'        => 'getkirby/test-plugin',
-			'license'     => 'MIT',
+			'license'     => [
+				'link'   => null,
+				'name'   => 'MIT',
+				'status' => [
+					'icon'  => 'check',
+					'label' => 'Valid license',
+					'theme' => 'positive',
+					'value' => 'active',
+				]
+			],
 			'link'        => 'https://getkirby.com',
 			'root'        => $root,
 			'version'     => '1.0.0'

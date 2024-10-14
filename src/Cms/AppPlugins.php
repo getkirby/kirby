@@ -11,6 +11,7 @@ use Kirby\Filesystem\F;
 use Kirby\Filesystem\Mime;
 use Kirby\Form\Field as FormField;
 use Kirby\Image\Image;
+use Kirby\Plugin\License;
 use Kirby\Plugin\Plugin;
 use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\A;
@@ -868,7 +869,8 @@ trait AppPlugins
 		array|null $extends = null,
 		array $info = [],
 		string|null $root = null,
-		string|null $version = null
+		string|null $version = null,
+		License|string|array|null $license = null,
 	): Plugin|null {
 		if ($extends === null) {
 			return static::$plugins[$name] ?? null;
@@ -878,6 +880,7 @@ trait AppPlugins
 			name:    $name,
 			extends: $extends,
 			info:    $info,
+			license: $license,
 			// TODO: Remove fallback to $extends in v7
 			root:    $root ?? $extends['root'] ?? dirname(debug_backtrace()[0]['file']),
 			version: $version
