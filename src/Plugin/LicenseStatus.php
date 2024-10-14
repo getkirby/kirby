@@ -33,51 +33,6 @@ class LicenseStatus implements Stringable
 	}
 
 	/**
-	 * Returns predefined statuses
-	 */
-	public static function defaults(): array
-	{
-		return [
-			'active' => new static(
-				value: 'active',
-				icon: SystemLicenseStatus::Active->icon(),
-				label: SystemLicenseStatus::Active->label(),
-				theme: SystemLicenseStatus::Active->theme()
-			),
-			'demo' => new static(
-				value: 'demo',
-				icon: SystemLicenseStatus::Demo->icon(),
-				label: SystemLicenseStatus::Demo->label(),
-				theme: SystemLicenseStatus::Demo->theme()
-			),
-			'inactive' => new static(
-				value: 'inactive',
-				icon: SystemLicenseStatus::Inactive->icon(),
-				label: SystemLicenseStatus::Inactive->label(),
-				theme: SystemLicenseStatus::Inactive->theme()
-			),
-			'legacy' => new static(
-				value: 'legacy',
-				icon: SystemLicenseStatus::Legacy->icon(),
-				label: SystemLicenseStatus::Legacy->label(),
-				theme: SystemLicenseStatus::Legacy->theme()
-			),
-			'missing' => new static(
-				value: 'missing',
-				icon: SystemLicenseStatus::Missing->icon(),
-				label: SystemLicenseStatus::Missing->label(),
-				theme: SystemLicenseStatus::Missing->theme()
-			),
-			'unknown' => new static(
-				value: 'unknown',
-				icon: 'question',
-				label: 'Unknown license',
-				theme: 'passive'
-			),
-		];
-	}
-
-	/**
 	 * Returns a status by its name
 	 */
 	public static function from(LicenseStatus|string|null $status): static
@@ -86,11 +41,15 @@ class LicenseStatus implements Stringable
 			return $status;
 		}
 
-		if ($status === null) {
-			return static::defaults()['unknown'];
-		}
+		$status   = SystemLicenseStatus::from($status ?? 'unknown');
+		$status ??= SystemLicenseStatus::Unknown;
 
-		return static::defaults()[$status] ?? static::defaults()['unknown'];
+		return new static(
+			value: $status->value,
+			icon: $status->icon(),
+			label: $status->label(),
+			theme: $status->theme()
+		);
 	}
 
 	/**

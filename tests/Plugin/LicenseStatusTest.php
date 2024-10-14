@@ -20,65 +20,6 @@ class LicenseStatusTest extends TestCase
 		$this->assertSame('Valid license', (string)$status);
 	}
 
-	public static function defaultsProvider(): array
-	{
-		return [
-			'active' => [
-				'key'   => 'active',
-				'value' => 'active',
-				'icon'  => 'check',
-				'label' => 'Valid license',
-				'theme' => 'positive'
-			],
-			'demo'   => [
-				'key'   => 'demo',
-				'value' => 'demo',
-				'icon'  => 'preview',
-				'label' => 'Demo',
-				'theme' => 'notice'
-			],
-			'inactive' => [
-				'key'   => 'inactive',
-				'value' => 'inactive',
-				'icon'  => 'clock',
-				'label' => 'No new major versions',
-				'theme' => 'notice'
-			],
-			'legacy' => [
-				'key'   => 'legacy',
-				'value' => 'legacy',
-				'icon'  => 'alert',
-				'label' => 'Please renew your license',
-				'theme' => 'negative'
-			],
-			'unknown' => [
-				'key'   => 'unknown',
-				'value' => 'unknown',
-				'icon'  => 'question',
-				'label' => 'Unknown license',
-				'theme' => 'passive'
-			]
-		];
-	}
-
-	/**
-	 * @covers ::defaults
-	 * @dataProvider defaultsProvider
-	 */
-	public function testDefaults(string $key, string $value, string $icon, string $label, string|null $theme = null): void
-	{
-		$defaults = LicenseStatus::defaults();
-
-		$this->assertArrayHasKey($key, $defaults);
-		$status = $defaults[$key];
-
-		$this->assertInstanceOf(LicenseStatus::class, $status);
-		$this->assertSame($value, $status->value());
-		$this->assertSame($icon, $status->icon());
-		$this->assertSame($label, $status->label());
-		$this->assertSame($theme, $status->theme());
-	}
-
 	/**
 	 * @covers ::from
 	 */
@@ -113,6 +54,21 @@ class LicenseStatusTest extends TestCase
 		$status = LicenseStatus::from('active');
 		$this->assertInstanceOf(LicenseStatus::class, $status);
 		$this->assertSame('active', $status->value());
+
+		$status = LicenseStatus::from('demo');
+		$this->assertSame('demo', $status->value());
+
+		$status = LicenseStatus::from('inactive');
+		$this->assertSame('inactive', $status->value());
+
+		$status = LicenseStatus::from('legacy');
+		$this->assertSame('legacy', $status->value());
+
+		$status = LicenseStatus::from('missing');
+		$this->assertSame('missing', $status->value());
+
+		$status = LicenseStatus::from('unknown');
+		$this->assertSame('unknown', $status->value());
 	}
 
 	/**
