@@ -71,6 +71,13 @@ export default {
 .k-field[data-disabled="true"] .k-text[data-theme="help"] * {
 	pointer-events: initial;
 }
+.k-field ul[data-variant="choices"] {
+	--counter: list-item;
+	counter-reset: var(--counter);
+}
+.k-field ul[data-variant="choices"] li {
+	counter-increment: var(--counter);
+}
 .k-field-header {
 	display: flex;
 	justify-content: space-between;
