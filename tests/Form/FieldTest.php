@@ -300,6 +300,34 @@ class FieldTest extends TestCase
 		$this->assertSame($expected, $field->errors());
 	}
 
+	public function testFill()
+	{
+		Field::$types = [
+			'test' => [
+				'computed' => [
+					'computedValue' => fn () => $this->value . ' computed'
+				]
+			]
+		];
+
+		$page = new Page(['slug' => 'test']);
+
+		$field = new Field('test', [
+			'model' => $page,
+			'value' => 'test'
+		]);
+
+		$this->assertSame('test', $field->value());
+		$this->assertSame('test', $field->value);
+		$this->assertSame('test computed', $field->computedValue());
+
+		$field->fill('test2');
+
+		$this->assertSame('test2', $field->value());
+		$this->assertSame('test2', $field->value);
+		$this->assertSame('test2 computed', $field->computedValue());
+	}
+
 	public function testHelp()
 	{
 		Field::$types = [

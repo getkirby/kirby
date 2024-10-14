@@ -303,6 +303,23 @@ class Field extends Component
 	}
 
 	/**
+	 * Sets a new value for the field
+	 */
+	public function fill(mixed $value): static
+	{
+		// overwrite the attribute value
+		$this->value = $this->attrs['value'] = $value;
+
+		// reevaluate the value prop
+		$this->applyProp('value', $this->options['props']['value'] ?? $value);
+
+		// reevaluate the computed props
+		$this->applyComputed($this->options['computed']);
+
+		return $this;
+	}
+
+	/**
 	 * Parent collection with all fields of the current form
 	 */
 	public function formFields(): Fields|null
