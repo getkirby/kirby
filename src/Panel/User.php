@@ -85,7 +85,7 @@ class User extends Model
 			'dialog'   => $url . '/changeRole',
 			'icon'     => 'bolt',
 			'text'     => I18n::translate('user.changeRole'),
-			'disabled' => $this->isDisabledDropdownOption('changeRole', $options, $permissions) || $this->model->roles('change')->count() < 2
+			'disabled' => $this->isDisabledDropdownOption('changeRole', $options, $permissions) || $this->model->roles()->count() < 2
 		];
 
 		$result[] = [
@@ -235,13 +235,18 @@ class User extends Model
 	 */
 	public function props(): array
 	{
-		$user    = $this->model;
-		$account = $user->isLoggedIn();
+		$user        = $this->model;
+		$account     = $user->isLoggedIn();
+		$permissions = $this->options();
 
 		return [
 			...parent::props(),
 			...$this->prevNext(),
-			'blueprint' => $this->model->role()->name(),
+			'blueprint'         => $this->model->role()->name(),
+			'canChangeEmail'    => $permissions['changeEmail'],
+			'canChangeLanguage' => $permissions['changeLanguage'],
+			'canChangeName'     => $permissions['changeName'],
+			'canChangeRole'     => $this->model->roles()->count() > 1,
 			'model' => [
 				'account'  => $account,
 				'avatar'   => $user->avatar()?->url(),
