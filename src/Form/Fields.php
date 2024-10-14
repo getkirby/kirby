@@ -43,12 +43,6 @@ class Fields extends Collection
 	 */
 	public function toArray(Closure|null $map = null): array
 	{
-		$array = [];
-
-		foreach ($this as $field) {
-			$array[$field->name()] = $field->toArray();
-		}
-
-		return $array;
+		return A::map($this->data, $map ?? fn($field) => $field->toArray());
 	}
 }
