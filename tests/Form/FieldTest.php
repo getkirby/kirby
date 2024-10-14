@@ -261,6 +261,7 @@ class FieldTest extends TestCase
 
 		$this->assertFalse($field->disabled());
 		$this->assertFalse($field->disabled);
+		$this->assertFalse($field->isDisabled());
 
 		// disabled
 		$field = new Field('test', [
@@ -270,6 +271,7 @@ class FieldTest extends TestCase
 
 		$this->assertTrue($field->disabled());
 		$this->assertTrue($field->disabled);
+		$this->assertTrue($field->isDisabled());
 	}
 
 	public function testErrors()

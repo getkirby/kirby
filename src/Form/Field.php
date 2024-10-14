@@ -340,6 +340,14 @@ class Field extends Component
 	}
 
 	/**
+	 * Checks if the field is disabled
+	 */
+	public function isDisabled(): bool
+	{
+		return $this->disabled === true;
+	}
+
+	/**
 	 * Checks if the field is empty
 	 */
 	public function isEmpty(mixed ...$args): bool
