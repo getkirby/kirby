@@ -520,7 +520,6 @@ abstract class FieldClass
 	public function toArray(): array
 	{
 		$props = $this->props();
-		$props['signature'] = md5(json_encode($props));
 
 		ksort($props);
 

@@ -3,6 +3,7 @@
 namespace Kirby\Form;
 
 use Closure;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
 
 /**
@@ -19,6 +20,13 @@ use Kirby\Toolkit\Collection;
 class Fields extends Collection
 {
 	/**
+	 * Cache for the errors array
+	 *
+	 * @var array<string, array<string, string>>|null
+	 */
+	protected array|null $errors = null;
+
+	/**
 	 * Internal setter for each object in the Collection.
 	 * This takes care of validation and of setting
 	 * the collection prop on each object correctly.
@@ -34,6 +42,57 @@ class Fields extends Collection
 		}
 
 		parent::__set($field->name(), $field);
+
+		// reset the errors cache if new fields are added
+		$this->errors = null;
+	}
+
+	/**
+	 * Returns an array with the default value of each field
+	 */
+	public function defaults(): array
+	{
+		return $this->toArray(fn ($field) => $field->default());
+	}
+
+	/**
+	 * An array of all found in all fields errors
+	 */
+	public function errors(): array
+	{
+		if ($this->errors !== null) {
+			return $this->errors;
+		}
+
+		$this->errors = [];
+
+		foreach ($this->data as $name => $field) {
+			$errors = $field->errors();
+
+			if ($errors !== []) {
+				$this->errors[$name] = [
+					'label'   => $field->label(),
+					'message' => $errors
+				];
+			}
+		}
+
+		return $this->errors;
+	}
+
+	/**
+	 * Sets the value for each field with a matching key in the input array
+	 */
+	public function fill(array $input): static
+	{
+		foreach ($input as $name => $value) {
+			$this->get($name)?->fill($value);
+		}
+
+		// reset the errors cache
+		$this->errors = null;
+
+		return $this;
 	}
 
 	/**
@@ -43,12 +102,6 @@ class Fields extends Collection
 	 */
 	public function toArray(Closure|null $map = null): array
 	{
-		$array = [];
-
-		foreach ($this as $field) {
-			$array[$field->name()] = $field->toArray();
-		}
-
-		return $array;
+		return A::map($this->data, $map ?? fn ($field) => $field->toArray());
 	}
 }

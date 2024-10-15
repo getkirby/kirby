@@ -27,11 +27,6 @@ use Throwable;
 class Form
 {
 	/**
-	 * An array of all found errors
-	 */
-	protected array|null $errors = null;
-
-	/**
 	 * Fields in the form
 	 */
 	protected Fields|null $fields;
@@ -143,22 +138,7 @@ class Form
 	 */
 	public function errors(): array
 	{
-		if ($this->errors !== null) {
-			return $this->errors;
-		}
-
-		$this->errors = [];
-
-		foreach ($this->fields as $field) {
-			if (empty($field->errors()) === false) {
-				$this->errors[$field->name()] = [
-					'label'   => $field->label(),
-					'message' => $field->errors()
-				];
-			}
-		}
-
-		return $this->errors;
+		return $this->fields->errors();
 	}
 
 	/**
@@ -341,7 +321,7 @@ class Form
 	{
 		$array = [
 			'errors'  => $this->errors(),
-			'fields'  => $this->fields->toArray(fn ($item) => $item->toArray()),
+			'fields'  => $this->fields->toArray(),
 			'invalid' => $this->isInvalid()
 		];
 

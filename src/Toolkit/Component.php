@@ -145,34 +145,42 @@ class Component
 	}
 
 	/**
+	 * Register a single property
+	 */
+	protected function applyProp(string $name, mixed $value): void
+	{
+		if ($value instanceof Closure) {
+			if (isset($this->attrs[$name]) === true) {
+				try {
+					$this->$name = $this->props[$name] = $value->call(
+						$this,
+						$this->attrs[$name]
+					);
+					return;
+				} catch (TypeError) {
+					throw new TypeError('Invalid value for "' . $name . '"');
+				}
+			}
+
+			try {
+				$this->$name = $this->props[$name] = $value->call($this);
+				return;
+			} catch (ArgumentCountError) {
+				throw new ArgumentCountError('Please provide a value for "' . $name . '"');
+			}
+		}
+
+		$this->$name = $this->props[$name] = $value;
+	}
+
+	/**
 	 * Register all defined props and apply the
 	 * passed values.
 	 */
 	protected function applyProps(array $props): void
 	{
-		foreach ($props as $name => $function) {
-			if ($function instanceof Closure) {
-				if (isset($this->attrs[$name]) === true) {
-					try {
-						$this->$name = $this->props[$name] = $function->call(
-							$this,
-							$this->attrs[$name]
-						);
-						continue;
-					} catch (TypeError) {
-						throw new TypeError('Invalid value for "' . $name . '"');
-					}
-				}
-
-				try {
-					$this->$name = $this->props[$name] = $function->call($this);
-					continue;
-				} catch (ArgumentCountError) {
-					throw new ArgumentCountError('Please provide a value for "' . $name . '"');
-				}
-			}
-
-			$this->$name = $this->props[$name] = $function;
+		foreach ($props as $name => $value) {
+			$this->applyProp($name, $value);
 		}
 	}
 
