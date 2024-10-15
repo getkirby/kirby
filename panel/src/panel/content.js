@@ -5,7 +5,7 @@ import { reactive } from "vue";
  * @since 5.0.0
  */
 export default (panel) => {
-	return reactive({
+	const content = reactive({
 		/**
 		 * API endpoint to handle content changes
 		 */
@@ -69,6 +69,13 @@ export default (panel) => {
 		isProcessing: false,
 
 		/**
+		 * Whether all content updates have been successfully sent to the backend
+		 *
+		 * @returns {Boolean}
+		 */
+		isSaved: true,
+
+		/**
 		 * The last published state
 		 *
 		 * @returns {Object}
@@ -124,6 +131,7 @@ export default (panel) => {
 				// update the last modification timestamp
 				panel.view.props.lock.modified = new Date();
 
+				this.isSaved = true;
 				this.isProcessing = false;
 			} catch (error) {
 				// silent aborted requests, but throw all other errors
@@ -154,6 +162,8 @@ export default (panel) => {
 				...panel.view.props.originals,
 				...values
 			};
+
+			this.isSaved = false;
 		},
 
 		/**
@@ -163,6 +173,30 @@ export default (panel) => {
 		 */
 		get values() {
 			return panel.view.props.content;
+		},
+
+		rescue() {
+			if (this.isSaved === false) {
+				const data = new FormData();
+
+				for (const field in panel.view.props.content) {
+					data.append(field, panel.view.props.content[field]);
+				}
+
+				navigator.sendBeacon(panel.url(this.api + "/changes/save"), data);
+
+				// update the last modification timestamp
+				panel.view.props.lock.modified = new Date();
+				this.isSaved = true;
+			}
 		}
 	});
+
+	document.addEventListener("visibilitychange", () => {
+		if (document.visibilityState === "hidden") {
+			content.rescue();
+		}
+	});
+
+	return content;
 };
