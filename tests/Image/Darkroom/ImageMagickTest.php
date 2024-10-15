@@ -3,9 +3,8 @@
 namespace Kirby\Image\Darkroom;
 
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\TestCase;
-use Kirby\Toolkit\F;
-use ReflectionMethod;
 
 /**
  * @coversDefaultClass \Kirby\Image\Darkroom\ImageMagick
@@ -42,46 +41,11 @@ class ImageMagickTest extends TestCase
 			'scaleWidth' => 1.0,
 			'sharpen' => null,
 			'width' => 500,
-			'bin' => 'convert',
 			'interlace' => false,
 			'threads' => 1,
 			'sourceWidth' => 500,
 			'sourceHeight' => 500
 		], $im->process($file));
-	}
-
-	/**
-	 * @covers ::sharpen
-	 */
-	public function testSharpen()
-	{
-		$im = new ImageMagick();
-
-		$method = new ReflectionMethod($im::class, 'sharpen');
-		$method->setAccessible(true);
-
-		$result = $method->invoke($im, '', [
-			'sharpen' => 50
-		]);
-
-		$this->assertSame("-sharpen '0x0.5'", $result);
-	}
-
-	/**
-	 * @covers ::sharpen
-	 */
-	public function testSharpenWithoutValue()
-	{
-		$im = new ImageMagick();
-
-		$method = new ReflectionMethod($im::class, 'sharpen');
-		$method->setAccessible(true);
-
-		$result = $method->invoke($im, '', [
-			'sharpen' => null
-		]);
-
-		$this->assertNull($result);
 	}
 
 	/**
@@ -103,8 +67,7 @@ class ImageMagickTest extends TestCase
 	public function testKeepColorProfileStripMeta(string $basename, bool $crop)
 	{
 		$im = new ImageMagick([
-			'bin' => 'convert',
-			'crop' => $crop,
+			'crop'  => $crop,
 			'width' => 250, // do some arbitrary transformation
 		]);
 
@@ -115,16 +78,7 @@ class ImageMagickTest extends TestCase
 		$originalProfile = shell_exec('identify -format "%[profile:icc]" ' . escapeshellarg($file) . ' 2>/dev/null');
 		$im->process($file);
 		$profile = shell_exec('identify -format "%[profile:icc]" ' . escapeshellarg($file) . ' 2>/dev/null');
-
-		if (F::extension($basename) === 'png') {
-			// ensure that the profile has been stripped from PNG files, because
-			// ImageMagick cannot keep it while stripping all other metadata
-			// (tested with ImageMagick 7.0.11-14 Q16 x86_64 2021-05-31)
-			$this->assertNull($profile);
-		} else {
-			// ensure that the profile has been kept for all other file types
-			$this->assertSame($originalProfile, $profile);
-		}
+		$this->assertSame($originalProfile, $profile);
 
 		// ensure that other metadata has been stripped
 		$meta = shell_exec('identify -verbose ' . escapeshellarg($file));
