@@ -176,11 +176,22 @@ class SystemTest extends AreaTestCase
 
 		$this->login();
 
+		$expectedLicense = [
+			'link' => null,
+			'name' => '-',
+			'status' => [
+				'icon'  => 'question',
+				'label' => 'Unknown license',
+				'theme' => 'passive',
+				'value' => 'unknown'
+			],
+		];
+
 		$view     = $this->view('system');
 		$expected = [
 			[
 				'author'  => '–',
-				'license' => '–',
+				'license' => $expectedLicense,
 				'name'    => [
 					'text' => 'getkirby/private',
 					'href' => null
@@ -197,7 +208,7 @@ class SystemTest extends AreaTestCase
 			],
 			[
 				'author'  => 'A, B',
-				'license' => '–',
+				'license' => $expectedLicense,
 				'name'    => [
 					'text' => 'getkirby/public',
 					'href' => 'https://getkirby.com'
@@ -214,7 +225,7 @@ class SystemTest extends AreaTestCase
 			],
 			[
 				'author'  => '–',
-				'license' => '–',
+				'license' => $expectedLicense,
 				'name'    => [
 					'text' => 'getkirby/unknown',
 					'href' => null
@@ -270,11 +281,23 @@ class SystemTest extends AreaTestCase
 
 		$this->login();
 
-		$view     = $this->view('system');
+		$view = $this->view('system');
+
+		$expectedLicense = [
+			'link' => null,
+			'name' => '-',
+			'status' => [
+				'icon'  => 'question',
+				'label' => 'Unknown license',
+				'theme' => 'passive',
+				'value' => 'unknown'
+			],
+		];
+
 		$expected = [
 			[
 				'author'  => '–',
-				'license' => '–',
+				'license' => $expectedLicense,
 				'name'    => [
 					'text' => 'getkirby/private',
 					'href' => null
@@ -291,7 +314,7 @@ class SystemTest extends AreaTestCase
 			],
 			[
 				'author'  => 'A, B',
-				'license' => '–',
+				'license' => $expectedLicense,
 				'name'    => [
 					'text' => 'getkirby/public',
 					'href' => 'https://getkirby.com'
@@ -308,7 +331,7 @@ class SystemTest extends AreaTestCase
 			],
 			[
 				'author'  => '–',
-				'license' => '–',
+				'license' => $expectedLicense,
 				'name'    => [
 					'text' => 'getkirby/unknown',
 					'href' => null
@@ -389,10 +412,22 @@ class SystemTest extends AreaTestCase
 			],
 		], $props['environment']);
 		$this->assertSame([], $props['security']);
+
+		$expectedLicense = [
+			'link' => null,
+			'name' => '-',
+			'status' => [
+				'icon'  => 'question',
+				'label' => 'Unknown license',
+				'theme' => 'passive',
+				'value' => 'unknown'
+			],
+		];
+
 		$this->assertSame([
 			[
 				'author'  => 'A, B',
-				'license' => '–',
+				'license' => $expectedLicense,
 				'name'    => [
 					'text' => 'getkirby/public',
 					'href' => 'https://getkirby.com'
