@@ -29,7 +29,7 @@ class Form
 	/**
 	 * Fields in the form
 	 */
-	protected Fields|null $fields;
+	protected Fields $fields;
 
 	/**
 	 * All values of form
@@ -206,7 +206,7 @@ class Form
 	/**
 	 * Returns form fields
 	 */
-	public function fields(): Fields|null
+	public function fields(): Fields
 	{
 		return $this->fields;
 	}
