@@ -32,7 +32,7 @@ class Field extends Component
 	/**
 	 * Parent collection with all fields of the current form
 	 */
-	protected Fields|null $formFields;
+	protected Fields $siblings;
 
 	/**
 	 * Registry for all component mixins
@@ -50,7 +50,7 @@ class Field extends Component
 	public function __construct(
 		string $type,
 		array $attrs = [],
-		Fields|null $formFields = null
+		Fields|null $siblings = null
 	) {
 		if (isset(static::$types[$type]) === false) {
 			throw new InvalidArgumentException(
@@ -68,13 +68,14 @@ class Field extends Component
 			);
 		}
 
-		$this->formFields = $formFields;
-
 		// use the type as fallback for the name
 		$attrs['name'] ??= $type;
 		$attrs['type']   = $type;
 
 		parent::__construct($type, $attrs);
+
+		// set the siblings collection
+		$this->siblings = $siblings ?? new Fields([$this]);
 	}
 
 	/**
@@ -285,21 +286,33 @@ class Field extends Component
 	}
 
 	/**
+	 * Validates when run for the first time and returns any errors
+	 */
+	public function errors(): array
+	{
+		if ($this->errors === null) {
+			$this->validate();
+		}
+
+		return $this->errors;
+	}
+
+	/**
 	 * Creates a new field instance
 	 */
 	public static function factory(
 		string $type,
 		array $attrs = [],
-		Fields|null $formFields = null
+		Fields|null $siblings = null
 	): static|FieldClass {
 		$field = static::$types[$type] ?? null;
 
 		if (is_string($field) && class_exists($field) === true) {
-			$attrs['siblings'] = $formFields;
+			$attrs['siblings'] = $siblings;
 			return new $field($attrs);
 		}
 
-		return new static($type, $attrs, $formFields);
+		return new static($type, $attrs, $siblings);
 	}
 
 	/**
@@ -323,23 +336,11 @@ class Field extends Component
 	}
 
 	/**
-	 * Parent collection with all fields of the current form
+	 * @deprecated Use `::siblings() instead
 	 */
-	public function formFields(): Fields|null
+	public function formFields(): Fields
 	{
-		return $this->formFields;
-	}
-
-	/**
-	 * Validates when run for the first time and returns any errors
-	 */
-	public function errors(): array
-	{
-		if ($this->errors === null) {
-			$this->validate();
-		}
-
-		return $this->errors;
+		return $this->siblings;
 	}
 
 	/**
@@ -438,10 +439,10 @@ class Field extends Component
 		if (
 			empty($this->when) === false &&
 			is_array($this->when) === true &&
-			$formFields = $this->formFields()
+			$siblings = $this->siblings()
 		) {
 			foreach ($this->when as $field => $value) {
-				$field      = $formFields->get($field);
+				$field      = $siblings->get($field);
 				$inputValue = $field?->value() ?? '';
 
 				// if the input data doesn't match the requested `when` value,
@@ -463,6 +464,14 @@ class Field extends Component
 	public function save(): bool
 	{
 		return ($this->options['save'] ?? true) !== false;
+	}
+
+	/**
+	 * Parent collection with all fields of the current form
+	 */
+	public function siblings(): Fields
+	{
+		return $this->siblings;
 	}
 
 	/**
