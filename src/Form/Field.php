@@ -5,6 +5,7 @@ namespace Kirby\Form;
 use Closure;
 use Exception;
 use Kirby\Cms\App;
+use Kirby\Cms\HasSiblings;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Component;
@@ -24,6 +25,7 @@ use Kirby\Toolkit\V;
  */
 class Field extends Component
 {
+	use HasSiblings;
 	use HasWhenQuery;
 
 	/**
@@ -448,6 +450,14 @@ class Field extends Component
 	 * Parent collection with all fields of the current form
 	 */
 	public function siblings(): Fields
+	{
+		return $this->siblings;
+	}
+
+	/**
+	 * Returns all sibling fields for the HasSiblings trait
+	 */
+	protected function siblingsCollection(): Fields
 	{
 		return $this->siblings;
 	}
