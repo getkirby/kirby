@@ -78,6 +78,28 @@ class VersionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::content
+	 * @covers ::prepareFieldsForContent
+	 */
+	public function testContentPrepareFields(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$version->update([
+			'lock' => 'test',
+			'slug' => 'foo',
+			'text' => 'Lorem ipsum'
+		]);
+
+		$this->assertSame(['text' => 'Lorem ipsum'], $version->content()->toArray());
+	}
+
+	/**
 	 * @covers ::contentFile
 	 */
 	public function testContentFileMultiLanguage(): void
@@ -343,7 +365,7 @@ class VersionTest extends TestCase
 			'subtitle' => 'Subtitle (changed)',
 		]);
 
-		$diff = $a->diff(VersionId::changes());
+		$diff = $a->diff('changes');
 
 		// the result array should contain the changed fields
 		// the changed values
@@ -401,7 +423,7 @@ class VersionTest extends TestCase
 			'subtitle' => 'Subtitle',
 		]);
 
-		$diff = $a->diff(VersionId::published());
+		$diff = $a->diff($a);
 
 		$this->assertSame([], $diff);
 	}

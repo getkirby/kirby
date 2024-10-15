@@ -80,7 +80,7 @@ class Changes
 			language: 'current'
 		);
 
-		if ($published->diff($changes, 'current') === []) {
+		if ($published->diff(version: $changes, language: 'current') === []) {
 			$changes->delete();
 		}
 

@@ -294,8 +294,8 @@ class Version
 	}
 
 	/**
-	 * Make sure that reading from storage will always
-	 * return a usable set of fields with clean field names
+	 * Make sure that the Content object receives the right set of fields
+	 * filtering fields used for lower logic (e.g. lock)
 	 */
 	protected function prepareFieldsForContent(
 		array $fields,
