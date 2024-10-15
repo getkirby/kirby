@@ -29,6 +29,7 @@ abstract class FieldClass
 	 * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
 	 */
 	use HasSiblings;
+	use HasWhenQuery;
 
 	protected string|null $after;
 	protected bool $autofocus;
@@ -45,7 +46,6 @@ abstract class FieldClass
 	protected Fields $siblings;
 	protected bool $translate;
 	protected mixed $value = null;
-	protected array|null $when;
 	protected string|null $width;
 
 	public function __construct(
@@ -282,48 +282,6 @@ abstract class FieldClass
 	}
 
 	/**
-	 * Checks if the field needs a value before being saved;
-	 * this is the case if all of the following requirements are met:
-	 * - The field is saveable
-	 * - The field is required
-	 * - The field is currently empty
-	 * - The field is not currently inactive because of a `when` rule
-	 */
-	protected function needsValue(): bool
-	{
-		// check simple conditions first
-		if (
-			$this->isSaveable() === false ||
-			$this->isRequired() === false ||
-			$this->isEmpty()    === false
-		) {
-			return false;
-		}
-
-		// check the data of the relevant fields if there is a `when` option
-		if (
-			empty($this->when) === false &&
-			is_array($this->when) === true &&
-			$formFields = $this->siblings()
-		) {
-			foreach ($this->when as $field => $value) {
-				$field      = $formFields->get($field);
-				$inputValue = $field?->value() ?? '';
-
-				// if the input data doesn't match the requested `when` value,
-				// that means that this field is not required and can be saved
-				// (*all* `when` conditions must be met for this field to be required)
-				if ($inputValue !== $value) {
-					return false;
-				}
-			}
-		}
-
-		// either there was no `when` condition or all conditions matched
-		return true;
-	}
-
-	/**
 	 * Returns all original params for the field
 	 */
 	public function params(): array
@@ -459,14 +417,6 @@ abstract class FieldClass
 	protected function setTranslate(bool $translate = true): void
 	{
 		$this->translate = $translate;
-	}
-
-	/**
-	 * Setter for the when condition
-	 */
-	protected function setWhen(array|null $when = null): void
-	{
-		$this->when = $when;
 	}
 
 	/**
@@ -627,14 +577,6 @@ abstract class FieldClass
 	protected function valueToYaml(array|null $value = null): string
 	{
 		return Data::encode($value, 'yaml');
-	}
-
-	/**
-	 * Conditions when the field will be shown
-	 */
-	public function when(): array|null
-	{
-		return $this->when;
 	}
 
 	/**
