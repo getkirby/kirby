@@ -209,6 +209,38 @@ class ChangesTest extends TestCase
 	}
 
 	/**
+	 * @covers ::track
+	 */
+	public function testTrackDisabledUuids()
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'content' => [
+					'uuid' => false
+				]
+			]
+		]);
+
+		$changes = new Changes();
+
+		$this->assertCount(0, $changes->files());
+		$this->assertCount(0, $changes->pages());
+		$this->assertCount(0, $changes->users());
+
+		$changes->track($this->app->page('test'));
+		$changes->track($this->app->file('test/test.jpg'));
+		$changes->track($this->app->user('test'));
+
+		$this->assertCount(1, $changes->files());
+		$this->assertCount(1, $changes->pages());
+		$this->assertCount(1, $changes->users());
+
+		$this->assertSame('test', $changes->pages()->first()->id());
+		$this->assertSame('test/test.jpg', $changes->files()->first()->id());
+		$this->assertSame('test', $changes->users()->first()->id());
+	}
+
+	/**
 	 * @covers ::update
 	 */
 	public function testUpdate()
@@ -262,6 +294,38 @@ class ChangesTest extends TestCase
 		$this->assertCount(0, $changes->read('files'));
 		$this->assertCount(0, $changes->read('pages'));
 		$this->assertCount(0, $changes->read('users'));
+	}
+
+	/**
+	 * @covers ::untrack
+	 */
+	public function testUntrackDisabledUuids()
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'content' => [
+					'uuid' => false
+				]
+			]
+		]);
+
+		$changes = new Changes();
+
+		$changes->track($this->app->page('test'));
+		$changes->track($this->app->file('test/test.jpg'));
+		$changes->track($this->app->user('test'));
+
+		$this->assertCount(1, $changes->files());
+		$this->assertCount(1, $changes->pages());
+		$this->assertCount(1, $changes->users());
+
+		$changes->untrack($this->app->page('test'));
+		$changes->untrack($this->app->file('test/test.jpg'));
+		$changes->untrack($this->app->user('test'));
+
+		$this->assertCount(0, $changes->files());
+		$this->assertCount(0, $changes->pages());
+		$this->assertCount(0, $changes->users());
 	}
 
 	/**

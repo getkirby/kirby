@@ -19,8 +19,6 @@ use Kirby\Toolkit\A;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
- *
- * @todo Add support when UUIDs are disabled
  */
 class Changes
 {
@@ -127,8 +125,8 @@ class Changes
 	{
 		$key = $this->cacheKey($model);
 
-		$changes = $this->read($key);
-		$changes[] = (string)$model->uuid();
+		$changes   = $this->read($key);
+		$changes[] = (string)($model->uuid() ?? $model->id());
 
 		$this->update($key, $changes);
 	}
@@ -144,7 +142,7 @@ class Changes
 		// remove the model from the list of changes
 		$changes = A::filter(
 			$this->read($key),
-			fn ($uuid) => $uuid !== (string)$model->uuid()
+			fn ($id) => $id !== (string)($model->uuid() ?? $model->id())
 		);
 
 		$this->update($key, $changes);
