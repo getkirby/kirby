@@ -6,6 +6,7 @@ use Kirby\Cache\ApcuCache;
 use Kirby\Cache\FileCache;
 use Kirby\Cache\MemCached;
 use Kirby\Cache\MemoryCache;
+use Kirby\Cache\RedisCache;
 use Kirby\Cms\Auth\EmailChallenge;
 use Kirby\Cms\Auth\TotpChallenge;
 use Kirby\Form\Field\BlocksField;
@@ -165,6 +166,7 @@ class Core
 			'file'      => FileCache::class,
 			'memcached' => MemCached::class,
 			'memory'    => MemoryCache::class,
+			'redis'     => RedisCache::class
 		];
 	}
 
