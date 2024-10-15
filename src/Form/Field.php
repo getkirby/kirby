@@ -393,6 +393,14 @@ class Field extends Component
 	}
 
 	/**
+	 * Checks if the field is saveable
+	 */
+	public function isSaveable(): bool
+	{
+		return ($this->options['save'] ?? true) !== false;
+	}
+
+	/**
 	 * Checks if the field is valid
 	 */
 	public function isValid(): bool
@@ -428,7 +436,7 @@ class Field extends Component
 	{
 		// check simple conditions first
 		if (
-			$this->save() === false ||
+			$this->isSaveable() === false ||
 			$this->isRequired() === false ||
 			$this->isEmpty() === false
 		) {
@@ -460,10 +468,11 @@ class Field extends Component
 
 	/**
 	 * Checks if the field is saveable
+	 * @deprecated Use `::isSaveable()` instead
 	 */
 	public function save(): bool
 	{
-		return ($this->options['save'] ?? true) !== false;
+		return $this->isSaveable();
 	}
 
 	/**
@@ -484,7 +493,7 @@ class Field extends Component
 		unset($array['model']);
 
 		$array['hidden']   = $this->isHidden();
-		$array['saveable'] = $this->save();
+		$array['saveable'] = $this->isSaveable();
 
 		ksort($array);
 
@@ -546,6 +555,6 @@ class Field extends Component
 	 */
 	public function value(): mixed
 	{
-		return $this->save() ? $this->value : null;
+		return $this->isSaveable() ? $this->value : null;
 	}
 }
