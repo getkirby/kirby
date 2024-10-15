@@ -353,6 +353,7 @@ class Field extends Component
 
 	/**
 	 * Checks if the field is empty
+	 * @deprecated Passing arguments is deprecated. Use `::isEmptyValue()` instead to check for
 	 */
 	public function isEmpty(mixed ...$args): bool
 	{
@@ -361,6 +362,14 @@ class Field extends Component
 			default => $args[0]
 		};
 
+		return $this->isEmptyValue($value);
+	}
+
+	/**
+	 * Checks if the given value is considered empty
+	 */
+	public function isEmptyValue(mixed $value = null): bool
+	{
 		if ($empty = $this->options['isEmpty'] ?? null) {
 			return $empty->call($this, $value);
 		}
