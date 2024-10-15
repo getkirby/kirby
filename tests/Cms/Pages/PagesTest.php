@@ -630,6 +630,50 @@ class PagesTest extends TestCase
 		$this->assertIsPage('zzz/yyy', $pages->find('zzz/yyy'));
 	}
 
+	public function testFindChildrenDrafts()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'grand',
+						'children' => [
+							[
+								'slug' => 'mother',
+								'children' => [
+									[
+										'slug' => 'child',
+									]
+								]
+							]
+						],
+						'drafts' => [
+							[
+								'slug' => 'father',
+								'children' => [
+									[
+										'slug' => 'child',
+									]
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$site = $app->site();
+
+		$this->assertIsPage('grand', $site->children()->find('grand'));
+		$this->assertIsPage('grand/mother', $site->children()->find('grand/mother'));
+		$this->assertIsPage('grand/father', $site->children()->find('grand/father'));
+		$this->assertIsPage('grand/mother/child', $site->children()->find('grand/mother/child'));
+		$this->assertIsPage('grand/father/child', $site->children()->find('grand/father/child'));
+	}
+
 	public function testFindMultiple()
 	{
 		$pages = Pages::factory([
