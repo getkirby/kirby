@@ -20,6 +20,13 @@ use Kirby\Toolkit\Collection;
 class Fields extends Collection
 {
 	/**
+	 * Cache for the errors array
+	 *
+	 * @var array<string, array<string, string>>|null
+	 */
+	protected array|null $errors = null;
+
+	/**
 	 * Internal setter for each object in the Collection.
 	 * This takes care of validation and of setting
 	 * the collection prop on each object correctly.
@@ -35,6 +42,9 @@ class Fields extends Collection
 		}
 
 		parent::__set($field->name(), $field);
+
+		// reset the errors cache if new fields are added
+		$this->errors = null;
 	}
 
 	/**
@@ -50,18 +60,22 @@ class Fields extends Collection
 	 */
 	public function errors(): array
 	{
-		$errors = [];
+		if ($this->errors !== null) {
+			return $this->errors;
+		}
+
+		$this->errors = [];
 
 		foreach ($this->data as $name => $field) {
 			if ($field->errors() !== []) {
-				$errors[$name] = [
+				$this->errors[$name] = [
 					'label'   => $field->label(),
 					'message' => $field->errors()
 				];
 			}
 		}
 
-		return $errors;
+		return $this->errors;
 	}
 
 	/**
@@ -72,6 +86,9 @@ class Fields extends Collection
 		foreach ($input as $name => $value) {
 			$this->get($name)?->fill($value);
 		}
+
+		// reset the errors cache
+		$this->errors = null;
 
 		return $this;
 	}

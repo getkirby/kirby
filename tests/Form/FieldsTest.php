@@ -96,6 +96,19 @@ class FieldsTest extends TestCase
 				]
 			]
 		], $fields->errors());
+
+		$fields->fill([
+			'a' => 'A',
+		]);
+
+		$this->assertSame([
+			'b' => [
+				'label'   => 'B',
+				'message' => [
+					'maxlength' => 'Please enter a shorter value. (max. 3 characters)'
+				]
+			]
+		], $fields->errors());
 	}
 
 	/**

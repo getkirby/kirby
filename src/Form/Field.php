@@ -316,6 +316,9 @@ class Field extends Component
 		// reevaluate the computed props
 		$this->applyComputed($this->options['computed']);
 
+		// reset the errors cache
+		$this->errors = null;
+
 		return $this;
 	}
 
