@@ -20,6 +20,19 @@ class LicenseStatusTest extends TestCase
 		$this->assertSame('Valid license', (string)$status);
 	}
 
+	public function testFromArray(): void
+	{
+		$status = LicenseStatus::from([
+			'icon'  => 'check',
+			'label' => 'Valid license',
+			'theme' => 'success',
+			'value' => 'active',
+		]);
+
+		$this->assertInstanceOf(LicenseStatus::class, $status);
+		$this->assertSame('active', $status->value());
+	}
+
 	/**
 	 * @covers ::from
 	 */

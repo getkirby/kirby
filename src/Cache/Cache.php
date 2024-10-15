@@ -70,7 +70,6 @@ abstract class Cache
 		return $this->expired($key) === false;
 	}
 
-
 	/**
 	 * Calculates the expiration timestamp
 	 */
