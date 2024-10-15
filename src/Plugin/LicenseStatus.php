@@ -35,10 +35,14 @@ class LicenseStatus implements Stringable
 	/**
 	 * Returns a status by its name
 	 */
-	public static function from(LicenseStatus|string|null $status): static
+	public static function from(LicenseStatus|string|array|null $status): static
 	{
 		if ($status instanceof LicenseStatus) {
 			return $status;
+		}
+
+		if (is_array($status) === true) {
+			return new static(...$status);
 		}
 
 		$status   = SystemLicenseStatus::from($status ?? 'unknown');
