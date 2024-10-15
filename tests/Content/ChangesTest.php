@@ -108,6 +108,7 @@ class ChangesTest extends TestCase
 	}
 
 	/**
+	 * @covers ::cacheExists
 	 * @covers ::generateCache
 	 */
 	public function testGenerateCache()
@@ -125,12 +126,14 @@ class ChangesTest extends TestCase
 
 		$this->app->cache('changes')->flush();
 
+		$this->assertFalse($changes->cacheExists());
 		$this->assertSame([], $changes->read('files'));
 		$this->assertSame([], $changes->read('pages'));
 		$this->assertSame([], $changes->read('users'));
 
 		$changes->generateCache();
 
+		$this->assertTrue($changes->cacheExists());
 		$this->assertSame(['file://test'], $changes->read('files'));
 		$this->assertSame(['page://test'], $changes->read('pages'));
 		$this->assertSame(['user://test'], $changes->read('users'));

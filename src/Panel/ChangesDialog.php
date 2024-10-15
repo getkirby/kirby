@@ -18,11 +18,9 @@ use Kirby\Content\Changes;
  */
 class ChangesDialog
 {
-	protected Changes $changes;
-
-	public function __construct()
-	{
-		$this->changes = new Changes();
+	public function __construct(
+		protected Changes $changes = new Changes()
+	) {
 	}
 
 	/**
@@ -48,6 +46,10 @@ class ChangesDialog
 	 */
 	public function load(): array
 	{
+		if ($this->changes->cacheExists() === false) {
+			$this->changes->generateCache();
+		}
+
 		return [
 			'component' => 'k-changes-dialog',
 			'props'     => [

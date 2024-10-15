@@ -38,6 +38,14 @@ class Changes
 	}
 
 	/**
+	 * Returns whether the cache has been populated
+	 */
+	public function cacheExists(): bool
+	{
+		return $this->cache()->get('__updated__') !== null;
+	}
+
+	/**
 	 * Returns the cache key for a given model
 	 */
 	public function cacheKey(ModelWithContent $model): string
@@ -157,6 +165,7 @@ class Changes
 		$changes = array_values($changes);
 
 		$this->cache()->set($key, $changes);
+		$this->cache()->set('__updated__', time());
 	}
 
 	/**
