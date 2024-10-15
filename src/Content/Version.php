@@ -50,6 +50,9 @@ class Version
 			];
 		}
 
+		// prepare raw content file fields as fields for Content object
+		$fields = $this->prepareFieldsForContent($fields, $language);
+
 		return new Content(
 			parent: $this->model,
 			data:   $fields,
@@ -281,6 +284,18 @@ class Version
 	protected function prepareFieldsAfterRead(array $fields, Language $language): array
 	{
 		return $this->convertFieldNamesToLowerCase($fields);
+	}
+
+	/**
+	 * Make sure that reading from storage will always
+	 * return a usable set of fields with clean field names
+	 */
+	protected function prepareFieldsForContent(
+		array $fields,
+		Language $language
+	): array {
+		unset($fields['lock'], $fields['slug']);
+		return $fields;
 	}
 
 	/**
