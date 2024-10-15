@@ -67,10 +67,12 @@ class Fields extends Collection
 		$this->errors = [];
 
 		foreach ($this->data as $name => $field) {
-			if ($field->errors() !== []) {
+			$errors = $field->errors();
+
+			if ($errors !== []) {
 				$this->errors[$name] = [
 					'label'   => $field->label(),
-					'message' => $field->errors()
+					'message' => $errors
 				];
 			}
 		}
