@@ -138,14 +138,13 @@ class SearchTest extends TestCase
 			'blue-fish.jpg'
 		], array_column($result['results'], 'text'));
 
-		// TODO: once `isListable` caching has been fixed
-		// $this->app->impersonate('kirby');
-		// $result = Search::pages('friend');
-		// $this->assertCount(2, $result['results']);
-		// $this->assertEqualsCanonicalizing([
-		// 	'blue-fish.jpg',
-		// 	'red-fish.jpg'
-		// ], array_column($result['results'], 'text'));
+		$this->app->impersonate('kirby');
+		$result = Search::files('fish');
+		$this->assertCount(2, $result['results']);
+		$this->assertEqualsCanonicalizing([
+			'blue-fish.jpg',
+			'red-fish.jpg'
+		], array_column($result['results'], 'text'));
 	}
 
 	/**
@@ -248,14 +247,13 @@ class SearchTest extends TestCase
 			'A friend'
 		], array_column($result['results'], 'text'));
 
-		// TODO: once `isListable` caching has been fixed
-		// $this->app->impersonate('kirby');
-		// $result = Search::pages('friend');
-		// $this->assertCount(2, $result['results']);
-		// $this->assertEqualsCanonicalizing([
-		// 	'A friend',
-		// 	'A secret friend'
-		// ], array_column($result['results'], 'text'));
+		$this->app->impersonate('kirby');
+		$result = Search::pages('friend');
+		$this->assertCount(2, $result['results']);
+		$this->assertEqualsCanonicalizing([
+			'A friend',
+			'A secret friend'
+		], array_column($result['results'], 'text'));
 	}
 
 	/**
