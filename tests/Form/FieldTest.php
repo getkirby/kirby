@@ -715,6 +715,54 @@ class FieldTest extends TestCase
 		$this->assertSame('a, b, c', $field->data());
 	}
 
+	/**
+	 * @covers ::siblings
+	 * @covers ::formFields
+	 */
+	public function testSiblings()
+	{
+		Field::$types = [
+			'test' => []
+		];
+
+		$model = new Page(['slug' => 'test']);
+
+		$field = new Field('test', [
+			'model' => $model,
+		]);
+
+		$this->assertInstanceOf(Fields::class, $field->siblings());
+		$this->assertInstanceOf(Fields::class, $field->formFields());
+		$this->assertCount(1, $field->siblings());
+		$this->assertCount(1, $field->formFields());
+		$this->assertSame($field, $field->siblings()->first());
+		$this->assertSame($field, $field->formFields()->first());
+
+		$field = new Field(
+			type: 'test',
+			attrs: [
+				'model' => $model,
+			],
+			siblings: new Fields([
+				new Field('test', [
+					'model' => $model,
+					'name'  => 'a'
+				]),
+				new Field('test', [
+					'model' => $model,
+					'name'  => 'b'
+				]),
+			])
+		);
+
+		$this->assertCount(2, $field->siblings());
+		$this->assertCount(2, $field->formFields());
+		$this->assertSame('a', $field->siblings()->first()->name());
+		$this->assertSame('a', $field->formFields()->first()->name());
+		$this->assertSame('b', $field->siblings()->last()->name());
+		$this->assertSame('b', $field->formFields()->last()->name());
+	}
+
 	public function testToArray()
 	{
 		Field::$types = [
