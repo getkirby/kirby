@@ -1,10 +1,12 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Api;
 
-use Kirby\Cms\Api\ApiModelTestCase;
+use Kirby\Cms\File;
+use Kirby\Cms\FileBlueprint;
+use Kirby\Cms\Page;
 
-class FileBlueprintApiModelTest extends ApiModelTestCase
+class FileBlueprintModelTest extends ModelTestCase
 {
 	protected File $file;
 
