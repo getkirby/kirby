@@ -125,17 +125,24 @@ class Version
 	 * Returns the changed fields, compared to the given version
 	 */
 	public function diff(
-		VersionId|string $versionId,
+		Version|VersionId|string $version,
 		Language|string $language = 'default'
 	): array {
-		$versionId = VersionId::from($versionId);
+		if (is_string($version) === true) {
+			$version = VersionId::from($version);
+		}
 
-		if ($versionId->is($this->id) === true) {
+		if ($version instanceof VersionId) {
+			$version = $this->model->version($version);
+		}
+
+
+		if ($version->id()->is($this->id) === true) {
 			return [];
 		}
 
-		$a = $this->read($language) ?? [];
-		$b = $this->model->version($versionId)->read($language) ?? [];
+		$a = $this->content($language)->toArray();
+		$b = $version->content($language)->toArray();
 
 		return array_diff($b, $a);
 	}
