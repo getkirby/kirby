@@ -320,7 +320,7 @@ class Form
 	public function toArray(): array
 	{
 		$array = [
-			'errors'  => $this->errors(),
+			'errors'  => $this->fields->errors(),
 			'fields'  => $this->fields->toArray(),
 			'invalid' => $this->isInvalid()
 		];
