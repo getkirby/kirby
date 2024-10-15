@@ -428,7 +428,7 @@ abstract class FieldClass
 	}
 
 	/**
-	 * Returns all sibling fields
+	 * Returns all sibling fields for the HasSiblings trait
 	 */
 	protected function siblingsCollection(): Fields
 	{
