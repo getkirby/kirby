@@ -646,6 +646,38 @@ class FieldTest extends TestCase
 	}
 
 	/**
+	 * @covers ::isSaveable
+	 * @covers ::save
+	 */
+	public function testIsSaveable()
+	{
+		Field::$types = [
+			'store-me' => [
+				'save' => true
+			],
+			'dont-store-me' => [
+				'save' => false
+			]
+		];
+
+		$page = new Page(['slug' => 'test']);
+
+		$a = new Field('store-me', [
+			'model' => $page
+		]);
+
+		$this->assertTrue($a->isSaveable());
+		$this->assertTrue($a->save());
+
+		$b = new Field('dont-store-me', [
+			'model' => $page
+		]);
+
+		$this->assertFalse($b->isSaveable());
+		$this->assertFalse($b->save());
+	}
+
+	/**
 	 * @covers ::kirby
 	 */
 	public function testKirby()
@@ -925,35 +957,6 @@ class FieldTest extends TestCase
 
 		$this->assertSame('blog', $field->placeholder());
 		$this->assertSame('blog', $field->placeholder);
-	}
-
-	/**
-	 * @covers ::save
-	 */
-	public function testSave()
-	{
-		Field::$types = [
-			'store-me' => [
-				'save' => true
-			],
-			'dont-store-me' => [
-				'save' => false
-			]
-		];
-
-		$page = new Page(['slug' => 'test']);
-
-		$a = new Field('store-me', [
-			'model' => $page
-		]);
-
-		$this->assertTrue($a->save());
-
-		$b = new Field('dont-store-me', [
-			'model' => $page
-		]);
-
-		$this->assertFalse($b->save());
 	}
 
 	/**
