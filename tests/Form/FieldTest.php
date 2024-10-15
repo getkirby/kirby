@@ -535,6 +535,7 @@ class FieldTest extends TestCase
 
 		$this->assertSame($expected, $field->isEmpty());
 		$this->assertSame($expected, $field->isEmpty($value));
+		$this->assertSame($expected, $field->isEmptyValue($value));
 	}
 
 	/**
@@ -555,7 +556,9 @@ class FieldTest extends TestCase
 		]);
 
 		$this->assertFalse($field->isEmpty(null));
+		$this->assertFalse($field->isEmptyValue(null));
 		$this->assertTrue($field->isEmpty(0));
+		$this->assertTrue($field->isEmptyValue(0));
 	}
 
 	/**
