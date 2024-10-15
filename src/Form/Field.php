@@ -24,6 +24,8 @@ use Kirby\Toolkit\V;
  */
 class Field extends Component
 {
+	use HasWhenQuery;
+
 	/**
 	 * An array of all found errors
 	 */
@@ -431,48 +433,6 @@ class Field extends Component
 	public function model(): mixed
 	{
 		return $this->model;
-	}
-
-	/**
-	 * Checks if the field needs a value before being saved;
-	 * this is the case if all of the following requirements are met:
-	 * - The field is saveable
-	 * - The field is required
-	 * - The field is currently empty
-	 * - The field is not currently inactive because of a `when` rule
-	 */
-	protected function needsValue(): bool
-	{
-		// check simple conditions first
-		if (
-			$this->isSaveable() === false ||
-			$this->isRequired() === false ||
-			$this->isEmpty() === false
-		) {
-			return false;
-		}
-
-		// check the data of the relevant fields if there is a `when` option
-		if (
-			empty($this->when) === false &&
-			is_array($this->when) === true &&
-			$siblings = $this->siblings()
-		) {
-			foreach ($this->when as $field => $value) {
-				$field      = $siblings->get($field);
-				$inputValue = $field?->value() ?? '';
-
-				// if the input data doesn't match the requested `when` value,
-				// that means that this field is not required and can be saved
-				// (*all* `when` conditions must be met for this field to be required)
-				if ($inputValue !== $value) {
-					return false;
-				}
-			}
-		}
-
-		// either there was no `when` condition or all conditions matched
-		return true;
 	}
 
 	/**
