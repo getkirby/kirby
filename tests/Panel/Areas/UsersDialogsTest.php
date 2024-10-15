@@ -35,6 +35,26 @@ class UsersDialogsTest extends AreaTestCase
 		$this->assertSame('admin', $props['value']['role']);
 	}
 
+	public function testCreateWithRoleQuery(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'role' => 'editor',
+				]
+			]
+		]);
+
+		$this->installEditor();
+		$this->login();
+
+		$dialog = $this->dialog('users/create');
+		$props  = $dialog['props'];
+
+		$this->assertFormDialog($dialog);
+		$this->assertSame('editor', $props['value']['role']);
+	}
+
 	public function testCreateOnSubmit(): void
 	{
 		$this->submit([

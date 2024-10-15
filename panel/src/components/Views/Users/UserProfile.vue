@@ -1,28 +1,28 @@
 <template>
 	<div class="k-user-profile">
-		<k-user-avatar :id="id" :api="api" :avatar="avatar" :disabled="isLocked" />
+		<k-user-avatar :id="id" :api="api" :avatar="avatar" :is-locked="isLocked" />
 
 		<k-button-group
 			:buttons="[
 				{
 					icon: 'email',
-					text: `${email}`,
+					text: email,
 					title: `${$t('email')}: ${email}`,
-					disabled: !permissions.changeEmail || isLocked,
+					disabled: !canChangeEmail,
 					click: () => $dialog(api + '/changeEmail')
 				},
 				{
 					icon: 'bolt',
-					text: `${role}`,
+					text: role,
 					title: `${$t('role')}: ${role}`,
-					disabled: !permissions.changeRole || isLocked,
-					click: () => $dialog(api + '/changeRole')
+					disabled: !canChangeRole,
+					click: () => $dialog(model.link + '/changeRole')
 				},
 				{
 					icon: 'translate',
-					text: `${language}`,
+					text: language,
 					title: `${$t('language')}: ${language}`,
-					disabled: !permissions.changeLanguage || isLocked,
+					disabled: !canChangeLanguage,
 					click: () => $dialog(api + '/changeLanguage')
 				}
 			]"
@@ -39,11 +39,13 @@ export default {
 	props: {
 		api: String,
 		avatar: String,
+		canChangeEmail: Boolean,
+		canChangeLanguage: Boolean,
+		canChangeRole: Boolean,
 		email: String,
 		id: String,
 		isLocked: Boolean,
 		language: String,
-		permissions: Object,
 		role: String
 	}
 };

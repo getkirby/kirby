@@ -11,7 +11,7 @@
 		</template>
 
 		<k-header
-			:editable="permissions.changeName && !isLocked"
+			:editable="canChangeName"
 			class="k-user-view-header"
 			@edit="$dialog(api + '/changeName')"
 		>
@@ -40,9 +40,12 @@
 			:api="api"
 			:avatar="avatar"
 			:email="email"
+			:can-change-email="canChangeEmail"
+			:can-change-language="canChangeLanguage"
+			:can-change-name="canChangeName"
+			:can-change-role="canChangeRole"
 			:is-locked="isLocked"
 			:language="language"
-			:permissions="permissions"
 			:role="role"
 		/>
 
@@ -68,6 +71,10 @@ export default {
 	extends: ModelView,
 	props: {
 		avatar: String,
+		canChangeEmail: Boolean,
+		canChangeLanguage: Boolean,
+		canChangeName: Boolean,
+		canChangeRole: Boolean,
 		email: String,
 		language: String,
 		name: String,

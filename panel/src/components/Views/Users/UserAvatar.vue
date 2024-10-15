@@ -1,5 +1,10 @@
 <template>
-	<k-button :title="$t('avatar')" class="k-user-view-image" @click="open">
+	<k-button
+		:disabled="isLocked"
+		:title="$t('avatar')"
+		class="k-user-view-image"
+		@click="open"
+	>
 		<template v-if="avatar">
 			<k-image-frame :cover="true" :src="avatar" />
 			<k-dropdown-content
@@ -18,7 +23,6 @@
 				]"
 			/>
 		</template>
-
 		<k-icon-frame v-else icon="user" />
 	</k-button>
 </template>
@@ -32,7 +36,8 @@ export default {
 	props: {
 		api: String,
 		avatar: String,
-		id: String
+		id: String,
+		isLocked: Boolean
 	},
 	methods: {
 		open() {

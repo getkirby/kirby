@@ -53,7 +53,7 @@ jobs:
         (github.repository == 'getkirby/kirby' || github.repository_owner != 'getkirby')
       )
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 5
     strategy:
       matrix:
@@ -164,7 +164,7 @@ jobs:
         (github.repository == 'getkirby/kirby' || github.repository_owner != 'getkirby')
       )
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 5
     env:
       php: "8.2"
@@ -245,7 +245,7 @@ jobs:
         (github.repository == 'getkirby/kirby' || github.repository_owner != 'getkirby')
       )
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 5
     env:
       php: "8.2"

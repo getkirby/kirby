@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
+use Kirby\Plugin\Plugin;
 
 /**
  * @coversDefaultClass Kirby\Cms\Html

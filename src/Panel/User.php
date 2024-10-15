@@ -85,7 +85,7 @@ class User extends Model
 			'dialog'   => $url . '/changeRole',
 			'icon'     => 'bolt',
 			'text'     => I18n::translate('user.changeRole'),
-			'disabled' => $this->isDisabledDropdownOption('changeRole', $options, $permissions) || $this->model->roles('change')->count() < 2
+			'disabled' => $this->isDisabledDropdownOption('changeRole', $options, $permissions) || $this->model->roles()->count() < 2
 		];
 
 		$result[] = [
@@ -235,9 +235,9 @@ class User extends Model
 	 */
 	public function props(): array
 	{
-		$props = parent::props();
-		$user  = $this->model;
-		$account = $user->isLoggedIn();
+		$props       = parent::props();
+		$user        = $this->model;
+		$permissions = $this->options();
 
 		// Additional model information
 		// @deprecated Use the top-level props instead
@@ -258,14 +258,18 @@ class User extends Model
 		return [
 			...parent::props(),
 			...$this->prevNext(),
-			'avatar'    => $model['avatar'],
-			'blueprint' => $this->model->role()->name(),
-			'email'     => $model['email'],
-			'language'  => $model['language'],
-			'model'     => $model,
-			'name'      => $model['name'],
-			'role'      => $model['role'],
-			'username'  => $model['username'],
+			'avatar'            => $model['avatar'],
+			'blueprint'         => $this->model->role()->name(),
+			'canChangeEmail'    => $permissions['changeEmail'],
+			'canChangeLanguage' => $permissions['changeLanguage'],
+			'canChangeName'     => $permissions['changeName'],
+			'canChangeRole'     => $this->model->roles()->count() > 1,
+			'email'             => $model['email'],
+			'language'          => $model['language'],
+			'model'             => $model,
+			'name'              => $model['name'],
+			'role'              => $model['role'],
+			'username'          => $model['username'],
 		];
 	}
 
