@@ -265,7 +265,7 @@ class Form
 	 */
 	public function isValid(): bool
 	{
-		return empty($this->errors()) === true;
+		return $this->fields->errors() === [];
 	}
 
 	/**
