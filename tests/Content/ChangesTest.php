@@ -108,6 +108,35 @@ class ChangesTest extends TestCase
 	}
 
 	/**
+	 * @covers ::generateCache
+	 */
+	public function testGenerateCache()
+	{
+		$changes = new Changes();
+
+		$file = $this->app->file('test/test.jpg');
+		$file->version(VersionId::changes())->create(['foo' => 'bar']);
+
+		$page = $this->app->page('test');
+		$page->version(VersionId::changes())->create(['foo' => 'bar']);
+
+		$user = $this->app->user('test');
+		$user->version(VersionId::changes())->create(['foo' => 'bar']);
+
+		$this->app->cache('changes')->flush();
+
+		$this->assertSame([], $changes->read('files'));
+		$this->assertSame([], $changes->read('pages'));
+		$this->assertSame([], $changes->read('users'));
+
+		$changes->generateCache();
+
+		$this->assertSame(['file://test'], $changes->read('files'));
+		$this->assertSame(['page://test'], $changes->read('pages'));
+		$this->assertSame(['user://test'], $changes->read('users'));
+	}
+
+	/**
 	 * @covers ::pages
 	 * @covers ::ensure
 	 */

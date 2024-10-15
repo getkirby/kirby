@@ -19,6 +19,8 @@ use Kirby\Toolkit\A;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @todo Add support when UUIDs are disabled
  */
 class Changes
 {
@@ -79,6 +81,18 @@ class Changes
 		}
 
 		return $this->ensure($files);
+	}
+
+	/**
+	 * Rebuilds the cache by finding all models with changes version
+	 */
+	public function generateCache(): void
+	{
+		foreach ($this->kirby->models() as $model) {
+			if ($model->version(VersionId::changes())->exists('*') === true) {
+				$this->track($model);
+			}
+		}
 	}
 
 	/**
