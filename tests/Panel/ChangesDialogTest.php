@@ -2,9 +2,9 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Content\Changes;
+use Kirby\Content\VersionId;
 use Kirby\Panel\Areas\AreaTestCase;
 use Kirby\Uuid\Uuids;
 
@@ -68,9 +68,7 @@ class ChangesDialogTest extends AreaTestCase
 	{
 		$this->setUpModels();
 
-		$this->changes->track(
-			$this->app->file('file://test')
-		);
+		$this->app->file('file://test')->version(VersionId::changes())->create([]);
 
 		$dialog = new ChangesDialog();
 		$files  = $dialog->files();
@@ -94,21 +92,18 @@ class ChangesDialogTest extends AreaTestCase
 	 */
 	public function testItems(): void
 	{
+		$this->setUpModels();
+		$page = $this->app->page('page://test');
+		$page->version(VersionId::changes())->create([]);
+
 		$dialog = new ChangesDialog();
-		$pages  = new Pages([
-			new Page(['slug' => 'test-a']),
-			new Page(['slug' => 'test-b'])
-		]);
+		$pages  = new Pages([$page]);
+		$items  = $dialog->items($pages);
 
-		$items = $dialog->items($pages);
+		$this->assertCount(1, $items);
 
-		$this->assertCount(2, $items);
-
-		$this->assertSame('test-a', $items[0]['text']);
-		$this->assertSame('/pages/test-a', $items[0]['link']);
-
-		$this->assertSame('test-b', $items[1]['text']);
-		$this->assertSame('/pages/test-b', $items[1]['link']);
+		$this->assertSame('test', $items[0]['text']);
+		$this->assertSame('/pages/test', $items[0]['link']);
 	}
 
 	/**
@@ -137,9 +132,7 @@ class ChangesDialogTest extends AreaTestCase
 	{
 		$this->setUpModels();
 
-		$this->changes->track(
-			$this->app->page('page://test')
-		);
+		$this->app->page('page://test')->version(VersionId::changes())->create([]);
 
 		$dialog = new ChangesDialog();
 		$pages  = $dialog->pages();
@@ -165,9 +158,7 @@ class ChangesDialogTest extends AreaTestCase
 	{
 		$this->setUpModels();
 
-		$this->changes->track(
-			$this->app->user('user://test')
-		);
+		$this->app->user('user://test')->version(VersionId::changes())->create([]);
 
 		$dialog = new ChangesDialog();
 		$users  = $dialog->users();
