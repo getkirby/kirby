@@ -2,9 +2,11 @@
 
 namespace Kirby\Content;
 
+use Kirby\Cms\File;
 use Kirby\Cms\Language;
 use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\Page;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 
@@ -301,7 +303,16 @@ class Version
 		array $fields,
 		Language $language
 	): array {
-		unset($fields['lock'], $fields['slug']);
+		unset($fields['lock']);
+
+		if ($this->model instanceof Page) {
+			unset($fields['slug']);
+		}
+
+		if ($this->model instanceof File) {
+			unset($fields['template']);
+		}
+
 		return $fields;
 	}
 

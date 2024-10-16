@@ -2,6 +2,7 @@
 
 namespace Kirby\Content;
 
+use Kirby\Cms\File;
 use Kirby\Data\Data;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
@@ -85,6 +86,7 @@ class VersionTest extends TestCase
 	{
 		$this->setUpSingleLanguage();
 
+		// for pages
 		$version = new Version(
 			model: $this->model,
 			id: VersionId::published()
@@ -94,6 +96,25 @@ class VersionTest extends TestCase
 			'lock' => 'test',
 			'slug' => 'foo',
 			'text' => 'Lorem ipsum'
+		]);
+
+		$this->assertSame(['text' => 'Lorem ipsum'], $version->content()->toArray());
+
+		// for files
+		$model = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $this->model
+		]);
+
+		$version = new Version(
+			model: $model,
+			id: VersionId::published()
+		);
+
+		$version->create([
+			'lock'     => 'test',
+			'template' => 'foo',
+			'text'     => 'Lorem ipsum'
 		]);
 
 		$this->assertSame(['text' => 'Lorem ipsum'], $version->content()->toArray());
