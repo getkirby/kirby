@@ -7,7 +7,6 @@ use Kirby\Cms\App;
 use Kirby\Cms\Files;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Pages;
-use Kirby\Cms\Site;
 use Kirby\Cms\Users;
 use Kirby\Toolkit\A;
 
@@ -47,9 +46,29 @@ class Changes
 	}
 
 	/**
+	 * Verify that the tracked model still really has changes.
+	 * If not, untrack and remove from collection.
+	 *
+	 * @template T of \Kirby\Cms\Files|\Kirby\Cms\Pages|\Kirby\Cms\Users
+	 * @param T $tracked
+	 * @return T
+	 */
+	public function ensure(Files|Pages|Users $tracked): Files|Pages|Users
+	{
+		foreach ($tracked as $model) {
+			if ($model->version(VersionId::changes())->exists('*') === false) {
+				$this->untrack($model);
+				$tracked->remove($model);
+			}
+		}
+
+		return $tracked;
+	}
+
+	/**
 	 * Return all files with unsaved changes
 	 */
-	public function files(): Files
+	public function files(bool $ensure = true): Files
 	{
 		$files = new Files([]);
 
@@ -59,19 +78,32 @@ class Changes
 			}
 		}
 
+		if ($ensure === true) {
+			$files = $this->ensure($files);
+		}
+
 		return $files;
 	}
 
 	/**
 	 * Return all pages with unsaved changes
 	 */
-	public function pages(): Pages
+	public function pages(bool $ensure = true): Pages
 	{
-		return $this->kirby->site()->find(
+		/**
+		 * @var \Kirby\Cms\Pages $pages
+		 */
+		$pages = $this->kirby->site()->find(
 			false,
 			false,
 			...$this->read('pages')
 		);
+
+		if ($ensure === true) {
+			$pages = $this->ensure($pages);
+		}
+
+		return $pages;
 	}
 
 	/**
@@ -126,12 +158,21 @@ class Changes
 	/**
 	 * Return all users with unsaved changes
 	 */
-	public function users(): Users
+	public function users(bool $ensure = true): Users
 	{
-		return $this->kirby->users()->find(
+		/**
+		 * @var \Kirby\Cms\Users $users
+		 */
+		$users = $this->kirby->users()->find(
 			false,
 			false,
 			...$this->read('users')
 		);
+
+		if ($ensure === true) {
+			$users = $this->ensure($users);
+		}
+
+		return $users;
 	}
 }
