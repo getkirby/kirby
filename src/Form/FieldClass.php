@@ -29,6 +29,7 @@ abstract class FieldClass
 	 * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
 	 */
 	use HasSiblings;
+	use HasValidation;
 	use HasWhenQuery;
 
 	protected string|null $after;
@@ -36,7 +37,6 @@ abstract class FieldClass
 	protected string|null $before;
 	protected mixed $default;
 	protected bool $disabled;
-	protected array|null $errors = null;
 	protected string|null $help;
 	protected string|null $icon;
 	protected string|null $label;
@@ -154,15 +154,6 @@ abstract class FieldClass
 	}
 
 	/**
-	 * Runs all validations and returns an array of
-	 * error messages
-	 */
-	public function errors(): array
-	{
-		return $this->errors ??= $this->validate();
-	}
-
-	/**
 	 * Sets a new value for the field
 	 */
 	public function fill(mixed $value = null): void
@@ -223,14 +214,6 @@ abstract class FieldClass
 		return false;
 	}
 
-	/**
-	 * Checks if the field is invalid
-	 */
-	public function isInvalid(): bool
-	{
-		return $this->isValid() === false;
-	}
-
 	public function isRequired(): bool
 	{
 		return $this->required;
@@ -239,14 +222,6 @@ abstract class FieldClass
 	public function isSaveable(): bool
 	{
 		return true;
-	}
-
-	/**
-	 * Checks if the field is valid
-	 */
-	public function isValid(): bool
-	{
-		return $this->errors() === [];
 	}
 
 	/**
@@ -484,52 +459,6 @@ abstract class FieldClass
 	public function type(): string
 	{
 		return lcfirst(basename(str_replace(['\\', 'Field'], ['/', ''], static::class)));
-	}
-
-	/**
-	 * Runs the validations defined for the field
-	 */
-	protected function validate(): array
-	{
-		$validations = $this->validations();
-		$value       = $this->value();
-		$errors      = [];
-
-		// validate required values
-		if ($this->needsValue() === true) {
-			$errors['required'] = I18n::translate('error.validation.required');
-		}
-
-		foreach ($validations as $key => $validation) {
-			if (is_int($key) === true) {
-				// predefined validation
-				try {
-					Validations::$validation($this, $value);
-				} catch (Exception $e) {
-					$errors[$validation] = $e->getMessage();
-				}
-				continue;
-			}
-
-			if ($validation instanceof Closure) {
-				try {
-					$validation->call($this, $value);
-				} catch (Exception $e) {
-					$errors[$key] = $e->getMessage();
-				}
-			}
-		}
-
-		return $errors;
-	}
-
-	/**
-	 * Defines all validation rules
-	 * @codeCoverageIgnore
-	 */
-	protected function validations(): array
-	{
-		return [];
 	}
 
 	/**

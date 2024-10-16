@@ -26,12 +26,8 @@ use Kirby\Toolkit\V;
 class Field extends Component
 {
 	use HasSiblings;
+	use HasValidation;
 	use HasWhenQuery;
-
-	/**
-	 * An array of all found errors
-	 */
-	protected array|null $errors = null;
 
 	/**
 	 * Parent collection with all fields of the current form
@@ -290,14 +286,6 @@ class Field extends Component
 	}
 
 	/**
-	 * Validates when run for the first time and returns any errors
-	 */
-	public function errors(): array
-	{
-		return $this->errors ??= $this->validate();
-	}
-
-	/**
 	 * Creates a new field instance
 	 */
 	public static function factory(
@@ -386,14 +374,6 @@ class Field extends Component
 	}
 
 	/**
-	 * Checks if the field is invalid
-	 */
-	public function isInvalid(): bool
-	{
-		return $this->isValid() === false;
-	}
-
-	/**
 	 * Checks if the field is required
 	 */
 	public function isRequired(): bool
@@ -407,14 +387,6 @@ class Field extends Component
 	public function isSaveable(): bool
 	{
 		return ($this->options['save'] ?? true) !== false;
-	}
-
-	/**
-	 * Checks if the field is valid
-	 */
-	public function isValid(): bool
-	{
-		return $this->errors() === [];
 	}
 
 	/**
@@ -477,56 +449,7 @@ class Field extends Component
 			fn ($item) => $item !== null && is_object($item) === false
 		);
 	}
-
-	/**
-	 * Runs the validations defined for the field
-	 */
-	protected function validate(): array
-	{
-		$validations = $this->validations();
-		$value       = $this->value();
-		$errors      = [];
-
-		// validate required values
-		if ($this->needsValue() === true) {
-			$errors['required'] = I18n::translate('error.validation.required');
-		}
-
-		foreach ($validations as $key => $validation) {
-			if (is_int($key) === true) {
-				// predefined validation
-				try {
-					Validations::$validation($this, $value);
-				} catch (Exception $e) {
-					$errors[$validation] = $e->getMessage();
-				}
-				continue;
-			}
-
-			if ($validation instanceof Closure) {
-				try {
-					$validation->call($this, $value);
-				} catch (Exception $e) {
-					$errors[$key] = $e->getMessage();
-				}
-			}
-		}
-
-		if (
-			empty($this->validate) === false &&
-			($this->isEmpty() === false || $this->isRequired() === true)
-		) {
-			$rules = A::wrap($this->validate);
-
-			$errors = [
-				...$errors,
-				...V::errors($value, $rules)
-			];
-		}
-
-		return $errors;
-	}
-
+	
 	/**
 	 * Defines all validation rules
 	 */
