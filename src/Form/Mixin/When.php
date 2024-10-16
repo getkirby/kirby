@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Form;
+namespace Kirby\Form\Mixin;
 
 /**
  * @package   Kirby Form
@@ -9,7 +9,7 @@ namespace Kirby\Form;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-trait HasWhenQuery
+trait When
 {
 	protected array|null $when = null;
 

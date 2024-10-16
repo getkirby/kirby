@@ -3,14 +3,12 @@
 namespace Kirby\Form;
 
 use Closure;
-use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\HasSiblings;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Component;
 use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\V;
 
 /**
  * Form Field object that takes a Vue component style
@@ -26,8 +24,8 @@ use Kirby\Toolkit\V;
 class Field extends Component
 {
 	use HasSiblings;
-	use HasValidation;
-	use HasWhenQuery;
+	use Mixin\Validation;
+	use Mixin\When;
 
 	/**
 	 * Parent collection with all fields of the current form
@@ -449,7 +447,7 @@ class Field extends Component
 			fn ($item) => $item !== null && is_object($item) === false
 		);
 	}
-	
+
 	/**
 	 * Defines all validation rules
 	 */
