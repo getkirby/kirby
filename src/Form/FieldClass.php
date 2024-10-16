@@ -36,6 +36,7 @@ abstract class FieldClass
 	protected string|null $before;
 	protected mixed $default;
 	protected bool $disabled;
+	protected array|null $errors = null;
 	protected string|null $help;
 	protected string|null $icon;
 	protected string|null $label;
@@ -158,15 +159,16 @@ abstract class FieldClass
 	 */
 	public function errors(): array
 	{
-		return $this->validate();
+		return $this->errors ??= $this->validate();
 	}
 
 	/**
-	 * Setter for the value
+	 * Sets a new value for the field
 	 */
 	public function fill(mixed $value = null): void
 	{
 		$this->value = $value;
+		$this->errors = null;
 	}
 
 	/**
@@ -244,7 +246,7 @@ abstract class FieldClass
 	 */
 	public function isValid(): bool
 	{
-		return empty($this->errors()) === true;
+		return $this->errors() === [];
 	}
 
 	/**
