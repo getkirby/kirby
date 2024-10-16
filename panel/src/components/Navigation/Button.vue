@@ -22,7 +22,11 @@
 		<span v-if="dropdown && (text || $slots.default)" class="k-button-arrow">
 			<k-icon type="angle-dropdown" />
 		</span>
-		<span v-if="badge" class="k-button-badge" :data-theme="badge.theme">
+		<span
+			v-if="badge"
+			class="k-button-badge"
+			:data-theme="badge.theme ?? theme"
+		>
 			{{ badge.text }}
 		</span>
 	</component>
