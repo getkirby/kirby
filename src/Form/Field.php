@@ -25,6 +25,7 @@ class Field extends Component
 {
 	use HasSiblings;
 	use Mixin\Api;
+	use Mixin\Model;
 	use Mixin\Validation;
 	use Mixin\When;
 
@@ -61,11 +62,7 @@ class Field extends Component
 			);
 		}
 
-		if (isset($attrs['model']) === false) {
-			throw new InvalidArgumentException(
-				message: 'Field requires a model'
-			);
-		}
+		$this->setModel($attrs['model'] ?? null);
 
 		// use the type as fallback for the name
 		$attrs['name'] ??= $type;
@@ -371,22 +368,6 @@ class Field extends Component
 	public function isSaveable(): bool
 	{
 		return ($this->options['save'] ?? true) !== false;
-	}
-
-	/**
-	 * Returns the Kirby instance
-	 */
-	public function kirby(): App
-	{
-		return $this->model()->kirby();
-	}
-
-	/**
-	 * Returns the parent model
-	 */
-	public function model(): mixed
-	{
-		return $this->model;
 	}
 
 	/**

@@ -28,6 +28,7 @@ abstract class FieldClass
 	 */
 	use HasSiblings;
 	use Mixin\Api;
+	use Mixin\Model;
 	use Mixin\Validation;
 	use Mixin\When;
 
@@ -39,7 +40,6 @@ abstract class FieldClass
 	protected string|null $help;
 	protected string|null $icon;
 	protected string|null $label;
-	protected ModelWithContent $model;
 	protected string|null $name;
 	protected string|null $placeholder;
 	protected bool $required;
@@ -59,7 +59,7 @@ abstract class FieldClass
 		$this->setHelp($params['help'] ?? null);
 		$this->setIcon($params['icon'] ?? null);
 		$this->setLabel($params['label'] ?? null);
-		$this->setModel($params['model'] ?? App::instance()->site());
+		$this->setModel($params['model'] ?? null);
 		$this->setName($params['name'] ?? null);
 		$this->setPlaceholder($params['placeholder'] ?? null);
 		$this->setRequired($params['required'] ?? false);
@@ -219,14 +219,6 @@ abstract class FieldClass
 	}
 
 	/**
-	 * Returns the Kirby instance
-	 */
-	public function kirby(): App
-	{
-		return $this->model->kirby();
-	}
-
-	/**
 	 * The field label can be set as string or associative array with translations
 	 */
 	public function label(): string
@@ -236,13 +228,6 @@ abstract class FieldClass
 		);
 	}
 
-	/**
-	 * Returns the parent model
-	 */
-	public function model(): ModelWithContent
-	{
-		return $this->model;
-	}
 
 	/**
 	 * Returns the field name
@@ -350,11 +335,6 @@ abstract class FieldClass
 	protected function setLabel(array|string|null $label = null): void
 	{
 		$this->label = $this->i18n($label);
-	}
-
-	protected function setModel(ModelWithContent $model): void
-	{
-		$this->model = $model;
 	}
 
 	protected function setName(string|null $name = null): void
