@@ -2,9 +2,7 @@
 
 namespace Kirby\Form;
 
-use Kirby\Cms\App;
 use Kirby\Cms\HasSiblings;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;

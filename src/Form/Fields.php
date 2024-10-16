@@ -3,6 +3,7 @@
 namespace Kirby\Form;
 
 use Closure;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
 
@@ -26,6 +27,15 @@ class Fields extends Collection
 	 */
 	protected array|null $errors = null;
 
+	public function __construct(
+		array $fields = [],
+		protected ModelWithContent|null $model = null
+	) {
+		foreach ($fields as $name => $field) {
+			$this->__set($name, $field);
+		}
+	}
+
 	/**
 	 * Internal setter for each object in the Collection.
 	 * This takes care of validation and of setting
@@ -37,7 +47,8 @@ class Fields extends Collection
 	{
 		if (is_array($field) === true) {
 			// use the array key as name if the name is not set
-			$field['name'] ??= $name;
+			$field['model'] ??= $this->model;
+			$field['name']  ??= $name;
 			$field = Field::factory($field['type'], $field, $this);
 		}
 
