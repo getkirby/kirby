@@ -98,7 +98,9 @@ class VersionTest extends TestCase
 			'text' => 'Lorem ipsum'
 		]);
 
-		$this->assertSame(['text' => 'Lorem ipsum'], $version->content()->toArray());
+		$this->assertSame([
+			'text' => 'Lorem ipsum'
+		], $version->content()->toArray());
 
 		// for files
 		$model = new File([
@@ -117,7 +119,10 @@ class VersionTest extends TestCase
 			'text'     => 'Lorem ipsum'
 		]);
 
-		$this->assertSame(['text' => 'Lorem ipsum'], $version->content()->toArray());
+		$this->assertSame([
+			'template' => 'foo',
+			'text'     => 'Lorem ipsum',
+		], $version->content()->toArray());
 	}
 
 	/**

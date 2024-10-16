@@ -309,10 +309,6 @@ class Version
 			unset($fields['slug']);
 		}
 
-		if ($this->model instanceof File) {
-			unset($fields['template']);
-		}
-
 		return $fields;
 	}
 
