@@ -108,12 +108,19 @@ class FieldTest extends TestCase
 			'model' => $model,
 		]);
 
-		$this->assertNull($field->api());
+		$this->assertSame([], $field->api());
+
+		$routes = [
+			[
+				'pattern' => '/',
+				'action'  => fn () => 'Hello World'
+			]
+		];
 
 		// return simple string
 		Field::$types = [
 			'test' => [
-				'api' => fn () => 'Hello World'
+				'api' => fn () => $routes
 			]
 		];
 
@@ -123,7 +130,7 @@ class FieldTest extends TestCase
 			'model' => $model,
 		]);
 
-		$this->assertSame('Hello World', $field->api());
+		$this->assertSame($routes, $field->api());
 	}
 
 	/**

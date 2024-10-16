@@ -27,6 +27,7 @@ abstract class FieldClass
 	 * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
 	 */
 	use HasSiblings;
+	use Mixin\Api;
 	use Mixin\Validation;
 	use Mixin\When;
 
@@ -84,11 +85,6 @@ abstract class FieldClass
 	public function after(): string|null
 	{
 		return $this->stringTemplate($this->after);
-	}
-
-	public function api(): array
-	{
-		return $this->routes();
 	}
 
 	public function autofocus(): bool
@@ -305,14 +301,6 @@ abstract class FieldClass
 	public function required(): bool
 	{
 		return $this->required;
-	}
-
-	/**
-	 * Routes for the field API
-	 */
-	public function routes(): array
-	{
-		return [];
 	}
 
 	/**
