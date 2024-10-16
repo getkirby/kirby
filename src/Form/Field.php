@@ -294,11 +294,7 @@ class Field extends Component
 	 */
 	public function errors(): array
 	{
-		if ($this->errors === null) {
-			$this->validate();
-		}
-
-		return $this->errors;
+		return $this->errors ??= $this->validate();
 	}
 
 	/**
@@ -394,7 +390,7 @@ class Field extends Component
 	 */
 	public function isInvalid(): bool
 	{
-		return empty($this->errors()) === false;
+		return $this->isValid() === false;
 	}
 
 	/**
@@ -418,7 +414,7 @@ class Field extends Component
 	 */
 	public function isValid(): bool
 	{
-		return empty($this->errors()) === true;
+		return $this->errors() === [];
 	}
 
 	/**
@@ -485,32 +481,33 @@ class Field extends Component
 	/**
 	 * Runs the validations defined for the field
 	 */
-	protected function validate(): void
+	protected function validate(): array
 	{
-		$validations  = $this->options['validations'] ?? [];
-		$this->errors = [];
+		$validations = $this->validations();
+		$value       = $this->value();
+		$errors      = [];
 
 		// validate required values
 		if ($this->needsValue() === true) {
-			$this->errors['required'] = I18n::translate('error.validation.required');
+			$errors['required'] = I18n::translate('error.validation.required');
 		}
 
 		foreach ($validations as $key => $validation) {
 			if (is_int($key) === true) {
 				// predefined validation
 				try {
-					Validations::$validation($this, $this->value());
+					Validations::$validation($this, $value);
 				} catch (Exception $e) {
-					$this->errors[$validation] = $e->getMessage();
+					$errors[$validation] = $e->getMessage();
 				}
 				continue;
 			}
 
 			if ($validation instanceof Closure) {
 				try {
-					$validation->call($this, $this->value());
+					$validation->call($this, $value);
 				} catch (Exception $e) {
-					$this->errors[$key] = $e->getMessage();
+					$errors[$key] = $e->getMessage();
 				}
 			}
 		}
@@ -521,11 +518,21 @@ class Field extends Component
 		) {
 			$rules = A::wrap($this->validate);
 
-			$this->errors = [
-				...$this->errors,
-				...V::errors($this->value(), $rules)
+			$errors = [
+				...$errors,
+				...V::errors($value, $rules)
 			];
 		}
+
+		return $errors;
+	}
+
+	/**
+	 * Defines all validation rules
+	 */
+	protected function validations(): array
+	{
+		return $this->options['validations'] ?? [];
 	}
 
 	/**
