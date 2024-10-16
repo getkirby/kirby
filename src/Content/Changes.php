@@ -94,10 +94,20 @@ class Changes
 	 */
 	public function generateCache(): void
 	{
+		$models = [
+			'files' => [],
+			'pages' => [],
+			'users' => []
+		];
+
 		foreach ($this->kirby->models() as $model) {
 			if ($model->version(VersionId::changes())->exists('*') === true) {
-				$this->track($model);
+				$models[$this->cacheKey($model)][] = (string)($model->uuid() ?? $model->id());
 			}
+		}
+
+		foreach ($models as $key => $changes) {
+			$this->update($key, $changes);
 		}
 	}
 
