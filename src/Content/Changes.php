@@ -68,7 +68,7 @@ class Changes
 	/**
 	 * Return all files with unsaved changes
 	 */
-	public function files(bool $ensure = true): Files
+	public function files(): Files
 	{
 		$files = new Files([]);
 
@@ -78,17 +78,13 @@ class Changes
 			}
 		}
 
-		if ($ensure === true) {
-			$files = $this->ensure($files);
-		}
-
-		return $files;
+		return $this->ensure($files);
 	}
 
 	/**
 	 * Return all pages with unsaved changes
 	 */
-	public function pages(bool $ensure = true): Pages
+	public function pages(): Pages
 	{
 		/**
 		 * @var \Kirby\Cms\Pages $pages
@@ -99,11 +95,7 @@ class Changes
 			...$this->read('pages')
 		);
 
-		if ($ensure === true) {
-			$pages = $this->ensure($pages);
-		}
-
-		return $pages;
+		return $this->ensure($pages);
 	}
 
 	/**
@@ -158,7 +150,7 @@ class Changes
 	/**
 	 * Return all users with unsaved changes
 	 */
-	public function users(bool $ensure = true): Users
+	public function users(): Users
 	{
 		/**
 		 * @var \Kirby\Cms\Users $users
@@ -169,10 +161,6 @@ class Changes
 			...$this->read('users')
 		);
 
-		if ($ensure === true) {
-			$users = $this->ensure($users);
-		}
-
-		return $users;
+		return $this->ensure($users);
 	}
 }

@@ -170,13 +170,13 @@ class ChangesTest extends TestCase
 		$changes->track($this->app->file('test/test.jpg'));
 		$changes->track($this->app->user('test'));
 
-		$this->assertCount(1, $files = $changes->files(ensure: false));
-		$this->assertCount(1, $pages = $changes->pages(ensure: false));
-		$this->assertCount(1, $users = $changes->users(ensure: false));
+		$this->assertCount(1, $files = $changes->read('files'));
+		$this->assertCount(1, $pages = $changes->read('pages'));
+		$this->assertCount(1, $users = $changes->read('users'));
 
-		$this->assertSame('test/test.jpg', $files->first()->id());
-		$this->assertSame('test', $pages->first()->id());
-		$this->assertSame('test', $users->first()->id());
+		$this->assertSame('file://test', $files[0]);
+		$this->assertSame('page://test', $pages[0]);
+		$this->assertSame('user://test', $users[0]);
 	}
 
 	/**
@@ -198,17 +198,17 @@ class ChangesTest extends TestCase
 			$this->app->user('test')->uuid()->toString()
 		]);
 
-		$this->assertCount(1, $changes->files(ensure: false));
-		$this->assertCount(1, $changes->pages(ensure: false));
-		$this->assertCount(1, $changes->users(ensure: false));
+		$this->assertCount(1, $changes->read('files'));
+		$this->assertCount(1, $changes->read('pages'));
+		$this->assertCount(1, $changes->read('users'));
 
 		$changes->update('files', []);
 		$changes->update('pages', []);
 		$changes->update('users', []);
 
-		$this->assertCount(0, $changes->files(ensure: false));
-		$this->assertCount(0, $changes->pages(ensure: false));
-		$this->assertCount(0, $changes->users(ensure: false));
+		$this->assertCount(0, $changes->read('files'));
+		$this->assertCount(0, $changes->read('pages'));
+		$this->assertCount(0, $changes->read('users'));
 	}
 
 	/**
@@ -222,17 +222,17 @@ class ChangesTest extends TestCase
 		$changes->track($this->app->file('test/test.jpg'));
 		$changes->track($this->app->user('test'));
 
-		$this->assertCount(1, $changes->files(ensure: false));
-		$this->assertCount(1, $changes->pages(ensure: false));
-		$this->assertCount(1, $changes->users(ensure: false));
+		$this->assertCount(1, $changes->read('files'));
+		$this->assertCount(1, $changes->read('pages'));
+		$this->assertCount(1, $changes->read('users'));
 
 		$changes->untrack($this->app->page('test'));
 		$changes->untrack($this->app->file('test/test.jpg'));
 		$changes->untrack($this->app->user('test'));
 
-		$this->assertCount(0, $changes->files(ensure: false));
-		$this->assertCount(0, $changes->pages(ensure: false));
-		$this->assertCount(0, $changes->users(ensure: false));
+		$this->assertCount(0, $changes->read('files'));
+		$this->assertCount(0, $changes->read('pages'));
+		$this->assertCount(0, $changes->read('users'));
 	}
 
 	/**
