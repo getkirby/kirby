@@ -3,7 +3,10 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\Collection;
+use Kirby\Cms\Languages;
 use Kirby\Content\Changes;
+use Kirby\Content\VersionId;
+use Kirby\Toolkit\Str;
 
 /**
  * Manages the Panel dialog for content changes in
@@ -38,9 +41,25 @@ class ChangesDialog
 	 */
 	public function items(Collection $models): array
 	{
-		return $models->values(
-			fn ($model) => $model->panel()->dropdownOption()
-		);
+		$languages = Languages::ensure();
+		$items     = [];
+
+		foreach ($models as $model) {
+			foreach ($languages as $language) {
+				if ($model->version(VersionId::changes())->exists($language) === true) {
+					$item = $model->panel()->dropdownOption();
+
+					if ($languages->count() > 1) {
+						$item['info']  = Str::upper($language->code());
+						$item['link'] .= '?language=' . $language->code();
+					}
+
+					$items[] = $item;
+				}
+			}
+		}
+
+		return $items;
 	}
 
 	/**
