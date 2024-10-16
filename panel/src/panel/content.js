@@ -110,21 +110,31 @@ export default (panel) => {
 		 * Saves any changes
 		 */
 		async save() {
-			if (this.isProcessing === true) {
-				return true;
-			}
-
 			this.isProcessing = true;
 
+			// ensure to abort unfinished previous save request
+			// to avoid race conditions with older content
+			this.saveAbortController?.abort();
+			this.saveAbortController = new AbortController();
+
 			try {
-				await panel.post(this.api + "/changes/save", panel.view.props.content);
-			} finally {
+				await panel.post(this.api + "/changes/save", panel.view.props.content, {
+					signal: this.saveAbortController.signal
+				});
+
 				this.isProcessing = false;
 
 				// update the last modification timestamp
 				panel.view.props.lock.modified = new Date();
+			} catch (error) {
+				// silent aborted requests, but throw all other errors
+				if (error.name !== "AbortError") {
+					throw error;
+				}
 			}
 		},
+
+		saveAbortController: null,
 
 		/**
 		 * Updates the values of fields
