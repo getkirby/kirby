@@ -67,15 +67,22 @@ class Changes
 			'input'          => $input,
 		]);
 
+		$changes   = $model->version(VersionId::changes());
+		$published = $model->version(VersionId::published());
+
 		// combine the new field changes with the
 		// last published state
-		$model->version(VersionId::changes())->save(
+		$changes->save(
 			fields: [
-				...$model->version(VersionId::published())->read(),
+				...$published->read(),
 				...$form->strings(),
 			],
 			language: 'current'
 		);
+
+		if ($published->diff(version: $changes, language: 'current') === []) {
+			$changes->delete();
+		}
 
 		return [
 			'status' => 'ok'

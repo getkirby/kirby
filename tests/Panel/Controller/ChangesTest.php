@@ -83,4 +83,28 @@ class ChangesTest extends TestCase
 
 		$this->assertSame(['title' => 'Test'], $changes);
 	}
+
+	public function testSaveWithNoDiff()
+	{
+		Data::write($this->page->root() . '/article.txt', [
+			'title' => 'Test'
+		]);
+		Data::write($this->page->root() . '/_changes/article.txt', [
+			'title' => 'Test'
+		]);
+
+		$response = Changes::save($this->page, [
+			'title' => 'Foo'
+		]);
+
+		$this->assertSame(['status' => 'ok'], $response);
+		$this->assertFileExists($this->page->root() . '/_changes/article.txt');
+
+		$response = Changes::save($this->page, [
+			'title' => 'Test'
+		]);
+
+		$this->assertSame(['status' => 'ok'], $response);
+		$this->assertFileDoesNotExist($this->page->root() . '/_changes/article.txt');
+	}
 }

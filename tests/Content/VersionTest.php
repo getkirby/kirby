@@ -2,6 +2,7 @@
 
 namespace Kirby\Content;
 
+use Kirby\Cms\File;
 use Kirby\Data\Data;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
@@ -75,6 +76,48 @@ class VersionTest extends TestCase
 
 		// make sure that the content fallback works
 		$this->assertSame($version->content('en')->toArray(), $version->content('de')->toArray());
+	}
+
+	/**
+	 * @covers ::content
+	 * @covers ::prepareFieldsForContent
+	 */
+	public function testContentPrepareFields(): void
+	{
+		$this->setUpSingleLanguage();
+
+		// for pages
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::published()
+		);
+
+		$version->update([
+			'lock' => 'test',
+			'slug' => 'foo',
+			'text' => 'Lorem ipsum'
+		]);
+
+		$this->assertSame(['text' => 'Lorem ipsum'], $version->content()->toArray());
+
+		// for files
+		$model = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $this->model
+		]);
+
+		$version = new Version(
+			model: $model,
+			id: VersionId::published()
+		);
+
+		$version->create([
+			'lock'     => 'test',
+			'template' => 'foo',
+			'text'     => 'Lorem ipsum'
+		]);
+
+		$this->assertSame(['text' => 'Lorem ipsum'], $version->content()->toArray());
 	}
 
 	/**
@@ -343,7 +386,7 @@ class VersionTest extends TestCase
 			'subtitle' => 'Subtitle (changed)',
 		]);
 
-		$diff = $a->diff(VersionId::changes());
+		$diff = $a->diff('changes');
 
 		// the result array should contain the changed fields
 		// the changed values
@@ -401,7 +444,7 @@ class VersionTest extends TestCase
 			'subtitle' => 'Subtitle',
 		]);
 
-		$diff = $a->diff(VersionId::published());
+		$diff = $a->diff($a);
 
 		$this->assertSame([], $diff);
 	}

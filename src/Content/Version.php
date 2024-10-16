@@ -2,9 +2,11 @@
 
 namespace Kirby\Content;
 
+use Kirby\Cms\File;
 use Kirby\Cms\Language;
 use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\Page;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 
@@ -49,6 +51,9 @@ class Version
 				...$fields
 			];
 		}
+
+		// prepare raw content file fields as fields for Content object
+		$fields = $this->prepareFieldsForContent($fields, $language);
 
 		return new Content(
 			parent: $this->model,
@@ -122,17 +127,24 @@ class Version
 	 * Returns the changed fields, compared to the given version
 	 */
 	public function diff(
-		VersionId|string $versionId,
+		Version|VersionId|string $version,
 		Language|string $language = 'default'
 	): array {
-		$versionId = VersionId::from($versionId);
+		if (is_string($version) === true) {
+			$version = VersionId::from($version);
+		}
 
-		if ($versionId->is($this->id) === true) {
+		if ($version instanceof VersionId) {
+			$version = $this->model->version($version);
+		}
+
+
+		if ($version->id()->is($this->id) === true) {
 			return [];
 		}
 
-		$a = $this->read($language) ?? [];
-		$b = $this->model->version($versionId)->read($language) ?? [];
+		$a = $this->content($language)->toArray();
+		$b = $version->content($language)->toArray();
 
 		return array_diff($b, $a);
 	}
@@ -281,6 +293,27 @@ class Version
 	protected function prepareFieldsAfterRead(array $fields, Language $language): array
 	{
 		return $this->convertFieldNamesToLowerCase($fields);
+	}
+
+	/**
+	 * Make sure that the Content object receives the right set of fields
+	 * filtering fields used for lower logic (e.g. lock)
+	 */
+	protected function prepareFieldsForContent(
+		array $fields,
+		Language $language
+	): array {
+		unset($fields['lock']);
+
+		if ($this->model instanceof Page) {
+			unset($fields['slug']);
+		}
+
+		if ($this->model instanceof File) {
+			unset($fields['template']);
+		}
+
+		return $fields;
 	}
 
 	/**
