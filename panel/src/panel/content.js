@@ -64,8 +64,7 @@ export default (panel) => {
 
 		/**
 		 * Whether content is currently being discarded, saved or published
-		 *
-		 * @returns {Boolean}
+		 * @var {Boolean}
 		 */
 		isProcessing: false,
 
@@ -122,18 +121,23 @@ export default (panel) => {
 					signal: this.saveAbortController.signal
 				});
 
-				this.isProcessing = false;
-
 				// update the last modification timestamp
 				panel.view.props.lock.modified = new Date();
+
+				this.isProcessing = false;
 			} catch (error) {
 				// silent aborted requests, but throw all other errors
 				if (error.name !== "AbortError") {
+					this.isProcessing = false;
 					throw error;
 				}
 			}
 		},
 
+		/**
+		 * @internal
+		 * @var {AbortController}
+		 */
 		saveAbortController: null,
 
 		/**
