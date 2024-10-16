@@ -379,10 +379,10 @@ export default {
 /** Badge **/
 .k-button-badge {
 	position: absolute;
-	top: -2px;
-	inset-inline-end: 4px;
+	top: 0;
+	inset-inline-end: 0;
+	transform: translate(50%, -20%);
 	font-variant-numeric: tabular-nums;
-	transform: translateX(75%);
 	line-height: 1.5;
 	padding: 0 var(--spacing-1);
 	border-radius: 1rem;

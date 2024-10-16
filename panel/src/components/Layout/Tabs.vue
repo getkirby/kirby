@@ -116,6 +116,8 @@ export default {
 					theme: this.theme,
 					text: tab.badge
 				};
+			} else {
+				delete button.badge;
 			}
 
 			return button;
@@ -180,7 +182,7 @@ export default {
 }
 
 .k-tab-button .k-button-badge {
-	top: 2px;
-	inset-inline-end: var(--button-padding);
+	top: 3px;
+	inset-inline-end: calc(var(--button-padding) / 2);
 }
 </style>
