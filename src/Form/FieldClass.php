@@ -2,8 +2,6 @@
 
 namespace Kirby\Form;
 
-use Closure;
-use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\HasSiblings;
 use Kirby\Cms\ModelWithContent;
@@ -29,8 +27,8 @@ abstract class FieldClass
 	 * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
 	 */
 	use HasSiblings;
-	use HasValidation;
-	use HasWhenQuery;
+	use Mixin\Validation;
+	use Mixin\When;
 
 	protected string|null $after;
 	protected bool $autofocus;

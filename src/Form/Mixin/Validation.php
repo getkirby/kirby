@@ -1,9 +1,10 @@
 <?php
 
-namespace Kirby\Form;
+namespace Kirby\Form\Mixin;
 
 use Closure;
 use Exception;
+use Kirby\Form\Validations;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\V;
@@ -15,7 +16,7 @@ use Kirby\Toolkit\V;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-trait HasValidation
+trait Validation
 {
 	/**
 	 * An array of all found errors
