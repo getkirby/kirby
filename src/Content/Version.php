@@ -318,12 +318,12 @@ class Version
 
 	/**
 	 * This method can only be applied to the "changes" version.
-	 * It will copy all fields over to the "published" version and delete
+	 * It will copy all fields over to the "latest" version and delete
 	 * this version afterwards.
 	 */
 	public function publish(Language|string $language = 'default'): void
 	{
-		if ($this->id->value() === VersionId::PUBLISHED) {
+		if ($this->id->is(VersionId::latest()) === true) {
 			throw new LogicException(
 				message: 'This version is already published'
 			);
@@ -334,8 +334,8 @@ class Version
 		// the version needs to exist
 		$this->ensure($language);
 
-		// update the published version
-		$this->model->version(VersionId::published())->save(
+		// update the latest version
+		$this->model->version(VersionId::latest())->save(
 			fields: $this->read($language),
 			language: $language
 		);
