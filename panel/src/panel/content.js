@@ -173,28 +173,13 @@ export default (panel) => {
 		 */
 		get values() {
 			return panel.view.props.content;
-		},
-
-		rescue() {
-			if (this.isSaved === false) {
-				const data = new FormData();
-
-				for (const field in panel.view.props.content) {
-					data.append(field, panel.view.props.content[field]);
-				}
-
-				navigator.sendBeacon(panel.url(this.api + "/changes/save"), data);
-
-				// update the last modification timestamp
-				panel.view.props.lock.modified = new Date();
-				this.isSaved = true;
-			}
 		}
 	});
 
-	document.addEventListener("visibilitychange", () => {
-		if (document.visibilityState === "hidden") {
-			content.rescue();
+	panel.events.on("beforeunload", (e) => {
+		if (content.isSaved === false) {
+			e.preventDefault();
+			e.returnValue = "";
 		}
 	});
 
