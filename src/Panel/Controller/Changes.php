@@ -19,7 +19,7 @@ use Kirby\Form\Form;
 class Changes
 {
 	/**
-	 * Discards unpublished changes by deleting the version
+	 * Discards unsaved changes by deleting the changes version
 	 */
 	public static function discard(ModelWithContent $model): array
 	{

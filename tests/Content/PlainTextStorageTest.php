@@ -71,7 +71,7 @@ class PlainTextStorageTest extends TestCase
 	/**
 	 * @covers ::create
 	 */
-	public function testCreatePublishedMultiLang()
+	public function testCreateLatestMultiLang()
 	{
 		$this->setUpMultiLanguage();
 
@@ -87,7 +87,7 @@ class PlainTextStorageTest extends TestCase
 	/**
 	 * @covers ::create
 	 */
-	public function testCreatePublishedSingleLang()
+	public function testCreateLatestSingleLang()
 	{
 		$this->setUpSingleLanguage();
 
@@ -157,7 +157,7 @@ class PlainTextStorageTest extends TestCase
 	/**
 	 * @covers ::delete
 	 */
-	public function testDeletePublishedMultiLang()
+	public function testDeleteLatestMultiLang()
 	{
 		$this->setUpMultiLanguage();
 
@@ -173,7 +173,7 @@ class PlainTextStorageTest extends TestCase
 	/**
 	 * @covers ::delete
 	 */
-	public function testDeletePublishedSingleLang()
+	public function testDeleteLatestSingleLang()
 	{
 		$this->setUpSingleLanguage();
 
@@ -347,7 +347,7 @@ class PlainTextStorageTest extends TestCase
 	/**
 	 * @covers ::read
 	 */
-	public function testReadPublishedMultiLang()
+	public function testReadLatestMultiLang()
 	{
 		$this->setUpMultiLanguage();
 
@@ -364,7 +364,7 @@ class PlainTextStorageTest extends TestCase
 	/**
 	 * @covers ::read
 	 */
-	public function testReadPublishedSingleLang()
+	public function testReadLatestSingleLang()
 	{
 		$this->setUpSingleLanguage();
 
@@ -436,7 +436,7 @@ class PlainTextStorageTest extends TestCase
 	/**
 	 * @covers ::touch
 	 */
-	public function testTouchPublishedMultiLang()
+	public function testTouchLatestMultiLang()
 	{
 		$this->setUpMultiLanguage();
 
@@ -456,7 +456,7 @@ class PlainTextStorageTest extends TestCase
 	/**
 	 * @covers ::touch
 	 */
-	public function testTouchPublishedSingleLang()
+	public function testTouchLatestSingleLang()
 	{
 		$this->setUpSingleLanguage();
 
@@ -514,7 +514,7 @@ class PlainTextStorageTest extends TestCase
 	/**
 	 * @covers ::update
 	 */
-	public function testUpdatePublishedMultiLang()
+	public function testUpdateLatestMultiLang()
 	{
 		$this->setUpMultiLanguage();
 
@@ -532,7 +532,7 @@ class PlainTextStorageTest extends TestCase
 	/**
 	 * @covers ::update
 	 */
-	public function testUpdatePublishedSingleLang()
+	public function testUpdateLatestSingleLang()
 	{
 		$this->setUpSingleLanguage();
 
@@ -683,7 +683,7 @@ class PlainTextStorageTest extends TestCase
 	/**
 	 * @covers ::contentFiles
 	 */
-	public function testContentFilesPublishedMultiLang()
+	public function testContentFilesLatestMultiLang()
 	{
 		$this->setUpMultiLanguage();
 
@@ -696,7 +696,7 @@ class PlainTextStorageTest extends TestCase
 	/**
 	 * @covers ::contentFiles
 	 */
-	public function testContentFilesPublishedSingleLang()
+	public function testContentFilesLatestSingleLang()
 	{
 		$this->setUpSingleLanguage();
 

@@ -106,8 +106,8 @@ class StorageTest extends TestCase
 		// count again
 		$versions = iterator_to_array($handler->all(), false);
 
-		// A page that's not in draft mode can have latest and changes versions
-		// and thus should have changes and latest for every language
+		// A page that's not in draft mode can have Latest and changes versions
+		// and thus should have changes and Latest for every language
 		$this->assertCount(4, $versions);
 	}
 
@@ -133,7 +133,7 @@ class StorageTest extends TestCase
 		// count again
 		$versions = iterator_to_array($handler->all(), false);
 
-		// A page that's not in draft mode can have latest and changes versions
+		// A page that's not in draft mode can have Latest and changes versions
 		$this->assertCount(2, $versions);
 	}
 
@@ -296,19 +296,19 @@ class StorageTest extends TestCase
 
 		$handlerA = new PlainTextStorage(model: $this->model);
 
-		$versionPublished = VersionId::latest();
-		$versionChanges   = VersionId::changes();
+		$versionLatest  = VersionId::latest();
+		$versionChanges = VersionId::changes();
 
 		$en = $this->app->language('en');
 		$de = $this->app->language('de');
 
 		// create all possible versions
-		$handlerA->create($versionPublished, $en, $latestEN = [
-			'title' => 'Published EN'
+		$handlerA->create($versionLatest, $en, $LatestEN = [
+			'title' => 'Latest EN'
 		]);
 
-		$handlerA->create($versionPublished, $de, $latestDE = [
-			'title' => 'Published DE'
+		$handlerA->create($versionLatest, $de, $LatestDE = [
+			'title' => 'Latest DE'
 		]);
 
 		$handlerA->create($versionChanges, $en, $changesEN = [
@@ -324,8 +324,8 @@ class StorageTest extends TestCase
 
 		$this->assertNotSame($handlerA, $handlerB);
 
-		$this->assertSame($latestEN, $handlerB->read($versionPublished, $en));
-		$this->assertSame($latestDE, $handlerB->read($versionPublished, $de));
+		$this->assertSame($LatestEN, $handlerB->read($versionLatest, $en));
+		$this->assertSame($LatestDE, $handlerB->read($versionLatest, $de));
 
 		$this->assertSame($changesEN, $handlerB->read($versionChanges, $en));
 		$this->assertSame($changesDE, $handlerB->read($versionChanges, $de));
@@ -457,10 +457,10 @@ class StorageTest extends TestCase
 		// realistic, testable results for this test
 		$handler = new PlainTextStorage(model: $this->model);
 
-		Data::write($filePublished = $this->model->root() . '/article.txt', []);
+		Data::write($fileLatest = $this->model->root() . '/article.txt', []);
 		Data::write($fileChanges   = $this->model->root() . '/_changes/article.txt', []);
 
-		$this->assertFileExists($filePublished);
+		$this->assertFileExists($fileLatest);
 		$this->assertFileExists($fileChanges);
 
 		$handler->moveLanguage(
@@ -468,7 +468,7 @@ class StorageTest extends TestCase
 			$this->app->language('en')
 		);
 
-		$this->assertFileDoesNotExist($filePublished);
+		$this->assertFileDoesNotExist($fileLatest);
 		$this->assertFileDoesNotExist($fileChanges);
 
 		$this->assertFileExists($this->model->root() . '/article.en.txt');
@@ -487,10 +487,10 @@ class StorageTest extends TestCase
 		$handler = new PlainTextStorage(model: $this->model);
 
 
-		Data::write($filePublished = $this->model->root() . '/article.en.txt', []);
+		Data::write($fileLatest = $this->model->root() . '/article.en.txt', []);
 		Data::write($fileChanges   = $this->model->root() . '/_changes/article.en.txt', []);
 
-		$this->assertFileExists($filePublished);
+		$this->assertFileExists($fileLatest);
 		$this->assertFileExists($fileChanges);
 
 		$handler->moveLanguage(
@@ -498,7 +498,7 @@ class StorageTest extends TestCase
 			Language::single(),
 		);
 
-		$this->assertFileDoesNotExist($filePublished);
+		$this->assertFileDoesNotExist($fileLatest);
 		$this->assertFileDoesNotExist($fileChanges);
 
 		$this->assertFileExists($this->model->root() . '/article.txt');
@@ -549,10 +549,10 @@ class StorageTest extends TestCase
 		Dir::make($this->model->root());
 		Dir::make($this->model->root() . '/_changes');
 
-		touch($filePublished = $this->model->root() . '/article.de.txt', 123456);
+		touch($fileLatest = $this->model->root() . '/article.de.txt', 123456);
 		touch($fileChanges   = $this->model->root() . '/_changes/article.de.txt', 123456);
 
-		$this->assertSame(123456, filemtime($filePublished));
+		$this->assertSame(123456, filemtime($fileLatest));
 		$this->assertSame(123456, filemtime($fileChanges));
 
 		$minTime = time();
@@ -562,7 +562,7 @@ class StorageTest extends TestCase
 		clearstatcache();
 
 		$this->assertGreaterThanOrEqual($minTime, filemtime($fileChanges));
-		$this->assertGreaterThanOrEqual($minTime, filemtime($filePublished));
+		$this->assertGreaterThanOrEqual($minTime, filemtime($fileLatest));
 	}
 
 }
