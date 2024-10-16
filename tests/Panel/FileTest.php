@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\File as ModelFile;
+use Kirby\Cms\Language;
 use Kirby\Cms\Page as ModelPage;
 use Kirby\Cms\Site as ModelSite;
 use Kirby\Cms\User as ModelUser;
@@ -13,7 +14,7 @@ use Kirby\TestCase;
 
 class FileForceLocked extends ModelFile
 {
-	public function lock(): Lock
+	public function lock(Language|string $language = 'current'): Lock
 	{
 		return new Lock(
 			user: new ModelUser(['email' => 'test@getkirby.com']),
