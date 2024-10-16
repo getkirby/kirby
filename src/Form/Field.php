@@ -24,6 +24,7 @@ use Kirby\Toolkit\I18n;
 class Field extends Component
 {
 	use HasSiblings;
+	use Mixin\Api;
 	use Mixin\Validation;
 	use Mixin\When;
 
@@ -74,21 +75,6 @@ class Field extends Component
 
 		// set the siblings collection
 		$this->siblings = $siblings ?? new Fields([$this]);
-	}
-
-	/**
-	 * Returns field api call
-	 */
-	public function api(): mixed
-	{
-		if (
-			isset($this->options['api']) === true &&
-			$this->options['api'] instanceof Closure
-		) {
-			return $this->options['api']->call($this);
-		}
-
-		return null;
 	}
 
 	/**
@@ -401,6 +387,21 @@ class Field extends Component
 	public function model(): mixed
 	{
 		return $this->model;
+	}
+
+	/**
+	 * Returns field api routes
+	 */
+	public function routes(): array
+	{
+		if (
+			isset($this->options['api']) === true &&
+			$this->options['api'] instanceof Closure
+		) {
+			return $this->options['api']->call($this);
+		}
+
+		return [];
 	}
 
 	/**
