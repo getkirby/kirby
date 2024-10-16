@@ -1,5 +1,5 @@
 import { length } from "@/helpers/object";
-import { reactive } from "vue";
+import { reactive, watch } from "vue";
 
 /**
  * @since 5.0.0
@@ -70,8 +70,7 @@ export default (panel) => {
 
 		/**
 		 * Whether all content updates have been successfully sent to the backend
-		 *
-		 * @returns {Boolean}
+		 * @var {Boolean}
 		 */
 		isSaved: true,
 
@@ -176,6 +175,20 @@ export default (panel) => {
 		}
 	});
 
+	// watch for view changes and
+	// trigger saving for changes that where
+	// not sent to the server yet
+	watch(
+		() => content.api,
+		() => {
+			if (content.isSaved === false) {
+				content.save();
+			}
+		}
+	);
+
+	// if user tries to close tab with changes not
+	// sent to the server yet, trigger warning popup
 	panel.events.on("beforeunload", (e) => {
 		if (content.isSaved === false) {
 			e.preventDefault();

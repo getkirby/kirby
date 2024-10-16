@@ -23,14 +23,6 @@ export default (panel) => {
 	return reactive({
 		...parent,
 
-		async open(feature, options = {}) {
-			if (panel.content.isSaved === false) {
-				await panel.content.save();
-			}
-
-			parent.open.call(this, feature, options);
-		},
-
 		/**
 		 * Setting the active view state
 		 * will also change the document title

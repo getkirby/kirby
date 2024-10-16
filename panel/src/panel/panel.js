@@ -88,9 +88,9 @@ export default {
 		this.user = User(this);
 
 		// features
-		this.content = Content(this);
 		this.dropdown = Dropdown(this);
 		this.view = View(this);
+		this.content = Content(this);
 
 		// modals
 		this.drawer = Drawer(this);
