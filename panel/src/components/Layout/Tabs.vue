@@ -9,9 +9,6 @@
 			>
 				{{ btn.text }}
 			</k-button>
-			<span v-if="btn.badge" :data-theme="theme" class="k-tabs-badge">
-				{{ btn.badge }}
-			</span>
 		</div>
 
 		<template v-if="invisible.length">
@@ -107,12 +104,21 @@ export default {
 	},
 	methods: {
 		button(tab) {
-			return {
+			const button = {
 				...tab,
 				current: tab.name === this.current,
 				title: tab.label,
 				text: tab.label ?? tab.text ?? tab.name
 			};
+
+			if (tab.badge) {
+				button.badge = {
+					theme: this.theme,
+					text: tab.badge
+				};
+			}
+
+			return button;
 		},
 		async resize() {
 			// container width
@@ -173,21 +179,8 @@ export default {
 	background: currentColor;
 }
 
-.k-tabs-badge {
-	position: absolute;
+.k-tab-button .k-button-badge {
 	top: 2px;
-	font-variant-numeric: tabular-nums;
 	inset-inline-end: var(--button-padding);
-	transform: translateX(75%);
-	line-height: 1.5;
-	padding: 0 var(--spacing-1);
-	border-radius: 1rem;
-	text-align: center;
-	font-size: 10px;
-	box-shadow: var(--shadow-md);
-	background: var(--theme-color-back);
-	border: 1px solid var(--theme-color-500);
-	color: var(--theme-color-text);
-	z-index: 1;
 }
 </style>
