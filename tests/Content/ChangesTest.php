@@ -62,22 +62,31 @@ class ChangesTest extends TestCase
 	 */
 	public function testCache()
 	{
-		$cache = App::instance()->cache('changes');
+		$cache = $this->app->cache('changes');
 
 		$this->assertInstanceOf(Cache::class, $cache);
 	}
 
 	/**
 	 * @covers ::files
+	 * @covers ::ensure
 	 */
 	public function testFiles()
 	{
-		App::instance()->cache('changes')->set('files', [
+		$this->app->cache('changes')->set('files', $cache = [
 			'file://test'
 		]);
 
 		$changes = new Changes();
 
+		// in cache, but changes don't exist in reality
+		$this->assertCount(0, $changes->files());
+		$this->assertSame([], $this->app->cache('changes')->get('files'));
+
+		// in cache and changes exist in reality
+		$this->app->file('test/test.jpg')->version(VersionId::changes())->create([]);
+
+		$this->assertSame($cache, $this->app->cache('changes')->get('files'));
 		$this->assertCount(1, $changes->files());
 		$this->assertSame('test/test.jpg', $changes->files()->first()->id());
 	}
@@ -100,15 +109,24 @@ class ChangesTest extends TestCase
 
 	/**
 	 * @covers ::pages
+	 * @covers ::ensure
 	 */
 	public function testPages()
 	{
-		App::instance()->cache('changes')->set('pages', [
+		$this->app->cache('changes')->set('pages', $cache = [
 			'page://test'
 		]);
 
 		$changes = new Changes();
 
+		// in cache, but changes don't exist in reality
+		$this->assertCount(0, $changes->pages());
+		$this->assertSame([], $this->app->cache('changes')->get('pages'));
+
+		// in cache and changes exist in reality
+		$this->app->page('test')->version(VersionId::changes())->create([]);
+
+		$this->assertSame($cache, $this->app->cache('changes')->get('pages'));
 		$this->assertCount(1, $changes->pages());
 		$this->assertSame('test', $changes->pages()->first()->id());
 	}
@@ -118,15 +136,15 @@ class ChangesTest extends TestCase
 	 */
 	public function testRead()
 	{
-		App::instance()->cache('changes')->set('files', [
+		$this->app->cache('changes')->set('files', [
 			'file://test'
 		]);
 
-		App::instance()->cache('changes')->set('pages', [
+		$this->app->cache('changes')->set('pages', [
 			'page://test'
 		]);
 
-		App::instance()->cache('changes')->set('users', [
+		$this->app->cache('changes')->set('users', [
 			'user://test'
 		]);
 
@@ -152,13 +170,13 @@ class ChangesTest extends TestCase
 		$changes->track($this->app->file('test/test.jpg'));
 		$changes->track($this->app->user('test'));
 
-		$this->assertCount(1, $changes->files());
-		$this->assertCount(1, $changes->pages());
-		$this->assertCount(1, $changes->users());
+		$this->assertCount(1, $files = $changes->read('files'));
+		$this->assertCount(1, $pages = $changes->read('pages'));
+		$this->assertCount(1, $users = $changes->read('users'));
 
-		$this->assertSame('test', $changes->pages()->first()->id());
-		$this->assertSame('test/test.jpg', $changes->files()->first()->id());
-		$this->assertSame('test', $changes->users()->first()->id());
+		$this->assertSame('file://test', $files[0]);
+		$this->assertSame('page://test', $pages[0]);
+		$this->assertSame('user://test', $users[0]);
 	}
 
 	/**
@@ -180,17 +198,17 @@ class ChangesTest extends TestCase
 			$this->app->user('test')->uuid()->toString()
 		]);
 
-		$this->assertCount(1, $changes->files());
-		$this->assertCount(1, $changes->pages());
-		$this->assertCount(1, $changes->users());
+		$this->assertCount(1, $changes->read('files'));
+		$this->assertCount(1, $changes->read('pages'));
+		$this->assertCount(1, $changes->read('users'));
 
 		$changes->update('files', []);
 		$changes->update('pages', []);
 		$changes->update('users', []);
 
-		$this->assertCount(0, $changes->files());
-		$this->assertCount(0, $changes->pages());
-		$this->assertCount(0, $changes->users());
+		$this->assertCount(0, $changes->read('files'));
+		$this->assertCount(0, $changes->read('pages'));
+		$this->assertCount(0, $changes->read('users'));
 	}
 
 	/**
@@ -204,30 +222,39 @@ class ChangesTest extends TestCase
 		$changes->track($this->app->file('test/test.jpg'));
 		$changes->track($this->app->user('test'));
 
-		$this->assertCount(1, $changes->files());
-		$this->assertCount(1, $changes->pages());
-		$this->assertCount(1, $changes->users());
+		$this->assertCount(1, $changes->read('files'));
+		$this->assertCount(1, $changes->read('pages'));
+		$this->assertCount(1, $changes->read('users'));
 
 		$changes->untrack($this->app->page('test'));
 		$changes->untrack($this->app->file('test/test.jpg'));
 		$changes->untrack($this->app->user('test'));
 
-		$this->assertCount(0, $changes->files());
-		$this->assertCount(0, $changes->pages());
-		$this->assertCount(0, $changes->users());
+		$this->assertCount(0, $changes->read('files'));
+		$this->assertCount(0, $changes->read('pages'));
+		$this->assertCount(0, $changes->read('users'));
 	}
 
 	/**
 	 * @covers ::users
+	 * @covers ::ensure
 	 */
 	public function testUsers()
 	{
-		App::instance()->cache('changes')->set('users', [
+		$this->app->cache('changes')->set('users', $cache = [
 			'user://test'
 		]);
 
 		$changes = new Changes();
 
+		// in cache, but changes don't exist in reality
+		$this->assertCount(0, $changes->users());
+		$this->assertSame([], $this->app->cache('changes')->get('users'));
+
+		// in cache and changes exist in reality
+		$this->app->user('test')->version(VersionId::changes())->create([]);
+
+		$this->assertSame($cache, $this->app->cache('changes')->get('users'));
 		$this->assertCount(1, $changes->users());
 		$this->assertSame('test', $changes->users()->first()->id());
 	}

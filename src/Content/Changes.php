@@ -7,7 +7,6 @@ use Kirby\Cms\App;
 use Kirby\Cms\Files;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Pages;
-use Kirby\Cms\Site;
 use Kirby\Cms\Users;
 use Kirby\Toolkit\A;
 
@@ -47,6 +46,26 @@ class Changes
 	}
 
 	/**
+	 * Verify that the tracked model still really has changes.
+	 * If not, untrack and remove from collection.
+	 *
+	 * @template T of \Kirby\Cms\Files|\Kirby\Cms\Pages|\Kirby\Cms\Users
+	 * @param T $tracked
+	 * @return T
+	 */
+	public function ensure(Files|Pages|Users $tracked): Files|Pages|Users
+	{
+		foreach ($tracked as $model) {
+			if ($model->version(VersionId::changes())->exists('*') === false) {
+				$this->untrack($model);
+				$tracked->remove($model);
+			}
+		}
+
+		return $tracked;
+	}
+
+	/**
 	 * Return all files with unsaved changes
 	 */
 	public function files(): Files
@@ -59,7 +78,7 @@ class Changes
 			}
 		}
 
-		return $files;
+		return $this->ensure($files);
 	}
 
 	/**
@@ -67,11 +86,16 @@ class Changes
 	 */
 	public function pages(): Pages
 	{
-		return $this->kirby->site()->find(
+		/**
+		 * @var \Kirby\Cms\Pages $pages
+		 */
+		$pages = $this->kirby->site()->find(
 			false,
 			false,
 			...$this->read('pages')
 		);
+
+		return $this->ensure($pages);
 	}
 
 	/**
@@ -128,10 +152,15 @@ class Changes
 	 */
 	public function users(): Users
 	{
-		return $this->kirby->users()->find(
+		/**
+		 * @var \Kirby\Cms\Users $users
+		 */
+		$users = $this->kirby->users()->find(
 			false,
 			false,
 			...$this->read('users')
 		);
+
+		return $this->ensure($users);
 	}
 }
