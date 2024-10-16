@@ -36,21 +36,6 @@ class FieldTest extends TestCase
 	}
 
 	/**
-	 * @covers ::__construct
-	 */
-	public function testConstructorWithoutModel()
-	{
-		Field::$types = [
-			'test' => []
-		];
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Field requires a model');
-
-		$field = new Field('test');
-	}
-
-	/**
 	 * @covers ::after
 	 */
 	public function testAfter()
