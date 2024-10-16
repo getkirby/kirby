@@ -3,7 +3,6 @@
 namespace Kirby\Form;
 
 use Closure;
-use Kirby\Cms\App;
 use Kirby\Cms\HasSiblings;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;

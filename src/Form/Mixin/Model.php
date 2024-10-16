@@ -4,7 +4,6 @@ namespace Kirby\Form\Mixin;
 
 use Kirby\Cms\App;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Exception\InvalidArgumentException;
 
 trait Model
 {
