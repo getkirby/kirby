@@ -64,8 +64,7 @@ export default (panel) => {
 
 		/**
 		 * Whether content is currently being discarded, saved or published
-		 *
-		 * @returns {Boolean}
+		 * @var {Boolean}
 		 */
 		isProcessing: false,
 
@@ -110,21 +109,36 @@ export default (panel) => {
 		 * Saves any changes
 		 */
 		async save() {
-			if (this.isProcessing === true) {
-				return true;
-			}
-
 			this.isProcessing = true;
 
+			// ensure to abort unfinished previous save request
+			// to avoid race conditions with older content
+			this.saveAbortController?.abort();
+			this.saveAbortController = new AbortController();
+
 			try {
-				await panel.post(this.api + "/changes/save", panel.view.props.content);
-			} finally {
-				this.isProcessing = false;
+				await panel.post(this.api + "/changes/save", panel.view.props.content, {
+					signal: this.saveAbortController.signal
+				});
 
 				// update the last modification timestamp
 				panel.view.props.lock.modified = new Date();
+
+				this.isProcessing = false;
+			} catch (error) {
+				// silent aborted requests, but throw all other errors
+				if (error.name !== "AbortError") {
+					this.isProcessing = false;
+					throw error;
+				}
 			}
 		},
+
+		/**
+		 * @internal
+		 * @var {AbortController}
+		 */
+		saveAbortController: null,
 
 		/**
 		 * Updates the values of fields
