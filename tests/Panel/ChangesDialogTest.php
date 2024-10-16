@@ -107,6 +107,43 @@ class ChangesDialogTest extends AreaTestCase
 	}
 
 	/**
+	 * @covers ::items
+	 */
+	public function testItemsChangesForMultipleLanguages(): void
+	{
+		$this->setUpModels();
+		$this->app = $this->app->clone([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de'
+				]
+			]
+		]);
+
+		$page = $this->app->page('page://test');
+		$page->version(VersionId::changes())->create([], 'en');
+		$page->version(VersionId::changes())->create([], 'de');
+
+		$dialog = new ChangesDialog();
+		$pages  = new Pages([$page]);
+		$items  = $dialog->items($pages);
+
+		$this->assertCount(2, $items);
+
+		$this->assertSame('test', $items[0]['text']);
+		$this->assertSame('EN', $items[0]['info']);
+		$this->assertSame('/pages/test?language=en', $items[0]['link']);
+
+		$this->assertSame('test', $items[1]['text']);
+		$this->assertSame('DE', $items[1]['info']);
+		$this->assertSame('/pages/test?language=de', $items[1]['link']);
+	}
+
+	/**
 	 * @covers ::load
 	 */
 	public function testLoad(): void
