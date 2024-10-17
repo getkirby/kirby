@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
+use Kirby\Toolkit\Str;
 
 /**
  * A collection of Field objects
@@ -104,6 +105,52 @@ class Fields extends Collection
 		$this->errors = null;
 
 		return $this;
+	}
+
+	/**
+	 * Find a field by key/name
+	 */
+	public function findByKey(string $key): Field|FieldClass|null
+	{
+		if (str_contains($key, '+')) {
+			return $this->findByKeyRecursive($key);
+		}
+
+		return parent::findByKey($key);
+	}
+
+	/**
+	 * Find fields in nested forms recursively
+	 */
+	public function findByKeyRecursive(string $key): Field|FieldClass|null
+	{
+		$fields = $this;
+		$names  = Str::split($key, '+');
+		$index  = 0;
+		$count  = count($names);
+		$field  = null;
+
+		foreach ($names as $name) {
+			$index++;
+
+			if ($field = $fields->get($name)) {
+				if ($count !== $index) {
+					$form = $field->form();
+
+					if ($form instanceof Form === false) {
+						return null;
+					}
+
+					$fields = $form->fields();
+				}
+
+				continue;
+			}
+
+			return null;
+		}
+
+		return $field;
 	}
 
 	/**

@@ -184,6 +184,53 @@ class FieldsTest extends TestCase
 	}
 
 	/**
+	 * @covers ::findByKey
+	 * @covers ::findByKeyRecursive
+	 */
+	public function testFind()
+	{
+		Field::$types['test'] = [
+			'methods' => [
+				'form' => function () {
+					return new Form([
+						'fields' => [
+							'child' => [
+								'type'  => 'text',
+							],
+						],
+						'model' => $this->model
+					]);
+				}
+			]
+		];
+
+		$fields = new Fields([
+			'mother' => [
+				'type'  => 'test',
+			],
+		], $this->model);
+
+		$this->assertSame('mother', $fields->find('mother')->name());
+		$this->assertSame('child', $fields->find('mother+child')->name());
+		$this->assertNull($fields->find('mother+missing-child'));
+	}
+
+	/**
+	 * @covers ::findByKey
+	 * @covers ::findByKeyRecursive
+	 */
+	public function testFindWhenFieldHasNoForm()
+	{
+		$fields = new Fields([
+			'mother' => [
+				'type'  => 'text',
+			],
+		], $this->model);
+
+		$this->assertNull($fields->find('mother+child'));
+	}
+
+	/**
 	 * @covers ::toArray
 	 */
 	public function testToArray()

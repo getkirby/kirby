@@ -9,7 +9,6 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\Str;
 use Throwable;
 
 /**
@@ -175,36 +174,13 @@ class Form
 	 */
 	public function field(string $name): Field|FieldClass
 	{
-		$form       = $this;
-		$fieldNames = Str::split($name, '+');
-		$index      = 0;
-		$count      = count($fieldNames);
-		$field      = null;
-
-		foreach ($fieldNames as $fieldName) {
-			$index++;
-
-			if ($field = $form->fields()->get($fieldName)) {
-				if ($count !== $index) {
-					$form = $field->form();
-				}
-
-				continue;
-			}
-
-			throw new NotFoundException(
-				message: 'The field "' . $fieldName . '" could not be found'
-			);
+		if ($field = $this->fields->find($name)) {
+			return $field;
 		}
 
-		// it can get this error only if $name is an empty string as $name = ''
-		if ($field === null) {
-			throw new NotFoundException(
-				message: 'No field could be loaded'
-			);
-		}
-
-		return $field;
+		throw new NotFoundException(
+			message: 'No field could be loaded'
+		);
 	}
 
 	/**
