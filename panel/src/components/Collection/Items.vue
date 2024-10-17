@@ -46,6 +46,7 @@
 					@drag="onDragStart($event, item.dragText)"
 					@mouseover.native="$emit('hover', $event, item, itemIndex)"
 					@option="onOption($event, item, itemIndex)"
+					@select="$emit('select', $event, item, itemIndex)"
 				>
 					<template #options>
 						<slot name="options" v-bind="{ item, index: itemIndex }" />

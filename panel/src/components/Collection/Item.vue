@@ -37,7 +37,7 @@
 		</div>
 
 		<div
-			v-if="buttons?.length || options || $slots.options"
+			v-if="buttons?.length || options || $slots.options || selectable"
 			class="k-item-options"
 			:data-only-option="!buttons?.length || (!options && !$slots.options)"
 		>
@@ -48,8 +48,12 @@
 				v-bind="button"
 			/>
 
+			<label v-if="selectable" class="k-item-options-checkbox">
+				<input type="checkbox" @change="$emit('select', $event)" />
+			</label>
+
 			<!-- Options -->
-			<slot name="options">
+			<slot v-else name="options">
 				<k-options-dropdown
 					v-if="options"
 					:options="options"
@@ -98,6 +102,10 @@ export default {
 		options: {
 			type: [Array, Function, String]
 		},
+		/**
+		 * If `true`, the item will be selectable via a checkbox
+		 */
+		selectable: Boolean,
 		/**
 		 * If `true`, the sort handle will be shown on hover
 		 */
@@ -197,6 +205,14 @@ export default {
 .k-item-options .k-button {
 	--button-height: var(--item-button-height);
 	--button-width: var(--item-button-width);
+}
+.k-item-options-checkbox {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: var(--item-button-height);
+	width: var(--item-button-height);
+	flex-shrink: 0;
 }
 
 .k-item .k-sort-button {
