@@ -76,6 +76,7 @@ class FieldTest extends TestCase
 
 	/**
 	 * @covers ::api
+	 * @covers ::routes
 	 */
 	public function testApi()
 	{
@@ -321,6 +322,48 @@ class FieldTest extends TestCase
 	}
 
 	/**
+	 * @covers ::drawers
+	 */
+	public function testDrawers()
+	{
+		// no defined as default
+		Field::$types = [
+			'test' => []
+		];
+
+		$model = new Page(['slug' => 'test']);
+		$field = new Field('test', [
+			'model' => $model,
+		]);
+
+		$this->assertSame([], $field->drawers());
+
+		// test drawers
+		$routes = [
+			[
+				'pattern' => 'foo',
+				'load'    => function () {
+				},
+				'submit'  => function () {
+				}
+			]
+		];
+
+		// return routes
+		Field::$types = [
+			'test' => [
+				'drawers' => fn () => $routes
+			]
+		];
+
+		$field = new Field('test', [
+			'model' => $model,
+		]);
+
+		$this->assertSame($routes, $field->drawers());
+	}
+
+	/**
 	 * @covers ::errors
 	 */
 	public function testErrors()
@@ -498,6 +541,7 @@ class FieldTest extends TestCase
 
 	/**
 	 * @covers ::isEmpty
+	 * @covers ::isEmptyValue
 	 * @dataProvider emptyValuesProvider
 	 */
 	public function testIsEmpty($value, $expected)
@@ -520,6 +564,7 @@ class FieldTest extends TestCase
 
 	/**
 	 * @covers ::isEmpty
+	 * @covers ::isEmptyValue
 	 */
 	public function testIsEmptyWithCustomFunction()
 	{
@@ -943,6 +988,36 @@ class FieldTest extends TestCase
 	}
 
 	/**
+	 * @covers ::next
+	 * @covers ::prev
+	 * @covers ::siblingsCollection
+	 */
+	public function testPrevNext()
+	{
+		Field::$types = [
+			'test' => []
+		];
+
+		$model = new Page(['slug' => 'test']);
+
+		$siblings = new Fields([
+			[
+				'type' => 'test',
+				'name' => 'a'
+			],
+			[
+				'type' => 'test',
+				'name' => 'b'
+			]
+		], $model);
+
+		$this->assertNull($siblings->first()->prev());
+		$this->assertNull($siblings->last()->next());
+		$this->assertSame('b', $siblings->first()->next()->name());
+		$this->assertSame('a', $siblings->last()->prev()->name());
+	}
+
+	/**
 	 * @covers ::siblings
 	 * @covers ::formFields
 	 */
@@ -1020,6 +1095,7 @@ class FieldTest extends TestCase
 
 	/**
 	 * @covers ::validate
+	 * @covers ::validations
 	 * @covers ::errors
 	 */
 	public function testValidate()
@@ -1074,6 +1150,7 @@ class FieldTest extends TestCase
 
 	/**
 	 * @covers ::validate
+	 * @covers ::validations
 	 * @covers ::isValid
 	 */
 	public function testValidateByAttr()
@@ -1133,6 +1210,7 @@ class FieldTest extends TestCase
 
 	/**
 	 * @covers ::validate
+	 * @covers ::validations
 	 * @covers ::errors
 	 * @covers ::isValid
 	 */
