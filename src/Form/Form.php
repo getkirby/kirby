@@ -44,6 +44,7 @@ class Form
 		$fields = $props['fields'] ?? [];
 		$values = $props['values'] ?? [];
 		$input  = $props['input']  ?? [];
+		$model  = $props['model']  ?? null;
 		$strict = $props['strict'] ?? false;
 		$inject = $props;
 
@@ -59,7 +60,10 @@ class Form
 
 		unset($inject['fields'], $inject['values'], $inject['input']);
 
-		$this->fields = new Fields();
+		$this->fields = new Fields(
+			model: $model
+		);
+
 		$this->values = [];
 
 		foreach ($fields as $name => $props) {
