@@ -22,6 +22,9 @@ use Kirby\Toolkit\I18n;
  */
 class Field extends Component
 {
+	/**
+	 * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
+	 */
 	use HasSiblings;
 	use Mixin\Api;
 	use Mixin\Model;
