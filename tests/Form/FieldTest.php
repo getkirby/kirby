@@ -1239,6 +1239,29 @@ class FieldTest extends TestCase
 		$this->assertSame(['test' => 'Invalid value: abc'], $field->errors());
 	}
 
+	public function testValue()
+	{
+		Field::$types['test'] = [];
+
+		$field = new Field('test');
+		$this->assertNull($field->value());
+
+		$field = new Field('test', ['value' => 'Test']);
+		$this->assertSame('Test', $field->value());
+
+		$field = new Field('test', ['default' => 'Default value']);
+		$this->assertNull($field->value());
+
+		$field = new Field('test', ['default' => 'Default value']);
+		$this->assertSame('Default value', $field->value(true));
+
+		Field::$types['test'] = [
+			'save' => false
+		];
+
+		$field = new Field('test', ['value' => 'Test']);
+		$this->assertNull($field->value());
+	}
 
 	public function testWidth()
 	{
