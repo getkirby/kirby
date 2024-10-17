@@ -73,7 +73,6 @@ export default {
 		this.isOffline = false;
 
 		this.activation = Activation(this);
-		this.content = Content(this);
 		this.drag = Drag(this);
 		this.events = Events(this);
 		this.searcher = Search(this);
@@ -91,6 +90,7 @@ export default {
 		// features
 		this.dropdown = Dropdown(this);
 		this.view = View(this);
+		this.content = Content(this);
 
 		// modals
 		this.drawer = Drawer(this);

@@ -1,11 +1,11 @@
 import { length } from "@/helpers/object";
-import { reactive } from "vue";
+import { reactive, watch } from "vue";
 
 /**
  * @since 5.0.0
  */
 export default (panel) => {
-	return reactive({
+	const content = reactive({
 		/**
 		 * API endpoint to handle content changes
 		 */
@@ -69,6 +69,12 @@ export default (panel) => {
 		isProcessing: false,
 
 		/**
+		 * Whether all content updates have been successfully sent to the backend
+		 * @var {Boolean}
+		 */
+		isSaved: true,
+
+		/**
 		 * The last published state
 		 *
 		 * @returns {Object}
@@ -124,6 +130,7 @@ export default (panel) => {
 				// update the last modification timestamp
 				panel.view.props.lock.modified = new Date();
 
+				this.isSaved = true;
 				this.isProcessing = false;
 			} catch (error) {
 				// silent aborted requests, but throw all other errors
@@ -154,6 +161,8 @@ export default (panel) => {
 				...panel.view.props.originals,
 				...values
 			};
+
+			this.isSaved = false;
 		},
 
 		/**
@@ -165,4 +174,27 @@ export default (panel) => {
 			return panel.view.props.content;
 		}
 	});
+
+	// watch for view changes and
+	// trigger saving for changes that where
+	// not sent to the server yet
+	watch(
+		() => content.api,
+		() => {
+			if (content.isSaved === false) {
+				content.save();
+			}
+		}
+	);
+
+	// if user tries to close tab with changes not
+	// sent to the server yet, trigger warning popup
+	panel.events.on("beforeunload", (e) => {
+		if (content.isSaved === false) {
+			e.preventDefault();
+			e.returnValue = "";
+		}
+	});
+
+	return content;
 };

@@ -48,6 +48,7 @@ export default (panel) => {
 			paste: true
 		},
 		window: {
+			beforeunload: false,
 			dragenter: false,
 			dragexit: false,
 			dragleave: false,
@@ -70,6 +71,15 @@ export default (panel) => {
 	 * methods (i.e. drag events)
 	 */
 	return {
+		/**
+		 * Global window beforeunload event
+		 *
+		 * @param {BeforeUnloadEvent} e
+		 */
+		beforeunload(e) {
+			this.emit("beforeunload", e);
+		},
+
 		/**
 		 * Global blur event
 		 *
