@@ -39,6 +39,7 @@
 					v-on="canAdd ? { empty: onAdd } : {}"
 					@action="onAction"
 					@change="onChange"
+					@select="onSelect"
 					@sort="onSort"
 					@paginate="onPaginate"
 				/>
@@ -65,6 +66,7 @@ export default {
 			error: null,
 			isLoading: false,
 			isProcessing: false,
+			isSelecting: false,
 			options: {
 				columns: {},
 				empty: null,
@@ -81,7 +83,8 @@ export default {
 				page: null
 			},
 			searchterm: null,
-			searching: false
+			searching: false,
+			selected: []
 		};
 	},
 	computed: {
@@ -91,11 +94,59 @@ export default {
 		buttons() {
 			let buttons = [];
 
+			if (this.isSelecting) {
+				if (this.selected.length === 0) {
+					buttons.push({
+						disabled: true,
+						text: `${this.selected.length} items selected`,
+						theme: "none"
+					});
+				} else {
+					buttons.push({
+						icon: "trash",
+						text: this.$t("delete") + ` (${this.selected.length})`,
+						theme: "negative",
+						click: () => {
+							this.$panel.dialog.open({
+								component: "k-remove-dialog",
+								props: {
+									text: `Do you really want to delete ${this.selected.length} items at once? This action cannot be undone.`
+								},
+								on: {
+									submit: () => {
+										this.$panel.dialog.close();
+										this.deleteSelected();
+									}
+								}
+							});
+						},
+						responsive: true
+					});
+				}
+
+				buttons.push({
+					icon: "cancel",
+					text: this.$t("cancel"),
+					click: this.onSelectToggle,
+					responsive: true
+				});
+
+				return buttons;
+			}
+
 			if (this.canSearch) {
 				buttons.push({
 					icon: "filter",
 					text: this.$t("filter"),
 					click: this.onSearchToggle,
+					responsive: true
+				});
+			}
+
+			if (this.canSelect) {
+				buttons.push({
+					icon: "checklist",
+					click: this.onSelectToggle,
 					responsive: true
 				});
 			}
@@ -119,6 +170,9 @@ export default {
 		},
 		canSearch() {
 			return this.options.search;
+		},
+		canSelect() {
+			return this.items.length > 0;
 		},
 		collection() {
 			return {
@@ -190,6 +244,30 @@ export default {
 		this.load();
 	},
 	methods: {
+		async deleteSelected() {
+			if (this.selected.length === 0) {
+				return;
+			}
+
+			this.isProcessing = true;
+
+			try {
+				await this.$api.delete(
+					this.parent + "/sections/" + this.name + "/delete",
+					{
+						ids: this.selected.map((item) => item.id)
+					}
+				);
+
+				this.reload();
+			} catch (error) {
+				this.$panel.notification.error(error);
+			} finally {
+				this.isSelecting = false;
+				this.isProcessing = false;
+				this.selected = [];
+			}
+		},
 		async load(reload) {
 			this.isProcessing = true;
 
@@ -223,7 +301,6 @@ export default {
 		onAdd() {},
 		onChange() {},
 		onDrop() {},
-		onSort() {},
 		onPaginate(pagination) {
 			sessionStorage.setItem(this.paginationId, pagination.page);
 			this.pagination = pagination;
@@ -233,6 +310,24 @@ export default {
 			this.searching = !this.searching;
 			this.searchterm = null;
 		},
+		onSelect(event, item) {
+			if (event.target.checked) {
+				this.selected.push(item);
+			} else {
+				this.selected = this.selected.filter(
+					(selected) => selected.id !== item.id
+				);
+			}
+		},
+		onSelectToggle() {
+			if (this.isSelecting) {
+				this.selected = [];
+				this.isSelecting = false;
+			} else {
+				this.isSelecting = true;
+			}
+		},
+		onSort() {},
 		async reload() {
 			await this.load(true);
 		},

@@ -35,7 +35,9 @@ export default {
 						delete: this.data.length > this.options.min
 					}
 				}),
-				sortable: file.permissions.sort && this.options.sortable
+				selectable: this.isSelecting,
+				sortable:
+					file.permissions.sort && this.options.sortable && !this.isSelecting
 			}));
 		},
 		type() {
