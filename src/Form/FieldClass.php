@@ -3,10 +3,8 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\HasSiblings;
-use Kirby\Data\Data;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
-use Throwable;
 
 /**
  * Abstract field class to be used instead
@@ -28,6 +26,7 @@ abstract class FieldClass
 	use Mixin\Api;
 	use Mixin\Model;
 	use Mixin\Validation;
+	use Mixin\Value;
 	use Mixin\When;
 
 	protected string|null $after;
@@ -109,19 +108,6 @@ abstract class FieldClass
 	}
 
 	/**
-	 * Returns the default value for the field,
-	 * which will be used when a page/file/user is created
-	 */
-	public function default(): mixed
-	{
-		if (is_string($this->default) === false) {
-			return $this->default;
-		}
-
-		return $this->stringTemplate($this->default);
-	}
-
-	/**
 	 * Returns optional dialog routes for the field
 	 */
 	public function dialogs(): array
@@ -189,16 +175,6 @@ abstract class FieldClass
 	public function isDisabled(): bool
 	{
 		return $this->disabled;
-	}
-
-	public function isEmpty(): bool
-	{
-		return $this->isEmptyValue($this->value());
-	}
-
-	public function isEmptyValue(mixed $value = null): bool
-	{
-		return in_array($value, [null, '', []], true);
 	}
 
 	public function isHidden(): bool
@@ -423,55 +399,6 @@ abstract class FieldClass
 	public function type(): string
 	{
 		return lcfirst(basename(str_replace(['\\', 'Field'], ['/', ''], static::class)));
-	}
-
-	/**
-	 * Returns the value of the field if saveable
-	 * otherwise it returns null
-	 */
-	public function value(bool $default = false): mixed
-	{
-		if ($this->isSaveable() === false) {
-			return null;
-		}
-
-		if ($default === true && $this->isEmpty() === true) {
-			return $this->default();
-		}
-
-		return $this->value;
-	}
-
-	protected function valueFromJson(mixed $value): array
-	{
-		try {
-			return Data::decode($value, 'json');
-		} catch (Throwable) {
-			return [];
-		}
-	}
-
-	protected function valueFromYaml(mixed $value): array
-	{
-		return Data::decode($value, 'yaml');
-	}
-
-	protected function valueToJson(
-		array|null $value = null,
-		bool $pretty = false
-	): string {
-		$constants = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
-
-		if ($pretty === true) {
-			$constants |= JSON_PRETTY_PRINT;
-		}
-
-		return json_encode($value, $constants);
-	}
-
-	protected function valueToYaml(array|null $value = null): string
-	{
-		return Data::encode($value, 'yaml');
 	}
 
 	/**
