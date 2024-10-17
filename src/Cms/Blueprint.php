@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Exception;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
@@ -55,19 +56,36 @@ class Blueprint
 			);
 		}
 
+		$cache       = null;
+		$kirby       = App::instance();
 		$this->model = $props['model'];
 
 		// the model should not be included in the props array
 		unset($props['model']);
+
+		// normalize the name
+		$props['name'] ??= 'default';
+
+		// try to get the blueprint from cache
+		if (static::isCacheable($props['name']) === true) {
+			$cache = $kirby->cache('blueprints');
+
+			if ($blueprint = $cache->get($props['name'])) {
+				$this->tabs     = $blueprint['tabs'];
+				$this->sections = $blueprint['sections'];
+				$this->fields   = $blueprint['fields'];
+				unset($blueprint['fields'], $blueprint['sections']);
+
+				$this->props = $blueprint;
+				return;
+			}
+		}
 
 		// extend the blueprint in general
 		$props = static::extend($props);
 
 		// apply any blueprint preset
 		$props = $this->preset($props);
-
-		// normalize the name
-		$props['name'] ??= 'default';
 
 		// normalize and translate the title
 		$props['title'] ??= ucfirst($props['name']);
@@ -82,6 +100,17 @@ class Blueprint
 		$props['tabs'] = $this->normalizeTabs($props['tabs'] ?? []);
 
 		$this->props = $props;
+
+		// cache the blueprint
+		if ($cache !== null) {
+			// store fields, sections, and tabs in the cache
+			// to set these properties when the cached blueprint is loaded
+			$props['fields']   = $this->fields;
+			$props['sections'] = $this->sections;
+			$props['tabs']     = $this->tabs;
+
+			$cache->set($props['name'], $props, $props['cache'] ?? 0);
+		}
 	}
 
 	/**
@@ -420,6 +449,34 @@ class Blueprint
 	protected function i18n(mixed $value, mixed $fallback = null): mixed
 	{
 		return I18n::translate($value, $fallback) ?? $value;
+	}
+
+	/**
+	 * Checks if the blueprint can be cached in the blueprints cache.
+	 * This will also check if one of the ignore rules from the config kick in.
+	 */
+	public static function isCacheable($name): bool
+	{
+		$kirby   = App::instance();
+		$cache   = $kirby->cache('blueprints');
+		$options = $cache->options();
+		$ignore  = $options['ignore'] ?? null;
+
+		// check for a custom ignore rule
+		if ($ignore instanceof Closure) {
+			if ($ignore($name) === true) {
+				return false;
+			}
+		}
+
+		// ignore blueprints by name
+		if (is_array($ignore) === true) {
+			if (in_array($name, $ignore) === true) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
