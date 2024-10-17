@@ -3,6 +3,11 @@
 		<k-lab-example label="cards">
 			<k-items :items="items" layout="cards" />
 		</k-lab-example>
+		<k-lab-example label="Selectable">
+			<k-items :items="selectableItems" layout="cards" @select="onSelect" />
+			<br />
+			<k-code>Selected: {{ selected.join(", ") }}</k-code>
+		</k-lab-example>
 	</k-lab-examples>
 </template>
 
@@ -10,6 +15,30 @@
 export default {
 	props: {
 		items: Array
+	},
+	data() {
+		return {
+			selected: []
+		};
+	},
+	computed: {
+		selectableItems() {
+			return this.items.map((item) => {
+				return {
+					...item,
+					selectable: true
+				};
+			});
+		}
+	},
+	methods: {
+		onSelect(event, item, index) {
+			if (event.target.checked) {
+				this.selected.push(index);
+			} else {
+				this.selected = this.selected.filter((i) => i !== index);
+			}
+		}
 	}
 };
 </script>
