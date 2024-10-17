@@ -315,6 +315,22 @@ return [
 			return $blueprints;
 		},
 	],
+	// @codeCoverageIgnoreStart
+	'api' => function () {
+		return [
+			[
+				'pattern' => 'delete',
+				'method'  => 'DELETE',
+				'action'  => function () {
+					foreach ($this->requestBody('ids') as $id) {
+						$this->section()->kirby()->page($id)?->delete();
+					}
+					return true;
+				}
+			]
+		];
+	},
+	// @codeCoverageIgnoreEnd
 	'toArray' => function () {
 		return [
 			'data'    => $this->data,
