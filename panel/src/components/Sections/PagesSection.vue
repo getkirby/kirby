@@ -9,7 +9,8 @@ export default {
 		},
 		items() {
 			return this.data.map((page) => {
-				const sortable = page.permissions.sort && this.options.sortable;
+				const sortable =
+					page.permissions.sort && this.options.sortable && !this.isSelecting;
 				const deletable = this.data.length > this.options.min;
 
 				return {
@@ -38,6 +39,7 @@ export default {
 							sort: sortable
 						}
 					}),
+					selectable: this.isSelecting,
 					sortable
 				};
 			});
