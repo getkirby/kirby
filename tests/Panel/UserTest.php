@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Blueprint;
+use Kirby\Cms\Language;
 use Kirby\Cms\User as ModelUser;
 use Kirby\Content\Lock;
 use Kirby\Filesystem\Dir;
@@ -12,7 +13,7 @@ use Kirby\Toolkit\Str;
 
 class UserForceLocked extends ModelUser
 {
-	public function lock(): Lock
+	public function lock(Language|string $language = 'current'): Lock
 	{
 		return new Lock(
 			user: new ModelUser(['email' => 'test@getkirby.com']),

@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Language;
 use Kirby\Cms\User;
 use Kirby\Toolkit\Str;
 
@@ -34,10 +35,11 @@ class Lock
 	 * lock user id from the version.
 	 */
 	public static function for(
-		Version $version
+		Version $version,
+		Language|string $language = 'current'
 	): static {
 		// if the version does not exist, it cannot be locked
-		if ($version->exists() === false) {
+		if ($version->exists($language) === false) {
 			// create an open lock for the current user
 			return new static(
 				user: App::instance()->user(),
@@ -45,13 +47,13 @@ class Lock
 		}
 
 		// Read the locked user id from the version
-		if ($userId = ($version->read('default')['lock'] ?? null)) {
+		if ($userId = ($version->read($language)['lock'] ?? null)) {
 			$user = App::instance()->user($userId);
 		}
 
 		return new static(
 			user: $user ?? null,
-			modified: $version->modified()
+			modified: $version->modified($language)
 		);
 	}
 

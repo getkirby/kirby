@@ -318,7 +318,7 @@ abstract class Model
 	{
 		$options = $this->model->permissions()->toArray();
 
-		if ($this->model->lock()->isLocked() === true) {
+		if ($this->model->isLocked('*') === true) {
 			foreach ($options as $key => $value) {
 				if (in_array($key, $unlock, true)) {
 					continue;
@@ -383,7 +383,7 @@ abstract class Model
 			'content'     => (object)$this->content(),
 			'id'          => $this->model->id(),
 			'link'        => $link,
-			'lock'        => $this->model->lock()->toArray(),
+			'lock'        => $this->model->lock('current')->toArray(),
 			'originals'   => (object)$this->originals(),
 			'permissions' => $this->model->permissions()->toArray(),
 			'tabs'        => $tabs,

@@ -307,11 +307,20 @@ abstract class ModelWithContent implements Identifiable, Stringable
 
 	/**
 	 * Checks if the model is locked for the current user
-	 * @deprecated 5.0.0 Use `->lock()->isLocked()` instead
 	 */
-	public function isLocked(): bool
+	public function isLocked(Language|string $language = 'default'): bool
 	{
-		return $this->lock()->isLocked() === true;
+		if ($language === '*') {
+			foreach (Languages::ensure() as $language) {
+				if ($this->lock($language)->isLocked() === true) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		return $this->lock($language)->isLocked() === true;
 	}
 
 	/**
@@ -333,13 +342,13 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	/**
 	 * Returns lock for the model
 	 */
-	public function lock(): Lock
+	public function lock(Language|string $language = 'current'): Lock
 	{
 		// get the changes for the current model
 		$version = $this->version(VersionId::changes());
 
 		// return lock object for the changes
-		return Lock::for($version);
+		return Lock::for($version, $language);
 	}
 
 	/**
