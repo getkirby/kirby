@@ -86,7 +86,7 @@ class Form
 				$field = static::exceptionField($e, $props);
 			}
 
-			if ($field->save() !== false) {
+			if ($field->isSaveable() === true) {
 				$this->values[$name] = $field->value();
 			}
 
@@ -123,7 +123,7 @@ class Form
 		$data = $this->values;
 
 		foreach ($this->fields as $field) {
-			if ($field->save() === false || $field->unset() === true) {
+			if ($field->isSaveable() === false || $field->unset() === true) {
 				if ($includeNulls === true) {
 					$data[$field->name()] = null;
 				} else {
