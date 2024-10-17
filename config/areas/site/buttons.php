@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Panel\Ui\Buttons\LanguagesDropdown;
@@ -24,8 +25,8 @@ return [
 	},
 	// `languages` button needs to be in site area, as languages area itself
 	// is only loaded when in multilang setup
-	'languages' => function () {
-		return new LanguagesDropdown();
+	'languages' => function (ModelWithContent $model) {
+		return new LanguagesDropdown($model);
 	},
 
 	// file buttons

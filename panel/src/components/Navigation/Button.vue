@@ -22,6 +22,13 @@
 		<span v-if="dropdown && (text || $slots.default)" class="k-button-arrow">
 			<k-icon type="angle-dropdown" />
 		</span>
+		<span
+			v-if="badge"
+			class="k-button-badge"
+			:data-theme="badge.theme ?? theme"
+		>
+			{{ badge.text }}
+		</span>
 	</component>
 </template>
 
@@ -35,6 +42,13 @@ export const props = {
 		 * Sets autofocus on button (when supported by element)
 		 */
 		autofocus: Boolean,
+		/**
+		 * Display a (colored) badge on the top-right of the button
+		 * @value { text, theme }
+		 * @example { text: 5, theme: "positive" }
+		 * @since 5.0.0
+		 */
+		badge: Object,
 		/**
 		 * Pass instead of a link URL to be triggered on clicking the button
 		 */
@@ -243,7 +257,6 @@ export default {
 	width: var(--button-width);
 	color: var(--button-color-text);
 	font-variant-numeric: tabular-nums;
-	overflow-x: clip;
 	text-align: var(--button-align);
 	flex-shrink: 0;
 }
@@ -361,6 +374,25 @@ export default {
 	width: max-content;
 	margin-inline-start: -0.25rem;
 	margin-inline-end: -0.125rem;
+}
+
+/** Badge **/
+.k-button-badge {
+	position: absolute;
+	top: 0;
+	inset-inline-end: 0;
+	transform: translate(50%, -20%);
+	font-variant-numeric: tabular-nums;
+	line-height: 1.5;
+	padding: 0 var(--spacing-1);
+	border-radius: 1rem;
+	text-align: center;
+	font-size: 0.6rem;
+	box-shadow: var(--shadow-md);
+	background: var(--theme-color-back);
+	border: 1px solid var(--theme-color-500);
+	color: var(--theme-color-text);
+	z-index: 1;
 }
 
 /** Disabled button **/

@@ -50,8 +50,10 @@ class User extends Model
 			'theme',
 			'settings',
 			'languages'
-		)->bind(['user' => $this->model()])
-			->render();
+		)->bind([
+			'model' => $this->model(),
+			'user'  => $this->model()
+		])->render();
 	}
 
 	/**
