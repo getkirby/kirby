@@ -218,6 +218,16 @@ return [
 
 					return true;
 				}
+			], 
+			[
+				'pattern' => 'delete',
+				'method'  => 'DELETE',
+				'action'  => function () {
+					foreach ($this->requestBody('ids') as $id) {
+						$this->section()->kirby()->file($id)?->delete();
+					}
+					return true;
+				}
 			]
 		];
 	},
