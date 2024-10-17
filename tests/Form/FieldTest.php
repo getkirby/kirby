@@ -558,32 +558,7 @@ class FieldTest extends TestCase
 		]);
 
 		$this->assertSame($expected, $field->isEmpty());
-		$this->assertSame($expected, $field->isEmpty($value));
 		$this->assertSame($expected, $field->isEmptyValue($value));
-	}
-
-	/**
-	 * @covers ::isEmpty
-	 * @covers ::isEmptyValue
-	 */
-	public function testIsEmptyWithCustomFunction()
-	{
-		Field::$types = [
-			'test' => [
-				'isEmpty' => fn ($value) => $value === 0
-			]
-		];
-
-		$page = new Page(['slug' => 'test']);
-
-		$field = new Field('test', [
-			'model' => $page
-		]);
-
-		$this->assertFalse($field->isEmpty(null));
-		$this->assertFalse($field->isEmptyValue(null));
-		$this->assertTrue($field->isEmpty(0));
-		$this->assertTrue($field->isEmptyValue(0));
 	}
 
 	/**

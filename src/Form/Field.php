@@ -30,6 +30,9 @@ class Field extends Component
 	use Mixin\Model;
 	use Mixin\Validation;
 	use Mixin\When;
+	use Mixin\Value {
+		isEmptyValue as protected isEmptyValueFromTrait;
+	}
 
 	/**
 	 * Parent collection with all fields of the current form
@@ -323,34 +326,6 @@ class Field extends Component
 	}
 
 	/**
-	 * Checks if the field is empty
-	 * @deprecated 5.0.0 Passing arguments is deprecated. Use `::isEmptyValue()` instead to check for
-	 */
-	public function isEmpty(mixed ...$args): bool
-	{
-		$value = match (count($args)) {
-			0       => $this->value(),
-			default => $args[0]
-		};
-
-		return $this->isEmptyValue($value);
-	}
-
-	/**
-	 * Checks if the given value is considered empty
-	 *
-	 * @since 5.0.0
-	 */
-	public function isEmptyValue(mixed $value = null): bool
-	{
-		if ($empty = $this->options['isEmpty'] ?? null) {
-			return $empty->call($this, $value);
-		}
-
-		return in_array($value, [null, '', []], true);
-	}
-
-	/**
 	 * Checks if the field is hidden
 	 */
 	public function isHidden(): bool
@@ -440,22 +415,5 @@ class Field extends Component
 	protected function validations(): array
 	{
 		return $this->options['validations'] ?? [];
-	}
-
-	/**
-	 * Returns the value of the field if saveable
-	 * otherwise it returns null
-	 */
-	public function value(bool $default = false): mixed
-	{
-		if ($this->isSaveable() === false) {
-			return null;
-		}
-
-		if ($default === true && $this->isEmpty() === true) {
-			return $this->default();
-		}
-
-		return $this->value;
 	}
 }
