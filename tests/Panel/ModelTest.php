@@ -95,7 +95,7 @@ class ModelTest extends TestCase
 			new ModelPage(['slug' => 'test'])
 		);
 
-		$panel->model()->version('published')->save([
+		$panel->model()->version('latest')->save([
 			'foo'  => 'foo',
 			'uuid' => 'test'
 		]);

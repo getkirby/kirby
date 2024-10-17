@@ -186,7 +186,7 @@ class PlainTextStorage extends Storage
 
 		// A changed version or non-default language version does not exist
 		// if the content file was not found
-		if (VersionId::published()->is($versionId) === false || $language->isDefault() === false) {
+		if (VersionId::latest()->is($versionId) === false || $language->isDefault() === false) {
 			return false;
 		}
 
