@@ -77,17 +77,17 @@ class Field extends Component
 	}
 
 	/**
-	 * Returns field data
+	 * @deprecated 3.5.0
+	 * @todo remove when the general field class setup has been refactored
+	 *
+	 * Returns the field data
+	 * in a format to be stored
+	 * in Kirby's content fields
 	 */
 	public function data(bool $default = false): mixed
 	{
-		$save = $this->options['save'] ?? true;
-
-		if ($default === true && $this->isEmpty($this->value)) {
-			$value = $this->default();
-		} else {
-			$value = $this->value;
-		}
+		$save  = $this->options['save'] ?? true;
+		$value = $this->value($default);
 
 		if ($save === false) {
 			return null;
@@ -446,8 +446,16 @@ class Field extends Component
 	 * Returns the value of the field if saveable
 	 * otherwise it returns null
 	 */
-	public function value(): mixed
+	public function value(bool $default = false): mixed
 	{
-		return $this->isSaveable() ? $this->value : null;
+		if ($this->isSaveable() === false) {
+			return null;
+		}
+
+		if ($default === true && $this->isEmpty() === true) {
+			return $this->default();
+		}
+
+		return $this->value;
 	}
 }
