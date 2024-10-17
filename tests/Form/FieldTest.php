@@ -35,9 +35,6 @@ class FieldTest extends TestCase
 		Field::$mixins = $this->originalMixins;
 	}
 
-	/**
-	 * @covers ::after
-	 */
 	public function testAfter()
 	{
 		Field::$types = [
@@ -118,9 +115,6 @@ class FieldTest extends TestCase
 		$this->assertSame($routes, $field->api());
 	}
 
-	/**
-	 * @covers ::autofocus
-	 */
 	public function testAutofocus()
 	{
 		Field::$types = [
@@ -147,9 +141,6 @@ class FieldTest extends TestCase
 		$this->assertTrue($field->autofocus);
 	}
 
-	/**
-	 * @covers ::before
-	 */
 	public function testBefore()
 	{
 		Field::$types = [
@@ -234,9 +225,6 @@ class FieldTest extends TestCase
 		$this->assertNull($field->data());
 	}
 
-	/**
-	 * @covers ::default
-	 */
 	public function testDefault()
 	{
 		Field::$types = [
