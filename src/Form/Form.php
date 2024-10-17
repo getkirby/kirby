@@ -212,12 +212,7 @@ class Form
 		$props['model']    = $model;
 
 		// search for the blueprint
-		if (
-			method_exists($model, 'blueprint') === true &&
-			$blueprint = $model->blueprint()
-		) {
-			$props['fields'] = $blueprint->fields();
-		}
+		$props['fields'] = $model->blueprint()->fields();
 
 		$ignoreDisabled = $props['ignoreDisabled'] ?? false;
 
