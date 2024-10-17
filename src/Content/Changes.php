@@ -38,6 +38,14 @@ class Changes
 	}
 
 	/**
+	 * Returns whether the cache has been populated
+	 */
+	public function cacheExists(): bool
+	{
+		return $this->cache()->get('__updated__') !== null;
+	}
+
+	/**
 	 * Returns the cache key for a given model
 	 */
 	public function cacheKey(ModelWithContent $model): string
@@ -82,6 +90,28 @@ class Changes
 	}
 
 	/**
+	 * Rebuilds the cache by finding all models with changes version
+	 */
+	public function generateCache(): void
+	{
+		$models = [
+			'files' => [],
+			'pages' => [],
+			'users' => []
+		];
+
+		foreach ($this->kirby->models() as $model) {
+			if ($model->version(VersionId::changes())->exists('*') === true) {
+				$models[$this->cacheKey($model)][] = (string)($model->uuid() ?? $model->id());
+			}
+		}
+
+		foreach ($models as $key => $changes) {
+			$this->update($key, $changes);
+		}
+	}
+
+	/**
 	 * Return all pages with unsaved changes
 	 */
 	public function pages(): Pages
@@ -113,8 +143,8 @@ class Changes
 	{
 		$key = $this->cacheKey($model);
 
-		$changes = $this->read($key);
-		$changes[] = (string)$model->uuid();
+		$changes   = $this->read($key);
+		$changes[] = (string)($model->uuid() ?? $model->id());
 
 		$this->update($key, $changes);
 	}
@@ -130,7 +160,7 @@ class Changes
 		// remove the model from the list of changes
 		$changes = A::filter(
 			$this->read($key),
-			fn ($uuid) => $uuid !== (string)$model->uuid()
+			fn ($id) => $id !== (string)($model->uuid() ?? $model->id())
 		);
 
 		$this->update($key, $changes);
@@ -145,6 +175,7 @@ class Changes
 		$changes = array_values($changes);
 
 		$this->cache()->set($key, $changes);
+		$this->cache()->set('__updated__', time());
 	}
 
 	/**
