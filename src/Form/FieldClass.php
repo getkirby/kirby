@@ -2,11 +2,7 @@
 
 namespace Kirby\Form;
 
-use Closure;
-use Exception;
-use Kirby\Cms\App;
 use Kirby\Cms\HasSiblings;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -29,6 +25,10 @@ abstract class FieldClass
 	 * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
 	 */
 	use HasSiblings;
+	use Mixin\Api;
+	use Mixin\Model;
+	use Mixin\Validation;
+	use Mixin\When;
 
 	protected string|null $after;
 	protected bool $autofocus;
@@ -38,14 +38,12 @@ abstract class FieldClass
 	protected string|null $help;
 	protected string|null $icon;
 	protected string|null $label;
-	protected ModelWithContent $model;
 	protected string|null $name;
 	protected string|null $placeholder;
 	protected bool $required;
 	protected Fields $siblings;
 	protected bool $translate;
 	protected mixed $value = null;
-	protected array|null $when;
 	protected string|null $width;
 
 	public function __construct(
@@ -59,7 +57,7 @@ abstract class FieldClass
 		$this->setHelp($params['help'] ?? null);
 		$this->setIcon($params['icon'] ?? null);
 		$this->setLabel($params['label'] ?? null);
-		$this->setModel($params['model'] ?? App::instance()->site());
+		$this->setModel($params['model'] ?? null);
 		$this->setName($params['name'] ?? null);
 		$this->setPlaceholder($params['placeholder'] ?? null);
 		$this->setRequired($params['required'] ?? false);
@@ -85,11 +83,6 @@ abstract class FieldClass
 	public function after(): string|null
 	{
 		return $this->stringTemplate($this->after);
-	}
-
-	public function api(): array
-	{
-		return $this->routes();
 	}
 
 	public function autofocus(): bool
@@ -153,20 +146,12 @@ abstract class FieldClass
 	}
 
 	/**
-	 * Runs all validations and returns an array of
-	 * error messages
-	 */
-	public function errors(): array
-	{
-		return $this->validate();
-	}
-
-	/**
-	 * Setter for the value
+	 * Sets a new value for the field
 	 */
 	public function fill(mixed $value = null): void
 	{
 		$this->value = $value;
+		$this->errors = null;
 	}
 
 	/**
@@ -221,14 +206,6 @@ abstract class FieldClass
 		return false;
 	}
 
-	/**
-	 * Checks if the field is invalid
-	 */
-	public function isInvalid(): bool
-	{
-		return $this->isValid() === false;
-	}
-
 	public function isRequired(): bool
 	{
 		return $this->required;
@@ -237,22 +214,6 @@ abstract class FieldClass
 	public function isSaveable(): bool
 	{
 		return true;
-	}
-
-	/**
-	 * Checks if the field is valid
-	 */
-	public function isValid(): bool
-	{
-		return empty($this->errors()) === true;
-	}
-
-	/**
-	 * Returns the Kirby instance
-	 */
-	public function kirby(): App
-	{
-		return $this->model->kirby();
 	}
 
 	/**
@@ -265,13 +226,6 @@ abstract class FieldClass
 		);
 	}
 
-	/**
-	 * Returns the parent model
-	 */
-	public function model(): ModelWithContent
-	{
-		return $this->model;
-	}
 
 	/**
 	 * Returns the field name
@@ -279,48 +233,6 @@ abstract class FieldClass
 	public function name(): string
 	{
 		return $this->name ?? $this->type();
-	}
-
-	/**
-	 * Checks if the field needs a value before being saved;
-	 * this is the case if all of the following requirements are met:
-	 * - The field is saveable
-	 * - The field is required
-	 * - The field is currently empty
-	 * - The field is not currently inactive because of a `when` rule
-	 */
-	protected function needsValue(): bool
-	{
-		// check simple conditions first
-		if (
-			$this->isSaveable() === false ||
-			$this->isRequired() === false ||
-			$this->isEmpty()    === false
-		) {
-			return false;
-		}
-
-		// check the data of the relevant fields if there is a `when` option
-		if (
-			empty($this->when) === false &&
-			is_array($this->when) === true &&
-			$formFields = $this->siblings()
-		) {
-			foreach ($this->when as $field => $value) {
-				$field      = $formFields->get($field);
-				$inputValue = $field?->value() ?? '';
-
-				// if the input data doesn't match the requested `when` value,
-				// that means that this field is not required and can be saved
-				// (*all* `when` conditions must be met for this field to be required)
-				if ($inputValue !== $value) {
-					return false;
-				}
-			}
-		}
-
-		// either there was no `when` condition or all conditions matched
-		return true;
 	}
 
 	/**
@@ -375,14 +287,6 @@ abstract class FieldClass
 	}
 
 	/**
-	 * Routes for the field API
-	 */
-	public function routes(): array
-	{
-		return [];
-	}
-
-	/**
 	 * @deprecated 3.5.0
 	 * @todo remove when the general field class setup has been refactored
 	 */
@@ -431,11 +335,6 @@ abstract class FieldClass
 		$this->label = $this->i18n($label);
 	}
 
-	protected function setModel(ModelWithContent $model): void
-	{
-		$this->model = $model;
-	}
-
 	protected function setName(string|null $name = null): void
 	{
 		$this->name = $name;
@@ -462,14 +361,6 @@ abstract class FieldClass
 	}
 
 	/**
-	 * Setter for the when condition
-	 */
-	protected function setWhen(array|null $when = null): void
-	{
-		$this->when = $when;
-	}
-
-	/**
 	 * Setter for the field width
 	 */
 	protected function setWidth(string|null $width = null): void
@@ -478,7 +369,7 @@ abstract class FieldClass
 	}
 
 	/**
-	 * Returns all sibling fields
+	 * Returns all sibling fields for the HasSiblings trait
 	 */
 	protected function siblingsCollection(): Fields
 	{
@@ -535,52 +426,6 @@ abstract class FieldClass
 	}
 
 	/**
-	 * Runs the validations defined for the field
-	 */
-	protected function validate(): array
-	{
-		$validations = $this->validations();
-		$value       = $this->value();
-		$errors      = [];
-
-		// validate required values
-		if ($this->needsValue() === true) {
-			$errors['required'] = I18n::translate('error.validation.required');
-		}
-
-		foreach ($validations as $key => $validation) {
-			if (is_int($key) === true) {
-				// predefined validation
-				try {
-					Validations::$validation($this, $value);
-				} catch (Exception $e) {
-					$errors[$validation] = $e->getMessage();
-				}
-				continue;
-			}
-
-			if ($validation instanceof Closure) {
-				try {
-					$validation->call($this, $value);
-				} catch (Exception $e) {
-					$errors[$key] = $e->getMessage();
-				}
-			}
-		}
-
-		return $errors;
-	}
-
-	/**
-	 * Defines all validation rules
-	 * @codeCoverageIgnore
-	 */
-	protected function validations(): array
-	{
-		return [];
-	}
-
-	/**
 	 * Returns the value of the field if saveable
 	 * otherwise it returns null
 	 */
@@ -627,14 +472,6 @@ abstract class FieldClass
 	protected function valueToYaml(array|null $value = null): string
 	{
 		return Data::encode($value, 'yaml');
-	}
-
-	/**
-	 * Conditions when the field will be shown
-	 */
-	public function when(): array|null
-	{
-		return $this->when;
 	}
 
 	/**

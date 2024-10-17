@@ -209,6 +209,7 @@ class FieldClassTest extends TestCase
 	/**
 	 * @covers ::errors
 	 * @covers ::validate
+	 * @covers ::validations
 	 */
 	public function testErrors()
 	{

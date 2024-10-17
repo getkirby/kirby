@@ -37,7 +37,29 @@ class FieldsTest extends TestCase
 		]);
 
 		$this->assertSame('a', $fields->first()->name());
+		$this->assertSame($this->model, $fields->first()->model());
 		$this->assertSame('b', $fields->last()->name());
+		$this->assertSame($this->model, $fields->last()->model());
+	}
+
+	/**
+	 * @covers ::__construct
+	 */
+	public function testConstructWithModel()
+	{
+		$fields = new Fields([
+			'a' => [
+				'type'  => 'text',
+			],
+			'b' => [
+				'type'  => 'text',
+			],
+		], $this->model);
+
+		$this->assertSame('a', $fields->first()->name());
+		$this->assertSame($this->model, $fields->first()->model());
+		$this->assertSame('b', $fields->last()->name());
+		$this->assertSame($this->model, $fields->last()->model());
 	}
 
 	/**
