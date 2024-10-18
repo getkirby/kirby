@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Ui\Buttons;
 
 use Kirby\Cms\Language;
+use Kirby\Cms\Page;
 use Kirby\Panel\Areas\AreaTestCase;
 
 /**
@@ -16,8 +17,9 @@ class LanguagesDropdownTest extends AreaTestCase
 	 */
 	public function testOption()
 	{
+		$page     = new Page(['slug' => 'test']);
+		$button   = new LanguagesDropdown($page);
 		$language = new Language(['name' => 'Deutsch', 'code' => 'de']);
-		$button   = new LanguagesDropdown();
 		$this->assertSame([
 			'text'    => 'Deutsch',
 			'code'    => 'de',
@@ -30,7 +32,8 @@ class LanguagesDropdownTest extends AreaTestCase
 	 */
 	public function testOptionsSingleLang()
 	{
-		$button = new LanguagesDropdown();
+		$page   = new Page(['slug' => 'test']);
+		$button = new LanguagesDropdown($page);
 		$this->assertSame([], $button->options());
 	}
 
@@ -42,7 +45,8 @@ class LanguagesDropdownTest extends AreaTestCase
 		$this->enableMultilang();
 		$this->installLanguages();
 
-		$button = new LanguagesDropdown();
+		$page   = new Page(['slug' => 'test']);
+		$button = new LanguagesDropdown($page);
 		$this->assertSame([
 			[
 				'text'    => 'English',
@@ -63,7 +67,8 @@ class LanguagesDropdownTest extends AreaTestCase
 	 */
 	public function testRenderSingleLang()
 	{
-		$button = new LanguagesDropdown();
+		$page   = new Page(['slug' => 'test']);
+		$button = new LanguagesDropdown($page);
 		$this->assertNull($button->render());
 	}
 
@@ -76,7 +81,8 @@ class LanguagesDropdownTest extends AreaTestCase
 		$this->enableMultilang();
 		$this->installLanguages();
 
-		$button = new LanguagesDropdown();
+		$page   = new Page(['slug' => 'test']);
+		$button = new LanguagesDropdown($page);
 		$this->assertSame('k-languages-dropdown', $button->component);
 		$this->assertSame('k-languages-dropdown', $button->class);
 		$this->assertSame('translate', $button->icon);
