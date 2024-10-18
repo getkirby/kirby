@@ -1,5 +1,5 @@
 <template>
-	<k-view-button v-bind="$props" :options="options" />
+	<k-view-button v-bind="$props" />
 </template>
 
 <script>
