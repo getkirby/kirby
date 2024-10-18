@@ -1,5 +1,5 @@
 <template>
-	<k-view-button v-bind="$props" :options="languages" />
+	<k-view-button v-bind="$props" />
 </template>
 
 <script>
@@ -14,33 +14,7 @@ import { props as ButtonProps } from "@/components/Navigation/Button.vue";
 export default {
 	mixins: [ButtonProps],
 	props: {
-		options: {
-			type: Array,
-			default: () => []
-		}
-	},
-	computed: {
-		languages() {
-			return this.options.map((option) => {
-				if (option === "-") {
-					return option;
-				}
-
-				return {
-					...option,
-					click: () => this.change(option)
-				};
-			});
-		}
-	},
-	methods: {
-		change(language) {
-			this.$reload({
-				query: {
-					language: language.code
-				}
-			});
-		}
+		options: String
 	}
 };
 </script>
