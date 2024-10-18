@@ -23,8 +23,10 @@ return [
 	'page.status' => function (Page $page) {
 		return new PageStatusButton($page);
 	},
-	// `languages` button needs to be in site area, as languages area itself
-	// is only loaded when in multilang setup
+	// `languages` button needs to be in site area,
+	// as the  languages might be not loaded even in
+	// multilang mode when the `languages` option is deactivated
+	// (but content languages to switch between still can exist)
 	'languages' => function (ModelWithContent $model) {
 		return new LanguagesDropdown($model);
 	},

@@ -23,12 +23,14 @@ class LanguagesDropdownTest extends AreaTestCase
 		$this->assertSame([
 			'text'    => 'Deutsch',
 			'code'    => 'de',
-			'current' => false
+			'current' => false,
+			'link'    => '/pages/test?language=de'
 		], $button->option($language));
 	}
 
 	/**
 	 * @covers ::options
+	 * @
 	 */
 	public function testOptionsSingleLang()
 	{
@@ -51,13 +53,15 @@ class LanguagesDropdownTest extends AreaTestCase
 			[
 				'text'    => 'English',
 				'code'    => 'en',
-				'current' => true
+				'current' => true,
+				'link'    => '/pages/test?language=en'
 			],
 			'-',
 			[
 				'text'    => 'Deutsch',
 				'code'    => 'de',
-				'current' => false
+				'current' => false,
+				'link'    => '/pages/test?language=de'
 			]
 		], $button->options());
 	}
@@ -86,7 +90,7 @@ class LanguagesDropdownTest extends AreaTestCase
 		$this->assertSame('k-languages-dropdown', $button->component);
 		$this->assertSame('k-languages-dropdown', $button->class);
 		$this->assertSame('translate', $button->icon);
-		$this->assertCount(3, $button->options);
+		$this->assertSame('/pages/test/languages', $button->options);
 		$this->assertSame('text', $button->responsive);
 		$this->assertSame('EN', $button->text);
 
@@ -94,6 +98,6 @@ class LanguagesDropdownTest extends AreaTestCase
 		$this->assertIsArray($render);
 		$this->assertSame('k-languages-dropdown', $render['component']);
 		$this->assertIsArray($render['props']);
-		$this->assertIsArray($render['props']['options']);
+		$this->assertSame('/pages/test/languages', $render['props']['options']);
 	}
 }
