@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Cms\Find;
+use Kirby\Panel\Ui\Buttons\LanguagesDropdown;
 
 $files = require __DIR__ . '/../files/dropdowns.php';
 
@@ -17,5 +19,12 @@ return [
 	'site.file' => [
 		'pattern' => '(site)/files/(:any)',
 		'options' => $files['file']
+	],
+	'languages' => [
+		'pattern' => '(site|pages/.*?)/languages',
+		'options' => function (string $path) {
+			$model = Find::parent($path);
+			return (new LanguagesDropdown($model))->options();
+		}
 	]
 ];

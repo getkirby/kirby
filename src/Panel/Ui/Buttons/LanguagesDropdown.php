@@ -31,7 +31,9 @@ class LanguagesDropdown extends ViewButton
 			component: 'k-languages-dropdown',
 			class: 'k-languages-dropdown',
 			icon: 'translate',
-			options: $this->options(),
+			// Fiber dropdown endpoint to load options
+			// only when dropdown is opened
+			options: $this->model->panel()->url(true) . '/languages',
 			responsive: 'text',
 			text: Str::upper($this->kirby->language()?->code())
 		);
@@ -43,9 +45,14 @@ class LanguagesDropdown extends ViewButton
 			'text'    => $language->name(),
 			'code'    => $language->code(),
 			'current' => $language->code() === $this->kirby->language()?->code(),
+			'link'    => $this->model->panel()->url(true) . '?language=' . $language->code()
 		];
 	}
 
+	/**
+	 * Options are used for the Fiber dropdown at endpoint
+	 * `(site|pages/.*?)/languages`
+	 */
 	public function options(): array
 	{
 		$languages = $this->kirby->languages();
