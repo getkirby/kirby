@@ -30,6 +30,7 @@ class LanguagesDropdownTest extends AreaTestCase
 
 	/**
 	 * @covers ::options
+	 * @
 	 */
 	public function testOptionsSingleLang()
 	{
@@ -40,6 +41,7 @@ class LanguagesDropdownTest extends AreaTestCase
 
 	/**
 	 * @covers ::options
+	 * 
 	 */
 	public function testOptionsMultiLang()
 	{
