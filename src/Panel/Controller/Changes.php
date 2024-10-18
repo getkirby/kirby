@@ -44,6 +44,13 @@ class Changes
 		// get the changes version
 		$changes = $model->version(VersionId::changes());
 
+		// if the changes version does not exist, we need to return early
+		if ($changes->exists('current') === false) {
+			return [
+				'status' => 'ok',
+			];
+		}
+
 		// publish the changes
 		$changes->publish(
 			language: 'current'
