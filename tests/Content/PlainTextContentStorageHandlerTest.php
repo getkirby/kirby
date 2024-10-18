@@ -80,7 +80,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 			'text'  => 'Bar'
 		];
 
-		$this->storage->create(VersionId::published(), $this->app->language('en'), $fields);
+		$this->storage->create(VersionId::latest(), $this->app->language('en'), $fields);
 		$this->assertSame($fields, Data::read($this->model->root() . '/article.en.txt'));
 	}
 
@@ -96,7 +96,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 			'text'  => 'Bar'
 		];
 
-		$this->storage->create(VersionId::published(), Language::single(), $fields);
+		$this->storage->create(VersionId::latest(), Language::single(), $fields);
 		$this->assertSame($fields, Data::read($this->model->root() . '/article.txt'));
 	}
 
@@ -107,7 +107,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	{
 		$this->setUpSingleLanguage();
 
-		$versionId = VersionId::published();
+		$versionId = VersionId::latest();
 		$language  = Language::single();
 
 		$this->assertContentFileDoesNotExist($language, $versionId);
@@ -165,7 +165,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		touch($this->model->root() . '/_changes/article.en.txt');
 		touch($this->model->root() . '/article.en.txt');
 
-		$this->storage->delete(VersionId::published(), $this->app->language('en'));
+		$this->storage->delete(VersionId::latest(), $this->app->language('en'));
 		$this->assertFileDoesNotExist($this->model->root() . '/article.en.txt');
 		$this->assertDirectoryExists($this->model->root());
 	}
@@ -181,7 +181,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		touch($this->model->root() . '/_changes/article.txt');
 		touch($this->model->root() . '/article.txt');
 
-		$this->storage->delete(VersionId::published(), Language::single());
+		$this->storage->delete(VersionId::latest(), Language::single());
 		$this->assertFileDoesNotExist($this->model->root() . '/article.txt');
 		$this->assertDirectoryExists($this->model->root());
 	}
@@ -215,7 +215,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		$this->setUpMultiLanguage();
 
 		$this->assertNull($this->storage->modified(VersionId::changes(), $this->app->language('en')));
-		$this->assertNull($this->storage->modified(VersionId::published(), $this->app->language('en')));
+		$this->assertNull($this->storage->modified(VersionId::latest(), $this->app->language('en')));
 	}
 
 	/**
@@ -226,7 +226,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		$this->setUpSingleLanguage();
 
 		$this->assertNull($this->storage->modified(VersionId::changes(), Language::single()));
-		$this->assertNull($this->storage->modified(VersionId::published(), Language::single()));
+		$this->assertNull($this->storage->modified(VersionId::latest(), Language::single()));
 	}
 
 	/**
@@ -240,7 +240,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		touch($this->model->root() . '/_changes/article.en.txt', $modified = 1234567890);
 
 		$this->assertSame($modified, $this->storage->modified(VersionId::changes(), $this->app->language('en')));
-		$this->assertNull($this->storage->modified(VersionId::published(), $this->app->language('en')));
+		$this->assertNull($this->storage->modified(VersionId::latest(), $this->app->language('en')));
 	}
 
 	/**
@@ -254,7 +254,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		touch(static::TMP . '/content/a-page/_changes/article.txt', $modified = 1234567890);
 
 		$this->assertSame($modified, $this->storage->modified(VersionId::changes(), Language::single()));
-		$this->assertNull($this->storage->modified(VersionId::published(), Language::single()));
+		$this->assertNull($this->storage->modified(VersionId::latest(), Language::single()));
 	}
 
 	/**
@@ -274,7 +274,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		$this->assertFileDoesNotExist($this->model->root() . '/_changes/article.txt');
 
 		$this->storage->move(
-			VersionId::published(),
+			VersionId::latest(),
 			Language::single(),
 			VersionId::changes()
 		);
@@ -296,7 +296,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		$this->assertFileDoesNotExist($this->model->root() . '/article.txt');
 
 		$this->storage->move(
-			VersionId::published(),
+			VersionId::latest(),
 			Language::single(),
 			VersionId::changes()
 		);
@@ -358,7 +358,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 
 		Data::write($this->model->root() . '/article.en.txt', $fields);
 
-		$this->assertSame($fields, $this->storage->read(VersionId::published(), $this->app->language('en')));
+		$this->assertSame($fields, $this->storage->read(VersionId::latest(), $this->app->language('en')));
 	}
 
 	/**
@@ -375,7 +375,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 
 		Data::write($this->model->root() . '/article.txt', $fields);
 
-		$this->assertSame($fields, $this->storage->read(VersionId::published(), Language::single()));
+		$this->assertSame($fields, $this->storage->read(VersionId::latest(), Language::single()));
 	}
 
 	/**
@@ -447,7 +447,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 
 		$minTime = time();
 
-		$this->storage->touch(VersionId::published(), $this->app->language('en'));
+		$this->storage->touch(VersionId::latest(), $this->app->language('en'));
 
 		clearstatcache();
 		$this->assertGreaterThanOrEqual($minTime, filemtime($root));
@@ -467,7 +467,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 
 		$minTime = time();
 
-		$this->storage->touch(VersionId::published(), Language::single());
+		$this->storage->touch(VersionId::latest(), Language::single());
 
 		clearstatcache();
 		$this->assertGreaterThanOrEqual($minTime, filemtime($root));
@@ -525,7 +525,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 
 		Data::write($this->model->root() . '/article.en.txt', $fields);
 
-		$this->storage->update(VersionId::published(), $this->app->language('en'), $fields);
+		$this->storage->update(VersionId::latest(), $this->app->language('en'), $fields);
 		$this->assertSame($fields, Data::read($this->model->root() . '/article.en.txt'));
 	}
 
@@ -543,7 +543,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 
 		Data::write($this->model->root() . '/article.txt', $fields);
 
-		$this->storage->update(VersionId::published(), Language::single(), $fields);
+		$this->storage->update(VersionId::latest(), Language::single(), $fields);
 		$this->assertSame($fields, Data::read($this->model->root() . '/article.txt'));
 	}
 
@@ -582,13 +582,13 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	{
 		return [
 			['file', VersionId::changes(), 'en', 'content/_changes/image.jpg.en.txt'],
-			['file', VersionId::published(), 'en', 'content/image.jpg.en.txt'],
+			['file', VersionId::latest(), 'en', 'content/image.jpg.en.txt'],
 			['page', VersionId::changes(), 'en', 'content/a-page/_changes/article.en.txt'],
-			['page', VersionId::published(), 'en', 'content/a-page/article.en.txt'],
+			['page', VersionId::latest(), 'en', 'content/a-page/article.en.txt'],
 			['site', VersionId::changes(), 'en', 'content/_changes/site.en.txt'],
-			['site', VersionId::published(), 'en', 'content/site.en.txt'],
+			['site', VersionId::latest(), 'en', 'content/site.en.txt'],
 			['user', VersionId::changes(), 'en', 'site/accounts/abcdefgh/_changes/user.en.txt'],
-			['user', VersionId::published(), 'en', 'site/accounts/abcdefgh/user.en.txt'],
+			['user', VersionId::latest(), 'en', 'site/accounts/abcdefgh/user.en.txt'],
 		];
 	}
 
@@ -627,13 +627,13 @@ class PlainTextContentStorageHandlerTest extends TestCase
 	{
 		return [
 			['file', VersionId::changes(), 'content/_changes/image.jpg.txt'],
-			['file', VersionId::published(), 'content/image.jpg.txt'],
+			['file', VersionId::latest(), 'content/image.jpg.txt'],
 			['page', VersionId::changes(), 'content/a-page/_changes/article.txt'],
-			['page', VersionId::published(), 'content/a-page/article.txt'],
+			['page', VersionId::latest(), 'content/a-page/article.txt'],
 			['site', VersionId::changes(), 'content/_changes/site.txt'],
-			['site', VersionId::published(), 'content/site.txt'],
+			['site', VersionId::latest(), 'content/site.txt'],
 			['user', VersionId::changes(), 'site/accounts/abcdefgh/_changes/user.txt'],
-			['user', VersionId::published(), 'site/accounts/abcdefgh/user.txt'],
+			['user', VersionId::latest(), 'site/accounts/abcdefgh/user.txt'],
 		];
 	}
 
@@ -690,7 +690,7 @@ class PlainTextContentStorageHandlerTest extends TestCase
 		$this->assertSame([
 			$this->model->root() . '/article.en.txt',
 			$this->model->root() . '/article.de.txt'
-		], $this->storage->contentFiles(VersionId::published()));
+		], $this->storage->contentFiles(VersionId::latest()));
 	}
 
 	/**
@@ -702,6 +702,6 @@ class PlainTextContentStorageHandlerTest extends TestCase
 
 		$this->assertSame([
 			$this->model->root() . '/article.txt'
-		], $this->storage->contentFiles(VersionId::published()));
+		], $this->storage->contentFiles(VersionId::latest()));
 	}
 }
