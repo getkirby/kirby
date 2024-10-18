@@ -41,28 +41,6 @@ trait When
 	}
 
 	/**
-	 * Checks if the field needs a value before being saved;
-	 * this is the case if all of the following requirements are met:
-	 * - The field is saveable
-	 * - The field is required
-	 * - The field is currently empty
-	 * - The field is not currently inactive because of a `when` rule
-	 */
-	protected function needsValue(): bool
-	{
-		if (
-			$this->isSaveable() === false ||
-			$this->isRequired() === false ||
-			$this->isEmpty() === false ||
-			$this->isActive() === false
-		) {
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	 * Setter for the `when` condition
 	 */
 	protected function setWhen(array|null $when = null): void
