@@ -307,7 +307,7 @@ class Field extends Component
 	}
 
 	/**
-	 * @deprecated Use `::siblings() instead
+	 * @deprecated 5.0.0 Use `::siblings() instead
 	 */
 	public function formFields(): Fields
 	{
@@ -324,7 +324,7 @@ class Field extends Component
 
 	/**
 	 * Checks if the field is empty
-	 * @deprecated Passing arguments is deprecated. Use `::isEmptyValue()` instead to check for
+	 * @deprecated 5.0.0 Passing arguments is deprecated. Use `::isEmptyValue()` instead to check for
 	 */
 	public function isEmpty(mixed ...$args): bool
 	{
@@ -338,6 +338,8 @@ class Field extends Component
 
 	/**
 	 * Checks if the given value is considered empty
+	 *
+	 * @since 5.0.0
 	 */
 	public function isEmptyValue(mixed $value = null): bool
 	{
@@ -389,7 +391,7 @@ class Field extends Component
 
 	/**
 	 * Checks if the field is saveable
-	 * @deprecated Use `::isSaveable()` instead
+	 * @deprecated 5.0.0 Use `::isSaveable()` instead
 	 */
 	public function save(): bool
 	{
