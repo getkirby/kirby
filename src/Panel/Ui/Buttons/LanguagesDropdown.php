@@ -50,8 +50,7 @@ class LanguagesDropdown extends ViewButton
 	}
 
 	/**
-	 * Options are used for the Fiber dropdown at endpoint
-	 * `(site|pages/.*?)/languages`
+	 * Options are used in the Fiber dropdown routes
 	 */
 	public function options(): array
 	{
