@@ -432,7 +432,7 @@ trait PageActions
 				$ignore[] = $file->root();
 
 				// append all content files
-				array_push($ignore, ...$file->storage()->contentFiles(VersionId::published()));
+				array_push($ignore, ...$file->storage()->contentFiles(VersionId::latest()));
 				array_push($ignore, ...$file->storage()->contentFiles(VersionId::changes()));
 			}
 		}

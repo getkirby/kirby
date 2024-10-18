@@ -24,6 +24,7 @@ class ViewButton extends Button
 {
 	public function __construct(
 		public string $component = 'k-view-button',
+		public array|null $badge = null,
 		public string|null $class = null,
 		public string|bool|null $current = null,
 		public string|null $dialog = null,

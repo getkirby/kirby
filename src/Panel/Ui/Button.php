@@ -15,6 +15,7 @@ class Button extends Component
 {
 	public function __construct(
 		public string $component = 'k-button',
+		public array|null $badge = null,
 		public string|null $class = null,
 		public string|bool|null $current = null,
 		public string|null $dialog = null,
@@ -39,6 +40,7 @@ class Button extends Component
 	{
 		return [
 			...parent::props(),
+			'badge'      => $this->badge,
 			'current'    => $this->current,
 			'dialog'     => $this->dialog,
 			'disabled'   => $this->disabled,
