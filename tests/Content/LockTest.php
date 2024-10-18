@@ -100,7 +100,7 @@ class LockTest extends TestCase
 		// the published version won't have a user id
 		$version = new Version(
 			model: $this->app->page('test'),
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$version->create([
