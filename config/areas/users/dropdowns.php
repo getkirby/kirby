@@ -24,9 +24,6 @@ return [
 	],
 	'user.file.languages' => [
 		'pattern' => '(users/.*?)/files/(:any)/languages',
-		'options' => function (string $parent, string $filename) {
-			$file = Find::file($parent, $filename);
-			return (new LanguagesDropdown($file))->options();
-		}
+		'options' => $files['language']
 	]
 ];

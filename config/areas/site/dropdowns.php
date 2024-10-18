@@ -14,10 +14,10 @@ return [
 		}
 	],
 	'page.languages' => [
-		'pattern' => '(pages/.*?)/languages',
+		'pattern' => 'pages/(:any)/languages',
 		'options' => function (string $path) {
-			$model = Find::parent($path);
-			return (new LanguagesDropdown($model))->options();
+			$page = Find::page($path);
+			return (new LanguagesDropdown($page))->options();
 		}
 	],
 	'page.file' => [
@@ -26,10 +26,7 @@ return [
 	],
 	'page.file.languages' => [
 		'pattern' => '(pages/.*?)/files/(:any)/languages',
-		'options' => function (string $parent, string $filename) {
-			$file = Find::file($parent, $filename);
-			return (new LanguagesDropdown($file))->options();
-		}
+		'options' => $files['language']
 	],
 	'site.languages' => [
 		'pattern' => 'site/languages',
@@ -43,10 +40,7 @@ return [
 		'options' => $files['file']
 	],
 	'site.file.languages' => [
-		'pattern' => 'site/files/(:any)/languages',
-		'options' => function (string $filename) {
-			$file = App::instance()->site()->file($filename);
-			return (new LanguagesDropdown($file))->options();
-		}
+		'pattern' => '(site)/files/(:any)/languages',
+		'options' => $files['language']
 	]
 ];
