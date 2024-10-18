@@ -3,57 +3,79 @@
 namespace Kirby\Image\Darkroom;
 
 use Exception;
-use Kirby\Filesystem\F;
+use Imagick;
 use Kirby\Image\Darkroom;
 use Kirby\Image\Focus;
 
 /**
- * ImageMagick
- *
- * @package   Kirby Image
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
- * @copyright Bastian Allgeier
- * @license   https://opensource.org/licenses/MIT
- */
+* ImageMagick
+*
+* @package   Kirby Image
+* @author    Nico Hoffmann <nico@getkirby.com>
+* @link      https://getkirby.com
+* @copyright Bastian Allgeier
+* @license   https://opensource.org/licenses/MIT
+*/
 class ImageMagick extends Darkroom
 {
+	protected function autoOrient(Imagick $image): void
+	{
+		switch ($image->getImageOrientation()) {
+			case Imagick::ORIENTATION_TOPLEFT:
+				break;
+			case Imagick::ORIENTATION_TOPRIGHT:
+				$image->flopImage();
+				break;
+			case Imagick::ORIENTATION_BOTTOMRIGHT:
+				$image->rotateImage("#000", 180);
+				break;
+			case Imagick::ORIENTATION_BOTTOMLEFT:
+				$image->flopImage();
+				$image->rotateImage("#000", 180);
+				break;
+			case Imagick::ORIENTATION_LEFTTOP:
+				$image->flopImage();
+				$image->rotateImage("#000", -90);
+				break;
+			case Imagick::ORIENTATION_RIGHTTOP:
+				$image->rotateImage("#000", 90);
+				break;
+			case Imagick::ORIENTATION_RIGHTBOTTOM:
+				$image->flopImage();
+				$image->rotateImage("#000", 90);
+				break;
+			case Imagick::ORIENTATION_LEFTBOTTOM:
+				$image->rotateImage("#000", -90);
+				break;
+			default: // Invalid orientation
+				break;
+		}
+
+		$image->setImageOrientation(Imagick::ORIENTATION_TOPLEFT);
+	}
+
 	/**
 	 * Applies the blur settings
 	 */
-	protected function blur(string $file, array $options): string|null
+	protected function blur(Imagick $image, array $options): Imagick
 	{
 		if ($options['blur'] !== false) {
-			return '-blur ' . escapeshellarg('0x' . $options['blur']);
+			return $image->blurImage(0.0, $options['blur']);
 		}
 
-		return null;
+		return $image;
 	}
 
 	/**
 	 * Keep animated gifs
 	 */
-	protected function coalesce(string $file, array $options): string|null
+	protected function coalesce(Imagick $image): Imagick
 	{
-		if (F::extension($file) === 'gif') {
-			return '-coalesce';
+		if ($image->getImageMimeType() === 'image/gif') {
+			return $image->coalesceImages();
 		}
 
-		return null;
-	}
-
-	/**
-	 * Creates the convert command with the right path to the binary file
-	 */
-	protected function convert(string $file, array $options): string
-	{
-		$command = escapeshellarg($options['bin']);
-
-		// default is limiting to single-threading to keep CPU usage sane
-		$command .= ' -limit thread ' . escapeshellarg($options['threads']);
-
-		// append input file
-		return $command . ' ' . escapeshellarg($file);
+		return $image;
 	}
 
 	/**
@@ -62,7 +84,6 @@ class ImageMagick extends Darkroom
 	protected function defaults(): array
 	{
 		return parent::defaults() + [
-			'bin'       => 'convert',
 			'interlace' => false,
 			'threads'   => 1,
 		];
@@ -71,39 +92,35 @@ class ImageMagick extends Darkroom
 	/**
 	 * Applies the correct settings for grayscale images
 	 */
-	protected function grayscale(string $file, array $options): string|null
+	protected function grayscale(Imagick $image, array $options): void
 	{
 		if ($options['grayscale'] === true) {
-			return '-colorspace gray';
+			$image->setColorspace(Imagick::COLORSPACE_GRAY);
 		}
-
-		return null;
 	}
 
 	/**
 	 * Applies sharpening if activated in the options.
 	 */
-	protected function sharpen(string $file, array $options): string|null
+	protected function sharpen(Imagick $image, array $options): Imagick
 	{
 		if (is_int($options['sharpen']) === false) {
-			return null;
+			return $image;
 		}
 
 		$amount = max(1, min(100, $options['sharpen'])) / 100;
-		return '-sharpen ' . escapeshellarg('0x' . $amount);
+		return $image->sharepenImage(0.0, $amount);
 	}
 
 	/**
 	 * Applies the correct settings for interlaced JPEGs if
 	 * activated via options
 	 */
-	protected function interlace(string $file, array $options): string|null
+	protected function interlace(Imagick $image, array $options): void
 	{
 		if ($options['interlace'] === true) {
-			return '-interlace line';
+			$image->setInterlaceScheme(Imagick::INTERLACE_LINE);
 		}
-
-		return null;
 	}
 
 	/**
@@ -115,29 +132,28 @@ class ImageMagick extends Darkroom
 	public function process(string $file, array $options = []): array
 	{
 		$options = $this->preprocess($file, $options);
-		$command = [];
+		$image   = new Imagick($file);
 
-		$command[] = $this->convert($file, $options);
-		$command[] = $this->strip($file, $options);
-		$command[] = $this->interlace($file, $options);
-		$command[] = $this->coalesce($file, $options);
-		$command[] = $this->grayscale($file, $options);
-		$command[] = '-auto-orient';
-		$command[] = $this->resize($file, $options);
-		$command[] = $this->quality($file, $options);
-		$command[] = $this->blur($file, $options);
-		$command[] = $this->sharpen($file, $options);
-		$command[] = $this->save($file, $options);
+		$profiles = $image->getImageProfiles('icc', true);
 
-		// remove all null values and join the parts
-		$command = implode(' ', array_filter($command));
+		$this->threads($image, $options);
+		$image->stripImage();
+		$this->interlace($image, $options);
 
-		// try to execute the command
-		exec($command, $output, $return);
+		$image = $this->coalesce($image);
+		$this->grayscale($image, $options);
+		$this->autoOrient($image);
+		$this->resize($image, $options);
+		$this->quality($image, $options);
+		$image = $this->blur($image, $options);
+		$image = $this->sharpen($image, $options);
 
-		// log broken commands
-		if ($return !== 0) {
-			throw new Exception(message: 'The imagemagick convert command could not be executed: ' . $command);
+		if ($profiles !== []) {
+			$image->profileImage('icc', $profiles['icc']);
+		}
+
+		if ($this->save($image, $file, $options) === false) {
+			throw new Exception(message: 'The imagemagick result could not be generated');
 		}
 
 		return $options;
@@ -146,20 +162,23 @@ class ImageMagick extends Darkroom
 	/**
 	 * Applies the correct JPEG compression quality settings
 	 */
-	protected function quality(string $file, array $options): string
+	protected function quality(Imagick $image, array $options): void
 	{
-		return '-quality ' . escapeshellarg($options['quality']);
+		$image->setImageCompressionQuality($options['quality']);
 	}
 
 	/**
 	 * Creates the correct options to crop or resize the image
 	 * and translates the crop positions for imagemagick
 	 */
-	protected function resize(string $file, array $options): string
+	protected function resize(Imagick $image, array $options): void
 	{
 		// simple resize
 		if ($options['crop'] === false) {
-			return '-thumbnail ' . escapeshellarg(sprintf('%sx%s!', $options['width'], $options['height']));
+			$image->thumbnailImage(
+				$options['width'],
+				$options['height']
+			);
 		}
 
 		// crop based on focus point
@@ -171,12 +190,14 @@ class ImageMagick extends Darkroom
 				$options['width'],
 				$options['height']
 			)) {
-				return sprintf(
-					'-crop %sx%s+%s+%s -resize %sx%s^',
-					$focus['width'],
-					$focus['height'],
+				$image->cropImage(
+					$options['width'],
+					$options['height'],
 					$focus['x1'],
-					$focus['y1'],
+					$focus['y1']
+				);
+
+				$image->thumbnailImage(
 					$options['width'],
 					$options['height']
 				);
@@ -185,49 +206,42 @@ class ImageMagick extends Darkroom
 
 		// translate the gravity option into something imagemagick understands
 		$gravity = match ($options['crop'] ?? null) {
-			'top left'     => 'NorthWest',
-			'top'          => 'North',
-			'top right'    => 'NorthEast',
-			'left'         => 'West',
-			'right'        => 'East',
-			'bottom left'  => 'SouthWest',
-			'bottom'       => 'South',
-			'bottom right' => 'SouthEast',
-			default        => 'Center'
+			'top left'     => Imagick::GRAVITY_NORTHWEST,
+			'top'          => Imagick::GRAVITY_NORTH,
+			'top right'    => Imagick::GRAVITY_NORTHEAST,
+			'left'         => Imagick::GRAVITY_WEST,
+			'right'        => Imagick::GRAVITY_EAST,
+			'bottom left'  => Imagick::GRAVITY_SOUTHWEST,
+			'bottom'       => Imagick::GRAVITY_SOUTH,
+			'bottom right' => Imagick::GRAVITY_SOUTHEAST,
+			default        => Imagick::GRAVITY_CENTER
 		};
 
-		$command  = '-thumbnail ' . escapeshellarg(sprintf('%sx%s^', $options['width'], $options['height']));
-		$command .= ' -gravity ' . escapeshellarg($gravity);
-		$command .= ' -crop ' . escapeshellarg(sprintf('%sx%s+0+0', $options['width'], $options['height']));
-
-		return $command;
+		$image->thumbnailImage($options['width'], $options['height']);
+		$image->setGravity($gravity);
+		$image->cropImage($options['width'], $options['height'], 0, 0);
 	}
 
 	/**
 	 * Creates the option for the output file
 	 */
-	protected function save(string $file, array $options): string
+	protected function save(Imagick $image, string $file, array $options): bool
 	{
 		if ($options['format'] !== null) {
 			$file = pathinfo($file, PATHINFO_DIRNAME) . '/' . pathinfo($file, PATHINFO_FILENAME) . '.' . $options['format'];
 		}
 
-		return escapeshellarg($file);
+		return $image->writeImage($file);
 	}
 
 	/**
-	 * Removes all metadata from the image
+	 * Sets thread limit
 	 */
-	protected function strip(string $file, array $options): string
+	protected function threads(Imagick $image, array $options): void
 	{
-		if (F::extension($file) === 'png') {
-			// ImageMagick does not support keeping ICC profiles while
-			// stripping other privacy- and security-related information,
-			// such as GPS data; so discard all color profiles for PNG files
-			// (tested with ImageMagick 7.0.11-14 Q16 x86_64 2021-05-31)
-			return '-strip';
-		}
-
-		return '';
+		$image->setResourceLimit(
+			Imagick::RESOURCETYPE_THREAD,
+			$options['threads']
+		);
 	}
 }
