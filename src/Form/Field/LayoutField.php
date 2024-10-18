@@ -43,7 +43,8 @@ class LayoutField extends BlocksField
 			}
 		}
 
-		$this->value = $layouts;
+		$this->value  = $layouts;
+		$this->errors = null;
 	}
 
 	public function attrsForm(array $input = []): Form

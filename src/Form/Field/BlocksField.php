@@ -108,7 +108,8 @@ class BlocksField extends FieldClass
 	{
 		$value  = BlocksCollection::parse($value);
 		$blocks = BlocksCollection::factory($value)->toArray();
-		$this->value = $this->blocksToValues($blocks);
+		$this->value  = $this->blocksToValues($blocks);
+		$this->errors = null;
 	}
 
 	public function form(array $fields, array $input = []): Form
