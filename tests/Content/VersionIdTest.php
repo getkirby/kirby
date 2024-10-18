@@ -81,7 +81,7 @@ class VersionIdTest extends TestCase
 	 * @covers ::latest
 	 * @covers ::value
 	 */
-	public function testPublished()
+	public function testLatest()
 	{
 		$version = VersionId::latest();
 

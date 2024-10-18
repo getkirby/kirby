@@ -549,7 +549,7 @@ class VersionTest extends TestCase
 	/**
 	 * @covers ::exists
 	 */
-	public function testExistsPublishedMultiLanguage(): void
+	public function testExistsLatestMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -608,7 +608,7 @@ class VersionTest extends TestCase
 	/**
 	 * @covers ::exists
 	 */
-	public function testExistsPublishedSingleLanguage(): void
+	public function testExistsLatestSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -771,9 +771,9 @@ class VersionTest extends TestCase
 	{
 		$this->setUpMultiLanguage();
 
-		$versionPublished = new Version(
+		$versionLatest = new Version(
 			model: $this->model,
-			id: $versionIdPublished = VersionId::latest()
+			id: $versionIdLatest = VersionId::latest()
 		);
 
 		$versionChanges = new Version(
@@ -781,34 +781,34 @@ class VersionTest extends TestCase
 			id: $versionIdChanges = VersionId::changes()
 		);
 
-		$this->assertContentFileDoesNotExist('en', $versionIdPublished);
+		$this->assertContentFileDoesNotExist('en', $versionIdLatest);
 		$this->assertContentFileDoesNotExist('en', $versionIdChanges);
 
-		$fileENPublished = $this->contentFile('en', $versionIdPublished);
+		$fileENLatest = $this->contentFile('en', $versionIdLatest);
 		$fileENChanges   = $this->contentFile('en', $versionIdChanges);
 
-		Data::write($fileENPublished, $content = [
+		Data::write($fileENLatest, $content = [
 			'title' => 'Test'
 		]);
 
-		$this->assertContentFileExists('en', $versionIdPublished);
+		$this->assertContentFileExists('en', $versionIdLatest);
 		$this->assertContentFileDoesNotExist('en', $versionIdChanges);
 
 		// move with string arguments
-		$versionPublished->move('en', $versionIdChanges);
+		$versionLatest->move('en', $versionIdChanges);
 
-		$this->assertContentFileDoesNotExist('en', $versionIdPublished);
+		$this->assertContentFileDoesNotExist('en', $versionIdLatest);
 		$this->assertContentFileExists('en', $versionIdChanges);
 
 		$this->assertSame($content, Data::read($fileENChanges));
 
 		// move the version back
-		$versionChanges->move('en', $versionIdPublished);
+		$versionChanges->move('en', $versionIdLatest);
 
 		$this->assertContentFileDoesNotExist('en', $versionIdChanges);
-		$this->assertContentFileExists('en', $versionIdPublished);
+		$this->assertContentFileExists('en', $versionIdLatest);
 
-		$this->assertSame($content, Data::read($fileENPublished));
+		$this->assertSame($content, Data::read($fileENLatest));
 	}
 
 	/**
@@ -823,28 +823,28 @@ class VersionTest extends TestCase
 			id: VersionId::changes()
 		);
 
-		Data::write($filePublished = $this->contentFile(null, VersionId::latest()), [
-			'title' => 'Title latest'
+		Data::write($fileLatest = $this->contentFile(null, VersionId::latest()), [
+			'title' => 'Title Latest'
 		]);
 
 		Data::write($fileChanges = $this->contentFile(null, VersionId::changes()), [
 			'title' => 'Title changes'
 		]);
 
-		$this->assertFileExists($filePublished);
+		$this->assertFileExists($fileLatest);
 		$this->assertFileExists($fileChanges);
 
 		$version->publish();
 
 		$this->assertFileDoesNotExist($fileChanges);
 
-		$this->assertSame('Title changes', Data::read($filePublished)['title']);
+		$this->assertSame('Title changes', Data::read($fileLatest)['title']);
 	}
 
 	/**
 	 * @covers ::publish
 	 */
-	public function testPublishAlreadyPublishedVersion()
+	public function testPublishAlreadyLatestVersion()
 	{
 		$this->setUpSingleLanguage();
 
@@ -905,7 +905,7 @@ class VersionTest extends TestCase
 	/**
 	 * @covers ::read
 	 */
-	public function testReadPublishedWithoutContentFile(): void
+	public function testReadLatestWithoutContentFile(): void
 	{
 		$this->setUpSingleLanguage();
 

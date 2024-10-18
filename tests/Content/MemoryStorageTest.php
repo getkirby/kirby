@@ -106,7 +106,7 @@ class MemoryStorageTest extends TestCase
 	 * @covers ::read
 	 * @covers ::write
 	 */
-	public function testCreateAndReadPublishedMultiLang()
+	public function testCreateAndReadLatestMultiLang()
 	{
 		$this->setUpMultiLanguage();
 
@@ -121,7 +121,7 @@ class MemoryStorageTest extends TestCase
 	 * @covers ::read
 	 * @covers ::write
 	 */
-	public function testCreateAndReadPublishedSingleLang()
+	public function testCreateAndReadLatestSingleLang()
 	{
 		$this->setUpSingleLanguage();
 
@@ -179,7 +179,7 @@ class MemoryStorageTest extends TestCase
 	/**
 	 * @covers ::delete
 	 */
-	public function testDeletePublishedMultiLang()
+	public function testDeleteLatestMultiLang()
 	{
 		$this->setUpMultiLanguage();
 
@@ -192,7 +192,7 @@ class MemoryStorageTest extends TestCase
 	/**
 	 * @covers ::delete
 	 */
-	public function testDeletePublishedSingleLang()
+	public function testDeleteLatestSingleLang()
 	{
 		$this->setUpSingleLanguage();
 

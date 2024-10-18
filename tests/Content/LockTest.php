@@ -97,7 +97,7 @@ class LockTest extends TestCase
 		// create the version with the admin user
 		$this->app->impersonate('admin');
 
-		// the published version won't have a user id
+		// the latest version won't have a user id
 		$version = new Version(
 			model: $this->app->page('test'),
 			id: VersionId::latest()
