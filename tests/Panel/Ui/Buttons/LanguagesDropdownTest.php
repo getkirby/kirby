@@ -41,7 +41,6 @@ class LanguagesDropdownTest extends AreaTestCase
 
 	/**
 	 * @covers ::options
-	 * 
 	 */
 	public function testOptionsMultiLang()
 	{

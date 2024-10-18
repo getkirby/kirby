@@ -52,4 +52,23 @@ class AccountDropdownsTest extends AreaTestCase
 		$this->assertSame('/account/delete', $delete['dialog']);
 		$this->assertSame('Delete your account', $delete['text']);
 	}
+
+	public function testAccountLanguageDropdown()
+	{
+		$this->app([
+			'languages' => [
+				'en' => [
+					'code' => 'en',
+					'name' => 'English',
+				],
+				'de' => [
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		$this->login();
+		$this->assertLanguageDropdown('account/languages');
+	}
 }
