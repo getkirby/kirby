@@ -7,7 +7,7 @@ use Stringable;
 
 /**
  * The Version ID identifies a version of content.
- * This can be the currently published version or changes
+ * This can be the currently published/latest version or changes
  * to the content. In the future, we also plan to use this
  * for older revisions of the content.
  *
@@ -25,7 +25,7 @@ class VersionId implements Stringable
 	/**
 	 * Latest stable version of the content
 	 */
-	public const PUBLISHED = 'published';
+	public const LATEST = 'latest';
 
 	/**
 	 * Latest changes to the content (optional)
@@ -44,7 +44,7 @@ class VersionId implements Stringable
 	public function __construct(
 		public string $value
 	) {
-		if (in_array($value, [static::CHANGES, static::PUBLISHED], true) === false) {
+		if (in_array($value, [static::CHANGES, static::LATEST], true) === false) {
 			throw new InvalidArgumentException(message: 'Invalid Version ID');
 		}
 	}
@@ -63,7 +63,7 @@ class VersionId implements Stringable
 	public static function all(): array
 	{
 		return [
-			static::published(),
+			static::latest(),
 			static::changes(),
 		];
 	}
@@ -99,9 +99,9 @@ class VersionId implements Stringable
 	/**
 	 * Creates a VersionId instance for the latest stable version of the content
 	 */
-	public static function published(): static
+	public static function latest(): static
 	{
-		return new static(static::PUBLISHED);
+		return new static(static::LATEST);
 	}
 
 	/**

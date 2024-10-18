@@ -110,7 +110,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 	{
 		$this->setUpMultiLanguage();
 
-		$versionId = VersionId::published();
+		$versionId = VersionId::latest();
 		$language  = $this->app->language('en');
 
 		$this->assertCreateAndRead($versionId, $language);
@@ -125,7 +125,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 	{
 		$this->setUpSingleLanguage();
 
-		$versionId = VersionId::published();
+		$versionId = VersionId::latest();
 		$language  = Language::single();
 
 		$this->assertCreateAndRead($versionId, $language);
@@ -139,7 +139,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 	{
 		$this->setUpSingleLanguage();
 
-		$versionId = VersionId::published();
+		$versionId = VersionId::latest();
 		$language  = Language::single();
 
 		$this->assertFalse($this->storage->exists($versionId, $language));
@@ -183,7 +183,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 	{
 		$this->setUpMultiLanguage();
 
-		$versionId = VersionId::published();
+		$versionId = VersionId::latest();
 		$language  = $this->app->language('en');
 
 		$this->assertCreateAndDelete($versionId, $language);
@@ -196,7 +196,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 	{
 		$this->setUpSingleLanguage();
 
-		$versionId = VersionId::published();
+		$versionId = VersionId::latest();
 		$language  = Language::single();
 
 		$this->assertCreateAndDelete($versionId, $language);
@@ -209,7 +209,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 	{
 		$this->setUpMultiLanguage();
 
-		$versionId = VersionId::published();
+		$versionId = VersionId::latest();
 
 		$this->assertFalse($this->storage->exists($versionId, $this->app->language('en')));
 		$this->assertFalse($this->storage->exists($versionId, $this->app->language('de')));
@@ -228,7 +228,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 	{
 		$this->setUpSingleLanguage();
 
-		$versionId = VersionId::published();
+		$versionId = VersionId::latest();
 		$language  = Language::single();
 
 		$this->assertFalse($this->storage->exists($versionId, $language));
@@ -267,7 +267,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 		$this->setUpMultiLanguage();
 
 		$this->assertNull($this->storage->modified(VersionId::changes(), $this->app->language('en')));
-		$this->assertNull($this->storage->modified(VersionId::published(), $this->app->language('en')));
+		$this->assertNull($this->storage->modified(VersionId::latest(), $this->app->language('en')));
 	}
 
 	/**
@@ -278,7 +278,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 		$this->setUpSingleLanguage();
 
 		$this->assertNull($this->storage->modified(VersionId::changes(), Language::single()));
-		$this->assertNull($this->storage->modified(VersionId::published(), Language::single()));
+		$this->assertNull($this->storage->modified(VersionId::latest(), Language::single()));
 	}
 
 	/**
@@ -294,7 +294,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 		$this->storage->create($changes, $language, []);
 
 		$this->assertIsInt($this->storage->modified($changes, $language));
-		$this->assertNull($this->storage->modified(VersionId::published(), $language));
+		$this->assertNull($this->storage->modified(VersionId::latest(), $language));
 	}
 
 	/**
@@ -310,7 +310,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 		$this->storage->create($changes, $language, []);
 
 		$this->assertIsInt($this->storage->modified($changes, $language));
-		$this->assertNull($this->storage->modified(VersionId::published(), $language));
+		$this->assertNull($this->storage->modified(VersionId::latest(), $language));
 	}
 
 	/**
