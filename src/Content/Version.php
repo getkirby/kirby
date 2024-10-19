@@ -146,7 +146,7 @@ class Version
 		$a = $this->content($language)->toArray();
 		$b = $version->content($language)->toArray();
 
-		return array_diff($b, $a);
+		return array_diff_assoc($b, $a);
 	}
 
 	/**
