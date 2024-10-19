@@ -44,6 +44,8 @@ class ChangesTest extends TestCase
 
 	public function testPublish()
 	{
+		$this->app->impersonate('kirby');
+
 		Data::write($this->page->root() . '/article.txt', []);
 		Data::write($file = $this->page->root() . '/_changes/article.txt', []);
 

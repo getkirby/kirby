@@ -817,6 +817,7 @@ class VersionTest extends TestCase
 	public function testPublish()
 	{
 		$this->setUpSingleLanguage();
+		$this->app->impersonate('kirby');
 
 		$version = new Version(
 			model: $this->model,
