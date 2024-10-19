@@ -95,19 +95,6 @@ abstract class FieldClass
 	}
 
 	/**
-	 * @deprecated 3.5.0
-	 * @todo remove when the general field class setup has been refactored
-	 *
-	 * Returns the field data
-	 * in a format to be stored
-	 * in Kirby's content fields
-	 */
-	public function data(bool $default = false): mixed
-	{
-		return $this->store($this->value($default));
-	}
-
-	/**
 	 * Returns optional dialog routes for the field
 	 */
 	public function dialogs(): array
@@ -201,7 +188,6 @@ abstract class FieldClass
 			$this->label ?? Str::ucfirst($this->name())
 		);
 	}
-
 
 	/**
 	 * Returns the field name
@@ -362,15 +348,6 @@ abstract class FieldClass
 		}
 
 		return null;
-	}
-
-	/**
-	 * Converts the given value to a value
-	 * that can be stored in the text file
-	 */
-	public function store(mixed $value): mixed
-	{
-		return $value;
 	}
 
 	/**

@@ -15,12 +15,16 @@ use Throwable;
 trait Value
 {
 	/**
-	 * @deprecated 3.5.0
+	 * @deprecated 3.5.0 Use `::toStoredValue()` instead
 	 * @todo remove when the general field class setup has been refactored
-	 *
-	 * Returns the field data
-	 * in a format to be stored
-	 * in Kirby's content fields
+	 */
+	public function data(bool $default = false): mixed
+	{
+		return $this->toStoredValue($default);
+	}
+
+	/**
+	 * Returns the default value of the field
 	 */
 	public function default(): mixed
 	{
@@ -67,6 +71,32 @@ trait Value
 		}
 
 		return true;
+	}
+
+	/**
+	 * Converts the given value to a value
+	 * that can be stored in the text file
+	 */
+	protected function store(mixed $value): mixed
+	{
+		return $value;
+	}
+
+	/**
+	 * Returns the value of the field in a format to be used in forms
+	 * @alias for `::value()`
+	 */
+	public function toFormValue(bool $default = false): mixed
+	{
+		return $this->value($default);
+	}
+
+	/**
+	 * Returns the value of the field in a format to be stored by our storage classes
+	 */
+	public function toStoredValue(bool $default = false): mixed
+	{
+		return $this->store($this->value($default));
 	}
 
 	/**
