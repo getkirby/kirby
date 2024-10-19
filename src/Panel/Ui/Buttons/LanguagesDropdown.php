@@ -4,7 +4,9 @@ namespace Kirby\Panel\Ui\Buttons;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
+use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Content\VersionId;
 use Kirby\Toolkit\Str;
 
 /**
@@ -27,7 +29,9 @@ class LanguagesDropdown extends ViewButton
 	) {
 		$this->kirby = $model->kirby();
 
+
 		parent::__construct(
+			badge: $this->badge(),
 			component: 'k-languages-dropdown',
 			class: 'k-languages-dropdown',
 			icon: 'translate',
@@ -37,6 +41,33 @@ class LanguagesDropdown extends ViewButton
 			responsive: 'text',
 			text: Str::upper($this->kirby->language()?->code())
 		);
+	}
+
+	public function badge(): array|null
+	{
+		if ($changes = $this->changes()) {
+			return [
+				'theme' => 'notice',
+				'text'  => $changes
+			];
+		}
+
+		return null;
+	}
+
+	public function changes(): int
+	{
+		$count = 0;
+
+		foreach (Languages::ensure() as $language) {
+			if ($this->kirby->language()?->code() !== $language->code()) {
+				if ($this->model->version(VersionId::changes())->exists($language) === true) {
+					$count++;
+				}
+			}
+		}
+
+		return $count;
 	}
 
 	public function option(Language $language): array
