@@ -80,30 +80,6 @@ class Field extends Component
 	}
 
 	/**
-	 * @deprecated 3.5.0
-	 * @todo remove when the general field class setup has been refactored
-	 *
-	 * Returns the field data
-	 * in a format to be stored
-	 * in Kirby's content fields
-	 */
-	public function data(bool $default = false): mixed
-	{
-		$save  = $this->options['save'] ?? true;
-		$value = $this->value($default);
-
-		if ($save === false) {
-			return null;
-		}
-
-		if ($save instanceof Closure) {
-			return $save->call($this, $value);
-		}
-
-		return $value;
-	}
-
-	/**
 	 * Default props and computed of the field
 	 */
 	public static function defaults(): array
@@ -387,6 +363,25 @@ class Field extends Component
 	protected function siblingsCollection(): Fields
 	{
 		return $this->siblings;
+	}
+
+	/**
+	 * Converts the given value to a value
+	 * that can be stored in the text file
+	 */
+	protected function store(mixed $value): mixed
+	{
+		$store = $this->options['save'] ?? true;
+
+		if ($store === false) {
+			return null;
+		}
+
+		if ($store instanceof Closure) {
+			return $store->call($this, $value);
+		}
+
+		return $value;
 	}
 
 	/**
