@@ -114,12 +114,13 @@ class BlocksFieldTest extends TestCase
 
 		$expected = [
 			[
-				'id'	  => 'uuid',
-				'type'    => 'heading',
 				'content' => [
 					'level' => '',
 					'text'  => 'A nice block/heäding'
-				]
+				],
+				'id'       => 'uuid',
+				'isHidden' => false,
+				'type'     => 'heading',
 			],
 		];
 
@@ -131,7 +132,7 @@ class BlocksFieldTest extends TestCase
 		$pretty = json_encode($expected, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
 		$this->assertTrue($field->pretty());
-		$this->assertSame($pretty, $field->store($value));
+		$this->assertSame($pretty, $field->toStoredValue());
 	}
 
 	public function testProps()
@@ -279,7 +280,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame('text', $response['type']);
 	}
 
-	public function testStore()
+	public function testToStoredValue()
 	{
 		$value = [
 			[
@@ -293,12 +294,13 @@ class BlocksFieldTest extends TestCase
 
 		$expected = [
 			[
-				'id'	  => 'uuid',
-				'type'    => 'heading',
 				'content' => [
 					'level' => '',
 					'text'  => 'A nice block/heäding'
-				]
+				],
+				'id'       => 'uuid',
+				'isHidden' => false,
+				'type'     => 'heading',
 			],
 		];
 
@@ -308,12 +310,15 @@ class BlocksFieldTest extends TestCase
 
 		$this->assertSame(
 			json_encode($expected, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
-			$field->store($value)
+			$field->toStoredValue()
 		);
 
 		// empty tests
-		$this->assertSame('', $field->store(null));
-		$this->assertSame('', $field->store([]));
+		$field->fill(null);
+		$this->assertSame('', $field->toStoredValue());
+
+		$field->fill([]);
+		$this->assertSame('', $field->toStoredValue());
 	}
 
 	public function testTranslateField()
