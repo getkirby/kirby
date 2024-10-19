@@ -3,13 +3,11 @@
 namespace Kirby\Form;
 
 use Closure;
-use Exception;
-use Kirby\Cms\App;
+use Kirby\Cms\HasSiblings;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Component;
 use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\V;
 
 /**
  * Form Field object that takes a Vue component style
@@ -25,14 +23,18 @@ use Kirby\Toolkit\V;
 class Field extends Component
 {
 	/**
-	 * An array of all found errors
+	 * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
 	 */
-	protected array|null $errors = null;
+	use HasSiblings;
+	use Mixin\Api;
+	use Mixin\Model;
+	use Mixin\Validation;
+	use Mixin\When;
 
 	/**
 	 * Parent collection with all fields of the current form
 	 */
-	protected Fields|null $formFields;
+	protected Fields $siblings;
 
 	/**
 	 * Registry for all component mixins
@@ -50,7 +52,7 @@ class Field extends Component
 	public function __construct(
 		string $type,
 		array $attrs = [],
-		Fields|null $formFields = null
+		Fields|null $siblings = null
 	) {
 		if (isset(static::$types[$type]) === false) {
 			throw new InvalidArgumentException(
@@ -62,34 +64,16 @@ class Field extends Component
 			);
 		}
 
-		if (isset($attrs['model']) === false) {
-			throw new InvalidArgumentException(
-				message: 'Field requires a model'
-			);
-		}
-
-		$this->formFields = $formFields;
+		$this->setModel($attrs['model'] ?? null);
 
 		// use the type as fallback for the name
 		$attrs['name'] ??= $type;
 		$attrs['type']   = $type;
 
 		parent::__construct($type, $attrs);
-	}
 
-	/**
-	 * Returns field api call
-	 */
-	public function api(): mixed
-	{
-		if (
-			isset($this->options['api']) === true &&
-			$this->options['api'] instanceof Closure
-		) {
-			return $this->options['api']->call($this);
-		}
-
-		return null;
+		// set the siblings collection
+		$this->siblings = $siblings ?? new Fields([$this]);
 	}
 
 	/**
@@ -290,16 +274,16 @@ class Field extends Component
 	public static function factory(
 		string $type,
 		array $attrs = [],
-		Fields|null $formFields = null
+		Fields|null $siblings = null
 	): static|FieldClass {
 		$field = static::$types[$type] ?? null;
 
 		if (is_string($field) && class_exists($field) === true) {
-			$attrs['siblings'] = $formFields;
+			$attrs['siblings'] = $siblings;
 			return new $field($attrs);
 		}
 
-		return new static($type, $attrs, $formFields);
+		return new static($type, $attrs, $siblings);
 	}
 
 	/**
@@ -323,23 +307,11 @@ class Field extends Component
 	}
 
 	/**
-	 * Parent collection with all fields of the current form
+	 * @deprecated 5.0.0 Use `::siblings() instead
 	 */
-	public function formFields(): Fields|null
+	public function formFields(): Fields
 	{
-		return $this->formFields;
-	}
-
-	/**
-	 * Validates when run for the first time and returns any errors
-	 */
-	public function errors(): array
-	{
-		if ($this->errors === null) {
-			$this->validate();
-		}
-
-		return $this->errors;
+		return $this->siblings;
 	}
 
 	/**
@@ -352,6 +324,7 @@ class Field extends Component
 
 	/**
 	 * Checks if the field is empty
+	 * @deprecated 5.0.0 Passing arguments is deprecated. Use `::isEmptyValue()` instead to check for
 	 */
 	public function isEmpty(mixed ...$args): bool
 	{
@@ -360,6 +333,16 @@ class Field extends Component
 			default => $args[0]
 		};
 
+		return $this->isEmptyValue($value);
+	}
+
+	/**
+	 * Checks if the given value is considered empty
+	 *
+	 * @since 5.0.0
+	 */
+	public function isEmptyValue(mixed $value = null): bool
+	{
 		if ($empty = $this->options['isEmpty'] ?? null) {
 			return $empty->call($this, $value);
 		}
@@ -376,14 +359,6 @@ class Field extends Component
 	}
 
 	/**
-	 * Checks if the field is invalid
-	 */
-	public function isInvalid(): bool
-	{
-		return empty($this->errors()) === false;
-	}
-
-	/**
 	 * Checks if the field is required
 	 */
 	public function isRequired(): bool
@@ -392,77 +367,51 @@ class Field extends Component
 	}
 
 	/**
-	 * Checks if the field is valid
+	 * Checks if the field is saveable
 	 */
-	public function isValid(): bool
+	public function isSaveable(): bool
 	{
-		return empty($this->errors()) === true;
+		return ($this->options['save'] ?? true) !== false;
 	}
 
 	/**
-	 * Returns the Kirby instance
+	 * Returns field api routes
 	 */
-	public function kirby(): App
+	public function routes(): array
 	{
-		return $this->model()->kirby();
-	}
-
-	/**
-	 * Returns the parent model
-	 */
-	public function model(): mixed
-	{
-		return $this->model;
-	}
-
-	/**
-	 * Checks if the field needs a value before being saved;
-	 * this is the case if all of the following requirements are met:
-	 * - The field is saveable
-	 * - The field is required
-	 * - The field is currently empty
-	 * - The field is not currently inactive because of a `when` rule
-	 */
-	protected function needsValue(): bool
-	{
-		// check simple conditions first
 		if (
-			$this->save() === false ||
-			$this->isRequired() === false ||
-			$this->isEmpty() === false
+			isset($this->options['api']) === true &&
+			$this->options['api'] instanceof Closure
 		) {
-			return false;
+			return $this->options['api']->call($this);
 		}
 
-		// check the data of the relevant fields if there is a `when` option
-		if (
-			empty($this->when) === false &&
-			is_array($this->when) === true &&
-			$formFields = $this->formFields()
-		) {
-			foreach ($this->when as $field => $value) {
-				$field      = $formFields->get($field);
-				$inputValue = $field?->value() ?? '';
-
-				// if the input data doesn't match the requested `when` value,
-				// that means that this field is not required and can be saved
-				// (*all* `when` conditions must be met for this field to be required)
-				if ($inputValue !== $value) {
-					return false;
-				}
-			}
-		}
-
-		// either there was no `when` condition or all conditions matched
-		return true;
+		return [];
 	}
 
 	/**
 	 * Checks if the field is saveable
+	 * @deprecated 5.0.0 Use `::isSaveable()` instead
 	 */
 	public function save(): bool
 	{
-		return ($this->options['save'] ?? true) !== false;
+		return $this->isSaveable();
+	}
+
+	/**
+	 * Parent collection with all fields of the current form
+	 */
+	public function siblings(): Fields
+	{
+		return $this->siblings;
+	}
+
+	/**
+	 * Returns all sibling fields for the HasSiblings trait
+	 */
+	protected function siblingsCollection(): Fields
+	{
+		return $this->siblings;
 	}
 
 	/**
@@ -475,7 +424,7 @@ class Field extends Component
 		unset($array['model']);
 
 		$array['hidden']   = $this->isHidden();
-		$array['saveable'] = $this->save();
+		$array['saveable'] = $this->isSaveable();
 
 		ksort($array);
 
@@ -486,49 +435,11 @@ class Field extends Component
 	}
 
 	/**
-	 * Runs the validations defined for the field
+	 * Defines all validation rules
 	 */
-	protected function validate(): void
+	protected function validations(): array
 	{
-		$validations  = $this->options['validations'] ?? [];
-		$this->errors = [];
-
-		// validate required values
-		if ($this->needsValue() === true) {
-			$this->errors['required'] = I18n::translate('error.validation.required');
-		}
-
-		foreach ($validations as $key => $validation) {
-			if (is_int($key) === true) {
-				// predefined validation
-				try {
-					Validations::$validation($this, $this->value());
-				} catch (Exception $e) {
-					$this->errors[$validation] = $e->getMessage();
-				}
-				continue;
-			}
-
-			if ($validation instanceof Closure) {
-				try {
-					$validation->call($this, $this->value());
-				} catch (Exception $e) {
-					$this->errors[$key] = $e->getMessage();
-				}
-			}
-		}
-
-		if (
-			empty($this->validate) === false &&
-			($this->isEmpty() === false || $this->isRequired() === true)
-		) {
-			$rules = A::wrap($this->validate);
-
-			$this->errors = [
-				...$this->errors,
-				...V::errors($this->value(), $rules)
-			];
-		}
+		return $this->options['validations'] ?? [];
 	}
 
 	/**
@@ -537,6 +448,6 @@ class Field extends Component
 	 */
 	public function value(): mixed
 	{
-		return $this->save() ? $this->value : null;
+		return $this->isSaveable() ? $this->value : null;
 	}
 }
