@@ -162,4 +162,20 @@ class Fields extends Collection
 	{
 		return A::map($this->data, $map ?? fn ($field) => $field->toArray());
 	}
+
+	/**
+	 * Returns an array with the form value of each field
+	 */
+	public function toFormValues(bool $defaults = false): array
+	{
+		return $this->toArray(fn ($field) => $field->toFormValue($defaults));
+	}
+
+	/**
+	 * Returns an array with the stored value of each field
+	 */
+	public function toStoredValues(bool $defaults = false): array
+	{
+		return $this->toArray(fn ($field) => $field->toStoredValue($defaults));
+	}
 }
