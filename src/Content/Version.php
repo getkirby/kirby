@@ -331,9 +331,10 @@ class Version
 		$this->ensure($language);
 
 		// update the latest version
-		$this->model->version(VersionId::latest())->save(
-			fields: $this->read($language),
-			language: $language
+		$this->model->update(
+			input: $this->read($language),
+			languageCode: $language->code(),
+			validate: true
 		);
 
 		// delete the changes
