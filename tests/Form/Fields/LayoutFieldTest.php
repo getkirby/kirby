@@ -128,7 +128,7 @@ class LayoutFieldTest extends TestCase
 		$this->assertIsArray($routes);
 		$this->assertCount(7, $routes);
 	}
-	
+
 	public function testToStoredValue()
 	{
 		$value = [
