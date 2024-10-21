@@ -25,6 +25,7 @@ abstract class FieldClass
 	use HasSiblings;
 	use Mixin\Api;
 	use Mixin\Model;
+	use Mixin\Translatable;
 	use Mixin\Validation;
 	use Mixin\Value;
 	use Mixin\When;
@@ -41,7 +42,6 @@ abstract class FieldClass
 	protected string|null $placeholder;
 	protected bool $required;
 	protected Fields $siblings;
-	protected bool $translate;
 	protected mixed $value = null;
 	protected string|null $width;
 
@@ -317,11 +317,6 @@ abstract class FieldClass
 		$this->siblings = $siblings ?? new Fields([$this]);
 	}
 
-	protected function setTranslate(bool $translate = true): void
-	{
-		$this->translate = $translate;
-	}
-
 	/**
 	 * Setter for the field width
 	 */
@@ -348,14 +343,6 @@ abstract class FieldClass
 		}
 
 		return null;
-	}
-
-	/**
-	 * Should the field be translatable?
-	 */
-	public function translate(): bool
-	{
-		return $this->translate;
 	}
 
 	/**

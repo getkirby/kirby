@@ -28,6 +28,7 @@ class Field extends Component
 	use HasSiblings;
 	use Mixin\Api;
 	use Mixin\Model;
+	use Mixin\Translatable;
 	use Mixin\Validation;
 	use Mixin\When;
 	use Mixin\Value {
