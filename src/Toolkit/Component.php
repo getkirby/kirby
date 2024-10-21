@@ -149,6 +149,14 @@ class Component
 	 */
 	protected function applyProp(string $name, mixed $value): void
 	{
+		// unset prop
+		if ($value === null) {
+			unset($this->props[$name]);
+			unset($this->$name);
+			return;
+		}
+
+		// apply a prop via a closure
 		if ($value instanceof Closure) {
 			if (isset($this->attrs[$name]) === true) {
 				try {
@@ -170,6 +178,7 @@ class Component
 			}
 		}
 
+		// simple prop assignment by value
 		$this->$name = $this->props[$name] = $value;
 	}
 
