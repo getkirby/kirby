@@ -281,7 +281,7 @@ class Form
 	public function strings($defaults = false): array
 	{
 		return A::map(
-			$this->toStoredValues($defaults),
+			$this->data($defaults),
 			fn ($value) => match (true) {
 				is_array($value) => Data::encode($value, 'yaml'),
 				default		     => $value
