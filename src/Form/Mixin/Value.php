@@ -79,6 +79,10 @@ trait Value
 	 */
 	protected function store(mixed $value): mixed
 	{
+		if ($this->isSaveable() === false) {
+			return null;
+		}
+
 		return $value;
 	}
 
