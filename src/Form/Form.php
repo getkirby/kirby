@@ -304,6 +304,22 @@ class Form
 	}
 
 	/**
+	 * Returns an array with the form value of each field
+	 */
+	public function toFormValues(bool $defaults = false): array
+	{
+		return $this->fields->toFormValues($defaults);
+	}
+
+	/**
+	 * Returns an array with the stored value of each field
+	 */
+	public function toStoredValues(bool $defaults = false): array
+	{
+		return $this->fields->toStoredValues($defaults);
+	}
+
+	/**
 	 * Returns form values
 	 */
 	public function values(): array
