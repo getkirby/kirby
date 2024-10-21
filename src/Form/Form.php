@@ -122,15 +122,15 @@ class Form
 		$data = $this->values;
 
 		foreach ($this->fields as $field) {
-			if ($field->isSaveable() === false || $field->unset() === true) {
-				if ($includeNulls === true) {
-					$data[$field->name()] = null;
-				} else {
-					unset($data[$field->name()]);
-				}
+			if ($field->unset() === true) {
+				$data[$field->name()] = null;
 			} else {
-				$data[$field->name()] = $field->data($defaults);
+				$data[$field->name()] = $field->toStoredValue($defaults);
 			}
+		}
+
+		if ($includeNulls === false) {
+			$data = array_filter($data, fn ($value) => $value !== null);
 		}
 
 		return $data;
@@ -276,12 +276,12 @@ class Form
 	/**
 	 * Converts the data of fields to strings
 	 *
-	 * @param false $defaults
+	 * @deprecated 5.0.0 Use `::toStoredValues` instead
 	 */
 	public function strings($defaults = false): array
 	{
 		return A::map(
-			$this->data($defaults),
+			$this->toStoredValues($defaults),
 			fn ($value) => match (true) {
 				is_array($value) => Data::encode($value, 'yaml'),
 				default		     => $value
