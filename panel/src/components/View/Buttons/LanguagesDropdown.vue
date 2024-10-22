@@ -1,5 +1,5 @@
 <template>
-	<k-view-button v-bind="$props" />
+	<k-view-button v-bind="$props" :badge="changesBadge" />
 </template>
 
 <script>
@@ -14,7 +14,23 @@ import { props as ButtonProps } from "@/components/Navigation/Button.vue";
 export default {
 	mixins: [ButtonProps],
 	props: {
+		/**
+		 * If translations other than the currently-viewed one
+		 * have any unsaved changes
+		 */
+		hasChanges: Boolean,
 		options: String
+	},
+	computed: {
+		changesBadge() {
+			if (this.hasChanges || this.$panel.content.hasChanges) {
+				return {
+					theme: "notice"
+				};
+			}
+
+			return null;
+		}
 	}
 };
 </script>
