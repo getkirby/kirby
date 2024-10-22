@@ -45,7 +45,7 @@ export default (panel) => {
 			this.isProcessing = true;
 
 			try {
-				await panel.post(this.api + "/changes/discard");
+				await panel.api.post(this.api + "/changes/discard");
 				panel.view.props.content = panel.view.props.originals;
 				panel.view.reload();
 			} finally {
@@ -95,7 +95,7 @@ export default (panel) => {
 
 			// Send updated values to API
 			try {
-				await panel.post(
+				await panel.api.post(
 					this.api + "/changes/publish",
 					panel.view.props.content
 				);
@@ -123,9 +123,13 @@ export default (panel) => {
 			this.saveAbortController = new AbortController();
 
 			try {
-				await panel.post(this.api + "/changes/save", panel.view.props.content, {
-					signal: this.saveAbortController.signal
-				});
+				await panel.api.post(
+					this.api + "/changes/save",
+					panel.view.props.content,
+					{
+						signal: this.saveAbortController.signal
+					}
+				);
 
 				// update the last modification timestamp
 				panel.view.props.lock.modified = new Date();
