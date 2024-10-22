@@ -15,28 +15,21 @@ export default {
 	mixins: [ButtonProps],
 	props: {
 		/**
-		 * Number of translations with unsaved changes
-		 * other than the currently viewed one
+		 * If translations other than the currently-viewed one
+		 * have any unsaved changes
 		 */
-		changes: Number,
+		hasChanges: Boolean,
 		options: String
 	},
 	computed: {
 		changesBadge() {
-			let changes = this.changes ?? 0;
-
-			if (this.$panel.content.hasChanges) {
-				changes++;
+			if (this.hasChanges || this.$panel.content.hasChanges) {
+				return {
+					theme: "notice"
+				};
 			}
 
-			if (changes === 0) {
-				return;
-			}
-
-			return {
-				theme: "notice",
-				text: changes
-			};
+			return;
 		}
 	}
 };

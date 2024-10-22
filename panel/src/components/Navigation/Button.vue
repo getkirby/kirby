@@ -381,11 +381,13 @@ export default {
 	position: absolute;
 	top: 0;
 	inset-inline-end: 0;
-	transform: translate(50%, -20%);
+	transform: translate(40%, -20%);
+	min-width: 1em;
+	min-height: 1em;
 	font-variant-numeric: tabular-nums;
 	line-height: 1.5;
 	padding: 0 var(--spacing-1);
-	border-radius: 1rem;
+	border-radius: 50%;
 	text-align: center;
 	font-size: 0.6rem;
 	box-shadow: var(--shadow-md);
