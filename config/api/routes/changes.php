@@ -1,8 +1,8 @@
 <?php
 
+use Kirby\Api\Controller\Changes;
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
-use Kirby\Panel\Controller\Changes;
 
 // Files
 $files = [
