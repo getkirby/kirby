@@ -870,7 +870,7 @@ trait AppPlugins
 		array $info = [],
 		string|null $root = null,
 		string|null $version = null,
-		License|string|array|null $license = null,
+		Closure|string|array|null $license = null,
 	): Plugin|null {
 		if ($extends === null) {
 			return static::$plugins[$name] ?? null;
