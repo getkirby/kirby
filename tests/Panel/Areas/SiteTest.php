@@ -58,6 +58,27 @@ class SiteTest extends AreaTestCase
 		$this->assertNull($props['prev']);
 	}
 
+	public function testPageChanges(): void
+	{
+		$this->login();
+
+		$this->app->site()->createChild([
+			'slug'    => 'test',
+			'isDraft' => false,
+			'content' => [
+				'title' => 'Test'
+			]
+		]);
+
+		$view  = $this->view('pages/test/changes');
+		$props = $view['props'];
+
+		$this->assertSame('k-page-changes-view', $view['component']);
+		$this->assertSame('Test', $view['title']);
+		$this->assertSame('/test?_version=changes', $props['src']['changes']);
+		$this->assertSame('/test', $props['src']['latest']);
+	}
+
 	public function testPageFileWithoutModel(): void
 	{
 		$this->login();
