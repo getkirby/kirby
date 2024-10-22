@@ -4,6 +4,7 @@
 			<k-button-group>
 				<k-button
 					:link="link"
+					:responsive="true"
 					:text="$t('back')"
 					icon="angle-left"
 					size="sm"
@@ -12,6 +13,7 @@
 				<k-button
 					:icon="modes[mode].icon"
 					:dropdown="true"
+					:responsive="true"
 					:text="$t('view')"
 					size="sm"
 					variant="filled"
@@ -132,6 +134,7 @@ export default {
 	grid-template-rows: auto 1fr;
 }
 .k-page-changes-header {
+	container-type: inline-size;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
