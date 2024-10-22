@@ -19,7 +19,7 @@ return [
 				'props'     => [
 					...$view['props'],
 					'src' => [
-						'changes' => $page->previewUrl() . '?_version=changes',						
+						'changes' => $page->previewUrl() . '?_version=changes',
 						'latest'  => $page->previewUrl(),
 					]
 				],
