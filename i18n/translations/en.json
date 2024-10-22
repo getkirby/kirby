@@ -748,10 +748,13 @@
 	"users": "Users",
 
 	"version": "Version",
+	"version.changes": "Changed version",
+	"version.compare": "Compare versions",
 	"version.current": "Current version",
 	"version.latest": "Latest version",
 	"versionInformation": "Version information",
 
+	"view": "View",
 	"view.account": "Your account",
 	"view.installation": "Installation",
 	"view.languages": "Languages",
