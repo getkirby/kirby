@@ -9,12 +9,20 @@ use Kirby\Cms\TestCase;
  */
 class LicenseTest extends TestCase
 {
+	protected function plugin(): Plugin
+	{
+		return new Plugin(
+			name: 'test/test'
+		);
+	}
+
 	/**
 	 * @covers ::__toString
 	 */
 	public function test__toString(): void
 	{
 		$license = new License(
+			plugin: $this->plugin(),
 			name: 'Custom license'
 		);
 
@@ -26,7 +34,7 @@ class LicenseTest extends TestCase
 	 */
 	public function testFromArray(): void
 	{
-		$license = License::from([
+		$license = License::from($this->plugin(), [
 			'name'   => 'Custom license',
 			'link'   => 'https://getkirby.com',
 			'status' => 'missing'
@@ -39,9 +47,16 @@ class LicenseTest extends TestCase
 	/**
 	 * @covers ::from
 	 */
-	public function testFromInstance(): void
+	public function testFromClosure(): void
 	{
-		$license = License::from(License::from('Custom license'));
+		$license = License::from($this->plugin(), function ($plugin) {
+			return new License(
+				plugin: $plugin,
+				name: 'Custom license',
+				status: LicenseStatus::from('active')
+			);
+		});
+
 		$this->assertSame('Custom license', $license->name());
 		$this->assertSame('active', $license->status()->value());
 	}
@@ -51,7 +66,7 @@ class LicenseTest extends TestCase
 	 */
 	public function testFromString(): void
 	{
-		$license = License::from('Custom license');
+		$license = License::from($this->plugin(), 'Custom license');
 		$this->assertSame('Custom license', $license->name());
 		$this->assertSame('active', $license->status()->value());
 	}
@@ -61,7 +76,7 @@ class LicenseTest extends TestCase
 	 */
 	public function testFromNull(): void
 	{
-		$license = License::from(null);
+		$license = License::from($this->plugin(), null);
 		$this->assertSame('-', $license->name());
 		$this->assertSame('unknown', $license->status()->value());
 	}
@@ -72,6 +87,7 @@ class LicenseTest extends TestCase
 	public function testLink(): void
 	{
 		$license = new License(
+			plugin: $this->plugin(),
 			name: 'Custom license',
 			link: 'https://getkirby.com'
 		);
@@ -85,6 +101,7 @@ class LicenseTest extends TestCase
 	public function testName(): void
 	{
 		$license = new License(
+			plugin: $this->plugin(),
 			name: 'Custom license'
 		);
 
@@ -97,6 +114,7 @@ class LicenseTest extends TestCase
 	public function testStatus(): void
 	{
 		$license = new License(
+			plugin: $this->plugin(),
 			name: 'Custom license',
 			status: LicenseStatus::from('missing')
 		);
@@ -111,6 +129,7 @@ class LicenseTest extends TestCase
 	public function testToArray(): void
 	{
 		$license = new License(
+			plugin: $this->plugin(),
 			name: 'Custom license',
 		);
 
