@@ -2,6 +2,7 @@
 
 namespace Kirby\Plugin;
 
+use Closure;
 use Composer\InstalledVersions;
 use Exception;
 use Kirby\Cms\App;
@@ -41,7 +42,7 @@ class Plugin
 		protected string $name,
 		protected array $extends = [],
 		protected array $info = [],
-		License|string|array|null $license = null,
+		Closure|string|array|null $license = null,
 		protected string|null $root = null,
 		protected string|null $version = null,
 	) {
@@ -78,7 +79,10 @@ class Plugin
 		$this->info = [...$info, ...$this->info];
 
 		// set the license
-		$this->license = License::from($license ?? $this->info['license'] ?? '-');
+		$this->license = License::from(
+			plugin: $this,
+			license: $license ?? $this->info['license'] ?? '-'
+		);
 	}
 
 	/**
