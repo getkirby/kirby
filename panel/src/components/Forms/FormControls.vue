@@ -4,6 +4,7 @@
 			<k-button
 				v-for="button in buttons"
 				:key="button.text"
+				:responsive="true"
 				v-bind="button"
 				size="sm"
 				variant="filled"
