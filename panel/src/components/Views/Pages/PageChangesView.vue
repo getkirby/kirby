@@ -134,8 +134,11 @@ export default {
 	display: grid;
 	grid-template-columns: 100%;
 }
-.k-page-changes-grid[data-mode="compare"] {
-	grid-template-columns: 50% 50%;
+
+@media screen and (min-width: 50rem) {
+	.k-page-changes-grid[data-mode="compare"] {
+		grid-template-columns: 50% 50%;
+	}
 }
 
 .k-page-changes-grid > section {
