@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Panel\Controller;
+namespace Kirby\Api\Controller;
 
 use Kirby\Cms\Page;
 use Kirby\Data\Data;
@@ -8,7 +8,7 @@ use Kirby\TestCase;
 
 class ChangesTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Changes';
+	public const TMP = KIRBY_TMP_DIR . '/Api.Controller.Changes';
 	public Page $page;
 
 	public function setUp(): void

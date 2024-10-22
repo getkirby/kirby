@@ -6,6 +6,7 @@
 return function ($kirby) {
 	$routes = [
 		...include __DIR__ . '/routes/auth.php',
+		...include __DIR__ . '/routes/changes.php',
 		...include __DIR__ . '/routes/pages.php',
 		...include __DIR__ . '/routes/roles.php',
 		...include __DIR__ . '/routes/site.php',

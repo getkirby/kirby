@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Panel\Controller;
+namespace Kirby\Api\Controller;
 
 use Kirby\Cms\ModelWithContent;
 use Kirby\Content\VersionId;
@@ -10,7 +10,7 @@ use Kirby\Form\Form;
  * The Changes controller takes care of the request logic
  * to save, discard and publish changes.
  *
- * @package   Kirby Panel
+ * @package   Kirby Api
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
