@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Languages;
 use Kirby\Cms\User;
 use Kirby\Toolkit\Str;
 
@@ -36,22 +37,27 @@ class Lock
 	public static function for(
 		Version $version
 	): static {
-		// if the version does not exist, it cannot be locked
-		if ($version->exists() === false) {
+		// Check if any translation has a lock
+		foreach (Languages::ensure() as $language) {
+			// Read the locked user id from the version
+			if ($userId = ($version->read($language)['lock'] ?? null)) {
+				return new static(
+					user: App::instance()->user($userId),
+					modified: $version->modified($language)
+				);
+			}
+		}
+
+		// if the current version does not exist, it cannot be locked
+		if ($version->exists('current') === false) {
 			// create an open lock for the current user
 			return new static(
-				user: App::instance()->user(),
+				user: App::instance()->user()
 			);
 		}
 
-		// Read the locked user id from the version
-		if ($userId = ($version->read('default')['lock'] ?? null)) {
-			$user = App::instance()->user($userId);
-		}
-
 		return new static(
-			user: $user ?? null,
-			modified: $version->modified()
+			modified: $version->modified('current')
 		);
 	}
 
