@@ -12,7 +12,7 @@ return [
 		'pattern' => 'pages/(:any)/changes',
 		'action'  => function (string $path) {
 			$page = Find::page($path);
-			$view = Find::page($path)->panel()->view();
+			$view = $page->panel()->view();
 
 			return [
 				'component' => 'k-page-changes-view',
