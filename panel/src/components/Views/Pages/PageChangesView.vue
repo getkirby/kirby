@@ -101,7 +101,7 @@ export default {
 			};
 		},
 		dropdown() {
-			return [this.modes.latest, this.modes.changes, "-", this.modes.compare];
+			return [this.modes.compare, "-", this.modes.latest, this.modes.changes];
 		}
 	},
 	methods: {
