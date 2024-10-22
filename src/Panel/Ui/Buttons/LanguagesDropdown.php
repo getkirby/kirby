@@ -29,9 +29,7 @@ class LanguagesDropdown extends ViewButton
 	) {
 		$this->kirby = $model->kirby();
 
-
 		parent::__construct(
-			badge: $this->badge(),
 			component: 'k-languages-dropdown',
 			class: 'k-languages-dropdown',
 			icon: 'translate',
@@ -43,18 +41,11 @@ class LanguagesDropdown extends ViewButton
 		);
 	}
 
-	public function badge(): array|null
-	{
-		if ($changes = $this->changes()) {
-			return [
-				'theme' => 'notice',
-				'text'  => $changes
-			];
-		}
-
-		return null;
-	}
-
+	/**
+	 * Returns the number of translations with unsaved changes
+	 * other than the current one (as the current one will be considered
+	 * dynamically in `<k-languages-dropdown>` based on its state)
+	 */
 	public function changes(): int
 	{
 		$count = 0;
@@ -105,6 +96,14 @@ class LanguagesDropdown extends ViewButton
 		}
 
 		return $options;
+	}
+
+	public function props(): array
+	{
+		return [
+			...parent::props(),
+			'changes' => $this->changes()
+		];
 	}
 
 	public function render(): array|null
