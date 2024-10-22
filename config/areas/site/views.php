@@ -8,20 +8,22 @@ return [
 		'pattern' => 'pages/(:any)',
 		'action'  => fn (string $path) => Find::page($path)->panel()->view()
 	],
-	'page.changes.compare' => [
-		'pattern' => 'pages/(:any)/changes/compare',
+	'page.changes' => [
+		'pattern' => 'pages/(:any)/changes',
 		'action'  => function (string $path) {
 			$page = Find::page($path);
+			$view = Find::page($path)->panel()->view();
 
 			return [
-				'component' => 'k-page-comparison-view',
+				'component' => 'k-page-changes-view',
 				'props'     => [
-					'changes'   => $page->previewUrl() . '?_version=changes',
-					'backlink'  => $page->panel()->url(true),
-					'lock'      => $page->lock()->toArray(),
-					'published' => $page->previewUrl(),
+					...$view['props'],
+					'src' => [
+						'changes' => $page->previewUrl() . '?_version=changes',						
+						'latest'  => $page->previewUrl(),
+					]
 				],
-				'title' => $page->title()->value(),
+				'title' => $view['title'],
 			];
 		}
 	],

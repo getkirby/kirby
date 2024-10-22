@@ -365,7 +365,7 @@ class Page extends Model
 			...$props,
 			...$this->prevNext(),
 			'blueprint'  => $this->model->intendedTemplate()->name(),
-			'changesUrl' => $this->url(true) . '/changes/compare',
+			'changesUrl' => $this->url(true) . '/changes',
 			'model'      => $model,
 			'title'      => $model['title'],
 		];
