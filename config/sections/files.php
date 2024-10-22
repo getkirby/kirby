@@ -224,11 +224,21 @@ return [
 				'pattern' => 'delete',
 				'method'  => 'DELETE',
 				'action'  => function () {
+					$section = $this->section();
+					$ids     = $this->requestBody('ids');
 					$errors = [];
 
-					foreach ($this->requestBody('ids') as $id) {
+					// check if the section has enough files after the deletion
+					if ($section->total() - count($ids) < $section->min()) {
+						throw new Exception(
+							message: 'The section needs to have at least ' . $section->min() . ' files',
+						);
+					}
+
+					// delete all files and collect errors
+					foreach ($ids as $id) {
 						try {
-							$this->section()->kirby()->file($id)?->delete();
+							$section->kirby()->file($id)?->delete();
 						} catch (Throwable $e) {
 							$errors[] = [
 								'label'  => $id,
@@ -237,6 +247,7 @@ return [
 						}
 					}
 
+					// throw an error if not all files could be deleted
 					if ($errors !== []) {
 						throw new Exception(
 							message: 'Not all files could be deleted',

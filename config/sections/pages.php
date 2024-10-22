@@ -323,11 +323,21 @@ return [
 				'pattern' => 'delete',
 				'method'  => 'DELETE',
 				'action'  => function () {
-					$errors = [];
+					$section = $this->section();
+					$ids     = $this->requestBody('ids');
+					$errors  = [];
 
-					foreach ($this->requestBody('ids') as $id) {
+					// check if the section has enough pages after the deletion
+					if ($section->total() - count($ids) < $section->min()) {
+						throw new Exception(
+							message: 'The section needs to have at least ' . $section->min() . ' pages',
+						);
+					}
+
+					// delete all pages and collect errors
+					foreach ($ids as $id) {
 						try {
-							$this->section()->kirby()->page($id)?->delete();
+							$section->kirby()->page($id)?->delete();
 						} catch (Throwable $e) {
 							$errors[] = [
 								'label'  => $id, 
@@ -336,6 +346,7 @@ return [
 						}
 					}
 
+					// throw an error if not all pages could be deleted
 					if ($errors !== []) {
 						throw new Exception(
 							message: 'Not all pages could be deleted',
