@@ -2,9 +2,17 @@
 	<k-panel class="k-panel-inside k-page-changes-view">
 		<header class="k-page-changes-header">
 			<k-button-group>
-				<k-button :link="link" icon="angle-left" size="sm" variant="filled" />
+				<k-button
+					:link="link"
+					:text="$t('back')"
+					icon="angle-left"
+					size="sm"
+					variant="filled"
+				/>
 				<k-button
 					:icon="modes[mode].icon"
+					:dropdown="true"
+					:text="$t('view')"
 					size="sm"
 					variant="filled"
 					@click="$refs.layout.toggle()"
@@ -48,7 +56,7 @@
 					/>
 				</k-headline>
 				<iframe v-if="isUnsaved" :src="src.changes"></iframe>
-				<k-empty v-else>There are no unsaved changes</k-empty>
+				<k-empty v-else>{{ $t("lock.unsaved.empty") }}</k-empty>
 			</section>
 		</main>
 	</k-panel>
@@ -71,19 +79,19 @@ export default {
 		modes() {
 			return {
 				latest: {
-					label: "Latest version",
+					label: this.$t("version.latest"),
 					icon: "layout-right",
 					current: this.mode === "latest",
 					click: () => (this.mode = "latest")
 				},
 				changes: {
-					label: "Changed version",
+					label: this.$t("version.changes"),
 					icon: "layout-left",
 					current: this.mode === "changes",
 					click: () => (this.mode = "changes")
 				},
 				compare: {
-					label: "Side by side",
+					label: this.$t("version.compare"),
 					icon: "layout-columns",
 					current: this.mode === "compare",
 					click: () => (this.mode = "compare")
