@@ -2,6 +2,7 @@
 
 namespace Kirby\Plugin;
 
+use Closure;
 use Stringable;
 
 /**
@@ -18,6 +19,7 @@ class License implements Stringable
 	protected LicenseStatus $status;
 
 	public function __construct(
+		protected Plugin $plugin,
 		protected string $name,
 		protected string|null $link = null,
 		LicenseStatus|null $status = null
@@ -36,14 +38,17 @@ class License implements Stringable
 	/**
 	 * Creates a license instance from a given value
 	 */
-	public static function from(License|array|string|null $license): static
-	{
-		if ($license instanceof License) {
-			return $license;
+	public static function from(
+		Plugin $plugin,
+		Closure|array|string|null $license
+	): static {
+		if ($license instanceof Closure) {
+			return $license($plugin);
 		}
 
 		if (is_array($license)) {
 			return new static(
+				plugin: $plugin,
 				name: $license['name'] ?? '',
 				link: $license['link'] ?? null,
 				status: LicenseStatus::from($license['status'] ?? 'active')
@@ -52,12 +57,14 @@ class License implements Stringable
 
 		if ($license === null || $license === '-') {
 			return new static(
+				plugin: $plugin,
 				name: '-',
 				status: LicenseStatus::from('unknown')
 			);
 		}
 
 		return new static(
+			plugin: $plugin,
 			name: $license,
 			status: LicenseStatus::from('active')
 		);
