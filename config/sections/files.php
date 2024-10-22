@@ -2,6 +2,7 @@
 
 use Kirby\Cms\File;
 use Kirby\Cms\Files;
+use Kirby\Exception\Exception;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -223,9 +224,26 @@ return [
 				'pattern' => 'delete',
 				'method'  => 'DELETE',
 				'action'  => function () {
+					$errors = [];
+
 					foreach ($this->requestBody('ids') as $id) {
-						$this->section()->kirby()->file($id)?->delete();
+						try {
+							$this->section()->kirby()->file($id)?->delete();
+						} catch (Throwable $e) {
+							$errors[] = [
+								'label'  => $id,
+								'message' => $e->getMessage()
+							];
+						}
 					}
+
+					if ($errors !== []) {
+						throw new Exception(
+							message: 'Not all files could be deleted',
+							details: $errors
+						);
+					}
+
 					return true;
 				}
 			]
