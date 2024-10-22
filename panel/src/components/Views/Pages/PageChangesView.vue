@@ -160,6 +160,7 @@ export default {
 	flex-grow: 1;
 	border-radius: var(--rounded-lg);
 	box-shadow: var(--shadow-xl);
+	background: var(--color-white);
 }
 .k-page-changes-grid .k-empty {
 	flex-grow: 1;
