@@ -189,8 +189,8 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		// first close object with new blueprint as template
 		$new = $this->clone(['template' => $blueprint]);
 
-		// temporary compatibility change (TODO: also convert changes)
-		$identifier = VersionId::latest();
+		// get version (only handling latest version)
+		$version = $new->version(VersionId::latest());
 
 		// for multilang, we go through all translations and
 		// covnert the content for each of them, remove the content file
@@ -203,7 +203,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 					$content = $this->content($code)->convertTo($blueprint);
 
 					// delete the old text file
-					$this->version($identifier)->delete($code);
+					$version->delete($code);
 
 					// save to re-create the translation content file
 					// with the converted/updated content
@@ -227,7 +227,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		$content = $this->content()->convertTo($blueprint);
 
 		// delete the old text file
-		$this->version($identifier)->delete('default');
+		$version->delete('default');
 
 		return $new->save($content);
 	}
