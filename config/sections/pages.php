@@ -5,6 +5,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\Exception;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 
@@ -322,9 +323,26 @@ return [
 				'pattern' => 'delete',
 				'method'  => 'DELETE',
 				'action'  => function () {
+					$errors = [];
+
 					foreach ($this->requestBody('ids') as $id) {
-						$this->section()->kirby()->page($id)?->delete();
+						try {
+							$this->section()->kirby()->page($id)?->delete();
+						} catch (Throwable $e) {
+							$errors[] = [
+								'label'  => $id, 
+								'message' => $e->getMessage()
+							];
+						}
 					}
+
+					if ($errors !== []) {
+						throw new Exception(
+							message: 'Not all pages could be deleted',
+							details: $errors
+						);
+					}
+
 					return true;
 				}
 			]
