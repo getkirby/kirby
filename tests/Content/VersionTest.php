@@ -175,12 +175,12 @@ class VersionTest extends TestCase
 		$this->assertContentFileDoesNotExist('de');
 
 		// with Language argument
-		$version->create([
+		$version->save([
 			'title' => 'Test'
 		], $this->app->language('en'));
 
 		// with string argument
-		$version->create([
+		$version->save([
 			'title' => 'Test'
 		], 'de');
 
@@ -202,7 +202,7 @@ class VersionTest extends TestCase
 
 		$this->assertContentFileDoesNotExist();
 
-		$version->create([
+		$version->save([
 			'title' => 'Test'
 		]);
 
@@ -238,7 +238,7 @@ class VersionTest extends TestCase
 		);
 
 		// primary language
-		$version->create([
+		$version->save([
 			'title'    => 'Test',
 			'uuid'     => '12345',
 			'Subtitle' => 'Subtitle',
@@ -337,16 +337,16 @@ class VersionTest extends TestCase
 			id: VersionId::changes()
 		);
 
-		$a->create($content = [
+		$a->save($content = [
 			'title'    => 'Title',
 			'subtitle' => 'Subtitle',
 		], 'en');
 
-		$a->create($content, 'de');
+		$a->save($content, 'de');
 
-		$b->create($content, 'en');
+		$b->save($content, 'en');
 
-		$b->create([
+		$b->save([
 			'title'    => 'Title',
 			'subtitle' => 'Subtitle (changed)',
 		], 'de');
@@ -381,12 +381,12 @@ class VersionTest extends TestCase
 			id: VersionId::changes()
 		);
 
-		$a->create([
+		$a->save([
 			'title'    => 'Title',
 			'subtitle' => 'Subtitle',
 		]);
 
-		$b->create([
+		$b->save([
 			'title'    => 'Title',
 			'subtitle' => 'Subtitle (changed)',
 		]);
@@ -417,12 +417,12 @@ class VersionTest extends TestCase
 			id: VersionId::changes()
 		);
 
-		$a->create([
+		$a->save([
 			'title'    => 'Title',
 			'subtitle' => 'Subtitle',
 		]);
 
-		$b->create([
+		$b->save([
 			'title'    => 'Title',
 			'subtitle' => 'Subtitle',
 		]);
@@ -444,7 +444,7 @@ class VersionTest extends TestCase
 			id: VersionId::latest()
 		);
 
-		$a->create([
+		$a->save([
 			'title'    => 'Title',
 			'subtitle' => 'Subtitle',
 		]);

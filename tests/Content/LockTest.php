@@ -13,6 +13,34 @@ class LockTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Content.LockTest';
 
+	protected function createChangesVersion(): Version
+	{
+		$version = new Version(
+			model: $this->app->page('test'),
+			id: VersionId::changes()
+		);
+
+		$version->create([
+			'title' => 'Test'
+		]);
+
+		return $version;
+	}
+
+	protected function createLatestVersion(): Version
+	{
+		$latest = new Version(
+			model: $this->app->page('test'),
+			id: VersionId::latest()
+		);
+
+		$latest->create([
+			'title' => 'Test'
+		]);
+
+		return $latest;
+	}
+
 	public function setUp(): void
 	{
 		$this->app = new App([
@@ -46,16 +74,9 @@ class LockTest extends TestCase
 	{
 		$this->app->impersonate('admin');
 
-		$version = new Version(
-			model: $this->app->page('test'),
-			id: VersionId::changes()
-		);
-
-		$version->create([
-			'title' => 'Test'
-		]);
-
-		$lock = Lock::for($version);
+		$latest  = $this->createLatestVersion();
+		$changes = $this->createChangesVersion();
+		$lock    = Lock::for($changes);
 
 		$this->assertTrue($lock->isActive());
 		$this->assertFalse($lock->isLocked());
@@ -70,19 +91,13 @@ class LockTest extends TestCase
 		// create the version with the admin user
 		$this->app->impersonate('admin');
 
-		$version = new Version(
-			model: $this->app->page('test'),
-			id: VersionId::changes()
-		);
-
-		$version->create([
-			'title' => 'Test'
-		]);
+		$latest  = $this->createLatestVersion();
+		$changes = $this->createChangesVersion();
 
 		// switch to a different user to simulate locked content
 		$this->app->impersonate('editor');
 
-		$lock = Lock::for($version);
+		$lock = Lock::for($changes);
 
 		$this->assertTrue($lock->isActive());
 		$this->assertTrue($lock->isLocked());
@@ -97,17 +112,8 @@ class LockTest extends TestCase
 		// create the version with the admin user
 		$this->app->impersonate('admin');
 
-		// the latest version won't have a user id
-		$version = new Version(
-			model: $this->app->page('test'),
-			id: VersionId::latest()
-		);
-
-		$version->create([
-			'title' => 'Test'
-		]);
-
-		$lock = Lock::for($version);
+		$latest = $this->createLatestVersion();
+		$lock   = Lock::for($latest);
 
 		$this->assertNull($lock->user());
 	}
