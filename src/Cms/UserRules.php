@@ -200,11 +200,8 @@ class UserRules
 			return true;
 		}
 
-		// check user permissions (if not on install)
-		if (
-			$user->kirby()->users()->count() > 0 &&
-			$user->permissions()->create() !== true
-		) {
+		// check user permissions
+		if ($user->permissions()->create() !== true) {
 			throw new PermissionException([
 				'key' => 'user.create.permission'
 			]);
