@@ -193,17 +193,14 @@ class UserRules
 
 		// allow to create the first user
 		if ($user->kirby()->users()->count() === 0) {
-			return true;
+			return;
 		}
 
-		// check user permissions (if not on install)
-		if (
-			$user->kirby()->users()->count() > 0 &&
-			$user->permissions()->create() !== true
-		) {
-			throw new PermissionException(
-				key: 'user.create.permission'
-			);
+		// check user permissions
+		if ($user->permissions()->create() !== true) {
+			throw new PermissionException([
+				'key' => 'user.create.permission'
+			]);
 		}
 
 		$role = $props['role'] ?? null;
