@@ -195,6 +195,11 @@ class UserRules
 			return true;
 		}
 
+		// allow to create the first user
+		if ($user->kirby()->users()->count() === 0) {
+			return true;
+		}
+
 		// check user permissions (if not on install)
 		if (
 			$user->kirby()->users()->count() > 0 &&

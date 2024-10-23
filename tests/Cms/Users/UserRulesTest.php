@@ -306,6 +306,23 @@ class UserRulesTest extends TestCase
 		UserRules::create($user, $props);
 	}
 
+	public function testCreateInstallation()
+	{
+		$app = $this->app()->clone();
+
+		$user = new User(
+			$props = [
+				'email'    => 'admin@domain.com',
+				'password' => '12345678',
+				'language' => 'en',
+				'role'     => 'admin',
+				'kirby'    => $app
+			]
+		);
+
+		$this->assertTrue(UserRules::create($user, $props));
+	}
+
 	public function testCreateAdminAsEditor()
 	{
 		$app = $this->app()->clone([
