@@ -27,16 +27,18 @@ class VersionRules
 	): void {
 		if ($version->exists($language) === true) {
 			throw new LogicException(
-				message: 'The Version already exists'
+				message: 'The version already exists'
 			);
 		}
 
-		if ($version->isLatest() === false) {
-			if ($version->model()->version(VersionId::latest())->exists($language) === false) {
-				throw new LogicException(
-					message: 'A matching latest version for the changes does not exist'
-				);
-			}
+		if ($version->isLatest() === true) {
+			return;
+		}
+
+		if ($version->model()->version(VersionId::latest())->exists($language) === false) {
+			throw new LogicException(
+				message: 'A matching latest version for the changes does not exist'
+			);
 		}
 	}
 
@@ -46,7 +48,7 @@ class VersionRules
 	): void {
 		if ($version->isLocked('*') === true) {
 			throw new LogicException(
-				message: 'The Version is locked and cannot be deleted'
+				message: 'The version is locked and cannot be deleted'
 			);
 		}
 	}
@@ -65,7 +67,7 @@ class VersionRules
 
 		if ($toVersion->isLocked('*') === true) {
 			throw new LogicException(
-				message: 'The destination version is locked'
+				message: 'The target version is locked and cannot be overwritten'
 			);
 		}
 	}
