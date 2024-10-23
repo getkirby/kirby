@@ -330,6 +330,8 @@ class UserRulesTest extends TestCase
 			]
 		);
 
+		$this->expectNotToPerformAssertions();
+
 		UserRules::create($user, $props);
 	}
 
