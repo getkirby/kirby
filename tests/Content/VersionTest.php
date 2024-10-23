@@ -640,6 +640,36 @@ class VersionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::isLocked
+	 */
+	public function testIsLocked(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->assertFalse($version->isLocked());
+	}
+
+	/**
+	 * @covers ::lock
+	 */
+	public function testLock(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->assertInstanceOf(Lock::class, $version->lock());
+	}
+
+	/**
 	 * @covers ::model
 	 */
 	public function testModel(): void
