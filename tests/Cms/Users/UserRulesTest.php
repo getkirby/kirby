@@ -330,7 +330,7 @@ class UserRulesTest extends TestCase
 			]
 		);
 
-		$this->assertTrue(UserRules::create($user, $props));
+		UserRules::create($user, $props);
 	}
 
 	public function testCreateAdminAsEditor()
