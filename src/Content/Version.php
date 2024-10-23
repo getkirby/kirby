@@ -211,6 +211,33 @@ class Version
 	}
 
 	/**
+	 * Checks if the version is locked for the current user
+	 */
+	public function isLocked(Language|string $language = 'default'): bool
+	{
+		// check if the version is locked in any language
+		if ($language === '*') {
+			foreach (Languages::ensure() as $language) {
+				if ($this->isLocked($language) === true) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		return $this->lock($language)->isLocked();
+	}
+
+	/**
+	 * Returns the lock object for the version
+	 */
+	public function lock(Language|string $language = 'default'): Lock
+	{
+		return Lock::for($this, Language::ensure($language));
+	}
+
+	/**
 	 * Returns the parent model
 	 */
 	public function model(): ModelWithContent
@@ -246,17 +273,26 @@ class Version
 		Language|string|null $toLanguage = null,
 		Storage|null $toStorage = null
 	): void {
+		$fromVersion  = $this;
 		$fromLanguage = Language::ensure($fromLanguage);
 		$toLanguage   = Language::ensure($toLanguage ?? $fromLanguage);
+		$toVersion    = $this->model->version($toVersionId ?? $this->id);
 
 		// check if moving is allowed
-		VersionRules::move($this, $fromLanguage, $toVersionId ?? $this->id, $toLanguage);
-
-		$this->ensure($fromLanguage);
-		$this->model->storage()->move(
-			fromVersionId: $this->id,
+		VersionRules::move(
+			fromVersion: $fromVersion,
 			fromLanguage: $fromLanguage,
-			toVersionId: $toVersionId,
+			toVersion: $toVersion,
+			toLanguage: $toLanguage
+		);
+
+		// make sure that the version exists
+		$this->ensure($fromLanguage);
+
+		$this->model->storage()->move(
+			fromVersionId: $fromVersion->id(),
+			fromLanguage: $fromLanguage,
+			toVersionId: $toVersion->id(),
 			toLanguage: $toLanguage,
 			toStorage: $toStorage
 		);
