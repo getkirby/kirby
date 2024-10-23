@@ -203,6 +203,14 @@ class Version
 	}
 
 	/**
+	 * Checks if the version is the latest version
+	 */
+	public function isLatest(): bool
+	{
+		return $this->id->is(VersionId::latest());
+	}
+
+	/**
 	 * Returns the parent model
 	 */
 	public function model(): ModelWithContent

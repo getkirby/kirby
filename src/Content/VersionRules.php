@@ -48,7 +48,7 @@ class VersionRules
 		Version $version,
 		Language $language
 	): void {
-		if ($version->id()->is(VersionId::latest()) === true) {
+		if ($version->isLatest() === true) {
 			throw new LogicException(
 				message: 'This version is already published'
 			);
