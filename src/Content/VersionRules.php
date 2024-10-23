@@ -25,23 +25,49 @@ class VersionRules
 		array $fields,
 		Language $language
 	): void {
+		if ($version->exists($language) === true) {
+			throw new LogicException(
+				message: 'The Version already exists'
+			);
+		}
 
+		if ($version->isLatest() === false) {
+			if ($version->model()->version(VersionId::latest())->exists($language) === false) {
+				throw new LogicException(
+					message: 'A matching latest version for the changes does not exist'
+				);
+			}
+		}
 	}
 
 	public static function delete(
 		Version $version,
 		Language $language
 	): void {
-
+		if ($version->isLocked('*') === true) {
+			throw new LogicException(
+				message: 'The Version is locked and cannot be deleted'
+			);
+		}
 	}
 
 	public static function move(
-		Version $version,
+		Version $fromVersion,
 		Language $fromLanguage,
-		VersionId $toVersionId,
+		Version $toVersion,
 		Language $toLanguage
 	): void {
+		if ($fromVersion->isLocked('*') === true) {
+			throw new LogicException(
+				message: 'The source version is locked and cannot be moved'
+			);
+		}
 
+		if ($toVersion->isLocked('*') === true) {
+			throw new LogicException(
+				message: 'The destination version is locked'
+			);
+		}
 	}
 
 	public static function publish(
@@ -54,6 +80,11 @@ class VersionRules
 			);
 		}
 
+		if ($version->isLocked('*') === true) {
+			throw new LogicException(
+				message: 'The version is locked and cannot be published'
+			);
+		}
 	}
 
 	public static function replace(
@@ -61,7 +92,11 @@ class VersionRules
 		array $fields,
 		Language $language
 	): void {
-
+		if ($version->isLocked('*') === true) {
+			throw new LogicException(
+				message: 'The version is locked and cannot be replaced'
+			);
+		}
 	}
 
 	public static function update(
@@ -69,6 +104,10 @@ class VersionRules
 		array $fields,
 		Language $language
 	): void {
-
+		if ($version->isLocked('*') === true) {
+			throw new LogicException(
+				message: 'The version is locked and cannot be updated'
+			);
+		}
 	}
 }
