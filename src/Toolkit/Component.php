@@ -151,8 +151,8 @@ class Component
 	{
 		// unset prop
 		if ($value === null) {
-			unset($this->props[$name]);
-			unset($this->$name);
+			unset($this->props[$name], $this->$name);
+
 			return;
 		}
 
