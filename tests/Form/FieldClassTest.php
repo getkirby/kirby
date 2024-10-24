@@ -548,11 +548,14 @@ class FieldClassTest extends TestCase
 
 	/**
 	 * @covers ::store
+	 * @covers ::toStoredValue
 	 */
-	public function testStore()
+	public function testToStoredValue()
 	{
 		$field = new TestField();
-		$this->assertSame('test', $field->store('test'));
+		$field->fill('test');
+
+		$this->assertSame('test', $field->toStoredValue());
 	}
 
 	/**

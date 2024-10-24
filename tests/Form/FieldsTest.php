@@ -28,13 +28,11 @@ class FieldsTest extends TestCase
 		$fields = new Fields([
 			'a' => [
 				'type'  => 'text',
-				'model' => $this->model
 			],
 			'b' => [
 				'type'  => 'text',
-				'model' => $this->model
 			],
-		]);
+		], $this->model);
 
 		$this->assertSame('a', $fields->first()->name());
 		$this->assertSame($this->model, $fields->first()->model());
@@ -70,15 +68,13 @@ class FieldsTest extends TestCase
 		$fields = new Fields([
 			'a' => [
 				'default' => 'a',
-				'model'   => $this->model,
 				'type'    => 'text'
 			],
 			'b' => [
 				'default' => 'b',
-				'model'   => $this->model,
 				'type'    => 'text'
 			],
-		]);
+		], $this->model);
 
 		$this->assertSame(['a' => 'a', 'b' => 'b'], $fields->defaults());
 	}
@@ -92,17 +88,15 @@ class FieldsTest extends TestCase
 			'a' => [
 				'label'    => 'A',
 				'type'     => 'text',
-				'model'    => $this->model,
 				'required' => true
 			],
 			'b' => [
 				'label'    => 'B',
 				'type'      => 'text',
-				'model'     => $this->model,
 				'maxlength' => 3,
 				'value'     => 'Too long'
 			],
-		]);
+		], $this->model);
 
 		$this->assertSame([
 			'a' => [
@@ -141,13 +135,11 @@ class FieldsTest extends TestCase
 		$fields = new Fields([
 			'a' => [
 				'type'  => 'text',
-				'model' => $this->model
 			],
 			'b' => [
 				'type'  => 'text',
-				'model' => $this->model
 			],
-		]);
+		], $this->model);
 
 		$this->assertSame([], $fields->errors());
 	}
@@ -160,15 +152,13 @@ class FieldsTest extends TestCase
 		$fields = new Fields([
 			'a' => [
 				'type'  => 'text',
-				'model' => $this->model,
 				'value' => 'A'
 			],
 			'b' => [
 				'type'  => 'text',
-				'model' => $this->model,
 				'value' => 'B'
 			],
-		]);
+		], $this->model);
 
 		$this->assertSame([
 			'a' => 'A',
@@ -184,6 +174,53 @@ class FieldsTest extends TestCase
 	}
 
 	/**
+	 * @covers ::findByKey
+	 * @covers ::findByKeyRecursive
+	 */
+	public function testFind()
+	{
+		Field::$types['test'] = [
+			'methods' => [
+				'form' => function () {
+					return new Form([
+						'fields' => [
+							'child' => [
+								'type'  => 'text',
+							],
+						],
+						'model' => $this->model
+					]);
+				}
+			]
+		];
+
+		$fields = new Fields([
+			'mother' => [
+				'type'  => 'test',
+			],
+		], $this->model);
+
+		$this->assertSame('mother', $fields->find('mother')->name());
+		$this->assertSame('child', $fields->find('mother+child')->name());
+		$this->assertNull($fields->find('mother+missing-child'));
+	}
+
+	/**
+	 * @covers ::findByKey
+	 * @covers ::findByKeyRecursive
+	 */
+	public function testFindWhenFieldHasNoForm()
+	{
+		$fields = new Fields([
+			'mother' => [
+				'type'  => 'text',
+			],
+		], $this->model);
+
+		$this->assertNull($fields->find('mother+child'));
+	}
+
+	/**
 	 * @covers ::toArray
 	 */
 	public function testToArray()
@@ -191,14 +228,57 @@ class FieldsTest extends TestCase
 		$fields = new Fields([
 			'a' => [
 				'type'  => 'text',
-				'model' => $this->model
 			],
 			'b' => [
 				'type'  => 'text',
-				'model' => $this->model
 			],
-		]);
+		], $this->model);
 
 		$this->assertSame(['a' => 'a', 'b' => 'b'], $fields->toArray(fn ($field) => $field->name()));
+	}
+
+	/**
+	 * @covers ::toFormValues
+	 */
+	public function testToFormValues()
+	{
+		$fields = new Fields([
+			'a' => [
+				'type'  => 'text',
+				'value' => 'Value a'
+			],
+			'b' => [
+				'type'  => 'text',
+				'value' => 'Value b'
+			],
+		], $this->model);
+
+		$this->assertSame(['a' => 'Value a', 'b' => 'Value b'], $fields->toFormValues());
+	}
+
+	/**
+	 * @covers ::toStoredValues
+	 */
+	public function testToStoredValues()
+	{
+		Field::$types['test'] = [
+			'save' => function ($value) {
+				return $value . ' stored';
+			}
+		];
+
+		$fields = new Fields([
+			'a' => [
+				'type'  => 'test',
+				'value' => 'Value a'
+			],
+			'b' => [
+				'type'  => 'test',
+				'value' => 'Value b'
+			],
+		], $this->model);
+
+		$this->assertSame(['a' => 'Value a', 'b' => 'Value b'], $fields->toFormValues());
+		$this->assertSame(['a' => 'Value a stored', 'b' => 'Value b stored'], $fields->toStoredValues());
 	}
 }

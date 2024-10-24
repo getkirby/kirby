@@ -591,7 +591,7 @@ class ApiTest extends TestCase
 		]);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The field "nonexists" could not be found');
+		$this->expectExceptionMessage('The field could not be found');
 
 		$page = $app->page('test');
 		$app->api()->fieldApi($page, 'nonexists');
@@ -608,7 +608,7 @@ class ApiTest extends TestCase
 		]);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('No field could be loaded');
+		$this->expectExceptionMessage('The field could not be found');
 
 		$page = $app->page('test');
 		$app->api()->fieldApi($page, '');

@@ -267,7 +267,7 @@ class LayoutField extends BlocksField
 		return $this->settings;
 	}
 
-	public function store(mixed $value): mixed
+	protected function store(mixed $value): mixed
 	{
 		$value = Layouts::factory($value, ['parent' => $this->model])->toArray();
 

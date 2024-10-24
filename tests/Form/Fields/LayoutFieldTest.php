@@ -129,7 +129,7 @@ class LayoutFieldTest extends TestCase
 		$this->assertCount(7, $routes);
 	}
 
-	public function testStore()
+	public function testToStoredValue()
 	{
 		$value = [
 			[
@@ -162,7 +162,7 @@ class LayoutFieldTest extends TestCase
 			'value' => $value
 		]);
 
-		$store = $field->store($value);
+		$store = $field->toStoredValue();
 		$this->assertIsString($store);
 
 		// ensure that the Unicode characters and slashes are not encoded
@@ -178,8 +178,11 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame('A nice block/heäding', $result[0]['columns'][0]['blocks'][0]['content']['text']);
 
 		// empty tests
-		$this->assertSame('', $field->store(null));
-		$this->assertSame('', $field->store([]));
+		$field->fill(null);
+		$this->assertSame('', $field->toStoredValue());
+
+		$field->fill([]);
+		$this->assertSame('', $field->toStoredValue());
 	}
 
 	public function testValidations()

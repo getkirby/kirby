@@ -238,7 +238,7 @@ class BlocksField extends FieldClass
 		];
 	}
 
-	public function store(mixed $value): mixed
+	protected function store(mixed $value): mixed
 	{
 		$blocks = $this->blocksToValues((array)$value, 'content');
 

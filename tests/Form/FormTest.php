@@ -5,6 +5,7 @@ namespace Kirby\Form;
 use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\TestCase;
 
@@ -13,11 +14,73 @@ use Kirby\TestCase;
  */
 class FormTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Form.Form';
+
+	protected ModelWithContent $model;
+
+	public function setUp(): void
+	{
+		$this->setUpSingleLanguage([
+			'children' => [
+				[
+					'slug' => 'test'
+				]
+			]
+		]);
+
+		$this->model = $this->app->page('test');
+		$this->setUpTmp();
+	}
+
 	public function tearDown(): void
 	{
 		App::destroy();
+		$this->tearDownTmp();
 	}
 
+	/**
+	 * @covers ::content
+	 */
+	public function testContent()
+	{
+		$form = new Form([
+			'fields' => [],
+			'values' => $values = [
+				'a' => 'A',
+				'b' => 'B'
+			]
+		]);
+
+		$this->assertSame($values, $form->content());
+	}
+
+	/**
+	 * @covers ::content
+	 * @covers ::data
+	 */
+	public function testContentAndDataFromUnsaveableFields()
+	{
+		$form = new Form([
+			'fields' => [
+				'info' => [
+					'type' => 'info',
+				]
+			],
+			'model' => $this->model,
+			'values' => [
+				'info' => 'Yay'
+			]
+		]);
+
+		$this->assertCount(0, $form->content());
+		$this->assertArrayNotHasKey('info', $form->content());
+		$this->assertCount(1, $form->data());
+		$this->assertArrayHasKey('info', $form->data());
+	}
+
+	/**
+	 * @covers ::data
+	 */
 	public function testDataWithoutFields()
 	{
 		$form = new Form([
@@ -32,59 +95,17 @@ class FormTest extends TestCase
 	}
 
 	/**
-	 * @covers ::exceptionField
+	 * @covers ::data
 	 */
-	public function testExceptionFieldDebug()
-	{
-		$exception = new Exception('This is an error');
-
-		$app  = new App();
-		$props = ['name' => 'test', 'model' => $app->site()];
-		$field = Form::exceptionField($exception, $props)->toArray();
-		$this->assertSame('info', $field['type']);
-		$this->assertSame('Error in "test" field.', $field['label']);
-		$this->assertSame('<p>This is an error</p>', $field['text']);
-		$this->assertSame('negative', $field['theme']);
-
-		$app   = $app->clone(['options' => ['debug' => true]]);
-		$props = ['name' => 'test', 'model' => $app->site()];
-		$field = Form::exceptionField($exception, $props)->toArray();
-		$this->assertSame('info', $field['type']);
-		$this->assertSame('Error in "test" field.', $field['label']);
-		$this->assertStringContainsString('<p>This is an error in file:', $field['text']);
-		$this->assertStringContainsString('tests/Form/FormTest.php line: 39</p>', $field['text']);
-		$this->assertSame('negative', $field['theme']);
-	}
-
-	public function testValuesWithoutFields()
-	{
-		$form = new Form([
-			'fields' => [],
-			'values' => $values = [
-				'a' => 'A',
-				'b' => 'B'
-			]
-		]);
-
-		$this->assertSame($values, $form->values());
-	}
-
 	public function testDataFromUnsaveableFields()
 	{
-		new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
-
-		$page = new Page(['slug' => 'test']);
 		$form = new Form([
 			'fields' => [
 				'info' => [
 					'type' => 'info',
-					'model' => $page
 				]
 			],
+			'model' => $this->model,
 			'values' => [
 				'info' => 'Yay'
 			]
@@ -93,28 +114,23 @@ class FormTest extends TestCase
 		$this->assertNull($form->data()['info']);
 	}
 
+	/**
+	 * @covers ::data
+	 */
 	public function testDataFromNestedFields()
 	{
-		new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
-
-		$page = new Page(['slug' => 'test']);
 		$form = new Form([
 			'fields' => [
 				'structure' => [
 					'type'   => 'structure',
-					'model' => $page,
 					'fields' => [
 						'tags' => [
 							'type'  => 'tags',
-							'model' => $page
 						]
 					]
 				]
 			],
+			'model' => $this->model,
 			'values' => $values = [
 				'structure' => [
 					[
@@ -127,128 +143,145 @@ class FormTest extends TestCase
 		$this->assertSame('a, b', $form->data()['structure'][0]['tags']);
 	}
 
-	public function testInvalidFieldType()
+	/**
+	 * @covers ::data
+	 * @covers ::values
+	 */
+	public function testDataWithCorrectFieldOrder()
 	{
-		new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
-
-		$page = new Page(['slug' => 'test']);
-		$form = new Form([
-			'fields' => [
-				'test' => [
-					'type'  => 'does-not-exist',
-					'model' => $page
-				]
-			]
-		]);
-
-		$field = $form->fields()->first();
-
-		$this->assertSame('info', $field->type());
-		$this->assertSame('negative', $field->theme());
-		$this->assertSame('Error in "test" field.', $field->label());
-		$this->assertSame('<p>Field "test": The field type "does-not-exist" does not exist</p>', $field->text());
-	}
-
-	public function testFieldOrder()
-	{
-		new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
-
-		$page = new Page(['slug' => 'test']);
 		$form = new Form([
 			'fields' => [
 				'a' => [
-					'type'  => 'text',
-					'model' => $page
+					'type' => 'text',
 				],
 				'b' => [
-					'type'  => 'text',
-					'model' => $page
+					'type' => 'text',
 				]
 			],
+			'input' => [
+				'b' => 'B modified'
+			],
+			'model' => $this->model,
 			'values' => [
 				'c' => 'C',
 				'b' => 'B',
 				'a' => 'A',
 			],
-			'input' => [
-				'b' => 'B modified'
-			]
 		]);
 
-		$this->assertTrue(['a' => 'A', 'b' => 'B modified', 'c' => 'C'] === $form->values());
 		$this->assertTrue(['a' => 'A', 'b' => 'B modified', 'c' => 'C'] === $form->data());
+		$this->assertTrue(['a' => 'A', 'b' => 'B modified', 'c' => 'C'] === $form->values());
 	}
 
-	public function testStrictMode()
+	/**
+	 * @covers ::data
+	 * @covers ::values
+	 */
+	public function testDataWithStrictMode()
 	{
-		new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
-
-		$page = new Page(['slug' => 'test']);
 		$form = new Form([
 			'fields' => [
 				'a' => [
 					'type' => 'text',
-					'model' => $page
 				],
 				'b' => [
 					'type' => 'text',
-					'model' => $page
 				]
-			],
-			'values' => [
-				'b' => 'B',
-				'a' => 'A'
 			],
 			'input' => [
 				'c' => 'C'
 			],
-			'strict' => true
+			'model' => $this->model,
+			'strict' => true,
+			'values' => [
+				'b' => 'B',
+				'a' => 'A'
+			],
 		]);
 
-		$this->assertTrue(['a' => 'A', 'b' => 'B'] === $form->values());
 		$this->assertTrue(['a' => 'A', 'b' => 'B'] === $form->data());
+		$this->assertTrue(['a' => 'A', 'b' => 'B'] === $form->values());
 	}
 
-	public function testErrors()
+	/**
+	 * @covers ::data
+	 * @covers ::values
+	 */
+	public function testDataWithUntranslatedFields()
 	{
-		new App([
-			'roots' => [
-				'index' => '/dev/null'
+		$this->setUpMultiLanguage();
+
+		$this->model = new Page([
+			'slug' => 'test',
+			'blueprint' => [
+				'fields' => [
+					'a' => [
+						'type' => 'text'
+					],
+					'b' => [
+						'type' => 'text',
+						'translate' => false
+					]
+				],
 			]
 		]);
 
-		$page = new Page(['slug' => 'test']);
+		// default language
+		$form = Form::for($this->model, [
+			'input' => [
+				'a' => 'A',
+				'b' => 'B'
+			]
+		]);
+
+		$expected = [
+			'a' => 'A',
+			'b' => 'B'
+		];
+
+		$this->assertSame($expected, $form->values());
+
+		// secondary language
+		$form = Form::for($this->model, [
+			'language' => 'de',
+			'input' => [
+				'a' => 'A',
+				'b' => 'B'
+			]
+		]);
+
+		$expected = [
+			'a' => 'A',
+			'b' => ''
+		];
+
+		$this->assertSame($expected, $form->values());
+	}
+
+	/**
+	 * @covers ::errors
+	 * @covers ::isInvalid
+	 * @covers ::isValid
+	 */
+	public function testErrors()
+	{
 		$form = new Form([
 			'fields' => [
 				'a' => [
 					'label' => 'Email',
 					'type' => 'email',
-					'model' => $page
 				],
 				'b' => [
 					'label' => 'Url',
 					'type' => 'url',
-					'model' => $page
 				]
 			],
+			'model' => $this->model,
 			'values' => [
 				'a' => 'A',
 				'b' => 'B',
 			]
 		]);
-
 
 		$this->assertTrue($form->isInvalid());
 		$this->assertFalse($form->isValid());
@@ -274,106 +307,86 @@ class FormTest extends TestCase
 		$this->assertSame($expected, $form->errors());
 	}
 
-	public function testToArray()
+	/**
+	 * @covers ::exceptionField
+	 */
+	public function testExceptionField()
 	{
-		new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
-
-		$page = new Page(['slug' => 'test']);
 		$form = new Form([
 			'fields' => [
-				'a' => [
-					'label' => 'A',
-					'type' => 'text',
-					'model' => $page
-				],
-				'b' => [
-					'label' => 'B',
-					'type' => 'text',
-					'model' => $page
-				]
-			],
-			'values' => [
-				'a' => 'A',
-				'b' => 'B',
-			]
-		]);
-
-		$this->assertSame([], $form->toArray()['errors']);
-		$this->assertArrayHasKey('a', $form->toArray()['fields']);
-		$this->assertArrayHasKey('b', $form->toArray()['fields']);
-		$this->assertCount(2, $form->toArray()['fields']);
-		$this->assertFalse($form->toArray()['invalid']);
-	}
-
-	public function testContent()
-	{
-		$form = new Form([
-			'fields' => [],
-			'values' => $values = [
-				'a' => 'A',
-				'b' => 'B'
-			]
-		]);
-
-		$this->assertSame($values, $form->content());
-	}
-
-	public function testContentFromUnsaveableFields()
-	{
-		new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
-
-		$page = new Page(['slug' => 'test']);
-		$form = new Form([
-			'fields' => [
-				'info' => [
-					'type' => 'info',
-					'model' => $page
-				]
-			],
-			'values' => [
-				'info' => 'Yay'
-			]
-		]);
-
-		$this->assertCount(0, $form->content());
-		$this->assertArrayNotHasKey('info', $form->content());
-		$this->assertCount(1, $form->data());
-		$this->assertArrayHasKey('info', $form->data());
-	}
-
-	public function testStrings()
-	{
-		$form = new Form([
-			'fields' => [],
-			'values' => [
-				'a' => 'A',
-				'b' => 'B',
-				'c' => [
-					'd' => 'D',
-					'e' => 'E'
+				'test' => [
+					'type'  => 'does-not-exist',
+					'model' => $this->model
 				]
 			]
 		]);
 
-		$this->assertSame([
-			'a' => 'A',
-			'b' => 'B',
-			'c' => "d: D\ne: E\n"
-		], $form->strings());
+		$field = $form->fields()->first();
+
+		$this->assertSame('info', $field->type());
+		$this->assertSame('negative', $field->theme());
+		$this->assertSame('Error in "test" field.', $field->label());
+		$this->assertSame('<p>Field "test": The field type "does-not-exist" does not exist</p>', $field->text());
 	}
 
-	public function testPageForm()
+	/**
+	 * @covers ::exceptionField
+	 */
+	public function testExceptionFieldInDebugMode()
 	{
-		App::instance();
+		$exception = new Exception('This is an error');
 
+		// debug mode off
+		$props = [
+			'name'  => 'test',
+			'model' => $this->app->site()
+		];
+
+		$field = Form::exceptionField($exception, $props)->toArray();
+		$this->assertSame('info', $field['type']);
+		$this->assertSame('Error in "test" field.', $field['label']);
+		$this->assertSame('<p>This is an error</p>', $field['text']);
+		$this->assertSame('negative', $field['theme']);
+
+		// debug mode on
+		$this->app->clone(['options' => ['debug' => true]]);
+
+		$props = [
+			'name'  => 'test',
+			'model' => $this->app->site()
+		];
+
+		$field = Form::exceptionField($exception, $props)->toArray();
+		$this->assertSame('info', $field['type']);
+		$this->assertSame('Error in "test" field.', $field['label']);
+		$this->assertStringContainsString('<p>This is an error in file:', $field['text']);
+		$this->assertStringContainsString('tests/Form/FormTest.php line:', $field['text']);
+		$this->assertSame('negative', $field['theme']);
+	}
+
+	/**
+	 * @covers ::for
+	 */
+	public function testForFileWithoutBlueprint()
+	{
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $this->model,
+			'content'  => []
+		]);
+
+		$form = Form::for($file, [
+			'values' => ['a' => 'A', 'b' => 'B']
+		]);
+
+		$this->assertSame(['a' => 'A', 'b' => 'B'], $form->data());
+	}
+
+	/**
+	 * @covers ::for
+	 */
+	public function testForPage()
+	{
 		$page = new Page([
 			'slug' => 'test',
 			'content' => [
@@ -407,7 +420,10 @@ class FormTest extends TestCase
 		$this->assertSame('', $values['date']);
 	}
 
-	public function testPageFormWithClosures()
+	/**
+	 * @covers ::for
+	 */
+	public function testForPageWithClosureValues()
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -429,95 +445,130 @@ class FormTest extends TestCase
 		$this->assertSame('B', $values['b']);
 	}
 
-	public function testFileFormWithoutBlueprint()
+	/**
+	 * @covers ::strings
+	 */
+	public function testStrings()
 	{
-		new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
-
-		$page = new Page([
-			'slug' => 'test'
-		]);
-
-		$file = new File([
-			'filename' => 'test.jpg',
-			'parent'   => $page,
-			'content'  => []
-		]);
-
-		$form = Form::for($file, [
-			'values' => ['a' => 'A', 'b' => 'B']
-		]);
-
-		$this->assertSame(['a' => 'A', 'b' => 'B'], $form->data());
-	}
-
-	public function testUntranslatedFields()
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'options' => [
-				'languages' => true
-			],
-			'languages' => [
-				[
-					'code'    => 'en',
-					'default' => true
-				],
-				[
-					'code' => 'de'
+		$form = new Form([
+			'fields' => [],
+			'values' => [
+				'a' => 'A',
+				'b' => 'B',
+				'c' => [
+					'd' => 'D',
+					'e' => 'E'
 				]
 			]
 		]);
 
-		$page = new Page([
-			'slug' => 'test',
-			'blueprint' => [
-				'fields' => [
-					'a' => [
-						'type' => 'text'
-					],
-					'b' => [
-						'type' => 'text',
-						'translate' => false
-					]
+		$this->assertSame([
+			'a' => 'A',
+			'b' => 'B',
+			'c' => "d: D\ne: E\n"
+		], $form->strings());
+	}
+
+	/**
+	 * @covers ::toArray
+	 */
+	public function testToArray()
+	{
+		$form = new Form([
+			'fields' => [
+				'a' => [
+					'label' => 'A',
+					'type'  => 'text',
 				],
+				'b' => [
+					'label' => 'B',
+					'type'  => 'text',
+				]
+			],
+			'model' => $this->model,
+			'values' => [
+				'a' => 'A',
+				'b' => 'B',
 			]
 		]);
 
-		// default language
-		$form = Form::for($page, [
-			'input' => [
+		$this->assertSame([], $form->toArray()['errors']);
+		$this->assertArrayHasKey('a', $form->toArray()['fields']);
+		$this->assertArrayHasKey('b', $form->toArray()['fields']);
+		$this->assertCount(2, $form->toArray()['fields']);
+		$this->assertFalse($form->toArray()['invalid']);
+	}
+
+	/**
+	 * @covers ::toFormValues
+	 */
+	public function testToFormValues()
+	{
+		$form = new Form([
+			'fields' => [
+				'a' => [
+					'type' => 'text',
+				],
+				'b' => [
+					'type' => 'text',
+				]
+			],
+			'values' => $values = [
+				'a' => 'A',
+				'b' => 'B',
+			]
+		]);
+
+		$this->assertSame($values, $form->toFormValues());
+	}
+
+	/**
+	 * @covers ::toStoredValues
+	 */
+	public function testToStoredValues()
+	{
+		Field::$types['test'] = [
+			'save' => function ($value) {
+				return $value . ' stored';
+			}
+		];
+
+		$form = new Form([
+			'fields' => [
+				'a' => [
+					'type' => 'test',
+				],
+				'b' => [
+					'type' => 'test',
+				]
+			],
+			'values' => [
+				'a' => 'A',
+				'b' => 'B',
+			]
+		]);
+
+		$expected = [
+			'a' => 'A stored',
+			'b' => 'B stored'
+		];
+
+		$this->assertSame($expected, $form->toStoredValues());
+	}
+
+	/**
+	 * @covers ::values
+	 */
+	public function testValuesWithoutFields()
+	{
+		$form = new Form([
+			'fields' => [],
+			'values' => $values = [
 				'a' => 'A',
 				'b' => 'B'
 			]
 		]);
 
-		$expected = [
-			'a' => 'A',
-			'b' => 'B'
-		];
-
-		$this->assertSame($expected, $form->values());
-
-		// secondary language
-		$form = Form::for($page, [
-			'language' => 'de',
-			'input' => [
-				'a' => 'A',
-				'b' => 'B'
-			]
-		]);
-
-		$expected = [
-			'a' => 'A',
-			'b' => ''
-		];
-
-		$this->assertSame($expected, $form->values());
+		$this->assertSame($values, $form->values());
 	}
 }

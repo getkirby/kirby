@@ -28,8 +28,12 @@ class Field extends Component
 	use HasSiblings;
 	use Mixin\Api;
 	use Mixin\Model;
+	use Mixin\Translatable;
 	use Mixin\Validation;
 	use Mixin\When;
+	use Mixin\Value {
+		isEmptyValue as protected isEmptyValueFromTrait;
+	}
 
 	/**
 	 * Parent collection with all fields of the current form
@@ -74,30 +78,6 @@ class Field extends Component
 
 		// set the siblings collection
 		$this->siblings = $siblings ?? new Fields([$this]);
-	}
-
-	/**
-	 * Returns field data
-	 */
-	public function data(bool $default = false): mixed
-	{
-		$save = $this->options['save'] ?? true;
-
-		if ($default === true && $this->isEmpty($this->value)) {
-			$value = $this->default();
-		} else {
-			$value = $this->value;
-		}
-
-		if ($save === false) {
-			return null;
-		}
-
-		if ($save instanceof Closure) {
-			return $save->call($this, $value);
-		}
-
-		return $value;
 	}
 
 	/**
@@ -323,34 +303,6 @@ class Field extends Component
 	}
 
 	/**
-	 * Checks if the field is empty
-	 * @deprecated 5.0.0 Passing arguments is deprecated. Use `::isEmptyValue()` instead to check for
-	 */
-	public function isEmpty(mixed ...$args): bool
-	{
-		$value = match (count($args)) {
-			0       => $this->value(),
-			default => $args[0]
-		};
-
-		return $this->isEmptyValue($value);
-	}
-
-	/**
-	 * Checks if the given value is considered empty
-	 *
-	 * @since 5.0.0
-	 */
-	public function isEmptyValue(mixed $value = null): bool
-	{
-		if ($empty = $this->options['isEmpty'] ?? null) {
-			return $empty->call($this, $value);
-		}
-
-		return in_array($value, [null, '', []], true);
-	}
-
-	/**
 	 * Checks if the field is hidden
 	 */
 	public function isHidden(): bool
@@ -415,6 +367,25 @@ class Field extends Component
 	}
 
 	/**
+	 * Converts the given value to a value
+	 * that can be stored in the text file
+	 */
+	protected function store(mixed $value): mixed
+	{
+		$store = $this->options['save'] ?? true;
+
+		if ($store === false) {
+			return null;
+		}
+
+		if ($store instanceof Closure) {
+			return $store->call($this, $value);
+		}
+
+		return $value;
+	}
+
+	/**
 	 * Converts the field to a plain array
 	 */
 	public function toArray(): array
@@ -440,14 +411,5 @@ class Field extends Component
 	protected function validations(): array
 	{
 		return $this->options['validations'] ?? [];
-	}
-
-	/**
-	 * Returns the value of the field if saveable
-	 * otherwise it returns null
-	 */
-	public function value(): mixed
-	{
-		return $this->isSaveable() ? $this->value : null;
 	}
 }
