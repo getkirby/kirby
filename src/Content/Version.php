@@ -234,7 +234,7 @@ class Version
 	 */
 	public function lock(Language|string $language = 'default'): Lock
 	{
-		return Lock::for($this, Language::ensure($language));
+		return Lock::for($this, $language);
 	}
 
 	/**
