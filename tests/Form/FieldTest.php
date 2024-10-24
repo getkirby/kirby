@@ -181,51 +181,6 @@ class FieldTest extends TestCase
 		$this->assertSame('blog', $field->before);
 	}
 
-	/**
-	 * @covers ::data
-	 */
-	public function testData()
-	{
-		Field::$types = [
-			'test' => [
-				'props' => [
-					'value' => fn ($value) => $value
-				],
-				'save' => fn ($value) => implode(', ', $value)
-			]
-		];
-
-		$page = new Page(['slug' => 'test']);
-
-		$field = new Field('test', [
-			'model' => $page,
-			'value' => ['a', 'b', 'c']
-		]);
-
-		$this->assertSame('a, b, c', $field->data());
-	}
-
-	/**
-	 * @covers ::data
-	 */
-	public function testDataWhenUnsaveable()
-	{
-		Field::$types = [
-			'test' => [
-				'save' => false
-			]
-		];
-
-		$model = new Page(['slug' => 'test']);
-
-		$field = new Field('test', [
-			'model' => $model,
-			'value' => 'something'
-		]);
-
-		$this->assertNull($field->data());
-	}
-
 	public function testDefault()
 	{
 		Field::$types = [
@@ -1069,6 +1024,88 @@ class FieldTest extends TestCase
 	}
 
 	/**
+	 * @covers ::toFormValue
+	 * @covers ::value
+	 */
+	public function testToFormValue()
+	{
+		Field::$types['test'] = [];
+
+		$field = new Field('test');
+		$this->assertNull($field->toFormValue());
+		$this->assertNull($field->value());
+
+		$field = new Field('test', ['value' => 'Test']);
+		$this->assertSame('Test', $field->toFormValue());
+		$this->assertSame('Test', $field->value());
+
+		$field = new Field('test', ['default' => 'Default value']);
+		$this->assertNull($field->toFormValue());
+		$this->assertNull($field->value());
+
+		$field = new Field('test', ['default' => 'Default value']);
+		$this->assertSame('Default value', $field->toFormValue(true));
+		$this->assertSame('Default value', $field->value(true));
+
+		Field::$types['test'] = [
+			'save' => false
+		];
+
+		$field = new Field('test', ['value' => 'Test']);
+		$this->assertNull($field->toFormValue());
+		$this->assertNull($field->value());
+	}
+
+	/**
+	 * @covers ::toStoredValue
+	 * @covers ::data
+	 */
+	public function testToStoredValue()
+	{
+		Field::$types = [
+			'test' => [
+				'props' => [
+					'value' => fn ($value) => $value
+				],
+				'save' => fn ($value) => implode(', ', $value)
+			]
+		];
+
+		$page = new Page(['slug' => 'test']);
+
+		$field = new Field('test', [
+			'model' => $page,
+			'value' => ['a', 'b', 'c']
+		]);
+
+		$this->assertSame('a, b, c', $field->toStoredValue());
+		$this->assertSame('a, b, c', $field->data());
+	}
+
+	/**
+	 * @covers ::toStoredValue
+	 * @covers ::data
+	 */
+	public function testToStoredValueWhenUnsaveable()
+	{
+		Field::$types = [
+			'test' => [
+				'save' => false
+			]
+		];
+
+		$model = new Page(['slug' => 'test']);
+
+		$field = new Field('test', [
+			'model' => $model,
+			'value' => 'something'
+		]);
+
+		$this->assertNull($field->toStoredValue());
+		$this->assertNull($field->data());
+	}
+
+	/**
 	 * @covers ::validate
 	 * @covers ::validations
 	 * @covers ::errors
@@ -1212,30 +1249,6 @@ class FieldTest extends TestCase
 
 		$this->assertFalse($field->isValid());
 		$this->assertSame(['test' => 'Invalid value: abc'], $field->errors());
-	}
-
-	public function testValue()
-	{
-		Field::$types['test'] = [];
-
-		$field = new Field('test');
-		$this->assertNull($field->value());
-
-		$field = new Field('test', ['value' => 'Test']);
-		$this->assertSame('Test', $field->value());
-
-		$field = new Field('test', ['default' => 'Default value']);
-		$this->assertNull($field->value());
-
-		$field = new Field('test', ['default' => 'Default value']);
-		$this->assertSame('Default value', $field->value(true));
-
-		Field::$types['test'] = [
-			'save' => false
-		];
-
-		$field = new Field('test', ['value' => 'Test']);
-		$this->assertNull($field->value());
 	}
 
 	public function testWidth()
