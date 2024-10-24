@@ -67,7 +67,7 @@ export const states = [
 export default {
 	create(plugins = {}) {
 		// props
-		this.isLoading = false;
+		this.controller = null;
 		this.isOffline = false;
 
 		this.activation = Activation(this);
@@ -202,6 +202,10 @@ export default {
 		return response?.json ?? {};
 	},
 
+	get isLoading() {
+		return this.controller !== null && this.controller.signal.aborted !== true;
+	},
+
 	/**
 	 * Opens a Panel URL and sets the state.
 	 * This is the main difference to panel.get,
@@ -219,10 +223,21 @@ export default {
 			if (isUrl(url) === false) {
 				this.set(url);
 			} else {
-				this.isLoading = true;
-				const state = await this.get(url, options);
-				this.set(state);
-				this.isLoading = false;
+				this.controller?.abort();
+				this.controller = new AbortController();
+
+				try {
+					const state = await this.get(url, {
+						...options,
+						signal: this.controller.signal
+					});
+					this.set(state);
+					this.controller = null;
+				} catch (e) {
+					if (e.name !== "AbortError") {
+						throw e;
+					}
+				}
 			}
 
 			return this.state();
