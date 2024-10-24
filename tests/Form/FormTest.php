@@ -500,6 +500,63 @@ class FormTest extends TestCase
 	}
 
 	/**
+	 * @covers ::toFormValues
+	 */
+	public function testToFormValues()
+	{
+		$form = new Form([
+			'fields' => [
+				'a' => [
+					'type' => 'text',
+				],
+				'b' => [
+					'type' => 'text',
+				]
+			],
+			'values' => $values = [
+				'a' => 'A',
+				'b' => 'B',
+			]
+		]);
+
+		$this->assertSame($values, $form->toFormValues());
+	}
+
+	/**
+	 * @covers ::toStoredValues
+	 */
+	public function testToStoredValues()
+	{
+		Field::$types['test'] = [
+			'save' => function ($value) {
+				return $value . ' stored';
+			}
+		];
+
+		$form = new Form([
+			'fields' => [
+				'a' => [
+					'type' => 'test',
+				],
+				'b' => [
+					'type' => 'test',
+				]
+			],
+			'values' => [
+				'a' => 'A',
+				'b' => 'B',
+			]
+		]);
+
+		$expected = [
+			'a' => 'A stored',
+			'b' => 'B stored'
+		];
+
+		$this->assertSame($expected, $form->toStoredValues());
+	}
+
+	/**
 	 * @covers ::values
 	 */
 	public function testValuesWithoutFields()
