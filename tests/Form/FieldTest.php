@@ -4,6 +4,7 @@ namespace Kirby\Form;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
+use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 
@@ -1058,6 +1059,7 @@ class FieldTest extends TestCase
 
 	/**
 	 * @covers ::toStoredValue
+	 * @covers ::store
 	 * @covers ::data
 	 */
 	public function testToStoredValue()
@@ -1084,6 +1086,7 @@ class FieldTest extends TestCase
 
 	/**
 	 * @covers ::toStoredValue
+	 * @covers ::store
 	 * @covers ::data
 	 */
 	public function testToStoredValueWhenUnsaveable()
@@ -1277,4 +1280,95 @@ class FieldTest extends TestCase
 		$this->assertSame('1/2', $field->width);
 	}
 
+	/**
+	 * @covers ::valueFromJson
+	 */
+	public function testValueFromJson()
+	{
+		// no defined as default
+		Field::$types = [
+			'test' => [
+				'props' => [
+					'value' => function (string $value): array {
+						return $this->valueFromJson($value);
+					}
+				]
+			]
+		];
+
+		$field = new Field('test', [
+			'model' => $model = new Page(['slug' => 'test']),
+			'value' => json_encode($value = ['a' => 'A'])
+		]);
+
+		$this->assertSame($value, $field->toFormValue());
+	}
+
+	/**
+	 * @covers ::valueFromYaml
+	 */
+	public function testValueFromYaml()
+	{
+		// no defined as default
+		Field::$types = [
+			'test' => [
+				'props' => [
+					'value' => function (string $value): array {
+						return $this->valueFromYaml($value);
+					}
+				]
+			]
+		];
+
+		$field = new Field('test', [
+			'model' => $model = new Page(['slug' => 'test']),
+			'value' => Data::encode($value = ['a' => 'A'], 'yml')
+		]);
+
+		$this->assertSame($value, $field->toFormValue());
+	}
+
+	/**
+	 * @covers ::valueToJson
+	 */
+	public function testValueToJson()
+	{
+		// no defined as default
+		Field::$types = [
+			'test' => [
+				'save' => function (array $value): string {
+					return $this->valueToJson($value);
+				}
+			]
+		];
+
+		$field = new Field('test', [
+			'model' => $model = new Page(['slug' => 'test']),
+			'value' => ['a' => 'A']
+		]);
+
+		$this->assertSame('{"a":"A"}', $field->toStoredValue());
+	}
+
+	/**
+	 * @covers ::valueToYaml
+	 */
+	public function testValueToYaml()
+	{
+		// no defined as default
+		Field::$types = [
+			'test' => [
+				'save' => function (array $value): string {
+					return $this->valueToYaml($value);
+				}
+			]
+		];
+
+		$field = new Field('test', [
+			'model' => $model = new Page(['slug' => 'test']),
+			'value' => ['a' => 'A']
+		]);
+
+		$this->assertSame("a: A\n", $field->toStoredValue());
+	}
 }
