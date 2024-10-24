@@ -92,7 +92,7 @@ class Translation extends ContentTranslation
 			$fields['slug'] = $slug;
 		}
 
-		$version->create($fields, $language);
+		$version->save($fields, $language);
 
 		return new static(
 			model: $model,

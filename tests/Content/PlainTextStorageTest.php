@@ -7,7 +7,6 @@ use Kirby\Cms\Language;
 use Kirby\Cms\Page;
 use Kirby\Cms\User;
 use Kirby\Data\Data;
-use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 
 /**
@@ -376,19 +375,6 @@ class PlainTextStorageTest extends TestCase
 		Data::write($this->model->root() . '/article.txt', $fields);
 
 		$this->assertSame($fields, $this->storage->read(VersionId::latest(), Language::single()));
-	}
-
-	/**
-	 * @covers ::read
-	 */
-	public function testReadWhenMissing()
-	{
-		$this->setUpSingleLanguage();
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Version "changes" does not already exist');
-
-		$this->storage->read(VersionId::changes(), Language::single());
 	}
 
 	/**

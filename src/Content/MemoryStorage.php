@@ -75,7 +75,6 @@ class MemoryStorage extends Storage
 	 */
 	public function read(VersionId $versionId, Language $language): array
 	{
-		$this->ensure($versionId, $language);
 		return $this->cache->get($this->cacheId($versionId, $language));
 	}
 

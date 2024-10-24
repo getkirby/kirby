@@ -238,20 +238,25 @@ class ModelWithContentTest extends TestCase
 
 		$page = $app->page('foo');
 
-		$this->assertSame(null, $page->content()->title()->value());
+		// create the latest version
+		$page->version('latest')->save([
+			'title' => 'Original Title'
+		]);
+
+		$this->assertSame('Original Title', $page->content()->title()->value());
 
 		// create some changes
 		$page->version('changes')->save([
-			'title' => 'Test'
+			'title' => 'Changed Title'
 		]);
 
 		VersionId::$render = VersionId::changes();
 
-		$this->assertSame('Test', $page->content()->title()->value());
+		$this->assertSame('Changed Title', $page->content()->title()->value());
 
 		VersionId::$render = null;
 
-		$this->assertSame(null, $page->content()->title()->value());
+		$this->assertSame('Original Title', $page->content()->title()->value());
 	}
 
 	/**
