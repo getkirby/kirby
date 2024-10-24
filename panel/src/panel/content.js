@@ -47,7 +47,6 @@ export default (panel) => {
 			try {
 				await panel.api.post(this.api + "/changes/discard");
 				panel.view.props.content = panel.view.props.originals;
-				panel.view.reload();
 			} finally {
 				this.isProcessing = false;
 			}
@@ -102,13 +101,11 @@ export default (panel) => {
 
 				panel.view.props.originals = panel.view.props.content;
 
-				await panel.view.refresh();
+				panel.events.emit("model.update");
+				panel.notification.success();
 			} finally {
 				this.isProcessing = false;
 			}
-
-			panel.events.emit("model.update");
-			panel.notification.success();
 		},
 
 		/**
