@@ -4,6 +4,7 @@ namespace Kirby\Content;
 
 use Kirby\Cms\Language;
 use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 
 class ExistingVersion extends Version
@@ -47,6 +48,9 @@ class VersionRulesTest extends TestCase
 		VersionRules::create($version, [], Language::ensure());
 	}
 
+	/**
+	 * @covers ::create
+	 */
 	public function testCreateWhenLatestVersionDoesNotExist()
 	{
 		$this->setUpSingleLanguage();
@@ -84,6 +88,95 @@ class VersionRulesTest extends TestCase
 	}
 
 	/**
+	 * @covers ::ensure
+	 */
+	public function testEnsureMultiLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->createContentMultiLanguage();
+
+		$this->assertNull(VersionRules::ensure($version, Language::ensure('en')));
+		$this->assertNull(VersionRules::ensure($version, Language::ensure('de')));
+	}
+
+	/**
+	 * @covers ::ensure
+	 */
+	public function testEnsureSingleLanguage(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->createContentSingleLanguage();
+
+		$this->assertNull(VersionRules::ensure($version, Language::ensure()));
+	}
+
+	/**
+	 * @covers ::ensure
+	 */
+	public function testEnsureWhenMissingMultiLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('Version "changes (de)" does not already exist');
+
+		VersionRules::ensure($version, Language::ensure('de'));
+	}
+
+	/**
+	 * @covers ::ensure
+	 */
+	public function testEnsureWhenMissingSingleLanguage(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('Version "changes" does not already exist');
+
+		VersionRules::ensure($version, Language::ensure());
+	}
+
+	/**
+	 * @covers ::ensure
+	 */
+	public function testEnsureWithInvalidLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('Invalid language: fr');
+
+		VersionRules::ensure($version, Language::ensure('fr'));
+	}
+
+	/**
 	 * @covers ::move
 	 */
 	public function testMoveWhenTheSourceVersionIsLocked()
@@ -99,6 +192,9 @@ class VersionRulesTest extends TestCase
 			model: $this->model,
 			id: VersionId::changes(),
 		);
+
+		$source->save([]);
+		$target->save([]);
 
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('The source version is locked and cannot be moved');
@@ -122,6 +218,10 @@ class VersionRulesTest extends TestCase
 			model: $this->model,
 			id: VersionId::changes(),
 		);
+
+		// the source needs to exist to jump to the
+		// next logic issue
+		$source->save([]);
 
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('The target version is locked and cannot be overwritten');
@@ -147,6 +247,9 @@ class VersionRulesTest extends TestCase
 		VersionRules::publish($version, Language::ensure());
 	}
 
+	/**
+	 * @covers ::publish
+	 */
 	public function testPublishWhenTheVersionIsLocked()
 	{
 		$this->setUpSingleLanguage();
@@ -156,10 +259,34 @@ class VersionRulesTest extends TestCase
 			id: VersionId::changes(),
 		);
 
+		$version->save([]);
+
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('The version is locked and cannot be published');
 
 		VersionRules::publish($version, Language::ensure());
+	}
+
+	/**
+	 * @covers ::read
+	 */
+	public function testReadWhenMissing()
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest(),
+		);
+
+		// make sure that the version does not exist
+		// just because the model root exists
+		Dir::remove($this->model->root());
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('Version "latest" does not already exist');
+
+		VersionRules::read($version, Language::ensure());
 	}
 
 	/**
@@ -174,10 +301,34 @@ class VersionRulesTest extends TestCase
 			id: VersionId::changes(),
 		);
 
+		$version->save([]);
+
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('The version is locked and cannot be replaced');
 
 		VersionRules::replace($version, [], Language::ensure());
+	}
+
+	/**
+	 * @covers ::touch
+	 */
+	public function testTouchWhenMissing()
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest(),
+		);
+
+		// make sure that the version does not exist
+		// just because the model root exists
+		Dir::remove($this->model->root());
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('Version "latest" does not already exist');
+
+		VersionRules::touch($version, Language::ensure());
 	}
 
 	/**
@@ -191,6 +342,8 @@ class VersionRulesTest extends TestCase
 			model: $this->model,
 			id: VersionId::changes(),
 		);
+
+		$version->save([]);
 
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('The version is locked and cannot be updated');

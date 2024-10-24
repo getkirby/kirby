@@ -157,21 +157,6 @@ class Version
 	}
 
 	/**
-	 * Ensure that the version exists and otherwise
-	 * throw an exception
-	 *
-	 * @throws \Kirby\Exception\NotFoundException if the version does not exist
-	 */
-	public function ensure(
-		Language|string $language = 'default'
-	): void {
-		$this->model->storage()->ensure(
-			$this->id,
-			Language::ensure($language)
-		);
-	}
-
-	/**
 	 * Checks if a version exists for the given language
 	 */
 	public function exists(Language|string $language = 'default'): bool
@@ -286,9 +271,6 @@ class Version
 			toLanguage: $toLanguage
 		);
 
-		// make sure that the version exists
-		$this->ensure($fromLanguage);
-
 		$this->model->storage()->move(
 			fromVersionId: $fromVersion->id(),
 			fromLanguage: $fromLanguage,
@@ -378,9 +360,6 @@ class Version
 	{
 		$language = Language::ensure($language);
 
-		// the version needs to exist
-		$this->ensure($language);
-
 		// check if publishing is allowed
 		VersionRules::publish($this, $language);
 
@@ -405,6 +384,9 @@ class Version
 		$language = Language::ensure($language);
 
 		try {
+			// make sure that the version exists
+			VersionRules::read($this, $language);
+
 			$fields = $this->model->storage()->read($this->id, $language);
 			$fields = $this->prepareFieldsAfterRead($fields, $language);
 			return $fields;
@@ -425,9 +407,6 @@ class Version
 		Language|string $language = 'default'
 	): void {
 		$language = Language::ensure($language);
-
-		// the version needs to exist
-		$this->ensure($language);
 
 		// check if replacing is allowed
 		VersionRules::replace($this, $fields, $language);
@@ -467,8 +446,11 @@ class Version
 	 */
 	public function touch(Language|string $language = 'default'): void
 	{
-		$this->ensure($language);
-		$this->model->storage()->touch($this->id, Language::ensure($language));
+		$language = Language::ensure($language);
+
+		VersionRules::touch($this, $language);
+
+		$this->model->storage()->touch($this->id, $language);
 	}
 
 	/**
@@ -483,9 +465,6 @@ class Version
 		Language|string $language = 'default'
 	): void {
 		$language = Language::ensure($language);
-
-		// the version needs to exist
-		$this->ensure($language);
 
 		// check if updating is allowed
 		VersionRules::update($this, $fields, $language);

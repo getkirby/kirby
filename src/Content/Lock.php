@@ -41,7 +41,7 @@ class Lock
 		$language = Language::ensure($language);
 
 		// if the version does not exist, it cannot be locked
-		if ($version->exists() === false) {
+		if ($version->exists($language) === false) {
 			// create an open lock for the current user
 			return new static(
 				user: App::instance()->user(),
