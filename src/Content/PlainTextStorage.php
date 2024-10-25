@@ -226,7 +226,6 @@ class PlainTextStorage extends Storage
 	 * Returns the stored content fields
 	 *
 	 * @return array<string, string>
-	 * @throws \Kirby\Exception\NotFoundException If the version is missing
 	 */
 	public function read(VersionId $versionId, Language $language): array
 	{

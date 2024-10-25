@@ -197,8 +197,6 @@ abstract class Storage
 	 * Returns the stored content fields
 	 *
 	 * @return array<string, string>
-	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
 	abstract public function read(VersionId $versionId, Language $language): array;
 
