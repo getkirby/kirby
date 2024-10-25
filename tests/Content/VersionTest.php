@@ -175,12 +175,12 @@ class VersionTest extends TestCase
 		$this->assertContentFileDoesNotExist('de');
 
 		// with Language argument
-		$version->create([
+		$version->save([
 			'title' => 'Test'
 		], $this->app->language('en'));
 
 		// with string argument
-		$version->create([
+		$version->save([
 			'title' => 'Test'
 		], 'de');
 
@@ -202,7 +202,7 @@ class VersionTest extends TestCase
 
 		$this->assertContentFileDoesNotExist();
 
-		$version->create([
+		$version->save([
 			'title' => 'Test'
 		]);
 
@@ -238,7 +238,7 @@ class VersionTest extends TestCase
 		);
 
 		// primary language
-		$version->create([
+		$version->save([
 			'title'    => 'Test',
 			'uuid'     => '12345',
 			'Subtitle' => 'Subtitle',
@@ -337,16 +337,16 @@ class VersionTest extends TestCase
 			id: VersionId::changes()
 		);
 
-		$a->create($content = [
+		$a->save($content = [
 			'title'    => 'Title',
 			'subtitle' => 'Subtitle',
 		], 'en');
 
-		$a->create($content, 'de');
+		$a->save($content, 'de');
 
-		$b->create($content, 'en');
+		$b->save($content, 'en');
 
-		$b->create([
+		$b->save([
 			'title'    => 'Title',
 			'subtitle' => 'Subtitle (changed)',
 		], 'de');
@@ -381,12 +381,12 @@ class VersionTest extends TestCase
 			id: VersionId::changes()
 		);
 
-		$a->create([
+		$a->save([
 			'title'    => 'Title',
 			'subtitle' => 'Subtitle',
 		]);
 
-		$b->create([
+		$b->save([
 			'title'    => 'Title',
 			'subtitle' => 'Subtitle (changed)',
 		]);
@@ -417,12 +417,12 @@ class VersionTest extends TestCase
 			id: VersionId::changes()
 		);
 
-		$a->create([
+		$a->save([
 			'title'    => 'Title',
 			'subtitle' => 'Subtitle',
 		]);
 
-		$b->create([
+		$b->save([
 			'title'    => 'Title',
 			'subtitle' => 'Subtitle',
 		]);
@@ -444,7 +444,7 @@ class VersionTest extends TestCase
 			id: VersionId::latest()
 		);
 
-		$a->create([
+		$a->save([
 			'title'    => 'Title',
 			'subtitle' => 'Subtitle',
 		]);
@@ -452,98 +452,6 @@ class VersionTest extends TestCase
 		$diff = $a->diff(VersionId::latest());
 
 		$this->assertSame([], $diff);
-	}
-
-	/**
-	 * @covers ::ensure
-	 */
-	public function testEnsureMultiLanguage(): void
-	{
-		$this->setUpMultiLanguage();
-
-		$version = new Version(
-			model: $this->model,
-			id: VersionId::latest()
-		);
-
-		$this->createContentMultiLanguage();
-
-		$this->assertNull($version->ensure('en'));
-		$this->assertNull($version->ensure($this->app->language('en')));
-
-		$this->assertNull($version->ensure('de'));
-		$this->assertNull($version->ensure($this->app->language('de')));
-	}
-
-	/**
-	 * @covers ::ensure
-	 */
-	public function testEnsureSingleLanguage(): void
-	{
-		$this->setUpSingleLanguage();
-
-		$version = new Version(
-			model: $this->model,
-			id: VersionId::latest()
-		);
-
-		$this->createContentSingleLanguage();
-
-		$this->assertNull($version->ensure());
-	}
-
-	/**
-	 * @covers ::ensure
-	 */
-	public function testEnsureWhenMissingMultiLanguage(): void
-	{
-		$this->setUpMultiLanguage();
-
-		$version = new Version(
-			model: $this->model,
-			id: VersionId::changes()
-		);
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Version "changes (de)" does not already exist');
-
-		$version->ensure('de');
-	}
-
-	/**
-	 * @covers ::ensure
-	 */
-	public function testEnsureWhenMissingSingleLanguage(): void
-	{
-		$this->setUpSingleLanguage();
-
-		$version = new Version(
-			model: $this->model,
-			id: VersionId::changes()
-		);
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Version "changes" does not already exist');
-
-		$version->ensure();
-	}
-
-	/**
-	 * @covers ::ensure
-	 */
-	public function testEnsureWithInvalidLanguage(): void
-	{
-		$this->setUpMultiLanguage();
-
-		$version = new Version(
-			model: $this->model,
-			id: VersionId::latest()
-		);
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Invalid language: fr');
-
-		$version->ensure('fr');
 	}
 
 	/**
@@ -637,6 +545,36 @@ class VersionTest extends TestCase
 		);
 
 		$this->assertSame($id, $version->id());
+	}
+
+	/**
+	 * @covers ::isLocked
+	 */
+	public function testIsLocked(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->assertFalse($version->isLocked());
+	}
+
+	/**
+	 * @covers ::lock
+	 */
+	public function testLock(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->assertInstanceOf(Lock::class, $version->lock());
 	}
 
 	/**

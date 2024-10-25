@@ -70,13 +70,10 @@ class MemoryStorage extends Storage
 	 * Returns the stored content fields
 	 *
 	 * @return array<string, string>
-	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
 	public function read(VersionId $versionId, Language $language): array
 	{
-		$this->ensure($versionId, $language);
-		return $this->cache->get($this->cacheId($versionId, $language));
+		return $this->cache->get($this->cacheId($versionId, $language)) ?? [];
 	}
 
 	/**

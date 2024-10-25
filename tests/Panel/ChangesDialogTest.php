@@ -68,7 +68,8 @@ class ChangesDialogTest extends AreaTestCase
 	{
 		$this->setUpModels();
 
-		$this->app->file('file://test')->version(VersionId::changes())->create([]);
+		$this->app->file('file://test')->version(VersionId::latest())->save([]);
+		$this->app->file('file://test')->version(VersionId::changes())->save([]);
 
 		$dialog = new ChangesDialog();
 		$files  = $dialog->files();
@@ -94,7 +95,8 @@ class ChangesDialogTest extends AreaTestCase
 	{
 		$this->setUpModels();
 		$page = $this->app->page('page://test');
-		$page->version(VersionId::changes())->create([]);
+		$page->version(VersionId::latest())->save([]);
+		$page->version(VersionId::changes())->save([]);
 
 		$dialog = new ChangesDialog();
 		$pages  = new Pages([$page]);
@@ -132,7 +134,8 @@ class ChangesDialogTest extends AreaTestCase
 	{
 		$this->setUpModels();
 
-		$this->app->page('page://test')->version(VersionId::changes())->create([]);
+		$this->app->page('page://test')->version(VersionId::latest())->save([]);
+		$this->app->page('page://test')->version(VersionId::changes())->save([]);
 
 		$dialog = new ChangesDialog();
 		$pages  = $dialog->pages();
@@ -158,7 +161,8 @@ class ChangesDialogTest extends AreaTestCase
 	{
 		$this->setUpModels();
 
-		$this->app->user('user://test')->version(VersionId::changes())->create([]);
+		$this->app->user('user://test')->version(VersionId::latest())->save([]);
+		$this->app->user('user://test')->version(VersionId::changes())->save([]);
 
 		$dialog = new ChangesDialog();
 		$users  = $dialog->users();

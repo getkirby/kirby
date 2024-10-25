@@ -27,11 +27,13 @@ class LanguagesDropdownTest extends AreaTestCase
 		$this->assertFalse($button->hasChanges());
 
 		// changes in current translation (not considered)
-		$page->version('changes')->create([], 'en');
+		$page->version('latest')->save([], 'en');
+		$page->version('changes')->save([], 'en');
 		$this->assertFalse($button->hasChanges());
 
 		// changes in other translations
-		$page->version('changes')->create([], 'de');
+		$page->version('latest')->save([], 'de');
+		$page->version('changes')->save([], 'de');
 		$this->assertTrue($button->hasChanges());
 	}
 

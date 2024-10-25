@@ -226,15 +226,9 @@ class PlainTextStorage extends Storage
 	 * Returns the stored content fields
 	 *
 	 * @return array<string, string>
-	 * @throws \Kirby\Exception\NotFoundException If the version is missing
 	 */
 	public function read(VersionId $versionId, Language $language): array
 	{
-		// Verify that the version exists. The `::exists` method
-		// makes sure to validate this correctly, based on the
-		// requested version and language
-		$this->ensure($versionId, $language);
-
 		$contentFile = $this->contentFile($versionId, $language);
 
 		if (file_exists($contentFile) === true) {

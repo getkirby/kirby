@@ -7,7 +7,6 @@ use Kirby\Cms\Language;
 use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
-use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 
 /**
@@ -97,6 +96,9 @@ class Version
 	): void {
 		$language = Language::ensure($language);
 
+		// check if creating is allowed
+		VersionRules::create($this, $fields, $language);
+
 		// track the changes
 		if ($this->id->is(VersionId::changes()) === true) {
 			(new Changes())->track($this->model);
@@ -114,7 +116,12 @@ class Version
 	 */
 	public function delete(Language|string $language = 'default'): void
 	{
-		$this->model->storage()->delete($this->id, Language::ensure($language));
+		$language = Language::ensure($language);
+
+		// check if deleting is allowed
+		VersionRules::delete($this, $language);
+
+		$this->model->storage()->delete($this->id, $language);
 
 		// untrack the changes if the version does no longer exist
 		// in any of the available languages
@@ -150,21 +157,6 @@ class Version
 	}
 
 	/**
-	 * Ensure that the version exists and otherwise
-	 * throw an exception
-	 *
-	 * @throws \Kirby\Exception\NotFoundException if the version does not exist
-	 */
-	public function ensure(
-		Language|string $language = 'default'
-	): void {
-		$this->model->storage()->ensure(
-			$this->id,
-			Language::ensure($language)
-		);
-	}
-
-	/**
 	 * Checks if a version exists for the given language
 	 */
 	public function exists(Language|string $language = 'default'): bool
@@ -193,6 +185,41 @@ class Version
 	public function id(): VersionId
 	{
 		return $this->id;
+	}
+
+	/**
+	 * Checks if the version is the latest version
+	 */
+	public function isLatest(): bool
+	{
+		return $this->id->is('latest');
+	}
+
+	/**
+	 * Checks if the version is locked for the current user
+	 */
+	public function isLocked(Language|string $language = 'default'): bool
+	{
+		// check if the version is locked in any language
+		if ($language === '*') {
+			foreach (Languages::ensure() as $language) {
+				if ($this->isLocked($language) === true) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		return $this->lock($language)->isLocked();
+	}
+
+	/**
+	 * Returns the lock object for the version
+	 */
+	public function lock(Language|string $language = 'default'): Lock
+	{
+		return Lock::for($this, $language);
 	}
 
 	/**
@@ -231,12 +258,24 @@ class Version
 		Language|string|null $toLanguage = null,
 		Storage|null $toStorage = null
 	): void {
-		$this->ensure($fromLanguage);
+		$fromVersion  = $this;
+		$fromLanguage = Language::ensure($fromLanguage);
+		$toLanguage   = Language::ensure($toLanguage ?? $fromLanguage);
+		$toVersion    = $this->model->version($toVersionId ?? $this->id);
+
+		// check if moving is allowed
+		VersionRules::move(
+			fromVersion: $fromVersion,
+			fromLanguage: $fromLanguage,
+			toVersion: $toVersion,
+			toLanguage: $toLanguage
+		);
+
 		$this->model->storage()->move(
-			fromVersionId: $this->id,
-			fromLanguage: Language::ensure($fromLanguage),
-			toVersionId: $toVersionId,
-			toLanguage: $toLanguage ? Language::ensure($toLanguage) : null,
+			fromVersionId: $fromVersion->id(),
+			fromLanguage: $fromLanguage,
+			toVersionId: $toVersion->id(),
+			toLanguage: $toLanguage,
 			toStorage: $toStorage
 		);
 	}
@@ -319,16 +358,10 @@ class Version
 	 */
 	public function publish(Language|string $language = 'default'): void
 	{
-		if ($this->id->is(VersionId::latest()) === true) {
-			throw new LogicException(
-				message: 'This version is already published'
-			);
-		}
-
 		$language = Language::ensure($language);
 
-		// the version needs to exist
-		$this->ensure($language);
+		// check if publishing is allowed
+		VersionRules::publish($this, $language);
 
 		// update the latest version
 		$this->model->update(
@@ -351,6 +384,9 @@ class Version
 		$language = Language::ensure($language);
 
 		try {
+			// make sure that the version exists
+			VersionRules::read($this, $language);
+
 			$fields = $this->model->storage()->read($this->id, $language);
 			$fields = $this->prepareFieldsAfterRead($fields, $language);
 			return $fields;
@@ -370,9 +406,10 @@ class Version
 		array $fields,
 		Language|string $language = 'default'
 	): void {
-		$this->ensure($language);
-
 		$language = Language::ensure($language);
+
+		// check if replacing is allowed
+		VersionRules::replace($this, $fields, $language);
 
 		$this->model->storage()->update(
 			versionId: $this->id,
@@ -409,8 +446,11 @@ class Version
 	 */
 	public function touch(Language|string $language = 'default'): void
 	{
-		$this->ensure($language);
-		$this->model->storage()->touch($this->id, Language::ensure($language));
+		$language = Language::ensure($language);
+
+		VersionRules::touch($this, $language);
+
+		$this->model->storage()->touch($this->id, $language);
 	}
 
 	/**
@@ -424,9 +464,10 @@ class Version
 		array $fields,
 		Language|string $language = 'default'
 	): void {
-		$this->ensure($language);
-
 		$language = Language::ensure($language);
+
+		// check if updating is allowed
+		VersionRules::update($this, $fields, $language);
 
 		// merge the previous state with the new state to always
 		// update to a complete version

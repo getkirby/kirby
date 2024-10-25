@@ -6,7 +6,6 @@ use Generator;
 use Kirby\Cms\Language;
 use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\A;
 
 /**
@@ -106,26 +105,6 @@ abstract class Storage
 	}
 
 	/**
-	 * Checks if a version/language combination exists and otherwise
-	 * will throw a `NotFoundException`
-	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
-	 */
-	public function ensure(VersionId $versionId, Language $language): void
-	{
-		if ($this->exists($versionId, $language) === true) {
-			return;
-		}
-
-		$message = match($this->model->kirby()->multilang()) {
-			true  => 'Version "' . $versionId . ' (' . $language->code() . ')" does not already exist',
-			false => 'Version "' . $versionId . '" does not already exist',
-		};
-
-		throw new NotFoundException($message);
-	}
-
-	/**
 	 * Checks if a version exists
 	 */
 	abstract public function exists(VersionId $versionId, Language $language): bool;
@@ -218,8 +197,6 @@ abstract class Storage
 	 * Returns the stored content fields
 	 *
 	 * @return array<string, string>
-	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
 	abstract public function read(VersionId $versionId, Language $language): array;
 
@@ -275,7 +252,6 @@ abstract class Storage
 	 */
 	public function update(VersionId $versionId, Language $language, array $fields): void
 	{
-		$this->ensure($versionId, $language);
 		$this->write($versionId, $language, $fields);
 	}
 
