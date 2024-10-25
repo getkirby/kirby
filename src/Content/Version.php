@@ -192,7 +192,7 @@ class Version
 	 */
 	public function isLatest(): bool
 	{
-		return $this->id->is(VersionId::latest());
+		return $this->id->is('latest');
 	}
 
 	/**
