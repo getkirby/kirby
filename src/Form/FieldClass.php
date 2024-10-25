@@ -41,7 +41,7 @@ abstract class FieldClass
 	protected string|null $name;
 	protected string|null $placeholder;
 	protected bool $required;
-	protected Fields $siblings;
+	public Fields $siblings;
 	protected mixed $value = null;
 	protected string|null $width;
 
@@ -64,6 +64,7 @@ abstract class FieldClass
 		$this->setTranslate($params['translate'] ?? true);
 		$this->setWhen($params['when'] ?? null);
 		$this->setWidth($params['width'] ?? null);
+		$this->setValidate($params['validate'] ?? []);
 
 		if (array_key_exists('value', $params) === true) {
 			$this->fill($params['value']);
@@ -125,6 +126,14 @@ abstract class FieldClass
 	{
 		$this->value = $value;
 		$this->errors = null;
+	}
+
+	/**
+	 * @deprecated 5.0.0 Use `::siblings() instead
+	 */
+	public function formFields(): Fields
+	{
+		return $this->siblings;
 	}
 
 	/**

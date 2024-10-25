@@ -53,6 +53,9 @@ class Fields extends Collection
 			$field = Field::factory($field['type'], $field, $this);
 		}
 
+		// set the siblings collection
+		$field->siblings = $this;
+
 		parent::__set($field->name(), $field);
 
 		// reset the errors cache if new fields are added

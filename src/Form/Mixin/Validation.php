@@ -22,6 +22,7 @@ trait Validation
 	 * An array of all found errors
 	 */
 	protected array|null $errors = null;
+	protected array $validate = [];
 
 	/**
 	 * Runs all validations and returns an array of
@@ -49,9 +50,17 @@ trait Validation
 	}
 
 	/**
+	 * Set custom validation rules for the field
+	 */
+	protected function setValidate(string|array $validate = []): void
+	{
+		$this->validate = A::wrap($validate);
+	}
+
+	/**
 	 * Runs the validations defined for the field
 	 */
-	protected function validate(): array
+	public function validate(): array
 	{
 		$validations = $this->validations();
 		$value       = $this->value();

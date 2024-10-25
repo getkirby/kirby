@@ -13,7 +13,7 @@ class LinkFieldTest extends TestCase
 		$this->assertSame('link', $field->type());
 		$this->assertSame('link', $field->name());
 		$this->assertSame('', $field->value());
-		$this->assertNull($field->label());
+		$this->assertSame('Link', $field->label());
 		$this->assertNull($field->text());
 		$this->assertTrue($field->save());
 		$this->assertNull($field->after());

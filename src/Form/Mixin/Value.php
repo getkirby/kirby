@@ -55,7 +55,7 @@ trait Value
 	 * - The field is currently empty
 	 * - The field is not currently inactive because of a `when` rule
 	 */
-	protected function needsValue(): bool
+	public function needsValue(): bool
 	{
 		if (
 			$this->isSaveable() === false ||

@@ -69,12 +69,12 @@ class StructureFieldTest extends TestCase
 		$expected = [
 			'a' => [
 				'type' => 'text',
-				'label' => 'a',
+				'label' => 'A',
 				'mobile' => true // the first column should be automatically kept on mobile
 			],
 			'b' => [
 				'type' => 'text',
-				'label' => 'b',
+				'label' => 'B',
 			],
 		];
 
@@ -103,7 +103,7 @@ class StructureFieldTest extends TestCase
 			'b' => [
 				'mobile' => true,
 				'type'   => 'text',
-				'label'  => 'b',
+				'label'  => 'B',
 			],
 		];
 

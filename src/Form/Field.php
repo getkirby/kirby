@@ -8,6 +8,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Component;
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
 
 /**
  * Form Field object that takes a Vue component style
@@ -36,7 +37,7 @@ class Field extends Component
 	/**
 	 * Parent collection with all fields of the current form
 	 */
-	protected Fields $siblings;
+	public Fields $siblings;
 
 	/**
 	 * Registry for all component mixins
@@ -67,6 +68,12 @@ class Field extends Component
 		}
 
 		$this->setModel($attrs['model'] ?? null);
+		$this->setValidate($attrs['validate'] ?? []);
+
+		unset(
+			$attrs['model'],
+			$attrs['validate']
+		);
 
 		// use the type as fallback for the name
 		$attrs['name'] ??= $type;
@@ -202,9 +209,7 @@ class Field extends Component
 				},
 				'label' => function () {
 					/** @var \Kirby\Form\Field $this */
-					if ($this->label !== null) {
-						return $this->model()->toString($this->label);
-					}
+					return $this->model()->toString($this->label ?? Str::ucfirst($this->name));
 				},
 				'placeholder' => function () {
 					/** @var \Kirby\Form\Field $this */
@@ -370,8 +375,6 @@ class Field extends Component
 	public function toArray(): array
 	{
 		$array = parent::toArray();
-
-		unset($array['model']);
 
 		$array['hidden']   = $this->isHidden();
 		$array['saveable'] = $this->isSaveable();
