@@ -40,6 +40,7 @@ class Permissions
 			'update'         => true
 		],
 		'languages' => [
+			'access' => true,
 			'create' => true,
 			'delete' => true,
 			'update' => true
@@ -61,10 +62,12 @@ class Permissions
 			'update'         => true
 		],
 		'site' => [
+			'access'      => true,
 			'changeTitle' => true,
 			'update'      => true
 		],
 		'users' => [
+			'access'         => true,
 			'changeEmail'    => true,
 			'changeLanguage' => true,
 			'changeName'     => true,
@@ -75,6 +78,7 @@ class Permissions
 			'update'         => true
 		],
 		'user' => [
+			'access'         => true,
 			'changeEmail'    => true,
 			'changeLanguage' => true,
 			'changeName'     => true,

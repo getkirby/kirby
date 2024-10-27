@@ -440,6 +440,36 @@ class ApiTest extends TestCase
 		$this->assertSame($this->app->users(), $this->api->users());
 	}
 
+	public function testUsersWithoutPermissions()
+	{
+		$app = $this->app->clone([
+			'users' => [
+				['email' => 'test@getkirby.com']
+			]
+		]);
+		$app->impersonate('test@getkirby.com');
+
+		$this->assertNotSame($app->users(), $app->api()->users());
+	}
+
+	public function testUsersWithoutPermissionsDebugEnabled()
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'debug' => true
+			],
+			'users'   => [
+				['email' => 'test@getkirby.com']
+			]
+		]);
+		$app->impersonate('test@getkirby.com');
+
+		$this->expectException(AuthException::class);
+		$this->expectExceptionMessage('You are not allowed to access the users');
+
+		$app->api()->users();
+	}
+
 	public function testFileGetRoute()
 	{
 		// regular
