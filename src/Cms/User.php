@@ -289,6 +289,16 @@ class User extends ModelWithContent
 	}
 
 	/**
+	 * Checks if the user is accessible
+	 */
+	public function isAccessible(): bool
+	{
+		static $accessible = [];
+		$role = $this->role()->id();
+		return $accessible[$role] ??= $this->permissions()->can('access');
+	}
+
+	/**
 	 * Checks if this user has the admin role
 	 */
 	public function isAdmin(): bool

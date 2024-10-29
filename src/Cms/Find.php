@@ -159,13 +159,23 @@ class Find
 				$kirby->option('api.allowImpersonation', false)
 			);
 
-			return $user ?? throw new NotFoundException([
+			if ($user?->isAccessible() === true) {
+				return $user;
+			}
+
+			throw new NotFoundException([
 				'key' => 'user.undefined'
 			]);
 		}
 
 		// get a specific user by id
-		return $kirby->user($id) ?? throw new NotFoundException([
+		$user = $kirby->user($id);
+
+		if ($user?->isAccessible() === true) {
+			return $user;
+		}
+
+		throw new NotFoundException([
 			'key'  => 'user.notFound',
 			'data' => [
 				'name' => $id
