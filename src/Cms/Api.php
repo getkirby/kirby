@@ -264,6 +264,6 @@ class Api extends BaseApi
 	 */
 	public function users(): Users
 	{
-		return $this->kirby->users();
+		return $this->kirby->users()->filter('isAccessible', true);
 	}
 }
