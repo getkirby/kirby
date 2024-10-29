@@ -94,10 +94,6 @@ class Api extends BaseApi
 		string $path,
 		string $filename
 	): File|null {
-		if ($this->hasAccess('files') === false) {
-			return null;
-		}
-
 		return Find::file($path, $filename);
 	}
 
@@ -109,40 +105,7 @@ class Api extends BaseApi
 	 */
 	public function files(string $path): Files
 	{
-		if ($this->hasAccess('files') === false) {
-			return new Files([], $this->parent($path));
-		}
-
 		return $this->parent($path)->files()->filter('isAccessible', true);
-	}
-
-	/**
-	 * Checks if the access permission to a specific category is granted.
-	 * For example, for the category `users` it checks in the following order:
-	 * - users.access (primary)
-	 * - panel.users (secondary)
-	 * - panel.access (fallback)
-	 *
-	 * @internal
-	 */
-	public function hasAccess(string $category): bool
-	{
-		$allowImpersonation = $this->kirby()->option('api.allowImpersonation', false);
-		$user               = $this->kirby()->user(null, $allowImpersonation);
-
-		if ($user === null) {
-			return false;
-		}
-
-		if ($user->role()->permissions()->for($category, 'access') === false) {
-			if ($this->kirby()->option('debug') === true) {
-				throw new AuthException(['key' => 'access.' . $category]);
-			}
-
-			return false;
-		}
-
-		return true;
 	}
 
 	/**
@@ -170,10 +133,6 @@ class Api extends BaseApi
 	 */
 	public function language(): string|null
 	{
-		if ($this->hasAccess('languages') === false) {
-			return null;
-		}
-
 		return
 			$this->requestQuery('language') ??
 			$this->requestHeaders('x-language');
@@ -184,10 +143,6 @@ class Api extends BaseApi
 	 */
 	public function languages(): Languages
 	{
-		if ($this->hasAccess('languages') === false) {
-			return new Languages();
-		}
-
 		return $this->kirby()->languages();
 	}
 
@@ -199,10 +154,6 @@ class Api extends BaseApi
 	 */
 	public function page(string $id): Page|null
 	{
-		if ($this->hasAccess('pages') === false) {
-			return null;
-		}
-
 		return Find::page($id);
 	}
 
@@ -215,10 +166,6 @@ class Api extends BaseApi
 		string|null $parentId = null,
 		string|null $status = null
 	): Pages {
-		if ($this->hasAccess('pages') !== true) {
-			return new Pages();
-		}
-
 		$parent = $parentId === null ? $this->site() : $this->page($parentId);
 		$pages  = match ($status) {
 			'all'             => $parent->childrenAndDrafts(),
@@ -238,10 +185,6 @@ class Api extends BaseApi
 	 */
 	public function searchPages(string|null $parent = null): Pages
 	{
-		if ($this->hasAccess('pages') !== true) {
-			return new Pages();
-		}
-
 		$pages = $this->pages($parent, $this->requestQuery('status'));
 
 		if ($this->requestMethod() === 'GET') {
@@ -259,10 +202,6 @@ class Api extends BaseApi
 		string $name,
 		string|null $path = null
 	): mixed {
-		if ($this->hasAccess('site') === false) {
-			return null;
-		}
-
 		if (!$section = $model->blueprint()?->section($name)) {
 			throw new NotFoundException('The section "' . $name . '" could not be found');
 		}
@@ -296,10 +235,6 @@ class Api extends BaseApi
 	 */
 	public function site(): Site
 	{
-		if ($this->hasAccess('site') === false) {
-			return new Site();
-		}
-
 		return $this->kirby->site();
 	}
 
@@ -313,10 +248,6 @@ class Api extends BaseApi
 	 */
 	public function user(string|null $id = null): User|null
 	{
-		if ($this->hasAccess('users') === false) {
-			return null;
-		}
-
 		try {
 			return Find::user($id);
 		} catch (NotFoundException $e) {
@@ -333,10 +264,6 @@ class Api extends BaseApi
 	 */
 	public function users(): Users
 	{
-		if ($this->hasAccess('users') === false) {
-			return new Users();
-		}
-
 		return $this->kirby->users();
 	}
 }
