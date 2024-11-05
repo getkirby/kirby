@@ -378,7 +378,7 @@
 	"filter": "Filter",
 
 	"form.discard": "Discard changes",
-	"form.discard.confirm": "Do you really want to <strong>delete all unpublished changes</strong>?",
+	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
 	"form.locked": "This content is disabled for you as it is currently edited by another user",
 	"form.unsaved": "The current changes have not yet been saved",
 	"form.preview": "Preview changes",
