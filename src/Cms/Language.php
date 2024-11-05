@@ -146,16 +146,7 @@ class Language
 	 */
 	public static function create(array $props): static
 	{
-		$kirby = App::instance();
-		$user  = $kirby->user();
-
-		if (
-			$user === null ||
-			$user->role()->permissions()->for('languages', 'create') === false
-		) {
-			throw new PermissionException(['key' => 'language.create.permission']);
-		}
-
+		$kirby         = App::instance();
 		$props['code'] = Str::slug($props['code'] ?? null);
 		$languages     = $kirby->languages();
 
@@ -165,6 +156,10 @@ class Language
 		}
 
 		$language = new static($props);
+
+		if ($language->permissions()->can('create') === false) {
+			throw new PermissionException(['key' => 'language.create.permission']);
+		}
 
 		// trigger before hook
 		$kirby->trigger(
@@ -213,20 +208,12 @@ class Language
 	 */
 	public function delete(): bool
 	{
-		$kirby = App::instance();
-		$user  = $kirby->user();
-		$code  = $this->code();
-
-		if (
-			$user === null ||
-			$user->role()->permissions()->for('languages', 'delete') === false
-		) {
+		if ($this->permissions()->can('delete') === false) {
 			throw new PermissionException(['key' => 'language.delete.permission']);
 		}
 
-		if ($this->isDeletable() === false) {
-			throw new Exception('The language cannot be deleted');
-		}
+		$kirby = App::instance();
+		$code  = $this->code();
 
 		// trigger before hook
 		$kirby->trigger('language.delete:before', [
@@ -270,6 +257,16 @@ class Language
 	public function exists(): bool
 	{
 		return file_exists($this->root());
+	}
+
+	/**
+	 * Checks if the language is accessible
+	 */
+	public function isAccessible(): bool
+	{
+		static $accessible = [];
+		$role = $this->kirby()->user()?->role()->id() ?? 'nobody';
+		return $accessible[$role] ??= $this->permissions()->can('access');
 	}
 
 	/**
@@ -386,6 +383,11 @@ class Language
 		}
 
 		return $path . '/(:all?)';
+	}
+
+	public function permissions(): LanguagePermissions
+	{
+		return new LanguagePermissions($this);
 	}
 
 	/**
@@ -515,15 +517,11 @@ class Language
 	 */
 	public function update(array $props = null): static
 	{
-		$kirby = App::instance();
-		$user  = $kirby->user();
-
-		if (
-			$user === null ||
-			$user->role()->permissions()->for('languages', 'update') === false
-		) {
+		if ($this->permissions()->can('update') === false) {
 			throw new PermissionException(['key' => 'language.update.permission']);
 		}
+
+		$kirby = App::instance();
 
 		// don't change the language code
 		unset($props['code']);

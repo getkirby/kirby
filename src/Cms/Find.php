@@ -54,7 +54,9 @@ class Find
 	 */
 	public static function language(string $code): Language|null
 	{
-		if ($language = App::instance()->language($code)) {
+		$language = App::instance()->language($code);
+
+		if ($language?->isAccessible() === true) {
 			return $language;
 		}
 
