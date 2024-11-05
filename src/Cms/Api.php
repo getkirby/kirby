@@ -144,7 +144,7 @@ class Api extends BaseApi
 	 */
 	public function languages(): Languages
 	{
-		return $this->kirby()->languages();
+		return $this->kirby()->languages()->filter('isAccessible', true);
 	}
 
 	/**
