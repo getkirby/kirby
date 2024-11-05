@@ -18,12 +18,15 @@ class Json extends Handler
 	/**
 	 * Converts an array to an encoded JSON string
 	 */
-	public static function encode($data): string
+	public static function encode($data, bool $pretty = false): string
 	{
-		return json_encode(
-			$data,
-			JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-		);
+		$constants = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+
+		if ($pretty === true) {
+			$constants |= JSON_PRETTY_PRINT;
+		}
+
+		return json_encode($data, $constants);
 	}
 
 	/**

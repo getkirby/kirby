@@ -4,6 +4,7 @@ namespace Kirby\Data;
 
 use Kirby\Exception\Exception;
 use Kirby\Filesystem\F;
+use Throwable;
 
 /**
  * The `Data` class provides readers and
@@ -80,9 +81,20 @@ class Data
 	/**
 	 * Decodes data with the specified handler
 	 */
-	public static function decode($string, string $type): array
-	{
-		return static::handler($type)->decode($string);
+	public static function decode(
+		$string,
+		string $type,
+		bool $exceptions = true
+	): array {
+		try {
+			return static::handler($type)->decode($string);
+		} catch (Throwable $e) {
+			if ($exceptions === false) {
+				return [];
+			}
+
+			throw $e;
+		}
 	}
 
 	/**
