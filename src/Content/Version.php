@@ -131,32 +131,6 @@ class Version
 	}
 
 	/**
-	 * Returns the changed fields, compared to the given version
-	 */
-	public function diff(
-		Version|VersionId|string $version,
-		Language|string $language = 'default'
-	): array {
-		if (is_string($version) === true) {
-			$version = VersionId::from($version);
-		}
-
-		if ($version instanceof VersionId) {
-			$version = $this->model->version($version);
-		}
-
-
-		if ($version->id()->is($this->id) === true) {
-			return [];
-		}
-
-		$a = $this->content($language)->toArray();
-		$b = $version->content($language)->toArray();
-
-		return array_diff_assoc($b, $a);
-	}
-
-	/**
 	 * Checks if a version exists for the given language
 	 */
 	public function exists(Language|string $language = 'default'): bool
@@ -185,6 +159,51 @@ class Version
 	public function id(): VersionId
 	{
 		return $this->id;
+	}
+
+	/**
+	 * Returns whether the content of both versions
+	 * is identical
+	 */
+	public function isIdentical(
+		Version|VersionId|string $version,
+		Language|string $language = 'default'
+	): bool {
+		if (is_string($version) === true) {
+			$version = VersionId::from($version);
+		}
+
+		if ($version instanceof VersionId) {
+			$version = $this->model->version($version);
+		}
+
+
+		if ($version->id()->is($this->id) === true) {
+			return true;
+		}
+
+		$language = Language::ensure($language);
+
+		// read fields low-level from storage
+		$a = $this->read($language) ?? [];
+		$b = $version->read($language) ?? [];
+
+		// apply same preparation as for content
+		$a = $this->prepareFieldsForContent($a, $language);
+		$b = $this->prepareFieldsForContent($b, $language);
+
+		// remove additional fields that should not be
+		// considered in the comparison
+		unset(
+			$a['uuid'],
+			$b['uuid']
+		);
+
+		// ensure both arrays of fields are sorted the same
+		ksort($a);
+		ksort($b);
+
+		return $a === $b;
 	}
 
 	/**

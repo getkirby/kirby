@@ -87,7 +87,7 @@ class Changes
 			language: 'current'
 		);
 
-		if ($latest->diff(version: $changes, language: 'current') === []) {
+		if ($changes->isIdentical(version: $latest, language: 'current')) {
 			$changes->delete();
 		}
 
