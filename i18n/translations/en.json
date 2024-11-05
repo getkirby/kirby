@@ -74,12 +74,7 @@
 	"error": "Error",
 	"error.access.code": "Invalid code",
 	"error.access.login": "Invalid login",
-	"error.access.files": "You are not allowed to access the files",
-	"error.access.languages": "You are not allowed to access the languages",
 	"error.access.panel": "You are not allowed to access the panel",
-	"error.access.site": "You are not allowed to access the site",
-	"error.access.user": "You are not allowed to access the user",
-	"error.access.users": "You are not allowed to access the users",
 	"error.access.view": "You are not allowed to access this part of the panel",
 
 	"error.avatar.create.fail": "The profile picture could not be uploaded",
