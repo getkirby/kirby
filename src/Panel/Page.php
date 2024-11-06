@@ -118,7 +118,6 @@ class Page extends Model
 			];
 
 			$result[] = '-';
-
 		}
 
 		$result['changeTitle'] = [

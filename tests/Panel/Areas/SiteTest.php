@@ -58,27 +58,6 @@ class SiteTest extends AreaTestCase
 		$this->assertNull($props['prev']);
 	}
 
-	public function testPageChanges(): void
-	{
-		$this->login();
-
-		$this->app->site()->createChild([
-			'slug'    => 'test',
-			'isDraft' => false,
-			'content' => [
-				'title' => 'Test'
-			]
-		]);
-
-		$view  = $this->view('pages/test/changes');
-		$props = $view['props'];
-
-		$this->assertSame('k-page-changes-view', $view['component']);
-		$this->assertSame('Test', $view['title']);
-		$this->assertSame('/test?_version=changes', $props['src']['changes']);
-		$this->assertSame('/test', $props['src']['latest']);
-	}
-
 	public function testPageFileWithoutModel(): void
 	{
 		$this->login();
@@ -138,6 +117,27 @@ class SiteTest extends AreaTestCase
 
 		$this->assertNull($props['next']);
 		$this->assertNull($props['prev']);
+	}
+
+	public function testPagePreview(): void
+	{
+		$this->login();
+
+		$this->app->site()->createChild([
+			'slug'    => 'test',
+			'isDraft' => false,
+			'content' => [
+				'title' => 'Test'
+			]
+		]);
+
+		$view  = $this->view('pages/test/preview/changes');
+		$props = $view['props'];
+
+		$this->assertSame('k-preview-view', $view['component']);
+		$this->assertSame('Test | Changes', $view['title']);
+		$this->assertSame('/test?_version=changes', $props['src']['changes']);
+		$this->assertSame('/test', $props['src']['latest']);
 	}
 
 	public function testSiteWithoutAuthentication(): void
@@ -212,6 +212,21 @@ class SiteTest extends AreaTestCase
 
 		$this->assertNull($props['next']);
 		$this->assertNull($props['prev']);
+	}
+
+	public function testSitePreview(): void
+	{
+		$this->login();
+
+		$this->app->site();
+
+		$view  = $this->view('site/preview/changes');
+		$props = $view['props'];
+
+		$this->assertSame('k-preview-view', $view['component']);
+		$this->assertSame('Site | Changes', $view['title']);
+		$this->assertSame('/?_version=changes', $props['src']['changes']);
+		$this->assertSame('/', $props['src']['latest']);
 	}
 
 	public function testSiteTitle(): void
