@@ -34,6 +34,15 @@ export default (panel) => {
 	emitter.on("keydown.cmd./", () => panel.search());
 
 	/**
+	 * Custom copy to clipboard event
+	 * @since 5.0.0
+	 */
+	emitter.on("copyToClipboard", async (e) => {
+		navigator.clipboard.writeText(e);
+		panel.notification.success(panel.t("copied") + "!");
+	});
+
+	/**
 	 * Config for globally delegated events.
 	 * Some events need to be fired on the document
 	 * and some on window. The boolean value determins if

@@ -18,9 +18,11 @@
 	"collapse.all": "Collapse All",
 	"color": "Color",
 	"coordinates": "Coordinates",
+	"copied": "Copied",
 	"copy": "Copy",
 	"copy.all": "Copy all",
 	"copy.success": "{count} copied!",
+	"copy.url": "Copy URL",
 	"create": "Create",
 	"custom": "Custom",
 

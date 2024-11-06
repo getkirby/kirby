@@ -92,11 +92,10 @@ class Page extends Model
 	 */
 	public function dropdown(array $options = []): array
 	{
-		$page     = $this->model;
-		$request  = $page->kirby()->request();
-		$defaults = $request->get(['view', 'sort', 'delete']);
-		$options  = [...$defaults, $options];
-
+		$page        = $this->model;
+		$request     = $page->kirby()->request();
+		$defaults    = $request->get(['view', 'sort', 'delete']);
+		$options     = [...$defaults, ...$options];
 		$permissions = $this->options(['preview']);
 		$view        = $options['view'] ?? 'view';
 		$url         = $this->url(true);
