@@ -103,15 +103,26 @@ class Page extends Model
 		$result      = [];
 
 		if ($view === 'list') {
-			$result['preview'] = [
-				'link'     => $page->previewUrl(),
-				'target'   => '_blank',
-				'icon'     => 'open',
-				'text'     => I18n::translate('open'),
-				'disabled' => $this->isDisabledDropdownOption('preview', $options, $permissions)
-			];
-			$result[] = '-';
+
 		}
+
+		$result['preview'] = [
+			'link'     => $page->previewUrl(),
+			'target'   => '_blank',
+			'icon'     => 'open',
+			'text'     => I18n::translate('open'),
+			'disabled' => $this->isDisabledDropdownOption('preview', $options, $permissions)
+		];
+
+		$result[] = '-';
+
+		$result['changes'] = [
+			'icon' => 'window',
+			'link' => $page->panel()->url(true) . '/preview/compare',
+			'text' => I18n::translate('preview'),
+		];
+
+		$result[] = '-';
 
 		$result['changeTitle'] = [
 			'dialog' => [
@@ -365,7 +376,6 @@ class Page extends Model
 			...$props,
 			...$this->prevNext(),
 			'blueprint'  => $this->model->intendedTemplate()->name(),
-			'changesUrl' => $this->url(true) . '/changes',
 			'model'      => $model,
 			'title'      => $model['title'],
 		];
@@ -382,8 +392,8 @@ class Page extends Model
 		return [
 			'breadcrumb' => $this->model->panel()->breadcrumb(),
 			'component'  => 'k-page-view',
-			'props'      => $this->props(),
-			'title'      => $this->model->title()->toString(),
+			'props'      => $props = $this->props(),
+			'title'      => $props['title'],
 		];
 	}
 }

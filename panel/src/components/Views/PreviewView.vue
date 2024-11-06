@@ -1,9 +1,9 @@
 <template>
-	<k-panel class="k-panel-inside k-page-changes-view">
-		<header class="k-page-changes-header">
+	<k-panel class="k-panel-inside k-preview-view">
+		<header class="k-preview-view-header">
 			<k-button-group>
 				<k-button
-					:link="link"
+					:link="back"
 					:responsive="true"
 					:title="$t('back')"
 					icon="angle-left"
@@ -12,7 +12,7 @@
 					@click="$refs.tree.toggle()"
 				>
 				</k-button>
-				<k-button icon="page" element="span">
+				<k-button icon="title" element="span">
 					{{ title }}
 				</k-button>
 			</k-button-group>
@@ -29,10 +29,10 @@
 				<k-dropdown-content ref="view" :options="dropdown" align-x="end" />
 			</k-button-group>
 		</header>
-		<main class="k-page-changes-grid" :data-mode="mode">
+		<main class="k-preview-view-grid" :data-mode="mode">
 			<section
 				v-if="mode === 'latest' || mode === 'compare'"
-				class="k-page-changes-panel"
+				class="k-preview-view-panel"
 			>
 				<header>
 					<k-headline>{{ modes.latest.label }}</k-headline>
@@ -54,12 +54,12 @@
 						/>
 					</k-button-group>
 				</header>
-				<iframe ref="latestFrame" :src="src.latest"></iframe>
+				<iframe :src="src.latest"></iframe>
 			</section>
 
 			<section
 				v-if="mode === 'changes' || mode === 'compare'"
-				class="k-page-changes-panel"
+				class="k-preview-view-panel"
 			>
 				<header>
 					<k-headline>{{ modes.changes.label }}</k-headline>
@@ -90,25 +90,28 @@
 						/>
 					</k-button-group>
 				</header>
-				<iframe v-if="isUnsaved" ref="changesFrame" :src="src.changes"></iframe>
-				<k-empty v-else>{{ $t("lock.unsaved.empty") }}</k-empty>
+				<iframe v-if="isUnsaved" :src="src.changes"></iframe>
+				<k-empty v-else>
+					{{ $t("lock.unsaved.empty") }}
+					<k-button icon="edit" variant="filled" :link="back">
+						{{ $t("edit") }}
+					</k-button>
+				</k-empty>
 			</section>
 		</main>
 	</k-panel>
 </template>
 
 <script>
-import PageView from "@/components/Views/Pages/PageView.vue";
+import ModelView from "@/components/Views/ModelView.vue";
 
 export default {
-	extends: PageView,
+	extends: ModelView,
 	props: {
-		src: Object
-	},
-	data() {
-		return {
-			mode: "compare"
-		};
+		back: String,
+		mode: String,
+		src: Object,
+		title: String
 	},
 	computed: {
 		modes() {
@@ -137,22 +140,13 @@ export default {
 			return [this.modes.compare, "-", this.modes.latest, this.modes.changes];
 		}
 	},
-	watch: {
-		id: {
-			handler() {
-				this.changeMode(localStorage.getItem("kirby$preview$mode"));
-			},
-			immediate: true
-		}
-	},
 	methods: {
 		changeMode(mode) {
 			if (!mode || !this.modes[mode]) {
 				return;
 			}
 
-			this.mode = mode;
-			localStorage.setItem("kirby$preview$mode", mode);
+			this.$panel.view.open(this.link + "/preview/" + mode);
 		},
 		async onDiscard() {
 			if (this.isLocked === true) {
@@ -168,21 +162,21 @@ export default {
 			}
 
 			await this.$panel.content.publish();
-			await this.$panel.reload();
+			await this.$panel.view.reload();
 		}
 	}
 };
 </script>
 
 <style>
-.k-page-changes-view {
+.k-preview-view {
 	position: fixed;
 	inset: 0;
 	height: 100%;
 	display: grid;
 	grid-template-rows: auto 1fr;
 }
-.k-page-changes-header {
+.k-preview-view-header {
 	container-type: inline-size;
 	display: flex;
 	gap: var(--spacing-2);
@@ -191,47 +185,44 @@ export default {
 	padding: var(--spacing-2);
 	border-bottom: 1px solid var(--color-border);
 }
-
-@media screen and (max-width: 40rem) {
-	.k-page-changes-header-controls > .k-button {
-		--button-text-display: none;
-	}
-}
-
-.k-page-changes-grid {
+.k-preview-view-grid {
 	display: flex;
 }
 @media screen and (max-width: 60rem) {
-	.k-page-changes-grid {
+	.k-preview-view-grid {
 		flex-direction: column;
 	}
 }
-.k-page-changes-grid .k-page-changes-panel + .k-page-changes-panel {
+.k-preview-view-grid .k-preview-view-panel + .k-preview-view-panel {
 	border-left: 1px solid var(--color-border);
 }
-.k-page-changes-panel {
+.k-preview-view-panel {
 	flex-grow: 1;
+	flex-basis: 50%;
 	display: flex;
 	flex-direction: column;
 	padding: var(--spacing-6);
 	background: var(--color-gray-200);
 }
-.k-page-changes-panel header {
+.k-preview-view-panel header {
 	container-type: inline-size;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	margin-bottom: var(--spacing-3);
 }
-.k-page-changes-grid iframe {
+.k-preview-view-panel iframe {
 	width: 100%;
 	flex-grow: 1;
 	border-radius: var(--rounded-lg);
 	box-shadow: var(--shadow-xl);
 	background: var(--color-white);
 }
-.k-page-changes-grid .k-empty {
+.k-preview-view-panel .k-empty {
 	flex-grow: 1;
 	justify-content: center;
+	flex-direction: column;
+	gap: var(--spacing-6);
+	--button-color-text: var(--color-text);
 }
 </style>
