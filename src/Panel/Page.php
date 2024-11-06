@@ -103,26 +103,23 @@ class Page extends Model
 		$result      = [];
 
 		if ($view === 'list') {
+			$result['open'] = [
+				'link'     => $page->previewUrl(),
+				'target'   => '_blank',
+				'icon'     => 'open',
+				'text'     => I18n::translate('open'),
+				'disabled' => $this->isDisabledDropdownOption('preview', $options, $permissions)
+			];
+
+			$result['preview'] = [
+				'icon' => 'window',
+				'link' => $page->panel()->url(true) . '/preview/compare',
+				'text' => I18n::translate('preview'),
+			];
+
+			$result[] = '-';
 
 		}
-
-		$result['preview'] = [
-			'link'     => $page->previewUrl(),
-			'target'   => '_blank',
-			'icon'     => 'open',
-			'text'     => I18n::translate('open'),
-			'disabled' => $this->isDisabledDropdownOption('preview', $options, $permissions)
-		];
-
-		$result[] = '-';
-
-		$result['changes'] = [
-			'icon' => 'window',
-			'link' => $page->panel()->url(true) . '/preview/compare',
-			'text' => I18n::translate('preview'),
-		];
-
-		$result[] = '-';
 
 		$result['changeTitle'] = [
 			'dialog' => [
