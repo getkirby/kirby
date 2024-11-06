@@ -749,7 +749,7 @@
 
 	"version": "Version",
 	"version.changes": "Changed version",
-	"version.compare": "Comparing versions",
+	"version.compare": "Compare versions",
 	"version.current": "Current version",
 	"version.latest": "Latest version",
 	"versionInformation": "Version information",
