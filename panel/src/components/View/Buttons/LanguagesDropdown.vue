@@ -1,5 +1,53 @@
 <template>
-	<k-view-button v-bind="$props" :badge="changesBadge" />
+	<div class="k-view-button k-languages-dropdown">
+		<k-button
+			v-bind="$props"
+			:badge="changesBadge"
+			:dropdown="true"
+			@click="$refs.dropdown.toggle()"
+		/>
+		<k-dropdown-content
+			ref="dropdown"
+			:options="$dropdown(options)"
+			align-x="end"
+			@action="$emit('action', $event)"
+		>
+			<template #default="{ items }">
+				<template v-for="(language, index) in items">
+					<hr v-if="language === '-'" :key="'separator-' + index" />
+
+					<template v-else>
+						<k-button
+							:key="'item-' + index"
+							v-bind="language"
+							class="k-dropdown-item k-language"
+						>
+							{{ language.text }} ({{ language.code }})
+
+							<footer class="k-language-footer">
+								<span v-if="language.default"> Primary language </span>
+
+								<span
+									v-if="language.lock"
+									class="k-language-state k-language-lock"
+								>
+									<k-icon type="lock" />
+									In editing
+								</span>
+								<span
+									v-else-if="language.changes"
+									class="k-language-state k-language-changes"
+								>
+									<k-icon type="edit" />
+									Has changes
+								</span>
+							</footer>
+						</k-button>
+					</template>
+				</template>
+			</template>
+		</k-dropdown-content>
+	</div>
 </template>
 
 <script>
@@ -34,3 +82,33 @@ export default {
 	}
 };
 </script>
+
+<style>
+.k-button.k-language {
+	--button-height: auto;
+	padding-block: var(--button-padding);
+}
+
+.k-language-footer {
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-3);
+	font-size: var(--text-xs);
+	color: var(--color-gray-400);
+	margin-top: var(--spacing-1);
+}
+
+.k-language-state {
+	--icon-size: 14px;
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-1);
+	font-weight: var(--font-bold);
+}
+.k-language-changes {
+	color: var(--color-orange-500);
+}
+.k-language-lock {
+	color: var(--color-red-500);
+}
+</style>
