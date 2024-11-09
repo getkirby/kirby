@@ -1,4 +1,5 @@
 import { lcfirst } from "@/helpers/string";
+import clipboard from "@/helpers/clipboard";
 import mitt from "mitt";
 
 /**
@@ -38,7 +39,7 @@ export default (panel) => {
 	 * @since 5.0.0
 	 */
 	emitter.on("copyToClipboard", async (e) => {
-		navigator.clipboard.writeText(e);
+		clipboard.write(e);
 		panel.notification.success(panel.t("copy.success") + "!");
 	});
 
