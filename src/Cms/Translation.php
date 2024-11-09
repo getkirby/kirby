@@ -111,11 +111,10 @@ class Translation
 		string $root,
 		array $inject = []
 	): static {
-		try {
-			$data = [...Data::read($root), ...$inject];
-		} catch (Exception) {
-			$data = [];
-		}
+		$data = [
+			...Data::read($root, fail: false),
+			...$inject
+		];
 
 		return new static($code, $data);
 	}
