@@ -39,7 +39,7 @@ export default (panel) => {
 	 */
 	emitter.on("copyToClipboard", async (e) => {
 		navigator.clipboard.writeText(e);
-		panel.notification.success(panel.t("copied") + "!");
+		panel.notification.success(panel.t("copy.success") + "!");
 	});
 
 	/**
