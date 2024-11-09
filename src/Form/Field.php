@@ -31,9 +31,7 @@ class Field extends Component
 	use Mixin\Translatable;
 	use Mixin\Validation;
 	use Mixin\When;
-	use Mixin\Value {
-		isEmptyValue as protected isEmptyValueFromTrait;
-	}
+	use Mixin\Value;
 
 	/**
 	 * Parent collection with all fields of the current form
