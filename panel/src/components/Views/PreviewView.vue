@@ -9,7 +9,6 @@
 					icon="angle-left"
 					size="sm"
 					variant="filled"
-					@click="$refs.tree.toggle()"
 				>
 				</k-button>
 				<k-button icon="title" element="span">
