@@ -547,7 +547,6 @@ class FieldClassTest extends TestCase
 	}
 
 	/**
-	 * @covers ::store
 	 * @covers ::toStoredValue
 	 */
 	public function testToStoredValue()

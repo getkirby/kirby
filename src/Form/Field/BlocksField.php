@@ -238,19 +238,6 @@ class BlocksField extends FieldClass
 		];
 	}
 
-	protected function store(mixed $value): mixed
-	{
-		$blocks = $this->blocksToValues((array)$value, 'content');
-
-		// returns empty string to avoid storing empty array as string `[]`
-		// and to consistency work with `$field->isEmpty()`
-		if ($blocks === []) {
-			return '';
-		}
-
-		return $this->valueToJson($blocks, $this->pretty());
-	}
-
 	protected function setDefault(mixed $default = null): void
 	{
 		// set id for blocks if not exists
@@ -285,6 +272,20 @@ class BlocksField extends FieldClass
 	protected function setPretty(bool $pretty = false): void
 	{
 		$this->pretty = $pretty;
+	}
+
+	public function toStoredValue(bool $default = false): mixed
+	{
+		$value  = $this->toFormValue($default);
+		$blocks = $this->blocksToValues((array)$value, 'content');
+
+		// returns empty string to avoid storing empty array as string `[]`
+		// and to consistency work with `$field->isEmpty()`
+		if ($blocks === []) {
+			return '';
+		}
+
+		return $this->valueToJson($blocks, $this->pretty());
 	}
 
 	public function validations(): array

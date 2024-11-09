@@ -40,7 +40,7 @@ trait Value
 	 */
 	public function isEmpty(): bool
 	{
-		return $this->isEmptyValue($this->value());
+		return $this->isEmptyValue($this->toFormValue());
 	}
 
 	/**
@@ -74,40 +74,10 @@ trait Value
 	}
 
 	/**
-	 * Converts the given value to a value
-	 * that can be stored in the text file
-	 */
-	protected function store(mixed $value): mixed
-	{
-		if ($this->isSaveable() === false) {
-			return null;
-		}
-
-		return $value;
-	}
-
-	/**
 	 * Returns the value of the field in a format to be used in forms
 	 * @alias for `::value()`
 	 */
 	public function toFormValue(bool $default = false): mixed
-	{
-		return $this->value($default);
-	}
-
-	/**
-	 * Returns the value of the field in a format to be stored by our storage classes
-	 */
-	public function toStoredValue(bool $default = false): mixed
-	{
-		return $this->store($this->value($default));
-	}
-
-	/**
-	 * Returns the value of the field if saveable
-	 * otherwise it returns null
-	 */
-	public function value(bool $default = false): mixed
 	{
 		if ($this->isSaveable() === false) {
 			return null;
@@ -118,6 +88,25 @@ trait Value
 		}
 
 		return $this->value;
+	}
+
+	/**
+	 * Returns the value of the field in a format to be stored by our storage classes
+	 */
+	public function toStoredValue(bool $default = false): mixed
+	{
+		return $this->toFormValue($default);
+	}
+
+	/**
+	 * Returns the value of the field if saveable
+	 * otherwise it returns null
+	 *
+	 * @alias for `::toFormValue()` might get deprecated or reused later
+	 */
+	public function value(bool $default = false): mixed
+	{
+		return $this->toFormValue($default);
 	}
 
 	/**

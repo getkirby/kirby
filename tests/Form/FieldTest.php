@@ -1059,7 +1059,6 @@ class FieldTest extends TestCase
 
 	/**
 	 * @covers ::toStoredValue
-	 * @covers ::store
 	 * @covers ::data
 	 */
 	public function testToStoredValue()
@@ -1086,7 +1085,6 @@ class FieldTest extends TestCase
 
 	/**
 	 * @covers ::toStoredValue
-	 * @covers ::store
 	 * @covers ::data
 	 */
 	public function testToStoredValueWhenUnsaveable()

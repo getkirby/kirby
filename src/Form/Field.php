@@ -367,25 +367,6 @@ class Field extends Component
 	}
 
 	/**
-	 * Converts the given value to a value
-	 * that can be stored in the text file
-	 */
-	protected function store(mixed $value): mixed
-	{
-		$store = $this->options['save'] ?? true;
-
-		if ($store === false) {
-			return null;
-		}
-
-		if ($store instanceof Closure) {
-			return $store->call($this, $value);
-		}
-
-		return $value;
-	}
-
-	/**
 	 * Converts the field to a plain array
 	 */
 	public function toArray(): array
@@ -403,6 +384,25 @@ class Field extends Component
 			$array,
 			fn ($item) => $item !== null && is_object($item) === false
 		);
+	}
+
+	/**
+	 * Returns the value of the field in a format to be stored by our storage classes
+	 */
+	public function toStoredValue(bool $default = false): mixed
+	{
+		$value = $this->value($default);
+		$store = $this->options['save'] ?? true;
+
+		if ($store === false) {
+			return null;
+		}
+
+		if ($store instanceof Closure) {
+			return $store->call($this, $value);
+		}
+
+		return $value;
 	}
 
 	/**
