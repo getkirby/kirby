@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Content\Field;
+use Kirby\Content\VersionId;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
@@ -929,26 +930,31 @@ class Page extends ModelWithContent
 	 * Draft preview Url
 	 * @internal
 	 */
-	public function previewUrl(): string|null
+	public function previewUrl(VersionId|string $version = 'latest'): string|null
 	{
-		$preview = $this->blueprint()->preview();
+		$versionId = VersionId::from($version);
+		$url       = $this->blueprint()->preview();
 
-		if ($preview === false) {
+		if ($url === false) {
 			return null;
 		}
 
-		$url = match ($preview) {
-			true    => $this->url(),
-			default => $preview
+		$url = match ($url) {
+			true, null => $this->url(),
+			default    => $url
 		};
 
+		$uri = new Uri($url ?? $this->url());
+
 		if ($this->isDraft() === true) {
-			$uri = new Uri($url);
 			$uri->query->token = $this->token();
-			$url = $uri->toString();
 		}
 
-		return $url;
+		if ($versionId->is('changes') === true) {
+			$uri->query->_version = 'changes';
+		}
+
+		return $uri->toString();
 	}
 
 	/**
