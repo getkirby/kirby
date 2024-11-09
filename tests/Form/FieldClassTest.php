@@ -4,7 +4,6 @@ namespace Kirby\Form;
 
 use Exception;
 use Kirby\Cms\Page;
-use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 
 class TestField extends FieldClass
@@ -24,22 +23,6 @@ class UnsaveableField extends FieldClass
 	public function isSaveable(): bool
 	{
 		return false;
-	}
-}
-
-class JsonField extends FieldClass
-{
-	public function fill($value = null): void
-	{
-		$this->value = $this->valueFromJson($value);
-	}
-}
-
-class YamlField extends FieldClass
-{
-	public function fill($value = null): void
-	{
-		$this->value = $this->valueFromYaml($value);
 	}
 }
 
@@ -597,57 +580,6 @@ class FieldClassTest extends TestCase
 
 		$field = new UnsaveableField(['value' => 'Test']);
 		$this->assertNull($field->value());
-	}
-
-	/**
-	 * @covers ::valueFromJson
-	 */
-	public function testValueFromJson()
-	{
-		$value = [
-			[
-				'content' => 'Heading 1',
-				'id' => 'h1',
-				'type' => 'h1',
-			]
-		];
-
-		// use simple value
-		$field = new JsonField(['value' => json_encode($value)]);
-		$this->assertSame($value, $field->value());
-
-		// use empty value
-		$field = new JsonField(['value' => '']);
-		$this->assertSame([], $field->value());
-
-		// use invalid value
-		$field = new JsonField(['value' => '{invalid}']);
-		$this->assertSame([], $field->value());
-	}
-
-	/**
-	 * @covers ::valueFromYaml
-	 */
-	public function testValueFromYaml()
-	{
-		$value = "name: Homer\nchildren:\n  - Lisa\n  - Bart\n  - Maggie\n";
-		$expected = [
-			'name'     => 'Homer',
-			'children' => ['Lisa', 'Bart', 'Maggie']
-		];
-
-		// use simple value
-		$field = new YamlField(['value' => $value]);
-		$this->assertSame($expected, $field->value());
-
-		// use empty value
-		$field = new YamlField(['value' => '']);
-		$this->assertSame([], $field->value());
-
-		// use invalid value
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid YAML data; please pass a string');
-		new YamlField(['value' => new \stdClass()]);
 	}
 
 	/**

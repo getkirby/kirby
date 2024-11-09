@@ -8,6 +8,7 @@ use Kirby\Cms\Blocks as BlocksCollection;
 use Kirby\Cms\Fieldset;
 use Kirby\Cms\Fieldsets;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\FieldClass;
@@ -285,7 +286,7 @@ class BlocksField extends FieldClass
 			return '';
 		}
 
-		return $this->valueToJson($blocks, $this->pretty());
+		return Json::encode($blocks, pretty: $this->pretty());
 	}
 
 	public function validations(): array
