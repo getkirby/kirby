@@ -32,7 +32,7 @@ class LayoutField extends BlocksField
 
 	public function fill(mixed $value = null): void
 	{
-		$value   = Data::decode($value, type: 'json', exceptions: false);
+		$value   = Data::decode($value, type: 'json', fail: false);
 		$layouts = Layouts::factory($value, ['parent' => $this->model])->toArray();
 
 		foreach ($layouts as $layoutIndex => $layout) {

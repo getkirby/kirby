@@ -84,12 +84,12 @@ class Data
 	public static function decode(
 		$string,
 		string $type,
-		bool $exceptions = true
+		bool $fail = true
 	): array {
 		try {
 			return static::handler($type)->decode($string);
 		} catch (Throwable $e) {
-			if ($exceptions === false) {
+			if ($fail === false) {
 				return [];
 			}
 
