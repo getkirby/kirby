@@ -12,8 +12,7 @@ namespace Kirby\Form\Mixin;
 trait Value
 {
 	/**
-	 * @deprecated 3.5.0 Use `::toStoredValue()` instead
-	 * @todo remove when the general field class setup has been refactored
+	 * @deprecated 5.0.0 Use `::toStoredValue()` instead
 	 */
 	public function data(bool $default = false): mixed
 	{
