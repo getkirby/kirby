@@ -944,7 +944,7 @@ class Page extends ModelWithContent
 			default    => $url
 		};
 
-		$uri = new Uri($url ?? $this->url());
+		$uri = new Uri($url);
 
 		if ($this->isDraft() === true) {
 			$uri->query->token = $this->token();
