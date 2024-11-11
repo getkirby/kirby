@@ -10,7 +10,6 @@ use Kirby\Filesystem\F;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
 use Stringable;
-use Throwable;
 
 /**
  * The `$language` object represents
