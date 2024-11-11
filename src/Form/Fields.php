@@ -133,21 +133,27 @@ class Fields extends Collection
 		foreach ($names as $name) {
 			$index++;
 
-			if ($field = $fields->get($name)) {
-				if ($count !== $index) {
-					$form = $field->form();
+			// search for the field by name
+			$field = $fields->get($name);
 
-					if ($form instanceof Form === false) {
-						return null;
-					}
-
-					$fields = $form->fields();
-				}
-
-				continue;
+			// if the field cannot be found,
+			// there's no point in going further
+			if ($field === null) {
+				return null;
 			}
 
-			return null;
+			// there are more parts in the key
+			if ($index < $count) {
+				$form = $field->form();
+
+				// the search can only continue for
+				// fields with valid nested forms
+				if ($form instanceof Form === false) {
+					return null;
+				}
+
+				$fields = $form->fields();
+			}
 		}
 
 		return $field;
