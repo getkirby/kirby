@@ -49,7 +49,7 @@ class PreviewDropdownButton extends ViewButton
 				'text' => I18n::translate('copy.url'),
 				'icon' => 'copy',
 				'click' => [
-					'global'  => 'copyToClipboard',
+					'global'  => 'clipboard.write',
 					'payload' => $this->copy
 				]
 			]

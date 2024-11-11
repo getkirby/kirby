@@ -38,7 +38,7 @@ export default (panel) => {
 	 * Custom copy to clipboard event
 	 * @since 5.0.0
 	 */
-	emitter.on("copyToClipboard", async (e) => {
+	emitter.on("clipboard.write", async (e) => {
 		clipboard.write(e);
 		panel.notification.success(panel.t("copy.success") + "!");
 	});
