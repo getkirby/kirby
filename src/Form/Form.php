@@ -122,15 +122,15 @@ class Form
 		$data = $this->values;
 
 		foreach ($this->fields as $field) {
-			if ($field->unset() === true) {
-				$data[$field->name()] = null;
+			if ($field->isSaveable() === false || $field->unset() === true) {
+				if ($includeNulls === true) {
+					$data[$field->name()] = null;
+				} else {
+					unset($data[$field->name()]);
+				}
 			} else {
 				$data[$field->name()] = $field->toStoredValue($defaults);
 			}
-		}
-
-		if ($includeNulls === false) {
-			$data = array_filter($data, fn ($value) => $value !== null);
 		}
 
 		return $data;
