@@ -139,6 +139,12 @@ export default {
 			return [this.modes.compare, "-", this.modes.latest, this.modes.changes];
 		}
 	},
+	mounted() {
+		this.$events.on("keydown.esc", this.onExit);
+	},
+	destroyed() {
+		this.$events.off("keydown.esc", this.onExit);
+	},
 	methods: {
 		changeMode(mode) {
 			if (!mode || !this.modes[mode]) {
@@ -154,6 +160,13 @@ export default {
 
 			await this.$panel.content.discard();
 			await this.$panel.view.reload();
+		},
+		onExit() {
+			if (this.$panel.overlays().length > 0) {
+				return;
+			}
+
+			this.$panel.view.open(this.link);
 		},
 		async onSubmit() {
 			if (this.isLocked === true) {
