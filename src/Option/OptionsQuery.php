@@ -183,8 +183,8 @@ class OptionsQuery extends OptionsProvider
 			$text = $model->$safeMethod($this->text ?? $text, $data);
 
 			// additional data
-			$icon = $model->toString($this->icon, $data);
-			$info = $model->$safeMethod($this->info, $data);
+			$icon = $this->icon !== null ? $model->toString($this->icon, $data) : null;
+			$info = $this->info !== null ? $model->$safeMethod($this->info, $data) : null;
 
 			return compact('text', 'value', 'icon', 'info');
 		});

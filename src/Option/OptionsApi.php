@@ -144,8 +144,8 @@ class OptionsApi extends OptionsProvider
 				// or when the safe mode is explicitly disabled (select field)
 				'text'  => $model->$safeMethod($this->text, ['item' => $item]),
 				// additional data
-				'icon'  => $model->toString($this->icon, ['item' => $item]),
-				'info'  => $model->$safeMethod($this->info, ['item' => $item])
+				'icon'  => $this->icon !== null ? $model->toString($this->icon, ['item' => $item]) : null,
+				'info'  => $this->info !== null ? $model->$safeMethod($this->info, ['item' => $item]) : null
 			];
 		}
 
