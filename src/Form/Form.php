@@ -275,8 +275,6 @@ class Form
 
 	/**
 	 * Converts the data of fields to strings
-	 *
-	 * @deprecated 5.0.0 Use `::toStoredValues` instead
 	 */
 	public function strings($defaults = false): array
 	{
