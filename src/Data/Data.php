@@ -110,11 +110,22 @@ class Data
 	 * the data handler is automatically chosen by
 	 * the extension if not specified
 	 */
-	public static function read(string $file, string|null $type = null): array
-	{
-		$type  ??= F::extension($file);
-		$handler = static::handler($type);
-		return $handler->read($file);
+	public static function read(
+		string $file,
+		string|null $type = null,
+		bool $fail = true
+	): array {
+		try {
+			$type  ??= F::extension($file);
+			$handler = static::handler($type);
+			return $handler->read($file);
+		} catch (Throwable $e) {
+			if ($fail === false) {
+				return [];
+			}
+
+			throw $e;
+		}
 	}
 
 	/**

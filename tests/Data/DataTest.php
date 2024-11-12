@@ -197,6 +197,15 @@ class DataTest extends TestCase
 	}
 
 	/**
+	 * @covers ::read
+	 */
+	public function testReadInvalidNoException()
+	{
+		$data = Data::read(static::TMP . '/data.foo', fail: false);
+		$this->assertSame([], $data);
+	}
+
+	/**
 	 * @covers ::write
 	 * @covers ::handler
 	 */
