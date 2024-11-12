@@ -74,12 +74,12 @@ class Transpiled extends Runner {
 	 * @param string $query The query string to be executed.
 	 * @param array $context An optional array of context variables to be passed to the query executor.
 	 * @return mixed The result of the executed query.
-	 * @throws \Exception If the query is not valid or the executor is not callable.
+	 * @throws Exception If the query is not valid or the executor is not callable.
 	 */
 	public function run(string $query, array $context = []): mixed {
 		$function = $this->getResolver($query);
 		if(!is_callable($function)) {
-			throw new \Exception("Query is not valid");
+			throw new Exception("Query is not valid");
 		}
 		return $function($context, $this->allowedFunctions);
 	}

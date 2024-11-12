@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit\Query\Runners\Visitors;
 
+use Exception;
 use Kirby\Toolkit\Query\AST\ArgumentList;
 use Kirby\Toolkit\Query\AST\ArrayList;
 use Kirby\Toolkit\Query\AST\Closure;
@@ -128,7 +129,7 @@ class CodeGen extends Visitor {
 	public function visitGlobalFunction(GlobalFunction $node): string {
 		$name = $node->name;
 		if(!isset($this->validGlobalFunctions[$name])) {
-			throw new \Exception("Invalid global function $name");
+			throw new Exception("Invalid global function $name");
 		}
 
 		$arguments = $node->arguments->accept($this);
