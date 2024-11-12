@@ -28,7 +28,9 @@ class OptionsApi extends OptionsProvider
 		public string $url,
 		public string|null $query = null,
 		public string|null $text = null,
-		public string|null $value = null
+		public string|null $value = null,
+		public string|null $icon = null,
+		public string|null $info = null
 	) {
 	}
 
@@ -46,10 +48,12 @@ class OptionsApi extends OptionsProvider
 		}
 
 		return new static(
-			url: $props['url'],
+			url  : $props['url'],
 			query: $props['query'] ?? $props['fetch'] ?? null,
-			text: $props['text'] ?? null,
-			value: $props['value'] ?? null
+			text : $props['text'] ?? null,
+			value: $props['value'] ?? null,
+			icon : $props['icon'] ?? null,
+			info : $props['info'] ?? null
 		);
 	}
 
@@ -138,7 +142,10 @@ class OptionsApi extends OptionsProvider
 				'value' => $model->toString($this->value, ['item' => $item]),
 				// text is only a raw string when using {< >}
 				// or when the safe mode is explicitly disabled (select field)
-				'text' => $model->$safeMethod($this->text, ['item' => $item])
+				'text'  => $model->$safeMethod($this->text, ['item' => $item]),
+				// additional data
+				'icon'  => $this->icon !== null ? $model->toString($this->icon, ['item' => $item]) : null,
+				'info'  => $this->info !== null ? $model->$safeMethod($this->info, ['item' => $item]) : null
 			];
 		}
 
