@@ -89,7 +89,23 @@ class QueryTest extends TestCase
 
 		$bar = $query->resolve($data);
 		$this->assertInstanceOf(Closure::class, $bar);
+
 		$bar = $bar();
+		$this->assertSame('simpson', $bar);
+	}
+
+	/**
+	 * @covers ::resolve
+	 */
+	public function testResolveWithClosureWithArgument()
+	{
+		$query = new Query('(foo) => foo.homer');
+		$data  = [];
+
+		$bar = $query->resolve($data);
+		$this->assertInstanceOf(Closure::class, $bar);
+
+		$bar = $bar(['homer' => 'simpson']);
 		$this->assertSame('simpson', $bar);
 	}
 }

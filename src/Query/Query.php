@@ -11,6 +11,10 @@ use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Image\QrCode;
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Query\Runner;
+use Kirby\Toolkit\Query\Runners\Interpreted;
+use Kirby\Toolkit\Query\Runners\Transpiled;
+use Kirby\Toolkit\Query\Visitor;
 
 /**
  * The Query class can be used to query arrays and objects,
@@ -60,24 +64,16 @@ class Query
 	/**
 	 * Method to help classes that extend Query
 	 * to intercept a segment's result.
+	 *
+	 * @deprecated 5.0.0 Will be removed in 6.0.0
 	 */
 	public function intercept(mixed $result): mixed
 	{
 		return $result;
 	}
 
-	/**
-	 * Returns the query result if anything
-	 * can be found, otherwise returns null
-	 *
-	 * @throws \Kirby\Exception\BadMethodCallException If an invalid method is accessed by the query
-	 */
-	public function resolve(array|object $data = []): mixed
+	private function resolve_legacy(array|object $data = []): mixed
 	{
-		if (empty($this->query) === true) {
-			return $data;
-		}
-
 		// merge data with default entries
 		if (is_array($data) === true) {
 			$data = [...static::$entries, ...$data];
@@ -99,6 +95,26 @@ class Query
 
 		// loop through all segments to resolve query
 		return Expression::factory($this->query, $this)->resolve($data);
+
+	}
+
+	/**
+	 * Returns the query result if anything
+	 * can be found, otherwise returns null
+	 *
+	 * @throws \Kirby\Exception\BadMethodCallException If an invalid method is accessed by the query
+	 */
+	public function resolve(array|object $data = []): mixed
+	{
+		if (empty($this->query) === true) {
+			return $data;
+		}
+
+		return match(option('query.runner', 'interpreted')) {
+			'transpiled' => (new Transpiled(static::$entries))->run($this->query, $data),
+			'interpreted' => (new Interpreted(static::$entries))->run($this->query, $data),
+			default => $this->resolve_legacy($data)
+		};
 	}
 }
 
