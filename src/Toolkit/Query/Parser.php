@@ -40,7 +40,6 @@ class Parser extends BaseParser {
 		$left = $this->ternary();
 
 		while ($this->match(TokenType::COALESCE)) {
-			$operator = $this->previous;
 			$right = $this->ternary();
 			$left = new Coalesce($left, $right);
 		}
@@ -75,13 +74,19 @@ class Parser extends BaseParser {
 		while ($tok = $this->matchAny([TokenType::DOT, TokenType::NULLSAFE])) {
 			$nullSafe = $tok->type === TokenType::NULLSAFE;
 
-			$right = $this->consume(TokenType::IDENTIFIER, 'Expect property name after ".".');
+			if($right = $this->match(TokenType::IDENTIFIER)) {
+				$right = $right->lexeme;
+			} else if($right = $this->match(TokenType::INTEGER)) {
+				$right = $right->literal;
+			} else {
+				throw new Exception('Expect property name after ".".');
+			}
 
 			if($this->match(TokenType::OPEN_PAREN)) {
 				$arguments = $this->argumentList();
-				$left = new MemberAccess($left, $right->lexeme, $arguments, $nullSafe);
+				$left = new MemberAccess($left, $right, $arguments, $nullSafe);
 			} else {
-				$left = new MemberAccess($left, $right->lexeme, null, $nullSafe);
+				$left = new MemberAccess($left, $right, null, $nullSafe);
 			}
 		}
 
@@ -111,14 +116,25 @@ class Parser extends BaseParser {
 		return new ArgumentList($list);
 	}
 
+
+
 	private function atomic(): Node {
+
+		// float numbers
+		if ($integer = $this->match(TokenType::INTEGER)) {
+			if($this->match(TokenType::DOT)) {
+				$fractional = $this->match(TokenType::INTEGER);
+				return new Literal(floatval($integer->literal . '.' . $fractional->literal));
+			}
+			return new Literal($integer->literal);
+		}
+
 		// primitives
 		if ($token = $this->matchAny([
 			TokenType::TRUE,
 			TokenType::FALSE,
 			TokenType::NULL,
 			TokenType::STRING,
-			TokenType::NUMBER,
 		])) {
 			return new Literal($token->literal);
 		}
