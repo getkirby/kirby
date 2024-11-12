@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit\Query;
 
+use Exception;
 use Iterator;
 
 abstract class BaseParser {
@@ -26,7 +27,7 @@ abstract class BaseParser {
 		$first = $this->tokens->current();
 
 		if ($first === null) {
-			throw new \Exception('No tokens found.');
+			throw new Exception('No tokens found.');
 		}
 
 		$this->current = $first;
@@ -37,7 +38,7 @@ abstract class BaseParser {
 			return $this->advance();
 		}
 
-		throw new \Exception($message);
+		throw new Exception($message);
 	}
 
 	protected function check(TokenType $type): bool {
