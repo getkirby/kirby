@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit\Query;
 
+use Exception;
 use Generator;
 
 class Tokenizer {
@@ -62,13 +63,11 @@ class Tokenizer {
 			self::match($source, $current, 'null', $l, true) => new Token(TokenType::NULL, $l, null),
 			self::match($source, $current, '"([^"\\\\]*(?:\\\\.[^"\\\\]*)*)"', $l) => new Token(TokenType::STRING, $l, stripcslashes(substr($l, 1, -1))),
 			self::match($source, $current, '\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\'', $l) => new Token(TokenType::STRING, $l, stripcslashes(substr($l, 1, -1))),
-			self::match($source, $current, '[0-9]+\\.[0-9]+', $l) => new Token(TokenType::NUMBER, $l, floatval($l)),
-			self::match($source, $current, '[0-9]+', $l) => new Token(TokenType::NUMBER, $l, intval($l)),
+			self::match($source, $current, '[0-9]+', $l) => new Token(TokenType::INTEGER, $l, intval($l)),
 			self::match($source, $current, '[a-zA-Z_][a-zA-Z0-9_]*', $l) => new Token(TokenType::IDENTIFIER, $l),
 
-
 			// unknown token
-			default => throw new \Exception("Unexpected character: {$source[$current]}"),
+			default => throw new Exception("Unexpected character: {$source[$current]}"),
 		};
 	}
 

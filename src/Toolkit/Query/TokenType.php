@@ -4,7 +4,7 @@ namespace Kirby\Toolkit\Query;
 
 enum TokenType {
 	case STRING;
-	case NUMBER;
+	case INTEGER;
 	case WHITESPACE;
 	case IDENTIFIER;
 	case DOT;
