@@ -4,16 +4,16 @@ namespace Kirby\Toolkit\Query;
 
 use Exception;
 use Iterator;
-use Kirby\Toolkit\Query\AST\ArgumentList;
-use Kirby\Toolkit\Query\AST\ArrayList;
-use Kirby\Toolkit\Query\AST\Closure;
-use Kirby\Toolkit\Query\AST\Coalesce;
-use Kirby\Toolkit\Query\AST\GlobalFunction;
-use Kirby\Toolkit\Query\AST\Literal;
-use Kirby\Toolkit\Query\AST\MemberAccess;
+use Kirby\Toolkit\Query\AST\ArgumentListNode;
+use Kirby\Toolkit\Query\AST\ArrayListNode;
+use Kirby\Toolkit\Query\AST\ClosureNode;
+use Kirby\Toolkit\Query\AST\CoalesceNode;
+use Kirby\Toolkit\Query\AST\GlobalFunctionNode;
+use Kirby\Toolkit\Query\AST\LiteralNode;
+use Kirby\Toolkit\Query\AST\MemberAccessNode;
 use Kirby\Toolkit\Query\AST\Node;
-use Kirby\Toolkit\Query\AST\Ternary;
-use Kirby\Toolkit\Query\AST\Variable;
+use Kirby\Toolkit\Query\AST\TernaryNode;
+use Kirby\Toolkit\Query\AST\VariableNode;
 
 class Parser extends BaseParser {
 	public function __construct(
@@ -41,7 +41,7 @@ class Parser extends BaseParser {
 
 		while ($this->match(TokenType::COALESCE)) {
 			$right = $this->ternary();
-			$left = new Coalesce($left, $right);
+			$left = new CoalesceNode($left, $right);
 		}
 
 		return $left;
@@ -62,7 +62,7 @@ class Parser extends BaseParser {
 				$falseBranch = $this->expression();
 			}
 
-			return new Ternary($left, $trueBranch, $falseBranch, $trueIsDefault);
+			return new TernaryNode($left, $trueBranch, $falseBranch, $trueIsDefault);
 		}
 
 		return $left;
@@ -84,9 +84,9 @@ class Parser extends BaseParser {
 
 			if($this->match(TokenType::OPEN_PAREN)) {
 				$arguments = $this->argumentList();
-				$left = new MemberAccess($left, $right, $arguments, $nullSafe);
+				$left = new MemberAccessNode($left, $right, $arguments, $nullSafe);
 			} else {
-				$left = new MemberAccess($left, $right, null, $nullSafe);
+				$left = new MemberAccessNode($left, $right, null, $nullSafe);
 			}
 		}
 
@@ -113,20 +113,17 @@ class Parser extends BaseParser {
 	private function argumentList(): Node {
 		$list = $this->listUntil(TokenType::CLOSE_PAREN);
 
-		return new ArgumentList($list);
+		return new ArgumentListNode($list);
 	}
 
-
-
 	private function atomic(): Node {
-
 		// float numbers
 		if ($integer = $this->match(TokenType::INTEGER)) {
 			if($this->match(TokenType::DOT)) {
 				$fractional = $this->match(TokenType::INTEGER);
-				return new Literal(floatval($integer->literal . '.' . $fractional->literal));
+				return new LiteralNode(floatval($integer->literal . '.' . $fractional->literal));
 			}
-			return new Literal($integer->literal);
+			return new LiteralNode($integer->literal);
 		}
 
 		// primitives
@@ -136,24 +133,24 @@ class Parser extends BaseParser {
 			TokenType::NULL,
 			TokenType::STRING,
 		])) {
-			return new Literal($token->literal);
+			return new LiteralNode($token->literal);
 		}
 
 		// array literals
 		if ($token = $this->match(TokenType::OPEN_BRACKET)) {
 			$arrayItems = $this->listUntil(TokenType::CLOSE_BRACKET);
 
-			return new ArrayList($arrayItems);
+			return new ArrayListNode($arrayItems);
 		}
 
 		// global functions and variables
 		if ($token = $this->match(TokenType::IDENTIFIER)) {
 			if($this->match(TokenType::OPEN_PAREN)) {
 				$arguments = $this->argumentList();
-				return new GlobalFunction($token->lexeme, $arguments);
+				return new GlobalFunctionNode($token->lexeme, $arguments);
 			}
 
-			return new Variable($token->lexeme);
+			return new VariableNode($token->lexeme);
 		}
 
 		// grouping and closure argument lists
@@ -164,12 +161,12 @@ class Parser extends BaseParser {
 				$expression = $this->expression();
 				// check if all elements are variables
 				foreach($list as $element) {
-					if(!$element instanceof Variable) {
+					if(!$element instanceof VariableNode) {
 						throw new Exception('Expecting only variables in closure argument list.');
 					}
 				}
-				$arguments = new ArgumentList($list);
-				return new Closure($arguments, $expression);
+				$arguments = new ArgumentListNode($list);
+				return new ClosureNode($arguments, $expression);
 			} else {
 				if(count($list) > 1) {
 					throw new Exception('Expecting \"=>\" after closure argument list.');

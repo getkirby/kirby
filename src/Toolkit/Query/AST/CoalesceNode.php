@@ -2,8 +2,9 @@
 
 namespace Kirby\Toolkit\Query\AST;
 
-class Variable extends Node {
+class CoalesceNode extends Node {
 	public function __construct(
-		public string $name,
+		public Node $left,
+		public Node $right,
 	) {}
 }

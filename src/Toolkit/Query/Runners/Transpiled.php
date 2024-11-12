@@ -19,6 +19,7 @@ class Transpiled extends Runner {
 	 */
 	public function __construct(
 		public array $allowedFunctions = [],
+		public Closure|null $interceptor = null,
 	) {}
 
 
@@ -54,7 +55,7 @@ class Transpiled extends Runner {
 		$comment = join("\n", array_map(fn($l) => "// $l", explode("\n", $query)));
 
 		$uses = join("\n", array_map(fn($k) => "use $k;", array_keys($codeGen->uses))) . "\n";
-		$function = "<?php\n$uses\n$comment\nreturn function(array \$context = [], array \$functions = []) {\n$mappings\nreturn $functionBody;\n};";
+		$function = "<?php\n$uses\n$comment\nreturn function(array \$context, array \$functions, Closure \$intercept) {\n$mappings\nreturn $functionBody;\n};";
 
 		// store closure in file-cache
 		if(!is_dir(self::$cacheFolder)) {
@@ -81,6 +82,6 @@ class Transpiled extends Runner {
 		if(!is_callable($function)) {
 			throw new Exception("Query is not valid");
 		}
-		return $function($context, $this->allowedFunctions);
+		return $function($context, $this->allowedFunctions, $this->interceptor ?? fn($v) => $v);
 	}
 }

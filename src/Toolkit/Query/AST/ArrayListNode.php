@@ -2,8 +2,8 @@
 
 namespace Kirby\Toolkit\Query\AST;
 
-class ArgumentList extends Node {
+class ArrayListNode extends Node {
 	public function __construct(
-		public array $arguments,
+		public array $elements,
 	) {}
 }

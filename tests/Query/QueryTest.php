@@ -108,4 +108,36 @@ class QueryTest extends TestCase
 		$bar = $bar(['homer' => 'simpson']);
 		$this->assertSame('simpson', $bar);
 	}
+
+	/**
+	 * @covers ::intercept
+	 */
+	public function testResolveWithInterceptor()
+	{
+		$query = new class extends Query {
+			public function __construct()
+			{
+				parent::__construct('foo.getObj.name');
+			}
+
+			public function intercept($result): mixed
+			{
+				if(is_object($result) === true) {
+					$result = clone $result;
+					$result->name .= ' simpson';
+				}
+
+				return $result;
+			}
+		};
+
+		$data  = [
+			'foo' => [
+				'getObj' => fn () => (object)['name' => 'homer']
+			]
+		];
+
+		$bar = $query->resolve($data);
+		$this->assertSame('homer simpson', $bar);
+	}
 }
