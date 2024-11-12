@@ -9,7 +9,6 @@ export default {
 		api: String,
 		blueprint: String,
 		buttons: Array,
-		changesUrl: String,
 		content: Object,
 		id: String,
 		link: String,
@@ -92,6 +91,7 @@ export default {
 			}
 
 			await this.$panel.content.discard();
+			this.$panel.view.reload();
 		},
 		onInput(values) {
 			if (this.isLocked === true) {
@@ -105,13 +105,14 @@ export default {
 			e?.preventDefault?.();
 			this.onSubmit();
 		},
-		onSubmit(values = {}) {
+		async onSubmit(values = {}) {
 			if (this.isLocked === true) {
 				return false;
 			}
 
 			this.$panel.content.update(values);
-			this.$panel.content.publish();
+			await this.$panel.content.publish();
+			await this.$panel.view.refresh();
 		},
 		toPrev(e) {
 			if (this.prev && e.target.localName === "body") {

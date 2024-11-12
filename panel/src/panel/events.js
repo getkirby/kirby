@@ -1,4 +1,5 @@
 import { lcfirst } from "@/helpers/string";
+import clipboard from "@/helpers/clipboard";
 import mitt from "mitt";
 
 /**
@@ -32,6 +33,15 @@ export default (panel) => {
 	 */
 	emitter.on("keydown.cmd.shift.f", () => panel.search());
 	emitter.on("keydown.cmd./", () => panel.search());
+
+	/**
+	 * Custom copy to clipboard event
+	 * @since 5.0.0
+	 */
+	emitter.on("clipboard.write", async (e) => {
+		clipboard.write(e);
+		panel.notification.success(panel.t("copy.success") + "!");
+	});
 
 	/**
 	 * Config for globally delegated events.

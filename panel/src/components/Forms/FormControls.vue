@@ -4,6 +4,7 @@
 			<k-button
 				v-for="button in buttons"
 				:key="button.text"
+				:responsive="true"
 				v-bind="button"
 				size="sm"
 				variant="filled"
@@ -41,7 +42,7 @@
 			</template>
 			<template v-if="preview">
 				<hr />
-				<k-dropdown-item :link="preview" icon="preview" target="_blank">
+				<k-dropdown-item :link="preview" icon="window">
 					{{ $t("form.preview") }}
 				</k-dropdown-item>
 			</template>

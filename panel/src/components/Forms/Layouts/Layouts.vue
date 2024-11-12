@@ -103,7 +103,7 @@ export default {
 
 			// a sign that it has been pasted
 			this.$panel.notification.success({
-				message: this.$t("copy.success", { count: copy.length ?? 1 }),
+				message: this.$t("copy.success.multiple", { count: copy.length ?? 1 }),
 				icon: "template"
 			});
 		},

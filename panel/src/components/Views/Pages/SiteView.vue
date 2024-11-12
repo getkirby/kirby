@@ -20,7 +20,7 @@
 					:is-locked="isLocked"
 					:is-unsaved="isUnsaved"
 					:modified="modified"
-					:preview="changesUrl"
+					:preview="permissions.preview ? api + '/preview/compare' : false"
 					@discard="onDiscard"
 					@submit="onSubmit"
 				/>

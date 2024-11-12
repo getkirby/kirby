@@ -92,24 +92,30 @@ class Page extends Model
 	 */
 	public function dropdown(array $options = []): array
 	{
-		$page     = $this->model;
-		$request  = $page->kirby()->request();
-		$defaults = $request->get(['view', 'sort', 'delete']);
-		$options  = [...$defaults, $options];
-
+		$page        = $this->model;
+		$request     = $page->kirby()->request();
+		$defaults    = $request->get(['view', 'sort', 'delete']);
+		$options     = [...$defaults, ...$options];
 		$permissions = $this->options(['preview']);
 		$view        = $options['view'] ?? 'view';
 		$url         = $this->url(true);
 		$result      = [];
 
 		if ($view === 'list') {
-			$result['preview'] = [
+			$result['open'] = [
 				'link'     => $page->previewUrl(),
 				'target'   => '_blank',
 				'icon'     => 'open',
 				'text'     => I18n::translate('open'),
 				'disabled' => $this->isDisabledDropdownOption('preview', $options, $permissions)
 			];
+
+			$result['preview'] = [
+				'icon' => 'window',
+				'link' => $page->panel()->url(true) . '/preview/compare',
+				'text' => I18n::translate('preview'),
+			];
+
 			$result[] = '-';
 		}
 
@@ -365,7 +371,6 @@ class Page extends Model
 			...$props,
 			...$this->prevNext(),
 			'blueprint'  => $this->model->intendedTemplate()->name(),
-			'changesUrl' => $this->model->previewUrl() . '?_version=changes',
 			'model'      => $model,
 			'title'      => $model['title'],
 		];
@@ -382,8 +387,8 @@ class Page extends Model
 		return [
 			'breadcrumb' => $this->model->panel()->breadcrumb(),
 			'component'  => 'k-page-view',
-			'props'      => $this->props(),
-			'title'      => $this->model->title()->toString(),
+			'props'      => $props = $this->props(),
+			'title'      => $props['title'],
 		];
 	}
 }
