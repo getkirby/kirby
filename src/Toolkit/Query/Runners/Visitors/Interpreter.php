@@ -2,166 +2,100 @@
 
 namespace Kirby\Toolkit\Query\Runners\Visitors;
 
-use Closure;
 use Exception;
-use Kirby\Toolkit\Query\AST\ArgumentListNode;
-use Kirby\Toolkit\Query\AST\ArrayListNode;
-use Kirby\Toolkit\Query\AST\ClosureNode;
-use Kirby\Toolkit\Query\AST\CoalesceNode;
-use Kirby\Toolkit\Query\AST\GlobalFunctionNode;
-use Kirby\Toolkit\Query\AST\LiteralNode;
-use Kirby\Toolkit\Query\AST\MemberAccessNode;
-use Kirby\Toolkit\Query\AST\TernaryNode;
-use Kirby\Toolkit\Query\AST\VariableNode;
+use Kirby\Toolkit\Query\AST\ArgumentList;
+use Kirby\Toolkit\Query\AST\ArrayList;
+use Kirby\Toolkit\Query\AST\Closure;
+use Kirby\Toolkit\Query\AST\Coalesce;
+use Kirby\Toolkit\Query\AST\Literal;
+use Kirby\Toolkit\Query\AST\MemberAccess;
+use Kirby\Toolkit\Query\AST\Ternary;
+use Kirby\Toolkit\Query\AST\Variable;
+use Kirby\Toolkit\Query\AST\GlobalFunction;
 use Kirby\Toolkit\Query\Runtime;
 use Kirby\Toolkit\Query\Visitor;
+
 
 /**
  * Visitor that interprets and directly executes a query AST.
  */
-class Interpreter extends Visitor
-{
+class Interpreter extends Visitor {
 	/**
-	 * @param array<string,Closure> $validGlobalFunctions An array of valid global function closures.
-	 * @param array<string,mixed> $context The data bindings for the query.
+	 * @param array{string:Closure} $validGlobalFunctions An array of valid global function closures.
+	 * @param array{string:mixed} $context The data bindings for the query.
 	 */
 	public function __construct(
 		public array $validGlobalFunctions = [],
 		public array $context = []
-	) {
+	) {}
+
+	public function visitArgumentList(ArgumentList $node): array {
+		return array_map(fn($argument) => $argument->accept($this), $node->arguments);
 	}
 
-	public function visitArgumentList(ArgumentListNode $node): array
-	{
-		return array_map(
-			fn ($argument) => $argument->accept($this),
-			$node->arguments
-		);
+	public function visitArrayList(ArrayList $node): mixed {
+		return array_map(fn($element) => $element->accept($this), $node->elements);
 	}
 
-	public function visitArrayList(ArrayListNode $node): mixed
-	{
-		return array_map(
-			fn ($element) => $element->accept($this),
-			$node->elements
-		);
-	}
-
-	public function visitCoalesce(CoalesceNode $node): mixed
-	{
+	public function visitCoalesce(Coalesce $node): mixed {
 		return $node->left->accept($this) ?? $node->right->accept($this);
 	}
 
-	public function visitLiteral(LiteralNode $node): mixed
-	{
-		$val = $node->value;
-
-		if ($this->interceptor !== null) {
-			$val = ($this->interceptor)($val);
-		}
-
-		return $val;
+	public function visitLiteral(Literal $node): mixed {
+		return $node->value;
 	}
 
-	public function visitMemberAccess(MemberAccessNode $node): mixed
-	{
+	public function visitMemberAccess(MemberAccess $node): mixed {
 		$left = $node->object->accept($this);
-		$item = null;
+		if($node->arguments !== null) {
+			return Runtime::access($left, $node->member, $node->nullSafe, ...$node->arguments->accept($this));
+		}
+		return Runtime::access($left, $node->member, $node->nullSafe);
+	}
 
-		if ($node->arguments !== null) {
-			$item = Runtime::access(
-				$left,
-				$node->member,
-				$node->nullSafe,
-				...$node->arguments->accept($this)
-			);
+	public function visitTernary(Ternary $node): mixed {
+		if($node->trueBranchIsDefault) {
+			return $node->condition->accept($this) ?: $node->trueBranch->accept($this);
 		} else {
-			$item = Runtime::access($left, $node->member, $node->nullSafe);
+			return $node->condition->accept($this) ? $node->trueBranch->accept($this) : $node->falseBranch->accept($this);
 		}
-
-		if ($this->interceptor !== null) {
-			$item = ($this->interceptor)($item);
-		}
-
-		return $item;
 	}
 
-	public function visitTernary(TernaryNode $node): mixed
-	{
-		if ($node->trueBranchIsDefault === true) {
-			return
-				$node->condition->accept($this) ?:
-				$node->trueBranch->accept($this);
-		}
-
-		return
-			$node->condition->accept($this) ?
-			$node->trueBranch->accept($this) :
-			$node->falseBranch->accept($this);
-	}
-
-	public function visitVariable(VariableNode $node): mixed
-	{
+	public function visitVariable(Variable $node): mixed {
 		// what looks like a variable might actually be a global function
 		// but if there is a variable with the same name, the variable takes precedence
 
-		$name = $node->name();
-
-		$item = match (true) {
-			isset($this->context[$name]) => $this->context[$name] instanceof Closure ? $this->context[$name]() : $this->context[$name],
-			isset($this->validGlobalFunctions[$name]) => $this->validGlobalFunctions[$name](),
-			default => null,
-		};
-
-		if ($this->interceptor !== null) {
-			$item = ($this->interceptor)($item);
+		if(isset($this->context[$node->name])) {
+			return $this->context[$node->name];
 		}
 
-		return $item;
+		if(isset($this->validGlobalFunctions[$node->name])) {
+			return $this->validGlobalFunctions[$node->name]();
+		}
+
+		return null;
 	}
 
-	public function visitGlobalFunction(GlobalFunctionNode $node): mixed
-	{
-		$name = $node->name();
-
-		if (isset($this->validGlobalFunctions[$name]) === false) {
-			throw new Exception("Invalid global function $name");
+	public function visitGlobalFunction(GlobalFunction $node): mixed {
+		if(!isset($this->validGlobalFunctions[$node->name])) {
+			throw new Exception("Invalid global function $node->name");
 		}
-
-		$function = $this->validGlobalFunctions[$name];
-
-		if ($this->interceptor !== null) {
-			$function = ($this->interceptor)($function);
-		}
-
-		$result = $function(...$node->arguments->accept($this));
-
-		if ($this->interceptor !== null) {
-			$result = ($this->interceptor)($result);
-		}
-
-		return $result;
+		return $this->validGlobalFunctions[$node->name](...$node->arguments->accept($this));
 	}
 
-	public function visitClosure(ClosureNode $node): mixed
-	{
+	public function visitClosure(Closure $node): mixed {
 		$self = $this;
 
-		return function (...$params) use ($self, $node) {
-			$context   = $self->context;
+		return function(...$params) use ($self, $node) {
+			$context = $self->context;
 			$functions = $self->validGlobalFunctions;
 
-			// [key1, key2] + [value1, value2] => [key1 => value1, key2 => value2]
 			$arguments = array_combine(
-				$node->arguments,
+				array_map(fn($param) => $param->name, $node->arguments->arguments),
 				$params
 			);
 
-			$visitor = new static($functions, [...$context, ...$arguments]);
-
-			if ($self->interceptor !== null) {
-				$visitor->setInterceptor($self->interceptor);
-			}
+			$visitor = new self($functions, [...$context, ...$arguments]);
 
 			return $node->body->accept($visitor);
 		};

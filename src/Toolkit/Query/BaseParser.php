@@ -2,12 +2,10 @@
 
 namespace Kirby\Toolkit\Query;
 
-use Exception;
 use Iterator;
 
-abstract class BaseParser
-{
-	protected Token|null $previous;
+abstract class BaseParser {
+	protected ?Token $previous;
 	protected Token $current;
 
 	/**
@@ -19,41 +17,39 @@ abstract class BaseParser
 	public function __construct(
 		Tokenizer|Iterator $source,
 	) {
-		if ($source instanceof Tokenizer) {
-			$source = $source->tokenize();
+		if($source instanceof Tokenizer) {
+			$this->tokens = $source->tokenize();
+		} else {
+			$this->tokens = $source;
 		}
 
-		$this->tokens = $source;
-		$first        = $this->tokens->current();
+		$first = $this->tokens->current();
 
 		if ($first === null) {
-			throw new Exception('No tokens found.');
+			throw new \Exception('No tokens found.');
 		}
 
 		$this->current = $first;
 	}
 
-	protected function consume(TokenType $type, string $message): Token
-	{
-		if ($this->check($type) === true) {
+	protected function consume(TokenType $type, string $message): Token {
+		if ($this->check($type)) {
 			return $this->advance();
 		}
 
-		throw new Exception($message);
+		throw new \Exception($message);
 	}
 
-	protected function check(TokenType $type): bool
-	{
-		if ($this->isAtEnd() === true) {
+	protected function check(TokenType $type): bool {
+		if ($this->isAtEnd()) {
 			return false;
 		}
 
 		return $this->current->type === $type;
 	}
 
-	protected function advance(): Token|null
-	{
-		if ($this->isAtEnd() === false) {
+	protected function advance(): ?Token {
+		if (!$this->isAtEnd()) {
 			$this->previous = $this->current;
 			$this->tokens->next();
 			$this->current = $this->tokens->current();
@@ -62,25 +58,22 @@ abstract class BaseParser
 		return $this->previous;
 	}
 
-	protected function isAtEnd(): bool
-	{
-		return $this->current->type === TokenType::T_EOF;
+	protected function isAtEnd(): bool {
+		return $this->current->type === TokenType::EOF;
 	}
 
 
-	protected function match(TokenType $type): Token|false
-	{
-		if ($this->check($type) === true) {
+	protected function match(TokenType $type): Token|false {
+		if ($this->check($type)) {
 			return $this->advance();
 		}
 
 		return false;
 	}
 
-	protected function matchAny(array $types): Token|false
-	{
+	protected function matchAny(array $types): Token|false {
 		foreach ($types as $type) {
-			if ($this->check($type) === true) {
+			if ($this->check($type)) {
 				return $this->advance();
 			}
 		}

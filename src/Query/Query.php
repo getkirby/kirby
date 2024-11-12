@@ -3,7 +3,6 @@
 namespace Kirby\Query;
 
 use Closure;
-use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
@@ -12,8 +11,10 @@ use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Image\QrCode;
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Query\Runner;
 use Kirby\Toolkit\Query\Runners\Interpreted;
 use Kirby\Toolkit\Query\Runners\Transpiled;
+use Kirby\Toolkit\Query\Visitor;
 
 /**
  * The Query class can be used to query arrays and objects,
@@ -63,6 +64,8 @@ class Query
 	/**
 	 * Method to help classes that extend Query
 	 * to intercept a segment's result.
+	 *
+	 * @deprecated 5.0.0 Will be removed in 6.0.0
 	 */
 	public function intercept(mixed $result): mixed
 	{
@@ -107,20 +110,11 @@ class Query
 			return $data;
 		}
 
-		$mode = App::instance()->option('query.runner', 'interpreted');
-
-		if ($mode === 'legacy') {
-			return $this->resolve_legacy($data);
-		}
-
-		$runnerClass = match($mode) {
-			'transpiled' => Transpiled::class,
-			'interpreted' => Interpreted::class,
-			default => throw new Exception('Invalid query runner')
+		return match(option('query.runner', 'interpreted')) {
+			'transpiled' => (new Transpiled(static::$entries))->run($this->query, $data),
+			'interpreted' => (new Interpreted(static::$entries))->run($this->query, $data),
+			default => $this->resolve_legacy($data)
 		};
-
-		$runner = new $runnerClass(static::$entries, $this->intercept(...));
-		return $runner->run($this->query, (array)$data);
 	}
 }
 

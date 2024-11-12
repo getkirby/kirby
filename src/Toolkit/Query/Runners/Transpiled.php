@@ -6,11 +6,9 @@ use Closure;
 use Exception;
 use Kirby\Toolkit\Query\Parser;
 use Kirby\Toolkit\Query\Runner;
-use Kirby\Toolkit\Query\Runners\Visitors\CodeGen;
 use Kirby\Toolkit\Query\Tokenizer;
 
-class Transpiled extends Runner
-{
+class Transpiled extends Runner {
 	private static array $cache = [];
 	public static string $cacheFolder = '/tmp/query_cache';
 
@@ -21,9 +19,8 @@ class Transpiled extends Runner
 	 */
 	public function __construct(
 		public array $allowedFunctions = [],
-		public Closure|null $interceptor = null,
-	) {
-	}
+	) {}
+
 
 	/**
 	 * Retrieves the executor closure for a given query.
@@ -32,46 +29,35 @@ class Transpiled extends Runner
 	 * @param string $query The query string to be executed.
 	 * @return Closure The executor closure for the given query.
 	 */
-	protected function getResolver(string $query): Closure
-	{
+	protected function getResolver(string $query): Closure {
 		// load closure from process memory
-		if (isset(self::$cache[$query])) {
+		if(isset(self::$cache[$query])) {
 			return self::$cache[$query];
 		}
 
 		// load closure from file-cache / opcache
-		$hash     = crc32($query);
+		$hash = crc32($query);
 		$filename = self::$cacheFolder . '/' . $hash . '.php';
-
-		if (file_exists($filename)) {
+		if(file_exists($filename)) {
 			return self::$cache[$query] = include $filename;
 		}
 
 		// on cache miss, parse query and generate closure
-		$tokenizer = new Tokenizer($query);
-		$parser    = new Parser($tokenizer);
-		$node      = $parser->parse();
-		$codeGen   = new CodeGen($this->allowedFunctions);
+		$t = new Tokenizer($query);
+		$parser = new Parser($t);
+		$node = $parser->parse();
+		$codeGen = new Visitors\CodeGen($this->allowedFunctions);
 
 		$functionBody = $node->accept($codeGen);
 
-		$mappings = array_map(
-			fn ($k, $v) => "$k = $v;",
-			array_keys($codeGen->mappings),
-			$codeGen->mappings
-		);
-		$mappings = join("\n", $mappings) . "\n";
+		$mappings = join("\n", array_map(fn($k, $v) => "$$k = $v;", array_keys($codeGen->mappings), $codeGen->mappings)) . "\n";
+		$comment = join("\n", array_map(fn($l) => "// $l", explode("\n", $query)));
 
-		$comment = array_map(fn ($l) => "// $l", explode("\n", $query));
-		$comment = join("\n", $comment);
-
-		$uses = array_map(fn ($k) => "use $k;", array_keys($codeGen->uses));
-		$uses = join("\n", $uses) . "\n";
-
-		$function = "<?php\n$uses\n$comment\nreturn function(array \$context, array \$functions, Closure \$intercept) {\n$mappings\nreturn $functionBody;\n};";
+		$uses = join("\n", array_map(fn($k) => "use $k;", array_keys($codeGen->uses))) . "\n";
+		$function = "<?php\n$uses\n$comment\nreturn function(array \$context = [], array \$functions = []) {\n$mappings\nreturn $functionBody;\n};";
 
 		// store closure in file-cache
-		if (is_dir(self::$cacheFolder) === false) {
+		if(!is_dir(self::$cacheFolder)) {
 			mkdir(self::$cacheFolder, 0777, true);
 		}
 
@@ -88,20 +74,13 @@ class Transpiled extends Runner
 	 * @param string $query The query string to be executed.
 	 * @param array $context An optional array of context variables to be passed to the query executor.
 	 * @return mixed The result of the executed query.
-	 * @throws Exception If the query is not valid or the executor is not callable.
+	 * @throws \Exception If the query is not valid or the executor is not callable.
 	 */
-	public function run(string $query, array $context = []): mixed
-	{
+	public function run(string $query, array $context = []): mixed {
 		$function = $this->getResolver($query);
-
-		if (is_callable($function) === false) {
-			throw new Exception('Query is not valid');
+		if(!is_callable($function)) {
+			throw new \Exception("Query is not valid");
 		}
-
-		return $function(
-			$context,
-			$this->allowedFunctions,
-			$this->interceptor ?? fn ($v) => $v
-		);
+		return $function($context, $this->allowedFunctions);
 	}
 }

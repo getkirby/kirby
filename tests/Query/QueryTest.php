@@ -67,24 +67,11 @@ class QueryTest extends TestCase
 		$query = new Query('user');
 		$this->assertSame('homer', $query->resolve(['user' => 'homer']));
 
-		$query = new Query('user\.username');
+		$query = new Query('user.username');
 		$this->assertSame('homer', $query->resolve(['user.username' => 'homer']));
 
-		$query = new Query('user\.callback');
+		$query = new Query('user.callback');
 		$this->assertSame('homer', $query->resolve(['user.callback' => fn () => 'homer']));
-
-		// in the query, the first slash escapes the second, the third escapes the dot
-		$query = <<<'TXT'
-		user\\\.username
-		TXT;
-
-		// this is actually the array key
-		$key = <<<'TXT'
-		user\.username
-		TXT;
-
-		$query = new Query($query);
-		$this->assertSame('homer', $query->resolve([$key => 'homer']));
 	}
 
 	/**
@@ -120,32 +107,5 @@ class QueryTest extends TestCase
 
 		$bar = $bar(['homer' => 'simpson']);
 		$this->assertSame('simpson', $bar);
-	}
-
-	/**
-	 * @covers ::intercept
-	 */
-	public function testResolveWithInterceptor()
-	{
-		$query = new class ('foo.getObj.name') extends Query {
-			public function intercept($result): mixed
-			{
-				if(is_object($result) === true) {
-					$result = clone $result;
-					$result->name .= ' simpson';
-				}
-
-				return $result;
-			}
-		};
-
-		$data  = [
-			'foo' => [
-				'getObj' => fn () => (object)['name' => 'homer']
-			]
-		];
-
-		$bar = $query->resolve($data);
-		$this->assertSame('homer simpson', $bar);
 	}
 }

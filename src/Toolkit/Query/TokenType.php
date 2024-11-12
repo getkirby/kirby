@@ -2,26 +2,25 @@
 
 namespace Kirby\Toolkit\Query;
 
-enum TokenType
-{
-	case T_STRING;
-	case T_INTEGER;
-	case T_WHITESPACE;
-	case T_IDENTIFIER;
-	case T_DOT;
-	case T_OPEN_PAREN;
-	case T_CLOSE_PAREN;
-	case T_OPEN_BRACKET;
-	case T_CLOSE_BRACKET;
-	case T_QUESTION_MARK;
-	case T_TERNARY_DEFAULT; // ?:
-	case T_NULLSAFE; // ?.
-	case T_COLON;
-	case T_COALESCE; // ??
-	case T_COMMA;
-	case T_EOF;
-	case T_TRUE;
-	case T_FALSE;
-	case T_NULL;
-	case T_ARROW;
+enum TokenType {
+	case STRING;
+	case NUMBER;
+	case WHITESPACE;
+	case IDENTIFIER;
+	case DOT;
+	case OPEN_PAREN;
+	case CLOSE_PAREN;
+	case OPEN_BRACKET;
+	case CLOSE_BRACKET;
+	case QUESTION_MARK;
+	case TERNARY_DEFAULT; // ?:
+	case NULLSAFE; // ?.
+	case COLON;
+	case COALESCE; // ??
+	case COMMA;
+	case EOF;
+	case TRUE;
+	case FALSE;
+	case NULL;
+	case ARROW;
 }

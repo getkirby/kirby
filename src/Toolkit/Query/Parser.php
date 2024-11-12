@@ -2,114 +2,98 @@
 
 namespace Kirby\Toolkit\Query;
 
-use Exception;
-use Kirby\Toolkit\Query\AST\ArgumentListNode;
-use Kirby\Toolkit\Query\AST\ArrayListNode;
-use Kirby\Toolkit\Query\AST\ClosureNode;
-use Kirby\Toolkit\Query\AST\CoalesceNode;
-use Kirby\Toolkit\Query\AST\GlobalFunctionNode;
-use Kirby\Toolkit\Query\AST\LiteralNode;
-use Kirby\Toolkit\Query\AST\MemberAccessNode;
+use Iterator;
+use Kirby\Toolkit\Query\AST\ArgumentList;
+use Kirby\Toolkit\Query\AST\ArrayList;
+use Kirby\Toolkit\Query\AST\Closure;
+use Kirby\Toolkit\Query\AST\Coalesce;
+use Kirby\Toolkit\Query\AST\GlobalFunction;
+use Kirby\Toolkit\Query\AST\Literal;
+use Kirby\Toolkit\Query\AST\MemberAccess;
 use Kirby\Toolkit\Query\AST\Node;
-use Kirby\Toolkit\Query\AST\TernaryNode;
-use Kirby\Toolkit\Query\AST\VariableNode;
+use Kirby\Toolkit\Query\AST\Ternary;
+use Kirby\Toolkit\Query\AST\Variable;
 
-class Parser extends BaseParser
-{
-	public function parse(): Node
-	{
+class Parser extends BaseParser {
+	public function __construct(
+		Tokenizer|Iterator $source,
+	) {
+		parent::__construct($source);
+	}
+
+	public function parse(): Node {
 		$expression = $this->expression();
 
 		// ensure that we consumed all tokens
-		if ($this->isAtEnd() === false) {
-			$this->consume(TokenType::T_EOF, 'Expect end of expression.');
-		}
+		if(!$this->isAtEnd())
+			$this->consume(TokenType::EOF, 'Expect end of expression.');
 
 		return $expression;
 	}
 
-	private function expression(): Node
-	{
+	private function expression(): Node {
 		return $this->coalesce();
 	}
 
-	private function coalesce(): Node
-	{
+	private function coalesce(): Node {
 		$left = $this->ternary();
 
-		while ($this->match(TokenType::T_COALESCE)) {
+		while ($this->match(TokenType::COALESCE)) {
+			$operator = $this->previous;
 			$right = $this->ternary();
-			$left  = new CoalesceNode($left, $right);
+			$left = new Coalesce($left, $right);
 		}
 
 		return $left;
 	}
 
-	private function ternary(): Node
-	{
+	private function ternary(): Node {
 		$left = $this->memberAccess();
 
-		if ($tok = $this->matchAny([TokenType::T_QUESTION_MARK, TokenType::T_TERNARY_DEFAULT])) {
-			if ($tok->type === TokenType::T_TERNARY_DEFAULT) {
+		if ($tok = $this->matchAny([TokenType::QUESTION_MARK, TokenType::TERNARY_DEFAULT])) {
+			if($tok->type === TokenType::TERNARY_DEFAULT) {
 				$trueIsDefault = true;
-				$trueBranch    = null;
+				$trueBranch = null;
+				$falseBranch = $this->expression();
 			} else {
 				$trueIsDefault = false;
-				$trueBranch    = $this->expression();
-				$this->consume(TokenType::T_COLON, 'Expect ":" after true branch.');
+				$trueBranch = $this->expression();
+				$this->consume(TokenType::COLON, 'Expect ":" after true branch.');
+				$falseBranch = $this->expression();
 			}
 
-			$falseBranch = $this->expression();
-
-			return new TernaryNode(
-				$left,
-				$trueBranch,
-				$falseBranch,
-				$trueIsDefault
-			);
+			return new Ternary($left, $trueBranch, $falseBranch, $trueIsDefault);
 		}
 
 		return $left;
 	}
 
-	private function memberAccess(): Node
-	{
+	private function memberAccess(): Node {
 		$left = $this->atomic();
 
-		while ($tok = $this->matchAny([TokenType::T_DOT, TokenType::T_NULLSAFE])) {
-			$nullSafe = $tok->type === TokenType::T_NULLSAFE;
+		while ($tok = $this->matchAny([TokenType::DOT, TokenType::NULLSAFE])) {
+			$nullSafe = $tok->type === TokenType::NULLSAFE;
 
-			if ($right = $this->match(TokenType::T_IDENTIFIER)) {
-				$right = $right->lexeme;
-			} elseif ($right = $this->match(TokenType::T_INTEGER)) {
-				$right = $right->literal;
-			} else {
-				throw new Exception('Expect property name after ".".');
-			}
+			$right = $this->consume(TokenType::IDENTIFIER, 'Expect property name after ".".');
 
-			if ($this->match(TokenType::T_OPEN_PAREN)) {
+			if($this->match(TokenType::OPEN_PAREN)) {
 				$arguments = $this->argumentList();
+				$left = new MemberAccess($left, $right->lexeme, $arguments, $nullSafe);
+			} else {
+				$left = new MemberAccess($left, $right->lexeme, null, $nullSafe);
 			}
-
-			$left = new MemberAccessNode(
-				$left,
-				$right,
-				$arguments ?? null,
-				$nullSafe
-			);
 		}
 
 		return $left;
 	}
 
-	private function listUntil(TokenType $until): array
-	{
+	private function listUntil(TokenType $until): array {
 		$elements = [];
 
-		while ($this->isAtEnd() === false && $this->check($until) === false) {
+		while (!$this->isAtEnd() && !$this->check($until)) {
 			$elements[] = $this->expression();
 
-			if ($this->match(TokenType::T_COMMA) == false) {
+			if (!$this->match(TokenType::COMMA)) {
 				break;
 			}
 		}
@@ -120,81 +104,65 @@ class Parser extends BaseParser
 		return $elements;
 	}
 
-	private function argumentList(): Node
-	{
-		$list = $this->listUntil(TokenType::T_CLOSE_PAREN);
+	private function argumentList(): Node {
+		$list = $this->listUntil(TokenType::CLOSE_PAREN);
 
-		return new ArgumentListNode($list);
+		return new ArgumentList($list);
 	}
 
-	private function atomic(): Node
-	{
-		// float numbers
-		if ($integer = $this->match(TokenType::T_INTEGER)) {
-			if ($this->match(TokenType::T_DOT)) {
-				$fractional = $this->match(TokenType::T_INTEGER);
-				return new LiteralNode((float)($integer->literal . '.' . $fractional->literal));
-			}
-
-			return new LiteralNode($integer->literal);
-		}
-
+	private function atomic(): Node {
 		// primitives
 		if ($token = $this->matchAny([
-			TokenType::T_TRUE,
-			TokenType::T_FALSE,
-			TokenType::T_NULL,
-			TokenType::T_STRING,
+			TokenType::TRUE,
+			TokenType::FALSE,
+			TokenType::NULL,
+			TokenType::STRING,
+			TokenType::NUMBER,
 		])) {
-			return new LiteralNode($token->literal);
+			return new Literal($token->literal);
 		}
 
 		// array literals
-		if ($token = $this->match(TokenType::T_OPEN_BRACKET)) {
-			$arrayItems = $this->listUntil(TokenType::T_CLOSE_BRACKET);
+		if ($token = $this->match(TokenType::OPEN_BRACKET)) {
+			$arrayItems = $this->listUntil(TokenType::CLOSE_BRACKET);
 
-			return new ArrayListNode($arrayItems);
+			return new ArrayList($arrayItems);
 		}
 
 		// global functions and variables
-		if ($token = $this->match(TokenType::T_IDENTIFIER)) {
-			if ($this->match(TokenType::T_OPEN_PAREN)) {
+		if ($token = $this->match(TokenType::IDENTIFIER)) {
+			if($this->match(TokenType::OPEN_PAREN)) {
 				$arguments = $this->argumentList();
-				return new GlobalFunctionNode($token->lexeme, $arguments);
+				return new GlobalFunction($token->lexeme, $arguments);
 			}
 
-			return new VariableNode($token->lexeme);
+			return new Variable($token->lexeme);
 		}
 
 		// grouping and closure argument lists
-		if ($token = $this->match(TokenType::T_OPEN_PAREN)) {
-			$list = $this->listUntil(TokenType::T_CLOSE_PAREN);
+		if ($token = $this->match(TokenType::OPEN_PAREN)) {
+			$list = $this->listUntil(TokenType::CLOSE_PAREN);
 
-			if ($this->match(TokenType::T_ARROW)) {
+			if($this->match(TokenType::ARROW)) {
 				$expression = $this->expression();
-
-				/**
-				 * Assert that all elements are VariableNodes
-				 * @var VariableNode[] $list
-				 */
+				// check if all elements are variables
 				foreach($list as $element) {
-					if ($element instanceof VariableNode === false) {
-						throw new Exception('Expecting only variables in closure argument list.');
+					if(!$element instanceof Variable) {
+						throw new \Exception('Expecting only variables in closure argument list.');
 					}
 				}
-
-				$arguments = array_map(fn ($element) => $element->name, $list);
-				return new ClosureNode($arguments, $expression);
+				$arguments = new ArgumentList($list);
+				return new Closure($arguments, $expression);
+			} else {
+				if(count($list) > 1) {
+					throw new \Exception('Expecting \"=>\" after closure argument list.');
+				} else {
+					// this is just a grouping
+					return $list[0];
+				}
 			}
-
-			if (count($list) > 1) {
-				throw new Exception('Expecting \"=>\" after closure argument list.');
-			}
-
-			// this is just a grouping
-			return $list[0];
 		}
 
-		throw new Exception('Expect expression.');
+		throw new \Exception('Expect expression.');
 	}
 }

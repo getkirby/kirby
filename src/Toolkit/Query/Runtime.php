@@ -2,50 +2,27 @@
 
 namespace Kirby\Toolkit\Query;
 
-use Closure;
-use Exception;
-
-class Runtime
-{
-	public static function access(
-		array|object|null $object,
-		string|int $key,
-		bool $nullSafe = false,
-		...$arguments
-	): mixed {
-		if ($nullSafe === true && $object === null) {
+class Runtime {
+	static function access($object, $key, bool $nullSafe = false, ...$arguments): mixed {
+		if($nullSafe && $object === null) {
 			return null;
 		}
 
-		if (is_array($object)) {
-			if ($item = $object[$key] ?? $object[(string)$key] ?? null) {
-				if ($arguments) {
-					return $item(...$arguments);
-				}
-
-				if ($item instanceof Closure) {
-					return $item();
-				}
+		if(is_array($object)) {
+			if($arguments) {
+				return $object[$key](...$arguments);
 			}
-
-			return $item;
-		}
-
-		if (is_object($object)) {
-			if (is_int($key)) {
-				$key = (string)$key;
+			if($object[$key] instanceof \Closure) {
+				return $object[$key]();
 			}
-
-			if (
-				method_exists($object, $key) ||
-				method_exists($object, '__call')
-			) {
+			return $object[$key] ?? null;
+		} else if(is_object($object)) {
+			if(method_exists($object, $key) || method_exists($object, '__call')) {
 				return $object->$key(...$arguments);
 			}
-
 			return $object->$key ?? null;
+		} else {
+			throw new \Exception("Cannot access \"$key\" on " . gettype($object));
 		}
-
-		throw new Exception("Cannot access \"$key\" on " . gettype($object));
 	}
 }
