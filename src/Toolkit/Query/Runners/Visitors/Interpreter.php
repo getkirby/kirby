@@ -22,8 +22,8 @@ use Kirby\Toolkit\Query\Visitor;
  */
 class Interpreter extends Visitor {
 	/**
-	 * @param array{string:Closure} $validGlobalFunctions An array of valid global function closures.
-	 * @param array{string:mixed} $context The data bindings for the query.
+	 * @param array<string,Closure> $validGlobalFunctions An array of valid global function closures.
+	 * @param array<string,mixed> $context The data bindings for the query.
 	 */
 	public function __construct(
 		public array $validGlobalFunctions = [],

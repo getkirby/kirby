@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit\Query\Runners\Visitors;
 
+use Closure;
 use Exception;
 use Kirby\Toolkit\Query\AST\ArgumentListNode;
 use Kirby\Toolkit\Query\AST\ArrayListNode;
@@ -25,19 +26,19 @@ class CodeGen extends Visitor {
 
 	/**
 	 * If we need something from a namespace, we'll add the namespace here into the array key
-	 * @var array{string:true}
+	 * @var array<string,true>
 	 */
 	public array $uses = [];
 
 	/**
-	 * @var array{string:string}
+	 * @var array<string,string>
 	 */
 	public array $mappings = [];
 
 	/**
 	 * CodeGen constructor.
 	 *
-	 * @param array{string:PHPClosure} $validGlobalFunctions An array of valid global function closures.
+	 * @param array<string,Closure> $validGlobalFunctions An array of valid global function closures.
 	 */
 	public function __construct(public array $validGlobalFunctions = [], public array $directAccessFor=[]){}
 
