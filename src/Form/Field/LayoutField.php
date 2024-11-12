@@ -7,6 +7,8 @@ use Kirby\Cms\Blueprint;
 use Kirby\Cms\Fieldset;
 use Kirby\Cms\Layout;
 use Kirby\Cms\Layouts;
+use Kirby\Data\Data;
+use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
 use Kirby\Toolkit\Str;
@@ -30,7 +32,7 @@ class LayoutField extends BlocksField
 
 	public function fill(mixed $value = null): void
 	{
-		$value   = $this->valueFromJson($value);
+		$value   = Data::decode($value, type: 'json', fail: false);
 		$layouts = Layouts::factory($value, ['parent' => $this->model])->toArray();
 
 		foreach ($layouts as $layoutIndex => $layout) {
@@ -267,8 +269,9 @@ class LayoutField extends BlocksField
 		return $this->settings;
 	}
 
-	public function store(mixed $value): mixed
+	public function toStoredValue(bool $default = false): mixed
 	{
+		$value = $this->toFormValue($default);
 		$value = Layouts::factory($value, ['parent' => $this->model])->toArray();
 
 		// returns empty string to avoid storing empty array as string `[]`
@@ -287,7 +290,7 @@ class LayoutField extends BlocksField
 			}
 		}
 
-		return $this->valueToJson($value, $this->pretty());
+		return Json::encode($value, pretty: $this->pretty());
 	}
 
 	public function validations(): array

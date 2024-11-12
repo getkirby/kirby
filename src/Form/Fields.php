@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
+use Kirby\Toolkit\Str;
 
 /**
  * A collection of Field objects
@@ -107,6 +108,58 @@ class Fields extends Collection
 	}
 
 	/**
+	 * Find a field by key/name
+	 */
+	public function findByKey(string $key): Field|FieldClass|null
+	{
+		if (str_contains($key, '+')) {
+			return $this->findByKeyRecursive($key);
+		}
+
+		return parent::findByKey($key);
+	}
+
+	/**
+	 * Find fields in nested forms recursively
+	 */
+	public function findByKeyRecursive(string $key): Field|FieldClass|null
+	{
+		$fields = $this;
+		$names  = Str::split($key, '+');
+		$index  = 0;
+		$count  = count($names);
+		$field  = null;
+
+		foreach ($names as $name) {
+			$index++;
+
+			// search for the field by name
+			$field = $fields->get($name);
+
+			// if the field cannot be found,
+			// there's no point in going further
+			if ($field === null) {
+				return null;
+			}
+
+			// there are more parts in the key
+			if ($index < $count) {
+				$form = $field->form();
+
+				// the search can only continue for
+				// fields with valid nested forms
+				if ($form instanceof Form === false) {
+					return null;
+				}
+
+				$fields = $form->fields();
+			}
+		}
+
+		return $field;
+	}
+
+	/**
 	 * Converts the fields collection to an
 	 * array and also does that for every
 	 * included field.
@@ -114,5 +167,21 @@ class Fields extends Collection
 	public function toArray(Closure|null $map = null): array
 	{
 		return A::map($this->data, $map ?? fn ($field) => $field->toArray());
+	}
+
+	/**
+	 * Returns an array with the form value of each field
+	 */
+	public function toFormValues(bool $defaults = false): array
+	{
+		return $this->toArray(fn ($field) => $field->toFormValue($defaults));
+	}
+
+	/**
+	 * Returns an array with the stored value of each field
+	 */
+	public function toStoredValues(bool $defaults = false): array
+	{
+		return $this->toArray(fn ($field) => $field->toStoredValue($defaults));
 	}
 }

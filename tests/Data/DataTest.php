@@ -132,6 +132,16 @@ class DataTest extends TestCase
 		Data::decode(true, $handler);
 	}
 
+	/**
+	 * @covers ::decode
+	 * @dataProvider handlerProvider
+	 */
+	public function testDecodeInvalidNoExceptions($handler)
+	{
+		$data = Data::decode(1, $handler, fail: false);
+		$this->assertSame([], $data);
+	}
+
 	public static function handlerProvider(): array
 	{
 		// the PHP handler doesn't support decoding and therefore cannot be
@@ -184,6 +194,15 @@ class DataTest extends TestCase
 		$this->expectExceptionMessage('Missing handler for type: "foo"');
 
 		Data::read(static::TMP . '/data.foo');
+	}
+
+	/**
+	 * @covers ::read
+	 */
+	public function testReadInvalidNoException()
+	{
+		$data = Data::read(static::TMP . '/data.foo', fail: false);
+		$this->assertSame([], $data);
 	}
 
 	/**

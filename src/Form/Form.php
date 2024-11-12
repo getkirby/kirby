@@ -9,7 +9,6 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\Str;
 use Throwable;
 
 /**
@@ -44,6 +43,7 @@ class Form
 		$fields = $props['fields'] ?? [];
 		$values = $props['values'] ?? [];
 		$input  = $props['input']  ?? [];
+		$model  = $props['model']  ?? null;
 		$strict = $props['strict'] ?? false;
 		$inject = $props;
 
@@ -59,7 +59,10 @@ class Form
 
 		unset($inject['fields'], $inject['values'], $inject['input']);
 
-		$this->fields = new Fields();
+		$this->fields = new Fields(
+			model: $model
+		);
+
 		$this->values = [];
 
 		foreach ($fields as $name => $props) {
@@ -82,7 +85,7 @@ class Form
 				$field = static::exceptionField($e, $props);
 			}
 
-			if ($field->save() !== false) {
+			if ($field->isSaveable() === true) {
 				$this->values[$name] = $field->value();
 			}
 
@@ -119,14 +122,14 @@ class Form
 		$data = $this->values;
 
 		foreach ($this->fields as $field) {
-			if ($field->save() === false || $field->unset() === true) {
+			if ($field->isSaveable() === false || $field->unset() === true) {
 				if ($includeNulls === true) {
 					$data[$field->name()] = null;
 				} else {
 					unset($data[$field->name()]);
 				}
 			} else {
-				$data[$field->name()] = $field->data($defaults);
+				$data[$field->name()] = $field->toStoredValue($defaults);
 			}
 		}
 
@@ -171,36 +174,13 @@ class Form
 	 */
 	public function field(string $name): Field|FieldClass
 	{
-		$form       = $this;
-		$fieldNames = Str::split($name, '+');
-		$index      = 0;
-		$count      = count($fieldNames);
-		$field      = null;
-
-		foreach ($fieldNames as $fieldName) {
-			$index++;
-
-			if ($field = $form->fields()->get($fieldName)) {
-				if ($count !== $index) {
-					$form = $field->form();
-				}
-
-				continue;
-			}
-
-			throw new NotFoundException(
-				message: 'The field "' . $fieldName . '" could not be found'
-			);
+		if ($field = $this->fields->find($name)) {
+			return $field;
 		}
 
-		// it can get this error only if $name is an empty string as $name = ''
-		if ($field === null) {
-			throw new NotFoundException(
-				message: 'No field could be loaded'
-			);
-		}
-
-		return $field;
+		throw new NotFoundException(
+			message: 'The field could not be found'
+		);
 	}
 
 	/**
@@ -232,12 +212,7 @@ class Form
 		$props['model']    = $model;
 
 		// search for the blueprint
-		if (
-			method_exists($model, 'blueprint') === true &&
-			$blueprint = $model->blueprint()
-		) {
-			$props['fields'] = $blueprint->fields();
-		}
+		$props['fields'] = $model->blueprint()->fields();
 
 		$ignoreDisabled = $props['ignoreDisabled'] ?? false;
 
@@ -300,8 +275,6 @@ class Form
 
 	/**
 	 * Converts the data of fields to strings
-	 *
-	 * @param false $defaults
 	 */
 	public function strings($defaults = false): array
 	{
@@ -326,6 +299,22 @@ class Form
 		];
 
 		return $array;
+	}
+
+	/**
+	 * Returns an array with the form value of each field
+	 */
+	public function toFormValues(bool $defaults = false): array
+	{
+		return $this->fields->toFormValues($defaults);
+	}
+
+	/**
+	 * Returns an array with the stored value of each field
+	 */
+	public function toStoredValues(bool $defaults = false): array
+	{
+		return $this->fields->toStoredValues($defaults);
 	}
 
 	/**
