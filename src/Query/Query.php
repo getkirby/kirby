@@ -111,8 +111,8 @@ class Query
 		}
 
 		return match(option('query.runner', 'interpreted')) {
-			'transpiled' => (new Transpiled(static::$entries))->run($this->query, $data),
-			'interpreted' => (new Interpreted(static::$entries))->run($this->query, $data),
+			'transpiled' => (new Transpiled(static::$entries))->run($this->query, (array)$data),
+			'interpreted' => (new Interpreted(static::$entries))->run($this->query, (array)$data),
 			default => $this->resolve_legacy($data)
 		};
 	}
