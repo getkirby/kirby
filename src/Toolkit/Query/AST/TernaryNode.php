@@ -2,7 +2,7 @@
 
 namespace Kirby\Toolkit\Query\AST;
 
-class Ternary extends Node {
+class TernaryNode extends Node {
 	public function __construct(
 		public Node $condition,
 		public ?Node $trueBranch,

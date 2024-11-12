@@ -2,11 +2,11 @@
 
 namespace Kirby\Toolkit\Query\AST;
 
-class MemberAccess extends Node {
+class MemberAccessNode extends Node {
 	public function __construct(
 		public Node $object,
 		public string|int $member,
-		public ?ArgumentList $arguments = null,
+		public ?ArgumentListNode $arguments = null,
 		public bool $nullSafe = false,
 	) {}
 }

@@ -2,10 +2,10 @@
 
 namespace Kirby\Toolkit\Query\AST;
 
-class Closure extends Node
+class ClosureNode extends Node
 {
 	public function __construct(
-		public ArgumentList $arguments,
+		public ArgumentListNode $arguments,
 		public Node $body,
 	) {
 	}

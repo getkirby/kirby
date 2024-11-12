@@ -2,8 +2,8 @@
 
 namespace Kirby\Toolkit\Query\AST;
 
-class ArrayList extends Node {
+class LiteralNode extends Node {
 	public function __construct(
-		public array $elements,
+		public mixed $value,
 	) {}
 }

@@ -10,6 +10,11 @@ use Kirby\Toolkit\Query\Tokenizer;
 class Interpreted extends Runner {
 	private static array $cache = [];
 
+	public function __construct(
+		public array $allowedFunctions = [],
+		protected Closure|null $interceptor = null,
+	) {}
+
 	protected function getResolver(string $query): Closure {
 		// load closure from process cache
 		if(isset(self::$cache[$query])) {
@@ -21,7 +26,15 @@ class Interpreted extends Runner {
 		$parser = new Parser($t);
 		$node = $parser->parse();
 
-		return self::$cache[$query] = fn(array $binding) => $node->accept(new Visitors\Interpreter($this->allowedFunctions, $binding));
+		$self = $this;
+
+		return self::$cache[$query] = function(array $binding) use ($node, $self) {
+			$interpreter = new Visitors\Interpreter($self->allowedFunctions, $binding);
+			if($self->interceptor !== null) {
+				$interpreter->setInterceptor($self->interceptor);
+			}
+			return $node->accept($interpreter);
+		};
 	}
 
 	public function run(string $query, array $bindings = []): mixed {

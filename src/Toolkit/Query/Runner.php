@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit\Query;
 
+use Closure;
 use Exception;
 
 abstract class Runner {
@@ -12,6 +13,7 @@ abstract class Runner {
 	 */
 	public function __construct(
 		public array $allowedFunctions = [],
+		protected Closure|null $interceptor = null,
 	) {}
 
 	/**
@@ -23,4 +25,5 @@ abstract class Runner {
 	 * @throws Exception If the query is not valid or the executor is not callable.
 	 */
 	abstract public function run(string $query, array $context = []): mixed;
+
 }
