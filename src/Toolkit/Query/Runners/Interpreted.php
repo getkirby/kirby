@@ -37,8 +37,8 @@ class Interpreted extends Runner {
 		};
 	}
 
-	public function run(string $query, array $bindings = []): mixed {
+	public function run(string $query, array $context = []): mixed {
 		$resolver = $this->getResolver($query);
-		return $resolver($bindings);
+		return $resolver($context);
 	}
 }
