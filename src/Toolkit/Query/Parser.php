@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit\Query;
 
+use Exception;
 use Iterator;
 use Kirby\Toolkit\Query\AST\ArgumentList;
 use Kirby\Toolkit\Query\AST\ArrayList;
@@ -148,14 +149,14 @@ class Parser extends BaseParser {
 				// check if all elements are variables
 				foreach($list as $element) {
 					if(!$element instanceof Variable) {
-						throw new \Exception('Expecting only variables in closure argument list.');
+						throw new Exception('Expecting only variables in closure argument list.');
 					}
 				}
 				$arguments = new ArgumentList($list);
 				return new Closure($arguments, $expression);
 			} else {
 				if(count($list) > 1) {
-					throw new \Exception('Expecting \"=>\" after closure argument list.');
+					throw new Exception('Expecting \"=>\" after closure argument list.');
 				} else {
 					// this is just a grouping
 					return $list[0];
@@ -163,6 +164,6 @@ class Parser extends BaseParser {
 			}
 		}
 
-		throw new \Exception('Expect expression.');
+		throw new Exception('Expect expression.');
 	}
 }
