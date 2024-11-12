@@ -3,15 +3,15 @@
 namespace Kirby\Toolkit\Query\Runners\Visitors;
 
 use Exception;
-use Kirby\Toolkit\Query\AST\ArgumentList;
-use Kirby\Toolkit\Query\AST\ArrayList;
-use Kirby\Toolkit\Query\AST\Closure;
-use Kirby\Toolkit\Query\AST\Coalesce;
-use Kirby\Toolkit\Query\AST\GlobalFunction;
-use Kirby\Toolkit\Query\AST\Literal;
-use Kirby\Toolkit\Query\AST\MemberAccess;
-use Kirby\Toolkit\Query\AST\Ternary;
-use Kirby\Toolkit\Query\AST\Variable;
+use Kirby\Toolkit\Query\AST\ArgumentListNode;
+use Kirby\Toolkit\Query\AST\ArrayListNode;
+use Kirby\Toolkit\Query\AST\ClosureNode;
+use Kirby\Toolkit\Query\AST\CoalesceNode;
+use Kirby\Toolkit\Query\AST\GlobalFunctionNode;
+use Kirby\Toolkit\Query\AST\LiteralNode;
+use Kirby\Toolkit\Query\AST\MemberAccessNode;
+use Kirby\Toolkit\Query\AST\TernaryNode;
+use Kirby\Toolkit\Query\AST\VariableNode;
 use Kirby\Toolkit\Query\Visitor;
 
 
@@ -29,20 +29,27 @@ class CodeGen extends Visitor {
 	 */
 	public array $uses = [];
 
+	/**
+	 * @var array{string:string}
+	 */
 	public array $mappings = [];
 
 	/**
 	 * CodeGen constructor.
 	 *
-	 * @param array{string:Closure} $validGlobalFunctions An array of valid global function closures.
+	 * @param array{string:PHPClosure} $validGlobalFunctions An array of valid global function closures.
 	 */
 	public function __construct(public array $validGlobalFunctions = [], public array $directAccessFor=[]){}
+
+	private function intercept(string $value): string {
+		return "(\$intercept($value))";
+	}
 
 
 	/**
 	 * Generates code like `arg1, arg2, arg3` from an argument list node.
 	 */
-	public function visitArgumentList(ArgumentList $node): string {
+	public function visitArgumentList(ArgumentListNode $node): string {
 		$arguments = array_map(fn($argument) => $argument->accept($this), $node->arguments);
 		return join(', ', $arguments);
 	}
@@ -50,7 +57,7 @@ class CodeGen extends Visitor {
 	/**
 	 * Generates code like `[element1, element2, element3]` from an array list node.
 	 */
-	public function visitArrayList(ArrayList $node): string {
+	public function visitArrayList(ArrayListNode $node): string {
 		$elements = array_map(fn($element) => $element->accept($this), $node->elements);
 		return '[' . join(', ', $elements) . ']';
 	}
@@ -58,7 +65,7 @@ class CodeGen extends Visitor {
 	/**
 	 * Generates code like `$left ?? $right` from a coalesce node.
 	 */
-	public function visitCoalesce(Coalesce $node): string {
+	public function visitCoalesce(CoalesceNode $node): string {
 		$left = $node->left->accept($this);
 		$right = $node->right->accept($this);
 		return "($left ?? $right)";
@@ -67,14 +74,14 @@ class CodeGen extends Visitor {
 	/**
 	 * Generates code like `true`, `false`, `123.45`, `"foo bar"`, etc from a literal node.
 	 */
-	public function visitLiteral(Literal $node): string {
-		return var_export($node->value, true);
+	public function visitLiteral(LiteralNode $node): string {
+		return '$intercept(' . var_export($node->value, true) . ')';
 	}
 
 	/**
 	 * Generates code like `$object->member` or `$object->member($arguments)` from a member access node.
 	 */
-	public function visitMemberAccess(MemberAccess $node): string {
+	public function visitMemberAccess(MemberAccessNode $node): string {
 		$object = $node->object->accept($this);
 		$member = $node->member;
 
@@ -86,16 +93,16 @@ class CodeGen extends Visitor {
 			$arguments = $node->arguments->accept($this);
 			$member = var_export($member, true);
 
-			return "Runtime::access($object, $memberStr, $nullSafe, $arguments)";
+			return $this->intercept("Runtime::access($object, $memberStr, $nullSafe, $arguments)");
 		}
 
-		return "Runtime::access($object, $memberStr, $nullSafe)";
+		return $this->intercept("Runtime::access($object, $memberStr, $nullSafe)");
 	}
 
 	/**
 	 * Generates code like `($condition ? $trueBranch : $falseBranch)` or `($condition ?: $falseBranch)` from a ternary node.
 	 */
-	public function visitTernary(Ternary $node): string {
+	public function visitTernary(TernaryNode $node): string {
 		$left = $node->condition->accept($this);
 		$falseBranch = $node->falseBranch->accept($this);
 
@@ -107,17 +114,17 @@ class CodeGen extends Visitor {
 		}
 	}
 
-	public function visitVariable(Variable $node): string {
+	public function visitVariable(VariableNode $node): string {
 		$name = $node->name;
 		$namestr = var_export($name, true);
 
-		$key = "_" . crc32($name);
+		$key = "_$name";
 		if(isset($this->directAccessFor[$name])) {
-			return "$$key";
+			return $this->intercept("$$key");
 		}
 
 		if(!isset($this->mappings[$key])) {
-			$this->mappings[$key] = "(match(true) { isset(\$context[$namestr]) => \$context[$namestr], isset(\$functions[$namestr]) => \$functions[$namestr](), default => null })";
+			$this->mappings[$key] = $this->intercept("match(true) { isset(\$context[$namestr]) => \$context[$namestr], isset(\$functions[$namestr]) => \$functions[$namestr](), default => null }");
 		}
 
 		return "\$$key";
@@ -126,7 +133,7 @@ class CodeGen extends Visitor {
 	/**
 	 * Generates code like `$functions['function']($arguments)` from a global function node.
 	 */
-	public function visitGlobalFunction(GlobalFunction $node): string {
+	public function visitGlobalFunction(GlobalFunctionNode $node): string {
 		$name = $node->name;
 		if(!isset($this->validGlobalFunctions[$name])) {
 			throw new Exception("Invalid global function $name");
@@ -135,14 +142,14 @@ class CodeGen extends Visitor {
 		$arguments = $node->arguments->accept($this);
 		$name = var_export($name, true);
 
-		return "\$functions[$name]($arguments)";
+		return  $this->intercept($this->intercept("\$functions[$name]") . "($arguments)");
 	}
 
-	public function visitClosure(Closure $node): mixed {
+	public function visitClosure(ClosureNode $node): mixed {
 		$this->uses['Kirby\\Toolkit\\Query\\Runtime'] = true;
 
 		$names = array_map(fn($n) => $n->name, $node->arguments->arguments);
-		$args = array_map(fn(string $n) => '$_' . crc32($n), $names);
+		$args = array_map(fn(string $n) => "\$_$n", $names);
 		$args = join(', ', $args);
 
 		$newDirectAccessFor = array_merge($this->directAccessFor, array_fill_keys($names, true));

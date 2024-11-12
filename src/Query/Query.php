@@ -3,6 +3,7 @@
 namespace Kirby\Query;
 
 use Closure;
+use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
@@ -64,8 +65,6 @@ class Query
 	/**
 	 * Method to help classes that extend Query
 	 * to intercept a segment's result.
-	 *
-	 * @deprecated 5.0.0 Will be removed in 6.0.0
 	 */
 	public function intercept(mixed $result): mixed
 	{
@@ -110,11 +109,18 @@ class Query
 			return $data;
 		}
 
-		return match(option('query.runner', 'interpreted')) {
-			'transpiled' => (new Transpiled(static::$entries))->run($this->query, (array)$data),
-			'interpreted' => (new Interpreted(static::$entries))->run($this->query, (array)$data),
-			default => $this->resolve_legacy($data)
+		if(option('query.runner', 'interpreted') == 'legacy') {
+			return $this->resolve_legacy($data);
+		}
+
+		$runnerClass = match(option('query.runner', 'interpreted')) {
+			'transpiled' => Transpiled::class,
+			'interpreted' => Interpreted::class,
+			default => throw new Exception('Invalid query runner')
 		};
+
+		$runner = new $runnerClass(static::$entries, $this->intercept(...));
+		return $runner->run($this->query, (array)$data);
 	}
 }
 
