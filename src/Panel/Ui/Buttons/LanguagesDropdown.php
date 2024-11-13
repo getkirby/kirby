@@ -61,14 +61,16 @@ class LanguagesDropdown extends ViewButton
 
 	public function option(Language $language): array
 	{
+		$changes = $this->model->version('changes');
+
 		return [
 			'text'    => $language->name(),
 			'code'    => $language->code(),
 			'link'    => $this->model->panel()->url(true) . '?language=' . $language->code(),
 			'current' => $language->code() === $this->kirby->language()?->code(),
 			'default' => $language->isDefault(),
-			'changes' => $this->model->version('changes')->exists($language),
-			'lock'    => $this->model->version('changes')->isLocked($language)
+			'changes' => $changes->exists($language),
+			'lock'    => $changes->isLocked()
 		];
 	}
 

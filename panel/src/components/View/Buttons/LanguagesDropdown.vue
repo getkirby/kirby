@@ -25,21 +25,23 @@
 							{{ language.text }} ({{ language.code }})
 
 							<footer class="k-language-footer">
-								<span v-if="language.default"> Primary language </span>
+								<span v-if="language.default">
+									{{ $t("language.default") }}
+								</span>
 
 								<span
 									v-if="language.lock"
 									class="k-language-state k-language-lock"
 								>
 									<k-icon type="lock" />
-									In editing
+									{{ $t("lock.unsaved") }}
 								</span>
 								<span
 									v-else-if="language.changes"
 									class="k-language-state k-language-changes"
 								>
 									<k-icon type="edit" />
-									Has changes
+									{{ $t("lock.unsaved") }}
 								</span>
 							</footer>
 						</k-button>
