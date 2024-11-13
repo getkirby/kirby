@@ -3,7 +3,6 @@
 namespace Kirby\Toolkit\Query;
 
 use Exception;
-use Iterator;
 use Kirby\Toolkit\Query\AST\ArgumentListNode;
 use Kirby\Toolkit\Query\AST\ArrayListNode;
 use Kirby\Toolkit\Query\AST\ClosureNode;
@@ -17,18 +16,12 @@ use Kirby\Toolkit\Query\AST\VariableNode;
 
 class Parser extends BaseParser
 {
-	public function __construct(
-		Tokenizer|Iterator $source,
-	) {
-		parent::__construct($source);
-	}
-
 	public function parse(): Node
 	{
 		$expression = $this->expression();
 
 		// ensure that we consumed all tokens
-		if(!$this->isAtEnd()) {
+		if ($this->isAtEnd() === false) {
 			$this->consume(TokenType::T_EOF, 'Expect end of expression.');
 		}
 
@@ -46,7 +39,7 @@ class Parser extends BaseParser
 
 		while ($this->match(TokenType::T_COALESCE)) {
 			$right = $this->ternary();
-			$left = new CoalesceNode($left, $right);
+			$left  = new CoalesceNode($left, $right);
 		}
 
 		return $left;
@@ -57,18 +50,23 @@ class Parser extends BaseParser
 		$left = $this->memberAccess();
 
 		if ($tok = $this->matchAny([TokenType::T_QUESTION_MARK, TokenType::T_TERNARY_DEFAULT])) {
-			if($tok->type === TokenType::T_TERNARY_DEFAULT) {
+			if ($tok->type === TokenType::T_TERNARY_DEFAULT) {
 				$trueIsDefault = true;
-				$trueBranch = null;
-				$falseBranch = $this->expression();
+				$trueBranch    = null;
 			} else {
 				$trueIsDefault = false;
-				$trueBranch = $this->expression();
+				$trueBranch    = $this->expression();
 				$this->consume(TokenType::T_COLON, 'Expect ":" after true branch.');
-				$falseBranch = $this->expression();
 			}
 
-			return new TernaryNode($left, $trueBranch, $falseBranch, $trueIsDefault);
+			$falseBranch = $this->expression();
+
+			return new TernaryNode(
+				$left,
+				$trueBranch,
+				$falseBranch,
+				$trueIsDefault
+			);
 		}
 
 		return $left;
@@ -81,20 +79,24 @@ class Parser extends BaseParser
 		while ($tok = $this->matchAny([TokenType::T_DOT, TokenType::T_NULLSAFE])) {
 			$nullSafe = $tok->type === TokenType::T_NULLSAFE;
 
-			if($right = $this->match(TokenType::T_IDENTIFIER)) {
+			if ($right = $this->match(TokenType::T_IDENTIFIER)) {
 				$right = $right->lexeme;
-			} elseif($right = $this->match(TokenType::T_INTEGER)) {
+			} elseif ($right = $this->match(TokenType::T_INTEGER)) {
 				$right = $right->literal;
 			} else {
 				throw new Exception('Expect property name after ".".');
 			}
 
-			if($this->match(TokenType::T_OPEN_PAREN)) {
+			if ($this->match(TokenType::T_OPEN_PAREN)) {
 				$arguments = $this->argumentList();
-				$left = new MemberAccessNode($left, $right, $arguments, $nullSafe);
-			} else {
-				$left = new MemberAccessNode($left, $right, null, $nullSafe);
 			}
+
+			$left = new MemberAccessNode(
+				$left,
+				$right,
+				$arguments ?? null,
+				$nullSafe
+			);
 		}
 
 		return $left;
@@ -104,10 +106,10 @@ class Parser extends BaseParser
 	{
 		$elements = [];
 
-		while (!$this->isAtEnd() && !$this->check($until)) {
+		while ($this->isAtEnd() === false && $this->check($until) === false) {
 			$elements[] = $this->expression();
 
-			if (!$this->match(TokenType::T_COMMA)) {
+			if ($this->match(TokenType::T_COMMA) == false) {
 				break;
 			}
 		}
@@ -129,10 +131,11 @@ class Parser extends BaseParser
 	{
 		// float numbers
 		if ($integer = $this->match(TokenType::T_INTEGER)) {
-			if($this->match(TokenType::T_DOT)) {
+			if ($this->match(TokenType::T_DOT)) {
 				$fractional = $this->match(TokenType::T_INTEGER);
 				return new LiteralNode((float)($integer->literal . '.' . $fractional->literal));
 			}
+
 			return new LiteralNode($integer->literal);
 		}
 
@@ -155,7 +158,7 @@ class Parser extends BaseParser
 
 		// global functions and variables
 		if ($token = $this->match(TokenType::T_IDENTIFIER)) {
-			if($this->match(TokenType::T_OPEN_PAREN)) {
+			if ($this->match(TokenType::T_OPEN_PAREN)) {
 				$arguments = $this->argumentList();
 				return new GlobalFunctionNode($token->lexeme, $arguments);
 			}
@@ -167,7 +170,7 @@ class Parser extends BaseParser
 		if ($token = $this->match(TokenType::T_OPEN_PAREN)) {
 			$list = $this->listUntil(TokenType::T_CLOSE_PAREN);
 
-			if($this->match(TokenType::T_ARROW)) {
+			if ($this->match(TokenType::T_ARROW)) {
 				$expression = $this->expression();
 
 				/**
@@ -175,7 +178,7 @@ class Parser extends BaseParser
 				 * @var VariableNode[] $list
 				 */
 				foreach($list as $element) {
-					if(!$element instanceof VariableNode) {
+					if ($element instanceof VariableNode === false) {
 						throw new Exception('Expecting only variables in closure argument list.');
 					}
 				}
@@ -183,13 +186,13 @@ class Parser extends BaseParser
 				$arguments = array_map(fn ($element) => $element->name, $list);
 				return new ClosureNode($arguments, $expression);
 			}
-			if(count($list) > 1) {
+
+			if (count($list) > 1) {
 				throw new Exception('Expecting \"=>\" after closure argument list.');
 			}
+
 			// this is just a grouping
 			return $list[0];
-
-
 		}
 
 		throw new Exception('Expect expression.');
