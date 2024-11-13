@@ -4,8 +4,11 @@ namespace Kirby\Toolkit\Query\AST;
 
 class ClosureNode extends Node
 {
+	/**
+	 * @param string[] $arguments The arguments names
+	 */
 	public function __construct(
-		public ArgumentListNode $arguments,
+		public array $arguments,
 		public Node $body,
 	) {
 	}

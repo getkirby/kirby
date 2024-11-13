@@ -35,6 +35,19 @@ class CodeGen extends Visitor {
 	 */
 	public array $mappings = [];
 
+
+	/**
+	 * Variable names in Query Language are different from PHP variable names,
+	 * they can start with a number and may contain escaped dots.
+	 *
+	 * This method returns a sanitized PHP variable name.
+	 *
+	 * @return string
+	 */
+	private static function phpName(string $name): string {
+		return '$_' . crc32($name);
+	}
+
 	/**
 	 * CodeGen constructor.
 	 *
@@ -46,42 +59,26 @@ class CodeGen extends Visitor {
 		return "(\$intercept($value))";
 	}
 
-
-	/**
-	 * Generates code like `arg1, arg2, arg3` from an argument list node.
-	 */
 	public function visitArgumentList(ArgumentListNode $node): string {
 		$arguments = array_map(fn($argument) => $argument->accept($this), $node->arguments);
 		return join(', ', $arguments);
 	}
 
-	/**
-	 * Generates code like `[element1, element2, element3]` from an array list node.
-	 */
 	public function visitArrayList(ArrayListNode $node): string {
 		$elements = array_map(fn($element) => $element->accept($this), $node->elements);
 		return '[' . join(', ', $elements) . ']';
 	}
 
-	/**
-	 * Generates code like `$left ?? $right` from a coalesce node.
-	 */
 	public function visitCoalesce(CoalesceNode $node): string {
 		$left = $node->left->accept($this);
 		$right = $node->right->accept($this);
 		return "($left ?? $right)";
 	}
 
-	/**
-	 * Generates code like `true`, `false`, `123.45`, `"foo bar"`, etc from a literal node.
-	 */
 	public function visitLiteral(LiteralNode $node): string {
 		return '$intercept(' . var_export($node->value, true) . ')';
 	}
 
-	/**
-	 * Generates code like `$object->member` or `$object->member($arguments)` from a member access node.
-	 */
 	public function visitMemberAccess(MemberAccessNode $node): string {
 		$object = $node->object->accept($this);
 		$member = $node->member;
@@ -100,9 +97,6 @@ class CodeGen extends Visitor {
 		return $this->intercept("Runtime::access($object, $memberStr, $nullSafe)");
 	}
 
-	/**
-	 * Generates code like `($condition ? $trueBranch : $falseBranch)` or `($condition ?: $falseBranch)` from a ternary node.
-	 */
 	public function visitTernary(TernaryNode $node): string {
 		$left = $node->condition->accept($this);
 		$falseBranch = $node->falseBranch->accept($this);
@@ -116,26 +110,26 @@ class CodeGen extends Visitor {
 	}
 
 	public function visitVariable(VariableNode $node): string {
-		$name = $node->name;
+		$name = $node->name();
 		$namestr = var_export($name, true);
 
-		$key = "_$name";
+		$key = self::phpName($name);
 		if(isset($this->directAccessFor[$name])) {
-			return $this->intercept("$$key");
+			return $this->intercept($key);
 		}
 
 		if(!isset($this->mappings[$key])) {
-			$this->mappings[$key] = $this->intercept("match(true) { isset(\$context[$namestr]) => \$context[$namestr], isset(\$functions[$namestr]) => \$functions[$namestr](), default => null }");
+			$this->mappings[$key] = $this->intercept("match(true) { isset(\$context[$namestr]) && \$context[$namestr] instanceof Closure => \$context[$namestr](), isset(\$context[$namestr]) => \$context[$namestr], isset(\$functions[$namestr]) => \$functions[$namestr](), default => null }");
 		}
 
-		return "\$$key";
+		return $key;
 	}
 
 	/**
 	 * Generates code like `$functions['function']($arguments)` from a global function node.
 	 */
 	public function visitGlobalFunction(GlobalFunctionNode $node): string {
-		$name = $node->name;
+		$name = $node->name();
 		if(!isset($this->validGlobalFunctions[$name])) {
 			throw new Exception("Invalid global function $name");
 		}
@@ -149,11 +143,10 @@ class CodeGen extends Visitor {
 	public function visitClosure(ClosureNode $node): mixed {
 		$this->uses['Kirby\\Toolkit\\Query\\Runtime'] = true;
 
-		$names = array_map(fn($n) => $n->name, $node->arguments->arguments);
-		$args = array_map(fn(string $n) => "\$_$n", $names);
+		$args = array_map(self::phpName(...), $node->arguments);
 		$args = join(', ', $args);
 
-		$newDirectAccessFor = array_merge($this->directAccessFor, array_fill_keys($names, true));
+		$newDirectAccessFor = array_merge($this->directAccessFor, array_fill_keys($node->arguments, true));
 
 		return "fn($args) => " . $node->body->accept(new self($this->validGlobalFunctions, $newDirectAccessFor));
 	}
