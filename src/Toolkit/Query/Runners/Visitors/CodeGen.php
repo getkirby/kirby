@@ -13,6 +13,7 @@ use Kirby\Toolkit\Query\AST\LiteralNode;
 use Kirby\Toolkit\Query\AST\MemberAccessNode;
 use Kirby\Toolkit\Query\AST\TernaryNode;
 use Kirby\Toolkit\Query\AST\VariableNode;
+use Kirby\Toolkit\Query\Runtime;
 use Kirby\Toolkit\Query\Visitor;
 
 /**
@@ -51,8 +52,10 @@ class CodeGen extends Visitor
 	 *
 	 * @param array<string,Closure> $validGlobalFunctions An array of valid global function closures.
 	 */
-	public function __construct(public array $validGlobalFunctions = [], public array $directAccessFor = [])
-	{
+	public function __construct(
+		public array $validGlobalFunctions = [],
+		public array $directAccessFor = []
+	) {
 	}
 
 	private function intercept(string $value): string
@@ -62,19 +65,27 @@ class CodeGen extends Visitor
 
 	public function visitArgumentList(ArgumentListNode $node): string
 	{
-		$arguments = array_map(fn ($argument) => $argument->accept($this), $node->arguments);
+		$arguments = array_map(
+			fn ($argument) => $argument->accept($this),
+			$node->arguments
+		);
+
 		return join(', ', $arguments);
 	}
 
 	public function visitArrayList(ArrayListNode $node): string
 	{
-		$elements = array_map(fn ($element) => $element->accept($this), $node->elements);
+		$elements = array_map(
+			fn ($element) => $element->accept($this),
+			$node->elements
+		);
+
 		return '[' . join(', ', $elements) . ']';
 	}
 
 	public function visitCoalesce(CoalesceNode $node): string
 	{
-		$left = $node->left->accept($this);
+		$left  = $node->left->accept($this);
 		$right = $node->right->accept($this);
 		return "($left ?? $right)";
 	}
@@ -89,28 +100,33 @@ class CodeGen extends Visitor
 		$object = $node->object->accept($this);
 		$member = $node->member;
 
-		$this->uses['Kirby\\Toolkit\\Query\\Runtime'] = true;
+		$this->uses[Runtime::class] = true;
 		$memberStr = var_export($member, true);
-		$nullSafe = $node->nullSafe ? 'true' : 'false';
+		$nullSafe  = $node->nullSafe ? 'true' : 'false';
 
-		if($node->arguments) {
+		if ($node->arguments) {
 			$arguments = $node->arguments->accept($this);
-			$member = var_export($member, true);
+			$member    = var_export($member, true);
 
-			return $this->intercept("Runtime::access($object, $memberStr, $nullSafe, $arguments)");
+			return $this->intercept(
+				"Runtime::access($object, $memberStr, $nullSafe, $arguments)"
+			);
 		}
 
-		return $this->intercept("Runtime::access($object, $memberStr, $nullSafe)");
+		return $this->intercept(
+			"Runtime::access($object, $memberStr, $nullSafe)"
+		);
 	}
 
 	public function visitTernary(TernaryNode $node): string
 	{
-		$left = $node->condition->accept($this);
+		$left        = $node->condition->accept($this);
 		$falseBranch = $node->falseBranch->accept($this);
 
-		if($node->trueBranchIsDefault) {
+		if ($node->trueBranchIsDefault === true) {
 			return "($left ?: $falseBranch)";
 		}
+
 		$trueBranch = $node->trueBranch->accept($this);
 		return "($left ? $trueBranch : $falseBranch)";
 
@@ -118,15 +134,15 @@ class CodeGen extends Visitor
 
 	public function visitVariable(VariableNode $node): string
 	{
-		$name = $node->name();
+		$name    = $node->name();
 		$namestr = var_export($name, true);
+		$key     = static::phpName($name);
 
-		$key = self::phpName($name);
-		if(isset($this->directAccessFor[$name])) {
+		if (isset($this->directAccessFor[$name])) {
 			return $this->intercept($key);
 		}
 
-		if(!isset($this->mappings[$key])) {
+		if (isset($this->mappings[$key]) === false) {
 			$this->mappings[$key] = $this->intercept("match(true) { isset(\$context[$namestr]) && \$context[$namestr] instanceof Closure => \$context[$namestr](), isset(\$context[$namestr]) => \$context[$namestr], isset(\$functions[$namestr]) => \$functions[$namestr](), default => null }");
 		}
 
@@ -139,25 +155,31 @@ class CodeGen extends Visitor
 	public function visitGlobalFunction(GlobalFunctionNode $node): string
 	{
 		$name = $node->name();
-		if(!isset($this->validGlobalFunctions[$name])) {
+
+		if (isset($this->validGlobalFunctions[$name])) {
 			throw new Exception("Invalid global function $name");
 		}
 
 		$arguments = $node->arguments->accept($this);
-		$name = var_export($name, true);
+		$name      = var_export($name, true);
 
 		return  $this->intercept($this->intercept("\$functions[$name]") . "($arguments)");
 	}
 
 	public function visitClosure(ClosureNode $node): mixed
 	{
-		$this->uses['Kirby\\Toolkit\\Query\\Runtime'] = true;
+		$this->uses[Runtime::class] = true;
 
-		$args = array_map(self::phpName(...), $node->arguments);
+		$args = array_map(static::phpName(...), $node->arguments);
 		$args = join(', ', $args);
 
-		$newDirectAccessFor = array_merge($this->directAccessFor, array_fill_keys($node->arguments, true));
+		$newDirectAccessFor = [
+			...$this->directAccessFor,
+			...array_fill_keys($node->arguments, true)
+		];
 
-		return "fn($args) => " . $node->body->accept(new self($this->validGlobalFunctions, $newDirectAccessFor));
+		return "fn($args) => " . $node->body->accept(
+			new static($this->validGlobalFunctions, $newDirectAccessFor)
+		);
 	}
 }

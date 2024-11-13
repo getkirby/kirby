@@ -6,6 +6,7 @@ use Closure;
 use Exception;
 use Kirby\Toolkit\Query\Parser;
 use Kirby\Toolkit\Query\Runner;
+use Kirby\Toolkit\Query\Runners\Visitors\CodeGen;
 use Kirby\Toolkit\Query\Tokenizer;
 
 class Transpiled extends Runner
@@ -24,7 +25,6 @@ class Transpiled extends Runner
 	) {
 	}
 
-
 	/**
 	 * Retrieves the executor closure for a given query.
 	 * If the closure is not already cached, it will be generated and stored in `Runner::$cacheFolder`.
@@ -35,33 +35,43 @@ class Transpiled extends Runner
 	protected function getResolver(string $query): Closure
 	{
 		// load closure from process memory
-		if(isset(self::$cache[$query])) {
+		if (isset(self::$cache[$query])) {
 			return self::$cache[$query];
 		}
 
 		// load closure from file-cache / opcache
-		$hash = crc32($query);
+		$hash     = crc32($query);
 		$filename = self::$cacheFolder . '/' . $hash . '.php';
-		if(file_exists($filename)) {
+
+		if (file_exists($filename)) {
 			return self::$cache[$query] = include $filename;
 		}
 
 		// on cache miss, parse query and generate closure
-		$t = new Tokenizer($query);
-		$parser = new Parser($t);
-		$node = $parser->parse();
-		$codeGen = new Visitors\CodeGen($this->allowedFunctions);
+		$tokenizer = new Tokenizer($query);
+		$parser    = new Parser($tokenizer);
+		$node      = $parser->parse();
+		$codeGen   = new CodeGen($this->allowedFunctions);
 
 		$functionBody = $node->accept($codeGen);
 
-		$mappings = join("\n", array_map(fn ($k, $v) => "$k = $v;", array_keys($codeGen->mappings), $codeGen->mappings)) . "\n";
-		$comment = join("\n", array_map(fn ($l) => "// $l", explode("\n", $query)));
+		$mappings = array_map(
+			fn ($k, $v) => "$k = $v;",
+			array_keys($codeGen->mappings),
+			$codeGen->mappings
+		);
+		$mappings = join("\n", $mappings) . "\n";
 
-		$uses = join("\n", array_map(fn ($k) => "use $k;", array_keys($codeGen->uses))) . "\n";
+		$comment = array_map(fn ($l) => "// $l", explode("\n", $query));
+		$comment = join("\n", $comment);
+
+		$uses = array_map(fn ($k) => "use $k;", array_keys($codeGen->uses));
+		$uses = join("\n", $uses) . "\n";
+
 		$function = "<?php\n$uses\n$comment\nreturn function(array \$context, array \$functions, Closure \$intercept) {\n$mappings\nreturn $functionBody;\n};";
 
 		// store closure in file-cache
-		if(!is_dir(self::$cacheFolder)) {
+		if (is_dir(self::$cacheFolder) === false) {
 			mkdir(self::$cacheFolder, 0777, true);
 		}
 
@@ -83,9 +93,15 @@ class Transpiled extends Runner
 	public function run(string $query, array $context = []): mixed
 	{
 		$function = $this->getResolver($query);
-		if(!is_callable($function)) {
+
+		if (is_callable($function) === false) {
 			throw new Exception('Query is not valid');
 		}
-		return $function($context, $this->allowedFunctions, $this->interceptor ?? fn ($v) => $v);
+
+		return $function(
+			$context,
+			$this->allowedFunctions,
+			$this->interceptor ?? fn ($v) => $v
+		);
 	}
 }

@@ -33,12 +33,18 @@ class Interpreter extends Visitor
 
 	public function visitArgumentList(ArgumentListNode $node): array
 	{
-		return array_map(fn ($argument) => $argument->accept($this), $node->arguments);
+		return array_map(
+			fn ($argument) => $argument->accept($this),
+			$node->arguments
+		);
 	}
 
 	public function visitArrayList(ArrayListNode $node): mixed
 	{
-		return array_map(fn ($element) => $element->accept($this), $node->elements);
+		return array_map(
+			fn ($element) => $element->accept($this),
+			$node->elements
+		);
 	}
 
 	public function visitCoalesce(CoalesceNode $node): mixed
@@ -50,7 +56,7 @@ class Interpreter extends Visitor
 	{
 		$val = $node->value;
 
-		if($this->interceptor !== null) {
+		if ($this->interceptor !== null) {
 			$val = ($this->interceptor)($val);
 		}
 
@@ -60,15 +66,20 @@ class Interpreter extends Visitor
 	public function visitMemberAccess(MemberAccessNode $node): mixed
 	{
 		$left = $node->object->accept($this);
-
 		$item = null;
-		if($node->arguments !== null) {
-			$item = Runtime::access($left, $node->member, $node->nullSafe, ...$node->arguments->accept($this));
+
+		if ($node->arguments !== null) {
+			$item = Runtime::access(
+				$left,
+				$node->member,
+				$node->nullSafe,
+				...$node->arguments->accept($this)
+			);
 		} else {
 			$item = Runtime::access($left, $node->member, $node->nullSafe);
 		}
 
-		if($this->interceptor !== null) {
+		if ($this->interceptor !== null) {
 			$item = ($this->interceptor)($item);
 		}
 
@@ -77,11 +88,16 @@ class Interpreter extends Visitor
 
 	public function visitTernary(TernaryNode $node): mixed
 	{
-		if($node->trueBranchIsDefault) {
-			return $node->condition->accept($this) ?: $node->trueBranch->accept($this);
+		if ($node->trueBranchIsDefault === true) {
+			return
+				$node->condition->accept($this) ?:
+				$node->trueBranch->accept($this);
 		}
-		return $node->condition->accept($this) ? $node->trueBranch->accept($this) : $node->falseBranch->accept($this);
 
+		return
+			$node->condition->accept($this) ?
+			$node->trueBranch->accept($this) :
+			$node->falseBranch->accept($this);
 	}
 
 	public function visitVariable(VariableNode $node): mixed
@@ -97,7 +113,7 @@ class Interpreter extends Visitor
 			default => null,
 		};
 
-		if($this->interceptor !== null) {
+		if ($this->interceptor !== null) {
 			$item = ($this->interceptor)($item);
 		}
 
@@ -108,18 +124,19 @@ class Interpreter extends Visitor
 	{
 		$name = $node->name();
 
-		if(!isset($this->validGlobalFunctions[$name])) {
+		if (isset($this->validGlobalFunctions[$name]) === false) {
 			throw new Exception("Invalid global function $name");
 		}
 
 		$function = $this->validGlobalFunctions[$name];
-		if($this->interceptor !== null) {
+
+		if ($this->interceptor !== null) {
 			$function = ($this->interceptor)($function);
 		}
 
 		$result = $function(...$node->arguments->accept($this));
 
-		if($this->interceptor !== null) {
+		if ($this->interceptor !== null) {
 			$result = ($this->interceptor)($result);
 		}
 
@@ -131,7 +148,7 @@ class Interpreter extends Visitor
 		$self = $this;
 
 		return function (...$params) use ($self, $node) {
-			$context = $self->context;
+			$context   = $self->context;
 			$functions = $self->validGlobalFunctions;
 
 			// [key1, key2] + [value1, value2] => [key1 => value1, key2 => value2]
@@ -140,8 +157,9 @@ class Interpreter extends Visitor
 				$params
 			);
 
-			$visitor = new self($functions, [...$context, ...$arguments]);
-			if($self->interceptor !== null) {
+			$visitor = new static($functions, [...$context, ...$arguments]);
+
+			if ($self->interceptor !== null) {
 				$visitor->setInterceptor($self->interceptor);
 			}
 
