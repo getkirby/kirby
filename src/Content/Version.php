@@ -95,6 +95,20 @@ class Version
 		Language|string $language = 'default'
 	): void {
 		$language = Language::ensure($language);
+		$latest   = $this->model->version(VersionId::latest());
+
+		// if the latest version of the translation does not exist yet,
+		// we have to copy over the content from the default language first.
+		if (
+			$this->isLatest() === false &&
+			$language->isDefault() === false &&
+			$latest->exists($language) === false
+		) {
+			$latest->create(
+				fields: $latest->read(Language::ensure('default')),
+				language: $language
+			);
+		}
 
 		// check if creating is allowed
 		VersionRules::create($this, $fields, $language);
