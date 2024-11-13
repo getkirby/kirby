@@ -335,7 +335,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 */
 	public function lock(): Lock
 	{
-		return $this->version(VersionId::changes())->lock();
+		return $this->version(VersionId::changes())->lock('*');
 	}
 
 	/**
