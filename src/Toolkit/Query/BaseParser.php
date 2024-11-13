@@ -60,7 +60,7 @@ abstract class BaseParser {
 	}
 
 	protected function isAtEnd(): bool {
-		return $this->current->type === TokenType::EOF;
+		return $this->current->type === TokenType::T_EOF;
 	}
 
 
