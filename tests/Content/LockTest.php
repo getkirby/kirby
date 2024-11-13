@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Language;
 use Kirby\Cms\User;
 
 /**
@@ -13,8 +14,9 @@ class LockTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Content.LockTest';
 
-	protected function createChangesVersion(): Version
-	{
+	protected function createChangesVersion(
+		Language|string $language = 'default'
+	): Version {
 		$version = new Version(
 			model: $this->app->page('test'),
 			id: VersionId::changes()
@@ -22,13 +24,14 @@ class LockTest extends TestCase
 
 		$version->create([
 			'title' => 'Test'
-		]);
+		], $language);
 
 		return $version;
 	}
 
-	protected function createLatestVersion(): Version
-	{
+	protected function createLatestVersion(
+		Language|string $language = 'default'
+	): Version {
 		$latest = new Version(
 			model: $this->app->page('test'),
 			id: VersionId::latest()
@@ -36,7 +39,7 @@ class LockTest extends TestCase
 
 		$latest->create([
 			'title' => 'Test'
-		]);
+		], $language);
 
 		return $latest;
 	}
@@ -116,6 +119,40 @@ class LockTest extends TestCase
 		$lock   = Lock::for($latest);
 
 		$this->assertNull($lock->user());
+	}
+
+	/**
+	 * @covers ::for
+	 */
+	public function testForWithLanguageWildcard()
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de'
+				]
+			]
+		]);
+
+		// create the version with the admin user
+		$this->app->impersonate('admin');
+
+		$this->createLatestVersion('en');
+		$this->createLatestVersion('de');
+
+		$this->createChangesVersion('de');
+
+		// switch to a different user to simulate locked content
+		$this->app->impersonate('editor');
+
+		$changes = $this->app->page('test')->version('changes');
+		$lock    = Lock::for($changes, '*');
+
+		$this->assertSame('admin', $lock->user()->id());
 	}
 
 	/**
