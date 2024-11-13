@@ -5,7 +5,8 @@ namespace Kirby\Toolkit\Query;
 use Exception;
 use Generator;
 
-class Tokenizer {
+class Tokenizer
+{
 	private int $length = 0;
 
 	/**
@@ -36,7 +37,8 @@ class Tokenizer {
 	 * Tokenizes the source string and returns a generator of tokens.
 	 * @return Generator<Token>
 	 */
-	public function tokenize(): Generator {
+	public function tokenize(): Generator
+	{
 		$current = 0;
 
 		while ($current < $this->length) {
@@ -59,7 +61,8 @@ class Tokenizer {
 	 * @return Token The scanned token
 	 * @throws Exception If an unexpected character is encountered
 	 */
-	protected static function scanToken(string $source, int $current): Token {
+	protected static function scanToken(string $source, int $current): Token
+	{
 		$l = '';
 		$c = $source[$current];
 
@@ -89,7 +92,7 @@ class Tokenizer {
 			self::match($source, $current, 'null', $l, true) => new Token(TokenType::T_NULL, $l, null),
 			self::match($source, $current, self::DOUBLEQUOTE_STRING_REGEX, $l) => new Token(TokenType::T_STRING, $l, stripcslashes(substr($l, 1, -1))),
 			self::match($source, $current, self::SINGLEQUOTE_STRING_REGEX, $l) => new Token(TokenType::T_STRING, $l, stripcslashes(substr($l, 1, -1))),
-			self::match($source, $current, '\d+\b', $l) => new Token(TokenType::T_INTEGER, $l, intval($l)),
+			self::match($source, $current, '\d+\b', $l) => new Token(TokenType::T_INTEGER, $l, (int)$l),
 			self::match($source, $current, self::IDENTIFIER_REGEX, $l) => new Token(TokenType::T_IDENTIFIER, $l),
 
 			// unknown token
@@ -108,7 +111,8 @@ class Tokenizer {
 	 * @param bool $caseIgnore Whether to ignore case while matching
 	 * @return bool Whether the regex pattern was matched
 	 */
-	protected static function match(string $source, int $current, string $regex, string &$lexeme, bool $caseIgnore = false): bool {
+	protected static function match(string $source, int $current, string $regex, string &$lexeme, bool $caseIgnore = false): bool
+	{
 		$regex = '/\G' . $regex . '/u';
 		if($caseIgnore) {
 			$regex .= 'i';

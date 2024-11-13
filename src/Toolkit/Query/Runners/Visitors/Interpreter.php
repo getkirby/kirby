@@ -8,19 +8,19 @@ use Kirby\Toolkit\Query\AST\ArgumentListNode;
 use Kirby\Toolkit\Query\AST\ArrayListNode;
 use Kirby\Toolkit\Query\AST\ClosureNode;
 use Kirby\Toolkit\Query\AST\CoalesceNode;
+use Kirby\Toolkit\Query\AST\GlobalFunctionNode;
 use Kirby\Toolkit\Query\AST\LiteralNode;
 use Kirby\Toolkit\Query\AST\MemberAccessNode;
 use Kirby\Toolkit\Query\AST\TernaryNode;
 use Kirby\Toolkit\Query\AST\VariableNode;
-use Kirby\Toolkit\Query\AST\GlobalFunctionNode;
 use Kirby\Toolkit\Query\Runtime;
 use Kirby\Toolkit\Query\Visitor;
-
 
 /**
  * Visitor that interprets and directly executes a query AST.
  */
-class Interpreter extends Visitor {
+class Interpreter extends Visitor
+{
 	/**
 	 * @param array<string,Closure> $validGlobalFunctions An array of valid global function closures.
 	 * @param array<string,mixed> $context The data bindings for the query.
@@ -28,21 +28,26 @@ class Interpreter extends Visitor {
 	public function __construct(
 		public array $validGlobalFunctions = [],
 		public array $context = []
-	) {}
-
-	public function visitArgumentList(ArgumentListNode $node): array {
-		return array_map(fn($argument) => $argument->accept($this), $node->arguments);
+	) {
 	}
 
-	public function visitArrayList(ArrayListNode $node): mixed {
-		return array_map(fn($element) => $element->accept($this), $node->elements);
+	public function visitArgumentList(ArgumentListNode $node): array
+	{
+		return array_map(fn ($argument) => $argument->accept($this), $node->arguments);
 	}
 
-	public function visitCoalesce(CoalesceNode $node): mixed {
+	public function visitArrayList(ArrayListNode $node): mixed
+	{
+		return array_map(fn ($element) => $element->accept($this), $node->elements);
+	}
+
+	public function visitCoalesce(CoalesceNode $node): mixed
+	{
 		return $node->left->accept($this) ?? $node->right->accept($this);
 	}
 
-	public function visitLiteral(LiteralNode $node): mixed {
+	public function visitLiteral(LiteralNode $node): mixed
+	{
 		$val = $node->value;
 
 		if($this->interceptor !== null) {
@@ -52,7 +57,8 @@ class Interpreter extends Visitor {
 		return $val;
 	}
 
-	public function visitMemberAccess(MemberAccessNode $node): mixed {
+	public function visitMemberAccess(MemberAccessNode $node): mixed
+	{
 		$left = $node->object->accept($this);
 
 		$item = null;
@@ -69,15 +75,17 @@ class Interpreter extends Visitor {
 		return $item;
 	}
 
-	public function visitTernary(TernaryNode $node): mixed {
+	public function visitTernary(TernaryNode $node): mixed
+	{
 		if($node->trueBranchIsDefault) {
 			return $node->condition->accept($this) ?: $node->trueBranch->accept($this);
-		} else {
-			return $node->condition->accept($this) ? $node->trueBranch->accept($this) : $node->falseBranch->accept($this);
 		}
+		return $node->condition->accept($this) ? $node->trueBranch->accept($this) : $node->falseBranch->accept($this);
+
 	}
 
-	public function visitVariable(VariableNode $node): mixed {
+	public function visitVariable(VariableNode $node): mixed
+	{
 		// what looks like a variable might actually be a global function
 		// but if there is a variable with the same name, the variable takes precedence
 
@@ -96,7 +104,8 @@ class Interpreter extends Visitor {
 		return $item;
 	}
 
-	public function visitGlobalFunction(GlobalFunctionNode $node): mixed {
+	public function visitGlobalFunction(GlobalFunctionNode $node): mixed
+	{
 		$name = $node->name();
 
 		if(!isset($this->validGlobalFunctions[$name])) {
@@ -117,10 +126,11 @@ class Interpreter extends Visitor {
 		return $result;
 	}
 
-	public function visitClosure(ClosureNode $node): mixed {
+	public function visitClosure(ClosureNode $node): mixed
+	{
 		$self = $this;
 
-		return function(...$params) use ($self, $node) {
+		return function (...$params) use ($self, $node) {
 			$context = $self->context;
 			$functions = $self->validGlobalFunctions;
 
