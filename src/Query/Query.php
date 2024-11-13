@@ -12,10 +12,8 @@ use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Image\QrCode;
 use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\Query\Runner;
 use Kirby\Toolkit\Query\Runners\Interpreted;
 use Kirby\Toolkit\Query\Runners\Transpiled;
-use Kirby\Toolkit\Query\Visitor;
 
 /**
  * The Query class can be used to query arrays and objects,
