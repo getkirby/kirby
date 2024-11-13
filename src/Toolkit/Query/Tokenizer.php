@@ -8,6 +8,24 @@ use Generator;
 class Tokenizer {
 	private int $length = 0;
 
+	/**
+	 * The more complex regexes are written here in nowdoc format so we don't need to double or triple escape backslashes (that becomes ridiculous rather fast).
+	 */
+
+	// Identifiers can contain letters, numbers, underscores and escaped dots. They can't start with a number.
+	// to match an array key like "foo.bar" we write the query as `foo\.bar`, to match an array key like "foo\.bar" we write the query as `foo\\.bar`
+	private const IDENTIFIER_REGEX = <<<'REGEX'
+	(?:[\p{L}\p{N}_]|\\\.|\\\\)*
+	REGEX;
+
+	private const SINGLEQUOTE_STRING_REGEX = <<<'REGEX'
+	'([^'\\]*(?:\\.[^'\\]*)*)'
+	REGEX;
+
+	private const DOUBLEQUOTE_STRING_REGEX = <<<'REGEX'
+	"([^"\\]*(?:\\.[^"\\]*)*)"
+	REGEX;
+
 	public function __construct(
 		private readonly string $source,
 	) {
@@ -24,47 +42,55 @@ class Tokenizer {
 		while ($current < $this->length) {
 			$t = self::scanToken($this->source, $current);
 			// don't yield whitespace tokens (ignore them)
-			if($t->type !== TokenType::WHITESPACE) {
+			if($t->type !== TokenType::T_WHITESPACE) {
 				yield $t;
 			}
 			$current += mb_strlen($t->lexeme);
 		}
 
-		yield new Token(TokenType::EOF, '', null);
+		yield new Token(TokenType::T_EOF, '', null);
 	}
 
+	/**
+	 * Scans the source string for a token starting at the given position.
+	 * @param string $source The source string
+	 * @param int $current The current position in the source string
+	 *
+	 * @return Token The scanned token
+	 * @throws Exception If an unexpected character is encountered
+	 */
 	protected static function scanToken(string $source, int $current): Token {
 		$l = '';
 		$c = $source[$current];
 
 		return match(true) {
 			// single character tokens
-			$c === '.' => new Token(TokenType::DOT, '.'),
-			$c === '(' => new Token(TokenType::OPEN_PAREN, '('),
-			$c === ')' => new Token(TokenType::CLOSE_PAREN, ')'),
-			$c === '[' => new Token(TokenType::OPEN_BRACKET, '['),
-			$c === ']' => new Token(TokenType::CLOSE_BRACKET, ']'),
-			$c === ',' => new Token(TokenType::COMMA, ','),
-			$c === ':' => new Token(TokenType::COLON, ':'),
+			$c === '.' => new Token(TokenType::T_DOT, '.'),
+			$c === '(' => new Token(TokenType::T_OPEN_PAREN, '('),
+			$c === ')' => new Token(TokenType::T_CLOSE_PAREN, ')'),
+			$c === '[' => new Token(TokenType::T_OPEN_BRACKET, '['),
+			$c === ']' => new Token(TokenType::T_CLOSE_BRACKET, ']'),
+			$c === ',' => new Token(TokenType::T_COMMA, ','),
+			$c === ':' => new Token(TokenType::T_COLON, ':'),
 
 			// two character tokens
-			self::match($source, $current, '\\?\\?', $l) => new Token(TokenType::COALESCE, $l),
-			self::match($source, $current, '\\?\\s*\\.', $l) => new Token(TokenType::NULLSAFE, $l),
-			self::match($source, $current, '\\?\\s*:', $l) => new Token(TokenType::TERNARY_DEFAULT, $l),
-			self::match($source, $current, '=>', $l) => new Token(TokenType::ARROW, $l),
+			self::match($source, $current, '\?\?', $l) => new Token(TokenType::T_COALESCE, $l),
+			self::match($source, $current, '\?\s*\.', $l) => new Token(TokenType::T_NULLSAFE, $l),
+			self::match($source, $current, '\?\s*:', $l) => new Token(TokenType::T_TERNARY_DEFAULT, $l),
+			self::match($source, $current, '=>', $l) => new Token(TokenType::T_ARROW, $l),
 
 			// make sure this check comes after the two above that check for '?' in the beginning
-			$c === '?' => new Token(TokenType::QUESTION_MARK, '?'),
+			$c === '?' => new Token(TokenType::T_QUESTION_MARK, '?'),
 
 			// multi character tokens
-			self::match($source, $current, '\\s+', $l) => new Token(TokenType::WHITESPACE, $l),
-			self::match($source, $current, 'true', $l, true) => new Token(TokenType::TRUE, $l, true),
-			self::match($source, $current, 'false', $l, true) => new Token(TokenType::FALSE, $l, false),
-			self::match($source, $current, 'null', $l, true) => new Token(TokenType::NULL, $l, null),
-			self::match($source, $current, '"([^"\\\\]*(?:\\\\.[^"\\\\]*)*)"', $l) => new Token(TokenType::STRING, $l, stripcslashes(substr($l, 1, -1))),
-			self::match($source, $current, '\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\'', $l) => new Token(TokenType::STRING, $l, stripcslashes(substr($l, 1, -1))),
-			self::match($source, $current, '[0-9]+', $l) => new Token(TokenType::INTEGER, $l, intval($l)),
-			self::match($source, $current, '[a-zA-Z_][a-zA-Z0-9_]*', $l) => new Token(TokenType::IDENTIFIER, $l),
+			self::match($source, $current, '\s+', $l) => new Token(TokenType::T_WHITESPACE, $l),
+			self::match($source, $current, 'true', $l, true) => new Token(TokenType::T_TRUE, $l, true),
+			self::match($source, $current, 'false', $l, true) => new Token(TokenType::T_FALSE, $l, false),
+			self::match($source, $current, 'null', $l, true) => new Token(TokenType::T_NULL, $l, null),
+			self::match($source, $current, self::DOUBLEQUOTE_STRING_REGEX, $l) => new Token(TokenType::T_STRING, $l, stripcslashes(substr($l, 1, -1))),
+			self::match($source, $current, self::SINGLEQUOTE_STRING_REGEX, $l) => new Token(TokenType::T_STRING, $l, stripcslashes(substr($l, 1, -1))),
+			self::match($source, $current, '\d+\b', $l) => new Token(TokenType::T_INTEGER, $l, intval($l)),
+			self::match($source, $current, self::IDENTIFIER_REGEX, $l) => new Token(TokenType::T_IDENTIFIER, $l),
 
 			// unknown token
 			default => throw new Exception("Unexpected character: {$source[$current]}"),
@@ -72,9 +98,15 @@ class Tokenizer {
 	}
 
 	/**
-	 * Checks if a given regex matches the current position in the source. Returns the matched string or false. Advances the current position when a match is found.
-	 * @param string $regex
-	 * @return string|false
+	 * Matches a regex pattern at the current position in the source string.
+	 * The matched lexeme will be stored in the $lexeme variable.
+	 *
+	 * @param string $source The source string
+	 * @param int $current The current position in the source string (used as offset for the regex)
+	 * @param string $regex The regex pattern to match (without delimiters / flags)
+	 * @param string $lexeme The matched lexeme will be stored in this variable
+	 * @param bool $caseIgnore Whether to ignore case while matching
+	 * @return bool Whether the regex pattern was matched
 	 */
 	protected static function match(string $source, int $current, string $regex, string &$lexeme, bool $caseIgnore = false): bool {
 		$regex = '/\G' . $regex . '/u';

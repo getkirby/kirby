@@ -27,7 +27,7 @@ class Parser extends BaseParser {
 
 		// ensure that we consumed all tokens
 		if(!$this->isAtEnd())
-			$this->consume(TokenType::EOF, 'Expect end of expression.');
+			$this->consume(TokenType::T_EOF, 'Expect end of expression.');
 
 		return $expression;
 	}
@@ -39,7 +39,7 @@ class Parser extends BaseParser {
 	private function coalesce(): Node {
 		$left = $this->ternary();
 
-		while ($this->match(TokenType::COALESCE)) {
+		while ($this->match(TokenType::T_COALESCE)) {
 			$right = $this->ternary();
 			$left = new CoalesceNode($left, $right);
 		}
@@ -50,15 +50,15 @@ class Parser extends BaseParser {
 	private function ternary(): Node {
 		$left = $this->memberAccess();
 
-		if ($tok = $this->matchAny([TokenType::QUESTION_MARK, TokenType::TERNARY_DEFAULT])) {
-			if($tok->type === TokenType::TERNARY_DEFAULT) {
+		if ($tok = $this->matchAny([TokenType::T_QUESTION_MARK, TokenType::T_TERNARY_DEFAULT])) {
+			if($tok->type === TokenType::T_TERNARY_DEFAULT) {
 				$trueIsDefault = true;
 				$trueBranch = null;
 				$falseBranch = $this->expression();
 			} else {
 				$trueIsDefault = false;
 				$trueBranch = $this->expression();
-				$this->consume(TokenType::COLON, 'Expect ":" after true branch.');
+				$this->consume(TokenType::T_COLON, 'Expect ":" after true branch.');
 				$falseBranch = $this->expression();
 			}
 
@@ -71,18 +71,18 @@ class Parser extends BaseParser {
 	private function memberAccess(): Node {
 		$left = $this->atomic();
 
-		while ($tok = $this->matchAny([TokenType::DOT, TokenType::NULLSAFE])) {
-			$nullSafe = $tok->type === TokenType::NULLSAFE;
+		while ($tok = $this->matchAny([TokenType::T_DOT, TokenType::T_NULLSAFE])) {
+			$nullSafe = $tok->type === TokenType::T_NULLSAFE;
 
-			if($right = $this->match(TokenType::IDENTIFIER)) {
+			if($right = $this->match(TokenType::T_IDENTIFIER)) {
 				$right = $right->lexeme;
-			} else if($right = $this->match(TokenType::INTEGER)) {
+			} else if($right = $this->match(TokenType::T_INTEGER)) {
 				$right = $right->literal;
 			} else {
 				throw new Exception('Expect property name after ".".');
 			}
 
-			if($this->match(TokenType::OPEN_PAREN)) {
+			if($this->match(TokenType::T_OPEN_PAREN)) {
 				$arguments = $this->argumentList();
 				$left = new MemberAccessNode($left, $right, $arguments, $nullSafe);
 			} else {
@@ -99,7 +99,7 @@ class Parser extends BaseParser {
 		while (!$this->isAtEnd() && !$this->check($until)) {
 			$elements[] = $this->expression();
 
-			if (!$this->match(TokenType::COMMA)) {
+			if (!$this->match(TokenType::T_COMMA)) {
 				break;
 			}
 		}
@@ -111,16 +111,16 @@ class Parser extends BaseParser {
 	}
 
 	private function argumentList(): Node {
-		$list = $this->listUntil(TokenType::CLOSE_PAREN);
+		$list = $this->listUntil(TokenType::T_CLOSE_PAREN);
 
 		return new ArgumentListNode($list);
 	}
 
 	private function atomic(): Node {
 		// float numbers
-		if ($integer = $this->match(TokenType::INTEGER)) {
-			if($this->match(TokenType::DOT)) {
-				$fractional = $this->match(TokenType::INTEGER);
+		if ($integer = $this->match(TokenType::T_INTEGER)) {
+			if($this->match(TokenType::T_DOT)) {
+				$fractional = $this->match(TokenType::T_INTEGER);
 				return new LiteralNode(floatval($integer->literal . '.' . $fractional->literal));
 			}
 			return new LiteralNode($integer->literal);
@@ -128,24 +128,24 @@ class Parser extends BaseParser {
 
 		// primitives
 		if ($token = $this->matchAny([
-			TokenType::TRUE,
-			TokenType::FALSE,
-			TokenType::NULL,
-			TokenType::STRING,
+			TokenType::T_TRUE,
+			TokenType::T_FALSE,
+			TokenType::T_NULL,
+			TokenType::T_STRING,
 		])) {
 			return new LiteralNode($token->literal);
 		}
 
 		// array literals
-		if ($token = $this->match(TokenType::OPEN_BRACKET)) {
-			$arrayItems = $this->listUntil(TokenType::CLOSE_BRACKET);
+		if ($token = $this->match(TokenType::T_OPEN_BRACKET)) {
+			$arrayItems = $this->listUntil(TokenType::T_CLOSE_BRACKET);
 
 			return new ArrayListNode($arrayItems);
 		}
 
 		// global functions and variables
-		if ($token = $this->match(TokenType::IDENTIFIER)) {
-			if($this->match(TokenType::OPEN_PAREN)) {
+		if ($token = $this->match(TokenType::T_IDENTIFIER)) {
+			if($this->match(TokenType::T_OPEN_PAREN)) {
 				$arguments = $this->argumentList();
 				return new GlobalFunctionNode($token->lexeme, $arguments);
 			}
@@ -154,10 +154,10 @@ class Parser extends BaseParser {
 		}
 
 		// grouping and closure argument lists
-		if ($token = $this->match(TokenType::OPEN_PAREN)) {
-			$list = $this->listUntil(TokenType::CLOSE_PAREN);
+		if ($token = $this->match(TokenType::T_OPEN_PAREN)) {
+			$list = $this->listUntil(TokenType::T_CLOSE_PAREN);
 
-			if($this->match(TokenType::ARROW)) {
+			if($this->match(TokenType::T_ARROW)) {
 				$expression = $this->expression();
 				// check if all elements are variables
 				foreach($list as $element) {
