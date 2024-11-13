@@ -51,7 +51,7 @@ class Transpiled extends Runner {
 
 		$functionBody = $node->accept($codeGen);
 
-		$mappings = join("\n", array_map(fn($k, $v) => "$$k = $v;", array_keys($codeGen->mappings), $codeGen->mappings)) . "\n";
+		$mappings = join("\n", array_map(fn($k, $v) => "$k = $v;", array_keys($codeGen->mappings), $codeGen->mappings)) . "\n";
 		$comment = join("\n", array_map(fn($l) => "// $l", explode("\n", $query)));
 
 		$uses = join("\n", array_map(fn($k) => "use $k;", array_keys($codeGen->uses))) . "\n";
