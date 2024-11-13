@@ -109,7 +109,7 @@ class Query
 
 		$mode = App::instance()->option('query.runner', 'transpiled');
 
-		if($mode === 'legacy') {
+		if ($mode === 'legacy') {
 			return $this->resolve_legacy($data);
 		}
 

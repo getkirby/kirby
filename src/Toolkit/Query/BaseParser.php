@@ -19,13 +19,12 @@ abstract class BaseParser
 	public function __construct(
 		Tokenizer|Iterator $source,
 	) {
-		if($source instanceof Tokenizer) {
-			$this->tokens = $source->tokenize();
-		} else {
-			$this->tokens = $source;
+		if ($source instanceof Tokenizer) {
+			$source = $source->tokenize();
 		}
 
-		$first = $this->tokens->current();
+		$this->tokens = $source;
+		$first        = $this->tokens->current();
 
 		if ($first === null) {
 			throw new Exception('No tokens found.');
@@ -36,7 +35,7 @@ abstract class BaseParser
 
 	protected function consume(TokenType $type, string $message): Token
 	{
-		if ($this->check($type)) {
+		if ($this->check($type) === true) {
 			return $this->advance();
 		}
 
@@ -45,7 +44,7 @@ abstract class BaseParser
 
 	protected function check(TokenType $type): bool
 	{
-		if ($this->isAtEnd()) {
+		if ($this->isAtEnd() === true) {
 			return false;
 		}
 
@@ -54,7 +53,7 @@ abstract class BaseParser
 
 	protected function advance(): Token|null
 	{
-		if (!$this->isAtEnd()) {
+		if ($this->isAtEnd() === false) {
 			$this->previous = $this->current;
 			$this->tokens->next();
 			$this->current = $this->tokens->current();
@@ -71,7 +70,7 @@ abstract class BaseParser
 
 	protected function match(TokenType $type): Token|false
 	{
-		if ($this->check($type)) {
+		if ($this->check($type) === true) {
 			return $this->advance();
 		}
 
@@ -81,7 +80,7 @@ abstract class BaseParser
 	protected function matchAny(array $types): Token|false
 	{
 		foreach ($types as $type) {
-			if ($this->check($type)) {
+			if ($this->check($type) === true) {
 				return $this->advance();
 			}
 		}

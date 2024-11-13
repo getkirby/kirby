@@ -42,12 +42,14 @@ class Tokenizer
 		$current = 0;
 
 		while ($current < $this->length) {
-			$t = self::scanToken($this->source, $current);
+			$token = static::scanToken($this->source, $current);
+
 			// don't yield whitespace tokens (ignore them)
-			if($t->type !== TokenType::T_WHITESPACE) {
-				yield $t;
+			if ($token->type !== TokenType::T_WHITESPACE) {
+				yield $token;
 			}
-			$current += mb_strlen($t->lexeme);
+
+			$current += mb_strlen($token->lexeme);
 		}
 
 		yield new Token(TokenType::T_EOF, '', null);
@@ -63,37 +65,50 @@ class Tokenizer
 	 */
 	protected static function scanToken(string $source, int $current): Token
 	{
-		$l = '';
-		$c = $source[$current];
+		$lex  = '';
+		$char = $source[$current];
 
 		return match(true) {
 			// single character tokens
-			$c === '.' => new Token(TokenType::T_DOT, '.'),
-			$c === '(' => new Token(TokenType::T_OPEN_PAREN, '('),
-			$c === ')' => new Token(TokenType::T_CLOSE_PAREN, ')'),
-			$c === '[' => new Token(TokenType::T_OPEN_BRACKET, '['),
-			$c === ']' => new Token(TokenType::T_CLOSE_BRACKET, ']'),
-			$c === ',' => new Token(TokenType::T_COMMA, ','),
-			$c === ':' => new Token(TokenType::T_COLON, ':'),
+			$char === '.' => new Token(TokenType::T_DOT, '.'),
+			$char === '(' => new Token(TokenType::T_OPEN_PAREN, '('),
+			$char === ')' => new Token(TokenType::T_CLOSE_PAREN, ')'),
+			$char === '[' => new Token(TokenType::T_OPEN_BRACKET, '['),
+			$char === ']' => new Token(TokenType::T_CLOSE_BRACKET, ']'),
+			$char === ',' => new Token(TokenType::T_COMMA, ','),
+			$char === ':' => new Token(TokenType::T_COLON, ':'),
 
 			// two character tokens
-			self::match($source, $current, '\?\?', $l) => new Token(TokenType::T_COALESCE, $l),
-			self::match($source, $current, '\?\s*\.', $l) => new Token(TokenType::T_NULLSAFE, $l),
-			self::match($source, $current, '\?\s*:', $l) => new Token(TokenType::T_TERNARY_DEFAULT, $l),
-			self::match($source, $current, '=>', $l) => new Token(TokenType::T_ARROW, $l),
+			static::match($source, $current, '\?\?', $lex)
+				=> new Token(TokenType::T_COALESCE, $lex),
+			static::match($source, $current, '\?\s*\.', $lex)
+				=> new Token(TokenType::T_NULLSAFE, $lex),
+			static::match($source, $current, '\?\s*:', $lex)
+				=> new Token(TokenType::T_TERNARY_DEFAULT, $lex),
+			static::match($source, $current, '=>', $lex)
+				=> new Token(TokenType::T_ARROW, $lex),
 
-			// make sure this check comes after the two above that check for '?' in the beginning
-			$c === '?' => new Token(TokenType::T_QUESTION_MARK, '?'),
+			// make sure this check comes after the two above
+			// that check for '?' in the beginning
+			$char === '?' => new Token(TokenType::T_QUESTION_MARK, '?'),
 
 			// multi character tokens
-			self::match($source, $current, '\s+', $l) => new Token(TokenType::T_WHITESPACE, $l),
-			self::match($source, $current, 'true', $l, true) => new Token(TokenType::T_TRUE, $l, true),
-			self::match($source, $current, 'false', $l, true) => new Token(TokenType::T_FALSE, $l, false),
-			self::match($source, $current, 'null', $l, true) => new Token(TokenType::T_NULL, $l, null),
-			self::match($source, $current, self::DOUBLEQUOTE_STRING_REGEX, $l) => new Token(TokenType::T_STRING, $l, stripcslashes(substr($l, 1, -1))),
-			self::match($source, $current, self::SINGLEQUOTE_STRING_REGEX, $l) => new Token(TokenType::T_STRING, $l, stripcslashes(substr($l, 1, -1))),
-			self::match($source, $current, '\d+\b', $l) => new Token(TokenType::T_INTEGER, $l, (int)$l),
-			self::match($source, $current, self::IDENTIFIER_REGEX, $l) => new Token(TokenType::T_IDENTIFIER, $l),
+			static::match($source, $current, '\s+', $lex)
+				=> new Token(TokenType::T_WHITESPACE, $lex),
+			static::match($source, $current, 'true', $lex, true)
+				=> new Token(TokenType::T_TRUE, $lex, true),
+			static::match($source, $current, 'false', $lex, true)
+				=> new Token(TokenType::T_FALSE, $lex, false),
+			static::match($source, $current, 'null', $lex, true)
+				=> new Token(TokenType::T_NULL, $lex, null),
+			static::match($source, $current, static::DOUBLEQUOTE_STRING_REGEX, $lex)
+				=> new Token(TokenType::T_STRING, $lex, stripcslashes(substr($lex, 1, -1))),
+			static::match($source, $current, static::SINGLEQUOTE_STRING_REGEX, $lex)
+				=> new Token(TokenType::T_STRING, $lex, stripcslashes(substr($lex, 1, -1))),
+			static::match($source, $current, '\d+\b', $lex)
+				=> new Token(TokenType::T_INTEGER, $lex, (int)$lex),
+			static::match($source, $current, static::IDENTIFIER_REGEX, $lex)
+				=> new Token(TokenType::T_IDENTIFIER, $lex),
 
 			// unknown token
 			default => throw new Exception("Unexpected character: {$source[$current]}"),
@@ -111,17 +126,26 @@ class Tokenizer
 	 * @param bool $caseIgnore Whether to ignore case while matching
 	 * @return bool Whether the regex pattern was matched
 	 */
-	protected static function match(string $source, int $current, string $regex, string &$lexeme, bool $caseIgnore = false): bool
-	{
+	protected static function match(
+		string $source,
+		int $current,
+		string $regex,
+		string &$lexeme,
+		bool $caseIgnore = false
+	): bool {
 		$regex = '/\G' . $regex . '/u';
-		if($caseIgnore) {
+
+		if ($caseIgnore) {
 			$regex .= 'i';
 		}
+
 		$matches = [];
 		preg_match($regex, $source, $matches, 0, $current);
+
 		if (empty($matches[0])) {
 			return false;
 		}
+
 		$lexeme = $matches[0];
 		return true;
 	}
