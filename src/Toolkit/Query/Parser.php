@@ -15,28 +15,33 @@ use Kirby\Toolkit\Query\AST\Node;
 use Kirby\Toolkit\Query\AST\TernaryNode;
 use Kirby\Toolkit\Query\AST\VariableNode;
 
-class Parser extends BaseParser {
+class Parser extends BaseParser
+{
 	public function __construct(
 		Tokenizer|Iterator $source,
 	) {
 		parent::__construct($source);
 	}
 
-	public function parse(): Node {
+	public function parse(): Node
+	{
 		$expression = $this->expression();
 
 		// ensure that we consumed all tokens
-		if(!$this->isAtEnd())
+		if(!$this->isAtEnd()) {
 			$this->consume(TokenType::T_EOF, 'Expect end of expression.');
+		}
 
 		return $expression;
 	}
 
-	private function expression(): Node {
+	private function expression(): Node
+	{
 		return $this->coalesce();
 	}
 
-	private function coalesce(): Node {
+	private function coalesce(): Node
+	{
 		$left = $this->ternary();
 
 		while ($this->match(TokenType::T_COALESCE)) {
@@ -47,7 +52,8 @@ class Parser extends BaseParser {
 		return $left;
 	}
 
-	private function ternary(): Node {
+	private function ternary(): Node
+	{
 		$left = $this->memberAccess();
 
 		if ($tok = $this->matchAny([TokenType::T_QUESTION_MARK, TokenType::T_TERNARY_DEFAULT])) {
@@ -68,7 +74,8 @@ class Parser extends BaseParser {
 		return $left;
 	}
 
-	private function memberAccess(): Node {
+	private function memberAccess(): Node
+	{
 		$left = $this->atomic();
 
 		while ($tok = $this->matchAny([TokenType::T_DOT, TokenType::T_NULLSAFE])) {
@@ -76,7 +83,7 @@ class Parser extends BaseParser {
 
 			if($right = $this->match(TokenType::T_IDENTIFIER)) {
 				$right = $right->lexeme;
-			} else if($right = $this->match(TokenType::T_INTEGER)) {
+			} elseif($right = $this->match(TokenType::T_INTEGER)) {
 				$right = $right->literal;
 			} else {
 				throw new Exception('Expect property name after ".".');
@@ -93,7 +100,8 @@ class Parser extends BaseParser {
 		return $left;
 	}
 
-	private function listUntil(TokenType $until): array {
+	private function listUntil(TokenType $until): array
+	{
 		$elements = [];
 
 		while (!$this->isAtEnd() && !$this->check($until)) {
@@ -110,18 +118,20 @@ class Parser extends BaseParser {
 		return $elements;
 	}
 
-	private function argumentList(): Node {
+	private function argumentList(): Node
+	{
 		$list = $this->listUntil(TokenType::T_CLOSE_PAREN);
 
 		return new ArgumentListNode($list);
 	}
 
-	private function atomic(): Node {
+	private function atomic(): Node
+	{
 		// float numbers
 		if ($integer = $this->match(TokenType::T_INTEGER)) {
 			if($this->match(TokenType::T_DOT)) {
 				$fractional = $this->match(TokenType::T_INTEGER);
-				return new LiteralNode(floatval($integer->literal . '.' . $fractional->literal));
+				return new LiteralNode((float)($integer->literal . '.' . $fractional->literal));
 			}
 			return new LiteralNode($integer->literal);
 		}
@@ -170,16 +180,16 @@ class Parser extends BaseParser {
 					}
 				}
 
-				$arguments = array_map(fn($element) => $element->name, $list);
+				$arguments = array_map(fn ($element) => $element->name, $list);
 				return new ClosureNode($arguments, $expression);
-			} else {
-				if(count($list) > 1) {
-					throw new Exception('Expecting \"=>\" after closure argument list.');
-				} else {
-					// this is just a grouping
-					return $list[0];
-				}
 			}
+			if(count($list) > 1) {
+				throw new Exception('Expecting \"=>\" after closure argument list.');
+			}
+			// this is just a grouping
+			return $list[0];
+
+
 		}
 
 		throw new Exception('Expect expression.');

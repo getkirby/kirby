@@ -5,7 +5,8 @@ namespace Kirby\Toolkit\Query;
 use Closure;
 use Exception;
 
-abstract class Runner {
+abstract class Runner
+{
 	/**
 	 * Runner constructor.
 	 *
@@ -14,7 +15,8 @@ abstract class Runner {
 	public function __construct(
 		public array $allowedFunctions = [],
 		protected Closure|null $interceptor = null,
-	) {}
+	) {
+	}
 
 	/**
 	 * Executes a query within a given data context.

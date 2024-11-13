@@ -5,8 +5,9 @@ namespace Kirby\Toolkit\Query;
 use Exception;
 use Iterator;
 
-abstract class BaseParser {
-	protected ?Token $previous;
+abstract class BaseParser
+{
+	protected Token|null $previous;
 	protected Token $current;
 
 	/**
@@ -33,7 +34,8 @@ abstract class BaseParser {
 		$this->current = $first;
 	}
 
-	protected function consume(TokenType $type, string $message): Token {
+	protected function consume(TokenType $type, string $message): Token
+	{
 		if ($this->check($type)) {
 			return $this->advance();
 		}
@@ -41,7 +43,8 @@ abstract class BaseParser {
 		throw new Exception($message);
 	}
 
-	protected function check(TokenType $type): bool {
+	protected function check(TokenType $type): bool
+	{
 		if ($this->isAtEnd()) {
 			return false;
 		}
@@ -49,7 +52,8 @@ abstract class BaseParser {
 		return $this->current->type === $type;
 	}
 
-	protected function advance(): ?Token {
+	protected function advance(): Token|null
+	{
 		if (!$this->isAtEnd()) {
 			$this->previous = $this->current;
 			$this->tokens->next();
@@ -59,12 +63,14 @@ abstract class BaseParser {
 		return $this->previous;
 	}
 
-	protected function isAtEnd(): bool {
+	protected function isAtEnd(): bool
+	{
 		return $this->current->type === TokenType::T_EOF;
 	}
 
 
-	protected function match(TokenType $type): Token|false {
+	protected function match(TokenType $type): Token|false
+	{
 		if ($this->check($type)) {
 			return $this->advance();
 		}
@@ -72,7 +78,8 @@ abstract class BaseParser {
 		return false;
 	}
 
-	protected function matchAny(array $types): Token|false {
+	protected function matchAny(array $types): Token|false
+	{
 		foreach ($types as $type) {
 			if ($this->check($type)) {
 				return $this->advance();
