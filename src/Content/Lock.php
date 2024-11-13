@@ -72,7 +72,7 @@ class Lock
 
 		return new static(
 			user: $user ?? null,
-			modified: $version->modified()
+			modified: $version->modified($language)
 		);
 	}
 
