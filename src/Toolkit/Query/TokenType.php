@@ -2,7 +2,8 @@
 
 namespace Kirby\Toolkit\Query;
 
-enum TokenType {
+enum TokenType
+{
 	case T_STRING;
 	case T_INTEGER;
 	case T_WHITESPACE;

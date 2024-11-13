@@ -127,12 +127,7 @@ class QueryTest extends TestCase
 	 */
 	public function testResolveWithInterceptor()
 	{
-		$query = new class extends Query {
-			public function __construct()
-			{
-				parent::__construct('foo.getObj.name');
-			}
-
+		$query = new class ('foo.getObj.name') extends Query {
 			public function intercept($result): mixed
 			{
 				if(is_object($result) === true) {
