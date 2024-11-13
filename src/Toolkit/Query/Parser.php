@@ -159,13 +159,18 @@ class Parser extends BaseParser {
 
 			if($this->match(TokenType::T_ARROW)) {
 				$expression = $this->expression();
-				// check if all elements are variables
+
+				/**
+				 * Assert that all elements are VariableNodes
+				 * @var VariableNode[] $list
+				 */
 				foreach($list as $element) {
 					if(!$element instanceof VariableNode) {
 						throw new Exception('Expecting only variables in closure argument list.');
 					}
 				}
-				$arguments = new ArgumentListNode($list);
+
+				$arguments = array_map(fn($element) => $element->name, $list);
 				return new ClosureNode($arguments, $expression);
 			} else {
 				if(count($list) > 1) {

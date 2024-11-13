@@ -81,9 +81,11 @@ class Interpreter extends Visitor {
 		// what looks like a variable might actually be a global function
 		// but if there is a variable with the same name, the variable takes precedence
 
+		$name = $node->name();
+
 		$item = match (true) {
-			isset($this->context[$node->name]) => $this->context[$node->name],
-			isset($this->validGlobalFunctions[$node->name]) => $this->validGlobalFunctions[$node->name](),
+			isset($this->context[$name]) => $this->context[$name] instanceof Closure ? $this->context[$name]() : $this->context[$name],
+			isset($this->validGlobalFunctions[$name]) => $this->validGlobalFunctions[$name](),
 			default => null,
 		};
 
@@ -95,11 +97,13 @@ class Interpreter extends Visitor {
 	}
 
 	public function visitGlobalFunction(GlobalFunctionNode $node): mixed {
-		if(!isset($this->validGlobalFunctions[$node->name])) {
-			throw new Exception("Invalid global function $node->name");
+		$name = $node->name();
+
+		if(!isset($this->validGlobalFunctions[$name])) {
+			throw new Exception("Invalid global function $name");
 		}
 
-		$function = $this->validGlobalFunctions[$node->name];
+		$function = $this->validGlobalFunctions[$name];
 		if($this->interceptor !== null) {
 			$function = ($this->interceptor)($function);
 		}
@@ -120,8 +124,9 @@ class Interpreter extends Visitor {
 			$context = $self->context;
 			$functions = $self->validGlobalFunctions;
 
+			// [key1, key2] + [value1, value2] => [key1 => value1, key2 => value2]
 			$arguments = array_combine(
-				array_map(fn($param) => $param->name, $node->arguments->arguments),
+				$node->arguments,
 				$params
 			);
 

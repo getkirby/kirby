@@ -2,13 +2,11 @@
 
 namespace Kirby\Toolkit\Query\AST;
 
-abstract class IdentifierNode extends Node
-{
+abstract class IdentifierNode extends Node {
 	/**
 	 * Replaces the escaped identifier with the actual identifier
 	 */
-	public static function unescape(string $name): string
-	{
+	static public function unescape(string $name): string {
 		return stripslashes($name);
 	}
 }
