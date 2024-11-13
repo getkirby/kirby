@@ -107,7 +107,7 @@ class Query
 			return $data;
 		}
 
-		$mode = App::instance()->option('query.runner', 'transpiled');
+		$mode = App::instance()->option('query.runner', 'interpreted');
 
 		if ($mode === 'legacy') {
 			return $this->resolve_legacy($data);
