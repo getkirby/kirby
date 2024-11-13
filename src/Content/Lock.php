@@ -4,6 +4,7 @@ namespace Kirby\Content;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
+use Kirby\Cms\Languages;
 use Kirby\Cms\User;
 use Kirby\Toolkit\Str;
 
@@ -38,6 +39,22 @@ class Lock
 		Version $version,
 		Language|string $language = 'default'
 	): static {
+		// wildcard to search for a lock in any language
+		// the first locked one will be preferred
+		if ($language === '*') {
+			foreach (Languages::ensure() as $language) {
+				$lock = static::for($version, $language);
+
+				// return the first locked lock if any exists
+				if ($lock->isLocked() === true) {
+					return $lock;
+				}
+			}
+
+			// return the last lock if no lock was found
+			return $lock;
+		}
+
 		$language = Language::ensure($language);
 
 		// if the version does not exist, it cannot be locked

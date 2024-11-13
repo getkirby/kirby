@@ -233,17 +233,6 @@ class Version
 	 */
 	public function isLocked(Language|string $language = 'default'): bool
 	{
-		// check if the version is locked in any language
-		if ($language === '*') {
-			foreach (Languages::ensure() as $language) {
-				if ($this->isLocked($language) === true) {
-					return true;
-				}
-			}
-
-			return false;
-		}
-
 		return $this->lock($language)->isLocked();
 	}
 
