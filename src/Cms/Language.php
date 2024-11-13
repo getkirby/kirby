@@ -76,7 +76,7 @@ class Language implements Stringable
 			$this->locale = [LC_ALL => $this->code];
 		}
 
-		$this->variables = new LanguageVariables($this, $props['translations'] ?? []);
+		$this->variables = new LanguageVariables($this, $props['variables'] ?? $props['translations'] ?? []);
 	}
 
 	/**
@@ -131,7 +131,7 @@ class Language implements Stringable
 			'name'         => $this->name,
 			'slugs'        => $this->slugs,
 			'smartypants'  => $this->smartypants,
-			'translations' => $this->variables->toArray(),
+			'variables' => $this->variables->toArray(),
 			'url'          => $this->url,
 		], $props));
 	}
@@ -487,7 +487,7 @@ class Language implements Stringable
 			'direction'    => $this->direction(),
 			'locale'       => Locale::export($this->locale()),
 			'name'         => $this->name(),
-			'translations' => $this->variables()->toArray(),
+			'variables' => $this->variables()->toArray(),
 			'url'          => $this->url,
 		];
 
