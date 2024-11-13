@@ -109,11 +109,13 @@ class Query
 			return $data;
 		}
 
-		if(option('query.runner', 'interpreted') == 'legacy') {
+		$mode = App::instance()->option('query.runner', 'transpiled');
+
+		if($mode === 'legacy') {
 			return $this->resolve_legacy($data);
 		}
 
-		$runnerClass = match(option('query.runner', 'interpreted')) {
+		$runnerClass = match($mode) {
 			'transpiled' => Transpiled::class,
 			'interpreted' => Interpreted::class,
 			default => throw new Exception('Invalid query runner')
