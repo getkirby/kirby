@@ -8,6 +8,7 @@ use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Exception\NotFoundException;
+use Kirby\Form\Form;
 
 /**
  * The Version class handles all actions for a single
@@ -191,7 +192,6 @@ class Version
 			$version = $this->model->version($version);
 		}
 
-
 		if ($version->id()->is($this->id) === true) {
 			return true;
 		}
@@ -213,7 +213,22 @@ class Version
 			$b['uuid']
 		);
 
-		// ensure both arrays of fields are sorted the same
+		$a = Form::for(
+			model: $this->model,
+			props: [
+				'language' => $language->code(),
+				'values'   => $a,
+			]
+		)->values();
+
+		$b = Form::for(
+			model: $this->model,
+			props: [
+				'language' => $language->code(),
+				'values'   => $b
+			]
+		)->values();
+
 		ksort($a);
 		ksort($b);
 
