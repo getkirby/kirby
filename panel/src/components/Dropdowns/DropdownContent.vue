@@ -15,17 +15,22 @@
 	>
 		<k-navigate ref="navigate" :disabled="navigate === false" axis="y">
 			<!-- @slot Content of the dropdown which overrides passed `options` prop -->
-			<slot>
+			<slot v-bind="{ items }">
 				<template v-for="(option, index) in items">
 					<hr v-if="option === '-'" :key="'separator-' + index" />
-					<k-dropdown-item
+					<slot
 						v-else-if="option.when ?? true"
-						:key="'item-' + index"
-						v-bind="option"
-						@click="onOptionClick(option)"
+						name="item"
+						v-bind="{ item: option, index }"
 					>
-						{{ option.label ?? option.text }}
-					</k-dropdown-item>
+						<k-dropdown-item
+							:key="'item-' + index"
+							v-bind="option"
+							@click="onOptionClick(option)"
+						>
+							{{ option.label ?? option.text }}
+						</k-dropdown-item>
+					</slot>
 				</template>
 			</slot>
 		</k-navigate>

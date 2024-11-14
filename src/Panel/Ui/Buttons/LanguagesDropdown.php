@@ -43,8 +43,8 @@ class LanguagesDropdown extends ViewButton
 
 	/**
 	 * Returns if any translation other than the current one has unsaved changes
-	 * (the current will be considered dynamically in `<k-languages-dropdown>`
-	 * based on its state)
+	 * (the current language has to be handled in `k-languages-dropdown` as its
+	 * state can change dynamically without another backend request)
 	 */
 	public function hasChanges(): bool
 	{
@@ -61,11 +61,16 @@ class LanguagesDropdown extends ViewButton
 
 	public function option(Language $language): array
 	{
+		$changes = $this->model->version('changes');
+
 		return [
 			'text'    => $language->name(),
 			'code'    => $language->code(),
+			'link'    => $this->model->panel()->url(true) . '?language=' . $language->code(),
 			'current' => $language->code() === $this->kirby->language()?->code(),
-			'link'    => $this->model->panel()->url(true) . '?language=' . $language->code()
+			'default' => $language->isDefault(),
+			'changes' => $changes->exists($language),
+			'lock'    => $changes->isLocked('*')
 		];
 	}
 
