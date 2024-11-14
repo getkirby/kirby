@@ -29,7 +29,7 @@ class Changes
 	{
 		return $this
 			->site()
-			->version(VersionId::published())
+			->version(VersionId::latest())
 			->content()
 			->get('changes');
 	}
@@ -92,7 +92,7 @@ class Changes
 
 		$this
 			->site()
-			->version(VersionId::published())
+			->version(VersionId::latest())
 			->update([
 				'changes' => $changes
 			]);

@@ -23,7 +23,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$expected = $this->createContentMultiLanguage();
@@ -44,7 +44,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$expected = $this->createContentSingleLanguage();
@@ -61,7 +61,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		// write something to the content file to make sure it
@@ -86,7 +86,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$this->assertSame($this->contentFile('en'), $version->contentFile());
@@ -105,7 +105,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$this->assertSame($this->contentFile(), $version->contentFile());
@@ -120,7 +120,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$this->assertContentFileDoesNotExist('en');
@@ -149,7 +149,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$this->assertContentFileDoesNotExist();
@@ -186,7 +186,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		// primary language
@@ -227,7 +227,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$this->assertContentFileDoesNotExist('de');
@@ -253,7 +253,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$this->assertContentFileDoesNotExist();
@@ -276,7 +276,7 @@ class VersionTest extends TestCase
 
 		$a = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$b = new Version(
@@ -320,7 +320,7 @@ class VersionTest extends TestCase
 
 		$a = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$b = new Version(
@@ -356,7 +356,7 @@ class VersionTest extends TestCase
 
 		$a = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$b = new Version(
@@ -388,7 +388,7 @@ class VersionTest extends TestCase
 
 		$a = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$a->create([
@@ -396,7 +396,7 @@ class VersionTest extends TestCase
 			'subtitle' => 'Subtitle',
 		]);
 
-		$diff = $a->diff(VersionId::published());
+		$diff = $a->diff(VersionId::latest());
 
 		$this->assertSame([], $diff);
 	}
@@ -410,7 +410,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$this->createContentMultiLanguage();
@@ -431,7 +431,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$this->createContentSingleLanguage();
@@ -484,7 +484,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$this->expectException(NotFoundException::class);
@@ -502,7 +502,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$this->assertDirectoryExists($this->model->root());
@@ -532,7 +532,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$this->assertDirectoryExists($this->model->root());
@@ -551,7 +551,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: $id = VersionId::published()
+			id: $id = VersionId::latest()
 		);
 
 		$this->assertSame($id, $version->id());
@@ -566,7 +566,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$this->assertSame($this->model, $version->model());
@@ -581,7 +581,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		touch($this->contentFile('de'), $modified = 123456);
@@ -599,7 +599,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$this->assertNull($version->modified('en'));
@@ -617,7 +617,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		touch($this->contentFile(), $modified = 123456);
@@ -634,7 +634,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$this->assertNull($version->modified());
@@ -649,7 +649,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: $versionId = VersionId::published()
+			id: $versionId = VersionId::latest()
 		);
 
 		$this->assertContentFileDoesNotExist('en');
@@ -666,7 +666,7 @@ class VersionTest extends TestCase
 		$this->assertContentFileDoesNotExist('de');
 
 		// move with string arguments
-		$version->move('en', $versionId, 'de');
+		$version->move('en', toLanguage: 'de');
 
 		$this->assertContentFileDoesNotExist('en');
 		$this->assertContentFileExists('de');
@@ -674,7 +674,7 @@ class VersionTest extends TestCase
 		$this->assertSame($content, Data::read($fileDE));
 
 		// move with Language arguments
-		$version->move($this->app->language('de'), $versionId, $this->app->language('en'));
+		$version->move($this->app->language('de'), toLanguage: $this->app->language('en'));
 
 		$this->assertContentFileExists('en');
 		$this->assertContentFileDoesNotExist('de');
@@ -691,7 +691,7 @@ class VersionTest extends TestCase
 
 		$versionPublished = new Version(
 			model: $this->model,
-			id: $versionIdPublished = VersionId::published()
+			id: $versionIdPublished = VersionId::latest()
 		);
 
 		$versionChanges = new Version(
@@ -713,7 +713,7 @@ class VersionTest extends TestCase
 		$this->assertContentFileDoesNotExist('en', $versionIdChanges);
 
 		// move with string arguments
-		$versionPublished->move('en', $versionIdChanges, 'en');
+		$versionPublished->move('en', $versionIdChanges);
 
 		$this->assertContentFileDoesNotExist('en', $versionIdPublished);
 		$this->assertContentFileExists('en', $versionIdChanges);
@@ -721,7 +721,7 @@ class VersionTest extends TestCase
 		$this->assertSame($content, Data::read($fileENChanges));
 
 		// move the version back
-		$versionChanges->move('en', $versionIdPublished, 'en');
+		$versionChanges->move('en', $versionIdPublished);
 
 		$this->assertContentFileDoesNotExist('en', $versionIdChanges);
 		$this->assertContentFileExists('en', $versionIdPublished);
@@ -741,8 +741,8 @@ class VersionTest extends TestCase
 			id: VersionId::changes()
 		);
 
-		Data::write($filePublished = $this->contentFile(null, VersionId::published()), [
-			'title' => 'Title published'
+		Data::write($filePublished = $this->contentFile(null, VersionId::latest()), [
+			'title' => 'Title latest'
 		]);
 
 		Data::write($fileChanges = $this->contentFile(null, VersionId::changes()), [
@@ -768,7 +768,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$this->createContentSingleLanguage();
@@ -790,7 +790,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$expected = $this->createContentMultiLanguage();
@@ -812,7 +812,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$expected = $this->createContentSingleLanguage();
@@ -829,7 +829,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$this->assertFileDoesNotExist($this->contentFile());
@@ -849,7 +849,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		Data::write($this->contentFile(), [
@@ -873,7 +873,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$this->expectException(NotFoundException::class);
@@ -893,7 +893,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$expected = $this->createContentMultiLanguage();
@@ -923,7 +923,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$expected = $this->createContentSingleLanguage();
@@ -960,7 +960,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$this->createContentMultiLanguage();
@@ -1003,7 +1003,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$expected = $this->createContentMultiLanguage();
@@ -1033,7 +1033,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$expected = $this->createContentSingleLanguage();
@@ -1055,7 +1055,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$this->assertContentFileDoesNotExist('en');
@@ -1084,7 +1084,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$this->assertContentFileDoesNotExist();
@@ -1105,7 +1105,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$expected = $this->createContentMultiLanguage();
@@ -1133,7 +1133,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$expected = $this->createContentSingleLanguage();
@@ -1154,7 +1154,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		touch($rootEN = $this->contentFile('en'), 123456);
@@ -1186,7 +1186,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		touch($root = $this->contentFile(), 123456);
@@ -1210,7 +1210,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$expected = $this->createContentMultiLanguage();
@@ -1240,7 +1240,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$expected = $this->createContentSingleLanguage();
@@ -1278,7 +1278,7 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model,
-			id: VersionId::published()
+			id: VersionId::latest()
 		);
 
 		$this->createContentMultiLanguage();

@@ -424,9 +424,9 @@ class PageActionsTest extends TestCase
 		$this->assertSame('article', $modified->intendedTemplate()->name());
 		$this->assertSame(2, $calls);
 
-		$this->assertFileExists($modified->version(VersionId::published())->contentFile('en'));
-		$this->assertFileExists($modified->version(VersionId::published())->contentFile('de'));
-		$this->assertFileDoesNotExist($modified->version(VersionId::published())->contentFile('fr'));
+		$this->assertFileExists($modified->version(VersionId::latest())->contentFile('en'));
+		$this->assertFileExists($modified->version(VersionId::latest())->contentFile('de'));
+		$this->assertFileDoesNotExist($modified->version(VersionId::latest())->contentFile('fr'));
 		$this->assertNull($modified->caption()->value());
 		$this->assertSame('Text', $modified->text()->value());
 		$this->assertNull($modified->content('de')->get('caption')->value());
@@ -955,7 +955,7 @@ class PageActionsTest extends TestCase
 			'code'   => 'en',
 		]);
 
-		$versionId = VersionId::published();
+		$versionId = VersionId::latest();
 
 		$this->assertFileExists($page->version($versionId)->contentFile('en'));
 
@@ -997,7 +997,7 @@ class PageActionsTest extends TestCase
 			'slug'  => 'test-de'
 		], 'de');
 
-		$versionId = VersionId::published();
+		$versionId = VersionId::latest();
 
 		$this->assertFileExists($page->version($versionId)->contentFile('en'));
 		$this->assertFileExists($page->version($versionId)->contentFile('de'));
@@ -1113,7 +1113,7 @@ class PageActionsTest extends TestCase
 			'code'   => 'en'
 		]);
 
-		$versionId = VersionId::published();
+		$versionId = VersionId::latest();
 
 		$copy = $page->duplicate('test-copy', ['children' => true]);
 

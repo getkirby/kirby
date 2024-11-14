@@ -85,11 +85,7 @@ trait FileActions
 			F::move($oldFile->root(), $newFile->root());
 
 			// move the content storage versions
-			foreach ($oldFile->storage()->all() as $version => $lang) {
-				$content = $oldFile->storage()->read($version, $lang);
-				$oldFile->storage()->delete($version, $lang);
-				$newFile->storage()->create($version, $lang, $content);
-			}
+			$oldFile->storage()->moveAll(to: $newFile->storage());
 
 			// update collections
 			$newFile->parent()->files()->remove($oldFile->id());
@@ -141,10 +137,9 @@ trait FileActions
 
 			$file = $file->update(['template' => $template]);
 
-			// rename and/or resize the file if configured by new blueprint
+			// resize the file if configured by new blueprint
 			$create = $file->blueprint()->create();
-			$file = $file->manipulate($create);
-			$file = $file->changeExtension($file, $create['format'] ?? null);
+			$file   = $file->manipulate($create);
 
 			return $file;
 		});
@@ -218,10 +213,7 @@ trait FileActions
 		F::copy($this->root(), $page->root() . '/' . $this->filename());
 		$copy = $page->clone()->file($this->filename());
 
-		foreach ($this->storage()->all() as $version => $lang) {
-			$content = $this->storage()->read($version, $lang);
-			$copy->storage()->create($version, $lang, $content);
-		}
+		$this->storage()->copyAll(to: $copy->storage());
 
 		// ensure the content is re-read after copying it
 		// @todo find a more elegant way
@@ -317,7 +309,6 @@ trait FileActions
 
 			// resize the file on upload if configured
 			$file = $file->manipulate($create);
-			$file = $file->changeExtension($file, $create['format'] ?? null);
 
 			// store the content if necessary
 			// (always create files in the default language)
@@ -370,7 +361,14 @@ trait FileActions
 		// generate image file and overwrite it in place
 		$this->kirby()->thumb($this->root(), $this->root(), $options);
 
-		return $this->clone([]);
+		$file = $this->clone();
+
+		// change the file extension if format option configured
+		if ($format = $options['format'] ?? null) {
+			$file = $file->changeExtension($file, $format);
+		}
+
+		return $file;
 	}
 
 	/**
@@ -421,7 +419,6 @@ trait FileActions
 			// apply the resizing/crop options from the blueprint
 			$create = $file->blueprint()->create();
 			$file   = $file->manipulate($create);
-			$file   = $file->changeExtension($file, $create['format'] ?? null);
 
 			// return a fresh clone
 			return $file->clone();

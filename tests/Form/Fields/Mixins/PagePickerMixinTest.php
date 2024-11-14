@@ -8,14 +8,6 @@ class PagePickerMixinTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Form.Fields.PagePickerMixin';
 
-	public function setUp(): void
-	{
-		parent::setUp();
-
-		// otherwise all pages won't be readable
-		$this->app->impersonate('kirby');
-	}
-
 	public function testPagesWithoutParent()
 	{
 		$app = $this->app->clone([
@@ -109,7 +101,7 @@ class PagePickerMixinTest extends TestCase
 
 	public function testPageChildren()
 	{
-		$this->app->clone([
+		$app = $this->app->clone([
 			'fields' => [
 				'test' => [
 					'mixins'  => ['pagepicker'],
@@ -121,6 +113,8 @@ class PagePickerMixinTest extends TestCase
 				]
 			],
 		]);
+
+		$app->impersonate('kirby');
 
 		$page = new Page([
 			'slug' => 'test',
@@ -159,7 +153,7 @@ class PagePickerMixinTest extends TestCase
 
 	public function testPageChildrenWithoutSubpages()
 	{
-		$this->app->clone([
+		$app = $this->app->clone([
 			'fields' => [
 				'test' => [
 					'mixins'  => ['pagepicker'],
@@ -172,6 +166,8 @@ class PagePickerMixinTest extends TestCase
 				]
 			],
 		]);
+
+		$app->impersonate('kirby');
 
 		$page = new Page([
 			'slug' => 'test',
@@ -206,7 +202,7 @@ class PagePickerMixinTest extends TestCase
 
 	public function testMap()
 	{
-		$this->app->clone([
+		$app = $this->app->clone([
 			'fields' => [
 				'test' => [
 					'mixins'  => ['pagepicker'],
@@ -219,6 +215,8 @@ class PagePickerMixinTest extends TestCase
 				]
 			],
 		]);
+
+		$app->impersonate('kirby');
 
 		$page = new Page([
 			'slug' => 'test',

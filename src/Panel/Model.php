@@ -44,7 +44,7 @@ abstract class Model
 			$changes = $version->content()->toArray();
 		}
 
-		// create a form which will collect the published values for the model,
+		// create a form which will collect the latest values for the model,
 		// but also pass along unpublished changes as overwrites
 		return Form::for(
 			model: $this->model,

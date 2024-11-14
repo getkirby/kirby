@@ -30,7 +30,7 @@ class ImmutableMemoryContentStorageHandlerTest extends TestCase
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Storage for the page is immutable and cannot be deleted. Make sure to use the last alteration of the object.');
 
-		$this->storage->delete(VersionId::published(), Language::ensure());
+		$this->storage->delete(VersionId::latest(), Language::ensure());
 	}
 
 	/**
@@ -43,10 +43,9 @@ class ImmutableMemoryContentStorageHandlerTest extends TestCase
 		$this->expectExceptionMessage('Storage for the page is immutable and cannot be deleted. Make sure to use the last alteration of the object.');
 
 		$this->storage->move(
-			fromVersionId: VersionId::published(),
+			fromVersionId: VersionId::latest(),
 			fromLanguage: Language::ensure(),
-			toVersionId: VersionId::changes(),
-			toLanguage: Language::ensure()
+			toVersionId: VersionId::changes()
 		);
 	}
 
@@ -59,7 +58,7 @@ class ImmutableMemoryContentStorageHandlerTest extends TestCase
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Storage for the page is immutable and cannot be deleted. Make sure to use the last alteration of the object.');
 
-		$this->storage->touch(VersionId::published(), Language::ensure());
+		$this->storage->touch(VersionId::latest(), Language::ensure());
 	}
 
 	/**
@@ -68,11 +67,11 @@ class ImmutableMemoryContentStorageHandlerTest extends TestCase
 	 */
 	public function testUpdate()
 	{
-		$this->storage->create(VersionId::published(), Language::ensure(), []);
+		$this->storage->create(VersionId::latest(), Language::ensure(), []);
 
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Storage for the page is immutable and cannot be deleted. Make sure to use the last alteration of the object.');
 
-		$this->storage->update(VersionId::published(), Language::ensure(), []);
+		$this->storage->update(VersionId::latest(), Language::ensure(), []);
 	}
 }

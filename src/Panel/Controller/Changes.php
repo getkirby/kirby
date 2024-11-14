@@ -79,7 +79,7 @@ class Changes
 		// last published state
 		$model->version(VersionId::changes())->save(
 			fields: [
-				...$model->version(VersionId::published())->read(),
+				...$model->version(VersionId::latest())->read(),
 				...$form->strings(),
 			],
 			language: 'current'

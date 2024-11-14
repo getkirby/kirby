@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Plugin;
 
 use Kirby\Filesystem\F;
 use Stringable;
@@ -10,13 +10,13 @@ use Stringable;
  * to manage the asset file between the plugin
  * and media folder
  *
- * @package   Kirby Cms
+ * @package   Kirby Plugin
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class PluginAsset implements Stringable
+class Asset implements Stringable
 {
 	public function __construct(
 		protected string $path,

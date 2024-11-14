@@ -105,19 +105,19 @@ class FileActionsTest extends TestCase
 		// create an empty dummy file
 		F::write($file->root(), '');
 		// ...and an empty content file for it
-		F::write($file->version(VersionId::published())->contentFile('default'), '');
+		F::write($file->version(VersionId::latest())->contentFile('default'), '');
 
 		$this->assertFileExists($file->root());
-		$this->assertFileExists($file->version(VersionId::published())->contentFile('default'));
+		$this->assertFileExists($file->version(VersionId::latest())->contentFile('default'));
 
 		$result = $file->changeName('test');
 
 		$this->assertNotSame($file->root(), $result->root());
 		$this->assertSame('test.csv', $result->filename());
 		$this->assertFileExists($result->root());
-		$this->assertFileExists($result->version(VersionId::published())->contentFile('default'));
+		$this->assertFileExists($result->version(VersionId::latest())->contentFile('default'));
 		$this->assertFileDoesNotExist($file->root());
-		$this->assertFileDoesNotExist($file->version(VersionId::published())->contentFile('default'));
+		$this->assertFileDoesNotExist($file->version(VersionId::latest())->contentFile('default'));
 	}
 
 	public static function fileProviderMultiLang(): array
@@ -141,20 +141,20 @@ class FileActionsTest extends TestCase
 		// create an empty dummy file
 		F::write($file->root(), '');
 		// ...and empty content files for it
-		F::write($file->version(VersionId::published())->contentFile('en'), '');
-		F::write($file->version(VersionId::published())->contentFile('de'), '');
+		F::write($file->version(VersionId::latest())->contentFile('en'), '');
+		F::write($file->version(VersionId::latest())->contentFile('de'), '');
 
 		$this->assertFileExists($file->root());
-		$this->assertFileExists($file->version(VersionId::published())->contentFile('en'));
-		$this->assertFileExists($file->version(VersionId::published())->contentFile('de'));
+		$this->assertFileExists($file->version(VersionId::latest())->contentFile('en'));
+		$this->assertFileExists($file->version(VersionId::latest())->contentFile('de'));
 
 		$result = $file->changeName('test');
 
 		$this->assertNotEquals($file->root(), $result->root());
 		$this->assertSame('test.csv', $result->filename());
 		$this->assertFileExists($result->root());
-		$this->assertFileExists($result->version(VersionId::published())->contentFile('en'));
-		$this->assertFileExists($result->version(VersionId::published())->contentFile('de'));
+		$this->assertFileExists($result->version(VersionId::latest())->contentFile('en'));
+		$this->assertFileExists($result->version(VersionId::latest())->contentFile('de'));
 	}
 
 	public function testChangeTemplate()
@@ -376,9 +376,9 @@ class FileActionsTest extends TestCase
 		$this->assertNull($modified->caption()->value());
 		$this->assertSame('Das ist der Text', $modified->text()->value());
 
-		$this->assertFileExists($modified->version(VersionId::published())->contentFile('en'));
-		$this->assertFileExists($modified->version(VersionId::published())->contentFile('de'));
-		$this->assertFileDoesNotExist($modified->version(VersionId::published())->contentFile('fr'));
+		$this->assertFileExists($modified->version(VersionId::latest())->contentFile('en'));
+		$this->assertFileExists($modified->version(VersionId::latest())->contentFile('de'));
+		$this->assertFileDoesNotExist($modified->version(VersionId::latest())->contentFile('fr'));
 	}
 
 	public function testChangeTemplateDefault()
@@ -577,6 +577,122 @@ class FileActionsTest extends TestCase
 
 		// altered result from last after hook
 		$this->assertSame(5, $result->sort()->value());
+	}
+
+	public function testChangeTemplateManipulate()
+	{
+		$testImage = static::FIXTURES . '/test.jpg';
+
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/test-default' => [
+					'sections' => [
+						[
+							'type' => 'files',
+							'template' => 'manipulate-a'
+						],
+						[
+							'type' => 'files',
+							'template' => 'manipulate-b'
+						]
+					]
+				],
+				'files/manipulate-a' => [
+					'title'  => 'Manipulate A',
+				],
+				'files/manipulate-b' => [
+					'title'  => 'Manipulate B',
+					'create' => [
+						'width'  => 100,
+						'height' => 100,
+						'format' => 'webp'
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test-default',
+						'files' => [
+							[
+								'filename' => 'test.jpg',
+								'content'  => ['template' => 'manipulate-a']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+		$page = $app->page('test');
+
+		F::copy($testImage, $page->root() . '/test.jpg');
+		F::write($page->root() . '/test.jpg.txt', 'Template: manipulate-a');
+
+		$file = $page->file('test.jpg');
+		$this->assertSame('jpg', $file->extension());
+		$this->assertSame(128, $file->width());
+		$this->assertSame(128, $file->height());
+
+		$file = $file->changeTemplate('manipulate-b');
+		$this->assertSame('webp', $file->extension());
+		$this->assertSame(100, $file->width());
+		$this->assertSame(100, $file->height());
+	}
+
+	public function testChangeTemplateManipulateNonImage()
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/test-default' => [
+					'sections' => [
+						[
+							'type' => 'files',
+							'template' => 'manipulate-a'
+						],
+						[
+							'type' => 'files',
+							'template' => 'manipulate-b'
+						]
+					]
+				],
+				'files/manipulate-a' => [
+					'title'  => 'Manipulate A',
+				],
+				'files/manipulate-b' => [
+					'title'  => 'Manipulate B',
+					'create' => [
+						'width'  => 100,
+						'height' => 100,
+						'format' => 'webp'
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test-default',
+						'files' => [
+							[
+								'filename' => 'test.pdf',
+								'content'  => ['template' => 'manipulate-a']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$file = $app->page('test')->file('test.pdf');
+		$newFile = $file->changeTemplate('manipulate-b');
+
+		$this->assertSame('pdf', $file->extension());
+		$this->assertSame('pdf', $newFile->extension());
 	}
 
 	public function testCopyRenewUuid()
@@ -800,6 +916,30 @@ class FileActionsTest extends TestCase
 	/**
 	 * @dataProvider parentProvider
 	 */
+	public function testCreateManipulateNonImage($parent)
+	{
+		$source = static::FIXTURES . '/test.pdf';
+
+		$result = File::create([
+			'filename'  => 'test.pdf',
+			'source'    => $source,
+			'parent'    => $parent,
+			'blueprint' => [
+				'name'   => 'test',
+				'create' => [
+					'width'  => 100,
+					'height' => 100,
+					'format' => 'webp'
+				]
+			]
+		]);
+
+		$this->assertFileEquals($source, $result->root());
+	}
+
+	/**
+	 * @dataProvider parentProvider
+	 */
 	public function testCreateHooks($parent)
 	{
 		$phpunit = $this;
@@ -842,17 +982,17 @@ class FileActionsTest extends TestCase
 		// create an empty dummy file
 		F::write($file->root(), '');
 		// ...and an empty content file for it
-		F::write($file->version(VersionId::published())->contentFile('default'), '');
+		F::write($file->version(VersionId::latest())->contentFile('default'), '');
 
 		$this->assertFileExists($file->root());
-		$this->assertFileExists($file->version(VersionId::published())->contentFile('default'));
+		$this->assertFileExists($file->version(VersionId::latest())->contentFile('default'));
 
 		$result = $file->delete();
 
 		$this->assertTrue($result);
 
 		$this->assertFileDoesNotExist($file->root());
-		$this->assertFileDoesNotExist($file->version(VersionId::published())->contentFile('default'));
+		$this->assertFileDoesNotExist($file->version(VersionId::latest())->contentFile('default'));
 	}
 
 	/**
@@ -954,6 +1094,35 @@ class FileActionsTest extends TestCase
 	}
 
 	/**
+	 * @dataProvider parentProvider
+	 */
+	public function testReplaceManipulateNonImage($parent)
+	{
+		$original    = static::FIXTURES . '/test.pdf';
+		$replacement = static::FIXTURES . '/doc.pdf';
+
+		$originalFile = File::create([
+			'filename' => 'test.pdf',
+			'source'   => $original,
+			'parent'   => $parent,
+			'blueprint' => [
+				'name' => 'test',
+				'create' => [
+					'width'  => 100,
+					'height' => 100,
+					'format' => 'webp'
+				]
+			]
+		]);
+
+		$this->assertFileEquals($original, $originalFile->root());
+
+		$replacedFile = $originalFile->replace($replacement);
+		$this->assertFileEquals($replacement, $replacedFile->root());
+		$this->assertSame('pdf', $replacedFile->extension());
+	}
+
+	/**
 	 * @dataProvider fileProvider
 	 */
 	public function testSave($file)
@@ -962,11 +1131,11 @@ class FileActionsTest extends TestCase
 		F::write($file->root(), '');
 
 		$this->assertFileExists($file->root());
-		$this->assertFileDoesNotExist($file->version(VersionId::published())->contentFile('default'));
+		$this->assertFileDoesNotExist($file->version(VersionId::latest())->contentFile('default'));
 
 		$file = $file->clone(['content' => ['caption' => 'save']])->save();
 
-		$this->assertFileExists($file->version(VersionId::published())->contentFile('default'));
+		$this->assertFileExists($file->version(VersionId::latest())->contentFile('default'));
 	}
 
 	/**
@@ -1003,11 +1172,9 @@ class FileActionsTest extends TestCase
 	 */
 	public function testManipulate($parent)
 	{
-		$original = static::FIXTURES . '/test.jpg';
-
 		$originalFile = File::create([
 			'filename' => 'test.jpg',
-			'source'   => $original,
+			'source'   => static::FIXTURES . '/test.jpg',
 			'parent'   => $parent
 		]);
 
@@ -1022,6 +1189,73 @@ class FileActionsTest extends TestCase
 		$this->assertSame($originalFile->root(), $replacedFile->root());
 		$this->assertSame(100, $replacedFile->width());
 		$this->assertSame(100, $replacedFile->height());
+	}
+
+	/**
+	 * @dataProvider parentProvider
+	 */
+	public function testManipulateNonImage($parent)
+	{
+		$originalFile = File::create([
+			'filename' => 'test.mp4',
+			'source'   => static::FIXTURES . '/test.mp4',
+			'parent'   => $parent
+		]);
+
+		$replacedFile = $originalFile->manipulate([
+			'width' => 100,
+			'height' => 100,
+		]);
+
+		// proves strictly that both are the same object
+		$this->assertSame($originalFile, $replacedFile);
+	}
+
+	/**
+	 * @dataProvider parentProvider
+	 */
+	public function testManipulateValidFormat($parent)
+	{
+		$originalFile = File::create([
+			'filename' => 'test.jpg',
+			'source'   => static::FIXTURES . '/test.jpg',
+			'parent'   => $parent
+		]);
+
+		$this->assertSame(128, $originalFile->width());
+		$this->assertSame(128, $originalFile->height());
+
+		$replacedFile = $originalFile->manipulate([
+			'width'  => 100,
+			'height' => 100,
+			'format' => 'webp'
+		]);
+
+		$this->assertSame('webp', $replacedFile->extension());
+		$this->assertSame(100, $replacedFile->width());
+		$this->assertSame(100, $replacedFile->height());
+	}
+
+	/**
+	 * @dataProvider parentProvider
+	 */
+	public function testManipulateInvalidValidFormat($parent)
+	{
+		$originalFile = File::create([
+			'filename' => 'test.mp4',
+			'source'   => static::FIXTURES . '/test.mp4',
+			'parent'   => $parent
+		]);
+
+		$replacedFile = $originalFile->manipulate([
+			'width'  => 100,
+			'height' => 100,
+			'format' => 'webp'
+		]);
+
+		// proves strictly that both are the same object
+		$this->assertSame($originalFile, $replacedFile);
+		$this->assertSame('mp4', $replacedFile->extension());
 	}
 
 	public function testChangeNameHooks()

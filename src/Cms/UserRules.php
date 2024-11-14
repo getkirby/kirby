@@ -126,7 +126,7 @@ class UserRules
 		}
 
 		// prevent changing to role that is not available for user
-		if ($user->roles('change')->find($role) instanceof Role === false) {
+		if ($user->roles()->find($role) instanceof Role === false) {
 			throw new InvalidArgumentException(
 				key: 'user.role.invalid',
 			);
@@ -191,14 +191,28 @@ class UserRules
 			return;
 		}
 
-		// check user permissions (if not on install)
+		// allow to create the first user
+		if ($user->kirby()->users()->count() === 0) {
+			return;
+		}
+
+		// check user permissions
+		if ($user->permissions()->create() !== true) {
+			throw new PermissionException([
+				'key' => 'user.create.permission'
+			]);
+		}
+
+		$role = $props['role'] ?? null;
+
+		// prevent creating a role that is not available for user
 		if (
-			$user->kirby()->users()->count() > 0 &&
-			$user->permissions()->can('create') !== true
+			in_array($role, [null, 'default', 'nobody'], true) === false &&
+			$user->kirby()->roles()->canBeCreated()->find($role) instanceof Role === false
 		) {
-			throw new PermissionException(
-				key: 'user.create.permission'
-			);
+			throw new InvalidArgumentException([
+				'key' => 'user.role.invalid',
+			]);
 		}
 	}
 

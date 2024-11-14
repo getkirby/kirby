@@ -18,7 +18,7 @@ class VersionIdTest extends TestCase
 		$list = VersionId::all();
 
 		$this->assertCount(2, $list);
-		$this->assertSame('published', $list[0]->value());
+		$this->assertSame('latest', $list[0]->value());
 		$this->assertSame('changes', $list[1]->value());
 	}
 
@@ -50,8 +50,8 @@ class VersionIdTest extends TestCase
 	 */
 	public function testFromString()
 	{
-		$version = VersionId::from('published');
-		$this->assertSame('published', $version->value());
+		$version = VersionId::from('latest');
+		$this->assertSame('latest', $version->value());
 	}
 
 	/**
@@ -60,8 +60,8 @@ class VersionIdTest extends TestCase
 	 */
 	public function testFromInstance()
 	{
-		$version = VersionId::from(VersionId::published());
-		$this->assertSame('published', $version->value());
+		$version = VersionId::from(VersionId::latest());
+		$this->assertSame('latest', $version->value());
 	}
 
 	/**
@@ -69,23 +69,23 @@ class VersionIdTest extends TestCase
 	 */
 	public function testIs()
 	{
-		$version = VersionId::published();
+		$version = VersionId::latest();
 
-		$this->assertTrue($version->is('published'));
-		$this->assertTrue($version->is(VersionId::PUBLISHED));
+		$this->assertTrue($version->is('latest'));
+		$this->assertTrue($version->is(VersionId::LATEST));
 		$this->assertFalse($version->is('something-else'));
 		$this->assertFalse($version->is(VersionId::CHANGES));
 	}
 
 	/**
-	 * @covers ::published
+	 * @covers ::latest
 	 * @covers ::value
 	 */
 	public function testPublished()
 	{
-		$version = VersionId::published();
+		$version = VersionId::latest();
 
-		$this->assertSame('published', $version->value());
+		$this->assertSame('latest', $version->value());
 	}
 
 	/**
@@ -93,7 +93,7 @@ class VersionIdTest extends TestCase
 	 */
 	public function testToString()
 	{
-		$this->assertSame('published', (string)VersionId::published());
+		$this->assertSame('latest', (string)VersionId::latest());
 		$this->assertSame('changes', (string)VersionId::changes());
 	}
 }

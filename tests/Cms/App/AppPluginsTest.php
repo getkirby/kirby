@@ -9,6 +9,7 @@ use Kirby\Filesystem\F;
 use Kirby\Filesystem\Mime;
 use Kirby\Form\Field as FormField;
 use Kirby\Image\Image;
+use Kirby\Plugin\Plugin;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\I18n;
 

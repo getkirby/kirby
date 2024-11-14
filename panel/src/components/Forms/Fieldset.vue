@@ -4,7 +4,7 @@
 			<template v-for="(field, fieldName) in fields">
 				<k-column
 					v-if="$helper.field.isVisible(field, value)"
-					:key="field.signature"
+					:key="fieldName"
 					:width="field.width"
 				>
 					<!-- @event input Triggered whenever any field value changes -->

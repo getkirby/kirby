@@ -53,13 +53,13 @@ jobs:
         (github.repository == 'getkirby/kirby' || github.repository_owner != 'getkirby')
       )
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 5
     strategy:
       matrix:
         php: ["8.2", "8.3"]
     env:
-      extensions: mbstring, ctype, curl, gd, apcu, memcached
+      extensions: mbstring, ctype, curl, gd, apcu, memcached, redis
       ini: apc.enabled=1, apc.enable_cli=1, pcov.directory=., "pcov.exclude=\"~(vendor|tests)~\""
 
     steps:
@@ -73,6 +73,11 @@ jobs:
 
       - name: Install memcached
         uses: niden/actions-memcached@3b3ecd9d0d035ea92db716dc1540a7dbe9e56349 # pin@v7
+
+      - name: Install redis
+        uses: supercharge/redis-github-action@ea9b21c6ecece47bd99595c532e481390ea0f044 # pin@v1
+        with:
+          redis-version: 7
 
       - name: Install system locales
         run: sudo apt-get update && sudo apt-get install -y locales-all
@@ -164,11 +169,11 @@ jobs:
         (github.repository == 'getkirby/kirby' || github.repository_owner != 'getkirby')
       )
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 5
     env:
       php: "8.2"
-      extensions: mbstring, ctype, curl, gd, apcu, memcached
+      extensions: mbstring, ctype, curl, gd, apcu, memcached, redis
 
     steps:
       - name: Checkout
@@ -245,7 +250,7 @@ jobs:
         (github.repository == 'getkirby/kirby' || github.repository_owner != 'getkirby')
       )
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 5
     env:
       php: "8.2"

@@ -4,6 +4,7 @@ namespace Kirby\Panel\Ui\Buttons;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Toolkit\Str;
 
 /**
@@ -22,14 +23,17 @@ class LanguagesDropdown extends ViewButton
 	protected App $kirby;
 
 	public function __construct(
+		protected ModelWithContent $model
 	) {
-		$this->kirby = App::instance();
+		$this->kirby = $model->kirby();
 
 		parent::__construct(
 			component: 'k-languages-dropdown',
 			class: 'k-languages-dropdown',
 			icon: 'translate',
-			options: $this->options(),
+			// Fiber dropdown endpoint to load options
+			// only when dropdown is opened
+			options: $this->model->panel()->url(true) . '/languages',
 			responsive: 'text',
 			text: Str::upper($this->kirby->language()?->code())
 		);
@@ -41,9 +45,13 @@ class LanguagesDropdown extends ViewButton
 			'text'    => $language->name(),
 			'code'    => $language->code(),
 			'current' => $language->code() === $this->kirby->language()?->code(),
+			'link'    => $this->model->panel()->url(true) . '?language=' . $language->code()
 		];
 	}
 
+	/**
+	 * Options are used in the Fiber dropdown routes
+	 */
 	public function options(): array
 	{
 		$languages = $this->kirby->languages();

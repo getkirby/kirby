@@ -34,6 +34,20 @@ class SystemTest extends AreaTestCase
 		$this->install();
 	}
 
+	public function unknownLicense(): array
+	{
+		return [
+			'link' => null,
+			'name' => '-',
+			'status' => [
+				'icon'  => 'question',
+				'label' => 'Unknown license',
+				'theme' => 'passive',
+				'value' => 'unknown',
+			]
+		];
+	}
+
 	public function testViewWithoutAuthentication(): void
 	{
 		$this->assertRedirect('system', 'login');
@@ -180,7 +194,7 @@ class SystemTest extends AreaTestCase
 		$expected = [
 			[
 				'author'  => '–',
-				'license' => '–',
+				'license' => $this->unknownLicense(),
 				'name'    => [
 					'text' => 'getkirby/private',
 					'href' => null
@@ -197,7 +211,7 @@ class SystemTest extends AreaTestCase
 			],
 			[
 				'author'  => 'A, B',
-				'license' => '–',
+				'license' => $this->unknownLicense(),
 				'name'    => [
 					'text' => 'getkirby/public',
 					'href' => 'https://getkirby.com'
@@ -214,7 +228,7 @@ class SystemTest extends AreaTestCase
 			],
 			[
 				'author'  => '–',
-				'license' => '–',
+				'license' => $this->unknownLicense(),
 				'name'    => [
 					'text' => 'getkirby/unknown',
 					'href' => null
@@ -274,7 +288,7 @@ class SystemTest extends AreaTestCase
 		$expected = [
 			[
 				'author'  => '–',
-				'license' => '–',
+				'license' => $this->unknownLicense(),
 				'name'    => [
 					'text' => 'getkirby/private',
 					'href' => null
@@ -291,7 +305,7 @@ class SystemTest extends AreaTestCase
 			],
 			[
 				'author'  => 'A, B',
-				'license' => '–',
+				'license' => $this->unknownLicense(),
 				'name'    => [
 					'text' => 'getkirby/public',
 					'href' => 'https://getkirby.com'
@@ -308,7 +322,7 @@ class SystemTest extends AreaTestCase
 			],
 			[
 				'author'  => '–',
-				'license' => '–',
+				'license' => $this->unknownLicense(),
 				'name'    => [
 					'text' => 'getkirby/unknown',
 					'href' => null
@@ -392,7 +406,7 @@ class SystemTest extends AreaTestCase
 		$this->assertSame([
 			[
 				'author'  => 'A, B',
-				'license' => '–',
+				'license' => $this->unknownLicense(),
 				'name'    => [
 					'text' => 'getkirby/public',
 					'href' => 'https://getkirby.com'

@@ -3,9 +3,9 @@
 namespace Kirby\Cms\System;
 
 use Kirby\Cms\License;
-use Kirby\Cms\Plugin;
 use Kirby\Data\Json;
 use Kirby\Filesystem\Dir;
+use Kirby\Plugin\Plugin;
 use Kirby\TestCase;
 use ReflectionProperty;
 

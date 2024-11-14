@@ -510,20 +510,20 @@ class ModelWithContentTest extends TestCase
 	public function testVersion()
 	{
 		$model = new Site();
-		$this->assertInstanceOf(Version::class, $model->version('published'));
-		$this->assertSame('published', $model->version('published')->id()->value());
-		$this->assertSame('published', $model->version(VersionId::published())->id()->value());
+		$this->assertInstanceOf(Version::class, $model->version('latest'));
+		$this->assertSame('latest', $model->version('latest')->id()->value());
+		$this->assertSame('latest', $model->version(VersionId::latest())->id()->value());
 
 		$model = new Page(['slug' => 'foo']);
-		$this->assertInstanceOf(Version::class, $model->version('published'));
-		$this->assertSame('published', $model->version('published')->id()->value());
-		$this->assertSame('published', $model->version(VersionId::published())->id()->value());
+		$this->assertInstanceOf(Version::class, $model->version('latest'));
+		$this->assertSame('latest', $model->version('latest')->id()->value());
+		$this->assertSame('latest', $model->version(VersionId::latest())->id()->value());
 	}
 
 	public function testVersionFallback()
 	{
 		$model = new Page(['slug' => 'foo']);
 		$this->assertInstanceOf(Version::class, $model->version());
-		$this->assertSame('published', $model->version()->id()->value());
+		$this->assertSame('latest', $model->version()->id()->value());
 	}
 }

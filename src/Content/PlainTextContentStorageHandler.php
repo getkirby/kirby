@@ -186,7 +186,7 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 
 		// A changed version or non-default language version does not exist
 		// if the content file was not found
-		if (VersionId::published()->is($versionId) === false || $language->isDefault() === false) {
+		if (VersionId::latest()->is($versionId) === false || $language->isDefault() === false) {
 			return false;
 		}
 
@@ -220,32 +220,6 @@ class PlainTextContentStorageHandler extends ContentStorageHandler
 		}
 
 		return null;
-	}
-
-	/**
-	 * Moves content from one version-language combination to another
-	 */
-	public function move(
-		VersionId $fromVersionId,
-		Language $fromLanguage,
-		VersionId $toVersionId,
-		Language $toLanguage
-	): void {
-		// make sure the source version exists
-		$this->ensure($fromVersionId, $fromLanguage);
-
-		// check for an existing content file
-		$contentFile = $this->contentFile($fromVersionId, $fromLanguage);
-
-		// create the source file if it doesn't exist so far
-		if (file_exists($contentFile) === false) {
-			$this->touch($fromVersionId, $fromLanguage);
-		}
-
-		F::move(
-			$contentFile,
-			$this->contentFile($toVersionId, $toLanguage)
-		);
 	}
 
 	/**

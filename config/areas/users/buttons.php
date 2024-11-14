@@ -9,7 +9,7 @@ return [
 	'users.create' => function (User $user, string|null $role = null) {
 		return new ViewButton(
 			dialog: 'users/create?role=' . $role,
-			disabled: $user->role()->permissions()->for('users', 'create') !== true,
+			disabled: $user->kirby()->roles()->canBeCreated()->count() < 1,
 			icon: 'add',
 			text: I18n::translate('user.create'),
 		);
