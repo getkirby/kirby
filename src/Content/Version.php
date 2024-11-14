@@ -8,6 +8,7 @@ use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Exception\NotFoundException;
+use Kirby\Form\Form;
 
 /**
  * The Version class handles all actions for a single
@@ -214,6 +215,27 @@ class Version
 		);
 
 		// ensure both arrays of fields are sorted the same
+		ksort($a);
+		ksort($b);
+
+		if ($a === $b) {
+			return true;
+		}
+
+		$a = Form::for(
+			model: $this->model,
+			props: [
+				'values' => $a
+			]
+		)->values();
+
+		$b = Form::for(
+			model: $this->model,
+			props: [
+				'values' => $b
+			]
+		)->values();
+
 		ksort($a);
 		ksort($b);
 
