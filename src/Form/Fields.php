@@ -73,7 +73,7 @@ class Fields extends Collection
 	public function errors(): array
 	{
 		if ($this->errors !== null) {
-			return $this->errors;
+			return $this->errors; // @codeCoverageIgnore
 		}
 
 		$this->errors = [];

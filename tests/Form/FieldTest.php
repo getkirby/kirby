@@ -4,7 +4,6 @@ namespace Kirby\Form;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
-use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 
@@ -34,6 +33,20 @@ class FieldTest extends TestCase
 		Field::$types = [];
 
 		Field::$mixins = $this->originalMixins;
+	}
+
+	/**
+	 * @covers ::__construct
+	 */
+	public function testConstructInvalidType(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Field "foo": The field type "test" does not exist');
+
+		new Field('test', [
+			'name' => 'foo',
+			'type' => 'foo'
+		]);
 	}
 
 	public function testAfter()
