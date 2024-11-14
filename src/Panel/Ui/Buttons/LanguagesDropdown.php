@@ -42,13 +42,17 @@ class LanguagesDropdown extends ViewButton
 	}
 
 	/**
-	 * Returns if any translation has unsaved changes
+	 * Returns if any translation other than the current one has unsaved changes
+	 * (the current will be considered dynamically in `<k-languages-dropdown>`
+	 * based on its state)
 	 */
 	public function hasChanges(): bool
 	{
 		foreach (Languages::ensure() as $language) {
-			if ($this->model->version(VersionId::changes())->exists($language) === true) {
-				return true;
+			if ($this->kirby->language()?->code() !== $language->code()) {
+				if ($this->model->version(VersionId::changes())->exists($language) === true) {
+					return true;
+				}
 			}
 		}
 
