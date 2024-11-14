@@ -64,7 +64,7 @@ export default {
 		/**
 		 * Preview URL for changes
 		 */
-		preview: String
+		preview: [String, Boolean]
 	},
 	emits: ["discard", "submit"],
 	computed: {
