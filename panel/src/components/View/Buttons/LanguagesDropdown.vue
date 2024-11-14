@@ -12,41 +12,32 @@
 			align-x="end"
 			@action="$emit('action', $event)"
 		>
-			<template #default="{ items }">
-				<template v-for="(language, index) in items">
-					<hr v-if="language === '-'" :key="'separator-' + index" />
+			<template #item="{ item: language, index }">
+				<k-button
+					:key="'item-' + index"
+					v-bind="language"
+					class="k-dropdown-item k-language"
+				>
+					{{ language.text }} ({{ language.code }})
 
-					<template v-else>
-						<k-button
-							:key="'item-' + index"
-							v-bind="language"
-							class="k-dropdown-item k-language"
+					<footer class="k-language-footer">
+						<span v-if="language.default">
+							{{ $t("language.default") }}
+						</span>
+
+						<span v-if="language.lock" class="k-language-state k-language-lock">
+							<k-icon type="lock" />
+							{{ $t("lock.unsaved") }}
+						</span>
+						<span
+							v-else-if="language.changes"
+							class="k-language-state k-language-changes"
 						>
-							{{ language.text }} ({{ language.code }})
-
-							<footer class="k-language-footer">
-								<span v-if="language.default">
-									{{ $t("language.default") }}
-								</span>
-
-								<span
-									v-if="language.lock"
-									class="k-language-state k-language-lock"
-								>
-									<k-icon type="lock" />
-									{{ $t("lock.unsaved") }}
-								</span>
-								<span
-									v-else-if="language.changes"
-									class="k-language-state k-language-changes"
-								>
-									<k-icon type="edit" />
-									{{ $t("lock.unsaved") }}
-								</span>
-							</footer>
-						</k-button>
-					</template>
-				</template>
+							<k-icon type="edit" />
+							{{ $t("lock.unsaved") }}
+						</span>
+					</footer>
+				</k-button>
 			</template>
 		</k-dropdown-content>
 	</div>
