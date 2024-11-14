@@ -88,7 +88,9 @@ class Changes
 		);
 
 		if ($changes->isIdentical(version: $latest, language: 'current')) {
-			$changes->delete();
+			$changes->delete(
+				language: 'current'
+			);
 		}
 
 		return [

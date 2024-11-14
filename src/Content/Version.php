@@ -192,7 +192,6 @@ class Version
 			$version = $this->model->version($version);
 		}
 
-
 		if ($version->id()->is($this->id) === true) {
 			return true;
 		}
@@ -214,25 +213,19 @@ class Version
 			$b['uuid']
 		);
 
-		// ensure both arrays of fields are sorted the same
-		ksort($a);
-		ksort($b);
-
-		if ($a === $b) {
-			return true;
-		}
-
 		$a = Form::for(
 			model: $this->model,
 			props: [
-				'values' => $a
+				'language' => $language->code(),
+				'values'   => $a,
 			]
 		)->values();
 
 		$b = Form::for(
 			model: $this->model,
 			props: [
-				'values' => $b
+				'language' => $language->code(),
+				'values'   => $b
 			]
 		)->values();
 
