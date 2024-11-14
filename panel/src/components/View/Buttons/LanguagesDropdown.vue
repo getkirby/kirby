@@ -61,6 +61,10 @@ export default {
 	},
 	computed: {
 		changesBadge() {
+			// `hasChanges` provides the state for all other than the current
+			// translation from the backend; for the current translation we need to
+			// check `content.hasChanges` as this state can change dynamically without
+			// any other backend request that would update `hasChanges`
 			if (this.hasChanges || this.$panel.content.hasChanges) {
 				return {
 					theme: this.$panel.content.lock.isLocked ? "red" : "orange"

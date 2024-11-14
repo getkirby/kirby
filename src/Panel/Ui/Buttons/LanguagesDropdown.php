@@ -43,8 +43,8 @@ class LanguagesDropdown extends ViewButton
 
 	/**
 	 * Returns if any translation other than the current one has unsaved changes
-	 * (the current will be considered dynamically in `<k-languages-dropdown>`
-	 * based on its state)
+	 * (the current language has to be handled in `k-languages-dropdown` as its
+	 * state can change dynamically without another backend request)
 	 */
 	public function hasChanges(): bool
 	{
