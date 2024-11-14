@@ -16,27 +16,24 @@
 				<k-button
 					:key="'item-' + index"
 					v-bind="language"
-					class="k-dropdown-item k-language"
+					class="k-dropdown-item k-languages-dropdown-item"
 				>
-					{{ language.text }} ({{ language.code }})
+					{{ language.text }}
 
-					<footer class="k-language-footer">
-						<span v-if="language.default">
-							{{ $t("language.default") }}
+					<span
+						:data-lock="language.lock"
+						class="k-languages-dropdown-item-info"
+					>
+						<k-icon
+							v-if="language.changes"
+							:alt="$t('lock.unsaved')"
+							:type="language.lock ? 'lock' : 'edit-line'"
+							class="k-languages-dropdown-item-icon"
+						/>
+						<span class="k-languages-dropdown-item-code">
+							{{ language.code.toUpperCase() }}
 						</span>
-
-						<span v-if="language.lock" class="k-language-state k-language-lock">
-							<k-icon type="lock" />
-							{{ $t("lock.unsaved") }}
-						</span>
-						<span
-							v-else-if="language.changes"
-							class="k-language-state k-language-changes"
-						>
-							<k-icon type="edit" />
-							{{ $t("lock.unsaved") }}
-						</span>
-					</footer>
+					</span>
 				</k-button>
 			</template>
 		</k-dropdown-content>
@@ -66,7 +63,7 @@ export default {
 		changesBadge() {
 			if (this.hasChanges || this.$panel.content.hasChanges) {
 				return {
-					theme: "notice"
+					theme: this.$panel.content.lock.isLocked ? "red" : "orange"
 				};
 			}
 
@@ -77,31 +74,35 @@ export default {
 </script>
 
 <style>
-.k-button.k-language {
-	--button-height: auto;
-	padding-block: var(--button-padding);
+.k-languages-dropdown-item::after {
+	content: "✓";
+	padding-inline-start: var(--spacing-1);
 }
-
-.k-language-footer {
+.k-languages-dropdown-item:not([aria-current])::after {
+	visibility: hidden;
+}
+.k-languages-dropdown-item .k-button-text {
 	display: flex;
+	flex-grow: 1;
+	justify-content: space-between;
 	align-items: center;
-	gap: var(--spacing-3);
+	gap: var(--spacing-6);
+	min-width: 8rem;
+}
+.k-languages-dropdown-item-info {
+	display: flex;
+	gap: var(--spacing-2);
+	align-items: center;
+}
+.k-languages-dropdown-item-icon {
+	--icon-color: var(--color-orange-500);
+	--icon-size: 1rem;
+}
+.k-languages-dropdown-item-info[data-lock] .k-languages-dropdown-item-icon {
+	--icon-color: var(--color-red-500);
+}
+.k-languages-dropdown-item-code {
 	font-size: var(--text-xs);
-	color: var(--color-gray-400);
-	margin-top: var(--spacing-1);
-}
-
-.k-language-state {
-	--icon-size: 14px;
-	display: flex;
-	align-items: center;
-	gap: var(--spacing-1);
-	font-weight: var(--font-bold);
-}
-.k-language-changes {
-	color: var(--color-orange-500);
-}
-.k-language-lock {
-	color: var(--color-red-500);
+	color: var(--color-gray-500);
 }
 </style>

@@ -74,6 +74,13 @@ export default (panel) => {
 		isSaved: true,
 
 		/**
+		 * Get the lock info for the model view
+		 */
+		get lock() {
+			return panel.view.props.lock;
+		},
+
+		/**
 		 * The last published state
 		 *
 		 * @returns {Object}

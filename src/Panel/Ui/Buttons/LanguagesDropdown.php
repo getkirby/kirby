@@ -70,7 +70,7 @@ class LanguagesDropdown extends ViewButton
 			'current' => $language->code() === $this->kirby->language()?->code(),
 			'default' => $language->isDefault(),
 			'changes' => $changes->exists($language),
-			'lock'    => $changes->isLocked()
+			'lock'    => $changes->isLocked('*')
 		];
 	}
 
