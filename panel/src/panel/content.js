@@ -38,11 +38,6 @@ export default (panel) => {
 		 * Removes all unpublished changes
 		 */
 		async discard() {
-			// avoid requests if there is no API defined
-			if (!this.api) {
-				return;
-			}
-
 			if (this.isProcessing === true) {
 				return;
 			}
@@ -91,11 +86,6 @@ export default (panel) => {
 		 * Publishes any changes
 		 */
 		async publish() {
-			// avoid requests if there is no API defined
-			if (!this.api) {
-				return;
-			}
-
 			if (this.isProcessing === true) {
 				return;
 			}
@@ -122,11 +112,6 @@ export default (panel) => {
 		 * Saves any changes
 		 */
 		async save() {
-			// avoid requests if there is no API defined
-			if (!this.api) {
-				return;
-			}
-
 			this.isProcessing = true;
 
 			// ensure to abort unfinished previous save request
