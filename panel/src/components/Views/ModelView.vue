@@ -77,16 +77,6 @@ export default {
 			return [];
 		}
 	},
-	watch: {
-		// watch for view changes and
-		// trigger saving for changes that where
-		// not sent to the server yet
-		api() {
-			if (this.isSaved === false) {
-				this.save();
-			}
-		}
-	},
 	mounted() {
 		// create a delayed version of save
 		// that we can use in the input event
@@ -109,15 +99,21 @@ export default {
 		this.$events.off("view.save", this.onSave);
 	},
 	methods: {
-		async save() {
+		async save(api, values) {
 			if (this.isLocked === true) {
 				return false;
 			}
 
-			await this.$panel.content.save(this.api, this.content);
+			await this.$panel.content.save(api, values);
 
 			// update the last modification timestamp
-			this.$panel.view.props.lock.modified = new Date();
+			// if the view hasn't changed in the meantime,
+			// in which case the correct timestamp will come
+			// from the server
+			if (api === this.api) {
+				this.$panel.view.props.lock.modified = new Date();
+			}
+
 			this.isSaved = true;
 		},
 		onBeforeUnload(e) {
@@ -141,7 +137,7 @@ export default {
 			}
 
 			this.update(values);
-			this.autosave();
+			this.autosave(this.api, values);
 		},
 		onSave(e) {
 			e?.preventDefault?.();
