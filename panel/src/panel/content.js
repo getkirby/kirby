@@ -59,7 +59,8 @@ export default (panel) => {
 
 			try {
 				await panel.api.post(api + "/changes/save", values, {
-					signal: this.saveAbortController.signal
+					signal: this.saveAbortController.signal,
+					silent: true
 				});
 
 				this.isProcessing = false;
