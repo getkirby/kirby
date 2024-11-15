@@ -153,28 +153,12 @@ export default {
 
 			this.$panel.view.open(this.link + "/preview/" + mode);
 		},
-		async onDiscard() {
-			if (this.isLocked === true) {
-				return false;
-			}
-
-			await this.$panel.content.discard();
-			await this.$panel.view.reload();
-		},
 		onExit() {
 			if (this.$panel.overlays().length > 0) {
 				return;
 			}
 
 			this.$panel.view.open(this.link);
-		},
-		async onSubmit() {
-			if (this.isLocked === true) {
-				return false;
-			}
-
-			await this.$panel.content.publish();
-			await this.$panel.view.reload();
 		}
 	}
 };
