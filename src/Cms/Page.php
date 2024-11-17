@@ -789,7 +789,7 @@ class Page extends ModelWithContent
 			return false;
 		}
 
-		return $this->token() === $token;
+		return hash_equals($this->token(), $token);
 	}
 
 	/**
