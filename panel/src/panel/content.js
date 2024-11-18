@@ -15,7 +15,7 @@ export default (panel) => {
 		changes(api = panel.view.props.api) {
 			// changes can only be computed for the current view
 			if (this.isCurrent(api) === false) {
-				throw new Error("Cannot get changes from another view");
+				throw new Error("Cannot get changes for another view");
 			}
 
 			const changes = {};
