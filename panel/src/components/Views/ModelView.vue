@@ -80,7 +80,7 @@ export default {
 	mounted() {
 		// create a delayed version of save
 		// that we can use in the input event
-		this.autosave = throttle(this.save, 1000, {
+		this.save = throttle(this.save, 1000, {
 			leading: true,
 			trailing: true
 		});
@@ -89,75 +89,45 @@ export default {
 		this.$events.on("model.reload", this.$reload);
 		this.$events.on("keydown.left", this.toPrev);
 		this.$events.on("keydown.right", this.toNext);
-		this.$events.on("view.save", this.onSave);
+		this.$events.on("view.save", this.onSubmitShortcut);
 	},
 	destroyed() {
 		this.$events.off("beforeunload", this.onBeforeUnload);
 		this.$events.off("model.reload", this.$reload);
 		this.$events.off("keydown.left", this.toPrev);
 		this.$events.off("keydown.right", this.toNext);
-		this.$events.off("view.save", this.onSave);
+		this.$events.off("view.save", this.onSubmitShortcut);
 	},
 	methods: {
-		async save(api, values) {
-			if (this.isLocked === true) {
-				return false;
-			}
-
-			await this.$panel.content.save(api, values);
-
-			// update the last modification timestamp
-			// if the view hasn't changed in the meantime,
-			// in which case the correct timestamp will come
-			// from the server
-			if (api === this.api) {
-				this.$panel.view.props.lock.modified = new Date();
-			}
-
+		async save(values) {
+			await this.$panel.content.save(values, this.api);
 			this.isSaved = true;
 		},
 		onBeforeUnload(e) {
-			if (this.isSaved === false) {
+			if (this.$panel.content.isProcessing === true || this.isSaved === false) {
 				e.preventDefault();
 				e.returnValue = "";
 			}
 		},
 		async onDiscard() {
-			if (this.isLocked === true) {
-				return false;
-			}
-
 			await this.$panel.content.discard(this.api);
-			this.$panel.view.props.content = this.$panel.view.props.originals;
 			this.$panel.view.reload();
 		},
 		onInput(values) {
-			if (this.isLocked === true) {
-				return false;
-			}
-
 			this.update(values);
-			this.autosave(this.api, values);
-		},
-		onSave(e) {
-			e?.preventDefault?.();
-			this.onSubmit();
+			this.save(values);
 		},
 		async onSubmit(values = {}) {
-			if (this.isLocked === true) {
-				return false;
-			}
+			await this.$panel.content.publish(values, this.api);
 
-			this.update(values);
-
-			await this.$panel.content.publish(this.api, this.content);
-
-			this.$panel.view.props.originals = this.content;
 			this.$panel.notification.success();
-
 			this.$events.emit("model.update");
 
 			await this.$panel.view.refresh();
+		},
+		onSubmitShortcut(e) {
+			e?.preventDefault?.();
+			this.onSubmit();
 		},
 		toPrev(e) {
 			if (this.prev && e.target.localName === "body") {
@@ -170,16 +140,7 @@ export default {
 			}
 		},
 		update(values) {
-			if (length(values) === 0) {
-				return;
-			}
-
-			this.$panel.view.props.content = {
-				...this.originals,
-				...values
-			};
-
-			this.isSaved = false;
+			this.$panel.content.update(values, this.api);
 		}
 	}
 };
