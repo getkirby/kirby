@@ -1,11 +1,36 @@
 import { length } from "@/helpers/object";
-import { reactive, set } from "vue";
+import { reactive } from "vue";
+import throttle from "@/helpers/throttle.js";
 
 /**
  * @since 5.0.0
  */
 export default (panel) => {
-	return reactive({
+	const content = reactive({
+		/**
+		 * Returns an object with all changed fields
+		 * @param {String} api
+		 * @returns {Object}
+		 */
+		changes(api = panel.view.props.api) {
+			if (this.isCurrent(api) === false) {
+				throw new Error("Cannot get changes from another view");
+			}
+
+			const changes = {};
+
+			for (const field in panel.view.props.content) {
+				const changed = JSON.stringify(panel.view.props.content[field]);
+				const original = JSON.stringify(panel.view.props.originals[field]);
+
+				if (changed !== original) {
+					changes[field] = panel.view.props.content[field];
+				}
+			}
+
+			return changes;
+		},
+
 		/**
 		 * Removes all unpublished changes
 		 */
@@ -26,6 +51,8 @@ export default (panel) => {
 				if (this.isCurrent(api)) {
 					panel.view.props.content = panel.view.props.originals;
 				}
+
+				panel.events.emit("content.discard", { api });
 			} finally {
 				this.isProcessing = false;
 			}
@@ -33,7 +60,7 @@ export default (panel) => {
 
 		/**
 		 * Whether the api endpoint belongs to the current view
-		 * @var {Boolean}
+		 * @var {String} api
 		 */
 		isCurrent(api) {
 			return panel.view.props.api === api;
@@ -41,16 +68,10 @@ export default (panel) => {
 
 		/**
 		 * Whether the current view is locked
-		 * @var {Boolean}
+		 * @param {String} api
 		 */
 		isLocked(api = panel.view.props.api) {
-			if (this.isCurrent(api) === false) {
-				throw new Error(
-					"The lock state cannot be detected for content from in another view"
-				);
-			}
-
-			return panel.view.props.lock.isLocked;
+			return this.lock(api).isLocked;
 		},
 
 		/**
@@ -58,6 +79,20 @@ export default (panel) => {
 		 * @var {Boolean}
 		 */
 		isProcessing: false,
+
+		/**
+		 * Get the lock state for the current view
+		 * @param {String} api
+		 */
+		lock(api = panel.view.props.api) {
+			if (this.isCurrent(api) === false) {
+				throw new Error(
+					"The lock state cannot be detected for content from in another view"
+				);
+			}
+
+			return panel.view.props.lock;
+		},
 
 		/**
 		 * Publishes any changes
@@ -72,7 +107,6 @@ export default (panel) => {
 			}
 
 			this.isProcessing = true;
-			this.update(api, values);
 
 			// Send updated values to API
 			try {
@@ -81,6 +115,8 @@ export default (panel) => {
 				if (this.isCurrent(api)) {
 					panel.view.props.originals = panel.view.props.content;
 				}
+
+				panel.events.emit("content.publish", { api, values });
 			} finally {
 				this.isProcessing = false;
 			}
@@ -109,10 +145,12 @@ export default (panel) => {
 
 				this.isProcessing = false;
 
-				// update the lock info
+				// update the lock timestamp
 				if (this.isCurrent(api) === true) {
 					panel.view.props.lock.modified = new Date();
 				}
+
+				panel.events.emit("content.save", { api, values });
 			} catch (error) {
 				// silent aborted requests, but throw all other errors
 				if (error.name !== "AbortError") {
@@ -146,4 +184,13 @@ export default (panel) => {
 			};
 		}
 	});
+
+	// create a delayed version of save
+	// that we can use in the input event
+	content.saveLazy = throttle(content.save, 1000, {
+		leading: true,
+		trailing: true
+	});
+
+	return content;
 };

@@ -1,7 +1,7 @@
 <template>
 	<k-view-button
 		v-bind="$props"
-		:disabled="disabled || $panel.view.props.lock.isLocked"
+		:disabled="disabled || $panel.content.isLocked()"
 	/>
 </template>
 

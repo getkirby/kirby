@@ -1,6 +1,5 @@
 <script>
 import { length } from "@/helpers/object";
-import throttle from "@/helpers/throttle.js";
 
 /**
  * @internal
@@ -45,21 +44,13 @@ export default {
 	},
 	computed: {
 		changes() {
-			const changes = {};
-
-			for (const field in this.content) {
-				const changed = JSON.stringify(this.content[field]);
-				const original = JSON.stringify(this.originals[field]);
-
-				if (changed !== original) {
-					changes[field] = this.content[field];
-				}
-			}
-
-			return changes;
+			return this.$panel.content.changes(this.api);
 		},
 		editor() {
 			return this.lock.user.email;
+		},
+		hasChanges() {
+			return length(this.changes) > 0;
 		},
 		hasTabs() {
 			return this.tabs.length > 1;
@@ -67,46 +58,36 @@ export default {
 		isLocked() {
 			return this.lock.isLocked;
 		},
-		isUnsaved() {
-			return length(this.changes) > 0;
-		},
 		modified() {
 			return this.lock.modified;
-		},
-		protectedFields() {
-			return [];
 		}
 	},
 	mounted() {
-		// create a delayed version of save
-		// that we can use in the input event
-		this.save = throttle(this.save, 1000, {
-			leading: true,
-			trailing: true
-		});
-
 		this.$events.on("beforeunload", this.onBeforeUnload);
-		this.$events.on("model.reload", this.$reload);
+		this.$events.on("content.save", this.onContentSave);
 		this.$events.on("keydown.left", this.toPrev);
 		this.$events.on("keydown.right", this.toNext);
+		this.$events.on("model.reload", this.$reload);
 		this.$events.on("view.save", this.onSubmitShortcut);
 	},
 	destroyed() {
 		this.$events.off("beforeunload", this.onBeforeUnload);
-		this.$events.off("model.reload", this.$reload);
+		this.$events.off("content.save", this.onContentSave);
 		this.$events.off("keydown.left", this.toPrev);
 		this.$events.off("keydown.right", this.toNext);
+		this.$events.off("model.reload", this.$reload);
 		this.$events.off("view.save", this.onSubmitShortcut);
 	},
 	methods: {
-		async save(values) {
-			await this.$panel.content.save(values, this.api);
-			this.isSaved = true;
-		},
 		onBeforeUnload(e) {
 			if (this.$panel.content.isProcessing === true || this.isSaved === false) {
 				e.preventDefault();
 				e.returnValue = "";
+			}
+		},
+		onContentSave({ api }) {
+			if (api === this.api) {
+				this.isSaved = true;
 			}
 		},
 		async onDiscard() {
@@ -114,11 +95,15 @@ export default {
 			this.$panel.view.reload();
 		},
 		onInput(values) {
-			this.update(values);
-			this.save(values);
+			this.$panel.content.update(values, this.api);
+			this.$panel.content.saveLazy(values, this.api);
 		},
 		async onSubmit(values = {}) {
-			await this.$panel.content.publish(values, this.api);
+			if (length(values) > 0) {
+				this.$panel.content.update(values, this.api);
+			}
+
+			await this.$panel.content.publish(this.content, this.api);
 
 			this.$panel.notification.success();
 			this.$events.emit("model.update");
@@ -138,9 +123,6 @@ export default {
 			if (this.next && e.target.localName === "body") {
 				this.$go(this.next.link);
 			}
-		},
-		update(values) {
-			this.$panel.content.update(values, this.api);
 		}
 	}
 };

@@ -22,7 +22,7 @@
 				<k-form-controls
 					:editor="editor"
 					:is-locked="isLocked"
-					:is-unsaved="isUnsaved"
+					:is-unsaved="hasChanges"
 					:modified="modified"
 					:preview="permissions.preview ? api + '/preview/compare' : false"
 					@discard="onDiscard"
@@ -53,11 +53,6 @@ export default {
 	extends: ModelView,
 	props: {
 		title: String
-	},
-	computed: {
-		protectedFields() {
-			return ["title"];
-		}
 	}
 };
 </script>

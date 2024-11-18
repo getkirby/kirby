@@ -22,7 +22,7 @@
 				<k-form-controls
 					:editor="editor"
 					:is-locked="isLocked"
-					:is-unsaved="isUnsaved"
+					:is-unsaved="hasChanges"
 					:modified="modified"
 					@discard="onDiscard"
 					@submit="onSubmit"

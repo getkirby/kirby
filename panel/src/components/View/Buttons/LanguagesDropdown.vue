@@ -67,7 +67,7 @@ export default {
 			// any other backend request that would update `hasChanges`
 			if (this.hasChanges || this.$panel.content.hasChanges) {
 				return {
-					theme: this.$panel.view.props.lock.isLocked ? "red" : "orange"
+					theme: this.$panel.content.isLocked() ? "red" : "orange"
 				};
 			}
 
