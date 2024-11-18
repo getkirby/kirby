@@ -81,7 +81,7 @@
 						<k-form-controls
 							:editor="editor"
 							:is-locked="isLocked"
-							:is-unsaved="isUnsaved"
+							:is-unsaved="hasChanges"
 							:modified="modified"
 							size="sm"
 							@discard="onDiscard"
@@ -89,7 +89,7 @@
 						/>
 					</k-button-group>
 				</header>
-				<iframe v-if="isUnsaved" :src="src.changes"></iframe>
+				<iframe v-if="hasChanges" :src="src.changes"></iframe>
 				<k-empty v-else>
 					{{ $t("lock.unsaved.empty") }}
 					<k-button icon="edit" variant="filled" :link="back">
