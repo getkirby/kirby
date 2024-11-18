@@ -68,7 +68,7 @@ export default {
 		this.$events.on("keydown.left", this.toPrev);
 		this.$events.on("keydown.right", this.toNext);
 		this.$events.on("model.reload", this.$reload);
-		this.$events.on("view.save", this.onSubmitShortcut);
+		this.$events.on("view.save", this.onViewSave);
 	},
 	destroyed() {
 		this.$events.off("beforeunload", this.onBeforeUnload);
@@ -76,7 +76,7 @@ export default {
 		this.$events.off("keydown.left", this.toPrev);
 		this.$events.off("keydown.right", this.toNext);
 		this.$events.off("model.reload", this.$reload);
-		this.$events.off("view.save", this.onSubmitShortcut);
+		this.$events.off("view.save", this.onViewSave);
 	},
 	methods: {
 		onBeforeUnload(e) {
@@ -92,36 +92,37 @@ export default {
 		},
 		async onDiscard() {
 			await this.$panel.content.discard(this.api);
-			this.$panel.view.reload();
+			this.$panel.view.refresh();
 		},
 		onInput(values) {
+			// update the content for the current view
+			// this will also refresh the content prop
 			this.$panel.content.update(values, this.api);
-			this.$panel.content.saveLazy(values, this.api);
+			// trigger a throttled save call with the updated content
+			this.$panel.content.saveLazy(this.content, this.api);
 		},
-		async onSubmit(values = {}) {
-			if (length(values) > 0) {
-				this.$panel.content.update(values, this.api);
-			}
-
+		async onSubmit() {
 			await this.$panel.content.publish(this.content, this.api);
 
 			this.$panel.notification.success();
 			this.$events.emit("model.update");
 
+			// the view needs to be refreshed to get an updated set of props
+			// this will also rerender sections if needed
 			await this.$panel.view.refresh();
 		},
-		onSubmitShortcut(e) {
+		onViewSave(e) {
 			e?.preventDefault?.();
 			this.onSubmit();
-		},
-		toPrev(e) {
-			if (this.prev && e.target.localName === "body") {
-				this.$go(this.prev.link);
-			}
 		},
 		toNext(e) {
 			if (this.next && e.target.localName === "body") {
 				this.$go(this.next.link);
+			}
+		},
+		toPrev(e) {
+			if (this.prev && e.target.localName === "body") {
+				this.$go(this.prev.link);
 			}
 		}
 	}

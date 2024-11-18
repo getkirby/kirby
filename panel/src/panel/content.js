@@ -13,6 +13,7 @@ export default (panel) => {
 		 * @returns {Object}
 		 */
 		changes(api = panel.view.props.api) {
+			// changes can only be computed for the current view
 			if (this.isCurrent(api) === false) {
 				throw new Error("Cannot get changes from another view");
 			}
@@ -39,6 +40,8 @@ export default (panel) => {
 				return;
 			}
 
+			// In the current view, we can use the existing
+			// lock state to determine if we can discard
 			if (this.isCurrent(api) === true && this.isLocked(api) === true) {
 				throw new Error("Cannot discard locked changes");
 			}
@@ -48,6 +51,7 @@ export default (panel) => {
 			try {
 				await panel.api.post(api + "/changes/discard");
 
+				// update the props for the current view
 				if (this.isCurrent(api)) {
 					panel.view.props.content = panel.view.props.originals;
 				}
@@ -87,7 +91,7 @@ export default (panel) => {
 		lock(api = panel.view.props.api) {
 			if (this.isCurrent(api) === false) {
 				throw new Error(
-					"The lock state cannot be detected for content from in another view"
+					"The lock state cannot be detected for content from another view"
 				);
 			}
 
@@ -102,6 +106,8 @@ export default (panel) => {
 				return;
 			}
 
+			// In the current view, we can use the existing
+			// lock state to determine if changes can be published
 			if (this.isCurrent(api) === true && this.isLocked(api) === true) {
 				throw new Error("Cannot publish locked changes");
 			}
@@ -112,11 +118,12 @@ export default (panel) => {
 			try {
 				await panel.api.post(api + "/changes/publish", values);
 
+				// update the props for the current view
 				if (this.isCurrent(api)) {
 					panel.view.props.originals = panel.view.props.content;
 				}
 
-				panel.events.emit("content.publish", { api, values });
+				panel.events.emit("content.publish", { values, api });
 			} finally {
 				this.isProcessing = false;
 			}
