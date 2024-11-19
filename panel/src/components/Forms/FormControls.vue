@@ -58,8 +58,8 @@
 export default {
 	props: {
 		editor: String,
+		hasChanges: Boolean,
 		isLocked: Boolean,
-		isUnsaved: Boolean,
 		modified: [String, Date],
 		/**
 		 * Preview URL for changes
@@ -81,7 +81,7 @@ export default {
 				];
 			}
 
-			if (this.isUnsaved === true) {
+			if (this.hasChanges === true) {
 				return [
 					{
 						theme: "notice",

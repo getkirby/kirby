@@ -21,8 +21,8 @@
 				<k-view-buttons :buttons="buttons" />
 				<k-form-controls
 					:editor="editor"
+					:has-changes="hasChanges"
 					:is-locked="isLocked"
-					:is-unsaved="hasChanges"
 					:modified="modified"
 					:preview="permissions.preview ? api + '/preview/compare' : false"
 					@discard="onDiscard"

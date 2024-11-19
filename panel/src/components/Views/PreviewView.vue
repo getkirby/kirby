@@ -80,8 +80,8 @@
 						/>
 						<k-form-controls
 							:editor="editor"
+							:has-changes="hasChanges"
 							:is-locked="isLocked"
-							:is-unsaved="hasChanges"
 							:modified="modified"
 							size="sm"
 							@discard="onDiscard"
