@@ -98,8 +98,6 @@ export default {
 			// update the content for the current view
 			// this will also refresh the content prop
 			this.$panel.content.update(values, this.api);
-			// trigger a throttled save call with the updated content
-			this.$panel.content.saveLazy(this.content, this.api);
 		},
 		async onSubmit() {
 			await this.$panel.content.publish(this.content, this.api);

@@ -197,6 +197,8 @@ export default (panel) => {
 				...panel.view.props.originals,
 				...values
 			};
+
+			this.saveLazy(panel.view.props.content, api);
 		}
 	});
 
