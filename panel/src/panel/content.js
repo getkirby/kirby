@@ -12,7 +12,9 @@ export default (panel) => {
 		 * @param {String} api
 		 * @returns {Object}
 		 */
-		changes(api = panel.view.props.api) {
+		changes(api) {
+			api ??= panel.view.props.api;
+
 			// changes can only be computed for the current view
 			if (this.isCurrent(api) === false) {
 				throw new Error("Cannot get changes for another view");
@@ -35,7 +37,9 @@ export default (panel) => {
 		/**
 		 * Removes all unpublished changes
 		 */
-		async discard(api = panel.view.props.api) {
+		async discard(api) {
+			api ??= panel.view.props.api;
+
 			if (this.isProcessing === true) {
 				return;
 			}
@@ -74,8 +78,8 @@ export default (panel) => {
 		 * Whether the current view is locked
 		 * @param {String} api
 		 */
-		isLocked(api = panel.view.props.api) {
-			return this.lock(api).isLocked;
+		isLocked(api) {
+			return this.lock(api ?? panel.view.props.api).isLocked;
 		},
 
 		/**
@@ -88,8 +92,8 @@ export default (panel) => {
 		 * Get the lock state for the current view
 		 * @param {String} api
 		 */
-		lock(api = panel.view.props.api) {
-			if (this.isCurrent(api) === false) {
+		lock(api) {
+			if (this.isCurrent(api ?? panel.view.props.api) === false) {
 				throw new Error(
 					"The lock state cannot be detected for content from another view"
 				);
@@ -101,7 +105,9 @@ export default (panel) => {
 		/**
 		 * Publishes any changes
 		 */
-		async publish(values, api = panel.view.props.api) {
+		async publish(values, api) {
+			api ??= panel.view.props.api;
+
 			if (this.isProcessing === true) {
 				return;
 			}
@@ -132,7 +138,9 @@ export default (panel) => {
 		/**
 		 * Saves any changes
 		 */
-		async save(values, api = panel.view.props.api) {
+		async save(values, api) {
+			api ??= panel.view.props.api;
+
 			if (this.isCurrent(api) === true && this.isLocked(api) === true) {
 				throw new Error("Cannot save locked changes");
 			}
@@ -176,12 +184,12 @@ export default (panel) => {
 		/**
 		 * Updates the form values of the current view
 		 */
-		update(values, api = panel.view.props.api) {
+		update(values, api) {
 			if (length(values) === 0) {
 				return;
 			}
 
-			if (this.isCurrent(api) === false) {
+			if (this.isCurrent(api ?? panel.view.props.api) === false) {
 				throw new Error("The content in another view cannot be updated");
 			}
 
