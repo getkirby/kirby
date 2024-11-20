@@ -53,7 +53,7 @@
 						/>
 					</k-button-group>
 				</header>
-				<iframe :src="src.latest"></iframe>
+				<iframe ref="latest" :src="src.latest"></iframe>
 			</section>
 
 			<section
@@ -89,7 +89,7 @@
 						/>
 					</k-button-group>
 				</header>
-				<iframe v-if="hasChanges" :src="src.changes"></iframe>
+				<iframe v-if="hasChanges" ref="changes" :src="src.changes"></iframe>
 				<k-empty v-else>
 					{{ $t("lock.unsaved.empty") }}
 					<k-button icon="edit" variant="filled" :link="back">
@@ -141,9 +141,11 @@ export default {
 	},
 	mounted() {
 		this.$events.on("keydown.esc", this.onExit);
+		this.$events.on("content.publish", this.onPublish);
 	},
 	destroyed() {
 		this.$events.off("keydown.esc", this.onExit);
+		this.$events.off("content.publish", this.onPublish);
 	},
 	methods: {
 		changeMode(mode) {
@@ -159,6 +161,9 @@ export default {
 			}
 
 			this.$panel.view.open(this.link);
+		},
+		onPublish() {
+			this.$refs.latest.contentWindow.location.reload();
 		}
 	}
 };
