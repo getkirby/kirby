@@ -16,11 +16,11 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
     );
 
     public static $prefixLengthsPsr4 = array (
-        'W' =>
+        'W' => 
         array (
             'Whoops\\' => 7,
         ),
-        'S' =>
+        'S' => 
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Intl\\Normalizer\\' => 33,
@@ -28,97 +28,97 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
             'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Component\\Yaml\\' => 23,
         ),
-        'P' =>
+        'P' => 
         array (
             'Psr\\Log\\' => 8,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
-        'L' =>
+        'L' => 
         array (
             'League\\ColorExtractor\\' => 22,
             'Laminas\\Escaper\\' => 16,
         ),
-        'K' =>
+        'K' => 
         array (
             'Kirby\\' => 6,
         ),
-        'C' =>
+        'C' => 
         array (
             'Composer\\Semver\\' => 16,
         ),
-        'B' =>
+        'B' => 
         array (
             'Base32\\' => 7,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Whoops\\' =>
+        'Whoops\\' => 
         array (
             0 => __DIR__ . '/..' . '/filp/whoops/src/Whoops',
         ),
-        'Symfony\\Polyfill\\Mbstring\\' =>
+        'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
-        'Symfony\\Polyfill\\Intl\\Normalizer\\' =>
+        'Symfony\\Polyfill\\Intl\\Normalizer\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer',
         ),
-        'Symfony\\Polyfill\\Intl\\Idn\\' =>
+        'Symfony\\Polyfill\\Intl\\Idn\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-intl-idn',
         ),
-        'Symfony\\Polyfill\\Ctype\\' =>
+        'Symfony\\Polyfill\\Ctype\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
-        'Symfony\\Component\\Yaml\\' =>
+        'Symfony\\Component\\Yaml\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/yaml',
         ),
-        'Psr\\Log\\' =>
+        'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/src',
         ),
-        'PHPMailer\\PHPMailer\\' =>
+        'PHPMailer\\PHPMailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
-        'League\\ColorExtractor\\' =>
+        'League\\ColorExtractor\\' => 
         array (
             0 => __DIR__ . '/..' . '/league/color-extractor/src',
         ),
-        'Laminas\\Escaper\\' =>
+        'Laminas\\Escaper\\' => 
         array (
             0 => __DIR__ . '/..' . '/laminas/laminas-escaper/src',
         ),
-        'Kirby\\' =>
+        'Kirby\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
             1 => __DIR__ . '/..' . '/getkirby/composer-installer/src',
         ),
-        'Composer\\Semver\\' =>
+        'Composer\\Semver\\' => 
         array (
             0 => __DIR__ . '/..' . '/composer/semver/src',
         ),
-        'Base32\\' =>
+        'Base32\\' => 
         array (
             0 => __DIR__ . '/..' . '/christian-riesen/base32/src',
         ),
     );
 
     public static $prefixesPsr0 = array (
-        'c' =>
+        'c' => 
         array (
-            'claviska' =>
+            'claviska' => 
             array (
                 0 => __DIR__ . '/..' . '/claviska/simpleimage/src',
             ),
         ),
-        'M' =>
+        'M' => 
         array (
-            'Michelf' =>
+            'Michelf' => 
             array (
                 0 => __DIR__ . '/..' . '/michelf/php-smartypants',
             ),
@@ -143,6 +143,7 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Composer\\Semver\\VersionParser' => __DIR__ . '/..' . '/composer/semver/src/VersionParser.php',
         'Kirby\\Api\\Api' => __DIR__ . '/../..' . '/src/Api/Api.php',
         'Kirby\\Api\\Collection' => __DIR__ . '/../..' . '/src/Api/Collection.php',
+        'Kirby\\Api\\Controller\\Changes' => __DIR__ . '/../..' . '/src/Api/Controller/Changes.php',
         'Kirby\\Api\\Model' => __DIR__ . '/../..' . '/src/Api/Model.php',
         'Kirby\\Api\\Upload' => __DIR__ . '/../..' . '/src/Api/Upload.php',
         'Kirby\\Blueprint\\Collection' => __DIR__ . '/../..' . '/src/Blueprint/Collection.php',
@@ -271,16 +272,18 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\ComposerInstaller\\PluginInstaller' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/PluginInstaller.php',
         'Kirby\\Content\\Changes' => __DIR__ . '/../..' . '/src/Content/Changes.php',
         'Kirby\\Content\\Content' => __DIR__ . '/../..' . '/src/Content/Content.php',
-        'Kirby\\Content\\ContentStorageHandler' => __DIR__ . '/../..' . '/src/Content/ContentStorageHandler.php',
         'Kirby\\Content\\ContentTranslation' => __DIR__ . '/../..' . '/src/Content/ContentTranslation.php',
         'Kirby\\Content\\Field' => __DIR__ . '/../..' . '/src/Content/Field.php',
-        'Kirby\\Content\\ImmutableMemoryContentStorageHandler' => __DIR__ . '/../..' . '/src/Content/ImmutableMemoryContentStorageHandler.php',
-        'Kirby\\Content\\MemoryContentStorageHandler' => __DIR__ . '/../..' . '/src/Content/MemoryContentStorageHandler.php',
-        'Kirby\\Content\\PlainTextContentStorageHandler' => __DIR__ . '/../..' . '/src/Content/PlainTextContentStorageHandler.php',
+        'Kirby\\Content\\ImmutableMemoryStorage' => __DIR__ . '/../..' . '/src/Content/ImmutableMemoryStorage.php',
+        'Kirby\\Content\\Lock' => __DIR__ . '/../..' . '/src/Content/Lock.php',
+        'Kirby\\Content\\MemoryStorage' => __DIR__ . '/../..' . '/src/Content/MemoryStorage.php',
+        'Kirby\\Content\\PlainTextStorage' => __DIR__ . '/../..' . '/src/Content/PlainTextStorage.php',
+        'Kirby\\Content\\Storage' => __DIR__ . '/../..' . '/src/Content/Storage.php',
         'Kirby\\Content\\Translation' => __DIR__ . '/../..' . '/src/Content/Translation.php',
         'Kirby\\Content\\Translations' => __DIR__ . '/../..' . '/src/Content/Translations.php',
         'Kirby\\Content\\Version' => __DIR__ . '/../..' . '/src/Content/Version.php',
         'Kirby\\Content\\VersionId' => __DIR__ . '/../..' . '/src/Content/VersionId.php',
+        'Kirby\\Content\\VersionRules' => __DIR__ . '/../..' . '/src/Content/VersionRules.php',
         'Kirby\\Data\\Data' => __DIR__ . '/../..' . '/src/Data/Data.php',
         'Kirby\\Data\\Handler' => __DIR__ . '/../..' . '/src/Data/Handler.php',
         'Kirby\\Data\\Json' => __DIR__ . '/../..' . '/src/Data/Json.php',
@@ -322,9 +325,15 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Form\\Field\\LayoutField' => __DIR__ . '/../..' . '/src/Form/Field/LayoutField.php',
         'Kirby\\Form\\Fields' => __DIR__ . '/../..' . '/src/Form/Fields.php',
         'Kirby\\Form\\Form' => __DIR__ . '/../..' . '/src/Form/Form.php',
+        'Kirby\\Form\\Mixin\\Api' => __DIR__ . '/../..' . '/src/Form/Mixin/Api.php',
         'Kirby\\Form\\Mixin\\EmptyState' => __DIR__ . '/../..' . '/src/Form/Mixin/EmptyState.php',
         'Kirby\\Form\\Mixin\\Max' => __DIR__ . '/../..' . '/src/Form/Mixin/Max.php',
         'Kirby\\Form\\Mixin\\Min' => __DIR__ . '/../..' . '/src/Form/Mixin/Min.php',
+        'Kirby\\Form\\Mixin\\Model' => __DIR__ . '/../..' . '/src/Form/Mixin/Model.php',
+        'Kirby\\Form\\Mixin\\Translatable' => __DIR__ . '/../..' . '/src/Form/Mixin/Translatable.php',
+        'Kirby\\Form\\Mixin\\Validation' => __DIR__ . '/../..' . '/src/Form/Mixin/Validation.php',
+        'Kirby\\Form\\Mixin\\Value' => __DIR__ . '/../..' . '/src/Form/Mixin/Value.php',
+        'Kirby\\Form\\Mixin\\When' => __DIR__ . '/../..' . '/src/Form/Mixin/When.php',
         'Kirby\\Form\\Validations' => __DIR__ . '/../..' . '/src/Form/Validations.php',
         'Kirby\\Http\\Cookie' => __DIR__ . '/../..' . '/src/Http/Cookie.php',
         'Kirby\\Http\\Environment' => __DIR__ . '/../..' . '/src/Http/Environment.php',
@@ -367,7 +376,6 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Option\\OptionsQuery' => __DIR__ . '/../..' . '/src/Option/OptionsQuery.php',
         'Kirby\\Panel\\Assets' => __DIR__ . '/../..' . '/src/Panel/Assets.php',
         'Kirby\\Panel\\ChangesDialog' => __DIR__ . '/../..' . '/src/Panel/ChangesDialog.php',
-        'Kirby\\Panel\\Controller\\Changes' => __DIR__ . '/../..' . '/src/Panel/Controller/Changes.php',
         'Kirby\\Panel\\Controller\\PageTree' => __DIR__ . '/../..' . '/src/Panel/Controller/PageTree.php',
         'Kirby\\Panel\\Controller\\Search' => __DIR__ . '/../..' . '/src/Panel/Controller/Search.php',
         'Kirby\\Panel\\Dialog' => __DIR__ . '/../..' . '/src/Panel/Dialog.php',
@@ -400,6 +408,7 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Panel\\Ui\\Buttons\\LanguagesDropdown' => __DIR__ . '/../..' . '/src/Panel/Ui/Buttons/LanguagesDropdown.php',
         'Kirby\\Panel\\Ui\\Buttons\\PageStatusButton' => __DIR__ . '/../..' . '/src/Panel/Ui/Buttons/PageStatusButton.php',
         'Kirby\\Panel\\Ui\\Buttons\\PreviewButton' => __DIR__ . '/../..' . '/src/Panel/Ui/Buttons/PreviewButton.php',
+        'Kirby\\Panel\\Ui\\Buttons\\PreviewDropdownButton' => __DIR__ . '/../..' . '/src/Panel/Ui/Buttons/PreviewDropdownButton.php',
         'Kirby\\Panel\\Ui\\Buttons\\SettingsButton' => __DIR__ . '/../..' . '/src/Panel/Ui/Buttons/SettingsButton.php',
         'Kirby\\Panel\\Ui\\Buttons\\ViewButton' => __DIR__ . '/../..' . '/src/Panel/Ui/Buttons/ViewButton.php',
         'Kirby\\Panel\\Ui\\Buttons\\ViewButtons' => __DIR__ . '/../..' . '/src/Panel/Ui/Buttons/ViewButtons.php',
@@ -421,6 +430,8 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Parsley\\Schema\\Plain' => __DIR__ . '/../..' . '/src/Parsley/Schema/Plain.php',
         'Kirby\\Plugin\\Asset' => __DIR__ . '/../..' . '/src/Plugin/Asset.php',
         'Kirby\\Plugin\\Assets' => __DIR__ . '/../..' . '/src/Plugin/Assets.php',
+        'Kirby\\Plugin\\License' => __DIR__ . '/../..' . '/src/Plugin/License.php',
+        'Kirby\\Plugin\\LicenseStatus' => __DIR__ . '/../..' . '/src/Plugin/LicenseStatus.php',
         'Kirby\\Plugin\\Plugin' => __DIR__ . '/../..' . '/src/Plugin/Plugin.php',
         'Kirby\\Query\\Argument' => __DIR__ . '/../..' . '/src/Query/Argument.php',
         'Kirby\\Query\\Arguments' => __DIR__ . '/../..' . '/src/Query/Arguments.php',
