@@ -249,8 +249,8 @@ abstract class FieldClass
 	}
 
 	/**
-	 * @deprecated 3.5.0
-	 * @todo remove when the general field class setup has been refactored
+	 * Checks if the field is saveable
+	 * @deprecated 5.0.0 Use `::isSaveable()` instead
 	 */
 	public function save(): bool
 	{
