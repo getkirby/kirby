@@ -1,5 +1,6 @@
 import { length } from "@/helpers/object";
-import { reactive, watch } from "vue";
+import { reactive } from "vue";
+import throttle from "@/helpers/throttle.js";
 
 /**
  * @since 5.0.0
@@ -7,19 +8,18 @@ import { reactive, watch } from "vue";
 export default (panel) => {
 	const content = reactive({
 		/**
-		 * API endpoint to handle content changes
-		 */
-		get api() {
-			return panel.view.props.api;
-		},
-
-		/**
-		 * Returns all fields and their values that
-		 * have been changed but not yet saved
-		 *
+		 * Returns an object with all changed fields
+		 * @param {String} api
 		 * @returns {Object}
 		 */
-		get changes() {
+		changes(api) {
+			api ??= panel.view.props.api;
+
+			// changes can only be computed for the current view
+			if (this.isCurrent(api) === false) {
+				throw new Error("Cannot get changes for another view");
+			}
+
 			const changes = {};
 
 			for (const field in panel.view.props.content) {
@@ -37,28 +37,49 @@ export default (panel) => {
 		/**
 		 * Removes all unpublished changes
 		 */
-		async discard() {
+		async discard(api) {
+			api ??= panel.view.props.api;
+
 			if (this.isProcessing === true) {
 				return;
+			}
+
+			// In the current view, we can use the existing
+			// lock state to determine if we can discard
+			if (this.isCurrent(api) === true && this.isLocked(api) === true) {
+				throw new Error("Cannot discard locked changes");
 			}
 
 			this.isProcessing = true;
 
 			try {
-				await panel.api.post(this.api + "/changes/discard");
-				panel.view.props.content = panel.view.props.originals;
+				await panel.api.post(api + "/changes/discard");
+
+				// update the props for the current view
+				if (this.isCurrent(api)) {
+					panel.view.props.content = panel.view.props.originals;
+				}
+
+				panel.events.emit("content.discard", { api });
 			} finally {
 				this.isProcessing = false;
 			}
 		},
 
 		/**
-		 * Whether there are any changes
-		 *
-		 * @returns {Boolean}
+		 * Whether the api endpoint belongs to the current view
+		 * @var {String} api
 		 */
-		get hasChanges() {
-			return length(this.changes) > 0;
+		isCurrent(api) {
+			return panel.view.props.api === api;
+		},
+
+		/**
+		 * Whether the current view is locked
+		 * @param {String} api
+		 */
+		isLocked(api) {
+			return this.lock(api ?? panel.view.props.api).isLocked;
 		},
 
 		/**
@@ -68,48 +89,47 @@ export default (panel) => {
 		isProcessing: false,
 
 		/**
-		 * Whether all content updates have been successfully sent to the backend
-		 * @var {Boolean}
+		 * Get the lock state for the current view
+		 * @param {String} api
 		 */
-		isSaved: true,
+		lock(api) {
+			if (this.isCurrent(api ?? panel.view.props.api) === false) {
+				throw new Error(
+					"The lock state cannot be detected for content from another view"
+				);
+			}
 
-		/**
-		 * Get the lock info for the model view
-		 */
-		get lock() {
 			return panel.view.props.lock;
-		},
-
-		/**
-		 * The last published state
-		 *
-		 * @returns {Object}
-		 */
-		get originals() {
-			return panel.view.props.originals;
 		},
 
 		/**
 		 * Publishes any changes
 		 */
-		async publish() {
+		async publish(values, api) {
+			api ??= panel.view.props.api;
+
 			if (this.isProcessing === true) {
 				return;
+			}
+
+			// In the current view, we can use the existing
+			// lock state to determine if changes can be published
+			if (this.isCurrent(api) === true && this.isLocked(api) === true) {
+				throw new Error("Cannot publish locked changes");
 			}
 
 			this.isProcessing = true;
 
 			// Send updated values to API
 			try {
-				await panel.api.post(
-					this.api + "/changes/publish",
-					panel.view.props.content
-				);
+				await panel.api.post(api + "/changes/publish", values);
 
-				panel.view.props.originals = panel.view.props.content;
+				// update the props for the current view
+				if (this.isCurrent(api)) {
+					panel.view.props.originals = panel.view.props.content;
+				}
 
-				panel.events.emit("model.update");
-				panel.notification.success();
+				panel.events.emit("content.publish", { values, api });
 			} finally {
 				this.isProcessing = false;
 			}
@@ -118,7 +138,13 @@ export default (panel) => {
 		/**
 		 * Saves any changes
 		 */
-		async save() {
+		async save(values, api) {
+			api ??= panel.view.props.api;
+
+			if (this.isCurrent(api) === true && this.isLocked(api) === true) {
+				throw new Error("Cannot save locked changes");
+			}
+
 			this.isProcessing = true;
 
 			// ensure to abort unfinished previous save request
@@ -127,19 +153,19 @@ export default (panel) => {
 			this.saveAbortController = new AbortController();
 
 			try {
-				await panel.api.post(
-					this.api + "/changes/save",
-					panel.view.props.content,
-					{
-						signal: this.saveAbortController.signal
-					}
-				);
+				await panel.api.post(api + "/changes/save", values, {
+					signal: this.saveAbortController.signal,
+					silent: true
+				});
 
-				// update the last modification timestamp
-				panel.view.props.lock.modified = new Date();
-
-				this.isSaved = true;
 				this.isProcessing = false;
+
+				// update the lock timestamp
+				if (this.isCurrent(api) === true) {
+					panel.view.props.lock.modified = new Date();
+				}
+
+				panel.events.emit("content.save", { api, values });
 			} catch (error) {
 				// silent aborted requests, but throw all other errors
 				if (error.name !== "AbortError") {
@@ -156,13 +182,15 @@ export default (panel) => {
 		saveAbortController: null,
 
 		/**
-		 * Updates the values of fields
-		 *
-		 * @param {Object} values
+		 * Updates the form values of the current view
 		 */
-		update(values) {
+		update(values, api) {
 			if (length(values) === 0) {
 				return;
+			}
+
+			if (this.isCurrent(api ?? panel.view.props.api) === false) {
+				throw new Error("The content in another view cannot be updated");
 			}
 
 			panel.view.props.content = {
@@ -170,38 +198,15 @@ export default (panel) => {
 				...values
 			};
 
-			this.isSaved = false;
-		},
-
-		/**
-		 * Returns all fields and values incl. changes
-		 *
-		 * @returns {Object}
-		 */
-		get values() {
-			return panel.view.props.content;
+			this.saveLazy(panel.view.props.content, api);
 		}
 	});
 
-	// watch for view changes and
-	// trigger saving for changes that where
-	// not sent to the server yet
-	watch(
-		() => content.api,
-		() => {
-			if (content.isSaved === false) {
-				content.save();
-			}
-		}
-	);
-
-	// if user tries to close tab with changes not
-	// sent to the server yet, trigger warning popup
-	panel.events.on("beforeunload", (e) => {
-		if (content.isSaved === false) {
-			e.preventDefault();
-			e.returnValue = "";
-		}
+	// create a delayed version of save
+	// that we can use in the input event
+	content.saveLazy = throttle(content.save, 1000, {
+		leading: true,
+		trailing: true
 	});
 
 	return content;

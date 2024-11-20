@@ -1,5 +1,5 @@
 <script>
-import throttle from "@/helpers/throttle.js";
+import { length } from "@/helpers/object";
 
 /**
  * @internal
@@ -37,12 +37,20 @@ export default {
 		},
 		uuid: String
 	},
+	data() {
+		return {
+			isSaved: true
+		};
+	},
 	computed: {
 		changes() {
-			return this.$panel.content.changes;
+			return this.$panel.content.changes(this.api);
 		},
 		editor() {
 			return this.lock.user.email;
+		},
+		hasChanges() {
+			return length(this.changes) > 0;
 		},
 		hasTabs() {
 			return this.tabs.length > 1;
@@ -50,78 +58,69 @@ export default {
 		isLocked() {
 			return this.lock.isLocked;
 		},
-		isUnsaved() {
-			return this.$panel.content.hasChanges;
-		},
 		modified() {
 			return this.lock.modified;
-		},
-		protectedFields() {
-			return [];
 		}
 	},
 	mounted() {
-		this.autosave = throttle(this.autosave, 1000, {
-			leading: true,
-			trailing: true
-		});
-
-		this.$events.on("model.reload", this.$reload);
+		this.$events.on("beforeunload", this.onBeforeUnload);
+		this.$events.on("content.save", this.onContentSave);
 		this.$events.on("keydown.left", this.toPrev);
 		this.$events.on("keydown.right", this.toNext);
-		this.$events.on("view.save", this.onSave);
+		this.$events.on("model.reload", this.$reload);
+		this.$events.on("view.save", this.onViewSave);
 	},
 	destroyed() {
-		this.$events.off("model.reload", this.$reload);
+		this.$events.off("beforeunload", this.onBeforeUnload);
+		this.$events.off("content.save", this.onContentSave);
 		this.$events.off("keydown.left", this.toPrev);
 		this.$events.off("keydown.right", this.toNext);
-		this.$events.off("view.save", this.onSave);
+		this.$events.off("model.reload", this.$reload);
+		this.$events.off("view.save", this.onViewSave);
 	},
 	methods: {
-		autosave() {
-			if (this.isLocked === true) {
-				return false;
+		onBeforeUnload(e) {
+			if (this.$panel.content.isProcessing === true || this.isSaved === false) {
+				e.preventDefault();
+				e.returnValue = "";
 			}
-
-			this.$panel.content.save();
+		},
+		onContentSave({ api }) {
+			if (api === this.api) {
+				this.isSaved = true;
+			}
 		},
 		async onDiscard() {
-			if (this.isLocked === true) {
-				return false;
-			}
-
-			await this.$panel.content.discard();
-			this.$panel.view.reload();
+			await this.$panel.content.discard(this.api);
+			this.$panel.view.refresh();
 		},
 		onInput(values) {
-			if (this.isLocked === true) {
-				return false;
-			}
-
-			this.$panel.content.update(values);
-			this.autosave();
+			// update the content for the current view
+			// this will also refresh the content prop
+			this.$panel.content.update(values, this.api);
 		},
-		onSave(e) {
-			e?.preventDefault?.();
-			this.onSubmit();
-		},
-		async onSubmit(values = {}) {
-			if (this.isLocked === true) {
-				return false;
-			}
+		async onSubmit() {
+			await this.$panel.content.publish(this.content, this.api);
 
-			this.$panel.content.update(values);
-			await this.$panel.content.publish();
+			this.$panel.notification.success();
+			this.$events.emit("model.update");
+
+			// the view needs to be refreshed to get an updated set of props
+			// this will also rerender sections if needed
 			await this.$panel.view.refresh();
 		},
-		toPrev(e) {
-			if (this.prev && e.target.localName === "body") {
-				this.$go(this.prev.link);
-			}
+		onViewSave(e) {
+			e?.preventDefault?.();
+			this.onSubmit();
 		},
 		toNext(e) {
 			if (this.next && e.target.localName === "body") {
 				this.$go(this.next.link);
+			}
+		},
+		toPrev(e) {
+			if (this.prev && e.target.localName === "body") {
+				this.$go(this.prev.link);
 			}
 		}
 	}

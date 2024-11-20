@@ -17,8 +17,8 @@
 				<k-view-buttons :buttons="buttons" />
 				<k-form-controls
 					:editor="editor"
+					:has-changes="hasChanges"
 					:is-locked="isLocked"
-					:is-unsaved="isUnsaved"
 					:modified="modified"
 					:preview="api + '/preview/compare'"
 					@discard="onDiscard"
@@ -27,7 +27,7 @@
 			</template>
 		</k-header>
 
-		<k-model-tabs :tab="tab.name" :tabs="tabs" />
+		<k-model-tabs :changes="changes" :tab="tab.name" :tabs="tabs" />
 
 		<k-sections
 			:blueprint="blueprint"

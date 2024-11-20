@@ -80,8 +80,8 @@
 						/>
 						<k-form-controls
 							:editor="editor"
+							:has-changes="hasChanges"
 							:is-locked="isLocked"
-							:is-unsaved="isUnsaved"
 							:modified="modified"
 							size="sm"
 							@discard="onDiscard"
@@ -89,7 +89,7 @@
 						/>
 					</k-button-group>
 				</header>
-				<iframe v-if="isUnsaved" :src="src.changes"></iframe>
+				<iframe v-if="hasChanges" :src="src.changes"></iframe>
 				<k-empty v-else>
 					{{ $t("lock.unsaved.empty") }}
 					<k-button icon="edit" variant="filled" :link="back">
@@ -153,28 +153,12 @@ export default {
 
 			this.$panel.view.open(this.link + "/preview/" + mode);
 		},
-		async onDiscard() {
-			if (this.isLocked === true) {
-				return false;
-			}
-
-			await this.$panel.content.discard();
-			await this.$panel.view.reload();
-		},
 		onExit() {
 			if (this.$panel.overlays().length > 0) {
 				return;
 			}
 
 			this.$panel.view.open(this.link);
-		},
-		async onSubmit() {
-			if (this.isLocked === true) {
-				return false;
-			}
-
-			await this.$panel.content.publish();
-			await this.$panel.view.reload();
 		}
 	}
 };

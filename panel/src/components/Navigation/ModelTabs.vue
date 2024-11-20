@@ -8,6 +8,7 @@
  */
 export default {
 	props: {
+		changes: Object,
 		tab: String,
 		tabs: {
 			type: Array,
@@ -16,7 +17,7 @@ export default {
 	},
 	computed: {
 		withBadges() {
-			const changes = Object.keys(this.$panel.content.changes);
+			const changes = Object.keys(this.changes);
 
 			return this.tabs.map((tab) => {
 				// collect all fields per tab
