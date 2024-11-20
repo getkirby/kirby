@@ -24,7 +24,7 @@ class Validations
 	 */
 	public static function boolean($field, $value): bool
 	{
-		if ($field->isEmpty($value) === false) {
+		if ($field->isEmptyValue($value) === false) {
 			if (is_bool($value) === false) {
 				throw new InvalidArgumentException(
 					key: 'validation.boolean'
@@ -42,7 +42,7 @@ class Validations
 	 */
 	public static function date(Field|FieldClass $field, mixed $value): bool
 	{
-		if ($field->isEmpty($value) === false) {
+		if ($field->isEmptyValue($value) === false) {
 			if (V::date($value) !== true) {
 				throw new InvalidArgumentException(
 					message: V::message('date', $value)
@@ -60,7 +60,7 @@ class Validations
 	 */
 	public static function email(Field|FieldClass $field, mixed $value): bool
 	{
-		if ($field->isEmpty($value) === false) {
+		if ($field->isEmptyValue($value) === false) {
 			if (V::email($value) === false) {
 				throw new InvalidArgumentException(
 					message: V::message('email', $value)
@@ -79,7 +79,7 @@ class Validations
 	public static function max(Field|FieldClass $field, mixed $value): bool
 	{
 		if (
-			$field->isEmpty($value) === false &&
+			$field->isEmptyValue($value) === false &&
 			$field->max() !== null
 		) {
 			if (V::max($value, $field->max()) === false) {
@@ -100,7 +100,7 @@ class Validations
 	public static function maxlength(Field|FieldClass $field, mixed $value): bool
 	{
 		if (
-			$field->isEmpty($value) === false &&
+			$field->isEmptyValue($value) === false &&
 			$field->maxlength() !== null
 		) {
 			if (V::maxLength($value, $field->maxlength()) === false) {
@@ -121,7 +121,7 @@ class Validations
 	public static function min(Field|FieldClass $field, mixed $value): bool
 	{
 		if (
-			$field->isEmpty($value) === false &&
+			$field->isEmptyValue($value) === false &&
 			$field->min() !== null
 		) {
 			if (V::min($value, $field->min()) === false) {
@@ -142,7 +142,7 @@ class Validations
 	public static function minlength(Field|FieldClass $field, mixed $value): bool
 	{
 		if (
-			$field->isEmpty($value) === false &&
+			$field->isEmptyValue($value) === false &&
 			$field->minlength() !== null
 		) {
 			if (V::minLength($value, $field->minlength()) === false) {
@@ -162,7 +162,7 @@ class Validations
 	 */
 	public static function pattern(Field|FieldClass $field, mixed $value): bool
 	{
-		if ($field->isEmpty($value) === false) {
+		if ($field->isEmptyValue($value) === false) {
 			if ($pattern = $field->pattern()) {
 				// ensure that that pattern needs to match the whole
 				// input value from start to end, not just a partial match
@@ -189,8 +189,8 @@ class Validations
 	{
 		if (
 			$field->isRequired() === true &&
-			$field->save() === true &&
-			$field->isEmpty($value) === true
+			$field->isSaveable() === true &&
+			$field->isEmptyValue($value) === true
 		) {
 			throw new InvalidArgumentException(
 				key: 'validation.required'
@@ -207,7 +207,7 @@ class Validations
 	 */
 	public static function option(Field|FieldClass $field, mixed $value): bool
 	{
-		if ($field->isEmpty($value) === false) {
+		if ($field->isEmptyValue($value) === false) {
 			$values = array_column($field->options(), 'value');
 
 			if (in_array($value, $values, true) !== true) {
@@ -227,7 +227,7 @@ class Validations
 	 */
 	public static function options(Field|FieldClass $field, mixed $value): bool
 	{
-		if ($field->isEmpty($value) === false) {
+		if ($field->isEmptyValue($value) === false) {
 			$values = array_column($field->options(), 'value');
 			foreach ($value as $val) {
 				if (in_array($val, $values, true) === false) {
@@ -248,7 +248,7 @@ class Validations
 	 */
 	public static function time(Field|FieldClass $field, mixed $value): bool
 	{
-		if ($field->isEmpty($value) === false) {
+		if ($field->isEmptyValue($value) === false) {
 			if (V::time($value) !== true) {
 				throw new InvalidArgumentException(
 					message: V::message('time', $value)
@@ -266,7 +266,7 @@ class Validations
 	 */
 	public static function url(Field|FieldClass $field, mixed $value): bool
 	{
-		if ($field->isEmpty($value) === false) {
+		if ($field->isEmptyValue($value) === false) {
 			if (V::url($value) === false) {
 				throw new InvalidArgumentException(
 					message: V::message('url', $value)

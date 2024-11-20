@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Panel\Controller;
+namespace Kirby\Api\Controller;
 
 use Kirby\Cms\Page;
 use Kirby\Data\Data;
@@ -8,7 +8,7 @@ use Kirby\TestCase;
 
 class ChangesTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Changes';
+	public const TMP = KIRBY_TMP_DIR . '/Api.Controller.Changes';
 	public Page $page;
 
 	public function setUp(): void
@@ -44,6 +44,8 @@ class ChangesTest extends TestCase
 
 	public function testPublish()
 	{
+		$this->app->impersonate('kirby');
+
 		Data::write($this->page->root() . '/article.txt', []);
 		Data::write($file = $this->page->root() . '/_changes/article.txt', []);
 
@@ -82,5 +84,29 @@ class ChangesTest extends TestCase
 		$changes = Data::read($this->page->root() . '/_changes/article.txt');
 
 		$this->assertSame(['title' => 'Test'], $changes);
+	}
+
+	public function testSaveWithNoDiff()
+	{
+		Data::write($this->page->root() . '/article.txt', [
+			'title' => 'Test'
+		]);
+		Data::write($this->page->root() . '/_changes/article.txt', [
+			'title' => 'Test'
+		]);
+
+		$response = Changes::save($this->page, [
+			'title' => 'Foo'
+		]);
+
+		$this->assertSame(['status' => 'ok'], $response);
+		$this->assertFileExists($this->page->root() . '/_changes/article.txt');
+
+		$response = Changes::save($this->page, [
+			'title' => 'Test'
+		]);
+
+		$this->assertSame(['status' => 'ok'], $response);
+		$this->assertFileDoesNotExist($this->page->root() . '/_changes/article.txt');
 	}
 }

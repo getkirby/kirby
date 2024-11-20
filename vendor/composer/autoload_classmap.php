@@ -61,8 +61,6 @@ return array(
     'Kirby\\Cms\\Blueprint' => $baseDir . '/src/Cms/Blueprint.php',
     'Kirby\\Cms\\Collection' => $baseDir . '/src/Cms/Collection.php',
     'Kirby\\Cms\\Collections' => $baseDir . '/src/Cms/Collections.php',
-    'Kirby\\Cms\\ContentLock' => $baseDir . '/src/Cms/ContentLock.php',
-    'Kirby\\Cms\\ContentLocks' => $baseDir . '/src/Cms/ContentLocks.php',
     'Kirby\\Cms\\Core' => $baseDir . '/src/Cms/Core.php',
     'Kirby\\Cms\\Email' => $baseDir . '/src/Cms/Email.php',
     'Kirby\\Cms\\Event' => $baseDir . '/src/Cms/Event.php',

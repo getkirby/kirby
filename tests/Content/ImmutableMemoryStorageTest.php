@@ -6,10 +6,10 @@ use Kirby\Cms\Language;
 use Kirby\Exception\LogicException;
 
 /**
- * @coversDefaultClass \Kirby\Content\ImmutableMemoryContentStorageHandler
+ * @coversDefaultClass \Kirby\Content\ImmutableMemoryStorage
  * @covers ::__construct
  */
-class ImmutableMemoryContentStorageHandlerTest extends TestCase
+class ImmutableMemoryStorageTest extends TestCase
 {
 	protected $storage;
 
@@ -18,7 +18,7 @@ class ImmutableMemoryContentStorageHandlerTest extends TestCase
 		parent::setUp();
 		parent::setUpSingleLanguage();
 
-		$this->storage = new ImmutableMemoryContentStorageHandler($this->model);
+		$this->storage = new ImmutableMemoryStorage($this->model);
 	}
 
 	/**

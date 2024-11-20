@@ -20,7 +20,9 @@
 	"coordinates": "Coordinates",
 	"copy": "Copy",
 	"copy.all": "Copy all",
-	"copy.success": "{count} copied!",
+	"copy.success": "Copied",
+	"copy.success.multiple": "{count} copied!",
+	"copy.url": "Copy URL",
 	"create": "Create",
 	"custom": "Custom",
 
@@ -378,8 +380,9 @@
 	"filter": "Filter",
 
 	"form.discard": "Discard changes",
-	"form.discard.confirm": "Do you really want to <strong>delete all unpublished changes</strong>?",
+	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
 	"form.locked": "This content is disabled for you as it is currently edited by another user",
+	"form.unsaved": "The current changes have not yet been saved",
 	"form.preview": "Preview changes",
 	"form.preview.draft": "Preview draft",
 
@@ -471,7 +474,10 @@
 	"loading": "Loading",
 
 	"lock.unsaved": "Unsaved changes",
-	"lock.unsaved.empty": "There are no more unsaved changes",
+	"lock.unsaved.empty": "There are no unsaved changes",
+	"lock.unsaved.files": "Unsaved files",
+	"lock.unsaved.pages": "Unsaved pages",
+	"lock.unsaved.users": "Unsaved accounts",
 	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Unlock",
 	"lock.unlock.submit": "Unlock and overwrite unsaved changes by <strong>{email}</strong>",
@@ -744,10 +750,13 @@
 	"users": "Users",
 
 	"version": "Version",
+	"version.changes": "Changed version",
+	"version.compare": "Compare versions",
 	"version.current": "Current version",
 	"version.latest": "Latest version",
 	"versionInformation": "Version information",
 
+	"view": "View",
 	"view.account": "Your account",
 	"view.installation": "Installation",
 	"view.languages": "Languages",

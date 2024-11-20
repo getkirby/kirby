@@ -8,6 +8,7 @@ use Kirby\Cms\Blocks as BlocksCollection;
 use Kirby\Cms\Fieldset;
 use Kirby\Cms\Fieldsets;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\FieldClass;
@@ -108,7 +109,8 @@ class BlocksField extends FieldClass
 	{
 		$value  = BlocksCollection::parse($value);
 		$blocks = BlocksCollection::factory($value)->toArray();
-		$this->value = $this->blocksToValues($blocks);
+		$this->value  = $this->blocksToValues($blocks);
+		$this->errors = null;
 	}
 
 	public function form(array $fields, array $input = []): Form
@@ -237,19 +239,6 @@ class BlocksField extends FieldClass
 		];
 	}
 
-	public function store(mixed $value): mixed
-	{
-		$blocks = $this->blocksToValues((array)$value, 'content');
-
-		// returns empty string to avoid storing empty array as string `[]`
-		// and to consistency work with `$field->isEmpty()`
-		if ($blocks === []) {
-			return '';
-		}
-
-		return $this->valueToJson($blocks, $this->pretty());
-	}
-
 	protected function setDefault(mixed $default = null): void
 	{
 		// set id for blocks if not exists
@@ -284,6 +273,20 @@ class BlocksField extends FieldClass
 	protected function setPretty(bool $pretty = false): void
 	{
 		$this->pretty = $pretty;
+	}
+
+	public function toStoredValue(bool $default = false): mixed
+	{
+		$value  = $this->toFormValue($default);
+		$blocks = $this->blocksToValues((array)$value, 'content');
+
+		// returns empty string to avoid storing empty array as string `[]`
+		// and to consistency work with `$field->isEmpty()`
+		if ($blocks === []) {
+			return '';
+		}
+
+		return Json::encode($blocks, pretty: $this->pretty());
 	}
 
 	public function validations(): array

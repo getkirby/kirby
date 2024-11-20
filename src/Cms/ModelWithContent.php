@@ -4,9 +4,10 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Content\Content;
-use Kirby\Content\ContentStorageHandler;
 use Kirby\Content\ContentTranslation;
-use Kirby\Content\PlainTextContentStorageHandler;
+use Kirby\Content\Lock;
+use Kirby\Content\PlainTextStorage;
+use Kirby\Content\Storage;
 use Kirby\Content\Version;
 use Kirby\Content\VersionId;
 use Kirby\Exception\InvalidArgumentException;
@@ -47,7 +48,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	public Content|null $content;
 	public static App $kirby;
 	protected Site|null $site;
-	protected ContentStorageHandler $storage;
+	protected Storage $storage;
 	public Collection|null $translations = null;
 
 	/**
@@ -188,8 +189,8 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		// first close object with new blueprint as template
 		$new = $this->clone(['template' => $blueprint]);
 
-		// temporary compatibility change (TODO: also convert changes)
-		$identifier = VersionId::latest();
+		// get version (only handling latest version)
+		$version = $new->version(VersionId::latest());
 
 		// for multilang, we go through all translations and
 		// covnert the content for each of them, remove the content file
@@ -202,7 +203,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 					$content = $this->content($code)->convertTo($blueprint);
 
 					// delete the old text file
-					$this->version($identifier)->delete($code);
+					$version->delete($code);
 
 					// save to re-create the translation content file
 					// with the converted/updated content
@@ -226,7 +227,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		$content = $this->content()->convertTo($blueprint);
 
 		// delete the old text file
-		$this->version($identifier)->delete('default');
+		$version->delete('default');
 
 		return $new->save($content);
 	}
@@ -306,11 +307,11 @@ abstract class ModelWithContent implements Identifiable, Stringable
 
 	/**
 	 * Checks if the model is locked for the current user
+	 * @deprecated 5.0.0 Use `->lock()->isLocked()` instead
 	 */
 	public function isLocked(): bool
 	{
-		$lock = $this->lock();
-		return $lock && $lock->isLocked() === true;
+		return $this->lock()->isLocked() === true;
 	}
 
 	/**
@@ -330,28 +331,11 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	}
 
 	/**
-	 * Returns the lock object for this model
-	 *
-	 * Only if a content directory exists,
-	 * virtual pages will need to overwrite this method
+	 * Returns lock for the model
 	 */
-	public function lock(): ContentLock|null
+	public function lock(): Lock
 	{
-		$dir = $this->root();
-
-		if ($this::CLASS_ALIAS === 'file') {
-			$dir = dirname($dir);
-		}
-
-		if (
-			$this->kirby()->option('content.locking', true) &&
-			is_string($dir) === true &&
-			file_exists($dir) === true
-		) {
-			return new ContentLock($this);
-		}
-
-		return null;
+		return $this->version(VersionId::changes())->lock('*');
 	}
 
 	/**
@@ -561,11 +545,9 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 * Returns the content storage handler
 	 * @internal
 	 */
-	public function storage(): ContentStorageHandler
+	public function storage(): Storage
 	{
-		return $this->storage ??= new PlainTextContentStorageHandler(
-			model: $this,
-		);
+		return $this->storage ??= new PlainTextStorage(model: $this);
 	}
 
 	/**

@@ -1,130 +1,213 @@
+import { length } from "@/helpers/object";
 import { reactive } from "vue";
+import throttle from "@/helpers/throttle.js";
 
 /**
  * @since 5.0.0
  */
 export default (panel) => {
-	return reactive({
+	const content = reactive({
 		/**
-		 * Returns all fields and their values that
-		 * have been changed but not yet published
-		 *
+		 * Returns an object with all changed fields
+		 * @param {String} api
 		 * @returns {Object}
 		 */
-		get changes() {
-			return panel.app.$store.getters["content/changes"]();
+		changes(api) {
+			api ??= panel.view.props.api;
+
+			// changes can only be computed for the current view
+			if (this.isCurrent(api) === false) {
+				throw new Error("Cannot get changes for another view");
+			}
+
+			const changes = {};
+
+			for (const field in panel.view.props.content) {
+				const changed = JSON.stringify(panel.view.props.content[field]);
+				const original = JSON.stringify(panel.view.props.originals[field]);
+
+				if (changed !== original) {
+					changes[field] = panel.view.props.content[field];
+				}
+			}
+
+			return changes;
 		},
+
 		/**
 		 * Removes all unpublished changes
 		 */
-		discard() {
-			panel.app.$store.dispatch("content/revert");
-		},
-		/**
-		 * Whether the model has changes that haven't been saved yet
-		 *
-		 * @returns {Boolean}
-		 */
-		get hasUnsavedChanges() {
-			return false;
-		},
-		/**
-		 * Whether the model has changes that haven't been published yet
-		 *
-		 * @returns {Boolean}
-		 */
-		get hasUnpublishedChanges() {
-			return panel.app.$store.getters["content/hasChanges"]();
-		},
-		/**
-		 * Whether the model is a draft
-		 *
-		 * @returns {Boolean}
-		 */
-		get isDraft() {
-			return panel.view.props.model.status === "draft";
-		},
-		isPublishing: false,
-		isSaving: false,
-		/**
-		 * Whether the content is currently locked by another user
-		 *
-		 * @returns {Boolean}
-		 */
-		get isLocked() {
-			return this.lock?.state === "lock";
-		},
-		/**
-		 * Content lock state of the model
-		 *
-		 * @returns {Object|null|false}
-		 */
-		get lock() {
-			const lock = panel.view.props.lock;
+		async discard(api) {
+			api ??= panel.view.props.api;
 
-			if (!lock) {
-				return false;
+			if (this.isProcessing === true) {
+				return;
 			}
 
-			if (lock.state === null) {
-				return null;
+			// In the current view, we can use the existing
+			// lock state to determine if we can discard
+			if (this.isCurrent(api) === true && this.isLocked(api) === true) {
+				throw new Error("Cannot discard locked changes");
 			}
 
-			return {
-				...lock.data,
-				state: lock.state
-			};
+			this.isProcessing = true;
+
+			try {
+				await panel.api.post(api + "/changes/discard");
+
+				// update the props for the current view
+				if (this.isCurrent(api)) {
+					panel.view.props.content = panel.view.props.originals;
+				}
+
+				panel.events.emit("content.discard", { api });
+			} finally {
+				this.isProcessing = false;
+			}
 		},
+
+		/**
+		 * Whether the api endpoint belongs to the current view
+		 * @var {String} api
+		 */
+		isCurrent(api) {
+			return panel.view.props.api === api;
+		},
+
+		/**
+		 * Whether the current view is locked
+		 * @param {String} api
+		 */
+		isLocked(api) {
+			return this.lock(api ?? panel.view.props.api).isLocked;
+		},
+
+		/**
+		 * Whether content is currently being discarded, saved or published
+		 * @var {Boolean}
+		 */
+		isProcessing: false,
+
+		/**
+		 * Get the lock state for the current view
+		 * @param {String} api
+		 */
+		lock(api) {
+			if (this.isCurrent(api ?? panel.view.props.api) === false) {
+				throw new Error(
+					"The lock state cannot be detected for content from another view"
+				);
+			}
+
+			return panel.view.props.lock;
+		},
+
 		/**
 		 * Publishes any changes
 		 */
-		async publish() {
-			this.isPublishing = true;
-			await panel.app.$store.dispatch("content/save");
-			panel.events.emit("model.update");
-			panel.notification.success();
-			this.isPublishing = false;
+		async publish(values, api) {
+			api ??= panel.view.props.api;
+
+			if (this.isProcessing === true) {
+				return;
+			}
+
+			// In the current view, we can use the existing
+			// lock state to determine if changes can be published
+			if (this.isCurrent(api) === true && this.isLocked(api) === true) {
+				throw new Error("Cannot publish locked changes");
+			}
+
+			this.isProcessing = true;
+
+			// Send updated values to API
+			try {
+				await panel.api.post(api + "/changes/publish", values);
+
+				// update the props for the current view
+				if (this.isCurrent(api)) {
+					panel.view.props.originals = panel.view.props.content;
+				}
+
+				panel.events.emit("content.publish", { values, api });
+			} finally {
+				this.isProcessing = false;
+			}
 		},
-		/**
-		 * Returns all fields and their already published values
-		 *
-		 * @returns {Object}
-		 */
-		get published() {
-			return panel.app.$store.getters["content/originals"]();
-		},
+
 		/**
 		 * Saves any changes
 		 */
-		async save() {
-			this.isSaving = true;
-			// …
-			this.isSaving = false;
+		async save(values, api) {
+			api ??= panel.view.props.api;
+
+			if (this.isCurrent(api) === true && this.isLocked(api) === true) {
+				throw new Error("Cannot save locked changes");
+			}
+
+			this.isProcessing = true;
+
+			// ensure to abort unfinished previous save request
+			// to avoid race conditions with older content
+			this.saveAbortController?.abort();
+			this.saveAbortController = new AbortController();
+
+			try {
+				await panel.api.post(api + "/changes/save", values, {
+					signal: this.saveAbortController.signal,
+					silent: true
+				});
+
+				this.isProcessing = false;
+
+				// update the lock timestamp
+				if (this.isCurrent(api) === true) {
+					panel.view.props.lock.modified = new Date();
+				}
+
+				panel.events.emit("content.save", { api, values });
+			} catch (error) {
+				// silent aborted requests, but throw all other errors
+				if (error.name !== "AbortError") {
+					this.isProcessing = false;
+					throw error;
+				}
+			}
 		},
+
 		/**
-		 * Updates the values of fields
-		 *
-		 * @param {Object} fields
-		 * @param {any} value
+		 * @internal
+		 * @var {AbortController}
 		 */
-		set(fields) {
-			panel.app.$store.dispatch("content/update", [null, fields]);
-		},
+		saveAbortController: null,
+
 		/**
-		 * Removes the content lock for the current user,
-		 * e.g. when closing/leaving the model view
+		 * Updates the form values of the current view
 		 */
-		async unlock() {},
-		/**
-		 * Returns all fields and values incl. changes
-		 *
-		 * @returns {Object}
-		 */
-		get values() {
-			return {
-				...this.published,
-				...this.changes
+		update(values, api) {
+			if (length(values) === 0) {
+				return;
+			}
+
+			if (this.isCurrent(api ?? panel.view.props.api) === false) {
+				throw new Error("The content in another view cannot be updated");
+			}
+
+			panel.view.props.content = {
+				...panel.view.props.originals,
+				...values
 			};
+
+			this.saveLazy(panel.view.props.content, api);
 		}
 	});
+
+	// create a delayed version of save
+	// that we can use in the input event
+	content.saveLazy = throttle(content.save, 1000, {
+		leading: true,
+		trailing: true
+	});
+
+	return content;
 };

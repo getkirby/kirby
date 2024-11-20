@@ -297,7 +297,6 @@ return [
 
 			return [
 				'event'    => 'user.delete',
-				'dispatch' => ['content/remove' => [$url]],
 				'redirect' => $redirect
 			];
 		}

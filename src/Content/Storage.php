@@ -6,7 +6,6 @@ use Generator;
 use Kirby\Cms\Language;
 use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\A;
 
 /**
@@ -23,7 +22,7 @@ use Kirby\Toolkit\A;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-abstract class ContentStorageHandler
+abstract class Storage
 {
 	public function __construct(protected ModelWithContent $model)
 	{
@@ -54,7 +53,7 @@ abstract class ContentStorageHandler
 		Language $fromLanguage,
 		VersionId|null $toVersionId = null,
 		Language|null $toLanguage = null,
-		ContentStorageHandler|null $toStorage = null
+		Storage|null $toStorage = null
 	): void {
 		// fallbacks to allow keeping the method call lean
 		$toVersionId ??= $fromVersionId;
@@ -71,7 +70,7 @@ abstract class ContentStorageHandler
 	/**
 	 * Copies all content to another storage
 	 */
-	public function copyAll(ContentStorageHandler $to): void
+	public function copyAll(Storage $to): void
 	{
 		foreach ($this->all() as $versionId => $language) {
 			$this->copy($versionId, $language, toStorage: $to);
@@ -103,26 +102,6 @@ abstract class ContentStorageHandler
 		foreach (VersionId::all() as $versionId) {
 			$this->delete($versionId, $language);
 		}
-	}
-
-	/**
-	 * Checks if a version/language combination exists and otherwise
-	 * will throw a `NotFoundException`
-	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
-	 */
-	public function ensure(VersionId $versionId, Language $language): void
-	{
-		if ($this->exists($versionId, $language) === true) {
-			return;
-		}
-
-		$message = match($this->model->kirby()->multilang()) {
-			true  => 'Version "' . $versionId . ' (' . $language->code() . ')" does not already exist',
-			false => 'Version "' . $versionId . '" does not already exist',
-		};
-
-		throw new NotFoundException($message);
 	}
 
 	/**
@@ -168,7 +147,7 @@ abstract class ContentStorageHandler
 		Language $fromLanguage,
 		VersionId|null $toVersionId = null,
 		Language|null $toLanguage = null,
-		ContentStorageHandler|null $toStorage = null
+		Storage|null $toStorage = null
 	): void {
 		// fallbacks to allow keeping the method call lean
 		$toVersionId ??= $fromVersionId;
@@ -191,7 +170,7 @@ abstract class ContentStorageHandler
 	/**
 	 * Moves all content to another storage
 	 */
-	public function moveAll(ContentStorageHandler $to): void
+	public function moveAll(Storage $to): void
 	{
 		foreach ($this->all() as $versionId => $language) {
 			$this->move($versionId, $language, toStorage: $to);
@@ -218,8 +197,6 @@ abstract class ContentStorageHandler
 	 * Returns the stored content fields
 	 *
 	 * @return array<string, string>
-	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
 	abstract public function read(VersionId $versionId, Language $language): array;
 
@@ -275,7 +252,6 @@ abstract class ContentStorageHandler
 	 */
 	public function update(VersionId $versionId, Language $language, array $fields): void
 	{
-		$this->ensure($versionId, $language);
 		$this->write($versionId, $language, $fields);
 	}
 

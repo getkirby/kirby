@@ -2,11 +2,13 @@
 
 namespace Kirby\Content;
 
+use Kirby\Cms\File;
 use Kirby\Cms\Language;
 use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Exception\LogicException;
+use Kirby\Cms\Page;
 use Kirby\Exception\NotFoundException;
+use Kirby\Form\Form;
 
 /**
  * The Version class handles all actions for a single
@@ -50,6 +52,9 @@ class Version
 			];
 		}
 
+		// prepare raw content file fields as fields for Content object
+		$fields = $this->prepareFieldsForContent($fields, $language);
+
 		return new Content(
 			parent: $this->model,
 			data:   $fields,
@@ -65,7 +70,10 @@ class Version
 	 */
 	public function contentFile(Language|string $language = 'default'): string
 	{
-		return $this->model->storage()->contentFile($this->id, Language::ensure($language));
+		return $this->model->storage()->contentFile(
+			$this->id,
+			Language::ensure($language)
+		);
 	}
 
 	/**
@@ -83,9 +91,33 @@ class Version
 	 *
 	 * @param array<string, string> $fields Content fields
 	 */
-	public function create(array $fields, Language|string $language = 'default'): void
-	{
+	public function create(
+		array $fields,
+		Language|string $language = 'default'
+	): void {
 		$language = Language::ensure($language);
+		$latest   = $this->model->version(VersionId::latest());
+
+		// if the latest version of the translation does not exist yet,
+		// we have to copy over the content from the default language first.
+		if (
+			$this->isLatest() === false &&
+			$language->isDefault() === false &&
+			$latest->exists($language) === false
+		) {
+			$latest->create(
+				fields: $latest->read(Language::ensure('default')),
+				language: $language
+			);
+		}
+
+		// check if creating is allowed
+		VersionRules::create($this, $fields, $language);
+
+		// track the changes
+		if ($this->id->is(VersionId::changes()) === true) {
+			(new Changes())->track($this->model);
+		}
 
 		$this->model->storage()->create(
 			versionId: $this->id,
@@ -95,42 +127,22 @@ class Version
 	}
 
 	/**
-	 * Deletes a version with all its languages
+	 * Deletes a version for a specific language
 	 */
-	public function delete(): void
+	public function delete(Language|string $language = 'default'): void
 	{
-		foreach (Languages::ensure() as $language) {
-			$this->model->storage()->delete($this->id, $language);
+		$language = Language::ensure($language);
+
+		// check if deleting is allowed
+		VersionRules::delete($this, $language);
+
+		$this->model->storage()->delete($this->id, $language);
+
+		// untrack the changes if the version does no longer exist
+		// in any of the available languages
+		if ($this->id->is(VersionId::changes()) === true && $this->exists('*') === false) {
+			(new Changes())->untrack($this->model);
 		}
-	}
-
-	/**
-	 * Returns the changed fields, compared to the given version
-	 */
-	public function diff(VersionId|string $versionId, Language|string $language = 'default'): array
-	{
-		$versionId = VersionId::from($versionId);
-
-		if ($versionId->is($this->id) === true) {
-			return [];
-		}
-
-		$a = $this->read($language) ?? [];
-		$b = $this->model->version($versionId)->read($language) ?? [];
-
-		return array_diff($b, $a);
-	}
-
-	/**
-	 * Ensure that the version exists and otherwise
-	 * throw an exception
-	 *
-	 * @throws \Kirby\Exception\NotFoundException if the version does not exist
-	 */
-	public function ensure(
-		Language|string $language = 'default'
-	): void {
-		$this->model->storage()->ensure($this->id, Language::ensure($language));
 	}
 
 	/**
@@ -138,7 +150,22 @@ class Version
 	 */
 	public function exists(Language|string $language = 'default'): bool
 	{
-		return $this->model->storage()->exists($this->id, Language::ensure($language));
+		// go through all possible languages to check if this
+		// version exists in any language
+		if ($language === '*') {
+			foreach (Languages::ensure() as $language) {
+				if ($this->exists($language) === true) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		return $this->model->storage()->exists(
+			$this->id,
+			Language::ensure($language)
+		);
 	}
 
 	/**
@@ -147,6 +174,89 @@ class Version
 	public function id(): VersionId
 	{
 		return $this->id;
+	}
+
+	/**
+	 * Returns whether the content of both versions
+	 * is identical
+	 */
+	public function isIdentical(
+		Version|VersionId|string $version,
+		Language|string $language = 'default'
+	): bool {
+		if (is_string($version) === true) {
+			$version = VersionId::from($version);
+		}
+
+		if ($version instanceof VersionId) {
+			$version = $this->model->version($version);
+		}
+
+		if ($version->id()->is($this->id) === true) {
+			return true;
+		}
+
+		$language = Language::ensure($language);
+
+		// read fields low-level from storage
+		$a = $this->read($language) ?? [];
+		$b = $version->read($language) ?? [];
+
+		// apply same preparation as for content
+		$a = $this->prepareFieldsForContent($a, $language);
+		$b = $this->prepareFieldsForContent($b, $language);
+
+		// remove additional fields that should not be
+		// considered in the comparison
+		unset(
+			$a['uuid'],
+			$b['uuid']
+		);
+
+		$a = Form::for(
+			model: $this->model,
+			props: [
+				'language' => $language->code(),
+				'values'   => $a,
+			]
+		)->values();
+
+		$b = Form::for(
+			model: $this->model,
+			props: [
+				'language' => $language->code(),
+				'values'   => $b
+			]
+		)->values();
+
+		ksort($a);
+		ksort($b);
+
+		return $a === $b;
+	}
+
+	/**
+	 * Checks if the version is the latest version
+	 */
+	public function isLatest(): bool
+	{
+		return $this->id->is('latest');
+	}
+
+	/**
+	 * Checks if the version is locked for the current user
+	 */
+	public function isLocked(Language|string $language = 'default'): bool
+	{
+		return $this->lock($language)->isLocked();
+	}
+
+	/**
+	 * Returns the lock object for the version
+	 */
+	public function lock(Language|string $language = 'default'): Lock
+	{
+		return Lock::for($this, $language);
 	}
 
 	/**
@@ -165,7 +275,10 @@ class Version
 		Language|string $language = 'default'
 	): int|null {
 		if ($this->exists($language) === true) {
-			return $this->model->storage()->modified($this->id, Language::ensure($language));
+			return $this->model->storage()->modified(
+				$this->id,
+				Language::ensure($language)
+			);
 		}
 
 		return null;
@@ -180,14 +293,26 @@ class Version
 		Language|string $fromLanguage,
 		VersionId|null $toVersionId = null,
 		Language|string|null $toLanguage = null,
-		ContentStorageHandler|null $toStorage = null
+		Storage|null $toStorage = null
 	): void {
-		$this->ensure($fromLanguage);
+		$fromVersion  = $this;
+		$fromLanguage = Language::ensure($fromLanguage);
+		$toLanguage   = Language::ensure($toLanguage ?? $fromLanguage);
+		$toVersion    = $this->model->version($toVersionId ?? $this->id);
+
+		// check if moving is allowed
+		VersionRules::move(
+			fromVersion: $fromVersion,
+			fromLanguage: $fromLanguage,
+			toVersion: $toVersion,
+			toLanguage: $toLanguage
+		);
+
 		$this->model->storage()->move(
-			fromVersionId: $this->id,
-			fromLanguage: Language::ensure($fromLanguage),
-			toVersionId: $toVersionId,
-			toLanguage: $toLanguage ? Language::ensure($toLanguage) : null,
+			fromVersionId: $fromVersion->id(),
+			fromLanguage: $fromLanguage,
+			toVersionId: $toVersion->id(),
+			toLanguage: $toLanguage,
 			toStorage: $toStorage
 		);
 	}
@@ -196,13 +321,28 @@ class Version
 	 * Prepare fields to be written by removing unwanted fields
 	 * depending on the language or model and by cleaning the field names
 	 */
-	protected function prepareFieldsBeforeWrite(array $fields, Language $language): array
-	{
+	protected function prepareFieldsBeforeWrite(
+		array $fields,
+		Language $language
+	): array {
 		// convert all field names to lower case
 		$fields = $this->convertFieldNamesToLowerCase($fields);
 
 		// make sure to store the right fields for the model
 		$fields = $this->model->contentFileData($fields, $language);
+
+		// add the editing user
+		if (
+			Lock::isEnabled() === true &&
+			$this->id->is(VersionId::changes()) === true
+		) {
+			$fields['lock'] = $this->model->kirby()->user()?->id();
+
+		// remove the lock field for any other version or
+		// if locking is disabled
+		} else {
+			unset($fields['lock']);
+		}
 
 		// the default language stores all fields
 		if ($language->isDefault() === true) {
@@ -232,27 +372,39 @@ class Version
 	}
 
 	/**
+	 * Make sure that the Content object receives the right set of fields
+	 * filtering fields used for lower logic (e.g. lock)
+	 */
+	protected function prepareFieldsForContent(
+		array $fields,
+		Language $language
+	): array {
+		unset($fields['lock']);
+
+		if ($this->model instanceof Page) {
+			unset($fields['slug']);
+		}
+
+		return $fields;
+	}
+
+	/**
 	 * This method can only be applied to the "changes" version.
 	 * It will copy all fields over to the "latest" version and delete
 	 * this version afterwards.
 	 */
 	public function publish(Language|string $language = 'default'): void
 	{
-		if ($this->id->is(VersionId::latest()) === true) {
-			throw new LogicException(
-				message: 'This version is already published'
-			);
-		}
-
 		$language = Language::ensure($language);
 
-		// the version needs to exist
-		$this->ensure($language);
+		// check if publishing is allowed
+		VersionRules::publish($this, $language);
 
-		// update the published version
-		$this->model->version(VersionId::latest())->save(
-			fields: $this->read($language),
-			language: $language
+		// update the latest version
+		$this->model->update(
+			input: $this->read($language),
+			languageCode: $language->code(),
+			validate: true
 		);
 
 		// delete the changes
@@ -269,6 +421,9 @@ class Version
 		$language = Language::ensure($language);
 
 		try {
+			// make sure that the version exists
+			VersionRules::read($this, $language);
+
 			$fields = $this->model->storage()->read($this->id, $language);
 			$fields = $this->prepareFieldsAfterRead($fields, $language);
 			return $fields;
@@ -284,11 +439,14 @@ class Version
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function replace(array $fields, Language|string $language = 'default'): void
-	{
-		$this->ensure($language);
-
+	public function replace(
+		array $fields,
+		Language|string $language = 'default'
+	): void {
 		$language = Language::ensure($language);
+
+		// check if replacing is allowed
+		VersionRules::replace($this, $fields, $language);
 
 		$this->model->storage()->update(
 			versionId: $this->id,
@@ -325,8 +483,11 @@ class Version
 	 */
 	public function touch(Language|string $language = 'default'): void
 	{
-		$this->ensure($language);
-		$this->model->storage()->touch($this->id, Language::ensure($language));
+		$language = Language::ensure($language);
+
+		VersionRules::touch($this, $language);
+
+		$this->model->storage()->touch($this->id, $language);
 	}
 
 	/**
@@ -336,11 +497,14 @@ class Version
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function update(array $fields, Language|string $language = 'default'): void
-	{
-		$this->ensure($language);
-
+	public function update(
+		array $fields,
+		Language|string $language = 'default'
+	): void {
 		$language = Language::ensure($language);
+
+		// check if updating is allowed
+		VersionRules::update($this, $fields, $language);
 
 		// merge the previous state with the new state to always
 		// update to a complete version

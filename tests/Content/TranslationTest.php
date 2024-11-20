@@ -154,7 +154,7 @@ class TranslationTest extends TestCase
 			slug: 'foo'
 		);
 
-		$this->assertSame(['title' => 'Test', 'slug' => 'foo'], $translation->version()->content()->toArray());
+		$this->assertSame(['title' => 'Test', 'slug' => 'foo'], $translation->version()->read());
 		$this->assertSame('foo', $translation->slug());
 	}
 

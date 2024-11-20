@@ -2,11 +2,11 @@
 
 namespace Kirby\Content;
 
+use Kirby\Cache\Cache;
 use Kirby\Cms\App;
 use Kirby\Cms\Files;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Pages;
-use Kirby\Cms\Site;
 use Kirby\Cms\Users;
 use Kirby\Toolkit\A;
 
@@ -22,16 +22,55 @@ use Kirby\Toolkit\A;
  */
 class Changes
 {
-	/**
-	 * Access helper for the field, in which changes are stored
-	 */
-	public function field(): Field
+	protected App $kirby;
+
+	public function __construct()
 	{
-		return $this
-			->site()
-			->version(VersionId::latest())
-			->content()
-			->get('changes');
+		$this->kirby = App::instance();
+	}
+
+	/**
+	 * Access helper for the cache, in which changes are stored
+	 */
+	public function cache(): Cache
+	{
+		return $this->kirby->cache('changes');
+	}
+
+	/**
+	 * Returns whether the cache has been populated
+	 */
+	public function cacheExists(): bool
+	{
+		return $this->cache()->get('__updated__') !== null;
+	}
+
+	/**
+	 * Returns the cache key for a given model
+	 */
+	public function cacheKey(ModelWithContent $model): string
+	{
+		return $model::CLASS_ALIAS . 's';
+	}
+
+	/**
+	 * Verify that the tracked model still really has changes.
+	 * If not, untrack and remove from collection.
+	 *
+	 * @template T of \Kirby\Cms\Files|\Kirby\Cms\Pages|\Kirby\Cms\Users
+	 * @param T $tracked
+	 * @return T
+	 */
+	public function ensure(Files|Pages|Users $tracked): Files|Pages|Users
+	{
+		foreach ($tracked as $model) {
+			if ($model->version(VersionId::changes())->exists('*') === false) {
+				$this->untrack($model);
+				$tracked->remove($model);
+			}
+		}
+
+		return $tracked;
 	}
 
 	/**
@@ -39,7 +78,37 @@ class Changes
 	 */
 	public function files(): Files
 	{
-		return $this->field()->toFiles();
+		$files = new Files([]);
+
+		foreach ($this->read('files') as $id) {
+			if ($file = $this->kirby->file($id)) {
+				$files->add($file);
+			}
+		}
+
+		return $this->ensure($files);
+	}
+
+	/**
+	 * Rebuilds the cache by finding all models with changes version
+	 */
+	public function generateCache(): void
+	{
+		$models = [
+			'files' => [],
+			'pages' => [],
+			'users' => []
+		];
+
+		foreach ($this->kirby->models() as $model) {
+			if ($model->version(VersionId::changes())->exists('*') === true) {
+				$models[$this->cacheKey($model)][] = (string)($model->uuid() ?? $model->id());
+			}
+		}
+
+		foreach ($models as $key => $changes) {
+			$this->update($key, $changes);
+		}
 	}
 
 	/**
@@ -47,15 +116,24 @@ class Changes
 	 */
 	public function pages(): Pages
 	{
-		return $this->field()->toPages();
+		/**
+		 * @var \Kirby\Cms\Pages $pages
+		 */
+		$pages = $this->kirby->site()->find(
+			false,
+			false,
+			...$this->read('pages')
+		);
+
+		return $this->ensure($pages);
 	}
 
 	/**
-	 * Access helper for the site object
+	 * Read the changes for a given model type
 	 */
-	public function site(): Site
+	public function read(string $key): array
 	{
-		return App::instance()->site();
+		return $this->cache()->get($key) ?? [];
 	}
 
 	/**
@@ -63,10 +141,12 @@ class Changes
 	 */
 	public function track(ModelWithContent $model): void
 	{
-		$changes = $this->field()->yaml();
-		$changes[] = (string)$model->uuid();
+		$key = $this->cacheKey($model);
 
-		$this->update($changes);
+		$changes   = $this->read($key);
+		$changes[] = (string)($model->uuid() ?? $model->id());
+
+		$this->update($key, $changes);
 	}
 
 	/**
@@ -74,28 +154,28 @@ class Changes
 	 */
 	public function untrack(ModelWithContent $model): void
 	{
+		// get the cache key for the model type
+		$key = $this->cacheKey($model);
+
+		// remove the model from the list of changes
 		$changes = A::filter(
-			$this->field()->yaml(),
-			fn ($uuid) => $uuid !== (string)$model->uuid()
+			$this->read($key),
+			fn ($id) => $id !== (string)($model->uuid() ?? $model->id())
 		);
 
-		$this->update($changes);
+		$this->update($key, $changes);
 	}
 
 	/**
 	 * Update the changes field
 	 */
-	public function update(array $changes): void
+	public function update(string $key, array $changes): void
 	{
 		$changes = array_unique($changes);
 		$changes = array_values($changes);
 
-		$this
-			->site()
-			->version(VersionId::latest())
-			->update([
-				'changes' => $changes
-			]);
+		$this->cache()->set($key, $changes);
+		$this->cache()->set('__updated__', time());
 	}
 
 	/**
@@ -103,6 +183,15 @@ class Changes
 	 */
 	public function users(): Users
 	{
-		return $this->field()->toUsers();
+		/**
+		 * @var \Kirby\Cms\Users $users
+		 */
+		$users = $this->kirby->users()->find(
+			false,
+			false,
+			...$this->read('users')
+		);
+
+		return $this->ensure($users);
 	}
 }

@@ -1,42 +1,53 @@
 <template>
-	<k-button-group
-		v-if="buttons.length"
-		layout="collapsed"
-		class="k-form-controls"
-	>
-		<k-button
-			v-for="button in buttons"
-			:key="button.text"
-			v-bind="button"
-			size="sm"
-			variant="filled"
-		/>
+	<div v-if="buttons.length" class="k-form-controls">
+		<k-button-group layout="collapsed">
+			<k-button
+				v-for="button in buttons"
+				:key="button.text"
+				:responsive="true"
+				v-bind="button"
+				size="sm"
+				variant="filled"
+			/>
+		</k-button-group>
 		<k-dropdown-content
-			v-if="isLocked"
-			ref="lock"
+			ref="dropdown"
 			align-x="end"
 			class="k-form-controls-dropdown"
 		>
-			<p>
-				{{ $t("form.locked") }}
-			</p>
-			<hr />
-			<dl>
-				<div>
-					<dt><k-icon type="user" /></dt>
-					<dd>{{ editor }}</dd>
-				</div>
-				<div>
-					<dt><k-icon type="clock" /></dt>
-					<dd>{{ modified }}</dd>
-				</div>
-			</dl>
-			<hr />
-			<k-dropdown-item :link="preview" icon="preview" target="_blank">
-				{{ $t("form.preview") }}
-			</k-dropdown-item>
+			<template v-if="isLocked">
+				<p>
+					{{ $t("form.locked") }}
+				</p>
+			</template>
+			<template v-else>
+				<p>
+					{{ $t("form.unsaved") }}
+				</p>
+			</template>
+			<template v-if="editor || modified">
+				<hr />
+				<dl>
+					<div v-if="editor">
+						<dt><k-icon type="user" /></dt>
+						<dd>{{ editor }}</dd>
+					</div>
+					<div v-if="modified">
+						<dt><k-icon type="clock" /></dt>
+						<dd>
+							{{ $library.dayjs(modified).format("YYYY-MM-DD HH:mm:ss") }}
+						</dd>
+					</div>
+				</dl>
+			</template>
+			<template v-if="preview">
+				<hr />
+				<k-dropdown-item :link="preview" icon="window">
+					{{ $t("form.preview") }}
+				</k-dropdown-item>
+			</template>
 		</k-dropdown-content>
-	</k-button-group>
+	</div>
 </template>
 
 <script>
@@ -47,13 +58,13 @@
 export default {
 	props: {
 		editor: String,
+		hasChanges: Boolean,
 		isLocked: Boolean,
-		isUnsaved: Boolean,
-		modified: String,
+		modified: [String, Date],
 		/**
 		 * Preview URL for changes
 		 */
-		preview: String
+		preview: [String, Boolean]
 	},
 	emits: ["discard", "submit"],
 	computed: {
@@ -65,12 +76,12 @@ export default {
 						dropdown: true,
 						text: this.editor,
 						icon: "lock",
-						click: () => this.$refs.lock.toggle()
+						click: () => this.$refs.dropdown.toggle()
 					}
 				];
 			}
 
-			if (this.isUnsaved === true) {
+			if (this.hasChanges === true) {
 				return [
 					{
 						theme: "notice",
@@ -83,6 +94,11 @@ export default {
 						text: this.$t("save"),
 						icon: "check",
 						click: () => this.$emit("submit")
+					},
+					{
+						theme: "notice",
+						icon: "dots",
+						click: () => this.$refs.dropdown.toggle()
 					}
 				];
 			}

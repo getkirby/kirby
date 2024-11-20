@@ -58,15 +58,6 @@ class JsonTest extends TestCase
 	}
 
 	/**
-	 * @covers ::encode
-	 */
-	public function testEncodeUnicode()
-	{
-		$string  = 'здравей';
-		$this->assertSame('"' . $string . '"', Json::encode($string));
-	}
-
-	/**
 	 * @covers ::decode
 	 */
 	public function testDecodeCorrupted1()
@@ -86,5 +77,35 @@ class JsonTest extends TestCase
 		$this->expectExceptionMessage('JSON string is invalid');
 
 		Json::decode('true');
+	}
+
+	/**
+	 * @covers ::encode
+	 */
+	public function testEncodePretty()
+	{
+		$array = [
+			'name'     => 'Homer',
+			'children' => ['Lisa', 'Bart', 'Maggie']
+		];
+
+		$data = Json::encode($array, pretty: true);
+		$this->assertSame('{
+    "name": "Homer",
+    "children": [
+        "Lisa",
+        "Bart",
+        "Maggie"
+    ]
+}', $data);
+	}
+
+	/**
+	 * @covers ::encode
+	 */
+	public function testEncodeUnicode()
+	{
+		$string  = 'здравей';
+		$this->assertSame('"' . $string . '"', Json::encode($string));
 	}
 }

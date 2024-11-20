@@ -2,6 +2,7 @@
 
 namespace Kirby\Content;
 
+use Kirby\Cms\File;
 use Kirby\Data\Data;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
@@ -78,6 +79,53 @@ class VersionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::content
+	 * @covers ::prepareFieldsForContent
+	 */
+	public function testContentPrepareFields(): void
+	{
+		$this->setUpSingleLanguage();
+
+		// for pages
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$version->update([
+			'lock' => 'test',
+			'slug' => 'foo',
+			'text' => 'Lorem ipsum'
+		]);
+
+		$this->assertSame([
+			'text' => 'Lorem ipsum'
+		], $version->content()->toArray());
+
+		// for files
+		$model = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $this->model
+		]);
+
+		$version = new Version(
+			model: $model,
+			id: VersionId::latest()
+		);
+
+		$version->create([
+			'lock'     => 'test',
+			'template' => 'foo',
+			'text'     => 'Lorem ipsum'
+		]);
+
+		$this->assertSame([
+			'template' => 'foo',
+			'text'     => 'Lorem ipsum',
+		], $version->content()->toArray());
+	}
+
+	/**
 	 * @covers ::contentFile
 	 */
 	public function testContentFileMultiLanguage(): void
@@ -127,17 +175,55 @@ class VersionTest extends TestCase
 		$this->assertContentFileDoesNotExist('de');
 
 		// with Language argument
-		$version->create([
+		$version->save([
 			'title' => 'Test'
 		], $this->app->language('en'));
 
 		// with string argument
-		$version->create([
+		$version->save([
 			'title' => 'Test'
 		], 'de');
 
 		$this->assertContentFileExists('en');
 		$this->assertContentFileExists('de');
+	}
+
+	/**
+	 * @covers ::create
+	 */
+	public function testCreateMultiLanguageWhenLatestTranslationIsMissing(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$latest = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$changes = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		$this->assertContentFileDoesNotExist('en', $latest->id());
+		$this->assertContentFileDoesNotExist('en', $changes->id());
+		$this->assertContentFileDoesNotExist('de', $latest->id());
+		$this->assertContentFileDoesNotExist('de', $changes->id());
+
+		// create the latest version for the default translation
+		$latest->save([
+			'title' => 'Test'
+		], $this->app->language('en'));
+
+		// create a changes version in the other language
+		$changes->save([
+			'title' => 'Translated Test',
+		], $this->app->language('de'));
+
+		$this->assertContentFileExists('en', $latest->id());
+		$this->assertContentFileDoesNotExist('en', $changes->id());
+		$this->assertContentFileExists('de', $latest->id());
+		$this->assertContentFileExists('de', $changes->id());
 	}
 
 	/**
@@ -154,7 +240,7 @@ class VersionTest extends TestCase
 
 		$this->assertContentFileDoesNotExist();
 
-		$version->create([
+		$version->save([
 			'title' => 'Test'
 		]);
 
@@ -190,7 +276,7 @@ class VersionTest extends TestCase
 		);
 
 		// primary language
-		$version->create([
+		$version->save([
 			'title'    => 'Test',
 			'uuid'     => '12345',
 			'Subtitle' => 'Subtitle',
@@ -238,7 +324,12 @@ class VersionTest extends TestCase
 		$this->assertContentFileExists('en');
 		$this->assertContentFileExists('de');
 
-		$version->delete();
+		$version->delete('en');
+
+		$this->assertContentFileDoesNotExist('en');
+		$this->assertContentFileExists('de');
+
+		$version->delete('de');
 
 		$this->assertContentFileDoesNotExist('en');
 		$this->assertContentFileDoesNotExist('de');
@@ -268,235 +359,9 @@ class VersionTest extends TestCase
 	}
 
 	/**
-	 * @covers ::diff
-	 */
-	public function testDiffMultiLanguage()
-	{
-		$this->setUpMultiLanguage();
-
-		$a = new Version(
-			model: $this->model,
-			id: VersionId::latest()
-		);
-
-		$b = new Version(
-			model: $this->model,
-			id: VersionId::changes()
-		);
-
-		$a->create($content = [
-			'title'    => 'Title',
-			'subtitle' => 'Subtitle',
-		], 'en');
-
-		$a->create($content, 'de');
-
-		$b->create($content, 'en');
-
-		$b->create([
-			'title'    => 'Title',
-			'subtitle' => 'Subtitle (changed)',
-		], 'de');
-
-		// no changes in English
-		$diffEN = $a->diff(VersionId::changes(), 'en');
-		$expectedEN = [];
-
-		$this->assertSame($expectedEN, $diffEN);
-
-		// changed subtitle in German
-		$diffDE = $a->diff(VersionId::changes(), 'de');
-		$expectedDE = ['subtitle' => 'Subtitle (changed)'];
-
-		$this->assertSame($expectedDE, $diffDE);
-	}
-
-	/**
-	 * @covers ::diff
-	 */
-	public function testDiffSingleLanguage()
-	{
-		$this->setUpSingleLanguage();
-
-		$a = new Version(
-			model: $this->model,
-			id: VersionId::latest()
-		);
-
-		$b = new Version(
-			model: $this->model,
-			id: VersionId::changes()
-		);
-
-		$a->create([
-			'title'    => 'Title',
-			'subtitle' => 'Subtitle',
-		]);
-
-		$b->create([
-			'title'    => 'Title',
-			'subtitle' => 'Subtitle (changed)',
-		]);
-
-		$diff = $a->diff(VersionId::changes());
-
-		// the result array should contain the changed fields
-		// the changed values
-		$expected = ['subtitle' => 'Subtitle (changed)'];
-
-		$this->assertSame($expected, $diff);
-	}
-
-	/**
-	 * @covers ::diff
-	 */
-	public function testDiffWithoutChanges()
-	{
-		$this->setUpSingleLanguage();
-
-		$a = new Version(
-			model: $this->model,
-			id: VersionId::latest()
-		);
-
-		$b = new Version(
-			model: $this->model,
-			id: VersionId::changes()
-		);
-
-		$a->create([
-			'title'    => 'Title',
-			'subtitle' => 'Subtitle',
-		]);
-
-		$b->create([
-			'title'    => 'Title',
-			'subtitle' => 'Subtitle',
-		]);
-
-		$diff = $a->diff(VersionId::changes());
-
-		$this->assertSame([], $diff);
-	}
-
-	/**
-	 * @covers ::diff
-	 */
-	public function testDiffWithSameVersion()
-	{
-		$this->setUpSingleLanguage();
-
-		$a = new Version(
-			model: $this->model,
-			id: VersionId::latest()
-		);
-
-		$a->create([
-			'title'    => 'Title',
-			'subtitle' => 'Subtitle',
-		]);
-
-		$diff = $a->diff(VersionId::latest());
-
-		$this->assertSame([], $diff);
-	}
-
-	/**
-	 * @covers ::ensure
-	 */
-	public function testEnsureMultiLanguage(): void
-	{
-		$this->setUpMultiLanguage();
-
-		$version = new Version(
-			model: $this->model,
-			id: VersionId::latest()
-		);
-
-		$this->createContentMultiLanguage();
-
-		$this->assertNull($version->ensure('en'));
-		$this->assertNull($version->ensure($this->app->language('en')));
-
-		$this->assertNull($version->ensure('de'));
-		$this->assertNull($version->ensure($this->app->language('de')));
-	}
-
-	/**
-	 * @covers ::ensure
-	 */
-	public function testEnsureSingleLanguage(): void
-	{
-		$this->setUpSingleLanguage();
-
-		$version = new Version(
-			model: $this->model,
-			id: VersionId::latest()
-		);
-
-		$this->createContentSingleLanguage();
-
-		$this->assertNull($version->ensure());
-	}
-
-	/**
-	 * @covers ::ensure
-	 */
-	public function testEnsureWhenMissingMultiLanguage(): void
-	{
-		$this->setUpMultiLanguage();
-
-		$version = new Version(
-			model: $this->model,
-			id: VersionId::changes()
-		);
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Version "changes (de)" does not already exist');
-
-		$version->ensure('de');
-	}
-
-	/**
-	 * @covers ::ensure
-	 */
-	public function testEnsureWhenMissingSingleLanguage(): void
-	{
-		$this->setUpSingleLanguage();
-
-		$version = new Version(
-			model: $this->model,
-			id: VersionId::changes()
-		);
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Version "changes" does not already exist');
-
-		$version->ensure();
-	}
-
-	/**
-	 * @covers ::ensure
-	 */
-	public function testEnsureWithInvalidLanguage(): void
-	{
-		$this->setUpMultiLanguage();
-
-		$version = new Version(
-			model: $this->model,
-			id: VersionId::latest()
-		);
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Invalid language: fr');
-
-		$version->ensure('fr');
-	}
-
-	/**
 	 * @covers ::exists
 	 */
-	public function testExistsPublishedMultiLanguage(): void
+	public function testExistsLatestMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -526,7 +391,36 @@ class VersionTest extends TestCase
 	/**
 	 * @covers ::exists
 	 */
-	public function testExistsPublishedSingleLanguage(): void
+	public function testExistsWithLanguageWildcard(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->createContentMultiLanguage();
+
+		$this->assertTrue($version->exists('en'));
+		$this->assertTrue($version->exists('de'));
+		$this->assertTrue($version->exists('*'));
+
+		// delete the German translation
+		$version->delete('de');
+
+		$this->assertTrue($version->exists('en'));
+		$this->assertFalse($version->exists('de'));
+
+		// The wildcard should now still return true
+		// because the English translation still exists
+		$this->assertTrue($version->exists('*'));
+	}
+
+	/**
+	 * @covers ::exists
+	 */
+	public function testExistsLatestSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -555,6 +449,154 @@ class VersionTest extends TestCase
 		);
 
 		$this->assertSame($id, $version->id());
+	}
+
+	/**
+	 * @covers ::isIdentical
+	 */
+	public function testIsIdenticalMultiLanguage()
+	{
+		$this->setUpMultiLanguage();
+
+		$a = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$b = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		$a->save($content = [
+			'title'    => 'Title',
+			'subtitle' => 'Subtitle',
+		], 'en');
+
+		$a->save($content, 'de');
+
+		$b->save($content, 'en');
+
+		$b->save([
+			'title'    => 'Title',
+			'subtitle' => 'Subtitle (changed)',
+		], 'de');
+
+		// no changes in English
+		$this->assertTrue($a->isIdentical(VersionId::changes(), 'en'));
+
+		// changed subtitle in German
+		$this->assertFalse($a->isIdentical(VersionId::changes(), 'de'));
+	}
+
+	/**
+	 * @covers ::isIdentical
+	 */
+	public function testIsIdenticalSingleLanguage()
+	{
+		$this->setUpSingleLanguage();
+
+		$a = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$b = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		$a->save($content = [
+			'title'    => 'Title',
+			'subtitle' => 'Subtitle',
+		]);
+
+		$b->save([
+			'title'    => 'Title',
+			'subtitle' => 'Subtitle (changed)',
+		]);
+
+		$this->assertFalse($a->isIdentical('changes'));
+	}
+
+	/**
+	 * @covers ::isIdentical
+	 */
+	public function testIsIdenticalWithoutChanges()
+	{
+		$this->setUpSingleLanguage();
+
+		$a = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$b = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		$a->save([
+			'title'    => 'Title',
+			'subtitle' => 'Subtitle',
+		]);
+
+		$b->save([
+			'title'    => 'Title',
+			'subtitle' => 'Subtitle',
+		]);
+
+		$this->assertTrue($a->isIdentical('changes'));
+	}
+
+	/**
+	 * @covers ::isIdentical
+	 */
+	public function testIsIdenticalWithSameVersion()
+	{
+		$this->setUpSingleLanguage();
+
+		$a = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$a->save([
+			'title'    => 'Title',
+			'subtitle' => 'Subtitle',
+		]);
+
+		$this->assertTrue($a->isIdentical('latest'));
+	}
+
+	/**
+	 * @covers ::isLocked
+	 */
+	public function testIsLocked(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->assertFalse($version->isLocked());
+	}
+
+	/**
+	 * @covers ::lock
+	 */
+	public function testLock(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->assertInstanceOf(Lock::class, $version->lock());
 	}
 
 	/**
@@ -689,9 +731,9 @@ class VersionTest extends TestCase
 	{
 		$this->setUpMultiLanguage();
 
-		$versionPublished = new Version(
+		$versionLatest = new Version(
 			model: $this->model,
-			id: $versionIdPublished = VersionId::latest()
+			id: $versionIdLatest = VersionId::latest()
 		);
 
 		$versionChanges = new Version(
@@ -699,34 +741,34 @@ class VersionTest extends TestCase
 			id: $versionIdChanges = VersionId::changes()
 		);
 
-		$this->assertContentFileDoesNotExist('en', $versionIdPublished);
+		$this->assertContentFileDoesNotExist('en', $versionIdLatest);
 		$this->assertContentFileDoesNotExist('en', $versionIdChanges);
 
-		$fileENPublished = $this->contentFile('en', $versionIdPublished);
+		$fileENLatest = $this->contentFile('en', $versionIdLatest);
 		$fileENChanges   = $this->contentFile('en', $versionIdChanges);
 
-		Data::write($fileENPublished, $content = [
+		Data::write($fileENLatest, $content = [
 			'title' => 'Test'
 		]);
 
-		$this->assertContentFileExists('en', $versionIdPublished);
+		$this->assertContentFileExists('en', $versionIdLatest);
 		$this->assertContentFileDoesNotExist('en', $versionIdChanges);
 
 		// move with string arguments
-		$versionPublished->move('en', $versionIdChanges);
+		$versionLatest->move('en', $versionIdChanges);
 
-		$this->assertContentFileDoesNotExist('en', $versionIdPublished);
+		$this->assertContentFileDoesNotExist('en', $versionIdLatest);
 		$this->assertContentFileExists('en', $versionIdChanges);
 
 		$this->assertSame($content, Data::read($fileENChanges));
 
 		// move the version back
-		$versionChanges->move('en', $versionIdPublished);
+		$versionChanges->move('en', $versionIdLatest);
 
 		$this->assertContentFileDoesNotExist('en', $versionIdChanges);
-		$this->assertContentFileExists('en', $versionIdPublished);
+		$this->assertContentFileExists('en', $versionIdLatest);
 
-		$this->assertSame($content, Data::read($fileENPublished));
+		$this->assertSame($content, Data::read($fileENLatest));
 	}
 
 	/**
@@ -735,34 +777,35 @@ class VersionTest extends TestCase
 	public function testPublish()
 	{
 		$this->setUpSingleLanguage();
+		$this->app->impersonate('kirby');
 
 		$version = new Version(
 			model: $this->model,
 			id: VersionId::changes()
 		);
 
-		Data::write($filePublished = $this->contentFile(null, VersionId::latest()), [
-			'title' => 'Title latest'
+		Data::write($fileLatest = $this->contentFile(null, VersionId::latest()), [
+			'title' => 'Title Latest'
 		]);
 
 		Data::write($fileChanges = $this->contentFile(null, VersionId::changes()), [
 			'title' => 'Title changes'
 		]);
 
-		$this->assertFileExists($filePublished);
+		$this->assertFileExists($fileLatest);
 		$this->assertFileExists($fileChanges);
 
 		$version->publish();
 
 		$this->assertFileDoesNotExist($fileChanges);
 
-		$this->assertSame('Title changes', Data::read($filePublished)['title']);
+		$this->assertSame('Title changes', Data::read($fileLatest)['title']);
 	}
 
 	/**
 	 * @covers ::publish
 	 */
-	public function testPublishAlreadyPublishedVersion()
+	public function testPublishAlreadyLatestVersion()
 	{
 		$this->setUpSingleLanguage();
 
@@ -823,7 +866,7 @@ class VersionTest extends TestCase
 	/**
 	 * @covers ::read
 	 */
-	public function testReadPublishedWithoutContentFile(): void
+	public function testReadLatestWithoutContentFile(): void
 	{
 		$this->setUpSingleLanguage();
 

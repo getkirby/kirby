@@ -13,7 +13,7 @@ use Kirby\Cms\ModelWithContent;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class MemoryContentStorageHandler extends ContentStorageHandler
+class MemoryStorage extends Storage
 {
 	/**
 	 * Cache instance, used to store content in memory
@@ -70,13 +70,10 @@ class MemoryContentStorageHandler extends ContentStorageHandler
 	 * Returns the stored content fields
 	 *
 	 * @return array<string, string>
-	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
 	public function read(VersionId $versionId, Language $language): array
 	{
-		$this->ensure($versionId, $language);
-		return $this->cache->get($this->cacheId($versionId, $language));
+		return $this->cache->get($this->cacheId($versionId, $language)) ?? [];
 	}
 
 	/**
