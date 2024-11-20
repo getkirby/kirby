@@ -126,12 +126,12 @@
 	"error.form.notSaved": "Formulář nemohl být uložen",
 
 	"error.language.code": "Zadejte prosím platný kód jazyka",
-	"error.language.create.permission": "You are not allowed to create a language",
-	"error.language.delete.permission": "You are not allowed to delete the language",
+	"error.language.create.permission": "Nemáte dovoleno vytvořit jazyk",
+	"error.language.delete.permission": "Nemáte dovoleno jazyk vymazat",
 	"error.language.duplicate": "Jazyk již existuje",
 	"error.language.name": "Zadejte prosím platné jméno jazyka",
 	"error.language.notFound": "Jazyk nebyl nalezen",
-	"error.language.update.permission": "You are not allowed to update the language",
+	"error.language.update.permission": "Nemáte dovoleno aktualizovat jazyk",
 
 	"error.layout.validation.block": "V rozvržení {layoutIndex} je v poli \"{field}\" v bloku {blockIndex} při použití \"{fieldset}\" typu chyba",
 	"error.layout.validation.settings": "Chyba v nastavení rozvržení {index}",
@@ -620,8 +620,8 @@
 	"stats.empty": "Žádná hlášení",
 	"status": "Stav",
 
-	"system.info.copy": "Copy info",
-	"system.info.copied": "System info copied",
+	"system.info.copy": "Kopírovat informace",
+	"system.info.copied": "Systémové informace zkopírovány",
 	"system.issues.content": "Složka content je zřejmě přístupná zvenčí",
 	"system.issues.eol.kirby": "Instalovaná verze Kirby dosáhla konce životnosti a nebude již dále dostávat bezpečnostní aktualizace",
 	"system.issues.eol.plugin": "Instalovaná verze doplňku { plugin } dosáhla konce životnosti a nebude již dále dostávat bezpečnostní aktualizace",
