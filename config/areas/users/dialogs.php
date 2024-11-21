@@ -54,7 +54,7 @@ return [
 						'email'       => '',
 						'password'    => '',
 						'translation' => $kirby->panelLanguage(),
-						'role'        => $role ?? $roles['options'][0]['value'] ?? null
+						'role'        => $role ?: $roles['options'][0]['value'] ?? null
 					]
 				]
 			];
