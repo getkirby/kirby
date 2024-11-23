@@ -23,7 +23,7 @@ abstract class Facade
 	/**
 	 * Proxy for all public instance calls
 	 */
-	public static function __callStatic(string $method, array $args = null)
+	public static function __callStatic(string $method, array|null $args = null)
 	{
 		return static::instance()->$method(...$args);
 	}

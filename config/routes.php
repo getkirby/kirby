@@ -33,7 +33,7 @@ return function (App $kirby) {
 			'pattern' => $api . '/(:all)',
 			'method'  => 'ALL',
 			'env'     => 'api',
-			'action'  => function (string $path = null) use ($kirby) {
+			'action'  => function (string|null $path = null) use ($kirby) {
 				if ($kirby->option('api') === false) {
 					return null;
 				}
@@ -125,7 +125,7 @@ return function (App $kirby) {
 			'pattern' => $panel . '/(:all?)',
 			'method'  => 'ALL',
 			'env'     => 'panel',
-			'action'  => function (string $path = null) {
+			'action'  => function (string|null $path = null) {
 				return Panel::router($path);
 			}
 		],

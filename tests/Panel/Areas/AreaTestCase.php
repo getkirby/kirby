@@ -155,7 +155,7 @@ abstract class AreaTestCase extends TestCase
 		$this->app->impersonate($user);
 	}
 
-	public function response(string $path = null, bool $toJson = false)
+	public function response(string|null $path = null, bool $toJson = false)
 	{
 		$response = Panel::router($path);
 
@@ -221,7 +221,7 @@ abstract class AreaTestCase extends TestCase
 		App::destroy();
 	}
 
-	public function view(string $path = null): array
+	public function view(string|null $path = null): array
 	{
 		return $this->response($path, true)['$view'];
 	}

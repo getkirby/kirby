@@ -385,7 +385,7 @@ class System
 	 * @throws \Kirby\Exception\Exception
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
-	public function register(string $license = null, string $email = null): bool
+	public function register(string|null $license = null, string|null $email = null): bool
 	{
 		$license = new License(
 			code: $license,

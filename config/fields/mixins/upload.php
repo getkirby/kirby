@@ -74,7 +74,7 @@ return [
 				return $map($file, $parent);
 			});
 		},
-		'uploadParent' => function (string $parentQuery = null) {
+		'uploadParent' => function (string|null $parentQuery = null) {
 			$parent = $this->model();
 
 			if ($parentQuery) {

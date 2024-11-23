@@ -96,7 +96,7 @@ trait Properties
 		}
 	}
 
-	protected function setProperties($props, array $keys = null)
+	protected function setProperties($props, array|null $keys = null)
 	{
 		foreach (get_object_vars($this) as $name => $default) {
 			if ($name === 'propertyData') {

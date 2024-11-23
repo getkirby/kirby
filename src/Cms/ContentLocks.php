@@ -173,7 +173,7 @@ class ContentLocks
 			) {
 				unset($this->data[$file][$id]);
 
-			// there is empty unlock data, but still lock data
+				// there is empty unlock data, but still lock data
 			} elseif (
 				isset($data['unlock']) === true &&
 				count($data['unlock']) === 0

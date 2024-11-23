@@ -285,7 +285,7 @@ class App
 	 *
 	 * @return $this
 	 */
-	protected function bakeRoots(array $roots = null): static
+	protected function bakeRoots(array|null $roots = null): static
 	{
 		$roots = array_merge($this->core->roots(), (array)$roots);
 		$this->roots = Ingredients::bake($roots);
@@ -297,7 +297,7 @@ class App
 	 *
 	 * @return $this
 	 */
-	protected function bakeUrls(array $urls = null): static
+	protected function bakeUrls(array|null $urls = null): static
 	{
 		$urls = array_merge($this->core->urls(), (array)$urls);
 		$this->urls = Ingredients::bake($urls);
@@ -331,7 +331,7 @@ class App
 	/**
 	 * Calls any Kirby route
 	 */
-	public function call(string $path = null, string $method = null): mixed
+	public function call(string|null $path = null, string|null $method = null): mixed
 	{
 		$path   ??= $this->path();
 		$method ??= $this->request()->method();
@@ -697,7 +697,7 @@ class App
 	 * @psalm-return ($lazy is false ? static : static|null)
 	 */
 	public static function instance(
-		self $instance = null,
+		self|null $instance = null,
 		bool $lazy = false
 	): static|null {
 		if ($instance !== null) {
@@ -852,7 +852,7 @@ class App
 	 *
 	 * @internal
 	 */
-	public function kirbytags(string $text = null, array $data = []): string
+	public function kirbytags(string|null $text = null, array $data = []): string
 	{
 		$data['kirby']  ??= $this;
 		$data['site']   ??= $data['kirby']->site();
@@ -872,7 +872,7 @@ class App
 	 *
 	 * @internal
 	 */
-	public function kirbytext(string $text = null, array $options = []): string
+	public function kirbytext(string|null $text = null, array $options = []): string
 	{
 		$text = $this->apply('kirbytext:before', compact('text'), 'text');
 		$text = $this->kirbytags($text, $options);
@@ -891,7 +891,7 @@ class App
 	 * Returns the language by code or shortcut (`default`, `current`).
 	 * Passing `null` is an alias for passing `current`
 	 */
-	public function language(string $code = null): Language|null
+	public function language(string|null $code = null): Language|null
 	{
 		if ($this->multilang() === false) {
 			return null;
@@ -909,7 +909,7 @@ class App
 	 *
 	 * @internal
 	 */
-	public function languageCode(string $languageCode = null): string|null
+	public function languageCode(string|null $languageCode = null): string|null
 	{
 		return $this->language($languageCode)?->code();
 	}
@@ -952,7 +952,7 @@ class App
 	 *
 	 * @internal
 	 */
-	public function markdown(string $text = null, array $options = null): string
+	public function markdown(string|null $text = null, array|null $options = null): string
 	{
 		// merge global options with local options
 		$options = array_merge(
@@ -1181,8 +1181,8 @@ class App
 	 * current request
 	 */
 	public function render(
-		string $path = null,
-		string $method = null
+		string|null $path = null,
+		string|null $method = null
 	): Response|null {
 		if (($_ENV['KIRBY_RENDER'] ?? true) === false) {
 			return null;
@@ -1441,7 +1441,7 @@ class App
 	 *
 	 * @return $this
 	 */
-	protected function setLanguages(array $languages = null): static
+	protected function setLanguages(array|null $languages = null): static
 	{
 		if ($languages !== null) {
 			$objects = [];
@@ -1462,7 +1462,7 @@ class App
 	 *
 	 * @return $this
 	 */
-	protected function setPath(string $path = null): static
+	protected function setPath(string|null $path = null): static
 	{
 		$this->path = $path !== null ? trim($path, '/') : null;
 		return $this;
@@ -1473,7 +1473,7 @@ class App
 	 *
 	 * @return $this
 	 */
-	protected function setRequest(array $request = null): static
+	protected function setRequest(array|null $request = null): static
 	{
 		if ($request !== null) {
 			$this->request = new Request($request);
@@ -1487,7 +1487,7 @@ class App
 	 *
 	 * @return $this
 	 */
-	protected function setRoles(array $roles = null): static
+	protected function setRoles(array|null $roles = null): static
 	{
 		if ($roles !== null) {
 			$this->roles = Roles::factory($roles);
@@ -1501,7 +1501,7 @@ class App
 	 *
 	 * @return $this
 	 */
-	protected function setSite(Site|array $site = null): static
+	protected function setSite(Site|array|null $site = null): static
 	{
 		if (is_array($site) === true) {
 			$site = new Site($site);
@@ -1528,7 +1528,7 @@ class App
 	 *
 	 * @internal
 	 */
-	public function smartypants(string $text = null): string
+	public function smartypants(string|null $text = null): string
 	{
 		$options = $this->option('smartypants', []);
 

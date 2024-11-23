@@ -210,7 +210,7 @@ class Field
 	 * the modified field will be returned. Otherwise it
 	 * will return the field value.
 	 */
-	public function value(string|Closure $value = null): mixed
+	public function value(string|Closure|null $value = null): mixed
 	{
 		if ($value === null) {
 			return $this->value;
