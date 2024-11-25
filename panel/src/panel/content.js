@@ -91,6 +91,31 @@ export default (panel) => {
 		isProcessing: false,
 
 		/**
+		 * Returns legacy content changes, stored in
+		 * localStorage if they exist.
+		 */
+		legacyChanges(api) {
+			if (this.isCurrent(api ?? panel.view.props.api) === false) {
+				throw new Error("The legacy state cannot be detected for another view");
+			}
+
+			const data = window.localStorage.getItem(this.legacyId(api));
+
+			if (!data) {
+				return null;
+			}
+
+			return JSON.parse(data).changes;
+		},
+
+		/**
+		 * Returns the localstorage id for legacy changes
+		 */
+		legacyId(api) {
+			return `kirby$content$${api}?language=${panel.language.code}`;
+		},
+
+		/**
 		 * Get the lock state for the current view
 		 * @param {String} api
 		 */
