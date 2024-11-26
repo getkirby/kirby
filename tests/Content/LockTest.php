@@ -319,6 +319,7 @@ class LockTest extends TestCase
 		);
 
 		$this->assertSame([
+			'isLegacy' => false,
 			'isLocked' => true,
 			'modified' => date('c', $modified),
 			'user'     => [
