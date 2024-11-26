@@ -3,7 +3,9 @@
 namespace Kirby\Api\Controller;
 
 use Kirby\Cms\ModelWithContent;
+use Kirby\Content\Lock;
 use Kirby\Content\VersionId;
+use Kirby\Filesystem\F;
 use Kirby\Form\Form;
 
 /**
@@ -19,11 +21,21 @@ use Kirby\Form\Form;
 class Changes
 {
 	/**
+	 * Cleans up legacy lock files
+	 */
+	protected static function cleanup(ModelWithContent $model): void
+	{
+		F::remove(Lock::legacyFile($model));
+	}
+
+	/**
 	 * Discards unsaved changes by deleting the changes version
 	 */
 	public static function discard(ModelWithContent $model): array
 	{
 		$model->version(VersionId::changes())->delete('current');
+
+		static::cleanup($model);
 
 		return [
 			'status' => 'ok'
@@ -40,6 +52,8 @@ class Changes
 			model: $model,
 			input: $input
 		);
+
+		static::cleanup($model);
 
 		// get the changes version
 		$changes = $model->version(VersionId::changes());
@@ -76,6 +90,8 @@ class Changes
 
 		$changes = $model->version(VersionId::changes());
 		$latest  = $model->version(VersionId::latest());
+
+		static::cleanup($model);
 
 		// combine the new field changes with the
 		// last published state

@@ -5,6 +5,7 @@ namespace Kirby\Content;
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Cms\Languages;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\User;
 use Kirby\Data\Data;
 use Kirby\Toolkit\Str;
@@ -42,7 +43,7 @@ class Lock
 		Language|string $language = 'default'
 	): static {
 
-		if ($legacy = static::legacy($version)) {
+		if ($legacy = static::legacy($version->model())) {
 			return $legacy;
 		}
 
@@ -143,12 +144,10 @@ class Lock
 	 * Looks for old .lock files and tries to create a
 	 * usable lock instance from them
 	 */
-	public static function legacy(Version $version): static|null
+	public static function legacy(ModelWithContent $model): static|null
 	{
-		$model = $version->model();
 		$kirby = $model->kirby();
-		$root  = $model::CLASS_ALIAS === 'file' ? dirname($model->root()) : $model->root();
-		$file  = $root . '/.lock';
+		$file  = static::legacyFile($model);
 		$id    = '/' . $model->id();
 
 		// no legacy lock file? no lock.
@@ -173,6 +172,15 @@ class Lock
 			modified: $data['lock']['time'],
 			legacy: true
 		);
+	}
+
+	/**
+	 * Returns the absolute path to a legacy lock file
+	 */
+	public static function legacyFile(ModelWithContent $model): string
+	{
+		$root = $model::CLASS_ALIAS === 'file' ? dirname($model->root()) : $model->root();
+		return $root . '/.lock';
 	}
 
 	/**
