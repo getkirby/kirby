@@ -157,6 +157,28 @@ class LockTest extends TestCase
 	}
 
 	/**
+	 * @covers ::for
+	 */
+	public function testForWithLegacyLock()
+	{
+		$page = $this->app->page('test');
+		$file = $page->root() . '/.lock';
+
+		Data::write($file, [
+			'/' . $page->id() => [
+				'lock' => [
+					'user' => 'editor',
+					'time' => $time = time()
+				]
+			]
+		], 'yml');
+
+		$lock = Lock::for($page->version('changes'));
+		$this->assertInstanceOf(Lock::class, $lock);
+		$this->assertTrue($lock->isLocked());
+	}
+
+	/**
 	 * @covers ::isActive
 	 */
 	public function testIsActive()
@@ -329,6 +351,20 @@ class LockTest extends TestCase
 		$this->assertTrue($lock->isLegacy());
 		$this->assertSame($this->app->user('editor'), $lock->user());
 		$this->assertSame($time, $lock->modified());
+	}
+
+	/**
+	 * @covers ::legacy
+	 */
+	public function testLegacyWithoutLockInfo()
+	{
+		$page = $this->app->page('test');
+		$file = $page->root() . '/.lock';
+
+		Data::write($file, [], 'yml');
+
+		$lock = Lock::legacy($page);
+		$this->assertNull($lock);
 	}
 
 	/**
