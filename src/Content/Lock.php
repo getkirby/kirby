@@ -179,7 +179,10 @@ class Lock
 	 */
 	public static function legacyFile(ModelWithContent $model): string
 	{
-		$root = $model::CLASS_ALIAS === 'file' ? dirname($model->root()) : $model->root();
+		$root = match ($model::CLASS_ALIAS) {
+			'file'  => dirname($model->root()),
+			default => $model->root()
+		};
 		return $root . '/.lock';
 	}
 
