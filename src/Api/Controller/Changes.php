@@ -21,7 +21,13 @@ use Kirby\Form\Form;
 class Changes
 {
 	/**
-	 * Cleans up legacy lock files
+	 * Cleans up legacy lock files. The `discard`, `publish` and `save` actions
+	 * are perfect for this cleanup job. They will be stopped early if
+	 * the lock is still active and otherwise, we can use them to clean
+	 * up outdated .lock files to keep the content folders clean. This
+	 * can be removed as soon as old .lock files should no longer be around.
+	 *
+	 * @todo Remove in 6.0.0
 	 */
 	protected static function cleanup(ModelWithContent $model): void
 	{
@@ -35,6 +41,8 @@ class Changes
 	{
 		$model->version(VersionId::changes())->delete('current');
 
+		// Removes the old .lock file when it is no longer needed
+		// @todo Remove in 6.0.0
 		static::cleanup($model);
 
 		return [
@@ -53,6 +61,8 @@ class Changes
 			input: $input
 		);
 
+		// Removes the old .lock file when it is no longer needed
+		// @todo Remove in 6.0.0
 		static::cleanup($model);
 
 		// get the changes version
@@ -91,6 +101,8 @@ class Changes
 		$changes = $model->version(VersionId::changes());
 		$latest  = $model->version(VersionId::latest());
 
+		// Removes the old .lock file when it is no longer needed
+		// @todo Remove in 6.0.0
 		static::cleanup($model);
 
 		// combine the new field changes with the
