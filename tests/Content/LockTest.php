@@ -5,6 +5,7 @@ namespace Kirby\Content;
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Cms\User;
+use Kirby\Data\Data;
 
 /**
  * @coversDefaultClass \Kirby\Content\Lock
@@ -216,6 +217,18 @@ class LockTest extends TestCase
 	}
 
 	/**
+	 * @covers ::isLegacy
+	 */
+	public function testIsLegacy()
+	{
+		$lock = new Lock();
+		$this->assertFalse($lock->isLegacy());
+
+		$lock = new Lock(legacy: true);
+		$this->assertTrue($lock->isLegacy());
+	}
+
+	/**
 	 * @covers ::isLocked
 	 */
 	public function testIsLocked()
@@ -290,6 +303,88 @@ class LockTest extends TestCase
 		);
 
 		$this->assertFalse($lock->isLocked());
+	}
+
+	/**
+	 * @covers ::legacy
+	 */
+	public function testLegacy()
+	{
+		$page = $this->app->page('test');
+		$file = $page->root() . '/.lock';
+
+		Data::write($file, [
+			'/' . $page->id() => [
+				'lock' => [
+					'user' => 'editor',
+					'time' => $time = time()
+				]
+			]
+		], 'yml');
+
+		$lock = Lock::legacy($page);
+
+		$this->assertInstanceOf(Lock::class, $lock);
+		$this->assertTrue($lock->isLocked());
+		$this->assertTrue($lock->isLegacy());
+		$this->assertSame($this->app->user('editor'), $lock->user());
+		$this->assertSame($time, $lock->modified());
+	}
+
+	/**
+	 * @covers ::legacy
+	 */
+	public function testLegacyWithOutdatedFile()
+	{
+		$page = $this->app->page('test');
+		$file = $page->root() . '/.lock';
+
+		Data::write($file, [
+			'/' . $page->id() => [
+				'lock' => [
+					'user' => 'editor',
+					'time' => time() - 60 * 60 * 24
+				],
+			]
+		], 'yml');
+
+		$lock = Lock::legacy($page);
+
+		$this->assertInstanceOf(Lock::class, $lock);
+		$this->assertFalse($lock->isLocked());
+	}
+
+	/**
+	 * @covers ::legacy
+	 */
+	public function testLegacyWithUnlockedFile()
+	{
+		$page = $this->app->page('test');
+		$file = $page->root() . '/.lock';
+
+		Data::write($file, [
+			'/' . $page->id() => [
+				'lock' => [
+					'user' => 'editor',
+					'time' => time()
+				],
+				'unlock' => ['admin']
+			]
+		], 'yml');
+
+		$lock = Lock::legacy($page);
+		$this->assertNull($lock);
+	}
+
+	/**
+	 * @covers ::legacyFile
+	 */
+	public function testLegacyFile()
+	{
+		$page = $this->app->page('test');
+		$expected = $page->root() . '/.lock';
+
+		$this->assertSame($expected, Lock::legacyFile($page));
 	}
 
 	/**
