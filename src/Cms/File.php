@@ -611,12 +611,6 @@ class File extends ModelWithContent
 			case 'page':
 				$preview = $parent->blueprint()->preview();
 
-				// user has no permission to preview page,
-				// also return null for file preview
-				if ($preview === false) {
-					return null;
-				}
-
 				// the page has a custom preview setting,
 				// thus the file is only accessible through
 				// the direct media URL
