@@ -291,4 +291,21 @@
 
 :root:has(.k-panel[data-theme="dark"]) {
 	color-scheme: dark;
+
+	--color-l-max: 100%;
+	--color-l-100: 98%;
+	--color-l-200: 94%;
+	--color-l-250: 90%;
+	--color-l-300: 85%;
+	--color-l-400: 75%;
+	--color-l-500: 65%;
+	--color-l-600: 50%;
+	--color-l-700: 40%;
+	--color-l-750: 35%;
+	--color-l-800: 25%;
+	--color-l-850: 18%;
+	--color-l-900: 13%;
+	--color-l-950: 8%;
+	--color-l-1000: 5%;
+	--color-l-min: 0%;
 }
