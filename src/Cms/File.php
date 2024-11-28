@@ -338,13 +338,12 @@ class File extends ModelWithContent
 			return false;
 		}
 
-		static $accessible = [];
+		static $accessible   = [];
+		$role                = $this->kirby()->user()?->role()->id() ?? '__none__';
+		$template            = $this->template() ?? '__none__';
+		$accessible[$role] ??= [];
 
-		if ($template = $this->template()) {
-			return $accessible[$template] ??= $this->permissions()->can('access');
-		}
-
-		return $accessible['__none__'] ??= $this->permissions()->can('access');
+		return $accessible[$role][$template] ??= $this->permissions()->can('access');
 	}
 
 	/**
@@ -363,13 +362,12 @@ class File extends ModelWithContent
 			return false;
 		}
 
-		static $listable = [];
+		static $listable   = [];
+		$role              = $this->kirby()->user()?->role()->id() ?? '__none__';
+		$template          = $this->template() ?? '__none__';
+		$listable[$role] ??= [];
 
-		if ($template = $this->template()) {
-			return $listable[$template] ??= $this->permissions()->can('list');
-		}
-
-		return $listable['__none__'] ??= $this->permissions()->can('list');
+		return $listable[$role][$template] ??= $this->permissions()->can('list');
 	}
 
 	/**
@@ -379,13 +377,12 @@ class File extends ModelWithContent
 	 */
 	public function isReadable(): bool
 	{
-		static $readable = [];
+		static $readable   = [];
+		$role              = $this->kirby()->user()?->role()->id() ?? '__none__';
+		$template          = $this->template() ?? '__none__';
+		$readable[$role] ??= [];
 
-		if ($template = $this->template()) {
-			return $readable[$template] ??= $this->permissions()->can('read');
-		}
-
-		return $readable['__none__'] ??= $this->permissions()->can('read');
+		return $readable[$role][$template] ??= $this->permissions()->can('read');
 	}
 
 	/**
@@ -632,12 +629,6 @@ class File extends ModelWithContent
 		switch ($parent::CLASS_ALIAS) {
 			case 'page':
 				$preview = $parent->blueprint()->preview();
-
-				// user has no permission to preview page,
-				// also return null for file preview
-				if ($preview === false) {
-					return null;
-				}
 
 				// the page has a custom preview setting,
 				// thus the file is only accessible through

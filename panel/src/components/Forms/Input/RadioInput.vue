@@ -22,7 +22,10 @@ import { required as validateRequired } from "vuelidate/lib/validators";
 export const props = {
 	mixins: [InputProps, options],
 	props: {
-		columns: Number,
+		columns: {
+			default: 1,
+			type: Number
+		},
 		reset: {
 			default: true,
 			type: Boolean

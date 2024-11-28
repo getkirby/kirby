@@ -4,7 +4,6 @@ namespace Kirby\Uuid;
 
 use Generator;
 use Kirby\Cms\App;
-use Kirby\Cms\File;
 
 /**
  * @coversDefaultClass \Kirby\Uuid\FileUuid

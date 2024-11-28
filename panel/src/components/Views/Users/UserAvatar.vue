@@ -1,5 +1,10 @@
 <template>
-	<k-button :title="$t('avatar')" class="k-user-view-image" @click="open">
+	<k-button
+		:disabled="isLocked"
+		:title="$t('avatar')"
+		class="k-user-view-image"
+		@click="open"
+	>
 		<template v-if="model.avatar">
 			<k-image-frame :cover="true" :src="model.avatar" />
 			<k-dropdown-content
@@ -30,6 +35,7 @@
  */
 export default {
 	props: {
+		isLocked: Boolean,
 		model: Object
 	},
 	methods: {

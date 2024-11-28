@@ -5,7 +5,7 @@
 
 			<template #buttons>
 				<k-button
-					:disabled="!$panel.permissions.users.create"
+					:disabled="!canCreate"
 					:text="$t('user.create')"
 					icon="add"
 					size="sm"
@@ -30,6 +30,7 @@
  */
 export default {
 	props: {
+		canCreate: Boolean,
 		role: Object,
 		roles: Array,
 		search: String,

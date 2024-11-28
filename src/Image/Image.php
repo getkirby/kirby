@@ -28,6 +28,7 @@ class Image extends File
 	protected Dimensions|null $dimensions = null;
 
 	public static array $resizableTypes = [
+		'avif',
 		'jpg',
 		'jpeg',
 		'gif',

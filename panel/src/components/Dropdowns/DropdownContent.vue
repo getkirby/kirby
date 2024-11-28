@@ -338,6 +338,7 @@ export default {
 :root {
 	--dropdown-color-bg: var(--color-black);
 	--dropdown-color-text: var(--color-white);
+	--dropdown-color-current: var(--color-blue-500);
 	--dropdown-color-hr: rgba(255, 255, 255, 0.25);
 	--dropdown-padding: var(--spacing-2);
 	--dropdown-rounded: var(--rounded);
@@ -383,6 +384,7 @@ export default {
 .k-dropdown-content[data-theme="light"] {
 	--dropdown-color-bg: var(--color-white);
 	--dropdown-color-text: var(--color-black);
+	--dropdown-color-current: var(--color-blue-800);
 	--dropdown-color-hr: rgba(0, 0, 0, 0.1);
 }
 </style>

@@ -574,33 +574,24 @@ class User extends ModelWithContent
 	}
 
 	/**
-	 * Returns all available roles
-	 * for this user, that can be selected
-	 * by the authenticated user
+	 * Returns all available roles for this user,
+	 * that the authenticated user can change to.
+	 *
+	 * For all roles the current user can create
+	 * use `$kirby->roles()->canBeCreated()`.
 	 */
 	public function roles(): Roles
 	{
 		$kirby = $this->kirby();
 		$roles = $kirby->roles();
 
-		// a collection with just the one role of the user
-		$myRole = $roles->filter('id', $this->role()->id());
-
-		// if there's an authenticated user …
-		// admin users can select pretty much any role
-		if ($kirby->user()?->isAdmin() === true) {
-			// except if the user is the last admin
-			if ($this->isLastAdmin() === true) {
-				// in which case they have to stay admin
-				return $myRole;
-			}
-
-			// return all roles for mighty admins
-			return $roles;
+		// if the authenticated user doesn't have the permission to change
+		// the role of this user, only the current role is available
+		if ($this->permissions()->can('changeRole') === false) {
+			return $roles->filter('id', $this->role()->id());
 		}
 
-		// any other user can only keep their role
-		return $myRole;
+		return $roles->canBeCreated();
 	}
 
 	/**
@@ -666,7 +657,7 @@ class User extends ModelWithContent
 	 */
 	protected function siblingsCollection(): Users
 	{
-		return $this->kirby()->users();
+		return $this->kirby()->users()->sortBy('username', 'asc');
 	}
 
 	/**

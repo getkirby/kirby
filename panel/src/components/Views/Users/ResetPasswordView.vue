@@ -3,6 +3,7 @@
 		<form @submit.prevent="submit">
 			<k-header>
 				{{ $t("view.resetPassword") }}
+
 				<template #buttons>
 					<k-button
 						icon="check"

@@ -8,21 +8,21 @@
 					icon: 'email',
 					text: `${model.email}`,
 					title: `${$t('email')}: ${model.email}`,
-					disabled: !permissions.changeEmail || isLocked,
+					disabled: !canChangeEmail,
 					click: () => $dialog(model.link + '/changeEmail')
 				},
 				{
 					icon: 'bolt',
 					text: `${model.role}`,
 					title: `${$t('role')}: ${model.role}`,
-					disabled: !permissions.changeRole || isLocked,
+					disabled: !canChangeRole,
 					click: () => $dialog(model.link + '/changeRole')
 				},
 				{
 					icon: 'translate',
 					text: `${model.language}`,
 					title: `${$t('language')}: ${model.language}`,
-					disabled: !permissions.changeLanguage || isLocked,
+					disabled: !canChangeLanguage,
 					click: () => $dialog(model.link + '/changeLanguage')
 				}
 			]"
@@ -37,8 +37,14 @@
  */
 export default {
 	props: {
+		canChangeEmail: Boolean,
+		canChangeLanguage: Boolean,
+		canChangeRole: Boolean,
 		isLocked: Boolean,
 		model: Object,
+		/**
+		 * @deprecated Will be remove in v5
+		 */
 		permissions: Object
 	}
 };

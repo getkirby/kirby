@@ -256,7 +256,7 @@ return [
 		},
 		'submit' => function (string $languageCode, string $translationKey) {
 			Find::language($languageCode)->variable($translationKey, true)->update(
-				App::instance()->request()->get('value')
+				App::instance()->request()->get('value', '')
 			);
 
 			return true;

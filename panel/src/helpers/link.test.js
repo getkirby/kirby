@@ -53,6 +53,12 @@ describe("$helper.link.getPageUUID()", () => {
 		expect(link.getPageUUID("/@/page/324hjk24")).toStrictEqual(
 			"page://324hjk24"
 		);
+		expect(link.getPageUUID("/en/@/page/324hjk24")).toStrictEqual(
+			"page://324hjk24"
+		);
+		expect(link.getPageUUID("/de/@/page/324hjk24")).toStrictEqual(
+			"page://324hjk24"
+		);
 	});
 });
 
@@ -67,6 +73,7 @@ describe("$helper.link.isPageUUID()", () => {
 	it("should detect UUID", () => {
 		expect(link.isPageUUID("page://324hjk24")).toBeTruthy();
 		expect(link.isPageUUID("/@/page/324hjk24")).toBeTruthy();
+		expect(link.isPageUUID("/en/@/page/324hjk24")).toBeTruthy();
 		expect(link.isPageUUID("site://")).toBeTruthy();
 	});
 });
