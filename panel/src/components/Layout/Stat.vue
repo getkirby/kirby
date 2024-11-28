@@ -82,22 +82,24 @@ export default {
 
 <style>
 :root {
-	--stat-value-text-size: var(--text-2xl);
+	--stat-color-back: var(--item-color-back);
+	--stat-color-hover-back: light-dark(var(--color-gray-100), var(--color-gray-1000));
 	--stat-info-text-color: var(--color-text-dimmed);
+	--stat-value-text-size: var(--text-2xl);
 }
 
 .k-stat {
 	display: flex;
 	flex-direction: column;
 	padding: var(--spacing-3) var(--spacing-6);
-	background: var(--color-white);
+	background: var(--stat-color-back);
 	border-radius: var(--rounded);
 	box-shadow: var(--shadow);
 	line-height: var(--leading-normal);
 }
 .k-stat.k-link:hover {
 	cursor: pointer;
-	background: var(--color-gray-100);
+	background: var(--stat-color-hover-back);
 }
 .k-stat :where(dt, dd) {
 	display: block;

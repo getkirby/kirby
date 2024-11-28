@@ -44,11 +44,6 @@ export default {
 	--code-padding: var(--spacing-3);
 }
 
-.k-panel[data-theme="dark"] {
-	--code-color-back: var(--color-gray-100);
-	--code-color-text: var(--color-text);
-}
-
 code {
 	font-family: var(--code-font-family);
 	font-size: var(--code-font-size);

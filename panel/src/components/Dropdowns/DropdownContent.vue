@@ -352,10 +352,6 @@ export default {
 	--dropdown-shadow: var(--shadow-xl);
 }
 
-.k-panel[data-theme="dark"] {
-	--dropdown-color-hr: hsla(0, 0%, var(--color-l-max), 0.1);
-}
-
 .k-dropdown-content {
 	--dropdown-x: 0;
 	--dropdown-y: 0;

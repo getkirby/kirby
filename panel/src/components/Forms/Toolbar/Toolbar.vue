@@ -136,7 +136,7 @@ export default {
 
 :where(.k-textarea-input, .k-writer-input):not(:focus-within) {
 	--toolbar-text: var(--color-gray-400);
-	--toolbar-border: var(--color-light);
+	--toolbar-border: var(--panel-color-back);
 }
 /** TODO: .k-toolbar:not([data-inline="true"]):has(~ :focus-within) */
 :where(.k-textarea-input, .k-writer-input):focus-within

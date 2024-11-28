@@ -210,7 +210,7 @@ export default {
 	padding-bottom: var(--spacing-2);
 	font-size: var(--text-sm);
 	background: var(--color-gray-100);
-	border-inline-start: 1px solid var(--color-light);
+	border-inline-start: 1px solid var(--panel-color-back);
 	color: var(--color-gray-500);
 }
 .k-layout-toolbar:hover {

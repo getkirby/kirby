@@ -50,7 +50,7 @@ export default {
 
 <style>
 :root {
-	--dialog-color-back: var(--color-light);
+	--dialog-color-back: var(--panel-color-back);
 	--dialog-color-text: currentColor;
 	--dialog-margin: var(--spacing-6);
 	--dialog-padding: var(--spacing-6);

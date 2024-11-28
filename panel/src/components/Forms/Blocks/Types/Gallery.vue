@@ -107,6 +107,6 @@ export default {
 	background: var(--color-gray-250);
 }
 .k-block-type-gallery-placeholder {
-	background: var(--color-light);
+	background: var(--panel-color-back);
 }
 </style>

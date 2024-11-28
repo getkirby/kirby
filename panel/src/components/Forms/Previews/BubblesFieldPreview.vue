@@ -61,7 +61,7 @@ export default {
 
 <style>
 .k-bubbles-field-preview {
-	--bubble-back: var(--color-light);
+	--bubble-back: var(--panel-color-back);
 	--bubble-text: var(--color-black);
 
 	padding: 0.375rem var(--table-cell-padding);

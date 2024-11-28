@@ -140,13 +140,14 @@ export default {
 :root {
 	--item-button-height: var(--height-md);
 	--item-button-width: var(--height-md);
+	--item-color-back: light-dark(var(--color-white), var(--color-gray-950));
 	--item-height: auto;
 	--item-height-cardlet: calc(var(--height-md) * 3);
 }
 
 .k-item {
 	position: relative;
-	background: var(--color-white);
+	background: var(--item-color-back);
 	box-shadow: var(--shadow);
 	border-radius: var(--rounded);
 	min-height: var(--item-height);

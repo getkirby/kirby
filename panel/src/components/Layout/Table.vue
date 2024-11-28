@@ -370,16 +370,12 @@ export default {
 <style>
 :root {
 	--table-cell-padding: var(--spacing-3);
-	--table-color-back: var(--color-white);
-	--table-color-border: var(--color-light);
-	--table-color-hover: var(--color-gray-100);
-	--table-color-th-back: var(--color-gray-100);
+	--table-color-back: light-dark(var(--color-white), var(--color-gray-950));
+	--table-color-border: var(--panel-color-back);
+	--table-color-hover: light-dark(var(--color-gray-100), var(--color-gray-1000));
+	--table-color-th-back: light-dark(var(--color-gray-100), var(--color-gray-1000));
 	--table-color-th-text: var(--color-text-dimmed);
 	--table-row-height: var(--input-height);
-}
-
-.k-panel[data-theme="dark"] {
-	--table-color-border: var(--color-border);
 }
 
 /* Table Layout */

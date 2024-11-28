@@ -107,7 +107,7 @@ export default {
 
 <style>
 :root {
-	--input-color-back: var(--color-white);
+	--input-color-back: light-dark(var(--color-white), var(--color-gray-850));
 	--input-color-border: var(--color-border);
 	--input-color-description: var(--color-text-dimmed);
 	--input-color-icon: currentColor;
@@ -194,7 +194,7 @@ export default {
 
 /* Disabled state */
 .k-input[data-disabled="true"] {
-	--input-color-back: var(--color-light);
+	--input-color-back: var(--panel-color-back);
 	--input-color-icon: var(--color-gray-600);
 	pointer-events: none;
 }

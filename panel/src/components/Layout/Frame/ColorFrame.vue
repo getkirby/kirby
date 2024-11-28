@@ -54,8 +54,4 @@ export default {
 	background: var(--color-frame-back);
 	content: "";
 }
-
-.k-panel[data-theme="dark"] {
-	--color-frame-pattern: var(--pattern-dark);
-}
 </style>

@@ -103,7 +103,7 @@ export default {
 
 :where(.k-checkboxes-field, .k-radio-field)
 	.k-choice-input:not([aria-disabled="true"]) {
-	background: var(--input-color-back);
+	background: var(--item-color-back);
 	box-shadow: var(--shadow);
 }
 

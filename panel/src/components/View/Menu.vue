@@ -98,8 +98,8 @@ export default {
 :root {
 	--menu-button-height: var(--height);
 	--menu-button-width: 100%;
-	--menu-color-back: var(--color-gray-250);
-	--menu-color-border: var(--color-gray-300);
+	--menu-color-back: light-dark(var(--color-gray-250), var(--color-gray-950));
+	--menu-color-border: light-dark(var(--color-gray-300), var(--color-gray-850));
 	--menu-display: none;
 	--menu-display-backdrop: block;
 	--menu-padding: var(--spacing-3);
@@ -171,11 +171,8 @@ export default {
 	flex-shrink: 0;
 }
 .k-panel-menu-button[aria-current="true"] {
-	--button-color-back: var(--color-white);
+	--button-color-back: light-dark(var(--color-white), var(--color-gray-850));
 	box-shadow: var(--shadow);
-}
-.k-panel[data-theme="dark"] .k-panel-menu-button[aria-current="true"] {
-	--button-color-back: var(--color-gray-400);
 }
 
 /* Outline should not vanish behind other buttons */

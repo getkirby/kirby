@@ -128,7 +128,7 @@ export default {
 /** TODO: .k-toggles-input li:has(input[disabled]) label */
 .k-toggles-input li[data-disabled="true"] label {
 	color: var(--color-text-dimmed);
-	background: var(--color-light);
+	background: var(--panel-color-back);
 }
 .k-toggles-input .k-icon + .k-toggles-text {
 	margin-inline-start: var(--spacing-2);

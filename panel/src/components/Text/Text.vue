@@ -49,7 +49,7 @@ export default {
 :root {
 	--text-font-size: 1em;
 	--text-line-height: 1.5;
-	--link-color: var(--color-blue-800);
+	--link-color: light-dark(var(--color-blue-800), var(--color-blue-600));
 	--link-underline-offset: 2px;
 }
 

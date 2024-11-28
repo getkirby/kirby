@@ -16,18 +16,3 @@
 	--pattern: var(--pattern-dark);
 }
 
-.k-panel[data-theme="dark"] {
-	--pattern-light: repeating-conic-gradient(
-			hsl(0, 0%, 90%) 0% 25%,
-			hsl(0, 0%, 80%) 0% 50%
-		)
-		50% / var(--pattern-size) var(--pattern-size);
-
-	--pattern-dark: repeating-conic-gradient(
-			hsla(0, 0%, 9%) 0% 25%,
-			hsl(0, 0%, 16%) 0% 50%
-		)
-		50% / var(--pattern-size) var(--pattern-size);
-
-	--pattern: var(--pattern-dark);
-}

@@ -305,14 +305,10 @@ export default {
 
 /** Filled Buttons **/
 .k-button:where([data-variant="filled"]) {
-	--button-color-back: var(--color-gray-300);
+	--button-color-back: light-dark(var(--color-gray-300), var(--color-gray-950));
 }
 .k-button:where([data-variant="filled"]):not([aria-disabled="true"]):hover {
 	filter: brightness(97%);
-}
-.k-panel[data-theme="dark"]
-	.k-button:where([data-variant="filled"]):not([aria-disabled="true"]):hover {
-	filter: brightness(87%);
 }
 
 .k-button:where([data-variant="filled"][data-theme]) {
@@ -324,7 +320,7 @@ export default {
 		var(--theme-color-hs),
 		57%
 	); /* slightly improve the contrast */
-	--button-color-back: var(--color-gray-300);
+	--button-color-back: light-dark(var(--color-gray-300), var(--color-gray-950));
 }
 
 /** Icon Buttons **/
