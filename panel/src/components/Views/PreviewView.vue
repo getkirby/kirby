@@ -91,10 +91,16 @@
 				</header>
 				<iframe v-if="hasChanges" ref="changes" :src="src.changes"></iframe>
 				<k-empty v-else>
-					{{ $t("lock.unsaved.empty") }}
-					<k-button icon="edit" variant="filled" :link="back">
-						{{ $t("edit") }}
-					</k-button>
+					<template v-if="lock.isLegacy">
+						This content is locked by our old lock system. <br />
+						Changes cannot be previewed.
+					</template>
+					<template v-else>
+						{{ $t("lock.unsaved.empty") }}
+						<k-button icon="edit" variant="filled" :link="back">
+							{{ $t("edit") }}
+						</k-button>
+					</template>
 				</k-empty>
 			</section>
 		</main>
@@ -223,6 +229,8 @@ export default {
 	flex-grow: 1;
 	justify-content: center;
 	flex-direction: column;
+	text-align: center;
+	padding-inline: var(--spacing-3);
 	gap: var(--spacing-6);
 	--button-color-text: var(--color-text);
 }
