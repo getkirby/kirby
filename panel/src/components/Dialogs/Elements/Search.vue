@@ -37,6 +37,6 @@ export default {
 .k-dialog-search {
 	margin-bottom: 0.75rem;
 	--input-color-border: transparent;
-	--input-color-back: var(--color-gray-300);
+	--input-color-back: light-dark(var(--color-gray-300), var(--color-gray-950));
 }
 </style>

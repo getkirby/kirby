@@ -106,7 +106,7 @@ export default {
 
 .k-label abbr.k-label-invalid {
 	display: none;
-	color: var(--color-red-700);
+	color: light-dark(var(--color-red-700), var(--color-red-600));
 }
 
 /** Tracking invalid via CSS */

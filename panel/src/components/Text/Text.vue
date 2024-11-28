@@ -50,6 +50,7 @@ export default {
 	--text-font-size: 1em;
 	--text-line-height: 1.5;
 	--link-color: light-dark(var(--color-blue-800), var(--color-blue-600));
+	--link-color-hover: light-dark(var(--color-black), var(--color-white));
 	--link-underline-offset: 2px;
 }
 
@@ -113,6 +114,9 @@ export default {
 	text-underline-offset: var(--link-underline-offset);
 	border-radius: var(--rounded-xs);
 	outline-offset: 2px;
+}
+.k-text :where(.k-link, a):hover {
+	color: var(--link-color-hover);
 }
 
 /* Lists */

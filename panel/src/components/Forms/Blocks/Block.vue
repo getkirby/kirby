@@ -366,7 +366,7 @@ export default {
 	border-radius: var(--rounded);
 }
 .k-block-container:not(:last-of-type) {
-	border-bottom: 1px dashed var(--color-border-dimmed);
+	border-bottom: 1px dashed var(--panel-color-back);
 }
 .k-block-container:focus {
 	outline: 0;

@@ -116,7 +116,7 @@ export default {
 
 <style>
 :root {
-	--tag-color-back: var(--color-black);
+	--tag-color-back: var(--color-gray-950);
 	--tag-color-text: var(--color-white);
 	--tag-color-toggle: currentColor;
 	--tag-color-disabled-back: var(--color-gray-600);

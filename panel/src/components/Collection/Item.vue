@@ -140,7 +140,7 @@ export default {
 :root {
 	--item-button-height: var(--height-md);
 	--item-button-width: var(--height-md);
-	--item-color-back: light-dark(var(--color-white), var(--color-gray-950));
+	--item-color-back: light-dark(var(--color-white), var(--color-gray-850));
 	--item-height: auto;
 	--item-height-cardlet: calc(var(--height-md) * 3);
 }

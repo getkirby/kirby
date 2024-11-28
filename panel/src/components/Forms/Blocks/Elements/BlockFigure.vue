@@ -52,7 +52,7 @@ export default {
 
 <style>
 .k-block-figure:not([data-empty="true"]) {
-	--block-figure-back: var(--color-white);
+	--block-figure-back: var(--block-color-back);
 	background: var(--block-figure-back);
 }
 .k-block-figure-container:not([data-disabled="true"]) {

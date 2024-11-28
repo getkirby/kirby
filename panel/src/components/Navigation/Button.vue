@@ -314,6 +314,7 @@ export default {
 .k-button:where([data-variant="filled"][data-theme]) {
 	--button-color-icon: var(--theme-color-700);
 	--button-color-back: var(--theme-color-back);
+	--button-color-text: var(--theme-color-text-highlight);
 }
 .k-button:where([data-theme$="-icon"][data-variant="filled"]) {
 	--button-color-icon: hsl(
@@ -321,6 +322,7 @@ export default {
 		57%
 	); /* slightly improve the contrast */
 	--button-color-back: light-dark(var(--color-gray-300), var(--color-gray-950));
+	--button-color-text: currentColor;
 }
 
 /** Icon Buttons **/
