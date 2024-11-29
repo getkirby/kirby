@@ -81,8 +81,8 @@ export default {
 <style>
 :root {
 	--toolbar-size: var(--height);
-	--toolbar-text: var(--color-black);
-	--toolbar-back: var(--color-white);
+	--toolbar-text: light-dark(var(--color-black), var(--color-white));
+	--toolbar-back: light-dark(var(--color-white), var(--color-gray-850));
 	--toolbar-hover: hsla(0, 0%, var(--color-l-min), 0.4);
 	--toolbar-border: hsla(0, 100%, var(--color-l-min), 0.1);
 	--toolbar-current: var(--color-focus);

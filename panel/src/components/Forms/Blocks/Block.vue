@@ -418,6 +418,6 @@ export default {
 	content: "";
 	height: 2rem;
 	width: 100%;
-	background: linear-gradient(to top, var(--color-white), transparent);
+	background: linear-gradient(to top, var(--block-color-back), transparent);
 }
 </style>
