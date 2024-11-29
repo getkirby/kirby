@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Cache\Value;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 
@@ -18,8 +19,9 @@ class PageRenderTest extends TestCase
 	{
 		$this->app = new App([
 			'roots' => [
-				'index'     => static::TMP,
-				'templates' => static::FIXTURES
+				'index'       => static::TMP,
+				'controllers' => static::FIXTURES . '/controllers',
+				'templates'   => static::FIXTURES . '/templates'
 			],
 			'site' => [
 				'children' => [
@@ -28,8 +30,16 @@ class PageRenderTest extends TestCase
 						'template' => 'cache-default'
 					],
 					[
+						'slug'     => 'data',
+						'template' => 'cache-data'
+					],
+					[
 						'slug'     => 'expiry',
 						'template' => 'cache-expiry'
+					],
+					[
+						'slug'     => 'metadata',
+						'template' => 'cache-metadata',
 					],
 					[
 						'slug'     => 'disabled',
@@ -50,6 +60,18 @@ class PageRenderTest extends TestCase
 					[
 						'slug'     => 'dynamic-auth-session',
 						'template' => 'cache-dynamic'
+					],
+					[
+						'slug'     => 'representation',
+						'template' => 'representation'
+					],
+					[
+						'slug'     => 'invalid',
+						'template' => 'invalid',
+					],
+					[
+						'slug'     => 'controller',
+						'template' => 'controller',
 					],
 					[
 						'slug'      => 'bar',
@@ -120,6 +142,33 @@ class PageRenderTest extends TestCase
 		$this->assertSame((int)$time, $value->expires());
 	}
 
+	public function testCacheMetadata()
+	{
+		$cache = $this->app->cache('pages');
+		$page  = $this->app->page('metadata');
+
+		$this->assertNull($cache->retrieve('metadata.html'));
+
+		$html1 = $page->render();
+		$this->assertStringStartsWith('This is a test:', $html1);
+		$this->assertSame(202, $this->app->response()->code());
+		$this->assertSame(['Cache-Control' => 'private'], $this->app->response()->headers());
+		$this->assertSame('text/plain', $this->app->response()->type());
+
+		// reset the Kirby Responder object
+		$this->setUp();
+		$this->assertNull($this->app->response()->code());
+		$this->assertSame([], $this->app->response()->headers());
+		$this->assertNull($this->app->response()->type());
+
+		// ensure the Responder object is restored from cache
+		$html2 = $this->app->page('metadata')->render();
+		$this->assertSame($html1, $html2);
+		$this->assertSame(202, $this->app->response()->code());
+		$this->assertSame(['Cache-Control' => 'private'], $this->app->response()->headers());
+		$this->assertSame('text/plain', $this->app->response()->type());
+	}
+
 	public function testCacheDisabled()
 	{
 		$cache = $this->app->cache('pages');
@@ -133,6 +182,7 @@ class PageRenderTest extends TestCase
 		$this->assertNull($cache->retrieve('disabled.html'));
 
 		$html2 = $page->render();
+		$this->assertStringStartsWith('This is a test:', $html2);
 		$this->assertNotSame($html1, $html2);
 	}
 
@@ -202,6 +252,7 @@ class PageRenderTest extends TestCase
 		// reset the Kirby Responder object
 		$this->setUp();
 		$html2 = $page->render();
+		$this->assertStringStartsWith('This is a test:', $html2);
 		$this->assertNotSame($html1, $html2);
 	}
 
@@ -235,7 +286,87 @@ class PageRenderTest extends TestCase
 		// reset the Kirby Responder object
 		$this->setUp();
 		$html2 = $page->render();
+		$this->assertStringStartsWith('This is a test:', $html2);
 		$this->assertNotSame($html1, $html2);
+	}
+
+	public function testCacheDataInitial()
+	{
+		$cache = $this->app->cache('pages');
+		$page  = $this->app->page('data');
+
+		$this->assertNull($cache->retrieve('data.html'));
+
+		$html = $page->render(['test' => 'custom test']);
+		$this->assertStringStartsWith('This is a custom test:', $html);
+
+		$this->assertNull($cache->retrieve('data.html'));
+	}
+
+	public function testCacheDataPreCached()
+	{
+		$cache = $this->app->cache('pages');
+		$page  = $this->app->page('data');
+
+		$this->assertNull($cache->retrieve('data.html'));
+
+		$html1 = $page->render();
+		$this->assertStringStartsWith('This is a test:', $html1);
+
+		$value = $cache->retrieve('data.html');
+		$this->assertInstanceOf(Value::class, $value);
+		$this->assertSame($html1, $value->value()['html']);
+		$this->assertNull($value->expires());
+
+		$html2 = $page->render(['test' => 'custom test']);
+		$this->assertStringStartsWith('This is a custom test:', $html2);
+
+		// cache still stores the non-custom result
+		$value = $cache->retrieve('data.html');
+		$this->assertInstanceOf(Value::class, $value);
+		$this->assertSame($html1, $value->value()['html']);
+		$this->assertNull($value->expires());
+	}
+
+	public function testRepresentationDefault()
+	{
+		$page = $this->app->page('representation');
+
+		$this->assertSame('<html>Some HTML: representation</html>', $page->render());
+	}
+
+	public function testRepresentationOverride()
+	{
+		$page = $this->app->page('representation');
+
+		$this->assertSame('<html>Some HTML: representation</html>', $page->render(contentType: 'html'));
+		$this->assertSame('{"some json": "representation"}', $page->render(contentType: 'json'));
+	}
+
+	public function testRepresentationMissing()
+	{
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The content representation cannot be found');
+
+		$page = $this->app->page('representation');
+		$page->render(contentType: 'txt');
+	}
+
+	public function testTemplateMissing()
+	{
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The default template does not exist');
+
+		$page = $this->app->page('invalid');
+		$page->render();
+	}
+
+	public function testController()
+	{
+		$page = $this->app->page('controller');
+
+		$this->assertSame('Data says TEST: controller and default!', $page->render());
+		$this->assertSame('Data says TEST: controller and custom!', $page->render(['test' => 'override', 'test2' => 'custom']));
 	}
 
 	public function testHookBefore()
