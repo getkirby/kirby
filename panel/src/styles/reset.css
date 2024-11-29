@@ -207,6 +207,6 @@ body {
 	display: inline-block;
 	padding-inline: var(--spacing-2);
 	border-radius: var(--rounded);
-	background: var(--color-white);
+	background: light-dark(var(--color-white), var(--color-black));
 	box-shadow: var(--shadow);
 }
