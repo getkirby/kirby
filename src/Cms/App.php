@@ -438,7 +438,7 @@ class App
 	{
 		$default = $this->root('content');
 
-		if (method_exists($model, 'id') === true) {
+		if (is_object($model) === true && method_exists($model, 'id') === true) {
 			$default .= '/' . $model->id();
 		}
 
