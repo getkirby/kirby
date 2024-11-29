@@ -29,7 +29,7 @@
 	--theme-color-hover: var(--theme-color-600);
 	--theme-color-icon: var(--theme-color-600);
 	--theme-color-icon-highlight: var(--theme-color-700);
-	--theme-color-text: light-dark(var(--theme-color-900), var(--theme-color-400));
+	--theme-color-text: light-dark(var(--theme-color-800), var(--theme-color-500));
 	--theme-color-text-dimmed: hsl(
 		var(--theme-color-h),
 		calc(var(--theme-color-s) - 60%),
