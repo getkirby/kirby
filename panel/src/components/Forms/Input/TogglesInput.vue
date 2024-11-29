@@ -112,11 +112,10 @@ export default {
 
 .k-toggles-input li {
 	height: var(--field-input-height);
-	background: var(--color-white);
 }
 .k-toggles-input label {
 	align-items: center;
-	background: var(--color-white);
+	background: light-dark(var(--color-white), var(--color-gray-850));
 	cursor: pointer;
 	display: flex;
 	font-size: var(--text-sm);
@@ -138,7 +137,7 @@ export default {
 }
 
 .k-toggles-input input:checked + label {
-	background: var(--color-black);
+	background: light-dark(var(--color-black), var(--color-gray-950));
 	color: var(--color-white);
 }
 </style>

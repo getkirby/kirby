@@ -125,6 +125,6 @@ export default {
 	color: var(--stat-info-text-color);
 }
 .k-stat:is([data-theme]) .k-stat-info {
-	--stat-info-text-color: var(--theme-color-700);
+	--stat-info-text-color: var(--theme-color-text);
 }
 </style>

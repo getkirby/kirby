@@ -44,14 +44,14 @@ export default {
 }
 
 .k-panel[data-theme="dark"] {
-	--highlight-punctuation: var(--color-gray-700);
-	--highlight-variable: var(--color-red-700);
-	--highlight-constant: var(--color-orange-700);
-	--highlight-keyword: var(--color-purple-700);
-	--highlight-function: var(--color-blue-700);
-	--highlight-operator: var(--color-aqua-700);
-	--highlight-string: var(--color-green-700);
-	--highlight-scope: var(--color-yellow-700);
+	--highlight-punctuation: var(--color-gray-400);
+	--highlight-variable: var(--color-red-400);
+	--highlight-constant: var(--color-orange-400);
+	--highlight-keyword: var(--color-purple-400);
+	--highlight-function: var(--color-blue-400);
+	--highlight-operator: var(--color-aqua-400);
+	--highlight-string: var(--color-green-400);
+	--highlight-scope: var(--color-yellow-400);
 }
 
 .token.punctuation,

@@ -38,6 +38,9 @@ export default {
 	--color-frame-size: 100%;
 	--color-frame-darkness: 0%;
 }
+:root:has(.k-panel[data-theme="dark"]) {
+	--color-frame-pattern: var(--pattern-dark);
+}
 .k-color-frame.k-frame {
 	background: var(--color-frame-pattern);
 	width: var(--color-frame-size);

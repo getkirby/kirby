@@ -38,7 +38,7 @@ export default {
 	--code-font-family: var(--font-mono);
 	--code-font-size: 1em;
 	--code-inline-color-back: var(--color-blue-300);
-	--code-inline-color-border: var(--color-blue-400);
+	--code-inline-color-border: light-dark(var(--color-blue-400), var(--color-blue-900));
 	--code-inline-color-text: var(--color-blue-900);
 	--code-inline-font-size: 0.9em;
 	--code-padding: var(--spacing-3);

@@ -385,13 +385,13 @@ export default {
 	font-variant-numeric: tabular-nums;
 	line-height: 1.5;
 	padding: 0 var(--spacing-1);
-	border-radius: 50%;
+	border-radius: 1em;
 	text-align: center;
 	font-size: 0.6rem;
 	box-shadow: var(--shadow-md);
 	background: var(--theme-color-back);
-	border: 1px solid var(--theme-color-500);
-	color: var(--theme-color-text);
+	border: 1px solid light-dark(var(--theme-color-500), var(--color-black));
+	color: var(--theme-color-text-highlight);
 	z-index: 1;
 }
 

@@ -155,7 +155,6 @@ export default {
 <style>
 .k-range-input {
 	--range-track-height: 1px;
-	--range-track-back: var(--color-gray-300);
 	--range-tooltip-back: var(--color-black);
 
 	display: flex;

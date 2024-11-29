@@ -98,6 +98,8 @@
 	--theme-color-h: var(--color-gray-h);
 	--theme-color-s: var(--color-gray-s);
 	--theme-color-boost: 10%;
+	--theme-color-icon: var(--color-gray-600);
+	--theme-color-text: var(--color-black);
 }
 
 [data-theme^="white"],
@@ -106,7 +108,7 @@
 	--theme-color-icon: var(--color-gray-800);
 	--theme-color-text: var(--color-text);
 	--theme-color-text-highlight: var(--theme-color-text);
-	--color-h: var(--color-black);
+	--color-h: var(--color-text);
 }
 
 /* Special Themes */

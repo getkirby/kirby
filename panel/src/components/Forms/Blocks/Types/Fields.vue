@@ -102,7 +102,7 @@ export default {
 }
 
 .k-block-type-fields-form {
-	background-color: var(--color-gray-200);
+	background-color: var(--panel-color-back);
 	padding: var(--spacing-6) var(--spacing-6) var(--spacing-8);
 	border-radius: var(--rounded-sm);
 	container: column / inline-size;

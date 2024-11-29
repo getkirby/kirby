@@ -52,7 +52,7 @@ class Docs
 				return [
 					'image' => [
 						'icon' => 'book',
-						'back' => 'white',
+						'back' => 'light-dark(white, var(--color-gray-800))',
 					],
 					'text' => $component,
 					'link' => '/lab/docs/' . $component,
