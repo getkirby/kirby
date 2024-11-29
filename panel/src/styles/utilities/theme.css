@@ -25,7 +25,7 @@
 	--theme-color-900: hsl(var(--theme-color-hs), var(--theme-color-l-900));
 
 	--theme-color-border: light-dark(var(--theme-color-500), var(--theme-color-600));
-	--theme-color-text: light-dark(var(--theme-color-900), var(--theme-color-300));
+	--theme-color-text: light-dark(var(--theme-color-900), var(--theme-color-400));
 	--theme-color-text-dimmed: hsl(
 		var(--theme-color-h),
 		calc(var(--theme-color-s) - 60%),
