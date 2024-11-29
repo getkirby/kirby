@@ -253,6 +253,7 @@ export default {
 .k-item:is([data-layout="cardlets"], [data-layout="cards"]) .k-sort-button {
 	top: var(--spacing-2);
 	inset-inline-start: var(--spacing-2);
+	color: var(--color-black);
 	background: hsla(0, 0%, var(--color-l-max), 50%);
 	backdrop-filter: blur(5px);
 	box-shadow: 0 2px 5px hsla(0, 0%, 0%, 20%);
