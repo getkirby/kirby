@@ -6,6 +6,7 @@ import vue from "@vitejs/plugin-vue2";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import externalize from "rollup-plugin-external-globals";
 import kirby from "./scripts/vite-kirby.mjs";
+import postcssLightDarkFunction from "@csstools/postcss-light-dark-function";
 
 /**
  * Returns all aliases used in the project
@@ -120,6 +121,11 @@ export default defineConfig(({ mode }) => {
 					chunkFileNames: "js/[name].min.js",
 					assetFileNames: "[ext]/[name].min.[ext]"
 				}
+			}
+		},
+		css: {
+			postcss: {
+				plugins: [postcssLightDarkFunction()]
 			}
 		},
 		optimizeDeps: {
