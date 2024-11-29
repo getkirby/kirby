@@ -25,6 +25,10 @@
 	--theme-color-900: hsl(var(--theme-color-hs), var(--theme-color-l-900));
 
 	--theme-color-border: light-dark(var(--theme-color-500), var(--theme-color-600));
+	--theme-color-back: light-dark(var(--theme-color-400), var(--theme-color-500));
+	--theme-color-hover: var(--theme-color-600);
+	--theme-color-icon: var(--theme-color-600);
+	--theme-color-icon-highlight: var(--theme-color-700);
 	--theme-color-text: light-dark(var(--theme-color-900), var(--theme-color-400));
 	--theme-color-text-dimmed: hsl(
 		var(--theme-color-h),
@@ -32,9 +36,6 @@
 		50%
 	);
 	--theme-color-text-highlight: var(--theme-color-900);
-	--theme-color-back: var(--theme-color-500);
-	--theme-color-hover: var(--theme-color-500);
-	--theme-color-icon: light-dark(var(--theme-color-700), var(--theme-color-600));
 }
 
 /* Color themes */

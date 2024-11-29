@@ -240,6 +240,7 @@ export default {
 	--button-rounded: var(--spacing-1);
 	--button-text-display: block;
 	--button-icon-display: block;
+	--button-filled-color-back: light-dark(var(--color-gray-300), var(--color-gray-950));
 }
 
 .k-button {
@@ -305,23 +306,20 @@ export default {
 
 /** Filled Buttons **/
 .k-button:where([data-variant="filled"]) {
-	--button-color-back: light-dark(var(--color-gray-300), var(--color-gray-950));
+	--button-color-back: var(--button-filled-color-back);
 }
 .k-button:where([data-variant="filled"]):not([aria-disabled="true"]):hover {
 	filter: brightness(97%);
 }
 
 .k-button:where([data-variant="filled"][data-theme]) {
-	--button-color-icon: var(--theme-color-700);
+	--button-color-icon: var(--theme-color-icon-highlight);
 	--button-color-back: var(--theme-color-back);
 	--button-color-text: var(--theme-color-text-highlight);
 }
 .k-button:where([data-theme$="-icon"][data-variant="filled"]) {
-	--button-color-icon: hsl(
-		var(--theme-color-hs),
-		57%
-	); /* slightly improve the contrast */
-	--button-color-back: light-dark(var(--color-gray-300), var(--color-gray-950));
+	--button-color-icon: var(--theme-color-icon);
+	--button-color-back: var(--button-filled-color-back);
 	--button-color-text: currentColor;
 }
 
