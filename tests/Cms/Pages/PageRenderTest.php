@@ -8,6 +8,7 @@ use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 
 /**
+ * @covers \Kirby\Cms\Page::cacheId
  * @covers \Kirby\Cms\Page::render
  */
 class PageRenderTest extends TestCase
