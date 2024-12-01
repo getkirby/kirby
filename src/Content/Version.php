@@ -568,7 +568,7 @@ class Version
 		$uri = new Uri($url);
 
 		if ($this->model instanceof Page && $this->model->isDraft() === true) {
-			$uri->query->token = $this->previewToken();
+			$uri->query->_token = $this->previewToken();
 		}
 
 		if ($this->id->is('changes') === true) {

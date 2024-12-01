@@ -680,7 +680,7 @@ class PageTest extends TestCase
 		if ($draft === true && $expected !== null) {
 			$expected = str_replace(
 				'{token}',
-				'token=' . hash_hmac('sha1', $page->id() . $page->template(), $page->kirby()->root('content') . '/' . $page->id()),
+				'_token=' . hash_hmac('sha1', $page->id() . $page->template(), $page->kirby()->root('content') . '/' . $page->id()),
 				$expected
 			);
 		}
