@@ -7,8 +7,11 @@ use Kirby\Cms\Language;
 use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
+use Kirby\Cms\Site;
+use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form;
+use Kirby\Http\Uri;
 
 /**
  * The Version class handles all actions for a single
@@ -389,6 +392,25 @@ class Version
 	}
 
 	/**
+	 * Returns a verification token for the authentication
+	 * of draft previews
+	 * @internal
+	 */
+	public function previewToken(): string
+	{
+		$id = match (true) {
+			$this->model instanceof Site => '',
+			$this->model instanceof Page => $this->model->id() . $this->model->template(),
+			default                      => throw new LogicException('Invalid model type')
+		};
+
+		return $this->model->kirby()->contentToken(
+			$this->model,
+			$id
+		);
+	}
+
+	/**
 	 * This method can only be applied to the "changes" version.
 	 * It will copy all fields over to the "latest" version and delete
 	 * this version afterwards.
@@ -518,5 +540,41 @@ class Version
 			language: $language,
 			fields: $this->prepareFieldsBeforeWrite($fields, $language)
 		);
+	}
+
+	/**
+	 * Returns the preview URL with authentication for drafts
+	 * @internal
+	 */
+	public function url(): string|null
+	{
+		if (
+			($this->model instanceof Page || $this->model instanceof Site) === false
+		) {
+			throw new LogicException('Only pages and the site have a content preview URL');
+		}
+
+		$url = $this->model->blueprint()->preview();
+
+		if ($url === false) {
+			return null;
+		}
+
+		$url = match ($url) {
+			true, null => $this->model->url(),
+			default    => $url
+		};
+
+		$uri = new Uri($url);
+
+		if ($this->model instanceof Page && $this->model->isDraft() === true) {
+			$uri->query->token = $this->previewToken();
+		}
+
+		if ($this->id->is('changes') === true) {
+			$uri->query->_version = 'changes';
+		}
+
+		return $uri->toString();
 	}
 }

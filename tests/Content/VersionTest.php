@@ -3,6 +3,8 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\File;
+use Kirby\Cms\Page;
+use Kirby\Cms\Site;
 use Kirby\Data\Data;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
@@ -772,6 +774,46 @@ class VersionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::previewToken
+	 */
+	public function testPreviewToken()
+	{
+		$this->setUpSingleLanguage();
+
+		// site
+		$version = new Version(
+			model: $this->app->site(),
+			id: VersionId::latest()
+		);
+		$this->assertSame(hash_hmac('sha1', '', static::TMP . '/content/'), $version->previewToken());
+
+		// page
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+		$this->assertSame(hash_hmac('sha1', 'a-pagedefault', static::TMP . '/content/a-page'), $version->previewToken());
+	}
+
+	/**
+	 * @covers ::previewToken
+	 */
+	public function testPreviewTokenInvalidModel()
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Invalid model type');
+
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model->file(),
+			id: VersionId::latest()
+		);
+
+		$version->previewToken();
+	}
+
+	/**
 	 * @covers ::publish
 	 */
 	public function testPublish()
@@ -1353,5 +1395,266 @@ class VersionTest extends TestCase
 		// check for untranslatable fields
 		$this->assertArrayHasKey('date', $version->read('en'));
 		$this->assertArrayNotHasKey('date', $version->read('de'));
+	}
+
+	/**
+	 * @covers ::url
+	 */
+	public function testUrlPage()
+	{
+		$this->setUpSingleLanguage();
+
+		// authenticate
+		$this->app->impersonate('kirby');
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->assertSame('/a-page', $version->url());
+	}
+
+	/**
+	 * @covers ::url
+	 */
+	public function testUrlPageUnauthenticated()
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->assertNull($version->url());
+	}
+
+	public static function pageUrlProvider(): array
+	{
+		return [
+			// latest version
+			[null, '/test', false, 'latest'],
+			[null, '/test?{token}', true, 'latest'],
+			[true, '/test', false, 'latest'],
+			[true, '/test?{token}', true, 'latest'],
+			['/something/different', '/something/different', false, 'latest'],
+			['/something/different', '/something/different?{token}', true, 'latest'],
+			['{{ site.url }}#{{ page.slug }}', '/#test', false, 'latest'],
+			['{{ site.url }}#{{ page.slug }}', '/?{token}#test', true, 'latest'],
+			['{{ page.url }}?preview=true', '/test?preview=true', false, 'latest'],
+			['{{ page.url }}?preview=true', '/test?preview=true&{token}', true, 'latest'],
+			[false, null, false, 'latest'],
+			[false, null, true, 'latest'],
+			[null, null, false, 'latest', false],
+
+			// changes version
+			[null, '/test?_version=changes', false, 'changes'],
+			[null, '/test?{token}&_version=changes', true, 'changes'],
+			[true, '/test?_version=changes', false, 'changes'],
+			[true, '/test?{token}&_version=changes', true, 'changes'],
+			['/something/different', '/something/different?_version=changes', false, 'changes'],
+			['/something/different', '/something/different?{token}&_version=changes', true, 'changes'],
+			['{{ site.url }}#{{ page.slug }}', '/?_version=changes#test', false, 'changes'],
+			['{{ site.url }}#{{ page.slug }}', '/?{token}&_version=changes#test', true, 'changes'],
+			['{{ page.url }}?preview=true', '/test?preview=true&_version=changes', false, 'changes'],
+			['{{ page.url }}?preview=true', '/test?preview=true&{token}&_version=changes', true, 'changes'],
+			[false, null, false, 'changes'],
+			[false, null, true, 'changes'],
+			[null, null, false, 'changes', false],
+		];
+	}
+
+	/**
+	 * @covers ::url
+	 * @dataProvider pageUrlProvider
+	 */
+	public function testUrlPageCustom(
+		$input,
+		$expected,
+		bool $draft,
+		string $versionId,
+		bool $authenticated = true
+	): void {
+		$this->setUpSingleLanguage();
+
+		$app = $this->app->clone([
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'roles' => [
+				[
+					'id'    => 'editor',
+					'name'  => 'editor',
+				]
+			]
+		]);
+
+		// authenticate
+		if ($authenticated === true) {
+			$app->impersonate('test@getkirby.com');
+		}
+
+		$options = [];
+
+		if ($input !== null) {
+			$options = [
+				'preview' => $input
+			];
+		}
+
+		$page = new Page([
+			'slug' => 'test',
+			'isDraft' => $draft,
+			'blueprint' => [
+				'name'    => 'test',
+				'options' => $options
+			]
+		]);
+
+		if ($expected !== null) {
+			$expected = str_replace(
+				'{token}',
+				'token=' . hash_hmac('sha1', $page->id() . $page->template(), $page->kirby()->root('content') . '/' . $page->id()),
+				$expected
+			);
+		}
+
+		$version = new Version(
+			model: $page,
+			id: VersionId::from($versionId)
+		);
+
+		$this->assertSame($expected, $version->url());
+	}
+
+	/**
+	 * @covers ::url
+	 */
+	public function testUrlSite()
+	{
+		$this->setUpSingleLanguage();
+
+		// authenticate
+		$this->app->impersonate('kirby');
+
+		$version = new Version(
+			model: $this->app->site(),
+			id: VersionId::latest()
+		);
+
+		$this->assertSame('/', $version->url());
+	}
+
+	/**
+	 * @covers ::url
+	 */
+	public function testUrlSiteUnauthenticated()
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->app->site(),
+			id: VersionId::latest()
+		);
+
+		$this->assertNull($version->url());
+	}
+
+	public static function siteUrlProvider(): array
+	{
+		return [
+			// latest version
+			[null, '/', 'latest'],
+			['https://test.com', 'https://test.com', 'latest'],
+			['{{ site.url }}#test', '/#test', 'latest'],
+			[false, null, 'latest'],
+			[null, null, 'latest', false],
+
+			// changes version
+			[null, '/?_version=changes', 'changes'],
+			['https://test.com', 'https://test.com?_version=changes', 'changes'],
+			['{{ site.url }}#test', '/?_version=changes#test', 'changes'],
+			[false, null, 'changes'],
+			[null, null, 'changes', false],
+		];
+	}
+
+	/**
+	 * @covers ::url
+	 * @dataProvider siteUrlProvider
+	 */
+	public function testUrlSiteCustom(
+		$input,
+		$expected,
+		string $versionId,
+		bool $authenticated = true
+	): void {
+		$this->setUpSingleLanguage();
+
+		$app = $this->app->clone([
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'roles' => [
+				[
+					'id'    => 'editor',
+					'name'  => 'editor',
+				]
+			]
+		]);
+
+		// authenticate
+		if ($authenticated === true) {
+			$app->impersonate('test@getkirby.com');
+		}
+
+		$options = [];
+
+		if ($input !== null) {
+			$options = [
+				'preview' => $input
+			];
+		}
+
+		$site = new Site([
+			'blueprint' => [
+				'name'    => 'site',
+				'options' => $options
+			]
+		]);
+
+		$version = new Version(
+			model: $site,
+			id: VersionId::from($versionId)
+		);
+
+		$this->assertSame($expected, $version->url());
+	}
+
+	/**
+	 * @covers ::url
+	 */
+	public function testUrlInvalidModel()
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Only pages and the site have a content preview URL');
+
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model->file(),
+			id: VersionId::latest()
+		);
+
+		$version->url();
 	}
 }

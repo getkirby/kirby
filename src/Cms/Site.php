@@ -6,7 +6,6 @@ use Kirby\Content\VersionId;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
-use Kirby\Http\Uri;
 use Kirby\Panel\Site as Panel;
 use Kirby\Toolkit\A;
 
@@ -350,30 +349,12 @@ class Site extends ModelWithContent
 	}
 
 	/**
-	 * Preview Url
+	 * Returns the preview URL with authentication for drafts
 	 * @internal
 	 */
 	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
 	{
-		$versionId = VersionId::from($versionId);
-		$url       = $this->blueprint()->preview();
-
-		if ($url === false) {
-			return null;
-		}
-
-		$url = match ($url) {
-			true, null => $this->url(),
-			default    => $url
-		};
-
-		$uri = new Uri($url);
-
-		if ($versionId->is('changes') === true) {
-			$uri->query->_version = 'changes';
-		}
-
-		return $uri->toString();
+		return $this->version($versionId)->url();
 	}
 
 	/**
