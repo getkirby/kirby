@@ -942,12 +942,24 @@ class Page extends ModelWithContent
 	 * the default template.
 	 *
 	 * @param string $contentType
+	 * @param \Kirby\Content\VersionId|string|null $versionId Optional override for the auto-detected version to render
 	 * @throws \Kirby\Exception\NotFoundException If the default template cannot be found
 	 */
-	public function render(array $data = [], $contentType = 'html'): string
-	{
+	public function render(
+		array $data = [],
+		$contentType = 'html',
+		VersionId|string|null $versionId = null
+	): string {
 		$kirby = $this->kirby();
 		$cache = $cacheId = $html = null;
+
+		// if not manually overridden, first use a globally set
+		// version ID (e.g. when rendering within another render),
+		// otherwise auto-detect from the request;
+		// make sure to convert it to an object
+		$versionId ??= VersionId::$render;
+		$versionId ??= $this->kirby()->request()->get('_version') === 'changes' ? VersionId::changes() : VersionId::latest();
+		$versionId   = VersionId::from($versionId);
 
 		// try to get the page from cache
 		if ($data === [] && $this->isCacheable() === true) {
@@ -973,36 +985,39 @@ class Page extends ModelWithContent
 
 		// fetch the page regularly
 		if ($html === null) {
-			$template = match ($contentType) {
-				'html'  => $this->template(),
-				default => $this->representation($contentType)
-			};
+			// set `VersionId::$render` to the intended version (only) while we render
+			$html = VersionId::render($versionId, function () use ($kirby, $data, $contentType) {
+				$template = match ($contentType) {
+					'html'  => $this->template(),
+					default => $this->representation($contentType)
+				};
 
-			if ($template->exists() === false) {
-				throw new NotFoundException(
-					key: 'template.default.notFound'
-				);
-			}
+				if ($template->exists() === false) {
+					throw new NotFoundException(
+						key: 'template.default.notFound'
+					);
+				}
 
-			$kirby->data = $this->controller($data, $contentType);
+				$kirby->data = $this->controller($data, $contentType);
 
-			// trigger before hook and apply for `data`
-			$kirby->data = $kirby->apply('page.render:before', [
-				'contentType' => $contentType,
-				'data'        => $kirby->data,
-				'page'        => $this
-			], 'data');
+				// trigger before hook and apply for `data`
+				$kirby->data = $kirby->apply('page.render:before', [
+					'contentType' => $contentType,
+					'data'        => $kirby->data,
+					'page'        => $this
+				], 'data');
 
-			// render the page
-			$html = $template->render($kirby->data);
+				// render the page
+				$html = $template->render($kirby->data);
 
-			// trigger after hook and apply for `html`
-			$html = $kirby->apply('page.render:after', [
-				'contentType' => $contentType,
-				'data'        => $kirby->data,
-				'html'        => $html,
-				'page'        => $this
-			], 'html');
+				// trigger after hook and apply for `html`
+				return $kirby->apply('page.render:after', [
+					'contentType' => $contentType,
+					'data'        => $kirby->data,
+					'html'        => $html,
+					'page'        => $this
+				], 'html');
+			});
 
 			// cache the result
 			$response = $kirby->response();
