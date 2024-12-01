@@ -431,14 +431,14 @@ class App
 	 * Generates a non-guessable token based on model
 	 * data and a configured salt
 	 *
-	 * @param mixed $model Object to pass to the salt callback if configured
+	 * @param object|null $model Object to pass to the salt callback if configured
 	 * @param string $value Model data to include in the generated token
 	 */
-	public function contentToken(mixed $model, string $value): string
+	public function contentToken(object|null $model, string $value): string
 	{
 		$default = $this->root('content');
 
-		if (is_object($model) === true && method_exists($model, 'id') === true) {
+		if ($model !== null && method_exists($model, 'id') === true) {
 			$default .= '/' . $model->id();
 		}
 

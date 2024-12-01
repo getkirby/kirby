@@ -284,7 +284,6 @@ class AppTest extends TestCase
 			]
 		]);
 		$this->assertSame(hash_hmac('sha1', 'test', '/dev/null/content/some-id'), $app->contentToken($model, 'test'));
-		$this->assertSame(hash_hmac('sha1', 'test', '/dev/null/content'), $app->contentToken('model', 'test'));
 		$this->assertSame(hash_hmac('sha1', 'test', '/dev/null/content'), $app->contentToken($app, 'test'));
 		$this->assertSame(hash_hmac('sha1', 'test', '/dev/null/content'), $app->contentToken(null, 'test'));
 
@@ -295,19 +294,10 @@ class AppTest extends TestCase
 			]
 		]);
 		$this->assertSame(hash_hmac('sha1', 'test', 'salt and pepper and chili'), $app->contentToken($model, 'test'));
-		$this->assertSame(hash_hmac('sha1', 'test', 'salt and pepper and chili'), $app->contentToken('model', 'test'));
 		$this->assertSame(hash_hmac('sha1', 'test', 'salt and pepper and chili'), $app->contentToken($app, 'test'));
 		$this->assertSame(hash_hmac('sha1', 'test', 'salt and pepper and chili'), $app->contentToken(null, 'test'));
 
-		// with callback 1
-		$app = new App([
-			'options' => [
-				'content.salt' => fn (string $model) => 'salt ' . $model
-			]
-		]);
-		$this->assertSame(hash_hmac('sha1', 'test', 'salt lake city'), $app->contentToken('lake city', 'test'));
-
-		// with callback 2
+		// with callback
 		$app = new App([
 			'options' => [
 				'content.salt' => fn (object|null $model) => $model?->type() . ' salt'
