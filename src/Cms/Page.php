@@ -929,9 +929,9 @@ class Page extends ModelWithContent
 	 * Returns the preview URL with authentication for drafts
 	 * @internal
 	 */
-	public function previewUrl(VersionId|string $version = 'latest'): string|null
+	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
 	{
-		return $this->version($version)->url();
+		return $this->version($versionId)->url();
 	}
 
 	/**
