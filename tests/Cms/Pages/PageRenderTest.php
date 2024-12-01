@@ -8,8 +8,7 @@ use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 
 /**
- * @covers \Kirby\Cms\Page::cacheId
- * @covers \Kirby\Cms\Page::render
+ * @coversDefaultClass \Kirby\Cms\Page
  */
 class PageRenderTest extends TestCase
 {
@@ -109,7 +108,130 @@ class PageRenderTest extends TestCase
 		);
 	}
 
-	public function testCache()
+	public static function requestMethodProvider(): array
+	{
+		return [
+			['GET', true],
+			['HEAD', true],
+			['POST', false],
+			['DELETE', false],
+			['PATCH', false],
+			['PUT', false],
+		];
+	}
+
+	/**
+	 * @covers ::isCacheable
+	 * @dataProvider requestMethodProvider
+	 */
+	public function testIsCacheableRequestMethod($method, $expected)
+	{
+		$app = $this->app->clone([
+			'request' => [
+				'method' => $method
+			]
+		]);
+
+		$this->assertSame($expected, $app->page('default')->isCacheable());
+	}
+
+	/**
+	 * @covers ::isCacheable
+	 * @dataProvider requestMethodProvider
+	 */
+	public function testIsCacheableRequestData($method)
+	{
+		$app = $this->app->clone([
+			'request' => [
+				'method' => $method,
+				'query'  => ['foo' => 'bar']
+			]
+		]);
+
+		$this->assertFalse($app->page('default')->isCacheable());
+	}
+
+	/**
+	 * @covers ::isCacheable
+	 */
+	public function testIsCacheableRequestParams()
+	{
+		$app = $this->app->clone([
+			'request' => [
+				'url' => 'https://getkirby.com/blog/page:2'
+			]
+		]);
+
+		$this->assertFalse($app->page('default')->isCacheable());
+	}
+
+	/**
+	 * @covers ::isCacheable
+	 */
+	public function testIsCacheableIgnoreId()
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'cache.pages' => [
+					'ignore' => [
+						'data'
+					]
+				]
+			]
+		]);
+
+		$this->assertTrue($app->page('default')->isCacheable());
+		$this->assertFalse($app->page('data')->isCacheable());
+	}
+
+	/**
+	 * @covers ::isCacheable
+	 */
+	public function testIsCacheableIgnoreCallback()
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'cache.pages' => [
+					'ignore' => fn ($page) => $page->id() === 'default'
+				]
+			]
+		]);
+
+		$this->assertFalse($app->page('default')->isCacheable());
+		$this->assertTrue($app->page('data')->isCacheable());
+	}
+
+	/**
+	 * @covers ::isCacheable
+	 */
+	public function testIsCacheableDisabledCache()
+	{
+		// deactivate on top level
+		$app = $this->app->clone([
+			'options' => [
+				'cache.pages' => false
+			]
+		]);
+
+		$this->assertFalse($app->page('default')->isCacheable());
+
+		// deactivate in array
+		$app = $this->app->clone([
+			'options' => [
+				'cache.pages' => [
+					'active' => false
+				]
+			]
+		]);
+
+		$this->assertFalse($app->page('default')->isCacheable());
+	}
+
+	/**
+	 * @covers ::cacheId
+	 * @covers ::render
+	 */
+	public function testRenderCache()
 	{
 		$cache = $this->app->cache('pages');
 		$page  = $this->app->page('default');
@@ -128,7 +250,11 @@ class PageRenderTest extends TestCase
 		$this->assertSame($html1, $html2);
 	}
 
-	public function testCacheCustomExpiry()
+	/**
+	 * @covers ::cacheId
+	 * @covers ::render
+	 */
+	public function testRenderCacheCustomExpiry()
 	{
 		$cache = $this->app->cache('pages');
 		$page  = $this->app->page('expiry');
@@ -143,7 +269,11 @@ class PageRenderTest extends TestCase
 		$this->assertSame((int)$time, $value->expires());
 	}
 
-	public function testCacheMetadata()
+	/**
+	 * @covers ::cacheId
+	 * @covers ::render
+	 */
+	public function testRenderCacheMetadata()
 	{
 		$cache = $this->app->cache('pages');
 		$page  = $this->app->page('metadata');
@@ -170,7 +300,11 @@ class PageRenderTest extends TestCase
 		$this->assertSame('text/plain', $this->app->response()->type());
 	}
 
-	public function testCacheDisabled()
+	/**
+	 * @covers ::cacheId
+	 * @covers ::render
+	 */
+	public function testRenderCacheDisabled()
 	{
 		$cache = $this->app->cache('pages');
 		$page  = $this->app->page('disabled');
@@ -198,9 +332,11 @@ class PageRenderTest extends TestCase
 	}
 
 	/**
+	 * @covers ::cacheId
+	 * @covers ::render
 	 * @dataProvider dynamicProvider
 	 */
-	public function testCacheDynamicNonActive(string $slug, array $dynamicElements)
+	public function testRenderCacheDynamicNonActive(string $slug, array $dynamicElements)
 	{
 		$cache = $this->app->cache('pages');
 		$page  = $this->app->page($slug);
@@ -228,9 +364,11 @@ class PageRenderTest extends TestCase
 	}
 
 	/**
+	 * @covers ::cacheId
+	 * @covers ::render
 	 * @dataProvider dynamicProvider
 	 */
-	public function testCacheDynamicActiveOnFirstRender(string $slug, array $dynamicElements)
+	public function testRenderCacheDynamicActiveOnFirstRender(string $slug, array $dynamicElements)
 	{
 		$_COOKIE['foo'] = $_COOKIE['kirby_session'] = 'bar';
 		$this->app->clone([
@@ -258,9 +396,11 @@ class PageRenderTest extends TestCase
 	}
 
 	/**
+	 * @covers ::cacheId
+	 * @covers ::render
 	 * @dataProvider dynamicProvider
 	 */
-	public function testCacheDynamicActiveOnSecondRender(string $slug, array $dynamicElements)
+	public function testRenderCacheDynamicActiveOnSecondRender(string $slug, array $dynamicElements)
 	{
 		$cache = $this->app->cache('pages');
 		$page  = $this->app->page($slug);
@@ -291,7 +431,11 @@ class PageRenderTest extends TestCase
 		$this->assertNotSame($html1, $html2);
 	}
 
-	public function testCacheDataInitial()
+	/**
+	 * @covers ::cacheId
+	 * @covers ::render
+	 */
+	public function testRenderCacheDataInitial()
 	{
 		$cache = $this->app->cache('pages');
 		$page  = $this->app->page('data');
@@ -304,7 +448,11 @@ class PageRenderTest extends TestCase
 		$this->assertNull($cache->retrieve('data.html'));
 	}
 
-	public function testCacheDataPreCached()
+	/**
+	 * @covers ::cacheId
+	 * @covers ::render
+	 */
+	public function testRenderCacheDataPreCached()
 	{
 		$cache = $this->app->cache('pages');
 		$page  = $this->app->page('data');
@@ -329,14 +477,22 @@ class PageRenderTest extends TestCase
 		$this->assertNull($value->expires());
 	}
 
-	public function testRepresentationDefault()
+	/**
+	 * @covers ::cacheId
+	 * @covers ::render
+	 */
+	public function testRenderRepresentationDefault()
 	{
 		$page = $this->app->page('representation');
 
 		$this->assertSame('<html>Some HTML: representation</html>', $page->render());
 	}
 
-	public function testRepresentationOverride()
+	/**
+	 * @covers ::cacheId
+	 * @covers ::render
+	 */
+	public function testRenderRepresentationOverride()
 	{
 		$page = $this->app->page('representation');
 
@@ -344,7 +500,11 @@ class PageRenderTest extends TestCase
 		$this->assertSame('{"some json": "representation"}', $page->render(contentType: 'json'));
 	}
 
-	public function testRepresentationMissing()
+	/**
+	 * @covers ::cacheId
+	 * @covers ::render
+	 */
+	public function testRenderRepresentationMissing()
 	{
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The content representation cannot be found');
@@ -353,7 +513,11 @@ class PageRenderTest extends TestCase
 		$page->render(contentType: 'txt');
 	}
 
-	public function testTemplateMissing()
+	/**
+	 * @covers ::cacheId
+	 * @covers ::render
+	 */
+	public function testRenderTemplateMissing()
 	{
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The default template does not exist');
@@ -362,7 +526,11 @@ class PageRenderTest extends TestCase
 		$page->render();
 	}
 
-	public function testController()
+	/**
+	 * @covers ::cacheId
+	 * @covers ::render
+	 */
+	public function testRenderController()
 	{
 		$page = $this->app->page('controller');
 
@@ -370,7 +538,11 @@ class PageRenderTest extends TestCase
 		$this->assertSame('Data says TEST: controller and custom!', $page->render(['test' => 'override', 'test2' => 'custom']));
 	}
 
-	public function testHookBefore()
+	/**
+	 * @covers ::cacheId
+	 * @covers ::render
+	 */
+	public function testRenderHookBefore()
 	{
 		$app = $this->app->clone([
 			'hooks' => [
@@ -385,7 +557,11 @@ class PageRenderTest extends TestCase
 		$this->assertSame('Bar Title : Test', $page->render());
 	}
 
-	public function testHookAfter()
+	/**
+	 * @covers ::cacheId
+	 * @covers ::render
+	 */
+	public function testRenderHookAfter()
 	{
 		$app = $this->app->clone([
 			'hooks' => [
