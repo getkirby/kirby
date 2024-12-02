@@ -125,7 +125,7 @@ class SiteTest extends AreaTestCase
 	{
 		$this->login();
 
-		$this->app->site()->createChild([
+		$page = $this->app->site()->createChild([
 			'slug'    => 'test',
 			'isDraft' => false,
 			'content' => [
@@ -136,9 +136,11 @@ class SiteTest extends AreaTestCase
 		$view  = $this->view('pages/test/preview/changes');
 		$props = $view['props'];
 
+		$token = $page->version('changes')->previewToken();
+
 		$this->assertSame('k-preview-view', $view['component']);
 		$this->assertSame('Test | Changes', $view['title']);
-		$this->assertSame('/test?_version=changes', $props['src']['changes']);
+		$this->assertSame('/test?_token=' . $token . '&_version=changes', $props['src']['changes']);
 		$this->assertSame('/test', $props['src']['latest']);
 	}
 
@@ -221,14 +223,21 @@ class SiteTest extends AreaTestCase
 	{
 		$this->login();
 
-		$this->app->site();
+		$site = $this->app->site();
+
+		$site->createChild([
+			'slug'    => 'home',
+			'isDraft' => false
+		]);
 
 		$view  = $this->view('site/preview/changes');
 		$props = $view['props'];
 
+		$token = $site->version('changes')->previewToken();
+
 		$this->assertSame('k-preview-view', $view['component']);
 		$this->assertSame('Site | Changes', $view['title']);
-		$this->assertSame('/?_version=changes', $props['src']['changes']);
+		$this->assertSame('/?_token=' . $token . '&_version=changes', $props['src']['changes']);
 		$this->assertSame('/', $props['src']['latest']);
 	}
 

@@ -5,7 +5,6 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Panel\Page as Panel;
-use ReflectionMethod;
 use TypeError;
 
 class PageTestModel extends Page
@@ -692,83 +691,6 @@ class PageTest extends TestCase
 	{
 		$page = new Page(['slug' => 'test']);
 		$this->assertSame('test', $page->slug());
-	}
-
-	public function testToken()
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
-
-		$page = new Page([
-			'slug'     => 'test',
-			'template' => 'default'
-		]);
-
-		$method = new ReflectionMethod(Page::class, 'token');
-		$method->setAccessible(true);
-
-		$expected = hash_hmac(
-			'sha1',
-			'testdefault',
-			'/dev/null/content/test'
-		);
-		$this->assertSame($expected, $method->invoke($page));
-	}
-
-	public function testTokenWithCustomSalt()
-	{
-		new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'options' => [
-				'content' => [
-					'salt' => 'testsalt'
-				]
-			]
-		]);
-
-		$page = new Page([
-			'slug'     => 'test',
-			'template' => 'default'
-		]);
-
-		$method = new ReflectionMethod(Page::class, 'token');
-		$method->setAccessible(true);
-
-		$expected = hash_hmac('sha1', 'test' . 'default', 'testsalt');
-		$this->assertSame($expected, $method->invoke($page));
-	}
-
-	public function testTokenWithSaltCallback()
-	{
-		new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'options' => [
-				'content' => [
-					'salt' => fn ($page) => $page->date()
-				]
-			]
-		]);
-
-		$page = new Page([
-			'slug'     => 'test',
-			'template' => 'default',
-			'content'  => [
-				'date' => '2012-12-12'
-			]
-		]);
-
-		$method = new ReflectionMethod(Page::class, 'token');
-		$method->setAccessible(true);
-
-		$expected = hash_hmac('sha1', 'test' . 'default', '2012-12-12');
-		$this->assertSame($expected, $method->invoke($page));
 	}
 
 	public function testToString()

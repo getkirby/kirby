@@ -793,7 +793,56 @@ class VersionTest extends TestCase
 			model: $this->model,
 			id: VersionId::latest()
 		);
-		$this->assertSame(hash_hmac('sha1', 'a-pagedefault', static::TMP . '/content/a-page'), $version->previewToken());
+		$this->assertSame(hash_hmac('sha1', 'a-page' . 'default', static::TMP . '/content/a-page'), $version->previewToken());
+	}
+
+	/**
+	 * @covers ::previewToken
+	 */
+	public function testPreviewTokenCustomSalt()
+	{
+		$this->setUpSingleLanguage();
+
+		$this->app->clone([
+			'options' => [
+				'content' => [
+					'salt' => 'testsalt'
+				]
+			]
+		]);
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->assertSame(hash_hmac('sha1', 'a-page' . 'default', 'testsalt'), $version->previewToken());
+	}
+
+	/**
+	 * @covers ::previewToken
+	 */
+	public function testPreviewTokenCustomSaltCallback()
+	{
+		$this->setUpSingleLanguage();
+
+		$this->app = $this->app->clone([
+			'options' => [
+				'content' => [
+					'salt' => fn ($page) => $page->date()
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+		$model = $this->model->update(['date' => '2012-12-12']);
+
+		$version = new Version(
+			model: $model,
+			id: VersionId::latest()
+		);
+
+		$this->assertSame(hash_hmac('sha1', 'a-page' . 'default', '2012-12-12'), $version->previewToken());
 	}
 
 	/**
@@ -1472,15 +1521,15 @@ class VersionTest extends TestCase
 			[null, null, false, 'latest', false],
 
 			// changes version
-			[null, '/test?_version=changes', false, 'changes'],
+			[null, '/test?{token}&_version=changes', false, 'changes'],
 			[null, '/test?{token}&_version=changes', true, 'changes'],
-			[true, '/test?_version=changes', false, 'changes'],
+			[true, '/test?{token}&_version=changes', false, 'changes'],
 			[true, '/test?{token}&_version=changes', true, 'changes'],
-			['/something/different', '/something/different?_version=changes', false, 'changes'],
+			['/something/different', '/something/different?{token}&_version=changes', false, 'changes'],
 			['/something/different', '/something/different?{token}&_version=changes', true, 'changes'],
-			['{{ site.url }}#{{ page.slug }}', '/?_version=changes#test', false, 'changes'],
+			['{{ site.url }}#{{ page.slug }}', '/?{token}&_version=changes#test', false, 'changes'],
 			['{{ site.url }}#{{ page.slug }}', '/?{token}&_version=changes#test', true, 'changes'],
-			['{{ page.url }}?preview=true', '/test?preview=true&_version=changes', false, 'changes'],
+			['{{ page.url }}?preview=true', '/test?preview=true&{token}&_version=changes', false, 'changes'],
 			['{{ page.url }}?preview=true', '/test?preview=true&{token}&_version=changes', true, 'changes'],
 			[false, null, false, 'changes'],
 			[false, null, true, 'changes'],
@@ -1599,9 +1648,9 @@ class VersionTest extends TestCase
 			[null, null, 'latest', false],
 
 			// changes version
-			[null, '/?_version=changes', 'changes'],
-			['https://test.com', 'https://test.com?_version=changes', 'changes'],
-			['{{ site.url }}#test', '/?_version=changes#test', 'changes'],
+			[null, '/?{token}&_version=changes', 'changes'],
+			['https://test.com', 'https://test.com?{token}&_version=changes', 'changes'],
+			['{{ site.url }}#test', '/?{token}&_version=changes#test', 'changes'],
 			[false, null, 'changes'],
 			[null, null, 'changes', false],
 		];
@@ -1619,6 +1668,14 @@ class VersionTest extends TestCase
 	): void {
 		$this->setUpSingleLanguage();
 
+		$options = [];
+
+		if ($input !== null) {
+			$options = [
+				'preview' => $input
+			];
+		}
+
 		$app = $this->app->clone([
 			'users' => [
 				[
@@ -1632,6 +1689,12 @@ class VersionTest extends TestCase
 					'id'    => 'editor',
 					'name'  => 'editor',
 				]
+			],
+			'site' => [
+				'blueprint' => [
+					'name'    => 'site',
+					'options' => $options
+				]
 			]
 		]);
 
@@ -1640,20 +1703,15 @@ class VersionTest extends TestCase
 			$app->impersonate('test@getkirby.com');
 		}
 
-		$options = [];
+		$site = $app->site();
 
-		if ($input !== null) {
-			$options = [
-				'preview' => $input
-			];
+		if ($expected !== null) {
+			$expected = str_replace(
+				'{token}',
+				'_token=' . hash_hmac('sha1', 'home' . 'default', $site->kirby()->root('content') . '/home'),
+				$expected
+			);
 		}
-
-		$site = new Site([
-			'blueprint' => [
-				'name'    => 'site',
-				'options' => $options
-			]
-		]);
 
 		$version = new Version(
 			model: $site,

@@ -777,27 +777,6 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Checks if the page access is verified.
-	 * This is only used for drafts so far.
-	 * @internal
-	 */
-	public function isVerified(string|null $token = null): bool
-	{
-		if (
-			$this->isPublished() === true &&
-			$this->parents()->findBy('status', 'draft') === null
-		) {
-			return true;
-		}
-
-		if ($token === null) {
-			return false;
-		}
-
-		return hash_equals($this->token(), $token);
-	}
-
-	/**
 	 * Returns the root to the media folder for the page
 	 * @internal
 	 */
@@ -932,7 +911,7 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Returns the preview URL with authentication for drafts
+	 * Returns the preview URL with authentication for drafts and versions
 	 * @internal
 	 */
 	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
@@ -961,10 +940,12 @@ class Page extends ModelWithContent
 
 		// if not manually overridden, first use a globally set
 		// version ID (e.g. when rendering within another render),
-		// otherwise auto-detect from the request;
-		// make sure to convert it to an object
+		// otherwise auto-detect from the request and fall back to
+		// the latest version if request is unauthenticated (no valid token);
+		// make sure to convert it to an object no matter what happened
 		$versionId ??= VersionId::$render;
-		$versionId ??= $this->kirby()->request()->get('_version') === 'changes' ? VersionId::changes() : VersionId::latest();
+		$versionId ??= $this->renderVersionFromRequest();
+		$versionId ??= VersionId::latest();
 		$versionId   = VersionId::from($versionId);
 
 		// try to get the page from cache
@@ -1038,6 +1019,42 @@ class Page extends ModelWithContent
 		}
 
 		return $html;
+	}
+
+	/**
+	 * Determines which version (if any) can be rendered
+	 * based on the token authentication in the current request
+	 * @internal
+	 */
+	public function renderVersionFromRequest(): VersionId|null
+	{
+		$request = $this->kirby()->request();
+		$token   = $request->get('_token', '');
+
+		try {
+			$versionId = VersionId::from($request->get('_version', ''));
+		} catch (InvalidArgumentException) {
+			// ignore invalid enum values in the request
+			$versionId = VersionId::latest();
+		}
+
+		// authenticated requests can always be trusted
+		$expectedToken = $this->version($versionId)->previewToken();
+		if ($token !== '' && hash_equals($expectedToken, $token) === true) {
+			return $versionId;
+		}
+
+		// published pages with published parents can render
+		// the latest version without (valid) token
+		if (
+			$this->isPublished() === true &&
+			$this->parents()->findBy('status', 'draft') === null
+		) {
+			return VersionId::latest();
+		}
+
+		// drafts cannot be accessed without authentication
+		return null;
 	}
 
 	/**
@@ -1214,18 +1231,6 @@ class Page extends ModelWithContent
 			'uri'       => $this->uri(),
 			'url'       => $this->url()
 		];
-	}
-
-	/**
-	 * Returns a verification token, which
-	 * is used for the draft authentication
-	 */
-	protected function token(): string
-	{
-		return $this->kirby()->contentToken(
-			$this,
-			$this->id() . $this->template()
-		);
 	}
 
 	/**
