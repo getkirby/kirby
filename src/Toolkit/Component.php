@@ -286,7 +286,18 @@ class Component
 			return $closure->call($this);
 		}
 
-		$array = [...$this->attrs, ...$this->props, ...$this->computed];
+		$props = [];
+
+		// lazy-load all properties
+		foreach ($this->props as $key => $value) {
+			$props[$key] = $this->$key();
+		}
+
+		$array = [
+			...$this->attrs,
+			...$props,
+			...$this->computed
+		];
 
 		ksort($array);
 

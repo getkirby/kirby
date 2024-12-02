@@ -11,6 +11,9 @@ namespace Kirby\Form\Mixin;
  */
 trait Value
 {
+	protected mixed $default;
+	protected mixed $value = null;
+
 	/**
 	 * @deprecated 5.0.0 Use `::toStoredValue()` instead
 	 */

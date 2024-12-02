@@ -32,4 +32,18 @@ trait Model
 	{
 		$this->model = $model ?? App::instance()->site();
 	}
+
+	/**
+	 * Parses a string template in the given value
+	 */
+	protected function stringTemplate(
+		string|null $string = null,
+		bool $safe = false
+	): string|null {
+		if ($string !== null) {
+			return $safe === true ? $this->model->toSafeString($string) : $this->model->toString($string);
+		}
+
+		return null;
+	}
 }

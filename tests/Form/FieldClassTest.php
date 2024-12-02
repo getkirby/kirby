@@ -7,7 +7,7 @@ use Kirby\Exception\Exception;
 
 class FieldWithApiRoutes extends FieldClass
 {
-	public function routes(): array
+	public function api(): array
 	{
 		return FieldClassTest::apiRoutes();
 	}

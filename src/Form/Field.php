@@ -3,12 +3,9 @@
 namespace Kirby\Form;
 
 use Closure;
-use Kirby\Cms\HasSiblings;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Component;
-use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\Str;
 
 /**
  * Form Field object that takes a Vue component style
@@ -23,21 +20,14 @@ use Kirby\Toolkit\Str;
  */
 class Field extends Component
 {
-	/**
-	 * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
-	 */
-	use HasSiblings;
-	use Mixin\Api;
+	use Mixin\Common;
+	use Mixin\Endpoints;
 	use Mixin\Model;
+	use Mixin\Siblings;
 	use Mixin\Translatable;
 	use Mixin\Validation;
 	use Mixin\When;
 	use Mixin\Value;
-
-	/**
-	 * Parent collection with all fields of the current form
-	 */
-	public Fields $siblings;
 
 	/**
 	 * Registry for all component mixins
@@ -81,8 +71,22 @@ class Field extends Component
 
 		parent::__construct($type, $attrs);
 
-		// set the siblings collection
-		$this->siblings = $siblings ?? new Fields([$this]);
+		$this->setSiblings($attrs['siblings'] ?? null);
+	}
+
+	/**
+	 * Returns field api routes
+	 */
+	public function api(): array
+	{
+		if (
+			isset($this->options['api']) === true &&
+			$this->options['api'] instanceof Closure
+		) {
+			return $this->options['api']->call($this);
+		}
+
+		return [];
 	}
 
 	/**
@@ -95,38 +99,38 @@ class Field extends Component
 				/**
 				 * Optional text that will be shown after the input
 				 */
-				'after' => function ($after = null) {
-					return I18n::translate($after, $after);
+				'after' => function (array|string|null $after = null) {
+					return $this->i18n($after);
 				},
 				/**
 				 * Sets the focus on this field when the form loads. Only the first field with this label gets
 				 */
-				'autofocus' => function (bool|null $autofocus = null): bool {
-					return $autofocus ?? false;
+				'autofocus' => function (bool $autofocus = false): bool {
+					return $autofocus;
 				},
 				/**
 				 * Optional text that will be shown before the input
 				 */
-				'before' => function ($before = null) {
-					return I18n::translate($before, $before);
+				'before' => function (array|string|null $before = null) {
+					return $this->i18n($before);
 				},
 				/**
 				 * Default value for the field, which will be used when a page/file/user is created
 				 */
-				'default' => function ($default = null) {
+				'default' => function (mixed $default = null) {
 					return $default;
 				},
 				/**
 				 * If `true`, the field is no longer editable and will not be saved
 				 */
-				'disabled' => function (bool|null $disabled = null): bool {
-					return $disabled ?? false;
+				'disabled' => function (bool $disabled = false): bool {
+					return $disabled;
 				},
 				/**
 				 * Optional help text below the field
 				 */
-				'help' => function ($help = null) {
-					return I18n::translate($help, $help);
+				'help' => function (array|string|null $help = null) {
+					return $this->i18n($help);
 				},
 				/**
 				 * Optional icon that will be shown at the end of the field
@@ -137,20 +141,20 @@ class Field extends Component
 				/**
 				 * The field label can be set as string or associative array with translations
 				 */
-				'label' => function ($label = null) {
-					return I18n::translate($label, $label);
+				'label' => function (array|string|null $label = null) {
+					return $this->i18n($label);
 				},
 				/**
 				 * Optional placeholder value that will be shown when the field is empty
 				 */
-				'placeholder' => function ($placeholder = null) {
-					return I18n::translate($placeholder, $placeholder);
+				'placeholder' => function (array|string|null $placeholder = null) {
+					return $this->i18n($placeholder);
 				},
 				/**
 				 * If `true`, the field has to be filled in correctly to be saved.
 				 */
-				'required' => function (bool|null $required = null): bool {
-					return $required ?? false;
+				'required' => function (bool $required = false): bool {
+					return $required;
 				},
 				/**
 				 * If `false`, the field will be disabled in non-default languages and cannot be translated. This is only relevant in multi-language setups.
@@ -161,61 +165,17 @@ class Field extends Component
 				/**
 				 * Conditions when the field will be shown (since 3.1.0)
 				 */
-				'when' => function ($when = null) {
+				'when' => function (array|null $when = null) {
 					return $when;
 				},
 				/**
 				 * The width of the field in the field grid. Available widths: `1/1`, `1/2`, `1/3`, `1/4`, `2/3`, `3/4`
 				 */
-				'width' => function (string $width = '1/1') {
+				'width' => function (string|null $width = null) {
 					return $width;
 				},
 				'value' => function ($value = null) {
 					return $value;
-				}
-			],
-			'computed' => [
-				'after' => function () {
-					/** @var \Kirby\Form\Field $this */
-					if ($this->after !== null) {
-						return $this->model()->toString($this->after);
-					}
-				},
-				'before' => function () {
-					/** @var \Kirby\Form\Field $this */
-					if ($this->before !== null) {
-						return $this->model()->toString($this->before);
-					}
-				},
-				'default' => function () {
-					/** @var \Kirby\Form\Field $this */
-					if ($this->default === null) {
-						return;
-					}
-
-					if (is_string($this->default) === false) {
-						return $this->default;
-					}
-
-					return $this->model()->toString($this->default);
-				},
-				'help' => function () {
-					/** @var \Kirby\Form\Field $this */
-					if ($this->help) {
-						$help = $this->model()->toSafeString($this->help);
-						$help = $this->kirby()->kirbytext($help);
-						return $help;
-					}
-				},
-				'label' => function () {
-					/** @var \Kirby\Form\Field $this */
-					return $this->model()->toString($this->label ?? Str::ucfirst($this->name));
-				},
-				'placeholder' => function () {
-					/** @var \Kirby\Form\Field $this */
-					if ($this->placeholder !== null) {
-						return $this->model()->toString($this->placeholder);
-					}
 				}
 			]
 		];
@@ -281,28 +241,12 @@ class Field extends Component
 		$this->applyProp('value', $this->options['props']['value'] ?? $value);
 
 		// reevaluate the computed props
-		$this->applyComputed($this->options['computed']);
+		$this->applyComputed($this->options['computed'] ?? []);
 
 		// reset the errors cache
 		$this->errors = null;
 
 		return $this;
-	}
-
-	/**
-	 * @deprecated 5.0.0 Use `::siblings() instead
-	 */
-	public function formFields(): Fields
-	{
-		return $this->siblings;
-	}
-
-	/**
-	 * Checks if the field is disabled
-	 */
-	public function isDisabled(): bool
-	{
-		return $this->disabled === true;
 	}
 
 	/**
@@ -314,59 +258,11 @@ class Field extends Component
 	}
 
 	/**
-	 * Checks if the field is required
-	 */
-	public function isRequired(): bool
-	{
-		return $this->required ?? false;
-	}
-
-	/**
 	 * Checks if the field is saveable
 	 */
 	public function isSaveable(): bool
 	{
 		return ($this->options['save'] ?? true) !== false;
-	}
-
-	/**
-	 * Returns field api routes
-	 */
-	public function routes(): array
-	{
-		if (
-			isset($this->options['api']) === true &&
-			$this->options['api'] instanceof Closure
-		) {
-			return $this->options['api']->call($this);
-		}
-
-		return [];
-	}
-
-	/**
-	 * Checks if the field is saveable
-	 * @deprecated 5.0.0 Use `::isSaveable()` instead
-	 */
-	public function save(): bool
-	{
-		return $this->isSaveable();
-	}
-
-	/**
-	 * Parent collection with all fields of the current form
-	 */
-	public function siblings(): Fields
-	{
-		return $this->siblings;
-	}
-
-	/**
-	 * Returns all sibling fields for the HasSiblings trait
-	 */
-	protected function siblingsCollection(): Fields
-	{
-		return $this->siblings;
 	}
 
 	/**

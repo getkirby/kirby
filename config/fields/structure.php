@@ -141,7 +141,7 @@ return [
 				}
 
 				$column['type']  ??= $field['type'];
-				$column['label'] ??= $field['label'] ?? $name;
+				$column['label'] ??= $field['label'] ?? Str::ucfirst($name);
 				$column['label']   = I18n::translate($column['label'], $column['label']);
 
 				$columns[$name] = $column;
