@@ -1089,7 +1089,6 @@ abstract class FieldTestCase extends TestCase
 
 	/**
 	 * @covers ::toStoredValue
-	 * @covers ::store
 	 * @covers ::data
 	 */
 	public function testToStoredValueWhenNotSet()
@@ -1101,7 +1100,6 @@ abstract class FieldTestCase extends TestCase
 
 	/**
 	 * @covers ::toStoredValue
-	 * @covers ::store
 	 * @covers ::data
 	 */
 	public function testToStoredValueWhenUnsaveable()
@@ -1115,7 +1113,6 @@ abstract class FieldTestCase extends TestCase
 
 	/**
 	 * @covers ::toStoredValue
-	 * @covers ::store
 	 * @covers ::data
 	 */
 	public function testToStoredValueWithDefault()
@@ -1134,7 +1131,6 @@ abstract class FieldTestCase extends TestCase
 
 	/**
 	 * @covers ::toStoredValue
-	 * @covers ::store
 	 * @covers ::data
 	 */
 	public function testToStoredValueWithCustomStoreHandler()
