@@ -133,7 +133,7 @@ export default {
 	margin-inline-start: var(--spacing-2);
 }
 .k-toggles-input input:focus:not(:checked) + label {
-	background: var(--color-blue-200);
+	background: light-dark(var(--color-blue-200), var(--color-blue-800));
 }
 
 .k-toggles-input input:checked + label {

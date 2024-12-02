@@ -223,7 +223,7 @@ export default {
 	flex-grow: 1;
 	border-radius: var(--rounded-lg);
 	box-shadow: var(--shadow-xl);
-	background: var(--color-white);
+	background: light-dark(var(--color-white), var(--color-gray-950));
 }
 .k-preview-view-panel .k-empty {
 	flex-grow: 1;

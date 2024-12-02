@@ -44,7 +44,7 @@ export default {
 	extends: Block,
 	data() {
 		return {
-			back: this.onBack() ?? "var(--color-white)"
+			back: this.onBack() ?? "var(--block-color-back)"
 		};
 	},
 	computed: {

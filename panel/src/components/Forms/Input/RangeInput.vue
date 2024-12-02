@@ -100,7 +100,7 @@ export default {
 		position() {
 			return this.value || this.value === 0
 				? this.value
-				: this.default ?? this.baseline;
+				: (this.default ?? this.baseline);
 		}
 	},
 	watch: {
@@ -195,7 +195,10 @@ export default {
 }
 
 .k-range-input[data-disabled="true"] {
-	--range-tooltip-back: var(--color-gray-600);
+	--range-tooltip-back: light-dark(
+		var(--color-gray-600),
+		var(--color-gray-850)
+	);
 }
 
 /* Input context */
