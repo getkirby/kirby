@@ -63,7 +63,4 @@ export default {
 .k-button.k-file-preview-frame-dropdown-toggle {
 	--button-color-icon: var(--color-gray-500);
 }
-.k-panel[data-theme="dark"] .k-button.k-file-preview-frame-dropdown-toggle {
-	--button-color-icon: var(--color-gray-700);
-}
 </style>

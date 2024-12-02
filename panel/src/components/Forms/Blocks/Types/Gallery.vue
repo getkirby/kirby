@@ -104,9 +104,9 @@ export default {
 }
 
 .k-block-type-gallery[data-disabled="true"] .k-block-type-gallery-placeholder {
-	background: var(--color-gray-250);
+	background: light-dark(var(--color-gray-250), var(--color-gray-950));
 }
 .k-block-type-gallery-placeholder {
-	background: var(--color-light);
+	background: var(--panel-color-back);
 }
 </style>

@@ -209,7 +209,7 @@ export default {
 	display: flex;
 	flex-direction: column;
 	padding: var(--spacing-6);
-	background: var(--color-gray-200);
+	background: var(--panel-color-back);
 }
 .k-preview-view-panel header {
 	container-type: inline-size;

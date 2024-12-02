@@ -87,6 +87,7 @@ export default {
 <style>
 .k-file-view-header {
 	margin-bottom: 0;
+	border-bottom: 0;
 }
 
 /** TODO: .k-file-view:has(.k-tabs) .k-file-preview  */

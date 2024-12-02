@@ -85,6 +85,6 @@ export default {
 
 <style>
 .k-system-info .k-stat-label {
-	color: var(--theme, var(--color-black));
+	color: var(--theme-color-text, currentColor);
 }
 </style>

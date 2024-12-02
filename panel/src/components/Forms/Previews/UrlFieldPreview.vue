@@ -60,6 +60,6 @@ export default {
 	text-underline-offset: var(--link-underline-offset);
 }
 .k-url-field-preview a:hover {
-	color: var(--color-black);
+	color: var(--link-color-hover);
 }
 </style>

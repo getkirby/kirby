@@ -343,17 +343,13 @@ export default {
 
 <style>
 :root {
-	--dropdown-color-bg: var(--color-black);
+	--dropdown-color-bg: var(--color-gray-950);
 	--dropdown-color-current: var(--color-blue-500);
-	--dropdown-color-hr: hsla(0, 0%, var(--color-l-max), 0.25);
+	--dropdown-color-hr: var(--color-gray-850);
 	--dropdown-color-text: var(--color-white);
 	--dropdown-padding: var(--spacing-2);
 	--dropdown-rounded: var(--rounded);
 	--dropdown-shadow: var(--shadow-xl);
-}
-
-.k-panel[data-theme="dark"] {
-	--dropdown-color-hr: hsla(0, 0%, var(--color-l-max), 0.1);
 }
 
 .k-dropdown-content {
@@ -395,7 +391,7 @@ export default {
 .k-dropdown-content[data-theme="light"] {
 	--dropdown-color-bg: var(--color-white);
 	--dropdown-color-current: var(--color-blue-800);
-	--dropdown-color-hr: var(--color-border-dimmed);
+	--dropdown-color-hr: var(--color-gray-250);
 	--dropdown-color-text: var(--color-black);
 }
 </style>

@@ -240,6 +240,7 @@ export default {
 	--button-rounded: var(--spacing-1);
 	--button-text-display: block;
 	--button-icon-display: block;
+	--button-filled-color-back: light-dark(var(--color-gray-300), var(--color-gray-950));
 }
 
 .k-button {
@@ -305,26 +306,21 @@ export default {
 
 /** Filled Buttons **/
 .k-button:where([data-variant="filled"]) {
-	--button-color-back: var(--color-gray-300);
+	--button-color-back: var(--button-filled-color-back);
 }
 .k-button:where([data-variant="filled"]):not([aria-disabled="true"]):hover {
 	filter: brightness(97%);
 }
-.k-panel[data-theme="dark"]
-	.k-button:where([data-variant="filled"]):not([aria-disabled="true"]):hover {
-	filter: brightness(87%);
-}
 
 .k-button:where([data-variant="filled"][data-theme]) {
-	--button-color-icon: var(--theme-color-700);
+	--button-color-icon: var(--theme-color-icon-highlight);
 	--button-color-back: var(--theme-color-back);
+	--button-color-text: var(--theme-color-text-highlight);
 }
 .k-button:where([data-theme$="-icon"][data-variant="filled"]) {
-	--button-color-icon: hsl(
-		var(--theme-color-hs),
-		57%
-	); /* slightly improve the contrast */
-	--button-color-back: var(--color-gray-300);
+	--button-color-icon: var(--theme-color-icon);
+	--button-color-back: var(--button-filled-color-back);
+	--button-color-text: currentColor;
 }
 
 /** Icon Buttons **/
@@ -387,13 +383,13 @@ export default {
 	font-variant-numeric: tabular-nums;
 	line-height: 1.5;
 	padding: 0 var(--spacing-1);
-	border-radius: 50%;
+	border-radius: 1em;
 	text-align: center;
 	font-size: 0.6rem;
 	box-shadow: var(--shadow-md);
 	background: var(--theme-color-back);
-	border: 1px solid var(--theme-color-500);
-	color: var(--theme-color-text);
+	border: 1px solid light-dark(var(--theme-color-500), var(--color-black));
+	color: var(--theme-color-text-highlight);
 	z-index: 1;
 }
 

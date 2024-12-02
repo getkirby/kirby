@@ -61,7 +61,7 @@ export default {
 <style>
 :root {
 	--drawer-body-padding: 1.5rem;
-	--drawer-color-back: var(--color-light);
+	--drawer-color-back: var(--panel-color-back);
 	--drawer-header-height: 2.5rem;
 	--drawer-header-padding: 1rem;
 	--drawer-shadow: var(--shadow-xl);

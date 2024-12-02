@@ -14,7 +14,7 @@
 			:options="[
 				{
 					text: $t('field.blocks.figure.back.plain'),
-					click: 'var(--color-white)'
+					click: 'transparent'
 				},
 				{
 					text: $t('field.blocks.figure.back.pattern.light'),

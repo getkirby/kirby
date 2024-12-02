@@ -84,7 +84,7 @@ export default {
 
 .k-frame:where([data-theme]) {
 	--back: var(--theme-color-back);
-	color: var(--theme-color-text);
+	color: var(--theme-color-text-highlight);
 }
 
 .k-frame *:where(img, video, iframe, button) {

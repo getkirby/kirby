@@ -26,7 +26,7 @@ export default {
 
 <style>
 .k-writer-input {
-	background-color: white;
+	background-color: var(--input-color-back);
 	border-radius: var(--rounded);
 }
 </style>

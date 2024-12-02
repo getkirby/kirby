@@ -362,11 +362,11 @@ export default {
 .k-block-container {
 	position: relative;
 	padding: var(--spacing-3);
-	background: var(--color-white);
+	background: var(--block-color-back);
 	border-radius: var(--rounded);
 }
 .k-block-container:not(:last-of-type) {
-	border-bottom: 1px dashed var(--color-border-dimmed);
+	border-bottom: 1px dashed var(--panel-color-back);
 }
 .k-block-container:focus {
 	outline: 0;
@@ -403,7 +403,7 @@ export default {
 	display: inline-grid;
 }
 .k-block-container[data-disabled="true"] {
-	background: var(--color-light);
+	background: var(--panel-color-back);
 }
 
 /* Collapse long blocks while dragging */
@@ -418,6 +418,6 @@ export default {
 	content: "";
 	height: 2rem;
 	width: 100%;
-	background: linear-gradient(to top, var(--color-white), transparent);
+	background: linear-gradient(to top, var(--block-color-back), transparent);
 }
 </style>

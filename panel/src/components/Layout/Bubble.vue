@@ -87,7 +87,7 @@ export default {
 <style>
 :root {
 	--bubble-size: 1.525rem;
-	--bubble-back: var(--color-light);
+	--bubble-back: var(--panel-color-back);
 	--bubble-rounded: var(--rounded-sm);
 	--bubble-text: var(--color-black);
 }

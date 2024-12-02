@@ -55,7 +55,7 @@ export default {
 .k-user-profile {
 	--button-height: auto;
 	padding: var(--spacing-2);
-	background: var(--color-white);
+	background: var(--item-color-back);
 	border-radius: var(--rounded-lg);
 	display: flex;
 	align-items: center;

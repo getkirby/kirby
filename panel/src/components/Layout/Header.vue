@@ -60,7 +60,7 @@ export default {
 
 <style>
 :root {
-	--header-color-back: var(--color-light);
+	--header-color-back: var(--panel-color-back);
 	--header-padding-block: var(--spacing-4);
 	--header-sticky-offset: var(--scroll-top);
 }

@@ -112,6 +112,10 @@ export default {
 </script>
 
 <style>
+:root {
+	--file-browser-items-color-back: light-dark(var(--color-gray-100), var(--panel-color-back));
+}
+
 .k-file-browser {
 	container-type: inline-size;
 	overflow: hidden;
@@ -129,19 +133,19 @@ export default {
 .k-file-browser-tree {
 	grid-area: tree;
 	padding: var(--spacing-2);
-	border-right: 1px solid var(--color-gray-300);
+	border-right: 1px solid var(--color-border);
 }
 .k-file-browser-items {
 	grid-area: items;
 	padding: var(--spacing-2);
-	background: var(--color-gray-100);
+	background: var(--file-browser-items-color-back);
 }
 .k-file-browser-back-button {
 	display: none;
 }
 
 .k-file-browser-pagination {
-	background: var(--color-gray-100);
+	background: var(--file-browser-items-color-back);
 	padding: var(--spacing-2);
 	display: flex;
 	justify-content: end;

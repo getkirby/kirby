@@ -721,11 +721,15 @@ export default {
 </script>
 
 <style>
+:root {
+	--block-color-back: var(--item-color-back);
+}
+
 .k-blocks {
 	border-radius: var(--rounded);
 }
 .k-blocks:not([data-empty="true"], [data-disabled="true"]) {
-	background: var(--color-white);
+	background: var(--block-color-back);
 	box-shadow: var(--shadow);
 }
 .k-blocks[data-disabled="true"]:not([data-empty="true"]) {
