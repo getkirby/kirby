@@ -127,8 +127,8 @@ export default {
 }
 
 .k-tag[data-theme="light"] {
-	--tag-color-back: var(--color-light);
-	--tag-color-text: var(--color-black);
+	--tag-color-back: var(--panel-color-back);
+	--tag-color-text: var(--color-text);
 	--tag-color-disabled-back: var(--color-gray-200);
 	--tag-color-disabled-text: var(--color-gray-600);
 }

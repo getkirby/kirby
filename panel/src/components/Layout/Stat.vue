@@ -83,7 +83,10 @@ export default {
 <style>
 :root {
 	--stat-color-back: var(--item-color-back);
-	--stat-color-hover-back: light-dark(var(--color-gray-100), var(--color-gray-850));
+	--stat-color-hover-back: light-dark(
+		var(--color-gray-100),
+		var(--color-gray-850)
+	);
 	--stat-info-text-color: var(--color-text-dimmed);
 	--stat-value-text-size: var(--text-2xl);
 }

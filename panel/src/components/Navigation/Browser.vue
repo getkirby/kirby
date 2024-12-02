@@ -53,9 +53,15 @@ export default {
 
 <style>
 :root {
-	--browser-item-hover-color-back: light-dark(var(--color-gray-300), var(--color-gray-950));
+	--browser-item-hover-color-back: light-dark(
+		var(--color-gray-300),
+		var(--color-gray-950)
+	);
 	--browser-item-hover-color-text: currentColor;
-	--browser-item-selected-color-back: light-dark(var(--color-blue-300), var(--color-blue-800));
+	--browser-item-selected-color-back: light-dark(
+		var(--color-blue-300),
+		var(--color-blue-800)
+	);
 	--browser-item-selected-color-text: currentColor;
 	--browser-item-gap: 1px;
 	--browser-item-size: 1fr;
@@ -106,7 +112,7 @@ export default {
 /** TODO: .k-browser-item-image:has(svg) */
 .k-browser-item-image.k-icon-frame {
 	box-shadow: none;
-	background: var(--color-white);
+	background: light-dark(var(--color-white), var(--color-black));
 }
 .k-browser-item-image svg {
 	transform: scale(0.8);
