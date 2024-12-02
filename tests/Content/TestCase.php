@@ -86,6 +86,10 @@ class TestCase extends BaseTestCase
 			site: $site ?? [
 				'children' => [
 					[
+						'slug'     => 'home',
+						'template' => 'default'
+					],
+					[
 						'slug'     => 'a-page',
 						'template' => 'article',
 						'files'    => [
@@ -109,6 +113,10 @@ class TestCase extends BaseTestCase
 		parent::setUpSingleLanguage(
 			site: $site ?? [
 				'children' => [
+					[
+						'slug'     => 'home',
+						'template' => 'default'
+					],
 					[
 						'slug'     => 'a-page',
 						'template' => 'article',

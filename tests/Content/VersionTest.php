@@ -2,6 +2,7 @@
 
 namespace Kirby\Content;
 
+use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
@@ -785,7 +786,7 @@ class VersionTest extends TestCase
 			model: $this->app->site(),
 			id: VersionId::latest()
 		);
-		$this->assertSame(hash_hmac('sha1', '', static::TMP . '/content/'), $version->previewToken());
+		$this->assertSame(hash_hmac('sha1', 'home' . 'default', static::TMP . '/content/home'), $version->previewToken());
 
 		// page
 		$version = new Version(
@@ -807,6 +808,28 @@ class VersionTest extends TestCase
 
 		$version = new Version(
 			model: $this->model->file(),
+			id: VersionId::latest()
+		);
+
+		$version->previewToken();
+	}
+
+	/**
+	 * @covers ::previewToken
+	 */
+	public function testPreviewTokenMissingHomePage()
+	{
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The home page does not exist');
+
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			]
+		]);
+
+		$version = new Version(
+			model: $app->site(),
 			id: VersionId::latest()
 		);
 
