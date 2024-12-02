@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Component;
+use Kirby\Toolkit\I18n;
 
 /**
  * Form Field object that takes a Vue component style
@@ -100,7 +101,7 @@ class Field extends Component
 				 * Optional text that will be shown after the input
 				 */
 				'after' => function (array|string|null $after = null) {
-					return $this->i18n($after);
+					return I18n::translate($after, $after);
 				},
 				/**
 				 * Sets the focus on this field when the form loads. Only the first field with this label gets
@@ -112,7 +113,7 @@ class Field extends Component
 				 * Optional text that will be shown before the input
 				 */
 				'before' => function (array|string|null $before = null) {
-					return $this->i18n($before);
+					return I18n::translate($before, $before);
 				},
 				/**
 				 * Default value for the field, which will be used when a page/file/user is created
@@ -130,7 +131,7 @@ class Field extends Component
 				 * Optional help text below the field
 				 */
 				'help' => function (array|string|null $help = null) {
-					return $this->i18n($help);
+					return I18n::translate($help, $help);
 				},
 				/**
 				 * Optional icon that will be shown at the end of the field
@@ -142,13 +143,13 @@ class Field extends Component
 				 * The field label can be set as string or associative array with translations
 				 */
 				'label' => function (array|string|null $label = null) {
-					return $this->i18n($label);
+					return I18n::translate($label, $label);
 				},
 				/**
 				 * Optional placeholder value that will be shown when the field is empty
 				 */
 				'placeholder' => function (array|string|null $placeholder = null) {
-					return $this->i18n($placeholder);
+					return I18n::translate($placeholder, $placeholder);
 				},
 				/**
 				 * If `true`, the field has to be filled in correctly to be saved.
