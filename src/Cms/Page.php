@@ -10,7 +10,6 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
-use Kirby\Http\Uri;
 use Kirby\Panel\Page as Panel;
 use Kirby\Template\Template;
 use Kirby\Toolkit\A;
@@ -927,34 +926,12 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Draft preview Url
+	 * Returns the preview URL with authentication for drafts
 	 * @internal
 	 */
-	public function previewUrl(VersionId|string $version = 'latest'): string|null
+	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
 	{
-		$versionId = VersionId::from($version);
-		$url       = $this->blueprint()->preview();
-
-		if ($url === false) {
-			return null;
-		}
-
-		$url = match ($url) {
-			true, null => $this->url(),
-			default    => $url
-		};
-
-		$uri = new Uri($url);
-
-		if ($this->isDraft() === true) {
-			$uri->query->token = $this->token();
-		}
-
-		if ($versionId->is('changes') === true) {
-			$uri->query->_version = 'changes';
-		}
-
-		return $uri->toString();
+		return $this->version($versionId)->url();
 	}
 
 	/**

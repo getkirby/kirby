@@ -87,7 +87,12 @@ class TestCase extends BaseTestCase
 				'children' => [
 					[
 						'slug'     => 'a-page',
-						'template' => 'article'
+						'template' => 'article',
+						'files'    => [
+							[
+								'filename' => 'a-file.jpg'
+							]
+						]
 					]
 				]
 			]
@@ -106,7 +111,12 @@ class TestCase extends BaseTestCase
 				'children' => [
 					[
 						'slug'     => 'a-page',
-						'template' => 'article'
+						'template' => 'article',
+						'files'    => [
+							[
+								'filename' => 'a-file.jpg'
+							]
+						]
 					]
 				]
 			]

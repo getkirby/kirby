@@ -75,6 +75,43 @@ class AppResolveTest extends TestCase
 		$this->assertSame('test/subpage', $result->id());
 	}
 
+	public function testResolveDraft()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'drafts' => [
+							[
+								'slug'  => 'a-draft',
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$result = $app->resolve('test/a-draft');
+		$this->assertNull($result);
+
+		$app = $app->clone([
+			'request' => [
+				'query' => [
+					'_token' => $app->page('test/a-draft')->version()->previewToken()
+				]
+			]
+		]);
+
+		$result = $app->resolve('test/a-draft');
+
+		$this->assertIsPage($result);
+		$this->assertSame('test/a-draft', $result->id());
+	}
+
 	public function testResolvePageRepresentation()
 	{
 		F::write($template = static::TMP . '/test.php', 'html');
