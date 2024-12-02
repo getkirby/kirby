@@ -263,7 +263,7 @@ class Page extends ModelWithContent
 	/**
 	 * Builds the cache id for the page
 	 */
-	protected function cacheId(string $contentType): string
+	protected function cacheId(string $contentType, VersionId $versionId): string
 	{
 		$cacheId = [$this->id()];
 
@@ -271,6 +271,7 @@ class Page extends ModelWithContent
 			$cacheId[] = $this->kirby()->language()->code();
 		}
 
+		$cacheId[] = $versionId->value();
 		$cacheId[] = $contentType;
 
 		return implode('.', $cacheId);
@@ -551,7 +552,7 @@ class Page extends ModelWithContent
 	 * pages cache. This will also check if one
 	 * of the ignore rules from the config kick in.
 	 */
-	public function isCacheable(): bool
+	public function isCacheable(VersionId|null $versionId = null): bool
 	{
 		$kirby   = $this->kirby();
 		$cache   = $kirby->cache('pages');
@@ -560,6 +561,11 @@ class Page extends ModelWithContent
 
 		// the pages cache is switched off
 		if (($options['active'] ?? false) === false) {
+			return false;
+		}
+
+		// updating the changes version does not flush the pages cache
+		if ($versionId?->is('changes') === true) {
 			return false;
 		}
 
@@ -962,9 +968,9 @@ class Page extends ModelWithContent
 		$versionId   = VersionId::from($versionId);
 
 		// try to get the page from cache
-		if ($data === [] && $this->isCacheable() === true) {
+		if ($data === [] && $this->isCacheable($versionId) === true) {
 			$cache       = $kirby->cache('pages');
-			$cacheId     = $this->cacheId($contentType);
+			$cacheId     = $this->cacheId($contentType, $versionId);
 			$result      = $cache->get($cacheId);
 			$html        = $result['html'] ?? null;
 			$response    = $result['response'] ?? [];
