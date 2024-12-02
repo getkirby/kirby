@@ -50,15 +50,6 @@ abstract class FieldClass
 		}
 	}
 
-	public function __call(string $param, array $args): mixed
-	{
-		if (isset($this->$param) === true) {
-			return $this->$param;
-		}
-
-		return $this->params[$param] ?? null;
-	}
-
 	/**
 	 * Sets a new value for the field
 	 */
@@ -66,14 +57,6 @@ abstract class FieldClass
 	{
 		$this->value = $value;
 		$this->errors = null;
-	}
-
-	/**
-	 * Returns all original params for the field
-	 */
-	public function params(): array
-	{
-		return $this->params;
 	}
 
 	/**
