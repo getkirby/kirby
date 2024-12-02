@@ -3,6 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Cache\Value;
+use Kirby\Content\VersionId;
+use Kirby\Exception\Exception;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
@@ -86,6 +88,18 @@ class PageRenderTest extends TestCase
 						'content'   => [
 							'title' => 'Foo Title',
 						]
+					],
+					[
+						'slug'     => 'version',
+						'template' => 'version'
+					],
+					[
+						'slug'     => 'version-exception',
+						'template' => 'version-exception'
+					],
+					[
+						'slug'     => 'version-recursive',
+						'template' => 'version-recursive'
 					]
 				]
 			],
@@ -573,5 +587,102 @@ class PageRenderTest extends TestCase
 
 		$page = $app->page('foo');
 		$this->assertSame('foo - Foo Title', $page->render());
+	}
+
+	public function testVersionDetectedFromRequest()
+	{
+		// TODO: To be removed in the next PR when caching respects versions
+		$this->app = $this->app->clone([
+			'options' => [
+				'cache.pages' => false
+			]
+		]);
+
+		$page = $this->app->page('version');
+		$page->version('latest')->save(['title' => 'Latest Title']);
+		$page->version('changes')->save(['title' => 'Changes Title']);
+
+		$this->assertSame("Version: latest\nContent: Latest Title", $page->render());
+
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => ['_version' => 'changes']
+			]
+		]);
+
+		$this->assertSame("Version: changes\nContent: Changes Title", $page->render());
+	}
+
+	public function testVersionDetectedRecursive()
+	{
+		// TODO: To be removed in the next PR when caching respects versions
+		$this->app = $this->app->clone([
+			'options' => [
+				'cache.pages' => false
+			]
+		]);
+
+		$versionPage = $this->app->page('version');
+		$versionPage->version('latest')->save(['title' => 'Latest Title']);
+		$versionPage->version('changes')->save(['title' => 'Changes Title']);
+
+		$page = $this->app->page('version-recursive');
+
+		$this->assertSame("<recursive>\nVersion: latest\nContent: Latest Title\n</recursive>", $page->render());
+		$this->assertSame("<recursive>\nVersion: latest\nContent: Latest Title\n</recursive>", $page->render(versionId: 'latest'));
+
+		// the overridden version propagates to the lower level
+		$this->assertSame("<recursive>\nVersion: changes\nContent: Changes Title\n</recursive>", $page->render(versionId: 'changes'));
+
+		// even if the request says something else
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => ['_version' => 'changes']
+			]
+		]);
+
+		$this->assertSame("<recursive>\nVersion: latest\nContent: Latest Title\n</recursive>", $page->render(versionId: 'latest'));
+	}
+
+	public function testVersionManual()
+	{
+		// TODO: To be removed in the next PR when caching respects versions
+		$this->app = $this->app->clone([
+			'options' => [
+				'cache.pages' => false
+			]
+		]);
+
+		$page = $this->app->page('version');
+		$page->version('latest')->save(['title' => 'Latest Title']);
+		$page->version('changes')->save(['title' => 'Changes Title']);
+
+		$this->assertSame("Version: latest\nContent: Latest Title", $page->render(versionId: 'latest'));
+		$this->assertSame("Version: latest\nContent: Latest Title", $page->render(versionId: VersionId::latest()));
+		$this->assertSame("Version: changes\nContent: Changes Title", $page->render(versionId: 'changes'));
+		$this->assertSame("Version: changes\nContent: Changes Title", $page->render(versionId: VersionId::changes()));
+
+		$this->assertNull(VersionId::$render);
+	}
+
+	public function testVersionException()
+	{
+		// TODO: To be removed in the next PR when caching respects versions
+		$this->app = $this->app->clone([
+			'options' => [
+				'cache.pages' => false
+			]
+		]);
+
+		$page = $this->app->page('version-exception');
+
+		try {
+			$page->render(versionId: 'changes');
+		} catch (Exception) {
+			// exception itself is not relevant for this test
+		}
+
+		// global state always needs to be reset after rendering
+		$this->assertNull(VersionId::$render);
 	}
 }

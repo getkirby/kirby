@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 use Closure;
 use Generator;
-use Kirby\Content\VersionId;
 use Kirby\Data\Data;
 use Kirby\Email\Email as BaseEmail;
 use Kirby\Exception\ErrorPageException;
@@ -1216,17 +1215,6 @@ class App
 	): Response|null {
 		if (($_ENV['KIRBY_RENDER'] ?? true) === false) {
 			return null;
-		}
-
-		/**
-		 * TODO: very rough preview mode for changes.
-		 *
-		 * We need page token verification for this before v5
-		 * hits beta. This rough implementation will only help
-		 * to get the panel integration up and running during the alpha
-		 */
-		if ($this->request()->get('_version') === 'changes') {
-			VersionId::$render = VersionId::changes();
 		}
 
 		return $this->io($this->call($path, $method));
