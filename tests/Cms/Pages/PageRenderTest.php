@@ -589,7 +589,11 @@ class PageRenderTest extends TestCase
 		$this->assertSame('foo - Foo Title', $page->render());
 	}
 
-	public function testVersionDetectedFromRequest()
+	/**
+	 * @covers ::cacheId
+	 * @covers ::render
+	 */
+	public function testRenderVersionDetectedFromRequest()
 	{
 		// TODO: To be removed in the next PR when caching respects versions
 		$this->app = $this->app->clone([
@@ -613,7 +617,11 @@ class PageRenderTest extends TestCase
 		$this->assertSame("Version: changes\nContent: Changes Title", $page->render());
 	}
 
-	public function testVersionDetectedRecursive()
+	/**
+	 * @covers ::cacheId
+	 * @covers ::render
+	 */
+	public function testRenderVersionDetectedRecursive()
 	{
 		// TODO: To be removed in the next PR when caching respects versions
 		$this->app = $this->app->clone([
@@ -644,7 +652,11 @@ class PageRenderTest extends TestCase
 		$this->assertSame("<recursive>\nVersion: latest\nContent: Latest Title\n</recursive>", $page->render(versionId: 'latest'));
 	}
 
-	public function testVersionManual()
+	/**
+	 * @covers ::cacheId
+	 * @covers ::render
+	 */
+	public function testRenderVersionManual()
 	{
 		// TODO: To be removed in the next PR when caching respects versions
 		$this->app = $this->app->clone([
@@ -665,7 +677,11 @@ class PageRenderTest extends TestCase
 		$this->assertNull(VersionId::$render);
 	}
 
-	public function testVersionException()
+	/**
+	 * @covers ::cacheId
+	 * @covers ::render
+	 */
+	public function testRenderVersionException()
 	{
 		// TODO: To be removed in the next PR when caching respects versions
 		$this->app = $this->app->clone([
