@@ -764,6 +764,7 @@ abstract class FieldTestCase extends TestCase
 
 	/**
 	 * @covers ::name
+	 * @covers ::id
 	 */
 	public function testName()
 	{
@@ -774,10 +775,12 @@ abstract class FieldTestCase extends TestCase
 		);
 
 		$this->assertSame('the-name', $field->name());
+		$this->assertSame('the-name', $field->id());
 	}
 
 	/**
 	 * @covers ::name
+	 * @covers ::id
 	 */
 	public function testNameWhenNotSet()
 	{
@@ -785,6 +788,7 @@ abstract class FieldTestCase extends TestCase
 
 		// the field type should be used as name
 		$this->assertSame('test', $field->name());
+		$this->assertSame('test', $field->id());
 	}
 
 	/**
