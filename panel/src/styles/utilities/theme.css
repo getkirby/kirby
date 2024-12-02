@@ -24,16 +24,24 @@
 	--theme-color-800: hsl(var(--theme-color-hs), var(--theme-color-l-800));
 	--theme-color-900: hsl(var(--theme-color-hs), var(--theme-color-l-900));
 
-	--theme-color-border: light-dark(var(--theme-color-500), var(--theme-color-600));
-	--theme-color-back: light-dark(var(--theme-color-400), var(--theme-color-500));
+	--theme-color-border: light-dark(
+		var(--theme-color-500),
+		var(--theme-color-600)
+	);
+	--theme-color-back: light-dark(
+		var(--theme-color-400),
+		var(--theme-color-500)
+	);
 	--theme-color-hover: var(--theme-color-600);
 	--theme-color-icon: var(--theme-color-600);
 	--theme-color-icon-highlight: var(--theme-color-700);
-	--theme-color-text: light-dark(var(--theme-color-800), var(--theme-color-500));
-	--theme-color-text-dimmed: hsl(
-		var(--theme-color-h),
-		calc(var(--theme-color-s) - 60%),
-		50%
+	--theme-color-text: light-dark(
+		var(--theme-color-800),
+		var(--theme-color-500)
+	);
+	--theme-color-text-dimmed: light-dark(
+		hsl(var(--theme-color-h), calc(var(--theme-color-s) - 60%), 50%),
+		hsl(var(--theme-color-h), calc(var(--theme-color-s) - 60%), 60%)
 	);
 	--theme-color-text-highlight: var(--theme-color-900);
 }

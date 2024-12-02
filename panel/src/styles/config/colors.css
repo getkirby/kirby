@@ -257,7 +257,10 @@
 	/** Shortcuts **/
 	--color-black: hsl(0, 0%, var(--color-l-min));
 	--color-border: light-dark(var(--color-gray-300), var(--color-gray-800));
-	--color-border-dimmed: light-dark(hsla(0, 0%, var(--color-l-min), 0.1), var(--color-gray-850));
+	--color-border-dimmed: light-dark(
+		hsla(0, 0%, var(--color-l-min), 0.1),
+		var(--color-gray-850)
+	);
 	--color-dark: var(--color-gray-900);
 	--color-focus: var(--color-blue-600);
 	--color-light: var(--color-gray-200);
@@ -293,19 +296,19 @@
 	color-scheme: dark;
 
 	--color-l-max: 100%;
-	--color-l-100: 98%;
-	--color-l-200: 94%;
-	--color-l-250: 90%;
-	--color-l-300: 85%;
-	--color-l-400: 75%;
-	--color-l-500: 65%;
+	--color-l-100: 95%;
+	--color-l-200: 86%;
+	--color-l-250: 78%;
+	--color-l-300: 73%;
+	--color-l-400: 67%;
+	--color-l-500: 62%;
 	--color-l-600: 52%;
 	--color-l-700: 40%;
-	--color-l-750: 36%;
-	--color-l-800: 27%;
-	--color-l-850: 22%;
-	--color-l-900: 13%;
-	--color-l-950: 8%;
-	--color-l-1000: 5%;
+	--color-l-750: 33%;
+	--color-l-800: 26%;
+	--color-l-850: 19%;
+	--color-l-900: 11%;
+	--color-l-950: 6%;
+	--color-l-1000: 3%;
 	--color-l-min: 0%;
 }
