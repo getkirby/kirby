@@ -5,27 +5,19 @@ namespace Kirby\Form\Mixin;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
+/**
+ * @package   Kirby Form
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 trait Common
 {
-	protected string|array|null $after = null;
 	protected bool $autofocus = false;
-	protected string|array|null $before = null;
 	protected bool $disabled = false;
-	protected string|array|null $help = null;
-	protected string|null $icon = null;
-	protected string|array|null $label = null;
 	protected string|null $name = null;
-	protected string|array|null $placeholder = null;
-	protected bool $required = false;
 	protected string|null $width = null;
-
-	/**
-	 * Optional text that will be shown after the input
-	 */
-	public function after(): string|null
-	{
-		return $this->stringTemplate($this->after);
-	}
 
 	/**
 	 * Sets the focus on this field when the form loads. Only the first field with this label gets focused
@@ -33,14 +25,6 @@ trait Common
 	public function autofocus(): bool
 	{
 		return $this->autofocus;
-	}
-
-	/**
-	 * Optional text that will be shown before the input
-	 */
-	public function before(): string|null
-	{
-		return $this->stringTemplate($this->before);
 	}
 
 	/**
@@ -52,33 +36,11 @@ trait Common
 	}
 
 	/**
-	 * Optional help text below the field
-	 */
-	public function help(): string|null
-	{
-		if (empty($this->help) === false) {
-			return $this->kirby()->kirbytext(
-				$this->stringTemplate($this->help, safe: true)
-			);
-		}
-
-		return null;
-	}
-
-	/**
-	 * Translate field parameters
+	 * Helper to translate field parameters
 	 */
 	protected function i18n(string|array|null $param = null): string|null
 	{
-		return empty($param) === false ? I18n::translate($param, $param) : null;
-	}
-
-	/**
-	 * Optional icon that will be shown at the end of the field
-	 */
-	public function icon(): string|null
-	{
-		return $this->icon;
+		return I18n::translate($param, $param);
 	}
 
 	/**
@@ -106,33 +68,7 @@ trait Common
 	}
 
 	/**
-	 * If `true`, the field has to be filled in correctly to be saved.
-	 */
-	public function isRequired(): bool
-	{
-		return $this->required;
-	}
-
-	/**
-	 * Checks if the field is saveable
-	 */
-	public function isSaveable(): bool
-	{
-		return true;
-	}
-
-	/**
-	 * The field label can be set as string or associative array with translations
-	 */
-	public function label(): string|null
-	{
-		return $this->stringTemplate(
-			$this->label ?? Str::ucfirst($this->name())
-		);
-	}
-
-	/**
-	 * Returns the field name
+	 * Returns the field name and falls back to the type if no name is given
 	 */
 	public function name(): string
 	{
@@ -140,28 +76,35 @@ trait Common
 	}
 
 	/**
-	 * Optional placeholder value that will be shown when the field is empty
+	 * Setter for the autofocus state
 	 */
-	public function placeholder(): string|null
+	protected function setAutofocus(bool $autofocus = false): void
 	{
-		return $this->stringTemplate($this->placeholder);
+		$this->autofocus = $autofocus;
 	}
 
 	/**
-	 * @deprecated 5.0.0 Use `::isRequired` instead
+	 * Setter for the disabled state
 	 */
-	public function required(): bool
+	protected function setDisabled(bool $disabled = false): void
 	{
-		return $this->isRequired();
+		$this->disabled = $disabled;
 	}
 
 	/**
-	 * Checks if the field is saveable
-	 * @deprecated 5.0.0 Use `::isSaveable()` instead
+	 * Setter for the name property
 	 */
-	public function save(): bool
+	protected function setName(string|null $name = null): void
 	{
-		return $this->isSaveable();
+		$this->name = $name;
+	}
+
+	/**
+	 * Setter for the field width. See `::width()` for available widths
+	 */
+	protected function setWidth(string|null $width = null): void
+	{
+		$this->width = $width;
 	}
 
 	/**

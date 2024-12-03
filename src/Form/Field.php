@@ -22,6 +22,7 @@ use Kirby\Toolkit\I18n;
 class Field extends Component
 {
 	use Mixin\Common;
+	use Mixin\Decorators;
 	use Mixin\Endpoints;
 	use Mixin\Model;
 	use Mixin\Siblings;
@@ -44,8 +45,8 @@ class Field extends Component
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public function __construct(
-		string $type,
-		array $attrs = [],
+		protected string $type,
+		protected array $attrs = [],
 		Fields|null $siblings = null
 	) {
 		if (isset(static::$types[$type]) === false) {
@@ -59,20 +60,22 @@ class Field extends Component
 		}
 
 		$this->setModel($attrs['model'] ?? null);
+		$this->setName($attrs['name'] ?? null);
+		$this->setSiblings($attrs['siblings'] ?? null);
 		$this->setValidate($attrs['validate'] ?? []);
 
+		// unset the attrs that should no longer be handled
+		// by the parent constructor, because we already took
+		// care of them.
 		unset(
 			$attrs['model'],
+			$attrs['name'],
+			$attrs['siblings'],
+			$attrs['type'],
 			$attrs['validate']
 		);
 
-		// use the type as fallback for the name
-		$attrs['name'] ??= $type;
-		$attrs['type']   = $type;
-
 		parent::__construct($type, $attrs);
-
-		$this->setSiblings($attrs['siblings'] ?? null);
 	}
 
 	/**
@@ -175,7 +178,7 @@ class Field extends Component
 				'width' => function (string|null $width = null) {
 					return $width;
 				},
-				'value' => function ($value = null) {
+				'value' => function (mixed $value = null) {
 					return $value;
 				}
 			]
@@ -274,7 +277,9 @@ class Field extends Component
 		$array = parent::toArray();
 
 		$array['hidden']   = $this->isHidden();
+		$array['name']     = $this->name();
 		$array['saveable'] = $this->isSaveable();
+		$array['type']     = $this->type();
 
 		ksort($array);
 

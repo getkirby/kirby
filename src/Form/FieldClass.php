@@ -16,6 +16,7 @@ namespace Kirby\Form;
 abstract class FieldClass
 {
 	use Mixin\Common;
+	use Mixin\Decorators;
 	use Mixin\Endpoints;
 	use Mixin\Model;
 	use Mixin\Siblings;
@@ -51,15 +52,6 @@ abstract class FieldClass
 	}
 
 	/**
-	 * Sets a new value for the field
-	 */
-	public function fill(mixed $value = null): void
-	{
-		$this->value = $value;
-		$this->errors = null;
-	}
-
-	/**
 	 * Define the props that will be sent to
 	 * the Vue component
 	 */
@@ -84,66 +76,6 @@ abstract class FieldClass
 			'when'        => $this->when(),
 			'width'       => $this->width(),
 		];
-	}
-
-	protected function setAfter(array|string|null $after = null): void
-	{
-		$this->after = $this->i18n($after);
-	}
-
-	protected function setAutofocus(bool $autofocus = false): void
-	{
-		$this->autofocus = $autofocus;
-	}
-
-	protected function setBefore(array|string|null $before = null): void
-	{
-		$this->before = $this->i18n($before);
-	}
-
-	protected function setDefault(mixed $default = null): void
-	{
-		$this->default = $default;
-	}
-
-	protected function setDisabled(bool $disabled = false): void
-	{
-		$this->disabled = $disabled;
-	}
-
-	protected function setHelp(array|string|null $help = null): void
-	{
-		$this->help = $this->i18n($help);
-	}
-
-	protected function setIcon(string|null $icon = null): void
-	{
-		$this->icon = $icon;
-	}
-
-	protected function setLabel(array|string|null $label = null): void
-	{
-		$this->label = $this->i18n($label);
-	}
-
-	protected function setName(string|null $name = null): void
-	{
-		$this->name = $name;
-	}
-
-	protected function setPlaceholder(array|string|null $placeholder = null): void
-	{
-		$this->placeholder = $this->i18n($placeholder);
-	}
-
-	protected function setRequired(bool $required = false): void
-	{
-		$this->required = $required;
-	}
-
-	protected function setWidth(string|null $width = null): void
-	{
-		$this->width = $width;
 	}
 
 	/**

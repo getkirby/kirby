@@ -22,6 +22,7 @@ trait Validation
 	 * An array of all found errors
 	 */
 	protected array|null $errors = null;
+	protected bool $required = false;
 	protected array $validate = [];
 
 	/**
@@ -42,11 +43,35 @@ trait Validation
 	}
 
 	/**
+	 * If `true`, the field has to be filled in correctly to be saved.
+	 */
+	public function isRequired(): bool
+	{
+		return $this->required;
+	}
+
+	/**
 	 * Checks if the field is valid
 	 */
 	public function isValid(): bool
 	{
 		return $this->errors() === [];
+	}
+
+	/**
+	 * @deprecated 5.0.0 Use `::isRequired` instead
+	 */
+	public function required(): bool
+	{
+		return $this->isRequired();
+	}
+
+	/**
+	 * Set the required state
+	 */
+	protected function setRequired(bool $required = false): void
+	{
+		$this->required = $required;
 	}
 
 	/**
