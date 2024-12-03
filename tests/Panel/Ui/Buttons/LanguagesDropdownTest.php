@@ -13,6 +13,31 @@ use Kirby\Panel\Areas\AreaTestCase;
 class LanguagesDropdownTest extends AreaTestCase
 {
 	/**
+	 * @covers ::hasChanges
+	 */
+	public function testHasChanges()
+	{
+		$this->install();
+		$this->installLanguages();
+
+		$page = new Page(['slug' => 'test']);
+		$button = new LanguagesDropdown($page);
+
+		// no changes
+		$this->assertFalse($button->hasChanges());
+
+		// changes in current translation (not considered)
+		$page->version('latest')->save([], 'en');
+		$page->version('changes')->save([], 'en');
+		$this->assertFalse($button->hasChanges());
+
+		// changes in other translations
+		$page->version('latest')->save([], 'de');
+		$page->version('changes')->save([], 'de');
+		$this->assertTrue($button->hasChanges());
+	}
+
+	/**
 	 * @covers ::option
 	 */
 	public function testOption()
@@ -23,8 +48,11 @@ class LanguagesDropdownTest extends AreaTestCase
 		$this->assertSame([
 			'text'    => 'Deutsch',
 			'code'    => 'de',
+			'link'    => '/pages/test?language=de',
 			'current' => false,
-			'link'    => '/pages/test?language=de'
+			'default' => false,
+			'changes' => false,
+			'lock'    => false
 		], $button->option($language));
 	}
 
@@ -53,17 +81,34 @@ class LanguagesDropdownTest extends AreaTestCase
 			[
 				'text'    => 'English',
 				'code'    => 'en',
+				'link'    => '/pages/test?language=en',
 				'current' => true,
-				'link'    => '/pages/test?language=en'
+				'default' => true,
+				'changes' => false,
+				'lock'    => false
 			],
 			'-',
 			[
 				'text'    => 'Deutsch',
 				'code'    => 'de',
+				'link'    => '/pages/test?language=de',
 				'current' => false,
-				'link'    => '/pages/test?language=de'
+				'default' => false,
+				'changes' => false,
+				'lock'    => false
 			]
 		], $button->options());
+	}
+
+	/**
+	 * @covers ::props
+	 */
+	public function testProps()
+	{
+		$page   = new Page(['slug' => 'test']);
+		$button = new LanguagesDropdown($page);
+		$props  = $button->props();
+		$this->assertFalse($props['hasChanges']);
 	}
 
 	/**

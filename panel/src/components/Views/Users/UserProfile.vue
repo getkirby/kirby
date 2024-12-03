@@ -1,29 +1,29 @@
 <template>
 	<div class="k-user-profile">
-		<k-user-avatar :disabled="isLocked" :model="model" />
+		<k-user-avatar :id="id" :api="api" :avatar="avatar" :is-locked="isLocked" />
 
 		<k-button-group
 			:buttons="[
 				{
 					icon: 'email',
-					text: `${model.email}`,
-					title: `${$t('email')}: ${model.email}`,
+					text: email,
+					title: `${$t('email')}: ${email}`,
 					disabled: !canChangeEmail,
-					click: () => $dialog(model.link + '/changeEmail')
+					click: () => $dialog(api + '/changeEmail')
 				},
 				{
 					icon: 'bolt',
-					text: `${model.role}`,
-					title: `${$t('role')}: ${model.role}`,
+					text: role,
+					title: `${$t('role')}: ${role}`,
 					disabled: !canChangeRole,
 					click: () => $dialog(model.link + '/changeRole')
 				},
 				{
 					icon: 'translate',
-					text: `${model.language}`,
-					title: `${$t('language')}: ${model.language}`,
+					text: language,
+					title: `${$t('language')}: ${language}`,
 					disabled: !canChangeLanguage,
-					click: () => $dialog(model.link + '/changeLanguage')
+					click: () => $dialog(api + '/changeLanguage')
 				}
 			]"
 		/>
@@ -37,15 +37,16 @@
  */
 export default {
 	props: {
+		api: String,
+		avatar: String,
 		canChangeEmail: Boolean,
 		canChangeLanguage: Boolean,
 		canChangeRole: Boolean,
+		email: String,
+		id: String,
 		isLocked: Boolean,
-		model: Object,
-		/**
-		 * @deprecated Will be remove in v5
-		 */
-		permissions: Object
+		language: String,
+		role: String
 	}
 };
 </script>

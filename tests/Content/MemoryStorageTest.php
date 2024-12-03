@@ -3,16 +3,15 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\Language;
-use Kirby\Exception\NotFoundException;
 
 /**
- * @coversDefaultClass Kirby\Content\MemoryContentStorageHandler
+ * @coversDefaultClass Kirby\Content\MemoryStorage
  * @covers ::__construct
  * @covers ::cacheId
  */
-class MemoryContentStorageHandlerTest extends TestCase
+class MemoryStorageTest extends TestCase
 {
-	protected MemoryContentStorageHandler $storage;
+	protected MemoryStorage $storage;
 
 	public function assertCreateAndDelete(VersionId $versionId, Language $language): void
 	{
@@ -60,7 +59,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 	): void {
 		parent::setUpMultiLanguage(site: $site);
 
-		$this->storage = new MemoryContentStorageHandler($this->model);
+		$this->storage = new MemoryStorage($this->model);
 	}
 
 	public function setUpSingleLanguage(
@@ -68,7 +67,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 	): void {
 		parent::setUpSingleLanguage(site: $site);
 
-		$this->storage = new MemoryContentStorageHandler($this->model);
+		$this->storage = new MemoryStorage($this->model);
 	}
 
 	/**
@@ -106,7 +105,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 	 * @covers ::read
 	 * @covers ::write
 	 */
-	public function testCreateAndReadPublishedMultiLang()
+	public function testCreateAndReadLatestMultiLang()
 	{
 		$this->setUpMultiLanguage();
 
@@ -121,7 +120,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 	 * @covers ::read
 	 * @covers ::write
 	 */
-	public function testCreateAndReadPublishedSingleLang()
+	public function testCreateAndReadLatestSingleLang()
 	{
 		$this->setUpSingleLanguage();
 
@@ -179,7 +178,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 	/**
 	 * @covers ::delete
 	 */
-	public function testDeletePublishedMultiLang()
+	public function testDeleteLatestMultiLang()
 	{
 		$this->setUpMultiLanguage();
 
@@ -192,7 +191,7 @@ class MemoryContentStorageHandlerTest extends TestCase
 	/**
 	 * @covers ::delete
 	 */
-	public function testDeletePublishedSingleLang()
+	public function testDeleteLatestSingleLang()
 	{
 		$this->setUpSingleLanguage();
 
@@ -311,19 +310,6 @@ class MemoryContentStorageHandlerTest extends TestCase
 
 		$this->assertIsInt($this->storage->modified($changes, $language));
 		$this->assertNull($this->storage->modified(VersionId::latest(), $language));
-	}
-
-	/**
-	 * @covers ::read
-	 */
-	public function testReadWhenMissing()
-	{
-		$this->setUpSingleLanguage();
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Version "changes" does not already exist');
-
-		$this->storage->read(VersionId::changes(), Language::single());
 	}
 
 	/**

@@ -26,7 +26,7 @@ class UpdateStatus
 	/**
 	 * Host to request the update data from
 	 */
-	public static string $host = 'https://assets.getkirby.com';
+	public static string $host = 'https://getkirby.com';
 
 	/**
 	 * Marker that stores whether a previous remote

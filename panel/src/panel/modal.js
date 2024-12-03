@@ -210,9 +210,6 @@ export default (panel, key, defaults) => {
 			// send custom events to the event bus
 			this.successEvents(success);
 
-			// dispatch store actions that might have been defined in the response
-			this.successDispatch(success);
-
 			// redirect or reload
 			if (success.route || success.redirect) {
 				// handle any redirects
@@ -223,25 +220,6 @@ export default (panel, key, defaults) => {
 			}
 
 			return success;
-		},
-
-		/**
-		 * Dispatch deprecated store events
-		 *
-		 * @param {Object} state
-		 */
-		successDispatch(state) {
-			if (isObject(state.dispatch) === false) {
-				return;
-			}
-
-			for (const event in state.dispatch) {
-				const payload = state.dispatch[event];
-				panel.app.$store.dispatch(
-					event,
-					Array.isArray(payload) === true ? [...payload] : payload
-				);
-			}
 		},
 
 		/**

@@ -1,13 +1,24 @@
 <template>
 	<k-dialog v-bind="$props" class="k-changes-dialog">
-		<template v-if="loading === false">
+		<section v-if="pages.length">
+			<k-headline>{{ $t("lock.unsaved.pages") }}</k-headline>
+			<k-items :items="pages" layout="list" />
+		</section>
+
+		<section v-if="files.length">
+			<k-headline>{{ $t("lock.unsaved.files") }}</k-headline>
+			<k-items :items="files" layout="list" />
+		</section>
+
+		<section v-if="users.length">
+			<k-headline>{{ $t("lock.unsaved.users") }}</k-headline>
+			<k-items :items="users" layout="list" />
+		</section>
+
+		<section v-if="!pages.length && !files.length && !users.length">
 			<k-headline>{{ $t("lock.unsaved") }}</k-headline>
-			<k-items v-if="changes.length" :items="changes" layout="list" />
-			<k-empty v-else icon="edit-line">{{ $t("lock.unsaved.empty") }}</k-empty>
-		</template>
-		<template v-else>
-			<k-icon type="loader" />
-		</template>
+			<k-empty icon="edit-line">{{ $t("lock.unsaved.empty") }}</k-empty>
+		</section>
 	</k-dialog>
 </template>
 
@@ -24,11 +35,13 @@ export default {
 		cancelButton: {
 			default: false
 		},
-		changes: {
-			type: Array
+		files: {
+			type: Array,
+			default: () => []
 		},
-		loading: {
-			type: Boolean
+		pages: {
+			type: Array,
+			default: () => []
 		},
 		// eslint-disable-next-line vue/require-prop-types
 		size: {
@@ -37,35 +50,19 @@ export default {
 		// eslint-disable-next-line vue/require-prop-types
 		submitButton: {
 			default: false
-		}
-	},
-	computed: {
-		ids() {
-			return Object.keys(this.store).filter(
-				(id) => this.$helper.object.length(this.store[id]?.changes) > 0
-			);
 		},
-		store() {
-			return this.$store.state.content.models;
-		}
-	},
-	watch: {
-		ids: {
-			handler(ids) {
-				this.$panel.dialog.refresh({
-					method: "POST",
-					body: {
-						ids: ids
-					}
-				});
-			},
-			immediate: true
+		users: {
+			type: Array,
+			default: () => []
 		}
 	}
 };
 </script>
 
 <style>
+.k-changes-dialog section + section {
+	margin-top: var(--spacing-6);
+}
 .k-changes-dialog .k-headline {
 	margin-top: -0.5rem;
 	margin-bottom: var(--spacing-3);

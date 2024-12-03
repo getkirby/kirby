@@ -126,12 +126,12 @@
 	"error.form.notSaved": "Formuläret kunde inte sparas",
 
 	"error.language.code": "Ange en giltig kod för språket",
-	"error.language.create.permission": "You are not allowed to create a language",
-	"error.language.delete.permission": "You are not allowed to delete the language",
+	"error.language.create.permission": "Du saknar behörighet att skapa ett nytt språk",
+	"error.language.delete.permission": "Du saknar behörighet att radera språket",
 	"error.language.duplicate": "Språket finns redan",
 	"error.language.name": "Ange ett giltigt namn för språket",
 	"error.language.notFound": "Språket hittades inte",
-	"error.language.update.permission": "You are not allowed to update the language",
+	"error.language.update.permission": "Du saknar behörighet att redigera språket",
 
 	"error.layout.validation.block": "Det finns ett fel i fältet \"{field}\" i blocket {blockIndex} med blocktypen \"{fieldset}\" i layouten {layoutIndex}",
 	"error.layout.validation.settings": "Det finns ett fel i inställningarna för layout {index}",
@@ -620,8 +620,8 @@
 	"stats.empty": "Inga rapporter",
 	"status": "Status",
 
-	"system.info.copy": "Copy info",
-	"system.info.copied": "System info copied",
+	"system.info.copy": "Kopiera info",
+	"system.info.copied": "Systeminformation kopierad",
 	"system.issues.content": "Mappen content verkar vara exponerad",
 	"system.issues.eol.kirby": "Din installerade Kirby-version har nått slutet av sin livscykel och kommer inte att få fler säkerhetsuppdateringar",
 	"system.issues.eol.plugin": "Den installerade versionen av tillägget { plugin } har nått slutet på sin livscykel och kommer inte att få fler säkerhetsuppdateringar.",

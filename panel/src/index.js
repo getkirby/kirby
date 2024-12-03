@@ -8,7 +8,6 @@ import I18n from "./config/i18n.js";
 import Legacy from "./panel/legacy.js";
 import Libraries from "./libraries/index.js";
 import Panel from "./panel/panel.js";
-import store from "./store/store.js";
 
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
@@ -46,7 +45,6 @@ window.panel = Vue.prototype.$panel = Panel.create(window.panel.plugins);
  * Create the Vue application
  */
 window.panel.app = new Vue({
-	store,
 	render: () => h(App)
 });
 

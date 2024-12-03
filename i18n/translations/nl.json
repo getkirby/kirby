@@ -126,12 +126,12 @@
 	"error.form.notSaved": "Het formulier kon niet worden opgeslagen",
 
 	"error.language.code": "Vul een geldige code voor deze taal in",
-	"error.language.create.permission": "You are not allowed to create a language",
-	"error.language.delete.permission": "You are not allowed to delete the language",
+	"error.language.create.permission": "Je hebt geen rechten om een taal toe te voegen",
+	"error.language.delete.permission": "Je hebt geen rechten om een taal te verwijderen",
 	"error.language.duplicate": "De taal bestaat al",
 	"error.language.name": "Vul een geldige naam voor deze taal in",
 	"error.language.notFound": "De taal kan niet worden gevonden",
-	"error.language.update.permission": "You are not allowed to update the language",
+	"error.language.update.permission": "Je hebt geen rechten om deze taal te updaten",
 
 	"error.layout.validation.block": "Er is een fout opgetreden bij het \"{field}\" veld in blok {blockIndex} in het \"{fieldset}\" bloktype in layout {layoutIndex}",
 	"error.layout.validation.settings": "Er is een fout gevonden in de instellingen van ontwerp {index} ",

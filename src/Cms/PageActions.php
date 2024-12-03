@@ -115,9 +115,6 @@ trait PageActions
 			$oldPage->uuid()?->clear(true);
 
 			if ($oldPage->exists() === true) {
-				// remove the lock of the old page
-				$oldPage->lock()?->remove();
-
 				// actually move stuff on disk
 				if (Dir::move($oldPage->root(), $newPage->root()) !== true) {
 					throw new LogicException(
@@ -427,9 +424,7 @@ trait PageActions
 			'slug'    => $slug,
 		]);
 
-		$ignore = [
-			$this->kirby()->locks()->file($this)
-		];
+		$ignore = [];
 
 		// don't copy files
 		if ($files === false) {

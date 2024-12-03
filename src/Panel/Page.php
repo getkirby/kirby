@@ -92,24 +92,30 @@ class Page extends Model
 	 */
 	public function dropdown(array $options = []): array
 	{
-		$page     = $this->model;
-		$request  = $page->kirby()->request();
-		$defaults = $request->get(['view', 'sort', 'delete']);
-		$options  = [...$defaults, $options];
-
+		$page        = $this->model;
+		$request     = $page->kirby()->request();
+		$defaults    = $request->get(['view', 'sort', 'delete']);
+		$options     = [...$defaults, ...$options];
 		$permissions = $this->options(['preview']);
 		$view        = $options['view'] ?? 'view';
 		$url         = $this->url(true);
 		$result      = [];
 
 		if ($view === 'list') {
-			$result['preview'] = [
+			$result['open'] = [
 				'link'     => $page->previewUrl(),
 				'target'   => '_blank',
 				'icon'     => 'open',
 				'text'     => I18n::translate('open'),
 				'disabled' => $this->isDisabledDropdownOption('preview', $options, $permissions)
 			];
+
+			$result['preview'] = [
+				'icon' => 'window',
+				'link' => $page->panel()->url(true) . '/preview/compare',
+				'text' => I18n::translate('preview'),
+			];
+
 			$result[] = '-';
 		}
 
@@ -346,22 +352,27 @@ class Page extends Model
 	 */
 	public function props(): array
 	{
-		$page = $this->model;
+		$props = parent::props();
+
+		// Additional model information
+		// @deprecated Use the top-level props instead
+		$model = [
+			'content'    => $props['content'],
+			'id'         => $props['id'],
+			'link'       => $props['link'],
+			'parent'     => $this->model->parentModel()->panel()->url(true),
+			'previewUrl' => $this->model->previewUrl(),
+			'status'     => $this->model->status(),
+			'title'      => $this->model->title()->toString(),
+			'uuid'       => $props['uuid'],
+		];
 
 		return [
-			...parent::props(),
+			...$props,
 			...$this->prevNext(),
-			'blueprint' => $page->intendedTemplate()->name(),
-			'model' => [
-				'content'    => $this->content(),
-				'id'         => $page->id(),
-				'link'       => $this->url(true),
-				'parent'     => $page->parentModel()->panel()->url(true),
-				'previewUrl' => $page->previewUrl(),
-				'status'     => $page->status(),
-				'title'      => $page->title()->toString(),
-				'uuid'       => fn () => $page->uuid()?->toString(),
-			]
+			'blueprint'  => $this->model->intendedTemplate()->name(),
+			'model'      => $model,
+			'title'      => $model['title'],
 		];
 	}
 
@@ -376,8 +387,8 @@ class Page extends Model
 		return [
 			'breadcrumb' => $this->model->panel()->breadcrumb(),
 			'component'  => 'k-page-view',
-			'props'      => $this->props(),
-			'title'      => $this->model->title()->toString(),
+			'props'      => $props = $this->props(),
+			'title'      => $props['title'],
 		];
 	}
 }

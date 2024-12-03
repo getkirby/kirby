@@ -237,31 +237,41 @@ class User extends Model
 	 */
 	public function props(): array
 	{
+		$props       = parent::props();
 		$user        = $this->model;
-		$account     = $user->isLoggedIn();
 		$permissions = $this->options();
+
+		// Additional model information
+		// @deprecated Use the top-level props instead
+		$model = [
+			'account'  => $user->isLoggedIn(),
+			'avatar'   => $user->avatar()?->url(),
+			'content'  => $props['content'],
+			'email'    => $user->email(),
+			'id'       => $props['id'],
+			'language' => $this->translation()->name(),
+			'link'     => $props['link'],
+			'name'     => $user->name()->toString(),
+			'role'     => $user->role()->title(),
+			'username' => $user->username(),
+			'uuid'     => $props['uuid'],
+		];
 
 		return [
 			...parent::props(),
 			...$this->prevNext(),
+			'avatar'            => $model['avatar'],
 			'blueprint'         => $this->model->role()->name(),
 			'canChangeEmail'    => $permissions['changeEmail'],
 			'canChangeLanguage' => $permissions['changeLanguage'],
 			'canChangeName'     => $permissions['changeName'],
 			'canChangeRole'     => $this->model->roles()->count() > 1,
-			'model' => [
-				'account'  => $account,
-				'avatar'   => $user->avatar()?->url(),
-				'content'  => $this->content(),
-				'email'    => $user->email(),
-				'id'       => $user->id(),
-				'language' => $this->translation()->name(),
-				'link'     => $this->url(true),
-				'name'     => $user->name()->toString(),
-				'role'     => $user->role()->title(),
-				'username' => $user->username(),
-				'uuid'     => fn () => $user->uuid()?->toString()
-			]
+			'email'             => $model['email'],
+			'language'          => $model['language'],
+			'model'             => $model,
+			'name'              => $model['name'],
+			'role'              => $model['role'],
+			'username'          => $model['username'],
 		];
 	}
 

@@ -183,6 +183,6 @@ export default {
 
 .k-tab-button .k-button-badge {
 	top: 3px;
-	inset-inline-end: calc(var(--button-padding) / 2);
+	inset-inline-end: calc(var(--button-padding) / 4);
 }
 </style>

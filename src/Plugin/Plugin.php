@@ -69,13 +69,7 @@ class Plugin
 		}
 
 		// read composer.json and use as info fallback
-		try {
-			$info = Data::read($this->manifest());
-		} catch (Exception) {
-			// there is no manifest file or it is invalid
-			$info = [];
-		}
-
+		$info       = Data::read($this->manifest(), fail: false);
 		$this->info = [...$info, ...$this->info];
 
 		// set the license

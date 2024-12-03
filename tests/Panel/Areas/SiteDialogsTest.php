@@ -36,4 +36,15 @@ class SiteDialogsTest extends AreaTestCase
 
 		$this->assertSame('Test', $this->app->site()->title()->value());
 	}
+
+	public function testChanges(): void
+	{
+		$dialog = $this->dialog('changes');
+		$props  = $dialog['props'];
+
+		$this->assertSame('k-changes-dialog', $dialog['component']);
+		$this->assertSame([], $props['files']);
+		$this->assertSame([], $props['pages']);
+		$this->assertSame([], $props['users']);
+	}
 }

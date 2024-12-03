@@ -92,7 +92,7 @@ class Translation extends ContentTranslation
 			$fields['slug'] = $slug;
 		}
 
-		$version->create($fields, $language);
+		$version->save($fields, $language);
 
 		return new static(
 			model: $model,
@@ -163,7 +163,7 @@ class Translation extends ContentTranslation
 	 */
 	public function slug(): string|null
 	{
-		return $this->version->content($this->language)->data()['slug'] ?? null;
+		return $this->version->read($this->language)['slug'] ?? null;
 	}
 
 	/**

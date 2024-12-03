@@ -45,13 +45,7 @@ return [
 			$oldUrl   = $file->panel()->url(true);
 			$newUrl   = $renamed->panel()->url(true);
 			$response = [
-				'event' => 'file.changeName',
-				'dispatch' => [
-					'content/move' => [
-						$oldUrl,
-						$newUrl
-					]
-				],
+				'event' => 'file.changeName'
 			];
 
 			// check for a necessary redirect after the filename has changed
@@ -163,7 +157,6 @@ return [
 
 			return [
 				'event'    => 'file.delete',
-				'dispatch' => ['content/remove' => [$url]],
 				'redirect' => $redirect
 			];
 		}

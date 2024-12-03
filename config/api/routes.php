@@ -6,12 +6,12 @@
 return function ($kirby) {
 	$routes = [
 		...include __DIR__ . '/routes/auth.php',
+		...include __DIR__ . '/routes/changes.php',
 		...include __DIR__ . '/routes/pages.php',
 		...include __DIR__ . '/routes/roles.php',
 		...include __DIR__ . '/routes/site.php',
 		...include __DIR__ . '/routes/users.php',
 		...include __DIR__ . '/routes/files.php',
-		...include __DIR__ . '/routes/lock.php',
 		...include __DIR__ . '/routes/system.php',
 		...include __DIR__ . '/routes/translations.php'
 	];

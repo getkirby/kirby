@@ -3,7 +3,6 @@ import Counter from "./Counter.vue";
 import Field from "./Field.vue";
 import Fieldset from "./Fieldset.vue";
 import Form from "./Form.vue";
-import FormButtons from "./FormButtons.vue";
 import FormControls from "./FormControls.vue";
 import Input from "./Input.vue";
 
@@ -21,7 +20,6 @@ export default {
 		app.component("k-field", Field);
 		app.component("k-fieldset", Fieldset);
 		app.component("k-form", Form);
-		app.component("k-form-buttons", FormButtons);
 		app.component("k-form-controls", FormControls);
 		app.component("k-input", Input);
 

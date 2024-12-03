@@ -71,7 +71,6 @@ class App
 	protected Environment|null $environment = null;
 	protected Language|null $language = null;
 	protected Languages|null $languages = null;
-	protected ContentLocks|null $locks = null;
 	protected bool|null $multilang = null;
 	protected string|null $nonce = null;
 	protected array $options;
@@ -965,14 +964,6 @@ class App
 	public function load(): Loader
 	{
 		return new Loader($this);
-	}
-
-	/**
-	 * Returns the app's locks object
-	 */
-	public function locks(): ContentLocks
-	{
-		return $this->locks ??= new ContentLocks();
 	}
 
 	/**

@@ -20,7 +20,7 @@ use Kirby\TestCase;
 class FieldMethodsTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
-	public const TMP      = KIRBY_TMP_DIR . '/Filesystem.FieldMethods';
+	public const TMP      = KIRBY_TMP_DIR . '/Content.FieldMethods';
 
 	public function setUp(): void
 	{

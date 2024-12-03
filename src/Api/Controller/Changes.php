@@ -1,18 +1,16 @@
 <?php
 
-namespace Kirby\Panel\Controller;
+namespace Kirby\Api\Controller;
 
-use Kirby\Cms\App;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Content\VersionId;
-use Kirby\Exception\Exception;
 use Kirby\Form\Form;
 
 /**
  * The Changes controller takes care of the request logic
- * to save, discard and publish changes, as well as unlocking.
+ * to save, discard and publish changes.
  *
- * @package   Kirby Panel
+ * @package   Kirby Api
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
@@ -21,14 +19,11 @@ use Kirby\Form\Form;
 class Changes
 {
 	/**
-	 * Discards unpublished changes by deleting the version
+	 * Discards unsaved changes by deleting the changes version
 	 */
 	public static function discard(ModelWithContent $model): array
 	{
-		$model->version(VersionId::changes())->delete();
-
-		// remove the model from the user's list of unsaved changes
-		App::instance()->site()->changes()->untrack($model);
+		$model->version(VersionId::changes())->delete('current');
 
 		return [
 			'status' => 'ok'
@@ -49,13 +44,17 @@ class Changes
 		// get the changes version
 		$changes = $model->version(VersionId::changes());
 
+		// if the changes version does not exist, we need to return early
+		if ($changes->exists('current') === false) {
+			return [
+				'status' => 'ok',
+			];
+		}
+
 		// publish the changes
 		$changes->publish(
 			language: 'current'
 		);
-
-		// remove the model from the user's list of unsaved changes
-		App::instance()->site()->changes()->untrack($model);
 
 		return [
 			'status' => 'ok'
@@ -75,30 +74,24 @@ class Changes
 			'input'          => $input,
 		]);
 
+		$changes = $model->version(VersionId::changes());
+		$latest  = $model->version(VersionId::latest());
+
 		// combine the new field changes with the
 		// last published state
-		$model->version(VersionId::changes())->save(
+		$changes->save(
 			fields: [
-				...$model->version(VersionId::latest())->read(),
+				...$latest->read(),
 				...$form->strings(),
 			],
 			language: 'current'
 		);
 
-		// add the model to the user's list of unsaved changes
-		App::instance()->site()->changes()->track($model);
-
-		return [
-			'status' => 'ok'
-		];
-	}
-
-	/**
-	 * Removes the user lock from a `changes` version
-	 */
-	public static function unlock(ModelWithContent $model): array
-	{
-		throw new Exception(message: 'Not yet implemented');
+		if ($changes->isIdentical(version: $latest, language: 'current')) {
+			$changes->delete(
+				language: 'current'
+			);
+		}
 
 		return [
 			'status' => 'ok'

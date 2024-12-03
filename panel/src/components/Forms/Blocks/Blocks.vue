@@ -263,7 +263,7 @@ export default {
 
 			// a sign that it has been copied
 			this.$panel.notification.success({
-				message: this.$t("copy.success", { count: blocks.length }),
+				message: this.$t("copy.success.multiple", { count: blocks.length }),
 				icon: "template"
 			});
 		},

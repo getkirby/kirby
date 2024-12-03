@@ -69,9 +69,6 @@ export default {
 			return this.pending.email ? "code" : "login";
 		}
 	},
-	mounted() {
-		this.$store.dispatch("content/clear");
-	},
 	methods: {
 		async onError(error) {
 			if (error === null) {

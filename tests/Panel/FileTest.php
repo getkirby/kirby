@@ -7,14 +7,18 @@ use Kirby\Cms\File as ModelFile;
 use Kirby\Cms\Page as ModelPage;
 use Kirby\Cms\Site as ModelSite;
 use Kirby\Cms\User as ModelUser;
+use Kirby\Content\Lock;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 
-class ModelFileTestForceLocked extends ModelFile
+class FileForceLocked extends ModelFile
 {
-	public function isLocked(): bool
+	public function lock(): Lock
 	{
-		return true;
+		return new Lock(
+			user: new ModelUser(['email' => 'test@getkirby.com']),
+			modified: time()
+		);
 	}
 }
 
@@ -550,7 +554,7 @@ class FileTest extends TestCase
 			'slug' => 'test'
 		]);
 
-		$file = new ModelFileTestForceLocked([
+		$file = new FileForceLocked([
 			'filename' => 'test.jpg',
 			'parent'   => $page
 		]);
@@ -588,7 +592,6 @@ class FileTest extends TestCase
 			'update'         => false,
 		];
 
-		$panel = new File($file);
 		$this->assertSame($expected, $panel->options(['delete']));
 	}
 

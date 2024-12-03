@@ -12,7 +12,7 @@ use Kirby\Exception\LogicException;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class ImmutableMemoryContentStorageHandler extends MemoryContentStorageHandler
+class ImmutableMemoryStorage extends MemoryStorage
 {
 	public function delete(VersionId $versionId, Language $language): void
 	{
@@ -24,7 +24,7 @@ class ImmutableMemoryContentStorageHandler extends MemoryContentStorageHandler
 		Language $fromLanguage,
 		VersionId|null $toVersionId = null,
 		Language|null $toLanguage = null,
-		ContentStorageHandler|null $toStorage = null
+		Storage|null $toStorage = null
 	): void {
 		$this->preventMutation();
 	}

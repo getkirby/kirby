@@ -5,15 +5,20 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Cms\Page as ModelPage;
 use Kirby\Cms\Site as ModelSite;
+use Kirby\Cms\User as ModelUser;
+use Kirby\Content\Lock;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use Kirby\Toolkit\Str;
 
-class ModelPageTestForceLocked extends ModelPage
+class PageForceLocked extends ModelPage
 {
-	public function isLocked(): bool
+	public function lock(): Lock
 	{
-		return true;
+		return new Lock(
+			user: new ModelUser(['email' => 'test@getkirby.com']),
+			modified: time()
+		);
 	}
 }
 
@@ -401,7 +406,7 @@ class PageTest extends TestCase
 	 */
 	public function testOptionsWithLockedPage()
 	{
-		$page = new ModelPageTestForceLocked([
+		$page = new PageForceLocked([
 			'slug' => 'test',
 		]);
 
@@ -446,7 +451,6 @@ class PageTest extends TestCase
 			'update'         => false,
 		];
 
-		$panel = new Page($page);
 		$this->assertSame($expected, $panel->options(['preview']));
 	}
 

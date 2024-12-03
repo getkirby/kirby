@@ -6,7 +6,7 @@ use Exception;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 
-class TestContentStorageHandler extends ContentStorageHandler
+class TestStorage extends Storage
 {
 	public array $store = [];
 

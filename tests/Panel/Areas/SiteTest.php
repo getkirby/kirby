@@ -37,8 +37,14 @@ class SiteTest extends AreaTestCase
 		$model = $props['model'];
 
 		$this->assertSame('default', $props['blueprint']);
-		$this->assertSame(['state' => null, 'data' => false], $props['lock']);
-
+		$this->assertSame([
+			'isLocked' => false,
+			'modified' => null,
+			'user'     => [
+				'id'    => 'test',
+				'email' => 'test@getkirby.com'
+			]
+		], $props['lock']);
 		$this->assertArrayNotHasKey('tab', $props);
 		$this->assertSame([], $props['tabs']);
 
@@ -88,8 +94,14 @@ class SiteTest extends AreaTestCase
 		$model = $props['model'];
 
 		$this->assertSame('image', $props['blueprint']);
-		$this->assertSame(['state' => null, 'data' => false], $props['lock']);
-
+		$this->assertSame([
+			'isLocked' => false,
+			'modified' => null,
+			'user'     => [
+				'id'    => 'test',
+				'email' => 'test@getkirby.com'
+			]
+		], $props['lock']);
 		$this->assertArrayNotHasKey('tab', $props);
 		$this->assertSame([], $props['tabs']);
 
@@ -105,6 +117,27 @@ class SiteTest extends AreaTestCase
 
 		$this->assertNull($props['next']);
 		$this->assertNull($props['prev']);
+	}
+
+	public function testPagePreview(): void
+	{
+		$this->login();
+
+		$this->app->site()->createChild([
+			'slug'    => 'test',
+			'isDraft' => false,
+			'content' => [
+				'title' => 'Test'
+			]
+		]);
+
+		$view  = $this->view('pages/test/preview/changes');
+		$props = $view['props'];
+
+		$this->assertSame('k-preview-view', $view['component']);
+		$this->assertSame('Test | Changes', $view['title']);
+		$this->assertSame('/test?_version=changes', $props['src']['changes']);
+		$this->assertSame('/test', $props['src']['latest']);
 	}
 
 	public function testSiteWithoutAuthentication(): void
@@ -156,8 +189,14 @@ class SiteTest extends AreaTestCase
 		$model = $props['model'];
 
 		$this->assertSame('image', $props['blueprint']);
-		$this->assertSame(['state' => null, 'data' => false], $props['lock']);
-
+		$this->assertSame([
+			'isLocked' => false,
+			'modified' => null,
+			'user'     => [
+				'id'    => 'test',
+				'email' => 'test@getkirby.com'
+			]
+		], $props['lock']);
 		$this->assertArrayNotHasKey('tab', $props);
 		$this->assertSame([], $props['tabs']);
 
@@ -173,6 +212,21 @@ class SiteTest extends AreaTestCase
 
 		$this->assertNull($props['next']);
 		$this->assertNull($props['prev']);
+	}
+
+	public function testSitePreview(): void
+	{
+		$this->login();
+
+		$this->app->site();
+
+		$view  = $this->view('site/preview/changes');
+		$props = $view['props'];
+
+		$this->assertSame('k-preview-view', $view['component']);
+		$this->assertSame('Site | Changes', $view['title']);
+		$this->assertSame('/?_version=changes', $props['src']['changes']);
+		$this->assertSame('/', $props['src']['latest']);
 	}
 
 	public function testSiteTitle(): void

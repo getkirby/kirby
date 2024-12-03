@@ -10,7 +10,6 @@ use Kirby\Filesystem\F;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
 use Stringable;
-use Throwable;
 
 /**
  * The `$language` object represents
@@ -375,11 +374,7 @@ class Language implements Stringable
 			$file = $kirby->root('i18n:rules') . '/' . Str::before($code, '_') . '.json';
 		}
 
-		try {
-			return Data::read($file);
-		} catch (\Exception) {
-			return [];
-		}
+		return Data::read($file, fail: false);
 	}
 
 	/**
@@ -471,11 +466,7 @@ class Language implements Stringable
 	 */
 	public function save(): static
 	{
-		try {
-			$existingData = Data::read($this->root());
-		} catch (Throwable) {
-			$existingData = [];
-		}
+		$existingData = Data::read($this->root(), fail: false);
 
 		$data = [
 			...$existingData,

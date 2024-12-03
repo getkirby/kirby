@@ -1,36 +1,44 @@
 <template>
 	<k-panel-inside
-		:data-has-tabs="tabs.length > 1"
-		:data-id="model.id"
+		:data-has-tabs="hasTabs"
+		:data-id="id"
 		:data-locked="isLocked"
 		:data-template="blueprint"
 		class="k-page-view"
 	>
 		<template #topbar>
-			<k-prev-next v-if="model.id" :prev="prev" :next="next" />
+			<k-prev-next :prev="prev" :next="next" />
 		</template>
 
 		<k-header
 			:editable="permissions.changeTitle && !isLocked"
 			class="k-page-view-header"
-			@edit="$dialog(id + '/changeTitle')"
+			@edit="$dialog(api + '/changeTitle')"
 		>
-			{{ model.title }}
+			{{ title }}
 
 			<template #buttons>
 				<k-view-buttons :buttons="buttons" />
-				<k-form-buttons @discard="onDiscard" @submit="onSubmit" />
+				<k-form-controls
+					:editor="editor"
+					:has-changes="hasChanges"
+					:is-locked="isLocked"
+					:modified="modified"
+					:preview="permissions.preview ? api + '/preview/compare' : false"
+					@discard="onDiscard"
+					@submit="onSubmit"
+				/>
 			</template>
 		</k-header>
 
-		<k-model-tabs :tab="tab.name" :tabs="tabs" />
+		<k-model-tabs :changes="changes" :tab="tab.name" :tabs="tabs" />
 
 		<k-sections
 			:blueprint="blueprint"
 			:content="content"
 			:empty="$t('page.blueprint', { blueprint: $esc(blueprint) })"
 			:lock="lock"
-			:parent="id"
+			:parent="api"
 			:tab="tab"
 			@input="onInput"
 			@submit="onSubmit"
@@ -43,10 +51,8 @@ import ModelView from "../ModelView.vue";
 
 export default {
 	extends: ModelView,
-	computed: {
-		protectedFields() {
-			return ["title"];
-		}
+	props: {
+		title: String
 	}
 };
 </script>

@@ -44,7 +44,7 @@ export default (panel) => {
 		api.requests.push(id);
 
 		// start the loader if it's not a silent request
-		if (silent === false) {
+		if (silent === false && options.silent !== true) {
 			panel.isLoading = true;
 		}
 

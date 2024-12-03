@@ -5,16 +5,24 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Panel\Ui\Buttons\LanguagesDropdown;
 use Kirby\Panel\Ui\Buttons\PageStatusButton;
-use Kirby\Panel\Ui\Buttons\PreviewButton;
+use Kirby\Panel\Ui\Buttons\PreviewDropdownButton;
 use Kirby\Panel\Ui\Buttons\SettingsButton;
 
 return [
 	'site.preview' => function (Site $site) {
-		return new PreviewButton(link: $site->url());
+		return new PreviewDropdownButton(
+			open: $site->url(),
+			preview: $site->panel()->url(true) . '/preview/compare',
+			copy: $site->url(),
+		);
 	},
 	'page.preview' => function (Page $page) {
 		if ($page->permissions()->can('preview') === true) {
-			return new PreviewButton(link: $page->previewUrl());
+			return new PreviewDropdownButton(
+				open: $page->previewUrl(),
+				preview: $page->panel()->url(true) . '/preview/compare',
+				copy: $page->previewUrl(),
+			);
 		}
 	},
 	'page.settings' => function (Page $page) {

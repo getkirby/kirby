@@ -7,7 +7,7 @@ use Stringable;
 
 /**
  * The Version ID identifies a version of content.
- * This can be the currently published/latest version or changes
+ * This can be the currently latest version or changes
  * to the content. In the future, we also plan to use this
  * for older revisions of the content.
  *

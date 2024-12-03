@@ -40,8 +40,8 @@ abstract class Model
 		$version = $this->model->version('changes');
 		$changes = [];
 
-		if ($version->exists() === true) {
-			$changes = $version->content()->toArray();
+		if ($version->exists('current') === true) {
+			$changes = $version->content('current')->toArray();
 		}
 
 		// create a form which will collect the latest values for the model,
@@ -299,17 +299,6 @@ abstract class Model
 	}
 
 	/**
-	 * Returns lock info for the Panel
-	 *
-	 * @return array|false array with lock info,
-	 *                     false if locking is not supported
-	 */
-	public function lock(): array|false
-	{
-		return $this->model->lock()?->toArray() ?? false;
-	}
-
-	/**
 	 * Returns the corresponding model object
 	 * @since 5.0.0
 	 */
@@ -329,7 +318,7 @@ abstract class Model
 	{
 		$options = $this->model->permissions()->toArray();
 
-		if ($this->model->isLocked()) {
+		if ($this->model->lock()->isLocked() === true) {
 			foreach ($options as $key => $value) {
 				if (in_array($key, $unlock, true)) {
 					continue;
@@ -340,6 +329,14 @@ abstract class Model
 		}
 
 		return $options;
+	}
+
+	/**
+	 * Get the original content values for the model
+	 */
+	public function originals(): array
+	{
+		return Form::for(model: $this->model)->values();
 	}
 
 	/**
@@ -375,15 +372,22 @@ abstract class Model
 	public function props(): array
 	{
 		$blueprint = $this->model->blueprint();
+		$link      = $this->url(true);
 		$request   = $this->model->kirby()->request();
 		$tabs      = $blueprint->tabs();
 		$tab       = $blueprint->tab($request->get('tab')) ?? $tabs[0] ?? null;
 
 		$props = [
+			'api'         => $link,
 			'buttons'     => fn () => $this->buttons(),
-			'lock'        => $this->lock(),
+			'content'     => (object)$this->content(),
+			'id'          => $this->model->id(),
+			'link'        => $link,
+			'lock'        => $this->model->lock()->toArray(),
+			'originals'   => (object)$this->originals(),
 			'permissions' => $this->model->permissions()->toArray(),
 			'tabs'        => $tabs,
+			'uuid'        => fn () => $this->model->uuid()?->toString()
 		];
 
 		// only send the tab if it exists

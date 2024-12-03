@@ -112,6 +112,77 @@ class SelectFieldTest extends TestCase
 		$this->assertSame($expected, $field->options());
 	}
 
+	public function testOptionsQueryAdditionalData()
+	{
+		$this->app()->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'    => 'a',
+						'content' => [
+							'title'    => 'Title A',
+							'icon'     => 'page',
+							'headline' => 'some a headline'
+						]
+					],
+					[
+						'slug'    => 'b',
+						'content' => [
+							'title'    => 'Title B',
+							'icon'     => 'user',
+							'headline' => 'some b headline'
+						],
+					],
+					[
+						'slug'    => 'c',
+						'content' => [
+							'title'    => 'Title C',
+							'icon'     => 'file',
+							'headline' => 'some c headline'
+						],
+					]
+				]
+			]
+		]);
+
+		$expected = [
+			[
+				'disabled' => false,
+				'icon'     => 'page',
+				'info'     => 'some a headline',
+				'text'     => 'Title A',
+				'value'    => 'a'
+			],
+			[
+				'disabled' => false,
+				'icon'     => 'user',
+				'info'     => 'some b headline',
+				'text'     => 'Title B',
+				'value'    => 'b'
+			],
+			[
+				'disabled' => false,
+				'icon'     => 'file',
+				'info'     => 'some c headline',
+				'text'     => 'Title C',
+				'value'    => 'c'
+			]
+		];
+
+		$field = $this->field('select', [
+			'options' => [
+				'type'  => 'query',
+				'query' => 'site.children',
+				'info'  => '{{ item.headline }}',
+				'icon'  => '{{ item.icon }}',
+				'text'  => '{{ item.title }}',
+				'value' => '{{ item.slug }}',
+			]
+		]);
+
+		$this->assertSame($expected, $field->options());
+	}
+
 	public static function valueInputProvider(): array
 	{
 		return [
