@@ -86,4 +86,10 @@ abstract class FieldClass
 	{
 		return lcfirst(basename(str_replace(['\\', 'Field'], ['/', ''], static::class)));
 	}
+
+	public function unset(): bool
+	{
+		return false;
+	}
+
 }

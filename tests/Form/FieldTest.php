@@ -20,6 +20,7 @@ class FieldTest extends FieldTestCase
 		parent::setUp();
 
 		Field::$types = [];
+		Field::$setups = [];
 
 		// make a backup of the system mixins
 		$this->originalMixins = Field::$mixins;

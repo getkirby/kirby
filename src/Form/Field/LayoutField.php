@@ -10,7 +10,7 @@ use Kirby\Cms\Layouts;
 use Kirby\Data\Data;
 use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Form\Form;
+use Kirby\Form\Reform;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -117,16 +117,16 @@ class LayoutField extends BlocksField
 		$this->errors = null;
 	}
 
-	public function attrsForm(array $input = []): Form
+	public function attrsForm(array $input = []): Reform
 	{
 		$settings = $this->settings();
 
-		return new Form([
-			'fields' => $settings?->fields() ?? [],
-			'model'  => $this->model,
-			'strict' => true,
-			'values' => $input,
-		]);
+		$form = new Reform(
+			model: $this->model,
+			fields: $settings?->fields() ?? []
+		);
+
+		return $form->fill($input);
 	}
 
 	public function layouts(): array|null
@@ -282,11 +282,11 @@ class LayoutField extends BlocksField
 
 		foreach ($value as $layoutIndex => $layout) {
 			if ($this->settings !== null) {
-				$value[$layoutIndex]['attrs'] = $this->attrsForm($layout['attrs'])->content();
+				$value[$layoutIndex]['attrs'] = $this->attrsForm($layout['attrs'])->toStoredValues();
 			}
 
 			foreach ($layout['columns'] as $columnIndex => $column) {
-				$value[$layoutIndex]['columns'][$columnIndex]['blocks'] = $this->blocksToValues($column['blocks'] ?? [], 'content');
+				$value[$layoutIndex]['columns'][$columnIndex]['blocks'] = $this->blocksToValues($column['blocks'] ?? [], 'toStoredValues');
 			}
 		}
 

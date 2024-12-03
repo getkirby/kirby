@@ -6,6 +6,7 @@ use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Content\Content;
 use Kirby\Content\Version;
+use Kirby\Exception\NotFoundException;
 
 class Reform
 {
@@ -28,6 +29,23 @@ class Reform
 	public function errors(): array
 	{
 		return $this->fields->errors();
+	}
+
+	/**
+	 * Get the field object by name
+	 * and handle nested fields correctly
+	 *
+	 * @throws \Kirby\Exception\NotFoundException
+	 */
+	public function field(string $name): Field|FieldClass
+	{
+		if ($field = $this->fields->find($name)) {
+			return $field;
+		}
+
+		throw new NotFoundException(
+			message: 'The field could not be found'
+		);
 	}
 
 	/**
@@ -79,7 +97,7 @@ class Reform
 	public function submit(array $input): static {
 		// only submit values for translatable fields
 		$this
-			->fields
+			->fields()
 			->filter(fn($field) => $field->isDisabled($this->language) === false)
 			->submit($input, $this->language);
 		return $this;
@@ -90,7 +108,7 @@ class Reform
 	 */
 	public function toFormValues(bool $defaults = false): array
 	{
-		return $this->fields->toFormValues($defaults);
+		return $this->fields()->toFormValues($defaults);
 	}
 
 	/**
@@ -98,6 +116,6 @@ class Reform
 	 */
 	public function toStoredValues(bool $defaults = false): array
 	{
-		return $this->fields->translatable($this->language)->toStoredValues($defaults);
+		return $this->fields()->translatable($this->language)->toStoredValues($defaults);
 	}
 }

@@ -813,8 +813,9 @@ trait AppPlugins
 	{
 		// Always start with fresh fields and sections
 		// from the core and add plugins on top of that
-		FormField::$types = [];
-		Section::$types   = [];
+		FormField::$types  = [];
+		FormField::$setups = [];
+		Section::$types    = [];
 
 		// mixins
 		FormField::$mixins = $this->core->fieldMixins();

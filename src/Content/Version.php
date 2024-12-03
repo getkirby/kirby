@@ -2,7 +2,6 @@
 
 namespace Kirby\Content;
 
-use Kirby\Cms\File;
 use Kirby\Cms\Language;
 use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
@@ -10,7 +9,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Form\Form;
+use Kirby\Form\Reform;
 use Kirby\Http\Uri;
 
 /**
@@ -216,21 +215,13 @@ class Version
 			$b['uuid']
 		);
 
-		$a = Form::for(
+		$form = new Reform(
 			model: $this->model,
-			props: [
-				'language' => $language->code(),
-				'values'   => $a,
-			]
-		)->values();
+			language: $language,
+		);
 
-		$b = Form::for(
-			model: $this->model,
-			props: [
-				'language' => $language->code(),
-				'values'   => $b
-			]
-		)->values();
+		$a = $form->fill($a)->toFormValues();
+		$b = $form->fill($b)->toFormValues();
 
 		ksort($a);
 		ksort($b);

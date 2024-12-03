@@ -51,6 +51,7 @@ class UsersRoutesTest extends TestCase
 	{
 		App::destroy();
 		Field::$types = [];
+		Field::$setups = [];
 		Section::$types = [];
 		Dir::remove(static::TMP);
 	}

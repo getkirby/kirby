@@ -12,10 +12,10 @@ use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\FieldClass;
-use Kirby\Form\Form;
 use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
 use Kirby\Form\Mixin\Min;
+use Kirby\Form\Reform;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -72,9 +72,8 @@ class BlocksField extends FieldClass
 				'action'  => function (
 					string $fieldsetType
 				) use ($field): array {
-					$fields   = $field->fields($fieldsetType);
-					$defaults = $field->form($fields, [])->data(true);
-					$content  = $field->form($fields, $defaults)->values();
+					$fields  = $field->fields($fieldsetType);
+					$content = $field->form($fields)->toFormValues(true);
 
 					return Block::factory([
 						'content' => $content,
@@ -113,7 +112,7 @@ class BlocksField extends FieldClass
 
 	public function blocksToValues(
 		array $blocks,
-		string $to = 'values'
+		string $to = 'toFormValues'
 	): array {
 		$result = [];
 		$fields = [];
@@ -178,14 +177,15 @@ class BlocksField extends FieldClass
 		$this->errors = null;
 	}
 
-	public function form(array $fields, array $input = []): Form
+	public function form(array $fields, array $input = []): Reform
 	{
-		return new Form([
-			'fields' => $fields,
-			'model'  => $this->model,
-			'strict' => true,
-			'values' => $input,
-		]);
+		$form = new Reform(
+			model: $this->model,
+			fields: $fields,
+			language: 'current'
+		);
+
+		return $form->fill($input);
 	}
 
 	public function isEmpty(): bool
@@ -278,7 +278,7 @@ class BlocksField extends FieldClass
 	public function toStoredValue(bool $default = false): mixed
 	{
 		$value  = $this->toFormValue($default);
-		$blocks = $this->blocksToValues((array)$value, 'content');
+		$blocks = $this->blocksToValues((array)$value, 'toStoredValues');
 
 		// returns empty string to avoid storing empty array as string `[]`
 		// and to consistency work with `$field->isEmpty()`

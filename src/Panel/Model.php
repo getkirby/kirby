@@ -6,7 +6,7 @@ use Closure;
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
-use Kirby\Form\Form;
+use Kirby\Form\Reform;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\A;
 
@@ -22,6 +22,8 @@ use Kirby\Toolkit\A;
  */
 abstract class Model
 {
+	protected Reform $form;
+
 	public function __construct(
 		protected ModelWithContent $model
 	) {
@@ -44,14 +46,7 @@ abstract class Model
 			$changes = $version->content('current')->toArray();
 		}
 
-		// create a form which will collect the latest values for the model,
-		// but also pass along unpublished changes as overwrites
-		return Form::for(
-			model: $this->model,
-			props: [
-				'values' => $changes
-			]
-		)->values();
+		return $this->form()->fill($changes)->toFormValues();
 	}
 
 	/**
@@ -107,6 +102,20 @@ abstract class Model
 			'link'  => $this->url(true),
 			'text'  => $this->model->id(),
 		];
+	}
+
+	public function form(): Reform
+	{
+		if (isset($this->form) === true) {
+			return $this->form;
+		}
+
+		$this->form = new Reform(
+			model: $this->model,
+			language: 'current'
+		);
+
+		return $this->form->fill($this->model);
 	}
 
 	/**
@@ -336,7 +345,7 @@ abstract class Model
 	 */
 	public function originals(): array
 	{
-		return Form::for(model: $this->model)->values();
+		return $this->form()->toFormValues();
 	}
 
 	/**

@@ -14,6 +14,7 @@ class TestCase extends BaseTestCase
 	{
 		// start with a fresh set of fields
 		Field::$types = [];
+		Field::$setups = [];
 
 		$this->setUpTmp();
 
