@@ -143,7 +143,7 @@ class DateFieldTest extends TestCase
 			'value' => '12.12.2012',
 		]);
 
-		$this->assertSame('2012-12-12', $field->data());
+		$this->assertSame('2012-12-12 00:00:00', $field->data());
 
 		// empty value
 		$field = $this->field('date', [

@@ -4,7 +4,6 @@ namespace Kirby\Form;
 
 use Closure;
 use Kirby\Cms\App;
-use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
 use Kirby\Exception\NotFoundException;

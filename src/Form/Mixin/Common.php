@@ -65,7 +65,7 @@ trait Common
 	{
 		$this->autofocus = $autofocus;
 	}
-	
+
 	/**
 	 * Setter for the name property
 	 */
@@ -80,6 +80,37 @@ trait Common
 	protected function setWidth(string|null $width = null): void
 	{
 		$this->width = $width;
+	}
+
+	/**
+	 * Converts the field to a plain array
+	 */
+	public function toArray(): array
+	{
+		return $this->toProps();
+	}
+
+	/**
+	 * Return field props, which can be used in our
+	 * frontend components
+	 */
+	public function toProps(): array
+	{
+		$props = $this->props();
+
+		// don't include the value
+		// values must be extracted with the toFormValue and toStoreValue methods.
+		unset($props['value']);
+
+		// sort all props by key alphabetically
+		// for better debuggability
+		ksort($props);
+
+		// remove null values and unintentional objects
+		return array_filter(
+			$props,
+			fn ($item) => $item !== null && is_object($item) === false
+		);
 	}
 
 	/**

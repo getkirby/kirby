@@ -3,6 +3,7 @@
 namespace Kirby\Form;
 
 use Closure;
+use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
@@ -163,6 +164,38 @@ class Fields extends Collection
 	}
 
 	/**
+	 * Sets the value for each field with a matching key in the input array
+	 */
+	public function submit(
+		array $input,
+		Language|string $language = 'default'
+	): static {
+		foreach ($input as $name => $value) {
+			$this->get($name)?->submit(
+				value: $value,
+				language: $language
+			);
+		}
+
+		// reset the errors cache
+		$this->errors = null;
+
+		return $this;
+	}
+
+	/**
+	 * Filter fields by whether they are translatable into the given language
+	 */
+	public function translatable(Language|string $language = 'default'): static
+	{
+		$language = Language::ensure($language);
+
+		return $this->filter(function ($field) use ($language) {
+			return $field->isTranslatableInto($language);
+		});
+	}
+
+	/**
 	 * Converts the fields collection to an
 	 * array and also does that for every
 	 * included field.
@@ -173,11 +206,28 @@ class Fields extends Collection
 	}
 
 	/**
+	 * Returns an array with the default value of each field
+	 */
+	public function toDefaultValues(): array
+	{
+		return $this->toArray(fn ($field) => $field->default());
+	}
+
+	/**
 	 * Returns an array with the form value of each field
 	 */
 	public function toFormValues(bool $defaults = false): array
 	{
 		return $this->toArray(fn ($field) => $field->toFormValue($defaults));
+	}
+
+	/**
+	 * Return field props for each field, which can be used in our
+	 * frontend components
+	 */
+	public function toProps(): array
+	{
+		return $this->toArray(fn ($field) => $field->toProps());
 	}
 
 	/**

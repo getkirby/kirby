@@ -2,6 +2,9 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Cms\Language;
+use Kirby\Exception\PermissionException;
+
 /**
  * @package   Kirby Form
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -104,6 +107,25 @@ trait Value
 	protected function setDefault(mixed $default = null): void
 	{
 		$this->default = $default;
+	}
+
+	/**
+	 * Tries to set a new field value, but will throw an exception
+	 * if the field is not submittable.
+	 */
+	public function submit(
+		mixed $value = null,
+		Language|string $language = 'default',
+	): void {
+		if ($this->isSaveable() === false) {
+			throw new PermissionException('The "' . $this->name() . '" field cannot be saved');
+		}
+
+		if ($this->isDisabled($language) === true) {
+			throw new PermissionException('The "' . $this->name() . '" field is disabled and cannot be submitted');
+		}
+
+		$this->fill($value);
 	}
 
 	/**

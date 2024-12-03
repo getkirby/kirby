@@ -80,18 +80,6 @@ abstract class FieldClass
 	}
 
 	/**
-	 * Converts the field to a plain array
-	 */
-	public function toArray(): array
-	{
-		$props = $this->props();
-
-		ksort($props);
-
-		return array_filter($props, fn ($item) => $item !== null);
-	}
-
-	/**
 	 * Returns the field type
 	 */
 	public function type(): string
