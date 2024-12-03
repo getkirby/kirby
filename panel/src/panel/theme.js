@@ -1,9 +1,12 @@
 import { reactive } from "vue";
 import State from "./state.js";
 
+const media = window.matchMedia?.("(prefers-color-scheme: dark)");
+
 export const defaults = () => {
 	return {
-		setting: localStorage.getItem("kirby$theme")
+		setting: localStorage.getItem("kirby$theme"),
+		system: media?.matches ? "dark" : "light"
 	};
 };
 
@@ -13,7 +16,7 @@ export const defaults = () => {
 export default () => {
 	const parent = State("theme", defaults());
 
-	return reactive({
+	const theme = reactive({
 		...parent,
 
 		get current() {
@@ -28,12 +31,14 @@ export default () => {
 		set(theme) {
 			this.setting = theme;
 			localStorage.setItem("kirby$theme", theme);
-		},
-
-		get system() {
-			return window.matchMedia?.("(prefers-color-scheme: dark)").matches
-				? "dark"
-				: "light";
 		}
 	});
+
+	// watch the media query for changes
+	// and update the system state
+	media?.addEventListener("change", (event) => {
+		theme.system = event.matches ? "dark" : "light";
+	});
+
+	return theme;
 };
