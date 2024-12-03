@@ -108,7 +108,10 @@ class Changes
 		// combine the new field changes with the
 		// last published state
 		$changes->save(
-			fields: $form->toStoredValues(),
+			fields: [
+				...$latest->read(),
+				...$form->toStoredValues(),
+			],
 			language: 'current'
 		);
 
