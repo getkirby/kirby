@@ -22,8 +22,6 @@ use Kirby\Toolkit\A;
  */
 abstract class Model
 {
-	protected Reform $form;
-
 	public function __construct(
 		protected ModelWithContent $model
 	) {
@@ -43,10 +41,13 @@ abstract class Model
 		$changes = [];
 
 		if ($version->exists('current') === true) {
-			$changes = $version->content('current')->toArray();
+			$changes = $version->read('current');
 		}
 
-		return $this->form()->fill($changes)->toFormValues();
+		return [
+			...$this->originals(),
+			...$changes
+		];
 	}
 
 	/**
@@ -106,16 +107,10 @@ abstract class Model
 
 	public function form(): Reform
 	{
-		if (isset($this->form) === true) {
-			return $this->form;
-		}
-
-		$this->form = new Reform(
+		return new Reform(
 			model: $this->model,
-			language: 'current'
+			language: 'current',
 		);
-
-		return $this->form->fill($this->model);
 	}
 
 	/**
@@ -345,7 +340,7 @@ abstract class Model
 	 */
 	public function originals(): array
 	{
-		return $this->form()->toFormValues();
+		return $this->model->version('latest')->read('current');
 	}
 
 	/**
@@ -385,15 +380,22 @@ abstract class Model
 		$request   = $this->model->kirby()->request();
 		$tabs      = $blueprint->tabs();
 		$tab       = $blueprint->tab($request->get('tab')) ?? $tabs[0] ?? null;
+		$form      = $this->form();
+
+		$originals = $this->originals();
+		$content = [
+			...$originals,
+			...$this->content()
+		];
 
 		$props = [
 			'api'         => $link,
 			'buttons'     => fn () => $this->buttons(),
-			'content'     => (object)$this->content(),
+			'content'     => (object)$form->fill($content)->toFormValues(),
 			'id'          => $this->model->id(),
 			'link'        => $link,
 			'lock'        => $this->model->lock()->toArray(),
-			'originals'   => (object)$this->originals(),
+			'originals'   => (object)$form->fill($originals)->toFormValues(),
 			'permissions' => $this->model->permissions()->toArray(),
 			'tabs'        => $tabs,
 			'uuid'        => fn () => $this->model->uuid()?->toString()
