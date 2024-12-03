@@ -87,14 +87,15 @@ class Parser extends BaseParser
 				throw new Exception('Expect property name after ".".');
 			}
 
-			if ($this->match(TokenType::T_OPEN_PAREN)) {
-				$arguments = $this->argumentList();
-			}
+			$arguments = match ($this->match(TokenType::T_OPEN_PAREN)) {
+				false => null,
+				default => $this->argumentList(),
+			};
 
 			$left = new MemberAccessNode(
 				$left,
 				$right,
-				$arguments ?? null,
+				$arguments,
 				$nullSafe
 			);
 		}
