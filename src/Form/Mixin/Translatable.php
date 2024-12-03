@@ -19,8 +19,10 @@ trait Translatable
 	 * Checks if the field can be translated into the
 	 * given language
 	 */
-	public function isTranslatableInto(Language $language): bool
+	public function isTranslatableInto(Language|string $language = 'current'): bool
 	{
+		$language = Language::ensure($language);
+
 		// fields are always active in the default language
 		if ($language->isDefault() === true) {
 			return true;
@@ -38,7 +40,7 @@ trait Translatable
 	 */
 	public function isTranslatableIntoCurrentLanguage(): bool
 	{
-		return $this->isTranslatableInto(Language::ensure('current'));
+		return $this->isTranslatableInto('current');
 	}
 
 	/**

@@ -17,6 +17,7 @@ abstract class FieldClass
 {
 	use Mixin\Common;
 	use Mixin\Decorators;
+	use Mixin\Disabled;
 	use Mixin\Endpoints;
 	use Mixin\Model;
 	use Mixin\Siblings;

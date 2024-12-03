@@ -15,7 +15,6 @@ use Kirby\Toolkit\Str;
 trait Common
 {
 	protected bool $autofocus = false;
-	protected bool $disabled = false;
 	protected string|null $name = null;
 	protected string|null $width = null;
 
@@ -25,14 +24,6 @@ trait Common
 	public function autofocus(): bool
 	{
 		return $this->autofocus;
-	}
-
-	/**
-	 * @deprecated 5.0.0 Use `::isDisabled` instead
-	 */
-	public function disabled(): bool
-	{
-		return $this->isDisabled();
 	}
 
 	/**
@@ -49,14 +40,6 @@ trait Common
 	public function id(): string
 	{
 		return $this->name();
-	}
-
-	/**
-	 * If `true`, the field is no longer editable and will not be saved
-	 */
-	public function isDisabled(): bool
-	{
-		return $this->disabled;
 	}
 
 	/**
@@ -82,15 +65,7 @@ trait Common
 	{
 		$this->autofocus = $autofocus;
 	}
-
-	/**
-	 * Setter for the disabled state
-	 */
-	protected function setDisabled(bool $disabled = false): void
-	{
-		$this->disabled = $disabled;
-	}
-
+	
 	/**
 	 * Setter for the name property
 	 */
