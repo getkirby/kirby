@@ -57,6 +57,7 @@ export default {
 	gap: 0.25rem;
 	box-shadow: var(--shadow-toolbar);
 	border: 1px solid var(--button-color-back);
+	overflow: clip;
 }
 .k-block-background-dropdown .k-color-frame {
 	border-right: 1px solid var(--color-gray-300);
