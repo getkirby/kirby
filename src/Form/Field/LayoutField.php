@@ -105,7 +105,7 @@ class LayoutField extends BlocksField
 
 		foreach ($layouts as $layoutIndex => $layout) {
 			if ($this->settings !== null) {
-				$layouts[$layoutIndex]['attrs'] = $this->attrsForm($layout['attrs'])->values();
+				$layouts[$layoutIndex]['attrs'] = $this->attrsForm($layout['attrs'])->toFormValues();
 			}
 
 			foreach ($layout['columns'] as $columnIndex => $column) {
