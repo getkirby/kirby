@@ -128,7 +128,7 @@ export default {
 .k-block-type-heading-level {
 	--input-color-back: transparent;
 	--input-color-border: none;
-	--input-color-text: var(--color-gray-600);
+	--input-color-text: light-dark(var(--color-gray-600), var(--color-gray-500));
 	font-weight: var(--font-bold);
 	text-transform: uppercase;
 }
