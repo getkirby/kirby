@@ -398,15 +398,24 @@ class Version
 	 */
 	public function previewToken(): string
 	{
-		$id = match (true) {
-			$this->model instanceof Site => '',
-			$this->model instanceof Page => $this->model->id() . $this->model->template(),
-			default                      => throw new LogicException('Invalid model type')
-		};
+		if ($this->model instanceof Site) {
+			// the site itself does not render; its preview is the home page
+			$homePage = $this->model->homePage();
+
+			if ($homePage === null) {
+				throw new NotFoundException('The home page does not exist');
+			}
+
+			return $homePage->version($this->id)->previewToken();
+		}
+
+		if (($this->model instanceof Page) === false) {
+			throw new LogicException('Invalid model type');
+		}
 
 		return $this->model->kirby()->contentToken(
 			$this->model,
-			$id
+			$this->model->id() . $this->model->template()
 		);
 	}
 
