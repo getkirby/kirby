@@ -349,7 +349,7 @@ class Site extends ModelWithContent
 	}
 
 	/**
-	 * Returns the preview URL with authentication for drafts
+	 * Returns the preview URL with authentication for drafts and versions
 	 * @internal
 	 */
 	public function previewUrl(VersionId|string $versionId = 'latest'): string|null

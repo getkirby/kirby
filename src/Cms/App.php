@@ -1277,7 +1277,7 @@ class App
 		if (!$page && $draft = $site->draft($path)) {
 			if (
 				$this->user() ||
-				$draft->isVerified($this->request()->get('_token'))
+				$draft->renderVersionFromRequest() !== null
 			) {
 				$page = $draft;
 			}

@@ -552,7 +552,7 @@ class Version
 	}
 
 	/**
-	 * Returns the preview URL with authentication for drafts
+	 * Returns the preview URL with authentication for drafts and versions
 	 * @internal
 	 */
 	public function url(): string|null
@@ -576,7 +576,10 @@ class Version
 
 		$uri = new Uri($url);
 
-		if ($this->model instanceof Page && $this->model->isDraft() === true) {
+		if (
+			($this->model instanceof Page && $this->model->isDraft() === true) ||
+			$this->id->is('changes') === true
+		) {
 			$uri->query->_token = $this->previewToken();
 		}
 

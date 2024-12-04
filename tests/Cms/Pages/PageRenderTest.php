@@ -101,6 +101,18 @@ class PageRenderTest extends TestCase
 						'slug'     => 'version-recursive',
 						'template' => 'version-recursive'
 					]
+				],
+				'drafts' => [
+					[
+						'slug'     => 'version-draft',
+						'template' => 'version',
+						'children' => [
+							[
+								'slug'     => 'a-child',
+								'template' => 'version'
+							]
+						]
+					],
 				]
 			],
 			'options' => [
@@ -613,7 +625,36 @@ class PageRenderTest extends TestCase
 
 		$this->app = $this->app->clone([
 			'request' => [
-				'query' => ['_version' => 'changes']
+				'query' => [
+					'_token'   => $page->version('changes')->previewToken(),
+					'_version' => 'changes'
+				]
+			]
+		]);
+
+		$this->assertSame("Version: changes\nContent: Changes Title", $page->render());
+	}
+
+	/**
+	 * @covers ::cacheId
+	 * @covers ::render
+	 */
+	public function testRenderVersionDetectedFromRequestDraft()
+	{
+		$page = $this->app->page('version-draft');
+		$page->version('latest')->save(['title' => 'Latest Title']);
+		$page->version('changes')->save(['title' => 'Changes Title']);
+
+		// manual renders of drafts falls back to the latest version even if
+		// the draft couldn't be rendered "publicly" by `$kirby->resolve()`
+		$this->assertSame("Version: latest\nContent: Latest Title", $page->render());
+
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'_token'   => $page->version('changes')->previewToken(),
+					'_version' => 'changes'
+				]
 			]
 		]);
 
@@ -682,5 +723,164 @@ class PageRenderTest extends TestCase
 
 		// global state always needs to be reset after rendering
 		$this->assertNull(VersionId::$render);
+	}
+
+	/**
+	 * @covers ::renderVersionFromRequest
+	 */
+	public function testRenderVersionFromRequestAuthenticated()
+	{
+		$page = $this->app->page('default');
+
+		$this->app->clone([
+			'request' => [
+				'query' => [
+					'_token'   => $page->version('latest')->previewToken(),
+					'_version' => 'latest'
+				]
+			]
+		]);
+
+		$this->assertSame('latest', $page->renderVersionFromRequest()->value());
+
+		$this->app->clone([
+			'request' => [
+				'query' => [
+					'_token'   => $page->version('changes')->previewToken(),
+					'_version' => 'changes'
+				]
+			]
+		]);
+
+		$this->assertSame('changes', $page->renderVersionFromRequest()->value());
+	}
+
+	/**
+	 * @covers ::renderVersionFromRequest
+	 */
+	public function testRenderVersionFromRequestAuthenticatedDraft()
+	{
+		$page = $this->app->page('version-draft');
+
+		$this->app->clone([
+			'request' => [
+				'query' => [
+					'_token'   => $page->version('latest')->previewToken(),
+					'_version' => 'latest'
+				]
+			]
+		]);
+
+		$this->assertSame('latest', $page->renderVersionFromRequest()->value());
+
+		$this->app->clone([
+			'request' => [
+				'query' => [
+					'_token'   => $page->version('changes')->previewToken(),
+					'_version' => 'changes'
+				]
+			]
+		]);
+
+		$this->assertSame('changes', $page->renderVersionFromRequest()->value());
+	}
+
+	/**
+	 * @covers ::renderVersionFromRequest
+	 */
+	public function testRenderVersionFromRequestInvalidId()
+	{
+		$page       = $this->app->page('default');
+		$draft      = $this->app->page('version-draft');
+		$draftChild = $this->app->page('version-draft/a-child');
+
+		$this->app->clone([
+			'request' => [
+				'query' => [
+					'_token'   => $page->version('changes')->previewToken(),
+					'_version' => 'some-gibberish'
+				]
+			]
+		]);
+
+		$this->assertSame('latest', $page->renderVersionFromRequest()->value());
+		$this->assertNull($draft->renderVersionFromRequest());
+		$this->assertNull($draftChild->renderVersionFromRequest());
+	}
+
+	/**
+	 * @covers ::renderVersionFromRequest
+	 */
+	public function testRenderVersionFromRequestMissingId()
+	{
+		$page = $this->app->page('default');
+
+		$this->app->clone([
+			'request' => [
+				'query' => [
+					'_token' => $page->version('changes')->previewToken()
+				]
+			]
+		]);
+
+		$this->assertSame('latest', $page->renderVersionFromRequest()->value());
+	}
+
+	/**
+	 * @covers ::renderVersionFromRequest
+	 */
+	public function testRenderVersionFromRequestMissingToken()
+	{
+		$page       = $this->app->page('default');
+		$draft      = $this->app->page('version-draft');
+		$draftChild = $this->app->page('version-draft/a-child');
+
+		$this->app->clone([
+			'request' => [
+				'query' => [
+					'_version' => 'changes'
+				]
+			]
+		]);
+
+		$this->assertSame('latest', $page->renderVersionFromRequest()->value());
+		$this->assertNull($draft->renderVersionFromRequest());
+		$this->assertNull($draftChild->renderVersionFromRequest());
+
+		$this->app->clone([
+			'request' => [
+				'query' => [
+					'_token'   => '',
+					'_version' => 'changes'
+				]
+			]
+		]);
+
+		$this->assertSame('latest', $page->renderVersionFromRequest()->value());
+		$this->assertNull($draft->renderVersionFromRequest());
+		$this->assertNull($draftChild->renderVersionFromRequest());
+	}
+
+	/**
+	 * @covers ::renderVersionFromRequest
+	 */
+	public function testRenderVersionFromRequestInvalidToken()
+	{
+		$page       = $this->app->page('default');
+		$draft      = $this->app->page('version-draft');
+		$draftChild = $this->app->page('version-draft/a-child');
+
+		$this->app->clone([
+			'request' => [
+				'query' => [
+					'_token'   => 'some-gibberish',
+					'_version' => 'changes'
+				]
+			]
+		]);
+
+		$this->assertSame('latest', $page->renderVersionFromRequest()->value());
+		$this->assertNull($draft->renderVersionFromRequest());
+		$this->assertNull($draftChild->renderVersionFromRequest());
 	}
 }
