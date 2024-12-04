@@ -212,8 +212,8 @@ export default (panel) => {
 		/**
 		 * Updates the form values of the current view with a delay
 		 */
-		async updateLazy(values, api) {
-			return await this.saveLazy(this.merge(values, api), api);
+		updateLazy(values, api) {
+			this.saveLazy(this.merge(values, api), api);
 		}
 	});
 
