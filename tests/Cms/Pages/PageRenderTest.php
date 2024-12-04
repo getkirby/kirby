@@ -147,6 +147,8 @@ class PageRenderTest extends TestCase
 		]);
 
 		$this->assertSame($expected, $app->page('default')->isCacheable());
+		$this->assertSame($expected, $app->page('default')->isCacheable(VersionId::latest()));
+		$this->assertFalse($app->page('default')->isCacheable(VersionId::changes()));
 	}
 
 	/**
@@ -195,7 +197,11 @@ class PageRenderTest extends TestCase
 		]);
 
 		$this->assertTrue($app->page('default')->isCacheable());
+		$this->assertTrue($app->page('default')->isCacheable(VersionId::latest()));
+		$this->assertFalse($app->page('default')->isCacheable(VersionId::changes()));
 		$this->assertFalse($app->page('data')->isCacheable());
+		$this->assertFalse($app->page('data')->isCacheable(VersionId::latest()));
+		$this->assertFalse($app->page('data')->isCacheable(VersionId::changes()));
 	}
 
 	/**
@@ -212,7 +218,11 @@ class PageRenderTest extends TestCase
 		]);
 
 		$this->assertFalse($app->page('default')->isCacheable());
+		$this->assertFalse($app->page('default')->isCacheable(VersionId::latest()));
+		$this->assertFalse($app->page('default')->isCacheable(VersionId::changes()));
 		$this->assertTrue($app->page('data')->isCacheable());
+		$this->assertTrue($app->page('data')->isCacheable(VersionId::latest()));
+		$this->assertFalse($app->page('data')->isCacheable(VersionId::changes()));
 	}
 
 	/**
@@ -250,12 +260,12 @@ class PageRenderTest extends TestCase
 		$cache = $this->app->cache('pages');
 		$page  = $this->app->page('default');
 
-		$this->assertNull($cache->retrieve('default.html'));
+		$this->assertNull($cache->retrieve('default.latest.html'));
 
 		$html1 = $page->render();
 		$this->assertStringStartsWith('This is a test:', $html1);
 
-		$value = $cache->retrieve('default.html');
+		$value = $cache->retrieve('default.latest.html');
 		$this->assertInstanceOf(Value::class, $value);
 		$this->assertSame($html1, $value->value()['html']);
 		$this->assertNull($value->expires());
@@ -273,11 +283,11 @@ class PageRenderTest extends TestCase
 		$cache = $this->app->cache('pages');
 		$page  = $this->app->page('expiry');
 
-		$this->assertNull($cache->retrieve('expiry.html'));
+		$this->assertNull($cache->retrieve('expiry.latest.html'));
 
 		$time = $page->render();
 
-		$value = $cache->retrieve('expiry.html');
+		$value = $cache->retrieve('expiry.latest.html');
 		$this->assertInstanceOf(Value::class, $value);
 		$this->assertSame($time, $value->value()['html']);
 		$this->assertSame((int)$time, $value->expires());
@@ -292,7 +302,7 @@ class PageRenderTest extends TestCase
 		$cache = $this->app->cache('pages');
 		$page  = $this->app->page('metadata');
 
-		$this->assertNull($cache->retrieve('metadata.html'));
+		$this->assertNull($cache->retrieve('metadata.latest.html'));
 
 		$html1 = $page->render();
 		$this->assertStringStartsWith('This is a test:', $html1);
@@ -323,12 +333,12 @@ class PageRenderTest extends TestCase
 		$cache = $this->app->cache('pages');
 		$page  = $this->app->page('disabled');
 
-		$this->assertNull($cache->retrieve('disabled.html'));
+		$this->assertNull($cache->retrieve('disabled.latest.html'));
 
 		$html1 = $page->render();
 		$this->assertStringStartsWith('This is a test:', $html1);
 
-		$this->assertNull($cache->retrieve('disabled.html'));
+		$this->assertNull($cache->retrieve('disabled.latest.html'));
 
 		$html2 = $page->render();
 		$this->assertStringStartsWith('This is a test:', $html2);
@@ -355,12 +365,12 @@ class PageRenderTest extends TestCase
 		$cache = $this->app->cache('pages');
 		$page  = $this->app->page($slug);
 
-		$this->assertNull($cache->retrieve($slug . '.html'));
+		$this->assertNull($cache->retrieve($slug . '.latest.html'));
 
 		$html1 = $page->render();
 		$this->assertStringStartsWith('This is a test:', $html1);
 
-		$cacheValue = $cache->retrieve($slug . '.html');
+		$cacheValue = $cache->retrieve($slug . '.latest.html');
 		$this->assertNotNull($cacheValue);
 		$this->assertSame(in_array('auth', $dynamicElements), $cacheValue->value()['usesAuth']);
 		if (in_array('cookie', $dynamicElements)) {
@@ -394,12 +404,12 @@ class PageRenderTest extends TestCase
 		$cache = $this->app->cache('pages');
 		$page  = $this->app->page($slug);
 
-		$this->assertNull($cache->retrieve($slug . '.html'));
+		$this->assertNull($cache->retrieve($slug . '.latest.html'));
 
 		$html1 = $page->render();
 		$this->assertStringStartsWith('This is a test:', $html1);
 
-		$cacheValue = $cache->retrieve($slug . '.html');
+		$cacheValue = $cache->retrieve($slug . '.latest.html');
 		$this->assertNull($cacheValue);
 
 		// reset the Kirby Responder object
@@ -419,12 +429,12 @@ class PageRenderTest extends TestCase
 		$cache = $this->app->cache('pages');
 		$page  = $this->app->page($slug);
 
-		$this->assertNull($cache->retrieve($slug . '.html'));
+		$this->assertNull($cache->retrieve($slug . '.latest.html'));
 
 		$html1 = $page->render();
 		$this->assertStringStartsWith('This is a test:', $html1);
 
-		$cacheValue = $cache->retrieve($slug . '.html');
+		$cacheValue = $cache->retrieve($slug . '.latest.html');
 		$this->assertNotNull($cacheValue);
 		$this->assertSame(in_array('auth', $dynamicElements), $cacheValue->value()['usesAuth']);
 		if (in_array('cookie', $dynamicElements)) {
@@ -454,12 +464,12 @@ class PageRenderTest extends TestCase
 		$cache = $this->app->cache('pages');
 		$page  = $this->app->page('data');
 
-		$this->assertNull($cache->retrieve('data.html'));
+		$this->assertNull($cache->retrieve('data.latest.html'));
 
 		$html = $page->render(['test' => 'custom test']);
 		$this->assertStringStartsWith('This is a custom test:', $html);
 
-		$this->assertNull($cache->retrieve('data.html'));
+		$this->assertNull($cache->retrieve('data.latest.html'));
 	}
 
 	/**
@@ -471,12 +481,12 @@ class PageRenderTest extends TestCase
 		$cache = $this->app->cache('pages');
 		$page  = $this->app->page('data');
 
-		$this->assertNull($cache->retrieve('data.html'));
+		$this->assertNull($cache->retrieve('data.latest.html'));
 
 		$html1 = $page->render();
 		$this->assertStringStartsWith('This is a test:', $html1);
 
-		$value = $cache->retrieve('data.html');
+		$value = $cache->retrieve('data.latest.html');
 		$this->assertInstanceOf(Value::class, $value);
 		$this->assertSame($html1, $value->value()['html']);
 		$this->assertNull($value->expires());
@@ -485,7 +495,7 @@ class PageRenderTest extends TestCase
 		$this->assertStringStartsWith('This is a custom test:', $html2);
 
 		// cache still stores the non-custom result
-		$value = $cache->retrieve('data.html');
+		$value = $cache->retrieve('data.latest.html');
 		$this->assertInstanceOf(Value::class, $value);
 		$this->assertSame($html1, $value->value()['html']);
 		$this->assertNull($value->expires());
@@ -595,13 +605,6 @@ class PageRenderTest extends TestCase
 	 */
 	public function testRenderVersionDetectedFromRequest()
 	{
-		// TODO: To be removed in the next PR when caching respects versions
-		$this->app = $this->app->clone([
-			'options' => [
-				'cache.pages' => false
-			]
-		]);
-
 		$page = $this->app->page('version');
 		$page->version('latest')->save(['title' => 'Latest Title']);
 		$page->version('changes')->save(['title' => 'Changes Title']);
@@ -623,13 +626,6 @@ class PageRenderTest extends TestCase
 	 */
 	public function testRenderVersionDetectedRecursive()
 	{
-		// TODO: To be removed in the next PR when caching respects versions
-		$this->app = $this->app->clone([
-			'options' => [
-				'cache.pages' => false
-			]
-		]);
-
 		$versionPage = $this->app->page('version');
 		$versionPage->version('latest')->save(['title' => 'Latest Title']);
 		$versionPage->version('changes')->save(['title' => 'Changes Title']);
@@ -658,13 +654,6 @@ class PageRenderTest extends TestCase
 	 */
 	public function testRenderVersionManual()
 	{
-		// TODO: To be removed in the next PR when caching respects versions
-		$this->app = $this->app->clone([
-			'options' => [
-				'cache.pages' => false
-			]
-		]);
-
 		$page = $this->app->page('version');
 		$page->version('latest')->save(['title' => 'Latest Title']);
 		$page->version('changes')->save(['title' => 'Changes Title']);
@@ -683,13 +672,6 @@ class PageRenderTest extends TestCase
 	 */
 	public function testRenderVersionException()
 	{
-		// TODO: To be removed in the next PR when caching respects versions
-		$this->app = $this->app->clone([
-			'options' => [
-				'cache.pages' => false
-			]
-		]);
-
 		$page = $this->app->page('version-exception');
 
 		try {
