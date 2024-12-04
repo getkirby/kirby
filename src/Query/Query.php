@@ -41,6 +41,8 @@ class Query
 	 */
 	public static array $entries = [];
 
+	private static array $resolverCache = [];
+
 	/**
 	 * Creates a new Query object
 	 */
@@ -119,7 +121,7 @@ class Query
 			default => throw new Exception('Invalid query runner')
 		};
 
-		$runner = new $runnerClass(static::$entries, $this->intercept(...));
+		$runner = new $runnerClass(static::$entries, $this->intercept(...), static::$resolverCache);
 		return $runner->run($this->query, (array)$data);
 	}
 }

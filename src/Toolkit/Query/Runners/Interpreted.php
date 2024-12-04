@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit\Query\Runners;
 
+use ArrayAccess;
 use Closure;
 use Kirby\Toolkit\Query\Parser;
 use Kirby\Toolkit\Query\Runner;
@@ -10,29 +11,27 @@ use Kirby\Toolkit\Query\Tokenizer;
 
 class Interpreted extends Runner
 {
-	private static array $cache = [];
-
 	public function __construct(
 		public array $allowedFunctions = [],
 		protected Closure|null $interceptor = null,
+		private ArrayAccess|array &$resolverCache = [],
 	) {
 	}
 
 	protected function getResolver(string $query): Closure
 	{
-		// load closure from process cache
-		if (isset(self::$cache[$query])) {
-			return self::$cache[$query];
+		// load closure from cache
+		if (isset($this->resolverCache[$query])) {
+			return $this->resolverCache[$query];
 		}
 
 		// on cache miss, parse query and generate closure
 		$tokenizer = new Tokenizer($query);
 		$parser    = new Parser($tokenizer);
 		$node      = $parser->parse();
+		$self      = $this;
 
-		$self = $this;
-
-		return self::$cache[$query] = function (array $binding) use ($node, $self) {
+		return $this->resolverCache[$query] = function (array $binding) use ($node, $self) {
 			$interpreter = new Interpreter($self->allowedFunctions, $binding);
 
 			if ($self->interceptor !== null) {
