@@ -60,7 +60,7 @@ export default {
 	overflow: clip;
 }
 .k-block-background-dropdown .k-color-frame {
-	border-right: 1px solid var(--color-gray-300);
+	border-right: 1px solid var(--color-border);
 }
 .k-block-background-dropdown .k-color-frame::after {
 	box-shadow: none;
