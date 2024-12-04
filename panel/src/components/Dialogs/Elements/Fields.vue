@@ -17,7 +17,7 @@ export const props = {
 		 * Empty state message if no fields are defined
 		 */
 		empty: {
-			default: () => window.panel.$t("dialog.fields.empty"),
+			default: () => window.panel.t("dialog.fields.empty"),
 			type: String
 		},
 		/**
