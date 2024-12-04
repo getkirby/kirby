@@ -97,7 +97,7 @@ export default {
 		onInput(values) {
 			// update the content for the current view
 			// this will also refresh the content prop
-			this.$panel.content.update(values, this.api);
+			this.$panel.content.updateLazy(values, this.api);
 		},
 		async onSubmit() {
 			await this.$panel.content.publish(this.content, this.api);
