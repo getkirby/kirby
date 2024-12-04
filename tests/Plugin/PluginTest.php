@@ -254,8 +254,6 @@ class PluginTest extends TestCase
 	{
 		$plugin = new Plugin(name: 'getkirby/test-plugin');
 		$this->assertInstanceOf(License::class, $license = $plugin->license());
-		// check for cached instance
-		$this->assertSame($license, $plugin->license());
 	}
 
 	public function testLicenseFromString(): void

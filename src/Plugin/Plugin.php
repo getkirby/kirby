@@ -174,12 +174,8 @@ class Plugin
 	 */
 	public function license(): License
 	{
-		if ($this->license instanceof License) {
-			return $this->license;
-		}
-
 		// resolve license info from Closure, array or string
-		return $this->license = License::from(
+		return License::from(
 			plugin: $this,
 			license: $this->license
 		);
