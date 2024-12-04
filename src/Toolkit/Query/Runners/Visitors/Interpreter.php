@@ -56,16 +56,17 @@ class Interpreter extends Visitor
 	{
 		$val = $node->value;
 
-		if ($this->interceptor !== null) {
-			$val = ($this->interceptor)($val);
-		}
-
 		return $val;
 	}
 
 	public function visitMemberAccess(MemberAccessNode $node): mixed
 	{
 		$left = $node->object->accept($this);
+
+		if ($this->interceptor !== null) {
+			$left = ($this->interceptor)($left);
+		}
+
 		$item = null;
 
 		if ($node->arguments !== null) {
@@ -77,10 +78,6 @@ class Interpreter extends Visitor
 			);
 		} else {
 			$item = Runtime::access($left, $node->member, $node->nullSafe);
-		}
-
-		if ($this->interceptor !== null) {
-			$item = ($this->interceptor)($item);
 		}
 
 		return $item;
@@ -113,10 +110,6 @@ class Interpreter extends Visitor
 			default => null,
 		};
 
-		if ($this->interceptor !== null) {
-			$item = ($this->interceptor)($item);
-		}
-
 		return $item;
 	}
 
@@ -130,15 +123,7 @@ class Interpreter extends Visitor
 
 		$function = $this->validGlobalFunctions[$name];
 
-		if ($this->interceptor !== null) {
-			$function = ($this->interceptor)($function);
-		}
-
 		$result = $function(...$node->arguments->accept($this));
-
-		if ($this->interceptor !== null) {
-			$result = ($this->interceptor)($result);
-		}
 
 		return $result;
 	}

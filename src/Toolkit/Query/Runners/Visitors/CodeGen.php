@@ -92,7 +92,7 @@ class CodeGen extends Visitor
 
 	public function visitLiteral(LiteralNode $node): string
 	{
-		return '$intercept(' . var_export($node->value, true) . ')';
+		return var_export($node->value, true);
 	}
 
 	public function visitMemberAccess(MemberAccessNode $node): string
@@ -104,18 +104,16 @@ class CodeGen extends Visitor
 		$memberStr = var_export($member, true);
 		$nullSafe  = $node->nullSafe ? 'true' : 'false';
 
+		$object = $this->intercept($object);
+
 		if ($node->arguments) {
 			$arguments = $node->arguments->accept($this);
 			$member    = var_export($member, true);
 
-			return $this->intercept(
-				"Runtime::access($object, $memberStr, $nullSafe, $arguments)"
-			);
+			return "Runtime::access($object, $memberStr, $nullSafe, $arguments)";
 		}
 
-		return $this->intercept(
-			"Runtime::access($object, $memberStr, $nullSafe)"
-		);
+		return "Runtime::access($object, $memberStr, $nullSafe)";
 	}
 
 	public function visitTernary(TernaryNode $node): string
@@ -139,11 +137,18 @@ class CodeGen extends Visitor
 		$key     = static::phpName($name);
 
 		if (isset($this->directAccessFor[$name])) {
-			return $this->intercept($key);
+			return $key;
 		}
 
 		if (isset($this->mappings[$key]) === false) {
-			$this->mappings[$key] = $this->intercept("match(true) { isset(\$context[$namestr]) && \$context[$namestr] instanceof Closure => \$context[$namestr](), isset(\$context[$namestr]) => \$context[$namestr], isset(\$functions[$namestr]) => \$functions[$namestr](), default => null }");
+			$this->mappings[$key] = <<<PHP
+				match(true) {
+					isset(\$context[$namestr]) && \$context[$namestr] instanceof Closure => \$context[$namestr](),
+					isset(\$context[$namestr]) => \$context[$namestr],
+					isset(\$functions[$namestr]) => \$functions[$namestr](),
+					default => null
+				}
+				PHP;
 		}
 
 		return $key;
@@ -156,14 +161,14 @@ class CodeGen extends Visitor
 	{
 		$name = $node->name();
 
-		if (isset($this->validGlobalFunctions[$name])) {
-			throw new Exception("Invalid global function $name");
+		if (isset($this->validGlobalFunctions[$name]) === false) {
+			throw new Exception("Invalid global function $name, valid functions are: " . join(', ', array_keys($this->validGlobalFunctions)));
 		}
 
 		$arguments = $node->arguments->accept($this);
 		$name      = var_export($name, true);
 
-		return  $this->intercept($this->intercept("\$functions[$name]") . "($arguments)");
+		return  "\$functions[$name]($arguments)";
 	}
 
 	public function visitClosure(ClosureNode $node): mixed
@@ -178,8 +183,13 @@ class CodeGen extends Visitor
 			...array_fill_keys($node->arguments, true)
 		];
 
-		return "fn($args) => " . $node->body->accept(
-			new static($this->validGlobalFunctions, $newDirectAccessFor)
-		);
+		$nestedVisitor = new static($this->validGlobalFunctions, $newDirectAccessFor);
+		$code = $node->body->accept($nestedVisitor);
+
+		// promote the nested visitor's uses and mappings to the current visitor
+		$this->uses     += $nestedVisitor->uses;
+		$this->mappings += $nestedVisitor->mappings;
+
+		return "fn($args) => $code";
 	}
 }
