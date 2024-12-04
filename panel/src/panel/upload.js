@@ -41,8 +41,8 @@ export default (panel) => {
 		/**
 		 * Called when dialog's cancel button was clicked
 		 */
-		cancel() {
-			this.emit("cancel");
+		async cancel() {
+			await this.emit("cancel");
 
 			// abort any ongoing requests
 			this.abort?.abort();
@@ -52,7 +52,7 @@ export default (panel) => {
 			// now cancel was clicked, but already some files have
 			// been completely uploaded
 			if (this.completed.length > 0) {
-				this.emit("complete", this.completed);
+				await this.emit("complete", this.completed);
 				panel.view.reload();
 			}
 
@@ -70,11 +70,11 @@ export default (panel) => {
 		 * Gets called when the dialog's submit button was clicked
 		 * and all remaining files have been uploaded
 		 */
-		done() {
+		async done() {
 			panel.dialog.close();
 
 			if (this.completed.length > 0) {
-				this.emit("done", this.completed);
+				await this.emit("done", this.completed);
 
 				if (panel.drawer.isOpen === false) {
 					panel.notification.success({ context: "view" });

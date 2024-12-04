@@ -1,4 +1,4 @@
-import { length } from "@/helpers/object";
+import { isObject } from "@/helpers/object";
 import { reactive } from "vue";
 import throttle from "@/helpers/throttle.js";
 
@@ -103,6 +103,27 @@ export default (panel) => {
 		},
 
 		/**
+		 * Merge new content changes with the
+		 * original values and update the view props
+		 */
+		merge(values, api) {
+			if (this.isCurrent(api ?? panel.view.props.api) === false) {
+				throw new Error("The content in another view cannot be merged");
+			}
+
+			if (isObject(values) === false) {
+				values = {};
+			}
+
+			panel.view.props.content = {
+				...panel.view.props.originals,
+				...values
+			};
+
+			return panel.view.props.content;
+		},
+
+		/**
 		 * Publishes any changes
 		 */
 		async publish(values, api) {
@@ -184,21 +205,15 @@ export default (panel) => {
 		/**
 		 * Updates the form values of the current view
 		 */
-		update(values, api) {
-			if (length(values) === 0) {
-				return;
-			}
+		async update(values, api) {
+			return await this.save(this.merge(values, api), api);
+		},
 
-			if (this.isCurrent(api ?? panel.view.props.api) === false) {
-				throw new Error("The content in another view cannot be updated");
-			}
-
-			panel.view.props.content = {
-				...panel.view.props.originals,
-				...values
-			};
-
-			this.saveLazy(panel.view.props.content, api);
+		/**
+		 * Updates the form values of the current view with a delay
+		 */
+		updateLazy(values, api) {
+			this.saveLazy(this.merge(values, api), api);
 		}
 	});
 
