@@ -15,6 +15,7 @@ abstract class Runner
 	public function __construct(
 		public array $allowedFunctions = [],
 		protected Closure|null $interceptor = null,
+		private array &$cache = [],
 	) {
 	}
 

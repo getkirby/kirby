@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit\Query\Runners;
 
+use ArrayAccess;
 use Closure;
 use Exception;
 use Kirby\Toolkit\Query\Parser;
@@ -11,7 +12,6 @@ use Kirby\Toolkit\Query\Tokenizer;
 
 class Transpiled extends Runner
 {
-	private static array $cache = [];
 	public static string $cacheFolder = '/tmp/query_cache';
 
 	/**
@@ -22,7 +22,14 @@ class Transpiled extends Runner
 	public function __construct(
 		public array $allowedFunctions = [],
 		public Closure|null $interceptor = null,
+		private ArrayAccess|array &$cache = [],
 	) {
+	}
+
+	public static function getCacheFile(string $query): string
+	{
+		$hash = crc32($query);
+		return self::$cacheFolder . '/' . $hash . '.php';
 	}
 
 	/**
@@ -35,16 +42,15 @@ class Transpiled extends Runner
 	protected function getResolver(string $query): Closure
 	{
 		// load closure from process memory
-		if (isset(self::$cache[$query])) {
-			return self::$cache[$query];
+		if (isset($this->cache[$query])) {
+			return $this->cache[$query];
 		}
 
 		// load closure from file-cache / opcache
-		$hash     = crc32($query);
-		$filename = self::$cacheFolder . '/' . $hash . '.php';
+		$filename = self::getCacheFile($query);
 
 		if (file_exists($filename)) {
-			return self::$cache[$query] = include $filename;
+			return $this->cache[$query] = include $filename;
 		}
 
 		// on cache miss, parse query and generate closure
@@ -78,7 +84,7 @@ class Transpiled extends Runner
 		file_put_contents($filename, $function);
 
 		// load from file-cache to create opcache entry
-		return self::$cache[$query] = include $filename;
+		return $this->cache[$query] = include $filename;
 	}
 
 
