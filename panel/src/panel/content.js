@@ -201,7 +201,7 @@ export default (panel) => {
 						// try again with the latest state in the props
 						await this.save(panel.view.props.content, api);
 
-						panel.dialog.isLoading = true;
+						panel.dialog.isLoading = false;
 
 						// give a more reassuring longer success notification
 						panel.notification.success(panel.t(`form.${method}.success`));
