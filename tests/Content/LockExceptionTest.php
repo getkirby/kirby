@@ -6,15 +6,14 @@ use Kirby\Cms\User;
 
 /**
  * @coversDefaultClass \Kirby\Content\LockException
- * @covers ::__construct
  */
 class LockExceptionTest extends TestCase
 {
 	/**
 	 * @covers ::__construct
-	 * @covers ::getCode
 	 * @covers ::getDetails
 	 * @covers ::getHttpCode
+	 * @covers ::getKey
 	 * @covers ::getMessage
 	 */
 	public function testException()
@@ -31,7 +30,7 @@ class LockExceptionTest extends TestCase
 		$this->assertSame('The version is locked', $exception->getMessage());
 		$this->assertSame($lock->toArray(), $exception->getDetails());
 		$this->assertSame(423, $exception->getHttpCode());
-		$this->assertSame('error.lock', $exception->getCode());
+		$this->assertSame('error.lock', $exception->getKey());
 	}
 
 	/**
