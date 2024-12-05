@@ -209,6 +209,7 @@ class Lock
 	public function toArray(): array
 	{
 		return [
+			'isActive' => $this->isActive(),
 			'isLegacy' => $this->isLegacy(),
 			'isLocked' => $this->isLocked(),
 			'modified' => $this->modified('c'),
