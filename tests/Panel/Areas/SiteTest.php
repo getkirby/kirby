@@ -38,6 +38,7 @@ class SiteTest extends AreaTestCase
 
 		$this->assertSame('default', $props['blueprint']);
 		$this->assertSame([
+			'isActive' => false,
 			'isLegacy' => false,
 			'isLocked' => false,
 			'modified' => null,
@@ -96,6 +97,7 @@ class SiteTest extends AreaTestCase
 
 		$this->assertSame('image', $props['blueprint']);
 		$this->assertSame([
+			'isActive' => false,
 			'isLegacy' => false,
 			'isLocked' => false,
 			'modified' => null,
@@ -194,6 +196,7 @@ class SiteTest extends AreaTestCase
 
 		$this->assertSame('image', $props['blueprint']);
 		$this->assertSame([
+			'isActive' => false,
 			'isLegacy' => false,
 			'isLocked' => false,
 			'modified' => null,
