@@ -194,7 +194,7 @@ export default (panel) => {
 						this.dialog.isLoading = true;
 
 						// try again with the latest state in the props
-						await this.save(panel.view.props.content, api);
+						await this[method](panel.view.props.content, api);
 
 						// make sure the dialog is closed if the request was successful
 						this.dialog?.close();
