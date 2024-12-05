@@ -66,7 +66,7 @@ export default {
 		api: {
 			handler(newValue, oldValue) {
 				if (newValue !== oldValue) {
-					this.supportLegacyChanges();
+					this.$panel.content.legacy.import(newValue);
 				}
 			},
 			immediate: true
@@ -122,24 +122,6 @@ export default {
 		onViewSave(e) {
 			e?.preventDefault?.();
 			this.onSubmit();
-		},
-		async supportLegacyChanges() {
-			const changes = this.$panel.content.legacyChanges(this.api);
-
-			if (!changes) {
-				return;
-			}
-
-			this.$panel.view.props.content = {
-				...this.$panel.view.props.originals,
-				...changes
-			};
-
-			// store the changes from local storage
-			await this.$panel.content.save(this.$panel.view.props.content, this.api);
-
-			// remove the local storage key
-			window.localStorage.removeItem(this.$panel.content.legacyId(this.api));
 		},
 		toNext(e) {
 			if (this.next && e.target.localName === "body") {
