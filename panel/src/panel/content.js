@@ -179,7 +179,6 @@ export default (panel) => {
 			this.dialog.open({
 				component: "k-text-dialog",
 				props: {
-					id: "content-retry-dialog",
 					text: panel.t(`form.${method}.error`),
 					cancelButton: panel.t("close"),
 					submitButton: {
