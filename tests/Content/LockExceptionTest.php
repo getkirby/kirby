@@ -9,13 +9,6 @@ use Kirby\Cms\User;
  */
 class LockExceptionTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 * @covers ::getDetails
-	 * @covers ::getHttpCode
-	 * @covers ::getKey
-	 * @covers ::getMessage
-	 */
 	public function testException()
 	{
 		$lock = new Lock(
@@ -33,9 +26,6 @@ class LockExceptionTest extends TestCase
 		$this->assertSame('error.lock', $exception->getKey());
 	}
 
-	/**
-	 * @covers ::getMessage
-	 */
 	public function testCustomMessage()
 	{
 		$lock = new Lock(
