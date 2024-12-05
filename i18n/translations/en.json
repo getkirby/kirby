@@ -383,8 +383,12 @@
 	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
 	"form.locked": "This content is disabled for you as it is currently edited by another user",
 	"form.unsaved": "The current changes have not yet been saved",
+	"form.save.error": "Your changes could not be saved.",
+	"form.save.success": "Your changes have been saved",
 	"form.preview": "Preview changes",
 	"form.preview.draft": "Preview draft",
+	"form.publish.error": "Your changes could not be published.",
+	"form.publish.success": "Your changes have been published",
 
 	"hide": "Hide",
 	"hour": "Hour",
