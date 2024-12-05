@@ -12,6 +12,7 @@ use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form;
 use Kirby\Http\Uri;
+use Kirby\Toolkit\Str;
 
 /**
  * The Version class handles all actions for a single
@@ -393,7 +394,7 @@ class Version
 
 	/**
 	 * Returns a verification token for the authentication
-	 * of draft previews
+	 * of draft and version previews
 	 * @internal
 	 */
 	public function previewToken(): string
@@ -413,10 +414,34 @@ class Version
 			throw new LogicException('Invalid model type');
 		}
 
-		return $this->model->kirby()->contentToken(
-			$this->model,
-			$this->model->id() . $this->model->template()
+		return $this->previewTokenFromUrl($this->model->url())
+			?? throw new LogicException('Cannot produce local preview token for model');
+	}
+
+	/**
+	 * Returns a verification token for the authentication
+	 * of draft and version previews from a raw URL
+	 * if the URL comes from the same site
+	 */
+	protected function previewTokenFromUrl(string $url): string|null
+	{
+		$localPrefix = $this->model->kirby()->url('base') . '/';
+
+		if (Str::startsWith($url, $localPrefix) === false) {
+			return null;
+		}
+
+		$data = [
+			'uri'       => Str::after($url, $localPrefix),
+			'versionId' => $this->id->value()
+		];
+
+		$token = $this->model->kirby()->contentToken(
+			null,
+			json_encode($data)
 		);
+
+		return substr($token, 0, 10);
 	}
 
 	/**
