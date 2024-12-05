@@ -34,17 +34,7 @@ export default (panel) => {
 			return changes;
 		},
 
-		/**
-		 * Closes the retry dialog if it is still open
-		 */
-		closeRetryDialog() {
-			if (
-				panel.dialog.isOpen &&
-				panel.dialog.props.id === "content-retry-dialog"
-			) {
-				panel.dialog.close();
-			}
-		},
+		dialog: null,
 
 		/**
 		 * Removes all unpublished changes
@@ -158,7 +148,7 @@ export default (panel) => {
 				await panel.api.post(api + "/changes/publish", values);
 
 				// close the retry dialog if it is still open
-				this.closeRetryDialog();
+				this.dialog?.close();
 
 				// update the props for the current view
 				if (this.isCurrent(api)) {
@@ -182,8 +172,11 @@ export default (panel) => {
 			// easier to debug the issue
 			console.error(error);
 
+			// set the dialog instance
+			this.dialog = panel.dialog;
+
 			// show a dialog to the user to try again
-			panel.dialog.open({
+			this.dialog.open({
 				component: "k-text-dialog",
 				props: {
 					id: "content-retry-dialog",
@@ -195,13 +188,17 @@ export default (panel) => {
 					}
 				},
 				on: {
+					close: () => {
+						this.dialog = null;
+					},
 					submit: async () => {
-						panel.dialog.isLoading = true;
+						this.dialog.isLoading = true;
 
 						// try again with the latest state in the props
 						await this.save(panel.view.props.content, api);
 
-						panel.dialog.isLoading = false;
+						// make sure the dialog is closed if the request was successful
+						this.dialog?.close();
 
 						// give a more reassuring longer success notification
 						panel.notification.success(panel.t(`form.${method}.success`));
@@ -236,7 +233,7 @@ export default (panel) => {
 				this.isProcessing = false;
 
 				// close the retry dialog if it is still open
-				this.closeRetryDialog();
+				this.dialog?.close();
 
 				// update the lock timestamp
 				if (this.isCurrent(api) === true) {
