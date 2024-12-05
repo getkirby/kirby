@@ -1,4 +1,5 @@
 import { isObject } from "@/helpers/object";
+import legacy from "./content.legacy.js";
 import { reactive } from "vue";
 import throttle from "@/helpers/throttle.js";
 
@@ -91,29 +92,9 @@ export default (panel) => {
 		isProcessing: false,
 
 		/**
-		 * Returns legacy content changes, stored in
-		 * localStorage if they exist.
+		 * Legacy content changes support
 		 */
-		legacyChanges(api) {
-			if (this.isCurrent(api ?? panel.view.props.api) === false) {
-				throw new Error("The legacy state cannot be detected for another view");
-			}
-
-			const data = window.localStorage.getItem(this.legacyId(api));
-
-			if (!data) {
-				return null;
-			}
-
-			return JSON.parse(data).changes;
-		},
-
-		/**
-		 * Returns the localstorage id for legacy changes
-		 */
-		legacyId(api) {
-			return `kirby$content$${api}?language=${panel.language.code}`;
-		},
+		legacy: legacy(panel),
 
 		/**
 		 * Get the lock state for the current view
