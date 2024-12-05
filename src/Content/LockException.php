@@ -28,5 +28,4 @@ class LockException extends LogicException
 			details: $lock->toArray()
 		);
 	}
-
 }
