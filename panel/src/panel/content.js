@@ -35,6 +35,18 @@ export default (panel) => {
 		},
 
 		/**
+		 * Closes the retry dialog if it is still open
+		 */
+		closeRetryDialog() {
+			if (
+				panel.dialog.isOpen &&
+				panel.dialog.props.id === "content-retry-dialog"
+			) {
+				panel.dialog.close();
+			}
+		},
+
+		/**
 		 * Removes all unpublished changes
 		 */
 		async discard(api) {
@@ -145,15 +157,57 @@ export default (panel) => {
 			try {
 				await panel.api.post(api + "/changes/publish", values);
 
+				// close the retry dialog if it is still open
+				this.closeRetryDialog();
+
 				// update the props for the current view
 				if (this.isCurrent(api)) {
 					panel.view.props.originals = panel.view.props.content;
 				}
 
 				panel.events.emit("content.publish", { values, api });
+			} catch (error) {
+				this.retry("publish", error, panel.view.props.content, api);
 			} finally {
 				this.isProcessing = false;
 			}
+		},
+
+		/**
+		 * Opens a dialog with the error message
+		 * to retry the given method.
+		 */
+		retry(method, error, values, api) {
+			// log the error to the console to make it
+			// easier to debug the issue
+			console.error(error);
+
+			// show a dialog to the user to try again
+			panel.dialog.open({
+				component: "k-text-dialog",
+				props: {
+					id: "content-retry-dialog",
+					text: panel.t(`form.${method}.error`),
+					cancelButton: panel.t("close"),
+					submitButton: {
+						icon: "refresh",
+						text: panel.t("retry")
+					}
+				},
+				on: {
+					submit: async () => {
+						panel.dialog.isLoading = true;
+
+						// try again with the latest state in the props
+						await this.save(panel.view.props.content, api);
+
+						panel.dialog.isLoading = true;
+
+						// give a more reassuring longer success notification
+						panel.notification.success(panel.t(`form.${method}.success`));
+					}
+				}
+			});
 		},
 
 		/**
@@ -181,6 +235,9 @@ export default (panel) => {
 
 				this.isProcessing = false;
 
+				// close the retry dialog if it is still open
+				this.closeRetryDialog();
+
 				// update the lock timestamp
 				if (this.isCurrent(api) === true) {
 					panel.view.props.lock.modified = new Date();
@@ -191,7 +248,7 @@ export default (panel) => {
 				// silent aborted requests, but throw all other errors
 				if (error.name !== "AbortError") {
 					this.isProcessing = false;
-					throw error;
+					this.retry("save", error, panel.view.props.content, api);
 				}
 			}
 		},
