@@ -11,7 +11,6 @@ use Kirby\Cms\Site;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form;
-use Kirby\Http\Query;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\Str;
 
@@ -435,7 +434,8 @@ class Version
 		// get rid of all modifiers after the path
 		$uri = new Uri($url);
 		$uri->fragment = null;
-		$uri->query    = new Query([]);
+		$uri->params   = null;
+		$uri->query    = null;
 
 		$data = [
 			'uri'       => Str::after($uri->toString(), $localPrefix),
