@@ -431,8 +431,14 @@ class Version
 			return null;
 		}
 
+		// get rid of all modifiers after the path
+		$uri = new Uri($url);
+		$uri->fragment = null;
+		$uri->params   = null;
+		$uri->query    = null;
+
 		$data = [
-			'uri'       => Str::after($url, $localPrefix),
+			'uri'       => Str::after($uri->toString(), $localPrefix),
 			'versionId' => $this->id->value()
 		];
 
@@ -590,23 +596,55 @@ class Version
 
 		$url = $this->model->blueprint()->preview();
 
+		// preview was disabled
 		if ($url === false) {
 			return null;
 		}
 
-		$url = match ($url) {
-			true, null => $this->model->url(),
-			default    => $url
-		};
-
-		$uri = new Uri($url);
-
+		// we only need to add a token for draft and changes previews
 		if (
-			($this->model instanceof Page && $this->model->isDraft() === true) ||
-			$this->id->is('changes') === true
+			($this->model instanceof Site || $this->model->isDraft() === false) &&
+			$this->id->is('changes') === false
 		) {
-			$uri->query->_token = $this->previewToken();
+			return match (true) {
+				is_string($url) => $url,
+				default         => $this->model->url()
+			};
 		}
+
+		// check if the URL was customized
+		if (is_string($url) === true) {
+			return $this->urlFromOption($url);
+		}
+
+		// it wasn't, use the safer/more reliable model-based preview token
+		return $this->urlWithQueryParams($this->model->url(), $this->previewToken());
+	}
+
+	/**
+	 * Returns the preview URL based on an arbitrary URL from
+	 * the blueprint option
+	 */
+	protected function urlFromOption(string $url): string
+	{
+		// try to determine a token for a local preview
+		// (we cannot determine the token for external previews)
+		if ($token = $this->previewTokenFromUrl($url)) {
+			return $this->urlWithQueryParams($url, $token);
+		}
+
+		// fall back to the URL as defined in the blueprint
+		return $url;
+	}
+
+	/**
+	 * Assembles the preview URL with the added `_token` and `_version`
+	 * query params, no matter if the base URL already contains query params
+	 */
+	protected function urlWithQueryParams(string $baseUrl, string $token): string
+	{
+		$uri = new Uri($baseUrl);
+		$uri->query->_token = $token;
 
 		if ($this->id->is('changes') === true) {
 			$uri->query->_version = 'changes';
