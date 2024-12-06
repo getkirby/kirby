@@ -2,6 +2,8 @@
 	<k-dialog
 		ref="dialog"
 		v-bind="$props"
+		:cancel-button="false"
+		:submit-button="{ theme: 'passive' }"
 		class="k-lock-alert-dialog"
 		@cancel="$emit('cancel')"
 		@submit="$emit('submit')"
@@ -29,9 +31,9 @@ import Dialog from "@/mixins/dialog.js";
 export const props = {
 	mixins: [Dialog],
 	props: {
-		cancelButton: {
-			default: false
-		},
+		cancelButton: null,
+		submitButton: null,
+
 		lock: Object,
 		preview: String
 	}
