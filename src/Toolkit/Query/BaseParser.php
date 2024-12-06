@@ -1,0 +1,90 @@
+<?php
+
+namespace Kirby\Toolkit\Query;
+
+use Exception;
+use Iterator;
+
+abstract class BaseParser
+{
+	protected Token|null $previous;
+	protected Token $current;
+
+	/**
+	 * @var Iterator<Token>
+	 */
+	protected Iterator $tokens;
+
+
+	public function __construct(
+		Tokenizer|Iterator $source,
+	) {
+		if ($source instanceof Tokenizer) {
+			$source = $source->tokenize();
+		}
+
+		$this->tokens = $source;
+		$first        = $this->tokens->current();
+
+		if ($first === null) {
+			throw new Exception('No tokens found.');
+		}
+
+		$this->current = $first;
+	}
+
+	protected function consume(TokenType $type, string $message): Token
+	{
+		if ($this->check($type) === true) {
+			return $this->advance();
+		}
+
+		throw new Exception($message);
+	}
+
+	protected function check(TokenType $type): bool
+	{
+		if ($this->isAtEnd() === true) {
+			return false;
+		}
+
+		return $this->current->type === $type;
+	}
+
+	protected function advance(): Token|null
+	{
+		if ($this->isAtEnd() === false) {
+			$this->previous = $this->current;
+			$this->tokens->next();
+			$this->current = $this->tokens->current();
+		}
+
+		return $this->previous;
+	}
+
+	protected function isAtEnd(): bool
+	{
+		return $this->current->type === TokenType::T_EOF;
+	}
+
+
+	protected function match(TokenType $type): Token|false
+	{
+		if ($this->check($type) === true) {
+			return $this->advance();
+		}
+
+		return false;
+	}
+
+	protected function matchAny(array $types): Token|false
+	{
+		foreach ($types as $type) {
+			if ($this->check($type) === true) {
+				return $this->advance();
+			}
+		}
+
+		return false;
+	}
+}
