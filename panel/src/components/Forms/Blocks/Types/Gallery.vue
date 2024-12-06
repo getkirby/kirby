@@ -1,5 +1,9 @@
 <template>
-	<figure :data-empty="isEmpty" :style="{ '--block-back': back }">
+	<figure
+		:data-empty="isEmpty"
+		:style="{ '--block-back': back }"
+		class="k-block-type-gallery-figure"
+	>
 		<ul @dblclick="open">
 			<template v-if="isEmpty">
 				<li
@@ -7,7 +11,7 @@
 					:key="index"
 					class="k-block-type-gallery-placeholder"
 				>
-					<k-image-frame :ratio="ratio" />
+					<k-image-frame :ratio="ratio" class="k-block-type-gallery-frame" />
 				</li>
 			</template>
 			<template v-else>
@@ -18,6 +22,7 @@
 						:src="image.url"
 						:srcset="image.image.srcset"
 						:alt="image.alt"
+						class="k-block-type-gallery-frame"
 					/>
 				</li>
 
@@ -80,15 +85,15 @@ export default {
 .k-block-container.k-block-container-type-gallery {
 	padding: 0;
 }
-.k-block-type-gallery > figure {
+.k-block-type-gallery-figure {
 	padding: var(--spacing-3);
 	border-radius: var(--rounded);
 }
-.k-block-type-gallery > figure:not([data-empty="true"]) {
+.k-block-type-gallery-figure:not([data-empty="true"]) {
 	background: var(--block-back);
 }
 
-.k-block-type-gallery ul {
+.k-block-type-gallery-figure ul {
 	display: grid;
 	grid-gap: 0.75rem;
 	grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
@@ -96,10 +101,12 @@ export default {
 	align-items: center;
 	justify-content: center;
 }
-.k-block-type-gallery:not([data-disabled="true"]) ul {
+.k-block-type-gallery:not([data-disabled="true"])
+	.k-block-type-gallery-figure
+	ul {
 	cursor: pointer;
 }
-.k-block-type-gallery ul .k-image-frame {
+.k-block-type-gallery-frame {
 	border-radius: var(--rounded-sm);
 }
 
