@@ -130,7 +130,7 @@ class Sqlite extends Sql
 	public function tables(): array
 	{
 		return [
-			'query'    => 'SELECT name FROM sqlite_master WHERE type = "table" OR type = "view"',
+			'query'    => 'SELECT name FROM sqlite_master WHERE type = \'table\' OR type = \'view\'',
 			'bindings' => []
 		];
 	}
