@@ -31,6 +31,11 @@ class Component
 	public static array $mixins = [];
 
 	/**
+	 * Cache for all component setups
+	 */
+	public static array $setups = [];
+
+	/**
 	 * Registry for all component types
 	 */
 	public static array $types = [];
@@ -151,7 +156,7 @@ class Component
 	{
 		// unset prop
 		if ($value === null) {
-			unset($this->props[$name], $this->$name);
+			unset($this->props[$name]);
 
 			return;
 		}
@@ -238,6 +243,10 @@ class Component
 	 */
 	public static function setup(string $type): array
 	{
+		if (isset(static::$setups[$type]) === true) {
+			return static::$setups[$type];
+		}
+
 		// load component definition
 		$definition = static::load($type);
 
@@ -272,7 +281,7 @@ class Component
 			}
 		}
 
-		return $options;
+		return static::$setups[$type] = $options;
 	}
 
 	/**
@@ -286,7 +295,18 @@ class Component
 			return $closure->call($this);
 		}
 
-		$array = [...$this->attrs, ...$this->props, ...$this->computed];
+		$props = [];
+
+		// lazy-load all properties
+		foreach ($this->props as $key => $value) {
+			$props[$key] = $this->$key();
+		}
+
+		$array = [
+			...$this->attrs,
+			...$this->props,
+			...$this->computed
+		];
 
 		ksort($array);
 
