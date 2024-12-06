@@ -9,12 +9,12 @@ export default (panel) => {
 	const content = reactive({
 		/**
 		 * Returns an object with all changed fields
-		 * @param {String} api
+		 * @param {Object} options
 		 * @returns {Object}
 		 */
-		changes({ api = panel.view.props.api, language = panel.language.code }) {
+		changes(options = {}) {
 			// changes can only be computed for the current view
-			if (this.isCurrent({ api, language }) === false) {
+			if (this.isCurrent(options) === false) {
 				throw new Error("Cannot get changes for another view");
 			}
 
@@ -37,41 +37,62 @@ export default (panel) => {
 		/**
 		 * Removes all unpublished changes
 		 */
-		async discard({
-			api = panel.view.props.api,
-			language = panel.language.code
-		}) {
+		async discard(env = {}) {
 			if (this.isProcessing === true) {
 				return;
 			}
 
 			// In the current view, we can use the existing
 			// lock state to determine if we can discard
-			if (this.isCurrent(api) === true && this.isLocked(api) === true) {
+			if (this.isCurrent(env) === true && this.isLocked(env) === true) {
 				throw new Error("Cannot discard locked changes");
 			}
 
 			this.isProcessing = true;
 
 			try {
-				await this.request("discard", { api, language });
+				await this.request("discard", {}, env);
 
 				// update the props for the current view
-				if (this.isCurrent(api)) {
+				if (this.isCurrent(env)) {
 					panel.view.props.content = panel.view.props.originals;
 				}
 
-				panel.events.emit("content.discard", { api, language });
+				this.emit("discard", {}, env);
 			} finally {
 				this.isProcessing = false;
 			}
 		},
 
 		/**
+		 * Emit a custom content event
+		 * and add the api and language properties
+		 */
+		emit(event, options = {}, env = {}) {
+			panel.events.emit("content." + event, {
+				...options,
+				...this.env(env)
+			});
+		},
+
+		/**
+		 * Ensure a consistent environment object
+		 * with api and language properties
+		 */
+		env(env = {}) {
+			return {
+				api: panel.view.props.api,
+				language: panel.language.code,
+				...env
+			};
+		},
+
+		/**
 		 * Whether the api endpoint belongs to the current view
 		 * @var {String} api
 		 */
-		isCurrent({ api = panel.view.props.api, language = panel.language.code }) {
+		isCurrent(env = {}) {
+			const { api, language } = this.env(env);
 			return panel.view.props.api === api && panel.language.code === language;
 		},
 
@@ -79,8 +100,8 @@ export default (panel) => {
 		 * Whether the current view is locked
 		 * @param {String} api
 		 */
-		isLocked(options = {}) {
-			return this.lock(options).isLocked;
+		isLocked(env = {}) {
+			return this.lock(env).isLocked;
 		},
 
 		/**
@@ -93,8 +114,8 @@ export default (panel) => {
 		 * Get the lock state for the current view
 		 * @param {String} api
 		 */
-		lock(options = {}) {
-			if (this.isCurrent(options) === false) {
+		lock(env = {}) {
+			if (this.isCurrent(env) === false) {
 				throw new Error(
 					"The lock state cannot be detected for content from another view"
 				);
@@ -107,12 +128,8 @@ export default (panel) => {
 		 * Merge new content changes with the
 		 * original values and update the view props
 		 */
-		merge({
-			values = {},
-			api = panel.view.props.api,
-			language = panel.language.code
-		}) {
-			if (this.isCurrent({ api, language }) === false) {
+		merge(values = {}, env = {}) {
+			if (this.isCurrent(env) === false) {
 				throw new Error("The content in another view cannot be merged");
 			}
 
@@ -131,21 +148,14 @@ export default (panel) => {
 		/**
 		 * Publishes any changes
 		 */
-		async publish({
-			values = {},
-			api = panel.view.props.api,
-			language = panel.language.code
-		}) {
+		async publish(values = {}, env = {}) {
 			if (this.isProcessing === true) {
 				return;
 			}
 
 			// In the current view, we can use the existing
 			// lock state to determine if changes can be published
-			if (
-				this.isCurrent({ api, language }) === true &&
-				this.isLocked({ api, language }) === true
-			) {
+			if (this.isCurrent(env) === true && this.isLocked(env) === true) {
 				throw new Error("Cannot publish locked changes");
 			}
 
@@ -153,19 +163,19 @@ export default (panel) => {
 
 			// Send updated values to API
 			try {
-				await this.request("publish", { api, language, values });
+				await this.request("publish", values, env);
 
 				// close the retry dialog if it is still open
 				this.dialog?.close();
 
 				// update the props for the current view
-				if (this.isCurrent({ api, language }) === true) {
+				if (this.isCurrent(env) === true) {
 					panel.view.props.originals = panel.view.props.content;
 				}
 
-				panel.events.emit("content.publish", { values, api, language });
+				this.emit("publish", { values }, env);
 			} catch (error) {
-				this.retry("publish", error, { values, api, language });
+				this.retry("publish", error, [values, env]);
 			} finally {
 				this.isProcessing = false;
 			}
@@ -174,14 +184,9 @@ export default (panel) => {
 		/**
 		 * Simplified request handler for all content API requests
 		 */
-		async request(
-			method,
-			{
-				values = {},
-				api = panel.view.props.api,
-				language = panel.language.code
-			}
-		) {
+		async request(method = "save", values = {}, env = {}) {
+			const { api, language } = this.env(env);
+
 			const options = {
 				headers: {
 					"x-language": language
@@ -200,15 +205,7 @@ export default (panel) => {
 		 * Opens a dialog with the error message
 		 * to retry the given method.
 		 */
-		retry(
-			method,
-			error,
-			{
-				values = {},
-				api = panel.view.props.api,
-				language = panel.language.code
-			}
-		) {
+		retry(method, error, ...args) {
 			// log the error to the console to make it
 			// easier to debug the issue
 			console.error(error);
@@ -235,7 +232,7 @@ export default (panel) => {
 						this.dialog.isLoading = true;
 
 						// try again with the latest state in the props
-						await this[method]({ values, api, language });
+						await this[method](...args);
 
 						// make sure the dialog is closed if the request was successful
 						this.dialog?.close();
@@ -250,15 +247,8 @@ export default (panel) => {
 		/**
 		 * Saves any changes
 		 */
-		async save({
-			values = {},
-			api = panel.view.props.api,
-			language = panel.language.code
-		}) {
-			if (
-				this.isCurrent({ api, language }) === true &&
-				this.isLocked({ api, language }) === true
-			) {
+		async save(values = {}, env = {}) {
+			if (this.isCurrent(env) === true && this.isLocked(env) === true) {
 				throw new Error("Cannot save locked changes");
 			}
 
@@ -270,11 +260,7 @@ export default (panel) => {
 			this.saveAbortController = new AbortController();
 
 			try {
-				await this.request("save", {
-					values,
-					api,
-					language
-				});
+				await this.request("save", values, env);
 
 				this.isProcessing = false;
 
@@ -282,16 +268,16 @@ export default (panel) => {
 				this.dialog?.close();
 
 				// update the lock timestamp
-				if (this.isCurrent({ api, language }) === true) {
+				if (this.isCurrent(env) === true) {
 					panel.view.props.lock.modified = new Date();
 				}
 
-				panel.events.emit("content.save", { api, values, language });
+				this.emit("save", { values }, env);
 			} catch (error) {
 				// silent aborted requests, but throw all other errors
 				if (error.name !== "AbortError") {
 					this.isProcessing = false;
-					this.retry("save", error, { values, api, language });
+					this.retry("save", error, [values, env]);
 				}
 			}
 		},
@@ -305,31 +291,15 @@ export default (panel) => {
 		/**
 		 * Updates the form values of the current view
 		 */
-		async update({
-			values = {},
-			api = panel.view.props.api,
-			language = panel.language.code
-		}) {
-			return await this.save({
-				values: this.merge({ values, api, language }),
-				api,
-				language
-			});
+		async update(values = {}, env = {}) {
+			return await this.save(this.merge(values, env), env);
 		},
 
 		/**
 		 * Updates the form values of the current view with a delay
 		 */
-		updateLazy({
-			values = {},
-			api = panel.view.props.api,
-			language = panel.language.code
-		}) {
-			this.saveLazy({
-				values: this.merge({ values, api, language }),
-				api,
-				language
-			});
+		updateLazy(values = {}, env = {}) {
+			this.saveLazy(this.merge(values, env), env);
 		}
 	});
 
