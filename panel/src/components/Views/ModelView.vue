@@ -44,7 +44,10 @@ export default {
 	},
 	computed: {
 		changes() {
-			return this.$panel.content.changes(this.api);
+			return this.$panel.content.changes({
+				api: this.api,
+				language: this.$panel.language.code
+			});
 		},
 		editor() {
 			return this.lock.user.email;

@@ -12,9 +12,9 @@ export default (panel) => {
 		 * @param {String} api
 		 * @returns {Object}
 		 */
-		changes(api = panel.view.props.api) {
+		changes({ api = panel.view.props.api, language = panel.language.code }) {
 			// changes can only be computed for the current view
-			if (this.isCurrent(api) === false) {
+			if (this.isCurrent({ api, language }) === false) {
 				throw new Error("Cannot get changes for another view");
 			}
 
@@ -71,16 +71,16 @@ export default (panel) => {
 		 * Whether the api endpoint belongs to the current view
 		 * @var {String} api
 		 */
-		isCurrent(api) {
-			return panel.view.props.api === api;
+		isCurrent({ api = panel.view.props.api, language = panel.language.code }) {
+			return panel.view.props.api === api && panel.language.code === language;
 		},
 
 		/**
 		 * Whether the current view is locked
 		 * @param {String} api
 		 */
-		isLocked(api = panel.view.props.api) {
-			return this.lock(api).isLocked;
+		isLocked(options = {}) {
+			return this.lock(options).isLocked;
 		},
 
 		/**
@@ -93,8 +93,8 @@ export default (panel) => {
 		 * Get the lock state for the current view
 		 * @param {String} api
 		 */
-		lock(api = panel.view.props.api) {
-			if (this.isCurrent(api) === false) {
+		lock(options = {}) {
+			if (this.isCurrent(options) === false) {
 				throw new Error(
 					"The lock state cannot be detected for content from another view"
 				);
@@ -107,8 +107,12 @@ export default (panel) => {
 		 * Merge new content changes with the
 		 * original values and update the view props
 		 */
-		merge(values = {}, api = panel.view.props.api) {
-			if (this.isCurrent(api) === false) {
+		merge({
+			values = {},
+			api = panel.view.props.api,
+			language = panel.language.code
+		}) {
+			if (this.isCurrent({ api, language }) === false) {
 				throw new Error("The content in another view cannot be merged");
 			}
 
@@ -138,7 +142,10 @@ export default (panel) => {
 
 			// In the current view, we can use the existing
 			// lock state to determine if changes can be published
-			if (this.isCurrent(api) === true && this.isLocked(api) === true) {
+			if (
+				this.isCurrent({ api, language }) === true &&
+				this.isLocked({ api, language }) === true
+			) {
 				throw new Error("Cannot publish locked changes");
 			}
 
@@ -152,7 +159,7 @@ export default (panel) => {
 				this.dialog?.close();
 
 				// update the props for the current view
-				if (this.isCurrent(api)) {
+				if (this.isCurrent({ api, language }) === true) {
 					panel.view.props.originals = panel.view.props.content;
 				}
 
@@ -170,9 +177,9 @@ export default (panel) => {
 		async request(
 			method,
 			{
+				values = {},
 				api = panel.view.props.api,
-				language = panel.language.code,
-				values = {}
+				language = panel.language.code
 			}
 		) {
 			const options = {
@@ -248,7 +255,10 @@ export default (panel) => {
 			api = panel.view.props.api,
 			language = panel.language.code
 		}) {
-			if (this.isCurrent(api) === true && this.isLocked(api) === true) {
+			if (
+				this.isCurrent({ api, language }) === true &&
+				this.isLocked({ api, language }) === true
+			) {
 				throw new Error("Cannot save locked changes");
 			}
 
@@ -272,7 +282,7 @@ export default (panel) => {
 				this.dialog?.close();
 
 				// update the lock timestamp
-				if (this.isCurrent(api) === true) {
+				if (this.isCurrent({ api, language }) === true) {
 					panel.view.props.lock.modified = new Date();
 				}
 
@@ -301,7 +311,7 @@ export default (panel) => {
 			language = panel.language.code
 		}) {
 			return await this.save({
-				values: this.merge(values, api),
+				values: this.merge({ values, api, language }),
 				api,
 				language
 			});
@@ -316,7 +326,7 @@ export default (panel) => {
 			language = panel.language.code
 		}) {
 			this.saveLazy({
-				values: this.merge(values, api),
+				values: this.merge({ values, api, language }),
 				api,
 				language
 			});
