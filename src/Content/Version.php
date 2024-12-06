@@ -618,7 +618,7 @@ class Version
 		}
 
 		// it wasn't, use the safer/more reliable model-based preview token
-		return $this->urlParams($this->model->url(), $this->previewToken());
+		return $this->urlWithQueryParams($this->model->url(), $this->previewToken());
 	}
 
 	/**
@@ -630,7 +630,7 @@ class Version
 		// try to determine a token for a local preview
 		// (we cannot determine the token for external previews)
 		if ($token = $this->previewTokenFromUrl($url)) {
-			return $this->urlParams($url, $token);
+			return $this->urlWithQueryParams($url, $token);
 		}
 
 		// fall back to the URL as defined in the blueprint
@@ -641,7 +641,7 @@ class Version
 	 * Assembles the preview URL with the added `_token` and `_version`
 	 * query params, no matter if the base URL already contains query params
 	 */
-	protected function urlParams(string $baseUrl, string $token): string
+	protected function urlWithQueryParams(string $baseUrl, string $token): string
 	{
 		$uri = new Uri($baseUrl);
 		$uri->query->_token = $token;

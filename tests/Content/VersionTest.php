@@ -1476,7 +1476,7 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::url
-	 * @covers ::urlParams
+	 * @covers ::urlWithQueryParams
 	 */
 	public function testUrlPage()
 	{
@@ -1555,7 +1555,7 @@ class VersionTest extends TestCase
 	 * @covers ::previewTokenFromUrl
 	 * @covers ::url
 	 * @covers ::urlFromOption
-	 * @covers ::urlParams
+	 * @covers ::urlWithQueryParams
 	 * @dataProvider pageUrlProvider
 	 */
 	public function testUrlPageCustom(
@@ -1633,7 +1633,7 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::url
-	 * @covers ::urlParams
+	 * @covers ::urlWithQueryParams
 	 */
 	public function testUrlSite()
 	{
@@ -1688,7 +1688,7 @@ class VersionTest extends TestCase
 	 * @covers ::previewTokenFromUrl
 	 * @covers ::url
 	 * @covers ::urlFromOption
-	 * @covers ::urlParams
+	 * @covers ::urlWithQueryParams
 	 * @dataProvider siteUrlProvider
 	 */
 	public function testUrlSiteCustom(
