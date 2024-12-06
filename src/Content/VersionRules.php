@@ -70,7 +70,7 @@ class VersionRules
 		if ($version->isLocked('*') === true) {
 			throw new LockedContentException(
 				lock: $version->lock('*'),
-				message: 'The version is locked and cannot be deleted'
+				key: 'content.lock.delete'
 			);
 		}
 	}
@@ -88,7 +88,7 @@ class VersionRules
 		if ($fromVersion->isLocked('*') === true) {
 			throw new LockedContentException(
 				lock: $fromVersion->lock('*'),
-				message: 'The source version is locked and cannot be moved'
+				key: 'content.lock.move'
 			);
 		}
 
@@ -96,7 +96,7 @@ class VersionRules
 		if ($toVersion->isLocked('*') === true) {
 			throw new LockedContentException(
 				lock: $toVersion->lock('*'),
-				message: 'The target version is locked and cannot be overwritten'
+				key: 'content.lock.update'
 			);
 		}
 	}
@@ -119,7 +119,7 @@ class VersionRules
 		if ($version->isLocked('*') === true) {
 			throw new LockedContentException(
 				lock: $version->lock('*'),
-				message: 'The version is locked and cannot be published'
+				key: 'content.lock.publish'
 			);
 		}
 	}
@@ -143,7 +143,7 @@ class VersionRules
 		if ($version->isLocked('*') === true) {
 			throw new LockedContentException(
 				lock: $version->lock('*'),
-				message: 'The version is locked and cannot be replaced'
+				key: 'content.lock.replace'
 			);
 		}
 	}
@@ -165,7 +165,7 @@ class VersionRules
 		if ($version->isLocked('*') === true) {
 			throw new LockedContentException(
 				lock: $version->lock('*'),
-				message: 'The version is locked and cannot be updated'
+				key: 'content.lock.update'
 			);
 		}
 	}

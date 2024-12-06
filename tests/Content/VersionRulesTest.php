@@ -81,8 +81,8 @@ class VersionRulesTest extends TestCase
 			id: VersionId::changes(),
 		);
 
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The version is locked and cannot be deleted');
+		$this->expectException(LockedContentException::class);
+		$this->expectExceptionCode('error.content.lock.delete');
 
 		VersionRules::delete($version, Language::ensure());
 	}
@@ -196,8 +196,8 @@ class VersionRulesTest extends TestCase
 		$source->save([]);
 		$target->save([]);
 
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The source version is locked and cannot be moved');
+		$this->expectException(LockedContentException::class);
+		$this->expectExceptionCode('error.content.lock.move');
 
 		VersionRules::move($source, Language::ensure(), $target, Language::ensure());
 	}
@@ -223,8 +223,8 @@ class VersionRulesTest extends TestCase
 		// next logic issue
 		$source->save([]);
 
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The target version is locked and cannot be overwritten');
+		$this->expectException(LockedContentException::class);
+		$this->expectExceptionCode('error.content.lock.update');
 
 		VersionRules::move($source, Language::ensure(), $target, Language::ensure());
 	}
@@ -261,8 +261,8 @@ class VersionRulesTest extends TestCase
 
 		$version->save([]);
 
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The version is locked and cannot be published');
+		$this->expectException(LockedContentException::class);
+		$this->expectExceptionCode('error.content.lock.publish');
 
 		VersionRules::publish($version, Language::ensure());
 	}
@@ -303,8 +303,8 @@ class VersionRulesTest extends TestCase
 
 		$version->save([]);
 
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The version is locked and cannot be replaced');
+		$this->expectException(LockedContentException::class);
+		$this->expectExceptionCode('error.content.lock.replace');
 
 		VersionRules::replace($version, [], Language::ensure());
 	}
@@ -345,8 +345,8 @@ class VersionRulesTest extends TestCase
 
 		$version->save([]);
 
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The version is locked and cannot be updated');
+		$this->expectException(LockedContentException::class);
+		$this->expectExceptionCode('error.content.lock.update');
 
 		VersionRules::update($version, [], Language::ensure());
 	}
