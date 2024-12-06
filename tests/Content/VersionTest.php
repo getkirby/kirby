@@ -786,14 +786,16 @@ class VersionTest extends TestCase
 			model: $this->app->site(),
 			id: VersionId::latest()
 		);
-		$this->assertSame(hash_hmac('sha1', 'home' . 'default', static::TMP . '/content/home'), $version->previewToken());
+		$expected = substr(hash_hmac('sha1', '{"uri":"","versionId":"latest"}', static::TMP . '/content'), 0, 10);
+		$this->assertSame($expected, $version->previewToken());
 
 		// page
 		$version = new Version(
 			model: $this->model,
 			id: VersionId::latest()
 		);
-		$this->assertSame(hash_hmac('sha1', 'a-page' . 'default', static::TMP . '/content/a-page'), $version->previewToken());
+		$expected = substr(hash_hmac('sha1', '{"uri":"a-page","versionId":"latest"}', static::TMP . '/content'), 0, 10);
+		$this->assertSame($expected, $version->previewToken());
 	}
 
 	/**
@@ -816,7 +818,8 @@ class VersionTest extends TestCase
 			id: VersionId::latest()
 		);
 
-		$this->assertSame(hash_hmac('sha1', 'a-page' . 'default', 'testsalt'), $version->previewToken());
+		$expected = substr(hash_hmac('sha1', '{"uri":"a-page","versionId":"latest"}', 'testsalt'), 0, 10);
+		$this->assertSame($expected, $version->previewToken());
 	}
 
 	/**
@@ -829,20 +832,22 @@ class VersionTest extends TestCase
 		$this->app = $this->app->clone([
 			'options' => [
 				'content' => [
-					'salt' => fn ($page) => $page->date()
+					'salt' => function ($model) {
+						$this->assertNull($model);
+
+						return 'salt-lake-city';
+					}
 				]
 			]
 		]);
 
-		$this->app->impersonate('kirby');
-		$model = $this->model->update(['date' => '2012-12-12']);
-
 		$version = new Version(
-			model: $model,
+			model: $this->model,
 			id: VersionId::latest()
 		);
 
-		$this->assertSame(hash_hmac('sha1', 'a-page' . 'default', '2012-12-12'), $version->previewToken());
+		$expected = substr(hash_hmac('sha1', '{"uri":"a-page","versionId":"latest"}', 'salt-lake-city'), 0, 10);
+		$this->assertSame($expected, $version->previewToken());
 	}
 
 	/**
@@ -1589,9 +1594,18 @@ class VersionTest extends TestCase
 		]);
 
 		if ($expected !== null) {
+			$expectedToken = substr(
+				hash_hmac(
+					'sha1',
+					'{"uri":"' . $page->uri() . '","versionId":"' . $versionId . '"}',
+					$page->kirby()->root('content')
+				),
+				0,
+				10
+			);
 			$expected = str_replace(
 				'{token}',
-				'_token=' . hash_hmac('sha1', $page->id() . $page->template(), $page->kirby()->root('content') . '/' . $page->id()),
+				'_token=' . $expectedToken,
 				$expected
 			);
 		}
@@ -1706,9 +1720,18 @@ class VersionTest extends TestCase
 		$site = $app->site();
 
 		if ($expected !== null) {
+			$expectedToken = substr(
+				hash_hmac(
+					'sha1',
+					'{"uri":"","versionId":"' . $versionId . '"}',
+					$site->kirby()->root('content')
+				),
+				0,
+				10
+			);
 			$expected = str_replace(
 				'{token}',
-				'_token=' . hash_hmac('sha1', 'home' . 'default', $site->kirby()->root('content') . '/home'),
+				'_token=' . $expectedToken,
 				$expected
 			);
 		}

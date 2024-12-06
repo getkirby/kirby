@@ -677,9 +677,10 @@ class PageTest extends TestCase
 		]);
 
 		if ($draft === true && $expected !== null) {
+			$expectedToken = substr(hash_hmac('sha1', '{"uri":"' . $page->uri() . '","versionId":"latest"}', $page->kirby()->root('content')), 0, 10);
 			$expected = str_replace(
 				'{token}',
-				'_token=' . hash_hmac('sha1', $page->id() . $page->template(), $page->kirby()->root('content') . '/' . $page->id()),
+				'_token=' . $expectedToken,
 				$expected
 			);
 		}

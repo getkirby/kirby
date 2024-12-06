@@ -788,6 +788,36 @@ class PageRenderTest extends TestCase
 	/**
 	 * @covers ::renderVersionFromRequest
 	 */
+	public function testRenderVersionFromRequestMismatch()
+	{
+		$page = $this->app->page('default');
+
+		$this->app->clone([
+			'request' => [
+				'query' => [
+					'_token'   => $page->version('changes')->previewToken(),
+					'_version' => 'latest'
+				]
+			]
+		]);
+
+		$this->assertSame('latest', $page->renderVersionFromRequest()->value());
+
+		$this->app->clone([
+			'request' => [
+				'query' => [
+					'_token'   => $page->version('latest')->previewToken(),
+					'_version' => 'changes'
+				]
+			]
+		]);
+
+		$this->assertSame('latest', $page->renderVersionFromRequest()->value());
+	}
+
+	/**
+	 * @covers ::renderVersionFromRequest
+	 */
 	public function testRenderVersionFromRequestInvalidId()
 	{
 		$page       = $this->app->page('default');
