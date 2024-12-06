@@ -68,7 +68,7 @@ class VersionRules
 		Language $language
 	): void {
 		if ($version->isLocked('*') === true) {
-			throw new LockException(
+			throw new LockedContentException(
 				lock: $version->lock('*'),
 				message: 'The version is locked and cannot be deleted'
 			);
@@ -86,7 +86,7 @@ class VersionRules
 
 		// check if the source version is locked in any language
 		if ($fromVersion->isLocked('*') === true) {
-			throw new LockException(
+			throw new LockedContentException(
 				lock: $fromVersion->lock('*'),
 				message: 'The source version is locked and cannot be moved'
 			);
@@ -94,7 +94,7 @@ class VersionRules
 
 		// check if the target version is locked in any language
 		if ($toVersion->isLocked('*') === true) {
-			throw new LockException(
+			throw new LockedContentException(
 				lock: $toVersion->lock('*'),
 				message: 'The target version is locked and cannot be overwritten'
 			);
@@ -117,7 +117,7 @@ class VersionRules
 
 		// check if the version is locked in any language
 		if ($version->isLocked('*') === true) {
-			throw new LockException(
+			throw new LockedContentException(
 				lock: $version->lock('*'),
 				message: 'The version is locked and cannot be published'
 			);
@@ -141,7 +141,7 @@ class VersionRules
 
 		// check if the version is locked in any language
 		if ($version->isLocked('*') === true) {
-			throw new LockException(
+			throw new LockedContentException(
 				lock: $version->lock('*'),
 				message: 'The version is locked and cannot be replaced'
 			);
@@ -163,7 +163,7 @@ class VersionRules
 		static::ensure($version, $language);
 
 		if ($version->isLocked('*') === true) {
-			throw new LockException(
+			throw new LockedContentException(
 				lock: $version->lock('*'),
 				message: 'The version is locked and cannot be updated'
 			);

@@ -5,9 +5,9 @@ namespace Kirby\Content;
 use Kirby\Cms\User;
 
 /**
- * @coversDefaultClass \Kirby\Content\LockException
+ * @coversDefaultClass \Kirby\Content\LockedContentException
  */
-class LockExceptionTest extends TestCase
+class LockedContentExceptionTest extends TestCase
 {
 	public function testException()
 	{
@@ -16,14 +16,14 @@ class LockExceptionTest extends TestCase
 			modified: $time = time()
 		);
 
-		$exception = new LockException(
+		$exception = new LockedContentException(
 			lock: $lock
 		);
 
 		$this->assertSame('The version is locked', $exception->getMessage());
 		$this->assertSame($lock->toArray(), $exception->getDetails());
 		$this->assertSame(423, $exception->getHttpCode());
-		$this->assertSame('error.lock', $exception->getKey());
+		$this->assertSame('error.content.lock', $exception->getKey());
 	}
 
 	public function testCustomMessage()
@@ -33,7 +33,7 @@ class LockExceptionTest extends TestCase
 			modified: $time = time()
 		);
 
-		$exception = new LockException(
+		$exception = new LockedContentException(
 			lock: $lock,
 			message: $message = 'The version is locked and cannot be deleted'
 		);

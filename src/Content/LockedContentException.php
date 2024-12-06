@@ -11,9 +11,9 @@ use Kirby\Exception\LogicException;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class LockException extends LogicException
+class LockedContentException extends LogicException
 {
-	protected static string $defaultKey = 'lock';
+	protected static string $defaultKey = 'content.lock';
 	protected static string $defaultFallback = 'The version is locked';
 	protected static int $defaultHttpCode = 423;
 
