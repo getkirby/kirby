@@ -9,12 +9,12 @@ export default (panel) => {
 	const content = reactive({
 		/**
 		 * Returns an object with all changed fields
-		 * @param {Object} options
+		 * @param {Object} env
 		 * @returns {Object}
 		 */
-		changes(options = {}) {
+		changes(env = {}) {
 			// changes can only be computed for the current view
-			if (this.isCurrent(options) === false) {
+			if (this.isCurrent(env) === false) {
 				throw new Error("Cannot get changes for another view");
 			}
 
