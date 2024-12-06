@@ -85,22 +85,34 @@ export default {
 				e.returnValue = "";
 			}
 		},
-		onContentSave({ api }) {
-			if (api === this.api) {
+		onContentSave({ api, language }) {
+			if (api === this.api && language === this.$panel.language.code) {
 				this.isSaved = true;
 			}
 		},
 		async onDiscard() {
-			await this.$panel.content.discard(this.api);
+			await this.$panel.content.discard({
+				api: this.api,
+				language: this.$panel.language.code
+			});
+
 			this.$panel.view.refresh();
 		},
 		onInput(values) {
 			// update the content for the current view
 			// this will also refresh the content prop
-			this.$panel.content.updateLazy(values, this.api);
+			this.$panel.content.updateLazy({
+				values: values,
+				api: this.api,
+				language: this.$panel.language.code
+			});
 		},
 		async onSubmit() {
-			await this.$panel.content.publish(this.content, this.api);
+			await this.$panel.content.publish({
+				values: this.content,
+				api: this.api,
+				language: this.$panel.language.code
+			});
 
 			this.$panel.notification.success();
 			this.$events.emit("model.update");
