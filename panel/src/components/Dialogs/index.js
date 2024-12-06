@@ -12,7 +12,7 @@ import FilesDialog from "./FilesDialog.vue";
 import FormDialog from "./FormDialog.vue";
 import LanguageDialog from "./LanguageDialog.vue";
 import LicenseDialog from "./LicenseDialog.vue";
-import LockDialog from "./LockDialog.vue";
+import LockAlertDialog from "./LockAlertDialog.vue";
 import LinkDialog from "./LinkDialog.vue";
 import ModelsDialog from "./ModelsDialog.vue";
 import PageCreateDialog from "./PageCreateDialog.vue";
@@ -39,7 +39,7 @@ export default {
 		app.component("k-form-dialog", FormDialog);
 		app.component("k-license-dialog", LicenseDialog);
 		app.component("k-link-dialog", LinkDialog);
-		app.component("k-lock-dialog", LockDialog);
+		app.component("k-lock-alert-dialog", LockAlertDialog);
 		app.component("k-language-dialog", LanguageDialog);
 		app.component("k-models-dialog", ModelsDialog);
 		app.component("k-page-create-dialog", PageCreateDialog);

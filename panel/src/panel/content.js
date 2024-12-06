@@ -139,7 +139,7 @@ export default (panel) => {
 		lockDialog(lock) {
 			this.dialog = panel.dialog;
 			this.dialog.open({
-				component: "k-lock-dialog",
+				component: "k-lock-alert-dialog",
 				props: {
 					lock: lock
 				},

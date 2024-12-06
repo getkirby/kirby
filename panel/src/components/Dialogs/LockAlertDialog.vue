@@ -2,7 +2,7 @@
 	<k-dialog
 		ref="dialog"
 		v-bind="$props"
-		class="k-lock-dialog"
+		class="k-lock-alert-dialog"
 		@cancel="$emit('cancel')"
 		@submit="$emit('submit')"
 	>
@@ -43,10 +43,10 @@ export default {
 </script>
 
 <style>
-.k-lock-dialog dl {
+.k-lock-alert-dialog dl {
 	margin: var(--spacing-6) 0 var(--spacing-2) 0;
 }
-.k-lock-dialog dl div {
+.k-lock-alert-dialog dl div {
 	padding: var(--spacing-1) 0;
 	line-height: var(--leading-normal);
 	display: flex;
@@ -54,7 +54,7 @@ export default {
 	gap: 0.75rem;
 	color: var(--color-gray-500);
 }
-.k-lock-dialog .k-dialog-buttons {
+.k-lock-alert-dialog .k-dialog-buttons {
 	grid-template-columns: 1fr;
 }
 </style>
