@@ -104,15 +104,13 @@ export default {
 		onInput(values) {
 			// update the content for the current view
 			// this will also refresh the content prop
-			this.$panel.content.updateLazy({
-				values: values,
+			this.$panel.content.updateLazy(values, {
 				api: this.api,
 				language: this.$panel.language.code
 			});
 		},
 		async onSubmit() {
-			await this.$panel.content.publish({
-				values: this.content,
+			await this.$panel.content.publish(this.content, {
 				api: this.api,
 				language: this.$panel.language.code
 			});
