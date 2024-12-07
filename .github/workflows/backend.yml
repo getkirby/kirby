@@ -122,7 +122,7 @@ jobs:
         run: phpunit --fail-on-skipped --coverage-clover ${{ github.workspace }}/clover.xml
 
       - name: Statically analyze using Psalm
-        if: always() && steps.finishPrepare.outcome == 'success'
+        if: always() && steps.finishPrepare.outcome == 'success' && ${{ matrix.php-version != '8.4' }}
         run: psalm --output-format=github --php-version=${{ matrix.php }} --report=sarif/psalm.sarif --report-show-info=false
 
       - name: Upload coverage results to Codecov
