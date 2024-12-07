@@ -9,10 +9,7 @@
 			:aria-expanded="item.open"
 			:aria-current="isItem(item, current)"
 		>
-			<p
-				class="k-tree-branch"
-				:data-has-subtree="item.hasChildren && item.open"
-			>
+			<p class="k-tree-branch">
 				<button
 					:disabled="!item.hasChildren"
 					class="k-tree-toggle"
@@ -135,8 +132,7 @@ export default {
 	margin-bottom: 1px;
 	background: var(--tree-branch-color-back);
 }
-/** TODO: .k-tree-branch:has(+ .k-tree)  */
-.k-tree-branch[data-has-subtree="true"] {
+.k-tree-branch:has(+ .k-tree) {
 	inset-block-start: calc(var(--tree-level) * 1.5rem);
 	z-index: calc(100 - var(--tree-level));
 }
