@@ -2,7 +2,6 @@
 	<component
 		:is="link ? 'k-link' : 'p'"
 		:class="['k-bubble', $attrs.class]"
-		:data-has-text="Boolean(text)"
 		:to="link"
 		:style="{
 			color: $helper.color(color),
@@ -106,8 +105,7 @@ export default {
 	width: var(--bubble-size);
 	height: var(--bubble-size);
 }
-/** TODO: .k-bubble:has(.k-bubble-text) */
-.k-bubble[data-has-text="true"] {
+.k-bubble:has(.k-bubble-text) {
 	display: flex;
 	gap: var(--spacing-2);
 	align-items: center;

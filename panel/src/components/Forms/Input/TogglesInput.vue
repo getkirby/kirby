@@ -11,11 +11,7 @@
 				:data-labels="labels"
 				:style="{ '--options': columns ?? options.length }"
 			>
-				<li
-					v-for="(option, index) in options"
-					:key="index"
-					:data-disabled="disabled"
-				>
+				<li v-for="(option, index) in options" :key="index">
 					<input
 						:id="id + '-' + index"
 						:aria-label="option.text"
@@ -124,8 +120,7 @@ export default {
 	padding: 0 var(--spacing-3);
 	height: 100%;
 }
-/** TODO: .k-toggles-input li:has(input[disabled]) label */
-.k-toggles-input li[data-disabled="true"] label {
+.k-toggles-input li:has(input[disabled]) label {
 	color: var(--color-text-dimmed);
 	background: var(--panel-color-back);
 }

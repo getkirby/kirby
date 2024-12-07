@@ -130,9 +130,11 @@ export default {
 	border-end-end-radius: var(--rounded);
 }
 
-/** TODO: .k-toolbar:not([data-inline="true"]):has(~ :focus-within) */
-:where(.k-textarea-input, .k-writer-input):focus-within
-	.k-toolbar:not([data-inline="true"]) {
+:where(.k-textarea-input, .k-writer-input):not(:focus-within) {
+	--toolbar-text: var(--color-gray-400);
+	--toolbar-border: var(--panel-color-back);
+}
+.k-toolbar:not([data-inline="true"]):has(~ :focus-within) {
 	position: sticky;
 	top: var(--header-sticky-offset);
 	inset-inline: 0;
