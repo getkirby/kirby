@@ -68,6 +68,7 @@ export default {
 			isProcessing: false,
 			isSelecting: false,
 			options: {
+				batch: false,
 				columns: {},
 				empty: null,
 				headline: null,
@@ -172,7 +173,7 @@ export default {
 			return this.options.search;
 		},
 		canSelect() {
-			return this.items.length > 0;
+			return this.options.batch && this.items.length > 0;
 		},
 		collection() {
 			return {
