@@ -4,9 +4,10 @@
 		:class="['k-item', `k-${layout}-item`, $attrs.class]"
 		:data-has-image="hasFigure"
 		:data-layout="layout"
+		:data-selectable="selectable"
 		:data-theme="theme"
 		:style="$attrs.style"
-		@click="$emit('click', $event)"
+		@click="onClick"
 		@dragstart="$emit('drag', $event)"
 	>
 		<!-- Image -->
@@ -25,7 +26,11 @@
 		<!-- Content -->
 		<div class="k-item-content">
 			<h3 class="k-item-title" :title="title(text)">
-				<k-link v-if="link !== false" :target="target" :to="link">
+				<k-link
+					v-if="link !== false && selectable !== true"
+					:target="target"
+					:to="link"
+				>
 					<!-- eslint-disable-next-line vue/no-v-html -->
 					<span v-html="text ?? '–'" />
 				</k-link>
@@ -48,7 +53,11 @@
 			/>
 
 			<label v-if="selectable" class="k-item-options-checkbox">
-				<input type="checkbox" @change="$emit('select', $event)" />
+				<input
+					ref="selector"
+					type="checkbox"
+					@change="$emit('select', $event)"
+				/>
 			</label>
 
 			<!-- Options -->
@@ -130,6 +139,13 @@ export default {
 		}
 	},
 	methods: {
+		onClick(event) {
+			if (this.selectable) {
+				return this.$refs.selector.click();
+			}
+
+			this.$emit("click", event);
+		},
 		onOption(event) {
 			this.$emit("action", event);
 			this.$emit("option", event);
@@ -197,14 +213,6 @@ export default {
 .k-item-options .k-button {
 	--button-height: var(--item-button-height);
 	--button-width: var(--item-button-width);
-}
-.k-item-options-checkbox {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	height: var(--item-button-height);
-	width: var(--item-button-height);
-	flex-shrink: 0;
 }
 
 .k-item .k-sort-button {
@@ -335,5 +343,18 @@ export default {
 	box-shadow: none;
 	outline: 1px solid var(--color-border);
 	outline-offset: -1px;
+}
+
+/** Selectable state */
+.k-item[data-selectable="true"] {
+	cursor: pointer;
+}
+.k-item-options-checkbox {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: var(--item-button-height);
+	width: var(--item-button-height);
+	flex-shrink: 0;
 }
 </style>
