@@ -78,21 +78,6 @@ class ColorFieldTest extends TestCase
 			['value' => '#bbb', 'text' => 'Color b'],
 			['value' => '#ccc', 'text' => 'Color c']
 		], $field->options());
-
-		// Deprecated: name => value
-		$field = $this->field('color', [
-			'options' => [
-				'Color a' => '#aaa',
-				'Color b' => '#bbb',
-				'Color c' => '#ccc'
-			],
-		]);
-
-		$this->assertSame([
-			['value' => '#aaa', 'text' => 'Color a'],
-			['value' => '#bbb', 'text' => 'Color b'],
-			['value' => '#ccc', 'text' => 'Color c']
-		], $field->options());
 	}
 
 	public function testOptionsFromQuery()
@@ -122,27 +107,6 @@ class ColorFieldTest extends TestCase
 					'#bbb' => 'Color b',
 					'#ccc' => 'Color c'
 				]
-			]
-		]);
-
-		$field = $this->field('color', [
-			'options' => ['type' => 'query', 'query' => 'kirby.option("foo")'],
-		]);
-
-		$this->assertSame([
-			['value' => '#aaa', 'text' => 'Color a'],
-			['value' => '#bbb', 'text' => 'Color b'],
-			['value' => '#ccc', 'text' => 'Color c']
-		], $field->options());
-
-		// Deprecated: name => value
-		$this->app = new App([
-			'options' => [
-				'foo' => [
-					'Color a' => '#aaa',
-					'Color b' => '#bbb',
-					'Color c' => '#ccc'
-				],
 			]
 		]);
 
