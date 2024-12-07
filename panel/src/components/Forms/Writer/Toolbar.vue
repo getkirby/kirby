@@ -338,8 +338,7 @@ export default {
 </script>
 
 <style>
-/** TODO: .k-writer:has(.k-toolbar:not([data-inline="true"])) */
-.k-writer:not([data-toolbar-inline="true"]):not([data-disabled="true"]) {
+.k-writer:has(.k-toolbar:not([data-inline="true"])) {
 	grid-template-areas: "topbar" "content";
 	grid-template-rows: var(--toolbar-size) 1fr;
 	gap: 0;
