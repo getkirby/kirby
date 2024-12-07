@@ -6,6 +6,9 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 
+/**
+ * @coversDefaultClass \Kirby\Cms\Pages
+ */
 class PagesTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Pages';
