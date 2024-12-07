@@ -46,7 +46,7 @@
 	--color-orange-h: 28;
 	--color-orange-s: 80%;
 	--color-orange-hs: var(--color-orange-h), var(--color-orange-s);
-	--color-orange-boost: 2.5%;
+	--color-orange-boost: 2%;
 
 	--color-orange-l-100: calc(var(--color-l-100) + var(--color-orange-boost));
 	--color-orange-l-200: calc(var(--color-l-200) + var(--color-orange-boost));
@@ -71,7 +71,7 @@
 	--color-yellow-h: 47;
 	--color-yellow-s: 80%;
 	--color-yellow-hs: var(--color-yellow-h), var(--color-yellow-s);
-	--color-yellow-boost: 0%;
+	--color-yellow-boost: -4%;
 
 	--color-yellow-l-100: calc(var(--color-l-100) + var(--color-yellow-boost));
 	--color-yellow-l-200: calc(var(--color-l-200) + var(--color-yellow-boost));
@@ -96,7 +96,7 @@
 	--color-green-h: 80;
 	--color-green-s: 60%;
 	--color-green-hs: var(--color-green-h), var(--color-green-s);
-	--color-green-boost: -2.5%;
+	--color-green-boost: -8%;
 
 	--color-green-l-100: calc(var(--color-l-100) + var(--color-green-boost));
 	--color-green-l-200: calc(var(--color-l-200) + var(--color-green-boost));
@@ -121,7 +121,7 @@
 	--color-aqua-h: 180;
 	--color-aqua-s: 50%;
 	--color-aqua-hs: var(--color-aqua-h), var(--color-aqua-s);
-	--color-aqua-boost: 0%;
+	--color-aqua-boost: -4%;
 
 	--color-aqua-l-100: calc(var(--color-l-100) + var(--color-aqua-boost));
 	--color-aqua-l-200: calc(var(--color-l-200) + var(--color-aqua-boost));
