@@ -335,11 +335,15 @@ return [
 					}
 
 					$ids = $this->requestBody('ids');
+					$min = $section->min();
 
 					// check if the section has enough pages after the deletion
-					if ($section->total() - count($ids) < $section->min()) {
+					if ($section->total() - count($ids) < $min) {
 						throw new Exception(
-							message: 'The section needs to have at least ' . $section->min() . ' pages',
+							message: I18n::template('error.section.pages.min.' . I18n::form($min), [
+								'min'     => $min,
+								'section' => $section->headline()
+							])
 						);
 					}
 
