@@ -3,6 +3,7 @@
 use Kirby\Cms\File;
 use Kirby\Cms\Files;
 use Kirby\Exception\Exception;
+use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -226,7 +227,15 @@ return [
 				'method'  => 'DELETE',
 				'action'  => function () {
 					$section = $this->section();
-					$ids     = $this->requestBody('ids');
+
+					// check if batch deletion is allowed
+					if ($section->batch() === false) {
+						throw new PermissionException(
+							message: 'The section does not support batch actions'
+						);
+					}
+
+					$ids    = $this->requestBody('ids');
 					$errors = [];
 
 					// check if the section has enough files after the deletion
