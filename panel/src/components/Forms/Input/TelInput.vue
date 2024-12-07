@@ -17,7 +17,7 @@ export const props = {
 			default: "tel"
 		},
 		placeholder: {
-			default: () => window.panel.$t("tel.placeholder")
+			default: () => window.panel.t("tel.placeholder")
 		}
 	}
 };

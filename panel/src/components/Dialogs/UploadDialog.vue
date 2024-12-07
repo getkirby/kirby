@@ -51,7 +51,7 @@ export default {
 			default: () => {
 				return {
 					icon: "upload",
-					text: window.panel.$t("upload")
+					text: window.panel.t("upload")
 				};
 			}
 		}

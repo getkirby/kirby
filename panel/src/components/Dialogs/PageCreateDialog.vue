@@ -40,7 +40,7 @@ export default {
 		},
 		submitButton: {
 			type: [String, Boolean],
-			default: () => window.panel.$t("save")
+			default: () => window.panel.t("save")
 		},
 		template: {
 			type: String

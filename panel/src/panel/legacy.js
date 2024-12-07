@@ -1,6 +1,3 @@
-/* eslint-disable-next-line no-unused-vars */
-import Vue from "vue";
-
 /**
  * This is the graveyard for all deprecated
  * aliases. We can remove them step by step
@@ -11,68 +8,18 @@ import Vue from "vue";
  */
 export default {
 	install(app) {
-		/**
-		 * Method object binding for the polyfills below
-		 */
-		window.panel.redirect = window.panel.redirect.bind(window.panel);
-		window.panel.reload = window.panel.reload.bind(window.panel);
-		window.panel.request = window.panel.request.bind(window.panel);
-		window.panel.search = window.panel.search.bind(window.panel);
-
-		/**
-		 * @deprecated 4.0.0 Dollar Sign Shortcuts for panel data
-		 *
-		 * @example
-		 * // Old:
-		 * `window.panel.$config`
-		 * // New:
-		 * window.panel.config
-		 *
-		 * @example
-		 * // Old:
-		 * this.$config
-		 * // New
-		 * this.$panel.config
-		 */
-		const polyfills = [
-			"api",
-			"config",
-			"direction",
-			"events",
-			"language",
-			"languages",
-			"license",
-			"menu",
-			"multilang",
-			"permissions",
-			"search",
-			"searches",
-			"system",
-			"t",
-			"translation",
-			"url",
-			"urls",
-			"user",
-			"view"
-		];
-
-		for (const polyfill of polyfills) {
-			const key = `$${polyfill}`;
-			app.prototype[key] = window.panel[key] = window.panel[polyfill];
-		}
-
+		const panel = window.panel;
 		/**
 		 * Some more shortcuts to the Panel's features
 		 */
-		app.prototype.$dialog = window.panel.dialog.open.bind(window.panel.dialog);
-		app.prototype.$drawer = window.panel.drawer.open.bind(window.panel.drawer);
-		app.prototype.$dropdown = window.panel.dropdown.openAsync.bind(
-			window.panel.dropdown
-		);
-		app.prototype.$go = window.panel.view.open.bind(window.panel.view);
-		app.prototype.$reload = window.panel.reload.bind(window.panel);
-
-		// Kirbyup relies on this
-		window.panel.$vue = window.panel.app;
+		app.prototype.$api = panel.api;
+		app.prototype.$dialog = panel.dialog.open.bind(panel.dialog);
+		app.prototype.$drawer = panel.drawer.open.bind(panel.drawer);
+		app.prototype.$dropdown = panel.dropdown.openAsync.bind(panel.dropdown);
+		app.prototype.$events = panel.events;
+		app.prototype.$go = panel.view.open.bind(panel.view);
+		app.prototype.$reload = panel.reload;
+		app.prototype.$t = panel.$t = panel.t;
+		app.prototype.$url = panel.url;
 	}
 };
