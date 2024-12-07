@@ -59,6 +59,14 @@ export default (panel) => {
 				}
 
 				this.emit("discard", {}, env);
+			} catch (error) {
+				// handle locked states
+				if (error.key.startsWith("error.content.lock")) {
+					return this.lockDialog(error.details);
+				}
+
+				// let our regular error handler take over
+				throw error;
 			} finally {
 				this.isProcessing = false;
 			}
@@ -125,6 +133,26 @@ export default (panel) => {
 		},
 
 		/**
+		 * Opens the lock dialog to inform the current editor
+		 * about edits from another user
+		 */
+		lockDialog(lock) {
+			this.dialog = panel.dialog;
+			this.dialog.open({
+				component: "k-lock-alert-dialog",
+				props: {
+					lock: lock
+				},
+				on: {
+					close: () => {
+						this.dialog = null;
+						panel.view.reload();
+					}
+				}
+			});
+		},
+
+		/**
 		 * Merge new content changes with the
 		 * original values and update the view props
 		 */
@@ -153,12 +181,6 @@ export default (panel) => {
 				return;
 			}
 
-			// In the current view, we can use the existing
-			// lock state to determine if changes can be published
-			if (this.isCurrent(env) === true && this.isLocked(env) === true) {
-				throw new Error("Cannot publish locked changes");
-			}
-
 			this.isProcessing = true;
 
 			// Send updated values to API
@@ -175,6 +197,11 @@ export default (panel) => {
 
 				this.emit("publish", { values }, env);
 			} catch (error) {
+				// handle locked states
+				if (error.key.startsWith("error.content.lock")) {
+					return this.lockDialog(error.details);
+				}
+
 				this.retry("publish", error, [values, env]);
 			} finally {
 				this.isProcessing = false;
@@ -248,10 +275,6 @@ export default (panel) => {
 		 * Saves any changes
 		 */
 		async save(values = {}, env = {}) {
-			if (this.isCurrent(env) === true && this.isLocked(env) === true) {
-				throw new Error("Cannot save locked changes");
-			}
-
 			this.isProcessing = true;
 
 			// ensure to abort unfinished previous save request
@@ -274,11 +297,23 @@ export default (panel) => {
 
 				this.emit("save", { values }, env);
 			} catch (error) {
-				// silent aborted requests, but throw all other errors
-				if (error.name !== "AbortError") {
-					this.isProcessing = false;
-					this.retry("save", error, [values, env]);
+				// handle aborted requests silently
+				if (error.name === "AbortError") {
+					return;
 				}
+
+				// processing must not be interrupted for aborted
+				// requests because the follow-up request is already
+				// in progress and setting the state to false here
+				// would be wrong
+				this.isProcessing = false;
+
+				// handle locked states
+				if (error.key.startsWith("error.content.lock")) {
+					return this.lockDialog(error.details);
+				}
+
+				this.retry("save", error, [values, env]);
 			}
 		},
 
