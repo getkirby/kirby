@@ -39,7 +39,7 @@ class Blueprint
 	/**
 	 * Magic getter/caller for any blueprint prop
 	 */
-	public function __call(string $key, array $arguments = null): mixed
+	public function __call(string $key, array|null $arguments = null): mixed
 	{
 		return $this->props[$key] ?? null;
 	}
@@ -102,7 +102,7 @@ class Blueprint
 	 * Gathers what file templates are allowed in
 	 * this model based on the blueprint
 	 */
-	public function acceptedFileTemplates(string $inSection = null): array
+	public function acceptedFileTemplates(string|null $inSection = null): array
 	{
 		// get cached results for the current file model
 		// (except when collecting for a specific section)
@@ -320,7 +320,7 @@ class Blueprint
 	 */
 	public static function factory(
 		string $name,
-		string $fallback = null,
+		string|null $fallback,
 		ModelWithContent $model
 	): static|null {
 		try {

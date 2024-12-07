@@ -54,7 +54,7 @@ class Blocks extends Items
 	 * catch blocks from layouts
 	 */
 	public static function factory(
-		array $items = null,
+		array|null $items = null,
 		array $params = []
 	): static {
 		$items = static::extractFromLayouts($items);

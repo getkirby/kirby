@@ -592,7 +592,7 @@ class Api
 	 * @return $this
 	 */
 	protected function setRequestMethod(
-		string $requestMethod = null
+		string|null $requestMethod = null
 	): static {
 		$this->requestMethod = $requestMethod ?? 'GET';
 		return $this;

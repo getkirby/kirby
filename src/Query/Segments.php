@@ -28,7 +28,7 @@ class Segments extends Collection
 	 * Split query string into segments by dot
 	 * but not inside (nested) parens
 	 */
-	public static function factory(string $query, Query $parent = null): static
+	public static function factory(string $query, Query|null $parent = null): static
 	{
 		$segments = static::parse($query);
 		$position = 0;

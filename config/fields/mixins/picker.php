@@ -23,7 +23,7 @@ return [
 		/**
 		 * Info text for each item
 		 */
-		'info' => function (string $info = null) {
+		'info' => function (string|null $info = null) {
 			return $info;
 		},
 
@@ -37,14 +37,14 @@ return [
 		/**
 		 * The minimum number of required selected
 		 */
-		'min' => function (int $min = null) {
+		'min' => function (int|null $min = null) {
 			return $min;
 		},
 
 		/**
 		 * The maximum number of allowed selected
 		 */
-		'max' => function (int $max = null) {
+		'max' => function (int|null $max = null) {
 			return $max;
 		},
 
@@ -58,7 +58,7 @@ return [
 		/**
 		 * Query for the items to be included in the picker
 		 */
-		'query' => function (string $query = null) {
+		'query' => function (string|null $query = null) {
 			return $query;
 		},
 
@@ -86,7 +86,7 @@ return [
 		/**
 		 * Main text for each item
 		 */
-		'text' => function (string $text = null) {
+		'text' => function (string|null $text = null) {
 			return $text;
 		},
 	],

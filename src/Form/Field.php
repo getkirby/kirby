@@ -127,7 +127,7 @@ class Field extends Component
 				/**
 				 * Sets the focus on this field when the form loads. Only the first field with this label gets
 				 */
-				'autofocus' => function (bool $autofocus = null): bool {
+				'autofocus' => function (bool|null $autofocus = null): bool {
 					return $autofocus ?? false;
 				},
 				/**
@@ -145,7 +145,7 @@ class Field extends Component
 				/**
 				 * If `true`, the field is no longer editable and will not be saved
 				 */
-				'disabled' => function (bool $disabled = null): bool {
+				'disabled' => function (bool|null $disabled = null): bool {
 					return $disabled ?? false;
 				},
 				/**
@@ -157,7 +157,7 @@ class Field extends Component
 				/**
 				 * Optional icon that will be shown at the end of the field
 				 */
-				'icon' => function (string $icon = null) {
+				'icon' => function (string|null $icon = null) {
 					return $icon;
 				},
 				/**
@@ -175,7 +175,7 @@ class Field extends Component
 				/**
 				 * If `true`, the field has to be filled in correctly to be saved.
 				 */
-				'required' => function (bool $required = null): bool {
+				'required' => function (bool|null $required = null): bool {
 					return $required ?? false;
 				},
 				/**

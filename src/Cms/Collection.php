@@ -365,7 +365,7 @@ class Collection extends BaseCollection
 	 * Searches the collection
 	 */
 	public function search(
-		string $query = null,
+		string|null $query = null,
 		string|array $params = []
 	): static {
 		return Search::collection($this, $query, $params);
@@ -376,7 +376,7 @@ class Collection extends BaseCollection
 	 * to an array. This can also take a callback
 	 * function to further modify the array result.
 	 */
-	public function toArray(Closure $map = null): array
+	public function toArray(Closure|null $map = null): array
 	{
 		return parent::toArray($map ?? fn ($object) => $object->toArray());
 	}

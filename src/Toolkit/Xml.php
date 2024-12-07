@@ -373,7 +373,7 @@ class Xml
 		string $name,
 		array|string|null $content = '',
 		array $attr = [],
-		string $indent = null,
+		string|null $indent = null,
 		int $level = 0
 	): string {
 		$attr       = static::attr($attr);

@@ -17,7 +17,7 @@ class ParsedownExtra extends Parsedown
 {
     # ~
 
-    public const version = '0.8.0-beta-1';
+    public const version = '0.8.0-beta-2';
 
     # ~
 
@@ -297,7 +297,7 @@ class ParsedownExtra extends Parsedown
     #
     # Setext
 
-    protected function blockSetextHeader($Line, array $Block = null)
+    protected function blockSetextHeader($Line, array|null $Block = null)
     {
         $Block = parent::blockSetextHeader($Line, $Block);
 

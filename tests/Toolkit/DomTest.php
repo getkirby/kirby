@@ -219,7 +219,7 @@ class DomTest extends TestCase
 	 * @covers ::exportHtml
 	 * @covers ::exportXml
 	 */
-	public function testParseSave(string $type, string $code, string $expected = null)
+	public function testParseSave(string $type, string $code, string|null $expected = null)
 	{
 		$dom = new Dom($code, $type);
 		$this->assertSame($expected ?? $code, $dom->toString());
@@ -356,7 +356,7 @@ class DomTest extends TestCase
 	 * @covers ::exportHtml
 	 * @covers ::exportXml
 	 */
-	public function testParseSaveNormalize(string $type, string $code, string $expected = null)
+	public function testParseSaveNormalize(string $type, string $code, string|null $expected = null)
 	{
 		$dom = new Dom($code, $type);
 		$this->assertSame($expected ?? $code, $dom->toString(true));

@@ -404,8 +404,8 @@ trait FileActions
 	 * @internal
 	 */
 	public function save(
-		array $data = null,
-		string $languageCode = null,
+		array|null $data = null,
+		string|null $languageCode = null,
 		bool $overwrite = false
 	): static {
 		$file = parent::save($data, $languageCode, $overwrite);
@@ -444,8 +444,8 @@ trait FileActions
 	 * @throws \Kirby\Exception\InvalidArgumentException If the input array contains invalid values
 	 */
 	public function update(
-		array $input = null,
-		string $languageCode = null,
+		array|null $input = null,
+		string|null $languageCode = null,
 		bool $validate = false
 	): static {
 		// delete all public media versions when focus field gets changed

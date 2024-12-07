@@ -77,7 +77,7 @@ class Plugin
 	/**
 	 * Allows access to any composer.json field by method call
 	 */
-	public function __call(string $key, array $arguments = null): mixed
+	public function __call(string $key, array|null $arguments = null): mixed
 	{
 		return $this->info()[$key] ?? null;
 	}

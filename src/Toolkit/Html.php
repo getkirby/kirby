@@ -405,7 +405,7 @@ class Html extends Xml
 		string $name,
 		array|string|null $content = '',
 		array $attr = [],
-		string $indent = null,
+		string|null $indent = null,
 		int $level = 0
 	): string {
 		// treat an explicit `null` value as an empty tag

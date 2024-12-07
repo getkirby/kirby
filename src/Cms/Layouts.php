@@ -26,7 +26,7 @@ class Layouts extends Items
 	public static array $methods = [];
 
 	public static function factory(
-		array $items = null,
+		array|null $items = null,
 		array $params = []
 	): static {
 		// convert single layout to layouts array

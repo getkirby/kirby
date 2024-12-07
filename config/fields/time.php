@@ -36,13 +36,13 @@ return [
 		/**
 		 * Latest time, which can be selected/saved (H:i or H:i:s)
 		 */
-		'max' => function (string $max = null): string|null {
+		'max' => function (string|null $max = null): string|null {
 			return Date::optional($max);
 		},
 		/**
 		 * Earliest time, which can be selected/saved (H:i or H:i:s)
 		 */
-		'min' => function (string $min = null): string|null {
+		'min' => function (string|null $min = null): string|null {
 			return Date::optional($min);
 		},
 

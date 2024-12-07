@@ -54,7 +54,7 @@ class Content
 	 */
 	public function __construct(
 		array $data = [],
-		ModelWithContent $parent = null,
+		ModelWithContent|null $parent = null,
 		bool $normalize = true
 	) {
 		if ($normalize === true) {
@@ -149,7 +149,7 @@ class Content
 	 * Returns either a single field object
 	 * or all registered fields
 	 */
-	public function get(string $key = null): Field|array
+	public function get(string|null $key = null): Field|array
 	{
 		if ($key === null) {
 			return $this->fields();
@@ -234,7 +234,7 @@ class Content
 	 * @return $this
 	 */
 	public function update(
-		array $content = null,
+		array|null $content = null,
 		bool $overwrite = false
 	): static {
 		$content = array_change_key_case((array)$content, CASE_LOWER);

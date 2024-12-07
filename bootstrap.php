@@ -6,7 +6,7 @@
  */
 if (
 	version_compare(PHP_VERSION, '8.1.0', '>=') === false ||
-	version_compare(PHP_VERSION, '8.4.0', '<')  === false
+	version_compare(PHP_VERSION, '8.5.0', '<')  === false
 ) {
 	die(include __DIR__ . '/views/php.php');
 }

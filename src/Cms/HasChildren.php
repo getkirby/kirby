@@ -176,7 +176,7 @@ trait HasChildren
 	 *
 	 * @return $this
 	 */
-	protected function setChildren(array $children = null): static
+	protected function setChildren(array|null $children = null): static
 	{
 		if ($children !== null) {
 			$this->children = Pages::factory($children, $this);
@@ -190,7 +190,7 @@ trait HasChildren
 	 *
 	 * @return $this
 	 */
-	protected function setDrafts(array $drafts = null): static
+	protected function setDrafts(array|null $drafts = null): static
 	{
 		if ($drafts !== null) {
 			$this->drafts = Pages::factory($drafts, $this, true);

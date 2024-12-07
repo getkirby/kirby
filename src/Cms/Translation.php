@@ -87,7 +87,7 @@ class Translation
 	 * Returns a single translation
 	 * string by key
 	 */
-	public function get(string $key, string $default = null): string|null
+	public function get(string $key, string|null $default = null): string|null
 	{
 		return $this->data[$key] ?? $default;
 	}

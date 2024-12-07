@@ -344,7 +344,7 @@ class Language
 	 *
 	 * @param int $category If passed, returns the locale for the specified category (e.g. LC_ALL) as string
 	 */
-	public function locale(int $category = null): array|string|null
+	public function locale(int|null $category = null): array|string|null
 	{
 		if ($category !== null) {
 			return $this->locale[$category] ?? $this->locale[LC_ALL] ?? null;
@@ -513,7 +513,7 @@ class Language
 	 * Update language properties and save them
 	 * @internal
 	 */
-	public function update(array $props = null): static
+	public function update(array|null $props = null): static
 	{
 		$kirby = App::instance();
 		$user  = $kirby->user();

@@ -59,8 +59,8 @@ class File
 	 * @throws \Kirby\Exception\InvalidArgumentException When the model does not use the `Kirby\Filesystem\IsFile` trait
 	 */
 	public function __construct(
-		array|string $props = null,
-		string $url = null
+		array|string|null $props = null,
+		string|null $url = null
 	) {
 		// Legacy support for old constructor of
 		// the `Kirby\Image\Image` class

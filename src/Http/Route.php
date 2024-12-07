@@ -63,7 +63,7 @@ class Route
 	/**
 	 * Magic getter for route attributes
 	 */
-	public function __call(string $key, array $args = null): mixed
+	public function __call(string $key, array|null $args = null): mixed
 	{
 		return $this->attributes[$key] ?? null;
 	}

@@ -198,7 +198,7 @@ class Collection extends Iterator implements Countable
 	 * @param array|null $data
 	 * @return array|$this
 	 */
-	public function data(array $data = null)
+	public function data(array|null $data = null)
 	{
 		if ($data === null) {
 			return $this->data;
@@ -775,7 +775,7 @@ class Collection extends Iterator implements Countable
 	 * @param bool $unique
 	 * @return array
 	 */
-	public function pluck(string $field, string $split = null, bool $unique = false): array
+	public function pluck(string $field, string|null $split = null, bool $unique = false): array
 	{
 		$result = [];
 
@@ -956,7 +956,7 @@ class Collection extends Iterator implements Countable
 	 * @param int|null $limit The optional number of elements to return
 	 * @return $this|static
 	 */
-	public function slice(int $offset = 0, int $limit = null)
+	public function slice(int $offset = 0, int|null $limit = null)
 	{
 		if ($offset === 0 && $limit === null) {
 			return $this;
@@ -1027,7 +1027,7 @@ class Collection extends Iterator implements Countable
 			} elseif ($arg === SORT_DESC || $argLower === 'desc') {
 				$fields[$currentField]['direction'] = SORT_DESC;
 
-			// other string: the field name
+				// other string: the field name
 			} elseif (is_string($arg) === true) {
 				$values = [];
 
@@ -1041,7 +1041,7 @@ class Collection extends Iterator implements Countable
 
 				$fields[] = ['field' => $arg, 'values' => $values];
 
-			// callable: custom field values
+				// callable: custom field values
 			} elseif (is_callable($arg) === true) {
 				$values = [];
 
@@ -1055,7 +1055,7 @@ class Collection extends Iterator implements Countable
 
 				$fields[] = ['field' => null, 'values' => $values];
 
-			// flags
+				// flags
 			} else {
 				$fields[$currentField]['flags'] = $arg;
 			}
@@ -1126,7 +1126,7 @@ class Collection extends Iterator implements Countable
 	 * @param \Closure|null $map
 	 * @return array
 	 */
-	public function toArray(Closure $map = null): array
+	public function toArray(Closure|null $map = null): array
 	{
 		if ($map !== null) {
 			return array_map($map, $this->data);
@@ -1163,7 +1163,7 @@ class Collection extends Iterator implements Countable
 	 * @param Closure|null $map
 	 * @return array
 	 */
-	public function values(Closure $map = null): array
+	public function values(Closure|null $map = null): array
 	{
 		$data = $map === null ? $this->data : array_map($map, $this->data);
 		return array_values($data);
@@ -1181,7 +1181,7 @@ class Collection extends Iterator implements Countable
 	 * @param \Closure|null $fallback
 	 * @return mixed
 	 */
-	public function when($condition, Closure $callback, Closure $fallback = null)
+	public function when($condition, Closure $callback, Closure|null $fallback = null)
 	{
 		if ($condition) {
 			return $callback->call($this, $condition);

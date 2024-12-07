@@ -169,7 +169,7 @@ class FilePickerMixinTest extends TestCase
 			'test' => [
 				'mixins'  => ['filepicker'],
 				'props' => [
-					'query' => function (string $query = null) {
+					'query' => function (string|null $query = null) {
 						return $query;
 					}
 				],
@@ -213,7 +213,7 @@ class FilePickerMixinTest extends TestCase
 			'test' => [
 				'mixins'  => ['filepicker'],
 				'props' => [
-					'query' => function (string $query = null) {
+					'query' => function (string|null $query = null) {
 						return $query;
 					}
 				],

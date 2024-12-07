@@ -125,7 +125,7 @@ class Pagination extends BasePagination
 	 * If the `$page` variable is set, the URL
 	 * for that page will be returned.
 	 */
-	public function pageUrl(int $page = null): string|null
+	public function pageUrl(int|null $page = null): string|null
 	{
 		if ($page === null) {
 			return $this->pageUrl($this->page());

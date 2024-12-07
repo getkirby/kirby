@@ -25,7 +25,7 @@ class Expression
 	/**
 	 * Parses an expression string into its parts
 	 */
-	public static function factory(string $expression, Query $parent = null): static|Segments
+	public static function factory(string $expression, Query|null $parent = null): static|Segments
 	{
 		// split into different expression parts and operators
 		$parts = static::parse($expression);

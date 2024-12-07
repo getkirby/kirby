@@ -7,13 +7,13 @@ return [
 		'headline',
 	],
 	'props' => [
-		'icon' => function (string $icon = null) {
+		'icon' => function (string|null $icon = null) {
 			return $icon;
 		},
 		'text' => function ($text = null) {
 			return I18n::translate($text, $text);
 		},
-		'theme' => function (string $theme = null) {
+		'theme' => function (string|null $theme = null) {
 			return $theme;
 		}
 	],

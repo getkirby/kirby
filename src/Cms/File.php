@@ -155,7 +155,7 @@ class File extends ModelWithContent
 	 * Returns an array with all blueprints that are available for the file
 	 * by comparing files sections and files fields of the parent model
 	 */
-	public function blueprints(string $inSection = null): array
+	public function blueprints(string|null $inSection = null): array
 	{
 		// get cached results for the current file model
 		// (except when collecting for a specific section)
@@ -227,7 +227,7 @@ class File extends ModelWithContent
 	 */
 	public function contentFileData(
 		array $data,
-		string $languageCode = null
+		string|null $languageCode = null
 	): array {
 		// only add the template in, if the $data array
 		// doesn't explicitly unsets it
@@ -443,7 +443,7 @@ class File extends ModelWithContent
 	 * Timestamp of the last modification
 	 * of the content file
 	 */
-	protected function modifiedContent(string $languageCode = null): int
+	protected function modifiedContent(string|null $languageCode = null): int
 	{
 		return $this->storage()->modified('published', $languageCode) ?? 0;
 	}
@@ -548,7 +548,7 @@ class File extends ModelWithContent
 	 *
 	 * @return $this
 	 */
-	protected function setBlueprint(array $blueprint = null): static
+	protected function setBlueprint(array|null $blueprint = null): static
 	{
 		if ($blueprint !== null) {
 			$blueprint['model'] = $this;

@@ -13,13 +13,13 @@ return [
 		/**
 		 * The lowest allowed number
 		 */
-		'min' => function (float $min = null) {
+		'min' => function (float|null $min = null) {
 			return $min;
 		},
 		/**
 		 * The highest allowed number
 		 */
-		'max' => function (float $max = null) {
+		'max' => function (float|null $max = null) {
 			return $max;
 		},
 		/**

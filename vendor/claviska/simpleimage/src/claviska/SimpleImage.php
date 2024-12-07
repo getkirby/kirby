@@ -331,7 +331,7 @@ class SimpleImage
      *
      * @throws Exception Thrown when WEBP support is not enabled or unsupported format.
      */
-    public function generate(string $mimeType = null, array|int $options = 100): array
+    public function generate(string|null $mimeType = null, array|int $options = 100): array
     {
         // Format defaults to the original mime type
         $mimeType = $mimeType ?: $this->mimeType;
@@ -473,7 +473,7 @@ class SimpleImage
      *
      * @throws Exception
      */
-    public function toDataUri(string $mimeType = null, array|int $options = 100): string
+    public function toDataUri(string|null $mimeType = null, array|int $options = 100): string
     {
         $image = $this->generate($mimeType, $options);
 
@@ -490,7 +490,7 @@ class SimpleImage
      *
      * @throws Exception
      */
-    public function toDownload(string $filename, string $mimeType = null, array|int $options = 100): static
+    public function toDownload(string $filename, string|null $mimeType = null, array|int $options = 100): static
     {
         $image = $this->generate($mimeType, $options);
 
@@ -517,7 +517,7 @@ class SimpleImage
      *
      * @throws Exception Thrown if failed write to file.
      */
-    public function toFile(string $file, string $mimeType = null, array|int $options = 100): static
+    public function toFile(string $file, string|null $mimeType = null, array|int $options = 100): static
     {
         $image = $this->generate($mimeType, $options);
 
@@ -538,7 +538,7 @@ class SimpleImage
      *
      * @throws Exception
      */
-    public function toScreen(string $mimeType = null, array|int $options = 100): static
+    public function toScreen(string|null $mimeType = null, array|int $options = 100): static
     {
         $image = $this->generate($mimeType, $options);
 
@@ -557,7 +557,7 @@ class SimpleImage
      *
      * @throws Exception
      */
-    public function toString(string $mimeType = null, array|int $options = 100): string
+    public function toString(string|null $mimeType = null, array|int $options = 100): string
     {
         return $this->generate($mimeType, $options)['data'];
     }
@@ -975,7 +975,7 @@ class SimpleImage
      * @param  int|null  $height The new image height.
      * @return SimpleImage
      */
-    public function resize(int $width = null, int $height = null): static
+    public function resize(int|null $width = null, int|null $height = null): static
     {
         // No dimensions specified
         if (! $width && ! $height) {
@@ -1027,7 +1027,7 @@ class SimpleImage
      * @param  int|null  $res_y The vertical resolution in DPI
      * @return SimpleImage
      */
-    public function resolution(int $res_x, int $res_y = null): static
+    public function resolution(int $res_x, int|null $res_y = null): static
     {
         if (is_null($res_y)) {
             imageresolution($this->image, $res_x);
@@ -1087,7 +1087,7 @@ class SimpleImage
      *
      * @throws Exception
      */
-    public function text(string $text, array $options, array &$boundary = null): static
+    public function text(string $text, array $options, array|null &$boundary = null): static
     {
         // Check for freetype support
         if (! function_exists('imagettftext')) {
@@ -2196,7 +2196,7 @@ class SimpleImage
      *
      * @throws Exception Thrown if library \League\ColorExtractor is missing.
      */
-    public function extractColors(int $count = 5, string|array $backgroundColor = null): array
+    public function extractColors(int $count = 5, string|array|null $backgroundColor = null): array
     {
         // Check for required library
         if (! class_exists('\\'.ColorExtractor::class)) {

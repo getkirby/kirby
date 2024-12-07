@@ -56,7 +56,7 @@ class TestCase extends BaseTestCase
 		return $this->site()->children();
 	}
 
-	public function page(string $id = null)
+	public function page(string|null $id = null)
 	{
 		if ($id !== null) {
 			return $this->site()->find($id);

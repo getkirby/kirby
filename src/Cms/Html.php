@@ -81,7 +81,7 @@ class Html extends \Kirby\Toolkit\Html
 	 */
 	public static function link(
 		string|null $href = null,
-		string|array $text = null,
+		string|array|null $text = null,
 		array $attr = []
 	): string {
 		return parent::link(Url::to($href), $text, $attr);

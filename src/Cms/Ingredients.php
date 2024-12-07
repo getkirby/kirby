@@ -34,7 +34,7 @@ class Ingredients
 	/**
 	 * Magic getter for single ingredients
 	 */
-	public function __call(string $method, array $args = null): mixed
+	public function __call(string $method, array|null $args = null): mixed
 	{
 		return $this->ingredients[$method] ?? null;
 	}

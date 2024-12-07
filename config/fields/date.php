@@ -24,7 +24,7 @@ return [
 		/**
 		 * Default date when a new page/file/user gets created
 		 */
-		'default' => function (string $default = null): string {
+		'default' => function (string|null $default = null): string {
 			return $this->toDatetime($default) ?? '';
 		},
 
@@ -46,13 +46,13 @@ return [
 		/**
 		 * Latest date, which can be selected/saved (Y-m-d)
 		 */
-		'max' => function (string $max = null): string|null {
+		'max' => function (string|null $max = null): string|null {
 			return Date::optional($max);
 		},
 		/**
 		 * Earliest date, which can be selected/saved (Y-m-d)
 		 */
-		'min' => function (string $min = null): string|null {
+		'min' => function (string|null $min = null): string|null {
 			return Date::optional($min);
 		},
 

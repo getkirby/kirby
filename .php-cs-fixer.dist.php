@@ -43,7 +43,10 @@ return $config
 		'no_unneeded_control_parentheses' => true,
 		'no_unused_imports' => true,
 		'no_useless_return' => true,
+		'nullable_type_declaration' => ['syntax' => 'union'],
+		'nullable_type_declaration_for_default_null_value' => true,
 		'ordered_imports' => ['sort_algorithm' => 'alpha'],
+		'ordered_types' => ['sort_algorithm' => 'none', 'null_adjustment' => 'always_last'],
 		// 'phpdoc_add_missing_param_annotation' => ['only_untyped' => false], // adds params in the wrong order
 		'phpdoc_align' => ['align' => 'left'],
 		'phpdoc_indent' => true,

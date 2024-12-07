@@ -28,7 +28,7 @@ return [
 		/**
 		 * Filters all files by template and also sets the template, which will be used for all uploads
 		 */
-		'template' => function (string $template = null) {
+		'template' => function (string|null $template = null) {
 			return $template;
 		},
 		/**

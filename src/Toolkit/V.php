@@ -306,7 +306,7 @@ V::$validators = [
 	 * Pass an operator as second argument and another date as
 	 * third argument to compare them.
 	 */
-	'date' => function (string|null $value, string $operator = null, string $test = null): bool {
+	'date' => function (string|null $value, string|null $operator = null, string|null $test = null): bool {
 		// make sure $value is a string
 		$value ??= '';
 
@@ -474,28 +474,28 @@ V::$validators = [
 	/**
 	 * Checks if the number of characters in the value equals or is below the given maximum
 	 */
-	'maxLength' => function (string $value = null, $max): bool {
+	'maxLength' => function (string|null $value, $max): bool {
 		return Str::length(trim($value)) <= $max;
 	},
 
 	/**
 	 * Checks if the number of characters in the value equals or is greater than the given minimum
 	 */
-	'minLength' => function (string $value = null, $min): bool {
+	'minLength' => function (string|null $value, $min): bool {
 		return Str::length(trim($value)) >= $min;
 	},
 
 	/**
 	 * Checks if the number of words in the value equals or is below the given maximum
 	 */
-	'maxWords' => function (string $value = null, $max): bool {
+	'maxWords' => function (string|null $value, $max): bool {
 		return V::max(explode(' ', trim($value)), $max) === true;
 	},
 
 	/**
 	 * Checks if the number of words in the value equals or is below the given maximum
 	 */
-	'minWords' => function (string $value = null, $min): bool {
+	'minWords' => function (string|null $value, $min): bool {
 		return V::min(explode(' ', trim($value)), $min) === true;
 	},
 
@@ -628,7 +628,7 @@ V::$validators = [
 	/**
 	 * Checks for a valid Uuid, optionally for specific model type
 	 */
-	'uuid' => function (string $value, string $type = null): bool {
+	'uuid' => function (string $value, string|null $type = null): bool {
 		return Uuid::is($value, $type);
 	}
 ];

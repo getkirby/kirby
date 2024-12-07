@@ -96,7 +96,7 @@ class Roles extends Collection
 		return $collection->sort('name', 'asc');
 	}
 
-	public static function load(string $root = null, array $inject = []): static
+	public static function load(string|null $root = null, array $inject = []): static
 	{
 		$kirby = App::instance();
 		$roles = new static();

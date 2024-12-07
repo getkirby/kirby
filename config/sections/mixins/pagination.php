@@ -14,7 +14,7 @@ return [
 		/**
 		 * Sets the default page for the pagination. This will overwrite default pagination.
 		 */
-		'page' => function (int $page = null) {
+		'page' => function (int|null $page = null) {
 			return App::instance()->request()->get('page', $page);
 		},
 	],

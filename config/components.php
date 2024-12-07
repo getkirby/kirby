@@ -118,7 +118,7 @@ return [
 	 */
 	'markdown' => function (
 		App $kirby,
-		string $text = null,
+		string|null $text = null,
 		array $options = []
 	): string {
 		static $markdown;
@@ -230,7 +230,7 @@ return [
 					$scoring['score'] += 16 * $score;
 					$scoring['hits']  += 1;
 
-				// check for exact beginning matches
+					// check for exact beginning matches
 				} elseif (
 					$options['words'] === false &&
 					Str::startsWith($lowerValue, $query) === true
@@ -238,7 +238,7 @@ return [
 					$scoring['score'] += 8 * $score;
 					$scoring['hits']  += 1;
 
-				// check for exact query matches
+					// check for exact query matches
 				} elseif ($matches = preg_match_all('!' . $exact . '!ui', $value, $r)) {
 					$scoring['score'] += 2 * $score;
 					$scoring['hits']  += $matches;
@@ -270,7 +270,7 @@ return [
 	 */
 	'smartypants' => function (
 		App $kirby,
-		string $text = null,
+		string|null $text = null,
 		array $options = []
 	): string {
 		static $smartypants;
@@ -354,7 +354,7 @@ return [
 	 */
 	'url' => function (
 		App $kirby,
-		string $path = null,
+		string|null $path = null,
 		$options = null
 	): string {
 		$language = null;

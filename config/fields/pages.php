@@ -31,7 +31,7 @@ return [
 		/**
 		 * Optional query to select a specific set of pages
 		 */
-		'query' => function (string $query = null) {
+		'query' => function (string|null $query = null) {
 			return $query;
 		},
 

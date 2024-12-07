@@ -105,7 +105,7 @@ class Sessions
 	 * @param string $token Session token, either including or without the key
 	 * @param string|null $mode Optional transmission mode override
 	 */
-	public function get(string $token, string $mode = null): Session
+	public function get(string $token, string|null $mode = null): Session
 	{
 		return $this->cache[$token] ??= new Session(
 			$this,

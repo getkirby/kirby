@@ -53,7 +53,7 @@ return [
 		/**
 		 * Filters the list by single template.
 		 */
-		'template' => function (string|array $template = null) {
+		'template' => function (string|array|null $template = null) {
 			return $template;
 		},
 		/**
