@@ -82,7 +82,7 @@ export default {
 	content: "✓";
 	padding-inline-start: var(--spacing-1);
 }
-.k-languages-dropdown-item:not([aria-current])::after {
+.k-languages-dropdown-item:not([aria-current="true"])::after {
 	visibility: hidden;
 }
 .k-languages-dropdown-item .k-button-text {
@@ -102,7 +102,8 @@ export default {
 	--icon-color: var(--color-orange-500);
 	--icon-size: 1rem;
 }
-.k-languages-dropdown-item-info[data-lock] .k-languages-dropdown-item-icon {
+.k-languages-dropdown-item-info[data-lock="true"]
+	.k-languages-dropdown-item-icon {
 	--icon-color: var(--color-red-500);
 }
 .k-languages-dropdown-item-code {

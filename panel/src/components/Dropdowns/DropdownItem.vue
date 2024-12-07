@@ -57,7 +57,7 @@ export default {
 .k-dropdown-item.k-button[aria-current="true"] {
 	--button-color-text: var(--dropdown-color-current);
 }
-.k-dropdown-item.k-button[aria-current]::after {
+.k-dropdown-item.k-button[aria-current="true"]::after {
 	margin-inline-start: auto;
 	text-align: center;
 	content: "✓";
