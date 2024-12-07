@@ -7,6 +7,7 @@ use Kirby\Toolkit\I18n;
 
 return [
 	'mixins' => [
+		'batch',
 		'details',
 		'empty',
 		'headline',
@@ -219,7 +220,7 @@ return [
 
 					return true;
 				}
-			], 
+			],
 			[
 				'pattern' => 'delete',
 				'method'  => 'DELETE',
@@ -268,6 +269,7 @@ return [
 			'options' => [
 				'accept'   => $this->accept,
 				'apiUrl'   => $this->parent->apiUrl(true) . '/sections/' . $this->name,
+				'batch'    => $this->batch,
 				'columns'  => $this->columnsWithTypes(),
 				'empty'    => $this->empty,
 				'headline' => $this->headline,

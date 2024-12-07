@@ -11,6 +11,7 @@ use Kirby\Toolkit\I18n;
 
 return [
 	'mixins' => [
+		'batch',
 		'details',
 		'empty',
 		'headline',
@@ -340,7 +341,7 @@ return [
 							$section->kirby()->page($id)?->delete();
 						} catch (Throwable $e) {
 							$errors[] = [
-								'label'  => $id, 
+								'label'  => $id,
 								'message' => $e->getMessage()
 							];
 						}
@@ -366,6 +367,7 @@ return [
 			'errors'  => $this->errors,
 			'options' => [
 				'add'      => $this->add,
+				'batch'    => $this->batch,
 				'columns'  => $this->columnsWithTypes(),
 				'empty'    => $this->empty,
 				'headline' => $this->headline,
