@@ -19,7 +19,7 @@ export const props = {
 		},
 		placeholder: {
 			type: String,
-			default: () => window.panel.$t("url.placeholder")
+			default: () => window.panel.t("url.placeholder")
 		}
 	}
 };

@@ -21,7 +21,7 @@ export const props = {
 		spellcheck: null,
 
 		placeholder: {
-			default: () => window.panel.$t("search") + " …",
+			default: () => window.panel.t("search") + " …",
 			type: String
 		}
 	}

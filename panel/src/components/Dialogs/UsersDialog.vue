@@ -17,7 +17,7 @@ export default {
 			type: Object,
 			default: () => ({
 				icon: "users",
-				text: window.panel.$t("dialog.users.empty")
+				text: window.panel.t("dialog.users.empty")
 			})
 		},
 		item: {
