@@ -262,7 +262,7 @@ export default {
 
 			// a sign that it has been copied
 			this.$panel.notification.success({
-				message: this.$t("copy.success", { count: blocks.length }),
+				message: this.$t("copy.success.multiple", { count: blocks.length }),
 				icon: "template"
 			});
 		},
@@ -720,11 +720,15 @@ export default {
 </script>
 
 <style>
+:root {
+	--block-color-back: var(--item-color-back);
+}
+
 .k-blocks {
 	border-radius: var(--rounded);
 }
 .k-blocks:not([data-empty="true"], [data-disabled="true"]) {
-	background: var(--color-white);
+	background: var(--block-color-back);
 	box-shadow: var(--shadow);
 }
 .k-blocks[data-disabled="true"]:not([data-empty="true"]) {

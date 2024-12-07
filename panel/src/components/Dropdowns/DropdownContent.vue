@@ -15,17 +15,22 @@
 	>
 		<k-navigate ref="navigate" :disabled="navigate === false" axis="y">
 			<!-- @slot Content of the dropdown which overrides passed `options` prop -->
-			<slot>
+			<slot v-bind="{ items }">
 				<template v-for="(option, index) in items">
 					<hr v-if="option === '-'" :key="'separator-' + index" />
-					<k-dropdown-item
+					<slot
 						v-else-if="option.when ?? true"
-						:key="'item-' + index"
-						v-bind="option"
-						@click="onOptionClick(option)"
+						name="item"
+						v-bind="{ item: option, index }"
 					>
-						{{ option.label ?? option.text }}
-					</k-dropdown-item>
+						<k-dropdown-item
+							:key="'item-' + index"
+							v-bind="option"
+							@click="onOptionClick(option)"
+						>
+							{{ option.label ?? option.text }}
+						</k-dropdown-item>
+					</slot>
 				</template>
 			</slot>
 		</k-navigate>
@@ -338,17 +343,13 @@ export default {
 
 <style>
 :root {
-	--dropdown-color-bg: var(--color-black);
+	--dropdown-color-bg: var(--color-gray-950);
 	--dropdown-color-current: var(--color-blue-500);
-	--dropdown-color-hr: hsla(0, 0%, var(--color-l-max), 0.25);
+	--dropdown-color-hr: var(--color-gray-850);
 	--dropdown-color-text: var(--color-white);
 	--dropdown-padding: var(--spacing-2);
 	--dropdown-rounded: var(--rounded);
 	--dropdown-shadow: var(--shadow-xl);
-}
-
-.k-panel[data-theme="dark"] {
-	--dropdown-color-hr: hsla(0, 0%, var(--color-l-max), 0.1);
 }
 
 .k-dropdown-content {
@@ -390,7 +391,7 @@ export default {
 .k-dropdown-content[data-theme="light"] {
 	--dropdown-color-bg: var(--color-white);
 	--dropdown-color-current: var(--color-blue-800);
-	--dropdown-color-hr: var(--color-border-dimmed);
+	--dropdown-color-hr: var(--color-gray-250);
 	--dropdown-color-text: var(--color-black);
 }
 </style>

@@ -14,7 +14,7 @@
 		</span>
 
 		<abbr v-if="required" :title="$t(type + '.required')">✶</abbr>
-		<abbr :title="$t(type + '.invalid')" class="k-label-invalid">&times;</abbr>
+		<abbr :title="$t(type + '.invalid')" data-theme="negative" class="k-label-invalid">&times;</abbr>
 	</component>
 </template>
 
@@ -106,7 +106,7 @@ export default {
 
 .k-label abbr.k-label-invalid {
 	display: none;
-	color: var(--color-red-700);
+	color: var(--theme-color-text);
 }
 
 /** Tracking invalid via CSS */

@@ -86,8 +86,17 @@ class TestCase extends BaseTestCase
 			site: $site ?? [
 				'children' => [
 					[
+						'slug'     => 'home',
+						'template' => 'default'
+					],
+					[
 						'slug'     => 'a-page',
-						'template' => 'article'
+						'template' => 'article',
+						'files'    => [
+							[
+								'filename' => 'a-file.jpg'
+							]
+						]
 					]
 				]
 			]
@@ -105,8 +114,17 @@ class TestCase extends BaseTestCase
 			site: $site ?? [
 				'children' => [
 					[
+						'slug'     => 'home',
+						'template' => 'default'
+					],
+					[
 						'slug'     => 'a-page',
-						'template' => 'article'
+						'template' => 'article',
+						'files'    => [
+							[
+								'filename' => 'a-file.jpg'
+							]
+						]
 					]
 				]
 			]

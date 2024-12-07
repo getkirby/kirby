@@ -55,10 +55,11 @@ export default {
 
 <style>
 .k-error-details {
-	background: var(--color-white);
+	background: var(--input-color-back);
 	display: block;
 	overflow: auto;
 	padding: 1rem;
+	border-radius: var(--rounded);
 	font-size: var(--text-sm);
 	line-height: 1.25em;
 	margin-top: 0.75rem;
@@ -79,7 +80,7 @@ export default {
 	white-space: pre-line;
 }
 .k-error-details li:not(:last-child) {
-	border-bottom: 1px solid var(--color-light);
+	border-bottom: 1px solid var(--color-border);
 	padding-bottom: 0.25rem;
 	margin-bottom: 0.25rem;
 }

@@ -370,16 +370,15 @@ export default {
 <style>
 :root {
 	--table-cell-padding: var(--spacing-3);
-	--table-color-back: var(--color-white);
-	--table-color-border: var(--color-light);
-	--table-color-hover: var(--color-gray-100);
-	--table-color-th-back: var(--color-gray-100);
+	--table-color-back: light-dark(var(--color-white), var(--color-gray-850));
+	--table-color-border: var(--panel-color-back);
+	--table-color-hover: light-dark(var(--color-gray-100), rgba(0, 0, 0, 0.1));
+	--table-color-th-back: light-dark(
+		var(--color-gray-100),
+		var(--color-gray-800)
+	);
 	--table-color-th-text: var(--color-text-dimmed);
 	--table-row-height: var(--input-height);
-}
-
-.k-panel[data-theme="dark"] {
-	--table-color-border: var(--color-border);
 }
 
 /* Table Layout */
@@ -479,7 +478,7 @@ export default {
 
 /* Sortable tables */
 .k-table-row-ghost {
-	background: var(--color-white);
+	background: var(--table-color-back);
 	outline: var(--outline);
 	border-radius: var(--rounded);
 	margin-bottom: 2px;

@@ -769,7 +769,7 @@ class FileTest extends TestCase
 		]);
 
 		$file = $page->file('test.pdf');
-		$this->assertNull($file->previewUrl());
+		$this->assertSame('/media/pages/test/' . $file->mediaHash() . '/test.pdf', $file->previewUrl());
 	}
 
 	public function testPreviewUrlForDraft()
@@ -852,7 +852,7 @@ class FileTest extends TestCase
 		$app->impersonate('test@getkirby.com');
 
 		$file = $app->file('test/test.pdf');
-		$this->assertNull($file->previewUrl());
+		$this->assertSame('/media/pages/test/' . $file->mediaHash() . '/test.pdf', $file->previewUrl());
 	}
 
 	public function testPreviewUrlForPageWithCustomPreviewSetting()

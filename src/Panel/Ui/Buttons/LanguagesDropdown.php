@@ -4,7 +4,9 @@ namespace Kirby\Panel\Ui\Buttons;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
+use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Content\VersionId;
 use Kirby\Toolkit\Str;
 
 /**
@@ -39,13 +41,36 @@ class LanguagesDropdown extends ViewButton
 		);
 	}
 
+	/**
+	 * Returns if any translation other than the current one has unsaved changes
+	 * (the current language has to be handled in `k-languages-dropdown` as its
+	 * state can change dynamically without another backend request)
+	 */
+	public function hasChanges(): bool
+	{
+		foreach (Languages::ensure() as $language) {
+			if ($this->kirby->language()?->code() !== $language->code()) {
+				if ($this->model->version(VersionId::changes())->exists($language) === true) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
 	public function option(Language $language): array
 	{
+		$changes = $this->model->version('changes');
+
 		return [
 			'text'    => $language->name(),
 			'code'    => $language->code(),
+			'link'    => $this->model->panel()->url(true) . '?language=' . $language->code(),
 			'current' => $language->code() === $this->kirby->language()?->code(),
-			'link'    => $this->model->panel()->url(true) . '?language=' . $language->code()
+			'default' => $language->isDefault(),
+			'changes' => $changes->exists($language),
+			'lock'    => $changes->isLocked('*')
 		];
 	}
 
@@ -74,6 +99,14 @@ class LanguagesDropdown extends ViewButton
 		}
 
 		return $options;
+	}
+
+	public function props(): array
+	{
+		return [
+			...parent::props(),
+			'hasChanges' => $this->hasChanges()
+		];
 	}
 
 	public function render(): array|null

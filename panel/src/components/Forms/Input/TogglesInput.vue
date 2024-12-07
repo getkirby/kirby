@@ -112,11 +112,10 @@ export default {
 
 .k-toggles-input li {
 	height: var(--field-input-height);
-	background: var(--color-white);
 }
 .k-toggles-input label {
 	align-items: center;
-	background: var(--color-white);
+	background: light-dark(var(--color-white), var(--color-gray-850));
 	cursor: pointer;
 	display: flex;
 	font-size: var(--text-sm);
@@ -128,17 +127,17 @@ export default {
 /** TODO: .k-toggles-input li:has(input[disabled]) label */
 .k-toggles-input li[data-disabled="true"] label {
 	color: var(--color-text-dimmed);
-	background: var(--color-light);
+	background: var(--panel-color-back);
 }
 .k-toggles-input .k-icon + .k-toggles-text {
 	margin-inline-start: var(--spacing-2);
 }
 .k-toggles-input input:focus:not(:checked) + label {
-	background: var(--color-blue-200);
+	background: light-dark(var(--color-blue-200), var(--color-blue-800));
 }
 
 .k-toggles-input input:checked + label {
-	background: var(--color-black);
+	background: light-dark(var(--color-black), var(--color-gray-950));
 	color: var(--color-white);
 }
 </style>

@@ -65,7 +65,7 @@ export default {
 <style>
 .k-block-type-table-preview {
 	cursor: pointer;
-	border: 1px solid var(--color-gray-300);
+	border: 1px solid var(--color-border);
 	border-spacing: 0;
 	border-radius: var(--rounded-sm);
 }

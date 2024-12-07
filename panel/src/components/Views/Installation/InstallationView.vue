@@ -180,8 +180,9 @@ export default {
 
 <style>
 .k-installation-dialog {
-	--dialog-color-back: var(--color-white);
-	--dialog-shadow: var(--shadow);
+	--dialog-color-back: light-dark(var(--color-white), var(--color-gray-950));
+	--dialog-shadow: light-dark(var(--shadow), none);
+
 	container-type: inline-size;
 }
 .k-installation-view .k-button {

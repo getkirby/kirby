@@ -2,7 +2,7 @@
 	<Teleport v-if="visible" to=".k-dialog-portal">
 		<form
 			:class="['k-dialog', $attrs.class]"
-			:data-has-footer="cancelButton || submitButton"
+			:data-has-footer="Boolean(cancelButton || submitButton)"
 			:data-size="size"
 			method="dialog"
 			@click.stop
@@ -45,7 +45,7 @@ export default {
 
 <style>
 :root {
-	--dialog-color-back: var(--color-light);
+	--dialog-color-back: var(--panel-color-back);
 	--dialog-color-text: currentColor;
 	--dialog-margin: var(--spacing-6);
 	--dialog-padding: var(--spacing-6);

@@ -49,7 +49,8 @@ export default {
 :root {
 	--text-font-size: 1em;
 	--text-line-height: 1.5;
-	--link-color: var(--color-blue-800);
+	--link-color: light-dark(var(--color-blue-800), var(--color-blue-500));
+	--link-color-hover: light-dark(var(--color-blue-700), var(--color-blue-400));
 	--link-underline-offset: 2px;
 }
 
@@ -114,6 +115,9 @@ export default {
 	border-radius: var(--rounded-xs);
 	outline-offset: 2px;
 }
+.k-text :where(.k-link, a):hover {
+	color: var(--link-color-hover);
+}
 
 /* Lists */
 .k-text ol,
@@ -143,7 +147,7 @@ export default {
 	font-size: var(--text-lg);
 	line-height: 1.25;
 	padding-inline-start: var(--spacing-4);
-	border-inline-start: 2px solid var(--color-black);
+	border-inline-start: 2px solid light-dark(var(--color-black), var(--color-border));
 }
 
 /* Images */

@@ -26,7 +26,7 @@ export default {
 <style>
 :root {
 	--progress-height: var(--spacing-2);
-	--progress-color-back: var(--color-gray-300);
+	--progress-color-back: light-dark(var(--color-gray-300), var(--color-gray-850));
 	--progress-color-value: var(--color-focus);
 }
 
@@ -36,6 +36,7 @@ progress {
 	height: var(--progress-height);
 	border-radius: var(--progress-height);
 	overflow: hidden;
+	background: var(--progress-color-back);
 	border: 0;
 }
 
@@ -51,6 +52,7 @@ progress::-webkit-progress-value {
 
 progress::-moz-progress-bar {
 	background: var(--progress-color-value);
+	border-radius: var(--progress-height);
 }
 
 /**	Indeterminate **/

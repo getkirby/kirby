@@ -266,14 +266,11 @@ return [
 
 			// the slug changed
 			if ($page->slug() !== $slug) {
-				$newPage = $page->changeSlug($slug);
 				$response['event'][] = 'page.changeSlug';
-				$response['dispatch'] = [
-					'content/move' => [
-						$oldUrl = $page->panel()->url(true),
-						$newUrl = $newPage->panel()->url(true)
-					]
-				];
+
+				$newPage = $page->changeSlug($slug);
+				$oldUrl  = $page->panel()->url(true);
+				$newUrl  = $newPage->panel()->url(true);
 
 				// check for a necessary redirect after the slug has changed
 				if (Panel::referrer() === $oldUrl && $oldUrl !== $newUrl) {
@@ -383,7 +380,6 @@ return [
 
 			return [
 				'event'    => 'page.delete',
-				'dispatch' => ['content/remove' => [$url]],
 				'redirect' => $redirect
 			];
 		}
@@ -554,13 +550,7 @@ return [
 
 			return [
 				'event'    => 'page.move',
-				'redirect' => $newPage->panel()->url(true),
-				'dispatch' => [
-					'content/move' => [
-						$oldPage->panel()->url(true),
-						$newPage->panel()->url(true)
-					]
-				],
+				'redirect' => $newPage->panel()->url(true)
 			];
 		}
 	],
@@ -641,13 +631,7 @@ return [
 	'changes' => [
 		'pattern' => 'changes',
 		'load'    => function () {
-			$dialog = new ChangesDialog();
-			return $dialog->load();
+			return (new ChangesDialog())->load();
 		},
-		'submit' => function () {
-			$dialog = new ChangesDialog();
-			$ids    = App::instance()->request()->get('ids');
-			return $dialog->submit($ids);
-		}
 	],
 ];

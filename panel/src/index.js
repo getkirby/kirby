@@ -8,7 +8,6 @@ import I18n from "./config/i18n.js";
 import Legacy from "./panel/legacy.js";
 import Libraries from "./libraries/index.js";
 import Panel from "./panel/panel.js";
-import Store from "./store/store.js";
 
 import preserveListeners from "./mixins/preserveListeners.js";
 
@@ -30,7 +29,6 @@ const app = createApp(App);
  */
 app.use(Helpers);
 app.use(Libraries);
-app.use(Store);
 app.use(Components);
 
 /**

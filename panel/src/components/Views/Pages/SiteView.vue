@@ -1,25 +1,33 @@
 <template>
 	<k-panel-inside
-		:data-has-tabs="tabs.length > 1"
+		:data-has-tabs="hasTabs"
+		:data-id="id"
 		:data-locked="isLocked"
-		data-id="/"
-		data-template="site"
+		:data-template="blueprint"
 		class="k-site-view"
 	>
 		<k-header
 			:editable="permissions.changeTitle && !isLocked"
 			class="k-site-view-header"
-			@edit="$dialog('site/changeTitle')"
+			@edit="$dialog(api + '/changeTitle')"
 		>
-			{{ model.title }}
+			{{ title }}
 
 			<template #buttons>
 				<k-view-buttons :buttons="buttons" />
-				<k-form-buttons @discard="onDiscard" @submit="onSubmit" />
+				<k-form-controls
+					:editor="editor"
+					:has-changes="hasChanges"
+					:is-locked="isLocked"
+					:modified="modified"
+					:preview="api + '/preview/compare'"
+					@discard="onDiscard"
+					@submit="onSubmit"
+				/>
 			</template>
 		</k-header>
 
-		<k-model-tabs :tab="tab.name" :tabs="tabs" />
+		<k-model-tabs :changes="changes" :tab="tab.name" :tabs="tabs" />
 
 		<k-sections
 			:blueprint="blueprint"
@@ -39,11 +47,8 @@ import ModelView from "../ModelView.vue";
 
 export default {
 	extends: ModelView,
-	emits: ["submit"],
-	computed: {
-		protectedFields() {
-			return ["title"];
-		}
+	props: {
+		title: String
 	}
 };
 </script>

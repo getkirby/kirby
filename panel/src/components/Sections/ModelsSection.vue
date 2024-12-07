@@ -144,7 +144,7 @@ export default {
 				...this.emptyProps,
 				text: this.searching
 					? this.$t("search.results.none")
-					: this.options.empty ?? this.emptyProps.text
+					: (this.options.empty ?? this.emptyProps.text)
 			};
 		},
 		items() {
@@ -252,7 +252,7 @@ export default {
 }
 
 .k-models-section-search.k-input {
-	--input-color-back: var(--color-gray-300);
+	--input-color-back: var(--color-border);
 	--input-color-border: transparent;
 	margin-bottom: var(--spacing-3);
 }

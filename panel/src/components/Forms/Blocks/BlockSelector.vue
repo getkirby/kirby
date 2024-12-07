@@ -157,7 +157,7 @@ export default {
 }
 .k-block-types .k-button {
 	--button-color-icon: var(--color-text);
-	--button-color-back: var(--color-white);
+	--button-color-back: light-dark(var(--color-white), var(--color-gray-850));
 	--button-padding: var(--spacing-3);
 	width: 100%;
 	justify-content: start;

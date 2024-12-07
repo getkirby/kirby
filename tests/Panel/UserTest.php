@@ -5,15 +5,19 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Cms\Blueprint;
 use Kirby\Cms\User as ModelUser;
+use Kirby\Content\Lock;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use Kirby\Toolkit\Str;
 
-class ModelUserTestForceLocked extends ModelUser
+class UserForceLocked extends ModelUser
 {
-	public function isLocked(): bool
+	public function lock(): Lock
 	{
-		return true;
+		return new Lock(
+			user: new ModelUser(['email' => 'test@getkirby.com']),
+			modified: time()
+		);
 	}
 }
 
@@ -305,7 +309,7 @@ class UserTest extends TestCase
 	 */
 	public function testOptionsWithLockedUser()
 	{
-		$user = new ModelUserTestForceLocked([
+		$user = new UserForceLocked([
 			'email' => 'test@getkirby.com',
 		]);
 

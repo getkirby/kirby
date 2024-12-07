@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 use Closure;
 use Generator;
-use Kirby\Content\VersionId;
 use Kirby\Data\Data;
 use Kirby\Email\Email as BaseEmail;
 use Kirby\Exception\ErrorPageException;
@@ -71,7 +70,6 @@ class App
 	protected Environment|null $environment = null;
 	protected Language|null $language = null;
 	protected Languages|null $languages = null;
-	protected ContentLocks|null $locks = null;
 	protected bool|null $multilang = null;
 	protected string|null $nonce = null;
 	protected array $options;
@@ -432,14 +430,14 @@ class App
 	 * Generates a non-guessable token based on model
 	 * data and a configured salt
 	 *
-	 * @param mixed $model Object to pass to the salt callback if configured
+	 * @param object|null $model Object to pass to the salt callback if configured
 	 * @param string $value Model data to include in the generated token
 	 */
-	public function contentToken(mixed $model, string $value): string
+	public function contentToken(object|null $model, string $value): string
 	{
 		$default = $this->root('content');
 
-		if (method_exists($model, 'id') === true) {
+		if ($model !== null && method_exists($model, 'id') === true) {
 			$default .= '/' . $model->id();
 		}
 
@@ -968,14 +966,6 @@ class App
 	}
 
 	/**
-	 * Returns the app's locks object
-	 */
-	public function locks(): ContentLocks
-	{
-		return $this->locks ??= new ContentLocks();
-	}
-
-	/**
 	 * Parses Markdown
 	 *
 	 * @internal
@@ -1227,17 +1217,6 @@ class App
 			return null;
 		}
 
-		/**
-		 * TODO: very rough preview mode for changes.
-		 *
-		 * We need page token verification for this before v5
-		 * hits beta. This rough implementation will only help
-		 * to get the panel integration up and running during the alpha
-		 */
-		if ($this->request()->get('_version') === 'changes') {
-			VersionId::$render = VersionId::changes();
-		}
-
 		return $this->io($this->call($path, $method));
 	}
 
@@ -1298,7 +1277,7 @@ class App
 		if (!$page && $draft = $site->draft($path)) {
 			if (
 				$this->user() ||
-				$draft->isVerified($this->request()->get('token'))
+				$draft->renderVersionFromRequest() !== null
 			) {
 				$page = $draft;
 			}

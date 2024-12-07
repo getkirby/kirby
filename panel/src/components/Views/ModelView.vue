@@ -1,23 +1,25 @@
 <script>
-import debounce from "@/helpers/debounce.js";
+import { length } from "@/helpers/object";
 
 /**
  * @internal
  */
 export default {
 	props: {
+		api: String,
 		blueprint: String,
 		buttons: Array,
-		next: Object,
-		prev: Object,
-		permissions: {
-			type: Object,
-			default: () => ({})
-		},
+		content: Object,
+		id: String,
+		link: String,
 		lock: {
 			type: [Boolean, Object]
 		},
-		model: {
+		model: Object,
+		next: Object,
+		originals: Object,
+		prev: Object,
+		permissions: {
 			type: Object,
 			default: () => ({})
 		},
@@ -32,72 +34,106 @@ export default {
 		tabs: {
 			type: Array,
 			default: () => []
-		}
+		},
+		uuid: String
+	},
+	data() {
+		return {
+			isSaved: true
+		};
 	},
 	computed: {
-		content() {
-			return this.$panel.content.values;
+		changes() {
+			return this.$panel.content.changes({
+				api: this.api,
+				language: this.$panel.language.code
+			});
 		},
-		id() {
-			return this.model.link;
+		editor() {
+			return this.lock.user.email;
+		},
+		hasChanges() {
+			return length(this.changes) > 0;
+		},
+		hasTabs() {
+			return this.tabs.length > 1;
 		},
 		isLocked() {
-			return this.$panel.content.isLocked;
+			return this.lock.isLocked;
 		},
-		protectedFields() {
-			return [];
-		}
-	},
-	watch: {
-		"$panel.view.timestamp": {
-			handler() {
-				this.$store.dispatch("content/create", {
-					id: this.id,
-					api: this.id,
-					content: this.model.content,
-					ignore: this.protectedFields
-				});
-			},
-			immediate: true
+		modified() {
+			return this.lock.modified;
 		}
 	},
 	mounted() {
-		this.onInput = debounce(this.onInput, 50);
-
-		this.$events.on("model.reload", this.$reload);
+		this.$events.on("beforeunload", this.onBeforeUnload);
+		this.$events.on("content.save", this.onContentSave);
 		this.$events.on("keydown.left", this.toPrev);
 		this.$events.on("keydown.right", this.toNext);
-		this.$events.on("view.save", this.onSave);
+		this.$events.on("model.reload", this.$reload);
+		this.$events.on("view.save", this.onViewSave);
 	},
 	unmounted() {
-		this.$events.off("model.reload", this.$reload);
+		this.$events.off("beforeunload", this.onBeforeUnload);
+		this.$events.off("content.save", this.onContentSave);
 		this.$events.off("keydown.left", this.toPrev);
 		this.$events.off("keydown.right", this.toNext);
-		this.$events.off("view.save", this.onSave);
+		this.$events.off("model.reload", this.$reload);
+		this.$events.off("view.save", this.onViewSave);
 	},
 	methods: {
-		onDiscard() {
-			this.$panel.content.discard();
+		onBeforeUnload(e) {
+			if (this.$panel.content.isProcessing === true || this.isSaved === false) {
+				e.preventDefault();
+				e.returnValue = "";
+			}
+		},
+		onContentSave({ api, language }) {
+			if (api === this.api && language === this.$panel.language.code) {
+				this.isSaved = true;
+			}
+		},
+		async onDiscard() {
+			await this.$panel.content.discard({
+				api: this.api,
+				language: this.$panel.language.code
+			});
+
+			this.$panel.view.refresh();
 		},
 		onInput(values) {
-			this.$panel.content.set(values);
+			// update the content for the current view
+			// this will also refresh the content prop
+			this.$panel.content.updateLazy(values, {
+				api: this.api,
+				language: this.$panel.language.code
+			});
 		},
-		onSave(e) {
+		async onSubmit() {
+			await this.$panel.content.publish(this.content, {
+				api: this.api,
+				language: this.$panel.language.code
+			});
+
+			this.$panel.notification.success();
+			this.$events.emit("model.update");
+
+			// the view needs to be refreshed to get an updated set of props
+			// this will also rerender sections if needed
+			await this.$panel.view.refresh();
+		},
+		onViewSave(e) {
 			e?.preventDefault?.();
 			this.onSubmit();
-		},
-		onSubmit(values = {}) {
-			this.$panel.content.set(values);
-			this.$panel.content.publish();
-		},
-		toPrev(e) {
-			if (this.prev && e.target.localName === "body") {
-				this.$go(this.prev.link);
-			}
 		},
 		toNext(e) {
 			if (this.next && e.target.localName === "body") {
 				this.$go(this.next.link);
+			}
+		},
+		toPrev(e) {
+			if (this.prev && e.target.localName === "body") {
+				this.$go(this.prev.link);
 			}
 		}
 	}

@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Content\VersionId;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
@@ -348,16 +349,12 @@ class Site extends ModelWithContent
 	}
 
 	/**
-	 * Preview Url
+	 * Returns the preview URL with authentication for drafts and versions
 	 * @internal
 	 */
-	public function previewUrl(): string|null
+	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
 	{
-		return match ($preview = $this->blueprint()->preview()) {
-			true    => $this->url(),
-			false   => null,
-			default => $preview
-		};
+		return $this->version($versionId)->url();
 	}
 
 	/**

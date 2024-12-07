@@ -50,7 +50,7 @@ export default {
 <style>
 .k-block-type-quote-editor {
 	padding-inline-start: var(--spacing-3);
-	border-inline-start: 2px solid var(--color-black);
+	border-inline-start: 2px solid light-dark(var(--color-black), var(--color-border));
 }
 .k-block-type-quote-text {
 	font-size: var(--text-xl);

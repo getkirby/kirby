@@ -48,21 +48,18 @@ export default {
 	align-self: center;
 	padding: var(--spacing-6);
 	line-height: 1.5em;
-	padding: var(--spacing-6);
 }
 .k-file-preview-details dt {
 	font-size: var(--text-sm);
-	font-weight: 500;
 	font-weight: var(--font-semi);
 	color: var(--color-gray-500);
 	margin-bottom: var(--spacing-1);
 }
 .k-file-preview-details :where(dd, a) {
-	font-size: var(--text-xs);
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	color: var(--file-preview-text);
+	color: var(--file-preview-color-text);
 	font-size: var(--text-sm);
 }
 </style>

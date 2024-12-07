@@ -173,7 +173,7 @@ class Example
 		return [
 			'image' => [
 				'icon' => $this->parent->icon(),
-				'back' => 'white',
+				'back' => 'light-dark(white, var(--color-gray-800))',
 			],
 			'text' => $this->title(),
 			'link' => $this->url()

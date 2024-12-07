@@ -15,10 +15,10 @@
 					/>
 
 					<k-form-controls
-						:is-unsaved="isUnsaved"
+						:has-changes="hasChanges"
 						:is-locked="isLocked"
 						editor="editor@getkirby.com"
-						modified="5 minutes ago"
+						modified="2024-10-01T17:00:00"
 						preview="https://getkirby.com"
 						@discard="log('discard')"
 						@submit="log('submit')"
@@ -35,9 +35,9 @@
 			>
 				<k-input
 					type="toggle"
-					:value="isUnsaved"
-					text="is-unsaved"
-					@input="isUnsaved = $event"
+					:value="hasChanges"
+					text="has-changes"
+					@input="hasChanges = $event"
 				/>
 				<k-input
 					type="toggle"
@@ -48,9 +48,12 @@
 			</k-grid>
 		</k-lab-example>
 
-		<k-lab-example label="Unsaved">
+		<k-lab-example label="Changes">
 			<k-form-controls
-				:is-unsaved="true"
+				:has-changes="true"
+				editor="editor@getkirby.com"
+				modified="2024-10-01T17:00:00"
+				preview="https://getkirby.com"
 				@discard="log('discard')"
 				@submit="log('submit')"
 			/>
@@ -59,7 +62,7 @@
 			<k-form-controls
 				:is-locked="true"
 				editor="editor@getkirby.com"
-				modified="5 minutes ago"
+				modified="2024-10-01T17:00:00"
 				preview="https://getkirby.com"
 				@discard="log('discard')"
 				@submit="log('submit')"
@@ -72,8 +75,8 @@
 export default {
 	data() {
 		return {
-			isLocked: false,
-			isUnsaved: false
+			hasChanges: false,
+			isLocked: false
 		};
 	},
 	methods: {

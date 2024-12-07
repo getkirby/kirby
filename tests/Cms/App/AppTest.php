@@ -265,14 +265,27 @@ class AppTest extends TestCase
 	 */
 	public function testContentToken()
 	{
+		$model = new class () {
+			public function id(): string
+			{
+				return 'some-id';
+			}
+
+			public function type(): string
+			{
+				return 'sea';
+			}
+		};
+
 		// without configured salt
 		$app = new App([
 			'roots' => [
 				'index' => '/dev/null'
 			]
 		]);
-		$this->assertSame(hash_hmac('sha1', 'test', '/dev/null/content'), $app->contentToken('model', 'test'));
+		$this->assertSame(hash_hmac('sha1', 'test', '/dev/null/content/some-id'), $app->contentToken($model, 'test'));
 		$this->assertSame(hash_hmac('sha1', 'test', '/dev/null/content'), $app->contentToken($app, 'test'));
+		$this->assertSame(hash_hmac('sha1', 'test', '/dev/null/content'), $app->contentToken(null, 'test'));
 
 		// with custom static salt
 		$app = new App([
@@ -280,15 +293,18 @@ class AppTest extends TestCase
 				'content.salt' => 'salt and pepper and chili'
 			]
 		]);
-		$this->assertSame(hash_hmac('sha1', 'test', 'salt and pepper and chili'), $app->contentToken('model', 'test'));
+		$this->assertSame(hash_hmac('sha1', 'test', 'salt and pepper and chili'), $app->contentToken($model, 'test'));
+		$this->assertSame(hash_hmac('sha1', 'test', 'salt and pepper and chili'), $app->contentToken($app, 'test'));
+		$this->assertSame(hash_hmac('sha1', 'test', 'salt and pepper and chili'), $app->contentToken(null, 'test'));
 
 		// with callback
 		$app = new App([
 			'options' => [
-				'content.salt' => fn ($model) => 'salt ' . $model
+				'content.salt' => fn (object|null $model) => $model?->type() . ' salt'
 			]
 		]);
-		$this->assertSame(hash_hmac('sha1', 'test', 'salt lake city'), $app->contentToken('lake city', 'test'));
+		$this->assertSame(hash_hmac('sha1', 'test', 'sea salt'), $app->contentToken($model, 'test'));
+		$this->assertSame(hash_hmac('sha1', 'test', ' salt'), $app->contentToken(null, 'test'));
 	}
 
 	/**

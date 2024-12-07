@@ -81,8 +81,8 @@ export default {
 <style>
 .k-link-field-preview {
 	--tag-height: var(--height-xs);
-	--tag-color-back: var(--color-gray-200);
-	--tag-color-text: var(--color-black);
+	--tag-color-back: var(--panel-color-back);
+	--tag-color-text: currentColor;
 	--tag-color-toggle: var(--tag-color-text);
 	--tag-color-toggle-border: var(--color-gray-300);
 	--tag-color-focus-back: var(--tag-color-back);

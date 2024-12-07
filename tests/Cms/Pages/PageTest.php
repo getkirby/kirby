@@ -5,7 +5,6 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Panel\Page as Panel;
-use ReflectionMethod;
 use TypeError;
 
 class PageTestModel extends Page
@@ -608,18 +607,18 @@ class PageTest extends TestCase
 	public static function previewUrlProvider(): array
 	{
 		return [
-			[null, '/test', false],
-			[null, '/test?{token}', true],
-			[true, '/test', false],
-			[true, '/test?{token}', true],
-			['/something/different', '/something/different', false],
-			['/something/different', '/something/different?{token}', true],
-			['{{ site.url }}#{{ page.slug }}', '/#test', false],
-			['{{ site.url }}#{{ page.slug }}', '/?{token}#test', true],
-			['{{ page.url }}?preview=true', '/test?preview=true&{token}', true],
-			[false, null, false],
-			[false, null, true],
-			[null, null, false, false],
+			[null, '/test', null, false],
+			[null, '/test?{token}', 'test', true],
+			[true, '/test', null, false],
+			[true, '/test?{token}', 'test', true],
+			['/something/different', '/something/different', null, false],
+			['/something/different', '/something/different?{token}', 'something\/different', true],
+			['{{ site.url }}#{{ page.slug }}', '/#test', null, false],
+			['{{ site.url }}#{{ page.slug }}', '/?{token}#test', '', true],
+			['{{ page.url }}?preview=true', '/test?preview=true&{token}', 'test', true],
+			[false, null, null, false],
+			[false, null, null, true],
+			[null, null, null, false, false],
 		];
 	}
 
@@ -629,6 +628,7 @@ class PageTest extends TestCase
 	public function testCustomPreviewUrl(
 		$input,
 		$expected,
+		$expectedUri,
 		bool $draft,
 		bool $authenticated = true
 	): void {
@@ -678,9 +678,10 @@ class PageTest extends TestCase
 		]);
 
 		if ($draft === true && $expected !== null) {
+			$expectedToken = substr(hash_hmac('sha1', '{"uri":"' . $expectedUri . '","versionId":"latest"}', $page->kirby()->root('content')), 0, 10);
 			$expected = str_replace(
 				'{token}',
-				'token=' . hash_hmac('sha1', $page->id() . $page->template(), $page->kirby()->root('content') . '/' . $page->id()),
+				'_token=' . $expectedToken,
 				$expected
 			);
 		}
@@ -692,83 +693,6 @@ class PageTest extends TestCase
 	{
 		$page = new Page(['slug' => 'test']);
 		$this->assertSame('test', $page->slug());
-	}
-
-	public function testToken()
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
-
-		$page = new Page([
-			'slug'     => 'test',
-			'template' => 'default'
-		]);
-
-		$method = new ReflectionMethod(Page::class, 'token');
-		$method->setAccessible(true);
-
-		$expected = hash_hmac(
-			'sha1',
-			'testdefault',
-			'/dev/null/content/test'
-		);
-		$this->assertSame($expected, $method->invoke($page));
-	}
-
-	public function testTokenWithCustomSalt()
-	{
-		new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'options' => [
-				'content' => [
-					'salt' => 'testsalt'
-				]
-			]
-		]);
-
-		$page = new Page([
-			'slug'     => 'test',
-			'template' => 'default'
-		]);
-
-		$method = new ReflectionMethod(Page::class, 'token');
-		$method->setAccessible(true);
-
-		$expected = hash_hmac('sha1', 'test' . 'default', 'testsalt');
-		$this->assertSame($expected, $method->invoke($page));
-	}
-
-	public function testTokenWithSaltCallback()
-	{
-		new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'options' => [
-				'content' => [
-					'salt' => fn ($page) => $page->date()
-				]
-			]
-		]);
-
-		$page = new Page([
-			'slug'     => 'test',
-			'template' => 'default',
-			'content'  => [
-				'date' => '2012-12-12'
-			]
-		]);
-
-		$method = new ReflectionMethod(Page::class, 'token');
-		$method->setAccessible(true);
-
-		$expected = hash_hmac('sha1', 'test' . 'default', '2012-12-12');
-		$this->assertSame($expected, $method->invoke($page));
 	}
 
 	public function testToString()
@@ -1137,68 +1061,5 @@ class PageTest extends TestCase
 		];
 
 		$this->assertSame($expected, $page->toArray());
-	}
-
-	public function testRenderBeforeHook()
-	{
-		$app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-			'templates' => [
-				'bar' => static::FIXTURES . '/PageRenderHookTest/bar.php'
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'      => 'bar',
-						'template'  => 'bar',
-						'content'   => [
-							'title' => 'Bar Title',
-						]
-					]
-				],
-			],
-			'hooks' => [
-				'page.render:before' => function ($contentType, $data, $page) {
-					$data['bar'] = 'Test';
-					return $data;
-				}
-			]
-		]);
-
-		$page = $app->page('bar');
-		$this->assertSame('Bar Title : Test', $page->render());
-	}
-
-	public function testRenderAfterHook()
-	{
-		$app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-			'templates' => [
-				'foo' => static::FIXTURES . '/PageRenderHookTest/foo.php'
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'      => 'foo',
-						'template'  => 'foo',
-						'content'   => [
-							'title' => 'Foo Title',
-						]
-					]
-				],
-			],
-			'hooks' => [
-				'page.render:after' => function ($contentType, $data, $html, $page) {
-					return str_replace(':', '-', $html);
-				}
-			]
-		]);
-
-		$page = $app->page('foo');
-		$this->assertSame('foo - Foo Title', $page->render());
 	}
 }

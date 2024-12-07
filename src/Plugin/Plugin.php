@@ -29,7 +29,7 @@ use Throwable;
 class Plugin
 {
 	protected Assets $assets;
-	protected License $license;
+	protected License|Closure|array|string $license;
 	protected UpdateStatus|null $updateStatus = null;
 
 	/**
@@ -69,20 +69,9 @@ class Plugin
 		}
 
 		// read composer.json and use as info fallback
-		try {
-			$info = Data::read($this->manifest());
-		} catch (Exception) {
-			// there is no manifest file or it is invalid
-			$info = [];
-		}
-
-		$this->info = [...$info, ...$this->info];
-
-		// set the license
-		$this->license = License::from(
-			plugin: $this,
-			license: $license ?? $this->info['license'] ?? '-'
-		);
+		$info          = Data::read($this->manifest(), fail: false);
+		$this->info    = [...$info, ...$this->info];
+		$this->license = $license ?? $this->info['license'] ?? '-';
 	}
 
 	/**
@@ -185,7 +174,11 @@ class Plugin
 	 */
 	public function license(): License
 	{
-		return $this->license;
+		// resolve license info from Closure, array or string
+		return License::from(
+			plugin: $this,
+			license: $this->license
+		);
 	}
 
 	/**

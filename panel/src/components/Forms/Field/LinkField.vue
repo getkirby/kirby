@@ -275,7 +275,7 @@ export default {
 .k-link-input-toggle.k-button {
 	--button-height: var(--height-sm);
 	--button-rounded: var(--rounded-sm);
-	--button-color-back: var(--color-gray-200);
+	--button-color-back: var(--panel-color-back);
 	margin-inline-start: 0.25rem;
 }
 
@@ -320,10 +320,11 @@ export default {
 .k-link-input-body {
 	display: grid;
 	overflow: hidden;
-	border-top: 1px solid var(--color-gray-300);
-	background: var(--color-gray-100);
-	--tree-color-back: var(--color-gray-100);
-	--tree-color-hover-back: var(--color-gray-200);
+	border-top: 1px solid var(--color-border);
+	background: var(--input-color-back);
+	--tree-color-back: var(--input-color-back);
+	--tree-branch-color-back: var(--input-color-back);
+	--tree-branch-hover-color-back: var(--panel-color-back);
 }
 
 .k-link-input-body[data-type="page"] .k-page-browser {

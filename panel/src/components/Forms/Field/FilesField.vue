@@ -44,7 +44,7 @@ export default {
 				preview: this.uploads.preview,
 				url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload",
 				on: {
-					done: (files) => {
+					done: async (files) => {
 						if (this.multiple === false) {
 							this.selected = [];
 						}
@@ -55,7 +55,10 @@ export default {
 							}
 						}
 
-						this.onInput();
+						await this.$panel.content.update({
+							[this.name]: this.selected
+						});
+
 						this.$events.emit("file.upload");
 						this.$events.emit("model.update");
 					}

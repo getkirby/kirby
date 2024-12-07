@@ -2,7 +2,6 @@
 
 namespace Kirby\Toolkit;
 
-use Kirby\Cms\Helpers;
 use SimpleXMLElement;
 
 /**
@@ -96,15 +95,6 @@ class Xml
 		if ($value === null || $value === false || $value === []) {
 			return null;
 		}
-
-		// TODO: In 5.0, remove this block to render space as space
-		// @codeCoverageIgnoreStart
-		if ($value === ' ') {
-			Helpers::deprecated('Passing a single space as value to `Xml::attr()` has been deprecated. In a future version, passing a single space won\'t render an empty value anymore but a single space. To render an empty value, please pass an empty string.', 'xml-attr-single-space');
-
-			return $name . '=""';
-		}
-		// @codeCoverageIgnoreEnd
 
 		if ($value === true) {
 			return $name . '="' . $name . '"';

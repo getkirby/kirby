@@ -41,6 +41,7 @@ export default {
 	background: var(--pattern);
 }
 .k-file-preview-frame {
+	position: relative;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -61,8 +62,5 @@ export default {
 
 .k-button.k-file-preview-frame-dropdown-toggle {
 	--button-color-icon: var(--color-gray-500);
-}
-.k-panel[data-theme="dark"] .k-button.k-file-preview-frame-dropdown-toggle {
-	--button-color-icon: var(--color-gray-700);
 }
 </style>

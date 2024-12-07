@@ -142,10 +142,6 @@ export default {
 	--overlay-color-back-dimmed: rgba(0, 0, 0, 0.2);
 }
 
-.k-panel[data-theme="dark"] {
-	--overlay-color-back-dimmed: rgba(0, 0, 0, 0.8);
-}
-
 .k-overlay[open] {
 	position: fixed;
 	overscroll-behavior: contain;

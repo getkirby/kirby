@@ -2,12 +2,13 @@
 
 namespace Kirby\Content;
 
+use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Stringable;
 
 /**
  * The Version ID identifies a version of content.
- * This can be the currently published/latest version or changes
+ * This can be the currently latest version or changes
  * to the content. In the future, we also plan to use this
  * for older revisions of the content.
  *
@@ -102,6 +103,24 @@ class VersionId implements Stringable
 	public static function latest(): static
 	{
 		return new static(static::LATEST);
+	}
+
+	/**
+	 * Temporarily sets the version ID for preview rendering
+	 * only for the logic in the callback
+	 */
+	public static function render(VersionId|string $versionId, Closure $callback): mixed
+	{
+		$original       = static::$render;
+		static::$render = static::from($versionId);
+
+		try {
+			return $callback();
+		} finally {
+			// ensure that the render version ID is *always* reset
+			// to the original value, even if an error occurred
+			static::$render = $original;
+		}
 	}
 
 	/**

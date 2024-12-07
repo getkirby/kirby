@@ -30,7 +30,7 @@ export default {
 		},
 		// eslint-disable-next-line vue/require-prop-types
 		submitButton: {
-			default: () => window.panel.$t("save")
+			default: () => window.panel.t("save")
 		},
 		text: {
 			type: String

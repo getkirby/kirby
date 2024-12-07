@@ -20,7 +20,9 @@
 	"coordinates": "Coordinates",
 	"copy": "Copy",
 	"copy.all": "Copy all",
-	"copy.success": "{count} copied!",
+	"copy.success": "Copied",
+	"copy.success.multiple": "{count} copied!",
+	"copy.url": "Copy URL",
 	"create": "Create",
 	"custom": "Custom",
 
@@ -89,6 +91,12 @@
 	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
 
 	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
+	"error.content.lock.delete": "The version is locked and cannot be deleted",
+	"error.content.lock.move": "The source version is locked and cannot be moved",
+	"error.content.lock.publish": "This version is already published",
+	"error.content.lock.replace": "The version is locked and cannot be replaced",
+	"error.content.lock.update": "The version is locked and cannot be updated",
 
 	"error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
 
@@ -378,10 +386,15 @@
 	"filter": "Filter",
 
 	"form.discard": "Discard changes",
-	"form.discard.confirm": "Do you really want to <strong>delete all unpublished changes</strong>?",
+	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
 	"form.locked": "This content is disabled for you as it is currently edited by another user",
+	"form.unsaved": "The current changes have not yet been saved",
+	"form.save.error": "Your changes could not be saved.",
+	"form.save.success": "Your changes have been saved",
 	"form.preview": "Preview changes",
 	"form.preview.draft": "Preview draft",
+	"form.publish.error": "Your changes could not be published.",
+	"form.publish.success": "Your changes have been published",
 
 	"hide": "Hide",
 	"hour": "Hour",
@@ -471,7 +484,10 @@
 	"loading": "Loading",
 
 	"lock.unsaved": "Unsaved changes",
-	"lock.unsaved.empty": "There are no more unsaved changes",
+	"lock.unsaved.empty": "There are no unsaved changes",
+	"lock.unsaved.files": "Unsaved files",
+	"lock.unsaved.pages": "Unsaved pages",
+	"lock.unsaved.users": "Unsaved accounts",
 	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Unlock",
 	"lock.unlock.submit": "Unlock and overwrite unsaved changes by <strong>{email}</strong>",
@@ -744,10 +760,13 @@
 	"users": "Users",
 
 	"version": "Version",
+	"version.changes": "Changed version",
+	"version.compare": "Compare versions",
 	"version.current": "Current version",
 	"version.latest": "Latest version",
 	"versionInformation": "Version information",
 
+	"view": "View",
 	"view.account": "Your account",
 	"view.installation": "Installation",
 	"view.languages": "Languages",

@@ -253,7 +253,14 @@ class PluginTest extends TestCase
 	public function testLicense(): void
 	{
 		$plugin = new Plugin(name: 'getkirby/test-plugin');
+		$this->assertInstanceOf(License::class, $license = $plugin->license());
+	}
+
+	public function testLicenseFromString(): void
+	{
+		$plugin = new Plugin(name: 'getkirby/test-plugin', license: 'mit');
 		$this->assertInstanceOf(License::class, $plugin->license());
+		$this->assertSame('mit', $plugin->license()->name());
 	}
 
 	/**

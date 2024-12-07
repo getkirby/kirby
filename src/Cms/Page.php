@@ -4,12 +4,12 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Content\Field;
+use Kirby\Content\VersionId;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
-use Kirby\Http\Uri;
 use Kirby\Panel\Page as Panel;
 use Kirby\Template\Template;
 use Kirby\Toolkit\A;
@@ -263,7 +263,7 @@ class Page extends ModelWithContent
 	/**
 	 * Builds the cache id for the page
 	 */
-	protected function cacheId(string $contentType): string
+	protected function cacheId(string $contentType, VersionId $versionId): string
 	{
 		$cacheId = [$this->id()];
 
@@ -271,6 +271,7 @@ class Page extends ModelWithContent
 			$cacheId[] = $this->kirby()->language()->code();
 		}
 
+		$cacheId[] = $versionId->value();
 		$cacheId[] = $contentType;
 
 		return implode('.', $cacheId);
@@ -551,7 +552,7 @@ class Page extends ModelWithContent
 	 * pages cache. This will also check if one
 	 * of the ignore rules from the config kick in.
 	 */
-	public function isCacheable(): bool
+	public function isCacheable(VersionId|null $versionId = null): bool
 	{
 		$kirby   = $this->kirby();
 		$cache   = $kirby->cache('pages');
@@ -560,6 +561,11 @@ class Page extends ModelWithContent
 
 		// the pages cache is switched off
 		if (($options['active'] ?? false) === false) {
+			return false;
+		}
+
+		// updating the changes version does not flush the pages cache
+		if ($versionId?->is('changes') === true) {
 			return false;
 		}
 
@@ -771,27 +777,6 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Checks if the page access is verified.
-	 * This is only used for drafts so far.
-	 * @internal
-	 */
-	public function isVerified(string|null $token = null): bool
-	{
-		if (
-			$this->isPublished() === true &&
-			$this->parents()->findBy('status', 'draft') === null
-		) {
-			return true;
-		}
-
-		if ($token === null) {
-			return false;
-		}
-
-		return $this->token() === $token;
-	}
-
-	/**
 	 * Returns the root to the media folder for the page
 	 * @internal
 	 */
@@ -926,29 +911,12 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Draft preview Url
+	 * Returns the preview URL with authentication for drafts and versions
 	 * @internal
 	 */
-	public function previewUrl(): string|null
+	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
 	{
-		$preview = $this->blueprint()->preview();
-
-		if ($preview === false) {
-			return null;
-		}
-
-		$url = match ($preview) {
-			true    => $this->url(),
-			default => $preview
-		};
-
-		if ($this->isDraft() === true) {
-			$uri = new Uri($url);
-			$uri->query->token = $this->token();
-			$url = $uri->toString();
-		}
-
-		return $url;
+		return $this->version($versionId)->url();
 	}
 
 	/**
@@ -959,17 +927,31 @@ class Page extends ModelWithContent
 	 * the default template.
 	 *
 	 * @param string $contentType
+	 * @param \Kirby\Content\VersionId|string|null $versionId Optional override for the auto-detected version to render
 	 * @throws \Kirby\Exception\NotFoundException If the default template cannot be found
 	 */
-	public function render(array $data = [], $contentType = 'html'): string
-	{
+	public function render(
+		array $data = [],
+		$contentType = 'html',
+		VersionId|string|null $versionId = null
+	): string {
 		$kirby = $this->kirby();
 		$cache = $cacheId = $html = null;
 
+		// if not manually overridden, first use a globally set
+		// version ID (e.g. when rendering within another render),
+		// otherwise auto-detect from the request and fall back to
+		// the latest version if request is unauthenticated (no valid token);
+		// make sure to convert it to an object no matter what happened
+		$versionId ??= VersionId::$render;
+		$versionId ??= $this->renderVersionFromRequest();
+		$versionId ??= VersionId::latest();
+		$versionId   = VersionId::from($versionId);
+
 		// try to get the page from cache
-		if ($data === [] && $this->isCacheable() === true) {
+		if ($data === [] && $this->isCacheable($versionId) === true) {
 			$cache       = $kirby->cache('pages');
-			$cacheId     = $this->cacheId($contentType);
+			$cacheId     = $this->cacheId($contentType, $versionId);
 			$result      = $cache->get($cacheId);
 			$html        = $result['html'] ?? null;
 			$response    = $result['response'] ?? [];
@@ -990,36 +972,39 @@ class Page extends ModelWithContent
 
 		// fetch the page regularly
 		if ($html === null) {
-			$template = match ($contentType) {
-				'html'  => $this->template(),
-				default => $this->representation($contentType)
-			};
+			// set `VersionId::$render` to the intended version (only) while we render
+			$html = VersionId::render($versionId, function () use ($kirby, $data, $contentType) {
+				$template = match ($contentType) {
+					'html'  => $this->template(),
+					default => $this->representation($contentType)
+				};
 
-			if ($template->exists() === false) {
-				throw new NotFoundException(
-					key: 'template.default.notFound'
-				);
-			}
+				if ($template->exists() === false) {
+					throw new NotFoundException(
+						key: 'template.default.notFound'
+					);
+				}
 
-			$kirby->data = $this->controller($data, $contentType);
+				$kirby->data = $this->controller($data, $contentType);
 
-			// trigger before hook and apply for `data`
-			$kirby->data = $kirby->apply('page.render:before', [
-				'contentType' => $contentType,
-				'data'        => $kirby->data,
-				'page'        => $this
-			], 'data');
+				// trigger before hook and apply for `data`
+				$kirby->data = $kirby->apply('page.render:before', [
+					'contentType' => $contentType,
+					'data'        => $kirby->data,
+					'page'        => $this
+				], 'data');
 
-			// render the page
-			$html = $template->render($kirby->data);
+				// render the page
+				$html = $template->render($kirby->data);
 
-			// trigger after hook and apply for `html`
-			$html = $kirby->apply('page.render:after', [
-				'contentType' => $contentType,
-				'data'        => $kirby->data,
-				'html'        => $html,
-				'page'        => $this
-			], 'html');
+				// trigger after hook and apply for `html`
+				return $kirby->apply('page.render:after', [
+					'contentType' => $contentType,
+					'data'        => $kirby->data,
+					'html'        => $html,
+					'page'        => $this
+				], 'html');
+			});
 
 			// cache the result
 			$response = $kirby->response();
@@ -1034,6 +1019,42 @@ class Page extends ModelWithContent
 		}
 
 		return $html;
+	}
+
+	/**
+	 * Determines which version (if any) can be rendered
+	 * based on the token authentication in the current request
+	 * @internal
+	 */
+	public function renderVersionFromRequest(): VersionId|null
+	{
+		$request = $this->kirby()->request();
+		$token   = $request->get('_token', '');
+
+		try {
+			$versionId = VersionId::from($request->get('_version', ''));
+		} catch (InvalidArgumentException) {
+			// ignore invalid enum values in the request
+			$versionId = VersionId::latest();
+		}
+
+		// authenticated requests can always be trusted
+		$expectedToken = $this->version($versionId)->previewToken();
+		if ($token !== '' && hash_equals($expectedToken, $token) === true) {
+			return $versionId;
+		}
+
+		// published pages with published parents can render
+		// the latest version without (valid) token
+		if (
+			$this->isPublished() === true &&
+			$this->parents()->findBy('status', 'draft') === null
+		) {
+			return VersionId::latest();
+		}
+
+		// drafts cannot be accessed without authentication
+		return null;
 	}
 
 	/**
@@ -1210,18 +1231,6 @@ class Page extends ModelWithContent
 			'uri'       => $this->uri(),
 			'url'       => $this->url()
 		];
-	}
-
-	/**
-	 * Returns a verification token, which
-	 * is used for the draft authentication
-	 */
-	protected function token(): string
-	{
-		return $this->kirby()->contentToken(
-			$this,
-			$this->id() . $this->template()
-		);
 	}
 
 	/**

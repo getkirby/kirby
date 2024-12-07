@@ -5,6 +5,7 @@ import { defineConfig, loadEnv, splitVendorChunkPlugin } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import kirby from "./scripts/vite-kirby.mjs";
+import postcssLightDarkFunction from "@csstools/postcss-light-dark-function";
 
 /**
  * Returns all aliases used in the project
@@ -125,6 +126,11 @@ export default defineConfig(({ mode }) => {
 					chunkFileNames: "js/[name].min.js",
 					assetFileNames: "[ext]/[name].min.[ext]"
 				}
+			}
+		},
+		css: {
+			postcss: {
+				plugins: [postcssLightDarkFunction()]
 			}
 		},
 		optimizeDeps: {

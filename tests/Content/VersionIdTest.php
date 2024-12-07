@@ -2,6 +2,7 @@
 
 namespace Kirby\Content;
 
+use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 
@@ -10,6 +11,13 @@ use Kirby\TestCase;
  */
 class VersionIdTest extends TestCase
 {
+	public function tearDown(): void
+	{
+		parent::tearDown();
+
+		VersionId::$render = null;
+	}
+
 	/**
 	 * @covers ::all
 	 */
@@ -81,11 +89,119 @@ class VersionIdTest extends TestCase
 	 * @covers ::latest
 	 * @covers ::value
 	 */
-	public function testPublished()
+	public function testLatest()
 	{
 		$version = VersionId::latest();
 
 		$this->assertSame('latest', $version->value());
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderString()
+	{
+		$executed = 0;
+
+		$this->assertNull(VersionId::$render);
+
+		$return = VersionId::render('latest', function () use (&$executed) {
+			$executed++;
+			$this->assertSame('latest', VersionId::$render->value());
+
+			return 'some string';
+		});
+		$this->assertSame('some string', $return);
+
+		$this->assertNull(VersionId::$render);
+
+		$return = VersionId::render('changes', function () use (&$executed) {
+			$executed += 2;
+			$this->assertSame('changes', VersionId::$render->value());
+
+			return 12345;
+		});
+		$this->assertSame(12345, $return);
+
+		$this->assertNull(VersionId::$render);
+		$this->assertSame(3, $executed);
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderInstance()
+	{
+		$executed = 0;
+
+		$this->assertNull(VersionId::$render);
+
+		$return = VersionId::render(VersionId::latest(), function () use (&$executed) {
+			$executed++;
+			$this->assertSame('latest', VersionId::$render->value());
+
+			return 'some string';
+		});
+		$this->assertSame('some string', $return);
+
+		$this->assertNull(VersionId::$render);
+
+		$return = VersionId::render(VersionId::changes(), function () use (&$executed) {
+			$executed += 2;
+			$this->assertSame('changes', VersionId::$render->value());
+
+			return 12345;
+		});
+		$this->assertSame(12345, $return);
+
+		$this->assertNull(VersionId::$render);
+		$this->assertSame(3, $executed);
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderPreviousValue()
+	{
+		$executed = 0;
+
+		VersionId::$render = VersionId::latest();
+
+		$return = VersionId::render('changes', function () use (&$executed) {
+			$executed++;
+			$this->assertSame('changes', VersionId::$render->value());
+
+			return 'some string';
+		});
+		$this->assertSame('some string', $return);
+
+		$this->assertSame('latest', VersionId::$render->value());
+		$this->assertSame(1, $executed);
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderException()
+	{
+		$executed = 0;
+
+		$this->assertNull(VersionId::$render);
+
+		try {
+			VersionId::render(VersionId::latest(), function () use (&$executed) {
+				$executed++;
+				$this->assertSame('latest', VersionId::$render->value());
+
+				throw new Exception('Something went wrong');
+			});
+		} catch (Exception $e) {
+			$executed += 2;
+			$this->assertSame('Something went wrong', $e->getMessage());
+		}
+
+		$this->assertNull(VersionId::$render);
+		$this->assertSame(3, $executed);
 	}
 
 	/**

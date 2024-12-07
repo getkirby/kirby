@@ -3,6 +3,7 @@
 namespace Kirby\Form\Fields;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Page;
 use Kirby\Form\Field;
 
 class StructureFieldTest extends TestCase
@@ -196,9 +197,13 @@ class StructureFieldTest extends TestCase
 
 	public function testNestedStructures()
 	{
+		$model = new Page([
+			'slug' => 'test'
+		]);
+
 		$field = $this->field('structure', [
-			'model'  => 'test',
 			'name'   => 'mothers',
+			'model'  => $model,
 			'fields' => [
 				'name' => [
 					'type' => 'text',
@@ -259,7 +264,7 @@ class StructureFieldTest extends TestCase
 		$childrenField = $motherForm->fields()->children();
 
 		$this->assertSame('structure', $childrenField->type());
-		$this->assertSame('test', $childrenField->model());
+		$this->assertSame($model, $childrenField->model());
 
 		// empty children form
 		$childrenForm = $childrenField->form();
@@ -277,7 +282,7 @@ class StructureFieldTest extends TestCase
 		$childrenNameField = $childrenField->form()->fields()->name();
 
 		$this->assertSame('text', $childrenNameField->type());
-		$this->assertSame('test', $childrenNameField->model());
+		$this->assertSame($model, $childrenNameField->model());
 		$this->assertSame('', $childrenNameField->data());
 	}
 
