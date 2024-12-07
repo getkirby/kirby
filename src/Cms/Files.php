@@ -125,7 +125,7 @@ class Files extends Collection
 
 		if ($exceptions !== []) {
 			throw new Exception(
-				message: 'Not all files could be deleted',
+				key: 'file.delete.multiple',
 			);
 		}
 	}

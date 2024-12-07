@@ -150,7 +150,7 @@ class Pages extends Collection
 
 		if ($exceptions !== []) {
 			throw new Exception(
-				message: 'Not all pages could be deleted',
+				key: 'page.delete.multiple',
 			);
 		}
 	}
