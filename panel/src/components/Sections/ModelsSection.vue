@@ -96,34 +96,27 @@ export default {
 			let buttons = [];
 
 			if (this.isSelecting) {
-				if (this.selected.length === 0) {
-					buttons.push({
-						disabled: true,
-						text: `${this.selected.length} items selected`,
-						theme: "none"
-					});
-				} else {
-					buttons.push({
-						icon: "trash",
-						text: this.$t("delete") + ` (${this.selected.length})`,
-						theme: "negative",
-						click: () => {
-							this.$panel.dialog.open({
-								component: "k-remove-dialog",
-								props: {
-									text: `Do you really want to delete ${this.selected.length} items at once? This action cannot be undone.`
-								},
-								on: {
-									submit: () => {
-										this.$panel.dialog.close();
-										this.deleteSelected();
-									}
+				buttons.push({
+					disabled: this.selected.length === 0,
+					icon: "trash",
+					text: this.$t("delete") + ` (${this.selected.length})`,
+					theme: "negative",
+					click: () => {
+						this.$panel.dialog.open({
+							component: "k-remove-dialog",
+							props: {
+								text: `Do you really want to delete ${this.selected.length} items at once? This action cannot be undone.`
+							},
+							on: {
+								submit: () => {
+									this.$panel.dialog.close();
+									this.deleteSelected();
 								}
-							});
-						},
-						responsive: true
-					});
-				}
+							}
+						});
+					},
+					responsive: true
+				});
 
 				buttons.push({
 					icon: "cancel",
@@ -148,6 +141,7 @@ export default {
 				buttons.push({
 					icon: "checklist",
 					click: this.onSelectToggle,
+					title: this.$t("select"),
 					responsive: true
 				});
 			}
