@@ -57,7 +57,7 @@ jobs:
     timeout-minutes: 5
     strategy:
       matrix:
-        php: ["8.2", "8.3"]
+        php: ["8.2", "8.3", "8.4"]
     env:
       extensions: mbstring, ctype, curl, gd, apcu, memcached, redis
       ini: apc.enabled=1, apc.enable_cli=1, pcov.directory=., "pcov.exclude=\"~(vendor|tests)~\""
@@ -104,7 +104,7 @@ jobs:
           extensions: ${{ env.extensions }}
           ini-values: ${{ env.ini }}
           coverage: pcov
-          tools: phpunit:10.5.5, psalm:5.20.0
+          tools: phpunit:10.5.38, psalm:5.26.1
 
       - name: Setup problem matchers
         run: |
@@ -127,7 +127,7 @@ jobs:
         run: phpunit --fail-on-skipped --coverage-clover ${{ github.workspace }}/clover.xml
 
       - name: Statically analyze using Psalm
-        if: always() && steps.finishPrepare.outcome == 'success'
+        if: always() && steps.finishPrepare.outcome == 'success' && matrix.php != '8.4'
         run: psalm --output-format=github --php-version=${{ matrix.php }} --report=sarif/psalm.sarif --report-show-info=false
 
       - name: Upload coverage results to Codecov
@@ -144,7 +144,7 @@ jobs:
           env_vars: PHP
 
       - name: Upload code scanning results to GitHub
-        if: always() && steps.finishPrepare.outcome == 'success' && github.repository == 'getkirby/kirby'
+        if: always() && steps.finishPrepare.outcome == 'success' && github.repository == 'getkirby/kirby' && matrix.php != '8.4'
         uses: github/codeql-action/upload-sarif@f09c1c0a94de965c15400f5634aa42fac8fb8f88 # pin@v3
         with:
           sarif_file: sarif
