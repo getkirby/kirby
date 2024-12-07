@@ -4,8 +4,9 @@ use Kirby\Cms\Blueprint;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
-use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 
@@ -325,8 +326,16 @@ return [
 				'method'  => 'DELETE',
 				'action'  => function () {
 					$section = $this->section();
-					$ids     = $this->requestBody('ids');
-					$errors  = [];
+
+					// check if batch deletion is allowed
+					if ($section->batch() === false) {
+						throw new PermissionException(
+							message: 'The section does not support batch actions'
+						);
+					}
+
+					$ids    = $this->requestBody('ids');
+					$errors = [];
 
 					// check if the section has enough pages after the deletion
 					if ($section->total() - count($ids) < $section->min()) {
