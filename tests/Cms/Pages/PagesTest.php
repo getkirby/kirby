@@ -2,7 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Filesystem\Dir;
 
 class PagesTest extends TestCase
 {
@@ -188,6 +190,99 @@ class PagesTest extends TestCase
 		];
 
 		$this->assertSame($expected, $pages->children()->keys());
+	}
+
+	/**
+	 * @covers ::delete
+	 */
+	public function testDelete()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'a'],
+					['slug' => 'b']
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$pages = $app->site()->children();
+
+		$this->assertCount(2, $pages);
+
+		$a = $pages->get('a')->root();
+		$b = $pages->get('b')->root();
+
+		// pretend the files exist
+		Dir::make($a);
+		Dir::make($b);
+
+		$this->assertDirectoryExists($a);
+		$this->assertDirectoryExists($b);
+
+		$pages->delete([
+			'a',
+			'b',
+		]);
+
+		$this->assertCount(0, $pages);
+
+		$this->assertDirectoryDoesNotExist($a);
+		$this->assertDirectoryDoesNotExist($b);
+	}
+
+	/**
+	 * @covers ::delete
+	 */
+	public function testDeleteWithInvalidIds()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'a'],
+					['slug' => 'b']
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$pages = $app->site()->children();
+
+		$this->assertCount(2, $pages);
+
+		$a = $pages->get('a')->root();
+		$b = $pages->get('b')->root();
+
+		// pretend the files exist
+		Dir::make($a);
+		Dir::make($b);
+
+		$this->assertDirectoryExists($a);
+		$this->assertDirectoryExists($b);
+
+		try {
+			$pages->delete([
+				'a',
+				'c',
+			]);
+		} catch (Exception $e) {
+			$this->assertSame('Not all pages could be deleted', $e->getMessage());
+		}
+
+		$this->assertCount(1, $pages);
+		$this->assertSame('b', $pages->first()->slug());
+
+		$this->assertDirectoryDoesNotExist($a);
+		$this->assertDirectoryExists($b);
 	}
 
 	public function testDocuments()
