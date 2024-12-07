@@ -235,8 +235,7 @@ return [
 						);
 					}
 
-					$ids    = $this->requestBody('ids');
-					$errors = [];
+					$ids = $this->requestBody('ids');
 
 					// check if the section has enough files after the deletion
 					if ($section->total() - count($ids) < $section->min()) {
@@ -245,26 +244,7 @@ return [
 						);
 					}
 
-					// delete all files and collect errors
-					foreach ($ids as $id) {
-						try {
-							$section->kirby()->file($id)?->delete();
-						} catch (Throwable $e) {
-							$errors[] = [
-								'label'  => $id,
-								'message' => $e->getMessage()
-							];
-						}
-					}
-
-					// throw an error if not all files could be deleted
-					if ($errors !== []) {
-						throw new Exception(
-							message: 'Not all files could be deleted',
-							details: $errors
-						);
-					}
-
+					$section->models()->delete($ids);
 					return true;
 				}
 			]
