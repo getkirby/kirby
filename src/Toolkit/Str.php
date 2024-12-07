@@ -263,7 +263,7 @@ class Str
 	 * Returns everything between two strings from the first occurrence of a given string
 	 */
 	public static function between(
-		string|null $string = null,
+		string|null $string,
 		string $start,
 		string $end
 	): string {
@@ -295,7 +295,7 @@ class Str
 	 * Checks if a str contains another string
 	 */
 	public static function contains(
-		string|null $string = null,
+		string|null $string,
 		string $needle,
 		bool $caseInsensitive = false
 	): bool {
@@ -414,7 +414,7 @@ class Str
 	 * Checks if a string ends with the passed needle
 	 */
 	public static function endsWith(
-		string|null $string = null,
+		string|null $string,
 		string $needle,
 		bool $caseInsensitive = false
 	): bool {
@@ -707,7 +707,7 @@ class Str
 	 * @throws \Kirby\Exception\InvalidArgumentException for empty $needle
 	 */
 	public static function position(
-		string|null $string = null,
+		string|null $string,
 		string $needle,
 		bool $caseInsensitive = false
 	): int|false {
@@ -1230,7 +1230,7 @@ class Str
 	 * Checks if a string starts with the passed needle
 	 */
 	public static function startsWith(
-		string|null $string = null,
+		string|null $string,
 		string $needle,
 		bool $caseInsensitive = false
 	): bool {

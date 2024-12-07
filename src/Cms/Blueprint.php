@@ -320,7 +320,7 @@ class Blueprint
 	 */
 	public static function factory(
 		string $name,
-		string|null $fallback = null,
+		string|null $fallback,
 		ModelWithContent $model
 	): static|null {
 		try {
