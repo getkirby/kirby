@@ -52,7 +52,7 @@
 				v-bind="button"
 			/>
 
-			<label v-if="selectable" class="k-item-options-checkbox">
+			<label v-if="selectable" class="k-item-options-checkbox" @click.stop>
 				<input
 					ref="selector"
 					type="checkbox"
