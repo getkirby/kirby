@@ -4,12 +4,15 @@ use Kirby\Cms\Blueprint;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 
 return [
 	'mixins' => [
+		'batch',
 		'details',
 		'empty',
 		'headline',
@@ -315,12 +318,49 @@ return [
 			return $blueprints;
 		},
 	],
+	// @codeCoverageIgnoreStart
+	'api' => function () {
+		return [
+			[
+				'pattern' => 'delete',
+				'method'  => 'DELETE',
+				'action'  => function () {
+					$section = $this->section();
+
+					// check if batch deletion is allowed
+					if ($section->batch() === false) {
+						throw new PermissionException(
+							message: 'The section does not support batch actions'
+						);
+					}
+
+					$ids = $this->requestBody('ids');
+					$min = $section->min();
+
+					// check if the section has enough pages after the deletion
+					if ($section->total() - count($ids) < $min) {
+						throw new Exception(
+							message: I18n::template('error.section.pages.min.' . I18n::form($min), [
+								'min'     => $min,
+								'section' => $section->headline()
+							])
+						);
+					}
+
+					$section->models()->delete($ids);
+					return true;
+				}
+			]
+		];
+	},
+	// @codeCoverageIgnoreEnd
 	'toArray' => function () {
 		return [
 			'data'    => $this->data,
 			'errors'  => $this->errors,
 			'options' => [
 				'add'      => $this->add,
+				'batch'    => $this->batch,
 				'columns'  => $this->columnsWithTypes(),
 				'empty'    => $this->empty,
 				'headline' => $this->headline,
