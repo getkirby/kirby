@@ -1,10 +1,11 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Api;
 
-use Kirby\Cms\Api\ApiModelTestCase;
+use Kirby\Cms\User;
+use Kirby\Cms\UserBlueprint;
 
-class UserBlueprintApiModelTest extends ApiModelTestCase
+class UserBlueprintModelTest extends ModelTestCase
 {
 	protected User $user;
 
