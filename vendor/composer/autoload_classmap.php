@@ -156,6 +156,7 @@ return array(
     'Kirby\\Content\\Field' => $baseDir . '/src/Content/Field.php',
     'Kirby\\Content\\ImmutableMemoryStorage' => $baseDir . '/src/Content/ImmutableMemoryStorage.php',
     'Kirby\\Content\\Lock' => $baseDir . '/src/Content/Lock.php',
+    'Kirby\\Content\\LockedContentException' => $baseDir . '/src/Content/LockedContentException.php',
     'Kirby\\Content\\MemoryStorage' => $baseDir . '/src/Content/MemoryStorage.php',
     'Kirby\\Content\\PlainTextStorage' => $baseDir . '/src/Content/PlainTextStorage.php',
     'Kirby\\Content\\Storage' => $baseDir . '/src/Content/Storage.php',
