@@ -30,6 +30,8 @@ class FormTest extends TestCase
 
 		$this->model = $this->app->page('test');
 		$this->setUpTmp();
+
+		Field::$setups = [];
 	}
 
 	public function tearDown(): void

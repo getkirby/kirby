@@ -10,6 +10,83 @@ use Kirby\Form\Fields;
 
 class BlocksFieldTest extends TestCase
 {
+	public function testApi()
+	{
+		$field = $this->field('blocks');
+
+		$routes = $field->api();
+
+		$this->assertIsArray($routes);
+		$this->assertCount(4, $routes);
+	}
+
+	public function testApiUUID()
+	{
+		$field = $this->field('blocks');
+		$route = $field->api()[0];
+
+		$response = $route['action']();
+
+		$this->assertIsArray($response);
+		$this->assertArrayHasKey('uuid', $response);
+	}
+
+	public function testApiPaste()
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'html' => '<p>Test</p>'
+				]
+			]
+		]);
+
+		$field = $this->field('blocks');
+		$route = $field->api()[1];
+
+		$response = $route['action']();
+
+		$this->assertCount(1, $response);
+		$this->assertSame(['text' => '<p>Test</p>'], $response[0]['content']);
+		$this->assertFalse($response[0]['isHidden']);
+		$this->assertSame('text', $response[0]['type']);
+	}
+
+	public function testApiPasteFieldsets()
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'html' => '<h1>Hello World</h1><p>Test</p><h6>Sincerely</h6>'
+				]
+			]
+		]);
+
+		$field = $this->field('blocks', ['fieldsets' => ['heading']]);
+		$route = $field->api()[1];
+
+		$response = $route['action']();
+
+		$this->assertCount(2, $response);
+		$this->assertSame(['level' => 'h1', 'text' => 'Hello World'], $response[0]['content']);
+		$this->assertSame('heading', $response[0]['type']);
+		$this->assertSame(['level' => 'h6', 'text' => 'Sincerely'], $response[1]['content']);
+		$this->assertSame('heading', $response[1]['type']);
+	}
+
+	public function testApiFieldset()
+	{
+		$field = $this->field('blocks');
+		$route = $field->api()[2];
+
+		$response = $route['action']('text');
+
+		$this->assertSame(['text' => ''], $response['content']);
+		$this->assertArrayHasKey('id', $response);
+		$this->assertFalse($response['isHidden']);
+		$this->assertSame('text', $response['type']);
+	}
+
 	public function testDefaultProps()
 	{
 		$field = $this->field('blocks', []);
@@ -201,83 +278,6 @@ class BlocksFieldTest extends TestCase
 		]);
 
 		$this->assertTrue($field->isValid());
-	}
-
-	public function testRoutes()
-	{
-		$field = $this->field('blocks');
-
-		$routes = $field->routes();
-
-		$this->assertIsArray($routes);
-		$this->assertCount(4, $routes);
-	}
-
-	public function testRouteUUID()
-	{
-		$field = $this->field('blocks');
-		$route = $field->routes()[0];
-
-		$response = $route['action']();
-
-		$this->assertIsArray($response);
-		$this->assertArrayHasKey('uuid', $response);
-	}
-
-	public function testRoutePaste()
-	{
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'html' => '<p>Test</p>'
-				]
-			]
-		]);
-
-		$field = $this->field('blocks');
-		$route = $field->routes()[1];
-
-		$response = $route['action']();
-
-		$this->assertCount(1, $response);
-		$this->assertSame(['text' => '<p>Test</p>'], $response[0]['content']);
-		$this->assertFalse($response[0]['isHidden']);
-		$this->assertSame('text', $response[0]['type']);
-	}
-
-	public function testRoutePasteFieldsets()
-	{
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'html' => '<h1>Hello World</h1><p>Test</p><h6>Sincerely</h6>'
-				]
-			]
-		]);
-
-		$field = $this->field('blocks', ['fieldsets' => ['heading']]);
-		$route = $field->routes()[1];
-
-		$response = $route['action']();
-
-		$this->assertCount(2, $response);
-		$this->assertSame(['level' => 'h1', 'text' => 'Hello World'], $response[0]['content']);
-		$this->assertSame('heading', $response[0]['type']);
-		$this->assertSame(['level' => 'h6', 'text' => 'Sincerely'], $response[1]['content']);
-		$this->assertSame('heading', $response[1]['type']);
-	}
-
-	public function testRouteFieldset()
-	{
-		$field = $this->field('blocks');
-		$route = $field->routes()[2];
-
-		$response = $route['action']('text');
-
-		$this->assertSame(['text' => ''], $response['content']);
-		$this->assertArrayHasKey('id', $response);
-		$this->assertFalse($response['isHidden']);
-		$this->assertSame('text', $response['type']);
 	}
 
 	public function testToStoredValue()

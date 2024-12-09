@@ -6,7 +6,7 @@ use Closure;
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
-use Kirby\Form\Form;
+use Kirby\Form\Reform;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\A;
 
@@ -41,17 +41,13 @@ abstract class Model
 		$changes = [];
 
 		if ($version->exists('current') === true) {
-			$changes = $version->content('current')->toArray();
+			$changes = $version->read('current');
 		}
 
-		// create a form which will collect the latest values for the model,
-		// but also pass along unpublished changes as overwrites
-		return Form::for(
-			model: $this->model,
-			props: [
-				'values' => $changes
-			]
-		)->values();
+		return [
+			...$this->originals(),
+			...$changes
+		];
 	}
 
 	/**
@@ -107,6 +103,14 @@ abstract class Model
 			'link'  => $this->url(true),
 			'text'  => $this->model->id(),
 		];
+	}
+
+	public function form(): Reform
+	{
+		return new Reform(
+			model: $this->model,
+			language: 'current',
+		);
 	}
 
 	/**
@@ -336,7 +340,7 @@ abstract class Model
 	 */
 	public function originals(): array
 	{
-		return Form::for(model: $this->model)->values();
+		return $this->model->version('latest')->read('current');
 	}
 
 	/**
@@ -376,15 +380,22 @@ abstract class Model
 		$request   = $this->model->kirby()->request();
 		$tabs      = $blueprint->tabs();
 		$tab       = $blueprint->tab($request->get('tab')) ?? $tabs[0] ?? null;
+		$form      = $this->form();
+
+		$originals = $this->originals();
+		$content = [
+			...$originals,
+			...$this->content()
+		];
 
 		$props = [
 			'api'         => $link,
 			'buttons'     => fn () => $this->buttons(),
-			'content'     => (object)$this->content(),
+			'content'     => (object)$form->fill($content)->toFormValues(),
 			'id'          => $this->model->id(),
 			'link'        => $link,
 			'lock'        => $this->model->lock()->toArray(),
-			'originals'   => (object)$this->originals(),
+			'originals'   => (object)$form->fill($originals)->toFormValues(),
 			'permissions' => $this->model->permissions()->toArray(),
 			'tabs'        => $tabs,
 			'uuid'        => fn () => $this->model->uuid()?->toString()
