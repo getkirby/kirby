@@ -21,6 +21,8 @@
 	"copy": "Kopijuoti",
 	"copy.all": "Kopijuoti visus",
 	"copy.success": "{count} nukopijuota!",
+	"copy.success.multiple": "{count} nukopijuota!",
+	"copy.url": "Copy URL",
 	"create": "Sukurti",
 	"custom": "Custom",
 
@@ -90,6 +92,12 @@
 
 	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
 
+	"error.content.lock.delete": "The version is locked and cannot be deleted",
+	"error.content.lock.move": "The source version is locked and cannot be moved",
+	"error.content.lock.publish": "This version is already published",
+	"error.content.lock.replace": "The version is locked and cannot be replaced",
+	"error.content.lock.update": "The version is locked and cannot be updated",
+
 	"error.email.preset.notFound": "El. pašto paruoštukas \"{name}\" nerastas",
 
 	"error.field.converter.invalid": "Neteisingas konverteris \"{converter}\"",
@@ -118,6 +126,7 @@
 	"error.file.name.missing": "Failo pavadinimas negali būti tuščias",
 	"error.file.notFound": "Failas \"{filename}\" nerastas",
 	"error.file.orientation": "Failo orientacija turi būti \"{orientation}\"",
+	"error.file.sort.permission": "You are not allowed to change the sorting of \"{filename}\"",
 	"error.file.type.forbidden": "Jūs neturite teisės įkelti {type} tipo failų",
 	"error.file.type.invalid": "Neteisingas failo tipas: {type}",
 	"error.file.undefined": "Failas nerastas",
@@ -168,6 +177,7 @@
 	"error.page.move.ancestor": "Puslapio negalima perkelti į save patį",
 	"error.page.move.directory": "The page directory cannot be moved",
 	"error.page.move.duplicate": "A sub page with the URL appendix \"{slug}\" already exists",
+	"error.page.move.noSections": "The page \"{parent}\" cannot be a parent of any page because it lacks any pages sections in its blueprint",
 	"error.page.move.notFound": "The moved page could not be found",
 	"error.page.move.permission": "You are not allowed to move \"{slug}\"",
 	"error.page.move.template": "The \"{template}\" template is not accepted as a subpage of \"{parent}\"",
@@ -297,6 +307,9 @@
 	"field.blocks.heading.name": "Antraštė",
 	"field.blocks.heading.text": "Tekstas",
 	"field.blocks.heading.placeholder": "Antraštė ...",
+	"field.blocks.figure.back.plain": "Plain",
+	"field.blocks.figure.back.pattern.light": "Pattern (light)",
+	"field.blocks.figure.back.pattern.dark": "Pattern (dark)",
 	"field.blocks.image.alt": "Alternatyvus tekstas",
 	"field.blocks.image.caption": "Aprašymas",
 	"field.blocks.image.crop": "Kirpti",
@@ -334,6 +347,7 @@
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
 	"field.files.empty": "Pasirinkti",
+	"field.files.empty.single": "No file selected yet",
 
 	"field.layout.change": "Change layout",
 	"field.layout.delete": "Pašalinti eilutę",
@@ -345,12 +359,14 @@
 	"field.object.empty": "Dar nėra informacijos",
 
 	"field.pages.empty": "Dar nėra puslapių",
+	"field.pages.empty.single": "No page selected yet",
 
 	"field.structure.delete.confirm": "Ar tikrai norite pašalinti šią eilutę?",
 	"field.structure.delete.confirm.all": "Ar tikrai norite išrtinti visus įrašus?",
 	"field.structure.empty": "Dar nėra įrašų",
 
 	"field.users.empty": "Dar nėra vartotojų",
+	"field.users.empty.single": "No user selected yet",
 
 	"fields.empty": "No fields yet",
 
@@ -368,6 +384,13 @@
 	"files.empty": "Įkelti",
 
 	"filter": "Filter",
+
+	"form.discard": "Discard changes",
+	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
+	"form.locked": "This content is disabled for you as it is currently edited by another user",
+	"form.unsaved": "The current changes have not yet been saved",
+	"form.preview": "Preview changes",
+	"form.preview.draft": "Preview draft",
 
 	"hide": "Paslėpti",
 	"hour": "Valanda",
@@ -444,6 +467,8 @@
 	"license.status.missing.bubble": "Pasiruošę paleisti naują svetainę?",
 	"license.status.missing.info": "Nėra galiojančios licencijos",
 	"license.status.missing.label": "Prašome aktyvuoti jūsų licenciją",
+	"license.status.unknown.info": "The license status is unknown",
+	"license.status.unknown.label": "Unknown license",
 	"license.manage": "Valdyti savo licencijas",
 	"license.purchased": "Nupirkta",
 	"license.success": "Ačiū, kad palaikote Kirby",
@@ -456,6 +481,9 @@
 
 	"lock.unsaved": "Neišsaugoti pakeitimai",
 	"lock.unsaved.empty": "Nebeliko neišsaugotų pakeitimų",
+	"lock.unsaved.files": "Unsaved files",
+	"lock.unsaved.pages": "Unsaved pages",
+	"lock.unsaved.users": "Unsaved accounts",
 	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Atrakinti",
 	"lock.unlock.submit": "Unlock and overwrite unsaved changes by <strong>{email}</strong>",
@@ -578,6 +606,10 @@
 	"plugins": "Įskiepai",
 	"prev": "Ankstesnis",
 	"preview": "Peržiūra",
+
+	"publish": "Publish",
+	"published": "Paskelbti",
+
 	"remove": "Pašalinti",
 	"rename": "Pervadinti",
 	"renew": "Atnaujinti",
@@ -597,7 +629,9 @@
 	"role.nobody.title": "Niekas",
 
 	"save": "Išsaugoti",
+	"saved": "Saved",
 	"search": "Ieškoti",
+	"searching": "Searching",
 	"search.min": "Minimalus simbolių kiekis paieškai: {min}",
 	"search.all": "Parodyti visus {count} rezultatus",
 	"search.results.none": "Nėra rezultatų",
@@ -622,6 +656,7 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
+	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
@@ -646,6 +681,12 @@
 	"tel": "Phone",
 	"tel.placeholder": "+49123456789",
 	"template": "Puslapio šablonas",
+
+	"theme": "Theme",
+	"theme.light": "Lights on",
+	"theme.dark": "Lights off",
+	"theme.automatic": "Match system default",
+
 	"title": "Pavadinimas",
 	"today": "Šiandien",
 
@@ -715,10 +756,13 @@
 	"users": "Vartotojai",
 
 	"version": "Versija",
+	"version.changes": "Changed version",
+	"version.compare": "Compare versions",
 	"version.current": "Dabartinė versija",
 	"version.latest": "Naujausia versija",
 	"versionInformation": "Versijos informacija",
 
+	"view": "View",
 	"view.account": "Jūsų paskyra",
 	"view.installation": "Installation",
 	"view.languages": "Kalbos",

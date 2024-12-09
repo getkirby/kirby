@@ -21,6 +21,8 @@
 	"copy": "کپی",
 	"copy.all": "Copy all",
 	"copy.success": "{count} copied!",
+	"copy.success.multiple": "{count} copied!",
+	"copy.url": "Copy URL",
 	"create": "ایجاد",
 	"custom": "Custom",
 
@@ -90,6 +92,12 @@
 
 	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
 
+	"error.content.lock.delete": "The version is locked and cannot be deleted",
+	"error.content.lock.move": "The source version is locked and cannot be moved",
+	"error.content.lock.publish": "This version is already published",
+	"error.content.lock.replace": "The version is locked and cannot be replaced",
+	"error.content.lock.update": "The version is locked and cannot be updated",
+
 	"error.email.preset.notFound": "قالب ایمیل «{name}» پیدا نشد",
 
 	"error.field.converter.invalid": "مبدل «{converter}» نامعتبر است",
@@ -118,6 +126,7 @@
 	"error.file.name.missing": "نام فایل اجباری است",
 	"error.file.notFound": "فایل «{filename}» پیدا نشد.",
 	"error.file.orientation": "The orientation of the image must be \"{orientation}\"",
+	"error.file.sort.permission": "You are not allowed to change the sorting of \"{filename}\"",
 	"error.file.type.forbidden": "شما اجازه بارگذاری فایلهای «{type}» را ندارید",
 	"error.file.type.invalid": "Invalid file type: {type}",
 	"error.file.undefined": "\u0641\u0627\u06cc\u0644 \u0645\u0648\u0631\u062f \u0646\u0638\u0631 \u067e\u06cc\u062f\u0627 \u0646\u0634\u062f.",
@@ -168,6 +177,7 @@
 	"error.page.move.ancestor": "The page cannot be moved into itself",
 	"error.page.move.directory": "The page directory cannot be moved",
 	"error.page.move.duplicate": "A sub page with the URL appendix \"{slug}\" already exists",
+	"error.page.move.noSections": "The page \"{parent}\" cannot be a parent of any page because it lacks any pages sections in its blueprint",
 	"error.page.move.notFound": "The moved page could not be found",
 	"error.page.move.permission": "You are not allowed to move \"{slug}\"",
 	"error.page.move.template": "The \"{template}\" template is not accepted as a subpage of \"{parent}\"",
@@ -297,6 +307,9 @@
 	"field.blocks.heading.name": "Heading",
 	"field.blocks.heading.text": "Text",
 	"field.blocks.heading.placeholder": "Heading …",
+	"field.blocks.figure.back.plain": "Plain",
+	"field.blocks.figure.back.pattern.light": "Pattern (light)",
+	"field.blocks.figure.back.pattern.dark": "Pattern (dark)",
 	"field.blocks.image.alt": "Alternative text",
 	"field.blocks.image.caption": "Caption",
 	"field.blocks.image.crop": "Crop",
@@ -334,6 +347,7 @@
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
 	"field.files.empty": "فایلی انتخاب نشده است",
+	"field.files.empty.single": "No file selected yet",
 
 	"field.layout.change": "Change layout",
 	"field.layout.delete": "Delete layout",
@@ -345,12 +359,14 @@
 	"field.object.empty": "No information yet",
 
 	"field.pages.empty": "صفحه‌ای انتخاب نشده است",
+	"field.pages.empty.single": "No page selected yet",
 
 	"field.structure.delete.confirm": "\u0645\u062f\u062e\u0644 \u062c\u0627\u0631\u06cc \u062d\u0630\u0641 \u0634\u0648\u062f\u061f",
 	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
 	"field.structure.empty": "\u0645\u0648\u0631\u062f\u06cc \u0648\u062c\u0648\u062f \u0646\u062f\u0627\u0631\u062f.",
 
 	"field.users.empty": "کاربری انتخاب نشده است",
+	"field.users.empty.single": "No user selected yet",
 
 	"fields.empty": "No fields yet",
 
@@ -368,6 +384,13 @@
 	"files.empty": "فایلی موجود نیست",
 
 	"filter": "Filter",
+
+	"form.discard": "Discard changes",
+	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
+	"form.locked": "This content is disabled for you as it is currently edited by another user",
+	"form.unsaved": "The current changes have not yet been saved",
+	"form.preview": "Preview changes",
+	"form.preview.draft": "Preview draft",
 
 	"hide": "Hide",
 	"hour": "ساعت",
@@ -444,6 +467,8 @@
 	"license.status.missing.bubble": "Ready to launch your site?",
 	"license.status.missing.info": "No valid license",
 	"license.status.missing.label": "Please activate your license",
+	"license.status.unknown.info": "The license status is unknown",
+	"license.status.unknown.label": "Unknown license",
 	"license.manage": "Manage your licenses",
 	"license.purchased": "Purchased",
 	"license.success": "با تشکر از شما برای حمایت از کربی",
@@ -456,6 +481,9 @@
 
 	"lock.unsaved": "Unsaved changes",
 	"lock.unsaved.empty": "There are no more unsaved changes",
+	"lock.unsaved.files": "Unsaved files",
+	"lock.unsaved.pages": "Unsaved pages",
+	"lock.unsaved.users": "Unsaved accounts",
 	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Unlock",
 	"lock.unlock.submit": "Unlock and overwrite unsaved changes by <strong>{email}</strong>",
@@ -578,6 +606,10 @@
 	"plugins": "Plugins",
 	"prev": "قبلی",
 	"preview": "Preview",
+
+	"publish": "Publish",
+	"published": "منتشر شده",
+
 	"remove": "حذف",
 	"rename": "تغییر نام",
 	"renew": "Renew",
@@ -597,7 +629,9 @@
 	"role.nobody.title": "Nobody",
 
 	"save": "\u0630\u062e\u06cc\u0631\u0647",
+	"saved": "Saved",
 	"search": "جستجو",
+	"searching": "Searching",
 	"search.min": "Enter {min} characters to search",
 	"search.all": "Show all {count} results",
 	"search.results.none": "No results",
@@ -622,6 +656,7 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
+	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
@@ -646,6 +681,12 @@
 	"tel": "Phone",
 	"tel.placeholder": "+49123456789",
 	"template": "\u0642\u0627\u0644\u0628 \u0635\u0641\u062d\u0647",
+
+	"theme": "Theme",
+	"theme.light": "Lights on",
+	"theme.dark": "Lights off",
+	"theme.automatic": "Match system default",
+
 	"title": "عنوان",
 	"today": "امروز",
 
@@ -715,10 +756,13 @@
 	"users": "کاربران",
 
 	"version": "\u0646\u0633\u062e\u0647 \u0646\u0631\u0645 \u0627\u0641\u0632\u0627\u0631",
+	"version.changes": "Changed version",
+	"version.compare": "Compare versions",
 	"version.current": "Current version",
 	"version.latest": "Latest version",
 	"versionInformation": "Version information",
 
+	"view": "View",
 	"view.account": "حساب کاربری شما",
 	"view.installation": "\u0646\u0635\u0628 \u0648 \u0631\u0627\u0647 \u0627\u0646\u062f\u0627\u0632\u06cc",
 	"view.languages": "زبان‌ها",

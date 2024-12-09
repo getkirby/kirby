@@ -21,6 +21,8 @@
 	"copy": "Copiază",
 	"copy.all": "Copiază toate",
 	"copy.success": "Copiat {count}!",
+	"copy.success.multiple": "Copiat {count}!",
+	"copy.url": "Copy URL",
 	"create": "Creează",
 	"custom": "Personalizat",
 
@@ -90,6 +92,12 @@
 
 	"error.cache.type.invalid": "Tipul de cache \"{type}\" este nevalid",
 
+	"error.content.lock.delete": "The version is locked and cannot be deleted",
+	"error.content.lock.move": "The source version is locked and cannot be moved",
+	"error.content.lock.publish": "This version is already published",
+	"error.content.lock.replace": "The version is locked and cannot be replaced",
+	"error.content.lock.update": "The version is locked and cannot be updated",
+
 	"error.email.preset.notFound": "Preset-ul de e-mail \"{name}\" nu a fost găsit",
 
 	"error.field.converter.invalid": "Convertorul \"{converter}\" nu este valid",
@@ -118,6 +126,7 @@
 	"error.file.name.missing": "Numele fișierului nu poate fi gol",
 	"error.file.notFound": "Fișierul \"{filename}\" nu a fost găsit",
 	"error.file.orientation": "Orientarea imaginii trebuie să fie \"{orientation}\"",
+	"error.file.sort.permission": "You are not allowed to change the sorting of \"{filename}\"",
 	"error.file.type.forbidden": "Nu ai voie să încarci fișiere {type}",
 	"error.file.type.invalid": "Tip nevalid de fișier: {type}",
 	"error.file.undefined": "Fișierul nu a fost găsit",
@@ -168,6 +177,7 @@
 	"error.page.move.ancestor": "Pagina nu poate fi mutată în ea însăși",
 	"error.page.move.directory": "Directorul de pagini nu poate fi mutat",
 	"error.page.move.duplicate": "Există deja o sub-pagină cu apendicele URL \"{slug}\"",
+	"error.page.move.noSections": "The page \"{parent}\" cannot be a parent of any page because it lacks any pages sections in its blueprint",
 	"error.page.move.notFound": "Pagina mutată nu a fost găsită",
 	"error.page.move.permission": "Nu ai voie să muți \"{slug}\"",
 	"error.page.move.template": "Șablonul \"{template}\" nu este acceptat ca sub-pagină a \"{parent}\"",
@@ -297,6 +307,9 @@
 	"field.blocks.heading.name": "Subtitlu",
 	"field.blocks.heading.text": "Text",
 	"field.blocks.heading.placeholder": "Subtitlu …",
+	"field.blocks.figure.back.plain": "Plain",
+	"field.blocks.figure.back.pattern.light": "Pattern (light)",
+	"field.blocks.figure.back.pattern.dark": "Pattern (dark)",
 	"field.blocks.image.alt": "Text alternativ",
 	"field.blocks.image.caption": "Etichetă",
 	"field.blocks.image.crop": "Decupaj",
@@ -334,6 +347,7 @@
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
 	"field.files.empty": "Niciun fișier selectat deocamdată",
+	"field.files.empty.single": "No file selected yet",
 
 	"field.layout.change": "Schimbă aranjament",
 	"field.layout.delete": "Șterge aranjamentul",
@@ -345,12 +359,14 @@
 	"field.object.empty": "Nicio informație deocamdată",
 
 	"field.pages.empty": "Nicio pagină aleasă deocamdată",
+	"field.pages.empty.single": "No page selected yet",
 
 	"field.structure.delete.confirm": "Chiar vrei să ștergi acest rând?",
 	"field.structure.delete.confirm.all": "Chiar vrei să ștergi toate înregistrările?",
 	"field.structure.empty": "Nicio înregistrare deocamdată",
 
 	"field.users.empty": "Niciun utilizator ales deocamdată",
+	"field.users.empty.single": "No user selected yet",
 
 	"fields.empty": "Niciun câmp deocamdată",
 
@@ -368,6 +384,13 @@
 	"files.empty": "Niciun fișier deocamdată",
 
 	"filter": "Filtru",
+
+	"form.discard": "Discard changes",
+	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
+	"form.locked": "This content is disabled for you as it is currently edited by another user",
+	"form.unsaved": "The current changes have not yet been saved",
+	"form.preview": "Preview changes",
+	"form.preview.draft": "Preview draft",
 
 	"hide": "Ascunde",
 	"hour": "Ora",
@@ -444,6 +467,8 @@
 	"license.status.missing.bubble": "Sunteți pregătit să lansați site-ul?",
 	"license.status.missing.info": "Licență nevalidă",
 	"license.status.missing.label": "Vă rugăm să activați licența",
+	"license.status.unknown.info": "The license status is unknown",
+	"license.status.unknown.label": "Unknown license",
 	"license.manage": "Gestionează-ți licențele",
 	"license.purchased": "Achiziționat",
 	"license.success": "Mulțumim că susții Kirby",
@@ -456,6 +481,9 @@
 
 	"lock.unsaved": "Schimbări nesalvate",
 	"lock.unsaved.empty": "Nu mai există nicio schimbare nesalvată",
+	"lock.unsaved.files": "Unsaved files",
+	"lock.unsaved.pages": "Unsaved pages",
+	"lock.unsaved.users": "Unsaved accounts",
 	"lock.isLocked": "Schimbări nesalvate de {email}",
 	"lock.unlock": "Deblochează",
 	"lock.unlock.submit": "Deblochează și suprascrie schimbările nesalvate de <strong>{email}</strong>",
@@ -578,6 +606,10 @@
 	"plugins": "Plugin-uri",
 	"prev": "Precedenta",
 	"preview": "Previzualizează",
+
+	"publish": "Publish",
+	"published": "Publicate",
+
 	"remove": "Înlătură",
 	"rename": "Redenumește",
 	"renew": "Reînnoiți",
@@ -597,7 +629,9 @@
 	"role.nobody.title": "Nimeni",
 
 	"save": "Salveaz\u0103",
+	"saved": "Saved",
 	"search": "Caută",
+	"searching": "Searching",
 	"search.min": "Introdu {min} caractere pentru a căuta",
 	"search.all": "Afișați toate {count} rezultatele",
 	"search.results.none": "Niciun rezultat",
@@ -622,6 +656,7 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
+	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "Directorul de conținut pare să fie expus",
 	"system.issues.eol.kirby": "Versiunea instalată de Kirby a ajuns la sfârșitul vieții utile și nu va mai primi actualizări de securitate.",
 	"system.issues.eol.plugin": "Versiunea instalată a plugin-ului { plugin } a ajuns la sfârșitul vieții utile și nu va mai primi actualizări de securitate.",
@@ -646,6 +681,12 @@
 	"tel": "Telefon",
 	"tel.placeholder": "+40123456789",
 	"template": "Șablon",
+
+	"theme": "Theme",
+	"theme.light": "Lights on",
+	"theme.dark": "Lights off",
+	"theme.automatic": "Match system default",
+
 	"title": "Titlu",
 	"today": "Astăzi",
 
@@ -715,10 +756,13 @@
 	"users": "Utilizatori",
 
 	"version": "Versiune",
+	"version.changes": "Changed version",
+	"version.compare": "Compare versions",
 	"version.current": "Versiunea curentă",
 	"version.latest": "Ultima versiune",
 	"versionInformation": "Informații despre versiune",
 
+	"view": "View",
 	"view.account": "Contul t\u0103u",
 	"view.installation": "Instalare",
 	"view.languages": "Limbi",

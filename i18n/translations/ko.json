@@ -21,6 +21,8 @@
 	"copy": "복사",
 	"copy.all": "모두 복사",
 	"copy.success": "복사되었습니다. ({count})",
+	"copy.success.multiple": "복사되었습니다. ({count})",
+	"copy.url": "Copy URL",
 	"create": "등록",
 	"custom": "개인화",
 
@@ -90,6 +92,12 @@
 
 	"error.cache.type.invalid": "캐시 형식(({type})이 올바르지 않습니다.",
 
+	"error.content.lock.delete": "The version is locked and cannot be deleted",
+	"error.content.lock.move": "The source version is locked and cannot be moved",
+	"error.content.lock.publish": "This version is already published",
+	"error.content.lock.replace": "The version is locked and cannot be replaced",
+	"error.content.lock.update": "The version is locked and cannot be updated",
+
 	"error.email.preset.notFound": "기본 이메일 주소({name})가 없습니다.",
 
 	"error.field.converter.invalid": "컨버터({converter})가 올바르지 않습니다.",
@@ -118,6 +126,7 @@
 	"error.file.name.missing": "파일명을 입력하세요.",
 	"error.file.notFound": "파일({filename})이 없습니다.",
 	"error.file.orientation": "이미지의 비율({orientation})을 확인하세요.",
+	"error.file.sort.permission": "You are not allowed to change the sorting of \"{filename}\"",
 	"error.file.type.forbidden": "이 형식({type})의 파일을 업로드할 권한이 없습니다.",
 	"error.file.type.invalid": "파일 형식({type})이 올바르지 않습니다.",
 	"error.file.undefined": "\ud30c\uc77c\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.",
@@ -168,6 +177,7 @@
 	"error.page.move.ancestor": "해당 페이지로 이동할 수 없습니다.",
 	"error.page.move.directory": "페이지 디렉토리는 이동할 수 없습니다.",
 	"error.page.move.duplicate": "고유 주소({slug})가 같은 서브 페이지가 있습니다.",
+	"error.page.move.noSections": "The page \"{parent}\" cannot be a parent of any page because it lacks any pages sections in its blueprint",
 	"error.page.move.notFound": "이동된 페이지를 찾을 수 없습니다.",
 	"error.page.move.permission": "페이지({slug})를 이동할 권한이 없습니다.",
 	"error.page.move.template": "이 템플릿({template})은 이 페이지({parent})의 서브 페이지로 이동할 수 없습니다.",
@@ -297,6 +307,9 @@
 	"field.blocks.heading.name": "제목",
 	"field.blocks.heading.text": "제목",
 	"field.blocks.heading.placeholder": "제목",
+	"field.blocks.figure.back.plain": "Plain",
+	"field.blocks.figure.back.pattern.light": "Pattern (light)",
+	"field.blocks.figure.back.pattern.dark": "Pattern (dark)",
 	"field.blocks.image.alt": "대체 텍스트",
 	"field.blocks.image.caption": "캡션",
 	"field.blocks.image.crop": "자르기",
@@ -334,6 +347,7 @@
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
 	"field.files.empty": "선택한 파일이 없습니다.",
+	"field.files.empty.single": "No file selected yet",
 
 	"field.layout.change": "레이아웃 변경",
 	"field.layout.delete": "레이아웃 삭제",
@@ -345,12 +359,14 @@
 	"field.object.empty": "정보가 없습니다.",
 
 	"field.pages.empty": "선택한 페이지가 없습니다.",
+	"field.pages.empty.single": "No page selected yet",
 
 	"field.structure.delete.confirm": "이 항목을 삭제할까요?",
 	"field.structure.delete.confirm.all": "모든 항목을 삭제할까요?",
 	"field.structure.empty": "항목이 없습니다.",
 
 	"field.users.empty": "선택한 사용자가 없습니다.",
+	"field.users.empty.single": "No user selected yet",
 
 	"fields.empty": "필드가 없습니다.",
 
@@ -368,6 +384,13 @@
 	"files.empty": "파일이 없습니다.",
 
 	"filter": "필터",
+
+	"form.discard": "Discard changes",
+	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
+	"form.locked": "This content is disabled for you as it is currently edited by another user",
+	"form.unsaved": "The current changes have not yet been saved",
+	"form.preview": "Preview changes",
+	"form.preview.draft": "Preview draft",
 
 	"hide": "숨기기",
 	"hour": "시",
@@ -444,6 +467,8 @@
 	"license.status.missing.bubble": "사이트를 공개합니다.",
 	"license.status.missing.info": "유효한 라이선스가 없습니다.",
 	"license.status.missing.label": "라이선스를 활성화하세요.",
+	"license.status.unknown.info": "The license status is unknown",
+	"license.status.unknown.label": "Unknown license",
 	"license.manage": "라이선스 관리",
 	"license.purchased": "구입했습니다.",
 	"license.success": "Kirby와 함께해주셔서 감사합니다.",
@@ -456,6 +481,9 @@
 
 	"lock.unsaved": "저장되지 않은 항목이 있습니다.",
 	"lock.unsaved.empty": "모든 페이지를 저장했습니다.",
+	"lock.unsaved.files": "Unsaved files",
+	"lock.unsaved.pages": "Unsaved pages",
+	"lock.unsaved.users": "Unsaved accounts",
 	"lock.isLocked": "사용자({email})의 변경 사항이 저장되지 않았습니다.",
 	"lock.unlock": "잠금 해제",
 	"lock.unlock.submit": "사용자({email})의 저장되지 않은 변경 사항을 해제하고 덮어쓰기",
@@ -578,6 +606,10 @@
 	"plugins": "플러그인",
 	"prev": "이전",
 	"preview": "미리 보기",
+
+	"publish": "Publish",
+	"published": "발행",
+
 	"remove": "삭제",
 	"rename": "이름 변경",
 	"renew": "갱신",
@@ -597,7 +629,9 @@
 	"role.nobody.title": "사용자가 없습니다.",
 
 	"save": "\uc800\uc7a5",
+	"saved": "Saved",
 	"search": "검색",
+	"searching": "Searching",
 	"search.min": "{min}자 이상 입력하세요.",
 	"search.all": "모든 결과({count}) 보기",
 	"search.results.none": "해당하는 결과가 없습니다.",
@@ -622,6 +656,7 @@
 
 	"system.info.copy": "정보 복사",
 	"system.info.copied": "시스템 정보가 복사되었습니다.",
+	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "<code>/content</code> 폴더의 권한을 확인하세요.",
 	"system.issues.eol.kirby": "설치된 Kirby 버전이 만료되었습니다. 더 이상 보안 업데이트를 받을 수 없습니다.",
 	"system.issues.eol.plugin": "설치된 플러그인({plugin}의 지원이 종료되었습니다. 더 이상 보안 업데이트를 받을 수 없습니다.",
@@ -646,6 +681,12 @@
 	"tel": "Phone",
 	"tel.placeholder": "+49123456789",
 	"template": "\ud15c\ud50c\ub9bf",
+
+	"theme": "Theme",
+	"theme.light": "Lights on",
+	"theme.dark": "Lights off",
+	"theme.automatic": "Match system default",
+
 	"title": "제목",
 	"today": "오늘",
 
@@ -715,10 +756,13 @@
 	"users": "사용자",
 
 	"version": "버전",
+	"version.changes": "Changed version",
+	"version.compare": "Compare versions",
 	"version.current": "현재 버전",
 	"version.latest": "최신 버전",
 	"versionInformation": "버전 정보",
 
+	"view": "View",
 	"view.account": "계정",
 	"view.installation": "\uc124\uce58",
 	"view.languages": "언어",
