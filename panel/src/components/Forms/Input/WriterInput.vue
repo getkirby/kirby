@@ -6,7 +6,6 @@
 		:data-disabled="disabled"
 		:data-empty="isEmpty"
 		:data-placeholder="placeholder"
-		:data-toolbar-inline="Boolean(toolbar.inline ?? true)"
 		:spellcheck="spellcheck"
 		:style="$attrs.style"
 	>

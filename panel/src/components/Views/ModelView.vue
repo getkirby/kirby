@@ -55,9 +55,6 @@ export default {
 		hasChanges() {
 			return length(this.changes) > 0;
 		},
-		hasTabs() {
-			return this.tabs.length > 1;
-		},
 		isLocked() {
 			return this.lock.isLocked;
 		},

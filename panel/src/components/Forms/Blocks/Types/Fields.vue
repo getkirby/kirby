@@ -78,13 +78,10 @@ export default {
 </script>
 
 <style>
-/** TODO: .k-block-container:has(.k-block-type-fields) */
 .k-block-container.k-block-container-type-fields {
 	padding-block: 0;
 }
 
-/** TODO: .k-block-container:not([data-hidden="true"])
-	.k-block-type-fields:has(.k-block-type-fields-form) */
 .k-block-container:not([data-hidden="true"])
 	.k-block-type-fields
 	> :not([data-collapsed="true"]) {
@@ -107,8 +104,6 @@ export default {
 	border-radius: var(--rounded-sm);
 	container: column / inline-size;
 }
-/** TODO: .k-block-container[data-hidden="true"]:has(.k-block-type-fields)
-	:where(.k-drawer-tabs, .k-block-type-fields-form) */
 .k-block-container-type-fields[data-hidden="true"]
 	:where(.k-drawer-tabs, .k-block-type-fields-form) {
 	display: none;

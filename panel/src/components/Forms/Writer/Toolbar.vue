@@ -338,15 +338,13 @@ export default {
 </script>
 
 <style>
-/** TODO: .k-writer-input:has(.k-toolbar:not([data-inline="true"])) */
-.k-writer-input:not([data-toolbar-inline="true"]):not([data-disabled="true"]) {
+.k-writer-input:has(.k-toolbar:not([data-inline="true"])) {
 	grid-template-areas: "topbar" "content";
 	grid-template-rows: var(--toolbar-size) 1fr;
 	gap: 0;
 }
 
-/** TODO: .k-writer-toolbar:not(:has(~ :focus-within)) */
-.k-writer-input:not(:focus-within) {
+.k-writer-toolbar:not(:has(~ :focus-within)) {
 	--toolbar-current: currentColor;
 }
 
