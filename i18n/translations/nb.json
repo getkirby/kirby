@@ -21,6 +21,8 @@
 	"copy": "Kopier",
 	"copy.all": "Kopier alle",
 	"copy.success": "{count} kopiert!",
+	"copy.success.multiple": "{count} copied!",
+	"copy.url": "Copy URL",
 	"create": "Opprett",
 	"custom": "Egendefinert",
 
@@ -90,6 +92,12 @@
 
 	"error.cache.type.invalid": "Ugyldig type cache \"{type}\"",
 
+	"error.content.lock.delete": "The version is locked and cannot be deleted",
+	"error.content.lock.move": "The source version is locked and cannot be moved",
+	"error.content.lock.publish": "This version is already published",
+	"error.content.lock.replace": "The version is locked and cannot be replaced",
+	"error.content.lock.update": "The version is locked and cannot be updated",
+
 	"error.email.preset.notFound": "E-postinnstillingen \"{name}\" ble ikke funnet",
 
 	"error.field.converter.invalid": "Ugyldig omformer \"{converter}\"",
@@ -118,6 +126,7 @@
 	"error.file.name.missing": "Filnavnet kan ikke være tomt",
 	"error.file.notFound": "Filen \"{filename}\" kan ikke bli funnet",
 	"error.file.orientation": "Bilderetningen må være \"{orientation}\"",
+	"error.file.sort.permission": "You are not allowed to change the sorting of \"{filename}\"",
 	"error.file.type.forbidden": "Du har ikke lov til å laste opp filer av typen {type}",
 	"error.file.type.invalid": "Ugyldig filtype: {type}",
 	"error.file.undefined": "Finner ikke filen",
@@ -168,6 +177,7 @@
 	"error.page.move.ancestor": "Siden kan ikke flyttes inn i seg selv",
 	"error.page.move.directory": "Sidestrukturen kan ikke flyttes",
 	"error.page.move.duplicate": "En underside med url banen \"{slug}\" finnes allerede",
+	"error.page.move.noSections": "The page \"{parent}\" cannot be a parent of any page because it lacks any pages sections in its blueprint",
 	"error.page.move.notFound": "Den flyttede siden kan ikke bli funnet",
 	"error.page.move.permission": "You are not allowed to move \"{slug}\"",
 	"error.page.move.template": "\"{template}\" malen er ikke akseptert som underside av \"{parent}\"",
@@ -297,6 +307,9 @@
 	"field.blocks.heading.name": "Overskrift",
 	"field.blocks.heading.text": "Tekst",
 	"field.blocks.heading.placeholder": "Overskrift…",
+	"field.blocks.figure.back.plain": "Plain",
+	"field.blocks.figure.back.pattern.light": "Pattern (light)",
+	"field.blocks.figure.back.pattern.dark": "Pattern (dark)",
 	"field.blocks.image.alt": "Alternativ tekst",
 	"field.blocks.image.caption": "Caption",
 	"field.blocks.image.crop": "Beskjær",
@@ -334,6 +347,7 @@
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
 	"field.files.empty": "Ingen filer har blitt valgt",
+	"field.files.empty.single": "No file selected yet",
 
 	"field.layout.change": "Endre layout",
 	"field.layout.delete": "Slett layout",
@@ -345,12 +359,14 @@
 	"field.object.empty": "Ingen informasjon enda",
 
 	"field.pages.empty": "Ingen side har blitt valgt",
+	"field.pages.empty.single": "No page selected yet",
 
 	"field.structure.delete.confirm": "\u00d8nsker du virkelig \u00e5 slette denne oppf\u00f8ringen?",
 	"field.structure.delete.confirm.all": "Vil du virkelig slette alle oppføringer?",
 	"field.structure.empty": "Ingen oppf\u00f8ringer enda",
 
 	"field.users.empty": "Ingen bruker har blitt valgt",
+	"field.users.empty.single": "No user selected yet",
 
 	"fields.empty": "Ingen felt enda",
 
@@ -368,6 +384,13 @@
 	"files.empty": "Ingen filer ennå",
 
 	"filter": "Filter",
+
+	"form.discard": "Discard changes",
+	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
+	"form.locked": "This content is disabled for you as it is currently edited by another user",
+	"form.unsaved": "The current changes have not yet been saved",
+	"form.preview": "Preview changes",
+	"form.preview.draft": "Preview draft",
 
 	"hide": "Skjul",
 	"hour": "Tid",
@@ -444,6 +467,8 @@
 	"license.status.missing.bubble": "Klar til å lansere din nettside?",
 	"license.status.missing.info": "Ingen gyldig lisens",
 	"license.status.missing.label": "Vennligst skriv inn din lisenskode",
+	"license.status.unknown.info": "The license status is unknown",
+	"license.status.unknown.label": "Unknown license",
 	"license.manage": "Håndter dine lisenser",
 	"license.purchased": "Kjøpt",
 	"license.success": "Takk for at du støtter Kirby",
@@ -456,6 +481,9 @@
 
 	"lock.unsaved": "Ulagrede endringer",
 	"lock.unsaved.empty": "Det er ingen flere ulagrede endringer",
+	"lock.unsaved.files": "Unsaved files",
+	"lock.unsaved.pages": "Unsaved pages",
+	"lock.unsaved.users": "Unsaved accounts",
 	"lock.isLocked": "Ulagrede endringer av {email}",
 	"lock.unlock": "Lås opp",
 	"lock.unlock.submit": "Lås opp og overskriv ulagrede endringer fra <strong>{email}</strong>",
@@ -578,6 +606,10 @@
 	"plugins": "Plugins",
 	"prev": "Forrige",
 	"preview": "Forhåndsvisning",
+
+	"publish": "Publish",
+	"published": "Publisert",
+
 	"remove": "Fjern",
 	"rename": "Endre navn",
 	"renew": "Fornye",
@@ -597,7 +629,9 @@
 	"role.nobody.title": "Ingen",
 
 	"save": "Lagre",
+	"saved": "Saved",
 	"search": "Søk",
+	"searching": "Searching",
 	"search.min": "Skriv inn {min} tegn for å søke",
 	"search.all": "Vis alle {count} resultat",
 	"search.results.none": "Ingen resultater",
@@ -622,6 +656,7 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
+	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "content-mappen ser ut til å være eksponert",
 	"system.issues.eol.kirby": "Din installerte Kirby versjon har nådd sitt end-of-life, og vil ikke lenger motta sikkerhetsoppdateringer",
 	"system.issues.eol.plugin": "Din installerte plugin { plugin } har nådd sitt end-of-life og vil ikke lenger motta sikkerhetsoppdateringer",
@@ -646,6 +681,12 @@
 	"tel": "Telefon",
 	"tel.placeholder": "+49123456789",
 	"template": "Mal",
+
+	"theme": "Theme",
+	"theme.light": "Lights on",
+	"theme.dark": "Lights off",
+	"theme.automatic": "Match system default",
+
 	"title": "Tittel",
 	"today": "I dag",
 
@@ -715,10 +756,13 @@
 	"users": "Brukere",
 
 	"version": "Kirby versjon",
+	"version.changes": "Changed version",
+	"version.compare": "Compare versions",
 	"version.current": "Nåværende versjon",
 	"version.latest": "Siste versjon",
 	"versionInformation": "Versjonsinformasjon",
 
+	"view": "View",
 	"view.account": "Din konto",
 	"view.installation": "Installasjon",
 	"view.languages": "Språk",

@@ -21,6 +21,8 @@
 	"copy": "Kopiera",
 	"copy.all": "Kopiera alla",
 	"copy.success": "{count} kopierad!",
+	"copy.success.multiple": "{count} kopierad!",
+	"copy.url": "Copy URL",
 	"create": "Skapa",
 	"custom": "Anpassad",
 
@@ -90,6 +92,12 @@
 
 	"error.cache.type.invalid": "Ogiltig cachetyp \"{type}\"",
 
+	"error.content.lock.delete": "The version is locked and cannot be deleted",
+	"error.content.lock.move": "The source version is locked and cannot be moved",
+	"error.content.lock.publish": "This version is already published",
+	"error.content.lock.replace": "The version is locked and cannot be replaced",
+	"error.content.lock.update": "The version is locked and cannot be updated",
+
 	"error.email.preset.notFound": "E-postförinställningen \"{name}\" kan inte hittas",
 
 	"error.field.converter.invalid": "Ogiltig omvandlare \"{converter}\"",
@@ -118,6 +126,7 @@
 	"error.file.name.missing": "Filnamnet får inte vara tomt",
 	"error.file.notFound": "Filen  \"{filename}\" kan ej hittas",
 	"error.file.orientation": "Bildens orientering måste vara \"{orientation}\"",
+	"error.file.sort.permission": "You are not allowed to change the sorting of \"{filename}\"",
 	"error.file.type.forbidden": "Du har inte behörighet att ladda upp filer av typen {type}",
 	"error.file.type.invalid": "Ogiltig filtyp: {type}",
 	"error.file.undefined": "Filen kan inte hittas",
@@ -168,6 +177,7 @@
 	"error.page.move.ancestor": "Sidan kan inte flyttas in i sig själv",
 	"error.page.move.directory": "Sidans mapp kan inte flyttas",
 	"error.page.move.duplicate": "En undersida med URL-appendixen \"{slug}\" existerar redan",
+	"error.page.move.noSections": "The page \"{parent}\" cannot be a parent of any page because it lacks any pages sections in its blueprint",
 	"error.page.move.notFound": "Den flyttade sidan kunde inte hittas",
 	"error.page.move.permission": "Du saknar behörighet för att flytta \"{slug}\"",
 	"error.page.move.template": "Mallen \"{template}\" accepteras inte som en undersida till \"{parent}\"",
@@ -297,6 +307,9 @@
 	"field.blocks.heading.name": "Rubrik",
 	"field.blocks.heading.text": "Text",
 	"field.blocks.heading.placeholder": "Rubrik …",
+	"field.blocks.figure.back.plain": "Plain",
+	"field.blocks.figure.back.pattern.light": "Pattern (light)",
+	"field.blocks.figure.back.pattern.dark": "Pattern (dark)",
 	"field.blocks.image.alt": "Alternativ text",
 	"field.blocks.image.caption": "Rubrik",
 	"field.blocks.image.crop": "Beskär",
@@ -334,6 +347,7 @@
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
 	"field.files.empty": "Inga filer valda än",
+	"field.files.empty.single": "No file selected yet",
 
 	"field.layout.change": "Ändra layout",
 	"field.layout.delete": "Radera layout",
@@ -345,12 +359,14 @@
 	"field.object.empty": "Ingen information ännu",
 
 	"field.pages.empty": "Inga sidor valda än",
+	"field.pages.empty.single": "No page selected yet",
 
 	"field.structure.delete.confirm": "Vill du verkligen radera denna rad?",
 	"field.structure.delete.confirm.all": "Vill du verkligen radera alla poster?",
 	"field.structure.empty": "Inga poster än",
 
 	"field.users.empty": "Inga användare valda än",
+	"field.users.empty.single": "No user selected yet",
 
 	"fields.empty": "Inga fält ännu",
 
@@ -368,6 +384,13 @@
 	"files.empty": "Inga filer än",
 
 	"filter": "Filter",
+
+	"form.discard": "Discard changes",
+	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
+	"form.locked": "This content is disabled for you as it is currently edited by another user",
+	"form.unsaved": "The current changes have not yet been saved",
+	"form.preview": "Preview changes",
+	"form.preview.draft": "Preview draft",
 
 	"hide": "Göm",
 	"hour": "Timme",
@@ -444,6 +467,8 @@
 	"license.status.missing.bubble": "Är du redo att lansera din webbplats?",
 	"license.status.missing.info": "Ingen giltig licens",
 	"license.status.missing.label": "Vänligen aktivera din licens",
+	"license.status.unknown.info": "The license status is unknown",
+	"license.status.unknown.label": "Unknown license",
 	"license.manage": "Hantera dina licenser",
 	"license.purchased": "Köpt",
 	"license.success": "Tack för att du stödjer Kirby",
@@ -456,6 +481,9 @@
 
 	"lock.unsaved": "Osparade ändringar",
 	"lock.unsaved.empty": "Det finns inga fler osparade ändringar",
+	"lock.unsaved.files": "Unsaved files",
+	"lock.unsaved.pages": "Unsaved pages",
+	"lock.unsaved.users": "Unsaved accounts",
 	"lock.isLocked": "Osparade ändringar av {email}",
 	"lock.unlock": "Lås upp",
 	"lock.unlock.submit": "Lås upp och skriv över osparade ändringar av <strong>{email}</strong>",
@@ -578,6 +606,10 @@
 	"plugins": "Tillägg",
 	"prev": "Föregående",
 	"preview": "Förhandsgranska",
+
+	"publish": "Publish",
+	"published": "Publicerade",
+
 	"remove": "Ta bort",
 	"rename": "Byt namn",
 	"renew": "Förnya",
@@ -597,7 +629,9 @@
 	"role.nobody.title": "Ingen",
 
 	"save": "Spara",
+	"saved": "Saved",
 	"search": "Sök",
+	"searching": "Searching",
 	"search.min": "Ange {min} tecken för att söka",
 	"search.all": "Visa alla {count} resultat",
 	"search.results.none": "Inga träffar",
@@ -622,6 +656,7 @@
 
 	"system.info.copy": "Kopiera info",
 	"system.info.copied": "Systeminformation kopierad",
+	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "Mappen content verkar vara exponerad",
 	"system.issues.eol.kirby": "Din installerade Kirby-version har nått slutet av sin livscykel och kommer inte att få fler säkerhetsuppdateringar",
 	"system.issues.eol.plugin": "Den installerade versionen av tillägget { plugin } har nått slutet på sin livscykel och kommer inte att få fler säkerhetsuppdateringar.",
@@ -646,6 +681,12 @@
 	"tel": "Telefon",
 	"tel.placeholder": "+46701234567",
 	"template": "Mall",
+
+	"theme": "Theme",
+	"theme.light": "Lights on",
+	"theme.dark": "Lights off",
+	"theme.automatic": "Match system default",
+
 	"title": "Titel",
 	"today": "Idag",
 
@@ -715,10 +756,13 @@
 	"users": "Användare",
 
 	"version": "Version",
+	"version.changes": "Changed version",
+	"version.compare": "Compare versions",
 	"version.current": "Aktuell version",
 	"version.latest": "Senaste version",
 	"versionInformation": "Versionsinformation",
 
+	"view": "View",
 	"view.account": "Ditt konto",
 	"view.installation": "Installation",
 	"view.languages": "Språk",

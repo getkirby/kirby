@@ -21,6 +21,8 @@
 	"copy": "Copier",
 	"copy.all": "Tout copier",
 	"copy.success": "Copié : {count}",
+	"copy.success.multiple": "Copié : {count}",
+	"copy.url": "Copy URL",
 	"create": "Créer",
 	"custom": "Personnalisé",
 
@@ -90,6 +92,12 @@
 
 	"error.cache.type.invalid": "Type de cache invalide « {type} »",
 
+	"error.content.lock.delete": "The version is locked and cannot be deleted",
+	"error.content.lock.move": "The source version is locked and cannot be moved",
+	"error.content.lock.publish": "This version is already published",
+	"error.content.lock.replace": "The version is locked and cannot be replaced",
+	"error.content.lock.update": "The version is locked and cannot be updated",
+
 	"error.email.preset.notFound": "La configuration de courriel « {name} » n’a pu être trouvé ",
 
 	"error.field.converter.invalid": "Convertisseur « {converter} » invalide",
@@ -118,6 +126,7 @@
 	"error.file.name.missing": "Veuillez entrer un titre",
 	"error.file.notFound": "Le fichier « {filename} » n’a pu être trouvé",
 	"error.file.orientation": "L’orientation de l'image doit être « {orientation} »",
+	"error.file.sort.permission": "You are not allowed to change the sorting of \"{filename}\"",
 	"error.file.type.forbidden": "Vous n’êtes pas autorisé à transférer des fichiers {type}",
 	"error.file.type.invalid": "Type de fichier invalide : {type}",
 	"error.file.undefined": "Le fichier n’a pu être trouvé",
@@ -168,6 +177,7 @@
 	"error.page.move.ancestor": "La page ne peut être déplacée à l’intérieur d’elle-même",
 	"error.page.move.directory": "Le répertoire de la page ne peut être déplacé",
 	"error.page.move.duplicate": "Une sous-page possédant l’identifiant d’URL « {slug} » existe déjà",
+	"error.page.move.noSections": "The page \"{parent}\" cannot be a parent of any page because it lacks any pages sections in its blueprint",
 	"error.page.move.notFound": "La page déplacée n’a pu être trouvée",
 	"error.page.move.permission": "Vous n’êtes pas autorisé à déplacer « {slug} »  ",
 	"error.page.move.template": "Le modèle « {template} » n’est pas accepté en tant que sous-page de « {parent} »",
@@ -297,6 +307,9 @@
 	"field.blocks.heading.name": "Titre",
 	"field.blocks.heading.text": "Texte",
 	"field.blocks.heading.placeholder": "Titre…",
+	"field.blocks.figure.back.plain": "Plain",
+	"field.blocks.figure.back.pattern.light": "Pattern (light)",
+	"field.blocks.figure.back.pattern.dark": "Pattern (dark)",
 	"field.blocks.image.alt": "Texte alternatif",
 	"field.blocks.image.caption": "Légende",
 	"field.blocks.image.crop": "Recadrer",
@@ -334,6 +347,7 @@
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
 	"field.files.empty": "Pas encore de fichier sélectionné",
+	"field.files.empty.single": "No file selected yet",
 
 	"field.layout.change": "Changer de disposition",
 	"field.layout.delete": "Supprimer cette disposition",
@@ -345,12 +359,14 @@
 	"field.object.empty": "Pas encore d‘information",
 
 	"field.pages.empty": "Pas encore de page sélectionnée",
+	"field.pages.empty.single": "No page selected yet",
 
 	"field.structure.delete.confirm": "Voulez-vous vraiment supprimer cette ligne ?",
 	"field.structure.delete.confirm.all": "Voulez-vous vraiment supprimer toutes les entrées ?",
 	"field.structure.empty": "Pas encore d’entrée",
 
 	"field.users.empty": "Pas encore d’utilisateur sélectionné",
+	"field.users.empty.single": "No user selected yet",
 
 	"fields.empty": "Pas encore de champs",
 
@@ -368,6 +384,13 @@
 	"files.empty": "Pas encore de fichier",
 
 	"filter": "Filtrer",
+
+	"form.discard": "Discard changes",
+	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
+	"form.locked": "This content is disabled for you as it is currently edited by another user",
+	"form.unsaved": "The current changes have not yet been saved",
+	"form.preview": "Preview changes",
+	"form.preview.draft": "Preview draft",
 
 	"hide": "Masquer",
 	"hour": "Heure",
@@ -444,6 +467,8 @@
 	"license.status.missing.bubble": "Prêt à lancer votre site ?",
 	"license.status.missing.info": "Pas de licence valide",
 	"license.status.missing.label": "Veuillez activer votre licence",
+	"license.status.unknown.info": "The license status is unknown",
+	"license.status.unknown.label": "Unknown license",
 	"license.manage": "Gérer vos licences",
 	"license.purchased": "Achetée",
 	"license.success": "Merci pour votre soutien à Kirby",
@@ -456,6 +481,9 @@
 
 	"lock.unsaved": "Modifications non enregistrées",
 	"lock.unsaved.empty": "Il n’y a plus de modifications non enregistrées",
+	"lock.unsaved.files": "Unsaved files",
+	"lock.unsaved.pages": "Unsaved pages",
+	"lock.unsaved.users": "Unsaved accounts",
 	"lock.isLocked": "Modifications non enregistrées par {email}",
 	"lock.unlock": "Déverrouiller",
 	"lock.unlock.submit": "Déverrouiller et écraser les modifications non enregistrées par <strong>{email}</strong>",
@@ -578,6 +606,10 @@
 	"plugins": "Plugins",
 	"prev": "Précédent",
 	"preview": "Prévisualiser",
+
+	"publish": "Publish",
+	"published": "Publié",
+
 	"remove": "Supprimer",
 	"rename": "Renommer",
 	"renew": "Renouveler",
@@ -597,7 +629,9 @@
 	"role.nobody.title": "Personne",
 
 	"save": "Enregistrer",
+	"saved": "Sauvegardé",
 	"search": "Rechercher",
+	"searching": "Searching",
 	"search.min": "Saisissez {min} caractères pour rechercher",
 	"search.all": "Afficher tous les résultats de {count}",
 	"search.results.none": "Pas de résultats",
@@ -622,6 +656,7 @@
 
 	"system.info.copy": "Copier les informations",
 	"system.info.copied": "Informations système copiées",
+	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "Le dossier content semble exposé",
 	"system.issues.eol.kirby": "La version de Kirby installée a atteint la fin de son cycle de vie et ne recevra plus de mises à jour de sécurité",
 	"system.issues.eol.plugin": "La version du plugin { plugin } installée a atteint la fin de son cycle de vie et ne recevra plus de mises à jour de sécurité",
@@ -646,6 +681,12 @@
 	"tel": "Téléphone",
 	"tel.placeholder": "+33123456789",
 	"template": "Modèle",
+
+	"theme": "Theme",
+	"theme.light": "Lights on",
+	"theme.dark": "Lights off",
+	"theme.automatic": "Match system default",
+
 	"title": "Titre",
 	"today": "Aujourd’hui",
 
@@ -715,10 +756,13 @@
 	"users": "Utilisateurs",
 
 	"version": "Version",
+	"version.changes": "Changed version",
+	"version.compare": "Compare versions",
 	"version.current": "Version actuelle",
 	"version.latest": "Dernière version",
 	"versionInformation": "Informations de version",
 
+	"view": "View",
 	"view.account": "Votre compte",
 	"view.installation": "Installation",
 	"view.languages": "Langues",
