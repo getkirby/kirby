@@ -107,7 +107,11 @@ class FileVersionTest extends TestCase
 			'slug' => 'test'
 		]);
 
-		$original = new File(['filename' => 'test.jpg', 'parent' => $page]);
+		$original = new File([
+			'filename' => 'test.jpg',
+			'parent' => $page,
+			'content' => ['alt' => 'Test text']
+		]);
 		$version  = new FileVersion([
 			'original' => $original,
 			'root'     => static::FIXTURES . '/test.txt',
@@ -122,6 +126,6 @@ class FileVersionTest extends TestCase
 			'url'      => $url = 'https://assets.getkirby.com/test-200x200.jpg',
 		]);
 
-		$this->assertSame('<img alt="" src="' . $url . '">', (string)$version);
+		$this->assertSame('<img alt="Test text" src="' . $url . '">', (string)$version);
 	}
 }
