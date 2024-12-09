@@ -3,6 +3,7 @@
 namespace Kirby\Query;
 
 use Closure;
+use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
@@ -11,6 +12,8 @@ use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Image\QrCode;
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Query\Runners\Interpreted;
+use Kirby\Toolkit\Query\Runners\Transpiled;
 
 /**
  * The Query class can be used to query arrays and objects,
@@ -37,6 +40,8 @@ class Query
 	 * Default data entries
 	 */
 	public static array $entries = [];
+
+	private static array $resolverCache = [];
 
 	/**
 	 * Creates a new Query object
@@ -66,18 +71,8 @@ class Query
 		return $result;
 	}
 
-	/**
-	 * Returns the query result if anything
-	 * can be found, otherwise returns null
-	 *
-	 * @throws \Kirby\Exception\BadMethodCallException If an invalid method is accessed by the query
-	 */
-	public function resolve(array|object $data = []): mixed
+	private function resolve_legacy(array|object $data = []): mixed
 	{
-		if (empty($this->query) === true) {
-			return $data;
-		}
-
 		// merge data with default entries
 		if (is_array($data) === true) {
 			$data = [...static::$entries, ...$data];
@@ -99,6 +94,35 @@ class Query
 
 		// loop through all segments to resolve query
 		return Expression::factory($this->query, $this)->resolve($data);
+
+	}
+
+	/**
+	 * Returns the query result if anything
+	 * can be found, otherwise returns null
+	 *
+	 * @throws \Kirby\Exception\BadMethodCallException If an invalid method is accessed by the query
+	 */
+	public function resolve(array|object $data = []): mixed
+	{
+		if (empty($this->query) === true) {
+			return $data;
+		}
+
+		$mode = App::instance()->option('query.runner', 'interpreted');
+
+		if ($mode === 'legacy') {
+			return $this->resolve_legacy($data);
+		}
+
+		$runnerClass = match($mode) {
+			'transpiled' => Transpiled::class,
+			'interpreted' => Interpreted::class,
+			default => throw new Exception('Invalid query runner')
+		};
+
+		$runner = new $runnerClass(static::$entries, $this->intercept(...), static::$resolverCache);
+		return $runner->run($this->query, (array)$data);
 	}
 }
 
