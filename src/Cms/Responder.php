@@ -75,7 +75,7 @@ class Responder
 	 *
 	 * @return $this|string|null
 	 */
-	public function body(string $body = null): static|string|null
+	public function body(string|null $body = null): static|string|null
 	{
 		if ($body === null) {
 			return $this->body;
@@ -210,7 +210,7 @@ class Responder
 	 *
 	 * @return int|$this
 	 */
-	public function code(int $code = null)
+	public function code(int|null $code = null)
 	{
 		if ($code === null) {
 			return $this->code;
@@ -266,7 +266,7 @@ class Responder
 	 *
 	 * @return array|$this
 	 */
-	public function headers(array $headers = null)
+	public function headers(array|null $headers = null)
 	{
 		if ($headers === null) {
 			$injectedHeaders = [];
@@ -305,7 +305,7 @@ class Responder
 	 *
 	 * @return string|$this
 	 */
-	public function json(array $json = null)
+	public function json(array|null $json = null)
 	{
 		if ($json !== null) {
 			$this->body(json_encode($json));
@@ -334,7 +334,7 @@ class Responder
 	/**
 	 * Creates and returns the response object from the config
 	 */
-	public function send(string $body = null): Response
+	public function send(string|null $body = null): Response
 	{
 		if ($body !== null) {
 			$this->body($body);
@@ -365,7 +365,7 @@ class Responder
 	 *
 	 * @return string|$this
 	 */
-	public function type(string $type = null)
+	public function type(string|null $type = null)
 	{
 		if ($type === null) {
 			return $this->type;

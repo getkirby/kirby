@@ -108,7 +108,7 @@ trait AppTranslations
 	 *
 	 * @internal
 	 */
-	public function setCurrentTranslation(string $translationCode = null): void
+	public function setCurrentTranslation(string|null $translationCode = null): void
 	{
 		I18n::$locale = $translationCode ?? 'en';
 	}

@@ -39,7 +39,7 @@ class Fields extends Collection
 	 * array and also does that for every
 	 * included field.
 	 */
-	public function toArray(Closure $map = null): array
+	public function toArray(Closure|null $map = null): array
 	{
 		$array = [];
 

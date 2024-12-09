@@ -25,7 +25,7 @@ class PageRules
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the given number is invalid
 	 */
-	public static function changeNum(Page $page, int $num = null): bool
+	public static function changeNum(Page $page, int|null $num = null): bool
 	{
 		if ($num !== null && $num < 0) {
 			throw new InvalidArgumentException(['key' => 'page.num.invalid']);
@@ -86,7 +86,7 @@ class PageRules
 	public static function changeStatus(
 		Page $page,
 		string $status,
-		int $position = null
+		int|null $position = null
 	): bool {
 		if (isset($page->blueprint()->status()[$status]) === false) {
 			throw new InvalidArgumentException(['key' => 'page.status.invalid']);

@@ -17,7 +17,7 @@ namespace Kirby\Cms;
 class Search
 {
 	public static function files(
-		string $query = null,
+		string|null $query = null,
 		array $params = []
 	): Files {
 		return App::instance()->site()->index()->files()->search($query, $params);
@@ -36,14 +36,14 @@ class Search
 	}
 
 	public static function pages(
-		string $query = null,
+		string|null $query = null,
 		array $params = []
 	): Pages {
 		return App::instance()->site()->index()->search($query, $params);
 	}
 
 	public static function users(
-		string $query = null,
+		string|null $query = null,
 		array $params = []
 	): Users {
 		return App::instance()->users()->search($query, $params);

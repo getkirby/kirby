@@ -421,7 +421,7 @@ class Query
 	 * @param string|null $order
 	 * @return $this
 	 */
-	public function order(string $order = null)
+	public function order(string|null $order = null)
 	{
 		$this->order = $order;
 		return $this;
@@ -828,13 +828,13 @@ class Query
 				if ($args[0] === null) {
 					return $current;
 
-				// ->where('username like "myuser"');
+					// ->where('username like "myuser"');
 				} elseif (is_string($args[0]) === true) {
 					// simply add the entire string to the where clause
 					// escaping or using bindings has to be done before calling this method
 					$result = $args[0];
 
-				// ->where(['username' => 'myuser']);
+					// ->where(['username' => 'myuser']);
 				} elseif (is_array($args[0]) === true) {
 					// simple array mode (AND operator)
 					$sql = $this->database->sql()->values($this->table, $args[0], ' AND ', true, true);
@@ -868,7 +868,7 @@ class Query
 					// store the bindings
 					$this->bindings($args[1]);
 
-				// ->where('username like ?', 'myuser')
+					// ->where('username like ?', 'myuser')
 				} elseif (is_string($args[0]) === true && is_scalar($args[1]) === true) {
 					// prepared where clause
 					$result = $args[0];
@@ -913,7 +913,7 @@ class Query
 						};
 						$result = $key . ' ' . $predicate . ' ' . $values;
 
-					// ->where('username', 'like', 'myuser');
+						// ->where('username', 'like', 'myuser');
 					} else {
 						$predicates = [
 							'=', '>=', '>', '<=', '<', '<>', '!=', '<=>',

@@ -44,9 +44,9 @@ class Url extends BaseUrl
 	 * @return string The safe string
 	 */
 	public static function slug(
-		string $string = null,
-		string $separator = null,
-		string $allowed = null,
+		string|null $string = null,
+		string|null $separator = null,
+		string|null $allowed = null,
 	): string {
 		$maxlength = App::instance()->option('slugs.maxlength', 255);
 		return Str::slug($string, $separator, $allowed, $maxlength);
