@@ -427,7 +427,9 @@ class Version
 	{
 		$localPrefix = $this->model->kirby()->url('base') . '/';
 
-		if (Str::startsWith($url, $localPrefix) === false) {
+		// Todo: this is only a quick fix to get home page previews working again,
+		// we need to double-check if this is still correct
+		if (Str::startsWith($url, $localPrefix) === false && $url . '/' !== $localPrefix) {
 			return null;
 		}
 
