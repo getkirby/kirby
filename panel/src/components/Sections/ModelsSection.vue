@@ -313,11 +313,11 @@ export default {
 			}
 		},
 		onSelectToggle() {
+			this.isSelecting = !this.isSelecting;
+			
+			// start new selection with a fresh list
 			if (this.isSelecting) {
 				this.selected = [];
-				this.isSelecting = false;
-			} else {
-				this.isSelecting = true;
 			}
 		},
 		onSort() {},
