@@ -774,12 +774,33 @@ class VersionTest extends TestCase
 		$this->assertSame($content, Data::read($fileENLatest));
 	}
 
+	public static function previewTokenIndexUrlProvider()
+	{
+		return [
+			['/'],
+			['/subfolder'],
+			['/subfolder/'],
+			['https://example.com'],
+			['https://example.com/'],
+			['https://example.com/subfolder'],
+			['https://example.com/subfolder/'],
+		];
+	}
+
 	/**
 	 * @covers ::previewToken
+	 * @covers ::previewTokenFromUrl
+	 * @dataProvider previewTokenIndexUrlProvider
 	 */
-	public function testPreviewToken()
+	public function testPreviewToken(string $indexUrl)
 	{
 		$this->setUpSingleLanguage();
+
+		$this->app = $this->app->clone([
+			'urls' => [
+				'index' => $indexUrl
+			]
+		]);
 
 		// site
 		$version = new Version(
@@ -789,7 +810,15 @@ class VersionTest extends TestCase
 		$expected = substr(hash_hmac('sha1', '{"uri":"","versionId":"latest"}', static::TMP . '/content'), 0, 10);
 		$this->assertSame($expected, $version->previewToken());
 
-		// page
+		// homepage
+		$version = new Version(
+			model: $this->app->site()->page('home'),
+			id: VersionId::latest()
+		);
+		$expected = substr(hash_hmac('sha1', '{"uri":"","versionId":"latest"}', static::TMP . '/content'), 0, 10);
+		$this->assertSame($expected, $version->previewToken());
+
+		// another page
 		$version = new Version(
 			model: $this->model,
 			id: VersionId::latest()
