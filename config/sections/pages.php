@@ -10,6 +10,7 @@ use Kirby\Toolkit\I18n;
 
 return [
 	'mixins' => [
+		'batch',
 		'details',
 		'empty',
 		'headline',
@@ -315,12 +316,28 @@ return [
 			return $blueprints;
 		},
 	],
+	// @codeCoverageIgnoreStart
+	'api' => function () {
+		return [
+			[
+				'pattern' => 'delete',
+				'method'  => 'DELETE',
+				'action'  => function () {
+					return $this->section()->deleteSelected(
+						ids: $this->requestBody('ids'),
+					);
+				}
+			]
+		];
+	},
+	// @codeCoverageIgnoreEnd
 	'toArray' => function () {
 		return [
 			'data'    => $this->data,
 			'errors'  => $this->errors,
 			'options' => [
 				'add'      => $this->add,
+				'batch'    => $this->batch,
 				'columns'  => $this->columnsWithTypes(),
 				'empty'    => $this->empty,
 				'headline' => $this->headline,
