@@ -254,11 +254,10 @@ export default {
 						ids: this.selected.map((item) => item.id)
 					}
 				);
-
-				this.reload();
 			} catch (error) {
 				this.$panel.notification.error(error);
 			} finally {
+				this.reload();
 				this.isSelecting = false;
 				this.isProcessing = false;
 				this.selected = [];
