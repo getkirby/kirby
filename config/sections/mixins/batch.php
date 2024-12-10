@@ -9,9 +9,4 @@ return [
 			return $batch;
 		},
 	],
-	'computed' => [
-		'batch' => function () {
-			return $this->layout === 'table' ? false : $this->batch;
-		}
-	],
 ];
