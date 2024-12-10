@@ -72,7 +72,7 @@
 						v-for="(row, rowIndex) in values"
 						:key="row.id ?? row._id ?? row.value ?? JSON.stringify(row)"
 						:class="{
-							'k-table-sortable-row': sortable && row.sortable !== false
+							'k-table-sortable-row': rowIsSortable(row)
 						}"
 					>
 						<!-- Index & drag handle -->
@@ -81,20 +81,30 @@
 							data-mobile="true"
 							class="k-table-index-column"
 						>
-							<slot
-								name="index"
-								v-bind="{
-									row,
-									rowIndex
-								}"
-							>
-								<div class="k-table-index" v-text="index + rowIndex" />
-							</slot>
+							<template v-if="rowIsSelectable(row)">
+								<label class="k-table-index-checkbox">
+									<input
+										type="checkbox"
+										@change="$emit('select', $event, row, rowIndex)"
+									/>
+								</label>
+							</template>
+							<template v-else>
+								<slot
+									name="index"
+									v-bind="{
+										row,
+										rowIndex
+									}"
+								>
+									<div class="k-table-index" v-text="index + rowIndex" />
+								</slot>
 
-							<k-sort-handle
-								v-if="sortable && row.sortable !== false"
-								class="k-table-sort-handle"
-							/>
+								<k-sort-handle
+									v-if="rowIsSortable(row)"
+									class="k-table-sort-handle"
+								/>
+							</template>
 						</td>
 
 						<!-- Cell -->
@@ -211,6 +221,10 @@ export default {
 		/**
 		 * Whether table is sortable
 		 */
+		selectable: Boolean,
+		/**
+		 * Whether table is sortable
+		 */
 		sortable: Boolean
 	},
 	emits: ["cell", "change", "header", "input", "option", "paginate", "sort"],
@@ -261,7 +275,7 @@ export default {
 		 * @returns {bool}
 		 */
 		hasIndexColumn() {
-			return this.sortable || this.index !== false;
+			return this.sortable || this.selectable || this.index !== false;
 		},
 		/**
 		 * Whether to show options column
@@ -347,6 +361,16 @@ export default {
 		onSort() {
 			this.$emit("input", this.values);
 			this.$emit("sort", this.values);
+		},
+		rowIsSelectable(row) {
+			return this.selectable === true && row.selectable !== false;
+		},
+		rowIsSortable(row) {
+			return (
+				this.sortable === true &&
+				this.selectable === false &&
+				row.sortable !== false
+			);
 		},
 		/**
 		 * Returns width styling based on column fraction
@@ -497,6 +521,14 @@ export default {
 	font-size: var(--text-xs);
 	color: var(--color-text-dimmed);
 	line-height: 1.1em;
+}
+.k-table .k-table-index-column:has(.k-table-index-checkbox) {
+	padding: 0;
+}
+.k-table .k-table-index-checkbox {
+	height: 100%;
+	display: grid;
+	place-items: center;
 }
 
 /* Table Index with sort handle */
