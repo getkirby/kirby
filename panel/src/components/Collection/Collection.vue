@@ -15,6 +15,7 @@
 				items,
 				layout,
 				link,
+				selectable,
 				size,
 				sortable,
 				theme
