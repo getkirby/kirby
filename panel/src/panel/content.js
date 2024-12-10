@@ -1,4 +1,5 @@
 import { isObject } from "@/helpers/object";
+import legacy from "./content.legacy.js";
 import { reactive } from "vue";
 import throttle from "@/helpers/throttle.js";
 
@@ -117,6 +118,11 @@ export default (panel) => {
 		 * @var {Boolean}
 		 */
 		isProcessing: false,
+
+		/**
+		 * Legacy content changes support
+		 */
+		legacy: legacy(panel),
 
 		/**
 		 * Get the lock state for the current view
