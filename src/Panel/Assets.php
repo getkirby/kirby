@@ -3,6 +3,7 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Helpers;
 use Kirby\Cms\Url;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
@@ -116,11 +117,7 @@ class Assets
 	}
 
 	/**
-	 * Returns array of favicon icons
-	 * based on config option
-	 *
-	 * @todo Deprecate `url` option in v5, use `href` option instead
-	 * @todo Deprecate `rel` usage as array key in v5, use `rel` option instead
+	 * Returns array of favicon icons based on config option
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
@@ -161,12 +158,16 @@ class Assets
 			foreach ($icons as $rel => &$icon) {
 				// TODO: remove this backward compatibility check in v6
 				if (isset($icon['url']) === true) {
+					Helpers::deprecated('`panel.favicon` option: use `href` instead of `url` attribute');
+
 					$icon['href'] = $icon['url'];
 					unset($icon['url']);
 				}
 
 				// TODO: remove this backward compatibility check in v6
 				if (is_string($rel) === true && isset($icon['rel']) === false) {
+					Helpers::deprecated('`panel.favicon` option: use `rel` attribute instead of passing string as key');
+
 					$icon['rel'] = $rel;
 				}
 
