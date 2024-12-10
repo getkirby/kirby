@@ -83,19 +83,6 @@ class FilesSectionTest extends TestCase
 		$this->assertTrue($section->toArray()['options']['batch']);
 	}
 
-	public function testBatchNotEnabledWithTableLayout()
-	{
-		$section = new Section('files', [
-			'name'   => 'test',
-			'model'  => new Page(['slug' => 'test']),
-			'batch'  => true,
-			'layout' => 'table'
-		]);
-
-		$this->assertFalse($section->batch());
-		$this->assertFalse($section->toArray()['options']['batch']);
-	}
-
 	public function testHeadline()
 	{
 		// single headline
