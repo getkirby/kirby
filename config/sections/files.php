@@ -2,8 +2,6 @@
 
 use Kirby\Cms\File;
 use Kirby\Cms\Files;
-use Kirby\Exception\Exception;
-use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -226,30 +224,9 @@ return [
 				'pattern' => 'delete',
 				'method'  => 'DELETE',
 				'action'  => function () {
-					$section = $this->section();
-
-					// check if batch deletion is allowed
-					if ($section->batch() === false) {
-						throw new PermissionException(
-							message: 'The section does not support batch actions'
-						);
-					}
-
-					$ids = $this->requestBody('ids');
-					$min = $section->min();
-
-					// check if the section has enough files after the deletion
-					if ($section->total() - count($ids) < $min) {
-						throw new Exception(
-							message: I18n::template('error.section.files.min.' . I18n::form($min), [
-								'min'     => $min,
-								'section' => $section->headline()
-							])
-						);
-					}
-
-					$section->models()->delete($ids);
-					return true;
+					return $this->section()->deleteSelected(
+						ids: $this->requestBody('ids'),
+					);
 				}
 			]
 		];
