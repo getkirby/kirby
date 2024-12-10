@@ -111,7 +111,8 @@ class LanguagesDropdown extends ViewButton
 
 	public function render(): array|null
 	{
-		if ($this->kirby->multilang() === false) {
+		// hides the language selector when there are less than 2 languages
+		if ($this->kirby->languages()->count() < 2) {
 			return null;
 		}
 
