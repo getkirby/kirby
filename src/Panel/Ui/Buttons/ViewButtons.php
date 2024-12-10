@@ -21,7 +21,7 @@ class ViewButtons
 {
 	public function __construct(
 		public readonly string $view,
-		public array|null $buttons = null,
+		public array|false|null $buttons = null,
 		public array $data = []
 	) {
 		$this->buttons ??= App::instance()->option(
@@ -57,6 +57,11 @@ class ViewButtons
 	 */
 	public function render(): array
 	{
+		// hides all buttons when `buttons: false` set
+		if ($this->buttons === false) {
+			return [];
+		}
+
 		$buttons = A::map(
 			$this->buttons ?? [],
 			fn ($button) =>
