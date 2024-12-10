@@ -217,7 +217,7 @@ class Blueprint
 	/**
 	 * Gathers custom config for Panel view buttons
 	 */
-	public function buttons(): array|null
+	public function buttons(): array|false|null
 	{
 		return $this->props['buttons'] ?? null;
 	}
