@@ -214,7 +214,7 @@ class Parsley
 		) {
 			$this->blocks[$lastIndex]['content']['text'] .= ' ' . $block['content']['text'];
 
-		// append
+			// append
 		} else {
 			$this->blocks[] = $block;
 		}

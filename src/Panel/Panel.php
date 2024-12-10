@@ -274,7 +274,7 @@ class Panel
 				message: 'The data could not be found'
 			);
 
-		// interpret strings as errors
+			// interpret strings as errors
 		} elseif (is_string($result) === true) {
 			$result = new Exception($result);
 		}

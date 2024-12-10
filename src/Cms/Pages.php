@@ -64,19 +64,19 @@ class Pages extends Collection
 		if ($object instanceof self) {
 			$this->data = [...$this->data, ...$object->data];
 
-		// add a page by id
+			// add a page by id
 		} elseif (
 			is_string($object) === true &&
 			$page = $site->find($object)
 		) {
 			$this->__set($page->id(), $page);
 
-		// add a page object
+			// add a page object
 		} elseif ($object instanceof Page) {
 			$this->__set($object->id(), $object);
 
-		// give a useful error message on invalid input;
-		// silently ignore "empty" values for compatibility with existing setups
+			// give a useful error message on invalid input;
+			// silently ignore "empty" values for compatibility with existing setups
 		} elseif (in_array($object, [null, false, true], true) !== true) {
 			throw new InvalidArgumentException(
 				message: 'You must pass a Pages or Page object or an ID of an existing page to the Pages collection'

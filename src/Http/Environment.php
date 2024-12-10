@@ -178,11 +178,11 @@ class Environment
 		if ($options['allowed'] === '*' || $options['allowed'] === ['*']) {
 			$this->detectAuto(true);
 
-		// fixed environments
+			// fixed environments
 		} elseif (empty($options['allowed']) === false) {
 			$this->detectAllowed($options['allowed']);
 
-		// secure auto-detection
+			// secure auto-detection
 		} else {
 			$this->detectAuto();
 		}
