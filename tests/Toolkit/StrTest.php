@@ -1492,7 +1492,10 @@ class StrTest extends TestCase
 	public function testUcfirst()
 	{
 		$this->assertSame('Hello world', Str::ucfirst('hello world'));
-		$this->assertSame('Hello world', Str::ucfirst('Hello World'));
+		$this->assertSame('Hello world', Str::ucfirst('Hello world'));
+		$this->assertSame('Hello World', Str::ucfirst('Hello World'));
+		$this->assertSame('HELLO WORLD', Str::ucfirst('HELLO WORLD'));
+		$this->assertSame('Hello WORLD', Str::ucfirst('hello WORLD'));
 	}
 
 	/**
