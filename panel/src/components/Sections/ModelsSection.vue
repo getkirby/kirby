@@ -235,6 +235,12 @@ export default {
 			this.reload();
 		}
 	},
+	created() {
+		this.$events.on("selecting", this.stopSelectingCollision);
+	},
+	destroyed() {
+		this.$events.off("selecting", this.stopSelectingCollision);
+	},
 	mounted() {
 		this.search = debounce(this.search, 200);
 		this.load();
@@ -315,14 +321,23 @@ export default {
 			}
 		},
 		onSelectToggle() {
-			this.isSelecting = !this.isSelecting;
-			
-			// start new selection with a fresh list
-			if (this.isSelecting) {
-				this.selected = [];
-			}
+			this.isSelecting ? this.stopSelecting() : this.startSelecting();
 		},
 		onSort() {},
+		startSelecting() {
+			this.isSelecting = true;
+			this.selected = [];
+			this.$events.emit("selecting", this.name);
+		},
+		stopSelecting() {
+			this.isSelecting = false;
+			this.selected = [];
+		},
+		stopSelectingCollision(name) {
+			if (name !== this.name) {
+				this.stopSelecting();
+			}
+		},
 		async reload() {
 			await this.load(true);
 		},
