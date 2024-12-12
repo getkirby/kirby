@@ -6,6 +6,7 @@ use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
@@ -591,62 +592,62 @@ class Language implements Stringable
 			throw new PermissionException(key: 'language.update.permission');
 		}
 
- 		$kirby = App::instance();
+		$kirby = App::instance();
 
- 		// don't change the language code
- 		unset($props['code']);
+		// don't change the language code
+		unset($props['code']);
 
- 		// make sure the slug is nice and clean
- 		$props['slug'] = Str::slug($props['slug'] ?? null);
+		// make sure the slug is nice and clean
+		$props['slug'] = Str::slug($props['slug'] ?? null);
 
- 		// trigger before hook
- 		$language = $kirby->apply(
- 			'language.update:before',
- 			[
- 				'language' => $this,
- 				'input'    => $props
- 			],
- 			'language'
- 		);
+		// trigger before hook
+		$language = $kirby->apply(
+			'language.update:before',
+			[
+				'language' => $this,
+				'input'    => $props
+			],
+			'language'
+		);
 
- 		// updated language object
- 		$language = $language->clone($props);
+		// updated language object
+		$language = $language->clone($props);
 
- 		if (isset($props['translations']) === true) {
- 			$language->translations = $props['translations'];
- 		}
+		if (isset($props['translations']) === true) {
+			$language->translations = $props['translations'];
+		}
 
- 		// validate the language rules after before hook was applied
- 		LanguageRules::update($language, $this);
+		// validate the language rules after before hook was applied
+		LanguageRules::update($language, $this);
 
- 		// if language just got promoted to be the new default language…
- 		if ($this->isDefault() === false && $language->isDefault() === true) {
- 			// convert the current default to a non-default language
- 			$previous = $kirby->defaultLanguage()?->clone(['default' => false])->save();
- 			$kirby->languages(false)->set($previous->code(), $previous);
+		// if language just got promoted to be the new default language…
+		if ($this->isDefault() === false && $language->isDefault() === true) {
+			// convert the current default to a non-default language
+			$previous = $kirby->defaultLanguage()?->clone(['default' => false])->save();
+			$kirby->languages(false)->set($previous->code(), $previous);
 
- 			foreach ($kirby->models() as $model) {
- 				$model->storage()->touchLanguage($this);
- 			}
- 		}
+			foreach ($kirby->models() as $model) {
+				$model->storage()->touchLanguage($this);
+			}
+		}
 
- 		$language = $language->save();
+		$language = $language->save();
 
- 		// make sure the language is also updated in the languages collection
- 		$kirby->languages(false)->set($language->code(), $language);
+		// make sure the language is also updated in the languages collection
+		$kirby->languages(false)->set($language->code(), $language);
 
- 		// trigger after hook
- 		$language = $kirby->apply(
- 			'language.update:after',
- 			[
- 				'newLanguage' => $language,
- 				'oldLanguage' => $this,
- 				'input' => $props
- 			],
- 			'newLanguage'
- 		);
+		// trigger after hook
+		$language = $kirby->apply(
+			'language.update:after',
+			[
+				'newLanguage' => $language,
+				'oldLanguage' => $this,
+				'input'       => $props
+			],
+			'newLanguage'
+		);
 
- 		return $language;
+		return $language;
  	}
 
 	/**

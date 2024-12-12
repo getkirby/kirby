@@ -176,7 +176,7 @@ class Find
 			return $user;
 		}
 
-		throw new NotFoundException([
+		throw new NotFoundException(
 			key: 'user.notFound',
 			data: ['name' => $id]
 		);
