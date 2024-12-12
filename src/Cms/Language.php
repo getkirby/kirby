@@ -165,7 +165,9 @@ class Language implements Stringable
 		$language = new static($props);
 
 		if ($language->permissions()->can('create') === false) {
-			throw new PermissionException(key: 'language.create.permission');
+			throw new PermissionException(
+				key: 'language.create.permission'
+			);
 		}
 
 		// validate the new language
@@ -222,7 +224,9 @@ class Language implements Stringable
 	public function delete(): bool
 	{
 		if ($this->permissions()->can('delete') === false) {
-			throw new PermissionException(key: 'language.delete.permission');
+			throw new PermissionException(
+				key: 'language.delete.permission'
+			);
 		}
 
 		$kirby = App::instance();
@@ -589,7 +593,9 @@ class Language implements Stringable
 	public function update(array|null $props = null): static
 	{
 		if ($this->permissions()->can('update') === false) {
-			throw new PermissionException(key: 'language.update.permission');
+			throw new PermissionException(
+				key: 'language.update.permission'
+			);
 		}
 
 		$kirby = App::instance();

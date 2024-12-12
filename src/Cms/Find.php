@@ -164,9 +164,9 @@ class Find
 				return $user;
 			}
 
-			throw new NotFoundException([
-				'key' => 'user.undefined'
-			]);
+			throw new NotFoundException(
+				key: 'user.undefined'
+			);
 		}
 
 		// get a specific user by id
@@ -176,11 +176,9 @@ class Find
 			return $user;
 		}
 
-		throw new NotFoundException([
-			'key'  => 'user.notFound',
-			'data' => [
-				'name' => $id
-			]
-		]);
+		throw new NotFoundException(
+			key: 'user.notFound',
+			data: ['name' => $id]
+		);
 	}
 }
