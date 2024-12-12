@@ -2,8 +2,6 @@
 	<component
 		:is="element"
 		:aria-disabled="disabled"
-		:data-has-image="Boolean(image)"
-		:data-has-toggle="isRemovable"
 		:data-theme="theme"
 		class="k-tag"
 		type="button"
@@ -169,8 +167,7 @@ button.k-tag:not([aria-disabled="true"]) {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
-/** TODO: .k-tag:has(.k-tag-toggle) .k-tag-text  */
-.k-tag[data-has-toggle="true"] .k-tag-text {
+.k-tag:has(.k-tag-toggle) .k-tag-text {
 	padding-inline-end: 0;
 }
 .k-tag-toggle {

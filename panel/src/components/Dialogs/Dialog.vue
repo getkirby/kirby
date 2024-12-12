@@ -7,7 +7,6 @@
 				$vnode.data.staticClass,
 				$attrs.class
 			]"
-			:data-has-footer="Boolean(cancelButton || submitButton)"
 			:data-size="size"
 			method="dialog"
 			@click.stop
