@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Api\Api as BaseApi;
-use Kirby\Exception\AuthException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form;
 use Kirby\Session\Session;
