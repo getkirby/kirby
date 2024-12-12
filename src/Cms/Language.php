@@ -654,7 +654,7 @@ class Language implements Stringable
 		);
 
 		return $language;
- 	}
+	}
 
 	/**
 	 * Returns a language variable object
