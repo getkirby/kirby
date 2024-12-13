@@ -138,7 +138,7 @@ class Pages extends Collection
 
 				if ($model instanceof Page === false) {
 					throw new NotFoundException(
-						key: 'page.notFound'
+						key: 'page.undefined',
 					);
 				}
 
@@ -151,6 +151,7 @@ class Pages extends Collection
 		if ($exceptions !== []) {
 			throw new Exception(
 				key: 'page.delete.multiple',
+				details: $exceptions
 			);
 		}
 	}

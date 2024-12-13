@@ -172,7 +172,18 @@ class Exception extends \Exception
 	 */
 	final public function getDetails(): array
 	{
-		return $this->details;
+		$details = $this->details;
+
+		foreach ($details as $key => $detail) {
+			if ($detail instanceof Throwable) {
+				$details[$key] = [
+					'label'   => $key,
+					'message' => $detail->getMessage(),
+				];
+			}
+		}
+
+		return $details;
 	}
 
 	/**
