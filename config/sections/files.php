@@ -91,14 +91,15 @@ return [
 				$files = $files->flip();
 			}
 
+			return $files;
+		},
+		'modelsPaginated' => function () {
 			// apply the default pagination
-			$files = $files->paginate([
+			return $this->models()->paginate([
 				'page'   => $this->page,
 				'limit'  => $this->limit,
 				'method' => 'none' // the page is manually provided
 			]);
-
-			return $files;
 		},
 		'files' => function () {
 			return $this->models;
@@ -110,7 +111,7 @@ return [
 			// a different parent model
 			$dragTextAbsolute = $this->model->is($this->parent) === false;
 
-			foreach ($this->models as $file) {
+			foreach ($this->modelsPaginated() as $file) {
 				$panel       = $file->panel();
 				$permissions = $file->permissions();
 
@@ -145,7 +146,7 @@ return [
 			return $data;
 		},
 		'total' => function () {
-			return $this->models->pagination()->total();
+			return $this->models()->count();
 		},
 		'errors' => function () {
 			$errors = [];
