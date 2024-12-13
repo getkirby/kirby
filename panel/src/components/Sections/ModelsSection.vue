@@ -311,13 +311,13 @@ export default {
 			this.searching = !this.searching;
 			this.searchterm = null;
 		},
-		onSelect(event, item) {
-			if (event.target.checked) {
-				this.selected.push(item);
-			} else {
+		onSelect(item) {
+			if (this.selected.includes(item)) {
 				this.selected = this.selected.filter(
 					(selected) => selected.id !== item.id
 				);
+			} else {
+				this.selected.push(item);
 			}
 		},
 		onSelectToggle() {
