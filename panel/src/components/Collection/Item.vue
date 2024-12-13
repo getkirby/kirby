@@ -357,4 +357,7 @@ export default {
 	width: var(--item-button-height);
 	flex-shrink: 0;
 }
+.k-item[data-selectable="true"]:has(.k-item-options-checkbox input:checked) {
+	outline: var(--outline);
+}
 </style>
