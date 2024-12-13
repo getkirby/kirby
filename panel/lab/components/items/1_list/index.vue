@@ -4,7 +4,7 @@
 			<k-items :items="items" />
 		</k-lab-example>
 		<k-lab-example label="Selectable">
-			<k-items :items="selectableItems" @select="onSelect" />
+			<k-items :items="selectableItems" :selectable="true" @select="onSelect" />
 			<br />
 			<k-code>Selected: {{ selected.join(", ") }}</k-code>
 		</k-lab-example>
@@ -32,11 +32,11 @@ export default {
 		}
 	},
 	methods: {
-		onSelect(event, item, index) {
-			if (event.target.checked) {
-				this.selected.push(index);
-			} else {
+		onSelect(item, index) {
+			if (this.selected.includes(index)) {
 				this.selected = this.selected.filter((i) => i !== index);
+			} else {
+				this.selected.push(index);
 			}
 		}
 	}
