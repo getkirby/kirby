@@ -150,6 +150,7 @@
 
 	--color-blue-l-100: calc(var(--color-l-100) + var(--color-blue-boost));
 	--color-blue-l-200: calc(var(--color-l-200) + var(--color-blue-boost));
+	--color-blue-l-250: calc(var(--color-l-250) + var(--color-blue-boost));
 	--color-blue-l-300: calc(var(--color-l-300) + var(--color-blue-boost));
 	--color-blue-l-400: calc(var(--color-l-400) + var(--color-blue-boost));
 	--color-blue-l-500: calc(var(--color-l-500) + var(--color-blue-boost));
@@ -160,6 +161,7 @@
 
 	--color-blue-100: hsl(var(--color-blue-hs), var(--color-blue-l-100));
 	--color-blue-200: hsl(var(--color-blue-hs), var(--color-blue-l-200));
+	--color-blue-250: hsl(var(--color-blue-hs), var(--color-blue-l-250));
 	--color-blue-300: hsl(var(--color-blue-hs), var(--color-blue-l-300));
 	--color-blue-400: hsl(var(--color-blue-hs), var(--color-blue-l-400));
 	--color-blue-500: hsl(var(--color-blue-hs), var(--color-blue-l-500));
