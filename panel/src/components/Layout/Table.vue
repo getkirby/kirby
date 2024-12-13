@@ -74,6 +74,8 @@
 						:class="{
 							'k-table-sortable-row': rowIsSortable(row)
 						}"
+						:data-selectable="rowIsSelectable(row)"
+						:data-sortable="rowIsSortable(row)"
 					>
 						<!-- Index & drag handle -->
 						<td
@@ -395,7 +397,7 @@ export default {
 :root {
 	--table-cell-padding: var(--spacing-3);
 	--table-color-back: light-dark(var(--color-white), var(--color-gray-850));
-	--table-color-border: var(--panel-color-back);
+	--table-color-border: light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.375));
 	--table-color-hover: light-dark(var(--color-gray-100), rgba(0, 0, 0, 0.1));
 	--table-color-th-back: light-dark(
 		var(--color-gray-100),
@@ -481,6 +483,9 @@ export default {
 }
 
 /* Table Body */
+.k-table tbody tr td {
+	background: var(--table-color-back);
+}
 .k-table tbody tr:hover td {
 	background: var(--table-color-hover);
 }
@@ -532,15 +537,21 @@ export default {
 }
 
 /* Table Index with sort handle */
-.k-table .k-table-index-column .k-sort-handle {
+.k-table tr[data-sortable="true"] .k-table-index-column .k-sort-handle {
 	--button-width: 100%;
 	display: none;
 }
-.k-table tr.k-table-sortable-row:hover .k-table-index-column .k-table-index {
+.k-table tr[data-sortable="true"]:hover .k-table-index-column .k-table-index {
 	display: none;
 }
-.k-table tr.k-table-sortable-row:hover .k-table-index-column .k-sort-handle {
+.k-table tr[data-sortable="true"]:hover .k-table-index-column .k-sort-handle {
 	display: flex;
+}
+
+/* Selectable rows */
+.k-table tr[data-selectable="true"]:has(.k-table-index-column input:checked) {
+	--table-color-back: light-dark(var(--color-blue-250), var(--color-blue-800));
+	--table-color-hover: var(--table-color-back);
 }
 
 /* Table Options */
