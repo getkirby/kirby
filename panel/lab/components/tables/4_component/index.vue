@@ -3,6 +3,14 @@
 		<k-lab-example label="Default">
 			<k-table :columns="columns" :options="options" :rows="rows"></k-table>
 		</k-lab-example>
+		<k-lab-example label="Sortable">
+			<k-table
+				:columns="columns"
+				:options="options"
+				:sortable="true"
+				:rows="rows"
+			></k-table>
+		</k-lab-example>
 		<k-lab-example label="Selectable">
 			<k-table
 				:columns="columns"
