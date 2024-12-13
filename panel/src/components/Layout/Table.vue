@@ -85,7 +85,7 @@
 								<label class="k-table-index-checkbox">
 									<input
 										type="checkbox"
-										@change="$emit('select', $event, row, rowIndex)"
+										@change="$emit('select', row, rowIndex)"
 									/>
 								</label>
 							</template>
