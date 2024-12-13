@@ -384,6 +384,7 @@
 	"file.sort": "Change position",
 
 	"files": "Files",
+	"files.delete.confirm.selected": "Do you really want to delete the selected files? This action cannot be undone.",
 	"files.empty": "No files yet",
 
 	"filter": "Filter",
@@ -593,6 +594,7 @@
 	"page.status.unlisted.description": "The page is only accessible via URL",
 
 	"pages": "Pages",
+	"pages.delete.confirm.selected": "Do you really want to delete the selected pages? This action cannot be undone.",
 	"pages.empty": "No pages yet",
 	"pages.status.draft": "Drafts",
 	"pages.status.listed": "Published",

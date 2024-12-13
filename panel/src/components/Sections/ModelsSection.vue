@@ -105,7 +105,7 @@ export default {
 						this.$panel.dialog.open({
 							component: "k-remove-dialog",
 							props: {
-								text: `Do you really want to delete ${this.selected.length} items at once? This action cannot be undone.`
+								text: this.confirmDeleteSelectedMessage
 							},
 							on: {
 								submit: () => {
@@ -182,6 +182,11 @@ export default {
 				sortable: !this.isProcessing && this.options.sortable,
 				size: this.options.size
 			};
+		},
+		confirmDeleteSelectedMessage() {
+			return this.$t(`${this.type}.delete.confirm.selected`, {
+				count: this.selected.length
+			});
 		},
 		emptyProps() {
 			return {
