@@ -166,12 +166,13 @@ export default {
 	--item-color-back: light-dark(var(--color-white), var(--color-gray-850));
 	--item-height: auto;
 	--item-height-cardlet: calc(var(--height-md) * 3);
+	--item-shadow: var(--shadow-sm);
 }
 
 .k-item {
 	position: relative;
 	background: var(--item-color-back);
-	box-shadow: var(--shadow);
+	box-shadow: var(--item-shadow);
 	border-radius: var(--rounded);
 	min-height: var(--item-height);
 	container-type: inline-size;
@@ -358,6 +359,7 @@ export default {
 	flex-shrink: 0;
 }
 .k-item[data-selectable="true"]:has(.k-item-options-checkbox input:checked) {
-	outline: var(--outline);
+	--item-color-back: light-dark(var(--color-blue-250), var(--color-blue-800));
+	--item-shadow: 0 1px 3px 0 rgba(0 0 0 / 0.25), 0 1px 2px 0 rgba(0 0 0 / 0.05);
 }
 </style>
