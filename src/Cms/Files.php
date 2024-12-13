@@ -113,7 +113,7 @@ class Files extends Collection
 
 				if ($model instanceof File === false) {
 					throw new NotFoundException(
-						key: 'file.notFound'
+						key: 'file.undefined'
 					);
 				}
 
@@ -126,6 +126,7 @@ class Files extends Collection
 		if ($exceptions !== []) {
 			throw new Exception(
 				key: 'file.delete.multiple',
+				details: $exceptions
 			);
 		}
 	}
