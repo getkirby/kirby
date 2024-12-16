@@ -3,9 +3,7 @@
 namespace Kirby\Form;
 
 use Closure;
-use Kirby\Cms\HasSiblings;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\Component;
 use Kirby\Toolkit\I18n;
 
@@ -22,21 +20,16 @@ use Kirby\Toolkit\I18n;
  */
 class Field extends Component
 {
-	/**
-	 * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
-	 */
-	use HasSiblings;
-	use Mixin\Api;
+	use Mixin\Common;
+	use Mixin\Decorators;
+	use Mixin\Disabled;
+	use Mixin\Endpoints;
 	use Mixin\Model;
+	use Mixin\Siblings;
 	use Mixin\Translatable;
 	use Mixin\Validation;
 	use Mixin\When;
 	use Mixin\Value;
-
-	/**
-	 * Parent collection with all fields of the current form
-	 */
-	protected Fields $siblings;
 
 	/**
 	 * Registry for all component mixins
@@ -52,8 +45,8 @@ class Field extends Component
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public function __construct(
-		string $type,
-		array $attrs = [],
+		protected string $type,
+		protected array $attrs = [],
 		Fields|null $siblings = null
 	) {
 		if (isset(static::$types[$type]) === false) {
@@ -67,15 +60,38 @@ class Field extends Component
 		}
 
 		$this->setModel($attrs['model'] ?? null);
+		$this->setName($attrs['name'] ?? null);
+		$this->setSiblings($attrs['siblings'] ?? null);
+		$this->setValidate($attrs['validate'] ?? []);
 
-		// use the type as fallback for the name
-		$attrs['name'] ??= $type;
-		$attrs['type']   = $type;
+		// unset the attrs that should no longer be handled
+		// by the parent constructor, because we already took
+		// care of them.
+		unset(
+			$attrs['model'],
+			$attrs['name'],
+			$attrs['siblings'],
+			$attrs['type'],
+			$attrs['validate']
+		);
 
 		parent::__construct($type, $attrs);
+	}
 
-		// set the siblings collection
-		$this->siblings = $siblings ?? new Fields([$this]);
+	/**
+	 * Returns field api routes
+	 */
+	public function api(): array
+	{
+		return $this->endpoints('api');
+	}
+
+	/**
+	 * Get a component option from the original field component definition
+	 */
+	protected function componentOption(string $option, mixed $fallback = null): mixed
+	{
+		return static::setup($this->type)[$option] ?? $fallback;
 	}
 
 	/**
@@ -88,37 +104,37 @@ class Field extends Component
 				/**
 				 * Optional text that will be shown after the input
 				 */
-				'after' => function ($after = null) {
+				'after' => function (array|string|null $after = null) {
 					return I18n::translate($after, $after);
 				},
 				/**
 				 * Sets the focus on this field when the form loads. Only the first field with this label gets
 				 */
-				'autofocus' => function (bool|null $autofocus = null): bool {
-					return $autofocus ?? false;
+				'autofocus' => function (bool $autofocus = false): bool {
+					return $autofocus;
 				},
 				/**
 				 * Optional text that will be shown before the input
 				 */
-				'before' => function ($before = null) {
+				'before' => function (array|string|null $before = null) {
 					return I18n::translate($before, $before);
 				},
 				/**
 				 * Default value for the field, which will be used when a page/file/user is created
 				 */
-				'default' => function ($default = null) {
+				'default' => function (mixed $default = null) {
 					return $default;
 				},
 				/**
 				 * If `true`, the field is no longer editable and will not be saved
 				 */
-				'disabled' => function (bool|null $disabled = null): bool {
-					return $disabled ?? false;
+				'disabled' => function (bool $disabled = false): bool {
+					return $disabled;
 				},
 				/**
 				 * Optional help text below the field
 				 */
-				'help' => function ($help = null) {
+				'help' => function (array|string|null $help = null) {
 					return I18n::translate($help, $help);
 				},
 				/**
@@ -130,23 +146,23 @@ class Field extends Component
 				/**
 				 * The field label can be set as string or associative array with translations
 				 */
-				'label' => function ($label = null) {
+				'label' => function (array|string|null $label = null) {
 					return I18n::translate($label, $label);
 				},
 				/**
 				 * Optional placeholder value that will be shown when the field is empty
 				 */
-				'placeholder' => function ($placeholder = null) {
+				'placeholder' => function (array|string|null $placeholder = null) {
 					return I18n::translate($placeholder, $placeholder);
 				},
 				/**
 				 * If `true`, the field has to be filled in correctly to be saved.
 				 */
-				'required' => function (bool|null $required = null): bool {
-					return $required ?? false;
+				'required' => function (bool $required = false): bool {
+					return $required;
 				},
 				/**
-				 * If `false`, the field will be disabled in non-default languages and cannot be translated. This is only relevant in multi-language setups.
+				 * If `false`, the ield will be disabled in non-default languages and cannot be translated. This is only relevant in multi-language setups.
 				 */
 				'translate' => function (bool $translate = true): bool {
 					return $translate;
@@ -154,63 +170,17 @@ class Field extends Component
 				/**
 				 * Conditions when the field will be shown (since 3.1.0)
 				 */
-				'when' => function ($when = null) {
+				'when' => function (array|null $when = null) {
 					return $when;
 				},
 				/**
 				 * The width of the field in the field grid. Available widths: `1/1`, `1/2`, `1/3`, `1/4`, `2/3`, `3/4`
 				 */
-				'width' => function (string $width = '1/1') {
+				'width' => function (string|null $width = null) {
 					return $width;
 				},
-				'value' => function ($value = null) {
+				'value' => function (mixed $value = null) {
 					return $value;
-				}
-			],
-			'computed' => [
-				'after' => function () {
-					/** @var \Kirby\Form\Field $this */
-					if ($this->after !== null) {
-						return $this->model()->toString($this->after);
-					}
-				},
-				'before' => function () {
-					/** @var \Kirby\Form\Field $this */
-					if ($this->before !== null) {
-						return $this->model()->toString($this->before);
-					}
-				},
-				'default' => function () {
-					/** @var \Kirby\Form\Field $this */
-					if ($this->default === null) {
-						return;
-					}
-
-					if (is_string($this->default) === false) {
-						return $this->default;
-					}
-
-					return $this->model()->toString($this->default);
-				},
-				'help' => function () {
-					/** @var \Kirby\Form\Field $this */
-					if ($this->help) {
-						$help = $this->model()->toSafeString($this->help);
-						$help = $this->kirby()->kirbytext($help);
-						return $help;
-					}
-				},
-				'label' => function () {
-					/** @var \Kirby\Form\Field $this */
-					if ($this->label !== null) {
-						return $this->model()->toString($this->label);
-					}
-				},
-				'placeholder' => function () {
-					/** @var \Kirby\Form\Field $this */
-					if ($this->placeholder !== null) {
-						return $this->model()->toString($this->placeholder);
-					}
 				}
 			]
 		];
@@ -221,14 +191,7 @@ class Field extends Component
 	 */
 	public function dialogs(): array
 	{
-		if (
-			isset($this->options['dialogs']) === true &&
-			$this->options['dialogs'] instanceof Closure
-		) {
-			return $this->options['dialogs']->call($this);
-		}
-
-		return [];
+		return $this->endpoints('dialogs');
 	}
 
 	/**
@@ -236,14 +199,21 @@ class Field extends Component
 	 */
 	public function drawers(): array
 	{
-		if (
-			isset($this->options['drawers']) === true &&
-			$this->options['drawers'] instanceof Closure
-		) {
-			return $this->options['drawers']->call($this);
+		return $this->endpoints('drawers');
+	}
+
+	/**
+	 * Helper to get endpoint definitions from the field component options
+	 */
+	protected function endpoints(string $type): array
+	{
+		$endpoints = $this->componentOption($type, []);
+
+		if ($endpoints instanceof Closure) {
+			return $endpoints->call($this);
 		}
 
-		return [];
+		return $endpoints;
 	}
 
 	/**
@@ -272,11 +242,14 @@ class Field extends Component
 		// overwrite the attribute value
 		$this->value = $this->attrs['value'] = $value;
 
+		$props    = $this->componentOption('props', []);
+		$computed = $this->componentOption('computed', []);
+
 		// reevaluate the value prop
-		$this->applyProp('value', $this->options['props']['value'] ?? $value);
+		$this->applyProp('value', $props['value'] ?? $value);
 
 		// reevaluate the computed props
-		$this->applyComputed($this->options['computed']);
+		$this->applyComputed($computed);
 
 		// reset the errors cache
 		$this->errors = null;
@@ -285,35 +258,11 @@ class Field extends Component
 	}
 
 	/**
-	 * @deprecated 5.0.0 Use `::siblings() instead
-	 */
-	public function formFields(): Fields
-	{
-		return $this->siblings;
-	}
-
-	/**
-	 * Checks if the field is disabled
-	 */
-	public function isDisabled(): bool
-	{
-		return $this->disabled === true;
-	}
-
-	/**
 	 * Checks if the field is hidden
 	 */
 	public function isHidden(): bool
 	{
-		return ($this->options['hidden'] ?? false) === true;
-	}
-
-	/**
-	 * Checks if the field is required
-	 */
-	public function isRequired(): bool
-	{
-		return $this->required ?? false;
+		return $this->componentOption('hidden', false) === true;
 	}
 
 	/**
@@ -321,67 +270,35 @@ class Field extends Component
 	 */
 	public function isSaveable(): bool
 	{
-		return ($this->options['save'] ?? true) !== false;
+		return $this->componentOption('save', true) !== false;
 	}
 
 	/**
-	 * Returns field api routes
+	 * Return field props, which can be used in our
+	 * frontend components
 	 */
-	public function routes(): array
+	public function props(): array
 	{
-		if (
-			isset($this->options['api']) === true &&
-			$this->options['api'] instanceof Closure
-		) {
-			return $this->options['api']->call($this);
-		}
-
-		return [];
-	}
-
-	/**
-	 * Checks if the field is saveable
-	 * @deprecated 5.0.0 Use `::isSaveable()` instead
-	 */
-	public function save(): bool
-	{
-		return $this->isSaveable();
-	}
-
-	/**
-	 * Parent collection with all fields of the current form
-	 */
-	public function siblings(): Fields
-	{
-		return $this->siblings;
-	}
-
-	/**
-	 * Returns all sibling fields for the HasSiblings trait
-	 */
-	protected function siblingsCollection(): Fields
-	{
-		return $this->siblings;
-	}
-
-	/**
-	 * Converts the field to a plain array
-	 */
-	public function toArray(): array
-	{
-		$array = parent::toArray();
-
-		unset($array['model']);
-
-		$array['hidden']   = $this->isHidden();
-		$array['saveable'] = $this->isSaveable();
-
-		ksort($array);
-
-		return array_filter(
-			$array,
-			fn ($item) => $item !== null && is_object($item) === false
-		);
+		return [
+			...parent::toArray(),
+			'after'       => $this->after(),
+			'autofocus'   => $this->autofocus(),
+			'before'      => $this->before(),
+			'default'     => $this->default(),
+			'disabled'    => $this->isDisabled(),
+			'help'        => $this->help(),
+			'hidden'      => $this->isHidden(),
+			'icon'        => $this->icon(),
+			'label'       => $this->label(),
+			'name'        => $this->name(),
+			'placeholder' => $this->placeholder(),
+			'required'    => $this->isRequired(),
+			'saveable'    => $this->isSaveable(),
+			'translate'   => $this->translate(),
+			'type'        => $this->type(),
+			'when'        => $this->when(),
+			'width'       => $this->width(),
+		];
 	}
 
 	/**
@@ -389,8 +306,8 @@ class Field extends Component
 	 */
 	public function toStoredValue(bool $default = false): mixed
 	{
-		$value = $this->value($default);
-		$store = $this->options['save'] ?? true;
+		$value = $this->toFormValue($default);
+		$store = $this->componentOption('save', true);
 
 		if ($store === false) {
 			return null;
@@ -408,6 +325,6 @@ class Field extends Component
 	 */
 	protected function validations(): array
 	{
-		return $this->options['validations'] ?? [];
+		return $this->componentOption('validations', []);
 	}
 }

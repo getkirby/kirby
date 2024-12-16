@@ -7,6 +7,16 @@ use Kirby\Cms\Layouts;
 
 class LayoutFieldTest extends TestCase
 {
+	public function testApi()
+	{
+		$field = $this->field('layout');
+
+		$routes = $field->api();
+
+		$this->assertIsArray($routes);
+		$this->assertCount(7, $routes);
+	}
+
 	public function testDefaultProps()
 	{
 		$field = $this->field('layout', []);
@@ -117,16 +127,6 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame('1/1', $props['width']);
 		$this->assertNull($props['settings']);
 		$this->assertSame([['1/1']], $props['layouts']);
-	}
-
-	public function testRoutes()
-	{
-		$field = $this->field('layout');
-
-		$routes = $field->routes();
-
-		$this->assertIsArray($routes);
-		$this->assertCount(7, $routes);
 	}
 
 	public function testToStoredValue()

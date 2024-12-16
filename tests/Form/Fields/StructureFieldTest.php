@@ -69,12 +69,12 @@ class StructureFieldTest extends TestCase
 		$expected = [
 			'a' => [
 				'type' => 'text',
-				'label' => 'a',
+				'label' => 'A',
 				'mobile' => true // the first column should be automatically kept on mobile
 			],
 			'b' => [
 				'type' => 'text',
-				'label' => 'b',
+				'label' => 'B',
 			],
 		];
 
@@ -103,7 +103,7 @@ class StructureFieldTest extends TestCase
 			'b' => [
 				'mobile' => true,
 				'type'   => 'text',
-				'label'  => 'b',
+				'label'  => 'B',
 			],
 		];
 
@@ -366,13 +366,13 @@ class StructureFieldTest extends TestCase
 
 		$app->setCurrentLanguage('en');
 
-		$this->assertFalse($field->form()->fields()->a()->disabled());
-		$this->assertFalse($field->form()->fields()->b()->disabled());
+		$this->assertFalse($field->form()->fields()->a()->isDisabled());
+		$this->assertFalse($field->form()->fields()->b()->isDisabled());
 
 		$app->setCurrentLanguage('de');
 
-		$this->assertFalse($field->form()->fields()->a()->disabled());
-		$this->assertTrue($field->form()->fields()->b()->disabled());
+		$this->assertFalse($field->form()->fields()->a()->isDisabled());
+		$this->assertTrue($field->form()->fields()->b()->isDisabled());
 	}
 
 	public function testDefault()

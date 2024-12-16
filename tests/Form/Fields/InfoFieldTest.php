@@ -13,7 +13,7 @@ class InfoFieldTest extends TestCase
 		$this->assertSame('info', $field->type());
 		$this->assertSame('info', $field->name());
 		$this->assertNull($field->value());
-		$this->assertNull($field->label());
+		$this->assertSame('Info', $field->label());
 		$this->assertNull($field->text());
 		$this->assertFalse($field->save());
 	}
