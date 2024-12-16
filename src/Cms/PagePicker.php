@@ -127,13 +127,13 @@ class PagePicker extends Picker
 		if (empty($this->options['query']) === true) {
 			$items = $this->itemsForParent();
 
-			// when subpage navigation is enabled, a parent
-			// might be passed in addition to the query.
-			// The parent then takes priority.
+		// when subpage navigation is enabled, a parent
+		// might be passed in addition to the query.
+		// The parent then takes priority.
 		} elseif ($this->options['subpages'] === true && empty($this->options['parent']) === false) {
 			$items = $this->itemsForParent();
 
-			// search by query
+		// search by query
 		} else {
 			$items = $this->itemsForQuery();
 		}
