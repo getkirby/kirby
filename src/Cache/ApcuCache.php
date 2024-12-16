@@ -46,6 +46,21 @@ class ApcuCache extends Cache
 	}
 
 	/**
+	 * Whether the cache has any entry,
+	 * irrespective whether the entries have expired or not
+	 */
+	public function isEmpty(): bool
+	{
+		if (empty($this->options['prefix']) === false) {
+			$iterator = new APCUIterator('!^' . preg_quote($this->options['prefix']) . '!');
+		} else {
+			$iterator = new APCUIterator();
+		}
+
+		return $iterator->getTotalCount() === 0;
+	}
+
+	/**
 	 * Removes an item from the cache and returns
 	 * whether the operation was successful
 	 */
