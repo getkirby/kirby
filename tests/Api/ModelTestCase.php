@@ -1,12 +1,11 @@
 <?php
 
-namespace Kirby\Cms\Api;
+namespace Kirby\Api;
 
-use Kirby\Cms\Api;
 use Kirby\Cms\App;
 use Kirby\Cms\TestCase;
 
-class ApiModelTestCase extends TestCase
+class ModelTestCase extends TestCase
 {
 	protected Api $api;
 
