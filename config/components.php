@@ -4,8 +4,11 @@ use Kirby\Cms\App;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
 use Kirby\Cms\FileVersion;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\User;
+use Kirby\Content\PlainTextStorage;
+use Kirby\Content\Storage;
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
 use Kirby\Exception\NotFoundException;
@@ -299,6 +302,16 @@ return [
 		bool $slots = false
 	): Snippet|string {
 		return Snippet::factory($name, $data, $slots);
+	},
+
+	/**
+	 * Create a new storage object for the given model
+	 */
+	'storage' => function (
+		App $kirby,
+		ModelWithContent $model
+	): Storage {
+		return new PlainTextStorage(model: $model);
 	},
 
 	/**
