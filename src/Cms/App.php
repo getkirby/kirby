@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Generator;
+use Kirby\Content\Storage;
 use Kirby\Data\Data;
 use Kirby\Email\Email as BaseEmail;
 use Kirby\Exception\ErrorPageException;
@@ -1614,6 +1615,14 @@ class App
 
 		echo $snippet;
 		return null;
+	}
+
+	/**
+	 * Returns the default storage instance for a given Model
+	 */
+	public function storage(ModelWithContent $model): Storage
+	{
+		return $this->component('storage')($this, $model);
 	}
 
 	/**
