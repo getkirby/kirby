@@ -523,7 +523,7 @@ class Page extends ModelWithContent
 		}
 
 		static $accessible   = [];
-		$role                = $this->kirby()->user()?->role()->id() ?? '__none__';
+		$role                = $this->kirby()->role()?->id() ?? '__none__';
 		$template            = $this->intendedTemplate()->name();
 		$accessible[$role] ??= [];
 
@@ -695,7 +695,7 @@ class Page extends ModelWithContent
 		}
 
 		static $listable   = [];
-		$role              = $this->kirby()->user()?->role()->id() ?? '__none__';
+		$role              = $this->kirby()->role()?->id() ?? '__none__';
 		$template          = $this->intendedTemplate()->name();
 		$listable[$role] ??= [];
 
@@ -753,7 +753,7 @@ class Page extends ModelWithContent
 	public function isReadable(): bool
 	{
 		static $readable   = [];
-		$role              = $this->kirby()->user()?->role()->id() ?? '__none__';
+		$role              = $this->kirby()->role()?->id() ?? '__none__';
 		$template          = $this->intendedTemplate()->name();
 		$readable[$role] ??= [];
 
