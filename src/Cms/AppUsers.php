@@ -68,6 +68,14 @@ trait AppUsers
 	}
 
 	/**
+	 * Returns all user roles
+	 */
+	public function roles(): Roles
+	{
+		return $this->roles ??= Roles::load($this->root('roles'));
+	}
+
+	/**
 	 * Set the currently active user id
 	 *
 	 * @return $this

@@ -110,7 +110,34 @@ class AppUsersTest extends TestCase
 		$this->app->impersonate('homer@simpsons.com');
 	}
 
-	public function testLoad()
+	public function testRolesSet()
+	{
+		$app = new App([
+			'roles' => [
+				[
+					'name'  => 'editor',
+					'title' => 'Editor'
+				]
+			]
+		]);
+
+		$this->assertCount(2, $app->roles());
+		$this->assertSame('editor', $app->roles()->last()->name());
+	}
+
+	public function testRolesLoad()
+	{
+		$app = new App([
+			'roots' => [
+				'site' => static::FIXTURES
+			]
+		]);
+
+		$this->assertCount(2, $app->roles());
+		$this->assertSame('editor', $app->roles()->last()->name());
+	}
+
+	public function testUsersLoad()
 	{
 		$app = $this->app->clone([
 			'roots' => [
@@ -122,7 +149,7 @@ class AppUsersTest extends TestCase
 		$this->assertSame('user@getkirby.com', $app->users()->first()->email());
 	}
 
-	public function testSet()
+	public function testUsersSet()
 	{
 		$app = $this->app->clone([
 			'users' => [
