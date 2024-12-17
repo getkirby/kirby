@@ -282,7 +282,7 @@ class User extends ModelWithContent
 	}
 
 	/**
-	 * Checks if the user is accessible
+	 * Checks if the user is accessible to the current user
 	 */
 	public function isAccessible(): bool
 	{

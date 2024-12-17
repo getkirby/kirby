@@ -314,7 +314,7 @@ class Language implements Stringable
 	}
 
 	/**
-	 * Checks if the language is accessible
+	 * Checks if the language is accessible to the current user
 	 */
 	public function isAccessible(): bool
 	{
