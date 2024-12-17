@@ -73,6 +73,15 @@
 				width="1/2"
 			/>
 		</k-lab-example>
+		<k-lab-example label="Selectable">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				:selectable="true"
+				layout="cards"
+				info="With some info"
+				text="This is a nice item"
+			/>
+		</k-lab-example>
 		<k-lab-example label="Theme: disabled">
 			<k-item
 				:image="{ src: 'https://picsum.photos/800/600' }"
