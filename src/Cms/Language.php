@@ -6,6 +6,7 @@ use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
@@ -163,6 +164,12 @@ class Language implements Stringable
 
 		$language = new static($props);
 
+		if ($language->permissions()->can('create') === false) {
+			throw new PermissionException(
+				key: 'language.create.permission'
+			);
+		}
+
 		// validate the new language
 		LanguageRules::create($language);
 
@@ -216,6 +223,12 @@ class Language implements Stringable
 	 */
 	public function delete(): bool
 	{
+		if ($this->permissions()->can('delete') === false) {
+			throw new PermissionException(
+				key: 'language.delete.permission'
+			);
+		}
+
 		$kirby = App::instance();
 		$code  = $this->code();
 
@@ -298,6 +311,16 @@ class Language implements Stringable
 	public function exists(): bool
 	{
 		return file_exists($this->root());
+	}
+
+	/**
+	 * Checks if the language is accessible
+	 */
+	public function isAccessible(): bool
+	{
+		static $accessible = [];
+		$role = $this->kirby()->user()?->role()->id() ?? 'nobody';
+		return $accessible[$role] ??= $this->permissions()->can('access');
 	}
 
 	/**
@@ -424,6 +447,11 @@ class Language implements Stringable
 		}
 
 		return $path . '/(:all?)';
+	}
+
+	public function permissions(): LanguagePermissions
+	{
+		return new LanguagePermissions($this);
 	}
 
 	/**
@@ -564,6 +592,12 @@ class Language implements Stringable
 	 */
 	public function update(array|null $props = null): static
 	{
+		if ($this->permissions()->can('update') === false) {
+			throw new PermissionException(
+				key: 'language.update.permission'
+			);
+		}
+
 		$kirby = App::instance();
 
 		// don't change the language code
@@ -571,7 +605,6 @@ class Language implements Stringable
 
 		// make sure the slug is nice and clean
 		$props['slug'] = Str::slug($props['slug'] ?? null);
-
 
 		// trigger before hook
 		$language = $kirby->apply(
@@ -615,7 +648,7 @@ class Language implements Stringable
 			[
 				'newLanguage' => $language,
 				'oldLanguage' => $this,
-				'input' => $props
+				'input'       => $props
 			],
 			'newLanguage'
 		);

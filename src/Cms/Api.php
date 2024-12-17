@@ -139,6 +139,14 @@ class Api extends BaseApi
 	}
 
 	/**
+	 * Returns the languages collection
+	 */
+	public function languages(): Languages
+	{
+		return $this->kirby()->languages()->filter('isAccessible', true);
+	}
+
+	/**
 	 * Returns the page object for the given id
 	 *
 	 * @param string $id Page's id
@@ -255,6 +263,6 @@ class Api extends BaseApi
 	 */
 	public function users(): Users
 	{
-		return $this->kirby->users();
+		return $this->kirby->users()->filter('isAccessible', true);
 	}
 }
