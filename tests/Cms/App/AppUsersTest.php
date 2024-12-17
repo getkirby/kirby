@@ -137,6 +137,67 @@ class AppUsersTest extends TestCase
 		$this->assertSame('editor', $app->roles()->last()->name());
 	}
 
+	public function testRoleManual()
+	{
+		$app = new App([
+			'roles' => [
+				[
+					'name'  => 'editor',
+					'title' => 'Editor'
+				]
+			]
+		]);
+
+		$this->assertSame('editor', $app->role('editor')->name());
+		$this->assertNull($app->role('something'));
+	}
+
+	public function testRoleFromUser()
+	{
+		$app = new App([
+			'roles' => [
+				[
+					'name'  => 'editor',
+					'title' => 'Editor'
+				]
+			],
+			'users' => [
+				[
+					'email' => 'user@getkirby.com',
+					'role'  => 'editor'
+				]
+			]
+		]);
+
+		$app->auth()->setUser($app->user('user@getkirby.com'));
+
+		$this->assertSame('editor', $app->role()->name());
+		$this->assertSame('editor', $app->role(null, false)->name());
+	}
+
+	public function testRoleFromImpersonatedUser()
+	{
+		$app = new App([
+			'roles' => [
+				[
+					'name'  => 'editor',
+					'title' => 'Editor'
+				]
+			],
+			'users' => [
+				[
+					'email' => 'user@getkirby.com',
+					'role'  => 'editor'
+				]
+			]
+		]);
+
+		$app->impersonate('user@getkirby.com');
+
+		$this->assertSame('editor', $app->role()->name());
+		$this->assertNull($app->role(null, false));
+	}
+
 	public function testUsersLoad()
 	{
 		$app = $this->app->clone([
