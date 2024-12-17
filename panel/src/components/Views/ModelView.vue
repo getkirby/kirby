@@ -65,6 +65,16 @@ export default {
 			return this.lock.modified;
 		}
 	},
+	watch: {
+		api: {
+			handler(newValue, oldValue) {
+				if (newValue !== oldValue) {
+					this.$panel.content.legacy.import(newValue);
+				}
+			},
+			immediate: true
+		}
+	},
 	mounted() {
 		this.$events.on("beforeunload", this.onBeforeUnload);
 		this.$events.on("content.save", this.onContentSave);
