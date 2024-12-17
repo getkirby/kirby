@@ -287,7 +287,7 @@ class User extends ModelWithContent
 	public function isAccessible(): bool
 	{
 		static $accessible = [];
-		$role = $this->role()->id();
+		$role = $this->kirby()->role()?->id() ?? '__none__';
 		return $accessible[$role] ??= $this->permissions()->can('access');
 	}
 

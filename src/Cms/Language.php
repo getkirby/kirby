@@ -306,7 +306,7 @@ class Language implements Stringable
 	public function isAccessible(): bool
 	{
 		static $accessible = [];
-		$role = $this->kirby()->user()?->role()->id() ?? 'nobody';
+		$role = $this->kirby()->role()?->id() ?? '__none__';
 		return $accessible[$role] ??= $this->permissions()->can('access');
 	}
 
