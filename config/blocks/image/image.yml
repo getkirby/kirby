@@ -5,6 +5,7 @@ fields:
   location:
     label: field.blocks.image.location
     type: radio
+    required: true
     columns: 2
     default: "kirby"
     options:
