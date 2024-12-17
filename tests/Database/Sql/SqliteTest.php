@@ -156,7 +156,7 @@ class SqliteTest extends TestCase
 	public function testTables()
 	{
 		$result = $this->sql->tables();
-		$this->assertSame('SELECT name FROM sqlite_master WHERE type = "table" OR type = "view"', $result['query']);
+		$this->assertSame('SELECT name FROM sqlite_master WHERE type = \'table\' OR type = \'view\'', $result['query']);
 		$this->assertSame([], $result['bindings']);
 	}
 
