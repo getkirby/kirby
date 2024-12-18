@@ -319,7 +319,7 @@ class File extends ModelWithContent
 		}
 
 		static $accessible   = [];
-		$role                = $this->kirby()->user()?->role()->id() ?? '__none__';
+		$role                = $this->kirby()->role()?->id() ?? '__none__';
 		$template            = $this->template() ?? '__none__';
 		$accessible[$role] ??= [];
 
@@ -343,7 +343,7 @@ class File extends ModelWithContent
 		}
 
 		static $listable   = [];
-		$role              = $this->kirby()->user()?->role()->id() ?? '__none__';
+		$role              = $this->kirby()->role()?->id() ?? '__none__';
 		$template          = $this->template() ?? '__none__';
 		$listable[$role] ??= [];
 
@@ -358,7 +358,7 @@ class File extends ModelWithContent
 	public function isReadable(): bool
 	{
 		static $readable   = [];
-		$role              = $this->kirby()->user()?->role()->id() ?? '__none__';
+		$role              = $this->kirby()->role()?->id() ?? '__none__';
 		$template          = $this->template() ?? '__none__';
 		$readable[$role] ??= [];
 
