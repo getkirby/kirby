@@ -30,6 +30,41 @@ class PagesSectionTest extends TestCase
 		App::destroy();
 	}
 
+	public function testBatchDefault()
+	{
+		$section = new Section('pages', [
+			'name'  => 'test',
+			'model' => new Page(['slug' => 'test']),
+		]);
+
+		$this->assertFalse($section->batch());
+		$this->assertFalse($section->toArray()['options']['batch']);
+	}
+
+	public function testBatchDisabled()
+	{
+		$section = new Section('pages', [
+			'name'  => 'test',
+			'model' => new Page(['slug' => 'test']),
+			'batch' => false
+		]);
+
+		$this->assertFalse($section->batch());
+		$this->assertFalse($section->toArray()['options']['batch']);
+	}
+
+	public function testBatchEnabled()
+	{
+		$section = new Section('pages', [
+			'name'  => 'test',
+			'model' => new Page(['slug' => 'test']),
+			'batch' => true
+		]);
+
+		$this->assertTrue($section->batch());
+		$this->assertTrue($section->toArray()['options']['batch']);
+	}
+
 	public function testHeadline()
 	{
 		// single headline
