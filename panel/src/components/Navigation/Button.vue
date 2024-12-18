@@ -240,7 +240,10 @@ export default {
 	--button-rounded: var(--spacing-1);
 	--button-text-display: block;
 	--button-icon-display: block;
-	--button-filled-color-back: light-dark(var(--color-gray-300), var(--color-gray-950));
+	--button-filled-color-back: light-dark(
+		var(--color-gray-300),
+		var(--color-gray-950)
+	);
 }
 
 .k-button {
@@ -294,7 +297,7 @@ export default {
 		[aria-current="true"]
 	)
 	.k-button-text {
-	filter: brightness(75%);
+	filter: light-dark(brightness(75%), brightness(125%));
 }
 .k-button:where([data-variant="dimmed"][data-theme]) {
 	--button-color-icon: var(--theme-color-icon);
