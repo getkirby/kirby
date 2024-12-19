@@ -572,7 +572,6 @@ class Language implements Stringable
 		// make sure the slug is nice and clean
 		$props['slug'] = Str::slug($props['slug'] ?? null);
 
-
 		// trigger before hook
 		$language = $kirby->apply(
 			'language.update:before',
@@ -615,7 +614,7 @@ class Language implements Stringable
 			[
 				'newLanguage' => $language,
 				'oldLanguage' => $this,
-				'input' => $props
+				'input'       => $props
 			],
 			'newLanguage'
 		);

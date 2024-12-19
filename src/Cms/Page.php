@@ -512,7 +512,7 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Checks if the page is accessible that accessible and listable.
+	 * Checks if the page is accessible to the current user
 	 * This permission depends on the `read` option until v5
 	 */
 	public function isAccessible(): bool

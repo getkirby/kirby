@@ -308,7 +308,7 @@ class File extends ModelWithContent
 	}
 
 	/**
-	 * Checks if the files is accessible.
+	 * Checks if the file is accessible to the current user
 	 * This permission depends on the `read` option until v5
 	 */
 	public function isAccessible(): bool
