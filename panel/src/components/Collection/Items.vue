@@ -15,6 +15,27 @@
 		>
 			<slot name="options" v-bind="{ item, index }" />
 		</template>
+
+		<template #extra-columns-headers>
+			<th
+				v-for="(button, buttonIndex) in table.rows[0].buttons"
+				:key="'button-' + buttonIndex"
+				:data-column-id="'buttons-' + buttonIndex"
+				:style="{ width: 'var(--table-row-height)' }"
+				data-mobile="true"
+				class="k-items-table-layout-buttons-column"
+			/>
+		</template>
+
+		<template #extra-columns="{ row: item, rowIndex: index }">
+			<td
+				v-for="(button, buttonIndex) in item.buttons"
+				:key="'button-' + buttonIndex"
+				class="k-items-table-layout-buttons-column"
+			>
+				<k-button v-bind="button" />
+			</td>
+		</template>
 	</k-table>
 
 	<!-- Layout: cards, cardlets, list -->
@@ -234,5 +255,16 @@ export default {
 	.k-items[data-layout="cards"][data-size="huge"] {
 		grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
 	}
+}
+
+.k-table .k-items-table-layout-buttons-column {
+	padding: 0;
+	width: var(--table-row-height);
+	text-align: center;
+}
+.k-table .k-items-table-layout-buttons-column .k-button {
+	--button-width: 100%;
+	--button-height: 100%;
+	outline-offset: -2px;
 }
 </style>

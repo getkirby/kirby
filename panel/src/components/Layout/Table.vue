@@ -43,6 +43,8 @@
 						</slot>
 					</th>
 
+					<slot name="extra-columns-headers" />
+
 					<th
 						v-if="hasOptions"
 						data-mobile="true"
@@ -125,6 +127,8 @@
 								})
 							"
 						/>
+
+						<slot name="extra-columns" v-bind="{ row, rowIndex }" />
 
 						<!-- Options -->
 						<td

@@ -4,7 +4,6 @@ import ColorFieldPreview from "./ColorFieldPreview.vue";
 import DateFieldPreview from "./DateFieldPreview.vue";
 import EmailFieldPreview from "./EmailFieldPreview.vue";
 import FilesFieldPreview from "./FilesFieldPreview.vue";
-import FlagFieldPreview from "./FlagFieldPreview.vue";
 import HtmlFieldPreview from "./HtmlFieldPreview.vue";
 import ImageFieldPreview from "./ImageFieldPreview.vue";
 import LinkFieldPreview from "./LinkFieldPreview.vue";
@@ -25,7 +24,6 @@ export default {
 		app.component("k-date-field-preview", DateFieldPreview);
 		app.component("k-email-field-preview", EmailFieldPreview);
 		app.component("k-files-field-preview", FilesFieldPreview);
-		app.component("k-flag-field-preview", FlagFieldPreview);
 		app.component("k-html-field-preview", HtmlFieldPreview);
 		app.component("k-image-field-preview", ImageFieldPreview);
 		app.component("k-link-field-preview", LinkFieldPreview);

@@ -94,15 +94,6 @@ return [
 				];
 			}
 
-			if ($this->type === 'pages') {
-				$columns['flag'] = [
-					'label'  => ' ',
-					'mobile' => true,
-					'type'   => 'flag',
-					'width'  => 'var(--table-row-height)',
-				];
-			}
-
 			return $columns;
 		},
 	],
