@@ -37,9 +37,7 @@ class LanguageRules
 			);
 		}
 
-		$user = App::instance()->user();
-
-		if ($user?->role()->permissions()->for('languages', 'create') !== true) {
+		if ($language->permissions()->create() !== true) {
 			throw new PermissionException(
 				key: 'language.create.permission'
 			);
@@ -54,15 +52,7 @@ class LanguageRules
 	 */
 	public static function delete(Language $language): void
 	{
-		if ($language->isDeletable() === false) {
-			throw new LogicException(
-				message: 'The language cannot be deleted'
-			);
-		}
-
-		$user = App::instance()->user();
-
-		if ($user?->role()->permissions()->for('languages', 'delete') !== true) {
+		if ($language->permissions()->delete() !== true) {
 			throw new PermissionException(
 				key: 'language.delete.permission'
 			);
@@ -93,9 +83,7 @@ class LanguageRules
 			);
 		}
 
-		$user = $kirby->user();
-
-		if ($user?->role()->permissions()->for('languages', 'update') !== true) {
+		if ($newLanguage->permissions()->update() !== true) {
 			throw new PermissionException(
 				key: 'language.update.permission'
 			);

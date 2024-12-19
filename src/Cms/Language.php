@@ -427,6 +427,14 @@ class Language implements Stringable
 	}
 
 	/**
+	 * Returns the permissions object for this language
+	 */
+	public function permissions(): LanguagePermissions
+	{
+		return new LanguagePermissions($this);
+	}
+
+	/**
 	 * Returns the absolute path to the language file
 	 */
 	public function root(): string
