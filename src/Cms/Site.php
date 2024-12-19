@@ -267,6 +267,16 @@ class Site extends ModelWithContent
 	}
 
 	/**
+	 * Checks if the site is accessible to the current user
+	 */
+	public function isAccessible(): bool
+	{
+		static $accessible = [];
+		$role = $this->kirby()->role()?->id() ?? '__none__';
+		return $accessible[$role] ??= $this->permissions()->can('access');
+	}
+
+	/**
 	 * Returns the root to the media folder for the site
 	 * @internal
 	 */

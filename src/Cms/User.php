@@ -282,6 +282,16 @@ class User extends ModelWithContent
 	}
 
 	/**
+	 * Checks if the user is accessible to the current user
+	 */
+	public function isAccessible(): bool
+	{
+		static $accessible = [];
+		$role = $this->kirby()->role()?->id() ?? '__none__';
+		return $accessible[$role] ??= $this->permissions()->can('access');
+	}
+
+	/**
 	 * Checks if this user has the admin role
 	 */
 	public function isAdmin(): bool

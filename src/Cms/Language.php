@@ -301,6 +301,16 @@ class Language implements Stringable
 	}
 
 	/**
+	 * Checks if the language is accessible to the current user
+	 */
+	public function isAccessible(): bool
+	{
+		static $accessible = [];
+		$role = $this->kirby()->role()?->id() ?? '__none__';
+		return $accessible[$role] ??= $this->permissions()->can('access');
+	}
+
+	/**
 	 * Checks if this is the default language
 	 * for the site.
 	 */
