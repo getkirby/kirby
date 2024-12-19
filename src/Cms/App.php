@@ -1332,14 +1332,6 @@ class App
 	}
 
 	/**
-	 * Returns all user roles
-	 */
-	public function roles(): Roles
-	{
-		return $this->roles ??= Roles::load($this->root('roles'));
-	}
-
-	/**
 	 * Returns a system root
 	 */
 	public function root(string $type = 'index'): string|null
