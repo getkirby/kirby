@@ -159,8 +159,8 @@ class LanguageRulesTest extends TestCase
 		$language = $this->createMock(Language::class);
 		$language->method('isDeletable')->willReturn(false);
 
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The language cannot be deleted');
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to delete the language');
 
 		LanguageRules::delete($language);
 	}
