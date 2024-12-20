@@ -16,17 +16,21 @@ use Kirby\Toolkit\A;
 abstract class ModelPermissions
 {
 	protected string $category;
-	protected ModelWithContent $model;
+	protected ModelWithContent|Language $model;
 	protected array $options;
 	protected Permissions $permissions;
 	protected User $user;
 
-	public function __construct(ModelWithContent $model)
+	public function __construct(ModelWithContent|Language $model)
 	{
 		$this->model       = $model;
-		$this->options     = $model->blueprint()->options();
 		$this->user        = $model->kirby()->user() ?? User::nobody();
 		$this->permissions = $this->user->role()->permissions();
+
+		$this->options = match (true) {
+			$model instanceof ModelWithContent => $model->blueprint()->options(),
+			default                            => []
+		};
 	}
 
 	public function __call(string $method, array $arguments = []): bool
