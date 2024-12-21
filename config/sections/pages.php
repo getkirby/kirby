@@ -10,6 +10,7 @@ use Kirby\Toolkit\I18n;
 
 return [
 	'mixins' => [
+		'batch',
 		'details',
 		'empty',
 		'headline',
@@ -149,25 +150,26 @@ return [
 				$pages = $pages->flip();
 			}
 
+			return $pages;
+		},
+		'modelsPaginated' => function () {
 			// pagination
-			$pages = $pages->paginate([
+			return $this->models()->paginate([
 				'page'   => $this->page,
 				'limit'  => $this->limit,
 				'method' => 'none' // the page is manually provided
 			]);
-
-			return $pages;
 		},
 		'pages' => function () {
 			return $this->models;
 		},
 		'total' => function () {
-			return $this->models->pagination()->total();
+			return $this->models()->count();
 		},
 		'data' => function () {
 			$data = [];
 
-			foreach ($this->models as $page) {
+			foreach ($this->modelsPaginated() as $page) {
 				$panel       = $page->panel();
 				$permissions = $page->permissions();
 
@@ -315,12 +317,28 @@ return [
 			return $blueprints;
 		},
 	],
+	// @codeCoverageIgnoreStart
+	'api' => function () {
+		return [
+			[
+				'pattern' => 'delete',
+				'method'  => 'DELETE',
+				'action'  => function () {
+					return $this->section()->deleteSelected(
+						ids: $this->requestBody('ids'),
+					);
+				}
+			]
+		];
+	},
+	// @codeCoverageIgnoreEnd
 	'toArray' => function () {
 		return [
 			'data'    => $this->data,
 			'errors'  => $this->errors,
 			'options' => [
 				'add'      => $this->add,
+				'batch'    => $this->batch,
 				'columns'  => $this->columnsWithTypes(),
 				'empty'    => $this->empty,
 				'headline' => $this->headline,

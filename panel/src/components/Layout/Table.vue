@@ -72,8 +72,10 @@
 						v-for="(row, rowIndex) in values"
 						:key="row.id ?? row._id ?? row.value ?? JSON.stringify(row)"
 						:class="{
-							'k-table-sortable-row': sortable && row.sortable !== false
+							'k-table-sortable-row': rowIsSortable(row)
 						}"
+						:data-selectable="rowIsSelectable(row)"
+						:data-sortable="rowIsSortable(row)"
 					>
 						<!-- Index & drag handle -->
 						<td
@@ -81,20 +83,30 @@
 							data-mobile="true"
 							class="k-table-index-column"
 						>
-							<slot
-								name="index"
-								v-bind="{
-									row,
-									rowIndex
-								}"
-							>
-								<div class="k-table-index" v-text="index + rowIndex" />
-							</slot>
+							<template v-if="rowIsSelectable(row)">
+								<label class="k-table-index-checkbox">
+									<input
+										type="checkbox"
+										@change="$emit('select', row, rowIndex)"
+									/>
+								</label>
+							</template>
+							<template v-else>
+								<slot
+									name="index"
+									v-bind="{
+										row,
+										rowIndex
+									}"
+								>
+									<div class="k-table-index" v-text="index + rowIndex" />
+								</slot>
 
-							<k-sort-handle
-								v-if="sortable && row.sortable !== false"
-								class="k-table-sort-handle"
-							/>
+								<k-sort-handle
+									v-if="rowIsSortable(row)"
+									class="k-table-sort-handle"
+								/>
+							</template>
 						</td>
 
 						<!-- Cell -->
@@ -211,6 +223,10 @@ export default {
 		/**
 		 * Whether table is sortable
 		 */
+		selectable: Boolean,
+		/**
+		 * Whether table is sortable
+		 */
 		sortable: Boolean
 	},
 	emits: ["cell", "change", "header", "input", "option", "paginate", "sort"],
@@ -261,7 +277,7 @@ export default {
 		 * @returns {bool}
 		 */
 		hasIndexColumn() {
-			return this.sortable || this.index !== false;
+			return this.sortable || this.selectable || this.index !== false;
 		},
 		/**
 		 * Whether to show options column
@@ -348,6 +364,16 @@ export default {
 			this.$emit("input", this.values);
 			this.$emit("sort", this.values);
 		},
+		rowIsSelectable(row) {
+			return this.selectable === true && row.selectable !== false;
+		},
+		rowIsSortable(row) {
+			return (
+				this.sortable === true &&
+				this.selectable === false &&
+				row.sortable !== false
+			);
+		},
 		/**
 		 * Returns width styling based on column fraction
 		 * @param {string} fraction
@@ -371,7 +397,7 @@ export default {
 :root {
 	--table-cell-padding: var(--spacing-3);
 	--table-color-back: light-dark(var(--color-white), var(--color-gray-850));
-	--table-color-border: var(--panel-color-back);
+	--table-color-border: light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.375));
 	--table-color-hover: light-dark(var(--color-gray-100), rgba(0, 0, 0, 0.1));
 	--table-color-th-back: light-dark(
 		var(--color-gray-100),
@@ -457,6 +483,9 @@ export default {
 }
 
 /* Table Body */
+.k-table tbody tr td {
+	background: var(--table-color-back);
+}
 .k-table tbody tr:hover td {
 	background: var(--table-color-hover);
 }
@@ -498,17 +527,31 @@ export default {
 	color: var(--color-text-dimmed);
 	line-height: 1.1em;
 }
+.k-table .k-table-index-column:has(.k-table-index-checkbox) {
+	padding: 0;
+}
+.k-table .k-table-index-checkbox {
+	height: 100%;
+	display: grid;
+	place-items: center;
+}
 
 /* Table Index with sort handle */
-.k-table .k-table-index-column .k-sort-handle {
+.k-table tr[data-sortable="true"] .k-table-index-column .k-sort-handle {
 	--button-width: 100%;
 	display: none;
 }
-.k-table tr.k-table-sortable-row:hover .k-table-index-column .k-table-index {
+.k-table tr[data-sortable="true"]:hover .k-table-index-column .k-table-index {
 	display: none;
 }
-.k-table tr.k-table-sortable-row:hover .k-table-index-column .k-sort-handle {
+.k-table tr[data-sortable="true"]:hover .k-table-index-column .k-sort-handle {
 	display: flex;
+}
+
+/* Selectable rows */
+.k-table tr[data-selectable="true"]:has(.k-table-index-column input:checked) {
+	--table-color-back: light-dark(var(--color-blue-250), var(--color-blue-800));
+	--table-color-hover: var(--table-color-back);
 }
 
 /* Table Options */

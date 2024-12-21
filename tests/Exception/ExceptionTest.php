@@ -99,6 +99,44 @@ class ExceptionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::getDetails
+	 */
+	public function testGetDetails()
+	{
+		$exception = new Exception(
+			details: $details = [
+				[
+					'label'   => 'A',
+					'message'   => 'Message A',
+				]
+			]
+		);
+
+		$this->assertSame($details, $exception->getDetails());
+	}
+
+	/**
+	 * @covers ::getDetails
+	 */
+	public function testGetDetailsWithExceptions()
+	{
+		$exception = new Exception(
+			details: [
+				'A' => new Exception(message: 'Message A')
+			]
+		);
+
+		$expected = [
+			'A' => [
+				'label'   => 'A',
+				'message'   => 'Message A',
+			]
+		];
+
+		$this->assertSame($expected, $exception->getDetails());
+	}
+
+	/**
 	 * @covers ::__construct
 	 */
 	public function testJustMessage()

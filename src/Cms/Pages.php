@@ -2,8 +2,11 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Uuid\HasUuids;
+use Throwable;
 
 /**
  * The `$pages` object refers to a
@@ -116,6 +119,41 @@ class Pages extends Collection
 	public function code(): Files
 	{
 		return $this->files()->filter('type', 'code');
+	}
+
+	/**
+	 * Deletes the pages with the given IDs
+	 * if they exist in the collection
+	 *
+	 * @throws \Kirby\Exception\Exception If not all pages could be deleted
+	 */
+	public function delete(array $ids): void
+	{
+		$exceptions = [];
+
+		// delete all pages and collect errors
+		foreach ($ids as $id) {
+			try {
+				$model = $this->get($id);
+
+				if ($model instanceof Page === false) {
+					throw new NotFoundException(
+						key: 'page.undefined',
+					);
+				}
+
+				$model->delete();
+			} catch (Throwable $e) {
+				$exceptions[$id] = $e;
+			}
+		}
+
+		if ($exceptions !== []) {
+			throw new Exception(
+				key: 'page.delete.multiple',
+				details: $exceptions
+			);
+		}
 	}
 
 	/**
