@@ -16,14 +16,12 @@ use Kirby\Toolkit\A;
 abstract class ModelPermissions
 {
 	protected string $category;
-	protected ModelWithContent|Language $model;
 	protected array $options;
 	protected Permissions $permissions;
 	protected User $user;
 
-	public function __construct(ModelWithContent|Language $model)
+	public function __construct(protected ModelWithContent|Language $model)
 	{
-		$this->model       = $model;
 		$this->user        = $model->kirby()->user() ?? User::nobody();
 		$this->permissions = $this->user->role()->permissions();
 
