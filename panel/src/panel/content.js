@@ -61,7 +61,7 @@ export default (panel) => {
 				this.emit("discard", {}, env);
 			} catch (error) {
 				// handle locked states
-				if (error.key.startsWith("error.content.lock")) {
+				if (error.key?.startsWith("error.content.lock")) {
 					return this.lockDialog(error.details);
 				}
 
@@ -198,7 +198,7 @@ export default (panel) => {
 				this.emit("publish", { values }, env);
 			} catch (error) {
 				// handle locked states
-				if (error.key.startsWith("error.content.lock")) {
+				if (error.key?.startsWith("error.content.lock")) {
 					return this.lockDialog(error.details);
 				}
 
@@ -266,7 +266,7 @@ export default (panel) => {
 				this.isProcessing = false;
 
 				// handle locked states
-				if (error.key.startsWith("error.content.lock")) {
+				if (error.key?.startsWith("error.content.lock")) {
 					return this.lockDialog(error.details);
 				}
 
