@@ -403,7 +403,7 @@ export default {
 						this.$panel.drawer.props.next = this.items[index + 1];
 						this.$panel.drawer.props.prev = this.items[index - 1];
 
-						this.$set(this.items, index, value);
+						this.items[index] = value;
 						this.save();
 					},
 					next: () => {

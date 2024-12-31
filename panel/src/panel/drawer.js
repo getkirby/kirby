@@ -1,6 +1,6 @@
-import { reactive } from "vue";
 import Modal, { defaults as modalDefaults } from "./modal.js";
 import History from "./history.js";
+import { reactive } from "vue";
 import { uuid } from "@/helpers/string.js";
 
 export const defaults = () => {
@@ -182,8 +182,8 @@ export default (panel) => {
 				return false;
 			}
 
-			set(this.props, "fields", tabs[tab].fields);
-			set(this.props, "tab", tab);
+			this.props.fields = tabs[tab].fields;
+			this.props.tab = tab;
 
 			this.emit("tab", tab);
 
