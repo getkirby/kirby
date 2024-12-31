@@ -5,24 +5,42 @@
 	--theme-color-boost: 3%;
 
 	--theme-color-l-100: calc(var(--color-l-100) + var(--theme-color-boost));
+	--theme-color-l-150: calc(var(--color-l-150) + var(--theme-color-boost));
 	--theme-color-l-200: calc(var(--color-l-200) + var(--theme-color-boost));
+	--theme-color-l-250: calc(var(--color-l-250) + var(--theme-color-boost));
 	--theme-color-l-300: calc(var(--color-l-300) + var(--theme-color-boost));
+	--theme-color-l-350: calc(var(--color-l-350) + var(--theme-color-boost));
 	--theme-color-l-400: calc(var(--color-l-400) + var(--theme-color-boost));
+	--theme-color-l-450: calc(var(--color-l-450) + var(--theme-color-boost));
 	--theme-color-l-500: calc(var(--color-l-500) + var(--theme-color-boost));
+	--theme-color-l-550: calc(var(--color-l-550) + var(--theme-color-boost));
 	--theme-color-l-600: calc(var(--color-l-600) + var(--theme-color-boost));
+	--theme-color-l-650: calc(var(--color-l-650) + var(--theme-color-boost));
 	--theme-color-l-700: calc(var(--color-l-700) + var(--theme-color-boost));
+	--theme-color-l-750: calc(var(--color-l-750) + var(--theme-color-boost));
 	--theme-color-l-800: calc(var(--color-l-800) + var(--theme-color-boost));
+	--theme-color-l-850: calc(var(--color-l-850) + var(--theme-color-boost));
 	--theme-color-l-900: calc(var(--color-l-900) + var(--theme-color-boost));
+	--theme-color-l-950: calc(var(--color-l-950) + var(--theme-color-boost));
 
 	--theme-color-100: hsl(var(--theme-color-hs), var(--theme-color-l-100));
+	--theme-color-150: hsl(var(--theme-color-hs), var(--theme-color-l-150));
 	--theme-color-200: hsl(var(--theme-color-hs), var(--theme-color-l-200));
+	--theme-color-250: hsl(var(--theme-color-hs), var(--theme-color-l-250));
 	--theme-color-300: hsl(var(--theme-color-hs), var(--theme-color-l-300));
+	--theme-color-350: hsl(var(--theme-color-hs), var(--theme-color-l-350));
 	--theme-color-400: hsl(var(--theme-color-hs), var(--theme-color-l-400));
+	--theme-color-450: hsl(var(--theme-color-hs), var(--theme-color-l-450));
 	--theme-color-500: hsl(var(--theme-color-hs), var(--theme-color-l-500));
+	--theme-color-550: hsl(var(--theme-color-hs), var(--theme-color-l-550));
 	--theme-color-600: hsl(var(--theme-color-hs), var(--theme-color-l-600));
+	--theme-color-650: hsl(var(--theme-color-hs), var(--theme-color-l-650));
 	--theme-color-700: hsl(var(--theme-color-hs), var(--theme-color-l-700));
+	--theme-color-750: hsl(var(--theme-color-hs), var(--theme-color-l-750));
 	--theme-color-800: hsl(var(--theme-color-hs), var(--theme-color-l-800));
+	--theme-color-850: hsl(var(--theme-color-hs), var(--theme-color-l-850));
 	--theme-color-900: hsl(var(--theme-color-hs), var(--theme-color-l-900));
+	--theme-color-950: hsl(var(--theme-color-hs), var(--theme-color-l-950));
 
 	--theme-color-border: light-dark(
 		var(--theme-color-500),

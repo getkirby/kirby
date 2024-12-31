@@ -30,6 +30,7 @@ class ViewButtonsTest extends AreaTestCase
 			]
 		]);
 	}
+
 	/**
 	 * @covers ::__construct
 	 */
@@ -101,6 +102,15 @@ class ViewButtonsTest extends AreaTestCase
 		$this->assertSame('result-a', $result[0]['component']);
 		$this->assertSame('result-b', $result[1]['component']);
 		$this->assertSame('result-c', $result[2]['component']);
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderNoButtons()
+	{
+		$buttons = new ViewButtons('test', buttons: false);
+		$this->assertSame([], $buttons->render());
 	}
 
 	/**

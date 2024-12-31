@@ -6,7 +6,6 @@ use Closure;
 use Kirby\Content\Content;
 use Kirby\Content\ContentTranslation;
 use Kirby\Content\Lock;
-use Kirby\Content\PlainTextStorage;
 use Kirby\Content\Storage;
 use Kirby\Content\Version;
 use Kirby\Content\VersionId;
@@ -547,7 +546,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 */
 	public function storage(): Storage
 	{
-		return $this->storage ??= new PlainTextStorage(model: $this);
+		return $this->storage ??= $this->kirby()->storage($this);
 	}
 
 	/**

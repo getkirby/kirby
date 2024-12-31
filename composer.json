@@ -3,7 +3,7 @@
 	"description": "The Kirby core",
 	"license": "proprietary",
 	"type": "kirby-cms",
-	"version": "5.0.0-alpha.4",
+	"version": "5.0.0-beta.1",
 	"keywords": [
 		"kirby",
 		"cms",
@@ -43,10 +43,10 @@
 		"getkirby/composer-installer": "^1.2.1",
 		"laminas/laminas-escaper": "2.14.0",
 		"michelf/php-smartypants": "1.8.1",
-		"phpmailer/phpmailer": "6.9.2",
+		"phpmailer/phpmailer": "6.9.3",
 		"symfony/polyfill-intl-idn": "1.31.0",
 		"symfony/polyfill-mbstring": "1.31.0",
-		"symfony/yaml": "7.1.6"
+		"symfony/yaml": "7.2.0"
 	},
 	"replace": {
 		"symfony/polyfill-php72": "*"

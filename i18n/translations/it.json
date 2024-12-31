@@ -21,6 +21,8 @@
 	"copy": "Copia",
 	"copy.all": "Copia tutto",
 	"copy.success": "{count} copied!",
+	"copy.success.multiple": "{count} copied!",
+	"copy.url": "Copy URL",
 	"create": "Crea",
 	"custom": "Custom",
 
@@ -90,6 +92,12 @@
 
 	"error.cache.type.invalid": "Tipo di cache \"{type}\" non valido",
 
+	"error.content.lock.delete": "The version is locked and cannot be deleted",
+	"error.content.lock.move": "The source version is locked and cannot be moved",
+	"error.content.lock.publish": "This version is already published",
+	"error.content.lock.replace": "The version is locked and cannot be replaced",
+	"error.content.lock.update": "The version is locked and cannot be updated",
+
 	"error.email.preset.notFound": "Non è stato possibile trovare il preset email \"{name}\"",
 
 	"error.field.converter.invalid": "Convertitore \"{converter}\" non valido",
@@ -118,6 +126,7 @@
 	"error.file.name.missing": "Il nome del file non può essere vuoto",
 	"error.file.notFound": "Il file non \u00e8 stato trovato",
 	"error.file.orientation": "L'imaggine dev'essere orientata in \"{orientation}\"",
+	"error.file.sort.permission": "You are not allowed to change the sorting of \"{filename}\"",
 	"error.file.type.forbidden": "Non ti è permesso caricare file {type}",
 	"error.file.type.invalid": "Tipo di file non valido: {type}",
 	"error.file.undefined": "Il file non \u00e8 stato trovato",
@@ -168,6 +177,7 @@
 	"error.page.move.ancestor": "The page cannot be moved into itself",
 	"error.page.move.directory": "The page directory cannot be moved",
 	"error.page.move.duplicate": "A sub page with the URL appendix \"{slug}\" already exists",
+	"error.page.move.noSections": "The page \"{parent}\" cannot be a parent of any page because it lacks any pages sections in its blueprint",
 	"error.page.move.notFound": "The moved page could not be found",
 	"error.page.move.permission": "You are not allowed to move \"{slug}\"",
 	"error.page.move.template": "The \"{template}\" template is not accepted as a subpage of \"{parent}\"",
@@ -297,6 +307,9 @@
 	"field.blocks.heading.name": "Titolo",
 	"field.blocks.heading.text": "Testo",
 	"field.blocks.heading.placeholder": "Titolo …",
+	"field.blocks.figure.back.plain": "Plain",
+	"field.blocks.figure.back.pattern.light": "Pattern (light)",
+	"field.blocks.figure.back.pattern.dark": "Pattern (dark)",
 	"field.blocks.image.alt": "Testo alternativo",
 	"field.blocks.image.caption": "Didascalia",
 	"field.blocks.image.crop": "Ritaglio",
@@ -334,6 +347,7 @@
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
 	"field.files.empty": "Nessun file selezionato",
+	"field.files.empty.single": "No file selected yet",
 
 	"field.layout.change": "Change layout",
 	"field.layout.delete": "Elimina layout",
@@ -345,12 +359,14 @@
 	"field.object.empty": "Ancora nessuna informazione",
 
 	"field.pages.empty": "Nessuna pagina selezionata",
+	"field.pages.empty.single": "No page selected yet",
 
 	"field.structure.delete.confirm": "Vuoi veramente eliminare questo elemento?",
 	"field.structure.delete.confirm.all": "Vuoi davvero cancellare tutte le voci?",
 	"field.structure.empty": "Non ci sono ancora elementi.",
 
 	"field.users.empty": "Nessun utente selezionato",
+	"field.users.empty.single": "No user selected yet",
 
 	"fields.empty": "No fields yet",
 
@@ -368,6 +384,13 @@
 	"files.empty": "Nessun file caricato",
 
 	"filter": "Filter",
+
+	"form.discard": "Discard changes",
+	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
+	"form.locked": "This content is disabled for you as it is currently edited by another user",
+	"form.unsaved": "The current changes have not yet been saved",
+	"form.preview": "Preview changes",
+	"form.preview.draft": "Preview draft",
 
 	"hide": "Nascondi",
 	"hour": "Ora",
@@ -444,6 +467,8 @@
 	"license.status.missing.bubble": "Pronto a lanciare il tuo sito?",
 	"license.status.missing.info": "Nessuna licenza valida",
 	"license.status.missing.label": "Attiva la tua licenza ora",
+	"license.status.unknown.info": "The license status is unknown",
+	"license.status.unknown.label": "Unknown license",
 	"license.manage": "Gestisci le tue licenze",
 	"license.purchased": "Acquistata",
 	"license.success": "Ti ringraziamo per aver supportato Kirby",
@@ -456,6 +481,9 @@
 
 	"lock.unsaved": "Modifiche non salvate",
 	"lock.unsaved.empty": "Non ci sono altre modifiche non salvate",
+	"lock.unsaved.files": "Unsaved files",
+	"lock.unsaved.pages": "Unsaved pages",
+	"lock.unsaved.users": "Unsaved accounts",
 	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Sblocca",
 	"lock.unlock.submit": "Unlock and overwrite unsaved changes by <strong>{email}</strong>",
@@ -578,6 +606,10 @@
 	"plugins": "Plugins",
 	"prev": "Precedente",
 	"preview": "Anteprima",
+
+	"publish": "Publish",
+	"published": "Pubblicato",
+
 	"remove": "Rimuovi",
 	"rename": "Rinomina",
 	"renew": "Rinnova",
@@ -597,7 +629,9 @@
 	"role.nobody.title": "Nessuno",
 
 	"save": "Salva",
+	"saved": "Saved",
 	"search": "Cerca",
+	"searching": "Searching",
 	"search.min": "Inserisci almeno {min} caratteri per la ricerca",
 	"search.all": "Mostra tutti i {count} risultati",
 	"search.results.none": "Nessun risultato",
@@ -622,6 +656,7 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
+	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "La cartella content sembra essere esposta",
 	"system.issues.eol.kirby": "La versione di Kirby installata è giunta alla fine del suo ciclo di vita e non riceverà ulteriori aggiornamenti di sicurezza ",
 	"system.issues.eol.plugin": "La versione installata del plugin { plugin } è giunta alla fine del suo ciclo di vita e non riceverà ulteriori aggiornamenti di sicurezza",
@@ -646,6 +681,12 @@
 	"tel": "Phone",
 	"tel.placeholder": "+49123456789",
 	"template": "Template",
+
+	"theme": "Theme",
+	"theme.light": "Lights on",
+	"theme.dark": "Lights off",
+	"theme.automatic": "Match system default",
+
 	"title": "Titolo",
 	"today": "Oggi",
 
@@ -715,10 +756,13 @@
 	"users": "Utenti",
 
 	"version": "Versione di Kirby",
+	"version.changes": "Changed version",
+	"version.compare": "Compare versions",
 	"version.current": "Versione corrente",
 	"version.latest": "Ultima versione",
 	"versionInformation": "Informazioni sulla versione",
 
+	"view": "View",
 	"view.account": "Il tuo account",
 	"view.installation": "Installazione",
 	"view.languages": "Lingue",

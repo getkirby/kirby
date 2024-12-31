@@ -114,8 +114,29 @@ class LanguagesDropdownTest extends AreaTestCase
 	/**
 	 * @covers ::render
 	 */
+	public function testRenderDefault()
+	{
+		$page   = new Page(['slug' => 'test']);
+		$button = new LanguagesDropdown($page);
+		$this->assertNull($button->render());
+	}
+
+	/**
+	 * @covers ::render
+	 */
 	public function testRenderSingleLang()
 	{
+		$this->enableMultilang();
+		$this->app([
+			'languages' => [
+				'en' => [
+					'code'    => 'en',
+					'default' => true,
+					'name'    => 'English'
+				]
+			]
+		]);
+
 		$page   = new Page(['slug' => 'test']);
 		$button = new LanguagesDropdown($page);
 		$this->assertNull($button->render());

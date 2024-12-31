@@ -21,6 +21,8 @@
 	"copy": "Kopier",
 	"copy.all": "Kopier alle",
 	"copy.success": "{count} copied!",
+	"copy.success.multiple": "{count} copied!",
+	"copy.url": "Copy URL",
 	"create": "Opret",
 	"custom": "Custom",
 
@@ -90,6 +92,12 @@
 
 	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
 
+	"error.content.lock.delete": "The version is locked and cannot be deleted",
+	"error.content.lock.move": "The source version is locked and cannot be moved",
+	"error.content.lock.publish": "This version is already published",
+	"error.content.lock.replace": "The version is locked and cannot be replaced",
+	"error.content.lock.update": "The version is locked and cannot be updated",
+
 	"error.email.preset.notFound": "Email preset \"{name}\" findes ikke",
 
 	"error.field.converter.invalid": "Ugyldig converter \"{converter}\"",
@@ -118,6 +126,7 @@
 	"error.file.name.missing": "Filnavn må ikke være tomt",
 	"error.file.notFound": "Filen kunne ikke findes",
 	"error.file.orientation": "Formatet på billedet skal være \"{orientation}\"",
+	"error.file.sort.permission": "You are not allowed to change the sorting of \"{filename}\"",
 	"error.file.type.forbidden": "Du har ikke tilladelse til at uploade {type} filer",
 	"error.file.type.invalid": "Ugyldig filtype: {type}",
 	"error.file.undefined": "Filen kunne ikke findes",
@@ -168,6 +177,7 @@
 	"error.page.move.ancestor": "The page cannot be moved into itself",
 	"error.page.move.directory": "The page directory cannot be moved",
 	"error.page.move.duplicate": "A sub page with the URL appendix \"{slug}\" already exists",
+	"error.page.move.noSections": "The page \"{parent}\" cannot be a parent of any page because it lacks any pages sections in its blueprint",
 	"error.page.move.notFound": "The moved page could not be found",
 	"error.page.move.permission": "You are not allowed to move \"{slug}\"",
 	"error.page.move.template": "The \"{template}\" template is not accepted as a subpage of \"{parent}\"",
@@ -297,6 +307,9 @@
 	"field.blocks.heading.name": "Overskrift",
 	"field.blocks.heading.text": "Tekst",
 	"field.blocks.heading.placeholder": "Overskrift …",
+	"field.blocks.figure.back.plain": "Plain",
+	"field.blocks.figure.back.pattern.light": "Pattern (light)",
+	"field.blocks.figure.back.pattern.dark": "Pattern (dark)",
 	"field.blocks.image.alt": "Alternativ tekst",
 	"field.blocks.image.caption": "Billedtekst",
 	"field.blocks.image.crop": "Beskær",
@@ -334,6 +347,7 @@
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
 	"field.files.empty": "Ingen filer valgt endnu",
+	"field.files.empty.single": "No file selected yet",
 
 	"field.layout.change": "Change layout",
 	"field.layout.delete": "Slet layout",
@@ -345,12 +359,14 @@
 	"field.object.empty": "No information yet",
 
 	"field.pages.empty": "Ingen sider valgt endnu",
+	"field.pages.empty.single": "No page selected yet",
 
 	"field.structure.delete.confirm": "\u00d8nsker du virkelig at slette denne indtastning?",
 	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
 	"field.structure.empty": "Ingen indtastninger endnu.",
 
 	"field.users.empty": "Ingen brugere er valgt",
+	"field.users.empty.single": "No user selected yet",
 
 	"fields.empty": "No fields yet",
 
@@ -368,6 +384,13 @@
 	"files.empty": "Ingen filer endnu",
 
 	"filter": "Filter",
+
+	"form.discard": "Discard changes",
+	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
+	"form.locked": "This content is disabled for you as it is currently edited by another user",
+	"form.unsaved": "The current changes have not yet been saved",
+	"form.preview": "Preview changes",
+	"form.preview.draft": "Preview draft",
 
 	"hide": "Skjul",
 	"hour": "Time",
@@ -444,6 +467,8 @@
 	"license.status.missing.bubble": "Ready to launch your site?",
 	"license.status.missing.info": "No valid license",
 	"license.status.missing.label": "Please activate your license",
+	"license.status.unknown.info": "The license status is unknown",
+	"license.status.unknown.label": "Unknown license",
 	"license.manage": "Manage your licenses",
 	"license.purchased": "Purchased",
 	"license.success": "Tak for din støtte af Kirby",
@@ -456,6 +481,9 @@
 
 	"lock.unsaved": "Ugemte ændringer",
 	"lock.unsaved.empty": "Der er ikke flere ændringer der ikke er gamt",
+	"lock.unsaved.files": "Unsaved files",
+	"lock.unsaved.pages": "Unsaved pages",
+	"lock.unsaved.users": "Unsaved accounts",
 	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Lås op",
 	"lock.unlock.submit": "Unlock and overwrite unsaved changes by <strong>{email}</strong>",
@@ -578,6 +606,10 @@
 	"plugins": "Plugins",
 	"prev": "Forrige",
 	"preview": "Forhåndsvisning",
+
+	"publish": "Publish",
+	"published": "Udgivede",
+
 	"remove": "Fjern",
 	"rename": "Omdøb",
 	"renew": "Renew",
@@ -597,7 +629,9 @@
 	"role.nobody.title": "Ingen",
 
 	"save": "Gem",
+	"saved": "Saved",
 	"search": "Søg",
+	"searching": "Searching",
 	"search.min": "Indtast {min} tegn for at søge",
 	"search.all": "Show all {count} results",
 	"search.results.none": "Ingen resultater",
@@ -622,6 +656,7 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
+	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
@@ -646,6 +681,12 @@
 	"tel": "Phone",
 	"tel.placeholder": "+49123456789",
 	"template": "Skabelon",
+
+	"theme": "Theme",
+	"theme.light": "Lights on",
+	"theme.dark": "Lights off",
+	"theme.automatic": "Match system default",
+
 	"title": "Titel",
 	"today": "Idag",
 
@@ -715,10 +756,13 @@
 	"users": "Brugere",
 
 	"version": "Kirby version",
+	"version.changes": "Changed version",
+	"version.compare": "Compare versions",
 	"version.current": "Current version",
 	"version.latest": "Latest version",
 	"versionInformation": "Version information",
 
+	"view": "View",
 	"view.account": "Din konto",
 	"view.installation": "Installation",
 	"view.languages": "Sprog",

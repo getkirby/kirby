@@ -9,8 +9,9 @@
 			<k-grid
 				v-for="name in names"
 				:key="name"
-				style="--columns: 9; gap: var(--spacing-3)"
+				style="--columns: 20; gap: var(--spacing-3)"
 			>
+				<k-box style="--span: 2"> {{ name }}- </k-box>
 				<k-box
 					v-for="(step, index) in steps"
 					:key="step"
@@ -19,7 +20,7 @@
 						color: `var(--color-${name}-${colors[step]})`
 					}"
 				>
-					{{ name }}-{{ step }}
+					{{ step }}
 				</k-box>
 			</k-grid>
 		</k-lab-example>
@@ -36,14 +37,23 @@ export default {
 		colors() {
 			return {
 				100: 800,
+				150: 800,
 				200: 800,
+				250: 800,
 				300: 900,
+				350: 900,
 				400: 1000,
+				450: 1000,
 				500: 1000,
-				600: 1000,
+				550: 100,
+				600: 100,
+				650: 100,
 				700: 100,
+				750: 100,
 				800: 200,
-				900: 200
+				850: 200,
+				900: 200,
+				950: 200
 			};
 		}
 	}

@@ -1405,7 +1405,7 @@ class Str
 	{
 		$first = static::substr($string, 0, 1);
 		$rest  = static::substr($string, 1);
-		return static::upper($first) . static::lower($rest);
+		return static::upper($first) . $rest;
 	}
 
 	/**

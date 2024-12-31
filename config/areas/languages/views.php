@@ -22,7 +22,7 @@ return [
 
 			// TODO: update following line and adapt for update and
 			// delete options when `languageVariables.*` permissions available
-			$canUpdate = $kirby->user()?->role()->permissions()->for('languages', 'update') === true;
+			$canUpdate = $kirby->role()?->permissions()->for('languages', 'update') === true;
 
 			ksort($foundation);
 

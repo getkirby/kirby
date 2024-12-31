@@ -110,17 +110,21 @@ export default {
 			});
 		},
 		async onSubmit() {
-			await this.$panel.content.publish(this.content, {
-				api: this.api,
-				language: this.$panel.language.code
-			});
+			try {
+				await this.$panel.content.publish(this.content, {
+					api: this.api,
+					language: this.$panel.language.code
+				});
 
-			this.$panel.notification.success();
-			this.$events.emit("model.update");
+				this.$panel.notification.success();
+				this.$events.emit("model.update");
 
-			// the view needs to be refreshed to get an updated set of props
-			// this will also rerender sections if needed
-			await this.$panel.view.refresh();
+				// the view needs to be refreshed to get an updated set of props
+				// this will also rerender sections if needed
+				await this.$panel.view.refresh();
+			} catch (error) {
+				this.$panel.notification.error(error);
+			}
 		},
 		onViewSave(e) {
 			e?.preventDefault?.();

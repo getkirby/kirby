@@ -4,23 +4,22 @@ namespace Kirby\Cms;
 
 use Kirby\TestCase;
 
-class UserPermissionsTest extends TestCase
+/**
+ * @coversDefaultClass \Kirby\Cms\LanguagePermissions
+ */
+class LanguagePermissionsTest extends TestCase
 {
 	public static function actionProvider(): array
 	{
 		return [
 			['create'],
-			['changeEmail'],
-			['changeLanguage'],
-			['changeName'],
-			['changePassword'],
-			['changeRole'],
 			['delete'],
 			['update'],
 		];
 	}
 
 	/**
+	 * @covers \Kirby\Cms\ModelPermissions::can
 	 * @dataProvider actionProvider
 	 */
 	public function testWithAdmin($action)
@@ -37,13 +36,14 @@ class UserPermissionsTest extends TestCase
 
 		$kirby->impersonate('kirby');
 
-		$user  = new User(['email' => 'test@getkirby.com']);
-		$perms = $user->permissions();
+		$language = new Language(['code' => 'en']);
+		$perms    = $language->permissions();
 
 		$this->assertTrue($perms->can($action));
 	}
 
 	/**
+	 * @covers \Kirby\Cms\ModelPermissions::can
 	 * @dataProvider actionProvider
 	 */
 	public function testWithNobody($action)
@@ -58,18 +58,24 @@ class UserPermissionsTest extends TestCase
 			]
 		]);
 
-		$user  = new User(['email' => 'test@getkirby.com']);
-		$perms = $user->permissions();
+		$language = new Language(['code' => 'en']);
+		$perms    = $language->permissions();
 
 		$this->assertFalse($perms->can($action));
 	}
 
 	/**
+	 * @covers \Kirby\Cms\ModelPermissions::can
 	 * @dataProvider actionProvider
 	 */
 	public function testWithNoAdmin($action)
 	{
 		$app = new App([
+			'languages' => [
+				[
+					'code' => 'en'
+				]
+			],
 			'roots' => [
 				'index' => '/dev/null'
 			],
@@ -78,25 +84,11 @@ class UserPermissionsTest extends TestCase
 				[
 					'name' => 'editor',
 					'permissions' => [
-						'user' => [
-							'changeEmail'    => false,
-							'changeLanguage' => false,
-							'changeName'     => false,
-							'changePassword' => false,
-							'changeRole'     => false,
-							'delete'         => false,
-							'update'         => false
+						'languages' => [
+							'create' => false,
+							'delete' => false,
+							'update' => false
 						],
-						'users' => [
-							'changeEmail'    => false,
-							'changeLanguage' => false,
-							'changeName'     => false,
-							'changePassword' => false,
-							'changeRole'     => false,
-							'create'         => false,
-							'delete'         => false,
-							'update'         => false
-						]
 					]
 				]
 			],
@@ -113,35 +105,41 @@ class UserPermissionsTest extends TestCase
 			],
 		]);
 
-		$user  = $app->user();
-		$perms = $user->permissions();
+		$language = $app->language('en');
+		$perms    = $language->permissions();
 
-		$this->assertSame('editor', $user->role()->name());
+		$this->assertSame('editor', $app->role()->name());
 		$this->assertFalse($perms->can($action));
 	}
 
-	public function testChangeSingleRole()
+	/**
+	 * @covers ::canDelete
+	 */
+	public function testCanDeleteWhenNotDeletable()
 	{
 		$app = new App([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de'
+				]
+			],
 			'roots' => [
 				'index' => '/dev/null'
 			],
 			'roles' => [
 				['name' => 'admin']
-			],
-			'users' => [
-				[
-					'email' => 'test@getkirby.com',
-					'role'  => 'admin'
-				]
 			]
 		]);
 
 		$app->impersonate('kirby');
 
-		$user  = $app->user('test@getkirby.com');
-		$perms = $user->permissions();
+		$language = $app->language('en');
+		$perms    = $language->permissions();
 
-		$this->assertFalse($perms->can('changeRole'));
+		$this->assertFalse($perms->can('delete'));
 	}
 }

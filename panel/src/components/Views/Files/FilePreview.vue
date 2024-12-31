@@ -36,8 +36,11 @@ export default {
 </script>
 <style>
 :root {
-	--file-preview-color-back: light-dark(var(--color-gray-900), var(--color-gray-950));
-	--file-preview-color-text: hsla(0, 100%, var(--color-l-max), 0.75);
+	--file-preview-color-back: light-dark(
+		var(--color-gray-900),
+		var(--color-gray-950)
+	);
+	--file-preview-color-text: var(--color-gray-200);
 }
 
 .k-file-preview {
