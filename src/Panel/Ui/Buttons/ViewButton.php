@@ -55,6 +55,7 @@ class ViewButton extends Button
 	 */
 	public static function factory(
 		string|array|Closure $button,
+		string|int|null $name = null,
 		string|null $view = null,
 		ModelWithContent|null $model = null,
 		array $data = []
@@ -64,6 +65,7 @@ class ViewButton extends Button
 			$button = static::find($button, $view);
 		}
 
+		// turn closure into actual button (object or array)
 		$button = static::resolve($button, $model, $data);
 
 		if (
@@ -73,7 +75,17 @@ class ViewButton extends Button
 			return $button;
 		}
 
-		return new static(...static::normalize($button), model: $model);
+		// flatten definition array into list of arguments for this class
+		$button = static::normalize($button);
+
+		// if button definition has a name, use it for the component name
+		if (is_string($name) === true) {
+			// If this specific component does not exist,
+			// `k-view-buttons` will fall back to `k-view-button` again
+			$button['component'] ??= 'k-' . $name . '-view-button';
+		}
+
+		return new static(...$button, model: $model);
 	}
 
 	/**
@@ -128,6 +140,7 @@ class ViewButton extends Button
 
 	public function props(): array
 	{
+		// helper for props that support Kirby queries
 		$resolve = fn ($value) =>
 			$value ?
 			$this->model?->toSafeString($value) ?? $value :

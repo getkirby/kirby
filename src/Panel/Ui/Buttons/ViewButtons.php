@@ -5,7 +5,6 @@ namespace Kirby\Panel\Ui\Buttons;
 use Kirby\Cms\App;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Panel\Model;
-use Kirby\Toolkit\A;
 
 /**
  * Collects view buttons for a specific view
@@ -26,6 +25,8 @@ class ViewButtons
 		public array|false|null $buttons = null,
 		public array $data = []
 	) {
+		// if no specific buttons are passed,
+		// use default buttons for this view from config
 		$this->buttons ??= App::instance()->option(
 			'panel.viewButtons.' . $view
 		);
@@ -64,18 +65,19 @@ class ViewButtons
 			return [];
 		}
 
-		$buttons = A::map(
-			$this->buttons ?? [],
-			fn ($button) =>
-				ViewButton::factory(
-					button: $button,
-					view: $this->view,
-					model: $this->model,
-					data: $this->data
-				)?->render()
-		);
+		$buttons = [];
 
-		return array_values(array_filter($buttons));
+		foreach ($this->buttons ?? [] as $name => $button) {
+			$buttons[] = ViewButton::factory(
+				button: $button,
+				name: $name,
+				view: $this->view,
+				model: $this->model,
+				data: $this->data
+			)?->render();
+		}
+
+		return array_filter($buttons);
 	}
 
 	/**
