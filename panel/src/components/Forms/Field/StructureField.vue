@@ -64,7 +64,7 @@
 					:sortable="isSortable"
 					:data-invalid="isInvalid"
 					@cell="open($event.row, $event.columnIndex)"
-					@input="save"
+					@input="onTableInput"
 					@option="option"
 					@paginate="paginate"
 				/>
@@ -466,6 +466,23 @@ export default {
 					this.open(row);
 					break;
 			}
+		},
+
+		/**
+		 * Merges the updated values from the paginated table
+		 * into the original items array and saves them
+		 * @param {Array} values
+		 */
+		onTableInput(values) {
+			if (this.limit) {
+				values = this.items.toSpliced(
+					this.pagination.offset,
+					this.limit,
+					...values
+				);
+			}
+
+			this.save(values);
 		},
 
 		/**
