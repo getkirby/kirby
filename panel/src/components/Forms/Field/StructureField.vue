@@ -177,21 +177,6 @@ export default {
 
 			return (this.page - 1) * this.limit + 1;
 		},
-		/**
-		 * Returns if new entries can be added
-		 * @returns {bool}
-		 */
-		more() {
-			if (this.disabled === true) {
-				return false;
-			}
-
-			if (this.max && this.items.length >= this.max) {
-				return false;
-			}
-
-			return true;
-		},
 		hasFields() {
 			return this.$helper.object.length(this.fields) > 0;
 		},
@@ -242,6 +227,21 @@ export default {
 			return true;
 		},
 		/**
+		 * Returns if new entries can be added
+		 * @returns {bool}
+		 */
+		more() {
+			if (this.disabled === true) {
+				return false;
+			}
+
+			if (this.max && this.items.length >= this.max) {
+				return false;
+			}
+
+			return true;
+		},
+		/**
 		 * Returns config for `k-pagination`
 		 * @returns {Obect}
 		 */
@@ -270,31 +270,25 @@ export default {
 				return [];
 			}
 
-			let options = [];
-			let more = this.duplicate && this.more;
-
-			options.push({
-				icon: "edit",
-				text: this.$t("edit"),
-				click: "edit"
-			});
-
-			options.push({
-				disabled: !more,
-				icon: "copy",
-				text: this.$t("duplicate"),
-				click: "duplicate"
-			});
-
-			options.push("-");
-
-			options.push({
-				icon: "trash",
-				text: more ? this.$t("delete") : null,
-				click: "remove"
-			});
-
-			return options;
+			return [
+				{
+					icon: "edit",
+					text: this.$t("edit"),
+					click: "edit"
+				},
+				{
+					disabled: !this.duplicate || !this.more,
+					icon: "copy",
+					text: this.$t("duplicate"),
+					click: "duplicate"
+				},
+				"-",
+				{
+					icon: "trash",
+					text: this.$t("delete"),
+					click: "remove"
+				}
+			];
 		},
 		/**
 		 * Returns paginated slice of items/rows
