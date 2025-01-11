@@ -67,7 +67,7 @@ return [
 		'required' => function ($value) {
 			if (
 				$this->isRequired() &&
-				($value === false || $this->isEmpty($value))
+				($value === false || $this->isEmptyValue($value))
 			) {
 				throw new InvalidArgumentException(
 					message: I18n::translate('field.required')
