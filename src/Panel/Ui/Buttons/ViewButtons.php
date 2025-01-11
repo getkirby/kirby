@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Ui\Buttons;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Panel\Model;
 
@@ -21,7 +22,7 @@ class ViewButtons
 {
 	public function __construct(
 		public readonly string $view,
-		public readonly ModelWithContent|null $model = null,
+		public readonly ModelWithContent|Language|null $model = null,
 		public array|false|null $buttons = null,
 		public array $data = []
 	) {
@@ -86,7 +87,7 @@ class ViewButtons
 	 */
 	public static function view(
 		string|Model $view,
-		ModelWithContent|null $model = null
+		ModelWithContent|Language|null $model = null
 	): static {
 		if ($view instanceof Model) {
 			$model     = $view->model();

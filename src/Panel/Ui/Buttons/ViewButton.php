@@ -4,6 +4,7 @@ namespace Kirby\Panel\Ui\Buttons;
 
 use Closure;
 use Kirby\Cms\App;
+use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Panel\Panel;
 use Kirby\Panel\Ui\Button;
@@ -25,7 +26,7 @@ class ViewButton extends Button
 {
 	public function __construct(
 		public string $component = 'k-view-button',
-		public readonly ModelWithContent|null $model = null,
+		public readonly ModelWithContent|Language|null $model = null,
 		public array|null $badge = null,
 		public string|null $class = null,
 		public string|bool|null $current = null,
@@ -57,7 +58,7 @@ class ViewButton extends Button
 		string|array|Closure $button,
 		string|int|null $name = null,
 		string|null $view = null,
-		ModelWithContent|null $model = null,
+		ModelWithContent|Language|null $model = null,
 		array $data = []
 	): static|null {
 		// referenced by name
@@ -162,14 +163,17 @@ class ViewButton extends Button
 	 */
 	public static function resolve(
 		Closure|array $button,
-		ModelWithContent|null $model = null,
+		ModelWithContent|Language|null $model = null,
 		array $data = []
 	): static|array|null {
 		if ($button instanceof Closure) {
 			$kirby      = App::instance();
 			$controller = new Controller($button);
 
-			if ($model instanceof ModelWithContent) {
+			if (
+				$model instanceof ModelWithContent ||
+				$model instanceof Language
+			) {
 				$data = [
 					'model'             => $model,
 					$model::CLASS_ALIAS => $model,

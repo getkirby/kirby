@@ -35,6 +35,11 @@ class Language implements Stringable
 	use HasSiblings;
 
 	/**
+	 * Short human-readable version used in template queries
+	 */
+	public const CLASS_ALIAS = 'language';
+
+	/**
 	 * The parent Kirby instance
 	 */
 	public static App|null $kirby;
