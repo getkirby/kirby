@@ -20,6 +20,9 @@ class LicenseStatus implements Stringable
 		protected string $value,
 		protected string $icon,
 		protected string $label,
+		protected string|null $link = null,
+		protected string|null $dialog = null,
+		protected string|null $drawer = null,
 		protected string|null $theme = null
 	) {
 	}
@@ -30,6 +33,22 @@ class LicenseStatus implements Stringable
 	public function __toString(): string
 	{
 		return $this->label();
+	}
+
+	/**
+	 * Returns the status dialog
+	 */
+	public function dialog(): string|null
+	{
+		return $this->dialog;
+	}
+
+	/**
+	 * Returns the status drawer
+	 */
+	public function drawer(): string|null
+	{
+		return $this->drawer;
 	}
 
 	/**
@@ -73,6 +92,14 @@ class LicenseStatus implements Stringable
 	}
 
 	/**
+	 * Returns the status link
+	 */
+	public function link(): string|null
+	{
+		return $this->link;
+	}
+
+	/**
 	 * Returns the theme
 	 */
 	public function theme(): string|null
@@ -86,10 +113,13 @@ class LicenseStatus implements Stringable
 	public function toArray(): array
 	{
 		return [
-			'icon'  => $this->icon(),
-			'label' => $this->label(),
-			'theme' => $this->theme(),
-			'value' => $this->value(),
+			'dialog' => $this->dialog(),
+			'drawer' => $this->drawer(),
+			'icon'   => $this->icon(),
+			'label'  => $this->label(),
+			'link'   => $this->link(),
+			'theme'  => $this->theme(),
+			'value'  => $this->value(),
 		];
 	}
 
