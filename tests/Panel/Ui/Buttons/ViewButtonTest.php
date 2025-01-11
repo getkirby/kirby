@@ -24,9 +24,11 @@ class ViewButtonTest extends AreaTestCase
 	public function testFactoryFromClosure()
 	{
 		$button = ViewButton::factory(
-			fn (string $name) => ['component' => 'k-' . $name . '-view-button'],
-			'test',
-			['name' => 'foo']
+			button: fn (string $name) => [
+				'component' => 'k-' . $name . '-view-button'
+			],
+			view: 'test',
+			data: ['name' => 'foo']
 		);
 
 		$this->assertInstanceOf(ViewButton::class, $button);
@@ -175,15 +177,18 @@ class ViewButtonTest extends AreaTestCase
 	public function testResolve(): void
 	{
 		$test   = $this;
-		$result = ViewButton::resolve(function (string $b, bool $a, App $kirby) use ($test) {
-			$test->assertFalse($a);
-			$test->assertSame('foo', $b);
-			$test->assertInstanceOf(App::class, $kirby);
-			return ['component' => 'k-test-view-button'];
-		}, [
-			'a' => false,
-			'b' => 'foo'
-		]);
+		$result = ViewButton::resolve(
+			button: function (string $b, bool $a, App $kirby) use ($test) {
+				$test->assertFalse($a);
+				$test->assertSame('foo', $b);
+				$test->assertInstanceOf(App::class, $kirby);
+				return ['component' => 'k-test-view-button'];
+			},
+			data: [
+				'a' => false,
+				'b' => 'foo'
+			]
+		);
 
 		$this->assertSame('k-test-view-button', $result['component']);
 

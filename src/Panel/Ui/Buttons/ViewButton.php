@@ -4,6 +4,7 @@ namespace Kirby\Panel\Ui\Buttons;
 
 use Closure;
 use Kirby\Cms\App;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Panel\Panel;
 use Kirby\Panel\Ui\Button;
 use Kirby\Toolkit\Controller;
@@ -24,6 +25,7 @@ class ViewButton extends Button
 {
 	public function __construct(
 		public string $component = 'k-view-button',
+		public readonly ModelWithContent|null $model = null,
 		public array|null $badge = null,
 		public string|null $class = null,
 		public string|bool|null $current = null,
@@ -38,9 +40,9 @@ class ViewButton extends Button
 		public string|null $size = 'sm',
 		public string|null $style = null,
 		public string|null $target = null,
-		public string|null $text = null,
+		public string|array|null $text = null,
 		public string|null $theme = null,
-		public string|null $title = null,
+		public string|array|null $title = null,
 		public string $type = 'button',
 		public string|null $variant = 'filled',
 	) {
@@ -54,6 +56,7 @@ class ViewButton extends Button
 	public static function factory(
 		string|array|Closure $button,
 		string|null $view = null,
+		ModelWithContent|null $model = null,
 		array $data = []
 	): static|null {
 		// referenced by name
@@ -61,7 +64,7 @@ class ViewButton extends Button
 			$button = static::find($button, $view);
 		}
 
-		$button = static::resolve($button, $data);
+		$button = static::resolve($button, $model, $data);
 
 		if (
 			$button === null ||
@@ -70,7 +73,7 @@ class ViewButton extends Button
 			return $button;
 		}
 
-		return new static(...static::normalize($button));
+		return new static(...static::normalize($button), model: $model);
 	}
 
 	/**
@@ -125,8 +128,16 @@ class ViewButton extends Button
 
 	public function props(): array
 	{
+		$resolve = fn ($value) =>
+			$value ?
+			$this->model?->toSafeString($value) ?? $value :
+			null;
+
 		return [
 			...parent::props(),
+			'dialog'  => $resolve($this->dialog),
+			'drawer'  => $resolve($this->drawer),
+			'link'    => $resolve($this->link),
 			'options' => $this->options
 		];
 	}
@@ -138,12 +149,22 @@ class ViewButton extends Button
 	 */
 	public static function resolve(
 		Closure|array $button,
+		ModelWithContent|null $model = null,
 		array $data = []
 	): static|array|null {
 		if ($button instanceof Closure) {
 			$kirby      = App::instance();
 			$controller = new Controller($button);
-			$button     = $controller->call(data: [
+
+			if ($model instanceof ModelWithContent) {
+				$data = [
+					'model'             => $model,
+					$model::CLASS_ALIAS => $model,
+					...$data
+				];
+			}
+
+			$button = $controller->call(data: [
 				'kirby' => $kirby,
 				'site'  => $kirby->site(),
 				'user'  => $kirby->user(),

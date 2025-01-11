@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Ui\Buttons;
 
 use Kirby\Cms\App;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Panel\Model;
 use Kirby\Toolkit\A;
 
@@ -21,6 +22,7 @@ class ViewButtons
 {
 	public function __construct(
 		public readonly string $view,
+		public readonly ModelWithContent|null $model = null,
 		public array|false|null $buttons = null,
 		public array $data = []
 	) {
@@ -66,9 +68,10 @@ class ViewButtons
 			$this->buttons ?? [],
 			fn ($button) =>
 				ViewButton::factory(
-					$button,
-					$this->view,
-					$this->data
+					button: $button,
+					view: $this->view,
+					model: $this->model,
+					data: $this->data
 				)?->render()
 		);
 
@@ -79,15 +82,19 @@ class ViewButtons
 	 * Creates new instance for a view
 	 * with special support for model views
 	 */
-	public static function view(string|Model $view): static
-	{
+	public static function view(
+		string|Model $view,
+		ModelWithContent|null $model = null
+	): static {
 		if ($view instanceof Model) {
-			$blueprint = $view->model()->blueprint()->buttons();
-			$view      = $view->model()::CLASS_ALIAS;
+			$model     = $view->model();
+			$blueprint = $model->blueprint()->buttons();
+			$view      = $model::CLASS_ALIAS;
 		}
 
 		return new static(
 			view: $view,
+			model: $model ?? null,
 			buttons: $blueprint ?? null
 		);
 	}
