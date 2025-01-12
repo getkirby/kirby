@@ -148,10 +148,13 @@ class ViewButton extends Button
 			null;
 
 		return [
-			...parent::props(),
-			'dialog'  => $resolve($this->dialog),
-			'drawer'  => $resolve($this->drawer),
-			'link'    => $resolve($this->link),
+			...$props = parent::props(),
+			'dialog'  => $resolve($props['dialog']),
+			'drawer'  => $resolve($props['drawer']),
+			'icon'    => $resolve($props['icon']),
+			'link'    => $resolve($props['link']),
+			'text'    => $resolve($props['text']),
+			'theme'   => $resolve($props['theme']),
 			'options' => $this->options
 		];
 	}
