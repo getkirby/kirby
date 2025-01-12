@@ -44,4 +44,20 @@ class ButtonTest extends TestCase
 			'variant'    => 'filled',
 		], $component->props());
 	}
+
+	/**
+	 * @covers ::props
+	 */
+	public function testPropsWithI18n()
+	{
+		$component = new Button(
+			text: [
+				'en' => 'Congrats',
+				'de' => 'Glückwunsch'
+			],
+		);
+
+		$props = $component->props();
+		$this->assertSame('Congrats', $props['text']);
+	}
 }

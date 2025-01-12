@@ -121,6 +121,7 @@ class ViewButtonsTest extends AreaTestCase
 		// view name
 		$buttons = ViewButtons::view('page');
 		$this->assertCount(0, $buttons->buttons ?? []);
+		$this->assertNull($buttons->model);
 
 		// view model
 		$page = new Page([
@@ -132,5 +133,6 @@ class ViewButtonsTest extends AreaTestCase
 
 		$buttons = ViewButtons::view($page->panel());
 		$this->assertCount(2, $buttons->buttons);
+		$this->assertSame($page, $buttons->model);
 	}
 }
