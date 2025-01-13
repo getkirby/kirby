@@ -10,7 +10,7 @@ use Kirby\Cms\Layouts;
 use Kirby\Data\Data;
 use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Form\Form;
+use Kirby\Form\Reform;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -30,6 +30,74 @@ class LayoutField extends BlocksField
 		parent::__construct($params);
 	}
 
+	public function api(): array
+	{
+		$field  = $this;
+		$routes = parent::api();
+
+		$routes[] = [
+			'pattern' => 'layout',
+			'method'  => 'POST',
+			'action'  => function () use ($field): array {
+				$request = App::instance()->request();
+
+				$input    = $request->get('attrs') ?? [];
+				$defaults = $field->attrsForm($input)->data(true);
+				$attrs    = $field->attrsForm($defaults)->values();
+				$columns  = $request->get('columns') ?? ['1/1'];
+
+				return Layout::factory([
+					'attrs'   => $attrs,
+					'columns' => array_map(fn ($width) => [
+						'blocks' => [],
+						'id'     => Str::uuid(),
+						'width'  => $width,
+					], $columns)
+				])->toArray();
+			},
+		];
+
+		$routes[] = [
+			'pattern' => 'layout/paste',
+			'method'  => 'POST',
+			'action'  => function () use ($field): array {
+				$request = App::instance()->request();
+				$value   = Layouts::parse($request->get('json'));
+				$layouts = Layouts::factory($value);
+
+				return $field->pasteLayouts($layouts->toArray());
+			}
+		];
+
+		$routes[] = [
+			'pattern' => 'fields/(:any)/(:all?)',
+			'method'  => 'ALL',
+			'action'  => function (
+				string $fieldName,
+				string|null $path = null
+			) use ($field): array {
+				$form  = $field->attrsForm();
+				$field = $form->field($fieldName);
+
+				$fieldApi = $this->clone([
+					'routes' => $field->api(),
+					'data'   => [
+						...$this->data(),
+						'field' => $field
+					]
+				]);
+
+				return $fieldApi->call(
+					$path,
+					$this->requestMethod(),
+					$this->requestData()
+				);
+			}
+		];
+
+		return $routes;
+	}
+
 	public function fill(mixed $value = null): void
 	{
 		$value   = Data::decode($value, type: 'json', fail: false);
@@ -37,7 +105,7 @@ class LayoutField extends BlocksField
 
 		foreach ($layouts as $layoutIndex => $layout) {
 			if ($this->settings !== null) {
-				$layouts[$layoutIndex]['attrs'] = $this->attrsForm($layout['attrs'])->values();
+				$layouts[$layoutIndex]['attrs'] = $this->attrsForm($layout['attrs'])->toFormValues();
 			}
 
 			foreach ($layout['columns'] as $columnIndex => $column) {
@@ -49,16 +117,16 @@ class LayoutField extends BlocksField
 		$this->errors = null;
 	}
 
-	public function attrsForm(array $input = []): Form
+	public function attrsForm(array $input = []): Reform
 	{
 		$settings = $this->settings();
 
-		return new Form([
-			'fields' => $settings?->fields() ?? [],
-			'model'  => $this->model,
-			'strict' => true,
-			'values' => $input,
-		]);
+		$form = new Reform(
+			model: $this->model,
+			fields: $settings?->fields() ?? []
+		);
+
+		return $form->fill($input);
 	}
 
 	public function layouts(): array|null
@@ -131,74 +199,6 @@ class LayoutField extends BlocksField
 			'selector' => $this->selector(),
 			'settings' => $this->settings()?->toArray()
 		];
-	}
-
-	public function routes(): array
-	{
-		$field  = $this;
-		$routes = parent::routes();
-
-		$routes[] = [
-			'pattern' => 'layout',
-			'method'  => 'POST',
-			'action'  => function () use ($field): array {
-				$request = App::instance()->request();
-
-				$input    = $request->get('attrs') ?? [];
-				$defaults = $field->attrsForm($input)->data(true);
-				$attrs    = $field->attrsForm($defaults)->values();
-				$columns  = $request->get('columns') ?? ['1/1'];
-
-				return Layout::factory([
-					'attrs'   => $attrs,
-					'columns' => array_map(fn ($width) => [
-						'blocks' => [],
-						'id'     => Str::uuid(),
-						'width'  => $width,
-					], $columns)
-				])->toArray();
-			},
-		];
-
-		$routes[] = [
-			'pattern' => 'layout/paste',
-			'method'  => 'POST',
-			'action'  => function () use ($field): array {
-				$request = App::instance()->request();
-				$value   = Layouts::parse($request->get('json'));
-				$layouts = Layouts::factory($value);
-
-				return $field->pasteLayouts($layouts->toArray());
-			}
-		];
-
-		$routes[] = [
-			'pattern' => 'fields/(:any)/(:all?)',
-			'method'  => 'ALL',
-			'action'  => function (
-				string $fieldName,
-				string|null $path = null
-			) use ($field): array {
-				$form  = $field->attrsForm();
-				$field = $form->field($fieldName);
-
-				$fieldApi = $this->clone([
-					'routes' => $field->api(),
-					'data'   => [
-						...$this->data(),
-						'field' => $field
-					]
-				]);
-
-				return $fieldApi->call(
-					$path,
-					$this->requestMethod(),
-					$this->requestData()
-				);
-			}
-		];
-
-		return $routes;
 	}
 
 	public function selector(): array|null
@@ -282,11 +282,11 @@ class LayoutField extends BlocksField
 
 		foreach ($value as $layoutIndex => $layout) {
 			if ($this->settings !== null) {
-				$value[$layoutIndex]['attrs'] = $this->attrsForm($layout['attrs'])->content();
+				$value[$layoutIndex]['attrs'] = $this->attrsForm($layout['attrs'])->toStoredValues();
 			}
 
 			foreach ($layout['columns'] as $columnIndex => $column) {
-				$value[$layoutIndex]['columns'][$columnIndex]['blocks'] = $this->blocksToValues($column['blocks'] ?? [], 'content');
+				$value[$layoutIndex]['columns'][$columnIndex]['blocks'] = $this->blocksToValues($column['blocks'] ?? [], 'toStoredValues');
 			}
 		}
 

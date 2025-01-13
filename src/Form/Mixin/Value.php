@@ -2,6 +2,9 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Cms\Language;
+use Kirby\Exception\PermissionException;
+
 /**
  * @package   Kirby Form
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -11,6 +14,9 @@ namespace Kirby\Form\Mixin;
  */
 trait Value
 {
+	protected mixed $default = null;
+	protected mixed $value = null;
+
 	/**
 	 * @deprecated 5.0.0 Use `::toStoredValue()` instead
 	 */
@@ -28,7 +34,16 @@ trait Value
 			return $this->default;
 		}
 
-		return $this->model->toString($this->default);
+		return $this->stringTemplate($this->default);
+	}
+
+	/**
+	 * Sets a new value for the field
+	 */
+	public function fill(mixed $value = null): void
+	{
+		$this->value  = $value;
+		$this->errors = null;
 	}
 
 	/**
@@ -48,6 +63,14 @@ trait Value
 	}
 
 	/**
+	 * Checks if the field is saveable
+	 */
+	public function isSaveable(): bool
+	{
+		return true;
+	}
+
+	/**
 	 * Checks if the field needs a value before being saved;
 	 * this is the case if all of the following requirements are met:
 	 * - The field is saveable
@@ -55,7 +78,7 @@ trait Value
 	 * - The field is currently empty
 	 * - The field is not currently inactive because of a `when` rule
 	 */
-	protected function needsValue(): bool
+	public function needsValue(): bool
 	{
 		if (
 			$this->isSaveable() === false ||
@@ -67,6 +90,42 @@ trait Value
 		}
 
 		return true;
+	}
+
+	/**
+	 * Checks if the field is saveable
+	 * @deprecated 5.0.0 Use `::isSaveable()` instead
+	 */
+	public function save(): bool
+	{
+		return $this->isSaveable();
+	}
+
+	/**
+	 * Setter for the default value property
+	 */
+	protected function setDefault(mixed $default = null): void
+	{
+		$this->default = $default;
+	}
+
+	/**
+	 * Tries to set a new field value, but will throw an exception
+	 * if the field is not submittable.
+	 */
+	public function submit(
+		mixed $value = null,
+		Language|string $language = 'default',
+	): void {
+		if ($this->isSaveable() === false) {
+			throw new PermissionException('The "' . $this->name() . '" field cannot be saved');
+		}
+
+		if ($this->isDisabled($language) === true) {
+			throw new PermissionException('The "' . $this->name() . '" field is disabled and cannot be submitted');
+		}
+
+		$this->fill($value);
 	}
 
 	/**

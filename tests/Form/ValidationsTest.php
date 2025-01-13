@@ -29,6 +29,7 @@ class ValidationsTest extends TestCase
 	public function tearDown(): void
 	{
 		Field::$types = [];
+		Field::$setups = [];
 	}
 
 	public function testBooleanValid()
