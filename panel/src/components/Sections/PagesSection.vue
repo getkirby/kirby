@@ -12,24 +12,26 @@ export default {
 				const sortable = page.permissions.sort && this.options.sortable;
 				const deletable = this.data.length > this.options.min;
 
+				const flag = {
+					...this.$helper.page.status(
+						page.status,
+						page.permissions.changeStatus === false
+					),
+					click: () => this.$dialog(page.link + "/changeStatus")
+				};
+
 				return {
 					...page,
-					buttons: [
-						{
-							...this.$helper.page.status(
-								page.status,
-								page.permissions.changeStatus === false
-							),
-							click: () => this.$dialog(page.link + "/changeStatus")
-						},
-						...(page.buttons ?? [])
-					],
+					buttons: [flag, ...(page.buttons ?? [])],
 					column: this.column,
 					data: {
 						"data-id": page.id,
 						"data-status": page.status,
 						"data-template": page.template
 					},
+					// TODO: remove `flag` once table layout has been refactored
+					// into a separate component and `buttons` support has been added
+					flag,
 					deletable,
 					options: this.$dropdown(page.link, {
 						query: {
