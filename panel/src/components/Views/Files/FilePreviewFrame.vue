@@ -63,4 +63,10 @@ export default {
 .k-button.k-file-preview-frame-dropdown-toggle {
 	--button-color-icon: var(--color-gray-500);
 }
+
+@container (min-width: 36rem) and (max-width: 65rem) {
+	.k-file-preview-frame-column {
+		aspect-ratio: auto;
+	}
+}
 </style>
