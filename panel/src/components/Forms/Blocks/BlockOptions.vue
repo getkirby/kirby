@@ -185,13 +185,13 @@ export default {
 			this.$refs.options.open();
 		},
 		sort(event) {
-			event.preventDefault();
-
 			switch (event.key) {
 				case "ArrowUp":
+					event.preventDefault();
 					this.$emit("sortUp");
 					break;
 				case "ArrowDown":
+					event.preventDefault();
 					this.$emit("sortDown");
 					break;
 			}
