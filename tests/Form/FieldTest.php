@@ -531,6 +531,29 @@ class FieldTest extends TestCase
 	}
 
 	/**
+	 * @covers ::isEmptyValue
+	 */
+	public function testIsEmptyValueFromOption()
+	{
+		Field::$types = [
+			'test' => [
+				'isEmpty' => function ($value) {
+					return $value === 'empty';
+				}
+			]
+		];
+
+		$page = new Page(['slug' => 'test']);
+
+		$field = new Field('test', [
+			'model' => $page,
+		]);
+
+		$this->assertFalse($field->isEmptyValue('test'));
+		$this->assertTrue($field->isEmptyValue('empty'));
+	}
+
+	/**
 	 * @covers ::isHidden
 	 */
 	public function testIsHidden()
