@@ -277,6 +277,10 @@ export default {
 		 * @public
 		 */
 		open() {
+			if (this.buttons.length === 0) {
+				return;
+			}
+
 			this.isOpen = true;
 
 			if (this.inline) {

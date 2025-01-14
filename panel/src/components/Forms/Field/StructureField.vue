@@ -67,7 +67,7 @@
 						:rows="paginatedItems"
 						:sortable="isSortable"
 						@cell="open($event.row, $event.columnIndex)"
-						@input="save"
+						@input="onTableInput"
 						@option="option"
 						@paginate="paginate"
 					/>
@@ -171,21 +171,6 @@ export default {
 
 			return (this.page - 1) * this.limit + 1;
 		},
-		/**
-		 * Returns if new entries can be added
-		 * @returns {bool}
-		 */
-		more() {
-			if (this.disabled === true) {
-				return false;
-			}
-
-			if (this.max && this.items.length >= this.max) {
-				return false;
-			}
-
-			return true;
-		},
 		hasFields() {
 			return this.$helper.object.length(this.fields) > 0;
 		},
@@ -211,6 +196,21 @@ export default {
 			}
 
 			if (this.sortable === false) {
+				return false;
+			}
+
+			return true;
+		},
+		/**
+		 * Returns if new entries can be added
+		 * @returns {bool}
+		 */
+		more() {
+			if (this.disabled === true) {
+				return false;
+			}
+
+			if (this.max && this.items.length >= this.max) {
 				return false;
 			}
 
@@ -245,31 +245,25 @@ export default {
 				return [];
 			}
 
-			let options = [];
-			let more = this.duplicate && this.more;
-
-			options.push({
-				icon: "edit",
-				text: this.$t("edit"),
-				click: "edit"
-			});
-
-			options.push({
-				disabled: !more,
-				icon: "copy",
-				text: this.$t("duplicate"),
-				click: "duplicate"
-			});
-
-			options.push("-");
-
-			options.push({
-				icon: "trash",
-				text: more ? this.$t("delete") : null,
-				click: "remove"
-			});
-
-			return options;
+			return [
+				{
+					icon: "edit",
+					text: this.$t("edit"),
+					click: "edit"
+				},
+				{
+					disabled: !this.duplicate || !this.more,
+					icon: "copy",
+					text: this.$t("duplicate"),
+					click: "duplicate"
+				},
+				"-",
+				{
+					icon: "trash",
+					text: this.$t("delete"),
+					click: "remove"
+				}
+			];
 		},
 		/**
 		 * Returns paginated slice of items/rows
@@ -441,6 +435,23 @@ export default {
 					this.open(row);
 					break;
 			}
+		},
+
+		/**
+		 * Merges the updated values from the paginated table
+		 * into the original items array and saves them
+		 * @param {Array} values
+		 */
+		onTableInput(values) {
+			if (this.limit) {
+				values = this.items.toSpliced(
+					this.pagination.offset,
+					this.limit,
+					...values
+				);
+			}
+
+			this.save(values);
 		},
 
 		/**
