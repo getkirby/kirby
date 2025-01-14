@@ -37,11 +37,11 @@ class ViewButtonsTest extends AreaTestCase
 	public function testConstruct()
 	{
 		// no buttons
-		$buttons = new ViewButtons('test', []);
+		$buttons = new ViewButtons('test', buttons: []);
 		$this->assertCount(0, $buttons->buttons);
 
 		// passed directly
-		$buttons = new ViewButtons('test', ['a', 'b']);
+		$buttons = new ViewButtons('test', buttons: ['a', 'b']);
 		$this->assertCount(2, $buttons->buttons);
 
 		// from options
@@ -82,7 +82,7 @@ class ViewButtonsTest extends AreaTestCase
 	 */
 	public function testRender()
 	{
-		$buttons = new ViewButtons('test', ['a', 'b']);
+		$buttons = new ViewButtons('test', buttons: ['a', 'b']);
 		$result  = $buttons->render();
 
 		$this->assertCount(2, $result);
@@ -121,6 +121,7 @@ class ViewButtonsTest extends AreaTestCase
 		// view name
 		$buttons = ViewButtons::view('page');
 		$this->assertCount(0, $buttons->buttons ?? []);
+		$this->assertNull($buttons->model);
 
 		// view model
 		$page = new Page([
@@ -132,5 +133,6 @@ class ViewButtonsTest extends AreaTestCase
 
 		$buttons = ViewButtons::view($page->panel());
 		$this->assertCount(2, $buttons->buttons);
+		$this->assertSame($page, $buttons->model);
 	}
 }
