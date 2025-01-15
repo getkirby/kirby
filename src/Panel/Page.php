@@ -51,10 +51,7 @@ class Page extends Model
 			'settings',
 			'languages',
 			'status'
-		)->bind([
-			'page'  => $this->model(),
-			'model' => $this->model()
-		])->render();
+		)->render();
 	}
 
 	/**
@@ -107,13 +104,14 @@ class Page extends Model
 				'target'   => '_blank',
 				'icon'     => 'open',
 				'text'     => I18n::translate('open'),
-				'disabled' => $this->isDisabledDropdownOption('preview', $options, $permissions)
+				'disabled' => $isPreviewDisabled = $this->isDisabledDropdownOption('preview', $options, $permissions)
 			];
 
 			$result['preview'] = [
-				'icon' => 'window',
-				'link' => $page->panel()->url(true) . '/preview/compare',
-				'text' => I18n::translate('preview'),
+				'icon'     => 'window',
+				'link'     => $page->panel()->url(true) . '/preview/compare',
+				'text'     => I18n::translate('preview'),
+				'disabled' => $isPreviewDisabled
 			];
 
 			$result[] = '-';

@@ -35,6 +35,20 @@ export function clone(value) {
 }
 
 /**
+ * Filters the object via a predicate callback
+ * @since 5.0.0
+ *
+ * @param {object} object
+ * @param {function} predicate
+ * @returns {object}
+ */
+export function filter(object, predicate) {
+	return Object.fromEntries(
+		Object.entries(object).filter(([key, value]) => predicate(value, key))
+	);
+}
+
+/**
  * Checks if value is empty
  *
  * @param {mixed} value
@@ -124,6 +138,7 @@ export function toLowerKeys(obj) {
 
 export default {
 	clone,
+	filter,
 	isEmpty,
 	isObject,
 	length,

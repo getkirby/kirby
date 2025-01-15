@@ -413,16 +413,6 @@ export default class Editor extends Emitter {
 		}
 	}
 
-	isEditable() {
-		return this.options.editable;
-	}
-
-	isEmpty() {
-		if (this.state) {
-			return this.state.doc.textContent.length === 0;
-		}
-	}
-
 	get isActive() {
 		return Object.entries({
 			...this.activeMarks,
@@ -434,6 +424,16 @@ export default class Editor extends Emitter {
 			}),
 			{}
 		);
+	}
+
+	isEditable() {
+		return this.options.editable;
+	}
+
+	isEmpty() {
+		if (this.state) {
+			return this.state.doc.textContent.length === 0;
+		}
 	}
 
 	removeMark(mark) {
