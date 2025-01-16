@@ -24,13 +24,25 @@
 				/>
 			</k-grid>
 		</k-lab-example>
+		<k-lab-example label="Text, Icon & Link">
+			<k-grid style="--columns: 1; gap: 0.5rem">
+				<k-box
+					v-for="theme in themes"
+					:key="theme"
+					:html="true"
+					:theme="theme"
+					text='Text with <a href="/">URL</a>'
+					icon="box"
+				/>
+			</k-grid>
+		</k-lab-example>
 	</k-lab-examples>
 </template>
 
 <script>
 export default {
 	props: {
-		themes: Array,
-	},
+		themes: Array
+	}
 };
 </script>
