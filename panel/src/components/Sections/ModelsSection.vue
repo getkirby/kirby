@@ -268,7 +268,7 @@ export default {
 			} catch (error) {
 				this.$panel.notification.error(error);
 			} finally {
-				this.reload();
+				this.$panel.events.emit("model.update");
 				this.isSelecting = false;
 				this.isProcessing = false;
 				this.selected = [];
