@@ -70,6 +70,7 @@ export default {
 .k-block-title {
 	display: flex;
 	align-items: center;
+	flex-shrink: 0;
 	min-width: 0;
 	padding-inline-end: 0.75rem;
 	line-height: 1;
