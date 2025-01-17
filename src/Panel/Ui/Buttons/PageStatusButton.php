@@ -24,7 +24,8 @@ class PageStatusButton extends ViewButton
 		$status    = $page->status();
 		$blueprint = $page->blueprint()->status()[$status] ?? null;
 		$disabled  = $page->permissions()->cannot('changeStatus');
-		$title     = I18n::translate('page.status') . ': ' . I18n::translate('page.status.' . $status);
+		$text      = $blueprint['label'] ?? I18n::translate('page.status.' . $status);
+		$title     = I18n::translate('page.status') . ': ' . $text;
 
 		if ($disabled === true) {
 			$title .= ' (' . I18n::translate('disabled') . ')';
@@ -37,7 +38,7 @@ class PageStatusButton extends ViewButton
 			disabled: $disabled,
 			icon: 'status-' . $status,
 			style: '--icon-size: 15px',
-			text: $blueprint['label'] ?? $status,
+			text: $text,
 			title: $title,
 			theme: match($status) {
 				'draft'    => 'negative-icon',
