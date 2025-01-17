@@ -393,6 +393,35 @@ class ModelTest extends TestCase
 	/**
 	 * @covers ::image
 	 */
+	public function testImageWithBlueprintString()
+	{
+		$app  = $this->app->clone([
+			'blueprints' => [
+				'pages/fox' => [
+					'image' => 'site.page("test").image'
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'template' => 'fox',
+						'files' => [
+							['filename' => 'test.jpg']
+						]
+					]
+				]
+			]
+		]);
+
+		$panel = $app->page('test')->panel();
+		$image = $panel->image([]);
+		$this->assertStringEndsWith('test.jpg', $image['url']);
+	}
+
+	/**
+	 * @covers ::image
+	 */
 	public function testImageWithQuery()
 	{
 		$site  = new ModelSiteWithImageMethod();
