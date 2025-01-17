@@ -35,6 +35,7 @@ class RoleTest extends TestCase
 
 		$this->assertSame('editor', $role->name());
 		$this->assertSame('Editor', $role->title());
+		$this->assertSame('This should be inherited', $role->description());
 	}
 
 	public function testMissingRole()
