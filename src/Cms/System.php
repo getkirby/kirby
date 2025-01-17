@@ -406,6 +406,16 @@ class System
 	}
 
 	/**
+	 * Returns the short version of the detected server software
+	 * @since 4.6.0
+	 */
+	public function serverSoftwareShort(): string
+	{
+		$software = $this->serverSoftware();
+		return strtok($software, ' ');
+	}
+
+	/**
 	 * Check for a writable sessions folder
 	 */
 	public function sessions(): bool
