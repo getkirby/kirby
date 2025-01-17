@@ -3,6 +3,8 @@
 		:is="component"
 		v-bind="attrs"
 		:class="['k-button', $attrs.class]"
+		:data-has-icon="Boolean(icon)"
+		:data-has-text="Boolean(text || $slots.default)"
 		:style="$attrs.style"
 		@click="onClick"
 	>
@@ -325,22 +327,22 @@ export default {
 }
 
 /** Icon Buttons **/
-.k-button:not(:has(.k-button-text)) {
+.k-button:not([data-has-text="true"]) {
 	--button-padding: 0;
 	aspect-ratio: 1/1;
 }
 
 /** Responsive buttons **/
 @container (max-width: 30rem) {
-	.k-button:is([data-responsive]:has(.k-button-icon)) {
+	.k-button[data-responsive="true"][data-has-icon="true"] {
 		--button-padding: 0;
 		aspect-ratio: 1/1;
 		--button-text-display: none;
 	}
-	.k-button[data-responsive="text"]:has(.k-button-text) {
+	.k-button[data-responsive="text"][data-has-text="true"] {
 		--button-icon-display: none;
 	}
-	.k-button:is([data-responsive]:has(.k-button-icon)) .k-button-arrow {
+	.k-button[data-responsive="true"][data-has-icon="true"] .k-button-arrow {
 		display: none;
 	}
 }

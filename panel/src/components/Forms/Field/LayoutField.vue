@@ -93,8 +93,6 @@ export default {
 .k-layout-field > footer {
 	display: flex;
 	justify-content: center;
-}
-.k-layout-field > :has(+ footer) {
-	margin-bottom: var(--spacing-3);
+	margin-top: var(--spacing-3);
 }
 </style>

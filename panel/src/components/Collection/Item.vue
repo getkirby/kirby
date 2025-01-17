@@ -2,6 +2,7 @@
 	<div
 		v-bind="data"
 		:class="['k-item', `k-${layout}-item`, $attrs.class]"
+		:data-has-image="hasFigure"
 		:data-layout="layout"
 		:data-theme="theme"
 		:style="$attrs.style"
@@ -210,7 +211,7 @@ export default {
 	align-items: center;
 	grid-template-columns: 1fr auto;
 }
-.k-item[data-layout="list"]:has(.k-item-image) {
+.k-item[data-layout="list"][data-has-image="true"] {
 	grid-template-columns: var(--item-height) 1fr auto;
 }
 .k-item[data-layout="list"] .k-frame {
@@ -269,7 +270,7 @@ export default {
 	grid-template-columns: 1fr;
 	grid-template-rows: 1fr var(--height-md);
 }
-.k-item[data-layout="cardlets"]:has(.k-item-image) {
+.k-item[data-layout="cardlets"][data-has-image="true"] {
 	grid-template-areas:
 		"image content"
 		"image options";

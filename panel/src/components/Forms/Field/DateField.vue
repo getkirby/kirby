@@ -5,7 +5,7 @@
 		:input="id"
 		:style="$attrs.style"
 	>
-		<div ref="body" class="k-date-field-body">
+		<div ref="body" :data-has-time="Boolean(time)" class="k-date-field-body">
 			<!-- Date input -->
 			<k-input
 				ref="dateInput"
@@ -242,7 +242,7 @@ export default {
 }
 
 @container (min-width: 20rem) {
-	.k-date-field-body:has(.k-time-input) {
+	.k-date-field-body[data-has-time="true"] {
 		grid-template-columns: 1fr minmax(6rem, 9rem);
 	}
 }

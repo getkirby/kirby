@@ -1,5 +1,6 @@
 <template>
 	<k-panel-inside
+		:data-has-tabs="hasTabs"
 		:data-id="id"
 		:data-locked="isLocked"
 		:data-template="blueprint"
@@ -89,7 +90,7 @@ export default {
 	border-bottom: 0;
 }
 
-.k-file-view:has(.k-tabs) .k-file-preview {
+.k-file-view[data-has-tabs="true"] .k-file-preview {
 	margin-bottom: 0;
 }
 </style>

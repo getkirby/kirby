@@ -103,7 +103,7 @@ export default {
 </script>
 
 <style>
-.k-lab-playground-view:has(.k-tabs) .k-lab-playground-header {
+.k-lab-playground-view:has(> .k-tabs) .k-lab-playground-header {
 	margin-bottom: 0;
 }
 

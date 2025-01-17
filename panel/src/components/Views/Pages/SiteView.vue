@@ -1,5 +1,6 @@
 <template>
 	<k-panel-inside
+		:data-has-tabs="hasTabs"
 		:data-id="id"
 		:data-locked="isLocked"
 		:data-template="blueprint"
@@ -53,7 +54,7 @@ export default {
 </script>
 
 <style>
-.k-site-view:has(.k-tabs) .k-site-view-header {
+.k-site-view[data-has-tabs="true"] .k-site-view-header {
 	margin-bottom: 0;
 }
 </style>

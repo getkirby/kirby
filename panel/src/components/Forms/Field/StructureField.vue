@@ -562,8 +562,6 @@ export default {
 .k-structure-field .k-table + footer {
 	display: flex;
 	justify-content: center;
-}
-.k-structure-field .k-table:has(+ footer) {
-	margin-bottom: var(--spacing-3);
+	margin-top: var(--spacing-3);
 }
 </style>
