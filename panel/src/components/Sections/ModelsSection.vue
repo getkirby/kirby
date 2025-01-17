@@ -48,15 +48,13 @@
 
 <script>
 import debounce from "@/helpers/debounce";
+import section from "@/mixins/section";
 
 export default {
+	mixins: [section],
 	inheritAttrs: false,
 	props: {
-		blueprint: String,
-		column: String,
-		parent: String,
-		name: String,
-		timestamp: Number
+		column: String
 	},
 	data() {
 		return {
